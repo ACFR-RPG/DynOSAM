@@ -95,7 +95,7 @@ TEST(RGBDBackendModule, constructSimpleGraph) {
         dyno::BackendParams().useLogger(false),
         map,
         dyno_testing::makeDefaultCameraPtr(),
-        dyno::RGBDBackendModule::UpdaterType::MotionInWorld
+        dyno::RGBDBackendModule::UpdaterType::ObjectCentric
         );
 
     for(size_t i = 0; i < 7; i++) {
@@ -202,29 +202,18 @@ TEST(RGBDBackendModule, constructSimpleGraph) {
         // backend.saveTree("rgbd_bayes_tree_" + std::to_string(i) + ".dot");
     }
 
-    gtsam::NonlinearFactorGraph full_graph = backend.new_updater_->getGraph();
-    full_graph.saveGraph(dyno::getOutputFilePath("construct_simple_graph_test_object_pose.dot"), dyno::DynoLikeKeyFormatter);
+    // gtsam::NonlinearFactorGraph full_graph = backend.new_updater_->getGraph();
+    // full_graph.saveGraph(dyno::getOutputFilePath("construct_simple_graph_test_object_pose.dot"), dyno::DynoLikeKeyFormatter);
+
+    // const auto[delayed_values, delayed_graph] = backend.constructGraph(2, 6, true);
+    // delayed_graph.saveGraph(dyno::getOutputFilePath("construct_simple_delayed_graph_test.dot"), dyno::DynoLikeKeyFormatter);
+
+     gtsam::NonlinearFactorGraph full_graph = backend.new_updater_->getGraph();
+    full_graph.saveGraph(dyno::getOutputFilePath("construct_simple_graph_object_centric.dot"), dyno::DynoLikeKeyFormatter);
 
     const auto[delayed_values, delayed_graph] = backend.constructGraph(2, 6, true);
-    delayed_graph.saveGraph(dyno::getOutputFilePath("construct_simple_delayed_graph_test.dot"), dyno::DynoLikeKeyFormatter);
+    delayed_graph.saveGraph(dyno::getOutputFilePath("construct_simple_delayed_graph_object_centric.dot"), dyno::DynoLikeKeyFormatter);
 
-    // gtsam::LevenbergMarquardtParams opt_params;
-    // opt_params.verbosity = gtsam::NonlinearOptimizerParams::Verbosity::ERROR;
-    // // opt_params.
-    // try {
-    //     gtsam::Values opt_values = gtsam::LevenbergMarquardtOptimizer(delayed_graph, delayed_values, opt_params).optimize();
-    // }
-    // catch(const gtsam::ValuesKeyDoesNotExist& e) {
-    //     LOG(INFO) << "Key does not exist in the values " <<  dyno::DynoLikeKeyFormatter(e.key());
-    // }
-
-
-    //graph depends on optimzier used
-    //dummy one will += new factors so should be the full graph
-    // gtsam::NonlinearFactorGraph full_graph = optimizer->getFactors();
-    // full_graph.saveGraph(dyno::getOutputFilePath("construct_simple_graph_test.dot"), dyno::DynoLikeKeyFormatter);
-
-    // backend.saveTree();
 
 
 

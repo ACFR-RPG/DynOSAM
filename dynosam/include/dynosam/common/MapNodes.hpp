@@ -401,7 +401,7 @@ public:
     std::vector<LandmarkMeasurementPair> getDynamicMeasurements() const;
     std::vector<LandmarkMeasurementPair> getDynamicMeasurements(ObjectId object_id) const;
 
-    //static and dynamic
+    //static and dynamic DEPRICATE!
     StatusLandmarkEstimates getAllLandmarkEstimates() const;
 
     inline size_t numObjects() const { return objects_seen.size(); }
@@ -538,6 +538,9 @@ public:
     inline const FrameNodePtrSet<MEASUREMENT>& getSeenFrames() const {
         return frames_seen_;
     }
+
+    inline FrameId getFirstSeenFrame() const { return getSeenFrames().template getFirstIndex<FrameId>(); }
+    inline FrameId getLastSeenFrame() const { return getSeenFrames().template getLastIndex<FrameId>(); }
 
     FrameIds getSeenFrameIds() const;
 

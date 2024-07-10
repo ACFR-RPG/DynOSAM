@@ -124,6 +124,7 @@ add_library(${PROJECT_NAME} SHARED
   src/backend/DynoISAM2Params.cc
   src/backend/DynoISAM2-impl.cc
   src/backend/DynoISAM2Clique.cc
+  src/backend/ObjectCentricUpdater.cc
 
   src/factors/LandmarkMotionTernaryFactor.cc
   src/factors/Pose3FlowProjectionFactor.cc
@@ -131,6 +132,7 @@ add_library(${PROJECT_NAME} SHARED
   src/factors/ObjectKinematicFactor.cc
   src/factors/LandmarkMotionPoseFactor.cc
   src/factors/LandmarkPoseSmoothingFactor.cc
+  src/factors/ObjectCentricMotionFactor.cc
 
   src/pipeline/PipelineManager.cc
   src/pipeline/PipelineDefinitions.cc

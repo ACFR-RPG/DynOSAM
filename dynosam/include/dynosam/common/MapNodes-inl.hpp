@@ -278,9 +278,9 @@ const MEASUREMENT& LandmarkNode<MEASUREMENT>::getMeasurement(FrameId frame_id) c
 template<typename MEASUREMENT>
 gtsam::Key LandmarkNode<MEASUREMENT>::makeStaticKey() const {
     const auto key = StaticLandmarkSymbol(this->tracklet_id);
-    if(!this->isStatic()) {
-        throw InvalidLandmarkQuery(key, "Static estimate requested but landmark is dynamic!");
-    }
+    // if(!this->isStatic()) {
+    //     throw InvalidLandmarkQuery(key, "Static estimate requested but landmark is dynamic!");
+    // }
     return key;
 }
 
@@ -294,9 +294,9 @@ gtsam::Key LandmarkNode<MEASUREMENT>::makeDynamicKey(FrameId frame_id) const {
 template<typename MEASUREMENT>
 DynamicPointSymbol LandmarkNode<MEASUREMENT>::makeDynamicSymbol(FrameId frame_id) const {
     const auto key = DynamicLandmarkSymbol(frame_id, this->tracklet_id);
-    if(this->isStatic()) {
-        throw InvalidLandmarkQuery(key, "Dynamic estimate requested but landmark is static!");
-    }
+    // if(this->isStatic()) {
+    //     throw InvalidLandmarkQuery(key, "Dynamic estimate requested but landmark is static!");
+    // }
     return key;
 
 }

@@ -155,21 +155,21 @@ RGBDBackendModule::nominalSpinImpl(RGBDInstanceOutputPacket::ConstPtr input) {
     new_updater_->updateDynamicObservations(frame_k, new_values, new_factors, update_params);
 
     //do sliding window like batch from zero
-    if(frame_k % 20 ==0) {
-        gtsam::Values values;
-        gtsam::NonlinearFactorGraph graph;
-        std::tie(values, graph) = constructGraph(first_frame_id_, frame_k, true);
-        LOG(INFO) << " Finished graph construction";
+    // if(frame_k % 20 ==0) {
+    //     gtsam::Values values;
+    //     gtsam::NonlinearFactorGraph graph;
+    //     std::tie(values, graph) = constructGraph(first_frame_id_, frame_k, true);
+    //     LOG(INFO) << " Finished graph construction";
 
-        graph.error(values);
-        gtsam::LevenbergMarquardtParams opt_params;
-        if(VLOG_IS_ON(20))
-            opt_params.verbosity = gtsam::NonlinearOptimizerParams::Verbosity::ERROR;
+    //     graph.error(values);
+    //     gtsam::LevenbergMarquardtParams opt_params;
+    //     if(VLOG_IS_ON(20))
+    //         opt_params.verbosity = gtsam::NonlinearOptimizerParams::Verbosity::ERROR;
 
-        gtsam::Values optimised_values_sliding = gtsam::LevenbergMarquardtOptimizer(graph, values, opt_params).optimize();
-        new_updater_->updateTheta(optimised_values_sliding);
+    //     gtsam::Values optimised_values_sliding = gtsam::LevenbergMarquardtOptimizer(graph, values, opt_params).optimize();
+    //     new_updater_->updateTheta(optimised_values_sliding);
 
-    }
+    // }
 
 
     gtsam::Values optimised_values;
@@ -886,8 +886,10 @@ RGBDBackendModule::Updater::updateDynamicObservations(
         std::vector<FrameId> frames_affected_vector(
             frames_affected.begin(), frames_affected.end()
         );
-        //TODO: should always have at least two frames (prev and current) as we must add factors on this frame and the previous frame
-        CHECK_GE(frames_affected_vector.size(), 2u);
+
+        //this is NO LONGER the case in the object centric case
+        // //TODO: should always have at least two frames (prev and current) as we must add factors on this frame and the previous frame
+        // CHECK_GE(frames_affected_vector.size(), 2u);
         for(size_t frame_idx = 0; frame_idx < frames_affected_vector.size(); frame_idx++) {
             const FrameId frame_id = frames_affected_vector.at(frame_idx);
             auto frame_node_k_impl = getMap()->getFrame(frame_id);
@@ -895,6 +897,7 @@ RGBDBackendModule::Updater::updateDynamicObservations(
             ObjectUpdateContext object_update_context;
             //perform motion check on this frame -> if this is the first frame (of at least 2)
             //then there should be no motion at this frame (since it is k-1 of a motion pair and there is no k-2)
+            //this nolonger holds for the object centric case as we dont deal with motion pairs!!
             if(frame_idx == 0) {
                 object_update_context.has_motion_pair = false;
             }
@@ -925,6 +928,7 @@ RGBDBackendModule::Updater::updateDynamicObservations(
 }
 
 void RGBDBackendModule::Updater::logBackendFromMap() {
+    LOG(INFO) << "Logging from backend!";
     BackendLogger logger(loggerPrefix());
     const auto& gt_packet_map = parent_->gt_packet_map_;
     auto map = getMap();
@@ -1229,8 +1233,6 @@ StateQuery<gtsam::Pose3> RGBDBackendModule::MotionWorldAccessor::getObjectMotion
     return this->query<gtsam::Pose3>(
         frame_node_k->makeObjectMotionKey(object_id)
     );
-
-
 }
 StateQuery<gtsam::Pose3> RGBDBackendModule::MotionWorldAccessor::getObjectPose(FrameId frame_id, ObjectId object_id) const {
     const auto object_poses = getObjectPoses(frame_id);

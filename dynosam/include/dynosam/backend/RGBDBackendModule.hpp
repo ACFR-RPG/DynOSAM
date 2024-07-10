@@ -50,7 +50,8 @@ public:
 
     enum UpdaterType {
         MotionInWorld = 0,
-        LLWorld = 1
+        LLWorld = 1,
+        ObjectCentric=2
     };
 
     RGBDBackendModule(const BackendParams& backend_params, RGBDMap::Ptr map, Camera::Ptr camera, const UpdaterType& updater_type, ImageDisplayQueue* display_queue = nullptr);
@@ -325,7 +326,7 @@ public:
             StateQuery<gtsam::Pose3> getSensorPose(FrameId frame_id) const override;
             virtual StateQuery<gtsam::Pose3> getObjectMotion(FrameId frame_id, ObjectId object_id) const override;
             virtual StateQuery<gtsam::Pose3> getObjectPose(FrameId frame_id, ObjectId object_id) const override;
-            StateQuery<gtsam::Point3> getDynamicLandmark(FrameId frame_id, TrackletId tracklet_id) const override;
+            virtual StateQuery<gtsam::Point3> getDynamicLandmark(FrameId frame_id, TrackletId tracklet_id) const override;
 
         protected:
 
@@ -368,9 +369,10 @@ public:
     class MotionWorldAccessor : public LLAccessor {
         public:
             MotionWorldAccessor(const gtsam::Values* theta, RGBDBackendModule* parent) : LLAccessor(theta, parent) {}
+            virtual ~MotionWorldAccessor() = default;
 
-            StateQuery<gtsam::Pose3> getObjectMotion(FrameId frame_id, ObjectId object_id) const override;
-            StateQuery<gtsam::Pose3> getObjectPose(FrameId frame_id, ObjectId object_id) const override;
+            virtual StateQuery<gtsam::Pose3> getObjectMotion(FrameId frame_id, ObjectId object_id) const override;
+            virtual StateQuery<gtsam::Pose3> getObjectPose(FrameId frame_id, ObjectId object_id) const override;
 
             inline ObjectPoseMap getObjectPoses() const override { return object_pose_cache_; }
             EstimateMap<ObjectId, gtsam::Pose3> getObjectPoses(FrameId frame_id) const override;
@@ -403,6 +405,68 @@ public:
         }
     };
 
+
+    struct ObjectCentricProperties {
+        inline gtsam::Symbol makeDynamicKey(TrackletId tracklet_id) const {
+            return gtsam::Symbol(kDynamicLandmarkSymbolChar, tracklet_id);
+        }
+    };
+
+
+    class ObjectCentricAccessor : public MotionWorldAccessor, public ObjectCentricProperties {
+        public:
+            ObjectCentricAccessor(
+                const gtsam::Values* theta, RGBDBackendModule* parent,
+                const gtsam::FastMap<ObjectId, std::pair<gtsam::Pose3, FrameId>>* L0_values) : MotionWorldAccessor(theta, parent), L0_values_(L0_values) {}
+            virtual ~ObjectCentricAccessor() {}
+
+            StateQuery<gtsam::Pose3> getObjectMotion(FrameId frame_id, ObjectId object_id) const override;
+            StateQuery<gtsam::Pose3> getObjectPose(FrameId frame_id, ObjectId object_id) const override;
+            StateQuery<gtsam::Point3> getDynamicLandmark(FrameId frame_id, TrackletId tracklet_id) const override;
+
+        private:
+            const gtsam::FastMap<ObjectId, std::pair<gtsam::Pose3, FrameId>>* L0_values_;
+    };
+
+    class ObjectCentricUpdater : public Updater, public ObjectCentricProperties {
+    public:
+        DYNO_POINTER_TYPEDEFS(ObjectCentricUpdater)
+
+        ObjectCentricUpdater(RGBDBackendModule* parent) : Updater(parent) {}
+
+        inline Accessor::Ptr createAccessor(const gtsam::Values* values) const override {
+            return std::make_shared<ObjectCentricAccessor>(values, parent_, &L0_values_);
+        }
+
+        void dynamicPointUpdateCallback(const PointUpdateContext& context, UpdateObservationResult& result, gtsam::Values& new_values,
+            gtsam::NonlinearFactorGraph& new_factors) override;
+        void objectUpdateContext(const ObjectUpdateContext& context, UpdateObservationResult& result, gtsam::Values& new_values,
+            gtsam::NonlinearFactorGraph& new_factors) override;
+
+        inline bool isDynamicTrackletInMap(const LandmarkNode3d2d::Ptr& lmk_node) const override {
+            const TrackletId tracklet_id = lmk_node->tracklet_id;
+            return is_dynamic_tracklet_in_map_.exists(tracklet_id);
+        }
+
+
+        std::string loggerPrefix() const override {
+            return "rgbd_object_centric";
+        }
+
+        private:
+        //right now just uses the frame id of the first seen frame -> may cause problems down the line!!
+            std::pair<gtsam::Pose3, FrameId> getL0OrInitalise(ObjectId object_id);
+
+            //re-computes everytime
+            gtsam::Pose3 computeInitialHFromFrontend(FrameId k, ObjectId object_id);
+
+    private:
+        gtsam::FastMap<ObjectId, std::pair<gtsam::Pose3, FrameId>> L0_values_;
+        //we need a separate way of tracking if a dynamic tracklet is in the map, since each point is modelled uniquely
+        //simply used as an O(1) lookup, the value is not actually used. If the key exists, we assume that the tracklet is in the map
+        gtsam::FastMap<TrackletId, bool> is_dynamic_tracklet_in_map_; //! thr set of dynamic points that have been added by this updater. We use a separate map containing the tracklets as the keys are non-unique
+    };
+
 public:
     bool buildSlidingWindowOptimisation(FrameId frame_k, gtsam::Values& optimised_values, double& error_before, double& error_after);
 
@@ -416,6 +480,10 @@ public:
         else if(updater_type_ == UpdaterType::LLWorld) {
             LOG(INFO) << "Using LLWorld";
             return std::make_unique<LLUpdater>(this);
+        }
+        else if(updater_type_ == UpdaterType::ObjectCentric) {
+            LOG(INFO) << "Using ObjectCentric";
+            return std::make_unique<ObjectCentricUpdater>(this);
         }
         else {
             CHECK(false) << "Not implemented";
@@ -444,6 +512,7 @@ public:
     BackendLogger::UniquePtr logger_{nullptr};
     gtsam::FastMap<FrameId, gtsam::Pose3> initial_camera_poses_; //! Camera poses as estimated from the frontend per frame
     gtsam::FastMap<FrameId, MotionEstimateMap> initial_object_motions_; //! Object motions (in world) as estimated from the frontend per frame
+
 
     inline bool hasFrontendMotionEstimate(FrameId frame_id, ObjectId object_id, Motion3* motion) const {
         if(!initial_object_motions_.exists(frame_id)) { return false; }
