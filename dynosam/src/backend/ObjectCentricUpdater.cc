@@ -36,7 +36,7 @@ namespace dyno {
 StateQuery<gtsam::Pose3> RGBDBackendModule::ObjectCentricAccessor::getObjectMotion(FrameId frame_id, ObjectId object_id) const {
     const auto frame_node_k = getMap()->getFrame(frame_id);
     const auto frame_node_k_1 = getMap()->getFrame(frame_id - 1u);
-    if (frame_node_k && frame_node_k) {
+    if (frame_node_k && frame_node_k_1) {
         const auto motion_key = frame_node_k->makeObjectMotionKey(object_id);
         StateQuery<gtsam::Pose3> motion_s0_k = this->query<gtsam::Pose3>(motion_key);
 
@@ -65,6 +65,9 @@ StateQuery<gtsam::Pose3> RGBDBackendModule::ObjectCentricAccessor::getObjectPose
     gtsam::Key motion_key = frame_node_k->makeObjectMotionKey(object_id);
     gtsam::Key pose_key = frame_node_k->makeObjectPoseKey(object_id);
     CHECK(frame_node_k);
+    ///hmmm... if we do a query after we do an update but before an optimise then the motion will
+    //be whatever we initalised it with
+    //in the case of identity, the pose at k will just be L_s0 which we dont want?
     StateQuery<gtsam::Pose3> motion_s0_k = this->query<gtsam::Pose3>(motion_key);
     CHECK(false);
 
@@ -123,6 +126,48 @@ StateQuery<gtsam::Point3> RGBDBackendModule::ObjectCentricAccessor::getDynamicLa
     }
 
 }
+
+StatusLandmarkEstimates RGBDBackendModule::ObjectCentricAccessor::getDynamicLandmarkEstimates(FrameId frame_id, ObjectId object_id) const {
+    const auto frame_node = getMap()->getFrame(frame_id);
+    const auto object_node = getMap()->getObject(object_id);
+    CHECK_NOTNULL(frame_node);
+    CHECK_NOTNULL(object_node);
+
+    if(!frame_node->objectObserved(object_id)) {
+        return StatusLandmarkEstimates{};
+    }
+
+    StatusLandmarkEstimates estimates;
+    //unlike in the base version, iterate over all points on the object (i.e all tracklets)
+    //as we can propogate all of them!!!!
+    const auto& dynamic_landmarks = object_node->dynamic_landmarks;
+    for(auto lmk_node : dynamic_landmarks) {
+        const auto tracklet_id = lmk_node->tracklet_id;
+
+        CHECK_EQ(object_id, lmk_node->object_id);
+
+        //user defined function should put point in the world frame
+        StateQuery<gtsam::Point3> lmk_query = this->getDynamicLandmark(
+            frame_id,
+            tracklet_id
+        );
+        if(lmk_query) {
+            estimates.push_back(
+                LandmarkStatus::DynamicInGLobal(
+                    lmk_query.get(), //estimate
+                    frame_id,
+                    tracklet_id,
+                    object_id,
+                    LandmarkStatus::Method::OPTIMIZED //this may not be correct!!
+                ) //status
+            );
+        }
+    }
+    return estimates;
+
+
+}
+
 
 
 void RGBDBackendModule::ObjectCentricUpdater::dynamicPointUpdateCallback(const PointUpdateContext& context, UpdateObservationResult& result, gtsam::Values& new_values,
@@ -214,6 +259,8 @@ void RGBDBackendModule::ObjectCentricUpdater::objectUpdateContext(const ObjectUp
     const gtsam::Key object_motion_key_k = frame_node_k->makeObjectMotionKey(context.getObjectId());
 
     Accessor::Ptr theta_accessor = this->accessorFromTheta();
+    const auto frame_id = context.getFrameId();
+    const auto object_id = context.getObjectId();
 
     if(!is_other_values_in_map.exists(object_motion_key_k)) {
         // gtsam::Pose3 motion;
@@ -221,6 +268,49 @@ void RGBDBackendModule::ObjectCentricUpdater::objectUpdateContext(const ObjectUp
         new_values.insert(object_motion_key_k, motion);
         is_other_values_in_map.insert2(object_motion_key_k, true);
     }
+
+    if(frame_id < 2) return;
+
+    auto frame_node_k_1 = getMap()->getFrame(frame_id - 1u);
+    if (!frame_node_k_1) { return; }
+
+    if(FLAGS_use_smoothing_factor && frame_node_k_1->objectObserved(object_id)) {
+        //motion key at previous frame
+        const gtsam::Symbol object_motion_key_k_1 = frame_node_k_1->makeObjectMotionKey(object_id);
+
+        auto object_smoothing_noise = parent_->object_smoothing_noise_;
+        CHECK(object_smoothing_noise);
+        CHECK_EQ(object_smoothing_noise->dim(), 6u);
+
+        {
+            ObjectId object_label_k_1, object_label_k;
+            FrameId frame_id_k_1, frame_id_k;
+            CHECK(reconstructMotionInfo(object_motion_key_k_1, object_label_k_1, frame_id_k_1));
+            CHECK(reconstructMotionInfo(object_motion_key_k, object_label_k, frame_id_k));
+            CHECK_EQ(object_label_k_1, object_label_k);
+            CHECK_EQ(frame_id_k_1 + 1, frame_id_k); //assumes consequative frames
+        }
+
+        //if the motion key at k (motion from k-1 to k), and key at k-1 (motion from k-2 to k-1)
+        //exists in the map or is about to exist via new values, add the smoothing factor
+        if(is_other_values_in_map.exists(object_motion_key_k_1) && is_other_values_in_map.exists(object_motion_key_k)) {
+            // new_factors.emplace_shared<gtsam::BetweenFactor<gtsam::Pose3>>(
+            //     object_motion_key_k_1,
+            //     object_motion_key_k,
+            //     gtsam::Pose3::Identity(),
+            //     object_smoothing_noise
+            // );
+            if(result.debug_info) result.debug_info->getObjectInfo(context.getObjectId()).smoothing_factor_added = true;
+
+        }
+
+        // if(smoothing_added) {
+        //     //TODO: add back in
+        //     // object_debug_info.smoothing_factor_added = true;
+        // }
+
+    }
+
 
 }
 
@@ -234,11 +324,22 @@ void RGBDBackendModule::ObjectCentricUpdater::objectUpdateContext(const ObjectUp
         auto frame_node = getMap()->getFrame(first_seen_frame);
         CHECK(frame_node);
 
+        auto gt_packet_map = parent_->getGroundTruthPackets();
+        if(gt_packet_map->exists(first_seen_frame)) {
+            const GroundTruthInputPacket& gt_packet_k_1 = gt_packet_map->at(first_seen_frame);
+
+            ObjectPoseGT object_pose_gt_k_1;
+            if(!gt_packet_k_1.getObject(object_id, object_pose_gt_k_1)) {
+                auto pose_k_1 = object_pose_gt_k_1.L_world_;
+                L0_values_.insert2(object_id, std::make_pair(pose_k_1, first_seen_frame));
+                return L0_values_.at(object_id);
+            }
+        }
+
         StatusLandmarkEstimates dynamic_landmarks;
 
         //measured/linearized camera pose at the first frame this object has been seen
-        // const gtsam::Pose3 X_world = getInitialOrLinearizedSensorPose(first_seen_frame);
-        gtsam::Pose3 X_world = parent_->initial_camera_poses_.at(first_seen_frame);
+        const gtsam::Pose3 X_world = getInitialOrLinearizedSensorPose(first_seen_frame);
 
         auto measurement_pairs = frame_node->getDynamicMeasurements(object_id);
         for(const auto&[lmk_node, measurement] : measurement_pairs) {
@@ -249,7 +350,7 @@ void RGBDBackendModule::ObjectCentricUpdater::objectUpdateContext(const ObjectUp
             const gtsam::Point3 landmark_measurement_world = X_world * landmark_measurement_local;
 
             dynamic_landmarks.push_back(LandmarkStatus::DynamicInGLobal(
-                landmark_measurement_world,
+                landmark_measurement_local,
                 first_seen_frame,
                 lmk_node->tracklet_id,
                 object_id,
@@ -257,6 +358,7 @@ void RGBDBackendModule::ObjectCentricUpdater::objectUpdateContext(const ObjectUp
             ));
         }
 
+        //keep in local (we say its dynamic in global so the X_world is not used) TODO: clean up code and clarify!
         CloudPerObject object_clouds = groupObjectCloud(dynamic_landmarks, X_world);
         if(object_clouds.size() == 0) {
             //TODO: why does this happen so much!!!
@@ -272,8 +374,7 @@ void RGBDBackendModule::ObjectCentricUpdater::objectUpdateContext(const ObjectUp
         pcl::computeCentroid(dynamic_point_cloud, centroid);
         //TODO: outlier reject?
         gtsam::Point3 translation = pclPointToGtsam(centroid);
-        // gtsam::Pose3 center(gtsam::Rot3::Identity(), translation);
-        gtsam::Pose3 center;
+        gtsam::Pose3 center(gtsam::Rot3::Identity(), X_world.transformTo(translation));
 
         L0_values_.insert2(object_id, std::make_pair(center, first_seen_frame));
         LOG(INFO) << "Initalising L0 for " << object_id << " at frame " << first_seen_frame << " with  " << center;
@@ -282,6 +383,7 @@ void RGBDBackendModule::ObjectCentricUpdater::objectUpdateContext(const ObjectUp
     return L0_values_.at(object_id);
 }
 
+//if we have an optimised motion should use that instead!!!?
 gtsam::Pose3 RGBDBackendModule::ObjectCentricUpdater::computeInitialHFromFrontend(FrameId k, ObjectId object_id) {
     gtsam::Pose3 L_0;
     FrameId s0;
@@ -302,13 +404,15 @@ gtsam::Pose3 RGBDBackendModule::ObjectCentricUpdater::computeInitialHFromFronten
     else {
         Motion3 composed_motion;
 
-        LOG(INFO) << "Computing initial motion from " << s0 << "to"  << k;
+        LOG(INFO) << "Computing initial motion from " << s0 << " to "  << k;
 
         //query from so+1 to k since we index backwards
         for(auto frame = s0+1; frame <=k; frame++) {
 
-            Motion3 motion;
-            CHECK(parent_->hasFrontendMotionEstimate(frame, object_id, &motion));
+            Motion3 motion; //if fail just use identity?
+            if(!parent_->hasFrontendMotionEstimate(frame, object_id, &motion)) {
+                LOG(INFO) << "No frontend motion at frame " << frame << " object id " << object_id;
+            }
 
             composed_motion = motion * composed_motion;
         }

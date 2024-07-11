@@ -28,8 +28,16 @@
 #include <gtsam/base/numericalDerivative.h>
 
 
-namespace dyno {
+// #if GTSAM_VERSION_MAJOR <= 4 && GTSAM_VERSION_MINOR < 3
+// using GtsamJacobianType = boost::optional<gtsam::Matrix&>;
+// #define JACOBIAN_DEFAULT \
+//   {}
+// #else
+// using GtsamJacobianType = gtsam::OptionalMatrixType;
+// #define JACOBIAN_DEFAULT nullptr
+// #endif
 
+namespace dyno {
 
 class ObjectCentricMotionFactor : public gtsam::NoiseModelFactor3<gtsam::Pose3, gtsam::Pose3, gtsam::Point3> {
 

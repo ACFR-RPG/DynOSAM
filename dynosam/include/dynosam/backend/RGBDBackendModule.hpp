@@ -159,7 +159,7 @@ public:
             virtual ObjectPoseMap getObjectPoses() const;
 
             StatusLandmarkEstimates getDynamicLandmarkEstimates(FrameId frame_id) const;
-            StatusLandmarkEstimates getDynamicLandmarkEstimates(FrameId frame_id, ObjectId object_id) const;
+            virtual StatusLandmarkEstimates getDynamicLandmarkEstimates(FrameId frame_id, ObjectId object_id) const;
 
             StatusLandmarkEstimates getStaticLandmarkEstimates(FrameId frame_id) const;
             StatusLandmarkEstimates getFullStaticMap() const;
@@ -423,6 +423,9 @@ public:
             StateQuery<gtsam::Pose3> getObjectMotion(FrameId frame_id, ObjectId object_id) const override;
             StateQuery<gtsam::Pose3> getObjectPose(FrameId frame_id, ObjectId object_id) const override;
             StateQuery<gtsam::Point3> getDynamicLandmark(FrameId frame_id, TrackletId tracklet_id) const override;
+
+            //in thie case we can actually propogate all object points ;)
+            StatusLandmarkEstimates getDynamicLandmarkEstimates(FrameId frame_id, ObjectId object_id) const override;
 
         private:
             const gtsam::FastMap<ObjectId, std::pair<gtsam::Pose3, FrameId>>* L0_values_;

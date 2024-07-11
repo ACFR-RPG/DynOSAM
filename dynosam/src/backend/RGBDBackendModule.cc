@@ -928,8 +928,9 @@ RGBDBackendModule::Updater::updateDynamicObservations(
 }
 
 void RGBDBackendModule::Updater::logBackendFromMap() {
-    LOG(INFO) << "Logging from backend!";
-    BackendLogger logger(loggerPrefix());
+    const auto logging_prefix = this->loggerPrefix();
+    LOG(INFO) << "Logging from backend: " << logging_prefix;
+    BackendLogger logger(logging_prefix);
     const auto& gt_packet_map = parent_->gt_packet_map_;
     auto map = getMap();
     auto accessor = this->accessorFromTheta();
@@ -941,8 +942,6 @@ void RGBDBackendModule::Updater::logBackendFromMap() {
         std::stringstream ss;
         ss << "Logging data from map at frame " << frame_k;
 
-        //get MotionestimateMap
-        // const MotionEstimateMap motions = map->getMotionEstimates(frame_k);
         {
         const MotionEstimateMap motions = accessor->getObjectMotions(frame_k);
         auto result = logger.logObjectMotion(gt_packet_map, frame_k, motions);
@@ -959,16 +958,13 @@ void RGBDBackendModule::Updater::logBackendFromMap() {
             LOG(WARNING) << "Could not log camera pose estimate at frame " << frame_k;
         }
 
-
         logger.logObjectPose(gt_packet_map, frame_k, object_pose_map);
 
 
         if(map->frameExists(frame_k)) {
             //TODO:
             StatusLandmarkEstimates static_map = accessor->getStaticLandmarkEstimates(frame_k);
-            // // LOG(INFO) << "static map size " << static_map.size();
             StatusLandmarkEstimates dynamic_map = accessor->getDynamicLandmarkEstimates(frame_k);
-            // LOG(INFO) << "dynamic map size " << dynamic_map.size();
 
             CHECK(X_k_query); //actually not needed for points in world!!
             logger.logPoints(frame_k, *X_k_query, static_map);
@@ -1025,8 +1021,6 @@ StateQuery<gtsam::Pose3> RGBDBackendModule::LLAccessor::getObjectPose(FrameId fr
     if(!frame_node) {
         return StateQuery<gtsam::Pose3>::InvalidMap();
     }
-
-    // CHECK(frame_node) << "Frame Id is null at frame " << frame_id;
     return this->query<gtsam::Pose3>(
         frame_node->makeObjectPoseKey(object_id)
     );
