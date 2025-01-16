@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <!-- Meta tags for social media banners, these should be filled in appropriatly as they are your "business card" -->
+  <!-- Replace the content tag with appropriate information -->
+  <meta name="description"
+    content="Dynamic SLAM pipeline">
+  <meta property="og:title" content="DynoSAM: Dynamic Object Smoothing and Mapping for Dynamic SLAM" />
+  <meta property="og:description" content=
+    "An open-source framework for Dynamic SLAM that enables the efficient implementation, testing, and comparison of various Dynamic SLAM optimization formulations. Our pipeline integrates static and dynamic measurements into a unified optimization problem solved using factor graphs, simultaneously estimating camera poses, static scene, object motion or poses, and object structures." />
+  <meta property="og:url" content="https://acfr-rpg.github.io/DynOSAM/" />
+  <meta property="og:image" content="https://acfr-rpg.github.io/DynOSAM/static/images/frontend_fig.svg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+
+  <meta name="twitter:title" content="DynoSAM: Dynamic Object Smoothing and Mapping for Dynamic SLAM">
+  <meta name="twitter:description" content="An open-source framework for Dynamic SLAM that enables the efficient implementation, testing, and comparison of various Dynamic SLAM optimization formulations. Our pipeline integrates static and dynamic measurements into a unified optimization problem solved using factor graphs, simultaneously estimating camera poses, static scene, object motion or poses, and object structures.">
+  <!-- Path to banner image, should be in the path listed below. Optimal dimenssions are 1200X600-->
+  <meta name="twitter:image" content="https://acfr-rpg.github.io/DynOSAM/static/images/frontend_fig.svg">
+  <meta name="twitter:card" content="summary_large_image">
+  <!-- Keywords for your paper to be indexed by-->
+  <meta name="keywords" content="SLAM, Dynamic SLAM, factor graphs, visual SLAM">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>DynoSAM: Dynamic Object Smoothing and Mapping for Dynamic SLAM</title>
+  <link rel="icon" type="image/x-icon" href="static/images/acfr_rpg_logo.png">
+
+  <link rel="stylesheet" href="static/css/bootstrap.min.css">
+  <link rel="stylesheet" href="static/css/fontawesome.all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="static/css/index.css">
+
+  <!-- <script src="https://documentcloud.adobe.com/view-sdk/main.js"></script> -->
+  <script defer src="static/js/fontawesome.all.min.js"></script>
+  <script src="static/js/bootstrap.bundle.min.js"></script>
+</head>
+
+
+
+<body>
+  <div class="container">
+    <!-- Title -->
+    <h1 class="pt-5 title">DynoSAM: Open-Source Smoothing and Mapping Framework for Dynamic SLAM</h1>
+    <div class="d-flex flex-row justify-content-center">
+      Jesse Morris, Yiduo Wang, Mikolaj Kliniewski, Viorela Ila
+    </div>
+
+    <div class="w-100 d-flex flex-row justify-content-center mt-4 gap-2">
+      <!-- Paper PDF -->
+      <!-- <a href="https://ieeexplore.ieee.org/abstract/document/10610840" target="_blank" class="btn btn-dark" role="button">
+        <span class="icon">
+          <i class="ai ai-ieee"></i>
+        </span>
+        <span>Paper</span>
+      </a> -->
+
+      <!-- Paper PDF -->
+      <!-- <a href="https://arxiv.org/abs/2312.04031" target="_blank" class="btn btn-dark" role="button">
+        <span class="icon">
+          <i class="ai ai-arxiv"></i>
+        </span>
+        <span>Arxiv</span>
+      </a> -->
+
+      <!-- Code -->
+      <a href="https://github.com/ACFR-RPG/DynOSAM/tree/main" target="_blank" class="btn btn-dark" role="button">
+        <span class="icon">
+          <i class="fab fa-github"></i>
+        </span>
+        <span>Code</span>
+      </a>
+
+      <a href="https://github.com/ACFR-RPG/DynOSAM/tree/main" target="_blank" class="btn btn-dark" role="button">
+        <span class="icon">
+          <i class="fa fa-code"></i>
+        </span>
+        <span>Documentation</span>
+      </a>
+
+    </div>
+
+    <!-- Teaser -->
+
+    <!-- TL;DR
+    <h2>TL;DR</h2>
+    <div class="alert alert-primary tldr mb-4">
+      pixelSplat infers a 3D Gaussian scene from two input views in a single forward pass.
+    </div> -->
+
+    <!-- Abstract -->
+    <h2>Abstract</h2>
+    <p class="mb-4">
+      Traditional Visual Simultaneous Localization and Mapping (vSLAM) systems focus solely on static scene structures, overlooking dynamic elements in the environment.
+Although effective for accurate visual odometry in complex scenarios, these methods discard crucial information about moving objects.
+By incorporating this information into a Dynamic SLAM framework, the motion of dynamic entities can be estimated, enhancing navigation whilst ensuring accurate localization.
+However, the fundamental formulation of Dynamic SLAM remains an open challenge, with no consensus on the optimal approach for accurate motion estimation within a SLAM pipeline.
+
+Therefore, we developed DynoSAM, an open-source framework for Dynamic SLAM that enables the efficient implementation, testing, and comparison of various Dynamic SLAM optimization formulations.
+DynoSAM integrates static and dynamic measurements into a unified optimization problem solved using factor graphs, simultaneously estimating camera poses, static scene, object motion or poses, and object structures.
+We evaluate DynoSAM across diverse simulated and real-world datasets, achieving state-of-the-art motion estimation in indoor and outdoor environments, with substantial improvements over existing systems.
+Additionally, we demonstrate DynoSAM's utility in downstream applications, including 3D reconstruction of dynamic scenes and trajectory prediction, thereby showcasing potential for advancing dynamic object-aware SLAM systems.
+    <!-- </p>
+
+    <div class="sep"></div>
+    <h3>BibTex</h3>
+    <pre class="bib">
+      @article{Morris2024TheIO,
+        title={The Importance of Coordinate Frames in Dynamic SLAM},
+        author={Jesse Morris and Yiduo Wang and Viorela Ila},
+        journal={2024 IEEE International Conference on Robotics and Automation (ICRA)},
+        year={2024},
+        pages={13755-13761},
+        url={https://api.semanticscholar.org/CorpusID:266044146}
+      }
+    </pre> -->
+
+
+    <img src="static/images/frontend_fig.svg" class="img-fluid w-100 mt-2 mb-3" alt="point clouds and depth maps" />
+    <!-- <h2>Comparison vs. Baselines</h2> -->
+    <!-- <p>Our paper compares and evaluates two formulations for Dynamic SLAM, where we joinly optimize for camera poses, object motions/poses as well as static and dynamic
+      points using factor graphs. The first formulation represents dynamic points in the object (or local) frame and is an intuiative approach as it easy to represent a rigid body
+      using points that are static with-respect-to their local body frame. The second formulation represents dynamic points in the world frame which allows direct 3D point measurements to model the object motion in common reference frame.
+      Our work addresses and analyses each approach in terms of estimation accuracy and the systems behaviour during optimization and conclues that the world-centric formulation is the better formulation.
+    </p>
+    <ul> -->
+      <!-- <li><a href="https://yilundu.github.io/wide_baseline/">The Method of Du et al.</a>: A light field renderer
+        designed for wide-baseline novel view synthesis.</li>
+      <li><a href="https://mohammedsuhail.net/gen_patch_neural_rendering/">GPNR</a>: A light field transformer which
+        struggles with only two input views.</li>
+      <li><a href="https://alexyu.net/pixelnerf/">pixelNeRF</a>: A well-known NeRF-based approach which struggles on
+        scene-scale datasets because it does not handle scale ambiguity.</li> -->
+    <!-- </ul> -->
+
+    <!-- <div class="w-100 my-4">
+      <h1 class="pt-5 title">Presentation</h1>
+        <video class="w-100 d-block" autoplay controls muted loop>
+          <source src="static/videos/ICRA2024_1643_presentation.mp4" type="video/mp4">
+        </video>
+      </div> -->
+
+  <div class="w-100 my-4">
+    <h1 class="pt-5 title">Supplementary Video</h1>
+      <video class="w-100 d-block" autoplay controls muted loop>
+        <source src="static/videos/supplementary.mp4" type="video/mp4">
+      </video>
+    </div>
+
+    <!-- Comparisons -->
+    <!-- <h2>Comparison vs. Baselines</h2>
+    <p>We compare our method against the following baselines:</p>
+    <ul>
+      <li><a href="https://yilundu.github.io/wide_baseline/">The Method of Du et al.</a>: A light field renderer
+        designed for wide-baseline novel view synthesis.</li>
+      <li><a href="https://mohammedsuhail.net/gen_patch_neural_rendering/">GPNR</a>: A light field transformer which
+        struggles with only two input views.</li>
+      <li><a href="https://alexyu.net/pixelnerf/">pixelNeRF</a>: A well-known NeRF-based approach which struggles on
+        scene-scale datasets because it does not handle scale ambiguity.</li>
+    </ul>
+
+    <h3>ACID Dataset</h3>
+    <img src="static/images/comparison_acid.svg" class="img-fluid w-100 mt-2 mb-3" alt="comparison on ACID dataset" />
+    <div class="border w-100 mb-4">
+      <video class="w-100 d-block" autoplay controls muted loop>
+        <source src="static/videos/output_acid.mp4" type="video/mp4">
+      </video>
+    </div>
+
+    <h3>Real Estate 10k Dataset</h3>
+    <img src="static/images/comparison_re10k.svg" class="img-fluid w-100 mt-2 mb-3" alt="comparison on ACID dataset" />
+    <div class="border w-100 mb-4">
+      <video class="w-100 d-block" autoplay controls muted loop>
+        <source src="static/videos/output_re10k.mp4" type="video/mp4">
+      </video>
+    </div> -->
+
+    <!-- Point Clouds -->
+    <!-- <h2>3D Gaussian Point Clouds</h2>
+    <p>Because pixelSplat infers a set of 3D Gaussians, we can visualize these Gaussians and render them to produce
+      depth maps. Since the Real Estate 10k and ACID datasets contain many areas with ambiguous depth (e.g., large,
+      textureless surfaces like interior walls), we fine-tune pixelSplat for 50,000 iterations using a depth regularizer
+      before exporting 3D Gaussian point clouds.</p>
+    <img src="static/images/point_clouds.svg" class="img-fluid w-100 mt-2 mb-3" alt="point clouds and depth maps" /> -->
+
+    <!-- <p>Use the interactive 3D viewer below to explore a set of 3D Gaussians generated by pixelSplat. However, note that the renderings produced by the interactive Spline viewer do not exactly match those produced by the original CUDA-based implementation of 3D Gaussian splatting.</p>
+    <iframe src='https://my.spline.design/untitled-56829706657b783ffda8a7682085e706/' frameborder='0' width='100%' height='400px'></iframe> -->
+
+    <!-- Footer -->
+    <footer class="border-top mt-5 py-4">
+      This page's code uses elements from this <a href="https://github.com/eliahuhorwitz/Academic-project-page-template"
+        target="_blank">Academic Project Page
+        Template</a>.
+    </footer>
+  </div>
+</body>
+
+</html>
