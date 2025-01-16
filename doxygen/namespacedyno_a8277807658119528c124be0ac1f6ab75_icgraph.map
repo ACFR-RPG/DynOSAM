@@ -1,0 +1,4 @@
+<map id="dyno::exponentialOffsetId" name="dyno::exponentialOffsetId">
+<area shape="rect" id="node1" title="Map a potentially infinite number of ids to a never repeating pattern in [0, 1]." alt="" coords="221,5,412,31"/>
+<area shape="rect" id="node2" href="$structdyno_1_1Color.html#a3fbcccc0bd349c0e60395a80fc2939a3" title="Generate a sequence of never repeating colors in the rainbow spectrum." alt="" coords="5,5,173,31"/>
+</map>

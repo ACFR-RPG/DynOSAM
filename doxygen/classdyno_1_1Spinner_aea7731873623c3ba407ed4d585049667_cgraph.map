@@ -1,0 +1,4 @@
+<map id="dyno::Spinner::~Spinner" name="dyno::Spinner::~Spinner">
+<area shape="rect" id="node1" title=" " alt="" coords="5,5,184,31"/>
+<area shape="rect" id="node2" href="$classdyno_1_1Spinner.html#af55891df661602adcaad443f0f48543b" title="Shutdown the spinner &#45; once stopped cannot be restarted. Used to ensure the thread closes safely...." alt="" coords="232,5,415,31"/>
+</map>

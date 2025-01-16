@@ -1,0 +1,7 @@
+<map id="dyno::Map::landmarkExists" name="dyno::Map::landmarkExists">
+<area shape="rect" id="node1" title="Check a landmark exists with the requested tracklet id." alt="" coords="801,38,1000,63"/>
+<area shape="rect" id="node2" href="$classdyno_1_1Map.html#a0f795b64fd5ae27c562c93ee0faf29dc" title=" " alt="" coords="296,5,508,45"/>
+<area shape="rect" id="node4" href="$classdyno_1_1Map.html#abb7ce213fd48cf913a8429255f57ad74" title="Get the Landmark object. If the landmark does not exist, return nullptr." alt="" coords="569,63,753,89"/>
+<area shape="rect" id="node3" href="$classdyno_1_1Map.html#abe87e9c89e1daf6f89e87d90f8f9320e" title="Update the map structure given new measurements." alt="" coords="5,13,235,38"/>
+<area shape="rect" id="node5" href="$classdyno_1_1Map.html#a1e89be730da6bc666ef43463a1f3a739" title="Get the (by output&#45;argument) object id for some tracked point. Function returns false if the landmark..." alt="" coords="283,70,521,95"/>
+</map>

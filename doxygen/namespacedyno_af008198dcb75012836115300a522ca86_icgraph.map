@@ -1,0 +1,15 @@
+<map id="dyno::determineOutlierIds" name="dyno::determineOutlierIds">
+<area shape="rect" id="node1" title="From a set a tracklets and a subset (of the tracklet) inliers, calculate the remaining subset of outl..." alt="" coords="1108,253,1300,278"/>
+<area shape="rect" id="node2" href="$classdyno_1_1EgoMotionSolver.html#a39f88d947e0e5dbb4b3d59bf4dac4548" title=" " alt="" coords="843,85,1024,125"/>
+<area shape="rect" id="node6" href="$classdyno_1_1ObjectMotionSovler.html#a45c8404687be14c0a548a8b6800aa985" title=" " alt="" coords="817,181,1050,221"/>
+<area shape="rect" id="node10" href="$classdyno_1_1ObjectMotionSovler.html#a1b847558346a89cfa173de6810e952a3" title=" " alt="" coords="807,245,1060,285"/>
+<area shape="rect" id="node11" href="$classdyno_1_1MotionOnlyRefinementOptimizer.html#ab9ea6586ab1c0a64f008a05a38350aae" title=" " alt="" coords="827,309,1039,349"/>
+<area shape="rect" id="node12" href="$classdyno_1_1KltFeatureTracker.html#a24e98ff72741e59ed48f5b14d5ecaf9b" title="Tracks features using KLT tracker between the previous image and the current one." alt="" coords="846,373,1021,413"/>
+<area shape="rect" id="node3" href="$classdyno_1_1EgoMotionSolver.html#a63b3bc2d024df5c56cfc9f6c7646f2af" title="Runs 2d&#45;2d PnP with optional Rotation (ie. from IMU)" alt="" coords="525,5,759,45"/>
+<area shape="rect" id="node4" href="$classdyno_1_1EgoMotionSolver.html#a6b176910a29c44e52305c1ce68ab656c" title=" " alt="" coords="525,69,759,109"/>
+<area shape="rect" id="node5" href="$classdyno_1_1EgoMotionSolver.html#a2a78b0b807853a0a0aa90d814bf07a18" title=" " alt="" coords="525,133,759,173"/>
+<area shape="rect" id="node7" href="$classdyno_1_1RGBDInstanceFrontendModule.html#ada2fe5067e732aa4734d96fc5e80f7f9" title=" " alt="" coords="536,197,748,237"/>
+<area shape="rect" id="node8" href="$classdyno_1_1RGBDInstanceFrontendModule.html#a9bfb2e31fd68b5b6d6ffb834b6c201a1" title=" " alt="" coords="265,197,477,237"/>
+<area shape="rect" id="node9" href="$classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2" title=" " alt="" coords="5,197,217,237"/>
+<area shape="rect" id="node13" href="$classdyno_1_1KltFeatureTracker.html#a8b8b5f33830f3b76205863b9236539e4" title="Track features between frames k&#45;1 and the current set of images (at k)." alt="" coords="555,373,729,413"/>
+</map>

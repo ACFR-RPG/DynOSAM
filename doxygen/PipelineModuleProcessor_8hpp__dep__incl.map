@@ -1,0 +1,14 @@
+<map id="dynosam/include/dynosam/pipeline/PipelineModuleProcessor.hpp" name="dynosam/include/dynosam/pipeline/PipelineModuleProcessor.hpp">
+<area shape="rect" id="node1" title=" " alt="" coords="165,5,437,45"/>
+<area shape="rect" id="node2" href="$BackendPipeline_8hpp.html" title=" " alt="" coords="69,93,288,133"/>
+<area shape="rect" id="node11" href="$FrontendPipeline_8hpp.html" title=" " alt="" coords="313,93,535,133"/>
+<area shape="rect" id="node3" href="$PipelineManager_8hpp.html" title=" " alt="" coords="192,181,411,221"/>
+<area shape="rect" id="node10" href="$BackendPipeline_8cc.html" title=" " alt="" coords="5,181,168,221"/>
+<area shape="rect" id="node4" href="$dyno__sam_8cc.html" title=" " alt="" coords="17,269,196,309"/>
+<area shape="rect" id="node5" href="$PipelineManager_8cc.html" title=" " alt="" coords="221,269,382,309"/>
+<area shape="rect" id="node6" href="$PipelineRos_8hpp.html" title=" " alt="" coords="407,269,628,309"/>
+<area shape="rect" id="node7" href="$backend__experiments__node_8cc.html" title=" " alt="" coords="175,357,385,397"/>
+<area shape="rect" id="node8" href="$dynosam__node_8cc.html" title=" " alt="" coords="409,357,625,397"/>
+<area shape="rect" id="node9" href="$PipelineRos_8cc.html" title=" " alt="" coords="650,357,838,397"/>
+<area shape="rect" id="node12" href="$FrontendPipeline_8cc.html" title=" " alt="" coords="435,181,599,221"/>
+</map>

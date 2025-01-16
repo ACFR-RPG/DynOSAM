@@ -1,0 +1,6 @@
+<map id="dyno::EgoMotionSolver::constructTrackletInliers" name="dyno::EgoMotionSolver::constructTrackletInliers">
+<area shape="rect" id="node1" title=" " alt="" coords="287,69,468,109"/>
+<area shape="rect" id="node2" href="$classdyno_1_1EgoMotionSolver.html#a63b3bc2d024df5c56cfc9f6c7646f2af" title="Runs 2d&#45;2d PnP with optional Rotation (ie. from IMU)" alt="" coords="5,5,239,45"/>
+<area shape="rect" id="node3" href="$classdyno_1_1EgoMotionSolver.html#a6b176910a29c44e52305c1ce68ab656c" title=" " alt="" coords="5,69,239,109"/>
+<area shape="rect" id="node4" href="$classdyno_1_1EgoMotionSolver.html#a2a78b0b807853a0a0aa90d814bf07a18" title=" " alt="" coords="5,133,239,173"/>
+</map>

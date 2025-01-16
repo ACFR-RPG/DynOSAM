@@ -1,0 +1,4 @@
+<map id="dyno::FrontendModule::FrontendModule" name="dyno::FrontendModule::FrontendModule">
+<area shape="rect" id="node1" title=" " alt="" coords="5,13,172,53"/>
+<area shape="rect" id="node2" href="$classdyno_1_1ModuleBase.html#a3a2819e9de31d4057773353d92925986" title="Registeres a function callback to be triggered prior to nominal/bootstrapSpin being called." alt="" coords="220,5,479,60"/>
+</map>

@@ -1,0 +1,8 @@
+<map id="dyno::Color::bgra" name="dyno::Color::bgra">
+<area shape="rect" id="node1" title="Return in BGRA format." alt="" coords="499,109,632,134"/>
+<area shape="rect" id="node2" href="$classdyno_1_1FeatureTrackerBase.html#aa902950650699301214f776a905e3b77" title=" " alt="" coords="253,5,443,45"/>
+<area shape="rect" id="node3" href="$structdyno_1_1ObjectPoseGT.html#ada6ef6e0253d33690945f1d8dcf7be45" title="Draws the object label and bounding box on the provided image." alt="" coords="271,69,425,109"/>
+<area shape="rect" id="node4" href="$classdyno_1_1Frame.html#a5e2adcdcb96143552fa891351b94dd22" title="From the detected list of objects (in Frame::object_observations_) draw the object masks as labelled ..." alt="" coords="247,133,449,173"/>
+<area shape="rect" id="node5" href="$classdyno_1_1FrontendDisplayRos.html#a92d22245bb27f232c7ae3bf8af7d6211" title=" " alt="" coords="245,197,451,237"/>
+<area shape="rect" id="node6" href="$classdyno_1_1FrontendDisplayRos.html#ab73f0433ed01e79b3375afd7a512a26c" title=" " alt="" coords="5,197,197,237"/>
+</map>

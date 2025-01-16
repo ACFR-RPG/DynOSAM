@@ -1,0 +1,15 @@
+<map id="dyno::Map::updateObservations" name="dyno::Map::updateObservations">
+<area shape="rect" id="node1" title="Update the map structure given new measurements." alt="" coords="5,268,235,294"/>
+<area shape="rect" id="node2" href="$classdyno_1_1Map.html#a0f795b64fd5ae27c562c93ee0faf29dc" title=" " alt="" coords="283,133,495,173"/>
+<area shape="rect" id="node10" href="$classdyno_1_1TrackedValueStatus.html#ab8df58b0063e956fe0118ec3db72db9d" title="Get frame id (k) for this status." alt="" coords="295,197,483,237"/>
+<area shape="rect" id="node11" href="$classdyno_1_1TrackedValueStatus.html#a1741e83bf5442c885da98c9c5bb71f08" title="Returns true if the object lavel is equal to dyno::background_label." alt="" coords="295,261,483,301"/>
+<area shape="rect" id="node12" href="$classdyno_1_1TrackedValueStatus.html#ae90b3059d173a9354cc6a55a55ef80ac" title="Get object id (j) for this status." alt="" coords="295,325,483,365"/>
+<area shape="rect" id="node13" href="$classdyno_1_1TrackedValueStatus.html#a663881d0ecfc39e15ea779c9a69ea0c9" title="Get tracklet id (i) for this status." alt="" coords="295,389,483,429"/>
+<area shape="rect" id="node3" href="$classdyno_1_1Map.html#a03e8a74c8bb5177056a67b74b2d8c982" title="Check a frame exists at the requested frame id." alt="" coords="786,15,962,40"/>
+<area shape="rect" id="node4" href="$classdyno_1_1Map.html#a245a6857bfee37eae36e78fd48946680" title="Get the Frame object. If the frame does not exist, return nullptr." alt="" coords="555,40,715,66"/>
+<area shape="rect" id="node5" href="$classdyno_1_1Map.html#abb7ce213fd48cf913a8429255f57ad74" title="Get the Landmark object. If the landmark does not exist, return nullptr." alt="" coords="543,90,727,115"/>
+<area shape="rect" id="node6" href="$classdyno_1_1Map.html#ae345dda6cb4e3ab5dfcc2abb9c04d8bb" title="Check a landmark exists with the requested tracklet id." alt="" coords="775,115,973,140"/>
+<area shape="rect" id="node7" href="$classdyno_1_1Map.html#ac7781cb581fbf46f1d11622a002f81c7" title="Get the Object object. If the object does not exist, return nullptr." alt="" coords="554,191,715,216"/>
+<area shape="rect" id="node8" href="$classdyno_1_1Map.html#a72de703a15213ecb3c56705f381472d6" title="Check that an object exists with the requested object id." alt="" coords="785,216,963,242"/>
+<area shape="rect" id="node9" href="$classdyno_1_1Map.html#a35c66e282f9f5f9aba8efe9653ab3510" title=" " alt="" coords="566,292,703,318"/>
+</map>

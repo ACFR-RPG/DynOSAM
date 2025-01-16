@@ -1,0 +1,14 @@
+<map id="dyno::ThreadsafeTemporalBuffer::getNewestValue" name="dyno::ThreadsafeTemporalBuffer::getNewestValue">
+<area shape="rect" id="node1" title=" " alt="" coords="1156,101,1351,141"/>
+<area shape="rect" id="node2" href="$classdyno_1_1ThreadsafeImuBuffer.html#a50cd006e61ecb908cec8ede163e05cb5" title=" " alt="" coords="909,69,1108,109"/>
+<area shape="rect" id="node7" href="$classdyno_1_1ThreadsafeImuBuffer.html#ac31f71d02e6bd3d152b63ece9b48c568" title=" " alt="" coords="909,133,1108,173"/>
+<area shape="rect" id="node3" href="$classdyno_1_1ThreadsafeImuBuffer.html#a4620846c124831ecaa7c871fd8616583" title=" " alt="" coords="655,5,854,45"/>
+<area shape="rect" id="node6" href="$classdyno_1_1DataInterfacePipelineImu.html#a689536a74ae1875e2ed59c628ebcaf88" title=" " alt="" coords="653,69,856,109"/>
+<area shape="rect" id="node4" href="$classdyno_1_1DataInterfacePipelineImu.html#a1645ef07d1fca9349fd7587d8905be8f" title=" " alt="" coords="365,5,567,45"/>
+<area shape="rect" id="node5" href="$classdyno_1_1DataProvider.html#ae57527fb3be1d1894e0f5f7ec0568390" title=" " alt="" coords="71,5,218,45"/>
+<area shape="rect" id="node8" href="$classdyno_1_1ThreadsafeImuBuffer.html#a79a8a16aa1d6e0ba523456a4971493f0" title=" " alt="" coords="648,133,861,173"/>
+<area shape="rect" id="node10" href="$classdyno_1_1ThreadsafeImuBuffer.html#a801e12f38e80e2f87ba7293bfa2bfa58" title=" " alt="" coords="27,158,263,213"/>
+<area shape="rect" id="node9" href="$classdyno_1_1ThreadsafeImuBuffer.html#a0844b1d7a4129383d8d0e08165df1de5" title="Return a list of the IMU measurements between the specified timestamps. The IMU values get interpolat..." alt="" coords="348,133,584,173"/>
+<area shape="rect" id="node11" href="$classdyno_1_1ThreadsafeImuBuffer.html#a08ffa136ec227e9b34ce7f16fba4c01e" title="Return a list of the IMU measurements between the specified timestamps. ONLY the IMU newest value get..." alt="" coords="332,69,600,109"/>
+<area shape="rect" id="node12" href="$classdyno_1_1DataInterfacePipelineImu.html#a233e9d7d80e5caee6882ea5007a3fef9" title="getTimeSyncedImuMeasurements Time synchronizes the IMU buffer with the given timestamp (this is typic..." alt="" coords="5,69,284,109"/>
+</map>

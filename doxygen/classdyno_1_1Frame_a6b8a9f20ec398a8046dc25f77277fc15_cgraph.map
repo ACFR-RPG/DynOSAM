@@ -1,0 +1,6 @@
+<map id="dyno::Frame::numStaticUsableFeatures" name="dyno::Frame::numStaticUsableFeatures">
+<area shape="rect" id="node1" title="Gets the total number of static inlier features." alt="" coords="5,5,228,45"/>
+<area shape="rect" id="node2" href="$classdyno_1_1Frame.html#ab036fb95341546a33d93bdd54d871452" title=" " alt="" coords="276,5,467,45"/>
+<area shape="rect" id="node3" href="$classdyno_1_1FeatureContainer.html#ab6187d4cb946a12bcea18482caf4e115" title=" " alt="" coords="515,5,689,45"/>
+<area shape="rect" id="node4" href="$classdyno_1_1Feature.html#af6d8414c9ac11dc48a8c6a80c4eb4635" title=" " alt="" coords="737,13,912,38"/>
+</map>

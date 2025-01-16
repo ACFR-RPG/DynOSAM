@@ -1,0 +1,12 @@
+<map id="dyno::RGBDInstanceFrontendModule::solveCameraMotion" name="dyno::RGBDInstanceFrontendModule::solveCameraMotion">
+<area shape="rect" id="node1" title="Solves PnP between frame_k&#45;1 and frame_k using the tracked correspondances to estimate the frame of t..." alt="" coords="5,149,217,189"/>
+<area shape="rect" id="node2" href="$classdyno_1_1EgoMotionSolver.html#a77c1966709d200fdb6464073f1e6f88b" title="Runs 3d&#45;2d PnP with optional Rotation (i.e from IMU)" alt="" coords="265,29,499,69"/>
+<area shape="rect" id="node3" href="$classdyno_1_1EgoMotionSolver.html#ac7f18ee805d436d46193e550cbc558be" title=" " alt="" coords="265,117,499,157"/>
+<area shape="rect" id="node4" href="$classdyno_1_1OpticalFlowAndPoseOptimizer.html#ad96216e768fc5dea6e6411222bac0ddd" title="Builds the factor&#45;graph problem using the set of specificed correspondences (tracklets) in frame k&#45;1 ..." alt="" coords="271,181,493,221"/>
+<area shape="rect" id="node10" href="$namespacedyno.html#a809604e427db44cbf532a545c71a3b5d" title=" " alt="" coords="323,246,441,271"/>
+<area shape="rect" id="node5" href="$classdyno_1_1OpticalFlowAndPoseOptimizer.html#af1037c8661213cd6e602b30918b6b3ec" title=" " alt="" coords="547,174,777,229"/>
+<area shape="rect" id="node6" href="$classdyno_1_1Feature.html#a37dbbe8da704c2f51e237d38760534fb" title=" " alt="" coords="839,124,1019,164"/>
+<area shape="rect" id="node8" href="$structdyno_1_1functional__keypoint.html#a3896d96a6f95b5311ae768cdd0ad97e8" title=" " alt="" coords="825,189,1032,214"/>
+<area shape="rect" id="node9" href="$structdyno_1_1functional__keypoint.html#a24933450cad8bc70b7b76b339756cd94" title=" " alt="" coords="825,238,1032,263"/>
+<area shape="rect" id="node7" href="$classdyno_1_1Feature.html#ada9f9980d950874a7a157a82b9921f8a" title="Gets keypoint observation." alt="" coords="1080,131,1255,157"/>
+</map>

@@ -1,0 +1,4 @@
+<map id="dyno::MotionOnlyRefinementOptimizer" name="dyno::MotionOnlyRefinementOptimizer">
+<area shape="rect" id="node1" title="Jointly refined the motion of an object using the 3D&#45;motion&#45;residual." alt="" coords="5,108,217,148"/>
+<area shape="rect" id="node2" href="$structdyno_1_1MotionOnlyRefinementOptimizer_1_1Params.html" title=" " alt="" coords="5,5,217,45"/>
+</map>

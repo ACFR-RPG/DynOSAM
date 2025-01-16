@@ -1,0 +1,10 @@
+<map id="dyno::KittiObjectPoseFolder::onPathInit" name="dyno::KittiObjectPoseFolder::onPathInit">
+<area shape="rect" id="node1" title="Setup ifstream and read everything in the data vector." alt="" coords="5,96,208,136"/>
+<area shape="rect" id="node2" href="$classdyno_1_1KittiObjectPoseFolder.html#ac6679f59966e1a46c93dbbb3629a468d" title=" " alt="" coords="284,64,487,104"/>
+<area shape="rect" id="node8" href="$classdyno_1_1DataFolder.html#ad832c1d501f9c40eefde4cfc3633e218" title=" " alt="" coords="256,128,515,168"/>
+<area shape="rect" id="node3" href="$namespacedyno_1_1utils.html#ae54978140c5727f3962fc255cad59952" title=" " alt="" coords="563,64,757,104"/>
+<area shape="rect" id="node4" href="$namespacedyno_1_1utils.html#abb54423b0987b5e72490f8cd223c5a02" title=" " alt="" coords="805,35,1008,75"/>
+<area shape="rect" id="node7" href="$namespacedyno.html#a362927fda6438780973f55111b77455c" title=" " alt="" coords="871,99,943,125"/>
+<area shape="rect" id="node5" href="$namespacedyno_1_1utils.html#aee4e3c7b880b6eab9a9593cf8d4ec024" title=" " alt="" coords="1071,5,1266,45"/>
+<area shape="rect" id="node6" href="$namespacedyno_1_1utils.html#ab677ec5a1e4a8e113d992eb5fd0e3abe" title=" " alt="" coords="1056,70,1281,95"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="dyno::VisualMeasurementStatus&lt; T &gt;" name="dyno::VisualMeasurementStatus&lt; T &gt;">
+<area shape="rect" id="node1" title="Defines a single visual measurement with tracking label, object id, frame id and measurement." alt="" coords="5,183,276,208"/>
+<area shape="rect" id="node2" href="$classdyno_1_1TrackedValueStatus.html" title=" " alt="" coords="27,108,254,133"/>
+<area shape="rect" id="node3" href="$structdyno_1_1ReferenceFrameValue.html" title=" " alt="" coords="38,5,243,45"/>
+</map>

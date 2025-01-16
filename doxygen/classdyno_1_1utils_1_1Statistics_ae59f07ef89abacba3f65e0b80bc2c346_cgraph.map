@@ -1,0 +1,13 @@
+<map id="dyno::utils::Statistics::WritePerModuleSummariesToCsvFile" name="dyno::utils::Statistics::WritePerModuleSummariesToCsvFile">
+<area shape="rect" id="node1" title=" " alt="" coords="5,124,275,164"/>
+<area shape="rect" id="node2" href="$classdyno_1_1utils_1_1Statistics.html#a14b340e8fa254f8c17bcbf564ebc63d6" title="Gets the module name from the tag. If the tag does not have a module (e.g. backend&#45;pipeline has no &quot;...." alt="" coords="323,5,516,45"/>
+<area shape="rect" id="node3" href="$classdyno_1_1utils_1_1Statistics.html#a755d6b65c1cbd3b81bf3b431fd6e8bfd" title=" " alt="" coords="771,248,929,288"/>
+<area shape="rect" id="node4" href="$classdyno_1_1utils_1_1Statistics.html#ab43441dcd688b3bf03662688e1984602" title=" " alt="" coords="331,216,507,256"/>
+<area shape="rect" id="node11" href="$classdyno_1_1CsvWriter.html#a7f16cca8c1dbb2cde03e75942895af31" title=" " alt="" coords="336,305,503,330"/>
+<area shape="rect" id="node5" href="$classdyno_1_1utils_1_1Statistics.html#abb74f8626cf1f13c12ce22c91cdfe3c8" title=" " alt="" coords="564,120,723,160"/>
+<area shape="rect" id="node6" href="$classdyno_1_1utils_1_1Statistics.html#a6b2b711215da85f19bbe551d4dea415f" title=" " alt="" coords="564,184,723,224"/>
+<area shape="rect" id="node7" href="$classdyno_1_1utils_1_1Statistics.html#a6b371ebc20e6ab63b8d750c7a84e236e" title=" " alt="" coords="564,248,723,288"/>
+<area shape="rect" id="node8" href="$classdyno_1_1utils_1_1Statistics.html#ad0f76a589eaeaac28ea4b195625c6371" title=" " alt="" coords="564,312,723,352"/>
+<area shape="rect" id="node9" href="$classdyno_1_1utils_1_1Statistics.html#aa8127f7860f34bf0d26e4ba790bfb87d" title=" " alt="" coords="564,376,723,416"/>
+<area shape="rect" id="node10" href="$classdyno_1_1utils_1_1Statistics.html#a3b9c4c2405c106ace4cf05b22ea4d240" title=" " alt="" coords="564,440,723,480"/>
+</map>

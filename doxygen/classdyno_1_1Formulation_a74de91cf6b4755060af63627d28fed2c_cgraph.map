@@ -1,0 +1,4 @@
+<map id="dyno::Formulation::updateStaticObservations" name="dyno::Formulation::updateStaticObservations">
+<area shape="rect" id="node1" title="Updates the static&#45;point part of the factor graph for frame k. This contains all the bookeeping logic..." alt="" coords="5,5,196,45"/>
+<area shape="rect" id="node2" href="$structdyno_1_1UpdateObservationResult.html#a002ddcad2bc2b520dd274acc8370d0a9" title=" " alt="" coords="244,5,473,45"/>
+</map>

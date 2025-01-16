@@ -1,0 +1,4 @@
+<map id="dyno::getLine" name="dyno::getLine">
+<area shape="rect" id="node1" title="Gets the next line from the input ifstream and returns it as split string (using white space as the d..." alt="" coords="5,5,116,31"/>
+<area shape="rect" id="node2" href="$namespacedyno.html#a0dfb0dda33d838e13818fcc0d2bdb7f3" title="Takes an input string and splits it using white space (&quot; &quot;) as the delimiter. Trims any newline/carri..." alt="" coords="164,5,307,31"/>
+</map>

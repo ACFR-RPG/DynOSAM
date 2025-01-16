@@ -1,0 +1,8 @@
+<map id="dyno::ExternalFlowFeatureTracker::constructStaticFeature" name="dyno::ExternalFlowFeatureTracker::constructStaticFeature">
+<area shape="rect" id="node1" title=" " alt="" coords="5,88,228,128"/>
+<area shape="rect" id="node2" href="$classdyno_1_1Feature.html#a37dbbe8da704c2f51e237d38760534fb" title=" " alt="" coords="305,5,485,45"/>
+<area shape="rect" id="node4" href="$classdyno_1_1ImageContainerSubset.html#a11ceb8e3325f28bf683b6480d53427a0" title="Gets the corresponding image (cv::Mat) corresponding to the requested ImageType. ImageType must be in..." alt="" coords="276,70,515,95"/>
+<area shape="rect" id="node5" href="$structdyno_1_1functional__keypoint.html#a3896d96a6f95b5311ae768cdd0ad97e8" title=" " alt="" coords="292,119,499,145"/>
+<area shape="rect" id="node6" href="$structdyno_1_1functional__keypoint.html#a24933450cad8bc70b7b76b339756cd94" title=" " alt="" coords="292,169,499,194"/>
+<area shape="rect" id="node3" href="$classdyno_1_1Feature.html#ada9f9980d950874a7a157a82b9921f8a" title="Gets keypoint observation." alt="" coords="563,13,737,38"/>
+</map>

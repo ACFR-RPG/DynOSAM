@@ -1,0 +1,4 @@
+<map id="dyno::FunctionalDetector::FactoryCreate" name="dyno::FunctionalDetector::FactoryCreate">
+<area shape="rect" id="node1" title="Factory method that uses the TrackerParams::feature_detector_type to determine the detector." alt="" coords="228,5,413,45"/>
+<area shape="rect" id="node2" href="$classdyno_1_1KltFeatureTracker.html#aba9bd1f20496da2a1a1810658c1942a9" title=" " alt="" coords="5,5,180,45"/>
+</map>

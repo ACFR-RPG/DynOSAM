@@ -1,0 +1,4 @@
+<map id="dyno::MeasurementWithCovariance::measurement" name="dyno::MeasurementWithCovariance::measurement">
+<area shape="rect" id="node1" title=" " alt="" coords="308,13,563,53"/>
+<area shape="rect" id="node2" href="$classdyno_1_1MeasurementWithCovariance.html#abcb9f871ce338e8f5cbc3e89040f12e4" title="Very important to have these cast operators so we can use Base::asType to cast to the internal data." alt="" coords="5,5,260,60"/>
+</map>

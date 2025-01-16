@@ -1,0 +1,10 @@
+<map id="dyno::FeatureTrackerBase" name="dyno::FeatureTrackerBase">
+<area shape="rect" id="node1" title=" " alt="" coords="773,218,963,243"/>
+<area shape="rect" id="node2" href="$structdyno_1_1TrackerParams.html" title="Params for the feature tracker but also the feature detector." alt="" coords="455,157,611,182"/>
+<area shape="rect" id="node3" href="$structdyno_1_1TrackerParams_1_1AnmsParams.html" title=" " alt="" coords="31,5,187,45"/>
+<area shape="rect" id="node4" href="$structdyno_1_1TrackerParams_1_1SubPixelCornerRefinementParams.html" title=" " alt="" coords="7,70,210,125"/>
+<area shape="rect" id="node5" href="$structdyno_1_1TrackerParams_1_1GFFTParams.html" title=" " alt="" coords="31,149,187,189"/>
+<area shape="rect" id="node6" href="$structdyno_1_1TrackerParams_1_1OrbParams.html" title=" " alt="" coords="31,213,187,253"/>
+<area shape="rect" id="node7" href="$classThreadsafeQueue.html" title=" " alt="" coords="445,242,620,267"/>
+<area shape="rect" id="node8" href="$classThreadsafeQueueBase.html" title=" " alt="" coords="5,278,212,303"/>
+</map>

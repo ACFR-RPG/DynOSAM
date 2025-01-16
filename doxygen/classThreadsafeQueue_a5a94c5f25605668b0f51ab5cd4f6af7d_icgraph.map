@@ -1,0 +1,4 @@
+<map id="ThreadsafeQueue::pop" name="ThreadsafeQueue::pop">
+<area shape="rect" id="node1" title="Pop without blocking, just checks once if the queue is empty. Returns true if the value could be retr..." alt="" coords="256,13,425,38"/>
+<area shape="rect" id="node2" href="$classdyno_1_1DataInterfacePipeline.html#a9173a04b9b1ac30f2de87597b3be2200" title=" " alt="" coords="5,5,208,45"/>
+</map>

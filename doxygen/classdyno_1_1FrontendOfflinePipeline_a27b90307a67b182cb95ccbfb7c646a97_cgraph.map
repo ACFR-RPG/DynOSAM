@@ -1,0 +1,6 @@
+<map id="dyno::FrontendOfflinePipeline::process" name="dyno::FrontendOfflinePipeline::process">
+<area shape="rect" id="node1" title=" " alt="" coords="5,37,220,77"/>
+<area shape="rect" id="node2" href="$classdyno_1_1FrontendOfflinePipeline.html#a9c7c10483b4d88d899d6ff471434ad0d" title="Virtual function that should check if (any of the) input queues have work to do." alt="" coords="268,5,483,45"/>
+<area shape="rect" id="node3" href="$classdyno_1_1PipelineBase.html#a3fe02ed3b9e50f0da3b1619216a1caca" title=" " alt="" coords="302,69,449,109"/>
+<area shape="rect" id="node4" href="$classdyno_1_1PipelineBase.html#a94a7ee9d6d2139a6de9337b4bfb76546" title="Virtual function that should shutdown all associated queues. Generally this should shutdown input que..." alt="" coords="531,69,677,109"/>
+</map>

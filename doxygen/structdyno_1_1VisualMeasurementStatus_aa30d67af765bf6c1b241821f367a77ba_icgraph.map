@@ -1,0 +1,4 @@
+<map id="dyno::VisualMeasurementStatus::StaticInGlobal" name="dyno::VisualMeasurementStatus::StaticInGlobal">
+<area shape="rect" id="node1" title="Constructs a static Visual Measurement Status in the global frame." alt="" coords="287,5,520,45"/>
+<area shape="rect" id="node2" href="$classdyno_1_1Accessor.html#a6ac7f822f520fac8f3ee93d24230abe4" title="Get all static landmarks at time&#45;step k." alt="" coords="5,5,239,45"/>
+</map>

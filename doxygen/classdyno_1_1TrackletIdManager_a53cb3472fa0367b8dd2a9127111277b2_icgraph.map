@@ -1,0 +1,11 @@
+<map id="dyno::TrackletIdManager::instance" name="dyno::TrackletIdManager::instance">
+<area shape="rect" id="node1" title=" " alt="" coords="961,107,1144,147"/>
+<area shape="rect" id="node2" href="$classdyno_1_1KltFeatureTracker.html#af29a1c043d097f368a86b346bcfe33e0" title="Construct a new static feature with a unique tracklet id." alt="" coords="708,13,913,53"/>
+<area shape="rect" id="node6" href="$classdyno_1_1KltFeatureTracker.html#a009ab3664d0280cb1fc6cb8b37a7a570" title="A more concise static feature constructor that the one in ExternalFlowFeatureTracker." alt="" coords="451,70,660,125"/>
+<area shape="rect" id="node7" href="$classdyno_1_1FeatureTracker.html#aeaff1c244270c93747ce92b36163c38d" title=" " alt="" coords="732,135,889,175"/>
+<area shape="rect" id="node9" href="$classdyno_1_1ExternalFlowFeatureTracker.html#a28dabdf87c24770c7541ad82b54cdad0" title="Base function to perform feature tracking on static points." alt="" coords="713,199,909,239"/>
+<area shape="rect" id="node3" href="$classdyno_1_1KltFeatureTracker.html#a4870d167d7dbd1a04a8d7d15a376a573" title=" " alt="" coords="468,5,643,45"/>
+<area shape="rect" id="node4" href="$classdyno_1_1KltFeatureTracker.html#a24e98ff72741e59ed48f5b14d5ecaf9b" title="Tracks features using KLT tracker between the previous image and the current one." alt="" coords="228,63,403,103"/>
+<area shape="rect" id="node5" href="$classdyno_1_1KltFeatureTracker.html#a8b8b5f33830f3b76205863b9236539e4" title="Track features between frames k&#45;1 and the current set of images (at k)." alt="" coords="5,35,180,75"/>
+<area shape="rect" id="node8" href="$classdyno_1_1FeatureTracker.html#a23296ac35b5935656d31a18450dc5e4c" title=" " alt="" coords="477,149,634,189"/>
+</map>

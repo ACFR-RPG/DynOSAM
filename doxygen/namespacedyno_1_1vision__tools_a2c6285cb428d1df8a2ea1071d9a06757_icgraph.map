@@ -1,0 +1,4 @@
+<map id="dyno::vision_tools::computeObjectMaskBoundaryMask" name="dyno::vision_tools::computeObjectMaskBoundaryMask">
+<area shape="rect" id="node1" title="From an input instance/semantic mask type img construct a image mask (binary) that has True values ar..." alt="" coords="211,5,472,45"/>
+<area shape="rect" id="node2" href="$classdyno_1_1FeatureTracker.html#a23296ac35b5935656d31a18450dc5e4c" title=" " alt="" coords="5,5,163,45"/>
+</map>

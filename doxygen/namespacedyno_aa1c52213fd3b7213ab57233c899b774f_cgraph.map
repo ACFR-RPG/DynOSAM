@@ -1,0 +1,5 @@
+<map id="dyno::findAABBFromCloud" name="dyno::findAABBFromCloud">
+<area shape="rect" id="node1" title="Compute the Axis Aligned Bounding Box (AABB) from an input cloud." alt="" coords="5,31,197,56"/>
+<area shape="rect" id="node2" href="$namespacedyno.html#aa9b5911b240752c754ece664f127acc7" title="Compute a MomentOfInertiaEstimation using an input point cloud." alt="" coords="245,5,480,31"/>
+<area shape="rect" id="node3" href="$namespacedyno.html#ac813bb3d37948e5e5c8d32a690e2c320" title="Constructs a gtsam::Point3 from the x,y,z components of the PointT." alt="" coords="277,55,448,80"/>
+</map>

@@ -1,0 +1,3 @@
+<map id="dyno::EgoMotionSolver::geometricOutlierRejection3d2d" name="dyno::EgoMotionSolver::geometricOutlierRejection3d2d">
+<area shape="rect" id="node1" title="Runs 3d&#45;2d PnP with optional Rotation (i.e from IMU)" alt="" coords="5,29,239,69"/>
+</map>

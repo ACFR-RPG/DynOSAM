@@ -1,0 +1,4 @@
+<map id="dyno::LoopingSpinner::LoopingSpinner" name="dyno::LoopingSpinner::LoopingSpinner">
+<area shape="rect" id="node1" title="Construct a new Looping Spinner object with a spinOnce style fucntion, name and period (i...." alt="" coords="5,5,168,45"/>
+<area shape="rect" id="node2" href="$classdyno_1_1Spinner.html#a687ff6b61b822035bf5adeabda5d1ca3" title="Starts the function in a thread. If the spinner has already been started (i.e from auto_start),..." alt="" coords="216,13,365,38"/>
+</map>

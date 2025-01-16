@@ -1,0 +1,8 @@
+<map id="dyno::utils::Statistics::getModuleNameFromTag" name="dyno::utils::Statistics::getModuleNameFromTag">
+<area shape="rect" id="node1" title="Gets the module name from the tag. If the tag does not have a module (e.g. backend&#45;pipeline has no &quot;...." alt="" coords="868,37,1061,77"/>
+<area shape="rect" id="node2" href="$classdyno_1_1utils_1_1Statistics.html#a0a3916a2ce1fc9b387421c821828bf56" title="Gets a vector of tags by module. A module is the parent name of a tag separated by &quot;...." alt="" coords="606,5,765,45"/>
+<area shape="rect" id="node3" href="$classdyno_1_1utils_1_1Statistics.html#ae59f07ef89abacba3f65e0b80bc2c346" title=" " alt="" coords="551,69,820,109"/>
+<area shape="rect" id="node4" href="$namespacedyno.html#a6b079f28613a22782fffd05b29fd81a7" title="Writes statistics per module to csv files on path defined by getOutputFilePath(). Interrnally uses Wr..." alt="" coords="300,69,503,109"/>
+<area shape="rect" id="node5" href="$classdyno_1_1BackendExperimentsNode.html#a747ee5b920ae612ea209704d6aa7a1a6" title=" " alt="" coords="5,37,252,77"/>
+<area shape="rect" id="node6" href="$classdyno_1_1DynoPipelineManager.html#a58b6b33fbf9f6a1ddc825e36c3ddb563" title=" " alt="" coords="26,101,231,141"/>
+</map>

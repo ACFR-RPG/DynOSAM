@@ -1,0 +1,13 @@
+<map id="dyno::ThreadsafeImuBuffer::getImuDataInterpolatedBorders" name="dyno::ThreadsafeImuBuffer::getImuDataInterpolatedBorders">
+<area shape="rect" id="node1" title="Return a list of the IMU measurements between the specified timestamps. The IMU values get interpolat..." alt="" coords="5,133,241,173"/>
+<area shape="rect" id="node2" href="$classdyno_1_1ThreadsafeImuBuffer.html#a79a8a16aa1d6e0ba523456a4971493f0" title=" " alt="" coords="295,69,509,109"/>
+<area shape="rect" id="node8" href="$classdyno_1_1ThreadsafeImuBuffer.html#a679fdccbbbf800a87ce92987fc8c8b9f" title=" " alt="" coords="289,165,515,205"/>
+<area shape="rect" id="node3" href="$classdyno_1_1ThreadsafeTemporalBuffer.html#acd4b008773d901fa9725218214608d3f" title=" " alt="" coords="563,5,793,45"/>
+<area shape="rect" id="node4" href="$classdyno_1_1ThreadsafeImuBuffer.html#ac31f71d02e6bd3d152b63ece9b48c568" title=" " alt="" coords="579,69,777,109"/>
+<area shape="rect" id="node5" href="$classdyno_1_1ThreadsafeTemporalBuffer.html#a5ce0cf9c6cf1bd7305b8cc526fd78106" title=" " alt="" coords="841,5,1036,45"/>
+<area shape="rect" id="node6" href="$classdyno_1_1ThreadsafeTemporalBuffer.html#a3679b5d8321550cd5ce21fade6ba4352" title=" " alt="" coords="841,69,1036,109"/>
+<area shape="rect" id="node7" href="$classdyno_1_1ThreadsafeTemporalBuffer.html#aea2ff0fa5149678402d89fdb0365381f" title=" " alt="" coords="841,133,1036,173"/>
+<area shape="rect" id="node9" href="$classdyno_1_1ThreadsafeTemporalBuffer.html#a53a07e118c0096b3a0c4a9b20e5119b6" title=" " alt="" coords="569,133,787,173"/>
+<area shape="rect" id="node10" href="$classdyno_1_1ThreadsafeTemporalBuffer.html#a92b90fc523cc69cf986dd2778e31df9b" title=" " alt="" coords="563,197,793,237"/>
+<area shape="rect" id="node11" href="$classdyno_1_1ThreadsafeImuBuffer.html#afb36a87285109546821e515f37a4dd43" title="Linear interpolation between two imu measurements." alt="" coords="579,261,777,301"/>
+</map>

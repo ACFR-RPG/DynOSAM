@@ -1,0 +1,4 @@
+<map id="dyno::FeatureContainer::add" name="dyno::FeatureContainer::add">
+<area shape="rect" id="node1" title="Adds a new feature to the container. Uses feature&#45;&gt;trackletId() to set the tracklet key." alt="" coords="5,13,212,38"/>
+<area shape="rect" id="node2" href="$classdyno_1_1FeatureContainer.html#abf2f2d568f5dc17944cc122c537a65f5" title="Returns true if a feature with the given tracklet id exists." alt="" coords="260,5,435,45"/>
+</map>

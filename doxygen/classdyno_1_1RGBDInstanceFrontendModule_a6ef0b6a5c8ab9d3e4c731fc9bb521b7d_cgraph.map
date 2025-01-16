@@ -1,0 +1,12 @@
+<map id="dyno::RGBDInstanceFrontendModule::constructOutput" name="dyno::RGBDInstanceFrontendModule::constructOutput">
+<area shape="rect" id="node1" title=" " alt="" coords="5,71,217,111"/>
+<area shape="rect" id="node2" href="$classdyno_1_1Frame.html#ab1af68fa722b3a69160ae0436318ad19" title="Gets a feature from its tracklet ID. Could be static or dynamic. Nullptr is returned if the feature d..." alt="" coords="555,23,679,49"/>
+<area shape="rect" id="node6" href="$classdyno_1_1Frame.html#aa6350c198dbedee19ce2cc32b99b1400" title=" " alt="" coords="281,53,466,78"/>
+<area shape="rect" id="node7" href="$classdyno_1_1Frame.html#aa422da72388d9f58a41ba3fbf853470b" title="Returns true if the feature is usable (inlier). Throws std::runtime_error if the feature does not exi..." alt="" coords="265,102,481,127"/>
+<area shape="rect" id="node8" href="$classdyno_1_1Frame.html#ab036fb95341546a33d93bdd54d871452" title=" " alt="" coords="278,152,469,192"/>
+<area shape="rect" id="node3" href="$classdyno_1_1FeatureContainer.html#abf2f2d568f5dc17944cc122c537a65f5" title="Returns true if a feature with the given tracklet id exists." alt="" coords="975,16,1149,56"/>
+<area shape="rect" id="node4" href="$classdyno_1_1Frame.html#ab9f7b3f513aeff82d47de7a72d66a69a" title="Checks if a feature exists within this frame. Could be static or dynamic." alt="" coords="764,23,915,49"/>
+<area shape="rect" id="node5" href="$classdyno_1_1FeatureContainer.html#a5b73e75d2f4063ac9c16dd0fd565f8da" title="Gets a feature given its tracklet id. If the feature does not exist, nullptr is returned." alt="" coords="752,73,927,113"/>
+<area shape="rect" id="node9" href="$classdyno_1_1FeatureContainer.html#ab6187d4cb946a12bcea18482caf4e115" title=" " alt="" coords="529,152,704,192"/>
+<area shape="rect" id="node10" href="$classdyno_1_1Feature.html#af6d8414c9ac11dc48a8c6a80c4eb4635" title=" " alt="" coords="752,159,927,185"/>
+</map>

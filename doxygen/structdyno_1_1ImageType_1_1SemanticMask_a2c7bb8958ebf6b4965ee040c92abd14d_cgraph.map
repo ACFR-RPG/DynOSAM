@@ -1,0 +1,5 @@
+<map id="dyno::ImageType::SemanticMask::validate" name="dyno::ImageType::SemanticMask::validate">
+<area shape="rect" id="node1" title="Expected opencv image type for SemanticMask image type." alt="" coords="5,5,208,45"/>
+<area shape="rect" id="node2" href="$namespacedyno.html#a31fb0387e1e309869f7b2280fbf07eac" title=" " alt="" coords="256,13,407,38"/>
+<area shape="rect" id="node3" href="$namespacedyno_1_1utils.html#a4bed389606523e7a31694ad904523c4d" title=" " alt="" coords="455,13,649,38"/>
+</map>

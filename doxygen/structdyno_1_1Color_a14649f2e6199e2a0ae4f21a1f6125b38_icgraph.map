@@ -1,0 +1,4 @@
+<map id="dyno::Color::blend" name="dyno::Color::blend">
+<area shape="rect" id="node1" title="Blend another color with this one." alt="" coords="200,5,340,31"/>
+<area shape="rect" id="node2" href="$structdyno_1_1Color.html#a344fa4f600d8e61d65f4c432fb2e45e6" title="Merge another color into this one." alt="" coords="5,5,152,31"/>
+</map>

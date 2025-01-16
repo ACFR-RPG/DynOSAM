@@ -1,0 +1,4 @@
+<map id="dyno::ThreadsafeImuBuffer::getImuDataInterpolatedBorders" name="dyno::ThreadsafeImuBuffer::getImuDataInterpolatedBorders">
+<area shape="rect" id="node1" title="Return a list of the IMU measurements between the specified timestamps. The IMU values get interpolat..." alt="" coords="289,13,525,53"/>
+<area shape="rect" id="node2" href="$classdyno_1_1ThreadsafeImuBuffer.html#a801e12f38e80e2f87ba7293bfa2bfa58" title=" " alt="" coords="5,5,241,60"/>
+</map>

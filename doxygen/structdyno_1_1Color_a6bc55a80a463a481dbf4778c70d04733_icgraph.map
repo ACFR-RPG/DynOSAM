@@ -1,0 +1,45 @@
+<map id="dyno::Color::Color" name="dyno::Color::Color">
+<area shape="rect" id="node1" title=" " alt="" coords="1259,381,1397,407"/>
+<area shape="rect" id="node2" href="$structdyno_1_1Color.html#a2b3c7ad3f6b6039c5a81a62e1ee17993" title=" " alt="" coords="1060,5,1199,31"/>
+<area shape="rect" id="node5" href="$structdyno_1_1Color.html#a14649f2e6199e2a0ae4f21a1f6125b38" title="Blend another color with this one." alt="" coords="1059,55,1199,80"/>
+<area shape="rect" id="node7" href="$structdyno_1_1Color.html#ac6497975e0e9af4d28092f8bc07b3678" title=" " alt="" coords="851,155,983,180"/>
+<area shape="rect" id="node9" href="$structdyno_1_1Color.html#a7174a88a312b60ea39db28d0aa037f3a" title=" " alt="" coords="1062,307,1197,332"/>
+<area shape="rect" id="node10" href="$structdyno_1_1Color.html#ad9f3399ae3549ee33cfd61d09571815f" title=" " alt="" coords="1049,356,1209,381"/>
+<area shape="rect" id="node13" href="$structdyno_1_1Color.html#a08bcb6ea49861f6978858a2ff5159002" title=" " alt="" coords="1048,257,1211,283"/>
+<area shape="rect" id="node34" href="$structdyno_1_1Color.html#afee948af086d53ac0109f6402cf75cd7" title="Generate a gray&#45;scale color." alt="" coords="1063,405,1196,431"/>
+<area shape="rect" id="node35" href="$structdyno_1_1Color.html#a9357d7ddef94b17ace0420444b4cb7a2" title=" " alt="" coords="847,205,988,231"/>
+<area shape="rect" id="node36" href="$structdyno_1_1Color.html#a086d0768983e516cd8fdcf6b95f8619a" title=" " alt="" coords="1048,455,1211,480"/>
+<area shape="rect" id="node37" href="$structdyno_1_1Color.html#a636be51d49e91e20a890e358090af50c" title=" " alt="" coords="1055,504,1204,529"/>
+<area shape="rect" id="node38" href="$structdyno_1_1Color.html#abe59ab2d3c64d8a6ac528bbd90b83846" title=" " alt="" coords="1063,553,1195,579"/>
+<area shape="rect" id="node39" href="$structdyno_1_1Color.html#ac16e238ca3c80bb10f7892c260ae2d41" title=" " alt="" coords="1057,603,1202,628"/>
+<area shape="rect" id="node40" href="$structdyno_1_1Color.html#a1f5bf928657c46a7101ff27ce8a39247" title=" " alt="" coords="1052,652,1207,677"/>
+<area shape="rect" id="node41" href="$structdyno_1_1Color.html#a1b75c1200495de0d1a32e382393e8dd7" title=" " alt="" coords="855,105,980,131"/>
+<area shape="rect" id="node42" href="$structdyno_1_1Color.html#ac1157e0341f49c6c81c8e5417df49377" title=" " alt="" coords="1059,701,1199,727"/>
+<area shape="rect" id="node43" href="$structdyno_1_1Color.html#a1805ed56c1f519083678b61536b1ca65" title=" " alt="" coords="1056,751,1203,776"/>
+<area shape="rect" id="node3" href="$structdyno_1_1Color.html#a3c5f663788365ce23752d4cfcca64c35" title="Generate a color based on a spectrum of colors." alt="" coords="835,5,1000,31"/>
+<area shape="rect" id="node4" href="$structdyno_1_1Color.html#ae28dde76a5a25818e4745afcf23e6d47" title="Generate a color based on a ironbow value." alt="" coords="605,5,761,31"/>
+<area shape="rect" id="node6" href="$structdyno_1_1Color.html#a344fa4f600d8e61d65f4c432fb2e45e6" title="Merge another color into this one." alt="" coords="844,55,991,80"/>
+<area shape="rect" id="node8" href="$classdyno_1_1FeatureTrackerBase.html#aa902950650699301214f776a905e3b77" title=" " alt="" coords="589,98,778,138"/>
+<area shape="rect" id="node11" href="$structdyno_1_1Color.html#a24ab8f421ba1414020d536fb64cba9da" title="Generate a color based on a rainbow value." alt="" coords="839,540,995,565"/>
+<area shape="rect" id="node12" href="$structdyno_1_1Color.html#a3fbcccc0bd349c0e60395a80fc2939a3" title="Generate a sequence of never repeating colors in the rainbow spectrum." alt="" coords="599,697,767,723"/>
+<area shape="rect" id="node14" href="$structdyno_1_1Color.html#a4f52f9aec87e2c34370ad02e6d4e25fc" title="Generates a sequence of never repeating colors using the golden ration to seperate the colours along ..." alt="" coords="837,333,997,359"/>
+<area shape="rect" id="node15" href="$classdyno_1_1DisplayRos.html#a158680601464555a7b0f92848575c193" title="Constructs axis&#45;aligned BB (AABB) and oriented BB (OBB) marker arrays from a set of point clouds whic..." alt="" coords="582,326,785,366"/>
+<area shape="rect" id="node18" href="$structdyno_1_1ObjectPoseGT.html#ada6ef6e0253d33690945f1d8dcf7be45" title="Draws the object label and bounding box on the provided image." alt="" coords="607,633,760,673"/>
+<area shape="rect" id="node19" href="$classdyno_1_1Frame.html#a5e2adcdcb96143552fa891351b94dd22" title="From the detected list of objects (in Frame::object_observations_) draw the object masks as labelled ..." alt="" coords="582,162,785,202"/>
+<area shape="rect" id="node20" href="$namespacedyno.html#ad2183909c7d4f0dd85c7db9ae1759b01" title="This function goes through the input 3D landmarks and group them into point clusters based on their o..." alt="" coords="594,227,773,252"/>
+<area shape="rect" id="node21" href="$namespacedyno_1_1utils.html#a5abdff0c77884da4a8da55f0880d8cfb" title="Given an image that operates like a mask (ie. is a single channel image where each pixel value corres..." alt="" coords="580,276,787,301"/>
+<area shape="rect" id="node28" href="$classdyno_1_1FrontendDisplayRos.html#a92d22245bb27f232c7ae3bf8af7d6211" title=" " alt="" coords="296,447,501,487"/>
+<area shape="rect" id="node30" href="$classdyno_1_1DisplayRos.html#afd3aa51f542cdb1d2049ba26c4cbdc7c" title=" " alt="" coords="588,505,779,545"/>
+<area shape="rect" id="node32" href="$classdyno_1_1DisplayRos.html#a8dcd1ae20081a592ac67b0464bb5b49e" title=" " alt="" coords="588,569,779,609"/>
+<area shape="rect" id="node33" href="$classdyno_1_1DisplayRos.html#a53a612360216ffffbf2651143c1d036f" title=" " alt="" coords="588,390,779,430"/>
+<area shape="rect" id="node16" href="$classdyno_1_1DisplayRos.html#a134a23d56c4c17a0035dc3d70d2c4a53" title=" " alt="" coords="303,333,494,373"/>
+<area shape="rect" id="node17" href="$classdyno_1_1BackendDisplayRos.html#af3446f9e7bc4962695664c95dfdd991e" title=" " alt="" coords="16,443,207,483"/>
+<area shape="rect" id="node22" href="$namespacedyno_1_1utils.html#a699bf9281c9c2c91ff538a4160975480" title="Same as labelMaskToRGB(mask, background label) but instead draws the mask over a black image so only ..." alt="" coords="295,105,502,131"/>
+<area shape="rect" id="node23" href="$KittiSemaniticToMotion_8cc.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="371,155,426,180"/>
+<area shape="rect" id="node24" href="$structdyno_1_1ImageType_1_1ClassSegmentation.html#afe839c69e62e5d1da10b813ca3bb824e" title=" " alt="" coords="265,205,532,245"/>
+<area shape="rect" id="node25" href="$structdyno_1_1ImageType_1_1MotionMask.html#a6b119596bef78424e2085d684d07cd43" title=" " alt="" coords="288,269,509,309"/>
+<area shape="rect" id="node27" href="$structdyno_1_1ImageType_1_1SemanticMask.html#aea33f14e71a1e9201d001f8c3abd61af" title=" " alt="" coords="297,41,500,81"/>
+<area shape="rect" id="node26" href="$classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2" title=" " alt="" coords="5,269,217,309"/>
+<area shape="rect" id="node29" href="$classdyno_1_1FrontendDisplayRos.html#ab73f0433ed01e79b3375afd7a512a26c" title=" " alt="" coords="15,534,207,574"/>
+<area shape="rect" id="node31" href="$classdyno_1_1FrontendDisplayRos.html#a09c000cc83b1a2916026fa21b2859d95" title=" " alt="" coords="303,562,495,602"/>
+</map>

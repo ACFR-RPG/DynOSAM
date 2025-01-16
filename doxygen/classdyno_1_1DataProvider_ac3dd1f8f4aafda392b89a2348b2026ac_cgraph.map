@@ -1,0 +1,6 @@
+<map id="dyno::DataProvider::DataProvider" name="dyno::DataProvider::DataProvider">
+<area shape="rect" id="node1" title=" " alt="" coords="5,37,152,77"/>
+<area shape="rect" id="node2" href="$classdyno_1_1DataInterfacePipeline.html#af34076d538c787a0044eb444586eed95" title=" " alt="" coords="219,5,421,45"/>
+<area shape="rect" id="node4" href="$classdyno_1_1DataProvider.html#ac659e4b4c130951d5862acb68d69d3b2" title=" " alt="" coords="200,69,440,109"/>
+<area shape="rect" id="node3" href="$classThreadsafeQueue.html#ae3ac884e8d8f4646ce7524038aa4cd2c" title="Push by value. Returns false if the queue has been shutdown. Not optimal, since it will make two move..." alt="" coords="488,13,664,38"/>
+</map>

@@ -1,0 +1,4 @@
+<map id="dyno::FeatureContainer::empty" name="dyno::FeatureContainer::empty">
+<area shape="rect" id="node1" title="If the container is empty." alt="" coords="5,5,180,45"/>
+<area shape="rect" id="node2" href="$classdyno_1_1FeatureContainer.html#afd095f6a9e0f25539e7febe6eeeaf003" title="Returns the number of features in the container." alt="" coords="228,5,403,45"/>
+</map>

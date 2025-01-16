@@ -1,0 +1,4 @@
+<map id="dyno::NullPipelinePayload" name="dyno::NullPipelinePayload">
+<area shape="rect" id="node1" title="The NullPipelinePayload is an empty payload, used for those modules that do not return a payload,..." alt="" coords="5,79,196,104"/>
+<area shape="rect" id="node2" href="$structdyno_1_1PipelinePayload.html" title=" " alt="" coords="18,5,183,31"/>
+</map>

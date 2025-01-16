@@ -1,0 +1,4 @@
+<map id="dyno::ProjectARIADataLoader::getCameraParams" name="dyno::ProjectARIADataLoader::getCameraParams">
+<area shape="rect" id="node1" title="Provides functionality to get camera paramters for the main pipeline, as these may be available from ..." alt="" coords="267,5,480,45"/>
+<area shape="rect" id="node2" href="$classdyno_1_1ProjectARIADataLoader.html#ac54b115f31c1e8c76395fc595f0c7637" title="The dataset path is /path/to/dataset/ /rgb /depth /calibration.json .... /optical_flow /instance_mask..." alt="" coords="5,5,219,45"/>
+</map>

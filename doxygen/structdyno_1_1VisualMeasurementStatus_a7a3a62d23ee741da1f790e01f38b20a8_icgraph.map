@@ -1,0 +1,4 @@
+<map id="dyno::VisualMeasurementStatus::DynamicInGLobal" name="dyno::VisualMeasurementStatus::DynamicInGLobal">
+<area shape="rect" id="node1" title="Constructs a dynamic Visual Measurement Status in the global frame." alt="" coords="260,5,493,45"/>
+<area shape="rect" id="node2" href="$classdyno_1_1Accessor.html#ab7c0aa6409651ee5ee49387e3272e930" title="Get all dynamic landmarks for object j at time&#45;step k." alt="" coords="5,5,212,45"/>
+</map>

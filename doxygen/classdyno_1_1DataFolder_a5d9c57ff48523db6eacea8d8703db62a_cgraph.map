@@ -1,0 +1,4 @@
+<map id="dyno::DataFolder::operator bool" name="dyno::DataFolder::operator bool">
+<area shape="rect" id="node1" title="Indicates that the absolute folder path has been set correctly with initAbsolutePath Same behaviour a..." alt="" coords="5,13,233,38"/>
+<area shape="rect" id="node2" href="$classdyno_1_1DataFolder.html#a80de9cc17cdad83606437b84c4c4699e" title="Checks if the absolute path has been set and the data folder is ready to get items." alt="" coords="281,5,491,45"/>
+</map>

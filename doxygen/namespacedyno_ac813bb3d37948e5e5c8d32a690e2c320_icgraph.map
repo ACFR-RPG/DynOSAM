@@ -1,0 +1,5 @@
+<map id="dyno::pclPointToGtsam" name="dyno::pclPointToGtsam">
+<area shape="rect" id="node1" title="Constructs a gtsam::Point3 from the x,y,z components of the PointT." alt="" coords="245,31,416,56"/>
+<area shape="rect" id="node2" href="$namespacedyno.html#aa1c52213fd3b7213ab57233c899b774f" title="Compute the Axis Aligned Bounding Box (AABB) from an input cloud." alt="" coords="5,5,197,31"/>
+<area shape="rect" id="node3" href="$namespacedyno.html#a103409029e529d9d7766e49a3b009d8e" title="Compute Oriented bounding box (OBB) from an input point cloud." alt="" coords="9,55,193,80"/>
+</map>

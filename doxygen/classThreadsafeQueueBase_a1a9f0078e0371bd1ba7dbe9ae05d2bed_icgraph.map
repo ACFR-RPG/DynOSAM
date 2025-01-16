@@ -1,0 +1,6 @@
+<map id="ThreadsafeQueueBase::shutdown" name="ThreadsafeQueueBase::shutdown">
+<area shape="rect" id="node1" title=" " alt="" coords="512,37,681,77"/>
+<area shape="rect" id="node2" href="$classdyno_1_1DynoPipelineManager.html#a852d7af05ad56b86dc4e221f1d7823b1" title=" " alt="" coords="259,5,464,45"/>
+<area shape="rect" id="node4" href="$classdyno_1_1DataInterfacePipeline.html#a0f6322dfc41ba0d489e363e874abc112" title="Called when general shutdown of PipelineModule is triggered." alt="" coords="260,69,463,109"/>
+<area shape="rect" id="node3" href="$classdyno_1_1DynoPipelineManager.html#a58b6b33fbf9f6a1ddc825e36c3ddb563" title=" " alt="" coords="5,5,211,45"/>
+</map>

@@ -1,0 +1,10 @@
+<map id="dyno::Map::frameExists" name="dyno::Map::frameExists">
+<area shape="rect" id="node1" title="Check a frame exists at the requested frame id." alt="" coords="772,81,948,106"/>
+<area shape="rect" id="node2" href="$classdyno_1_1Map.html#a0f795b64fd5ae27c562c93ee0faf29dc" title=" " alt="" coords="293,5,505,45"/>
+<area shape="rect" id="node4" href="$classdyno_1_1Map.html#a245a6857bfee37eae36e78fd48946680" title="Get the Frame object. If the frame does not exist, return nullptr." alt="" coords="564,106,724,131"/>
+<area shape="rect" id="node3" href="$classdyno_1_1Map.html#abe87e9c89e1daf6f89e87d90f8f9320e" title="Update the map structure given new measurements." alt="" coords="5,13,235,38"/>
+<area shape="rect" id="node5" href="$classdyno_1_1Map.html#a689ce158587e120a5f919d00fa41d2a7" title=" " alt="" coords="299,69,499,109"/>
+<area shape="rect" id="node6" href="$classdyno_1_1Map.html#acd74a70c4b8457388ab39e69b15b587a" title=" " alt="" coords="283,134,516,159"/>
+<area shape="rect" id="node7" href="$classdyno_1_1Map.html#ad57f443c26407e2f05cff96c65bdab6f" title=" " alt="" coords="284,184,515,224"/>
+<area shape="rect" id="node8" href="$classdyno_1_1Map.html#ad94b89b9966f9a2ddc6af0d9b15077ad" title=" " alt="" coords="290,248,509,288"/>
+</map>

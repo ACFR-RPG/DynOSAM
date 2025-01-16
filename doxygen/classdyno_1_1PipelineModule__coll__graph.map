@@ -1,0 +1,4 @@
+<map id="dyno::PipelineModule&lt; INPUT, OUTPUT &gt;" name="dyno::PipelineModule&lt; INPUT, OUTPUT &gt;">
+<area shape="rect" id="node1" title="A PipelineModule is responsible for taking data from an input (or input queues) processing it,..." alt="" coords="5,79,168,119"/>
+<area shape="rect" id="node2" href="$classdyno_1_1PipelineBase.html" title=" " alt="" coords="13,5,160,31"/>
+</map>

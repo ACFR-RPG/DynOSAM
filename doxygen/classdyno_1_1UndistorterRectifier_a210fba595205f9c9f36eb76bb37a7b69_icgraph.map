@@ -1,0 +1,4 @@
+<map id="dyno::UndistorterRectifier::UndistortKeypointAndGetVersor" name="dyno::UndistorterRectifier::UndistortKeypointAndGetVersor">
+<area shape="rect" id="node1" title="UndistortKeypointAndGetVersor undistort a single pixel, and return the corresponding versor...." alt="" coords="288,5,524,45"/>
+<area shape="rect" id="node2" href="$classdyno_1_1UndistorterRectifier.html#aa55a8cd2fa64ee3b968f2be1d6acf19f" title="Undistorts a single pixel and returns the corresponding versor (unit norm vector corresponding to bea..." alt="" coords="5,5,240,45"/>
+</map>

@@ -1,0 +1,4 @@
+<map id="dyno::ThreadsafeImuBuffer::size" name="dyno::ThreadsafeImuBuffer::size">
+<area shape="rect" id="node1" title=" " alt="" coords="332,5,531,45"/>
+<area shape="rect" id="node2" href="$classdyno_1_1DataInterfacePipelineImu.html#a233e9d7d80e5caee6882ea5007a3fef9" title="getTimeSyncedImuMeasurements Time synchronizes the IMU buffer with the given timestamp (this is typic..." alt="" coords="5,5,284,45"/>
+</map>

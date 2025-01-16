@@ -1,0 +1,6 @@
+<map id="dyno::DynoDatasetProvider::spin" name="dyno::DynoDatasetProvider::spin">
+<area shape="rect" id="node1" title="Spins the dataset for one &quot;step&quot; of the dataset." alt="" coords="5,77,207,117"/>
+<area shape="rect" id="node2" href="$classdyno_1_1DataProvider.html#aeed0a3ab688356858ca5831289ffaa1f" title=" " alt="" coords="275,5,453,45"/>
+<area shape="rect" id="node3" href="$classdyno_1_1DynoDataset.html#aaa8bfccc12b03c78f1881b2c49daab10" title="Returns true when setLoaders(...) has been called and the internal datasets have been constructed cor..." alt="" coords="267,70,461,125"/>
+<area shape="rect" id="node4" href="$classdyno_1_1DynoDataset.html#a2d23b68a541033ed6526f79e5caf226c" title=" " alt="" coords="255,149,473,189"/>
+</map>

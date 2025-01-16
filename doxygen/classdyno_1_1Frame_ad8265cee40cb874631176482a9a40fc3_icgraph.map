@@ -1,0 +1,4 @@
+<map id="dyno::Frame::numDynamicFeatures" name="dyno::Frame::numDynamicFeatures">
+<area shape="rect" id="node1" title="Gets the total number of dynamic features observed at this frame. Includes usables (inliers) and outl..." alt="" coords="280,5,535,31"/>
+<area shape="rect" id="node2" href="$classdyno_1_1Frame.html#afe219d6ce6e007934982c6594fa70f65" title="Gets the total number of features (static + dynamic) in this frame. Includes usables (inliers) and ou..." alt="" coords="5,5,232,31"/>
+</map>

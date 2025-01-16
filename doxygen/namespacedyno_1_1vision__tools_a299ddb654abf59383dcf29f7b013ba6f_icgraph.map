@@ -1,0 +1,4 @@
+<map id="dyno::vision_tools::makeTrackletLengthHistorgram" name="dyno::vision_tools::makeTrackletLengthHistorgram">
+<area shape="rect" id="node1" title="Constructs a map of histograms (static features: 0, one for each dynamic object) containing the track..." alt="" coords="269,5,504,45"/>
+<area shape="rect" id="node2" href="$classdyno_1_1RGBDFrontendLogger.html#a87ab9ef3f6f6c14345dd7f1b1c23b00c" title=" " alt="" coords="5,5,221,45"/>
+</map>

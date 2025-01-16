@@ -1,0 +1,6 @@
+<map id="dyno::PipelineBase::shutdownQueues" name="dyno::PipelineBase::shutdownQueues">
+<area shape="rect" id="node1" title="Virtual function that should shutdown all associated queues. Generally this should shutdown input que..." alt="" coords="527,37,673,77"/>
+<area shape="rect" id="node2" href="$classdyno_1_1PipelineBase.html#a3fe02ed3b9e50f0da3b1619216a1caca" title=" " alt="" coords="332,37,479,77"/>
+<area shape="rect" id="node3" href="$classdyno_1_1DataInterfacePipelineImu.html#a233e9d7d80e5caee6882ea5007a3fef9" title="getTimeSyncedImuMeasurements Time synchronizes the IMU buffer with the given timestamp (this is typic..." alt="" coords="5,5,284,45"/>
+<area shape="rect" id="node4" href="$classdyno_1_1FrontendOfflinePipeline.html#a27b90307a67b182cb95ccbfb7c646a97" title=" " alt="" coords="37,69,252,109"/>
+</map>

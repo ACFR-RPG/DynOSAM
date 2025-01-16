@@ -1,0 +1,5 @@
+<map id="dyno::DynamicLandmarkSymbol" name="dyno::DynamicLandmarkSymbol">
+<area shape="rect" id="node1" title=" " alt="" coords="265,45,500,70"/>
+<area shape="rect" id="node2" href="$structdyno_1_1LandmarkNode.html#a7862e84d9a6ffcfd4a05e8e8b844a8a3" title="Construcs a dynamic landmark symbol for this landmark. The frame id and tracklet id will be used to c..." alt="" coords="25,5,198,45"/>
+<area shape="rect" id="node3" href="$classdyno_1_1MotionOnlyRefinementOptimizer.html#ab9ea6586ab1c0a64f008a05a38350aae" title=" " alt="" coords="5,69,217,109"/>
+</map>

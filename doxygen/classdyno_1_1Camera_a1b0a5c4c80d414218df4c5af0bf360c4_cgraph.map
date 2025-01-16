@@ -1,0 +1,3 @@
+<map id="dyno::Camera::isKeypointContained" name="dyno::Camera::isKeypointContained">
+<area shape="rect" id="node1" title="Checks if a given keypoint is inside the image AND in front the camera (ie. depth &gt; 0)." alt="" coords="5,29,195,69"/>
+</map>

@@ -1,0 +1,10 @@
+<map id="dyno::FeatureContainer::size" name="dyno::FeatureContainer::size">
+<area shape="rect" id="node1" title="Returns the number of features in the container." alt="" coords="805,134,980,174"/>
+<area shape="rect" id="node2" href="$classdyno_1_1KltFeatureTracker.html#a4870d167d7dbd1a04a8d7d15a376a573" title=" " alt="" coords="543,105,717,145"/>
+<area shape="rect" id="node3" href="$classdyno_1_1KltFeatureTracker.html#a24e98ff72741e59ed48f5b14d5ecaf9b" title="Tracks features using KLT tracker between the previous image and the current one." alt="" coords="254,45,429,85"/>
+<area shape="rect" id="node4" href="$classdyno_1_1KltFeatureTracker.html#a8b8b5f33830f3b76205863b9236539e4" title="Track features between frames k&#45;1 and the current set of images (at k)." alt="" coords="5,105,180,145"/>
+<area shape="rect" id="node5" href="$classdyno_1_1FeatureContainer.html#a4d5e186005b95a09871538e314922a11" title="If the container is empty." alt="" coords="543,41,717,81"/>
+<area shape="rect" id="node6" href="$classdyno_1_1Frame.html#ad8265cee40cb874631176482a9a40fc3" title="Gets the total number of dynamic features observed at this frame. Includes usables (inliers) and outl..." alt="" coords="503,220,757,245"/>
+<area shape="rect" id="node8" href="$classdyno_1_1Frame.html#a5d875b237cb599cd8f5a2c13feaf0be8" title="Gets the total number of static features observed at this frame. Includes usables (inliers) and outli..." alt="" coords="513,269,747,295"/>
+<area shape="rect" id="node7" href="$classdyno_1_1Frame.html#afe219d6ce6e007934982c6594fa70f65" title="Gets the total number of features (static + dynamic) in this frame. Includes usables (inliers) and ou..." alt="" coords="228,244,455,269"/>
+</map>

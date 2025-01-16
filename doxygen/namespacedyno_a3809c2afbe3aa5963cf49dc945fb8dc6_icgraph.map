@@ -1,0 +1,4 @@
+<map id="dyno::StaticLandmarkSymbol" name="dyno::StaticLandmarkSymbol">
+<area shape="rect" id="node1" title=" " alt="" coords="215,13,428,38"/>
+<area shape="rect" id="node2" href="$structdyno_1_1LandmarkNode.html#a46a635b254a6c10a7594db558d46c727" title="Construcs a static landmark key for this landmark. The tracklet id will be used to construct a unique..." alt="" coords="5,5,167,45"/>
+</map>

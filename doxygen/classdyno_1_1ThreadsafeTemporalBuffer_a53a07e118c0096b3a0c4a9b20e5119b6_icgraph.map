@@ -1,0 +1,8 @@
+<map id="dyno::ThreadsafeTemporalBuffer::getValueAtOrAfterTime" name="dyno::ThreadsafeTemporalBuffer::getValueAtOrAfterTime">
+<area shape="rect" id="node1" title=" " alt="" coords="921,49,1140,89"/>
+<area shape="rect" id="node2" href="$classdyno_1_1ThreadsafeImuBuffer.html#a679fdccbbbf800a87ce92987fc8c8b9f" title=" " alt="" coords="648,49,873,89"/>
+<area shape="rect" id="node3" href="$classdyno_1_1ThreadsafeImuBuffer.html#a0844b1d7a4129383d8d0e08165df1de5" title="Return a list of the IMU measurements between the specified timestamps. The IMU values get interpolat..." alt="" coords="348,15,584,55"/>
+<area shape="rect" id="node5" href="$classdyno_1_1ThreadsafeImuBuffer.html#a08ffa136ec227e9b34ce7f16fba4c01e" title="Return a list of the IMU measurements between the specified timestamps. ONLY the IMU newest value get..." alt="" coords="332,81,600,121"/>
+<area shape="rect" id="node4" href="$classdyno_1_1ThreadsafeImuBuffer.html#a801e12f38e80e2f87ba7293bfa2bfa58" title=" " alt="" coords="27,5,263,60"/>
+<area shape="rect" id="node6" href="$classdyno_1_1DataInterfacePipelineImu.html#a233e9d7d80e5caee6882ea5007a3fef9" title="getTimeSyncedImuMeasurements Time synchronizes the IMU buffer with the given timestamp (this is typic..." alt="" coords="5,85,284,125"/>
+</map>

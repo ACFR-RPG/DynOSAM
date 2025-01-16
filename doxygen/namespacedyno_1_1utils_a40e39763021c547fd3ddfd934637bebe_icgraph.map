@@ -1,0 +1,5 @@
+<map id="dyno::utils::getDisparityVis" name="dyno::utils::getDisparityVis">
+<area shape="rect" id="node1" title="Allows visualization of disparity image (which is usually outputed as CV_16S or CV_32F from stereo de..." alt="" coords="551,13,749,38"/>
+<area shape="rect" id="node2" href="$classdyno_1_1StereoMatcher.html#afe57452a9951b94bb69fae54ec8ebaaf" title="Dense stereo reconstruction from two (undistored, rectified) images and produces a disparity map." alt="" coords="261,5,503,45"/>
+<area shape="rect" id="node3" href="$classdyno_1_1StereoMatcher.html#a80a925f47436fb14d55bfe199260431e" title="Dense stereo reconstruction from two (distored, non&#45;rectified) images and produces a dense depth map." alt="" coords="5,5,213,45"/>
+</map>

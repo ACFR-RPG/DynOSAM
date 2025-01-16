@@ -1,0 +1,8 @@
+<map id="dyno::SparseFeatureDetector" name="dyno::SparseFeatureDetector">
+<area shape="rect" id="node1" title="Wrapper on classic sparse feature detection method and integrates the option for adaptive non&#45;maxima ..." alt="" coords="759,121,969,146"/>
+<area shape="rect" id="node2" href="$structdyno_1_1TrackerParams.html" title="Params for the feature tracker but also the feature detector." alt="" coords="441,121,597,146"/>
+<area shape="rect" id="node3" href="$structdyno_1_1TrackerParams_1_1AnmsParams.html" title=" " alt="" coords="29,5,185,45"/>
+<area shape="rect" id="node4" href="$structdyno_1_1TrackerParams_1_1SubPixelCornerRefinementParams.html" title=" " alt="" coords="5,70,208,125"/>
+<area shape="rect" id="node5" href="$structdyno_1_1TrackerParams_1_1GFFTParams.html" title=" " alt="" coords="29,149,185,189"/>
+<area shape="rect" id="node6" href="$structdyno_1_1TrackerParams_1_1OrbParams.html" title=" " alt="" coords="29,213,185,253"/>
+</map>

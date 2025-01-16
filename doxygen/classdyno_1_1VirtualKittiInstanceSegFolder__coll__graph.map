@@ -1,0 +1,6 @@
+<map id="dyno::VirtualKittiInstanceSegFolder" name="dyno::VirtualKittiInstanceSegFolder">
+<area shape="rect" id="node1" title=" " alt="" coords="5,269,192,309"/>
+<area shape="rect" id="node2" href="$classdyno_1_1VirtualKittiGenericInstanceSegFolder.html" title=" " alt="" coords="7,181,190,221"/>
+<area shape="rect" id="node3" href="$classdyno_1_1GenericVirtualKittiImageLoader.html" title="Loading class for the Virtual Kitti 2 dataset: https://europe.naverlabs.com/research/computer&#45;vision/..." alt="" coords="7,93,190,133"/>
+<area shape="rect" id="node4" href="$classdyno_1_1DataFolder.html" title=" " alt="" coords="17,5,180,45"/>
+</map>

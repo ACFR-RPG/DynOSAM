@@ -1,0 +1,16 @@
+<map id="dyno::PipelineModule&lt; INPUT, OUTPUT &gt;" name="dyno::PipelineModule&lt; INPUT, OUTPUT &gt;">
+<area shape="rect" id="node1" title="A PipelineModule is responsible for taking data from an input (or input queues) processing it,..." alt="" coords="200,121,363,161"/>
+<area shape="rect" id="node3" href="$classdyno_1_1MIMOPipelineModule.html" title=" " alt="" coords="423,5,628,60"/>
+<area shape="rect" id="node6" href="$classdyno_1_1MIMOPipelineModule.html" title=" " alt="" coords="411,85,640,125"/>
+<area shape="rect" id="node7" href="$classdyno_1_1MIMOPipelineModule.html" title=" " alt="" coords="417,149,633,204"/>
+<area shape="rect" id="node9" href="$classdyno_1_1MIMOPipelineModule.html" title=" " alt="" coords="425,229,625,269"/>
+<area shape="rect" id="node2" href="$classdyno_1_1PipelineBase.html" title=" " alt="" coords="5,128,152,153"/>
+<area shape="rect" id="node4" href="$classdyno_1_1DataInterfacePipeline.html" title="Takes data, synchronizes it and sends it to the output queue which should be connected to the fronten..." alt="" coords="701,20,904,45"/>
+<area shape="rect" id="node5" href="$classdyno_1_1DataInterfacePipelineImu.html" title=" " alt="" coords="965,20,1193,45"/>
+<area shape="rect" id="node8" href="$classdyno_1_1FrontendOfflinePipeline.html" title="module traits of the associated backend..." alt="" coords="695,157,910,197"/>
+<area shape="rect" id="node10" href="$classdyno_1_1SIMOPipelineModule.html" title=" " alt="" coords="688,225,917,265"/>
+<area shape="rect" id="node12" href="$classdyno_1_1SIMOPipelineModule.html" title="SIMOPipelineModule Single Input Multiple Output (SIMO) pipeline module. Receives Input packets via a ..." alt="" coords="705,289,901,329"/>
+<area shape="rect" id="node11" href="$classdyno_1_1DisplayPipeline.html" title="Generic pipeline for display." alt="" coords="998,225,1161,265"/>
+<area shape="rect" id="node13" href="$classdyno_1_1FunctionalSIMOPipelineModule.html" title=" " alt="" coords="972,289,1187,329"/>
+<area shape="rect" id="node14" href="$classdyno_1_1PipelineModuleProcessor.html" title="A SIMO (Single&#45;in&#45;multi&#45;out) pipeline module that processes a data module." alt="" coords="967,353,1192,393"/>
+</map>

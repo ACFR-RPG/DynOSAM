@@ -1,0 +1,4 @@
+<map id="dyno::FastMapNodeSet&lt; NODE &gt;" name="dyno::FastMapNodeSet&lt; NODE &gt;">
+<area shape="rect" id="node1" title="Data structuring for fast access of map nodes, sorted by their id. We use a set to prevent objects be..." alt="" coords="273,20,444,60"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,5,225,75"/>
+</map>

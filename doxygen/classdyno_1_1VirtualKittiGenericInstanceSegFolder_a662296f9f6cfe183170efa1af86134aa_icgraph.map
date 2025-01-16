@@ -1,0 +1,5 @@
+<map id="dyno::VirtualKittiGenericInstanceSegFolder::loadSemanticInstanceUnchanged" name="dyno::VirtualKittiGenericInstanceSegFolder::loadSemanticInstanceUnchanged">
+<area shape="rect" id="node1" title="Loads instance semantic mask from the file path." alt="" coords="240,30,479,85"/>
+<area shape="rect" id="node2" href="$classdyno_1_1VirtualKittiMotionSegFolder.html#a5fbe696de81a23607cfb6333a6ff1f94" title=" " alt="" coords="10,5,187,45"/>
+<area shape="rect" id="node3" href="$classdyno_1_1VirtualKittiInstanceSegFolder.html#af9cb32abdce5a88eda7047745d9db094" title=" " alt="" coords="5,69,192,109"/>
+</map>

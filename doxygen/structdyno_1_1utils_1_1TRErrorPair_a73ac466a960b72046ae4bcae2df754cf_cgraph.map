@@ -1,0 +1,5 @@
+<map id="dyno::utils::TRErrorPair::CalculateRelativePoseError" name="dyno::utils::TRErrorPair::CalculateRelativePoseError">
+<area shape="rect" id="node1" title="Calculates the relative pose error between poses." alt="" coords="5,5,212,45"/>
+<area shape="rect" id="node2" href="$structdyno_1_1utils_1_1TRErrorPair.html#a663dd9aaa29bf2d2740554ecc8b24e94" title="Calculates the pose error between two poses in the same frame." alt="" coords="260,5,431,45"/>
+<area shape="rect" id="node3" href="$structdyno_1_1utils_1_1TRErrorPair.html#abe2ada54d46e863d6642ddbad53a5da2" title="rads" alt="" coords="479,5,649,45"/>
+</map>

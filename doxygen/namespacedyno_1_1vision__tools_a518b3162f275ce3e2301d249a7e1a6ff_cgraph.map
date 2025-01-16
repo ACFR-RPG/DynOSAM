@@ -1,0 +1,4 @@
+<map id="dyno::vision_tools::shrinkMask" name="dyno::vision_tools::shrinkMask">
+<area shape="rect" id="node1" title="Shrinks all found object masks by a given ammount." alt="" coords="5,5,145,45"/>
+<area shape="rect" id="node2" href="$namespacedyno_1_1vision__tools.html#a3a09fe6c15aeb5e18979dc27d68c4616" title="Finds the unique object labels (j) as present in the instance segmentation image. Does not include th..." alt="" coords="193,5,333,45"/>
+</map>

@@ -1,0 +1,4 @@
+<map id="dyno::StereoMatcher::disparityRectifiedReconstruction" name="dyno::StereoMatcher::disparityRectifiedReconstruction">
+<area shape="rect" id="node1" title="Dense stereo reconstruction from two (undistored, rectified) images and produces a disparity map." alt="" coords="261,5,503,45"/>
+<area shape="rect" id="node2" href="$classdyno_1_1StereoMatcher.html#a80a925f47436fb14d55bfe199260431e" title="Dense stereo reconstruction from two (distored, non&#45;rectified) images and produces a dense depth map." alt="" coords="5,5,213,45"/>
+</map>

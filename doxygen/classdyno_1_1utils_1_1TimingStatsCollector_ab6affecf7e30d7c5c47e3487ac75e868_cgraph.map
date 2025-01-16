@@ -1,0 +1,7 @@
+<map id="dyno::utils::TimingStatsCollector::~TimingStatsCollector" name="dyno::utils::TimingStatsCollector::~TimingStatsCollector">
+<area shape="rect" id="node1" title=" " alt="" coords="5,35,240,75"/>
+<area shape="rect" id="node2" href="$classdyno_1_1utils_1_1TimingStatsCollector.html#a5ea6857430a09c6d219f505adace45dc" title="Creates a toc time to compare against the latest tic time and logs the diff as sample to the collecto..." alt="" coords="288,35,464,75"/>
+<area shape="rect" id="node3" href="$classdyno_1_1utils_1_1StatsCollectorImpl.html#ab92087ce27dbec18730bf779e48d6aec" title=" " alt="" coords="512,35,701,75"/>
+<area shape="rect" id="node4" href="$classdyno_1_1utils_1_1Statistics.html#a1c18a39943c66b2bd4b6a788ed2c06be" title=" " alt="" coords="749,5,908,45"/>
+<area shape="rect" id="node5" href="$classdyno_1_1utils_1_1Statistics.html#a755d6b65c1cbd3b81bf3b431fd6e8bfd" title=" " alt="" coords="956,35,1115,75"/>
+</map>

@@ -1,0 +1,13 @@
+<map id="dyno::ImageContainer::toString" name="dyno::ImageContainer::toString">
+<area shape="rect" id="node1" title=" " alt="" coords="5,133,172,173"/>
+<area shape="rect" id="node2" href="$classdyno_1_1ImageContainer.html#a002c72dfd08a460fc10a233e2b8b44e5" title=" " alt="" coords="220,5,399,45"/>
+<area shape="rect" id="node4" href="$classdyno_1_1ImageContainer.html#ae6d8d0845eb77179dc00b4b865393ad7" title=" " alt="" coords="226,69,393,109"/>
+<area shape="rect" id="node6" href="$classdyno_1_1ImageContainer.html#a1e542c2de79711afb3b925d20f94cef7" title=" " alt="" coords="226,133,393,173"/>
+<area shape="rect" id="node8" href="$classdyno_1_1ImageContainer.html#a9249d3580ffc65459f01a8d116c108a8" title=" " alt="" coords="226,197,393,237"/>
+<area shape="rect" id="node10" href="$classdyno_1_1ImageContainer.html#ab1a215ac3480c3d6e8414109d4fef25c" title="True if the image has 3 channels and is therefore expected to be RGB. The alternative is greyscale." alt="" coords="226,261,393,301"/>
+<area shape="rect" id="node3" href="$classdyno_1_1ImageContainer.html#ab2109c3e725bfd9b52184c8b1f9f94d4" title=" " alt="" coords="447,5,624,45"/>
+<area shape="rect" id="node5" href="$classdyno_1_1ImageContainer.html#a4cadfbf4fbd4eab24e8c0e0fe18e7759" title=" " alt="" coords="452,69,619,109"/>
+<area shape="rect" id="node7" href="$classdyno_1_1ImageContainer.html#ae3fae25d81812e990d5d35b04359e087" title=" " alt="" coords="452,133,619,173"/>
+<area shape="rect" id="node9" href="$classdyno_1_1ImageContainer.html#a4124640dbeea3e5f960327109c1ed0f8" title=" " alt="" coords="452,197,619,237"/>
+<area shape="rect" id="node11" href="$classdyno_1_1ImageContainer.html#a490837d7e6f52d84cc018cc7d9b1148e" title="Returns image. Could be RGB or greyscale." alt="" coords="452,261,619,301"/>
+</map>

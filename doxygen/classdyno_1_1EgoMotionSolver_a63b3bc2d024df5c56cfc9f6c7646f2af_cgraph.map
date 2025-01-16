@@ -1,0 +1,6 @@
+<map id="dyno::EgoMotionSolver::geometricOutlierRejection2d2d" name="dyno::EgoMotionSolver::geometricOutlierRejection2d2d">
+<area shape="rect" id="node1" title="Runs 2d&#45;2d PnP with optional Rotation (ie. from IMU)" alt="" coords="5,37,239,77"/>
+<area shape="rect" id="node2" href="$classdyno_1_1EgoMotionSolver.html#a39f88d947e0e5dbb4b3d59bf4dac4548" title=" " alt="" coords="287,5,468,45"/>
+<area shape="rect" id="node4" href="$classdyno_1_1CameraParams.html#a5573f4552b86bb79f033168f078a30a9" title=" " alt="" coords="287,69,467,109"/>
+<area shape="rect" id="node3" href="$namespacedyno.html#af008198dcb75012836115300a522ca86" title="From a set a tracklets and a subset (of the tracklet) inliers, calculate the remaining subset of outl..." alt="" coords="516,13,708,38"/>
+</map>

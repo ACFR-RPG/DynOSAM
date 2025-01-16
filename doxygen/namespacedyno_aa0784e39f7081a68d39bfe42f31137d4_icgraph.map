@@ -1,0 +1,13 @@
+<map id="dyno::isMoving" name="dyno::isMoving">
+<area shape="rect" id="node1" title=" " alt="" coords="1013,141,1135,166"/>
+<area shape="rect" id="node2" href="$structdyno_1_1ObjectPoseGT.html#a3d43ea421ec8fc4d21454a60270d3885" title="Calculates and sets prev_*_current_world_ using ground truth object in the previous frame...." alt="" coords="812,133,965,173"/>
+<area shape="rect" id="node3" href="$classdyno_1_1GroundTruthInputPacket.html#aa72fe05d556acd282772210df78fe09b" title="Calcualtes and sets the object motion ground truth variables of this GroundTruthInputPacket using the..." alt="" coords="548,133,764,173"/>
+<area shape="rect" id="node4" href="$classdyno_1_1GroundTruthInputPacket.html#a3eb76a8c0bbd4051c2e99fb8b420d9f4" title=" " alt="" coords="284,5,500,45"/>
+<area shape="rect" id="node5" href="$classdyno_1_1VirtualKittiTextGtLoader.html#ae36a704d18c2f6ee38b1f98355c1ea6d" title=" " alt="" coords="291,69,493,109"/>
+<area shape="rect" id="node7" href="$classdyno_1_1KittiObjectPoseFolder.html#a50e540fa5f13d68a16eda80e72b285d6" title="Get the Item at an index in the dataset." alt="" coords="291,133,493,173"/>
+<area shape="rect" id="node8" href="$classdyno_1_1OMDOldAllLoader.html#a3b098f14caca41fbd0c7b4adc3ca5e4b" title=" " alt="" coords="303,197,481,237"/>
+<area shape="rect" id="node10" href="$classdyno_1_1ClusterSlamAllLoader.html#ab475a49ae3fc624f16b9b5cf3210dda7" title=" " alt="" coords="291,261,493,301"/>
+<area shape="rect" id="node6" href="$classdyno_1_1VirtualKittiTextGtLoader.html#acd84a6178b51cde7490b662d4c0143d7" title="Construct a new Virtual Kitti Text Gt Laoder object." alt="" coords="5,69,236,109"/>
+<area shape="rect" id="node9" href="$classdyno_1_1OMDOldAllLoader.html#a5407ba0dda29eaf6520c615807fe3b93" title=" " alt="" coords="32,197,209,237"/>
+<area shape="rect" id="node11" href="$classdyno_1_1ClusterSlamAllLoader.html#a3475570fea904450975ee52c48fb298c" title="Construct a new Cluster Slam Gt Loader object." alt="" coords="19,261,222,301"/>
+</map>

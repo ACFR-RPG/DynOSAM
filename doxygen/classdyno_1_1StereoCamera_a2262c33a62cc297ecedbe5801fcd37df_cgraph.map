@@ -1,0 +1,15 @@
+<map id="dyno::StereoCamera::StereoCamera" name="dyno::StereoCamera::StereoCamera">
+<area shape="rect" id="node1" title=" " alt="" coords="5,197,160,237"/>
+<area shape="rect" id="node2" href="$classdyno_1_1StereoCamera.html#a469d1da1b8c3528e74b707f2905e8aa4" title=" " alt="" coords="252,133,407,173"/>
+<area shape="rect" id="node3" href="$classdyno_1_1StereoCamera.html#a6ce9ba10820d974b32a081868c224fad" title="computeRectificationParameters" alt="" coords="208,197,451,237"/>
+<area shape="rect" id="node13" href="$namespacedyno_1_1utils.html#abe851502ab3c4419cd7b6a4aa4caca69" title="Converts a 3x3 (or 3xM, M &gt; 3) camera matrix from opencv to gtsam::Cal3_S2." alt="" coords="229,262,430,287"/>
+<area shape="rect" id="node4" href="$classdyno_1_1CameraParams.html#ae50eb600c23415b3f7bd46e70553f96a" title=" " alt="" coords="511,5,672,45"/>
+<area shape="rect" id="node5" href="$classdyno_1_1CameraParams.html#a19bbd8710bfeec7e1dc1096f1ea773cd" title=" " alt="" coords="511,69,672,109"/>
+<area shape="rect" id="node6" href="$classdyno_1_1CameraParams.html#ad824176d6c92a8162e6360c0760fa304" title=" " alt="" coords="511,133,672,173"/>
+<area shape="rect" id="node7" href="$classdyno_1_1CameraParams.html#ac5f6ec080db908038d9928c3a493327b" title="Get the camera extrinsics &#45; the transform of the camera in the body frame (e.g T_robot_camera or ^RT_..." alt="" coords="511,197,672,237"/>
+<area shape="rect" id="node8" href="$classdyno_1_1CameraParams.html#abee4c6077c08a626e78d8bdab667b935" title=" " alt="" coords="511,261,672,301"/>
+<area shape="rect" id="node9" href="$namespacedyno_1_1utils.html#ae07df9c266ca251a8892fd9ad371dab5" title="Converts a gtsam pose3 to a 3x3 rotation matrix and translation vector in opencv format (note: the fu..." alt="" coords="499,326,684,351"/>
+<area shape="rect" id="node12" href="$namespacedyno.html#a809604e427db44cbf532a545c71a3b5d" title=" " alt="" coords="532,375,651,401"/>
+<area shape="rect" id="node10" href="$namespacedyno_1_1utils.html#a1acd48b0777dc5cc242c9a1fa2cac2d4" title=" " alt="" coords="732,287,921,327"/>
+<area shape="rect" id="node11" href="$namespacedyno_1_1utils.html#abe9a814a0ae44a165baa1812835c833b" title=" " alt="" coords="733,351,921,391"/>
+</map>

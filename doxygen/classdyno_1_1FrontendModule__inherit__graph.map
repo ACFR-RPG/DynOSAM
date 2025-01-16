@@ -1,0 +1,5 @@
+<map id="dyno::FrontendModule" name="dyno::FrontendModule">
+<area shape="rect" id="node1" title="Base class to actually do processing. Data passed to this module from the frontend." alt="" coords="41,108,208,133"/>
+<area shape="rect" id="node3" href="$classdyno_1_1RGBDInstanceFrontendModule.html" title=" " alt="" coords="19,181,231,221"/>
+<area shape="rect" id="node2" href="$classdyno_1_1ModuleBase.html" title=" " alt="" coords="5,5,244,60"/>
+</map>

@@ -1,0 +1,7 @@
+<map id="ThreadsafeQueue::popBlocking" name="ThreadsafeQueue::popBlocking">
+<area shape="rect" id="node1" title="Pop value. Waits for data to be available in the queue. Returns false if the queue has been shutdown." alt="" coords="764,45,989,70"/>
+<area shape="rect" id="node2" href="$classdyno_1_1DataInterfacePipeline.html#a9173a04b9b1ac30f2de87597b3be2200" title=" " alt="" coords="513,5,715,45"/>
+<area shape="rect" id="node3" href="$classdyno_1_1OpenCVImageDisplayQueue.html#af8fa9a44165ec7c4fd83d4251fc416c4" title=" " alt="" coords="512,69,716,109"/>
+<area shape="rect" id="node4" href="$classdyno_1_1DynoPipelineManager.html#a088564a2b3ea645611764a41fc290e67" title=" " alt="" coords="259,69,464,109"/>
+<area shape="rect" id="node5" href="$classdyno_1_1DynoPipelineManager.html#a543b0e2db2996861c2872609fea448eb" title="Spins the whole pipeline by spinning the data provider. If in sequential mode, it will return for eac..." alt="" coords="5,69,211,109"/>
+</map>

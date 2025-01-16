@@ -1,0 +1,6 @@
+<map id="dyno::utils::Statistics::getTagByModule" name="dyno::utils::Statistics::getTagByModule">
+<area shape="rect" id="node1" title="Gets a vector of tags by module. A module is the parent name of a tag separated by &quot;...." alt="" coords="5,69,164,109"/>
+<area shape="rect" id="node2" href="$classdyno_1_1utils_1_1Statistics.html#a14b340e8fa254f8c17bcbf564ebc63d6" title="Gets the module name from the tag. If the tag does not have a module (e.g. backend&#45;pipeline has no &quot;...." alt="" coords="212,5,405,45"/>
+<area shape="rect" id="node3" href="$classdyno_1_1utils_1_1Statistics.html#a59f2ba576efdd82567fd2883f9d6fb59" title=" " alt="" coords="229,69,388,109"/>
+<area shape="rect" id="node4" href="$classdyno_1_1utils_1_1Statistics.html#a755d6b65c1cbd3b81bf3b431fd6e8bfd" title=" " alt="" coords="453,99,612,139"/>
+</map>

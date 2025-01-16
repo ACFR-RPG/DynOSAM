@@ -1,0 +1,4 @@
+<map id="dyno::Map::getFrame" name="dyno::Map::getFrame">
+<area shape="rect" id="node1" title="Get the Frame object. If the frame does not exist, return nullptr." alt="" coords="5,5,165,31"/>
+<area shape="rect" id="node2" href="$classdyno_1_1Map.html#a03e8a74c8bb5177056a67b74b2d8c982" title="Check a frame exists at the requested frame id." alt="" coords="213,5,389,31"/>
+</map>

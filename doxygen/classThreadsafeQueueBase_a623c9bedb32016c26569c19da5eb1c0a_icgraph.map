@@ -1,0 +1,5 @@
+<map id="ThreadsafeQueueBase::empty" name="ThreadsafeQueueBase::empty">
+<area shape="rect" id="node1" title="Checks if the queue is empty. the state of the queue might change right after this query." alt="" coords="256,37,425,77"/>
+<area shape="rect" id="node2" href="$classThreadsafeQueueBase.html#a65bfe8c92a35848a5253ca91c403aca0" title=" " alt="" coords="22,5,191,45"/>
+<area shape="rect" id="node3" href="$classdyno_1_1DataInterfacePipeline.html#ab9ec92237dd774f90aa34efc8f11338c" title="Virtual function that should check if (any of the) input queues have work to do." alt="" coords="5,69,208,109"/>
+</map>

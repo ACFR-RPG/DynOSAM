@@ -1,0 +1,19 @@
+<map id="dynosam/include/dynosam/backend" name="dynosam/include/dynosam/backend">
+<area shape="rect" id="node1" href="dir_13c0d96b9066dadba60c0fe54c54df81.html" title="logger" alt="" coords="137,136,199,161"/>
+<area shape="rect" id="node2" href="dir_4545a13cb7472d9f8be7dcdc27139e51.html" title="frontend" alt="" coords="224,136,301,161"/>
+<area shape="rect" id="node3" href="dir_6803379718cc62be7b94a1b46b37c8ca.html" title="visualizer" alt="" coords="325,136,411,161"/>
+<area shape="rect" id="node4" href="dir_6d4c369584d8fed332043d0ec817db0b.html" title="pipeline" alt="" coords="435,136,509,161"/>
+<area shape="rect" id="node5" href="dir_e90706111b527bd7d771e5120c1fb51f.html" title="common" alt="" coords="271,209,350,235"/>
+<area shape="rect" id="node6" href="dir_ecb64fd74fc702701a4d48ffddfe049d.html" title="utils" alt="" coords="560,136,611,161"/>
+<area shape="rect" id="edge1-headlabel" href="dir_000003_000029.html" title="2" alt="" coords="139,111,148,125"/>
+<area shape="rect" id="edge3-headlabel" href="dir_000003_000023.html" title="3" alt="" coords="214,114,223,129"/>
+<area shape="rect" id="edge4-headlabel" href="dir_000003_000045.html" title="2" alt="" coords="305,117,314,132"/>
+<area shape="rect" id="edge5-headlabel" href="dir_000003_000034.html" title="1" alt="" coords="414,119,423,134"/>
+<area shape="rect" id="edge6-headlabel" href="dir_000003_000007.html" title="19" alt="" coords="360,218,377,233"/>
+<area shape="rect" id="edge7-headlabel" href="dir_000003_000041.html" title="4" alt="" coords="539,120,549,135"/>
+<area shape="rect" id="node8" href="dir_30a89d1f8baa95edad9631e1044350bf.html" title="rgbd" alt="" coords="56,136,107,161"/>
+<area shape="rect" id="edge2-headlabel" href="dir_000003_000037.html" title="2" alt="" coords="83,110,92,125"/>
+<area shape="rect" id="edge8-headlabel" href="dir_000037_000007.html" title="2" alt="" coords="250,197,259,212"/>
+<area shape="rect" id="clust2" href="dir_22c70bd49b7ad17356631635bf6dae09.html" alt="" coords="27,52,125,172"/>
+<area shape="rect" id="clust1" href="dir_0c508da48c40328131e0e187ecaa7ee4.html" title="dynosam" alt="" coords="16,16,621,245"/>
+</map>

@@ -1,0 +1,6 @@
+<map id="dyno::Map::objectExists" name="dyno::Map::objectExists">
+<area shape="rect" id="node1" title="Check that an object exists with the requested object id." alt="" coords="752,13,929,38"/>
+<area shape="rect" id="node2" href="$classdyno_1_1Map.html#a0f795b64fd5ae27c562c93ee0faf29dc" title=" " alt="" coords="283,5,495,45"/>
+<area shape="rect" id="node4" href="$classdyno_1_1Map.html#ac7781cb581fbf46f1d11622a002f81c7" title="Get the Object object. If the object does not exist, return nullptr." alt="" coords="543,38,704,63"/>
+<area shape="rect" id="node3" href="$classdyno_1_1Map.html#abe87e9c89e1daf6f89e87d90f8f9320e" title="Update the map structure given new measurements." alt="" coords="5,13,235,38"/>
+</map>

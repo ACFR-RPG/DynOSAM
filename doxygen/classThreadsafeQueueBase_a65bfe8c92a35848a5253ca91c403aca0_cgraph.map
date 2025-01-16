@@ -1,0 +1,4 @@
+<map id="ThreadsafeQueueBase::clear" name="ThreadsafeQueueBase::clear">
+<area shape="rect" id="node1" title=" " alt="" coords="5,5,175,45"/>
+<area shape="rect" id="node2" href="$classThreadsafeQueueBase.html#a623c9bedb32016c26569c19da5eb1c0a" title="Checks if the queue is empty. the state of the queue might change right after this query." alt="" coords="223,5,392,45"/>
+</map>

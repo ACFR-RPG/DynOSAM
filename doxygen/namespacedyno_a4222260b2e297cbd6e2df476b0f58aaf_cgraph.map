@@ -1,0 +1,7 @@
+<map id="dyno::removeStaticObjectFromMask" name="dyno::removeStaticObjectFromMask">
+<area shape="rect" id="node1" title="From an instance semantic mask (one that satisfies the requirements for a SemanticMask),..." alt="" coords="5,37,196,77"/>
+<area shape="rect" id="node2" href="$namespacedyno_1_1vision__tools.html#a3a09fe6c15aeb5e18979dc27d68c4616" title="Finds the unique object labels (j) as present in the instance segmentation image. Does not include th..." alt="" coords="275,5,415,45"/>
+<area shape="rect" id="node3" href="$structdyno_1_1ImageType_1_1SemanticMask.html#a2c7bb8958ebf6b4965ee040c92abd14d" title="Expected opencv image type for SemanticMask image type." alt="" coords="244,69,447,109"/>
+<area shape="rect" id="node4" href="$namespacedyno.html#a31fb0387e1e309869f7b2280fbf07eac" title=" " alt="" coords="495,77,645,102"/>
+<area shape="rect" id="node5" href="$namespacedyno_1_1utils.html#a4bed389606523e7a31694ad904523c4d" title=" " alt="" coords="693,77,888,102"/>
+</map>

@@ -1,0 +1,27 @@
+<map id="dynosam/include/dynosam/frontend/FrontendParams.hpp" name="dynosam/include/dynosam/frontend/FrontendParams.hpp">
+<area shape="rect" id="node1" title=" " alt="" coords="529,5,748,45"/>
+<area shape="rect" id="node2" href="$FrontendModule_8hpp.html" title=" " alt="" coords="137,101,356,141"/>
+<area shape="rect" id="node9" href="$FeatureTracker_8hpp.html" title=" " alt="" coords="285,299,536,339"/>
+<area shape="rect" id="node13" href="$FeatureTrackerBase_8hpp.html" title=" " alt="" coords="454,93,677,148"/>
+<area shape="rect" id="node17" href="$PipelineParams_8hpp.html" title=" " alt="" coords="1033,203,1244,243"/>
+<area shape="rect" id="node24" href="$FrontendParams_8cc.html" title=" " alt="" coords="751,101,915,141"/>
+<area shape="rect" id="node25" href="$VisionTools_8cc.html" title=" " alt="" coords="939,101,1103,141"/>
+<area shape="rect" id="node3" href="$RGBDInstanceFrontendModule_8hpp.html" title=" " alt="" coords="9,387,244,441"/>
+<area shape="rect" id="node8" href="$FrontendModule_8cc.html" title=" " alt="" coords="165,203,329,243"/>
+<area shape="rect" id="node4" href="$ModuleFactory_8hpp.html" title=" " alt="" coords="273,489,481,529"/>
+<area shape="rect" id="node5" href="$RGBDInstanceFrontendModule_8cc.html" title=" " alt="" coords="5,489,248,529"/>
+<area shape="rect" id="node6" href="$PipelineManager_8cc.html" title=" " alt="" coords="509,489,670,529"/>
+<area shape="rect" id="node7" href="$backend__experiments__node_8cc.html" title=" " alt="" coords="696,489,907,529"/>
+<area shape="rect" id="node10" href="$dyno__sam_8cc.html" title=" " alt="" coords="703,394,881,434"/>
+<area shape="rect" id="node11" href="$FeatureTracker_8cc.html" title=" " alt="" coords="268,394,449,434"/>
+<area shape="rect" id="node12" href="$dataset__node_8cc.html" title=" " alt="" coords="473,394,679,434"/>
+<area shape="rect" id="node14" href="$StaticFeatureTracker_8hpp.html" title=" " alt="" coords="482,196,697,251"/>
+<area shape="rect" id="node16" href="$FeatureTrackerBase_8cc.html" title=" " alt="" coords="721,203,935,243"/>
+<area shape="rect" id="node15" href="$StaticFeatureTracker_8cc.html" title=" " alt="" coords="560,299,779,339"/>
+<area shape="rect" id="node18" href="$PipelineManager_8hpp.html" title=" " alt="" coords="956,299,1175,339"/>
+<area shape="rect" id="node19" href="$PipelineRos_8hpp.html" title=" " alt="" coords="1007,394,1228,434"/>
+<area shape="rect" id="node21" href="$PipelineRos_8cc.html" title=" " alt="" coords="1171,489,1359,529"/>
+<area shape="rect" id="node22" href="$Pipeline-Definitions_8cc.html" title=" " alt="" coords="1303,299,1473,339"/>
+<area shape="rect" id="node23" href="$PipelineParams_8cc.html" title=" " alt="" coords="1498,299,1659,339"/>
+<area shape="rect" id="node20" href="$dynosam__node_8cc.html" title=" " alt="" coords="931,489,1147,529"/>
+</map>

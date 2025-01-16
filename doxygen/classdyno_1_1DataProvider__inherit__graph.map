@@ -1,0 +1,10 @@
+<map id="dyno::DataProvider" name="dyno::DataProvider">
+<area shape="rect" id="node1" title="A data provider is a module that actually gets the inididual image and/or IMU data from some source a..." alt="" coords="5,69,152,95"/>
+<area shape="rect" id="node2" href="$classdyno_1_1DynoDatasetProvider.html" title=" " alt="" coords="200,5,447,60"/>
+<area shape="rect" id="node4" href="$classdyno_1_1DynoDatasetProvider.html" title=" " alt="" coords="223,98,424,138"/>
+<area shape="rect" id="node3" href="$classdyno_1_1KittiDataLoader.html" title=" " alt="" coords="521,7,685,32"/>
+<area shape="rect" id="node5" href="$classdyno_1_1ClusterSlamDataLoader.html" title="Data loader for the cluster slam datasets as provided at: https://huangjh&#45;pub.github...." alt="" coords="495,56,711,81"/>
+<area shape="rect" id="node6" href="$classdyno_1_1OMDDataLoader.html" title="Data loader for the oxford multi motion (omd) datasets as provided at: https://robotic&#45;esp...." alt="" coords="518,105,687,131"/>
+<area shape="rect" id="node7" href="$classdyno_1_1ProjectARIADataLoader.html" title="Data loader for the PREPROCESSED Project ARIA for MP testing team (dataset so far closest source)" alt="" coords="496,155,709,180"/>
+<area shape="rect" id="node8" href="$classdyno_1_1VirtualKittiDataLoader.html" title=" " alt="" coords="499,204,706,229"/>
+</map>

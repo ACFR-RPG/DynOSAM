@@ -1,0 +1,9 @@
+<map id="dyno::VirtualKittiMotionSegFolder::loadImage" name="dyno::VirtualKittiMotionSegFolder::loadImage">
+<area shape="rect" id="node1" title=" " alt="" coords="5,49,183,89"/>
+<area shape="rect" id="node2" href="$classdyno_1_1VirtualKittiGenericInstanceSegFolder.html#a662296f9f6cfe183170efa1af86134aa" title="Loads instance semantic mask from the file path." alt="" coords="231,5,469,60"/>
+<area shape="rect" id="node3" href="$namespacedyno.html#a4222260b2e297cbd6e2df476b0f58aaf" title="From an instance semantic mask (one that satisfies the requirements for a SemanticMask),..." alt="" coords="255,85,445,125"/>
+<area shape="rect" id="node4" href="$namespacedyno_1_1vision__tools.html#a3a09fe6c15aeb5e18979dc27d68c4616" title="Finds the unique object labels (j) as present in the instance segmentation image. Does not include th..." alt="" coords="549,53,689,93"/>
+<area shape="rect" id="node5" href="$structdyno_1_1ImageType_1_1SemanticMask.html#a2c7bb8958ebf6b4965ee040c92abd14d" title="Expected opencv image type for SemanticMask image type." alt="" coords="517,117,720,157"/>
+<area shape="rect" id="node6" href="$namespacedyno.html#a31fb0387e1e309869f7b2280fbf07eac" title=" " alt="" coords="768,124,919,149"/>
+<area shape="rect" id="node7" href="$namespacedyno_1_1utils.html#a4bed389606523e7a31694ad904523c4d" title=" " alt="" coords="967,124,1161,149"/>
+</map>

@@ -1,0 +1,4 @@
+<map id="dyno::is_zero" name="dyno::is_zero">
+<area shape="rect" id="node1" title="Checks if a double value is zero up to a tolerance." alt="" coords="5,5,113,31"/>
+<area shape="rect" id="node2" href="$namespacedyno.html#adf545b8b790321f0f83e16e7b4927192" title="Float point comparison up to a tolerance." alt="" coords="161,5,272,31"/>
+</map>

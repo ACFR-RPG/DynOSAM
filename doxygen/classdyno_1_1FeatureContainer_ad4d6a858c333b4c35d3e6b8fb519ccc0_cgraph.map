@@ -1,0 +1,4 @@
+<map id="dyno::FeatureContainer::remove" name="dyno::FeatureContainer::remove">
+<area shape="rect" id="node1" title="Removes a feature by tracklet id by using std::map::erase." alt="" coords="5,5,180,45"/>
+<area shape="rect" id="node2" href="$classdyno_1_1FeatureContainer.html#abf2f2d568f5dc17944cc122c537a65f5" title="Returns true if a feature with the given tracklet id exists." alt="" coords="228,5,403,45"/>
+</map>

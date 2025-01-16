@@ -1,0 +1,5 @@
+<map id="dyno::Camera::isLandmarkContained" name="dyno::Camera::isLandmarkContained">
+<area shape="rect" id="node1" title="Checks if a landmark can be seen in the image frustrum. The 3D point must be in the camera frame." alt="" coords="5,59,203,99"/>
+<area shape="rect" id="node2" href="$classdyno_1_1Camera.html#a1b0a5c4c80d414218df4c5af0bf360c4" title="Checks if a given keypoint is inside the image AND in front the camera (ie. depth &gt; 0)." alt="" coords="251,29,440,69"/>
+<area shape="rect" id="node3" href="$classdyno_1_1Camera.html#a4b65a9e00aef7b4f7e2d58753d8d43b7" title="Projects a 3D point in the camera frame into the image frame as a keypoint. Doesnt do any checks if t..." alt="" coords="262,94,429,119"/>
+</map>

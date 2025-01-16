@@ -1,0 +1,5 @@
+<map id="dyno::ImageType::ClassSegmentation::validate" name="dyno::ImageType::ClassSegmentation::validate">
+<area shape="rect" id="node1" title="Expected opencv image type for ClassSegmentation image type." alt="" coords="5,5,272,45"/>
+<area shape="rect" id="node2" href="$namespacedyno.html#a31fb0387e1e309869f7b2280fbf07eac" title=" " alt="" coords="320,13,471,38"/>
+<area shape="rect" id="node3" href="$namespacedyno_1_1utils.html#a4bed389606523e7a31694ad904523c4d" title=" " alt="" coords="519,13,713,38"/>
+</map>

@@ -1,0 +1,13 @@
+<map id="dynosam/include/dynosam/frontend/vision/StaticFeatureTracker.hpp" name="dynosam/include/dynosam/frontend/vision/StaticFeatureTracker.hpp">
+<area shape="rect" id="node1" title=" " alt="" coords="610,5,825,60"/>
+<area shape="rect" id="node2" href="$FeatureTracker_8hpp.html" title=" " alt="" coords="463,108,713,148"/>
+<area shape="rect" id="node11" href="$StaticFeatureTracker_8cc.html" title=" " alt="" coords="737,108,956,148"/>
+<area shape="rect" id="node3" href="$dyno__sam_8cc.html" title=" " alt="" coords="152,203,331,243"/>
+<area shape="rect" id="node4" href="$RGBDInstanceFrontendModule_8hpp.html" title=" " alt="" coords="355,196,589,251"/>
+<area shape="rect" id="node9" href="$FeatureTracker_8cc.html" title=" " alt="" coords="613,203,795,243"/>
+<area shape="rect" id="node10" href="$dataset__node_8cc.html" title=" " alt="" coords="819,203,1024,243"/>
+<area shape="rect" id="node5" href="$ModuleFactory_8hpp.html" title=" " alt="" coords="5,299,213,339"/>
+<area shape="rect" id="node6" href="$RGBDInstanceFrontendModule_8cc.html" title=" " alt="" coords="237,299,480,339"/>
+<area shape="rect" id="node7" href="$PipelineManager_8cc.html" title=" " alt="" coords="505,299,666,339"/>
+<area shape="rect" id="node8" href="$backend__experiments__node_8cc.html" title=" " alt="" coords="691,299,901,339"/>
+</map>

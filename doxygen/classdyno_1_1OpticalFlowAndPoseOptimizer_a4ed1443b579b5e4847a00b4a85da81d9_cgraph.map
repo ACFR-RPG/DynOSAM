@@ -1,0 +1,8 @@
+<map id="dyno::OpticalFlowAndPoseOptimizer::optimize" name="dyno::OpticalFlowAndPoseOptimizer::optimize">
+<area shape="rect" id="node1" title="Builds the factor&#45;graph problem using the set of specificed correspondences (tracklets) in frame k&#45;1 ..." alt="" coords="5,88,200,128"/>
+<area shape="rect" id="node2" href="$classdyno_1_1utils_1_1StatsCollectorImpl.html#ab92087ce27dbec18730bf779e48d6aec" title=" " alt="" coords="267,56,456,96"/>
+<area shape="rect" id="node5" href="$namespacedyno_1_1factor__graph__tools.html#af7b6cb76226919a10ad3cdac2ba3ac6a" title=" " alt="" coords="248,120,475,160"/>
+<area shape="rect" id="node3" href="$classdyno_1_1utils_1_1Statistics.html#a1c18a39943c66b2bd4b6a788ed2c06be" title=" " alt="" coords="543,5,702,45"/>
+<area shape="rect" id="node4" href="$classdyno_1_1utils_1_1Statistics.html#a755d6b65c1cbd3b81bf3b431fd6e8bfd" title=" " alt="" coords="771,35,929,75"/>
+<area shape="rect" id="node6" href="$namespacedyno.html#a45aa2da5e284a5b1014c7d698ae91afc" title="Compute the quantile function of the Chi&#45;Squared distribution." alt="" coords="523,127,723,153"/>
+</map>

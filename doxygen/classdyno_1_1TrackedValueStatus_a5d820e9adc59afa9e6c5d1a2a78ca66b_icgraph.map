@@ -1,0 +1,5 @@
+<map id="dyno::TrackedValueStatus::referenceFrame" name="dyno::TrackedValueStatus::referenceFrame">
+<area shape="rect" id="node1" title="Get the reference frame the value is in. Const version." alt="" coords="241,37,429,77"/>
+<area shape="rect" id="node2" href="$classdyno_1_1TrackedValueStatus.html#afd88182aef8ac96a3358fba02a361cb5" title="Allows the casting of the internal value type to another using static casting." alt="" coords="5,5,193,45"/>
+<area shape="rect" id="node3" href="$classdyno_1_1TrackedValueStatus.html#a36d501f3710663913e8cfab37e58116b" title=" " alt="" coords="5,69,193,109"/>
+</map>

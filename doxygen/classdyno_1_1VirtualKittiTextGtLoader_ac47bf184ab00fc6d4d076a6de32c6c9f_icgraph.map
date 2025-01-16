@@ -1,0 +1,6 @@
+<map id="dyno::VirtualKittiTextGtLoader::checkExists" name="dyno::VirtualKittiTextGtLoader::checkExists">
+<area shape="rect" id="node1" title=" " alt="" coords="507,37,681,77"/>
+<area shape="rect" id="node2" href="$classdyno_1_1VirtualKittiTextGtLoader.html#af0317fe52279ccb55b45d1dce6ce83a0" title="Queries if an object is moving in the current frame." alt="" coords="284,5,459,45"/>
+<area shape="rect" id="node3" href="$classdyno_1_1VirtualKittiTextGtLoader.html#a2dcc001902365382bba57dc0fb79667e" title=" " alt="" coords="284,69,459,109"/>
+<area shape="rect" id="node4" href="$classdyno_1_1VirtualKittiTextGtLoader.html#acd84a6178b51cde7490b662d4c0143d7" title="Construct a new Virtual Kitti Text Gt Laoder object." alt="" coords="5,69,236,109"/>
+</map>

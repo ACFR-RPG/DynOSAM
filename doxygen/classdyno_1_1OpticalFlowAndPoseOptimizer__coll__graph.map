@@ -1,0 +1,4 @@
+<map id="dyno::OpticalFlowAndPoseOptimizer" name="dyno::OpticalFlowAndPoseOptimizer">
+<area shape="rect" id="node1" title="Joinly refines optical flow with with the given pose using the error term: e = [u,..." alt="" coords="5,108,200,148"/>
+<area shape="rect" id="node2" href="$structdyno_1_1OpticalFlowAndPoseOptimizer_1_1Params.html" title=" " alt="" coords="5,5,200,45"/>
+</map>

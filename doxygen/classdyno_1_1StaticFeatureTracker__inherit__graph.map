@@ -1,0 +1,6 @@
+<map id="dyno::StaticFeatureTracker" name="dyno::StaticFeatureTracker">
+<area shape="rect" id="node1" title=" " alt="" coords="110,79,305,104"/>
+<area shape="rect" id="node3" href="$classdyno_1_1ExternalFlowFeatureTracker.html" title=" " alt="" coords="5,152,201,192"/>
+<area shape="rect" id="node4" href="$classdyno_1_1KltFeatureTracker.html" title="Static feature tracking that tracks sparse feature set using the iterative Lucas&#45;Kanade method with p..." alt="" coords="225,159,400,185"/>
+<area shape="rect" id="node2" href="$classdyno_1_1FeatureTrackerBase.html" title=" " alt="" coords="113,5,302,31"/>
+</map>

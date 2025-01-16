@@ -1,0 +1,4 @@
+<map id="dyno::Spinner" name="dyno::Spinner">
+<area shape="rect" id="node1" title="Class to handle the calling of a function within a thread. The spinner launches its own thread for ea..." alt="" coords="31,5,142,31"/>
+<area shape="rect" id="node2" href="$classdyno_1_1LoopingSpinner.html" title="A spinner that will take a non&#45;blocking function (spinOnce) and puts it in a loop with a given delay...." alt="" coords="5,79,168,104"/>
+</map>

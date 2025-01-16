@@ -1,0 +1,5 @@
+<map id="dyno::TrackedValueStatus::objectId" name="dyno::TrackedValueStatus::objectId">
+<area shape="rect" id="node1" title="Get object id (j) for this status." alt="" coords="283,35,471,75"/>
+<area shape="rect" id="node2" href="$classdyno_1_1TrackedValueStatus.html#afd88182aef8ac96a3358fba02a361cb5" title="Allows the casting of the internal value type to another using static casting." alt="" coords="26,5,214,45"/>
+<area shape="rect" id="node3" href="$classdyno_1_1Map.html#abe87e9c89e1daf6f89e87d90f8f9320e" title="Update the map structure given new measurements." alt="" coords="5,70,235,95"/>
+</map>

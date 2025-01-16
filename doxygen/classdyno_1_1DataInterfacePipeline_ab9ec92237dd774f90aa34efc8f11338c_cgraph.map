@@ -1,0 +1,5 @@
+<map id="dyno::DataInterfacePipeline::hasWork" name="dyno::DataInterfacePipeline::hasWork">
+<area shape="rect" id="node1" title="Virtual function that should check if (any of the) input queues have work to do." alt="" coords="5,37,208,77"/>
+<area shape="rect" id="node2" href="$classThreadsafeQueueBase.html#a623c9bedb32016c26569c19da5eb1c0a" title="Checks if the queue is empty. the state of the queue might change right after this query." alt="" coords="256,5,425,45"/>
+<area shape="rect" id="node3" href="$classThreadsafeQueueBase.html#adb208658a05047121e701ddff4a8d505" title=" " alt="" coords="256,69,425,109"/>
+</map>

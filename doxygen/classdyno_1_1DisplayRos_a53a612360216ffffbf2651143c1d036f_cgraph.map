@@ -1,0 +1,7 @@
+<map id="dyno::DisplayRos::publishPointCloud" name="dyno::DisplayRos::publishPointCloud">
+<area shape="rect" id="node1" title=" " alt="" coords="5,23,196,63"/>
+<area shape="rect" id="node2" href="$structdyno_1_1Color.html#a4f52f9aec87e2c34370ad02e6d4e25fc" title="Generates a sequence of never repeating colors using the golden ration to seperate the colours along ..." alt="" coords="244,31,404,56"/>
+<area shape="rect" id="node3" href="$structdyno_1_1Color.html#a08bcb6ea49861f6978858a2ff5159002" title=" " alt="" coords="452,31,615,56"/>
+<area shape="rect" id="node4" href="$structdyno_1_1Color.html#a6bc55a80a463a481dbf4778c70d04733" title=" " alt="" coords="690,5,829,31"/>
+<area shape="rect" id="node5" href="$namespacedyno.html#ab0e74ec8992860404a618192cc694b83" title=" " alt="" coords="663,55,856,80"/>
+</map>

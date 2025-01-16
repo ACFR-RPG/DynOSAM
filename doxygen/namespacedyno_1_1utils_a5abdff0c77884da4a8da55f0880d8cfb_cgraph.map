@@ -1,0 +1,7 @@
+<map id="dyno::utils::labelMaskToRGB" name="dyno::utils::labelMaskToRGB">
+<area shape="rect" id="node1" title="Given an image that operates like a mask (ie. is a single channel image where each pixel value corres..." alt="" coords="5,31,212,56"/>
+<area shape="rect" id="node2" href="$structdyno_1_1Color.html#a4f52f9aec87e2c34370ad02e6d4e25fc" title="Generates a sequence of never repeating colors using the golden ration to seperate the colours along ..." alt="" coords="260,31,420,56"/>
+<area shape="rect" id="node3" href="$structdyno_1_1Color.html#a08bcb6ea49861f6978858a2ff5159002" title=" " alt="" coords="468,31,631,56"/>
+<area shape="rect" id="node4" href="$structdyno_1_1Color.html#a6bc55a80a463a481dbf4778c70d04733" title=" " alt="" coords="706,5,845,31"/>
+<area shape="rect" id="node5" href="$namespacedyno.html#ab0e74ec8992860404a618192cc694b83" title=" " alt="" coords="679,55,872,80"/>
+</map>

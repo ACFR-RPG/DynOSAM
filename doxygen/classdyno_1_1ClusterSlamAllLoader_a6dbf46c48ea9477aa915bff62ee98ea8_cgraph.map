@@ -1,0 +1,20 @@
+<map id="dyno::ClusterSlamAllLoader::getInstanceMask" name="dyno::ClusterSlamAllLoader::getInstanceMask">
+<area shape="rect" id="node1" title=" " alt="" coords="5,284,208,324"/>
+<area shape="rect" id="node2" href="$classdyno_1_1ClusterSlamAllLoader.html#a074af7358c98d715599460ca2671ecc4" title=" " alt="" coords="256,191,497,231"/>
+<area shape="rect" id="node17" href="$namespacedyno.html#a38a7315ac269741048e61a97bd545321" title=" " alt="" coords="314,319,439,345"/>
+<area shape="rect" id="node3" href="$namespacedyno_1_1vision__tools.html#a01601f2fba95a79f4ecaa11b89286d99" title="From a instance/semantic mask type img, construct the bounding box for the mask of object_id." alt="" coords="555,5,738,45"/>
+<area shape="rect" id="node4" href="$classdyno_1_1ClusterSlamAllLoader.html#afc00a3357c65994196a64d621afd1e5c" title=" " alt="" coords="545,69,748,109"/>
+<area shape="rect" id="node5" href="$namespacedyno_1_1vision__tools.html#a3a09fe6c15aeb5e18979dc27d68c4616" title="Finds the unique object labels (j) as present in the instance segmentation image. Does not include th..." alt="" coords="577,133,717,173"/>
+<area shape="rect" id="node6" href="$namespacedyno_1_1utils.html#a566e85133acf8b739daa549be74d2e1c" title=" " alt="" coords="545,198,748,223"/>
+<area shape="rect" id="node7" href="$namespacedyno_1_1vision__tools.html#ae077e5d2722435f6731a8f58e3aab848" title=" " alt="" coords="577,248,717,288"/>
+<area shape="rect" id="node8" href="$structdyno_1_1internal_1_1HungarianAlgorithm.html#a2bb97d6f6a4ffb36912fbb24d248fd13" title="Solve the optical assignment problem given a set of workers (row) and jobs (columns)...." alt="" coords="553,312,740,352"/>
+<area shape="rect" id="node9" href="$structdyno_1_1internal_1_1HungarianAlgorithm.html#a4f657d2f47d441ca6ed9b904bf68ffae" title=" " alt="" coords="796,312,1016,352"/>
+<area shape="rect" id="node10" href="$structdyno_1_1internal_1_1HungarianAlgorithm.html#a0d698d068e1ffe22064098d0e4df65cb" title=" " alt="" coords="1064,280,1319,320"/>
+<area shape="rect" id="node11" href="$structdyno_1_1internal_1_1HungarianAlgorithm.html#a5420826c147a5256ca048b751a36654b" title=" " alt="" coords="1098,344,1285,384"/>
+<area shape="rect" id="node12" href="$structdyno_1_1internal_1_1HungarianAlgorithm.html#a463b5538b087355adf05892b1f7202a4" title=" " alt="" coords="1367,280,1609,320"/>
+<area shape="rect" id="node13" href="$structdyno_1_1internal_1_1HungarianAlgorithm.html#a104861cd70f4082e54aa7fea2976a427" title=" " alt="" coords="1395,344,1581,384"/>
+<area shape="rect" id="node14" href="$structdyno_1_1internal_1_1HungarianAlgorithm.html#a46efba4821d8bc4626f0d816407f3fa6" title=" " alt="" coords="1657,280,1844,320"/>
+<area shape="rect" id="node16" href="$structdyno_1_1internal_1_1HungarianAlgorithm.html#a241ebba1dd0feab75ce38971b8ee1e0e" title=" " alt="" coords="1657,344,1844,384"/>
+<area shape="rect" id="node15" href="$structdyno_1_1internal_1_1HungarianAlgorithm.html#a024f1f51b22daad6295f8b9b459530ce" title=" " alt="" coords="1892,341,2079,381"/>
+<area shape="rect" id="node18" href="$namespacedyno.html#a80d59abcebfb78b7fb237b1572429606" title=" " alt="" coords="547,376,747,416"/>
+</map>

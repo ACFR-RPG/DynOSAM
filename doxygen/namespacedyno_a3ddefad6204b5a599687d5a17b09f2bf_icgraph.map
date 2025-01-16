@@ -1,0 +1,5 @@
+<map id="dyno::ObjectPoseSymbol" name="dyno::ObjectPoseSymbol">
+<area shape="rect" id="node1" title=" " alt="" coords="276,45,460,70"/>
+<area shape="rect" id="node2" href="$classdyno_1_1WorldMotionAccessor.html#a261be7df36333929259a315767fc6578" title="Get the pose (^wL_k) of an object (j) at time&#45;step (k)." alt="" coords="15,5,218,45"/>
+<area shape="rect" id="node3" href="$structdyno_1_1FrameNode.html#abe39c4e00fca2c55f343a1afe6caf35b" title="Construct an object pose key. The associated pose will be for frame k." alt="" coords="5,69,228,109"/>
+</map>

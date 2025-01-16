@@ -1,0 +1,9 @@
+<map id="dyno::VirtualKittiDataLoader" name="dyno::VirtualKittiDataLoader">
+<area shape="rect" id="node1" title=" " alt="" coords="864,112,1071,137"/>
+<area shape="rect" id="node2" href="$classdyno_1_1DynoDatasetProvider.html" title=" " alt="" coords="497,55,694,80"/>
+<area shape="rect" id="node3" href="$classdyno_1_1DynoDataset.html" title=" " alt="" coords="284,13,443,53"/>
+<area shape="rect" id="node4" href="$structdyno_1_1__DynoDatasetConstructor.html" title=" " alt="" coords="5,5,235,60"/>
+<area shape="rect" id="node5" href="$classdyno_1_1DataProvider.html" title="A data provider is a module that actually gets the inididual image and/or IMU data from some source a..." alt="" coords="290,77,437,103"/>
+<area shape="rect" id="node6" href="$structdyno_1_1VirtualKittiDataLoader_1_1Params.html" title=" " alt="" coords="492,105,699,145"/>
+<area shape="rect" id="node7" href="$classdyno_1_1CameraParams.html" title=" " alt="" coords="515,169,676,195"/>
+</map>

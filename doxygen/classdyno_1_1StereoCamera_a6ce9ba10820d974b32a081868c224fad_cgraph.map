@@ -1,0 +1,12 @@
+<map id="dyno::StereoCamera::computeRectificationParameters" name="dyno::StereoCamera::computeRectificationParameters">
+<area shape="rect" id="node1" title="computeRectificationParameters" alt="" coords="5,197,248,237"/>
+<area shape="rect" id="node2" href="$classdyno_1_1CameraParams.html#ae50eb600c23415b3f7bd46e70553f96a" title=" " alt="" coords="308,5,469,45"/>
+<area shape="rect" id="node3" href="$classdyno_1_1CameraParams.html#a19bbd8710bfeec7e1dc1096f1ea773cd" title=" " alt="" coords="308,69,469,109"/>
+<area shape="rect" id="node4" href="$classdyno_1_1CameraParams.html#ad824176d6c92a8162e6360c0760fa304" title=" " alt="" coords="308,133,469,173"/>
+<area shape="rect" id="node5" href="$classdyno_1_1CameraParams.html#ac5f6ec080db908038d9928c3a493327b" title="Get the camera extrinsics &#45; the transform of the camera in the body frame (e.g T_robot_camera or ^RT_..." alt="" coords="308,197,469,237"/>
+<area shape="rect" id="node6" href="$classdyno_1_1CameraParams.html#abee4c6077c08a626e78d8bdab667b935" title=" " alt="" coords="308,261,469,301"/>
+<area shape="rect" id="node7" href="$namespacedyno_1_1utils.html#ae07df9c266ca251a8892fd9ad371dab5" title="Converts a gtsam pose3 to a 3x3 rotation matrix and translation vector in opencv format (note: the fu..." alt="" coords="296,326,481,351"/>
+<area shape="rect" id="node10" href="$namespacedyno.html#a809604e427db44cbf532a545c71a3b5d" title=" " alt="" coords="329,375,448,401"/>
+<area shape="rect" id="node8" href="$namespacedyno_1_1utils.html#a1acd48b0777dc5cc242c9a1fa2cac2d4" title=" " alt="" coords="529,287,719,327"/>
+<area shape="rect" id="node9" href="$namespacedyno_1_1utils.html#abe9a814a0ae44a165baa1812835c833b" title=" " alt="" coords="530,351,718,391"/>
+</map>

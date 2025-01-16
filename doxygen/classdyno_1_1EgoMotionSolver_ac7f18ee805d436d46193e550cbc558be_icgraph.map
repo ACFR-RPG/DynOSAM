@@ -1,0 +1,8 @@
+<map id="dyno::EgoMotionSolver::geometricOutlierRejection3d3d" name="dyno::EgoMotionSolver::geometricOutlierRejection3d3d">
+<area shape="rect" id="node1" title=" " alt="" coords="1067,39,1300,79"/>
+<area shape="rect" id="node2" href="$classdyno_1_1ObjectMotionSovler.html#a06f423f432c7e530c2eb692b69a1b57d" title=" " alt="" coords="785,8,1019,48"/>
+<area shape="rect" id="node6" href="$classdyno_1_1RGBDInstanceFrontendModule.html#a78935cca3751ad2a0c25019250d12230" title="Solves PnP between frame_k&#45;1 and frame_k using the tracked correspondances to estimate the frame of t..." alt="" coords="525,69,737,109"/>
+<area shape="rect" id="node3" href="$classdyno_1_1RGBDInstanceFrontendModule.html#ada2fe5067e732aa4734d96fc5e80f7f9" title=" " alt="" coords="525,5,737,45"/>
+<area shape="rect" id="node4" href="$classdyno_1_1RGBDInstanceFrontendModule.html#a9bfb2e31fd68b5b6d6ffb834b6c201a1" title=" " alt="" coords="265,8,477,48"/>
+<area shape="rect" id="node5" href="$classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2" title=" " alt="" coords="5,39,217,79"/>
+</map>

@@ -1,0 +1,4 @@
+<map id="dyno::WorldPoseAccessor::getSensorPose" name="dyno::WorldPoseAccessor::getSensorPose">
+<area shape="rect" id="node1" title="Get the sensor pose (^wX_k) from theta at the requested time&#45;step." alt="" coords="5,5,193,45"/>
+<area shape="rect" id="node2" href="$classdyno_1_1Accessor.html#a7204bf6ab3ea8d16809049aa1553bccc" title=" " alt="" coords="241,5,436,45"/>
+</map>

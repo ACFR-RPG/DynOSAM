@@ -1,0 +1,6 @@
+<map id="dyno::Frame::at" name="dyno::Frame::at">
+<area shape="rect" id="node1" title="Gets a feature from its tracklet ID. Could be static or dynamic. Nullptr is returned if the feature d..." alt="" coords="5,24,129,50"/>
+<area shape="rect" id="node2" href="$classdyno_1_1FeatureContainer.html#abf2f2d568f5dc17944cc122c537a65f5" title="Returns true if a feature with the given tracklet id exists." alt="" coords="400,17,575,57"/>
+<area shape="rect" id="node3" href="$classdyno_1_1Frame.html#ab9f7b3f513aeff82d47de7a72d66a69a" title="Checks if a feature exists within this frame. Could be static or dynamic." alt="" coords="189,24,340,50"/>
+<area shape="rect" id="node4" href="$classdyno_1_1FeatureContainer.html#a5b73e75d2f4063ac9c16dd0fd565f8da" title="Gets a feature given its tracklet id. If the feature does not exist, nullptr is returned." alt="" coords="177,74,352,114"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="dyno::FeatureTrackerBase::isWithinShrunkenImage" name="dyno::FeatureTrackerBase::isWithinShrunkenImage">
+<area shape="rect" id="node1" title="Checks if a keypoint is within an image, taking into account the shrink row/col values in the params...." alt="" coords="5,23,195,63"/>
+<area shape="rect" id="node2" href="$structdyno_1_1functional__keypoint.html#a3896d96a6f95b5311ae768cdd0ad97e8" title=" " alt="" coords="243,5,449,31"/>
+<area shape="rect" id="node3" href="$structdyno_1_1functional__keypoint.html#a24933450cad8bc70b7b76b339756cd94" title=" " alt="" coords="243,55,449,80"/>
+</map>

@@ -1,0 +1,10 @@
+<map id="dyno::DataInterfacePipeline::getInputPacket" name="dyno::DataInterfacePipeline::getInputPacket">
+<area shape="rect" id="node1" title=" " alt="" coords="5,155,208,195"/>
+<area shape="rect" id="node2" href="$classdyno_1_1utils_1_1StatsCollectorImpl.html#ab92087ce27dbec18730bf779e48d6aec" title=" " alt="" coords="274,33,463,73"/>
+<area shape="rect" id="node5" href="$classdyno_1_1PipelineBase.html#a5c485b024b7b1c710c94303f29ca8e31" title="Returns true if the pipeline has been shutdown by shutdown()." alt="" coords="295,97,442,137"/>
+<area shape="rect" id="node6" href="$classThreadsafeQueue.html#a5a94c5f25605668b0f51ab5cd4f6af7d" title="Pop without blocking, just checks once if the queue is empty. Returns true if the value could be retr..." alt="" coords="284,162,453,187"/>
+<area shape="rect" id="node7" href="$classThreadsafeQueue.html#a06b3418f87d1703da2fb8af8cb689790" title="Pop value. Waits for data to be available in the queue. Returns false if the queue has been shutdown." alt="" coords="256,211,481,237"/>
+<area shape="rect" id="node8" href="$classThreadsafeQueueBase.html#a72b4575cbd1b4ac1fa555b4a8cd18c9b" title=" " alt="" coords="284,261,453,301"/>
+<area shape="rect" id="node3" href="$classdyno_1_1utils_1_1Statistics.html#a1c18a39943c66b2bd4b6a788ed2c06be" title=" " alt="" coords="529,5,688,45"/>
+<area shape="rect" id="node4" href="$classdyno_1_1utils_1_1Statistics.html#a755d6b65c1cbd3b81bf3b431fd6e8bfd" title=" " alt="" coords="736,35,895,75"/>
+</map>

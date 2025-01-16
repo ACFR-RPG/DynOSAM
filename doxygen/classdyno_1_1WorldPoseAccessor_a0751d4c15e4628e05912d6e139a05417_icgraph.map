@@ -1,0 +1,4 @@
+<map id="dyno::WorldPoseAccessor::getObjectPose" name="dyno::WorldPoseAccessor::getObjectPose">
+<area shape="rect" id="node1" title="Get the pose (^wL_k) of an object (j) at time&#45;step (k)." alt="" coords="241,5,429,45"/>
+<area shape="rect" id="node2" href="$classdyno_1_1WorldPoseAccessor.html#a3208d2b3d549ea804cfa783ad06e06cc" title="Get an absolute object motion (_{k&#45;1}^wH_k) from theta the requested time&#45;step (k) and object (j)." alt="" coords="5,5,193,45"/>
+</map>

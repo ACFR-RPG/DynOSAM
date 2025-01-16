@@ -1,0 +1,23 @@
+<map id="dyno::FeatureTracker::track" name="dyno::FeatureTracker::track">
+<area shape="rect" id="node1" title=" " alt="" coords="5,187,163,227"/>
+<area shape="rect" id="node2" href="$namespacedyno_1_1vision__tools.html#a2c6285cb428d1df8a2ea1071d9a06757" title="From an input instance/semantic mask type img construct a image mask (binary) that has True values ar..." alt="" coords="211,65,472,105"/>
+<area shape="rect" id="node5" href="$namespacedyno.html#a17d3c448677824ae83870358b2a3e01d" title=" " alt="" coords="270,129,413,169"/>
+<area shape="rect" id="node6" href="$classdyno_1_1ImageContainerSubset.html#a11ceb8e3325f28bf683b6480d53427a0" title="Gets the corresponding image (cv::Mat) corresponding to the requested ImageType. ImageType must be in..." alt="" coords="520,190,759,215"/>
+<area shape="rect" id="node7" href="$classdyno_1_1FeatureTracker.html#a7877773d1c6d5b9cef0c379cd701c1e4" title=" " alt="" coords="263,244,420,284"/>
+<area shape="rect" id="node14" href="$classdyno_1_1FeatureTracker.html#aeaff1c244270c93747ce92b36163c38d" title=" " alt="" coords="263,541,420,581"/>
+<area shape="rect" id="node3" href="$namespacedyno_1_1vision__tools.html#a01601f2fba95a79f4ecaa11b89286d99" title="From a instance/semantic mask type img, construct the bounding box for the mask of object_id." alt="" coords="548,5,731,45"/>
+<area shape="rect" id="node4" href="$namespacedyno_1_1vision__tools.html#a3a09fe6c15aeb5e18979dc27d68c4616" title="Finds the unique object labels (j) as present in the instance segmentation image. Does not include th..." alt="" coords="569,69,709,109"/>
+<area shape="rect" id="node8" href="$classdyno_1_1Feature.html#a37dbbe8da704c2f51e237d38760534fb" title=" " alt="" coords="549,456,729,496"/>
+<area shape="rect" id="node10" href="$classdyno_1_1Feature.html#a6ef4cbae2843a4646954bcb53f63c7a8" title=" " alt="" coords="550,141,729,166"/>
+<area shape="rect" id="node11" href="$classdyno_1_1FeatureTrackerBase.html#a32d80be7e74a096c2b816529b7fd2c69" title="Checks if a keypoint is within an image, taking into account the shrink row/col values in the params...." alt="" coords="545,392,734,432"/>
+<area shape="rect" id="node12" href="$structdyno_1_1functional__keypoint.html#a3896d96a6f95b5311ae768cdd0ad97e8" title=" " alt="" coords="807,399,1013,425"/>
+<area shape="rect" id="node13" href="$structdyno_1_1functional__keypoint.html#a24933450cad8bc70b7b76b339756cd94" title=" " alt="" coords="807,342,1013,367"/>
+<area shape="rect" id="node9" href="$classdyno_1_1Feature.html#ada9f9980d950874a7a157a82b9921f8a" title="Gets keypoint observation." alt="" coords="823,463,997,489"/>
+<area shape="rect" id="node15" href="$classdyno_1_1FeatureContainer.html#a3af7c9e40df21b96a8c7067348aed5f5" title="Adds a new feature to the container. Uses feature.trackletId() to set the tracklet key." alt="" coords="536,659,743,685"/>
+<area shape="rect" id="node16" href="$classdyno_1_1FeatureContainer.html#ae6b7ac557be9590ec1a329acfe00d1c7" title="Clears the entire container." alt="" coords="552,709,727,749"/>
+<area shape="rect" id="node17" href="$classdyno_1_1OccupandyGrid2D.html#a47842553cb516c8c8d2490538973cd81" title=" " alt="" coords="550,773,729,813"/>
+<area shape="rect" id="node18" href="$structdyno_1_1FeatureTrackerInfo.html#a8d5e1a05167ecd041783f39243dd508e" title=" " alt="" coords="548,837,731,877"/>
+<area shape="rect" id="node19" href="$classdyno_1_1TrackletIdManager.html#a53cb3472fa0367b8dd2a9127111277b2" title=" " alt="" coords="548,901,731,941"/>
+<area shape="rect" id="node21" href="$classdyno_1_1OccupandyGrid2D.html#aa5431f09664865ba805c56fd3e9772a5" title=" " alt="" coords="550,571,729,611"/>
+<area shape="rect" id="node20" href="$classdyno_1_1TrackletIdManager.html#a2a115366087e907d04e6c0d62643ef20" title=" " alt="" coords="819,901,1001,941"/>
+</map>

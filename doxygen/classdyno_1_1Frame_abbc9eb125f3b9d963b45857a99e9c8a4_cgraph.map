@@ -1,0 +1,6 @@
+<map id="dyno::Frame::numDynamicUsableFeatures" name="dyno::Frame::numDynamicUsableFeatures">
+<area shape="rect" id="node1" title="Gets the total number of dynamic inlier features." alt="" coords="5,5,248,45"/>
+<area shape="rect" id="node2" href="$classdyno_1_1Frame.html#a7769d1c2fe4f5831191dc4da47d4404c" title=" " alt="" coords="296,5,508,45"/>
+<area shape="rect" id="node3" href="$classdyno_1_1FeatureContainer.html#ab6187d4cb946a12bcea18482caf4e115" title=" " alt="" coords="556,5,731,45"/>
+<area shape="rect" id="node4" href="$classdyno_1_1Feature.html#af6d8414c9ac11dc48a8c6a80c4eb4635" title=" " alt="" coords="779,13,953,38"/>
+</map>

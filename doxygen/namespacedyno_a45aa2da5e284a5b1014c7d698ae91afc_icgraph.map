@@ -1,0 +1,6 @@
+<map id="dyno::chi_squared_quantile" name="dyno::chi_squared_quantile">
+<area shape="rect" id="node1" title="Compute the quantile function of the Chi&#45;Squared distribution." alt="" coords="540,45,740,70"/>
+<area shape="rect" id="node2" href="$namespacedyno_1_1factor__graph__tools.html#af7b6cb76226919a10ad3cdac2ba3ac6a" title=" " alt="" coords="265,37,492,77"/>
+<area shape="rect" id="node3" href="$classdyno_1_1OpticalFlowAndPoseOptimizer.html#a4ed1443b579b5e4847a00b4a85da81d9" title="Builds the factor&#45;graph problem using the set of specificed correspondences (tracklets) in frame k&#45;1 ..." alt="" coords="14,5,209,45"/>
+<area shape="rect" id="node4" href="$classdyno_1_1MotionOnlyRefinementOptimizer.html#ab9ea6586ab1c0a64f008a05a38350aae" title=" " alt="" coords="5,69,217,109"/>
+</map>

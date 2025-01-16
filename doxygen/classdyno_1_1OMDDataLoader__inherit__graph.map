@@ -1,0 +1,7 @@
+<map id="dyno::OMDDataLoader" name="dyno::OMDDataLoader">
+<area shape="rect" id="node1" title="Data loader for the oxford multi motion (omd) datasets as provided at: https://robotic&#45;esp...." alt="" coords="123,269,293,295"/>
+<area shape="rect" id="node2" href="$classdyno_1_1DynoDatasetProvider.html" title=" " alt="" coords="129,196,287,221"/>
+<area shape="rect" id="node3" href="$classdyno_1_1DynoDataset.html" title=" " alt="" coords="41,108,199,148"/>
+<area shape="rect" id="node4" href="$structdyno_1_1__DynoDatasetConstructor.html" title=" " alt="" coords="5,5,235,60"/>
+<area shape="rect" id="node5" href="$classdyno_1_1DataProvider.html" title="A data provider is a module that actually gets the inididual image and/or IMU data from some source a..." alt="" coords="224,115,371,141"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="dyno::ObjectMotionSymbol" name="dyno::ObjectMotionSymbol">
+<area shape="rect" id="node1" title=" " alt="" coords="276,45,475,70"/>
+<area shape="rect" id="node2" href="$structdyno_1_1FrameNode.html#a4d6390c39ed912081600bf8d8c108d33" title="Consturcts an object motion key. The associated motion will be from k&#45;1 to k." alt="" coords="5,5,228,45"/>
+<area shape="rect" id="node3" href="$classdyno_1_1MotionOnlyRefinementOptimizer.html#ab9ea6586ab1c0a64f008a05a38350aae" title=" " alt="" coords="11,69,223,109"/>
+</map>

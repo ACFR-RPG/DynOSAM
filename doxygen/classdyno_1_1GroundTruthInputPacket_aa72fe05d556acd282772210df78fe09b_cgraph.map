@@ -1,0 +1,7 @@
+<map id="dyno::GroundTruthInputPacket::calculateAndSetMotions" name="dyno::GroundTruthInputPacket::calculateAndSetMotions">
+<area shape="rect" id="node1" title="Calcualtes and sets the object motion ground truth variables of this GroundTruthInputPacket using the..." alt="" coords="5,61,221,101"/>
+<area shape="rect" id="node2" href="$classdyno_1_1GroundTruthInputPacket.html#a363624912bee6139e09c9ef475e4f91b" title="Query an ObjectPoseGT in this packet and anOTHER packet using a object label." alt="" coords="269,29,485,69"/>
+<area shape="rect" id="node3" href="$structdyno_1_1ObjectPoseGT.html#a3d43ea421ec8fc4d21454a60270d3885" title="Calculates and sets prev_*_current_world_ using ground truth object in the previous frame...." alt="" coords="301,93,454,133"/>
+<area shape="rect" id="node4" href="$namespacedyno.html#abc75308b8ff6d0b5602587beb0aacd84" title=" " alt="" coords="533,75,699,101"/>
+<area shape="rect" id="node5" href="$namespacedyno.html#aa0784e39f7081a68d39bfe42f31137d4" title=" " alt="" coords="555,125,677,150"/>
+</map>

@@ -1,0 +1,52 @@
+<map id="dynosam/include/dynosam/frontend/vision/VisionTools&#45;inl.hpp" name="dynosam/include/dynosam/frontend/vision/VisionTools&#45;inl.hpp">
+<area shape="rect" id="node1" title=" " alt="" coords="3173,5,3375,60"/>
+<area shape="rect" id="node2" href="$VisionTools_8hpp.html" title=" " alt="" coords="3182,108,3366,148"/>
+<area shape="rect" id="node3" href="$Types_8hpp.html" title=" " alt="" coords="2580,548,2792,573"/>
+<area shape="rect" id="node4" title=" " alt="" coords="3003,790,3118,815"/>
+<area shape="rect" id="node9" title=" " alt="" coords="3536,790,3751,815"/>
+<area shape="rect" id="node17" href="$GtsamUtils_8hpp.html" title=" " alt="" coords="1393,702,1611,727"/>
+<area shape="rect" id="node30" href="$Camera_8hpp.html" title=" " alt="" coords="1610,379,1837,405"/>
+<area shape="rect" id="node33" href="$OpenCVUtils_8hpp.html" title=" " alt="" coords="3643,548,3871,573"/>
+<area shape="rect" id="node35" href="$Frame_8hpp.html" title=" " alt="" coords="2862,196,3046,236"/>
+<area shape="rect" id="node38" href="$ImageContainer_8hpp.html" title=" " alt="" coords="3491,467,3769,493"/>
+<area shape="rect" id="node42" href="$Vision-Definitions_8hpp.html" title=" " alt="" coords="3182,284,3366,324"/>
+<area shape="rect" id="node45" href="$Visualizer-Definitions_8hpp.html" title=" " alt="" coords="3901,695,4095,735"/>
+<area shape="rect" id="node47" href="$Histogram_8hpp.html" title=" " alt="" coords="3997,548,4212,573"/>
+<area shape="rect" id="node5" title=" " alt="" coords="2331,621,2499,647"/>
+<area shape="rect" id="node6" title=" " alt="" coords="2435,871,2591,896"/>
+<area shape="rect" id="node7" title=" " alt="" coords="2045,790,2231,815"/>
+<area shape="rect" id="node8" title=" " alt="" coords="2524,621,2667,647"/>
+<area shape="rect" id="node10" title=" " alt="" coords="2306,790,2381,815"/>
+<area shape="rect" id="node11" title=" " alt="" coords="2691,621,2788,647"/>
+<area shape="rect" id="node12" title=" " alt="" coords="3401,790,3493,815"/>
+<area shape="rect" id="node13" title=" " alt="" coords="3301,621,3364,647"/>
+<area shape="rect" id="node14" href="$Flags_8hpp.html" title=" " alt="" coords="2813,621,3023,647"/>
+<area shape="rect" id="node15" href="$Macros_8hpp.html" title=" " alt="" coords="2231,702,2424,727"/>
+<area shape="rect" id="node16" href="$SensorModels_8hpp.html" title=" " alt="" coords="1838,621,2105,647"/>
+<area shape="rect" id="node18" title=" " alt="" coords="5,790,204,815"/>
+<area shape="rect" id="node19" title=" " alt="" coords="1834,790,2021,815"/>
+<area shape="rect" id="node20" title=" " alt="" coords="393,790,569,815"/>
+<area shape="rect" id="node21" title=" " alt="" coords="593,790,774,815"/>
+<area shape="rect" id="node22" title=" " alt="" coords="799,790,965,815"/>
+<area shape="rect" id="node23" title=" " alt="" coords="989,790,1183,815"/>
+<area shape="rect" id="node24" title=" " alt="" coords="1207,790,1381,815"/>
+<area shape="rect" id="node25" title=" " alt="" coords="1405,783,1599,823"/>
+<area shape="rect" id="node26" title=" " alt="" coords="1623,790,1810,815"/>
+<area shape="rect" id="node27" title=" " alt="" coords="228,790,368,815"/>
+<area shape="rect" id="node28" href="$Numerical_8hpp.html" title=" " alt="" coords="3157,790,3370,815"/>
+<area shape="rect" id="node29" title=" " alt="" coords="3805,871,3885,896"/>
+<area shape="rect" id="node31" href="$CameraParams_8hpp.html" title=" " alt="" coords="1562,467,1837,493"/>
+<area shape="rect" id="node32" title=" " alt="" coords="1293,467,1538,493"/>
+<area shape="rect" id="node34" title=" " alt="" coords="3693,621,3825,647"/>
+<area shape="rect" id="node36" title=" " alt="" coords="3227,548,3313,573"/>
+<area shape="rect" id="node37" href="$DynamicObjects_8hpp.html" title=" " alt="" coords="2723,291,3006,317"/>
+<area shape="rect" id="node39" href="$StructuredContainers_8hpp.html" title=" " alt="" coords="3017,460,3232,500"/>
+<area shape="rect" id="node40" href="$Feature_8hpp.html" title=" " alt="" coords="3182,372,3366,412"/>
+<area shape="rect" id="node41" href="$UndistortRectifier_8hpp.html" title=" " alt="" coords="1883,372,2067,412"/>
+<area shape="rect" id="node44" href="$Frame-inl_8hpp.html" title=" " alt="" coords="2465,284,2649,324"/>
+<area shape="rect" id="node43" href="$Frontend-Definitions_8hpp.html" title=" " alt="" coords="3390,372,3593,412"/>
+<area shape="rect" id="node46" href="$ThreadSafeQueue_8hpp.html" title=" " alt="" coords="3890,783,4106,823"/>
+<area shape="rect" id="node48" title=" " alt="" coords="4253,621,4388,647"/>
+<area shape="rect" id="node49" title=" " alt="" coords="3901,621,4057,647"/>
+<area shape="rect" id="node50" title=" " alt="" coords="4082,621,4229,647"/>
+</map>

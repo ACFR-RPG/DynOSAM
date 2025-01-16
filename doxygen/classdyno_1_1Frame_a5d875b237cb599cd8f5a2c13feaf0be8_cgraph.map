@@ -1,0 +1,4 @@
+<map id="dyno::Frame::numStaticFeatures" name="dyno::Frame::numStaticFeatures">
+<area shape="rect" id="node1" title="Gets the total number of static features observed at this frame. Includes usables (inliers) and outli..." alt="" coords="5,13,239,38"/>
+<area shape="rect" id="node2" href="$classdyno_1_1FeatureContainer.html#afd095f6a9e0f25539e7febe6eeeaf003" title="Returns the number of features in the container." alt="" coords="287,5,461,45"/>
+</map>

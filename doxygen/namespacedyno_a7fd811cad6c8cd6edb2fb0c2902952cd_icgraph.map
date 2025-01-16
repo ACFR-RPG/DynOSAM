@@ -1,0 +1,15 @@
+<map id="dyno::loadRGB" name="dyno::loadRGB">
+<area shape="rect" id="node1" title=" " alt="" coords="763,209,881,235"/>
+<area shape="rect" id="node2" href="$classdyno_1_1ClusterSlamAllLoader.html#ad03534eef7c09acc88ca16759d44175b" title=" " alt="" coords="256,78,464,118"/>
+<area shape="rect" id="node4" href="$classdyno_1_1RGBDataFolder.html#a1fbbb0f6d9c6b4a6f9e54bded018068c" title="Get the Item at an index in the dataset." alt="" coords="533,42,694,82"/>
+<area shape="rect" id="node5" href="$classdyno_1_1VirtualKittiRGBDataFolder.html#aee9f5ca3b576bf0b3e6e057eda916979" title="Get the Item at an index in the dataset." alt="" coords="518,106,709,146"/>
+<area shape="rect" id="node6" href="$classdyno_1_1VirtualKittiDepthDataFolder.html#acce8c4cbaf6534efda02d2e29c558d51" title="Get the Item at an index in the dataset." alt="" coords="512,170,715,210"/>
+<area shape="rect" id="node7" href="$classdyno_1_1ClusterSlamAllLoader.html#a24bee3be27badd9891e36a422b698f0c" title=" " alt="" coords="512,234,715,274"/>
+<area shape="rect" id="node10" href="$classdyno_1_1OMDOldAllLoader.html#a491c05547e087a07c9eb14cde4ea6e73" title=" " alt="" coords="525,298,702,338"/>
+<area shape="rect" id="node11" href="$classdyno_1_1ProjectAriaAllLoader.html#a5dea349fac48f8399054ddb36cba26b9" title=" " alt="" coords="516,362,711,402"/>
+<area shape="rect" id="node12" href="$classdyno_1_1VirtualKittiFlowDataFolder.html#ac0ca5eb1af1fee0108f1410f42efed18" title=" " alt="" coords="516,426,711,466"/>
+<area shape="rect" id="node3" href="$classdyno_1_1ClusterSlamAllLoader.html#a133e869bbc78736d1f33eac038fa1660" title=" " alt="" coords="5,78,208,118"/>
+<area shape="rect" id="node8" href="$classdyno_1_1ClusterSlamAllLoader.html#afb6725c06fceb8052d7ff1ca6bd4be58" title=" " alt="" coords="259,234,461,274"/>
+<area shape="rect" id="node9" href="$classdyno_1_1ClusterSlamAllLoader.html#a3475570fea904450975ee52c48fb298c" title="Construct a new Cluster Slam Gt Loader object." alt="" coords="5,234,208,274"/>
+<area shape="rect" id="node13" href="$classdyno_1_1VirtualKittiFlowDataFolder.html#ac86a6b85917c19d4c7b4dbad75231d38" title="Get the Item at an index in the dataset." alt="" coords="263,426,457,466"/>
+</map>

@@ -1,0 +1,4 @@
+<map id="dyno::ThreadsafeImuBuffer::shutdown" name="dyno::ThreadsafeImuBuffer::shutdown">
+<area shape="rect" id="node1" title="Shutdown the queue and release all blocked waiters." alt="" coords="252,5,451,45"/>
+<area shape="rect" id="node2" href="$classdyno_1_1ThreadsafeImuBuffer.html#a9bd0cd6877c5164da86b63322e84d4be" title=" " alt="" coords="5,5,204,45"/>
+</map>

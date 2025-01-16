@@ -1,0 +1,4 @@
+<map id="dyno::FrontendOfflinePipeline::hasWork" name="dyno::FrontendOfflinePipeline::hasWork">
+<area shape="rect" id="node1" title="Virtual function that should check if (any of the) input queues have work to do." alt="" coords="268,5,483,45"/>
+<area shape="rect" id="node2" href="$classdyno_1_1FrontendOfflinePipeline.html#a27b90307a67b182cb95ccbfb7c646a97" title=" " alt="" coords="5,5,220,45"/>
+</map>

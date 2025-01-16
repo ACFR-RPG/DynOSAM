@@ -1,0 +1,4 @@
+<map id="dyno::DataInterfacePipeline::onShutdown" name="dyno::DataInterfacePipeline::onShutdown">
+<area shape="rect" id="node1" title=" " alt="" coords="256,5,459,45"/>
+<area shape="rect" id="node2" href="$classdyno_1_1DataInterfacePipeline.html#a0f6322dfc41ba0d489e363e874abc112" title="Called when general shutdown of PipelineModule is triggered." alt="" coords="5,5,208,45"/>
+</map>

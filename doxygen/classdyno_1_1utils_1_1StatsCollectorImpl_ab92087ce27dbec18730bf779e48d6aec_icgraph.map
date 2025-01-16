@@ -1,0 +1,10 @@
+<map id="dyno::utils::StatsCollectorImpl::AddSample" name="dyno::utils::StatsCollectorImpl::AddSample">
+<area shape="rect" id="node1" title=" " alt="" coords="579,152,768,192"/>
+<area shape="rect" id="node2" href="$classdyno_1_1RGBDBackendModule.html#a10e52b9b6ccefbffe7b2cfbd637cec0a" title=" " alt="" coords="288,5,531,45"/>
+<area shape="rect" id="node3" href="$classdyno_1_1RGBDBackendModule.html#a9484cb840c3c82033d4929bd202bc7a8" title=" " alt="" coords="21,35,224,75"/>
+<area shape="rect" id="node4" href="$classdyno_1_1DataInterfacePipeline.html#a9173a04b9b1ac30f2de87597b3be2200" title=" " alt="" coords="308,120,511,160"/>
+<area shape="rect" id="node5" href="$classdyno_1_1OpticalFlowAndPoseOptimizer.html#a4ed1443b579b5e4847a00b4a85da81d9" title="Builds the factor&#45;graph problem using the set of specificed correspondences (tracklets) in frame k&#45;1 ..." alt="" coords="312,184,507,224"/>
+<area shape="rect" id="node6" href="$classdyno_1_1MotionOnlyRefinementOptimizer.html#ab9ea6586ab1c0a64f008a05a38350aae" title=" " alt="" coords="303,248,515,288"/>
+<area shape="rect" id="node7" href="$classdyno_1_1utils_1_1TimingStatsCollector.html#a5ea6857430a09c6d219f505adace45dc" title="Creates a toc time to compare against the latest tic time and logs the diff as sample to the collecto..." alt="" coords="321,312,497,352"/>
+<area shape="rect" id="node8" href="$classdyno_1_1utils_1_1TimingStatsCollector.html#ab6affecf7e30d7c5c47e3487ac75e868" title=" " alt="" coords="5,312,240,352"/>
+</map>

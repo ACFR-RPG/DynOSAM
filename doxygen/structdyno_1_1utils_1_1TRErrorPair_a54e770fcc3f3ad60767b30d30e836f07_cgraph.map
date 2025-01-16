@@ -1,0 +1,4 @@
+<map id="dyno::utils::TRErrorPair::getRotationErrorDegrees" name="dyno::utils::TRErrorPair::getRotationErrorDegrees">
+<area shape="rect" id="node1" title="Get the rotation error in degrees." alt="" coords="5,5,196,45"/>
+<area shape="rect" id="node2" href="$namespacedyno.html#a1dadcc4234590a14f18c11ab67fe4293" title="Converts radians to degrees." alt="" coords="244,13,368,38"/>
+</map>

@@ -1,0 +1,10 @@
+<map id="dyno::Map::addOrUpdateMapStructures" name="dyno::Map::addOrUpdateMapStructures">
+<area shape="rect" id="node1" title=" " alt="" coords="5,133,217,173"/>
+<area shape="rect" id="node2" href="$classdyno_1_1Map.html#a03e8a74c8bb5177056a67b74b2d8c982" title="Check a frame exists at the requested frame id." alt="" coords="509,15,685,40"/>
+<area shape="rect" id="node3" href="$classdyno_1_1Map.html#a245a6857bfee37eae36e78fd48946680" title="Get the Frame object. If the frame does not exist, return nullptr." alt="" coords="277,40,437,66"/>
+<area shape="rect" id="node4" href="$classdyno_1_1Map.html#abb7ce213fd48cf913a8429255f57ad74" title="Get the Landmark object. If the landmark does not exist, return nullptr." alt="" coords="265,90,449,115"/>
+<area shape="rect" id="node5" href="$classdyno_1_1Map.html#ae345dda6cb4e3ab5dfcc2abb9c04d8bb" title="Check a landmark exists with the requested tracklet id." alt="" coords="497,115,696,140"/>
+<area shape="rect" id="node6" href="$classdyno_1_1Map.html#ac7781cb581fbf46f1d11622a002f81c7" title="Get the Object object. If the object does not exist, return nullptr." alt="" coords="277,191,438,216"/>
+<area shape="rect" id="node7" href="$classdyno_1_1Map.html#a72de703a15213ecb3c56705f381472d6" title="Check that an object exists with the requested object id." alt="" coords="508,216,685,242"/>
+<area shape="rect" id="node8" href="$classdyno_1_1Map.html#a35c66e282f9f5f9aba8efe9653ab3510" title=" " alt="" coords="289,292,426,318"/>
+</map>

@@ -1,0 +1,4 @@
+<map id="dyno::ImageContainerSubset::cloneImage" name="dyno::ImageContainerSubset::cloneImage">
+<area shape="rect" id="node1" title="Safely clones the corresponding image (cv::Mat) corresponding to the requested ImageType...." alt="" coords="256,5,467,45"/>
+<area shape="rect" id="node2" href="$classdyno_1_1Frame.html#a5e2adcdcb96143552fa891351b94dd22" title="From the detected list of objects (in Frame::object_observations_) draw the object masks as labelled ..." alt="" coords="5,5,208,45"/>
+</map>

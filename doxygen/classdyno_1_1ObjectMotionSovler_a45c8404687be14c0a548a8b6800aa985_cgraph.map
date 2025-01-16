@@ -1,0 +1,12 @@
+<map id="dyno::ObjectMotionSovler::geometricOutlierRejection3d2d" name="dyno::ObjectMotionSovler::geometricOutlierRejection3d2d">
+<area shape="rect" id="node1" title=" " alt="" coords="5,111,239,151"/>
+<area shape="rect" id="node2" href="$namespacedyno.html#af008198dcb75012836115300a522ca86" title="From a set a tracklets and a subset (of the tracklet) inliers, calculate the remaining subset of outl..." alt="" coords="307,5,499,31"/>
+<area shape="rect" id="node3" href="$classdyno_1_1EgoMotionSolver.html#a77c1966709d200fdb6464073f1e6f88b" title="Runs 3d&#45;2d PnP with optional Rotation (i.e from IMU)" alt="" coords="287,79,520,119"/>
+<area shape="rect" id="node4" href="$classdyno_1_1OpticalFlowAndPoseOptimizer.html#ad96216e768fc5dea6e6411222bac0ddd" title="Builds the factor&#45;graph problem using the set of specificed correspondences (tracklets) in frame k&#45;1 ..." alt="" coords="292,143,515,183"/>
+<area shape="rect" id="node10" href="$classdyno_1_1MotionOnlyRefinementOptimizer.html#a6a892ae86966052c856c312099c68462" title=" " alt="" coords="292,207,515,247"/>
+<area shape="rect" id="node5" href="$classdyno_1_1OpticalFlowAndPoseOptimizer.html#af1037c8661213cd6e602b30918b6b3ec" title=" " alt="" coords="568,136,799,191"/>
+<area shape="rect" id="node6" href="$classdyno_1_1Feature.html#a37dbbe8da704c2f51e237d38760534fb" title=" " alt="" coords="860,86,1040,126"/>
+<area shape="rect" id="node8" href="$structdyno_1_1functional__keypoint.html#a3896d96a6f95b5311ae768cdd0ad97e8" title=" " alt="" coords="847,151,1053,176"/>
+<area shape="rect" id="node9" href="$structdyno_1_1functional__keypoint.html#a24933450cad8bc70b7b76b339756cd94" title=" " alt="" coords="847,200,1053,225"/>
+<area shape="rect" id="node7" href="$classdyno_1_1Feature.html#ada9f9980d950874a7a157a82b9921f8a" title="Gets keypoint observation." alt="" coords="1101,93,1276,119"/>
+</map>

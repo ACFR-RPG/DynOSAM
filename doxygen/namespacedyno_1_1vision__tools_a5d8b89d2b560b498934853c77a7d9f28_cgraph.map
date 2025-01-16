@@ -1,0 +1,9 @@
+<map id="dyno::vision_tools::writeOutProjectMaskAndDepthMap" name="dyno::vision_tools::writeOutProjectMaskAndDepthMap">
+<area shape="rect" id="node1" title="Saves a re&#45;projected 3D point cloud with labelled points to file as a cv::Mat." alt="" coords="5,119,264,159"/>
+<area shape="rect" id="node2" href="$namespacedyno.html#a2c13b22c0d8be0826712863c5ce0770e" title="Create a directory at the given path." alt="" coords="326,5,489,31"/>
+<area shape="rect" id="node3" href="$namespacedyno_1_1vision__tools.html#aaabcfcca356f30c83a45a51259e39783" title="Projects a dense depth map to 3D coordinates in the local frame." alt="" coords="337,55,477,95"/>
+<area shape="rect" id="node5" href="$classdyno_1_1CameraParams.html#ae50eb600c23415b3f7bd46e70553f96a" title=" " alt="" coords="327,119,488,159"/>
+<area shape="rect" id="node6" href="$namespacedyno.html#a80a71f28f4f692dc9c21976237dfcfe1" title="Constructs a file path (using the file name) where the root of the path is defined by the FLAGS_outpu..." alt="" coords="318,184,497,209"/>
+<area shape="rect" id="node7" href="$classdyno_1_1Camera.html#af56ce3541d3ef8a7bcb2246e4634ca59" title=" " alt="" coords="312,233,503,259"/>
+<area shape="rect" id="node4" href="$namespacedyno.html#a362927fda6438780973f55111b77455c" title=" " alt="" coords="551,63,623,88"/>
+</map>

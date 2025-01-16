@@ -1,0 +1,7 @@
+<map id="dyno::DataInterfacePipeline" name="dyno::DataInterfacePipeline">
+<area shape="rect" id="node1" title="Takes data, synchronizes it and sends it to the output queue which should be connected to the fronten..." alt="" coords="18,269,221,295"/>
+<area shape="rect" id="node5" href="$classdyno_1_1DataInterfacePipelineImu.html" title=" " alt="" coords="5,343,233,368"/>
+<area shape="rect" id="node2" href="$classdyno_1_1MIMOPipelineModule.html" title=" " alt="" coords="17,167,222,221"/>
+<area shape="rect" id="node3" href="$classdyno_1_1PipelineModule.html" title="A PipelineModule is responsible for taking data from an input (or input queues) processing it,..." alt="" coords="38,79,201,119"/>
+<area shape="rect" id="node4" href="$classdyno_1_1PipelineBase.html" title=" " alt="" coords="46,5,193,31"/>
+</map>

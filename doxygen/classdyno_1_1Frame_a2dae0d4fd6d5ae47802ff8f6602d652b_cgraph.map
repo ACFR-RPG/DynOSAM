@@ -1,0 +1,9 @@
+<map id="dyno::Frame::getStaticCorrespondences" name="dyno::Frame::getStaticCorrespondences">
+<area shape="rect" id="node1" title=" " alt="" coords="5,60,287,85"/>
+<area shape="rect" id="node2" href="$classdyno_1_1FeatureContainer.html#ab6187d4cb946a12bcea18482caf4e115" title=" " alt="" coords="335,10,509,50"/>
+<area shape="rect" id="node4" href="$namespacedyno_1_1vision__tools.html#ac7721b6e34c712cd9d194afe30dec47c" title=" " alt="" coords="341,85,503,125"/>
+<area shape="rect" id="node3" href="$classdyno_1_1Feature.html#af6d8414c9ac11dc48a8c6a80c4eb4635" title=" " alt="" coords="573,5,748,31"/>
+<area shape="rect" id="node5" href="$classdyno_1_1FeatureContainer.html#abf2f2d568f5dc17944cc122c537a65f5" title="Returns true if a feature with the given tracklet id exists." alt="" coords="812,78,987,118"/>
+<area shape="rect" id="node6" href="$classdyno_1_1FeatureContainer.html#a5b73e75d2f4063ac9c16dd0fd565f8da" title="Gets a feature given its tracklet id. If the feature does not exist, nullptr is returned." alt="" coords="573,106,748,146"/>
+<area shape="rect" id="node7" href="$structdyno_1_1internal_1_1filter__iterator__base.html#ac1df3e0d6d5b4ef5851cd10f7d327a6f" title=" " alt="" coords="557,170,764,210"/>
+</map>

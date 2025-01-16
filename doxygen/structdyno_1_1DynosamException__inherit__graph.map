@@ -1,0 +1,14 @@
+<map id="dyno::DynosamException" name="dyno::DynosamException">
+<area shape="rect" id="node1" title=" " alt="" coords="192,235,380,260"/>
+<area shape="rect" id="node3" href="$classdyno_1_1DynoDatasetException.html" title=" " alt="" coords="447,5,657,31"/>
+<area shape="rect" id="node4" href="$classdyno_1_1ImageContainerConstructionException.html" title=" " alt="" coords="428,55,676,95"/>
+<area shape="rect" id="node5" href="$structdyno_1_1InvalidCsvHeaderException.html" title=" " alt="" coords="431,120,673,145"/>
+<area shape="rect" id="node6" href="$structdyno_1_1InvalidImageContainerException.html" title=" " alt="" coords="447,170,657,210"/>
+<area shape="rect" id="node7" href="$classdyno_1_1InvalidImageTypeException.html" title=" " alt="" coords="431,235,673,260"/>
+<area shape="rect" id="node8" href="$structdyno_1_1InvalidLandmarkException.html" title=" " alt="" coords="435,284,669,309"/>
+<area shape="rect" id="node10" href="$structdyno_1_1InvalidLandmarkQuery.html" title=" " alt="" coords="447,333,657,359"/>
+<area shape="rect" id="node11" href="$structdyno_1_1InvalidMapException.html" title=" " alt="" coords="453,383,651,408"/>
+<area shape="rect" id="node12" href="$classdyno_1_1TimestampDataFolderDoesNotExist.html" title=" " alt="" coords="449,433,655,473"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,235,144,260"/>
+<area shape="rect" id="node9" href="$structdyno_1_1MissingLandmarkException.html" title=" " alt="" coords="724,284,965,309"/>
+</map>

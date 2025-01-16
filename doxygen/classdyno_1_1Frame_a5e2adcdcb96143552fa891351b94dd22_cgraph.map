@@ -1,0 +1,10 @@
+<map id="dyno::Frame::drawDetectedObjectBoxes" name="dyno::Frame::drawDetectedObjectBoxes">
+<area shape="rect" id="node1" title="From the detected list of objects (in Frame::object_observations_) draw the object masks as labelled ..." alt="" coords="5,87,208,127"/>
+<area shape="rect" id="node2" href="$structdyno_1_1Color.html#a19ef171ae71fa3481957f66d420ced3b" title="Return in BGRA format." alt="" coords="295,5,428,31"/>
+<area shape="rect" id="node3" href="$classdyno_1_1ImageContainerSubset.html#a2ea7ce181adb14ad90ca8308ac4ca44a" title="Safely clones the corresponding image (cv::Mat) corresponding to the requested ImageType...." alt="" coords="256,55,467,95"/>
+<area shape="rect" id="node4" href="$namespacedyno_1_1utils.html#ab3245a3ae481133c8052ef2ba138c990" title="Draws a coloured bounding box and associated label onto a RGB image." alt="" coords="271,119,452,159"/>
+<area shape="rect" id="node5" href="$structdyno_1_1Color.html#a4f52f9aec87e2c34370ad02e6d4e25fc" title="Generates a sequence of never repeating colors using the golden ration to seperate the colours along ..." alt="" coords="281,184,441,209"/>
+<area shape="rect" id="node6" href="$structdyno_1_1Color.html#a08bcb6ea49861f6978858a2ff5159002" title=" " alt="" coords="515,184,677,209"/>
+<area shape="rect" id="node7" href="$structdyno_1_1Color.html#a6bc55a80a463a481dbf4778c70d04733" title=" " alt="" coords="753,159,891,184"/>
+<area shape="rect" id="node8" href="$namespacedyno.html#ab0e74ec8992860404a618192cc694b83" title=" " alt="" coords="725,208,919,233"/>
+</map>

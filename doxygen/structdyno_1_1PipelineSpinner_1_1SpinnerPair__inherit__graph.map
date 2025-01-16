@@ -1,0 +1,5 @@
+<map id="dyno::PipelineSpinner::SpinnerPair" name="dyno::PipelineSpinner::SpinnerPair">
+<area shape="rect" id="node1" title=" " alt="" coords="5,37,168,77"/>
+<area shape="rect" id="node2" href="$structdyno_1_1PipelineSpinner_1_1AsynchronousSpinnerPair.html" title=" " alt="" coords="216,5,411,45"/>
+<area shape="rect" id="node3" href="$structdyno_1_1PipelineSpinner_1_1SynchronousSpinnerPair.html" title=" " alt="" coords="220,69,407,109"/>
+</map>

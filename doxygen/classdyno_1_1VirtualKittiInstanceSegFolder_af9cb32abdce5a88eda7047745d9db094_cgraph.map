@@ -1,0 +1,4 @@
+<map id="dyno::VirtualKittiInstanceSegFolder::loadImage" name="dyno::VirtualKittiInstanceSegFolder::loadImage">
+<area shape="rect" id="node1" title=" " alt="" coords="5,13,192,53"/>
+<area shape="rect" id="node2" href="$classdyno_1_1VirtualKittiGenericInstanceSegFolder.html#a662296f9f6cfe183170efa1af86134aa" title="Loads instance semantic mask from the file path." alt="" coords="240,5,479,60"/>
+</map>

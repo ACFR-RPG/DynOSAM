@@ -1,0 +1,4 @@
+<map id="dyno::PipelineBase::isWorking" name="dyno::PipelineBase::isWorking">
+<area shape="rect" id="node1" title="Returns true if the pipeline is currently processing data or if these is still data to process...." alt="" coords="5,5,152,45"/>
+<area shape="rect" id="node2" href="$classdyno_1_1PipelineBase.html#abb02cf85483c5e267db459381fad8cfa" title="Virtual function that should check if (any of the) input queues have work to do." alt="" coords="200,5,347,45"/>
+</map>

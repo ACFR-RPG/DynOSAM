@@ -1,0 +1,5 @@
+<map id="dyno::FeatureContainer::remove" name="dyno::FeatureContainer::remove">
+<area shape="rect" id="node1" title="Removes a feature by tracklet id by using std::map::erase." alt="" coords="257,37,432,77"/>
+<area shape="rect" id="node2" href="$classdyno_1_1Frame.html#aa2382204ba0abc50393dd52f06cfa590" title=" " alt="" coords="5,5,209,45"/>
+<area shape="rect" id="node3" href="$classdyno_1_1FeatureContainer.html#a4a7236c0a1b8c864962492839dcc743e" title="Removes all features with a particular object id." alt="" coords="20,69,195,109"/>
+</map>

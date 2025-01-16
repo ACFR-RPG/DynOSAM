@@ -1,0 +1,8 @@
+<map id="dyno::Color::rainbowId" name="dyno::Color::rainbowId">
+<area shape="rect" id="node1" title="Generate a sequence of never repeating colors in the rainbow spectrum." alt="" coords="5,31,173,56"/>
+<area shape="rect" id="node2" href="$namespacedyno.html#a8277807658119528c124be0ac1f6ab75" title="Map a potentially infinite number of ids to a never repeating pattern in [0, 1]." alt="" coords="221,5,412,31"/>
+<area shape="rect" id="node3" href="$structdyno_1_1Color.html#a24ab8f421ba1414020d536fb64cba9da" title="Generate a color based on a rainbow value." alt="" coords="239,55,395,80"/>
+<area shape="rect" id="node4" href="$structdyno_1_1Color.html#ad9f3399ae3549ee33cfd61d09571815f" title=" " alt="" coords="460,55,620,80"/>
+<area shape="rect" id="node5" href="$structdyno_1_1Color.html#a6bc55a80a463a481dbf4778c70d04733" title=" " alt="" coords="695,29,834,55"/>
+<area shape="rect" id="node6" href="$namespacedyno.html#ab0e74ec8992860404a618192cc694b83" title=" " alt="" coords="668,79,861,104"/>
+</map>

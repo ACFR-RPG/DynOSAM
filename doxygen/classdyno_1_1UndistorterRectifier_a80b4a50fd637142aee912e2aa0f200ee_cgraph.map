@@ -1,0 +1,11 @@
+<map id="dyno::UndistorterRectifier::undistortKeypointAndGetProjectedVersor" name="dyno::UndistorterRectifier::undistortKeypointAndGetProjectedVersor">
+<area shape="rect" id="node1" title=" " alt="" coords="5,85,260,139"/>
+<area shape="rect" id="node2" href="$classdyno_1_1UndistorterRectifier.html#af102413f7c20a9120b1e1d0a7d848c41" title="UndistortKeypointAndGetVersor undistort a single pixel, and return the corresponding projected versor..." alt="" coords="308,85,564,139"/>
+<area shape="rect" id="node3" href="$classdyno_1_1CameraParams.html#ae50eb600c23415b3f7bd46e70553f96a" title=" " alt="" coords="883,5,1045,45"/>
+<area shape="rect" id="node4" href="$classdyno_1_1UndistorterRectifier.html#ae64676bd43fb299d9c72034fa3ee3c09" title="undistortRectifyKeypoints undistorts and rectifies" alt="" coords="612,120,811,160"/>
+<area shape="rect" id="node5" href="$namespacedyno_1_1utils.html#af331019717c52781bef4bf816e2165b2" title=" " alt="" coords="859,70,1069,95"/>
+<area shape="rect" id="node6" href="$classdyno_1_1CameraParams.html#a19bbd8710bfeec7e1dc1096f1ea773cd" title=" " alt="" coords="883,120,1045,160"/>
+<area shape="rect" id="node7" href="$classdyno_1_1CameraParams.html#ad824176d6c92a8162e6360c0760fa304" title=" " alt="" coords="883,184,1045,224"/>
+<area shape="rect" id="node8" href="$namespacedyno_1_1utils.html#af59783e0798baa636b8a23535a676f37" title=" " alt="" coords="859,249,1069,274"/>
+<area shape="rect" id="node9" href="$namespacedyno.html#a809604e427db44cbf532a545c71a3b5d" title=" " alt="" coords="905,298,1023,323"/>
+</map>

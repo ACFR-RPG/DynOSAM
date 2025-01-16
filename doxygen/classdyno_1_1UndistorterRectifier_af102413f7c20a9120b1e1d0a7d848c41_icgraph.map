@@ -1,0 +1,4 @@
+<map id="dyno::UndistorterRectifier::UndistortKeypointAndGetProjectedVersor" name="dyno::UndistorterRectifier::UndistortKeypointAndGetProjectedVersor">
+<area shape="rect" id="node1" title="UndistortKeypointAndGetVersor undistort a single pixel, and return the corresponding projected versor..." alt="" coords="308,5,564,60"/>
+<area shape="rect" id="node2" href="$classdyno_1_1UndistorterRectifier.html#a80b4a50fd637142aee912e2aa0f200ee" title=" " alt="" coords="5,5,260,60"/>
+</map>

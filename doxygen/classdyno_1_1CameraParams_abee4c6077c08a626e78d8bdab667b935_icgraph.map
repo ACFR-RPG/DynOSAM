@@ -1,0 +1,7 @@
+<map id="dyno::CameraParams::imageSize" name="dyno::CameraParams::imageSize">
+<area shape="rect" id="node1" title=" " alt="" coords="533,37,695,77"/>
+<area shape="rect" id="node2" href="$classdyno_1_1StereoCamera.html#a6ce9ba10820d974b32a081868c224fad" title="computeRectificationParameters" alt="" coords="243,5,485,45"/>
+<area shape="rect" id="node4" href="$classdyno_1_1UndistorterRectifier.html#a4a4cf24ce89d70f3ec6c3c25051f4691" title="initUndistortRectifyMaps Initialize pixel to pixel maps for undistortion and rectification...." alt="" coords="269,69,459,109"/>
+<area shape="rect" id="node3" href="$classdyno_1_1StereoCamera.html#a2262c33a62cc297ecedbe5801fcd37df" title=" " alt="" coords="23,5,177,45"/>
+<area shape="rect" id="node5" href="$classdyno_1_1UndistorterRectifier.html#aaffa018d8098ac0c4916029c05340d0b" title="UndistorterRectifier." alt="" coords="5,69,195,109"/>
+</map>

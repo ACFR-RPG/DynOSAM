@@ -1,0 +1,8 @@
+<map id="dyno::TrackedValueStatus::asType" name="dyno::TrackedValueStatus::asType">
+<area shape="rect" id="node1" title="Allows the casting of the internal value type to another using static casting." alt="" coords="5,133,193,173"/>
+<area shape="rect" id="node2" href="$classdyno_1_1TrackedValueStatus.html#ab8df58b0063e956fe0118ec3db72db9d" title="Get frame id (k) for this status." alt="" coords="241,5,429,45"/>
+<area shape="rect" id="node3" href="$classdyno_1_1TrackedValueStatus.html#ae90b3059d173a9354cc6a55a55ef80ac" title="Get object id (j) for this status." alt="" coords="241,69,429,109"/>
+<area shape="rect" id="node4" href="$classdyno_1_1TrackedValueStatus.html#a5d820e9adc59afa9e6c5d1a2a78ca66b" title="Get the reference frame the value is in. Const version." alt="" coords="241,133,429,173"/>
+<area shape="rect" id="node5" href="$classdyno_1_1TrackedValueStatus.html#a663881d0ecfc39e15ea779c9a69ea0c9" title="Get tracklet id (i) for this status." alt="" coords="241,197,429,237"/>
+<area shape="rect" id="node6" href="$classdyno_1_1TrackedValueStatus.html#a828faf38cea11c1dcc7651d49b68d8e1" title="Get value. Const version." alt="" coords="241,261,429,301"/>
+</map>

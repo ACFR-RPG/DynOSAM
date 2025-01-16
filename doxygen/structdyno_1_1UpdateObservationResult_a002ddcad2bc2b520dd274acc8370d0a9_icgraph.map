@@ -1,0 +1,6 @@
+<map id="dyno::UpdateObservationResult::updateAffectedObject" name="dyno::UpdateObservationResult::updateAffectedObject">
+<area shape="rect" id="node1" title=" " alt="" coords="276,69,505,109"/>
+<area shape="rect" id="node2" href="$classdyno_1_1WorldMotionFormulation.html#ad60f9621d41608943694144aad4d2e22" title=" " alt="" coords="5,5,228,45"/>
+<area shape="rect" id="node3" href="$classdyno_1_1WorldPoseFormulation.html#ad1e6e0a4af9b06496359ceb969405f0a" title=" " alt="" coords="5,69,228,109"/>
+<area shape="rect" id="node4" href="$classdyno_1_1Formulation.html#a74de91cf6b4755060af63627d28fed2c" title="Updates the static&#45;point part of the factor graph for frame k. This contains all the bookeeping logic..." alt="" coords="21,133,212,173"/>
+</map>

@@ -1,0 +1,4 @@
+<map id="dyno::LoopingSpinner::shutdown" name="dyno::LoopingSpinner::shutdown">
+<area shape="rect" id="node1" title="Shutsdown the thread and exists the loop. In this case, as the class manages the loop,..." alt="" coords="5,5,168,45"/>
+<area shape="rect" id="node2" href="$classdyno_1_1Spinner.html#af55891df661602adcaad443f0f48543b" title="Shutdown the spinner &#45; once stopped cannot be restarted. Used to ensure the thread closes safely...." alt="" coords="216,13,399,38"/>
+</map>

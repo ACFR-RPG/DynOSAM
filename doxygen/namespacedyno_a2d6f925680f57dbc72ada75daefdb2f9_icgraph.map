@@ -1,0 +1,16 @@
+<map id="dyno::DynoLikeKeyFormatter" name="dyno::DynoLikeKeyFormatter">
+<area shape="rect" id="node1" title=" " alt="" coords="843,249,1053,274"/>
+<area shape="rect" id="node2" href="$classdyno_1_1RGBDBackendModule.html#a10e52b9b6ccefbffe7b2cfbd637cec0a" title=" " alt="" coords="552,95,795,135"/>
+<area shape="rect" id="node4" href="$classdyno_1_1StateQuery.html#af7ca5fb04717f5719c62a54b3b67fd17" title=" " alt="" coords="592,249,755,274"/>
+<area shape="rect" id="node11" href="$classdyno_1_1WorldPoseFormulation.html#a2fe402643436b3cdf4b38748317c284c" title=" " alt="" coords="20,287,228,327"/>
+<area shape="rect" id="node3" href="$classdyno_1_1RGBDBackendModule.html#a9484cb840c3c82033d4929bd202bc7a8" title=" " alt="" coords="296,5,499,45"/>
+<area shape="rect" id="node5" href="$classdyno_1_1Accessor.html#ab7c0aa6409651ee5ee49387e3272e930" title="Get all dynamic landmarks for object j at time&#45;step k." alt="" coords="294,69,501,109"/>
+<area shape="rect" id="node6" href="$classdyno_1_1Accessor.html#a1d29b55442543df1530b5784e745527b" title="Collects all object poses at some time&#45;step (k). This is equivalent to \mathcal{L}_k...." alt="" coords="302,133,493,173"/>
+<area shape="rect" id="node7" href="$namespacedyno.html#ad5ce0869676f7888164ba26aceda60a9" title="Safe getter to a StateQuery object. If the StateQuery is successful, result is set to the value of th..." alt="" coords="322,198,473,223"/>
+<area shape="rect" id="node12" href="$classdyno_1_1Accessor.html#a143801da1d538d06b5825ae8885fa23a" title="Check if there exists an estimate for object motion at time&#45;step (k) for object id (j)...." alt="" coords="291,299,504,339"/>
+<area shape="rect" id="node13" href="$classdyno_1_1Accessor.html#ab3e5cd6c8bc67beb904bba9767b76869" title="Check if there exists an estimate for object pose at time&#45;step (k) for object id (j)...." alt="" coords="298,363,497,403"/>
+<area shape="rect" id="node14" href="$classdyno_1_1Formulation.html#a7a559d73e69e026a67b5af2e7b8c1eae" title="Logs all frames and values to file using Accessor and BackendLogger. The BackendMetaData provides met..." alt="" coords="318,427,477,467"/>
+<area shape="rect" id="node8" href="$classdyno_1_1WorldMotionFormulation.html#ad60f9621d41608943694144aad4d2e22" title=" " alt="" coords="13,95,235,135"/>
+<area shape="rect" id="node9" href="$classdyno_1_1WorldPoseFormulation.html#ad1e6e0a4af9b06496359ceb969405f0a" title=" " alt="" coords="13,159,235,199"/>
+<area shape="rect" id="node10" href="$classdyno_1_1Formulation.html#a3369b4fa4dd649495e5bace0e9b715d9" title=" " alt="" coords="5,223,243,263"/>
+</map>

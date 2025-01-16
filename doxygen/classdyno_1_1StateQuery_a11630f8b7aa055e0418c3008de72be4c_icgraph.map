@@ -1,0 +1,6 @@
+<map id="dyno::StateQuery::InvalidMap" name="dyno::StateQuery::InvalidMap">
+<area shape="rect" id="node1" title=" " alt="" coords="492,45,707,70"/>
+<area shape="rect" id="node2" href="$classdyno_1_1WorldMotionAccessor.html#a261be7df36333929259a315767fc6578" title="Get the pose (^wL_k) of an object (j) at time&#45;step (k)." alt="" coords="241,5,444,45"/>
+<area shape="rect" id="node3" href="$classdyno_1_1WorldPoseAccessor.html#a0751d4c15e4628e05912d6e139a05417" title="Get the pose (^wL_k) of an object (j) at time&#45;step (k)." alt="" coords="249,69,437,109"/>
+<area shape="rect" id="node4" href="$classdyno_1_1WorldPoseAccessor.html#a3208d2b3d549ea804cfa783ad06e06cc" title="Get an absolute object motion (_{k&#45;1}^wH_k) from theta the requested time&#45;step (k) and object (j)." alt="" coords="5,69,193,109"/>
+</map>

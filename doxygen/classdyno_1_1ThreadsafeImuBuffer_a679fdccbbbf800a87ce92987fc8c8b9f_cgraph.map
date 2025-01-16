@@ -1,0 +1,6 @@
+<map id="dyno::ThreadsafeImuBuffer::interpolateValueAtTimestamp" name="dyno::ThreadsafeImuBuffer::interpolateValueAtTimestamp">
+<area shape="rect" id="node1" title=" " alt="" coords="5,69,231,109"/>
+<area shape="rect" id="node2" href="$classdyno_1_1ThreadsafeTemporalBuffer.html#a53a07e118c0096b3a0c4a9b20e5119b6" title=" " alt="" coords="285,5,503,45"/>
+<area shape="rect" id="node3" href="$classdyno_1_1ThreadsafeTemporalBuffer.html#a92b90fc523cc69cf986dd2778e31df9b" title=" " alt="" coords="279,69,509,109"/>
+<area shape="rect" id="node4" href="$classdyno_1_1ThreadsafeImuBuffer.html#afb36a87285109546821e515f37a4dd43" title="Linear interpolation between two imu measurements." alt="" coords="295,133,493,173"/>
+</map>

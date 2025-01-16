@@ -1,0 +1,11 @@
+<map id="dyno::CameraPoseSymbol" name="dyno::CameraPoseSymbol">
+<area shape="rect" id="node1" title=" " alt="" coords="571,199,764,225"/>
+<area shape="rect" id="node2" href="$namespacedyno_1_1factor__graph__tools.html#a3d58225c246103a5e85572e32cd17706" title=" " alt="" coords="310,5,499,45"/>
+<area shape="rect" id="node3" href="$classdyno_1_1Formulation.html#ad3c2df3ba1ce22a47c529c07bba70bf8" title="Adds odometry factor betwene k&#45;1 and k using T_world_camera as the measurement at k and the existing ..." alt="" coords="48,31,196,71"/>
+<area shape="rect" id="node4" href="$namespacedyno_1_1factor__graph__tools.html#ae43c0c8b4007e563f9743d49f29692d7" title=" " alt="" coords="306,121,503,175"/>
+<area shape="rect" id="node6" href="$structdyno_1_1FrameNode.html#ae502a89cbd05d4d3deacc12b6a885a56" title="Constructs a robot/sensor pose key." alt="" coords="287,199,523,225"/>
+<area shape="rect" id="node7" href="$classdyno_1_1MotionOnlyRefinementOptimizer.html#ab9ea6586ab1c0a64f008a05a38350aae" title=" " alt="" coords="299,249,511,289"/>
+<area shape="rect" id="node8" href="$classdyno_1_1Formulation.html#aef00ff0f96ad2253cc394b8905065882" title="Adds a gtsam::Pose3 as a value in the graph at frame k." alt="" coords="331,313,479,353"/>
+<area shape="rect" id="node9" href="$classdyno_1_1Formulation.html#a32192676e4fab1dc4d35045373c155a3" title="Adds a pose prior on a value in the graph at frame k using the given pose value as the prior&#39;s mean." alt="" coords="331,377,479,417"/>
+<area shape="rect" id="node5" href="$namespacedyno_1_1factor__graph__tools.html#aaaa6c69b7e5369840a024b3832b5f9ed" title=" " alt="" coords="5,121,239,175"/>
+</map>

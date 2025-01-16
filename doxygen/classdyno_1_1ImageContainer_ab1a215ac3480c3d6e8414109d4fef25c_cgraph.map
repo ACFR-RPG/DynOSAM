@@ -1,0 +1,4 @@
+<map id="dyno::ImageContainer::isImageRGB" name="dyno::ImageContainer::isImageRGB">
+<area shape="rect" id="node1" title="True if the image has 3 channels and is therefore expected to be RGB. The alternative is greyscale." alt="" coords="5,5,172,45"/>
+<area shape="rect" id="node2" href="$classdyno_1_1ImageContainer.html#a490837d7e6f52d84cc018cc7d9b1148e" title="Returns image. Could be RGB or greyscale." alt="" coords="220,5,387,45"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="dyno::Color::fromHLS" name="dyno::Color::fromHLS">
+<area shape="rect" id="node1" title=" " alt="" coords="425,5,585,31"/>
+<area shape="rect" id="node2" href="$structdyno_1_1Color.html#a24ab8f421ba1414020d536fb64cba9da" title="Generate a color based on a rainbow value." alt="" coords="221,5,377,31"/>
+<area shape="rect" id="node3" href="$structdyno_1_1Color.html#a3fbcccc0bd349c0e60395a80fc2939a3" title="Generate a sequence of never repeating colors in the rainbow spectrum." alt="" coords="5,5,173,31"/>
+</map>

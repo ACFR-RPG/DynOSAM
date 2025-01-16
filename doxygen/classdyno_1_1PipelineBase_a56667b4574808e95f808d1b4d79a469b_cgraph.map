@@ -1,0 +1,5 @@
+<map id="dyno::PipelineBase::spin" name="dyno::PipelineBase::spin">
+<area shape="rect" id="node1" title="Spins the pipeline via continuous calls to spinOnce until the pipeline is shutdown." alt="" coords="5,37,152,77"/>
+<area shape="rect" id="node2" href="$classdyno_1_1PipelineBase.html#a5c485b024b7b1c710c94303f29ca8e31" title="Returns true if the pipeline has been shutdown by shutdown()." alt="" coords="200,5,347,45"/>
+<area shape="rect" id="node3" href="$classdyno_1_1PipelineBase.html#a8853e3c9efbd227fbd6e5fc0a3220362" title="Processes for one iteration of the pipeline." alt="" coords="200,69,347,109"/>
+</map>

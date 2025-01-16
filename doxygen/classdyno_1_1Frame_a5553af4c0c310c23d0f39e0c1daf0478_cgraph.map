@@ -1,0 +1,11 @@
+<map id="dyno::Frame::Frame" name="dyno::Frame::Frame">
+<area shape="rect" id="node1" title=" " alt="" coords="5,173,157,198"/>
+<area shape="rect" id="node2" href="$classdyno_1_1Frame.html#ab038b536516e42beb788f1b794801270" title=" " alt="" coords="205,133,435,173"/>
+<area shape="rect" id="node9" href="$classdyno_1_1CameraParams.html#ae50eb600c23415b3f7bd46e70553f96a" title=" " alt="" coords="239,197,401,237"/>
+<area shape="rect" id="node3" href="$classdyno_1_1FeatureContainer.html#ab6187d4cb946a12bcea18482caf4e115" title=" " alt="" coords="515,5,689,45"/>
+<area shape="rect" id="node5" href="$namespacedyno.html#a17d3c448677824ae83870358b2a3e01d" title=" " alt="" coords="531,69,673,109"/>
+<area shape="rect" id="node6" href="$namespacedyno_1_1vision__tools.html#a01601f2fba95a79f4ecaa11b89286d99" title="From a instance/semantic mask type img, construct the bounding box for the mask of object_id." alt="" coords="511,133,693,173"/>
+<area shape="rect" id="node7" href="$classdyno_1_1ImageContainerSubset.html#a11ceb8e3325f28bf683b6480d53427a0" title="Gets the corresponding image (cv::Mat) corresponding to the requested ImageType. ImageType must be in..." alt="" coords="483,198,721,223"/>
+<area shape="rect" id="node8" href="$namespacedyno_1_1vision__tools.html#a3a09fe6c15aeb5e18979dc27d68c4616" title="Finds the unique object labels (j) as present in the instance segmentation image. Does not include th..." alt="" coords="532,248,672,288"/>
+<area shape="rect" id="node4" href="$classdyno_1_1Feature.html#af6d8414c9ac11dc48a8c6a80c4eb4635" title=" " alt="" coords="769,13,944,38"/>
+</map>

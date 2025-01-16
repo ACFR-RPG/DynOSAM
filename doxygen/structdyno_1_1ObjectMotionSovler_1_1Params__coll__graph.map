@@ -1,0 +1,6 @@
+<map id="dyno::ObjectMotionSovler::Params" name="dyno::ObjectMotionSovler::Params">
+<area shape="rect" id="node1" title=" " alt="" coords="441,69,632,109"/>
+<area shape="rect" id="node2" href="$structdyno_1_1EgoMotionSolver_1_1Params.html" title=" " alt="" coords="25,5,197,45"/>
+<area shape="rect" id="node3" href="$structdyno_1_1OpticalFlowAndPoseOptimizer_1_1Params.html" title=" " alt="" coords="14,69,209,109"/>
+<area shape="rect" id="node4" href="$structdyno_1_1MotionOnlyRefinementOptimizer_1_1Params.html" title=" " alt="" coords="5,133,217,173"/>
+</map>

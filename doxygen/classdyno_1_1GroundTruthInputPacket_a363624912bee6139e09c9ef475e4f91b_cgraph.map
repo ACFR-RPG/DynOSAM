@@ -1,0 +1,3 @@
+<map id="dyno::GroundTruthInputPacket::findAssociatedObject" name="dyno::GroundTruthInputPacket::findAssociatedObject">
+<area shape="rect" id="node1" title="Query an ObjectPoseGT in this packet and anOTHER packet using a object label." alt="" coords="5,29,221,69"/>
+</map>

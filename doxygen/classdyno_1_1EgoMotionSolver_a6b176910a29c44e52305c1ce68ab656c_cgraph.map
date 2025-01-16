@@ -1,0 +1,8 @@
+<map id="dyno::EgoMotionSolver::geometricOutlierRejection3d2d" name="dyno::EgoMotionSolver::geometricOutlierRejection3d2d">
+<area shape="rect" id="node1" title=" " alt="" coords="5,88,239,128"/>
+<area shape="rect" id="node2" href="$classdyno_1_1EgoMotionSolver.html#a39f88d947e0e5dbb4b3d59bf4dac4548" title=" " alt="" coords="287,5,469,45"/>
+<area shape="rect" id="node4" href="$classdyno_1_1CameraParams.html#a006fa38075052f41cc49509fa16ba864" title=" " alt="" coords="287,70,469,95"/>
+<area shape="rect" id="node5" href="$classdyno_1_1CameraParams.html#af593866ca855cd9cf008275735596450" title=" " alt="" coords="287,119,469,145"/>
+<area shape="rect" id="node6" href="$classdyno_1_1CameraParams.html#a5573f4552b86bb79f033168f078a30a9" title=" " alt="" coords="288,169,468,209"/>
+<area shape="rect" id="node3" href="$namespacedyno.html#af008198dcb75012836115300a522ca86" title="From a set a tracklets and a subset (of the tracklet) inliers, calculate the remaining subset of outl..." alt="" coords="517,13,709,38"/>
+</map>

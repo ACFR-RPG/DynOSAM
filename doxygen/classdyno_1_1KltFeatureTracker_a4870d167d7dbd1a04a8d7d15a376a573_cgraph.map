@@ -1,0 +1,16 @@
+<map id="dyno::KltFeatureTracker::detectFeatures" name="dyno::KltFeatureTracker::detectFeatures">
+<area shape="rect" id="node1" title=" " alt="" coords="5,258,180,298"/>
+<area shape="rect" id="node2" href="$classdyno_1_1FeatureContainer.html#a3af7c9e40df21b96a8c7067348aed5f5" title="Adds a new feature to the container. Uses feature.trackletId() to set the tracklet key." alt="" coords="244,29,451,55"/>
+<area shape="rect" id="node3" href="$classdyno_1_1KltFeatureTracker.html#af29a1c043d097f368a86b346bcfe33e0" title="Construct a new static feature with a unique tracklet id." alt="" coords="245,79,450,119"/>
+<area shape="rect" id="node8" href="$classdyno_1_1KltFeatureTracker.html#a8d1fe23ea28bc785dc41afa798a952a4" title="Detects features on the input image using the feature detector." alt="" coords="260,143,435,183"/>
+<area shape="rect" id="node9" href="$classdyno_1_1ImageContainerSubset.html#a11ceb8e3325f28bf683b6480d53427a0" title="Gets the corresponding image (cv::Mat) corresponding to the requested ImageType. ImageType must be in..." alt="" coords="228,208,467,233"/>
+<area shape="rect" id="node10" href="$classdyno_1_1ImageContainer.html#adcfec6b4ad9068b1349b975523fd6666" title=" " alt="" coords="264,258,431,298"/>
+<area shape="rect" id="node11" href="$classdyno_1_1FeatureTrackerBase.html#a32d80be7e74a096c2b816529b7fd2c69" title="Checks if a keypoint is within an image, taking into account the shrink row/col values in the params...." alt="" coords="253,373,442,413"/>
+<area shape="rect" id="node12" href="$structdyno_1_1functional__keypoint.html#a3896d96a6f95b5311ae768cdd0ad97e8" title=" " alt="" coords="515,353,721,379"/>
+<area shape="rect" id="node13" href="$structdyno_1_1functional__keypoint.html#a24933450cad8bc70b7b76b339756cd94" title=" " alt="" coords="515,407,721,432"/>
+<area shape="rect" id="node14" href="$classdyno_1_1FeatureContainer.html#afd095f6a9e0f25539e7febe6eeeaf003" title="Returns the number of features in the container." alt="" coords="260,487,435,527"/>
+<area shape="rect" id="node4" href="$classdyno_1_1TrackletIdManager.html#ab7ec1738de58e54adbdad49f1f44f7ae" title=" " alt="" coords="527,15,709,55"/>
+<area shape="rect" id="node5" href="$classdyno_1_1TrackletIdManager.html#a5b83806eebd74cfafc4d706cd4182c6b" title=" " alt="" coords="519,79,717,119"/>
+<area shape="rect" id="node6" href="$classdyno_1_1TrackletIdManager.html#a53cb3472fa0367b8dd2a9127111277b2" title=" " alt="" coords="527,143,709,183"/>
+<area shape="rect" id="node7" href="$classdyno_1_1TrackletIdManager.html#a2a115366087e907d04e6c0d62643ef20" title=" " alt="" coords="769,143,952,183"/>
+</map>
