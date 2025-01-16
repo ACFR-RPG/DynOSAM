@@ -104,7 +104,7 @@ Public Types</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a76a7f1ca2ddfa98c3ca91b35fad3130f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1Spinner.html#a76a7f1ca2ddfa98c3ca91b35fad3130f">Spinner</a> (<a class="el" href="classdyno_1_1Spinner.html#a6ea8f13308414e84742ddfef6b9d98e4">Evoke</a> <a class="el" href="group__group1.html#ga24f647174760cac13d2624b5ad74b00c">func</a>, const std::string &amp;name, bool auto_start=true)</td></tr>
+<tr class="memitem:a76a7f1ca2ddfa98c3ca91b35fad3130f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1Spinner.html#a76a7f1ca2ddfa98c3ca91b35fad3130f">Spinner</a> (<a class="el" href="classdyno_1_1Spinner.html#a6ea8f13308414e84742ddfef6b9d98e4">Evoke</a> func, const std::string &amp;name, bool auto_start=true)</td></tr>
 <tr class="memdesc:a76a7f1ca2ddfa98c3ca91b35fad3130f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a new <a class="el" href="classdyno_1_1Spinner.html" title="Class to handle the calling of a function within a thread. The spinner launches its own thread for ea...">Spinner</a> given a function which is blocking (ie. has a loop within the function method itself)  <br /></td></tr>
 <tr class="separator:a76a7f1ca2ddfa98c3ca91b35fad3130f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aea7731873623c3ba407ed4d585049667"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1Spinner.html#aea7731873623c3ba407ed4d585049667">~Spinner</a> ()</td></tr>
@@ -205,7 +205,7 @@ Private Attributes</h2></td></tr>
 </dl>
 
 <p class="definition">Definition at line <a class="el" href="Spinner_8cc_source.html#l00035">35</a> of file <a class="el" href="Spinner_8cc_source.html">Spinner.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   35</span>                                                                   : <a class="code hl_variable" href="classdyno_1_1Spinner.html#aba7217db893675ce3a298d1c2095fdc5">func_</a>(<a class="code hl_function" href="group__group1.html#ga24f647174760cac13d2624b5ad74b00c">func</a>), <a class="code hl_variable" href="classdyno_1_1Spinner.html#a66f9bbbd1eeb8fc297627eba953119b1">name_</a>(name)</div>
+<div class="fragment"><div class="line"><span class="lineno">   35</span>                                                                   : <a class="code hl_variable" href="classdyno_1_1Spinner.html#aba7217db893675ce3a298d1c2095fdc5">func_</a>(func), <a class="code hl_variable" href="classdyno_1_1Spinner.html#a66f9bbbd1eeb8fc297627eba953119b1">name_</a>(name)</div>
 <div class="line"><span class="lineno">   36</span>{</div>
 <div class="line"><span class="lineno">   37</span>  VLOG(10) &lt;&lt; <span class="stringliteral">&quot;Creating spinner - &quot;</span> &lt;&lt; name;</div>
 <div class="line"><span class="lineno">   38</span> </div>
@@ -218,7 +218,6 @@ Private Attributes</h2></td></tr>
 <div class="ttc" id="aclassdyno_1_1Spinner_html_a66f9bbbd1eeb8fc297627eba953119b1"><div class="ttname"><a href="classdyno_1_1Spinner.html#a66f9bbbd1eeb8fc297627eba953119b1">dyno::Spinner::name_</a></div><div class="ttdeci">const std::string name_</div><div class="ttdef"><b>Definition:</b> <a href="Spinner_8hpp_source.html#l00095">Spinner.hpp:95</a></div></div>
 <div class="ttc" id="aclassdyno_1_1Spinner_html_a687ff6b61b822035bf5adeabda5d1ca3"><div class="ttname"><a href="classdyno_1_1Spinner.html#a687ff6b61b822035bf5adeabda5d1ca3">dyno::Spinner::start</a></div><div class="ttdeci">void start()</div><div class="ttdoc">Starts the function in a thread. If the spinner has already been started (i.e from auto_start),...</div><div class="ttdef"><b>Definition:</b> <a href="Spinner_8cc_source.html#l00051">Spinner.cc:51</a></div></div>
 <div class="ttc" id="aclassdyno_1_1Spinner_html_aba7217db893675ce3a298d1c2095fdc5"><div class="ttname"><a href="classdyno_1_1Spinner.html#aba7217db893675ce3a298d1c2095fdc5">dyno::Spinner::func_</a></div><div class="ttdeci">Evoke func_</div><div class="ttdef"><b>Definition:</b> <a href="Spinner_8hpp_source.html#l00094">Spinner.hpp:94</a></div></div>
-<div class="ttc" id="agroup__group1_html_ga24f647174760cac13d2624b5ad74b00c"><div class="ttname"><a href="group__group1.html#ga24f647174760cac13d2624b5ad74b00c">func</a></div><div class="ttdeci">void func()</div><div class="ttdef"><b>Definition:</b> <a href="group_8cpp_source.html#l00013">group.cpp:13</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1Spinner.html#a687ff6b61b822035bf5adeabda5d1ca3">start()</a>.</p>
 <div class="dynheader">

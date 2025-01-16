@@ -1,6 +1,10 @@
 <map id="dyno::byte_track::ByteTracker::linear_assignment" name="dyno::byte_track::ByteTracker::linear_assignment">
-<area shape="rect" id="node1" title=" " alt="" coords="5,27,220,67"/>
-<area shape="rect" id="node2" href="$namespacedyno_1_1byte__track.html#aaa4d3bb196efe7196e965da20431d1a9" title=" " alt="" coords="279,5,471,31"/>
-<area shape="rect" id="node3" href="$classdyno_1_1byte__track_1_1ByteTracker.html#a7d287139cf0b0b2e054e2e8b7c9eaae5" title=" " alt="" coords="268,55,483,95"/>
-<area shape="rect" id="node4" href="$namespacedyno_1_1byte__track.html#a1b98a1c2549d3523a7061f8e29733ce5" title=" " alt="" coords="531,55,701,95"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,188,220,228"/>
+<area shape="rect" id="node2" href="$namespacedyno_1_1byte__track.html#aaa4d3bb196efe7196e965da20431d1a9" title=" " alt="" coords="279,134,471,159"/>
+<area shape="rect" id="node7" href="$classdyno_1_1byte__track_1_1ByteTracker.html#a7d287139cf0b0b2e054e2e8b7c9eaae5" title=" " alt="" coords="268,216,483,256"/>
+<area shape="rect" id="node3" href="$classdyno_1_1byte__track_1_1RectBase.html#a54b8921fd564fcbd838179db3bbdb1b4" title=" " alt="" coords="545,5,745,45"/>
+<area shape="rect" id="node4" href="$classdyno_1_1byte__track_1_1RectBase.html#abe762fbb01fa8e6a6367342eed12705f" title=" " alt="" coords="545,69,745,109"/>
+<area shape="rect" id="node5" href="$classdyno_1_1byte__track_1_1RectBase.html#a845ae1d4d393890cc632a88a53285301" title=" " alt="" coords="531,134,760,159"/>
+<area shape="rect" id="node6" href="$classdyno_1_1byte__track_1_1RectBase.html#a5d7a4517f172325824fd2ea9037168c2" title=" " alt="" coords="545,184,745,224"/>
+<area shape="rect" id="node8" href="$namespacedyno_1_1byte__track.html#a1b98a1c2549d3523a7061f8e29733ce5" title=" " alt="" coords="560,248,731,288"/>
 </map>

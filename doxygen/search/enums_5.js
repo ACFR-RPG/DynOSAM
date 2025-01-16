@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['globenum_0',['GlobEnum',['../autolink_8cpp.html#a656d63cf384d2a6f23c2c18523a7bc5e',1,'autolink.cpp']]]
+  ['labels_0',['Labels',['../structdyno_1_1ImageType_1_1ClassSegmentation.html#a1e1241cf556b4e80151c3a43d0eb52a5',1,'dyno::ImageType::ClassSegmentation']]]
 ];

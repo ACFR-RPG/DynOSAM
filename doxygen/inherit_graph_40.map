@@ -1,3 +1,7 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classdyno_1_1DataFolder.html" title="Defines a set of datafiles within a folder to be laoded by a dataset (partially inspired by pytorch&#39;s..." alt="" coords="5,5,176,31"/>
+<area shape="rect" id="node1" href="$classdyno_1_1DisplayBase.html" title=" " alt="" coords="5,55,160,95"/>
+<area shape="rect" id="node2" href="$classdyno_1_1BackendDisplayRos.html" title=" " alt="" coords="223,55,413,80"/>
+<area shape="rect" id="node3" href="$classdyno_1_1FrontendDisplayRos.html" title=" " alt="" coords="222,5,414,31"/>
+<area shape="rect" id="node4" href="$classdyno_1_1OpenCVFrontendDisplay.html" title=" " alt="" coords="208,104,428,129"/>
+<area shape="rect" id="node5" href="$classdyno_1_1DisplayRos.html" title=" " alt="" coords="15,5,150,31"/>
 </map>

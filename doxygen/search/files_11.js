@@ -1,17 +1,18 @@
 var searchData=
 [
-  ['ranget_2eh_0',['ranget.h',['../ranget_8h.html',1,'']]],
-  ['readme_2emd_1',['README.md',['../include_2dynosam_2common_2byte__tracker_2README_8md.html',1,'(Global Namespace)'],['../include_2dynosam_2frontend_2anms_2README_8md.html',1,'(Global Namespace)'],['../utils_2README_8md.html',1,'(Global Namespace)']]],
-  ['rect_2ecc_2',['Rect.cc',['../Rect_8cc.html',1,'']]],
-  ['rect_2ehpp_3',['Rect.hpp',['../Rect_8hpp.html',1,'']]],
-  ['relates_2ecpp_4',['relates.cpp',['../relates_8cpp.html',1,'']]],
-  ['restypedef_2ecpp_5',['restypedef.cpp',['../restypedef_8cpp.html',1,'']]],
-  ['rgbdbackendmodule_2ecc_6',['RGBDBackendModule.cc',['../RGBDBackendModule_8cc.html',1,'']]],
-  ['rgbdbackendmodule_2ehpp_7',['RGBDBackendModule.hpp',['../RGBDBackendModule_8hpp.html',1,'']]],
-  ['rgbdinstance_2ddefinitions_2ecc_8',['RGBDInstance-Definitions.cc',['../RGBDInstance-Definitions_8cc.html',1,'']]],
-  ['rgbdinstance_2ddefinitions_2ehpp_9',['RGBDInstance-Definitions.hpp',['../RGBDInstance-Definitions_8hpp.html',1,'']]],
-  ['rgbdinstancefrontendmodule_2ecc_10',['RGBDInstanceFrontendModule.cc',['../RGBDInstanceFrontendModule_8cc.html',1,'']]],
-  ['rgbdinstancefrontendmodule_2ehpp_11',['RGBDInstanceFrontendModule.hpp',['../RGBDInstanceFrontendModule_8hpp.html',1,'']]],
-  ['rosutils_2ecc_12',['RosUtils.cc',['../RosUtils_8cc.html',1,'']]],
-  ['rosutils_2ehpp_13',['RosUtils.hpp',['../RosUtils_8hpp.html',1,'']]]
+  ['safecast_2ehpp_0',['SafeCast.hpp',['../SafeCast_8hpp.html',1,'']]],
+  ['sensormodels_2ehpp_1',['SensorModels.hpp',['../SensorModels_8hpp.html',1,'']]],
+  ['spinner_2ecc_2',['Spinner.cc',['../Spinner_8cc.html',1,'']]],
+  ['spinner_2ehpp_3',['Spinner.hpp',['../Spinner_8hpp.html',1,'']]],
+  ['staticfeaturetracker_2ecc_4',['StaticFeatureTracker.cc',['../StaticFeatureTracker_8cc.html',1,'']]],
+  ['staticfeaturetracker_2ehpp_5',['StaticFeatureTracker.hpp',['../StaticFeatureTracker_8hpp.html',1,'']]],
+  ['statistics_2ecc_6',['Statistics.cc',['../Statistics_8cc.html',1,'']]],
+  ['statistics_2ehpp_7',['Statistics.hpp',['../Statistics_8hpp.html',1,'']]],
+  ['stereocamera_2ecc_8',['StereoCamera.cc',['../StereoCamera_8cc.html',1,'']]],
+  ['stereocamera_2ehpp_9',['StereoCamera.hpp',['../StereoCamera_8hpp.html',1,'']]],
+  ['stereomatcher_2ecc_10',['StereoMatcher.cc',['../StereoMatcher_8cc.html',1,'']]],
+  ['stereomatcher_2ehpp_11',['StereoMatcher.hpp',['../StereoMatcher_8hpp.html',1,'']]],
+  ['stereomatchingparams_2ehpp_12',['StereoMatchingParams.hpp',['../StereoMatchingParams_8hpp.html',1,'']]],
+  ['structuredcontainers_2ecc_13',['StructuredContainers.cc',['../StructuredContainers_8cc.html',1,'']]],
+  ['structuredcontainers_2ehpp_14',['StructuredContainers.hpp',['../StructuredContainers_8hpp.html',1,'']]]
 ];

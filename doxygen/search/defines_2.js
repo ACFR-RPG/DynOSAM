@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['check_5fmat_5ftypes_0',['CHECK_MAT_TYPES',['../OpenCVUtils_8hpp.html#aaad4c6ed28680c17202f26fe2026719d',1,'OpenCVUtils.hpp']]]
+  ['enable_5fstatistics_0',['ENABLE_STATISTICS',['../Statistics_8hpp.html#aab186ebd3fdc6562bb8aadad4ccce3ed',1,'Statistics.hpp']]]
 ];

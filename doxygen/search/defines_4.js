@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['enable_5fstatistics_0',['ENABLE_STATISTICS',['../Statistics_8hpp.html#aab186ebd3fdc6562bb8aadad4ccce3ed',1,'Statistics.hpp']]]
+  ['get_5fvalue_0',['GET_VALUE',['../ORBextractor_8cc.html#a35931865021519a9d7a2a4d2f196e684',1,'ORBextractor.cc']]]
 ];

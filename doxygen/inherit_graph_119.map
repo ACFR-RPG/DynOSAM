@@ -1,3 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classdyno_1_1JsonConverter.html" title=" " alt="" coords="5,5,159,31"/>
+<area shape="rect" id="node1" href="$classdyno_1_1ModuleBase.html" title=" " alt="" coords="5,5,244,60"/>
+<area shape="rect" id="node2" href="$classdyno_1_1FrontendModule.html" title="Base class to actually do processing. Data passed to this module from the frontend." alt="" coords="292,20,459,45"/>
+<area shape="rect" id="node3" href="$classdyno_1_1RGBDInstanceFrontendModule.html" title=" " alt="" coords="507,13,719,53"/>
 </map>

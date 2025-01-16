@@ -85,8 +85,8 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a165cf77e9466ca0ca98dde215119dd6c"><td class="memTemplParams" colspan="2">template&lt;typename <a class="el" href="classC.html">C</a> , typename F , typename T , typename... A&gt; </td></tr>
-<tr class="memitem:a165cf77e9466ca0ca98dde215119dd6c"><td class="memTemplItemLeft" align="right" valign="top">static auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structdyno_1_1internal_1_1ApplyMember.html#a165cf77e9466ca0ca98dde215119dd6c">apply</a> (<a class="el" href="classC.html">C</a> &amp;&amp;c, F &amp;&amp;f, T &amp;&amp;t, <a class="el" href="classA.html">A</a> &amp;&amp;... a) -&gt; decltype(<a class="el" href="structdyno_1_1internal_1_1ApplyMember.html">ApplyMember</a>&lt; N - 1 &gt;::apply(forward&lt; <a class="el" href="classC.html">C</a> &gt;(c), forward&lt; F &gt;(f), forward&lt; T &gt;(t), std::get&lt; N - 1 &gt;(forward&lt; T &gt;(t)), forward&lt; <a class="el" href="classA.html">A</a> &gt;(a)...))</td></tr>
+<tr class="memitem:a165cf77e9466ca0ca98dde215119dd6c"><td class="memTemplParams" colspan="2">template&lt;typename C , typename F , typename T , typename... A&gt; </td></tr>
+<tr class="memitem:a165cf77e9466ca0ca98dde215119dd6c"><td class="memTemplItemLeft" align="right" valign="top">static auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structdyno_1_1internal_1_1ApplyMember.html#a165cf77e9466ca0ca98dde215119dd6c">apply</a> (C &amp;&amp;c, F &amp;&amp;f, T &amp;&amp;t, A &amp;&amp;... a) -&gt; decltype(<a class="el" href="structdyno_1_1internal_1_1ApplyMember.html">ApplyMember</a>&lt; N - 1 &gt;::apply(forward&lt; C &gt;(c), forward&lt; F &gt;(f), forward&lt; T &gt;(t), std::get&lt; N - 1 &gt;(forward&lt; T &gt;(t)), forward&lt; A &gt;(a)...))</td></tr>
 <tr class="separator:a165cf77e9466ca0ca98dde215119dd6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -102,7 +102,7 @@ struct dyno::internal::ApplyMember&lt; N &gt;</div>
 <div class="memtemplate">
 template&lt;size_t N&gt; </div>
 <div class="memtemplate">
-template&lt;typename <a class="el" href="classC.html">C</a> , typename F , typename T , typename... A&gt; </div>
+template&lt;typename C , typename F , typename T , typename... A&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -110,7 +110,7 @@ template&lt;typename <a class="el" href="classC.html">C</a> , typename F , typen
         <tr>
           <td class="memname">static auto <a class="el" href="structdyno_1_1internal_1_1ApplyMember.html">dyno::internal::ApplyMember</a>&lt; N &gt;::apply </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classC.html">C</a> &amp;&amp;&#160;</td>
+          <td class="paramtype">C &amp;&amp;&#160;</td>
           <td class="paramname"><em>c</em>, </td>
         </tr>
         <tr>
@@ -128,14 +128,14 @@ template&lt;typename <a class="el" href="classC.html">C</a> , typename F , typen
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classA.html">A</a> &amp;&amp;...&#160;</td>
+          <td class="paramtype">A &amp;&amp;...&#160;</td>
           <td class="paramname"><em>a</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td> -&gt; decltype(<a class="el" href="structdyno_1_1internal_1_1ApplyMember.html">ApplyMember</a>&lt;N - 1&gt;::apply(forward&lt;<a class="el" href="classC.html">C</a>&gt;(c), forward&lt;F&gt;(f), forward&lt;T&gt;(t), std::get&lt;N - 1&gt;(forward&lt;T&gt;(t)),
-                                            forward&lt;<a class="el" href="classA.html">A</a>&gt;(a)...))
+          <td></td><td> -&gt; decltype(<a class="el" href="structdyno_1_1internal_1_1ApplyMember.html">ApplyMember</a>&lt;N - 1&gt;::apply(forward&lt;C&gt;(c), forward&lt;F&gt;(f), forward&lt;T&gt;(t), std::get&lt;N - 1&gt;(forward&lt;T&gt;(t)),
+                                            forward&lt;A&gt;(a)...))
   </td>
         </tr>
       </table>

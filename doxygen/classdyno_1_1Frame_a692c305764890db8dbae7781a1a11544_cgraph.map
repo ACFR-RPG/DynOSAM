@@ -1,7 +1,6 @@
 <map id="dyno::Frame::landmarkWorldProjectedBearingCorrespondance" name="dyno::Frame::landmarkWorldProjectedBearingCorrespondance">
-<area shape="rect" id="node1" title="Helper function that creates a ConstructCorrespondanceFunc which operates to return a TrackletCorresp..." alt="" coords="5,75,244,115"/>
+<area shape="rect" id="node1" title="Helper function that creates a ConstructCorrespondanceFunc which operates to return a TrackletCorresp..." alt="" coords="5,45,244,85"/>
 <area shape="rect" id="node2" href="$classdyno_1_1Frame.html#ae588299966f1a710e11db6d64cc5b707" title="Project the feature into the world frame using the frames pose (T_world_camera_) and returns the 3D l..." alt="" coords="292,45,479,85"/>
-<area shape="rect" id="node8" href="$group__group1.html#ga24f647174760cac13d2624b5ad74b00c" title=" " alt="" coords="360,110,411,135"/>
 <area shape="rect" id="node3" href="$classdyno_1_1Frame.html#ab1af68fa722b3a69160ae0436318ad19" title="Gets a feature from its tracklet ID. Could be static or dynamic. Nullptr is returned if the feature d..." alt="" coords="563,23,687,49"/>
 <area shape="rect" id="node7" href="$classdyno_1_1Frame.html#a32308c0857baace44e2d5e8e406be685" title=" " alt="" coords="527,73,724,113"/>
 <area shape="rect" id="node4" href="$classdyno_1_1FeatureContainer.html#abf2f2d568f5dc17944cc122c537a65f5" title="Returns true if a feature with the given tracklet id exists." alt="" coords="995,16,1169,56"/>

@@ -1,3 +1,4 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$structdyno_1_1utils_1_1StatisticsMapValue.html" title=" " alt="" coords="5,5,192,45"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,13,200,38"/>
+<area shape="rect" id="node2" href="$classdyno_1_1LandmarkMotionPoseFactor.html" title="Implements the landmark motion factor that models the displacement of a tracked point,..." alt="" coords="248,5,451,45"/>
 </map>

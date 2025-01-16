@@ -173,7 +173,7 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:af34076d538c787a0044eb444586eed95"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a77f641128f1fdb74e2564a1953424ceb"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DataInterfacePipeline.html#a77f641128f1fdb74e2564a1953424ceb">addGroundTruthPacket</a> (const <a class="el" href="classdyno_1_1GroundTruthInputPacket.html">GroundTruthInputPacket</a> &amp;gt_packet)</td></tr>
 <tr class="separator:a77f641128f1fdb74e2564a1953424ceb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a618d7b94531fbee4be436f41dc9a0355"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DataInterfacePipeline.html#a618d7b94531fbee4be436f41dc9a0355">registerImageContainerPreprocessor</a> (const <a class="el" href="classdyno_1_1DataInterfacePipeline.html#ae37d92effd98257956053848201b0ad0">ImageContainerPreprocesser</a> &amp;<a class="el" href="group__group1.html#ga24f647174760cac13d2624b5ad74b00c">func</a>)</td></tr>
+<tr class="memitem:a618d7b94531fbee4be436f41dc9a0355"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DataInterfacePipeline.html#a618d7b94531fbee4be436f41dc9a0355">registerImageContainerPreprocessor</a> (const <a class="el" href="classdyno_1_1DataInterfacePipeline.html#ae37d92effd98257956053848201b0ad0">ImageContainerPreprocesser</a> &amp;func)</td></tr>
 <tr class="separator:a618d7b94531fbee4be436f41dc9a0355"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classdyno_1_1MIMOPipelineModule"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classdyno_1_1MIMOPipelineModule')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classdyno_1_1MIMOPipelineModule.html">dyno::MIMOPipelineModule&lt; FrontendInputPacketBase, FrontendInputPacketBase &gt;</a></td></tr>
 <tr class="memitem:a05b391dea1432318d9429ee2214305ad inherit pub_methods_classdyno_1_1MIMOPipelineModule"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1MIMOPipelineModule.html#a05b391dea1432318d9429ee2214305ad">MIMOPipelineModule</a> (const std::string &amp;module_name)</td></tr>
@@ -714,20 +714,10 @@ Here is the caller graph for this function:</div>
 
 <p class="definition">Definition at line <a class="el" href="DataInterfacePipeline_8hpp_source.html#l00055">55</a> of file <a class="el" href="DataInterfacePipeline_8hpp_source.html">DataInterfacePipeline.hpp</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">   55</span>                                                                                                   {</div>
-<div class="line"><span class="lineno">   56</span>        <a class="code hl_variable" href="classdyno_1_1DataInterfacePipeline.html#a9760aed7678cb638648e436b598b95a7">image_container_preprocessor_</a> = <a class="code hl_function" href="group__group1.html#ga24f647174760cac13d2624b5ad74b00c">func</a>;</div>
+<div class="line"><span class="lineno">   56</span>        <a class="code hl_variable" href="classdyno_1_1DataInterfacePipeline.html#a9760aed7678cb638648e436b598b95a7">image_container_preprocessor_</a> = func;</div>
 <div class="line"><span class="lineno">   57</span>    }</div>
-<div class="ttc" id="agroup__group1_html_ga24f647174760cac13d2624b5ad74b00c"><div class="ttname"><a href="group__group1.html#ga24f647174760cac13d2624b5ad74b00c">func</a></div><div class="ttdeci">void func()</div><div class="ttdef"><b>Definition:</b> <a href="group_8cpp_source.html#l00013">group.cpp:13</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="group__group1.html#ga24f647174760cac13d2624b5ad74b00c">func()</a>, and <a class="el" href="classdyno_1_1DataInterfacePipeline.html#a9760aed7678cb638648e436b598b95a7">image_container_preprocessor_</a>.</p>
-<div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="classdyno_1_1DataInterfacePipeline_a618d7b94531fbee4be436f41dc9a0355_cgraph.png" border="0" usemap="#aclassdyno_1_1DataInterfacePipeline_a618d7b94531fbee4be436f41dc9a0355_cgraph" alt=""/></div>
-<map name="aclassdyno_1_1DataInterfacePipeline_a618d7b94531fbee4be436f41dc9a0355_cgraph" id="aclassdyno_1_1DataInterfacePipeline_a618d7b94531fbee4be436f41dc9a0355_cgraph">
-<area shape="rect" title=" " alt="" coords="5,5,273,45"/>
-<area shape="rect" href="group__group1.html#ga24f647174760cac13d2624b5ad74b00c" title=" " alt="" coords="321,13,372,38"/>
-</map>
-</div>
+<p class="reference">References <a class="el" href="classdyno_1_1DataInterfacePipeline.html#a9760aed7678cb638648e436b598b95a7">image_container_preprocessor_</a>.</p>
 
 </div>
 </div>

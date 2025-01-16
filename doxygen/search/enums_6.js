@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['keypointtype_0',['KeyPointType',['../namespacedyno.html#ad6aa767541eb74e30fc5a7b018322952',1,'dyno']]]
+  ['masktype_0',['MaskType',['../namespacedyno.html#aaa09ef374edf57e1a3edc9b15a52e080',1,'dyno']]]
 ];

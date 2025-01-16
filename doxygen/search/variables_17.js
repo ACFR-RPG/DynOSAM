@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['x_0',['x',['../structCoordStruct.html#a183d7226fc5a8470ce9b9f04f9cb69bb',1,'CoordStruct::x()'],['../structrangetree_1_1ptx.html#a3e0bc00284c6e52b68a3cd95bad3cdcb',1,'rangetree::ptx::x()']]],
+  ['x_0',['x',['../structrangetree_1_1ptx.html#a3e0bc00284c6e52b68a3cd95bad3cdcb',1,'rangetree::ptx']]],
   ['x_5faxis_1',['x_axis',['../plot__triangulation_8m.html#a6e71e660c72847358bca2ed7a2a5c3ea',1,'plot_triangulation.m']]],
   ['x_5fk_5f1_5fmeasured_2',['X_k_1_measured',['../structdyno_1_1PointUpdateContext.html#a78f158a2f524dae37d96caccdb5b36ce',1,'dyno::PointUpdateContext']]],
   ['x_5fk_5fmeasured_3',['X_k_measured',['../structdyno_1_1PointUpdateContext.html#a123ded3f9e01cea8fb41bf6d57c3f091',1,'dyno::PointUpdateContext']]],

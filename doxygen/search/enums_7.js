@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['labels_0',['Labels',['../structdyno_1_1ImageType_1_1ClassSegmentation.html#a1e1241cf556b4e80151c3a43d0eb52a5',1,'dyno::ImageType::ClassSegmentation']]]
+  ['propogatetype_0',['PropogateType',['../namespacedyno.html#a53fef7d596a6ac062de528d25e47a7f6',1,'dyno']]]
 ];

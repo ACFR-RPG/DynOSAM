@@ -194,7 +194,7 @@ Private Attributes</h2></td></tr>
 <div class="ttc" id="anamespacedyno_1_1vision__tools_html_a01601f2fba95a79f4ecaa11b89286d99"><div class="ttname"><a href="namespacedyno_1_1vision__tools.html#a01601f2fba95a79f4ecaa11b89286d99">dyno::vision_tools::findObjectBoundingBox</a></div><div class="ttdeci">bool findObjectBoundingBox(const cv::Mat &amp;mask, ObjectId object_id, cv::Rect &amp;detected_rect, std::vector&lt; std::vector&lt; cv::Point &gt; &gt; &amp;detected_contours)</div><div class="ttdoc">From a instance/semantic mask type img, construct the bounding box for the mask of object_id.</div><div class="ttdef"><b>Definition:</b> <a href="VisionTools_8cc_source.html#l00439">VisionTools.cc:439</a></div></div>
 <div class="ttc" id="anamespacedyno_1_1vision__tools_html_a3a09fe6c15aeb5e18979dc27d68c4616"><div class="ttname"><a href="namespacedyno_1_1vision__tools.html#a3a09fe6c15aeb5e18979dc27d68c4616">dyno::vision_tools::getObjectLabels</a></div><div class="ttdeci">ObjectIds getObjectLabels(const cv::Mat &amp;image)</div><div class="ttdoc">Finds the unique object labels (j) as present in the instance segmentation image. Does not include th...</div><div class="ttdef"><b>Definition:</b> <a href="VisionTools_8cc_source.html#l00069">VisionTools.cc:69</a></div></div>
 <div class="ttc" id="anamespacedyno_1_1vision__tools_html_ae077e5d2722435f6731a8f58e3aab848"><div class="ttname"><a href="namespacedyno_1_1vision__tools.html#ae077e5d2722435f6731a8f58e3aab848">dyno::vision_tools::relabelMasks</a></div><div class="ttdeci">void relabelMasks(const cv::Mat &amp;mask, cv::Mat &amp;relabelled_mask, const ObjectIds &amp;old_labels, const ObjectIds &amp;new_labels)</div><div class="ttdef"><b>Definition:</b> <a href="VisionTools_8cc_source.html#l00542">VisionTools.cc:542</a></div></div>
-<div class="ttc" id="anamespacedyno_html_ae777b079c377ffa066d89051ee0cc623"><div class="ttname"><a href="namespacedyno.html#ae777b079c377ffa066d89051ee0cc623">dyno::ObjectIds</a></div><div class="ttdeci">std::vector&lt; ObjectId &gt; ObjectIds</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00067">Types.hpp:67</a></div></div>
+<div class="ttc" id="anamespacedyno_html_ae777b079c377ffa066d89051ee0cc623"><div class="ttname"><a href="namespacedyno.html#ae777b079c377ffa066d89051ee0cc623">dyno::ObjectIds</a></div><div class="ttdeci">std::vector&lt; ObjectId &gt; ObjectIds</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00069">Types.hpp:69</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="namespacedyno_1_1vision__tools.html#a01601f2fba95a79f4ecaa11b89286d99">dyno::vision_tools::findObjectBoundingBox()</a>, <a class="el" href="namespacedyno_1_1vision__tools.html#a3a09fe6c15aeb5e18979dc27d68c4616">dyno::vision_tools::getObjectLabels()</a>, <a class="el" href="classdyno_1_1ByteObjectTracker.html#a7e0aeb5a037bda4b4f13574cb0a7a928">impl_tracker_</a>, <a class="el" href="namespacedyno_1_1vision__tools.html#ae077e5d2722435f6731a8f58e3aab848">dyno::vision_tools::relabelMasks()</a>, <a class="el" href="classdyno_1_1ByteObjectTracker.html#aeb79dc19fb881160be780b9f4a2b2240">track()</a>, and <a class="el" href="classdyno_1_1byte__track_1_1ByteTracker.html#a56236b67c32d75c221b1ac7d74c0356b">dyno::byte_track::ByteTracker::update()</a>.</p>
 
@@ -213,12 +213,16 @@ Here is the call graph for this function:</div>
 <area shape="rect" href="classdyno_1_1byte__track_1_1ByteTracker.html#a0e814cd7f0a8c99be91bd779c6b16907" title=" " alt="" coords="496,101,711,141"/>
 <area shape="rect" href="classdyno_1_1byte__track_1_1ByteTracker.html#af6e5508ceda7befa412803c4f91028b5" title=" " alt="" coords="496,165,711,205"/>
 <area shape="rect" href="classdyno_1_1byte__track_1_1ByteTracker.html#af4ed38aaa6352d0eefd08153cf12eea2" title=" " alt="" coords="496,229,711,269"/>
-<area shape="rect" href="classdyno_1_1byte__track_1_1ByteTracker.html#ab6212301e2183729281fbf165e3b7b3d" title=" " alt="" coords="759,227,973,267"/>
+<area shape="rect" href="classdyno_1_1byte__track_1_1ByteTracker.html#ab6212301e2183729281fbf165e3b7b3d" title=" " alt="" coords="759,259,973,299"/>
 <area shape="rect" href="classdyno_1_1byte__track_1_1ByteTracker.html#aa39e5654bd4c65ac51e4a9b3a1c208a2" title=" " alt="" coords="496,344,711,384"/>
-<area shape="rect" href="classdyno_1_1byte__track_1_1ByteTracker.html#a659627eae7c2f046d757afe10991224a" title=" " alt="" coords="759,132,973,172"/>
-<area shape="rect" href="namespacedyno_1_1byte__track.html#aaa4d3bb196efe7196e965da20431d1a9" title=" " alt="" coords="1033,199,1225,225"/>
-<area shape="rect" href="classdyno_1_1byte__track_1_1ByteTracker.html#a7d287139cf0b0b2e054e2e8b7c9eaae5" title=" " alt="" coords="1021,132,1236,172"/>
-<area shape="rect" href="namespacedyno_1_1byte__track.html#a1b98a1c2549d3523a7061f8e29733ce5" title=" " alt="" coords="1284,132,1455,172"/>
+<area shape="rect" href="classdyno_1_1byte__track_1_1ByteTracker.html#a659627eae7c2f046d757afe10991224a" title=" " alt="" coords="759,105,973,145"/>
+<area shape="rect" href="namespacedyno_1_1byte__track.html#aaa4d3bb196efe7196e965da20431d1a9" title=" " alt="" coords="1033,251,1225,277"/>
+<area shape="rect" href="classdyno_1_1byte__track_1_1ByteTracker.html#a7d287139cf0b0b2e054e2e8b7c9eaae5" title=" " alt="" coords="1021,105,1236,145"/>
+<area shape="rect" href="classdyno_1_1byte__track_1_1RectBase.html#a54b8921fd564fcbd838179db3bbdb1b4" title=" " alt="" coords="1299,173,1499,213"/>
+<area shape="rect" href="classdyno_1_1byte__track_1_1RectBase.html#abe762fbb01fa8e6a6367342eed12705f" title=" " alt="" coords="1299,237,1499,277"/>
+<area shape="rect" href="classdyno_1_1byte__track_1_1RectBase.html#a845ae1d4d393890cc632a88a53285301" title=" " alt="" coords="1284,302,1513,327"/>
+<area shape="rect" href="classdyno_1_1byte__track_1_1RectBase.html#a5d7a4517f172325824fd2ea9037168c2" title=" " alt="" coords="1299,352,1499,392"/>
+<area shape="rect" href="namespacedyno_1_1byte__track.html#a1b98a1c2549d3523a7061f8e29733ce5" title=" " alt="" coords="1313,105,1484,145"/>
 </map>
 </div>
 <div class="dynheader">

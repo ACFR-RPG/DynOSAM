@@ -111,13 +111,13 @@ Functions</h2></td></tr>
 <tr class="memdesc:a299ddb654abf59383dcf29f7b013ba6f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a map of histograms (static features: 0, one for each dynamic object) containing the tracklet length at this frame.  <br /></td></tr>
 <tr class="separator:a299ddb654abf59383dcf29f7b013ba6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaabcfcca356f30c83a45a51259e39783"><td class="memItemLeft" align="right" valign="top">cv::Mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno_1_1vision__tools.html#aaabcfcca356f30c83a45a51259e39783">depthTo3D</a> (const <a class="el" href="structdyno_1_1ImageWrapper.html">ImageWrapper</a>&lt; <a class="el" href="structdyno_1_1ImageType_1_1Depth.html">ImageType::Depth</a> &gt; &amp;depth_image, const cv::Mat &amp;K)</td></tr>
-<tr class="memdesc:aaabcfcca356f30c83a45a51259e39783"><td class="mdescLeft">&#160;</td><td class="mdescRight">Projects a dense depth map to 3<a class="el" href="classD.html">D</a> coordinates in the local frame.  <br /></td></tr>
+<tr class="memdesc:aaabcfcca356f30c83a45a51259e39783"><td class="mdescLeft">&#160;</td><td class="mdescRight">Projects a dense depth map to 3D coordinates in the local frame.  <br /></td></tr>
 <tr class="separator:aaabcfcca356f30c83a45a51259e39783"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5d8b89d2b560b498934853c77a7d9f28"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno_1_1vision__tools.html#a5d8b89d2b560b498934853c77a7d9f28">writeOutProjectMaskAndDepthMap</a> (const <a class="el" href="structdyno_1_1ImageWrapper.html">ImageWrapper</a>&lt; <a class="el" href="structdyno_1_1ImageType_1_1Depth.html">ImageType::Depth</a> &gt; &amp;depth_image, const <a class="el" href="structdyno_1_1ImageWrapper.html">ImageWrapper</a>&lt; <a class="el" href="structdyno_1_1ImageType_1_1SemanticMask.html">ImageType::SemanticMask</a> &gt; &amp;mask_image, const <a class="el" href="classdyno_1_1Camera.html">Camera</a> &amp;camera, <a class="el" href="namespacedyno.html#ac4303d6fafb755f794b072d76f9cfb41">FrameId</a> frame_id)</td></tr>
-<tr class="memdesc:a5d8b89d2b560b498934853c77a7d9f28"><td class="mdescLeft">&#160;</td><td class="mdescRight">Saves a re-projected 3<a class="el" href="classD.html">D</a> point cloud with labelled points to file as a cv::Mat.  <br /></td></tr>
+<tr class="memdesc:a5d8b89d2b560b498934853c77a7d9f28"><td class="mdescLeft">&#160;</td><td class="mdescRight">Saves a re-projected 3D point cloud with labelled points to file as a cv::Mat.  <br /></td></tr>
 <tr class="separator:a5d8b89d2b560b498934853c77a7d9f28"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8cf2c16aa30d7bfa4ea4844abb555716"><td class="memItemLeft" align="right" valign="top">std::pair&lt; gtsam::Vector3, gtsam::Matrix3 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno_1_1vision__tools.html#a8cf2c16aa30d7bfa4ea4844abb555716">backProjectAndCovariance</a> (const <a class="el" href="classdyno_1_1Feature.html">Feature</a> &amp;feature, const <a class="el" href="classdyno_1_1Camera.html">Camera</a> &amp;camera, double pixel_sigma, double depth_sigma)</td></tr>
-<tr class="memdesc:a8cf2c16aa30d7bfa4ea4844abb555716"><td class="mdescLeft">&#160;</td><td class="mdescRight">From a feature with valid depth, backproject to a 3<a class="el" href="classD.html">D</a> point in the camera frame with the associated covariance (3x3) matrix.  <br /></td></tr>
+<tr class="memdesc:a8cf2c16aa30d7bfa4ea4844abb555716"><td class="mdescLeft">&#160;</td><td class="mdescRight">From a feature with valid depth, backproject to a 3D point in the camera frame with the associated covariance (3x3) matrix.  <br /></td></tr>
 <tr class="separator:a8cf2c16aa30d7bfa4ea4844abb555716"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
@@ -159,7 +159,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>From a feature with valid depth, backproject to a 3<a class="el" href="classD.html">D</a> point in the camera frame with the associated covariance (3x3) matrix. </p>
+<p>From a feature with valid depth, backproject to a 3D point in the camera frame with the associated covariance (3x3) matrix. </p>
 <p>The measurement covariance matrix for the pixel measurement is obtanied directly as a 2x2 diagonal matrix from the pixel sigma and the measurement covariance for the depth is modelled as a quadratic cost where sigma = depth * depth_sgima^2.</p>
 <p>The final covariance matrix is in the diagonal form [x,y,z]</p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -349,7 +349,7 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p>Projects a dense depth map to 3<a class="el" href="classD.html">D</a> coordinates in the local frame. </p>
+<p>Projects a dense depth map to 3D coordinates in the local frame. </p>
 <p>Returns a (H x W x 3) image of type CV_64F</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -806,8 +806,8 @@ Here is the caller graph for this function:</div>
 <div class="line"><span class="lineno">   81</span> </div>
 <div class="line"><span class="lineno">   82</span>  <span class="keywordflow">return</span> <a class="code hl_typedef" href="namespacedyno.html#ae777b079c377ffa066d89051ee0cc623">ObjectIds</a>(unique_labels.begin(), unique_labels.end());</div>
 <div class="line"><span class="lineno">   83</span>}</div>
-<div class="ttc" id="anamespacedyno_html_a38bb86e4154b86428b8d133be03fb2b5"><div class="ttname"><a href="namespacedyno.html#a38bb86e4154b86428b8d133be03fb2b5">dyno::ObjectId</a></div><div class="ttdeci">int ObjectId</div><div class="ttdoc">Discrete object id, j.</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00066">Types.hpp:66</a></div></div>
-<div class="ttc" id="anamespacedyno_html_ae777b079c377ffa066d89051ee0cc623"><div class="ttname"><a href="namespacedyno.html#ae777b079c377ffa066d89051ee0cc623">dyno::ObjectIds</a></div><div class="ttdeci">std::vector&lt; ObjectId &gt; ObjectIds</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00067">Types.hpp:67</a></div></div>
+<div class="ttc" id="anamespacedyno_html_a38bb86e4154b86428b8d133be03fb2b5"><div class="ttname"><a href="namespacedyno.html#a38bb86e4154b86428b8d133be03fb2b5">dyno::ObjectId</a></div><div class="ttdeci">int ObjectId</div><div class="ttdoc">Discrete object id, j.</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00068">Types.hpp:68</a></div></div>
+<div class="ttc" id="anamespacedyno_html_ae777b079c377ffa066d89051ee0cc623"><div class="ttname"><a href="namespacedyno.html#ae777b079c377ffa066d89051ee0cc623">dyno::ObjectIds</a></div><div class="ttdeci">std::vector&lt; ObjectId &gt; ObjectIds</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00069">Types.hpp:69</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="namespacedyno.html#ae78915ea0afc5025dafb398829f15ba3">dyno::background_label</a>.</p>
 
@@ -1234,7 +1234,7 @@ Here is the call graph for this function:</div>
 <div class="line"><span class="lineno">  437</span>}</div>
 <div class="ttc" id="aclassdyno_1_1Frame_html_a25df20e3d82010bd6d0fb5d9106ea5ff"><div class="ttname"><a href="classdyno_1_1Frame.html#a25df20e3d82010bd6d0fb5d9106ea5ff">dyno::Frame::dynamic_features_</a></div><div class="ttdeci">FeatureContainer dynamic_features_</div><div class="ttdef"><b>Definition:</b> <a href="Frame_8hpp_source.html#l00057">Frame.hpp:57</a></div></div>
 <div class="ttc" id="aclassdyno_1_1Frame_html_ae588299966f1a710e11db6d64cc5b707"><div class="ttname"><a href="classdyno_1_1Frame.html#ae588299966f1a710e11db6d64cc5b707">dyno::Frame::backProjectToWorld</a></div><div class="ttdeci">Landmark backProjectToWorld(TrackletId tracklet_id) const</div><div class="ttdoc">Project the feature into the world frame using the frames pose (T_world_camera_) and returns the 3D l...</div><div class="ttdef"><b>Definition:</b> <a href="Frame_8cc_source.html#l00128">Frame.cc:128</a></div></div>
-<div class="ttc" id="anamespacedyno_html_afdd174eb44901fb205371d796287378c"><div class="ttname"><a href="namespacedyno.html#afdd174eb44901fb205371d796287378c">dyno::TrackletId</a></div><div class="ttdeci">long int TrackletId</div><div class="ttdoc">Unique tracklet/landmark id, i.</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00077">Types.hpp:77</a></div></div>
+<div class="ttc" id="anamespacedyno_html_afdd174eb44901fb205371d796287378c"><div class="ttname"><a href="namespacedyno.html#afdd174eb44901fb205371d796287378c">dyno::TrackletId</a></div><div class="ttdeci">long int TrackletId</div><div class="ttdoc">Unique tracklet/landmark id, i.</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00079">Types.hpp:79</a></div></div>
 <div class="ttc" id="astructdyno_1_1FrontendParams_html_a27cd8ab520f7cbeb68e75a3b49cf26ef"><div class="ttname"><a href="structdyno_1_1FrontendParams.html#a27cd8ab520f7cbeb68e75a3b49cf26ef">dyno::FrontendParams::scene_flow_magnitude</a></div><div class="ttdeci">double scene_flow_magnitude</div><div class="ttdef"><b>Definition:</b> <a href="FrontendParams_8hpp_source.html#l00038">FrontendParams.hpp:38</a></div></div>
 <div class="ttc" id="astructdyno_1_1FrontendParams_html_ae4e06ec2821e70fd421cfe0ba74ad8c5"><div class="ttname"><a href="structdyno_1_1FrontendParams.html#ae4e06ec2821e70fd421cfe0ba74ad8c5">dyno::FrontendParams::scene_flow_percentage</a></div><div class="ttdeci">double scene_flow_percentage</div><div class="ttdef"><b>Definition:</b> <a href="FrontendParams_8hpp_source.html#l00039">FrontendParams.hpp:39</a></div></div>
 </div><!-- fragment -->
@@ -1305,7 +1305,7 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p>Saves a re-projected 3<a class="el" href="classD.html">D</a> point cloud with labelled points to file as a cv::Mat. </p>
+<p>Saves a re-projected 3D point cloud with labelled points to file as a cv::Mat. </p>
 <p>The depth map is projected into the camera coordinate frame and each pixel is labelled with the tracking label from the mask.</p>
 <p>The final image is saved as a CV_64F (double) of W X H X 4 where channels [0:3] are the xyz values of the point and [3] is the tracking label (0=background, 1....N object track label).</p>
 <p>Used for reconstructing testing.</p>

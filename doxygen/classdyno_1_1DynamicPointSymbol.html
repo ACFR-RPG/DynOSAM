@@ -114,8 +114,6 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a5322b67e507483ef7ac28abe5b660b88"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a127224d722a928ca67b6bd2b6b3a701c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacedyno.html#ac4303d6fafb755f794b072d76f9cfb41">FrameId</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DynamicPointSymbol.html#a127224d722a928ca67b6bd2b6b3a701c">frameId</a> () const</td></tr>
 <tr class="separator:a127224d722a928ca67b6bd2b6b3a701c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a46f2b433ec75309c695821571e1c2473"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DynamicPointSymbol.html#a46f2b433ec75309c695821571e1c2473">operator std::string</a> () const</td></tr>
-<tr class="separator:a46f2b433ec75309c695821571e1c2473"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acec9bd3e8e3beb72d0e1963c86ac90af"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DynamicPointSymbol.html#acec9bd3e8e3beb72d0e1963c86ac90af">string</a> () const</td></tr>
 <tr class="memdesc:acec9bd3e8e3beb72d0e1963c86ac90af"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return string representation of the key.  <br /></td></tr>
 <tr class="separator:acec9bd3e8e3beb72d0e1963c86ac90af"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -666,31 +664,6 @@ Here is the call graph for this function:</div>
 
 </div>
 </div>
-<a id="a46f2b433ec75309c695821571e1c2473" name="a46f2b433ec75309c695821571e1c2473"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a46f2b433ec75309c695821571e1c2473">&#9670;&#160;</a></span>operator std::string()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">dyno::DynamicPointSymbol::operator std::string </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Create a string from the key </p>
-
-<p class="definition">Definition at line <a class="el" href="DynamicPointSymbol_8cc_source.html#l00084">84</a> of file <a class="el" href="DynamicPointSymbol_8cc_source.html">DynamicPointSymbol.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   84</span>                                             {</div>
-<div class="line"><span class="lineno">   85</span>    <span class="keywordtype">char</span> buffer[20];</div>
-<div class="line"><span class="lineno">   86</span>    snprintf(buffer, 20, <span class="stringliteral">&quot;%c%ld-%lu&quot;</span>, <a class="code hl_variable" href="classdyno_1_1DynamicPointSymbol.html#a85b3822996d7931a8835073153e32a50">c_</a>, <a class="code hl_variable" href="classdyno_1_1DynamicPointSymbol.html#ad4eedfc52fe3c4fe872bb62d81ed559d">tracklet_id_</a>, <span class="keyword">static_cast&lt;</span><span class="keywordtype">unsigned</span> <span class="keywordtype">long</span><span class="keyword">&gt;</span>(<a class="code hl_variable" href="classdyno_1_1DynamicPointSymbol.html#ae922b7a6e36ee6241ef39992893482b8">frame_id_</a>));</div>
-<div class="line"><span class="lineno">   87</span>    <span class="keywordflow">return</span> std::string(buffer);</div>
-<div class="line"><span class="lineno">   88</span>}</div>
-</div><!-- fragment -->
-</div>
-</div>
 <a id="a789916acf953c476dbb1f579171b771e" name="a789916acf953c476dbb1f579171b771e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a789916acf953c476dbb1f579171b771e">&#9670;&#160;</a></span>operator!=() <span class="overload">[1/2]</span></h2>
 
@@ -928,8 +901,8 @@ Here is the call graph for this function:</div>
 <div class="line"><span class="lineno">  105</span>    tracklet_id = <span class="keyword">static_cast&lt;</span><a class="code hl_typedef" href="namespacedyno.html#afdd174eb44901fb205371d796287378c">TrackletId</a><span class="keyword">&gt;</span>(result.first);</div>
 <div class="line"><span class="lineno">  106</span>    frame_id = <span class="keyword">static_cast&lt;</span><a class="code hl_typedef" href="namespacedyno.html#ac4303d6fafb755f794b072d76f9cfb41">FrameId</a><span class="keyword">&gt;</span>(result.second);</div>
 <div class="line"><span class="lineno">  107</span>}</div>
-<div class="ttc" id="anamespacedyno_html_ac4303d6fafb755f794b072d76f9cfb41"><div class="ttname"><a href="namespacedyno.html#ac4303d6fafb755f794b072d76f9cfb41">dyno::FrameId</a></div><div class="ttdeci">size_t FrameId</div><div class="ttdoc">Discrete time-step k.</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00070">Types.hpp:70</a></div></div>
-<div class="ttc" id="anamespacedyno_html_afdd174eb44901fb205371d796287378c"><div class="ttname"><a href="namespacedyno.html#afdd174eb44901fb205371d796287378c">dyno::TrackletId</a></div><div class="ttdeci">long int TrackletId</div><div class="ttdoc">Unique tracklet/landmark id, i.</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00077">Types.hpp:77</a></div></div>
+<div class="ttc" id="anamespacedyno_html_ac4303d6fafb755f794b072d76f9cfb41"><div class="ttname"><a href="namespacedyno.html#ac4303d6fafb755f794b072d76f9cfb41">dyno::FrameId</a></div><div class="ttdeci">size_t FrameId</div><div class="ttdoc">Discrete time-step k.</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00072">Types.hpp:72</a></div></div>
+<div class="ttc" id="anamespacedyno_html_afdd174eb44901fb205371d796287378c"><div class="ttname"><a href="namespacedyno.html#afdd174eb44901fb205371d796287378c">dyno::TrackletId</a></div><div class="ttdeci">long int TrackletId</div><div class="ttdoc">Unique tracklet/landmark id, i.</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00079">Types.hpp:79</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="structdyno_1_1CantorPairingFunction.html#aace60cfaed9461dc3a76e832b68899f9">dyno::CantorPairingFunction::depair()</a>.</p>
 
@@ -965,7 +938,7 @@ Here is the caller graph for this function:</div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::string <a class="el" href="classdyno_1_1DynamicPointSymbol.html#a46f2b433ec75309c695821571e1c2473">dyno::DynamicPointSymbol::string</a> </td>
+          <td class="memname">std::string dyno::DynamicPointSymbol::string </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>

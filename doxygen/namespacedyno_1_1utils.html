@@ -136,7 +136,7 @@ Functions</h2></td></tr>
 <tr class="memitem:a01280019f78340615a1a6ece270cd3ca"><td class="memItemLeft" align="right" valign="top">cv::Mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno_1_1utils.html#a01280019f78340615a1a6ece270cd3ca">gtsamPoint3ToCvMat</a> (const gtsam::Point3 &amp;point)</td></tr>
 <tr class="separator:a01280019f78340615a1a6ece270cd3ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad1f35c9afd5ac9342323a9b5fec55172"><td class="memItemLeft" align="right" valign="top">gtsam::Pose3&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno_1_1utils.html#ad1f35c9afd5ac9342323a9b5fec55172">poseVectorToGtsamPose3</a> (const std::vector&lt; double &gt; &amp;vector_pose)</td></tr>
-<tr class="memdesc:ad1f35c9afd5ac9342323a9b5fec55172"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a vector of 16 elements listing the elements of a 4x4 3<a class="el" href="classD.html">D</a> pose matrix by rows into a pose3 in gtsam.  <br /></td></tr>
+<tr class="memdesc:ad1f35c9afd5ac9342323a9b5fec55172"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a vector of 16 elements listing the elements of a 4x4 3D pose matrix by rows into a pose3 in gtsam.  <br /></td></tr>
 <tr class="separator:ad1f35c9afd5ac9342323a9b5fec55172"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abe851502ab3c4419cd7b6a4aa4caca69"><td class="memItemLeft" align="right" valign="top">gtsam::Cal3_S2&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno_1_1utils.html#abe851502ab3c4419cd7b6a4aa4caca69">Cvmat2Cal3_S2</a> (const cv::Mat &amp;M)</td></tr>
 <tr class="memdesc:abe851502ab3c4419cd7b6a4aa4caca69"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a 3x3 (or 3xM, M &gt; 3) camera matrix from opencv to gtsam::Cal3_S2.  <br /></td></tr>
@@ -1416,7 +1416,7 @@ Here is the caller graph for this function:</div>
 <div class="line"><span class="lineno">  153</span>  <span class="keywordflow">return</span> timestamp;</div>
 <div class="line"><span class="lineno">  154</span>}</div>
 <div class="ttc" id="anamespacedyno_html_a2b18a1990bb26145cec08be631b0ef74"><div class="ttname"><a href="namespacedyno.html#a2b18a1990bb26145cec08be631b0ef74">dyno::convert</a></div><div class="ttdeci">bool convert(const Input &amp;, Output &amp;)</div></div>
-<div class="ttc" id="anamespacedyno_html_a7fda67c0575c4b7a8210dcc8ae227370"><div class="ttname"><a href="namespacedyno.html#a7fda67c0575c4b7a8210dcc8ae227370">dyno::Timestamp</a></div><div class="ttdeci">double Timestamp</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00062">Types.hpp:62</a></div></div>
+<div class="ttc" id="anamespacedyno_html_a7fda67c0575c4b7a8210dcc8ae227370"><div class="ttname"><a href="namespacedyno.html#a7fda67c0575c4b7a8210dcc8ae227370">dyno::Timestamp</a></div><div class="ttdeci">double Timestamp</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00064">Types.hpp:64</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="namespacedyno.html#a2b18a1990bb26145cec08be631b0ef74">dyno::convert()</a>.</p>
 
@@ -2208,7 +2208,7 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p>Converts a vector of 16 elements listing the elements of a 4x4 3<a class="el" href="classD.html">D</a> pose matrix by rows into a pose3 in gtsam. </p>
+<p>Converts a vector of 16 elements listing the elements of a 4x4 3D pose matrix by rows into a pose3 in gtsam. </p>
 
 <p class="definition">Definition at line <a class="el" href="GtsamUtils_8cc_source.html#l00100">100</a> of file <a class="el" href="GtsamUtils_8cc_source.html">GtsamUtils.cc</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">  100</span>                                                                        {</div>

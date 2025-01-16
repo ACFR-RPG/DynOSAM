@@ -86,7 +86,7 @@ $(function() {
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a921bc00a6d15b578bfe9197a159ae3ca"><td class="memTemplParams" colspan="2">template&lt;typename F , typename... Args&gt; </td></tr>
-<tr class="memitem:a921bc00a6d15b578bfe9197a159ae3ca"><td class="memTemplItemLeft" align="right" valign="top">static T::rep&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structdyno_1_1utils_1_1Measure.html#a921bc00a6d15b578bfe9197a159ae3ca">execution</a> (F &amp;&amp;<a class="el" href="group__group1.html#ga24f647174760cac13d2624b5ad74b00c">func</a>, Args &amp;&amp;... args)</td></tr>
+<tr class="memitem:a921bc00a6d15b578bfe9197a159ae3ca"><td class="memTemplItemLeft" align="right" valign="top">static T::rep&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structdyno_1_1utils_1_1Measure.html#a921bc00a6d15b578bfe9197a159ae3ca">execution</a> (F &amp;&amp;func, Args &amp;&amp;... args)</td></tr>
 <tr class="separator:a921bc00a6d15b578bfe9197a159ae3ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -135,23 +135,11 @@ template&lt;typename F , typename... Args&gt; </div>
 <p class="definition">Definition at line <a class="el" href="Timing_8hpp_source.html#l00080">80</a> of file <a class="el" href="Timing_8hpp_source.html">Timing.hpp</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">   81</span>  {</div>
 <div class="line"><span class="lineno">   82</span>    <span class="keyword">auto</span> start = std::chrono::steady_clock::now();</div>
-<div class="line"><span class="lineno">   83</span>    std::forward&lt;decltype(func)&gt;(<a class="code hl_function" href="group__group1.html#ga24f647174760cac13d2624b5ad74b00c">func</a>)(std::forward&lt;Args&gt;(args)...);</div>
+<div class="line"><span class="lineno">   83</span>    std::forward&lt;decltype(func)&gt;(func)(std::forward&lt;Args&gt;(args)...);</div>
 <div class="line"><span class="lineno">   84</span>    <span class="keyword">auto</span> duration = std::chrono::duration_cast&lt;T&gt;(std::chrono::steady_clock::now() - start);</div>
 <div class="line"><span class="lineno">   85</span>    <span class="keywordflow">return</span> duration.count();</div>
 <div class="line"><span class="lineno">   86</span>  }</div>
-<div class="ttc" id="agroup__group1_html_ga24f647174760cac13d2624b5ad74b00c"><div class="ttname"><a href="group__group1.html#ga24f647174760cac13d2624b5ad74b00c">func</a></div><div class="ttdeci">void func()</div><div class="ttdef"><b>Definition:</b> <a href="group_8cpp_source.html#l00013">group.cpp:13</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="group__group1.html#ga24f647174760cac13d2624b5ad74b00c">func()</a>.</p>
-<div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="structdyno_1_1utils_1_1Measure_a921bc00a6d15b578bfe9197a159ae3ca_cgraph.png" border="0" usemap="#astructdyno_1_1utils_1_1Measure_a921bc00a6d15b578bfe9197a159ae3ca_cgraph" alt=""/></div>
-<map name="astructdyno_1_1utils_1_1Measure_a921bc00a6d15b578bfe9197a159ae3ca_cgraph" id="astructdyno_1_1utils_1_1Measure_a921bc00a6d15b578bfe9197a159ae3ca_cgraph">
-<area shape="rect" title=" " alt="" coords="5,5,160,45"/>
-<area shape="rect" href="group__group1.html#ga24f647174760cac13d2624b5ad74b00c" title=" " alt="" coords="208,13,259,38"/>
-</map>
-</div>
-
 </div>
 </div>
 <hr/>The documentation for this struct was generated from the following file:<ul>

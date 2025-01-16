@@ -75,7 +75,6 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="#friends">Friends</a> &#124;
 <a href="structdyno_1_1DebugInfo_1_1ObjectInfo-members.html">List of all members</a>  </div>
@@ -85,11 +84,6 @@ $(function() {
 
 <p><code>#include &lt;<a class="el" href="BackendDefinitions_8hpp_source.html">BackendDefinitions.hpp</a>&gt;</code></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
-Public Member Functions</h2></td></tr>
-<tr class="memitem:ae366b079edb4b2f637d19bd1746176b7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1DebugInfo_1_1ObjectInfo.html#ae366b079edb4b2f637d19bd1746176b7">operator std::string</a> () const</td></tr>
-<tr class="separator:ae366b079edb4b2f637d19bd1746176b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:abbb2c8e72315d219bdcaf11cb9143280"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1DebugInfo_1_1ObjectInfo.html#abbb2c8e72315d219bdcaf11cb9143280">num_dynamic_factors</a> = 0</td></tr>
@@ -109,39 +103,7 @@ Friends</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
 <p class="definition">Definition at line <a class="el" href="BackendDefinitions_8hpp_source.html#l00182">182</a> of file <a class="el" href="BackendDefinitions_8hpp_source.html">BackendDefinitions.hpp</a>.</p>
-</div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="ae366b079edb4b2f637d19bd1746176b7" name="ae366b079edb4b2f637d19bd1746176b7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae366b079edb4b2f637d19bd1746176b7">&#9670;&#160;</a></span>operator std::string()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">dyno::DebugInfo::ObjectInfo::operator std::string </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="BackendDefinitions_8cc_source.html#l00154">154</a> of file <a class="el" href="BackendDefinitions_8cc_source.html">BackendDefinitions.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  154</span>                                              {</div>
-<div class="line"><span class="lineno">  155</span>  std::stringstream ss;</div>
-<div class="line"><span class="lineno">  156</span>    ss &lt;&lt; <span class="stringliteral">&quot;Num point factors: &quot;</span> &lt;&lt; <a class="code hl_variable" href="structdyno_1_1DebugInfo_1_1ObjectInfo.html#abbb2c8e72315d219bdcaf11cb9143280">num_dynamic_factors</a> &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
-<div class="line"><span class="lineno">  157</span>    ss &lt;&lt; <span class="stringliteral">&quot;Num point variables: &quot;</span> &lt;&lt; <a class="code hl_variable" href="structdyno_1_1DebugInfo_1_1ObjectInfo.html#a98fed15063db5d7f6861cc6bb8b68607">num_new_dynamic_points</a> &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
-<div class="line"><span class="lineno">  158</span>    ss &lt;&lt; <span class="stringliteral">&quot;Num motion factors: &quot;</span> &lt;&lt; <a class="code hl_variable" href="structdyno_1_1DebugInfo_1_1ObjectInfo.html#a152641550063683d582cbe4437b2552b">num_motion_factors</a> &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
-<div class="line"><span class="lineno">  159</span>    ss &lt;&lt; <span class="stringliteral">&quot;Smoothing factor added: &quot;</span> &lt;&lt; std::boolalpha &lt;&lt;  <a class="code hl_variable" href="structdyno_1_1DebugInfo_1_1ObjectInfo.html#a902d6a8b83f7ee714d4b6465cabc9eb7">smoothing_factor_added</a>;</div>
-<div class="line"><span class="lineno">  160</span>    <span class="keywordflow">return</span> ss.str();</div>
-<div class="line"><span class="lineno">  161</span>}</div>
-<div class="ttc" id="astructdyno_1_1DebugInfo_1_1ObjectInfo_html_a152641550063683d582cbe4437b2552b"><div class="ttname"><a href="structdyno_1_1DebugInfo_1_1ObjectInfo.html#a152641550063683d582cbe4437b2552b">dyno::DebugInfo::ObjectInfo::num_motion_factors</a></div><div class="ttdeci">int num_motion_factors</div><div class="ttdef"><b>Definition:</b> <a href="BackendDefinitions_8hpp_source.html#l00185">BackendDefinitions.hpp:185</a></div></div>
-<div class="ttc" id="astructdyno_1_1DebugInfo_1_1ObjectInfo_html_a902d6a8b83f7ee714d4b6465cabc9eb7"><div class="ttname"><a href="structdyno_1_1DebugInfo_1_1ObjectInfo.html#a902d6a8b83f7ee714d4b6465cabc9eb7">dyno::DebugInfo::ObjectInfo::smoothing_factor_added</a></div><div class="ttdeci">bool smoothing_factor_added</div><div class="ttdef"><b>Definition:</b> <a href="BackendDefinitions_8hpp_source.html#l00186">BackendDefinitions.hpp:186</a></div></div>
-<div class="ttc" id="astructdyno_1_1DebugInfo_1_1ObjectInfo_html_a98fed15063db5d7f6861cc6bb8b68607"><div class="ttname"><a href="structdyno_1_1DebugInfo_1_1ObjectInfo.html#a98fed15063db5d7f6861cc6bb8b68607">dyno::DebugInfo::ObjectInfo::num_new_dynamic_points</a></div><div class="ttdeci">int num_new_dynamic_points</div><div class="ttdef"><b>Definition:</b> <a href="BackendDefinitions_8hpp_source.html#l00184">BackendDefinitions.hpp:184</a></div></div>
-<div class="ttc" id="astructdyno_1_1DebugInfo_1_1ObjectInfo_html_abbb2c8e72315d219bdcaf11cb9143280"><div class="ttname"><a href="structdyno_1_1DebugInfo_1_1ObjectInfo.html#abbb2c8e72315d219bdcaf11cb9143280">dyno::DebugInfo::ObjectInfo::num_dynamic_factors</a></div><div class="ttdeci">int num_dynamic_factors</div><div class="ttdef"><b>Definition:</b> <a href="BackendDefinitions_8hpp_source.html#l00183">BackendDefinitions.hpp:183</a></div></div>
-</div><!-- fragment -->
-</div>
-</div>
-<h2 class="groupheader">Friends And Related Function Documentation</h2>
+</div><h2 class="groupheader">Friends And Related Function Documentation</h2>
 <a id="afcb6f36c0aecdd1780e12618d4fa461c" name="afcb6f36c0aecdd1780e12618d4fa461c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#afcb6f36c0aecdd1780e12618d4fa461c">&#9670;&#160;</a></span>operator&lt;&lt;</h2>
 

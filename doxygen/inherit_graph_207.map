@@ -1,3 +1,11 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classdyno_1_1YamlParser.html" title=" " alt="" coords="5,5,139,31"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,237,124,262"/>
+<area shape="rect" id="node2" href="$structdyno_1_1internal_1_1is__one__of.html" title=" " alt="" coords="189,5,373,45"/>
+<area shape="rect" id="node3" href="$structdyno_1_1internal_1_1HasChildFrame.html" title=" " alt="" coords="184,69,379,109"/>
+<area shape="rect" id="node4" href="$structdyno_1_1internal_1_1HasMsgHeader.html" title=" " alt="" coords="172,133,391,173"/>
+<area shape="rect" id="node5" href="$structdyno_1_1internal_1_1is__one__of.html" title=" " alt="" coords="195,197,367,237"/>
+<area shape="rect" id="node6" href="$structdyno_1_1internal_1_1is__variant.html" title=" " alt="" coords="216,261,347,301"/>
+<area shape="rect" id="node7" href="$structdyno_1_1internal_1_1is__variant__member.html" title=" " alt="" coords="199,326,363,381"/>
+<area shape="rect" id="node8" href="$structdyno_1_1is__optional.html" title=" " alt="" coords="196,405,367,430"/>
+<area shape="rect" id="node9" href="$structis__gtsam__value.html" title=" " alt="" coords="206,455,357,495"/>
 </map>

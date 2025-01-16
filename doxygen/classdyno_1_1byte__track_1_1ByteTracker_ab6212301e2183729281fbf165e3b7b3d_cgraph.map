@@ -1,4 +1,8 @@
 <map id="dyno::byte_track::ByteTracker::remove_duplicate_tracks" name="dyno::byte_track::ByteTracker::remove_duplicate_tracks">
-<area shape="rect" id="node1" title=" " alt="" coords="5,5,220,45"/>
-<area shape="rect" id="node2" href="$namespacedyno_1_1byte__track.html#aaa4d3bb196efe7196e965da20431d1a9" title=" " alt="" coords="268,13,460,38"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,99,220,139"/>
+<area shape="rect" id="node2" href="$namespacedyno_1_1byte__track.html#aaa4d3bb196efe7196e965da20431d1a9" title=" " alt="" coords="268,106,460,131"/>
+<area shape="rect" id="node3" href="$classdyno_1_1byte__track_1_1RectBase.html#a54b8921fd564fcbd838179db3bbdb1b4" title=" " alt="" coords="523,5,723,45"/>
+<area shape="rect" id="node4" href="$classdyno_1_1byte__track_1_1RectBase.html#abe762fbb01fa8e6a6367342eed12705f" title=" " alt="" coords="523,69,723,109"/>
+<area shape="rect" id="node5" href="$classdyno_1_1byte__track_1_1RectBase.html#a845ae1d4d393890cc632a88a53285301" title=" " alt="" coords="508,134,737,159"/>
+<area shape="rect" id="node6" href="$classdyno_1_1byte__track_1_1RectBase.html#a5d7a4517f172325824fd2ea9037168c2" title=" " alt="" coords="523,184,723,224"/>
 </map>

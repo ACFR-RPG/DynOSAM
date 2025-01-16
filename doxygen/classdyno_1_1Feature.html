@@ -85,7 +85,7 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>2<a class="el" href="classD.html">D</a> tracking and id information for a feature observation at a single frame.  
+<p>2D tracking and id information for a feature observation at a single frame.  
  <a href="classdyno_1_1Feature.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>&gt;</code></p>
@@ -201,7 +201,7 @@ Private Attributes</h2></td></tr>
 <tr class="separator:ae6a975328f68857c63a1dbb33d9aaa04"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>2<a class="el" href="classD.html">D</a> tracking and id information for a feature observation at a single frame. </p>
+<div class="textblock"><p>2D tracking and id information for a feature observation at a single frame. </p>
 <p>Modifcation and access to <a class="el" href="classdyno_1_1Feature.html" title="2D tracking and id information for a feature observation at a single frame.">Feature</a> is thread safe. </p>
 
 <p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00078">78</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
@@ -728,7 +728,7 @@ Here is the caller graph for this function:</div>
 <div class="line"><span class="lineno">  300</span>    std::lock_guard&lt;std::mutex&gt; lk(<a class="code hl_variable" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>);</div>
 <div class="line"><span class="lineno">  301</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>.<a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#ac66ef7a83384411f5cf8bacccb37844d">type</a> == <a class="code hl_enumvalue" href="namespacedyno.html#ad6aa767541eb74e30fc5a7b018322952aa7ffd97a62d9e9295b5f90cea20c2833">KeyPointType::STATIC</a>;</div>
 <div class="line"><span class="lineno">  302</span>  }</div>
-<div class="ttc" id="anamespacedyno_html_ad6aa767541eb74e30fc5a7b018322952aa7ffd97a62d9e9295b5f90cea20c2833"><div class="ttname"><a href="namespacedyno.html#ad6aa767541eb74e30fc5a7b018322952aa7ffd97a62d9e9295b5f90cea20c2833">dyno::STATIC</a></div><div class="ttdeci">@ STATIC</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00137">Types.hpp:137</a></div></div>
+<div class="ttc" id="anamespacedyno_html_ad6aa767541eb74e30fc5a7b018322952aa7ffd97a62d9e9295b5f90cea20c2833"><div class="ttname"><a href="namespacedyno.html#ad6aa767541eb74e30fc5a7b018322952aa7ffd97a62d9e9295b5f90cea20c2833">dyno::STATIC</a></div><div class="ttdeci">@ STATIC</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00139">Types.hpp:139</a></div></div>
 <div class="ttc" id="astructdyno_1_1Feature_1_1impl_html_ac66ef7a83384411f5cf8bacccb37844d"><div class="ttname"><a href="structdyno_1_1Feature_1_1impl.html#ac66ef7a83384411f5cf8bacccb37844d">dyno::Feature::impl::type</a></div><div class="ttdeci">KeyPointType type</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00338">Feature.hpp:338</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>, <a class="el" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>, <a class="el" href="namespacedyno.html#ad6aa767541eb74e30fc5a7b018322952aa7ffd97a62d9e9295b5f90cea20c2833">dyno::STATIC</a>, and <a class="el" href="structdyno_1_1Feature_1_1impl.html#ac66ef7a83384411f5cf8bacccb37844d">dyno::Feature::impl::type</a>.</p>
@@ -1524,7 +1524,7 @@ false </dd></dl>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">=</div>
 <div class="line">      <a class="code hl_variable" href="namespacedyno.html#aa9297665cadd44539c6b64879869c834">NaN</a></div>
-<div class="ttc" id="anamespacedyno_html_aa9297665cadd44539c6b64879869c834"><div class="ttname"><a href="namespacedyno.html#aa9297665cadd44539c6b64879869c834">dyno::NaN</a></div><div class="ttdeci">static constexpr auto NaN</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00060">Types.hpp:60</a></div></div>
+<div class="ttc" id="anamespacedyno_html_aa9297665cadd44539c6b64879869c834"><div class="ttname"><a href="namespacedyno.html#aa9297665cadd44539c6b64879869c834">dyno::NaN</a></div><div class="ttdeci">static constexpr auto NaN</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00062">Types.hpp:62</a></div></div>
 </div><!-- fragment --><p>can refer to and invalid id label (of type int) including tracklet id, instance and tracking label </p>
 
 <p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00086">86</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>

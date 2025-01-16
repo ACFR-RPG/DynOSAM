@@ -1,5 +1,4 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classdyno_1_1Formulation.html" title=" " alt="" coords="5,5,156,45"/>
-<area shape="rect" id="node2" href="$classdyno_1_1WorldPoseFormulation.html" title=" " alt="" coords="204,13,412,38"/>
-<area shape="rect" id="node3" href="$classdyno_1_1WorldMotionFormulation.html" title=" " alt="" coords="460,13,683,38"/>
+<area shape="rect" id="node1" href="$classdyno_1_1ImageContainerSubset.html" title=" " alt="" coords="5,5,344,89"/>
+<area shape="rect" id="node2" href="$classdyno_1_1ImageContainer.html" title=" " alt="" coords="392,35,559,60"/>
 </map>

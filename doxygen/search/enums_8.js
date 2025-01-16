@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['masktype_0',['MaskType',['../namespacedyno.html#aaa09ef374edf57e1a3edc9b15a52e080',1,'dyno']]]
+  ['queryresult_0',['QueryResult',['../classdyno_1_1ThreadsafeImuBuffer.html#ac71268252763622c4644f283eb17047e',1,'dyno::ThreadsafeImuBuffer']]]
 ];

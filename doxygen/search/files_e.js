@@ -12,6 +12,5 @@ var searchData=
   ['opencvutils_2ecc_9',['OpenCVUtils.cc',['../OpenCVUtils_8cc.html',1,'']]],
   ['opencvutils_2ehpp_10',['OpenCVUtils.hpp',['../OpenCVUtils_8hpp.html',1,'']]],
   ['orbextractor_2ecc_11',['ORBextractor.cc',['../ORBextractor_8cc.html',1,'']]],
-  ['orbextractor_2ehpp_12',['ORBextractor.hpp',['../ORBextractor_8hpp.html',1,'']]],
-  ['overload_2ecpp_13',['overload.cpp',['../overload_8cpp.html',1,'']]]
+  ['orbextractor_2ehpp_12',['ORBextractor.hpp',['../ORBextractor_8hpp.html',1,'']]]
 ];
