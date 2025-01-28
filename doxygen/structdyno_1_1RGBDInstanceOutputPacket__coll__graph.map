@@ -3,6 +3,6 @@
 <area shape="rect" id="node2" href="$structdyno_1_1FrontendOutputPacketBase.html" title=" " alt="" coords="763,67,1000,93"/>
 <area shape="rect" id="node3" href="$classdyno_1_1GenericTrackedStatusVector.html" title=" " alt="" coords="283,11,485,66"/>
 <area shape="rect" id="node4" title=" " alt="" coords="5,26,233,51"/>
-<area shape="rect" id="node5" href="$classdyno_1_1GenericObjectCentricMap.html" title="Generic mapping of Object Id &#45;&gt; FrameId &#45;&gt; Value within a nested gtsam::FastMap structure...." alt="" coords="781,117,981,157"/>
+<area shape="rect" id="node5" href="$classdyno_1_1GenericObjectCentricMap.html" title="Generic mapping of Object Id to FrameId to VALUE within a nested gtsam::FastMap structure...." alt="" coords="781,117,981,157"/>
 <area shape="rect" id="node6" title=" " alt="" coords="283,110,485,165"/>
 </map>

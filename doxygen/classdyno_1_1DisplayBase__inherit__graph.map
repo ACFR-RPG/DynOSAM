@@ -1,6 +1,8 @@
 <map id="dyno::DisplayBase&lt; INPUT &gt;" name="dyno::DisplayBase&lt; INPUT &gt;">
-<area shape="rect" id="node1" title=" " alt="" coords="5,69,160,109"/>
-<area shape="rect" id="node2" href="$classdyno_1_1BackendDisplayRos.html" title=" " alt="" coords="225,5,418,45"/>
-<area shape="rect" id="node3" href="$classdyno_1_1FrontendDisplayRos.html" title=" " alt="" coords="208,69,435,109"/>
-<area shape="rect" id="node4" href="$classdyno_1_1OpenCVFrontendDisplay.html" title=" " alt="" coords="208,133,435,173"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,133,160,173"/>
+<area shape="rect" id="node2" href="$classdyno_1_1BackendDSDRos.html" title=" " alt="" coords="237,5,430,45"/>
+<area shape="rect" id="node3" href="$classdyno_1_1BackendInbuiltDisplayRos.html" title=" " alt="" coords="225,69,442,109"/>
+<area shape="rect" id="node4" href="$classdyno_1_1FrontendDSDRos.html" title=" " alt="" coords="220,133,447,173"/>
+<area shape="rect" id="node5" href="$classdyno_1_1FrontendInbuiltDisplayRos.html" title=" " alt="" coords="208,197,459,237"/>
+<area shape="rect" id="node6" href="$classdyno_1_1OpenCVFrontendDisplay.html" title=" " alt="" coords="220,261,447,301"/>
 </map>

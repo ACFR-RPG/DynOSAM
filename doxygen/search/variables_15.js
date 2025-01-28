@@ -12,10 +12,14 @@ var searchData=
   ['value_9',['value',['../structdyno_1_1internal_1_1tuple__element__index.html#a646809822de1b14490980bc0430a1e33',1,'dyno::internal::tuple_element_index']]],
   ['value_5f_10',['value_',['../classdyno_1_1TrackedValueStatus.html#aac0801cb35f368eee477377aa69847f7',1,'dyno::TrackedValueStatus']]],
   ['value_5fcount_5f_11',['value_count_',['../classdyno_1_1CsvWriter.html#a0ed4a24caab2514ccb9e458e28c16af2',1,'dyno::CsvWriter']]],
-  ['values_5f_12',['values_',['../classdyno_1_1NonlinearFactorGraphManager.html#ac19c33989e9be1d996b65b0dcc0e12c3',1,'dyno::NonlinearFactorGraphManager::values_()'],['../classdyno_1_1ThreadsafeTemporalBuffer.html#af669b007331123f63ba93a8459815cdb',1,'dyno::ThreadsafeTemporalBuffer::values_()'],['../structdyno_1_1utils_1_1StatisticsMapValue.html#ac4dcee0083a0e44082673858367a9322',1,'dyno::utils::StatisticsMapValue::values_()']]],
-  ['video_5fwriter_5f_13',['video_writer_',['../classdyno_1_1FrontendDisplayRos.html#a2ca30e3e64fd5965a65675e982bdaba3',1,'dyno::FrontendDisplayRos']]],
+  ['values_5f_12',['values_',['../classdyno_1_1NonlinearFactorGraphManager.html#ac19c33989e9be1d996b65b0dcc0e12c3',1,'dyno::NonlinearFactorGraphManager::values_()'],['../structdyno_1_1utils_1_1StatisticsMapValue.html#ac4dcee0083a0e44082673858367a9322',1,'dyno::utils::StatisticsMapValue::values_()'],['../classdyno_1_1ThreadsafeTemporalBuffer.html#af669b007331123f63ba93a8459815cdb',1,'dyno::ThreadsafeTemporalBuffer::values_()']]],
+  ['video_5fwriter_5f_13',['video_writer_',['../classdyno_1_1FrontendInbuiltDisplayRos.html#a58306174cf8f34e7ae52a4432df196d3',1,'dyno::FrontendInbuiltDisplayRos']]],
   ['visitor_5f_14',['visitor_',['../structdyno_1_1factor__graph__tools_1_1travsersal_1_1NodeVisitor.html#a1bb16a71c6c6714539f62fbc566c62ea',1,'dyno::factor_graph_tools::travsersal::NodeVisitor']]],
   ['vkeys_15',['vKeys',['../classdyno_1_1ExtractorNode.html#a3ed9ec7ebe8d31b0d5d1fb21d06707c2',1,'dyno::ExtractorNode']]],
-  ['vobjposegt_5f_16',['vObjPoseGT_',['../classdyno_1_1OMDOldAllLoader.html#a6ca0e7bdbf730f99fa29be1ed50a5ad0',1,'dyno::OMDOldAllLoader']]],
-  ['vposegt_5f_17',['vPoseGT_',['../classdyno_1_1OMDOldAllLoader.html#aa2dbfb586a1a47c6bf2d7f778732a629',1,'dyno::OMDOldAllLoader']]]
+  ['vo_5fground_5ftruth_5fpublisher_5f_16',['vo_ground_truth_publisher_',['../classdyno_1_1FrontendDSDRos.html#a90803608af861e0c2480bdd9f62ec882',1,'dyno::FrontendDSDRos']]],
+  ['vo_5fpath_5fground_5ftruth_5fpublisher_5f_17',['vo_path_ground_truth_publisher_',['../classdyno_1_1FrontendDSDRos.html#a765b409eb864e2d2360e70adbea99763',1,'dyno::FrontendDSDRos']]],
+  ['vo_5fpath_5fpublisher_5f_18',['vo_path_publisher_',['../classdyno_1_1DSDRos.html#a8f610bac05a0bc16940ad839a32920ab',1,'dyno::DSDRos']]],
+  ['vo_5fpublisher_5f_19',['vo_publisher_',['../classdyno_1_1DSDRos.html#ac93b662a89d4df544e00527aa60b867b',1,'dyno::DSDRos']]],
+  ['vobjposegt_5f_20',['vObjPoseGT_',['../classdyno_1_1OMDOldAllLoader.html#a6ca0e7bdbf730f99fa29be1ed50a5ad0',1,'dyno::OMDOldAllLoader']]],
+  ['vposegt_5f_21',['vPoseGT_',['../classdyno_1_1OMDOldAllLoader.html#aa2dbfb586a1a47c6bf2d7f778732a629',1,'dyno::OMDOldAllLoader']]]
 ];

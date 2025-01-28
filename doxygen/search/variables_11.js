@@ -40,6 +40,7 @@ var searchData=
   ['right_5frgb_5fimage_5fpaths_5f_37',['right_rgb_image_paths_',['../classdyno_1_1ClusterSlamAllLoader.html#aaad967a87b4748800452a4a83c0e4aef',1,'dyno::ClusterSlamAllLoader']]],
   ['roi1_5f_38',['ROI1_',['../classdyno_1_1StereoCamera.html#a254f977aec6500c2f8adfc870b03da40',1,'dyno::StereoCamera']]],
   ['roi2_5f_39',['ROI2_',['../classdyno_1_1StereoCamera.html#a913f1be48195a94bf548d465657fdfc1',1,'dyno::StereoCamera']]],
-  ['rot_5f_40',['rot_',['../structdyno_1_1utils_1_1TRErrorPair.html#a9818c4047c022e6e2383a0336c484432',1,'dyno::utils::TRErrorPair']]],
-  ['row_5f_41',['row_',['../classdyno_1_1CsvReader_1_1RowIterator.html#ab1abb6d6f34866cac0165a568c09981c',1,'dyno::CsvReader::RowIterator']]]
+  ['ros_5fparameter_5ftype_40',['ros_parameter_type',['../structdyno_1_1internal_1_1RosParameterType.html#aea596266e7216e552ce2292610daf922',1,'dyno::internal::RosParameterType']]],
+  ['rot_5f_41',['rot_',['../structdyno_1_1utils_1_1TRErrorPair.html#a9818c4047c022e6e2383a0336c484432',1,'dyno::utils::TRErrorPair']]],
+  ['row_5f_42',['row_',['../classdyno_1_1CsvReader_1_1RowIterator.html#ab1abb6d6f34866cac0165a568c09981c',1,'dyno::CsvReader::RowIterator']]]
 ];

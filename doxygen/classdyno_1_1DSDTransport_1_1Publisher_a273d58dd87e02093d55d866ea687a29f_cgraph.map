@@ -1,0 +1,4 @@
+<map id="dyno::DSDTransport::Publisher::publishObjectTransforms" name="dyno::DSDTransport::Publisher::publishObjectTransforms">
+<area shape="rect" id="node1" title="Broadcast the transform of each object using their pose. Transforms will be constructed between the P..." alt="" coords="5,5,192,60"/>
+<area shape="rect" id="node2" href="$namespacedyno.html#a2b18a1990bb26145cec08be631b0ef74" title=" " alt="" coords="240,20,351,45"/>
+</map>

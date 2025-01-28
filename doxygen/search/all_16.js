@@ -31,7 +31,7 @@ var searchData=
   ['vector_5fiterator_5fbase_28',['vector_iterator_base',['../structdyno_1_1FeatureContainer_1_1vector__iterator__base.html',1,'dyno::FeatureContainer::vector_iterator_base&lt; MapIterator, MappedType &gt;'],['../structdyno_1_1FeatureContainer_1_1vector__iterator__base.html#a3af935e798544791fca89e9522a69988',1,'dyno::FeatureContainer::vector_iterator_base::vector_iterator_base()']]],
   ['vermillion_29',['vermillion',['../structdyno_1_1NiceColors.html#ad20074e8d24b89e18075d3933669a771',1,'dyno::NiceColors']]],
   ['version_30',['version',['../classrangetree.html#a220f5db2b5cdaee7479f4b4e3b430943',1,'rangetree']]],
-  ['video_5fwriter_5f_31',['video_writer_',['../classdyno_1_1FrontendDisplayRos.html#a2ca30e3e64fd5965a65675e982bdaba3',1,'dyno::FrontendDisplayRos']]],
+  ['video_5fwriter_5f_31',['video_writer_',['../classdyno_1_1FrontendInbuiltDisplayRos.html#a58306174cf8f34e7ae52a4432df196d3',1,'dyno::FrontendInbuiltDisplayRos']]],
   ['virtual_5fkitti_32',['VIRTUAL_KITTI',['../namespacedyno.html#ada04b22647b53dd4feb5a6b9b9c94480aa1f04a0f11b787c7605a72f2ddd705b6',1,'dyno']]],
   ['virtualkitticlasssegmentationdatafolder_33',['VirtualKittiClassSegmentationDataFolder',['../classdyno_1_1VirtualKittiClassSegmentationDataFolder.html',1,'dyno::VirtualKittiClassSegmentationDataFolder'],['../classdyno_1_1VirtualKittiClassSegmentationDataFolder.html#a1e1dddf55b558254aa59a4d305a62913',1,'dyno::VirtualKittiClassSegmentationDataFolder::VirtualKittiClassSegmentationDataFolder()']]],
   ['virtualkittidataloader_34',['VirtualKittiDataLoader',['../classdyno_1_1VirtualKittiDataLoader.html',1,'dyno::VirtualKittiDataLoader'],['../classdyno_1_1VirtualKittiDataLoader.html#aac90985e4a9dee128c448148e218aed5',1,'dyno::VirtualKittiDataLoader::VirtualKittiDataLoader()']]],
@@ -57,11 +57,15 @@ var searchData=
   ['visualizer_2ddefinitions_2ehpp_54',['Visualizer-Definitions.hpp',['../Visualizer-Definitions_8hpp.html',1,'']]],
   ['visualizerpipelines_2ecc_55',['VisualizerPipelines.cc',['../VisualizerPipelines_8cc.html',1,'']]],
   ['visualizerpipelines_2ehpp_56',['VisualizerPipelines.hpp',['../VisualizerPipelines_8hpp.html',1,'']]],
-  ['visualmeasurementstatus_57',['VisualMeasurementStatus',['../structdyno_1_1VisualMeasurementStatus.html',1,'dyno::VisualMeasurementStatus&lt; T &gt;'],['../structdyno_1_1VisualMeasurementStatus.html#af871e644755e2f355f304af923cf5931',1,'dyno::VisualMeasurementStatus::VisualMeasurementStatus(const Base &amp;base)'],['../structdyno_1_1VisualMeasurementStatus.html#ad076d7787c2b27e03af336ef23116a0e',1,'dyno::VisualMeasurementStatus::VisualMeasurementStatus(const T &amp;m, FrameId frame_id, TrackletId tracklet_id, ObjectId label, ReferenceFrame reference_frame)'],['../structdyno_1_1VisualMeasurementStatus.html#ad66ca6db15c3f8796c5857ce0607af77',1,'dyno::VisualMeasurementStatus::VisualMeasurementStatus()=default']]],
+  ['visualmeasurementstatus_57',['VisualMeasurementStatus',['../structdyno_1_1VisualMeasurementStatus.html',1,'dyno::VisualMeasurementStatus&lt; T &gt;'],['../structdyno_1_1VisualMeasurementStatus.html#ad076d7787c2b27e03af336ef23116a0e',1,'dyno::VisualMeasurementStatus::VisualMeasurementStatus(const T &amp;m, FrameId frame_id, TrackletId tracklet_id, ObjectId label, ReferenceFrame reference_frame)'],['../structdyno_1_1VisualMeasurementStatus.html#af871e644755e2f355f304af923cf5931',1,'dyno::VisualMeasurementStatus::VisualMeasurementStatus(const Base &amp;base)'],['../structdyno_1_1VisualMeasurementStatus.html#ad66ca6db15c3f8796c5857ce0607af77',1,'dyno::VisualMeasurementStatus::VisualMeasurementStatus()=default']]],
   ['visualmeasurementwithcovstatus_58',['VisualMeasurementWithCovStatus',['../namespacedyno.html#a0e5f851627fa8150f85c213c86a58744',1,'dyno']]],
   ['visualnoiseparams_59',['VisualNoiseParams',['../structdyno_1_1VisualNoiseParams.html',1,'dyno']]],
   ['vkeys_60',['vKeys',['../classdyno_1_1ExtractorNode.html#a3ed9ec7ebe8d31b0d5d1fb21d06707c2',1,'dyno::ExtractorNode']]],
   ['vkittipngtoflow_61',['vKittiPngToFlow',['../classdyno_1_1VirtualKittiFlowDataFolder.html#ac0ca5eb1af1fee0108f1410f42efed18',1,'dyno::VirtualKittiFlowDataFolder']]],
-  ['vobjposegt_5f_62',['vObjPoseGT_',['../classdyno_1_1OMDOldAllLoader.html#a6ca0e7bdbf730f99fa29be1ed50a5ad0',1,'dyno::OMDOldAllLoader']]],
-  ['vposegt_5f_63',['vPoseGT_',['../classdyno_1_1OMDOldAllLoader.html#aa2dbfb586a1a47c6bf2d7f778732a629',1,'dyno::OMDOldAllLoader']]]
+  ['vo_5fground_5ftruth_5fpublisher_5f_62',['vo_ground_truth_publisher_',['../classdyno_1_1FrontendDSDRos.html#a90803608af861e0c2480bdd9f62ec882',1,'dyno::FrontendDSDRos']]],
+  ['vo_5fpath_5fground_5ftruth_5fpublisher_5f_63',['vo_path_ground_truth_publisher_',['../classdyno_1_1FrontendDSDRos.html#a765b409eb864e2d2360e70adbea99763',1,'dyno::FrontendDSDRos']]],
+  ['vo_5fpath_5fpublisher_5f_64',['vo_path_publisher_',['../classdyno_1_1DSDRos.html#a8f610bac05a0bc16940ad839a32920ab',1,'dyno::DSDRos']]],
+  ['vo_5fpublisher_5f_65',['vo_publisher_',['../classdyno_1_1DSDRos.html#ac93b662a89d4df544e00527aa60b867b',1,'dyno::DSDRos']]],
+  ['vobjposegt_5f_66',['vObjPoseGT_',['../classdyno_1_1OMDOldAllLoader.html#a6ca0e7bdbf730f99fa29be1ed50a5ad0',1,'dyno::OMDOldAllLoader']]],
+  ['vposegt_5f_67',['vPoseGT_',['../classdyno_1_1OMDOldAllLoader.html#aa2dbfb586a1a47c6bf2d7f778732a629',1,'dyno::OMDOldAllLoader']]]
 ];

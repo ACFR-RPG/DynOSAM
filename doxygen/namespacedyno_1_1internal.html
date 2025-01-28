@@ -96,6 +96,9 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1internal_1_1ApplyMember_3_010_01_4.html">ApplyMember&lt; 0 &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1internal_1_1CppParameterType.html">CppParameterType</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type trait to retrieve a.  <a href="structdyno_1_1internal_1_1CppParameterType.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1internal_1_1filter__iterator__base.html">filter_iterator_base</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1internal_1_1filter__iterator__detail.html">filter_iterator_detail</a></td></tr>
@@ -122,6 +125,8 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><b>is_variant_member&lt; T, std::variant&lt; Variants... &gt; &gt;</b></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1internal_1_1RosParameterType.html">RosParameterType</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1internal_1_1tuple__element__index.html">tuple_element_index</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1internal_1_1tuple__element__index__helper.html">tuple_element_index_helper</a></td></tr>
@@ -131,6 +136,8 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><b>tuple_element_index_helper&lt; T, std::tuple&lt; T, Rest... &gt; &gt;</b></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><b>tuple_element_index_helper&lt; T, std::tuple&lt;&gt; &gt;</b></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1internal_1_1type__identity.html">type_identity</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
@@ -151,6 +158,9 @@ Typedefs</h2></td></tr>
 <tr class="memitem:a604e27d4b8481ecb065443921dbb0a24"><td class="memTemplParams" colspan="2">template&lt;std::size_t N, typename... Ts&gt; </td></tr>
 <tr class="memitem:a604e27d4b8481ecb065443921dbb0a24"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacedyno_1_1internal.html#a604e27d4b8481ecb065443921dbb0a24">select_nth</a> = std::tuple_element_t&lt; N, std::tuple&lt; Ts... &gt; &gt;</td></tr>
 <tr class="separator:a604e27d4b8481ecb065443921dbb0a24"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4a8bf733efbf818f18335cd89139da25"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
+<tr class="memitem:a4a8bf733efbf818f18335cd89139da25"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacedyno_1_1internal.html#a4a8bf733efbf818f18335cd89139da25">type_identity_t</a> = typename <a class="el" href="structdyno_1_1internal_1_1type__identity.html">type_identity</a>&lt; T &gt;::type</td></tr>
+<tr class="separator:a4a8bf733efbf818f18335cd89139da25"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
@@ -287,6 +297,24 @@ template&lt;std::size_t N, typename... Ts&gt; </div>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="Tuple_8hpp_source.html#l00055">55</a> of file <a class="el" href="Tuple_8hpp_source.html">Tuple.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a4a8bf733efbf818f18335cd89139da25" name="a4a8bf733efbf818f18335cd89139da25"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4a8bf733efbf818f18335cd89139da25">&#9670;&#160;</a></span>type_identity_t</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="namespacedyno_1_1internal.html#a4a8bf733efbf818f18335cd89139da25">dyno::internal::type_identity_t</a> = typedef typename <a class="el" href="structdyno_1_1internal_1_1type__identity.html">type_identity</a>&lt;T&gt;::type</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="RosUtils_8hpp_source.html#l00082">82</a> of file <a class="el" href="RosUtils_8hpp_source.html">RosUtils.hpp</a>.</p>
 
 </div>
 </div>

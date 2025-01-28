@@ -27,5 +27,6 @@ var searchData=
   ['trerrorpair_24',['TRErrorPair',['../structdyno_1_1utils_1_1TRErrorPair.html',1,'dyno::utils']]],
   ['trerrorpairvector_25',['TRErrorPairVector',['../structdyno_1_1utils_1_1TRErrorPairVector.html',1,'dyno::utils']]],
   ['tuple_5felement_5findex_26',['tuple_element_index',['../structdyno_1_1internal_1_1tuple__element__index.html',1,'dyno::internal']]],
-  ['tuple_5felement_5findex_5fhelper_27',['tuple_element_index_helper',['../structdyno_1_1internal_1_1tuple__element__index__helper.html',1,'dyno::internal']]]
+  ['tuple_5felement_5findex_5fhelper_27',['tuple_element_index_helper',['../structdyno_1_1internal_1_1tuple__element__index__helper.html',1,'dyno::internal']]],
+  ['type_5fidentity_28',['type_identity',['../structdyno_1_1internal_1_1type__identity.html',1,'dyno::internal']]]
 ];

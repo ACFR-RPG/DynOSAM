@@ -221,50 +221,51 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PipelineManager_8cc_source.html#l00038">38</a> of file <a class="el" href="PipelineManager_8cc_source.html">PipelineManager.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   39</span>    :   <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#ae7bd479d9af076c6df001981ef4fc618">params_</a>(params),</div>
-<div class="line"><span class="lineno">   40</span>        <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#ad5b04b4152cef7080b3a5673b2ef6d71">use_offline_frontend_</a>(FLAGS_frontend_from_file),</div>
-<div class="line"><span class="lineno">   41</span>        <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#afffb0f5366efd5a76512917447c3ab20">data_loader_</a>(std::move(data_loader)),</div>
-<div class="line"><span class="lineno">   42</span>        <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a238f201fbb69c513c43ae7421a49b4de">displayer_</a>(&amp;<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a9575f4a45586f5bdcf580bbdd3f99609">display_queue_</a>, params.parallelRun())</div>
-<div class="line"><span class="lineno">   43</span> </div>
-<div class="line"><span class="lineno">   44</span>{</div>
-<div class="line"><span class="lineno">   45</span>    LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Starting DynoPipelineManager&quot;</span>;</div>
-<div class="line"><span class="lineno">   46</span> </div>
-<div class="line"><span class="lineno">   47</span>    CHECK(<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#afffb0f5366efd5a76512917447c3ab20">data_loader_</a>);</div>
-<div class="line"><span class="lineno">   48</span>    CHECK(frontend_display);</div>
-<div class="line"><span class="lineno">   49</span> </div>
-<div class="line"><span class="lineno">   50</span>    <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a42e49895180ea97d125adbdb9726dba5">data_interface_</a> = std::make_unique&lt;DataInterfacePipeline&gt;(<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#ae7bd479d9af076c6df001981ef4fc618">params_</a>.<a class="code hl_function" href="classdyno_1_1DynoParams.html#ab02ca24dcf94affa7705e9cdc63bd2d4">parallelRun</a>());</div>
-<div class="line"><span class="lineno">   51</span>    <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#afffb0f5366efd5a76512917447c3ab20">data_loader_</a>-&gt;registerImageContainerCallback(</div>
-<div class="line"><span class="lineno">   52</span>        std::bind(&amp;<a class="code hl_function" href="classdyno_1_1DataInterfacePipeline.html#af34076d538c787a0044eb444586eed95">dyno::DataInterfacePipeline::fillImageContainerQueue</a>, <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a42e49895180ea97d125adbdb9726dba5">data_interface_</a>.get(), std::placeholders::_1)</div>
-<div class="line"><span class="lineno">   53</span>    );</div>
-<div class="line"><span class="lineno">   54</span> </div>
-<div class="line"><span class="lineno">   55</span>    <span class="comment">//ground truth</span></div>
-<div class="line"><span class="lineno">   56</span>    <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#afffb0f5366efd5a76512917447c3ab20">data_loader_</a>-&gt;registerGroundTruthPacketCallback(</div>
-<div class="line"><span class="lineno">   57</span>        std::bind(&amp;<a class="code hl_function" href="classdyno_1_1DataInterfacePipeline.html#a77f641128f1fdb74e2564a1953424ceb">dyno::DataInterfacePipeline::addGroundTruthPacket</a>, <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a42e49895180ea97d125adbdb9726dba5">data_interface_</a>.get(), std::placeholders::_1)</div>
-<div class="line"><span class="lineno">   58</span>    );</div>
+<p class="definition">Definition at line <a class="el" href="PipelineManager_8cc_source.html#l00045">45</a> of file <a class="el" href="PipelineManager_8cc_source.html">PipelineManager.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   49</span>    : <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#ae7bd479d9af076c6df001981ef4fc618">params_</a>(params),</div>
+<div class="line"><span class="lineno">   50</span>      <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#ad5b04b4152cef7080b3a5673b2ef6d71">use_offline_frontend_</a>(FLAGS_frontend_from_file),</div>
+<div class="line"><span class="lineno">   51</span>      <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#afffb0f5366efd5a76512917447c3ab20">data_loader_</a>(std::move(data_loader)),</div>
+<div class="line"><span class="lineno">   52</span>      <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a238f201fbb69c513c43ae7421a49b4de">displayer_</a>(&amp;<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a9575f4a45586f5bdcf580bbdd3f99609">display_queue_</a>, params.parallelRun())</div>
+<div class="line"><span class="lineno">   53</span> </div>
+<div class="line"><span class="lineno">   54</span>{</div>
+<div class="line"><span class="lineno">   55</span>  LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Starting DynoPipelineManager&quot;</span>;</div>
+<div class="line"><span class="lineno">   56</span> </div>
+<div class="line"><span class="lineno">   57</span>  CHECK(<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#afffb0f5366efd5a76512917447c3ab20">data_loader_</a>);</div>
+<div class="line"><span class="lineno">   58</span>  CHECK(frontend_display);</div>
 <div class="line"><span class="lineno">   59</span> </div>
-<div class="line"><span class="lineno">   60</span>    <span class="comment">//preprocessing</span></div>
-<div class="line"><span class="lineno">   61</span>    <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a42e49895180ea97d125adbdb9726dba5">data_interface_</a>-&gt;registerImageContainerPreprocessor(</div>
-<div class="line"><span class="lineno">   62</span>        std::bind(&amp;<a class="code hl_function" href="classdyno_1_1DataProvider.html#a45d3385ae82257c8cfcf6552ba7f0670">dyno::DataProvider::imageContainerPreprocessor</a>, <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#afffb0f5366efd5a76512917447c3ab20">data_loader_</a>.get(), std::placeholders::_1)</div>
-<div class="line"><span class="lineno">   63</span>    );</div>
-<div class="line"><span class="lineno">   64</span> </div>
-<div class="line"><span class="lineno">   65</span>    <span class="comment">//push data from the data interface to the frontend module</span></div>
-<div class="line"><span class="lineno">   66</span>    <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a42e49895180ea97d125adbdb9726dba5">data_interface_</a>-&gt;registerOutputQueue(&amp;<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a9342ea4ec0a3e426fc1f9de0900c3aff">frontend_input_queue_</a>);</div>
-<div class="line"><span class="lineno">   67</span> </div>
-<div class="line"><span class="lineno">   68</span>    CameraParams camera_params;</div>
-<div class="line"><span class="lineno">   69</span>    <span class="keywordflow">if</span>(<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#ae7bd479d9af076c6df001981ef4fc618">params_</a>.<a class="code hl_function" href="classdyno_1_1DynoParams.html#a55143b60fd1418289b54025203aece83">preferDataProviderCameraParams</a>() &amp;&amp; <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#afffb0f5366efd5a76512917447c3ab20">data_loader_</a>-&gt;getCameraParams().has_value()) {</div>
-<div class="line"><span class="lineno">   70</span>        LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Using camera params from DataProvider, not the config in the CameraParams.yaml!&quot;</span>;</div>
-<div class="line"><span class="lineno">   71</span>        camera_params = *<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#afffb0f5366efd5a76512917447c3ab20">data_loader_</a>-&gt;getCameraParams();</div>
-<div class="line"><span class="lineno">   72</span>    }</div>
-<div class="line"><span class="lineno">   73</span>    <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">   74</span>        LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Using camera params specified in CameraParams.yaml!&quot;</span>;</div>
-<div class="line"><span class="lineno">   75</span>        camera_params = <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#ae7bd479d9af076c6df001981ef4fc618">params_</a>.<a class="code hl_variable" href="classdyno_1_1DynoParams.html#aac0013979a7fa1b36e94750f956a2847">camera_params_</a>;</div>
-<div class="line"><span class="lineno">   76</span>    }</div>
-<div class="line"><span class="lineno">   77</span> </div>
-<div class="line"><span class="lineno">   78</span>    <a class="code hl_function" href="classdyno_1_1DynoPipelineManager.html#a7253b9241873476c79d38c607c95dea7">loadPipelines</a>(camera_params, frontend_display, backend_display);</div>
-<div class="line"><span class="lineno">   79</span>    <a class="code hl_function" href="classdyno_1_1DynoPipelineManager.html#abe710e5db047895f61547936feb16637">launchSpinners</a>();</div>
-<div class="line"><span class="lineno">   80</span> </div>
-<div class="line"><span class="lineno">   81</span>}</div>
+<div class="line"><span class="lineno">   60</span>  <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a42e49895180ea97d125adbdb9726dba5">data_interface_</a> =</div>
+<div class="line"><span class="lineno">   61</span>      std::make_unique&lt;DataInterfacePipeline&gt;(<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#ae7bd479d9af076c6df001981ef4fc618">params_</a>.<a class="code hl_function" href="classdyno_1_1DynoParams.html#ab02ca24dcf94affa7705e9cdc63bd2d4">parallelRun</a>());</div>
+<div class="line"><span class="lineno">   62</span>  <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#afffb0f5366efd5a76512917447c3ab20">data_loader_</a>-&gt;registerImageContainerCallback(</div>
+<div class="line"><span class="lineno">   63</span>      std::bind(&amp;<a class="code hl_function" href="classdyno_1_1DataInterfacePipeline.html#af34076d538c787a0044eb444586eed95">dyno::DataInterfacePipeline::fillImageContainerQueue</a>,</div>
+<div class="line"><span class="lineno">   64</span>                <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a42e49895180ea97d125adbdb9726dba5">data_interface_</a>.get(), std::placeholders::_1));</div>
+<div class="line"><span class="lineno">   65</span> </div>
+<div class="line"><span class="lineno">   66</span>  <span class="comment">// ground truth</span></div>
+<div class="line"><span class="lineno">   67</span>  <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#afffb0f5366efd5a76512917447c3ab20">data_loader_</a>-&gt;registerGroundTruthPacketCallback(</div>
+<div class="line"><span class="lineno">   68</span>      std::bind(&amp;<a class="code hl_function" href="classdyno_1_1DataInterfacePipeline.html#a77f641128f1fdb74e2564a1953424ceb">dyno::DataInterfacePipeline::addGroundTruthPacket</a>,</div>
+<div class="line"><span class="lineno">   69</span>                <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a42e49895180ea97d125adbdb9726dba5">data_interface_</a>.get(), std::placeholders::_1));</div>
+<div class="line"><span class="lineno">   70</span> </div>
+<div class="line"><span class="lineno">   71</span>  <span class="comment">// preprocessing</span></div>
+<div class="line"><span class="lineno">   72</span>  <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a42e49895180ea97d125adbdb9726dba5">data_interface_</a>-&gt;registerImageContainerPreprocessor(</div>
+<div class="line"><span class="lineno">   73</span>      std::bind(&amp;<a class="code hl_function" href="classdyno_1_1DataProvider.html#a45d3385ae82257c8cfcf6552ba7f0670">dyno::DataProvider::imageContainerPreprocessor</a>,</div>
+<div class="line"><span class="lineno">   74</span>                <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#afffb0f5366efd5a76512917447c3ab20">data_loader_</a>.get(), std::placeholders::_1));</div>
+<div class="line"><span class="lineno">   75</span> </div>
+<div class="line"><span class="lineno">   76</span>  <span class="comment">// push data from the data interface to the frontend module</span></div>
+<div class="line"><span class="lineno">   77</span>  <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a42e49895180ea97d125adbdb9726dba5">data_interface_</a>-&gt;registerOutputQueue(&amp;<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a9342ea4ec0a3e426fc1f9de0900c3aff">frontend_input_queue_</a>);</div>
+<div class="line"><span class="lineno">   78</span> </div>
+<div class="line"><span class="lineno">   79</span>  CameraParams camera_params;</div>
+<div class="line"><span class="lineno">   80</span>  <span class="keywordflow">if</span> (<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#ae7bd479d9af076c6df001981ef4fc618">params_</a>.<a class="code hl_function" href="classdyno_1_1DynoParams.html#a55143b60fd1418289b54025203aece83">preferDataProviderCameraParams</a>() &amp;&amp;</div>
+<div class="line"><span class="lineno">   81</span>      <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#afffb0f5366efd5a76512917447c3ab20">data_loader_</a>-&gt;getCameraParams().has_value()) {</div>
+<div class="line"><span class="lineno">   82</span>    LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Using camera params from DataProvider, not the config in the &quot;</span></div>
+<div class="line"><span class="lineno">   83</span>                 <span class="stringliteral">&quot;CameraParams.yaml!&quot;</span>;</div>
+<div class="line"><span class="lineno">   84</span>    camera_params = *<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#afffb0f5366efd5a76512917447c3ab20">data_loader_</a>-&gt;getCameraParams();</div>
+<div class="line"><span class="lineno">   85</span>  } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">   86</span>    LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Using camera params specified in CameraParams.yaml!&quot;</span>;</div>
+<div class="line"><span class="lineno">   87</span>    camera_params = <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#ae7bd479d9af076c6df001981ef4fc618">params_</a>.<a class="code hl_variable" href="classdyno_1_1DynoParams.html#aac0013979a7fa1b36e94750f956a2847">camera_params_</a>;</div>
+<div class="line"><span class="lineno">   88</span>  }</div>
+<div class="line"><span class="lineno">   89</span> </div>
+<div class="line"><span class="lineno">   90</span>  <a class="code hl_function" href="classdyno_1_1DynoPipelineManager.html#a7253b9241873476c79d38c607c95dea7">loadPipelines</a>(camera_params, frontend_display, backend_display);</div>
+<div class="line"><span class="lineno">   91</span>  <a class="code hl_function" href="classdyno_1_1DynoPipelineManager.html#abe710e5db047895f61547936feb16637">launchSpinners</a>();</div>
+<div class="line"><span class="lineno">   92</span>}</div>
 <div class="ttc" id="aclassdyno_1_1DataInterfacePipeline_html_a77f641128f1fdb74e2564a1953424ceb"><div class="ttname"><a href="classdyno_1_1DataInterfacePipeline.html#a77f641128f1fdb74e2564a1953424ceb">dyno::DataInterfacePipeline::addGroundTruthPacket</a></div><div class="ttdeci">virtual void addGroundTruthPacket(const GroundTruthInputPacket &amp;gt_packet)</div><div class="ttdef"><b>Definition:</b> <a href="DataInterfacePipeline_8hpp_source.html#l00051">DataInterfacePipeline.hpp:51</a></div></div>
 <div class="ttc" id="aclassdyno_1_1DataInterfacePipeline_html_af34076d538c787a0044eb444586eed95"><div class="ttname"><a href="classdyno_1_1DataInterfacePipeline.html#af34076d538c787a0044eb444586eed95">dyno::DataInterfacePipeline::fillImageContainerQueue</a></div><div class="ttdeci">virtual void fillImageContainerQueue(ImageContainer::Ptr image_container)</div><div class="ttdef"><b>Definition:</b> <a href="DataInterfacePipeline_8hpp_source.html#l00042">DataInterfacePipeline.hpp:42</a></div></div>
 <div class="ttc" id="aclassdyno_1_1DataProvider_html_a45d3385ae82257c8cfcf6552ba7f0670"><div class="ttname"><a href="classdyno_1_1DataProvider.html#a45d3385ae82257c8cfcf6552ba7f0670">dyno::DataProvider::imageContainerPreprocessor</a></div><div class="ttdeci">virtual ImageContainer::Ptr imageContainerPreprocessor(ImageContainer::Ptr image_container)</div><div class="ttdoc">Virtual Image Container Preprocessor function that is registered to the data interface pipeline.</div><div class="ttdef"><b>Definition:</b> <a href="DataProvider_8hpp_source.html#l00075">DataProvider.hpp:75</a></div></div>
@@ -273,10 +274,10 @@ Private Attributes</h2></td></tr>
 <div class="ttc" id="aclassdyno_1_1DynoParams_html_ab02ca24dcf94affa7705e9cdc63bd2d4"><div class="ttname"><a href="classdyno_1_1DynoParams.html#ab02ca24dcf94affa7705e9cdc63bd2d4">dyno::DynoParams::parallelRun</a></div><div class="ttdeci">bool parallelRun() const</div><div class="ttdef"><b>Definition:</b> <a href="PipelineParams_8hpp_source.html#l00067">PipelineParams.hpp:67</a></div></div>
 <div class="ttc" id="aclassdyno_1_1DynoPipelineManager_html_a238f201fbb69c513c43ae7421a49b4de"><div class="ttname"><a href="classdyno_1_1DynoPipelineManager.html#a238f201fbb69c513c43ae7421a49b4de">dyno::DynoPipelineManager::displayer_</a></div><div class="ttdeci">OpenCVImageDisplayQueue displayer_</div><div class="ttdef"><b>Definition:</b> <a href="PipelineManager_8hpp_source.html#l00102">PipelineManager.hpp:102</a></div></div>
 <div class="ttc" id="aclassdyno_1_1DynoPipelineManager_html_a42e49895180ea97d125adbdb9726dba5"><div class="ttname"><a href="classdyno_1_1DynoPipelineManager.html#a42e49895180ea97d125adbdb9726dba5">dyno::DynoPipelineManager::data_interface_</a></div><div class="ttdeci">DataInterfacePipeline::UniquePtr data_interface_</div><div class="ttdef"><b>Definition:</b> <a href="PipelineManager_8hpp_source.html#l00095">PipelineManager.hpp:95</a></div></div>
-<div class="ttc" id="aclassdyno_1_1DynoPipelineManager_html_a7253b9241873476c79d38c607c95dea7"><div class="ttname"><a href="classdyno_1_1DynoPipelineManager.html#a7253b9241873476c79d38c607c95dea7">dyno::DynoPipelineManager::loadPipelines</a></div><div class="ttdeci">void loadPipelines(const CameraParams &amp;camera_params, FrontendDisplay::Ptr frontend_display, BackendDisplay::Ptr backend_display)</div><div class="ttdef"><b>Definition:</b> <a href="PipelineManager_8cc_source.html#l00185">PipelineManager.cc:185</a></div></div>
+<div class="ttc" id="aclassdyno_1_1DynoPipelineManager_html_a7253b9241873476c79d38c607c95dea7"><div class="ttname"><a href="classdyno_1_1DynoPipelineManager.html#a7253b9241873476c79d38c607c95dea7">dyno::DynoPipelineManager::loadPipelines</a></div><div class="ttdeci">void loadPipelines(const CameraParams &amp;camera_params, FrontendDisplay::Ptr frontend_display, BackendDisplay::Ptr backend_display)</div><div class="ttdef"><b>Definition:</b> <a href="PipelineManager_8cc_source.html#l00205">PipelineManager.cc:205</a></div></div>
 <div class="ttc" id="aclassdyno_1_1DynoPipelineManager_html_a9342ea4ec0a3e426fc1f9de0900c3aff"><div class="ttname"><a href="classdyno_1_1DynoPipelineManager.html#a9342ea4ec0a3e426fc1f9de0900c3aff">dyno::DynoPipelineManager::frontend_input_queue_</a></div><div class="ttdeci">FrontendPipeline::InputQueue frontend_input_queue_</div><div class="ttdef"><b>Definition:</b> <a href="PipelineManager_8hpp_source.html#l00080">PipelineManager.hpp:80</a></div></div>
 <div class="ttc" id="aclassdyno_1_1DynoPipelineManager_html_a9575f4a45586f5bdcf580bbdd3f99609"><div class="ttname"><a href="classdyno_1_1DynoPipelineManager.html#a9575f4a45586f5bdcf580bbdd3f99609">dyno::DynoPipelineManager::display_queue_</a></div><div class="ttdeci">ImageDisplayQueue display_queue_</div><div class="ttdef"><b>Definition:</b> <a href="PipelineManager_8hpp_source.html#l00101">PipelineManager.hpp:101</a></div></div>
-<div class="ttc" id="aclassdyno_1_1DynoPipelineManager_html_abe710e5db047895f61547936feb16637"><div class="ttname"><a href="classdyno_1_1DynoPipelineManager.html#abe710e5db047895f61547936feb16637">dyno::DynoPipelineManager::launchSpinners</a></div><div class="ttdeci">void launchSpinners()</div><div class="ttdef"><b>Definition:</b> <a href="PipelineManager_8cc_source.html#l00164">PipelineManager.cc:164</a></div></div>
+<div class="ttc" id="aclassdyno_1_1DynoPipelineManager_html_abe710e5db047895f61547936feb16637"><div class="ttname"><a href="classdyno_1_1DynoPipelineManager.html#abe710e5db047895f61547936feb16637">dyno::DynoPipelineManager::launchSpinners</a></div><div class="ttdeci">void launchSpinners()</div><div class="ttdef"><b>Definition:</b> <a href="PipelineManager_8cc_source.html#l00174">PipelineManager.cc:174</a></div></div>
 <div class="ttc" id="aclassdyno_1_1DynoPipelineManager_html_ad5b04b4152cef7080b3a5673b2ef6d71"><div class="ttname"><a href="classdyno_1_1DynoPipelineManager.html#ad5b04b4152cef7080b3a5673b2ef6d71">dyno::DynoPipelineManager::use_offline_frontend_</a></div><div class="ttdeci">const bool use_offline_frontend_</div><div class="ttdef"><b>Definition:</b> <a href="PipelineManager_8hpp_source.html#l00074">PipelineManager.hpp:74</a></div></div>
 <div class="ttc" id="aclassdyno_1_1DynoPipelineManager_html_ae7bd479d9af076c6df001981ef4fc618"><div class="ttname"><a href="classdyno_1_1DynoPipelineManager.html#ae7bd479d9af076c6df001981ef4fc618">dyno::DynoPipelineManager::params_</a></div><div class="ttdeci">const DynoParams params_</div><div class="ttdef"><b>Definition:</b> <a href="PipelineManager_8hpp_source.html#l00073">PipelineManager.hpp:73</a></div></div>
 <div class="ttc" id="aclassdyno_1_1DynoPipelineManager_html_afffb0f5366efd5a76512917447c3ab20"><div class="ttname"><a href="classdyno_1_1DynoPipelineManager.html#afffb0f5366efd5a76512917447c3ab20">dyno::DynoPipelineManager::data_loader_</a></div><div class="ttdeci">DataProvider::Ptr data_loader_</div><div class="ttdef"><b>Definition:</b> <a href="PipelineManager_8hpp_source.html#l00096">PipelineManager.hpp:96</a></div></div>
@@ -320,18 +321,17 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PipelineManager_8cc_source.html#l00083">83</a> of file <a class="el" href="PipelineManager_8cc_source.html">PipelineManager.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   83</span>                                          {</div>
-<div class="line"><span class="lineno">   84</span>    <a class="code hl_function" href="classdyno_1_1DynoPipelineManager.html#a852d7af05ad56b86dc4e221f1d7823b1">shutdownPipelines</a>();</div>
-<div class="line"><span class="lineno">   85</span>    <a class="code hl_function" href="classdyno_1_1DynoPipelineManager.html#a4cd3eaceda6fa09a659f1dfae264822d">shutdownSpinners</a>();</div>
-<div class="line"><span class="lineno">   86</span> </div>
-<div class="line"><span class="lineno">   87</span>    <span class="comment">//TODO: make shutdown hook!</span></div>
-<div class="line"><span class="lineno">   88</span>    <a class="code hl_function" href="namespacedyno.html#a9ee85912019a84727f7945f60292952f">writeStatisticsSamplesToFile</a>(<span class="stringliteral">&quot;statistics_samples.csv&quot;</span>);</div>
-<div class="line"><span class="lineno">   89</span>    <a class="code hl_function" href="namespacedyno.html#a6b079f28613a22782fffd05b29fd81a7">writeStatisticsModuleSummariesToFile</a>();</div>
-<div class="line"><span class="lineno">   90</span> </div>
-<div class="line"><span class="lineno">   91</span>}</div>
-<div class="ttc" id="aclassdyno_1_1DynoPipelineManager_html_a4cd3eaceda6fa09a659f1dfae264822d"><div class="ttname"><a href="classdyno_1_1DynoPipelineManager.html#a4cd3eaceda6fa09a659f1dfae264822d">dyno::DynoPipelineManager::shutdownSpinners</a></div><div class="ttdeci">void shutdownSpinners()</div><div class="ttdef"><b>Definition:</b> <a href="PipelineManager_8cc_source.html#l00094">PipelineManager.cc:94</a></div></div>
-<div class="ttc" id="aclassdyno_1_1DynoPipelineManager_html_a852d7af05ad56b86dc4e221f1d7823b1"><div class="ttname"><a href="classdyno_1_1DynoPipelineManager.html#a852d7af05ad56b86dc4e221f1d7823b1">dyno::DynoPipelineManager::shutdownPipelines</a></div><div class="ttdeci">void shutdownPipelines()</div><div class="ttdef"><b>Definition:</b> <a href="PipelineManager_8cc_source.html#l00106">PipelineManager.cc:106</a></div></div>
+<p class="definition">Definition at line <a class="el" href="PipelineManager_8cc_source.html#l00094">94</a> of file <a class="el" href="PipelineManager_8cc_source.html">PipelineManager.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   94</span>                                          {</div>
+<div class="line"><span class="lineno">   95</span>  <a class="code hl_function" href="classdyno_1_1DynoPipelineManager.html#a852d7af05ad56b86dc4e221f1d7823b1">shutdownPipelines</a>();</div>
+<div class="line"><span class="lineno">   96</span>  <a class="code hl_function" href="classdyno_1_1DynoPipelineManager.html#a4cd3eaceda6fa09a659f1dfae264822d">shutdownSpinners</a>();</div>
+<div class="line"><span class="lineno">   97</span> </div>
+<div class="line"><span class="lineno">   98</span>  <span class="comment">// TODO: make shutdown hook!</span></div>
+<div class="line"><span class="lineno">   99</span>  <a class="code hl_function" href="namespacedyno.html#a9ee85912019a84727f7945f60292952f">writeStatisticsSamplesToFile</a>(<span class="stringliteral">&quot;statistics_samples.csv&quot;</span>);</div>
+<div class="line"><span class="lineno">  100</span>  <a class="code hl_function" href="namespacedyno.html#a6b079f28613a22782fffd05b29fd81a7">writeStatisticsModuleSummariesToFile</a>();</div>
+<div class="line"><span class="lineno">  101</span>}</div>
+<div class="ttc" id="aclassdyno_1_1DynoPipelineManager_html_a4cd3eaceda6fa09a659f1dfae264822d"><div class="ttname"><a href="classdyno_1_1DynoPipelineManager.html#a4cd3eaceda6fa09a659f1dfae264822d">dyno::DynoPipelineManager::shutdownSpinners</a></div><div class="ttdeci">void shutdownSpinners()</div><div class="ttdef"><b>Definition:</b> <a href="PipelineManager_8cc_source.html#l00103">PipelineManager.cc:103</a></div></div>
+<div class="ttc" id="aclassdyno_1_1DynoPipelineManager_html_a852d7af05ad56b86dc4e221f1d7823b1"><div class="ttname"><a href="classdyno_1_1DynoPipelineManager.html#a852d7af05ad56b86dc4e221f1d7823b1">dyno::DynoPipelineManager::shutdownPipelines</a></div><div class="ttdeci">void shutdownPipelines()</div><div class="ttdef"><b>Definition:</b> <a href="PipelineManager_8cc_source.html#l00116">PipelineManager.cc:116</a></div></div>
 <div class="ttc" id="anamespacedyno_html_a6b079f28613a22782fffd05b29fd81a7"><div class="ttname"><a href="namespacedyno.html#a6b079f28613a22782fffd05b29fd81a7">dyno::writeStatisticsModuleSummariesToFile</a></div><div class="ttdeci">void writeStatisticsModuleSummariesToFile()</div><div class="ttdoc">Writes statistics per module to csv files on path defined by getOutputFilePath(). Interrnally uses Wr...</div><div class="ttdef"><b>Definition:</b> <a href="Logger_8cc_source.html#l00060">Logger.cc:60</a></div></div>
 <div class="ttc" id="anamespacedyno_html_a9ee85912019a84727f7945f60292952f"><div class="ttname"><a href="namespacedyno.html#a9ee85912019a84727f7945f60292952f">dyno::writeStatisticsSamplesToFile</a></div><div class="ttdeci">void writeStatisticsSamplesToFile(const std::string &amp;file_name=&quot;statistics_samples.csv&quot;)</div><div class="ttdoc">Writes all the statistics to a csv file on the path defined by getOutputFilePath(file_name).</div><div class="ttdef"><b>Definition:</b> <a href="Logger_8cc_source.html#l00052">Logger.cc:52</a></div></div>
 </div><!-- fragment -->
@@ -390,26 +390,37 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PipelineManager_8cc_source.html#l00164">164</a> of file <a class="el" href="PipelineManager_8cc_source.html">PipelineManager.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  164</span>                                         {</div>
-<div class="line"><span class="lineno">  165</span>    LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Running PipelineManager with parallel_run=&quot;</span> &lt;&lt; <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#ae7bd479d9af076c6df001981ef4fc618">params_</a>.<a class="code hl_function" href="classdyno_1_1DynoParams.html#ab02ca24dcf94affa7705e9cdc63bd2d4">parallelRun</a>();</div>
-<div class="line"><span class="lineno">  166</span> </div>
-<div class="line"><span class="lineno">  167</span>    <span class="keywordflow">if</span>(<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#ae7bd479d9af076c6df001981ef4fc618">params_</a>.<a class="code hl_function" href="classdyno_1_1DynoParams.html#ab02ca24dcf94affa7705e9cdc63bd2d4">parallelRun</a>()) {</div>
-<div class="line"><span class="lineno">  168</span>        <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a9d10b7cac06fe026b181171db14b117a">frontend_pipeline_spinner_</a> = std::make_unique&lt;dyno::Spinner&gt;(std::bind(&amp;<a class="code hl_function" href="classdyno_1_1PipelineBase.html#a56667b4574808e95f808d1b4d79a469b">dyno::FrontendPipeline::spin</a>, <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a8d9e90b6192c573b290a76cf90321a8b">frontend_pipeline_</a>.get()), <span class="stringliteral">&quot;frontend-pipeline-spinner&quot;</span>);</div>
-<div class="line"><span class="lineno">  169</span> </div>
-<div class="line"><span class="lineno">  170</span>        <span class="keywordflow">if</span>(<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#ac54c14380931cb8fa4c7ccbd1b2ab2b9">backend_pipeline_</a>)</div>
-<div class="line"><span class="lineno">  171</span>            <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a744ba1125f05940b0b2374d059e5e7d9">backend_pipeline_spinner_</a> = std::make_unique&lt;dyno::Spinner&gt;(std::bind(&amp;<a class="code hl_function" href="classdyno_1_1PipelineBase.html#a56667b4574808e95f808d1b4d79a469b">dyno::BackendPipeline::spin</a>, <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#ac54c14380931cb8fa4c7ccbd1b2ab2b9">backend_pipeline_</a>.get()), <span class="stringliteral">&quot;backend-pipeline-spinner&quot;</span>);</div>
-<div class="line"><span class="lineno">  172</span> </div>
-<div class="line"><span class="lineno">  173</span>    }</div>
-<div class="line"><span class="lineno">  174</span> </div>
-<div class="line"><span class="lineno">  175</span>    <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a40dc29d7469a7d498e90dd222705eece">data_provider_spinner_</a> = std::make_unique&lt;dyno::Spinner&gt;(std::bind(&amp;<a class="code hl_function" href="classdyno_1_1PipelineBase.html#a56667b4574808e95f808d1b4d79a469b">dyno::DataInterfacePipeline::spin</a>, <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a42e49895180ea97d125adbdb9726dba5">data_interface_</a>.get()), <span class="stringliteral">&quot;data-interface-spinner&quot;</span>);</div>
-<div class="line"><span class="lineno">  176</span> </div>
-<div class="line"><span class="lineno">  177</span>    <span class="keywordflow">if</span>(<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a21bb37f21d20ea74d23a210ebc618631">frontend_viz_pipeline_</a>)</div>
-<div class="line"><span class="lineno">  178</span>        <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a3cb5a42f79c06e0bad2db27b62de7f75">frontend_viz_pipeline_spinner_</a> = std::make_unique&lt;dyno::Spinner&gt;(std::bind(&amp;<a class="code hl_function" href="classdyno_1_1PipelineBase.html#a56667b4574808e95f808d1b4d79a469b">dyno::FrontendVizPipeline::spin</a>, <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a21bb37f21d20ea74d23a210ebc618631">frontend_viz_pipeline_</a>.get()), <span class="stringliteral">&quot;frontend-display-spinner&quot;</span>);</div>
-<div class="line"><span class="lineno">  179</span> </div>
-<div class="line"><span class="lineno">  180</span>    <span class="keywordflow">if</span>(<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#ae289b4f6787dc5d37e5232a1b1a61536">backend_viz_pipeline_</a>)</div>
-<div class="line"><span class="lineno">  181</span>        <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a5de04c2ba3dd2824a8cc5ccc3244c889">backend_viz_pipeline_spinner_</a> = std::make_unique&lt;dyno::Spinner&gt;(std::bind(&amp;<a class="code hl_function" href="classdyno_1_1PipelineBase.html#a56667b4574808e95f808d1b4d79a469b">dyno::BackendVizPipeline::spin</a>, <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#ae289b4f6787dc5d37e5232a1b1a61536">backend_viz_pipeline_</a>.get()), <span class="stringliteral">&quot;backend-display-spinner&quot;</span>);</div>
-<div class="line"><span class="lineno">  182</span>}</div>
+<p class="definition">Definition at line <a class="el" href="PipelineManager_8cc_source.html#l00174">174</a> of file <a class="el" href="PipelineManager_8cc_source.html">PipelineManager.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  174</span>                                         {</div>
+<div class="line"><span class="lineno">  175</span>  LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Running PipelineManager with parallel_run=&quot;</span></div>
+<div class="line"><span class="lineno">  176</span>            &lt;&lt; <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#ae7bd479d9af076c6df001981ef4fc618">params_</a>.<a class="code hl_function" href="classdyno_1_1DynoParams.html#ab02ca24dcf94affa7705e9cdc63bd2d4">parallelRun</a>();</div>
+<div class="line"><span class="lineno">  177</span> </div>
+<div class="line"><span class="lineno">  178</span>  <span class="keywordflow">if</span> (<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#ae7bd479d9af076c6df001981ef4fc618">params_</a>.<a class="code hl_function" href="classdyno_1_1DynoParams.html#ab02ca24dcf94affa7705e9cdc63bd2d4">parallelRun</a>()) {</div>
+<div class="line"><span class="lineno">  179</span>    <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a9d10b7cac06fe026b181171db14b117a">frontend_pipeline_spinner_</a> = std::make_unique&lt;dyno::Spinner&gt;(</div>
+<div class="line"><span class="lineno">  180</span>        std::bind(&amp;<a class="code hl_function" href="classdyno_1_1PipelineBase.html#a56667b4574808e95f808d1b4d79a469b">dyno::FrontendPipeline::spin</a>, <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a8d9e90b6192c573b290a76cf90321a8b">frontend_pipeline_</a>.get()),</div>
+<div class="line"><span class="lineno">  181</span>        <span class="stringliteral">&quot;frontend-pipeline-spinner&quot;</span>);</div>
+<div class="line"><span class="lineno">  182</span> </div>
+<div class="line"><span class="lineno">  183</span>    <span class="keywordflow">if</span> (<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#ac54c14380931cb8fa4c7ccbd1b2ab2b9">backend_pipeline_</a>)</div>
+<div class="line"><span class="lineno">  184</span>      <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a744ba1125f05940b0b2374d059e5e7d9">backend_pipeline_spinner_</a> = std::make_unique&lt;dyno::Spinner&gt;(</div>
+<div class="line"><span class="lineno">  185</span>          std::bind(&amp;<a class="code hl_function" href="classdyno_1_1PipelineBase.html#a56667b4574808e95f808d1b4d79a469b">dyno::BackendPipeline::spin</a>, <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#ac54c14380931cb8fa4c7ccbd1b2ab2b9">backend_pipeline_</a>.get()),</div>
+<div class="line"><span class="lineno">  186</span>          <span class="stringliteral">&quot;backend-pipeline-spinner&quot;</span>);</div>
+<div class="line"><span class="lineno">  187</span>  }</div>
+<div class="line"><span class="lineno">  188</span> </div>
+<div class="line"><span class="lineno">  189</span>  <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a40dc29d7469a7d498e90dd222705eece">data_provider_spinner_</a> = std::make_unique&lt;dyno::Spinner&gt;(</div>
+<div class="line"><span class="lineno">  190</span>      std::bind(&amp;<a class="code hl_function" href="classdyno_1_1PipelineBase.html#a56667b4574808e95f808d1b4d79a469b">dyno::DataInterfacePipeline::spin</a>, <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a42e49895180ea97d125adbdb9726dba5">data_interface_</a>.get()),</div>
+<div class="line"><span class="lineno">  191</span>      <span class="stringliteral">&quot;data-interface-spinner&quot;</span>);</div>
+<div class="line"><span class="lineno">  192</span> </div>
+<div class="line"><span class="lineno">  193</span>  <span class="keywordflow">if</span> (<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a21bb37f21d20ea74d23a210ebc618631">frontend_viz_pipeline_</a>)</div>
+<div class="line"><span class="lineno">  194</span>    <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a3cb5a42f79c06e0bad2db27b62de7f75">frontend_viz_pipeline_spinner_</a> = std::make_unique&lt;dyno::Spinner&gt;(</div>
+<div class="line"><span class="lineno">  195</span>        std::bind(&amp;<a class="code hl_function" href="classdyno_1_1PipelineBase.html#a56667b4574808e95f808d1b4d79a469b">dyno::FrontendVizPipeline::spin</a>,</div>
+<div class="line"><span class="lineno">  196</span>                  <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a21bb37f21d20ea74d23a210ebc618631">frontend_viz_pipeline_</a>.get()),</div>
+<div class="line"><span class="lineno">  197</span>        <span class="stringliteral">&quot;frontend-display-spinner&quot;</span>);</div>
+<div class="line"><span class="lineno">  198</span> </div>
+<div class="line"><span class="lineno">  199</span>  <span class="keywordflow">if</span> (<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#ae289b4f6787dc5d37e5232a1b1a61536">backend_viz_pipeline_</a>)</div>
+<div class="line"><span class="lineno">  200</span>    <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a5de04c2ba3dd2824a8cc5ccc3244c889">backend_viz_pipeline_spinner_</a> = std::make_unique&lt;dyno::Spinner&gt;(</div>
+<div class="line"><span class="lineno">  201</span>        std::bind(&amp;<a class="code hl_function" href="classdyno_1_1PipelineBase.html#a56667b4574808e95f808d1b4d79a469b">dyno::BackendVizPipeline::spin</a>, <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#ae289b4f6787dc5d37e5232a1b1a61536">backend_viz_pipeline_</a>.get()),</div>
+<div class="line"><span class="lineno">  202</span>        <span class="stringliteral">&quot;backend-display-spinner&quot;</span>);</div>
+<div class="line"><span class="lineno">  203</span>}</div>
 <div class="ttc" id="aclassdyno_1_1DynoPipelineManager_html_a21bb37f21d20ea74d23a210ebc618631"><div class="ttname"><a href="classdyno_1_1DynoPipelineManager.html#a21bb37f21d20ea74d23a210ebc618631">dyno::DynoPipelineManager::frontend_viz_pipeline_</a></div><div class="ttdeci">FrontendVizPipeline::UniquePtr frontend_viz_pipeline_</div><div class="ttdef"><b>Definition:</b> <a href="PipelineManager_8hpp_source.html#l00099">PipelineManager.hpp:99</a></div></div>
 <div class="ttc" id="aclassdyno_1_1DynoPipelineManager_html_a3cb5a42f79c06e0bad2db27b62de7f75"><div class="ttname"><a href="classdyno_1_1DynoPipelineManager.html#a3cb5a42f79c06e0bad2db27b62de7f75">dyno::DynoPipelineManager::frontend_viz_pipeline_spinner_</a></div><div class="ttdeci">Spinner::UniquePtr frontend_viz_pipeline_spinner_</div><div class="ttdef"><b>Definition:</b> <a href="PipelineManager_8hpp_source.html#l00109">PipelineManager.hpp:109</a></div></div>
 <div class="ttc" id="aclassdyno_1_1DynoPipelineManager_html_a40dc29d7469a7d498e90dd222705eece"><div class="ttname"><a href="classdyno_1_1DynoPipelineManager.html#a40dc29d7469a7d498e90dd222705eece">dyno::DynoPipelineManager::data_provider_spinner_</a></div><div class="ttdeci">Spinner::UniquePtr data_provider_spinner_</div><div class="ttdef"><b>Definition:</b> <a href="PipelineManager_8hpp_source.html#l00106">PipelineManager.hpp:106</a></div></div>
@@ -488,124 +499,141 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PipelineManager_8cc_source.html#l00185">185</a> of file <a class="el" href="PipelineManager_8cc_source.html">PipelineManager.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  185</span>                                                                                                                                                 {</div>
-<div class="line"><span class="lineno">  186</span> </div>
-<div class="line"><span class="lineno">  187</span>    BackendModule::Ptr backend = <span class="keyword">nullptr</span>;</div>
-<div class="line"><span class="lineno">  188</span>    <span class="comment">//the registra for the frontend pipeline</span></div>
-<div class="line"><span class="lineno">  189</span>    <span class="comment">//this is agnostic to the actual pipeline type so we can add/register</span></div>
-<div class="line"><span class="lineno">  190</span>    <span class="comment">//a new queue to it regardless of the derived type (as long as it is at least a MIMO,</span></div>
-<div class="line"><span class="lineno">  191</span>    <span class="comment">//which it should be as this is the lowest type of actual pipeline with any functionality)</span></div>
-<div class="line"><span class="lineno">  192</span>    <span class="keyword">typename</span> FrontendPipeline::OutputRegistra::Ptr frontend_output_registra = <span class="keyword">nullptr</span>;</div>
-<div class="line"><span class="lineno">  193</span>    <span class="keyword">const</span> <span class="keyword">auto</span> parallel_run = <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#ae7bd479d9af076c6df001981ef4fc618">params_</a>.<a class="code hl_function" href="classdyno_1_1DynoParams.html#ab02ca24dcf94affa7705e9cdc63bd2d4">parallelRun</a>();</div>
-<div class="line"><span class="lineno">  194</span> </div>
-<div class="line"><span class="lineno">  195</span>    <span class="keywordflow">switch</span> (<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#ae7bd479d9af076c6df001981ef4fc618">params_</a>.<a class="code hl_variable" href="classdyno_1_1DynoParams.html#a4bc68cd0a38dc2e39e7037554a3b0a20">frontend_type_</a>)</div>
-<div class="line"><span class="lineno">  196</span>    {</div>
-<div class="line"><span class="lineno">  197</span>        <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="namespacedyno.html#a373dccfbe74119feedaaa3124678e5f5a23c7055de1982c9646cb8ebcbc4cb632">FrontendType::kRGBD</a>: {</div>
-<div class="line"><span class="lineno">  198</span>            LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Making RGBDInstance frontend&quot;</span>;</div>
-<div class="line"><span class="lineno">  199</span> </div>
-<div class="line"><span class="lineno">  200</span>            <span class="keyword">using </span>MapType = <a class="code hl_typedef" href="classdyno_1_1BackendModuleType.html#a8cc142d98537163fe6f1ba2b462ff8fe">RGBDBackendModule::MapType</a>;</div>
-<div class="line"><span class="lineno">  201</span>            <span class="keyword">typename</span> MapType::Ptr map = MapType::create();</div>
-<div class="line"><span class="lineno">  202</span> </div>
-<div class="line"><span class="lineno">  203</span>            Camera::Ptr camera = std::make_shared&lt;Camera&gt;(camera_params);</div>
-<div class="line"><span class="lineno">  204</span>            CHECK_NOTNULL(camera);</div>
-<div class="line"><span class="lineno">  205</span> </div>
-<div class="line"><span class="lineno">  206</span> </div>
-<div class="line"><span class="lineno">  207</span>            <span class="keywordflow">if</span>(<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#ad5b04b4152cef7080b3a5673b2ef6d71">use_offline_frontend_</a>) {</div>
-<div class="line"><span class="lineno">  208</span>                LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Offline RGBD frontend&quot;</span>;</div>
-<div class="line"><span class="lineno">  209</span>                <span class="keyword">using </span>OfflineFrontend = FrontendOfflinePipeline&lt;RGBDBackendModule::ModuleTraits&gt;;</div>
-<div class="line"><span class="lineno">  210</span>                <span class="keyword">const</span> std::string file_path = <a class="code hl_function" href="namespacedyno.html#a80a71f28f4f692dc9c21976237dfcfe1">getOutputFilePath</a>(<a class="code hl_variable" href="namespacedyno.html#a49209c99b692a99011783e95f4f8fc2e">kRgbdFrontendOutputJsonFile</a>);</div>
-<div class="line"><span class="lineno">  211</span>                LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Loading RGBD frontend output packets from &quot;</span> &lt;&lt; file_path;</div>
-<div class="line"><span class="lineno">  212</span> </div>
-<div class="line"><span class="lineno">  213</span>                OfflineFrontend::UniquePtr offline_frontend = std::make_unique&lt;OfflineFrontend&gt;(<span class="stringliteral">&quot;offline-rgbdfrontend&quot;</span>, file_path);</div>
-<div class="line"><span class="lineno">  214</span>                <span class="comment">//make registra so we can register queues with this pipeline</span></div>
-<div class="line"><span class="lineno">  215</span>                frontend_output_registra = offline_frontend-&gt;getOutputRegistra();</div>
-<div class="line"><span class="lineno">  216</span>                <span class="comment">//raw ptr type becuase we cannot copy the unique ptr!! This is only becuase</span></div>
-<div class="line"><span class="lineno">  217</span>                <span class="comment">//we need it in the lambda function which is a temporary solution</span></div>
-<div class="line"><span class="lineno">  218</span>                OfflineFrontend* offline_frontend_ptr = offline_frontend.get();</div>
-<div class="line"><span class="lineno">  219</span>                <span class="comment">//set get dataset size function (bit of a hack for now, and only for the batch optimizer so it</span></div>
-<div class="line"><span class="lineno">  220</span>                <span class="comment">//knows when to optimize!!)</span></div>
-<div class="line"><span class="lineno">  221</span>                <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#aace8ef37ffdcf9958e3cd09fb3085950">get_dataset_size_</a> = [offline_frontend_ptr]() -&gt; <a class="code hl_typedef" href="namespacedyno.html#ac4303d6fafb755f794b072d76f9cfb41">FrameId</a> {</div>
-<div class="line"><span class="lineno">  222</span>                    <span class="comment">//get frame id of the final frame saved</span></div>
-<div class="line"><span class="lineno">  223</span>                    <span class="keywordflow">return</span> CHECK_NOTNULL(offline_frontend_ptr)-&gt;getFrontendOutputPackets().rbegin()-&gt;first;</div>
-<div class="line"><span class="lineno">  224</span>                };</div>
-<div class="line"><span class="lineno">  225</span>                <span class="comment">//convert pipeline to base type</span></div>
-<div class="line"><span class="lineno">  226</span>                <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a8d9e90b6192c573b290a76cf90321a8b">frontend_pipeline_</a> = std::move(offline_frontend);</div>
-<div class="line"><span class="lineno">  227</span>            }</div>
-<div class="line"><span class="lineno">  228</span>            <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  229</span>                FrontendModule::Ptr frontend = std::make_shared&lt;RGBDInstanceFrontendModule&gt;(<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#ae7bd479d9af076c6df001981ef4fc618">params_</a>.<a class="code hl_variable" href="classdyno_1_1DynoParams.html#ac6be57b51ea040afbb688410ce3751f3">frontend_params_</a>, camera, &amp;<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a9575f4a45586f5bdcf580bbdd3f99609">display_queue_</a>);</div>
-<div class="line"><span class="lineno">  230</span>                LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Made RGBDInstanceFrontendModule&quot;</span>;</div>
-<div class="line"><span class="lineno">  231</span>                <span class="comment">//need to make the derived pipeline so we can set parallel run etc</span></div>
-<div class="line"><span class="lineno">  232</span>                <span class="comment">//the manager takes a pointer to the base MIMO so we can have different types of pipelines</span></div>
-<div class="line"><span class="lineno">  233</span>                FrontendPipeline::UniquePtr frontend_pipeline_derived = std::make_unique&lt;FrontendPipeline&gt;(<span class="stringliteral">&quot;frontend-pipeline&quot;</span>, &amp;<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a9342ea4ec0a3e426fc1f9de0900c3aff">frontend_input_queue_</a>, frontend);</div>
-<div class="line"><span class="lineno">  234</span>                <span class="comment">//make registra so we can register queues with this pipeline</span></div>
-<div class="line"><span class="lineno">  235</span>                frontend_output_registra = frontend_pipeline_derived-&gt;getOutputRegistra();</div>
-<div class="line"><span class="lineno">  236</span>                frontend_pipeline_derived-&gt;parallelRun(parallel_run);</div>
-<div class="line"><span class="lineno">  237</span>                <span class="comment">//conver pipeline to base type</span></div>
-<div class="line"><span class="lineno">  238</span>                <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a8d9e90b6192c573b290a76cf90321a8b">frontend_pipeline_</a> = std::move(frontend_pipeline_derived);</div>
-<div class="line"><span class="lineno">  239</span> </div>
-<div class="line"><span class="lineno">  240</span>                <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#aace8ef37ffdcf9958e3cd09fb3085950">get_dataset_size_</a> = [=]() -&gt; <a class="code hl_typedef" href="namespacedyno.html#ac4303d6fafb755f794b072d76f9cfb41">FrameId</a> {</div>
-<div class="line"><span class="lineno">  241</span>                    CHECK(<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#afffb0f5366efd5a76512917447c3ab20">data_loader_</a>) &lt;&lt; <span class="stringliteral">&quot;Data Loader is null when accessing get_last_frame_ in BatchOptimizerParams&quot;</span>;</div>
-<div class="line"><span class="lineno">  242</span>                    <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#afffb0f5366efd5a76512917447c3ab20">data_loader_</a>-&gt;datasetSize();</div>
-<div class="line"><span class="lineno">  243</span>                };</div>
-<div class="line"><span class="lineno">  244</span>            }</div>
-<div class="line"><span class="lineno">  245</span> </div>
-<div class="line"><span class="lineno">  246</span>            <span class="comment">//right now depends on the get_dataset_size_ function being det before the optimzier is created!!!</span></div>
-<div class="line"><span class="lineno">  247</span> </div>
-<div class="line"><span class="lineno">  248</span> </div>
-<div class="line"><span class="lineno">  249</span>            <span class="keywordflow">if</span>(FLAGS_use_backend) {</div>
-<div class="line"><span class="lineno">  250</span>                LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Construcing RGBD backend&quot;</span>;</div>
-<div class="line"><span class="lineno">  251</span> </div>
-<div class="line"><span class="lineno">  252</span>                <span class="comment">//TODO: make better params!!</span></div>
-<div class="line"><span class="lineno">  253</span>                <span class="keyword">auto</span> updater_type = <span class="keyword">static_cast&lt;</span><a class="code hl_enumeration" href="classdyno_1_1RGBDBackendModule.html#acf5730c4860fc4f7a2265215aa02f4cf">RGBDBackendModule::UpdaterType</a><span class="keyword">&gt;</span>(</div>
-<div class="line"><span class="lineno">  254</span>                    FLAGS_backend_updater_enum</div>
-<div class="line"><span class="lineno">  255</span>                );</div>
-<div class="line"><span class="lineno">  256</span> </div>
-<div class="line"><span class="lineno">  257</span>                <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#ae7bd479d9af076c6df001981ef4fc618">params_</a>.<a class="code hl_variable" href="classdyno_1_1DynoParams.html#aba77d9978b33088e8a8c0433232b7e31">backend_params_</a>.<a class="code hl_variable" href="structdyno_1_1BackendParams.html#a22d94a957fa882e446f730ca614eda84">full_batch_frame</a> = (int)<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#aace8ef37ffdcf9958e3cd09fb3085950">get_dataset_size_</a>();</div>
-<div class="line"><span class="lineno">  258</span> </div>
-<div class="line"><span class="lineno">  259</span>                backend = std::make_shared&lt;RGBDBackendModule&gt;(<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#ae7bd479d9af076c6df001981ef4fc618">params_</a>.<a class="code hl_variable" href="classdyno_1_1DynoParams.html#aba77d9978b33088e8a8c0433232b7e31">backend_params_</a>, map, camera, updater_type, &amp;<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a9575f4a45586f5bdcf580bbdd3f99609">display_queue_</a>);</div>
-<div class="line"><span class="lineno">  260</span>            }</div>
-<div class="line"><span class="lineno">  261</span>            <span class="keywordflow">else</span> <span class="keywordflow">if</span>(<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#ad5b04b4152cef7080b3a5673b2ef6d71">use_offline_frontend_</a>) {</div>
-<div class="line"><span class="lineno">  262</span>                LOG(WARNING) &lt;&lt; <span class="stringliteral">&quot;FLAGS_use_backend is false but use_offline_frontend (FLAGS_frontend_from_file) us true. &quot;</span></div>
-<div class="line"><span class="lineno">  263</span>                    &lt;&lt; <span class="stringliteral">&quot; Pipeline will load data from frontend but send it nowhere!!&quot;</span>;</div>
-<div class="line"><span class="lineno">  264</span>            }</div>
-<div class="line"><span class="lineno">  265</span> </div>
-<div class="line"><span class="lineno">  266</span>        }   <span class="keywordflow">break</span>;</div>
-<div class="line"><span class="lineno">  267</span>        <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="namespacedyno.html#a373dccfbe74119feedaaa3124678e5f5ab93464d5b697cfb7a50eeb4c0239e090">FrontendType::kMono</a>: {</div>
-<div class="line"><span class="lineno">  268</span>            LOG(FATAL) &lt;&lt; <span class="stringliteral">&quot;MONO Not implemented!&quot;</span>;</div>
-<div class="line"><span class="lineno">  269</span>        }   <span class="keywordflow">break</span>;</div>
-<div class="line"><span class="lineno">  270</span> </div>
-<div class="line"><span class="lineno">  271</span>        <span class="keywordflow">default</span>: {</div>
-<div class="line"><span class="lineno">  272</span>            LOG(FATAL) &lt;&lt; <span class="stringliteral">&quot;Not implemented!&quot;</span>;</div>
-<div class="line"><span class="lineno">  273</span>        }  <span class="keywordflow">break</span>;</div>
-<div class="line"><span class="lineno">  274</span>    }</div>
-<div class="line"><span class="lineno">  275</span> </div>
-<div class="line"><span class="lineno">  276</span>    CHECK_NOTNULL(<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a8d9e90b6192c573b290a76cf90321a8b">frontend_pipeline_</a>);</div>
-<div class="line"><span class="lineno">  277</span>    CHECK_NOTNULL(frontend_output_registra);</div>
-<div class="line"><span class="lineno">  278</span>    frontend_output_registra-&gt;registerQueue(&amp;<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#adcd3cb4d8328566c769df45d15b4c84d">frontend_viz_input_queue_</a>);</div>
-<div class="line"><span class="lineno">  279</span> </div>
-<div class="line"><span class="lineno">  280</span>    <span class="keywordflow">if</span>(backend) {</div>
-<div class="line"><span class="lineno">  281</span>        <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#ac54c14380931cb8fa4c7ccbd1b2ab2b9">backend_pipeline_</a> = std::make_unique&lt;BackendPipeline&gt;(<span class="stringliteral">&quot;backend-pipeline&quot;</span>, &amp;<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#adca1504f9418de92bc2f9e127c0a799f">backend_input_queue_</a>, backend);</div>
-<div class="line"><span class="lineno">  282</span>        <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#ac54c14380931cb8fa4c7ccbd1b2ab2b9">backend_pipeline_</a>-&gt;parallelRun(parallel_run);</div>
-<div class="line"><span class="lineno">  283</span>        <span class="comment">//also register connection between front and back</span></div>
-<div class="line"><span class="lineno">  284</span>        frontend_output_registra-&gt;registerQueue(&amp;<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#adca1504f9418de92bc2f9e127c0a799f">backend_input_queue_</a>);</div>
-<div class="line"><span class="lineno">  285</span> </div>
-<div class="line"><span class="lineno">  286</span>        <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#ac54c14380931cb8fa4c7ccbd1b2ab2b9">backend_pipeline_</a>-&gt;registerOutputQueue(&amp;<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#ac7727712013aa204df197895778ca54c">backend_output_queue_</a>);</div>
-<div class="line"><span class="lineno">  287</span>    }</div>
-<div class="line"><span class="lineno">  288</span> </div>
-<div class="line"><span class="lineno">  289</span>    <span class="comment">//right now we cannot use the viz when we load from file as do not load certain data values (e.g. camera and debug info)</span></div>
-<div class="line"><span class="lineno">  290</span>    <span class="comment">//so these will be null - the viz&#39;s try and access these causing a seg fault. Just need to add checks</span></div>
-<div class="line"><span class="lineno">  291</span>    <span class="keywordflow">if</span>(!<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#ad5b04b4152cef7080b3a5673b2ef6d71">use_offline_frontend_</a>) {</div>
-<div class="line"><span class="lineno">  292</span>        <span class="keywordflow">if</span>(backend &amp;&amp; backend_display) {</div>
-<div class="line"><span class="lineno">  293</span>            <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#ae289b4f6787dc5d37e5232a1b1a61536">backend_viz_pipeline_</a> = std::make_unique&lt;BackendVizPipeline&gt;(<span class="stringliteral">&quot;backend-viz-pipeline&quot;</span>, &amp;<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#ac7727712013aa204df197895778ca54c">backend_output_queue_</a>, backend_display);</div>
-<div class="line"><span class="lineno">  294</span>        }</div>
-<div class="line"><span class="lineno">  295</span>        <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a21bb37f21d20ea74d23a210ebc618631">frontend_viz_pipeline_</a> = std::make_unique&lt;FrontendVizPipeline&gt;(<span class="stringliteral">&quot;frontend-viz-pipeline&quot;</span>, &amp;<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#adcd3cb4d8328566c769df45d15b4c84d">frontend_viz_input_queue_</a>, frontend_display);</div>
-<div class="line"><span class="lineno">  296</span> </div>
-<div class="line"><span class="lineno">  297</span>    }</div>
-<div class="line"><span class="lineno">  298</span> </div>
-<div class="line"><span class="lineno">  299</span> </div>
-<div class="line"><span class="lineno">  300</span>}</div>
-<div class="ttc" id="aclassdyno_1_1BackendModuleType_html_a8cc142d98537163fe6f1ba2b462ff8fe"><div class="ttname"><a href="classdyno_1_1BackendModuleType.html#a8cc142d98537163fe6f1ba2b462ff8fe">dyno::BackendModuleType&lt; RGBDBackendModuleTraits &gt;::MapType</a></div><div class="ttdeci">Map&lt; MeasurementType &gt; MapType</div><div class="ttdef"><b>Definition:</b> <a href="BackendModule_8hpp_source.html#l00126">BackendModule.hpp:126</a></div></div>
+<p class="definition">Definition at line <a class="el" href="PipelineManager_8cc_source.html#l00205">205</a> of file <a class="el" href="PipelineManager_8cc_source.html">PipelineManager.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  207</span>                                                                           {</div>
+<div class="line"><span class="lineno">  208</span>  BackendModule::Ptr backend = <span class="keyword">nullptr</span>;</div>
+<div class="line"><span class="lineno">  209</span>  <span class="comment">// the registra for the frontend pipeline</span></div>
+<div class="line"><span class="lineno">  210</span>  <span class="comment">// this is agnostic to the actual pipeline type so we can add/register</span></div>
+<div class="line"><span class="lineno">  211</span>  <span class="comment">// a new queue to it regardless of the derived type (as long as it is at least</span></div>
+<div class="line"><span class="lineno">  212</span>  <span class="comment">// a MIMO, which it should be as this is the lowest type of actual pipeline</span></div>
+<div class="line"><span class="lineno">  213</span>  <span class="comment">// with any functionality)</span></div>
+<div class="line"><span class="lineno">  214</span>  <span class="keyword">typename</span> FrontendPipeline::OutputRegistra::Ptr frontend_output_registra =</div>
+<div class="line"><span class="lineno">  215</span>      <span class="keyword">nullptr</span>;</div>
+<div class="line"><span class="lineno">  216</span>  <span class="keyword">const</span> <span class="keyword">auto</span> parallel_run = <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#ae7bd479d9af076c6df001981ef4fc618">params_</a>.<a class="code hl_function" href="classdyno_1_1DynoParams.html#ab02ca24dcf94affa7705e9cdc63bd2d4">parallelRun</a>();</div>
+<div class="line"><span class="lineno">  217</span> </div>
+<div class="line"><span class="lineno">  218</span>  <span class="keywordflow">switch</span> (<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#ae7bd479d9af076c6df001981ef4fc618">params_</a>.<a class="code hl_variable" href="classdyno_1_1DynoParams.html#a4bc68cd0a38dc2e39e7037554a3b0a20">frontend_type_</a>) {</div>
+<div class="line"><span class="lineno">  219</span>    <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="namespacedyno.html#a373dccfbe74119feedaaa3124678e5f5a23c7055de1982c9646cb8ebcbc4cb632">FrontendType::kRGBD</a>: {</div>
+<div class="line"><span class="lineno">  220</span>      LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Making RGBDInstance frontend&quot;</span>;</div>
+<div class="line"><span class="lineno">  221</span> </div>
+<div class="line"><span class="lineno">  222</span>      <span class="keyword">using </span>MapType = <a class="code hl_typedef" href="classdyno_1_1BackendModuleType.html#a8cc142d98537163fe6f1ba2b462ff8fe">RGBDBackendModule::MapType</a>;</div>
+<div class="line"><span class="lineno">  223</span>      <span class="keyword">typename</span> MapType::Ptr map = MapType::create();</div>
+<div class="line"><span class="lineno">  224</span> </div>
+<div class="line"><span class="lineno">  225</span>      Camera::Ptr camera = std::make_shared&lt;Camera&gt;(camera_params);</div>
+<div class="line"><span class="lineno">  226</span>      CHECK_NOTNULL(camera);</div>
+<div class="line"><span class="lineno">  227</span> </div>
+<div class="line"><span class="lineno">  228</span>      <span class="keywordflow">if</span> (<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#ad5b04b4152cef7080b3a5673b2ef6d71">use_offline_frontend_</a>) {</div>
+<div class="line"><span class="lineno">  229</span>        LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Offline RGBD frontend&quot;</span>;</div>
+<div class="line"><span class="lineno">  230</span>        <span class="keyword">using </span>OfflineFrontend =</div>
+<div class="line"><span class="lineno">  231</span>            FrontendOfflinePipeline&lt;RGBDBackendModule::ModuleTraits&gt;;</div>
+<div class="line"><span class="lineno">  232</span>        <span class="keyword">const</span> std::string file_path =</div>
+<div class="line"><span class="lineno">  233</span>            <a class="code hl_function" href="namespacedyno.html#a80a71f28f4f692dc9c21976237dfcfe1">getOutputFilePath</a>(<a class="code hl_variable" href="namespacedyno.html#a49209c99b692a99011783e95f4f8fc2e">kRgbdFrontendOutputJsonFile</a>);</div>
+<div class="line"><span class="lineno">  234</span>        LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Loading RGBD frontend output packets from &quot;</span> &lt;&lt; file_path;</div>
+<div class="line"><span class="lineno">  235</span> </div>
+<div class="line"><span class="lineno">  236</span>        OfflineFrontend::UniquePtr offline_frontend =</div>
+<div class="line"><span class="lineno">  237</span>            std::make_unique&lt;OfflineFrontend&gt;(<span class="stringliteral">&quot;offline-rgbdfrontend&quot;</span>,</div>
+<div class="line"><span class="lineno">  238</span>                                              file_path);</div>
+<div class="line"><span class="lineno">  239</span>        <span class="comment">// make registra so we can register queues with this pipeline</span></div>
+<div class="line"><span class="lineno">  240</span>        frontend_output_registra = offline_frontend-&gt;getOutputRegistra();</div>
+<div class="line"><span class="lineno">  241</span>        <span class="comment">// raw ptr type becuase we cannot copy the unique ptr!! This is only</span></div>
+<div class="line"><span class="lineno">  242</span>        <span class="comment">// becuase we need it in the lambda function which is a temporary</span></div>
+<div class="line"><span class="lineno">  243</span>        <span class="comment">// solution</span></div>
+<div class="line"><span class="lineno">  244</span>        OfflineFrontend* offline_frontend_ptr = offline_frontend.get();</div>
+<div class="line"><span class="lineno">  245</span>        <span class="comment">// set get dataset size function (bit of a hack for now, and only for</span></div>
+<div class="line"><span class="lineno">  246</span>        <span class="comment">// the batch optimizer so it knows when to optimize!!)</span></div>
+<div class="line"><span class="lineno">  247</span>        <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#aace8ef37ffdcf9958e3cd09fb3085950">get_dataset_size_</a> = [offline_frontend_ptr]() -&gt; <a class="code hl_typedef" href="namespacedyno.html#ac4303d6fafb755f794b072d76f9cfb41">FrameId</a> {</div>
+<div class="line"><span class="lineno">  248</span>          <span class="comment">// get frame id of the final frame saved</span></div>
+<div class="line"><span class="lineno">  249</span>          <span class="keywordflow">return</span> CHECK_NOTNULL(offline_frontend_ptr)</div>
+<div class="line"><span class="lineno">  250</span>              -&gt;getFrontendOutputPackets()</div>
+<div class="line"><span class="lineno">  251</span>              .rbegin()</div>
+<div class="line"><span class="lineno">  252</span>              -&gt;first;</div>
+<div class="line"><span class="lineno">  253</span>        };</div>
+<div class="line"><span class="lineno">  254</span>        <span class="comment">// convert pipeline to base type</span></div>
+<div class="line"><span class="lineno">  255</span>        <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a8d9e90b6192c573b290a76cf90321a8b">frontend_pipeline_</a> = std::move(offline_frontend);</div>
+<div class="line"><span class="lineno">  256</span>      } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  257</span>        FrontendModule::Ptr frontend =</div>
+<div class="line"><span class="lineno">  258</span>            std::make_shared&lt;RGBDInstanceFrontendModule&gt;(</div>
+<div class="line"><span class="lineno">  259</span>                <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#ae7bd479d9af076c6df001981ef4fc618">params_</a>.<a class="code hl_variable" href="classdyno_1_1DynoParams.html#ac6be57b51ea040afbb688410ce3751f3">frontend_params_</a>, camera, &amp;<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a9575f4a45586f5bdcf580bbdd3f99609">display_queue_</a>);</div>
+<div class="line"><span class="lineno">  260</span>        LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Made RGBDInstanceFrontendModule&quot;</span>;</div>
+<div class="line"><span class="lineno">  261</span>        <span class="comment">// need to make the derived pipeline so we can set parallel run etc</span></div>
+<div class="line"><span class="lineno">  262</span>        <span class="comment">// the manager takes a pointer to the base MIMO so we can have different</span></div>
+<div class="line"><span class="lineno">  263</span>        <span class="comment">// types of pipelines</span></div>
+<div class="line"><span class="lineno">  264</span>        FrontendPipeline::UniquePtr frontend_pipeline_derived =</div>
+<div class="line"><span class="lineno">  265</span>            std::make_unique&lt;FrontendPipeline&gt;(</div>
+<div class="line"><span class="lineno">  266</span>                <span class="stringliteral">&quot;frontend-pipeline&quot;</span>, &amp;<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a9342ea4ec0a3e426fc1f9de0900c3aff">frontend_input_queue_</a>, frontend);</div>
+<div class="line"><span class="lineno">  267</span>        <span class="comment">// make registra so we can register queues with this pipeline</span></div>
+<div class="line"><span class="lineno">  268</span>        frontend_output_registra =</div>
+<div class="line"><span class="lineno">  269</span>            frontend_pipeline_derived-&gt;getOutputRegistra();</div>
+<div class="line"><span class="lineno">  270</span>        frontend_pipeline_derived-&gt;parallelRun(parallel_run);</div>
+<div class="line"><span class="lineno">  271</span>        <span class="comment">// conver pipeline to base type</span></div>
+<div class="line"><span class="lineno">  272</span>        <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a8d9e90b6192c573b290a76cf90321a8b">frontend_pipeline_</a> = std::move(frontend_pipeline_derived);</div>
+<div class="line"><span class="lineno">  273</span> </div>
+<div class="line"><span class="lineno">  274</span>        <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#aace8ef37ffdcf9958e3cd09fb3085950">get_dataset_size_</a> = [=]() -&gt; <a class="code hl_typedef" href="namespacedyno.html#ac4303d6fafb755f794b072d76f9cfb41">FrameId</a> {</div>
+<div class="line"><span class="lineno">  275</span>          CHECK(<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#afffb0f5366efd5a76512917447c3ab20">data_loader_</a>) &lt;&lt; <span class="stringliteral">&quot;Data Loader is null when accessing &quot;</span></div>
+<div class="line"><span class="lineno">  276</span>                                 <span class="stringliteral">&quot;get_last_frame_ in BatchOptimizerParams&quot;</span>;</div>
+<div class="line"><span class="lineno">  277</span>          <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#afffb0f5366efd5a76512917447c3ab20">data_loader_</a>-&gt;datasetSize();</div>
+<div class="line"><span class="lineno">  278</span>        };</div>
+<div class="line"><span class="lineno">  279</span>      }</div>
+<div class="line"><span class="lineno">  280</span> </div>
+<div class="line"><span class="lineno">  281</span>      <span class="comment">// right now depends on the get_dataset_size_ function being det before</span></div>
+<div class="line"><span class="lineno">  282</span>      <span class="comment">// the optimzier is created!!!</span></div>
+<div class="line"><span class="lineno">  283</span> </div>
+<div class="line"><span class="lineno">  284</span>      <span class="keywordflow">if</span> (FLAGS_use_backend) {</div>
+<div class="line"><span class="lineno">  285</span>        LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Construcing RGBD backend&quot;</span>;</div>
+<div class="line"><span class="lineno">  286</span> </div>
+<div class="line"><span class="lineno">  287</span>        <span class="comment">// TODO: make better params!!</span></div>
+<div class="line"><span class="lineno">  288</span>        <span class="keyword">auto</span> updater_type = <span class="keyword">static_cast&lt;</span><a class="code hl_enumeration" href="classdyno_1_1RGBDBackendModule.html#acf5730c4860fc4f7a2265215aa02f4cf">RGBDBackendModule::UpdaterType</a><span class="keyword">&gt;</span>(</div>
+<div class="line"><span class="lineno">  289</span>            FLAGS_backend_updater_enum);</div>
+<div class="line"><span class="lineno">  290</span> </div>
+<div class="line"><span class="lineno">  291</span>        <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#ae7bd479d9af076c6df001981ef4fc618">params_</a>.<a class="code hl_variable" href="classdyno_1_1DynoParams.html#aba77d9978b33088e8a8c0433232b7e31">backend_params_</a>.<a class="code hl_variable" href="structdyno_1_1BackendParams.html#a22d94a957fa882e446f730ca614eda84">full_batch_frame</a> = (int)<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#aace8ef37ffdcf9958e3cd09fb3085950">get_dataset_size_</a>();</div>
+<div class="line"><span class="lineno">  292</span> </div>
+<div class="line"><span class="lineno">  293</span>        backend = std::make_shared&lt;RGBDBackendModule&gt;(<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#ae7bd479d9af076c6df001981ef4fc618">params_</a>.<a class="code hl_variable" href="classdyno_1_1DynoParams.html#aba77d9978b33088e8a8c0433232b7e31">backend_params_</a>,</div>
+<div class="line"><span class="lineno">  294</span>                                                      map, camera, updater_type,</div>
+<div class="line"><span class="lineno">  295</span>                                                      &amp;<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a9575f4a45586f5bdcf580bbdd3f99609">display_queue_</a>);</div>
+<div class="line"><span class="lineno">  296</span>      } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#ad5b04b4152cef7080b3a5673b2ef6d71">use_offline_frontend_</a>) {</div>
+<div class="line"><span class="lineno">  297</span>        LOG(WARNING)</div>
+<div class="line"><span class="lineno">  298</span>            &lt;&lt; <span class="stringliteral">&quot;FLAGS_use_backend is false but use_offline_frontend &quot;</span></div>
+<div class="line"><span class="lineno">  299</span>               <span class="stringliteral">&quot;(FLAGS_frontend_from_file) us true. &quot;</span></div>
+<div class="line"><span class="lineno">  300</span>            &lt;&lt; <span class="stringliteral">&quot; Pipeline will load data from frontend but send it nowhere!!&quot;</span>;</div>
+<div class="line"><span class="lineno">  301</span>      }</div>
+<div class="line"><span class="lineno">  302</span> </div>
+<div class="line"><span class="lineno">  303</span>    } <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">  304</span>    <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="namespacedyno.html#a373dccfbe74119feedaaa3124678e5f5ab93464d5b697cfb7a50eeb4c0239e090">FrontendType::kMono</a>: {</div>
+<div class="line"><span class="lineno">  305</span>      LOG(FATAL) &lt;&lt; <span class="stringliteral">&quot;MONO Not implemented!&quot;</span>;</div>
+<div class="line"><span class="lineno">  306</span>    } <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">  307</span> </div>
+<div class="line"><span class="lineno">  308</span>    <span class="keywordflow">default</span>: {</div>
+<div class="line"><span class="lineno">  309</span>      LOG(FATAL) &lt;&lt; <span class="stringliteral">&quot;Not implemented!&quot;</span>;</div>
+<div class="line"><span class="lineno">  310</span>    } <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">  311</span>  }</div>
+<div class="line"><span class="lineno">  312</span> </div>
+<div class="line"><span class="lineno">  313</span>  CHECK_NOTNULL(<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a8d9e90b6192c573b290a76cf90321a8b">frontend_pipeline_</a>);</div>
+<div class="line"><span class="lineno">  314</span>  CHECK_NOTNULL(frontend_output_registra);</div>
+<div class="line"><span class="lineno">  315</span>  <span class="comment">// register output queue to send the front-end output to the viz</span></div>
+<div class="line"><span class="lineno">  316</span>  frontend_output_registra-&gt;registerQueue(&amp;<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#adcd3cb4d8328566c769df45d15b4c84d">frontend_viz_input_queue_</a>);</div>
+<div class="line"><span class="lineno">  317</span> </div>
+<div class="line"><span class="lineno">  318</span>  <span class="keywordflow">if</span> (backend) {</div>
+<div class="line"><span class="lineno">  319</span>    <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#ac54c14380931cb8fa4c7ccbd1b2ab2b9">backend_pipeline_</a> = std::make_unique&lt;BackendPipeline&gt;(</div>
+<div class="line"><span class="lineno">  320</span>        <span class="stringliteral">&quot;backend-pipeline&quot;</span>, &amp;<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#adca1504f9418de92bc2f9e127c0a799f">backend_input_queue_</a>, backend);</div>
+<div class="line"><span class="lineno">  321</span>    <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#ac54c14380931cb8fa4c7ccbd1b2ab2b9">backend_pipeline_</a>-&gt;parallelRun(parallel_run);</div>
+<div class="line"><span class="lineno">  322</span>    <span class="comment">// also register connection between front and back</span></div>
+<div class="line"><span class="lineno">  323</span>    frontend_output_registra-&gt;registerQueue(&amp;<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#adca1504f9418de92bc2f9e127c0a799f">backend_input_queue_</a>);</div>
+<div class="line"><span class="lineno">  324</span> </div>
+<div class="line"><span class="lineno">  325</span>    <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#ac54c14380931cb8fa4c7ccbd1b2ab2b9">backend_pipeline_</a>-&gt;registerOutputQueue(&amp;<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#ac7727712013aa204df197895778ca54c">backend_output_queue_</a>);</div>
+<div class="line"><span class="lineno">  326</span>  }</div>
+<div class="line"><span class="lineno">  327</span> </div>
+<div class="line"><span class="lineno">  328</span>  <span class="comment">// right now we cannot use the viz when we load from file as do not load</span></div>
+<div class="line"><span class="lineno">  329</span>  <span class="comment">// certain data values (e.g. camera and debug info) so these will be null -</span></div>
+<div class="line"><span class="lineno">  330</span>  <span class="comment">// the viz&#39;s try and access these causing a seg fault. Just need to add checks</span></div>
+<div class="line"><span class="lineno">  331</span>  <span class="keywordflow">if</span> (!<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#ad5b04b4152cef7080b3a5673b2ef6d71">use_offline_frontend_</a>) {</div>
+<div class="line"><span class="lineno">  332</span>    <span class="keywordflow">if</span> (backend &amp;&amp; backend_display) {</div>
+<div class="line"><span class="lineno">  333</span>      <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#ae289b4f6787dc5d37e5232a1b1a61536">backend_viz_pipeline_</a> = std::make_unique&lt;BackendVizPipeline&gt;(</div>
+<div class="line"><span class="lineno">  334</span>          <span class="stringliteral">&quot;backend-viz-pipeline&quot;</span>, &amp;<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#ac7727712013aa204df197895778ca54c">backend_output_queue_</a>, backend_display);</div>
+<div class="line"><span class="lineno">  335</span>    }</div>
+<div class="line"><span class="lineno">  336</span>    <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a21bb37f21d20ea74d23a210ebc618631">frontend_viz_pipeline_</a> = std::make_unique&lt;FrontendVizPipeline&gt;(</div>
+<div class="line"><span class="lineno">  337</span>        <span class="stringliteral">&quot;frontend-viz-pipeline&quot;</span>, &amp;<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#adcd3cb4d8328566c769df45d15b4c84d">frontend_viz_input_queue_</a>, frontend_display);</div>
+<div class="line"><span class="lineno">  338</span>  }</div>
+<div class="line"><span class="lineno">  339</span>}</div>
+<div class="ttc" id="aclassdyno_1_1BackendModuleType_html_a8cc142d98537163fe6f1ba2b462ff8fe"><div class="ttname"><a href="classdyno_1_1BackendModuleType.html#a8cc142d98537163fe6f1ba2b462ff8fe">dyno::BackendModuleType&lt; RGBDBackendModuleTraits &gt;::MapType</a></div><div class="ttdeci">Map&lt; MeasurementType &gt; MapType</div><div class="ttdef"><b>Definition:</b> <a href="BackendModule_8hpp_source.html#l00127">BackendModule.hpp:127</a></div></div>
 <div class="ttc" id="aclassdyno_1_1DynoParams_html_a4bc68cd0a38dc2e39e7037554a3b0a20"><div class="ttname"><a href="classdyno_1_1DynoParams.html#a4bc68cd0a38dc2e39e7037554a3b0a20">dyno::DynoParams::frontend_type_</a></div><div class="ttdeci">FrontendType frontend_type_</div><div class="ttdef"><b>Definition:</b> <a href="PipelineParams_8hpp_source.html#l00078">PipelineParams.hpp:78</a></div></div>
 <div class="ttc" id="aclassdyno_1_1DynoParams_html_aba77d9978b33088e8a8c0433232b7e31"><div class="ttname"><a href="classdyno_1_1DynoParams.html#aba77d9978b33088e8a8c0433232b7e31">dyno::DynoParams::backend_params_</a></div><div class="ttdeci">BackendParams backend_params_</div><div class="ttdef"><b>Definition:</b> <a href="PipelineParams_8hpp_source.html#l00075">PipelineParams.hpp:75</a></div></div>
 <div class="ttc" id="aclassdyno_1_1DynoParams_html_ac6be57b51ea040afbb688410ce3751f3"><div class="ttname"><a href="classdyno_1_1DynoParams.html#ac6be57b51ea040afbb688410ce3751f3">dyno::DynoParams::frontend_params_</a></div><div class="ttdeci">FrontendParams frontend_params_</div><div class="ttdef"><b>Definition:</b> <a href="PipelineParams_8hpp_source.html#l00074">PipelineParams.hpp:74</a></div></div>
@@ -669,18 +697,19 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PipelineManager_8cc_source.html#l00106">106</a> of file <a class="el" href="PipelineManager_8cc_source.html">PipelineManager.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  106</span>                                            {</div>
-<div class="line"><span class="lineno">  107</span>    <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a9575f4a45586f5bdcf580bbdd3f99609">display_queue_</a>.<a class="code hl_function" href="classThreadsafeQueueBase.html#a1a9f0078e0371bd1ba7dbe9ae05d2bed">shutdown</a>();</div>
-<div class="line"><span class="lineno">  108</span>    <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a8d9e90b6192c573b290a76cf90321a8b">frontend_pipeline_</a>-&gt;shutdown();</div>
-<div class="line"><span class="lineno">  109</span> </div>
-<div class="line"><span class="lineno">  110</span>    <span class="keywordflow">if</span>(<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#ac54c14380931cb8fa4c7ccbd1b2ab2b9">backend_pipeline_</a>) <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#ac54c14380931cb8fa4c7ccbd1b2ab2b9">backend_pipeline_</a>-&gt;shutdown();</div>
-<div class="line"><span class="lineno">  111</span> </div>
-<div class="line"><span class="lineno">  112</span>    <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a42e49895180ea97d125adbdb9726dba5">data_interface_</a>-&gt;shutdown();</div>
-<div class="line"><span class="lineno">  113</span> </div>
-<div class="line"><span class="lineno">  114</span>    <span class="keywordflow">if</span>(<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a21bb37f21d20ea74d23a210ebc618631">frontend_viz_pipeline_</a>) <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a21bb37f21d20ea74d23a210ebc618631">frontend_viz_pipeline_</a>-&gt;shutdown();</div>
-<div class="line"><span class="lineno">  115</span>    <span class="keywordflow">if</span>(<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#ae289b4f6787dc5d37e5232a1b1a61536">backend_viz_pipeline_</a>) <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#ae289b4f6787dc5d37e5232a1b1a61536">backend_viz_pipeline_</a>-&gt;shutdown();</div>
-<div class="line"><span class="lineno">  116</span>}</div>
+<p class="definition">Definition at line <a class="el" href="PipelineManager_8cc_source.html#l00116">116</a> of file <a class="el" href="PipelineManager_8cc_source.html">PipelineManager.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  116</span>                                            {</div>
+<div class="line"><span class="lineno">  117</span>  <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a9575f4a45586f5bdcf580bbdd3f99609">display_queue_</a>.<a class="code hl_function" href="classThreadsafeQueueBase.html#a1a9f0078e0371bd1ba7dbe9ae05d2bed">shutdown</a>();</div>
+<div class="line"><span class="lineno">  118</span>  <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a8d9e90b6192c573b290a76cf90321a8b">frontend_pipeline_</a>-&gt;shutdown();</div>
+<div class="line"><span class="lineno">  119</span> </div>
+<div class="line"><span class="lineno">  120</span>  <span class="keywordflow">if</span> (<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#ac54c14380931cb8fa4c7ccbd1b2ab2b9">backend_pipeline_</a>) <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#ac54c14380931cb8fa4c7ccbd1b2ab2b9">backend_pipeline_</a>-&gt;shutdown();</div>
+<div class="line"><span class="lineno">  121</span> </div>
+<div class="line"><span class="lineno">  122</span>  <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a42e49895180ea97d125adbdb9726dba5">data_interface_</a>-&gt;shutdown();</div>
+<div class="line"><span class="lineno">  123</span> </div>
+<div class="line"><span class="lineno">  124</span>  <span class="keywordflow">if</span> (<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a21bb37f21d20ea74d23a210ebc618631">frontend_viz_pipeline_</a>) <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a21bb37f21d20ea74d23a210ebc618631">frontend_viz_pipeline_</a>-&gt;shutdown();</div>
+<div class="line"><span class="lineno">  125</span>  <span class="keywordflow">if</span> (<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#ae289b4f6787dc5d37e5232a1b1a61536">backend_viz_pipeline_</a>) <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#ae289b4f6787dc5d37e5232a1b1a61536">backend_viz_pipeline_</a>-&gt;shutdown();</div>
+<div class="line"><span class="lineno">  126</span>  <span class="keywordflow">if</span> (<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#ae289b4f6787dc5d37e5232a1b1a61536">backend_viz_pipeline_</a>) <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#ae289b4f6787dc5d37e5232a1b1a61536">backend_viz_pipeline_</a>-&gt;shutdown();</div>
+<div class="line"><span class="lineno">  127</span>}</div>
 <div class="ttc" id="aclassThreadsafeQueueBase_html_a1a9f0078e0371bd1ba7dbe9ae05d2bed"><div class="ttname"><a href="classThreadsafeQueueBase.html#a1a9f0078e0371bd1ba7dbe9ae05d2bed">ThreadsafeQueueBase::shutdown</a></div><div class="ttdeci">void shutdown()</div><div class="ttdef"><b>Definition:</b> <a href="ThreadSafeQueue_8hpp_source.html#l00104">ThreadSafeQueue.hpp:104</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1DynoPipelineManager.html#ac54c14380931cb8fa4c7ccbd1b2ab2b9">backend_pipeline_</a>, <a class="el" href="classdyno_1_1DynoPipelineManager.html#ae289b4f6787dc5d37e5232a1b1a61536">backend_viz_pipeline_</a>, <a class="el" href="classdyno_1_1DynoPipelineManager.html#a42e49895180ea97d125adbdb9726dba5">data_interface_</a>, <a class="el" href="classdyno_1_1DynoPipelineManager.html#a9575f4a45586f5bdcf580bbdd3f99609">display_queue_</a>, <a class="el" href="classdyno_1_1DynoPipelineManager.html#a8d9e90b6192c573b290a76cf90321a8b">frontend_pipeline_</a>, <a class="el" href="classdyno_1_1DynoPipelineManager.html#a21bb37f21d20ea74d23a210ebc618631">frontend_viz_pipeline_</a>, and <a class="el" href="classThreadsafeQueueBase.html#a1a9f0078e0371bd1ba7dbe9ae05d2bed">ThreadsafeQueueBase&lt; T &gt;::shutdown()</a>.</p>
@@ -730,18 +759,19 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PipelineManager_8cc_source.html#l00094">94</a> of file <a class="el" href="PipelineManager_8cc_source.html">PipelineManager.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   94</span>                                           {</div>
-<div class="line"><span class="lineno">   95</span>    <span class="keywordflow">if</span>(<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a9d10b7cac06fe026b181171db14b117a">frontend_pipeline_spinner_</a>) <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a9d10b7cac06fe026b181171db14b117a">frontend_pipeline_spinner_</a>-&gt;shutdown();</div>
-<div class="line"><span class="lineno">   96</span> </div>
-<div class="line"><span class="lineno">   97</span>    <span class="keywordflow">if</span>(<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a744ba1125f05940b0b2374d059e5e7d9">backend_pipeline_spinner_</a>) <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a744ba1125f05940b0b2374d059e5e7d9">backend_pipeline_spinner_</a>-&gt;shutdown();</div>
-<div class="line"><span class="lineno">   98</span> </div>
-<div class="line"><span class="lineno">   99</span>    <span class="keywordflow">if</span>(<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a40dc29d7469a7d498e90dd222705eece">data_provider_spinner_</a>) <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a40dc29d7469a7d498e90dd222705eece">data_provider_spinner_</a>-&gt;shutdown();</div>
-<div class="line"><span class="lineno">  100</span> </div>
-<div class="line"><span class="lineno">  101</span>    <span class="keywordflow">if</span>(<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a3cb5a42f79c06e0bad2db27b62de7f75">frontend_viz_pipeline_spinner_</a>) <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a3cb5a42f79c06e0bad2db27b62de7f75">frontend_viz_pipeline_spinner_</a>-&gt;shutdown();</div>
-<div class="line"><span class="lineno">  102</span> </div>
-<div class="line"><span class="lineno">  103</span>    <span class="keywordflow">if</span>(<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a5de04c2ba3dd2824a8cc5ccc3244c889">backend_viz_pipeline_spinner_</a>) <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a5de04c2ba3dd2824a8cc5ccc3244c889">backend_viz_pipeline_spinner_</a>-&gt;shutdown();</div>
-<div class="line"><span class="lineno">  104</span>}</div>
+<p class="definition">Definition at line <a class="el" href="PipelineManager_8cc_source.html#l00103">103</a> of file <a class="el" href="PipelineManager_8cc_source.html">PipelineManager.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  103</span>                                           {</div>
+<div class="line"><span class="lineno">  104</span>  <span class="keywordflow">if</span> (<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a9d10b7cac06fe026b181171db14b117a">frontend_pipeline_spinner_</a>) <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a9d10b7cac06fe026b181171db14b117a">frontend_pipeline_spinner_</a>-&gt;shutdown();</div>
+<div class="line"><span class="lineno">  105</span> </div>
+<div class="line"><span class="lineno">  106</span>  <span class="keywordflow">if</span> (<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a744ba1125f05940b0b2374d059e5e7d9">backend_pipeline_spinner_</a>) <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a744ba1125f05940b0b2374d059e5e7d9">backend_pipeline_spinner_</a>-&gt;shutdown();</div>
+<div class="line"><span class="lineno">  107</span> </div>
+<div class="line"><span class="lineno">  108</span>  <span class="keywordflow">if</span> (<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a40dc29d7469a7d498e90dd222705eece">data_provider_spinner_</a>) <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a40dc29d7469a7d498e90dd222705eece">data_provider_spinner_</a>-&gt;shutdown();</div>
+<div class="line"><span class="lineno">  109</span> </div>
+<div class="line"><span class="lineno">  110</span>  <span class="keywordflow">if</span> (<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a3cb5a42f79c06e0bad2db27b62de7f75">frontend_viz_pipeline_spinner_</a>)</div>
+<div class="line"><span class="lineno">  111</span>    <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a3cb5a42f79c06e0bad2db27b62de7f75">frontend_viz_pipeline_spinner_</a>-&gt;shutdown();</div>
+<div class="line"><span class="lineno">  112</span> </div>
+<div class="line"><span class="lineno">  113</span>  <span class="keywordflow">if</span> (<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a5de04c2ba3dd2824a8cc5ccc3244c889">backend_viz_pipeline_spinner_</a>) <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a5de04c2ba3dd2824a8cc5ccc3244c889">backend_viz_pipeline_spinner_</a>-&gt;shutdown();</div>
+<div class="line"><span class="lineno">  114</span>}</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1DynoPipelineManager.html#a744ba1125f05940b0b2374d059e5e7d9">backend_pipeline_spinner_</a>, <a class="el" href="classdyno_1_1DynoPipelineManager.html#a5de04c2ba3dd2824a8cc5ccc3244c889">backend_viz_pipeline_spinner_</a>, <a class="el" href="classdyno_1_1DynoPipelineManager.html#a40dc29d7469a7d498e90dd222705eece">data_provider_spinner_</a>, <a class="el" href="classdyno_1_1DynoPipelineManager.html#a9d10b7cac06fe026b181171db14b117a">frontend_pipeline_spinner_</a>, and <a class="el" href="classdyno_1_1DynoPipelineManager.html#a3cb5a42f79c06e0bad2db27b62de7f75">frontend_viz_pipeline_spinner_</a>.</p>
 
@@ -787,46 +817,44 @@ Here is the caller graph for this function:</div>
 <dd>
 false </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="PipelineManager_8cc_source.html#l00118">118</a> of file <a class="el" href="PipelineManager_8cc_source.html">PipelineManager.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  118</span>                               {</div>
-<div class="line"><span class="lineno">  119</span> </div>
-<div class="line"><span class="lineno">  120</span>    std::function&lt;bool()&gt; spin_func;</div>
-<div class="line"><span class="lineno">  121</span> </div>
-<div class="line"><span class="lineno">  122</span>    <span class="keywordflow">if</span>(<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#ad5b04b4152cef7080b3a5673b2ef6d71">use_offline_frontend_</a>) {</div>
-<div class="line"><span class="lineno">  123</span>        <span class="comment">// if we have an offline frontend only spiun the frontend pipeline</span></div>
-<div class="line"><span class="lineno">  124</span>        <span class="comment">// and no need to spin the viz (TODO: right now this is only images and not the actual pipelines...)</span></div>
-<div class="line"><span class="lineno">  125</span>        spin_func =[=]() -&gt; <span class="keywordtype">bool</span> {</div>
-<div class="line"><span class="lineno">  126</span>            <span class="keywordflow">if</span>(<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a8d9e90b6192c573b290a76cf90321a8b">frontend_pipeline_</a>-&gt;isWorking()) {</div>
-<div class="line"><span class="lineno">  127</span>                <span class="keywordflow">if</span>(!<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#ae7bd479d9af076c6df001981ef4fc618">params_</a>.<a class="code hl_function" href="classdyno_1_1DynoParams.html#ab02ca24dcf94affa7705e9cdc63bd2d4">parallelRun</a>()) {</div>
-<div class="line"><span class="lineno">  128</span>                    <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a8d9e90b6192c573b290a76cf90321a8b">frontend_pipeline_</a>-&gt;spinOnce();</div>
-<div class="line"><span class="lineno">  129</span>                    <span class="keywordflow">if</span>(<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#ac54c14380931cb8fa4c7ccbd1b2ab2b9">backend_pipeline_</a>) <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#ac54c14380931cb8fa4c7ccbd1b2ab2b9">backend_pipeline_</a>-&gt;spinOnce();</div>
-<div class="line"><span class="lineno">  130</span>                }</div>
-<div class="line"><span class="lineno">  131</span>                <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  132</span>            }</div>
-<div class="line"><span class="lineno">  133</span>            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">  134</span>        };</div>
-<div class="line"><span class="lineno">  135</span>    }</div>
-<div class="line"><span class="lineno">  136</span>    <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  137</span>        <span class="comment">//regular spinner....</span></div>
-<div class="line"><span class="lineno">  138</span>        spin_func =[=]() -&gt; <span class="keywordtype">bool</span> {</div>
-<div class="line"><span class="lineno">  139</span>            <span class="keywordflow">if</span>(<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#afffb0f5366efd5a76512917447c3ab20">data_loader_</a>-&gt;spin() || <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a8d9e90b6192c573b290a76cf90321a8b">frontend_pipeline_</a>-&gt;isWorking()) {</div>
-<div class="line"><span class="lineno">  140</span>                <span class="keywordflow">if</span>(!<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#ae7bd479d9af076c6df001981ef4fc618">params_</a>.<a class="code hl_function" href="classdyno_1_1DynoParams.html#ab02ca24dcf94affa7705e9cdc63bd2d4">parallelRun</a>()) {</div>
-<div class="line"><span class="lineno">  141</span>                    <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a8d9e90b6192c573b290a76cf90321a8b">frontend_pipeline_</a>-&gt;spinOnce();</div>
-<div class="line"><span class="lineno">  142</span>                    <span class="keywordflow">if</span>(<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#ac54c14380931cb8fa4c7ccbd1b2ab2b9">backend_pipeline_</a>) <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#ac54c14380931cb8fa4c7ccbd1b2ab2b9">backend_pipeline_</a>-&gt;spinOnce();</div>
-<div class="line"><span class="lineno">  143</span>                }</div>
-<div class="line"><span class="lineno">  144</span>                <a class="code hl_function" href="classdyno_1_1DynoPipelineManager.html#a088564a2b3ea645611764a41fc290e67">spinViz</a>(); <span class="comment">//for now</span></div>
-<div class="line"><span class="lineno">  145</span>                <span class="comment">//a later problem!</span></div>
-<div class="line"><span class="lineno">  146</span>                <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  147</span>            }</div>
-<div class="line"><span class="lineno">  148</span>            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">  149</span>        };</div>
-<div class="line"><span class="lineno">  150</span>    }</div>
-<div class="line"><span class="lineno">  151</span> </div>
-<div class="line"><span class="lineno">  152</span>    utils::TimingStatsCollector timer(<span class="stringliteral">&quot;pipeline_spin&quot;</span>);</div>
-<div class="line"><span class="lineno">  153</span>    <span class="keywordflow">return</span> spin_func();</div>
-<div class="line"><span class="lineno">  154</span> </div>
-<div class="line"><span class="lineno">  155</span>}</div>
-<div class="ttc" id="aclassdyno_1_1DynoPipelineManager_html_a088564a2b3ea645611764a41fc290e67"><div class="ttname"><a href="classdyno_1_1DynoPipelineManager.html#a088564a2b3ea645611764a41fc290e67">dyno::DynoPipelineManager::spinViz</a></div><div class="ttdeci">virtual bool spinViz()</div><div class="ttdef"><b>Definition:</b> <a href="PipelineManager_8cc_source.html#l00157">PipelineManager.cc:157</a></div></div>
+<p class="definition">Definition at line <a class="el" href="PipelineManager_8cc_source.html#l00129">129</a> of file <a class="el" href="PipelineManager_8cc_source.html">PipelineManager.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  129</span>                               {</div>
+<div class="line"><span class="lineno">  130</span>  std::function&lt;bool()&gt; spin_func;</div>
+<div class="line"><span class="lineno">  131</span> </div>
+<div class="line"><span class="lineno">  132</span>  <span class="keywordflow">if</span> (<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#ad5b04b4152cef7080b3a5673b2ef6d71">use_offline_frontend_</a>) {</div>
+<div class="line"><span class="lineno">  133</span>    <span class="comment">// if we have an offline frontend only spiun the frontend pipeline</span></div>
+<div class="line"><span class="lineno">  134</span>    <span class="comment">// and no need to spin the viz (TODO: right now this is only images and not</span></div>
+<div class="line"><span class="lineno">  135</span>    <span class="comment">// the actual pipelines...)</span></div>
+<div class="line"><span class="lineno">  136</span>    spin_func = [=]() -&gt; <span class="keywordtype">bool</span> {</div>
+<div class="line"><span class="lineno">  137</span>      <span class="keywordflow">if</span> (<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a8d9e90b6192c573b290a76cf90321a8b">frontend_pipeline_</a>-&gt;isWorking()) {</div>
+<div class="line"><span class="lineno">  138</span>        <span class="keywordflow">if</span> (!<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#ae7bd479d9af076c6df001981ef4fc618">params_</a>.<a class="code hl_function" href="classdyno_1_1DynoParams.html#ab02ca24dcf94affa7705e9cdc63bd2d4">parallelRun</a>()) {</div>
+<div class="line"><span class="lineno">  139</span>          <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a8d9e90b6192c573b290a76cf90321a8b">frontend_pipeline_</a>-&gt;spinOnce();</div>
+<div class="line"><span class="lineno">  140</span>          <span class="keywordflow">if</span> (<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#ac54c14380931cb8fa4c7ccbd1b2ab2b9">backend_pipeline_</a>) <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#ac54c14380931cb8fa4c7ccbd1b2ab2b9">backend_pipeline_</a>-&gt;spinOnce();</div>
+<div class="line"><span class="lineno">  141</span>        }</div>
+<div class="line"><span class="lineno">  142</span>        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  143</span>      }</div>
+<div class="line"><span class="lineno">  144</span>      <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">  145</span>    };</div>
+<div class="line"><span class="lineno">  146</span>  } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  147</span>    <span class="comment">// regular spinner....</span></div>
+<div class="line"><span class="lineno">  148</span>    spin_func = [=]() -&gt; <span class="keywordtype">bool</span> {</div>
+<div class="line"><span class="lineno">  149</span>      <span class="keywordflow">if</span> (<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#afffb0f5366efd5a76512917447c3ab20">data_loader_</a>-&gt;spin() || <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a8d9e90b6192c573b290a76cf90321a8b">frontend_pipeline_</a>-&gt;isWorking()) {</div>
+<div class="line"><span class="lineno">  150</span>        <span class="keywordflow">if</span> (!<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#ae7bd479d9af076c6df001981ef4fc618">params_</a>.<a class="code hl_function" href="classdyno_1_1DynoParams.html#ab02ca24dcf94affa7705e9cdc63bd2d4">parallelRun</a>()) {</div>
+<div class="line"><span class="lineno">  151</span>          <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a8d9e90b6192c573b290a76cf90321a8b">frontend_pipeline_</a>-&gt;spinOnce();</div>
+<div class="line"><span class="lineno">  152</span>          <span class="keywordflow">if</span> (<a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#ac54c14380931cb8fa4c7ccbd1b2ab2b9">backend_pipeline_</a>) <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#ac54c14380931cb8fa4c7ccbd1b2ab2b9">backend_pipeline_</a>-&gt;spinOnce();</div>
+<div class="line"><span class="lineno">  153</span>        }</div>
+<div class="line"><span class="lineno">  154</span>        <a class="code hl_function" href="classdyno_1_1DynoPipelineManager.html#a088564a2b3ea645611764a41fc290e67">spinViz</a>();  <span class="comment">// for now</span></div>
+<div class="line"><span class="lineno">  155</span>        <span class="comment">// a later problem!</span></div>
+<div class="line"><span class="lineno">  156</span>        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  157</span>      }</div>
+<div class="line"><span class="lineno">  158</span>      <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">  159</span>    };</div>
+<div class="line"><span class="lineno">  160</span>  }</div>
+<div class="line"><span class="lineno">  161</span> </div>
+<div class="line"><span class="lineno">  162</span>  utils::TimingStatsCollector timer(<span class="stringliteral">&quot;pipeline_spin&quot;</span>);</div>
+<div class="line"><span class="lineno">  163</span>  <span class="keywordflow">return</span> spin_func();</div>
+<div class="line"><span class="lineno">  164</span>}</div>
+<div class="ttc" id="aclassdyno_1_1DynoPipelineManager_html_a088564a2b3ea645611764a41fc290e67"><div class="ttname"><a href="classdyno_1_1DynoPipelineManager.html#a088564a2b3ea645611764a41fc290e67">dyno::DynoPipelineManager::spinViz</a></div><div class="ttdeci">virtual bool spinViz()</div><div class="ttdef"><b>Definition:</b> <a href="PipelineManager_8cc_source.html#l00166">PipelineManager.cc:166</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1DynoPipelineManager.html#ac54c14380931cb8fa4c7ccbd1b2ab2b9">backend_pipeline_</a>, <a class="el" href="classdyno_1_1DynoPipelineManager.html#afffb0f5366efd5a76512917447c3ab20">data_loader_</a>, <a class="el" href="classdyno_1_1DynoPipelineManager.html#a8d9e90b6192c573b290a76cf90321a8b">frontend_pipeline_</a>, <a class="el" href="classdyno_1_1DynoParams.html#ab02ca24dcf94affa7705e9cdc63bd2d4">dyno::DynoParams::parallelRun()</a>, <a class="el" href="classdyno_1_1DynoPipelineManager.html#ae7bd479d9af076c6df001981ef4fc618">params_</a>, <a class="el" href="classdyno_1_1DynoPipelineManager.html#a088564a2b3ea645611764a41fc290e67">spinViz()</a>, and <a class="el" href="classdyno_1_1DynoPipelineManager.html#ad5b04b4152cef7080b3a5673b2ef6d71">use_offline_frontend_</a>.</p>
 <div class="dynheader">
@@ -868,12 +896,14 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PipelineManager_8cc_source.html#l00157">157</a> of file <a class="el" href="PipelineManager_8cc_source.html">PipelineManager.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  157</span>                                  {</div>
-<div class="line"><span class="lineno">  158</span>    <span class="comment">// if()</span></div>
-<div class="line"><span class="lineno">  159</span>    <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a238f201fbb69c513c43ae7421a49b4de">displayer_</a>.<a class="code hl_function" href="classdyno_1_1OpenCVImageDisplayQueue.html#af8fa9a44165ec7c4fd83d4251fc416c4">process</a>(); <span class="comment">//when enabled this gives a segafault when the process ends. when commented out the program just waits at thee end</span></div>
-<div class="line"><span class="lineno">  160</span>    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  161</span>}</div>
+<p class="definition">Definition at line <a class="el" href="PipelineManager_8cc_source.html#l00166">166</a> of file <a class="el" href="PipelineManager_8cc_source.html">PipelineManager.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  166</span>                                  {</div>
+<div class="line"><span class="lineno">  167</span>  <span class="comment">// if()</span></div>
+<div class="line"><span class="lineno">  168</span>  <a class="code hl_variable" href="classdyno_1_1DynoPipelineManager.html#a238f201fbb69c513c43ae7421a49b4de">displayer_</a></div>
+<div class="line"><span class="lineno">  169</span>      .<a class="code hl_function" href="classdyno_1_1OpenCVImageDisplayQueue.html#af8fa9a44165ec7c4fd83d4251fc416c4">process</a>();  <span class="comment">// when enabled this gives a segafault when the process ends.</span></div>
+<div class="line"><span class="lineno">  170</span>                   <span class="comment">// when commented out the program just waits at thee end</span></div>
+<div class="line"><span class="lineno">  171</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  172</span>}</div>
 <div class="ttc" id="aclassdyno_1_1OpenCVImageDisplayQueue_html_af8fa9a44165ec7c4fd83d4251fc416c4"><div class="ttname"><a href="classdyno_1_1OpenCVImageDisplayQueue.html#af8fa9a44165ec7c4fd83d4251fc416c4">dyno::OpenCVImageDisplayQueue::process</a></div><div class="ttdeci">void process()</div><div class="ttdef"><b>Definition:</b> <a href="Visualizer-Definitions_8cc_source.html#l00044">Visualizer-Definitions.cc:44</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1DynoPipelineManager.html#a238f201fbb69c513c43ae7421a49b4de">displayer_</a>, and <a class="el" href="classdyno_1_1OpenCVImageDisplayQueue.html#af8fa9a44165ec7c4fd83d4251fc416c4">dyno::OpenCVImageDisplayQueue::process()</a>.</p>

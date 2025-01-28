@@ -1,6 +1,4 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classThreadsafeQueueBase.html" title=" " alt="" coords="5,77,212,102"/>
-<area shape="rect" id="node2" href="$classThreadsafeQueue.html" title=" " alt="" coords="260,5,516,45"/>
-<area shape="rect" id="node3" href="$classThreadsafeQueue.html" title=" " alt="" coords="285,69,491,109"/>
-<area shape="rect" id="node4" href="$classThreadsafeQueue.html" title=" " alt="" coords="301,134,475,159"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,5,151,45"/>
+<area shape="rect" id="node2" href="$classdyno_1_1Map.html" title="A container that holds all connected information about static and dynamic entities that is build from..." alt="" coords="199,13,421,38"/>
 </map>

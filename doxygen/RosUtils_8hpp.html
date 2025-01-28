@@ -77,62 +77,73 @@ $(function() {
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#namespaces">Namespaces</a> &#124;
+<a href="#define-members">Macros</a> &#124;
+<a href="#typedef-members">Typedefs</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">RosUtils.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;<a class="el" href="Types_8hpp_source.html">dynosam/common/Types.hpp</a>&gt;</code><br />
-<code>#include &quot;rclcpp/time.hpp&quot;</code><br />
+<div class="textblock"><code>#include &lt;<a class="el" href="Exceptions_8hpp_source.html">dynosam/common/Exceptions.hpp</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="Types_8hpp_source.html">dynosam/common/Types.hpp</a>&gt;</code><br />
+<code>#include &lt;type_traits&gt;</code><br />
+<code>#include &quot;rcl_interfaces/msg/parameter.hpp&quot;</code><br />
 <code>#include &quot;rclcpp/node.hpp&quot;</code><br />
 <code>#include &quot;rclcpp/parameter.hpp&quot;</code><br />
-<code>#include &quot;rcl_interfaces/msg/parameter.hpp&quot;</code><br />
+<code>#include &quot;rclcpp/time.hpp&quot;</code><br />
 <code>#include &quot;rosidl_runtime_cpp/traits.hpp&quot;</code><br />
-<code>#include &lt;type_traits&gt;</code><br />
+<code>#include &quot;<a class="el" href="RosUtils-inl_8hpp_source.html">dynosam_ros/RosUtils-inl.hpp</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for RosUtils.hpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="RosUtils_8hpp__incl.png" border="0" usemap="#adynosam__ros_2include_2dynosam__ros_2RosUtils_8hpp" alt=""/></div>
 <map name="adynosam__ros_2include_2dynosam__ros_2RosUtils_8hpp" id="adynosam__ros_2include_2dynosam__ros_2RosUtils_8hpp">
-<area shape="rect" title=" " alt="" coords="3594,5,3793,45"/>
-<area shape="rect" href="Types_8hpp.html" title=" " alt="" coords="801,101,1013,126"/>
-<area shape="rect" title=" " alt="" coords="3436,335,3528,361"/>
-<area shape="rect" title=" " alt="" coords="3484,101,3607,126"/>
-<area shape="rect" title=" " alt="" coords="3631,101,3756,126"/>
-<area shape="rect" title=" " alt="" coords="3780,101,3940,126"/>
-<area shape="rect" title=" " alt="" coords="3965,93,4108,133"/>
-<area shape="rect" title=" " alt="" coords="4132,93,4279,133"/>
-<area shape="rect" title=" " alt="" coords="3296,335,3411,361"/>
-<area shape="rect" title=" " alt="" coords="3208,181,3376,207"/>
-<area shape="rect" title=" " alt="" coords="402,423,558,449"/>
-<area shape="rect" title=" " alt="" coords="518,335,704,361"/>
-<area shape="rect" title=" " alt="" coords="249,181,392,207"/>
-<area shape="rect" title=" " alt="" coords="3057,335,3272,361"/>
-<area shape="rect" title=" " alt="" coords="52,335,127,361"/>
-<area shape="rect" title=" " alt="" coords="702,181,800,207"/>
-<area shape="rect" title=" " alt="" coords="876,181,938,207"/>
-<area shape="rect" href="Flags_8hpp.html" title=" " alt="" coords="467,181,678,207"/>
-<area shape="rect" href="Macros_8hpp.html" title=" " alt="" coords="32,181,225,207"/>
-<area shape="rect" href="SensorModels_8hpp.html" title=" " alt="" coords="963,181,1230,207"/>
-<area shape="rect" title=" " alt="" coords="514,255,630,280"/>
-<area shape="rect" title=" " alt="" coords="127,255,204,280"/>
-<area shape="rect" title=" " alt="" coords="3018,423,3172,449"/>
-<area shape="rect" title=" " alt="" coords="998,255,1195,280"/>
-<area shape="rect" href="GtsamUtils_8hpp.html" title=" " alt="" coords="1746,255,1964,280"/>
-<area shape="rect" title=" " alt="" coords="728,335,926,361"/>
-<area shape="rect" title=" " alt="" coords="951,335,1138,361"/>
-<area shape="rect" title=" " alt="" coords="1162,335,1338,361"/>
-<area shape="rect" title=" " alt="" coords="1362,335,1543,361"/>
-<area shape="rect" title=" " alt="" coords="1568,335,1734,361"/>
-<area shape="rect" title=" " alt="" coords="1758,335,1952,361"/>
-<area shape="rect" title=" " alt="" coords="1976,335,2150,361"/>
-<area shape="rect" title=" " alt="" coords="2174,328,2368,368"/>
-<area shape="rect" title=" " alt="" coords="2392,335,2579,361"/>
-<area shape="rect" title=" " alt="" coords="2604,335,2744,361"/>
-<area shape="rect" href="Numerical_8hpp.html" title=" " alt="" coords="2768,335,2982,361"/>
-<area shape="rect" title=" " alt="" coords="2503,416,2684,456"/>
-<area shape="rect" title=" " alt="" coords="2708,416,2890,456"/>
-<area shape="rect" title=" " alt="" coords="2914,423,2994,449"/>
-<area shape="rect" title=" " alt="" coords="2405,423,2478,449"/>
+<area shape="rect" title=" " alt="" coords="2359,5,2557,45"/>
+<area shape="rect" href="Exceptions_8hpp.html" title=" " alt="" coords="173,101,420,126"/>
+<area shape="rect" href="Types_8hpp.html" title=" " alt="" coords="1521,101,1733,126"/>
+<area shape="rect" title=" " alt="" coords="4493,335,4585,361"/>
+<area shape="rect" title=" " alt="" coords="2441,93,2584,133"/>
+<area shape="rect" title=" " alt="" coords="2609,101,2734,126"/>
+<area shape="rect" title=" " alt="" coords="2758,101,2918,126"/>
+<area shape="rect" title=" " alt="" coords="2942,101,3065,126"/>
+<area shape="rect" title=" " alt="" coords="3089,93,3235,133"/>
+<area shape="rect" href="RosUtils-inl_8hpp.html" title=" " alt="" coords="1331,93,1497,133"/>
+<area shape="rect" title=" " alt="" coords="5,181,92,207"/>
+<area shape="rect" title=" " alt="" coords="117,181,175,207"/>
+<area shape="rect" title=" " alt="" coords="200,181,287,207"/>
+<area shape="rect" title=" " alt="" coords="311,181,387,207"/>
+<area shape="rect" title=" " alt="" coords="411,181,486,207"/>
+<area shape="rect" title=" " alt="" coords="517,335,631,361"/>
+<area shape="rect" title=" " alt="" coords="611,181,779,207"/>
+<area shape="rect" title=" " alt="" coords="1601,423,1757,449"/>
+<area shape="rect" title=" " alt="" coords="4284,335,4469,361"/>
+<area shape="rect" title=" " alt="" coords="804,181,947,207"/>
+<area shape="rect" title=" " alt="" coords="1768,335,1983,361"/>
+<area shape="rect" title=" " alt="" coords="1439,335,1514,361"/>
+<area shape="rect" title=" " alt="" coords="971,181,1068,207"/>
+<area shape="rect" title=" " alt="" coords="1092,181,1155,207"/>
+<area shape="rect" href="Flags_8hpp.html" title=" " alt="" coords="1178,181,1389,207"/>
+<area shape="rect" href="Macros_8hpp.html" title=" " alt="" coords="1464,181,1657,207"/>
+<area shape="rect" href="SensorModels_8hpp.html" title=" " alt="" coords="1733,181,1999,207"/>
+<area shape="rect" title=" " alt="" coords="1225,255,1341,280"/>
+<area shape="rect" title=" " alt="" coords="1514,255,1591,280"/>
+<area shape="rect" title=" " alt="" coords="2177,423,2331,449"/>
+<area shape="rect" title=" " alt="" coords="2635,255,2833,280"/>
+<area shape="rect" href="GtsamUtils_8hpp.html" title=" " alt="" coords="2393,255,2611,280"/>
+<area shape="rect" title=" " alt="" coords="3444,335,3643,361"/>
+<area shape="rect" title=" " alt="" coords="3667,335,3854,361"/>
+<area shape="rect" title=" " alt="" coords="3878,335,4054,361"/>
+<area shape="rect" title=" " alt="" coords="4078,335,4259,361"/>
+<area shape="rect" title=" " alt="" coords="2007,335,2173,361"/>
+<area shape="rect" title=" " alt="" coords="2197,335,2391,361"/>
+<area shape="rect" title=" " alt="" coords="2415,335,2589,361"/>
+<area shape="rect" title=" " alt="" coords="2613,328,2807,368"/>
+<area shape="rect" title=" " alt="" coords="3069,335,3255,361"/>
+<area shape="rect" title=" " alt="" coords="3280,335,3420,361"/>
+<area shape="rect" href="Numerical_8hpp.html" title=" " alt="" coords="2831,335,3045,361"/>
+<area shape="rect" title=" " alt="" coords="2745,416,2926,456"/>
+<area shape="rect" title=" " alt="" coords="2950,416,3131,456"/>
+<area shape="rect" title=" " alt="" coords="3155,423,3235,449"/>
+<area shape="rect" title=" " alt="" coords="2647,423,2720,449"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -140,10 +151,16 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="RosUtils_8hpp__dep__incl.png" border="0" usemap="#adynosam__ros_2include_2dynosam__ros_2RosUtils_8hppdep" alt=""/></div>
 <map name="adynosam__ros_2include_2dynosam__ros_2RosUtils_8hppdep" id="adynosam__ros_2include_2dynosam__ros_2RosUtils_8hppdep">
-<area shape="rect" title=" " alt="" coords="283,5,482,45"/>
-<area shape="rect" href="BackendDisplayRos_8cc.html" title=" " alt="" coords="5,93,245,133"/>
-<area shape="rect" href="DisplayRos_8cc.html" title=" " alt="" coords="269,101,496,126"/>
-<area shape="rect" href="FrontendDisplayRos_8cc.html" title=" " alt="" coords="521,93,714,133"/>
+<area shape="rect" title=" " alt="" coords="749,5,947,45"/>
+<area shape="rect" href="RosUtils-inl_8hpp.html" title=" " alt="" coords="5,93,176,148"/>
+<area shape="rect" href="PipelineRos_8cc.html" title=" " alt="" coords="201,101,389,141"/>
+<area shape="rect" href="RosUtils_8cc.html" title=" " alt="" coords="413,108,621,133"/>
+<area shape="rect" href="DisplaysCommon_8cc.html" title=" " alt="" coords="646,101,837,141"/>
+<area shape="rect" href="DSDCommonRos_8cc.html" title=" " alt="" coords="861,93,1051,148"/>
+<area shape="rect" href="FrontendDSDRos_8cc.html" title=" " alt="" coords="1075,93,1266,148"/>
+<area shape="rect" href="BackendInbuiltDisplayRos_8cc.html" title=" " alt="" coords="1290,93,1518,148"/>
+<area shape="rect" href="FrontendInbuiltDisplayRos_8cc.html" title=" " alt="" coords="1542,93,1773,148"/>
+<area shape="rect" href="InbuiltDisplayCommon_8cc.html" title=" " alt="" coords="1797,93,2019,148"/>
 </map>
 </div>
 </div>
@@ -151,6 +168,8 @@ This graph shows which files directly or indirectly include this file:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1internal_1_1type__identity.html">dyno::internal::type_identity&lt; T &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1internal_1_1HasMsgHeader.html">dyno::internal::HasMsgHeader&lt; Msg, typename &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1internal_1_1HasMsgHeader_3_01Msg_00_01decltype_07_07void_08_01Msg_1_1header_00_010_08_4.html">dyno::internal::HasMsgHeader&lt; Msg, decltype((void) Msg::header, 0)&gt;</a></td></tr>
@@ -158,6 +177,19 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1internal_1_1HasChildFrame.html">dyno::internal::HasChildFrame&lt; Msg, typename &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1internal_1_1HasChildFrame_3_01Msg_00_01decltype_07_07void_08_01Msg_1_1child__frame__id_00_010_08_4.html">dyno::internal::HasChildFrame&lt; Msg, decltype((void) Msg::child_frame_id, 0)&gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1internal_1_1RosParameterType.html">dyno::internal::RosParameterType&lt; Type &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1internal_1_1CppParameterType.html">dyno::internal::CppParameterType&lt; CPP_TYPE &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type trait to retrieve a.  <a href="structdyno_1_1internal_1_1CppParameterType.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1InvalidDefaultParameter.html">dyno::InvalidDefaultParameter</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Exception thrown when a parameter is missing a default parameter and MUST be set by the user at runtime (ie. no default value allowed)  <a href="classdyno_1_1InvalidDefaultParameter.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1ParameterDetails.html">dyno::ParameterDetails</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1ParameterConstructor.html">dyno::ParameterConstructor</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Wrapper class to define paramter details. Using these details a <a class="el" href="classdyno_1_1ParameterDetails.html">ParameterDetails</a> object can be created which declares the paramter with its associated node automatically and can be used to directly access the latest value.  <a href="classdyno_1_1ParameterConstructor.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
@@ -170,6 +202,17 @@ Namespaces</h2></td></tr>
 <tr class="memitem:namespacedyno_1_1utils"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno_1_1utils.html">dyno::utils</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:a4828e6dc4cf0cbd74c456d832d273d25"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="RosUtils_8hpp.html#a4828e6dc4cf0cbd74c456d832d273d25">DECLARE_ROS_PARAM_TYPE_CONVERSIONS</a>(CPP_TYPE,  PARAMETER_TYPE)</td></tr>
+<tr class="separator:a4828e6dc4cf0cbd74c456d832d273d25"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:a4a8bf733efbf818f18335cd89139da25"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
+<tr class="memitem:a4a8bf733efbf818f18335cd89139da25"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacedyno_1_1internal.html#a4a8bf733efbf818f18335cd89139da25">dyno::internal::type_identity_t</a> = typename type_identity&lt; T &gt;::type</td></tr>
+<tr class="separator:a4a8bf733efbf818f18335cd89139da25"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a367447d229280a53123017719e94f0d9"><td class="memItemLeft" align="right" valign="top">Timestamp&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno_1_1utils.html#a367447d229280a53123017719e94f0d9">dyno::utils::fromRosTime</a> (const rclcpp::Time &amp;time)</td></tr>
@@ -178,11 +221,113 @@ Functions</h2></td></tr>
 <tr class="memitem:a81025ee06847cec0fd854eff05362d19"><td class="memItemLeft" align="right" valign="top">rclcpp::Time&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno_1_1utils.html#a81025ee06847cec0fd854eff05362d19">dyno::utils::toRosTime</a> (Timestamp timestamp)</td></tr>
 <tr class="memdesc:a81025ee06847cec0fd854eff05362d19"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts Timestamp (in seconds) to ROS time.  <br /></td></tr>
 <tr class="separator:a81025ee06847cec0fd854eff05362d19"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7efb03484e6c5b1cc0d0eeeb43546ffa"><td class="memTemplParams" colspan="2">template&lt;typename INPUT , typename OUTPUT , typename  = std::enable_if_t&lt;rosidl_generator_traits::is_message&lt;OUTPUT&gt;::value&gt;&gt; </td></tr>
+<tr class="memitem:a7efb03484e6c5b1cc0d0eeeb43546ffa"><td class="memTemplParams" colspan="2">template&lt;typename INPUT , typename OUTPUT , typename  = std::enable_if_t&lt;              rosidl_generator_traits::is_message&lt;OUTPUT&gt;::value&gt;&gt; </td></tr>
 <tr class="memitem:a7efb03484e6c5b1cc0d0eeeb43546ffa"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacedyno_1_1utils.html#a7efb03484e6c5b1cc0d0eeeb43546ffa">dyno::utils::convertWithHeader</a> (const INPUT &amp;input, OUTPUT &amp;output, Timestamp timestamp, const std::string &amp;frame_id, std::optional&lt; std::string &gt; child_frame_id=std::nullopt)</td></tr>
 <tr class="memdesc:a7efb03484e6c5b1cc0d0eeeb43546ffa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts from input type to output type where output type is a ROS message with a header. OUTPUT type MUST be a ROS message type.  <br /></td></tr>
 <tr class="separator:a7efb03484e6c5b1cc0d0eeeb43546ffa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab9177fecc53c5abc59c07ec7f3536241"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="RosUtils_8hpp.html#ab9177fecc53c5abc59c07ec7f3536241">DECLARE_ROS_PARAM_TYPE_CONVERSIONS</a> (bool, rcl_interfaces::msg::ParameterType::PARAMETER_BOOL) DECLARE_ROS_PARAM_TYPE_CONVERSIONS(int</td></tr>
+<tr class="separator:ab9177fecc53c5abc59c07ec7f3536241"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa9274f840ee26b6637f551a12a2d8000"><td class="memItemLeft" align="right" valign="top">rcl_interfaces::msg::ParameterType::PARAMETER_INTEGER&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="RosUtils_8hpp.html#aa9274f840ee26b6637f551a12a2d8000">DECLARE_ROS_PARAM_TYPE_CONVERSIONS</a> (double, rcl_interfaces::msg::ParameterType::PARAMETER_DOUBLE) DECLARE_ROS_PARAM_TYPE_CONVERSIONS(const char *</td></tr>
+<tr class="separator:aa9274f840ee26b6637f551a12a2d8000"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="a4828e6dc4cf0cbd74c456d832d273d25" name="a4828e6dc4cf0cbd74c456d832d273d25"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4828e6dc4cf0cbd74c456d832d273d25">&#9670;&#160;</a></span>DECLARE_ROS_PARAM_TYPE_CONVERSIONS</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define DECLARE_ROS_PARAM_TYPE_CONVERSIONS</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">CPP_TYPE, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">PARAMETER_TYPE&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">  <span class="keyword">template</span> &lt;&gt;                                                        \</div>
+<div class="line">  <span class="keyword">struct </span><a class="code hl_struct" href="structdyno_1_1traits.html">dyno::traits</a>&lt;CPP_TYPE&gt;                                      \</div>
+<div class="line">      : <a class="code hl_struct" href="structdyno_1_1internal_1_1RosParameterType.html">dyno::internal::RosParameterType</a>&lt;PARAMETER_TYPE&gt; {};         \</div>
+<div class="line">  <span class="keyword">template</span> &lt;&gt;                                                        \</div>
+<div class="line">  <span class="keyword">struct </span><a class="code hl_struct" href="structdyno_1_1ros__param__traits.html">dyno::ros_param_traits</a>&lt;PARAMETER_TYPE&gt;                      \</div>
+<div class="line">      : <a class="code hl_struct" href="structdyno_1_1internal_1_1CppParameterType.html">dyno::internal::CppParameterType</a>&lt;CPP_TYPE&gt; {};</div>
+<div class="ttc" id="astructdyno_1_1internal_1_1CppParameterType_html"><div class="ttname"><a href="structdyno_1_1internal_1_1CppParameterType.html">dyno::internal::CppParameterType</a></div><div class="ttdoc">Type trait to retrieve a.</div><div class="ttdef"><b>Definition:</b> <a href="RosUtils_8hpp_source.html#l00114">RosUtils.hpp:114</a></div></div>
+<div class="ttc" id="astructdyno_1_1internal_1_1RosParameterType_html"><div class="ttname"><a href="structdyno_1_1internal_1_1RosParameterType.html">dyno::internal::RosParameterType</a></div><div class="ttdef"><b>Definition:</b> <a href="RosUtils_8hpp_source.html#l00098">RosUtils.hpp:98</a></div></div>
+<div class="ttc" id="astructdyno_1_1ros__param__traits_html"><div class="ttname"><a href="structdyno_1_1ros__param__traits.html">dyno::ros_param_traits</a></div><div class="ttdoc">Type trait to retrieve a c++ type from the corresponding rcl_interfaces::msg::ParameterType....</div><div class="ttdef"><b>Definition:</b> <a href="RosUtils_8hpp_source.html#l00070">RosUtils.hpp:70</a></div></div>
+<div class="ttc" id="astructdyno_1_1traits_html"><div class="ttname"><a href="structdyno_1_1traits.html">dyno::traits</a></div><div class="ttdoc">A generic type trait with the dyno namespace. Here we define compile time conversions between c++ typ...</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00060">Types.hpp:60</a></div></div>
+</div><!-- fragment -->
+<p class="definition">Definition at line <a class="el" href="RosUtils_8hpp_source.html#l00448">448</a> of file <a class="el" href="RosUtils_8hpp_source.html">RosUtils.hpp</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="ab9177fecc53c5abc59c07ec7f3536241" name="ab9177fecc53c5abc59c07ec7f3536241"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab9177fecc53c5abc59c07ec7f3536241">&#9670;&#160;</a></span>DECLARE_ROS_PARAM_TYPE_CONVERSIONS() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">DECLARE_ROS_PARAM_TYPE_CONVERSIONS </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">rcl_interfaces::msg::ParameterType::PARAMETER_BOOL&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa9274f840ee26b6637f551a12a2d8000" name="aa9274f840ee26b6637f551a12a2d8000"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa9274f840ee26b6637f551a12a2d8000">&#9670;&#160;</a></span>DECLARE_ROS_PARAM_TYPE_CONVERSIONS() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">rcl_interfaces::msg::ParameterType::PARAMETER_INTEGER DECLARE_ROS_PARAM_TYPE_CONVERSIONS </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">rcl_interfaces::msg::ParameterType::PARAMETER_DOUBLE&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

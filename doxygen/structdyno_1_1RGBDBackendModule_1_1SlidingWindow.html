@@ -115,7 +115,7 @@ Public Attributes</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Helper struct to determine the conditions for the sliding window optimisation. Only works when called in consequative frame order as we use the last trigger frame (the last frame when the sliding window conditions were true) to determine the next one. </p>
 
-<p class="definition">Definition at line <a class="el" href="RGBDBackendModule_8hpp_source.html#l00091">91</a> of file <a class="el" href="RGBDBackendModule_8hpp_source.html">RGBDBackendModule.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="RGBDBackendModule_8hpp_source.html#l00087">87</a> of file <a class="el" href="RGBDBackendModule_8hpp_source.html">RGBDBackendModule.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="aac5f49c22ceade4e362582f9a87584f6" name="aac5f49c22ceade4e362582f9a87584f6"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aac5f49c22ceade4e362582f9a87584f6">&#9670;&#160;</a></span>SlidingWindow()</h2>
@@ -152,13 +152,13 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p>The first frame that is checked. Used to offset the condition checking if the first frame is not zero! </p>
 
-<p class="definition">Definition at line <a class="el" href="RGBDBackendModule_8hpp_source.html#l00119">119</a> of file <a class="el" href="RGBDBackendModule_8hpp_source.html">RGBDBackendModule.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  120</span>        : <a class="code hl_variable" href="structdyno_1_1RGBDBackendModule_1_1SlidingWindow.html#a40adfa5be40a03361c4ff8bf1618669d">sliding_window</a>(window),</div>
-<div class="line"><span class="lineno">  121</span>          <a class="code hl_variable" href="structdyno_1_1RGBDBackendModule_1_1SlidingWindow.html#a80f881408b5cd5dcd2c04408b463bb74">overlap_size</a>(overlap),</div>
-<div class="line"><span class="lineno">  122</span>          <a class="code hl_variable" href="structdyno_1_1RGBDBackendModule_1_1SlidingWindow.html#a9017ec87e45bcc485c1dc8f1d539fc1d">previous_trigger_frame</a>(overlap) {}</div>
-<div class="ttc" id="astructdyno_1_1RGBDBackendModule_1_1SlidingWindow_html_a40adfa5be40a03361c4ff8bf1618669d"><div class="ttname"><a href="structdyno_1_1RGBDBackendModule_1_1SlidingWindow.html#a40adfa5be40a03361c4ff8bf1618669d">dyno::RGBDBackendModule::SlidingWindow::sliding_window</a></div><div class="ttdeci">const int sliding_window</div><div class="ttdef"><b>Definition:</b> <a href="RGBDBackendModule_8hpp_source.html#l00109">RGBDBackendModule.hpp:109</a></div></div>
-<div class="ttc" id="astructdyno_1_1RGBDBackendModule_1_1SlidingWindow_html_a80f881408b5cd5dcd2c04408b463bb74"><div class="ttname"><a href="structdyno_1_1RGBDBackendModule_1_1SlidingWindow.html#a80f881408b5cd5dcd2c04408b463bb74">dyno::RGBDBackendModule::SlidingWindow::overlap_size</a></div><div class="ttdeci">const int overlap_size</div><div class="ttdef"><b>Definition:</b> <a href="RGBDBackendModule_8hpp_source.html#l00110">RGBDBackendModule.hpp:110</a></div></div>
-<div class="ttc" id="astructdyno_1_1RGBDBackendModule_1_1SlidingWindow_html_a9017ec87e45bcc485c1dc8f1d539fc1d"><div class="ttname"><a href="structdyno_1_1RGBDBackendModule_1_1SlidingWindow.html#a9017ec87e45bcc485c1dc8f1d539fc1d">dyno::RGBDBackendModule::SlidingWindow::previous_trigger_frame</a></div><div class="ttdeci">int previous_trigger_frame</div><div class="ttdef"><b>Definition:</b> <a href="RGBDBackendModule_8hpp_source.html#l00111">RGBDBackendModule.hpp:111</a></div></div>
+<p class="definition">Definition at line <a class="el" href="RGBDBackendModule_8hpp_source.html#l00115">115</a> of file <a class="el" href="RGBDBackendModule_8hpp_source.html">RGBDBackendModule.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  116</span>        : <a class="code hl_variable" href="structdyno_1_1RGBDBackendModule_1_1SlidingWindow.html#a40adfa5be40a03361c4ff8bf1618669d">sliding_window</a>(window),</div>
+<div class="line"><span class="lineno">  117</span>          <a class="code hl_variable" href="structdyno_1_1RGBDBackendModule_1_1SlidingWindow.html#a80f881408b5cd5dcd2c04408b463bb74">overlap_size</a>(overlap),</div>
+<div class="line"><span class="lineno">  118</span>          <a class="code hl_variable" href="structdyno_1_1RGBDBackendModule_1_1SlidingWindow.html#a9017ec87e45bcc485c1dc8f1d539fc1d">previous_trigger_frame</a>(overlap) {}</div>
+<div class="ttc" id="astructdyno_1_1RGBDBackendModule_1_1SlidingWindow_html_a40adfa5be40a03361c4ff8bf1618669d"><div class="ttname"><a href="structdyno_1_1RGBDBackendModule_1_1SlidingWindow.html#a40adfa5be40a03361c4ff8bf1618669d">dyno::RGBDBackendModule::SlidingWindow::sliding_window</a></div><div class="ttdeci">const int sliding_window</div><div class="ttdef"><b>Definition:</b> <a href="RGBDBackendModule_8hpp_source.html#l00105">RGBDBackendModule.hpp:105</a></div></div>
+<div class="ttc" id="astructdyno_1_1RGBDBackendModule_1_1SlidingWindow_html_a80f881408b5cd5dcd2c04408b463bb74"><div class="ttname"><a href="structdyno_1_1RGBDBackendModule_1_1SlidingWindow.html#a80f881408b5cd5dcd2c04408b463bb74">dyno::RGBDBackendModule::SlidingWindow::overlap_size</a></div><div class="ttdeci">const int overlap_size</div><div class="ttdef"><b>Definition:</b> <a href="RGBDBackendModule_8hpp_source.html#l00106">RGBDBackendModule.hpp:106</a></div></div>
+<div class="ttc" id="astructdyno_1_1RGBDBackendModule_1_1SlidingWindow_html_a9017ec87e45bcc485c1dc8f1d539fc1d"><div class="ttname"><a href="structdyno_1_1RGBDBackendModule_1_1SlidingWindow.html#a9017ec87e45bcc485c1dc8f1d539fc1d">dyno::RGBDBackendModule::SlidingWindow::previous_trigger_frame</a></div><div class="ttdeci">int previous_trigger_frame</div><div class="ttdef"><b>Definition:</b> <a href="RGBDBackendModule_8hpp_source.html#l00107">RGBDBackendModule.hpp:107</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -187,34 +187,34 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="RGBDBackendModule_8hpp_source.html#l00124">124</a> of file <a class="el" href="RGBDBackendModule_8hpp_source.html">RGBDBackendModule.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  124</span>                                  {</div>
-<div class="line"><span class="lineno">  125</span>      <span class="keywordflow">if</span> (<a class="code hl_variable" href="structdyno_1_1RGBDBackendModule_1_1SlidingWindow.html#a711d6217dca1a6ad67f93ceff096e737">first_frame</a> == -1) {</div>
-<div class="line"><span class="lineno">  126</span>        <a class="code hl_variable" href="structdyno_1_1RGBDBackendModule_1_1SlidingWindow.html#a711d6217dca1a6ad67f93ceff096e737">first_frame</a> = <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(frame_k);</div>
-<div class="line"><span class="lineno">  127</span>        CHECK_GE(<a class="code hl_variable" href="structdyno_1_1RGBDBackendModule_1_1SlidingWindow.html#a711d6217dca1a6ad67f93ceff096e737">first_frame</a>, 0);</div>
-<div class="line"><span class="lineno">  128</span>      }</div>
-<div class="line"><span class="lineno">  129</span> </div>
-<div class="line"><span class="lineno">  130</span>      <span class="keyword">auto</span> frame = <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(frame_k) - <a class="code hl_variable" href="structdyno_1_1RGBDBackendModule_1_1SlidingWindow.html#a711d6217dca1a6ad67f93ceff096e737">first_frame</a>;</div>
-<div class="line"><span class="lineno">  131</span>      <span class="keyword">const</span> <span class="keywordtype">bool</span> condition =</div>
-<div class="line"><span class="lineno">  132</span>          (<a class="code hl_variable" href="structdyno_1_1RGBDBackendModule_1_1SlidingWindow.html#a9017ec87e45bcc485c1dc8f1d539fc1d">previous_trigger_frame</a> - (frame - <a class="code hl_variable" href="structdyno_1_1RGBDBackendModule_1_1SlidingWindow.html#a40adfa5be40a03361c4ff8bf1618669d">sliding_window</a>)) == <a class="code hl_variable" href="structdyno_1_1RGBDBackendModule_1_1SlidingWindow.html#a80f881408b5cd5dcd2c04408b463bb74">overlap_size</a>;</div>
-<div class="line"><span class="lineno">  133</span>      <span class="keywordflow">if</span> (condition) {</div>
-<div class="line"><span class="lineno">  134</span>        <a class="code hl_variable" href="structdyno_1_1RGBDBackendModule_1_1SlidingWindow.html#a9017ec87e45bcc485c1dc8f1d539fc1d">previous_trigger_frame</a> = frame;</div>
-<div class="line"><span class="lineno">  135</span>      }</div>
-<div class="line"><span class="lineno">  136</span> </div>
-<div class="line"><span class="lineno">  137</span>      Result result;</div>
-<div class="line"><span class="lineno">  138</span>      result.condition = condition;</div>
-<div class="line"><span class="lineno">  139</span>      result.ending_frame = frame_k;</div>
-<div class="line"><span class="lineno">  140</span>      <span class="keywordtype">int</span> starting_frame = frame_k - <a class="code hl_variable" href="structdyno_1_1RGBDBackendModule_1_1SlidingWindow.html#a40adfa5be40a03361c4ff8bf1618669d">sliding_window</a>;</div>
-<div class="line"><span class="lineno">  141</span> </div>
-<div class="line"><span class="lineno">  142</span>      <span class="comment">// some logic checks</span></div>
-<div class="line"><span class="lineno">  143</span>      <span class="keywordflow">if</span> (condition) {</div>
-<div class="line"><span class="lineno">  144</span>        CHECK_GE(starting_frame, <a class="code hl_variable" href="structdyno_1_1RGBDBackendModule_1_1SlidingWindow.html#a711d6217dca1a6ad67f93ceff096e737">first_frame</a>);</div>
-<div class="line"><span class="lineno">  145</span>      }</div>
-<div class="line"><span class="lineno">  146</span>      result.starting_frame = <span class="keyword">static_cast&lt;</span><a class="code hl_typedef" href="namespacedyno.html#ac4303d6fafb755f794b072d76f9cfb41">FrameId</a><span class="keyword">&gt;</span>(starting_frame);</div>
-<div class="line"><span class="lineno">  147</span>      <span class="keywordflow">return</span> result;</div>
-<div class="line"><span class="lineno">  148</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="RGBDBackendModule_8hpp_source.html#l00120">120</a> of file <a class="el" href="RGBDBackendModule_8hpp_source.html">RGBDBackendModule.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  120</span>                                  {</div>
+<div class="line"><span class="lineno">  121</span>      <span class="keywordflow">if</span> (<a class="code hl_variable" href="structdyno_1_1RGBDBackendModule_1_1SlidingWindow.html#a711d6217dca1a6ad67f93ceff096e737">first_frame</a> == -1) {</div>
+<div class="line"><span class="lineno">  122</span>        <a class="code hl_variable" href="structdyno_1_1RGBDBackendModule_1_1SlidingWindow.html#a711d6217dca1a6ad67f93ceff096e737">first_frame</a> = <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(frame_k);</div>
+<div class="line"><span class="lineno">  123</span>        CHECK_GE(<a class="code hl_variable" href="structdyno_1_1RGBDBackendModule_1_1SlidingWindow.html#a711d6217dca1a6ad67f93ceff096e737">first_frame</a>, 0);</div>
+<div class="line"><span class="lineno">  124</span>      }</div>
+<div class="line"><span class="lineno">  125</span> </div>
+<div class="line"><span class="lineno">  126</span>      <span class="keyword">auto</span> frame = <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(frame_k) - <a class="code hl_variable" href="structdyno_1_1RGBDBackendModule_1_1SlidingWindow.html#a711d6217dca1a6ad67f93ceff096e737">first_frame</a>;</div>
+<div class="line"><span class="lineno">  127</span>      <span class="keyword">const</span> <span class="keywordtype">bool</span> condition =</div>
+<div class="line"><span class="lineno">  128</span>          (<a class="code hl_variable" href="structdyno_1_1RGBDBackendModule_1_1SlidingWindow.html#a9017ec87e45bcc485c1dc8f1d539fc1d">previous_trigger_frame</a> - (frame - <a class="code hl_variable" href="structdyno_1_1RGBDBackendModule_1_1SlidingWindow.html#a40adfa5be40a03361c4ff8bf1618669d">sliding_window</a>)) == <a class="code hl_variable" href="structdyno_1_1RGBDBackendModule_1_1SlidingWindow.html#a80f881408b5cd5dcd2c04408b463bb74">overlap_size</a>;</div>
+<div class="line"><span class="lineno">  129</span>      <span class="keywordflow">if</span> (condition) {</div>
+<div class="line"><span class="lineno">  130</span>        <a class="code hl_variable" href="structdyno_1_1RGBDBackendModule_1_1SlidingWindow.html#a9017ec87e45bcc485c1dc8f1d539fc1d">previous_trigger_frame</a> = frame;</div>
+<div class="line"><span class="lineno">  131</span>      }</div>
+<div class="line"><span class="lineno">  132</span> </div>
+<div class="line"><span class="lineno">  133</span>      Result result;</div>
+<div class="line"><span class="lineno">  134</span>      result.condition = condition;</div>
+<div class="line"><span class="lineno">  135</span>      result.ending_frame = frame_k;</div>
+<div class="line"><span class="lineno">  136</span>      <span class="keywordtype">int</span> starting_frame = frame_k - <a class="code hl_variable" href="structdyno_1_1RGBDBackendModule_1_1SlidingWindow.html#a40adfa5be40a03361c4ff8bf1618669d">sliding_window</a>;</div>
+<div class="line"><span class="lineno">  137</span> </div>
+<div class="line"><span class="lineno">  138</span>      <span class="comment">// some logic checks</span></div>
+<div class="line"><span class="lineno">  139</span>      <span class="keywordflow">if</span> (condition) {</div>
+<div class="line"><span class="lineno">  140</span>        CHECK_GE(starting_frame, <a class="code hl_variable" href="structdyno_1_1RGBDBackendModule_1_1SlidingWindow.html#a711d6217dca1a6ad67f93ceff096e737">first_frame</a>);</div>
+<div class="line"><span class="lineno">  141</span>      }</div>
+<div class="line"><span class="lineno">  142</span>      result.starting_frame = <span class="keyword">static_cast&lt;</span><a class="code hl_typedef" href="namespacedyno.html#ac4303d6fafb755f794b072d76f9cfb41">FrameId</a><span class="keyword">&gt;</span>(starting_frame);</div>
+<div class="line"><span class="lineno">  143</span>      <span class="keywordflow">return</span> result;</div>
+<div class="line"><span class="lineno">  144</span>    }</div>
 <div class="ttc" id="anamespacedyno_html_ac4303d6fafb755f794b072d76f9cfb41"><div class="ttname"><a href="namespacedyno.html#ac4303d6fafb755f794b072d76f9cfb41">dyno::FrameId</a></div><div class="ttdeci">size_t FrameId</div><div class="ttdoc">Discrete time-step k.</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00072">Types.hpp:72</a></div></div>
-<div class="ttc" id="astructdyno_1_1RGBDBackendModule_1_1SlidingWindow_html_a711d6217dca1a6ad67f93ceff096e737"><div class="ttname"><a href="structdyno_1_1RGBDBackendModule_1_1SlidingWindow.html#a711d6217dca1a6ad67f93ceff096e737">dyno::RGBDBackendModule::SlidingWindow::first_frame</a></div><div class="ttdeci">int first_frame</div><div class="ttdef"><b>Definition:</b> <a href="RGBDBackendModule_8hpp_source.html#l00114">RGBDBackendModule.hpp:114</a></div></div>
+<div class="ttc" id="astructdyno_1_1RGBDBackendModule_1_1SlidingWindow_html_a711d6217dca1a6ad67f93ceff096e737"><div class="ttname"><a href="structdyno_1_1RGBDBackendModule_1_1SlidingWindow.html#a711d6217dca1a6ad67f93ceff096e737">dyno::RGBDBackendModule::SlidingWindow::first_frame</a></div><div class="ttdeci">int first_frame</div><div class="ttdef"><b>Definition:</b> <a href="RGBDBackendModule_8hpp_source.html#l00110">RGBDBackendModule.hpp:110</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="structdyno_1_1RGBDBackendModule_1_1SlidingWindow_1_1Result.html#a70eaf99cb4cfa36b5a7fa76b8935e589">dyno::RGBDBackendModule::SlidingWindow::Result::condition</a>, <a class="el" href="structdyno_1_1RGBDBackendModule_1_1SlidingWindow_1_1Result.html#a328c9e3f17ea066adb33c0bb1262edaf">dyno::RGBDBackendModule::SlidingWindow::Result::ending_frame</a>, <a class="el" href="structdyno_1_1RGBDBackendModule_1_1SlidingWindow.html#a711d6217dca1a6ad67f93ceff096e737">first_frame</a>, <a class="el" href="structdyno_1_1RGBDBackendModule_1_1SlidingWindow.html#a80f881408b5cd5dcd2c04408b463bb74">overlap_size</a>, <a class="el" href="structdyno_1_1RGBDBackendModule_1_1SlidingWindow.html#a9017ec87e45bcc485c1dc8f1d539fc1d">previous_trigger_frame</a>, <a class="el" href="structdyno_1_1RGBDBackendModule_1_1SlidingWindow.html#a40adfa5be40a03361c4ff8bf1618669d">sliding_window</a>, and <a class="el" href="structdyno_1_1RGBDBackendModule_1_1SlidingWindow_1_1Result.html#a5ad3ae246eec96c1b7352ff82ac9c360">dyno::RGBDBackendModule::SlidingWindow::Result::starting_frame</a>.</p>
 
@@ -236,7 +236,7 @@ Public Attributes</h2></td></tr>
 <div class="line">        -1}</div>
 </div><!-- fragment --><p>The last frame where the sliding window conditions were true. Used to determine the next frame </p>
 
-<p class="definition">Definition at line <a class="el" href="RGBDBackendModule_8hpp_source.html#l00114">114</a> of file <a class="el" href="RGBDBackendModule_8hpp_source.html">RGBDBackendModule.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="RGBDBackendModule_8hpp_source.html#l00110">110</a> of file <a class="el" href="RGBDBackendModule_8hpp_source.html">RGBDBackendModule.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="structdyno_1_1RGBDBackendModule_1_1SlidingWindow.html#a09708c9598b961802399d9bc4d4aaa61">check()</a>.</p>
 
@@ -254,7 +254,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="RGBDBackendModule_8hpp_source.html#l00110">110</a> of file <a class="el" href="RGBDBackendModule_8hpp_source.html">RGBDBackendModule.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="RGBDBackendModule_8hpp_source.html#l00106">106</a> of file <a class="el" href="RGBDBackendModule_8hpp_source.html">RGBDBackendModule.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="structdyno_1_1RGBDBackendModule_1_1SlidingWindow.html#a09708c9598b961802399d9bc4d4aaa61">check()</a>.</p>
 
@@ -274,7 +274,7 @@ Public Attributes</h2></td></tr>
 <b>Initial value:</b><div class="fragment"><div class="line">{</div>
 <div class="line">        -1}</div>
 </div><!-- fragment -->
-<p class="definition">Definition at line <a class="el" href="RGBDBackendModule_8hpp_source.html#l00111">111</a> of file <a class="el" href="RGBDBackendModule_8hpp_source.html">RGBDBackendModule.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="RGBDBackendModule_8hpp_source.html#l00107">107</a> of file <a class="el" href="RGBDBackendModule_8hpp_source.html">RGBDBackendModule.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="structdyno_1_1RGBDBackendModule_1_1SlidingWindow.html#a09708c9598b961802399d9bc4d4aaa61">check()</a>.</p>
 
@@ -292,7 +292,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="RGBDBackendModule_8hpp_source.html#l00109">109</a> of file <a class="el" href="RGBDBackendModule_8hpp_source.html">RGBDBackendModule.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="RGBDBackendModule_8hpp_source.html#l00105">105</a> of file <a class="el" href="RGBDBackendModule_8hpp_source.html">RGBDBackendModule.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="structdyno_1_1RGBDBackendModule_1_1SlidingWindow.html#a09708c9598b961802399d9bc4d4aaa61">check()</a>.</p>
 

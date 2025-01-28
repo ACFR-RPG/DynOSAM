@@ -1,0 +1,11 @@
+<map id="dyno::DSDTransport::constructObjectOdometry" name="dyno::DSDTransport::constructObjectOdometry">
+<area shape="rect" id="node1" title=" " alt="" coords="5,78,203,118"/>
+<area shape="rect" id="node2" href="$namespacedyno.html#a2e68bad5f89fd79e6a7515919080c286" title="Calculate the local body velocity given the motion in world from k&#45;1 to k and the object pose at k&#45;1...." alt="" coords="251,5,449,31"/>
+<area shape="rect" id="node3" href="$namespacedyno.html#a2b18a1990bb26145cec08be631b0ef74" title=" " alt="" coords="755,75,865,100"/>
+<area shape="rect" id="node4" href="$namespacedyno_1_1utils.html#a7efb03484e6c5b1cc0d0eeeb43546ffa" title="Converts from input type to output type where output type is a ROS message with a header...." alt="" coords="261,106,439,146"/>
+<area shape="rect" id="node6" href="$structdyno_1_1Color.html#a4f52f9aec87e2c34370ad02e6d4e25fc" title="Generates a sequence of never repeating colors using the golden ration to seperate the colours along ..." alt="" coords="270,171,430,196"/>
+<area shape="rect" id="node5" href="$namespacedyno_1_1utils.html#a81025ee06847cec0fd854eff05362d19" title="Converts Timestamp (in seconds) to ROS time." alt="" coords="497,111,665,136"/>
+<area shape="rect" id="node7" href="$structdyno_1_1Color.html#a08bcb6ea49861f6978858a2ff5159002" title=" " alt="" coords="500,171,663,196"/>
+<area shape="rect" id="node8" href="$structdyno_1_1Color.html#a6bc55a80a463a481dbf4778c70d04733" title=" " alt="" coords="741,141,879,167"/>
+<area shape="rect" id="node9" href="$namespacedyno.html#ab0e74ec8992860404a618192cc694b83" title=" " alt="" coords="713,191,907,216"/>
+</map>

@@ -77,9 +77,20 @@ $(function() {
   <div class="headertitle"><div class="title">dyno::traits&lt; T &gt; Struct Template Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>A generic type trait with the dyno namespace. Here we define compile time conversions between c++ types and their corresponding rcl_interfaces::msg::ParameterType. The following properies are defined:  
+ <a href="structdyno_1_1traits.html#details">More...</a></p>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename T&gt;<br />
-struct dyno::traits&lt; T &gt;</div>
+struct dyno::traits&lt; T &gt;</div><p>A generic type trait with the dyno namespace. Here we define compile time conversions between c++ types and their corresponding rcl_interfaces::msg::ParameterType. The following properies are defined: </p>
+<p>::traits&lt;double&gt;::ros_parameter_type, where T=double is any primitive type that has a parameter type versions, and, ::traits&lt;rcl_interfaces::msg::ParameterType::PARAMETER_DOUBLE&gt;::cpp_type</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p class="definition">Definition at line <a class="el" href="Types_8hpp_source.html#l00060">60</a> of file <a class="el" href="Types_8hpp_source.html">Types.hpp</a>.</p>
 </div><hr/>The documentation for this struct was generated from the following file:<ul>
 <li>dynosam/include/dynosam/common/<a class="el" href="Types_8hpp_source.html">Types.hpp</a></li>

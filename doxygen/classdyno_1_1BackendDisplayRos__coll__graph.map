@@ -1,6 +1,0 @@
-<map id="dyno::BackendDisplayRos" name="dyno::BackendDisplayRos">
-<area shape="rect" id="node1" title=" " alt="" coords="20,168,211,193"/>
-<area shape="rect" id="node2" href="$classdyno_1_1DisplayBase.html" title=" " alt="" coords="5,93,132,119"/>
-<area shape="rect" id="node3" href="$classdyno_1_1DisplayRos.html" title=" " alt="" coords="156,93,291,119"/>
-<area shape="rect" id="node4" href="$structdyno_1_1DisplayParams.html" title=" " alt="" coords="144,5,303,31"/>
-</map>

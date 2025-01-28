@@ -1,7 +1,6 @@
 <map id="dyno::Accessor::getObjectPoses" name="dyno::Accessor::getObjectPoses">
-<area shape="rect" id="node1" title="Collects all object poses for frame 0 to k. (Non&#45;pure )Virtual function that may be overwritten &#45; def..." alt="" coords="5,35,196,75"/>
-<area shape="rect" id="node2" href="$classdyno_1_1GenericObjectCentricMap.html#a974563b8edd3f4b0cb6fe17615d04fbd" title=" " alt="" coords="244,35,444,75"/>
-<area shape="rect" id="node3" href="$classdyno_1_1GenericObjectCentricMap.html#a33450c8ce82ab7fbfa2541ee0c6b20e3" title="Helper function to determine if the query exists. Operates like a regular exists function but also se..." alt="" coords="492,35,692,75"/>
+<area shape="rect" id="node1" title="Collects all object poses for frame 0 to k. (Non&#45;pure )Virtual function that may be overwritten &#45; def..." alt="" coords="5,5,196,45"/>
+<area shape="rect" id="node2" href="$classdyno_1_1GenericObjectCentricMap.html#a974563b8edd3f4b0cb6fe17615d04fbd" title=" " alt="" coords="244,5,444,45"/>
+<area shape="rect" id="node3" href="$classdyno_1_1GenericObjectCentricMap.html#a33450c8ce82ab7fbfa2541ee0c6b20e3" title="Helper function to determine if the query exists. Operates like a regular exists function but also se..." alt="" coords="492,5,692,45"/>
 <area shape="rect" id="node4" href="$classdyno_1_1GenericObjectCentricMap.html#af6ce62ffab5aadf1981a0ec04c3fad1e" title=" " alt="" coords="740,5,940,45"/>
-<area shape="rect" id="node5" href="$classdyno_1_1GenericObjectCentricMap.html#add1f50d9f6d02dd0ef1f23f89e2fcf5a" title=" " alt="" coords="988,35,1188,75"/>
 </map>

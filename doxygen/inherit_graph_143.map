@@ -1,5 +1,3 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$structdyno_1_1PipelinePayload.html" title=" " alt="" coords="5,31,171,56"/>
-<area shape="rect" id="node2" href="$classdyno_1_1GroundTruthInputPacket.html" title=" " alt="" coords="219,5,435,31"/>
-<area shape="rect" id="node3" href="$structdyno_1_1NullPipelinePayload.html" title="The NullPipelinePayload is an empty payload, used for those modules that do not return a payload,..." alt="" coords="231,55,422,80"/>
+<area shape="rect" id="node1" href="$classdyno_1_1OpticalFlowAndPoseOptimizer.html" title="Joinly refines optical flow with with the given pose using the error term: e = [u,..." alt="" coords="5,5,200,45"/>
 </map>

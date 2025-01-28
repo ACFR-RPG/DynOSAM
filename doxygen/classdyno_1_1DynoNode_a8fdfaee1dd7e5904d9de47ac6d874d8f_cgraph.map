@@ -1,4 +1,10 @@
 <map id="dyno::DynoNode::searchForPathWithParams" name="dyno::DynoNode::searchForPathWithParams">
-<area shape="rect" id="node1" title="Retrieves a std::string param (under param_name) which is expected to be a file path." alt="" coords="5,5,207,45"/>
-<area shape="rect" id="node2" href="$namespacedyno.html#a80d59abcebfb78b7fb237b1572429606" title=" " alt="" coords="255,5,455,45"/>
+<area shape="rect" id="node1" title="Retrieves a std::string param (under param_name) which is expected to be a file path." alt="" coords="5,123,207,163"/>
+<area shape="rect" id="node2" href="$classdyno_1_1ParameterConstructor.html#a83e32e6b87f9aaa75e6b3564a960e9d9" title="Updates the paramters description and a returns a reference to this." alt="" coords="255,29,459,69"/>
+<area shape="rect" id="node3" href="$classdyno_1_1ParameterConstructor.html#a2f64575e1752c6b9be7063c8467b627f" title="Constructs a ParameterDetails object from the details in this." alt="" coords="255,93,459,133"/>
+<area shape="rect" id="node4" href="$classdyno_1_1ParameterDetails.html#a68f46befd597e6b463dc0da16bdbd876" title="Get the rclcpp::Parameter from the node." alt="" coords="255,158,459,183"/>
+<area shape="rect" id="node8" href="$namespacedyno.html#a80d59abcebfb78b7fb237b1572429606" title=" " alt="" coords="257,208,457,248"/>
+<area shape="rect" id="node5" href="$classdyno_1_1ParameterDetails.html#a1370e883feff7a600c8fd9783e2b792d" title=" " alt="" coords="507,151,681,191"/>
+<area shape="rect" id="node6" href="$classdyno_1_1ParameterDetails.html#a606d5ea74ad42dc56142759bb2e17b11" title=" " alt="" coords="729,121,904,161"/>
+<area shape="rect" id="node7" href="$classdyno_1_1ParameterDetails.html#a5b29e21d596fc2efce6df3477f7c5961" title="Name of the paramter." alt="" coords="952,151,1127,191"/>
 </map>

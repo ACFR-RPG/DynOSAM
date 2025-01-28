@@ -1,9 +1,11 @@
 <map id="dyno::GenericObjectCentricMap::insert22" name="dyno::GenericObjectCentricMap::insert22">
-<area shape="rect" id="node1" title="Handy insert function allowing direct insertion to the nested map structure." alt="" coords="793,101,993,141"/>
-<area shape="rect" id="node2" href="$namespacedyno.html#a93c3e3c50ec5de7bfd1e2a373d20e77b" title="Propogated a map of object poses via their motions or otherwise." alt="" coords="537,77,745,102"/>
-<area shape="rect" id="node6" href="$classdyno_1_1FrontendDisplayRos.html#a09c000cc83b1a2916026fa21b2859d95" title=" " alt="" coords="545,129,737,169"/>
+<area shape="rect" id="node1" title="Handy insert function allowing direct insertion to the nested map structure." alt="" coords="795,133,995,173"/>
+<area shape="rect" id="node2" href="$namespacedyno.html#a93c3e3c50ec5de7bfd1e2a373d20e77b" title="Propogated a map of object poses via their motions or otherwise." alt="" coords="538,77,746,102"/>
+<area shape="rect" id="node6" href="$classdyno_1_1FrontendInbuiltDisplayRos.html#acdc1be16deea0c706451e415f303342f" title=" " alt="" coords="537,133,747,173"/>
+<area shape="rect" id="node8" href="$classdyno_1_1FrontendDSDRos.html#a30a427c3d1b16b3fa99e2ddde0802c41" title=" " alt="" coords="555,197,729,237"/>
 <area shape="rect" id="node3" href="$classdyno_1_1WorldMotionAccessor.html#a0a396e6c748dc58cf38e5b1a70b2eea4" title="Virtual function that is called to indcate the associated formulation has been updated...." alt="" coords="276,5,479,45"/>
 <area shape="rect" id="node4" href="$classdyno_1_1RGBDInstanceFrontendModule.html#a3b8a72f00e038ce10f89be9ed52198da" title=" " alt="" coords="265,69,489,109"/>
 <area shape="rect" id="node5" href="$classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2" title=" " alt="" coords="5,69,217,109"/>
-<area shape="rect" id="node7" href="$classdyno_1_1FrontendDisplayRos.html#ab73f0433ed01e79b3375afd7a512a26c" title=" " alt="" coords="281,133,473,173"/>
+<area shape="rect" id="node7" href="$classdyno_1_1FrontendInbuiltDisplayRos.html#a8e47d6ce98cd285d8b6d9674cbacf334" title=" " alt="" coords="273,133,482,173"/>
+<area shape="rect" id="node9" href="$classdyno_1_1FrontendDSDRos.html#a633a457c51868257f25d44d1a99f0e12" title=" " alt="" coords="292,197,463,237"/>
 </map>

@@ -84,7 +84,7 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>Generic mapping of Object Id -&gt; FrameId -&gt; Value within a nested gtsam::FastMap structure. This is a common datastrcture used for object's to store temporal information about each object.  
+<p>Generic mapping of Object Id to FrameId to VALUE within a nested gtsam::FastMap structure. This is a common datastrcture used to store temporal information about each object.  
  <a href="classdyno_1_1GenericObjectCentricMap.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="Types_8hpp_source.html">Types.hpp</a>&gt;</code></p>
@@ -93,7 +93,7 @@ Inheritance diagram for dyno::GenericObjectCentricMap&lt; VALUE &gt;:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1GenericObjectCentricMap__inherit__graph.png" border="0" usemap="#adyno_1_1GenericObjectCentricMap_3_01VALUE_01_4_inherit__map" alt="Inheritance graph"/></div>
 <map name="adyno_1_1GenericObjectCentricMap_3_01VALUE_01_4_inherit__map" id="adyno_1_1GenericObjectCentricMap_3_01VALUE_01_4_inherit__map">
-<area shape="rect" title="Generic mapping of Object Id &#45;&gt; FrameId &#45;&gt; Value within a nested gtsam::FastMap structure...." alt="" coords="6,108,206,148"/>
+<area shape="rect" title="Generic mapping of Object Id to FrameId to VALUE within a nested gtsam::FastMap structure...." alt="" coords="6,108,206,148"/>
 <area shape="rect" title=" " alt="" coords="5,5,207,60"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
@@ -102,7 +102,7 @@ Collaboration diagram for dyno::GenericObjectCentricMap&lt; VALUE &gt;:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1GenericObjectCentricMap__coll__graph.png" border="0" usemap="#adyno_1_1GenericObjectCentricMap_3_01VALUE_01_4_coll__map" alt="Collaboration graph"/></div>
 <map name="adyno_1_1GenericObjectCentricMap_3_01VALUE_01_4_coll__map" id="adyno_1_1GenericObjectCentricMap_3_01VALUE_01_4_coll__map">
-<area shape="rect" title="Generic mapping of Object Id &#45;&gt; FrameId &#45;&gt; Value within a nested gtsam::FastMap structure...." alt="" coords="6,108,206,148"/>
+<area shape="rect" title="Generic mapping of Object Id to FrameId to VALUE within a nested gtsam::FastMap structure...." alt="" coords="6,108,206,148"/>
 <area shape="rect" title=" " alt="" coords="5,5,207,60"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
@@ -145,13 +145,13 @@ Private Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-static-methods" name="pri-static-methods"></a>
 Static Private Member Functions</h2></td></tr>
-<tr class="memitem:add1f50d9f6d02dd0ef1f23f89e2fcf5a"><td class="memTemplParams" colspan="2">template&lt;typename Container &gt; </td></tr>
-<tr class="memitem:add1f50d9f6d02dd0ef1f23f89e2fcf5a"><td class="memTemplItemLeft" align="right" valign="top">static auto &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classdyno_1_1GenericObjectCentricMap.html#add1f50d9f6d02dd0ef1f23f89e2fcf5a">atImpl</a> (Container *container, <a class="el" href="namespacedyno.html#a38bb86e4154b86428b8d133be03fb2b5">ObjectId</a> object_id, <a class="el" href="namespacedyno.html#ac4303d6fafb755f794b072d76f9cfb41">FrameId</a> frame_id)</td></tr>
-<tr class="separator:add1f50d9f6d02dd0ef1f23f89e2fcf5a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a688aa499290955eee3dcc1c13e02e6c9"><td class="memTemplParams" colspan="2">template&lt;typename Container , typename Return &gt; </td></tr>
+<tr class="memitem:a688aa499290955eee3dcc1c13e02e6c9"><td class="memTemplItemLeft" align="right" valign="top">static Return&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classdyno_1_1GenericObjectCentricMap.html#a688aa499290955eee3dcc1c13e02e6c9">atImpl</a> (Container *container, <a class="el" href="namespacedyno.html#a38bb86e4154b86428b8d133be03fb2b5">ObjectId</a> object_id, <a class="el" href="namespacedyno.html#ac4303d6fafb755f794b072d76f9cfb41">FrameId</a> frame_id)</td></tr>
+<tr class="separator:a688aa499290955eee3dcc1c13e02e6c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename VALUE&gt;<br />
-class dyno::GenericObjectCentricMap&lt; VALUE &gt;</div><p>Generic mapping of Object Id -&gt; FrameId -&gt; Value within a nested gtsam::FastMap structure. This is a common datastrcture used for object's to store temporal information about each object. </p>
+class dyno::GenericObjectCentricMap&lt; VALUE &gt;</div><p>Generic mapping of Object Id to FrameId to VALUE within a nested gtsam::FastMap structure. This is a common datastrcture used to store temporal information about each object. </p>
 <p>We call it ObjectCentric map as we order by ObjectId first.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
@@ -273,25 +273,10 @@ template&lt;typename VALUE &gt; </div>
 
 <p class="definition">Definition at line <a class="el" href="Types_8hpp_source.html#l00449">449</a> of file <a class="el" href="Types_8hpp_source.html">Types.hpp</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">  449</span>                                                  {</div>
-<div class="line"><span class="lineno">  450</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="classdyno_1_1GenericObjectCentricMap.html#add1f50d9f6d02dd0ef1f23f89e2fcf5a">atImpl</a>(<span class="keyword">const_cast&lt;</span><span class="keyword">const </span><a class="code hl_typedef" href="classdyno_1_1GenericObjectCentricMap.html#a9fb7256e7eea63da71c1a15368391d0b">This</a>*<span class="keyword">&gt;</span>(<span class="keyword">this</span>), object_id, frame_id);</div>
+<div class="line"><span class="lineno">  450</span>    <span class="keywordflow">return</span> atImpl&lt;This, Value&amp;&gt;(<span class="keyword">const_cast&lt;</span><a class="code hl_typedef" href="classdyno_1_1GenericObjectCentricMap.html#a9fb7256e7eea63da71c1a15368391d0b">This</a>*<span class="keyword">&gt;</span>(<span class="keyword">this</span>), object_id, frame_id);</div>
 <div class="line"><span class="lineno">  451</span>  }</div>
 <div class="ttc" id="aclassdyno_1_1GenericObjectCentricMap_html_a9fb7256e7eea63da71c1a15368391d0b"><div class="ttname"><a href="classdyno_1_1GenericObjectCentricMap.html#a9fb7256e7eea63da71c1a15368391d0b">dyno::GenericObjectCentricMap::This</a></div><div class="ttdeci">GenericObjectCentricMap&lt; VALUE &gt; This</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00406">Types.hpp:406</a></div></div>
-<div class="ttc" id="aclassdyno_1_1GenericObjectCentricMap_html_add1f50d9f6d02dd0ef1f23f89e2fcf5a"><div class="ttname"><a href="classdyno_1_1GenericObjectCentricMap.html#add1f50d9f6d02dd0ef1f23f89e2fcf5a">dyno::GenericObjectCentricMap::atImpl</a></div><div class="ttdeci">static auto &amp; atImpl(Container *container, ObjectId object_id, FrameId frame_id)</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00472">Types.hpp:472</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="classdyno_1_1GenericObjectCentricMap.html#add1f50d9f6d02dd0ef1f23f89e2fcf5a">dyno::GenericObjectCentricMap&lt; VALUE &gt;::atImpl()</a>.</p>
-<div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="classdyno_1_1GenericObjectCentricMap_a24c0185b92312c57dbd1bf26f35ed844_cgraph.png" border="0" usemap="#aclassdyno_1_1GenericObjectCentricMap_a24c0185b92312c57dbd1bf26f35ed844_cgraph" alt=""/></div>
-<map name="aclassdyno_1_1GenericObjectCentricMap_a24c0185b92312c57dbd1bf26f35ed844_cgraph" id="aclassdyno_1_1GenericObjectCentricMap_a24c0185b92312c57dbd1bf26f35ed844_cgraph">
-<area shape="rect" title=" " alt="" coords="5,39,205,79"/>
-<area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html#add1f50d9f6d02dd0ef1f23f89e2fcf5a" title=" " alt="" coords="253,39,453,79"/>
-<area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html#a33450c8ce82ab7fbfa2541ee0c6b20e3" title="Helper function to determine if the query exists. Operates like a regular exists function but also se..." alt="" coords="501,68,701,108"/>
-<area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html#af6ce62ffab5aadf1981a0ec04c3fad1e" title=" " alt="" coords="749,5,949,45"/>
-<area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html#a974563b8edd3f4b0cb6fe17615d04fbd" title=" " alt="" coords="749,69,949,109"/>
-</map>
-</div>
-
 </div>
 </div>
 <a id="af6ce62ffab5aadf1981a0ec04c3fad1e" name="af6ce62ffab5aadf1981a0ec04c3fad1e"></a>
@@ -332,61 +317,50 @@ template&lt;typename VALUE &gt; </div>
 
 <p class="definition">Definition at line <a class="el" href="Types_8hpp_source.html#l00445">445</a> of file <a class="el" href="Types_8hpp_source.html">Types.hpp</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">  445</span>                                                              {</div>
-<div class="line"><span class="lineno">  446</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="classdyno_1_1GenericObjectCentricMap.html#add1f50d9f6d02dd0ef1f23f89e2fcf5a">atImpl</a>(<span class="keyword">this</span>, object_id, frame_id);</div>
+<div class="line"><span class="lineno">  446</span>    <span class="keywordflow">return</span> atImpl&lt;const This, const Value&amp;&gt;(<span class="keyword">this</span>, object_id, frame_id);</div>
 <div class="line"><span class="lineno">  447</span>  }</div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="classdyno_1_1GenericObjectCentricMap.html#add1f50d9f6d02dd0ef1f23f89e2fcf5a">dyno::GenericObjectCentricMap&lt; VALUE &gt;::atImpl()</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1GenericObjectCentricMap.html#a33450c8ce82ab7fbfa2541ee0c6b20e3">dyno::GenericObjectCentricMap&lt; VALUE &gt;::existsImpl()</a>, <a class="el" href="classdyno_1_1GenericObjectCentricMap.html#abfce9b218241a024c0f66400200bbd58">dyno::GenericObjectCentricMap&lt; VALUE &gt;::insert22()</a>, <a class="el" href="classdyno_1_1FrontendDisplayRos.html#a92d22245bb27f232c7ae3bf8af7d6211">dyno::FrontendDisplayRos::processRGBDOutputpacket()</a>, and <a class="el" href="namespacedyno.html#a93c3e3c50ec5de7bfd1e2a373d20e77b">dyno::propogateObjectPoses()</a>.</p>
-<div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="classdyno_1_1GenericObjectCentricMap_af6ce62ffab5aadf1981a0ec04c3fad1e_cgraph.png" border="0" usemap="#aclassdyno_1_1GenericObjectCentricMap_af6ce62ffab5aadf1981a0ec04c3fad1e_cgraph" alt=""/></div>
-<map name="aclassdyno_1_1GenericObjectCentricMap_af6ce62ffab5aadf1981a0ec04c3fad1e_cgraph" id="aclassdyno_1_1GenericObjectCentricMap_af6ce62ffab5aadf1981a0ec04c3fad1e_cgraph">
-<area shape="rect" title=" " alt="" coords="5,35,205,75"/>
-<area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html#add1f50d9f6d02dd0ef1f23f89e2fcf5a" title=" " alt="" coords="253,5,453,45"/>
-<area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html#a33450c8ce82ab7fbfa2541ee0c6b20e3" title="Helper function to determine if the query exists. Operates like a regular exists function but also se..." alt="" coords="501,35,701,75"/>
-<area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html#a974563b8edd3f4b0cb6fe17615d04fbd" title=" " alt="" coords="749,35,949,75"/>
-</map>
-</div>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1DSDTransport.html#a73f0554c9013b1e5be9fda71990706bf">dyno::DSDTransport::constructObjectOdometries()</a>, <a class="el" href="classdyno_1_1GenericObjectCentricMap.html#a33450c8ce82ab7fbfa2541ee0c6b20e3">dyno::GenericObjectCentricMap&lt; VALUE &gt;::existsImpl()</a>, <a class="el" href="classdyno_1_1GenericObjectCentricMap.html#abfce9b218241a024c0f66400200bbd58">dyno::GenericObjectCentricMap&lt; VALUE &gt;::insert22()</a>, <a class="el" href="classdyno_1_1FrontendInbuiltDisplayRos.html#a4b6fefaf04a868c58cd85d8a741b4726">dyno::FrontendInbuiltDisplayRos::processRGBDOutputpacket()</a>, and <a class="el" href="namespacedyno.html#a93c3e3c50ec5de7bfd1e2a373d20e77b">dyno::propogateObjectPoses()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1GenericObjectCentricMap_af6ce62ffab5aadf1981a0ec04c3fad1e_icgraph.png" border="0" usemap="#aclassdyno_1_1GenericObjectCentricMap_af6ce62ffab5aadf1981a0ec04c3fad1e_icgraph" alt=""/></div>
 <map name="aclassdyno_1_1GenericObjectCentricMap_af6ce62ffab5aadf1981a0ec04c3fad1e_icgraph" id="aclassdyno_1_1GenericObjectCentricMap_af6ce62ffab5aadf1981a0ec04c3fad1e_icgraph">
-<area shape="rect" title=" " alt="" coords="1543,126,1743,166"/>
-<area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html#a33450c8ce82ab7fbfa2541ee0c6b20e3" title="Helper function to determine if the query exists. Operates like a regular exists function but also se..." alt="" coords="1292,126,1492,166"/>
-<area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html#abfce9b218241a024c0f66400200bbd58" title="Handy insert function allowing direct insertion to the nested map structure." alt="" coords="793,184,993,224"/>
-<area shape="rect" href="namespacedyno.html#a93c3e3c50ec5de7bfd1e2a373d20e77b" title="Propogated a map of object poses via their motions or otherwise." alt="" coords="537,134,745,159"/>
-<area shape="rect" href="classdyno_1_1FrontendDisplayRos.html#a92d22245bb27f232c7ae3bf8af7d6211" title=" " alt="" coords="1289,241,1495,281"/>
-<area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html#add1f50d9f6d02dd0ef1f23f89e2fcf5a" title=" " alt="" coords="1041,62,1241,102"/>
-<area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html#a974563b8edd3f4b0cb6fe17615d04fbd" title=" " alt="" coords="1041,126,1241,166"/>
-<area shape="rect" href="classdyno_1_1Accessor.html#a724e8bbef287e354030f9ae6d42b3c6d" title="Collects all object poses for frame 0 to k. (Non&#45;pure )Virtual function that may be overwritten &#45; def..." alt="" coords="798,69,989,109"/>
-<area shape="rect" href="classdyno_1_1FrontendDisplayRos.html#a09c000cc83b1a2916026fa21b2859d95" title=" " alt="" coords="545,184,737,224"/>
-<area shape="rect" href="classdyno_1_1WorldMotionAccessor.html#a0a396e6c748dc58cf38e5b1a70b2eea4" title="Virtual function that is called to indcate the associated formulation has been updated...." alt="" coords="276,76,479,116"/>
-<area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#a3b8a72f00e038ce10f89be9ed52198da" title=" " alt="" coords="265,140,489,180"/>
-<area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2" title=" " alt="" coords="5,140,217,180"/>
-<area shape="rect" href="classdyno_1_1FrontendDisplayRos.html#ab73f0433ed01e79b3375afd7a512a26c" title=" " alt="" coords="281,216,473,256"/>
+<area shape="rect" title=" " alt="" coords="1576,177,1776,217"/>
+<area shape="rect" href="classdyno_1_1DSDTransport.html#a73f0554c9013b1e5be9fda71990706bf" title=" " alt="" coords="795,5,1003,45"/>
+<area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html#a33450c8ce82ab7fbfa2541ee0c6b20e3" title="Helper function to determine if the query exists. Operates like a regular exists function but also se..." alt="" coords="1328,120,1528,160"/>
+<area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html#abfce9b218241a024c0f66400200bbd58" title="Handy insert function allowing direct insertion to the nested map structure." alt="" coords="799,235,999,275"/>
+<area shape="rect" href="namespacedyno.html#a93c3e3c50ec5de7bfd1e2a373d20e77b" title="Propogated a map of object poses via their motions or otherwise." alt="" coords="538,158,746,183"/>
+<area shape="rect" href="classdyno_1_1FrontendInbuiltDisplayRos.html#a4b6fefaf04a868c58cd85d8a741b4726" title=" " alt="" coords="1051,299,1280,339"/>
+<area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html#a974563b8edd3f4b0cb6fe17615d04fbd" title=" " alt="" coords="1065,120,1265,160"/>
+<area shape="rect" href="classdyno_1_1Accessor.html#a724e8bbef287e354030f9ae6d42b3c6d" title="Collects all object poses for frame 0 to k. (Non&#45;pure )Virtual function that may be overwritten &#45; def..." alt="" coords="803,69,994,109"/>
+<area shape="rect" href="classdyno_1_1FrontendInbuiltDisplayRos.html#acdc1be16deea0c706451e415f303342f" title=" " alt="" coords="537,275,747,315"/>
+<area shape="rect" href="classdyno_1_1FrontendDSDRos.html#a30a427c3d1b16b3fa99e2ddde0802c41" title=" " alt="" coords="555,211,729,251"/>
+<area shape="rect" href="classdyno_1_1WorldMotionAccessor.html#a0a396e6c748dc58cf38e5b1a70b2eea4" title="Virtual function that is called to indcate the associated formulation has been updated...." alt="" coords="276,87,479,127"/>
+<area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#a3b8a72f00e038ce10f89be9ed52198da" title=" " alt="" coords="265,151,489,191"/>
+<area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2" title=" " alt="" coords="5,151,217,191"/>
+<area shape="rect" href="classdyno_1_1FrontendInbuiltDisplayRos.html#a8e47d6ce98cd285d8b6d9674cbacf334" title=" " alt="" coords="273,304,482,344"/>
+<area shape="rect" href="classdyno_1_1FrontendDSDRos.html#a633a457c51868257f25d44d1a99f0e12" title=" " alt="" coords="292,215,463,255"/>
 </map>
 </div>
 
 </div>
 </div>
-<a id="add1f50d9f6d02dd0ef1f23f89e2fcf5a" name="add1f50d9f6d02dd0ef1f23f89e2fcf5a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#add1f50d9f6d02dd0ef1f23f89e2fcf5a">&#9670;&#160;</a></span>atImpl()</h2>
+<a id="a688aa499290955eee3dcc1c13e02e6c9" name="a688aa499290955eee3dcc1c13e02e6c9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a688aa499290955eee3dcc1c13e02e6c9">&#9670;&#160;</a></span>atImpl()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename VALUE &gt; </div>
 <div class="memtemplate">
-template&lt;typename Container &gt; </div>
+template&lt;typename Container , typename Return &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static auto &amp; <a class="el" href="classdyno_1_1GenericObjectCentricMap.html">dyno::GenericObjectCentricMap</a>&lt; VALUE &gt;::atImpl </td>
+          <td class="memname">static Return <a class="el" href="classdyno_1_1GenericObjectCentricMap.html">dyno::GenericObjectCentricMap</a>&lt; VALUE &gt;::atImpl </td>
           <td>(</td>
           <td class="paramtype">Container *&#160;</td>
           <td class="paramname"><em>container</em>, </td>
@@ -417,58 +391,23 @@ template&lt;typename Container &gt; </div>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="Types_8hpp_source.html#l00472">472</a> of file <a class="el" href="Types_8hpp_source.html">Types.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  473</span>                                        {</div>
+<div class="fragment"><div class="line"><span class="lineno">  473</span>                                         {</div>
 <div class="line"><span class="lineno">  474</span>    <span class="keywordtype">size_t</span> out_of_range_flag;</div>
-<div class="line"><span class="lineno">  475</span>    <span class="keyword">const</span> <span class="keywordtype">bool</span> result = <a class="code hl_function" href="classdyno_1_1GenericObjectCentricMap.html#a33450c8ce82ab7fbfa2541ee0c6b20e3">existsImpl</a>(object_id, frame_id, out_of_range_flag);</div>
-<div class="line"><span class="lineno">  476</span>    <span class="keywordflow">if</span> (result) {</div>
-<div class="line"><span class="lineno">  477</span>      CHECK_EQ(out_of_range_flag, 2u);</div>
-<div class="line"><span class="lineno">  478</span>      <span class="keywordflow">return</span> container-&gt;at(object_id)[frame_id];</div>
-<div class="line"><span class="lineno">  479</span>    } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  480</span>      std::stringstream ss;</div>
-<div class="line"><span class="lineno">  481</span>      ss &lt;&lt; <span class="stringliteral">&quot;Index out of range: &quot;</span></div>
-<div class="line"><span class="lineno">  482</span>         &lt;&lt; ((out_of_range_flag == 0) ? <span class="stringliteral">&quot; object id &quot;</span> : <span class="stringliteral">&quot; frame id&quot;</span>)</div>
-<div class="line"><span class="lineno">  483</span>         &lt;&lt; <span class="stringliteral">&quot; missing. Full query - (object id &quot;</span> &lt;&lt; object_id &lt;&lt; <span class="stringliteral">&quot;, frame id &quot;</span></div>
-<div class="line"><span class="lineno">  484</span>         &lt;&lt; frame_id &lt;&lt; <span class="stringliteral">&quot;).&quot;</span>;</div>
-<div class="line"><span class="lineno">  485</span>      <span class="keywordflow">throw</span> std::out_of_range(ss.str());</div>
-<div class="line"><span class="lineno">  486</span>    }</div>
-<div class="line"><span class="lineno">  487</span>  }</div>
-<div class="ttc" id="aclassdyno_1_1GenericObjectCentricMap_html_a33450c8ce82ab7fbfa2541ee0c6b20e3"><div class="ttname"><a href="classdyno_1_1GenericObjectCentricMap.html#a33450c8ce82ab7fbfa2541ee0c6b20e3">dyno::GenericObjectCentricMap::existsImpl</a></div><div class="ttdeci">bool existsImpl(ObjectId object_id, FrameId frame_id, size_t &amp;out_of_range_flag) const</div><div class="ttdoc">Helper function to determine if the query exists. Operates like a regular exists function but also se...</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00504">Types.hpp:504</a></div></div>
+<div class="line"><span class="lineno">  475</span>    <span class="keyword">const</span> <span class="keywordtype">bool</span> result =</div>
+<div class="line"><span class="lineno">  476</span>        container-&gt;existsImpl(object_id, frame_id, out_of_range_flag);</div>
+<div class="line"><span class="lineno">  477</span>    <span class="keywordflow">if</span> (result) {</div>
+<div class="line"><span class="lineno">  478</span>      CHECK_EQ(out_of_range_flag, 2u);</div>
+<div class="line"><span class="lineno">  479</span>      <span class="keywordflow">return</span> container-&gt;at(object_id).at(frame_id);</div>
+<div class="line"><span class="lineno">  480</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  481</span>      std::stringstream ss;</div>
+<div class="line"><span class="lineno">  482</span>      ss &lt;&lt; <span class="stringliteral">&quot;Index out of range: &quot;</span></div>
+<div class="line"><span class="lineno">  483</span>         &lt;&lt; ((out_of_range_flag == 0) ? <span class="stringliteral">&quot; object id &quot;</span> : <span class="stringliteral">&quot; frame id&quot;</span>)</div>
+<div class="line"><span class="lineno">  484</span>         &lt;&lt; <span class="stringliteral">&quot; missing. Full query - (object id &quot;</span> &lt;&lt; object_id &lt;&lt; <span class="stringliteral">&quot;, frame id &quot;</span></div>
+<div class="line"><span class="lineno">  485</span>         &lt;&lt; frame_id &lt;&lt; <span class="stringliteral">&quot;).&quot;</span>;</div>
+<div class="line"><span class="lineno">  486</span>      <span class="keywordflow">throw</span> std::out_of_range(ss.str());</div>
+<div class="line"><span class="lineno">  487</span>    }</div>
+<div class="line"><span class="lineno">  488</span>  }</div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="classdyno_1_1GenericObjectCentricMap.html#a33450c8ce82ab7fbfa2541ee0c6b20e3">dyno::GenericObjectCentricMap&lt; VALUE &gt;::existsImpl()</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1GenericObjectCentricMap.html#af6ce62ffab5aadf1981a0ec04c3fad1e">dyno::GenericObjectCentricMap&lt; VALUE &gt;::at()</a>.</p>
-<div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="classdyno_1_1GenericObjectCentricMap_add1f50d9f6d02dd0ef1f23f89e2fcf5a_cgraph.png" border="0" usemap="#aclassdyno_1_1GenericObjectCentricMap_add1f50d9f6d02dd0ef1f23f89e2fcf5a_cgraph" alt=""/></div>
-<map name="aclassdyno_1_1GenericObjectCentricMap_add1f50d9f6d02dd0ef1f23f89e2fcf5a_cgraph" id="aclassdyno_1_1GenericObjectCentricMap_add1f50d9f6d02dd0ef1f23f89e2fcf5a_cgraph">
-<area shape="rect" title=" " alt="" coords="5,39,205,79"/>
-<area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html#a33450c8ce82ab7fbfa2541ee0c6b20e3" title="Helper function to determine if the query exists. Operates like a regular exists function but also se..." alt="" coords="253,68,453,108"/>
-<area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html#af6ce62ffab5aadf1981a0ec04c3fad1e" title=" " alt="" coords="501,5,701,45"/>
-<area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html#a974563b8edd3f4b0cb6fe17615d04fbd" title=" " alt="" coords="501,69,701,109"/>
-</map>
-</div>
-<div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="classdyno_1_1GenericObjectCentricMap_add1f50d9f6d02dd0ef1f23f89e2fcf5a_icgraph.png" border="0" usemap="#aclassdyno_1_1GenericObjectCentricMap_add1f50d9f6d02dd0ef1f23f89e2fcf5a_icgraph" alt=""/></div>
-<map name="aclassdyno_1_1GenericObjectCentricMap_add1f50d9f6d02dd0ef1f23f89e2fcf5a_icgraph" id="aclassdyno_1_1GenericObjectCentricMap_add1f50d9f6d02dd0ef1f23f89e2fcf5a_icgraph">
-<area shape="rect" title=" " alt="" coords="1791,85,1991,125"/>
-<area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html#af6ce62ffab5aadf1981a0ec04c3fad1e" title=" " alt="" coords="1543,113,1743,153"/>
-<area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html#a33450c8ce82ab7fbfa2541ee0c6b20e3" title="Helper function to determine if the query exists. Operates like a regular exists function but also se..." alt="" coords="1295,56,1495,96"/>
-<area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html#abfce9b218241a024c0f66400200bbd58" title="Handy insert function allowing direct insertion to the nested map structure." alt="" coords="793,171,993,211"/>
-<area shape="rect" href="namespacedyno.html#a93c3e3c50ec5de7bfd1e2a373d20e77b" title="Propogated a map of object poses via their motions or otherwise." alt="" coords="537,121,745,146"/>
-<area shape="rect" href="classdyno_1_1FrontendDisplayRos.html#a92d22245bb27f232c7ae3bf8af7d6211" title=" " alt="" coords="1041,225,1247,265"/>
-<area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html#a974563b8edd3f4b0cb6fe17615d04fbd" title=" " alt="" coords="1044,56,1244,96"/>
-<area shape="rect" href="classdyno_1_1Accessor.html#a724e8bbef287e354030f9ae6d42b3c6d" title="Collects all object poses for frame 0 to k. (Non&#45;pure )Virtual function that may be overwritten &#45; def..." alt="" coords="798,5,989,45"/>
-<area shape="rect" href="classdyno_1_1FrontendDisplayRos.html#a09c000cc83b1a2916026fa21b2859d95" title=" " alt="" coords="545,171,737,211"/>
-<area shape="rect" href="classdyno_1_1WorldMotionAccessor.html#a0a396e6c748dc58cf38e5b1a70b2eea4" title="Virtual function that is called to indcate the associated formulation has been updated...." alt="" coords="276,63,479,103"/>
-<area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#a3b8a72f00e038ce10f89be9ed52198da" title=" " alt="" coords="265,127,489,167"/>
-<area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2" title=" " alt="" coords="5,127,217,167"/>
-<area shape="rect" href="classdyno_1_1FrontendDisplayRos.html#ab73f0433ed01e79b3375afd7a512a26c" title=" " alt="" coords="281,203,473,243"/>
-</map>
-</div>
-
 </div>
 </div>
 <a id="a5c4641434abd1ae38d013cce5caab739" name="a5c4641434abd1ae38d013cce5caab739"></a>
@@ -572,19 +511,19 @@ template&lt;typename VALUE &gt; </div>
 <div class="line"><span class="lineno">  441</span>    <span class="keyword">static</span> <span class="keywordtype">size_t</span> out_of_range_flag;</div>
 <div class="line"><span class="lineno">  442</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="classdyno_1_1GenericObjectCentricMap.html#a33450c8ce82ab7fbfa2541ee0c6b20e3">existsImpl</a>(object_id, frame_id, out_of_range_flag);</div>
 <div class="line"><span class="lineno">  443</span>  }</div>
+<div class="ttc" id="aclassdyno_1_1GenericObjectCentricMap_html_a33450c8ce82ab7fbfa2541ee0c6b20e3"><div class="ttname"><a href="classdyno_1_1GenericObjectCentricMap.html#a33450c8ce82ab7fbfa2541ee0c6b20e3">dyno::GenericObjectCentricMap::existsImpl</a></div><div class="ttdeci">bool existsImpl(ObjectId object_id, FrameId frame_id, size_t &amp;out_of_range_flag) const</div><div class="ttdoc">Helper function to determine if the query exists. Operates like a regular exists function but also se...</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00505">Types.hpp:505</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1GenericObjectCentricMap.html#a33450c8ce82ab7fbfa2541ee0c6b20e3">dyno::GenericObjectCentricMap&lt; VALUE &gt;::existsImpl()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1GenericObjectCentricMap.html#a33450c8ce82ab7fbfa2541ee0c6b20e3">dyno::GenericObjectCentricMap&lt; VALUE &gt;::existsImpl()</a>, <a class="el" href="classdyno_1_1Accessor.html#a724e8bbef287e354030f9ae6d42b3c6d">dyno::Accessor&lt; MAP &gt;::getObjectPoses()</a>, <a class="el" href="classdyno_1_1GenericObjectCentricMap.html#abfce9b218241a024c0f66400200bbd58">dyno::GenericObjectCentricMap&lt; VALUE &gt;::insert22()</a>, and <a class="el" href="namespacedyno.html#a93c3e3c50ec5de7bfd1e2a373d20e77b">dyno::propogateObjectPoses()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1DSDTransport.html#a73f0554c9013b1e5be9fda71990706bf">dyno::DSDTransport::constructObjectOdometries()</a>, <a class="el" href="classdyno_1_1GenericObjectCentricMap.html#a33450c8ce82ab7fbfa2541ee0c6b20e3">dyno::GenericObjectCentricMap&lt; VALUE &gt;::existsImpl()</a>, <a class="el" href="classdyno_1_1Accessor.html#a724e8bbef287e354030f9ae6d42b3c6d">dyno::Accessor&lt; MAP &gt;::getObjectPoses()</a>, <a class="el" href="classdyno_1_1GenericObjectCentricMap.html#abfce9b218241a024c0f66400200bbd58">dyno::GenericObjectCentricMap&lt; VALUE &gt;::insert22()</a>, and <a class="el" href="namespacedyno.html#a93c3e3c50ec5de7bfd1e2a373d20e77b">dyno::propogateObjectPoses()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1GenericObjectCentricMap_a974563b8edd3f4b0cb6fe17615d04fbd_cgraph.png" border="0" usemap="#aclassdyno_1_1GenericObjectCentricMap_a974563b8edd3f4b0cb6fe17615d04fbd_cgraph" alt=""/></div>
 <map name="aclassdyno_1_1GenericObjectCentricMap_a974563b8edd3f4b0cb6fe17615d04fbd_cgraph" id="aclassdyno_1_1GenericObjectCentricMap_a974563b8edd3f4b0cb6fe17615d04fbd_cgraph">
-<area shape="rect" title=" " alt="" coords="5,35,205,75"/>
-<area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html#a33450c8ce82ab7fbfa2541ee0c6b20e3" title="Helper function to determine if the query exists. Operates like a regular exists function but also se..." alt="" coords="253,35,453,75"/>
+<area shape="rect" title=" " alt="" coords="5,5,205,45"/>
+<area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html#a33450c8ce82ab7fbfa2541ee0c6b20e3" title="Helper function to determine if the query exists. Operates like a regular exists function but also se..." alt="" coords="253,5,453,45"/>
 <area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html#af6ce62ffab5aadf1981a0ec04c3fad1e" title=" " alt="" coords="501,5,701,45"/>
-<area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html#add1f50d9f6d02dd0ef1f23f89e2fcf5a" title=" " alt="" coords="749,35,949,75"/>
 </map>
 </div>
 <div class="dynheader">
@@ -592,19 +531,19 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1GenericObjectCentricMap_a974563b8edd3f4b0cb6fe17615d04fbd_icgraph.png" border="0" usemap="#aclassdyno_1_1GenericObjectCentricMap_a974563b8edd3f4b0cb6fe17615d04fbd_icgraph" alt=""/></div>
 <map name="aclassdyno_1_1GenericObjectCentricMap_a974563b8edd3f4b0cb6fe17615d04fbd_icgraph" id="aclassdyno_1_1GenericObjectCentricMap_a974563b8edd3f4b0cb6fe17615d04fbd_icgraph">
-<area shape="rect" title=" " alt="" coords="1791,109,1991,149"/>
-<area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html#a33450c8ce82ab7fbfa2541ee0c6b20e3" title="Helper function to determine if the query exists. Operates like a regular exists function but also se..." alt="" coords="1543,109,1743,149"/>
-<area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html#abfce9b218241a024c0f66400200bbd58" title="Handy insert function allowing direct insertion to the nested map structure." alt="" coords="796,56,996,96"/>
-<area shape="rect" href="namespacedyno.html#a93c3e3c50ec5de7bfd1e2a373d20e77b" title="Propogated a map of object poses via their motions or otherwise." alt="" coords="537,63,745,89"/>
-<area shape="rect" href="classdyno_1_1Accessor.html#a724e8bbef287e354030f9ae6d42b3c6d" title="Collects all object poses for frame 0 to k. (Non&#45;pure )Virtual function that may be overwritten &#45; def..." alt="" coords="1547,173,1738,213"/>
-<area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html#add1f50d9f6d02dd0ef1f23f89e2fcf5a" title=" " alt="" coords="1295,109,1495,149"/>
-<area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html#af6ce62ffab5aadf1981a0ec04c3fad1e" title=" " alt="" coords="1047,113,1247,153"/>
-<area shape="rect" href="classdyno_1_1FrontendDisplayRos.html#a92d22245bb27f232c7ae3bf8af7d6211" title=" " alt="" coords="793,171,999,211"/>
-<area shape="rect" href="classdyno_1_1FrontendDisplayRos.html#a09c000cc83b1a2916026fa21b2859d95" title=" " alt="" coords="545,113,737,153"/>
-<area shape="rect" href="classdyno_1_1WorldMotionAccessor.html#a0a396e6c748dc58cf38e5b1a70b2eea4" title="Virtual function that is called to indcate the associated formulation has been updated...." alt="" coords="276,5,479,45"/>
-<area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#a3b8a72f00e038ce10f89be9ed52198da" title=" " alt="" coords="265,69,489,109"/>
-<area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2" title=" " alt="" coords="5,69,217,109"/>
-<area shape="rect" href="classdyno_1_1FrontendDisplayRos.html#ab73f0433ed01e79b3375afd7a512a26c" title=" " alt="" coords="281,145,473,185"/>
+<area shape="rect" title=" " alt="" coords="1051,101,1251,141"/>
+<area shape="rect" href="classdyno_1_1DSDTransport.html#a73f0554c9013b1e5be9fda71990706bf" title=" " alt="" coords="795,5,1003,45"/>
+<area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html#a33450c8ce82ab7fbfa2541ee0c6b20e3" title="Helper function to determine if the query exists. Operates like a regular exists function but also se..." alt="" coords="799,69,999,109"/>
+<area shape="rect" href="classdyno_1_1Accessor.html#a724e8bbef287e354030f9ae6d42b3c6d" title="Collects all object poses for frame 0 to k. (Non&#45;pure )Virtual function that may be overwritten &#45; def..." alt="" coords="803,133,994,173"/>
+<area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html#abfce9b218241a024c0f66400200bbd58" title="Handy insert function allowing direct insertion to the nested map structure." alt="" coords="799,249,999,289"/>
+<area shape="rect" href="namespacedyno.html#a93c3e3c50ec5de7bfd1e2a373d20e77b" title="Propogated a map of object poses via their motions or otherwise." alt="" coords="538,195,746,221"/>
+<area shape="rect" href="classdyno_1_1FrontendInbuiltDisplayRos.html#acdc1be16deea0c706451e415f303342f" title=" " alt="" coords="537,251,747,291"/>
+<area shape="rect" href="classdyno_1_1FrontendDSDRos.html#a30a427c3d1b16b3fa99e2ddde0802c41" title=" " alt="" coords="555,315,729,355"/>
+<area shape="rect" href="classdyno_1_1WorldMotionAccessor.html#a0a396e6c748dc58cf38e5b1a70b2eea4" title="Virtual function that is called to indcate the associated formulation has been updated...." alt="" coords="276,123,479,163"/>
+<area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#a3b8a72f00e038ce10f89be9ed52198da" title=" " alt="" coords="265,187,489,227"/>
+<area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2" title=" " alt="" coords="5,187,217,227"/>
+<area shape="rect" href="classdyno_1_1FrontendInbuiltDisplayRos.html#a8e47d6ce98cd285d8b6d9674cbacf334" title=" " alt="" coords="273,251,482,291"/>
+<area shape="rect" href="classdyno_1_1FrontendDSDRos.html#a633a457c51868257f25d44d1a99f0e12" title=" " alt="" coords="292,315,463,355"/>
 </map>
 </div>
 
@@ -665,28 +604,28 @@ template&lt;typename VALUE &gt; </div>
 <dd>
 false </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Types_8hpp_source.html#l00504">504</a> of file <a class="el" href="Types_8hpp_source.html">Types.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  505</span>                                                   {</div>
-<div class="line"><span class="lineno">  506</span>    <span class="keywordflow">if</span> (!this-&gt;<a class="code hl_function" href="classdyno_1_1GenericObjectCentricMap.html#a974563b8edd3f4b0cb6fe17615d04fbd">exists</a>(object_id)) {</div>
-<div class="line"><span class="lineno">  507</span>      out_of_range_flag = 0;</div>
-<div class="line"><span class="lineno">  508</span>      <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">  509</span>    }</div>
-<div class="line"><span class="lineno">  510</span> </div>
-<div class="line"><span class="lineno">  511</span>    <span class="keyword">const</span> <span class="keyword">auto</span>&amp; frame_map = this-&gt;<a class="code hl_function" href="classdyno_1_1GenericObjectCentricMap.html#af6ce62ffab5aadf1981a0ec04c3fad1e">at</a>(object_id);</div>
-<div class="line"><span class="lineno">  512</span>    <span class="keywordflow">if</span> (!frame_map.exists(frame_id)) {</div>
-<div class="line"><span class="lineno">  513</span>      out_of_range_flag = 1;</div>
-<div class="line"><span class="lineno">  514</span>      <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">  515</span>    } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  516</span>      out_of_range_flag = 2;</div>
-<div class="line"><span class="lineno">  517</span>      <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  518</span>    }</div>
-<div class="line"><span class="lineno">  519</span>  }</div>
+<p class="definition">Definition at line <a class="el" href="Types_8hpp_source.html#l00505">505</a> of file <a class="el" href="Types_8hpp_source.html">Types.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  506</span>                                                   {</div>
+<div class="line"><span class="lineno">  507</span>    <span class="keywordflow">if</span> (!this-&gt;<a class="code hl_function" href="classdyno_1_1GenericObjectCentricMap.html#a974563b8edd3f4b0cb6fe17615d04fbd">exists</a>(object_id)) {</div>
+<div class="line"><span class="lineno">  508</span>      out_of_range_flag = 0;</div>
+<div class="line"><span class="lineno">  509</span>      <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">  510</span>    }</div>
+<div class="line"><span class="lineno">  511</span> </div>
+<div class="line"><span class="lineno">  512</span>    <span class="keyword">const</span> <span class="keyword">auto</span>&amp; frame_map = this-&gt;<a class="code hl_function" href="classdyno_1_1GenericObjectCentricMap.html#af6ce62ffab5aadf1981a0ec04c3fad1e">at</a>(object_id);</div>
+<div class="line"><span class="lineno">  513</span>    <span class="keywordflow">if</span> (!frame_map.exists(frame_id)) {</div>
+<div class="line"><span class="lineno">  514</span>      out_of_range_flag = 1;</div>
+<div class="line"><span class="lineno">  515</span>      <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">  516</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  517</span>      out_of_range_flag = 2;</div>
+<div class="line"><span class="lineno">  518</span>      <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  519</span>    }</div>
+<div class="line"><span class="lineno">  520</span>  }</div>
 <div class="ttc" id="aclassdyno_1_1GenericObjectCentricMap_html_a974563b8edd3f4b0cb6fe17615d04fbd"><div class="ttname"><a href="classdyno_1_1GenericObjectCentricMap.html#a974563b8edd3f4b0cb6fe17615d04fbd">dyno::GenericObjectCentricMap::exists</a></div><div class="ttdeci">bool exists(ObjectId object_id, FrameId frame_id) const</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00440">Types.hpp:440</a></div></div>
 <div class="ttc" id="aclassdyno_1_1GenericObjectCentricMap_html_af6ce62ffab5aadf1981a0ec04c3fad1e"><div class="ttname"><a href="classdyno_1_1GenericObjectCentricMap.html#af6ce62ffab5aadf1981a0ec04c3fad1e">dyno::GenericObjectCentricMap::at</a></div><div class="ttdeci">const Value &amp; at(ObjectId object_id, FrameId frame_id) const</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00445">Types.hpp:445</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1GenericObjectCentricMap.html#af6ce62ffab5aadf1981a0ec04c3fad1e">dyno::GenericObjectCentricMap&lt; VALUE &gt;::at()</a>, and <a class="el" href="classdyno_1_1GenericObjectCentricMap.html#a974563b8edd3f4b0cb6fe17615d04fbd">dyno::GenericObjectCentricMap&lt; VALUE &gt;::exists()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1GenericObjectCentricMap.html#add1f50d9f6d02dd0ef1f23f89e2fcf5a">dyno::GenericObjectCentricMap&lt; VALUE &gt;::atImpl()</a>, and <a class="el" href="classdyno_1_1GenericObjectCentricMap.html#a974563b8edd3f4b0cb6fe17615d04fbd">dyno::GenericObjectCentricMap&lt; VALUE &gt;::exists()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1GenericObjectCentricMap.html#a974563b8edd3f4b0cb6fe17615d04fbd">dyno::GenericObjectCentricMap&lt; VALUE &gt;::exists()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -695,7 +634,6 @@ Here is the call graph for this function:</div>
 <area shape="rect" title="Helper function to determine if the query exists. Operates like a regular exists function but also se..." alt="" coords="5,69,205,109"/>
 <area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html#af6ce62ffab5aadf1981a0ec04c3fad1e" title=" " alt="" coords="253,5,453,45"/>
 <area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html#a974563b8edd3f4b0cb6fe17615d04fbd" title=" " alt="" coords="253,69,453,109"/>
-<area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html#add1f50d9f6d02dd0ef1f23f89e2fcf5a" title=" " alt="" coords="501,67,701,107"/>
 </map>
 </div>
 <div class="dynheader">
@@ -703,19 +641,19 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1GenericObjectCentricMap_a33450c8ce82ab7fbfa2541ee0c6b20e3_icgraph.png" border="0" usemap="#aclassdyno_1_1GenericObjectCentricMap_a33450c8ce82ab7fbfa2541ee0c6b20e3_icgraph" alt=""/></div>
 <map name="aclassdyno_1_1GenericObjectCentricMap_a33450c8ce82ab7fbfa2541ee0c6b20e3_icgraph" id="aclassdyno_1_1GenericObjectCentricMap_a33450c8ce82ab7fbfa2541ee0c6b20e3_icgraph">
-<area shape="rect" title="Helper function to determine if the query exists. Operates like a regular exists function but also se..." alt="" coords="1543,149,1743,189"/>
-<area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html#add1f50d9f6d02dd0ef1f23f89e2fcf5a" title=" " alt="" coords="1295,63,1495,103"/>
-<area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html#a974563b8edd3f4b0cb6fe17615d04fbd" title=" " alt="" coords="1295,177,1495,217"/>
-<area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html#af6ce62ffab5aadf1981a0ec04c3fad1e" title=" " alt="" coords="1047,63,1247,103"/>
-<area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html#abfce9b218241a024c0f66400200bbd58" title="Handy insert function allowing direct insertion to the nested map structure." alt="" coords="796,120,996,160"/>
-<area shape="rect" href="namespacedyno.html#a93c3e3c50ec5de7bfd1e2a373d20e77b" title="Propogated a map of object poses via their motions or otherwise." alt="" coords="537,127,745,153"/>
-<area shape="rect" href="classdyno_1_1FrontendDisplayRos.html#a92d22245bb27f232c7ae3bf8af7d6211" title=" " alt="" coords="793,5,999,45"/>
-<area shape="rect" href="classdyno_1_1FrontendDisplayRos.html#a09c000cc83b1a2916026fa21b2859d95" title=" " alt="" coords="545,63,737,103"/>
-<area shape="rect" href="classdyno_1_1WorldMotionAccessor.html#a0a396e6c748dc58cf38e5b1a70b2eea4" title="Virtual function that is called to indcate the associated formulation has been updated...." alt="" coords="276,107,479,147"/>
-<area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#a3b8a72f00e038ce10f89be9ed52198da" title=" " alt="" coords="265,171,489,211"/>
-<area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2" title=" " alt="" coords="5,171,217,211"/>
-<area shape="rect" href="classdyno_1_1FrontendDisplayRos.html#ab73f0433ed01e79b3375afd7a512a26c" title=" " alt="" coords="281,17,473,57"/>
-<area shape="rect" href="classdyno_1_1Accessor.html#a724e8bbef287e354030f9ae6d42b3c6d" title="Collects all object poses for frame 0 to k. (Non&#45;pure )Virtual function that may be overwritten &#45; def..." alt="" coords="1051,235,1242,275"/>
+<area shape="rect" title="Helper function to determine if the query exists. Operates like a regular exists function but also se..." alt="" coords="1299,99,1499,139"/>
+<area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html#a974563b8edd3f4b0cb6fe17615d04fbd" title=" " alt="" coords="1051,99,1251,139"/>
+<area shape="rect" href="classdyno_1_1DSDTransport.html#a73f0554c9013b1e5be9fda71990706bf" title=" " alt="" coords="795,5,1003,45"/>
+<area shape="rect" href="classdyno_1_1Accessor.html#a724e8bbef287e354030f9ae6d42b3c6d" title="Collects all object poses for frame 0 to k. (Non&#45;pure )Virtual function that may be overwritten &#45; def..." alt="" coords="803,69,994,109"/>
+<area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html#abfce9b218241a024c0f66400200bbd58" title="Handy insert function allowing direct insertion to the nested map structure." alt="" coords="799,185,999,225"/>
+<area shape="rect" href="namespacedyno.html#a93c3e3c50ec5de7bfd1e2a373d20e77b" title="Propogated a map of object poses via their motions or otherwise." alt="" coords="538,131,746,157"/>
+<area shape="rect" href="classdyno_1_1FrontendInbuiltDisplayRos.html#acdc1be16deea0c706451e415f303342f" title=" " alt="" coords="537,187,747,227"/>
+<area shape="rect" href="classdyno_1_1FrontendDSDRos.html#a30a427c3d1b16b3fa99e2ddde0802c41" title=" " alt="" coords="555,251,729,291"/>
+<area shape="rect" href="classdyno_1_1WorldMotionAccessor.html#a0a396e6c748dc58cf38e5b1a70b2eea4" title="Virtual function that is called to indcate the associated formulation has been updated...." alt="" coords="276,59,479,99"/>
+<area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#a3b8a72f00e038ce10f89be9ed52198da" title=" " alt="" coords="265,123,489,163"/>
+<area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2" title=" " alt="" coords="5,123,217,163"/>
+<area shape="rect" href="classdyno_1_1FrontendInbuiltDisplayRos.html#a8e47d6ce98cd285d8b6d9674cbacf334" title=" " alt="" coords="273,187,482,227"/>
+<area shape="rect" href="classdyno_1_1FrontendDSDRos.html#a633a457c51868257f25d44d1a99f0e12" title=" " alt="" coords="292,251,463,291"/>
 </map>
 </div>
 
@@ -789,17 +727,16 @@ false </dd></dl>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1GenericObjectCentricMap.html#af6ce62ffab5aadf1981a0ec04c3fad1e">dyno::GenericObjectCentricMap&lt; VALUE &gt;::at()</a>, and <a class="el" href="classdyno_1_1GenericObjectCentricMap.html#a974563b8edd3f4b0cb6fe17615d04fbd">dyno::GenericObjectCentricMap&lt; VALUE &gt;::exists()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="namespacedyno.html#a93c3e3c50ec5de7bfd1e2a373d20e77b">dyno::propogateObjectPoses()</a>, and <a class="el" href="classdyno_1_1FrontendDisplayRos.html#a09c000cc83b1a2916026fa21b2859d95">dyno::FrontendDisplayRos::publishGroundTruthInfo()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="namespacedyno.html#a93c3e3c50ec5de7bfd1e2a373d20e77b">dyno::propogateObjectPoses()</a>, <a class="el" href="classdyno_1_1FrontendInbuiltDisplayRos.html#acdc1be16deea0c706451e415f303342f">dyno::FrontendInbuiltDisplayRos::publishGroundTruthInfo()</a>, and <a class="el" href="classdyno_1_1FrontendDSDRos.html#a30a427c3d1b16b3fa99e2ddde0802c41">dyno::FrontendDSDRos::tryPublishGroundTruth()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1GenericObjectCentricMap_abfce9b218241a024c0f66400200bbd58_cgraph.png" border="0" usemap="#aclassdyno_1_1GenericObjectCentricMap_abfce9b218241a024c0f66400200bbd58_cgraph" alt=""/></div>
 <map name="aclassdyno_1_1GenericObjectCentricMap_abfce9b218241a024c0f66400200bbd58_cgraph" id="aclassdyno_1_1GenericObjectCentricMap_abfce9b218241a024c0f66400200bbd58_cgraph">
-<area shape="rect" title="Handy insert function allowing direct insertion to the nested map structure." alt="" coords="5,88,205,128"/>
-<area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html#af6ce62ffab5aadf1981a0ec04c3fad1e" title=" " alt="" coords="253,59,453,99"/>
-<area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html#a974563b8edd3f4b0cb6fe17615d04fbd" title=" " alt="" coords="997,59,1197,99"/>
-<area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html#add1f50d9f6d02dd0ef1f23f89e2fcf5a" title=" " alt="" coords="501,5,701,45"/>
-<area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html#a33450c8ce82ab7fbfa2541ee0c6b20e3" title="Helper function to determine if the query exists. Operates like a regular exists function but also se..." alt="" coords="749,59,949,99"/>
+<area shape="rect" title="Handy insert function allowing direct insertion to the nested map structure." alt="" coords="5,5,205,45"/>
+<area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html#af6ce62ffab5aadf1981a0ec04c3fad1e" title=" " alt="" coords="749,5,949,45"/>
+<area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html#a974563b8edd3f4b0cb6fe17615d04fbd" title=" " alt="" coords="253,33,453,73"/>
+<area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html#a33450c8ce82ab7fbfa2541ee0c6b20e3" title="Helper function to determine if the query exists. Operates like a regular exists function but also se..." alt="" coords="501,33,701,73"/>
 </map>
 </div>
 <div class="dynheader">
@@ -807,13 +744,15 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1GenericObjectCentricMap_abfce9b218241a024c0f66400200bbd58_icgraph.png" border="0" usemap="#aclassdyno_1_1GenericObjectCentricMap_abfce9b218241a024c0f66400200bbd58_icgraph" alt=""/></div>
 <map name="aclassdyno_1_1GenericObjectCentricMap_abfce9b218241a024c0f66400200bbd58_icgraph" id="aclassdyno_1_1GenericObjectCentricMap_abfce9b218241a024c0f66400200bbd58_icgraph">
-<area shape="rect" title="Handy insert function allowing direct insertion to the nested map structure." alt="" coords="793,101,993,141"/>
-<area shape="rect" href="namespacedyno.html#a93c3e3c50ec5de7bfd1e2a373d20e77b" title="Propogated a map of object poses via their motions or otherwise." alt="" coords="537,77,745,102"/>
-<area shape="rect" href="classdyno_1_1FrontendDisplayRos.html#a09c000cc83b1a2916026fa21b2859d95" title=" " alt="" coords="545,129,737,169"/>
+<area shape="rect" title="Handy insert function allowing direct insertion to the nested map structure." alt="" coords="795,133,995,173"/>
+<area shape="rect" href="namespacedyno.html#a93c3e3c50ec5de7bfd1e2a373d20e77b" title="Propogated a map of object poses via their motions or otherwise." alt="" coords="538,77,746,102"/>
+<area shape="rect" href="classdyno_1_1FrontendInbuiltDisplayRos.html#acdc1be16deea0c706451e415f303342f" title=" " alt="" coords="537,133,747,173"/>
+<area shape="rect" href="classdyno_1_1FrontendDSDRos.html#a30a427c3d1b16b3fa99e2ddde0802c41" title=" " alt="" coords="555,197,729,237"/>
 <area shape="rect" href="classdyno_1_1WorldMotionAccessor.html#a0a396e6c748dc58cf38e5b1a70b2eea4" title="Virtual function that is called to indcate the associated formulation has been updated...." alt="" coords="276,5,479,45"/>
 <area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#a3b8a72f00e038ce10f89be9ed52198da" title=" " alt="" coords="265,69,489,109"/>
 <area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2" title=" " alt="" coords="5,69,217,109"/>
-<area shape="rect" href="classdyno_1_1FrontendDisplayRos.html#ab73f0433ed01e79b3375afd7a512a26c" title=" " alt="" coords="281,133,473,173"/>
+<area shape="rect" href="classdyno_1_1FrontendInbuiltDisplayRos.html#a8e47d6ce98cd285d8b6d9674cbacf334" title=" " alt="" coords="273,133,482,173"/>
+<area shape="rect" href="classdyno_1_1FrontendDSDRos.html#a633a457c51868257f25d44d1a99f0e12" title=" " alt="" coords="292,197,463,237"/>
 </map>
 </div>
 

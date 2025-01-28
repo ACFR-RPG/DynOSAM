@@ -140,6 +140,9 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:a2e68bad5f89fd79e6a7515919080c286"><td class="memItemLeft" align="right" valign="top">gtsam::Vector3&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno.html#a2e68bad5f89fd79e6a7515919080c286">dyno::calculateBodyMotion</a> (const gtsam::Pose3 &amp;w_k_1_H_k, const gtsam::Pose3 &amp;w_L_k_1)</td></tr>
+<tr class="memdesc:a2e68bad5f89fd79e6a7515919080c286"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate the local body velocity given the motion in world from k-1 to k and the object pose at k-1. This returns the body velocity at k-1.  <br /></td></tr>
+<tr class="separator:a2e68bad5f89fd79e6a7515919080c286"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a93c3e3c50ec5de7bfd1e2a373d20e77b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno.html#a93c3e3c50ec5de7bfd1e2a373d20e77b">dyno::propogateObjectPoses</a> (ObjectPoseMap &amp;object_poses, const MotionEstimateMap &amp;object_motions_k, const gtsam::Point3Vector &amp;object_centroids_k_1, const gtsam::Point3Vector &amp;object_centroids_k, FrameId frame_id_k, std::optional&lt; GroundTruthPacketMap &gt; gt_packet_map={}, PropogatePoseResult *result=nullptr)</td></tr>
 <tr class="memdesc:a93c3e3c50ec5de7bfd1e2a373d20e77b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Propogated a map of object poses via their motions or otherwise.  <br /></td></tr>
 <tr class="separator:a93c3e3c50ec5de7bfd1e2a373d20e77b"><td class="memSeparator" colspan="2">&#160;</td></tr>

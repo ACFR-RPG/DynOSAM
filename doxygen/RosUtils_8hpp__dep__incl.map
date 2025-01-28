@@ -1,6 +1,12 @@
 <map id="dynosam_ros/include/dynosam_ros/RosUtils.hpp" name="dynosam_ros/include/dynosam_ros/RosUtils.hpp">
-<area shape="rect" id="node1" title=" " alt="" coords="283,5,482,45"/>
-<area shape="rect" id="node2" href="$BackendDisplayRos_8cc.html" title=" " alt="" coords="5,93,245,133"/>
-<area shape="rect" id="node3" href="$DisplayRos_8cc.html" title=" " alt="" coords="269,101,496,126"/>
-<area shape="rect" id="node4" href="$FrontendDisplayRos_8cc.html" title=" " alt="" coords="521,93,714,133"/>
+<area shape="rect" id="node1" title=" " alt="" coords="749,5,947,45"/>
+<area shape="rect" id="node2" href="$RosUtils-inl_8hpp.html" title=" " alt="" coords="5,93,176,148"/>
+<area shape="rect" id="node3" href="$PipelineRos_8cc.html" title=" " alt="" coords="201,101,389,141"/>
+<area shape="rect" id="node4" href="$RosUtils_8cc.html" title=" " alt="" coords="413,108,621,133"/>
+<area shape="rect" id="node5" href="$DisplaysCommon_8cc.html" title=" " alt="" coords="646,101,837,141"/>
+<area shape="rect" id="node6" href="$DSDCommonRos_8cc.html" title=" " alt="" coords="861,93,1051,148"/>
+<area shape="rect" id="node7" href="$FrontendDSDRos_8cc.html" title=" " alt="" coords="1075,93,1266,148"/>
+<area shape="rect" id="node8" href="$BackendInbuiltDisplayRos_8cc.html" title=" " alt="" coords="1290,93,1518,148"/>
+<area shape="rect" id="node9" href="$FrontendInbuiltDisplayRos_8cc.html" title=" " alt="" coords="1542,93,1773,148"/>
+<area shape="rect" id="node10" href="$InbuiltDisplayCommon_8cc.html" title=" " alt="" coords="1797,93,2019,148"/>
 </map>

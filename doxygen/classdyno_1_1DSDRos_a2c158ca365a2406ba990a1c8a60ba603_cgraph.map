@@ -1,0 +1,8 @@
+<map id="dyno::DSDRos::publishDynamicPointCloud" name="dyno::DSDRos::publishDynamicPointCloud">
+<area shape="rect" id="node1" title=" " alt="" coords="5,23,232,63"/>
+<area shape="rect" id="node2" href="$structdyno_1_1DisplayCommon.html#ad9251fcb86a8c872c6b3736d0c2cd8f8" title=" " alt="" coords="280,23,451,63"/>
+<area shape="rect" id="node3" href="$structdyno_1_1Color.html#a4f52f9aec87e2c34370ad02e6d4e25fc" title="Generates a sequence of never repeating colors using the golden ration to seperate the colours along ..." alt="" coords="499,31,659,56"/>
+<area shape="rect" id="node4" href="$structdyno_1_1Color.html#a08bcb6ea49861f6978858a2ff5159002" title=" " alt="" coords="707,31,869,56"/>
+<area shape="rect" id="node5" href="$structdyno_1_1Color.html#a6bc55a80a463a481dbf4778c70d04733" title=" " alt="" coords="945,5,1083,31"/>
+<area shape="rect" id="node6" href="$namespacedyno.html#ab0e74ec8992860404a618192cc694b83" title=" " alt="" coords="917,55,1111,80"/>
+</map>
