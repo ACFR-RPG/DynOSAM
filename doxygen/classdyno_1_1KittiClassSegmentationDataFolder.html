@@ -146,7 +146,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="KittiDataProvider_8hpp_source.html#l00295">295</a> of file <a class="el" href="KittiDataProvider_8hpp_source.html">KittiDataProvider.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="KittiDataProvider_8hpp_source.html#l00307">307</a> of file <a class="el" href="KittiDataProvider_8hpp_source.html">KittiDataProvider.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a7a722baaa38a034247d56076a0bbe64b" name="a7a722baaa38a034247d56076a0bbe64b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7a722baaa38a034247d56076a0bbe64b">&#9670;&#160;</a></span>KittiClassSegmentationDataFolder()</h2>
@@ -171,8 +171,8 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="KittiDataProvider_8hpp_source.html#l00299">299</a> of file <a class="el" href="KittiDataProvider_8hpp_source.html">KittiDataProvider.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  299</span>{}</div>
+<p class="definition">Definition at line <a class="el" href="KittiDataProvider_8hpp_source.html#l00311">311</a> of file <a class="el" href="KittiDataProvider_8hpp_source.html">KittiDataProvider.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  311</span>{}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -202,8 +202,10 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classdyno_1_1DataFolder.html#a63d64595445016c30e623154c45260b6">dyno::DataFolder&lt; cv::Mat &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="KittiDataProvider_8hpp_source.html#l00301">301</a> of file <a class="el" href="KittiDataProvider_8hpp_source.html">KittiDataProvider.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  301</span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;pixel_semantics&quot;</span>; }</div>
+<p class="definition">Definition at line <a class="el" href="KittiDataProvider_8hpp_source.html#l00314">314</a> of file <a class="el" href="KittiDataProvider_8hpp_source.html">KittiDataProvider.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  314</span>                                                  {</div>
+<div class="line"><span class="lineno">  315</span>    <span class="keywordflow">return</span> <span class="stringliteral">&quot;pixel_semantics&quot;</span>;</div>
+<div class="line"><span class="lineno">  316</span>  }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -243,42 +245,42 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classdyno_1_1DataFolder.html#a60162e20f359ad6f5ff58edf0964e3ac">dyno::DataFolder&lt; cv::Mat &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="KittiDataProvider_8hpp_source.html#l00303">303</a> of file <a class="el" href="KittiDataProvider_8hpp_source.html">KittiDataProvider.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  303</span>                                       {</div>
-<div class="line"><span class="lineno">  304</span>        std::stringstream ss;</div>
-<div class="line"><span class="lineno">  305</span>        ss &lt;&lt; std::setfill(<span class="charliteral">&#39;0&#39;</span>) &lt;&lt; std::setw(6) &lt;&lt; idx;</div>
-<div class="line"><span class="lineno">  306</span>        <span class="keyword">const</span> std::string file_path = (std::string)<a class="code hl_function" href="classdyno_1_1DataFolder.html#ad832c1d501f9c40eefde4cfc3633e218">getAbsolutePath</a>()  + <span class="stringliteral">&quot;/&quot;</span> + ss.str() + <span class="stringliteral">&quot;.png&quot;</span>;</div>
-<div class="line"><span class="lineno">  307</span>        <a class="code hl_function" href="namespacedyno.html#a80d59abcebfb78b7fb237b1572429606">throwExceptionIfPathInvalid</a>(file_path);</div>
-<div class="line"><span class="lineno">  308</span> </div>
-<div class="line"><span class="lineno">  309</span>        png::image&lt;png::rgb_pixel&gt; index_image(file_path);</div>
-<div class="line"><span class="lineno">  310</span> </div>
-<div class="line"><span class="lineno">  311</span>        cv::Size size(index_image.get_width(), index_image.get_height());</div>
-<div class="line"><span class="lineno">  312</span>        cv::Mat class_segmentation(size, <a class="code hl_variable" href="structdyno_1_1ImageType_1_1ClassSegmentation.html#a823e729b609c1c8bc9bc22e575c9f375">ImageType::ClassSegmentation::OpenCVType</a>);</div>
-<div class="line"><span class="lineno">  313</span> </div>
-<div class="line"><span class="lineno">  314</span>        <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> y = 0; y &lt; index_image.get_height(); ++y)</div>
-<div class="line"><span class="lineno">  315</span>        {</div>
-<div class="line"><span class="lineno">  316</span>            <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> x = 0; x &lt; index_image.get_width(); ++x)</div>
-<div class="line"><span class="lineno">  317</span>            {</div>
-<div class="line"><span class="lineno">  318</span>                <span class="keyword">const</span> <span class="keyword">auto</span>&amp; pixel = index_image.get_pixel(x, y);</div>
-<div class="line"><span class="lineno">  319</span>                <span class="keyword">const</span> <span class="keyword">auto</span> red = pixel.red;</div>
-<div class="line"><span class="lineno">  320</span> </div>
-<div class="line"><span class="lineno">  321</span>                <span class="comment">//TODO: HARDCODED!!! https://github.com/google-research/deeplab2/blob/main/g3doc/setup/kitti_step.md</span></div>
-<div class="line"><span class="lineno">  322</span>                <span class="keywordflow">if</span>(red == 0) {</div>
-<div class="line"><span class="lineno">  323</span>                    class_segmentation.at&lt;<span class="keywordtype">int</span>&gt;(y, x) = <a class="code hl_enumvalue" href="structdyno_1_1ImageType_1_1ClassSegmentation.html#a1e1241cf556b4e80151c3a43d0eb52a5aba27bf5de23529afdba03269e0aa077a">ImageType::ClassSegmentation::Labels::Road</a>;</div>
-<div class="line"><span class="lineno">  324</span>                }</div>
-<div class="line"><span class="lineno">  325</span>                <span class="keywordflow">else</span> <span class="keywordflow">if</span>(red == 12) {</div>
-<div class="line"><span class="lineno">  326</span>                    class_segmentation.at&lt;<span class="keywordtype">int</span>&gt;(y, x) = <a class="code hl_enumvalue" href="structdyno_1_1ImageType_1_1ClassSegmentation.html#a1e1241cf556b4e80151c3a43d0eb52a5af35b93a5e017060649a40d207b86827b">ImageType::ClassSegmentation::Labels::Rider</a>;</div>
-<div class="line"><span class="lineno">  327</span>                }</div>
-<div class="line"><span class="lineno">  328</span> </div>
-<div class="line"><span class="lineno">  329</span>            }</div>
-<div class="line"><span class="lineno">  330</span>        }</div>
-<div class="line"><span class="lineno">  331</span>        <span class="keywordflow">return</span> class_segmentation;</div>
-<div class="line"><span class="lineno">  332</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="KittiDataProvider_8hpp_source.html#l00318">318</a> of file <a class="el" href="KittiDataProvider_8hpp_source.html">KittiDataProvider.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  318</span>                                     {</div>
+<div class="line"><span class="lineno">  319</span>    std::stringstream ss;</div>
+<div class="line"><span class="lineno">  320</span>    ss &lt;&lt; std::setfill(<span class="charliteral">&#39;0&#39;</span>) &lt;&lt; std::setw(6) &lt;&lt; idx;</div>
+<div class="line"><span class="lineno">  321</span>    <span class="keyword">const</span> std::string file_path =</div>
+<div class="line"><span class="lineno">  322</span>        (std::string)<a class="code hl_function" href="classdyno_1_1DataFolder.html#ad832c1d501f9c40eefde4cfc3633e218">getAbsolutePath</a>() + <span class="stringliteral">&quot;/&quot;</span> + ss.str() + <span class="stringliteral">&quot;.png&quot;</span>;</div>
+<div class="line"><span class="lineno">  323</span>    <a class="code hl_function" href="namespacedyno.html#a80d59abcebfb78b7fb237b1572429606">throwExceptionIfPathInvalid</a>(file_path);</div>
+<div class="line"><span class="lineno">  324</span> </div>
+<div class="line"><span class="lineno">  325</span>    png::image&lt;png::rgb_pixel&gt; index_image(file_path);</div>
+<div class="line"><span class="lineno">  326</span> </div>
+<div class="line"><span class="lineno">  327</span>    cv::Size size(index_image.get_width(), index_image.get_height());</div>
+<div class="line"><span class="lineno">  328</span>    cv::Mat class_segmentation(size, <a class="code hl_variable" href="structdyno_1_1ImageType_1_1ClassSegmentation.html#a823e729b609c1c8bc9bc22e575c9f375">ImageType::ClassSegmentation::OpenCVType</a>);</div>
+<div class="line"><span class="lineno">  329</span> </div>
+<div class="line"><span class="lineno">  330</span>    <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> y = 0; y &lt; index_image.get_height(); ++y) {</div>
+<div class="line"><span class="lineno">  331</span>      <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> x = 0; x &lt; index_image.get_width(); ++x) {</div>
+<div class="line"><span class="lineno">  332</span>        <span class="keyword">const</span> <span class="keyword">auto</span>&amp; pixel = index_image.get_pixel(x, y);</div>
+<div class="line"><span class="lineno">  333</span>        <span class="keyword">const</span> <span class="keyword">auto</span> red = pixel.red;</div>
+<div class="line"><span class="lineno">  334</span> </div>
+<div class="line"><span class="lineno">  335</span>        <span class="comment">// TODO: HARDCODED!!!</span></div>
+<div class="line"><span class="lineno">  336</span>        <span class="comment">// https://github.com/google-research/deeplab2/blob/main/g3doc/setup/kitti_step.md</span></div>
+<div class="line"><span class="lineno">  337</span>        <span class="keywordflow">if</span> (red == 0) {</div>
+<div class="line"><span class="lineno">  338</span>          class_segmentation.at&lt;<span class="keywordtype">int</span>&gt;(y, x) =</div>
+<div class="line"><span class="lineno">  339</span>              <a class="code hl_enumvalue" href="structdyno_1_1ImageType_1_1ClassSegmentation.html#a1e1241cf556b4e80151c3a43d0eb52a5aba27bf5de23529afdba03269e0aa077a">ImageType::ClassSegmentation::Labels::Road</a>;</div>
+<div class="line"><span class="lineno">  340</span>        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (red == 12) {</div>
+<div class="line"><span class="lineno">  341</span>          class_segmentation.at&lt;<span class="keywordtype">int</span>&gt;(y, x) =</div>
+<div class="line"><span class="lineno">  342</span>              <a class="code hl_enumvalue" href="structdyno_1_1ImageType_1_1ClassSegmentation.html#a1e1241cf556b4e80151c3a43d0eb52a5af35b93a5e017060649a40d207b86827b">ImageType::ClassSegmentation::Labels::Rider</a>;</div>
+<div class="line"><span class="lineno">  343</span>        }</div>
+<div class="line"><span class="lineno">  344</span>      }</div>
+<div class="line"><span class="lineno">  345</span>    }</div>
+<div class="line"><span class="lineno">  346</span>    <span class="keywordflow">return</span> class_segmentation;</div>
+<div class="line"><span class="lineno">  347</span>  }</div>
 <div class="ttc" id="aclassdyno_1_1DataFolder_html_ad832c1d501f9c40eefde4cfc3633e218"><div class="ttname"><a href="classdyno_1_1DataFolder.html#ad832c1d501f9c40eefde4cfc3633e218">dyno::DataFolder&lt; cv::Mat &gt;::getAbsolutePath</a></div><div class="ttdeci">fs::path getAbsolutePath() const</div><div class="ttdef"><b>Definition:</b> <a href="DatasetLoader_8hpp_source.html#l00106">DatasetLoader.hpp:106</a></div></div>
 <div class="ttc" id="anamespacedyno_html_a80d59abcebfb78b7fb237b1572429606"><div class="ttname"><a href="namespacedyno.html#a80d59abcebfb78b7fb237b1572429606">dyno::throwExceptionIfPathInvalid</a></div><div class="ttdeci">void throwExceptionIfPathInvalid(const std::string image_path)</div><div class="ttdef"><b>Definition:</b> <a href="DataProviderUtils_8cc_source.html#l00044">DataProviderUtils.cc:44</a></div></div>
-<div class="ttc" id="astructdyno_1_1ImageType_1_1ClassSegmentation_html_a1e1241cf556b4e80151c3a43d0eb52a5aba27bf5de23529afdba03269e0aa077a"><div class="ttname"><a href="structdyno_1_1ImageType_1_1ClassSegmentation.html#a1e1241cf556b4e80151c3a43d0eb52a5aba27bf5de23529afdba03269e0aa077a">dyno::ImageType::ClassSegmentation::Road</a></div><div class="ttdeci">@ Road</div><div class="ttdef"><b>Definition:</b> <a href="ImageTypes_8hpp_source.html#l00141">ImageTypes.hpp:141</a></div></div>
-<div class="ttc" id="astructdyno_1_1ImageType_1_1ClassSegmentation_html_a1e1241cf556b4e80151c3a43d0eb52a5af35b93a5e017060649a40d207b86827b"><div class="ttname"><a href="structdyno_1_1ImageType_1_1ClassSegmentation.html#a1e1241cf556b4e80151c3a43d0eb52a5af35b93a5e017060649a40d207b86827b">dyno::ImageType::ClassSegmentation::Rider</a></div><div class="ttdeci">@ Rider</div><div class="ttdef"><b>Definition:</b> <a href="ImageTypes_8hpp_source.html#l00142">ImageTypes.hpp:142</a></div></div>
-<div class="ttc" id="astructdyno_1_1ImageType_1_1ClassSegmentation_html_a823e729b609c1c8bc9bc22e575c9f375"><div class="ttname"><a href="structdyno_1_1ImageType_1_1ClassSegmentation.html#a823e729b609c1c8bc9bc22e575c9f375">dyno::ImageType::ClassSegmentation::OpenCVType</a></div><div class="ttdeci">static constexpr int OpenCVType</div><div class="ttdef"><b>Definition:</b> <a href="ImageTypes_8hpp_source.html#l00133">ImageTypes.hpp:133</a></div></div>
+<div class="ttc" id="astructdyno_1_1ImageType_1_1ClassSegmentation_html_a1e1241cf556b4e80151c3a43d0eb52a5aba27bf5de23529afdba03269e0aa077a"><div class="ttname"><a href="structdyno_1_1ImageType_1_1ClassSegmentation.html#a1e1241cf556b4e80151c3a43d0eb52a5aba27bf5de23529afdba03269e0aa077a">dyno::ImageType::ClassSegmentation::Road</a></div><div class="ttdeci">@ Road</div><div class="ttdef"><b>Definition:</b> <a href="ImageTypes_8hpp_source.html#l00155">ImageTypes.hpp:155</a></div></div>
+<div class="ttc" id="astructdyno_1_1ImageType_1_1ClassSegmentation_html_a1e1241cf556b4e80151c3a43d0eb52a5af35b93a5e017060649a40d207b86827b"><div class="ttname"><a href="structdyno_1_1ImageType_1_1ClassSegmentation.html#a1e1241cf556b4e80151c3a43d0eb52a5af35b93a5e017060649a40d207b86827b">dyno::ImageType::ClassSegmentation::Rider</a></div><div class="ttdeci">@ Rider</div><div class="ttdef"><b>Definition:</b> <a href="ImageTypes_8hpp_source.html#l00156">ImageTypes.hpp:156</a></div></div>
+<div class="ttc" id="astructdyno_1_1ImageType_1_1ClassSegmentation_html_a823e729b609c1c8bc9bc22e575c9f375"><div class="ttname"><a href="structdyno_1_1ImageType_1_1ClassSegmentation.html#a823e729b609c1c8bc9bc22e575c9f375">dyno::ImageType::ClassSegmentation::OpenCVType</a></div><div class="ttdeci">static constexpr int OpenCVType</div><div class="ttdef"><b>Definition:</b> <a href="ImageTypes_8hpp_source.html#l00146">ImageTypes.hpp:146</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1DataFolder.html#ad832c1d501f9c40eefde4cfc3633e218">dyno::DataFolder&lt; cv::Mat &gt;::getAbsolutePath()</a>, <a class="el" href="structdyno_1_1ImageType_1_1ClassSegmentation.html#a823e729b609c1c8bc9bc22e575c9f375">dyno::ImageType::ClassSegmentation::OpenCVType</a>, <a class="el" href="structdyno_1_1ImageType_1_1ClassSegmentation.html#a1e1241cf556b4e80151c3a43d0eb52a5af35b93a5e017060649a40d207b86827b">dyno::ImageType::ClassSegmentation::Rider</a>, <a class="el" href="structdyno_1_1ImageType_1_1ClassSegmentation.html#a1e1241cf556b4e80151c3a43d0eb52a5aba27bf5de23529afdba03269e0aa077a">dyno::ImageType::ClassSegmentation::Road</a>, and <a class="el" href="namespacedyno.html#a80d59abcebfb78b7fb237b1572429606">dyno::throwExceptionIfPathInvalid()</a>.</p>
 <div class="dynheader">

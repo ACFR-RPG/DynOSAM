@@ -314,9 +314,10 @@ Additional Inherited Members</h2></td></tr>
 <div class="line"><span class="lineno">   67</span>      std::make_unique&lt;FeatureTracker&gt;(frontend_params, <a class="code hl_variable" href="classdyno_1_1RGBDInstanceFrontendModule.html#acba1dedf24b5945c4ef39010fe0c79a9">camera_</a>, display_queue);</div>
 <div class="line"><span class="lineno">   68</span> </div>
 <div class="line"><span class="lineno">   69</span>  <span class="keywordflow">if</span> (FLAGS_use_frontend_logger) {</div>
-<div class="line"><span class="lineno">   70</span>    <a class="code hl_variable" href="classdyno_1_1RGBDInstanceFrontendModule.html#ab3ca43e5e01c0af7ddd620282d229121">logger_</a> = std::make_unique&lt;RGBDFrontendLogger&gt;();</div>
-<div class="line"><span class="lineno">   71</span>  }</div>
-<div class="line"><span class="lineno">   72</span>}</div>
+<div class="line"><span class="lineno">   70</span>    LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Using front-end logger!&quot;</span>;</div>
+<div class="line"><span class="lineno">   71</span>    <a class="code hl_variable" href="classdyno_1_1RGBDInstanceFrontendModule.html#ab3ca43e5e01c0af7ddd620282d229121">logger_</a> = std::make_unique&lt;RGBDFrontendLogger&gt;();</div>
+<div class="line"><span class="lineno">   72</span>  }</div>
+<div class="line"><span class="lineno">   73</span>}</div>
 <div class="ttc" id="aclassdyno_1_1FrontendModule_html_a3401a08ecaccc94f6651a331e72589d5"><div class="ttname"><a href="classdyno_1_1FrontendModule.html#a3401a08ecaccc94f6651a331e72589d5">dyno::FrontendModule::FrontendModule</a></div><div class="ttdeci">FrontendModule(const FrontendParams &amp;params, ImageDisplayQueue *display_queue=nullptr)</div><div class="ttdef"><b>Definition:</b> <a href="FrontendModule_8cc_source.html#l00031">FrontendModule.cc:31</a></div></div>
 <div class="ttc" id="aclassdyno_1_1RGBDInstanceFrontendModule_html_a2eb15437003aef1c7a0b9612e9d9ee64"><div class="ttname"><a href="classdyno_1_1RGBDInstanceFrontendModule.html#a2eb15437003aef1c7a0b9612e9d9ee64">dyno::RGBDInstanceFrontendModule::motion_solver_</a></div><div class="ttdeci">EgoMotionSolver motion_solver_</div><div class="ttdef"><b>Definition:</b> <a href="RGBDInstanceFrontendModule_8hpp_source.html#l00053">RGBDInstanceFrontendModule.hpp:53</a></div></div>
 <div class="ttc" id="aclassdyno_1_1RGBDInstanceFrontendModule_html_a6f7ea559d6128c83bfefd238ebc4b608"><div class="ttname"><a href="classdyno_1_1RGBDInstanceFrontendModule.html#a6f7ea559d6128c83bfefd238ebc4b608">dyno::RGBDInstanceFrontendModule::tracker_</a></div><div class="ttdeci">FeatureTracker::UniquePtr tracker_</div><div class="ttdef"><b>Definition:</b> <a href="RGBDInstanceFrontendModule_8hpp_source.html#l00055">RGBDInstanceFrontendModule.hpp:55</a></div></div>
@@ -343,16 +344,16 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="RGBDInstanceFrontendModule_8cc_source.html#l00074">74</a> of file <a class="el" href="RGBDInstanceFrontendModule_8cc_source.html">RGBDInstanceFrontendModule.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   74</span>                                                        {</div>
-<div class="line"><span class="lineno">   75</span>  <span class="keywordflow">if</span> (FLAGS_save_frontend_json) {</div>
-<div class="line"><span class="lineno">   76</span>    LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Saving frontend output as json&quot;</span>;</div>
-<div class="line"><span class="lineno">   77</span>    <span class="keyword">const</span> std::string file_path =</div>
-<div class="line"><span class="lineno">   78</span>        <a class="code hl_function" href="namespacedyno.html#a80a71f28f4f692dc9c21976237dfcfe1">getOutputFilePath</a>(<a class="code hl_variable" href="namespacedyno.html#a49209c99b692a99011783e95f4f8fc2e">kRgbdFrontendOutputJsonFile</a>);</div>
-<div class="line"><span class="lineno">   79</span>    <a class="code hl_function" href="classdyno_1_1JsonConverter.html#a6efe3e60a8d0f2851d18beb6f6ba363a">JsonConverter::WriteOutJson</a>(<a class="code hl_variable" href="classdyno_1_1RGBDInstanceFrontendModule.html#a2eda61065a45a930571823756c1a7324">output_packet_record_</a>, file_path,</div>
-<div class="line"><span class="lineno">   80</span>                                <a class="code hl_enumvalue" href="classdyno_1_1JsonConverter.html#a6f6ff6dc979983011066496232a81077a3bbe9dadc3435bf55619f0c6ef8ef7ba">JsonConverter::Format::BSON</a>);</div>
-<div class="line"><span class="lineno">   81</span>  }</div>
-<div class="line"><span class="lineno">   82</span>}</div>
+<p class="definition">Definition at line <a class="el" href="RGBDInstanceFrontendModule_8cc_source.html#l00075">75</a> of file <a class="el" href="RGBDInstanceFrontendModule_8cc_source.html">RGBDInstanceFrontendModule.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   75</span>                                                        {</div>
+<div class="line"><span class="lineno">   76</span>  <span class="keywordflow">if</span> (FLAGS_save_frontend_json) {</div>
+<div class="line"><span class="lineno">   77</span>    LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Saving frontend output as json&quot;</span>;</div>
+<div class="line"><span class="lineno">   78</span>    <span class="keyword">const</span> std::string file_path =</div>
+<div class="line"><span class="lineno">   79</span>        <a class="code hl_function" href="namespacedyno.html#a80a71f28f4f692dc9c21976237dfcfe1">getOutputFilePath</a>(<a class="code hl_variable" href="namespacedyno.html#a49209c99b692a99011783e95f4f8fc2e">kRgbdFrontendOutputJsonFile</a>);</div>
+<div class="line"><span class="lineno">   80</span>    <a class="code hl_function" href="classdyno_1_1JsonConverter.html#a6efe3e60a8d0f2851d18beb6f6ba363a">JsonConverter::WriteOutJson</a>(<a class="code hl_variable" href="classdyno_1_1RGBDInstanceFrontendModule.html#a2eda61065a45a930571823756c1a7324">output_packet_record_</a>, file_path,</div>
+<div class="line"><span class="lineno">   81</span>                                <a class="code hl_enumvalue" href="classdyno_1_1JsonConverter.html#a6f6ff6dc979983011066496232a81077a3bbe9dadc3435bf55619f0c6ef8ef7ba">JsonConverter::Format::BSON</a>);</div>
+<div class="line"><span class="lineno">   82</span>  }</div>
+<div class="line"><span class="lineno">   83</span>}</div>
 <div class="ttc" id="aclassdyno_1_1JsonConverter_html_a6efe3e60a8d0f2851d18beb6f6ba363a"><div class="ttname"><a href="classdyno_1_1JsonConverter.html#a6efe3e60a8d0f2851d18beb6f6ba363a">dyno::JsonConverter::WriteOutJson</a></div><div class="ttdeci">static void WriteOutJson(const T &amp;value, const std::string &amp;filepath, const Format &amp;fmt=Format::BSON)</div><div class="ttdef"><b>Definition:</b> <a href="Logger_8hpp_source.html#l00173">Logger.hpp:173</a></div></div>
 <div class="ttc" id="aclassdyno_1_1JsonConverter_html_a6f6ff6dc979983011066496232a81077a3bbe9dadc3435bf55619f0c6ef8ef7ba"><div class="ttname"><a href="classdyno_1_1JsonConverter.html#a6f6ff6dc979983011066496232a81077a3bbe9dadc3435bf55619f0c6ef8ef7ba">dyno::JsonConverter::BSON</a></div><div class="ttdeci">@ BSON</div><div class="ttdef"><b>Definition:</b> <a href="Logger_8hpp_source.html#l00169">Logger.hpp:169</a></div></div>
 <div class="ttc" id="aclassdyno_1_1RGBDInstanceFrontendModule_html_a2eda61065a45a930571823756c1a7324"><div class="ttname"><a href="classdyno_1_1RGBDInstanceFrontendModule.html#a2eda61065a45a930571823756c1a7324">dyno::RGBDInstanceFrontendModule::output_packet_record_</a></div><div class="ttdeci">std::map&lt; FrameId, RGBDInstanceOutputPacket::Ptr &gt; output_packet_record_</div><div class="ttdef"><b>Definition:</b> <a href="RGBDInstanceFrontendModule_8hpp_source.html#l00105">RGBDInstanceFrontendModule.hpp:105</a></div></div>
@@ -398,15 +399,17 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="RGBDInstanceFrontendModule_8cc_source.html#l00091">91</a> of file <a class="el" href="RGBDInstanceFrontendModule_8cc_source.html">RGBDInstanceFrontendModule.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   92</span>                                           {</div>
-<div class="line"><span class="lineno">   93</span>  ImageContainer::Ptr image_container = input-&gt;image_container_;</div>
-<div class="line"><span class="lineno">   94</span>  Frame::Ptr frame = <a class="code hl_variable" href="classdyno_1_1RGBDInstanceFrontendModule.html#a6f7ea559d6128c83bfefd238ebc4b608">tracker_</a>-&gt;track(input-&gt;getFrameId(), input-&gt;getTimestamp(),</div>
-<div class="line"><span class="lineno">   95</span>                                     *image_container);</div>
-<div class="line"><span class="lineno">   96</span>  CHECK(frame-&gt;updateDepths());</div>
-<div class="line"><span class="lineno">   97</span> </div>
-<div class="line"><span class="lineno">   98</span>  <span class="keywordflow">return</span> {State::Nominal, <span class="keyword">nullptr</span>};</div>
-<div class="line"><span class="lineno">   99</span>}</div>
+<p class="definition">Definition at line <a class="el" href="RGBDInstanceFrontendModule_8cc_source.html#l00092">92</a> of file <a class="el" href="RGBDInstanceFrontendModule_8cc_source.html">RGBDInstanceFrontendModule.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   93</span>                                           {</div>
+<div class="line"><span class="lineno">   94</span>  ImageContainer::Ptr image_container = input-&gt;image_container_;</div>
+<div class="line"><span class="lineno">   95</span>  Frame::Ptr frame = <a class="code hl_variable" href="classdyno_1_1RGBDInstanceFrontendModule.html#a6f7ea559d6128c83bfefd238ebc4b608">tracker_</a>-&gt;track(input-&gt;getFrameId(), input-&gt;getTimestamp(),</div>
+<div class="line"><span class="lineno">   96</span>                                     *image_container);</div>
+<div class="line"><span class="lineno">   97</span>  <span class="comment">// LOG(INFO) &lt;&lt; &quot;Num usable static &quot; &lt;&lt; frame-&gt;numStaticUsableFeatures();</span></div>
+<div class="line"><span class="lineno">   98</span>  CHECK(frame-&gt;updateDepths());</div>
+<div class="line"><span class="lineno">   99</span>  <span class="comment">// LOG(INFO) &lt;&lt; &quot;Num usable static &quot; &lt;&lt; frame-&gt;numStaticUsableFeatures();</span></div>
+<div class="line"><span class="lineno">  100</span> </div>
+<div class="line"><span class="lineno">  101</span>  <span class="keywordflow">return</span> {State::Nominal, <span class="keyword">nullptr</span>};</div>
+<div class="line"><span class="lineno">  102</span>}</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1RGBDInstanceFrontendModule.html#a6f7ea559d6128c83bfefd238ebc4b608">tracker_</a>.</p>
 
@@ -464,82 +467,82 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="RGBDInstanceFrontendModule_8cc_source.html#l00323">323</a> of file <a class="el" href="RGBDInstanceFrontendModule_8cc_source.html">RGBDInstanceFrontendModule.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  327</span>                                               {</div>
-<div class="line"><span class="lineno">  328</span>  <a class="code hl_typedef" href="namespacedyno.html#a1efaa56a29795d6bd138701d1aeb72c9">StatusKeypointVector</a> static_keypoint_measurements;</div>
-<div class="line"><span class="lineno">  329</span>  <a class="code hl_typedef" href="namespacedyno.html#afa01ab54e33c616353a643645cd2aaee">StatusLandmarkVector</a> static_landmarks;</div>
-<div class="line"><span class="lineno">  330</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> Feature::Ptr&amp; f : frame.usableStaticFeaturesBegin()) {</div>
-<div class="line"><span class="lineno">  331</span>    <span class="keyword">const</span> <a class="code hl_typedef" href="namespacedyno.html#afdd174eb44901fb205371d796287378c">TrackletId</a> tracklet_id = f-&gt;trackletId();</div>
-<div class="line"><span class="lineno">  332</span>    <span class="keyword">const</span> <a class="code hl_typedef" href="namespacedyno.html#aaa260a8022691078c59e1ac6a4fa05b5">Keypoint</a> kp = f-&gt;keypoint();</div>
-<div class="line"><span class="lineno">  333</span>    CHECK(f-&gt;isStatic());</div>
-<div class="line"><span class="lineno">  334</span>    CHECK(<a class="code hl_function" href="classdyno_1_1Feature.html#af6d8414c9ac11dc48a8c6a80c4eb4635">Feature::IsUsable</a>(f));</div>
-<div class="line"><span class="lineno">  335</span> </div>
-<div class="line"><span class="lineno">  336</span>    <span class="comment">// dont include features that have only been seen once as we havent had a</span></div>
-<div class="line"><span class="lineno">  337</span>    <span class="comment">// chance to validate it yet</span></div>
-<div class="line"><span class="lineno">  338</span>    <span class="keywordflow">if</span> (f-&gt;age() &lt; 1) {</div>
-<div class="line"><span class="lineno">  339</span>      <span class="keywordflow">continue</span>;</div>
-<div class="line"><span class="lineno">  340</span>    }</div>
-<div class="line"><span class="lineno">  341</span> </div>
-<div class="line"><span class="lineno">  342</span>    MeasurementWithCovariance&lt;Keypoint&gt; kp_measurement(kp);</div>
-<div class="line"><span class="lineno">  343</span>    MeasurementWithCovariance&lt;Landmark&gt; landmark_measurement(</div>
-<div class="line"><span class="lineno">  344</span>        <a class="code hl_function" href="namespacedyno_1_1vision__tools.html#a8cf2c16aa30d7bfa4ea4844abb555716">vision_tools::backProjectAndCovariance</a>(*f, *<a class="code hl_variable" href="classdyno_1_1RGBDInstanceFrontendModule.html#acba1dedf24b5945c4ef39010fe0c79a9">camera_</a>, 0.2, 0.1));</div>
-<div class="line"><span class="lineno">  345</span> </div>
-<div class="line"><span class="lineno">  346</span>    static_keypoint_measurements.push_back(<a class="code hl_function" href="structdyno_1_1VisualMeasurementStatus.html#ae37f0e53a418eda49c898bd5d9365a35">KeypointStatus::StaticInLocal</a>(</div>
-<div class="line"><span class="lineno">  347</span>        kp_measurement, frame.getFrameId(), tracklet_id));</div>
+<p class="definition">Definition at line <a class="el" href="RGBDInstanceFrontendModule_8cc_source.html#l00326">326</a> of file <a class="el" href="RGBDInstanceFrontendModule_8cc_source.html">RGBDInstanceFrontendModule.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  330</span>                                               {</div>
+<div class="line"><span class="lineno">  331</span>  <a class="code hl_typedef" href="namespacedyno.html#a1efaa56a29795d6bd138701d1aeb72c9">StatusKeypointVector</a> static_keypoint_measurements;</div>
+<div class="line"><span class="lineno">  332</span>  <a class="code hl_typedef" href="namespacedyno.html#afa01ab54e33c616353a643645cd2aaee">StatusLandmarkVector</a> static_landmarks;</div>
+<div class="line"><span class="lineno">  333</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> Feature::Ptr&amp; f : frame.usableStaticFeaturesBegin()) {</div>
+<div class="line"><span class="lineno">  334</span>    <span class="keyword">const</span> <a class="code hl_typedef" href="namespacedyno.html#afdd174eb44901fb205371d796287378c">TrackletId</a> tracklet_id = f-&gt;trackletId();</div>
+<div class="line"><span class="lineno">  335</span>    <span class="keyword">const</span> <a class="code hl_typedef" href="namespacedyno.html#aaa260a8022691078c59e1ac6a4fa05b5">Keypoint</a> kp = f-&gt;keypoint();</div>
+<div class="line"><span class="lineno">  336</span>    CHECK(f-&gt;isStatic());</div>
+<div class="line"><span class="lineno">  337</span>    CHECK(<a class="code hl_function" href="classdyno_1_1Feature.html#af6d8414c9ac11dc48a8c6a80c4eb4635">Feature::IsUsable</a>(f));</div>
+<div class="line"><span class="lineno">  338</span> </div>
+<div class="line"><span class="lineno">  339</span>    <span class="comment">// dont include features that have only been seen once as we havent had a</span></div>
+<div class="line"><span class="lineno">  340</span>    <span class="comment">// chance to validate it yet</span></div>
+<div class="line"><span class="lineno">  341</span>    <span class="keywordflow">if</span> (f-&gt;age() &lt; 1) {</div>
+<div class="line"><span class="lineno">  342</span>      <span class="keywordflow">continue</span>;</div>
+<div class="line"><span class="lineno">  343</span>    }</div>
+<div class="line"><span class="lineno">  344</span> </div>
+<div class="line"><span class="lineno">  345</span>    MeasurementWithCovariance&lt;Keypoint&gt; kp_measurement(kp);</div>
+<div class="line"><span class="lineno">  346</span>    MeasurementWithCovariance&lt;Landmark&gt; landmark_measurement(</div>
+<div class="line"><span class="lineno">  347</span>        <a class="code hl_function" href="namespacedyno_1_1vision__tools.html#a8cf2c16aa30d7bfa4ea4844abb555716">vision_tools::backProjectAndCovariance</a>(*f, *<a class="code hl_variable" href="classdyno_1_1RGBDInstanceFrontendModule.html#acba1dedf24b5945c4ef39010fe0c79a9">camera_</a>, 0.2, 0.1));</div>
 <div class="line"><span class="lineno">  348</span> </div>
-<div class="line"><span class="lineno">  349</span>    static_landmarks.push_back(<a class="code hl_function" href="structdyno_1_1VisualMeasurementStatus.html#ae37f0e53a418eda49c898bd5d9365a35">LandmarkStatus::StaticInLocal</a>(</div>
-<div class="line"><span class="lineno">  350</span>        landmark_measurement, frame.getFrameId(), tracklet_id));</div>
-<div class="line"><span class="lineno">  351</span>  }</div>
-<div class="line"><span class="lineno">  352</span> </div>
-<div class="line"><span class="lineno">  353</span>  <a class="code hl_typedef" href="namespacedyno.html#a1efaa56a29795d6bd138701d1aeb72c9">StatusKeypointVector</a> dynamic_keypoint_measurements;</div>
-<div class="line"><span class="lineno">  354</span>  <a class="code hl_typedef" href="namespacedyno.html#afa01ab54e33c616353a643645cd2aaee">StatusLandmarkVector</a> dynamic_landmarks;</div>
-<div class="line"><span class="lineno">  355</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [object_id, obs] : frame.object_observations_) {</div>
-<div class="line"><span class="lineno">  356</span>    CHECK_EQ(object_id, obs.instance_label_);</div>
-<div class="line"><span class="lineno">  357</span>    <span class="comment">// TODO: add back in?</span></div>
-<div class="line"><span class="lineno">  358</span>    <span class="comment">//  CHECK(obs.marked_as_moving_);</span></div>
-<div class="line"><span class="lineno">  359</span> </div>
-<div class="line"><span class="lineno">  360</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <a class="code hl_typedef" href="namespacedyno.html#afdd174eb44901fb205371d796287378c">TrackletId</a> tracklet : obs.object_features_) {</div>
-<div class="line"><span class="lineno">  361</span>      <span class="keywordflow">if</span> (frame.isFeatureUsable(tracklet)) {</div>
-<div class="line"><span class="lineno">  362</span>        <span class="keyword">const</span> Feature::Ptr f = frame.at(tracklet);</div>
-<div class="line"><span class="lineno">  363</span>        CHECK(!f-&gt;isStatic());</div>
-<div class="line"><span class="lineno">  364</span>        CHECK_EQ(f-&gt;objectId(), object_id);</div>
-<div class="line"><span class="lineno">  365</span> </div>
-<div class="line"><span class="lineno">  366</span>        <span class="comment">// dont include features that have only been seen once as we havent had</span></div>
-<div class="line"><span class="lineno">  367</span>        <span class="comment">// a chance to validate it yet</span></div>
-<div class="line"><span class="lineno">  368</span>        <span class="keywordflow">if</span> (f-&gt;age() &lt; 1) {</div>
-<div class="line"><span class="lineno">  369</span>          <span class="keywordflow">continue</span>;</div>
-<div class="line"><span class="lineno">  370</span>        }</div>
-<div class="line"><span class="lineno">  371</span> </div>
-<div class="line"><span class="lineno">  372</span>        <span class="keyword">const</span> <a class="code hl_typedef" href="namespacedyno.html#afdd174eb44901fb205371d796287378c">TrackletId</a> tracklet_id = f-&gt;trackletId();</div>
-<div class="line"><span class="lineno">  373</span>        <span class="keyword">const</span> <a class="code hl_typedef" href="namespacedyno.html#aaa260a8022691078c59e1ac6a4fa05b5">Keypoint</a> kp = f-&gt;keypoint();</div>
+<div class="line"><span class="lineno">  349</span>    static_keypoint_measurements.push_back(<a class="code hl_function" href="structdyno_1_1VisualMeasurementStatus.html#ae37f0e53a418eda49c898bd5d9365a35">KeypointStatus::StaticInLocal</a>(</div>
+<div class="line"><span class="lineno">  350</span>        kp_measurement, frame.getFrameId(), tracklet_id));</div>
+<div class="line"><span class="lineno">  351</span> </div>
+<div class="line"><span class="lineno">  352</span>    static_landmarks.push_back(<a class="code hl_function" href="structdyno_1_1VisualMeasurementStatus.html#ae37f0e53a418eda49c898bd5d9365a35">LandmarkStatus::StaticInLocal</a>(</div>
+<div class="line"><span class="lineno">  353</span>        landmark_measurement, frame.getFrameId(), tracklet_id));</div>
+<div class="line"><span class="lineno">  354</span>  }</div>
+<div class="line"><span class="lineno">  355</span> </div>
+<div class="line"><span class="lineno">  356</span>  <a class="code hl_typedef" href="namespacedyno.html#a1efaa56a29795d6bd138701d1aeb72c9">StatusKeypointVector</a> dynamic_keypoint_measurements;</div>
+<div class="line"><span class="lineno">  357</span>  <a class="code hl_typedef" href="namespacedyno.html#afa01ab54e33c616353a643645cd2aaee">StatusLandmarkVector</a> dynamic_landmarks;</div>
+<div class="line"><span class="lineno">  358</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [object_id, obs] : frame.object_observations_) {</div>
+<div class="line"><span class="lineno">  359</span>    CHECK_EQ(object_id, obs.instance_label_);</div>
+<div class="line"><span class="lineno">  360</span>    <span class="comment">// TODO: add back in?</span></div>
+<div class="line"><span class="lineno">  361</span>    <span class="comment">//  CHECK(obs.marked_as_moving_);</span></div>
+<div class="line"><span class="lineno">  362</span> </div>
+<div class="line"><span class="lineno">  363</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <a class="code hl_typedef" href="namespacedyno.html#afdd174eb44901fb205371d796287378c">TrackletId</a> tracklet : obs.object_features_) {</div>
+<div class="line"><span class="lineno">  364</span>      <span class="keywordflow">if</span> (frame.isFeatureUsable(tracklet)) {</div>
+<div class="line"><span class="lineno">  365</span>        <span class="keyword">const</span> Feature::Ptr f = frame.at(tracklet);</div>
+<div class="line"><span class="lineno">  366</span>        CHECK(!f-&gt;isStatic());</div>
+<div class="line"><span class="lineno">  367</span>        CHECK_EQ(f-&gt;objectId(), object_id);</div>
+<div class="line"><span class="lineno">  368</span> </div>
+<div class="line"><span class="lineno">  369</span>        <span class="comment">// dont include features that have only been seen once as we havent had</span></div>
+<div class="line"><span class="lineno">  370</span>        <span class="comment">// a chance to validate it yet</span></div>
+<div class="line"><span class="lineno">  371</span>        <span class="keywordflow">if</span> (f-&gt;age() &lt; 1) {</div>
+<div class="line"><span class="lineno">  372</span>          <span class="keywordflow">continue</span>;</div>
+<div class="line"><span class="lineno">  373</span>        }</div>
 <div class="line"><span class="lineno">  374</span> </div>
-<div class="line"><span class="lineno">  375</span>        MeasurementWithCovariance&lt;Keypoint&gt; kp_measurement(kp);</div>
-<div class="line"><span class="lineno">  376</span>        MeasurementWithCovariance&lt;Landmark&gt; landmark_measurement(</div>
-<div class="line"><span class="lineno">  377</span>            <a class="code hl_function" href="namespacedyno_1_1vision__tools.html#a8cf2c16aa30d7bfa4ea4844abb555716">vision_tools::backProjectAndCovariance</a>(*f, *<a class="code hl_variable" href="classdyno_1_1RGBDInstanceFrontendModule.html#acba1dedf24b5945c4ef39010fe0c79a9">camera_</a>, 0.2, 0.1));</div>
-<div class="line"><span class="lineno">  378</span> </div>
-<div class="line"><span class="lineno">  379</span>        dynamic_keypoint_measurements.push_back(<a class="code hl_function" href="structdyno_1_1VisualMeasurementStatus.html#a9e1b5df32148bf244b6a69e47e88aa21">KeypointStatus::DynamicInLocal</a>(</div>
-<div class="line"><span class="lineno">  380</span>            kp_measurement, frame.frame_id_, tracklet_id, object_id));</div>
+<div class="line"><span class="lineno">  375</span>        <span class="keyword">const</span> <a class="code hl_typedef" href="namespacedyno.html#afdd174eb44901fb205371d796287378c">TrackletId</a> tracklet_id = f-&gt;trackletId();</div>
+<div class="line"><span class="lineno">  376</span>        <span class="keyword">const</span> <a class="code hl_typedef" href="namespacedyno.html#aaa260a8022691078c59e1ac6a4fa05b5">Keypoint</a> kp = f-&gt;keypoint();</div>
+<div class="line"><span class="lineno">  377</span> </div>
+<div class="line"><span class="lineno">  378</span>        MeasurementWithCovariance&lt;Keypoint&gt; kp_measurement(kp);</div>
+<div class="line"><span class="lineno">  379</span>        MeasurementWithCovariance&lt;Landmark&gt; landmark_measurement(</div>
+<div class="line"><span class="lineno">  380</span>            <a class="code hl_function" href="namespacedyno_1_1vision__tools.html#a8cf2c16aa30d7bfa4ea4844abb555716">vision_tools::backProjectAndCovariance</a>(*f, *<a class="code hl_variable" href="classdyno_1_1RGBDInstanceFrontendModule.html#acba1dedf24b5945c4ef39010fe0c79a9">camera_</a>, 0.2, 0.1));</div>
 <div class="line"><span class="lineno">  381</span> </div>
-<div class="line"><span class="lineno">  382</span>        dynamic_landmarks.push_back(<a class="code hl_function" href="structdyno_1_1VisualMeasurementStatus.html#a9e1b5df32148bf244b6a69e47e88aa21">LandmarkStatus::DynamicInLocal</a>(</div>
-<div class="line"><span class="lineno">  383</span>            landmark_measurement, frame.frame_id_, tracklet_id, object_id));</div>
-<div class="line"><span class="lineno">  384</span>      }</div>
-<div class="line"><span class="lineno">  385</span>    }</div>
-<div class="line"><span class="lineno">  386</span>  }</div>
-<div class="line"><span class="lineno">  387</span> </div>
-<div class="line"><span class="lineno">  388</span>  <span class="comment">// update trajectory of camera poses to be visualised by the frontend viz</span></div>
-<div class="line"><span class="lineno">  389</span>  <span class="comment">// module</span></div>
-<div class="line"><span class="lineno">  390</span>  <a class="code hl_variable" href="classdyno_1_1FrontendModule.html#a008a0baef921d56ee594a0198f4c2174">camera_poses_</a>.push_back(T_world_camera);</div>
-<div class="line"><span class="lineno">  391</span> </div>
-<div class="line"><span class="lineno">  392</span>  <span class="keywordflow">return</span> std::make_shared&lt;RGBDInstanceOutputPacket&gt;(</div>
-<div class="line"><span class="lineno">  393</span>      static_keypoint_measurements, dynamic_keypoint_measurements,</div>
-<div class="line"><span class="lineno">  394</span>      static_landmarks, dynamic_landmarks, T_world_camera, frame.timestamp_,</div>
-<div class="line"><span class="lineno">  395</span>      frame.frame_id_, estimated_motions, <a class="code hl_variable" href="classdyno_1_1FrontendModule.html#ae07929467e6cc8acbab483b12efe801b">object_poses_</a>, <a class="code hl_variable" href="classdyno_1_1FrontendModule.html#a008a0baef921d56ee594a0198f4c2174">camera_poses_</a>, <a class="code hl_variable" href="classdyno_1_1RGBDInstanceFrontendModule.html#acba1dedf24b5945c4ef39010fe0c79a9">camera_</a>,</div>
-<div class="line"><span class="lineno">  396</span>      gt_packet, debug_imagery);</div>
-<div class="line"><span class="lineno">  397</span>}</div>
+<div class="line"><span class="lineno">  382</span>        dynamic_keypoint_measurements.push_back(<a class="code hl_function" href="structdyno_1_1VisualMeasurementStatus.html#a9e1b5df32148bf244b6a69e47e88aa21">KeypointStatus::DynamicInLocal</a>(</div>
+<div class="line"><span class="lineno">  383</span>            kp_measurement, frame.frame_id_, tracklet_id, object_id));</div>
+<div class="line"><span class="lineno">  384</span> </div>
+<div class="line"><span class="lineno">  385</span>        dynamic_landmarks.push_back(<a class="code hl_function" href="structdyno_1_1VisualMeasurementStatus.html#a9e1b5df32148bf244b6a69e47e88aa21">LandmarkStatus::DynamicInLocal</a>(</div>
+<div class="line"><span class="lineno">  386</span>            landmark_measurement, frame.frame_id_, tracklet_id, object_id));</div>
+<div class="line"><span class="lineno">  387</span>      }</div>
+<div class="line"><span class="lineno">  388</span>    }</div>
+<div class="line"><span class="lineno">  389</span>  }</div>
+<div class="line"><span class="lineno">  390</span> </div>
+<div class="line"><span class="lineno">  391</span>  <span class="comment">// update trajectory of camera poses to be visualised by the frontend viz</span></div>
+<div class="line"><span class="lineno">  392</span>  <span class="comment">// module</span></div>
+<div class="line"><span class="lineno">  393</span>  <a class="code hl_variable" href="classdyno_1_1FrontendModule.html#a008a0baef921d56ee594a0198f4c2174">camera_poses_</a>.push_back(T_world_camera);</div>
+<div class="line"><span class="lineno">  394</span> </div>
+<div class="line"><span class="lineno">  395</span>  <span class="keywordflow">return</span> std::make_shared&lt;RGBDInstanceOutputPacket&gt;(</div>
+<div class="line"><span class="lineno">  396</span>      static_keypoint_measurements, dynamic_keypoint_measurements,</div>
+<div class="line"><span class="lineno">  397</span>      static_landmarks, dynamic_landmarks, T_world_camera, frame.timestamp_,</div>
+<div class="line"><span class="lineno">  398</span>      frame.frame_id_, estimated_motions, <a class="code hl_variable" href="classdyno_1_1FrontendModule.html#ae07929467e6cc8acbab483b12efe801b">object_poses_</a>, <a class="code hl_variable" href="classdyno_1_1FrontendModule.html#a008a0baef921d56ee594a0198f4c2174">camera_poses_</a>, <a class="code hl_variable" href="classdyno_1_1RGBDInstanceFrontendModule.html#acba1dedf24b5945c4ef39010fe0c79a9">camera_</a>,</div>
+<div class="line"><span class="lineno">  399</span>      gt_packet, debug_imagery);</div>
+<div class="line"><span class="lineno">  400</span>}</div>
 <div class="ttc" id="aclassdyno_1_1Feature_html_af6d8414c9ac11dc48a8c6a80c4eb4635"><div class="ttname"><a href="classdyno_1_1Feature.html#af6d8414c9ac11dc48a8c6a80c4eb4635">dyno::Feature::IsUsable</a></div><div class="ttdeci">static bool IsUsable(const Feature::Ptr &amp;f)</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00327">Feature.hpp:327</a></div></div>
 <div class="ttc" id="aclassdyno_1_1FrontendModule_html_a008a0baef921d56ee594a0198f4c2174"><div class="ttname"><a href="classdyno_1_1FrontendModule.html#a008a0baef921d56ee594a0198f4c2174">dyno::FrontendModule::camera_poses_</a></div><div class="ttdeci">gtsam::Pose3Vector camera_poses_</div><div class="ttdef"><b>Definition:</b> <a href="FrontendModule_8hpp_source.html#l00121">FrontendModule.hpp:121</a></div></div>
 <div class="ttc" id="aclassdyno_1_1FrontendModule_html_ae07929467e6cc8acbab483b12efe801b"><div class="ttname"><a href="classdyno_1_1FrontendModule.html#ae07929467e6cc8acbab483b12efe801b">dyno::FrontendModule::object_poses_</a></div><div class="ttdeci">ObjectPoseMap object_poses_</div><div class="ttdef"><b>Definition:</b> <a href="FrontendModule_8hpp_source.html#l00118">FrontendModule.hpp:118</a></div></div>
-<div class="ttc" id="anamespacedyno_1_1vision__tools_html_a8cf2c16aa30d7bfa4ea4844abb555716"><div class="ttname"><a href="namespacedyno_1_1vision__tools.html#a8cf2c16aa30d7bfa4ea4844abb555716">dyno::vision_tools::backProjectAndCovariance</a></div><div class="ttdeci">std::pair&lt; gtsam::Vector3, gtsam::Matrix3 &gt; backProjectAndCovariance(const Feature &amp;feature, const Camera &amp;camera, double pixel_sigma, double depth_sigma)</div><div class="ttdoc">From a feature with valid depth, backproject to a 3D point in the camera frame with the associated co...</div><div class="ttdef"><b>Definition:</b> <a href="VisionTools_8cc_source.html#l00671">VisionTools.cc:671</a></div></div>
+<div class="ttc" id="anamespacedyno_1_1vision__tools_html_a8cf2c16aa30d7bfa4ea4844abb555716"><div class="ttname"><a href="namespacedyno_1_1vision__tools.html#a8cf2c16aa30d7bfa4ea4844abb555716">dyno::vision_tools::backProjectAndCovariance</a></div><div class="ttdeci">std::pair&lt; gtsam::Vector3, gtsam::Matrix3 &gt; backProjectAndCovariance(const Feature &amp;feature, const Camera &amp;camera, double pixel_sigma, double depth_sigma)</div><div class="ttdoc">From a feature with valid depth, backproject to a 3D point in the camera frame with the associated co...</div><div class="ttdef"><b>Definition:</b> <a href="VisionTools_8cc_source.html#l00672">VisionTools.cc:672</a></div></div>
 <div class="ttc" id="anamespacedyno_html_a1efaa56a29795d6bd138701d1aeb72c9"><div class="ttname"><a href="namespacedyno.html#a1efaa56a29795d6bd138701d1aeb72c9">dyno::StatusKeypointVector</a></div><div class="ttdeci">GenericTrackedStatusVector&lt; KeypointStatus &gt; StatusKeypointVector</div><div class="ttdoc">A vector of KeypointStatus.</div><div class="ttdef"><b>Definition:</b> <a href="SensorModels_8hpp_source.html#l00320">SensorModels.hpp:320</a></div></div>
 <div class="ttc" id="anamespacedyno_html_aaa260a8022691078c59e1ac6a4fa05b5"><div class="ttname"><a href="namespacedyno.html#aaa260a8022691078c59e1ac6a4fa05b5">dyno::Keypoint</a></div><div class="ttdeci">gtsam::Point2 Keypoint</div><div class="ttdoc">Observed optical flow vector (ordered x, y)</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00094">Types.hpp:94</a></div></div>
 <div class="ttc" id="anamespacedyno_html_afa01ab54e33c616353a643645cd2aaee"><div class="ttname"><a href="namespacedyno.html#afa01ab54e33c616353a643645cd2aaee">dyno::StatusLandmarkVector</a></div><div class="ttdeci">GenericTrackedStatusVector&lt; LandmarkStatus &gt; StatusLandmarkVector</div><div class="ttdoc">A vector of LandmarkStatus.</div><div class="ttdef"><b>Definition:</b> <a href="SensorModels_8hpp_source.html#l00318">SensorModels.hpp:318</a></div></div>
@@ -603,33 +606,33 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="RGBDInstanceFrontendModule_8cc_source.html#l00450">450</a> of file <a class="el" href="RGBDInstanceFrontendModule_8cc_source.html">RGBDInstanceFrontendModule.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  451</span>                                             {</div>
-<div class="line"><span class="lineno">  452</span>  <span class="comment">// if we only have instance semgentation (not motion) then we need to make a</span></div>
-<div class="line"><span class="lineno">  453</span>  <span class="comment">// motion mask out of the semantic mask we cannot do this for the first frame</span></div>
-<div class="line"><span class="lineno">  454</span>  <span class="comment">// so we will just treat the semantic mask and the motion mask and then</span></div>
-<div class="line"><span class="lineno">  455</span>  <span class="comment">// subsequently elimate non-moving objects later on</span></div>
-<div class="line"><span class="lineno">  456</span>  <a class="code hl_typedef" href="namespacedyno.html#a3ddd15112178d82a8460d63ffcf3cdfd">TrackingInputImages</a> tracking_images;</div>
-<div class="line"><span class="lineno">  457</span>  <span class="keywordflow">if</span> (image_container-&gt;hasSemanticMask()) {</div>
-<div class="line"><span class="lineno">  458</span>    CHECK(!image_container-&gt;hasMotionMask());</div>
-<div class="line"><span class="lineno">  459</span>    <span class="comment">// TODO: some bug when going from semantic mask to motion mask as motion</span></div>
-<div class="line"><span class="lineno">  460</span>    <span class="comment">// mask is empty in the tracker after this process!!! its becuase we dont</span></div>
-<div class="line"><span class="lineno">  461</span>    <span class="comment">// actually use the tracking_images!!</span></div>
-<div class="line"><span class="lineno">  462</span>    <span class="keyword">auto</span> intermediate_tracking_images =</div>
-<div class="line"><span class="lineno">  463</span>        image_container-&gt;makeSubset&lt;ImageType::RGBMono, ImageType::OpticalFlow,</div>
-<div class="line"><span class="lineno">  464</span>                                    ImageType::SemanticMask&gt;();</div>
-<div class="line"><span class="lineno">  465</span>    tracking_images = <a class="code hl_typedef" href="namespacedyno.html#a3ddd15112178d82a8460d63ffcf3cdfd">TrackingInputImages</a>(</div>
-<div class="line"><span class="lineno">  466</span>        intermediate_tracking_images.getImageWrapper&lt;ImageType::RGBMono&gt;(),</div>
-<div class="line"><span class="lineno">  467</span>        intermediate_tracking_images.getImageWrapper&lt;ImageType::OpticalFlow&gt;(),</div>
-<div class="line"><span class="lineno">  468</span>        ImageWrapper&lt;ImageType::MotionMask&gt;(</div>
-<div class="line"><span class="lineno">  469</span>            intermediate_tracking_images.get&lt;ImageType::SemanticMask&gt;()));</div>
-<div class="line"><span class="lineno">  470</span>  } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  471</span>    tracking_images =</div>
-<div class="line"><span class="lineno">  472</span>        image_container-&gt;makeSubset&lt;ImageType::RGBMono, ImageType::OpticalFlow,</div>
-<div class="line"><span class="lineno">  473</span>                                    ImageType::MotionMask&gt;();</div>
-<div class="line"><span class="lineno">  474</span>  }</div>
-<div class="line"><span class="lineno">  475</span>  <span class="keywordflow">return</span> tracking_images;</div>
-<div class="line"><span class="lineno">  476</span>}</div>
+<p class="definition">Definition at line <a class="el" href="RGBDInstanceFrontendModule_8cc_source.html#l00453">453</a> of file <a class="el" href="RGBDInstanceFrontendModule_8cc_source.html">RGBDInstanceFrontendModule.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  454</span>                                             {</div>
+<div class="line"><span class="lineno">  455</span>  <span class="comment">// if we only have instance semgentation (not motion) then we need to make a</span></div>
+<div class="line"><span class="lineno">  456</span>  <span class="comment">// motion mask out of the semantic mask we cannot do this for the first frame</span></div>
+<div class="line"><span class="lineno">  457</span>  <span class="comment">// so we will just treat the semantic mask and the motion mask and then</span></div>
+<div class="line"><span class="lineno">  458</span>  <span class="comment">// subsequently elimate non-moving objects later on</span></div>
+<div class="line"><span class="lineno">  459</span>  <a class="code hl_typedef" href="namespacedyno.html#a3ddd15112178d82a8460d63ffcf3cdfd">TrackingInputImages</a> tracking_images;</div>
+<div class="line"><span class="lineno">  460</span>  <span class="keywordflow">if</span> (image_container-&gt;hasSemanticMask()) {</div>
+<div class="line"><span class="lineno">  461</span>    CHECK(!image_container-&gt;hasMotionMask());</div>
+<div class="line"><span class="lineno">  462</span>    <span class="comment">// TODO: some bug when going from semantic mask to motion mask as motion</span></div>
+<div class="line"><span class="lineno">  463</span>    <span class="comment">// mask is empty in the tracker after this process!!! its becuase we dont</span></div>
+<div class="line"><span class="lineno">  464</span>    <span class="comment">// actually use the tracking_images!!</span></div>
+<div class="line"><span class="lineno">  465</span>    <span class="keyword">auto</span> intermediate_tracking_images =</div>
+<div class="line"><span class="lineno">  466</span>        image_container-&gt;makeSubset&lt;ImageType::RGBMono, ImageType::OpticalFlow,</div>
+<div class="line"><span class="lineno">  467</span>                                    ImageType::SemanticMask&gt;();</div>
+<div class="line"><span class="lineno">  468</span>    tracking_images = <a class="code hl_typedef" href="namespacedyno.html#a3ddd15112178d82a8460d63ffcf3cdfd">TrackingInputImages</a>(</div>
+<div class="line"><span class="lineno">  469</span>        intermediate_tracking_images.getImageWrapper&lt;ImageType::RGBMono&gt;(),</div>
+<div class="line"><span class="lineno">  470</span>        intermediate_tracking_images.getImageWrapper&lt;ImageType::OpticalFlow&gt;(),</div>
+<div class="line"><span class="lineno">  471</span>        ImageWrapper&lt;ImageType::MotionMask&gt;(</div>
+<div class="line"><span class="lineno">  472</span>            intermediate_tracking_images.get&lt;ImageType::SemanticMask&gt;()));</div>
+<div class="line"><span class="lineno">  473</span>  } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  474</span>    tracking_images =</div>
+<div class="line"><span class="lineno">  475</span>        image_container-&gt;makeSubset&lt;ImageType::RGBMono, ImageType::OpticalFlow,</div>
+<div class="line"><span class="lineno">  476</span>                                    ImageType::MotionMask&gt;();</div>
+<div class="line"><span class="lineno">  477</span>  }</div>
+<div class="line"><span class="lineno">  478</span>  <span class="keywordflow">return</span> tracking_images;</div>
+<div class="line"><span class="lineno">  479</span>}</div>
 <div class="ttc" id="anamespacedyno_html_a3ddd15112178d82a8460d63ffcf3cdfd"><div class="ttname"><a href="namespacedyno.html#a3ddd15112178d82a8460d63ffcf3cdfd">dyno::TrackingInputImages</a></div><div class="ttdeci">ImageContainerSubset&lt; ImageType::RGBMono, ImageType::OpticalFlow, ImageType::MotionMask &gt; TrackingInputImages</div><div class="ttdef"><b>Definition:</b> <a href="Frontend-Definitions_8hpp_source.html#l00088">Frontend-Definitions.hpp:90</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1ImageContainerSubset.html#a99f422ebc8e10e49873078f3e3ca87df">dyno::ImageContainerSubset&lt; ImageTypes &gt;::makeSubset()</a>.</p>
@@ -669,106 +672,106 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="RGBDInstanceFrontendModule_8cc_source.html#l00101">101</a> of file <a class="el" href="RGBDInstanceFrontendModule_8cc_source.html">RGBDInstanceFrontendModule.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  102</span>                                           {</div>
-<div class="line"><span class="lineno">  103</span>  ImageContainer::Ptr image_container = input-&gt;image_container_;</div>
-<div class="line"><span class="lineno">  104</span> </div>
-<div class="line"><span class="lineno">  105</span>  Frame::Ptr frame = <span class="keyword">nullptr</span>;</div>
-<div class="line"><span class="lineno">  106</span>  {</div>
-<div class="line"><span class="lineno">  107</span>    utils::TimingStatsCollector tracking_timer(<span class="stringliteral">&quot;tracking_timer&quot;</span>);</div>
-<div class="line"><span class="lineno">  108</span>    frame = <a class="code hl_variable" href="classdyno_1_1RGBDInstanceFrontendModule.html#a6f7ea559d6128c83bfefd238ebc4b608">tracker_</a>-&gt;track(input-&gt;getFrameId(), input-&gt;getTimestamp(),</div>
-<div class="line"><span class="lineno">  109</span>                            *image_container);</div>
-<div class="line"><span class="lineno">  110</span>  }</div>
-<div class="line"><span class="lineno">  111</span>  CHECK(frame);</div>
-<div class="line"><span class="lineno">  112</span> </div>
-<div class="line"><span class="lineno">  113</span>  Frame::Ptr previous_frame = <a class="code hl_variable" href="classdyno_1_1RGBDInstanceFrontendModule.html#a6f7ea559d6128c83bfefd238ebc4b608">tracker_</a>-&gt;getPreviousFrame();</div>
-<div class="line"><span class="lineno">  114</span>  CHECK(previous_frame);</div>
+<p class="definition">Definition at line <a class="el" href="RGBDInstanceFrontendModule_8cc_source.html#l00104">104</a> of file <a class="el" href="RGBDInstanceFrontendModule_8cc_source.html">RGBDInstanceFrontendModule.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  105</span>                                           {</div>
+<div class="line"><span class="lineno">  106</span>  ImageContainer::Ptr image_container = input-&gt;image_container_;</div>
+<div class="line"><span class="lineno">  107</span> </div>
+<div class="line"><span class="lineno">  108</span>  Frame::Ptr frame = <span class="keyword">nullptr</span>;</div>
+<div class="line"><span class="lineno">  109</span>  {</div>
+<div class="line"><span class="lineno">  110</span>    utils::TimingStatsCollector tracking_timer(<span class="stringliteral">&quot;tracking_timer&quot;</span>);</div>
+<div class="line"><span class="lineno">  111</span>    frame = <a class="code hl_variable" href="classdyno_1_1RGBDInstanceFrontendModule.html#a6f7ea559d6128c83bfefd238ebc4b608">tracker_</a>-&gt;track(input-&gt;getFrameId(), input-&gt;getTimestamp(),</div>
+<div class="line"><span class="lineno">  112</span>                            *image_container);</div>
+<div class="line"><span class="lineno">  113</span>  }</div>
+<div class="line"><span class="lineno">  114</span>  CHECK(frame);</div>
 <div class="line"><span class="lineno">  115</span> </div>
-<div class="line"><span class="lineno">  116</span>  LOG(INFO) &lt;&lt; <a class="code hl_function" href="namespacedyno.html#a809604e427db44cbf532a545c71a3b5d">to_string</a>(<a class="code hl_variable" href="classdyno_1_1RGBDInstanceFrontendModule.html#a6f7ea559d6128c83bfefd238ebc4b608">tracker_</a>-&gt;getTrackerInfo());</div>
-<div class="line"><span class="lineno">  117</span> </div>
-<div class="line"><span class="lineno">  118</span>  {</div>
-<div class="line"><span class="lineno">  119</span>    utils::TimingStatsCollector update_depths_timer(<span class="stringliteral">&quot;depth_updater&quot;</span>);</div>
-<div class="line"><span class="lineno">  120</span>    frame-&gt;updateDepths();</div>
-<div class="line"><span class="lineno">  121</span>  }</div>
-<div class="line"><span class="lineno">  122</span>  <span class="comment">// updates frame-&gt;T_world_camera_</span></div>
-<div class="line"><span class="lineno">  123</span>  <span class="keywordflow">if</span> (!<a class="code hl_function" href="classdyno_1_1RGBDInstanceFrontendModule.html#a78935cca3751ad2a0c25019250d12230">solveCameraMotion</a>(frame, previous_frame)) {</div>
-<div class="line"><span class="lineno">  124</span>    LOG(ERROR) &lt;&lt; <span class="stringliteral">&quot;Could not solve for camera&quot;</span>;</div>
-<div class="line"><span class="lineno">  125</span>  }</div>
-<div class="line"><span class="lineno">  126</span> </div>
-<div class="line"><span class="lineno">  127</span>  <span class="keywordflow">if</span> (FLAGS_use_dynamic_track) {</div>
-<div class="line"><span class="lineno">  128</span>    <span class="comment">// TODO: bring back byte tracker??</span></div>
-<div class="line"><span class="lineno">  129</span>    utils::TimingStatsCollector track_dynamic_timer(<span class="stringliteral">&quot;tracking_dynamic&quot;</span>);</div>
-<div class="line"><span class="lineno">  130</span>    <a class="code hl_function" href="namespacedyno_1_1vision__tools.html#a70f3daa5a2a0fb3a715ffb1fb65992cb">vision_tools::trackDynamic</a>(<a class="code hl_variable" href="classdyno_1_1FrontendModule.html#a0453998c25bc6ebff1163940718a08ac">base_params_</a>, *previous_frame, frame);</div>
-<div class="line"><span class="lineno">  131</span>  }</div>
-<div class="line"><span class="lineno">  132</span> </div>
-<div class="line"><span class="lineno">  133</span>  <a class="code hl_typedef" href="namespacedyno.html#acef42ad0a1e53f5876f1000defc23e3b">MotionEstimateMap</a> motion_estimates;</div>
-<div class="line"><span class="lineno">  134</span>  <a class="code hl_function" href="classdyno_1_1RGBDInstanceFrontendModule.html#a9bfb2e31fd68b5b6d6ffb834b6c201a1">solveObjectMotions</a>(frame, previous_frame, motion_estimates);</div>
+<div class="line"><span class="lineno">  116</span>  Frame::Ptr previous_frame = <a class="code hl_variable" href="classdyno_1_1RGBDInstanceFrontendModule.html#a6f7ea559d6128c83bfefd238ebc4b608">tracker_</a>-&gt;getPreviousFrame();</div>
+<div class="line"><span class="lineno">  117</span>  CHECK(previous_frame);</div>
+<div class="line"><span class="lineno">  118</span> </div>
+<div class="line"><span class="lineno">  119</span>  LOG(INFO) &lt;&lt; <a class="code hl_function" href="namespacedyno.html#a809604e427db44cbf532a545c71a3b5d">to_string</a>(<a class="code hl_variable" href="classdyno_1_1RGBDInstanceFrontendModule.html#a6f7ea559d6128c83bfefd238ebc4b608">tracker_</a>-&gt;getTrackerInfo());</div>
+<div class="line"><span class="lineno">  120</span> </div>
+<div class="line"><span class="lineno">  121</span>  {</div>
+<div class="line"><span class="lineno">  122</span>    utils::TimingStatsCollector update_depths_timer(<span class="stringliteral">&quot;depth_updater&quot;</span>);</div>
+<div class="line"><span class="lineno">  123</span>    frame-&gt;updateDepths();</div>
+<div class="line"><span class="lineno">  124</span>  }</div>
+<div class="line"><span class="lineno">  125</span>  <span class="comment">// updates frame-&gt;T_world_camera_</span></div>
+<div class="line"><span class="lineno">  126</span>  <span class="keywordflow">if</span> (!<a class="code hl_function" href="classdyno_1_1RGBDInstanceFrontendModule.html#a78935cca3751ad2a0c25019250d12230">solveCameraMotion</a>(frame, previous_frame)) {</div>
+<div class="line"><span class="lineno">  127</span>    LOG(ERROR) &lt;&lt; <span class="stringliteral">&quot;Could not solve for camera&quot;</span>;</div>
+<div class="line"><span class="lineno">  128</span>  }</div>
+<div class="line"><span class="lineno">  129</span> </div>
+<div class="line"><span class="lineno">  130</span>  <span class="keywordflow">if</span> (FLAGS_use_dynamic_track) {</div>
+<div class="line"><span class="lineno">  131</span>    <span class="comment">// TODO: bring back byte tracker??</span></div>
+<div class="line"><span class="lineno">  132</span>    utils::TimingStatsCollector track_dynamic_timer(<span class="stringliteral">&quot;tracking_dynamic&quot;</span>);</div>
+<div class="line"><span class="lineno">  133</span>    <a class="code hl_function" href="namespacedyno_1_1vision__tools.html#a70f3daa5a2a0fb3a715ffb1fb65992cb">vision_tools::trackDynamic</a>(<a class="code hl_variable" href="classdyno_1_1FrontendModule.html#a0453998c25bc6ebff1163940718a08ac">base_params_</a>, *previous_frame, frame);</div>
+<div class="line"><span class="lineno">  134</span>  }</div>
 <div class="line"><span class="lineno">  135</span> </div>
-<div class="line"><span class="lineno">  136</span>  <span class="comment">// update the object_poses trajectory map which will be send to the viz</span></div>
-<div class="line"><span class="lineno">  137</span>  <a class="code hl_function" href="classdyno_1_1RGBDInstanceFrontendModule.html#a3b8a72f00e038ce10f89be9ed52198da">propogateObjectPoses</a>(motion_estimates, frame-&gt;getFrameId());</div>
+<div class="line"><span class="lineno">  136</span>  <a class="code hl_typedef" href="namespacedyno.html#acef42ad0a1e53f5876f1000defc23e3b">MotionEstimateMap</a> motion_estimates;</div>
+<div class="line"><span class="lineno">  137</span>  <a class="code hl_function" href="classdyno_1_1RGBDInstanceFrontendModule.html#a9bfb2e31fd68b5b6d6ffb834b6c201a1">solveObjectMotions</a>(frame, previous_frame, motion_estimates);</div>
 <div class="line"><span class="lineno">  138</span> </div>
-<div class="line"><span class="lineno">  139</span>  <span class="keywordflow">if</span> (<a class="code hl_variable" href="classdyno_1_1RGBDInstanceFrontendModule.html#ab3ca43e5e01c0af7ddd620282d229121">logger_</a>) {</div>
-<div class="line"><span class="lineno">  140</span>    <span class="keyword">auto</span> ground_truths = this-&gt;<a class="code hl_function" href="classdyno_1_1FrontendModule.html#ace21578a253c182fc92f7fba030b6e00">getGroundTruthPackets</a>();</div>
-<div class="line"><span class="lineno">  141</span>    <a class="code hl_variable" href="classdyno_1_1RGBDInstanceFrontendModule.html#ab3ca43e5e01c0af7ddd620282d229121">logger_</a>-&gt;logCameraPose(frame-&gt;getFrameId(), frame-&gt;getPose(),</div>
-<div class="line"><span class="lineno">  142</span>                           ground_truths);</div>
-<div class="line"><span class="lineno">  143</span>    <a class="code hl_variable" href="classdyno_1_1RGBDInstanceFrontendModule.html#ab3ca43e5e01c0af7ddd620282d229121">logger_</a>-&gt;logObjectMotion(frame-&gt;getFrameId(), motion_estimates,</div>
-<div class="line"><span class="lineno">  144</span>                             ground_truths);</div>
-<div class="line"><span class="lineno">  145</span>    <a class="code hl_variable" href="classdyno_1_1RGBDInstanceFrontendModule.html#ab3ca43e5e01c0af7ddd620282d229121">logger_</a>-&gt;logTrackingLengthHistogram(frame);</div>
-<div class="line"><span class="lineno">  146</span>    <a class="code hl_variable" href="classdyno_1_1RGBDInstanceFrontendModule.html#ab3ca43e5e01c0af7ddd620282d229121">logger_</a>-&gt;logFrameIdToTimestamp(frame-&gt;getFrameId(), frame-&gt;getTimestamp());</div>
-<div class="line"><span class="lineno">  147</span>  }</div>
-<div class="line"><span class="lineno">  148</span> </div>
-<div class="line"><span class="lineno">  149</span>  DebugImagery debug_imagery;</div>
-<div class="line"><span class="lineno">  150</span>  debug_imagery.tracking_image =</div>
-<div class="line"><span class="lineno">  151</span>      <a class="code hl_variable" href="classdyno_1_1RGBDInstanceFrontendModule.html#a6f7ea559d6128c83bfefd238ebc4b608">tracker_</a>-&gt;computeImageTracks(*previous_frame, *frame);</div>
-<div class="line"><span class="lineno">  152</span>  <span class="keywordflow">if</span> (<a class="code hl_variable" href="classdyno_1_1FrontendModule.html#a74e2ceac249e8401a210fbf913647a59">display_queue_</a>)</div>
-<div class="line"><span class="lineno">  153</span>    <a class="code hl_variable" href="classdyno_1_1FrontendModule.html#a74e2ceac249e8401a210fbf913647a59">display_queue_</a>-&gt;<a class="code hl_function" href="classThreadsafeQueue.html#ae3ac884e8d8f4646ce7524038aa4cd2c">push</a>(</div>
-<div class="line"><span class="lineno">  154</span>        ImageToDisplay(<span class="stringliteral">&quot;tracks&quot;</span>, debug_imagery.tracking_image));</div>
-<div class="line"><span class="lineno">  155</span> </div>
-<div class="line"><span class="lineno">  156</span>  debug_imagery.detected_bounding_boxes = frame-&gt;drawDetectedObjectBoxes();</div>
-<div class="line"><span class="lineno">  157</span> </div>
-<div class="line"><span class="lineno">  158</span>  <span class="keyword">const</span> ImageContainer&amp; processed_image_container = frame-&gt;image_container_;</div>
-<div class="line"><span class="lineno">  159</span>  debug_imagery.rgb_viz = <a class="code hl_function" href="structdyno_1_1ImageType_1_1RGBMono.html#a37a5b542cae43e66743b763132d9b3b8">ImageType::RGBMono::toRGB</a>(</div>
-<div class="line"><span class="lineno">  160</span>      processed_image_container.get&lt;ImageType::RGBMono&gt;());</div>
-<div class="line"><span class="lineno">  161</span>  debug_imagery.flow_viz = ImageType::OpticalFlow::toRGB(</div>
-<div class="line"><span class="lineno">  162</span>      processed_image_container.get&lt;ImageType::OpticalFlow&gt;());</div>
-<div class="line"><span class="lineno">  163</span>  debug_imagery.mask_viz = <a class="code hl_function" href="structdyno_1_1ImageType_1_1MotionMask.html#a6b119596bef78424e2085d684d07cd43">ImageType::MotionMask::toRGB</a>(</div>
-<div class="line"><span class="lineno">  164</span>      processed_image_container.get&lt;ImageType::MotionMask&gt;());</div>
-<div class="line"><span class="lineno">  165</span>  debug_imagery.depth_viz = ImageType::Depth::toRGB(</div>
-<div class="line"><span class="lineno">  166</span>      processed_image_container.get&lt;ImageType::Depth&gt;());</div>
-<div class="line"><span class="lineno">  167</span> </div>
-<div class="line"><span class="lineno">  168</span>  RGBDInstanceOutputPacket::Ptr output =</div>
-<div class="line"><span class="lineno">  169</span>      <a class="code hl_function" href="classdyno_1_1RGBDInstanceFrontendModule.html#a6ef0b6a5c8ab9d3e4c731fc9bb521b7d">constructOutput</a>(*frame, motion_estimates, frame-&gt;T_world_camera_,</div>
-<div class="line"><span class="lineno">  170</span>                      input-&gt;optional_gt_, debug_imagery);</div>
-<div class="line"><span class="lineno">  171</span> </div>
-<div class="line"><span class="lineno">  172</span>  <span class="keywordflow">if</span> (FLAGS_save_frontend_json)</div>
-<div class="line"><span class="lineno">  173</span>    <a class="code hl_variable" href="classdyno_1_1RGBDInstanceFrontendModule.html#a2eda61065a45a930571823756c1a7324">output_packet_record_</a>.insert({output-&gt;getFrameId(), output});</div>
+<div class="line"><span class="lineno">  139</span>  <span class="comment">// update the object_poses trajectory map which will be send to the viz</span></div>
+<div class="line"><span class="lineno">  140</span>  <a class="code hl_function" href="classdyno_1_1RGBDInstanceFrontendModule.html#a3b8a72f00e038ce10f89be9ed52198da">propogateObjectPoses</a>(motion_estimates, frame-&gt;getFrameId());</div>
+<div class="line"><span class="lineno">  141</span> </div>
+<div class="line"><span class="lineno">  142</span>  <span class="keywordflow">if</span> (<a class="code hl_variable" href="classdyno_1_1RGBDInstanceFrontendModule.html#ab3ca43e5e01c0af7ddd620282d229121">logger_</a>) {</div>
+<div class="line"><span class="lineno">  143</span>    <span class="keyword">auto</span> ground_truths = this-&gt;<a class="code hl_function" href="classdyno_1_1FrontendModule.html#ace21578a253c182fc92f7fba030b6e00">getGroundTruthPackets</a>();</div>
+<div class="line"><span class="lineno">  144</span>    <a class="code hl_variable" href="classdyno_1_1RGBDInstanceFrontendModule.html#ab3ca43e5e01c0af7ddd620282d229121">logger_</a>-&gt;logCameraPose(frame-&gt;getFrameId(), frame-&gt;getPose(),</div>
+<div class="line"><span class="lineno">  145</span>                           ground_truths);</div>
+<div class="line"><span class="lineno">  146</span>    <a class="code hl_variable" href="classdyno_1_1RGBDInstanceFrontendModule.html#ab3ca43e5e01c0af7ddd620282d229121">logger_</a>-&gt;logObjectMotion(frame-&gt;getFrameId(), motion_estimates,</div>
+<div class="line"><span class="lineno">  147</span>                             ground_truths);</div>
+<div class="line"><span class="lineno">  148</span>    <a class="code hl_variable" href="classdyno_1_1RGBDInstanceFrontendModule.html#ab3ca43e5e01c0af7ddd620282d229121">logger_</a>-&gt;logTrackingLengthHistogram(frame);</div>
+<div class="line"><span class="lineno">  149</span>    <a class="code hl_variable" href="classdyno_1_1RGBDInstanceFrontendModule.html#ab3ca43e5e01c0af7ddd620282d229121">logger_</a>-&gt;logFrameIdToTimestamp(frame-&gt;getFrameId(), frame-&gt;getTimestamp());</div>
+<div class="line"><span class="lineno">  150</span>  }</div>
+<div class="line"><span class="lineno">  151</span> </div>
+<div class="line"><span class="lineno">  152</span>  DebugImagery debug_imagery;</div>
+<div class="line"><span class="lineno">  153</span>  debug_imagery.tracking_image =</div>
+<div class="line"><span class="lineno">  154</span>      <a class="code hl_variable" href="classdyno_1_1RGBDInstanceFrontendModule.html#a6f7ea559d6128c83bfefd238ebc4b608">tracker_</a>-&gt;computeImageTracks(*previous_frame, *frame);</div>
+<div class="line"><span class="lineno">  155</span>  <span class="keywordflow">if</span> (<a class="code hl_variable" href="classdyno_1_1FrontendModule.html#a74e2ceac249e8401a210fbf913647a59">display_queue_</a>)</div>
+<div class="line"><span class="lineno">  156</span>    <a class="code hl_variable" href="classdyno_1_1FrontendModule.html#a74e2ceac249e8401a210fbf913647a59">display_queue_</a>-&gt;<a class="code hl_function" href="classThreadsafeQueue.html#ae3ac884e8d8f4646ce7524038aa4cd2c">push</a>(</div>
+<div class="line"><span class="lineno">  157</span>        ImageToDisplay(<span class="stringliteral">&quot;tracks&quot;</span>, debug_imagery.tracking_image));</div>
+<div class="line"><span class="lineno">  158</span> </div>
+<div class="line"><span class="lineno">  159</span>  debug_imagery.detected_bounding_boxes = frame-&gt;drawDetectedObjectBoxes();</div>
+<div class="line"><span class="lineno">  160</span> </div>
+<div class="line"><span class="lineno">  161</span>  <span class="keyword">const</span> ImageContainer&amp; processed_image_container = frame-&gt;image_container_;</div>
+<div class="line"><span class="lineno">  162</span>  debug_imagery.rgb_viz = <a class="code hl_function" href="structdyno_1_1ImageType_1_1RGBMono.html#a37a5b542cae43e66743b763132d9b3b8">ImageType::RGBMono::toRGB</a>(</div>
+<div class="line"><span class="lineno">  163</span>      processed_image_container.get&lt;ImageType::RGBMono&gt;());</div>
+<div class="line"><span class="lineno">  164</span>  debug_imagery.flow_viz = ImageType::OpticalFlow::toRGB(</div>
+<div class="line"><span class="lineno">  165</span>      processed_image_container.get&lt;ImageType::OpticalFlow&gt;());</div>
+<div class="line"><span class="lineno">  166</span>  debug_imagery.mask_viz = <a class="code hl_function" href="structdyno_1_1ImageType_1_1MotionMask.html#a6b119596bef78424e2085d684d07cd43">ImageType::MotionMask::toRGB</a>(</div>
+<div class="line"><span class="lineno">  167</span>      processed_image_container.get&lt;ImageType::MotionMask&gt;());</div>
+<div class="line"><span class="lineno">  168</span>  debug_imagery.depth_viz = ImageType::Depth::toRGB(</div>
+<div class="line"><span class="lineno">  169</span>      processed_image_container.get&lt;ImageType::Depth&gt;());</div>
+<div class="line"><span class="lineno">  170</span> </div>
+<div class="line"><span class="lineno">  171</span>  RGBDInstanceOutputPacket::Ptr output =</div>
+<div class="line"><span class="lineno">  172</span>      <a class="code hl_function" href="classdyno_1_1RGBDInstanceFrontendModule.html#a6ef0b6a5c8ab9d3e4c731fc9bb521b7d">constructOutput</a>(*frame, motion_estimates, frame-&gt;T_world_camera_,</div>
+<div class="line"><span class="lineno">  173</span>                      input-&gt;optional_gt_, debug_imagery);</div>
 <div class="line"><span class="lineno">  174</span> </div>
-<div class="line"><span class="lineno">  175</span>  <span class="keywordflow">if</span> (FLAGS_log_projected_masks)</div>
-<div class="line"><span class="lineno">  176</span>    <a class="code hl_function" href="namespacedyno_1_1vision__tools.html#a5d8b89d2b560b498934853c77a7d9f28">vision_tools::writeOutProjectMaskAndDepthMap</a>(</div>
-<div class="line"><span class="lineno">  177</span>        frame-&gt;image_container_.get&lt;ImageType::Depth&gt;(),</div>
-<div class="line"><span class="lineno">  178</span>        frame-&gt;image_container_.get&lt;ImageType::MotionMask&gt;(),</div>
-<div class="line"><span class="lineno">  179</span>        *frame-&gt;getCamera(), frame-&gt;getFrameId());</div>
-<div class="line"><span class="lineno">  180</span> </div>
-<div class="line"><span class="lineno">  181</span>  <span class="keywordflow">if</span> (<a class="code hl_variable" href="classdyno_1_1RGBDInstanceFrontendModule.html#ab3ca43e5e01c0af7ddd620282d229121">logger_</a>) {</div>
-<div class="line"><span class="lineno">  182</span>    <span class="keyword">auto</span> ground_truths = this-&gt;<a class="code hl_function" href="classdyno_1_1FrontendModule.html#ace21578a253c182fc92f7fba030b6e00">getGroundTruthPackets</a>();</div>
-<div class="line"><span class="lineno">  183</span>    <a class="code hl_variable" href="classdyno_1_1RGBDInstanceFrontendModule.html#ab3ca43e5e01c0af7ddd620282d229121">logger_</a>-&gt;logPoints(output-&gt;getFrameId(), output-&gt;T_world_camera_,</div>
-<div class="line"><span class="lineno">  184</span>                       output-&gt;dynamic_landmarks_);</div>
-<div class="line"><span class="lineno">  185</span>    <span class="comment">// object_poses_ are in frontend module</span></div>
-<div class="line"><span class="lineno">  186</span>    <a class="code hl_variable" href="classdyno_1_1RGBDInstanceFrontendModule.html#ab3ca43e5e01c0af7ddd620282d229121">logger_</a>-&gt;logObjectPose(output-&gt;getFrameId(), <a class="code hl_variable" href="classdyno_1_1FrontendModule.html#ae07929467e6cc8acbab483b12efe801b">object_poses_</a>, ground_truths);</div>
-<div class="line"><span class="lineno">  187</span>    <a class="code hl_variable" href="classdyno_1_1RGBDInstanceFrontendModule.html#ab3ca43e5e01c0af7ddd620282d229121">logger_</a>-&gt;logObjectBbxes(output-&gt;getFrameId(), output-&gt;getObjectBbxes());</div>
-<div class="line"><span class="lineno">  188</span>  }</div>
-<div class="line"><span class="lineno">  189</span>  <span class="keywordflow">return</span> {State::Nominal, output};</div>
-<div class="line"><span class="lineno">  190</span>}</div>
+<div class="line"><span class="lineno">  175</span>  <span class="keywordflow">if</span> (FLAGS_save_frontend_json)</div>
+<div class="line"><span class="lineno">  176</span>    <a class="code hl_variable" href="classdyno_1_1RGBDInstanceFrontendModule.html#a2eda61065a45a930571823756c1a7324">output_packet_record_</a>.insert({output-&gt;getFrameId(), output});</div>
+<div class="line"><span class="lineno">  177</span> </div>
+<div class="line"><span class="lineno">  178</span>  <span class="keywordflow">if</span> (FLAGS_log_projected_masks)</div>
+<div class="line"><span class="lineno">  179</span>    <a class="code hl_function" href="namespacedyno_1_1vision__tools.html#a5d8b89d2b560b498934853c77a7d9f28">vision_tools::writeOutProjectMaskAndDepthMap</a>(</div>
+<div class="line"><span class="lineno">  180</span>        frame-&gt;image_container_.get&lt;ImageType::Depth&gt;(),</div>
+<div class="line"><span class="lineno">  181</span>        frame-&gt;image_container_.get&lt;ImageType::MotionMask&gt;(),</div>
+<div class="line"><span class="lineno">  182</span>        *frame-&gt;getCamera(), frame-&gt;getFrameId());</div>
+<div class="line"><span class="lineno">  183</span> </div>
+<div class="line"><span class="lineno">  184</span>  <span class="keywordflow">if</span> (<a class="code hl_variable" href="classdyno_1_1RGBDInstanceFrontendModule.html#ab3ca43e5e01c0af7ddd620282d229121">logger_</a>) {</div>
+<div class="line"><span class="lineno">  185</span>    <span class="keyword">auto</span> ground_truths = this-&gt;<a class="code hl_function" href="classdyno_1_1FrontendModule.html#ace21578a253c182fc92f7fba030b6e00">getGroundTruthPackets</a>();</div>
+<div class="line"><span class="lineno">  186</span>    <a class="code hl_variable" href="classdyno_1_1RGBDInstanceFrontendModule.html#ab3ca43e5e01c0af7ddd620282d229121">logger_</a>-&gt;logPoints(output-&gt;getFrameId(), output-&gt;T_world_camera_,</div>
+<div class="line"><span class="lineno">  187</span>                       output-&gt;dynamic_landmarks_);</div>
+<div class="line"><span class="lineno">  188</span>    <span class="comment">// object_poses_ are in frontend module</span></div>
+<div class="line"><span class="lineno">  189</span>    <a class="code hl_variable" href="classdyno_1_1RGBDInstanceFrontendModule.html#ab3ca43e5e01c0af7ddd620282d229121">logger_</a>-&gt;logObjectPose(output-&gt;getFrameId(), <a class="code hl_variable" href="classdyno_1_1FrontendModule.html#ae07929467e6cc8acbab483b12efe801b">object_poses_</a>, ground_truths);</div>
+<div class="line"><span class="lineno">  190</span>    <a class="code hl_variable" href="classdyno_1_1RGBDInstanceFrontendModule.html#ab3ca43e5e01c0af7ddd620282d229121">logger_</a>-&gt;logObjectBbxes(output-&gt;getFrameId(), output-&gt;getObjectBbxes());</div>
+<div class="line"><span class="lineno">  191</span>  }</div>
+<div class="line"><span class="lineno">  192</span>  <span class="keywordflow">return</span> {State::Nominal, output};</div>
+<div class="line"><span class="lineno">  193</span>}</div>
 <div class="ttc" id="aclassThreadsafeQueue_html_ae3ac884e8d8f4646ce7524038aa4cd2c"><div class="ttname"><a href="classThreadsafeQueue.html#ae3ac884e8d8f4646ce7524038aa4cd2c">ThreadsafeQueue::push</a></div><div class="ttdeci">bool push(T new_value) override</div><div class="ttdoc">Push by value. Returns false if the queue has been shutdown. Not optimal, since it will make two move...</div><div class="ttdef"><b>Definition:</b> <a href="ThreadSafeQueue_8hpp_source.html#l00242">ThreadSafeQueue.hpp:242</a></div></div>
 <div class="ttc" id="aclassdyno_1_1FrontendModule_html_a0453998c25bc6ebff1163940718a08ac"><div class="ttname"><a href="classdyno_1_1FrontendModule.html#a0453998c25bc6ebff1163940718a08ac">dyno::FrontendModule::base_params_</a></div><div class="ttdeci">const FrontendParams base_params_</div><div class="ttdef"><b>Definition:</b> <a href="FrontendModule_8hpp_source.html#l00115">FrontendModule.hpp:115</a></div></div>
 <div class="ttc" id="aclassdyno_1_1FrontendModule_html_a74e2ceac249e8401a210fbf913647a59"><div class="ttname"><a href="classdyno_1_1FrontendModule.html#a74e2ceac249e8401a210fbf913647a59">dyno::FrontendModule::display_queue_</a></div><div class="ttdeci">ImageDisplayQueue * display_queue_</div><div class="ttdef"><b>Definition:</b> <a href="FrontendModule_8hpp_source.html#l00116">FrontendModule.hpp:116</a></div></div>
 <div class="ttc" id="aclassdyno_1_1FrontendModule_html_ace21578a253c182fc92f7fba030b6e00"><div class="ttname"><a href="classdyno_1_1FrontendModule.html#ace21578a253c182fc92f7fba030b6e00">dyno::FrontendModule::getGroundTruthPackets</a></div><div class="ttdeci">std::optional&lt; GroundTruthPacketMap &gt; getGroundTruthPackets() const</div><div class="ttdef"><b>Definition:</b> <a href="FrontendModule_8hpp_source.html#l00089">FrontendModule.hpp:89</a></div></div>
-<div class="ttc" id="aclassdyno_1_1RGBDInstanceFrontendModule_html_a3b8a72f00e038ce10f89be9ed52198da"><div class="ttname"><a href="classdyno_1_1RGBDInstanceFrontendModule.html#a3b8a72f00e038ce10f89be9ed52198da">dyno::RGBDInstanceFrontendModule::propogateObjectPoses</a></div><div class="ttdeci">void propogateObjectPoses(const MotionEstimateMap &amp;motion_estimates, FrameId frame_id)</div><div class="ttdef"><b>Definition:</b> <a href="RGBDInstanceFrontendModule_8cc_source.html#l00399">RGBDInstanceFrontendModule.cc:399</a></div></div>
-<div class="ttc" id="aclassdyno_1_1RGBDInstanceFrontendModule_html_a6ef0b6a5c8ab9d3e4c731fc9bb521b7d"><div class="ttname"><a href="classdyno_1_1RGBDInstanceFrontendModule.html#a6ef0b6a5c8ab9d3e4c731fc9bb521b7d">dyno::RGBDInstanceFrontendModule::constructOutput</a></div><div class="ttdeci">RGBDInstanceOutputPacket::Ptr constructOutput(const Frame &amp;frame, const MotionEstimateMap &amp;estimated_motions, const gtsam::Pose3 &amp;T_world_camera, const GroundTruthInputPacket::Optional &amp;gt_packet=std::nullopt, const DebugImagery::Optional &amp;debug_imagery=std::nullopt)</div><div class="ttdef"><b>Definition:</b> <a href="RGBDInstanceFrontendModule_8cc_source.html#l00323">RGBDInstanceFrontendModule.cc:323</a></div></div>
-<div class="ttc" id="aclassdyno_1_1RGBDInstanceFrontendModule_html_a78935cca3751ad2a0c25019250d12230"><div class="ttname"><a href="classdyno_1_1RGBDInstanceFrontendModule.html#a78935cca3751ad2a0c25019250d12230">dyno::RGBDInstanceFrontendModule::solveCameraMotion</a></div><div class="ttdeci">bool solveCameraMotion(Frame::Ptr frame_k, const Frame::Ptr &amp;frame_k_1)</div><div class="ttdoc">Solves PnP between frame_k-1 and frame_k using the tracked correspondances to estimate the frame of t...</div><div class="ttdef"><b>Definition:</b> <a href="RGBDInstanceFrontendModule_8cc_source.html#l00192">RGBDInstanceFrontendModule.cc:192</a></div></div>
-<div class="ttc" id="aclassdyno_1_1RGBDInstanceFrontendModule_html_a9bfb2e31fd68b5b6d6ffb834b6c201a1"><div class="ttname"><a href="classdyno_1_1RGBDInstanceFrontendModule.html#a9bfb2e31fd68b5b6d6ffb834b6c201a1">dyno::RGBDInstanceFrontendModule::solveObjectMotions</a></div><div class="ttdeci">void solveObjectMotions(Frame::Ptr frame_k, Frame::Ptr frame_k_1, MotionEstimateMap &amp;motion_estimates)</div><div class="ttdef"><b>Definition:</b> <a href="RGBDInstanceFrontendModule_8cc_source.html#l00278">RGBDInstanceFrontendModule.cc:278</a></div></div>
-<div class="ttc" id="anamespacedyno_1_1vision__tools_html_a5d8b89d2b560b498934853c77a7d9f28"><div class="ttname"><a href="namespacedyno_1_1vision__tools.html#a5d8b89d2b560b498934853c77a7d9f28">dyno::vision_tools::writeOutProjectMaskAndDepthMap</a></div><div class="ttdeci">void writeOutProjectMaskAndDepthMap(const ImageWrapper&lt; ImageType::Depth &gt; &amp;depth_image, const ImageWrapper&lt; ImageType::SemanticMask &gt; &amp;mask_image, const Camera &amp;camera, FrameId frame_id)</div><div class="ttdoc">Saves a re-projected 3D point cloud with labelled points to file as a cv::Mat.</div><div class="ttdef"><b>Definition:</b> <a href="VisionTools_8cc_source.html#l00639">VisionTools.cc:639</a></div></div>
-<div class="ttc" id="anamespacedyno_1_1vision__tools_html_a70f3daa5a2a0fb3a715ffb1fb65992cb"><div class="ttname"><a href="namespacedyno_1_1vision__tools.html#a70f3daa5a2a0fb3a715ffb1fb65992cb">dyno::vision_tools::trackDynamic</a></div><div class="ttdeci">std::vector&lt; std::vector&lt; int &gt; &gt; trackDynamic(const FrontendParams &amp;params, const Frame &amp;previous_frame, Frame::Ptr current_frame)</div><div class="ttdoc">Depricate ;)</div><div class="ttdef"><b>Definition:</b> <a href="VisionTools_8cc_source.html#l00316">VisionTools.cc:316</a></div></div>
+<div class="ttc" id="aclassdyno_1_1RGBDInstanceFrontendModule_html_a3b8a72f00e038ce10f89be9ed52198da"><div class="ttname"><a href="classdyno_1_1RGBDInstanceFrontendModule.html#a3b8a72f00e038ce10f89be9ed52198da">dyno::RGBDInstanceFrontendModule::propogateObjectPoses</a></div><div class="ttdeci">void propogateObjectPoses(const MotionEstimateMap &amp;motion_estimates, FrameId frame_id)</div><div class="ttdef"><b>Definition:</b> <a href="RGBDInstanceFrontendModule_8cc_source.html#l00402">RGBDInstanceFrontendModule.cc:402</a></div></div>
+<div class="ttc" id="aclassdyno_1_1RGBDInstanceFrontendModule_html_a6ef0b6a5c8ab9d3e4c731fc9bb521b7d"><div class="ttname"><a href="classdyno_1_1RGBDInstanceFrontendModule.html#a6ef0b6a5c8ab9d3e4c731fc9bb521b7d">dyno::RGBDInstanceFrontendModule::constructOutput</a></div><div class="ttdeci">RGBDInstanceOutputPacket::Ptr constructOutput(const Frame &amp;frame, const MotionEstimateMap &amp;estimated_motions, const gtsam::Pose3 &amp;T_world_camera, const GroundTruthInputPacket::Optional &amp;gt_packet=std::nullopt, const DebugImagery::Optional &amp;debug_imagery=std::nullopt)</div><div class="ttdef"><b>Definition:</b> <a href="RGBDInstanceFrontendModule_8cc_source.html#l00326">RGBDInstanceFrontendModule.cc:326</a></div></div>
+<div class="ttc" id="aclassdyno_1_1RGBDInstanceFrontendModule_html_a78935cca3751ad2a0c25019250d12230"><div class="ttname"><a href="classdyno_1_1RGBDInstanceFrontendModule.html#a78935cca3751ad2a0c25019250d12230">dyno::RGBDInstanceFrontendModule::solveCameraMotion</a></div><div class="ttdeci">bool solveCameraMotion(Frame::Ptr frame_k, const Frame::Ptr &amp;frame_k_1)</div><div class="ttdoc">Solves PnP between frame_k-1 and frame_k using the tracked correspondances to estimate the frame of t...</div><div class="ttdef"><b>Definition:</b> <a href="RGBDInstanceFrontendModule_8cc_source.html#l00195">RGBDInstanceFrontendModule.cc:195</a></div></div>
+<div class="ttc" id="aclassdyno_1_1RGBDInstanceFrontendModule_html_a9bfb2e31fd68b5b6d6ffb834b6c201a1"><div class="ttname"><a href="classdyno_1_1RGBDInstanceFrontendModule.html#a9bfb2e31fd68b5b6d6ffb834b6c201a1">dyno::RGBDInstanceFrontendModule::solveObjectMotions</a></div><div class="ttdeci">void solveObjectMotions(Frame::Ptr frame_k, Frame::Ptr frame_k_1, MotionEstimateMap &amp;motion_estimates)</div><div class="ttdef"><b>Definition:</b> <a href="RGBDInstanceFrontendModule_8cc_source.html#l00281">RGBDInstanceFrontendModule.cc:281</a></div></div>
+<div class="ttc" id="anamespacedyno_1_1vision__tools_html_a5d8b89d2b560b498934853c77a7d9f28"><div class="ttname"><a href="namespacedyno_1_1vision__tools.html#a5d8b89d2b560b498934853c77a7d9f28">dyno::vision_tools::writeOutProjectMaskAndDepthMap</a></div><div class="ttdeci">void writeOutProjectMaskAndDepthMap(const ImageWrapper&lt; ImageType::Depth &gt; &amp;depth_image, const ImageWrapper&lt; ImageType::SemanticMask &gt; &amp;mask_image, const Camera &amp;camera, FrameId frame_id)</div><div class="ttdoc">Saves a re-projected 3D point cloud with labelled points to file as a cv::Mat.</div><div class="ttdef"><b>Definition:</b> <a href="VisionTools_8cc_source.html#l00640">VisionTools.cc:640</a></div></div>
+<div class="ttc" id="anamespacedyno_1_1vision__tools_html_a70f3daa5a2a0fb3a715ffb1fb65992cb"><div class="ttname"><a href="namespacedyno_1_1vision__tools.html#a70f3daa5a2a0fb3a715ffb1fb65992cb">dyno::vision_tools::trackDynamic</a></div><div class="ttdeci">std::vector&lt; std::vector&lt; int &gt; &gt; trackDynamic(const FrontendParams &amp;params, const Frame &amp;previous_frame, Frame::Ptr current_frame)</div><div class="ttdoc">Depricate ;)</div><div class="ttdef"><b>Definition:</b> <a href="VisionTools_8cc_source.html#l00317">VisionTools.cc:317</a></div></div>
 <div class="ttc" id="anamespacedyno_html_a809604e427db44cbf532a545c71a3b5d"><div class="ttname"><a href="namespacedyno.html#a809604e427db44cbf532a545c71a3b5d">dyno::to_string</a></div><div class="ttdeci">std::string to_string(const T &amp;t)</div></div>
 <div class="ttc" id="anamespacedyno_html_acef42ad0a1e53f5876f1000defc23e3b"><div class="ttname"><a href="namespacedyno.html#acef42ad0a1e53f5876f1000defc23e3b">dyno::MotionEstimateMap</a></div><div class="ttdeci">EstimateMap&lt; ObjectId, Motion3 &gt; MotionEstimateMap</div><div class="ttdoc">Map of object ids to ReferenceFrameValue's of motions.</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00388">Types.hpp:388</a></div></div>
 <div class="ttc" id="astructdyno_1_1ImageType_1_1MotionMask_html_a6b119596bef78424e2085d684d07cd43"><div class="ttname"><a href="structdyno_1_1ImageType_1_1MotionMask.html#a6b119596bef78424e2085d684d07cd43">dyno::ImageType::MotionMask::toRGB</a></div><div class="ttdeci">static cv::Mat toRGB(const ImageWrapper&lt; MotionMask &gt; &amp;image)</div><div class="ttdef"><b>Definition:</b> <a href="ImageTypes_8cc_source.html#l00187">ImageTypes.cc:187</a></div></div>
@@ -911,56 +914,56 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="RGBDInstanceFrontendModule_8cc_source.html#l00399">399</a> of file <a class="el" href="RGBDInstanceFrontendModule_8cc_source.html">RGBDInstanceFrontendModule.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  400</span>                                                                 {</div>
-<div class="line"><span class="lineno">  401</span>  gtsam::Point3Vector object_centroids_k_1, object_centroids_k;</div>
-<div class="line"><span class="lineno">  402</span> </div>
-<div class="line"><span class="lineno">  403</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [object_id, motion_estimate] : motion_estimates) {</div>
-<div class="line"><span class="lineno">  404</span>    <span class="keyword">const</span> <span class="keyword">auto</span> frame_k_1 = <a class="code hl_variable" href="classdyno_1_1RGBDInstanceFrontendModule.html#a6f7ea559d6128c83bfefd238ebc4b608">tracker_</a>-&gt;getPreviousFrame();</div>
-<div class="line"><span class="lineno">  405</span>    <span class="keyword">const</span> <span class="keyword">auto</span> frame_k = <a class="code hl_variable" href="classdyno_1_1RGBDInstanceFrontendModule.html#a6f7ea559d6128c83bfefd238ebc4b608">tracker_</a>-&gt;getCurrentFrame();</div>
-<div class="line"><span class="lineno">  406</span> </div>
-<div class="line"><span class="lineno">  407</span>    <span class="keyword">auto</span> object_points = <a class="code hl_typedef" href="namespacedyno.html#aeaa15616abde5162319c97576823c59a">FeatureFilterIterator</a>(</div>
-<div class="line"><span class="lineno">  408</span>        <span class="keyword">const_cast&lt;</span>FeatureContainer&amp;<span class="keyword">&gt;</span>(frame_k_1-&gt;dynamic_features_),</div>
-<div class="line"><span class="lineno">  409</span>        [object_id, &amp;frame_k](<span class="keyword">const</span> Feature::Ptr&amp; f) -&gt; <span class="keywordtype">bool</span> {</div>
-<div class="line"><span class="lineno">  410</span>          return Feature::IsUsable(f) &amp;&amp; f-&gt;objectId() == object_id &amp;&amp;</div>
-<div class="line"><span class="lineno">  411</span>                 frame_k-&gt;exists(f-&gt;trackletId()) &amp;&amp;</div>
-<div class="line"><span class="lineno">  412</span>                 frame_k-&gt;isFeatureUsable(f-&gt;trackletId());</div>
-<div class="line"><span class="lineno">  413</span>        });</div>
-<div class="line"><span class="lineno">  414</span> </div>
-<div class="line"><span class="lineno">  415</span>    gtsam::Point3 centroid_k_1(0, 0, 0);</div>
-<div class="line"><span class="lineno">  416</span>    gtsam::Point3 centroid_k(0, 0, 0);</div>
-<div class="line"><span class="lineno">  417</span>    <span class="keywordtype">size_t</span> count = 0;</div>
-<div class="line"><span class="lineno">  418</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; feature : object_points) {</div>
-<div class="line"><span class="lineno">  419</span>      gtsam::Point3 lmk_k_1 =</div>
-<div class="line"><span class="lineno">  420</span>          frame_k_1-&gt;backProjectToCamera(feature-&gt;trackletId());</div>
-<div class="line"><span class="lineno">  421</span>      centroid_k_1 += lmk_k_1;</div>
-<div class="line"><span class="lineno">  422</span> </div>
-<div class="line"><span class="lineno">  423</span>      gtsam::Point3 lmk_k = frame_k-&gt;backProjectToCamera(feature-&gt;trackletId());</div>
-<div class="line"><span class="lineno">  424</span>      centroid_k += lmk_k;</div>
+<p class="definition">Definition at line <a class="el" href="RGBDInstanceFrontendModule_8cc_source.html#l00402">402</a> of file <a class="el" href="RGBDInstanceFrontendModule_8cc_source.html">RGBDInstanceFrontendModule.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  403</span>                                                                 {</div>
+<div class="line"><span class="lineno">  404</span>  gtsam::Point3Vector object_centroids_k_1, object_centroids_k;</div>
+<div class="line"><span class="lineno">  405</span> </div>
+<div class="line"><span class="lineno">  406</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [object_id, motion_estimate] : motion_estimates) {</div>
+<div class="line"><span class="lineno">  407</span>    <span class="keyword">const</span> <span class="keyword">auto</span> frame_k_1 = <a class="code hl_variable" href="classdyno_1_1RGBDInstanceFrontendModule.html#a6f7ea559d6128c83bfefd238ebc4b608">tracker_</a>-&gt;getPreviousFrame();</div>
+<div class="line"><span class="lineno">  408</span>    <span class="keyword">const</span> <span class="keyword">auto</span> frame_k = <a class="code hl_variable" href="classdyno_1_1RGBDInstanceFrontendModule.html#a6f7ea559d6128c83bfefd238ebc4b608">tracker_</a>-&gt;getCurrentFrame();</div>
+<div class="line"><span class="lineno">  409</span> </div>
+<div class="line"><span class="lineno">  410</span>    <span class="keyword">auto</span> object_points = <a class="code hl_typedef" href="namespacedyno.html#aeaa15616abde5162319c97576823c59a">FeatureFilterIterator</a>(</div>
+<div class="line"><span class="lineno">  411</span>        <span class="keyword">const_cast&lt;</span>FeatureContainer&amp;<span class="keyword">&gt;</span>(frame_k_1-&gt;dynamic_features_),</div>
+<div class="line"><span class="lineno">  412</span>        [object_id, &amp;frame_k](<span class="keyword">const</span> Feature::Ptr&amp; f) -&gt; <span class="keywordtype">bool</span> {</div>
+<div class="line"><span class="lineno">  413</span>          return Feature::IsUsable(f) &amp;&amp; f-&gt;objectId() == object_id &amp;&amp;</div>
+<div class="line"><span class="lineno">  414</span>                 frame_k-&gt;exists(f-&gt;trackletId()) &amp;&amp;</div>
+<div class="line"><span class="lineno">  415</span>                 frame_k-&gt;isFeatureUsable(f-&gt;trackletId());</div>
+<div class="line"><span class="lineno">  416</span>        });</div>
+<div class="line"><span class="lineno">  417</span> </div>
+<div class="line"><span class="lineno">  418</span>    gtsam::Point3 centroid_k_1(0, 0, 0);</div>
+<div class="line"><span class="lineno">  419</span>    gtsam::Point3 centroid_k(0, 0, 0);</div>
+<div class="line"><span class="lineno">  420</span>    <span class="keywordtype">size_t</span> count = 0;</div>
+<div class="line"><span class="lineno">  421</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; feature : object_points) {</div>
+<div class="line"><span class="lineno">  422</span>      gtsam::Point3 lmk_k_1 =</div>
+<div class="line"><span class="lineno">  423</span>          frame_k_1-&gt;backProjectToCamera(feature-&gt;trackletId());</div>
+<div class="line"><span class="lineno">  424</span>      centroid_k_1 += lmk_k_1;</div>
 <div class="line"><span class="lineno">  425</span> </div>
-<div class="line"><span class="lineno">  426</span>      count++;</div>
-<div class="line"><span class="lineno">  427</span>    }</div>
+<div class="line"><span class="lineno">  426</span>      gtsam::Point3 lmk_k = frame_k-&gt;backProjectToCamera(feature-&gt;trackletId());</div>
+<div class="line"><span class="lineno">  427</span>      centroid_k += lmk_k;</div>
 <div class="line"><span class="lineno">  428</span> </div>
-<div class="line"><span class="lineno">  429</span>    centroid_k_1 /= count;</div>
-<div class="line"><span class="lineno">  430</span>    centroid_k /= count;</div>
+<div class="line"><span class="lineno">  429</span>      count++;</div>
+<div class="line"><span class="lineno">  430</span>    }</div>
 <div class="line"><span class="lineno">  431</span> </div>
-<div class="line"><span class="lineno">  432</span>    centroid_k_1 = frame_k_1-&gt;getPose() * centroid_k_1;</div>
-<div class="line"><span class="lineno">  433</span>    centroid_k = frame_k-&gt;getPose() * centroid_k;</div>
+<div class="line"><span class="lineno">  432</span>    centroid_k_1 /= count;</div>
+<div class="line"><span class="lineno">  433</span>    centroid_k /= count;</div>
 <div class="line"><span class="lineno">  434</span> </div>
-<div class="line"><span class="lineno">  435</span>    object_centroids_k_1.push_back(centroid_k_1);</div>
-<div class="line"><span class="lineno">  436</span>    object_centroids_k.push_back(centroid_k);</div>
-<div class="line"><span class="lineno">  437</span>  }</div>
-<div class="line"><span class="lineno">  438</span> </div>
-<div class="line"><span class="lineno">  439</span>  <span class="keywordflow">if</span> (FLAGS_init_object_pose_from_gt) {</div>
-<div class="line"><span class="lineno">  440</span>    <a class="code hl_function" href="namespacedyno.html#a93c3e3c50ec5de7bfd1e2a373d20e77b">dyno::propogateObjectPoses</a>(<a class="code hl_variable" href="classdyno_1_1FrontendModule.html#ae07929467e6cc8acbab483b12efe801b">object_poses_</a>, motion_estimates,</div>
-<div class="line"><span class="lineno">  441</span>                               object_centroids_k_1, object_centroids_k,</div>
-<div class="line"><span class="lineno">  442</span>                               frame_id, <a class="code hl_function" href="classdyno_1_1FrontendModule.html#ace21578a253c182fc92f7fba030b6e00">getGroundTruthPackets</a>());</div>
-<div class="line"><span class="lineno">  443</span>  } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  444</span>    <a class="code hl_function" href="namespacedyno.html#a93c3e3c50ec5de7bfd1e2a373d20e77b">dyno::propogateObjectPoses</a>(<a class="code hl_variable" href="classdyno_1_1FrontendModule.html#ae07929467e6cc8acbab483b12efe801b">object_poses_</a>, motion_estimates,</div>
-<div class="line"><span class="lineno">  445</span>                               object_centroids_k_1, object_centroids_k,</div>
-<div class="line"><span class="lineno">  446</span>                               frame_id);</div>
-<div class="line"><span class="lineno">  447</span>  }</div>
-<div class="line"><span class="lineno">  448</span>}</div>
+<div class="line"><span class="lineno">  435</span>    centroid_k_1 = frame_k_1-&gt;getPose() * centroid_k_1;</div>
+<div class="line"><span class="lineno">  436</span>    centroid_k = frame_k-&gt;getPose() * centroid_k;</div>
+<div class="line"><span class="lineno">  437</span> </div>
+<div class="line"><span class="lineno">  438</span>    object_centroids_k_1.push_back(centroid_k_1);</div>
+<div class="line"><span class="lineno">  439</span>    object_centroids_k.push_back(centroid_k);</div>
+<div class="line"><span class="lineno">  440</span>  }</div>
+<div class="line"><span class="lineno">  441</span> </div>
+<div class="line"><span class="lineno">  442</span>  <span class="keywordflow">if</span> (FLAGS_init_object_pose_from_gt) {</div>
+<div class="line"><span class="lineno">  443</span>    <a class="code hl_function" href="namespacedyno.html#a93c3e3c50ec5de7bfd1e2a373d20e77b">dyno::propogateObjectPoses</a>(<a class="code hl_variable" href="classdyno_1_1FrontendModule.html#ae07929467e6cc8acbab483b12efe801b">object_poses_</a>, motion_estimates,</div>
+<div class="line"><span class="lineno">  444</span>                               object_centroids_k_1, object_centroids_k,</div>
+<div class="line"><span class="lineno">  445</span>                               frame_id, <a class="code hl_function" href="classdyno_1_1FrontendModule.html#ace21578a253c182fc92f7fba030b6e00">getGroundTruthPackets</a>());</div>
+<div class="line"><span class="lineno">  446</span>  } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  447</span>    <a class="code hl_function" href="namespacedyno.html#a93c3e3c50ec5de7bfd1e2a373d20e77b">dyno::propogateObjectPoses</a>(<a class="code hl_variable" href="classdyno_1_1FrontendModule.html#ae07929467e6cc8acbab483b12efe801b">object_poses_</a>, motion_estimates,</div>
+<div class="line"><span class="lineno">  448</span>                               object_centroids_k_1, object_centroids_k,</div>
+<div class="line"><span class="lineno">  449</span>                               frame_id);</div>
+<div class="line"><span class="lineno">  450</span>  }</div>
+<div class="line"><span class="lineno">  451</span>}</div>
 <div class="ttc" id="anamespacedyno_html_a93c3e3c50ec5de7bfd1e2a373d20e77b"><div class="ttname"><a href="namespacedyno.html#a93c3e3c50ec5de7bfd1e2a373d20e77b">dyno::propogateObjectPoses</a></div><div class="ttdeci">void propogateObjectPoses(ObjectPoseMap &amp;object_poses, const MotionEstimateMap &amp;object_motions_k, const gtsam::Point3Vector &amp;object_centroids_k_1, const gtsam::Point3Vector &amp;object_centroids_k, FrameId frame_id_k, std::optional&lt; GroundTruthPacketMap &gt; gt_packet_map={}, PropogatePoseResult *result=nullptr)</div><div class="ttdoc">Propogated a map of object poses via their motions or otherwise.</div><div class="ttdef"><b>Definition:</b> <a href="DynamicObjects_8cc_source.html#l00048">DynamicObjects.cc:48</a></div></div>
 <div class="ttc" id="anamespacedyno_html_aeaa15616abde5162319c97576823c59a"><div class="ttname"><a href="namespacedyno.html#aeaa15616abde5162319c97576823c59a">dyno::FeatureFilterIterator</a></div><div class="ttdeci">FeatureContainer::FilterIterator FeatureFilterIterator</div><div class="ttdoc">filter iterator over a FeatureContainer class</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00607">Feature.hpp:607</a></div></div>
 </div><!-- fragment -->
@@ -1041,55 +1044,55 @@ Here is the caller graph for this function:</div>
 <dd>
 false </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="RGBDInstanceFrontendModule_8cc_source.html#l00192">192</a> of file <a class="el" href="RGBDInstanceFrontendModule_8cc_source.html">RGBDInstanceFrontendModule.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  193</span>                                                 {</div>
-<div class="line"><span class="lineno">  194</span>  <a class="code hl_typedef" href="namespacedyno.html#a80a44a3e6e4745a2514ffdc58dbcfaac">Pose3SolverResult</a> result;</div>
-<div class="line"><span class="lineno">  195</span>  <span class="keywordflow">if</span> (<a class="code hl_variable" href="classdyno_1_1FrontendModule.html#a0453998c25bc6ebff1163940718a08ac">base_params_</a>.<a class="code hl_variable" href="structdyno_1_1FrontendParams.html#a606a4126729a5781af504e37fce62a6b">use_ego_motion_pnp</a>) {</div>
-<div class="line"><span class="lineno">  196</span>    result = <a class="code hl_variable" href="classdyno_1_1RGBDInstanceFrontendModule.html#a2eb15437003aef1c7a0b9612e9d9ee64">motion_solver_</a>.<a class="code hl_function" href="classdyno_1_1EgoMotionSolver.html#a77c1966709d200fdb6464073f1e6f88b">geometricOutlierRejection3d2d</a>(frame_k_1, frame_k);</div>
-<div class="line"><span class="lineno">  197</span>  } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  198</span>    <span class="comment">// TODO: untested</span></div>
-<div class="line"><span class="lineno">  199</span>    LOG(FATAL) &lt;&lt; <span class="stringliteral">&quot;Not tested&quot;</span>;</div>
-<div class="line"><span class="lineno">  200</span>    result = <a class="code hl_variable" href="classdyno_1_1RGBDInstanceFrontendModule.html#a2eb15437003aef1c7a0b9612e9d9ee64">motion_solver_</a>.<a class="code hl_function" href="classdyno_1_1EgoMotionSolver.html#ac7f18ee805d436d46193e550cbc558be">geometricOutlierRejection3d3d</a>(frame_k_1, frame_k);</div>
-<div class="line"><span class="lineno">  201</span>  }</div>
-<div class="line"><span class="lineno">  202</span> </div>
-<div class="line"><span class="lineno">  203</span>  VLOG(15) &lt;&lt; (<a class="code hl_variable" href="classdyno_1_1FrontendModule.html#a0453998c25bc6ebff1163940718a08ac">base_params_</a>.<a class="code hl_variable" href="structdyno_1_1FrontendParams.html#a606a4126729a5781af504e37fce62a6b">use_ego_motion_pnp</a> ? <span class="stringliteral">&quot;3D2D&quot;</span> : <span class="stringliteral">&quot;3D3D&quot;</span>)</div>
-<div class="line"><span class="lineno">  204</span>           &lt;&lt; <span class="stringliteral">&quot;camera pose estimate at frame &quot;</span> &lt;&lt; frame_k-&gt;frame_id_</div>
-<div class="line"><span class="lineno">  205</span>           &lt;&lt; (result.status == <a class="code hl_enumvalue" href="namespacedyno.html#ab31927aa859decf5da77d9664094cb6bac9f1a6384b1c466d4612f513bd8e13ea">TrackingStatus::VALID</a> ? <span class="stringliteral">&quot; success &quot;</span></div>
-<div class="line"><span class="lineno">  206</span>                                                      : <span class="stringliteral">&quot; failure &quot;</span>)</div>
-<div class="line"><span class="lineno">  207</span>           &lt;&lt; <span class="stringliteral">&quot;:\n&quot;</span></div>
-<div class="line"><span class="lineno">  208</span>           &lt;&lt; <span class="stringliteral">&quot;- Tracking Status: &quot;</span> &lt;&lt; <a class="code hl_function" href="namespacedyno.html#a809604e427db44cbf532a545c71a3b5d">to_string</a>(result.status) &lt;&lt; <span class="charliteral">&#39;\n&#39;</span></div>
-<div class="line"><span class="lineno">  209</span>           &lt;&lt; <span class="stringliteral">&quot;- Total Correspondences: &quot;</span></div>
-<div class="line"><span class="lineno">  210</span>           &lt;&lt; result.inliers.size() + result.outliers.size() &lt;&lt; <span class="charliteral">&#39;\n&#39;</span></div>
-<div class="line"><span class="lineno">  211</span>           &lt;&lt; <span class="stringliteral">&quot;\t- # inliers: &quot;</span> &lt;&lt; result.inliers.size() &lt;&lt; <span class="charliteral">&#39;\n&#39;</span></div>
-<div class="line"><span class="lineno">  212</span>           &lt;&lt; <span class="stringliteral">&quot;\t- # outliers: &quot;</span> &lt;&lt; result.outliers.size() &lt;&lt; <span class="charliteral">&#39;\n&#39;</span>;</div>
-<div class="line"><span class="lineno">  213</span> </div>
-<div class="line"><span class="lineno">  214</span>  <span class="keywordflow">if</span> (result.status == <a class="code hl_enumvalue" href="namespacedyno.html#ab31927aa859decf5da77d9664094cb6bac9f1a6384b1c466d4612f513bd8e13ea">TrackingStatus::VALID</a>) {</div>
-<div class="line"><span class="lineno">  215</span>    frame_k-&gt;T_world_camera_ = result.best_result;</div>
-<div class="line"><span class="lineno">  216</span>    <a class="code hl_typedef" href="namespacedyno.html#a7b74611da938f0d55a3b1fdb16219037">TrackletIds</a> tracklets = frame_k-&gt;static_features_.collectTracklets();</div>
-<div class="line"><span class="lineno">  217</span>    CHECK_GE(tracklets.size(),</div>
-<div class="line"><span class="lineno">  218</span>             result.inliers.size() +</div>
-<div class="line"><span class="lineno">  219</span>                 result.outliers.size());  <span class="comment">// tracklets shoudl be more (or same</span></div>
-<div class="line"><span class="lineno">  220</span>                                           <span class="comment">// as) correspondances as there will</span></div>
-<div class="line"><span class="lineno">  221</span>                                           <span class="comment">// be new points untracked</span></div>
-<div class="line"><span class="lineno">  222</span>    frame_k-&gt;static_features_.markOutliers(result.outliers);</div>
-<div class="line"><span class="lineno">  223</span> </div>
-<div class="line"><span class="lineno">  224</span>    <span class="keywordflow">if</span> (<a class="code hl_variable" href="classdyno_1_1FrontendModule.html#a0453998c25bc6ebff1163940718a08ac">base_params_</a>.<a class="code hl_variable" href="structdyno_1_1FrontendParams.html#a1477e857845f703c1ef6210b45e15560">refine_camera_pose_with_joint_of</a>) {</div>
-<div class="line"><span class="lineno">  225</span>      OpticalFlowAndPoseOptimizer flow_optimizer(</div>
-<div class="line"><span class="lineno">  226</span>          <a class="code hl_variable" href="classdyno_1_1FrontendModule.html#a0453998c25bc6ebff1163940718a08ac">base_params_</a>.<a class="code hl_variable" href="structdyno_1_1FrontendParams.html#a54f7c61a2dfc9cf8bc31c0d29eaf40d9">object_motion_solver_params</a>.<a class="code hl_variable" href="structdyno_1_1ObjectMotionSovler_1_1Params.html#a7d4888ebe0eb5eb801e2dde7afffba4f">joint_of_params</a>);</div>
-<div class="line"><span class="lineno">  227</span> </div>
-<div class="line"><span class="lineno">  228</span>      <span class="keyword">auto</span> flow_opt_result = flow_optimizer.optimizeAndUpdate&lt;<a class="code hl_typedef" href="namespacedyno.html#a23fb2e58952a071624b23552e74cfb01">CalibrationType</a>&gt;(</div>
-<div class="line"><span class="lineno">  229</span>          frame_k_1, frame_k, result.inliers, result.best_result);</div>
-<div class="line"><span class="lineno">  230</span>      frame_k-&gt;T_world_camera_ = flow_opt_result.best_result.refined_pose;</div>
-<div class="line"><span class="lineno">  231</span>      VLOG(15) &lt;&lt; <span class="stringliteral">&quot;Refined camera pose with optical flow - error before: &quot;</span></div>
-<div class="line"><span class="lineno">  232</span>               &lt;&lt; flow_opt_result.error_before.value_or(<a class="code hl_variable" href="namespacedyno.html#aa9297665cadd44539c6b64879869c834">NaN</a>)</div>
-<div class="line"><span class="lineno">  233</span>               &lt;&lt; <span class="stringliteral">&quot; error_after: &quot;</span> &lt;&lt; flow_opt_result.error_after.value_or(<a class="code hl_variable" href="namespacedyno.html#aa9297665cadd44539c6b64879869c834">NaN</a>);</div>
-<div class="line"><span class="lineno">  234</span>    }</div>
-<div class="line"><span class="lineno">  235</span>    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  236</span>  } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  237</span>    frame_k-&gt;T_world_camera_ = gtsam::Pose3::Identity();</div>
-<div class="line"><span class="lineno">  238</span>    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">  239</span>  }</div>
-<div class="line"><span class="lineno">  240</span>}</div>
+<p class="definition">Definition at line <a class="el" href="RGBDInstanceFrontendModule_8cc_source.html#l00195">195</a> of file <a class="el" href="RGBDInstanceFrontendModule_8cc_source.html">RGBDInstanceFrontendModule.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  196</span>                                                 {</div>
+<div class="line"><span class="lineno">  197</span>  <a class="code hl_typedef" href="namespacedyno.html#a80a44a3e6e4745a2514ffdc58dbcfaac">Pose3SolverResult</a> result;</div>
+<div class="line"><span class="lineno">  198</span>  <span class="keywordflow">if</span> (<a class="code hl_variable" href="classdyno_1_1FrontendModule.html#a0453998c25bc6ebff1163940718a08ac">base_params_</a>.<a class="code hl_variable" href="structdyno_1_1FrontendParams.html#a606a4126729a5781af504e37fce62a6b">use_ego_motion_pnp</a>) {</div>
+<div class="line"><span class="lineno">  199</span>    result = <a class="code hl_variable" href="classdyno_1_1RGBDInstanceFrontendModule.html#a2eb15437003aef1c7a0b9612e9d9ee64">motion_solver_</a>.<a class="code hl_function" href="classdyno_1_1EgoMotionSolver.html#a77c1966709d200fdb6464073f1e6f88b">geometricOutlierRejection3d2d</a>(frame_k_1, frame_k);</div>
+<div class="line"><span class="lineno">  200</span>  } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  201</span>    <span class="comment">// TODO: untested</span></div>
+<div class="line"><span class="lineno">  202</span>    LOG(FATAL) &lt;&lt; <span class="stringliteral">&quot;Not tested&quot;</span>;</div>
+<div class="line"><span class="lineno">  203</span>    result = <a class="code hl_variable" href="classdyno_1_1RGBDInstanceFrontendModule.html#a2eb15437003aef1c7a0b9612e9d9ee64">motion_solver_</a>.<a class="code hl_function" href="classdyno_1_1EgoMotionSolver.html#ac7f18ee805d436d46193e550cbc558be">geometricOutlierRejection3d3d</a>(frame_k_1, frame_k);</div>
+<div class="line"><span class="lineno">  204</span>  }</div>
+<div class="line"><span class="lineno">  205</span> </div>
+<div class="line"><span class="lineno">  206</span>  VLOG(15) &lt;&lt; (<a class="code hl_variable" href="classdyno_1_1FrontendModule.html#a0453998c25bc6ebff1163940718a08ac">base_params_</a>.<a class="code hl_variable" href="structdyno_1_1FrontendParams.html#a606a4126729a5781af504e37fce62a6b">use_ego_motion_pnp</a> ? <span class="stringliteral">&quot;3D2D&quot;</span> : <span class="stringliteral">&quot;3D3D&quot;</span>)</div>
+<div class="line"><span class="lineno">  207</span>           &lt;&lt; <span class="stringliteral">&quot;camera pose estimate at frame &quot;</span> &lt;&lt; frame_k-&gt;frame_id_</div>
+<div class="line"><span class="lineno">  208</span>           &lt;&lt; (result.status == <a class="code hl_enumvalue" href="namespacedyno.html#ab31927aa859decf5da77d9664094cb6bac9f1a6384b1c466d4612f513bd8e13ea">TrackingStatus::VALID</a> ? <span class="stringliteral">&quot; success &quot;</span></div>
+<div class="line"><span class="lineno">  209</span>                                                      : <span class="stringliteral">&quot; failure &quot;</span>)</div>
+<div class="line"><span class="lineno">  210</span>           &lt;&lt; <span class="stringliteral">&quot;:\n&quot;</span></div>
+<div class="line"><span class="lineno">  211</span>           &lt;&lt; <span class="stringliteral">&quot;- Tracking Status: &quot;</span> &lt;&lt; <a class="code hl_function" href="namespacedyno.html#a809604e427db44cbf532a545c71a3b5d">to_string</a>(result.status) &lt;&lt; <span class="charliteral">&#39;\n&#39;</span></div>
+<div class="line"><span class="lineno">  212</span>           &lt;&lt; <span class="stringliteral">&quot;- Total Correspondences: &quot;</span></div>
+<div class="line"><span class="lineno">  213</span>           &lt;&lt; result.inliers.size() + result.outliers.size() &lt;&lt; <span class="charliteral">&#39;\n&#39;</span></div>
+<div class="line"><span class="lineno">  214</span>           &lt;&lt; <span class="stringliteral">&quot;\t- # inliers: &quot;</span> &lt;&lt; result.inliers.size() &lt;&lt; <span class="charliteral">&#39;\n&#39;</span></div>
+<div class="line"><span class="lineno">  215</span>           &lt;&lt; <span class="stringliteral">&quot;\t- # outliers: &quot;</span> &lt;&lt; result.outliers.size() &lt;&lt; <span class="charliteral">&#39;\n&#39;</span>;</div>
+<div class="line"><span class="lineno">  216</span> </div>
+<div class="line"><span class="lineno">  217</span>  <span class="keywordflow">if</span> (result.status == <a class="code hl_enumvalue" href="namespacedyno.html#ab31927aa859decf5da77d9664094cb6bac9f1a6384b1c466d4612f513bd8e13ea">TrackingStatus::VALID</a>) {</div>
+<div class="line"><span class="lineno">  218</span>    frame_k-&gt;T_world_camera_ = result.best_result;</div>
+<div class="line"><span class="lineno">  219</span>    <a class="code hl_typedef" href="namespacedyno.html#a7b74611da938f0d55a3b1fdb16219037">TrackletIds</a> tracklets = frame_k-&gt;static_features_.collectTracklets();</div>
+<div class="line"><span class="lineno">  220</span>    CHECK_GE(tracklets.size(),</div>
+<div class="line"><span class="lineno">  221</span>             result.inliers.size() +</div>
+<div class="line"><span class="lineno">  222</span>                 result.outliers.size());  <span class="comment">// tracklets shoudl be more (or same</span></div>
+<div class="line"><span class="lineno">  223</span>                                           <span class="comment">// as) correspondances as there will</span></div>
+<div class="line"><span class="lineno">  224</span>                                           <span class="comment">// be new points untracked</span></div>
+<div class="line"><span class="lineno">  225</span>    frame_k-&gt;static_features_.markOutliers(result.outliers);</div>
+<div class="line"><span class="lineno">  226</span> </div>
+<div class="line"><span class="lineno">  227</span>    <span class="keywordflow">if</span> (<a class="code hl_variable" href="classdyno_1_1FrontendModule.html#a0453998c25bc6ebff1163940718a08ac">base_params_</a>.<a class="code hl_variable" href="structdyno_1_1FrontendParams.html#a1477e857845f703c1ef6210b45e15560">refine_camera_pose_with_joint_of</a>) {</div>
+<div class="line"><span class="lineno">  228</span>      OpticalFlowAndPoseOptimizer flow_optimizer(</div>
+<div class="line"><span class="lineno">  229</span>          <a class="code hl_variable" href="classdyno_1_1FrontendModule.html#a0453998c25bc6ebff1163940718a08ac">base_params_</a>.<a class="code hl_variable" href="structdyno_1_1FrontendParams.html#a54f7c61a2dfc9cf8bc31c0d29eaf40d9">object_motion_solver_params</a>.<a class="code hl_variable" href="structdyno_1_1ObjectMotionSovler_1_1Params.html#a7d4888ebe0eb5eb801e2dde7afffba4f">joint_of_params</a>);</div>
+<div class="line"><span class="lineno">  230</span> </div>
+<div class="line"><span class="lineno">  231</span>      <span class="keyword">auto</span> flow_opt_result = flow_optimizer.optimizeAndUpdate&lt;<a class="code hl_typedef" href="namespacedyno.html#a23fb2e58952a071624b23552e74cfb01">CalibrationType</a>&gt;(</div>
+<div class="line"><span class="lineno">  232</span>          frame_k_1, frame_k, result.inliers, result.best_result);</div>
+<div class="line"><span class="lineno">  233</span>      frame_k-&gt;T_world_camera_ = flow_opt_result.best_result.refined_pose;</div>
+<div class="line"><span class="lineno">  234</span>      VLOG(15) &lt;&lt; <span class="stringliteral">&quot;Refined camera pose with optical flow - error before: &quot;</span></div>
+<div class="line"><span class="lineno">  235</span>               &lt;&lt; flow_opt_result.error_before.value_or(<a class="code hl_variable" href="namespacedyno.html#aa9297665cadd44539c6b64879869c834">NaN</a>)</div>
+<div class="line"><span class="lineno">  236</span>               &lt;&lt; <span class="stringliteral">&quot; error_after: &quot;</span> &lt;&lt; flow_opt_result.error_after.value_or(<a class="code hl_variable" href="namespacedyno.html#aa9297665cadd44539c6b64879869c834">NaN</a>);</div>
+<div class="line"><span class="lineno">  237</span>    }</div>
+<div class="line"><span class="lineno">  238</span>    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  239</span>  } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  240</span>    frame_k-&gt;T_world_camera_ = gtsam::Pose3::Identity();</div>
+<div class="line"><span class="lineno">  241</span>    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">  242</span>  }</div>
+<div class="line"><span class="lineno">  243</span>}</div>
 <div class="ttc" id="aclassdyno_1_1EgoMotionSolver_html_a77c1966709d200fdb6464073f1e6f88b"><div class="ttname"><a href="classdyno_1_1EgoMotionSolver.html#a77c1966709d200fdb6464073f1e6f88b">dyno::EgoMotionSolver::geometricOutlierRejection3d2d</a></div><div class="ttdeci">Pose3SolverResult geometricOutlierRejection3d2d(Frame::Ptr frame_k_1, Frame::Ptr frame_k, std::optional&lt; gtsam::Rot3 &gt; R_curr_ref={})</div><div class="ttdoc">Runs 3d-2d PnP with optional Rotation (i.e from IMU)</div><div class="ttdef"><b>Definition:</b> <a href="MotionSolver_8cc_source.html#l00202">MotionSolver.cc:202</a></div></div>
 <div class="ttc" id="aclassdyno_1_1EgoMotionSolver_html_ac7f18ee805d436d46193e550cbc558be"><div class="ttname"><a href="classdyno_1_1EgoMotionSolver.html#ac7f18ee805d436d46193e550cbc558be">dyno::EgoMotionSolver::geometricOutlierRejection3d3d</a></div><div class="ttdeci">Pose3SolverResult geometricOutlierRejection3d3d(Frame::Ptr frame_k_1, Frame::Ptr frame_k, std::optional&lt; gtsam::Rot3 &gt; R_curr_ref={})</div><div class="ttdef"><b>Definition:</b> <a href="MotionSolver_8cc_source.html#l00364">MotionSolver.cc:364</a></div></div>
 <div class="ttc" id="anamespacedyno_html_a23fb2e58952a071624b23552e74cfb01"><div class="ttname"><a href="namespacedyno.html#a23fb2e58952a071624b23552e74cfb01">dyno::CalibrationType</a></div><div class="ttdeci">Camera::CalibrationType CalibrationType</div><div class="ttdef"><b>Definition:</b> <a href="BackendDefinitions_8hpp_source.html#l00159">BackendDefinitions.hpp:160</a></div></div>
@@ -1180,40 +1183,40 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="RGBDInstanceFrontendModule_8cc_source.html#l00242">242</a> of file <a class="el" href="RGBDInstanceFrontendModule_8cc_source.html">RGBDInstanceFrontendModule.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  244</span>                                         {</div>
-<div class="line"><span class="lineno">  245</span>  <a class="code hl_typedef" href="namespacedyno.html#a80a44a3e6e4745a2514ffdc58dbcfaac">Pose3SolverResult</a> result;</div>
-<div class="line"><span class="lineno">  246</span>  <span class="keywordflow">if</span> (<a class="code hl_variable" href="classdyno_1_1FrontendModule.html#a0453998c25bc6ebff1163940718a08ac">base_params_</a>.<a class="code hl_variable" href="structdyno_1_1FrontendParams.html#ae40cb4a8653523f99d3f4db8589f1bfe">use_object_motion_pnp</a>) {</div>
-<div class="line"><span class="lineno">  247</span>    result = <a class="code hl_variable" href="classdyno_1_1RGBDInstanceFrontendModule.html#ab7d913608f7ebd0763bf3cd3ba9818fa">object_motion_solver_</a>.<a class="code hl_function" href="classdyno_1_1ObjectMotionSovler.html#a45c8404687be14c0a548a8b6800aa985">geometricOutlierRejection3d2d</a>(</div>
-<div class="line"><span class="lineno">  248</span>        frame_k_1, frame_k, frame_k-&gt;T_world_camera_, object_id);</div>
-<div class="line"><span class="lineno">  249</span>  } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  250</span>    result = <a class="code hl_variable" href="classdyno_1_1RGBDInstanceFrontendModule.html#ab7d913608f7ebd0763bf3cd3ba9818fa">object_motion_solver_</a>.<a class="code hl_function" href="classdyno_1_1ObjectMotionSovler.html#a06f423f432c7e530c2eb692b69a1b57d">geometricOutlierRejection3d3d</a>(</div>
+<p class="definition">Definition at line <a class="el" href="RGBDInstanceFrontendModule_8cc_source.html#l00245">245</a> of file <a class="el" href="RGBDInstanceFrontendModule_8cc_source.html">RGBDInstanceFrontendModule.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  247</span>                                         {</div>
+<div class="line"><span class="lineno">  248</span>  <a class="code hl_typedef" href="namespacedyno.html#a80a44a3e6e4745a2514ffdc58dbcfaac">Pose3SolverResult</a> result;</div>
+<div class="line"><span class="lineno">  249</span>  <span class="keywordflow">if</span> (<a class="code hl_variable" href="classdyno_1_1FrontendModule.html#a0453998c25bc6ebff1163940718a08ac">base_params_</a>.<a class="code hl_variable" href="structdyno_1_1FrontendParams.html#ae40cb4a8653523f99d3f4db8589f1bfe">use_object_motion_pnp</a>) {</div>
+<div class="line"><span class="lineno">  250</span>    result = <a class="code hl_variable" href="classdyno_1_1RGBDInstanceFrontendModule.html#ab7d913608f7ebd0763bf3cd3ba9818fa">object_motion_solver_</a>.<a class="code hl_function" href="classdyno_1_1ObjectMotionSovler.html#a45c8404687be14c0a548a8b6800aa985">geometricOutlierRejection3d2d</a>(</div>
 <div class="line"><span class="lineno">  251</span>        frame_k_1, frame_k, frame_k-&gt;T_world_camera_, object_id);</div>
-<div class="line"><span class="lineno">  252</span>  }</div>
-<div class="line"><span class="lineno">  253</span> </div>
-<div class="line"><span class="lineno">  254</span>  VLOG(15) &lt;&lt; (<a class="code hl_variable" href="classdyno_1_1FrontendModule.html#a0453998c25bc6ebff1163940718a08ac">base_params_</a>.<a class="code hl_variable" href="structdyno_1_1FrontendParams.html#ae40cb4a8653523f99d3f4db8589f1bfe">use_object_motion_pnp</a> ? <span class="stringliteral">&quot;3D2D&quot;</span> : <span class="stringliteral">&quot;3D3D&quot;</span>)</div>
-<div class="line"><span class="lineno">  255</span>           &lt;&lt; <span class="stringliteral">&quot; object motion estimate &quot;</span> &lt;&lt; object_id &lt;&lt; <span class="stringliteral">&quot; at frame &quot;</span></div>
-<div class="line"><span class="lineno">  256</span>           &lt;&lt; frame_k-&gt;frame_id_</div>
-<div class="line"><span class="lineno">  257</span>           &lt;&lt; (result.status == <a class="code hl_enumvalue" href="namespacedyno.html#ab31927aa859decf5da77d9664094cb6bac9f1a6384b1c466d4612f513bd8e13ea">TrackingStatus::VALID</a> ? <span class="stringliteral">&quot; success &quot;</span></div>
-<div class="line"><span class="lineno">  258</span>                                                      : <span class="stringliteral">&quot; failure &quot;</span>)</div>
-<div class="line"><span class="lineno">  259</span>           &lt;&lt; <span class="stringliteral">&quot;:\n&quot;</span></div>
-<div class="line"><span class="lineno">  260</span>           &lt;&lt; <span class="stringliteral">&quot;- Tracking Status: &quot;</span> &lt;&lt; <a class="code hl_function" href="namespacedyno.html#a809604e427db44cbf532a545c71a3b5d">to_string</a>(result.status) &lt;&lt; <span class="charliteral">&#39;\n&#39;</span></div>
-<div class="line"><span class="lineno">  261</span>           &lt;&lt; <span class="stringliteral">&quot;- Total Correspondences: &quot;</span></div>
-<div class="line"><span class="lineno">  262</span>           &lt;&lt; result.inliers.size() + result.outliers.size() &lt;&lt; <span class="charliteral">&#39;\n&#39;</span></div>
-<div class="line"><span class="lineno">  263</span>           &lt;&lt; <span class="stringliteral">&quot;\t- # inliers: &quot;</span> &lt;&lt; result.inliers.size() &lt;&lt; <span class="charliteral">&#39;\n&#39;</span></div>
-<div class="line"><span class="lineno">  264</span>           &lt;&lt; <span class="stringliteral">&quot;\t- # outliers: &quot;</span> &lt;&lt; result.outliers.size() &lt;&lt; <span class="charliteral">&#39;\n&#39;</span>;</div>
-<div class="line"><span class="lineno">  265</span>  <span class="comment">// sanity check</span></div>
-<div class="line"><span class="lineno">  266</span>  <span class="comment">// if valid, remove outliers and add to motion estimation</span></div>
-<div class="line"><span class="lineno">  267</span>  <span class="keywordflow">if</span> (result.status == <a class="code hl_enumvalue" href="namespacedyno.html#ab31927aa859decf5da77d9664094cb6bac9f1a6384b1c466d4612f513bd8e13ea">TrackingStatus::VALID</a>) {</div>
-<div class="line"><span class="lineno">  268</span>    frame_k-&gt;dynamic_features_.markOutliers(result.outliers);</div>
-<div class="line"><span class="lineno">  269</span>    ReferenceFrameValue&lt;Motion3&gt; estimate(result.best_result,</div>
-<div class="line"><span class="lineno">  270</span>                                          <a class="code hl_enumvalue" href="namespacedyno.html#a828b92ac8912e7d2ffc267eb0d08b74cae456468cc146bd360464043f0645212e">ReferenceFrame::GLOBAL</a>);</div>
-<div class="line"><span class="lineno">  271</span>    motion_estimates.insert({object_id, estimate});</div>
-<div class="line"><span class="lineno">  272</span>    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  273</span>  } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  274</span>    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">  275</span>  }</div>
-<div class="line"><span class="lineno">  276</span>}</div>
+<div class="line"><span class="lineno">  252</span>  } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  253</span>    result = <a class="code hl_variable" href="classdyno_1_1RGBDInstanceFrontendModule.html#ab7d913608f7ebd0763bf3cd3ba9818fa">object_motion_solver_</a>.<a class="code hl_function" href="classdyno_1_1ObjectMotionSovler.html#a06f423f432c7e530c2eb692b69a1b57d">geometricOutlierRejection3d3d</a>(</div>
+<div class="line"><span class="lineno">  254</span>        frame_k_1, frame_k, frame_k-&gt;T_world_camera_, object_id);</div>
+<div class="line"><span class="lineno">  255</span>  }</div>
+<div class="line"><span class="lineno">  256</span> </div>
+<div class="line"><span class="lineno">  257</span>  VLOG(15) &lt;&lt; (<a class="code hl_variable" href="classdyno_1_1FrontendModule.html#a0453998c25bc6ebff1163940718a08ac">base_params_</a>.<a class="code hl_variable" href="structdyno_1_1FrontendParams.html#ae40cb4a8653523f99d3f4db8589f1bfe">use_object_motion_pnp</a> ? <span class="stringliteral">&quot;3D2D&quot;</span> : <span class="stringliteral">&quot;3D3D&quot;</span>)</div>
+<div class="line"><span class="lineno">  258</span>           &lt;&lt; <span class="stringliteral">&quot; object motion estimate &quot;</span> &lt;&lt; object_id &lt;&lt; <span class="stringliteral">&quot; at frame &quot;</span></div>
+<div class="line"><span class="lineno">  259</span>           &lt;&lt; frame_k-&gt;frame_id_</div>
+<div class="line"><span class="lineno">  260</span>           &lt;&lt; (result.status == <a class="code hl_enumvalue" href="namespacedyno.html#ab31927aa859decf5da77d9664094cb6bac9f1a6384b1c466d4612f513bd8e13ea">TrackingStatus::VALID</a> ? <span class="stringliteral">&quot; success &quot;</span></div>
+<div class="line"><span class="lineno">  261</span>                                                      : <span class="stringliteral">&quot; failure &quot;</span>)</div>
+<div class="line"><span class="lineno">  262</span>           &lt;&lt; <span class="stringliteral">&quot;:\n&quot;</span></div>
+<div class="line"><span class="lineno">  263</span>           &lt;&lt; <span class="stringliteral">&quot;- Tracking Status: &quot;</span> &lt;&lt; <a class="code hl_function" href="namespacedyno.html#a809604e427db44cbf532a545c71a3b5d">to_string</a>(result.status) &lt;&lt; <span class="charliteral">&#39;\n&#39;</span></div>
+<div class="line"><span class="lineno">  264</span>           &lt;&lt; <span class="stringliteral">&quot;- Total Correspondences: &quot;</span></div>
+<div class="line"><span class="lineno">  265</span>           &lt;&lt; result.inliers.size() + result.outliers.size() &lt;&lt; <span class="charliteral">&#39;\n&#39;</span></div>
+<div class="line"><span class="lineno">  266</span>           &lt;&lt; <span class="stringliteral">&quot;\t- # inliers: &quot;</span> &lt;&lt; result.inliers.size() &lt;&lt; <span class="charliteral">&#39;\n&#39;</span></div>
+<div class="line"><span class="lineno">  267</span>           &lt;&lt; <span class="stringliteral">&quot;\t- # outliers: &quot;</span> &lt;&lt; result.outliers.size() &lt;&lt; <span class="charliteral">&#39;\n&#39;</span>;</div>
+<div class="line"><span class="lineno">  268</span>  <span class="comment">// sanity check</span></div>
+<div class="line"><span class="lineno">  269</span>  <span class="comment">// if valid, remove outliers and add to motion estimation</span></div>
+<div class="line"><span class="lineno">  270</span>  <span class="keywordflow">if</span> (result.status == <a class="code hl_enumvalue" href="namespacedyno.html#ab31927aa859decf5da77d9664094cb6bac9f1a6384b1c466d4612f513bd8e13ea">TrackingStatus::VALID</a>) {</div>
+<div class="line"><span class="lineno">  271</span>    frame_k-&gt;dynamic_features_.markOutliers(result.outliers);</div>
+<div class="line"><span class="lineno">  272</span>    ReferenceFrameValue&lt;Motion3&gt; estimate(result.best_result,</div>
+<div class="line"><span class="lineno">  273</span>                                          <a class="code hl_enumvalue" href="namespacedyno.html#a828b92ac8912e7d2ffc267eb0d08b74cae456468cc146bd360464043f0645212e">ReferenceFrame::GLOBAL</a>);</div>
+<div class="line"><span class="lineno">  274</span>    motion_estimates.insert({object_id, estimate});</div>
+<div class="line"><span class="lineno">  275</span>    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  276</span>  } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  277</span>    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">  278</span>  }</div>
+<div class="line"><span class="lineno">  279</span>}</div>
 <div class="ttc" id="aclassdyno_1_1ObjectMotionSovler_html_a06f423f432c7e530c2eb692b69a1b57d"><div class="ttname"><a href="classdyno_1_1ObjectMotionSovler.html#a06f423f432c7e530c2eb692b69a1b57d">dyno::ObjectMotionSovler::geometricOutlierRejection3d3d</a></div><div class="ttdeci">Pose3SolverResult geometricOutlierRejection3d3d(Frame::Ptr frame_k_1, Frame::Ptr frame_k, const gtsam::Pose3 &amp;T_world_k, ObjectId object_id)</div><div class="ttdef"><b>Definition:</b> <a href="MotionSolver_8cc_source.html#l00538">MotionSolver.cc:538</a></div></div>
 <div class="ttc" id="aclassdyno_1_1ObjectMotionSovler_html_a45c8404687be14c0a548a8b6800aa985"><div class="ttname"><a href="classdyno_1_1ObjectMotionSovler.html#a45c8404687be14c0a548a8b6800aa985">dyno::ObjectMotionSovler::geometricOutlierRejection3d2d</a></div><div class="ttdeci">Pose3SolverResult geometricOutlierRejection3d2d(Frame::Ptr frame_k_1, Frame::Ptr frame_k, const gtsam::Pose3 &amp;T_world_k, ObjectId object_id)</div><div class="ttdef"><b>Definition:</b> <a href="MotionSolver_8cc_source.html#l00436">MotionSolver.cc:436</a></div></div>
 <div class="ttc" id="anamespacedyno_html_a828b92ac8912e7d2ffc267eb0d08b74cae456468cc146bd360464043f0645212e"><div class="ttname"><a href="namespacedyno.html#a828b92ac8912e7d2ffc267eb0d08b74cae456468cc146bd360464043f0645212e">dyno::GLOBAL</a></div><div class="ttdeci">@ GLOBAL</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00141">Types.hpp:141</a></div></div>
@@ -1297,49 +1300,49 @@ Here is the caller graph for this function:</div>
 </div><div class="memdoc">
 <p>remove objects from the object observations list</p>
 
-<p class="definition">Definition at line <a class="el" href="RGBDInstanceFrontendModule_8cc_source.html#l00278">278</a> of file <a class="el" href="RGBDInstanceFrontendModule_8cc_source.html">RGBDInstanceFrontendModule.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  280</span>                                         {</div>
-<div class="line"><span class="lineno">  281</span>  <a class="code hl_typedef" href="namespacedyno.html#ae777b079c377ffa066d89051ee0cc623">ObjectIds</a> failed_object_tracks;</div>
-<div class="line"><span class="lineno">  282</span> </div>
-<div class="line"><span class="lineno">  283</span>  <span class="comment">// if only 1 object, no point parallelising</span></div>
-<div class="line"><span class="lineno">  284</span>  <span class="keywordflow">if</span> (motion_estimates.size() &lt;= 1) {</div>
-<div class="line"><span class="lineno">  285</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [object_id, observations] :</div>
-<div class="line"><span class="lineno">  286</span>         frame_k-&gt;object_observations_) {</div>
-<div class="line"><span class="lineno">  287</span>      <span class="keywordflow">if</span> (!<a class="code hl_function" href="classdyno_1_1RGBDInstanceFrontendModule.html#ada2fe5067e732aa4734d96fc5e80f7f9">solveObjectMotion</a>(frame_k, frame_k_1, object_id, motion_estimates)) {</div>
-<div class="line"><span class="lineno">  288</span>        VLOG(5) &lt;&lt; <span class="stringliteral">&quot;Could not solve motion for object &quot;</span> &lt;&lt; object_id</div>
-<div class="line"><span class="lineno">  289</span>                &lt;&lt; <span class="stringliteral">&quot; from frame &quot;</span> &lt;&lt; frame_k_1-&gt;getFrameId() &lt;&lt; <span class="stringliteral">&quot; -&gt; &quot;</span></div>
-<div class="line"><span class="lineno">  290</span>                &lt;&lt; frame_k-&gt;getFrameId();</div>
-<div class="line"><span class="lineno">  291</span>        failed_object_tracks.push_back(object_id);</div>
-<div class="line"><span class="lineno">  292</span>      }</div>
-<div class="line"><span class="lineno">  293</span>    }</div>
-<div class="line"><span class="lineno">  294</span>  } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  295</span>    std::mutex mutex;</div>
-<div class="line"><span class="lineno">  296</span>    <span class="comment">// paralleilise the process of each function call.</span></div>
-<div class="line"><span class="lineno">  297</span>    tbb::parallel_for_each(</div>
-<div class="line"><span class="lineno">  298</span>        frame_k-&gt;object_observations_.begin(),</div>
-<div class="line"><span class="lineno">  299</span>        frame_k-&gt;object_observations_.end(),</div>
-<div class="line"><span class="lineno">  300</span>        [&amp;](<span class="keyword">const</span> std::pair&lt;ObjectId, DynamicObjectObservation&gt;&amp; pair) {</div>
-<div class="line"><span class="lineno">  301</span>          const auto object_id = pair.first;</div>
-<div class="line"><span class="lineno">  302</span>          if (!solveObjectMotion(frame_k, frame_k_1, object_id,</div>
-<div class="line"><span class="lineno">  303</span>                                 motion_estimates)) {</div>
-<div class="line"><span class="lineno">  304</span>            VLOG(5) &lt;&lt; <span class="stringliteral">&quot;Could not solve motion for object &quot;</span> &lt;&lt; object_id</div>
-<div class="line"><span class="lineno">  305</span>                    &lt;&lt; <span class="stringliteral">&quot; from frame &quot;</span> &lt;&lt; frame_k_1-&gt;getFrameId() &lt;&lt; <span class="stringliteral">&quot; -&gt; &quot;</span></div>
-<div class="line"><span class="lineno">  306</span>                    &lt;&lt; frame_k-&gt;getFrameId();</div>
-<div class="line"><span class="lineno">  307</span> </div>
-<div class="line"><span class="lineno">  308</span>            std::lock_guard&lt;std::mutex&gt; lk(mutex);</div>
-<div class="line"><span class="lineno">  309</span>            failed_object_tracks.push_back(object_id);</div>
-<div class="line"><span class="lineno">  310</span>          }</div>
-<div class="line"><span class="lineno">  311</span>        });</div>
-<div class="line"><span class="lineno">  312</span>  }</div>
-<div class="line"><span class="lineno">  313</span> </div>
-<div class="line"><span class="lineno">  315</span>  <span class="comment">// does not remove the features etc but stops the object being propogated to</span></div>
-<div class="line"><span class="lineno">  316</span>  <span class="comment">// the backend as we loop over the object observations in the constructOutput</span></div>
-<div class="line"><span class="lineno">  317</span>  <span class="comment">// function</span></div>
-<div class="line"><span class="lineno">  318</span>  <span class="keywordflow">for</span> (<span class="keyword">auto</span> object_id : failed_object_tracks) {</div>
-<div class="line"><span class="lineno">  319</span>    frame_k-&gt;object_observations_.erase(object_id);</div>
-<div class="line"><span class="lineno">  320</span>  }</div>
-<div class="line"><span class="lineno">  321</span>}</div>
-<div class="ttc" id="aclassdyno_1_1RGBDInstanceFrontendModule_html_ada2fe5067e732aa4734d96fc5e80f7f9"><div class="ttname"><a href="classdyno_1_1RGBDInstanceFrontendModule.html#ada2fe5067e732aa4734d96fc5e80f7f9">dyno::RGBDInstanceFrontendModule::solveObjectMotion</a></div><div class="ttdeci">bool solveObjectMotion(Frame::Ptr frame_k, Frame::Ptr frame_k_1, ObjectId object_id, MotionEstimateMap &amp;motion_estimates)</div><div class="ttdef"><b>Definition:</b> <a href="RGBDInstanceFrontendModule_8cc_source.html#l00242">RGBDInstanceFrontendModule.cc:242</a></div></div>
+<p class="definition">Definition at line <a class="el" href="RGBDInstanceFrontendModule_8cc_source.html#l00281">281</a> of file <a class="el" href="RGBDInstanceFrontendModule_8cc_source.html">RGBDInstanceFrontendModule.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  283</span>                                         {</div>
+<div class="line"><span class="lineno">  284</span>  <a class="code hl_typedef" href="namespacedyno.html#ae777b079c377ffa066d89051ee0cc623">ObjectIds</a> failed_object_tracks;</div>
+<div class="line"><span class="lineno">  285</span> </div>
+<div class="line"><span class="lineno">  286</span>  <span class="comment">// if only 1 object, no point parallelising</span></div>
+<div class="line"><span class="lineno">  287</span>  <span class="keywordflow">if</span> (motion_estimates.size() &lt;= 1) {</div>
+<div class="line"><span class="lineno">  288</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [object_id, observations] :</div>
+<div class="line"><span class="lineno">  289</span>         frame_k-&gt;object_observations_) {</div>
+<div class="line"><span class="lineno">  290</span>      <span class="keywordflow">if</span> (!<a class="code hl_function" href="classdyno_1_1RGBDInstanceFrontendModule.html#ada2fe5067e732aa4734d96fc5e80f7f9">solveObjectMotion</a>(frame_k, frame_k_1, object_id, motion_estimates)) {</div>
+<div class="line"><span class="lineno">  291</span>        VLOG(5) &lt;&lt; <span class="stringliteral">&quot;Could not solve motion for object &quot;</span> &lt;&lt; object_id</div>
+<div class="line"><span class="lineno">  292</span>                &lt;&lt; <span class="stringliteral">&quot; from frame &quot;</span> &lt;&lt; frame_k_1-&gt;getFrameId() &lt;&lt; <span class="stringliteral">&quot; -&gt; &quot;</span></div>
+<div class="line"><span class="lineno">  293</span>                &lt;&lt; frame_k-&gt;getFrameId();</div>
+<div class="line"><span class="lineno">  294</span>        failed_object_tracks.push_back(object_id);</div>
+<div class="line"><span class="lineno">  295</span>      }</div>
+<div class="line"><span class="lineno">  296</span>    }</div>
+<div class="line"><span class="lineno">  297</span>  } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  298</span>    std::mutex mutex;</div>
+<div class="line"><span class="lineno">  299</span>    <span class="comment">// paralleilise the process of each function call.</span></div>
+<div class="line"><span class="lineno">  300</span>    tbb::parallel_for_each(</div>
+<div class="line"><span class="lineno">  301</span>        frame_k-&gt;object_observations_.begin(),</div>
+<div class="line"><span class="lineno">  302</span>        frame_k-&gt;object_observations_.end(),</div>
+<div class="line"><span class="lineno">  303</span>        [&amp;](<span class="keyword">const</span> std::pair&lt;ObjectId, DynamicObjectObservation&gt;&amp; pair) {</div>
+<div class="line"><span class="lineno">  304</span>          const auto object_id = pair.first;</div>
+<div class="line"><span class="lineno">  305</span>          if (!solveObjectMotion(frame_k, frame_k_1, object_id,</div>
+<div class="line"><span class="lineno">  306</span>                                 motion_estimates)) {</div>
+<div class="line"><span class="lineno">  307</span>            VLOG(5) &lt;&lt; <span class="stringliteral">&quot;Could not solve motion for object &quot;</span> &lt;&lt; object_id</div>
+<div class="line"><span class="lineno">  308</span>                    &lt;&lt; <span class="stringliteral">&quot; from frame &quot;</span> &lt;&lt; frame_k_1-&gt;getFrameId() &lt;&lt; <span class="stringliteral">&quot; -&gt; &quot;</span></div>
+<div class="line"><span class="lineno">  309</span>                    &lt;&lt; frame_k-&gt;getFrameId();</div>
+<div class="line"><span class="lineno">  310</span> </div>
+<div class="line"><span class="lineno">  311</span>            std::lock_guard&lt;std::mutex&gt; lk(mutex);</div>
+<div class="line"><span class="lineno">  312</span>            failed_object_tracks.push_back(object_id);</div>
+<div class="line"><span class="lineno">  313</span>          }</div>
+<div class="line"><span class="lineno">  314</span>        });</div>
+<div class="line"><span class="lineno">  315</span>  }</div>
+<div class="line"><span class="lineno">  316</span> </div>
+<div class="line"><span class="lineno">  318</span>  <span class="comment">// does not remove the features etc but stops the object being propogated to</span></div>
+<div class="line"><span class="lineno">  319</span>  <span class="comment">// the backend as we loop over the object observations in the constructOutput</span></div>
+<div class="line"><span class="lineno">  320</span>  <span class="comment">// function</span></div>
+<div class="line"><span class="lineno">  321</span>  <span class="keywordflow">for</span> (<span class="keyword">auto</span> object_id : failed_object_tracks) {</div>
+<div class="line"><span class="lineno">  322</span>    frame_k-&gt;object_observations_.erase(object_id);</div>
+<div class="line"><span class="lineno">  323</span>  }</div>
+<div class="line"><span class="lineno">  324</span>}</div>
+<div class="ttc" id="aclassdyno_1_1RGBDInstanceFrontendModule_html_ada2fe5067e732aa4734d96fc5e80f7f9"><div class="ttname"><a href="classdyno_1_1RGBDInstanceFrontendModule.html#ada2fe5067e732aa4734d96fc5e80f7f9">dyno::RGBDInstanceFrontendModule::solveObjectMotion</a></div><div class="ttdeci">bool solveObjectMotion(Frame::Ptr frame_k, Frame::Ptr frame_k_1, ObjectId object_id, MotionEstimateMap &amp;motion_estimates)</div><div class="ttdef"><b>Definition:</b> <a href="RGBDInstanceFrontendModule_8cc_source.html#l00245">RGBDInstanceFrontendModule.cc:245</a></div></div>
 <div class="ttc" id="anamespacedyno_html_ae777b079c377ffa066d89051ee0cc623"><div class="ttname"><a href="namespacedyno.html#ae777b079c377ffa066d89051ee0cc623">dyno::ObjectIds</a></div><div class="ttdeci">std::vector&lt; ObjectId &gt; ObjectIds</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00069">Types.hpp:69</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1RGBDInstanceFrontendModule.html#ada2fe5067e732aa4734d96fc5e80f7f9">solveObjectMotion()</a>.</p>
@@ -1415,11 +1418,11 @@ Here is the caller graph for this function:</div>
 
 <p>Implements <a class="el" href="classdyno_1_1FrontendModule.html#a9924c83f5d7c12358c72cc9f4485cbe3">dyno::FrontendModule</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="RGBDInstanceFrontendModule_8cc_source.html#l00085">85</a> of file <a class="el" href="RGBDInstanceFrontendModule_8cc_source.html">RGBDInstanceFrontendModule.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   86</span>                                                    {</div>
-<div class="line"><span class="lineno">   87</span>  <span class="keywordflow">return</span> ImageValidationResult(image_container-&gt;hasDepth(),</div>
-<div class="line"><span class="lineno">   88</span>                               <span class="stringliteral">&quot;Depth is required&quot;</span>);</div>
-<div class="line"><span class="lineno">   89</span>}</div>
+<p class="definition">Definition at line <a class="el" href="RGBDInstanceFrontendModule_8cc_source.html#l00086">86</a> of file <a class="el" href="RGBDInstanceFrontendModule_8cc_source.html">RGBDInstanceFrontendModule.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   87</span>                                                    {</div>
+<div class="line"><span class="lineno">   88</span>  <span class="keywordflow">return</span> ImageValidationResult(image_container-&gt;hasDepth(),</div>
+<div class="line"><span class="lineno">   89</span>                               <span class="stringliteral">&quot;Depth is required&quot;</span>);</div>
+<div class="line"><span class="lineno">   90</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>

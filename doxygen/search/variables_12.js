@@ -53,12 +53,13 @@ var searchData=
   ['std_5fweight_5fvelocity_5f_50',['std_weight_velocity_',['../classdyno_1_1byte__track_1_1KalmanFilter.html#a543a5cd9dccb32f67a4b7797ec090ba4',1,'dyno::byte_track::KalmanFilter']]],
   ['stereo_5fbaseline_5f_51',['stereo_baseline_',['../classdyno_1_1StereoCamera.html#aa71645e64829318cfc220ff880ad0a07',1,'dyno::StereoCamera']]],
   ['stereo_5fcalibration_5f_52',['stereo_calibration_',['../classdyno_1_1StereoCamera.html#a2c1b2162b3343e3ce7c06a59317ac742',1,'dyno::StereoCamera']]],
-  ['stereo_5fcamera_5f_53',['stereo_camera_',['../classdyno_1_1StereoMatcher.html#a16e8b0b1ba261055ee0265bee50dee00',1,'dyno::StereoMatcher::stereo_camera_()'],['../classdyno_1_1ClusterSlamAllLoader.html#ad2278d7452375db893ee91adea307046',1,'dyno::ClusterSlamAllLoader::stereo_camera_()']]],
+  ['stereo_5fcamera_5f_53',['stereo_camera_',['../classdyno_1_1ClusterSlamAllLoader.html#ad2278d7452375db893ee91adea307046',1,'dyno::ClusterSlamAllLoader::stereo_camera_()'],['../classdyno_1_1StereoMatcher.html#a16e8b0b1ba261055ee0265bee50dee00',1,'dyno::StereoMatcher::stereo_camera_()']]],
   ['stereo_5fmatcher_5f_54',['stereo_matcher_',['../classdyno_1_1ClusterSlamAllLoader.html#ae3ea43f3bd251eba33d29a62dfb8e69b',1,'dyno::ClusterSlamAllLoader']]],
   ['stereo_5fmatching_5fparams_5f_55',['stereo_matching_params_',['../classdyno_1_1StereoMatcher.html#a94154e2e7d0d8ab7c19e2d521cce1ffe',1,'dyno::StereoMatcher']]],
   ['stripe_5fextra_5frows_5f_56',['stripe_extra_rows_',['../structdyno_1_1StereoMatchingParams.html#a8bf6e72c0b5dc2060560e92c107a97ad',1,'dyno::StereoMatchingParams']]],
   ['subpixel_5fcorner_5frefinement_5fparams_57',['subpixel_corner_refinement_params',['../structdyno_1_1TrackerParams.html#afffb056ebf98b21326c19b1c13b1a9a6',1,'dyno::TrackerParams']]],
   ['subpixel_5frefinement_5f_58',['subpixel_refinement_',['../structdyno_1_1StereoMatchingParams.html#ab82a76926a6f6cee560f43a2a2779933',1,'dyno::StereoMatchingParams']]],
   ['suffix_59',['suffix',['../structdyno_1_1FormulationParams.html#ac3367e0c0d80aec0900a00132becd768',1,'dyno::FormulationParams']]],
-  ['sum_5f_60',['sum_',['../classdyno_1_1utils_1_1Accumulator.html#a4d00a50c10c390f9754c2807916d1257',1,'dyno::utils::Accumulator']]]
+  ['sum_5f_60',['sum_',['../classdyno_1_1utils_1_1Accumulator.html#a4d00a50c10c390f9754c2807916d1257',1,'dyno::utils::Accumulator']]],
+  ['sync_5f_61',['sync_',['../classdyno_1_1OnlineDataProviderRos.html#acb9ac6a2541e0556c093a23d66f4596c',1,'dyno::OnlineDataProviderRos']]]
 ];

@@ -1,0 +1,5 @@
+<map id="rclcpp::TypeAdapter&lt; dyno::CameraParams, sensor_msgs::msg::CameraInfo &gt;::convert_to_custom" name="rclcpp::TypeAdapter&lt; dyno::CameraParams, sensor_msgs::msg::CameraInfo &gt;::convert_to_custom">
+<area shape="rect" id="node1" title=" " alt="" coords="5,5,236,75"/>
+<area shape="rect" id="node2" href="$classdyno_1_1CameraParams.html#ade9185c809685d1e4c523c2e9355091d" title="Converts a 3x3 camera calibration matrix to an IntrinsicsCoeffs in the form fu, fy,..." alt="" coords="284,13,487,67"/>
+<area shape="rect" id="node3" href="$namespacedyno_1_1utils.html#a4bed389606523e7a31694ad904523c4d" title=" " alt="" coords="535,27,729,53"/>
+</map>

@@ -11,9 +11,10 @@ var searchData=
   ['slot_8',['Slot',['../namespacedyno.html#ad0a86323bbb89fa492dd5fe7bf5b164a',1,'dyno']]],
   ['smartprojectionfactor_9',['SmartProjectionFactor',['../namespacedyno.html#aaaad5b8e3458fc5a18f8999d960b3eee',1,'dyno']]],
   ['smartprojectionfactorparams_10',['SmartProjectionFactorParams',['../namespacedyno.html#adbc49a75d6e9881022f761c2943891e4',1,'dyno']]],
-  ['spinreturn_11',['SpinReturn',['../classdyno_1_1RGBDBackendModule.html#a09df57ca304b301958b876301fb376ac',1,'dyno::RGBDBackendModule::SpinReturn()'],['../classdyno_1_1ModuleBase.html#ac555603c9d728ceb0cc7a618829a3ffc',1,'dyno::ModuleBase::SpinReturn()'],['../classdyno_1_1RGBDInstanceFrontendModule.html#a11a6ced992822c759fd09acbd6a2e762',1,'dyno::RGBDInstanceFrontendModule::SpinReturn()']]],
+  ['spinreturn_11',['SpinReturn',['../classdyno_1_1RGBDBackendModule.html#a09df57ca304b301958b876301fb376ac',1,'dyno::RGBDBackendModule::SpinReturn()'],['../classdyno_1_1RGBDInstanceFrontendModule.html#a11a6ced992822c759fd09acbd6a2e762',1,'dyno::RGBDInstanceFrontendModule::SpinReturn()'],['../classdyno_1_1ModuleBase.html#ac555603c9d728ceb0cc7a618829a3ffc',1,'dyno::ModuleBase::SpinReturn()']]],
   ['statscollector_12',['StatsCollector',['../namespacedyno_1_1utils.html#a2a0bf9b09c753fdfa86ae7ebb92a0746',1,'dyno::utils']]],
   ['statuskeypointvector_13',['StatusKeypointVector',['../namespacedyno.html#a1efaa56a29795d6bd138701d1aeb72c9',1,'dyno']]],
   ['statuslandmarkvector_14',['StatusLandmarkVector',['../namespacedyno.html#afa01ab54e33c616353a643645cd2aaee',1,'dyno']]],
-  ['symbolchar_15',['SymbolChar',['../namespacedyno.html#a7ffce191936284983ac549a2a407e520',1,'dyno']]]
+  ['symbolchar_15',['SymbolChar',['../namespacedyno.html#a7ffce191936284983ac549a2a407e520',1,'dyno']]],
+  ['syncpolicy_16',['SyncPolicy',['../classdyno_1_1OnlineDataProviderRos.html#adccf94a7535c64742038501893c955e7',1,'dyno::OnlineDataProviderRos']]]
 ];

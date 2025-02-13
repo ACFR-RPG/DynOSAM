@@ -1,5 +1,7 @@
 <map id="dyno::CameraParams::toString" name="dyno::CameraParams::toString">
-<area shape="rect" id="node1" title=" " alt="" coords="456,5,617,45"/>
-<area shape="rect" id="node2" href="$classdyno_1_1OMDOldAllLoader.html#a0bf74dd052ecef9baa3fd57050347dc3" title=" " alt="" coords="231,5,408,45"/>
-<area shape="rect" id="node3" href="$classdyno_1_1OMDOldAllLoader.html#a5407ba0dda29eaf6520c615807fe3b93" title=" " alt="" coords="5,5,183,45"/>
+<area shape="rect" id="node1" title=" " alt="" coords="509,37,671,77"/>
+<area shape="rect" id="node2" href="$classdyno_1_1OMDOldAllLoader.html#a0bf74dd052ecef9baa3fd57050347dc3" title=" " alt="" coords="271,5,449,45"/>
+<area shape="rect" id="node4" href="$classdyno_1_1DataProviderRos.html#a1cb49fe70873ef4b7ed49afb75c013bc" title="Gets CameraParams from a sensor_msgs::msg::CameraInfo recieved on the specified topic...." alt="" coords="259,69,461,109"/>
+<area shape="rect" id="node3" href="$classdyno_1_1OMDOldAllLoader.html#a5407ba0dda29eaf6520c615807fe3b93" title=" " alt="" coords="19,5,197,45"/>
+<area shape="rect" id="node5" href="$classdyno_1_1OnlineDataProviderRos.html#abea751b62c91dbf7bfac759680a434f7" title="Construct a new OnlineDataProviderRos." alt="" coords="5,69,211,109"/>
 </map>

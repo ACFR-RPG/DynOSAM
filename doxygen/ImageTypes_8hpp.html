@@ -80,69 +80,69 @@ $(function() {
   <div class="headertitle"><div class="title">ImageTypes.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;<a class="el" href="Exceptions_8hpp_source.html">dynosam/common/Exceptions.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="Types_8hpp_source.html">dynosam/common/Types.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="Tuple_8hpp_source.html">dynosam/utils/Tuple.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="OpenCVUtils_8hpp_source.html">dynosam/utils/OpenCVUtils.hpp</a>&quot;</code><br />
-<code>#include &lt;opencv4/opencv2/opencv.hpp&gt;</code><br />
-<code>#include &lt;glog/logging.h&gt;</code><br />
-<code>#include &lt;type_traits&gt;</code><br />
+<div class="textblock"><code>#include &lt;glog/logging.h&gt;</code><br />
 <code>#include &lt;exception&gt;</code><br />
+<code>#include &lt;opencv4/opencv2/opencv.hpp&gt;</code><br />
+<code>#include &lt;type_traits&gt;</code><br />
+<code>#include &quot;<a class="el" href="Exceptions_8hpp_source.html">dynosam/common/Exceptions.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="Types_8hpp_source.html">dynosam/common/Types.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="OpenCVUtils_8hpp_source.html">dynosam/utils/OpenCVUtils.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="Tuple_8hpp_source.html">dynosam/utils/Tuple.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="ImageTypes-inl_8hpp_source.html">dynosam/common/ImageTypes-inl.hpp</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for ImageTypes.hpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="ImageTypes_8hpp__incl.png" border="0" usemap="#adynosam_2include_2dynosam_2common_2ImageTypes_8hpp" alt=""/></div>
 <map name="adynosam_2include_2dynosam_2common_2ImageTypes_8hpp" id="adynosam_2include_2dynosam_2common_2ImageTypes_8hpp">
-<area shape="rect" title=" " alt="" coords="3915,5,4113,45"/>
-<area shape="rect" href="Exceptions_8hpp.html" title=" " alt="" coords="175,101,421,126"/>
-<area shape="rect" href="Types_8hpp.html" title=" " alt="" coords="1404,101,1616,126"/>
-<area shape="rect" title=" " alt="" coords="518,335,633,361"/>
-<area shape="rect" title=" " alt="" coords="3805,335,4020,361"/>
-<area shape="rect" title=" " alt="" coords="4044,335,4136,361"/>
-<area shape="rect" href="Tuple_8hpp.html" title=" " alt="" coords="4156,255,4336,280"/>
-<area shape="rect" href="OpenCVUtils_8hpp.html" title=" " alt="" coords="3824,101,4052,126"/>
-<area shape="rect" title=" " alt="" coords="4179,101,4265,126"/>
-<area shape="rect" href="ImageTypes-inl_8hpp.html" title=" " alt="" coords="4289,93,4515,133"/>
-<area shape="rect" title=" " alt="" coords="205,181,292,207"/>
-<area shape="rect" title=" " alt="" coords="317,181,375,207"/>
-<area shape="rect" title=" " alt="" coords="400,181,487,207"/>
-<area shape="rect" title=" " alt="" coords="5,181,81,207"/>
-<area shape="rect" title=" " alt="" coords="106,181,181,207"/>
-<area shape="rect" title=" " alt="" coords="2471,181,2639,207"/>
-<area shape="rect" title=" " alt="" coords="1152,423,1308,449"/>
-<area shape="rect" title=" " alt="" coords="3596,335,3781,361"/>
-<area shape="rect" title=" " alt="" coords="2664,181,2807,207"/>
-<area shape="rect" title=" " alt="" coords="990,335,1065,361"/>
-<area shape="rect" title=" " alt="" coords="613,181,711,207"/>
-<area shape="rect" title=" " alt="" coords="735,181,797,207"/>
-<area shape="rect" href="Flags_8hpp.html" title=" " alt="" coords="873,181,1083,207"/>
-<area shape="rect" href="Macros_8hpp.html" title=" " alt="" coords="1108,181,1301,207"/>
-<area shape="rect" href="SensorModels_8hpp.html" title=" " alt="" coords="1377,181,1643,207"/>
-<area shape="rect" title=" " alt="" coords="873,255,989,280"/>
-<area shape="rect" title=" " alt="" coords="1065,255,1142,280"/>
-<area shape="rect" title=" " alt="" coords="2113,423,2267,449"/>
-<area shape="rect" title=" " alt="" coords="1267,255,1465,280"/>
-<area shape="rect" href="GtsamUtils_8hpp.html" title=" " alt="" coords="2127,255,2346,280"/>
-<area shape="rect" title=" " alt="" coords="2519,335,2717,361"/>
-<area shape="rect" title=" " alt="" coords="2742,335,2929,361"/>
-<area shape="rect" title=" " alt="" coords="2953,335,3129,361"/>
-<area shape="rect" title=" " alt="" coords="3390,335,3571,361"/>
-<area shape="rect" title=" " alt="" coords="1319,335,1485,361"/>
-<area shape="rect" title=" " alt="" coords="1509,335,1703,361"/>
-<area shape="rect" title=" " alt="" coords="1727,335,1901,361"/>
-<area shape="rect" title=" " alt="" coords="1925,328,2119,368"/>
-<area shape="rect" title=" " alt="" coords="2143,335,2330,361"/>
-<area shape="rect" title=" " alt="" coords="2355,335,2495,361"/>
-<area shape="rect" href="Numerical_8hpp.html" title=" " alt="" coords="3153,335,3366,361"/>
-<area shape="rect" title=" " alt="" coords="3169,416,3350,456"/>
-<area shape="rect" title=" " alt="" coords="3374,416,3555,456"/>
-<area shape="rect" title=" " alt="" coords="3985,423,4065,449"/>
-<area shape="rect" title=" " alt="" coords="3071,423,3144,449"/>
-<area shape="rect" title=" " alt="" coords="4160,335,4215,361"/>
-<area shape="rect" title=" " alt="" coords="4239,335,4309,361"/>
-<area shape="rect" title=" " alt="" coords="4333,335,4393,361"/>
-<area shape="rect" title=" " alt="" coords="3920,181,4052,207"/>
+<area shape="rect" title=" " alt="" coords="1466,5,1663,45"/>
+<area shape="rect" title=" " alt="" coords="670,335,785,361"/>
+<area shape="rect" title=" " alt="" coords="2599,101,2685,126"/>
+<area shape="rect" title=" " alt="" coords="315,335,529,361"/>
+<area shape="rect" title=" " alt="" coords="553,335,645,361"/>
+<area shape="rect" href="Exceptions_8hpp.html" title=" " alt="" coords="3451,101,3697,126"/>
+<area shape="rect" href="Types_8hpp.html" title=" " alt="" coords="2363,101,2575,126"/>
+<area shape="rect" href="OpenCVUtils_8hpp.html" title=" " alt="" coords="364,101,592,126"/>
+<area shape="rect" href="Tuple_8hpp.html" title=" " alt="" coords="108,255,288,280"/>
+<area shape="rect" href="ImageTypes-inl_8hpp.html" title=" " alt="" coords="3721,93,3947,133"/>
+<area shape="rect" title=" " alt="" coords="3891,181,3977,207"/>
+<area shape="rect" title=" " alt="" coords="3497,181,3555,207"/>
+<area shape="rect" title=" " alt="" coords="3580,181,3667,207"/>
+<area shape="rect" title=" " alt="" coords="3691,181,3767,207"/>
+<area shape="rect" title=" " alt="" coords="3791,181,3866,207"/>
+<area shape="rect" title=" " alt="" coords="2323,181,2491,207"/>
+<area shape="rect" title=" " alt="" coords="3072,423,3228,449"/>
+<area shape="rect" title=" " alt="" coords="3188,335,3373,361"/>
+<area shape="rect" title=" " alt="" coords="2567,181,2709,207"/>
+<area shape="rect" title=" " alt="" coords="3449,335,3523,361"/>
+<area shape="rect" title=" " alt="" coords="2733,181,2831,207"/>
+<area shape="rect" title=" " alt="" coords="2855,181,2917,207"/>
+<area shape="rect" href="Flags_8hpp.html" title=" " alt="" coords="3211,181,3422,207"/>
+<area shape="rect" href="Macros_8hpp.html" title=" " alt="" coords="2993,181,3187,207"/>
+<area shape="rect" href="SensorModels_8hpp.html" title=" " alt="" coords="1930,181,2197,207"/>
+<area shape="rect" title=" " alt="" coords="3259,255,3375,280"/>
+<area shape="rect" title=" " alt="" coords="3051,255,3129,280"/>
+<area shape="rect" title=" " alt="" coords="697,423,851,449"/>
+<area shape="rect" title=" " alt="" coords="1707,255,1905,280"/>
+<area shape="rect" href="GtsamUtils_8hpp.html" title=" " alt="" coords="1929,255,2147,280"/>
+<area shape="rect" title=" " alt="" coords="1888,335,2087,361"/>
+<area shape="rect" title=" " alt="" coords="2111,335,2298,361"/>
+<area shape="rect" title=" " alt="" coords="2322,335,2498,361"/>
+<area shape="rect" title=" " alt="" coords="2522,335,2703,361"/>
+<area shape="rect" title=" " alt="" coords="2728,335,2895,361"/>
+<area shape="rect" title=" " alt="" coords="2919,335,3112,361"/>
+<area shape="rect" title=" " alt="" coords="1097,335,1270,361"/>
+<area shape="rect" title=" " alt="" coords="1294,328,1489,368"/>
+<area shape="rect" title=" " alt="" coords="1513,335,1699,361"/>
+<area shape="rect" title=" " alt="" coords="1724,335,1864,361"/>
+<area shape="rect" href="Numerical_8hpp.html" title=" " alt="" coords="859,335,1073,361"/>
+<area shape="rect" title=" " alt="" coords="875,416,1057,456"/>
+<area shape="rect" title=" " alt="" coords="1081,416,1262,456"/>
+<area shape="rect" title=" " alt="" coords="375,423,455,449"/>
+<area shape="rect" title=" " alt="" coords="1287,423,1360,449"/>
+<area shape="rect" title=" " alt="" coords="364,181,496,207"/>
+<area shape="rect" title=" " alt="" coords="236,335,291,361"/>
+<area shape="rect" title=" " alt="" coords="5,335,76,361"/>
+<area shape="rect" title=" " alt="" coords="100,335,160,361"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -150,56 +150,56 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="ImageTypes_8hpp__dep__incl.png" border="0" usemap="#adynosam_2include_2dynosam_2common_2ImageTypes_8hppdep" alt=""/></div>
 <map name="adynosam_2include_2dynosam_2common_2ImageTypes_8hppdep" id="adynosam_2include_2dynosam_2common_2ImageTypes_8hppdep">
-<area shape="rect" title=" " alt="" coords="3920,5,4117,45"/>
-<area shape="rect" href="ImageContainer_8hpp.html" title=" " alt="" coords="1331,93,1549,133"/>
-<area shape="rect" href="DataProviderUtils_8cc.html" title=" " alt="" coords="3695,585,3887,625"/>
-<area shape="rect" href="ImageTypes-inl_8hpp.html" title=" " alt="" coords="3911,93,4126,133"/>
-<area shape="rect" href="ImageTypes_8cc.html" title=" " alt="" coords="4150,93,4317,133"/>
-<area shape="rect" href="StereoMatcher_8cc.html" title=" " alt="" coords="4341,93,4523,133"/>
-<area shape="rect" href="dyno__sam_8cc.html" title=" " alt="" coords="3085,790,3264,830"/>
-<area shape="rect" href="ImageContainer-inl_8hpp.html" title=" " alt="" coords="1135,181,1332,236"/>
-<area shape="rect" href="Frontend-Definitions_8hpp.html" title=" " alt="" coords="1700,189,1945,229"/>
-<area shape="rect" href="Vision-Definitions_8hpp.html" title=" " alt="" coords="812,284,1009,339"/>
-<area shape="rect" href="Frame_8hpp.html" title=" " alt="" coords="799,387,996,427"/>
-<area shape="rect" href="VisionTools_8hpp.html" title=" " alt="" coords="1415,482,1644,522"/>
-<area shape="rect" href="FrontendInputPacket_8hpp.html" title=" " alt="" coords="2603,387,2848,427"/>
-<area shape="rect" href="Feature_8hpp.html" title=" " alt="" coords="672,189,877,229"/>
-<area shape="rect" href="ImageContainer_8cc.html" title=" " alt="" coords="1357,189,1523,229"/>
-<area shape="rect" href="BackendDefinitions_8hpp.html" title=" " alt="" coords="2121,291,2359,331"/>
-<area shape="rect" href="PipelineParams_8hpp.html" title=" " alt="" coords="2872,387,3083,427"/>
-<area shape="rect" href="FrontendOutputPacket_8hpp.html" title=" " alt="" coords="1897,482,2153,522"/>
-<area shape="rect" href="MotionSolver_8hpp.html" title=" " alt="" coords="582,585,823,625"/>
-<area shape="rect" href="JsonUtils_8hpp.html" title=" " alt="" coords="1700,291,1897,331"/>
-<area shape="rect" href="Frontend-Definitions_8cc.html" title=" " alt="" coords="1921,291,2097,331"/>
-<area shape="rect" href="MotionSolver_8cc.html" title=" " alt="" coords="1441,687,1613,727"/>
-<area shape="rect" href="FrontendPipeline_8hpp.html" title=" " alt="" coords="3347,585,3570,625"/>
-<area shape="rect" href="RGBDInstance-Definitions_8hpp.html" title=" " alt="" coords="1956,577,2153,632"/>
-<area shape="rect" href="RGBDInstanceFrontendModule_8hpp.html" title=" " alt="" coords="1035,783,1269,837"/>
-<area shape="rect" href="RGBDInstanceFrontendModule_8cc.html" title=" " alt="" coords="819,885,1061,925"/>
-<area shape="rect" href="RGBDInstance-Definitions_8cc.html" title=" " alt="" coords="1993,687,2205,727"/>
-<area shape="rect" href="FrontendInbuiltDisplayRos_8cc.html" title=" " alt="" coords="1637,680,1867,735"/>
-<area shape="rect" href="DataProvider_8hpp.html" title=" " alt="" coords="2777,585,3002,625"/>
-<area shape="rect" href="FeatureTracker_8hpp.html" title=" " alt="" coords="405,687,656,727"/>
-<area shape="rect" href="FeatureTrackerBase_8hpp.html" title=" " alt="" coords="389,475,611,529"/>
-<area shape="rect" href="StaticFeatureTracker_8hpp.html" title=" " alt="" coords="241,577,455,632"/>
-<area shape="rect" href="Frame-inl_8hpp.html" title=" " alt="" coords="787,475,984,529"/>
-<area shape="rect" href="Frame_8cc.html" title=" " alt="" coords="899,585,1063,625"/>
-<area shape="rect" href="FeatureTracker_8cc.html" title=" " alt="" coords="469,790,651,830"/>
-<area shape="rect" href="StaticFeatureTracker_8cc.html" title=" " alt="" coords="793,687,1012,727"/>
-<area shape="rect" href="VisionTools-inl_8hpp.html" title=" " alt="" coords="1429,577,1630,632"/>
-<area shape="rect" href="ClusterSlamDataProvider_8cc.html" title=" " alt="" coords="2279,585,2486,625"/>
-<area shape="rect" href="OMDDataProvider_8cc.html" title=" " alt="" coords="2511,585,2703,625"/>
-<area shape="rect" href="VirtualKittidataProvider_8cc.html" title=" " alt="" coords="3077,585,3273,625"/>
-<area shape="rect" href="ObjectTracker_8cc.html" title=" " alt="" coords="1706,585,1881,625"/>
-<area shape="rect" href="VisionTools_8cc.html" title=" " alt="" coords="1241,585,1405,625"/>
-<area shape="rect" href="ClusterSlamDataProvider_8hpp.html" title=" " alt="" coords="2178,475,2401,529"/>
-<area shape="rect" href="DataInterfacePipeline_8hpp.html" title=" " alt="" coords="2757,482,3040,522"/>
-<area shape="rect" href="KittiDataProvider_8hpp.html" title=" " alt="" coords="3358,687,3610,727"/>
-<area shape="rect" href="OMDDataProvider_8hpp.html" title=" " alt="" coords="2425,482,2682,522"/>
-<area shape="rect" href="ProjectAriaDataProvider_8hpp.html" title=" " alt="" coords="3065,475,3279,529"/>
-<area shape="rect" href="VirtualKittiDataProvider_8hpp.html" title=" " alt="" coords="3303,475,3518,529"/>
-<area shape="rect" href="OccupancyGrid2D_8hpp.html" title=" " alt="" coords="43,482,315,522"/>
-<area shape="rect" href="Feature_8cc.html" title=" " alt="" coords="573,291,737,331"/>
+<area shape="rect" title=" " alt="" coords="3784,5,3981,45"/>
+<area shape="rect" href="ImageContainer_8hpp.html" title=" " alt="" coords="2212,93,2431,133"/>
+<area shape="rect" href="DataProviderRos_8hpp.html" title=" " alt="" coords="3518,599,3773,639"/>
+<area shape="rect" href="DataProviderRos_8cc.html" title=" " alt="" coords="3700,702,3921,742"/>
+<area shape="rect" href="DataProviderUtils_8cc.html" title=" " alt="" coords="2552,599,2744,639"/>
+<area shape="rect" href="ImageTypes-inl_8hpp.html" title=" " alt="" coords="3849,93,4063,133"/>
+<area shape="rect" href="ImageTypes_8cc.html" title=" " alt="" coords="4087,93,4254,133"/>
+<area shape="rect" href="StereoMatcher_8cc.html" title=" " alt="" coords="4279,93,4460,133"/>
+<area shape="rect" href="dyno__sam_8cc.html" title=" " alt="" coords="853,805,1032,845"/>
+<area shape="rect" href="ImageContainer-inl_8hpp.html" title=" " alt="" coords="2659,181,2856,236"/>
+<area shape="rect" href="Frontend-Definitions_8hpp.html" title=" " alt="" coords="1729,189,1975,229"/>
+<area shape="rect" href="Vision-Definitions_8hpp.html" title=" " alt="" coords="2120,284,2317,339"/>
+<area shape="rect" href="Frame_8hpp.html" title=" " alt="" coords="2696,394,2893,434"/>
+<area shape="rect" href="VisionTools_8hpp.html" title=" " alt="" coords="1456,497,1685,537"/>
+<area shape="rect" href="FrontendInputPacket_8hpp.html" title=" " alt="" coords="425,291,671,331"/>
+<area shape="rect" href="Feature_8hpp.html" title=" " alt="" coords="2429,189,2635,229"/>
+<area shape="rect" href="ImageContainer_8cc.html" title=" " alt="" coords="2238,189,2405,229"/>
+<area shape="rect" href="BackendDefinitions_8hpp.html" title=" " alt="" coords="1387,291,1624,331"/>
+<area shape="rect" href="PipelineParams_8hpp.html" title=" " alt="" coords="1368,394,1579,434"/>
+<area shape="rect" href="FrontendOutputPacket_8hpp.html" title=" " alt="" coords="731,394,987,434"/>
+<area shape="rect" href="MotionSolver_8hpp.html" title=" " alt="" coords="2286,599,2527,639"/>
+<area shape="rect" href="JsonUtils_8hpp.html" title=" " alt="" coords="1648,291,1845,331"/>
+<area shape="rect" href="Frontend-Definitions_8cc.html" title=" " alt="" coords="1869,291,2045,331"/>
+<area shape="rect" href="MotionSolver_8cc.html" title=" " alt="" coords="1411,702,1583,742"/>
+<area shape="rect" href="FrontendPipeline_8hpp.html" title=" " alt="" coords="739,497,962,537"/>
+<area shape="rect" href="RGBDInstance-Definitions_8hpp.html" title=" " alt="" coords="1777,489,1975,544"/>
+<area shape="rect" href="RGBDInstanceFrontendModule_8hpp.html" title=" " alt="" coords="2131,797,2365,852"/>
+<area shape="rect" href="RGBDInstanceFrontendModule_8cc.html" title=" " alt="" coords="2007,900,2249,940"/>
+<area shape="rect" href="RGBDInstance-Definitions_8cc.html" title=" " alt="" coords="1759,599,1971,639"/>
+<area shape="rect" href="FrontendInbuiltDisplayRos_8cc.html" title=" " alt="" coords="2769,592,2999,647"/>
+<area shape="rect" href="DataProvider_8hpp.html" title=" " alt="" coords="2446,497,2671,537"/>
+<area shape="rect" href="FeatureTracker_8hpp.html" title=" " alt="" coords="3035,702,3285,742"/>
+<area shape="rect" href="FeatureTrackerBase_8hpp.html" title=" " alt="" coords="3170,489,3393,544"/>
+<area shape="rect" href="StaticFeatureTracker_8hpp.html" title=" " alt="" coords="3126,592,3341,647"/>
+<area shape="rect" href="Frame-inl_8hpp.html" title=" " alt="" coords="2696,489,2893,544"/>
+<area shape="rect" href="Frame_8cc.html" title=" " alt="" coords="2046,599,2210,639"/>
+<area shape="rect" href="OnlineDataProviderRos_8hpp.html" title=" " alt="" coords="3431,695,3675,749"/>
+<area shape="rect" href="FeatureTracker_8cc.html" title=" " alt="" coords="1775,805,1956,845"/>
+<area shape="rect" href="VisionTools-inl_8hpp.html" title=" " alt="" coords="1331,592,1533,647"/>
+<area shape="rect" href="ClusterSlamDataProvider_8cc.html" title=" " alt="" coords="731,599,938,639"/>
+<area shape="rect" href="OMDDataProvider_8cc.html" title=" " alt="" coords="963,599,1155,639"/>
+<area shape="rect" href="VirtualKittidataProvider_8cc.html" title=" " alt="" coords="459,599,655,639"/>
+<area shape="rect" href="ClusterSlamDataProvider_8hpp.html" title=" " alt="" coords="93,387,315,441"/>
+<area shape="rect" href="DataInterfacePipeline_8hpp.html" title=" " alt="" coords="1011,394,1293,434"/>
+<area shape="rect" href="KittiDataProvider_8hpp.html" title=" " alt="" coords="691,702,943,742"/>
+<area shape="rect" href="OMDDataProvider_8hpp.html" title=" " alt="" coords="366,497,623,537"/>
+<area shape="rect" href="ProjectAriaDataProvider_8hpp.html" title=" " alt="" coords="441,387,655,441"/>
+<area shape="rect" href="VirtualKittiDataProvider_8hpp.html" title=" " alt="" coords="75,489,290,544"/>
+<area shape="rect" href="OccupancyGrid2D_8hpp.html" title=" " alt="" coords="2151,497,2423,537"/>
+<area shape="rect" href="Feature_8cc.html" title=" " alt="" coords="2450,291,2614,331"/>
 </map>
 </div>
 </div>
@@ -208,6 +208,8 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1InvalidImageTypeException.html">dyno::InvalidImageTypeException</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1image__traits__impl.html">dyno::image_traits_impl&lt; IMAGETYPE &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1ImageWrapper.html">dyno::ImageWrapper&lt; IMAGETYPE &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structdyno_1_1ImageWrapper.html" title="ImageWrapper for a ImageType that defines a particular type of input image. The ImageType template is...">ImageWrapper</a> for a <a class="el" href="structdyno_1_1ImageType.html">ImageType</a> that defines a particular type of input image. The <a class="el" href="structdyno_1_1ImageType.html">ImageType</a> template is used to create different types (actual c++ types) to differntial cv::Mat's from each other - eg. a type for a RGB image, Optical Flow or Motion Mask.  <a href="structdyno_1_1ImageWrapper.html#details">More...</a><br /></td></tr>
@@ -226,6 +228,16 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1ImageType_1_1MotionMask.html">dyno::ImageType::MotionMask</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1ImageType_1_1ClassSegmentation.html">dyno::ImageType::ClassSegmentation</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1image__traits_3_01ImageType_1_1RGBMono_01_4.html">dyno::image_traits&lt; ImageType::RGBMono &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1image__traits_3_01ImageType_1_1Depth_01_4.html">dyno::image_traits&lt; ImageType::Depth &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1image__traits_3_01ImageType_1_1OpticalFlow_01_4.html">dyno::image_traits&lt; ImageType::OpticalFlow &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1image__traits_3_01ImageType_1_1SemanticMask_01_4.html">dyno::image_traits&lt; ImageType::SemanticMask &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1image__traits_3_01ImageType_1_1MotionMask_01_4.html">dyno::image_traits&lt; ImageType::MotionMask &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>

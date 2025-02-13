@@ -482,21 +482,21 @@ template&lt;typename INPUT , typename OUTPUT &gt; </div>
 
 <p>Implements <a class="el" href="classdyno_1_1PipelineModule.html#a7e780c92e82405964c0b55e90ef4a23b">dyno::PipelineModule&lt; INPUT, OUTPUT &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="PipelineBase-inl_8hpp_source.html#l00116">116</a> of file <a class="el" href="PipelineBase-inl_8hpp_source.html">PipelineBase-inl.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  117</span>{</div>
-<div class="line"><span class="lineno">  118</span>  <span class="keyword">auto</span> tic_callbacks = <a class="code hl_function" href="classdyno_1_1utils_1_1Timer.html#a9dfd91c5a5d7cea18a766b8323854f15">utils::Timer::tic</a>();</div>
-<div class="line"><span class="lineno">  122</span>  <span class="keywordflow">for</span> (<a class="code hl_typedef" href="classdyno_1_1MIMOPipelineModule.html#a30f5319a34c5eea0fdba041ec339fe5f">OutputQueue</a>* queue : <a class="code hl_variable" href="classdyno_1_1MIMOPipelineModule.html#a11e23ed8feee40707889ab3b58d70636">output_queues_</a>)</div>
-<div class="line"><span class="lineno">  123</span>  {</div>
-<div class="line"><span class="lineno">  124</span>    CHECK(queue);</div>
-<div class="line"><span class="lineno">  125</span>    queue-&gt;push(output_packet);</div>
-<div class="line"><span class="lineno">  126</span>  }</div>
-<div class="line"><span class="lineno">  127</span>  <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> kTimeLimitCallbacks = std::chrono::milliseconds(10);</div>
-<div class="line"><span class="lineno">  128</span>  <span class="keyword">auto</span> callbacks_duration = <a class="code hl_function" href="classdyno_1_1utils_1_1Timer.html#a166123da21761deffa2463167aaab2ea">utils::Timer::toc</a>(tic_callbacks);</div>
-<div class="line"><span class="lineno">  129</span>  LOG_IF(WARNING, callbacks_duration &gt; kTimeLimitCallbacks)</div>
-<div class="line"><span class="lineno">  130</span>      &lt;&lt; <span class="stringliteral">&quot;Pushing output packet to queues for module: &quot;</span> &lt;&lt; this-&gt;<a class="code hl_variable" href="classdyno_1_1PipelineBase.html#aa08d3c035aed987a2f25cdde0a488115">module_name_</a></div>
-<div class="line"><span class="lineno">  131</span>      &lt;&lt; <span class="stringliteral">&quot; are taking very long! Current latency: &quot;</span> &lt;&lt; callbacks_duration.count() &lt;&lt; <span class="stringliteral">&quot; ms.&quot;</span>;</div>
-<div class="line"><span class="lineno">  132</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  133</span>}</div>
+<p class="definition">Definition at line <a class="el" href="PipelineBase-inl_8hpp_source.html#l00111">111</a> of file <a class="el" href="PipelineBase-inl_8hpp_source.html">PipelineBase-inl.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  112</span>                                                                  {</div>
+<div class="line"><span class="lineno">  113</span>  <span class="keyword">auto</span> tic_callbacks = <a class="code hl_function" href="classdyno_1_1utils_1_1Timer.html#a9dfd91c5a5d7cea18a766b8323854f15">utils::Timer::tic</a>();</div>
+<div class="line"><span class="lineno">  117</span>  <span class="keywordflow">for</span> (<a class="code hl_typedef" href="classdyno_1_1MIMOPipelineModule.html#a30f5319a34c5eea0fdba041ec339fe5f">OutputQueue</a>* queue : <a class="code hl_variable" href="classdyno_1_1MIMOPipelineModule.html#a11e23ed8feee40707889ab3b58d70636">output_queues_</a>) {</div>
+<div class="line"><span class="lineno">  118</span>    CHECK(queue);</div>
+<div class="line"><span class="lineno">  119</span>    queue-&gt;push(output_packet);</div>
+<div class="line"><span class="lineno">  120</span>  }</div>
+<div class="line"><span class="lineno">  121</span>  <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> kTimeLimitCallbacks = std::chrono::milliseconds(10);</div>
+<div class="line"><span class="lineno">  122</span>  <span class="keyword">auto</span> callbacks_duration = <a class="code hl_function" href="classdyno_1_1utils_1_1Timer.html#a166123da21761deffa2463167aaab2ea">utils::Timer::toc</a>(tic_callbacks);</div>
+<div class="line"><span class="lineno">  123</span>  LOG_IF(WARNING, callbacks_duration &gt; kTimeLimitCallbacks)</div>
+<div class="line"><span class="lineno">  124</span>      &lt;&lt; <span class="stringliteral">&quot;Pushing output packet to queues for module: &quot;</span> &lt;&lt; this-&gt;<a class="code hl_variable" href="classdyno_1_1PipelineBase.html#aa08d3c035aed987a2f25cdde0a488115">module_name_</a></div>
+<div class="line"><span class="lineno">  125</span>      &lt;&lt; <span class="stringliteral">&quot; are taking very long! Current latency: &quot;</span></div>
+<div class="line"><span class="lineno">  126</span>      &lt;&lt; callbacks_duration.count() &lt;&lt; <span class="stringliteral">&quot; ms.&quot;</span>;</div>
+<div class="line"><span class="lineno">  127</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  128</span>}</div>
 <div class="ttc" id="aclassdyno_1_1MIMOPipelineModule_html_a30f5319a34c5eea0fdba041ec339fe5f"><div class="ttname"><a href="classdyno_1_1MIMOPipelineModule.html#a30f5319a34c5eea0fdba041ec339fe5f">dyno::MIMOPipelineModule::OutputQueue</a></div><div class="ttdeci">typename OutputTypeTraits::TypeQueue OutputQueue</div><div class="ttdef"><b>Definition:</b> <a href="PipelineBase_8hpp_source.html#l00187">PipelineBase.hpp:187</a></div></div>
 <div class="ttc" id="aclassdyno_1_1PipelineBase_html_aa08d3c035aed987a2f25cdde0a488115"><div class="ttname"><a href="classdyno_1_1PipelineBase.html#aa08d3c035aed987a2f25cdde0a488115">dyno::PipelineBase::module_name_</a></div><div class="ttdeci">const std::string module_name_</div><div class="ttdef"><b>Definition:</b> <a href="PipelineBase_8hpp_source.html#l00134">PipelineBase.hpp:134</a></div></div>
 <div class="ttc" id="aclassdyno_1_1utils_1_1Timer_html_a166123da21761deffa2463167aaab2ea"><div class="ttname"><a href="classdyno_1_1utils_1_1Timer.html#a166123da21761deffa2463167aaab2ea">dyno::utils::Timer::toc</a></div><div class="ttdeci">static T toc(const TimePoint &amp;start)</div><div class="ttdef"><b>Definition:</b> <a href="Timing_8hpp_source.html#l00050">Timing.hpp:50</a></div></div>
@@ -534,11 +534,11 @@ template&lt;typename INPUT , typename OUTPUT &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PipelineBase-inl_8hpp_source.html#l00108">108</a> of file <a class="el" href="PipelineBase-inl_8hpp_source.html">PipelineBase-inl.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  109</span>{</div>
-<div class="line"><span class="lineno">  110</span>  CHECK(output_queue);</div>
-<div class="line"><span class="lineno">  111</span>  <a class="code hl_variable" href="classdyno_1_1MIMOPipelineModule.html#a11e23ed8feee40707889ab3b58d70636">output_queues_</a>.push_back(output_queue);</div>
-<div class="line"><span class="lineno">  112</span>}</div>
+<p class="definition">Definition at line <a class="el" href="PipelineBase-inl_8hpp_source.html#l00104">104</a> of file <a class="el" href="PipelineBase-inl_8hpp_source.html">PipelineBase-inl.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  105</span>                               {</div>
+<div class="line"><span class="lineno">  106</span>  CHECK(output_queue);</div>
+<div class="line"><span class="lineno">  107</span>  <a class="code hl_variable" href="classdyno_1_1MIMOPipelineModule.html#a11e23ed8feee40707889ab3b58d70636">output_queues_</a>.push_back(output_queue);</div>
+<div class="line"><span class="lineno">  108</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>

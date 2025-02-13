@@ -1,3 +1,4 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classdyno_1_1TrackletIdManager.html" title="Singleton class to manage a global tracklet id for all trackers to ensure they are unique." alt="" coords="5,5,188,31"/>
+<area shape="rect" id="node1" href="$classdyno_1_1TrackedValueStatus.html" title=" " alt="" coords="5,5,232,31"/>
+<area shape="rect" id="node2" href="$structdyno_1_1VisualMeasurementStatus.html" title="Defines a single visual measurement with tracking label, object id, frame id and measurement." alt="" coords="280,5,551,31"/>
 </map>

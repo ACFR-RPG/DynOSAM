@@ -337,8 +337,8 @@ Private Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="DataInterfacePipeline_8cc_source.html#l00036">36</a> of file <a class="el" href="DataInterfacePipeline_8cc_source.html">DataInterfacePipeline.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   36</span>: <a class="code hl_typedef" href="classdyno_1_1DataInterfacePipeline.html#a945c27ddf3b841d60022ee96ec783cc3">MIMO</a>(<span class="stringliteral">&quot;data-interface&quot;</span>), <a class="code hl_variable" href="classdyno_1_1DataInterfacePipeline.html#a6f17f2e675cc0e1fe7bd0afe5ece3fed">parallel_run_</a>(parallel_run) {}</div>
+<p class="definition">Definition at line <a class="el" href="DataInterfacePipeline_8cc_source.html#l00040">40</a> of file <a class="el" href="DataInterfacePipeline_8cc_source.html">DataInterfacePipeline.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   41</span>    : <a class="code hl_typedef" href="classdyno_1_1DataInterfacePipeline.html#a945c27ddf3b841d60022ee96ec783cc3">MIMO</a>(<span class="stringliteral">&quot;data-interface&quot;</span>), <a class="code hl_variable" href="classdyno_1_1DataInterfacePipeline.html#a6f17f2e675cc0e1fe7bd0afe5ece3fed">parallel_run_</a>(parallel_run) {}</div>
 <div class="ttc" id="aclassdyno_1_1DataInterfacePipeline_html_a6f17f2e675cc0e1fe7bd0afe5ece3fed"><div class="ttname"><a href="classdyno_1_1DataInterfacePipeline.html#a6f17f2e675cc0e1fe7bd0afe5ece3fed">dyno::DataInterfacePipeline::parallel_run_</a></div><div class="ttdeci">std::atomic_bool parallel_run_</div><div class="ttdef"><b>Definition:</b> <a href="DataInterfacePipeline_8hpp_source.html#l00075">DataInterfacePipeline.hpp:75</a></div></div>
 <div class="ttc" id="aclassdyno_1_1DataInterfacePipeline_html_a945c27ddf3b841d60022ee96ec783cc3"><div class="ttname"><a href="classdyno_1_1DataInterfacePipeline.html#a945c27ddf3b841d60022ee96ec783cc3">dyno::DataInterfacePipeline::MIMO</a></div><div class="ttdeci">MIMOPipelineModule&lt; FrontendInputPacketBase, FrontendInputPacketBase &gt; MIMO</div><div class="ttdef"><b>Definition:</b> <a href="DataInterfacePipeline_8hpp_source.html#l00027">DataInterfacePipeline.hpp:28</a></div></div>
 </div><!-- fragment -->
@@ -502,44 +502,42 @@ Here is the caller graph for this function:</div>
 
 <p>Implements <a class="el" href="classdyno_1_1PipelineModule.html#a0961a7fb2ec456f1aac2173f1cf201de">dyno::PipelineModule&lt; INPUT, OUTPUT &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="DataInterfacePipeline_8cc_source.html#l00046">46</a> of file <a class="el" href="DataInterfacePipeline_8cc_source.html">DataInterfacePipeline.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   46</span>                                                                      {</div>
-<div class="line"><span class="lineno">   47</span>  <span class="keywordflow">if</span>(<a class="code hl_function" href="classdyno_1_1PipelineBase.html#a5c485b024b7b1c710c94303f29ca8e31">isShutdown</a>()) {</div>
-<div class="line"><span class="lineno">   48</span>    <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
-<div class="line"><span class="lineno">   49</span>  }</div>
-<div class="line"><span class="lineno">   50</span> </div>
-<div class="line"><span class="lineno">   51</span>  <a class="code hl_typedef" href="namespacedyno_1_1utils.html#a2a0bf9b09c753fdfa86ae7ebb92a0746">utils::StatsCollector</a> queue_size_stats(<span class="stringliteral">&quot;data-interface_queue_size #&quot;</span>);</div>
-<div class="line"><span class="lineno">   52</span>  queue_size_stats.AddSample(<a class="code hl_variable" href="classdyno_1_1DataInterfacePipeline.html#a4a57971aa816cbdfade6190329bdf42b">packet_queue_</a>.<a class="code hl_function" href="classThreadsafeQueueBase.html#a72b4575cbd1b4ac1fa555b4a8cd18c9b">size</a>());</div>
+<p class="definition">Definition at line <a class="el" href="DataInterfacePipeline_8cc_source.html#l00049">49</a> of file <a class="el" href="DataInterfacePipeline_8cc_source.html">DataInterfacePipeline.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   49</span>                                                                      {</div>
+<div class="line"><span class="lineno">   50</span>  <span class="keywordflow">if</span> (<a class="code hl_function" href="classdyno_1_1PipelineBase.html#a5c485b024b7b1c710c94303f29ca8e31">isShutdown</a>()) {</div>
+<div class="line"><span class="lineno">   51</span>    <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
+<div class="line"><span class="lineno">   52</span>  }</div>
 <div class="line"><span class="lineno">   53</span> </div>
-<div class="line"><span class="lineno">   54</span>  <span class="keywordtype">bool</span> queue_state;</div>
-<div class="line"><span class="lineno">   55</span>  ImageContainer::Ptr packet = <span class="keyword">nullptr</span>;</div>
+<div class="line"><span class="lineno">   54</span>  <a class="code hl_typedef" href="namespacedyno_1_1utils.html#a2a0bf9b09c753fdfa86ae7ebb92a0746">utils::StatsCollector</a> queue_size_stats(<span class="stringliteral">&quot;data-interface_queue_size #&quot;</span>);</div>
+<div class="line"><span class="lineno">   55</span>  queue_size_stats.AddSample(<a class="code hl_variable" href="classdyno_1_1DataInterfacePipeline.html#a4a57971aa816cbdfade6190329bdf42b">packet_queue_</a>.<a class="code hl_function" href="classThreadsafeQueueBase.html#a72b4575cbd1b4ac1fa555b4a8cd18c9b">size</a>());</div>
 <div class="line"><span class="lineno">   56</span> </div>
-<div class="line"><span class="lineno">   57</span>  <span class="keywordflow">if</span>(<a class="code hl_variable" href="classdyno_1_1DataInterfacePipeline.html#a6f17f2e675cc0e1fe7bd0afe5ece3fed">parallel_run_</a>) {</div>
-<div class="line"><span class="lineno">   58</span>    queue_state = <a class="code hl_variable" href="classdyno_1_1DataInterfacePipeline.html#a4a57971aa816cbdfade6190329bdf42b">packet_queue_</a>.<a class="code hl_function" href="classThreadsafeQueue.html#a5a94c5f25605668b0f51ab5cd4f6af7d">pop</a>(packet);</div>
-<div class="line"><span class="lineno">   59</span>  }</div>
-<div class="line"><span class="lineno">   60</span>  <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">   61</span>    queue_state = <a class="code hl_variable" href="classdyno_1_1DataInterfacePipeline.html#a4a57971aa816cbdfade6190329bdf42b">packet_queue_</a>.<a class="code hl_function" href="classThreadsafeQueue.html#a06b3418f87d1703da2fb8af8cb689790">popBlocking</a>(packet);</div>
-<div class="line"><span class="lineno">   62</span>  }</div>
-<div class="line"><span class="lineno">   63</span> </div>
-<div class="line"><span class="lineno">   64</span> </div>
+<div class="line"><span class="lineno">   57</span>  <span class="keywordtype">bool</span> queue_state;</div>
+<div class="line"><span class="lineno">   58</span>  ImageContainer::Ptr packet = <span class="keyword">nullptr</span>;</div>
+<div class="line"><span class="lineno">   59</span> </div>
+<div class="line"><span class="lineno">   60</span>  <span class="keywordflow">if</span> (<a class="code hl_variable" href="classdyno_1_1DataInterfacePipeline.html#a6f17f2e675cc0e1fe7bd0afe5ece3fed">parallel_run_</a>) {</div>
+<div class="line"><span class="lineno">   61</span>    queue_state = <a class="code hl_variable" href="classdyno_1_1DataInterfacePipeline.html#a4a57971aa816cbdfade6190329bdf42b">packet_queue_</a>.<a class="code hl_function" href="classThreadsafeQueue.html#a5a94c5f25605668b0f51ab5cd4f6af7d">pop</a>(packet);</div>
+<div class="line"><span class="lineno">   62</span>  } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">   63</span>    queue_state = <a class="code hl_variable" href="classdyno_1_1DataInterfacePipeline.html#a4a57971aa816cbdfade6190329bdf42b">packet_queue_</a>.<a class="code hl_function" href="classThreadsafeQueue.html#a06b3418f87d1703da2fb8af8cb689790">popBlocking</a>(packet);</div>
+<div class="line"><span class="lineno">   64</span>  }</div>
 <div class="line"><span class="lineno">   65</span> </div>
-<div class="line"><span class="lineno">   66</span>  <span class="keywordflow">if</span>(!queue_state) {</div>
+<div class="line"><span class="lineno">   66</span>  <span class="keywordflow">if</span> (!queue_state) {</div>
 <div class="line"><span class="lineno">   67</span>    <span class="comment">//  LOG_EVERY_N(WARNING, 10)</span></div>
 <div class="line"><span class="lineno">   68</span>    <span class="comment">//     &lt;&lt; &quot;Module: &quot; &lt;&lt; MIMO::module_name_ &lt;&lt; &quot; - queue is down&quot;;</span></div>
-<div class="line"><span class="lineno">   69</span>        <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
+<div class="line"><span class="lineno">   69</span>    <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
 <div class="line"><span class="lineno">   70</span>  }</div>
 <div class="line"><span class="lineno">   71</span> </div>
 <div class="line"><span class="lineno">   72</span>  CHECK(packet);</div>
 <div class="line"><span class="lineno">   73</span> </div>
-<div class="line"><span class="lineno">   74</span> </div>
-<div class="line"><span class="lineno">   75</span>  GroundTruthInputPacket::Optional ground_truth;</div>
-<div class="line"><span class="lineno">   76</span>  <span class="keywordflow">if</span>(<a class="code hl_variable" href="classdyno_1_1DataInterfacePipeline.html#a06957f3281ba421a16f0dd23cdddb01f">ground_truth_packets_</a>.find(packet-&gt;getFrameId()) != <a class="code hl_variable" href="classdyno_1_1DataInterfacePipeline.html#a06957f3281ba421a16f0dd23cdddb01f">ground_truth_packets_</a>.end()) {</div>
-<div class="line"><span class="lineno">   77</span>    VLOG(5) &lt;&lt; <span class="stringliteral">&quot;Gotten ground truth packet for frame id &quot;</span> &lt;&lt; packet-&gt;getFrameId();</div>
-<div class="line"><span class="lineno">   78</span>    ground_truth = <a class="code hl_variable" href="classdyno_1_1DataInterfacePipeline.html#a06957f3281ba421a16f0dd23cdddb01f">ground_truth_packets_</a>.at(packet-&gt;getFrameId());</div>
-<div class="line"><span class="lineno">   79</span>  }</div>
-<div class="line"><span class="lineno">   80</span> </div>
-<div class="line"><span class="lineno">   81</span>  <span class="keywordflow">return</span> std::make_shared&lt;FrontendInputPacketBase&gt;(packet, ground_truth);</div>
-<div class="line"><span class="lineno">   82</span>}</div>
+<div class="line"><span class="lineno">   74</span>  GroundTruthInputPacket::Optional ground_truth;</div>
+<div class="line"><span class="lineno">   75</span>  <span class="keywordflow">if</span> (<a class="code hl_variable" href="classdyno_1_1DataInterfacePipeline.html#a06957f3281ba421a16f0dd23cdddb01f">ground_truth_packets_</a>.find(packet-&gt;getFrameId()) !=</div>
+<div class="line"><span class="lineno">   76</span>      <a class="code hl_variable" href="classdyno_1_1DataInterfacePipeline.html#a06957f3281ba421a16f0dd23cdddb01f">ground_truth_packets_</a>.end()) {</div>
+<div class="line"><span class="lineno">   77</span>    VLOG(5) &lt;&lt; <span class="stringliteral">&quot;Gotten ground truth packet for frame id &quot;</span></div>
+<div class="line"><span class="lineno">   78</span>            &lt;&lt; packet-&gt;getFrameId();</div>
+<div class="line"><span class="lineno">   79</span>    ground_truth = <a class="code hl_variable" href="classdyno_1_1DataInterfacePipeline.html#a06957f3281ba421a16f0dd23cdddb01f">ground_truth_packets_</a>.at(packet-&gt;getFrameId());</div>
+<div class="line"><span class="lineno">   80</span>  }</div>
+<div class="line"><span class="lineno">   81</span> </div>
+<div class="line"><span class="lineno">   82</span>  <span class="keywordflow">return</span> std::make_shared&lt;FrontendInputPacketBase&gt;(packet, ground_truth);</div>
+<div class="line"><span class="lineno">   83</span>}</div>
 <div class="ttc" id="aclassThreadsafeQueueBase_html_a72b4575cbd1b4ac1fa555b4a8cd18c9b"><div class="ttname"><a href="classThreadsafeQueueBase.html#a72b4575cbd1b4ac1fa555b4a8cd18c9b">ThreadsafeQueueBase::size</a></div><div class="ttdeci">int size()</div><div class="ttdef"><b>Definition:</b> <a href="ThreadSafeQueue_8hpp_source.html#l00102">ThreadSafeQueue.hpp:102</a></div></div>
 <div class="ttc" id="aclassThreadsafeQueue_html_a06b3418f87d1703da2fb8af8cb689790"><div class="ttname"><a href="classThreadsafeQueue.html#a06b3418f87d1703da2fb8af8cb689790">ThreadsafeQueue::popBlocking</a></div><div class="ttdeci">bool popBlocking(T &amp;value) override</div><div class="ttdoc">Pop value. Waits for data to be available in the queue. Returns false if the queue has been shutdown.</div><div class="ttdef"><b>Definition:</b> <a href="ThreadSafeQueue_8hpp_source.html#l00280">ThreadSafeQueue.hpp:280</a></div></div>
 <div class="ttc" id="aclassThreadsafeQueue_html_a5a94c5f25605668b0f51ab5cd4f6af7d"><div class="ttname"><a href="classThreadsafeQueue.html#a5a94c5f25605668b0f51ab5cd4f6af7d">ThreadsafeQueue::pop</a></div><div class="ttdeci">bool pop(T &amp;value) override</div><div class="ttdoc">Pop without blocking, just checks once if the queue is empty. Returns true if the value could be retr...</div><div class="ttdef"><b>Definition:</b> <a href="ThreadSafeQueue_8hpp_source.html#l00321">ThreadSafeQueue.hpp:321</a></div></div>
@@ -595,10 +593,10 @@ false </dd></dl>
 
 <p>Implements <a class="el" href="classdyno_1_1PipelineBase.html#abb02cf85483c5e267db459381fad8cfa">dyno::PipelineBase</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="DataInterfacePipeline_8cc_source.html#l00084">84</a> of file <a class="el" href="DataInterfacePipeline_8cc_source.html">DataInterfacePipeline.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   84</span>                                          {</div>
-<div class="line"><span class="lineno">   85</span>  <span class="keywordflow">return</span> !<a class="code hl_variable" href="classdyno_1_1DataInterfacePipeline.html#a4a57971aa816cbdfade6190329bdf42b">packet_queue_</a>.<a class="code hl_function" href="classThreadsafeQueueBase.html#a623c9bedb32016c26569c19da5eb1c0a">empty</a>() &amp;&amp; !<a class="code hl_variable" href="classdyno_1_1DataInterfacePipeline.html#a4a57971aa816cbdfade6190329bdf42b">packet_queue_</a>.<a class="code hl_function" href="classThreadsafeQueueBase.html#adb208658a05047121e701ddff4a8d505">isShutdown</a>();</div>
-<div class="line"><span class="lineno">   86</span>}</div>
+<p class="definition">Definition at line <a class="el" href="DataInterfacePipeline_8cc_source.html#l00085">85</a> of file <a class="el" href="DataInterfacePipeline_8cc_source.html">DataInterfacePipeline.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   85</span>                                          {</div>
+<div class="line"><span class="lineno">   86</span>  <span class="keywordflow">return</span> !<a class="code hl_variable" href="classdyno_1_1DataInterfacePipeline.html#a4a57971aa816cbdfade6190329bdf42b">packet_queue_</a>.<a class="code hl_function" href="classThreadsafeQueueBase.html#a623c9bedb32016c26569c19da5eb1c0a">empty</a>() &amp;&amp; !<a class="code hl_variable" href="classdyno_1_1DataInterfacePipeline.html#a4a57971aa816cbdfade6190329bdf42b">packet_queue_</a>.<a class="code hl_function" href="classThreadsafeQueueBase.html#adb208658a05047121e701ddff4a8d505">isShutdown</a>();</div>
+<div class="line"><span class="lineno">   87</span>}</div>
 <div class="ttc" id="aclassThreadsafeQueueBase_html_a623c9bedb32016c26569c19da5eb1c0a"><div class="ttname"><a href="classThreadsafeQueueBase.html#a623c9bedb32016c26569c19da5eb1c0a">ThreadsafeQueueBase::empty</a></div><div class="ttdeci">bool empty() const</div><div class="ttdoc">Checks if the queue is empty. the state of the queue might change right after this query.</div><div class="ttdef"><b>Definition:</b> <a href="ThreadSafeQueue_8hpp_source.html#l00129">ThreadSafeQueue.hpp:129</a></div></div>
 <div class="ttc" id="aclassThreadsafeQueueBase_html_adb208658a05047121e701ddff4a8d505"><div class="ttname"><a href="classThreadsafeQueueBase.html#adb208658a05047121e701ddff4a8d505">ThreadsafeQueueBase::isShutdown</a></div><div class="ttdeci">bool isShutdown()</div><div class="ttdef"><b>Definition:</b> <a href="ThreadSafeQueue_8hpp_source.html#l00114">ThreadSafeQueue.hpp:114</a></div></div>
 </div><!-- fragment -->
@@ -748,12 +746,12 @@ Here is the caller graph for this function:</div>
 
 <p>Implements <a class="el" href="classdyno_1_1PipelineBase.html#a94a7ee9d6d2139a6de9337b4bfb76546">dyno::PipelineBase</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="DataInterfacePipeline_8cc_source.html#l00039">39</a> of file <a class="el" href="DataInterfacePipeline_8cc_source.html">DataInterfacePipeline.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   39</span>                                           {</div>
-<div class="line"><span class="lineno">   40</span>    <a class="code hl_variable" href="classdyno_1_1DataInterfacePipeline.html#a4a57971aa816cbdfade6190329bdf42b">packet_queue_</a>.<a class="code hl_function" href="classThreadsafeQueueBase.html#a1a9f0078e0371bd1ba7dbe9ae05d2bed">shutdown</a>();</div>
-<div class="line"><span class="lineno">   41</span>    <span class="comment">//call the virtual shutdown method for the derived dataprovider module</span></div>
-<div class="line"><span class="lineno">   42</span>    this-&gt;<a class="code hl_function" href="classdyno_1_1DataInterfacePipeline.html#a965c52e5baddf99a4323714e2fc6e6f4">onShutdown</a>();</div>
-<div class="line"><span class="lineno">   43</span>}</div>
+<p class="definition">Definition at line <a class="el" href="DataInterfacePipeline_8cc_source.html#l00043">43</a> of file <a class="el" href="DataInterfacePipeline_8cc_source.html">DataInterfacePipeline.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   43</span>                                           {</div>
+<div class="line"><span class="lineno">   44</span>  <a class="code hl_variable" href="classdyno_1_1DataInterfacePipeline.html#a4a57971aa816cbdfade6190329bdf42b">packet_queue_</a>.<a class="code hl_function" href="classThreadsafeQueueBase.html#a1a9f0078e0371bd1ba7dbe9ae05d2bed">shutdown</a>();</div>
+<div class="line"><span class="lineno">   45</span>  <span class="comment">// call the virtual shutdown method for the derived dataprovider module</span></div>
+<div class="line"><span class="lineno">   46</span>  this-&gt;<a class="code hl_function" href="classdyno_1_1DataInterfacePipeline.html#a965c52e5baddf99a4323714e2fc6e6f4">onShutdown</a>();</div>
+<div class="line"><span class="lineno">   47</span>}</div>
 <div class="ttc" id="aclassThreadsafeQueueBase_html_a1a9f0078e0371bd1ba7dbe9ae05d2bed"><div class="ttname"><a href="classThreadsafeQueueBase.html#a1a9f0078e0371bd1ba7dbe9ae05d2bed">ThreadsafeQueueBase::shutdown</a></div><div class="ttdeci">void shutdown()</div><div class="ttdef"><b>Definition:</b> <a href="ThreadSafeQueue_8hpp_source.html#l00104">ThreadSafeQueue.hpp:104</a></div></div>
 <div class="ttc" id="aclassdyno_1_1DataInterfacePipeline_html_a965c52e5baddf99a4323714e2fc6e6f4"><div class="ttname"><a href="classdyno_1_1DataInterfacePipeline.html#a965c52e5baddf99a4323714e2fc6e6f4">dyno::DataInterfacePipeline::onShutdown</a></div><div class="ttdeci">virtual void onShutdown()</div><div class="ttdef"><b>Definition:</b> <a href="DataInterfacePipeline_8hpp_source.html#l00060">DataInterfacePipeline.hpp:60</a></div></div>
 </div><!-- fragment -->

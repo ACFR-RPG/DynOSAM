@@ -1,4 +1,7 @@
 <map id="dyno::ImageType::MotionMask::toRGB" name="dyno::ImageType::MotionMask::toRGB">
-<area shape="rect" id="node1" title=" " alt="" coords="265,5,487,45"/>
-<area shape="rect" id="node2" href="$classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2" title=" " alt="" coords="5,5,217,45"/>
+<area shape="rect" id="node1" title=" " alt="" coords="756,37,977,77"/>
+<area shape="rect" id="node2" href="$classdyno_1_1OnlineDataProviderRos.html#a02b6aa8b0f6c6c732310c0852f54ef42" title=" " alt="" coords="507,5,697,45"/>
+<area shape="rect" id="node5" href="$classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2" title=" " alt="" coords="496,69,708,109"/>
+<area shape="rect" id="node3" href="$classdyno_1_1OnlineDataProviderRos.html#a3b7725856bc86407813c51804a26bea4" title="Connects all subscribers." alt="" coords="259,5,448,45"/>
+<area shape="rect" id="node4" href="$classdyno_1_1OnlineDataProviderRos.html#abea751b62c91dbf7bfac759680a434f7" title="Construct a new OnlineDataProviderRos." alt="" coords="5,5,211,45"/>
 </map>

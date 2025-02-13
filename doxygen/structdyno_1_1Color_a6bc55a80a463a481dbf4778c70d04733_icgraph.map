@@ -29,10 +29,10 @@
 <area shape="rect" id="node21" href="$classdyno_1_1Frame.html#a5e2adcdcb96143552fa891351b94dd22" title="From the detected list of objects (in Frame::object_observations_) draw the object masks as labelled ..." alt="" coords="871,519,1073,559"/>
 <area shape="rect" id="node22" href="$namespacedyno.html#ad2183909c7d4f0dd85c7db9ae1759b01" title="This function goes through the input 3D landmarks and group them into point clusters based on their o..." alt="" coords="883,584,1061,609"/>
 <area shape="rect" id="node23" href="$namespacedyno_1_1utils.html#a5abdff0c77884da4a8da55f0880d8cfb" title="Given an image that operates like a mask (ie. is a single channel image where each pixel value corres..." alt="" coords="869,725,1075,751"/>
-<area shape="rect" id="node30" href="$classdyno_1_1FrontendInbuiltDisplayRos.html#a4b6fefaf04a868c58cd85d8a741b4726" title=" " alt="" coords="263,206,492,246"/>
-<area shape="rect" id="node32" href="$classdyno_1_1InbuiltDisplayCommon.html#a70f9716db81c6643674174da5a5f5f90" title=" " alt="" coords="568,206,779,246"/>
-<area shape="rect" id="node34" href="$classdyno_1_1InbuiltDisplayCommon.html#a59e66ed2ccc103f7bfdd420547ecdcad" title=" " alt="" coords="568,270,779,310"/>
-<area shape="rect" id="node35" href="$structdyno_1_1DisplayCommon.html#ad9251fcb86a8c872c6b3736d0c2cd8f8" title=" " alt="" coords="887,391,1057,431"/>
+<area shape="rect" id="node31" href="$classdyno_1_1FrontendInbuiltDisplayRos.html#a4b6fefaf04a868c58cd85d8a741b4726" title=" " alt="" coords="263,206,492,246"/>
+<area shape="rect" id="node33" href="$classdyno_1_1InbuiltDisplayCommon.html#a70f9716db81c6643674174da5a5f5f90" title=" " alt="" coords="568,206,779,246"/>
+<area shape="rect" id="node35" href="$classdyno_1_1InbuiltDisplayCommon.html#a59e66ed2ccc103f7bfdd420547ecdcad" title=" " alt="" coords="568,270,779,310"/>
+<area shape="rect" id="node36" href="$structdyno_1_1DisplayCommon.html#ad9251fcb86a8c872c6b3736d0c2cd8f8" title=" " alt="" coords="887,391,1057,431"/>
 <area shape="rect" id="node16" href="$classdyno_1_1InbuiltDisplayCommon.html#a1b2fa923dc466d1357936bf793d65ce2" title=" " alt="" coords="568,334,779,374"/>
 <area shape="rect" id="node17" href="$classdyno_1_1BackendInbuiltDisplayRos.html#ae435d50beb86a1beecb8bf249e723bf4" title=" " alt="" coords="274,334,481,374"/>
 <area shape="rect" id="node19" href="$classdyno_1_1DSDTransport.html#a73f0554c9013b1e5be9fda71990706bf" title=" " alt="" coords="569,590,777,630"/>
@@ -40,13 +40,13 @@
 <area shape="rect" id="node25" href="$KittiSemaniticToMotion_8cc.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="646,896,701,921"/>
 <area shape="rect" id="node26" href="$structdyno_1_1ImageType_1_1ClassSegmentation.html#afe839c69e62e5d1da10b813ca3bb824e" title=" " alt="" coords="540,654,807,694"/>
 <area shape="rect" id="node27" href="$structdyno_1_1ImageType_1_1MotionMask.html#a6b119596bef78424e2085d684d07cd43" title=" " alt="" coords="563,782,784,822"/>
-<area shape="rect" id="node29" href="$structdyno_1_1ImageType_1_1SemanticMask.html#aea33f14e71a1e9201d001f8c3abd61af" title=" " alt="" coords="572,718,775,758"/>
-<area shape="rect" id="node28" href="$classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2" title=" " alt="" coords="271,782,483,822"/>
-<area shape="rect" id="node31" href="$classdyno_1_1FrontendInbuiltDisplayRos.html#a8e47d6ce98cd285d8b6d9674cbacf334" title=" " alt="" coords="5,238,215,278"/>
-<area shape="rect" id="node33" href="$classdyno_1_1FrontendInbuiltDisplayRos.html#acdc1be16deea0c706451e415f303342f" title=" " alt="" coords="273,270,482,310"/>
-<area shape="rect" id="node36" href="$classdyno_1_1DSDRos.html#a2c158ca365a2406ba990a1c8a60ba603" title=" " alt="" coords="560,526,787,566"/>
+<area shape="rect" id="node30" href="$structdyno_1_1ImageType_1_1SemanticMask.html#aea33f14e71a1e9201d001f8c3abd61af" title=" " alt="" coords="572,718,775,758"/>
+<area shape="rect" id="node28" href="$classdyno_1_1OnlineDataProviderRos.html#a02b6aa8b0f6c6c732310c0852f54ef42" title=" " alt="" coords="283,750,472,790"/>
+<area shape="rect" id="node29" href="$classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2" title=" " alt="" coords="271,814,483,854"/>
+<area shape="rect" id="node32" href="$classdyno_1_1FrontendInbuiltDisplayRos.html#a8e47d6ce98cd285d8b6d9674cbacf334" title=" " alt="" coords="5,238,215,278"/>
+<area shape="rect" id="node34" href="$classdyno_1_1FrontendInbuiltDisplayRos.html#acdc1be16deea0c706451e415f303342f" title=" " alt="" coords="273,270,482,310"/>
+<area shape="rect" id="node37" href="$classdyno_1_1DSDRos.html#a2c158ca365a2406ba990a1c8a60ba603" title=" " alt="" coords="560,462,787,502"/>
 <area shape="rect" id="node39" href="$classdyno_1_1InbuiltDisplayCommon.html#a5ea9ec6ffedf2a6cb3a84a71fe0590fd" title=" " alt="" coords="568,398,779,438"/>
-<area shape="rect" id="node40" href="$classdyno_1_1DSDRos.html#a2ea9ccc0e69485a7128c10b55ca60c99" title=" " alt="" coords="570,462,777,502"/>
-<area shape="rect" id="node37" href="$classdyno_1_1FrontendDSDRos.html#a9101c485338a62d8a86b37a56a68503e" title=" " alt="" coords="275,526,480,566"/>
-<area shape="rect" id="node38" href="$classdyno_1_1BackendDSDRos.html#a5316ec622424b5f5c3c5b111a56c4063" title=" " alt="" coords="293,462,462,502"/>
+<area shape="rect" id="node40" href="$classdyno_1_1DSDRos.html#a2ea9ccc0e69485a7128c10b55ca60c99" title=" " alt="" coords="570,526,777,566"/>
+<area shape="rect" id="node38" href="$classdyno_1_1FrontendDSDRos.html#a9101c485338a62d8a86b37a56a68503e" title=" " alt="" coords="275,494,480,534"/>
 </map>

@@ -1,6 +1,9 @@
 <map id="dyno::ImageWrapper::clone" name="dyno::ImageWrapper::clone">
-<area shape="rect" id="node1" title="Returns an ImageWrapper with the underlying image data cloned." alt="" coords="535,37,693,77"/>
-<area shape="rect" id="node2" href="$structdyno_1_1ImageType_1_1Depth.html#a6415e19a2a9ba5f3279e06e5aa70fa33" title=" " alt="" coords="286,5,466,45"/>
-<area shape="rect" id="node3" href="$structdyno_1_1ImageType_1_1MotionMask.html#a6b119596bef78424e2085d684d07cd43" title=" " alt="" coords="265,69,487,109"/>
-<area shape="rect" id="node4" href="$classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2" title=" " alt="" coords="5,69,217,109"/>
+<area shape="rect" id="node1" title="Returns an ImageWrapper with the underlying image data cloned." alt="" coords="1025,37,1184,77"/>
+<area shape="rect" id="node2" href="$structdyno_1_1ImageType_1_1Depth.html#a6415e19a2a9ba5f3279e06e5aa70fa33" title=" " alt="" coords="777,5,957,45"/>
+<area shape="rect" id="node3" href="$structdyno_1_1ImageType_1_1MotionMask.html#a6b119596bef78424e2085d684d07cd43" title=" " alt="" coords="756,69,977,109"/>
+<area shape="rect" id="node4" href="$classdyno_1_1OnlineDataProviderRos.html#a02b6aa8b0f6c6c732310c0852f54ef42" title=" " alt="" coords="507,37,697,77"/>
+<area shape="rect" id="node7" href="$classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2" title=" " alt="" coords="496,101,708,141"/>
+<area shape="rect" id="node5" href="$classdyno_1_1OnlineDataProviderRos.html#a3b7725856bc86407813c51804a26bea4" title="Connects all subscribers." alt="" coords="259,37,448,77"/>
+<area shape="rect" id="node6" href="$classdyno_1_1OnlineDataProviderRos.html#abea751b62c91dbf7bfac759680a434f7" title="Construct a new OnlineDataProviderRos." alt="" coords="5,37,211,77"/>
 </map>

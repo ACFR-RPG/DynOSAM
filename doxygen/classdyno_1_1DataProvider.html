@@ -94,14 +94,16 @@ Inheritance diagram for dyno::DataProvider:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1DataProvider__inherit__graph.png" border="0" usemap="#adyno_1_1DataProvider_inherit__map" alt="Inheritance graph"/></div>
 <map name="adyno_1_1DataProvider_inherit__map" id="adyno_1_1DataProvider_inherit__map">
-<area shape="rect" title="A data provider is a module that actually gets the inididual image and/or IMU data from some source a..." alt="" coords="5,69,152,95"/>
+<area shape="rect" title="A data provider is a module that actually gets the inididual image and/or IMU data from some source a..." alt="" coords="5,84,152,109"/>
 <area shape="rect" href="classdyno_1_1DynoDatasetProvider.html" title=" " alt="" coords="200,5,447,60"/>
-<area shape="rect" href="classdyno_1_1DynoDatasetProvider.html" title=" " alt="" coords="223,98,424,138"/>
-<area shape="rect" href="classdyno_1_1KittiDataLoader.html" title=" " alt="" coords="521,7,685,32"/>
-<area shape="rect" href="classdyno_1_1ClusterSlamDataLoader.html" title="Data loader for the cluster slam datasets as provided at: https://huangjh&#45;pub.github...." alt="" coords="495,56,711,81"/>
-<area shape="rect" href="classdyno_1_1OMDDataLoader.html" title="Data loader for the oxford multi motion (omd) datasets as provided at: https://robotic&#45;esp...." alt="" coords="518,105,687,131"/>
-<area shape="rect" href="classdyno_1_1ProjectARIADataLoader.html" title="Data loader for the PREPROCESSED Project ARIA for MP testing team (dataset so far closest source)" alt="" coords="496,155,709,180"/>
-<area shape="rect" href="classdyno_1_1VirtualKittiDataLoader.html" title=" " alt="" coords="499,204,706,229"/>
+<area shape="rect" href="classdyno_1_1DataProviderRos.html" title="Base Dataprovider for ROS that implements common image processing functionalities." alt="" coords="238,84,409,109"/>
+<area shape="rect" href="classdyno_1_1DynoDatasetProvider.html" title=" " alt="" coords="223,167,424,207"/>
+<area shape="rect" href="classdyno_1_1KittiDataLoader.html" title=" " alt="" coords="521,20,685,45"/>
+<area shape="rect" href="classdyno_1_1OnlineDataProviderRos.html" title="Online data&#45;provider for DynoSAM." alt="" coords="496,76,709,101"/>
+<area shape="rect" href="classdyno_1_1ClusterSlamDataLoader.html" title="Data loader for the cluster slam datasets as provided at: https://huangjh&#45;pub.github...." alt="" coords="495,125,711,151"/>
+<area shape="rect" href="classdyno_1_1OMDDataLoader.html" title="Data loader for the oxford multi motion (omd) datasets as provided at: https://robotic&#45;esp...." alt="" coords="518,175,687,200"/>
+<area shape="rect" href="classdyno_1_1ProjectARIADataLoader.html" title="Data loader for the PREPROCESSED Project ARIA for MP testing team (dataset so far closest source)" alt="" coords="496,224,709,249"/>
+<area shape="rect" href="classdyno_1_1VirtualKittiDataLoader.html" title=" " alt="" coords="499,273,706,299"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -437,7 +439,7 @@ Here is the call graph for this function:</div>
 <p>Get the size of the dataset - if this is not valid (i.e. the provider is online) this function should return -1. </p>
 <dl class="section return"><dt>Returns</dt><dd>int </dd></dl>
 
-<p>Implemented in <a class="el" href="classdyno_1_1DynoDatasetProvider.html#a57edd63edc85ccc7d7ae21060278ff38">dyno::DynoDatasetProvider&lt; DataTypes &gt;</a>, and <a class="el" href="classdyno_1_1DynoDatasetProvider.html#a57edd63edc85ccc7d7ae21060278ff38">dyno::DynoDatasetProvider&lt; cv::Mat, cv::Mat, gtsam::Pose3, GroundTruthInputPacket &gt;</a>.</p>
+<p>Implemented in <a class="el" href="classdyno_1_1DynoDatasetProvider.html#a57edd63edc85ccc7d7ae21060278ff38">dyno::DynoDatasetProvider&lt; DataTypes &gt;</a>, <a class="el" href="classdyno_1_1DynoDatasetProvider.html#a57edd63edc85ccc7d7ae21060278ff38">dyno::DynoDatasetProvider&lt; cv::Mat, cv::Mat, gtsam::Pose3, GroundTruthInputPacket &gt;</a>, and <a class="el" href="classdyno_1_1OnlineDataProviderRos.html#ac3f8e1e8ca6167cc926f1a9a17071c49">dyno::OnlineDataProviderRos</a>.</p>
 
 </div>
 </div>
@@ -513,7 +515,7 @@ Here is the caller graph for this function:</div>
 <p>By default returns std::nullopt but the derived data-provider can overwrite this and return the loaded params</p>
 <dl class="section return"><dt>Returns</dt><dd>CameraParams::Optional </dd></dl>
 
-<p>Reimplemented in <a class="el" href="classdyno_1_1ClusterSlamDataLoader.html#ac2df8b8870306d0d5840d9b3f7a3d9ed">dyno::ClusterSlamDataLoader</a>, <a class="el" href="classdyno_1_1KittiDataLoader.html#a1ae7994314d13f355483a3c4efa013a1">dyno::KittiDataLoader</a>, <a class="el" href="classdyno_1_1OMDDataLoader.html#a90e7bdf43e040e0bfa83cc7b7e2ebacd">dyno::OMDDataLoader</a>, <a class="el" href="classdyno_1_1ProjectARIADataLoader.html#afdc738dbc509f28c068da9d3f82046af">dyno::ProjectARIADataLoader</a>, and <a class="el" href="classdyno_1_1VirtualKittiDataLoader.html#aa62d6f7d9e04fea95ea44e0877d97211">dyno::VirtualKittiDataLoader</a>.</p>
+<p>Reimplemented in <a class="el" href="classdyno_1_1ClusterSlamDataLoader.html#ac2df8b8870306d0d5840d9b3f7a3d9ed">dyno::ClusterSlamDataLoader</a>, <a class="el" href="classdyno_1_1KittiDataLoader.html#a1ae7994314d13f355483a3c4efa013a1">dyno::KittiDataLoader</a>, <a class="el" href="classdyno_1_1OMDDataLoader.html#a90e7bdf43e040e0bfa83cc7b7e2ebacd">dyno::OMDDataLoader</a>, <a class="el" href="classdyno_1_1ProjectARIADataLoader.html#afdc738dbc509f28c068da9d3f82046af">dyno::ProjectARIADataLoader</a>, <a class="el" href="classdyno_1_1VirtualKittiDataLoader.html#aa62d6f7d9e04fea95ea44e0877d97211">dyno::VirtualKittiDataLoader</a>, and <a class="el" href="classdyno_1_1DataProviderRos.html#a7afae88aebb8a7b0f873a700ea961e7b">dyno::DataProviderRos</a>.</p>
 
 <p class="definition">Definition at line <a class="el" href="DataProvider_8hpp_source.html#l00111">111</a> of file <a class="el" href="DataProvider_8hpp_source.html">DataProvider.hpp</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">  111</span>{ <span class="keywordflow">return</span> {}; }</div>
@@ -796,6 +798,8 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
+<p>Reimplemented in <a class="el" href="classdyno_1_1OnlineDataProviderRos.html#a7a29e46f09c1a033d158e4c43585e508">dyno::OnlineDataProviderRos</a>.</p>
+
 <p class="definition">Definition at line <a class="el" href="DataProvider_8cc_source.html#l00044">44</a> of file <a class="el" href="DataProvider_8cc_source.html">DataProvider.cc</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">   44</span>                            {</div>
 <div class="line"><span class="lineno">   45</span>    LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Shutting down data provider and associated module&quot;</span>;</div>
@@ -846,7 +850,7 @@ Here is the caller graph for this function:</div>
 <dd>
 false </dd></dl>
 
-<p>Implemented in <a class="el" href="classdyno_1_1DynoDatasetProvider.html#aa400624ddd0204276ce512486effa160">dyno::DynoDatasetProvider&lt; DataTypes &gt;</a>, and <a class="el" href="classdyno_1_1DynoDatasetProvider.html#aa400624ddd0204276ce512486effa160">dyno::DynoDatasetProvider&lt; cv::Mat, cv::Mat, gtsam::Pose3, GroundTruthInputPacket &gt;</a>.</p>
+<p>Implemented in <a class="el" href="classdyno_1_1DynoDatasetProvider.html#aa400624ddd0204276ce512486effa160">dyno::DynoDatasetProvider&lt; DataTypes &gt;</a>, <a class="el" href="classdyno_1_1DynoDatasetProvider.html#aa400624ddd0204276ce512486effa160">dyno::DynoDatasetProvider&lt; cv::Mat, cv::Mat, gtsam::Pose3, GroundTruthInputPacket &gt;</a>, and <a class="el" href="classdyno_1_1OnlineDataProviderRos.html#ace65280b44a739073adfba0fad1ae759">dyno::OnlineDataProviderRos</a>.</p>
 
 </div>
 </div>
@@ -899,7 +903,7 @@ false </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="DataProvider_8hpp_source.html#l00124">124</a> of file <a class="el" href="DataProvider_8hpp_source.html">DataProvider.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1ClusterSlamDataLoader.html#a08661c0ee53d2504e5b6d2c931df1f97">dyno::ClusterSlamDataLoader::ClusterSlamDataLoader()</a>, <a class="el" href="classdyno_1_1DataProvider.html#ac3dd1f8f4aafda392b89a2348b2026ac">DataProvider()</a>, <a class="el" href="classdyno_1_1KittiDataLoader.html#ac3950a2ffba6caf37cefb51459336862">dyno::KittiDataLoader::KittiDataLoader()</a>, <a class="el" href="classdyno_1_1OMDDataLoader.html#ac5ff322c63be13db32c7ad810c85ea08">dyno::OMDDataLoader::OMDDataLoader()</a>, <a class="el" href="classdyno_1_1ProjectARIADataLoader.html#ac54b115f31c1e8c76395fc595f0c7637">dyno::ProjectARIADataLoader::ProjectARIADataLoader()</a>, <a class="el" href="classdyno_1_1DataProvider.html#ac659e4b4c130951d5862acb68d69d3b2">registerImageContainerCallback()</a>, and <a class="el" href="classdyno_1_1VirtualKittiDataLoader.html#aac90985e4a9dee128c448148e218aed5">dyno::VirtualKittiDataLoader::VirtualKittiDataLoader()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1ClusterSlamDataLoader.html#a08661c0ee53d2504e5b6d2c931df1f97">dyno::ClusterSlamDataLoader::ClusterSlamDataLoader()</a>, <a class="el" href="classdyno_1_1DataProvider.html#ac3dd1f8f4aafda392b89a2348b2026ac">DataProvider()</a>, <a class="el" href="classdyno_1_1OnlineDataProviderRos.html#a02b6aa8b0f6c6c732310c0852f54ef42">dyno::OnlineDataProviderRos::imageSyncCallback()</a>, <a class="el" href="classdyno_1_1KittiDataLoader.html#ac3950a2ffba6caf37cefb51459336862">dyno::KittiDataLoader::KittiDataLoader()</a>, <a class="el" href="classdyno_1_1OMDDataLoader.html#ac5ff322c63be13db32c7ad810c85ea08">dyno::OMDDataLoader::OMDDataLoader()</a>, <a class="el" href="classdyno_1_1ProjectARIADataLoader.html#ac54b115f31c1e8c76395fc595f0c7637">dyno::ProjectARIADataLoader::ProjectARIADataLoader()</a>, <a class="el" href="classdyno_1_1DataProvider.html#ac659e4b4c130951d5862acb68d69d3b2">registerImageContainerCallback()</a>, and <a class="el" href="classdyno_1_1VirtualKittiDataLoader.html#aac90985e4a9dee128c448148e218aed5">dyno::VirtualKittiDataLoader::VirtualKittiDataLoader()</a>.</p>
 
 </div>
 </div>
@@ -1003,7 +1007,7 @@ false </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="DataProvider_8hpp_source.html#l00131">131</a> of file <a class="el" href="DataProvider_8hpp_source.html">DataProvider.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1DataProvider.html#aab837117aea198eb0b7afb261ff757fb">shutdown()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1OnlineDataProviderRos.html#a3b7725856bc86407813c51804a26bea4">dyno::OnlineDataProviderRos::connect()</a>, <a class="el" href="classdyno_1_1OnlineDataProviderRos.html#abea751b62c91dbf7bfac759680a434f7">dyno::OnlineDataProviderRos::OnlineDataProviderRos()</a>, <a class="el" href="classdyno_1_1DataProvider.html#aab837117aea198eb0b7afb261ff757fb">shutdown()</a>, <a class="el" href="classdyno_1_1OnlineDataProviderRos.html#a7a29e46f09c1a033d158e4c43585e508">dyno::OnlineDataProviderRos::shutdown()</a>, and <a class="el" href="classdyno_1_1OnlineDataProviderRos.html#ace65280b44a739073adfba0fad1ae759">dyno::OnlineDataProviderRos::spin()</a>.</p>
 
 </div>
 </div>

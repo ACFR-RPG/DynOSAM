@@ -446,97 +446,93 @@ Here is the caller graph for this function:</div>
 <dd>
 false </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="DataInterfacePipeline_8cc_source.html#l00090">90</a> of file <a class="el" href="DataInterfacePipeline_8cc_source.html">DataInterfacePipeline.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   92</span>                               {</div>
-<div class="line"><span class="lineno">   93</span>  CHECK_NOTNULL(imu_meas);</div>
-<div class="line"><span class="lineno">   94</span>  CHECK_LT(<a class="code hl_variable" href="classdyno_1_1DataInterfacePipelineImu.html#aff5cc9ddab5f74961a4cf982a26db284">timestamp_last_sync_</a>, timestamp)</div>
-<div class="line"><span class="lineno">   95</span>      &lt;&lt; <span class="stringliteral">&quot;Timestamps out of order:\n&quot;</span></div>
-<div class="line"><span class="lineno">   96</span>      &lt;&lt; <span class="stringliteral">&quot; - Last Frame Timestamp = &quot;</span> &lt;&lt; <a class="code hl_variable" href="classdyno_1_1DataInterfacePipelineImu.html#aff5cc9ddab5f74961a4cf982a26db284">timestamp_last_sync_</a> &lt;&lt; <span class="charliteral">&#39;\n&#39;</span></div>
-<div class="line"><span class="lineno">   97</span>      &lt;&lt; <span class="stringliteral">&quot; - Current Timestamp = &quot;</span> &lt;&lt; timestamp;</div>
-<div class="line"><span class="lineno">   98</span> </div>
-<div class="line"><span class="lineno">   99</span>  <span class="keywordflow">if</span> (<a class="code hl_variable" href="classdyno_1_1DataInterfacePipelineImu.html#a9be43119b2a7aba3afd0ed7accf4253c">imu_buffer_</a>.<a class="code hl_function" href="classdyno_1_1ThreadsafeImuBuffer.html#a250effe6321d200e5df351da69a2cff8">size</a>() == 0) {</div>
-<div class="line"><span class="lineno">  100</span>    VLOG(1) &lt;&lt; <span class="stringliteral">&quot;No IMU measurements available yet, dropping this frame.&quot;</span>;</div>
-<div class="line"><span class="lineno">  101</span>    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">  102</span>  }</div>
-<div class="line"><span class="lineno">  103</span> </div>
-<div class="line"><span class="lineno">  104</span>  <span class="comment">// Extract imu measurements between consecutive frames.</span></div>
-<div class="line"><span class="lineno">  105</span>  <span class="keywordflow">if</span> (<a class="code hl_function" href="namespacedyno.html#adf545b8b790321f0f83e16e7b4927192">dyno::fpEqual</a>(<a class="code hl_variable" href="classdyno_1_1DataInterfacePipelineImu.html#aff5cc9ddab5f74961a4cf982a26db284">timestamp_last_sync_</a>, 0.0)) {</div>
-<div class="line"><span class="lineno">  106</span>    <span class="comment">// TODO(Toni): wouldn&#39;t it be better to get all IMU measurements up to</span></div>
-<div class="line"><span class="lineno">  107</span>    <span class="comment">// this</span></div>
-<div class="line"><span class="lineno">  108</span>    <span class="comment">// timestamp? We should add a method to the IMU buffer for that.</span></div>
-<div class="line"><span class="lineno">  109</span>    VLOG(1) &lt;&lt; <span class="stringliteral">&quot;Skipping first frame, because we do not have a concept of &quot;</span></div>
-<div class="line"><span class="lineno">  110</span>               <span class="stringliteral">&quot;a previous frame timestamp otherwise.&quot;</span>;</div>
-<div class="line"><span class="lineno">  111</span>    <a class="code hl_variable" href="classdyno_1_1DataInterfacePipelineImu.html#aff5cc9ddab5f74961a4cf982a26db284">timestamp_last_sync_</a> = timestamp;</div>
-<div class="line"><span class="lineno">  112</span>    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">  113</span>  }</div>
-<div class="line"><span class="lineno">  114</span> </div>
-<div class="line"><span class="lineno">  115</span>  <a class="code hl_enumeration" href="classdyno_1_1ThreadsafeImuBuffer.html#ac71268252763622c4644f283eb17047e">ThreadsafeImuBuffer::QueryResult</a> query_result =</div>
-<div class="line"><span class="lineno">  116</span>      <a class="code hl_enumvalue" href="classdyno_1_1ThreadsafeImuBuffer.html#ac71268252763622c4644f283eb17047ea55545b14190fd044996ee214f8984f42">ThreadsafeImuBuffer::QueryResult::kDataNeverAvailable</a>;</div>
-<div class="line"><span class="lineno">  117</span>  <span class="keywordtype">bool</span> log_error_once = <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  118</span>  <span class="keywordflow">while</span> (</div>
-<div class="line"><span class="lineno">  119</span>      !<a class="code hl_function" href="classdyno_1_1PipelineBase.html#a5c485b024b7b1c710c94303f29ca8e31">MIMO::isShutdown</a>() &amp;&amp;</div>
-<div class="line"><span class="lineno">  120</span>      (query_result = <a class="code hl_variable" href="classdyno_1_1DataInterfacePipelineImu.html#a9be43119b2a7aba3afd0ed7accf4253c">imu_buffer_</a>.<a class="code hl_function" href="classdyno_1_1ThreadsafeImuBuffer.html#a08ffa136ec227e9b34ce7f16fba4c01e">getImuDataInterpolatedUpperBorder</a>(</div>
-<div class="line"><span class="lineno">  121</span>           <a class="code hl_variable" href="classdyno_1_1DataInterfacePipelineImu.html#aff5cc9ddab5f74961a4cf982a26db284">timestamp_last_sync_</a>,</div>
-<div class="line"><span class="lineno">  122</span>           timestamp,</div>
-<div class="line"><span class="lineno">  123</span>           &amp;imu_meas-&gt;timestamps_,</div>
-<div class="line"><span class="lineno">  124</span>           &amp;imu_meas-&gt;acc_gyr_)) !=</div>
-<div class="line"><span class="lineno">  125</span>          <a class="code hl_enumvalue" href="classdyno_1_1ThreadsafeImuBuffer.html#ac71268252763622c4644f283eb17047eacd1922f6fc46a6b5524bfa448dfff98d">ThreadsafeImuBuffer::QueryResult::kDataAvailable</a>) {</div>
-<div class="line"><span class="lineno">  126</span>    VLOG(1) &lt;&lt; <span class="stringliteral">&quot;No IMU data available. Reason:\n&quot;</span>;</div>
-<div class="line"><span class="lineno">  127</span>    <span class="keywordflow">switch</span> (query_result) {</div>
-<div class="line"><span class="lineno">  128</span>      <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="classdyno_1_1ThreadsafeImuBuffer.html#ac71268252763622c4644f283eb17047ea4eed1ddbec66392dce40d9a8b53e01b8">ThreadsafeImuBuffer::QueryResult::kDataNotYetAvailable</a>: {</div>
-<div class="line"><span class="lineno">  129</span>        <span class="keywordflow">if</span> (log_error_once) {</div>
-<div class="line"><span class="lineno">  130</span>          LOG(WARNING) &lt;&lt; <span class="stringliteral">&quot;Waiting for IMU data...&quot;</span>;</div>
-<div class="line"><span class="lineno">  131</span>          log_error_once = <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">  132</span>        }</div>
-<div class="line"><span class="lineno">  133</span>        <span class="keywordflow">continue</span>;</div>
-<div class="line"><span class="lineno">  134</span>      }</div>
-<div class="line"><span class="lineno">  135</span>      <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="classdyno_1_1ThreadsafeImuBuffer.html#ac71268252763622c4644f283eb17047ea0b2cd9cfc57037b0730a5768b74b454f">ThreadsafeImuBuffer::QueryResult::kQueueShutdown</a>: {</div>
-<div class="line"><span class="lineno">  136</span>        LOG(WARNING)</div>
-<div class="line"><span class="lineno">  137</span>            &lt;&lt; <span class="stringliteral">&quot;IMU buffer was shutdown. Shutting down DataInterfacePipeline.&quot;</span>;</div>
-<div class="line"><span class="lineno">  138</span>        <a class="code hl_function" href="classdyno_1_1PipelineBase.html#a3fe02ed3b9e50f0da3b1619216a1caca">MIMO::shutdown</a>();</div>
-<div class="line"><span class="lineno">  139</span>        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">  140</span>      }</div>
-<div class="line"><span class="lineno">  141</span>      <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="classdyno_1_1ThreadsafeImuBuffer.html#ac71268252763622c4644f283eb17047ea55545b14190fd044996ee214f8984f42">ThreadsafeImuBuffer::QueryResult::kDataNeverAvailable</a>: {</div>
-<div class="line"><span class="lineno">  142</span>        LOG(WARNING)</div>
-<div class="line"><span class="lineno">  143</span>            &lt;&lt; <span class="stringliteral">&quot;Asking for data before start of IMU stream, from timestamp: &quot;</span></div>
-<div class="line"><span class="lineno">  144</span>            &lt;&lt; <a class="code hl_variable" href="classdyno_1_1DataInterfacePipelineImu.html#aff5cc9ddab5f74961a4cf982a26db284">timestamp_last_sync_</a> &lt;&lt; <span class="stringliteral">&quot; to timestamp: &quot;</span> &lt;&lt; timestamp;</div>
-<div class="line"><span class="lineno">  145</span>        <span class="comment">// Ignore frames that happened before the earliest imu data</span></div>
-<div class="line"><span class="lineno">  146</span>        <a class="code hl_variable" href="classdyno_1_1DataInterfacePipelineImu.html#aff5cc9ddab5f74961a4cf982a26db284">timestamp_last_sync_</a> = timestamp;</div>
-<div class="line"><span class="lineno">  147</span>        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">  148</span>      }</div>
-<div class="line"><span class="lineno">  149</span>      <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="classdyno_1_1ThreadsafeImuBuffer.html#ac71268252763622c4644f283eb17047eadae792ae358705b3026f30b6d6c8296a">ThreadsafeImuBuffer::QueryResult::</a></div>
-<div class="line"><span class="lineno">  150</span><a class="code hl_enumvalue" href="classdyno_1_1ThreadsafeImuBuffer.html#ac71268252763622c4644f283eb17047eadae792ae358705b3026f30b6d6c8296a">          kTooFewMeasurementsAvailable</a>: {</div>
-<div class="line"><span class="lineno">  151</span>        LOG(WARNING) &lt;&lt; <span class="stringliteral">&quot;No IMU measurements here, and IMU data stream already &quot;</span></div>
-<div class="line"><span class="lineno">  152</span>                        <span class="stringliteral">&quot;passed this time region&quot;</span></div>
-<div class="line"><span class="lineno">  153</span>                     &lt;&lt; <span class="stringliteral">&quot;from timestamp: &quot;</span> &lt;&lt; <a class="code hl_variable" href="classdyno_1_1DataInterfacePipelineImu.html#aff5cc9ddab5f74961a4cf982a26db284">timestamp_last_sync_</a></div>
-<div class="line"><span class="lineno">  154</span>                     &lt;&lt; <span class="stringliteral">&quot; to timestamp: &quot;</span> &lt;&lt; timestamp;</div>
-<div class="line"><span class="lineno">  155</span>        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">  156</span>      }</div>
-<div class="line"><span class="lineno">  157</span>      <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="classdyno_1_1ThreadsafeImuBuffer.html#ac71268252763622c4644f283eb17047eacd1922f6fc46a6b5524bfa448dfff98d">ThreadsafeImuBuffer::QueryResult::kDataAvailable</a>: {</div>
-<div class="line"><span class="lineno">  158</span>        LOG(FATAL) &lt;&lt; <span class="stringliteral">&quot;We should not be inside this while loop if IMU data is &quot;</span></div>
-<div class="line"><span class="lineno">  159</span>                      <span class="stringliteral">&quot;available...&quot;</span>;</div>
-<div class="line"><span class="lineno">  160</span>        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">  161</span>      }</div>
-<div class="line"><span class="lineno">  162</span>    }</div>
-<div class="line"><span class="lineno">  163</span>  }</div>
-<div class="line"><span class="lineno">  164</span>  <a class="code hl_variable" href="classdyno_1_1DataInterfacePipelineImu.html#aff5cc9ddab5f74961a4cf982a26db284">timestamp_last_sync_</a> = timestamp;</div>
-<div class="line"><span class="lineno">  165</span> </div>
-<div class="line"><span class="lineno">  166</span>  VLOG(10) &lt;&lt; <span class="stringliteral">&quot;////////////////////////////////////////// Creating packet!\n&quot;</span></div>
-<div class="line"><span class="lineno">  167</span>           &lt;&lt; <span class="stringliteral">&quot;STAMPS IMU rows : \n&quot;</span></div>
-<div class="line"><span class="lineno">  168</span>           &lt;&lt; imu_meas-&gt;timestamps_.rows() &lt;&lt; <span class="charliteral">&#39;\n&#39;</span></div>
-<div class="line"><span class="lineno">  169</span>           &lt;&lt; <span class="stringliteral">&quot;STAMPS IMU cols : \n&quot;</span></div>
-<div class="line"><span class="lineno">  170</span>           &lt;&lt; imu_meas-&gt;timestamps_.cols() &lt;&lt; <span class="charliteral">&#39;\n&#39;</span></div>
-<div class="line"><span class="lineno">  171</span>           &lt;&lt; <span class="stringliteral">&quot;STAMPS IMU: \n&quot;</span></div>
-<div class="line"><span class="lineno">  172</span>           &lt;&lt; imu_meas-&gt;timestamps_ &lt;&lt; <span class="charliteral">&#39;\n&#39;</span></div>
-<div class="line"><span class="lineno">  173</span>           &lt;&lt; <span class="stringliteral">&quot;ACCGYR IMU rows : \n&quot;</span></div>
-<div class="line"><span class="lineno">  174</span>           &lt;&lt; imu_meas-&gt;acc_gyr_.rows() &lt;&lt; <span class="charliteral">&#39;\n&#39;</span></div>
-<div class="line"><span class="lineno">  175</span>           &lt;&lt; <span class="stringliteral">&quot;ACCGYR IMU cols : \n&quot;</span></div>
-<div class="line"><span class="lineno">  176</span>           &lt;&lt; imu_meas-&gt;acc_gyr_.cols() &lt;&lt; <span class="charliteral">&#39;\n&#39;</span></div>
-<div class="line"><span class="lineno">  177</span>           &lt;&lt; <span class="stringliteral">&quot;ACCGYR IMU: \n&quot;</span></div>
-<div class="line"><span class="lineno">  178</span>           &lt;&lt; imu_meas-&gt;acc_gyr_;</div>
-<div class="line"><span class="lineno">  179</span> </div>
-<div class="line"><span class="lineno">  180</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  181</span>}</div>
+<p class="definition">Definition at line <a class="el" href="DataInterfacePipeline_8cc_source.html#l00089">89</a> of file <a class="el" href="DataInterfacePipeline_8cc_source.html">DataInterfacePipeline.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   90</span>                                                           {</div>
+<div class="line"><span class="lineno">   91</span>  CHECK_NOTNULL(imu_meas);</div>
+<div class="line"><span class="lineno">   92</span>  CHECK_LT(<a class="code hl_variable" href="classdyno_1_1DataInterfacePipelineImu.html#aff5cc9ddab5f74961a4cf982a26db284">timestamp_last_sync_</a>, timestamp)</div>
+<div class="line"><span class="lineno">   93</span>      &lt;&lt; <span class="stringliteral">&quot;Timestamps out of order:\n&quot;</span></div>
+<div class="line"><span class="lineno">   94</span>      &lt;&lt; <span class="stringliteral">&quot; - Last Frame Timestamp = &quot;</span> &lt;&lt; <a class="code hl_variable" href="classdyno_1_1DataInterfacePipelineImu.html#aff5cc9ddab5f74961a4cf982a26db284">timestamp_last_sync_</a> &lt;&lt; <span class="charliteral">&#39;\n&#39;</span></div>
+<div class="line"><span class="lineno">   95</span>      &lt;&lt; <span class="stringliteral">&quot; - Current Timestamp = &quot;</span> &lt;&lt; timestamp;</div>
+<div class="line"><span class="lineno">   96</span> </div>
+<div class="line"><span class="lineno">   97</span>  <span class="keywordflow">if</span> (<a class="code hl_variable" href="classdyno_1_1DataInterfacePipelineImu.html#a9be43119b2a7aba3afd0ed7accf4253c">imu_buffer_</a>.<a class="code hl_function" href="classdyno_1_1ThreadsafeImuBuffer.html#a250effe6321d200e5df351da69a2cff8">size</a>() == 0) {</div>
+<div class="line"><span class="lineno">   98</span>    VLOG(1) &lt;&lt; <span class="stringliteral">&quot;No IMU measurements available yet, dropping this frame.&quot;</span>;</div>
+<div class="line"><span class="lineno">   99</span>    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">  100</span>  }</div>
+<div class="line"><span class="lineno">  101</span> </div>
+<div class="line"><span class="lineno">  102</span>  <span class="comment">// Extract imu measurements between consecutive frames.</span></div>
+<div class="line"><span class="lineno">  103</span>  <span class="keywordflow">if</span> (<a class="code hl_function" href="namespacedyno.html#adf545b8b790321f0f83e16e7b4927192">dyno::fpEqual</a>(<a class="code hl_variable" href="classdyno_1_1DataInterfacePipelineImu.html#aff5cc9ddab5f74961a4cf982a26db284">timestamp_last_sync_</a>, 0.0)) {</div>
+<div class="line"><span class="lineno">  104</span>    <span class="comment">// TODO(Toni): wouldn&#39;t it be better to get all IMU measurements up to</span></div>
+<div class="line"><span class="lineno">  105</span>    <span class="comment">// this</span></div>
+<div class="line"><span class="lineno">  106</span>    <span class="comment">// timestamp? We should add a method to the IMU buffer for that.</span></div>
+<div class="line"><span class="lineno">  107</span>    VLOG(1) &lt;&lt; <span class="stringliteral">&quot;Skipping first frame, because we do not have a concept of &quot;</span></div>
+<div class="line"><span class="lineno">  108</span>               <span class="stringliteral">&quot;a previous frame timestamp otherwise.&quot;</span>;</div>
+<div class="line"><span class="lineno">  109</span>    <a class="code hl_variable" href="classdyno_1_1DataInterfacePipelineImu.html#aff5cc9ddab5f74961a4cf982a26db284">timestamp_last_sync_</a> = timestamp;</div>
+<div class="line"><span class="lineno">  110</span>    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">  111</span>  }</div>
+<div class="line"><span class="lineno">  112</span> </div>
+<div class="line"><span class="lineno">  113</span>  <a class="code hl_enumeration" href="classdyno_1_1ThreadsafeImuBuffer.html#ac71268252763622c4644f283eb17047e">ThreadsafeImuBuffer::QueryResult</a> query_result =</div>
+<div class="line"><span class="lineno">  114</span>      <a class="code hl_enumvalue" href="classdyno_1_1ThreadsafeImuBuffer.html#ac71268252763622c4644f283eb17047ea55545b14190fd044996ee214f8984f42">ThreadsafeImuBuffer::QueryResult::kDataNeverAvailable</a>;</div>
+<div class="line"><span class="lineno">  115</span>  <span class="keywordtype">bool</span> log_error_once = <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  116</span>  <span class="keywordflow">while</span> (!<a class="code hl_function" href="classdyno_1_1PipelineBase.html#a5c485b024b7b1c710c94303f29ca8e31">MIMO::isShutdown</a>() &amp;&amp;</div>
+<div class="line"><span class="lineno">  117</span>         (query_result = <a class="code hl_variable" href="classdyno_1_1DataInterfacePipelineImu.html#a9be43119b2a7aba3afd0ed7accf4253c">imu_buffer_</a>.<a class="code hl_function" href="classdyno_1_1ThreadsafeImuBuffer.html#a08ffa136ec227e9b34ce7f16fba4c01e">getImuDataInterpolatedUpperBorder</a>(</div>
+<div class="line"><span class="lineno">  118</span>              <a class="code hl_variable" href="classdyno_1_1DataInterfacePipelineImu.html#aff5cc9ddab5f74961a4cf982a26db284">timestamp_last_sync_</a>, timestamp, &amp;imu_meas-&gt;timestamps_,</div>
+<div class="line"><span class="lineno">  119</span>              &amp;imu_meas-&gt;acc_gyr_)) !=</div>
+<div class="line"><span class="lineno">  120</span>             <a class="code hl_enumvalue" href="classdyno_1_1ThreadsafeImuBuffer.html#ac71268252763622c4644f283eb17047eacd1922f6fc46a6b5524bfa448dfff98d">ThreadsafeImuBuffer::QueryResult::kDataAvailable</a>) {</div>
+<div class="line"><span class="lineno">  121</span>    VLOG(1) &lt;&lt; <span class="stringliteral">&quot;No IMU data available. Reason:\n&quot;</span>;</div>
+<div class="line"><span class="lineno">  122</span>    <span class="keywordflow">switch</span> (query_result) {</div>
+<div class="line"><span class="lineno">  123</span>      <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="classdyno_1_1ThreadsafeImuBuffer.html#ac71268252763622c4644f283eb17047ea4eed1ddbec66392dce40d9a8b53e01b8">ThreadsafeImuBuffer::QueryResult::kDataNotYetAvailable</a>: {</div>
+<div class="line"><span class="lineno">  124</span>        <span class="keywordflow">if</span> (log_error_once) {</div>
+<div class="line"><span class="lineno">  125</span>          LOG(WARNING) &lt;&lt; <span class="stringliteral">&quot;Waiting for IMU data...&quot;</span>;</div>
+<div class="line"><span class="lineno">  126</span>          log_error_once = <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">  127</span>        }</div>
+<div class="line"><span class="lineno">  128</span>        <span class="keywordflow">continue</span>;</div>
+<div class="line"><span class="lineno">  129</span>      }</div>
+<div class="line"><span class="lineno">  130</span>      <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="classdyno_1_1ThreadsafeImuBuffer.html#ac71268252763622c4644f283eb17047ea0b2cd9cfc57037b0730a5768b74b454f">ThreadsafeImuBuffer::QueryResult::kQueueShutdown</a>: {</div>
+<div class="line"><span class="lineno">  131</span>        LOG(WARNING)</div>
+<div class="line"><span class="lineno">  132</span>            &lt;&lt; <span class="stringliteral">&quot;IMU buffer was shutdown. Shutting down DataInterfacePipeline.&quot;</span>;</div>
+<div class="line"><span class="lineno">  133</span>        <a class="code hl_function" href="classdyno_1_1PipelineBase.html#a3fe02ed3b9e50f0da3b1619216a1caca">MIMO::shutdown</a>();</div>
+<div class="line"><span class="lineno">  134</span>        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">  135</span>      }</div>
+<div class="line"><span class="lineno">  136</span>      <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="classdyno_1_1ThreadsafeImuBuffer.html#ac71268252763622c4644f283eb17047ea55545b14190fd044996ee214f8984f42">ThreadsafeImuBuffer::QueryResult::kDataNeverAvailable</a>: {</div>
+<div class="line"><span class="lineno">  137</span>        LOG(WARNING)</div>
+<div class="line"><span class="lineno">  138</span>            &lt;&lt; <span class="stringliteral">&quot;Asking for data before start of IMU stream, from timestamp: &quot;</span></div>
+<div class="line"><span class="lineno">  139</span>            &lt;&lt; <a class="code hl_variable" href="classdyno_1_1DataInterfacePipelineImu.html#aff5cc9ddab5f74961a4cf982a26db284">timestamp_last_sync_</a> &lt;&lt; <span class="stringliteral">&quot; to timestamp: &quot;</span> &lt;&lt; timestamp;</div>
+<div class="line"><span class="lineno">  140</span>        <span class="comment">// Ignore frames that happened before the earliest imu data</span></div>
+<div class="line"><span class="lineno">  141</span>        <a class="code hl_variable" href="classdyno_1_1DataInterfacePipelineImu.html#aff5cc9ddab5f74961a4cf982a26db284">timestamp_last_sync_</a> = timestamp;</div>
+<div class="line"><span class="lineno">  142</span>        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">  143</span>      }</div>
+<div class="line"><span class="lineno">  144</span>      <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="classdyno_1_1ThreadsafeImuBuffer.html#ac71268252763622c4644f283eb17047eadae792ae358705b3026f30b6d6c8296a">ThreadsafeImuBuffer::QueryResult::kTooFewMeasurementsAvailable</a>: {</div>
+<div class="line"><span class="lineno">  145</span>        LOG(WARNING) &lt;&lt; <span class="stringliteral">&quot;No IMU measurements here, and IMU data stream already &quot;</span></div>
+<div class="line"><span class="lineno">  146</span>                        <span class="stringliteral">&quot;passed this time region&quot;</span></div>
+<div class="line"><span class="lineno">  147</span>                     &lt;&lt; <span class="stringliteral">&quot;from timestamp: &quot;</span> &lt;&lt; <a class="code hl_variable" href="classdyno_1_1DataInterfacePipelineImu.html#aff5cc9ddab5f74961a4cf982a26db284">timestamp_last_sync_</a></div>
+<div class="line"><span class="lineno">  148</span>                     &lt;&lt; <span class="stringliteral">&quot; to timestamp: &quot;</span> &lt;&lt; timestamp;</div>
+<div class="line"><span class="lineno">  149</span>        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">  150</span>      }</div>
+<div class="line"><span class="lineno">  151</span>      <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="classdyno_1_1ThreadsafeImuBuffer.html#ac71268252763622c4644f283eb17047eacd1922f6fc46a6b5524bfa448dfff98d">ThreadsafeImuBuffer::QueryResult::kDataAvailable</a>: {</div>
+<div class="line"><span class="lineno">  152</span>        LOG(FATAL) &lt;&lt; <span class="stringliteral">&quot;We should not be inside this while loop if IMU data is &quot;</span></div>
+<div class="line"><span class="lineno">  153</span>                      <span class="stringliteral">&quot;available...&quot;</span>;</div>
+<div class="line"><span class="lineno">  154</span>        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">  155</span>      }</div>
+<div class="line"><span class="lineno">  156</span>    }</div>
+<div class="line"><span class="lineno">  157</span>  }</div>
+<div class="line"><span class="lineno">  158</span>  <a class="code hl_variable" href="classdyno_1_1DataInterfacePipelineImu.html#aff5cc9ddab5f74961a4cf982a26db284">timestamp_last_sync_</a> = timestamp;</div>
+<div class="line"><span class="lineno">  159</span> </div>
+<div class="line"><span class="lineno">  160</span>  VLOG(10) &lt;&lt; <span class="stringliteral">&quot;////////////////////////////////////////// Creating packet!\n&quot;</span></div>
+<div class="line"><span class="lineno">  161</span>           &lt;&lt; <span class="stringliteral">&quot;STAMPS IMU rows : \n&quot;</span></div>
+<div class="line"><span class="lineno">  162</span>           &lt;&lt; imu_meas-&gt;timestamps_.rows() &lt;&lt; <span class="charliteral">&#39;\n&#39;</span></div>
+<div class="line"><span class="lineno">  163</span>           &lt;&lt; <span class="stringliteral">&quot;STAMPS IMU cols : \n&quot;</span></div>
+<div class="line"><span class="lineno">  164</span>           &lt;&lt; imu_meas-&gt;timestamps_.cols() &lt;&lt; <span class="charliteral">&#39;\n&#39;</span></div>
+<div class="line"><span class="lineno">  165</span>           &lt;&lt; <span class="stringliteral">&quot;STAMPS IMU: \n&quot;</span></div>
+<div class="line"><span class="lineno">  166</span>           &lt;&lt; imu_meas-&gt;timestamps_ &lt;&lt; <span class="charliteral">&#39;\n&#39;</span></div>
+<div class="line"><span class="lineno">  167</span>           &lt;&lt; <span class="stringliteral">&quot;ACCGYR IMU rows : \n&quot;</span></div>
+<div class="line"><span class="lineno">  168</span>           &lt;&lt; imu_meas-&gt;acc_gyr_.rows() &lt;&lt; <span class="charliteral">&#39;\n&#39;</span></div>
+<div class="line"><span class="lineno">  169</span>           &lt;&lt; <span class="stringliteral">&quot;ACCGYR IMU cols : \n&quot;</span></div>
+<div class="line"><span class="lineno">  170</span>           &lt;&lt; imu_meas-&gt;acc_gyr_.cols() &lt;&lt; <span class="charliteral">&#39;\n&#39;</span></div>
+<div class="line"><span class="lineno">  171</span>           &lt;&lt; <span class="stringliteral">&quot;ACCGYR IMU: \n&quot;</span></div>
+<div class="line"><span class="lineno">  172</span>           &lt;&lt; imu_meas-&gt;acc_gyr_;</div>
+<div class="line"><span class="lineno">  173</span> </div>
+<div class="line"><span class="lineno">  174</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  175</span>}</div>
 <div class="ttc" id="aclassdyno_1_1DataInterfacePipelineImu_html_aff5cc9ddab5f74961a4cf982a26db284"><div class="ttname"><a href="classdyno_1_1DataInterfacePipelineImu.html#aff5cc9ddab5f74961a4cf982a26db284">dyno::DataInterfacePipelineImu::timestamp_last_sync_</a></div><div class="ttdeci">Timestamp timestamp_last_sync_</div><div class="ttdef"><b>Definition:</b> <a href="DataInterfacePipeline_8hpp_source.html#l00120">DataInterfacePipeline.hpp:120</a></div></div>
 <div class="ttc" id="aclassdyno_1_1PipelineBase_html_a3fe02ed3b9e50f0da3b1619216a1caca"><div class="ttname"><a href="classdyno_1_1PipelineBase.html#a3fe02ed3b9e50f0da3b1619216a1caca">dyno::PipelineBase::shutdown</a></div><div class="ttdeci">virtual void shutdown()</div><div class="ttdef"><b>Definition:</b> <a href="PipelineBase_8cc_source.html#l00049">PipelineBase.cc:49</a></div></div>
 <div class="ttc" id="aclassdyno_1_1PipelineBase_html_a5c485b024b7b1c710c94303f29ca8e31"><div class="ttname"><a href="classdyno_1_1PipelineBase.html#a5c485b024b7b1c710c94303f29ca8e31">dyno::PipelineBase::isShutdown</a></div><div class="ttdeci">bool isShutdown() const</div><div class="ttdoc">Returns true if the pipeline has been shutdown by shutdown().</div><div class="ttdef"><b>Definition:</b> <a href="PipelineBase_8hpp_source.html#l00092">PipelineBase.hpp:92</a></div></div>

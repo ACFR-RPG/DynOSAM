@@ -2,7 +2,7 @@
 <area shape="rect" id="node1" title=" " alt="" coords="784,77,935,102"/>
 <area shape="rect" id="node2" href="$structdyno_1_1ImageType_1_1SemanticMask.html#a2c7bb8958ebf6b4965ee040c92abd14d" title="Expected opencv image type for SemanticMask image type." alt="" coords="501,5,704,45"/>
 <area shape="rect" id="node5" href="$structdyno_1_1ImageType_1_1MotionMask.html#aa4eb3d69224167818e52ebda2d119a67" title="Expected opencv image type for MotionMask image type." alt="" coords="492,69,713,109"/>
-<area shape="rect" id="node6" href="$structdyno_1_1ImageType_1_1ClassSegmentation.html#ade690e32cbc6526cc70649232a24cd62" title="Expected opencv image type for ClassSegmentation image type." alt="" coords="469,133,736,173"/>
+<area shape="rect" id="node6" href="$structdyno_1_1ImageType_1_1ClassSegmentation.html#ade690e32cbc6526cc70649232a24cd62" title=" " alt="" coords="469,133,736,173"/>
 <area shape="rect" id="node3" href="$namespacedyno.html#a4222260b2e297cbd6e2df476b0f58aaf" title="From an instance semantic mask (one that satisfies the requirements for a SemanticMask),..." alt="" coords="231,5,421,45"/>
 <area shape="rect" id="node4" href="$classdyno_1_1VirtualKittiMotionSegFolder.html#a5fbe696de81a23607cfb6333a6ff1f94" title=" " alt="" coords="5,5,183,45"/>
 </map>

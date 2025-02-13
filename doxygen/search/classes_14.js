@@ -28,5 +28,6 @@ var searchData=
   ['trerrorpairvector_25',['TRErrorPairVector',['../structdyno_1_1utils_1_1TRErrorPairVector.html',1,'dyno::utils']]],
   ['tuple_5felement_5findex_26',['tuple_element_index',['../structdyno_1_1internal_1_1tuple__element__index.html',1,'dyno::internal']]],
   ['tuple_5felement_5findex_5fhelper_27',['tuple_element_index_helper',['../structdyno_1_1internal_1_1tuple__element__index__helper.html',1,'dyno::internal']]],
-  ['type_5fidentity_28',['type_identity',['../structdyno_1_1internal_1_1type__identity.html',1,'dyno::internal']]]
+  ['type_5fidentity_28',['type_identity',['../structdyno_1_1internal_1_1type__identity.html',1,'dyno::internal']]],
+  ['typeadapter_3c_20dyno_3a_3acameraparams_2c_20sensor_5fmsgs_3a_3amsg_3a_3acamerainfo_20_3e_29',['TypeAdapter&lt; dyno::CameraParams, sensor_msgs::msg::CameraInfo &gt;',['../structrclcpp_1_1TypeAdapter_3_01dyno_1_1CameraParams_00_01sensor__msgs_1_1msg_1_1CameraInfo_01_4.html',1,'rclcpp']]]
 ];

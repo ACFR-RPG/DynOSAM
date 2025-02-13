@@ -125,7 +125,7 @@ $(function() {
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>  options.arguments(non_ros_args);</div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>  options.use_intra_process_comms(<span class="keyword">true</span>);</div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>  rclcpp::executors::SingleThreadedExecutor exec;</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>  rclcpp::executors::MultiThreadedExecutor exec;</div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>  <span class="keyword">auto</span> ros_pipeline = std::make_shared&lt;dyno::DynoPipelineManagerRos&gt;();</div>
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span> </div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>  <span class="keywordflow">if</span> (FLAGS_show_dyno_args) {</div>

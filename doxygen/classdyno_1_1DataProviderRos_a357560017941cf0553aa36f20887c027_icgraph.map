@@ -1,0 +1,4 @@
+<map id="dyno::DataProviderRos::readRosImage" name="dyno::DataProviderRos::readRosImage">
+<area shape="rect" id="node1" title="Helper function to convert a ROS Image message to a CvImageConstPtr via the cv bridge." alt="" coords="224,5,395,45"/>
+<area shape="rect" id="node2" href="$classdyno_1_1DataProviderRos.html#a1b074062e0b3a1fd62fbb32d1cdad91b" title="Helper function to convert a sensor_msgs::msg::Image::ConstSharedPtr&amp; to a cv::Mat with the right dat..." alt="" coords="5,5,176,45"/>
+</map>

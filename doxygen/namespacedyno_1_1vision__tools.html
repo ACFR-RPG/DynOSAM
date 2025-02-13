@@ -173,32 +173,32 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>std::pair&lt;gtsam::Vector3, gtsam::Matrix3&gt; </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="VisionTools_8cc_source.html#l00671">671</a> of file <a class="el" href="VisionTools_8cc_source.html">VisionTools.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  673</span>                        {</div>
-<div class="line"><span class="lineno">  674</span>  <span class="keyword">const</span> <span class="keyword">auto</span> gtsam_camera = camera.<a class="code hl_function" href="classdyno_1_1Camera.html#afa242b874c0c1a185adb8d83a35171c8">getImplCamera</a>();</div>
-<div class="line"><span class="lineno">  675</span>  <span class="keyword">const</span> <span class="keyword">auto</span> keypoint = feature.<a class="code hl_function" href="classdyno_1_1Feature.html#ada9f9980d950874a7a157a82b9921f8a">keypoint</a>();</div>
-<div class="line"><span class="lineno">  676</span> </div>
-<div class="line"><span class="lineno">  677</span>  CHECK(feature.<a class="code hl_function" href="classdyno_1_1Feature.html#ae7d554f489558630f69b617f82c24173">hasDepth</a>());</div>
-<div class="line"><span class="lineno">  678</span>  <span class="keyword">const</span> <span class="keyword">auto</span> depth = feature.<a class="code hl_function" href="classdyno_1_1Feature.html#aa1dad2ea2a931bbccb56ae5b53822943">depth</a>();</div>
-<div class="line"><span class="lineno">  679</span> </div>
-<div class="line"><span class="lineno">  680</span>  gtsam::Matrix32 J_keypoint;</div>
-<div class="line"><span class="lineno">  681</span>  gtsam::Matrix31 J_depth;</div>
-<div class="line"><span class="lineno">  682</span>  gtsam::Point3 landmark = gtsam_camera-&gt;backproject(</div>
-<div class="line"><span class="lineno">  683</span>      keypoint, depth, boost::none, J_keypoint, J_depth, boost::none);</div>
-<div class="line"><span class="lineno">  684</span> </div>
-<div class="line"><span class="lineno">  685</span>  <span class="comment">// form measurement covariance matrices</span></div>
-<div class="line"><span class="lineno">  686</span>  gtsam::Matrix22 pixel_covariance_matrix;</div>
-<div class="line"><span class="lineno">  687</span>  pixel_covariance_matrix &lt;&lt; pixel_sigma, 0.0, 0.0, pixel_sigma;</div>
-<div class="line"><span class="lineno">  688</span> </div>
-<div class="line"><span class="lineno">  689</span>  <span class="comment">// for depth uncertainty, we model it as a quadratic increase with distnace</span></div>
-<div class="line"><span class="lineno">  690</span>  <span class="keywordtype">double</span> depth_covariance = depth_sigma * std::pow(depth, 2);</div>
-<div class="line"><span class="lineno">  691</span> </div>
-<div class="line"><span class="lineno">  692</span>  <span class="comment">// calcualte 3x3 covairance matrix</span></div>
-<div class="line"><span class="lineno">  693</span>  gtsam::Matrix33 covariance =</div>
-<div class="line"><span class="lineno">  694</span>      J_keypoint * pixel_covariance_matrix * J_keypoint.transpose() +</div>
-<div class="line"><span class="lineno">  695</span>      J_depth * depth_covariance * J_depth.transpose();</div>
-<div class="line"><span class="lineno">  696</span>  <span class="keywordflow">return</span> {landmark, covariance};</div>
-<div class="line"><span class="lineno">  697</span>}</div>
+<p class="definition">Definition at line <a class="el" href="VisionTools_8cc_source.html#l00672">672</a> of file <a class="el" href="VisionTools_8cc_source.html">VisionTools.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  674</span>                        {</div>
+<div class="line"><span class="lineno">  675</span>  <span class="keyword">const</span> <span class="keyword">auto</span> gtsam_camera = camera.<a class="code hl_function" href="classdyno_1_1Camera.html#afa242b874c0c1a185adb8d83a35171c8">getImplCamera</a>();</div>
+<div class="line"><span class="lineno">  676</span>  <span class="keyword">const</span> <span class="keyword">auto</span> keypoint = feature.<a class="code hl_function" href="classdyno_1_1Feature.html#ada9f9980d950874a7a157a82b9921f8a">keypoint</a>();</div>
+<div class="line"><span class="lineno">  677</span> </div>
+<div class="line"><span class="lineno">  678</span>  CHECK(feature.<a class="code hl_function" href="classdyno_1_1Feature.html#ae7d554f489558630f69b617f82c24173">hasDepth</a>());</div>
+<div class="line"><span class="lineno">  679</span>  <span class="keyword">const</span> <span class="keyword">auto</span> depth = feature.<a class="code hl_function" href="classdyno_1_1Feature.html#aa1dad2ea2a931bbccb56ae5b53822943">depth</a>();</div>
+<div class="line"><span class="lineno">  680</span> </div>
+<div class="line"><span class="lineno">  681</span>  gtsam::Matrix32 J_keypoint;</div>
+<div class="line"><span class="lineno">  682</span>  gtsam::Matrix31 J_depth;</div>
+<div class="line"><span class="lineno">  683</span>  gtsam::Point3 landmark = gtsam_camera-&gt;backproject(</div>
+<div class="line"><span class="lineno">  684</span>      keypoint, depth, boost::none, J_keypoint, J_depth, boost::none);</div>
+<div class="line"><span class="lineno">  685</span> </div>
+<div class="line"><span class="lineno">  686</span>  <span class="comment">// form measurement covariance matrices</span></div>
+<div class="line"><span class="lineno">  687</span>  gtsam::Matrix22 pixel_covariance_matrix;</div>
+<div class="line"><span class="lineno">  688</span>  pixel_covariance_matrix &lt;&lt; pixel_sigma, 0.0, 0.0, pixel_sigma;</div>
+<div class="line"><span class="lineno">  689</span> </div>
+<div class="line"><span class="lineno">  690</span>  <span class="comment">// for depth uncertainty, we model it as a quadratic increase with distnace</span></div>
+<div class="line"><span class="lineno">  691</span>  <span class="keywordtype">double</span> depth_covariance = depth_sigma * std::pow(depth, 2);</div>
+<div class="line"><span class="lineno">  692</span> </div>
+<div class="line"><span class="lineno">  693</span>  <span class="comment">// calcualte 3x3 covairance matrix</span></div>
+<div class="line"><span class="lineno">  694</span>  gtsam::Matrix33 covariance =</div>
+<div class="line"><span class="lineno">  695</span>      J_keypoint * pixel_covariance_matrix * J_keypoint.transpose() +</div>
+<div class="line"><span class="lineno">  696</span>      J_depth * depth_covariance * J_depth.transpose();</div>
+<div class="line"><span class="lineno">  697</span>  <span class="keywordflow">return</span> {landmark, covariance};</div>
+<div class="line"><span class="lineno">  698</span>}</div>
 <div class="ttc" id="aclassdyno_1_1Camera_html_afa242b874c0c1a185adb8d83a35171c8"><div class="ttname"><a href="classdyno_1_1Camera.html#afa242b874c0c1a185adb8d83a35171c8">dyno::Camera::getImplCamera</a></div><div class="ttdeci">CameraImpl * getImplCamera() const</div><div class="ttdef"><b>Definition:</b> <a href="Camera_8hpp_source.html#l00161">Camera.hpp:161</a></div></div>
 <div class="ttc" id="aclassdyno_1_1Feature_html_aa1dad2ea2a931bbccb56ae5b53822943"><div class="ttname"><a href="classdyno_1_1Feature.html#aa1dad2ea2a931bbccb56ae5b53822943">dyno::Feature::depth</a></div><div class="ttdeci">Depth depth() const</div><div class="ttdoc">Depth of this keypoint (will be Feature::invalid_depth is depth is not set).</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00205">Feature.hpp:205</a></div></div>
 <div class="ttc" id="aclassdyno_1_1Feature_html_ada9f9980d950874a7a157a82b9921f8a"><div class="ttname"><a href="classdyno_1_1Feature.html#ada9f9980d950874a7a157a82b9921f8a">dyno::Feature::keypoint</a></div><div class="ttdeci">Keypoint keypoint() const</div><div class="ttdoc">Gets keypoint observation.</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00105">Feature.hpp:105</a></div></div>
@@ -271,32 +271,32 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="VisionTools_8cc_source.html#l00514">514</a> of file <a class="el" href="VisionTools_8cc_source.html">VisionTools.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  516</span>                                                                       {</div>
-<div class="line"><span class="lineno">  517</span>  cv::Mat thicc_boarder;  <span class="comment">// god im so funny</span></div>
-<div class="line"><span class="lineno">  518</span>  cv::Scalar fill_colour;</div>
-<div class="line"><span class="lineno">  519</span> </div>
-<div class="line"><span class="lineno">  520</span>  <span class="comment">// background should be 255 as we&#39;re can detect in this region and boarder</span></div>
-<div class="line"><span class="lineno">  521</span>  <span class="comment">// region should be zero</span></div>
-<div class="line"><span class="lineno">  522</span>  <span class="keywordflow">if</span> (use_as_feature_detection_mask) {</div>
-<div class="line"><span class="lineno">  523</span>    thicc_boarder = cv::Mat(mask.size(), CV_8U, cv::Scalar(255));</div>
-<div class="line"><span class="lineno">  524</span>    fill_colour = cv::Scalar(0);</div>
-<div class="line"><span class="lineno">  525</span>  } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  526</span>    thicc_boarder = cv::Mat(mask.size(), CV_8U, cv::Scalar(0));</div>
-<div class="line"><span class="lineno">  527</span>    fill_colour = cv::Scalar(255);</div>
-<div class="line"><span class="lineno">  528</span>  }</div>
-<div class="line"><span class="lineno">  529</span> </div>
-<div class="line"><span class="lineno">  530</span>  <span class="keyword">const</span> ObjectIds instance_labels = vision_tools::getObjectLabels(mask);</div>
-<div class="line"><span class="lineno">  531</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> object_id : instance_labels) {</div>
-<div class="line"><span class="lineno">  532</span>    std::vector&lt;std::vector&lt;cv::Point&gt;&gt; detected_contours;</div>
-<div class="line"><span class="lineno">  533</span>    vision_tools::findObjectBoundingBox(mask, object_id, detected_contours);</div>
-<div class="line"><span class="lineno">  534</span> </div>
-<div class="line"><span class="lineno">  535</span>    cv::drawContours(thicc_boarder, detected_contours, -1, fill_colour,</div>
-<div class="line"><span class="lineno">  536</span>                     thickness);</div>
-<div class="line"><span class="lineno">  537</span>  }</div>
-<div class="line"><span class="lineno">  538</span> </div>
-<div class="line"><span class="lineno">  539</span>  boundary_mask = thicc_boarder;</div>
-<div class="line"><span class="lineno">  540</span>}</div>
+<p class="definition">Definition at line <a class="el" href="VisionTools_8cc_source.html#l00515">515</a> of file <a class="el" href="VisionTools_8cc_source.html">VisionTools.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  517</span>                                                                       {</div>
+<div class="line"><span class="lineno">  518</span>  cv::Mat thicc_boarder;  <span class="comment">// god im so funny</span></div>
+<div class="line"><span class="lineno">  519</span>  cv::Scalar fill_colour;</div>
+<div class="line"><span class="lineno">  520</span> </div>
+<div class="line"><span class="lineno">  521</span>  <span class="comment">// background should be 255 as we&#39;re can detect in this region and boarder</span></div>
+<div class="line"><span class="lineno">  522</span>  <span class="comment">// region should be zero</span></div>
+<div class="line"><span class="lineno">  523</span>  <span class="keywordflow">if</span> (use_as_feature_detection_mask) {</div>
+<div class="line"><span class="lineno">  524</span>    thicc_boarder = cv::Mat(mask.size(), CV_8U, cv::Scalar(255));</div>
+<div class="line"><span class="lineno">  525</span>    fill_colour = cv::Scalar(0);</div>
+<div class="line"><span class="lineno">  526</span>  } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  527</span>    thicc_boarder = cv::Mat(mask.size(), CV_8U, cv::Scalar(0));</div>
+<div class="line"><span class="lineno">  528</span>    fill_colour = cv::Scalar(255);</div>
+<div class="line"><span class="lineno">  529</span>  }</div>
+<div class="line"><span class="lineno">  530</span> </div>
+<div class="line"><span class="lineno">  531</span>  <span class="keyword">const</span> ObjectIds instance_labels = vision_tools::getObjectLabels(mask);</div>
+<div class="line"><span class="lineno">  532</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> object_id : instance_labels) {</div>
+<div class="line"><span class="lineno">  533</span>    std::vector&lt;std::vector&lt;cv::Point&gt;&gt; detected_contours;</div>
+<div class="line"><span class="lineno">  534</span>    vision_tools::findObjectBoundingBox(mask, object_id, detected_contours);</div>
+<div class="line"><span class="lineno">  535</span> </div>
+<div class="line"><span class="lineno">  536</span>    cv::drawContours(thicc_boarder, detected_contours, -1, fill_colour,</div>
+<div class="line"><span class="lineno">  537</span>                     thickness);</div>
+<div class="line"><span class="lineno">  538</span>  }</div>
+<div class="line"><span class="lineno">  539</span> </div>
+<div class="line"><span class="lineno">  540</span>  boundary_mask = thicc_boarder;</div>
+<div class="line"><span class="lineno">  541</span>}</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="namespacedyno_1_1vision__tools.html#a01601f2fba95a79f4ecaa11b89286d99">findObjectBoundingBox()</a>, and <a class="el" href="namespacedyno_1_1vision__tools.html#a3a09fe6c15aeb5e18979dc27d68c4616">getObjectLabels()</a>.</p>
 
@@ -360,46 +360,46 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>cv::Mat </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="VisionTools_8cc_source.html#l00598">598</a> of file <a class="el" href="VisionTools_8cc_source.html">VisionTools.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  599</span>                                  {</div>
-<div class="line"><span class="lineno">  600</span>  <span class="keyword">const</span> cv::Mat&amp; depth_map = depth_image;</div>
-<div class="line"><span class="lineno">  601</span>  <span class="keywordtype">int</span> <a class="code hl_function" href="namespacedyno.html#a362927fda6438780973f55111b77455c">H</a> = depth_map.rows;</div>
-<div class="line"><span class="lineno">  602</span>  <span class="keywordtype">int</span> W = depth_map.cols;</div>
-<div class="line"><span class="lineno">  603</span> </div>
-<div class="line"><span class="lineno">  604</span>  <span class="comment">// Camera intrinsic parameters</span></div>
-<div class="line"><span class="lineno">  605</span>  <span class="keywordtype">double</span> fx = K.at&lt;<span class="keywordtype">double</span>&gt;(0, 0);</div>
-<div class="line"><span class="lineno">  606</span>  <span class="keywordtype">double</span> fy = K.at&lt;<span class="keywordtype">double</span>&gt;(1, 1);</div>
-<div class="line"><span class="lineno">  607</span>  <span class="keywordtype">double</span> cx = K.at&lt;<span class="keywordtype">double</span>&gt;(0, 2);</div>
-<div class="line"><span class="lineno">  608</span>  <span class="keywordtype">double</span> cy = K.at&lt;<span class="keywordtype">double</span>&gt;(1, 2);</div>
-<div class="line"><span class="lineno">  609</span> </div>
-<div class="line"><span class="lineno">  610</span>  <span class="comment">// Generate pixel grid</span></div>
-<div class="line"><span class="lineno">  611</span>  cv::Mat u_grid, v_grid;</div>
-<div class="line"><span class="lineno">  612</span>  cv::Mat u = cv::Mat::zeros(H, W, CV_64F);</div>
-<div class="line"><span class="lineno">  613</span>  cv::Mat v = cv::Mat::zeros(H, W, CV_64F);</div>
-<div class="line"><span class="lineno">  614</span> </div>
-<div class="line"><span class="lineno">  615</span>  <span class="keywordflow">for</span> (<span class="keywordtype">int</span> y = 0; y &lt; <a class="code hl_function" href="namespacedyno.html#a362927fda6438780973f55111b77455c">H</a>; ++y) {</div>
-<div class="line"><span class="lineno">  616</span>    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> x = 0; x &lt; W; ++x) {</div>
-<div class="line"><span class="lineno">  617</span>      u.at&lt;<span class="keywordtype">double</span>&gt;(y, x) = <span class="keyword">static_cast&lt;</span><span class="keywordtype">double</span><span class="keyword">&gt;</span>(x);</div>
-<div class="line"><span class="lineno">  618</span>      v.at&lt;<span class="keywordtype">double</span>&gt;(y, x) = <span class="keyword">static_cast&lt;</span><span class="keywordtype">double</span><span class="keyword">&gt;</span>(y);</div>
-<div class="line"><span class="lineno">  619</span>    }</div>
-<div class="line"><span class="lineno">  620</span>  }</div>
-<div class="line"><span class="lineno">  621</span> </div>
-<div class="line"><span class="lineno">  622</span>  <span class="comment">// Normalize pixel coordinates by the intrinsic matrix</span></div>
-<div class="line"><span class="lineno">  623</span>  cv::Mat X_norm = (u - cx) / fx;</div>
-<div class="line"><span class="lineno">  624</span>  cv::Mat Y_norm = (v - cy) / fy;</div>
-<div class="line"><span class="lineno">  625</span> </div>
-<div class="line"><span class="lineno">  626</span>  <span class="comment">// Depth map scaling for 3D coordinates</span></div>
-<div class="line"><span class="lineno">  627</span>  cv::Mat X_3D = X_norm.mul(depth_map);</div>
-<div class="line"><span class="lineno">  628</span>  cv::Mat Y_3D = Y_norm.mul(depth_map);</div>
-<div class="line"><span class="lineno">  629</span> </div>
-<div class="line"><span class="lineno">  630</span>  cv::Mat Z_3D = depth_map.clone();</div>
-<div class="line"><span class="lineno">  631</span> </div>
-<div class="line"><span class="lineno">  632</span>  std::vector&lt;cv::Mat&gt; channels = {X_3D, Y_3D, Z_3D};</div>
-<div class="line"><span class="lineno">  633</span>  cv::Mat point_cloud;</div>
-<div class="line"><span class="lineno">  634</span>  cv::merge(channels, point_cloud);</div>
-<div class="line"><span class="lineno">  635</span> </div>
-<div class="line"><span class="lineno">  636</span>  <span class="keywordflow">return</span> point_cloud;  <span class="comment">// 3-channel float matrix (H x W x 3)</span></div>
-<div class="line"><span class="lineno">  637</span>}</div>
+<p class="definition">Definition at line <a class="el" href="VisionTools_8cc_source.html#l00599">599</a> of file <a class="el" href="VisionTools_8cc_source.html">VisionTools.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  600</span>                                  {</div>
+<div class="line"><span class="lineno">  601</span>  <span class="keyword">const</span> cv::Mat&amp; depth_map = depth_image;</div>
+<div class="line"><span class="lineno">  602</span>  <span class="keywordtype">int</span> <a class="code hl_function" href="namespacedyno.html#a362927fda6438780973f55111b77455c">H</a> = depth_map.rows;</div>
+<div class="line"><span class="lineno">  603</span>  <span class="keywordtype">int</span> W = depth_map.cols;</div>
+<div class="line"><span class="lineno">  604</span> </div>
+<div class="line"><span class="lineno">  605</span>  <span class="comment">// Camera intrinsic parameters</span></div>
+<div class="line"><span class="lineno">  606</span>  <span class="keywordtype">double</span> fx = K.at&lt;<span class="keywordtype">double</span>&gt;(0, 0);</div>
+<div class="line"><span class="lineno">  607</span>  <span class="keywordtype">double</span> fy = K.at&lt;<span class="keywordtype">double</span>&gt;(1, 1);</div>
+<div class="line"><span class="lineno">  608</span>  <span class="keywordtype">double</span> cx = K.at&lt;<span class="keywordtype">double</span>&gt;(0, 2);</div>
+<div class="line"><span class="lineno">  609</span>  <span class="keywordtype">double</span> cy = K.at&lt;<span class="keywordtype">double</span>&gt;(1, 2);</div>
+<div class="line"><span class="lineno">  610</span> </div>
+<div class="line"><span class="lineno">  611</span>  <span class="comment">// Generate pixel grid</span></div>
+<div class="line"><span class="lineno">  612</span>  cv::Mat u_grid, v_grid;</div>
+<div class="line"><span class="lineno">  613</span>  cv::Mat u = cv::Mat::zeros(H, W, CV_64F);</div>
+<div class="line"><span class="lineno">  614</span>  cv::Mat v = cv::Mat::zeros(H, W, CV_64F);</div>
+<div class="line"><span class="lineno">  615</span> </div>
+<div class="line"><span class="lineno">  616</span>  <span class="keywordflow">for</span> (<span class="keywordtype">int</span> y = 0; y &lt; <a class="code hl_function" href="namespacedyno.html#a362927fda6438780973f55111b77455c">H</a>; ++y) {</div>
+<div class="line"><span class="lineno">  617</span>    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> x = 0; x &lt; W; ++x) {</div>
+<div class="line"><span class="lineno">  618</span>      u.at&lt;<span class="keywordtype">double</span>&gt;(y, x) = <span class="keyword">static_cast&lt;</span><span class="keywordtype">double</span><span class="keyword">&gt;</span>(x);</div>
+<div class="line"><span class="lineno">  619</span>      v.at&lt;<span class="keywordtype">double</span>&gt;(y, x) = <span class="keyword">static_cast&lt;</span><span class="keywordtype">double</span><span class="keyword">&gt;</span>(y);</div>
+<div class="line"><span class="lineno">  620</span>    }</div>
+<div class="line"><span class="lineno">  621</span>  }</div>
+<div class="line"><span class="lineno">  622</span> </div>
+<div class="line"><span class="lineno">  623</span>  <span class="comment">// Normalize pixel coordinates by the intrinsic matrix</span></div>
+<div class="line"><span class="lineno">  624</span>  cv::Mat X_norm = (u - cx) / fx;</div>
+<div class="line"><span class="lineno">  625</span>  cv::Mat Y_norm = (v - cy) / fy;</div>
+<div class="line"><span class="lineno">  626</span> </div>
+<div class="line"><span class="lineno">  627</span>  <span class="comment">// Depth map scaling for 3D coordinates</span></div>
+<div class="line"><span class="lineno">  628</span>  cv::Mat X_3D = X_norm.mul(depth_map);</div>
+<div class="line"><span class="lineno">  629</span>  cv::Mat Y_3D = Y_norm.mul(depth_map);</div>
+<div class="line"><span class="lineno">  630</span> </div>
+<div class="line"><span class="lineno">  631</span>  cv::Mat Z_3D = depth_map.clone();</div>
+<div class="line"><span class="lineno">  632</span> </div>
+<div class="line"><span class="lineno">  633</span>  std::vector&lt;cv::Mat&gt; channels = {X_3D, Y_3D, Z_3D};</div>
+<div class="line"><span class="lineno">  634</span>  cv::Mat point_cloud;</div>
+<div class="line"><span class="lineno">  635</span>  cv::merge(channels, point_cloud);</div>
+<div class="line"><span class="lineno">  636</span> </div>
+<div class="line"><span class="lineno">  637</span>  <span class="keywordflow">return</span> point_cloud;  <span class="comment">// 3-channel float matrix (H x W x 3)</span></div>
+<div class="line"><span class="lineno">  638</span>}</div>
 <div class="ttc" id="anamespacedyno_html_a362927fda6438780973f55111b77455c"><div class="ttname"><a href="namespacedyno.html#a362927fda6438780973f55111b77455c">dyno::H</a></div><div class="ttdeci">gtsam::Key H(unsigned char label, std::uint64_t j)</div><div class="ttdef"><b>Definition:</b> <a href="BackendDefinitions_8hpp_source.html#l00063">BackendDefinitions.hpp:63</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="namespacedyno.html#a362927fda6438780973f55111b77455c">dyno::H()</a>.</p>
@@ -473,15 +473,15 @@ Here is the caller graph for this function:</div>
 <dd>
 false </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="VisionTools_8cc_source.html#l00478">478</a> of file <a class="el" href="VisionTools_8cc_source.html">VisionTools.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  479</span>                                                  {</div>
-<div class="line"><span class="lineno">  480</span>  std::vector&lt;std::vector&lt;cv::Point&gt;&gt; detected_contours;</div>
-<div class="line"><span class="lineno">  481</span>  <span class="keyword">auto</span> result =</div>
-<div class="line"><span class="lineno">  482</span>      <a class="code hl_function" href="namespacedyno_1_1vision__tools.html#a01601f2fba95a79f4ecaa11b89286d99">findObjectBoundingBox</a>(mask, object_id, detected_rect, detected_contours);</div>
-<div class="line"><span class="lineno">  483</span>  (void)detected_contours;</div>
-<div class="line"><span class="lineno">  484</span>  <span class="keywordflow">return</span> result;</div>
-<div class="line"><span class="lineno">  485</span>}</div>
-<div class="ttc" id="anamespacedyno_1_1vision__tools_html_a01601f2fba95a79f4ecaa11b89286d99"><div class="ttname"><a href="namespacedyno_1_1vision__tools.html#a01601f2fba95a79f4ecaa11b89286d99">dyno::vision_tools::findObjectBoundingBox</a></div><div class="ttdeci">bool findObjectBoundingBox(const cv::Mat &amp;mask, ObjectId object_id, cv::Rect &amp;detected_rect, std::vector&lt; std::vector&lt; cv::Point &gt; &gt; &amp;detected_contours)</div><div class="ttdoc">From a instance/semantic mask type img, construct the bounding box for the mask of object_id.</div><div class="ttdef"><b>Definition:</b> <a href="VisionTools_8cc_source.html#l00439">VisionTools.cc:439</a></div></div>
+<p class="definition">Definition at line <a class="el" href="VisionTools_8cc_source.html#l00479">479</a> of file <a class="el" href="VisionTools_8cc_source.html">VisionTools.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  480</span>                                                  {</div>
+<div class="line"><span class="lineno">  481</span>  std::vector&lt;std::vector&lt;cv::Point&gt;&gt; detected_contours;</div>
+<div class="line"><span class="lineno">  482</span>  <span class="keyword">auto</span> result =</div>
+<div class="line"><span class="lineno">  483</span>      <a class="code hl_function" href="namespacedyno_1_1vision__tools.html#a01601f2fba95a79f4ecaa11b89286d99">findObjectBoundingBox</a>(mask, object_id, detected_rect, detected_contours);</div>
+<div class="line"><span class="lineno">  484</span>  (void)detected_contours;</div>
+<div class="line"><span class="lineno">  485</span>  <span class="keywordflow">return</span> result;</div>
+<div class="line"><span class="lineno">  486</span>}</div>
+<div class="ttc" id="anamespacedyno_1_1vision__tools_html_a01601f2fba95a79f4ecaa11b89286d99"><div class="ttname"><a href="namespacedyno_1_1vision__tools.html#a01601f2fba95a79f4ecaa11b89286d99">dyno::vision_tools::findObjectBoundingBox</a></div><div class="ttdeci">bool findObjectBoundingBox(const cv::Mat &amp;mask, ObjectId object_id, cv::Rect &amp;detected_rect, std::vector&lt; std::vector&lt; cv::Point &gt; &gt; &amp;detected_contours)</div><div class="ttdoc">From a instance/semantic mask type img, construct the bounding box for the mask of object_id.</div><div class="ttdef"><b>Definition:</b> <a href="VisionTools_8cc_source.html#l00440">VisionTools.cc:440</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="namespacedyno_1_1vision__tools.html#a01601f2fba95a79f4ecaa11b89286d99">findObjectBoundingBox()</a>.</p>
 <div class="dynheader">
@@ -549,43 +549,43 @@ Here is the call graph for this function:</div>
 <dd>
 false </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="VisionTools_8cc_source.html#l00439">439</a> of file <a class="el" href="VisionTools_8cc_source.html">VisionTools.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  441</span>                                                      {</div>
-<div class="line"><span class="lineno">  442</span>  cv::Mat mask_copy = mask.clone();</div>
-<div class="line"><span class="lineno">  443</span> </div>
-<div class="line"><span class="lineno">  444</span>  cv::Mat obj_mask = (mask_copy == object_id);</div>
-<div class="line"><span class="lineno">  445</span>  cv::Mat dilated_obj_mask;</div>
-<div class="line"><span class="lineno">  446</span>  <span class="comment">// dilate to fill any small holes in the mask to get a more complete set of</span></div>
-<div class="line"><span class="lineno">  447</span>  <span class="comment">// contours</span></div>
-<div class="line"><span class="lineno">  448</span>  cv::Mat dilate_element = cv::getStructuringElement(</div>
-<div class="line"><span class="lineno">  449</span>      cv::MORPH_RECT, cv::Size(1, 11));  <span class="comment">// a rectangle of 1*5</span></div>
-<div class="line"><span class="lineno">  450</span>  cv::dilate(obj_mask, dilated_obj_mask, dilate_element, cv::Point(-1, -1));</div>
-<div class="line"><span class="lineno">  451</span> </div>
-<div class="line"><span class="lineno">  452</span>  std::vector&lt;std::vector&lt;cv::Point&gt;&gt; contours;</div>
-<div class="line"><span class="lineno">  453</span>  std::vector&lt;cv::Vec4i&gt; hierarchy;</div>
-<div class="line"><span class="lineno">  454</span>  cv::findContours(dilated_obj_mask, contours, hierarchy, cv::RETR_TREE,</div>
-<div class="line"><span class="lineno">  455</span>                   cv::CHAIN_APPROX_NONE);</div>
-<div class="line"><span class="lineno">  456</span> </div>
-<div class="line"><span class="lineno">  457</span>  detected_contours = contours;</div>
-<div class="line"><span class="lineno">  458</span> </div>
-<div class="line"><span class="lineno">  459</span>  <span class="keywordflow">if</span> (contours.empty()) {</div>
-<div class="line"><span class="lineno">  460</span>    detected_rect = cv::Rect();</div>
-<div class="line"><span class="lineno">  461</span>    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">  462</span>  } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (contours.size() == 1u) {</div>
-<div class="line"><span class="lineno">  463</span>    detected_rect = cv::boundingRect(contours.at(0));</div>
-<div class="line"><span class="lineno">  464</span>  } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  465</span>    std::vector&lt;cv::Rect&gt; rectangles;</div>
-<div class="line"><span class="lineno">  466</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> it : contours) {</div>
-<div class="line"><span class="lineno">  467</span>      rectangles.push_back(cv::boundingRect(it));</div>
-<div class="line"><span class="lineno">  468</span>    }</div>
-<div class="line"><span class="lineno">  469</span>    cv::Rect merged_rect = rectangles[0];</div>
-<div class="line"><span class="lineno">  470</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; r : rectangles) {</div>
-<div class="line"><span class="lineno">  471</span>      merged_rect |= r;</div>
-<div class="line"><span class="lineno">  472</span>    }</div>
-<div class="line"><span class="lineno">  473</span>    detected_rect = merged_rect;</div>
-<div class="line"><span class="lineno">  474</span>  }</div>
-<div class="line"><span class="lineno">  475</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  476</span>}</div>
+<p class="definition">Definition at line <a class="el" href="VisionTools_8cc_source.html#l00440">440</a> of file <a class="el" href="VisionTools_8cc_source.html">VisionTools.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  442</span>                                                      {</div>
+<div class="line"><span class="lineno">  443</span>  cv::Mat mask_copy = mask.clone();</div>
+<div class="line"><span class="lineno">  444</span> </div>
+<div class="line"><span class="lineno">  445</span>  cv::Mat obj_mask = (mask_copy == object_id);</div>
+<div class="line"><span class="lineno">  446</span>  cv::Mat dilated_obj_mask;</div>
+<div class="line"><span class="lineno">  447</span>  <span class="comment">// dilate to fill any small holes in the mask to get a more complete set of</span></div>
+<div class="line"><span class="lineno">  448</span>  <span class="comment">// contours</span></div>
+<div class="line"><span class="lineno">  449</span>  cv::Mat dilate_element = cv::getStructuringElement(</div>
+<div class="line"><span class="lineno">  450</span>      cv::MORPH_RECT, cv::Size(1, 11));  <span class="comment">// a rectangle of 1*5</span></div>
+<div class="line"><span class="lineno">  451</span>  cv::dilate(obj_mask, dilated_obj_mask, dilate_element, cv::Point(-1, -1));</div>
+<div class="line"><span class="lineno">  452</span> </div>
+<div class="line"><span class="lineno">  453</span>  std::vector&lt;std::vector&lt;cv::Point&gt;&gt; contours;</div>
+<div class="line"><span class="lineno">  454</span>  std::vector&lt;cv::Vec4i&gt; hierarchy;</div>
+<div class="line"><span class="lineno">  455</span>  cv::findContours(dilated_obj_mask, contours, hierarchy, cv::RETR_TREE,</div>
+<div class="line"><span class="lineno">  456</span>                   cv::CHAIN_APPROX_NONE);</div>
+<div class="line"><span class="lineno">  457</span> </div>
+<div class="line"><span class="lineno">  458</span>  detected_contours = contours;</div>
+<div class="line"><span class="lineno">  459</span> </div>
+<div class="line"><span class="lineno">  460</span>  <span class="keywordflow">if</span> (contours.empty()) {</div>
+<div class="line"><span class="lineno">  461</span>    detected_rect = cv::Rect();</div>
+<div class="line"><span class="lineno">  462</span>    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">  463</span>  } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (contours.size() == 1u) {</div>
+<div class="line"><span class="lineno">  464</span>    detected_rect = cv::boundingRect(contours.at(0));</div>
+<div class="line"><span class="lineno">  465</span>  } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  466</span>    std::vector&lt;cv::Rect&gt; rectangles;</div>
+<div class="line"><span class="lineno">  467</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> it : contours) {</div>
+<div class="line"><span class="lineno">  468</span>      rectangles.push_back(cv::boundingRect(it));</div>
+<div class="line"><span class="lineno">  469</span>    }</div>
+<div class="line"><span class="lineno">  470</span>    cv::Rect merged_rect = rectangles[0];</div>
+<div class="line"><span class="lineno">  471</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; r : rectangles) {</div>
+<div class="line"><span class="lineno">  472</span>      merged_rect |= r;</div>
+<div class="line"><span class="lineno">  473</span>    }</div>
+<div class="line"><span class="lineno">  474</span>    detected_rect = merged_rect;</div>
+<div class="line"><span class="lineno">  475</span>  }</div>
+<div class="line"><span class="lineno">  476</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  477</span>}</div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1ClusterSlamAllLoader.html#a074af7358c98d715599460ca2671ecc4">dyno::ClusterSlamAllLoader::associateDetectedBBWithObject()</a>, <a class="el" href="namespacedyno_1_1vision__tools.html#a2c6285cb428d1df8a2ea1071d9a06757">computeObjectMaskBoundaryMask()</a>, <a class="el" href="classdyno_1_1Frame.html#ab038b536516e42beb788f1b794801270">dyno::Frame::constructDynamicObservations()</a>, <a class="el" href="namespacedyno_1_1vision__tools.html#a46d0411291384b813e022cf32c66a82b">findObjectBoundingBox()</a>, and <a class="el" href="classdyno_1_1ByteObjectTracker.html#aeb79dc19fb881160be780b9f4a2b2240">dyno::ByteObjectTracker::track()</a>.</p>
 <div class="dynheader">
@@ -653,14 +653,14 @@ Here is the caller graph for this function:</div>
 <dd>
 false </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="VisionTools_8cc_source.html#l00487">487</a> of file <a class="el" href="VisionTools_8cc_source.html">VisionTools.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  489</span>                                                      {</div>
-<div class="line"><span class="lineno">  490</span>  cv::Rect detected_rect;</div>
-<div class="line"><span class="lineno">  491</span>  <span class="keyword">auto</span> result =</div>
-<div class="line"><span class="lineno">  492</span>      <a class="code hl_function" href="namespacedyno_1_1vision__tools.html#a01601f2fba95a79f4ecaa11b89286d99">findObjectBoundingBox</a>(mask, object_id, detected_rect, detected_contours);</div>
-<div class="line"><span class="lineno">  493</span>  (void)detected_rect;</div>
-<div class="line"><span class="lineno">  494</span>  <span class="keywordflow">return</span> result;</div>
-<div class="line"><span class="lineno">  495</span>}</div>
+<p class="definition">Definition at line <a class="el" href="VisionTools_8cc_source.html#l00488">488</a> of file <a class="el" href="VisionTools_8cc_source.html">VisionTools.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  490</span>                                                      {</div>
+<div class="line"><span class="lineno">  491</span>  cv::Rect detected_rect;</div>
+<div class="line"><span class="lineno">  492</span>  <span class="keyword">auto</span> result =</div>
+<div class="line"><span class="lineno">  493</span>      <a class="code hl_function" href="namespacedyno_1_1vision__tools.html#a01601f2fba95a79f4ecaa11b89286d99">findObjectBoundingBox</a>(mask, object_id, detected_rect, detected_contours);</div>
+<div class="line"><span class="lineno">  494</span>  (void)detected_rect;</div>
+<div class="line"><span class="lineno">  495</span>  <span class="keywordflow">return</span> result;</div>
+<div class="line"><span class="lineno">  496</span>}</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="namespacedyno_1_1vision__tools.html#a01601f2fba95a79f4ecaa11b89286d99">findObjectBoundingBox()</a>.</p>
 <div class="dynheader">
@@ -792,20 +792,21 @@ Here is the caller graph for this function:</div>
 
 <p class="definition">Definition at line <a class="el" href="VisionTools_8cc_source.html#l00069">69</a> of file <a class="el" href="VisionTools_8cc_source.html">VisionTools.cc</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">   69</span>                                              {</div>
-<div class="line"><span class="lineno">   70</span>  <span class="comment">// TODO: this could be optimised by mapping the data directly to a std::set?</span></div>
-<div class="line"><span class="lineno">   71</span>  std::set&lt;ObjectId&gt; unique_labels;</div>
-<div class="line"><span class="lineno">   72</span>  <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; image.rows; i++) {</div>
-<div class="line"><span class="lineno">   73</span>    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> j = 0; j &lt; image.cols; j++) {</div>
-<div class="line"><span class="lineno">   74</span>      <span class="keyword">const</span> <a class="code hl_typedef" href="namespacedyno.html#a38bb86e4154b86428b8d133be03fb2b5">ObjectId</a> label = image.at&lt;<a class="code hl_typedef" href="namespacedyno.html#a38bb86e4154b86428b8d133be03fb2b5">ObjectId</a>&gt;(i, j);</div>
-<div class="line"><span class="lineno">   75</span> </div>
-<div class="line"><span class="lineno">   76</span>      <span class="keywordflow">if</span> (label != background_label) {</div>
-<div class="line"><span class="lineno">   77</span>        unique_labels.insert(label);</div>
-<div class="line"><span class="lineno">   78</span>      }</div>
-<div class="line"><span class="lineno">   79</span>    }</div>
-<div class="line"><span class="lineno">   80</span>  }</div>
-<div class="line"><span class="lineno">   81</span> </div>
-<div class="line"><span class="lineno">   82</span>  <span class="keywordflow">return</span> <a class="code hl_typedef" href="namespacedyno.html#ae777b079c377ffa066d89051ee0cc623">ObjectIds</a>(unique_labels.begin(), unique_labels.end());</div>
-<div class="line"><span class="lineno">   83</span>}</div>
+<div class="line"><span class="lineno">   70</span>  CHECK(!image.empty());</div>
+<div class="line"><span class="lineno">   71</span>  <span class="comment">// TODO: this could be optimised by mapping the data directly to a std::set?</span></div>
+<div class="line"><span class="lineno">   72</span>  std::set&lt;ObjectId&gt; unique_labels;</div>
+<div class="line"><span class="lineno">   73</span>  <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; image.rows; i++) {</div>
+<div class="line"><span class="lineno">   74</span>    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> j = 0; j &lt; image.cols; j++) {</div>
+<div class="line"><span class="lineno">   75</span>      <span class="keyword">const</span> <a class="code hl_typedef" href="namespacedyno.html#a38bb86e4154b86428b8d133be03fb2b5">ObjectId</a> label = image.at&lt;<a class="code hl_typedef" href="namespacedyno.html#a38bb86e4154b86428b8d133be03fb2b5">ObjectId</a>&gt;(i, j);</div>
+<div class="line"><span class="lineno">   76</span> </div>
+<div class="line"><span class="lineno">   77</span>      <span class="keywordflow">if</span> (label != background_label) {</div>
+<div class="line"><span class="lineno">   78</span>        unique_labels.insert(label);</div>
+<div class="line"><span class="lineno">   79</span>      }</div>
+<div class="line"><span class="lineno">   80</span>    }</div>
+<div class="line"><span class="lineno">   81</span>  }</div>
+<div class="line"><span class="lineno">   82</span> </div>
+<div class="line"><span class="lineno">   83</span>  <span class="keywordflow">return</span> <a class="code hl_typedef" href="namespacedyno.html#ae777b079c377ffa066d89051ee0cc623">ObjectIds</a>(unique_labels.begin(), unique_labels.end());</div>
+<div class="line"><span class="lineno">   84</span>}</div>
 <div class="ttc" id="anamespacedyno_html_a38bb86e4154b86428b8d133be03fb2b5"><div class="ttname"><a href="namespacedyno.html#a38bb86e4154b86428b8d133be03fb2b5">dyno::ObjectId</a></div><div class="ttdeci">int ObjectId</div><div class="ttdoc">Discrete object id, j.</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00068">Types.hpp:68</a></div></div>
 <div class="ttc" id="anamespacedyno_html_ae777b079c377ffa066d89051ee0cc623"><div class="ttname"><a href="namespacedyno.html#ae777b079c377ffa066d89051ee0cc623">dyno::ObjectIds</a></div><div class="ttdeci">std::vector&lt; ObjectId &gt; ObjectIds</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00069">Types.hpp:69</a></div></div>
 </div><!-- fragment -->
@@ -869,36 +870,36 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>gtsam::FastMap&lt;ObjectId, Histogram&gt; </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="VisionTools_8cc_source.html#l00567">567</a> of file <a class="el" href="VisionTools_8cc_source.html">VisionTools.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  568</span>                                                         {</div>
-<div class="line"><span class="lineno">  569</span>  <span class="comment">// one for every object + 1 for static points</span></div>
-<div class="line"><span class="lineno">  570</span>  gtsam::FastMap&lt;ObjectId, Histogram&gt; histograms;</div>
-<div class="line"><span class="lineno">  571</span> </div>
-<div class="line"><span class="lineno">  572</span>  <span class="comment">// collect dynamic features</span></div>
-<div class="line"><span class="lineno">  573</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [object_id, observations] : frame-&gt;getObjectObservations()) {</div>
-<div class="line"><span class="lineno">  574</span>    <a class="code hl_class" href="classdyno_1_1Histogram.html">Histogram</a> hist(bh::make_histogram(bh::axis::variable&lt;&gt;(bins)));</div>
-<div class="line"><span class="lineno">  575</span>    hist.name_ = <span class="stringliteral">&quot;tacklet-length-&quot;</span> + std::to_string(object_id);</div>
-<div class="line"><span class="lineno">  576</span> </div>
-<div class="line"><span class="lineno">  577</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> tracklet_id : observations.object_features_) {</div>
-<div class="line"><span class="lineno">  578</span>      <span class="keyword">const</span> Feature::Ptr feature = frame-&gt;at(tracklet_id);</div>
-<div class="line"><span class="lineno">  579</span>      CHECK(feature);</div>
-<div class="line"><span class="lineno">  580</span>      <span class="keywordflow">if</span> (feature-&gt;usable()) {</div>
-<div class="line"><span class="lineno">  581</span>        hist.histogram_(feature-&gt;age());</div>
-<div class="line"><span class="lineno">  582</span>      }</div>
-<div class="line"><span class="lineno">  583</span>    }</div>
-<div class="line"><span class="lineno">  584</span> </div>
-<div class="line"><span class="lineno">  585</span>    histograms.insert2(object_id, hist);</div>
-<div class="line"><span class="lineno">  586</span>  }</div>
-<div class="line"><span class="lineno">  587</span> </div>
-<div class="line"><span class="lineno">  588</span>  <span class="comment">// collect static features</span></div>
-<div class="line"><span class="lineno">  589</span>  Histogram static_hist(bh::make_histogram(bh::axis::variable&lt;&gt;(bins)));</div>
-<div class="line"><span class="lineno">  590</span>  static_hist.name_ = <span class="stringliteral">&quot;tacklet-length-0&quot;</span>;</div>
-<div class="line"><span class="lineno">  591</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; static_feature : frame-&gt;static_features_.beginUsable()) {</div>
-<div class="line"><span class="lineno">  592</span>    static_hist.histogram_(static_feature-&gt;age());</div>
-<div class="line"><span class="lineno">  593</span>  }</div>
-<div class="line"><span class="lineno">  594</span>  histograms.insert2(background_label, static_hist);</div>
-<div class="line"><span class="lineno">  595</span>  <span class="keywordflow">return</span> histograms;</div>
-<div class="line"><span class="lineno">  596</span>}</div>
+<p class="definition">Definition at line <a class="el" href="VisionTools_8cc_source.html#l00568">568</a> of file <a class="el" href="VisionTools_8cc_source.html">VisionTools.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  569</span>                                                         {</div>
+<div class="line"><span class="lineno">  570</span>  <span class="comment">// one for every object + 1 for static points</span></div>
+<div class="line"><span class="lineno">  571</span>  gtsam::FastMap&lt;ObjectId, Histogram&gt; histograms;</div>
+<div class="line"><span class="lineno">  572</span> </div>
+<div class="line"><span class="lineno">  573</span>  <span class="comment">// collect dynamic features</span></div>
+<div class="line"><span class="lineno">  574</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [object_id, observations] : frame-&gt;getObjectObservations()) {</div>
+<div class="line"><span class="lineno">  575</span>    <a class="code hl_class" href="classdyno_1_1Histogram.html">Histogram</a> hist(bh::make_histogram(bh::axis::variable&lt;&gt;(bins)));</div>
+<div class="line"><span class="lineno">  576</span>    hist.name_ = <span class="stringliteral">&quot;tacklet-length-&quot;</span> + std::to_string(object_id);</div>
+<div class="line"><span class="lineno">  577</span> </div>
+<div class="line"><span class="lineno">  578</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> tracklet_id : observations.object_features_) {</div>
+<div class="line"><span class="lineno">  579</span>      <span class="keyword">const</span> Feature::Ptr feature = frame-&gt;at(tracklet_id);</div>
+<div class="line"><span class="lineno">  580</span>      CHECK(feature);</div>
+<div class="line"><span class="lineno">  581</span>      <span class="keywordflow">if</span> (feature-&gt;usable()) {</div>
+<div class="line"><span class="lineno">  582</span>        hist.histogram_(feature-&gt;age());</div>
+<div class="line"><span class="lineno">  583</span>      }</div>
+<div class="line"><span class="lineno">  584</span>    }</div>
+<div class="line"><span class="lineno">  585</span> </div>
+<div class="line"><span class="lineno">  586</span>    histograms.insert2(object_id, hist);</div>
+<div class="line"><span class="lineno">  587</span>  }</div>
+<div class="line"><span class="lineno">  588</span> </div>
+<div class="line"><span class="lineno">  589</span>  <span class="comment">// collect static features</span></div>
+<div class="line"><span class="lineno">  590</span>  Histogram static_hist(bh::make_histogram(bh::axis::variable&lt;&gt;(bins)));</div>
+<div class="line"><span class="lineno">  591</span>  static_hist.name_ = <span class="stringliteral">&quot;tacklet-length-0&quot;</span>;</div>
+<div class="line"><span class="lineno">  592</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; static_feature : frame-&gt;static_features_.beginUsable()) {</div>
+<div class="line"><span class="lineno">  593</span>    static_hist.histogram_(static_feature-&gt;age());</div>
+<div class="line"><span class="lineno">  594</span>  }</div>
+<div class="line"><span class="lineno">  595</span>  histograms.insert2(background_label, static_hist);</div>
+<div class="line"><span class="lineno">  596</span>  <span class="keywordflow">return</span> histograms;</div>
+<div class="line"><span class="lineno">  597</span>}</div>
 <div class="ttc" id="aclassdyno_1_1Histogram_html"><div class="ttname"><a href="classdyno_1_1Histogram.html">dyno::Histogram</a></div><div class="ttdef"><b>Definition:</b> <a href="Histogram_8hpp_source.html#l00038">Histogram.hpp:38</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="namespacedyno.html#ae78915ea0afc5025dafb398829f15ba3">dyno::background_label</a>, <a class="el" href="classdyno_1_1Histogram.html#a88536a6a75b12af6e2a480d856d56560">dyno::Histogram::histogram_</a>, and <a class="el" href="classdyno_1_1Histogram.html#a411c9781e100046a9ade240c287ba6d0">dyno::Histogram::name_</a>.</p>
@@ -954,30 +955,30 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="VisionTools_8cc_source.html#l00542">542</a> of file <a class="el" href="VisionTools_8cc_source.html">VisionTools.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  543</span>                                                                            {</div>
-<div class="line"><span class="lineno">  544</span>  <span class="keywordflow">if</span> (old_labels.size() != old_labels.size()) {</div>
-<div class="line"><span class="lineno">  545</span>    <span class="keywordflow">throw</span> std::invalid_argument(</div>
-<div class="line"><span class="lineno">  546</span>        <span class="stringliteral">&quot;Old labels and new labels must have the same size&quot;</span>);</div>
-<div class="line"><span class="lineno">  547</span>  }</div>
-<div class="line"><span class="lineno">  548</span> </div>
-<div class="line"><span class="lineno">  549</span>  <span class="comment">// Create a map from old labels to new labels</span></div>
-<div class="line"><span class="lineno">  550</span>  std::unordered_map&lt;ObjectId, ObjectId&gt; label_map;</div>
-<div class="line"><span class="lineno">  551</span>  <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; old_labels.size(); ++i) {</div>
-<div class="line"><span class="lineno">  552</span>    label_map[old_labels[i]] = new_labels[i];</div>
-<div class="line"><span class="lineno">  553</span>  }</div>
-<div class="line"><span class="lineno">  554</span> </div>
-<div class="line"><span class="lineno">  555</span>  mask.copyTo(relabelled_mask);</div>
-<div class="line"><span class="lineno">  556</span>  <span class="comment">// / Relabel the pixels</span></div>
-<div class="line"><span class="lineno">  557</span>  <span class="keywordflow">for</span> (<span class="keywordtype">int</span> r = 0; r &lt; relabelled_mask.rows; ++r) {</div>
-<div class="line"><span class="lineno">  558</span>    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> c = 0; c &lt; relabelled_mask.cols; ++c) {</div>
-<div class="line"><span class="lineno">  559</span>      ObjectId pixelValue = relabelled_mask.at&lt;ObjectId&gt;(r, c);</div>
-<div class="line"><span class="lineno">  560</span>      <span class="keywordflow">if</span> (label_map.find(pixelValue) != label_map.end()) {</div>
-<div class="line"><span class="lineno">  561</span>        relabelled_mask.at&lt;ObjectId&gt;(r, c) = label_map[pixelValue];</div>
-<div class="line"><span class="lineno">  562</span>      }</div>
-<div class="line"><span class="lineno">  563</span>    }</div>
-<div class="line"><span class="lineno">  564</span>  }</div>
-<div class="line"><span class="lineno">  565</span>}</div>
+<p class="definition">Definition at line <a class="el" href="VisionTools_8cc_source.html#l00543">543</a> of file <a class="el" href="VisionTools_8cc_source.html">VisionTools.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  544</span>                                                                            {</div>
+<div class="line"><span class="lineno">  545</span>  <span class="keywordflow">if</span> (old_labels.size() != old_labels.size()) {</div>
+<div class="line"><span class="lineno">  546</span>    <span class="keywordflow">throw</span> std::invalid_argument(</div>
+<div class="line"><span class="lineno">  547</span>        <span class="stringliteral">&quot;Old labels and new labels must have the same size&quot;</span>);</div>
+<div class="line"><span class="lineno">  548</span>  }</div>
+<div class="line"><span class="lineno">  549</span> </div>
+<div class="line"><span class="lineno">  550</span>  <span class="comment">// Create a map from old labels to new labels</span></div>
+<div class="line"><span class="lineno">  551</span>  std::unordered_map&lt;ObjectId, ObjectId&gt; label_map;</div>
+<div class="line"><span class="lineno">  552</span>  <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; old_labels.size(); ++i) {</div>
+<div class="line"><span class="lineno">  553</span>    label_map[old_labels[i]] = new_labels[i];</div>
+<div class="line"><span class="lineno">  554</span>  }</div>
+<div class="line"><span class="lineno">  555</span> </div>
+<div class="line"><span class="lineno">  556</span>  mask.copyTo(relabelled_mask);</div>
+<div class="line"><span class="lineno">  557</span>  <span class="comment">// / Relabel the pixels</span></div>
+<div class="line"><span class="lineno">  558</span>  <span class="keywordflow">for</span> (<span class="keywordtype">int</span> r = 0; r &lt; relabelled_mask.rows; ++r) {</div>
+<div class="line"><span class="lineno">  559</span>    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> c = 0; c &lt; relabelled_mask.cols; ++c) {</div>
+<div class="line"><span class="lineno">  560</span>      ObjectId pixelValue = relabelled_mask.at&lt;ObjectId&gt;(r, c);</div>
+<div class="line"><span class="lineno">  561</span>      <span class="keywordflow">if</span> (label_map.find(pixelValue) != label_map.end()) {</div>
+<div class="line"><span class="lineno">  562</span>        relabelled_mask.at&lt;ObjectId&gt;(r, c) = label_map[pixelValue];</div>
+<div class="line"><span class="lineno">  563</span>      }</div>
+<div class="line"><span class="lineno">  564</span>    }</div>
+<div class="line"><span class="lineno">  565</span>  }</div>
+<div class="line"><span class="lineno">  566</span>}</div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1ClusterSlamAllLoader.html#a074af7358c98d715599460ca2671ecc4">dyno::ClusterSlamAllLoader::associateDetectedBBWithObject()</a>, and <a class="el" href="classdyno_1_1ByteObjectTracker.html#aeb79dc19fb881160be780b9f4a2b2240">dyno::ByteObjectTracker::track()</a>.</p>
 <div class="dynheader">
@@ -1036,23 +1037,23 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="VisionTools_8cc_source.html#l00497">497</a> of file <a class="el" href="VisionTools_8cc_source.html">VisionTools.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  497</span>                                                                         {</div>
-<div class="line"><span class="lineno">  498</span>  shrunk_mask = cv::Mat::zeros(mask.size(), mask.type());</div>
-<div class="line"><span class="lineno">  499</span>  shrunk_mask.setTo(background_label);</div>
-<div class="line"><span class="lineno">  500</span> </div>
-<div class="line"><span class="lineno">  501</span>  <span class="keyword">const</span> <a class="code hl_typedef" href="namespacedyno.html#ae777b079c377ffa066d89051ee0cc623">ObjectIds</a> original_object_labels = <a class="code hl_function" href="namespacedyno_1_1vision__tools.html#a3a09fe6c15aeb5e18979dc27d68c4616">getObjectLabels</a>(mask);</div>
-<div class="line"><span class="lineno">  502</span> </div>
-<div class="line"><span class="lineno">  503</span>  <span class="keyword">const</span> cv::Mat element = cv::getStructuringElement(</div>
-<div class="line"><span class="lineno">  504</span>      cv::MORPH_RECT, cv::Size(2 * erosion_size + 1, 2 * erosion_size + 1));</div>
-<div class="line"><span class="lineno">  505</span> </div>
-<div class="line"><span class="lineno">  506</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> object_id : original_object_labels) {</div>
-<div class="line"><span class="lineno">  507</span>    cv::Mat obj_mask = (mask == object_id);</div>
-<div class="line"><span class="lineno">  508</span>    cv::Mat eroded_mask;</div>
-<div class="line"><span class="lineno">  509</span>    cv::erode(obj_mask, eroded_mask, element);</div>
-<div class="line"><span class="lineno">  510</span>    shrunk_mask = shrunk_mask.setTo(object_id, eroded_mask);</div>
-<div class="line"><span class="lineno">  511</span>  }</div>
-<div class="line"><span class="lineno">  512</span>}</div>
+<p class="definition">Definition at line <a class="el" href="VisionTools_8cc_source.html#l00498">498</a> of file <a class="el" href="VisionTools_8cc_source.html">VisionTools.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  498</span>                                                                         {</div>
+<div class="line"><span class="lineno">  499</span>  shrunk_mask = cv::Mat::zeros(mask.size(), mask.type());</div>
+<div class="line"><span class="lineno">  500</span>  shrunk_mask.setTo(background_label);</div>
+<div class="line"><span class="lineno">  501</span> </div>
+<div class="line"><span class="lineno">  502</span>  <span class="keyword">const</span> <a class="code hl_typedef" href="namespacedyno.html#ae777b079c377ffa066d89051ee0cc623">ObjectIds</a> original_object_labels = <a class="code hl_function" href="namespacedyno_1_1vision__tools.html#a3a09fe6c15aeb5e18979dc27d68c4616">getObjectLabels</a>(mask);</div>
+<div class="line"><span class="lineno">  503</span> </div>
+<div class="line"><span class="lineno">  504</span>  <span class="keyword">const</span> cv::Mat element = cv::getStructuringElement(</div>
+<div class="line"><span class="lineno">  505</span>      cv::MORPH_RECT, cv::Size(2 * erosion_size + 1, 2 * erosion_size + 1));</div>
+<div class="line"><span class="lineno">  506</span> </div>
+<div class="line"><span class="lineno">  507</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> object_id : original_object_labels) {</div>
+<div class="line"><span class="lineno">  508</span>    cv::Mat obj_mask = (mask == object_id);</div>
+<div class="line"><span class="lineno">  509</span>    cv::Mat eroded_mask;</div>
+<div class="line"><span class="lineno">  510</span>    cv::erode(obj_mask, eroded_mask, element);</div>
+<div class="line"><span class="lineno">  511</span>    shrunk_mask = shrunk_mask.setTo(object_id, eroded_mask);</div>
+<div class="line"><span class="lineno">  512</span>  }</div>
+<div class="line"><span class="lineno">  513</span>}</div>
 <div class="ttc" id="anamespacedyno_1_1vision__tools_html_a3a09fe6c15aeb5e18979dc27d68c4616"><div class="ttname"><a href="namespacedyno_1_1vision__tools.html#a3a09fe6c15aeb5e18979dc27d68c4616">dyno::vision_tools::getObjectLabels</a></div><div class="ttdeci">ObjectIds getObjectLabels(const cv::Mat &amp;image)</div><div class="ttdoc">Finds the unique object labels (j) as present in the instance segmentation image. Does not include th...</div><div class="ttdef"><b>Definition:</b> <a href="VisionTools_8cc_source.html#l00069">VisionTools.cc:69</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="namespacedyno.html#ae78915ea0afc5025dafb398829f15ba3">dyno::background_label</a>, and <a class="el" href="namespacedyno_1_1vision__tools.html#a3a09fe6c15aeb5e18979dc27d68c4616">getObjectLabels()</a>.</p>
@@ -1111,127 +1112,127 @@ Here is the call graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="VisionTools_8cc_source.html#l00316">316</a> of file <a class="el" href="VisionTools_8cc_source.html">VisionTools.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  318</span>                                                                   {</div>
-<div class="line"><span class="lineno">  319</span>  <span class="keyword">auto</span>&amp; objects_by_instance_label = current_frame-&gt;object_observations_;</div>
-<div class="line"><span class="lineno">  320</span> </div>
-<div class="line"><span class="lineno">  321</span>  <span class="keyword">auto</span>&amp; previous_dynamic_feature_container = previous_frame.<a class="code hl_variable" href="classdyno_1_1Frame.html#a25df20e3d82010bd6d0fb5d9106ea5ff">dynamic_features_</a>;</div>
-<div class="line"><span class="lineno">  322</span>  <span class="keyword">auto</span>&amp; current_dynamic_feature_container = current_frame-&gt;dynamic_features_;</div>
-<div class="line"><span class="lineno">  323</span> </div>
-<div class="line"><span class="lineno">  324</span>  <a class="code hl_typedef" href="namespacedyno.html#ae777b079c377ffa066d89051ee0cc623">ObjectIds</a> instance_labels_to_remove;</div>
-<div class="line"><span class="lineno">  325</span> </div>
-<div class="line"><span class="lineno">  326</span>  <span class="comment">// TODO: shrink object boundary?</span></div>
-<div class="line"><span class="lineno">  327</span>  <span class="keywordflow">for</span> (<span class="keyword">auto</span>&amp; [instance_label, object_observation] : objects_by_instance_label) {</div>
-<div class="line"><span class="lineno">  328</span>    <span class="keywordtype">double</span> obj_center_depth = 0, sf_min = 100, sf_max = 0, sf_mean = 0,</div>
-<div class="line"><span class="lineno">  329</span>           sf_count = 0;</div>
-<div class="line"><span class="lineno">  330</span>    std::vector&lt;int&gt; sf_range(10, 0);</div>
-<div class="line"><span class="lineno">  331</span> </div>
-<div class="line"><span class="lineno">  332</span>    <span class="keyword">const</span> <span class="keywordtype">size_t</span> num_object_features =</div>
-<div class="line"><span class="lineno">  333</span>        object_observation.object_features_.size();</div>
-<div class="line"><span class="lineno">  334</span>    <span class="comment">// LOG(INFO) &lt;&lt; &quot;tracking object observation with instance label &quot; &lt;&lt;</span></div>
-<div class="line"><span class="lineno">  335</span>    <span class="comment">// instance_label &lt;&lt; &quot; and &quot; &lt;&lt; num_object_features &lt;&lt; &quot; features&quot;;</span></div>
-<div class="line"><span class="lineno">  336</span> </div>
-<div class="line"><span class="lineno">  337</span>    <span class="keywordtype">int</span> feature_pairs_valid = 0;</div>
-<div class="line"><span class="lineno">  338</span>    <span class="keywordtype">int</span> num_found = 0;</div>
-<div class="line"><span class="lineno">  339</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <a class="code hl_typedef" href="namespacedyno.html#afdd174eb44901fb205371d796287378c">TrackletId</a> tracklet_id : object_observation.object_features_) {</div>
-<div class="line"><span class="lineno">  340</span>      <span class="keywordflow">if</span> (previous_dynamic_feature_container.exists(tracklet_id)) {</div>
-<div class="line"><span class="lineno">  341</span>        num_found++;</div>
-<div class="line"><span class="lineno">  342</span>        CHECK(current_dynamic_feature_container.exists(tracklet_id));</div>
-<div class="line"><span class="lineno">  343</span> </div>
-<div class="line"><span class="lineno">  344</span>        Feature::Ptr current_feature =</div>
-<div class="line"><span class="lineno">  345</span>            current_dynamic_feature_container.getByTrackletId(tracklet_id);</div>
-<div class="line"><span class="lineno">  346</span>        Feature::Ptr previous_feature =</div>
-<div class="line"><span class="lineno">  347</span>            previous_dynamic_feature_container.getByTrackletId(tracklet_id);</div>
-<div class="line"><span class="lineno">  348</span> </div>
-<div class="line"><span class="lineno">  349</span>        <span class="keywordflow">if</span> (!previous_feature-&gt;usable()) {</div>
-<div class="line"><span class="lineno">  350</span>          current_feature-&gt;markInvalid();</div>
-<div class="line"><span class="lineno">  351</span>          <span class="keywordflow">continue</span>;</div>
-<div class="line"><span class="lineno">  352</span>        }</div>
-<div class="line"><span class="lineno">  353</span> </div>
-<div class="line"><span class="lineno">  354</span>        <span class="comment">// this can happen in situations such as the updateDepths when depths &gt;</span></div>
-<div class="line"><span class="lineno">  355</span>        <span class="comment">// thresh are marked invalud</span></div>
-<div class="line"><span class="lineno">  356</span>        <span class="keywordflow">if</span> (!current_feature-&gt;usable()) {</div>
-<div class="line"><span class="lineno">  357</span>          <span class="keywordflow">continue</span>;</div>
-<div class="line"><span class="lineno">  358</span>        }</div>
-<div class="line"><span class="lineno">  359</span> </div>
-<div class="line"><span class="lineno">  360</span>        CHECK(!previous_feature-&gt;isStatic());</div>
-<div class="line"><span class="lineno">  361</span>        CHECK(!current_feature-&gt;isStatic());</div>
-<div class="line"><span class="lineno">  362</span> </div>
-<div class="line"><span class="lineno">  363</span>        Landmark lmk_previous = previous_frame.<a class="code hl_function" href="classdyno_1_1Frame.html#ae588299966f1a710e11db6d64cc5b707">backProjectToWorld</a>(tracklet_id);</div>
-<div class="line"><span class="lineno">  364</span>        Landmark lmk_current = current_frame-&gt;backProjectToWorld(tracklet_id);</div>
-<div class="line"><span class="lineno">  365</span> </div>
-<div class="line"><span class="lineno">  366</span>        Landmark flow_world = lmk_current - lmk_previous;</div>
-<div class="line"><span class="lineno">  367</span>        <span class="keywordtype">double</span> sf_norm = flow_world.norm();</div>
-<div class="line"><span class="lineno">  368</span> </div>
-<div class="line"><span class="lineno">  369</span>        feature_pairs_valid++;</div>
-<div class="line"><span class="lineno">  370</span> </div>
-<div class="line"><span class="lineno">  371</span>        <span class="keywordflow">if</span> (sf_norm &lt; params.<a class="code hl_variable" href="structdyno_1_1FrontendParams.html#a27cd8ab520f7cbeb68e75a3b49cf26ef">scene_flow_magnitude</a>) sf_count = sf_count + 1;</div>
-<div class="line"><span class="lineno">  372</span>        <span class="keywordflow">if</span> (sf_norm &lt; sf_min) sf_min = sf_norm;</div>
-<div class="line"><span class="lineno">  373</span>        <span class="keywordflow">if</span> (sf_norm &gt; sf_max) sf_max = sf_norm;</div>
-<div class="line"><span class="lineno">  374</span>        sf_mean = sf_mean + sf_norm;</div>
-<div class="line"><span class="lineno">  375</span> </div>
-<div class="line"><span class="lineno">  376</span>        {</div>
-<div class="line"><span class="lineno">  377</span>          <span class="keywordflow">if</span> (0.0 &lt;= sf_norm &amp;&amp; sf_norm &lt; 0.05)</div>
-<div class="line"><span class="lineno">  378</span>            sf_range[0] = sf_range[0] + 1;</div>
-<div class="line"><span class="lineno">  379</span>          <span class="keywordflow">else</span> <span class="keywordflow">if</span> (0.05 &lt;= sf_norm &amp;&amp; sf_norm &lt; 0.1)</div>
-<div class="line"><span class="lineno">  380</span>            sf_range[1] = sf_range[1] + 1;</div>
-<div class="line"><span class="lineno">  381</span>          <span class="keywordflow">else</span> <span class="keywordflow">if</span> (0.1 &lt;= sf_norm &amp;&amp; sf_norm &lt; 0.2)</div>
-<div class="line"><span class="lineno">  382</span>            sf_range[2] = sf_range[2] + 1;</div>
-<div class="line"><span class="lineno">  383</span>          <span class="keywordflow">else</span> <span class="keywordflow">if</span> (0.2 &lt;= sf_norm &amp;&amp; sf_norm &lt; 0.4)</div>
-<div class="line"><span class="lineno">  384</span>            sf_range[3] = sf_range[3] + 1;</div>
-<div class="line"><span class="lineno">  385</span>          <span class="keywordflow">else</span> <span class="keywordflow">if</span> (0.4 &lt;= sf_norm &amp;&amp; sf_norm &lt; 0.8)</div>
-<div class="line"><span class="lineno">  386</span>            sf_range[4] = sf_range[4] + 1;</div>
-<div class="line"><span class="lineno">  387</span>          <span class="keywordflow">else</span> <span class="keywordflow">if</span> (0.8 &lt;= sf_norm &amp;&amp; sf_norm &lt; 1.6)</div>
-<div class="line"><span class="lineno">  388</span>            sf_range[5] = sf_range[5] + 1;</div>
-<div class="line"><span class="lineno">  389</span>          <span class="keywordflow">else</span> <span class="keywordflow">if</span> (1.6 &lt;= sf_norm &amp;&amp; sf_norm &lt; 3.2)</div>
-<div class="line"><span class="lineno">  390</span>            sf_range[6] = sf_range[6] + 1;</div>
-<div class="line"><span class="lineno">  391</span>          <span class="keywordflow">else</span> <span class="keywordflow">if</span> (3.2 &lt;= sf_norm &amp;&amp; sf_norm &lt; 6.4)</div>
-<div class="line"><span class="lineno">  392</span>            sf_range[7] = sf_range[7] + 1;</div>
-<div class="line"><span class="lineno">  393</span>          <span class="keywordflow">else</span> <span class="keywordflow">if</span> (6.4 &lt;= sf_norm &amp;&amp; sf_norm &lt; 12.8)</div>
-<div class="line"><span class="lineno">  394</span>            sf_range[8] = sf_range[8] + 1;</div>
-<div class="line"><span class="lineno">  395</span>          <span class="keywordflow">else</span> <span class="keywordflow">if</span> (12.8 &lt;= sf_norm &amp;&amp; sf_norm &lt; 25.6)</div>
-<div class="line"><span class="lineno">  396</span>            sf_range[9] = sf_range[9] + 1;</div>
-<div class="line"><span class="lineno">  397</span>        }</div>
-<div class="line"><span class="lineno">  398</span>      }</div>
-<div class="line"><span class="lineno">  399</span>    }</div>
-<div class="line"><span class="lineno">  400</span> </div>
-<div class="line"><span class="lineno">  401</span>    VLOG(10) &lt;&lt; <span class="stringliteral">&quot;Number feature pairs valid &quot;</span> &lt;&lt; feature_pairs_valid</div>
-<div class="line"><span class="lineno">  402</span>             &lt;&lt; <span class="stringliteral">&quot; out of &quot;</span> &lt;&lt; num_object_features &lt;&lt; <span class="stringliteral">&quot; for instance  &quot;</span></div>
-<div class="line"><span class="lineno">  403</span>             &lt;&lt; instance_label &lt;&lt; <span class="stringliteral">&quot; num found &quot;</span> &lt;&lt; num_found;</div>
-<div class="line"><span class="lineno">  404</span> </div>
-<div class="line"><span class="lineno">  405</span>    <span class="comment">// if no points found (i.e tracked)</span></div>
-<div class="line"><span class="lineno">  406</span>    <span class="comment">// dont do anything as this is a new object so we cannot say if its dynamic</span></div>
-<div class="line"><span class="lineno">  407</span>    <span class="comment">// or not</span></div>
-<div class="line"><span class="lineno">  408</span>    <span class="keywordflow">if</span> (num_found == 0) {</div>
-<div class="line"><span class="lineno">  409</span>      <span class="comment">// TODO: i guess?</span></div>
-<div class="line"><span class="lineno">  410</span>      object_observation.marked_as_moving_ = <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  411</span>    }</div>
-<div class="line"><span class="lineno">  412</span>    <span class="keywordflow">if</span> (sf_count / num_object_features &gt; params.<a class="code hl_variable" href="structdyno_1_1FrontendParams.html#ae4e06ec2821e70fd421cfe0ba74ad8c5">scene_flow_percentage</a> ||</div>
-<div class="line"><span class="lineno">  413</span>        num_object_features &lt; 30)</div>
-<div class="line"><span class="lineno">  414</span>    <span class="comment">// else if (sf_count/num_object_features&gt;params.scene_flow_percentage ||</span></div>
-<div class="line"><span class="lineno">  415</span>    <span class="comment">// num_object_features &lt; 15)</span></div>
-<div class="line"><span class="lineno">  416</span>    {</div>
-<div class="line"><span class="lineno">  417</span>      <span class="comment">// label this object as static background</span></div>
-<div class="line"><span class="lineno">  418</span>      <span class="comment">// LOG(INFO) &lt;&lt; &quot;Instance object &quot; &lt;&lt; instance_label &lt;&lt; &quot; to static for</span></div>
-<div class="line"><span class="lineno">  419</span>      <span class="comment">// frame &quot; &lt;&lt; current_frame-&gt;frame_id_;</span></div>
-<div class="line"><span class="lineno">  420</span>      instance_labels_to_remove.push_back(instance_label);</div>
-<div class="line"><span class="lineno">  421</span>    } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  422</span>      <span class="comment">// LOG(INFO) &lt;&lt; &quot;Instance object &quot; &lt;&lt; instance_label &lt;&lt; &quot; marked as</span></div>
-<div class="line"><span class="lineno">  423</span>      <span class="comment">// dynamic&quot;;</span></div>
-<div class="line"><span class="lineno">  424</span>      object_observation.marked_as_moving_ = <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  425</span>    }</div>
-<div class="line"><span class="lineno">  426</span>  }</div>
-<div class="line"><span class="lineno">  427</span> </div>
-<div class="line"><span class="lineno">  428</span>  <span class="comment">// we do the removal after the iteration so as not to mess up the loop</span></div>
-<div class="line"><span class="lineno">  429</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> label : instance_labels_to_remove) {</div>
-<div class="line"><span class="lineno">  430</span>    VLOG(30) &lt;&lt; <span class="stringliteral">&quot;Removing label &quot;</span> &lt;&lt; label;</div>
-<div class="line"><span class="lineno">  431</span>    <span class="comment">// TODO: this is really really slow!!</span></div>
-<div class="line"><span class="lineno">  432</span>    current_frame-&gt;moveObjectToStatic(label);</div>
-<div class="line"><span class="lineno">  433</span>    <span class="comment">// LOG(INFO) &lt;&lt; &quot;Done Removing label &quot; &lt;&lt; label;</span></div>
-<div class="line"><span class="lineno">  434</span>  }</div>
-<div class="line"><span class="lineno">  435</span> </div>
-<div class="line"><span class="lineno">  436</span>  <span class="keywordflow">return</span> std::vector&lt;std::vector&lt;int&gt;&gt;();</div>
-<div class="line"><span class="lineno">  437</span>}</div>
+<p class="definition">Definition at line <a class="el" href="VisionTools_8cc_source.html#l00317">317</a> of file <a class="el" href="VisionTools_8cc_source.html">VisionTools.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  319</span>                                                                   {</div>
+<div class="line"><span class="lineno">  320</span>  <span class="keyword">auto</span>&amp; objects_by_instance_label = current_frame-&gt;object_observations_;</div>
+<div class="line"><span class="lineno">  321</span> </div>
+<div class="line"><span class="lineno">  322</span>  <span class="keyword">auto</span>&amp; previous_dynamic_feature_container = previous_frame.<a class="code hl_variable" href="classdyno_1_1Frame.html#a25df20e3d82010bd6d0fb5d9106ea5ff">dynamic_features_</a>;</div>
+<div class="line"><span class="lineno">  323</span>  <span class="keyword">auto</span>&amp; current_dynamic_feature_container = current_frame-&gt;dynamic_features_;</div>
+<div class="line"><span class="lineno">  324</span> </div>
+<div class="line"><span class="lineno">  325</span>  <a class="code hl_typedef" href="namespacedyno.html#ae777b079c377ffa066d89051ee0cc623">ObjectIds</a> instance_labels_to_remove;</div>
+<div class="line"><span class="lineno">  326</span> </div>
+<div class="line"><span class="lineno">  327</span>  <span class="comment">// TODO: shrink object boundary?</span></div>
+<div class="line"><span class="lineno">  328</span>  <span class="keywordflow">for</span> (<span class="keyword">auto</span>&amp; [instance_label, object_observation] : objects_by_instance_label) {</div>
+<div class="line"><span class="lineno">  329</span>    <span class="keywordtype">double</span> obj_center_depth = 0, sf_min = 100, sf_max = 0, sf_mean = 0,</div>
+<div class="line"><span class="lineno">  330</span>           sf_count = 0;</div>
+<div class="line"><span class="lineno">  331</span>    std::vector&lt;int&gt; sf_range(10, 0);</div>
+<div class="line"><span class="lineno">  332</span> </div>
+<div class="line"><span class="lineno">  333</span>    <span class="keyword">const</span> <span class="keywordtype">size_t</span> num_object_features =</div>
+<div class="line"><span class="lineno">  334</span>        object_observation.object_features_.size();</div>
+<div class="line"><span class="lineno">  335</span>    <span class="comment">// LOG(INFO) &lt;&lt; &quot;tracking object observation with instance label &quot; &lt;&lt;</span></div>
+<div class="line"><span class="lineno">  336</span>    <span class="comment">// instance_label &lt;&lt; &quot; and &quot; &lt;&lt; num_object_features &lt;&lt; &quot; features&quot;;</span></div>
+<div class="line"><span class="lineno">  337</span> </div>
+<div class="line"><span class="lineno">  338</span>    <span class="keywordtype">int</span> feature_pairs_valid = 0;</div>
+<div class="line"><span class="lineno">  339</span>    <span class="keywordtype">int</span> num_found = 0;</div>
+<div class="line"><span class="lineno">  340</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <a class="code hl_typedef" href="namespacedyno.html#afdd174eb44901fb205371d796287378c">TrackletId</a> tracklet_id : object_observation.object_features_) {</div>
+<div class="line"><span class="lineno">  341</span>      <span class="keywordflow">if</span> (previous_dynamic_feature_container.exists(tracklet_id)) {</div>
+<div class="line"><span class="lineno">  342</span>        num_found++;</div>
+<div class="line"><span class="lineno">  343</span>        CHECK(current_dynamic_feature_container.exists(tracklet_id));</div>
+<div class="line"><span class="lineno">  344</span> </div>
+<div class="line"><span class="lineno">  345</span>        Feature::Ptr current_feature =</div>
+<div class="line"><span class="lineno">  346</span>            current_dynamic_feature_container.getByTrackletId(tracklet_id);</div>
+<div class="line"><span class="lineno">  347</span>        Feature::Ptr previous_feature =</div>
+<div class="line"><span class="lineno">  348</span>            previous_dynamic_feature_container.getByTrackletId(tracklet_id);</div>
+<div class="line"><span class="lineno">  349</span> </div>
+<div class="line"><span class="lineno">  350</span>        <span class="keywordflow">if</span> (!previous_feature-&gt;usable()) {</div>
+<div class="line"><span class="lineno">  351</span>          current_feature-&gt;markInvalid();</div>
+<div class="line"><span class="lineno">  352</span>          <span class="keywordflow">continue</span>;</div>
+<div class="line"><span class="lineno">  353</span>        }</div>
+<div class="line"><span class="lineno">  354</span> </div>
+<div class="line"><span class="lineno">  355</span>        <span class="comment">// this can happen in situations such as the updateDepths when depths &gt;</span></div>
+<div class="line"><span class="lineno">  356</span>        <span class="comment">// thresh are marked invalud</span></div>
+<div class="line"><span class="lineno">  357</span>        <span class="keywordflow">if</span> (!current_feature-&gt;usable()) {</div>
+<div class="line"><span class="lineno">  358</span>          <span class="keywordflow">continue</span>;</div>
+<div class="line"><span class="lineno">  359</span>        }</div>
+<div class="line"><span class="lineno">  360</span> </div>
+<div class="line"><span class="lineno">  361</span>        CHECK(!previous_feature-&gt;isStatic());</div>
+<div class="line"><span class="lineno">  362</span>        CHECK(!current_feature-&gt;isStatic());</div>
+<div class="line"><span class="lineno">  363</span> </div>
+<div class="line"><span class="lineno">  364</span>        Landmark lmk_previous = previous_frame.<a class="code hl_function" href="classdyno_1_1Frame.html#ae588299966f1a710e11db6d64cc5b707">backProjectToWorld</a>(tracklet_id);</div>
+<div class="line"><span class="lineno">  365</span>        Landmark lmk_current = current_frame-&gt;backProjectToWorld(tracklet_id);</div>
+<div class="line"><span class="lineno">  366</span> </div>
+<div class="line"><span class="lineno">  367</span>        Landmark flow_world = lmk_current - lmk_previous;</div>
+<div class="line"><span class="lineno">  368</span>        <span class="keywordtype">double</span> sf_norm = flow_world.norm();</div>
+<div class="line"><span class="lineno">  369</span> </div>
+<div class="line"><span class="lineno">  370</span>        feature_pairs_valid++;</div>
+<div class="line"><span class="lineno">  371</span> </div>
+<div class="line"><span class="lineno">  372</span>        <span class="keywordflow">if</span> (sf_norm &lt; params.<a class="code hl_variable" href="structdyno_1_1FrontendParams.html#a27cd8ab520f7cbeb68e75a3b49cf26ef">scene_flow_magnitude</a>) sf_count = sf_count + 1;</div>
+<div class="line"><span class="lineno">  373</span>        <span class="keywordflow">if</span> (sf_norm &lt; sf_min) sf_min = sf_norm;</div>
+<div class="line"><span class="lineno">  374</span>        <span class="keywordflow">if</span> (sf_norm &gt; sf_max) sf_max = sf_norm;</div>
+<div class="line"><span class="lineno">  375</span>        sf_mean = sf_mean + sf_norm;</div>
+<div class="line"><span class="lineno">  376</span> </div>
+<div class="line"><span class="lineno">  377</span>        {</div>
+<div class="line"><span class="lineno">  378</span>          <span class="keywordflow">if</span> (0.0 &lt;= sf_norm &amp;&amp; sf_norm &lt; 0.05)</div>
+<div class="line"><span class="lineno">  379</span>            sf_range[0] = sf_range[0] + 1;</div>
+<div class="line"><span class="lineno">  380</span>          <span class="keywordflow">else</span> <span class="keywordflow">if</span> (0.05 &lt;= sf_norm &amp;&amp; sf_norm &lt; 0.1)</div>
+<div class="line"><span class="lineno">  381</span>            sf_range[1] = sf_range[1] + 1;</div>
+<div class="line"><span class="lineno">  382</span>          <span class="keywordflow">else</span> <span class="keywordflow">if</span> (0.1 &lt;= sf_norm &amp;&amp; sf_norm &lt; 0.2)</div>
+<div class="line"><span class="lineno">  383</span>            sf_range[2] = sf_range[2] + 1;</div>
+<div class="line"><span class="lineno">  384</span>          <span class="keywordflow">else</span> <span class="keywordflow">if</span> (0.2 &lt;= sf_norm &amp;&amp; sf_norm &lt; 0.4)</div>
+<div class="line"><span class="lineno">  385</span>            sf_range[3] = sf_range[3] + 1;</div>
+<div class="line"><span class="lineno">  386</span>          <span class="keywordflow">else</span> <span class="keywordflow">if</span> (0.4 &lt;= sf_norm &amp;&amp; sf_norm &lt; 0.8)</div>
+<div class="line"><span class="lineno">  387</span>            sf_range[4] = sf_range[4] + 1;</div>
+<div class="line"><span class="lineno">  388</span>          <span class="keywordflow">else</span> <span class="keywordflow">if</span> (0.8 &lt;= sf_norm &amp;&amp; sf_norm &lt; 1.6)</div>
+<div class="line"><span class="lineno">  389</span>            sf_range[5] = sf_range[5] + 1;</div>
+<div class="line"><span class="lineno">  390</span>          <span class="keywordflow">else</span> <span class="keywordflow">if</span> (1.6 &lt;= sf_norm &amp;&amp; sf_norm &lt; 3.2)</div>
+<div class="line"><span class="lineno">  391</span>            sf_range[6] = sf_range[6] + 1;</div>
+<div class="line"><span class="lineno">  392</span>          <span class="keywordflow">else</span> <span class="keywordflow">if</span> (3.2 &lt;= sf_norm &amp;&amp; sf_norm &lt; 6.4)</div>
+<div class="line"><span class="lineno">  393</span>            sf_range[7] = sf_range[7] + 1;</div>
+<div class="line"><span class="lineno">  394</span>          <span class="keywordflow">else</span> <span class="keywordflow">if</span> (6.4 &lt;= sf_norm &amp;&amp; sf_norm &lt; 12.8)</div>
+<div class="line"><span class="lineno">  395</span>            sf_range[8] = sf_range[8] + 1;</div>
+<div class="line"><span class="lineno">  396</span>          <span class="keywordflow">else</span> <span class="keywordflow">if</span> (12.8 &lt;= sf_norm &amp;&amp; sf_norm &lt; 25.6)</div>
+<div class="line"><span class="lineno">  397</span>            sf_range[9] = sf_range[9] + 1;</div>
+<div class="line"><span class="lineno">  398</span>        }</div>
+<div class="line"><span class="lineno">  399</span>      }</div>
+<div class="line"><span class="lineno">  400</span>    }</div>
+<div class="line"><span class="lineno">  401</span> </div>
+<div class="line"><span class="lineno">  402</span>    VLOG(10) &lt;&lt; <span class="stringliteral">&quot;Number feature pairs valid &quot;</span> &lt;&lt; feature_pairs_valid</div>
+<div class="line"><span class="lineno">  403</span>             &lt;&lt; <span class="stringliteral">&quot; out of &quot;</span> &lt;&lt; num_object_features &lt;&lt; <span class="stringliteral">&quot; for instance  &quot;</span></div>
+<div class="line"><span class="lineno">  404</span>             &lt;&lt; instance_label &lt;&lt; <span class="stringliteral">&quot; num found &quot;</span> &lt;&lt; num_found;</div>
+<div class="line"><span class="lineno">  405</span> </div>
+<div class="line"><span class="lineno">  406</span>    <span class="comment">// if no points found (i.e tracked)</span></div>
+<div class="line"><span class="lineno">  407</span>    <span class="comment">// dont do anything as this is a new object so we cannot say if its dynamic</span></div>
+<div class="line"><span class="lineno">  408</span>    <span class="comment">// or not</span></div>
+<div class="line"><span class="lineno">  409</span>    <span class="keywordflow">if</span> (num_found == 0) {</div>
+<div class="line"><span class="lineno">  410</span>      <span class="comment">// TODO: i guess?</span></div>
+<div class="line"><span class="lineno">  411</span>      object_observation.marked_as_moving_ = <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  412</span>    }</div>
+<div class="line"><span class="lineno">  413</span>    <span class="keywordflow">if</span> (sf_count / num_object_features &gt; params.<a class="code hl_variable" href="structdyno_1_1FrontendParams.html#ae4e06ec2821e70fd421cfe0ba74ad8c5">scene_flow_percentage</a> ||</div>
+<div class="line"><span class="lineno">  414</span>        num_object_features &lt; 30)</div>
+<div class="line"><span class="lineno">  415</span>    <span class="comment">// else if (sf_count/num_object_features&gt;params.scene_flow_percentage ||</span></div>
+<div class="line"><span class="lineno">  416</span>    <span class="comment">// num_object_features &lt; 15)</span></div>
+<div class="line"><span class="lineno">  417</span>    {</div>
+<div class="line"><span class="lineno">  418</span>      <span class="comment">// label this object as static background</span></div>
+<div class="line"><span class="lineno">  419</span>      <span class="comment">// LOG(INFO) &lt;&lt; &quot;Instance object &quot; &lt;&lt; instance_label &lt;&lt; &quot; to static for</span></div>
+<div class="line"><span class="lineno">  420</span>      <span class="comment">// frame &quot; &lt;&lt; current_frame-&gt;frame_id_;</span></div>
+<div class="line"><span class="lineno">  421</span>      instance_labels_to_remove.push_back(instance_label);</div>
+<div class="line"><span class="lineno">  422</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  423</span>      <span class="comment">// LOG(INFO) &lt;&lt; &quot;Instance object &quot; &lt;&lt; instance_label &lt;&lt; &quot; marked as</span></div>
+<div class="line"><span class="lineno">  424</span>      <span class="comment">// dynamic&quot;;</span></div>
+<div class="line"><span class="lineno">  425</span>      object_observation.marked_as_moving_ = <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  426</span>    }</div>
+<div class="line"><span class="lineno">  427</span>  }</div>
+<div class="line"><span class="lineno">  428</span> </div>
+<div class="line"><span class="lineno">  429</span>  <span class="comment">// we do the removal after the iteration so as not to mess up the loop</span></div>
+<div class="line"><span class="lineno">  430</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> label : instance_labels_to_remove) {</div>
+<div class="line"><span class="lineno">  431</span>    VLOG(30) &lt;&lt; <span class="stringliteral">&quot;Removing label &quot;</span> &lt;&lt; label;</div>
+<div class="line"><span class="lineno">  432</span>    <span class="comment">// TODO: this is really really slow!!</span></div>
+<div class="line"><span class="lineno">  433</span>    current_frame-&gt;moveObjectToStatic(label);</div>
+<div class="line"><span class="lineno">  434</span>    <span class="comment">// LOG(INFO) &lt;&lt; &quot;Done Removing label &quot; &lt;&lt; label;</span></div>
+<div class="line"><span class="lineno">  435</span>  }</div>
+<div class="line"><span class="lineno">  436</span> </div>
+<div class="line"><span class="lineno">  437</span>  <span class="keywordflow">return</span> std::vector&lt;std::vector&lt;int&gt;&gt;();</div>
+<div class="line"><span class="lineno">  438</span>}</div>
 <div class="ttc" id="aclassdyno_1_1Frame_html_a25df20e3d82010bd6d0fb5d9106ea5ff"><div class="ttname"><a href="classdyno_1_1Frame.html#a25df20e3d82010bd6d0fb5d9106ea5ff">dyno::Frame::dynamic_features_</a></div><div class="ttdeci">FeatureContainer dynamic_features_</div><div class="ttdef"><b>Definition:</b> <a href="Frame_8hpp_source.html#l00057">Frame.hpp:57</a></div></div>
 <div class="ttc" id="aclassdyno_1_1Frame_html_ae588299966f1a710e11db6d64cc5b707"><div class="ttname"><a href="classdyno_1_1Frame.html#ae588299966f1a710e11db6d64cc5b707">dyno::Frame::backProjectToWorld</a></div><div class="ttdeci">Landmark backProjectToWorld(TrackletId tracklet_id) const</div><div class="ttdoc">Project the feature into the world frame using the frames pose (T_world_camera_) and returns the 3D l...</div><div class="ttdef"><b>Definition:</b> <a href="Frame_8cc_source.html#l00128">Frame.cc:128</a></div></div>
 <div class="ttc" id="anamespacedyno_html_afdd174eb44901fb205371d796287378c"><div class="ttname"><a href="namespacedyno.html#afdd174eb44901fb205371d796287378c">dyno::TrackletId</a></div><div class="ttdeci">long int TrackletId</div><div class="ttdoc">Unique tracklet/landmark id, i.</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00079">Types.hpp:79</a></div></div>
@@ -1319,38 +1320,38 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="VisionTools_8cc_source.html#l00639">639</a> of file <a class="el" href="VisionTools_8cc_source.html">VisionTools.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  642</span>                                            {</div>
-<div class="line"><span class="lineno">  643</span>  cv::Mat point_cloud =</div>
-<div class="line"><span class="lineno">  644</span>      <a class="code hl_function" href="namespacedyno_1_1vision__tools.html#aaabcfcca356f30c83a45a51259e39783">depthTo3D</a>(depth_image, camera.<a class="code hl_function" href="classdyno_1_1Camera.html#af56ce3541d3ef8a7bcb2246e4634ca59">getParams</a>().<a class="code hl_function" href="classdyno_1_1CameraParams.html#ae50eb600c23415b3f7bd46e70553f96a">getCameraMatrix</a>());</div>
-<div class="line"><span class="lineno">  645</span> </div>
-<div class="line"><span class="lineno">  646</span>  <span class="keyword">const</span> cv::Mat&amp; mask = mask_image;</div>
-<div class="line"><span class="lineno">  647</span> </div>
-<div class="line"><span class="lineno">  648</span>  <span class="comment">// new mask of double type to match the type of the output cloud</span></div>
-<div class="line"><span class="lineno">  649</span>  cv::Mat mask_double;</div>
-<div class="line"><span class="lineno">  650</span>  mask.copyTo(mask_double);</div>
-<div class="line"><span class="lineno">  651</span>  mask_double.convertTo(mask_double, CV_64F);</div>
-<div class="line"><span class="lineno">  652</span> </div>
-<div class="line"><span class="lineno">  653</span>  std::vector&lt;cv::Mat&gt; channels = {point_cloud, mask_double};</div>
-<div class="line"><span class="lineno">  654</span> </div>
-<div class="line"><span class="lineno">  655</span>  cv::Mat projected_cloud;</div>
-<div class="line"><span class="lineno">  656</span>  cv::merge(channels, projected_cloud);</div>
-<div class="line"><span class="lineno">  657</span> </div>
-<div class="line"><span class="lineno">  658</span>  <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">auto</span> folder_name = <span class="stringliteral">&quot;project_mask&quot;</span>;</div>
-<div class="line"><span class="lineno">  659</span>  <span class="keyword">const</span> std::string output_folder = <a class="code hl_function" href="namespacedyno.html#a80a71f28f4f692dc9c21976237dfcfe1">getOutputFilePath</a>(folder_name);</div>
-<div class="line"><span class="lineno">  660</span> </div>
-<div class="line"><span class="lineno">  661</span>  <span class="comment">// create write out directly if it does not exist</span></div>
-<div class="line"><span class="lineno">  662</span>  <a class="code hl_function" href="namespacedyno.html#a2c13b22c0d8be0826712863c5ce0770e">createDirectory</a>(output_folder);</div>
-<div class="line"><span class="lineno">  663</span> </div>
-<div class="line"><span class="lineno">  664</span>  <span class="keyword">const</span> std::string file_name =</div>
-<div class="line"><span class="lineno">  665</span>      output_folder + <span class="stringliteral">&quot;/&quot;</span> + std::to_string(frame_id) + <span class="stringliteral">&quot;.yml&quot;</span>;</div>
-<div class="line"><span class="lineno">  666</span>  cv::FileStorage file(file_name, cv::FileStorage::WRITE);</div>
-<div class="line"><span class="lineno">  667</span>  file &lt;&lt; <span class="stringliteral">&quot;matrix&quot;</span> &lt;&lt; projected_cloud;</div>
-<div class="line"><span class="lineno">  668</span>  file.release();</div>
-<div class="line"><span class="lineno">  669</span>}</div>
-<div class="ttc" id="aclassdyno_1_1CameraParams_html_ae50eb600c23415b3f7bd46e70553f96a"><div class="ttname"><a href="classdyno_1_1CameraParams.html#ae50eb600c23415b3f7bd46e70553f96a">dyno::CameraParams::getCameraMatrix</a></div><div class="ttdeci">cv::Mat getCameraMatrix() const</div><div class="ttdef"><b>Definition:</b> <a href="CameraParams_8hpp_source.html#l00124">CameraParams.hpp:124</a></div></div>
+<p class="definition">Definition at line <a class="el" href="VisionTools_8cc_source.html#l00640">640</a> of file <a class="el" href="VisionTools_8cc_source.html">VisionTools.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  643</span>                                            {</div>
+<div class="line"><span class="lineno">  644</span>  cv::Mat point_cloud =</div>
+<div class="line"><span class="lineno">  645</span>      <a class="code hl_function" href="namespacedyno_1_1vision__tools.html#aaabcfcca356f30c83a45a51259e39783">depthTo3D</a>(depth_image, camera.<a class="code hl_function" href="classdyno_1_1Camera.html#af56ce3541d3ef8a7bcb2246e4634ca59">getParams</a>().<a class="code hl_function" href="classdyno_1_1CameraParams.html#ae50eb600c23415b3f7bd46e70553f96a">getCameraMatrix</a>());</div>
+<div class="line"><span class="lineno">  646</span> </div>
+<div class="line"><span class="lineno">  647</span>  <span class="keyword">const</span> cv::Mat&amp; mask = mask_image;</div>
+<div class="line"><span class="lineno">  648</span> </div>
+<div class="line"><span class="lineno">  649</span>  <span class="comment">// new mask of double type to match the type of the output cloud</span></div>
+<div class="line"><span class="lineno">  650</span>  cv::Mat mask_double;</div>
+<div class="line"><span class="lineno">  651</span>  mask.copyTo(mask_double);</div>
+<div class="line"><span class="lineno">  652</span>  mask_double.convertTo(mask_double, CV_64F);</div>
+<div class="line"><span class="lineno">  653</span> </div>
+<div class="line"><span class="lineno">  654</span>  std::vector&lt;cv::Mat&gt; channels = {point_cloud, mask_double};</div>
+<div class="line"><span class="lineno">  655</span> </div>
+<div class="line"><span class="lineno">  656</span>  cv::Mat projected_cloud;</div>
+<div class="line"><span class="lineno">  657</span>  cv::merge(channels, projected_cloud);</div>
+<div class="line"><span class="lineno">  658</span> </div>
+<div class="line"><span class="lineno">  659</span>  <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">auto</span> folder_name = <span class="stringliteral">&quot;project_mask&quot;</span>;</div>
+<div class="line"><span class="lineno">  660</span>  <span class="keyword">const</span> std::string output_folder = <a class="code hl_function" href="namespacedyno.html#a80a71f28f4f692dc9c21976237dfcfe1">getOutputFilePath</a>(folder_name);</div>
+<div class="line"><span class="lineno">  661</span> </div>
+<div class="line"><span class="lineno">  662</span>  <span class="comment">// create write out directly if it does not exist</span></div>
+<div class="line"><span class="lineno">  663</span>  <a class="code hl_function" href="namespacedyno.html#a2c13b22c0d8be0826712863c5ce0770e">createDirectory</a>(output_folder);</div>
+<div class="line"><span class="lineno">  664</span> </div>
+<div class="line"><span class="lineno">  665</span>  <span class="keyword">const</span> std::string file_name =</div>
+<div class="line"><span class="lineno">  666</span>      output_folder + <span class="stringliteral">&quot;/&quot;</span> + std::to_string(frame_id) + <span class="stringliteral">&quot;.yml&quot;</span>;</div>
+<div class="line"><span class="lineno">  667</span>  cv::FileStorage file(file_name, cv::FileStorage::WRITE);</div>
+<div class="line"><span class="lineno">  668</span>  file &lt;&lt; <span class="stringliteral">&quot;matrix&quot;</span> &lt;&lt; projected_cloud;</div>
+<div class="line"><span class="lineno">  669</span>  file.release();</div>
+<div class="line"><span class="lineno">  670</span>}</div>
+<div class="ttc" id="aclassdyno_1_1CameraParams_html_ae50eb600c23415b3f7bd46e70553f96a"><div class="ttname"><a href="classdyno_1_1CameraParams.html#ae50eb600c23415b3f7bd46e70553f96a">dyno::CameraParams::getCameraMatrix</a></div><div class="ttdeci">cv::Mat getCameraMatrix() const</div><div class="ttdef"><b>Definition:</b> <a href="CameraParams_8hpp_source.html#l00110">CameraParams.hpp:110</a></div></div>
 <div class="ttc" id="aclassdyno_1_1Camera_html_af56ce3541d3ef8a7bcb2246e4634ca59"><div class="ttname"><a href="classdyno_1_1Camera.html#af56ce3541d3ef8a7bcb2246e4634ca59">dyno::Camera::getParams</a></div><div class="ttdeci">const CameraParams &amp; getParams() const</div><div class="ttdef"><b>Definition:</b> <a href="Camera_8hpp_source.html#l00163">Camera.hpp:163</a></div></div>
-<div class="ttc" id="anamespacedyno_1_1vision__tools_html_aaabcfcca356f30c83a45a51259e39783"><div class="ttname"><a href="namespacedyno_1_1vision__tools.html#aaabcfcca356f30c83a45a51259e39783">dyno::vision_tools::depthTo3D</a></div><div class="ttdeci">cv::Mat depthTo3D(const ImageWrapper&lt; ImageType::Depth &gt; &amp;depth_image, const cv::Mat &amp;K)</div><div class="ttdoc">Projects a dense depth map to 3D coordinates in the local frame.</div><div class="ttdef"><b>Definition:</b> <a href="VisionTools_8cc_source.html#l00598">VisionTools.cc:598</a></div></div>
+<div class="ttc" id="anamespacedyno_1_1vision__tools_html_aaabcfcca356f30c83a45a51259e39783"><div class="ttname"><a href="namespacedyno_1_1vision__tools.html#aaabcfcca356f30c83a45a51259e39783">dyno::vision_tools::depthTo3D</a></div><div class="ttdeci">cv::Mat depthTo3D(const ImageWrapper&lt; ImageType::Depth &gt; &amp;depth_image, const cv::Mat &amp;K)</div><div class="ttdoc">Projects a dense depth map to 3D coordinates in the local frame.</div><div class="ttdef"><b>Definition:</b> <a href="VisionTools_8cc_source.html#l00599">VisionTools.cc:599</a></div></div>
 <div class="ttc" id="anamespacedyno_html_a2c13b22c0d8be0826712863c5ce0770e"><div class="ttname"><a href="namespacedyno.html#a2c13b22c0d8be0826712863c5ce0770e">dyno::createDirectory</a></div><div class="ttdeci">bool createDirectory(const std::string &amp;path)</div><div class="ttdoc">Create a directory at the given path.</div><div class="ttdef"><b>Definition:</b> <a href="Logger_8cc_source.html#l00064">Logger.cc:64</a></div></div>
 <div class="ttc" id="anamespacedyno_html_a80a71f28f4f692dc9c21976237dfcfe1"><div class="ttname"><a href="namespacedyno.html#a80a71f28f4f692dc9c21976237dfcfe1">dyno::getOutputFilePath</a></div><div class="ttdeci">std::string getOutputFilePath(const std::string &amp;file_name)</div><div class="ttdoc">Constructs a file path (using the file name) where the root of the path is defined by the FLAGS_outpu...</div><div class="ttdef"><b>Definition:</b> <a href="Logger_8cc_source.html#l00047">Logger.cc:47</a></div></div>
 </div><!-- fragment -->

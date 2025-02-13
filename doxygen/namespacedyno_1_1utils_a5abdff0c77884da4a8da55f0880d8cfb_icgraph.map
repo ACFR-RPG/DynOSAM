@@ -1,9 +1,12 @@
 <map id="dyno::utils::labelMaskToRGB" name="dyno::utils::labelMaskToRGB">
-<area shape="rect" id="node1" title="Given an image that operates like a mask (ie. is a single channel image where each pixel value corres..." alt="" coords="580,112,787,137"/>
-<area shape="rect" id="node2" href="$namespacedyno_1_1utils.html#a699bf9281c9c2c91ff538a4160975480" title="Same as labelMaskToRGB(mask, background label) but instead draws the mask over a black image so only ..." alt="" coords="295,5,502,31"/>
-<area shape="rect" id="node3" href="$KittiSemaniticToMotion_8cc.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="371,55,426,80"/>
-<area shape="rect" id="node4" href="$structdyno_1_1ImageType_1_1ClassSegmentation.html#afe839c69e62e5d1da10b813ca3bb824e" title=" " alt="" coords="265,105,532,145"/>
-<area shape="rect" id="node5" href="$structdyno_1_1ImageType_1_1MotionMask.html#a6b119596bef78424e2085d684d07cd43" title=" " alt="" coords="288,169,509,209"/>
-<area shape="rect" id="node7" href="$structdyno_1_1ImageType_1_1SemanticMask.html#aea33f14e71a1e9201d001f8c3abd61af" title=" " alt="" coords="297,233,500,273"/>
-<area shape="rect" id="node6" href="$classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2" title=" " alt="" coords="5,169,217,209"/>
+<area shape="rect" id="node1" title="Given an image that operates like a mask (ie. is a single channel image where each pixel value corres..." alt="" coords="1071,112,1277,137"/>
+<area shape="rect" id="node2" href="$namespacedyno_1_1utils.html#a699bf9281c9c2c91ff538a4160975480" title="Same as labelMaskToRGB(mask, background label) but instead draws the mask over a black image so only ..." alt="" coords="786,5,993,31"/>
+<area shape="rect" id="node3" href="$KittiSemaniticToMotion_8cc.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="862,55,917,80"/>
+<area shape="rect" id="node4" href="$structdyno_1_1ImageType_1_1ClassSegmentation.html#afe839c69e62e5d1da10b813ca3bb824e" title=" " alt="" coords="756,105,1023,145"/>
+<area shape="rect" id="node5" href="$structdyno_1_1ImageType_1_1MotionMask.html#a6b119596bef78424e2085d684d07cd43" title=" " alt="" coords="779,169,1000,209"/>
+<area shape="rect" id="node10" href="$structdyno_1_1ImageType_1_1SemanticMask.html#aea33f14e71a1e9201d001f8c3abd61af" title=" " alt="" coords="788,233,991,273"/>
+<area shape="rect" id="node6" href="$classdyno_1_1OnlineDataProviderRos.html#a02b6aa8b0f6c6c732310c0852f54ef42" title=" " alt="" coords="507,137,697,177"/>
+<area shape="rect" id="node9" href="$classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2" title=" " alt="" coords="496,201,708,241"/>
+<area shape="rect" id="node7" href="$classdyno_1_1OnlineDataProviderRos.html#a3b7725856bc86407813c51804a26bea4" title="Connects all subscribers." alt="" coords="259,137,448,177"/>
+<area shape="rect" id="node8" href="$classdyno_1_1OnlineDataProviderRos.html#abea751b62c91dbf7bfac759680a434f7" title="Construct a new OnlineDataProviderRos." alt="" coords="5,137,211,177"/>
 </map>

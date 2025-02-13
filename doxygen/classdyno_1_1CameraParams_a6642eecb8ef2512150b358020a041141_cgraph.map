@@ -1,5 +1,5 @@
 <map id="dyno::CameraParams::CameraParams" name="dyno::CameraParams::CameraParams">
 <area shape="rect" id="node1" title=" " alt="" coords="5,53,167,93"/>
 <area shape="rect" id="node2" href="$classdyno_1_1CameraParams.html#a56408d20d8b16fadc9e7373c92e8977a" title=" " alt="" coords="215,5,413,60"/>
-<area shape="rect" id="node3" href="$classdyno_1_1CameraParams.html#a969d8b0935dffdf1a722156a3a96ef39" title=" " alt="" coords="217,84,411,139"/>
+<area shape="rect" id="node3" href="$classdyno_1_1CameraParams.html#a969d8b0935dffdf1a722156a3a96ef39" title="Converts the IntrinsicsCoeffs (in the form: fu, fy, cu, cv) to a 3x3 camera matrix in the form: [fx 0..." alt="" coords="217,84,411,139"/>
 </map>

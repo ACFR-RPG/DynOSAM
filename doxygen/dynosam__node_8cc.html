@@ -221,7 +221,7 @@ Functions</h2></td></tr>
 <div class="line"><span class="lineno">   46</span>  options.arguments(non_ros_args);</div>
 <div class="line"><span class="lineno">   47</span>  options.use_intra_process_comms(<span class="keyword">true</span>);</div>
 <div class="line"><span class="lineno">   48</span> </div>
-<div class="line"><span class="lineno">   49</span>  rclcpp::executors::SingleThreadedExecutor exec;</div>
+<div class="line"><span class="lineno">   49</span>  rclcpp::executors::MultiThreadedExecutor exec;</div>
 <div class="line"><span class="lineno">   50</span>  <span class="keyword">auto</span> ros_pipeline = std::make_shared&lt;dyno::DynoPipelineManagerRos&gt;();</div>
 <div class="line"><span class="lineno">   51</span> </div>
 <div class="line"><span class="lineno">   52</span>  <span class="keywordflow">if</span> (FLAGS_show_dyno_args) {</div>

@@ -472,33 +472,29 @@ template&lt;typename INPUT , typename OUTPUT &gt; </div>
 
 <p>Implements <a class="el" href="classdyno_1_1PipelineModule.html#a0961a7fb2ec456f1aac2173f1cf201de">dyno::PipelineModule&lt; INPUT, OUTPUT &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="PipelineBase-inl_8hpp_source.html#l00139">139</a> of file <a class="el" href="PipelineBase-inl_8hpp_source.html">PipelineBase-inl.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  140</span>{</div>
-<div class="line"><span class="lineno">  141</span>  <span class="keyword">typename</span> <a class="code hl_typedef" href="classdyno_1_1MIMOPipelineModule.html#af2a1a86735ce9c0f3dffe142284fae81">Base::InputConstSharedPtr</a> input = <span class="keyword">nullptr</span>;</div>
-<div class="line"><span class="lineno">  142</span> </div>
-<div class="line"><span class="lineno">  143</span>  <span class="keywordtype">bool</span> queue_state;</div>
-<div class="line"><span class="lineno">  144</span>  <span class="keywordflow">if</span>(<a class="code hl_variable" href="classdyno_1_1SIMOPipelineModule.html#a9e97a3a7707c44eb5e408c5ae855c8b1">parallel_run_</a>) {</div>
-<div class="line"><span class="lineno">  145</span>    queue_state = <a class="code hl_variable" href="classdyno_1_1SIMOPipelineModule.html#a5ea2014fd60fee0a975bcacf9766d323">input_queue</a>-&gt;popBlocking(input);</div>
-<div class="line"><span class="lineno">  146</span>  }</div>
-<div class="line"><span class="lineno">  147</span>  <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  148</span>    queue_state = <a class="code hl_variable" href="classdyno_1_1SIMOPipelineModule.html#a5ea2014fd60fee0a975bcacf9766d323">input_queue</a>-&gt;pop(input);</div>
-<div class="line"><span class="lineno">  149</span>  }</div>
-<div class="line"><span class="lineno">  150</span> </div>
-<div class="line"><span class="lineno">  151</span>  <span class="keywordflow">if</span> (queue_state)</div>
-<div class="line"><span class="lineno">  152</span>  {</div>
-<div class="line"><span class="lineno">  153</span>    <span class="keywordflow">return</span> input;</div>
-<div class="line"><span class="lineno">  154</span>  }</div>
-<div class="line"><span class="lineno">  155</span>  <span class="keywordflow">else</span></div>
-<div class="line"><span class="lineno">  156</span>  {</div>
-<div class="line"><span class="lineno">  157</span>    LOG_IF(WARNING, !<a class="code hl_function" href="classdyno_1_1PipelineBase.html#a5c485b024b7b1c710c94303f29ca8e31">Base::isShutdown</a>() &amp;&amp; !<a class="code hl_function" href="classdyno_1_1SIMOPipelineModule.html#a5b9f5286afab981f95a8a4c46b601646">hasWork</a>())</div>
-<div class="line"><span class="lineno">  158</span>        &lt;&lt; <span class="stringliteral">&quot;Module: &quot;</span> &lt;&lt; <a class="code hl_variable" href="classdyno_1_1PipelineBase.html#aa08d3c035aed987a2f25cdde0a488115">Base::module_name_</a> &lt;&lt; <span class="stringliteral">&quot; - didn&#39;t return an output.&quot;</span>;</div>
-<div class="line"><span class="lineno">  159</span>    <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
-<div class="line"><span class="lineno">  160</span>  }</div>
-<div class="line"><span class="lineno">  161</span>}</div>
+<p class="definition">Definition at line <a class="el" href="PipelineBase-inl_8hpp_source.html#l00134">134</a> of file <a class="el" href="PipelineBase-inl_8hpp_source.html">PipelineBase-inl.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  134</span>                                                  {</div>
+<div class="line"><span class="lineno">  135</span>  <span class="keyword">typename</span> <a class="code hl_typedef" href="classdyno_1_1MIMOPipelineModule.html#af2a1a86735ce9c0f3dffe142284fae81">Base::InputConstSharedPtr</a> input = <span class="keyword">nullptr</span>;</div>
+<div class="line"><span class="lineno">  136</span> </div>
+<div class="line"><span class="lineno">  137</span>  <span class="keywordtype">bool</span> queue_state;</div>
+<div class="line"><span class="lineno">  138</span>  <span class="keywordflow">if</span> (<a class="code hl_variable" href="classdyno_1_1SIMOPipelineModule.html#a9e97a3a7707c44eb5e408c5ae855c8b1">parallel_run_</a>) {</div>
+<div class="line"><span class="lineno">  139</span>    queue_state = <a class="code hl_variable" href="classdyno_1_1SIMOPipelineModule.html#a5ea2014fd60fee0a975bcacf9766d323">input_queue</a>-&gt;popBlocking(input);</div>
+<div class="line"><span class="lineno">  140</span>  } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  141</span>    queue_state = <a class="code hl_variable" href="classdyno_1_1SIMOPipelineModule.html#a5ea2014fd60fee0a975bcacf9766d323">input_queue</a>-&gt;pop(input);</div>
+<div class="line"><span class="lineno">  142</span>  }</div>
+<div class="line"><span class="lineno">  143</span> </div>
+<div class="line"><span class="lineno">  144</span>  <span class="keywordflow">if</span> (queue_state) {</div>
+<div class="line"><span class="lineno">  145</span>    <span class="keywordflow">return</span> input;</div>
+<div class="line"><span class="lineno">  146</span>  } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  147</span>    LOG_IF_EVERY_N(WARNING, !<a class="code hl_function" href="classdyno_1_1PipelineBase.html#a5c485b024b7b1c710c94303f29ca8e31">Base::isShutdown</a>() &amp;&amp; !<a class="code hl_function" href="classdyno_1_1SIMOPipelineModule.html#a5b9f5286afab981f95a8a4c46b601646">hasWork</a>(), 100)</div>
+<div class="line"><span class="lineno">  148</span>        &lt;&lt; <span class="stringliteral">&quot;Module: &quot;</span> &lt;&lt; <a class="code hl_variable" href="classdyno_1_1PipelineBase.html#aa08d3c035aed987a2f25cdde0a488115">Base::module_name_</a> &lt;&lt; <span class="stringliteral">&quot; - didn&#39;t return an output.&quot;</span>;</div>
+<div class="line"><span class="lineno">  149</span>    <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
+<div class="line"><span class="lineno">  150</span>  }</div>
+<div class="line"><span class="lineno">  151</span>}</div>
 <div class="ttc" id="aclassdyno_1_1MIMOPipelineModule_html_af2a1a86735ce9c0f3dffe142284fae81"><div class="ttname"><a href="classdyno_1_1MIMOPipelineModule.html#af2a1a86735ce9c0f3dffe142284fae81">dyno::MIMOPipelineModule::InputConstSharedPtr</a></div><div class="ttdeci">typename InputTypeTraits::TypeConstSharedPtr InputConstSharedPtr</div><div class="ttdef"><b>Definition:</b> <a href="PipelineBase_8hpp_source.html#l00182">PipelineBase.hpp:182</a></div></div>
 <div class="ttc" id="aclassdyno_1_1PipelineBase_html_a5c485b024b7b1c710c94303f29ca8e31"><div class="ttname"><a href="classdyno_1_1PipelineBase.html#a5c485b024b7b1c710c94303f29ca8e31">dyno::PipelineBase::isShutdown</a></div><div class="ttdeci">bool isShutdown() const</div><div class="ttdoc">Returns true if the pipeline has been shutdown by shutdown().</div><div class="ttdef"><b>Definition:</b> <a href="PipelineBase_8hpp_source.html#l00092">PipelineBase.hpp:92</a></div></div>
 <div class="ttc" id="aclassdyno_1_1PipelineBase_html_aa08d3c035aed987a2f25cdde0a488115"><div class="ttname"><a href="classdyno_1_1PipelineBase.html#aa08d3c035aed987a2f25cdde0a488115">dyno::PipelineBase::module_name_</a></div><div class="ttdeci">const std::string module_name_</div><div class="ttdef"><b>Definition:</b> <a href="PipelineBase_8hpp_source.html#l00134">PipelineBase.hpp:134</a></div></div>
-<div class="ttc" id="aclassdyno_1_1SIMOPipelineModule_html_a5b9f5286afab981f95a8a4c46b601646"><div class="ttname"><a href="classdyno_1_1SIMOPipelineModule.html#a5b9f5286afab981f95a8a4c46b601646">dyno::SIMOPipelineModule::hasWork</a></div><div class="ttdeci">bool hasWork() const override</div><div class="ttdoc">Checks if the module has work to do (should check input queues are empty)</div><div class="ttdef"><b>Definition:</b> <a href="PipelineBase-inl_8hpp_source.html#l00170">PipelineBase-inl.hpp:170</a></div></div>
+<div class="ttc" id="aclassdyno_1_1SIMOPipelineModule_html_a5b9f5286afab981f95a8a4c46b601646"><div class="ttname"><a href="classdyno_1_1SIMOPipelineModule.html#a5b9f5286afab981f95a8a4c46b601646">dyno::SIMOPipelineModule::hasWork</a></div><div class="ttdeci">bool hasWork() const override</div><div class="ttdoc">Checks if the module has work to do (should check input queues are empty)</div><div class="ttdef"><b>Definition:</b> <a href="PipelineBase-inl_8hpp_source.html#l00159">PipelineBase-inl.hpp:159</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -528,10 +524,10 @@ template&lt;typename INPUT , typename OUTPUT &gt; </div>
 
 <p>Implements <a class="el" href="classdyno_1_1PipelineBase.html#abb02cf85483c5e267db459381fad8cfa">dyno::PipelineBase</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="PipelineBase-inl_8hpp_source.html#l00170">170</a> of file <a class="el" href="PipelineBase-inl_8hpp_source.html">PipelineBase-inl.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  171</span>{</div>
-<div class="line"><span class="lineno">  172</span>  <span class="keywordflow">return</span> !<a class="code hl_variable" href="classdyno_1_1SIMOPipelineModule.html#a5ea2014fd60fee0a975bcacf9766d323">input_queue</a>-&gt;isShutdown() &amp;&amp; !<a class="code hl_variable" href="classdyno_1_1SIMOPipelineModule.html#a5ea2014fd60fee0a975bcacf9766d323">input_queue</a>-&gt;empty();</div>
-<div class="line"><span class="lineno">  173</span>}</div>
+<p class="definition">Definition at line <a class="el" href="PipelineBase-inl_8hpp_source.html#l00159">159</a> of file <a class="el" href="PipelineBase-inl_8hpp_source.html">PipelineBase-inl.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  159</span>                                                      {</div>
+<div class="line"><span class="lineno">  160</span>  <span class="keywordflow">return</span> !<a class="code hl_variable" href="classdyno_1_1SIMOPipelineModule.html#a5ea2014fd60fee0a975bcacf9766d323">input_queue</a>-&gt;isShutdown() &amp;&amp; !<a class="code hl_variable" href="classdyno_1_1SIMOPipelineModule.html#a5ea2014fd60fee0a975bcacf9766d323">input_queue</a>-&gt;empty();</div>
+<div class="line"><span class="lineno">  161</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -600,10 +596,10 @@ template&lt;typename INPUT , typename OUTPUT &gt; </div>
 
 <p>Implements <a class="el" href="classdyno_1_1PipelineBase.html#a94a7ee9d6d2139a6de9337b4bfb76546">dyno::PipelineBase</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="PipelineBase-inl_8hpp_source.html#l00164">164</a> of file <a class="el" href="PipelineBase-inl_8hpp_source.html">PipelineBase-inl.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  165</span>{</div>
-<div class="line"><span class="lineno">  166</span>  <a class="code hl_variable" href="classdyno_1_1SIMOPipelineModule.html#a5ea2014fd60fee0a975bcacf9766d323">input_queue</a>-&gt;shutdown();</div>
-<div class="line"><span class="lineno">  167</span>}</div>
+<p class="definition">Definition at line <a class="el" href="PipelineBase-inl_8hpp_source.html#l00154">154</a> of file <a class="el" href="PipelineBase-inl_8hpp_source.html">PipelineBase-inl.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  154</span>                                                       {</div>
+<div class="line"><span class="lineno">  155</span>  <a class="code hl_variable" href="classdyno_1_1SIMOPipelineModule.html#a5ea2014fd60fee0a975bcacf9766d323">input_queue</a>-&gt;shutdown();</div>
+<div class="line"><span class="lineno">  156</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>

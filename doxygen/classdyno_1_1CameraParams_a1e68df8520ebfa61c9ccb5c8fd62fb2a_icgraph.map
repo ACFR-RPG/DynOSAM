@@ -1,0 +1,4 @@
+<map id="dyno::CameraParams::distortionModelToString" name="dyno::CameraParams::distortionModelToString">
+<area shape="rect" id="node1" title="Converts the DistortionModel enum to a distortion model string and associated camera model." alt="" coords="284,20,468,60"/>
+<area shape="rect" id="node2" href="$structrclcpp_1_1TypeAdapter_3_01dyno_1_1CameraParams_00_01sensor__msgs_1_1msg_1_1CameraInfo_01_4.html#a88de3493ecfc9c56e7812f9a8919d673" title=" " alt="" coords="5,5,236,75"/>
+</map>

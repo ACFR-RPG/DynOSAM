@@ -1,4 +1,4 @@
 <map id="dyno::CameraParams::convertIntrinsicsVectorToMatrix" name="dyno::CameraParams::convertIntrinsicsVectorToMatrix">
-<area shape="rect" id="node1" title=" " alt="" coords="215,5,408,60"/>
+<area shape="rect" id="node1" title="Converts the IntrinsicsCoeffs (in the form: fu, fy, cu, cv) to a 3x3 camera matrix in the form: [fx 0..." alt="" coords="215,5,408,60"/>
 <area shape="rect" id="node2" href="$classdyno_1_1CameraParams.html#a6642eecb8ef2512150b358020a041141" title=" " alt="" coords="5,13,167,53"/>
 </map>

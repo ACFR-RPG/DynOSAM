@@ -158,7 +158,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="KittiDataProvider_8hpp_source.html#l00039">39</a> of file <a class="el" href="KittiDataProvider_8hpp_source.html">KittiDataProvider.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="KittiDataProvider_8hpp_source.html#l00046">46</a> of file <a class="el" href="KittiDataProvider_8hpp_source.html">KittiDataProvider.hpp</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="a350c2fc309a495596c48f4fc4c0d680b" name="a350c2fc309a495596c48f4fc4c0d680b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a350c2fc309a495596c48f4fc4c0d680b">&#9670;&#160;</a></span>getFolderName()</h2>
@@ -185,8 +185,8 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classdyno_1_1DataFolder.html#a63d64595445016c30e623154c45260b6">dyno::DataFolder&lt; gtsam::Pose3 &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="KittiDataProvider_8hpp_source.html#l00044">44</a> of file <a class="el" href="KittiDataProvider_8hpp_source.html">KittiDataProvider.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   44</span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;pose_gt.txt&quot;</span>; }</div>
+<p class="definition">Definition at line <a class="el" href="KittiDataProvider_8hpp_source.html#l00050">50</a> of file <a class="el" href="KittiDataProvider_8hpp_source.html">KittiDataProvider.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   50</span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;pose_gt.txt&quot;</span>; }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -226,11 +226,9 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classdyno_1_1DataFolder.html#a60162e20f359ad6f5ff58edf0964e3ac">dyno::DataFolder&lt; gtsam::Pose3 &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="KittiDataProvider_8hpp_source.html#l00045">45</a> of file <a class="el" href="KittiDataProvider_8hpp_source.html">KittiDataProvider.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   45</span>                                            {</div>
-<div class="line"><span class="lineno">   46</span>        <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1KittiCameraPoseFolder.html#af7565f2f92480a667ae6040ce332de9b">gt_camera_poses_</a>.at(idx);</div>
-<div class="line"><span class="lineno">   47</span>    }</div>
-<div class="ttc" id="aclassdyno_1_1KittiCameraPoseFolder_html_af7565f2f92480a667ae6040ce332de9b"><div class="ttname"><a href="classdyno_1_1KittiCameraPoseFolder.html#af7565f2f92480a667ae6040ce332de9b">dyno::KittiCameraPoseFolder::gt_camera_poses_</a></div><div class="ttdeci">std::vector&lt; gtsam::Pose3 &gt; gt_camera_poses_</div><div class="ttdef"><b>Definition:</b> <a href="KittiDataProvider_8hpp_source.html#l00088">KittiDataProvider.hpp:88</a></div></div>
+<p class="definition">Definition at line <a class="el" href="KittiDataProvider_8hpp_source.html#l00051">51</a> of file <a class="el" href="KittiDataProvider_8hpp_source.html">KittiDataProvider.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   51</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1KittiCameraPoseFolder.html#af7565f2f92480a667ae6040ce332de9b">gt_camera_poses_</a>.at(idx); }</div>
+<div class="ttc" id="aclassdyno_1_1KittiCameraPoseFolder_html_af7565f2f92480a667ae6040ce332de9b"><div class="ttname"><a href="classdyno_1_1KittiCameraPoseFolder.html#af7565f2f92480a667ae6040ce332de9b">dyno::KittiCameraPoseFolder::gt_camera_poses_</a></div><div class="ttdeci">std::vector&lt; gtsam::Pose3 &gt; gt_camera_poses_</div><div class="ttdef"><b>Definition:</b> <a href="KittiDataProvider_8hpp_source.html#l00093">KittiDataProvider.hpp:93</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1KittiCameraPoseFolder.html#af7565f2f92480a667ae6040ce332de9b">gt_camera_poses_</a>.</p>
 
@@ -264,46 +262,47 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="classdyno_1_1DataFolder.html#aa85fd968b248a11a5a2534415981d08b">dyno::DataFolder&lt; gtsam::Pose3 &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="KittiDataProvider_8hpp_source.html#l00050">50</a> of file <a class="el" href="KittiDataProvider_8hpp_source.html">KittiDataProvider.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   50</span>                               {</div>
-<div class="line"><span class="lineno">   51</span>        std::ifstream object_pose_stream((std::string)<a class="code hl_function" href="classdyno_1_1DataFolder.html#ad832c1d501f9c40eefde4cfc3633e218">getAbsolutePath</a>(), std::ios::in);</div>
-<div class="line"><span class="lineno">   52</span> </div>
-<div class="line"><span class="lineno">   53</span>        <span class="keywordtype">bool</span> set_initial_pose = <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">   54</span>        <span class="keywordflow">while</span> (!object_pose_stream.eof())</div>
-<div class="line"><span class="lineno">   55</span>        {</div>
-<div class="line"><span class="lineno">   56</span>            std::string s;</div>
-<div class="line"><span class="lineno">   57</span>            getline(object_pose_stream, s);</div>
-<div class="line"><span class="lineno">   58</span>            <span class="keywordflow">if</span> (!s.empty())</div>
-<div class="line"><span class="lineno">   59</span>            {</div>
-<div class="line"><span class="lineno">   60</span>                std::stringstream ss;</div>
-<div class="line"><span class="lineno">   61</span>                ss &lt;&lt; s;</div>
-<div class="line"><span class="lineno">   62</span>                <span class="keywordtype">int</span> t;</div>
-<div class="line"><span class="lineno">   63</span>                ss &gt;&gt; t;</div>
-<div class="line"><span class="lineno">   64</span>                cv::Mat cv_pose = cv::Mat::eye(4, 4, CV_64F);</div>
-<div class="line"><span class="lineno">   65</span> </div>
-<div class="line"><span class="lineno">   66</span>                ss &gt;&gt; cv_pose.at&lt;<span class="keywordtype">double</span>&gt;(0, 0) &gt;&gt; cv_pose.at&lt;<span class="keywordtype">double</span>&gt;(0, 1) &gt;&gt; cv_pose.at&lt;<span class="keywordtype">double</span>&gt;(0, 2) &gt;&gt;</div>
-<div class="line"><span class="lineno">   67</span>                    cv_pose.at&lt;<span class="keywordtype">double</span>&gt;(0, 3) &gt;&gt; cv_pose.at&lt;<span class="keywordtype">double</span>&gt;(1, 0) &gt;&gt; cv_pose.at&lt;<span class="keywordtype">double</span>&gt;(1, 1) &gt;&gt;</div>
-<div class="line"><span class="lineno">   68</span>                    cv_pose.at&lt;<span class="keywordtype">double</span>&gt;(1, 2) &gt;&gt; cv_pose.at&lt;<span class="keywordtype">double</span>&gt;(1, 3) &gt;&gt; cv_pose.at&lt;<span class="keywordtype">double</span>&gt;(2, 0) &gt;&gt;</div>
-<div class="line"><span class="lineno">   69</span>                    cv_pose.at&lt;<span class="keywordtype">double</span>&gt;(2, 1) &gt;&gt; cv_pose.at&lt;<span class="keywordtype">double</span>&gt;(2, 2) &gt;&gt; cv_pose.at&lt;<span class="keywordtype">double</span>&gt;(2, 3) &gt;&gt;</div>
-<div class="line"><span class="lineno">   70</span>                    cv_pose.at&lt;<span class="keywordtype">double</span>&gt;(3, 0) &gt;&gt; cv_pose.at&lt;<span class="keywordtype">double</span>&gt;(3, 1) &gt;&gt; cv_pose.at&lt;<span class="keywordtype">double</span>&gt;(3, 2) &gt;&gt;</div>
-<div class="line"><span class="lineno">   71</span>                    cv_pose.at&lt;<span class="keywordtype">double</span>&gt;(3, 3);</div>
-<div class="line"><span class="lineno">   72</span> </div>
-<div class="line"><span class="lineno">   73</span>                gtsam::Pose3 pose = <a class="code hl_function" href="namespacedyno_1_1utils.html#ae54978140c5727f3962fc255cad59952">utils::cvMatToGtsamPose3</a>(cv_pose);</div>
-<div class="line"><span class="lineno">   74</span> </div>
-<div class="line"><span class="lineno">   75</span>                <span class="keywordflow">if</span>(!set_initial_pose) {</div>
-<div class="line"><span class="lineno">   76</span>                    <a class="code hl_variable" href="classdyno_1_1KittiCameraPoseFolder.html#a7a1fafd4ce700028a5dfc26072fa3613">initial_pose_</a> = pose;</div>
-<div class="line"><span class="lineno">   77</span>                    set_initial_pose = <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">   78</span>                }</div>
-<div class="line"><span class="lineno">   79</span>                <span class="comment">//aign with first pose</span></div>
-<div class="line"><span class="lineno">   80</span>                pose = <a class="code hl_variable" href="classdyno_1_1KittiCameraPoseFolder.html#a7a1fafd4ce700028a5dfc26072fa3613">initial_pose_</a>.inverse() * pose;</div>
-<div class="line"><span class="lineno">   81</span> </div>
-<div class="line"><span class="lineno">   82</span>                <a class="code hl_variable" href="classdyno_1_1KittiCameraPoseFolder.html#af7565f2f92480a667ae6040ce332de9b">gt_camera_poses_</a>.push_back(pose);</div>
-<div class="line"><span class="lineno">   83</span>            }</div>
-<div class="line"><span class="lineno">   84</span>        }</div>
-<div class="line"><span class="lineno">   85</span>        object_pose_stream.close();</div>
-<div class="line"><span class="lineno">   86</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="KittiDataProvider_8hpp_source.html#l00054">54</a> of file <a class="el" href="KittiDataProvider_8hpp_source.html">KittiDataProvider.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   54</span>                             {</div>
+<div class="line"><span class="lineno">   55</span>    std::ifstream object_pose_stream((std::string)<a class="code hl_function" href="classdyno_1_1DataFolder.html#ad832c1d501f9c40eefde4cfc3633e218">getAbsolutePath</a>(),</div>
+<div class="line"><span class="lineno">   56</span>                                     std::ios::in);</div>
+<div class="line"><span class="lineno">   57</span> </div>
+<div class="line"><span class="lineno">   58</span>    <span class="keywordtype">bool</span> set_initial_pose = <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">   59</span>    <span class="keywordflow">while</span> (!object_pose_stream.eof()) {</div>
+<div class="line"><span class="lineno">   60</span>      std::string s;</div>
+<div class="line"><span class="lineno">   61</span>      getline(object_pose_stream, s);</div>
+<div class="line"><span class="lineno">   62</span>      <span class="keywordflow">if</span> (!s.empty()) {</div>
+<div class="line"><span class="lineno">   63</span>        std::stringstream ss;</div>
+<div class="line"><span class="lineno">   64</span>        ss &lt;&lt; s;</div>
+<div class="line"><span class="lineno">   65</span>        <span class="keywordtype">int</span> t;</div>
+<div class="line"><span class="lineno">   66</span>        ss &gt;&gt; t;</div>
+<div class="line"><span class="lineno">   67</span>        cv::Mat cv_pose = cv::Mat::eye(4, 4, CV_64F);</div>
+<div class="line"><span class="lineno">   68</span> </div>
+<div class="line"><span class="lineno">   69</span>        ss &gt;&gt; cv_pose.at&lt;<span class="keywordtype">double</span>&gt;(0, 0) &gt;&gt; cv_pose.at&lt;<span class="keywordtype">double</span>&gt;(0, 1) &gt;&gt;</div>
+<div class="line"><span class="lineno">   70</span>            cv_pose.at&lt;<span class="keywordtype">double</span>&gt;(0, 2) &gt;&gt; cv_pose.at&lt;<span class="keywordtype">double</span>&gt;(0, 3) &gt;&gt;</div>
+<div class="line"><span class="lineno">   71</span>            cv_pose.at&lt;<span class="keywordtype">double</span>&gt;(1, 0) &gt;&gt; cv_pose.at&lt;<span class="keywordtype">double</span>&gt;(1, 1) &gt;&gt;</div>
+<div class="line"><span class="lineno">   72</span>            cv_pose.at&lt;<span class="keywordtype">double</span>&gt;(1, 2) &gt;&gt; cv_pose.at&lt;<span class="keywordtype">double</span>&gt;(1, 3) &gt;&gt;</div>
+<div class="line"><span class="lineno">   73</span>            cv_pose.at&lt;<span class="keywordtype">double</span>&gt;(2, 0) &gt;&gt; cv_pose.at&lt;<span class="keywordtype">double</span>&gt;(2, 1) &gt;&gt;</div>
+<div class="line"><span class="lineno">   74</span>            cv_pose.at&lt;<span class="keywordtype">double</span>&gt;(2, 2) &gt;&gt; cv_pose.at&lt;<span class="keywordtype">double</span>&gt;(2, 3) &gt;&gt;</div>
+<div class="line"><span class="lineno">   75</span>            cv_pose.at&lt;<span class="keywordtype">double</span>&gt;(3, 0) &gt;&gt; cv_pose.at&lt;<span class="keywordtype">double</span>&gt;(3, 1) &gt;&gt;</div>
+<div class="line"><span class="lineno">   76</span>            cv_pose.at&lt;<span class="keywordtype">double</span>&gt;(3, 2) &gt;&gt; cv_pose.at&lt;<span class="keywordtype">double</span>&gt;(3, 3);</div>
+<div class="line"><span class="lineno">   77</span> </div>
+<div class="line"><span class="lineno">   78</span>        gtsam::Pose3 pose = <a class="code hl_function" href="namespacedyno_1_1utils.html#ae54978140c5727f3962fc255cad59952">utils::cvMatToGtsamPose3</a>(cv_pose);</div>
+<div class="line"><span class="lineno">   79</span> </div>
+<div class="line"><span class="lineno">   80</span>        <span class="keywordflow">if</span> (!set_initial_pose) {</div>
+<div class="line"><span class="lineno">   81</span>          <a class="code hl_variable" href="classdyno_1_1KittiCameraPoseFolder.html#a7a1fafd4ce700028a5dfc26072fa3613">initial_pose_</a> = pose;</div>
+<div class="line"><span class="lineno">   82</span>          set_initial_pose = <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">   83</span>        }</div>
+<div class="line"><span class="lineno">   84</span>        <span class="comment">// aign with first pose</span></div>
+<div class="line"><span class="lineno">   85</span>        pose = <a class="code hl_variable" href="classdyno_1_1KittiCameraPoseFolder.html#a7a1fafd4ce700028a5dfc26072fa3613">initial_pose_</a>.inverse() * pose;</div>
+<div class="line"><span class="lineno">   86</span> </div>
+<div class="line"><span class="lineno">   87</span>        <a class="code hl_variable" href="classdyno_1_1KittiCameraPoseFolder.html#af7565f2f92480a667ae6040ce332de9b">gt_camera_poses_</a>.push_back(pose);</div>
+<div class="line"><span class="lineno">   88</span>      }</div>
+<div class="line"><span class="lineno">   89</span>    }</div>
+<div class="line"><span class="lineno">   90</span>    object_pose_stream.close();</div>
+<div class="line"><span class="lineno">   91</span>  }</div>
 <div class="ttc" id="aclassdyno_1_1DataFolder_html_ad832c1d501f9c40eefde4cfc3633e218"><div class="ttname"><a href="classdyno_1_1DataFolder.html#ad832c1d501f9c40eefde4cfc3633e218">dyno::DataFolder&lt; gtsam::Pose3 &gt;::getAbsolutePath</a></div><div class="ttdeci">fs::path getAbsolutePath() const</div><div class="ttdef"><b>Definition:</b> <a href="DatasetLoader_8hpp_source.html#l00106">DatasetLoader.hpp:106</a></div></div>
-<div class="ttc" id="aclassdyno_1_1KittiCameraPoseFolder_html_a7a1fafd4ce700028a5dfc26072fa3613"><div class="ttname"><a href="classdyno_1_1KittiCameraPoseFolder.html#a7a1fafd4ce700028a5dfc26072fa3613">dyno::KittiCameraPoseFolder::initial_pose_</a></div><div class="ttdeci">gtsam::Pose3 initial_pose_</div><div class="ttdef"><b>Definition:</b> <a href="KittiDataProvider_8hpp_source.html#l00089">KittiDataProvider.hpp:89</a></div></div>
+<div class="ttc" id="aclassdyno_1_1KittiCameraPoseFolder_html_a7a1fafd4ce700028a5dfc26072fa3613"><div class="ttname"><a href="classdyno_1_1KittiCameraPoseFolder.html#a7a1fafd4ce700028a5dfc26072fa3613">dyno::KittiCameraPoseFolder::initial_pose_</a></div><div class="ttdeci">gtsam::Pose3 initial_pose_</div><div class="ttdef"><b>Definition:</b> <a href="KittiDataProvider_8hpp_source.html#l00095">KittiDataProvider.hpp:95</a></div></div>
 <div class="ttc" id="anamespacedyno_1_1utils_html_ae54978140c5727f3962fc255cad59952"><div class="ttname"><a href="namespacedyno_1_1utils.html#ae54978140c5727f3962fc255cad59952">dyno::utils::cvMatToGtsamPose3</a></div><div class="ttdeci">gtsam::Pose3 cvMatToGtsamPose3(const cv::Mat &amp;H)</div><div class="ttdef"><b>Definition:</b> <a href="GtsamUtils_8cc_source.html#l00036">GtsamUtils.cc:36</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="namespacedyno_1_1utils.html#ae54978140c5727f3962fc255cad59952">dyno::utils::cvMatToGtsamPose3()</a>, <a class="el" href="classdyno_1_1DataFolder.html#ad832c1d501f9c40eefde4cfc3633e218">dyno::DataFolder&lt; gtsam::Pose3 &gt;::getAbsolutePath()</a>, <a class="el" href="classdyno_1_1KittiCameraPoseFolder.html#af7565f2f92480a667ae6040ce332de9b">gt_camera_poses_</a>, and <a class="el" href="classdyno_1_1KittiCameraPoseFolder.html#a7a1fafd4ce700028a5dfc26072fa3613">initial_pose_</a>.</p>
@@ -345,7 +344,7 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="KittiDataProvider_8hpp_source.html#l00088">88</a> of file <a class="el" href="KittiDataProvider_8hpp_source.html">KittiDataProvider.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="KittiDataProvider_8hpp_source.html#l00093">93</a> of file <a class="el" href="KittiDataProvider_8hpp_source.html">KittiDataProvider.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1KittiCameraPoseFolder.html#a2a66d34c3b291172c56b293315e10d09">getItem()</a>, and <a class="el" href="classdyno_1_1KittiCameraPoseFolder.html#aefd157054db515cedb9382be067d9046">onPathInit()</a>.</p>
 
@@ -371,7 +370,7 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="KittiDataProvider_8hpp_source.html#l00089">89</a> of file <a class="el" href="KittiDataProvider_8hpp_source.html">KittiDataProvider.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="KittiDataProvider_8hpp_source.html#l00095">95</a> of file <a class="el" href="KittiDataProvider_8hpp_source.html">KittiDataProvider.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1KittiCameraPoseFolder.html#aefd157054db515cedb9382be067d9046">onPathInit()</a>.</p>
 

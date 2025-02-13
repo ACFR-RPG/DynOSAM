@@ -19,5 +19,6 @@ var searchData=
   ['constructcorrespondancefunc_16',['ConstructCorrespondanceFunc',['../classdyno_1_1Frame.html#afdc897aece97c1fe82f3cea4cf5e267e',1,'dyno::Frame']]],
   ['container_17',['container',['../structdyno_1_1internal_1_1filter__iterator__base.html#abcc940b62b062df58cc3445c2403ca49',1,'dyno::internal::filter_iterator_base']]],
   ['covariance_18',['Covariance',['../classdyno_1_1MeasurementWithCovariance.html#a99ee96128bac6d2c22a3c8a22641e934',1,'dyno::MeasurementWithCovariance']]],
-  ['cpp_5ftype_19',['cpp_type',['../structdyno_1_1internal_1_1CppParameterType.html#a567d0e2270d105a32347b632d67d79ea',1,'dyno::internal::CppParameterType']]]
+  ['cpp_5ftype_19',['cpp_type',['../structdyno_1_1internal_1_1CppParameterType.html#a567d0e2270d105a32347b632d67d79ea',1,'dyno::internal::CppParameterType']]],
+  ['custom_5ftype_20',['custom_type',['../structrclcpp_1_1TypeAdapter_3_01dyno_1_1CameraParams_00_01sensor__msgs_1_1msg_1_1CameraInfo_01_4.html#af08bbc4fbdc287a577e1d2d322835d10',1,'rclcpp::TypeAdapter&lt; dyno::CameraParams, sensor_msgs::msg::CameraInfo &gt;']]]
 ];

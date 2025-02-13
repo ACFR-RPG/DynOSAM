@@ -11,5 +11,6 @@ var searchData=
   ['return_8',['Return',['../structdyno_1_1ModuleFactory.html#a4d47562166b149b23a7ac61c153d9f40',1,'dyno::ModuleFactory']]],
   ['rgbdbackendmoduletraits_9',['RGBDBackendModuleTraits',['../namespacedyno.html#a0ff8123eefa835fea829f8de34f6f1f3',1,'dyno']]],
   ['rgbdmap_10',['RGBDMap',['../classdyno_1_1RGBDBackendModule.html#a2e0b40ee512c97b33a191fbd03817acc',1,'dyno::RGBDBackendModule']]],
-  ['rowtype_11',['RowType',['../classdyno_1_1CsvReader_1_1RowIterator.html#a3792a15f1aa32ab0f1982aca3f6a3dcc',1,'dyno::CsvReader::RowIterator']]]
+  ['ros_5fmessage_5ftype_11',['ros_message_type',['../structrclcpp_1_1TypeAdapter_3_01dyno_1_1CameraParams_00_01sensor__msgs_1_1msg_1_1CameraInfo_01_4.html#a2ed071c291b68accd9514a1e421e96c5',1,'rclcpp::TypeAdapter&lt; dyno::CameraParams, sensor_msgs::msg::CameraInfo &gt;']]],
+  ['rowtype_12',['RowType',['../classdyno_1_1CsvReader_1_1RowIterator.html#a3792a15f1aa32ab0f1982aca3f6a3dcc',1,'dyno::CsvReader::RowIterator']]]
 ];

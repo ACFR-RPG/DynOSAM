@@ -290,7 +290,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="KittiDataProvider_8hpp_source.html#l00337">337</a> of file <a class="el" href="KittiDataProvider_8hpp_source.html">KittiDataProvider.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="KittiDataProvider_8hpp_source.html#l00352">352</a> of file <a class="el" href="KittiDataProvider_8hpp_source.html">KittiDataProvider.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="ac3950a2ffba6caf37cefb51459336862" name="ac3950a2ffba6caf37cefb51459336862"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac3950a2ffba6caf37cefb51459336862">&#9670;&#160;</a></span>KittiDataLoader()</h2>
@@ -336,109 +336,96 @@ Additional Inherited Members</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="KittiDataProvider_8hpp_source.html#l00383">383</a> of file <a class="el" href="KittiDataProvider_8hpp_source.html">KittiDataProvider.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  383</span>                                                                      : DynoDatasetProvider&lt;cv::Mat, cv::Mat, gtsam::Pose3, GroundTruthInputPacket&gt;(</div>
-<div class="line"><span class="lineno">  384</span>        dataset_path), <a class="code hl_variable" href="classdyno_1_1KittiDataLoader.html#ac6402795e16262ed2fda6bf3cd8b960d">params_</a>(params)</div>
-<div class="line"><span class="lineno">  385</span>    {</div>
-<div class="line"><span class="lineno">  386</span>        TimestampFile::Ptr timestamp_file =  std::make_shared&lt;TimestampFile&gt;();</div>
-<div class="line"><span class="lineno">  387</span>        RGBDataFolder::Ptr rgb_folder = std::make_shared&lt;RGBDataFolder&gt;();</div>
-<div class="line"><span class="lineno">  388</span> </div>
-<div class="line"><span class="lineno">  389</span>        CHECK(timestamp_file);</div>
-<div class="line"><span class="lineno">  390</span>        CHECK(rgb_folder);</div>
-<div class="line"><span class="lineno">  391</span> </div>
-<div class="line"><span class="lineno">  392</span>        SegMaskFolder::Ptr mask_folder = <span class="keyword">nullptr</span>;</div>
-<div class="line"><span class="lineno">  393</span>        <span class="keywordflow">if</span>(params.mask_type == <a class="code hl_enumvalue" href="namespacedyno.html#aaa09ef374edf57e1a3edc9b15a52e080a15df8a43ae809c71a3d7cf35b5b14209">MaskType::MOTION</a>) {</div>
-<div class="line"><span class="lineno">  394</span>            mask_folder = std::make_shared&lt;MotionSegMaskFolder&gt;(rgb_folder);</div>
-<div class="line"><span class="lineno">  395</span>            LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Using MaskType::MOTION for loading mask&quot;</span>;</div>
-<div class="line"><span class="lineno">  396</span>        }</div>
-<div class="line"><span class="lineno">  397</span>        <span class="keywordflow">else</span> <span class="keywordflow">if</span>(params.mask_type == <a class="code hl_enumvalue" href="namespacedyno.html#aaa09ef374edf57e1a3edc9b15a52e080ab73bd40e28290e1a3126255f053f82c1">MaskType::SEMANTIC_INSTANCE</a>) {</div>
-<div class="line"><span class="lineno">  398</span>            mask_folder = std::make_shared&lt;InstantanceSegMaskFolder&gt;(rgb_folder);</div>
-<div class="line"><span class="lineno">  399</span>            LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Using MaskType::SEMANTIC_INSTANCE for loading mask&quot;</span>;</div>
-<div class="line"><span class="lineno">  400</span>        }</div>
-<div class="line"><span class="lineno">  401</span>        <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  402</span>            LOG(FATAL) &lt;&lt; <span class="stringliteral">&quot;Unknown MaskType for KittiDataLoader&quot;</span>;</div>
-<div class="line"><span class="lineno">  403</span>        }</div>
-<div class="line"><span class="lineno">  404</span>        CHECK_NOTNULL(mask_folder);</div>
-<div class="line"><span class="lineno">  405</span> </div>
-<div class="line"><span class="lineno">  406</span>        <span class="comment">// KittiClassSegmentationDataFolder::Ptr pixel_level_semantics_folder = std::make_shared&lt;KittiClassSegmentationDataFolder&gt;();</span></div>
+<p class="definition">Definition at line <a class="el" href="KittiDataProvider_8hpp_source.html#l00398">398</a> of file <a class="el" href="KittiDataProvider_8hpp_source.html">KittiDataProvider.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  399</span>      : <a class="code hl_function" href="classdyno_1_1DynoDatasetProvider.html#af562055a5bac5c9b2d0f605448509e6b">DynoDatasetProvider</a>&lt;cv::Mat, cv::Mat, gtsam::Pose3,</div>
+<div class="line"><span class="lineno">  400</span>                            GroundTruthInputPacket&gt;(dataset_path),</div>
+<div class="line"><span class="lineno">  401</span>        <a class="code hl_variable" href="classdyno_1_1KittiDataLoader.html#ac6402795e16262ed2fda6bf3cd8b960d">params_</a>(params) {</div>
+<div class="line"><span class="lineno">  402</span>    TimestampFile::Ptr timestamp_file = std::make_shared&lt;TimestampFile&gt;();</div>
+<div class="line"><span class="lineno">  403</span>    RGBDataFolder::Ptr rgb_folder = std::make_shared&lt;RGBDataFolder&gt;();</div>
+<div class="line"><span class="lineno">  404</span> </div>
+<div class="line"><span class="lineno">  405</span>    CHECK(timestamp_file);</div>
+<div class="line"><span class="lineno">  406</span>    CHECK(rgb_folder);</div>
 <div class="line"><span class="lineno">  407</span> </div>
-<div class="line"><span class="lineno">  408</span>        KittiCameraPoseFolder::Ptr camera_pose_folder = std::make_shared&lt;KittiCameraPoseFolder&gt;();</div>
-<div class="line"><span class="lineno">  409</span>        KittiObjectPoseFolder::Ptr object_pose_gt_folder = std::make_shared&lt;KittiObjectPoseFolder&gt;(</div>
-<div class="line"><span class="lineno">  410</span>            timestamp_file, camera_pose_folder</div>
-<div class="line"><span class="lineno">  411</span>        );</div>
-<div class="line"><span class="lineno">  412</span> </div>
-<div class="line"><span class="lineno">  413</span>        CHECK(camera_pose_folder);</div>
-<div class="line"><span class="lineno">  414</span>        CHECK(object_pose_gt_folder);</div>
-<div class="line"><span class="lineno">  415</span> </div>
-<div class="line"><span class="lineno">  416</span>        <span class="comment">// will also update the params!!</span></div>
-<div class="line"><span class="lineno">  417</span>        <a class="code hl_function" href="classdyno_1_1KittiDataLoader.html#ada06ff2d05bd857b8573413e01a5dd6f">setCameraParams</a>(dataset_path);</div>
-<div class="line"><span class="lineno">  418</span> </div>
-<div class="line"><span class="lineno">  419</span>        this-&gt;<a class="code hl_function" href="classdyno_1_1DynoDatasetProvider.html#aca00b7dce03a97517c126aacb60a3332">setLoaders</a>(</div>
-<div class="line"><span class="lineno">  420</span>            timestamp_file,</div>
-<div class="line"><span class="lineno">  421</span>            rgb_folder,</div>
-<div class="line"><span class="lineno">  422</span>            <span class="comment">//should really be called kitti optical flow and kitti depth data folder</span></div>
-<div class="line"><span class="lineno">  423</span>            std::make_shared&lt;OpticalFlowDataFolder&gt;(),</div>
-<div class="line"><span class="lineno">  424</span>            std::make_shared&lt;DepthDataFolder&gt;(),</div>
-<div class="line"><span class="lineno">  425</span>            mask_folder,</div>
-<div class="line"><span class="lineno">  426</span>            <span class="comment">// pixel_level_semantics_folder,</span></div>
-<div class="line"><span class="lineno">  427</span>            camera_pose_folder,</div>
-<div class="line"><span class="lineno">  428</span>            object_pose_gt_folder</div>
-<div class="line"><span class="lineno">  429</span>        );</div>
-<div class="line"><span class="lineno">  430</span> </div>
-<div class="line"><span class="lineno">  431</span>        <span class="keyword">auto</span> callback = [&amp;](<span class="keywordtype">size_t</span> frame_id,</div>
-<div class="line"><span class="lineno">  432</span>            <a class="code hl_typedef" href="namespacedyno.html#a7fda67c0575c4b7a8210dcc8ae227370">Timestamp</a> timestamp,</div>
-<div class="line"><span class="lineno">  433</span>            cv::Mat rgb,</div>
-<div class="line"><span class="lineno">  434</span>            cv::Mat optical_flow,</div>
-<div class="line"><span class="lineno">  435</span>            cv::Mat depth,</div>
-<div class="line"><span class="lineno">  436</span>            cv::Mat instance_mask,</div>
-<div class="line"><span class="lineno">  437</span>            gtsam::Pose3 camera_pose_gt,</div>
-<div class="line"><span class="lineno">  438</span>            GroundTruthInputPacket gt_object_pose_gt) -&gt; <span class="keywordtype">bool</span></div>
-<div class="line"><span class="lineno">  439</span>        {</div>
-<div class="line"><span class="lineno">  440</span>            CHECK(camera_pose_gt.equals(gt_object_pose_gt.X_world_));</div>
-<div class="line"><span class="lineno">  441</span>            CHECK(timestamp == gt_object_pose_gt.timestamp_);</div>
+<div class="line"><span class="lineno">  408</span>    SegMaskFolder::Ptr mask_folder = <span class="keyword">nullptr</span>;</div>
+<div class="line"><span class="lineno">  409</span>    <span class="keywordflow">if</span> (params.mask_type == <a class="code hl_enumvalue" href="namespacedyno.html#aaa09ef374edf57e1a3edc9b15a52e080a15df8a43ae809c71a3d7cf35b5b14209">MaskType::MOTION</a>) {</div>
+<div class="line"><span class="lineno">  410</span>      mask_folder = std::make_shared&lt;MotionSegMaskFolder&gt;(rgb_folder);</div>
+<div class="line"><span class="lineno">  411</span>      LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Using MaskType::MOTION for loading mask&quot;</span>;</div>
+<div class="line"><span class="lineno">  412</span>    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (params.mask_type == <a class="code hl_enumvalue" href="namespacedyno.html#aaa09ef374edf57e1a3edc9b15a52e080ab73bd40e28290e1a3126255f053f82c1">MaskType::SEMANTIC_INSTANCE</a>) {</div>
+<div class="line"><span class="lineno">  413</span>      mask_folder = std::make_shared&lt;InstantanceSegMaskFolder&gt;(rgb_folder);</div>
+<div class="line"><span class="lineno">  414</span>      LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Using MaskType::SEMANTIC_INSTANCE for loading mask&quot;</span>;</div>
+<div class="line"><span class="lineno">  415</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  416</span>      LOG(FATAL) &lt;&lt; <span class="stringliteral">&quot;Unknown MaskType for KittiDataLoader&quot;</span>;</div>
+<div class="line"><span class="lineno">  417</span>    }</div>
+<div class="line"><span class="lineno">  418</span>    CHECK_NOTNULL(mask_folder);</div>
+<div class="line"><span class="lineno">  419</span> </div>
+<div class="line"><span class="lineno">  420</span>    <span class="comment">// KittiClassSegmentationDataFolder::Ptr pixel_level_semantics_folder =</span></div>
+<div class="line"><span class="lineno">  421</span>    <span class="comment">// std::make_shared&lt;KittiClassSegmentationDataFolder&gt;();</span></div>
+<div class="line"><span class="lineno">  422</span> </div>
+<div class="line"><span class="lineno">  423</span>    KittiCameraPoseFolder::Ptr camera_pose_folder =</div>
+<div class="line"><span class="lineno">  424</span>        std::make_shared&lt;KittiCameraPoseFolder&gt;();</div>
+<div class="line"><span class="lineno">  425</span>    KittiObjectPoseFolder::Ptr object_pose_gt_folder =</div>
+<div class="line"><span class="lineno">  426</span>        std::make_shared&lt;KittiObjectPoseFolder&gt;(timestamp_file,</div>
+<div class="line"><span class="lineno">  427</span>                                                camera_pose_folder);</div>
+<div class="line"><span class="lineno">  428</span> </div>
+<div class="line"><span class="lineno">  429</span>    CHECK(camera_pose_folder);</div>
+<div class="line"><span class="lineno">  430</span>    CHECK(object_pose_gt_folder);</div>
+<div class="line"><span class="lineno">  431</span> </div>
+<div class="line"><span class="lineno">  432</span>    <span class="comment">// will also update the params!!</span></div>
+<div class="line"><span class="lineno">  433</span>    <a class="code hl_function" href="classdyno_1_1KittiDataLoader.html#ada06ff2d05bd857b8573413e01a5dd6f">setCameraParams</a>(dataset_path);</div>
+<div class="line"><span class="lineno">  434</span> </div>
+<div class="line"><span class="lineno">  435</span>    this-&gt;<a class="code hl_function" href="classdyno_1_1DynoDatasetProvider.html#aca00b7dce03a97517c126aacb60a3332">setLoaders</a>(timestamp_file, rgb_folder,</div>
+<div class="line"><span class="lineno">  436</span>                     <span class="comment">// should really be called kitti optical flow and kitti</span></div>
+<div class="line"><span class="lineno">  437</span>                     <span class="comment">// depth data folder</span></div>
+<div class="line"><span class="lineno">  438</span>                     std::make_shared&lt;OpticalFlowDataFolder&gt;(),</div>
+<div class="line"><span class="lineno">  439</span>                     std::make_shared&lt;DepthDataFolder&gt;(), mask_folder,</div>
+<div class="line"><span class="lineno">  440</span>                     <span class="comment">// pixel_level_semantics_folder,</span></div>
+<div class="line"><span class="lineno">  441</span>                     camera_pose_folder, object_pose_gt_folder);</div>
 <div class="line"><span class="lineno">  442</span> </div>
-<div class="line"><span class="lineno">  443</span>            CHECK(<a class="code hl_variable" href="classdyno_1_1DataProvider.html#a1691b6605c29a0bfda5fea991c6bc199">ground_truth_packet_callback_</a>);</div>
-<div class="line"><span class="lineno">  444</span>            <span class="keywordflow">if</span>(<a class="code hl_variable" href="classdyno_1_1DataProvider.html#a1691b6605c29a0bfda5fea991c6bc199">ground_truth_packet_callback_</a>) <a class="code hl_variable" href="classdyno_1_1DataProvider.html#a1691b6605c29a0bfda5fea991c6bc199">ground_truth_packet_callback_</a>(gt_object_pose_gt);</div>
-<div class="line"><span class="lineno">  445</span> </div>
-<div class="line"><span class="lineno">  446</span>            ImageContainer::Ptr image_container = <span class="keyword">nullptr</span>;</div>
-<div class="line"><span class="lineno">  447</span> </div>
-<div class="line"><span class="lineno">  448</span>            <span class="keywordflow">if</span>(<a class="code hl_variable" href="classdyno_1_1KittiDataLoader.html#ac6402795e16262ed2fda6bf3cd8b960d">params_</a>.<a class="code hl_variable" href="structdyno_1_1KittiDataLoader_1_1Params.html#abcf69034dec8879bc198d079d694c0c6">mask_type</a> == <a class="code hl_enumvalue" href="namespacedyno.html#aaa09ef374edf57e1a3edc9b15a52e080a15df8a43ae809c71a3d7cf35b5b14209">MaskType::MOTION</a>) {</div>
-<div class="line"><span class="lineno">  449</span>                image_container = <a class="code hl_function" href="classdyno_1_1ImageContainer.html#a5b0f2449742264ffb55c9062bc58c06f">ImageContainer::Create</a>(</div>
-<div class="line"><span class="lineno">  450</span>                    timestamp,</div>
-<div class="line"><span class="lineno">  451</span>                    frame_id,</div>
-<div class="line"><span class="lineno">  452</span>                    ImageWrapper&lt;ImageType::RGBMono&gt;(rgb),</div>
-<div class="line"><span class="lineno">  453</span>                    ImageWrapper&lt;ImageType::Depth&gt;(depth),</div>
-<div class="line"><span class="lineno">  454</span>                    ImageWrapper&lt;ImageType::OpticalFlow&gt;(optical_flow),</div>
-<div class="line"><span class="lineno">  455</span>                    ImageWrapper&lt;ImageType::MotionMask&gt;(instance_mask));</div>
-<div class="line"><span class="lineno">  456</span>            }</div>
-<div class="line"><span class="lineno">  457</span>            <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  458</span>                image_container = <a class="code hl_function" href="classdyno_1_1ImageContainer.html#a5b0f2449742264ffb55c9062bc58c06f">ImageContainer::Create</a>(</div>
-<div class="line"><span class="lineno">  459</span>                    timestamp,</div>
-<div class="line"><span class="lineno">  460</span>                    frame_id,</div>
-<div class="line"><span class="lineno">  461</span>                    ImageWrapper&lt;ImageType::RGBMono&gt;(rgb),</div>
-<div class="line"><span class="lineno">  462</span>                    ImageWrapper&lt;ImageType::Depth&gt;(depth),</div>
-<div class="line"><span class="lineno">  463</span>                    ImageWrapper&lt;ImageType::OpticalFlow&gt;(optical_flow),</div>
-<div class="line"><span class="lineno">  464</span>                    ImageWrapper&lt;ImageType::SemanticMask&gt;(instance_mask));</div>
-<div class="line"><span class="lineno">  465</span>            }</div>
-<div class="line"><span class="lineno">  466</span> </div>
-<div class="line"><span class="lineno">  467</span> </div>
-<div class="line"><span class="lineno">  468</span>            CHECK(<a class="code hl_variable" href="classdyno_1_1DataProvider.html#aa11672e30d895d97f113076391bc02cc">image_container_callback_</a>);</div>
-<div class="line"><span class="lineno">  469</span>            <span class="keywordflow">if</span>(<a class="code hl_variable" href="classdyno_1_1DataProvider.html#aa11672e30d895d97f113076391bc02cc">image_container_callback_</a>) <a class="code hl_variable" href="classdyno_1_1DataProvider.html#aa11672e30d895d97f113076391bc02cc">image_container_callback_</a>(image_container);</div>
-<div class="line"><span class="lineno">  470</span>            <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  471</span>        };</div>
-<div class="line"><span class="lineno">  472</span> </div>
-<div class="line"><span class="lineno">  473</span>        this-&gt;<a class="code hl_function" href="structdyno_1_1__DynoDatasetConstructor.html#a5354a00794f43690a5bab204bda3879e">setCallback</a>(callback);</div>
-<div class="line"><span class="lineno">  474</span>    }</div>
+<div class="line"><span class="lineno">  443</span>    <span class="keyword">auto</span> callback = [&amp;](<span class="keywordtype">size_t</span> frame_id, <a class="code hl_typedef" href="namespacedyno.html#a7fda67c0575c4b7a8210dcc8ae227370">Timestamp</a> timestamp, cv::Mat rgb,</div>
+<div class="line"><span class="lineno">  444</span>                        cv::Mat optical_flow, cv::Mat depth,</div>
+<div class="line"><span class="lineno">  445</span>                        cv::Mat instance_mask, gtsam::Pose3 camera_pose_gt,</div>
+<div class="line"><span class="lineno">  446</span>                        GroundTruthInputPacket gt_object_pose_gt) -&gt; <span class="keywordtype">bool</span> {</div>
+<div class="line"><span class="lineno">  447</span>      CHECK(camera_pose_gt.equals(gt_object_pose_gt.X_world_));</div>
+<div class="line"><span class="lineno">  448</span>      CHECK(timestamp == gt_object_pose_gt.timestamp_);</div>
+<div class="line"><span class="lineno">  449</span> </div>
+<div class="line"><span class="lineno">  450</span>      CHECK(<a class="code hl_variable" href="classdyno_1_1DataProvider.html#a1691b6605c29a0bfda5fea991c6bc199">ground_truth_packet_callback_</a>);</div>
+<div class="line"><span class="lineno">  451</span>      <span class="keywordflow">if</span> (<a class="code hl_variable" href="classdyno_1_1DataProvider.html#a1691b6605c29a0bfda5fea991c6bc199">ground_truth_packet_callback_</a>)</div>
+<div class="line"><span class="lineno">  452</span>        <a class="code hl_variable" href="classdyno_1_1DataProvider.html#a1691b6605c29a0bfda5fea991c6bc199">ground_truth_packet_callback_</a>(gt_object_pose_gt);</div>
+<div class="line"><span class="lineno">  453</span> </div>
+<div class="line"><span class="lineno">  454</span>      ImageContainer::Ptr image_container = <span class="keyword">nullptr</span>;</div>
+<div class="line"><span class="lineno">  455</span> </div>
+<div class="line"><span class="lineno">  456</span>      <span class="keywordflow">if</span> (<a class="code hl_variable" href="classdyno_1_1KittiDataLoader.html#ac6402795e16262ed2fda6bf3cd8b960d">params_</a>.<a class="code hl_variable" href="structdyno_1_1KittiDataLoader_1_1Params.html#abcf69034dec8879bc198d079d694c0c6">mask_type</a> == <a class="code hl_enumvalue" href="namespacedyno.html#aaa09ef374edf57e1a3edc9b15a52e080a15df8a43ae809c71a3d7cf35b5b14209">MaskType::MOTION</a>) {</div>
+<div class="line"><span class="lineno">  457</span>        image_container = <a class="code hl_function" href="classdyno_1_1ImageContainer.html#a5b0f2449742264ffb55c9062bc58c06f">ImageContainer::Create</a>(</div>
+<div class="line"><span class="lineno">  458</span>            timestamp, frame_id, ImageWrapper&lt;ImageType::RGBMono&gt;(rgb),</div>
+<div class="line"><span class="lineno">  459</span>            ImageWrapper&lt;ImageType::Depth&gt;(depth),</div>
+<div class="line"><span class="lineno">  460</span>            ImageWrapper&lt;ImageType::OpticalFlow&gt;(optical_flow),</div>
+<div class="line"><span class="lineno">  461</span>            ImageWrapper&lt;ImageType::MotionMask&gt;(instance_mask));</div>
+<div class="line"><span class="lineno">  462</span>      } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  463</span>        image_container = <a class="code hl_function" href="classdyno_1_1ImageContainer.html#a5b0f2449742264ffb55c9062bc58c06f">ImageContainer::Create</a>(</div>
+<div class="line"><span class="lineno">  464</span>            timestamp, frame_id, ImageWrapper&lt;ImageType::RGBMono&gt;(rgb),</div>
+<div class="line"><span class="lineno">  465</span>            ImageWrapper&lt;ImageType::Depth&gt;(depth),</div>
+<div class="line"><span class="lineno">  466</span>            ImageWrapper&lt;ImageType::OpticalFlow&gt;(optical_flow),</div>
+<div class="line"><span class="lineno">  467</span>            ImageWrapper&lt;ImageType::SemanticMask&gt;(instance_mask));</div>
+<div class="line"><span class="lineno">  468</span>      }</div>
+<div class="line"><span class="lineno">  469</span> </div>
+<div class="line"><span class="lineno">  470</span>      CHECK(<a class="code hl_variable" href="classdyno_1_1DataProvider.html#aa11672e30d895d97f113076391bc02cc">image_container_callback_</a>);</div>
+<div class="line"><span class="lineno">  471</span>      <span class="keywordflow">if</span> (<a class="code hl_variable" href="classdyno_1_1DataProvider.html#aa11672e30d895d97f113076391bc02cc">image_container_callback_</a>) <a class="code hl_variable" href="classdyno_1_1DataProvider.html#aa11672e30d895d97f113076391bc02cc">image_container_callback_</a>(image_container);</div>
+<div class="line"><span class="lineno">  472</span>      <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  473</span>    };</div>
+<div class="line"><span class="lineno">  474</span> </div>
+<div class="line"><span class="lineno">  475</span>    this-&gt;<a class="code hl_function" href="structdyno_1_1__DynoDatasetConstructor.html#a5354a00794f43690a5bab204bda3879e">setCallback</a>(callback);</div>
+<div class="line"><span class="lineno">  476</span>  }</div>
 <div class="ttc" id="aclassdyno_1_1DataProvider_html_a1691b6605c29a0bfda5fea991c6bc199"><div class="ttname"><a href="classdyno_1_1DataProvider.html#a1691b6605c29a0bfda5fea991c6bc199">dyno::DataProvider::ground_truth_packet_callback_</a></div><div class="ttdeci">GroundTruthPacketCallback ground_truth_packet_callback_</div><div class="ttdef"><b>Definition:</b> <a href="DataProvider_8hpp_source.html#l00128">DataProvider.hpp:128</a></div></div>
 <div class="ttc" id="aclassdyno_1_1DataProvider_html_aa11672e30d895d97f113076391bc02cc"><div class="ttname"><a href="classdyno_1_1DataProvider.html#aa11672e30d895d97f113076391bc02cc">dyno::DataProvider::image_container_callback_</a></div><div class="ttdeci">ImageContainerCallback image_container_callback_</div><div class="ttdef"><b>Definition:</b> <a href="DataProvider_8hpp_source.html#l00124">DataProvider.hpp:124</a></div></div>
 <div class="ttc" id="aclassdyno_1_1DynoDatasetProvider_html_aca00b7dce03a97517c126aacb60a3332"><div class="ttname"><a href="classdyno_1_1DynoDatasetProvider.html#aca00b7dce03a97517c126aacb60a3332">dyno::DynoDatasetProvider&lt; cv::Mat, cv::Mat, gtsam::Pose3, GroundTruthInputPacket &gt;::setLoaders</a></div><div class="ttdeci">void setLoaders(TimestampBaseLoader::Ptr timestamp_loader, dyno::DataFolder&lt; cv::Mat &gt;::Ptr rgb_loader, dyno::DataFolder&lt; cv::Mat &gt;::Ptr optical_flow_loader, typename DataFolder&lt; DataTypes &gt;::Ptr... data_folders) override</div><div class="ttdef"><b>Definition:</b> <a href="DatasetProvider_8hpp_source.html#l00340">DatasetProvider.hpp:340</a></div></div>
+<div class="ttc" id="aclassdyno_1_1DynoDatasetProvider_html_af562055a5bac5c9b2d0f605448509e6b"><div class="ttname"><a href="classdyno_1_1DynoDatasetProvider.html#af562055a5bac5c9b2d0f605448509e6b">dyno::DynoDatasetProvider&lt; cv::Mat, cv::Mat, gtsam::Pose3, GroundTruthInputPacket &gt;::DynoDatasetProvider</a></div><div class="ttdeci">DynoDatasetProvider(const fs::path &amp;dataset_path)</div><div class="ttdef"><b>Definition:</b> <a href="DatasetProvider_8hpp_source.html#l00268">DatasetProvider.hpp:268</a></div></div>
 <div class="ttc" id="aclassdyno_1_1ImageContainer_html_a5b0f2449742264ffb55c9062bc58c06f"><div class="ttname"><a href="classdyno_1_1ImageContainer.html#a5b0f2449742264ffb55c9062bc58c06f">dyno::ImageContainer::Create</a></div><div class="ttdeci">static ImageContainer::Ptr Create(const Timestamp timestamp, const FrameId frame_id, const ImageWrapper&lt; ImageType::RGBMono &gt; &amp;img, const ImageWrapper&lt; ImageType::Depth &gt; &amp;depth, const ImageWrapper&lt; ImageType::OpticalFlow &gt; &amp;optical_flow, const ImageWrapper&lt; ImageType::SemanticMask &gt; &amp;semantic_mask)</div><div class="ttdoc">Construct an image container equivalent to RGBD + Semantic Mask input.</div><div class="ttdef"><b>Definition:</b> <a href="ImageContainer_8cc_source.html#l00112">ImageContainer.cc:112</a></div></div>
-<div class="ttc" id="aclassdyno_1_1KittiDataLoader_html_ac6402795e16262ed2fda6bf3cd8b960d"><div class="ttname"><a href="classdyno_1_1KittiDataLoader.html#ac6402795e16262ed2fda6bf3cd8b960d">dyno::KittiDataLoader::params_</a></div><div class="ttdeci">Params params_</div><div class="ttdef"><b>Definition:</b> <a href="KittiDataProvider_8hpp_source.html#l00558">KittiDataProvider.hpp:558</a></div></div>
-<div class="ttc" id="aclassdyno_1_1KittiDataLoader_html_ada06ff2d05bd857b8573413e01a5dd6f"><div class="ttname"><a href="classdyno_1_1KittiDataLoader.html#ada06ff2d05bd857b8573413e01a5dd6f">dyno::KittiDataLoader::setCameraParams</a></div><div class="ttdeci">void setCameraParams(const fs::path &amp;dataset_path)</div><div class="ttdef"><b>Definition:</b> <a href="KittiDataProvider_8hpp_source.html#l00516">KittiDataProvider.hpp:516</a></div></div>
+<div class="ttc" id="aclassdyno_1_1KittiDataLoader_html_ac6402795e16262ed2fda6bf3cd8b960d"><div class="ttname"><a href="classdyno_1_1KittiDataLoader.html#ac6402795e16262ed2fda6bf3cd8b960d">dyno::KittiDataLoader::params_</a></div><div class="ttdeci">Params params_</div><div class="ttdef"><b>Definition:</b> <a href="KittiDataProvider_8hpp_source.html#l00565">KittiDataProvider.hpp:565</a></div></div>
+<div class="ttc" id="aclassdyno_1_1KittiDataLoader_html_ada06ff2d05bd857b8573413e01a5dd6f"><div class="ttname"><a href="classdyno_1_1KittiDataLoader.html#ada06ff2d05bd857b8573413e01a5dd6f">dyno::KittiDataLoader::setCameraParams</a></div><div class="ttdeci">void setCameraParams(const fs::path &amp;dataset_path)</div><div class="ttdef"><b>Definition:</b> <a href="KittiDataProvider_8hpp_source.html#l00520">KittiDataProvider.hpp:520</a></div></div>
 <div class="ttc" id="anamespacedyno_html_a7fda67c0575c4b7a8210dcc8ae227370"><div class="ttname"><a href="namespacedyno.html#a7fda67c0575c4b7a8210dcc8ae227370">dyno::Timestamp</a></div><div class="ttdeci">double Timestamp</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00064">Types.hpp:64</a></div></div>
 <div class="ttc" id="anamespacedyno_html_aaa09ef374edf57e1a3edc9b15a52e080a15df8a43ae809c71a3d7cf35b5b14209"><div class="ttname"><a href="namespacedyno.html#aaa09ef374edf57e1a3edc9b15a52e080a15df8a43ae809c71a3d7cf35b5b14209">dyno::MOTION</a></div><div class="ttdeci">@ MOTION</div><div class="ttdef"><b>Definition:</b> <a href="DatasetLoader_8hpp_source.html#l00287">DatasetLoader.hpp:287</a></div></div>
 <div class="ttc" id="anamespacedyno_html_aaa09ef374edf57e1a3edc9b15a52e080ab73bd40e28290e1a3126255f053f82c1"><div class="ttname"><a href="namespacedyno.html#aaa09ef374edf57e1a3edc9b15a52e080ab73bd40e28290e1a3126255f053f82c1">dyno::SEMANTIC_INSTANCE</a></div><div class="ttdeci">@ SEMANTIC_INSTANCE</div><div class="ttdef"><b>Definition:</b> <a href="DatasetLoader_8hpp_source.html#l00289">DatasetLoader.hpp:288</a></div></div>
-<div class="ttc" id="astructdyno_1_1KittiDataLoader_1_1Params_html_abcf69034dec8879bc198d079d694c0c6"><div class="ttname"><a href="structdyno_1_1KittiDataLoader_1_1Params.html#abcf69034dec8879bc198d079d694c0c6">dyno::KittiDataLoader::Params::mask_type</a></div><div class="ttdeci">MaskType mask_type</div><div class="ttdef"><b>Definition:</b> <a href="KittiDataProvider_8hpp_source.html#l00342">KittiDataProvider.hpp:342</a></div></div>
+<div class="ttc" id="astructdyno_1_1KittiDataLoader_1_1Params_html_abcf69034dec8879bc198d079d694c0c6"><div class="ttname"><a href="structdyno_1_1KittiDataLoader_1_1Params.html#abcf69034dec8879bc198d079d694c0c6">dyno::KittiDataLoader::Params::mask_type</a></div><div class="ttdeci">MaskType mask_type</div><div class="ttdef"><b>Definition:</b> <a href="KittiDataProvider_8hpp_source.html#l00357">KittiDataProvider.hpp:357</a></div></div>
 <div class="ttc" id="astructdyno_1_1__DynoDatasetConstructor_html_a5354a00794f43690a5bab204bda3879e"><div class="ttname"><a href="structdyno_1_1__DynoDatasetConstructor.html#a5354a00794f43690a5bab204bda3879e">dyno::_DynoDatasetConstructor&lt; Timestamp, cv::Mat, cv::Mat, DataTypes... &gt;::setCallback</a></div><div class="ttdeci">void setCallback(const DataInputCallback &amp;data_input_callback)</div><div class="ttdef"><b>Definition:</b> <a href="DatasetProvider_8hpp_source.html#l00067">DatasetProvider.hpp:67</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1ImageContainer.html#a5b0f2449742264ffb55c9062bc58c06f">dyno::ImageContainer::Create()</a>, <a class="el" href="classdyno_1_1DataProvider.html#a1691b6605c29a0bfda5fea991c6bc199">dyno::DataProvider::ground_truth_packet_callback_</a>, <a class="el" href="classdyno_1_1DataProvider.html#aa11672e30d895d97f113076391bc02cc">dyno::DataProvider::image_container_callback_</a>, <a class="el" href="structdyno_1_1KittiDataLoader_1_1Params.html#abcf69034dec8879bc198d079d694c0c6">dyno::KittiDataLoader::Params::mask_type</a>, <a class="el" href="namespacedyno.html#aaa09ef374edf57e1a3edc9b15a52e080a15df8a43ae809c71a3d7cf35b5b14209">dyno::MOTION</a>, <a class="el" href="classdyno_1_1KittiDataLoader.html#ac6402795e16262ed2fda6bf3cd8b960d">params_</a>, <a class="el" href="namespacedyno.html#aaa09ef374edf57e1a3edc9b15a52e080ab73bd40e28290e1a3126255f053f82c1">dyno::SEMANTIC_INSTANCE</a>, <a class="el" href="structdyno_1_1__DynoDatasetConstructor.html#a5354a00794f43690a5bab204bda3879e">dyno::_DynoDatasetConstructor&lt; Timestamp, cv::Mat, cv::Mat, DataTypes... &gt;::setCallback()</a>, <a class="el" href="classdyno_1_1KittiDataLoader.html#ada06ff2d05bd857b8573413e01a5dd6f">setCameraParams()</a>, and <a class="el" href="classdyno_1_1DynoDatasetProvider.html#aca00b7dce03a97517c126aacb60a3332">dyno::DynoDatasetProvider&lt; cv::Mat, cv::Mat, gtsam::Pose3, GroundTruthInputPacket &gt;::setLoaders()</a>.</p>
@@ -487,11 +474,11 @@ Here is the call graph for this function:</div>
 
 <p>Reimplemented from <a class="el" href="classdyno_1_1DataProvider.html#a7ad37ecec178b81be71cd7ec8657160d">dyno::DataProvider</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="KittiDataProvider_8hpp_source.html#l00476">476</a> of file <a class="el" href="KittiDataProvider_8hpp_source.html">KittiDataProvider.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  476</span>                                                           {</div>
-<div class="line"><span class="lineno">  477</span>        <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1KittiDataLoader.html#aaf9d1398d573d45d9a0a04648d80b65b">camera_params_</a>;</div>
-<div class="line"><span class="lineno">  478</span>    }</div>
-<div class="ttc" id="aclassdyno_1_1KittiDataLoader_html_aaf9d1398d573d45d9a0a04648d80b65b"><div class="ttname"><a href="classdyno_1_1KittiDataLoader.html#aaf9d1398d573d45d9a0a04648d80b65b">dyno::KittiDataLoader::camera_params_</a></div><div class="ttdeci">CameraParams::Optional camera_params_</div><div class="ttdef"><b>Definition:</b> <a href="KittiDataProvider_8hpp_source.html#l00559">KittiDataProvider.hpp:559</a></div></div>
+<p class="definition">Definition at line <a class="el" href="KittiDataProvider_8hpp_source.html#l00478">478</a> of file <a class="el" href="KittiDataProvider_8hpp_source.html">KittiDataProvider.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  478</span>                                                        {</div>
+<div class="line"><span class="lineno">  479</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1KittiDataLoader.html#aaf9d1398d573d45d9a0a04648d80b65b">camera_params_</a>;</div>
+<div class="line"><span class="lineno">  480</span>  }</div>
+<div class="ttc" id="aclassdyno_1_1KittiDataLoader_html_aaf9d1398d573d45d9a0a04648d80b65b"><div class="ttname"><a href="classdyno_1_1KittiDataLoader.html#aaf9d1398d573d45d9a0a04648d80b65b">dyno::KittiDataLoader::camera_params_</a></div><div class="ttdeci">CameraParams::Optional camera_params_</div><div class="ttdef"><b>Definition:</b> <a href="KittiDataProvider_8hpp_source.html#l00566">KittiDataProvider.hpp:566</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1KittiDataLoader.html#aaf9d1398d573d45d9a0a04648d80b65b">camera_params_</a>.</p>
 
@@ -533,39 +520,39 @@ Here is the call graph for this function:</div>
 
 <p>Reimplemented from <a class="el" href="classdyno_1_1DataProvider.html#a45d3385ae82257c8cfcf6552ba7f0670">dyno::DataProvider</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="KittiDataProvider_8hpp_source.html#l00480">480</a> of file <a class="el" href="KittiDataProvider_8hpp_source.html">KittiDataProvider.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  480</span>                                                                                             {</div>
-<div class="line"><span class="lineno">  481</span>        <span class="keywordflow">if</span>(!image_container-&gt;hasDepth()) {</div>
-<div class="line"><span class="lineno">  482</span>            <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;Cannot preprocess ImageContainer in Kitti dataset as no depth!&quot;</span>);</div>
-<div class="line"><span class="lineno">  483</span>        }</div>
-<div class="line"><span class="lineno">  484</span> </div>
-<div class="line"><span class="lineno">  485</span>        <span class="keyword">const</span> <span class="keyword">auto</span>&amp; base_line = <a class="code hl_variable" href="classdyno_1_1KittiDataLoader.html#ac6402795e16262ed2fda6bf3cd8b960d">params_</a>.<a class="code hl_variable" href="structdyno_1_1KittiDataLoader_1_1Params.html#a2fe35a76ee64c23e7374896adb742d14">base_line</a>;</div>
-<div class="line"><span class="lineno">  486</span>        <span class="keyword">const</span> <span class="keyword">auto</span>&amp; depth_scale_factor = <a class="code hl_variable" href="classdyno_1_1KittiDataLoader.html#ac6402795e16262ed2fda6bf3cd8b960d">params_</a>.<a class="code hl_variable" href="structdyno_1_1KittiDataLoader_1_1Params.html#a1aa4639873808d18962a24e75481983a">depth_scale_factor</a>;</div>
-<div class="line"><span class="lineno">  487</span> </div>
-<div class="line"><span class="lineno">  488</span>        <span class="keyword">const</span> cv::Mat&amp; const_disparity = image_container-&gt;getDepth();</div>
-<div class="line"><span class="lineno">  489</span>        cv::Mat depth;</div>
-<div class="line"><span class="lineno">  490</span>        const_disparity.copyTo(depth);</div>
-<div class="line"><span class="lineno">  491</span>        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; const_disparity.rows; i++)</div>
-<div class="line"><span class="lineno">  492</span>        {</div>
-<div class="line"><span class="lineno">  493</span>            <span class="keywordflow">for</span> (<span class="keywordtype">int</span> j = 0; j &lt; const_disparity.cols; j++)</div>
-<div class="line"><span class="lineno">  494</span>            {</div>
-<div class="line"><span class="lineno">  495</span>                <span class="keywordflow">if</span> (const_disparity.at&lt;<span class="keywordtype">double</span>&gt;(i, j) &lt; 0) {</div>
-<div class="line"><span class="lineno">  496</span>                    depth.at&lt;<span class="keywordtype">double</span>&gt;(i, j) = 0;</div>
-<div class="line"><span class="lineno">  497</span>                }</div>
-<div class="line"><span class="lineno">  498</span>                <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  499</span>                    depth.at&lt;<span class="keywordtype">double</span>&gt;(i, j) = base_line / (const_disparity.at&lt;<span class="keywordtype">double</span>&gt;(i, j) / depth_scale_factor);</div>
-<div class="line"><span class="lineno">  500</span>                }</div>
-<div class="line"><span class="lineno">  501</span>            }</div>
-<div class="line"><span class="lineno">  502</span>        }</div>
-<div class="line"><span class="lineno">  503</span> </div>
-<div class="line"><span class="lineno">  504</span>        cv::Mat&amp; disparity = image_container-&gt;get&lt;ImageType::Depth&gt;();</div>
-<div class="line"><span class="lineno">  505</span>        depth.copyTo(disparity);</div>
-<div class="line"><span class="lineno">  506</span>        depth.convertTo(depth, CV_64F);</div>
-<div class="line"><span class="lineno">  507</span> </div>
-<div class="line"><span class="lineno">  508</span>        <span class="keywordflow">return</span> image_container;</div>
-<div class="line"><span class="lineno">  509</span>    }</div>
-<div class="ttc" id="astructdyno_1_1KittiDataLoader_1_1Params_html_a1aa4639873808d18962a24e75481983a"><div class="ttname"><a href="structdyno_1_1KittiDataLoader_1_1Params.html#a1aa4639873808d18962a24e75481983a">dyno::KittiDataLoader::Params::depth_scale_factor</a></div><div class="ttdeci">double depth_scale_factor</div><div class="ttdef"><b>Definition:</b> <a href="KittiDataProvider_8hpp_source.html#l00347">KittiDataProvider.hpp:347</a></div></div>
-<div class="ttc" id="astructdyno_1_1KittiDataLoader_1_1Params_html_a2fe35a76ee64c23e7374896adb742d14"><div class="ttname"><a href="structdyno_1_1KittiDataLoader_1_1Params.html#a2fe35a76ee64c23e7374896adb742d14">dyno::KittiDataLoader::Params::base_line</a></div><div class="ttdeci">double base_line</div><div class="ttdef"><b>Definition:</b> <a href="KittiDataProvider_8hpp_source.html#l00346">KittiDataProvider.hpp:346</a></div></div>
+<p class="definition">Definition at line <a class="el" href="KittiDataProvider_8hpp_source.html#l00482">482</a> of file <a class="el" href="KittiDataProvider_8hpp_source.html">KittiDataProvider.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  483</span>                                                  {</div>
+<div class="line"><span class="lineno">  484</span>    <span class="keywordflow">if</span> (!image_container-&gt;hasDepth()) {</div>
+<div class="line"><span class="lineno">  485</span>      <span class="keywordflow">throw</span> std::runtime_error(</div>
+<div class="line"><span class="lineno">  486</span>          <span class="stringliteral">&quot;Cannot preprocess ImageContainer in Kitti dataset as no depth!&quot;</span>);</div>
+<div class="line"><span class="lineno">  487</span>    }</div>
+<div class="line"><span class="lineno">  488</span> </div>
+<div class="line"><span class="lineno">  489</span>    <span class="keyword">const</span> <span class="keyword">auto</span>&amp; base_line = <a class="code hl_variable" href="classdyno_1_1KittiDataLoader.html#ac6402795e16262ed2fda6bf3cd8b960d">params_</a>.<a class="code hl_variable" href="structdyno_1_1KittiDataLoader_1_1Params.html#a2fe35a76ee64c23e7374896adb742d14">base_line</a>;</div>
+<div class="line"><span class="lineno">  490</span>    <span class="keyword">const</span> <span class="keyword">auto</span>&amp; depth_scale_factor = <a class="code hl_variable" href="classdyno_1_1KittiDataLoader.html#ac6402795e16262ed2fda6bf3cd8b960d">params_</a>.<a class="code hl_variable" href="structdyno_1_1KittiDataLoader_1_1Params.html#a1aa4639873808d18962a24e75481983a">depth_scale_factor</a>;</div>
+<div class="line"><span class="lineno">  491</span> </div>
+<div class="line"><span class="lineno">  492</span>    <span class="keyword">const</span> cv::Mat&amp; const_disparity = image_container-&gt;getDepth();</div>
+<div class="line"><span class="lineno">  493</span>    cv::Mat depth;</div>
+<div class="line"><span class="lineno">  494</span>    const_disparity.copyTo(depth);</div>
+<div class="line"><span class="lineno">  495</span>    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; const_disparity.rows; i++) {</div>
+<div class="line"><span class="lineno">  496</span>      <span class="keywordflow">for</span> (<span class="keywordtype">int</span> j = 0; j &lt; const_disparity.cols; j++) {</div>
+<div class="line"><span class="lineno">  497</span>        <span class="keywordflow">if</span> (const_disparity.at&lt;<span class="keywordtype">double</span>&gt;(i, j) &lt; 0) {</div>
+<div class="line"><span class="lineno">  498</span>          depth.at&lt;<span class="keywordtype">double</span>&gt;(i, j) = 0;</div>
+<div class="line"><span class="lineno">  499</span>        } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  500</span>          depth.at&lt;<span class="keywordtype">double</span>&gt;(i, j) =</div>
+<div class="line"><span class="lineno">  501</span>              base_line /</div>
+<div class="line"><span class="lineno">  502</span>              (const_disparity.at&lt;<span class="keywordtype">double</span>&gt;(i, j) / depth_scale_factor);</div>
+<div class="line"><span class="lineno">  503</span>        }</div>
+<div class="line"><span class="lineno">  504</span>      }</div>
+<div class="line"><span class="lineno">  505</span>    }</div>
+<div class="line"><span class="lineno">  506</span> </div>
+<div class="line"><span class="lineno">  507</span>    cv::Mat&amp; disparity = image_container-&gt;get&lt;ImageType::Depth&gt;();</div>
+<div class="line"><span class="lineno">  508</span>    depth.copyTo(disparity);</div>
+<div class="line"><span class="lineno">  509</span>    depth.convertTo(depth, CV_64F);</div>
+<div class="line"><span class="lineno">  510</span> </div>
+<div class="line"><span class="lineno">  511</span>    <span class="keywordflow">return</span> image_container;</div>
+<div class="line"><span class="lineno">  512</span>  }</div>
+<div class="ttc" id="astructdyno_1_1KittiDataLoader_1_1Params_html_a1aa4639873808d18962a24e75481983a"><div class="ttname"><a href="structdyno_1_1KittiDataLoader_1_1Params.html#a1aa4639873808d18962a24e75481983a">dyno::KittiDataLoader::Params::depth_scale_factor</a></div><div class="ttdeci">double depth_scale_factor</div><div class="ttdef"><b>Definition:</b> <a href="KittiDataProvider_8hpp_source.html#l00362">KittiDataProvider.hpp:362</a></div></div>
+<div class="ttc" id="astructdyno_1_1KittiDataLoader_1_1Params_html_a2fe35a76ee64c23e7374896adb742d14"><div class="ttname"><a href="structdyno_1_1KittiDataLoader_1_1Params.html#a2fe35a76ee64c23e7374896adb742d14">dyno::KittiDataLoader::Params::base_line</a></div><div class="ttdeci">double base_line</div><div class="ttdef"><b>Definition:</b> <a href="KittiDataProvider_8hpp_source.html#l00361">KittiDataProvider.hpp:361</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="structdyno_1_1KittiDataLoader_1_1Params.html#a2fe35a76ee64c23e7374896adb742d14">dyno::KittiDataLoader::Params::base_line</a>, <a class="el" href="structdyno_1_1KittiDataLoader_1_1Params.html#a1aa4639873808d18962a24e75481983a">dyno::KittiDataLoader::Params::depth_scale_factor</a>, and <a class="el" href="classdyno_1_1KittiDataLoader.html#ac6402795e16262ed2fda6bf3cd8b960d">params_</a>.</p>
 
@@ -595,50 +582,53 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="KittiDataProvider_8hpp_source.html#l00516">516</a> of file <a class="el" href="KittiDataProvider_8hpp_source.html">KittiDataProvider.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  516</span>                                                     {</div>
-<div class="line"><span class="lineno">  517</span>        std::string end_folder = dataset_path.parent_path().filename();</div>
-<div class="line"><span class="lineno">  518</span>        LOG(INFO) &lt;&lt; end_folder;</div>
-<div class="line"><span class="lineno">  519</span>        <span class="keywordtype">int</span> dataset_id;</div>
-<div class="line"><span class="lineno">  520</span>        std::istringstream(end_folder) &gt;&gt; dataset_id;</div>
-<div class="line"><span class="lineno">  521</span> </div>
-<div class="line"><span class="lineno">  522</span>        LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Loading KITTI camera params from dataset: &quot;</span> &lt;&lt; dataset_id;</div>
-<div class="line"><span class="lineno">  523</span> </div>
-<div class="line"><span class="lineno">  524</span>        <span class="keywordflow">if</span>(dataset_id &lt;=13) {</div>
-<div class="line"><span class="lineno">  525</span>            <a class="code hl_typedef" href="classdyno_1_1CameraParams.html#a2b2c8e9993ec05e2be9bbee6c3b73760">CameraParams::IntrinsicsCoeffs</a> intrinsics({ 721.5377, 721.5377, 609.5593, 172.8540 });</div>
-<div class="line"><span class="lineno">  526</span>            <a class="code hl_typedef" href="classdyno_1_1CameraParams.html#a8349ad5f0c727d6ef16a1b127e620eae">CameraParams::DistortionCoeffs</a> distortion({ 0, 0, 0, 0 });</div>
+<p class="definition">Definition at line <a class="el" href="KittiDataProvider_8hpp_source.html#l00520">520</a> of file <a class="el" href="KittiDataProvider_8hpp_source.html">KittiDataProvider.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  520</span>                                                   {</div>
+<div class="line"><span class="lineno">  521</span>    std::string end_folder = dataset_path.parent_path().filename();</div>
+<div class="line"><span class="lineno">  522</span>    LOG(INFO) &lt;&lt; end_folder;</div>
+<div class="line"><span class="lineno">  523</span>    <span class="keywordtype">int</span> dataset_id;</div>
+<div class="line"><span class="lineno">  524</span>    std::istringstream(end_folder) &gt;&gt; dataset_id;</div>
+<div class="line"><span class="lineno">  525</span> </div>
+<div class="line"><span class="lineno">  526</span>    LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Loading KITTI camera params from dataset: &quot;</span> &lt;&lt; dataset_id;</div>
 <div class="line"><span class="lineno">  527</span> </div>
-<div class="line"><span class="lineno">  528</span>            cv::Size image_size(1242, 375);</div>
-<div class="line"><span class="lineno">  529</span>            <a class="code hl_variable" href="classdyno_1_1KittiDataLoader.html#aaf9d1398d573d45d9a0a04648d80b65b">camera_params_</a>= CameraParams(intrinsics, distortion, image_size, <span class="stringliteral">&quot;radial-tangential&quot;</span>);</div>
-<div class="line"><span class="lineno">  530</span> </div>
-<div class="line"><span class="lineno">  531</span>            <a class="code hl_variable" href="classdyno_1_1KittiDataLoader.html#ac6402795e16262ed2fda6bf3cd8b960d">params_</a>.<a class="code hl_variable" href="structdyno_1_1KittiDataLoader_1_1Params.html#a2fe35a76ee64c23e7374896adb742d14">base_line</a> = 387.5744;</div>
-<div class="line"><span class="lineno">  532</span>        }</div>
-<div class="line"><span class="lineno">  533</span>        <span class="keywordflow">else</span> <span class="keywordflow">if</span>(dataset_id &gt;= 18 &amp;&amp; dataset_id &lt;=20) {</div>
-<div class="line"><span class="lineno">  534</span>            <a class="code hl_typedef" href="classdyno_1_1CameraParams.html#a2b2c8e9993ec05e2be9bbee6c3b73760">CameraParams::IntrinsicsCoeffs</a> intrinsics({ 718.8560, 718.8560, 607.1928, 185.2157 });</div>
-<div class="line"><span class="lineno">  535</span>            <a class="code hl_typedef" href="classdyno_1_1CameraParams.html#a8349ad5f0c727d6ef16a1b127e620eae">CameraParams::DistortionCoeffs</a> distortion({ 0, 0, 0, 0 });</div>
+<div class="line"><span class="lineno">  528</span>    <span class="keywordflow">if</span> (dataset_id &lt;= 13) {</div>
+<div class="line"><span class="lineno">  529</span>      <a class="code hl_typedef" href="classdyno_1_1CameraParams.html#a2b2c8e9993ec05e2be9bbee6c3b73760">CameraParams::IntrinsicsCoeffs</a> intrinsics(</div>
+<div class="line"><span class="lineno">  530</span>          {721.5377, 721.5377, 609.5593, 172.8540});</div>
+<div class="line"><span class="lineno">  531</span>      <a class="code hl_typedef" href="classdyno_1_1CameraParams.html#a8349ad5f0c727d6ef16a1b127e620eae">CameraParams::DistortionCoeffs</a> distortion({0, 0, 0, 0});</div>
+<div class="line"><span class="lineno">  532</span> </div>
+<div class="line"><span class="lineno">  533</span>      cv::Size image_size(1242, 375);</div>
+<div class="line"><span class="lineno">  534</span>      <a class="code hl_variable" href="classdyno_1_1KittiDataLoader.html#aaf9d1398d573d45d9a0a04648d80b65b">camera_params_</a> =</div>
+<div class="line"><span class="lineno">  535</span>          CameraParams(intrinsics, distortion, image_size, <span class="stringliteral">&quot;radial_tangential&quot;</span>);</div>
 <div class="line"><span class="lineno">  536</span> </div>
-<div class="line"><span class="lineno">  537</span>            <span class="keywordflow">if</span>(dataset_id == 18) {</div>
-<div class="line"><span class="lineno">  538</span>                cv::Size image_size(1238, 374);</div>
-<div class="line"><span class="lineno">  539</span>                <a class="code hl_variable" href="classdyno_1_1KittiDataLoader.html#aaf9d1398d573d45d9a0a04648d80b65b">camera_params_</a>= CameraParams(intrinsics, distortion, image_size, <span class="stringliteral">&quot;radial-tangential&quot;</span>);</div>
-<div class="line"><span class="lineno">  540</span> </div>
-<div class="line"><span class="lineno">  541</span>            }</div>
-<div class="line"><span class="lineno">  542</span>            <span class="keywordflow">else</span> <span class="keywordflow">if</span>(dataset_id == 20) {</div>
-<div class="line"><span class="lineno">  543</span>                cv::Size image_size(1241, 376);</div>
-<div class="line"><span class="lineno">  544</span>                <a class="code hl_variable" href="classdyno_1_1KittiDataLoader.html#aaf9d1398d573d45d9a0a04648d80b65b">camera_params_</a>= CameraParams(intrinsics, distortion, image_size, <span class="stringliteral">&quot;radial-tangential&quot;</span>);</div>
-<div class="line"><span class="lineno">  545</span>            }</div>
-<div class="line"><span class="lineno">  546</span>            <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  547</span>                LOG(WARNING) &lt;&lt; <span class="stringliteral">&quot;Unknown KITTI dataset when loading camera params. Returning no camera params!&quot;</span>;</div>
-<div class="line"><span class="lineno">  548</span>            }</div>
-<div class="line"><span class="lineno">  549</span> </div>
-<div class="line"><span class="lineno">  550</span>            <a class="code hl_variable" href="classdyno_1_1KittiDataLoader.html#ac6402795e16262ed2fda6bf3cd8b960d">params_</a>.<a class="code hl_variable" href="structdyno_1_1KittiDataLoader_1_1Params.html#a2fe35a76ee64c23e7374896adb742d14">base_line</a> = 388.1822;</div>
-<div class="line"><span class="lineno">  551</span> </div>
-<div class="line"><span class="lineno">  552</span>        }</div>
-<div class="line"><span class="lineno">  553</span>        <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  554</span>            LOG(WARNING) &lt;&lt; <span class="stringliteral">&quot;Unknown KITTI dataset when loading camera params. Returning no camera params!&quot;</span>;</div>
-<div class="line"><span class="lineno">  555</span>        }</div>
-<div class="line"><span class="lineno">  556</span>    }</div>
-<div class="ttc" id="aclassdyno_1_1CameraParams_html_a2b2c8e9993ec05e2be9bbee6c3b73760"><div class="ttname"><a href="classdyno_1_1CameraParams.html#a2b2c8e9993ec05e2be9bbee6c3b73760">dyno::CameraParams::IntrinsicsCoeffs</a></div><div class="ttdeci">std::vector&lt; double &gt; IntrinsicsCoeffs</div><div class="ttdef"><b>Definition:</b> <a href="CameraParams_8hpp_source.html#l00064">CameraParams.hpp:64</a></div></div>
-<div class="ttc" id="aclassdyno_1_1CameraParams_html_a8349ad5f0c727d6ef16a1b127e620eae"><div class="ttname"><a href="classdyno_1_1CameraParams.html#a8349ad5f0c727d6ef16a1b127e620eae">dyno::CameraParams::DistortionCoeffs</a></div><div class="ttdeci">std::vector&lt; double &gt; DistortionCoeffs</div><div class="ttdef"><b>Definition:</b> <a href="CameraParams_8hpp_source.html#l00062">CameraParams.hpp:62</a></div></div>
+<div class="line"><span class="lineno">  537</span>      <a class="code hl_variable" href="classdyno_1_1KittiDataLoader.html#ac6402795e16262ed2fda6bf3cd8b960d">params_</a>.<a class="code hl_variable" href="structdyno_1_1KittiDataLoader_1_1Params.html#a2fe35a76ee64c23e7374896adb742d14">base_line</a> = 387.5744;</div>
+<div class="line"><span class="lineno">  538</span>    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (dataset_id &gt;= 18 &amp;&amp; dataset_id &lt;= 20) {</div>
+<div class="line"><span class="lineno">  539</span>      <a class="code hl_typedef" href="classdyno_1_1CameraParams.html#a2b2c8e9993ec05e2be9bbee6c3b73760">CameraParams::IntrinsicsCoeffs</a> intrinsics(</div>
+<div class="line"><span class="lineno">  540</span>          {718.8560, 718.8560, 607.1928, 185.2157});</div>
+<div class="line"><span class="lineno">  541</span>      <a class="code hl_typedef" href="classdyno_1_1CameraParams.html#a8349ad5f0c727d6ef16a1b127e620eae">CameraParams::DistortionCoeffs</a> distortion({0, 0, 0, 0});</div>
+<div class="line"><span class="lineno">  542</span> </div>
+<div class="line"><span class="lineno">  543</span>      <span class="keywordflow">if</span> (dataset_id == 18) {</div>
+<div class="line"><span class="lineno">  544</span>        cv::Size image_size(1238, 374);</div>
+<div class="line"><span class="lineno">  545</span>        <a class="code hl_variable" href="classdyno_1_1KittiDataLoader.html#aaf9d1398d573d45d9a0a04648d80b65b">camera_params_</a> = CameraParams(intrinsics, distortion, image_size,</div>
+<div class="line"><span class="lineno">  546</span>                                      <span class="stringliteral">&quot;radial_tangential&quot;</span>);</div>
+<div class="line"><span class="lineno">  547</span> </div>
+<div class="line"><span class="lineno">  548</span>      } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (dataset_id == 20) {</div>
+<div class="line"><span class="lineno">  549</span>        cv::Size image_size(1241, 376);</div>
+<div class="line"><span class="lineno">  550</span>        <a class="code hl_variable" href="classdyno_1_1KittiDataLoader.html#aaf9d1398d573d45d9a0a04648d80b65b">camera_params_</a> = CameraParams(intrinsics, distortion, image_size,</div>
+<div class="line"><span class="lineno">  551</span>                                      <span class="stringliteral">&quot;radial_tangential&quot;</span>);</div>
+<div class="line"><span class="lineno">  552</span>      } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  553</span>        LOG(WARNING) &lt;&lt; <span class="stringliteral">&quot;Unknown KITTI dataset when loading camera params. &quot;</span></div>
+<div class="line"><span class="lineno">  554</span>                        <span class="stringliteral">&quot;Returning no camera params!&quot;</span>;</div>
+<div class="line"><span class="lineno">  555</span>      }</div>
+<div class="line"><span class="lineno">  556</span> </div>
+<div class="line"><span class="lineno">  557</span>      <a class="code hl_variable" href="classdyno_1_1KittiDataLoader.html#ac6402795e16262ed2fda6bf3cd8b960d">params_</a>.<a class="code hl_variable" href="structdyno_1_1KittiDataLoader_1_1Params.html#a2fe35a76ee64c23e7374896adb742d14">base_line</a> = 388.1822;</div>
+<div class="line"><span class="lineno">  558</span> </div>
+<div class="line"><span class="lineno">  559</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  560</span>      LOG(WARNING) &lt;&lt; <span class="stringliteral">&quot;Unknown KITTI dataset when loading camera params. &quot;</span></div>
+<div class="line"><span class="lineno">  561</span>                      <span class="stringliteral">&quot;Returning no camera params!&quot;</span>;</div>
+<div class="line"><span class="lineno">  562</span>    }</div>
+<div class="line"><span class="lineno">  563</span>  }</div>
+<div class="ttc" id="aclassdyno_1_1CameraParams_html_a2b2c8e9993ec05e2be9bbee6c3b73760"><div class="ttname"><a href="classdyno_1_1CameraParams.html#a2b2c8e9993ec05e2be9bbee6c3b73760">dyno::CameraParams::IntrinsicsCoeffs</a></div><div class="ttdeci">std::vector&lt; double &gt; IntrinsicsCoeffs</div><div class="ttdef"><b>Definition:</b> <a href="CameraParams_8hpp_source.html#l00062">CameraParams.hpp:62</a></div></div>
+<div class="ttc" id="aclassdyno_1_1CameraParams_html_a8349ad5f0c727d6ef16a1b127e620eae"><div class="ttname"><a href="classdyno_1_1CameraParams.html#a8349ad5f0c727d6ef16a1b127e620eae">dyno::CameraParams::DistortionCoeffs</a></div><div class="ttdeci">std::vector&lt; double &gt; DistortionCoeffs</div><div class="ttdef"><b>Definition:</b> <a href="CameraParams_8hpp_source.html#l00060">CameraParams.hpp:60</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="structdyno_1_1KittiDataLoader_1_1Params.html#a2fe35a76ee64c23e7374896adb742d14">dyno::KittiDataLoader::Params::base_line</a>, <a class="el" href="classdyno_1_1KittiDataLoader.html#aaf9d1398d573d45d9a0a04648d80b65b">camera_params_</a>, and <a class="el" href="classdyno_1_1KittiDataLoader.html#ac6402795e16262ed2fda6bf3cd8b960d">params_</a>.</p>
 
@@ -676,7 +666,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="KittiDataProvider_8hpp_source.html#l00559">559</a> of file <a class="el" href="KittiDataProvider_8hpp_source.html">KittiDataProvider.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="KittiDataProvider_8hpp_source.html#l00566">566</a> of file <a class="el" href="KittiDataProvider_8hpp_source.html">KittiDataProvider.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1KittiDataLoader.html#a1ae7994314d13f355483a3c4efa013a1">getCameraParams()</a>, and <a class="el" href="classdyno_1_1KittiDataLoader.html#ada06ff2d05bd857b8573413e01a5dd6f">setCameraParams()</a>.</p>
 
@@ -702,7 +692,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="KittiDataProvider_8hpp_source.html#l00558">558</a> of file <a class="el" href="KittiDataProvider_8hpp_source.html">KittiDataProvider.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="KittiDataProvider_8hpp_source.html#l00565">565</a> of file <a class="el" href="KittiDataProvider_8hpp_source.html">KittiDataProvider.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1KittiDataLoader.html#ad4db6b1ce7226d92c95e929bc4aea255">imageContainerPreprocessor()</a>, <a class="el" href="classdyno_1_1KittiDataLoader.html#ac3950a2ffba6caf37cefb51459336862">KittiDataLoader()</a>, and <a class="el" href="classdyno_1_1KittiDataLoader.html#ada06ff2d05bd857b8573413e01a5dd6f">setCameraParams()</a>.</p>
 
