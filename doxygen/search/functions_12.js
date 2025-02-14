@@ -81,8 +81,8 @@ var searchData=
   ['string_78',['string',['../classdyno_1_1DynamicPointSymbol.html#acec9bd3e8e3beb72d0e1963c86ac90af',1,'dyno::DynamicPointSymbol']]],
   ['stringtodistortion_79',['stringToDistortion',['../classdyno_1_1CameraParams.html#add58aad8e64c327cdf55e0d2c19e1b87',1,'dyno::CameraParams']]],
   ['sub_5ftracks_80',['sub_tracks',['../classdyno_1_1byte__track_1_1ByteTracker.html#aa39e5654bd4c65ac51e4a9b3a1c208a2',1,'dyno::byte_track::ByteTracker']]],
-  ['sum_81',['Sum',['../structdyno_1_1utils_1_1StatisticsMapValue.html#adfe59472d97df290735258f6478717a3',1,'dyno::utils::StatisticsMapValue']]],
-  ['sum_82',['sum',['../classdyno_1_1utils_1_1Accumulator.html#af6f79f0e19369772a4d44b96fdd8abc4',1,'dyno::utils::Accumulator']]],
+  ['sum_81',['sum',['../classdyno_1_1utils_1_1Accumulator.html#af6f79f0e19369772a4d44b96fdd8abc4',1,'dyno::utils::Accumulator']]],
+  ['sum_82',['Sum',['../structdyno_1_1utils_1_1StatisticsMapValue.html#adfe59472d97df290735258f6478717a3',1,'dyno::utils::StatisticsMapValue']]],
   ['summarywriterhelper_83',['SummaryWriterHelper',['../classdyno_1_1utils_1_1Statistics.html#ab43441dcd688b3bf03662688e1984602',1,'dyno::utils::Statistics']]],
   ['suppressnonmax_84',['suppressNonMax',['../classdyno_1_1AdaptiveNonMaximumSuppression.html#a5efbd5583824ca1f6b80d8fe133d0f8c',1,'dyno::AdaptiveNonMaximumSuppression::suppressNonMax()'],['../classdyno_1_1NonMaximumSuppression.html#a58f0a7f7d45ba397e5d4339c63d541a5',1,'dyno::NonMaximumSuppression::suppressNonMax()']]],
   ['synchronousspinnerpair_85',['SynchronousSpinnerPair',['../structdyno_1_1PipelineSpinner_1_1SynchronousSpinnerPair.html#a799ef999fd5bc9c20d7e79f09e09999e',1,'dyno::PipelineSpinner::SynchronousSpinnerPair']]]

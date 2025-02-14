@@ -133,6 +133,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:af6ce62ffab5aadf1981a0ec04c3fad1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a24c0185b92312c57dbd1bf26f35ed844"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classdyno_1_1GenericObjectCentricMap.html#a36b70753449fc3217efc5e8700b6b7f8">Value</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1GenericObjectCentricMap.html#a24c0185b92312c57dbd1bf26f35ed844">at</a> (<a class="el" href="namespacedyno.html#a38bb86e4154b86428b8d133be03fb2b5">ObjectId</a> object_id, <a class="el" href="namespacedyno.html#ac4303d6fafb755f794b072d76f9cfb41">FrameId</a> frame_id)</td></tr>
 <tr class="separator:a24c0185b92312c57dbd1bf26f35ed844"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4bad1836d313a3eee8f5c7275a10e870"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classdyno_1_1GenericObjectCentricMap.html#a9fb7256e7eea63da71c1a15368391d0b">This</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1GenericObjectCentricMap.html#a4bad1836d313a3eee8f5c7275a10e870">operator+=</a> (const <a class="el" href="classdyno_1_1GenericObjectCentricMap.html#a9fb7256e7eea63da71c1a15368391d0b">This</a> &amp;rhs)</td></tr>
+<tr class="separator:a4bad1836d313a3eee8f5c7275a10e870"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5c4641434abd1ae38d013cce5caab739"><td class="memItemLeft" align="right" valign="top">gtsam::FastMap&lt; <a class="el" href="namespacedyno.html#a38bb86e4154b86428b8d133be03fb2b5">ObjectId</a>, <a class="el" href="classdyno_1_1GenericObjectCentricMap.html#a36b70753449fc3217efc5e8700b6b7f8">Value</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1GenericObjectCentricMap.html#a5c4641434abd1ae38d013cce5caab739">collectByFrame</a> (<a class="el" href="namespacedyno.html#ac4303d6fafb755f794b072d76f9cfb41">FrameId</a> frame_id) const</td></tr>
 <tr class="memdesc:a5c4641434abd1ae38d013cce5caab739"><td class="mdescLeft">&#160;</td><td class="mdescRight">Collect all objects that appear in the query frame, as well as their value.  <br /></td></tr>
 <tr class="separator:a5c4641434abd1ae38d013cce5caab739"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -390,23 +392,23 @@ template&lt;typename Container , typename Return &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Types_8hpp_source.html#l00472">472</a> of file <a class="el" href="Types_8hpp_source.html">Types.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  473</span>                                         {</div>
-<div class="line"><span class="lineno">  474</span>    <span class="keywordtype">size_t</span> out_of_range_flag;</div>
-<div class="line"><span class="lineno">  475</span>    <span class="keyword">const</span> <span class="keywordtype">bool</span> result =</div>
-<div class="line"><span class="lineno">  476</span>        container-&gt;existsImpl(object_id, frame_id, out_of_range_flag);</div>
-<div class="line"><span class="lineno">  477</span>    <span class="keywordflow">if</span> (result) {</div>
-<div class="line"><span class="lineno">  478</span>      CHECK_EQ(out_of_range_flag, 2u);</div>
-<div class="line"><span class="lineno">  479</span>      <span class="keywordflow">return</span> container-&gt;at(object_id).at(frame_id);</div>
-<div class="line"><span class="lineno">  480</span>    } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  481</span>      std::stringstream ss;</div>
-<div class="line"><span class="lineno">  482</span>      ss &lt;&lt; <span class="stringliteral">&quot;Index out of range: &quot;</span></div>
-<div class="line"><span class="lineno">  483</span>         &lt;&lt; ((out_of_range_flag == 0) ? <span class="stringliteral">&quot; object id &quot;</span> : <span class="stringliteral">&quot; frame id&quot;</span>)</div>
-<div class="line"><span class="lineno">  484</span>         &lt;&lt; <span class="stringliteral">&quot; missing. Full query - (object id &quot;</span> &lt;&lt; object_id &lt;&lt; <span class="stringliteral">&quot;, frame id &quot;</span></div>
-<div class="line"><span class="lineno">  485</span>         &lt;&lt; frame_id &lt;&lt; <span class="stringliteral">&quot;).&quot;</span>;</div>
-<div class="line"><span class="lineno">  486</span>      <span class="keywordflow">throw</span> std::out_of_range(ss.str());</div>
-<div class="line"><span class="lineno">  487</span>    }</div>
-<div class="line"><span class="lineno">  488</span>  }</div>
+<p class="definition">Definition at line <a class="el" href="Types_8hpp_source.html#l00479">479</a> of file <a class="el" href="Types_8hpp_source.html">Types.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  480</span>                                         {</div>
+<div class="line"><span class="lineno">  481</span>    <span class="keywordtype">size_t</span> out_of_range_flag;</div>
+<div class="line"><span class="lineno">  482</span>    <span class="keyword">const</span> <span class="keywordtype">bool</span> result =</div>
+<div class="line"><span class="lineno">  483</span>        container-&gt;existsImpl(object_id, frame_id, out_of_range_flag);</div>
+<div class="line"><span class="lineno">  484</span>    <span class="keywordflow">if</span> (result) {</div>
+<div class="line"><span class="lineno">  485</span>      CHECK_EQ(out_of_range_flag, 2u);</div>
+<div class="line"><span class="lineno">  486</span>      <span class="keywordflow">return</span> container-&gt;at(object_id).at(frame_id);</div>
+<div class="line"><span class="lineno">  487</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  488</span>      std::stringstream ss;</div>
+<div class="line"><span class="lineno">  489</span>      ss &lt;&lt; <span class="stringliteral">&quot;Index out of range: &quot;</span></div>
+<div class="line"><span class="lineno">  490</span>         &lt;&lt; ((out_of_range_flag == 0) ? <span class="stringliteral">&quot; object id &quot;</span> : <span class="stringliteral">&quot; frame id&quot;</span>)</div>
+<div class="line"><span class="lineno">  491</span>         &lt;&lt; <span class="stringliteral">&quot; missing. Full query - (object id &quot;</span> &lt;&lt; object_id &lt;&lt; <span class="stringliteral">&quot;, frame id &quot;</span></div>
+<div class="line"><span class="lineno">  492</span>         &lt;&lt; frame_id &lt;&lt; <span class="stringliteral">&quot;).&quot;</span>;</div>
+<div class="line"><span class="lineno">  493</span>      <span class="keywordflow">throw</span> std::out_of_range(ss.str());</div>
+<div class="line"><span class="lineno">  494</span>    }</div>
+<div class="line"><span class="lineno">  495</span>  }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -445,16 +447,16 @@ template&lt;typename VALUE &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>gtsam::FastMap&lt;ObjectId, Value&gt; </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Types_8hpp_source.html#l00460">460</a> of file <a class="el" href="Types_8hpp_source.html">Types.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  460</span>                                                                       {</div>
-<div class="line"><span class="lineno">  461</span>    gtsam::FastMap&lt;ObjectId, Value&gt; object_map;</div>
-<div class="line"><span class="lineno">  462</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [object_id, frame_map] : *<span class="keyword">this</span>) {</div>
-<div class="line"><span class="lineno">  463</span>      <span class="keywordflow">if</span> (frame_map.exists(frame_id)) {</div>
-<div class="line"><span class="lineno">  464</span>        object_map.insert2(object_id, frame_map.at(frame_id));</div>
-<div class="line"><span class="lineno">  465</span>      }</div>
-<div class="line"><span class="lineno">  466</span>    }</div>
-<div class="line"><span class="lineno">  467</span>    <span class="keywordflow">return</span> object_map;</div>
-<div class="line"><span class="lineno">  468</span>  }</div>
+<p class="definition">Definition at line <a class="el" href="Types_8hpp_source.html#l00467">467</a> of file <a class="el" href="Types_8hpp_source.html">Types.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  467</span>                                                                       {</div>
+<div class="line"><span class="lineno">  468</span>    gtsam::FastMap&lt;ObjectId, Value&gt; object_map;</div>
+<div class="line"><span class="lineno">  469</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [object_id, frame_map] : *<span class="keyword">this</span>) {</div>
+<div class="line"><span class="lineno">  470</span>      <span class="keywordflow">if</span> (frame_map.exists(frame_id)) {</div>
+<div class="line"><span class="lineno">  471</span>        object_map.insert2(object_id, frame_map.at(frame_id));</div>
+<div class="line"><span class="lineno">  472</span>      }</div>
+<div class="line"><span class="lineno">  473</span>    }</div>
+<div class="line"><span class="lineno">  474</span>    <span class="keywordflow">return</span> object_map;</div>
+<div class="line"><span class="lineno">  475</span>  }</div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1WorldMotionAccessor.html#a75fe4157ba60bd1aff73b7240847062d">dyno::WorldMotionAccessor::getObjectPoses()</a>, and <a class="el" href="classdyno_1_1WorldMotionAccessor.html#a0a396e6c748dc58cf38e5b1a70b2eea4">dyno::WorldMotionAccessor::postUpdateCallback()</a>.</p>
 <div class="dynheader">
@@ -511,7 +513,7 @@ template&lt;typename VALUE &gt; </div>
 <div class="line"><span class="lineno">  441</span>    <span class="keyword">static</span> <span class="keywordtype">size_t</span> out_of_range_flag;</div>
 <div class="line"><span class="lineno">  442</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="classdyno_1_1GenericObjectCentricMap.html#a33450c8ce82ab7fbfa2541ee0c6b20e3">existsImpl</a>(object_id, frame_id, out_of_range_flag);</div>
 <div class="line"><span class="lineno">  443</span>  }</div>
-<div class="ttc" id="aclassdyno_1_1GenericObjectCentricMap_html_a33450c8ce82ab7fbfa2541ee0c6b20e3"><div class="ttname"><a href="classdyno_1_1GenericObjectCentricMap.html#a33450c8ce82ab7fbfa2541ee0c6b20e3">dyno::GenericObjectCentricMap::existsImpl</a></div><div class="ttdeci">bool existsImpl(ObjectId object_id, FrameId frame_id, size_t &amp;out_of_range_flag) const</div><div class="ttdoc">Helper function to determine if the query exists. Operates like a regular exists function but also se...</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00505">Types.hpp:505</a></div></div>
+<div class="ttc" id="aclassdyno_1_1GenericObjectCentricMap_html_a33450c8ce82ab7fbfa2541ee0c6b20e3"><div class="ttname"><a href="classdyno_1_1GenericObjectCentricMap.html#a33450c8ce82ab7fbfa2541ee0c6b20e3">dyno::GenericObjectCentricMap::existsImpl</a></div><div class="ttdeci">bool existsImpl(ObjectId object_id, FrameId frame_id, size_t &amp;out_of_range_flag) const</div><div class="ttdoc">Helper function to determine if the query exists. Operates like a regular exists function but also se...</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00512">Types.hpp:512</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1GenericObjectCentricMap.html#a33450c8ce82ab7fbfa2541ee0c6b20e3">dyno::GenericObjectCentricMap&lt; VALUE &gt;::existsImpl()</a>.</p>
 
@@ -604,22 +606,22 @@ template&lt;typename VALUE &gt; </div>
 <dd>
 false </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Types_8hpp_source.html#l00505">505</a> of file <a class="el" href="Types_8hpp_source.html">Types.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  506</span>                                                   {</div>
-<div class="line"><span class="lineno">  507</span>    <span class="keywordflow">if</span> (!this-&gt;<a class="code hl_function" href="classdyno_1_1GenericObjectCentricMap.html#a974563b8edd3f4b0cb6fe17615d04fbd">exists</a>(object_id)) {</div>
-<div class="line"><span class="lineno">  508</span>      out_of_range_flag = 0;</div>
-<div class="line"><span class="lineno">  509</span>      <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">  510</span>    }</div>
-<div class="line"><span class="lineno">  511</span> </div>
-<div class="line"><span class="lineno">  512</span>    <span class="keyword">const</span> <span class="keyword">auto</span>&amp; frame_map = this-&gt;<a class="code hl_function" href="classdyno_1_1GenericObjectCentricMap.html#af6ce62ffab5aadf1981a0ec04c3fad1e">at</a>(object_id);</div>
-<div class="line"><span class="lineno">  513</span>    <span class="keywordflow">if</span> (!frame_map.exists(frame_id)) {</div>
-<div class="line"><span class="lineno">  514</span>      out_of_range_flag = 1;</div>
-<div class="line"><span class="lineno">  515</span>      <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">  516</span>    } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  517</span>      out_of_range_flag = 2;</div>
-<div class="line"><span class="lineno">  518</span>      <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  519</span>    }</div>
-<div class="line"><span class="lineno">  520</span>  }</div>
+<p class="definition">Definition at line <a class="el" href="Types_8hpp_source.html#l00512">512</a> of file <a class="el" href="Types_8hpp_source.html">Types.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  513</span>                                                   {</div>
+<div class="line"><span class="lineno">  514</span>    <span class="keywordflow">if</span> (!this-&gt;<a class="code hl_function" href="classdyno_1_1GenericObjectCentricMap.html#a974563b8edd3f4b0cb6fe17615d04fbd">exists</a>(object_id)) {</div>
+<div class="line"><span class="lineno">  515</span>      out_of_range_flag = 0;</div>
+<div class="line"><span class="lineno">  516</span>      <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">  517</span>    }</div>
+<div class="line"><span class="lineno">  518</span> </div>
+<div class="line"><span class="lineno">  519</span>    <span class="keyword">const</span> <span class="keyword">auto</span>&amp; frame_map = this-&gt;<a class="code hl_function" href="classdyno_1_1GenericObjectCentricMap.html#af6ce62ffab5aadf1981a0ec04c3fad1e">at</a>(object_id);</div>
+<div class="line"><span class="lineno">  520</span>    <span class="keywordflow">if</span> (!frame_map.exists(frame_id)) {</div>
+<div class="line"><span class="lineno">  521</span>      out_of_range_flag = 1;</div>
+<div class="line"><span class="lineno">  522</span>      <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">  523</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  524</span>      out_of_range_flag = 2;</div>
+<div class="line"><span class="lineno">  525</span>      <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  526</span>    }</div>
+<div class="line"><span class="lineno">  527</span>  }</div>
 <div class="ttc" id="aclassdyno_1_1GenericObjectCentricMap_html_a974563b8edd3f4b0cb6fe17615d04fbd"><div class="ttname"><a href="classdyno_1_1GenericObjectCentricMap.html#a974563b8edd3f4b0cb6fe17615d04fbd">dyno::GenericObjectCentricMap::exists</a></div><div class="ttdeci">bool exists(ObjectId object_id, FrameId frame_id) const</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00440">Types.hpp:440</a></div></div>
 <div class="ttc" id="aclassdyno_1_1GenericObjectCentricMap_html_af6ce62ffab5aadf1981a0ec04c3fad1e"><div class="ttname"><a href="classdyno_1_1GenericObjectCentricMap.html#af6ce62ffab5aadf1981a0ec04c3fad1e">dyno::GenericObjectCentricMap::at</a></div><div class="ttdeci">const Value &amp; at(ObjectId object_id, FrameId frame_id) const</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00445">Types.hpp:445</a></div></div>
 </div><!-- fragment -->
@@ -819,6 +821,42 @@ template&lt;typename VALUE &gt; </div>
 <div class="fragment"><div class="line"><span class="lineno">  417</span>                                     {</div>
 <div class="line"><span class="lineno">  418</span>    <span class="keywordflow">return</span> <span class="keyword">typename</span> Base::Base(this-&gt;begin(), this-&gt;end());</div>
 <div class="line"><span class="lineno">  419</span>  }</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="a4bad1836d313a3eee8f5c7275a10e870" name="a4bad1836d313a3eee8f5c7275a10e870"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4bad1836d313a3eee8f5c7275a10e870">&#9670;&#160;</a></span>operator+=()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename VALUE &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classdyno_1_1GenericObjectCentricMap.html#a9fb7256e7eea63da71c1a15368391d0b">This</a> &amp; <a class="el" href="classdyno_1_1GenericObjectCentricMap.html">dyno::GenericObjectCentricMap</a>&lt; VALUE &gt;::operator+= </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classdyno_1_1GenericObjectCentricMap.html#a9fb7256e7eea63da71c1a15368391d0b">This</a> &amp;&#160;</td>
+          <td class="paramname"><em>rhs</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Types_8hpp_source.html#l00453">453</a> of file <a class="el" href="Types_8hpp_source.html">Types.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  453</span>                                    {</div>
+<div class="line"><span class="lineno">  454</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [key, value] : rhs) {</div>
+<div class="line"><span class="lineno">  455</span>      this-&gt;operator[](key).insert(value.begin(), value.end());</div>
+<div class="line"><span class="lineno">  456</span>    }</div>
+<div class="line"><span class="lineno">  457</span>    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><span class="lineno">  458</span>  }</div>
 </div><!-- fragment -->
 </div>
 </div>

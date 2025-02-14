@@ -83,7 +83,9 @@ $(function() {
 <div class="contents">
 <div class="textblock"><code>#include &lt;<a class="el" href="Types_8hpp_source.html">dynosam/common/Types.hpp</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="Macros_8hpp_source.html">dynosam/utils/Macros.hpp</a>&gt;</code><br />
+<code>#include &quot;dynamic_slam_interfaces/msg/multi_object_odometry_path.hpp&quot;</code><br />
 <code>#include &quot;dynamic_slam_interfaces/msg/object_odometry.hpp&quot;</code><br />
+<code>#include &quot;dynamic_slam_interfaces/msg/object_odometry_path.hpp&quot;</code><br />
 <code>#include &quot;<a class="el" href="Display-Definitions_8hpp_source.html">dynosam_ros/Display-Definitions.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="DisplaysCommon_8hpp_source.html">dynosam_ros/displays/DisplaysCommon.hpp</a>&quot;</code><br />
 <code>#include &quot;rclcpp/rclcpp.hpp&quot;</code><br />
@@ -93,56 +95,56 @@ Include dependency graph for DSDCommonRos.hpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="DSDCommonRos_8hpp__incl.png" border="0" usemap="#adynosam__ros_2include_2dynosam__ros_2displays_2dynamic__slam__displays_2DSDCommonRos_8hpp" alt=""/></div>
 <map name="adynosam__ros_2include_2dynosam__ros_2displays_2dynamic__slam__displays_2DSDCommonRos_8hpp" id="adynosam__ros_2include_2dynosam__ros_2displays_2dynamic__slam__displays_2DSDCommonRos_8hpp">
-<area shape="rect" title=" " alt="" coords="1780,5,1963,75"/>
-<area shape="rect" href="Types_8hpp.html" title=" " alt="" coords="1417,306,1629,331"/>
-<area shape="rect" href="Macros_8hpp.html" title=" " alt="" coords="3321,387,3515,412"/>
-<area shape="rect" title=" " alt="" coords="1959,123,2154,163"/>
-<area shape="rect" href="Display-Definitions_8hpp.html" title=" " alt="" coords="10,211,173,251"/>
-<area shape="rect" href="DisplaysCommon_8hpp.html" title=" " alt="" coords="1064,123,1233,163"/>
-<area shape="rect" title=" " alt="" coords="1701,218,1833,243"/>
-<area shape="rect" title=" " alt="" coords="2179,130,2409,155"/>
-<area shape="rect" title=" " alt="" coords="2899,541,3014,566"/>
-<area shape="rect" title=" " alt="" coords="3129,387,3297,412"/>
-<area shape="rect" title=" " alt="" coords="2973,621,3129,647"/>
-<area shape="rect" title=" " alt="" coords="5,541,191,566"/>
-<area shape="rect" title=" " alt="" coords="715,387,857,412"/>
-<area shape="rect" title=" " alt="" coords="267,541,481,566"/>
-<area shape="rect" title=" " alt="" coords="3139,541,3214,566"/>
-<area shape="rect" title=" " alt="" coords="881,387,979,412"/>
-<area shape="rect" title=" " alt="" coords="505,541,597,566"/>
-<area shape="rect" title=" " alt="" coords="1003,387,1065,412"/>
-<area shape="rect" href="Flags_8hpp.html" title=" " alt="" coords="1089,387,1299,412"/>
-<area shape="rect" href="SensorModels_8hpp.html" title=" " alt="" coords="1489,387,1755,412"/>
-<area shape="rect" title=" " alt="" coords="1136,460,1252,485"/>
-<area shape="rect" title=" " alt="" coords="3379,460,3457,485"/>
-<area shape="rect" title=" " alt="" coords="1422,621,1577,647"/>
-<area shape="rect" title=" " alt="" coords="1769,460,1966,485"/>
-<area shape="rect" href="GtsamUtils_8hpp.html" title=" " alt="" coords="1526,460,1745,485"/>
-<area shape="rect" title=" " alt="" coords="1216,541,1415,566"/>
-<area shape="rect" title=" " alt="" coords="1439,541,1626,566"/>
-<area shape="rect" title=" " alt="" coords="1650,541,1826,566"/>
-<area shape="rect" title=" " alt="" coords="1850,541,2031,566"/>
-<area shape="rect" title=" " alt="" coords="2056,541,2223,566"/>
-<area shape="rect" title=" " alt="" coords="2247,541,2440,566"/>
-<area shape="rect" title=" " alt="" coords="2465,541,2638,566"/>
-<area shape="rect" title=" " alt="" coords="622,533,817,573"/>
-<area shape="rect" title=" " alt="" coords="841,541,1027,566"/>
-<area shape="rect" title=" " alt="" coords="1052,541,1192,566"/>
-<area shape="rect" href="Numerical_8hpp.html" title=" " alt="" coords="2662,541,2875,566"/>
-<area shape="rect" title=" " alt="" coords="501,387,559,412"/>
-<area shape="rect" title=" " alt="" coords="1527,211,1677,251"/>
-<area shape="rect" href="PointCloudProcess_8hpp.html" title=" " alt="" coords="1040,211,1257,251"/>
-<area shape="rect" title=" " alt="" coords="197,211,373,251"/>
-<area shape="rect" title=" " alt="" coords="397,211,572,251"/>
-<area shape="rect" title=" " alt="" coords="597,218,810,243"/>
-<area shape="rect" title=" " alt="" coords="834,218,1015,243"/>
-<area shape="rect" title=" " alt="" coords="1282,211,1453,251"/>
-<area shape="rect" title=" " alt="" coords="1213,299,1393,339"/>
-<area shape="rect" title=" " alt="" coords="436,299,587,339"/>
-<area shape="rect" title=" " alt="" coords="611,306,745,331"/>
-<area shape="rect" href="Exceptions_8hpp.html" title=" " alt="" coords="769,306,1016,331"/>
-<area shape="rect" href="ColourMap_8hpp.html" title=" " alt="" coords="1039,299,1189,339"/>
-<area shape="rect" title=" " alt="" coords="604,387,691,412"/>
+<area shape="rect" title=" " alt="" coords="1241,5,1423,75"/>
+<area shape="rect" href="Types_8hpp.html" title=" " alt="" coords="559,321,771,346"/>
+<area shape="rect" href="Macros_8hpp.html" title=" " alt="" coords="57,401,250,427"/>
+<area shape="rect" title=" " alt="" coords="1370,123,1579,177"/>
+<area shape="rect" title=" " alt="" coords="1604,130,1799,170"/>
+<area shape="rect" title=" " alt="" coords="1823,130,2055,170"/>
+<area shape="rect" href="Display-Definitions_8hpp.html" title=" " alt="" coords="1775,225,1937,265"/>
+<area shape="rect" href="DisplaysCommon_8hpp.html" title=" " alt="" coords="1074,130,1243,170"/>
+<area shape="rect" title=" " alt="" coords="1962,233,2094,258"/>
+<area shape="rect" title=" " alt="" coords="2079,137,2310,163"/>
+<area shape="rect" title=" " alt="" coords="2500,555,2615,581"/>
+<area shape="rect" title=" " alt="" coords="823,401,991,427"/>
+<area shape="rect" title=" " alt="" coords="427,475,583,500"/>
+<area shape="rect" title=" " alt="" coords="2639,555,2825,581"/>
+<area shape="rect" title=" " alt="" coords="1015,401,1158,427"/>
+<area shape="rect" title=" " alt="" coords="105,555,319,581"/>
+<area shape="rect" title=" " alt="" coords="5,555,80,581"/>
+<area shape="rect" title=" " alt="" coords="1182,401,1279,427"/>
+<area shape="rect" title=" " alt="" coords="343,555,435,581"/>
+<area shape="rect" title=" " alt="" coords="1303,401,1366,427"/>
+<area shape="rect" href="Flags_8hpp.html" title=" " alt="" coords="1389,401,1600,427"/>
+<area shape="rect" href="SensorModels_8hpp.html" title=" " alt="" coords="532,401,799,427"/>
+<area shape="rect" title=" " alt="" coords="1437,475,1553,500"/>
+<area shape="rect" title=" " alt="" coords="39,475,116,500"/>
+<area shape="rect" title=" " alt="" coords="608,475,763,500"/>
+<area shape="rect" title=" " alt="" coords="787,475,984,500"/>
+<area shape="rect" href="GtsamUtils_8hpp.html" title=" " alt="" coords="1117,475,1336,500"/>
+<area shape="rect" title=" " alt="" coords="1866,555,2065,581"/>
+<area shape="rect" title=" " alt="" coords="2089,555,2276,581"/>
+<area shape="rect" title=" " alt="" coords="2300,555,2476,581"/>
+<area shape="rect" title=" " alt="" coords="460,555,641,581"/>
+<area shape="rect" title=" " alt="" coords="666,555,833,581"/>
+<area shape="rect" title=" " alt="" coords="857,555,1050,581"/>
+<area shape="rect" title=" " alt="" coords="1075,555,1248,581"/>
+<area shape="rect" title=" " alt="" coords="1272,548,1467,588"/>
+<area shape="rect" title=" " alt="" coords="1491,555,1677,581"/>
+<area shape="rect" title=" " alt="" coords="1702,555,1842,581"/>
+<area shape="rect" title=" " alt="" coords="1783,401,1841,427"/>
+<area shape="rect" title=" " alt="" coords="1401,225,1551,265"/>
+<area shape="rect" href="PointCloudProcess_8hpp.html" title=" " alt="" coords="1159,225,1377,265"/>
+<area shape="rect" title=" " alt="" coords="1575,225,1751,265"/>
+<area shape="rect" title=" " alt="" coords="322,225,497,265"/>
+<area shape="rect" title=" " alt="" coords="521,233,735,258"/>
+<area shape="rect" title=" " alt="" coords="759,233,940,258"/>
+<area shape="rect" title=" " alt="" coords="964,225,1135,265"/>
+<area shape="rect" title=" " alt="" coords="1425,313,1605,353"/>
+<area shape="rect" title=" " alt="" coords="1629,313,1779,353"/>
+<area shape="rect" title=" " alt="" coords="823,321,956,346"/>
+<area shape="rect" href="Exceptions_8hpp.html" title=" " alt="" coords="1154,321,1401,346"/>
+<area shape="rect" href="ColourMap_8hpp.html" title=" " alt="" coords="980,313,1129,353"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -182,8 +184,14 @@ Namespaces</h2></td></tr>
 Typedefs</h2></td></tr>
 <tr class="memitem:a1e7b8e7cb9c94acacd56b98dc9900a97"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno.html#a1e7b8e7cb9c94acacd56b98dc9900a97">dyno::ObjectOdometry</a> = dynamic_slam_interfaces::msg::ObjectOdometry</td></tr>
 <tr class="separator:a1e7b8e7cb9c94acacd56b98dc9900a97"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae75f40076d0752a992e0a684f375de74"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno.html#ae75f40076d0752a992e0a684f375de74">dyno::ObjectOdometryPath</a> = dynamic_slam_interfaces::msg::ObjectOdometryPath</td></tr>
+<tr class="separator:ae75f40076d0752a992e0a684f375de74"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a08ed1ede4e6919d056b91f50997b3cb5"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno.html#a08ed1ede4e6919d056b91f50997b3cb5">dyno::MultiObjectOdometryPath</a> = dynamic_slam_interfaces::msg::MultiObjectOdometryPath</td></tr>
+<tr class="separator:a08ed1ede4e6919d056b91f50997b3cb5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a00c64c36ca8b666eebaf02bd8f844397"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno.html#a00c64c36ca8b666eebaf02bd8f844397">dyno::ObjectOdometryPub</a> = rclcpp::Publisher&lt; ObjectOdometry &gt;</td></tr>
 <tr class="separator:a00c64c36ca8b666eebaf02bd8f844397"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af4017ef83a94752067ec0043f2eae994"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno.html#af4017ef83a94752067ec0043f2eae994">dyno::MultiObjectOdometryPathPub</a> = rclcpp::Publisher&lt; MultiObjectOdometryPath &gt;</td></tr>
+<tr class="separator:af4017ef83a94752067ec0043f2eae994"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a17f4c1fe4d4fb10dff1544f64ac6aadc"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno.html#a17f4c1fe4d4fb10dff1544f64ac6aadc">dyno::ObjectOdometryMap</a> = gtsam::FastMap&lt; std::string, ObjectOdometry &gt;</td></tr>
 <tr class="separator:a17f4c1fe4d4fb10dff1544f64ac6aadc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>

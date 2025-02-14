@@ -6,7 +6,7 @@ var searchData=
   ['map3d_3',['Map3d',['../namespacedyno.html#a7c2a0f6ddab35d15fc692843219c63ed',1,'dyno']]],
   ['map3d2d_4',['Map3d2d',['../namespacedyno.html#acd4c28164584283b69cddea5cf1921b3',1,'dyno']]],
   ['map_5ft_5',['map_t',['../classdyno_1_1utils_1_1Statistics.html#a4da93fbc4d563d83623f6a6f894c4574',1,'dyno::utils::Statistics']]],
-  ['maptraitstype_6',['MapTraitsType',['../structdyno_1_1ObjectUpdateContext.html#a8294dc2ec36e2558e7d2e717ec58999f',1,'dyno::ObjectUpdateContext::MapTraitsType()'],['../classdyno_1_1Formulation.html#a1d2f31a8b905f003dec50bc08e832adb',1,'dyno::Formulation::MapTraitsType()'],['../structdyno_1_1PointUpdateContext.html#aff4715e8006f3d41046a602ab005ab32',1,'dyno::PointUpdateContext::MapTraitsType()']]],
+  ['maptraitstype_6',['MapTraitsType',['../classdyno_1_1Formulation.html#a1d2f31a8b905f003dec50bc08e832adb',1,'dyno::Formulation::MapTraitsType()'],['../structdyno_1_1ObjectUpdateContext.html#a8294dc2ec36e2558e7d2e717ec58999f',1,'dyno::ObjectUpdateContext::MapTraitsType()'],['../structdyno_1_1PointUpdateContext.html#aff4715e8006f3d41046a602ab005ab32',1,'dyno::PointUpdateContext::MapTraitsType()']]],
   ['maptype_7',['MapType',['../classdyno_1_1BackendModuleType.html#a8cc142d98537163fe6f1ba2b462ff8fe',1,'dyno::BackendModuleType']]],
   ['markerarray_8',['MarkerArray',['../namespacedyno.html#a17b3426d4ee794ba8ca908e263631d2c',1,'dyno']]],
   ['markerarraypub_9',['MarkerArrayPub',['../namespacedyno.html#a625bb849f452431cb27e4608502e9993',1,'dyno']]],
@@ -21,5 +21,7 @@ var searchData=
   ['moduletraits_18',['ModuleTraits',['../classdyno_1_1FrontendOfflinePipeline.html#a3aa4983bf086e5baa3456a55e71753b4',1,'dyno::FrontendOfflinePipeline::ModuleTraits()'],['../classdyno_1_1BackendModuleType.html#a6114e5255c3fa3720121fc025a515933',1,'dyno::BackendModuleType::ModuleTraits()']]],
   ['motion3_19',['Motion3',['../namespacedyno.html#a6549470bc523e57ef4bfa81eed756659',1,'dyno']]],
   ['motionestimatemap_20',['MotionEstimateMap',['../namespacedyno.html#acef42ad0a1e53f5876f1000defc23e3b',1,'dyno']]],
-  ['motionmap_21',['MotionMap',['../namespacedyno.html#ad94680f3869e465a0c99aa4729ad64d3',1,'dyno']]]
+  ['motionmap_21',['MotionMap',['../namespacedyno.html#ad94680f3869e465a0c99aa4729ad64d3',1,'dyno']]],
+  ['multiobjectodometrypath_22',['MultiObjectOdometryPath',['../namespacedyno.html#a08ed1ede4e6919d056b91f50997b3cb5',1,'dyno']]],
+  ['multiobjectodometrypathpub_23',['MultiObjectOdometryPathPub',['../namespacedyno.html#af4017ef83a94752067ec0043f2eae994',1,'dyno']]]
 ];

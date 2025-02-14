@@ -60,10 +60,11 @@ var searchData=
   ['motion_5fsolver_5f_57',['motion_solver_',['../classdyno_1_1RGBDInstanceFrontendModule.html#a2eb15437003aef1c7a0b9612e9d9ee64',1,'dyno::RGBDInstanceFrontendModule']]],
   ['motion_5fternary_5ffactor_5fnoise_5fsigma_5f_58',['motion_ternary_factor_noise_sigma_',['../structdyno_1_1BackendParams.html#a0f956a9cb197f1b8013772b81f9c2fed',1,'dyno::BackendParams']]],
   ['motions_5fworld_59',['motions_world',['../structdyno_1_1FrameNode.html#ae2504faf2aaa36ddcd7b8ff71fa6ef63',1,'dyno::FrameNode']]],
-  ['mutex_5f_60',['mutex_',['../classThreadsafeQueueBase.html#ac7efbddfa7b3503e1141e25cb85b5e29',1,'ThreadsafeQueueBase::mutex_()'],['../classThreadsafeQueue.html#ac7efbddfa7b3503e1141e25cb85b5e29',1,'ThreadsafeQueue::mutex_()'],['../classdyno_1_1utils_1_1Statistics.html#a5ce5509e07340fe1f129d5a1078a7df7',1,'dyno::utils::Statistics::mutex_()'],['../classdyno_1_1ThreadsafeTemporalBuffer.html#ad773c91ed48fb08950168f97b6957140',1,'dyno::ThreadsafeTemporalBuffer::mutex_()'],['../classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04',1,'dyno::Feature::mutex_()']]],
-  ['mvimagepyramid_61',['mvImagePyramid',['../classdyno_1_1ORBextractor.html#a600379953e6bffe90323adaa6818909e',1,'dyno::ORBextractor']]],
-  ['mvinvlevelsigma2_62',['mvInvLevelSigma2',['../classdyno_1_1ORBextractor.html#a9756d55aef2ab28e31292660bbfaac22',1,'dyno::ORBextractor']]],
-  ['mvinvscalefactor_63',['mvInvScaleFactor',['../classdyno_1_1ORBextractor.html#a821a4152d49306bc6b897c1935607428',1,'dyno::ORBextractor']]],
-  ['mvlevelsigma2_64',['mvLevelSigma2',['../classdyno_1_1ORBextractor.html#a2068ad50103677f16821feddf3a4eecd',1,'dyno::ORBextractor']]],
-  ['mvscalefactor_65',['mvScaleFactor',['../classdyno_1_1ORBextractor.html#a89d1b12b9fcafabf6df54e4dea0b7937',1,'dyno::ORBextractor']]]
+  ['multi_5fobject_5fodom_5fpath_5fpublisher_5f_60',['multi_object_odom_path_publisher_',['../classdyno_1_1DSDTransport_1_1Publisher.html#a971cb998c142e0b326ceef25b4aa8839',1,'dyno::DSDTransport::Publisher::multi_object_odom_path_publisher_()'],['../classdyno_1_1DSDTransport.html#a8a8b65f994b5d8e6de606f1c63e45515',1,'dyno::DSDTransport::multi_object_odom_path_publisher_()']]],
+  ['mutex_5f_61',['mutex_',['../classThreadsafeQueueBase.html#ac7efbddfa7b3503e1141e25cb85b5e29',1,'ThreadsafeQueueBase::mutex_()'],['../classThreadsafeQueue.html#ac7efbddfa7b3503e1141e25cb85b5e29',1,'ThreadsafeQueue::mutex_()'],['../classdyno_1_1utils_1_1Statistics.html#a5ce5509e07340fe1f129d5a1078a7df7',1,'dyno::utils::Statistics::mutex_()'],['../classdyno_1_1ThreadsafeTemporalBuffer.html#ad773c91ed48fb08950168f97b6957140',1,'dyno::ThreadsafeTemporalBuffer::mutex_()'],['../classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04',1,'dyno::Feature::mutex_()']]],
+  ['mvimagepyramid_62',['mvImagePyramid',['../classdyno_1_1ORBextractor.html#a600379953e6bffe90323adaa6818909e',1,'dyno::ORBextractor']]],
+  ['mvinvlevelsigma2_63',['mvInvLevelSigma2',['../classdyno_1_1ORBextractor.html#a9756d55aef2ab28e31292660bbfaac22',1,'dyno::ORBextractor']]],
+  ['mvinvscalefactor_64',['mvInvScaleFactor',['../classdyno_1_1ORBextractor.html#a821a4152d49306bc6b897c1935607428',1,'dyno::ORBextractor']]],
+  ['mvlevelsigma2_65',['mvLevelSigma2',['../classdyno_1_1ORBextractor.html#a2068ad50103677f16821feddf3a4eecd',1,'dyno::ORBextractor']]],
+  ['mvscalefactor_66',['mvScaleFactor',['../classdyno_1_1ORBextractor.html#a89d1b12b9fcafabf6df54e4dea0b7937',1,'dyno::ORBextractor']]]
 ];

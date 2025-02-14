@@ -105,22 +105,24 @@ Collaboration diagram for dyno::FrontendModule:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1FrontendModule__coll__graph.png" border="0" usemap="#adyno_1_1FrontendModule_coll__map" alt="Collaboration graph"/></div>
 <map name="adyno_1_1FrontendModule_coll__map" id="adyno_1_1FrontendModule_coll__map">
-<area shape="rect" title="Base class to actually do processing. Data passed to this module from the frontend." alt="" coords="1243,265,1409,290"/>
-<area shape="rect" href="classdyno_1_1ModuleBase.html" title=" " alt="" coords="851,162,1089,217"/>
-<area shape="rect" href="structdyno_1_1FrontendParams.html" title=" " alt="" coords="887,241,1053,266"/>
-<area shape="rect" href="structdyno_1_1ObjectMotionSovler_1_1Params.html" title=" " alt="" coords="459,104,649,144"/>
+<area shape="rect" title="Base class to actually do processing. Data passed to this module from the frontend." alt="" coords="1325,290,1492,315"/>
+<area shape="rect" href="classdyno_1_1ModuleBase.html" title=" " alt="" coords="927,162,1165,217"/>
+<area shape="rect" href="structdyno_1_1FrontendParams.html" title=" " alt="" coords="963,241,1129,266"/>
+<area shape="rect" href="structdyno_1_1ObjectMotionSovler_1_1Params.html" title=" " alt="" coords="497,103,687,143"/>
 <area shape="rect" href="structdyno_1_1EgoMotionSolver_1_1Params.html" title=" " alt="" coords="25,5,197,45"/>
 <area shape="rect" href="structdyno_1_1OpticalFlowAndPoseOptimizer_1_1Params.html" title=" " alt="" coords="14,69,209,109"/>
 <area shape="rect" href="structdyno_1_1MotionOnlyRefinementOptimizer_1_1Params.html" title=" " alt="" coords="5,133,217,173"/>
-<area shape="rect" href="structdyno_1_1TrackerParams.html" title="Params for the feature tracker but also the feature detector." alt="" coords="476,241,632,266"/>
+<area shape="rect" href="structdyno_1_1TrackerParams.html" title="Params for the feature tracker but also the feature detector." alt="" coords="514,241,670,266"/>
 <area shape="rect" href="structdyno_1_1TrackerParams_1_1AnmsParams.html" title=" " alt="" coords="33,197,189,237"/>
 <area shape="rect" href="structdyno_1_1TrackerParams_1_1SubPixelCornerRefinementParams.html" title=" " alt="" coords="10,262,213,317"/>
 <area shape="rect" href="structdyno_1_1TrackerParams_1_1GFFTParams.html" title=" " alt="" coords="33,341,189,381"/>
 <area shape="rect" href="structdyno_1_1TrackerParams_1_1OrbParams.html" title=" " alt="" coords="33,405,189,445"/>
-<area shape="rect" href="classThreadsafeQueue.html" title=" " alt="" coords="883,290,1057,315"/>
-<area shape="rect" href="classThreadsafeQueueBase.html" title=" " alt="" coords="451,290,657,315"/>
-<area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html" title=" " alt="" coords="870,343,1070,383"/>
-<area shape="rect" title=" " alt="" coords="453,339,655,394"/>
+<area shape="rect" href="classThreadsafeQueue.html" title=" " alt="" coords="959,290,1133,315"/>
+<area shape="rect" href="classThreadsafeQueueBase.html" title=" " alt="" coords="489,290,695,315"/>
+<area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html" title=" " alt="" coords="946,343,1146,383"/>
+<area shape="rect" title=" " alt="" coords="491,339,693,394"/>
+<area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html" title=" " alt="" coords="942,414,1150,469"/>
+<area shape="rect" title=" " alt="" coords="451,418,733,473"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -202,6 +204,8 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:a74e2ceac249e8401a210fbf913647a59"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae07929467e6cc8acbab483b12efe801b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacedyno.html#a47c0a08523c12765d4bd6e243f900c16">ObjectPoseMap</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1FrontendModule.html#ae07929467e6cc8acbab483b12efe801b">object_poses_</a></td></tr>
 <tr class="separator:ae07929467e6cc8acbab483b12efe801b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a538a29be015756dd4918e614c714bc50"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacedyno.html#a3365cfec845be0c15d15f21c8388db90">ObjectMotionMap</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1FrontendModule.html#a538a29be015756dd4918e614c714bc50">object_motions_</a></td></tr>
+<tr class="separator:a538a29be015756dd4918e614c714bc50"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a008a0baef921d56ee594a0198f4c2174"><td class="memItemLeft" align="right" valign="top">gtsam::Pose3Vector&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1FrontendModule.html#a008a0baef921d56ee594a0198f4c2174">camera_poses_</a></td></tr>
 <tr class="separator:a008a0baef921d56ee594a0198f4c2174"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -267,7 +271,7 @@ Private Attributes</h2></td></tr>
 <div class="line"><span class="lineno">   37</span>        });</div>
 <div class="line"><span class="lineno">   38</span>    }</div>
 <div class="ttc" id="aclassdyno_1_1FrontendModule_html_a0453998c25bc6ebff1163940718a08ac"><div class="ttname"><a href="classdyno_1_1FrontendModule.html#a0453998c25bc6ebff1163940718a08ac">dyno::FrontendModule::base_params_</a></div><div class="ttdeci">const FrontendParams base_params_</div><div class="ttdef"><b>Definition:</b> <a href="FrontendModule_8hpp_source.html#l00115">FrontendModule.hpp:115</a></div></div>
-<div class="ttc" id="aclassdyno_1_1FrontendModule_html_a6158f22ded91a4a838d4d439708fc9f3"><div class="ttname"><a href="classdyno_1_1FrontendModule.html#a6158f22ded91a4a838d4d439708fc9f3">dyno::FrontendModule::gt_packet_map_</a></div><div class="ttdeci">GroundTruthPacketMap gt_packet_map_</div><div class="ttdef"><b>Definition:</b> <a href="FrontendModule_8hpp_source.html#l00126">FrontendModule.hpp:126</a></div></div>
+<div class="ttc" id="aclassdyno_1_1FrontendModule_html_a6158f22ded91a4a838d4d439708fc9f3"><div class="ttname"><a href="classdyno_1_1FrontendModule.html#a6158f22ded91a4a838d4d439708fc9f3">dyno::FrontendModule::gt_packet_map_</a></div><div class="ttdeci">GroundTruthPacketMap gt_packet_map_</div><div class="ttdef"><b>Definition:</b> <a href="FrontendModule_8hpp_source.html#l00127">FrontendModule.hpp:127</a></div></div>
 <div class="ttc" id="aclassdyno_1_1FrontendModule_html_a74e2ceac249e8401a210fbf913647a59"><div class="ttname"><a href="classdyno_1_1FrontendModule.html#a74e2ceac249e8401a210fbf913647a59">dyno::FrontendModule::display_queue_</a></div><div class="ttdeci">ImageDisplayQueue * display_queue_</div><div class="ttdef"><b>Definition:</b> <a href="FrontendModule_8hpp_source.html#l00116">FrontendModule.hpp:116</a></div></div>
 <div class="ttc" id="aclassdyno_1_1FrontendModule_html_a8d1fe77b630a77f6354f4cd8c718f797"><div class="ttname"><a href="classdyno_1_1FrontendModule.html#a8d1fe77b630a77f6354f4cd8c718f797">dyno::FrontendModule::Base</a></div><div class="ttdeci">ModuleBase&lt; FrontendInputPacketBase, FrontendOutputPacketBase &gt; Base</div><div class="ttdef"><b>Definition:</b> <a href="FrontendModule_8hpp_source.html#l00063">FrontendModule.hpp:63</a></div></div>
 <div class="ttc" id="aclassdyno_1_1ModuleBase_html_a3a2819e9de31d4057773353d92925986"><div class="ttname"><a href="classdyno_1_1ModuleBase.html#a3a2819e9de31d4057773353d92925986">dyno::ModuleBase&lt; FrontendInputPacketBase, FrontendOutputPacketBase &gt;::registerInputCallback</a></div><div class="ttdeci">void registerInputCallback(const InputCallback &amp;input_callback)</div><div class="ttdoc">Registeres a function callback to be triggered prior to nominal/bootstrapSpin being called.</div><div class="ttdef"><b>Definition:</b> <a href="ModuleBase_8hpp_source.html#l00109">ModuleBase.hpp:109</a></div></div>
@@ -511,9 +515,8 @@ Here is the call graph for this function:</div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Keeps a track of the current object locations by propogating the motions. Really just (viz) </p>
 
-<p class="definition">Definition at line <a class="el" href="FrontendModule_8hpp_source.html#l00121">121</a> of file <a class="el" href="FrontendModule_8hpp_source.html">FrontendModule.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FrontendModule_8hpp_source.html#l00122">122</a> of file <a class="el" href="FrontendModule_8hpp_source.html">FrontendModule.hpp</a>.</p>
 
 </div>
 </div>
@@ -564,9 +567,34 @@ Here is the call graph for this function:</div>
 </div><div class="memdoc">
 <p>Keeps track of current camera trajectory. Really just for (viz) and drawn everytime </p>
 
-<p class="definition">Definition at line <a class="el" href="FrontendModule_8hpp_source.html#l00126">126</a> of file <a class="el" href="FrontendModule_8hpp_source.html">FrontendModule.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FrontendModule_8hpp_source.html#l00127">127</a> of file <a class="el" href="FrontendModule_8hpp_source.html">FrontendModule.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1FrontendModule.html#a3401a08ecaccc94f6651a331e72589d5">FrontendModule()</a>, and <a class="el" href="classdyno_1_1FrontendModule.html#ace21578a253c182fc92f7fba030b6e00">getGroundTruthPackets()</a>.</p>
+
+</div>
+</div>
+<a id="a538a29be015756dd4918e614c714bc50" name="a538a29be015756dd4918e614c714bc50"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a538a29be015756dd4918e614c714bc50">&#9670;&#160;</a></span>object_motions_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespacedyno.html#a3365cfec845be0c15d15f21c8388db90">ObjectMotionMap</a> dyno::FrontendModule::object_motions_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Keeps a track of the current object locations by propogating the motions. Really just (viz) </p>
+
+<p class="definition">Definition at line <a class="el" href="FrontendModule_8hpp_source.html#l00120">120</a> of file <a class="el" href="FrontendModule_8hpp_source.html">FrontendModule.hpp</a>.</p>
 
 </div>
 </div>
