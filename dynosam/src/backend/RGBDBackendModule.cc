@@ -161,18 +161,19 @@ RGBDBackendModule::SpinReturn RGBDBackendModule::boostrapSpinImpl(
   gtsam::Pose3 T_world_cam_k_frontend;
   updateMap(T_world_cam_k_frontend, input);
 
-  gtsam::Values new_values;
-  gtsam::NonlinearFactorGraph new_factors;
+  // gtsam::Values new_values;
+  // gtsam::NonlinearFactorGraph new_factors;
+  GraphUpdateResult graph_update;
 
-  new_updater_->setInitialPose(T_world_cam_k_frontend, frame_k, new_values);
+  new_updater_->setInitialPose(T_world_cam_k_frontend, frame_k, graph_update);
   new_updater_->setInitialPosePrior(T_world_cam_k_frontend, frame_k,
-                                    new_factors);
+                                    graph_update);
 
   if (callback) {
-    callback(new_updater_, frame_k, new_values, new_factors);
+    callback(new_updater_, frame_k, graph_update);
   }
 
-  smoother_->update(new_factors, new_values);
+  smoother_->update(graph_update.factors(), graph_update.values());
   // smoother_->update(new_factors, new_values);
 
   return {State::Nominal, nullptr};
@@ -189,11 +190,11 @@ RGBDBackendModule::SpinReturn RGBDBackendModule::nominalSpinImpl(
   gtsam::Pose3 T_world_cam_k_frontend;
   updateMap(T_world_cam_k_frontend, input);
 
-  gtsam::Values new_values;
-  gtsam::NonlinearFactorGraph new_factors;
+  // gtsam::Values new_values;
+  // gtsam::NonlinearFactorGraph new_factors;
+  GraphUpdateResult graph_update;
 
-  new_updater_->addOdometry(frame_k, T_world_cam_k_frontend, new_values,
-                            new_factors);
+  new_updater_->addOdometry(frame_k, T_world_cam_k_frontend, graph_update);
 
   UpdateObservationParams update_params;
   update_params.enable_debug_info = true;
@@ -203,8 +204,8 @@ RGBDBackendModule::SpinReturn RGBDBackendModule::nominalSpinImpl(
   {
     LOG(INFO) << "Starting updateStaticObservations";
     utils::TimingStatsCollector timer("backend.update_static_obs");
-    // new_updater_->updateStaticObservations(frame_k, new_values, new_factors,
-    //                                        update_params);
+    new_updater_->updateStaticObservations(frame_k, graph_update,
+                                           update_params);
   }
 
   gtsam::Values new_dynamic_values;
@@ -213,12 +214,12 @@ RGBDBackendModule::SpinReturn RGBDBackendModule::nominalSpinImpl(
   {
     LOG(INFO) << "Starting updateDynamicObservations";
     utils::TimingStatsCollector timer("backend.update_dynamic_obs");
-    new_updater_->updateDynamicObservations(frame_k, new_values, new_factors,
+    new_updater_->updateDynamicObservations(frame_k, graph_update,
                                             update_params);
   }
 
   if (callback) {
-    callback(new_updater_, frame_k, new_values, new_factors);
+    callback(new_updater_, frame_k, graph_update);
   }
 
   LOG(INFO) << "Starting any updates";
@@ -252,7 +253,8 @@ RGBDBackendModule::SpinReturn RGBDBackendModule::nominalSpinImpl(
     //   }
     // }
 
-    auto result = smoother_->update(new_factors, new_values);
+    auto result =
+        smoother_->update(graph_update.factors(), graph_update.values());
     // fixed_lag_smoother_->update(new_factors, new_values, timestamp_map);
 
     // auto result = fixed_lag_smoother_->getISAM2Result();
@@ -355,8 +357,9 @@ RGBDBackendModule::constructGraph(FrameId from_frame, FrameId to_frame,
                                   bool set_initial_camera_pose_prior,
                                   std::optional<gtsam::Values> initial_theta) {
   CHECK_LT(from_frame, to_frame);
-  gtsam::Values new_values;
-  gtsam::NonlinearFactorGraph new_factors;
+  // gtsam::Values new_values;
+  // gtsam::NonlinearFactorGraph new_factors;
+  GraphUpdateResult graph_update;
 
   auto updater = std::move(makeUpdater());
 
@@ -396,21 +399,21 @@ RGBDBackendModule::constructGraph(FrameId from_frame, FrameId to_frame,
     // if first frame
     if (frame_id == from_frame) {
       // add first pose
-      updater->setInitialPose(T_world_camera_k, frame_id, new_values);
+      updater->setInitialPose(T_world_camera_k, frame_id, graph_update);
 
       if (set_initial_camera_pose_prior)
-        updater->setInitialPosePrior(T_world_camera_k, frame_id, new_factors);
+        updater->setInitialPosePrior(T_world_camera_k, frame_id, graph_update);
     } else {
-      updater->addOdometry(frame_id, T_world_camera_k, new_values, new_factors);
+      updater->addOdometry(frame_id, T_world_camera_k, graph_update);
       // no backtrack
-      results += updater->updateDynamicObservations(frame_id, new_values,
-                                                    new_factors, update_params);
+      results += updater->updateDynamicObservations(frame_id, graph_update,
+                                                    update_params);
     }
-    results += updater->updateStaticObservations(frame_id, new_values,
-                                                 new_factors, update_params);
+    results += updater->updateStaticObservations(frame_id, graph_update,
+                                                 update_params);
   }
 
-  return {new_values, new_factors};
+  return {graph_update.values(), graph_update.factors()};
 }
 
 bool RGBDBackendModule::buildSlidingWindowOptimisation(

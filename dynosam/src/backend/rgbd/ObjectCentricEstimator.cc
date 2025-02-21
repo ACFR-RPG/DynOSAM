@@ -412,6 +412,10 @@ void ObjectCentricFormulation::dynamicPointUpdateCallback(
     new_values.insert(point_key, lmk_L0);
     result.updateAffectedObject(frame_node_k_1->frame_id,
                                 context.getObjectId());
+
+    if (result.debug_info)
+      result.debug_info->getObjectInfo(context.getObjectId())
+          .num_new_dynamic_points++;
   }
 
   auto dynamic_point_noise = noise_models_.dynamic_point_noise;
@@ -423,6 +427,9 @@ void ObjectCentricFormulation::dynamicPointUpdateCallback(
         object_motion_key_k_1, point_key,
         lmk_node->getMeasurement(frame_node_k_1).landmark, L_0,
         dynamic_point_noise);
+    if (result.debug_info)
+      result.debug_info->getObjectInfo(context.getObjectId())
+          .num_motion_factors++;
   }
 
   // add factor at k
@@ -432,6 +439,10 @@ void ObjectCentricFormulation::dynamicPointUpdateCallback(
       object_motion_key_k, point_key,
       lmk_node->getMeasurement(frame_node_k).landmark, L_0,
       dynamic_point_noise);
+
+  if (result.debug_info)
+    result.debug_info->getObjectInfo(context.getObjectId())
+        .num_motion_factors++;
 
   result.updateAffectedObject(frame_node_k->frame_id, context.getObjectId());
 }
@@ -456,6 +467,7 @@ void ObjectCentricFormulation::objectUpdateContext(
     // gtsam::Pose3 motion;
     new_values.insert(object_motion_key_k, motion);
     is_other_values_in_map.insert2(object_motion_key_k, true);
+    result.updateAffectedObject(frame_id, object_id);
 
     FrameId s0 = getOrConstructL0(object_id, frame_id).first;
     if (s0 == frame_id) {

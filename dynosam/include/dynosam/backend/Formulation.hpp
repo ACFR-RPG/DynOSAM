@@ -54,21 +54,8 @@ struct UpdateObservationResult {
       objects_affected_per_frame;  // per frame
   DebugInfo::Optional debug_info{};
 
-  // TODO: debug info
-  inline UpdateObservationResult& operator+=(
-      const UpdateObservationResult& oth) {
-    for (const auto& [key, value] : oth.objects_affected_per_frame) {
-      objects_affected_per_frame[key].insert(value.begin(), value.end());
-    }
-    return *this;
-  }
-
-  void updateAffectedObject(FrameId frame_id, ObjectId object_id) {
-    if (!objects_affected_per_frame.exists(object_id)) {
-      objects_affected_per_frame.insert2(object_id, std::set<FrameId>{});
-    }
-    objects_affected_per_frame[object_id].insert(frame_id);
-  }
+  UpdateObservationResult& operator+=(const UpdateObservationResult& oth);
+  void updateAffectedObject(FrameId frame_id, ObjectId object_id);
 };
 
 template <typename MAP>
@@ -124,6 +111,55 @@ struct UpdateObservationParams {
   //! case where we want to be explicit about which frames are added!
   bool do_backtrack = false;
   bool enable_debug_info = true;
+};
+
+class GraphUpdateResult {
+ public:
+  GraphUpdateResult(ObjectId static_id = background_label)
+      : static_id_(static_id) {}
+  ~GraphUpdateResult() = default;
+
+  const gtsam::Values& values() const;
+  const gtsam::NonlinearFactorGraph& factors() const;
+
+  const gtsam::Values& dynamicValues() const;
+  const gtsam::NonlinearFactorGraph& dynamicFactors() const;
+
+  const gtsam::Values& staticValues() const;
+  const gtsam::NonlinearFactorGraph& staticFactors() const;
+
+  std::optional<std::reference_wrapper<const gtsam::Values>> values(
+      ObjectId object_id) const;
+  std::optional<std::reference_wrapper<const gtsam::NonlinearFactorGraph>>
+  factors(ObjectId object_id) const;
+
+  GraphUpdateResult& add(const gtsam::Values& new_values, ObjectId object_id);
+  GraphUpdateResult& add(const gtsam::NonlinearFactorGraph& new_factors,
+                         ObjectId object_id);
+
+  ObjectIds dynamicObjectIds() const;
+
+ private:
+  struct Collection {
+    gtsam::Values values;
+    gtsam::NonlinearFactorGraph factors;
+  };
+
+ private:
+  const ObjectId static_id_;
+  // only collects dynamic objects here
+  gtsam::FastMap<ObjectId, Collection> collections_;
+
+  //! saves iterating over all the dynamic values/factors each time
+  //! updated on add
+  gtsam::Values new_dynamic_values_;
+  gtsam::NonlinearFactorGraph new_dynamic_factors_;
+
+  gtsam::Values new_static_values_;
+  gtsam::NonlinearFactorGraph new_static_factors_;
+
+  gtsam::Values all_new_values_;
+  gtsam::NonlinearFactorGraph all_new_factors_;
 };
 
 // forward declare
@@ -395,7 +431,7 @@ class Formulation {
    * @param new_values gtsam::Values&
    */
   void setInitialPose(const gtsam::Pose3& T_world_camera, FrameId frame_id_k,
-                      gtsam::Values& new_values);
+                      GraphUpdateResult& graph_update);
   /**
    * @brief Adds a pose prior on a value in the graph at frame k using the given
    * pose value as the prior's mean.
@@ -405,8 +441,7 @@ class Formulation {
    * @param new_factors gtsam::NonlinearFactorGraph&
    */
   void setInitialPosePrior(const gtsam::Pose3& T_world_camera,
-                           FrameId frame_id_k,
-                           gtsam::NonlinearFactorGraph& new_factors);
+                           FrameId frame_id_k, GraphUpdateResult& graph_update);
 
   /**
    * @brief Adds odometry factor between multiple frames using the initial
@@ -418,8 +453,7 @@ class Formulation {
    * @param new_factors gtsam::NonlinearFactorGraph&
    */
   void addOdometry(FrameId from_frame, FrameId to_frame,
-                   gtsam::Values& new_values,
-                   gtsam::NonlinearFactorGraph& new_factors);
+                   GraphUpdateResult& graph_update);
 
   /**
    * @brief Adds odometry factor betwene k-1 and k using T_world_camera as the
@@ -432,8 +466,7 @@ class Formulation {
    * @param new_factors gtsam::NonlinearFactorGraph&
    */
   void addOdometry(FrameId frame_id_k, const gtsam::Pose3& T_world_camera,
-                   gtsam::Values& new_values,
-                   gtsam::NonlinearFactorGraph& new_factors);
+                   GraphUpdateResult& graph_update);
 
   /**
    * @brief Update the static-point part of the factor graph between multiple
@@ -450,8 +483,7 @@ class Formulation {
    * @return UpdateObservationResult
    */
   UpdateObservationResult updateStaticObservations(
-      FrameId from_frame, FrameId to_frame, gtsam::Values& new_values,
-      gtsam::NonlinearFactorGraph& new_factors,
+      FrameId from_frame, FrameId to_frame, GraphUpdateResult& graph_update,
       const UpdateObservationParams& update_params);
 
   /**
@@ -469,8 +501,7 @@ class Formulation {
    * @return UpdateObservationResult
    */
   UpdateObservationResult updateDynamicObservations(
-      FrameId from_frame, FrameId to_frame, gtsam::Values& new_values,
-      gtsam::NonlinearFactorGraph& new_factors,
+      FrameId from_frame, FrameId to_frame, GraphUpdateResult& graph_update,
       const UpdateObservationParams& update_params);
 
   /**
@@ -485,8 +516,7 @@ class Formulation {
    * @return UpdateObservationResult
    */
   UpdateObservationResult updateStaticObservations(
-      FrameId frame_id_k, gtsam::Values& new_values,
-      gtsam::NonlinearFactorGraph& new_factors,
+      FrameId frame_id_k, GraphUpdateResult& graph_update,
       const UpdateObservationParams& update_params);
 
   /**
@@ -502,8 +532,7 @@ class Formulation {
    * @return UpdateObservationResult
    */
   UpdateObservationResult updateDynamicObservations(
-      FrameId frame_id_k, gtsam::Values& new_values,
-      gtsam::NonlinearFactorGraph& new_factors,
+      FrameId frame_id_k, GraphUpdateResult& graph_update,
       const UpdateObservationParams& update_params);
 
   /**

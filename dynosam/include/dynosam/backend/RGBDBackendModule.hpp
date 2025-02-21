@@ -91,7 +91,7 @@ class RGBDBackendModule : public BackendModuleType<RGBDBackendModuleTraits> {
 
   // FOR NOW!!
   std::function<void(const Formulation<RGBDMap>::UniquePtr&, FrameId,
-                     const gtsam::Values&, const gtsam::NonlinearFactorGraph&)>
+                     const GraphUpdateResult&)>
       callback;
 
  public:

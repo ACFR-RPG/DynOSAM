@@ -87,8 +87,13 @@ void DecoupledObjectSAM::updateFormulation(
   update_params.enable_debug_info = true;
   VLOG(10) << "DecoupledObjectSAM: Starting formulation update k=" << frame_k
            << " j= " << object_id_;
-  decoupled_formulation_->updateDynamicObservations(frame_k, new_values,
-                                                    new_factors, update_params);
+
+  GraphUpdateResult graph_update;
+  decoupled_formulation_->updateDynamicObservations(frame_k, graph_update,
+                                                    update_params);
+
+  new_values = graph_update.values();
+  new_factors = graph_update.factors();
 }
 
 bool DecoupledObjectSAM::updateSmoother(FrameId frame_k) {

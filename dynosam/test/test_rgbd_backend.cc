@@ -45,6 +45,7 @@
 
 #include "dynosam/backend/BackendPipeline.hpp"
 #include "dynosam/backend/FactorGraphTools.hpp"
+#include "dynosam/backend/Formulation.hpp"
 #include "dynosam/backend/RGBDBackendModule.hpp"
 #include "dynosam/common/Map.hpp"
 #include "dynosam/factors/LandmarkMotionTernaryFactor.hpp"
@@ -107,10 +108,12 @@ TEST(RGBDBackendModule, smallKITTIDataset) {
 
   backend.callback =
       [&](const dyno::Formulation<dyno::Map3d2d>::UniquePtr& formulation,
-          dyno::FrameId frame_id, const gtsam::Values& new_values,
-          const gtsam::NonlinearFactorGraph& new_factors) -> void {
+          dyno::FrameId frame_id,
+          const dyno::GraphUpdateResult& graph_update) -> void {
     LOG(INFO) << "In backend callback " << frame_id;
 
+    gtsam::Values new_values = graph_update.values();
+    gtsam::NonlinearFactorGraph new_factors = graph_update.factors();
     auto result = isam2.update(new_factors, new_values);
 
     isam2.getFactorsUnsafe().saveGraph(
@@ -534,8 +537,8 @@ TEST(RGBDBackendModule, testObjectCentricFormulations) {
 
       backend->callback =
           [data](const dyno::Formulation<dyno::Map3d2d>::UniquePtr& formulation,
-                 dyno::FrameId frame_id, const gtsam::Values& new_values,
-                 const gtsam::NonlinearFactorGraph& new_factors) -> void {
+                 dyno::FrameId frame_id,
+                 const dyno::GraphUpdateResult& graph_update) -> void {
         LOG(INFO) << "Running isam2 update " << frame_id << " for formulation "
                   << formulation->getFullyQualifiedName();
         CHECK_NOTNULL(data);
@@ -545,7 +548,7 @@ TEST(RGBDBackendModule, testObjectCentricFormulations) {
         {
           dyno::utils::TimingStatsCollector timer(
               "isam2_oc_test_update." + formulation->getFullyQualifiedName());
-          result = isam->update(new_factors, new_values);
+          result = isam->update(graph_update.factors(), graph_update.values());
         }
 
         LOG(INFO) << "ISAM2 result. Error before " << result.getErrorBefore()
@@ -701,9 +704,12 @@ TEST(RGBDBackendModule, testObjectCentric) {
 
   backend.callback =
       [&](const dyno::Formulation<dyno::Map3d2d>::UniquePtr& formulation,
-          dyno::FrameId frame_id, const gtsam::Values& new_values,
-          const gtsam::NonlinearFactorGraph& new_factors) -> void {
+          dyno::FrameId frame_id,
+          const dyno::GraphUpdateResult& graph_update) -> void {
     LOG(INFO) << "In backend callback " << frame_id;
+
+    gtsam::Values new_values = graph_update.values();
+    gtsam::NonlinearFactorGraph new_factors = graph_update.factors();
 
     gtsam::KeyVector marginalizableKeys;
     gtsam::FastMap<gtsam::Key, int> constrained_keys;

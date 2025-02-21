@@ -84,15 +84,18 @@ BackendLogger::UniquePtr Formulation<MAP>::makeFullyQualifiedLogger() const {
 template <typename MAP>
 void Formulation<MAP>::setInitialPose(const gtsam::Pose3& T_world_camera,
                                       FrameId frame_id_k,
-                                      gtsam::Values& new_values) {
+                                      GraphUpdateResult& graph_update) {
+  gtsam::Values new_values;
   new_values.insert(CameraPoseSymbol(frame_id_k), T_world_camera);
+  graph_update.add(new_values, background_label);
+
   theta_.insert_or_assign(new_values);
 }
 
 template <typename MAP>
-void Formulation<MAP>::setInitialPosePrior(
-    const gtsam::Pose3& T_world_camera, FrameId frame_id_k,
-    gtsam::NonlinearFactorGraph& new_factors) {
+void Formulation<MAP>::setInitialPosePrior(const gtsam::Pose3& T_world_camera,
+                                           FrameId frame_id_k,
+                                           GraphUpdateResult& graph_update) {
   auto initial_pose_prior = noise_models_.initial_pose_prior;
 
   // keep track of the new factors added in this function
@@ -100,14 +103,14 @@ void Formulation<MAP>::setInitialPosePrior(
   gtsam::NonlinearFactorGraph internal_new_factors;
   internal_new_factors.addPrior(CameraPoseSymbol(frame_id_k), T_world_camera,
                                 initial_pose_prior);
-  new_factors += internal_new_factors;
+
+  graph_update.add(internal_new_factors, background_label);
   factors_ += internal_new_factors;
 }
 
 template <typename MAP>
 void Formulation<MAP>::addOdometry(FrameId from_frame, FrameId to_frame,
-                                   gtsam::Values& new_values,
-                                   gtsam::NonlinearFactorGraph& new_factors) {
+                                   GraphUpdateResult& graph_update) {
   CHECK_LT(from_frame, to_frame);
   CHECK_GT(from_frame, this->map()->firstFrameId());
 
@@ -119,20 +122,20 @@ void Formulation<MAP>::addOdometry(FrameId from_frame, FrameId to_frame,
     gtsam::Pose3 T_world_camera_k;
     CHECK(this->map()->hasInitialSensorPose(frame_id, &T_world_camera_k));
 
-    addOdometry(frame_id, T_world_camera_k, values, graph);
-
-    new_values.insert(values);
-    new_factors += graph;
+    addOdometry(frame_id, T_world_camera_k, graph_update);
   }
 }
 
 template <typename MAP>
 void Formulation<MAP>::addOdometry(FrameId frame_id_k,
                                    const gtsam::Pose3& T_world_camera,
-                                   gtsam::Values& new_values,
-                                   gtsam::NonlinearFactorGraph& new_factors) {
+                                   GraphUpdateResult& graph_update) {
+  gtsam::Values new_values;
   new_values.insert(CameraPoseSymbol(frame_id_k), T_world_camera);
   theta_.insert_or_assign(new_values);
+
+  graph_update.add(new_values, background_label);
+
   auto odometry_noise = noise_models_.odometry_noise;
 
   typename Map::Ptr map = this->map();
@@ -157,15 +160,14 @@ void Formulation<MAP>::addOdometry(FrameId frame_id_k,
     factor_graph_tools::addBetweenFactor(frame_id_k_1, frame_id_k, odom,
                                          odometry_noise, internal_new_factors);
     factors_ += internal_new_factors;
-    new_factors += internal_new_factors;
+    graph_update.add(internal_new_factors, background_label);
     LOG(INFO) << "Finished adding odom";
   }
 }
 
 template <typename MAP>
 UpdateObservationResult Formulation<MAP>::updateStaticObservations(
-    FrameId from_frame, FrameId to_frame, gtsam::Values& new_values,
-    gtsam::NonlinearFactorGraph& new_factors,
+    FrameId from_frame, FrameId to_frame, GraphUpdateResult& graph_update,
     const UpdateObservationParams& update_params) {
   CHECK_LT(from_frame, to_frame);
   CHECK_GT(from_frame, this->map()->firstFrameId());
@@ -174,11 +176,7 @@ UpdateObservationResult Formulation<MAP>::updateStaticObservations(
   for (auto frame_id = from_frame; frame_id <= to_frame; frame_id++) {
     // TODO: not sure we need this extra factors variable here now we use the
     // internal_new_factors
-    gtsam::NonlinearFactorGraph factors;
-    result +=
-        updateStaticObservations(frame_id, new_values, factors, update_params);
-
-    new_factors += factors;
+    result += updateStaticObservations(frame_id, graph_update, update_params);
   }
 
   return result;
@@ -186,26 +184,21 @@ UpdateObservationResult Formulation<MAP>::updateStaticObservations(
 
 template <typename MAP>
 UpdateObservationResult Formulation<MAP>::updateDynamicObservations(
-    FrameId from_frame, FrameId to_frame, gtsam::Values& new_values,
-    gtsam::NonlinearFactorGraph& new_factors,
+    FrameId from_frame, FrameId to_frame, GraphUpdateResult& graph_update,
     const UpdateObservationParams& update_params) {
   CHECK_LT(from_frame, to_frame);
   CHECK_GT(from_frame, this->map()->firstFrameId());
 
   UpdateObservationResult result;
   for (auto frame_id = from_frame; frame_id <= to_frame; frame_id++) {
-    gtsam::NonlinearFactorGraph factors;
-    result +=
-        updateDynamicObservations(frame_id, new_values, factors, update_params);
-    new_factors += factors;
+    result += updateDynamicObservations(frame_id, graph_update, update_params);
   }
   return result;
 }
 
 template <typename MAP>
 UpdateObservationResult Formulation<MAP>::updateStaticObservations(
-    FrameId frame_id_k, gtsam::Values& new_values,
-    gtsam::NonlinearFactorGraph& new_factors,
+    FrameId frame_id_k, GraphUpdateResult& graph_update,
     const UpdateObservationParams& update_params) {
   typename Map::Ptr map = this->map();
   auto accessor = this->accessorFromTheta();
@@ -214,6 +207,7 @@ UpdateObservationResult Formulation<MAP>::updateStaticObservations(
   // keep track of the new factors added in this function
   // these are then appended to the internal factors_ and new_factors
   gtsam::NonlinearFactorGraph internal_new_factors;
+  gtsam::Values internal_new_values;
 
   UpdateObservationResult result;
   if (update_params.enable_debug_info) {
@@ -285,7 +279,7 @@ UpdateObservationResult Formulation<MAP>::updateStaticObservations(
       getSafeQuery(lmk_world,
                    accessor->getStaticLandmark(lmk_node->tracklet_id),
                    gtsam::Point3(T_world_camera_frontend * measured));
-      new_values.insert(point_key, lmk_world);
+      internal_new_values.insert(point_key, lmk_world);
       is_other_values_in_map.insert2(point_key, true);
 
       if (result.debug_info) result.debug_info->num_new_static_points++;
@@ -294,9 +288,11 @@ UpdateObservationResult Formulation<MAP>::updateStaticObservations(
   }
 
   // update internal data structures
-  theta_.insert_or_assign(new_values);
+  theta_.insert_or_assign(internal_new_values);
   factors_ += internal_new_factors;
-  new_factors += internal_new_factors;
+
+  graph_update.add(internal_new_factors, background_label);
+  graph_update.add(internal_new_values, background_label);
 
   if (result.debug_info)
     LOG(INFO) << "Num new static points: "
@@ -308,8 +304,7 @@ UpdateObservationResult Formulation<MAP>::updateStaticObservations(
 
 template <typename MAP>
 UpdateObservationResult Formulation<MAP>::updateDynamicObservations(
-    FrameId frame_id_k, gtsam::Values& new_values,
-    gtsam::NonlinearFactorGraph& new_factors,
+    FrameId frame_id_k, GraphUpdateResult& graph_update,
     const UpdateObservationParams& update_params) {
   typename Map::Ptr map = this->map();
   auto accessor = this->accessorFromTheta();
@@ -318,7 +313,9 @@ UpdateObservationResult Formulation<MAP>::updateDynamicObservations(
   auto dynamic_point_noise = noise_models_.dynamic_point_noise;
   // keep track of the new factors added in this function
   // these are then appended to the internal factors_ and new_factors
-  gtsam::NonlinearFactorGraph internal_new_factors;
+  // gtsam::NonlinearFactorGraph internal_new_factors;
+  gtsam::FastMap<ObjectId, gtsam::NonlinearFactorGraph>
+      internal_new_factors_per_object;
 
   UpdateObservationResult result;
   if (update_params.enable_debug_info) {
@@ -470,6 +467,14 @@ UpdateObservationResult Formulation<MAP>::updateDynamicObservations(
           point_context.X_k_measured = T_world_camera_k;
           point_context.X_k_1_measured = T_world_camera_k_1;
 
+          const ObjectId object_id = point_context.getObjectId();
+          if (!internal_new_factors_per_object.exists(object_id)) {
+            internal_new_factors_per_object.insert2(
+                object_id, gtsam::NonlinearFactorGraph{});
+          }
+          gtsam::NonlinearFactorGraph& internal_new_factors =
+              internal_new_factors_per_object.at(object_id);
+
           // this assumes we add all the points in order and have continuous
           // frames (which we should have?)
           if (seen_frames_itr == starting_motion_frame_itr) {
@@ -484,7 +489,7 @@ UpdateObservationResult Formulation<MAP>::updateDynamicObservations(
           // update internal theta and factors
           theta_.insert(local_new_values);
           // add to the external new_values
-          new_values.insert(local_new_values);
+          graph_update.add(local_new_values, object_id);
         }
       } else {
         // these tracklets should already be in the graph so we should only need
@@ -499,6 +504,15 @@ UpdateObservationResult Formulation<MAP>::updateDynamicObservations(
         point_context.X_k_measured =
             getInitialOrLinearizedSensorPose(frame_node_k->frame_id);
         point_context.is_starting_motion_frame = false;
+
+        const ObjectId object_id = point_context.getObjectId();
+        if (!internal_new_factors_per_object.exists(object_id)) {
+          internal_new_factors_per_object.insert2(
+              object_id, gtsam::NonlinearFactorGraph{});
+        }
+        gtsam::NonlinearFactorGraph& internal_new_factors =
+            internal_new_factors_per_object.at(object_id);
+
         utils::TimingStatsCollector dyn_point_update_timer(
             this->loggerPrefix() + ".dyn_point_update_2");
         // the true set of values that are added from the update
@@ -508,7 +522,8 @@ UpdateObservationResult Formulation<MAP>::updateDynamicObservations(
         // update internal theta and factors
         theta_.insert(local_new_values);
         // add to the external new_values
-        new_values.insert(local_new_values);
+        // new_values.insert(local_new_values);
+        graph_update.add(local_new_values, point_context.getObjectId());
       }
     }
   }
@@ -551,13 +566,18 @@ UpdateObservationResult Formulation<MAP>::updateDynamicObservations(
       object_update_context.frame_node_k = frame_node_k_impl;
       object_update_context.object_node = object_node;
 
+      CHECK(internal_new_factors_per_object.exists(object_id));
+      gtsam::NonlinearFactorGraph& internal_new_factors =
+          internal_new_factors_per_object.at(object_id);
+
       gtsam::Values local_new_values;
       objectUpdateContext(object_update_context, result, local_new_values,
                           internal_new_factors);
       // update internal theta and factors
       theta_.insert(local_new_values);
       // add to the external new_values
-      new_values.insert(local_new_values);
+      // new_values.insert(local_new_values);
+      graph_update.add(local_new_values, object_update_context.getObjectId());
     }
   }
 
@@ -572,8 +592,16 @@ UpdateObservationResult Formulation<MAP>::updateDynamicObservations(
     }
   }
 
-  factors_ += internal_new_factors;
-  new_factors += internal_new_factors;
+  // factors_ += internal_new_factors;
+
+  // add per object factors
+  for (const auto& [object_id, factors_per_object] :
+       internal_new_factors_per_object) {
+    factors_ += factors_per_object;
+    graph_update.add(factors_per_object, object_id);
+  }
+  //
+  // graph_update.add(local_new_values, object_update_context.getObjectId());
   return result;
 }
 

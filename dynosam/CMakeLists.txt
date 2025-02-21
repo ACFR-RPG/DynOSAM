@@ -127,6 +127,7 @@ add_library(${PROJECT_NAME} SHARED
   src/backend/rgbd/ObjectCentricEstimator.cc
   src/backend/rgbd/impl/ObjectCentricFormulations.cc
   src/backend/rgbd/impl/DecoupledObjectSAM.cc
+  src/backend/Formulation.cc
 
   src/factors/LandmarkMotionTernaryFactor.cc
   src/factors/Pose3FlowProjectionFactor.cc
@@ -316,6 +317,10 @@ if(BUILD_TESTING)
     test/test_factors.cc
     test/test_numerical.cc
     test/test_params.cc
+    test/test_mr_bayes.cc
+
+    test/MRISAM2.cc
+    test/MRBayesTree.cc
 )
 
   target_link_libraries(${PROJECT_NAME}_test ${PROJECT_NAME} ${rclcpp_LIBRARIES})
