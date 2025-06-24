@@ -50,3 +50,10 @@ image_tracks_vis_params:
   show_intermediate_tracking: false
   draw_object_bounding_box: false
   draw_object_mask: true
+
+
+initial_T_world_camera:
+  R: [1.0,0.0,0.0,
+      0.0,1.0,0.0,
+      0.0,0.0,1.0]
+  t: [0.0,0.0,0.0]
