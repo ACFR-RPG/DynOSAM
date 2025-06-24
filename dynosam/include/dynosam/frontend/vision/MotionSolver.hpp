@@ -272,6 +272,9 @@ class EgoMotionSolver {
     //! Generic ransac params
     double ransac_iterations = 500;
     double ransac_probability = 0.995;
+
+    //! World frame construction params
+    gtsam::Pose3 T_world_camera = gtsam::Pose3::Identity();
   };
 
   EgoMotionSolver(const Params& params, const CameraParams& camera_params);

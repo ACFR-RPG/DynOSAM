@@ -76,7 +76,8 @@ cv::Mat FeatureTrackerBase::computeImageTracks(
     const ImageTracksParams& config) const {
   cv::Mat img_rgb;
 
-  const cv::Mat& rgb = current_frame.image_container_.get<ImageType::RGBMono>();
+  const cv::Mat& rgb = ImageType::RGBMono::toRGB(
+      current_frame.image_container_.get<ImageType::RGBMono>());;
   const cv::Mat& object_mask =
       current_frame.image_container_.get<ImageType::MotionMask>();
   rgb.copyTo(img_rgb);
