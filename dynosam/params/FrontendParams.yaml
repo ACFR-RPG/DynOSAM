@@ -25,15 +25,18 @@ object_motion_solver:
 
   object_motion_3d_refinement:
     outlier_reject: True
-
-
-
+    
 
 camera_motion_solver:
   ransac_threshold_pnp: 2.0
   ransac_iterations: 500
   ransac_probability:  0.995
 
+  initial_T_world_camera:
+    R: [1.0,0.0,0.0,
+        0.0,1.0,0.0,
+        0.0,0.0,1.0]
+    t: [0.0,0.0,0.0]
 
 tracker_params:
   shrink_row: 0
@@ -51,9 +54,3 @@ image_tracks_vis_params:
   draw_object_bounding_box: false
   draw_object_mask: true
 
-
-initial_T_world_camera:
-  R: [1.0,0.0,0.0,
-      0.0,1.0,0.0,
-      0.0,0.0,1.0]
-  t: [0.0,0.0,0.0]
