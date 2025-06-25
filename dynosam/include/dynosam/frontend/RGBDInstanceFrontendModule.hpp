@@ -52,7 +52,8 @@ class RGBDInstanceFrontendModule : public FrontendModule {
  private:
   Camera::Ptr camera_;
   EgoMotionSolver motion_solver_;
-  //   ObjectMotionSovlerF2F object_motion_solver_;
+  ObjectMotionSovlerF2F::Params object_motion_solver_params_;
+  EgoMotionSolver::Params ego_motion_solver_params_;
   ObjectMotionSolver::UniquePtr object_motion_solver_;
   FeatureTracker::UniquePtr tracker_;
   RGBDFrontendLogger::UniquePtr logger_;

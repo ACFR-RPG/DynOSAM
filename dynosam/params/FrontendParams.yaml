@@ -18,7 +18,7 @@ object_motion_solver:
   refine_motion_with_3d: False
 
   ransac_iterations: 500
-  ransac_probability:  0.995
+  ransac_probability: 0.995
 
   joint_optical_flow:
     outlier_reject: True
@@ -32,11 +32,10 @@ camera_motion_solver:
   ransac_iterations: 500
   ransac_probability:  0.995
 
-  initial_T_world_camera:
-    R: [1.0,0.0,0.0,
-        0.0,1.0,0.0,
-        0.0,0.0,1.0]
-    t: [0.0,0.0,0.0]
+  initial_R_world_camera: [1.0,0.0,0.0,
+                          0.0,1.0,0.0,
+                          0.0,0.0,1.0]
+  initial_t_world_camera: [0.0,0.0,0.0]
 
 tracker_params:
   shrink_row: 0

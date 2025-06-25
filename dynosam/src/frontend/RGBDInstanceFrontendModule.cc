@@ -76,18 +76,22 @@ RGBDInstanceFrontendModule::RGBDInstanceFrontendModule(
   // isam2_params.keyFormatter = DynoLikeKeyFormatter;
   // isam2_params.evaluateNonlinearError = true;
 
-  ObjectMotionSovlerF2F::Params object_motion_solver_params =
+  object_motion_solver_params_ =
       frontend_params.object_motion_solver_params;
+
   // add ground truth hook
-  object_motion_solver_params.ground_truth_packets_request = [&]() {
+  object_motion_solver_params_.ground_truth_packets_request = [&]() {
     return this->shared_module_info.getGroundTruthPackets();
   };
-  object_motion_solver_params.refine_motion_with_3d = false;
+  object_motion_solver_params_.refine_motion_with_3d = false;
 
   // object_motion_solver_ = std::make_unique<ObjectMotionSolverSAM>(
   //     object_motion_solver_params, camera->getParams(), isam2_params);
   object_motion_solver_ = std::make_unique<ObjectMotionSovlerF2F>(
-      object_motion_solver_params, camera->getParams());
+      object_motion_solver_params_, camera->getParams());
+
+  ego_motion_solver_params_ = frontend_params.ego_motion_solver_params;
+
 }
 
 RGBDInstanceFrontendModule::~RGBDInstanceFrontendModule() {
@@ -112,6 +116,23 @@ FrontendModule::SpinReturn RGBDInstanceFrontendModule::boostrapSpin(
   ImageContainer::Ptr image_container = input->image_container_;
   Frame::Ptr frame = tracker_->track(input->getFrameId(), input->getTimestamp(),
                                      *image_container);
+
+
+  // gtsam::Rot3(R[0],)
+    
+  std::vector<double> initial_R_world_camera = ego_motion_solver_params_.initial_R_world_camera;
+  std::vector<double> initial_t_world_camera = ego_motion_solver_params_.initial_t_world_camera;
+
+  // gtsam::Rot3 R = gtsam::Rot3::RzRyRx(0.0, 0, 0.0);
+
+  gtsam::Rot3 R = gtsam::Rot3(initial_R_world_camera[0],initial_R_world_camera[1],initial_R_world_camera[2],
+                              initial_R_world_camera[3],initial_R_world_camera[4],initial_R_world_camera[5],
+                              initial_R_world_camera[6],initial_R_world_camera[7],initial_R_world_camera[8]);
+
+  gtsam::Point3 t = {initial_t_world_camera[0],initial_t_world_camera[1],initial_t_world_camera[2]};
+  // std::cout << "T_world_camera rotation: " << R << "T_world_camera translation: " <<  t << std::endl;
+
+  frame->T_world_camera_ = gtsam::Pose3(R, t);
   CHECK(frame->updateDepths());
 
   return {State::Nominal, nullptr};
@@ -267,9 +288,11 @@ bool RGBDInstanceFrontendModule::solveCameraMotion(
                << flow_opt_result.error_before.value_or(NaN)
                << " error_after: " << flow_opt_result.error_after.value_or(NaN);
     }
+    std::cerr << frame_k->T_world_camera_ << "T world camera valid track" << std::endl;
     return true;
   } else {
     frame_k->T_world_camera_ = gtsam::Pose3::Identity();
+    std::cerr << frame_k->T_world_camera_ << "T world camera invalid track" << std::endl;
     return false;
   }
 }

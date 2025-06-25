@@ -93,6 +93,9 @@ void declare_config(EgoMotionSolver::Params& config) {
         "optimize_3d3d_pose_from_inliers");
   field(config.ransac_iterations, "ransac_iterations");
   field(config.ransac_probability, "ransac_probability");
+  
+  field(config.initial_R_world_camera, "initial_R_world_camera");
+  field(config.initial_t_world_camera, "initial_t_world_camera");
 }
 void declare_config(ObjectMotionSovlerF2F::Params& config) {
   using namespace config;
