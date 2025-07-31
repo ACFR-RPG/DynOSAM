@@ -205,3 +205,13 @@ struct ISAM2Result {
 };
 
 }  // namespace dyno
+
+#include <gtsam/nonlinear/ISAM2Result.h>
+
+template <>
+inline bool dyno::convert(const dyno::ISAM2Result& input,
+                          gtsam::ISAM2Result& output) {
+  // TODO: for now just need the new factor indices...
+  output.newFactorsIndices = input.newFactorsIndices;
+  return true;
+}

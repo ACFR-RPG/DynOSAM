@@ -266,10 +266,17 @@ class SmartStructurlessFormulation : public RegularHybridFormulation {
   }
 
  private:
+  void postUpdate(const PostUpdateData& data) override;
+
+ private:
   gtsam::FastMap<TrackletId, HybridSmartFactor::shared_ptr>
       tracklet_id_to_smart_factor_;
   gtsam::FastMap<TrackletId, gtsam::FactorIndex>
       tracklet_id_to_smart_factor_index_;
+
+  // this will get cleared on each postUpdate... what if smoother fails? Should
+  // we reset this??!!
+  std::vector<TrackletId> tracklet_ids_of_new_smart_factors_;
 };
 
 }  // namespace test_hybrid

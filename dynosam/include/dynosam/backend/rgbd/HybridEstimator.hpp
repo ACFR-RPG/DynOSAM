@@ -181,16 +181,23 @@ class SmartMotionFactor : public gtsam::NonlinearFactor,
       boost::optional<gtsam::Point3> external_point = {}) const {
     TriangulationResult point;
 
+    // if (external_point) {
+    //   point = TriangulationResult(*external_point);
+    // } else {
+    //   // do triangulation without updating the internal 3d point result
+    //   point = triangulatePoint3Internal(motions, poses);
+    // }
+
     if (external_point) {
-      point = TriangulationResult(*external_point);
+      result_ = TriangulationResult(*external_point);
     } else {
       // do triangulation without updating the internal 3d point result
-      point = triangulatePoint3Internal(motions, poses);
+      result_ = triangulateSafe(motions, poses);
     }
 
     if (result_) {
       // All good, just use version in base class
-      return this->totalReprojectionError(motions, poses, *point);
+      return this->totalReprojectionError(motions, poses, *result_);
       // else if (params_.degeneracyMode == HANDLE_INFINITY) {
       //   // Otherwise, manage the exceptions with rotation-only factors
       //   Unit3 backprojected = cameras.front().backprojectPointAtInfinity(
@@ -968,8 +975,37 @@ class SmartMotionFactor : public gtsam::NonlinearFactor,
 
     auto gg_timer =
         std::make_unique<utils::TimingStatsCollector>("smf_Gg_calc");
-    gtsam::Matrix g = Ft * (b - E * P * Et * b);
-    gtsam::Matrix G = Ft * F - Ft * E * P * Et * F;
+    // gtsam::Matrix g = Ft * (b - E * P * Et * b);
+    // gtsam::Matrix G = Ft * F - Ft * E * P * Et * F;
+
+    // gtsam::Matrix EPtF = E.transpose() * F;  // 3×n
+    // gtsam::Matrix EPtb = E.transpose() * b;  // 3×1
+
+    // gtsam::Matrix P_EPtF = P * EPtF;         // 3×n
+    // gtsam::Vector P_EPtb = P * EPtb;         // 3×1
+
+    // gtsam::Matrix G = Ft * F - Ft * E * P_EPtF;
+    // gtsam::Vector g = Ft * b - Ft * E * P_EPtb;
+
+    // Step 1: Compute full QR decomposition of E
+    Eigen::HouseholderQR<gtsam::Matrix> qr(E);
+    gtsam::Matrix Q = qr.householderQ();  // Q is m x m
+
+    const int nm = E.rows();  // number of residuals
+    const int nr = E.cols();  // should be 3
+
+    // Step 2: Extract the nullspace basis N = Q.rightCols(m - r)
+    const int null_dim = nm - nr;
+    gtsam::Matrix N = Q.rightCols(null_dim);  // m x (m - 3)
+
+    // Step 3: Project F and b into the nullspace
+    gtsam::Matrix NF = N.transpose() * F;  // (m-3) x n
+    gtsam::Vector Nb = N.transpose() * b;  // (m-3) x 1
+
+    // Step 4: Build reduced system
+    gtsam::Matrix G = NF.transpose() * NF;  // n x n
+    gtsam::Matrix g = NF.transpose() * Nb;  // n x 1
+
     gg_timer.reset();
 
     // size of schur = num measurements * Hessian size + 1
@@ -1291,7 +1327,7 @@ class RegularHybridFormulation : public HybridFormulation {
   void preUpdate(const PreUpdateData& data) override;
   // use post update information to set internal data about when objects were
   // last udpated!!
-  void postUpdate(const PostUpdateData& data) override;
+  virtual void postUpdate(const PostUpdateData& data) override;
 
  protected:
   struct ObjectUpdateData {

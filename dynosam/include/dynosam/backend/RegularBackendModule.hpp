@@ -87,13 +87,17 @@ class RegularBackendModule
   void setupUpdates();
 
   void updateAndOptimize(FrameId frame_id_k, const gtsam::Values& new_values,
-                         const gtsam::NonlinearFactorGraph& new_factors);
+                         const gtsam::NonlinearFactorGraph& new_factors,
+                         PostUpdateData& post_update_data);
   void updateIncremental(FrameId frame_id_k, const gtsam::Values& new_values,
-                         const gtsam::NonlinearFactorGraph& new_factors);
+                         const gtsam::NonlinearFactorGraph& new_factors,
+                         PostUpdateData& post_update_data);
   void updateBatch(FrameId frame_id_k, const gtsam::Values& new_values,
-                   const gtsam::NonlinearFactorGraph& new_factors);
+                   const gtsam::NonlinearFactorGraph& new_factors,
+                   PostUpdateData& post_update_data);
   void updateSlidingWindow(FrameId frame_id_k, const gtsam::Values& new_values,
-                           const gtsam::NonlinearFactorGraph& new_factors);
+                           const gtsam::NonlinearFactorGraph& new_factors,
+                           PostUpdateData& post_update_data);
 
   void logIncrementalStats(
       FrameId frame_id_k,

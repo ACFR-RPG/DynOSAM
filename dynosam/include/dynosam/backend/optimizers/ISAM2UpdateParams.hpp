@@ -34,6 +34,7 @@
 #include <gtsam/dllexport.h>  // GTSAM_EXPORT
 #include <gtsam/inference/FactorGraph.h>
 #include <gtsam/inference/Key.h>  // Key, KeySet
+#include <gtsam/nonlinear/ISAM2UpdateParams.h>
 // #include <gtsam/nonlinear/ISAM2Result.h>  //FactorIndices
 #include <optional>
 
@@ -82,4 +83,30 @@ struct ISAM2UpdateParams {
   bool forceFullSolve{false};
 };
 
+namespace {
+
+// TODO: gross and only needed because gtsam version we're on still uses boost!!
+template <typename T>
+std::optional<T> boostOptToStd(const boost::optional<T>& opt) {
+  if (opt.has_value()) {
+    return std::optional<T>(*opt);
+  } else {
+    return std::nullopt;
+  }
+}
+}  // namespace
+
 }  // namespace dyno
+
+template <>
+inline bool dyno::convert(const gtsam::ISAM2UpdateParams& input,
+                          dyno::ISAM2UpdateParams& output) {
+  output.removeFactorIndices = input.removeFactorIndices;
+  output.constrainedKeys = boostOptToStd(input.constrainedKeys);
+  output.noRelinKeys = boostOptToStd(input.noRelinKeys);
+  output.extraReelimKeys = boostOptToStd(input.extraReelimKeys);
+  output.force_relinearize = input.force_relinearize;
+  output.newAffectedKeys = boostOptToStd(input.newAffectedKeys);
+  output.forceFullSolve = input.forceFullSolve;
+  return true;
+}

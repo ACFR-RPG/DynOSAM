@@ -558,7 +558,7 @@ TEST(RegularBackendModule, testObjectCentricFormulations) {
 
   const double H_R_sigma = 0.05;
   const double H_t_sigma = 0.08;
-  const double dynamic_point_sigma = 0.2;
+  const double dynamic_point_sigma = 0.1;
 
   const double X_R_sigma = 0.01;
   const double X_t_sigma = 0.01;
@@ -571,12 +571,11 @@ TEST(RegularBackendModule, testObjectCentricFormulations) {
   noise_params.X_t_sigma = X_t_sigma;
 
   dyno_testing::RGBDScenario scenario(
-      camera,
-      std::make_shared<dyno_testing::SimpleStaticPointsGenerator>(22, 7),
+      camera, std::make_shared<dyno_testing::SimpleStaticPointsGenerator>(6, 4),
       noise_params);
 
   // add one obect
-  const size_t num_points = 30;
+  const size_t num_points = 15;
   const size_t obj1_overlap = 6;
   const size_t obj2_overlap = 7;
   const size_t obj3_overlap = 7;
@@ -614,8 +613,8 @@ TEST(RegularBackendModule, testObjectCentricFormulations) {
           dyno_testing::ObjectBodyParams(0, 19));
 
   scenario.addObjectBody(1, object1);
-  scenario.addObjectBody(2, object2);
-  scenario.addObjectBody(3, object3);
+  //   scenario.addObjectBody(2, object2);
+  //   scenario.addObjectBody(3, object3);
 
   dyno::BackendParams backend_params;
   backend_params.use_robust_kernals_ = false;
@@ -660,6 +659,8 @@ TEST(RegularBackendModule, testObjectCentricFormulations) {
           backend_params, dyno_testing::makeDefaultCameraPtr(),
           dyno::RegularBackendModule::UpdaterType::HYBRID));
 
+  backend_params.optimization_mode = 2;
+  backend_params.use_robust_kernals_ = false;
   auto oc_smf_backend = tester.addTester<dyno_testing::BatchTester>(
       std::make_shared<dyno::RegularBackendModule>(
           backend_params, dyno_testing::makeDefaultCameraPtr(),

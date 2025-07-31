@@ -50,6 +50,9 @@ DECLARE_double(static_point_noise_sigma);
 DECLARE_double(dynamic_point_noise_sigma);
 
 DECLARE_bool(use_smoothing_factor);
+DECLARE_bool(use_robust_kernals);
+
+DECLARE_int32(optimization_mode);
 
 namespace dyno {
 
@@ -63,7 +66,7 @@ struct BackendParams {
                                   //! projection factor (mono) on dynamic points
 
   //! RGBD/Stereo
-  bool use_robust_kernals_ = true;
+  bool use_robust_kernals_ = FLAGS_use_robust_kernals;
   double k_huber_3d_points_ =
       0.0001;  //! Huber constant used for robust kernal on dynamic points
   double static_point_noise_sigma_ =
@@ -94,7 +97,9 @@ struct BackendParams {
       FLAGS_motion_ternary_factor_noise_sigma;
 
   bool use_logger_ = true;  // TODO: make param!?
-  bool use_use_full_batch_opt = true;
+  bool use_full_batch_opt = true;
+
+  int32_t optimization_mode = FLAGS_optimization_mode;
 
   bool use_smoothing_factor = FLAGS_use_smoothing_factor;
 

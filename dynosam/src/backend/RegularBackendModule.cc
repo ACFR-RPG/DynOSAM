@@ -56,9 +56,6 @@
 DEFINE_int32(opt_window_size, 10, "Sliding window size for optimisation");
 DEFINE_int32(opt_window_overlap, 4, "Overlap for window size optimisation");
 
-DEFINE_int32(optimization_mode, 0,
-             "0: Full-batch, 1: sliding-window, 2: incremental");
-
 DEFINE_bool(
     use_vo_factor, true,
     "If true, use visual odometry measurement as factor from the frontend");
@@ -132,9 +129,9 @@ RegularBackendModule::SpinReturn RegularBackendModule::boostrapSpinImpl(
     post_formulation_update_cb_(formulation_, frame_k, new_values, new_factors);
   }
 
-  updateAndOptimize(frame_k, new_values, new_factors);
-
   PostUpdateData post_update_data(frame_k);
+  updateAndOptimize(frame_k, new_values, new_factors, post_update_data);
+
   formulation_->postUpdate(post_update_data);
 
   // TODO: sanity checks that vision states are inline with the other frame idss
@@ -185,7 +182,7 @@ RegularBackendModule::SpinReturn RegularBackendModule::nominalSpinImpl(
 
   LOG(INFO) << "Starting any updates";
 
-  updateAndOptimize(frame_k, new_values, new_factors);
+  updateAndOptimize(frame_k, new_values, new_factors, post_update_data);
   LOG(INFO) << "Done any udpates";
 
   auto accessor = formulation_->accessorFromTheta();
@@ -212,7 +209,7 @@ RegularBackendModule::SpinReturn RegularBackendModule::nominalSpinImpl(
 
 void RegularBackendModule::setupUpdates() {
   // 0: Full-batch, 1: sliding-window, 2: incremental
-  const int optimization_mode = FLAGS_optimization_mode;
+  const int& optimization_mode = base_params_.optimization_mode;
   if (optimization_mode == 1) {
     LOG(INFO) << "Setting up backend for Sliding Window Optimisation";
     SlidingWindowOptimization::Params sw_params;
@@ -236,15 +233,16 @@ void RegularBackendModule::setupUpdates() {
 
 void RegularBackendModule::updateAndOptimize(
     FrameId frame_id_k, const gtsam::Values& new_values,
-    const gtsam::NonlinearFactorGraph& new_factors) {
+    const gtsam::NonlinearFactorGraph& new_factors,
+    PostUpdateData& post_update_data) {
   // 0: Full-batch, 1: sliding-window, 2: incremental
-  const int optimization_mode = FLAGS_optimization_mode;
+  const int& optimization_mode = base_params_.optimization_mode;
   if (optimization_mode == 0) {
-    updateBatch(frame_id_k, new_values, new_factors);
+    updateBatch(frame_id_k, new_values, new_factors, post_update_data);
   } else if (optimization_mode == 1) {
-    updateSlidingWindow(frame_id_k, new_values, new_factors);
+    updateSlidingWindow(frame_id_k, new_values, new_factors, post_update_data);
   } else if (optimization_mode == 2) {
-    updateIncremental(frame_id_k, new_values, new_factors);
+    updateIncremental(frame_id_k, new_values, new_factors, post_update_data);
   } else {
     LOG(FATAL) << "Unknown optimisation mode" << optimization_mode;
   }
@@ -252,7 +250,8 @@ void RegularBackendModule::updateAndOptimize(
 
 void RegularBackendModule::updateIncremental(
     FrameId frame_id_k, const gtsam::Values& new_values,
-    const gtsam::NonlinearFactorGraph& new_factors) {
+    const gtsam::NonlinearFactorGraph& new_factors,
+    PostUpdateData& post_update_data) {
   CHECK(smoother_) << "updateIncremental run but smoother was not setup!";
   utils::TimingStatsCollector timer(formulation_->getFullyQualifiedName() +
                                     ".update_incremental");
@@ -269,6 +268,11 @@ void RegularBackendModule::updateIncremental(
           SmootherInterface::UpdateArguments& update_arguments) {
         update_arguments.new_values = new_values;
         update_arguments.new_factors = new_factors;
+
+        // TODO: for now only dynamic isam2 update params but eventually will
+        // need to merge post_update_data should already be updated!!!!
+        convert(post_update_data.dynamic_update_result.isam_update_params,
+                update_arguments.update_params);
       },
       error_hooks_);
 
@@ -281,6 +285,10 @@ void RegularBackendModule::updateIncremental(
   gtsam::Values optimised_values = smoother_->calculateEstimate();
   formulation_->updateTheta(optimised_values);
 
+  // update result
+  post_update_data.incremental_result = gtsam::ISAM2Result();
+  convert(result, post_update_data.incremental_result.value());
+
   if (FLAGS_regular_backend_log_incremental_stats) {
     VLOG(10) << "Logging incremental stats at frame " << frame_id_k;
     logIncrementalStats(frame_id_k, smoother_interface);
@@ -288,7 +296,8 @@ void RegularBackendModule::updateIncremental(
 }
 
 void RegularBackendModule::updateBatch(FrameId frame_id_k, const gtsam::Values&,
-                                       const gtsam::NonlinearFactorGraph&) {
+                                       const gtsam::NonlinearFactorGraph&,
+                                       PostUpdateData& post_update_data) {
   if (base_params_.full_batch_frame - 1 == (int)frame_id_k) {
     LOG(INFO) << " Doing full batch at frame " << frame_id_k;
 
@@ -323,7 +332,8 @@ void RegularBackendModule::updateBatch(FrameId frame_id_k, const gtsam::Values&,
 
 void RegularBackendModule::updateSlidingWindow(
     FrameId frame_id_k, const gtsam::Values& new_values,
-    const gtsam::NonlinearFactorGraph& new_factors) {
+    const gtsam::NonlinearFactorGraph& new_factors,
+    PostUpdateData& post_update_data) {
   CHECK(sliding_window_opt_);
   const auto sw_result =
       sliding_window_opt_->update(new_factors, new_values, frame_id_k);
@@ -561,6 +571,7 @@ RegularBackendModule::makeFormulation() {
   } else if (updater_type_ == RGBDFormulationType::TESTING_HYBRID_SMF) {
     LOG(INFO) << "Using Hybrid Smart Motion Factor. Warning this is a testing "
                  "only formulation!";
+    formulation_params.min_dynamic_observations = 1u;
     formulation = std::make_unique<test_hybrid::SmartStructurlessFormulation>(
         formulation_params, getMap(), noise_models_, hooks);
   } else {

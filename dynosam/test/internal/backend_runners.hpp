@@ -160,6 +160,8 @@ struct BatchTester : public TesterBase {
     LOG(INFO) << "Starting batch opt";
     try {
       gtsam::LevenbergMarquardtParams opt_params;
+      opt_params.verbosityLM =
+          gtsam::LevenbergMarquardtParams::VerbosityLM::SUMMARY;
       gtsam::Values opt_values = gtsam::LevenbergMarquardtOptimizer(
                                      data->factors, data->values, opt_params)
                                      .optimize();

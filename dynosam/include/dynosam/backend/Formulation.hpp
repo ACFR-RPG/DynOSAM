@@ -30,6 +30,9 @@
 
 #pragma once
 
+#include <gtsam/nonlinear/ISAM2Result.h>
+#include <gtsam/nonlinear/ISAM2UpdateParams.h>
+
 #include "dynosam/backend/Accessor.hpp"
 #include "dynosam/backend/BackendDefinitions.hpp"
 #include "dynosam/common/Map.hpp"
@@ -64,21 +67,15 @@ struct UpdateObservationResult {
       objects_affected_per_frame;  // per frame
   DebugInfo::Optional debug_info{};
 
+  // Incremental interface
+  gtsam::ISAM2UpdateParams isam_update_params;
+
   UpdateObservationResult() {}
 
   UpdateObservationResult(const UpdateObservationParams& update_params) {
     if (update_params.enable_debug_info) {
       this->debug_info = DebugInfo();
     }
-  }
-
-  // TODO: debug info
-  inline UpdateObservationResult& operator+=(
-      const UpdateObservationResult& oth) {
-    for (const auto& [key, value] : oth.objects_affected_per_frame) {
-      objects_affected_per_frame[key].insert(value.begin(), value.end());
-    }
-    return *this;
   }
 
   void updateAffectedObject(FrameId frame_id, ObjectId object_id) {
@@ -101,6 +98,11 @@ struct PointUpdateContext {
   gtsam::Pose3 X_k_measured;
   //! Camera pose from measurement (or initial)
   gtsam::Pose3 X_k_1_measured;
+
+  //! When an update starts only a subset of the factors are provided to the
+  //! update This value indicates the factor slot offset (ie the total graph
+  //! size before any update)
+  Slot starting_factor_slot = -1;
 
   //! If true then this frame is the first frame where a motion is available
   //! (i.e we have a pair of valid frames) e.g k-1 is the FIRST frame for this
@@ -158,6 +160,8 @@ struct PostUpdateData {
   FrameId frame_id;
   UpdateObservationResult dynamic_update_result;
   UpdateObservationResult static_update_result;
+
+  std::optional<gtsam::ISAM2Result> incremental_result = {};
 
   PostUpdateData() {}
   PostUpdateData(FrameId _frame_id) : frame_id(_frame_id) {}
@@ -467,44 +471,6 @@ class Formulation {
   void setInitialPosePrior(const gtsam::Pose3& T_world_camera,
                            FrameId frame_id_k,
                            gtsam::NonlinearFactorGraph& new_factors);
-
-  /**
-   * @brief Update the static-point part of the factor graph between multiple
-   * frames. Internally makes several calls to
-   * updateStaticObservations(FrameId,gtsam::Values&,gtsam::NonlinearFactorGraph&,const
-   * UpdateObservationParams&) and returns the accumulated
-   * UpdateObservationResult.
-   *
-   * @param from_frame FrameId
-   * @param to_frame FrameId
-   * @param new_values gtsam::Values&
-   * @param new_factors gtsam::NonlinearFactorGraph&
-   * @param update_params const UpdateObservationParams&
-   * @return UpdateObservationResult
-   */
-  UpdateObservationResult updateStaticObservations(
-      FrameId from_frame, FrameId to_frame, gtsam::Values& new_values,
-      gtsam::NonlinearFactorGraph& new_factors,
-      const UpdateObservationParams& update_params);
-
-  /**
-   * @brief Update the dynamic-point part of the factor graph between multiple
-   * frames. Internally makes several calls to
-   * updateDynamicObservations(FrameId,gtsam::Values&,gtsam::NonlinearFactorGraph&,const
-   * UpdateObservationParams&) and returns the accumulated
-   * UpdateObservationResult.
-   *
-   * @param from_frame FrameId
-   * @param to_frame FrameId
-   * @param new_values gtsam::Values&
-   * @param new_factors gtsam::NonlinearFactorGraph&
-   * @param update_params const UpdateObservationParams&
-   * @return UpdateObservationResult
-   */
-  UpdateObservationResult updateDynamicObservations(
-      FrameId from_frame, FrameId to_frame, gtsam::Values& new_values,
-      gtsam::NonlinearFactorGraph& new_factors,
-      const UpdateObservationParams& update_params);
 
   /**
    * @brief Updates the static-point part of the factor graph for frame k.

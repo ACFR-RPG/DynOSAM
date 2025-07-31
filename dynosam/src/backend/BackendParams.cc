@@ -48,6 +48,9 @@ DEFINE_double(odometry_rotation_sigma, 0.02,
 DEFINE_double(odometry_translation_sigma, 0.01,
               "Noise used on translation component of odometry");
 
+DEFINE_int32(optimization_mode, 0,
+             "0: Full-batch, 1: sliding-window, 2: incremental");
+
 // TODO: need to make projection covariance!!
 DEFINE_double(static_point_noise_sigma, 0.06,
               "Isotropic noise used on PoseToPointFactor for static points");
@@ -56,3 +59,6 @@ DEFINE_double(dynamic_point_noise_sigma, 0.0625,
 
 DEFINE_bool(use_smoothing_factor, true,
             "If the backend should use the smoothing factor between motions");
+
+DEFINE_bool(use_robust_kernals, true,
+            "If the backend should use the robust noise kernals");

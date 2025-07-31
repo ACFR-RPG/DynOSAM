@@ -404,9 +404,14 @@ void SmartStructurlessFormulation::dynamicPointUpdateCallback(
                                               lmk_L0_init);
     // HybridSmartFactor::shared_ptr smart_factor =
     //     boost::make_shared<HybridSmartFactor>(L_e, dynamic_point_noise);
+    // TODO: actually not needed!!
+    Slot new_factor_slot = context.starting_factor_slot + new_factors.size();
 
     new_factors.push_back(smart_factor);
     tracklet_id_to_smart_factor_.insert2(context.getTrackletId(), smart_factor);
+    tracklet_id_to_smart_factor_index_.insert2(context.getTrackletId(),
+                                               new_factor_slot);
+    tracklet_ids_of_new_smart_factors_.push_back(context.getTrackletId());
 
     result.updateAffectedObject(frame_node_k_1->frame_id,
                                 context.getObjectId());
@@ -419,6 +424,17 @@ void SmartStructurlessFormulation::dynamicPointUpdateCallback(
       tracklet_id_to_smart_factor_.at(context.getTrackletId());
   CHECK_NOTNULL(smart_factor);
 
+  // expecting slot to have been updated
+  // TODO: do not only want to do this if the smart factor is old...?
+  Slot slot = tracklet_id_to_smart_factor_index_.at(context.getTrackletId());
+
+  if (!result.isam_update_params.newAffectedKeys) {
+    result.isam_update_params.newAffectedKeys =
+        gtsam::FastMap<gtsam::FactorIndex, gtsam::KeySet>{};
+  }
+
+  gtsam::KeySet affected_keys;
+
   if (context.is_starting_motion_frame) {
     // add factor at k-1
     // ------ good motion factor/////
@@ -427,22 +443,56 @@ void SmartStructurlessFormulation::dynamicPointUpdateCallback(
     if (result.debug_info)
       result.debug_info->getObjectInfo(context.getObjectId())
           .num_dynamic_factors++;
+
+    affected_keys.insert(object_motion_key_k_1);
+    affected_keys.insert(frame_node_k_1->makePoseKey());
   }
 
   smart_factor->add(lmk_node->getMeasurement(frame_node_k).landmark,
                     object_motion_key_k, frame_node_k->makePoseKey());
-  // add factor at k
-  // ------ good motion factor/////
-  // new_factors.emplace_shared<HybridMotionFactor>(
-  //     frame_node_k->makePoseKey(),  // pose key at previous frames,
-  //     object_motion_key_k, point_key,
-  //     lmk_node->getMeasurement(frame_node_k).landmark, L_e,
-  //     dynamic_point_noise);
+
+  affected_keys.insert(object_motion_key_k);
+  affected_keys.insert(frame_node_k->makePoseKey());
+
+  // altert the incremental solver of the updates to this factor!!!
+  result.isam_update_params.newAffectedKeys->insert2(slot, affected_keys);
 
   result.updateAffectedObject(frame_node_k->frame_id, context.getObjectId());
   if (result.debug_info)
     result.debug_info->getObjectInfo(context.getObjectId())
         .num_dynamic_factors++;
+}
+
+void SmartStructurlessFormulation::postUpdate(const PostUpdateData& data) {
+  // call base class first
+  Base::postUpdate(data);
+
+  // if incremental, update factor slots
+  if (data.incremental_result) {
+    const auto& incremental_result = data.incremental_result.value();
+
+    VLOG(15) << "Received incremental result. Updating slots for "
+             << tracklet_ids_of_new_smart_factors_.size() << " smart factors";
+    for (size_t i = 0u; i < tracklet_ids_of_new_smart_factors_.size(); ++i) {
+      DCHECK(i < incremental_result.newFactorsIndices.size())
+          << "There are more new smart factors than new factors added to the "
+             "graph.";
+      // Get new slot in the graph for the newly added smart factor.
+      const size_t& slot = incremental_result.newFactorsIndices.at(i);
+
+      const auto& it = tracklet_id_to_smart_factor_index_.find(
+          tracklet_ids_of_new_smart_factors_.at(i));
+
+      DCHECK(it != tracklet_id_to_smart_factor_index_.end())
+          << "Trying to access unavailable factor.";
+
+      // update slot number
+      it->second = slot;
+    }
+
+    // only clear if incremental update...?
+    tracklet_ids_of_new_smart_factors_.clear();
+  }
 }
 
 }  // namespace test_hybrid

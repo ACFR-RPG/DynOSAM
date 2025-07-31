@@ -144,46 +144,6 @@ void Formulation<MAP>::setInitialPosePrior(
 
 template <typename MAP>
 UpdateObservationResult Formulation<MAP>::updateStaticObservations(
-    FrameId from_frame, FrameId to_frame, gtsam::Values& new_values,
-    gtsam::NonlinearFactorGraph& new_factors,
-    const UpdateObservationParams& update_params) {
-  CHECK_LT(from_frame, to_frame);
-  CHECK_GT(from_frame, this->map()->firstFrameId());
-
-  UpdateObservationResult result;
-  for (auto frame_id = from_frame; frame_id <= to_frame; frame_id++) {
-    // TODO: not sure we need this extra factors variable here now we use the
-    // internal_new_factors
-    gtsam::NonlinearFactorGraph factors;
-    result +=
-        updateStaticObservations(frame_id, new_values, factors, update_params);
-
-    new_factors += factors;
-  }
-
-  return result;
-}
-
-template <typename MAP>
-UpdateObservationResult Formulation<MAP>::updateDynamicObservations(
-    FrameId from_frame, FrameId to_frame, gtsam::Values& new_values,
-    gtsam::NonlinearFactorGraph& new_factors,
-    const UpdateObservationParams& update_params) {
-  CHECK_LT(from_frame, to_frame);
-  CHECK_GT(from_frame, this->map()->firstFrameId());
-
-  UpdateObservationResult result;
-  for (auto frame_id = from_frame; frame_id <= to_frame; frame_id++) {
-    gtsam::NonlinearFactorGraph factors;
-    result +=
-        updateDynamicObservations(frame_id, new_values, factors, update_params);
-    new_factors += factors;
-  }
-  return result;
-}
-
-template <typename MAP>
-UpdateObservationResult Formulation<MAP>::updateStaticObservations(
     FrameId frame_id_k, gtsam::Values& new_values,
     gtsam::NonlinearFactorGraph& new_factors,
     const UpdateObservationParams& update_params) {
@@ -337,9 +297,10 @@ UpdateObservationResult Formulation<MAP>::updateDynamicObservations(
   gtsam::Values internal_new_values;
 
   UpdateObservationResult result(update_params);
-  //! At least three points on the object are required to solve
-  //! otherise the system is indeterminate
-  // constexpr static size_t kMinNumberPoints = 3u;
+
+  // starting slot number is size of new factors
+  // as long as the new factor slot is calculated before adding a new factor
+  const Slot starting_factor_slot = new_factors.size();
 
   const FrameId frame_id_k_1 = frame_id_k - 1u;
   VLOG(20) << "Add dynamic observations between frames " << frame_id_k_1
@@ -485,6 +446,7 @@ UpdateObservationResult Formulation<MAP>::updateDynamicObservations(
           point_context.frame_node_k = query_frame_node_k;
           point_context.X_k_measured = T_world_camera_k;
           point_context.X_k_1_measured = T_world_camera_k_1;
+          point_context.starting_factor_slot = starting_factor_slot;
 
           // this assumes we add all the points in order and have continuous
           // frames (which we should have?)
@@ -513,6 +475,7 @@ UpdateObservationResult Formulation<MAP>::updateDynamicObservations(
             getInitialOrLinearizedSensorPose(frame_node_k_1->frame_id);
         point_context.X_k_measured =
             getInitialOrLinearizedSensorPose(frame_node_k->frame_id);
+        point_context.starting_factor_slot = starting_factor_slot;
         point_context.is_starting_motion_frame = false;
         utils::TimingStatsCollector dyn_point_update_timer(
             this->loggerPrefix() + ".dyn_point_update_2");
@@ -624,7 +587,8 @@ void Formulation<MAP>::logBackendFromMap(const BackendMetaData& backend_info) {
   for (FrameId frame_k : map->getFrameIds()) {
     // TODO: hack - only go up to frames < full batch so we actually only
     // include the optimised alues
-    if (backend_params.use_use_full_batch_opt &&
+    // TODO: actually should be based on the optimization mode!!
+    if (backend_params.use_full_batch_opt &&
         backend_params.full_batch_frame - 1 == (int)frame_k) {
       break;
     }

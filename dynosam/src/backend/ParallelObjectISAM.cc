@@ -186,20 +186,6 @@ bool ParallelObjectISAM::updateSmoother(FrameId frame_k,
   gtsam::Values new_values;
   gtsam::NonlinearFactorGraph new_factors;
 
-  // manually force keyframe every N frames
-  //  const bool has_keyframe =
-  //  decoupled_formulation_->hasObjectKeyFrame(object_id_, frame_k);
-  //  if(has_keyframe) {
-  //    const auto [keyframe_k, _] =
-  //    decoupled_formulation_->getObjectKeyFrame(object_id_, frame_k);
-
-  //   constexpr static FrameId N_keyframe = 30;
-  //   if (frame_k - keyframe_k > N_keyframe) {
-  //     LOG(INFO) << "Manually forcing KEYFRAME in backend at " <<
-  //     info_string(frame_k, object_id_); insertNewKeyFrame(frame_k);
-  //   }
-  // }
-
   updateFormulation(frame_k, X_W_k, new_factors, new_values);
 
   // do first optimisation
@@ -251,23 +237,6 @@ bool ParallelObjectISAM::updateSmoother(FrameId frame_k,
       },
       error_hooks);
 
-  // bool is_smoother_ok = optimize(&result_.isam_result, new_factors,
-  // new_values);
-
-  // if (is_smoother_ok) {
-  //   // use dummy isam result when running optimize without new values/factors
-  //   // as we want to use the result to determine which values were
-  //   // changed/marked
-  //   // TODO: maybe we actually need to append results together?
-  //   static gtsam::ISAM2Result dummy_result;
-  //   const auto& max_extra_iterations =
-  //       static_cast<size_t>(params_.num_optimzie);
-  //   VLOG(30) << "Doing extra iteration nr: " << max_extra_iterations;
-  //   for (size_t n_iter = 0; n_iter < max_extra_iterations && is_smoother_ok;
-  //        ++n_iter) {
-  //     is_smoother_ok = optimize(&dummy_result);
-  //   }
-  // }
   auto toc = utils::Timer::toc<std::chrono::nanoseconds>(tic);
   int64_t milliseconds =
       std::chrono::duration_cast<std::chrono::milliseconds>(toc).count();
@@ -282,94 +251,6 @@ bool ParallelObjectISAM::updateSmoother(FrameId frame_k,
           << " error after: " << result_.isam_result.errorAfter.value_or(NaN);
   return is_smoother_ok;
 }
-
-// bool ParallelObjectISAM::optimize(
-//     gtsam::ISAM2Result* result, const gtsam::NonlinearFactorGraph&
-//     new_factors, const gtsam::Values& new_values, const ISAM2UpdateParams&
-//     update_params) {
-//   CHECK_NOTNULL(result);
-//   CHECK(smoother_);
-
-//   // This is not doing a full deep copy: it is keeping same shared_ptrs for
-//   // factors but copying the isam result.
-//   ISAM2 smoother_backup(*smoother_);
-
-//   // gtsam::FastList<gtsam::Key>
-//   // norelin_keys{CameraPoseSymbol(result_.frame_id)};
-//   gtsam::FastMap<gtsam::Key, int> constrain;
-//   // constrain.insert2(CameraPoseSymbol(result_.frame_id), 1);
-//   constrain.insert2(ObjectMotionSymbol(object_id_, result_.frame_id), 1);
-
-//   for (const auto& k : new_factors.keys()) {
-//     constrain[k] = 1;
-//   }
-
-//   for (auto factor : new_factors) {
-//     CHECK_NOTNULL(factor);
-//   }
-
-//   ISAM2UpdateParams up = update_params;
-//   // up.constrainedKeys = constrain;
-//   // up.noRelinKeys = norelin_keys;
-//   try {
-//     *result = smoother_->update(new_factors, new_values, up);
-
-//   } catch (gtsam::IndeterminantLinearSystemException& e) {
-//     const gtsam::Key& var = e.nearbyVariable();
-//     LOG(ERROR) << "gtsam::IndeterminantLinearSystemException with variable "
-//                << DynoLikeKeyFormatter(var) << " j=" << object_id_;
-
-//     // // Add priors on all variables to fix indeterminant linear system
-//     const gtsam::Values values = smoother_->calculateEstimate();
-//     gtsam::NonlinearFactorGraph nfg;
-
-//     ApplyFunctionalSymbol afs;
-//     afs.cameraPose([&nfg, &values](FrameId, const gtsam::Symbol& sym) {
-//          const gtsam::Key& key = sym;
-//          gtsam::Pose3 pose = values.at<gtsam::Pose3>(key);
-//          gtsam::Vector6 sigmas;
-//          sigmas.head<3>().setConstant(0.001);  // rotation
-//          sigmas.tail<3>().setConstant(0.01);   // translation
-//          gtsam::SharedNoiseModel noise =
-//              gtsam::noiseModel::Diagonal::Sigmas(sigmas);
-//          nfg.emplace_shared<gtsam::PriorFactor<gtsam::Pose3>>(key, pose,
-//          noise);
-//        })
-//         .
-//         operator()(var);
-
-//     // afs callback did not occur
-//     if (nfg.size() == 0) {
-//       LOG(WARNING) << DynoLikeKeyFormatter(var) << " at j=" << object_id_
-//                    << " not recognised in indeterminant exception handling";
-//       return false;
-//     }
-
-//     gtsam::NonlinearFactorGraph new_factors_mutable;
-//     new_factors_mutable.push_back(new_factors.begin(), new_factors.end());
-//     new_factors_mutable.push_back(nfg.begin(), nfg.end());
-
-//     // Update with graph and GN optimized values
-//     try {
-//       // Update smoother
-//       LOG(ERROR) << "Attempting to update smoother with added prior factors";
-//       *smoother_ = smoother_backup;  // reset isam to backup
-//       *result = smoother_->update(new_factors_mutable, new_values, up);
-//     } catch (...) {
-//       // Catch the rest of exceptions.
-//       LOG(WARNING) << "Smoother recovery failed. Most likely, the additional
-//       "
-//                       "prior factors were insufficient to keep the system
-//                       from " "becoming indeterminant.";
-//       return false;
-//     }
-
-//   } catch (gtsam::ValuesKeyDoesNotExist& e) {
-//     LOG(FATAL) << "gtsam::ValuesKeyDoesNotExist with variable "
-//                << DynoLikeKeyFormatter(e.key()) << " j=" << object_id_;
-//   }
-//   return true;
-// }
 
 void ParallelObjectISAM::updateStates() {
   gtsam::Values previous_estimate = this->getEstimate();
