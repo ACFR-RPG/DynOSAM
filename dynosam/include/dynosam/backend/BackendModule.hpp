@@ -44,7 +44,7 @@
 #include "dynosam/utils/SafeCast.hpp"
 #include "dynosam/visualizer/Visualizer-Definitions.hpp"  //for ImageDisplayQueueOptional,
 
-DECLARE_string(updater_suffix);
+// DECLARE_string(updater_suffix);
 
 namespace dyno {
 
@@ -83,9 +83,6 @@ class BackendModule
   const BackendParams& getParams() const { return base_params_; }
   const NoiseModels& getNoiseModels() const { return noise_models_; }
   const BackendSpinState& getSpinState() const { return spin_state_; }
-
-  // void optimize(FrameId frame_id_k, gtsam::Values& new_values,
-  // gtsam::NonlinearFactorGraph& new_factors) const;
 
  protected:
   // called in ModuleBase immediately before the spin function is called

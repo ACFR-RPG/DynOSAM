@@ -8,7 +8,11 @@
 # --constant_object_motion_rotation_sigma=0.1
 # --constant_object_motion_translation_sigma=0.01
 
---constant_object_motion_rotation_sigma=0.01
+# --constant_object_motion_rotation_sigma=0.01
+# --constant_object_motion_translation_sigma=0.2
+
+
+--constant_object_motion_rotation_sigma=0.4
 --constant_object_motion_translation_sigma=0.2
 
 
@@ -16,16 +20,16 @@
 # --motion_ternary_factor_noise_sigma=0.00000000001
 --motion_ternary_factor_noise_sigma=0.001
 
---odometry_rotation_sigma=0.05
---odometry_translation_sigma=0.01
+# --odometry_rotation_sigma=0.05
+# --odometry_translation_sigma=0.01
 
-# --odometry_rotation_sigma=0.005
-# --odometry_translation_sigma=0.001
+--odometry_rotation_sigma=0.005
+--odometry_translation_sigma=0.001
 
 
 
 --static_point_noise_sigma=0.01
---dynamic_point_noise_sigma=0.01
+--dynamic_point_noise_sigma=0.4
 # --dynamic_point_noise_sigma=0.00006
 
 --opt_window_size=10

@@ -62,3 +62,6 @@ DEFINE_bool(use_smoothing_factor, true,
 
 DEFINE_bool(use_robust_kernals, true,
             "If the backend should use the robust noise kernals");
+DEFINE_bool(
+    dynamic_point_noise_as_robust, true,
+    "If the backend should use the robust noise kernals on the Dynamic Points");

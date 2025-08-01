@@ -319,9 +319,9 @@ void StructurlessFormulation::dynamicPointUpdateCallback(
 
 StateQuery<gtsam::Point3> SmartStructurlessAccessor::queryPoint(
     gtsam::Key point_key, TrackletId tracklet_id) const {
-  if (tracklet_id_to_smart_factor_->exists(tracklet_id)) {
+  if (smart_factor_map_->exists(tracklet_id)) {
     HybridSmartFactor::shared_ptr smart_factor =
-        tracklet_id_to_smart_factor_->at(tracklet_id);
+        smart_factor_map_->at(tracklet_id).first;
 
     gtsam::TriangulationResult point_result = smart_factor->point();
 
@@ -359,6 +359,8 @@ void SmartStructurlessFormulation::dynamicPointUpdateCallback(
   std::tie(s0, L_e) =
       getOrConstructL0(context.getObjectId(), frame_node_k_1->getId());
   auto landmark_motion_noise = noise_models_.landmark_motion_noise;
+
+  bool is_smart_factor_new = false;
 
   if (!isDynamicTrackletInMap(lmk_node)) {
     bool keyframe_updated;
@@ -404,14 +406,22 @@ void SmartStructurlessFormulation::dynamicPointUpdateCallback(
                                               lmk_L0_init);
     // HybridSmartFactor::shared_ptr smart_factor =
     //     boost::make_shared<HybridSmartFactor>(L_e, dynamic_point_noise);
-    // TODO: actually not needed!!
-    Slot new_factor_slot = context.starting_factor_slot + new_factors.size();
+
+    // slot for a new factor MUST be its relative position in the set of new
+    // factors so that when we update its new factor index (after incremental
+    // update) we can calculate the corresponding position in 1-1
+    // newFactorsIndices
+    Slot starting_factor_slot =
+        context.starting_factor_slot + new_factors.size();
+    // LOG(INFO) << "Expecting SMF at slot " <<  starting_factor_slot;
 
     new_factors.push_back(smart_factor);
-    tracklet_id_to_smart_factor_.insert2(context.getTrackletId(), smart_factor);
-    tracklet_id_to_smart_factor_index_.insert2(context.getTrackletId(),
-                                               new_factor_slot);
+    smart_factor_map_.insert2(
+        context.getTrackletId(),
+        std::make_pair(smart_factor, starting_factor_slot));
     tracklet_ids_of_new_smart_factors_.push_back(context.getTrackletId());
+
+    is_smart_factor_new = true;
 
     result.updateAffectedObject(frame_node_k_1->frame_id,
                                 context.getObjectId());
@@ -420,15 +430,11 @@ void SmartStructurlessFormulation::dynamicPointUpdateCallback(
           .num_new_dynamic_points++;
   }
 
-  HybridSmartFactor::shared_ptr smart_factor =
-      tracklet_id_to_smart_factor_.at(context.getTrackletId());
+  // expecting slot to have been updated
+  auto [smart_factor, slot] = smart_factor_map_.at(context.getTrackletId());
   CHECK_NOTNULL(smart_factor);
 
-  // expecting slot to have been updated
-  // TODO: do not only want to do this if the smart factor is old...?
-  Slot slot = tracklet_id_to_smart_factor_index_.at(context.getTrackletId());
-
-  if (!result.isam_update_params.newAffectedKeys) {
+  if (!is_smart_factor_new && !result.isam_update_params.newAffectedKeys) {
     result.isam_update_params.newAffectedKeys =
         gtsam::FastMap<gtsam::FactorIndex, gtsam::KeySet>{};
   }
@@ -436,8 +442,6 @@ void SmartStructurlessFormulation::dynamicPointUpdateCallback(
   gtsam::KeySet affected_keys;
 
   if (context.is_starting_motion_frame) {
-    // add factor at k-1
-    // ------ good motion factor/////
     smart_factor->add(lmk_node->getMeasurement(frame_node_k_1).landmark,
                       object_motion_key_k_1, frame_node_k_1->makePoseKey());
     if (result.debug_info)
@@ -454,8 +458,11 @@ void SmartStructurlessFormulation::dynamicPointUpdateCallback(
   affected_keys.insert(object_motion_key_k);
   affected_keys.insert(frame_node_k->makePoseKey());
 
-  // altert the incremental solver of the updates to this factor!!!
-  result.isam_update_params.newAffectedKeys->insert2(slot, affected_keys);
+  // if this factor is old alert the smoother to new updates
+  // its slot in the smoother should be updated in the postUpdate hook
+  if (!is_smart_factor_new) {
+    result.isam_update_params.newAffectedKeys->insert2(slot, affected_keys);
+  }
 
   result.updateAffectedObject(frame_node_k->frame_id, context.getObjectId());
   if (result.debug_info)
@@ -467,27 +474,94 @@ void SmartStructurlessFormulation::postUpdate(const PostUpdateData& data) {
   // call base class first
   Base::postUpdate(data);
 
+  // now take the opportunity to update all points
+  const gtsam::Values& estimate = this->getTheta();
+
+  std::string file_name =
+      getOutputFilePath("smf_stats_" + this->getFullyQualifiedName() + ".csv");
+
+  static bool is_first = true;
+
+  if (is_first) {
+    // clear the file first
+    std::ofstream clear_file(file_name, std::ios::out | std::ios::trunc);
+    if (!clear_file.is_open()) {
+      LOG(FATAL) << "Error clearing file: " << file_name;
+    }
+    clear_file.close();  // Close the stream to ensure truncation is complete
+    is_first = false;
+
+    std::ofstream header_file(file_name, std::ios::out | std::ios::trunc);
+    if (!header_file.is_open()) {
+      LOG(FATAL) << "Error writing file header file: " << file_name;
+    }
+
+    header_file << "tracklet_id,frame_id,reprojection_error,is_good\n";
+
+    header_file.close();  // Close the stream to ensure truncation is complete
+    is_first = false;
+  }
+
+  std::fstream file(file_name, std::ios::in | std::ios::out | std::ios::app);
+  file.precision(15);
+
+  for (auto& [tracklet_id, shf_pair] : smart_factor_map_) {
+    HybridSmartFactor::shared_ptr smart_factor = shf_pair.first;
+    // TODO: would be nice to take the reprojection error before and after but
+    // current implementation will update the internal result_ variable with any
+    // call to totalReprojectionError
+    auto result = smart_factor->point(estimate);
+    double error = smart_factor->reprojectionError(estimate).norm();
+
+    file << tracklet_id << "," << data.frame_id << "," << error << ","
+         << result.valid() << "\n";
+  }
+
+  file.close();
+
   // if incremental, update factor slots
   if (data.incremental_result) {
     const auto& incremental_result = data.incremental_result.value();
+    const auto isam2_result = incremental_result.isam2;
+    const auto isam2_factors = incremental_result.factors;
 
     VLOG(15) << "Received incremental result. Updating slots for "
              << tracklet_ids_of_new_smart_factors_.size() << " smart factors";
     for (size_t i = 0u; i < tracklet_ids_of_new_smart_factors_.size(); ++i) {
-      DCHECK(i < incremental_result.newFactorsIndices.size())
+      DCHECK(i < isam2_result.newFactorsIndices.size())
           << "There are more new smart factors than new factors added to the "
              "graph.";
-      // Get new slot in the graph for the newly added smart factor.
-      const size_t& slot = incremental_result.newFactorsIndices.at(i);
 
-      const auto& it = tracklet_id_to_smart_factor_index_.find(
-          tracklet_ids_of_new_smart_factors_.at(i));
-
-      DCHECK(it != tracklet_id_to_smart_factor_index_.end())
+      TrackletId tracklet_id_of_smart_factor =
+          tracklet_ids_of_new_smart_factors_.at(i);
+      const auto& it = smart_factor_map_.find(tracklet_id_of_smart_factor);
+      CHECK(it != smart_factor_map_.end())
           << "Trying to access unavailable factor.";
 
+      CHECK_EQ(it->first, tracklet_id_of_smart_factor);
+
+      // calculate relative position of this factor in the set of new factors
+      // that was added to the smoother
+      const auto& starting_slot = it->second.second;
+      // Get new slot in the graph for the newly added smart factor.
+      const size_t& slot = isam2_result.newFactorsIndices.at(starting_slot);
+
+      const auto shptr =
+          dynamic_cast<const HybridSmartFactor*>(isam2_factors.at(slot).get());
+
+      // isam2_factors.at(slot)->print("Not shf: ", DynoLikeKeyFormatter);
+      // it->second.first->print("shf: ", DynoLikeKeyFormatter);
+
+      CHECK(shptr);
+      // check the factors are the same!!!
+      if (shptr != it->second.first.get()) {
+        isam2_factors.at(slot)->print("Not shf: ", DynoLikeKeyFormatter);
+        it->second.first->print("shf: ", DynoLikeKeyFormatter);
+        CHECK_EQ(shptr, it->second.first.get());
+      }
+
       // update slot number
-      it->second = slot;
+      it->second.second = slot;
     }
 
     // only clear if incremental update...?

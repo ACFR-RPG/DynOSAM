@@ -1061,10 +1061,13 @@ void RegularHybridFormulation::postUpdate(const PostUpdateData& data) {
   // Jesse: I guess seen frames could be size > 1 but it SHOULD only matter if
   // its seen in the current frame
   for (const auto& [object_id, seen_frames] : affected_objects) {
+    LOG(INFO) << "PostUpdate: adffected object " << object_id
+              << "k = " << data.frame_id;
     CHECK(seen_frames.find(data.frame_id) != seen_frames.end());
 
     if (!objects_update_data_.exists(object_id)) {
       ObjectUpdateData oud;
+      oud.frame_id = data.frame_id;
       oud.count = 1;
       objects_update_data_.insert2(object_id, oud);
     } else {

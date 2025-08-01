@@ -208,7 +208,7 @@ bool ParallelObjectISAM::updateSmoother(FrameId frame_k,
                                         gtsam::Key problematic_key) {
     ErrorHandlingHooks::HandleILSResult ils_handle_result;
     // a little gross that I need to set this up in this function
-    gtsam::NonlinearFactorGraph& prior_factors = ils_handle_result.new_factors;
+    gtsam::NonlinearFactorGraph& prior_factors = ils_handle_result.pior_factors;
 
     ApplyFunctionalSymbol afs;
     afs.cameraPose([&prior_factors, &current_values](FrameId,

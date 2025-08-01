@@ -152,7 +152,8 @@ ParallelHybridBackendModule::~ParallelHybridBackendModule() {
     logBackendFromEstimators();
 
     std::string file_name = "parallel_isam2_results";
-    const std::string suffix = FLAGS_updater_suffix;
+    const std::string suffix = base_params_.updater_suffix;
+    ;
     if (!suffix.empty()) {
       file_name += ("_" + suffix);
     }
@@ -668,7 +669,7 @@ void ParallelHybridBackendModule::logBackendFromEstimators() {
   // TODO: name + suffix
   std::string name = "parallel_hybrid";
 
-  const std::string suffix = FLAGS_updater_suffix;
+  const std::string suffix = base_params_.updater_suffix;
   if (!suffix.empty()) {
     name += ("_" + suffix);
   }

@@ -140,7 +140,7 @@ struct ErrorHandlingHooks {
   struct HandleILSResult {
     //! New factors to try and add to handle the the ILS. Usually priors on
     //! undetermined values
-    gtsam::NonlinearFactorGraph new_factors;
+    gtsam::NonlinearFactorGraph pior_factors;
     //! Indication of objects which had a undetermined variable
     //! If non-empty, used in conjunction with OnFailedObject
     std::vector<std::pair<FrameId, ObjectId>> failed_objects;
@@ -192,11 +192,12 @@ class IncrementalInterface {
       static ResultType dummy_result;
       static UpdateArguments empty_arguments;
       VLOG(30) << "Doing extra iteration nr: " << max_extra_iterations_;
-      for (size_t n_iter = 0; n_iter < max_extra_iterations_ && is_smoother_ok;
-           ++n_iter) {
-        is_smoother_ok &=
-            updateSmoother(&dummy_result, empty_arguments, error_hooks);
-      }
+      // for (size_t n_iter = 1; n_iter < max_extra_iterations_ &&
+      // is_smoother_ok;
+      //      ++n_iter) {
+      //   is_smoother_ok &=
+      //       updateSmoother(&dummy_result, empty_arguments, error_hooks);
+      // }
     }
 
     auto toc = utils::Timer::toc<std::chrono::nanoseconds>(tic);
@@ -217,6 +218,19 @@ class IncrementalInterface {
     max_extra_iterations_ = max_extra_iterations;
     return *this;
   };
+
+  // getters
+  gtsam::NonlinearFactorGraph getFactors() const {
+    return SmootherTraitsType::getFactors(*smoother_);
+  }
+
+  gtsam::Values calculateEstimate() const {
+    return SmootherTraitsType::calculateEstimate(*smoother_);
+  }
+
+  gtsam::Values getLinearizationPoint() const {
+    return SmootherTraitsType::getLinearizationPoint(*smoother_);
+  }
 
  protected:
   bool updateSmoother(ResultType* result,
@@ -255,9 +269,10 @@ class IncrementalInterface {
           error_hooks.handle_ils_exception(values, var);
 
       // New prior factors that will be used update smoother
-      const gtsam::NonlinearFactorGraph& nfg = ils_handle_result.new_factors;
+      const gtsam::NonlinearFactorGraph& pior_factors =
+          ils_handle_result.pior_factors;
 
-      if (nfg.size() == 0) {
+      if (pior_factors.size() == 0) {
         LOG(WARNING) << DynoLikeKeyFormatter(var)
                      << " not recognised in indeterminant exception handling";
         return false;
@@ -265,7 +280,7 @@ class IncrementalInterface {
 
       gtsam::NonlinearFactorGraph new_factors_mutable;
       new_factors_mutable.push_back(new_factors.begin(), new_factors.end());
-      new_factors_mutable.push_back(nfg.begin(), nfg.end());
+      new_factors_mutable.push_back(pior_factors.begin(), pior_factors.end());
 
       // Update with graph and GN optimized values
       try {
@@ -273,7 +288,7 @@ class IncrementalInterface {
         LOG(ERROR) << "Attempting to update smoother with added prior factors";
         // update smoother_arguments with new factors containing the priors
         // this should be the same as the original EXCEPT for the new factors
-        UpdateArguments smoother_arguments_copy;
+        UpdateArguments smoother_arguments_copy = smoother_arguments;
         smoother_arguments_copy.new_factors = new_factors_mutable;
         *smoother_ = smoother_backup;  // reset smoother to backup
         *result =

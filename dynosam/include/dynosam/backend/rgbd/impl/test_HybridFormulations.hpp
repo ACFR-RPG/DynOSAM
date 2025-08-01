@@ -216,22 +216,22 @@ class StructurlessFormulation : public HybridFormulation {
   std::string loggerPrefix() const override { return "hybrid_structureless"; }
 };
 
+using HybridSmartFactorMap = FactorMap<HybridSmartFactor::shared_ptr>;
+
 class SmartStructurlessAccessor : public HybridAccessor {
  public:
   SmartStructurlessAccessor(
       const SharedFormulationData& shared_data, Map3d2d::Ptr map,
       const SharedHybridFormulationData& shared_hybrid_formulation_data,
-      const gtsam::FastMap<TrackletId, HybridSmartFactor::shared_ptr>*
-          tracklet_id_to_smart_factor)
+      const HybridSmartFactorMap* smart_factor_map)
       : HybridAccessor(shared_data, map, shared_hybrid_formulation_data),
-        tracklet_id_to_smart_factor_(tracklet_id_to_smart_factor) {}
+        smart_factor_map_(smart_factor_map) {}
 
   StateQuery<gtsam::Point3> queryPoint(gtsam::Key point_key,
                                        TrackletId tracklet_id) const override;
 
  private:
-  const gtsam::FastMap<TrackletId, HybridSmartFactor::shared_ptr>*
-      tracklet_id_to_smart_factor_;
+  const HybridSmartFactorMap* smart_factor_map_;
 };
 
 class SmartStructurlessFormulation : public RegularHybridFormulation {
@@ -257,8 +257,7 @@ class SmartStructurlessFormulation : public RegularHybridFormulation {
     shared_hybrid_data.tracklet_id_to_keyframe = &all_dynamic_landmarks_;
 
     return std::make_shared<SmartStructurlessAccessor>(
-        shared_data, this->map(), shared_hybrid_data,
-        &tracklet_id_to_smart_factor_);
+        shared_data, this->map(), shared_hybrid_data, &smart_factor_map_);
   }
 
   std::string loggerPrefix() const override {
@@ -269,10 +268,7 @@ class SmartStructurlessFormulation : public RegularHybridFormulation {
   void postUpdate(const PostUpdateData& data) override;
 
  private:
-  gtsam::FastMap<TrackletId, HybridSmartFactor::shared_ptr>
-      tracklet_id_to_smart_factor_;
-  gtsam::FastMap<TrackletId, gtsam::FactorIndex>
-      tracklet_id_to_smart_factor_index_;
+  HybridSmartFactorMap smart_factor_map_;
 
   // this will get cleared on each postUpdate... what if smoother fails? Should
   // we reset this??!!

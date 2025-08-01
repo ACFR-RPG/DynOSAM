@@ -167,6 +167,8 @@ struct NoiseModels {
   gtsam::SharedNoiseModel static_point_noise;
 
   static NoiseModels fromBackendParams(const BackendParams&);
+
+  void print(const std::string& name) const;
 };
 
 /**
@@ -241,6 +243,9 @@ using GenericProjectionFactor =
                                    CalibrationType>;
 
 using SmartProjectionFactorParams = gtsam::SmartProjectionParams;
+
+template <typename T>
+using FactorMap = gtsam::FastMap<TrackletId, std::pair<T, Slot>>;
 
 class DebugInfo {
  public:

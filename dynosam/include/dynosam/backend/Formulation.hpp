@@ -142,7 +142,7 @@ struct ObjectUpdateContext {
 class BackendParams;
 
 /**
- * @brief Meta-data struct used for the Formulation::preUpdate hook.
+ * @brief Metadata struct used for the Formulation::preUpdate hook.
  *
  */
 struct PreUpdateData {
@@ -153,7 +153,7 @@ struct PreUpdateData {
 };
 
 /**
- * @brief Metdata struct used for the Formulation::poseUpdate hook.
+ * @brief Metdata struct used for the Formulation::postUpdate hook.
  *
  */
 struct PostUpdateData {
@@ -161,7 +161,16 @@ struct PostUpdateData {
   UpdateObservationResult dynamic_update_result;
   UpdateObservationResult static_update_result;
 
-  std::optional<gtsam::ISAM2Result> incremental_result = {};
+  struct IncrementalResult {
+    //! Result from the incremental update
+    gtsam::ISAM2Result isam2;
+    //! Current set of factors from the (incremental) smoother
+    gtsam::NonlinearFactorGraph factors;
+  };
+
+  // TODO: batch result!!!
+
+  std::optional<IncrementalResult> incremental_result = {};
 
   PostUpdateData() {}
   PostUpdateData(FrameId _frame_id) : frame_id(_frame_id) {}

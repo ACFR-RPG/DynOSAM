@@ -154,6 +154,14 @@ class SmartMotionFactor : public gtsam::NonlinearFactor,
     this->pose_keys_.push_back(pose_key);
   }
 
+  void print(const std::string& s = "",
+             const gtsam::KeyFormatter& keyFormatter =
+                 DynoLikeKeyFormatter) const override {
+    std::cout << s << "SmartMotionFactor\n";
+    std::cout << "result:\n" << result_ << std::endl;
+    Base::print("", DynoLikeKeyFormatter);
+  }
+
   /// Return the 2D measurements (ZDim, in general).
   const ZVector& measured() const { return measured_; }
 
@@ -191,7 +199,6 @@ class SmartMotionFactor : public gtsam::NonlinearFactor,
     if (external_point) {
       result_ = TriangulationResult(*external_point);
     } else {
-      // do triangulation without updating the internal 3d point result
       result_ = triangulateSafe(motions, poses);
     }
 
@@ -360,7 +367,7 @@ class SmartMotionFactor : public gtsam::NonlinearFactor,
     // compute G, F, E and b blocks
     computeJacobiansWithTriangulatedPoint(motions, poses, Gs, Fs, Es, b);
     // TODO: add back in will fail tests!!!
-    //  whitenJacobians(Gs, Fs, Es, b);
+    whitenJacobians(Gs, Fs, Es, b);
 
     const size_t m = numMeasurements();
     CHECK_EQ(m, Es.size());
@@ -465,7 +472,7 @@ class SmartMotionFactor : public gtsam::NonlinearFactor,
   // not actually const as modified result_
   const gtsam::TriangulationResult& triangulateSafe(const Motions& motions,
                                                     const Poses& poses) const {
-    if (numMeasurements() < 2) {
+    if (numMeasurements() < 3) {
       result_ = gtsam::TriangulationResult::Degenerate();
     }
 

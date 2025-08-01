@@ -52,7 +52,11 @@ DECLARE_double(dynamic_point_noise_sigma);
 DECLARE_bool(use_smoothing_factor);
 DECLARE_bool(use_robust_kernals);
 
+DECLARE_bool(dynamic_point_noise_as_robust);
+
 DECLARE_int32(optimization_mode);
+
+DECLARE_string(updater_suffix);
 
 namespace dyno {
 
@@ -67,6 +71,9 @@ struct BackendParams {
 
   //! RGBD/Stereo
   bool use_robust_kernals_ = FLAGS_use_robust_kernals;
+  bool static_point_noise_as_robust = true;
+  bool dynamic_point_noise_as_robust = FLAGS_dynamic_point_noise_as_robust;
+
   double k_huber_3d_points_ =
       0.0001;  //! Huber constant used for robust kernal on dynamic points
   double static_point_noise_sigma_ =
@@ -102,6 +109,8 @@ struct BackendParams {
   int32_t optimization_mode = FLAGS_optimization_mode;
 
   bool use_smoothing_factor = FLAGS_use_smoothing_factor;
+
+  std::string updater_suffix = FLAGS_updater_suffix;
 
   size_t min_static_obs_ = 2u;
   size_t min_dynamic_obs_ = 3u;

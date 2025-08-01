@@ -75,6 +75,23 @@ make_plot("/root/results/misc/", "hybrid_batch_opt_backend", plot_collection)
 
 make_plot("/root/results/misc/", "hybrid_smart_structureless_backend", plot_collection)
 make_plot("/root/results/misc/", "hybrid_smart_structureless_batch_opt_backend", plot_collection)
+
+
+# make_plot("/root/results/misc/", "hybrid_all_robust_backend", plot_collection)
+# make_plot("/root/results/misc/", "hybrid_all_robust_opt_backend", plot_collection)
+
+# make_plot("/root/results/misc/", "hybrid_not_robust_backend", plot_collection)
+# make_plot("/root/results/misc/", "hybrid_not_robust_opt_backend", plot_collection)
+
+# make_plot("/root/results/misc/", "hybrid_static_robust_backend", plot_collection)
+# make_plot("/root/results/misc/", "hybrid_static_robust_opt_backend", plot_collection)
+
+# make_plot("/root/results/misc/", "hybrid_smart_structureless_not_robust_backend", plot_collection)
+# make_plot("/root/results/misc/", "hybrid_smart_structureless_not_robust_batch_opt_backend", plot_collection)
+
+# make_plot("/root/results/misc/", "hybrid_smart_structureless_static_robust_backend", plot_collection)
+# make_plot("/root/results/misc/", "hybrid_smart_structureless_static_robust_batch_opt_backend", plot_collection)
+
 # make_plot("/root/results/misc/", "rgbd_motion_world_backend", plot_collection)
 
 # make_plot("/root/results/misc/test_oc/", "object_centric_backend", plot_collection)

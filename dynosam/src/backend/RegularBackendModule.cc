@@ -93,12 +93,48 @@ RegularBackendModule::RegularBackendModule(const BackendParams& backend_params,
       updater_type_(updater_type) {
   CHECK_NOTNULL(map_);
 
+  // // TODO: functioanlise and streamline with BackendModule
+  // noise_models_.static_point_noise = gtsam::noiseModel::Isotropic::Sigma(
+  //     3u, backend_params.static_point_noise_sigma_);
+  // noise_models_.dynamic_point_noise = gtsam::noiseModel::Isotropic::Sigma(
+  //     3u, backend_params.dynamic_point_noise_sigma_);
+  // // set in base!
+  // noise_models_.landmark_motion_noise = gtsam::noiseModel::Isotropic::Sigma(
+  //     3u, backend_params.motion_ternary_factor_noise_sigma_);
+
+  // if (backend_params.use_robust_kernals_) {
+  //   noise_models_.static_point_noise = gtsam::noiseModel::Robust::Create(
+  //       gtsam::noiseModel::mEstimator::Huber::Create(
+  //           backend_params.k_huber_3d_points_),
+  //       noise_models_.static_point_noise);
+
+  //   noise_models_.dynamic_point_noise = gtsam::noiseModel::Robust::Create(
+  //       gtsam::noiseModel::mEstimator::Huber::Create(
+  //           backend_params.k_huber_3d_points_),
+  //       noise_models_.dynamic_point_noise);
+
+  //   // TODO: not k_huber_3d_points_ not just used for 3d points
+  //   noise_models_.landmark_motion_noise = gtsam::noiseModel::Robust::Create(
+  //       gtsam::noiseModel::mEstimator::Huber::Create(
+  //           backend_params.k_huber_3d_points_),
+  //       noise_models_.landmark_motion_noise);
+  // }
+
+  // CHECK_NOTNULL(noise_models_.static_point_noise);
+  // CHECK_NOTNULL(noise_models_.dynamic_point_noise);
+  // CHECK_NOTNULL(noise_models_.landmark_motion_noise);
+
+  // noise_models_.dynamic_point_noise->print("Dynamic Point Noise");
+  // noise_models_.landmark_motion_noise->print("Landmark motion noise");
+  // // CHECK(false);
+
+  noise_models_.print("RegularBackend noise models ");
+
   // setup smoother/optimizer variables
   setupUpdates();
 
   // set up formulation/some error handling
   formulation_ = std::move(makeFormulation());
-  SlidingWindowOptimization::Params sw_params;
 }
 
 RegularBackendModule::~RegularBackendModule() {
@@ -259,6 +295,13 @@ void RegularBackendModule::updateIncremental(
   using SmootherInterface = IncrementalInterface<dyno::ISAM2>;
   SmootherInterface smoother_interface(smoother_.get());
 
+  // LOG(INFO) << "Adding incremental: new factors size " << new_factors.size();
+  // for(size_t i = 0; i < new_factors.size(); i++) {
+  //   std::cout << "idx " << i << " ";
+  //   new_factors.at(i)->print("");
+  //   std::cout << "\n";
+  // }
+
   // error hooks should be updated for this formulation in the
   // makeFormulationFunction
   dyno::ISAM2Result result;
@@ -273,6 +316,16 @@ void RegularBackendModule::updateIncremental(
         // need to merge post_update_data should already be updated!!!!
         convert(post_update_data.dynamic_update_result.isam_update_params,
                 update_arguments.update_params);
+
+        // if(update_arguments.update_params.newAffectedKeys) {
+        //    for(const auto& [idx, affected_keys] :
+        //    *update_arguments.update_params.newAffectedKeys) {
+        //     std::stringstream ss;
+        //     for(const auto& key : affected_keys) ss <<
+        //     DynoLikeKeyFormatter(key) << " "; LOG(INFO) << "Factor affected
+        //     " << idx << " keys: " << ss.str();
+        //   }
+        // }
       },
       error_hooks_);
 
@@ -282,12 +335,24 @@ void RegularBackendModule::updateIncremental(
 
   LOG(INFO) << "ISAM2 result. Error before " << result.getErrorBefore()
             << " error after " << result.getErrorAfter();
-  gtsam::Values optimised_values = smoother_->calculateEstimate();
+  gtsam::Values optimised_values = smoother_interface.calculateEstimate();
   formulation_->updateTheta(optimised_values);
 
-  // update result
-  post_update_data.incremental_result = gtsam::ISAM2Result();
-  convert(result, post_update_data.incremental_result.value());
+  // set and update post update incremental result
+  PostUpdateData::IncrementalResult incremental_result;
+  incremental_result.factors = smoother_interface.getFactors();
+
+  // LOG(INFO) << "After increemental update " <<
+  // incremental_result.factors.size(); for(size_t i = 0; i <
+  // incremental_result.factors.size(); i++) {
+  //   std::cout << "idx " << i << " ";
+  //   incremental_result.factors.at(i)->print("");
+  //   std::cout << "\n";
+  // }
+
+  convert(result, incremental_result.isam2);
+
+  post_update_data.incremental_result = incremental_result;
 
   if (FLAGS_regular_backend_log_incremental_stats) {
     VLOG(10) << "Logging incremental stats at frame " << frame_id_k;
@@ -351,10 +416,10 @@ void RegularBackendModule::logIncrementalStats(
                              const std::string& file_type =
                                  ".csv") -> std::string {
     std::string file_name = formulation_->getFullyQualifiedName() + name;
-    const std::string suffix = FLAGS_updater_suffix;
-    if (!suffix.empty()) {
-      file_name += ("_" + suffix);
-    }
+    // const std::string& suffix = base_params_.updater_suffix;
+    // if (!suffix.empty()) {
+    //   file_name += ("_" + suffix);
+    // }
     file_name += file_type;
     return getOutputFilePath(file_name);
   };
@@ -491,6 +556,7 @@ RegularBackendModule::makeFormulation() {
   // TODO: why are we copying params over???
   formulation_params.min_static_observations = base_params_.min_static_obs_;
   formulation_params.min_dynamic_observations = base_params_.min_dynamic_obs_;
+  formulation_params.suffix = base_params_.updater_suffix;
   // formulation_params.min_dynamic_observations = 2u;
   formulation_params.use_smoothing_factor = base_params_.use_smoothing_factor;
 
@@ -502,7 +568,7 @@ RegularBackendModule::makeFormulation() {
                                         gtsam::Key problematic_key) {
     ErrorHandlingHooks::HandleILSResult ils_handle_result;
     // a little gross that I need to set this up in this function
-    gtsam::NonlinearFactorGraph& prior_factors = ils_handle_result.new_factors;
+    gtsam::NonlinearFactorGraph& prior_factors = ils_handle_result.pior_factors;
     auto& failed_on_object = ils_handle_result.failed_objects;
 
     ApplyFunctionalSymbol afs;
@@ -601,7 +667,7 @@ RegularBackendModule::makeFormulation() {
 BackendMetaData RegularBackendModule::createBackendMetadata() const {
   // TODO: cache?
   BackendMetaData backend_info;
-  backend_info.logging_suffix = FLAGS_updater_suffix;
+  // backend_info.logging_suffix = base_params_.updater_suffix;
   backend_info.backend_params = &base_params_;
   return backend_info;
 }
