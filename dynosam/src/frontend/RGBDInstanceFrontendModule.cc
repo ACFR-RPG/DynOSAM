@@ -54,16 +54,16 @@ DEFINE_bool(log_projected_masks, false,
 namespace dyno {
 
 RGBDInstanceFrontendModule::RGBDInstanceFrontendModule(
-    const FrontendParams& frontend_params, Camera::Ptr camera,
+    const DynoParams& params, Camera::Ptr camera,
     ImageDisplayQueue* display_queue)
-    : FrontendModule(frontend_params, display_queue),
+    : FrontendModule(params, display_queue),
       camera_(camera),
-      motion_solver_(frontend_params.ego_motion_solver_params,
+      motion_solver_(params.frontend_params_.ego_motion_solver_params,
                      camera->getParams()),
-      imu_frontend_(frontend_params.imu_params) {
+      imu_frontend_(params.frontend_params_.imu_params) {
   CHECK_NOTNULL(camera_);
-  tracker_ =
-      std::make_unique<FeatureTracker>(frontend_params, camera_, display_queue);
+  tracker_ = std::make_unique<FeatureTracker>(getFrontendParams(), camera_,
+                                              display_queue);
 
   if (FLAGS_use_frontend_logger) {
     LOG(INFO) << "Using front-end logger!";
@@ -71,7 +71,7 @@ RGBDInstanceFrontendModule::RGBDInstanceFrontendModule(
   }
 
   ObjectMotionSovlerF2F::Params object_motion_solver_params =
-      frontend_params.object_motion_solver_params;
+      getFrontendParams().object_motion_solver_params;
   // add ground truth hook
   object_motion_solver_params.ground_truth_packets_request = [&]() {
     return this->shared_module_info.getGroundTruthPackets();
@@ -200,7 +200,7 @@ FrontendModule::SpinReturn RGBDInstanceFrontendModule::nominalSpin(
 
   if (FLAGS_use_dynamic_track) {
     utils::TimingStatsCollector track_dynamic_timer("tracking_dynamic");
-    vision_tools::trackDynamic(base_params_, *previous_frame, frame);
+    vision_tools::trackDynamic(getFrontendParams(), *previous_frame, frame);
   }
 
   ObjectMotionMap object_motions;
@@ -285,7 +285,9 @@ bool RGBDInstanceFrontendModule::solveCameraMotion(
     std::optional<gtsam::Rot3> R_curr_ref) {
   utils::TimingStatsCollector timer("frontend.solve_camera_motion");
   Pose3SolverResult result;
-  if (base_params_.use_ego_motion_pnp) {
+
+  const auto& frontend_params = getFrontendParams();
+  if (frontend_params.use_ego_motion_pnp) {
     result = motion_solver_.geometricOutlierRejection3d2d(frame_k_1, frame_k,
                                                           R_curr_ref);
   } else {
@@ -295,7 +297,7 @@ bool RGBDInstanceFrontendModule::solveCameraMotion(
     // frame_k);
   }
 
-  VLOG(15) << (base_params_.use_ego_motion_pnp ? "3D2D" : "3D3D")
+  VLOG(15) << (frontend_params.use_ego_motion_pnp ? "3D2D" : "3D3D")
            << "camera pose estimate at frame " << frame_k->frame_id_
            << (result.status == TrackingStatus::VALID ? " success "
                                                       : " failure ")
@@ -366,10 +368,10 @@ bool RGBDInstanceFrontendModule::solveCameraMotion(
   } else {
     frame_k->T_world_camera_ = result.best_result;
 
-    if (base_params_.refine_camera_pose_with_joint_of) {
+    if (frontend_params.refine_camera_pose_with_joint_of) {
       VLOG(10) << "Refining camera pose with joint of";
       OpticalFlowAndPoseOptimizer flow_optimizer(
-          base_params_.object_motion_solver_params.joint_of_params);
+          frontend_params.object_motion_solver_params.joint_of_params);
 
       auto flow_opt_result = flow_optimizer.optimizeAndUpdate<CalibrationType>(
           frame_k_1, frame_k, result.inliers, result.best_result);
@@ -390,6 +392,12 @@ RGBDInstanceOutputPacket::Ptr RGBDInstanceFrontendModule::constructOutput(
     const PointCloudLabelRGB::Ptr dense_labelled_cloud) {
   StatusKeypointVector static_keypoint_measurements;
   StatusLandmarkVector static_landmarks;
+
+  const double& static_pixel_sigma =
+      params_.backend_params_.static_pixel_noise_sigma;
+  const double& static_point_sigma =
+      params_.backend_params_.static_point_noise_sigma;
+
   for (const Feature::Ptr& f : frame.usableStaticFeaturesBegin()) {
     const TrackletId tracklet_id = f->trackletId();
     const Keypoint kp = f->keypoint();
@@ -404,7 +412,8 @@ RGBDInstanceOutputPacket::Ptr RGBDInstanceFrontendModule::constructOutput(
 
     MeasurementWithCovariance<Keypoint> kp_measurement(kp);
     MeasurementWithCovariance<Landmark> landmark_measurement(
-        vision_tools::backProjectAndCovariance(*f, *camera_, 0.2, 0.1));
+        vision_tools::backProjectAndCovariance(*f, *camera_, static_pixel_sigma,
+                                               static_point_sigma));
 
     static_keypoint_measurements.push_back(KeypointStatus::StaticInLocal(
         kp_measurement, frame.getFrameId(), tracklet_id));
@@ -412,6 +421,11 @@ RGBDInstanceOutputPacket::Ptr RGBDInstanceFrontendModule::constructOutput(
     static_landmarks.push_back(LandmarkStatus::StaticInLocal(
         landmark_measurement, frame.getFrameId(), tracklet_id));
   }
+
+  const double& dynamic_pixel_sigma =
+      params_.backend_params_.dynamic_pixel_noise_sigma;
+  const double& dynamic_point_sigma =
+      params_.backend_params_.dynamic_point_noise_sigma;
 
   StatusKeypointVector dynamic_keypoint_measurements;
   StatusLandmarkVector dynamic_landmarks;
@@ -437,7 +451,8 @@ RGBDInstanceOutputPacket::Ptr RGBDInstanceFrontendModule::constructOutput(
 
         MeasurementWithCovariance<Keypoint> kp_measurement(kp);
         MeasurementWithCovariance<Landmark> landmark_measurement(
-            vision_tools::backProjectAndCovariance(*f, *camera_, 0.2, 0.1));
+            vision_tools::backProjectAndCovariance(
+                *f, *camera_, dynamic_pixel_sigma, dynamic_point_sigma));
 
         dynamic_keypoint_measurements.push_back(KeypointStatus::DynamicInLocal(
             kp_measurement, frame.frame_id_, tracklet_id, object_id));
@@ -473,7 +488,7 @@ cv::Mat RGBDInstanceFrontendModule::createTrackingImage(
     const Frame::Ptr& frame_k, const Frame::Ptr& frame_k_1,
     const ObjectPoseMap& object_poses) const {
   cv::Mat tracking_image = tracker_->computeImageTracks(
-      *frame_k_1, *frame_k, base_params_.image_tracks_vis_params);
+      *frame_k_1, *frame_k, getFrontendParams().image_tracks_vis_params);
 
   const auto& camera_params = camera_->getParams();
   const auto& K = camera_params.getCameraMatrix();

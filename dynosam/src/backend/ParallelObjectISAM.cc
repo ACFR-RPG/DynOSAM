@@ -51,11 +51,11 @@ ParallelObjectISAM::ParallelObjectISAM(
       expected_style_(MotionRepresentationStyle::F2F) {
   smoother_ = std::make_shared<gtsam::ISAM2>(params_.isam);
 
-  FormulationParams formulation_params;
-  formulation_params.suffix = "object_" + std::to_string(object_id);
+  FormulationParams formulation_params = params_.formulation;
+  formulation_params.updater_suffix = "object_" + std::to_string(object_id);
   // HACK for now so that we get object motions at every frame!!!?
   formulation_params.min_dynamic_observations = 2u;
-  formulation_params.use_smoothing_factor = FLAGS_use_smoothing_factor;
+  // formulation_params.use_smoothing_factor = FLAGS_use_smoothing_factor;
 
   decoupled_formulation_ = std::make_shared<HybridFormulation>(
       formulation_params, map_, noise_models, formulation_hooks);

@@ -192,6 +192,21 @@ cv::Mat gtsamMatrix3ToCvMat(const gtsam::Matrix3& rot);
 cv::Mat gtsamVector3ToCvMat(const gtsam::Vector3& tran);
 cv::Point3d gtsamVector3ToCvPoint3(const gtsam::Vector3& tran);
 
+template <typename T>
+T perturbWithUniformNoise(const T& t, double lower, double upper) {
+  static std::random_device rd;
+  static std::mt19937 gen(rd());
+
+  std::uniform_real_distribution<double> dist(lower, upper);
+
+  constexpr size_t N = gtsam::traits<T>::dimension;
+  Eigen::Matrix<double, N, 1> delta;
+  for (int i = 0; i < N; ++i) {
+    delta[i] = dist(gen);
+  }
+  return gtsam::traits<T>::Retract(t, delta);
+}
+
 /**
  * @brief Perturbs a gtsam::Value type object via sampling a normal distribution
  * using the sigmas provided. The length of the sigmas must match the dimension

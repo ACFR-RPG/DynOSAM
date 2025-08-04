@@ -36,6 +36,7 @@
 #include "dynosam/common/Types.hpp"
 #include "dynosam/frontend/FrontendOutputPacket.hpp"
 #include "dynosam/frontend/FrontendParams.hpp"
+#include "dynosam/pipeline/PipelineParams.hpp"
 #include "dynosam/visualizer/Visualizer-Definitions.hpp"
 
 // #include "dynosam/common"
@@ -66,11 +67,13 @@ class FrontendModule
   using Base = ModuleBase<FrontendInputPacketBase, FrontendOutputPacketBase>;
   using Base::SpinReturn;
 
-  FrontendModule(const FrontendParams& params,
+  FrontendModule(const DynoParams& params,
                  ImageDisplayQueue* display_queue = nullptr);
   virtual ~FrontendModule();
 
-  // virtual void mapUpdate(const Accessor& accessor) {}
+  const FrontendParams& getFrontendParams() const {
+    return params_.frontend_params_;
+  }
 
  protected:
   /**
@@ -91,13 +94,6 @@ class FrontendModule
   };
 
  protected:
-  // std::optional<GroundTruthPacketMap> getGroundTruthPackets() const {
-  //   if (gt_packet_map_.empty()) {
-  //     return {};
-  //   }
-  //   return gt_packet_map_;
-  // }
-
   void validateInput(
       const FrontendInputPacketBase::ConstPtr& input) const override;
 
@@ -117,19 +113,11 @@ class FrontendModule
       const ImageContainer::Ptr& image_container) const = 0;
 
  protected:
-  const FrontendParams base_params_;
+  const DynoParams params_;
   ImageDisplayQueue* display_queue_;
   gtsam::Pose3Vector
       camera_poses_;  //! Keeps track of current camera trajectory. Really just
                       //! for (viz) and drawn everytime
-
-  // gtsam::FastMap<TrackletId, Landmark> map_from_backend_;
-
-  //  private:
-  //   GroundTruthPacketMap
-  //       gt_packet_map_;  //! Updated in the frontend module base via
-  //       InputCallback
-  //                        //! (see FrontendModule constructor)
 };
 
 }  // namespace dyno

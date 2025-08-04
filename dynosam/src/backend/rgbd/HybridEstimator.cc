@@ -652,27 +652,45 @@ void HybridFormulation::dynamicPointUpdateCallback(
           .num_new_dynamic_points++;
   }
 
-  auto dynamic_point_noise = noise_models_.dynamic_point_noise;
   if (context.is_starting_motion_frame) {
     // add factor at k-1
-    // ------ good motion factor/////
+    Landmark measured_point_local;
+    gtsam::SharedNoiseModel measurement_covariance;
+    std::tie(measured_point_local, measurement_covariance) =
+        MeasurementTraits::pointWithCovariance(
+            lmk_node->getMeasurement(frame_node_k_1));
+
+    if (params_.makeDynamicMeasurementsRobust()) {
+      measurement_covariance = factor_graph_tools::robustifyHuber(
+          params_.k_huber_3d_points_, measurement_covariance);
+    }
+
     new_factors.emplace_shared<HybridMotionFactor>(
         frame_node_k_1->makePoseKey(),  // pose key at previous frames,
-        object_motion_key_k_1, point_key,
-        lmk_node->getMeasurement(frame_node_k_1).landmark, L_e,
-        dynamic_point_noise);
+        object_motion_key_k_1, point_key, measured_point_local, L_e,
+        measurement_covariance);
     if (result.debug_info)
       result.debug_info->getObjectInfo(context.getObjectId())
           .num_dynamic_factors++;
   }
 
   // add factor at k
-  // ------ good motion factor/////
+
+  Landmark measured_point_local;
+  gtsam::SharedNoiseModel measurement_covariance;
+  std::tie(measured_point_local, measurement_covariance) =
+      MeasurementTraits::pointWithCovariance(
+          lmk_node->getMeasurement(frame_node_k));
+
+  if (params_.makeDynamicMeasurementsRobust()) {
+    measurement_covariance = factor_graph_tools::robustifyHuber(
+        params_.k_huber_3d_points_, measurement_covariance);
+  }
+
   new_factors.emplace_shared<HybridMotionFactor>(
       frame_node_k->makePoseKey(),  // pose key at previous frames,
-      object_motion_key_k, point_key,
-      lmk_node->getMeasurement(frame_node_k).landmark, L_e,
-      dynamic_point_noise);
+      object_motion_key_k, point_key, measured_point_local, L_e,
+      measurement_covariance);
 
   result.updateAffectedObject(frame_node_k->frame_id, context.getObjectId());
   if (result.debug_info)

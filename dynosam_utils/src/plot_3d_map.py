@@ -73,6 +73,10 @@ plot_collection = evo_plot.PlotCollection("Map")
 make_plot("/root/results/misc/", "hybrid_backend", plot_collection)
 make_plot("/root/results/misc/", "hybrid_batch_opt_backend", plot_collection)
 
+make_plot("/root/results/misc/", "hybrid_dynamic_not_robust_backend", plot_collection)
+make_plot("/root/results/misc/", "hybrid_dynamic_not_robust_batch_opt_backend", plot_collection)
+
+
 make_plot("/root/results/misc/", "hybrid_smart_structureless_backend", plot_collection)
 make_plot("/root/results/misc/", "hybrid_smart_structureless_batch_opt_backend", plot_collection)
 

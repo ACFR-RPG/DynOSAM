@@ -264,7 +264,7 @@ class MeasurementWithCovariance {
    */
   MeasurementWithCovariance(const T& measurement, const Covariance& covariance)
       : measurement_(measurement),
-        model_(gtsam::noiseModel::Gaussian::Covariance(covariance)) {}
+        model_(gtsam::noiseModel::Gaussian::Covariance(covariance, false)) {}
 
   /**
    * @brief Construct object using a measurement type and associated sigma
@@ -296,7 +296,6 @@ class MeasurementWithCovariance {
 
   /// @brief Very important to have these cast operators so we can use
   /// Base::asType to cast to the internal data.
-
   operator const T&() const { return measurement(); }
   operator Covariance() const { return covariance(); }
 
@@ -373,6 +372,12 @@ struct LandmarkKeypoint {
   MeasurementWithCovariance<Landmark> landmark;
   //! Keypoint measurement with covariance
   MeasurementWithCovariance<Keypoint> keypoint;
+
+  friend std::ostream& operator<<(std::ostream& os,
+                                  const LandmarkKeypoint& status) {
+    os << "landmark: " << status.landmark << ", keypoint " << status.keypoint;
+    return os;
+  }
 };
 
 /**
@@ -433,8 +438,18 @@ struct measurement_traits<LandmarkKeypoint> {
     return measurement.landmark;
   }
 
+  static std::pair<Landmark, gtsam::SharedNoiseModel> pointWithCovariance(
+      const LandmarkKeypoint& measurement) {
+    return {measurement.landmark.measurement(), measurement.landmark.model()};
+  }
+
   static Keypoint keypoint(const LandmarkKeypoint& measurement) {
     return measurement.keypoint;
+  }
+
+  static std::pair<Keypoint, gtsam::SharedNoiseModel> keypointWithCovariance(
+      const LandmarkKeypoint& measurement) {
+    return {measurement.keypoint.measurement(), measurement.keypoint.model()};
   }
 };
 

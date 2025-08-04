@@ -401,9 +401,11 @@ void SmartStructurlessFormulation::dynamicPointUpdateCallback(
     getSafeQuery(lmk_L0, theta_accessor->query<Landmark>(point_key),
                  lmk_L0_init);
 
+    SmartMotionFactorParams smart_factor_params;
+    smart_factor_params.dyanmic_outlier_rejection_threshold = 1.0;
     HybridSmartFactor::shared_ptr smart_factor =
         boost::make_shared<HybridSmartFactor>(L_e, dynamic_point_noise,
-                                              lmk_L0_init);
+                                              smart_factor_params, lmk_L0_init);
     // HybridSmartFactor::shared_ptr smart_factor =
     //     boost::make_shared<HybridSmartFactor>(L_e, dynamic_point_noise);
 

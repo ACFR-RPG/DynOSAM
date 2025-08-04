@@ -34,9 +34,7 @@
 
 #include <string>
 
-// defined in BackendParamd.cc
-DECLARE_double(static_point_sigma);
-DECLARE_double(dynamic_point_sigma);
+// defined in BackendParams.cc
 
 DECLARE_double(constant_object_motion_rotation_sigma);
 DECLARE_double(constant_object_motion_translation_sigma);
@@ -48,6 +46,9 @@ DECLARE_double(odometry_translation_sigma);
 
 DECLARE_double(static_point_noise_sigma);
 DECLARE_double(dynamic_point_noise_sigma);
+
+DECLARE_double(static_pixel_noise_sigma);
+DECLARE_double(dynamic_pixel_noise_sigma);
 
 DECLARE_bool(use_smoothing_factor);
 DECLARE_bool(use_robust_kernals);
@@ -62,12 +63,14 @@ namespace dyno {
 
 struct BackendParams {
   //! Only Mono
-  double static_smart_projection_noise_sigma_ =
-      FLAGS_static_point_sigma;  //! Isotropic noise used for the smart
-                                 //! projection factor (mono) on static points
-  double dynamic_smart_projection_noise_sigma_ =
-      FLAGS_dynamic_point_sigma;  //! Isotropic noise used for the smart
-                                  //! projection factor (mono) on dynamic points
+  //   double static_smart_projection_noise_sigma_ =
+  //       FLAGS_static_point_sigma;  //! Isotropic noise used for the smart
+  //                                  //! projection factor (mono) on static
+  //                                  points
+  //   double dynamic_smart_projection_noise_sigma_ =
+  //       FLAGS_dynamic_point_sigma;  //! Isotropic noise used for the smart
+  //                                   //! projection factor (mono) on dynamic
+  //                                   points
 
   //! RGBD/Stereo
   bool use_robust_kernals_ = FLAGS_use_robust_kernals;
@@ -76,15 +79,18 @@ struct BackendParams {
 
   double k_huber_3d_points_ =
       0.0001;  //! Huber constant used for robust kernal on dynamic points
-  double static_point_noise_sigma_ =
+  double static_point_noise_sigma =
       FLAGS_static_point_noise_sigma;  //! Isotropic noise used on
                                        //! PoseToPointFactor for static points
   // TODO: make param!!! and really should come from covariance on image plane
   // and then projection!!!
-  double dynamic_point_noise_sigma_ =
+  double dynamic_point_noise_sigma =
       FLAGS_dynamic_point_noise_sigma;  //! Isotropic noise used on
                                         //! PoseToPointFactor for dynamic points
                                         //! //0.0125
+
+  double static_pixel_noise_sigma = FLAGS_static_pixel_noise_sigma;
+  double dynamic_pixel_noise_sigma = FLAGS_dynamic_pixel_noise_sigma;
 
   double odometry_rotation_sigma_ =
       FLAGS_odometry_rotation_sigma;  //! sigma used to construct the noise
@@ -112,10 +118,32 @@ struct BackendParams {
 
   std::string updater_suffix = FLAGS_updater_suffix;
 
-  size_t min_static_obs_ = 2u;
-  size_t min_dynamic_obs_ = 3u;
+  size_t min_static_observations = 2u;
+  size_t min_dynamic_observations = 3u;
 
   static BackendParams fromYaml(const std::string& file_path);
+
+  /**
+   * @brief True if robust kernals are on and the static point noise should also
+   * be robust.
+   *
+   * @return true
+   * @return false
+   */
+  bool makeStaticMeasurementsRobust() const {
+    return use_robust_kernals_ && static_point_noise_as_robust;
+  };
+
+  /**
+   * @brief True if robust kernals are on and the dynamic point noise should
+   * also be robust.
+   *
+   * @return true
+   * @return false
+   */
+  bool makeDynamicMeasurementsRobust() const {
+    return use_robust_kernals_ && dynamic_point_noise_as_robust;
+  };
 
   BackendParams& useLogger(bool value) {
     this->use_logger_ = value;

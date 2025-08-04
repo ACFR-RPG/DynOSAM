@@ -485,32 +485,37 @@ void writeOutProjectMaskAndDepthMap(
   file.release();
 }
 
-std::pair<gtsam::Vector3, gtsam::Matrix3> backProjectAndCovariance(
+std::pair<gtsam::Vector3, gtsam::Matrix33> backProjectAndCovariance(
     const Feature& feature, const Camera& camera, double pixel_sigma,
     double depth_sigma) {
   const auto gtsam_camera = camera.getImplCamera();
   const auto keypoint = feature.keypoint();
+  const auto u = keypoint(0);
+  const auto v = keypoint(1);
 
   CHECK(feature.hasDepth());
   const auto depth = feature.depth();
+  const auto& cam_params = camera.getParams();
+  const auto fx = cam_params.fx();
+  const auto fy = cam_params.fy();
+  const auto cx = cam_params.cu();
+  const auto cy = cam_params.cv();
 
-  gtsam::Matrix32 J_keypoint;
-  gtsam::Matrix31 J_depth;
-  gtsam::Point3 landmark = gtsam_camera->backproject(
-      keypoint, depth, boost::none, J_keypoint, J_depth, boost::none);
+  // Jacobian J of backprojection w.r.t. (u, v, d) assuming pinhole camera
+  gtsam::Matrix33 J;
+  J << depth / fx, 0, (u - cx) / fx, 0, depth / fy, (v - cy) / fy, 0, 0, 1;
 
-  // form measurement covariance matrices
-  gtsam::Matrix22 pixel_covariance_matrix;
-  pixel_covariance_matrix << pixel_sigma, 0.0, 0.0, pixel_sigma;
+  double pixel_sigma2 = pixel_sigma * pixel_sigma;
+  double depth_sigma2 = depth_sigma * depth_sigma;
+  gtsam::Matrix33 sigma_uvd =
+      (Eigen::Vector3d(pixel_sigma2, pixel_sigma2, depth_sigma2)).asDiagonal();
 
-  // for depth uncertainty, we model it as a quadratic increase with distnace
-  double depth_covariance = depth_sigma * std::pow(depth, 2);
+  // Propagate to 3D covariance
+  gtsam::Matrix33 sigma_3d = J * sigma_uvd * J.transpose();
 
-  // calcualte 3x3 covairance matrix
-  gtsam::Matrix33 covariance =
-      J_keypoint * pixel_covariance_matrix * J_keypoint.transpose() +
-      J_depth * depth_covariance * J_depth.transpose();
-  return {landmark, covariance};
+  // Back project point
+  gtsam::Point3 landmark = gtsam_camera->backproject(keypoint, depth);
+  return {landmark, sigma_3d};
 }
 
 // void writeOutProjectMaskAndDepthMap(const ImageWrapper<ImageType::Depth>&

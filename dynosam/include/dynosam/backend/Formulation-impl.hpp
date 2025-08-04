@@ -163,14 +163,14 @@ UpdateObservationResult Formulation<MAP>::updateStaticObservations(
 
   UpdateObservationResult result(update_params);
 
-  // VIODE!!
-  double fx = 376.0;
-  double fy = 376.0;
-  double cx = 376.0;
-  double cy = 240.0;
-  double skew = 0.0;  // assuming zero skew
+  // // VIODE!!
+  // double fx = 376.0;
+  // double fy = 376.0;
+  // double cx = 376.0;
+  // double cy = 240.0;
+  // double skew = 0.0;  // assuming zero skew
 
-  const auto K = boost::make_shared<gtsam::Cal3_S2>(fx, fy, skew, cx, cy);
+  // const auto K = boost::make_shared<gtsam::Cal3_S2>(fx, fy, skew, cx, cy);
 
   const auto frame_node_k = map->getFrame(frame_id_k);
   CHECK_NOTNULL(frame_node_k);
@@ -187,20 +187,22 @@ UpdateObservationResult Formulation<MAP>::updateStaticObservations(
     // check if lmk node is already in map (which should mean it is equivalently
     // in isam)
     if (is_other_values_in_map.exists(point_key)) {
-      const Landmark measured = lmk_node->getMeasurement(frame_id_k).landmark;
-      // const auto measured_keypoint =
-      // lmk_node->getMeasurement(frame_id_k).keypoint;
+      Landmark measured_point_local;
+      gtsam::SharedNoiseModel measurement_covariance;
+      std::tie(measured_point_local, measurement_covariance) =
+          MeasurementTraits::pointWithCovariance(
+              lmk_node->getMeasurement(frame_id_k));
+      CHECK(measurement_covariance);
+
+      if (params_.makeStaticMeasurementsRobust()) {
+        measurement_covariance = factor_graph_tools::robustifyHuber(
+            params_.k_huber_3d_points_, measurement_covariance);
+      }
 
       internal_new_factors
           .emplace_shared<gtsam::PoseToPointFactor<gtsam::Pose3, Landmark>>(
               frame_node_k->makePoseKey(),  // pose key for this frame
-              point_key, measured, static_point_noise);
-      // internal_new_factors
-      //     .emplace_shared<GenericProjectionFactor>(
-      //         measured_keypoint,
-      //         static_keypoint_noise,
-      //         frame_node_k->makePoseKey(),  // pose key for this frame
-      //         point_key, K);
+              point_key, measured_point_local, measurement_covariance);
 
       if (result.debug_info) result.debug_info->num_static_factors++;
       result.updateAffectedObject(frame_id_k, 0);
@@ -230,21 +232,21 @@ UpdateObservationResult Formulation<MAP>::updateStaticObservations(
           continue;
         }
 
-        const auto measured_keypoint =
-            lmk_node->getMeasurement(seen_frame).keypoint;
+        Landmark measured_point_local;
+        gtsam::SharedNoiseModel measurement_covariance;
+        std::tie(measured_point_local, measurement_covariance) =
+            MeasurementTraits::pointWithCovariance(
+                lmk_node->getMeasurement(frame_id_k));
+        CHECK(measurement_covariance);
 
-        const Landmark& measured =
-            lmk_node->getMeasurement(seen_frame).landmark;
+        if (params_.makeStaticMeasurementsRobust()) {
+          measurement_covariance = factor_graph_tools::robustifyHuber(
+              params_.k_huber_3d_points_, measurement_covariance);
+        }
+
         internal_new_factors.emplace_shared<PoseToPointFactor>(
             seen_frame->makePoseKey(),  // pose key at previous frames
-            point_key, measured, static_point_noise);
-
-        // internal_new_factors
-        //   .emplace_shared<GenericProjectionFactor>(
-        //       measured_keypoint,
-        //       static_keypoint_noise,
-        //       seen_frame->makePoseKey(),  // pose key for this frame
-        //       point_key, K);
+            point_key, measured_point_local, measurement_covariance);
 
         if (result.debug_info) result.debug_info->num_static_factors++;
         result.updateAffectedObject(seen_frame_id, 0);
@@ -579,8 +581,10 @@ void Formulation<MAP>::logBackendFromMap(const BackendMetaData& backend_info) {
   CHECK(hooks().ground_truth_packets_request);
   const auto ground_truth_packets = hooks().ground_truth_packets_request();
 
-  CHECK_NOTNULL(backend_info.backend_params);
-  const auto& backend_params = *backend_info.backend_params;
+  // TODO: formulation params are now backend params so no longer need to
+  //  pass backend params into Formulation with BackendMetaData
+  //  CHECK_NOTNULL(backend_info.backend_params);
+  //  const auto& backend_params = *backend_info.backend_params;
 
   const ObjectPoseMap object_pose_map = accessor->getObjectPoses();
 
@@ -588,8 +592,8 @@ void Formulation<MAP>::logBackendFromMap(const BackendMetaData& backend_info) {
     // TODO: hack - only go up to frames < full batch so we actually only
     // include the optimised alues
     // TODO: actually should be based on the optimization mode!!
-    if (backend_params.use_full_batch_opt &&
-        backend_params.full_batch_frame - 1 == (int)frame_k) {
+    if (params_.use_full_batch_opt &&
+        params_.full_batch_frame - 1 == (int)frame_k) {
       break;
     }
 
@@ -648,7 +652,7 @@ template <typename MAP>
 std::string Formulation<MAP>::setFullyQualifiedName() const {
   // get the derived name of the formulation
   std::string logger_prefix = this->loggerPrefix();
-  const std::string suffix = params_.suffix;
+  const std::string suffix = params_.updater_suffix;
 
   // add suffix to name if required
   if (!suffix.empty()) {

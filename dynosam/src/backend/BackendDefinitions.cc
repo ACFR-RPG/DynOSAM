@@ -193,10 +193,11 @@ NoiseModels NoiseModels::fromBackendParams(
 
   // TODO: CHECKS that values are not zero!!!
 
+  // TODO: should now depricate if we're using covariance from frontend??
   noise_models.static_point_noise = gtsam::noiseModel::Isotropic::Sigma(
-      3u, backend_params.static_point_noise_sigma_);
+      3u, backend_params.static_point_noise_sigma);
   noise_models.dynamic_point_noise = gtsam::noiseModel::Isotropic::Sigma(
-      3u, backend_params.dynamic_point_noise_sigma_);
+      3u, backend_params.dynamic_point_noise_sigma);
 
   if (backend_params.use_robust_kernals_) {
     LOG(INFO) << "Using robust huber loss function: "

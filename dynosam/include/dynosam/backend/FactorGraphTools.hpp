@@ -33,6 +33,7 @@
 #include <glog/logging.h>
 #include <gtsam/base/treeTraversal-inst.h>
 #include <gtsam/linear/GaussianFactorGraph.h>
+#include <gtsam/linear/NoiseModel.h>
 #include <gtsam/nonlinear/ISAM2.h>
 #include <gtsam/nonlinear/NonlinearFactorGraph.h>
 
@@ -61,6 +62,16 @@ SmartProjectionFactor::shared_ptr constructSmartProjectionFactor(
     gtsam::SharedNoiseModel smart_noise, boost::shared_ptr<CalibrationType> K,
     SmartProjectionFactorParams projection_params, Keypoint measurement,
     FrameId frame_id);
+
+/**
+ * @brief Wrapper on the creation of a robust Huber noise model from a Shared
+ * noise model
+ *
+ * @param k double k paramter for the Huber lss function
+ * @param model  gtsam::SharedNoiseModel model to make robust
+ * @return gtsam::SharedNoiseModel
+ */
+gtsam::SharedNoiseModel robustifyHuber(double k, gtsam::SharedNoiseModel model);
 
 void addBetweenFactor(FrameId from_frame, FrameId to_frame,
                       const gtsam::Pose3 from_pose_to,

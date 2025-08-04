@@ -35,6 +35,7 @@
 
 #include "dynosam/backend/Accessor.hpp"
 #include "dynosam/backend/BackendDefinitions.hpp"
+#include "dynosam/backend/BackendParams.hpp"
 #include "dynosam/common/Map.hpp"
 #include "dynosam/common/Types.hpp"
 
@@ -176,14 +177,23 @@ struct PostUpdateData {
   PostUpdateData(FrameId _frame_id) : frame_id(_frame_id) {}
 };
 
-// TODO: copy so many of these params from backendparams, why not just use the
-// same one?
-struct FormulationParams {
-  size_t min_dynamic_observations = 3u;
-  size_t min_static_observations = 2u;
-  bool use_smoothing_factor = true;
-  std::string suffix = "";
+/**
+ * @brief Basic parameters for a Formulation.
+ * Right now is just directly the BackendParams since there is lots of
+ * cross-over, but later we may add formulation specific ones
+ *
+ */
+struct FormulationParams : public BackendParams {
+  FormulationParams() {}
+
+  FormulationParams(const BackendParams& b) { FormulationParams::operator=(b); }
+
+  FormulationParams& operator=(const BackendParams& b) {
+    static_cast<BackendParams&>(*this) = b;
+    return *this;
+  }
 };
+
 /**
  * @brief Base class for a formulation that defines the structure and
  * implementation for a factor-graph based Dynamic SLAM solution. Derived

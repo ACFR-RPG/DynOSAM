@@ -14,7 +14,7 @@ np.random.seed(42)
 def plot_covariance_ellipsoid(mean, cov, ax, n_std=1.0, color='r', alpha=0.3):
     """
     Plot a 3D covariance ellipsoid.
-    
+
     Args:
         mean: 3D position (center of ellipsoid)
         cov: 3x3 covariance matrix
@@ -157,16 +157,20 @@ def construct_3d_projection_covariance(K: gtsam.Cal3_S2, u: float, v: float, dep
     # Covariance in pixel-depth space
     Sigma_uvd = np.diag([sigma_u**2, sigma_v**2, sigma_d**2])
 
+    print(Sigma_uvd)
+
     # Propagate to 3D covariance
     Sigma_3d = J @ Sigma_uvd @ J.T
     covariance_matrix = Sigma_3d
-    
+
     # regularization = 1e-5
     # covariance_matrix += regularization * np.eye()
-    
+
     # print("Cov", covariance_matrix)
-    
+
     import sys
+
+    print(covariance_matrix)
     # sys.exit(0)
 
     # covariance_matrix = np.array([[sigma_x2, 0, 0],
@@ -253,7 +257,7 @@ is_outlier = []
 # Simulate observations and build both graphs
 for i, pose in enumerate(poses_gt):
     pose_key = symbol('x', i)
-    initial_estimates.insert(pose_key, pose.retract(np.random.randn(6) * 0.3))
+    initial_estimates.insert(pose_key, pose.retract(np.random.randn(6) * 0.1))
     # initial_estimates_ptp.insert(pose_key, pose.retract(np.random.randn(6) * 0.1))
 
     camera = gtsam.PinholeCameraCal3_S2(pose, K)
@@ -310,6 +314,7 @@ for i, pose in enumerate(poses_gt):
 
         # Add 3d pose to point factor using 3D covariance model
         covariance_3d_model = construct_3d_projection_covariance(K, z[0], z[1], depth_noisy, pixel_noise_sigma, pixel_noise_sigma, point_noise_sigma)
+        print(covariance_3d_model)
         ptp_factor_3d_model = pose_to_point_factor(covariance_3d_model, pose_key, point_key, noisy_point_local)
         graph_ptp_3d_model.add(ptp_factor_3d_model)
 

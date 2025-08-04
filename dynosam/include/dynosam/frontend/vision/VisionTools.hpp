@@ -254,7 +254,7 @@ void writeOutProjectMaskAndDepthMap(
  * @param depth_sigma
  * @return std::pair<gtsam::Vector3, gtsam::Matrix3>
  */
-std::pair<gtsam::Vector3, gtsam::Matrix3> backProjectAndCovariance(
+std::pair<gtsam::Vector3, gtsam::Matrix33> backProjectAndCovariance(
     const Feature& feature, const Camera& camera, double pixel_sigma,
     double depth_sigma);
 

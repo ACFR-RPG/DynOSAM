@@ -94,7 +94,7 @@ TEST(RegularBackendModule, smallKITTIDataset) {
 
   dyno::BackendParams backend_params;
   backend_params.useLogger(false);
-  backend_params.min_dynamic_obs_ = 1u;
+  backend_params.min_dynamic_observations = 1u;
 
   dyno::RegularBackendModule backend(
       backend_params, dyno_testing::makeDefaultCameraPtr(),
@@ -198,7 +198,7 @@ TEST(RegularBackendModule, smallKITTIDataset) {
 //   //   CHECK(ISDEBUG("IncrementalFixedLagSmoother update"));
 //   dyno::BackendParams backend_params;
 //   backend_params.useLogger(false);
-//   backend_params.min_dynamic_obs_ = 3u;
+//   backend_params.min_dynamic_observations = 3u;
 //   backend_params.dynamic_point_noise_sigma_ = dynamic_point_sigma;
 
 //   //   dyno::FormulationHooks hooks;
@@ -511,8 +511,8 @@ TEST(RegularBackendModule, testParallelRGBDBackend) {
 
   dyno::BackendParams backend_params;
   backend_params.useLogger(true);
-  backend_params.min_dynamic_obs_ = 3u;
-  backend_params.dynamic_point_noise_sigma_ = dynamic_point_sigma;
+  backend_params.min_dynamic_observations = 3u;
+  backend_params.dynamic_point_noise_sigma = dynamic_point_sigma;
   backend_params.odometry_rotation_sigma_ = X_R_sigma;
   backend_params.odometry_translation_sigma_ = X_t_sigma;
 
@@ -550,30 +550,35 @@ TEST(RegularBackendModule, testObjectCentricFormulations) {
           std::make_unique<dyno_testing::ConstantMotionBodyVisitor>(
               gtsam::Pose3::Identity(),
               // motion only in x
-              gtsam::Pose3(gtsam::Rot3::RzRyRx(0.3, 0.1, 0.0),
+              gtsam::Pose3(gtsam::Rot3::RzRyRx(0.0, 0.0, 0.0),
                            gtsam::Point3(1.4, 3.8, 0))));
   // needs to be at least 3 overlap so we can meet requirements in graph
   // TODO: how can we do 1 point but with lots of overlap (even infinity
   // overlap?)
 
-  const double H_R_sigma = 0.03;
-  const double H_t_sigma = 0.01;
-  const double dynamic_point_sigma = 0.03;
+  const double H_R_sigma = 0.3;
+  const double H_t_sigma = 0.2;
+  const double dynamic_point_sigma = 0.5;
+  const double static_point_sigma = 0.2;
 
-  const double X_R_sigma = 0.04;
-  const double X_t_sigma = 0.05;
+  const double X_R_sigma = 0.01;
+  const double X_t_sigma = 0.1;
 
   dyno_testing::RGBDScenario::NoiseParams noise_params;
   noise_params.H_R_sigma = H_R_sigma;
   noise_params.H_t_sigma = H_t_sigma;
+  noise_params.static_point_sigma = static_point_sigma;
   noise_params.dynamic_point_sigma = dynamic_point_sigma;
   noise_params.X_R_sigma = X_R_sigma;
   noise_params.X_t_sigma = X_t_sigma;
 
+  dyno_testing::RGBDScenario::Params scenario_params;
+  //   scenario_params.dynamic_outlier_ratio = 0.4;
+
   dyno_testing::RGBDScenario scenario(
       camera,
       std::make_shared<dyno_testing::SimpleStaticPointsGenerator>(100, 30),
-      noise_params);
+      noise_params, scenario_params);
 
   // add one obect
   const size_t num_points = 15;
@@ -596,7 +601,8 @@ TEST(RegularBackendModule, testObjectCentricFormulations) {
           std::make_unique<dyno_testing::ConstantMotionBodyVisitor>(
               gtsam::Pose3(gtsam::Rot3::Identity(), gtsam::Point3(1, 0.4, 0.1)),
               // motion only in x
-              gtsam::Pose3(gtsam::Rot3::Identity(), gtsam::Point3(0.2, 0, 0))),
+              gtsam::Pose3(gtsam::Rot3::Identity(),
+                           gtsam::Point3(3.2, 1.2, 4.1))),
           std::make_unique<dyno_testing::RandomOverlapObjectPointsVisitor>(
               num_points, obj2_overlap),
           dyno_testing::ObjectBodyParams(0, 15));
@@ -605,10 +611,10 @@ TEST(RegularBackendModule, testObjectCentricFormulations) {
       std::make_shared<dyno_testing::ObjectBody>(
           std::make_unique<dyno_testing::ConstantMotionBodyVisitor>(
               gtsam::Pose3(gtsam::Rot3::RzRyRx(0.3, 0.2, 0.1),
-                           gtsam::Point3(3.1, 1.2, 3.2)),
+                           gtsam::Point3(3.1, 2.2, 5.2)),
               // motion only in x
               gtsam::Pose3(gtsam::Rot3::RzRyRx(0.2, 0.1, 0.0),
-                           gtsam::Point3(0.2, 0.3, 1.2))),
+                           gtsam::Point3(3.2, 2.3, 6.2))),
           std::make_unique<dyno_testing::RandomOverlapObjectPointsVisitor>(
               num_points, obj3_overlap),
           dyno_testing::ObjectBodyParams(0, 19));
@@ -618,10 +624,11 @@ TEST(RegularBackendModule, testObjectCentricFormulations) {
   scenario.addObjectBody(3, object3);
 
   dyno::BackendParams backend_params;
-  backend_params.use_robust_kernals_ = true;
+  backend_params.use_robust_kernals_ = false;
   backend_params.useLogger(false);
-  backend_params.min_dynamic_obs_ = 1u;
-  backend_params.dynamic_point_noise_sigma_ = dynamic_point_sigma;
+  backend_params.min_dynamic_observations = 1u;
+  backend_params.static_point_noise_sigma = static_point_sigma;
+  backend_params.dynamic_point_noise_sigma = dynamic_point_sigma;
   backend_params.odometry_rotation_sigma_ = X_R_sigma;
   backend_params.odometry_translation_sigma_ = X_t_sigma;
 
@@ -671,6 +678,7 @@ TEST(RegularBackendModule, testObjectCentricFormulations) {
   //           dyno::RegularBackendModule::UpdaterType::HYBRID));
 
   //   backend_params.updater_suffix = "static_robust";
+  backend_params.optimization_mode = 0;
   backend_params.use_robust_kernals_ = true;
   backend_params.static_point_noise_as_robust = true;
   backend_params.dynamic_point_noise_as_robust = false;
@@ -679,6 +687,14 @@ TEST(RegularBackendModule, testObjectCentricFormulations) {
           backend_params, dyno_testing::makeDefaultCameraPtr(),
           dyno::RegularBackendModule::UpdaterType::TESTING_HYBRID_SMF));
 
+  backend_params.optimization_mode = 0;
+  backend_params.dynamic_point_noise_as_robust = true;
+  tester.addTester<dyno_testing::BatchTester>(
+      std::make_shared<dyno::RegularBackendModule>(
+          backend_params, dyno_testing::makeDefaultCameraPtr(),
+          dyno::RegularBackendModule::UpdaterType::HYBRID));
+
+  backend_params.updater_suffix = "dynamic_not_robust";
   tester.addTester<dyno_testing::BatchTester>(
       std::make_shared<dyno::RegularBackendModule>(
           backend_params, dyno_testing::makeDefaultCameraPtr(),
@@ -820,8 +836,8 @@ TEST(RegularBackendModule, testObjectCentric) {
 
   dyno::BackendParams backend_params;
   backend_params.useLogger(false);
-  backend_params.min_dynamic_obs_ = 3u;
-  backend_params.dynamic_point_noise_sigma_ = dynamic_point_sigma;
+  backend_params.min_dynamic_observations = 3u;
+  backend_params.dynamic_point_noise_sigma = dynamic_point_sigma;
 
   dyno::RegularBackendModule backend(
       backend_params, dyno_testing::makeDefaultCameraPtr(),

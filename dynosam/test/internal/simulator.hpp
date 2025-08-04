@@ -639,17 +639,31 @@ class RGBDScenario : public Scenario {
     NoiseParams() {}
   };
 
+  struct Params {
+    double static_outlier_ratio = 0;   // Must be between 0 and 1
+    double dynamic_outlier_ratio = 0;  // Must be between 0 and 1
+
+    Params() {}
+  };
+
   RGBDScenario(ScenarioBody::Ptr camera_body,
                StaticPointGeneratorVisitor::Ptr static_points_generator,
-               const NoiseParams& noise_params = NoiseParams())
+               const NoiseParams& noise_params = NoiseParams(),
+               const Params& params = Params())
       : Scenario(camera_body, static_points_generator),
-        noise_params_(noise_params) {}
+        noise_params_(noise_params),
+        params_(params) {}
 
   // first is gt, second is with noisy
   using Output =
       std::pair<RGBDInstanceOutputPacket::Ptr, RGBDInstanceOutputPacket::Ptr>;
 
   Output getOutput(FrameId frame_id) const {
+    static std::random_device rd;
+    static std::mt19937 gen(rd());
+
+    std::uniform_real_distribution<double> outlier_dist(0.0, 1.0);
+
     StatusLandmarkVector static_landmarks, dynamic_landmarks,
         noisy_static_landmarks, noisy_dynamic_landmarks;
     StatusKeypointVector static_keypoint_measurements,
@@ -724,18 +738,26 @@ class RGBDScenario : public Scenario {
           auto tracklet_id = tracked_p_world.first;
           auto p_world = tracked_p_world.second;
           const Point3Measurement p_camera(X_world_k.inverse() * p_world);
-          const Point3Measurement noisy_p_camera(dyno::utils::perturbWithNoise(
-              p_camera.measurement(), noise_params_.dynamic_point_sigma));
+          auto noisy_p_camera = dyno::utils::perturbWithNoise(
+              p_camera.measurement(), noise_params_.dynamic_point_sigma);
 
-          // LOG(INFO) << p_camera;
-          // LOG(INFO) << noisy_p_camera;
+          if (params_.dynamic_outlier_ratio > 0 &&
+              outlier_dist(gen) < params_.dynamic_outlier_ratio) {
+            // simulate out of distribution noise
+            noisy_p_camera =
+                dyno::utils::perturbWithUniformNoise(noisy_p_camera, -6, 6);
+          }
+
+          const Point3Measurement noisy_p_camera_measurement(
+              noisy_p_camera, gtsam::noiseModel::Isotropic::Sigma(
+                                  3, noise_params_.dynamic_point_sigma));
 
           auto landmark_status = dyno::LandmarkStatus::DynamicInLocal(
               p_camera, frame_id, tracklet_id, object_id);
           dynamic_landmarks.push_back(landmark_status);
 
           auto noisy_landmark_status = dyno::LandmarkStatus::DynamicInLocal(
-              noisy_p_camera, frame_id, tracklet_id, object_id);
+              noisy_p_camera_measurement, frame_id, tracklet_id, object_id);
           noisy_dynamic_landmarks.push_back(noisy_landmark_status);
 
           // the keypoint sttatus should be unused in the RGBD case but
@@ -757,15 +779,27 @@ class RGBDScenario : public Scenario {
       auto tracklet_id = tracked_p_world.first;
       auto p_world = tracked_p_world.second;
       const Point3Measurement p_camera(X_world_k.inverse() * p_world);
-      const Point3Measurement noisy_p_camera(dyno::utils::perturbWithNoise(
-          p_camera.measurement(), noise_params_.static_point_sigma));
+
+      auto noisy_p_camera = dyno::utils::perturbWithNoise(
+          p_camera.measurement(), noise_params_.static_point_sigma);
+
+      if (params_.static_outlier_ratio > 0 &&
+          outlier_dist(gen) < params_.static_outlier_ratio) {
+        // simulate out of distribution noise
+        noisy_p_camera =
+            dyno::utils::perturbWithUniformNoise(noisy_p_camera, -6, 6);
+      }
+
+      const Point3Measurement noisy_p_camera_measurement(
+          noisy_p_camera, gtsam::noiseModel::Isotropic::Sigma(
+                              3, noise_params_.static_point_sigma));
 
       auto landmark_status =
           dyno::LandmarkStatus::StaticInLocal(p_camera, frame_id, tracklet_id);
       static_landmarks.push_back(landmark_status);
 
       auto noisy_landmark_status = dyno::LandmarkStatus::StaticInLocal(
-          noisy_p_camera, frame_id, tracklet_id);
+          noisy_p_camera_measurement, frame_id, tracklet_id);
       noisy_static_landmarks.push_back(noisy_landmark_status);
 
       // the keypoint sttatus should be unused in the RGBD case but
@@ -802,6 +836,7 @@ class RGBDScenario : public Scenario {
 
  private:
   NoiseParams noise_params_;
+  Params params_;
   mutable GroundTruthPacketMap ground_truths_;
   mutable gtsam::FastMap<FrameId, gtsam::Pose3> noisy_camera_poses_;
 };

@@ -52,6 +52,7 @@ class ParallelObjectISAM {
   struct Params {
     //! Number additional iSAM updates to run
     int num_optimzie = 2;
+    FormulationParams formulation{};
     gtsam::ISAM2Params isam{};
   };
 

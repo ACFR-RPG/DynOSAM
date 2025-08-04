@@ -30,6 +30,7 @@
 
 #include "dynosam/backend/FactorGraphTools.hpp"
 
+#include <gtsam/linear/LossFunctions.h>
 #include <gtsam/slam/BetweenFactor.h>
 #include <gtsam_unstable/slam/PoseToPointFactor.h>
 
@@ -64,6 +65,12 @@ SmartProjectionFactor::shared_ptr constructSmartProjectionFactor(
 
   addSmartProjectionMeasurement(smart_factor, measurement, frame_id);
   return smart_factor;
+}
+
+gtsam::SharedNoiseModel robustifyHuber(double k,
+                                       gtsam::SharedNoiseModel model) {
+  return gtsam::noiseModel::Robust::Create(
+      gtsam::noiseModel::mEstimator::Huber::Create(k), model);
 }
 
 void addBetweenFactor(FrameId from_frame, FrameId to_frame,

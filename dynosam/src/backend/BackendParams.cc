@@ -30,11 +30,6 @@
 
 #include "dynosam/backend/BackendParams.hpp"
 
-DEFINE_double(static_point_sigma, 2.0,
-              "Isotropic pixel noise used on static points");
-DEFINE_double(dynamic_point_sigma, 2,
-              "Isotropic pixel noise used on dynamic points");
-
 DEFINE_double(constant_object_motion_rotation_sigma, 0.01,
               "Noise used on rotation componenent of smoothing factor");
 DEFINE_double(constant_object_motion_translation_sigma, 0.1,
@@ -51,11 +46,15 @@ DEFINE_double(odometry_translation_sigma, 0.01,
 DEFINE_int32(optimization_mode, 0,
              "0: Full-batch, 1: sliding-window, 2: incremental");
 
-// TODO: need to make projection covariance!!
-DEFINE_double(static_point_noise_sigma, 0.06,
-              "Isotropic noise used on PoseToPointFactor for static points");
-DEFINE_double(dynamic_point_noise_sigma, 0.0625,
-              "Isotropic noise used on PoseToPointFactor for dynamic points");
+DEFINE_double(static_point_noise_sigma, 0.2,
+              "Point (depth) noise for static points");
+DEFINE_double(dynamic_point_noise_sigma, 0.2,
+              "Point (depth) noise for dynamic points");
+
+DEFINE_double(static_pixel_noise_sigma, 2.0,
+              "Pixel noise used on static points");
+DEFINE_double(dynamic_pixel_noise_sigma, 2.0,
+              "Pixel noise used on dynamic points");
 
 DEFINE_bool(use_smoothing_factor, true,
             "If the backend should use the smoothing factor between motions");

@@ -211,7 +211,8 @@ TEST(SmartMotionFactor, testZeroErrorWithIdenties) {
   values.insert(pose_key, pose);
   values.insert(motion_key, motion);
 
-  SmartFactor factor(L_e, gtsam::noiseModel::Isotropic::Sigma(3, 0.05), point);
+  SmartFactor factor(L_e, gtsam::noiseModel::Isotropic::Sigma(3, 0.05),
+                     SmartMotionFactorParams{}, point);
   factor.add(measured, motion_key, pose_key);
 
   gtsam::Vector expectedError = gtsam::Vector3(0.0, 0.0, 0);
@@ -239,7 +240,7 @@ TEST(SmartMotionFactor, testZeroErrorWithL0AndCamera) {
   values.insert(motion_key, motion);
 
   SmartFactor factor(L_e, gtsam::noiseModel::Isotropic::Sigma(3, 0.05),
-                     point_l);
+                     SmartMotionFactorParams{}, point_l);
   factor.add(measured_c, motion_key, pose_key);
 
   gtsam::Vector expectedError = gtsam::Vector3(0.0, 0.0, 0);
@@ -265,7 +266,7 @@ TEST(SmartMotionFactor, testNoiseWithIdentity) {
   values.insert(motion_key, motion);
 
   SmartFactor factor(L_e, gtsam::noiseModel::Isotropic::Sigma(3, 0.05),
-                     point_l);
+                     SmartMotionFactorParams{}, point_l);
   factor.add(measured_c, motion_key, pose_key);
 
   gtsam::Vector expectedError = -noise;
@@ -307,7 +308,8 @@ TEST(SmartMotionFactor, testBasicSchurCompliment) {
   // values.insert(pose_key2, pose2);
   // values.insert(motion_key2, motion);
 
-  SmartFactor factor(L_e, gtsam::noiseModel::Isotropic::Sigma(3, 0.05), point);
+  SmartFactor factor(L_e, gtsam::noiseModel::Isotropic::Sigma(3, 0.05),
+                     SmartMotionFactorParams{}, point);
   factor.add(measured, motion_key, pose_key);
   factor.add(measured + 2 * noise, motion_key1, pose_key1);
   // factor.add(measured + 3 * noise, motion_key2, pose_key2);
@@ -480,8 +482,9 @@ TEST(SmartMotionFactor, testSimpleOptimise) {
   auto create_smart_factor = [=](const gtsam::Point3& point,
                                  double sigma) -> SmartFactor::shared_ptr {
     // start with actual point ie no linearization error here
-    SmartFactor::shared_ptr factor(new SmartFactor(
-        L_e, gtsam::noiseModel::Isotropic::Sigma(3, sigma), point));
+    SmartFactor::shared_ptr factor(
+        new SmartFactor(L_e, gtsam::noiseModel::Isotropic::Sigma(3, sigma),
+                        SmartMotionFactorParams{}, point));
 
     auto Z1 = HybridObjectMotion::projectToCamera3(pose1, motion1, L_e, point);
     Z1 = utils::perturbWithNoise(Z1, sigma);
@@ -577,7 +580,8 @@ TEST(SmartMotionFactor, computeTriangulationBasic) {
   values.insert(motion_key2, motion2);
 
   SmartFactor::shared_ptr factor(
-      new SmartFactor(L_e, gtsam::noiseModel::Isotropic::Sigma(3, sigma)));
+      new SmartFactor(L_e, gtsam::noiseModel::Isotropic::Sigma(3, sigma),
+                      SmartMotionFactorParams{}));
 
   auto Z1 = HybridObjectMotion::projectToCamera3(pose1, motion1, L_e, point);
   Z1 = utils::perturbWithNoise(Z1, sigma);

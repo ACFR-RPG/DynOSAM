@@ -134,12 +134,8 @@ ParallelHybridBackendModule::ParallelHybridBackendModule(
     return shared_module_info.getGroundTruthPackets();
   };
 
-  FormulationParams formulation_params;
-  formulation_params.min_static_observations = base_params_.min_static_obs_;
-  // formulation_params.min_static_observations = 4;
-  formulation_params.min_dynamic_observations = base_params_.min_dynamic_obs_;
-  formulation_params.use_smoothing_factor = base_params_.use_smoothing_factor;
-  formulation_params.suffix = "static";
+  FormulationParams formulation_params(base_params_);
+  formulation_params.updater_suffix = "static";
 
   static_formulation_ = std::make_unique<HybridFormulation>(
       formulation_params, RGBDMap::create(), noise_models_, hooks);
@@ -532,6 +528,7 @@ ParallelObjectISAM::Ptr ParallelHybridBackendModule::getEstimator(
     ParallelObjectISAM::Params params;
     params.num_optimzie = FLAGS_num_dynamic_optimize;
     params.isam = dynamic_isam2_params_;
+    params.formulation = FormulationParams(base_params_);
     // // make this prior not SO small
     NoiseModels noise_models = NoiseModels::fromBackendParams(base_params_);
     sam_estimators_.insert2(

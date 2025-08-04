@@ -45,8 +45,7 @@ namespace dyno {
 
 class RGBDInstanceFrontendModule : public FrontendModule {
  public:
-  RGBDInstanceFrontendModule(const FrontendParams& frontend_params,
-                             Camera::Ptr camera,
+  RGBDInstanceFrontendModule(const DynoParams& params, Camera::Ptr camera,
                              ImageDisplayQueue* display_queue);
   ~RGBDInstanceFrontendModule();
 

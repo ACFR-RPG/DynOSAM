@@ -176,8 +176,8 @@ TEST(DarinSimulations, test1) {
   dyno::BackendParams backend_params;
   backend_params.use_robust_kernals_ = true;
   backend_params.useLogger(true);
-  backend_params.min_dynamic_obs_ = 3u;
-  backend_params.dynamic_point_noise_sigma_ = dynamic_point_sigma;
+  backend_params.min_dynamic_observations = 3u;
+  backend_params.dynamic_point_noise_sigma = dynamic_point_sigma;
   backend_params.odometry_rotation_sigma_ = X_R_sigma;
   backend_params.odometry_translation_sigma_ = X_t_sigma;
 

@@ -552,14 +552,7 @@ void RegularBackendModule::updateMapWithMeasurements(
 
 Formulation<RegularBackendModule::RGBDMap>::UniquePtr
 RegularBackendModule::makeFormulation() {
-  FormulationParams formulation_params;
-  // TODO: why are we copying params over???
-  formulation_params.min_static_observations = base_params_.min_static_obs_;
-  formulation_params.min_dynamic_observations = base_params_.min_dynamic_obs_;
-  formulation_params.suffix = base_params_.updater_suffix;
-  // formulation_params.min_dynamic_observations = 2u;
-  formulation_params.use_smoothing_factor = base_params_.use_smoothing_factor;
-
+  FormulationParams formulation_params = base_params_;
   FormulationHooks hooks = createFormulationHooks();
 
   // setup error hooks

@@ -294,7 +294,7 @@ void DynoPipelineManager::loadPipelines(const CameraParams& camera_params,
         frontend_pipeline_ = std::move(offline_frontend);
       } else {
         frontend = std::make_shared<RGBDInstanceFrontendModule>(
-            params_.frontend_params_, camera, &display_queue_);
+            params_, camera, &display_queue_);
         LOG(INFO) << "Made RGBDInstanceFrontendModule";
         // need to make the derived pipeline so we can set parallel run etc
         // the manager takes a pointer to the base MIMO so we can have different
