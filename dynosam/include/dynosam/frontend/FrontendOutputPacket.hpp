@@ -32,11 +32,46 @@
 
 #include "dynosam/common/Camera.hpp"
 #include "dynosam/common/GroundTruthPacket.hpp"
+#include "dynosam/common/SensorModels.hpp"
 #include "dynosam/common/Types.hpp"
 #include "dynosam/frontend/Frontend-Definitions.hpp"
 #include "dynosam/frontend/FrontendInputPacket.hpp"
+#include "dynosam/frontend/imu/ImuFrontend.hpp"
 
 namespace dyno {
+
+struct VisionImuPacket {
+  struct Tracks {
+    TrackingStatus status;
+    CameraMeasurementStatusVector measurements;
+    bool is_keyframe{false};
+  };
+
+  struct CameraTracks : public Tracks {
+    //! Camera pose in world frame
+    gtsam::Pose3 X_W_k;
+    //! Relative camera pose from k-1 to k
+    gtsam::Pose3 T_k_1_k;
+  };
+
+  struct ObjectTracks : public Tracks {
+    //! Object motion from k-1 to k in W
+    Motion3ReferenceFrame H_W_k_1_k;
+  };
+
+  Timestamp timestamp;
+  FrameId frame_id;
+  ImuFrontend::PimPtr pim;
+
+  CameraTracks static_tracks;
+  gtsam::FastMap<ObjectId, ObjectTracks> object_tracks;
+
+  ObjectPoseMap object_poses;
+  gtsam::Pose3Vector camera_poses;
+
+  GroundTruthInputPacket::Optional ground_truth;
+  DebugImagery::Optional debug_imagery;
+};
 
 struct FrontendOutputPacketBase {
  public:

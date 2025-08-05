@@ -111,6 +111,7 @@ struct BackendParams {
 
   bool use_logger_ = true;  // TODO: make param!?
   bool use_full_batch_opt = true;
+  bool use_vo = true;
 
   int32_t optimization_mode = FLAGS_optimization_mode;
 

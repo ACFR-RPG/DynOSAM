@@ -253,6 +253,9 @@ class TrajectoryHelper:
     def set_ax_limits(self, ax: plt.Axes, plot_mode: evo_plot.PlotMode = evo_plot.PlotMode.xyz, buffer = 0):
         from mpl_toolkits.mplot3d import Axes3D
 
+        if self.min_x == np.inf:
+            return
+
         if  plot_mode == evo_plot.PlotMode.xyz and isinstance(ax, Axes3D):
             ax.set_xlim3d([self.min_x - buffer, self.max_x + buffer])
             ax.set_ylim3d([self.min_y - buffer, self.max_y + buffer])

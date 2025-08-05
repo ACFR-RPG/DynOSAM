@@ -40,6 +40,7 @@
 #include "dynosam/utils/Statistics.hpp"
 #include "dynosam/utils/Variant.hpp"
 #include "internal/helpers.hpp"
+#include "internal/simulator.hpp"
 
 using namespace dyno;
 
@@ -755,7 +756,8 @@ TEST(SensorTypes, MeasurementWithCovarianceConstructionMeasurementAndSigmas) {
   Landmark lmk(10, 12.4, 0.001);
   gtsam::Vector3 sigmas;
   sigmas << 0.1, 0.2, 0.3;
-  MeasurementWithCovariance<Landmark> measurement(lmk, sigmas);
+  MeasurementWithCovariance<Landmark> measurement =
+      MeasurementWithCovariance<Landmark>::FromSigmas(lmk, sigmas);
   EXPECT_TRUE(measurement.hasModel());
   EXPECT_EQ(measurement.measurement(), lmk);
 
@@ -825,7 +827,8 @@ TEST(JsonIO, MeasurementWithCov) {
   Landmark lmk(10, 12.4, 0.001);
   gtsam::Vector3 sigmas;
   sigmas << 0.1, 0.2, 0.3;
-  MeasurementWithCovariance<Landmark> measurement(lmk, sigmas);
+  MeasurementWithCovariance<Landmark> measurement =
+      MeasurementWithCovariance<Landmark>::FromSigmas(lmk, sigmas);
 
   json j = measurement;
   auto measurements_load =

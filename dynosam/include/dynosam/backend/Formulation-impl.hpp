@@ -207,9 +207,15 @@ UpdateObservationResult Formulation<MAP>::updateStaticObservations(
       if (result.debug_info) result.debug_info->num_static_factors++;
       result.updateAffectedObject(frame_id_k, 0);
 
+      LOG(INFO) << point_key << " adding factor for frame" << frame_id_k
+                << " with m: " << lmk_node->numObservations();
+
     } else {
       // see if we have enough observations to add this lmk
       if (lmk_node->numObservations() < params_.min_static_observations) {
+        LOG(INFO) << point_key
+                  << " not enough obs: " << lmk_node->numObservations();
+
         continue;
       }
 
@@ -244,6 +250,9 @@ UpdateObservationResult Formulation<MAP>::updateStaticObservations(
               params_.k_huber_3d_points_, measurement_covariance);
         }
 
+        LOG(INFO) << point_key << " adding factor for frame" << seen_frame_id
+                  << " with m: " << lmk_node->numObservations();
+
         internal_new_factors.emplace_shared<PoseToPointFactor>(
             seen_frame->makePoseKey(),  // pose key at previous frames
             point_key, measured_point_local, measurement_covariance);
@@ -262,6 +271,9 @@ UpdateObservationResult Formulation<MAP>::updateStaticObservations(
                    gtsam::Point3(T_world_camera_frontend * measured));
       new_values.insert(point_key, lmk_world);
       is_other_values_in_map.insert2(point_key, true);
+
+      LOG(INFO) << "Added new tracklet " << point_key << " at frame "
+                << frame_id_k << " with m: " << lmk_node->numObservations();
 
       if (result.debug_info) result.debug_info->num_new_static_points++;
       result.updateAffectedObject(frame_id_k, 0);
@@ -308,8 +320,6 @@ UpdateObservationResult Formulation<MAP>::updateDynamicObservations(
   VLOG(20) << "Add dynamic observations between frames " << frame_id_k_1
            << " and " << frame_id_k;
   const auto frame_node_k = map->getFrame(frame_id_k);
-  const auto frame_node_k_1 = map->getFrame(frame_id_k_1);
-  CHECK_NOTNULL(frame_node_k_1);
 
   // pose estimate from frontend
   // CHECK(parent_->initial_camera_poses_.exists(frame_id_k));
@@ -466,6 +476,9 @@ UpdateObservationResult Formulation<MAP>::updateDynamicObservations(
           // new_values.insert(local_new_values);
         }
       } else {
+        const auto frame_node_k_1 = map->getFrame(frame_id_k_1);
+        CHECK_NOTNULL(frame_node_k_1);
+
         // these tracklets should already be in the graph so we should only need
         // to add the new measurements from this frame check that we have
         // previous point for this frame

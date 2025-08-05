@@ -163,9 +163,5 @@ inline void checkAndThrow(bool condition, EArgs&&... eargs) {
 }  // namespace dyno
 
 // Macro to throw with streaming syntax, auto-wrapped
-// The !! is magical; it bascially converts a value type to its equivalent
-// boolean type via implicit casting according to CHAT-GPT "!! is common in
-// projects like GLOG because it forces boolean context safely" This has been
-// somewhat verified #define DYNO_THROW_MSG(exception_type)
 #define DYNO_THROW_MSG(exception_type) \
   ThrowStreamHelper<exception_type>().stream()

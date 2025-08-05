@@ -219,13 +219,17 @@ class VisionImuBackendModule : public BackendModuleType<MODULE_TRAITS> {
     } else {
       VLOG(10) << "Adding states/factors between frames " << from_id << " -> "
                << to_id << " using VO";
-      formulation->addFactorsFunctional(
-          [&](gtsam::NonlinearFactorGraph& factors) {
-            auto odometry_noise = noise_models.odometry_noise;
-            factor_graph_tools::addBetweenFactor(from_id, to_id, T_k_1_k,
-                                                 odometry_noise, factors);
-          },
-          new_factors);
+      if (this->base_params_.use_vo) {
+        formulation->addFactorsFunctional(
+            [&](gtsam::NonlinearFactorGraph& factors) {
+              auto odometry_noise = noise_models.odometry_noise;
+              factor_graph_tools::addBetweenFactor(from_id, to_id, T_k_1_k,
+                                                   odometry_noise, factors);
+            },
+            new_factors);
+        VLOG(30) << "Added Between factor frames " << from_id << " -> " << to_id
+                 << " using VO";
+      }
     }
 
     return predicted_navstate_k;

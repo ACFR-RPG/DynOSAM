@@ -151,6 +151,7 @@ RegularBackendModule::~RegularBackendModule() {
 RegularBackendModule::SpinReturn RegularBackendModule::boostrapSpinImpl(
     RGBDInstanceOutputPacket::ConstPtr input) {
   const FrameId frame_k = input->getFrameId();
+  const Timestamp timestamp = input->getTimestamp();
   CHECK_EQ(spin_state_.frame_id, frame_k);
   LOG(INFO) << "Running backend " << frame_k;
   gtsam::Values new_values;
@@ -165,15 +166,56 @@ RegularBackendModule::SpinReturn RegularBackendModule::boostrapSpinImpl(
     post_formulation_update_cb_(formulation_, frame_k, new_values, new_factors);
   }
 
-  PostUpdateData post_update_data(frame_k);
-  updateAndOptimize(frame_k, new_values, new_factors, post_update_data);
+  UpdateObservationParams update_params;
+  update_params.enable_debug_info = true;
+  update_params.do_backtrack =
+      false;  // apparently this is v important for making the results == ICRA
 
-  formulation_->postUpdate(post_update_data);
+  PostUpdateData post_update_data(frame_k);
+  {
+    LOG(INFO) << "Starting updateStaticObservations";
+    utils::TimingStatsCollector timer("backend.update_static_obs");
+    post_update_data.static_update_result =
+        formulation_->updateStaticObservations(frame_k, new_values, new_factors,
+                                               update_params);
+  }
+
+  // TODO: maybe dont call dynamic update here as the formulation-impl is writen
+  // so that a motion only exists from k-1 to k
+  {
+    LOG(INFO) << "Starting updateDynamicObservations";
+    utils::TimingStatsCollector timer("backend.update_dynamic_obs");
+    post_update_data.dynamic_update_result =
+        formulation_->updateDynamicObservations(frame_k, new_values,
+                                                new_factors, update_params);
+  }
+
+  if (post_formulation_update_cb_) {
+    post_formulation_update_cb_(formulation_, frame_k, new_values, new_factors);
+  }
+
+  LOG(INFO) << "Starting any updates";
+
+  updateAndOptimize(frame_k, new_values, new_factors, post_update_data);
+  LOG(INFO) << "Done any udpates";
+
+  // Should be no need to update after opt as we just added the initial state!?
+  // updateNavStateFromFormulation(frame_k, formulation_.get());
 
   // TODO: sanity checks that vision states are inline with the other frame idss
   // etc
 
-  return {State::Nominal, nullptr};
+  utils::TimingStatsCollector timer(formulation_->getFullyQualifiedName() +
+                                    ".post_update");
+  formulation_->postUpdate(post_update_data);
+
+  BackendOutputPacket::Ptr backend_output =
+      constructOutputPacket(frame_k, timestamp);
+  backend_output->involved_timestamp = input->involved_timestamps_;
+
+  debug_info_ = DebugInfo();
+
+  return {State::Nominal, backend_output};
 }
 
 RegularBackendModule::SpinReturn RegularBackendModule::nominalSpinImpl(

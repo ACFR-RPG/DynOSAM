@@ -213,6 +213,8 @@ class MeasurementWithCovariance {
   using Covariance = Eigen::Matrix<double, D, D>;
   //! D x 1 sigma matrix used to construct the covariance matrix
   using Sigmas = Eigen::Matrix<double, D, 1>;
+  //! Optional alias
+  using Optional = std::optional<This>;
 
   /**
    * @brief Empty constructor
@@ -254,6 +256,9 @@ class MeasurementWithCovariance {
   explicit MeasurementWithCovariance(const T& measurement)
       : measurement_(measurement), model_(nullptr) {}
 
+  explicit MeasurementWithCovariance(const std::pair<T, Covariance>& pair)
+      : MeasurementWithCovariance(pair.first, pair.second) {}
+
   /**
    * @brief Construct object using a measurement type and associated covariance
    * matrix. The covariance matrix is used to construct the underlying sensor
@@ -261,6 +266,7 @@ class MeasurementWithCovariance {
    *
    * @param measurement const T&
    * @param covariance const Covariance&
+   * @return MeasurementWithCovariance
    */
   MeasurementWithCovariance(const T& measurement, const Covariance& covariance)
       : measurement_(measurement),
@@ -273,14 +279,14 @@ class MeasurementWithCovariance {
    * gtsam::noiseModel::Gaussian.
    *
    * @param measurement const T&
-   * @param sigmas const Sigmas&
+   * @param covariance const Sigmas&
+   * @return MeasurementWithCovariance
    */
-  MeasurementWithCovariance(const T& measurement, const Sigmas& sigmas)
-      : measurement_(measurement),
-        model_(gtsam::noiseModel::Diagonal::Sigmas(sigmas)) {}
-
-  explicit MeasurementWithCovariance(const std::pair<T, Covariance>& pair)
-      : MeasurementWithCovariance(pair.first, pair.second) {}
+  static MeasurementWithCovariance FromSigmas(const T& measurement,
+                                              const Sigmas& sigmas) {
+    return MeasurementWithCovariance(
+        measurement, gtsam::noiseModel::Diagonal::Sigmas(sigmas));
+  }
 
   const T& measurement() const { return measurement_; }
   const gtsam::SharedGaussian& model() const { return model_; }
@@ -394,6 +400,52 @@ struct KeypointDepth {
   Depth depth;
 };
 
+/**
+ * @brief Structure to contain all possible visual measurements from a camera
+ * setup including monocular, RGBD and stereo measurements with covariance
+ * matrices
+ *
+ */
+class CameraMeasurement {
+ public:
+  // CameraMeasurement() = default;
+  CameraMeasurement(const MeasurementWithCovariance<Keypoint>& keypoint);
+
+  CameraMeasurement& keypoint(
+      const MeasurementWithCovariance<Keypoint>& keypoint);
+  CameraMeasurement& landmark(
+      const MeasurementWithCovariance<Landmark>& landmark);
+  CameraMeasurement& depth(const MeasurementWithCovariance<Depth>& depth);
+  CameraMeasurement& rightKeypoint(
+      const MeasurementWithCovariance<Keypoint>& right_keypoint);
+
+  bool monocular() const;
+  bool rgbd() const;
+  bool stereo() const;
+
+  bool hasLandmark() const;
+
+  const MeasurementWithCovariance<Keypoint>& keypoint() const;
+  const MeasurementWithCovariance<Landmark>& landmark() const;
+  const MeasurementWithCovariance<Depth>& depth() const;
+  const MeasurementWithCovariance<Keypoint>& rightKeypoint() const;
+
+ protected:
+  //! 2D keypoint measurement with covariance.
+  //! If the measurement is stereo, then this is expected to be the left
+  //! keypoint.
+  MeasurementWithCovariance<Keypoint> keypoint_;
+  //! 3d Landmark measurement in the camera frame with covariance
+  MeasurementWithCovariance<Landmark>::Optional landmark_ = {};
+  //! Depth measurement associated with an RGBD camera. Usually used to project
+  //! a 2D keypoint into a 3D landmark. There should never be a case where we
+  //! have depth without a landmark
+  MeasurementWithCovariance<Depth>::Optional depth_ = {};
+  //! Right 2D keypoint measurement with covariance (associated with the right
+  //! frame of a stereo pair).
+  MeasurementWithCovariance<Keypoint>::Optional right_keypoint_ = {};
+};
+
 /// @brief Alias to a visual measurement with a fixed-sized covariance matrix.
 /// @tparam T Measurement type (e.g. 2D keypoint, 3D landmark)
 template <typename T>
@@ -410,11 +462,15 @@ typedef VisualMeasurementWithCovStatus<Depth> DepthStatus;
 typedef VisualMeasurementWithCovStatus<gtsam::StereoPoint2> StereoStatus;
 
 using LandmarkKeypointStatus = TrackedValueStatus<LandmarkKeypoint>;
+using CameraMeasurementStatus = TrackedValueStatus<CameraMeasurement>;
 
 /// @brief A vector of LandmarkStatus
 typedef GenericTrackedStatusVector<LandmarkStatus> StatusLandmarkVector;
 /// @brief A vector of KeypointStatus
 typedef GenericTrackedStatusVector<KeypointStatus> StatusKeypointVector;
+/// @brief A vector of CameraMeasurementStatus
+typedef GenericTrackedStatusVector<CameraMeasurementStatus>
+    CameraMeasurementStatusVector;
 
 /**
  * @brief Noise parameters used when constructing the output of each frontend

@@ -30,4 +30,63 @@
 
 #include "dynosam/common/SensorModels.hpp"
 
-namespace dyno {}
+#include "dynosam/common/Exceptions.hpp"
+
+namespace dyno {
+
+CameraMeasurement::CameraMeasurement(
+    const MeasurementWithCovariance<Keypoint>& keypoint)
+    : keypoint_(keypoint) {}
+
+CameraMeasurement& CameraMeasurement::keypoint(
+    const MeasurementWithCovariance<Keypoint>& keypoint) {
+  keypoint_ = keypoint;
+  return *this;
+}
+
+CameraMeasurement& CameraMeasurement::landmark(
+    const MeasurementWithCovariance<Landmark>& landmark) {
+  landmark_ = landmark;
+  return *this;
+}
+CameraMeasurement& CameraMeasurement::depth(
+    const MeasurementWithCovariance<Depth>& depth) {
+  depth_ = depth;
+  return *this;
+}
+
+CameraMeasurement& CameraMeasurement::rightKeypoint(
+    const MeasurementWithCovariance<Keypoint>& right_keypoint) {
+  right_keypoint_ = right_keypoint;
+  return *this;
+}
+
+bool CameraMeasurement::monocular() const { return !rgbd() || !stereo(); }
+
+bool CameraMeasurement::rgbd() const { return depth_.has_value(); }
+bool CameraMeasurement::stereo() const { return right_keypoint_.has_value(); }
+
+bool CameraMeasurement::hasLandmark() const { return landmark_.has_value(); }
+
+const MeasurementWithCovariance<Keypoint>& CameraMeasurement::keypoint() const {
+  return keypoint_;
+}
+
+const MeasurementWithCovariance<Landmark>& CameraMeasurement::landmark() const {
+  if (landmark_) return landmark_.value();
+  DYNO_THROW_MSG(DynosamException)
+      << "Landmark measurement missing from CameraMeasurement";
+}
+const MeasurementWithCovariance<Depth>& CameraMeasurement::depth() const {
+  if (depth_) return depth_.value();
+  DYNO_THROW_MSG(DynosamException)
+      << "Depth measurement missing from CameraMeasurement";
+}
+const MeasurementWithCovariance<Keypoint>& CameraMeasurement::rightKeypoint()
+    const {
+  if (right_keypoint_) return right_keypoint_.value();
+  DYNO_THROW_MSG(DynosamException)
+      << "Right Keypoint measurement missing from CameraMeasurement";
+}
+
+}  // namespace dyno
