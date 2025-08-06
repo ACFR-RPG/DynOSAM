@@ -75,6 +75,7 @@ NLOHMANN_JSON_SERIALIZE_ENUM(MotionRepresentationStyle, {
 // forward declare - IO definition is in .cc file
 class FrontendOutputPacketBase;
 class RGBDInstanceOutputPacket;
+class VisionImuPacket;
 
 }  // namespace dyno
 
@@ -494,11 +495,11 @@ struct adl_serializer<dyno::RGBDInstanceOutputPacket> {
   static dyno::RGBDInstanceOutputPacket from_json(const json& j);
 };
 
-// template <>
-// struct adl_serializer<dyno::FrontendOutputPacketBase> {
-//     static void to_json(json& j, const dyno::FrontendOutputPacketBase&
-//     input); static dyno::FrontendOutputPacketBase from_json(const json& j);
-// };
+template <>
+struct adl_serializer<dyno::VisionImuPacket> {
+  static void to_json(json& j, const dyno::VisionImuPacket& input);
+  static dyno::VisionImuPacket from_json(const json& j);
+};
 
 template <typename T>
 struct adl_serializer<dyno::ReferenceFrameValue<T>> {
@@ -642,36 +643,5 @@ struct adl_serializer<dyno::GenericTrackedStatusVector<DERIVEDSTATUS>> {
   }
 };
 // end dyno::GenericTrackedStatusVector
-
-// template <typename T>
-// struct adl_serializer<dyno::VisualMeasurementStatus<T>> {
-//     static void to_json(json& j, const dyno::VisualMeasurementStatus<T>&
-//     status) {
-//         //expect value to be seralizable
-//         j["value"] = (json)status.value();
-//         j["frame_id"] = status.frameId();
-//         j["tracklet_id"] = status.trackletId();
-//         j["object_id"] = status.objectId();
-//         j["reference_frame"] = status.referenceFrame();
-//     }
-//     static void from_json(const json& j, dyno::VisualMeasurementStatus<T>&
-//     status) {
-//         using namespace dyno;
-//         typename dyno::VisualMeasurementStatus<T>::Value value =
-//         j["value"].template get<typename
-//         dyno::VisualMeasurementStatus<T>::Value>(); FrameId frame_id =
-//         j["frame_id"].template get<FrameId>(); TrackletId tracklet_id =
-//         j["tracklet_id"].template get<TrackletId>(); ObjectId object_id =
-//         j["object_id"].template get<ObjectId>(); ReferenceFrame rf =
-//         j["reference_frame"].template get<ReferenceFrame>(); status =
-//         dyno::VisualMeasurementStatus<T>(
-//             value,
-//             frame_id,
-//             tracklet_id,
-//             object_id,
-//             rf
-//         );
-//     }
-// };
 
 }  // namespace nlohmann

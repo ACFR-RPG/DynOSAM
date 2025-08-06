@@ -105,10 +105,18 @@ void WorldPoseFormulation::dynamicPointUpdateCallback(
   // if first motion (i.e first time we have both k-1 and k), add both at k-1
   // and k
   if (context.is_starting_motion_frame) {
+    auto [measured_point_local, measurement_covariance] =
+        MeasurementTraits::pointWithCovariance(
+            lmk_node->getMeasurement(frame_node_k_1));
+
+    if (params_.makeDynamicMeasurementsRobust()) {
+      measurement_covariance = factor_graph_tools::robustifyHuber(
+          params_.k_huber_3d_points_, measurement_covariance);
+    }
+
     new_factors.emplace_shared<PoseToPointFactor>(
         frame_node_k_1->makePoseKey(),  // pose key at previous frames
-        object_point_key_k_1, lmk_node->getMeasurement(frame_node_k_1).landmark,
-        dynamic_point_noise);
+        object_point_key_k_1, measured_point_local, measurement_covariance);
     // object_debug_info.num_dynamic_factors++;
     result.updateAffectedObject(frame_node_k_1->frame_id,
                                 context.getObjectId());
@@ -117,12 +125,10 @@ void WorldPoseFormulation::dynamicPointUpdateCallback(
           .num_dynamic_factors++;
 
     // add landmark at previous frame
-    const Landmark measured_k_1 =
-        lmk_node->getMeasurement(frame_node_k_1->frame_id).landmark;
     Landmark lmk_world_k_1;
     getSafeQuery(lmk_world_k_1,
                  theta_accessor->query<Landmark>(object_point_key_k_1),
-                 gtsam::Point3(context.X_k_1_measured * measured_k_1));
+                 gtsam::Point3(context.X_k_1_measured * measured_point_local));
     new_values.insert(object_point_key_k_1, lmk_world_k_1);
     if (result.debug_info)
       result.debug_info->getObjectInfo(context.getObjectId())
@@ -133,12 +139,21 @@ void WorldPoseFormulation::dynamicPointUpdateCallback(
   CHECK(new_values.exists(object_point_key_k_1) ||
         theta_accessor->exists(object_point_key_k_1));
 
-  const Landmark measured_k = lmk_node->getMeasurement(frame_node_k).landmark;
+  // const Landmark measured_k =
+  // lmk_node->getMeasurement(frame_node_k).landmark;
+  auto [measured_point_local, measurement_covariance] =
+      MeasurementTraits::pointWithCovariance(
+          lmk_node->getMeasurement(frame_node_k));
+
+  if (params_.makeDynamicMeasurementsRobust()) {
+    measurement_covariance = factor_graph_tools::robustifyHuber(
+        params_.k_huber_3d_points_, measurement_covariance);
+  }
 
   new_factors.emplace_shared<PoseToPointFactor>(
       frame_node_k
           ->makePoseKey(),  // pose key at this (in the iteration) frames
-      object_point_key_k, measured_k, dynamic_point_noise);
+      object_point_key_k, measured_point_local, measurement_covariance);
   if (result.debug_info)
     result.debug_info->getObjectInfo(context.getObjectId())
         .num_dynamic_factors++;
@@ -146,7 +161,7 @@ void WorldPoseFormulation::dynamicPointUpdateCallback(
 
   Landmark lmk_world_k;
   getSafeQuery(lmk_world_k, theta_accessor->query<Landmark>(object_point_key_k),
-               gtsam::Point3(context.X_k_measured * measured_k));
+               gtsam::Point3(context.X_k_measured * measured_point_local));
   new_values.insert(object_point_key_k, lmk_world_k);
   if (result.debug_info)
     result.debug_info->getObjectInfo(context.getObjectId())

@@ -88,12 +88,13 @@ class RGBDInstanceFrontendModule : public FrontendModule {
       const ObjectMotionMap& object_motions, const ObjectPoseMap& object_poses,
       const gtsam::Pose3& T_k_1_k, ImuFrontend::PimPtr pim);
 
-  RGBDInstanceOutputPacket::Ptr constructOutput(
-      const Frame& frame, const ObjectMotionMap& object_motions,
-      const ObjectPoseMap& object_poses, const gtsam::Pose3& T_world_camera,
-      const GroundTruthInputPacket::Optional& gt_packet = std::nullopt,
-      const DebugImagery::Optional& debug_imagery = std::nullopt,
-      const PointCloudLabelRGB::Ptr dense_labelled_cloud = nullptr);
+  //   VisionImuPacket::Ptr constructOutput(
+  //       const Frame& frame, const ObjectMotionMap& object_motions,
+  //       const ObjectPoseMap& object_poses, const gtsam::Pose3&
+  //       T_world_camera, const GroundTruthInputPacket::Optional& gt_packet =
+  //       std::nullopt, const DebugImagery::Optional& debug_imagery =
+  //       std::nullopt, const PointCloudLabelRGB::Ptr dense_labelled_cloud =
+  //       nullptr);
 
   cv::Mat createTrackingImage(const Frame::Ptr& frame_k,
                               const Frame::Ptr& frame_k_1,
@@ -101,7 +102,7 @@ class RGBDInstanceFrontendModule : public FrontendModule {
 
   // used when we want to seralize the output to json via the
   // FLAGS_save_frontend_json flag
-  std::map<FrameId, RGBDInstanceOutputPacket::Ptr> output_packet_record_;
+  //   std::map<FrameId, RGBDInstanceOutputPacket::Ptr> output_packet_record_;
 
   ImuFrontend imu_frontend_;
   gtsam::NavState nav_state_;

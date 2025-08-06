@@ -35,193 +35,197 @@
 namespace dyno {
 namespace test_hybrid {
 
-// optimizes object motion and object point using KF motion representation
-// assumes camera pose is known
-class DecoupledObjectCentricMotionFactor
-    : public gtsam::NoiseModelFactor2<gtsam::Pose3, gtsam::Point3>,
-      public HybridObjectMotion {
- public:
-  typedef boost::shared_ptr<DecoupledObjectCentricMotionFactor> shared_ptr;
-  typedef DecoupledObjectCentricMotionFactor This;
-  typedef gtsam::NoiseModelFactor2<gtsam::Pose3, gtsam::Point3> Base;
+// // optimizes object motion and object point using KF motion representation
+// // assumes camera pose is known
+// class DecoupledObjectCentricMotionFactor
+//     : public gtsam::NoiseModelFactor2<gtsam::Pose3, gtsam::Point3>,
+//       public HybridObjectMotion {
+//  public:
+//   typedef boost::shared_ptr<DecoupledObjectCentricMotionFactor> shared_ptr;
+//   typedef DecoupledObjectCentricMotionFactor This;
+//   typedef gtsam::NoiseModelFactor2<gtsam::Pose3, gtsam::Point3> Base;
 
-  using HybridObjectMotion::residual;
+//   using HybridObjectMotion::residual;
 
-  gtsam::Point3 Z_k_;
-  gtsam::Pose3 L_e_;
-  gtsam::Pose3 X_k_;
+//   gtsam::Point3 Z_k_;
+//   gtsam::Pose3 L_e_;
+//   gtsam::Pose3 X_k_;
 
-  DecoupledObjectCentricMotionFactor(gtsam::Key motion_key,
-                                     gtsam::Key point_object_key,
-                                     const gtsam::Point3& Z_k,
-                                     const gtsam::Pose3& L_e,
-                                     const gtsam::Pose3& X_k,
-                                     gtsam::SharedNoiseModel model)
-      : Base(model, motion_key, point_object_key),
-        Z_k_(Z_k),
-        L_e_(L_e),
-        X_k_(X_k) {}
+//   DecoupledObjectCentricMotionFactor(gtsam::Key motion_key,
+//                                      gtsam::Key point_object_key,
+//                                      const gtsam::Point3& Z_k,
+//                                      const gtsam::Pose3& L_e,
+//                                      const gtsam::Pose3& X_k,
+//                                      gtsam::SharedNoiseModel model)
+//       : Base(model, motion_key, point_object_key),
+//         Z_k_(Z_k),
+//         L_e_(L_e),
+//         X_k_(X_k) {}
 
-  gtsam::Vector evaluateError(
-      const gtsam::Pose3& e_H_k_world, const gtsam::Point3& m_L,
-      boost::optional<gtsam::Matrix&> J1 = boost::none,
-      boost::optional<gtsam::Matrix&> J2 = boost::none) const override;
-};
+//   gtsam::Vector evaluateError(
+//       const gtsam::Pose3& e_H_k_world, const gtsam::Point3& m_L,
+//       boost::optional<gtsam::Matrix&> J1 = boost::none,
+//       boost::optional<gtsam::Matrix&> J2 = boost::none) const override;
+// };
 
-struct StructurelessObjectCentricMotion2 {
-  // error residual given 2 views of a single point on an object
-  // given the camera poses, motions and measurements of that point at k-1 and k
-  // using a KF representation of motion
-  static gtsam::Vector residual(const gtsam::Pose3& X_k_1,
-                                const gtsam::Pose3& H_k_1,
-                                const gtsam::Pose3& X_k,
-                                const gtsam::Pose3& H_k,
-                                const gtsam::Point3& Z_k_1,
-                                const gtsam::Point3& Z_k,
-                                const gtsam::Pose3& L_e);
-};
+// struct StructurelessObjectCentricMotion2 {
+//   // error residual given 2 views of a single point on an object
+//   // given the camera poses, motions and measurements of that point at k-1
+//   and k
+//   // using a KF representation of motion
+//   static gtsam::Vector residual(const gtsam::Pose3& X_k_1,
+//                                 const gtsam::Pose3& H_k_1,
+//                                 const gtsam::Pose3& X_k,
+//                                 const gtsam::Pose3& H_k,
+//                                 const gtsam::Point3& Z_k_1,
+//                                 const gtsam::Point3& Z_k,
+//                                 const gtsam::Pose3& L_e);
+// };
 
-// structurless object motion factor between two H's and two observin X's
-//  all other variables are fixed
-// TODO: should add the 2 to the class name to indicate the 2-view constraint?
-class StructurelessDecoupledObjectCentricMotion
-    : public gtsam::NoiseModelFactor2<gtsam::Pose3, gtsam::Pose3>,
-      public StructurelessObjectCentricMotion2 {
- public:
-  typedef boost::shared_ptr<StructurelessDecoupledObjectCentricMotion>
-      shared_ptr;
-  typedef StructurelessDecoupledObjectCentricMotion This;
-  typedef gtsam::NoiseModelFactor2<gtsam::Pose3, gtsam::Pose3> Base;
+// // structurless object motion factor between two H's and two observin X's
+// //  all other variables are fixed
+// // TODO: should add the 2 to the class name to indicate the 2-view
+// constraint? class StructurelessDecoupledObjectCentricMotion
+//     : public gtsam::NoiseModelFactor2<gtsam::Pose3, gtsam::Pose3>,
+//       public StructurelessObjectCentricMotion2 {
+//  public:
+//   typedef boost::shared_ptr<StructurelessDecoupledObjectCentricMotion>
+//       shared_ptr;
+//   typedef StructurelessDecoupledObjectCentricMotion This;
+//   typedef gtsam::NoiseModelFactor2<gtsam::Pose3, gtsam::Pose3> Base;
 
-  using StructurelessObjectCentricMotion2::residual;
+//   using StructurelessObjectCentricMotion2::residual;
 
-  gtsam::Point3 Z_k_1_;
-  gtsam::Point3 Z_k_;
-  gtsam::Pose3 L_e_;
-  gtsam::Pose3 X_k_1_;
-  gtsam::Pose3 X_k_;
+//   gtsam::Point3 Z_k_1_;
+//   gtsam::Point3 Z_k_;
+//   gtsam::Pose3 L_e_;
+//   gtsam::Pose3 X_k_1_;
+//   gtsam::Pose3 X_k_;
 
-  StructurelessDecoupledObjectCentricMotion(
-      gtsam::Key H_k_1_key, gtsam::Key H_k_key, const gtsam::Pose3& X_k_1,
-      const gtsam::Pose3& X_k, const gtsam::Point3& Z_k_1,
-      const gtsam::Point3& Z_k, const gtsam::Pose3& L_e,
-      gtsam::SharedNoiseModel model)
-      : Base(model, H_k_1_key, H_k_key),
-        Z_k_1_(Z_k_1),
-        Z_k_(Z_k),
-        L_e_(L_e),
-        X_k_1_(X_k_1),
-        X_k_(X_k) {}
+//   StructurelessDecoupledObjectCentricMotion(
+//       gtsam::Key H_k_1_key, gtsam::Key H_k_key, const gtsam::Pose3& X_k_1,
+//       const gtsam::Pose3& X_k, const gtsam::Point3& Z_k_1,
+//       const gtsam::Point3& Z_k, const gtsam::Pose3& L_e,
+//       gtsam::SharedNoiseModel model)
+//       : Base(model, H_k_1_key, H_k_key),
+//         Z_k_1_(Z_k_1),
+//         Z_k_(Z_k),
+//         L_e_(L_e),
+//         X_k_1_(X_k_1),
+//         X_k_(X_k) {}
 
-  gtsam::Vector evaluateError(
-      const gtsam::Pose3& H_k_1, const gtsam::Pose3& H_k,
-      boost::optional<gtsam::Matrix&> J1 = boost::none,
-      boost::optional<gtsam::Matrix&> J2 = boost::none) const override;
-};
+//   gtsam::Vector evaluateError(
+//       const gtsam::Pose3& H_k_1, const gtsam::Pose3& H_k,
+//       boost::optional<gtsam::Matrix&> J1 = boost::none,
+//       boost::optional<gtsam::Matrix&> J2 = boost::none) const override;
+// };
 
-// structurless object motion factor between two H's and two observin X's
-// TODO: this is NOT decoupled as we optimize for X
-class StructurelessObjectCentricMotionFactor2
-    : public gtsam::NoiseModelFactor4<gtsam::Pose3, gtsam::Pose3, gtsam::Pose3,
-                                      gtsam::Pose3>,
-      public StructurelessObjectCentricMotion2 {
- public:
-  typedef boost::shared_ptr<StructurelessObjectCentricMotionFactor2> shared_ptr;
-  typedef StructurelessObjectCentricMotionFactor2 This;
-  typedef gtsam::NoiseModelFactor4<gtsam::Pose3, gtsam::Pose3, gtsam::Pose3,
-                                   gtsam::Pose3>
-      Base;
+// // structurless object motion factor between two H's and two observin X's
+// // TODO: this is NOT decoupled as we optimize for X
+// class StructurelessObjectCentricMotionFactor2
+//     : public gtsam::NoiseModelFactor4<gtsam::Pose3, gtsam::Pose3,
+//     gtsam::Pose3,
+//                                       gtsam::Pose3>,
+//       public StructurelessObjectCentricMotion2 {
+//  public:
+//   typedef boost::shared_ptr<StructurelessObjectCentricMotionFactor2>
+//   shared_ptr; typedef StructurelessObjectCentricMotionFactor2 This; typedef
+//   gtsam::NoiseModelFactor4<gtsam::Pose3, gtsam::Pose3, gtsam::Pose3,
+//                                    gtsam::Pose3>
+//       Base;
 
-  gtsam::Point3 Z_k_1_;
-  gtsam::Point3 Z_k_;
-  gtsam::Pose3 L_e_;
+//   gtsam::Point3 Z_k_1_;
+//   gtsam::Point3 Z_k_;
+//   gtsam::Pose3 L_e_;
 
-  StructurelessObjectCentricMotionFactor2(
-      gtsam::Key X_k_1_key, gtsam::Key H_k_1_key, gtsam::Key X_k_key,
-      gtsam::Key H_k_key, const gtsam::Point3& Z_k_1, const gtsam::Point3& Z_k,
-      const gtsam::Pose3& L_e, gtsam::SharedNoiseModel model)
-      : Base(model, X_k_1_key, H_k_1_key, X_k_key, H_k_key),
-        Z_k_1_(Z_k_1),
-        Z_k_(Z_k),
-        L_e_(L_e) {}
+//   StructurelessObjectCentricMotionFactor2(
+//       gtsam::Key X_k_1_key, gtsam::Key H_k_1_key, gtsam::Key X_k_key,
+//       gtsam::Key H_k_key, const gtsam::Point3& Z_k_1, const gtsam::Point3&
+//       Z_k, const gtsam::Pose3& L_e, gtsam::SharedNoiseModel model) :
+//       Base(model, X_k_1_key, H_k_1_key, X_k_key, H_k_key),
+//         Z_k_1_(Z_k_1),
+//         Z_k_(Z_k),
+//         L_e_(L_e) {}
 
-  gtsam::Vector evaluateError(
-      const gtsam::Pose3& X_k_1, const gtsam::Pose3& H_k_1,
-      const gtsam::Pose3& X_k, const gtsam::Pose3& H_k,
-      boost::optional<gtsam::Matrix&> J1 = boost::none,
-      boost::optional<gtsam::Matrix&> J2 = boost::none,
-      boost::optional<gtsam::Matrix&> J3 = boost::none,
-      boost::optional<gtsam::Matrix&> J4 = boost::none) const override;
-};
+//   gtsam::Vector evaluateError(
+//       const gtsam::Pose3& X_k_1, const gtsam::Pose3& H_k_1,
+//       const gtsam::Pose3& X_k, const gtsam::Pose3& H_k,
+//       boost::optional<gtsam::Matrix&> J1 = boost::none,
+//       boost::optional<gtsam::Matrix&> J2 = boost::none,
+//       boost::optional<gtsam::Matrix&> J3 = boost::none,
+//       boost::optional<gtsam::Matrix&> J4 = boost::none) const override;
+// };
 
-class StructurelessDecoupledFormulation : public HybridFormulation {
- public:
-  DYNO_POINTER_TYPEDEFS(StructurelessDecoupledFormulation)
+// class StructurelessDecoupledFormulation : public HybridFormulation {
+//  public:
+//   DYNO_POINTER_TYPEDEFS(StructurelessDecoupledFormulation)
 
-  using Base = HybridFormulation;
-  StructurelessDecoupledFormulation(const FormulationParams& params,
-                                    typename Map::Ptr map,
-                                    const NoiseModels& noise_models,
-                                    const FormulationHooks& hooks)
-      : Base(params, map, noise_models, hooks) {}
+//   using Base = HybridFormulation;
+//   StructurelessDecoupledFormulation(const FormulationParams& params,
+//                                     typename Map::Ptr map,
+//                                     const NoiseModels& noise_models,
+//                                     const FormulationHooks& hooks)
+//       : Base(params, map, noise_models, hooks) {}
 
-  void dynamicPointUpdateCallback(
-      const PointUpdateContextType& context, UpdateObservationResult& result,
-      gtsam::Values& new_values,
-      gtsam::NonlinearFactorGraph& new_factors) override;
+//   void dynamicPointUpdateCallback(
+//       const PointUpdateContextType& context, UpdateObservationResult& result,
+//       gtsam::Values& new_values,
+//       gtsam::NonlinearFactorGraph& new_factors) override;
 
-  std::string loggerPrefix() const override {
-    return "hybrid_structureless_decoupled";
-  }
-};
+//   std::string loggerPrefix() const override {
+//     return "hybrid_structureless_decoupled";
+//   }
+// };
 
-class DecoupledFormulation : public HybridFormulation {
- public:
-  DYNO_POINTER_TYPEDEFS(DecoupledFormulation)
+// class DecoupledFormulation : public HybridFormulation {
+//  public:
+//   DYNO_POINTER_TYPEDEFS(DecoupledFormulation)
 
-  using Base = HybridFormulation;
-  using Base::Map;
+//   using Base = HybridFormulation;
+//   using Base::Map;
 
-  DecoupledFormulation(const FormulationParams& params, typename Map::Ptr map,
-                       const NoiseModels& noise_models,
-                       const FormulationHooks& hooks)
-      : Base(params, map, noise_models, hooks) {}
+//   DecoupledFormulation(const FormulationParams& params, typename Map::Ptr
+//   map,
+//                        const NoiseModels& noise_models,
+//                        const FormulationHooks& hooks)
+//       : Base(params, map, noise_models, hooks) {}
 
-  void dynamicPointUpdateCallback(
-      const PointUpdateContextType& context, UpdateObservationResult& result,
-      gtsam::Values& new_values,
-      gtsam::NonlinearFactorGraph& new_factors) override;
+//   void dynamicPointUpdateCallback(
+//       const PointUpdateContextType& context, UpdateObservationResult& result,
+//       gtsam::Values& new_values,
+//       gtsam::NonlinearFactorGraph& new_factors) override;
 
-  std::string loggerPrefix() const override {
-    return "hybrid_centric_decoupled";
-  }
-};
+//   std::string loggerPrefix() const override {
+//     return "hybrid_centric_decoupled";
+//   }
+// };
 
-class StructurlessFormulation : public HybridFormulation {
- public:
-  DYNO_POINTER_TYPEDEFS(StructurlessFormulation)
+// class StructurlessFormulation : public HybridFormulation {
+//  public:
+//   DYNO_POINTER_TYPEDEFS(StructurlessFormulation)
 
-  using Base = HybridFormulation;
-  StructurlessFormulation(const FormulationParams& params,
-                          typename Map::Ptr map,
-                          const NoiseModels& noise_models,
-                          const FormulationHooks& hooks)
-      : Base(params, map, noise_models, hooks) {}
+//   using Base = HybridFormulation;
+//   StructurlessFormulation(const FormulationParams& params,
+//                           typename Map::Ptr map,
+//                           const NoiseModels& noise_models,
+//                           const FormulationHooks& hooks)
+//       : Base(params, map, noise_models, hooks) {}
 
-  void dynamicPointUpdateCallback(
-      const PointUpdateContextType& context, UpdateObservationResult& result,
-      gtsam::Values& new_values,
-      gtsam::NonlinearFactorGraph& new_factors) override;
+//   void dynamicPointUpdateCallback(
+//       const PointUpdateContextType& context, UpdateObservationResult& result,
+//       gtsam::Values& new_values,
+//       gtsam::NonlinearFactorGraph& new_factors) override;
 
-  std::string loggerPrefix() const override { return "hybrid_structureless"; }
-};
+//   std::string loggerPrefix() const override { return "hybrid_structureless";
+//   }
+// };
 
 using HybridSmartFactorMap = FactorMap<HybridSmartFactor::shared_ptr>;
 
 class SmartStructurlessAccessor : public HybridAccessor {
  public:
   SmartStructurlessAccessor(
-      const SharedFormulationData& shared_data, Map3d2d::Ptr map,
+      const SharedFormulationData& shared_data, MapVision::Ptr map,
       const SharedHybridFormulationData& shared_hybrid_formulation_data,
       const HybridSmartFactorMap* smart_factor_map)
       : HybridAccessor(shared_data, map, shared_hybrid_formulation_data),

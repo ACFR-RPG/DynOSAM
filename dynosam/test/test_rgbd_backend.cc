@@ -108,7 +108,8 @@ TEST(RegularBackendModule, smallKITTIDataset) {
   // gtsam::IncrementalFixedLagSmoother smoother(2.0, isam2_params);
 
   backend.registerPostFormulationUpdateCallback(
-      [&](const dyno::Formulation<dyno::Map3d2d>::UniquePtr& formulation,
+      [&](const dyno::RegularBackendModule::FormulationType::UniquePtr&
+              formulation,
           dyno::FrameId frame_id, const gtsam::Values& new_values,
           const gtsam::NonlinearFactorGraph& new_factors) -> void {
         LOG(INFO) << "In backend callback " << frame_id;
@@ -521,8 +522,7 @@ TEST(RegularBackendModule, testParallelRGBDBackend) {
       backend_params, dyno_testing::makeDefaultCameraPtr());
 
   for (size_t i = 0; i < 20; i++) {
-    dyno::RGBDInstanceOutputPacket::Ptr output_gt, output_noisy;
-    std::tie(output_gt, output_noisy) = scenario.getOutput(i);
+    auto [output_gt, output_noisy] = scenario.getOutput(i);
 
     backend.spinOnce(output_noisy);
     backend.logGraphs();
@@ -723,8 +723,7 @@ TEST(RegularBackendModule, testObjectCentricFormulations) {
   //           dyno::RegularBackendModule::UpdaterType::HYBRID));
 
   for (size_t i = 0; i < 20; i++) {
-    dyno::RGBDInstanceOutputPacket::Ptr output_gt, output_noisy;
-    std::tie(output_gt, output_noisy) = scenario.getOutput(i);
+    auto [output_gt, output_noisy] = scenario.getOutput(i);
 
     tester.processAll(output_noisy);
   }
@@ -869,7 +868,8 @@ TEST(RegularBackendModule, testObjectCentric) {
   gtsam::Values opt_values;
 
   backend.registerPostFormulationUpdateCallback(
-      [&](const dyno::Formulation<dyno::Map3d2d>::UniquePtr& formulation,
+      [&](const dyno::RegularBackendModule::FormulationType::UniquePtr&
+              formulation,
           dyno::FrameId frame_id, const gtsam::Values& new_values,
           const gtsam::NonlinearFactorGraph& new_factors) -> void {
         LOG(INFO) << "In backend callback " << frame_id;
@@ -1092,8 +1092,7 @@ TEST(RegularBackendModule, testObjectCentric) {
       });
 
   for (size_t i = 0; i < 15; i++) {
-    dyno::RGBDInstanceOutputPacket::Ptr output_gt, output_noisy;
-    std::tie(output_gt, output_noisy) = scenario.getOutput(i);
+    auto [output_gt, output_noisy] = scenario.getOutput(i);
 
     // std::stringstream ss;
     // ss << output_gt->T_world_camera_ << "\n";

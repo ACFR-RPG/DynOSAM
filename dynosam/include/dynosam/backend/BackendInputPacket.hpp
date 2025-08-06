@@ -35,6 +35,6 @@
 namespace dyno {
 
 /// @brief Define the BackendInputPacket as the output of the frontend
-using BackendInputPacket = FrontendOutputPacketBase;
+using BackendInputPacket = VisionImuPacket;
 
 }  // namespace dyno

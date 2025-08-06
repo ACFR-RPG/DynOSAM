@@ -117,4 +117,22 @@ adl_serializer<dyno::RGBDInstanceOutputPacket>::from_json(const json& j) {
   );
 }
 
+// TODO:
+void adl_serializer<dyno::VisionImuPacket>::to_json(
+    json& j, const dyno::VisionImuPacket& input) {
+  using namespace dyno;
+  // j["timestamp"] = input.timestamp;
+  // j["frame_id"] = input.frame_id;
+  // //NOTE: IMU not seralized!
+  // json static_tracks;
+  // static_tracks[""]
+}
+
+// TODO:
+dyno::VisionImuPacket adl_serializer<dyno::VisionImuPacket>::from_json(
+    const json& j) {
+  using namespace dyno;
+  return dyno::VisionImuPacket{};
+}
+
 }  // namespace nlohmann

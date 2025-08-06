@@ -39,6 +39,153 @@ namespace dyno_testing {
 
 using namespace dyno;
 
+RGBDScenario::Output RGBDScenario::getOutput(FrameId frame_id) const {
+  static std::random_device rd;
+  // static std::mt19937 gen(rd());
+
+  VisionImuPacket::Ptr ground_truth_input = std::make_shared<VisionImuPacket>();
+  VisionImuPacket::Ptr noisy_input = std::make_shared<VisionImuPacket>();
+
+  GroundTruthInputPacket gt_packet;
+  gt_packet.frame_id_ = frame_id;
+
+  MotionEstimateMap motions, noisy_motions;
+  const gtsam::Pose3 X_world_k = cameraPose(frame_id);
+  gt_packet.X_world_ = X_world_k;
+
+  gtsam::Pose3 noisy_X_world_k;
+  gtsam::Pose3 w_T_k_1_k;
+  gtsam::Pose3 noisy_w_T_k_1_k;
+  if (frame_id > 0) {
+    // add noise on relative transformation of camera pose using gt poses to
+    // calculate gt realtive pose
+    const gtsam::Pose3 X_world_k_1 = cameraPose(frame_id - 1u);
+    w_T_k_1_k = X_world_k_1.inverse() * X_world_k;
+
+    gtsam::Vector6 pose_sigmas;
+    pose_sigmas.head<3>().setConstant(noise_params_.X_R_sigma);
+    pose_sigmas.tail<3>().setConstant(noise_params_.X_t_sigma);
+    noisy_w_T_k_1_k = dyno::utils::perturbWithNoise(w_T_k_1_k, pose_sigmas);
+
+    CHECK(noisy_camera_poses_.exists(frame_id - 1u));
+    noisy_X_world_k = noisy_camera_poses_.at(frame_id - 1u) * noisy_w_T_k_1_k;
+  } else {
+    noisy_X_world_k = X_world_k;
+  }
+
+  ground_truth_input->static_tracks.X_W_k = X_world_k;
+  noisy_input->static_tracks.X_W_k = noisy_X_world_k;
+
+  ground_truth_input->static_tracks.T_k_1_k = w_T_k_1_k;
+  noisy_input->static_tracks.T_k_1_k = noisy_w_T_k_1_k;
+
+  // tracklets should be uniqyue but becuase we use the DynamicPointSymbol
+  // they only need to be unique per frame
+  for (const auto& [object_id, object] : object_bodies_) {
+    if (objectInScenario(object_id, frame_id)) {
+      const gtsam::Pose3 H_world_k = object->motionWorld(frame_id);
+      const gtsam::Pose3 L_world_k = object->pose(frame_id);
+      TrackedPoints points_world = object->getPointsWorld(frame_id);
+
+      VisionImuPacket::ObjectTracks object_track, noisy_object_track;
+
+      ObjectPoseGT object_pose_gt;
+      object_pose_gt.frame_id_ = frame_id;
+      object_pose_gt.object_id_ = object_id;
+      object_pose_gt.L_world_ = L_world_k;
+      object_pose_gt.prev_H_current_world_ = H_world_k;
+      gt_packet.object_poses_.push_back(object_pose_gt);
+
+      FrameId previous_frame;
+      if (frame_id > 0) {
+        previous_frame = frame_id - 1u;
+      } else {
+        previous_frame = 0u;  // hack? should actually skip this case
+      }
+
+      object_track.H_W_k_1_k = Motion3ReferenceFrame(
+          H_world_k, Motion3ReferenceFrame::Style::F2F, ReferenceFrame::GLOBAL,
+          previous_frame, frame_id);
+
+      gtsam::Vector6 motion_sigmas;
+      motion_sigmas.head<3>().setConstant(noise_params_.H_R_sigma);
+      motion_sigmas.tail<3>().setConstant(noise_params_.H_t_sigma);
+      const gtsam::Pose3 noisy_H_world_k =
+          dyno::utils::perturbWithNoise(H_world_k, motion_sigmas);
+
+      noisy_object_track.H_W_k_1_k = Motion3ReferenceFrame(
+          noisy_H_world_k, Motion3ReferenceFrame::Style::F2F,
+          ReferenceFrame::GLOBAL, previous_frame, frame_id);
+
+      // convert to status vectors
+      for (const TrackedPoint& tracked_p_world : points_world) {
+        auto tracklet_id = tracked_p_world.first;
+        auto p_world = tracked_p_world.second;
+
+        // currently no keypoints!
+        MeasurementWithCovariance<Keypoint> keypoint(dyno::Keypoint{});
+        MeasurementWithCovariance<Keypoint> noisy_keypoint(dyno::Keypoint{});
+
+        const Point3Measurement p_camera(X_world_k.inverse() * p_world);
+        const Point3Measurement p_camera_noisy = addNoiseDynamicPoint(p_camera);
+
+        CameraMeasurement measurement(keypoint);
+        CameraMeasurement measurement_noisy(noisy_keypoint);
+
+        measurement.landmark(p_camera);
+        measurement_noisy.landmark(p_camera_noisy);
+
+        object_track.measurements.push_back(
+            CameraMeasurementStatus(measurement, frame_id, tracklet_id,
+                                    object_id, ReferenceFrame::LOCAL));
+
+        noisy_object_track.measurements.push_back(
+            CameraMeasurementStatus(measurement_noisy, frame_id, tracklet_id,
+                                    object_id, ReferenceFrame::LOCAL));
+      }
+
+      ground_truth_input->object_tracks.insert2(object_id, object_track);
+      noisy_input->object_tracks.insert2(object_id, noisy_object_track);
+    }
+  }
+
+  // add static points
+  const TrackedPoints static_points_world =
+      static_points_generator_->getPointsWorld(frame_id);
+
+  // convert to status vectors
+  for (const TrackedPoint& tracked_p_world : static_points_world) {
+    auto tracklet_id = tracked_p_world.first;
+    auto p_world = tracked_p_world.second;
+
+    const Point3Measurement p_camera(X_world_k.inverse() * p_world);
+    Point3Measurement noisy_p_camera = addNoiseStaticPoint(p_camera);
+
+    MeasurementWithCovariance<Keypoint> keypoint(dyno::Keypoint{});
+    MeasurementWithCovariance<Keypoint> noisy_keypoint(dyno::Keypoint{});
+
+    CameraMeasurement measurement(keypoint);
+    CameraMeasurement measurement_noisy(noisy_keypoint);
+
+    measurement.landmark(p_camera);
+    measurement_noisy.landmark(noisy_p_camera);
+
+    ground_truth_input->static_tracks.measurements.push_back(
+        CameraMeasurementStatus(measurement, frame_id, tracklet_id,
+                                background_label, ReferenceFrame::LOCAL));
+
+    noisy_input->static_tracks.measurements.push_back(
+        CameraMeasurementStatus(measurement_noisy, frame_id, tracklet_id,
+                                background_label, ReferenceFrame::LOCAL));
+  }
+
+  ground_truths_.insert2(frame_id, gt_packet);
+  ground_truth_input->ground_truth = gt_packet;
+  noisy_input->ground_truth = gt_packet;
+
+  return {ground_truth_input, noisy_input};
+}
+
 Point3Measurement RGBDScenario::addNoiseStaticPoint(
     const Point3Measurement& p_local) const {
   return addNoisePoint(p_local, noise_params_.static_point_noise,

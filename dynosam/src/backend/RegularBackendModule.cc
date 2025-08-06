@@ -145,9 +145,9 @@ RegularBackendModule::~RegularBackendModule() {
 }
 
 RegularBackendModule::SpinReturn RegularBackendModule::boostrapSpinImpl(
-    RGBDInstanceOutputPacket::ConstPtr input) {
-  const FrameId frame_k = input->getFrameId();
-  const Timestamp timestamp = input->getTimestamp();
+    VisionImuPacket::ConstPtr input) {
+  const FrameId frame_k = input->frame_id;
+  const Timestamp timestamp = input->timestamp;
   CHECK_EQ(spin_state_.frame_id, frame_k);
   LOG(INFO) << "Running backend " << frame_k;
   gtsam::Values new_values;
@@ -207,7 +207,9 @@ RegularBackendModule::SpinReturn RegularBackendModule::boostrapSpinImpl(
 
   BackendOutputPacket::Ptr backend_output =
       constructOutputPacket(frame_k, timestamp);
-  backend_output->involved_timestamp = input->involved_timestamps_;
+
+  // TODO: put back in!!
+  //  backend_output->involved_timestamp = input->involved_timestamps_;
 
   debug_info_ = DebugInfo();
 
@@ -215,9 +217,9 @@ RegularBackendModule::SpinReturn RegularBackendModule::boostrapSpinImpl(
 }
 
 RegularBackendModule::SpinReturn RegularBackendModule::nominalSpinImpl(
-    RGBDInstanceOutputPacket::ConstPtr input) {
-  const FrameId frame_k = input->getFrameId();
-  const Timestamp timestamp = input->getTimestamp();
+    VisionImuPacket::ConstPtr input) {
+  const FrameId frame_k = input->frame_id;
+  const Timestamp timestamp = input->timestamp;
   LOG(INFO) << "Running backend " << frame_k;
   CHECK_EQ(spin_state_.frame_id, frame_k);
 
@@ -274,7 +276,8 @@ RegularBackendModule::SpinReturn RegularBackendModule::nominalSpinImpl(
 
   BackendOutputPacket::Ptr backend_output =
       constructOutputPacket(frame_k, timestamp);
-  backend_output->involved_timestamp = input->involved_timestamps_;
+  // TODO: bring back!
+  //  backend_output->involved_timestamp = input->involved_timestamps_;
 
   debug_info_ = DebugInfo();
 
@@ -528,20 +531,19 @@ void RegularBackendModule::logIncrementalStats(
 }
 
 void RegularBackendModule::addInitialStates(
-    const RGBDInstanceOutputPacket::ConstPtr& input,
-    FormulationType* formulation, gtsam::Values& new_values,
-    gtsam::NonlinearFactorGraph& new_factors) {
+    const VisionImuPacket::ConstPtr& input, FormulationType* formulation,
+    gtsam::Values& new_values, gtsam::NonlinearFactorGraph& new_factors) {
   CHECK(formulation);
 
-  const FrameId frame_k = input->getFrameId();
-  const Timestamp timestamp = input->getTimestamp();
-  const auto& X_k_initial = input->T_world_camera_;
+  const FrameId frame_k = input->frame_id;
+  const Timestamp timestamp = input->timestamp;
+  const auto& X_k_initial = input->static_tracks.X_W_k;
 
   // update map
   updateMapWithMeasurements(frame_k, input, X_k_initial);
 
   // update formulation with initial states
-  if (input->pim_) {
+  if (input->pim) {
     LOG(INFO) << "Initialising backend with IMU states!";
     this->addInitialVisualInertialState(
         frame_k, formulation, new_values, new_factors, noise_models_,
@@ -554,38 +556,42 @@ void RegularBackendModule::addInitialStates(
                                 noise_models_, X_k_initial);
   }
 }
-void RegularBackendModule::addStates(
-    const RGBDInstanceOutputPacket::ConstPtr& input,
-    FormulationType* formulation, gtsam::Values& new_values,
-    gtsam::NonlinearFactorGraph& new_factors) {
+void RegularBackendModule::addStates(const VisionImuPacket::ConstPtr& input,
+                                     FormulationType* formulation,
+                                     gtsam::Values& new_values,
+                                     gtsam::NonlinearFactorGraph& new_factors) {
   CHECK(formulation);
 
-  const FrameId frame_k = input->getFrameId();
+  const FrameId frame_k = input->frame_id;
 
   const gtsam::NavState predicted_nav_state = this->addVisualInertialStates(
       frame_k, formulation, new_values, new_factors, noise_models_,
-      input->T_k_1_k_, input->pim_);
+      input->static_tracks.T_k_1_k, input->pim);
 
   updateMapWithMeasurements(frame_k, input, predicted_nav_state.pose());
 }
 
 void RegularBackendModule::updateMapWithMeasurements(
-    FrameId frame_id_k, const RGBDInstanceOutputPacket::ConstPtr& input,
+    FrameId frame_id_k, const VisionImuPacket::ConstPtr& input,
     const gtsam::Pose3& X_k_w) {
-  CHECK_EQ(frame_id_k, input->getFrameId());
+  CHECK_EQ(frame_id_k, input->frame_id);
 
-  map_->updateObservations(input->collectStaticLandmarkKeypointMeasurements());
-  map_->updateObservations(input->collectDynamicLandmarkKeypointMeasurements());
+  // update static and ego motion
+  map_->updateObservations(input->static_tracks.measurements);
   map_->updateSensorPoseMeasurement(frame_id_k, Pose3Measurement(X_k_w));
 
+  // update dynamic and motions
+  MotionEstimateMap object_motions;
+  for (const auto& [object_id, object_track] : input->object_tracks) {
+    map_->updateObservations(object_track.measurements);
+    object_motions.insert2(object_id, object_track.H_W_k_1_k);
+  }
   // collected motion estimates for this current frame (ie. new motions!)
   // not handling the case where the update is incremental and other motions
   // have changed but right now the backend is not designed to handle this and
   // we currently dont run the backend with smoothing (tracking) in the
   // frontend.
-  const auto estimated_motions =
-      input->object_motions_.toEstimateMap(frame_id_k);
-  map_->updateObjectMotionMeasurements(frame_id_k, estimated_motions);
+  map_->updateObjectMotionMeasurements(frame_id_k, object_motions);
 }
 
 Formulation<RegularBackendModule::RGBDMap>::UniquePtr
@@ -650,21 +656,14 @@ RegularBackendModule::makeFormulation() {
     formulation = std::make_unique<RegularHybridFormulation>(
         formulation_params, getMap(), noise_models_, hooks);
   } else if (updater_type_ == RGBDFormulationType::TESTING_HYBRID_SD) {
-    LOG(INFO) << "Using Hybrid Structureless Decoupled. Warning this is a "
-                 "testing only formulation!";
-    formulation =
-        std::make_unique<test_hybrid::StructurelessDecoupledFormulation>(
-            formulation_params, getMap(), noise_models_, hooks);
+    LOG(FATAL) << "Using Hybrid Structureless Decoupled. Warning this is a "
+                  "testing only formulation!";
   } else if (updater_type_ == RGBDFormulationType::TESTING_HYBRID_D) {
-    LOG(INFO) << "Using Hybrid Decoupled. Warning this is a testing only "
-                 "formulation!";
-    formulation = std::make_unique<test_hybrid::DecoupledFormulation>(
-        formulation_params, getMap(), noise_models_, hooks);
+    LOG(FATAL) << "Using Hybrid Decoupled. Warning this is a testing only "
+                  "formulation!";
   } else if (updater_type_ == RGBDFormulationType::TESTING_HYBRID_S) {
-    LOG(INFO) << "Using Hybrid Structurless. Warning this is a testing only "
-                 "formulation!";
-    formulation = std::make_unique<test_hybrid::StructurlessFormulation>(
-        formulation_params, getMap(), noise_models_, hooks);
+    LOG(FATAL) << "Using Hybrid Structurless. Warning this is a testing only "
+                  "formulation!";
   } else if (updater_type_ == RGBDFormulationType::TESTING_HYBRID_SMF) {
     LOG(INFO) << "Using Hybrid Smart Motion Factor. Warning this is a testing "
                  "only formulation!";

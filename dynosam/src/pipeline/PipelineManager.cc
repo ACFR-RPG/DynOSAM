@@ -265,33 +265,36 @@ void DynoPipelineManager::loadPipelines(const CameraParams& camera_params,
       CHECK_NOTNULL(camera);
 
       if (use_offline_frontend_) {
-        LOG(INFO) << "Offline RGBD frontend";
-        using OfflineFrontend =
-            FrontendOfflinePipeline<RegularBackendModule::ModuleTraits>;
-        const std::string file_path =
-            getOutputFilePath(kRgbdFrontendOutputJsonFile);
-        LOG(INFO) << "Loading RGBD frontend output packets from " << file_path;
+        // TODO: bring back!
+        LOG(FATAL) << "Not reimplemented";
+        // LOG(INFO) << "Offline RGBD frontend";
+        // using OfflineFrontend =
+        //     FrontendOfflinePipeline<RegularBackendModule::ModuleTraits>;
+        // const std::string file_path =
+        //     getOutputFilePath(kRgbdFrontendOutputJsonFile);
+        // LOG(INFO) << "Loading RGBD frontend output packets from " <<
+        // file_path;
 
-        OfflineFrontend::UniquePtr offline_frontend =
-            std::make_unique<OfflineFrontend>("offline-rgbdfrontend",
-                                              file_path);
-        // make registra so we can register queues with this pipeline
-        frontend_output_registra = offline_frontend->getOutputRegistra();
-        // raw ptr type becuase we cannot copy the unique ptr!! This is only
-        // becuase we need it in the lambda function which is a temporary
-        // solution
-        OfflineFrontend* offline_frontend_ptr = offline_frontend.get();
-        // set get dataset size function (bit of a hack for now, and only for
-        // the batch optimizer so it knows when to optimize!!)
-        get_dataset_size_ = [offline_frontend_ptr]() -> FrameId {
-          // get frame id of the final frame saved
-          return CHECK_NOTNULL(offline_frontend_ptr)
-              ->getFrontendOutputPackets()
-              .rbegin()
-              ->first;
-        };
-        // convert pipeline to base type
-        frontend_pipeline_ = std::move(offline_frontend);
+        // OfflineFrontend::UniquePtr offline_frontend =
+        //     std::make_unique<OfflineFrontend>("offline-rgbdfrontend",
+        //                                       file_path);
+        // // make registra so we can register queues with this pipeline
+        // frontend_output_registra = offline_frontend->getOutputRegistra();
+        // // raw ptr type becuase we cannot copy the unique ptr!! This is only
+        // // becuase we need it in the lambda function which is a temporary
+        // // solution
+        // OfflineFrontend* offline_frontend_ptr = offline_frontend.get();
+        // // set get dataset size function (bit of a hack for now, and only for
+        // // the batch optimizer so it knows when to optimize!!)
+        // get_dataset_size_ = [offline_frontend_ptr]() -> FrameId {
+        //   // get frame id of the final frame saved
+        //   return CHECK_NOTNULL(offline_frontend_ptr)
+        //       ->getFrontendOutputPackets()
+        //       .rbegin()
+        //       ->first;
+        // };
+        // // convert pipeline to base type
+        // frontend_pipeline_ = std::move(offline_frontend);
       } else {
         frontend = std::make_shared<RGBDInstanceFrontendModule>(
             params_, camera, &display_queue_);

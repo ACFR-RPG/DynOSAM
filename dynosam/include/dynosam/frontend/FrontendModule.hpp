@@ -59,12 +59,12 @@ struct InvalidImageContainerException : public DynosamException {
  */
 
 class FrontendModule
-    : public ModuleBase<FrontendInputPacketBase, FrontendOutputPacketBase>,
+    : public ModuleBase<FrontendInputPacketBase, VisionImuPacket>,
       public SharedModuleInterface {
  public:
   DYNO_POINTER_TYPEDEFS(FrontendModule)
 
-  using Base = ModuleBase<FrontendInputPacketBase, FrontendOutputPacketBase>;
+  using Base = ModuleBase<FrontendInputPacketBase, VisionImuPacket>;
   using Base::SpinReturn;
 
   FrontendModule(const DynoParams& params,

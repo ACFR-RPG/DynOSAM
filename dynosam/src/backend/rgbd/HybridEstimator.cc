@@ -636,7 +636,7 @@ void HybridFormulation::dynamicPointUpdateCallback(
     //     L_e.inverse() * k_H_s0_W * context.X_k_1_measured * m_camera;
     Landmark lmk_L0_init = HybridObjectMotion::projectToObject3(
         context.X_k_1_measured, e_H_k_world, L_e,
-        lmk_node->getMeasurement(frame_node_k_1).landmark);
+        MeasurementTraits::point(lmk_node->getMeasurement(frame_node_k_1)));
 
     // TODO: this should not every be true as this is a new value!!!
     Landmark lmk_L0;
@@ -1013,7 +1013,8 @@ gtsam::Pose3 HybridFormulation::calculateObjectCentroid(
     CHECK(lmk_node->seenAtFrame(frame_id));
     CHECK_EQ(lmk_node->object_id, object_id);
 
-    const gtsam::Point3 landmark_measurement_local = measurement.landmark;
+    const gtsam::Point3 landmark_measurement_local =
+        MeasurementTraits::point(measurement);
     // const gtsam::Point3 landmark_measurement_world = X_world *
     // landmark_measurement_local;
 

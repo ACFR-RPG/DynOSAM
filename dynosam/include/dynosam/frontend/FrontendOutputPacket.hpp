@@ -93,6 +93,23 @@ struct VisionImuPacket {
   GroundTruthInputPacket::Optional ground_truth;
   //! Optional debug/visualiation imagery for this frame
   DebugImagery::Optional debug_imagery;
+
+  // helper functions
+  ObjectIds getObjectIds() const {
+    ObjectIds object_ids;
+    object_ids.reserve(object_tracks.size());
+    for (const auto& kv : object_tracks) {
+      object_ids.push_back(kv.first);
+    }
+    return object_ids;
+  }
+
+  const gtsam::Pose3 cameraPose() const { return static_tracks.X_W_k; }
+
+  bool operator==(const VisionImuPacket& other) const {
+    return frame_id == other.frame_id && timestamp == other.timestamp;
+    // TODO: minimal operator
+  }
 };
 
 struct FrontendOutputPacketBase {

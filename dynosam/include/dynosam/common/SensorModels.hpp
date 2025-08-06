@@ -476,8 +476,11 @@ typedef GenericTrackedStatusVector<KeypointStatus> StatusKeypointVector;
 typedef GenericTrackedStatusVector<CameraMeasurementStatus>
     CameraMeasurementStatusVector;
 
+// TODO: I think can depricate this...?
 template <>
 struct measurement_traits<LandmarkKeypoint> {
+  // TODO: probably cant use constant traits (ie. some measurement may or may
+  // not have a certain measurement)
   static constexpr bool has_point = true;
   static constexpr bool has_keypoint = true;
 
@@ -497,6 +500,42 @@ struct measurement_traits<LandmarkKeypoint> {
   static std::pair<Keypoint, gtsam::SharedNoiseModel> keypointWithCovariance(
       const LandmarkKeypoint& measurement) {
     return {measurement.keypoint.measurement(), measurement.keypoint.model()};
+  }
+};
+
+template <>
+struct measurement_traits<CameraMeasurement> {
+  // static constexpr bool has_point = true;
+  // static constexpr bool has_keypoint = true;
+
+  static Landmark point(const CameraMeasurement& measurement) {
+    return measurement.landmark();
+  }
+
+  static std::pair<Landmark, gtsam::SharedNoiseModel> pointWithCovariance(
+      const CameraMeasurement& measurement) {
+    return {measurement.landmark().measurement(),
+            measurement.landmark().model()};
+  }
+
+  static Keypoint keypoint(const CameraMeasurement& measurement) {
+    return measurement.keypoint();
+  }
+
+  static std::pair<Keypoint, gtsam::SharedNoiseModel> keypointWithCovariance(
+      const CameraMeasurement& measurement) {
+    return {measurement.keypoint().measurement(),
+            measurement.keypoint().model()};
+  }
+
+  static Keypoint rightKeypoint(const CameraMeasurement& measurement) {
+    return measurement.rightKeypoint();
+  }
+
+  static std::pair<Keypoint, gtsam::SharedNoiseModel>
+  rightKeypointWithCovariance(const CameraMeasurement& measurement) {
+    return {measurement.rightKeypoint().measurement(),
+            measurement.rightKeypoint().model()};
   }
 };
 

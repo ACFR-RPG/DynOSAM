@@ -61,7 +61,7 @@ struct IncrementalTester : public TesterBase {
     data->isam2 = std::make_shared<gtsam::ISAM2>(isam2_params);
 
     backend->registerPostFormulationUpdateCallback(
-        [&](const dyno::Formulation<dyno::Map3d2d>::UniquePtr& formulation,
+        [&](const RegularBackendModule::FormulationType::UniquePtr& formulation,
             dyno::FrameId frame_id, const gtsam::Values& new_values,
             const gtsam::NonlinearFactorGraph& new_factors) -> void {
           LOG(INFO) << "Running isam2 update " << frame_id
@@ -132,7 +132,7 @@ struct BatchTester : public TesterBase {
     data->backend = backend;
 
     backend->registerPostFormulationUpdateCallback(
-        [&](const dyno::Formulation<dyno::Map3d2d>::UniquePtr& formulation,
+        [&](const RegularBackendModule::FormulationType::UniquePtr& formulation,
             dyno::FrameId frame_id, const gtsam::Values& new_values,
             const gtsam::NonlinearFactorGraph& new_factors) -> void {
           data->values = formulation->getTheta();
@@ -187,7 +187,7 @@ struct RGBDBackendTester {
     return backend;
   }
 
-  void processAll(dyno::RGBDInstanceOutputPacket::Ptr output_packet) {
+  void processAll(dyno::VisionImuPacket::Ptr output_packet) {
     for (auto b : backends) {
       b->spinOnce(output_packet);
     }

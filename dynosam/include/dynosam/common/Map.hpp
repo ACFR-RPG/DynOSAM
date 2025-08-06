@@ -487,6 +487,7 @@ class Map : public std::enable_shared_from_this<Map<MEASUREMENT>> {
   FrameId last_estimate_update_{0};
 };
 
+// TODO: can depricate most of these...
 using Map2dDepth = Map<KeypointDepth>;
 using ObjectNode2dDepth = Map2dDepth::ObjectNodeM;
 using LandmarkNode2dDepth = Map2dDepth::LandmarkNodeM;
@@ -506,5 +507,10 @@ using Map2d = Map<Keypoint>;
 using ObjectNode2d = Map2d::ObjectNodeM;
 using LandmarkNode2d = Map2d::LandmarkNodeM;
 using FrameNode2d = Map2d::FrameNodeM;
+
+using MapVision = Map<CameraMeasurement>;
+using ObjectNodeV = MapVision::ObjectNodeM;
+using LandmarkNodeV = MapVision::LandmarkNodeM;
+using FrameNodeV = MapVision::FrameNodeM;
 
 }  // namespace dyno

@@ -37,7 +37,7 @@
 namespace dyno {
 
 using RGBDBackendModuleTraits =
-    BackendModuleTraits<RGBDInstanceOutputPacket, LandmarkKeypoint>;
+    BackendModuleTraits<VisionImuPacket, CameraMeasurement>;
 
 enum RGBDFormulationType : int {
 

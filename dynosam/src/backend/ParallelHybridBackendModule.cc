@@ -164,26 +164,20 @@ ParallelHybridBackendModule::~ParallelHybridBackendModule() {
 // implementation taken from ObjectMotionSolverSAM
 // TODO: update api
 ParallelHybridBackendModule::SpinReturn
-ParallelHybridBackendModule::boostrapSpinImpl(
-    RGBDInstanceOutputPacket::ConstPtr input) {
-  const FrameId frame_k = input->getFrameId();
-  const Timestamp timestamp = input->getTimestamp();
+ParallelHybridBackendModule::boostrapSpinImpl(VisionImuPacket::ConstPtr input) {
+  const FrameId frame_k = input->frame_id;
+  const Timestamp timestamp = input->timestamp;
   // TODO: sovle smoother
   //  non-sequentially?
-  std::vector<PerObjectUpdate> dynamic_updates = collectPerObjectUpdates(input);
   Pose3Measurement optimized_camera_pose =
       bootstrapUpdateStaticEstimator(input);
 
-  for (PerObjectUpdate& update : dynamic_updates) {
-    update.X_k_measurement = optimized_camera_pose;
-  }
-
-  parallelObjectSolve(dynamic_updates);
+  parallelObjectSolve(input, optimized_camera_pose);
 
   // lazy update (not parallel)
-  for (const PerObjectUpdate& update : dynamic_updates) {
-    const auto object_id = update.object_id;
+  for (const ObjectId& object_id : input->getObjectIds()) {
     ParallelObjectISAM::Ptr estimator = getEstimator(object_id);
+    CHECK(estimator) << "Somehow no estimator for j=" << object_id;
     const auto result = estimator->getResult();
 
     if (!result.was_smoother_ok) {
@@ -201,23 +195,19 @@ ParallelHybridBackendModule::boostrapSpinImpl(
 }
 
 ParallelHybridBackendModule::SpinReturn
-ParallelHybridBackendModule::nominalSpinImpl(
-    RGBDInstanceOutputPacket::ConstPtr input) {
-  const FrameId frame_k = input->getFrameId();
-  const Timestamp timestamp = input->getTimestamp();
-  // TODO: sovle smoother
-  std::vector<PerObjectUpdate> dynamic_updates = collectPerObjectUpdates(input);
-  bool has_objects = dynamic_updates.size() > 0u;
-  bool requires_covariance_calc = has_objects;
+ParallelHybridBackendModule::nominalSpinImpl(VisionImuPacket::ConstPtr input) {
+  const FrameId frame_k = input->frame_id;
+  const Timestamp timestamp = input->timestamp;
+
+  const ObjectIds tracked_objects = input->getObjectIds();
+  const bool has_objects = tracked_objects.size() > 0u;
+  const bool requires_covariance_calc = has_objects;
   //  non-sequentially?
   Pose3Measurement optimized_camera_pose =
       nominalUpdateStaticEstimator(input, requires_covariance_calc);
 
   if (has_objects) {
-    for (PerObjectUpdate& update : dynamic_updates) {
-      update.X_k_measurement = optimized_camera_pose;
-    }
-    parallelObjectSolve(dynamic_updates);
+    parallelObjectSolve(input, optimized_camera_pose);
   }
   // get estimator
   // should add previous measurements
@@ -235,14 +225,14 @@ ParallelHybridBackendModule::nominalSpinImpl(
   const int current_frame = static_cast<int>(frame_k);
   int start_frame = std::max(current_frame - kWindow, 1);
 
-  if (input->debug_imagery_ && !input->debug_imagery_->rgb_viz.empty()) {
-    const cv::Mat& rgb = input->debug_imagery_->rgb_viz;
+  if (input->debug_imagery && !input->debug_imagery->rgb_viz.empty()) {
+    const cv::Mat& rgb = input->debug_imagery->rgb_viz;
     rgb.copyTo(backend_output->debug_image);
   }
 
-  for (const PerObjectUpdate& update : dynamic_updates) {
-    const auto object_id = update.object_id;
+  for (const ObjectId& object_id : tracked_objects) {
     ParallelObjectISAM::Ptr estimator = getEstimator(object_id);
+    CHECK(estimator) << "Somehow no estimator for j=" << object_id;
     HybridAccessor::Ptr accessor = estimator->accessor();
     const auto result = estimator->getResult();
 
@@ -303,23 +293,25 @@ ParallelHybridBackendModule::nominalSpinImpl(
 }
 
 Pose3Measurement ParallelHybridBackendModule::bootstrapUpdateStaticEstimator(
-    RGBDInstanceOutputPacket::ConstPtr input) {
+    VisionImuPacket::ConstPtr input) {
   utils::TimingStatsCollector timer("parallel_object_sam.static_estimator");
 
-  const FrameId frame_k = input->getFrameId();
+  const FrameId frame_k = input->frame_id;
   auto map = static_formulation_->map();
 
-  const auto& X_k_initial = input->T_world_camera_;
+  const auto& X_k_initial = input->static_tracks.X_W_k;
 
-  map->updateObservations(input->collectStaticLandmarkKeypointMeasurements());
+  map->updateObservations(input->static_tracks.measurements);
   map->updateSensorPoseMeasurement(frame_k, Pose3Measurement(X_k_initial));
 
   gtsam::Values new_values;
   gtsam::NonlinearFactorGraph new_factors;
 
   // update formulation with initial states
+  // TODO: I think exactly the same as RegularBackendModule so could put into
+  // base class?
   gtsam::NavState nav_state;
-  if (input->pim_) {
+  if (input->pim) {
     LOG(INFO) << "Initialising backend with IMU states!";
     nav_state = this->addInitialVisualInertialState(
         frame_k, static_formulation_.get(), new_values, new_factors,
@@ -359,13 +351,12 @@ Pose3Measurement ParallelHybridBackendModule::bootstrapUpdateStaticEstimator(
 }
 
 Pose3Measurement ParallelHybridBackendModule::nominalUpdateStaticEstimator(
-    RGBDInstanceOutputPacket::ConstPtr input,
-    bool should_calculate_covariance) {
+    VisionImuPacket::ConstPtr input, bool should_calculate_covariance) {
   utils::TimingStatsCollector timer("parallel_object_sam.static_estimator");
 
-  const FrameId frame_k = input->getFrameId();
+  const FrameId frame_k = input->frame_id;
   auto map = static_formulation_->map();
-  map->updateObservations(input->collectStaticLandmarkKeypointMeasurements());
+  map->updateObservations(input->static_tracks.measurements);
 
   gtsam::Values new_values;
   gtsam::NonlinearFactorGraph new_factors;
@@ -374,7 +365,7 @@ Pose3Measurement ParallelHybridBackendModule::nominalUpdateStaticEstimator(
 
   const gtsam::NavState predicted_nav_state = this->addVisualInertialStates(
       frame_k, static_formulation_.get(), new_values, new_factors,
-      noise_models_, input->T_k_1_k_, input->pim_);
+      noise_models_, input->static_tracks.T_k_1_k, input->pim);
   // we dont have an uncertainty from the frontend
   map->updateSensorPoseMeasurement(
       frame_k, Pose3Measurement(predicted_nav_state.pose()));
@@ -460,55 +451,64 @@ Pose3Measurement ParallelHybridBackendModule::nominalUpdateStaticEstimator(
   }
 }
 
-std::vector<ParallelHybridBackendModule::PerObjectUpdate>
-ParallelHybridBackendModule::collectPerObjectUpdates(
-    RGBDInstanceOutputPacket::ConstPtr input) const {
-  GenericTrackedStatusVector<LandmarkKeypointStatus> all_dynamic_measurements =
-      input->collectDynamicLandmarkKeypointMeasurements();
+// std::vector<ParallelHybridBackendModule::PerObjectUpdate>
+// ParallelHybridBackendModule::collectPerObjectUpdates(
+//     VisionImuPacket::ConstPtr input) const {
+//   // CameraMeasurementStatusVector all_dynamic_measurements =
+//   //     input->collectDynamicLandmarkKeypointMeasurements();
 
-  gtsam::FastMap<ObjectId, GenericTrackedStatusVector<LandmarkKeypointStatus>>
-      measurements_by_object;
-  for (const auto& measurement : all_dynamic_measurements) {
-    const auto& object_id = measurement.objectId();
-    if (!measurements_by_object.exists(object_id)) {
-      measurements_by_object.insert2(
-          object_id, GenericTrackedStatusVector<LandmarkKeypointStatus>{});
-    }
-    measurements_by_object.at(object_id).push_back(measurement);
-  }
+//   // gtsam::FastMap<ObjectId, CameraMeasurementStatusVector>
+//   //     measurements_by_object;
+//   // for (const auto& measurement : all_dynamic_measurements) {
+//   //   const auto& object_id = measurement.objectId();
+//   //   if (!measurements_by_object.exists(object_id)) {
+//   //     measurements_by_object.insert2(
+//   //         object_id,
+//   GenericTrackedStatusVector<LandmarkKeypointStatus>{});
+//   //   }
+//   //   measurements_by_object.at(object_id).push_back(measurement);
+//   // }
 
-  const auto frame_id_k = input->getFrameId();
-  const auto& estimated_motions =
-      input->object_motions_.toEstimateMap(frame_id_k);
+//   // const auto frame_id_k = input->getFrameId();
+//   // const auto& estimated_motions =
+//   //     input->object_motions_.toEstimateMap(frame_id_k);
 
-  std::vector<PerObjectUpdate> object_updates;
-  std::stringstream ss;
-  ss << "Objects with updates: ";
-  for (const auto& [object_id, collected_measurements] :
-       measurements_by_object) {
-    PerObjectUpdate object_update;
-    object_update.frame_id = frame_id_k;
-    object_update.object_id = object_id;
+//   std::vector<PerObjectUpdate> object_updates;
+//   std::stringstream ss;
+//   ss << "Objects with updates: ";
+//   for(const auto& [object_id, object_tracks] : input->object_tracks) {
+//     PerObjectUpdate object_update;
+//     object_update.frame_id = input->frame_id;
+//     object_update.object_id = object_id;
+//     object_update.is_keyframe = object_tracks.is_keyframe;
+//     object_update.measurements = collected_measurements;
+//   }
+//   // for (const auto& [object_id, collected_measurements] :
+//   //      measurements_by_object) {
+//   //   PerObjectUpdate object_update;
+//   //   object_update.frame_id = frame_id_k;
+//   //   object_update.object_id = object_id;
 
-    if (input->is_keyframe_.find(object_id) != input->is_keyframe_.end()) {
-      object_update.is_keyframe = true;
-    }
+//   //   if (input->is_keyframe_.find(object_id) != input->is_keyframe_.end())
+//   {
+//   //     object_update.is_keyframe = true;
+//   //   }
 
-    object_update.measurements = collected_measurements;
-    // object_update.X_k_measurement = X_k_measurement;
+//   //   object_update.measurements = collected_measurements;
+//   //   // object_update.X_k_measurement = X_k_measurement;
 
-    CHECK(estimated_motions.exists(object_id));
-    object_update.H_k_measurement = estimated_motions.at(object_id);
+//   //   CHECK(estimated_motions.exists(object_id));
+//   //   object_update.H_k_measurement = estimated_motions.at(object_id);
 
-    object_updates.push_back(object_update);
-    ss << object_id << " (KF: " << object_update.is_keyframe << ") ";
-  }
+//   //   object_updates.push_back(object_update);
+//   //   ss << object_id << " (KF: " << object_update.is_keyframe << ") ";
+//   // }
 
-  // log inf
-  LOG(INFO) << ss.str();
+//   // log inf
+//   LOG(INFO) << ss.str();
 
-  return object_updates;
-}
+//   return object_updates;
+// }
 
 ParallelObjectISAM::Ptr ParallelHybridBackendModule::getEstimator(
     ObjectId object_id, bool* is_object_new) {
@@ -545,19 +545,21 @@ ParallelObjectISAM::Ptr ParallelHybridBackendModule::getEstimator(
 }
 
 void ParallelHybridBackendModule::parallelObjectSolve(
-    const std::vector<PerObjectUpdate>& object_updates) {
+    VisionImuPacket::ConstPtr input, const Pose3Measurement& X_W_k) {
   utils::TimingStatsCollector timer("parallel_object_sam.dynamic_estimator");
+  const auto frame_id = input->frame_id;
+  const auto& object_tracks = input->object_tracks;
   tbb::parallel_for_each(
-      object_updates.begin(), object_updates.end(),
-      [&](const PerObjectUpdate& update) { this->implSolvePerObject(update); });
+      object_tracks.begin(), object_tracks.end(),
+      [&](const std::pair<ObjectId, VisionImuPacket::ObjectTracks>& update) {
+        this->implSolvePerObject(frame_id, update.first, update.second, X_W_k);
+      });
 }
 
 bool ParallelHybridBackendModule::implSolvePerObject(
-    const PerObjectUpdate& object_update) {
-  const auto object_id = object_update.object_id;
-  const auto frame_id_k = object_update.frame_id;
-  const auto& measurements = object_update.measurements;
-
+    FrameId frame_id_k, ObjectId object_id,
+    const VisionImuPacket::ObjectTracks& object_update,
+    const Pose3Measurement& X_W_k) {
   bool is_object_new;
   ParallelObjectISAM::Ptr estimator = getEstimator(object_id, &is_object_new);
 
@@ -567,8 +569,7 @@ bool ParallelHybridBackendModule::implSolvePerObject(
   CHECK_NOTNULL(estimator);
   auto map = estimator->map();
 
-  const Pose3Measurement& X_k_measurement = object_update.X_k_measurement;
-  const Motion3ReferenceFrame& H_k = object_update.H_k_measurement;
+  const Motion3ReferenceFrame& H_W_k_1_k = object_update.H_W_k_1_k;
 
   // hack for now - if the object is new only update its map
   // this will create nodes in the Map but not update the estimator
@@ -596,7 +597,7 @@ bool ParallelHybridBackendModule::implSolvePerObject(
     needs_new_key_frame = true;
   }
 
-  estimator->update(frame_id_k, measurements, X_k_measurement, H_k,
+  estimator->update(frame_id_k, object_update.measurements, X_W_k, H_W_k_1_k,
                     should_update_smoother);
 
   if (needs_new_key_frame) {

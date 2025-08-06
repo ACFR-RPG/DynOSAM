@@ -875,7 +875,7 @@ TEST(JsonIO, TrackedValueStatusKps) {
 TEST(JsonIO, RGBDInstanceOutputPacket) {
   auto scenario = dyno_testing::makeDefaultScenario();
 
-  std::map<FrameId, RGBDInstanceOutputPacket> rgbd_output;
+  std::map<FrameId, VisionImuPacket> rgbd_output;
 
   for (size_t i = 0; i < 10; i++) {
     auto output = scenario.getOutput(i);
@@ -884,8 +884,8 @@ TEST(JsonIO, RGBDInstanceOutputPacket) {
 
   using json = nlohmann::json;
   json j = rgbd_output;
-  std::map<FrameId, RGBDInstanceOutputPacket> rgbd_output_loaded =
-      j.template get<std::map<FrameId, RGBDInstanceOutputPacket>>();
+  std::map<FrameId, VisionImuPacket> rgbd_output_loaded =
+      j.template get<std::map<FrameId, VisionImuPacket>>();
   EXPECT_EQ(rgbd_output_loaded, rgbd_output);
 }
 

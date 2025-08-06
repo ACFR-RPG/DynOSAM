@@ -40,7 +40,7 @@ namespace dyno {
 class WorldMotionAccessor : public WorldPoseAccessor {
  public:
   WorldMotionAccessor(const SharedFormulationData& shared_data,
-                      Map3d2d::Ptr map)
+                      MapVision::Ptr map)
       : WorldPoseAccessor(shared_data, map) {}
 
   StateQuery<gtsam::Pose3> getObjectMotion(FrameId frame_id,

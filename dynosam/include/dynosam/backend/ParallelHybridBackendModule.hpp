@@ -63,33 +63,36 @@ class ParallelHybridBackendModule
  private:
   using SpinReturn = Base::SpinReturn;
 
-  SpinReturn boostrapSpinImpl(
-      RGBDInstanceOutputPacket::ConstPtr input) override;
-  SpinReturn nominalSpinImpl(RGBDInstanceOutputPacket::ConstPtr input) override;
+  SpinReturn boostrapSpinImpl(VisionImuPacket::ConstPtr input) override;
+  SpinReturn nominalSpinImpl(VisionImuPacket::ConstPtr input) override;
 
   Pose3Measurement bootstrapUpdateStaticEstimator(
-      RGBDInstanceOutputPacket::ConstPtr input);
+      VisionImuPacket::ConstPtr input);
   Pose3Measurement nominalUpdateStaticEstimator(
-      RGBDInstanceOutputPacket::ConstPtr input,
-      bool should_calculate_covariance = true);
+      VisionImuPacket::ConstPtr input, bool should_calculate_covariance = true);
 
-  struct PerObjectUpdate {
-    FrameId frame_id;
-    ObjectId object_id;
-    GenericTrackedStatusVector<LandmarkKeypointStatus> measurements;
-    Pose3Measurement X_k_measurement;
-    Motion3ReferenceFrame H_k_measurement;
-    bool is_keyframe = false;
-  };
+  // TODO: can now maybe get rid of this?
+  //   struct PerObjectUpdate {
+  //     FrameId frame_id;
+  //     ObjectId object_id;
+  //     CameraMeasurementStatusVector measurements;
+  //     Pose3Measurement X_k_measurement;
+  //     Motion3ReferenceFrame H_k_measurement;
+  //     bool is_keyframe = false;
+  //   };
 
-  std::vector<PerObjectUpdate> collectPerObjectUpdates(
-      RGBDInstanceOutputPacket::ConstPtr input) const;
+  //   std::vector<PerObjectUpdate> collectPerObjectUpdates(
+  //       VisionImuPacket::ConstPtr input) const;
 
   ParallelObjectISAM::Ptr getEstimator(ObjectId object_id,
                                        bool* is_object_new = nullptr);
 
-  void parallelObjectSolve(const std::vector<PerObjectUpdate>& object_updates);
-  bool implSolvePerObject(const PerObjectUpdate& object_update);
+  // SHOULD Returns objects with successful sovle
+  void parallelObjectSolve(VisionImuPacket::ConstPtr input,
+                           const Pose3Measurement& X_W_k);
+  bool implSolvePerObject(FrameId frame_id, ObjectId object_id,
+                          const VisionImuPacket::ObjectTracks& object_update,
+                          const Pose3Measurement& X_W_k);
 
   BackendOutputPacket::Ptr constructOutputPacket(FrameId frame_k,
                                                  Timestamp timestamp) const;

@@ -35,287 +35,295 @@
 namespace dyno {
 namespace test_hybrid {
 
-gtsam::Vector DecoupledObjectCentricMotionFactor::evaluateError(
-    const gtsam::Pose3& e_H_k_world, const gtsam::Point3& m_L,
-    boost::optional<gtsam::Matrix&> J1,
-    boost::optional<gtsam::Matrix&> J2) const {
-  auto reordered_resiudal = [&](const gtsam::Pose3& e_H_k_world,
-                                const gtsam::Point3& m_L) {
-    return residual(X_k_, e_H_k_world, m_L, Z_k_, L_e_);
-  };
+// gtsam::Vector DecoupledObjectCentricMotionFactor::evaluateError(
+//     const gtsam::Pose3& e_H_k_world, const gtsam::Point3& m_L,
+//     boost::optional<gtsam::Matrix&> J1,
+//     boost::optional<gtsam::Matrix&> J2) const {
+//   auto reordered_resiudal = [&](const gtsam::Pose3& e_H_k_world,
+//                                 const gtsam::Point3& m_L) {
+//     return residual(X_k_, e_H_k_world, m_L, Z_k_, L_e_);
+//   };
 
-  if (J1) {
-    Eigen::Matrix<double, 3, 6> J =
-        gtsam::numericalDerivative21<gtsam::Vector3, gtsam::Pose3,
-                                     gtsam::Point3>(reordered_resiudal,
-                                                    e_H_k_world, m_L);
-    *J1 = J;
-  }
+//   if (J1) {
+//     Eigen::Matrix<double, 3, 6> J =
+//         gtsam::numericalDerivative21<gtsam::Vector3, gtsam::Pose3,
+//                                      gtsam::Point3>(reordered_resiudal,
+//                                                     e_H_k_world, m_L);
+//     *J1 = J;
+//   }
 
-  if (J2) {
-    Eigen::Matrix<double, 3, 3> J =
-        gtsam::numericalDerivative22<gtsam::Vector3, gtsam::Pose3,
-                                     gtsam::Point3>(reordered_resiudal,
-                                                    e_H_k_world, m_L);
-    *J2 = J;
-  }
+//   if (J2) {
+//     Eigen::Matrix<double, 3, 3> J =
+//         gtsam::numericalDerivative22<gtsam::Vector3, gtsam::Pose3,
+//                                      gtsam::Point3>(reordered_resiudal,
+//                                                     e_H_k_world, m_L);
+//     *J2 = J;
+//   }
 
-  return reordered_resiudal(e_H_k_world, m_L);
-}
+//   return reordered_resiudal(e_H_k_world, m_L);
+// }
 
-gtsam::Vector StructurelessObjectCentricMotion2::residual(
-    const gtsam::Pose3& X_k_1, const gtsam::Pose3& H_k_1,
-    const gtsam::Pose3& X_k, const gtsam::Pose3& H_k,
-    const gtsam::Point3& Z_k_1, const gtsam::Point3& Z_k,
-    const gtsam::Pose3& L_e) {
-  return HybridObjectMotion::projectToObject3(X_k_1, H_k_1, L_e, Z_k_1) -
-         HybridObjectMotion::projectToObject3(X_k, H_k, L_e, Z_k);
-}
+// gtsam::Vector StructurelessObjectCentricMotion2::residual(
+//     const gtsam::Pose3& X_k_1, const gtsam::Pose3& H_k_1,
+//     const gtsam::Pose3& X_k, const gtsam::Pose3& H_k,
+//     const gtsam::Point3& Z_k_1, const gtsam::Point3& Z_k,
+//     const gtsam::Pose3& L_e) {
+//   return HybridObjectMotion::projectToObject3(X_k_1, H_k_1, L_e, Z_k_1) -
+//          HybridObjectMotion::projectToObject3(X_k, H_k, L_e, Z_k);
+// }
 
-gtsam::Vector StructurelessDecoupledObjectCentricMotion::evaluateError(
-    const gtsam::Pose3& H_k_1, const gtsam::Pose3& H_k,
-    boost::optional<gtsam::Matrix&> J1,
-    boost::optional<gtsam::Matrix&> J2) const {
-  // use lambda to create residual with arguments and variables
-  auto reordered_resiudal = [&](const gtsam::Pose3& H_k_1,
-                                const gtsam::Pose3& H_k) -> gtsam::Vector3 {
-    return residual(X_k_1_, H_k_1, X_k_, H_k, Z_k_1_, Z_k_, L_e_);
-  };
+// gtsam::Vector StructurelessDecoupledObjectCentricMotion::evaluateError(
+//     const gtsam::Pose3& H_k_1, const gtsam::Pose3& H_k,
+//     boost::optional<gtsam::Matrix&> J1,
+//     boost::optional<gtsam::Matrix&> J2) const {
+//   // use lambda to create residual with arguments and variables
+//   auto reordered_resiudal = [&](const gtsam::Pose3& H_k_1,
+//                                 const gtsam::Pose3& H_k) -> gtsam::Vector3 {
+//     return residual(X_k_1_, H_k_1, X_k_, H_k, Z_k_1_, Z_k_, L_e_);
+//   };
 
-  if (J1) {
-    Eigen::Matrix<double, 3, 6> J =
-        gtsam::numericalDerivative21<gtsam::Vector3, gtsam::Pose3,
-                                     gtsam::Pose3>(reordered_resiudal, H_k_1,
-                                                   H_k);
-    *J1 = J;
-  }
+//   if (J1) {
+//     Eigen::Matrix<double, 3, 6> J =
+//         gtsam::numericalDerivative21<gtsam::Vector3, gtsam::Pose3,
+//                                      gtsam::Pose3>(reordered_resiudal, H_k_1,
+//                                                    H_k);
+//     *J1 = J;
+//   }
 
-  if (J2) {
-    Eigen::Matrix<double, 3, 6> J =
-        gtsam::numericalDerivative22<gtsam::Vector3, gtsam::Pose3,
-                                     gtsam::Pose3>(reordered_resiudal, H_k_1,
-                                                   H_k);
-    *J2 = J;
-  }
+//   if (J2) {
+//     Eigen::Matrix<double, 3, 6> J =
+//         gtsam::numericalDerivative22<gtsam::Vector3, gtsam::Pose3,
+//                                      gtsam::Pose3>(reordered_resiudal, H_k_1,
+//                                                    H_k);
+//     *J2 = J;
+//   }
 
-  return reordered_resiudal(H_k_1, H_k);
-}
+//   return reordered_resiudal(H_k_1, H_k);
+// }
 
-gtsam::Vector StructurelessObjectCentricMotionFactor2::evaluateError(
-    const gtsam::Pose3& X_k_1, const gtsam::Pose3& H_k_1,
-    const gtsam::Pose3& X_k, const gtsam::Pose3& H_k,
-    boost::optional<gtsam::Matrix&> J1, boost::optional<gtsam::Matrix&> J2,
-    boost::optional<gtsam::Matrix&> J3,
-    boost::optional<gtsam::Matrix&> J4) const {
-  if (J1) {
-    Eigen::Matrix<double, 3, 6> J =
-        gtsam::numericalDerivative41<gtsam::Vector3, gtsam::Pose3, gtsam::Pose3,
-                                     gtsam::Pose3, gtsam::Pose3>(
-            std::bind(&StructurelessObjectCentricMotionFactor2::residual,
-                      std::placeholders::_1, std::placeholders::_2,
-                      std::placeholders::_3, std::placeholders::_4, Z_k_1_,
-                      Z_k_, L_e_),
-            X_k_1, H_k_1, X_k, H_k);
-    *J1 = J;
-  }
+// gtsam::Vector StructurelessObjectCentricMotionFactor2::evaluateError(
+//     const gtsam::Pose3& X_k_1, const gtsam::Pose3& H_k_1,
+//     const gtsam::Pose3& X_k, const gtsam::Pose3& H_k,
+//     boost::optional<gtsam::Matrix&> J1, boost::optional<gtsam::Matrix&> J2,
+//     boost::optional<gtsam::Matrix&> J3,
+//     boost::optional<gtsam::Matrix&> J4) const {
+//   if (J1) {
+//     Eigen::Matrix<double, 3, 6> J =
+//         gtsam::numericalDerivative41<gtsam::Vector3, gtsam::Pose3,
+//         gtsam::Pose3,
+//                                      gtsam::Pose3, gtsam::Pose3>(
+//             std::bind(&StructurelessObjectCentricMotionFactor2::residual,
+//                       std::placeholders::_1, std::placeholders::_2,
+//                       std::placeholders::_3, std::placeholders::_4, Z_k_1_,
+//                       Z_k_, L_e_),
+//             X_k_1, H_k_1, X_k, H_k);
+//     *J1 = J;
+//   }
 
-  if (J1) {
-    Eigen::Matrix<double, 3, 6> J =
-        gtsam::numericalDerivative41<gtsam::Vector3, gtsam::Pose3, gtsam::Pose3,
-                                     gtsam::Pose3, gtsam::Pose3>(
-            std::bind(&StructurelessObjectCentricMotionFactor2::residual,
-                      std::placeholders::_1, std::placeholders::_2,
-                      std::placeholders::_3, std::placeholders::_4, Z_k_1_,
-                      Z_k_, L_e_),
-            X_k_1, H_k_1, X_k, H_k);
-    *J1 = J;
-  }
+//   if (J1) {
+//     Eigen::Matrix<double, 3, 6> J =
+//         gtsam::numericalDerivative41<gtsam::Vector3, gtsam::Pose3,
+//         gtsam::Pose3,
+//                                      gtsam::Pose3, gtsam::Pose3>(
+//             std::bind(&StructurelessObjectCentricMotionFactor2::residual,
+//                       std::placeholders::_1, std::placeholders::_2,
+//                       std::placeholders::_3, std::placeholders::_4, Z_k_1_,
+//                       Z_k_, L_e_),
+//             X_k_1, H_k_1, X_k, H_k);
+//     *J1 = J;
+//   }
 
-  if (J2) {
-    Eigen::Matrix<double, 3, 6> J =
-        gtsam::numericalDerivative42<gtsam::Vector3, gtsam::Pose3, gtsam::Pose3,
-                                     gtsam::Pose3, gtsam::Pose3>(
-            std::bind(&StructurelessObjectCentricMotionFactor2::residual,
-                      std::placeholders::_1, std::placeholders::_2,
-                      std::placeholders::_3, std::placeholders::_4, Z_k_1_,
-                      Z_k_, L_e_),
-            X_k_1, H_k_1, X_k, H_k);
-    *J2 = J;
-  }
+//   if (J2) {
+//     Eigen::Matrix<double, 3, 6> J =
+//         gtsam::numericalDerivative42<gtsam::Vector3, gtsam::Pose3,
+//         gtsam::Pose3,
+//                                      gtsam::Pose3, gtsam::Pose3>(
+//             std::bind(&StructurelessObjectCentricMotionFactor2::residual,
+//                       std::placeholders::_1, std::placeholders::_2,
+//                       std::placeholders::_3, std::placeholders::_4, Z_k_1_,
+//                       Z_k_, L_e_),
+//             X_k_1, H_k_1, X_k, H_k);
+//     *J2 = J;
+//   }
 
-  if (J3) {
-    Eigen::Matrix<double, 3, 6> J =
-        gtsam::numericalDerivative43<gtsam::Vector3, gtsam::Pose3, gtsam::Pose3,
-                                     gtsam::Pose3, gtsam::Pose3>(
-            std::bind(&StructurelessObjectCentricMotionFactor2::residual,
-                      std::placeholders::_1, std::placeholders::_2,
-                      std::placeholders::_3, std::placeholders::_4, Z_k_1_,
-                      Z_k_, L_e_),
-            X_k_1, H_k_1, X_k, H_k);
-    *J3 = J;
-  }
+//   if (J3) {
+//     Eigen::Matrix<double, 3, 6> J =
+//         gtsam::numericalDerivative43<gtsam::Vector3, gtsam::Pose3,
+//         gtsam::Pose3,
+//                                      gtsam::Pose3, gtsam::Pose3>(
+//             std::bind(&StructurelessObjectCentricMotionFactor2::residual,
+//                       std::placeholders::_1, std::placeholders::_2,
+//                       std::placeholders::_3, std::placeholders::_4, Z_k_1_,
+//                       Z_k_, L_e_),
+//             X_k_1, H_k_1, X_k, H_k);
+//     *J3 = J;
+//   }
 
-  if (J4) {
-    Eigen::Matrix<double, 3, 6> J =
-        gtsam::numericalDerivative44<gtsam::Vector3, gtsam::Pose3, gtsam::Pose3,
-                                     gtsam::Pose3, gtsam::Pose3>(
-            std::bind(&StructurelessObjectCentricMotionFactor2::residual,
-                      std::placeholders::_1, std::placeholders::_2,
-                      std::placeholders::_3, std::placeholders::_4, Z_k_1_,
-                      Z_k_, L_e_),
-            X_k_1, H_k_1, X_k, H_k);
-    *J4 = J;
-  }
+//   if (J4) {
+//     Eigen::Matrix<double, 3, 6> J =
+//         gtsam::numericalDerivative44<gtsam::Vector3, gtsam::Pose3,
+//         gtsam::Pose3,
+//                                      gtsam::Pose3, gtsam::Pose3>(
+//             std::bind(&StructurelessObjectCentricMotionFactor2::residual,
+//                       std::placeholders::_1, std::placeholders::_2,
+//                       std::placeholders::_3, std::placeholders::_4, Z_k_1_,
+//                       Z_k_, L_e_),
+//             X_k_1, H_k_1, X_k, H_k);
+//     *J4 = J;
+//   }
 
-  return residual(X_k_1, H_k_1, X_k, H_k, Z_k_1_, Z_k_, L_e_);
-}
+//   return residual(X_k_1, H_k_1, X_k, H_k, Z_k_1_, Z_k_, L_e_);
+// }
 
-void StructurelessDecoupledFormulation::dynamicPointUpdateCallback(
-    const PointUpdateContextType& context, UpdateObservationResult& result,
-    gtsam::Values& new_values, gtsam::NonlinearFactorGraph& new_factors) {
-  const auto lmk_node = context.lmk_node;
-  const auto frame_node_k_1 = context.frame_node_k_1;
-  const auto frame_node_k = context.frame_node_k;
+// void StructurelessDecoupledFormulation::dynamicPointUpdateCallback(
+//     const PointUpdateContextType& context, UpdateObservationResult& result,
+//     gtsam::Values& new_values, gtsam::NonlinearFactorGraph& new_factors) {
+//   const auto lmk_node = context.lmk_node;
+//   const auto frame_node_k_1 = context.frame_node_k_1;
+//   const auto frame_node_k = context.frame_node_k;
 
-  gtsam::Key point_key = this->makeDynamicKey(context.getTrackletId());
+//   gtsam::Key point_key = this->makeDynamicKey(context.getTrackletId());
 
-  const gtsam::Key object_motion_key_k =
-      frame_node_k->makeObjectMotionKey(context.getObjectId());
-  const gtsam::Key object_motion_key_k_1 =
-      frame_node_k_1->makeObjectMotionKey(context.getObjectId());
-  auto landmark_motion_noise = noise_models_.landmark_motion_noise;
+//   const gtsam::Key object_motion_key_k =
+//       frame_node_k->makeObjectMotionKey(context.getObjectId());
+//   const gtsam::Key object_motion_key_k_1 =
+//       frame_node_k_1->makeObjectMotionKey(context.getObjectId());
+//   auto landmark_motion_noise = noise_models_.landmark_motion_noise;
 
-  gtsam::Pose3 X_K_1 =
-      this->getInitialOrLinearizedSensorPose(frame_node_k_1->frame_id);
-  gtsam::Pose3 X_K =
-      this->getInitialOrLinearizedSensorPose(frame_node_k->frame_id);
+//   gtsam::Pose3 X_K_1 =
+//       this->getInitialOrLinearizedSensorPose(frame_node_k_1->frame_id);
+//   gtsam::Pose3 X_K =
+//       this->getInitialOrLinearizedSensorPose(frame_node_k->frame_id);
 
-  gtsam::Pose3 L_e;
-  FrameId s0;
-  std::tie(s0, L_e) =
-      getOrConstructL0(context.getObjectId(), frame_node_k_1->getId());
-  auto dynamic_point_noise = noise_models_.dynamic_point_noise;
+//   gtsam::Pose3 L_e;
+//   FrameId s0;
+//   std::tie(s0, L_e) =
+//       getOrConstructL0(context.getObjectId(), frame_node_k_1->getId());
+//   auto dynamic_point_noise = noise_models_.dynamic_point_noise;
 
-  new_factors.emplace_shared<StructurelessDecoupledObjectCentricMotion>(
-      object_motion_key_k_1, object_motion_key_k, X_K_1, X_K,
-      lmk_node->getMeasurement(frame_node_k_1).landmark,
-      lmk_node->getMeasurement(frame_node_k).landmark, L_e,
-      dynamic_point_noise);
+//   new_factors.emplace_shared<StructurelessDecoupledObjectCentricMotion>(
+//       object_motion_key_k_1, object_motion_key_k, X_K_1, X_K,
+//       lmk_node->getMeasurement(frame_node_k_1).landmark,
+//       lmk_node->getMeasurement(frame_node_k).landmark, L_e,
+//       dynamic_point_noise);
 
-  result.updateAffectedObject(frame_node_k_1->frame_id, context.getObjectId());
-  result.updateAffectedObject(frame_node_k->frame_id, context.getObjectId());
-}
+//   result.updateAffectedObject(frame_node_k_1->frame_id,
+//   context.getObjectId()); result.updateAffectedObject(frame_node_k->frame_id,
+//   context.getObjectId());
+// }
 
-void DecoupledFormulation::dynamicPointUpdateCallback(
-    const PointUpdateContextType& context, UpdateObservationResult& result,
-    gtsam::Values& new_values, gtsam::NonlinearFactorGraph& new_factors) {
-  const auto lmk_node = context.lmk_node;
-  const auto frame_node_k_1 = context.frame_node_k_1;
-  const auto frame_node_k = context.frame_node_k;
+// void DecoupledFormulation::dynamicPointUpdateCallback(
+//     const PointUpdateContextType& context, UpdateObservationResult& result,
+//     gtsam::Values& new_values, gtsam::NonlinearFactorGraph& new_factors) {
+//   const auto lmk_node = context.lmk_node;
+//   const auto frame_node_k_1 = context.frame_node_k_1;
+//   const auto frame_node_k = context.frame_node_k;
 
-  auto theta_accessor = this->accessorFromTheta();
+//   auto theta_accessor = this->accessorFromTheta();
 
-  gtsam::Key point_key = this->makeDynamicKey(context.getTrackletId());
+//   gtsam::Key point_key = this->makeDynamicKey(context.getTrackletId());
 
-  const gtsam::Key object_motion_key_k =
-      frame_node_k->makeObjectMotionKey(context.getObjectId());
-  const gtsam::Key object_motion_key_k_1 =
-      frame_node_k_1->makeObjectMotionKey(context.getObjectId());
+//   const gtsam::Key object_motion_key_k =
+//       frame_node_k->makeObjectMotionKey(context.getObjectId());
+//   const gtsam::Key object_motion_key_k_1 =
+//       frame_node_k_1->makeObjectMotionKey(context.getObjectId());
 
-  gtsam::Pose3 L_e;
-  FrameId s0;
-  std::tie(s0, L_e) =
-      getOrConstructL0(context.getObjectId(), frame_node_k_1->getId());
-  auto landmark_motion_noise = noise_models_.landmark_motion_noise;
+//   gtsam::Pose3 L_e;
+//   FrameId s0;
+//   std::tie(s0, L_e) =
+//       getOrConstructL0(context.getObjectId(), frame_node_k_1->getId());
+//   auto landmark_motion_noise = noise_models_.landmark_motion_noise;
 
-  // TODO:this will not be the case with sliding/window as we reconstruct the
-  // graph from a different starting point!!
-  //  CHECK_GE(frame_node_k_1->getId(), s0);
+//   // TODO:this will not be the case with sliding/window as we reconstruct the
+//   // graph from a different starting point!!
+//   //  CHECK_GE(frame_node_k_1->getId(), s0);
 
-  if (!isDynamicTrackletInMap(lmk_node)) {
-    // mark as now in map
-    is_dynamic_tracklet_in_map_.insert2(context.getTrackletId(), true);
-    CHECK(isDynamicTrackletInMap(lmk_node));
+//   if (!isDynamicTrackletInMap(lmk_node)) {
+//     // mark as now in map
+//     is_dynamic_tracklet_in_map_.insert2(context.getTrackletId(), true);
+//     CHECK(isDynamicTrackletInMap(lmk_node));
 
-    // use first point as initalisation?
-    // in this case k is k-1 as we use frame_node_k_1
-    gtsam::Pose3 e_H_k_world =
-        computeInitialH(context.getObjectId(), frame_node_k_1->getId());
-    gtsam::Pose3 L_k = e_H_k_world * L_e;
-    // H from k to s0 in frame k (^wL_k)
-    //  gtsam::Pose3 k_H_s0_k = L_e * e_H_k_world.inverse() *  L_e.inverse();
-    gtsam::Pose3 k_H_s0_k = (L_e.inverse() * e_H_k_world * L_e).inverse();
-    gtsam::Pose3 k_H_s0_W = L_k * k_H_s0_k * L_k.inverse();
-    // LOG(INFO) << "e_H_k_world " << e_H_k_world;
-    // measured point in camera frame
-    const gtsam::Point3 m_camera =
-        lmk_node->getMeasurement(frame_node_k_1).landmark;
-    Landmark lmk_L0_init =
-        L_e.inverse() * k_H_s0_W * context.X_k_1_measured * m_camera;
+//     // use first point as initalisation?
+//     // in this case k is k-1 as we use frame_node_k_1
+//     gtsam::Pose3 e_H_k_world =
+//         computeInitialH(context.getObjectId(), frame_node_k_1->getId());
+//     gtsam::Pose3 L_k = e_H_k_world * L_e;
+//     // H from k to s0 in frame k (^wL_k)
+//     //  gtsam::Pose3 k_H_s0_k = L_e * e_H_k_world.inverse() *  L_e.inverse();
+//     gtsam::Pose3 k_H_s0_k = (L_e.inverse() * e_H_k_world * L_e).inverse();
+//     gtsam::Pose3 k_H_s0_W = L_k * k_H_s0_k * L_k.inverse();
+//     // LOG(INFO) << "e_H_k_world " << e_H_k_world;
+//     // measured point in camera frame
+//     const gtsam::Point3 m_camera =
+//         lmk_node->getMeasurement(frame_node_k_1).landmark;
+//     Landmark lmk_L0_init =
+//         L_e.inverse() * k_H_s0_W * context.X_k_1_measured * m_camera;
 
-    // initalise value //cannot initalise again the same -> it depends where L_e
-    // is created, no?
-    Landmark lmk_L0;
-    getSafeQuery(lmk_L0, theta_accessor->query<Landmark>(point_key),
-                 lmk_L0_init);
-    new_values.insert(point_key, lmk_L0);
-    result.updateAffectedObject(frame_node_k_1->frame_id,
-                                context.getObjectId());
-  }
+//     // initalise value //cannot initalise again the same -> it depends where
+//     L_e
+//     // is created, no?
+//     Landmark lmk_L0;
+//     getSafeQuery(lmk_L0, theta_accessor->query<Landmark>(point_key),
+//                  lmk_L0_init);
+//     new_values.insert(point_key, lmk_L0);
+//     result.updateAffectedObject(frame_node_k_1->frame_id,
+//                                 context.getObjectId());
+//   }
 
-  auto dynamic_point_noise = noise_models_.dynamic_point_noise;
-  if (context.is_starting_motion_frame) {
-    gtsam::Pose3 X_k_1 =
-        this->getInitialOrLinearizedSensorPose(frame_node_k_1->frame_id);
-    new_factors.emplace_shared<DecoupledObjectCentricMotionFactor>(
-        object_motion_key_k_1, point_key,
-        lmk_node->getMeasurement(frame_node_k_1).landmark, L_e, X_k_1,
-        dynamic_point_noise);
-    result.updateAffectedObject(frame_node_k_1->frame_id,
-                                context.getObjectId());
-  }
+//   auto dynamic_point_noise = noise_models_.dynamic_point_noise;
+//   if (context.is_starting_motion_frame) {
+//     gtsam::Pose3 X_k_1 =
+//         this->getInitialOrLinearizedSensorPose(frame_node_k_1->frame_id);
+//     new_factors.emplace_shared<DecoupledObjectCentricMotionFactor>(
+//         object_motion_key_k_1, point_key,
+//         lmk_node->getMeasurement(frame_node_k_1).landmark, L_e, X_k_1,
+//         dynamic_point_noise);
+//     result.updateAffectedObject(frame_node_k_1->frame_id,
+//                                 context.getObjectId());
+//   }
 
-  gtsam::Pose3 X_k =
-      this->getInitialOrLinearizedSensorPose(frame_node_k->frame_id);
+//   gtsam::Pose3 X_k =
+//       this->getInitialOrLinearizedSensorPose(frame_node_k->frame_id);
 
-  new_factors.emplace_shared<DecoupledObjectCentricMotionFactor>(
-      object_motion_key_k, point_key,
-      lmk_node->getMeasurement(frame_node_k).landmark, L_e, X_k,
-      dynamic_point_noise);
-  result.updateAffectedObject(frame_node_k->frame_id, context.getObjectId());
-}
+//   new_factors.emplace_shared<DecoupledObjectCentricMotionFactor>(
+//       object_motion_key_k, point_key,
+//       lmk_node->getMeasurement(frame_node_k).landmark, L_e, X_k,
+//       dynamic_point_noise);
+//   result.updateAffectedObject(frame_node_k->frame_id, context.getObjectId());
+// }
 
-void StructurlessFormulation::dynamicPointUpdateCallback(
-    const PointUpdateContextType& context, UpdateObservationResult& result,
-    gtsam::Values& new_values, gtsam::NonlinearFactorGraph& new_factors) {
-  const auto lmk_node = context.lmk_node;
-  const auto frame_node_k_1 = context.frame_node_k_1;
-  const auto frame_node_k = context.frame_node_k;
+// void StructurlessFormulation::dynamicPointUpdateCallback(
+//     const PointUpdateContextType& context, UpdateObservationResult& result,
+//     gtsam::Values& new_values, gtsam::NonlinearFactorGraph& new_factors) {
+//   const auto lmk_node = context.lmk_node;
+//   const auto frame_node_k_1 = context.frame_node_k_1;
+//   const auto frame_node_k = context.frame_node_k;
 
-  gtsam::Key point_key = this->makeDynamicKey(context.getTrackletId());
+//   gtsam::Key point_key = this->makeDynamicKey(context.getTrackletId());
 
-  const gtsam::Key object_motion_key_k =
-      frame_node_k->makeObjectMotionKey(context.getObjectId());
-  const gtsam::Key object_motion_key_k_1 =
-      frame_node_k_1->makeObjectMotionKey(context.getObjectId());
-  auto landmark_motion_noise = noise_models_.landmark_motion_noise;
+//   const gtsam::Key object_motion_key_k =
+//       frame_node_k->makeObjectMotionKey(context.getObjectId());
+//   const gtsam::Key object_motion_key_k_1 =
+//       frame_node_k_1->makeObjectMotionKey(context.getObjectId());
+//   auto landmark_motion_noise = noise_models_.landmark_motion_noise;
 
-  gtsam::Pose3 L_e;
-  FrameId s0;
-  std::tie(s0, L_e) =
-      getOrConstructL0(context.getObjectId(), frame_node_k_1->getId());
-  auto dynamic_point_noise = noise_models_.dynamic_point_noise;
+//   gtsam::Pose3 L_e;
+//   FrameId s0;
+//   std::tie(s0, L_e) =
+//       getOrConstructL0(context.getObjectId(), frame_node_k_1->getId());
+//   auto dynamic_point_noise = noise_models_.dynamic_point_noise;
 
-  new_factors.emplace_shared<StructurelessObjectCentricMotionFactor2>(
-      frame_node_k_1->makePoseKey(), object_motion_key_k_1,
-      frame_node_k->makePoseKey(), object_motion_key_k,
-      lmk_node->getMeasurement(frame_node_k_1).landmark,
-      lmk_node->getMeasurement(frame_node_k).landmark, L_e,
-      dynamic_point_noise);
+//   new_factors.emplace_shared<StructurelessObjectCentricMotionFactor2>(
+//       frame_node_k_1->makePoseKey(), object_motion_key_k_1,
+//       frame_node_k->makePoseKey(), object_motion_key_k,
+//       lmk_node->getMeasurement(frame_node_k_1).landmark,
+//       lmk_node->getMeasurement(frame_node_k).landmark, L_e,
+//       dynamic_point_noise);
 
-  result.updateAffectedObject(frame_node_k_1->frame_id, context.getObjectId());
-  result.updateAffectedObject(frame_node_k->frame_id, context.getObjectId());
-}
+//   result.updateAffectedObject(frame_node_k_1->frame_id,
+//   context.getObjectId()); result.updateAffectedObject(frame_node_k->frame_id,
+//   context.getObjectId());
+// }
 
 StateQuery<gtsam::Point3> SmartStructurlessAccessor::queryPoint(
     gtsam::Key point_key, TrackletId tracklet_id) const {
@@ -394,7 +402,7 @@ void SmartStructurlessFormulation::dynamicPointUpdateCallback(
     //     L_e.inverse() * k_H_s0_W * context.X_k_1_measured * m_camera;
     Landmark lmk_L0_init = HybridObjectMotion::projectToObject3(
         context.X_k_1_measured, e_H_k_world, L_e,
-        lmk_node->getMeasurement(frame_node_k_1).landmark);
+        MeasurementTraits::point(lmk_node->getMeasurement(frame_node_k_1)));
 
     // TODO: this should not every be true as this is a new value!!!
     Landmark lmk_L0;
@@ -444,8 +452,9 @@ void SmartStructurlessFormulation::dynamicPointUpdateCallback(
   gtsam::KeySet affected_keys;
 
   if (context.is_starting_motion_frame) {
-    smart_factor->add(lmk_node->getMeasurement(frame_node_k_1).landmark,
-                      object_motion_key_k_1, frame_node_k_1->makePoseKey());
+    smart_factor->add(
+        MeasurementTraits::point(lmk_node->getMeasurement(frame_node_k_1)),
+        object_motion_key_k_1, frame_node_k_1->makePoseKey());
     if (result.debug_info)
       result.debug_info->getObjectInfo(context.getObjectId())
           .num_dynamic_factors++;
@@ -454,8 +463,9 @@ void SmartStructurlessFormulation::dynamicPointUpdateCallback(
     affected_keys.insert(frame_node_k_1->makePoseKey());
   }
 
-  smart_factor->add(lmk_node->getMeasurement(frame_node_k).landmark,
-                    object_motion_key_k, frame_node_k->makePoseKey());
+  smart_factor->add(
+      MeasurementTraits::point(lmk_node->getMeasurement(frame_node_k)),
+      object_motion_key_k, frame_node_k->makePoseKey());
 
   affected_keys.insert(object_motion_key_k);
   affected_keys.insert(frame_node_k->makePoseKey());

@@ -1177,15 +1177,15 @@ struct SharedHybridFormulationData {
   const gtsam::FastMap<TrackletId, FrameId>* tracklet_id_to_keyframe;
 };
 
-class HybridAccessor : public Accessor<Map3d2d>,
+class HybridAccessor : public Accessor<MapVision>,
                        public HybridFormulationProperties {
  public:
   DYNO_POINTER_TYPEDEFS(HybridAccessor)
 
   HybridAccessor(
-      const SharedFormulationData& shared_data, Map3d2d::Ptr map,
+      const SharedFormulationData& shared_data, MapVision::Ptr map,
       const SharedHybridFormulationData& shared_hybrid_formulation_data)
-      : Accessor<Map3d2d>(shared_data, map),
+      : Accessor<MapVision>(shared_data, map),
         shared_hybrid_formulation_data_(shared_hybrid_formulation_data) {}
   virtual ~HybridAccessor() {}
 
@@ -1243,11 +1243,18 @@ class HybridAccessor : public Accessor<Map3d2d>,
   const SharedHybridFormulationData shared_hybrid_formulation_data_;
 };
 
-class HybridFormulation : public Formulation<Map3d2d>,
+// TODO: for future proofing with new measurement stuff the formulation (at the
+// top level)
+//  should be templated on the map and then we use type traits to extract the
+//  measurements care about so it can be measurement generic... eventually need
+//  way to define (AND CHECK, becuase we cannot assume all types have the same
+//  compile-time properties) and get the measurement we are interested in
+class HybridFormulation : public Formulation<MapVision>,
                           public HybridFormulationProperties {
  public:
-  using Base = Formulation<Map3d2d>;
+  using Base = Formulation<MapVision>;
   using Base::AccessorTypePointer;
+  using Base::MapTraitsType;
   using Base::ObjectUpdateContextType;
   using Base::PointUpdateContextType;
 
@@ -1269,7 +1276,7 @@ class HybridFormulation : public Formulation<Map3d2d>,
       gtsam::NonlinearFactorGraph& new_factors) override;
 
   inline bool isDynamicTrackletInMap(
-      const LandmarkNode3d2d::Ptr& lmk_node) const override {
+      const typename MapTraitsType::LandmarkNodePtr& lmk_node) const override {
     const TrackletId tracklet_id = lmk_node->tracklet_id;
     return is_dynamic_tracklet_in_map_.exists(tracklet_id);
   }

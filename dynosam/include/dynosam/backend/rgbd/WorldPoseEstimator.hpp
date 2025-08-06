@@ -36,10 +36,11 @@
 
 namespace dyno {
 
-class WorldPoseAccessor : public Accessor<Map3d2d> {
+class WorldPoseAccessor : public Accessor<MapVision> {
  public:
-  WorldPoseAccessor(const SharedFormulationData& shared_data, Map3d2d::Ptr map)
-      : Accessor<Map3d2d>(shared_data, map) {}
+  WorldPoseAccessor(const SharedFormulationData& shared_data,
+                    MapVision::Ptr map)
+      : Accessor<MapVision>(shared_data, map) {}
   virtual ~WorldPoseAccessor() {}
 
   StateQuery<gtsam::Pose3> getSensorPose(FrameId frame_id) const override;
@@ -51,10 +52,11 @@ class WorldPoseAccessor : public Accessor<Map3d2d> {
       FrameId frame_id, TrackletId tracklet_id) const override;
 };
 
-class WorldPoseFormulation : public Formulation<Map3d2d> {
+class WorldPoseFormulation : public Formulation<MapVision> {
  public:
-  using Base = Formulation<Map3d2d>;
+  using Base = Formulation<MapVision>;
   using Base::AccessorTypePointer;
+  using Base::MapTraitsType;
   using Base::ObjectUpdateContextType;
   using Base::PointUpdateContextType;
 
@@ -76,7 +78,7 @@ class WorldPoseFormulation : public Formulation<Map3d2d> {
                            gtsam::NonlinearFactorGraph& new_factors) override;
 
   inline bool isDynamicTrackletInMap(
-      const LandmarkNode3d2d::Ptr& lmk_node) const override {
+      const typename MapTraitsType::LandmarkNodePtr& lmk_node) const override {
     const TrackletId tracklet_id = lmk_node->tracklet_id;
     return is_dynamic_tracklet_in_map_.exists(tracklet_id);
   }

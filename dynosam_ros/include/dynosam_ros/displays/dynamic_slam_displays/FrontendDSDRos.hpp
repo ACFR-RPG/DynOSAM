@@ -31,7 +31,7 @@
 #pragma once
 
 #include <dynosam/common/GroundTruthPacket.hpp>
-#include <dynosam/frontend/RGBDInstance-Definitions.hpp>
+#include <dynosam/frontend/FrontendOutputPacket.hpp>
 #include <dynosam/visualizer/Display.hpp>
 
 #include "dynamic_slam_interfaces/msg/object_odometry.hpp"
@@ -48,19 +48,17 @@ class FrontendDSDRos : public FrontendDisplay, DSDRos {
   FrontendDSDRos(const DisplayParams params, rclcpp::Node::SharedPtr node);
   ~FrontendDSDRos() = default;
 
-  void spinOnce(
-      const FrontendOutputPacketBase::ConstPtr& frontend_output) override;
+  void spinOnce(const VisionImuPacket::ConstPtr& frontend_output) override;
 
  private:
-  void tryPublishDebugImagery(
-      const FrontendOutputPacketBase::ConstPtr& frontend_output);
-  void tryPublishGroundTruth(
-      const FrontendOutputPacketBase::ConstPtr& frontend_output);
+  void tryPublishDebugImagery(const VisionImuPacket::ConstPtr& frontend_output);
+  void tryPublishGroundTruth(const VisionImuPacket::ConstPtr& frontend_output);
   void tryPublishVisualOdometry(
-      const FrontendOutputPacketBase::ConstPtr& frontend_output);
+      const VisionImuPacket::ConstPtr& frontend_output);
 
-  void processRGBDOutputpacket(
-      const RGBDInstanceOutputPacket::ConstPtr& rgbd_packet);
+  // TODO: not publishing object stuff and point cloud!!!
+  //   void processRGBDOutputpacket(
+  //       const RGBDInstanceOutputPacket::ConstPtr& rgbd_packet);
 
  private:
   //! Transport for ground truth publishing

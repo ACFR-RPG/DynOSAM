@@ -105,21 +105,20 @@ class RegularBackendModule
 
   // TODO: for now
  protected:
-  SpinReturn boostrapSpinImpl(
-      RGBDInstanceOutputPacket::ConstPtr input) override;
-  SpinReturn nominalSpinImpl(RGBDInstanceOutputPacket::ConstPtr input) override;
+  SpinReturn boostrapSpinImpl(VisionImuPacket::ConstPtr input) override;
+  SpinReturn nominalSpinImpl(VisionImuPacket::ConstPtr input) override;
 
-  void addInitialStates(const RGBDInstanceOutputPacket::ConstPtr& input,
+  void addInitialStates(const VisionImuPacket::ConstPtr& input,
                         FormulationType* formulation, gtsam::Values& new_values,
                         gtsam::NonlinearFactorGraph& new_factors);
-  void addStates(const RGBDInstanceOutputPacket::ConstPtr& input,
+  void addStates(const VisionImuPacket::ConstPtr& input,
                  FormulationType* formulation, gtsam::Values& new_values,
                  gtsam::NonlinearFactorGraph& new_factors);
 
   // initial pose can come from many sources
-  void updateMapWithMeasurements(
-      FrameId frame_id_k, const RGBDInstanceOutputPacket::ConstPtr& input,
-      const gtsam::Pose3& X_k_w);
+  void updateMapWithMeasurements(FrameId frame_id_k,
+                                 const VisionImuPacket::ConstPtr& input,
+                                 const gtsam::Pose3& X_k_w);
 
  private:
   // Also sets up error hooks based on the formulation
