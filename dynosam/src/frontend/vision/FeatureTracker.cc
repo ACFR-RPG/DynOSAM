@@ -242,7 +242,7 @@ bool FeatureTracker::stereoTrack(FeaturePtrs& stereo_features,
       double depth = fx * virtual_baseline / disparity;
       // TODO: no max depth
       feature->depth(depth);
-      feature->rightKeypoint(uR);
+      feature->rightKeypoint(Keypoint(uL, uR));
 
       stereo_features.push_back(feature);
     }

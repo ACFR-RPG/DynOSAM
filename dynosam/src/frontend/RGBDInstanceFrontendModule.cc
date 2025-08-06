@@ -258,7 +258,7 @@ FrontendModule::SpinReturn RGBDInstanceFrontendModule::nominalSpin(
   output->pim_ = pim;
   output->T_k_1_k_ = T_k_1_k;
   vo_velocity_ = T_k_1_k;
-  // output->is_keyframe_ = keyframed_objects;
+  output->is_keyframe_ = keyframed_objects;
 
   if (FLAGS_save_frontend_json)
     output_packet_record_.insert({output->getFrameId(), output});
@@ -384,6 +384,118 @@ bool RGBDInstanceFrontendModule::solveCameraMotion(
   }
 }
 
+VisionImuPacket::Ptr RGBDInstanceFrontendModule::constructOutputAndLog(
+    const FrontendInputPacketBase::ConstPtr& input, const Frame& frame,
+    const ObjectMotionMap& object_motions, const ObjectPoseMap& object_poses,
+    const gtsam::Pose3& T_k_1_k, ImuFrontend::PimPtr pim) {
+  const auto frame_id = frame.getFrameId();
+
+  VisionImuPacket vision_imu_packet;
+  vision_imu_packet.frame_id = frame_id;
+  vision_imu_packet.timestamp = frame.getTimestamp();
+
+  // construct image tracks
+  const double& static_pixel_sigma =
+      params_.backend_params_.static_pixel_noise_sigma;
+  const double& static_point_sigma =
+      params_.backend_params_.static_point_noise_sigma;
+
+  const double& dynamic_pixel_sigma =
+      params_.backend_params_.dynamic_pixel_noise_sigma;
+  const double& dynamic_point_sigma =
+      params_.backend_params_.dynamic_point_noise_sigma;
+
+  gtsam::Vector2 static_pixel_sigmas;
+  static_pixel_sigmas << static_pixel_sigma, static_pixel_sigma;
+
+  gtsam::Vector2 dynamic_pixel_sigmas;
+  dynamic_pixel_sigmas << dynamic_pixel_sigma, dynamic_pixel_sigma;
+
+  auto& camera = *this->camera_;
+  auto fill_camera_measurements =
+      [&camera](FeatureFilterIterator it,
+                CameraMeasurementStatusVector* measurements, FrameId frame_id,
+                const gtsam::Vector2& pixel_sigmas, double depth_sigma) {
+        for (const Feature::Ptr& f : it) {
+          const TrackletId tracklet_id = f->trackletId();
+          const Keypoint& kp = f->keypoint();
+          const ObjectId object_id = f->objectId();
+          CHECK_EQ(f->objectId(), object_id);
+          CHECK(Feature::IsUsable(f));
+
+          MeasurementWithCovariance<Keypoint> kp_measurement =
+              MeasurementWithCovariance<Keypoint>::FromSigmas(kp, pixel_sigmas);
+          CameraMeasurement camera_measurement(kp_measurement);
+
+          // This can come from either stereo or rgbd
+          if (f->hasDepth()) {
+            MeasurementWithCovariance<Landmark> landmark_measurement(
+                // assume sigma_u and sigma_v are identical
+                vision_tools::backProjectAndCovariance(
+                    *f, camera, pixel_sigmas(0), depth_sigma));
+            camera_measurement.landmark(landmark_measurement);
+          }
+
+          if (f->hasRightKeypoint()) {
+            CHECK(f->hasDepth())
+                << "Right keypoint set for feature but no depth!";
+            MeasurementWithCovariance<Keypoint> right_kp_measurement =
+                MeasurementWithCovariance<Keypoint>::FromSigmas(
+                    f->rightKeypoint(), pixel_sigmas);
+            camera_measurement.rightKeypoint(right_kp_measurement);
+          }
+
+          if (f->keypointType() == KeyPointType::STATIC) {
+            CHECK_EQ(object_id, background_label);
+          } else {
+            CHECK_NE(object_id, background_label);
+          }
+
+          measurements->push_back(
+              CameraMeasurementStatus(camera_measurement, frame_id, tracklet_id,
+                                      object_id, ReferenceFrame::LOCAL));
+        }
+      };
+
+  // TODO: fill ttracking status?
+
+  auto* static_measurements = &vision_imu_packet.static_tracks.measurements;
+  fill_camera_measurements(frame.usableStaticFeaturesBegin(),
+                           static_measurements, vision_imu_packet.frame_id,
+                           static_pixel_sigmas, static_point_sigma);
+  vision_imu_packet.static_tracks.X_W_k = frame.getPose();
+  vision_imu_packet.static_tracks.T_k_1_k = T_k_1_k;
+
+  // First collect all dynamic measurements then split them by object
+  // This is a bit silly
+  CameraMeasurementStatusVector dynamic_measurements;
+  fill_camera_measurements(frame.usableDynamicFeaturesBegin(),
+                           &dynamic_measurements, vision_imu_packet.frame_id,
+                           dynamic_pixel_sigmas, dynamic_point_sigma);
+
+  auto* object_tracks = &vision_imu_packet.object_tracks;
+  // motions in this frame (ie. new motions!!)
+  MotionEstimateMap motion_estimates =
+      object_motions.toEstimateMap(vision_imu_packet.frame_id);
+
+  // fill object tracks based on valid motions
+  for (const auto& [object_id, motion_reference_estimate] : motion_estimates) {
+    VisionImuPacket::ObjectTracks object_track;
+    object_track.H_W_k_1_k = motion_reference_estimate;
+    object_tracks->insert2(object_id, object_track);
+  }
+
+  for (const auto& dm : dynamic_measurements) {
+    const auto& object_id = dm.objectId();
+    CHECK(object_tracks->exists(object_id))
+        << "We have a feature for " << info_string(frame_id, object_id)
+        << " but object does not exist in the estimated motions!";
+
+    VisionImuPacket::ObjectTracks& object_track = object_tracks->at(object_id);
+    object_track.measurements.push_back(dm);
+  }
+}
+
 RGBDInstanceOutputPacket::Ptr RGBDInstanceFrontendModule::constructOutput(
     const Frame& frame, const ObjectMotionMap& object_motions,
     const ObjectPoseMap& object_poses, const gtsam::Pose3& T_world_camera,
@@ -398,6 +510,9 @@ RGBDInstanceOutputPacket::Ptr RGBDInstanceFrontendModule::constructOutput(
   const double& static_point_sigma =
       params_.backend_params_.static_point_noise_sigma;
 
+  gtsam::Vector2 static_pixel_sigmas;
+  static_pixel_sigmas << static_pixel_sigma, static_pixel_sigma;
+
   for (const Feature::Ptr& f : frame.usableStaticFeaturesBegin()) {
     const TrackletId tracklet_id = f->trackletId();
     const Keypoint kp = f->keypoint();
@@ -410,7 +525,9 @@ RGBDInstanceOutputPacket::Ptr RGBDInstanceFrontendModule::constructOutput(
       continue;
     }
 
-    MeasurementWithCovariance<Keypoint> kp_measurement(kp);
+    MeasurementWithCovariance<Keypoint> kp_measurement =
+        MeasurementWithCovariance<Keypoint>::FromSigmas(kp,
+                                                        static_pixel_sigmas);
     MeasurementWithCovariance<Landmark> landmark_measurement(
         vision_tools::backProjectAndCovariance(*f, *camera_, static_pixel_sigma,
                                                static_point_sigma));

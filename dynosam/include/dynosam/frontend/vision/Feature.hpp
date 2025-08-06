@@ -37,6 +37,7 @@
 #include "dynosam/common/ImageContainer.hpp"
 #include "dynosam/common/StructuredContainers.hpp"
 #include "dynosam/common/Types.hpp"
+#include "dynosam/utils/GtsamUtils.hpp"
 #include "dynosam/utils/Numerical.hpp"
 
 namespace dyno {
@@ -212,14 +213,16 @@ class Feature {
   }
 
   /**
-   * @brief Gets the right keypoint (uR). The value will be
-   * Feature::invalid_depth if not set.
+   * @brief Gets the right keypoint. The value will be
+   * std::nullopt if not set.
    *
-   * @return double
+   * @return Keypoint
    */
-  double rightKeypoint() const {
+  Keypoint rightKeypoint() const {
     std::lock_guard<std::mutex> lk(mutex_);
-    return data_.uR;
+    if (data_.right_kp.has_value()) return data_.right_kp.value();
+    DYNO_THROW_MSG(DynosamException)
+        << "Right Kp requested for" << data_.tracklet_id << " but not set";
   }
 
   static Keypoint CalculatePredictedKeypoint(const Keypoint& keypoint,
@@ -297,9 +300,9 @@ class Feature {
     return *this;
   }
 
-  Feature& rightKeypoint(double uR) {
+  Feature& rightKeypoint(const Keypoint& right_kp) {
     std::lock_guard<std::mutex> lk(mutex_);
-    data_.uR = uR;
+    data_.right_kp = right_kp;
     return *this;
   }
 
@@ -347,7 +350,7 @@ class Feature {
 
   inline bool hasRightKeypoint() const {
     std::lock_guard<std::mutex> lk(mutex_);
-    return !std::isnan(data_.uR);
+    return data_.right_kp.has_value();
   }
 
   inline static bool IsUsable(const Feature::Ptr& f) { return f->usable(); }
@@ -372,7 +375,8 @@ class Feature {
                       //! tracked object between frames
     Depth depth{invalid_depth};  //! Depth as provided by a depth image (not Z).
                                  //! Initalised as invalid_depth (NaN)
-    double uR{invalid_depth};    //! Possible stereo keypoint in the right image
+    //! Possible stereo keypoint in the right image
+    std::optional<Keypoint> right_kp = {};
 
     bool operator==(const impl& other) const {
       // TODO: lock?
@@ -384,7 +388,8 @@ class Feature {
              tracklet_id == other.tracklet_id && frame_id == other.frame_id &&
              inlier == other.inlier && instance_label == other.instance_label &&
              tracking_label == other.tracking_label &&
-             fpEqual(depth, other.depth) && fpEqual(uR, other.uR);
+             fpEqual(depth, other.depth) &&
+             utils::equateGtsamOptionalValues(right_kp, other.right_kp);
     }
   };
 

@@ -485,6 +485,8 @@ void writeOutProjectMaskAndDepthMap(
   file.release();
 }
 
+// TODO: specifically this is one type of noise using a specific RGBD
+// measurement model
 std::pair<gtsam::Vector3, gtsam::Matrix33> backProjectAndCovariance(
     const Feature& feature, const Camera& camera, double pixel_sigma,
     double depth_sigma) {

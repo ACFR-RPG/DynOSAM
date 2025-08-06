@@ -562,7 +562,7 @@ TEST(RegularBackendModule, testObjectCentricFormulations) {
   const double dynamic_point_sigma = 0.1;
   const double static_point_sigma = 0.1;
 
-  const double X_R_sigma = 0.1;
+  const double X_R_sigma = 0.01;
   const double X_t_sigma = 0.2;
 
   dyno_testing::RGBDScenario::NoiseParams noise_params;
@@ -698,7 +698,7 @@ TEST(RegularBackendModule, testObjectCentricFormulations) {
   //           backend_params, dyno_testing::makeDefaultCameraPtr(),
   //           dyno::RegularBackendModule::UpdaterType::TESTING_HYBRID_SMF));
 
-  backend_params.use_vo = true;
+  backend_params.use_vo = false;
   backend_params.optimization_mode = 0;
   backend_params.dynamic_point_noise_as_robust = true;
   tester.addTester<dyno_testing::BatchTester>(

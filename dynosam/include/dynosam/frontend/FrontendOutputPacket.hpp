@@ -32,6 +32,7 @@
 
 #include "dynosam/common/Camera.hpp"
 #include "dynosam/common/GroundTruthPacket.hpp"
+#include "dynosam/common/PointCloudProcess.hpp"
 #include "dynosam/common/SensorModels.hpp"
 #include "dynosam/common/Types.hpp"
 #include "dynosam/frontend/Frontend-Definitions.hpp"
@@ -41,10 +42,14 @@
 namespace dyno {
 
 struct VisionImuPacket {
+  DYNO_POINTER_TYPEDEFS(VisionImuPacket)
+
   struct Tracks {
     TrackingStatus status;
     CameraMeasurementStatusVector measurements;
     bool is_keyframe{false};
+
+    bool valid() const { return status == TrackingStatus::VALID; }
   };
 
   struct CameraTracks : public Tracks {
@@ -59,17 +64,34 @@ struct VisionImuPacket {
     Motion3ReferenceFrame H_W_k_1_k;
   };
 
+  //! Timestamp
   Timestamp timestamp;
+  //! Frame Id
   FrameId frame_id;
+
+  //! Possible PIM going from last frame to this frame
   ImuFrontend::PimPtr pim;
 
+  //! Static point tracks
   CameraTracks static_tracks;
+  //! Dynamic point tracks associated to each object
   gtsam::FastMap<ObjectId, ObjectTracks> object_tracks;
 
+  //! Possible camera
+  Camera::Ptr camera;
+
+  //! Possible dense point cloud (with label and RGB) in camera frame
+  PointCloudLabelRGB::Ptr dense_labelled_cloud;
+
+  //! Trajectory of all objects from the frontend (mostly used for
+  //! visualisation)
   ObjectPoseMap object_poses;
+  //! Trajectory of camera from the frontend (mostly used for visualisation)
   gtsam::Pose3Vector camera_poses;
 
+  //! Optional ground truth information for this frame
   GroundTruthInputPacket::Optional ground_truth;
+  //! Optional debug/visualiation imagery for this frame
   DebugImagery::Optional debug_imagery;
 };
 

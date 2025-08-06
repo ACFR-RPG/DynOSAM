@@ -59,8 +59,19 @@ DEFINE_double(dynamic_pixel_noise_sigma, 2.0,
 DEFINE_bool(use_smoothing_factor, true,
             "If the backend should use the smoothing factor between motions");
 
+DEFINE_bool(
+    use_vo_factor, true,
+    "If true, use visual odometry measurement as factor from the frontend");
+
 DEFINE_bool(use_robust_kernals, true,
             "If the backend should use the robust noise kernals");
 DEFINE_bool(
     dynamic_point_noise_as_robust, true,
     "If the backend should use the robust noise kernals on the Dynamic Points");
+
+DEFINE_int32(min_static_observations, 2u,
+             "Min number of observations of a point before it is added to the "
+             "optimisation");
+DEFINE_int32(min_dynamic_observations, 3u,
+             "Min number of observations of a point before it is added to the "
+             "optimisation");

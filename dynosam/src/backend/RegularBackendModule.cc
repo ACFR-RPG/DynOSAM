@@ -57,10 +57,6 @@ DEFINE_int32(opt_window_size, 10, "Sliding window size for optimisation");
 DEFINE_int32(opt_window_overlap, 4, "Overlap for window size optimisation");
 
 DEFINE_bool(
-    use_vo_factor, true,
-    "If true, use visual odometry measurement as factor from the frontend");
-
-DEFINE_bool(
     use_identity_rot_L_for_init, false,
     "For experiments: set the initalisation point of L with identity rotation");
 DEFINE_bool(corrupt_L_for_init, false,

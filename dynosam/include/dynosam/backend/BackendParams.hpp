@@ -53,25 +53,20 @@ DECLARE_double(dynamic_pixel_noise_sigma);
 DECLARE_bool(use_smoothing_factor);
 DECLARE_bool(use_robust_kernals);
 
+DECLARE_bool(use_vo_factor);
+
 DECLARE_bool(dynamic_point_noise_as_robust);
 
 DECLARE_int32(optimization_mode);
 
 DECLARE_string(updater_suffix);
 
+DECLARE_int32(min_static_observations);
+DECLARE_int32(min_dynamic_observations);
+
 namespace dyno {
 
 struct BackendParams {
-  //! Only Mono
-  //   double static_smart_projection_noise_sigma_ =
-  //       FLAGS_static_point_sigma;  //! Isotropic noise used for the smart
-  //                                  //! projection factor (mono) on static
-  //                                  points
-  //   double dynamic_smart_projection_noise_sigma_ =
-  //       FLAGS_dynamic_point_sigma;  //! Isotropic noise used for the smart
-  //                                   //! projection factor (mono) on dynamic
-  //                                   points
-
   //! RGBD/Stereo
   bool use_robust_kernals_ = FLAGS_use_robust_kernals;
   bool static_point_noise_as_robust = true;
@@ -111,7 +106,7 @@ struct BackendParams {
 
   bool use_logger_ = true;  // TODO: make param!?
   bool use_full_batch_opt = true;
-  bool use_vo = true;
+  bool use_vo = FLAGS_use_vo_factor;
 
   int32_t optimization_mode = FLAGS_optimization_mode;
 
@@ -119,8 +114,8 @@ struct BackendParams {
 
   std::string updater_suffix = FLAGS_updater_suffix;
 
-  size_t min_static_observations = 2u;
-  size_t min_dynamic_observations = 3u;
+  size_t min_static_observations = FLAGS_min_static_observations;
+  size_t min_dynamic_observations = FLAGS_min_dynamic_observations;
 
   static BackendParams fromYaml(const std::string& file_path);
 

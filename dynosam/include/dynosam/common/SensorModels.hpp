@@ -446,6 +446,10 @@ class CameraMeasurement {
   MeasurementWithCovariance<Keypoint>::Optional right_keypoint_ = {};
 };
 
+// TODO: I think we can depricate a lot of this functionality now we have just
+// one visual measurement
+//  that captures all camera tings...
+
 /// @brief Alias to a visual measurement with a fixed-sized covariance matrix.
 /// @tparam T Measurement type (e.g. 2D keypoint, 3D landmark)
 template <typename T>
@@ -471,19 +475,6 @@ typedef GenericTrackedStatusVector<KeypointStatus> StatusKeypointVector;
 /// @brief A vector of CameraMeasurementStatus
 typedef GenericTrackedStatusVector<CameraMeasurementStatus>
     CameraMeasurementStatusVector;
-
-/**
- * @brief Noise parameters used when constructing the output of each frontend
- * and defines the measurement noise of each visual measurement.
- *
- */
-struct VisualNoiseParams {
-  //! sigma (standard devation) on each measured keypoint. Pixel units.
-  double keypoint_sigma = 2.0;
-  //! sigma (standard deviation) on the depth of each measured keypoint. Pixel
-  //! meters.
-  double depth_sigma = 0.3;
-};
 
 template <>
 struct measurement_traits<LandmarkKeypoint> {

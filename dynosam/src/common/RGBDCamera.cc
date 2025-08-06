@@ -55,7 +55,7 @@ bool RGBDCamera::projectRight(Feature::Ptr feature) const {
       return false;
     }
 
-    feature->rightKeypoint(uR);
+    feature->rightKeypoint(Keypoint(uL, uR));
     return true;
   }
   return false;
