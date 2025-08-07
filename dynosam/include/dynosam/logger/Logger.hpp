@@ -270,7 +270,7 @@ class EstimationModuleLogger {
 
   // logs object pose (to a differnet file)
   virtual std::optional<size_t> logObjectPose(
-      FrameId frame_id, const ObjectPoseMap& propogated_poses,
+      FrameId frame_id, const PoseEstimateMap& object_poses,
       const std::optional<GroundTruthPacketMap>& gt_packets = {});
 
   virtual std::optional<size_t> logObjectPose(

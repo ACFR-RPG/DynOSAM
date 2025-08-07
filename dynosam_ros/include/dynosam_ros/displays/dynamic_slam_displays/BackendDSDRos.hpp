@@ -46,7 +46,8 @@ class BackendDSDRos : public BackendDisplay, DSDRos {
   BackendDSDRos(const DisplayParams params, rclcpp::Node::SharedPtr node);
   ~BackendDSDRos() = default;
 
-  void spinOnce(const BackendOutputPacket::ConstPtr& backend_output) override;
+  void spinOnceImpl(
+      const BackendOutputPacket::ConstPtr& backend_output) override;
 
  private:
   void publishTemporalDynamicMaps(

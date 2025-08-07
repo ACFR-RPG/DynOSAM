@@ -41,17 +41,25 @@
 
 namespace dyno {
 
-struct VisionImuPacket {
+class VisionImuPacket {
+ public:
   DYNO_POINTER_TYPEDEFS(VisionImuPacket)
 
+  /// @brief Basic track structure representing a tracking status and visual
+  /// measurements
   struct Tracks {
     TrackingStatus status;
     CameraMeasurementStatusVector measurements;
     bool is_keyframe{false};
 
-    bool valid() const { return status == TrackingStatus::VALID; }
+    inline bool valid() const { return status == TrackingStatus::VALID; }
   };
 
+  /**
+   * @brief Ego-motion/camera tracks representing visual measurements on the
+   * static background and ego-motion information.
+   *
+   */
   struct CameraTracks : public Tracks {
     //! Camera pose in world frame
     gtsam::Pose3 X_W_k;
@@ -59,57 +67,118 @@ struct VisionImuPacket {
     gtsam::Pose3 T_k_1_k;
   };
 
+  /**
+   * @brief Object track information epresenting visual measurements for a
+   * single object as well as frame-to-frame (and possibly other) motion/pose
+   * information.
+   *
+   */
   struct ObjectTracks : public Tracks {
     //! Object motion from k-1 to k in W
     Motion3ReferenceFrame H_W_k_1_k;
+    //! Object pose at k in W
+    gtsam::Pose3 L_W_k;
   };
+  //! Map of object id's to ObjectTracks
+  using ObjectTrackMap = gtsam::FastMap<ObjectId, ObjectTracks>;
 
-  //! Timestamp
-  Timestamp timestamp;
-  //! Frame Id
-  FrameId frame_id;
+  Timestamp timestamp() const;
+  FrameId frameId() const;
+  ImuFrontend::PimPtr pim() const;
+  Camera::ConstPtr camera() const;
+  PointCloudLabelRGB::Ptr denseLabelledCloud() const;
 
-  //! Possible PIM going from last frame to this frame
-  ImuFrontend::PimPtr pim;
+  const CameraTracks& cameraTracks() const;
+  const gtsam::Pose3& cameraPose() const;
+  /**
+   * @brief Returns the relative camera motion T_k_1_k, representing the motion
+   * of the camera from k-1 to k in the camera local frame (at k-1)
+   *
+   * @return const gtsam::Pose3&
+   */
+  const gtsam::Pose3& relativeCameraTransform() const;
 
-  //! Static point tracks
-  CameraTracks static_tracks;
-  //! Dynamic point tracks associated to each object
-  gtsam::FastMap<ObjectId, ObjectTracks> object_tracks;
+  const ObjectTrackMap& objectTracks() const;
+  /**
+   * @brief Object poses for this frame matching the set of objects available in
+   * ObjectTracks
+   *
+   * @return const PoseEstimateMap&
+   */
+  const PoseEstimateMap& objectPoses() const;
+  const ObjectIds& getObjectIds() const;
+  const MotionEstimateMap& objectMotions() const;
 
-  //! Possible camera
-  Camera::Ptr camera;
+  const GroundTruthInputPacket::Optional& groundTruthPacket() const;
+  const DebugImagery::Optional& debugImagery() const;
 
-  //! Possible dense point cloud (with label and RGB) in camera frame
-  PointCloudLabelRGB::Ptr dense_labelled_cloud;
+  const CameraMeasurementStatusVector& objectMeasurements() const;
+  const CameraMeasurementStatusVector& staticMeasurements() const;
 
-  //! Trajectory of all objects from the frontend (mostly used for
-  //! visualisation)
-  ObjectPoseMap object_poses;
-  //! Trajectory of camera from the frontend (mostly used for visualisation)
-  gtsam::Pose3Vector camera_poses;
+  // Gets static landmark measurements (if any)
+  StatusLandmarkVector staticLandmarkMeasurements() const;
+  // Gets dynamic landmark measurements (if any)
+  StatusLandmarkVector dynamicLandmarkMeasurements() const;
 
-  //! Optional ground truth information for this frame
-  GroundTruthInputPacket::Optional ground_truth;
-  //! Optional debug/visualiation imagery for this frame
-  DebugImagery::Optional debug_imagery;
-
-  // helper functions
-  ObjectIds getObjectIds() const {
-    ObjectIds object_ids;
-    object_ids.reserve(object_tracks.size());
-    for (const auto& kv : object_tracks) {
-      object_ids.push_back(kv.first);
-    }
-    return object_ids;
-  }
-
-  const gtsam::Pose3 cameraPose() const { return static_tracks.X_W_k; }
+  VisionImuPacket& timestamp(Timestamp ts);
+  VisionImuPacket& frameId(FrameId id);
+  VisionImuPacket& pim(const ImuFrontend::PimPtr& pim);
+  VisionImuPacket& camera(const Camera::Ptr& cam);
+  VisionImuPacket& denseLabelledCloud(const PointCloudLabelRGB::Ptr& cloud);
+  VisionImuPacket& cameraTracks(const CameraTracks& camera_tracks);
+  VisionImuPacket& objectTracks(const ObjectTrackMap& object_tracks);
+  VisionImuPacket& objectTracks(const ObjectTracks& object_track,
+                                ObjectId object_id);
+  VisionImuPacket& groundTruthPacket(
+      const GroundTruthInputPacket::Optional& gt);
+  VisionImuPacket& debugImagery(const DebugImagery::Optional& dbg);
 
   bool operator==(const VisionImuPacket& other) const {
-    return frame_id == other.frame_id && timestamp == other.timestamp;
+    return frame_id_ == other.frame_id_ && timestamp_ == other.timestamp_;
     // TODO: minimal operator
   }
+
+ protected:
+  //! Timestamp
+  Timestamp timestamp_;
+  //! Frame Id
+  FrameId frame_id_;
+
+  //! Possible PIM going from last frame to this frame
+  ImuFrontend::PimPtr pim_;
+
+  //! Possible camera
+  Camera::Ptr camera_;
+
+  //! Possible dense point cloud (with label and RGB) in camera frame
+  PointCloudLabelRGB::Ptr dense_labelled_cloud_;
+  //! Optional ground truth information for this frame
+  GroundTruthInputPacket::Optional ground_truth_;
+  //! Optional debug/visualiation imagery for this frame
+  DebugImagery::Optional debug_imagery_;
+
+ protected:
+  void updateObjectTrackCaches();
+
+ private:
+  //! Static point tracks
+  CameraTracks camera_tracks_;
+  //! Dynamic point tracks associated to each object
+  ObjectTrackMap object_tracks_;
+
+  //! Object poses for this frame (cached when object tracks are set)
+  PoseEstimateMap cached_object_poses_;
+  //! Object motions for this frame (cached when object tracks are set)
+  MotionEstimateMap cached_object_motions_;
+  //! Object ids for this frame (cached when object tracks are set)
+  ObjectIds cached_object_ids_;
+  //! All object measurements for this frame
+  CameraMeasurementStatusVector cached_object_measurements_;
+
+ private:
+  static void fillLandmarkMeasurements(
+      StatusLandmarkVector& landmarks,
+      const CameraMeasurementStatusVector& camera_measurements);
 };
 
 struct FrontendOutputPacketBase {

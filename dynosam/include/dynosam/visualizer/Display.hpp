@@ -31,14 +31,31 @@
 #pragma once
 
 #include "dynosam/backend/BackendOutputPacket.hpp"
+#include "dynosam/common/SharedModuleInfo.hpp"
 #include "dynosam/common/Types.hpp"
 #include "dynosam/frontend/FrontendOutputPacket.hpp"
-#include "dynosam/visualizer/Visualizer-Definitions.hpp"  //for image queue
 
 namespace dyno {
 
+namespace internal {
 template <typename INPUT>
-class DisplayBase {
+std::pair<Timestamp, FrameId> collectTemporalData(const INPUT&);
+
+template <>
+inline std::pair<Timestamp, FrameId> collectTemporalData(
+    const VisionImuPacket& input) {
+  return {input.timestamp(), input.frameId()};
+}
+
+template <>
+inline std::pair<Timestamp, FrameId> collectTemporalData(
+    const BackendOutputPacket& input) {
+  return {input.timestamp, input.frame_id};
+}
+}  // namespace internal
+
+template <typename INPUT>
+class DisplayBase : public SharedModuleInterface {
  public:
   using Input = INPUT;
   using This = DisplayBase<INPUT>;
@@ -49,7 +66,15 @@ class DisplayBase {
   DisplayBase() {}
   virtual ~DisplayBase() {}
 
-  virtual void spinOnce(const InputConstPtr& input) = 0;
+  void spinOnce(const InputConstPtr& input) {
+    CHECK(input);
+    auto [timestamp, frame_id] = internal::collectTemporalData<INPUT>(*input);
+    this->shared_module_info.updateTimestampMapping(frame_id, timestamp);
+    spinOnceImpl(input);
+  }
+
+ protected:
+  virtual void spinOnceImpl(const InputConstPtr& input) = 0;
 };
 
 using FrontendDisplay = DisplayBase<VisionImuPacket>;

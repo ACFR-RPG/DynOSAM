@@ -83,10 +83,14 @@ class RGBDInstanceFrontendModule : public FrontendModule {
   bool solveCameraMotion(Frame::Ptr frame_k, const Frame::Ptr& frame_k_1,
                          std::optional<gtsam::Rot3> R_curr_ref = {});
 
-  VisionImuPacket::Ptr constructOutputAndLog(
-      const FrontendInputPacketBase::ConstPtr& input, const Frame& frame,
-      const ObjectMotionMap& object_motions, const ObjectPoseMap& object_poses,
-      const gtsam::Pose3& T_k_1_k, ImuFrontend::PimPtr pim);
+  void fillOutputPacketWithTracks(VisionImuPacket::Ptr vision_imu_packet,
+                                  const Frame& frame,
+                                  const gtsam::Pose3& T_k_1_k,
+                                  const ObjectMotionMap& object_motions,
+                                  const ObjectPoseMap& object_poses) const;
+
+  void sendToFrontendLogger(const Frame::Ptr& frame,
+                            const VisionImuPacket::Ptr& vision_imu_packet);
 
   //   VisionImuPacket::Ptr constructOutput(
   //       const Frame& frame, const ObjectMotionMap& object_motions,

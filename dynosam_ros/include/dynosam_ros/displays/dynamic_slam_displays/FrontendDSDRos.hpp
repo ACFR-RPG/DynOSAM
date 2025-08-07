@@ -48,7 +48,7 @@ class FrontendDSDRos : public FrontendDisplay, DSDRos {
   FrontendDSDRos(const DisplayParams params, rclcpp::Node::SharedPtr node);
   ~FrontendDSDRos() = default;
 
-  void spinOnce(const VisionImuPacket::ConstPtr& frontend_output) override;
+  void spinOnceImpl(const VisionImuPacket::ConstPtr& frontend_output) override;
 
  private:
   void tryPublishDebugImagery(const VisionImuPacket::ConstPtr& frontend_output);
@@ -56,9 +56,11 @@ class FrontendDSDRos : public FrontendDisplay, DSDRos {
   void tryPublishVisualOdometry(
       const VisionImuPacket::ConstPtr& frontend_output);
 
-  // TODO: not publishing object stuff and point cloud!!!
-  //   void processRGBDOutputpacket(
-  //       const RGBDInstanceOutputPacket::ConstPtr& rgbd_packet);
+  void tryPublishPointClouds(const VisionImuPacket::ConstPtr& frontend_output);
+  void tryPublishObjects(const VisionImuPacket::ConstPtr& frontend_output);
+
+  void updateAccumulatedDataStructured(
+      const VisionImuPacket::ConstPtr& frontend_output);
 
  private:
   //! Transport for ground truth publishing
@@ -71,6 +73,13 @@ class FrontendDSDRos : public FrontendDisplay, DSDRos {
 
   rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr
       dense_dynamic_cloud_pub_;
+
+  //! Accumulated camera poses
+  gtsam::Pose3Vector camera_poses_;
+  //! Accumulated object motions
+  ObjectMotionMap object_motions_;
+  //! Accumulated object poses
+  ObjectPoseMap object_poses_;
 };
 
 }  // namespace dyno

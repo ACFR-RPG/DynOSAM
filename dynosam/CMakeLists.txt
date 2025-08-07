@@ -108,6 +108,7 @@ add_library(${PROJECT_NAME} SHARED
   src/frontend/FrontendModule.cc
   src/frontend/FrontendParams.cc
   src/frontend/RGBDInstanceFrontendModule.cc
+  src/frontend/FrontendOutputPacket.cc
   src/frontend/vision/ORBextractor.cc
   src/frontend/vision/FeatureTracker.cc
   src/frontend/vision/ObjectTracker.cc

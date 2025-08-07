@@ -504,6 +504,9 @@ using MotionEstimateMap = MotionReferenceEstimateMap<ObjectId, Motion3>;
 /// @brief Alias of a MotionReferenceFrame using Motion3 (Pose3)
 using Motion3ReferenceFrame = MotionReferenceFrame<Motion3>;
 
+/// @brief Map of object id's to gtsam::Pose3
+using PoseEstimateMap = gtsam::FastMap<ObjectId, gtsam::Pose3>;
+
 /**
  * @brief Generic mapping of Object Id to FrameId to VALUE within a nested
  * gtsam::FastMap structure. This is a common datastrcture used to

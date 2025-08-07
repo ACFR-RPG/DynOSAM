@@ -42,7 +42,7 @@ BackendDSDRos::BackendDSDRos(const DisplayParams params,
           "temporal_dynamic_cloud", 1);
 }
 
-void BackendDSDRos::spinOnce(
+void BackendDSDRos::spinOnceImpl(
     const BackendOutputPacket::ConstPtr& backend_output) {
   // publish vo and path
   auto tic = utils::Timer::tic();
@@ -67,7 +67,7 @@ void BackendDSDRos::spinOnce(
 
   const auto& object_motions = backend_output->optimized_object_motions;
   const auto& object_poses = backend_output->optimized_object_poses;
-  const auto& timestamp_map = backend_output->involved_timestamp;
+  const auto& timestamp_map = this->shared_module_info.getTimestampMap();
 
   // // publish objects
   DSDTransport::Publisher object_poses_publisher = dsd_transport_.addObjectInfo(

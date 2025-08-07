@@ -35,7 +35,7 @@
 namespace dyno {
 
 class OpenCVFrontendDisplay : public FrontendDisplay {
-  void spinOnce(const VisionImuPacket::ConstPtr& frontend_output) override;
+  void spinOnceImpl(const VisionImuPacket::ConstPtr& frontend_output) override;
 };
 
 }  // namespace dyno

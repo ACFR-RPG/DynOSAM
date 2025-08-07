@@ -43,8 +43,8 @@ RGBDScenario::Output RGBDScenario::getOutput(FrameId frame_id) const {
   static std::random_device rd;
   // static std::mt19937 gen(rd());
 
-  VisionImuPacket::Ptr ground_truth_input = std::make_shared<VisionImuPacket>();
-  VisionImuPacket::Ptr noisy_input = std::make_shared<VisionImuPacket>();
+  VisionImuPacket::CameraTracks camera_tracks, noisy_camera_tracks;
+  VisionImuPacket::ObjectTrackMap object_tracks, noisy_object_tracks;
 
   GroundTruthInputPacket gt_packet;
   gt_packet.frame_id_ = frame_id;
@@ -73,11 +73,11 @@ RGBDScenario::Output RGBDScenario::getOutput(FrameId frame_id) const {
     noisy_X_world_k = X_world_k;
   }
 
-  ground_truth_input->static_tracks.X_W_k = X_world_k;
-  noisy_input->static_tracks.X_W_k = noisy_X_world_k;
+  camera_tracks.X_W_k = X_world_k;
+  noisy_camera_tracks.X_W_k = noisy_X_world_k;
 
-  ground_truth_input->static_tracks.T_k_1_k = w_T_k_1_k;
-  noisy_input->static_tracks.T_k_1_k = noisy_w_T_k_1_k;
+  camera_tracks.T_k_1_k = w_T_k_1_k;
+  noisy_camera_tracks.T_k_1_k = noisy_w_T_k_1_k;
 
   // tracklets should be uniqyue but becuase we use the DynamicPointSymbol
   // they only need to be unique per frame
@@ -106,6 +106,7 @@ RGBDScenario::Output RGBDScenario::getOutput(FrameId frame_id) const {
       object_track.H_W_k_1_k = Motion3ReferenceFrame(
           H_world_k, Motion3ReferenceFrame::Style::F2F, ReferenceFrame::GLOBAL,
           previous_frame, frame_id);
+      object_track.L_W_k = L_world_k;
 
       gtsam::Vector6 motion_sigmas;
       motion_sigmas.head<3>().setConstant(noise_params_.H_R_sigma);
@@ -116,6 +117,7 @@ RGBDScenario::Output RGBDScenario::getOutput(FrameId frame_id) const {
       noisy_object_track.H_W_k_1_k = Motion3ReferenceFrame(
           noisy_H_world_k, Motion3ReferenceFrame::Style::F2F,
           ReferenceFrame::GLOBAL, previous_frame, frame_id);
+      noisy_object_track.L_W_k = L_world_k;
 
       // convert to status vectors
       for (const TrackedPoint& tracked_p_world : points_world) {
@@ -144,8 +146,8 @@ RGBDScenario::Output RGBDScenario::getOutput(FrameId frame_id) const {
                                     object_id, ReferenceFrame::LOCAL));
       }
 
-      ground_truth_input->object_tracks.insert2(object_id, object_track);
-      noisy_input->object_tracks.insert2(object_id, noisy_object_track);
+      object_tracks.insert2(object_id, object_track);
+      noisy_object_tracks.insert2(object_id, noisy_object_track);
     }
   }
 
@@ -170,18 +172,32 @@ RGBDScenario::Output RGBDScenario::getOutput(FrameId frame_id) const {
     measurement.landmark(p_camera);
     measurement_noisy.landmark(noisy_p_camera);
 
-    ground_truth_input->static_tracks.measurements.push_back(
+    camera_tracks.measurements.push_back(
         CameraMeasurementStatus(measurement, frame_id, tracklet_id,
                                 background_label, ReferenceFrame::LOCAL));
 
-    noisy_input->static_tracks.measurements.push_back(
+    noisy_camera_tracks.measurements.push_back(
         CameraMeasurementStatus(measurement_noisy, frame_id, tracklet_id,
                                 background_label, ReferenceFrame::LOCAL));
   }
 
+  VisionImuPacket::Ptr ground_truth_input = std::make_shared<VisionImuPacket>();
+  VisionImuPacket::Ptr noisy_input = std::make_shared<VisionImuPacket>();
+
   ground_truths_.insert2(frame_id, gt_packet);
-  ground_truth_input->ground_truth = gt_packet;
-  noisy_input->ground_truth = gt_packet;
+  noisy_camera_poses_.insert2(frame_id, noisy_X_world_k);
+
+  ground_truth_input->groundTruthPacket(gt_packet);
+  ground_truth_input->cameraTracks(camera_tracks);
+  ground_truth_input->objectTracks(object_tracks);
+  ground_truth_input->frameId(frame_id);
+  ground_truth_input->timestamp(frame_id);
+
+  noisy_input->groundTruthPacket(gt_packet);
+  noisy_input->cameraTracks(noisy_camera_tracks);
+  noisy_input->objectTracks(noisy_object_tracks);
+  noisy_input->frameId(frame_id);
+  noisy_input->timestamp(frame_id);
 
   return {ground_truth_input, noisy_input};
 }

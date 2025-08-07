@@ -136,7 +136,7 @@ def run_ecmr_experiment_sequences(dataset_path, dataset_name, dataset_loader, *a
         args_list.extend(list(specific_args))
         return args_list
     # run fukk hybrid in (full)batch mode to get results!!
-    # run_sequnce(dataset_path, dataset_name, dataset_loader, parallel_hybrid,  *append_args_list(), run_as_frontend=False, run_as_experiment=False, run_analysis=False)
+    run_sequnce(dataset_path, dataset_name, dataset_loader, parallel_hybrid,  *append_args_list(), run_as_frontend=False, run_as_experiment=False, run_analysis=False)
     # run_sequnce(dataset_path, dataset_name, dataset_loader, full_hybrid, *append_args_list("--optimization_mode=0"), run_as_frontend=False, run_as_experiment=False, run_analysis=False)
     # run_sequnce(dataset_path, dataset_name, dataset_loader, motion_world_backend_type, *append_args_list("--optimization_mode=0"), run_as_frontend=False, run_as_experiment=False, run_analysis=True)
 
@@ -144,7 +144,7 @@ def run_ecmr_experiment_sequences(dataset_path, dataset_name, dataset_loader, *a
 
     # pass
     # run the two batches again but with increemntal mode and additional suffix so we can individual logs!!!
-    run_sequnce(dataset_path, dataset_name, dataset_loader, full_hybrid, *append_args_list("--optimization_mode=2", "--regular_backend_relinearize_skip=10","--updater_suffix=inc", "--use_robust_kernals=true", "--dynamic_point_noise_as_robust=true"), run_as_frontend=False, run_as_experiment=False, run_analysis=False)
+    # run_sequnce(dataset_path, dataset_name, dataset_loader, full_hybrid, *append_args_list("--optimization_mode=2", "--regular_backend_relinearize_skip=10","--updater_suffix=inc", "--use_robust_kernals=true", "--dynamic_point_noise_as_robust=true"), run_as_frontend=False, run_as_experiment=False, run_analysis=False)
     # run_sequnce(dataset_path, dataset_name, dataset_loader, motion_world_backend_type, *append_args_list("--optimization_mode=2", "--regular_backend_relinearize_skip=10","--updater_suffix=inc"), run_as_frontend=False, run_as_experiment=False, run_analysis=True)
 
     # run_sequnce(dataset_path, dataset_name, dataset_loader, full_hybrid, *append_args_list("--optimization_mode=2", "--regular_backend_relinearize_skip=1","--updater_suffix=inc_relin1"), run_as_frontend=False, run_as_experiment=False, run_analysis=True)

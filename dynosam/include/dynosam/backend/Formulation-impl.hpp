@@ -207,15 +207,12 @@ UpdateObservationResult Formulation<MAP>::updateStaticObservations(
       if (result.debug_info) result.debug_info->num_static_factors++;
       result.updateAffectedObject(frame_id_k, 0);
 
-      LOG(INFO) << point_key << " adding factor for frame" << frame_id_k
-                << " with m: " << lmk_node->numObservations();
+      // LOG(INFO) << point_key << " adding factor for frame" << frame_id_k
+      //           << " with m: " << lmk_node->numObservations();
 
     } else {
       // see if we have enough observations to add this lmk
       if (lmk_node->numObservations() < params_.min_static_observations) {
-        LOG(INFO) << point_key
-                  << " not enough obs: " << lmk_node->numObservations();
-
         continue;
       }
 
@@ -250,9 +247,6 @@ UpdateObservationResult Formulation<MAP>::updateStaticObservations(
               params_.k_huber_3d_points_, measurement_covariance);
         }
 
-        LOG(INFO) << point_key << " adding factor for frame" << seen_frame_id
-                  << " with m: " << lmk_node->numObservations();
-
         internal_new_factors.emplace_shared<PoseToPointFactor>(
             seen_frame->makePoseKey(),  // pose key at previous frames
             point_key, measured_point_local, measurement_covariance);
@@ -271,9 +265,6 @@ UpdateObservationResult Formulation<MAP>::updateStaticObservations(
                    gtsam::Point3(T_world_camera_frontend * measured));
       new_values.insert(point_key, lmk_world);
       is_other_values_in_map.insert2(point_key, true);
-
-      LOG(INFO) << "Added new tracklet " << point_key << " at frame "
-                << frame_id_k << " with m: " << lmk_node->numObservations();
 
       if (result.debug_info) result.debug_info->num_new_static_points++;
       result.updateAffectedObject(frame_id_k, 0);
@@ -634,7 +625,7 @@ void Formulation<MAP>::logBackendFromMap(const BackendMetaData& backend_info) {
       LOG(WARNING) << "Could not log camera pose estimate at frame " << frame_k;
     }
 
-    logger->logObjectPose(frame_k, object_pose_map, ground_truth_packets);
+    logger->logObjectPose(object_pose_map, ground_truth_packets);
 
     if (map->frameExists(frame_k)) {
       auto static_map = accessor->getStaticLandmarkEstimates(frame_k);

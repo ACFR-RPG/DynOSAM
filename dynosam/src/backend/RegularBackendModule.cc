@@ -146,8 +146,8 @@ RegularBackendModule::~RegularBackendModule() {
 
 RegularBackendModule::SpinReturn RegularBackendModule::boostrapSpinImpl(
     VisionImuPacket::ConstPtr input) {
-  const FrameId frame_k = input->frame_id;
-  const Timestamp timestamp = input->timestamp;
+  const FrameId frame_k = input->frameId();
+  const Timestamp timestamp = input->timestamp();
   CHECK_EQ(spin_state_.frame_id, frame_k);
   LOG(INFO) << "Running backend " << frame_k;
   gtsam::Values new_values;
@@ -218,8 +218,8 @@ RegularBackendModule::SpinReturn RegularBackendModule::boostrapSpinImpl(
 
 RegularBackendModule::SpinReturn RegularBackendModule::nominalSpinImpl(
     VisionImuPacket::ConstPtr input) {
-  const FrameId frame_k = input->frame_id;
-  const Timestamp timestamp = input->timestamp;
+  const FrameId frame_k = input->frameId();
+  const Timestamp timestamp = input->timestamp();
   LOG(INFO) << "Running backend " << frame_k;
   CHECK_EQ(spin_state_.frame_id, frame_k);
 
@@ -535,15 +535,15 @@ void RegularBackendModule::addInitialStates(
     gtsam::Values& new_values, gtsam::NonlinearFactorGraph& new_factors) {
   CHECK(formulation);
 
-  const FrameId frame_k = input->frame_id;
-  const Timestamp timestamp = input->timestamp;
-  const auto& X_k_initial = input->static_tracks.X_W_k;
+  const FrameId frame_k = input->frameId();
+  const Timestamp timestamp = input->timestamp();
+  const auto& X_k_initial = input->cameraPose();
 
   // update map
   updateMapWithMeasurements(frame_k, input, X_k_initial);
 
   // update formulation with initial states
-  if (input->pim) {
+  if (input->pim()) {
     LOG(INFO) << "Initialising backend with IMU states!";
     this->addInitialVisualInertialState(
         frame_k, formulation, new_values, new_factors, noise_models_,
@@ -562,11 +562,11 @@ void RegularBackendModule::addStates(const VisionImuPacket::ConstPtr& input,
                                      gtsam::NonlinearFactorGraph& new_factors) {
   CHECK(formulation);
 
-  const FrameId frame_k = input->frame_id;
+  const FrameId frame_k = input->frameId();
 
   const gtsam::NavState predicted_nav_state = this->addVisualInertialStates(
       frame_k, formulation, new_values, new_factors, noise_models_,
-      input->static_tracks.T_k_1_k, input->pim);
+      input->relativeCameraTransform(), input->pim());
 
   updateMapWithMeasurements(frame_k, input, predicted_nav_state.pose());
 }
@@ -574,15 +574,15 @@ void RegularBackendModule::addStates(const VisionImuPacket::ConstPtr& input,
 void RegularBackendModule::updateMapWithMeasurements(
     FrameId frame_id_k, const VisionImuPacket::ConstPtr& input,
     const gtsam::Pose3& X_k_w) {
-  CHECK_EQ(frame_id_k, input->frame_id);
+  CHECK_EQ(frame_id_k, input->frameId());
 
   // update static and ego motion
-  map_->updateObservations(input->static_tracks.measurements);
+  map_->updateObservations(input->staticMeasurements());
   map_->updateSensorPoseMeasurement(frame_id_k, Pose3Measurement(X_k_w));
 
   // update dynamic and motions
   MotionEstimateMap object_motions;
-  for (const auto& [object_id, object_track] : input->object_tracks) {
+  for (const auto& [object_id, object_track] : input->objectTracks()) {
     map_->updateObservations(object_track.measurements);
     object_motions.insert2(object_id, object_track.H_W_k_1_k);
   }

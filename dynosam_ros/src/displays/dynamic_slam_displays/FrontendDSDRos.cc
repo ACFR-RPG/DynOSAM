@@ -62,8 +62,10 @@ FrontendDSDRos::FrontendDSDRos(const DisplayParams params,
           "dense_labelled_cloud", 1);
 }
 
-void FrontendDSDRos::spinOnce(
+void FrontendDSDRos::spinOnceImpl(
     const VisionImuPacket::ConstPtr& frontend_output) {
+  updateAccumulatedDataStructured(frontend_output);
+
   // publish debug imagery
   tryPublishDebugImagery(frontend_output);
 
@@ -83,9 +85,9 @@ void FrontendDSDRos::spinOnce(
 
 void FrontendDSDRos::tryPublishDebugImagery(
     const VisionImuPacket::ConstPtr& frontend_output) {
-  if (!frontend_output->debug_imagery_) return;
+  if (!frontend_output->debugImagery()) return;
 
-  const DebugImagery& debug_imagery = *frontend_output->debug_imagery_;
+  const DebugImagery& debug_imagery = *frontend_output->debugImagery();
   if (debug_imagery.tracking_image.empty()) return;
 
   std_msgs::msg::Header hdr;
@@ -97,12 +99,13 @@ void FrontendDSDRos::tryPublishDebugImagery(
 
 void FrontendDSDRos::tryPublishGroundTruth(
     const VisionImuPacket::ConstPtr& frontend_output) {
-  if (!frontend_output->gt_packet_ || !frontend_output->debug_imagery_) return;
+  if (!frontend_output->groundTruthPacket() || !frontend_output->debugImagery())
+    return;
 
-  const DebugImagery& debug_imagery = *frontend_output->debug_imagery_;
+  const DebugImagery& debug_imagery = *frontend_output->debugImagery();
   const cv::Mat& rgb_image = debug_imagery.rgb_viz;
-  const auto timestamp = frontend_output->getTimestamp();
-  const auto frame_id = frontend_output->getFrameId();
+  const auto timestamp = frontend_output->timestamp();
+  const auto frame_id = frontend_output->frameId();
 
   if (rgb_image.empty()) return;
 
@@ -113,7 +116,8 @@ void FrontendDSDRos::tryPublishGroundTruth(
   // hack! recreate the timestamp since it is not in the frontend base packet!!
   timestamp_map.insert2(frame_id, timestamp);
 
-  const GroundTruthInputPacket& gt_packet = frontend_output->gt_packet_.value();
+  const GroundTruthInputPacket& gt_packet =
+      frontend_output->groundTruthPacket().value();
 
   for (const auto& object_pose_gt : gt_packet.object_poses_) {
     // check we have a gt motion here
@@ -170,10 +174,60 @@ void FrontendDSDRos::tryPublishVisualOdometry(
   // publish vo
   constexpr static bool kPublishOdomAsTf = true;
   this->publishVisualOdometry(frontend_output->cameraPose(),
-                              frontend_output->timestamp, kPublishOdomAsTf);
+                              frontend_output->timestamp(), kPublishOdomAsTf);
 
-  this->publishVisualOdometryPath(frontend_output->camera_poses,
-                                  frontend_output->timestamp);
+  // relies on correct accumulation of internal objects
+  this->publishVisualOdometryPath(camera_poses_, frontend_output->timestamp());
+}
+
+void FrontendDSDRos::tryPublishPointClouds(
+    const VisionImuPacket::ConstPtr& frontend_output) {
+  StatusLandmarkVector static_landmarks =
+      frontend_output->staticLandmarkMeasurements();
+  if (!static_landmarks.empty()) {
+    this->publishStaticPointCloud(static_landmarks,
+                                  frontend_output->cameraPose());
+  }
+
+  StatusLandmarkVector dynamic_landmarks =
+      frontend_output->dynamicLandmarkMeasurements();
+  if (!dynamic_landmarks.empty()) {
+    this->publishDynamicPointCloud(dynamic_landmarks,
+                                   frontend_output->cameraPose());
+  }
+
+  if (auto labelled_point_cloud = frontend_output->denseLabelledCloud();
+      labelled_point_cloud) {
+    sensor_msgs::msg::PointCloud2 pc2_msg;
+    pcl::toROSMsg(*labelled_point_cloud, pc2_msg);
+    pc2_msg.header.frame_id = params_.camera_frame_id;
+    pc2_msg.header.stamp = utils::toRosTime(frontend_output->timestamp());
+    dense_dynamic_cloud_pub_->publish(pc2_msg);
+  }
+}
+void FrontendDSDRos::tryPublishObjects(
+    const VisionImuPacket::ConstPtr& frontend_output) {
+  // relies on correct accumulation of internal objects AND that the shared
+  // module data is updated with timestamp/frame data (as in Display.hpp)
+  const auto& object_motions = object_motions_;
+  const auto& object_poses = object_poses_;
+  const auto& timestamp_map = this->shared_module_info.getTimestampMap();
+
+  DSDTransport::Publisher object_poses_publisher = dsd_transport_.addObjectInfo(
+      object_motions, object_poses, params_.world_frame_id, timestamp_map,
+      frontend_output->frameId(), frontend_output->timestamp());
+  object_poses_publisher.publishObjectOdometry();
+  object_poses_publisher.publishObjectTransforms();
+  object_poses_publisher.publishObjectPaths();
+}
+
+void FrontendDSDRos::updateAccumulatedDataStructured(
+    const VisionImuPacket::ConstPtr& frontend_output) {
+  camera_poses_.push_back(frontend_output->cameraPose());
+  object_motions_.insert2(frontend_output->frameId(),
+                          frontend_output->objectMotions());
+  object_poses_.insert2(frontend_output->frameId(),
+                        frontend_output->objectPoses());
 }
 
 // void FrontendDSDRos::processRGBDOutputpacket(

@@ -40,6 +40,7 @@ struct BackendOutputPacket {
 
   StatusLandmarkVector static_landmarks;   // all frames?
   StatusLandmarkVector dynamic_landmarks;  // all objects only this frame?
+  // TODO: depricate and let output viz handle now it has shared module...
   FrameIdTimestampMap involved_timestamp;
   gtsam::Pose3 T_world_camera;
   FrameId frame_id;
