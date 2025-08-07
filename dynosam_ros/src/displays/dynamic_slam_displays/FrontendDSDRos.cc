@@ -75,12 +75,9 @@ void FrontendDSDRos::spinOnceImpl(
   // publish odometry
   tryPublishVisualOdometry(frontend_output);
 
-  // // attempt cast
-  // RGBDInstanceOutputPacket::ConstPtr rgbd_output =
-  //     safeCast<FrontendOutputPacketBase, RGBDInstanceOutputPacket>(
-  //         frontend_output);
-  // // publish object info
-  // if (rgbd_output) processRGBDOutputpacket(rgbd_output);
+  tryPublishPointClouds(frontend_output);
+
+  tryPublishObjects(frontend_output);
 }
 
 void FrontendDSDRos::tryPublishDebugImagery(

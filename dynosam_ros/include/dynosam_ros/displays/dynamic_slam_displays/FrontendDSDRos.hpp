@@ -31,7 +31,7 @@
 #pragma once
 
 #include <dynosam/common/GroundTruthPacket.hpp>
-#include <dynosam/frontend/FrontendOutputPacket.hpp>
+#include <dynosam/frontend/VisionImuOutputPacket.hpp>
 #include <dynosam/visualizer/Display.hpp>
 
 #include "dynamic_slam_interfaces/msg/object_odometry.hpp"

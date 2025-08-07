@@ -89,41 +89,6 @@ RegularBackendModule::RegularBackendModule(const BackendParams& backend_params,
       updater_type_(updater_type) {
   CHECK_NOTNULL(map_);
 
-  // // TODO: functioanlise and streamline with BackendModule
-  // noise_models_.static_point_noise = gtsam::noiseModel::Isotropic::Sigma(
-  //     3u, backend_params.static_point_noise_sigma_);
-  // noise_models_.dynamic_point_noise = gtsam::noiseModel::Isotropic::Sigma(
-  //     3u, backend_params.dynamic_point_noise_sigma_);
-  // // set in base!
-  // noise_models_.landmark_motion_noise = gtsam::noiseModel::Isotropic::Sigma(
-  //     3u, backend_params.motion_ternary_factor_noise_sigma_);
-
-  // if (backend_params.use_robust_kernals_) {
-  //   noise_models_.static_point_noise = gtsam::noiseModel::Robust::Create(
-  //       gtsam::noiseModel::mEstimator::Huber::Create(
-  //           backend_params.k_huber_3d_points_),
-  //       noise_models_.static_point_noise);
-
-  //   noise_models_.dynamic_point_noise = gtsam::noiseModel::Robust::Create(
-  //       gtsam::noiseModel::mEstimator::Huber::Create(
-  //           backend_params.k_huber_3d_points_),
-  //       noise_models_.dynamic_point_noise);
-
-  //   // TODO: not k_huber_3d_points_ not just used for 3d points
-  //   noise_models_.landmark_motion_noise = gtsam::noiseModel::Robust::Create(
-  //       gtsam::noiseModel::mEstimator::Huber::Create(
-  //           backend_params.k_huber_3d_points_),
-  //       noise_models_.landmark_motion_noise);
-  // }
-
-  // CHECK_NOTNULL(noise_models_.static_point_noise);
-  // CHECK_NOTNULL(noise_models_.dynamic_point_noise);
-  // CHECK_NOTNULL(noise_models_.landmark_motion_noise);
-
-  // noise_models_.dynamic_point_noise->print("Dynamic Point Noise");
-  // noise_models_.landmark_motion_noise->print("Landmark motion noise");
-  // // CHECK(false);
-
   noise_models_.print("RegularBackend noise models ");
 
   // setup smoother/optimizer variables
@@ -168,27 +133,8 @@ RegularBackendModule::SpinReturn RegularBackendModule::boostrapSpinImpl(
       false;  // apparently this is v important for making the results == ICRA
 
   PostUpdateData post_update_data(frame_k);
-  {
-    LOG(INFO) << "Starting updateStaticObservations";
-    utils::TimingStatsCollector timer("backend.update_static_obs");
-    post_update_data.static_update_result =
-        formulation_->updateStaticObservations(frame_k, new_values, new_factors,
-                                               update_params);
-  }
-
-  // TODO: maybe dont call dynamic update here as the formulation-impl is writen
-  // so that a motion only exists from k-1 to k
-  {
-    LOG(INFO) << "Starting updateDynamicObservations";
-    utils::TimingStatsCollector timer("backend.update_dynamic_obs");
-    post_update_data.dynamic_update_result =
-        formulation_->updateDynamicObservations(frame_k, new_values,
-                                                new_factors, update_params);
-  }
-
-  if (post_formulation_update_cb_) {
-    post_formulation_update_cb_(formulation_, frame_k, new_values, new_factors);
-  }
+  addMeasurements(update_params, frame_k, new_values, new_factors,
+                  post_update_data);
 
   LOG(INFO) << "Starting any updates";
 
@@ -207,9 +153,6 @@ RegularBackendModule::SpinReturn RegularBackendModule::boostrapSpinImpl(
 
   BackendOutputPacket::Ptr backend_output =
       constructOutputPacket(frame_k, timestamp);
-
-  // TODO: put back in!!
-  //  backend_output->involved_timestamp = input->involved_timestamps_;
 
   debug_info_ = DebugInfo();
 
@@ -236,25 +179,8 @@ RegularBackendModule::SpinReturn RegularBackendModule::nominalSpinImpl(
       false;  // apparently this is v important for making the results == ICRA
 
   PostUpdateData post_update_data(frame_k);
-  {
-    LOG(INFO) << "Starting updateStaticObservations";
-    utils::TimingStatsCollector timer("backend.update_static_obs");
-    post_update_data.static_update_result =
-        formulation_->updateStaticObservations(frame_k, new_values, new_factors,
-                                               update_params);
-  }
-
-  {
-    LOG(INFO) << "Starting updateDynamicObservations";
-    utils::TimingStatsCollector timer("backend.update_dynamic_obs");
-    post_update_data.dynamic_update_result =
-        formulation_->updateDynamicObservations(frame_k, new_values,
-                                                new_factors, update_params);
-  }
-
-  if (post_formulation_update_cb_) {
-    post_formulation_update_cb_(formulation_, frame_k, new_values, new_factors);
-  }
+  addMeasurements(update_params, frame_k, new_values, new_factors,
+                  post_update_data);
 
   LOG(INFO) << "Starting any updates";
 
@@ -308,6 +234,31 @@ void RegularBackendModule::setupUpdates() {
   }
 }
 
+void RegularBackendModule::addMeasurements(
+    const UpdateObservationParams& update_params, FrameId frame_k,
+    gtsam::Values& new_values, gtsam::NonlinearFactorGraph& new_factors,
+    PostUpdateData& post_update_data) {
+  {
+    LOG(INFO) << "Starting updateStaticObservations";
+    utils::TimingStatsCollector timer("backend.update_static_obs");
+    post_update_data.static_update_result =
+        formulation_->updateStaticObservations(frame_k, new_values, new_factors,
+                                               update_params);
+  }
+
+  {
+    LOG(INFO) << "Starting updateDynamicObservations";
+    utils::TimingStatsCollector timer("backend.update_dynamic_obs");
+    post_update_data.dynamic_update_result =
+        formulation_->updateDynamicObservations(frame_k, new_values,
+                                                new_factors, update_params);
+  }
+
+  if (post_formulation_update_cb_) {
+    post_formulation_update_cb_(formulation_, frame_k, new_values, new_factors);
+  }
+}
+
 void RegularBackendModule::updateAndOptimize(
     FrameId frame_id_k, const gtsam::Values& new_values,
     const gtsam::NonlinearFactorGraph& new_factors,
@@ -335,13 +286,6 @@ void RegularBackendModule::updateIncremental(
 
   using SmootherInterface = IncrementalInterface<dyno::ISAM2>;
   SmootherInterface smoother_interface(smoother_.get());
-
-  // LOG(INFO) << "Adding incremental: new factors size " << new_factors.size();
-  // for(size_t i = 0; i < new_factors.size(); i++) {
-  //   std::cout << "idx " << i << " ";
-  //   new_factors.at(i)->print("");
-  //   std::cout << "\n";
-  // }
 
   // error hooks should be updated for this formulation in the
   // makeFormulationFunction

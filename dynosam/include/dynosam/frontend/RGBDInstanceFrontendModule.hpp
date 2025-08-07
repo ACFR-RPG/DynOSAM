@@ -54,7 +54,6 @@ class RGBDInstanceFrontendModule : public FrontendModule {
  private:
   Camera::Ptr camera_;
   EgoMotionSolver motion_solver_;
-  //   ObjectMotionSovlerF2F object_motion_solver_;
   ObjectMotionSolver::UniquePtr object_motion_solver_;
   FeatureTracker::UniquePtr tracker_;
   RGBDFrontendLogger::UniquePtr logger_;
@@ -91,14 +90,6 @@ class RGBDInstanceFrontendModule : public FrontendModule {
 
   void sendToFrontendLogger(const Frame::Ptr& frame,
                             const VisionImuPacket::Ptr& vision_imu_packet);
-
-  //   VisionImuPacket::Ptr constructOutput(
-  //       const Frame& frame, const ObjectMotionMap& object_motions,
-  //       const ObjectPoseMap& object_poses, const gtsam::Pose3&
-  //       T_world_camera, const GroundTruthInputPacket::Optional& gt_packet =
-  //       std::nullopt, const DebugImagery::Optional& debug_imagery =
-  //       std::nullopt, const PointCloudLabelRGB::Ptr dense_labelled_cloud =
-  //       nullptr);
 
   cv::Mat createTrackingImage(const Frame::Ptr& frame_k,
                               const Frame::Ptr& frame_k_1,

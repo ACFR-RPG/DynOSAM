@@ -491,9 +491,6 @@ void RGBDInstanceFrontendModule::fillOutputPacketWithTracks(
       VisionImuPacket::ObjectTracks& object_track = object_tracks.at(object_id);
       object_track.measurements.push_back(dm);
     }
-    // CHECK(object_tracks.exists(object_id))
-    //     << "We have a feature for " << info_string(frame_id, object_id)
-    //     << " but object does not exist in the estimated motions!";
   }
   vision_imu_packet->objectTracks(object_tracks);
 }
@@ -514,113 +511,6 @@ void RGBDInstanceFrontendModule::sendToFrontendLogger(
     logger_->logFrameIdToTimestamp(frame->getFrameId(), frame->getTimestamp());
   }
 }
-
-// RGBDInstanceOutputPacket::Ptr RGBDInstanceFrontendModule::constructOutput(
-//     const Frame& frame, const ObjectMotionMap& object_motions,
-//     const ObjectPoseMap& object_poses, const gtsam::Pose3& T_world_camera,
-//     const GroundTruthInputPacket::Optional& gt_packet,
-//     const DebugImagery::Optional& debug_imagery,
-//     const PointCloudLabelRGB::Ptr dense_labelled_cloud) {
-//   StatusKeypointVector static_keypoint_measurements;
-//   StatusLandmarkVector static_landmarks;
-
-//   const double& static_pixel_sigma =
-//       params_.backend_params_.static_pixel_noise_sigma;
-//   const double& static_point_sigma =
-//       params_.backend_params_.static_point_noise_sigma;
-
-//   gtsam::Vector2 static_pixel_sigmas;
-//   static_pixel_sigmas << static_pixel_sigma, static_pixel_sigma;
-
-//   for (const Feature::Ptr& f : frame.usableStaticFeaturesBegin()) {
-//     const TrackletId tracklet_id = f->trackletId();
-//     const Keypoint kp = f->keypoint();
-//     CHECK(f->isStatic());
-//     CHECK(Feature::IsUsable(f));
-
-//     // dont include features that have only been seen once as we havent had a
-//     // // chance to validate it yet
-//     if (f->age() < 1) {
-//       continue;
-//     }
-
-//     MeasurementWithCovariance<Keypoint> kp_measurement =
-//         MeasurementWithCovariance<Keypoint>::FromSigmas(kp,
-//                                                         static_pixel_sigmas);
-//     MeasurementWithCovariance<Landmark> landmark_measurement(
-//         vision_tools::backProjectAndCovariance(*f, *camera_,
-//         static_pixel_sigma,
-//                                                static_point_sigma));
-
-//     static_keypoint_measurements.push_back(KeypointStatus::StaticInLocal(
-//         kp_measurement, frame.getFrameId(), tracklet_id));
-
-//     static_landmarks.push_back(LandmarkStatus::StaticInLocal(
-//         landmark_measurement, frame.getFrameId(), tracklet_id));
-//   }
-
-//   const double& dynamic_pixel_sigma =
-//       params_.backend_params_.dynamic_pixel_noise_sigma;
-//   const double& dynamic_point_sigma =
-//       params_.backend_params_.dynamic_point_noise_sigma;
-
-//   StatusKeypointVector dynamic_keypoint_measurements;
-//   StatusLandmarkVector dynamic_landmarks;
-//   for (const auto& [object_id, obs] : frame.object_observations_) {
-//     CHECK_EQ(object_id, obs.instance_label_);
-//     // TODO: add back in?
-//     //  CHECK(obs.marked_as_moving_);
-
-//     for (const TrackletId tracklet : obs.object_features_) {
-//       if (frame.isFeatureUsable(tracklet)) {
-//         const Feature::Ptr f = frame.at(tracklet);
-//         CHECK(!f->isStatic());
-//         CHECK_EQ(f->objectId(), object_id);
-
-//         // dont include features that have only been seen once as we havent
-//         had
-//         // a chance to validate it yet
-//         if (f->age() < 1) {
-//           continue;
-//         }
-
-//         const TrackletId tracklet_id = f->trackletId();
-//         const Keypoint kp = f->keypoint();
-
-//         MeasurementWithCovariance<Keypoint> kp_measurement(kp);
-//         MeasurementWithCovariance<Landmark> landmark_measurement(
-//             vision_tools::backProjectAndCovariance(
-//                 *f, *camera_, dynamic_pixel_sigma, dynamic_point_sigma));
-
-//         dynamic_keypoint_measurements.push_back(KeypointStatus::DynamicInLocal(
-//             kp_measurement, frame.frame_id_, tracklet_id, object_id));
-
-//         dynamic_landmarks.push_back(LandmarkStatus::DynamicInLocal(
-//             landmark_measurement, frame.frame_id_, tracklet_id, object_id));
-//       }
-//     }
-//   }
-
-//   // update trajectory of camera poses to be visualised by the frontend viz
-//   // module
-//   camera_poses_.push_back(T_world_camera);
-
-//   // create timestamps for the provided frames
-//   // TODO: maybe a more efficient way later!!!
-//   const FrameIdTimestampMap& all_timestamp_map =
-//       shared_module_info.getTimestampMap();
-//   FrameIdTimestampMap involved_timestamps;
-//   for (const FrameId& frame_id : object_motions.getInvovledFrameIds()) {
-//     CHECK(all_timestamp_map.exists(frame_id));
-//     involved_timestamps.insert2(frame_id, all_timestamp_map.at(frame_id));
-//   }
-
-//   return std::make_shared<RGBDInstanceOutputPacket>(
-//       static_keypoint_measurements, dynamic_keypoint_measurements,
-//       static_landmarks, dynamic_landmarks, T_world_camera, frame.timestamp_,
-//       frame.frame_id_, object_motions, object_poses, camera_poses_, camera_,
-//       gt_packet, debug_imagery, dense_labelled_cloud, involved_timestamps);
-// }
 
 cv::Mat RGBDInstanceFrontendModule::createTrackingImage(
     const Frame::Ptr& frame_k, const Frame::Ptr& frame_k_1,

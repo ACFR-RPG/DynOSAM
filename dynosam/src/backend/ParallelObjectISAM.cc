@@ -55,13 +55,15 @@ ParallelObjectISAM::ParallelObjectISAM(
   formulation_params.updater_suffix = "object_" + std::to_string(object_id);
   // HACK for now so that we get object motions at every frame!!!?
   formulation_params.min_dynamic_observations = 2u;
-  // formulation_params.use_smoothing_factor = FLAGS_use_smoothing_factor;
 
   decoupled_formulation_ = std::make_shared<HybridFormulation>(
       formulation_params, map_, noise_models, formulation_hooks);
   accessor_ = std::dynamic_pointer_cast<HybridAccessor>(
       decoupled_formulation_->accessorFromTheta());
   CHECK_NOTNULL(accessor_);
+
+  // setup error hooks for the optimisation
+  setupErrorHandlingHooks();
 }
 
 StateQuery<Motion3ReferenceFrame> ParallelObjectISAM::getFrame2FrameMotion(
@@ -202,32 +204,6 @@ bool ParallelObjectISAM::updateSmoother(FrameId frame_k,
   const auto& max_extra_iterations = static_cast<size_t>(params_.num_optimzie);
   smoother_interface.setMaxExtraIterations(max_extra_iterations);
 
-  // setup exception handling
-  ErrorHandlingHooks error_hooks;
-  error_hooks.handle_ils_exception = [](const gtsam::Values& current_values,
-                                        gtsam::Key problematic_key) {
-    ErrorHandlingHooks::HandleILSResult ils_handle_result;
-    // a little gross that I need to set this up in this function
-    gtsam::NonlinearFactorGraph& prior_factors = ils_handle_result.pior_factors;
-
-    ApplyFunctionalSymbol afs;
-    afs.cameraPose([&prior_factors, &current_values](FrameId,
-                                                     const gtsam::Symbol& sym) {
-         const gtsam::Key& key = sym;
-         gtsam::Pose3 pose = current_values.at<gtsam::Pose3>(key);
-         gtsam::Vector6 sigmas;
-         sigmas.head<3>().setConstant(0.001);  // rotation
-         sigmas.tail<3>().setConstant(0.01);   // translation
-         gtsam::SharedNoiseModel noise =
-             gtsam::noiseModel::Diagonal::Sigmas(sigmas);
-         prior_factors.emplace_shared<gtsam::PriorFactor<gtsam::Pose3>>(
-             key, pose, noise);
-       })
-        .
-        operator()(problematic_key);
-    return ils_handle_result;
-  };
-
   bool is_smoother_ok = smoother_interface.optimize(
       &result_.isam_result,
       [&](const gtsam::ISAM2&,
@@ -235,7 +211,7 @@ bool ParallelObjectISAM::updateSmoother(FrameId frame_k,
         update_arguments.new_values = new_values;
         update_arguments.new_factors = new_factors;
       },
-      error_hooks);
+      error_hooks_);
 
   auto toc = utils::Timer::toc<std::chrono::nanoseconds>(tic);
   int64_t milliseconds =
@@ -358,6 +334,33 @@ void ParallelObjectISAM::updateStates() {
           << " for j=" << object_id_;
 
   decoupled_formulation_->updateTheta(estimate);
+}
+
+void ParallelObjectISAM::setupErrorHandlingHooks() {
+  // setup error
+  error_hooks_.handle_ils_exception = [](const gtsam::Values& current_values,
+                                         gtsam::Key problematic_key) {
+    ErrorHandlingHooks::HandleILSResult ils_handle_result;
+    // a little gross that I need to set this up in this function
+    gtsam::NonlinearFactorGraph& prior_factors = ils_handle_result.pior_factors;
+
+    ApplyFunctionalSymbol afs;
+    afs.cameraPose([&prior_factors, &current_values](FrameId,
+                                                     const gtsam::Symbol& sym) {
+         const gtsam::Key& key = sym;
+         gtsam::Pose3 pose = current_values.at<gtsam::Pose3>(key);
+         gtsam::Vector6 sigmas;
+         sigmas.head<3>().setConstant(0.001);  // rotation
+         sigmas.tail<3>().setConstant(0.01);   // translation
+         gtsam::SharedNoiseModel noise =
+             gtsam::noiseModel::Diagonal::Sigmas(sigmas);
+         prior_factors.emplace_shared<gtsam::PriorFactor<gtsam::Pose3>>(
+             key, pose, noise);
+       })
+        .
+        operator()(problematic_key);
+    return ils_handle_result;
+  };
 }
 
 void to_json(json& j, const ParallelObjectISAM::Result& result) {

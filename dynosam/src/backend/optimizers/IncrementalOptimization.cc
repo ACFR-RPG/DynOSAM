@@ -29,3 +29,51 @@
  */
 
 #include "dynosam/backend/optimizers/IncrementalOptimization.hpp"
+
+#include <gtsam/nonlinear/ISAM2Result.h>
+#include <gtsam_unstable/nonlinear/IncrementalFixedLagSmoother.h>
+
+namespace dyno {
+
+template <>
+struct iOptimizationTraits<gtsam::IncrementalFixedLagSmoother> {
+  typedef iOptimizationTraits<gtsam::IncrementalFixedLagSmoother> This;
+  typedef gtsam::IncrementalFixedLagSmoother Smoother;
+  typedef gtsam::ISAM2Result ResultType;
+
+  struct IFLSUpdateArguments : public UpdateArguments {
+    std::map<gtsam::Key, double> timestamps;
+  };
+  typedef IFLSUpdateArguments UpdateArguments;
+
+  using FillArguments = std::function<void(const Smoother&, UpdateArguments&)>;
+
+  static ResultType update(Smoother& smoother,
+                           const UpdateArguments& update_arguments) {
+    smoother.update(update_arguments.new_factors, update_arguments.new_values,
+                    update_arguments.timestamps);
+    return smoother.getISAM2Result();
+  }
+
+  static ResultType update(Smoother& smoother,
+                           const FillArguments& update_arguments_filler) {
+    UpdateArguments arguments;
+    update_arguments_filler(smoother, arguments);
+
+    return This::update(smoother, arguments);
+  }
+
+  static gtsam::NonlinearFactorGraph getFactors(const Smoother& smoother) {
+    return smoother.getFactors();
+  }
+
+  static gtsam::Values calculateEstimate(const Smoother& smoother) {
+    return smoother.calculateEstimate();
+  }
+
+  static gtsam::Values getLinearizationPoint(const Smoother& smoother) {
+    return smoother.getLinearizationPoint();
+  }
+};
+
+}  // namespace dyno

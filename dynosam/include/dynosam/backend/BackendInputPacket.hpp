@@ -30,7 +30,7 @@
 
 #pragma once
 
-#include "dynosam/frontend/FrontendOutputPacket.hpp"
+#include "dynosam/frontend/VisionImuOutputPacket.hpp"
 
 namespace dyno {
 

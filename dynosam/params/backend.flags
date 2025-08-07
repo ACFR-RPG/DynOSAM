@@ -31,10 +31,10 @@
 
 
 --static_point_noise_sigma=0.05
---dynamic_point_noise_sigma=0.1
+--dynamic_point_noise_sigma=0.05
 
---static_pixel_noise_sigma=2.0
---dynamic_pixel_noise_sigma=2.0
+--static_pixel_noise_sigma=1.0
+--dynamic_pixel_noise_sigma=1.0
 
 # --static_point_noise_sigma=0.01
 # --dynamic_point_noise_sigma=0.4

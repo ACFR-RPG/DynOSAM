@@ -361,8 +361,6 @@ Pose3Measurement ParallelHybridBackendModule::nominalUpdateStaticEstimator(
   gtsam::Values new_values;
   gtsam::NonlinearFactorGraph new_factors;
 
-  // timestamps[CameraPoseSymbol(frame_k)] = curr_id;
-
   const gtsam::NavState predicted_nav_state = this->addVisualInertialStates(
       frame_k, static_formulation_.get(), new_values, new_factors,
       noise_models_, input->relativeCameraTransform(), input->pim());
@@ -450,65 +448,6 @@ Pose3Measurement ParallelHybridBackendModule::nominalUpdateStaticEstimator(
     return Pose3Measurement(X_w_k_opt_query.get());
   }
 }
-
-// std::vector<ParallelHybridBackendModule::PerObjectUpdate>
-// ParallelHybridBackendModule::collectPerObjectUpdates(
-//     VisionImuPacket::ConstPtr input) const {
-//   // CameraMeasurementStatusVector all_dynamic_measurements =
-//   //     input->collectDynamicLandmarkKeypointMeasurements();
-
-//   // gtsam::FastMap<ObjectId, CameraMeasurementStatusVector>
-//   //     measurements_by_object;
-//   // for (const auto& measurement : all_dynamic_measurements) {
-//   //   const auto& object_id = measurement.objectId();
-//   //   if (!measurements_by_object.exists(object_id)) {
-//   //     measurements_by_object.insert2(
-//   //         object_id,
-//   GenericTrackedStatusVector<LandmarkKeypointStatus>{});
-//   //   }
-//   //   measurements_by_object.at(object_id).push_back(measurement);
-//   // }
-
-//   // const auto frame_id_k = input->getFrameId();
-//   // const auto& estimated_motions =
-//   //     input->object_motions_.toEstimateMap(frame_id_k);
-
-//   std::vector<PerObjectUpdate> object_updates;
-//   std::stringstream ss;
-//   ss << "Objects with updates: ";
-//   for(const auto& [object_id, object_tracks] : input->object_tracks) {
-//     PerObjectUpdate object_update;
-//     object_update.frame_id = input->frameId();
-//     object_update.object_id = object_id;
-//     object_update.is_keyframe = object_tracks.is_keyframe;
-//     object_update.measurements = collected_measurements;
-//   }
-//   // for (const auto& [object_id, collected_measurements] :
-//   //      measurements_by_object) {
-//   //   PerObjectUpdate object_update;
-//   //   object_update.frame_id = frame_id_k;
-//   //   object_update.object_id = object_id;
-
-//   //   if (input->is_keyframe_.find(object_id) != input->is_keyframe_.end())
-//   {
-//   //     object_update.is_keyframe = true;
-//   //   }
-
-//   //   object_update.measurements = collected_measurements;
-//   //   // object_update.X_k_measurement = X_k_measurement;
-
-//   //   CHECK(estimated_motions.exists(object_id));
-//   //   object_update.H_k_measurement = estimated_motions.at(object_id);
-
-//   //   object_updates.push_back(object_update);
-//   //   ss << object_id << " (KF: " << object_update.is_keyframe << ") ";
-//   // }
-
-//   // log inf
-//   LOG(INFO) << ss.str();
-
-//   return object_updates;
-// }
 
 ParallelObjectISAM::Ptr ParallelHybridBackendModule::getEstimator(
     ObjectId object_id, bool* is_object_new) {

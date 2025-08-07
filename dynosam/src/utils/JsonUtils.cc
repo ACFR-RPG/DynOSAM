@@ -30,8 +30,8 @@
 
 #include "dynosam/utils/JsonUtils.hpp"
 
-#include "dynosam/frontend/FrontendOutputPacket.hpp"
 #include "dynosam/frontend/RGBDInstance-Definitions.hpp"
+#include "dynosam/frontend/VisionImuOutputPacket.hpp"
 
 #define DYNO_FRONTEND_OUTPUT_PACKET_BASE_TO_JSON(jason, input)       \
   jason["frontend_type"] = input.frontend_type_;                     \

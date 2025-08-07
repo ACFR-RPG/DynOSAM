@@ -34,7 +34,7 @@
 
 #include "dynosam/backend/BackendOutputPacket.hpp"
 #include "dynosam/common/Types.hpp"
-#include "dynosam/frontend/FrontendOutputPacket.hpp"
+#include "dynosam/frontend/VisionImuOutputPacket.hpp"
 #include "dynosam/pipeline/PipelineBase.hpp"
 #include "dynosam/pipeline/ThreadSafeQueue.hpp"
 #include "dynosam/visualizer/Display.hpp"

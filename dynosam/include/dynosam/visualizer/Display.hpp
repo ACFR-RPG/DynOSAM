@@ -33,7 +33,7 @@
 #include "dynosam/backend/BackendOutputPacket.hpp"
 #include "dynosam/common/SharedModuleInfo.hpp"
 #include "dynosam/common/Types.hpp"
-#include "dynosam/frontend/FrontendOutputPacket.hpp"
+#include "dynosam/frontend/VisionImuOutputPacket.hpp"
 
 namespace dyno {
 

@@ -31,7 +31,7 @@
 #pragma once
 
 #include "dynosam/frontend/FrontendInputPacket.hpp"
-#include "dynosam/frontend/FrontendOutputPacket.hpp"
+#include "dynosam/frontend/VisionImuOutputPacket.hpp"
 #include "dynosam/logger/Logger.hpp"
 #include "dynosam/pipeline/PipelineModuleProcessor.hpp"
 

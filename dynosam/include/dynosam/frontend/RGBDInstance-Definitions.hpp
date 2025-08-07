@@ -36,7 +36,7 @@
 
 #include "dynosam/common/PointCloudProcess.hpp"
 #include "dynosam/common/Types.hpp"
-#include "dynosam/frontend/FrontendOutputPacket.hpp"
+#include "dynosam/frontend/VisionImuOutputPacket.hpp"
 #include "dynosam/frontend/imu/ImuFrontend.hpp"
 #include "dynosam/frontend/vision/Frame.hpp"
 #include "dynosam/logger/Logger.hpp"

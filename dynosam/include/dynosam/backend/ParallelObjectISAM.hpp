@@ -38,6 +38,7 @@
 #include <nlohmann/json.hpp>
 
 #include "dynosam/backend/BackendDefinitions.hpp"
+#include "dynosam/backend/optimizers/IncrementalOptimization.hpp"
 #include "dynosam/backend/rgbd/HybridEstimator.hpp"
 #include "dynosam/common/Exceptions.hpp"
 #include "dynosam/common/Map.hpp"
@@ -185,14 +186,9 @@ class ParallelObjectISAM {
                          gtsam::NonlinearFactorGraph& new_factors,
                          gtsam::Values& new_values);
 
-  // bool optimize(
-  //     gtsam::ISAM2Result* result,
-  //     const gtsam::NonlinearFactorGraph& new_factors =
-  //         gtsam::NonlinearFactorGraph(),
-  //     const gtsam::Values& new_values = gtsam::Values(),
-  //     const ISAM2UpdateParams& update_params = gtsam::ISAM2UpdateParams());
-
   void updateStates();
+
+  void setupErrorHandlingHooks();
 
  private:
   const Params params_;
@@ -205,6 +201,7 @@ class ParallelObjectISAM {
   //! style of motion expected to be used as input. Set on the first run and all
   //! motions are expected to then follow the same style
   std::optional<MotionRepresentationStyle> expected_style_;
+  ErrorHandlingHooks error_hooks_;
 };
 
 using json = nlohmann::json;

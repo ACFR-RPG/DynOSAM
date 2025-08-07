@@ -392,12 +392,4 @@ void DynoPipelineManager::loadPipelines(const CameraParams& camera_params,
   }
 }
 
-// PipelineBase::UniquePtr DynoPipelineManager::makeFrontendPipeline(Camera::Ptr
-// camera, bool offline_frontend) {
-
-// }
-// BackendPipeline::UniquePtr DynoPipelineManager::makeBackendPipeline() {
-
-// }
-
 }  // namespace dyno

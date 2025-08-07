@@ -103,7 +103,6 @@ class RegularBackendModule
       FrameId frame_id_k,
       const IncrementalInterface<dyno::ISAM2>& smoother_interface) const;
 
-  // TODO: for now
  protected:
   SpinReturn boostrapSpinImpl(VisionImuPacket::ConstPtr input) override;
   SpinReturn nominalSpinImpl(VisionImuPacket::ConstPtr input) override;
@@ -114,6 +113,23 @@ class RegularBackendModule
   void addStates(const VisionImuPacket::ConstPtr& input,
                  FormulationType* formulation, gtsam::Values& new_values,
                  gtsam::NonlinearFactorGraph& new_factors);
+
+  /**
+   * @brief Construct factors and new values for static and dynamic features.
+   * Does the bulk of the graph construction by calling
+   * Formulation::updateStaticObservations and
+   * Formulation::updateDynamicObservations.
+   *
+   * @param update_params const UpdateObservationParams&
+   * @param frame_k FrameId
+   * @param new_values gtsam::Values&
+   * @param new_factors gtsam::NonlinearFactorGraph&
+   * @param post_update_data PostUpdateData&
+   */
+  virtual void addMeasurements(const UpdateObservationParams& update_params,
+                               FrameId frame_k, gtsam::Values& new_values,
+                               gtsam::NonlinearFactorGraph& new_factors,
+                               PostUpdateData& post_update_data);
 
   // initial pose can come from many sources
   void updateMapWithMeasurements(FrameId frame_id_k,
