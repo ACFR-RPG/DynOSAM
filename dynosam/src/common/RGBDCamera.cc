@@ -32,17 +32,34 @@
 
 namespace dyno {
 
-RGBDCamera::RGBDCamera(const CameraParams& camera_params,
-                       const RGBDCameraParams& rgbd_params)
+namespace {
+
+double tryGetBaseline(const CameraParams& camera_param) {
+  if (camera_param.hasDepthParams()) {
+    return camera_param.depthParams().virtual_baseline;
+  } else {
+    return 0.0;
+  }
+}
+
+}  // namespace
+
+RGBDCamera::RGBDCamera(const CameraParams& camera_params)
     : Camera(camera_params),
-      rgbd_params_(rgbd_params),
-      fx_b_(camera_params.fx() * rgbd_params.virtual_baseline) {}
+      fx_b_(camera_params.fx() * tryGetBaseline(camera_params)) {
+  checkAndThrow<DynosamException>(
+      camera_params.hasDepthParams(),
+      "Cannot construct RGBDCamera from a CameraParams that is missing depth "
+      "information!");
+}
 
 double RGBDCamera::depthFromDisparity(double disparity) const {
   return fx_b_ / disparity;
 }
 
-Baseline RGBDCamera::baseline() const { return rgbd_params_.virtual_baseline; }
+Baseline RGBDCamera::baseline() const {
+  return getParams().depthParams().virtual_baseline;
+}
 
 bool RGBDCamera::projectRight(Feature::Ptr feature) const {
   CHECK(feature);

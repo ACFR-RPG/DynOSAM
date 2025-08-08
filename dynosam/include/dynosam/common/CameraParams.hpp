@@ -63,6 +63,37 @@ class CameraParams {
   // eg pinhole
   using CameraModel = std::string;
 
+  //! RGBD only parameters
+  //! Modified from:
+  //! https://github.com/MIT-SPARK/Kimera-VIO/blob/master/include/kimera-vio/frontend/CameraParams.h
+  struct DepthParams {
+    //! Whether or not the parameters were read
+    bool valid = false;
+
+    //! Virtual depth baseline: smaller means less disparity
+    double virtual_baseline = 1.0e-2f;
+
+    //! Conversion factor between raw depth measurements and meters
+    double depth_to_meters = 1.0f;
+
+    //! Minimum depth to convert
+    double min_depth = 0.0f;
+
+    //! Maximum depth to convert
+    double max_depth = 10.0f;
+
+    //! Whether or not the image is registered
+    bool is_registered = true;
+
+    //! Camera matrix for the depth image
+    cv::Mat K;
+
+    //! Extrinsic transform between the depth and rgb cameras
+    cv::Mat T_color_depth;
+
+    DepthParams(double baseline) : valid(true), virtual_baseline(baseline) {}
+  };
+
   /**
    * @brief Needed for IO construction
    *
@@ -124,6 +155,12 @@ class CameraParams {
   inline DistortionModel getDistortionModel() const {
     return distortion_model_;
   }
+
+  CameraParams& setDepthParams(const DepthParams& depth_params);
+
+  CameraParams& setDepthParams(double baseline);
+  bool hasDepthParams() const;
+  const DepthParams& depthParams() const;
 
   static void convertDistortionVectorToMatrix(
       const DistortionCoeffs& distortion_coeffs,
@@ -191,10 +228,6 @@ class CameraParams {
   CALIBRATION constructGtsamCalibration() const;
 
  private:
-  // updates cv Mat P
-  // for now only works if FISH_EYE
-  //   void estimateNewMatrixForDistortion();
-
   //! fu, fv, cu, cv
   IntrinsicsCoeffs intrinsics_;
   DistortionCoeffs distortion_coeff_;
@@ -217,6 +250,9 @@ class CameraParams {
   cv::Mat P_;
 
   cv::Mat D_;
+
+  //! Optional params for an RGB-D
+  std::optional<DepthParams> depth_ = {};
 };
 
 void declare_config(CameraParams& config);

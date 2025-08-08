@@ -245,34 +245,12 @@ FrontendModule::SpinReturn RGBDInstanceFrontendModule::nominalSpin(
   //   output_packet_record_.insert({output->getFrameId(), output});
 
   sendToFrontendLogger(frame, vision_imu_packet);
-
-  // RGBDInstanceOutputPacket::Ptr output = constructOutput(
-  //     *frame, object_motions, object_poses, frame->T_world_camera_,
-  //     input->optional_gt_, debug_imagery, dense_labelled_cloud);
-
-  // output->pim_ = pim;
-  // output->T_k_1_k_ = T_k_1_k;
-  // vo_velocity_ = T_k_1_k;
-  // output->is_keyframe_ = keyframed_objects;
-
-  // if (FLAGS_save_frontend_json)
-  //   output_packet_record_.insert({output->getFrameId(), output});
-
   // if (FLAGS_log_projected_masks)
   //   vision_tools::writeOutProjectMaskAndDepthMap(
   //       frame->image_container_.depth(),
   //       frame->image_container_.objectMotionMask(), *frame->getCamera(),
   //       frame->getFrameId());
 
-  // if (logger_) {
-  //   auto ground_truths = this->shared_module_info.getGroundTruthPackets();
-  //   logger_->logPoints(output->getFrameId(), output->T_world_camera_,
-  //                      output->dynamic_landmarks_);
-  //   // object_poses_ are in frontend module
-  //   logger_->logObjectPose(output->getFrameId(), object_poses,
-  //   ground_truths); logger_->logObjectBbxes(output->getFrameId(),
-  //   output->getObjectBbxes());
-  // }
   return {State::Nominal, vision_imu_packet};
 }
 

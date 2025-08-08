@@ -65,57 +65,59 @@ namespace nlohmann {
 
 // }
 
-void adl_serializer<dyno::RGBDInstanceOutputPacket>::to_json(
-    json& j, const dyno::RGBDInstanceOutputPacket& input) {
-  using namespace dyno;
+// void adl_serializer<dyno::RGBDInstanceOutputPacket>::to_json(
+//     json& j, const dyno::RGBDInstanceOutputPacket& input) {
+//   using namespace dyno;
 
-  DYNO_FRONTEND_OUTPUT_PACKET_BASE_TO_JSON(j, input)
-  j["static_landmarks"] = input.static_landmarks_;
-  j["dynamic_landmarks"] = input.dynamic_landmarks_;
-  j["estimated_motions"] = input.object_motions_;
-  j["propogated_object_poses"] = input.propogated_object_poses_;
-  j["camera_poses"] = input.camera_poses_;
-}
+//   DYNO_FRONTEND_OUTPUT_PACKET_BASE_TO_JSON(j, input)
+//   j["static_landmarks"] = input.static_landmarks_;
+//   j["dynamic_landmarks"] = input.dynamic_landmarks_;
+//   j["estimated_motions"] = input.object_motions_;
+//   j["propogated_object_poses"] = input.propogated_object_poses_;
+//   j["camera_poses"] = input.camera_poses_;
+// }
 
-dyno::RGBDInstanceOutputPacket
-adl_serializer<dyno::RGBDInstanceOutputPacket>::from_json(const json& j) {
-  using namespace dyno;
+// dyno::RGBDInstanceOutputPacket
+// adl_serializer<dyno::RGBDInstanceOutputPacket>::from_json(const json& j) {
+//   using namespace dyno;
 
-  StatusKeypointVector static_keypoints =
-      j["static_keypoints"].template get<StatusKeypointVector>();
-  StatusKeypointVector dynamic_keypoints =
-      j["dynamic_keypoints"].template get<StatusKeypointVector>();
+//   StatusKeypointVector static_keypoints =
+//       j["static_keypoints"].template get<StatusKeypointVector>();
+//   StatusKeypointVector dynamic_keypoints =
+//       j["dynamic_keypoints"].template get<StatusKeypointVector>();
 
-  gtsam::Pose3 T_world_camera =
-      j["T_world_camera"].template get<gtsam::Pose3>();
+//   gtsam::Pose3 T_world_camera =
+//       j["T_world_camera"].template get<gtsam::Pose3>();
 
-  Timestamp timestamp = j["timestamp"].template get<Timestamp>();
-  FrameId frame_id = j["frame_id"].template get<FrameId>();
+//   Timestamp timestamp = j["timestamp"].template get<Timestamp>();
+//   FrameId frame_id = j["frame_id"].template get<FrameId>();
 
-  StatusLandmarkVector static_landmarks =
-      j["static_landmarks"].template get<StatusLandmarkVector>();
-  StatusLandmarkVector dynamic_landmarks =
-      j["dynamic_landmarks"].template get<StatusLandmarkVector>();
-  // Base is a std::map with the right custom allocation
-  // we use the std::map version so that all the automagic with nlohmann::json
-  // can work
-  ObjectMotionMap estimated_motions(
-      j["estimated_motions"].template get<ObjectMotionMap>());
-  ObjectPoseMap propogated_object_poses =
-      j["propogated_object_poses"].template get<ObjectPoseMap>();
-  gtsam::Pose3Vector camera_poses =
-      j["camera_poses"].template get<gtsam::Pose3Vector>();
+//   StatusLandmarkVector static_landmarks =
+//       j["static_landmarks"].template get<StatusLandmarkVector>();
+//   StatusLandmarkVector dynamic_landmarks =
+//       j["dynamic_landmarks"].template get<StatusLandmarkVector>();
+//   // Base is a std::map with the right custom allocation
+//   // we use the std::map version so that all the automagic with
+//   nlohmann::json
+//   // can work
+//   ObjectMotionMap estimated_motions(
+//       j["estimated_motions"].template get<ObjectMotionMap>());
+//   ObjectPoseMap propogated_object_poses =
+//       j["propogated_object_poses"].template get<ObjectPoseMap>();
+//   gtsam::Pose3Vector camera_poses =
+//       j["camera_poses"].template get<gtsam::Pose3Vector>();
 
-  GroundTruthInputPacket::Optional gt_packet =
-      j["ground_truth"].template get<GroundTruthInputPacket::Optional>();
+//   GroundTruthInputPacket::Optional gt_packet =
+//       j["ground_truth"].template get<GroundTruthInputPacket::Optional>();
 
-  return dyno::RGBDInstanceOutputPacket(
-      static_keypoints, dynamic_keypoints, static_landmarks, dynamic_landmarks,
-      T_world_camera, timestamp, frame_id, estimated_motions,
-      propogated_object_poses, camera_poses, nullptr, /* no camera*/
-      gt_packet, std::nullopt                         /* no debug imagery */
-  );
-}
+//   return dyno::RGBDInstanceOutputPacket(
+//       static_keypoints, dynamic_keypoints, static_landmarks,
+//       dynamic_landmarks, T_world_camera, timestamp, frame_id,
+//       estimated_motions, propogated_object_poses, camera_poses, nullptr, /*
+//       no camera*/ gt_packet, std::nullopt                         /* no debug
+//       imagery */
+//   );
+// }
 
 // TODO:
 void adl_serializer<dyno::VisionImuPacket>::to_json(

@@ -139,6 +139,22 @@ CameraParams::CameraParams(const IntrinsicsCoeffs& intrinsics,
   K_.copyTo(P_);
 }
 
+CameraParams& CameraParams::setDepthParams(const DepthParams& depth_params) {
+  depth_ = depth_params;
+  return *this;
+}
+
+CameraParams& CameraParams::setDepthParams(double baseline) {
+  depth_ = DepthParams(baseline);
+  return *this;
+}
+
+bool CameraParams::hasDepthParams() const { return depth_.has_value(); }
+
+const CameraParams::DepthParams& CameraParams::depthParams() const {
+  return depth_.value();
+}
+
 void CameraParams::convertDistortionVectorToMatrix(
     const DistortionCoeffs& distortion_coeffs, cv::Mat* distortion_coeffs_mat) {
   *distortion_coeffs_mat = cv::Mat::zeros(1, distortion_coeffs.size(), CV_64F);

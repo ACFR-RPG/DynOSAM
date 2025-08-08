@@ -123,18 +123,33 @@ RegularBackendModule::SpinReturn RegularBackendModule::boostrapSpinImpl(
   PreUpdateData pre_update_data(frame_k);
   formulation_->preUpdate(pre_update_data);
 
-  if (post_formulation_update_cb_) {
-    post_formulation_update_cb_(formulation_, frame_k, new_values, new_factors);
-  }
-
   UpdateObservationParams update_params;
   update_params.enable_debug_info = true;
   update_params.do_backtrack =
       false;  // apparently this is v important for making the results == ICRA
 
   PostUpdateData post_update_data(frame_k);
-  addMeasurements(update_params, frame_k, new_values, new_factors,
-                  post_update_data);
+  // addMeasurements(update_params, frame_k, new_values, new_factors,
+  //                 post_update_data);
+  {
+    LOG(INFO) << "Starting updateStaticObservations";
+    utils::TimingStatsCollector timer("backend.update_static_obs");
+    post_update_data.static_update_result =
+        formulation_->updateStaticObservations(frame_k, new_values, new_factors,
+                                               update_params);
+  }
+  // DONT run dynamic updates on the first frame (if any...)
+  {
+    LOG(INFO) << "Starting updateDynamicObservations";
+    utils::TimingStatsCollector timer("backend.update_dynamic_obs");
+    post_update_data.dynamic_update_result =
+        formulation_->updateDynamicObservations(frame_k, new_values,
+                                                new_factors, update_params);
+  }
+
+  if (post_formulation_update_cb_) {
+    post_formulation_update_cb_(formulation_, frame_k, new_values, new_factors);
+  }
 
   LOG(INFO) << "Starting any updates";
 

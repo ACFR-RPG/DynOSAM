@@ -41,6 +41,15 @@
 
 namespace dyno {
 
+/**
+ * @brief Visual Tracking and Ego-motion information constructed by the DynoSAM
+ * frontend.
+ *
+ * Contains feature tracking information capable of representing information
+ * from monocular/RGB-D/Stereo cameras and ego-motion information from Visual
+ * Odometry and Preintegrated IMU data.
+ *
+ */
 class VisionImuPacket {
  public:
   DYNO_POINTER_TYPEDEFS(VisionImuPacket)
@@ -179,58 +188,6 @@ class VisionImuPacket {
   static void fillLandmarkMeasurements(
       StatusLandmarkVector& landmarks,
       const CameraMeasurementStatusVector& camera_measurements);
-};
-
-struct FrontendOutputPacketBase {
- public:
-  DYNO_POINTER_TYPEDEFS(FrontendOutputPacketBase)
-
- public:
-  const FrontendType frontend_type_;
-  const StatusKeypointVector static_keypoint_measurements_;
-  const StatusKeypointVector dynamic_keypoint_measurements_;
-  const gtsam::Pose3 T_world_camera_;
-  const Timestamp timestamp_;
-  const FrameId frame_id_;
-  const Camera::Ptr camera_;
-  const GroundTruthInputPacket::Optional gt_packet_;
-  const DebugImagery::Optional debug_imagery_;
-
-  FrontendOutputPacketBase(
-      const FrontendType frontend_type,
-      const StatusKeypointVector& static_keypoint_measurements,
-      const StatusKeypointVector& dynamic_keypoint_measurements,
-      const gtsam::Pose3& T_world_camera, const Timestamp timestamp,
-      const FrameId frame_id, const Camera::Ptr camera = nullptr,
-      const GroundTruthInputPacket::Optional& gt_packet = std::nullopt,
-      const DebugImagery::Optional& debug_imagery = std::nullopt)
-      : frontend_type_(frontend_type),
-        static_keypoint_measurements_(static_keypoint_measurements),
-        dynamic_keypoint_measurements_(dynamic_keypoint_measurements),
-        T_world_camera_(T_world_camera),
-        timestamp_(timestamp),
-        frame_id_(frame_id),
-        camera_(camera),
-        gt_packet_(gt_packet),
-        debug_imagery_(debug_imagery) {}
-
-  virtual ~FrontendOutputPacketBase() {}
-
-  inline bool hasCamera() const { return (bool)camera_; }
-  inline Timestamp getTimestamp() const { return timestamp_; }
-  inline FrameId getFrameId() const { return frame_id_; }
-
-  bool operator==(const FrontendOutputPacketBase& other) const {
-    return frontend_type_ == other.frontend_type_ &&
-           static_keypoint_measurements_ ==
-               other.static_keypoint_measurements_ &&
-           dynamic_keypoint_measurements_ ==
-               other.dynamic_keypoint_measurements_ &&
-           gtsam::traits<gtsam::Pose3>::Equals(T_world_camera_,
-                                               other.T_world_camera_) &&
-           timestamp_ == other.timestamp_ && frame_id_ == other.timestamp_;
-    // TODO: no camera or gt packket
-  }
 };
 
 }  // namespace dyno

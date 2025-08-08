@@ -443,9 +443,9 @@ class Formulation {
   template <typename Derived>
   std::shared_ptr<Derived> derivedAccessor() const {
     if (!accessor_theta_) {
-      return nullptr;
+      accessorFromTheta();
     }
-
+    CHECK(accessor_theta_);
     return std::dynamic_pointer_cast<Derived>(accessor_theta_);
   }
 

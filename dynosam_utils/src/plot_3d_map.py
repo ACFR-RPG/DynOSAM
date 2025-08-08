@@ -69,16 +69,20 @@ def make_plot(results_folder_path, prefix, plot_collection: evo_plot.PlotCollect
 plot_collection = evo_plot.PlotCollection("Map")
 # make_plot("/root/results/TRO2025/omd_swinging_4_unconstrained_sliding", "rgbd_motion_world_backend", plot_collection)
 
-
+# make_plot("/root/results/misc/", "wcme_isam_opt_backend", plot_collection)
+# make_plot("/root/results/misc/", "hybrid_isam_opt_backend", plot_collection)
 make_plot("/root/results/misc/", "hybrid_backend", plot_collection)
 make_plot("/root/results/misc/", "hybrid_batch_opt_backend", plot_collection)
 
-make_plot("/root/results/misc/", "hybrid_dynamic_not_robust_backend", plot_collection)
-make_plot("/root/results/misc/", "hybrid_dynamic_not_robust_batch_opt_backend", plot_collection)
+# make_plot("/root/results/misc/", "wcme_backend", plot_collection)
+# make_plot("/root/results/misc/", "wcme_batch_opt_backend", plot_collection)
+
+# make_plot("/root/results/misc/", "hybrid_dynamic_not_robust_backend", plot_collection)
+# make_plot("/root/results/misc/", "hybrid_dynamic_not_robust_batch_opt_backend", plot_collection)
 
 
-make_plot("/root/results/misc/", "hybrid_smart_structureless_backend", plot_collection)
-make_plot("/root/results/misc/", "hybrid_smart_structureless_batch_opt_backend", plot_collection)
+# make_plot("/root/results/misc/", "hybrid_smart_structureless_backend", plot_collection)
+# make_plot("/root/results/misc/", "hybrid_smart_structureless_batch_opt_backend", plot_collection)
 
 
 # make_plot("/root/results/misc/", "hybrid_all_robust_backend", plot_collection)

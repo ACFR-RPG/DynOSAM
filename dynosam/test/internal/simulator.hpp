@@ -33,11 +33,12 @@
 #include <gtsam/geometry/Pose3.h>
 
 #include <optional>
+#include <variant>
 
 #include "dynosam/common/Camera.hpp"
 #include "dynosam/common/StructuredContainers.hpp"
 #include "dynosam/common/Types.hpp"
-#include "dynosam/frontend/RGBDInstance-Definitions.hpp"
+#include "dynosam/frontend/VisionImuOutputPacket.hpp"
 #include "dynosam/utils/GtsamUtils.hpp"
 #include "helpers.hpp"
 
@@ -629,10 +630,6 @@ class OverlappingStaticPointsGenerator : public StaticPointGeneratorVisitor {
       double radius_min, double radius_max) const {
     const auto& cam_params = dyno_camera_->getParams();
     const auto& K = cam_params.getCameraMatrixEigen();
-
-    // // Sample pixel (u, v) in image space
-    // int u = std::rand() % cam_params.ImageWidth();
-    // int v = std::rand() % cam_params.ImageHeight();
 
     std::uniform_int_distribution<int> distribution_width(
         1, cam_params.ImageWidth() - 1u);

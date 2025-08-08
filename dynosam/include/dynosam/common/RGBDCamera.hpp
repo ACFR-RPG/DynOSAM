@@ -42,33 +42,9 @@ namespace dyno {
 
 using StereoCalibPtr = gtsam::Cal3_S2Stereo::shared_ptr;
 
-struct RGBDCameraParams {
-  //! Virtual depth baseline: smaller means less disparity
-  Baseline virtual_baseline = 1.0e-2f;
-
-  //! Conversion factor between raw depth measurements and meters
-  double depth_to_meters = 1.0f;
-
-  //! Minimum depth to convert
-  double min_depth = 0.0f;
-
-  //! Maximum depth to convert
-  double max_depth = 10.0f;
-
-  // //! Whether or not the image is registered
-  // bool is_registered_ = true;
-
-  // //! Camera matrix for the depth image
-  // cv::Mat K_;
-
-  // //! Extrinsic transform between the depth and rgb cameras
-  // cv::Mat T_color_depth_;
-};
-
 class RGBDCamera : public Camera {
  public:
-  RGBDCamera(const CameraParams& camera_params,
-             const RGBDCameraParams& rgbd_params);
+  RGBDCamera(const CameraParams& camera_params);
 
   double depthFromDisparity(double disparity) const;
 
@@ -94,7 +70,6 @@ class RGBDCamera : public Camera {
   gtsam::StereoCamera getFakeStereoCamera() const;
 
  private:
-  RGBDCameraParams rgbd_params_;
   double fx_b_;
 };
 

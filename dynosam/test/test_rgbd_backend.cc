@@ -557,10 +557,10 @@ TEST(RegularBackendModule, testObjectCentricFormulations) {
   // TODO: how can we do 1 point but with lots of overlap (even infinity
   // overlap?)
 
-  const double H_R_sigma = 0.3;
-  const double H_t_sigma = 0.2;
-  const double dynamic_point_sigma = 0.1;
-  const double static_point_sigma = 0.1;
+  const double H_R_sigma = 0.08;
+  const double H_t_sigma = 0.35;
+  const double dynamic_point_sigma = 0.3;
+  const double static_point_sigma = 0.01;
 
   const double X_R_sigma = 0.01;
   const double X_t_sigma = 0.2;
@@ -573,30 +573,32 @@ TEST(RegularBackendModule, testObjectCentricFormulations) {
                                                     static_point_sigma);
   // noise_params.static_point_noise =
   // dyno_testing::RGBDScenario::NaivePoint3dNoiseParams(static_point_sigma);
+  //   noise_params.dynamic_point_noise =
+  //       dyno_testing::RGBDScenario::Point3NoiseParams(dynamic_point_sigma,
+  //                                                     dynamic_point_sigma);
   noise_params.dynamic_point_noise =
-      dyno_testing::RGBDScenario::Point3NoiseParams(dynamic_point_sigma,
-                                                    dynamic_point_sigma);
+      dyno_testing::RGBDScenario::NaivePoint3dNoiseParams(dynamic_point_sigma);
   noise_params.X_R_sigma = X_R_sigma;
   noise_params.X_t_sigma = X_t_sigma;
 
   dyno_testing::RGBDScenario::Params scenario_params;
-  //   scenario_params.dynamic_outlier_ratio = 0.4;
+  // scenario_params.dynamic_outlier_ratio = 0.4;
 
   dyno_testing::RGBDScenario scenario(
       camera,
       std::make_shared<dyno_testing::OverlappingStaticPointsGenerator>(camera),
       noise_params, scenario_params);
 
-  //   dyno_testing::RGBDScenario scenario(
-  //       camera,
-  //       std::make_shared<dyno_testing::SimpleStaticPointsGenerator>(15, 7),
-  //       noise_params, scenario_params);
+  // dyno_testing::RGBDScenario scenario(
+  //     camera,
+  //     std::make_shared<dyno_testing::SimpleStaticPointsGenerator>(5, 3),
+  //     noise_params, scenario_params);
 
   // add one obect
-  const size_t num_points = 15;
-  const size_t obj1_overlap = 6;
-  const size_t obj2_overlap = 7;
-  const size_t obj3_overlap = 7;
+  const size_t num_points = 30;
+  const size_t obj1_overlap = 8;
+  const size_t obj2_overlap = 8;
+  const size_t obj3_overlap = 8;
   dyno_testing::ObjectBody::Ptr object1 =
       std::make_shared<dyno_testing::ObjectBody>(
           std::make_unique<dyno_testing::ConstantMotionBodyVisitor>(
@@ -632,8 +634,8 @@ TEST(RegularBackendModule, testObjectCentricFormulations) {
           dyno_testing::ObjectBodyParams(0, 19));
 
   scenario.addObjectBody(1, object1);
-  //   scenario.addObjectBody(2, object2);
-  //   scenario.addObjectBody(3, object3);
+  scenario.addObjectBody(2, object2);
+  scenario.addObjectBody(3, object3);
 
   dyno::BackendParams backend_params;
   backend_params.use_robust_kernals_ = true;
@@ -644,11 +646,12 @@ TEST(RegularBackendModule, testObjectCentricFormulations) {
   backend_params.dynamic_point_noise_sigma = dynamic_point_sigma;
 
   dyno_testing::RGBDBackendTester tester;
+  backend_params.optimization_mode = 2;
   //   auto object_centric_backend =
-  //       tester.addTester<dyno_testing::IncrementalTester>(
-  //           std::make_shared<dyno::RegularBackendModule>(
-  //               backend_params, dyno_testing::makeDefaultCameraPtr(),
-  //               dyno::RegularBackendModule::UpdaterType::HYBRID));
+  tester.addTester<dyno_testing::BatchTester>(
+      std::make_shared<dyno::RegularBackendModule>(
+          backend_params, dyno_testing::makeDefaultCameraPtr(),
+          dyno::RegularBackendModule::UpdaterType::HYBRID));
 
   //   auto oc_noise_models = object_centric_backend->getNoiseModels();
   //   CHECK(!oc_noise_models.initial_pose_prior->isConstrained());
@@ -659,11 +662,11 @@ TEST(RegularBackendModule, testObjectCentricFormulations) {
   //   CHECK(!oc_noise_models.dynamic_point_noise->isConstrained());
   //   CHECK(!oc_noise_models.static_point_noise->isConstrained());
 
-  //   auto world_centric_backend =
-  //       tester.addTester<dyno_testing::IncrementalTester>(
-  //           std::make_shared<dyno::RegularBackendModule>(
-  //               backend_params, dyno_testing::makeDefaultCameraPtr(),
-  //               dyno::RegularBackendModule::UpdaterType::WCME));
+  //   //   auto world_centric_backend =
+  //         tester.addTester<dyno_testing::BatchTester>(
+  //             std::make_shared<dyno::RegularBackendModule>(
+  //                 backend_params, dyno_testing::makeDefaultCameraPtr(),
+  //                 dyno::RegularBackendModule::UpdaterType::WCME));
 
   //   tester.addTester<IncrementalTester>(std::make_shared<dyno::RegularBackendModule>(
   //       backend_params, dyno_testing::makeDefaultCameraPtr(),
@@ -698,13 +701,13 @@ TEST(RegularBackendModule, testObjectCentricFormulations) {
   //           backend_params, dyno_testing::makeDefaultCameraPtr(),
   //           dyno::RegularBackendModule::UpdaterType::TESTING_HYBRID_SMF));
 
-  backend_params.use_vo = false;
-  backend_params.optimization_mode = 0;
-  backend_params.dynamic_point_noise_as_robust = true;
-  tester.addTester<dyno_testing::BatchTester>(
-      std::make_shared<dyno::RegularBackendModule>(
-          backend_params, dyno_testing::makeDefaultCameraPtr(),
-          dyno::RegularBackendModule::UpdaterType::HYBRID));
+  //   backend_params.use_vo = false;
+  //   backend_params.optimization_mode = 0;
+  //   backend_params.dynamic_point_noise_as_robust = true;
+  //   tester.addTester<dyno_testing::BatchTester>(
+  //       std::make_shared<dyno::RegularBackendModule>(
+  //           backend_params, dyno_testing::makeDefaultCameraPtr(),
+  //           dyno::RegularBackendModule::UpdaterType::HYBRID));
 
   //   backend_params.updater_suffix = "dynamic_not_robust";
   //   tester.addTester<dyno_testing::BatchTester>(

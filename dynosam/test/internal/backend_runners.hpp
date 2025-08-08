@@ -91,7 +91,7 @@ struct IncrementalTester : public TesterBase {
             dyno::factor_graph_tools::saveBayesTree(
                 *isam,
                 dyno::getOutputFilePath(
-                    "oc_bayes_tree_" + std::to_string(frame_id) + "_" +
+                    "bayes_tree_" + std::to_string(frame_id) + "_" +
                     formulation->getFullyQualifiedName() + ".dot"),
                 dyno::DynoLikeKeyFormatter);
           }
