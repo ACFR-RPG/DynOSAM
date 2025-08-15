@@ -194,7 +194,7 @@
 
 //   //  auto backend = std::make_shared<dyno::RegularBackendModule>(
 //   //     backend_params, dyno_testing::makeDefaultCameraPtr(),
-//   //     dyno::RegularBackendModule::UpdaterType::HYBRID);
+//   //     dyno::RegularBackendModule::BackendType::HYBRID);
 
 //   auto node = std::make_shared<rclcpp::Node>("dynosam");
 //   auto viz = std::make_shared<dyno::BackendDisplayRos>(DisplayParams{},

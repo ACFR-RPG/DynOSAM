@@ -128,6 +128,9 @@ ParallelHybridBackendModule::ParallelHybridBackendModule(
       gtsam::IncrementalFixedLagSmoother(25.0, static_isam2_params_);
   // static_estimator_ = gtsam::ISAM2(static_isam2_params_);
 
+  Sensors sensors;
+  sensors.camera = camera;
+
   FormulationHooks hooks;
   hooks.ground_truth_packets_request =
       [&]() -> std::optional<GroundTruthPacketMap> {
@@ -138,7 +141,7 @@ ParallelHybridBackendModule::ParallelHybridBackendModule(
   formulation_params.updater_suffix = "static";
 
   static_formulation_ = std::make_unique<HybridFormulation>(
-      formulation_params, RGBDMap::create(), noise_models_, hooks);
+      formulation_params, RGBDMap::create(), noise_models_, sensors, hooks);
 }
 
 ParallelHybridBackendModule::~ParallelHybridBackendModule() {
@@ -464,6 +467,9 @@ ParallelObjectISAM::Ptr ParallelHybridBackendModule::getEstimator(
       return shared_module_info.getGroundTruthPackets();
     };
 
+    Sensors sensors;
+    sensors.camera = camera_;
+
     ParallelObjectISAM::Params params;
     params.num_optimzie = FLAGS_num_dynamic_optimize;
     params.isam = dynamic_isam2_params_;
@@ -471,8 +477,8 @@ ParallelObjectISAM::Ptr ParallelHybridBackendModule::getEstimator(
     // // make this prior not SO small
     NoiseModels noise_models = NoiseModels::fromBackendParams(base_params_);
     sam_estimators_.insert2(
-        object_id, std::make_shared<ParallelObjectISAM>(params, object_id,
-                                                        noise_models, hooks));
+        object_id, std::make_shared<ParallelObjectISAM>(
+                       params, object_id, noise_models, sensors, hooks));
 
     is_new = true;
   }
@@ -655,12 +661,18 @@ void ParallelHybridBackendModule::logGraphs() {
         dyno::DynoLikeKeyFormatter);
 
     if (!smoother.empty()) {
+      const auto isam_result = estimator->getResult().isam_result;
+      gtsam::FastMap<gtsam::Key, std::string> colour_map;
+      for (const auto& affected_keys : isam_result.markedKeys) {
+        colour_map.insert2(affected_keys, "red");
+      }
+
       dyno::factor_graph_tools::saveBayesTree(
           smoother,
           dyno::getOutputFilePath("parallel_object_sam_btree_k" +
                                   std::to_string(frame_id_k) + "_j" +
                                   std::to_string(object_id) + ".dot"),
-          dyno::DynoLikeKeyFormatter);
+          dyno::DynoLikeKeyFormatter, colour_map);
     }
   }
 

@@ -41,8 +41,13 @@ template <typename MAP>
 Formulation<MAP>::Formulation(const FormulationParams& params,
                               typename Map::Ptr map,
                               const NoiseModels& noise_models,
+                              const Sensors& sensors,
                               const FormulationHooks& hooks)
-    : params_(params), map_(map), noise_models_(noise_models), hooks_(hooks) {}
+    : params_(params),
+      map_(map),
+      noise_models_(noise_models),
+      sensors_(sensors),
+      hooks_(hooks) {}
 
 template <typename MAP>
 void Formulation<MAP>::setTheta(const gtsam::Values& linearization) {
@@ -596,7 +601,7 @@ void Formulation<MAP>::logBackendFromMap(const BackendMetaData& backend_info) {
     // TODO: hack - only go up to frames < full batch so we actually only
     // include the optimised alues
     // TODO: actually should be based on the optimization mode!!
-    if (params_.use_full_batch_opt &&
+    if (params_.optimization_mode == RegularOptimizationType::FULL_BATCH &&
         params_.full_batch_frame - 1 == (int)frame_k) {
       break;
     }

@@ -66,7 +66,22 @@ DECLARE_int32(min_dynamic_observations);
 
 namespace dyno {
 
+// TODO:(jesse) why is this here...?
+enum RegularOptimizationType : int {
+  FULL_BATCH = 0,
+  SLIDING_WINDOW = 1,
+  INCREMENTAL = 2
+};
+
 struct BackendParams {
+  enum StaticFormulationType {
+    PTP = 0,  //! Pose-to-point factor with 3D projection residual in the camera
+              //! frame
+    PROJECTION = 1,  //! Regular projection factor with 2D projection residual
+                     //! on the image plane
+    SMART_PROJECTION = 2
+  };
+
   //! RGBD/Stereo
   bool use_robust_kernals_ = FLAGS_use_robust_kernals;
   bool static_point_noise_as_robust = true;
@@ -105,10 +120,10 @@ struct BackendParams {
       FLAGS_motion_ternary_factor_noise_sigma;
 
   bool use_logger_ = true;  // TODO: make param!?
-  bool use_full_batch_opt = true;
   bool use_vo = FLAGS_use_vo_factor;
 
-  int32_t optimization_mode = FLAGS_optimization_mode;
+  RegularOptimizationType optimization_mode =
+      static_cast<RegularOptimizationType>(FLAGS_optimization_mode);
 
   bool use_smoothing_factor = FLAGS_use_smoothing_factor;
 
@@ -116,6 +131,8 @@ struct BackendParams {
 
   size_t min_static_observations = FLAGS_min_static_observations;
   size_t min_dynamic_observations = FLAGS_min_dynamic_observations;
+
+  StaticFormulationType static_formulation = StaticFormulationType::PTP;
 
   static BackendParams fromYaml(const std::string& file_path);
 

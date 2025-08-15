@@ -47,9 +47,6 @@ DEFINE_bool(save_frontend_json, false,
 DEFINE_bool(frontend_from_file, false,
             "If true, the frontend will try and load all the data from a "
             "seralized json file");
-DEFINE_int32(backend_updater_enum, 0,
-             "Which UpdaterType the backend should use and should match an "
-             "enum in whatever backend module type is loaded");
 DEFINE_bool(
     use_byte_tracker, false,
     "If true, the ByteTracking will be used to associated objects between "

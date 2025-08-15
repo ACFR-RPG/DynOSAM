@@ -38,7 +38,7 @@
 #include "dynosam/backend/BackendModule.hpp"
 #include "dynosam/backend/Formulation.hpp"
 #include "dynosam/backend/ParallelObjectISAM.hpp"
-#include "dynosam/backend/RGBDBackendDefinitions.hpp"
+#include "dynosam/backend/RegularBackendDefinitions.hpp"
 #include "dynosam/backend/VisionImuBackendModule.hpp"
 #include "dynosam/common/Flags.hpp"
 #include "dynosam/common/Map.hpp"
@@ -46,11 +46,11 @@
 namespace dyno {
 
 class ParallelHybridBackendModule
-    : public VisionImuBackendModule<RGBDBackendModuleTraits> {
+    : public VisionImuBackendModule<RegularBackendModuleTraits> {
  public:
   DYNO_POINTER_TYPEDEFS(ParallelHybridBackendModule)
 
-  using Base = VisionImuBackendModule<RGBDBackendModuleTraits>;
+  using Base = VisionImuBackendModule<RegularBackendModuleTraits>;
   using RGBDMap = Base::MapType;
 
   ParallelHybridBackendModule(const BackendParams& backend_params,
@@ -70,19 +70,6 @@ class ParallelHybridBackendModule
       VisionImuPacket::ConstPtr input);
   Pose3Measurement nominalUpdateStaticEstimator(
       VisionImuPacket::ConstPtr input, bool should_calculate_covariance = true);
-
-  // TODO: can now maybe get rid of this?
-  //   struct PerObjectUpdate {
-  //     FrameId frame_id;
-  //     ObjectId object_id;
-  //     CameraMeasurementStatusVector measurements;
-  //     Pose3Measurement X_k_measurement;
-  //     Motion3ReferenceFrame H_k_measurement;
-  //     bool is_keyframe = false;
-  //   };
-
-  //   std::vector<PerObjectUpdate> collectPerObjectUpdates(
-  //       VisionImuPacket::ConstPtr input) const;
 
   ParallelObjectISAM::Ptr getEstimator(ObjectId object_id,
                                        bool* is_object_new = nullptr);

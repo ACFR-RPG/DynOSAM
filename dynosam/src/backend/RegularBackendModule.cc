@@ -33,22 +33,16 @@
 #include <gflags/gflags.h>
 #include <glog/logging.h>
 #include <gtsam/nonlinear/LevenbergMarquardtOptimizer.h>
-#include <gtsam_unstable/slam/PoseToPointFactor.h>
 
 #include "dynosam/backend/Accessor.hpp"
+#include "dynosam/backend/BackendFactory.hpp"
 #include "dynosam/backend/FactorGraphTools.hpp"
 #include "dynosam/backend/Formulation.hpp"
 #include "dynosam/backend/optimizers/ISAM2Params.hpp"
 #include "dynosam/backend/optimizers/ISAM2UpdateParams.hpp"
 #include "dynosam/backend/optimizers/IncrementalOptimization.hpp"
 #include "dynosam/backend/optimizers/SlidingWindowOptimization.hpp"
-#include "dynosam/backend/rgbd/HybridEstimator.hpp"
-#include "dynosam/backend/rgbd/impl/test_HybridFormulations.hpp"
 #include "dynosam/common/Flags.hpp"
-#include "dynosam/factors/LandmarkMotionPoseFactor.hpp"
-#include "dynosam/factors/LandmarkMotionTernaryFactor.hpp"
-#include "dynosam/factors/LandmarkPoseSmoothingFactor.hpp"
-#include "dynosam/factors/ObjectKinematicFactor.hpp"
 #include "dynosam/logger/Logger.hpp"
 #include "dynosam/utils/SafeCast.hpp"
 #include "dynosam/utils/TimingStats.hpp"
@@ -82,11 +76,11 @@ namespace dyno {
 
 RegularBackendModule::RegularBackendModule(const BackendParams& backend_params,
                                            Camera::Ptr camera,
-                                           const UpdaterType& updater_type,
+                                           const BackendType& updater_type,
                                            ImageDisplayQueue* display_queue)
     : Base(backend_params, display_queue),
       camera_(CHECK_NOTNULL(camera)),
-      updater_type_(updater_type) {
+      backend_type_(updater_type) {
   CHECK_NOTNULL(map_);
 
   noise_models_.print("RegularBackend noise models ");
@@ -119,6 +113,8 @@ RegularBackendModule::SpinReturn RegularBackendModule::boostrapSpinImpl(
   gtsam::NonlinearFactorGraph new_factors;
 
   addInitialStates(input, formulation_.get(), new_values, new_factors);
+
+  CHECK(formulation_);
 
   PreUpdateData pre_update_data(frame_k);
   formulation_->preUpdate(pre_update_data);
@@ -227,8 +223,9 @@ RegularBackendModule::SpinReturn RegularBackendModule::nominalSpinImpl(
 
 void RegularBackendModule::setupUpdates() {
   // 0: Full-batch, 1: sliding-window, 2: incremental
-  const int& optimization_mode = base_params_.optimization_mode;
-  if (optimization_mode == 1) {
+  const RegularOptimizationType& optimization_mode =
+      base_params_.optimization_mode;
+  if (optimization_mode == RegularOptimizationType::SLIDING_WINDOW) {
     LOG(INFO) << "Setting up backend for Sliding Window Optimisation";
     SlidingWindowOptimization::Params sw_params;
     sw_params.window_size = FLAGS_opt_window_size;
@@ -237,7 +234,7 @@ void RegularBackendModule::setupUpdates() {
         std::make_unique<SlidingWindowOptimization>(sw_params);
   }
 
-  if (optimization_mode == 2) {
+  if (optimization_mode == RegularOptimizationType::INCREMENTAL) {
     LOG(INFO) << "Setting up backend for Incremental Optimisation.";
     dyno::ISAM2Params isam2_params;
     isam2_params.relinearizeThreshold = 0.01;
@@ -279,12 +276,13 @@ void RegularBackendModule::updateAndOptimize(
     const gtsam::NonlinearFactorGraph& new_factors,
     PostUpdateData& post_update_data) {
   // 0: Full-batch, 1: sliding-window, 2: incremental
-  const int& optimization_mode = base_params_.optimization_mode;
-  if (optimization_mode == 0) {
+  const RegularOptimizationType& optimization_mode =
+      base_params_.optimization_mode;
+  if (optimization_mode == RegularOptimizationType::FULL_BATCH) {
     updateBatch(frame_id_k, new_values, new_factors, post_update_data);
-  } else if (optimization_mode == 1) {
+  } else if (optimization_mode == RegularOptimizationType::SLIDING_WINDOW) {
     updateSlidingWindow(frame_id_k, new_values, new_factors, post_update_data);
-  } else if (optimization_mode == 2) {
+  } else if (optimization_mode == RegularOptimizationType::INCREMENTAL) {
     updateIncremental(frame_id_k, new_values, new_factors, post_update_data);
   } else {
     LOG(FATAL) << "Unknown optimisation mode" << optimization_mode;
@@ -514,6 +512,8 @@ void RegularBackendModule::addInitialStates(
     this->addInitialVisualState(frame_k, formulation, new_values, new_factors,
                                 noise_models_, X_k_initial);
   }
+
+  LOG(INFO) << "Done!";
 }
 void RegularBackendModule::addStates(const VisionImuPacket::ConstPtr& input,
                                      FormulationType* formulation,
@@ -555,9 +555,6 @@ void RegularBackendModule::updateMapWithMeasurements(
 
 Formulation<RegularBackendModule::RGBDMap>::UniquePtr
 RegularBackendModule::makeFormulation() {
-  FormulationParams formulation_params = base_params_;
-  FormulationHooks hooks = createFormulationHooks();
-
   // setup error hooks
   ErrorHandlingHooks error_hooks;
   error_hooks.handle_ils_exception = [](const gtsam::Values& current_values,
@@ -599,39 +596,14 @@ RegularBackendModule::makeFormulation() {
     return ils_handle_result;
   };
 
-  Formulation<RegularBackendModule::RGBDMap>::UniquePtr formulation;
+  FormulationParams formulation_params = base_params_;
+  Sensors sensors;
+  sensors.camera = camera_;
 
-  if (updater_type_ == RGBDFormulationType::WCME) {
-    LOG(INFO) << "Using WCME";
-    formulation = std::make_unique<WorldMotionFormulation>(
-        formulation_params, getMap(), noise_models_, hooks);
-
-  } else if (updater_type_ == RGBDFormulationType::WCPE) {
-    LOG(INFO) << "Using WCPE";
-    formulation = std::make_unique<WorldPoseFormulation>(
-        formulation_params, getMap(), noise_models_, hooks);
-  } else if (updater_type_ == RGBDFormulationType::HYBRID) {
-    LOG(INFO) << "Using HYBRID";
-    formulation = std::make_unique<RegularHybridFormulation>(
-        formulation_params, getMap(), noise_models_, hooks);
-  } else if (updater_type_ == RGBDFormulationType::TESTING_HYBRID_SD) {
-    LOG(FATAL) << "Using Hybrid Structureless Decoupled. Warning this is a "
-                  "testing only formulation!";
-  } else if (updater_type_ == RGBDFormulationType::TESTING_HYBRID_D) {
-    LOG(FATAL) << "Using Hybrid Decoupled. Warning this is a testing only "
-                  "formulation!";
-  } else if (updater_type_ == RGBDFormulationType::TESTING_HYBRID_S) {
-    LOG(FATAL) << "Using Hybrid Structurless. Warning this is a testing only "
-                  "formulation!";
-  } else if (updater_type_ == RGBDFormulationType::TESTING_HYBRID_SMF) {
-    LOG(INFO) << "Using Hybrid Smart Motion Factor. Warning this is a testing "
-                 "only formulation!";
-    formulation_params.min_dynamic_observations = 1u;
-    formulation = std::make_unique<test_hybrid::SmartStructurlessFormulation>(
-        formulation_params, getMap(), noise_models_, hooks);
-  } else {
-    CHECK(false) << "Not implemented";
-  }
+  Formulation<RegularBackendModule::RGBDMap>::UniquePtr formulation =
+      BackendFactory::createFormulation(backend_type_, formulation_params,
+                                        getMap(), noise_models_, sensors,
+                                        createFormulationHooks());
 
   CHECK_NOTNULL(formulation);
   // add additional error handling for incremental based on formulation

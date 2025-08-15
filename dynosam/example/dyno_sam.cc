@@ -67,7 +67,7 @@ int main(int argc, char* argv[]) {
   FLAGS_log_prefix = 1;
 
   KittiDataLoader::Params params;
-  KittiDataLoader loader("/root/data/vdo_slam/kitti/kitti/0000/", params);
+  KittiDataLoader loader("/root/data/vdo_slam/kitti/kitti/0004/", params);
   // ClusterSlamDataLoader loader("/root/data/cluster_slam/CARLA-L1");
   // OMDDataLoader loader(
   //     "/root/data/vdo_slam/omd/omd/swinging_4_unconstrained_stereo/");
@@ -78,6 +78,8 @@ int main(int argc, char* argv[]) {
 
   FrontendParams fp;
   fp.tracker_params.max_dynamic_features_per_frame = 300;
+  // fp.tracker_params.feature_detector_type =
+  // TrackerParams::FeatureDetectorType::ORB_SLAM_ORB;
 
   auto camera = std::make_shared<Camera>(*loader.getCameraParams());
   auto tracker = std::make_shared<FeatureTracker>(fp, camera);

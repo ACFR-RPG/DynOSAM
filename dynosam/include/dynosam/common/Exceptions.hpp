@@ -42,83 +42,6 @@ struct DynosamException : public std::runtime_error {
   DynosamException(const std::string& what) : std::runtime_error(what) {}
 };
 
-// /**
-//  * @brief A stream like object that throws an exception on destruction
-//  * Allows for easy input stream operators<< to set exception messages at
-//  runtime before
-//  * actually throwing the exception. The exception is thrown when the
-//  destructor of the object
-//  * is called.
-//  *
-//  * e.g ExceptionStream d<SomeException>...
-//  * d << "Error message becuase d < " << 10;
-//  *
-//  * A ExcpetionStream without a template will not throw an exception at
-//  destruction
-//  *
-//  * The exception must take a const std::string& as argument.
-//  *
-//  * Needs big three definitions due to std::stringstream which is
-//  non-copyable.
-//  * Unable to make pointer from Create as this will cause destrector to be
-//  called and the excpetion thrown.
-//  *
-//  *
-//  */
-// class ExceptionStream {
-
-// public:
-//     template<typename Exception>
-//     static ExceptionStream Create(const std::string& prefix = "")
-//     noexcept(false) {
-//       ExceptionStream e;
-//       e.throw_exception_ = [&e, &prefix]() {
-//         if(std::uncaught_exceptions() == e.uncaught_count_) //unchanged
-//           throw Exception(prefix + e.ss_.str());
-//       };
-//       return e;
-//     }
-
-//     static ExceptionStream Create() noexcept {
-//       ExceptionStream e;
-//       e.throw_exception_ = []() {};
-//       return e;
-//     }
-
-//     /**
-//      * @brief Destroy the object and throw the contained excpetion with
-//      message.
-//      * It must specify noexcept(false) so that the exception throw can be
-//      caught with a try/catch
-//      * statement.
-//      *
-//      * Reference:
-//      https://stackoverflow.com/questions/130117/if-you-shouldnt-throw-exceptions-in-a-destructor-how-do-you-handle-errors-in-i
-//      *
-//      */
-//     ~ExceptionStream() noexcept(false);
-//     ExceptionStream(const ExceptionStream& other);
-
-//     ExceptionStream& operator=(const ExceptionStream& other);
-
-//     template<typename T>
-//     ExceptionStream& operator<<(const T& t){
-//         ss_ << t;
-//         return *this;
-//     }
-
-// private:
-//   ExceptionStream() = default;
-//   void swap(ExceptionStream& other);
-
-// private:
-//     std::stringstream ss_;
-//     std::function<void()> throw_exception_;
-
-//     int uncaught_count_ = std::uncaught_exceptions();
-
-// };
-
 // Internal helper that builds and throws the exception immediately
 namespace {
 // Helper class for streaming exception messages
@@ -142,7 +65,14 @@ class ThrowStreamHelper {
 template <typename Exception = DynosamException>
 inline void checkAndThrow(bool condition) {
   if (!condition) {
-    throw Exception("");
+    if constexpr (std::is_constructible_v<Exception, const char*>) {
+      throw Exception("");
+    } else {
+      static_assert(std::is_default_constructible_v<Exception>,
+                    "Exception type must be default constructible if it does "
+                    "not take const char*");
+      throw Exception();
+    }
   }
 }
 

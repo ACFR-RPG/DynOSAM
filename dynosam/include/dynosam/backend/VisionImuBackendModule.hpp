@@ -38,6 +38,8 @@
 
 namespace dyno {
 
+// TODO(jesse) not sure this should be here but where to put you...?
+
 /**
  * @brief Class that handles the management of ego-motion (NavState) states from
  * VO and (optionally) IMU.
@@ -64,6 +66,8 @@ class VisionImuBackendModule : public BackendModuleType<MODULE_TRAITS> {
   using Base = BackendModuleType<MODULE_TRAITS>;
   using MapType = typename Base::MapType;
   using FormulationType = typename Base::FormulationType;
+
+  DYNO_POINTER_TYPEDEFS(This)
 
   VisionImuBackendModule(const BackendParams& params,
                          ImageDisplayQueue* display_queue)

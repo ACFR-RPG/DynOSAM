@@ -32,8 +32,7 @@
 
 #include <glog/logging.h>
 
-#include "dynosam/backend/ParallelHybridBackendModule.hpp"
-#include "dynosam/backend/RegularBackendModule.hpp"
+#include "dynosam/backend/BackendFactory.hpp"
 #include "dynosam/common/Map.hpp"
 #include "dynosam/frontend/RGBDInstanceFrontendModule.hpp"
 #include "dynosam/logger/Logger.hpp"
@@ -324,22 +323,12 @@ void DynoPipelineManager::loadPipelines(const CameraParams& camera_params,
 
       if (FLAGS_use_backend) {
         LOG(INFO) << "Construcing RGBD backend";
+        params_.backend_params_.full_batch_frame = (int)get_dataset_size_();
 
-        // TODO: make better params and hhow they are used in each backend!
-        // right now they affect which backend is used AND the formulation in
-        // that backend
-        auto updater_type =
-            static_cast<RGBDFormulationType>(FLAGS_backend_updater_enum);
-
-        if (updater_type == RGBDFormulationType::PARALLEL_HYBRID) {
-          backend = std::make_shared<ParallelHybridBackendModule>(
-              params_.backend_params_, camera, &display_queue_);
-        } else {
-          params_.backend_params_.full_batch_frame = (int)get_dataset_size_();
-
-          backend = std::make_shared<RegularBackendModule>(
-              params_.backend_params_, camera, updater_type, &display_queue_);
-        }
+        const auto& backend_type = params_.backend_type;
+        backend = BackendFactory::createModule(
+            backend_type, params_.backend_params_, camera, &display_queue_);
+        CHECK(backend);
 
         // if(frontend && backend) {
         //   backend->registerMapUpdater(std::bind(&FrontendModule::mapUpdate,

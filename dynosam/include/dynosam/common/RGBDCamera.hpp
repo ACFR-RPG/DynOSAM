@@ -42,6 +42,15 @@ namespace dyno {
 
 using StereoCalibPtr = gtsam::Cal3_S2Stereo::shared_ptr;
 
+class InvalidRGBDCameraParams : public DynosamException {
+ public:
+  InvalidRGBDCameraParams()
+      : DynosamException(
+            "Cannot construct RGBDCamera from a CameraParams that is missing "
+            "depth "
+            "information!") {}
+};
+
 class RGBDCamera : public Camera {
  public:
   RGBDCamera(const CameraParams& camera_params);

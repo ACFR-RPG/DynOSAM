@@ -47,10 +47,7 @@ double tryGetBaseline(const CameraParams& camera_param) {
 RGBDCamera::RGBDCamera(const CameraParams& camera_params)
     : Camera(camera_params),
       fx_b_(camera_params.fx() * tryGetBaseline(camera_params)) {
-  checkAndThrow<DynosamException>(
-      camera_params.hasDepthParams(),
-      "Cannot construct RGBDCamera from a CameraParams that is missing depth "
-      "information!");
+  checkAndThrow<InvalidRGBDCameraParams>(camera_params.hasDepthParams());
 }
 
 double RGBDCamera::depthFromDisparity(double disparity) const {

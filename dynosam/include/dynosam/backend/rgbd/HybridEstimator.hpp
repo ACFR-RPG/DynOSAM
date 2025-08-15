@@ -1261,9 +1261,9 @@ class HybridFormulation : public Formulation<MapVision>,
   DYNO_POINTER_TYPEDEFS(HybridFormulation)
 
   HybridFormulation(const FormulationParams& params, typename Map::Ptr map,
-                    const NoiseModels& noise_models,
+                    const NoiseModels& noise_models, const Sensors& sensors,
                     const FormulationHooks& hooks)
-      : Base(params, map, noise_models, hooks) {}
+      : Base(params, map, noise_models, sensors, hooks) {}
   virtual ~HybridFormulation() {}
 
   virtual void dynamicPointUpdateCallback(
@@ -1379,8 +1379,9 @@ class RegularHybridFormulation : public HybridFormulation {
   RegularHybridFormulation(const FormulationParams& params,
                            typename Map::Ptr map,
                            const NoiseModels& noise_models,
+                           const Sensors& sensors,
                            const FormulationHooks& hooks)
-      : Base(params, map, noise_models, hooks) {}
+      : Base(params, map, noise_models, sensors, hooks) {}
 
   // using previous (postUdpate) check when the last time an object was updated
   // (in the estimator) if more than 1 frame ago, create new keyframe - this

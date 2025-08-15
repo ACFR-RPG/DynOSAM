@@ -1040,6 +1040,7 @@ gtsam::Pose3 HybridFormulation::calculateObjectCentroid(
 void RegularHybridFormulation::preUpdate(const PreUpdateData& data) {
   // get objects seen in this frame from the map
   const typename Map::Ptr map = this->map();
+  CHECK(map) << "Now can map be null!?";
   const auto frame_id_k = data.frame_id;
   const auto frame_node = map->getFrame(frame_id_k);
   CHECK(frame_node) << "Frame node null at k=" << data.frame_id;

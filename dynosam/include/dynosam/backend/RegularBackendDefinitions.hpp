@@ -30,28 +30,12 @@
 
 #pragma once
 
-#include "dynosam/backend/BackendDefinitions.hpp"
 #include "dynosam/backend/BackendInputPacket.hpp"
 #include "dynosam/backend/BackendModule.hpp"
 
 namespace dyno {
 
-using RGBDBackendModuleTraits =
+using RegularBackendModuleTraits =
     BackendModuleTraits<VisionImuPacket, CameraMeasurement>;
 
-enum RGBDFormulationType : int {
-
-  WCME = 0,             // world-centric motion estimator
-  WCPE = 1,             // world-centric pose estimator
-  HYBRID = 2,           // full-hybrid
-  PARALLEL_HYBRID = 3,  // associated to its own special class
-  // the following are test formulations that were not specifcially part of a
-  // paper but were used for (internal) development/research. they may not work
-  // as intended and are included for posterity
-  TESTING_HYBRID_SD = 4,  // (SD) structureless-decoupled
-  TESTING_HYBRID_D = 5,   // (D) decoupled
-  TESTING_HYBRID_S = 6,   // (S) structureless
-  TESTING_HYBRID_SMF = 7  // (SFM) smart motion factor
-};
-
-}  // namespace dyno
+}

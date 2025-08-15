@@ -38,6 +38,8 @@
 
 namespace dyno {
 
+class RGBDCamera;
+
 class Camera {
  public:
   DYNO_POINTER_TYPEDEFS(Camera)
@@ -178,6 +180,9 @@ class Camera {
   CameraImpl* getImplCamera() const { return camera_impl_.get(); }
 
   const CameraParams& getParams() const { return camera_params_; }
+
+  RGBDCamera getRGBDCamera() const;
+  std::shared_ptr<RGBDCamera> safeGetRGBDCamera() const;
 
  protected:
   const CameraParams camera_params_;

@@ -107,6 +107,8 @@ class DynoParams {
     return pipeline_params_.prefer_data_provider_imu_params;
   }
 
+  bool incrementalBackend() const;
+
  public:
   PipelineParams pipeline_params_;
   FrontendParams frontend_params_;
@@ -115,6 +117,7 @@ class DynoParams {
   ImuParams imu_params_;
 
   FrontendType frontend_type_ = FrontendType::kRGBD;
+  BackendType backend_type = BackendType::PARALLEL_HYBRID;
 
  private:
 };

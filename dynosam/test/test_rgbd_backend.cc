@@ -96,9 +96,9 @@ TEST(RegularBackendModule, smallKITTIDataset) {
   backend_params.useLogger(false);
   backend_params.min_dynamic_observations = 1u;
 
-  dyno::RegularBackendModule backend(
-      backend_params, dyno_testing::makeDefaultCameraPtr(),
-      dyno::RegularBackendModule::UpdaterType::HYBRID);
+  dyno::RegularBackendModule backend(backend_params,
+                                     dyno_testing::makeDefaultCameraPtr(),
+                                     dyno::BackendType::HYBRID);
 
   gtsam::ISAM2Params isam2_params;
   isam2_params.factorization = gtsam::ISAM2Params::Factorization::QR;
@@ -214,7 +214,7 @@ TEST(RegularBackendModule, smallKITTIDataset) {
 
 //   dyno::RegularBackendModule backend(
 //       backend_params, dyno_testing::makeDefaultCameraPtr(),
-//       dyno::RegularBackendModule::UpdaterType::ObjectCentric);
+//       dyno::RegularBackendModule::BackendType::ObjectCentric);
 
 //   gtsam::ISAM2Params isam2_params;
 //   isam2_params.evaluateNonlinearError = true;
@@ -595,10 +595,10 @@ TEST(RegularBackendModule, testObjectCentricFormulations) {
   //     noise_params, scenario_params);
 
   // add one obect
-  const size_t num_points = 30;
-  const size_t obj1_overlap = 8;
-  const size_t obj2_overlap = 8;
-  const size_t obj3_overlap = 8;
+  const size_t num_points = 15;
+  const size_t obj1_overlap = 4;
+  const size_t obj2_overlap = 4;
+  const size_t obj3_overlap = 4;
   dyno_testing::ObjectBody::Ptr object1 =
       std::make_shared<dyno_testing::ObjectBody>(
           std::make_unique<dyno_testing::ConstantMotionBodyVisitor>(
@@ -646,12 +646,26 @@ TEST(RegularBackendModule, testObjectCentricFormulations) {
   backend_params.dynamic_point_noise_sigma = dynamic_point_sigma;
 
   dyno_testing::RGBDBackendTester tester;
-  backend_params.optimization_mode = 2;
+  backend_params.optimization_mode = dyno::RegularOptimizationType::INCREMENTAL;
   //   auto object_centric_backend =
-  tester.addTester<dyno_testing::BatchTester>(
+  //   tester.addTester<dyno_testing::BatchTester>(
+  //       std::make_shared<dyno::RegularBackendModule>(
+  //           backend_params, dyno_testing::makeDefaultCameraPtr(),
+  //           dyno::RegularBackendModule::BackendType::HYBRID));
+
+  tester.addTester(std::make_shared<dyno_testing::BatchTester>(
       std::make_shared<dyno::RegularBackendModule>(
           backend_params, dyno_testing::makeDefaultCameraPtr(),
-          dyno::RegularBackendModule::UpdaterType::HYBRID));
+          dyno::BackendType::HYBRID)));
+
+  // tester.addTester(std::make_shared<dyno_testing::ParallelHybridBackendTester>(
+  //      std::make_shared<dyno::ParallelHybridBackendModule>(
+  //         backend_params, dyno_testing::makeDefaultCameraPtr())
+  // ));
+
+  // tester.addTester<dyno_testing::ParallelHybridTester>(
+  //   std::make_shared<dyno::ParallelHybridBackendModule>(
+  //       backend_params, dyno_testing::makeDefaultCameraPtr()));
 
   //   auto oc_noise_models = object_centric_backend->getNoiseModels();
   //   CHECK(!oc_noise_models.initial_pose_prior->isConstrained());
@@ -666,15 +680,15 @@ TEST(RegularBackendModule, testObjectCentricFormulations) {
   //         tester.addTester<dyno_testing::BatchTester>(
   //             std::make_shared<dyno::RegularBackendModule>(
   //                 backend_params, dyno_testing::makeDefaultCameraPtr(),
-  //                 dyno::RegularBackendModule::UpdaterType::WCME));
+  //                 dyno::RegularBackendModule::BackendType::WCME));
 
   //   tester.addTester<IncrementalTester>(std::make_shared<dyno::RegularBackendModule>(
   //       backend_params, dyno_testing::makeDefaultCameraPtr(),
-  //       dyno::RegularBackendModule::UpdaterType::OC_D));
+  //       dyno::RegularBackendModule::BackendType::OC_D));
 
   //   tester.addTester<IncrementalTester>(std::make_shared<dyno::RegularBackendModule>(
   //       backend_params, dyno_testing::makeDefaultCameraPtr(),
-  //       dyno::RegularBackendModule::UpdaterType::OC_S));
+  //       dyno::RegularBackendModule::BackendType::OC_S));
 
   //   backend_params.optimization_mode = 2;
   //   backend_params.constant_object_motion_rotation_sigma_ = 0.4;
@@ -684,22 +698,22 @@ TEST(RegularBackendModule, testObjectCentricFormulations) {
   //   tester.addTester<dyno_testing::BatchTester>(
   //       std::make_shared<dyno::RegularBackendModule>(
   //           backend_params, dyno_testing::makeDefaultCameraPtr(),
-  //           dyno::RegularBackendModule::UpdaterType::TESTING_HYBRID_SMF));
+  //           dyno::RegularBackendModule::BackendType::TESTING_HYBRID_SMF));
 
   //   tester.addTester<dyno_testing::BatchTester>(
   //       std::make_shared<dyno::RegularBackendModule>(
   //           backend_params, dyno_testing::makeDefaultCameraPtr(),
-  //           dyno::RegularBackendModule::UpdaterType::HYBRID));
+  //           dyno::RegularBackendModule::BackendType::HYBRID));
 
   //   backend_params.updater_suffix = "static_robust";
-  backend_params.optimization_mode = 0;
+  backend_params.optimization_mode = dyno::RegularOptimizationType::FULL_BATCH;
   //   backend_params.use_robust_kernals_ = true;
   //   backend_params.static_point_noise_as_robust = true;
   //   backend_params.dynamic_point_noise_as_robust = false;
   //   tester.addTester<dyno_testing::BatchTester>(
   //       std::make_shared<dyno::RegularBackendModule>(
   //           backend_params, dyno_testing::makeDefaultCameraPtr(),
-  //           dyno::RegularBackendModule::UpdaterType::TESTING_HYBRID_SMF));
+  //           dyno::RegularBackendModule::BackendType::TESTING_HYBRID_SMF));
 
   //   backend_params.use_vo = false;
   //   backend_params.optimization_mode = 0;
@@ -707,13 +721,13 @@ TEST(RegularBackendModule, testObjectCentricFormulations) {
   //   tester.addTester<dyno_testing::BatchTester>(
   //       std::make_shared<dyno::RegularBackendModule>(
   //           backend_params, dyno_testing::makeDefaultCameraPtr(),
-  //           dyno::RegularBackendModule::UpdaterType::HYBRID));
+  //           dyno::RegularBackendModule::BackendType::HYBRID));
 
   //   backend_params.updater_suffix = "dynamic_not_robust";
   //   tester.addTester<dyno_testing::BatchTester>(
   //       std::make_shared<dyno::RegularBackendModule>(
   //           backend_params, dyno_testing::makeDefaultCameraPtr(),
-  //           dyno::RegularBackendModule::UpdaterType::HYBRID));
+  //           dyno::RegularBackendModule::BackendType::HYBRID));
 
   //     backend_params.updater_suffix = "all_robust";
   //   backend_params.use_robust_kernals_ = true;
@@ -723,7 +737,7 @@ TEST(RegularBackendModule, testObjectCentricFormulations) {
   //    tester.addTester<dyno_testing::BatchTester>(
   //       std::make_shared<dyno::RegularBackendModule>(
   //           backend_params, dyno_testing::makeDefaultCameraPtr(),
-  //           dyno::RegularBackendModule::UpdaterType::HYBRID));
+  //           dyno::RegularBackendModule::BackendType::HYBRID));
 
   for (size_t i = 0; i < 20; i++) {
     auto [output_gt, output_noisy] = scenario.getOutput(i);
@@ -854,9 +868,9 @@ TEST(RegularBackendModule, testObjectCentric) {
   backend_params.min_dynamic_observations = 3u;
   backend_params.dynamic_point_noise_sigma = dynamic_point_sigma;
 
-  dyno::RegularBackendModule backend(
-      backend_params, dyno_testing::makeDefaultCameraPtr(),
-      dyno::RegularBackendModule::UpdaterType::TESTING_HYBRID_SD);
+  dyno::RegularBackendModule backend(backend_params,
+                                     dyno_testing::makeDefaultCameraPtr(),
+                                     dyno::BackendType::TESTING_HYBRID_SD);
 
   gtsam::ISAM2Params isam2_params;
   isam2_params.evaluateNonlinearError = true;

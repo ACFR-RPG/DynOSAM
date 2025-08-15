@@ -38,32 +38,27 @@
 #include "dynosam/backend/BackendInputPacket.hpp"
 #include "dynosam/backend/BackendModule.hpp"
 #include "dynosam/backend/Formulation.hpp"
-#include "dynosam/backend/RGBDBackendDefinitions.hpp"
+#include "dynosam/backend/RegularBackendDefinitions.hpp"
 #include "dynosam/backend/VisionImuBackendModule.hpp"
 #include "dynosam/backend/optimizers/ISAM2.hpp"
 #include "dynosam/backend/optimizers/IncrementalOptimization.hpp"
 #include "dynosam/backend/optimizers/SlidingWindowOptimization.hpp"
-#include "dynosam/backend/rgbd/WorldMotionEstimator.hpp"
-#include "dynosam/backend/rgbd/WorldPoseEstimator.hpp"
 #include "dynosam/common/Flags.hpp"
 #include "dynosam/common/Map.hpp"
 
 namespace dyno {
 
 class RegularBackendModule
-    : public VisionImuBackendModule<RGBDBackendModuleTraits> {
+    : public VisionImuBackendModule<RegularBackendModuleTraits> {
  public:
   DYNO_POINTER_TYPEDEFS(RegularBackendModule)
 
-  using Base = VisionImuBackendModule<RGBDBackendModuleTraits>;
+  using Base = VisionImuBackendModule<RegularBackendModuleTraits>;
   using RGBDMap = Base::MapType;
   using FormulationType = Base::FormulationType;
 
-  // for backwards compatability!
-  using UpdaterType = RGBDFormulationType;
-
   RegularBackendModule(const BackendParams& backend_params, Camera::Ptr camera,
-                       const UpdaterType& updater_type,
+                       const BackendType& updater_type,
                        ImageDisplayQueue* display_queue = nullptr);
   ~RegularBackendModule();
 
@@ -149,7 +144,7 @@ class RegularBackendModule
       Timestamp timestamp);
 
   Camera::Ptr camera_;
-  const UpdaterType updater_type_;
+  const BackendType backend_type_;
   Formulation<RGBDMap>::UniquePtr formulation_;
   // new calibration every time
   inline auto getGtsamCalibration() const {

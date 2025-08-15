@@ -44,7 +44,7 @@ namespace dyno {
 
 ParallelObjectISAM::ParallelObjectISAM(
     const Params& params, ObjectId object_id, const NoiseModels& noise_models,
-    const FormulationHooks& formulation_hooks)
+    const Sensors& sensors, const FormulationHooks& formulation_hooks)
     : params_(params),
       object_id_(object_id),
       map_(Map::create()),
@@ -57,7 +57,7 @@ ParallelObjectISAM::ParallelObjectISAM(
   formulation_params.min_dynamic_observations = 2u;
 
   decoupled_formulation_ = std::make_shared<HybridFormulation>(
-      formulation_params, map_, noise_models, formulation_hooks);
+      formulation_params, map_, noise_models, sensors, formulation_hooks);
   accessor_ = std::dynamic_pointer_cast<HybridAccessor>(
       decoupled_formulation_->accessorFromTheta());
   CHECK_NOTNULL(accessor_);

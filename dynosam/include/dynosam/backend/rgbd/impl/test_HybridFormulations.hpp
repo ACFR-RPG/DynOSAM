@@ -246,8 +246,9 @@ class SmartStructurlessFormulation : public RegularHybridFormulation {
   SmartStructurlessFormulation(const FormulationParams& params,
                                typename Map::Ptr map,
                                const NoiseModels& noise_models,
+                               const Sensors& sensors,
                                const FormulationHooks& hooks)
-      : Base(params, map, noise_models, hooks) {}
+      : Base(params, map, noise_models, sensors, hooks) {}
 
   void dynamicPointUpdateCallback(
       const PointUpdateContextType& context, UpdateObservationResult& result,

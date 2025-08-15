@@ -194,6 +194,19 @@ struct FormulationParams : public BackendParams {
   }
 };
 
+class Camera;
+
+/**
+ * @brief Encapsulation of various sensor types, giving the Formulation access
+ * to different models
+ *
+ */
+struct Sensors {
+  std::shared_ptr<Camera> camera;
+
+  Sensors() {}
+};
+
 /**
  * @brief Base class for a formulation that defines the structure and
  * implementation for a factor-graph based Dynamic SLAM solution. Derived
@@ -252,7 +265,7 @@ class Formulation {
   DYNO_POINTER_TYPEDEFS(This)
 
   Formulation(const FormulationParams& params, typename Map::Ptr map,
-              const NoiseModels& noise_models,
+              const NoiseModels& noise_models, const Sensors& sensors,
               const FormulationHooks& hooks = FormulationHooks());
   virtual ~Formulation() = default;
 
@@ -413,6 +426,7 @@ class Formulation {
 
   const FormulationHooks& hooks() const { return hooks_; }
   const NoiseModels& noiseModels() const { return noise_models_; }
+  const Sensors& sensors() const { return sensors_; }
 
   /**
    * @brief Custom gtsam::Key formatter for this formulation.
@@ -560,6 +574,7 @@ class Formulation {
   const FormulationParams params_;
   typename Map::Ptr map_;
   const NoiseModels noise_models_;
+  Sensors sensors_;
   FormulationHooks hooks_;
   //! the set of (static related) values managed by this updater. Allows
   //! checking if values have already been added over successive function calls

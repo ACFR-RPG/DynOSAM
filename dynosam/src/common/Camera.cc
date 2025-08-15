@@ -32,6 +32,8 @@
 
 #include <glog/logging.h>
 
+#include "dynosam/common/RGBDCamera.hpp"
+
 namespace dyno {
 
 Camera::Camera(const CameraParams& camera_params)
@@ -182,6 +184,18 @@ bool Camera::isLandmarkContained(const Landmark& lmk,
   const bool result = isKeypointContained(kp);
   if (keypoint) *keypoint = kp;
   return result;
+}
+
+RGBDCamera Camera::getRGBDCamera() const {
+  return RGBDCamera(this->getParams());
+}
+std::shared_ptr<RGBDCamera> Camera::safeGetRGBDCamera() const {
+  try {
+    return std::make_shared<RGBDCamera>(this->getParams());
+  } catch (const InvalidRGBDCameraParams& e) {
+    VLOG(10) << "Cannot get RGBD Camera: " << e.what();
+    return nullptr;
+  }
 }
 
 }  // namespace dyno

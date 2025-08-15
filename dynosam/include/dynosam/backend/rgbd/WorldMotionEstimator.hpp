@@ -79,8 +79,8 @@ class WorldMotionFormulation : public WorldPoseFormulation {
 
   WorldMotionFormulation(const FormulationParams& params, typename Map::Ptr map,
                          const NoiseModels& noise_models,
-                         const FormulationHooks& hooks)
-      : WorldPoseFormulation(params, map, noise_models, hooks) {
+                         const Sensors& sensors, const FormulationHooks& hooks)
+      : WorldPoseFormulation(params, map, noise_models, sensors, hooks) {
     derived_accessor_ = derivedAccessor<WorldMotionAccessor>();
     CHECK_NOTNULL(derived_accessor_);
   }

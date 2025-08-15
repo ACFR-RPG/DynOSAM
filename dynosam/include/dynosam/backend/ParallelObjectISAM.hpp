@@ -90,7 +90,7 @@ class ParallelObjectISAM {
   using MeasurementStatusVector = Map::MeasurementStatusVector<DERIVEDSTATUS>;
 
   ParallelObjectISAM(const Params& params, ObjectId object_id,
-                     const NoiseModels& noise_models,
+                     const NoiseModels& noise_models, const Sensors& sensors,
                      const FormulationHooks& formulation_hooks);
 
   // what motion representation should this be in? GLOBAL? Do ne need a new
