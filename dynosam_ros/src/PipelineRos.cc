@@ -144,6 +144,9 @@ void DynoPipelineManagerRos::initalisePipeline() {
           .finish()
           .get<std::string>();
 
+  LOG(INFO) << "Camera frame id " << display_params.camera_frame_id;
+  LOG(INFO) << "World frame id " << display_params.world_frame_id;
+
   auto frontend_display = std::make_shared<dyno::FrontendDisplayRos>(
       display_params, this->create_sub_node("frontend"));
   auto backend_display = std::make_shared<dyno::BackendDisplayRos>(

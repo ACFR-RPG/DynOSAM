@@ -98,6 +98,9 @@ def load_dynosam_node(context, *args, **kwargs):
     camera_params_timeout_config = LaunchConfiguration("camera_params_timeout")
     output_path_config = LaunchConfiguration("output_path")
 
+    world_frame_id = LaunchConfiguration("world_frame_id")
+    camera_frame_id = LaunchConfiguration("camera_frame_id")
+
     # remap topics
     camera_info_config = LaunchConfiguration("camera_info")
     rgb_cam_topic_config = LaunchConfiguration("rgb_cam_topic")
@@ -189,7 +192,9 @@ def load_dynosam_node(context, *args, **kwargs):
         {"dataset_path": dynosam_dataset_path_config},
         {"online": online_config},
         {"wait_for_camera_params": wait_for_camera_params_config},
-        {"camera_params_timeout": camera_params_timeout_config}
+        {"camera_params_timeout": camera_params_timeout_config},
+        {"world_frame_id" : world_frame_id},
+        {"camera_frame_id": camera_frame_id}
     ]
 
     is_online = bool(online_config.perform(context))
@@ -283,7 +288,9 @@ def generate_dynosam_launch_description(**kwargs):
          "rgb_cam_topic": "/dyno/camera/rgb",
          "depth_cam_topic": "/dyno/camera/depth",
          "motion_mask_cam_topic": "/dyno/camera/motion_mask",
-         "optical_flow_cam_topic": "/dyno/camera/optical_flow"},
+         "optical_flow_cam_topic": "/dyno/camera/optical_flow",
+         "camera_frame_id": "camera",
+         "world_frame_id": "world"},
          **kwargs)
 
     return LaunchDescription([

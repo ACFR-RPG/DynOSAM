@@ -235,11 +235,11 @@ FrontendModule::SpinReturn RGBDInstanceFrontendModule::nominalSpin(
   debug_imagery.detected_bounding_boxes = frame->drawDetectedObjectBoxes();
   vision_imu_packet->debugImagery(debug_imagery);
 
-  // // const cv::Mat& board_detection_mask =
-  // tracker_->getBoarderDetectionMask(); PointCloudLabelRGB::Ptr
-  // dense_labelled_cloud =
-  //     frame->projectToDenseCloud(&board_detection_mask);
-  PointCloudLabelRGB::Ptr dense_labelled_cloud = nullptr;
+  const cv::Mat& board_detection_mask = tracker_->getBoarderDetectionMask();
+  PointCloudLabelRGB::Ptr dense_labelled_cloud =
+      frame->projectToDenseCloud(&board_detection_mask);
+  // PointCloudLabelRGB::Ptr dense_labelled_cloud = nullptr;
+  vision_imu_packet->denseLabelledCloud(dense_labelled_cloud);
 
   // if (FLAGS_save_frontend_json)
   //   output_packet_record_.insert({output->getFrameId(), output});

@@ -71,7 +71,8 @@ void OnlineDataProviderRos::connect() {
 
   if (sync_) sync_.reset();
 
-  static constexpr size_t kQueueSize = 20u;
+  // static constexpr size_t kQueueSize = 20u;
+  static constexpr size_t kQueueSize = 1000u;
   sync_ = std::make_shared<message_filters::Synchronizer<SyncPolicy>>(
       SyncPolicy(kQueueSize), rgb_image_sub_, depth_image_sub_, flow_image_sub_,
       mask_image_sub_);
@@ -116,12 +117,18 @@ void OnlineDataProviderRos::imageSyncCallback(
   image_container.rgb(rgb).depth(depth).opticalFlow(flow).objectMotionMask(
       mask);
 
-  // cv::imshow("Optical Flow", of_viz);
-  // cv::imshow("Motion mask", motion_viz);
-  // cv::imshow("Depth", depth_viz);
-  // cv::waitKey(1);
+  cv::Mat of_viz, motion_viz, depth_viz;
+  of_viz = ImageType::OpticalFlow::toRGB(flow);
+  motion_viz = ImageType::MotionMask::toRGB(mask);
+  depth_viz = ImageType::Depth::toRGB(depth);
+
+  cv::imshow("Optical Flow", of_viz);
+  cv::imshow("Motion mask", motion_viz);
+  cv::imshow("Depth", depth_viz);
+  cv::waitKey(1);
+
   // trigger callback to send data to the DataInterface!
-  image_container_callback_(std::make_shared<ImageContainer>(image_container));
+  // image_container_callback_(std::make_shared<ImageContainer>(image_container));
 }
 
 }  // namespace dyno

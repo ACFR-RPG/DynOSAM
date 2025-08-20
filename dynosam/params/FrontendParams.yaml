@@ -1,8 +1,11 @@
 
 scene_flow_mag_threshold: 0.12
 scene_flow_dist_threshold: 0.5
-max_background_depth: 50.0
-max_object_depth: 30.0
+# max_background_depth: 50.0
+# max_object_depth: 30.0
+
+max_background_depth: 300.0
+max_object_depth: 150.0
 # max_object_depth: 10.0
 
 # max_object_depth: 8.0 #indoors
