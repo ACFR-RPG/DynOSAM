@@ -121,7 +121,20 @@ bool equateGtsamPointerLikeValues(const POINTER& a, const POINTER& b,
 }  // namespace
 
 namespace dyno {
+
 namespace utils {
+
+/**
+ * @brief ConfigUtilities converter to take a std::vector representing a 4x4
+ * homogenous matrix into a gtsam::Pose3.
+ *
+ */
+struct Pose3Converter {
+  static std::vector<double> toIntermediate(const gtsam::Pose3& other,
+                                            std::string& error);
+  static void fromIntermediate(const std::vector<double>& other,
+                               gtsam::Pose3& value, std::string& error);
+};
 
 /**
  * @brief Check if two objects wrapped in std::optional are equal.

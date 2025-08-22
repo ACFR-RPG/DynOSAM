@@ -31,12 +31,15 @@
 #pragma once
 
 #include "dynosam_ros/DataProviderRos.hpp"
+#include "dynosam_ros/adaptors/ImuMeasurementAdaptor.hpp"
+#include "geometry_msgs/msg/pose_with_covariance_stamped.hpp"
 #include "message_filters/subscriber.h"
 #include "message_filters/sync_policies/exact_time.h"
 #include "message_filters/synchronizer.h"
 #include "rclcpp/node.hpp"
 #include "rclcpp/node_options.hpp"
 #include "sensor_msgs/msg/image.hpp"
+#include "sensor_msgs/msg/imu.hpp"
 
 namespace dyno {
 
@@ -116,6 +119,17 @@ class OnlineDataProviderRos : public DataProviderRos {
   message_filters::Subscriber<sensor_msgs::msg::Image> mask_image_sub_;
 
   std::shared_ptr<message_filters::Synchronizer<SyncPolicy>> sync_;
+
+  rclcpp::CallbackGroup::SharedPtr imu_callback_group_;
+
+  using ImuAdaptedType =
+      rclcpp::adapt_type<dyno::ImuMeasurement>::as<sensor_msgs::msg::Imu>;
+  rclcpp::Subscription<ImuAdaptedType>::SharedPtr imu_sub_;
+
+  // for dyno_mpc
+  using PoseWithCovarianceStampted =
+      geometry_msgs::msg::PoseWithCovarianceStamped;
+  rclcpp::Subscription<PoseWithCovarianceStampted>::SharedPtr gps_like_sub_;
 };
 
 }  // namespace dyno

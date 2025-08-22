@@ -32,6 +32,11 @@
 
 #include <config_utilities/config_utilities.h>
 #include <config_utilities/parsing/yaml.h>
+#include <config_utilities/types/eigen_matrix.h>
+
+#include "dynosam/utils/GtsamUtils.hpp"   //for cv equals and pose convernsion
+#include "dynosam/utils/Numerical.hpp"    //for equals
+#include "dynosam/utils/OpenCVUtils.hpp"  //for cv equals
 
 namespace dyno {
 
@@ -39,6 +44,23 @@ void declare_config(ImuParams& config) {
   using namespace config;
 
   name("ImuParams");
+
+  // // camera to robot pose
+  // std::vector<double> vector_pose;
+  // field(vector_pose, "T_BS");
+  // checkCondition(
+  //     vector_pose.size() == 16u,
+  //     "param 'T_BS' must be a 16 length vector in homogenous matrix form");
+  // config.body_P_sensor = utils::poseVectorToGtsamPose3(vector_pose);
+  field<utils::Pose3Converter>(config.body_P_sensor, "T_BS");
+
+  field(config.gyro_noise_density, "gyroscope_noise_density");
+  field(config.gyro_random_walk, "gyroscope_random_walk");
+  field(config.acc_noise_density, "accelerometer_noise_density");
+  field(config.acc_random_walk, "accelerometer_random_walk");
+  field(config.imu_integration_sigma, "imu_integration_sigma");
+
+  field(config.n_gravity, "n_gravity");
 }
 
 }  // namespace dyno

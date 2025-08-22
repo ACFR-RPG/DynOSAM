@@ -44,6 +44,7 @@
 #include "dynosam/common/Camera.hpp"  //for calibration type
 #include "dynosam/common/Exceptions.hpp"
 #include "dynosam/common/GroundTruthPacket.hpp"
+#include "dynosam/common/SensorModels.hpp"
 #include "dynosam/common/Types.hpp"
 #include "dynosam/frontend/Frontend-Definitions.hpp"
 #include "dynosam/logger/Logger.hpp"
@@ -109,6 +110,20 @@ bool reconstructMotionInfo(gtsam::Key key, ObjectId& object_label,
                            FrameId& frame_id);
 bool reconstructPoseInfo(gtsam::Key key, ObjectId& object_label,
                          FrameId& frame_id);
+
+template <typename T = gtsam::Pose3>
+class UnaryPoseMeasurement : public UnaryMeasurement<T> {
+ public:
+  using Base = UnaryMeasurement<T>;
+  using typename Base::Measurement;
+
+  UnaryPoseMeasurement(Timestamp timestamp, const Measurement& measurement)
+      : Base(timestamp, measurement) {}
+
+  gtsam::Key makeSymbol(FrameId frame_id) override {
+    return CameraPoseSymbol(frame_id);
+  }
+};
 
 // TODO: this information is sort of duplicated when the ROS odometry messages
 // are constructed.

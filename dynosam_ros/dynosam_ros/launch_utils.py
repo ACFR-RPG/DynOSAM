@@ -107,6 +107,7 @@ def load_dynosam_node(context, *args, **kwargs):
     depth_cam_topic_config = LaunchConfiguration("depth_cam_topic")
     motion_mask_cam_topic_config = LaunchConfiguration("motion_mask_cam_topic")
     optical_flow_cam_topic_config = LaunchConfiguration("optical_flow_cam_topic")
+    imu_topic_config = LaunchConfiguration("imu_topic")
 
     # additional cmdline arguments
     # args_config = LaunchConfiguration("argv")
@@ -212,7 +213,8 @@ def load_dynosam_node(context, *args, **kwargs):
             ("dataprovider/image/rgb", rgb_cam_topic_config),
             ("dataprovider/image/depth", depth_cam_topic_config),
             ("dataprovider/image/mask", motion_mask_cam_topic_config),
-            ("dataprovider/image/flow", optical_flow_cam_topic_config)
+            ("dataprovider/image/flow", optical_flow_cam_topic_config),
+            ("dataprovider/imu", imu_topic_config)
         ],
         # prefix='valgrind --tool=massif --massif-out-file=/tmp/massif.out',
         arguments=arguments,
@@ -289,6 +291,7 @@ def generate_dynosam_launch_description(**kwargs):
          "depth_cam_topic": "/dyno/camera/depth",
          "motion_mask_cam_topic": "/dyno/camera/motion_mask",
          "optical_flow_cam_topic": "/dyno/camera/optical_flow",
+         "imu_topic": "dyno/imu",
          "camera_frame_id": "camera",
          "world_frame_id": "world"},
          **kwargs)

@@ -192,12 +192,11 @@ class IncrementalInterface {
       static ResultType dummy_result;
       static UpdateArguments empty_arguments;
       VLOG(30) << "Doing extra iteration nr: " << max_extra_iterations_;
-      // for (size_t n_iter = 1; n_iter < max_extra_iterations_ &&
-      // is_smoother_ok;
-      //      ++n_iter) {
-      //   is_smoother_ok &=
-      //       updateSmoother(&dummy_result, empty_arguments, error_hooks);
-      // }
+      for (size_t n_iter = 1; n_iter < max_extra_iterations_ && is_smoother_ok;
+           ++n_iter) {
+        is_smoother_ok &=
+            updateSmoother(&dummy_result, empty_arguments, error_hooks);
+      }
     }
 
     auto toc = utils::Timer::toc<std::chrono::nanoseconds>(tic);

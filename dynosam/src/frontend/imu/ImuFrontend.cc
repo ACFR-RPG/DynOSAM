@@ -67,6 +67,7 @@ ImuFrontend::ImuFrontend(const ImuParams& imu_params) : params_(imu_params) {
   pim_params.reset(new CombinedParams(params_.n_gravity));
 
   pim_params->body_P_sensor = params_.body_P_sensor;
+
   // // in opencv convention y is down...
   // // pim_params.reset(new CombinedParams(gtsam::Point3(0, 0, 9.8)));
   // pim_params.reset(new CombinedParams(gtsam::Point3(0, 9.8, 0)));
@@ -113,6 +114,8 @@ ImuFrontend::ImuFrontend(const ImuParams& imu_params) : params_(imu_params) {
   pim_params->integrationCovariance =
       std::pow(params_.imu_integration_sigma, 2.0) *
       Eigen::Matrix3d::Identity();
+
+  pim_params->print("IMU Frontend params ");
 
   pim_ = std::make_unique<gtsam::PreintegratedCombinedMeasurements>(
       pim_params, gtsam::imuBias::ConstantBias{});

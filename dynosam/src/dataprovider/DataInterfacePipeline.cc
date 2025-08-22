@@ -80,6 +80,8 @@ FrontendInputPacketBase::ConstPtr DataInterfacePipeline::getInputPacket() {
   }
 
   const Timestamp& timestamp = packet->timestamp();
+
+  // handle imu
   ImuMeasurements::Optional imu_meas;
   imu_meas.emplace();
   FrameAction action = getTimeSyncedImuMeasurements(timestamp, &(*imu_meas));
@@ -93,14 +95,82 @@ FrontendInputPacketBase::ConstPtr DataInterfacePipeline::getInputPacket() {
       break;
   }
 
+  // handle external data
+  FunctionMeasurements external_measurements;
+  getTimeSyncedExternalMeasurements(timestamp, external_measurements);
+
+  if (VLOG_IS_ON(5) && !external_measurements.empty()) {
+    std::stringstream ss;
+    ss << "External measurements synced at frame " << packet->frameId() << ": ";
+    for (const auto& e : external_measurements) ss << e->toString();
+    VLOG(5) << ss.str();
+  }
+
   auto frontend_input =
       std::make_shared<FrontendInputPacketBase>(packet, ground_truth);
   frontend_input->imu_measurements = imu_meas;
+  frontend_input->external_measurements = external_measurements;
   return frontend_input;
 }
 
 bool DataInterfacePipeline::hasWork() const {
   return !packet_queue_.empty() && !packet_queue_.isShutdown();
+}
+
+FunctionalMeasurement::Ptr
+ExternalMeasurementHandler::getTimeSyncedExternalMeasurements(
+    const Timestamp& timestamp) const {
+  if (external_measurement_buffer_.empty()) {
+    return nullptr;
+  }
+
+  FunctionalMeasurement::Ptr measurement = nullptr;
+  if (sync_delta_ == 0.0) {
+    if (external_measurement_buffer_.getValueAtTime(timestamp, &measurement)) {
+      CHECK(measurement);
+      return measurement;
+    }
+  } else {
+    if (external_measurement_buffer_.getNearestValueToTime(
+            timestamp, sync_delta_, &measurement)) {
+      CHECK(measurement);
+      return measurement;
+    }
+  }
+  return nullptr;
+}
+
+void MultiExternalMeasurementHandler::setSyncDelta(const std::string& topic,
+                                                   Timestamp sync_delta) {
+  const std::lock_guard<std::mutex> lock(mutex_);
+  if (!external_measurement_handlers_.exists(topic)) {
+    external_measurement_handlers_.insert2(
+        topic, ExternalMeasurementHandler{sync_delta});
+  }
+}
+
+void MultiExternalMeasurementHandler::fillExternalMeasurementQueue(
+    const std::string& topic, FunctionalMeasurement::Ptr external) {
+  const std::lock_guard<std::mutex> lock(mutex_);
+  if (!external_measurement_handlers_.exists(topic)) {
+    external_measurement_handlers_.insert2(
+        topic, ExternalMeasurementHandler{default_sync_delta_});
+  }
+  external_measurement_handlers_.at(topic).fillExternalMeasurementQueue(
+      external);
+}
+
+void MultiExternalMeasurementHandler::getTimeSyncedExternalMeasurements(
+    const Timestamp& timestamp,
+    std::vector<FunctionalMeasurement::Ptr>& external_measurements) const {
+  const std::lock_guard<std::mutex> lock(mutex_);
+  for (const auto& [_, handler] : external_measurement_handlers_) {
+    if (FunctionalMeasurement::Ptr measurement =
+            handler.getTimeSyncedExternalMeasurements(timestamp);
+        measurement) {
+      external_measurements.push_back(measurement);
+    }
+  }
 }
 
 ImuInterfaceHandler::ImuInterfaceHandler()

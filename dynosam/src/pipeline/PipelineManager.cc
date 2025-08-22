@@ -92,6 +92,11 @@ DynoPipelineManager::DynoPipelineManager(
           &dyno::DataInterfacePipeline::fillImuQueue),
       data_interface_.get(), std::placeholders::_1));
 
+  // register external measurement callbacks
+  data_loader_->registerExternalMeasurementCallback(std::bind(
+      &dyno::DataInterfacePipeline::fillExternalMeasurementQueue,
+      data_interface_.get(), std::placeholders::_1, std::placeholders::_2));
+
   // preprocessing
   data_interface_->registerImageContainerPreprocessor(
       std::bind(&dyno::DataProvider::imageContainerPreprocessor,

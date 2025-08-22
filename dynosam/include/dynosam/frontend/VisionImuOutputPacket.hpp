@@ -147,6 +147,9 @@ class VisionImuPacket {
     // TODO: minimal operator
   }
 
+  // TODO: for dyno_mpc
+  std::vector<FunctionalMeasurement::Ptr> other_measurements;
+
  protected:
   //! Timestamp
   Timestamp timestamp_;

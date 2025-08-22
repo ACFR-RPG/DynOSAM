@@ -380,6 +380,12 @@ Pose3Measurement ParallelHybridBackendModule::nominalUpdateStaticEstimator(
   static_formulation_->updateStaticObservations(frame_k, new_values,
                                                 new_factors, update_params);
 
+  // TODO: this will break if other measurements are meant for dynamic
+  // objects!!!
+  handleExternalMeasurements(frame_k, input->other_measurements,
+                             static_formulation_.get(), new_values,
+                             new_factors);
+
   // marginalise all values
   std::map<gtsam::Key, double> timestamps;
   double curr_id = static_cast<double>(this->spin_state_.iteration);

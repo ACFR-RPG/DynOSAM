@@ -7,6 +7,7 @@ from launch.substitutions import LaunchConfiguration
 
 def generate_launch_description():
     # Define arguments
+    #TODO: (jesse) dont actually need these here as they are already defined in dynosam_launch_utils
     declared_arguments = [
         DeclareLaunchArgument('camera_info', default_value='/dyno/camera/camera_info', description='Camera info topic'),
         DeclareLaunchArgument('rgb_cam_topic', default_value='/dyno/camera/rgb', description='RGB camera topic'),

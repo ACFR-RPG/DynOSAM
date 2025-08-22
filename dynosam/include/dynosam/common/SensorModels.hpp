@@ -39,6 +39,11 @@
 #include "dynosam/common/Types.hpp"
 #include "dynosam/utils/GtsamUtils.hpp"
 
+// TODO: annoyuing we need to include these here (just for the unary measurement
+// thing...)
+#include <gtsam/nonlinear/NonlinearFactorGraph.h>
+#include <gtsam/nonlinear/Values.h>
+
 namespace dyno {
 
 template <typename M>
@@ -444,6 +449,67 @@ class CameraMeasurement {
   //! Right 2D keypoint measurement with covariance (associated with the right
   //! frame of a stereo pair).
   MeasurementWithCovariance<Keypoint>::Optional right_keypoint_ = {};
+};
+
+// functional is a bad name. Its just a 'synchronized' container that
+// that knows how to add itself to ANY factor graph
+// this is different from all the Dynamic SLAM formulation/visual factor's which
+// are much more complex and is meant to provide an interface to standard
+// factors (ie gps, between, baromter factors etc) that better support sensor
+// fusion from a wide variety of sensors to facilitate more general applications
+// the backend can than just add these factors as needed without caring how they
+// are generated or which Dynamic SLAM formulation is being used.
+class FunctionalMeasurement {
+ public:
+  DYNO_POINTER_TYPEDEFS(FunctionalMeasurement)
+
+  FunctionalMeasurement(Timestamp _timestamp) : timestamp(_timestamp) {}
+  // FunctionalMeasurement() = default;
+  virtual ~FunctionalMeasurement() = default;
+
+  // frame id is used becuase we expect the measurement to be syncyrnoized by
+  // the frontend/data-provider but the measurement is created without knowing
+  // what frame it is associated with, just the timestamp
+  virtual bool add(FrameId frame_id, gtsam::Values&,
+                   gtsam::NonlinearFactorGraph&) = 0;
+  virtual std::string toString() = 0;
+
+  Timestamp timestamp;
+};
+
+/// @brief Alias to a vector of FunctionalMeasurement shared pointers
+using FunctionMeasurements = std::vector<FunctionalMeasurement::Ptr>;
+
+template <typename T>
+class UnaryMeasurement : public FunctionalMeasurement {
+ public:
+  using Measurement = MeasurementWithCovariance<T>;
+
+  UnaryMeasurement(Timestamp timestamp, const Measurement& measurement)
+      : FunctionalMeasurement(timestamp), measurement_(measurement) {}
+
+  bool add(FrameId frame_id, gtsam::Values& new_values,
+           gtsam::NonlinearFactorGraph& new_factors) {
+    if (!measurement_.hasModel()) {
+      VLOG(10) << "Cannot add UnaryMeasurement at k=" << frame_id
+               << ". Missing noise model";
+      return false;
+    }
+    new_factors.addPrior<T>(this->makeSymbol(frame_id),
+                            measurement_.measurement(), measurement_.model());
+    return true;
+  }
+
+  virtual gtsam::Key makeSymbol(FrameId frame_id) = 0;
+
+  virtual std::string toString() {
+    std::stringstream ss;
+    ss << "Unary Measurement: " << measurement_;
+    return ss.str();
+  }
+
+ protected:
+  Measurement measurement_;
 };
 
 // TODO: I think we can depricate a lot of this functionality now we have just

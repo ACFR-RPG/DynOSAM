@@ -38,6 +38,22 @@
 namespace dyno {
 namespace utils {
 
+std::vector<double> Pose3Converter::toIntermediate(const gtsam::Pose3& other,
+                                                   std::string& error) {
+  const auto& matrix = other.matrix();
+  return std::vector<double>(matrix.data(), matrix.data() + matrix.size());
+}
+void Pose3Converter::fromIntermediate(const std::vector<double>& other,
+                                      gtsam::Pose3& value, std::string& error) {
+  if (other.size() != 16u) {
+    error =
+        "invalid format! Must be a 16 length vector in homogenous matrix form";
+    return;
+  }
+
+  value = poseVectorToGtsamPose3(other);
+}
+
 // TODO: unit test
 gtsam::Pose3 cvMatToGtsamPose3(const cv::Mat& H) {
   CHECK_EQ(H.rows, 4);

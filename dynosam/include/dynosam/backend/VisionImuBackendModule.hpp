@@ -38,7 +38,10 @@
 
 namespace dyno {
 
-// TODO(jesse) not sure this should be here but where to put you...?
+// TODO: in a way this shouldn't be templated as this MUST deal with a
+// VisionImuOutputPacket but we need to template it so we can inherit the module
+// and so that the actual packet can derive from VisionImuOutputPacket... this
+// is all a bit gross :/
 
 /**
  * @brief Class that handles the management of ego-motion (NavState) states from

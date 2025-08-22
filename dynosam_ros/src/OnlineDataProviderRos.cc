@@ -30,6 +30,8 @@
 
 #include "dynosam_ros/OnlineDataProviderRos.hpp"
 
+#include <dynosam/backend/BackendDefinitions.hpp>  //TODO: just for the gps stuff for dyno_mpc... for now
+
 #include "dynosam_ros/RosUtils.hpp"
 
 namespace dyno {
@@ -89,6 +91,70 @@ void OnlineDataProviderRos::connect() {
           << flow_image_sub_.getSubscriber()->get_topic_name() << " "
           << mask_image_sub_.getSubscriber()->get_topic_name() << ".");
 
+  if (imu_sub_) imu_sub_.reset();
+
+  imu_callback_group_ = node_->create_callback_group(
+      rclcpp::CallbackGroupType::MutuallyExclusive);
+
+  rclcpp::SubscriptionOptions options;
+  options.callback_group = imu_callback_group_;
+
+  imu_sub_ = node_->create_subscription<ImuAdaptedType>(
+      "imu", rclcpp::SensorDataQoS(),
+      [&](const dyno::ImuMeasurement &imu) -> void {
+        if (!imu_single_input_callback_) {
+          RCLCPP_ERROR_THROTTLE(
+              node_->get_logger(), *node_->get_clock(), 1000,
+              "Imu callback triggered but "
+              "imu_single_input_callback_ is not registered!");
+          return;
+        }
+        imu_single_input_callback_(imu);
+      },
+      options);
+
+  gps_like_sub_ = node_->create_subscription<PoseWithCovarianceStampted>(
+      "gps", rclcpp::SensorDataQoS(),
+      [&](const PoseWithCovarianceStampted &pose_msg) -> void {
+        if (!external_measurement_callback_) {
+          RCLCPP_ERROR_THROTTLE(
+              node_->get_logger(), *node_->get_clock(), 1000,
+              "GPS like callback triggered but "
+              "external_measurement_callback_ is not registered!");
+          return;
+        }
+
+        dyno::Timestamp timestamp;
+        dyno::convert(pose_msg.header.stamp, timestamp);
+
+        gtsam::Pose3 pose;
+        dyno::convert(pose_msg.pose.pose, pose);
+
+        // convert covariance matrix
+        Eigen::Matrix<double, 6, 6> cov_ros;
+        for (int i = 0; i < 6; ++i) {
+          for (int j = 0; j < 6; ++j) {
+            cov_ros(i, j) = pose_msg.pose.covariance[i * 6 + j];
+          }
+        }
+
+        // Step 2. Permutation matrix (xyzrpy → rpyxyz)
+        Eigen::Matrix<double, 6, 6> P;
+        P << 0, 0, 0, 1, 0, 0,  // roll
+            0, 0, 0, 0, 1, 0,   // pitch
+            0, 0, 0, 0, 0, 1,   // yaw
+            1, 0, 0, 0, 0, 0,   // x
+            0, 1, 0, 0, 0, 0,   // y
+            0, 0, 1, 0, 0, 0;   // z
+
+        // Step 3. Convert covariance
+        Eigen::Matrix<double, 6, 6> cov_gtsam = P * cov_ros * P.transpose();
+
+        external_measurement_callback_(
+            "gps", std::make_shared<dyno::UnaryPoseMeasurement<gtsam::Pose3>>(
+                       timestamp, Pose3Measurement(pose, cov_gtsam)));
+      });
+
   shutdown_ = false;
 }
 
@@ -117,18 +183,18 @@ void OnlineDataProviderRos::imageSyncCallback(
   image_container.rgb(rgb).depth(depth).opticalFlow(flow).objectMotionMask(
       mask);
 
-  cv::Mat of_viz, motion_viz, depth_viz;
-  of_viz = ImageType::OpticalFlow::toRGB(flow);
-  motion_viz = ImageType::MotionMask::toRGB(mask);
-  depth_viz = ImageType::Depth::toRGB(depth);
+  // cv::Mat of_viz, motion_viz, depth_viz;
+  // of_viz = ImageType::OpticalFlow::toRGB(flow);
+  // motion_viz = ImageType::MotionMask::toRGB(mask);
+  // depth_viz = ImageType::Depth::toRGB(depth);
 
-  cv::imshow("Optical Flow", of_viz);
-  cv::imshow("Motion mask", motion_viz);
-  cv::imshow("Depth", depth_viz);
-  cv::waitKey(1);
+  // cv::imshow("Optical Flow", of_viz);
+  // cv::imshow("Motion mask", motion_viz);
+  // cv::imshow("Depth", depth_viz);
+  // cv::waitKey(1);
 
   // trigger callback to send data to the DataInterface!
-  // image_container_callback_(std::make_shared<ImageContainer>(image_container));
+  image_container_callback_(std::make_shared<ImageContainer>(image_container));
 }
 
 }  // namespace dyno

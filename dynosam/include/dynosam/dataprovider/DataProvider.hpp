@@ -35,7 +35,9 @@ class DataProvider {
   using GroundTruthPacketCallback =
       std::function<void(const GroundTruthInputPacket&)>;
 
-  // this one will not guarnatee a binding of bind the data prover module
+  using ExternalMeasurementCallback =
+      std::function<void(const std::string&, FunctionalMeasurement::Ptr)>;
+
   DataProvider() = default;
 
   virtual ~DataProvider();
@@ -57,6 +59,11 @@ class DataProvider {
   inline void registerGroundTruthPacketCallback(
       const GroundTruthPacketCallback& callback) {
     ground_truth_packet_callback_ = callback;
+  }
+
+  inline void registerExternalMeasurementCallback(
+      const ExternalMeasurementCallback& callback) {
+    external_measurement_callback_ = callback;
   }
 
   /**
@@ -128,6 +135,8 @@ class DataProvider {
   ImuMultiInputCallback imu_multi_input_callback_;
 
   GroundTruthPacketCallback ground_truth_packet_callback_;
+
+  ExternalMeasurementCallback external_measurement_callback_;
 
   // Shutdown switch to stop data provider.
   std::atomic_bool shutdown_ = {false};

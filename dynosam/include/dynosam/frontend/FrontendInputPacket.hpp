@@ -38,6 +38,7 @@
 
 #include "dynosam/common/GroundTruthPacket.hpp"
 #include "dynosam/common/ImageContainer.hpp"
+#include "dynosam/common/SensorModels.hpp"
 #include "dynosam/common/Types.hpp"
 #include "dynosam/frontend/imu/ImuMeasurements.hpp"
 #include "dynosam/utils/OpenCVUtils.hpp"
@@ -56,6 +57,8 @@ struct FrontendInputPacketBase {
   ImageContainer::Ptr image_container_;
   GroundTruthInputPacket::Optional optional_gt_;
   ImuMeasurements::Optional imu_measurements;
+
+  FunctionMeasurements external_measurements = {};
 
   FrontendInputPacketBase()
       : image_container_(nullptr), optional_gt_(std::nullopt) {}

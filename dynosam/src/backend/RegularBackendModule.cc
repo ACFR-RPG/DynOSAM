@@ -143,6 +143,9 @@ RegularBackendModule::SpinReturn RegularBackendModule::boostrapSpinImpl(
                                                 new_factors, update_params);
   }
 
+  handleExternalMeasurements(frame_k, input->other_measurements,
+                             formulation_.get(), new_values, new_factors);
+
   if (post_formulation_update_cb_) {
     post_formulation_update_cb_(formulation_, frame_k, new_values, new_factors);
   }

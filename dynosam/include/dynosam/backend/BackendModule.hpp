@@ -44,8 +44,6 @@
 #include "dynosam/utils/SafeCast.hpp"
 #include "dynosam/visualizer/Visualizer-Definitions.hpp"  //for ImageDisplayQueueOptional,
 
-// DECLARE_string(updater_suffix);
-
 namespace dyno {
 
 template <typename DERIVED_INPUT_PACKET, typename MEASUREMENT_TYPE,
@@ -145,6 +143,32 @@ class BackendModuleType : public BackendModule {
  protected:
   virtual SpinReturn boostrapSpinImpl(InputConstPtr input) = 0;
   virtual SpinReturn nominalSpinImpl(InputConstPtr input) = 0;
+
+  // frame id is the frame that these measureemnts have been synchronized with
+  virtual void handleExternalMeasurements(
+      FrameId frame_id,
+      const std::vector<FunctionalMeasurement::Ptr>& external_measurements,
+      FormulationType* formulation, gtsam::Values& new_values,
+      gtsam::NonlinearFactorGraph& new_factors) {
+    gtsam::Values new_external_values;
+    gtsam::NonlinearFactorGraph new_external_factors;
+
+    for (auto external : external_measurements) {
+      external->add(frame_id, new_external_values, new_external_factors);
+    }
+
+    formulation->addValuesFunctional(
+        [&new_external_values](gtsam::Values& values) {
+          values.insert(new_external_values);
+        },
+        new_values);
+
+    formulation->addFactorsFunctional(
+        [&new_external_factors](gtsam::NonlinearFactorGraph& factors) {
+          factors += new_external_factors;
+        },
+        new_factors);
+  }
 
   void optimize(FrameId frame_id_k, FormulationType* formulation,
                 gtsam::Values& new_values,

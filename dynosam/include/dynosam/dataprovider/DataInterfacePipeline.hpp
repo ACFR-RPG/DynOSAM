@@ -4,13 +4,72 @@
  */
 #pragma once
 
+#include <mutex>
+
+#include "dynosam/common/SensorModels.hpp"
 #include "dynosam/common/Types.hpp"
 #include "dynosam/frontend/FrontendInputPacket.hpp"
 #include "dynosam/frontend/imu/ThreadSafeImuBuffer.hpp"
 #include "dynosam/pipeline/PipelineBase.hpp"
 #include "dynosam/pipeline/ThreadSafeQueue.hpp"
+#include "dynosam/pipeline/ThreadSafeTemporalBuffer.hpp"
 
 namespace dyno {
+
+class ExternalMeasurementHandler {
+ public:
+  ExternalMeasurementHandler(Timestamp sync_delta = 0)
+      : sync_delta_(sync_delta) {}
+  virtual ~ExternalMeasurementHandler() {}
+
+  inline void fillExternalMeasurementQueue(
+      FunctionalMeasurement::Ptr external) {
+    external_measurement_buffer_.addValue(external->timestamp, external);
+  }
+
+  FunctionalMeasurement::Ptr getTimeSyncedExternalMeasurements(
+      const Timestamp& timestamp) const;
+
+ protected:
+  //! Allowable time-delta for synchronization in seconds. 0 means exact
+  Timestamp sync_delta_{0};
+  ThreadsafeTemporalBuffer<FunctionalMeasurement::Ptr>
+      external_measurement_buffer_;
+};
+
+class MultiExternalMeasurementHandler {
+ public:
+  MultiExternalMeasurementHandler(Timestamp default_sync_delta = 0.0)
+      : default_sync_delta_(default_sync_delta) {}
+  virtual ~MultiExternalMeasurementHandler() {}
+
+  /**
+   * @brief Sets the allowable synchronisation delta for a
+   * ExternalMeasurementHandler. If the topic does not exist, it will be
+   * created.
+   *
+   * Does nothing if topic already exists!!? (So should be called before any
+   * fillExternalMeasurementQueue)
+   *
+   * @param topic const std::string&
+   * @param sync_delta Timestamp
+   */
+  void setSyncDelta(const std::string& topic, Timestamp sync_delta);
+
+  void fillExternalMeasurementQueue(const std::string& topic,
+                                    FunctionalMeasurement::Ptr external);
+
+ protected:
+  void getTimeSyncedExternalMeasurements(
+      const Timestamp& timestamp,
+      std::vector<FunctionalMeasurement::Ptr>& external_measurements) const;
+
+ protected:
+  Timestamp default_sync_delta_;
+  gtsam::FastMap<std::string, ExternalMeasurementHandler>
+      external_measurement_handlers_;
+  mutable std::mutex mutex_;
+};
 
 class ImuInterfaceHandler {
  public:
@@ -70,7 +129,8 @@ class ImuInterfaceHandler {
 class DataInterfacePipeline
     : public MIMOPipelineModule<FrontendInputPacketBase,
                                 FrontendInputPacketBase>,
-      public ImuInterfaceHandler {
+      public ImuInterfaceHandler,
+      public MultiExternalMeasurementHandler {
  public:
   DYNO_POINTER_TYPEDEFS(DataInterfacePipeline)
 
@@ -136,7 +196,6 @@ class DataInterfacePipeline
   std::atomic_bool parallel_run_;
 
   std::map<FrameId, GroundTruthInputPacket> ground_truth_packets_;
-  // gtsam::FastMap<FrameId, ImuMeasurements> imu_measurements_;
 
   // callback to handle dataset specific pre-processing of the images before
   // they are sent to the frontend if one is registered, called immediately
