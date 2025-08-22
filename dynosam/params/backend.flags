@@ -40,7 +40,7 @@
 # --dynamic_point_noise_sigma=0.4
 # --dynamic_point_noise_sigma=0.00006
 
---opt_window_size=10
+--opt_window_size=20
 --opt_window_overlap=4
 
 
@@ -48,8 +48,10 @@
 --use_smoothing_factor=true
 
 # 0: Full-batch, 1: sliding-window, 2: incremental
---optimization_mode=0
+--optimization_mode=1
 
+
+--use_backend_logger=false
 
 # for ISAM2 params using ParallelObjectSAM
 --use_marginal_covariance=false
@@ -70,8 +72,8 @@
 
 # currently only for rgbd, indicates which updater the rgbd backend should use
 # i.e which formulation is used for solving
-# MotionInWorld = 0, LLWorld=1, Parallel-Hybrid=3
---backend_updater_enum=3
+# MotionInWorld = 0, LLWorld=1, Hybrid = 2,Parallel-Hybrid=3
+--backend_updater_enum=2
 
 --init_H_with_identity=true
 --updater_suffix=

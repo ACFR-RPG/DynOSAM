@@ -198,6 +198,9 @@ RegularBackendModule::SpinReturn RegularBackendModule::nominalSpinImpl(
 
   LOG(INFO) << "Starting any updates";
 
+  handleExternalMeasurements(frame_k, input->other_measurements,
+                             formulation_.get(), new_values, new_factors);
+
   updateAndOptimize(frame_k, new_values, new_factors, post_update_data);
   LOG(INFO) << "Done any udpates";
 
@@ -216,8 +219,6 @@ RegularBackendModule::SpinReturn RegularBackendModule::nominalSpinImpl(
 
   BackendOutputPacket::Ptr backend_output =
       constructOutputPacket(frame_k, timestamp);
-  // TODO: bring back!
-  //  backend_output->involved_timestamp = input->involved_timestamps_;
 
   debug_info_ = DebugInfo();
 
@@ -230,11 +231,20 @@ void RegularBackendModule::setupUpdates() {
       base_params_.optimization_mode;
   if (optimization_mode == RegularOptimizationType::SLIDING_WINDOW) {
     LOG(INFO) << "Setting up backend for Sliding Window Optimisation";
-    SlidingWindowOptimization::Params sw_params;
-    sw_params.window_size = FLAGS_opt_window_size;
-    sw_params.overlap = FLAGS_opt_window_overlap;
-    sliding_window_opt_ =
-        std::make_unique<SlidingWindowOptimization>(sw_params);
+    // SlidingWindowOptimization::Params sw_params;
+    // sw_params.window_size = FLAGS_opt_window_size;
+    // sw_params.overlap = FLAGS_opt_window_overlap;
+    // sliding_window_opt_ =
+    //     std::make_unique<SlidingWindowOptimization>(sw_params);
+
+    // TODO: same set up as in ParallelHybrid
+    //  sliding window of 20 frames...
+    //  this should be greater than the max track age to avoid adding static
+    //  points to poses that have been removed! (and becuase we dont
+    //  keyframe...)
+    LevenbergMarquardtParams lm_params;
+    sliding_window_ =
+        std::make_unique<gtsam::BatchFixedLagSmoother>(25.0, lm_params);
   }
 
   if (optimization_mode == RegularOptimizationType::INCREMENTAL) {
@@ -243,6 +253,11 @@ void RegularBackendModule::setupUpdates() {
     isam2_params.relinearizeThreshold = 0.01;
     isam2_params.relinearizeSkip = FLAGS_regular_backend_relinearize_skip;
     isam2_params.keyFormatter = DynoLikeKeyFormatter;
+
+    // https://github.com/borglab/gtsam/issues/1935
+    // Important!!!!!! Key parameter to ensure old factors are released after
+    // marginalization
+    //  isamParameters.findUnusedFactorSlots = true;
     // isam2_params.enablePartialRelinearizationCheck = true;
     isam2_params.evaluateNonlinearError = true;
     smoother_ = std::make_unique<dyno::ISAM2>(isam2_params);
@@ -400,14 +415,47 @@ void RegularBackendModule::updateSlidingWindow(
     FrameId frame_id_k, const gtsam::Values& new_values,
     const gtsam::NonlinearFactorGraph& new_factors,
     PostUpdateData& post_update_data) {
-  CHECK(sliding_window_opt_);
-  const auto sw_result =
-      sliding_window_opt_->update(new_factors, new_values, frame_id_k);
-  LOG(INFO) << "Sliding window result - " << sw_result.optimized;
+  // CHECK(sliding_window_opt_);
+  // const auto sw_result =
+  //     sliding_window_opt_->update(new_factors, new_values, frame_id_k);
+  // LOG(INFO) << "Sliding window result - " << sw_result.optimized;
 
-  if (sw_result.optimized) {
-    formulation_->updateTheta(sw_result.result);
+  // if (sw_result.optimized) {
+  //   formulation_->updateTheta(sw_result.result);
+  // }
+  CHECK(sliding_window_);
+  using SmootherInterface = IncrementalInterface<gtsam::BatchFixedLagSmoother>;
+  SmootherInterface smoother_interface(sliding_window_.get());
+  // since it is actually batch dont do extra iterations
+  smoother_interface.setMaxExtraIterations(0);
+
+  sliding_window_->print();
+
+  // marginalise all values
+  std::map<gtsam::Key, double> timestamps;
+  double curr_id = static_cast<double>(this->spin_state_.iteration);
+  for (const auto& key_value : new_values) {
+    timestamps[key_value.key] = curr_id;
   }
+
+  SmootherInterface::ResultType result;
+  bool is_smoother_ok = smoother_interface.optimize(
+      &result,
+      [&](const dyno::BatchFixedLagSmoother&,
+          SmootherInterface::UpdateArguments& update_arguments) {
+        update_arguments.new_values = new_values;
+        update_arguments.new_factors = new_factors;
+        update_arguments.timestamps = timestamps;
+      },
+      error_hooks_);
+
+  if (!is_smoother_ok) {
+    LOG(FATAL) << "Fixed lag batch optimisation failedFailed...";
+  }
+
+  LOG(INFO) << "BatchFixedLagSmoother result: error " << result.getError();
+  gtsam::Values optimised_values = smoother_interface.calculateEstimate();
+  formulation_->updateTheta(optimised_values);
 }
 
 void RegularBackendModule::logIncrementalStats(

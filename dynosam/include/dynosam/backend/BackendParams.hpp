@@ -64,6 +64,8 @@ DECLARE_string(updater_suffix);
 DECLARE_int32(min_static_observations);
 DECLARE_int32(min_dynamic_observations);
 
+DECLARE_bool(use_backend_logger);
+
 namespace dyno {
 
 // TODO:(jesse) why is this here...?
@@ -119,7 +121,7 @@ struct BackendParams {
   double motion_ternary_factor_noise_sigma_ =
       FLAGS_motion_ternary_factor_noise_sigma;
 
-  bool use_logger_ = true;  // TODO: make param!?
+  bool use_logger_ = FLAGS_use_backend_logger;
   bool use_vo = FLAGS_use_vo_factor;
 
   RegularOptimizationType optimization_mode =

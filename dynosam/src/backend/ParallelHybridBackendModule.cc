@@ -121,6 +121,11 @@ ParallelHybridBackendModule::ParallelHybridBackendModule(
   // this value is very important for accuracy
   static_isam2_params_.relinearizeSkip = 1;
 
+  // https://github.com/borglab/gtsam/issues/1935
+  // Important!!!!!! Key parameter to ensure old factors are released after
+  // marginalization
+  //  isamParameters.findUnusedFactorSlots = true;
+
   // sliding window of 20 frames...
   // this should be greater than the max track age to avoid adding static points
   // to poses that have been removed! (and becuase we dont keyframe...)

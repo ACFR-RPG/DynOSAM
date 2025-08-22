@@ -59,6 +59,8 @@ DEFINE_double(dynamic_pixel_noise_sigma, 2.0,
 DEFINE_bool(use_smoothing_factor, true,
             "If the backend should use the smoothing factor between motions");
 
+DEFINE_bool(use_backend_logger, true, "If the backend should use a logger");
+
 DEFINE_bool(
     use_vo_factor, true,
     "If true, use visual odometry measurement as factor from the frontend");
