@@ -134,6 +134,7 @@ add_library(${PROJECT_NAME} SHARED
   src/backend/rgbd/WorldMotionEstimator.cc
   src/backend/rgbd/WorldPoseEstimator.cc
   src/backend/rgbd/HybridEstimator.cc
+  src/backend/rgbd/MPCEstimator.cc
   src/backend/rgbd/impl/test_HybridFormulations.cc
   src/backend/ParallelObjectISAM.cc
   src/backend/ParallelHybridBackendModule.cc

@@ -81,6 +81,13 @@ class PipelineModuleProcessor : public SIMOPipelineModule<INPUT, OUTPUT> {
 
   virtual ~PipelineModuleProcessor() = default;
 
+  /**
+   * @brief Returns the internal module.
+   *
+   * @return ModulePtr Shared Pointer to Module.
+   */
+  ModulePtr getModule() { return module_; }
+
   virtual inline OutputConstSharedPtr process(
       const InputConstSharedPtr& input) override {
     return module_->spinOnce(CHECK_NOTNULL(input));

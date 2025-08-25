@@ -33,6 +33,8 @@
 --static_point_noise_sigma=0.0001
 --dynamic_point_noise_sigma=0.0001
 
+--min_static_observations=0
+
 --static_pixel_noise_sigma=0.01
 --dynamic_pixel_noise_sigma=0.01
 
@@ -72,8 +74,8 @@
 
 # currently only for rgbd, indicates which updater the rgbd backend should use
 # i.e which formulation is used for solving
-# MotionInWorld = 0, LLWorld=1, Hybrid = 2,Parallel-Hybrid=3
---backend_updater_enum=2
+# MotionInWorld = 0, LLWorld=1, Hybrid = 2,Parallel-Hybrid=3, MPC-Estimator=8
+--backend_updater_enum=8
 
 --init_H_with_identity=true
 --updater_suffix=

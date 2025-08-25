@@ -1,4 +1,4 @@
-parallel_run: True
+parallel_run: False
 
 
 #RGBD instance = 0, MONO instance = 1 (same as FrontendType)

@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2023 ACFR-RPG, University of Sydney, Jesse Morris
+ *   Copyright (c) 2025 ACFR-RPG, University of Sydney, Jesse Morris
  (jesse.morris@sydney.edu.au)
  *   All rights reserved.
 
@@ -30,33 +30,21 @@
 
 #pragma once
 
-#include "dynosam/backend/BackendDefinitions.hpp"  //for TemporalObjectMetaData
-#include "dynosam/common/Types.hpp"
+#include "dynosam/backend/rgbd/MPCEstimator.hpp"
+#include "dynosam_ros/Display-Definitions.hpp"
+#include "rclcpp/node.hpp"
 
 namespace dyno {
 
-struct BackendOutputPacket {
-  DYNO_POINTER_TYPEDEFS(BackendOutputPacket)
+class MPCEstimationVizRos : public MPCEstimationViz {
+ public:
+  MPCEstimationVizRos(const DisplayParams params, rclcpp::Node::SharedPtr node);
 
-  StatusLandmarkVector static_landmarks;   // all frames?
-  StatusLandmarkVector dynamic_landmarks;  // all objects only this frame?
-  // TODO: depricate and let output viz handle now it has shared module...
-  FrameIdTimestampMap involved_timestamp;
-  gtsam::Pose3 T_world_camera;
-  FrameId frame_id;
-  Timestamp timestamp;
-  ObjectMotionMap optimized_object_motions;
-  ObjectPoseMap optimized_object_poses;
-  gtsam::Pose3Vector optimized_camera_poses;
-  std::vector<TemporalObjectMetaData> temporal_object_data;
-  // streamline imagery with incremental visualisation tools!
-  cv::Mat debug_image;
+  void spin(FrameId frame_id, const MPCFormulation* formulation);
 
-  // TODO: just for dyno mpc. Streamline later
-
-  inline FrameId getFrameId() const { return frame_id; }
-  inline Timestamp getTimestamp() const { return timestamp; }
-  const gtsam::Pose3& pose() const { return T_world_camera; }
+ private:
+  const DisplayParams params_;
+  rclcpp::Node::SharedPtr node_;
 };
 
 }  // namespace dyno

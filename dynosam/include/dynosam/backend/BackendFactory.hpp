@@ -36,6 +36,7 @@
 #include "dynosam/backend/ParallelHybridBackendModule.hpp"
 #include "dynosam/backend/RegularBackendModule.hpp"
 #include "dynosam/backend/rgbd/HybridEstimator.hpp"
+#include "dynosam/backend/rgbd/MPCEstimator.hpp"
 #include "dynosam/backend/rgbd/WorldMotionEstimator.hpp"
 #include "dynosam/backend/rgbd/WorldPoseEstimator.hpp"
 #include "dynosam/backend/rgbd/impl/test_HybridFormulations.hpp"
@@ -108,7 +109,13 @@ class BackendFactory {
       fp.min_dynamic_observations = 1u;
       return std::make_unique<test_hybrid::SmartStructurlessFormulation>(
           fp, map, noise_models, sensors, formulation_hooks);
-    } else {
+    } else if (backend_type == BackendType::MPC_ESTIMATOR) {
+      LOG(INFO) << "Using MPC-Estimation";
+      return std::make_unique<MPCFormulation>(
+          formulation_params, map, noise_models, sensors, formulation_hooks);
+    }
+
+    else {
       CHECK(false) << "Not implemented";
       return nullptr;
     }

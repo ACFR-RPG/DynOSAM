@@ -88,7 +88,8 @@ if(ENABLE_DYNAMIC_SLAM_INTERFACES)
   list(APPEND SRC_FILES
     src/displays/dynamic_slam_displays/DSDCommonRos.cc
     src/displays/dynamic_slam_displays/FrontendDSDRos.cc
-    src/displays/dynamic_slam_displays/BackendDSDRos.cc)
+    src/displays/dynamic_slam_displays/BackendDSDRos.cc
+    src/displays/dynamic_slam_displays/MPCEstimationVizRos.cc)
 
 else()
   message(WARNING "dynamic_slam_interfaces will be not used")
@@ -96,7 +97,6 @@ else()
     src/displays/inbuilt_displays/BackendInbuiltDisplayRos.cc
     src/displays/inbuilt_displays/InbuiltDisplayCommon.cc
     src/displays/inbuilt_displays/FrontendInbuiltDisplayRos.cc)
-
 
 endif()
 

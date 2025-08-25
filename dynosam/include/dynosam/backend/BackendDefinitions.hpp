@@ -99,10 +99,11 @@ enum BackendType : int {
   // the following are test formulations that were not specifcially part of a
   // paper but were used for (internal) development/research. they may not work
   // as intended and are included for posterity
-  TESTING_HYBRID_SD = 4,  // (SD) structureless-decoupled
-  TESTING_HYBRID_D = 5,   // (D) decoupled
-  TESTING_HYBRID_S = 6,   // (S) structureless
-  TESTING_HYBRID_SMF = 7  // (SFM) smart motion factor
+  TESTING_HYBRID_SD = 4,   // (SD) structureless-decoupled
+  TESTING_HYBRID_D = 5,    // (D) decoupled
+  TESTING_HYBRID_S = 6,    // (S) structureless
+  TESTING_HYBRID_SMF = 7,  // (SFM) smart motion factor
+  MPC_ESTIMATOR = 8        // ICRA 2026
 };
 
 bool checkIfLabeledSymbol(gtsam::Key key);

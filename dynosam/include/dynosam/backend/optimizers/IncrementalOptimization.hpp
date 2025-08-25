@@ -271,6 +271,11 @@ struct ErrorHandlingHooks {
   OnFailedObject handle_failed_object;
 };
 
+struct IncrementalInterfaceParams {
+  bool calculate_errors = {false};
+  size_t max_extra_iterations = 3u;
+};
+
 template <typename SMOOTHER>
 class IncrementalInterface {
  public:
@@ -280,8 +285,10 @@ class IncrementalInterface {
   typedef typename SmootherTraitsType::ResultType ResultType;
   typedef typename SmootherTraitsType::FillArguments FillArguments;
 
-  IncrementalInterface(Smoother* smoother)
-      : smoother_(CHECK_NOTNULL(smoother)) {}
+  IncrementalInterface(
+      Smoother* smoother,
+      const IncrementalInterfaceParams& params = IncrementalInterfaceParams())
+      : smoother_(CHECK_NOTNULL(smoother)), params_(params) {}
 
   bool optimize(ResultType* result,
                 const FillArguments& update_arguments_filler,
@@ -299,9 +306,9 @@ class IncrementalInterface {
       // TODO: maybe we actually need to append results together?
       static ResultType dummy_result;
       static UpdateArguments empty_arguments;
-      VLOG(30) << "Doing extra iteration nr: " << max_extra_iterations_;
-      for (size_t n_iter = 1; n_iter < max_extra_iterations_ && is_smoother_ok;
-           ++n_iter) {
+      VLOG(30) << "Doing extra iteration nr: " << params_.max_extra_iterations;
+      for (size_t n_iter = 1;
+           n_iter < params_.max_extra_iterations && is_smoother_ok; ++n_iter) {
         is_smoother_ok &=
             updateSmoother(&dummy_result, empty_arguments, error_hooks);
       }
@@ -320,9 +327,10 @@ class IncrementalInterface {
   int64_t timing() const { return timing_; }
   bool wasSmootherOk() const { return was_smoother_ok_; }
   const ResultType& result() const { return result_; }
+  const IncrementalInterfaceParams& params() const { return params_; }
 
   IncrementalInterface& setMaxExtraIterations(size_t max_extra_iterations) {
-    max_extra_iterations_ = max_extra_iterations;
+    params_.max_extra_iterations = max_extra_iterations;
     return *this;
   };
 
@@ -428,7 +436,7 @@ class IncrementalInterface {
 
  protected:
   Smoother* smoother_;
-  size_t max_extra_iterations_ = 3u;
+  IncrementalInterfaceParams params_;
 
   //! state variables indicating result of last call to optimize
   //! Time in ms for last call to optimize

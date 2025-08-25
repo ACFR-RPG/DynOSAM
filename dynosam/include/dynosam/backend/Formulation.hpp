@@ -69,10 +69,24 @@ struct UpdateObservationResult {
   DebugInfo::Optional debug_info{};
 
   // Incremental interface
+  // TODO: should be optional
+  // Doubles as any fixed lag interface
   gtsam::ISAM2UpdateParams isam_update_params;
+
+  struct BatchUpdateParams {
+    //! Since no batch algorithm (even fixed-lag smoothers) have a 1-to-1 factor
+    //! index like ISAM2, this interface will find the factors manually
+    gtsam::NonlinearFactorGraph factors_to_remove;
+  };
+
+  //! Batch update params.
+  //! TODO: should be optional for only when running with batch!!
+  BatchUpdateParams batch_update_params;
 
   UpdateObservationResult() {}
 
+  // TODO: use the UpdateObservationParams to set if we have an incremental
+  // update or batch update params!!
   UpdateObservationResult(const UpdateObservationParams& update_params) {
     if (update_params.enable_debug_info) {
       this->debug_info = DebugInfo();
@@ -139,6 +153,16 @@ struct ObjectUpdateContext {
   inline ObjectId getObjectId() const { return object_node->template getId(); }
 };
 
+template <typename MAP>
+struct OtherUpdateContext {
+  using MapTraitsType = MapTraits<MAP>;
+  //! Frame that is part of the update context. Shared pointer to a frame node
+  //! as defined by the Map type
+  typename MapTraitsType::FrameNodePtr frame_node_k;
+
+  inline FrameId getFrameId() const { return frame_node_k->template getId(); }
+};
+
 // forward declare
 class BackendParams;
 
@@ -161,6 +185,7 @@ struct PostUpdateData {
   FrameId frame_id;
   UpdateObservationResult dynamic_update_result;
   UpdateObservationResult static_update_result;
+  UpdateObservationResult other_update_result;
 
   struct IncrementalResult {
     //! Result from the incremental update
@@ -259,6 +284,7 @@ class Formulation {
 
   using PointUpdateContextType = PointUpdateContext<Map>;
   using ObjectUpdateContextType = ObjectUpdateContext<Map>;
+  using OtherUpdateContextType = OtherUpdateContext<Map>;
   using AccessorType = Accessor<MAP>;
   using AccessorTypePointer = typename Accessor<MAP>::Ptr;
 
@@ -343,6 +369,22 @@ class Formulation {
       const ObjectUpdateContextType& context, UpdateObservationResult& result,
       gtsam::Values& new_values, gtsam::NonlinearFactorGraph& new_factors) = 0;
 
+  // TODO: how to handle static vs dynamic (ie in parallel!!!)
+  /**
+   * @brief Virtual function that allows any other updates to the factor graph
+   * to occur at a specific time-step k.
+   *
+   * These updates should not non vison related as these are handled by the
+   * objectUpdate and dynamicPointUpdateCallback functions.
+   *
+   * NOTE: this function should not be called directly and instead should be
+   * called via the updateOtherObservations function.
+   *
+   */
+  virtual void otherUpdatesContext(const OtherUpdateContextType&,
+                                   UpdateObservationResult&, gtsam::Values&,
+                                   gtsam::NonlinearFactorGraph&) {}
+
   /**
    * @brief Virtual function to be implemented by derived class and indicates
    * that the specified landmark exists within the graph already. This is used
@@ -377,8 +419,6 @@ class Formulation {
    */
   virtual typename AccessorType::Ptr createAccessor(
       const SharedFormulationData& shared_data) const = 0;
-
-  // virtual void
 
  public:
   /**
@@ -537,6 +577,28 @@ class Formulation {
       FrameId frame_id_k, gtsam::Values& new_values,
       gtsam::NonlinearFactorGraph& new_factors,
       const UpdateObservationParams& update_params);
+
+  /**
+   * @brief Fills new values and factors based on any other miscelaneous
+   * observations for frame k. This allows a formulation to be constructed that
+   * contains additional information other than just static/dynamic point
+   * variables.
+   *
+   * This function is called after all static/dynamic point measurements but
+   * before handleExternalMeasurements. This function is meant to differ from
+   * the handling of external measurements as this allows values to be
+   * constructed from the current set of values in the formulation while
+   * external measurements are fixed in their behaviour.
+   *
+   * Internally this calls the otherUpdatesContext function.
+   *
+   * @param frame_id_k
+   * @param new_values
+   * @param new_factors
+   */
+  UpdateObservationResult updateOtherObservations(
+      FrameId frame_id_k, gtsam::Values& new_values,
+      gtsam::NonlinearFactorGraph& new_factors);
 
   /**
    * @brief Logs all frames and values to file using Accessor and BackendLogger.

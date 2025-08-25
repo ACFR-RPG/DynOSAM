@@ -185,9 +185,12 @@ class VisionImuBackendModule : public BackendModuleType<MODULE_TRAITS> {
     const gtsam::NavState predicted_navstate_k =
         predictNewState(frame_id_k, T_k_1_k, pim);
 
-    // always add sensor pose
-    formulation->addSensorPoseValue(predicted_navstate_k.pose(), frame_id_k,
-                                    new_values);
+    // TODO: only for dyno mpc becuase the prediction will have alraedy added
+    // future camera poses
+    // handle this case in the future!!
+    //  always add sensor pose
+    //  formulation->addSensorPoseValue(predicted_navstate_k.pose(), frame_id_k,
+    //                                  new_values);
 
     // TODO: using RuntimeSensorOptions...
     if (pim) {

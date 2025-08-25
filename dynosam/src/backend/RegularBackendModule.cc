@@ -125,30 +125,32 @@ RegularBackendModule::SpinReturn RegularBackendModule::boostrapSpinImpl(
       false;  // apparently this is v important for making the results == ICRA
 
   PostUpdateData post_update_data(frame_k);
-  // addMeasurements(update_params, frame_k, new_values, new_factors,
-  //                 post_update_data);
-  {
-    LOG(INFO) << "Starting updateStaticObservations";
-    utils::TimingStatsCollector timer("backend.update_static_obs");
-    post_update_data.static_update_result =
-        formulation_->updateStaticObservations(frame_k, new_values, new_factors,
-                                               update_params);
-  }
-  // DONT run dynamic updates on the first frame (if any...)
-  {
-    LOG(INFO) << "Starting updateDynamicObservations";
-    utils::TimingStatsCollector timer("backend.update_dynamic_obs");
-    post_update_data.dynamic_update_result =
-        formulation_->updateDynamicObservations(frame_k, new_values,
-                                                new_factors, update_params);
-  }
+  addMeasurements(input, update_params, new_values, new_factors,
+                  post_update_data);
+  // {
+  //   LOG(INFO) << "Starting updateStaticObservations";
+  //   utils::TimingStatsCollector timer("backend.update_static_obs");
+  //   post_update_data.static_update_result =
+  //       formulation_->updateStaticObservations(frame_k, new_values,
+  //       new_factors,
+  //                                              update_params);
+  // }
+  // // DONT run dynamic updates on the first frame (if any...)
+  // {
+  //   LOG(INFO) << "Starting updateDynamicObservations";
+  //   utils::TimingStatsCollector timer("backend.update_dynamic_obs");
+  //   post_update_data.dynamic_update_result =
+  //       formulation_->updateDynamicObservations(frame_k, new_values,
+  //                                               new_factors, update_params);
+  // }
 
-  handleExternalMeasurements(frame_k, input->other_measurements,
-                             formulation_.get(), new_values, new_factors);
+  // handleExternalMeasurements(frame_k, input->other_measurements,
+  //                            formulation_.get(), new_values, new_factors);
 
-  if (post_formulation_update_cb_) {
-    post_formulation_update_cb_(formulation_, frame_k, new_values, new_factors);
-  }
+  // if (post_formulation_update_cb_) {
+  //   post_formulation_update_cb_(formulation_, frame_k, new_values,
+  //   new_factors);
+  // }
 
   LOG(INFO) << "Starting any updates";
 
@@ -193,18 +195,14 @@ RegularBackendModule::SpinReturn RegularBackendModule::nominalSpinImpl(
       false;  // apparently this is v important for making the results == ICRA
 
   PostUpdateData post_update_data(frame_k);
-  addMeasurements(update_params, frame_k, new_values, new_factors,
+  addMeasurements(input, update_params, new_values, new_factors,
                   post_update_data);
 
   LOG(INFO) << "Starting any updates";
 
-  handleExternalMeasurements(frame_k, input->other_measurements,
-                             formulation_.get(), new_values, new_factors);
-
   updateAndOptimize(frame_k, new_values, new_factors, post_update_data);
   LOG(INFO) << "Done any udpates";
 
-  auto accessor = formulation_->accessorFromTheta();
   // update internal nav state based on the initial/optimised estimated in the
   // formulation this is also necessary to update the internal timestamp/frameid
   // variables within the VisionImuBackendModule
@@ -265,11 +263,14 @@ void RegularBackendModule::setupUpdates() {
 }
 
 void RegularBackendModule::addMeasurements(
-    const UpdateObservationParams& update_params, FrameId frame_k,
-    gtsam::Values& new_values, gtsam::NonlinearFactorGraph& new_factors,
+    const VisionImuPacket::ConstPtr& input,
+    const UpdateObservationParams& update_params, gtsam::Values& new_values,
+    gtsam::NonlinearFactorGraph& new_factors,
     PostUpdateData& post_update_data) {
+  const auto frame_k = input->frameId();
+
   {
-    LOG(INFO) << "Starting updateStaticObservations";
+    VLOG(10) << "Starting updateStaticObservations";
     utils::TimingStatsCollector timer("backend.update_static_obs");
     post_update_data.static_update_result =
         formulation_->updateStaticObservations(frame_k, new_values, new_factors,
@@ -277,11 +278,25 @@ void RegularBackendModule::addMeasurements(
   }
 
   {
-    LOG(INFO) << "Starting updateDynamicObservations";
+    VLOG(10) << "Starting updateDynamicObservations";
     utils::TimingStatsCollector timer("backend.update_dynamic_obs");
     post_update_data.dynamic_update_result =
         formulation_->updateDynamicObservations(frame_k, new_values,
                                                 new_factors, update_params);
+  }
+
+  {
+    VLOG(10) << "Starting otherUpdates";
+    utils::TimingStatsCollector timer("backend.other_obs");
+    post_update_data.other_update_result =
+        formulation_->updateOtherObservations(frame_k, new_values, new_factors);
+  }
+
+  {
+    VLOG(10) << "Starting handleExternalMeasurements";
+    utils::TimingStatsCollector timer("backend.external_obs");
+    handleExternalMeasurements(frame_k, input->other_measurements,
+                               formulation_.get(), new_values, new_factors);
   }
 
   if (post_formulation_update_cb_) {
@@ -429,7 +444,37 @@ void RegularBackendModule::updateSlidingWindow(
   // since it is actually batch dont do extra iterations
   smoother_interface.setMaxExtraIterations(0);
 
-  sliding_window_->print();
+  // this is very slow...
+  auto find_factor_slots_to_remove =
+      [](const gtsam::NonlinearFactorGraph& factors_to_remove,
+         const gtsam::NonlinearFactorGraph& current_factors)
+      -> gtsam::FactorIndices {
+    gtsam::FactorIndices factors_indicies;
+    for (const auto& factor_remove : factors_to_remove) {
+      for (size_t i = 0; i < current_factors.size(); i++) {
+        // equals or compare memory...?
+        if (current_factors.at(i) && current_factors.at(i) == factor_remove) {
+          factors_indicies.push_back(i);
+        }
+      }
+    }
+
+    return factors_indicies;
+  };
+
+  // find factors to remove from the batch interface
+  // TODO: for dyno mpc only doing other_update_result
+  // as in incremental will need to merge all at some point!!
+  gtsam::FactorIndices factors_to_remove =
+      find_factor_slots_to_remove(post_update_data.other_update_result
+                                      .batch_update_params.factors_to_remove,
+                                  smoother_interface.getFactors());
+
+  // LOG(INFO) << "Removing batch factors"
+  for (auto index : factors_to_remove) {
+    smoother_interface.getFactors().at(index)->print("Factor remove ",
+                                                     formulation_->formatter());
+  }
 
   // marginalise all values
   std::map<gtsam::Key, double> timestamps;
@@ -446,6 +491,7 @@ void RegularBackendModule::updateSlidingWindow(
         update_arguments.new_values = new_values;
         update_arguments.new_factors = new_factors;
         update_arguments.timestamps = timestamps;
+        update_arguments.factors_to_remove = factors_to_remove;
       },
       error_hooks_);
 
@@ -739,6 +785,11 @@ BackendOutputPacket::Ptr RegularBackendModule::constructOutputPacket(
 
   backend_output->optimized_object_motions = accessor->getObjectMotions();
   backend_output->optimized_object_poses = accessor->getObjectPoses();
+
+  // TODO: only for DYNO_MPC later find way to stream line this!!!
+  const auto mpc_accessor = formulation->derivedAccessor<MPCAccessor>();
+  if (mpc_accessor) {
+  }
   return backend_output;
 }
 

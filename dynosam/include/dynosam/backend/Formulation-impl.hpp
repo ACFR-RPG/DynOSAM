@@ -572,6 +572,43 @@ UpdateObservationResult Formulation<MAP>::updateDynamicObservations(
 }
 
 template <typename MAP>
+UpdateObservationResult Formulation<MAP>::updateOtherObservations(
+    FrameId frame_id_k, gtsam::Values& new_values,
+    gtsam::NonlinearFactorGraph& new_factors) {
+  UpdateObservationResult result;
+
+  // keep track of the new factors added in this function
+  // these are then appended to the internal factors_ and new_factors
+  gtsam::NonlinearFactorGraph internal_new_factors;
+  // keep track of the new values added in this function
+  // these are then appended to the internal values_ and new_values
+  gtsam::Values internal_new_values;
+
+  typename Map::Ptr map = this->map();
+  const auto frame_node_k = map->getFrame(frame_id_k);
+  if (!frame_node_k) {
+    LOG(WARNING) << "Frame node at k=" << frame_id_k
+                 << "is null! Skipping updateOtherObservations";
+    return result;
+  }
+
+  OtherUpdateContextType context;
+  context.frame_node_k = frame_node_k;
+
+  // call internal update
+  this->otherUpdatesContext(context, result, internal_new_values,
+                            internal_new_factors);
+
+  // update internal and new values/factors
+  factors_ += internal_new_factors;
+  new_factors += internal_new_factors;
+  theta_.insert(internal_new_values);
+  new_values.insert(internal_new_values);
+
+  return result;
+}
+
+template <typename MAP>
 void Formulation<MAP>::logBackendFromMap(const BackendMetaData& backend_info) {
   // TODO:
   std::string logger_prefix = this->getFullyQualifiedName();

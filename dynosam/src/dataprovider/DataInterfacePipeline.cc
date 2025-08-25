@@ -84,26 +84,35 @@ FrontendInputPacketBase::ConstPtr DataInterfacePipeline::getInputPacket() {
   // handle imu
   ImuMeasurements::Optional imu_meas;
   imu_meas.emplace();
-  FrameAction action = getTimeSyncedImuMeasurements(timestamp, &(*imu_meas));
-  switch (action) {
-    case FrameAction::Use:
-      CHECK(imu_meas);
-      break;
-    case FrameAction::Wait:
-    case FrameAction::Drop:
-      imu_meas.reset();
-      break;
+
+  {
+    utils::TimingStatsCollector track_dynamic_timer("data-interface.imu_sync");
+    FrameAction action = getTimeSyncedImuMeasurements(timestamp, &(*imu_meas));
+    switch (action) {
+      case FrameAction::Use:
+        CHECK(imu_meas);
+        break;
+      case FrameAction::Wait:
+      case FrameAction::Drop:
+        imu_meas.reset();
+        break;
+    }
   }
 
   // handle external data
   FunctionMeasurements external_measurements;
-  getTimeSyncedExternalMeasurements(timestamp, external_measurements);
+  {
+    utils::TimingStatsCollector track_dynamic_timer(
+        "data-interface.external_sync");
+    getTimeSyncedExternalMeasurements(timestamp, external_measurements);
 
-  if (VLOG_IS_ON(5) && !external_measurements.empty()) {
-    std::stringstream ss;
-    ss << "External measurements synced at frame " << packet->frameId() << ": ";
-    for (const auto& e : external_measurements) ss << e->toString();
-    VLOG(5) << ss.str();
+    if (VLOG_IS_ON(5) && !external_measurements.empty()) {
+      std::stringstream ss;
+      ss << "External measurements synced at frame " << packet->frameId()
+         << ": ";
+      for (const auto& e : external_measurements) ss << e->toString();
+      VLOG(5) << ss.str();
+    }
   }
 
   auto frontend_input =

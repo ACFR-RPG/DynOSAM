@@ -47,6 +47,12 @@
 #include "rclcpp/parameter.hpp"
 #include "rosgraph_msgs/msg/clock.hpp"
 
+// TODO: just for dyno mppc
+#include <dynosam/backend/RegularBackendModule.hpp>
+#include <dynosam/backend/rgbd/MPCEstimator.hpp>
+
+#include "dynosam_ros/displays/dynamic_slam_displays/MPCEstimationVizRos.hpp"
+
 namespace dyno {
 
 DynoNode::DynoNode(const std::string& node_name,
@@ -173,6 +179,25 @@ void DynoPipelineManagerRos::initalisePipeline() {
   auto data_loader = createDataProvider();
   pipeline_ = std::make_unique<DynoPipelineManager>(
       params, data_loader, frontend_display, backend_display, hooks);
+
+  // JUST FOR DYNO MPC
+  auto backend_module = pipeline_->getBackendModule();
+  if (backend_module) {
+    auto regular_backend_module =
+        std::dynamic_pointer_cast<RegularBackendModule>(backend_module);
+    if (regular_backend_module) {
+      LOG(INFO) << "Is regular backend module";
+
+      auto formulation = regular_backend_module->formulation();
+      MPCFormulation* mpc_formulation =
+          static_cast<MPCFormulation*>(formulation);
+      if (mpc_formulation) {
+        LOG(INFO) << "Is mpc formulation!";
+        mpc_formulation->viz_ = std::make_unique<MPCEstimationVizRos>(
+            display_params, this->create_sub_node("control"));
+      }
+    }
+  }
 }
 
 }  // namespace dyno

@@ -145,6 +145,8 @@ class BackendModuleType : public BackendModule {
   virtual SpinReturn nominalSpinImpl(InputConstPtr input) = 0;
 
   // frame id is the frame that these measureemnts have been synchronized with
+  // TODO: how to handle static vs dynamic
+  // these should probably be neither and just relate to the ego-motion?
   virtual void handleExternalMeasurements(
       FrameId frame_id,
       const std::vector<FunctionalMeasurement::Ptr>& external_measurements,

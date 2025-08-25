@@ -114,16 +114,17 @@ class RegularBackendModule
    * @brief Construct factors and new values for static and dynamic features.
    * Does the bulk of the graph construction by calling
    * Formulation::updateStaticObservations and
-   * Formulation::updateDynamicObservations.
+   * Formulation::updateDynamicObservations etc...
    *
+   * @param input const VisionImuPacket::ConstPtr&
    * @param update_params const UpdateObservationParams&
-   * @param frame_k FrameId
    * @param new_values gtsam::Values&
    * @param new_factors gtsam::NonlinearFactorGraph&
    * @param post_update_data PostUpdateData&
    */
-  virtual void addMeasurements(const UpdateObservationParams& update_params,
-                               FrameId frame_k, gtsam::Values& new_values,
+  virtual void addMeasurements(const VisionImuPacket::ConstPtr& input,
+                               const UpdateObservationParams& update_params,
+                               gtsam::Values& new_values,
                                gtsam::NonlinearFactorGraph& new_factors,
                                PostUpdateData& post_update_data);
 

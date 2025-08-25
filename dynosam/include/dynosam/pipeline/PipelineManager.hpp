@@ -68,6 +68,15 @@ class DynoPipelineManager {
 
   virtual bool spinViz();
 
+  // TODO: himmm just for DYNO MPC or also otherwuise....?
+  BackendPipeline::ModulePtr getBackendModule() {
+    if (backend_pipeline_) {
+      return backend_pipeline_->getModule();
+    } else {
+      return nullptr;
+    }
+  }
+
  private:
   void launchSpinners();
   void shutdownSpinners();
