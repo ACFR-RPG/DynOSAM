@@ -83,6 +83,12 @@ struct UpdateObservationResult {
   //! TODO: should be optional for only when running with batch!!
   BatchUpdateParams batch_update_params;
 
+  //! A custom set of keys that wont be added to the timestamp map of a fixed
+  //! lag smoother (when used) This prevents the keys being marginalized out
+  //! when they leave the lag horizin; Should be keys added during 'this' update
+  //! step
+  gtsam::KeySet keys_to_not_marginalize;
+
   UpdateObservationResult() {}
 
   // TODO: use the UpdateObservationParams to set if we have an incremental
@@ -160,6 +166,10 @@ struct OtherUpdateContext {
   //! as defined by the Map type
   typename MapTraitsType::FrameNodePtr frame_node_k;
 
+  // TODO: hack for now as we need timestamp in dynosam mpc
+  // make easily avaiable for all contexts/formulations
+  Timestamp timestamp;
+
   inline FrameId getFrameId() const { return frame_node_k->template getId(); }
 };
 
@@ -183,6 +193,7 @@ struct PreUpdateData {
  */
 struct PostUpdateData {
   FrameId frame_id;
+  Timestamp timestamp;
   UpdateObservationResult dynamic_update_result;
   UpdateObservationResult static_update_result;
   UpdateObservationResult other_update_result;
@@ -199,7 +210,8 @@ struct PostUpdateData {
   std::optional<IncrementalResult> incremental_result = {};
 
   PostUpdateData() {}
-  PostUpdateData(FrameId _frame_id) : frame_id(_frame_id) {}
+  PostUpdateData(FrameId _frame_id, Timestamp _timestamp)
+      : frame_id(_frame_id), timestamp(_timestamp) {}
 };
 
 /**
@@ -578,6 +590,7 @@ class Formulation {
       gtsam::NonlinearFactorGraph& new_factors,
       const UpdateObservationParams& update_params);
 
+  // TODO: update all to have timestamps easily available!!
   /**
    * @brief Fills new values and factors based on any other miscelaneous
    * observations for frame k. This allows a formulation to be constructed that
@@ -597,7 +610,7 @@ class Formulation {
    * @param new_factors
    */
   UpdateObservationResult updateOtherObservations(
-      FrameId frame_id_k, gtsam::Values& new_values,
+      Timestamp timestamp_k, FrameId frame_id_k, gtsam::Values& new_values,
       gtsam::NonlinearFactorGraph& new_factors);
 
   /**

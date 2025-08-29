@@ -32,19 +32,38 @@
 
 #include "dynosam/backend/rgbd/MPCEstimator.hpp"
 #include "dynosam_ros/Display-Definitions.hpp"
+#include "dynosam_ros/displays/dynamic_slam_displays/DSDCommonRos.hpp"
+#include "nav_msgs/msg/path.hpp"
 #include "rclcpp/node.hpp"
+#include "visualization_msgs/msg/marker.hpp"
+#include "visualization_msgs/msg/marker_array.hpp"
 
 namespace dyno {
 
 class MPCEstimationVizRos : public MPCEstimationViz {
  public:
-  MPCEstimationVizRos(const DisplayParams params, rclcpp::Node::SharedPtr node);
+  MPCEstimationVizRos(const DisplayParams params, rclcpp::Node::SharedPtr node,
+                      MPCFormulation* formulation);
 
-  void spin(FrameId frame_id, const MPCFormulation* formulation);
+  void spin(Timestamp timestamp, FrameId frame_id,
+            const MPCFormulation* formulation);
+
+ private:
+  void publishLocalGoalMarker(const gtsam::Pose3& pose,
+                              const std::string& name);
 
  private:
   const DisplayParams params_;
   rclcpp::Node::SharedPtr node_;
+  DSDRos prediction_transport_;
+
+  rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr cmd_vel_pub_;
+  rclcpp::Subscription<nav_msgs::msg::Path>::SharedPtr global_path_subscriber_;
+
+  rclcpp::Publisher<visualization_msgs::msg::MarkerArray>::SharedPtr
+      local_goal_marker_pub_;
+
+  MPCFormulation* formulation_;
 };
 
 }  // namespace dyno

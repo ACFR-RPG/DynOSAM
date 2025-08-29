@@ -169,7 +169,7 @@ void FrontendDSDRos::tryPublishGroundTruth(
 void FrontendDSDRos::tryPublishVisualOdometry(
     const VisionImuPacket::ConstPtr& frontend_output) {
   // publish vo
-  constexpr static bool kPublishOdomAsTf = true;
+  constexpr static bool kPublishOdomAsTf = false;
   this->publishVisualOdometry(frontend_output->cameraPose(),
                               frontend_output->timestamp(), kPublishOdomAsTf);
 

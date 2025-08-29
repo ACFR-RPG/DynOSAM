@@ -96,8 +96,8 @@ void OnlineDataProviderRos::connect() {
   imu_callback_group_ = node_->create_callback_group(
       rclcpp::CallbackGroupType::MutuallyExclusive);
 
-  rclcpp::SubscriptionOptions options;
-  options.callback_group = imu_callback_group_;
+  rclcpp::SubscriptionOptions imu_sub_options;
+  imu_sub_options.callback_group = imu_callback_group_;
 
   imu_sub_ = node_->create_subscription<ImuAdaptedType>(
       "imu", rclcpp::SensorDataQoS(),
@@ -111,7 +111,14 @@ void OnlineDataProviderRos::connect() {
         }
         imu_single_input_callback_(imu);
       },
-      options);
+      imu_sub_options);
+
+  external_measurements_callback_group_ = node_->create_callback_group(
+      rclcpp::CallbackGroupType::MutuallyExclusive);
+
+  rclcpp::SubscriptionOptions external_measurement_sub_options;
+  external_measurement_sub_options.callback_group =
+      external_measurements_callback_group_;
 
   gps_like_sub_ = node_->create_subscription<PoseWithCovarianceStampted>(
       "gps", rclcpp::SensorDataQoS(),
@@ -153,7 +160,8 @@ void OnlineDataProviderRos::connect() {
         external_measurement_callback_(
             "gps", std::make_shared<dyno::UnaryPoseMeasurement<gtsam::Pose3>>(
                        timestamp, Pose3Measurement(pose, cov_gtsam)));
-      });
+      },
+      external_measurement_sub_options);
 
   shutdown_ = false;
 }

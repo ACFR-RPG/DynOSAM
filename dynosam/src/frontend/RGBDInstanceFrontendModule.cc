@@ -35,6 +35,7 @@
 #include <opencv4/opencv2/opencv.hpp>
 
 #include "dynosam/common/Flags.hpp"  //for common flags
+#include "dynosam/common/RGBDCamera.hpp"
 #include "dynosam/frontend/RGBDInstance-Definitions.hpp"
 #include "dynosam/frontend/vision/MotionSolver.hpp"
 #include "dynosam/frontend/vision/Vision-Definitions.hpp"
@@ -150,6 +151,7 @@ FrontendModule::SpinReturn RGBDInstanceFrontendModule::nominalSpin(
   }
 
   bool stereo_result = false;
+  // TODO: change to use rgb camera
   static const double base_line = 0.05;  // VIODE
   // static const double base_line = 0.12;  // ZED
 
@@ -389,7 +391,9 @@ void RGBDInstanceFrontendModule::fillOutputPacketWithTracks(
       [&camera](FeatureFilterIterator it,
                 CameraMeasurementStatusVector* measurements, FrameId frame_id,
                 const gtsam::Vector2& pixel_sigmas, double depth_sigma) {
-        for (const Feature::Ptr& f : it) {
+        std::shared_ptr<RGBDCamera> rgbd_camera = camera.safeGetRGBDCamera();
+
+        for (Feature::Ptr f : it) {
           const TrackletId tracklet_id = f->trackletId();
           const Keypoint& kp = f->keypoint();
           const ObjectId object_id = f->objectId();
@@ -422,6 +426,22 @@ void RGBDInstanceFrontendModule::fillOutputPacketWithTracks(
           if (f->hasRightKeypoint()) {
             CHECK(f->hasDepth())
                 << "Right keypoint set for feature but no depth!";
+            MeasurementWithCovariance<Keypoint> right_kp_measurement =
+                MeasurementWithCovariance<Keypoint>::FromSigmas(
+                    f->rightKeypoint(), pixel_sigmas);
+            camera_measurement.rightKeypoint(right_kp_measurement);
+          }
+          // no right keypoint and has rgbd camera and has depth, project
+          // keypoint into right camera
+          else if (rgbd_camera && f->hasDepth()) {
+            bool right_projection_result = rgbd_camera->projectRight(f);
+            if (!right_projection_result) {
+              // TODO: for now mark as outlier and ignore point
+              f->markOutlier();
+              continue;
+            }
+
+            CHECK(f->hasRightKeypoint());
             MeasurementWithCovariance<Keypoint> right_kp_measurement =
                 MeasurementWithCovariance<Keypoint>::FromSigmas(
                     f->rightKeypoint(), pixel_sigmas);

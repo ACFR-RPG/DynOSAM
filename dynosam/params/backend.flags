@@ -30,12 +30,13 @@
 --odometry_translation_sigma=0.01
 
 
---static_point_noise_sigma=0.0001
---dynamic_point_noise_sigma=0.0001
+--static_point_noise_sigma=0.1
+--dynamic_point_noise_sigma=0.1
 
---min_static_observations=0
+--min_static_observations=3
+--min_dynamic_observations=2
 
---static_pixel_noise_sigma=0.01
+--static_pixel_noise_sigma=2.0
 --dynamic_pixel_noise_sigma=0.01
 
 # --static_point_noise_sigma=0.01
@@ -51,6 +52,8 @@
 
 # 0: Full-batch, 1: sliding-window, 2: incremental
 --optimization_mode=1
+
+--regular_backend_smoother_lag=25
 
 
 --use_backend_logger=false
@@ -85,3 +88,20 @@
 --corrupt_L_for_init=false
 --corrupt_L_for_init_sigma=0.2
 --init_LL_with_identity=false
+
+
+# Dyno MPC stuff
+--mpc_horizon=30
+--mpc_vel2d_prior_sigma=5e-3
+--mpc_vel2d_limit_sigma=1e-2
+
+--mpc_accel2d_limit_sigma=1e-2
+--mpc_accel2d_cost_sigma=1e2
+
+--mpc_accel2d_smoothing_sigma=5e3
+--mpc_dynamic_factor_sigma=1e-3
+--mpc_object_prediction_constant_motion_sigma=1e-1
+--mpc_follow_sigma=5e-1
+
+--mpc_desired_follow_distance=3.0
+--mpc_desired_follow_heading=0.0

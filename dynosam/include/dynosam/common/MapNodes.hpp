@@ -290,6 +290,7 @@ class StateQuery : public std::optional<ValueType> {
   //! Base type representing the existance of the query value
   using Base = std::optional<ValueType>;
   using Base::value_or;
+  using Base::operator bool;
 
   //! Status of the state query
   using Status = StateQueryStatus;

@@ -144,8 +144,8 @@ SIMOPipelineModule<INPUT, OUTPUT>::getInputPacket() {
   if (queue_state) {
     return input;
   } else {
-    LOG_IF_EVERY_N(WARNING, !Base::isShutdown() && !hasWork(), 100)
-        << "Module: " << Base::module_name_ << " - didn't return an output.";
+    // LOG_IF_EVERY_N(WARNING, !Base::isShutdown() && !hasWork(), 100)
+    //     << "Module: " << Base::module_name_ << " - didn't return an output.";
     return nullptr;
   }
 }

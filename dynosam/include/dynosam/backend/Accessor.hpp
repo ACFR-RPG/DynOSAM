@@ -326,14 +326,31 @@ class Accessor {
   bool exists(gtsam::Key key) const;
 
   /**
-   * @brief Access a key in the current theta.
+   * @brief Query the current theta.
    *
-   * @tparam ValueType
-   * @param key gtsam::Key
+   * If the key is not found an invalid StateQuery will be returned.
+   *
+   * @tparam ValueType A gtsam value type
+   * @param key gtsam::Key key
    * @return StateQuery<ValueType>
    */
   template <typename ValueType>
   StateQuery<ValueType> query(gtsam::Key key) const;
+
+  /**
+   * @brief Query the current theta OR a set of new values.
+   *
+   * The current state will be queried first before new_values.
+   * If the key is not in either an invalid StateQuery will be returned.
+   *
+   * @tparam ValueType A gtsam value type
+   * @param key gtsam::Key
+   * @param new_values const gtsam::Values&
+   * @return StateQuery<ValueType>
+   */
+  template <typename ValueType>
+  StateQuery<ValueType> queryWithTheta(gtsam::Key key,
+                                       const gtsam::Values& new_values) const;
 
  protected:
   auto map() const { return map_; }

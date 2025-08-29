@@ -72,6 +72,10 @@ DEFINE_bool(
     "If ISAM2 stats should be logged to file when running incrementally."
     " This will slow down compute!!");
 
+DEFINE_double(
+    regular_backend_smoother_lag, 25,
+    "Smoother lag used for any fixed lag optimizer (batch, incremental etc)");
+
 namespace dyno {
 
 RegularBackendModule::RegularBackendModule(const BackendParams& backend_params,
@@ -97,7 +101,8 @@ RegularBackendModule::~RegularBackendModule() {
 
   if (base_params_.use_logger_) {
     auto backend_info = createBackendMetadata();
-    PostUpdateData post_update_data(spin_state_.frame_id);
+    PostUpdateData post_update_data(spin_state_.frame_id,
+                                    spin_state_.timestamp);
     formulation_->postUpdate(post_update_data);
     formulation_->logBackendFromMap(backend_info);
   }
@@ -121,10 +126,13 @@ RegularBackendModule::SpinReturn RegularBackendModule::boostrapSpinImpl(
 
   UpdateObservationParams update_params;
   update_params.enable_debug_info = true;
-  update_params.do_backtrack =
-      false;  // apparently this is v important for making the results == ICRA
+  // TODO: current implementation cannot do back_track for dynamic objects
+  // in the case they re-appear as the first motion frame will be taken as the
+  // first frame the object was observed in; not the first frame of the new
+  // segment!!
+  update_params.do_backtrack = false;
 
-  PostUpdateData post_update_data(frame_k);
+  PostUpdateData post_update_data(frame_k, timestamp);
   addMeasurements(input, update_params, new_values, new_factors,
                   post_update_data);
   // {
@@ -191,10 +199,12 @@ RegularBackendModule::SpinReturn RegularBackendModule::nominalSpinImpl(
 
   UpdateObservationParams update_params;
   update_params.enable_debug_info = true;
-  update_params.do_backtrack =
-      false;  // apparently this is v important for making the results == ICRA
+  // update_params.do_backtrack =
+  //     false;  // apparently this is v important for making the results ==
+  //     ICRA
+  update_params.do_backtrack = true;
 
-  PostUpdateData post_update_data(frame_k);
+  PostUpdateData post_update_data(frame_k, timestamp);
   addMeasurements(input, update_params, new_values, new_factors,
                   post_update_data);
 
@@ -228,7 +238,6 @@ void RegularBackendModule::setupUpdates() {
   const RegularOptimizationType& optimization_mode =
       base_params_.optimization_mode;
   if (optimization_mode == RegularOptimizationType::SLIDING_WINDOW) {
-    LOG(INFO) << "Setting up backend for Sliding Window Optimisation";
     // SlidingWindowOptimization::Params sw_params;
     // sw_params.window_size = FLAGS_opt_window_size;
     // sw_params.overlap = FLAGS_opt_window_overlap;
@@ -240,9 +249,14 @@ void RegularBackendModule::setupUpdates() {
     //  this should be greater than the max track age to avoid adding static
     //  points to poses that have been removed! (and becuase we dont
     //  keyframe...)
+    double smoother_lag = FLAGS_regular_backend_smoother_lag;
+    LOG(INFO) << "Setting up backend for Batch fixed lag smoothing: lag="
+              << smoother_lag;
+    ;
+
     LevenbergMarquardtParams lm_params;
     sliding_window_ =
-        std::make_unique<gtsam::BatchFixedLagSmoother>(25.0, lm_params);
+        std::make_unique<gtsam::BatchFixedLagSmoother>(smoother_lag, lm_params);
   }
 
   if (optimization_mode == RegularOptimizationType::INCREMENTAL) {
@@ -288,8 +302,11 @@ void RegularBackendModule::addMeasurements(
   {
     VLOG(10) << "Starting otherUpdates";
     utils::TimingStatsCollector timer("backend.other_obs");
+    // TODO: need timestamps everywhere put into contexts for all (or frames
+    // node!!)
     post_update_data.other_update_result =
-        formulation_->updateOtherObservations(frame_k, new_values, new_factors);
+        formulation_->updateOtherObservations(input->timestamp(), frame_k,
+                                              new_values, new_factors);
   }
 
   {
@@ -465,22 +482,35 @@ void RegularBackendModule::updateSlidingWindow(
   // find factors to remove from the batch interface
   // TODO: for dyno mpc only doing other_update_result
   // as in incremental will need to merge all at some point!!
-  gtsam::FactorIndices factors_to_remove =
-      find_factor_slots_to_remove(post_update_data.other_update_result
-                                      .batch_update_params.factors_to_remove,
-                                  smoother_interface.getFactors());
-
-  // LOG(INFO) << "Removing batch factors"
-  for (auto index : factors_to_remove) {
-    smoother_interface.getFactors().at(index)->print("Factor remove ",
-                                                     formulation_->formatter());
+  gtsam::FactorIndices factors_to_remove;
+  {
+    utils::TimingStatsCollector timer(formulation_->getFullyQualifiedName() +
+                                      ".updated_sw.find_factors");
+    factors_to_remove =
+        find_factor_slots_to_remove(post_update_data.other_update_result
+                                        .batch_update_params.factors_to_remove,
+                                    smoother_interface.getFactors());
   }
 
-  // marginalise all values
+  // LOG(INFO) << "Removing batch factors"
+  // for (auto index : factors_to_remove) {
+  //   smoother_interface.getFactors().at(index)->print("Factor remove ",
+  //                                                    formulation_->formatter());
+  // }
+
+  // marginalise values
   std::map<gtsam::Key, double> timestamps;
   double curr_id = static_cast<double>(this->spin_state_.iteration);
+
+  // TODO: again for dyno mpc only doing other_update_result
+  const auto& keys_to_not_marginalize =
+      post_update_data.other_update_result.keys_to_not_marginalize;
   for (const auto& key_value : new_values) {
-    timestamps[key_value.key] = curr_id;
+    const auto& key = key_value.key;
+    // add key to timestamp if not in keys_to_not_marginalize
+    if (keys_to_not_marginalize.find(key) == keys_to_not_marginalize.end()) {
+      timestamps[key_value.key] = curr_id;
+    }
   }
 
   SmootherInterface::ResultType result;

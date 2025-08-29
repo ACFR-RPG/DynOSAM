@@ -194,7 +194,7 @@ void DynoPipelineManagerRos::initalisePipeline() {
       if (mpc_formulation) {
         LOG(INFO) << "Is mpc formulation!";
         mpc_formulation->viz_ = std::make_unique<MPCEstimationVizRos>(
-            display_params, this->create_sub_node("control"));
+            display_params, this->create_sub_node("control"), mpc_formulation);
       }
     }
   }

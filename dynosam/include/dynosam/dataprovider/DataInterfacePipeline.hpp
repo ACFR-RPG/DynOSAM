@@ -39,7 +39,7 @@ class ExternalMeasurementHandler {
 
 class MultiExternalMeasurementHandler {
  public:
-  MultiExternalMeasurementHandler(Timestamp default_sync_delta = 0.0)
+  MultiExternalMeasurementHandler(Timestamp default_sync_delta = 0.05)
       : default_sync_delta_(default_sync_delta) {}
   virtual ~MultiExternalMeasurementHandler() {}
 

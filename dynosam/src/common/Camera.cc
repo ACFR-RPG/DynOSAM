@@ -189,6 +189,7 @@ bool Camera::isLandmarkContained(const Landmark& lmk,
 RGBDCamera Camera::getRGBDCamera() const {
   return RGBDCamera(this->getParams());
 }
+
 std::shared_ptr<RGBDCamera> Camera::safeGetRGBDCamera() const {
   try {
     return std::make_shared<RGBDCamera>(this->getParams());

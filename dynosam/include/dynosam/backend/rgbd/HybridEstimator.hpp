@@ -1400,7 +1400,11 @@ class RegularHybridFormulation : public HybridFormulation {
 
     inline bool isNew() const { return count == 1u; }
   };
-  // The last frame
+
+  //! Tracks the last updated frame for each object in the optimisation
+  //! Checking that an object exists in this datastructure is a good way to
+  //! check that the object has variables in the optimizer (as compared to
+  //! checking the map which only lets us see that an object is observed)
   gtsam::FastMap<ObjectId, ObjectUpdateData> objects_update_data_;
 };
 

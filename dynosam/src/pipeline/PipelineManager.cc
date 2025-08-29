@@ -265,7 +265,15 @@ void DynoPipelineManager::loadPipelines(const CameraParams& camera_params,
       LOG(INFO) << "Making RGBDInstance frontend";
       FrontendModule::Ptr frontend = nullptr;
 
-      Camera::Ptr camera = std::make_shared<Camera>(camera_params);
+      CameraParams mutable_camera_params = camera_params;
+      // TODO: make this conversion to RGBD param based
+      //  only update camera to rgbd if the data provider has not already set
+      if (!mutable_camera_params.hasDepthParams()) {
+        LOG(INFO) << "Updating camera params: converting to Fake Stereo camera";
+        mutable_camera_params.setDepthParams(0.07);
+      }
+      Camera::Ptr camera = std::make_shared<Camera>(mutable_camera_params);
+
       CHECK_NOTNULL(camera);
 
       if (use_offline_frontend_) {

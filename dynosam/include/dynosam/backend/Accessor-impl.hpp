@@ -400,4 +400,19 @@ StateQuery<ValueType> Accessor<MAP>::query(gtsam::Key key) const {
   }
 }
 
+template <class MAP>
+template <typename ValueType>
+StateQuery<ValueType> Accessor<MAP>::queryWithTheta(
+    gtsam::Key key, const gtsam::Values& new_values) const {
+  if (StateQuery<ValueType> theta = this->query<ValueType>(key); theta) {
+    return theta;
+  }
+
+  if (new_values.exists(key)) {
+    return StateQuery<ValueType>(key, new_values.at<ValueType>(key));
+  } else {
+    return StateQuery<ValueType>::NotInMap(key);
+  }
+}
+
 }  // namespace dyno

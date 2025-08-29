@@ -30,9 +30,12 @@
 
 #pragma once
 
+#include <gtsam/slam/StereoFactor.h>
+
 #include "dynosam/backend/BackendParams.hpp"
 #include "dynosam/backend/FactorGraphTools.hpp"
 #include "dynosam/backend/Formulation.hpp"
+#include "dynosam/common/RGBDCamera.hpp"
 #include "dynosam/utils/TimingStats.hpp"
 
 namespace dyno {
@@ -155,27 +158,16 @@ UpdateObservationResult Formulation<MAP>::updateStaticObservations(
   typename Map::Ptr map = this->map();
   auto accessor = this->accessorFromTheta();
 
-  auto static_point_noise = CHECK_NOTNULL(noise_models_.static_point_noise);
-
-  gtsam::SharedNoiseModel static_keypoint_noise =
-      gtsam::noiseModel::Isotropic::Sigma(2u, 3);
-  static_keypoint_noise = gtsam::noiseModel::Robust::Create(
-      gtsam::noiseModel::mEstimator::Huber::Create(0.01),
-      static_keypoint_noise);
   // keep track of the new factors added in this function
   // these are then appended to the internal factors_ and new_factors
   gtsam::NonlinearFactorGraph internal_new_factors;
 
   UpdateObservationResult result(update_params);
 
-  // // VIODE!!
-  // double fx = 376.0;
-  // double fy = 376.0;
-  // double cx = 376.0;
-  // double cy = 240.0;
-  // double skew = 0.0;  // assuming zero skew
-
-  // const auto K = boost::make_shared<gtsam::Cal3_S2>(fx, fy, skew, cx, cy);
+  std::shared_ptr<Camera> camera = CHECK_NOTNULL(sensors_.camera);
+  std::shared_ptr<RGBDCamera> rgbd_camera =
+      CHECK_NOTNULL(camera->safeGetRGBDCamera());
+  auto stereo_K = rgbd_camera->getFakeStereoCalib();
 
   const auto frame_node_k = map->getFrame(frame_id_k);
   CHECK_NOTNULL(frame_node_k);
@@ -208,6 +200,27 @@ UpdateObservationResult Formulation<MAP>::updateStaticObservations(
           .emplace_shared<gtsam::PoseToPointFactor<gtsam::Pose3, Landmark>>(
               frame_node_k->makePoseKey(),  // pose key for this frame
               point_key, measured_point_local, measurement_covariance);
+
+      // auto stereo_measurement = MeasurementTraits::stereo(
+      //   lmk_node->getMeasurement(frame_id_k)
+      // );
+      // //FOR NOW
+      // CHECK(stereo_measurement);
+      // auto [measurement, model] = *stereo_measurement;
+      // if (params_.makeStaticMeasurementsRobust()) {
+      //   model = factor_graph_tools::robustifyHuber(
+      //       params_.k_huber_3d_points_, model);
+      // }
+
+      //  internal_new_factors
+      //     .emplace_shared<gtsam::GenericStereoFactor<gtsam::Pose3,
+      //     Landmark>>(
+      //         measurement,
+      //         model,
+      //         frame_node_k->makePoseKey(),
+      //         point_key,
+      //         stereo_K
+      //     );
 
       if (result.debug_info) result.debug_info->num_static_factors++;
       result.updateAffectedObject(frame_id_k, 0);
@@ -244,7 +257,7 @@ UpdateObservationResult Formulation<MAP>::updateStaticObservations(
         gtsam::SharedNoiseModel measurement_covariance;
         std::tie(measured_point_local, measurement_covariance) =
             MeasurementTraits::pointWithCovariance(
-                lmk_node->getMeasurement(frame_id_k));
+                lmk_node->getMeasurement(seen_frame_id));
         CHECK(measurement_covariance);
 
         if (params_.makeStaticMeasurementsRobust()) {
@@ -255,6 +268,27 @@ UpdateObservationResult Formulation<MAP>::updateStaticObservations(
         internal_new_factors.emplace_shared<PoseToPointFactor>(
             seen_frame->makePoseKey(),  // pose key at previous frames
             point_key, measured_point_local, measurement_covariance);
+
+        // auto stereo_measurement = MeasurementTraits::stereo(
+        //   lmk_node->getMeasurement(seen_frame_id)
+        // );
+        // //FOR NOW
+        // CHECK(stereo_measurement);
+        // auto [measurement, model] = *stereo_measurement;
+        // if (params_.makeStaticMeasurementsRobust()) {
+        //   model = factor_graph_tools::robustifyHuber(
+        //       params_.k_huber_3d_points_, model);
+        // }
+
+        // internal_new_factors
+        //     .emplace_shared<gtsam::GenericStereoFactor<gtsam::Pose3,
+        //     Landmark>>(
+        //         measurement,
+        //         model,
+        //         seen_frame->makePoseKey(),
+        //         point_key,
+        //         stereo_K
+        //     );
 
         if (result.debug_info) result.debug_info->num_static_factors++;
         result.updateAffectedObject(seen_frame_id, 0);
@@ -573,7 +607,7 @@ UpdateObservationResult Formulation<MAP>::updateDynamicObservations(
 
 template <typename MAP>
 UpdateObservationResult Formulation<MAP>::updateOtherObservations(
-    FrameId frame_id_k, gtsam::Values& new_values,
+    Timestamp timestamp_k, FrameId frame_id_k, gtsam::Values& new_values,
     gtsam::NonlinearFactorGraph& new_factors) {
   UpdateObservationResult result;
 
@@ -594,6 +628,7 @@ UpdateObservationResult Formulation<MAP>::updateOtherObservations(
 
   OtherUpdateContextType context;
   context.frame_node_k = frame_node_k;
+  context.timestamp = timestamp_k;
 
   // call internal update
   this->otherUpdatesContext(context, result, internal_new_values,

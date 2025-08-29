@@ -96,7 +96,7 @@ class DSDTransport {
       const ObjectMotionMap& motions, const ObjectPoseMap& poses,
       Timestamp timestamp_k, const FrameIdTimestampMap& frame_timestamp_map,
       const std::string& frame_id_link,
-      bool interpolate_missing_segments = true);
+      bool interpolate_missing_segments = false);
 
   /**
    * @brief Nested Publisher that publishes all the object odometries for a
@@ -249,6 +249,9 @@ class DSDRos {
 
   CloudPerObject publishDynamicPointCloud(const StatusLandmarkVector& landmarks,
                                           const gtsam::Pose3& T_world_camera);
+
+  DSDTransport& getDSDTransport() { return dsd_transport_; }
+  const DSDTransport& getDSDTransport() const { return dsd_transport_; }
 
  private:
  protected:

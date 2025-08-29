@@ -130,6 +130,8 @@ class OnlineDataProviderRos : public DataProviderRos {
   using PoseWithCovarianceStampted =
       geometry_msgs::msg::PoseWithCovarianceStamped;
   rclcpp::Subscription<PoseWithCovarianceStampted>::SharedPtr gps_like_sub_;
+
+  rclcpp::CallbackGroup::SharedPtr external_measurements_callback_group_;
 };
 
 }  // namespace dyno

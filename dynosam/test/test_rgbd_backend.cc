@@ -1129,7 +1129,8 @@ TEST(RegularBackendModule, testObjectCentric) {
 
   // log results of LM optimisation with different suffix
   dyno::BackendMetaData backend_info;
-  dyno::PostUpdateData post_update(backend.getSpinState().frame_id);
+  dyno::PostUpdateData post_update(backend.getSpinState().frame_id,
+                                   backend.getSpinState().timestamp);
   backend.formulation()->postUpdate(post_update);
   backend.formulation()->logBackendFromMap(backend_info);
 

@@ -46,7 +46,7 @@ void BackendDSDRos::spinOnceImpl(
     const BackendOutputPacket::ConstPtr& backend_output) {
   // publish vo and path
   auto tic = utils::Timer::tic();
-  constexpr static bool kPublishOdomAsTf = false;
+  constexpr static bool kPublishOdomAsTf = true;
   this->publishVisualOdometry(backend_output->pose(),
                               backend_output->getTimestamp(), kPublishOdomAsTf);
   this->publishVisualOdometryPath(backend_output->optimized_camera_poses,

@@ -108,6 +108,8 @@ def load_dynosam_node(context, *args, **kwargs):
     motion_mask_cam_topic_config = LaunchConfiguration("motion_mask_cam_topic")
     optical_flow_cam_topic_config = LaunchConfiguration("optical_flow_cam_topic")
     imu_topic_config = LaunchConfiguration("imu_topic")
+    mpc_cmd_vel_topic_config = LaunchConfiguration("mpc_cmd_vel_topic")
+    mpc_global_plan_topic_config = LaunchConfiguration("mpc_global_plan_topic")
 
     # additional cmdline arguments
     # args_config = LaunchConfiguration("argv")
@@ -208,13 +210,18 @@ def load_dynosam_node(context, *args, **kwargs):
         package='dynosam_ros',
         executable=executable,
         parameters=parameters,
+        # programamtically allyw remappings: why do i need to specify every time!!
         remappings=[
             ("dataprovider/image/camera_info", camera_info_config),
             ("dataprovider/image/rgb", rgb_cam_topic_config),
             ("dataprovider/image/depth", depth_cam_topic_config),
             ("dataprovider/image/mask", motion_mask_cam_topic_config),
             ("dataprovider/image/flow", optical_flow_cam_topic_config),
-            ("dataprovider/imu", imu_topic_config)
+            ("dataprovider/imu", imu_topic_config),
+            # only for dynompc
+            ("control/cmd_vel", mpc_cmd_vel_topic_config),
+            ("control/global_plan", mpc_global_plan_topic_config)
+
         ],
         # prefix='valgrind --tool=massif --massif-out-file=/tmp/massif.out',
         arguments=arguments,
@@ -274,6 +281,8 @@ def inside_ros_launch():
 
 
 
+#TODO: have to specify remappings individually - find better way to pass them directly as a
+# singl argument e.g. remappings = [(...)]
 def generate_dynosam_launch_description(**kwargs):
     # these values can be overwritten by providing launch arguments of the same name, these
     # just provide the default if no launch arguments are given
@@ -292,6 +301,8 @@ def generate_dynosam_launch_description(**kwargs):
          "motion_mask_cam_topic": "/dyno/camera/motion_mask",
          "optical_flow_cam_topic": "/dyno/camera/optical_flow",
          "imu_topic": "dyno/imu",
+         "mpc_cmd_vel_topic": "control/cmd_vel",
+         "mpc_global_plan_topic": "control/global_plan",
          "camera_frame_id": "camera",
          "world_frame_id": "world"},
          **kwargs)

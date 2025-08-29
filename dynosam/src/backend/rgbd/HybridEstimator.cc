@@ -188,7 +188,6 @@ StateQuery<gtsam::Pose3> HybridAccessor::getObjectMotion(
       // want a motion from k-1 to k, but we estimate s0 to k
       //^w_{k-1}H_k = ^w_{s0}H_k \: ^w_{s0}H_{k-1}^{-1}
       gtsam::Pose3 motion = e_H_k_world.get() * e_H_km1_world->inverse();
-      // LOG(INFO) << "Obj motion " << motion;
       return StateQuery<gtsam::Pose3>(motion_key, motion);
     } else {
       return StateQuery<gtsam::Pose3>::NotInMap(
@@ -716,7 +715,16 @@ void HybridFormulation::objectUpdateContext(
     gtsam::Pose3 motion = computeInitialH(object_id, frame_id);
     VLOG(5) << "Added motion at  " << DynoLikeKeyFormatter(object_motion_key_k);
     // gtsam::Pose3 motion;
-    new_values.insert(object_motion_key_k, motion);
+
+    // TODO: for dyno moc only!!! We assume we already have it in the map
+    // it already exists in the values but is not registered with
+    // is_other_values_in_map this may happen with dyno mpc as it forward
+    // preddicts and initalises object poses
+    if (!theta_accessor->queryWithTheta<gtsam::Pose3>(object_motion_key_k,
+                                                      new_values)) {
+      new_values.insert(object_motion_key_k, motion);
+    }
+    // new_values.insert(object_motion_key_k, motion);
     is_other_values_in_map.insert2(object_motion_key_k, true);
 
     // for now lets treat num_motion_factors as motion (values) added!!

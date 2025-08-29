@@ -130,7 +130,8 @@ struct IncrementalTester : public RegularBackendTester {
     dyno::BackendMetaData backend_info;
     backend_info.backend_params = &backend->getParams();
 
-    dyno::PostUpdateData post_update(backend->getSpinState().frame_id);
+    dyno::PostUpdateData post_update(backend->getSpinState().frame_id,
+                                     backend->getSpinState().timestamp);
     backend->formulation()->postUpdate(post_update);
     backend->formulation()->logBackendFromMap(backend_info);
 
@@ -178,7 +179,8 @@ struct BatchTester : public RegularBackendTester {
     dyno::BackendMetaData backend_info;
     backend_info.backend_params = &backend->getParams();
 
-    dyno::PostUpdateData post_update(backend->getSpinState().frame_id);
+    dyno::PostUpdateData post_update(backend->getSpinState().frame_id,
+                                     backend->getSpinState().timestamp);
     backend->formulation()->postUpdate(post_update);
     backend->formulation()->logBackendFromMap(backend_info);
 

@@ -32,10 +32,37 @@
 
 #include <glog/logging.h>
 
+#include "dynosam/factors/HybridFormulationFactors.hpp"
+
 // Vec2LimitFactor (2DV and 2DA limits)
 // ControlChangeFactor (2DA Smooth)
 // FollowFactor (need zero Jacobian)
 // Pose2DynXVAFactor (Dynamic factor) + zero Jacobian version
+
+DEFINE_uint32(mpc_horizon, 4, "Dyno mpc time horizon");
+
+DEFINE_double(mpc_vel2d_prior_sigma, 1.0, "Sigma for the cam pose prior");
+
+DEFINE_double(mpc_vel2d_limit_sigma, 1.0, "Sigma for the cam pose prior");
+DEFINE_double(mpc_accel2d_limit_sigma, 1.0, "Sigma for the cam pose prior");
+
+DEFINE_double(mpc_accel2d_cost_sigma, 1.0, "Sigma for the cam pose prior");
+DEFINE_double(mpc_accel2d_smoothing_sigma, 1.0, "Sigma for the cam pose prior");
+
+DEFINE_double(mpc_dynamic_factor_sigma, 1.0, "Sigma for mpc dynamic factor");
+DEFINE_double(mpc_object_prediction_constant_motion_sigma, 0.01,
+              "Sigma object prediction smoothing");
+
+DEFINE_double(mpc_follow_sigma, 1.0, "Sigma for follow factor");
+
+DEFINE_double(mpc_desired_follow_distance, 3.0,
+              "Desired follow distance for follow factor");
+DEFINE_double(mpc_desired_follow_heading, 0.1,
+              "Desired follow heading for follow factor");
+
+DEFINE_double(
+    mpc_dt, 0.1,
+    "Expected dt for mpc algorithm. SHould be the same as the frame-rate");
 
 namespace dyno {
 
@@ -164,36 +191,39 @@ class Vec2LimitFactor : public gtsam::NoiseModelFactor1<gtsam::Vector2> {
   double dt_;    // Time step
 };
 
-class Pose3FollowJac0Factor
+class HybridMotionFollowJac0Factor
     : public gtsam::NoiseModelFactor2<gtsam::Pose3, gtsam::Pose3> {
  public:
-  using shared_ptr = boost::shared_ptr<Pose3FollowJac0Factor>;
-  using This = Pose3FollowJac0Factor;
+  using shared_ptr = boost::shared_ptr<HybridMotionFollowJac0Factor>;
+  using This = HybridMotionFollowJac0Factor;
   using Base = gtsam::NoiseModelFactor2<gtsam::Pose3, gtsam::Pose3>;
 
   // Constructor
-  Pose3FollowJac0Factor(gtsam::Key poseFollowerKey, gtsam::Key poseLeaderKey,
-                        double des_distance, double des_heading,
-                        gtsam::SharedNoiseModel model)
-      : Base(model, poseFollowerKey, poseLeaderKey),
+  HybridMotionFollowJac0Factor(gtsam::Key X_W_key_follower,
+                               gtsam::Key H_W_e_k_key_leader,
+                               const gtsam::Pose3& L_e_leader,
+                               double des_distance, double des_heading,
+                               gtsam::SharedNoiseModel model)
+      : Base(model, X_W_key_follower, H_W_e_k_key_leader),
+        L_e_leader_(L_e_leader),
         des_distance_(des_distance),
         des_heading_(des_heading) {}
 
   // Clone method
   gtsam::NonlinearFactor::shared_ptr clone() const override {
-    return boost::make_shared<Pose3FollowJac0Factor>(*this);
+    return boost::make_shared<HybridMotionFollowJac0Factor>(*this);
   }
 
   void print(const std::string& s = "",
              const gtsam::KeyFormatter& keyFormatter =
                  DynoLikeKeyFormatter) const override {
-    std::cout << s << "Pose3FollowJac0Factor\n";
+    std::cout << s << "HybridMotionFollowJac0Factor\n";
     Base::print("", keyFormatter);
   }
 
   // Error function
   gtsam::Vector evaluateError(
-      const gtsam::Pose3& poseFollower, const gtsam::Pose3& poseLeader,
+      const gtsam::Pose3& X_W_follower, const gtsam::Pose3& H_W_e_k_leader,
       boost::optional<gtsam::Matrix&> J1 = boost::none,
       boost::optional<gtsam::Matrix&> J2 = boost::none) const override {
     // Compute Jacobians if requested
@@ -201,37 +231,45 @@ class Pose3FollowJac0Factor
       Eigen::Matrix<double, 2, 6> df_f =
           gtsam::numericalDerivative21<gtsam::Vector2, gtsam::Pose3,
                                        gtsam::Pose3>(
-              std::bind(&Pose3FollowJac0Factor::residual, this,
+              std::bind(&HybridMotionFollowJac0Factor::residual, this,
                         std::placeholders::_1, std::placeholders::_2,
                         des_distance_, des_heading_),
-              poseFollower, poseLeader);
+              X_W_follower, H_W_e_k_leader);
       *J1 = df_f;
     }
 
     if (J2) {
-      Eigen::Matrix<double, 2, 6> df_l =
-          gtsam::numericalDerivative22<gtsam::Vector2, gtsam::Pose3,
-                                       gtsam::Pose3>(
-              std::bind(&Pose3FollowJac0Factor::residual, this,
-                        std::placeholders::_1, std::placeholders::_2,
-                        des_distance_, des_heading_),
-              poseFollower, poseLeader);
-      *J2 = df_l;
+      // Eigen::Matrix<double, 2, 6> df_l =
+      //     gtsam::numericalDerivative22<gtsam::Vector2, gtsam::Pose3,
+      //                                  gtsam::Pose3>(
+      //         std::bind(&HybridMotionFollowJac0Factor::residual, this,
+      //                   std::placeholders::_1, std::placeholders::_2,
+      //                   des_distance_, des_heading_),
+      //         X_W_follower, H_W_e_k_leader);
+      // *J2 = df_l;
+      *J2 = Eigen::Matrix<double, 2, 6>::Zero();
     }
 
-    return residual(poseFollower, poseLeader, des_distance_, des_heading_);
+    return residual(X_W_follower, H_W_e_k_leader, des_distance_, des_heading_);
   }
 
   // Compute residual (static utility function)
-  gtsam::Vector residual(const gtsam::Pose3& poseFollower_3d,
-                         const gtsam::Pose3& poseLeader_3d, double des_distance,
+  gtsam::Vector residual(const gtsam::Pose3& X_W_follower_3d,
+                         const gtsam::Pose3& H_W_e_k_leader_3d,
+                         double des_distance,
                          const gtsam::Rot2& des_heading) const {
-    gtsam::Pose2 poseFollower(poseFollower_3d.x(), poseFollower_3d.y(),
-                              poseFollower_3d.rotation().yaw());
-    gtsam::Pose2 poseLeader(poseLeader_3d.x(), poseLeader_3d.y(),
-                            poseLeader_3d.rotation().yaw());
-    double distance = poseFollower.range(poseLeader);
-    gtsam::Rot2 bearing = poseFollower.bearing(poseLeader);
+    // gtsam::Pose2 X_W_follower(X_W_follower_3d.x(), X_W_follower_3d.y(),
+    //                           X_W_follower_3d.rotation().yaw());
+    gtsam::Pose2 X_W_follower(X_W_follower_3d.z(), -X_W_follower_3d.x(),
+                              -X_W_follower_3d.rotation().pitch());
+
+    gtsam::Pose3 L_W_3d = H_W_e_k_leader_3d * L_e_leader_;
+
+    // gtsam::Pose2 L_W(L_W_3d.x(), L_W_3d.y(),
+    //                         L_W_3d.rotation().yaw());
+    gtsam::Pose2 L_W(L_W_3d.z(), -L_W_3d.x(), -L_W_3d.rotation().pitch());
+    double distance = X_W_follower.range(L_W);
+    gtsam::Rot2 bearing = X_W_follower.bearing(L_W);
     gtsam::Vector1 bearing_error =
         gtsam::Rot2::Logmap(bearing.between(des_heading));
 
@@ -257,10 +295,11 @@ class Pose3FollowJac0Factor
     );
   }
 
-  inline gtsam::Key poseFollowerKey() const { return key1(); }
-  inline gtsam::Key poseLeaderKey() const { return key2(); }
+  inline gtsam::Key X_W_key_follower() const { return key1(); }
+  inline gtsam::Key H_W_e_k_key_leader() const { return key2(); }
 
  private:
+  gtsam::Pose3 L_e_leader_;
   double des_distance_;
   gtsam::Rot2 des_heading_;
 };
@@ -380,8 +419,8 @@ class Pose3DynXVAFactor
                          const gtsam::Pose3& pose3_2,
                          const gtsam::Vector2& vel1, const gtsam::Vector2& vel2,
                          const gtsam::Vector2& acc1) const {
-    gtsam::Pose2 pose1(pose3_1.x(), pose3_1.y(), pose3_1.rotation().yaw());
-    gtsam::Pose2 pose2(pose3_2.x(), pose3_2.y(), pose3_2.rotation().yaw());
+    gtsam::Pose2 pose1(pose3_1.z(), -pose3_1.x(), -pose3_1.rotation().pitch());
+    gtsam::Pose2 pose2(pose3_2.z(), -pose3_2.x(), -pose3_2.rotation().pitch());
     // Update velocities using acceleration and time step
     gtsam::Vector2 pred_vel2 = vel1 + acc1 * dt_;
 
@@ -400,14 +439,13 @@ class Pose3DynXVAFactor
     // Compute the residual as the difference between the expected and actual
     // current pose
 
-    return gtsam::Vector8(
-        pose_error(0),  // x error
-        pose_error(1),  // y error
-        pose_error(2),  // theta error
-        vel2[0] - pred_vel2[0], vel2[1] - pred_vel2[1],
-        pose3_2.rotation().roll() - pose3_1.rotation().roll(),
-        pose3_2.rotation().pitch() - pose3_1.rotation().pitch(),
-        pose3_2.z() - pose3_1.z());
+    return gtsam::Vector8(pose_error(0),  // x error
+                          pose_error(1),  // y error
+                          pose_error(2),  // theta error
+                          vel2[0] - pred_vel2[0], vel2[1] - pred_vel2[1],
+                          pose3_2.rotation().yaw() - pose3_1.rotation().yaw(),
+                          pose3_2.rotation().roll() - pose3_1.rotation().roll(),
+                          pose3_2.y() - pose3_1.y());
   }
 
   // Accessor methods for keys
@@ -520,8 +558,8 @@ class Pose3DynXVAJac0Factor
                          const gtsam::Pose3& pose3_2,
                          const gtsam::Vector2& vel1, const gtsam::Vector2& vel2,
                          const gtsam::Vector2& acc1) const {
-    gtsam::Pose2 pose1(pose3_1.x(), pose3_1.y(), pose3_1.rotation().yaw());
-    gtsam::Pose2 pose2(pose3_2.x(), pose3_2.y(), pose3_2.rotation().yaw());
+    gtsam::Pose2 pose1(pose3_1.z(), -pose3_1.x(), -pose3_1.rotation().pitch());
+    gtsam::Pose2 pose2(pose3_2.z(), -pose3_2.x(), -pose3_2.rotation().pitch());
     // Update velocities using acceleration and time step
     gtsam::Vector2 pred_vel2 = vel1 + acc1 * dt_;
 
@@ -540,14 +578,13 @@ class Pose3DynXVAJac0Factor
     // Compute the residual as the difference between the expected and actual
     // current pose
 
-    return gtsam::Vector8(
-        pose_error(0),  // x error
-        pose_error(1),  // y error
-        pose_error(2),  // theta error
-        vel2[0] - pred_vel2[0], vel2[1] - pred_vel2[1],
-        pose3_2.rotation().roll() - pose3_1.rotation().roll(),
-        pose3_2.rotation().pitch() - pose3_1.rotation().pitch(),
-        pose3_2.z() - pose3_1.z());
+    return gtsam::Vector8(pose_error(0),  // x error
+                          pose_error(1),  // y error
+                          pose_error(2),  // theta error
+                          vel2[0] - pred_vel2[0], vel2[1] - pred_vel2[1],
+                          pose3_2.rotation().yaw() - pose3_1.rotation().yaw(),
+                          pose3_2.rotation().roll() - pose3_1.rotation().roll(),
+                          pose3_2.y() - pose3_1.y());
   }
 
   // Accessor methods for keys
@@ -561,12 +598,533 @@ class Pose3DynXVAJac0Factor
   double dt_;  // Time step
 };
 
+class HybridSmoothingJac0Factor
+    : public gtsam::NoiseModelFactor3<gtsam::Pose3, gtsam::Pose3,
+                                      gtsam::Pose3> {
+ public:
+  typedef boost::shared_ptr<HybridSmoothingJac0Factor> shared_ptr;
+  typedef HybridSmoothingJac0Factor This;
+  typedef gtsam::NoiseModelFactor3<gtsam::Pose3, gtsam::Pose3, gtsam::Pose3>
+      Base;
+
+  gtsam::Pose3 L_e_;
+
+  HybridSmoothingJac0Factor(gtsam::Key e_H_km2_world_key,
+                            gtsam::Key e_H_km1_world_key,
+                            gtsam::Key e_H_k_world_key, const gtsam::Pose3& L_e,
+                            gtsam::SharedNoiseModel model)
+      : Base(model, e_H_km2_world_key, e_H_km1_world_key, e_H_k_world_key),
+        L_e_(L_e) {}
+
+  gtsam::Vector evaluateError(
+      const gtsam::Pose3& e_H_km2_world, const gtsam::Pose3& e_H_km1_world,
+      const gtsam::Pose3& e_H_k_world,
+      boost::optional<gtsam::Matrix&> J1 = boost::none,
+      boost::optional<gtsam::Matrix&> J2 = boost::none,
+      boost::optional<gtsam::Matrix&> J3 = boost::none) const override {
+    if (J1) {
+      *J1 = Eigen::Matrix<double, 6, 6>::Zero();
+    }
+
+    if (J2) {
+      *J2 = gtsam::numericalDerivative32<gtsam::Vector6, gtsam::Pose3,
+                                         gtsam::Pose3, gtsam::Pose3>(
+          std::bind(&HybridSmoothingJac0Factor::residual, std::placeholders::_1,
+                    std::placeholders::_2, std::placeholders::_3, L_e_),
+          e_H_km2_world, e_H_km1_world, e_H_k_world);
+    }
+
+    if (J3) {
+      *J3 = gtsam::numericalDerivative33<gtsam::Vector6, gtsam::Pose3,
+                                         gtsam::Pose3, gtsam::Pose3>(
+          std::bind(&HybridSmoothingJac0Factor::residual, std::placeholders::_1,
+                    std::placeholders::_2, std::placeholders::_3, L_e_),
+          e_H_km2_world, e_H_km1_world, e_H_k_world);
+    }
+
+    return residual(e_H_km2_world, e_H_km1_world, e_H_k_world, L_e_);
+  }
+
+  static gtsam::Vector residual(const gtsam::Pose3& e_H_km2_world,
+                                const gtsam::Pose3& e_H_km1_world,
+                                const gtsam::Pose3& e_H_k_world,
+                                const gtsam::Pose3& L_e) {
+    const gtsam::Pose3 L_k_2 = e_H_km2_world * L_e;
+    const gtsam::Pose3 L_k_1 = e_H_km1_world * L_e;
+    const gtsam::Pose3 L_k = e_H_k_world * L_e;
+
+    gtsam::Pose3 k_2_H_k_1 = L_k_2.inverse() * L_k_1;
+    gtsam::Pose3 k_1_H_k = L_k_1.inverse() * L_k;
+
+    gtsam::Pose3 relative_motion = k_2_H_k_1.inverse() * k_1_H_k;
+
+    return gtsam::traits<gtsam::Pose3>::Local(gtsam::Pose3::Identity(),
+                                              relative_motion);
+  }
+};
+
+class HybridSmoothingHolonomicFactor
+    : public gtsam::NoiseModelFactor3<gtsam::Pose3, gtsam::Pose3,
+                                      gtsam::Pose3> {
+ public:
+  typedef boost::shared_ptr<HybridSmoothingHolonomicFactor> shared_ptr;
+  typedef HybridSmoothingHolonomicFactor This;
+  typedef gtsam::NoiseModelFactor3<gtsam::Pose3, gtsam::Pose3, gtsam::Pose3>
+      Base;
+
+  gtsam::Pose3 L_e_;
+  bool should_zero_first_jacobian_;
+
+  HybridSmoothingHolonomicFactor(gtsam::Key e_H_km2_world_key,
+                                 gtsam::Key e_H_km1_world_key,
+                                 gtsam::Key e_H_k_world_key,
+                                 const gtsam::Pose3& L_e,
+                                 gtsam::SharedNoiseModel model,
+                                 bool should_zero_first_jacobian = false)
+      : Base(model, e_H_km2_world_key, e_H_km1_world_key, e_H_k_world_key),
+        L_e_(L_e),
+        should_zero_first_jacobian_(should_zero_first_jacobian) {}
+
+  gtsam::Vector evaluateError(
+      const gtsam::Pose3& e_H_km2_world, const gtsam::Pose3& e_H_km1_world,
+      const gtsam::Pose3& e_H_k_world,
+      boost::optional<gtsam::Matrix&> J1 = boost::none,
+      boost::optional<gtsam::Matrix&> J2 = boost::none,
+      boost::optional<gtsam::Matrix&> J3 = boost::none) const override {
+    if (J1) {
+      if (should_zero_first_jacobian_) {
+        *J1 = Eigen::Matrix<double, 8, 6>::Zero();
+      } else {
+        *J1 = gtsam::numericalDerivative31<gtsam::Vector8, gtsam::Pose3,
+                                           gtsam::Pose3, gtsam::Pose3>(
+            std::bind(&HybridSmoothingHolonomicFactor::residual,
+                      std::placeholders::_1, std::placeholders::_2,
+                      std::placeholders::_3, L_e_),
+            e_H_km2_world, e_H_km1_world, e_H_k_world);
+      }
+    }
+
+    if (J2) {
+      *J2 = gtsam::numericalDerivative32<gtsam::Vector8, gtsam::Pose3,
+                                         gtsam::Pose3, gtsam::Pose3>(
+          std::bind(&HybridSmoothingHolonomicFactor::residual,
+                    std::placeholders::_1, std::placeholders::_2,
+                    std::placeholders::_3, L_e_),
+          e_H_km2_world, e_H_km1_world, e_H_k_world);
+    }
+
+    if (J3) {
+      *J3 = gtsam::numericalDerivative33<gtsam::Vector8, gtsam::Pose3,
+                                         gtsam::Pose3, gtsam::Pose3>(
+          std::bind(&HybridSmoothingHolonomicFactor::residual,
+                    std::placeholders::_1, std::placeholders::_2,
+                    std::placeholders::_3, L_e_),
+          e_H_km2_world, e_H_km1_world, e_H_k_world);
+    }
+
+    return residual(e_H_km2_world, e_H_km1_world, e_H_k_world, L_e_);
+  }
+
+  static gtsam::Vector residual(const gtsam::Pose3& e_H_km2_world,
+                                const gtsam::Pose3& e_H_km1_world,
+                                const gtsam::Pose3& e_H_k_world,
+                                const gtsam::Pose3& L_e) {
+    const gtsam::Pose3 L_k_2 = e_H_km2_world * L_e;
+    const gtsam::Pose3 L_k_1 = e_H_km1_world * L_e;
+    const gtsam::Pose3 L_k = e_H_k_world * L_e;
+
+    gtsam::Pose3 k_2_H_k_1 = L_k_2.inverse() * L_k_1;
+    gtsam::Pose3 k_1_H_k = L_k_1.inverse() * L_k;
+
+    gtsam::Pose3 relative_motion = k_2_H_k_1.inverse() * k_1_H_k;
+    // now we add holonomic constraints in the
+    //  gtsam::Pose2 relaitive_motion2(
+    //    relative_motion.z(),
+    //    -relative_motion.x(),
+    //    -relative_motion.rotation().pitch());
+
+    // now we add holonomic constraints in the opencv convention
+    // to constrain the pose in world frame
+    // gtsam::Pose2 relaitive_motion2(
+    //   relative_motion.z(),
+    //   -relative_motion.x(),
+    //   -relative_motion.rotation().pitch());
+
+    // gtsam::Vector3 relative_motion2_error =
+    //   gtsam::traits<gtsam::Pose2>::Local(
+    //     gtsam::Pose2::Identity(),
+    //     relaitive_motion2);
+
+    gtsam::Vector6 relative_motion_error = gtsam::traits<gtsam::Pose3>::Local(
+        gtsam::Pose3::Identity(), relative_motion);
+
+    // return gtsam::Vector9(
+    //     relative_motion2_error(0),  // x error
+    //     relative_motion2_error(1),  // y error
+    //     relative_motion2_error(2),  // theta error
+    //     // L_k_2.rotation().roll() - L_k_1.rotation().roll(),
+    //     // L_k_1.rotation().roll() - L_k.rotation().roll(),
+    //     // L_k_2.rotation().yaw() - L_k_1.rotation().yaw(),
+    //     // L_k_1.rotation().yaw() - L_k.rotation().yaw(),
+    //     0, 0, 0, 0,
+    //     L_k_2.y() - L_k_1.y(),
+    //     L_k_1.y() - L_k.y()
+    // );
+    return gtsam::Vector8(relative_motion_error(0), relative_motion_error(1),
+                          relative_motion_error(2), relative_motion_error(3),
+                          relative_motion_error(4), relative_motion_error(5),
+                          L_k_2.y() - L_k_1.y(), L_k_1.y() - L_k.y());
+  }
+};
+
+struct HybridConstantMotionFactorResidual {
+  static gtsam::Vector residual(const gtsam::Pose3& e_H_km1_world_est,
+                                const gtsam::Pose3& e_H_k_world_est,
+                                const gtsam::Pose3& e_H_n1_world_future,
+                                const gtsam::Pose3& e_H_n2_world_future,
+                                const gtsam::Pose3& L_e) {
+    gtsam::Pose3 L_km1_est = e_H_km1_world_est * L_e;
+    gtsam::Pose3 L_k_est = e_H_k_world_est * L_e;
+
+    gtsam::Pose3 L_n1_est = e_H_n1_world_future * L_e;
+    gtsam::Pose3 L_n2_est = e_H_n2_world_future * L_e;
+
+    // measured (really expected) relative motion as given by the most recent
+    // estimate
+    gtsam::Pose3 measured_relative_motion = L_km1_est.inverse() * L_k_est;
+
+    // implement between factor!
+    gtsam::Pose3 hx =
+        gtsam::traits<gtsam::Pose3>::Between(L_n1_est, L_n2_est);  // h(x)
+    return gtsam::traits<gtsam::Pose3>::Local(measured_relative_motion, hx);
+  }
+};
+
+struct HybridConstantMotionFactorResidualBetter {
+  static gtsam::Vector residual(const gtsam::Pose3& e_H_km2_world,
+                                const gtsam::Pose3& e_H_km1_world,
+                                const gtsam::Pose3& e_H_k_world,
+                                const gtsam::Pose3& L_e) {
+    gtsam::Pose3 L_km2_est = e_H_km2_world * L_e;
+    gtsam::Pose3 L_km1_est = e_H_km1_world * L_e;
+    gtsam::Pose3 L_k_est = e_H_k_world * L_e;
+
+    // measured (really expected) relative motion as given by the most recent
+    // estimate
+    gtsam::Pose3 measured_relative_motion = L_km2_est.inverse() * L_km1_est;
+
+    // implement between factor!
+    gtsam::Pose3 hx =
+        gtsam::traits<gtsam::Pose3>::Between(L_km1_est, L_k_est);  // h(x)
+    return gtsam::traits<gtsam::Pose3>::Local(measured_relative_motion, hx);
+  }
+};
+
+class HybridConstantMotionFactorBase
+    : public gtsam::NoiseModelFactor3<gtsam::Pose3, gtsam::Pose3, gtsam::Pose3>,
+      public HybridConstantMotionFactorResidualBetter {
+ public:
+  typedef boost::shared_ptr<HybridConstantMotionFactorBase> shared_ptr;
+  typedef HybridConstantMotionFactorBase This;
+  typedef gtsam::NoiseModelFactor3<gtsam::Pose3, gtsam::Pose3, gtsam::Pose3>
+      Base;
+
+  gtsam::Pose3 L_e_;
+
+  HybridConstantMotionFactorBase(gtsam::Key e_H_km2_world_key,
+                                 gtsam::Key e_H_km1_world_key,
+                                 gtsam::Key e_H_k_world_key,
+                                 const gtsam::Pose3& L_e,
+                                 gtsam::SharedNoiseModel model)
+      : Base(model, e_H_km2_world_key, e_H_km1_world_key, e_H_k_world_key),
+        L_e_(L_e) {}
+
+  virtual gtsam::Vector evaluateError(
+      const gtsam::Pose3& e_H_km2_world, const gtsam::Pose3& e_H_km1_world,
+      const gtsam::Pose3& e_H_k_world,
+      boost::optional<gtsam::Matrix&> J1 = boost::none,
+      boost::optional<gtsam::Matrix&> J2 = boost::none,
+      boost::optional<gtsam::Matrix&> J3 = boost::none) const override {
+    if (J1) {
+      *J1 = gtsam::numericalDerivative31<gtsam::Vector6, gtsam::Pose3,
+                                         gtsam::Pose3, gtsam::Pose3>(
+          std::bind(&HybridConstantMotionFactorBase::residual,
+                    std::placeholders::_1, std::placeholders::_2,
+                    std::placeholders::_3, L_e_),
+          e_H_km2_world, e_H_km1_world, e_H_k_world);
+    }
+
+    if (J2) {
+      *J2 = gtsam::numericalDerivative32<gtsam::Vector6, gtsam::Pose3,
+                                         gtsam::Pose3, gtsam::Pose3>(
+          std::bind(&HybridConstantMotionFactorBase::residual,
+                    std::placeholders::_1, std::placeholders::_2,
+                    std::placeholders::_3, L_e_),
+          e_H_km2_world, e_H_km1_world, e_H_k_world);
+    }
+
+    if (J3) {
+      *J3 = gtsam::numericalDerivative33<gtsam::Vector6, gtsam::Pose3,
+                                         gtsam::Pose3, gtsam::Pose3>(
+          std::bind(&HybridConstantMotionFactorBase::residual,
+                    std::placeholders::_1, std::placeholders::_2,
+                    std::placeholders::_3, L_e_),
+          e_H_km2_world, e_H_km1_world, e_H_k_world);
+    }
+
+    // in this case k = n1 and n1=2 since we overlap between the estiamtion and
+    // the prediction
+    return residual(e_H_km2_world, e_H_km1_world, e_H_k_world, L_e_);
+  }
+};
+
+template <size_t... ZeroIndices>
+class HybridConstantMotionFactor : public HybridConstantMotionFactorBase {
+ public:
+  using This = HybridConstantMotionFactor<ZeroIndices...>;
+  using Base = HybridConstantMotionFactorBase;
+  typedef boost::shared_ptr<This> shared_ptr;
+
+  // Only define indices if pack is non-empty
+  static constexpr bool HasIndices = sizeof...(ZeroIndices) > 0;
+  static constexpr std::array<size_t, sizeof...(ZeroIndices)> indices = {
+      ZeroIndices...};
+
+  template <typename... Args>
+  HybridConstantMotionFactor(Args&&... args)
+      : Base(std::forward<Args>(args)...) {}
+
+  virtual gtsam::Vector evaluateError(
+      const gtsam::Pose3& e_H_km2_world, const gtsam::Pose3& e_H_km1_world,
+      const gtsam::Pose3& e_H_k_world,
+      boost::optional<gtsam::Matrix&> J1 = boost::none,
+      boost::optional<gtsam::Matrix&> J2 = boost::none,
+      boost::optional<gtsam::Matrix&> J3 = boost::none) const override {
+    gtsam::Vector error = Base::evaluateError(e_H_km2_world, e_H_km1_world,
+                                              e_H_k_world, J1, J2, J3);
+
+    if constexpr (HasIndices) {
+      for (size_t i : indices) {
+        if (i == 1 && J1) *J1 = Eigen::Matrix<double, 6, 6>::Zero();
+        if (i == 2 && J2) *J2 = Eigen::Matrix<double, 6, 6>::Zero();
+        if (i == 3 && J3) *J3 = Eigen::Matrix<double, 6, 6>::Zero();
+      }
+    }
+
+    return error;
+  }
+};
+
+// constant relative motion from estimation (propogated to the future)
+// always zero jacobian on estimated motions (ie <=k)
+class HybridConstantMotionFactor4
+    : public gtsam::NoiseModelFactor4<gtsam::Pose3, gtsam::Pose3, gtsam::Pose3,
+                                      gtsam::Pose3>,
+      public HybridConstantMotionFactorResidual {
+ public:
+  typedef boost::shared_ptr<HybridConstantMotionFactor4> shared_ptr;
+  typedef HybridConstantMotionFactor4 This;
+  typedef gtsam::NoiseModelFactor4<gtsam::Pose3, gtsam::Pose3, gtsam::Pose3,
+                                   gtsam::Pose3>
+      Base;
+
+  gtsam::Pose3 L_e_;
+
+  // first two keys are motions at k-1 and k (ie the most recent two motions) in
+  // the dynosam estimator (ie actually seen) the next two are the k+n and k+n+1
+  // predicted motions at n steps in the future (n is from 1 up to N-1 ie mpc
+  // horizon)
+  HybridConstantMotionFactor4(gtsam::Key e_H_km1_world_est_key,
+                              gtsam::Key e_H_k_world_est_key,
+                              gtsam::Key e_H_n1_world_future_key,
+                              gtsam::Key e_H_n2_world_future_key,
+                              const gtsam::Pose3& L_e,
+                              gtsam::SharedNoiseModel model)
+      : Base(model, e_H_km1_world_est_key, e_H_k_world_est_key,
+             e_H_n1_world_future_key, e_H_n2_world_future_key),
+        L_e_(L_e) {}
+
+  gtsam::Vector evaluateError(
+      const gtsam::Pose3& e_H_km1_world_est,
+      const gtsam::Pose3& e_H_k_world_est,
+      const gtsam::Pose3& e_H_n1_world_future,
+      const gtsam::Pose3& e_H_n2_world_future,
+      boost::optional<gtsam::Matrix&> J1 = boost::none,
+      boost::optional<gtsam::Matrix&> J2 = boost::none,
+      boost::optional<gtsam::Matrix&> J3 = boost::none,
+      boost::optional<gtsam::Matrix&> J4 = boost::none) const override {
+    if (J1) {
+      *J1 = Eigen::Matrix<double, 6, 6>::Zero();
+    }
+
+    if (J2) {
+      *J2 = Eigen::Matrix<double, 6, 6>::Zero();
+    }
+
+    if (J3) {
+      *J3 = gtsam::numericalDerivative43<gtsam::Vector6, gtsam::Pose3,
+                                         gtsam::Pose3, gtsam::Pose3,
+                                         gtsam::Pose3>(
+          std::bind(&HybridConstantMotionFactor4::residual,
+                    std::placeholders::_1, std::placeholders::_2,
+                    std::placeholders::_3, std::placeholders::_4, L_e_),
+          e_H_km1_world_est, e_H_k_world_est, e_H_n1_world_future,
+          e_H_n2_world_future);
+    }
+
+    if (J4) {
+      *J4 = gtsam::numericalDerivative44<gtsam::Vector6, gtsam::Pose3,
+                                         gtsam::Pose3, gtsam::Pose3,
+                                         gtsam::Pose3>(
+          std::bind(&HybridConstantMotionFactor4::residual,
+                    std::placeholders::_1, std::placeholders::_2,
+                    std::placeholders::_3, std::placeholders::_4, L_e_),
+          e_H_km1_world_est, e_H_k_world_est, e_H_n1_world_future,
+          e_H_n2_world_future);
+    }
+
+    return residual(e_H_km1_world_est, e_H_k_world_est, e_H_n1_world_future,
+                    e_H_n2_world_future, L_e_);
+  }
+};
+
+// template<typename NLF, size_t...N>
+// class DirectedEdgeFactor;
+
+// HybridConstantMotionFactorJac12 =
+// DirectedEdgeFactor<HybridConstantMotionFactor, 1, 2>;
+// HybridConstantMotionFactorJac0 =
+// DirectedEdgeFactor<HybridConstantMotionFactor, 0>;
+
+// varient factor for when k == n1 (ie the first prediction) where the factor
+// overlaps the estimation and prediction as we want
+class HybridConstantMotionFactor3
+    : public gtsam::NoiseModelFactor3<gtsam::Pose3, gtsam::Pose3, gtsam::Pose3>,
+      public HybridConstantMotionFactorResidual {
+ public:
+  typedef boost::shared_ptr<HybridConstantMotionFactor3> shared_ptr;
+  typedef HybridConstantMotionFactor3 This;
+  typedef gtsam::NoiseModelFactor3<gtsam::Pose3, gtsam::Pose3, gtsam::Pose3>
+      Base;
+
+  gtsam::Pose3 L_e_;
+
+  HybridConstantMotionFactor3(gtsam::Key e_H_km1_world_est_key,
+                              gtsam::Key e_H_k_world_est_key,
+                              gtsam::Key e_H_n1_world_future_key,
+                              const gtsam::Pose3& L_e,
+                              gtsam::SharedNoiseModel model)
+      : Base(model, e_H_km1_world_est_key, e_H_k_world_est_key,
+             e_H_n1_world_future_key),
+        L_e_(L_e) {}
+
+  gtsam::Vector evaluateError(
+      const gtsam::Pose3& e_H_km1_world_est,
+      const gtsam::Pose3& e_H_k_world_est,
+      const gtsam::Pose3& e_H_n1_world_future,
+      boost::optional<gtsam::Matrix&> J1 = boost::none,
+      boost::optional<gtsam::Matrix&> J2 = boost::none,
+      boost::optional<gtsam::Matrix&> J3 = boost::none) const override {
+    if (J1) {
+      *J1 = Eigen::Matrix<double, 6, 6>::Zero();
+    }
+
+    if (J2) {
+      *J2 = Eigen::Matrix<double, 6, 6>::Zero();
+    }
+
+    if (J3) {
+      // Jacobian of the fourth input (ie e_H_n1_world_future) which is the 3rd
+      // jacobian of the actual factor
+      *J3 = gtsam::numericalDerivative44<gtsam::Vector6, gtsam::Pose3,
+                                         gtsam::Pose3, gtsam::Pose3,
+                                         gtsam::Pose3>(
+          std::bind(&HybridConstantMotionFactor3::residual,
+                    std::placeholders::_1, std::placeholders::_2,
+                    std::placeholders::_3, std::placeholders::_4, L_e_),
+          e_H_km1_world_est, e_H_k_world_est, e_H_k_world_est,
+          e_H_n1_world_future);
+    }
+
+    // in this case k = n1 and n1=2 since we overlap between the estiamtion and
+    // the prediction
+    return residual(e_H_km1_world_est, e_H_k_world_est, e_H_k_world_est,
+                    e_H_n1_world_future, L_e_);
+  }
+};
+
 }  // namespace mpc_factors
 
 StateQuery<gtsam::Vector2> MPCAccessor::getControlCommand(
     FrameId frame_k) const {
-  return StateQuery<gtsam::Vector2>::NotInMap(
-      this->makeControlCommandKey(frame_k));
+  auto control_command = this->makeControlCommandKey(frame_k);
+  return this->query<gtsam::Vector2>(control_command);
+}
+
+// TODO: gross dont need this function!!!!
+StateQuery<gtsam::Vector2> MPCFormulation::getControlCommand(
+    FrameId frame_k) const {
+  auto accessor = this->derivedAccessor<MPCAccessor>();
+  return accessor->getControlCommand(frame_k);
+}
+
+std::pair<ObjectMotionMap, ObjectPoseMap> MPCFormulation::getObjectPredictions(
+    FrameId frame_k) const {
+  auto object_to_follow = mpc_data_.object_to_follow;
+  auto accessor = this->accessorFromTheta();
+
+  if (!this->hasObjectKeyFrame(object_to_follow, frame_k)) {
+    VLOG(10) << "j=" << object_to_follow << " has no keyframe at k=" << frame_k
+             << ". Unable to make object predictions!";
+    return {};
+  } else {
+    // assume these are the same for all future poses... yes (as we havebt
+    // observed them yet so there is no mechaism to change L_e)
+    const auto [reference_frame_e, L_e] =
+        this->getObjectKeyFrame(object_to_follow, frame_k);
+
+    auto mpc_horizon = mpc_data_.mpc_horizon;
+    FrameId frame_N = frame_k + mpc_horizon;
+
+    ObjectPoseMap object_poses;
+    ObjectMotionMap object_motions;
+
+    for (FrameId frame_id = frame_k; frame_id < frame_N; frame_id++) {
+      auto motion_key_k = ObjectMotionSymbol(object_to_follow, frame_id);
+
+      if (auto query = accessor->query<gtsam::Pose3>(motion_key_k); query) {
+        gtsam::Pose3 H = *query;
+        gtsam::Pose3 L = H * L_e;
+        object_poses.insert22(object_to_follow, frame_id, L);
+
+        Motion3ReferenceFrame H_ref(H, MotionRepresentationStyle::KF,
+                                    ReferenceFrame::GLOBAL, reference_frame_e,
+                                    frame_id);
+        object_motions.insert22(object_to_follow, frame_id, H_ref);
+      }
+    }
+
+    return {object_motions, object_poses};
+  }
+}
+
+gtsam::Pose3Vector MPCFormulation::getPredictedCameraPoses(
+    FrameId frame_k) const {
+  auto mpc_horizon = mpc_data_.mpc_horizon;
+  FrameId frame_N = frame_k + mpc_horizon;
+
+  auto accessor = this->accessorFromTheta();
+
+  gtsam::Pose3Vector camera_poses;
+  for (FrameId frame_id = frame_k; frame_id < frame_N; frame_id++) {
+    auto camera_key = CameraPoseSymbol(frame_id);
+
+    if (auto query = accessor->query<gtsam::Pose3>(camera_key); query) {
+      camera_poses.push_back(*query);
+    }
+  }
+
+  return camera_poses;
 }
 
 MPCFormulation::MPCFormulation(const FormulationParams& params,
@@ -574,23 +1132,50 @@ MPCFormulation::MPCFormulation(const FormulationParams& params,
                                const NoiseModels& noise_models,
                                const Sensors& sensors,
                                const FormulationHooks& hooks)
-    : Base(params, map, noise_models, sensors, hooks) {
-  camera_pose_prior_noise_ = gtsam::noiseModel::Isotropic::Sigma(6u, 1.0);
-  vel2d_prior_noise_ = gtsam::noiseModel::Isotropic::Sigma(2u, 1.0);
-  accel2d_prior_noise_ = gtsam::noiseModel::Isotropic::Sigma(2u, 1.0);
+    : Base(params, map, noise_models, sensors, hooks),
+      mpc_data_({FLAGS_mpc_horizon, 1}),
+      dt_(FLAGS_mpc_dt) {
+  vel2d_prior_noise_ =
+      gtsam::noiseModel::Isotropic::Sigma(2u, FLAGS_mpc_vel2d_prior_sigma);
 
-  vel2d_limit_noise_ = gtsam::noiseModel::Isotropic::Sigma(2u, 1.0);
-  accel2d_limit_noise_ = gtsam::noiseModel::Isotropic::Sigma(2u, 1.0);
+  vel2d_limit_noise_ =
+      gtsam::noiseModel::Isotropic::Sigma(2u, FLAGS_mpc_vel2d_limit_sigma);
+  accel2d_limit_noise_ =
+      gtsam::noiseModel::Isotropic::Sigma(2u, FLAGS_mpc_accel2d_limit_sigma);
 
-  accel2d_cost_noise_ = gtsam::noiseModel::Isotropic::Sigma(2u, 1.0);
-  accel2d_smoothing_noise_ = gtsam::noiseModel::Isotropic::Sigma(2u, 1.0);
+  accel2d_cost_noise_ =
+      gtsam::noiseModel::Isotropic::Sigma(2u, FLAGS_mpc_accel2d_cost_sigma);
+  accel2d_smoothing_noise_ = gtsam::noiseModel::Isotropic::Sigma(
+      2u, FLAGS_mpc_accel2d_smoothing_sigma);
 
-  dynamic_factor_noise_ = gtsam::noiseModel::Isotropic::Sigma(8u, 1.0);
+  dynamic_factor_noise_ =
+      gtsam::noiseModel::Isotropic::Sigma(8u, FLAGS_mpc_dynamic_factor_sigma);
 
-  lin_vel_ = Limits{-1, 1};
-  ang_vel_ = Limits{-1, 1};
-  lin_acc_ = Limits{-1, 1};
-  ang_acc_ = Limits{-1, 1};
+  // object_prediction_constant_motion_noise_ =
+  // gtsam::noiseModel::Isotropic::Sigma(6u,
+  // FLAGS_mpc_object_prediction_smoothing_sigma);
+  object_prediction_constant_motion_noise_ =
+      gtsam::noiseModel::Isotropic::Sigma(
+          6u, FLAGS_mpc_object_prediction_constant_motion_sigma);
+  follow_noise_ =
+      gtsam::noiseModel::Isotropic::Sigma(2u, FLAGS_mpc_follow_sigma);
+
+  lin_vel_ = Limits{-0.5, 1};
+  ang_vel_ = Limits{-0.5, 0.5};
+  lin_acc_ = Limits{-0.5, 1};
+  ang_acc_ = Limits{-0.5, 0.5};
+
+  desired_follow_distance_ = FLAGS_mpc_desired_follow_distance;
+  desired_follow_heading_ = FLAGS_mpc_desired_follow_heading;
+
+  LOG(INFO) << "Creating MPC formulation with time horizon "
+            << mpc_data_.mpc_horizon;
+}
+
+void MPCFormulation::updateGlobalPath(Timestamp timestamp,
+                                      const gtsam::Pose3Vector& global_path) {
+  last_global_path_update_ = timestamp;
+  global_path_ = global_path;
 }
 
 void MPCFormulation::otherUpdatesContext(
@@ -598,17 +1183,23 @@ void MPCFormulation::otherUpdatesContext(
     gtsam::Values& new_values, gtsam::NonlinearFactorGraph& new_factors) {
   using namespace mpc_factors;
 
-  FrameId frame_k = context.getFrameId();
-  FrameId frame_k_m1 = frame_k - 1u;
+  // frames relative to the current real frame
+  const FrameId frame_k = context.getFrameId();
+  const FrameId frame_k_m1 = frame_k - 1u;
+  const FrameId frame_k_m2 = frame_k - 2u;
   auto formatter = this->formatter();
   // TODO: now assume we reun with batch. Later must check the indicies
   if (factors_per_frame_.exists(frame_k_m1)) {
     result.batch_update_params.factors_to_remove =
         factors_per_frame_.at(frame_k_m1);
 
-    for (const auto& f : result.batch_update_params.factors_to_remove)
-      f->print("Factors wanting removel ", this->formatter());
+    // for (const auto& f : result.batch_update_params.factors_to_remove)
+    //   f->print("Factors wanting removel ", this->formatter());
   }
+
+  auto is_future_frame = [&frame_k](FrameId frame_id) -> bool {
+    return frame_id > frame_k;
+  };
 
   gtsam::NonlinearFactorGraph factors_to_remove_this_frame;
 
@@ -625,11 +1216,14 @@ void MPCFormulation::otherUpdatesContext(
   //. Smoothing factors between A(...)
   //. Dynamic factors {X(k), V(k), A(k), X(k+1), V(k+1)} -> {N}
   //. Goal factor on X(N) (later)
-  //. Follow factor on {X(k), L(k)} -> {X(N), L(N)}
+  //. Follow factor on {X(k+1), L(k+1)} -> {X(N), L(N)}
   //. Prediction factor { L(k), L(k+1)} -> { L(N-1), L(N)}
 
   auto accessor = this->derivedAccessor<MPCAccessor>();
   CHECK(accessor);
+
+  const auto mpc_horizon = mpc_data_.mpc_horizon;
+  const auto object_to_follow = mpc_data_.object_to_follow;
 
   FrameId frame_N = frame_k + mpc_horizon;
 
@@ -650,12 +1244,16 @@ void MPCFormulation::otherUpdatesContext(
     if (auto sensor_pose_query =
             accessor->queryWithTheta<gtsam::Pose3>(camera_key, new_values);
         !sensor_pose_query) {
-      LOG(INFO) << "Inserting future key " << formatter(camera_key);
+      // LOG(INFO) << "Inserting future key " << formatter(camera_key);
 
       auto sensor_pose_query_previous = accessor->queryWithTheta<gtsam::Pose3>(
           camera_key_previous, new_values);
       CHECK(sensor_pose_query_previous);
       new_values.insert(camera_key, *sensor_pose_query_previous);
+
+      if (is_future_frame(frame_id)) {
+        result.keys_to_not_marginalize.insert(camera_key);
+      }
 
       X_k = *sensor_pose_query_previous;
     } else {
@@ -666,7 +1264,7 @@ void MPCFormulation::otherUpdatesContext(
     if (auto velocity2d_query =
             accessor->queryWithTheta<gtsam::Vector2>(control_key, new_values);
         !velocity2d_query) {
-      LOG(INFO) << "Inserting future key " << formatter(control_key);
+      // LOG(INFO) << "Inserting future key " << formatter(control_key);
 
       auto control_query_previous = accessor->queryWithTheta<gtsam::Vector2>(
           control_key_previous, new_values);
@@ -677,6 +1275,10 @@ void MPCFormulation::otherUpdatesContext(
         control_value = gtsam::Vector2(0, 0);
       }
       new_values.insert(control_key, control_value);
+
+      if (is_future_frame(frame_id)) {
+        result.keys_to_not_marginalize.insert(control_key);
+      }
 
       // velocity prior
       auto prior_factor =
@@ -729,8 +1331,7 @@ void MPCFormulation::otherUpdatesContext(
           accel_query_previous) {
         auto stabilising_accel_prior =
             boost::make_shared<gtsam::PriorFactor<gtsam::Vector2>>(
-                accel_key_previous, *accel_query_previous,
-                accel2d_prior_noise_);
+                accel_key_previous, *accel_query_previous, vel2d_prior_noise_);
 
         new_factors.add(stabilising_accel_prior);
       }
@@ -751,7 +1352,7 @@ void MPCFormulation::otherUpdatesContext(
       if (auto acceleration2d_query =
               accessor->queryWithTheta<gtsam::Vector2>(accel_key, new_values);
           !acceleration2d_query) {
-        LOG(INFO) << "Inserting future key " << formatter(accel_key);
+        // LOG(INFO) << "Inserting future key " << formatter(accel_key);
 
         auto accel_query_previous = accessor->queryWithTheta<gtsam::Vector2>(
             accel_key_previous, new_values);
@@ -762,34 +1363,38 @@ void MPCFormulation::otherUpdatesContext(
           accel_value = gtsam::Vector2(0, 0);
         }
         new_values.insert(accel_key, accel_value);
+
+        if (is_future_frame(frame_id)) {
+          result.keys_to_not_marginalize.insert(accel_key);
+        }
+
         A_k = accel_value;
       } else {
         A_k = *acceleration2d_query;
       }
 
       // acceleration prior
-      // TODO: cost factor?
-      auto acceleration_prior_factor =
+      auto acceleration_cost_factor =
           boost::make_shared<gtsam::PriorFactor<gtsam::Vector2>>(
-              accel_key, A_k, accel2d_prior_noise_);
+              accel_key, A_k, accel2d_cost_noise_);
 
       // limit factor
       auto acceleration_limit_factor = boost::make_shared<Vec2LimitFactor>(
           accel_key, lin_acc_.min, lin_acc_.max, ang_acc_.min, ang_acc_.max,
           accel2d_limit_noise_, dt_);
 
-      new_factors.add(acceleration_prior_factor);
+      new_factors.add(acceleration_cost_factor);
       new_factors.add(acceleration_limit_factor);
 
-      factors_to_remove_this_frame.add(acceleration_prior_factor);
+      factors_to_remove_this_frame.add(acceleration_cost_factor);
       factors_to_remove_this_frame.add(acceleration_limit_factor);
 
       // we are at least the second frame of the horizon
       if (frame_id > frame_k) {
         // acceleration smoothing costs
-        LOG(INFO) << "Adding accel smoothing cost"
-                  << formatter(accel_key_previous) << " -> "
-                  << formatter(accel_key);
+        // LOG(INFO) << "Adding accel smoothing cost"
+        //           << formatter(accel_key_previous) << " -> "
+        //           << formatter(accel_key);
 
         auto factor = boost::make_shared<gtsam::BetweenFactor<gtsam::Vector2>>(
             accel_key_previous, accel_key,
@@ -813,14 +1418,14 @@ void MPCFormulation::otherUpdatesContext(
             camera_key_previous, camera_key, control_key_previous, control_key,
             accel_key_previous, dynamic_factor_noise_, dt_);
 
-        LOG(INFO) << "Adding Pose3 zero-jacobain factor at k=" << frame_id
-                  << " k-1=" << frame_id_m1;
+        // LOG(INFO) << "Adding Pose3 zero-jacobain factor at k=" << frame_id
+        //           << " k-1=" << frame_id_m1;
       } else {
         factor = boost::make_shared<Pose3DynXVAFactor>(
             camera_key_previous, camera_key, control_key_previous, control_key,
             accel_key_previous, dynamic_factor_noise_, dt_);
-        LOG(INFO) << "Adding Pose3 factor at k=" << frame_id
-                  << " k-1=" << frame_id_m1;
+        // LOG(INFO) << "Adding Pose3 factor at k=" << frame_id
+        //           << " k-1=" << frame_id_m1;
       }
 
       CHECK(factor);
@@ -829,21 +1434,315 @@ void MPCFormulation::otherUpdatesContext(
     }
   }
 
-  // values and factors init object pose
-  auto L_W_k = accessor->getObjectPose(frame_k, object_to_follow_);
-  auto H_k_1_k = accessor->getRelativeLocalMotion(frame_k, object_to_follow_);
-  if (L_W_k && H_k_1_k) {
-    for (FrameId frame_id = frame_k; frame_id < frame_N; frame_id++) {
-      if (frame_id == frame_k) {
-      }
+  auto map = this->map();
+  auto frame_node_k = map->getFrame(frame_k);
+  CHECK(frame_node_k) << "Frame node null at k=" << frame_k;
+
+  // logic flags that determine how we handle adding of predicted object motion
+  // factors
+  bool object_available = false;
+  bool object_reappeared = false;
+  bool object_disappeared = false;
+  bool object_new = false;
+
+  /**
+   * We need at least two frames before a motion is added (it is always added as
+   * a pair the first time an object is seen/re-appears) So to check that an
+   * object is new/re-appeared we need to check back 2 frames but to check that
+   * an object has disappeared we only need to check back once frame.
+   *
+   * Cannot rely on object observed functions from the map as this does not tell
+   * us if the object is in the optimisation problem.
+   *
+   * NOTE: if a motion is in an opt it may come from the estimator or from the
+   * prediction depending if k > frame_k
+   *
+   */
+  const bool object_in_opt_at_km2 = static_cast<bool>(
+      accessor->getObjectMotion(frame_k_m2, object_to_follow));
+  const bool object_in_opt_at_km1 = static_cast<bool>(
+      accessor->getObjectMotion(frame_k_m1, object_to_follow));
+  const bool object_in_opt_at_k = static_cast<bool>(
+      accessor->getObjectMotion(frame_k_m1, object_to_follow));
+  const bool object_in_opt_has_embedded_frame =
+      this->hasObjectKeyFrame(object_to_follow, frame_k);
+  const bool object_in_opt_at_current =
+      object_in_opt_has_embedded_frame && object_in_opt_at_k;
+  // object not observed or has no keyframe
+  // it may be observed but checking for its embedded frame tells us its in the
+  // optimisation problem
+  const bool seen_and_in_opt = frame_node_k->objectObserved(object_to_follow) &&
+                               object_in_opt_at_current;
+  // object exists at all (may not be observed at this frame!)
+  // logic to track that object is seen and we should do predictions etc...
+  if (objects_update_data_.exists(object_to_follow)) {
+    const ObjectUpdateData& update_data =
+        objects_update_data_.at(object_to_follow);
+
+    auto object_node = map->getObject(object_to_follow);
+    CHECK(object_node);
+
+    // object must be optimized at least N times before we start to use its
+    // prediction count is updated in RegularHybrid::postUpdate so only
+    // increments after an optimization!
+    constexpr static int kMinNumberMotionsOptimized = 2;
+    if (update_data.count > kMinNumberMotionsOptimized && seen_and_in_opt) {
+      LOG(INFO) << "Object seen enough times, is in opt etc..., "
+                << info_string(frame_k, object_to_follow);
+      object_available = true;
     }
 
-  } else {
-    VLOG(10) << "j=" << object_to_follow_ << " not found at k=" << frame_k
+    CHECK(this->hasObjectKeyFrame(object_to_follow, frame_k));
+
+    if (frame_k_m1 == object_node->getFirstSeenFrame()) {
+      object_new = true;
+      LOG(INFO) << "Object j=" << object_to_follow << " is new";
+    }
+
+    FrameId last_update_frame = update_data.frame_id;
+
+    // duplicate logic from RegularHybridEstimator::preUpdate
+    if (object_available && !object_new && (frame_k > 0) &&
+        (last_update_frame < (frame_k - 1u))) {
+      LOG(INFO) << "Object j=" << object_to_follow << " reappeared!";
+      object_reappeared = true;
+    }
+
+    // not seen in this frame but was updated at this frame or last frame
+    if (!seen_and_in_opt && (frame_k > 0) &&
+        (last_update_frame >= (frame_k - 1u))) {
+      // for an object to disppear it must have existed at least once
+      // we can put this logic inside the objects_update_data_.exists == true
+      // condition
+      object_disappeared = true;
+      LOG(INFO) << "Object j=" << object_to_follow << " is disappeared";
+    }
+  }
+
+  {
+    // sanity check
+    // object cannot have disappeared and also be available
+    if (object_available) CHECK(!object_disappeared);
+
+    // if(!object_available) CHECK(!object_reappeared);
+  }
+
+  if (!object_available) {
+    VLOG(10) << "j=" << object_to_follow << "is unavailable at k=" << frame_k
              << ". Unable to follow!";
+    // add factor on last pose if no object (for now) to stabilise planning
+    // using value of latest real pose (ie frame k)
+    auto camera_pose_k =
+        accessor->query<gtsam::Pose3>(CameraPoseSymbol(frame_k));
+    CHECK(camera_pose_k);
+    auto stabilising_pose_prior =
+        boost::make_shared<gtsam::PriorFactor<gtsam::Pose3>>(
+            CameraPoseSymbol(frame_N - 1), *camera_pose_k,
+            gtsam::noiseModel::Isotropic::Sigma(6u, 0.1));
+    new_factors.add(stabilising_pose_prior);
+    factors_to_remove_this_frame.add(stabilising_pose_prior);
+
+    // if disappeared add stabilising factors on predicted motions!!
+    if (object_disappeared) {
+      LOG(INFO) << object_to_follow
+                << " assumed to have disappreared k=" << frame_k;
+
+      // if we're adding stabilising object factors they should not already
+      // exist
+      CHECK(!stabilising_object_factors_.exists(object_to_follow));
+      gtsam::NonlinearFactorGraph stabilising_factors;
+
+      LOG(INFO) << "Adding stabilising motion factors " << frame_k << " -> "
+                << frame_N - 1u;
+      // Object observed in previous frame so only add stabilising factors on
+      // the predicted motions this will end at frame_N - 1 becuase the last set
+      // of predictions happend at the previous frame which is equivalanet to
+      // (k-1)+1 to k-1+N
+      for (FrameId frame_id = frame_k; frame_id < frame_N - 1u; frame_id++) {
+        auto motion_key_to_be_stabilised =
+            ObjectMotionSymbol(object_to_follow, frame_id);
+        auto motion_to_be_stabilised_query =
+            accessor->queryWithTheta<gtsam::Pose3>(motion_key_to_be_stabilised,
+                                                   new_values);
+        CHECK(motion_to_be_stabilised_query)
+            << "No motion at  " << motion_to_be_stabilised_query.key();
+
+        auto stabilising_motion_prior =
+            boost::make_shared<gtsam::PriorFactor<gtsam::Pose3>>(
+                motion_key_to_be_stabilised, *motion_to_be_stabilised_query,
+                gtsam::noiseModel::Isotropic::Sigma(6u, 0.1));
+        new_factors.add(stabilising_motion_prior);
+        stabilising_factors.add(stabilising_motion_prior);
+      }
+
+      stabilising_object_factors_.insert2(object_to_follow,
+                                          stabilising_factors);
+    }
+  } else {
+    // object available
+    LOG(INFO) << "Object " << info_string(frame_k, object_to_follow)
+              << " good. Adding predictions!";
+
+    if (object_reappeared) {
+      // remove all stabilising factors as we're about to add new ones
+      CHECK(stabilising_object_factors_.exists(object_to_follow));
+      gtsam::NonlinearFactorGraph stabilising_motion_factors =
+          stabilising_object_factors_.at(object_to_follow);
+      factors_to_remove_this_frame += stabilising_motion_factors;
+
+      stabilising_object_factors_.erase(object_to_follow);
+    }
+
+    CHECK(frame_node_k->objectObserved(object_to_follow));
+    // values and factors init object pose
+    // dont get the latest motion/pose (the ones added by the base Hybrid
+    // formulation) as these will not be optimized yet. Get the ones from the
+    // previous frame which are better. Maybe bug in initalisation of latest
+    // motion
+    auto L_W_k_query = accessor->getObjectPose(frame_k_m1, object_to_follow);
+    auto H_W_km1_k_query =
+        accessor->getObjectMotion(frame_k_m1, object_to_follow);
+
+    // have already chceck that object should be in previous
+    CHECK(L_W_k_query);
+    CHECK(H_W_km1_k_query);
+
+    // assume we have a timestamp_km1_ set before we get here
+    // this is only true in implementation as we need at least two frames to get
+    // a motion but we actually have a pose at all frames!!!
+    Timestamp frame_dt = context.timestamp - timestamp_km1_;
+    LOG(INFO) << "Calculated dt " << frame_dt;
+
+    // if (L_W_k_query && H_W_km1_k_query) {
+    // the estimated motions we are going to connect our constant motion factors
+    // with
+    auto motion_key_km1_est = ObjectMotionSymbol(object_to_follow, frame_k_m1);
+    auto motion_key_k_est = ObjectMotionSymbol(object_to_follow, frame_k);
+
+    const auto [reference_frame_e, L_e] =
+        this->getObjectKeyFrame(object_to_follow, frame_k);
+    gtsam::Pose3 L_W_k = *L_W_k_query;
+    gtsam::Pose3 H_W_km1_k = *H_W_km1_k_query;
+    // gtsam::Pose3 H_W_km1_k = gtsam::Pose3(gtsam::Rot3::Identity(),
+    // gtsam::Point3(1, 0, 0));
+    gtsam::Pose3 L_W_future = L_W_k;
+
+    ObjectIds objects_predicted{object_to_follow};
+    predicted_objects_at_frame_.insert2(frame_k, objects_predicted);
+
+    // LOG(INFO) << "Predicting poses " << info_string(frame_k,
+    // object_to_follow) << " using constant H_W_km1_k " << H_W_km1_k
+    //   << " from frame e=" << reference_frame_e;
+    // LOG(INFO) << "Starting pose " <<  L_W_k << " using motion key " <<
+    // formatter(H_W_km1_k_query.key()) << " pose key " <<
+    // formatter(L_W_k_query.key());
+
+    for (FrameId frame_id = frame_k + 1; frame_id < frame_N; frame_id++) {
+      // progate frame L using constant realtive motion
+      // then convert the progogated frame into H
+      L_W_future = H_W_km1_k * L_W_future;
+      // following L_k = H_e_k * L_e
+      gtsam::Pose3 H_W_future = L_W_future * L_e.inverse();
+
+      // LOG(INFO) << "Future pose k=" << frame_id << " " << L_W_future;
+
+      auto motion_key_k_predicted =
+          ObjectMotionSymbol(object_to_follow, frame_id);
+      auto camera_pose_key_k_predicted = CameraPoseSymbol(frame_id);
+
+      // k-1 and k-2 relative to the current forward predictive timetamp
+      auto motion_key_k_m1_predicted =
+          ObjectMotionSymbol(object_to_follow, frame_id - 1u);
+      auto motion_key_k_m2_predicted =
+          ObjectMotionSymbol(object_to_follow, frame_id - 2u);
+
+      if (auto hybrid_motion_query = accessor->queryWithTheta<gtsam::Pose3>(
+              motion_key_k_predicted, new_values);
+          !hybrid_motion_query) {
+        LOG(INFO) << "Inserting future key "
+                  << formatter(motion_key_k_predicted);
+        new_values.insert(motion_key_k_predicted, H_W_future);
+
+        if (is_future_frame(frame_id)) {
+          result.keys_to_not_marginalize.insert(motion_key_k_predicted);
+        }
+      }
+
+      using HybridConstantMotionFactorDirected1And2 =
+          HybridConstantMotionFactor<1, 2>;
+      using HybridConstantMotionFactorDirected1 = HybridConstantMotionFactor<1>;
+
+      // first iteration:
+      // motion_key_k_m2_predicted is km1 (ie the second last motion in the
+      // estimation) motion_key_k_m1_predicted is k (ie. the last motion in the
+      // estimation) we therefore prevent information flow back to these
+      // variables
+      gtsam::NonlinearFactor::shared_ptr constant_motion_factor = nullptr;
+      if (frame_id == frame_k + 1) {
+        CHECK_EQ(frame_id - 2u, frame_k - 1u);
+        CHECK_EQ(frame_id - 1u, frame_k);
+        constant_motion_factor =
+            boost::make_shared<HybridConstantMotionFactorDirected1And2>(
+                motion_key_k_m2_predicted, motion_key_k_m1_predicted,
+                motion_key_k_predicted, L_e,
+                object_prediction_constant_motion_noise_);
+
+      }
+      // second iteration:
+      // motion_key_k_m2_predicted is km (ie. the last motion in the estimation)
+      // motion_key_k_m1_predicted is k+1 (ie. the first predicted motion)
+      // we therefore prevent information flow back to only
+      // motion_key_k_m2_predicted
+      else if (frame_id == frame_k + 2) {
+        // here motion_key_k_m2_predicted == object_node(k) -> makeMotionKey()
+        // ie the last motion in the optimisation problem
+        constant_motion_factor =
+            boost::make_shared<HybridConstantMotionFactorDirected1>(
+                motion_key_k_m2_predicted, motion_key_k_m1_predicted,
+                motion_key_k_predicted, L_e,
+                object_prediction_constant_motion_noise_);
+
+      }
+      // third iteration:
+      // all variales in prediction!
+      else {
+        constant_motion_factor =
+            boost::make_shared<HybridConstantMotionFactor<>>(
+                motion_key_k_m2_predicted, motion_key_k_m1_predicted,
+                motion_key_k_predicted, L_e,
+                object_prediction_constant_motion_noise_);
+      }
+      CHECK(constant_motion_factor);
+      new_factors.add(constant_motion_factor);
+      factors_to_remove_this_frame.add(constant_motion_factor);
+
+      {
+        // sanity check
+        CHECK(accessor->queryWithTheta<gtsam::Pose3>(
+            camera_pose_key_k_predicted, new_values));
+      }
+
+      // add follow factors
+      auto follow_factor = boost::make_shared<HybridMotionFollowJac0Factor>(
+          camera_pose_key_k_predicted, motion_key_k_predicted, L_e,
+          desired_follow_distance_, desired_follow_heading_, follow_noise_);
+      new_factors.add(follow_factor);
+      factors_to_remove_this_frame.add(follow_factor);
+    }
+  }
+
+  // handle global path
+  gtsam::Pose3 local_goal;
+  bool local_goal_result = getLocalGoalFromGlobalPath(
+      accessor->getSensorPose(frame_k).value(), 30, local_goal);
+
+  if (local_goal_result) {
+    LOG(INFO) << "Set local goal!";
+    local_goal_ = local_goal;
   }
 
   factors_per_frame_[frame_k] = factors_to_remove_this_frame;
+  timestamp_km1_ = context.timestamp;
   LOG(INFO) << "MPCFormulation::otherUpdatesContext";
 }
 
@@ -859,10 +1758,68 @@ void MPCFormulation::postUpdate(const PostUpdateData& data) {
     factors_per_frame_.erase(frame_k_m1);
   }
 
+  FrameId frame_N = frame_k + mpc_data_.mpc_horizon - 1;
+
+  auto formatter = this->formatter();
+  // values init camera pose, 2dvelocity, 2d acceletation
+  for (FrameId frame_id = frame_k; frame_id < frame_N; frame_id++) {
+    auto camera_key = CameraPoseSymbol(frame_id);
+    auto control_key = this->makeControlCommandKey(frame_id);
+    auto accel_key = this->makeAccelerationKey(frame_id);
+
+    // LOG(INFO) << formatter(camera_key) << " " <<
+    // theta_.at<gtsam::Pose3>(camera_key); LOG(INFO) << formatter(control_key)
+    // << " " << theta_.at<gtsam::Vector2>(control_key); LOG(INFO) <<
+    // formatter(accel_key) << " " << theta_.at<gtsam::Vector2>(accel_key);
+  }
+
   // 1. Collect current estimates and publish to rviz
   // 2. Collect control command and send
 
-  if (viz_) viz_->spin(data.frame_id, this);
+  if (viz_) viz_->spin(data.timestamp, data.frame_id, this);
+}
+
+bool MPCFormulation::getLocalGoalFromGlobalPath(const gtsam::Pose3& X_k,
+                                                size_t horizon,
+                                                gtsam::Pose3& goal) {
+  if (!global_path_) {
+    LOG(WARNING) << "Cannot get local goal as global path not set!";
+    return false;
+  }
+
+  const auto& path = *global_path_;
+  auto find_closest_index = [](const gtsam::Pose3& X_k,
+                               const gtsam::Pose3Vector& path) -> size_t {
+    size_t best_index = 0;
+    double best_dist2 = std::numeric_limits<double>::max();
+
+    const auto& translation = X_k.translation();  // Point3
+
+    for (size_t i = 0; i < path.size(); ++i) {
+      const auto& t = path[i].translation();
+      double dist2 = (t - translation).squaredNorm();
+
+      if (dist2 < best_dist2) {
+        best_dist2 = dist2;
+        best_index = i;
+      }
+    }
+
+    return best_index;
+  };
+
+  // find index in path which has the closest euclidean distance to the current
+  // pose
+  size_t closest_index = find_closest_index(X_k, path);
+  size_t desired_local_goal_index = closest_index + horizon;
+
+  size_t max_path_index = path.size() - 1u;
+  // handle case where we are close to end of goal
+  size_t local_goal_index = std::min(desired_local_goal_index, max_path_index);
+  CHECK_LE(local_goal_index, max_path_index);
+
+  goal = path.at(local_goal_index);
+  return true;
 }
 
 }  // namespace dyno

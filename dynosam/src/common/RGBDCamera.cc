@@ -48,6 +48,8 @@ RGBDCamera::RGBDCamera(const CameraParams& camera_params)
     : Camera(camera_params),
       fx_b_(camera_params.fx() * tryGetBaseline(camera_params)) {
   checkAndThrow<InvalidRGBDCameraParams>(camera_params.hasDepthParams());
+
+  LOG(INFO) << "fx_b " << fx_b_;
 }
 
 double RGBDCamera::depthFromDisparity(double disparity) const {
@@ -62,6 +64,7 @@ bool RGBDCamera::projectRight(Feature::Ptr feature) const {
   CHECK(feature);
   if (feature->hasDepth()) {
     double uL = feature->keypoint()(0);
+    double v = feature->keypoint()(1);
     double uR = rightKeypoint(feature->depth(), uL);
 
     // out of image bounds
@@ -69,7 +72,7 @@ bool RGBDCamera::projectRight(Feature::Ptr feature) const {
       return false;
     }
 
-    feature->rightKeypoint(Keypoint(uL, uR));
+    feature->rightKeypoint(Keypoint(uR, v));
     return true;
   }
   return false;

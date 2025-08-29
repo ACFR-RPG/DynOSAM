@@ -89,4 +89,28 @@ const MeasurementWithCovariance<Keypoint>& CameraMeasurement::rightKeypoint()
       << "Right Keypoint measurement missing from CameraMeasurement";
 }
 
+StereoMeasurement::Optional CameraMeasurement::stereoMeasurement() const {
+  if (!stereo()) {
+    return {};
+  }
+
+  gtsam::Vector3 sigmas;
+  if (keypoint_.hasModel() && right_keypoint_->hasModel()) {
+    auto left_model_sigmas = keypoint_.model()->sigmas();
+    auto right_model_sigmas = right_keypoint_->model()->sigmas();
+
+    sigmas << left_model_sigmas(0), left_model_sigmas(1), right_model_sigmas(0);
+  } else {
+    LOG(WARNING)
+        << "Creating stereo measurement with default noise model (1px)";
+    sigmas << 1, 1, 1;
+  }
+
+  const Keypoint& L = keypoint_.measurement();
+  const Keypoint& R = right_keypoint_->measurement();
+
+  return StereoMeasurement::FromSigmas(gtsam::StereoPoint2(L(0), R(0), L(1)),
+                                       sigmas);
+}
+
 }  // namespace dyno
