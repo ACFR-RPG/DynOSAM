@@ -180,6 +180,7 @@ class MPCFormulation : public RegularHybridFormulation,
   gtsam::SharedNoiseModel object_prediction_constant_motion_noise_;
 
   gtsam::SharedNoiseModel follow_noise_;
+  gtsam::SharedNoiseModel goal_noise_;
 
   double desired_follow_distance_;
   double desired_follow_heading_;
@@ -190,6 +191,10 @@ class MPCFormulation : public RegularHybridFormulation,
   // global path things
   Timestamp last_global_path_update_;
   std::optional<gtsam::Pose3Vector> global_path_ = {};
+
+  enum MissionType { FOLLOW = 0, NAVIGATE = 1 };
+
+  MissionType mission_type_;
 };
 
 // HACK for now to get ros stuff easily into this backend!!

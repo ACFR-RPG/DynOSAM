@@ -35,6 +35,8 @@
 #include "dynosam_ros/displays/dynamic_slam_displays/DSDCommonRos.hpp"
 #include "nav_msgs/msg/path.hpp"
 #include "rclcpp/node.hpp"
+#include "tf2_ros/buffer.h"
+#include "tf2_ros/transform_listener.h"
 #include "visualization_msgs/msg/marker.hpp"
 #include "visualization_msgs/msg/marker_array.hpp"
 
@@ -49,7 +51,7 @@ class MPCEstimationVizRos : public MPCEstimationViz {
             const MPCFormulation* formulation);
 
  private:
-  void publishLocalGoalMarker(const gtsam::Pose3& pose,
+  void publishLocalGoalMarker(const gtsam::Pose3& pose, Timestamp timestamp,
                               const std::string& name);
 
  private:
@@ -64,6 +66,9 @@ class MPCEstimationVizRos : public MPCEstimationViz {
       local_goal_marker_pub_;
 
   MPCFormulation* formulation_;
+
+  tf2_ros::Buffer tf_buffer_;
+  tf2_ros::TransformListener tf_listener_;
 };
 
 }  // namespace dyno

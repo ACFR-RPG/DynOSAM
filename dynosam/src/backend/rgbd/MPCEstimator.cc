@@ -54,6 +54,7 @@ DEFINE_double(mpc_object_prediction_constant_motion_sigma, 0.01,
               "Sigma object prediction smoothing");
 
 DEFINE_double(mpc_follow_sigma, 1.0, "Sigma for follow factor");
+DEFINE_double(mpc_goal_sigma, 1.0, "Sigma for goal factor");
 
 DEFINE_double(mpc_desired_follow_distance, 3.0,
               "Desired follow distance for follow factor");
@@ -64,7 +65,13 @@ DEFINE_double(
     mpc_dt, 0.1,
     "Expected dt for mpc algorithm. SHould be the same as the frame-rate");
 
+DEFINE_int32(mission_type, 0, "0: follow object, 1: navigate (global path)");
+
 namespace dyno {
+
+gtsam::Pose2 convertToSE2OpenCV(const gtsam::Pose3& pose_3) {
+  return gtsam::Pose2(pose_3.z(), -pose_3.x(), -pose_3.rotation().pitch());
+}
 
 namespace mpc_factors {
 
@@ -419,8 +426,8 @@ class Pose3DynXVAFactor
                          const gtsam::Pose3& pose3_2,
                          const gtsam::Vector2& vel1, const gtsam::Vector2& vel2,
                          const gtsam::Vector2& acc1) const {
-    gtsam::Pose2 pose1(pose3_1.z(), -pose3_1.x(), -pose3_1.rotation().pitch());
-    gtsam::Pose2 pose2(pose3_2.z(), -pose3_2.x(), -pose3_2.rotation().pitch());
+    gtsam::Pose2 pose1 = convertToSE2OpenCV(pose3_1);
+    gtsam::Pose2 pose2 = convertToSE2OpenCV(pose3_2);
     // Update velocities using acceleration and time step
     gtsam::Vector2 pred_vel2 = vel1 + acc1 * dt_;
 
@@ -558,8 +565,8 @@ class Pose3DynXVAJac0Factor
                          const gtsam::Pose3& pose3_2,
                          const gtsam::Vector2& vel1, const gtsam::Vector2& vel2,
                          const gtsam::Vector2& acc1) const {
-    gtsam::Pose2 pose1(pose3_1.z(), -pose3_1.x(), -pose3_1.rotation().pitch());
-    gtsam::Pose2 pose2(pose3_2.z(), -pose3_2.x(), -pose3_2.rotation().pitch());
+    gtsam::Pose2 pose1 = convertToSE2OpenCV(pose3_1);
+    gtsam::Pose2 pose2 = convertToSE2OpenCV(pose3_2);
     // Update velocities using acceleration and time step
     gtsam::Vector2 pred_vel2 = vel1 + acc1 * dt_;
 
@@ -596,6 +603,51 @@ class Pose3DynXVAJac0Factor
 
  private:
   double dt_;  // Time step
+};
+
+// mimics a prior factor on SE(2) when the variables are in SE(3)
+// leaves some variables unconstrained
+// NOTE: we assume the goal pose has already been converted into the opencv
+// coordiante convention (this happens at the ROS level where we do a tf look up
+// between the map and child frame of dynosam)
+class GoalFactorSE2 : public gtsam::NoiseModelFactor1<gtsam::Pose3> {
+ public:
+  GoalFactorSE2(gtsam::Key X_k_key, const gtsam::Pose3& goal_pose_opencv,
+                const gtsam::SharedNoiseModel& noiseModel)
+      : gtsam::NoiseModelFactor1<gtsam::Pose3>(noiseModel, X_k_key),
+        goal_pose_se2(convertToSE2OpenCV(goal_pose_opencv)) {}
+
+  // Clone method
+  gtsam::NonlinearFactor::shared_ptr clone() const override {
+    return boost::make_shared<GoalFactorSE2>(*this);
+  }
+
+  gtsam::Vector evaluateError(
+      const gtsam::Pose3& X_k_se3,
+      boost::optional<gtsam::Matrix&> J1 = boost::none) const {
+    auto residual = [](const gtsam::Pose3& X_k_se3,
+                       const gtsam::Pose2& goal_pose_se2) {
+      gtsam::Pose2 X_k_se2 = convertToSE2OpenCV(X_k_se3);
+      LOG(INFO) << "X_k_se2 " << X_k_se2;
+      return -gtsam::traits<gtsam::Pose2>::Local(X_k_se2,
+                                                 gtsam::Pose2(20, 20, 0));
+    };
+
+    // Compute Jacobians if requested
+    if (J1) {
+      Eigen::Matrix<double, 3, 6> df_p =
+          gtsam::numericalDerivative11<gtsam::Vector3, gtsam::Pose3>(
+              std::bind(residual, std::placeholders::_1, goal_pose_se2),
+              X_k_se3);
+      *J1 = df_p;
+    }
+
+    gtsam::Vector3 e = residual(X_k_se3, goal_pose_se2);
+    return e;
+  }
+
+ private:
+  gtsam::Pose2 goal_pose_se2;
 };
 
 class HybridSmoothingJac0Factor
@@ -1134,7 +1186,8 @@ MPCFormulation::MPCFormulation(const FormulationParams& params,
                                const FormulationHooks& hooks)
     : Base(params, map, noise_models, sensors, hooks),
       mpc_data_({FLAGS_mpc_horizon, 1}),
-      dt_(FLAGS_mpc_dt) {
+      dt_(FLAGS_mpc_dt),
+      mission_type_(static_cast<MissionType>(FLAGS_mission_type)) {
   vel2d_prior_noise_ =
       gtsam::noiseModel::Isotropic::Sigma(2u, FLAGS_mpc_vel2d_prior_sigma);
 
@@ -1160,6 +1213,8 @@ MPCFormulation::MPCFormulation(const FormulationParams& params,
   follow_noise_ =
       gtsam::noiseModel::Isotropic::Sigma(2u, FLAGS_mpc_follow_sigma);
 
+  goal_noise_ = gtsam::noiseModel::Isotropic::Sigma(3u, FLAGS_mpc_goal_sigma);
+
   lin_vel_ = Limits{-0.5, 1};
   ang_vel_ = Limits{-0.5, 0.5};
   lin_acc_ = Limits{-0.5, 1};
@@ -1170,6 +1225,14 @@ MPCFormulation::MPCFormulation(const FormulationParams& params,
 
   LOG(INFO) << "Creating MPC formulation with time horizon "
             << mpc_data_.mpc_horizon;
+
+  if (mission_type_ == MissionType::FOLLOW) {
+    LOG(INFO) << "Mission type is follow!";
+  } else if (mission_type_ == MissionType::NAVIGATE) {
+    LOG(INFO) << "Mission type is Navigate!";
+  } else {
+    LOG(FATAL) << "Unknown mission type for MPCFormulation!";
+  }
 }
 
 void MPCFormulation::updateGlobalPath(Timestamp timestamp,
@@ -1337,13 +1400,16 @@ void MPCFormulation::otherUpdatesContext(
       }
     }
 
-    // limit factor
-    auto velocity_limit_factor = boost::make_shared<Vec2LimitFactor>(
-        control_key, lin_vel_.min, lin_vel_.max, ang_vel_.min, ang_vel_.max,
-        vel2d_limit_noise_, dt_);
+    if (frame_id != frame_k) {
+      CHECK_GT(frame_id, frame_k);
+      // limit factors on planning only
+      auto velocity_limit_factor = boost::make_shared<Vec2LimitFactor>(
+          control_key, lin_vel_.min, lin_vel_.max, ang_vel_.min, ang_vel_.max,
+          vel2d_limit_noise_, dt_);
 
-    new_factors.add(velocity_limit_factor);
-    factors_to_remove_this_frame.add(velocity_limit_factor);
+      new_factors.add(velocity_limit_factor);
+      factors_to_remove_this_frame.add(velocity_limit_factor);
+    }
 
     // add acceleration up to k+N-1
     if (frame_id < frame_N - 1) {
@@ -1722,23 +1788,46 @@ void MPCFormulation::otherUpdatesContext(
             camera_pose_key_k_predicted, new_values));
       }
 
-      // add follow factors
-      auto follow_factor = boost::make_shared<HybridMotionFollowJac0Factor>(
-          camera_pose_key_k_predicted, motion_key_k_predicted, L_e,
-          desired_follow_distance_, desired_follow_heading_, follow_noise_);
-      new_factors.add(follow_factor);
-      factors_to_remove_this_frame.add(follow_factor);
+      if (mission_type_ == MissionType::FOLLOW) {
+        // add follow factors
+        auto follow_factor = boost::make_shared<HybridMotionFollowJac0Factor>(
+            camera_pose_key_k_predicted, motion_key_k_predicted, L_e,
+            desired_follow_distance_, desired_follow_heading_, follow_noise_);
+        new_factors.add(follow_factor);
+        factors_to_remove_this_frame.add(follow_factor);
+      }
     }
   }
 
-  // handle global path
-  gtsam::Pose3 local_goal;
-  bool local_goal_result = getLocalGoalFromGlobalPath(
-      accessor->getSensorPose(frame_k).value(), 30, local_goal);
+  if (mission_type_ == MissionType::NAVIGATE) {
+    // handle global path
+    gtsam::Pose3 local_goal;
+    bool local_goal_result = getLocalGoalFromGlobalPath(
+        accessor->getSensorPose(frame_k).value(), 60, local_goal);
 
-  if (local_goal_result) {
-    LOG(INFO) << "Set local goal!";
-    local_goal_ = local_goal;
+    if (local_goal_result) {
+      local_goal_ = local_goal;
+
+      // final camera pose in the plan
+      // TODO: check this is in the values?
+      auto camera_key_N = CameraPoseSymbol(frame_N - 1u);
+
+      // auto goal_factor = boost::make_shared<GoalFactorSE2>(
+      //   camera_key_N,
+      //   local_goal,
+      //   goal_noise_
+      // );
+      auto goal_factor = boost::make_shared<gtsam::PriorFactor<gtsam::Pose3>>(
+          camera_key_N, local_goal,
+          gtsam::noiseModel::Isotropic::Sigma(6u, FLAGS_mpc_goal_sigma));
+      LOG(INFO) << "Added goal factor for " << formatter(camera_key_N);
+      new_factors.add(goal_factor);
+      factors_to_remove_this_frame.add(goal_factor);
+
+    } else {
+      LOG(WARNING) << "MissionType set to navigate but global plan not found "
+                      "or local goal cannot be set!";
+    }
   }
 
   factors_per_frame_[frame_k] = factors_to_remove_this_frame;
@@ -1818,7 +1907,29 @@ bool MPCFormulation::getLocalGoalFromGlobalPath(const gtsam::Pose3& X_k,
   size_t local_goal_index = std::min(desired_local_goal_index, max_path_index);
   CHECK_LE(local_goal_index, max_path_index);
 
-  goal = path.at(local_goal_index);
+  gtsam::Pose3 goal_n = path.at(local_goal_index);
+
+  if (local_goal_index == 0) {
+    goal = goal_n;
+  } else {
+    gtsam::Pose3 goal_nm1 = path.at(local_goal_index - 1);
+
+    // calcualte bearing in pose2 for the plan (we assume everything will happen
+    // in pose3) assyme goals are in opencv convention (this happens at the ROS
+    // level where we use the tf look to)
+    gtsam::Pose2 goal_n_se2 = convertToSE2OpenCV(goal_n);
+    gtsam::Pose2 goal_nm1_se2 = convertToSE2OpenCV(goal_nm1);
+
+    // theta in opencv
+    // since we do calculations in opencv when we convert SE(3) to SE(2) we use
+    // the -pitch component of the 3D rotation. Then we go back to SE(3) we just
+    // use -bearing again
+    double bearing = goal_nm1_se2.bearing(goal_n_se2).theta();
+    gtsam::Rot3 rotation = gtsam::Rot3::Pitch(-bearing);
+
+    goal = gtsam::Pose3(rotation, goal_n.translation());
+  }
+
   return true;
 }
 

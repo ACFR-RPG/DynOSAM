@@ -33,6 +33,7 @@
 #include <glog/logging.h>
 
 #include "dynosam_ros/RosUtils.hpp"
+#include "tf2_geometry_msgs/tf2_geometry_msgs.hpp"
 
 namespace dyno {
 
@@ -42,7 +43,9 @@ MPCEstimationVizRos::MPCEstimationVizRos(const DisplayParams params,
     : params_(params),
       node_(node),
       prediction_transport_(params, node->create_sub_node("prediction")),
-      formulation_(CHECK_NOTNULL(formulation)) {
+      formulation_(CHECK_NOTNULL(formulation)),
+      tf_buffer_(node->get_clock()),
+      tf_listener_(tf_buffer_) {
   cmd_vel_pub_ =
       node->create_publisher<geometry_msgs::msg::Twist>("cmd_vel", 10);
   local_goal_marker_pub_ =
@@ -52,30 +55,69 @@ MPCEstimationVizRos::MPCEstimationVizRos(const DisplayParams params,
   global_path_subscriber_ = node_->create_subscription<nav_msgs::msg::Path>(
       "global_plan", rclcpp::SensorDataQoS(),
       [&](const nav_msgs::msg::Path::ConstSharedPtr& global_path) -> void {
+        // need it in the camera odom frame as this is what dynosam estimates
+        // w.r.t however the goal is generated with respect to the world frame!!
+        const auto target_frame = params_.world_frame_id;
+        const auto fixed_frame = global_path->header.frame_id;
+        // time in seconds
         Timestamp timestamp = utils::fromRosTime(global_path->header.stamp);
+        tf2::TimePoint target_time = tf2::timeFromSec(timestamp);
 
-        gtsam::Pose3Vector path;
-        for (const auto& pose_stamped_ros : global_path->poses) {
-          gtsam::Pose3 pose_gtsam;
-          convert(pose_stamped_ros.pose, pose_gtsam);
+        LOG(INFO) << "Looking up tf transfor " << fixed_frame << " -> "
+                  << target_frame;
 
-          // https://github.com/ros-navigation/navigation2/issues/2186
-          // planner ignores frame_id request from action and assumes it matches
-          // the global/map frame since our map frame is in robotic convention
-          // and dynosam operates in opencv coonvention we need to manually
-          // apply a transform we ignore the orientation so just use identity!
-          auto translation_robotic = pose_gtsam.translation();
-          // gtsam::Point3 translation_opencv(
-          //   translation_robotic.y(),
-          //   -translation_robotic.z(),
-          //   translation_robotic.x()
-          // );
-          // path.push_back(gtsam::Pose3(gtsam::Rot3::Identity(),
-          // translation_opencv));
+        try {
+          // TODO: could (maybe should) do transform pose in one go and then
+          // loop through and convert to Pose3Vector
+          gtsam::Pose3Vector path;
+          // for (const geometry_msgs::msg::PoseStamped& pose_stamped :
+          // global_path->poses) {
+          //   //for some reason the path comes with a default header (time 0,0
+          //   and frame_id='')
+          //   //this means that the tf_buffer_.transform does not work!
+          //   geometry_msgs::msg::PoseStamped pose_stamped_with_proper_header =
+          //   pose_stamped; pose_stamped_with_proper_header.header =
+          //   global_path->header;
+
+          //   geometry_msgs::msg::PoseStamped transformed_pose_ros =
+          //     tf_buffer_.transform(
+          //       pose_stamped_with_proper_header,
+          //       target_frame,
+          //       tf2::durationFromSec(0.1));
+
+          //   gtsam::Pose3 pose_gtsam;
+          //   convert(transformed_pose_ros.pose, pose_gtsam);
+          //   path.push_back(pose_gtsam);
+          // }
+
+          // LOG(INFO) << "Recieved global plan at time " << timestamp;
+          // CHECK(formulation_);
+          // formulation_->updateGlobalPath(timestamp, path);
+
+          geometry_msgs::msg::TransformStamped tf_stamped =
+              tf_buffer_.lookupTransform(target_frame, fixed_frame,
+                                         tf2::TimePointZero  // latest available
+              );
+
+          for (const geometry_msgs::msg::PoseStamped& pose_stamped :
+               global_path->poses) {
+            geometry_msgs::msg::PoseStamped pose_stamped_transform;
+            tf2::doTransform(pose_stamped, pose_stamped_transform, tf_stamped);
+
+            gtsam::Pose3 pose_gtsam;
+            convert(pose_stamped_transform.pose, pose_gtsam);
+            path.push_back(pose_gtsam);
+          }
+
+          LOG(INFO) << "Recieved global plan at time " << timestamp;
+          CHECK(formulation_);
+          formulation_->updateGlobalPath(timestamp, path);
+
+        } catch (const tf2::TransformException& ex) {
+          RCLCPP_WARN(node_->get_logger(),
+                      "Transform failed: %s. Cannot set global path!",
+                      ex.what());
         }
-        LOG(INFO) << "Recieved global plan at time " << timestamp;
-        CHECK(formulation_);
-        formulation_->updateGlobalPath(timestamp, path);
       });
 }
 
@@ -103,7 +145,7 @@ void MPCEstimationVizRos::spin(Timestamp timestamp, FrameId frame_k,
   auto local_goal = formulation->local_goal_;
   if (local_goal) {
     LOG(INFO) << "Publishing local goal";
-    publishLocalGoalMarker(*local_goal, "Local Goal");
+    publishLocalGoalMarker(*local_goal, timestamp, "Local Goal");
   }
 
   auto command_query = formulation->getControlCommand(frame_k + 1);
@@ -147,12 +189,13 @@ void MPCEstimationVizRos::spin(Timestamp timestamp, FrameId frame_k,
 }
 
 void MPCEstimationVizRos::publishLocalGoalMarker(const gtsam::Pose3& pose,
+                                                 Timestamp timestamp,
                                                  const std::string& name) {
   visualization_msgs::msg::Marker marker;
   marker.header.frame_id =
       params_.world_frame_id;  // change to your fixed frame
-  marker.header.stamp = node_->get_clock()->now();
-  marker.ns = "local_goal";
+  marker.header.stamp = utils::toRosTime(timestamp);
+  marker.ns = name;
   marker.id = 0;
   marker.type =
       visualization_msgs::msg::Marker::SPHERE;  // can be SPHERE, CUBE, etc.

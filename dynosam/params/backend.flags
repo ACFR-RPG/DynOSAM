@@ -102,6 +102,9 @@
 --mpc_dynamic_factor_sigma=1e-3
 --mpc_object_prediction_constant_motion_sigma=1e-1
 --mpc_follow_sigma=5e-1
+--mpc_goal_sigma=5e-3
 
 --mpc_desired_follow_distance=3.0
 --mpc_desired_follow_heading=0.0
+
+--mission_type=1

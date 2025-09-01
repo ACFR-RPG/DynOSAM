@@ -33,6 +33,8 @@ find_package(dynosam REQUIRED)
 find_package(PCL REQUIRED)
 find_package(rclpy REQUIRED)
 find_package(message_filters REQUIRED)
+find_package(tf2_geometry_msgs REQUIRED)
+
 
 # setup targets
 include_directories(
@@ -65,6 +67,7 @@ set(TARGET_DEPS
   cv_bridge
   pcl_conversions
   tf2_ros
+  tf2_geometry_msgs
   message_filters
 )
 
