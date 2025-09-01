@@ -88,6 +88,22 @@ bool dyno::convert(const Color& colour, std_msgs::msg::ColorRGBA& msg) {
 }
 
 template <>
+bool dyno::convert(const geometry_msgs::msg::TransformStamped& msg,
+                   gtsam::Pose3& pose) {
+  gtsam::Point3 t(msg.transform.translation.x, msg.transform.translation.y,
+                  msg.transform.translation.z);
+
+  // Extract rotation (quaternion: w, x, y, z)
+  gtsam::Rot3 R = gtsam::Rot3::Quaternion(
+      msg.transform.rotation.w, msg.transform.rotation.x,
+      msg.transform.rotation.y, msg.transform.rotation.z);
+
+  pose = gtsam::Pose3(R, t);
+
+  return true;
+}
+
+template <>
 bool dyno::convert(const gtsam::Pose3& pose, geometry_msgs::msg::Pose& msg) {
   const gtsam::Rot3& rotation = pose.rotation();
   const gtsam::Quaternion& quaternion = rotation.toQuaternion();

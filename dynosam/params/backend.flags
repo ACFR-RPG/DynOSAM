@@ -101,10 +101,15 @@
 --mpc_accel2d_smoothing_sigma=5e3
 --mpc_dynamic_factor_sigma=1e-3
 --mpc_object_prediction_constant_motion_sigma=1e-1
---mpc_follow_sigma=5e-1
---mpc_goal_sigma=5e-3
+--mpc_follow_sigma=5e0
+--mpc_goal_sigma=1e-2
+--mpc_static_obstacle_sigma=1e-2
 
 --mpc_desired_follow_distance=3.0
 --mpc_desired_follow_heading=0.0
 
+--mpc_static_safety_distance=0.5
+
 --mission_type=1
+
+--mpc_path_to_sdf_map=/home/user/dev_ws/install/dyno_mpc_sim/share/dyno_mpc_sim/maps/sdf_files/tugboat_warehouse_with_boxes_map

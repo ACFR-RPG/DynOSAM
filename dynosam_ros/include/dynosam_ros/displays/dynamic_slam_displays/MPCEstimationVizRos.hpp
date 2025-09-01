@@ -48,7 +48,9 @@ class MPCEstimationVizRos : public MPCEstimationViz {
                       MPCFormulation* formulation);
 
   void spin(Timestamp timestamp, FrameId frame_id,
-            const MPCFormulation* formulation);
+            const MPCFormulation* formulation) override;
+
+  bool queryGlobalOffset(gtsam::Pose3& T_world_camera) override;
 
  private:
   void publishLocalGoalMarker(const gtsam::Pose3& pose, Timestamp timestamp,

@@ -188,6 +188,26 @@ void MPCEstimationVizRos::spin(Timestamp timestamp, FrameId frame_k,
   LOG(INFO) << "In MPCEstimationVizRos spin";
 }
 
+bool MPCEstimationVizRos::queryGlobalOffset(gtsam::Pose3& T_world_camera) {
+  const std::string map_frame = "odom";  /// hardcoded!!
+
+  try {
+    geometry_msgs::msg::TransformStamped tf_stamped =
+        tf_buffer_.lookupTransform(map_frame, params_.world_frame_id,
+                                   tf2::TimePointZero);
+
+    convert(tf_stamped, T_world_camera);
+    return true;
+
+  } catch (const tf2::TransformException& ex) {
+    RCLCPP_WARN(node_->get_logger(),
+                "Transform failed: %s. Cannot set get transform between map "
+                "and dynosam odom!",
+                ex.what());
+    return false;
+  }
+}
+
 void MPCEstimationVizRos::publishLocalGoalMarker(const gtsam::Pose3& pose,
                                                  Timestamp timestamp,
                                                  const std::string& name) {

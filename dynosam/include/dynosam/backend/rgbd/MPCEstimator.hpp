@@ -68,6 +68,7 @@ class MPCAccessor : public HybridAccessor, public MPCFormulationProperties {
 
 // forward
 class MPCEstimationViz;
+class SDFMap2D;
 
 class MPCFormulation : public RegularHybridFormulation,
                        public MPCFormulationProperties {
@@ -182,6 +183,8 @@ class MPCFormulation : public RegularHybridFormulation,
   gtsam::SharedNoiseModel follow_noise_;
   gtsam::SharedNoiseModel goal_noise_;
 
+  gtsam::SharedNoiseModel static_obstacle_noise_;
+
   double desired_follow_distance_;
   double desired_follow_heading_;
 
@@ -195,6 +198,19 @@ class MPCFormulation : public RegularHybridFormulation,
   enum MissionType { FOLLOW = 0, NAVIGATE = 1 };
 
   MissionType mission_type_;
+
+  // only shared becuase its forward declared because cbf to put it in the
+  // header file for now! also shared between all obstacle factors...
+  std::shared_ptr<SDFMap2D> sdf_map_{nullptr};
+  // this transform takes us from the camera (opencv) to the map (robotic) frame
+  // this is not simply the current pose to camera/odometry but the actual map
+  // frame of the sdf map which was generated w.r.t the 'odom' frame N.B this
+  // name is misleading it should really be called the world/map frame since
+  // dynosam estimates w.r.t camera/odom this is static transform from
+  // camera/odom to odom and allows us to put the current pose (which is in
+  // camera) into the map frame and should include the conversion from
+  // opencv-robotic
+  std::optional<gtsam::Pose3> T_map_camera_;
 };
 
 // HACK for now to get ros stuff easily into this backend!!
@@ -202,6 +218,13 @@ class MPCEstimationViz {
  public:
   MPCEstimationViz() = default;
   virtual ~MPCEstimationViz() = default;
+
+  // bascially queries odom to world_frame_id
+  // in this setup dynosam does not start the the real world frame (ie the frame
+  // of the map) and so we have a transform between the maps origin and the
+  // starting point of the offset this transform is that static offset from
+  // which the dynosam odometry is referenced gainnst
+  virtual bool queryGlobalOffset(gtsam::Pose3& T_world_camera) = 0;
 
   virtual void spin(Timestamp timestamp, FrameId frame_id,
                     const MPCFormulation* formulation) = 0;

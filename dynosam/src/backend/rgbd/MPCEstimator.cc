@@ -33,6 +33,7 @@
 #include <glog/logging.h>
 
 #include "dynosam/factors/HybridFormulationFactors.hpp"
+#include "dynosam/utils/Numerical.hpp"
 
 // Vec2LimitFactor (2DV and 2DA limits)
 // ControlChangeFactor (2DA Smooth)
@@ -52,6 +53,8 @@ DEFINE_double(mpc_accel2d_smoothing_sigma, 1.0, "Sigma for the cam pose prior");
 DEFINE_double(mpc_dynamic_factor_sigma, 1.0, "Sigma for mpc dynamic factor");
 DEFINE_double(mpc_object_prediction_constant_motion_sigma, 0.01,
               "Sigma object prediction smoothing");
+DEFINE_double(mpc_static_obstacle_sigma, 0.1,
+              "Sigma for static obstacle factor");
 
 DEFINE_double(mpc_follow_sigma, 1.0, "Sigma for follow factor");
 DEFINE_double(mpc_goal_sigma, 1.0, "Sigma for goal factor");
@@ -67,11 +70,154 @@ DEFINE_double(
 
 DEFINE_int32(mission_type, 0, "0: follow object, 1: navigate (global path)");
 
+DEFINE_string(mpc_path_to_sdf_map,
+              "/root/sdf_maps/tugboat_warehouse_with_boxes_map",
+              "Path to sdf map (without suffix)");
+
+DEFINE_double(mpc_static_safety_distance, 1.0,
+              "Safety distance constant for a static obstacel");
+
 namespace dyno {
 
 gtsam::Pose2 convertToSE2OpenCV(const gtsam::Pose3& pose_3) {
   return gtsam::Pose2(pose_3.z(), -pose_3.x(), -pose_3.rotation().pitch());
 }
+
+class SDFMap2D {
+ public:
+  DYNO_POINTER_TYPEDEFS(SDFMap2D)
+
+  SDFMap2D(const std::string& bin_path, const std::string& meta_path) {
+    CHECK(loadFromFiles(bin_path, meta_path));
+  }
+
+  // Returns signed distance at world coordinates (x, y)
+  double distanceAt(double x, double y) const {
+    double gx, gy;
+    if (!worldToGrid(x, y, gx, gy)) {
+      // Outside map bounds, return large positive distance
+      return 10.0;
+    }
+
+    int i = static_cast<int>(std::floor(gx));
+    int j = static_cast<int>(std::floor(gy));
+    double dx = gx - i;
+    double dy = gy - j;
+
+    // Bilinear interpolation
+    double v00 = valueAt(i, j);
+    double v10 = valueAt(i + 1, j);
+    double v01 = valueAt(i, j + 1);
+    double v11 = valueAt(i + 1, j + 1);
+
+    double val = (1 - dx) * (1 - dy) * v00 + dx * (1 - dy) * v10 +
+                 (1 - dx) * dy * v01 + dx * dy * v11;
+
+    return val;
+  }
+
+  // transform that puts a query into the map frame
+  // we assume the query will be in opencv coordinate convention but the map
+  // frame will be in robotic convention!
+  SDFMap2D& setQueryOffset(const gtsam::Pose3& T_map_query) {
+    T_map_query_ = T_map_query;
+    return *this;
+  }
+
+  double getDistanceFromPose(const gtsam::Pose3& T_query) const {
+    // T_query will be an SE(3) in opecv convention
+    // We then hope/assume that T_map_query_ rightly puts T_query into the
+    // robotic convention!!
+    gtsam::Pose3 T_map_se3 = T_map_query_ * T_query;
+
+    const double x = T_map_se3.x();
+    const double y = T_map_se3.y();
+    const double dist = this->distanceAt(x, y);
+    return dist;
+  }
+
+  // Returns gradient vector at world coordinates (x, y)
+  gtsam::Vector2 gradientAt(double x, double y) const {
+    const double delta = 0.1;
+    double dx =
+        (distanceAt(x + delta, y) - distanceAt(x - delta, y)) / (2 * delta);
+    double dy =
+        (distanceAt(x, y + delta) - distanceAt(x, y - delta)) / (2 * delta);
+
+    gtsam::Vector2 grad(dx, dy);
+    // SCALE IT DOWN TO MOVE SLOWER
+    const double step_scale = 0.1;  // smaller = slower
+    return grad * step_scale;
+  }
+
+  // Accessors for map info
+  int getWidth() const { return width_; }
+  int getHeight() const { return height_; }
+  double getResolution() const { return resolution_; }
+  double getOriginX() const { return origin_x_; }
+  double getOriginY() const { return origin_y_; }
+
+  // Returns signed distance at discrete grid coordinates
+  double distanceAtGrid(int gx, int gy) const {
+    return static_cast<double>(valueAt(gx, gy));
+  }
+
+ private:
+  bool loadFromFiles(const std::string& bin_path,
+                     const std::string& meta_path) {
+    std::ifstream meta_file(meta_path);
+    if (!meta_file) {
+      LOG(FATAL) << "Failed to open meta file: " << meta_path;
+      return false;
+    }
+
+    meta_file >> width_ >> height_;
+    meta_file >> origin_x_ >> origin_y_;
+    meta_file >> resolution_;
+    meta_file.close();
+
+    std::ifstream bin_file(bin_path, std::ios::binary);
+    if (!bin_file) {
+      LOG(FATAL) << "Failed to open bin file: " << bin_path;
+      return false;
+    }
+
+    data_.resize(width_ * height_);
+    bin_file.read(reinterpret_cast<char*>(data_.data()),
+                  data_.size() * sizeof(float));
+    if (!bin_file) {
+      LOG(FATAL) << "Failed to read binary data";
+      return false;
+    }
+
+    bin_file.close();
+    return true;
+  }
+
+ private:
+  std::vector<float> data_;
+  int width_, height_;
+  double origin_x_, origin_y_;
+  double resolution_;
+
+  gtsam::Pose3 T_map_query_;
+
+  // Converts world coordinates to grid indices (floating point)
+  bool worldToGrid(double x, double y, double& gx, double& gy) const {
+    gx = (x - origin_x_) / resolution_;
+    gy = (y - origin_y_) / resolution_;
+    return gx >= 0 && gx < width_ - 1 && gy >= 0 && gy < height_ - 1;
+  }
+
+  // Returns the value at integer grid indices (with bounds check)
+  double valueAt(int i, int j) const {
+    if (i < 0) i = 0;
+    if (i >= width_) i = width_ - 1;
+    if (j < 0) j = 0;
+    if (j >= height_) j = height_ - 1;
+    return static_cast<double>(data_[j * width_ + i]);
+  }
+};
 
 namespace mpc_factors {
 
@@ -111,6 +257,63 @@ gtsam::Pose2 predictRobotPose(gtsam::Pose2 current_pose,
   return gtsam::Pose2(current_pose.x() + new_x, current_pose.y() + new_y,
                       current_pose.theta() + new_theta);
 }
+
+class SDFStaticObstacleFactor : public gtsam::NoiseModelFactor1<gtsam::Pose3> {
+ public:
+  using shared_ptr = boost::shared_ptr<SDFStaticObstacleFactor>;
+  using This = SDFStaticObstacleFactor;
+  using Base = gtsam::NoiseModelFactor1<gtsam::Pose3>;
+
+  SDFStaticObstacleFactor(gtsam::Key X_k_key, std::shared_ptr<SDFMap2D> sdf_map,
+                          double safety_distance, gtsam::SharedNoiseModel model)
+      : Base(model, X_k_key),
+        sdf_map_(CHECK_NOTNULL(sdf_map)),
+        safety_distance_(safety_distance) {}
+
+  // Clone method
+  gtsam::NonlinearFactor::shared_ptr clone() const override {
+    return boost::make_shared<SDFStaticObstacleFactor>(*this);
+  }
+
+  // Error function
+  gtsam::Vector evaluateError(
+      const gtsam::Pose3& X_k,
+      boost::optional<gtsam::Matrix&> J1 = boost::none) const override {
+    // TODO: repeated calculations!!
+    double distance = sdf_map_->getDistanceFromPose(X_k);
+
+    if (J1) {
+      // NOTE: condition on distance directly without limit (std::max) as in
+      // residual function!
+      if (distance >= safety_distance_) {
+        // Zero residual => zero Jacobian
+        *J1 = (gtsam::Matrix(1, 6) << 0.0, 0.0, 0.0, 0.0, 0.0, 0.0).finished();
+      } else {
+        Eigen::Matrix<double, 1, 6> df_f =
+            gtsam::numericalDerivative11<gtsam::Vector1, gtsam::Pose3>(
+                std::bind(&SDFStaticObstacleFactor::residual, this,
+                          std::placeholders::_1),
+                X_k);
+        *J1 = df_f;
+      }
+    }
+    gtsam::Vector e = residual(X_k);
+    LOG(INFO) << "dist " << distance << " error " << e;
+    return e;
+  }
+
+  // Compute residual (static utility function)
+  gtsam::Vector residual(const gtsam::Pose3& X_k) const {
+    double distance = sdf_map_->getDistanceFromPose(X_k);
+    return gtsam::Vector1(std::max(0.0, safety_distance_ - distance));
+  }
+
+  inline gtsam::Key poseKey() const { return key1(); }
+
+ private:
+  std::shared_ptr<SDFMap2D> sdf_map_;
+  double safety_distance_;
+};
 
 /**
  * @brief A factor that enforces inequality constraints on a gtsam::Vector2
@@ -431,7 +634,7 @@ class Pose3DynXVAFactor
     // Update velocities using acceleration and time step
     gtsam::Vector2 pred_vel2 = vel1 + acc1 * dt_;
 
-    gtsam::Pose2 pred_pose = predictRobotPose(pose1, pred_vel2, dt_);
+    gtsam::Pose2 pred_pose = predictRobotPose(pose1, vel2, dt_);
 
     // Following 2 lines do the same as
     // "gtsam::traits<gtsam::Pose2>::Local(next_pose, pred_pose);" gtsam::Pose2
@@ -1214,8 +1417,10 @@ MPCFormulation::MPCFormulation(const FormulationParams& params,
       gtsam::noiseModel::Isotropic::Sigma(2u, FLAGS_mpc_follow_sigma);
 
   goal_noise_ = gtsam::noiseModel::Isotropic::Sigma(3u, FLAGS_mpc_goal_sigma);
+  static_obstacle_noise_ =
+      gtsam::noiseModel::Isotropic::Sigma(1u, FLAGS_mpc_static_obstacle_sigma);
 
-  lin_vel_ = Limits{-0.5, 1};
+  lin_vel_ = Limits{-0.0, 1};
   ang_vel_ = Limits{-0.5, 0.5};
   lin_acc_ = Limits{-0.5, 1};
   ang_acc_ = Limits{-0.5, 0.5};
@@ -1233,6 +1438,13 @@ MPCFormulation::MPCFormulation(const FormulationParams& params,
   } else {
     LOG(FATAL) << "Unknown mission type for MPCFormulation!";
   }
+
+  const std::string sdf_map_path = FLAGS_mpc_path_to_sdf_map;
+  const std::string sdf_bin_path = sdf_map_path + ".bin";
+  const std::string sdf_meta_path = sdf_map_path + ".txt";
+  sdf_map_ = std::make_shared<SDFMap2D>(sdf_bin_path, sdf_meta_path);
+  CHECK(sdf_map_);
+  LOG(INFO) << "Made sdf map from path " << sdf_map_path;
 }
 
 void MPCFormulation::updateGlobalPath(Timestamp timestamp,
@@ -1289,6 +1501,22 @@ void MPCFormulation::otherUpdatesContext(
   const auto object_to_follow = mpc_data_.object_to_follow;
 
   FrameId frame_N = frame_k + mpc_horizon;
+
+  // first try and get map offset pose if we dont already have
+  // this sets the static offset between dynosam odom and the map frame (which
+  // is called 'odom')
+  if (!T_map_camera_) {
+    gtsam::Pose3 T;
+    if (viz_->queryGlobalOffset(T)) {
+      T_map_camera_ = T;
+      LOG(INFO) << "Found offset between dynosam pose and map frame!! " << T;
+      CHECK(sdf_map_);
+      sdf_map_->setQueryOffset(T);
+    }
+  }
+
+  bool sdf_map_valid = (bool)T_map_camera_;
+  LOG(INFO) << "Sdf map is valid. Can add obstacle factors if desired";
 
   // values init camera pose, 2dvelocity, 2d acceletation
   for (FrameId frame_id = frame_k; frame_id < frame_N; frame_id++) {
@@ -1409,6 +1637,18 @@ void MPCFormulation::otherUpdatesContext(
 
       new_factors.add(velocity_limit_factor);
       factors_to_remove_this_frame.add(velocity_limit_factor);
+
+      // add static obstacle factor on planned poses from frame_k + 1 -> frame_N
+      if (sdf_map_valid) {
+        auto static_obstacle_factor =
+            boost::make_shared<SDFStaticObstacleFactor>(
+                camera_key, CHECK_NOTNULL(sdf_map_),
+                FLAGS_mpc_static_safety_distance, static_obstacle_noise_);
+
+        new_factors.add(static_obstacle_factor);
+        factors_to_remove_this_frame.add(static_obstacle_factor);
+        LOG(INFO) << "Adding static obstacle factor " << formatter(camera_key);
+      }
     }
 
     // add acceleration up to k+N-1
