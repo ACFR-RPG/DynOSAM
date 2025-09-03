@@ -226,8 +226,8 @@ FrontendModule::SpinReturn RGBDInstanceFrontendModule::nominalSpin(
   const ImageContainer& processed_image_container = frame->image_container_;
   debug_imagery.rgb_viz =
       ImageType::RGBMono::toRGB(processed_image_container.rgb());
-  debug_imagery.flow_viz =
-      ImageType::OpticalFlow::toRGB(processed_image_container.opticalFlow());
+  // debug_imagery.flow_viz =
+  //     ImageType::OpticalFlow::toRGB(processed_image_container.opticalFlow());
   debug_imagery.mask_viz = ImageType::MotionMask::toRGB(
       processed_image_container.objectMotionMask());
   debug_imagery.depth_viz =

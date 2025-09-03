@@ -52,7 +52,7 @@ tracker_params:
 
   # dynamic keyframing criteria
   dynamic_feature_age_buffer: 3
-  min_dynamic_tracks: 20
+  min_dynamic_tracks: 45
   min_dynamic_mask_iou: 0.3
 
 image_tracks_vis_params:

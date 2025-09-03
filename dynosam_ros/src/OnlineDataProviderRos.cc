@@ -59,7 +59,7 @@ void OnlineDataProviderRos::shutdown() {
 
   rgb_image_sub_.unsubscribe();
   depth_image_sub_.unsubscribe();
-  flow_image_sub_.unsubscribe();
+  // flow_image_sub_.unsubscribe();
   mask_image_sub_.unsubscribe();
 }
 
@@ -68,27 +68,34 @@ void OnlineDataProviderRos::connect() {
   CHECK_NOTNULL(node_ptr);
   rgb_image_sub_.subscribe(node_ptr, "image/rgb");
   depth_image_sub_.subscribe(node_ptr, "image/depth");
-  flow_image_sub_.subscribe(node_ptr, "image/flow");
+  // flow_image_sub_.subscribe(node_ptr, "image/flow");
   mask_image_sub_.subscribe(node_ptr, "image/mask");
 
   if (sync_) sync_.reset();
 
   // static constexpr size_t kQueueSize = 20u;
   static constexpr size_t kQueueSize = 1000u;
+  // sync_ = std::make_shared<message_filters::Synchronizer<SyncPolicy>>(
+  //     SyncPolicy(kQueueSize), rgb_image_sub_, depth_image_sub_,
+  //     flow_image_sub_, mask_image_sub_);
   sync_ = std::make_shared<message_filters::Synchronizer<SyncPolicy>>(
-      SyncPolicy(kQueueSize), rgb_image_sub_, depth_image_sub_, flow_image_sub_,
+      SyncPolicy(kQueueSize), rgb_image_sub_, depth_image_sub_,
       mask_image_sub_);
 
+  // sync_->registerCallback(std::bind(
+  //     &OnlineDataProviderRos::imageSyncCallback, this, std::placeholders::_1,
+  //     std::placeholders::_2, std::placeholders::_3, std::placeholders::_4));
   sync_->registerCallback(std::bind(
       &OnlineDataProviderRos::imageSyncCallback, this, std::placeholders::_1,
-      std::placeholders::_2, std::placeholders::_3, std::placeholders::_4));
+      std::placeholders::_2, std::placeholders::_3));
 
   RCLCPP_INFO_STREAM(
       node_->get_logger(),
       "OnlineDataProviderRos has been connected. Subscribed to image topics: "
           << rgb_image_sub_.getSubscriber()->get_topic_name() << " "
-          << depth_image_sub_.getSubscriber()->get_topic_name() << " "
-          << flow_image_sub_.getSubscriber()->get_topic_name() << " "
+          << depth_image_sub_.getSubscriber()->get_topic_name()
+          << " "
+          // << flow_image_sub_.getSubscriber()->get_topic_name() << " "
           << mask_image_sub_.getSubscriber()->get_topic_name() << ".");
 
   if (imu_sub_) imu_sub_.reset();
@@ -169,7 +176,7 @@ void OnlineDataProviderRos::connect() {
 void OnlineDataProviderRos::imageSyncCallback(
     const sensor_msgs::msg::Image::ConstSharedPtr &rgb_msg,
     const sensor_msgs::msg::Image::ConstSharedPtr &depth_msg,
-    const sensor_msgs::msg::Image::ConstSharedPtr &flow_msg,
+    // const sensor_msgs::msg::Image::ConstSharedPtr &flow_msg,
     const sensor_msgs::msg::Image::ConstSharedPtr &mask_msg) {
   if (!image_container_callback_) {
     RCLCPP_ERROR_THROTTLE(node_->get_logger(), *node_->get_clock(), 1000,
@@ -180,7 +187,7 @@ void OnlineDataProviderRos::imageSyncCallback(
 
   const cv::Mat rgb = readRgbRosImage(rgb_msg);
   const cv::Mat depth = readDepthRosImage(depth_msg);
-  const cv::Mat flow = readFlowRosImage(flow_msg);
+  // const cv::Mat flow = readFlowRosImage(flow_msg);
   const cv::Mat mask = readMaskRosImage(mask_msg);
 
   const Timestamp timestamp = utils::fromRosTime(rgb_msg->header.stamp);
@@ -188,8 +195,7 @@ void OnlineDataProviderRos::imageSyncCallback(
   frame_id_++;
 
   ImageContainer image_container(frame_id, timestamp);
-  image_container.rgb(rgb).depth(depth).opticalFlow(flow).objectMotionMask(
-      mask);
+  image_container.rgb(rgb).depth(depth).objectMotionMask(mask);
 
   // cv::Mat of_viz, motion_viz, depth_viz;
   // of_viz = ImageType::OpticalFlow::toRGB(flow);

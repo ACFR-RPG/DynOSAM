@@ -294,7 +294,7 @@ void OpticalFlowAndPoseOptimizer::updateFrameOutliersWithResult(
     const Result& result, Frame::Ptr frame_k_1, Frame::Ptr frame_k) const {
   // //original flow image that goes from k to k+1 (gross, im sorry!)
   // TODO: use flow_is_future param
-  const cv::Mat& flow_image = frame_k->image_container_.opticalFlow();
+  // const cv::Mat& flow_image = frame_k->image_container_.opticalFlow();
   const cv::Mat& motion_mask = frame_k->image_container_.objectMotionMask();
 
   auto camera = frame_k->camera_;
@@ -332,18 +332,17 @@ void OpticalFlowAndPoseOptimizer::updateFrameOutliersWithResult(
       continue;
     }
 
-    // we now have to update the prediced keypoint using the original flow!!
-    // TODO: code copied from feature tracker
-    const int x = functional_keypoint::u(refined_keypoint);
-    const int y = functional_keypoint::v(refined_keypoint);
-    double flow_xe = static_cast<double>(flow_image.at<cv::Vec2f>(y, x)[0]);
-    double flow_ye = static_cast<double>(flow_image.at<cv::Vec2f>(y, x)[1]);
+    // // we now have to update the prediced keypoint using the original flow!!
+    // // TODO: code copied from feature tracker
+    // const int x = functional_keypoint::u(refined_keypoint);
+    // const int y = functional_keypoint::v(refined_keypoint);
+    // double flow_xe = static_cast<double>(flow_image.at<cv::Vec2f>(y, x)[0]);
+    // double flow_ye = static_cast<double>(flow_image.at<cv::Vec2f>(y, x)[1]);
     // the measured flow after the origin has been updated
-    OpticalFlow new_measured_flow(flow_xe, flow_ye);
-    feature_k->measuredFlow(new_measured_flow);
+    feature_k->measuredFlow(refined_flow);
     // TODO: check predicted flow is within image
-    Keypoint predicted_kp = Feature::CalculatePredictedKeypoint(
-        refined_keypoint, new_measured_flow);
+    Keypoint predicted_kp =
+        Feature::CalculatePredictedKeypoint(refined_keypoint, refined_flow);
     feature_k->predictedKeypoint(predicted_kp);
   }
 

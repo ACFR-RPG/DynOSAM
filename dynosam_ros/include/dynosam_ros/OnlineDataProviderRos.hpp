@@ -100,14 +100,22 @@ class OnlineDataProviderRos : public DataProviderRos {
   void connect();
 
  private:
-  using SyncPolicy = message_filters::sync_policies::ExactTime<
-      sensor_msgs::msg::Image, sensor_msgs::msg::Image, sensor_msgs::msg::Image,
-      sensor_msgs::msg::Image>;
+  //   using SyncPolicy = message_filters::sync_policies::ExactTime<
+  //       sensor_msgs::msg::Image, sensor_msgs::msg::Image,
+  //       sensor_msgs::msg::Image, sensor_msgs::msg::Image>;
+  using SyncPolicy =
+      message_filters::sync_policies::ExactTime<sensor_msgs::msg::Image,
+                                                sensor_msgs::msg::Image,
+                                                sensor_msgs::msg::Image>;
 
+  //   void imageSyncCallback(
+  //       const sensor_msgs::msg::Image::ConstSharedPtr &rgb_msg,
+  //       const sensor_msgs::msg::Image::ConstSharedPtr &depth_msg,
+  //       const sensor_msgs::msg::Image::ConstSharedPtr &flow_msg,
+  //       const sensor_msgs::msg::Image::ConstSharedPtr &mask_msg);
   void imageSyncCallback(
       const sensor_msgs::msg::Image::ConstSharedPtr &rgb_msg,
       const sensor_msgs::msg::Image::ConstSharedPtr &depth_msg,
-      const sensor_msgs::msg::Image::ConstSharedPtr &flow_msg,
       const sensor_msgs::msg::Image::ConstSharedPtr &mask_msg);
 
  private:
@@ -115,7 +123,7 @@ class OnlineDataProviderRos : public DataProviderRos {
 
   message_filters::Subscriber<sensor_msgs::msg::Image> rgb_image_sub_;
   message_filters::Subscriber<sensor_msgs::msg::Image> depth_image_sub_;
-  message_filters::Subscriber<sensor_msgs::msg::Image> flow_image_sub_;
+  //   message_filters::Subscriber<sensor_msgs::msg::Image> flow_image_sub_;
   message_filters::Subscriber<sensor_msgs::msg::Image> mask_image_sub_;
 
   std::shared_ptr<message_filters::Synchronizer<SyncPolicy>> sync_;

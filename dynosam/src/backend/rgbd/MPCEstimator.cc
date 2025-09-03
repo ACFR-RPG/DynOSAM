@@ -1599,7 +1599,7 @@ void MPCFormulation::otherUpdatesContext(
       object_in_opt_at_current;
   // object exists at all (may not be observed at this frame!)
   // logic to track that object is seen and we should do predictions etc...
-  if (objects_update_data_.exists(object_to_follow) && false) {
+  if (objects_update_data_.exists(object_to_follow)) {
     const ObjectUpdateData& update_data =
         objects_update_data_.at(object_to_follow);
 
