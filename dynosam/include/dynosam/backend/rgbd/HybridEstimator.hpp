@@ -1393,6 +1393,7 @@ class RegularHybridFormulation : public HybridFormulation {
   virtual void postUpdate(const PostUpdateData& data) override;
 
  protected:
+  // Temporal data for objects in the estimaion problem (not observed!)
   struct ObjectUpdateData {
     FrameId frame_id{0};  //! Last time the object was updted in the estimator
     size_t count{0};  //! Number of (total) times the object has been updated.

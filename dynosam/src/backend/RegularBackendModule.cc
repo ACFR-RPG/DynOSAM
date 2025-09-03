@@ -202,7 +202,7 @@ RegularBackendModule::SpinReturn RegularBackendModule::nominalSpinImpl(
   // update_params.do_backtrack =
   //     false;  // apparently this is v important for making the results ==
   //     ICRA
-  update_params.do_backtrack = true;
+  update_params.do_backtrack = false;
 
   PostUpdateData post_update_data(frame_k, timestamp);
   addMeasurements(input, update_params, new_values, new_factors,
@@ -273,6 +273,33 @@ void RegularBackendModule::setupUpdates() {
     // isam2_params.enablePartialRelinearizationCheck = true;
     isam2_params.evaluateNonlinearError = true;
     smoother_ = std::make_unique<dyno::ISAM2>(isam2_params);
+  }
+}
+
+std::pair<gtsam::Values, gtsam::NonlinearFactorGraph>
+RegularBackendModule::getActiveOptimisation() const {
+  const RegularOptimizationType& optimization_mode =
+      base_params_.optimization_mode;
+  if (optimization_mode == RegularOptimizationType::FULL_BATCH) {
+    const auto theta = formulation_->getTheta();
+    const auto graph = formulation_->getGraph();
+    return {theta, graph};
+  } else if (optimization_mode == RegularOptimizationType::SLIDING_WINDOW) {
+    using SmootherInterface =
+        IncrementalInterface<gtsam::BatchFixedLagSmoother>;
+    SmootherInterface smoother_interface(sliding_window_.get());
+    const auto graph = smoother_interface.getFactors();
+    const auto theta = smoother_interface.getLinearizationPoint();
+    return {theta, graph};
+
+  } else if (optimization_mode == RegularOptimizationType::INCREMENTAL) {
+    using SmootherInterface = IncrementalInterface<dyno::ISAM2>;
+    SmootherInterface smoother_interface(smoother_.get());
+    const auto graph = smoother_interface.getFactors();
+    const auto theta = smoother_interface.getLinearizationPoint();
+    return {theta, graph};
+  } else {
+    LOG(FATAL) << "Unknown optimisation mode" << optimization_mode;
   }
 }
 
@@ -492,7 +519,7 @@ void RegularBackendModule::updateSlidingWindow(
                                     smoother_interface.getFactors());
   }
 
-  // LOG(INFO) << "Removing batch factors"
+  // LOG(INFO) << "Removing batch factors";
   // for (auto index : factors_to_remove) {
   //   smoother_interface.getFactors().at(index)->print("Factor remove ",
   //                                                    formulation_->formatter());

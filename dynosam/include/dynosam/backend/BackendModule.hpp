@@ -82,6 +82,20 @@ class BackendModule
   const NoiseModels& getNoiseModels() const { return noise_models_; }
   const BackendSpinState& getSpinState() const { return spin_state_; }
 
+  /**
+   * @brief Shortcut to the frame id of the current spin state.
+   *
+   * @return FrameId
+   */
+  FrameId getSpinStateFrameId() const { return spin_state_.frame_id; }
+
+  /**
+   * @brief Shortcut to the timestamp of the current spin state.
+   *
+   * @return Timestamp
+   */
+  Timestamp getSpinStateTimestamp() const { return spin_state_.timestamp; }
+
  protected:
   // called in ModuleBase immediately before the spin function is called
   virtual void validateInput(

@@ -89,6 +89,10 @@ struct UpdateObservationResult {
   //! step
   gtsam::KeySet keys_to_not_marginalize;
 
+  //! Additional set of keys to frameid that will be added to the timestamp of a
+  //! fixed lag smoother (when used).
+  gtsam::FastMap<gtsam::Key, double> additional_keys_to_marginalize;
+
   UpdateObservationResult() {}
 
   // TODO: use the UpdateObservationParams to set if we have an incremental

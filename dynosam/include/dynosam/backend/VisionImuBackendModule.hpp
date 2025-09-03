@@ -188,6 +188,16 @@ class VisionImuBackendModule : public BackendModuleType<MODULE_TRAITS> {
     // TODO: only for dyno mpc becuase the prediction will have alraedy added
     // future camera poses
     // handle this case in the future!!
+
+    // TODO: for dyno moc only!!! We assume we already have it in the map
+    // it already exists in the values but is not registered with
+    // is_other_values_in_map this may happen with dyno mpc as it forward
+    // preddicts and initalises object poses
+    if (!accessor->template queryWithTheta<gtsam::Pose3>(
+            CameraPoseSymbol(frame_id_k), new_values)) {
+      formulation->addSensorPoseValue(predicted_navstate_k.pose(), frame_id_k,
+                                      new_values);
+    }
     //  always add sensor pose
     //  formulation->addSensorPoseValue(predicted_navstate_k.pose(), frame_id_k,
     //                                  new_values);

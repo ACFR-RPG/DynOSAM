@@ -176,6 +176,8 @@ class MPCFormulation : public RegularHybridFormulation,
   gtsam::SharedNoiseModel accel2d_cost_noise_;
   gtsam::SharedNoiseModel accel2d_smoothing_noise_;
 
+  // this is really the factor on the camera dynamics (ie x(k+1) = f(x, v, a))
+  // as opposed to the dynamic obstacle factor
   gtsam::SharedNoiseModel dynamic_factor_noise_;
 
   gtsam::SharedNoiseModel object_prediction_constant_motion_noise_;
@@ -183,7 +185,10 @@ class MPCFormulation : public RegularHybridFormulation,
   gtsam::SharedNoiseModel follow_noise_;
   gtsam::SharedNoiseModel goal_noise_;
 
-  gtsam::SharedNoiseModel static_obstacle_noise_;
+  gtsam::SharedNoiseModel static_obstacle_X_noise_;
+  gtsam::SharedNoiseModel static_obstacle_H_noise_;
+
+  gtsam::SharedNoiseModel dynamic_obstacle_factor_;
 
   double desired_follow_distance_;
   double desired_follow_heading_;
@@ -198,6 +203,11 @@ class MPCFormulation : public RegularHybridFormulation,
   enum MissionType { FOLLOW = 0, NAVIGATE = 1 };
 
   MissionType mission_type_;
+
+  // internal logic for object porediction (currently only works for single
+  // object)
+  //  bool object_reappeared_{false};
+  //  bool object_disappeared_{false};
 
   // only shared becuase its forward declared because cbf to put it in the
   // header file for now! also shared between all obstacle factors...

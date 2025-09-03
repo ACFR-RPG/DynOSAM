@@ -33,8 +33,8 @@
 --static_point_noise_sigma=0.1
 --dynamic_point_noise_sigma=0.1
 
---min_static_observations=3
---min_dynamic_observations=2
+--min_static_observations=0
+--min_dynamic_observations=0
 
 --static_pixel_noise_sigma=2.0
 --dynamic_pixel_noise_sigma=0.01
@@ -92,6 +92,7 @@
 
 # Dyno MPC stuff
 --mpc_horizon=30
+# --mpc_horizon=5
 --mpc_vel2d_prior_sigma=5e-3
 --mpc_vel2d_limit_sigma=1e-2
 
@@ -100,16 +101,29 @@
 
 --mpc_accel2d_smoothing_sigma=5e3
 --mpc_dynamic_factor_sigma=1e-3
---mpc_object_prediction_constant_motion_sigma=1e-1
+--mpc_object_prediction_constant_motion_sigma=1e-3
 --mpc_follow_sigma=5e0
---mpc_goal_sigma=1e-2
---mpc_static_obstacle_sigma=1e-2
+--mpc_goal_sigma=1e-1
+
+
+--mpc_static_sdf_X_safety_distance_sigma=1e-2
+--mpc_static_sdf_H_safety_distance_noise=1e-2
+--mpc_dynamic_obstacle_sigma=1e-2
 
 --mpc_desired_follow_distance=3.0
 --mpc_desired_follow_heading=0.0
 
---mpc_static_safety_distance=0.5
+--mpc_static_sdf_X_safety_distance=0.4
+--mpc_static_sdf_H_safety_distance=0.2
 
+--mpc_dynamic_obstacle_safety_distance=0.7
+
+
+--mpc_use_directed_factors=true
+
+--mpc_local_goal_horizin=120
+
+# 0: Follow, 1: Navigate
 --mission_type=1
 
 --mpc_path_to_sdf_map=/home/user/dev_ws/install/dyno_mpc_sim/share/dyno_mpc_sim/maps/sdf_files/tugboat_warehouse_with_boxes_map

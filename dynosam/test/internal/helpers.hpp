@@ -92,7 +92,9 @@ inline CameraParams makeDefaultCameraParams() {
   intrinsics.at(1) = 554.256;  // fy
   intrinsics.at(2) = 640 / 2;  // u0
   intrinsics.at(3) = 480 / 2;  // v0
-  return CameraParams(intrinsics, distortion, cv::Size(640, 480), "radtan");
+  CameraParams params(intrinsics, distortion, cv::Size(640, 480), "radtan");
+  params.setDepthParams(0.1);
+  return params;
 }
 
 inline Camera makeDefaultCamera() { return Camera(makeDefaultCameraParams()); }

@@ -218,7 +218,7 @@ void MPCEstimationVizRos::publishLocalGoalMarker(const gtsam::Pose3& pose,
   marker.ns = name;
   marker.id = 0;
   marker.type =
-      visualization_msgs::msg::Marker::SPHERE;  // can be SPHERE, CUBE, etc.
+      visualization_msgs::msg::Marker::ARROW;  // can be SPHERE, CUBE, etc.
   marker.action = visualization_msgs::msg::Marker::ADD;
 
   // Set position
@@ -228,15 +228,15 @@ void MPCEstimationVizRos::publishLocalGoalMarker(const gtsam::Pose3& pose,
 
   // Set orientation
   auto q = pose.rotation().toQuaternion();  // gtsam::Quaternion
-  marker.pose.orientation.x = 0;
-  marker.pose.orientation.y = 0;
-  marker.pose.orientation.z = 0;
-  marker.pose.orientation.w = 1;
+  marker.pose.orientation.x = q.x();
+  marker.pose.orientation.y = q.y();
+  marker.pose.orientation.z = q.z();
+  marker.pose.orientation.w = q.w();
 
   // Marker scale
-  marker.scale.x = 0.5;  // shaft length for arrow
-  marker.scale.y = 0.5;
-  marker.scale.z = 0.5;
+  marker.scale.x = 0.2;  // shaft length for arrow
+  marker.scale.y = 0.2;
+  marker.scale.z = 0.2;
 
   // Color (RGBA)
   marker.color.r = 0.0f;

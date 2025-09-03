@@ -203,6 +203,26 @@ struct BatchTester : public RegularBackendTester {
   std::shared_ptr<Data> data;
 };
 
+struct DefaultTester : public RegularBackendTester {
+  DefaultTester(dyno::RegularBackendModule::Ptr backend_)
+      : RegularBackendTester(backend_) {}
+
+  void onFinish() override {}
+  void postSpin() override {
+    const auto [theta, factor_graph] = backend->getActiveOptimisation();
+
+    auto spin_state_frame_id = backend->getSpinStateFrameId();
+    factor_graph.saveGraph(
+        dyno::getOutputFilePath("active_graph_" +
+                                std::to_string(spin_state_frame_id) + "_" +
+                                backend->formulationName() + ".dot"),
+        dyno::DynoLikeKeyFormatter);
+    VLOG(10) << "Saving active graph for spin state frame id "
+             << spin_state_frame_id;
+    ;
+  }
+};
+
 struct RGBDBackendTester {
   void addTester(std::shared_ptr<TesterBase> t) { testers.push_back(t); }
 

@@ -42,6 +42,10 @@
 
 DEFINE_uint32(mpc_horizon, 4, "Dyno mpc time horizon");
 
+DEFINE_uint32(
+    mpc_local_goal_horizin, 120,
+    "Number of steps ahead to calculate the local goal from the global plan");
+
 DEFINE_double(mpc_vel2d_prior_sigma, 1.0, "Sigma for the cam pose prior");
 
 DEFINE_double(mpc_vel2d_limit_sigma, 1.0, "Sigma for the cam pose prior");
@@ -53,8 +57,13 @@ DEFINE_double(mpc_accel2d_smoothing_sigma, 1.0, "Sigma for the cam pose prior");
 DEFINE_double(mpc_dynamic_factor_sigma, 1.0, "Sigma for mpc dynamic factor");
 DEFINE_double(mpc_object_prediction_constant_motion_sigma, 0.01,
               "Sigma object prediction smoothing");
-DEFINE_double(mpc_static_obstacle_sigma, 0.1,
-              "Sigma for static obstacle factor");
+DEFINE_double(mpc_static_sdf_X_safety_distance_sigma, 0.1,
+              "Sigma for sdf X factor");
+DEFINE_double(mpc_static_sdf_H_safety_distance_sigma, 0.1,
+              "Sigma for sdf H obstacle factor");
+
+DEFINE_double(mpc_dynamic_obstacle_sigma, 0.1,
+              "Sigma for dynamic obstacle factor");
 
 DEFINE_double(mpc_follow_sigma, 1.0, "Sigma for follow factor");
 DEFINE_double(mpc_goal_sigma, 1.0, "Sigma for goal factor");
@@ -74,8 +83,18 @@ DEFINE_string(mpc_path_to_sdf_map,
               "/root/sdf_maps/tugboat_warehouse_with_boxes_map",
               "Path to sdf map (without suffix)");
 
-DEFINE_double(mpc_static_safety_distance, 1.0,
-              "Safety distance constant for a static obstacel");
+DEFINE_double(mpc_static_sdf_X_safety_distance, 1.0,
+              "Safety distance constant for a static obstacle");
+DEFINE_double(mpc_static_sdf_H_safety_distance, 1.0,
+              "Safety distance constant for a dynamic obstacle");
+
+DEFINE_double(mpc_dynamic_obstacle_safety_distance, 1.0,
+              "Safety distance constant for keeping X away from dynamic "
+              "obstacles. Only in Navigation mode");
+
+DEFINE_bool(mpc_use_directed_factors, true,
+            "Mostly for testing/experiments. Whether or not to use proposed "
+            "directed factors");
 
 namespace dyno {
 
@@ -96,7 +115,9 @@ class SDFMap2D {
     double gx, gy;
     if (!worldToGrid(x, y, gx, gy)) {
       // Outside map bounds, return large positive distance
-      return 10.0;
+      // we assume outside the map there are no obsacles
+      // but we have map boundary so really this should be -10!
+      return -10.0;
     }
 
     int i = static_cast<int>(std::floor(gx));
@@ -258,62 +279,263 @@ gtsam::Pose2 predictRobotPose(gtsam::Pose2 current_pose,
                       current_pose.theta() + new_theta);
 }
 
-class SDFStaticObstacleFactor : public gtsam::NoiseModelFactor1<gtsam::Pose3> {
+class SDFObstacleFactorBase : public gtsam::NoiseModelFactor1<gtsam::Pose3> {
  public:
-  using shared_ptr = boost::shared_ptr<SDFStaticObstacleFactor>;
-  using This = SDFStaticObstacleFactor;
+  using shared_ptr = boost::shared_ptr<SDFObstacleFactorBase>;
+  using This = SDFObstacleFactorBase;
   using Base = gtsam::NoiseModelFactor1<gtsam::Pose3>;
 
-  SDFStaticObstacleFactor(gtsam::Key X_k_key, std::shared_ptr<SDFMap2D> sdf_map,
-                          double safety_distance, gtsam::SharedNoiseModel model)
-      : Base(model, X_k_key),
+  SDFObstacleFactorBase(gtsam::Key key, std::shared_ptr<SDFMap2D> sdf_map,
+                        double safety_distance, gtsam::SharedNoiseModel model)
+      : Base(model, key),
         sdf_map_(CHECK_NOTNULL(sdf_map)),
         safety_distance_(safety_distance) {}
 
-  // Clone method
-  gtsam::NonlinearFactor::shared_ptr clone() const override {
-    return boost::make_shared<SDFStaticObstacleFactor>(*this);
-  }
+  virtual double calculateDistance(const gtsam::Pose3& pose) const = 0;
 
   // Error function
   gtsam::Vector evaluateError(
-      const gtsam::Pose3& X_k,
+      const gtsam::Pose3& pose,
       boost::optional<gtsam::Matrix&> J1 = boost::none) const override {
     // TODO: repeated calculations!!
-    double distance = sdf_map_->getDistanceFromPose(X_k);
+    double distance = this->calculateDistance(pose);
 
     if (J1) {
       // NOTE: condition on distance directly without limit (std::max) as in
       // residual function!
       if (distance >= safety_distance_) {
+        // if (distance <= safety_distance_) {
         // Zero residual => zero Jacobian
         *J1 = (gtsam::Matrix(1, 6) << 0.0, 0.0, 0.0, 0.0, 0.0, 0.0).finished();
       } else {
         Eigen::Matrix<double, 1, 6> df_f =
             gtsam::numericalDerivative11<gtsam::Vector1, gtsam::Pose3>(
-                std::bind(&SDFStaticObstacleFactor::residual, this,
+                std::bind(&SDFObstacleFactorBase::residual, this,
                           std::placeholders::_1),
-                X_k);
+                pose);
         *J1 = df_f;
       }
     }
-    gtsam::Vector e = residual(X_k);
-    LOG(INFO) << "dist " << distance << " error " << e;
+    gtsam::Vector e = residual(pose);
+    // LOG(INFO) << "dist " << distance << " error " << e;
     return e;
   }
 
   // Compute residual (static utility function)
-  gtsam::Vector residual(const gtsam::Pose3& X_k) const {
-    double distance = sdf_map_->getDistanceFromPose(X_k);
+  gtsam::Vector residual(const gtsam::Pose3& pose) const {
+    double distance = this->calculateDistance(pose);
     return gtsam::Vector1(std::max(0.0, safety_distance_ - distance));
   }
 
   inline gtsam::Key poseKey() const { return key1(); }
 
- private:
+ protected:
   std::shared_ptr<SDFMap2D> sdf_map_;
+
+ private:
   double safety_distance_;
 };
+
+class SDFStaticObstacleXFactor : public SDFObstacleFactorBase {
+ public:
+  using shared_ptr = boost::shared_ptr<SDFStaticObstacleXFactor>;
+  using This = SDFStaticObstacleXFactor;
+  using Base = SDFObstacleFactorBase;
+
+  SDFStaticObstacleXFactor(gtsam::Key X_k_key,
+                           std::shared_ptr<SDFMap2D> sdf_map,
+                           double safety_distance,
+                           gtsam::SharedNoiseModel model)
+      : Base(X_k_key, sdf_map, safety_distance, model) {}
+
+  double calculateDistance(const gtsam::Pose3& X_k) const override {
+    return sdf_map_->getDistanceFromPose(X_k);
+  }
+
+  gtsam::NonlinearFactor::shared_ptr clone() const override {
+    return boost::make_shared<SDFStaticObstacleXFactor>(*this);
+  }
+};
+
+class SDFStaticObstacleHFactor : public SDFObstacleFactorBase {
+ public:
+  using shared_ptr = boost::shared_ptr<SDFStaticObstacleHFactor>;
+  using This = SDFStaticObstacleHFactor;
+  using Base = SDFObstacleFactorBase;
+
+  SDFStaticObstacleHFactor(gtsam::Key H_W_e_k_key,
+                           std::shared_ptr<SDFMap2D> sdf_map,
+                           double safety_distance, const gtsam::Pose3& L_e,
+                           gtsam::SharedNoiseModel model)
+      : Base(H_W_e_k_key, sdf_map, safety_distance, model), L_e_(L_e) {}
+
+  double calculateDistance(const gtsam::Pose3& H_W_e_k) const override {
+    auto L_W_k = H_W_e_k * L_e_;
+    return sdf_map_->getDistanceFromPose(L_W_k);
+  }
+
+  gtsam::NonlinearFactor::shared_ptr clone() const override {
+    return boost::make_shared<SDFStaticObstacleHFactor>(*this);
+  }
+
+ private:
+  gtsam::Pose3 L_e_;
+};
+
+struct DynamicObstacleFactorResidual {
+  static gtsam::Vector residual(const gtsam::Pose3& X_k_se3,
+                                const gtsam::Pose3& H_W_e_k,
+                                const gtsam::Pose3& L_e,
+                                double safety_distance) {
+    const gtsam::Pose3 L_W_k_se3 = H_W_e_k * L_e;
+    gtsam::Pose2 X_k_se2 = convertToSE2OpenCV(X_k_se3);
+    gtsam::Pose2 L_W_k_se2 = convertToSE2OpenCV(L_W_k_se3);
+
+    double distance = X_k_se2.range(L_W_k_se2);
+    // double distance = X_k_se3.range(L_W_k_se3);
+    if (distance < safety_distance) {
+      return gtsam::Vector1(safety_distance - distance);  // - Works
+    } else {
+      // No error if outside safety distance
+      return gtsam::Vector1(0.0);
+    }
+  }
+};
+
+class DynamicObstacleFactorBase
+    : public gtsam::NoiseModelFactor2<gtsam::Pose3, gtsam::Pose3>,
+      public DynamicObstacleFactorResidual {
+ public:
+  using shared_ptr = boost::shared_ptr<DynamicObstacleFactorBase>;
+  using This = DynamicObstacleFactorBase;
+  using Base = gtsam::NoiseModelFactor2<gtsam::Pose3, gtsam::Pose3>;
+
+  DynamicObstacleFactorBase(gtsam::Key X_k_key, gtsam::Key H_W_e_k_key,
+                            const gtsam::Pose3& L_e, double safety_distance,
+                            gtsam::SharedNoiseModel model)
+      : Base(model, X_k_key, H_W_e_k_key),
+        safety_distance_(safety_distance),
+        L_e_(L_e) {}
+
+  // Error function
+  virtual gtsam::Vector evaluateError(
+      const gtsam::Pose3& X_k, const gtsam::Pose3& H_W_e_k,
+      boost::optional<gtsam::Matrix&> J1 = boost::none,
+      boost::optional<gtsam::Matrix&> J2 = boost::none) const override {
+    if (J1) {
+      Eigen::Matrix<double, 1, 6> df_f =
+          gtsam::numericalDerivative21<gtsam::Vector1, gtsam::Pose3,
+                                       gtsam::Pose3>(
+              std::bind(&DynamicObstacleFactorBase::residual,
+                        std::placeholders::_1, std::placeholders::_2, L_e_,
+                        safety_distance_),
+              X_k, H_W_e_k);
+      *J1 = df_f;
+    }
+
+    if (J2) {
+      Eigen::Matrix<double, 1, 6> df_f =
+          gtsam::numericalDerivative22<gtsam::Vector1, gtsam::Pose3,
+                                       gtsam::Pose3>(
+              std::bind(&DynamicObstacleFactorBase::residual,
+                        std::placeholders::_1, std::placeholders::_2, L_e_,
+                        safety_distance_),
+              X_k, H_W_e_k);
+      *J2 = df_f;
+    }
+
+    return residual(X_k, H_W_e_k, L_e_, safety_distance_);
+  }
+
+ private:
+  double safety_distance_;
+  gtsam::Pose3 L_e_;
+};
+
+template <size_t... ZeroIndices>
+class DynamicObstacleFactor : public DynamicObstacleFactorBase {
+ public:
+  using This = DynamicObstacleFactor<ZeroIndices...>;
+  using Base = DynamicObstacleFactorBase;
+  typedef boost::shared_ptr<This> shared_ptr;
+
+  static constexpr bool HasIndices = sizeof...(ZeroIndices) > 0;
+  static constexpr std::array<size_t, sizeof...(ZeroIndices)> indices = {
+      ZeroIndices...};
+
+  gtsam::NonlinearFactor::shared_ptr clone() const override {
+    return boost::make_shared<This>(*this);
+  }
+
+  DynamicObstacleFactor(gtsam::Key X_k_key, gtsam::Key H_W_e_k_key,
+                        const gtsam::Pose3& L_e, double safety_distance,
+                        gtsam::SharedNoiseModel model)
+      : Base(X_k_key, H_W_e_k_key, L_e, safety_distance, model) {}
+
+  gtsam::Vector evaluateError(
+      const gtsam::Pose3& X_k, const gtsam::Pose3& H_W_e_k,
+      boost::optional<gtsam::Matrix&> J1 = boost::none,
+      boost::optional<gtsam::Matrix&> J2 = boost::none) const override {
+    gtsam::Vector error = Base::evaluateError(X_k, H_W_e_k, J1, J2);
+
+    if constexpr (HasIndices) {
+      for (size_t i : indices) {
+        if (i == 1 && J1) J1->setZero();
+        if (i == 2 && J2) J2->setZero();
+      }
+    }
+    return error;
+  }
+};
+
+template <typename VALUE, size_t... ZeroIndices>
+class BetweenFactorDirected : public gtsam::NoiseModelFactorN<VALUE, VALUE> {
+ public:
+  typedef VALUE T;
+  typedef BetweenFactorDirected<VALUE, ZeroIndices...> This;
+  typedef gtsam::NoiseModelFactorN<VALUE, VALUE> Base;
+  typedef boost::shared_ptr<This> shared_ptr;
+
+  static constexpr bool HasIndices = sizeof...(ZeroIndices) > 0;
+  static constexpr std::array<size_t, sizeof...(ZeroIndices)> indices = {
+      ZeroIndices...};
+
+  BetweenFactorDirected(Key key1, Key key2, const VALUE& measured,
+                        const SharedNoiseModel& model = nullptr)
+      : Base(model, key1, key2), measured_(measured) {}
+
+  void print(
+      const std::string& s = "",
+      const KeyFormatter& keyFormatter = DefaultKeyFormatter) const override {
+    std::cout << s << "BetweenFactorDirected(" << keyFormatter(this->key1())
+              << "," << keyFormatter(this->key2()) << ")\n";
+    gtsam::traits<T>::Print(measured_, "  measured: ");
+    this->noiseModel_->print("  noise model: ");
+  }
+
+  gtsam::Vector evaluateError(
+      const T& p1, const T& p2,
+      boost::optional<gtsam::Matrix&> H1 = boost::none,
+      boost::optional<gtsam::Matrix&> H2 = boost::none) const override {
+    T hx = gtsam::traits<T>::Between(p1, p2, H1, H2);  // h(x)
+    // manifold equivalent of h(x)-z -> log(z,h(x))
+    gtsam::Vector error = gtsam::traits<T>::Local(measured_, hx);
+
+    using Jacobian = typename gtsam::traits<T>::ChartJacobian::Jacobian;
+    if constexpr (HasIndices) {
+      for (size_t i : indices) {
+        if (i == 1 && H1) *H1 = Jacobian::Zero();
+        if (i == 2 && H2) *H2 = Jacobian::Zero();
+      }
+      return error;
+    }
+  }
+
+ protected:
+  VALUE measured_; /** The measurement */
+};
+
+using Vec2BetweenFactorDirected1 = BetweenFactorDirected<gtsam::Vector2, 1>;
 
 /**
  * @brief A factor that enforces inequality constraints on a gtsam::Vector2
@@ -514,37 +736,60 @@ class HybridMotionFollowJac0Factor
   gtsam::Rot2 des_heading_;
 };
 
-class Pose3DynXVAFactor
+struct MotionModelFactorResidual {
+  static gtsam::Vector residual(const gtsam::Pose3& pose3_1,
+                                const gtsam::Pose3& pose3_2,
+                                const gtsam::Vector2& vel1,
+                                const gtsam::Vector2& vel2,
+                                const gtsam::Vector2& acc1, const double dt) {
+    gtsam::Pose2 pose1 = convertToSE2OpenCV(pose3_1);
+    gtsam::Pose2 pose2 = convertToSE2OpenCV(pose3_2);
+    // Update velocities using acceleration and time step
+    gtsam::Vector2 pred_vel2 = vel1 + acc1 * dt;
+
+    gtsam::Pose2 pred_pose = predictRobotPose(pose1, vel2, dt);
+
+    gtsam::Vector3 pose_error =
+        gtsam::traits<gtsam::Pose2>::Local(pose2, pred_pose);
+
+    return gtsam::Vector8(pose_error(0),  // x error
+                          pose_error(1),  // y error
+                          pose_error(2),  // theta error
+                          vel2[0] - pred_vel2[0], vel2[1] - pred_vel2[1],
+                          pose3_2.rotation().yaw() - pose3_1.rotation().yaw(),
+                          pose3_2.rotation().roll() - pose3_1.rotation().roll(),
+                          pose3_2.y() - pose3_1.y());
+  }
+};
+
+class MotionModelFactorBase
     : public gtsam::NoiseModelFactor5<gtsam::Pose3, gtsam::Pose3,
                                       gtsam::Vector2, gtsam::Vector2,
-                                      gtsam::Vector2> {
+                                      gtsam::Vector2>,
+      public MotionModelFactorResidual {
  public:
-  using shared_ptr = boost::shared_ptr<Pose3DynXVAFactor>;
-  using This = Pose3DynXVAFactor;
+  using shared_ptr = boost::shared_ptr<MotionModelFactorBase>;
+  using This = MotionModelFactorBase;
   using Base =
       gtsam::NoiseModelFactor5<gtsam::Pose3, gtsam::Pose3, gtsam::Vector2,
                                gtsam::Vector2, gtsam::Vector2>;
 
   // Constructor
-  Pose3DynXVAFactor(gtsam::Key pose1Key, gtsam::Key pose2Key,
-                    gtsam::Key vel1Key, gtsam::Key vel2Key, gtsam::Key acc1Key,
-                    gtsam::SharedNoiseModel model, double dt)
+  MotionModelFactorBase(gtsam::Key pose1Key, gtsam::Key pose2Key,
+                        gtsam::Key vel1Key, gtsam::Key vel2Key,
+                        gtsam::Key acc1Key, gtsam::SharedNoiseModel model,
+                        double dt)
       : Base(model, pose1Key, pose2Key, vel1Key, vel2Key, acc1Key), dt_(dt) {}
 
-  // Clone method
-  gtsam::NonlinearFactor::shared_ptr clone() const override {
-    return boost::make_shared<Pose3DynXVAFactor>(*this);
-  }
-
-  void print(const std::string& s = "",
-             const gtsam::KeyFormatter& keyFormatter =
-                 DynoLikeKeyFormatter) const override {
-    std::cout << s << "Pose3DynXVAFactor\n";
+  virtual void print(const std::string& s = "",
+                     const gtsam::KeyFormatter& keyFormatter =
+                         DynoLikeKeyFormatter) const override {
+    std::cout << s << "MotionModelFactorBase\n";
     Base::print("", keyFormatter);
   }
 
   // Evaluate error and optionally compute Jacobians
-  gtsam::Vector evaluateError(
+  virtual gtsam::Vector evaluateError(
       const gtsam::Pose3& pose1, const gtsam::Pose3& pose2,
       const gtsam::Vector2& vel1, const gtsam::Vector2& vel2,
       const gtsam::Vector2& acc1,
@@ -560,10 +805,9 @@ class Pose3DynXVAFactor
           gtsam::numericalDerivative51<gtsam::Vector8, gtsam::Pose3,
                                        gtsam::Pose3, gtsam::Vector2,
                                        gtsam::Vector2, gtsam::Vector2>(
-              std::bind(&Pose3DynXVAFactor::residual, this,
-                        std::placeholders::_1, std::placeholders::_2,
-                        std::placeholders::_3, std::placeholders::_4,
-                        std::placeholders::_5),
+              std::bind(&MotionModelFactorBase::residual, std::placeholders::_1,
+                        std::placeholders::_2, std::placeholders::_3,
+                        std::placeholders::_4, std::placeholders::_5, dt_),
               pose1, pose2, vel1, vel2, acc1);
       *J1 = df_pp;
     }
@@ -573,10 +817,9 @@ class Pose3DynXVAFactor
           gtsam::numericalDerivative52<gtsam::Vector8, gtsam::Pose3,
                                        gtsam::Pose3, gtsam::Vector2,
                                        gtsam::Vector2, gtsam::Vector2>(
-              std::bind(&Pose3DynXVAFactor::residual, this,
-                        std::placeholders::_1, std::placeholders::_2,
-                        std::placeholders::_3, std::placeholders::_4,
-                        std::placeholders::_5),
+              std::bind(&MotionModelFactorBase::residual, std::placeholders::_1,
+                        std::placeholders::_2, std::placeholders::_3,
+                        std::placeholders::_4, std::placeholders::_5, dt_),
               pose1, pose2, vel1, vel2, acc1);
       *J2 = df_cp;
     }
@@ -586,10 +829,9 @@ class Pose3DynXVAFactor
           gtsam::numericalDerivative53<gtsam::Vector8, gtsam::Pose3,
                                        gtsam::Pose3, gtsam::Vector2,
                                        gtsam::Vector2, gtsam::Vector2>(
-              std::bind(&Pose3DynXVAFactor::residual, this,
-                        std::placeholders::_1, std::placeholders::_2,
-                        std::placeholders::_3, std::placeholders::_4,
-                        std::placeholders::_5),
+              std::bind(&MotionModelFactorBase::residual, std::placeholders::_1,
+                        std::placeholders::_2, std::placeholders::_3,
+                        std::placeholders::_4, std::placeholders::_5, dt_),
               pose1, pose2, vel1, vel2, acc1);
       *J3 = df_pc;
     }
@@ -599,10 +841,9 @@ class Pose3DynXVAFactor
           gtsam::numericalDerivative54<gtsam::Vector8, gtsam::Pose3,
                                        gtsam::Pose3, gtsam::Vector2,
                                        gtsam::Vector2, gtsam::Vector2>(
-              std::bind(&Pose3DynXVAFactor::residual, this,
-                        std::placeholders::_1, std::placeholders::_2,
-                        std::placeholders::_3, std::placeholders::_4,
-                        std::placeholders::_5),
+              std::bind(&MotionModelFactorBase::residual, std::placeholders::_1,
+                        std::placeholders::_2, std::placeholders::_3,
+                        std::placeholders::_4, std::placeholders::_5, dt_),
               pose1, pose2, vel1, vel2, acc1);
       *J4 = df_cc;
     }
@@ -612,200 +853,68 @@ class Pose3DynXVAFactor
           gtsam::numericalDerivative55<gtsam::Vector8, gtsam::Pose3,
                                        gtsam::Pose3, gtsam::Vector2,
                                        gtsam::Vector2, gtsam::Vector2>(
-              std::bind(&Pose3DynXVAFactor::residual, this,
-                        std::placeholders::_1, std::placeholders::_2,
-                        std::placeholders::_3, std::placeholders::_4,
-                        std::placeholders::_5),
+              std::bind(&MotionModelFactorBase::residual, std::placeholders::_1,
+                        std::placeholders::_2, std::placeholders::_3,
+                        std::placeholders::_4, std::placeholders::_5, dt_),
               pose1, pose2, vel1, vel2, acc1);
       *J5 = df_ca;
     }
 
     // Return the residual
-    return residual(pose1, pose2, vel1, vel2, acc1);
+    return residual(pose1, pose2, vel1, vel2, acc1, dt_);
   }
-
-  // Compute residual
-  gtsam::Vector residual(const gtsam::Pose3& pose3_1,
-                         const gtsam::Pose3& pose3_2,
-                         const gtsam::Vector2& vel1, const gtsam::Vector2& vel2,
-                         const gtsam::Vector2& acc1) const {
-    gtsam::Pose2 pose1 = convertToSE2OpenCV(pose3_1);
-    gtsam::Pose2 pose2 = convertToSE2OpenCV(pose3_2);
-    // Update velocities using acceleration and time step
-    gtsam::Vector2 pred_vel2 = vel1 + acc1 * dt_;
-
-    gtsam::Pose2 pred_pose = predictRobotPose(pose1, vel2, dt_);
-
-    // Following 2 lines do the same as
-    // "gtsam::traits<gtsam::Pose2>::Local(next_pose, pred_pose);" gtsam::Pose2
-    // error_pose = next_pose.between(pred_pose); gtsam::Vector3 pose_error =
-    // gtsam::Pose2::Logmap(error_pose);
-
-    gtsam::Vector3 pose_error =
-        gtsam::traits<gtsam::Pose2>::Local(pose2, pred_pose);
-
-    // return gtsam::traits<gtsam::Pose2>::Local(pose2, expectedPose);
-
-    // Compute the residual as the difference between the expected and actual
-    // current pose
-
-    return gtsam::Vector8(pose_error(0),  // x error
-                          pose_error(1),  // y error
-                          pose_error(2),  // theta error
-                          vel2[0] - pred_vel2[0], vel2[1] - pred_vel2[1],
-                          pose3_2.rotation().yaw() - pose3_1.rotation().yaw(),
-                          pose3_2.rotation().roll() - pose3_1.rotation().roll(),
-                          pose3_2.y() - pose3_1.y());
-  }
-
-  // Accessor methods for keys
-  inline gtsam::Key pose1Key() const { return key1(); }
-  inline gtsam::Key pose2Key() const { return key2(); }
-  inline gtsam::Key vel1Key() const { return key3(); }
-  inline gtsam::Key vel2Key() const { return key4(); }
-  inline gtsam::Key acc1Key() const { return key5(); }
 
  private:
   double dt_;  // Time step
 };
 
-// TODO:(Jesse) make DynXVAJac0Factor templated on the pose type and
-//  some way to encapsulate the zeroJacobian stuff...
-// NOTE: residuals have the same math betweeen Pose3DynXVAJac0Factor and
-// Pose2DynXVAFactor we just collapse the Pose3 to a Pose3
-class Pose3DynXVAJac0Factor
-    : public gtsam::NoiseModelFactor5<gtsam::Pose3, gtsam::Pose3,
-                                      gtsam::Vector2, gtsam::Vector2,
-                                      gtsam::Vector2> {
+template <size_t... ZeroIndices>
+class MotionModelFactor : public MotionModelFactorBase {
  public:
-  using shared_ptr = boost::shared_ptr<Pose3DynXVAJac0Factor>;
-  using This = Pose3DynXVAJac0Factor;
-  using Base =
-      gtsam::NoiseModelFactor5<gtsam::Pose3, gtsam::Pose3, gtsam::Vector2,
-                               gtsam::Vector2, gtsam::Vector2>;
+  using This = MotionModelFactor<ZeroIndices...>;
+  using Base = MotionModelFactorBase;
+  typedef boost::shared_ptr<This> shared_ptr;
+
+  // Only define indices if pack is non-empty
+  static constexpr bool HasIndices = sizeof...(ZeroIndices) > 0;
+  static constexpr std::array<size_t, sizeof...(ZeroIndices)> indices = {
+      ZeroIndices...};
 
   // Constructor
-  Pose3DynXVAJac0Factor(gtsam::Key pose1Key, gtsam::Key pose2Key,
-                        gtsam::Key vel1Key, gtsam::Key vel2Key,
-                        gtsam::Key acc1Key, gtsam::SharedNoiseModel model,
-                        double dt)
-      : Base(model, pose1Key, pose2Key, vel1Key, vel2Key, acc1Key), dt_(dt) {}
+  MotionModelFactor(gtsam::Key pose1Key, gtsam::Key pose2Key,
+                    gtsam::Key vel1Key, gtsam::Key vel2Key, gtsam::Key acc1Key,
+                    gtsam::SharedNoiseModel model, double dt)
+      : Base(pose1Key, pose2Key, vel1Key, vel2Key, acc1Key, model, dt) {}
 
   // Clone method
   gtsam::NonlinearFactor::shared_ptr clone() const override {
-    return boost::make_shared<Pose3DynXVAJac0Factor>(*this);
-  }
-
-  void print(const std::string& s = "",
-             const gtsam::KeyFormatter& keyFormatter =
-                 DynoLikeKeyFormatter) const override {
-    std::cout << s << "Pose3DynXVAJac0Factor\n";
-    Base::print("", keyFormatter);
+    return boost::make_shared<This>(*this);
   }
 
   // Evaluate error and optionally compute Jacobians
   gtsam::Vector evaluateError(
       const gtsam::Pose3& pose1, const gtsam::Pose3& pose2,
       const gtsam::Vector2& vel1, const gtsam::Vector2& vel2,
-      const gtsam::Vector2& acc1, boost::optional<gtsam::Matrix&> J1,
-      boost::optional<gtsam::Matrix&> J2, boost::optional<gtsam::Matrix&> J3,
-      boost::optional<gtsam::Matrix&> J4,
-      boost::optional<gtsam::Matrix&> J5) const {
-    // Compute Jacobians if requested
-    if (J1) {
-      *J1 = Eigen::Matrix<double, 8, 6>::Zero();
-    }
+      const gtsam::Vector2& acc1,
+      boost::optional<gtsam::Matrix&> J1 = boost::none,
+      boost::optional<gtsam::Matrix&> J2 = boost::none,
+      boost::optional<gtsam::Matrix&> J3 = boost::none,
+      boost::optional<gtsam::Matrix&> J4 = boost::none,
+      boost::optional<gtsam::Matrix&> J5 = boost::none) const override {
+    gtsam::Vector error =
+        Base::evaluateError(pose1, pose2, vel1, vel2, acc1, J1, J2, J3, J4, J5);
 
-    if (J2) {
-      Eigen::Matrix<double, 8, 6> df_cp =
-          gtsam::numericalDerivative52<gtsam::Vector8, gtsam::Pose3,
-                                       gtsam::Pose3, gtsam::Vector2,
-                                       gtsam::Vector2, gtsam::Vector2>(
-              std::bind(&Pose3DynXVAJac0Factor::residual, this,
-                        std::placeholders::_1, std::placeholders::_2,
-                        std::placeholders::_3, std::placeholders::_4,
-                        std::placeholders::_5),
-              pose1, pose2, vel1, vel2, acc1);
-      *J2 = df_cp;
+    if constexpr (HasIndices) {
+      for (size_t i : indices) {
+        if (i == 1 && J1) J1->setZero();
+        if (i == 2 && J2) J2->setZero();
+        if (i == 3 && J3) J3->setZero();
+        if (i == 4 && J4) J4->setZero();
+        if (i == 5 && J5) J5->setZero();
+      }
     }
-
-    if (J3) {
-      *J3 = Eigen::Matrix<double, 8, 2>::Zero();
-    }
-
-    if (J4) {
-      Eigen::Matrix<double, 8, 2> df_cc =
-          gtsam::numericalDerivative54<gtsam::Vector8, gtsam::Pose3,
-                                       gtsam::Pose3, gtsam::Vector2,
-                                       gtsam::Vector2, gtsam::Vector2>(
-              std::bind(&Pose3DynXVAJac0Factor::residual, this,
-                        std::placeholders::_1, std::placeholders::_2,
-                        std::placeholders::_3, std::placeholders::_4,
-                        std::placeholders::_5),
-              pose1, pose2, vel1, vel2, acc1);
-      *J4 = df_cc;
-    }
-
-    if (J5) {
-      Eigen::Matrix<double, 8, 2> df_ca =
-          gtsam::numericalDerivative55<gtsam::Vector8, gtsam::Pose3,
-                                       gtsam::Pose3, gtsam::Vector2,
-                                       gtsam::Vector2, gtsam::Vector2>(
-              std::bind(&Pose3DynXVAJac0Factor::residual, this,
-                        std::placeholders::_1, std::placeholders::_2,
-                        std::placeholders::_3, std::placeholders::_4,
-                        std::placeholders::_5),
-              pose1, pose2, vel1, vel2, acc1);
-      *J5 = df_ca;
-    }
-
-    // Return the residual
-    return residual(pose1, pose2, vel1, vel2, acc1);
+    return error;
   }
-
-  // Compute residual
-  gtsam::Vector residual(const gtsam::Pose3& pose3_1,
-                         const gtsam::Pose3& pose3_2,
-                         const gtsam::Vector2& vel1, const gtsam::Vector2& vel2,
-                         const gtsam::Vector2& acc1) const {
-    gtsam::Pose2 pose1 = convertToSE2OpenCV(pose3_1);
-    gtsam::Pose2 pose2 = convertToSE2OpenCV(pose3_2);
-    // Update velocities using acceleration and time step
-    gtsam::Vector2 pred_vel2 = vel1 + acc1 * dt_;
-
-    gtsam::Pose2 pred_pose = predictRobotPose(pose1, pred_vel2, dt_);
-
-    // Following 2 lines do the same as
-    // "gtsam::traits<gtsam::Pose2>::Local(next_pose, pred_pose);" gtsam::Pose2
-    // error_pose = next_pose.between(pred_pose); gtsam::Vector3 pose_error =
-    // gtsam::Pose2::Logmap(error_pose);
-
-    gtsam::Vector3 pose_error =
-        gtsam::traits<gtsam::Pose2>::Local(pose2, pred_pose);
-
-    // return gtsam::traits<gtsam::Pose2>::Local(pose2, expectedPose);
-
-    // Compute the residual as the difference between the expected and actual
-    // current pose
-
-    return gtsam::Vector8(pose_error(0),  // x error
-                          pose_error(1),  // y error
-                          pose_error(2),  // theta error
-                          vel2[0] - pred_vel2[0], vel2[1] - pred_vel2[1],
-                          pose3_2.rotation().yaw() - pose3_1.rotation().yaw(),
-                          pose3_2.rotation().roll() - pose3_1.rotation().roll(),
-                          pose3_2.y() - pose3_1.y());
-  }
-
-  // Accessor methods for keys
-  inline gtsam::Key pose1Key() const { return key1(); }
-  inline gtsam::Key pose2Key() const { return key2(); }
-  inline gtsam::Key vel1Key() const { return key3(); }
-  inline gtsam::Key vel2Key() const { return key4(); }
-  inline gtsam::Key acc1Key() const { return key5(); }
-
- private:
-  double dt_;  // Time step
 };
 
 // mimics a prior factor on SE(2) when the variables are in SE(3)
@@ -853,209 +962,7 @@ class GoalFactorSE2 : public gtsam::NoiseModelFactor1<gtsam::Pose3> {
   gtsam::Pose2 goal_pose_se2;
 };
 
-class HybridSmoothingJac0Factor
-    : public gtsam::NoiseModelFactor3<gtsam::Pose3, gtsam::Pose3,
-                                      gtsam::Pose3> {
- public:
-  typedef boost::shared_ptr<HybridSmoothingJac0Factor> shared_ptr;
-  typedef HybridSmoothingJac0Factor This;
-  typedef gtsam::NoiseModelFactor3<gtsam::Pose3, gtsam::Pose3, gtsam::Pose3>
-      Base;
-
-  gtsam::Pose3 L_e_;
-
-  HybridSmoothingJac0Factor(gtsam::Key e_H_km2_world_key,
-                            gtsam::Key e_H_km1_world_key,
-                            gtsam::Key e_H_k_world_key, const gtsam::Pose3& L_e,
-                            gtsam::SharedNoiseModel model)
-      : Base(model, e_H_km2_world_key, e_H_km1_world_key, e_H_k_world_key),
-        L_e_(L_e) {}
-
-  gtsam::Vector evaluateError(
-      const gtsam::Pose3& e_H_km2_world, const gtsam::Pose3& e_H_km1_world,
-      const gtsam::Pose3& e_H_k_world,
-      boost::optional<gtsam::Matrix&> J1 = boost::none,
-      boost::optional<gtsam::Matrix&> J2 = boost::none,
-      boost::optional<gtsam::Matrix&> J3 = boost::none) const override {
-    if (J1) {
-      *J1 = Eigen::Matrix<double, 6, 6>::Zero();
-    }
-
-    if (J2) {
-      *J2 = gtsam::numericalDerivative32<gtsam::Vector6, gtsam::Pose3,
-                                         gtsam::Pose3, gtsam::Pose3>(
-          std::bind(&HybridSmoothingJac0Factor::residual, std::placeholders::_1,
-                    std::placeholders::_2, std::placeholders::_3, L_e_),
-          e_H_km2_world, e_H_km1_world, e_H_k_world);
-    }
-
-    if (J3) {
-      *J3 = gtsam::numericalDerivative33<gtsam::Vector6, gtsam::Pose3,
-                                         gtsam::Pose3, gtsam::Pose3>(
-          std::bind(&HybridSmoothingJac0Factor::residual, std::placeholders::_1,
-                    std::placeholders::_2, std::placeholders::_3, L_e_),
-          e_H_km2_world, e_H_km1_world, e_H_k_world);
-    }
-
-    return residual(e_H_km2_world, e_H_km1_world, e_H_k_world, L_e_);
-  }
-
-  static gtsam::Vector residual(const gtsam::Pose3& e_H_km2_world,
-                                const gtsam::Pose3& e_H_km1_world,
-                                const gtsam::Pose3& e_H_k_world,
-                                const gtsam::Pose3& L_e) {
-    const gtsam::Pose3 L_k_2 = e_H_km2_world * L_e;
-    const gtsam::Pose3 L_k_1 = e_H_km1_world * L_e;
-    const gtsam::Pose3 L_k = e_H_k_world * L_e;
-
-    gtsam::Pose3 k_2_H_k_1 = L_k_2.inverse() * L_k_1;
-    gtsam::Pose3 k_1_H_k = L_k_1.inverse() * L_k;
-
-    gtsam::Pose3 relative_motion = k_2_H_k_1.inverse() * k_1_H_k;
-
-    return gtsam::traits<gtsam::Pose3>::Local(gtsam::Pose3::Identity(),
-                                              relative_motion);
-  }
-};
-
-class HybridSmoothingHolonomicFactor
-    : public gtsam::NoiseModelFactor3<gtsam::Pose3, gtsam::Pose3,
-                                      gtsam::Pose3> {
- public:
-  typedef boost::shared_ptr<HybridSmoothingHolonomicFactor> shared_ptr;
-  typedef HybridSmoothingHolonomicFactor This;
-  typedef gtsam::NoiseModelFactor3<gtsam::Pose3, gtsam::Pose3, gtsam::Pose3>
-      Base;
-
-  gtsam::Pose3 L_e_;
-  bool should_zero_first_jacobian_;
-
-  HybridSmoothingHolonomicFactor(gtsam::Key e_H_km2_world_key,
-                                 gtsam::Key e_H_km1_world_key,
-                                 gtsam::Key e_H_k_world_key,
-                                 const gtsam::Pose3& L_e,
-                                 gtsam::SharedNoiseModel model,
-                                 bool should_zero_first_jacobian = false)
-      : Base(model, e_H_km2_world_key, e_H_km1_world_key, e_H_k_world_key),
-        L_e_(L_e),
-        should_zero_first_jacobian_(should_zero_first_jacobian) {}
-
-  gtsam::Vector evaluateError(
-      const gtsam::Pose3& e_H_km2_world, const gtsam::Pose3& e_H_km1_world,
-      const gtsam::Pose3& e_H_k_world,
-      boost::optional<gtsam::Matrix&> J1 = boost::none,
-      boost::optional<gtsam::Matrix&> J2 = boost::none,
-      boost::optional<gtsam::Matrix&> J3 = boost::none) const override {
-    if (J1) {
-      if (should_zero_first_jacobian_) {
-        *J1 = Eigen::Matrix<double, 8, 6>::Zero();
-      } else {
-        *J1 = gtsam::numericalDerivative31<gtsam::Vector8, gtsam::Pose3,
-                                           gtsam::Pose3, gtsam::Pose3>(
-            std::bind(&HybridSmoothingHolonomicFactor::residual,
-                      std::placeholders::_1, std::placeholders::_2,
-                      std::placeholders::_3, L_e_),
-            e_H_km2_world, e_H_km1_world, e_H_k_world);
-      }
-    }
-
-    if (J2) {
-      *J2 = gtsam::numericalDerivative32<gtsam::Vector8, gtsam::Pose3,
-                                         gtsam::Pose3, gtsam::Pose3>(
-          std::bind(&HybridSmoothingHolonomicFactor::residual,
-                    std::placeholders::_1, std::placeholders::_2,
-                    std::placeholders::_3, L_e_),
-          e_H_km2_world, e_H_km1_world, e_H_k_world);
-    }
-
-    if (J3) {
-      *J3 = gtsam::numericalDerivative33<gtsam::Vector8, gtsam::Pose3,
-                                         gtsam::Pose3, gtsam::Pose3>(
-          std::bind(&HybridSmoothingHolonomicFactor::residual,
-                    std::placeholders::_1, std::placeholders::_2,
-                    std::placeholders::_3, L_e_),
-          e_H_km2_world, e_H_km1_world, e_H_k_world);
-    }
-
-    return residual(e_H_km2_world, e_H_km1_world, e_H_k_world, L_e_);
-  }
-
-  static gtsam::Vector residual(const gtsam::Pose3& e_H_km2_world,
-                                const gtsam::Pose3& e_H_km1_world,
-                                const gtsam::Pose3& e_H_k_world,
-                                const gtsam::Pose3& L_e) {
-    const gtsam::Pose3 L_k_2 = e_H_km2_world * L_e;
-    const gtsam::Pose3 L_k_1 = e_H_km1_world * L_e;
-    const gtsam::Pose3 L_k = e_H_k_world * L_e;
-
-    gtsam::Pose3 k_2_H_k_1 = L_k_2.inverse() * L_k_1;
-    gtsam::Pose3 k_1_H_k = L_k_1.inverse() * L_k;
-
-    gtsam::Pose3 relative_motion = k_2_H_k_1.inverse() * k_1_H_k;
-    // now we add holonomic constraints in the
-    //  gtsam::Pose2 relaitive_motion2(
-    //    relative_motion.z(),
-    //    -relative_motion.x(),
-    //    -relative_motion.rotation().pitch());
-
-    // now we add holonomic constraints in the opencv convention
-    // to constrain the pose in world frame
-    // gtsam::Pose2 relaitive_motion2(
-    //   relative_motion.z(),
-    //   -relative_motion.x(),
-    //   -relative_motion.rotation().pitch());
-
-    // gtsam::Vector3 relative_motion2_error =
-    //   gtsam::traits<gtsam::Pose2>::Local(
-    //     gtsam::Pose2::Identity(),
-    //     relaitive_motion2);
-
-    gtsam::Vector6 relative_motion_error = gtsam::traits<gtsam::Pose3>::Local(
-        gtsam::Pose3::Identity(), relative_motion);
-
-    // return gtsam::Vector9(
-    //     relative_motion2_error(0),  // x error
-    //     relative_motion2_error(1),  // y error
-    //     relative_motion2_error(2),  // theta error
-    //     // L_k_2.rotation().roll() - L_k_1.rotation().roll(),
-    //     // L_k_1.rotation().roll() - L_k.rotation().roll(),
-    //     // L_k_2.rotation().yaw() - L_k_1.rotation().yaw(),
-    //     // L_k_1.rotation().yaw() - L_k.rotation().yaw(),
-    //     0, 0, 0, 0,
-    //     L_k_2.y() - L_k_1.y(),
-    //     L_k_1.y() - L_k.y()
-    // );
-    return gtsam::Vector8(relative_motion_error(0), relative_motion_error(1),
-                          relative_motion_error(2), relative_motion_error(3),
-                          relative_motion_error(4), relative_motion_error(5),
-                          L_k_2.y() - L_k_1.y(), L_k_1.y() - L_k.y());
-  }
-};
-
 struct HybridConstantMotionFactorResidual {
-  static gtsam::Vector residual(const gtsam::Pose3& e_H_km1_world_est,
-                                const gtsam::Pose3& e_H_k_world_est,
-                                const gtsam::Pose3& e_H_n1_world_future,
-                                const gtsam::Pose3& e_H_n2_world_future,
-                                const gtsam::Pose3& L_e) {
-    gtsam::Pose3 L_km1_est = e_H_km1_world_est * L_e;
-    gtsam::Pose3 L_k_est = e_H_k_world_est * L_e;
-
-    gtsam::Pose3 L_n1_est = e_H_n1_world_future * L_e;
-    gtsam::Pose3 L_n2_est = e_H_n2_world_future * L_e;
-
-    // measured (really expected) relative motion as given by the most recent
-    // estimate
-    gtsam::Pose3 measured_relative_motion = L_km1_est.inverse() * L_k_est;
-
-    // implement between factor!
-    gtsam::Pose3 hx =
-        gtsam::traits<gtsam::Pose3>::Between(L_n1_est, L_n2_est);  // h(x)
-    return gtsam::traits<gtsam::Pose3>::Local(measured_relative_motion, hx);
-  }
-};
-
-struct HybridConstantMotionFactorResidualBetter {
   static gtsam::Vector residual(const gtsam::Pose3& e_H_km2_world,
                                 const gtsam::Pose3& e_H_km1_world,
                                 const gtsam::Pose3& e_H_k_world,
@@ -1064,20 +971,20 @@ struct HybridConstantMotionFactorResidualBetter {
     gtsam::Pose3 L_km1_est = e_H_km1_world * L_e;
     gtsam::Pose3 L_k_est = e_H_k_world * L_e;
 
-    // measured (really expected) relative motion as given by the most recent
-    // estimate
-    gtsam::Pose3 measured_relative_motion = L_km2_est.inverse() * L_km1_est;
+    // this is now same as smoothing factor from Morris RA-L (2025)
+    gtsam::Pose3 k_2_H_k_1 = L_km2_est.inverse() * L_km1_est;
+    gtsam::Pose3 k_1_H_k = L_km1_est.inverse() * L_k_est;
 
-    // implement between factor!
-    gtsam::Pose3 hx =
-        gtsam::traits<gtsam::Pose3>::Between(L_km1_est, L_k_est);  // h(x)
-    return gtsam::traits<gtsam::Pose3>::Local(measured_relative_motion, hx);
+    gtsam::Pose3 relative_motion = k_2_H_k_1.inverse() * k_1_H_k;
+
+    return gtsam::traits<gtsam::Pose3>::Local(gtsam::Pose3::Identity(),
+                                              relative_motion);
   }
 };
 
 class HybridConstantMotionFactorBase
     : public gtsam::NoiseModelFactor3<gtsam::Pose3, gtsam::Pose3, gtsam::Pose3>,
-      public HybridConstantMotionFactorResidualBetter {
+      public HybridConstantMotionFactorResidual {
  public:
   typedef boost::shared_ptr<HybridConstantMotionFactorBase> shared_ptr;
   typedef HybridConstantMotionFactorBase This;
@@ -1167,144 +1074,6 @@ class HybridConstantMotionFactor : public HybridConstantMotionFactorBase {
     }
 
     return error;
-  }
-};
-
-// constant relative motion from estimation (propogated to the future)
-// always zero jacobian on estimated motions (ie <=k)
-class HybridConstantMotionFactor4
-    : public gtsam::NoiseModelFactor4<gtsam::Pose3, gtsam::Pose3, gtsam::Pose3,
-                                      gtsam::Pose3>,
-      public HybridConstantMotionFactorResidual {
- public:
-  typedef boost::shared_ptr<HybridConstantMotionFactor4> shared_ptr;
-  typedef HybridConstantMotionFactor4 This;
-  typedef gtsam::NoiseModelFactor4<gtsam::Pose3, gtsam::Pose3, gtsam::Pose3,
-                                   gtsam::Pose3>
-      Base;
-
-  gtsam::Pose3 L_e_;
-
-  // first two keys are motions at k-1 and k (ie the most recent two motions) in
-  // the dynosam estimator (ie actually seen) the next two are the k+n and k+n+1
-  // predicted motions at n steps in the future (n is from 1 up to N-1 ie mpc
-  // horizon)
-  HybridConstantMotionFactor4(gtsam::Key e_H_km1_world_est_key,
-                              gtsam::Key e_H_k_world_est_key,
-                              gtsam::Key e_H_n1_world_future_key,
-                              gtsam::Key e_H_n2_world_future_key,
-                              const gtsam::Pose3& L_e,
-                              gtsam::SharedNoiseModel model)
-      : Base(model, e_H_km1_world_est_key, e_H_k_world_est_key,
-             e_H_n1_world_future_key, e_H_n2_world_future_key),
-        L_e_(L_e) {}
-
-  gtsam::Vector evaluateError(
-      const gtsam::Pose3& e_H_km1_world_est,
-      const gtsam::Pose3& e_H_k_world_est,
-      const gtsam::Pose3& e_H_n1_world_future,
-      const gtsam::Pose3& e_H_n2_world_future,
-      boost::optional<gtsam::Matrix&> J1 = boost::none,
-      boost::optional<gtsam::Matrix&> J2 = boost::none,
-      boost::optional<gtsam::Matrix&> J3 = boost::none,
-      boost::optional<gtsam::Matrix&> J4 = boost::none) const override {
-    if (J1) {
-      *J1 = Eigen::Matrix<double, 6, 6>::Zero();
-    }
-
-    if (J2) {
-      *J2 = Eigen::Matrix<double, 6, 6>::Zero();
-    }
-
-    if (J3) {
-      *J3 = gtsam::numericalDerivative43<gtsam::Vector6, gtsam::Pose3,
-                                         gtsam::Pose3, gtsam::Pose3,
-                                         gtsam::Pose3>(
-          std::bind(&HybridConstantMotionFactor4::residual,
-                    std::placeholders::_1, std::placeholders::_2,
-                    std::placeholders::_3, std::placeholders::_4, L_e_),
-          e_H_km1_world_est, e_H_k_world_est, e_H_n1_world_future,
-          e_H_n2_world_future);
-    }
-
-    if (J4) {
-      *J4 = gtsam::numericalDerivative44<gtsam::Vector6, gtsam::Pose3,
-                                         gtsam::Pose3, gtsam::Pose3,
-                                         gtsam::Pose3>(
-          std::bind(&HybridConstantMotionFactor4::residual,
-                    std::placeholders::_1, std::placeholders::_2,
-                    std::placeholders::_3, std::placeholders::_4, L_e_),
-          e_H_km1_world_est, e_H_k_world_est, e_H_n1_world_future,
-          e_H_n2_world_future);
-    }
-
-    return residual(e_H_km1_world_est, e_H_k_world_est, e_H_n1_world_future,
-                    e_H_n2_world_future, L_e_);
-  }
-};
-
-// template<typename NLF, size_t...N>
-// class DirectedEdgeFactor;
-
-// HybridConstantMotionFactorJac12 =
-// DirectedEdgeFactor<HybridConstantMotionFactor, 1, 2>;
-// HybridConstantMotionFactorJac0 =
-// DirectedEdgeFactor<HybridConstantMotionFactor, 0>;
-
-// varient factor for when k == n1 (ie the first prediction) where the factor
-// overlaps the estimation and prediction as we want
-class HybridConstantMotionFactor3
-    : public gtsam::NoiseModelFactor3<gtsam::Pose3, gtsam::Pose3, gtsam::Pose3>,
-      public HybridConstantMotionFactorResidual {
- public:
-  typedef boost::shared_ptr<HybridConstantMotionFactor3> shared_ptr;
-  typedef HybridConstantMotionFactor3 This;
-  typedef gtsam::NoiseModelFactor3<gtsam::Pose3, gtsam::Pose3, gtsam::Pose3>
-      Base;
-
-  gtsam::Pose3 L_e_;
-
-  HybridConstantMotionFactor3(gtsam::Key e_H_km1_world_est_key,
-                              gtsam::Key e_H_k_world_est_key,
-                              gtsam::Key e_H_n1_world_future_key,
-                              const gtsam::Pose3& L_e,
-                              gtsam::SharedNoiseModel model)
-      : Base(model, e_H_km1_world_est_key, e_H_k_world_est_key,
-             e_H_n1_world_future_key),
-        L_e_(L_e) {}
-
-  gtsam::Vector evaluateError(
-      const gtsam::Pose3& e_H_km1_world_est,
-      const gtsam::Pose3& e_H_k_world_est,
-      const gtsam::Pose3& e_H_n1_world_future,
-      boost::optional<gtsam::Matrix&> J1 = boost::none,
-      boost::optional<gtsam::Matrix&> J2 = boost::none,
-      boost::optional<gtsam::Matrix&> J3 = boost::none) const override {
-    if (J1) {
-      *J1 = Eigen::Matrix<double, 6, 6>::Zero();
-    }
-
-    if (J2) {
-      *J2 = Eigen::Matrix<double, 6, 6>::Zero();
-    }
-
-    if (J3) {
-      // Jacobian of the fourth input (ie e_H_n1_world_future) which is the 3rd
-      // jacobian of the actual factor
-      *J3 = gtsam::numericalDerivative44<gtsam::Vector6, gtsam::Pose3,
-                                         gtsam::Pose3, gtsam::Pose3,
-                                         gtsam::Pose3>(
-          std::bind(&HybridConstantMotionFactor3::residual,
-                    std::placeholders::_1, std::placeholders::_2,
-                    std::placeholders::_3, std::placeholders::_4, L_e_),
-          e_H_km1_world_est, e_H_k_world_est, e_H_k_world_est,
-          e_H_n1_world_future);
-    }
-
-    // in this case k = n1 and n1=2 since we overlap between the estiamtion and
-    // the prediction
-    return residual(e_H_km1_world_est, e_H_k_world_est, e_H_k_world_est,
-                    e_H_n1_world_future, L_e_);
   }
 };
 
@@ -1417,12 +1186,17 @@ MPCFormulation::MPCFormulation(const FormulationParams& params,
       gtsam::noiseModel::Isotropic::Sigma(2u, FLAGS_mpc_follow_sigma);
 
   goal_noise_ = gtsam::noiseModel::Isotropic::Sigma(3u, FLAGS_mpc_goal_sigma);
-  static_obstacle_noise_ =
-      gtsam::noiseModel::Isotropic::Sigma(1u, FLAGS_mpc_static_obstacle_sigma);
+  static_obstacle_X_noise_ = gtsam::noiseModel::Isotropic::Sigma(
+      1u, FLAGS_mpc_static_sdf_X_safety_distance_sigma);
+  static_obstacle_H_noise_ = gtsam::noiseModel::Isotropic::Sigma(
+      1u, FLAGS_mpc_static_sdf_H_safety_distance_sigma);
 
-  lin_vel_ = Limits{-0.0, 1};
+  dynamic_obstacle_factor_ =
+      gtsam::noiseModel::Isotropic::Sigma(1u, FLAGS_mpc_dynamic_obstacle_sigma);
+
+  lin_vel_ = Limits{-0.3, 1};
   ang_vel_ = Limits{-0.5, 0.5};
-  lin_acc_ = Limits{-0.5, 1};
+  lin_acc_ = Limits{-1.0, 0.5};
   ang_acc_ = Limits{-0.5, 0.5};
 
   desired_follow_distance_ = FLAGS_mpc_desired_follow_distance;
@@ -1460,6 +1234,11 @@ void MPCFormulation::otherUpdatesContext(
 
   // frames relative to the current real frame
   const FrameId frame_k = context.getFrameId();
+
+  if (frame_k < 1) {
+    return;
+  }
+
   const FrameId frame_k_m1 = frame_k - 1u;
   const FrameId frame_k_m2 = frame_k - 2u;
   auto formatter = this->formatter();
@@ -1474,6 +1253,12 @@ void MPCFormulation::otherUpdatesContext(
 
   auto is_future_frame = [&frame_k](FrameId frame_id) -> bool {
     return frame_id > frame_k;
+  };
+  auto is_past_frame = [&frame_k](FrameId frame_id) -> bool {
+    return frame_id < frame_k;
+  };
+  auto is_current_frame = [&frame_k](FrameId frame_id) -> bool {
+    return frame_id == frame_k;
   };
 
   gtsam::NonlinearFactorGraph factors_to_remove_this_frame;
@@ -1502,10 +1287,14 @@ void MPCFormulation::otherUpdatesContext(
 
   FrameId frame_N = frame_k + mpc_horizon;
 
+  const bool& use_directed_factors = FLAGS_mpc_use_directed_factors;
+  LOG(INFO) << "Using directed factors: " << std::boolalpha
+            << use_directed_factors;
+
   // first try and get map offset pose if we dont already have
   // this sets the static offset between dynosam odom and the map frame (which
   // is called 'odom')
-  if (!T_map_camera_) {
+  if (!T_map_camera_ && viz_) {
     gtsam::Pose3 T;
     if (viz_->queryGlobalOffset(T)) {
       T_map_camera_ = T;
@@ -1516,7 +1305,8 @@ void MPCFormulation::otherUpdatesContext(
   }
 
   bool sdf_map_valid = (bool)T_map_camera_;
-  LOG(INFO) << "Sdf map is valid. Can add obstacle factors if desired";
+  if (sdf_map_valid)
+    LOG(INFO) << "Sdf map is valid. Can add obstacle factors if desired";
 
   // values init camera pose, 2dvelocity, 2d acceletation
   for (FrameId frame_id = frame_k; frame_id < frame_N; frame_id++) {
@@ -1571,11 +1361,6 @@ void MPCFormulation::otherUpdatesContext(
         result.keys_to_not_marginalize.insert(control_key);
       }
 
-      // velocity prior
-      auto prior_factor =
-          boost::make_shared<gtsam::PriorFactor<gtsam::Vector2>>(
-              control_key, control_value, vel2d_prior_noise_);
-
       // limit factor
       auto limit_factor = boost::make_shared<Vec2LimitFactor>(
           control_key, lin_vel_.min, lin_vel_.max, ang_vel_.min, ang_vel_.max,
@@ -1589,7 +1374,7 @@ void MPCFormulation::otherUpdatesContext(
     // at each timestep (update) assume we have removed all old factors
     // perterining to forward prediction stuff
 
-    // add velocity prior only on first of time horizon
+    // add velocity and acceleration prior only on first of time horizon
     if (frame_id == frame_k) {
       // velocity prior
       auto velocity_prior_factor =
@@ -1641,13 +1426,15 @@ void MPCFormulation::otherUpdatesContext(
       // add static obstacle factor on planned poses from frame_k + 1 -> frame_N
       if (sdf_map_valid) {
         auto static_obstacle_factor =
-            boost::make_shared<SDFStaticObstacleFactor>(
+            boost::make_shared<SDFStaticObstacleXFactor>(
                 camera_key, CHECK_NOTNULL(sdf_map_),
-                FLAGS_mpc_static_safety_distance, static_obstacle_noise_);
+                FLAGS_mpc_static_sdf_X_safety_distance,
+                static_obstacle_X_noise_);
 
         new_factors.add(static_obstacle_factor);
         factors_to_remove_this_frame.add(static_obstacle_factor);
-        LOG(INFO) << "Adding static obstacle factor " << formatter(camera_key);
+        // LOG(INFO) << "Adding static obstacle factor " <<
+        // formatter(camera_key);
       }
     }
 
@@ -1696,12 +1483,28 @@ void MPCFormulation::otherUpdatesContext(
       factors_to_remove_this_frame.add(acceleration_limit_factor);
 
       // we are at least the second frame of the horizon
-      if (frame_id > frame_k) {
-        // acceleration smoothing costs
-        // LOG(INFO) << "Adding accel smoothing cost"
-        //           << formatter(accel_key_previous) << " -> "
-        //           << formatter(accel_key);
+      if (frame_id == frame_k) {
+        // add direcrd between factor between current acceleration and previous
+        // if we have a previous acceletation relies on also having a prior
+        // factor on a(k-1) this should be set in the previous condition which
+        // adds stabilising factors on velocity and acceleration on the first
+        // iteration (ie. when frame_id == frame_k)
+        bool has_previous_acceleration =
+            static_cast<bool>(accessor->queryWithTheta<gtsam::Vector2>(
+                accel_key_previous, new_values));
+        if (has_previous_acceleration) {
+          auto factor = boost::make_shared<Vec2BetweenFactorDirected1>(
+              accel_key_previous, accel_key,
+              gtsam::traits<gtsam::Vector2>::Identity(),
+              accel2d_smoothing_noise_);
 
+          new_factors.add(factor);
+          factors_to_remove_this_frame.add(factor);
+        }
+      } else {
+        // here accel_key_previous == a(k)
+        // and accel_key == a(k+1) since frame_id iterates from frame_k to
+        // frame_N
         auto factor = boost::make_shared<gtsam::BetweenFactor<gtsam::Vector2>>(
             accel_key_previous, accel_key,
             gtsam::traits<gtsam::Vector2>::Identity(),
@@ -1719,19 +1522,21 @@ void MPCFormulation::otherUpdatesContext(
       gtsam::NonlinearFactor::shared_ptr factor = nullptr;
 
       if (frame_id == frame_k + 1) {
-        // add zero jacobian on first 'pair' of iteration
-        factor = boost::make_shared<Pose3DynXVAJac0Factor>(
-            camera_key_previous, camera_key, control_key_previous, control_key,
-            accel_key_previous, dynamic_factor_noise_, dt_);
+        if (use_directed_factors) {
+          // add zero jacobian on first 'pair' of iteration
+          factor = boost::make_shared<MotionModelFactor<1>>(
+              camera_key_previous, camera_key, control_key_previous,
+              control_key, accel_key_previous, dynamic_factor_noise_, dt_);
+        } else {
+          factor = boost::make_shared<MotionModelFactor<>>(
+              camera_key_previous, camera_key, control_key_previous,
+              control_key, accel_key_previous, dynamic_factor_noise_, dt_);
+        }
 
-        // LOG(INFO) << "Adding Pose3 zero-jacobain factor at k=" << frame_id
-        //           << " k-1=" << frame_id_m1;
       } else {
-        factor = boost::make_shared<Pose3DynXVAFactor>(
+        factor = boost::make_shared<MotionModelFactor<>>(
             camera_key_previous, camera_key, control_key_previous, control_key,
             accel_key_previous, dynamic_factor_noise_, dt_);
-        // LOG(INFO) << "Adding Pose3 factor at k=" << frame_id
-        //           << " k-1=" << frame_id_m1;
       }
 
       CHECK(factor);
@@ -1768,42 +1573,53 @@ void MPCFormulation::otherUpdatesContext(
       accessor->getObjectMotion(frame_k_m2, object_to_follow));
   const bool object_in_opt_at_km1 = static_cast<bool>(
       accessor->getObjectMotion(frame_k_m1, object_to_follow));
-  const bool object_in_opt_at_k = static_cast<bool>(
-      accessor->getObjectMotion(frame_k_m1, object_to_follow));
+  const bool object_in_opt_at_k =
+      static_cast<bool>(accessor->getObjectMotion(frame_k, object_to_follow));
   const bool object_in_opt_has_embedded_frame =
       this->hasObjectKeyFrame(object_to_follow, frame_k);
   const bool object_in_opt_at_current =
       object_in_opt_has_embedded_frame && object_in_opt_at_k;
+
+  // handle removal of motion keys in the past.
+  if (object_in_opt_at_k) {
+    // auto motion_key_k = accessor->getObjectMotion(frame_k,
+    // object_to_follow).key(); LOG(INFO) << "Adding motion key " <<
+    // formatter(motion_key_k) << " into marginalization set";
+    // result.additional_keys_to_marginalize[motion_key_k] = frame_k;
+  }
+
   // object not observed or has no keyframe
   // it may be observed but checking for its embedded frame tells us its in the
   // optimisation problem
-  const bool seen_and_in_opt = frame_node_k->objectObserved(object_to_follow) &&
-                               object_in_opt_at_current;
+  // we use object motion expected to indicate that the object is seen at k-1
+  // and k and not just in the optimsiation as they may happen from estimation
+  // or prediction!
+  const bool seen_and_in_opt =
+      frame_node_k->objectMotionExpected(object_to_follow) &&
+      object_in_opt_at_current;
   // object exists at all (may not be observed at this frame!)
   // logic to track that object is seen and we should do predictions etc...
-  if (objects_update_data_.exists(object_to_follow)) {
+  if (objects_update_data_.exists(object_to_follow) && false) {
     const ObjectUpdateData& update_data =
         objects_update_data_.at(object_to_follow);
 
     auto object_node = map->getObject(object_to_follow);
     CHECK(object_node);
 
-    // object must be optimized at least N times before we start to use its
-    // prediction count is updated in RegularHybrid::postUpdate so only
-    // increments after an optimization!
-    constexpr static int kMinNumberMotionsOptimized = 2;
-    if (update_data.count > kMinNumberMotionsOptimized && seen_and_in_opt) {
-      LOG(INFO) << "Object seen enough times, is in opt etc..., "
-                << info_string(frame_k, object_to_follow);
-      object_available = true;
-    }
-
-    CHECK(this->hasObjectKeyFrame(object_to_follow, frame_k));
-
     if (frame_k_m1 == object_node->getFirstSeenFrame()) {
       object_new = true;
       LOG(INFO) << "Object j=" << object_to_follow << " is new";
     }
+
+    // object must be optimized at least N times before we start to use its
+    // prediction count is updated in RegularHybrid::postUpdate so only
+    // increments after an optimization!
+    constexpr static int kMinNumberMotionsOptimized = 3;
+    if (update_data.count > kMinNumberMotionsOptimized && seen_and_in_opt) {
+      object_available = true;
+    }
+
+    CHECK(this->hasObjectKeyFrame(object_to_follow, frame_k));
 
     FrameId last_update_frame = update_data.frame_id;
 
@@ -1823,6 +1639,19 @@ void MPCFormulation::otherUpdatesContext(
       object_disappeared = true;
       LOG(INFO) << "Object j=" << object_to_follow << " is disappeared";
     }
+
+    // //if object re-appeared check its frame count. If not enough set
+    // object_available
+    // //this is only to handle the re-appearing case and we want to wait
+    // kMinNumberMotionsOptimized frames again before
+    // //forward predicring!!
+    // if(object_reappeared) {
+    //   const size_t& object_count =
+    //   object_prediction_count_.at(object_to_follow); if(object_count <
+    //   kMinNumberMotionsOptimized) {
+    //     object_available = false;
+    //   }
+    // }
   }
 
   {
@@ -1836,17 +1665,23 @@ void MPCFormulation::otherUpdatesContext(
   if (!object_available) {
     VLOG(10) << "j=" << object_to_follow << "is unavailable at k=" << frame_k
              << ". Unable to follow!";
-    // add factor on last pose if no object (for now) to stabilise planning
-    // using value of latest real pose (ie frame k)
-    auto camera_pose_k =
-        accessor->query<gtsam::Pose3>(CameraPoseSymbol(frame_k));
-    CHECK(camera_pose_k);
-    auto stabilising_pose_prior =
-        boost::make_shared<gtsam::PriorFactor<gtsam::Pose3>>(
-            CameraPoseSymbol(frame_N - 1), *camera_pose_k,
-            gtsam::noiseModel::Isotropic::Sigma(6u, 0.1));
-    new_factors.add(stabilising_pose_prior);
-    factors_to_remove_this_frame.add(stabilising_pose_prior);
+
+    // check for any H's in the horizon window
+    FrameIds future_frames_with_motion_prediction;
+
+    if (mission_type_ == MissionType::FOLLOW) {
+      // add factor on last pose if no object (for now) to stabilise planning
+      // using value of latest real pose (ie frame k)
+      auto camera_pose_k =
+          accessor->query<gtsam::Pose3>(CameraPoseSymbol(frame_k));
+      CHECK(camera_pose_k);
+      auto stabilising_pose_prior =
+          boost::make_shared<gtsam::PriorFactor<gtsam::Pose3>>(
+              CameraPoseSymbol(frame_N - 1), *camera_pose_k,
+              gtsam::noiseModel::Isotropic::Sigma(6u, 0.1));
+      new_factors.add(stabilising_pose_prior);
+      factors_to_remove_this_frame.add(stabilising_pose_prior);
+    }
 
     // if disappeared add stabilising factors on predicted motions!!
     if (object_disappeared) {
@@ -1871,7 +1706,10 @@ void MPCFormulation::otherUpdatesContext(
             accessor->queryWithTheta<gtsam::Pose3>(motion_key_to_be_stabilised,
                                                    new_values);
         CHECK(motion_to_be_stabilised_query)
-            << "No motion at  " << motion_to_be_stabilised_query.key();
+            << "No motion at  "
+            << formatter(motion_to_be_stabilised_query.key());
+        LOG(INFO) << "Addomg stabilising factor "
+                  << formatter(motion_to_be_stabilised_query.key());
 
         auto stabilising_motion_prior =
             boost::make_shared<gtsam::PriorFactor<gtsam::Pose3>>(
@@ -1891,23 +1729,80 @@ void MPCFormulation::otherUpdatesContext(
 
     if (object_reappeared) {
       // remove all stabilising factors as we're about to add new ones
-      CHECK(stabilising_object_factors_.exists(object_to_follow));
-      gtsam::NonlinearFactorGraph stabilising_motion_factors =
-          stabilising_object_factors_.at(object_to_follow);
-      factors_to_remove_this_frame += stabilising_motion_factors;
+      if (stabilising_object_factors_.exists(object_to_follow)) {
+        //   gtsam::NonlinearFactorGraph stabilising_motion_factors =
+        //     stabilising_object_factors_.at(object_to_follow);
+        // factors_to_remove_this_frame += stabilising_motion_factors;
 
-      stabilising_object_factors_.erase(object_to_follow);
+        // stabilising_object_factors_.erase(object_to_follow);
+
+        // HACK (sort of) of object re-seen within horizon overlap
+        // ie. there are still predicted motions from last time we saw the
+        // object but these have timestamp < k (ie now in the past) we keep
+        // priors on these to stabilise them. Really this is WRONG (we should
+        // remove them) by passing a new set of variables to the BackendModule
+        // telling it which new variables to marginalize We current dont do this
+        // as it messes up the following logic of which new variables to add..
+        gtsam::NonlinearFactorGraph stabilising_motion_factors =
+            stabilising_object_factors_.at(object_to_follow);
+        for (auto factor : stabilising_motion_factors) {
+          auto prior_factor =
+              boost::dynamic_pointer_cast<gtsam::PriorFactor<gtsam::Pose3>>(
+                  factor);
+          CHECK(prior_factor) << "Unknown stabilising motion factor type!";
+          auto motion_key = prior_factor->key1();
+
+          ObjectId object_id;
+          FrameId frame_id;
+          CHECK(reconstructMotionInfo(motion_key, object_id, frame_id));
+          (void)object_id;
+
+          // remove as we're about to add new ones!
+          // for motion prediction we also add a smoothing factor which connects
+          // k-1, k and k+1 (prediction) to not destroy estimation we then also
+          // need to remove prior on k-1
+          if (is_future_frame(frame_id) || is_current_frame(frame_id) ||
+              frame_id == frame_k_m1) {
+            LOG(INFO) << "Removing stabilising factor "
+                      << formatter(motion_key);
+            // stabilising_motion_factors_to_remove.push_back(factor);
+            // factors_to_remove_this_frame.add(factor);
+
+            // NOTE: here we directly update the result with this factor so it
+            // removes it immediately adding to factors_to_remove_this_frame
+            // will remove it at the next frame! this only makes sense for other
+            // factors...
+            result.batch_update_params.factors_to_remove.add(factor);
+          }
+        }
+        // factors_to_remove_this_frame += stabilising_motion_factors_to_remove;
+        // remove tracking of these factors as we'll never touch these
+        // stabilishing factors again
+        stabilising_object_factors_.erase(object_to_follow);
+
+      } else {
+        // NOTE: this should not actually happen! I think there is some
+        // inconsistencies between how/when the appearence/disappearnce flags
+        // are set. Maybe an obejct is seen and in the opt (from previous
+        // prediction window) but not in the opt from new measurements. In this
+        // case the last_update_frame will not be updated (since this is updated
+        // when we get new measurements of the object) and therefore it will
+        // re-appear twice (which I think is what happens) rather than
+        // appearing->disappearing->appearing...
+        LOG(FATAL) << "Object has reappeared but no previous stabilising "
+                      "factors. This means it REappeared without disappearing!";
+      }
     }
 
     CHECK(frame_node_k->objectObserved(object_to_follow));
+
     // values and factors init object pose
     // dont get the latest motion/pose (the ones added by the base Hybrid
     // formulation) as these will not be optimized yet. Get the ones from the
     // previous frame which are better. Maybe bug in initalisation of latest
     // motion
     auto L_W_k_query = accessor->getObjectPose(frame_k_m1, object_to_follow);
-    auto H_W_km1_k_query =
-        accessor->getObjectMotion(frame_k_m1, object_to_follow);
+    auto H_W_km1_k_query = accessor->getObjectMotion(frame_k, object_to_follow);
 
     // have already chceck that object should be in previous
     CHECK(L_W_k_query);
@@ -1950,8 +1845,6 @@ void MPCFormulation::otherUpdatesContext(
       // following L_k = H_e_k * L_e
       gtsam::Pose3 H_W_future = L_W_future * L_e.inverse();
 
-      // LOG(INFO) << "Future pose k=" << frame_id << " " << L_W_future;
-
       auto motion_key_k_predicted =
           ObjectMotionSymbol(object_to_follow, frame_id);
       auto camera_pose_key_k_predicted = CameraPoseSymbol(frame_id);
@@ -1969,6 +1862,9 @@ void MPCFormulation::otherUpdatesContext(
                   << formatter(motion_key_k_predicted);
         new_values.insert(motion_key_k_predicted, H_W_future);
 
+        // TODO: evenetually if this object is reobserved any intermdiate motion
+        // predictions ie between i=k and j where the object is reobserved will
+        // need to be explicitly removed
         if (is_future_frame(frame_id)) {
           result.keys_to_not_marginalize.insert(motion_key_k_predicted);
         }
@@ -2018,9 +1914,28 @@ void MPCFormulation::otherUpdatesContext(
                 motion_key_k_predicted, L_e,
                 object_prediction_constant_motion_noise_);
       }
+
+      if (!use_directed_factors) {
+        // replace with non-directed factor
+        constant_motion_factor =
+            boost::make_shared<HybridConstantMotionFactor<>>(
+                motion_key_k_m2_predicted, motion_key_k_m1_predicted,
+                motion_key_k_predicted, L_e,
+                object_prediction_constant_motion_noise_);
+      }
       CHECK(constant_motion_factor);
       new_factors.add(constant_motion_factor);
       factors_to_remove_this_frame.add(constant_motion_factor);
+
+      // sdf factor on the dynamic obstacle to use the map to inform prediction
+      // we assume the obstacle is smart and therefore will try and avoid places
+      // where it cannot go!
+      auto obstacle_H_factor = boost::make_shared<SDFStaticObstacleHFactor>(
+          motion_key_k_predicted, sdf_map_,
+          FLAGS_mpc_static_sdf_H_safety_distance, L_e,
+          static_obstacle_H_noise_);
+      new_factors.add(obstacle_H_factor);
+      factors_to_remove_this_frame.add(obstacle_H_factor);
 
       {
         // sanity check
@@ -2035,18 +1950,42 @@ void MPCFormulation::otherUpdatesContext(
             desired_follow_distance_, desired_follow_heading_, follow_noise_);
         new_factors.add(follow_factor);
         factors_to_remove_this_frame.add(follow_factor);
+
+      } else if (mission_type_ == MissionType::NAVIGATE) {
+        if (use_directed_factors) {
+          // prevent motion from being affected
+          auto dynamic_obstacle_factor =
+              boost::make_shared<DynamicObstacleFactor<2>>(
+                  camera_pose_key_k_predicted, motion_key_k_predicted, L_e,
+                  FLAGS_mpc_dynamic_obstacle_safety_distance,
+                  dynamic_obstacle_factor_);
+          new_factors.add(dynamic_obstacle_factor);
+          factors_to_remove_this_frame.add(dynamic_obstacle_factor);
+        } else {
+          auto dynamic_obstacle_factor =
+              boost::make_shared<DynamicObstacleFactor<>>(
+                  camera_pose_key_k_predicted, motion_key_k_predicted, L_e,
+                  FLAGS_mpc_dynamic_obstacle_safety_distance,
+                  dynamic_obstacle_factor_);
+          new_factors.add(dynamic_obstacle_factor);
+          factors_to_remove_this_frame.add(dynamic_obstacle_factor);
+        }
       }
     }
   }
 
   if (mission_type_ == MissionType::NAVIGATE) {
+    const int local_horizon = static_cast<int>(FLAGS_mpc_local_goal_horizin);
     // handle global path
     gtsam::Pose3 local_goal;
     bool local_goal_result = getLocalGoalFromGlobalPath(
-        accessor->getSensorPose(frame_k).value(), 60, local_goal);
+        accessor->getSensorPose(frame_k).value(), local_horizon, local_goal);
 
     if (local_goal_result) {
       local_goal_ = local_goal;
+
+      VLOG(20) << "Calculated local goal from global plan with horizin: "
+               << local_horizon;
 
       // final camera pose in the plan
       // TODO: check this is in the values?
@@ -2067,6 +2006,15 @@ void MPCFormulation::otherUpdatesContext(
     } else {
       LOG(WARNING) << "MissionType set to navigate but global plan not found "
                       "or local goal cannot be set!";
+      auto camera_pose_k =
+          accessor->query<gtsam::Pose3>(CameraPoseSymbol(frame_k));
+      CHECK(camera_pose_k);
+      auto stabilising_pose_prior =
+          boost::make_shared<gtsam::PriorFactor<gtsam::Pose3>>(
+              CameraPoseSymbol(frame_N - 1), *camera_pose_k,
+              gtsam::noiseModel::Isotropic::Sigma(6u, 0.1));
+      new_factors.add(stabilising_pose_prior);
+      factors_to_remove_this_frame.add(stabilising_pose_prior);
     }
   }
 
@@ -2154,19 +2102,11 @@ bool MPCFormulation::getLocalGoalFromGlobalPath(const gtsam::Pose3& X_k,
   } else {
     gtsam::Pose3 goal_nm1 = path.at(local_goal_index - 1);
 
-    // calcualte bearing in pose2 for the plan (we assume everything will happen
-    // in pose3) assyme goals are in opencv convention (this happens at the ROS
-    // level where we use the tf look to)
-    gtsam::Pose2 goal_n_se2 = convertToSE2OpenCV(goal_n);
-    gtsam::Pose2 goal_nm1_se2 = convertToSE2OpenCV(goal_nm1);
+    double diff_x = goal_n.x() - goal_nm1.x();
+    double diff_z = goal_n.z() - goal_nm1.z();
 
-    // theta in opencv
-    // since we do calculations in opencv when we convert SE(3) to SE(2) we use
-    // the -pitch component of the 3D rotation. Then we go back to SE(3) we just
-    // use -bearing again
-    double bearing = goal_nm1_se2.bearing(goal_n_se2).theta();
-    gtsam::Rot3 rotation = gtsam::Rot3::Pitch(-bearing);
-
+    double theta = std::atan2(diff_x, diff_z);
+    gtsam::Rot3 rotation = gtsam::Rot3::Pitch(theta);
     goal = gtsam::Pose3(rotation, goal_n.translation());
   }
 

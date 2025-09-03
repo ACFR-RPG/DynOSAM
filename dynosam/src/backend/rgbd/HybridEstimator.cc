@@ -1045,6 +1045,8 @@ gtsam::Pose3 HybridFormulation::calculateObjectCentroid(
   return center;
 }
 
+// TODO: would be nice to calculate object state (disappeared, re-appeared etc)
+// here so its available for the formulation...
 void RegularHybridFormulation::preUpdate(const PreUpdateData& data) {
   // get objects seen in this frame from the map
   const typename Map::Ptr map = this->map();
@@ -1063,15 +1065,26 @@ void RegularHybridFormulation::preUpdate(const PreUpdateData& data) {
       bool is_object_new = obj_node->getFirstSeenFrame() == frame_id_k;
       FrameId last_update_frame = update_data.frame_id;
 
+      bool seen_in_previous = frame_node->objectObservedInPrevious(obj_id);
+
       // duplicate logic from ParallelBackend!
-      if (!is_object_new && (frame_id_k > 0) &&
+      // NOTE: this logic is a bit wrong as we need at least two frames of
+      // observation before the formulation-impl will add any moving objects
+      // (regardless of min point track) so even if an object is seen in this
+      // frame and the last-updatetime was a long time ago it may only get added
+      // next frame (if frame_k is the first of a pair)
+
+      // if its seen in previous and seen here then it now must form a motion
+      // only add a new keyframe when its seen twice (ie. forming a motion)
+      // but put the keyframe on the previous motion!!
+      if (!is_object_new && (frame_id_k > 0) && seen_in_previous &&
           (last_update_frame < (frame_id_k - 1u))) {
         VLOG(5)
             << "Only update k=" << frame_id_k << " j= " << obj_id
             << " as object is not new but has reappeared. Previous update was "
             << last_update_frame << ". Making keyframe";
 
-        this->forceNewKeyFrame(frame_id_k, obj_id);
+        this->forceNewKeyFrame(frame_id_k - 1, obj_id);
       }
     }
   }

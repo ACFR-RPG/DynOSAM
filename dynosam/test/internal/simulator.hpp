@@ -487,6 +487,13 @@ class OverlappingStaticPointsGenerator : public StaticPointGeneratorVisitor {
     }
   }
 
+  void setMinNewPoints(size_t min_new_points) {
+    min_new_points_ = min_new_points;
+  }
+  void setMaxNewPoints(size_t max_new_points) {
+    max_new_points_ = max_new_points;
+  }
+
   TrackedPoints getPointsWorld(FrameId frame_id) const override {
     if (frame_id == 0) {
       generateInitialPoints();
@@ -520,15 +527,7 @@ class OverlappingStaticPointsGenerator : public StaticPointGeneratorVisitor {
     all_points_.clear();
 
     // Reasonable seeding range for initial points (e.g., 30–60)
-    constexpr int initial_min_points = 30;
-    constexpr int initial_max_points = 60;
-
-    // const size_t num_initial_points = initial_min_points +
-    //                                   (std::rand() % (initial_max_points -
-    //                                   initial_min_points + 1));
-
-    std::uniform_int_distribution<int> dist(initial_min_points,
-                                            initial_max_points);
+    std::uniform_int_distribution<int> dist(min_new_points_, max_new_points_);
     const size_t num_initial_points = dist(gen_);
 
     // Adds points starting from frame 0, with random lifetime

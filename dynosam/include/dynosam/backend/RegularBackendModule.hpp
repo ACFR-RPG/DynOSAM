@@ -70,6 +70,9 @@ class RegularBackendModule
   // also provide non-const access (this should only be used with caution and is
   // really only there to enable specific unit-tests!)
   FormulationType* formulation() { return formulation_.get(); }
+  std::string formulationName() const {
+    return formulation_->getFullyQualifiedName();
+  }
 
   using PostFormulationUpdateCallback = std::function<void(
       const Formulation<RGBDMap>::UniquePtr&, FrameId, const gtsam::Values&,
@@ -78,6 +81,9 @@ class RegularBackendModule
       const PostFormulationUpdateCallback& cb) {
     post_formulation_update_cb_ = cb;
   }
+
+  std::pair<gtsam::Values, gtsam::NonlinearFactorGraph> getActiveOptimisation()
+      const;
 
  protected:
   void setupUpdates();
