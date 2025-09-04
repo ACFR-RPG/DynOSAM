@@ -119,7 +119,13 @@ MPCEstimationVizRos::MPCEstimationVizRos(const DisplayParams params,
                       ex.what());
         }
       });
+
+  world_control_client_ =
+      node_->create_client<ControlWorld>("/world/empty/control");
 }
+
+void MPCEstimationVizRos::inPreUpdate() { pauseWorld(); }
+void MPCEstimationVizRos::inPostUpdate() { startWorld(); }
 
 void MPCEstimationVizRos::spin(Timestamp timestamp, FrameId frame_k,
                                const MPCFormulation* formulation) {
@@ -263,6 +269,107 @@ void MPCEstimationVizRos::publishLocalGoalMarker(const gtsam::Pose3& pose,
   marker_array.markers.push_back(text_marker);
 
   local_goal_marker_pub_->publish(marker_array);
+}
+
+void MPCEstimationVizRos::pauseWorld() {
+  // RCLCPP_INFO(node_->get_logger(), "Pausing simulation");
+  if (!checkWorldControlServiceAvailable()) {
+    RCLCPP_INFO(node_->get_logger(),
+                "Unable to pause world: control service unavailable!");
+    return;
+  }
+
+  auto request = std::make_shared<ControlWorld::Request>();
+  request->world_control.pause = true;
+
+  using ServiceResponseFuture = rclcpp::Client<ControlWorld>::SharedFuture;
+  auto response_received_callback = [&](ServiceResponseFuture future) {
+    (void)future;  // service response is empty
+    RCLCPP_INFO(node_->get_logger(), "World paused successfully.");
+  };
+
+  world_control_client_->async_send_request(request,
+                                            response_received_callback);
+
+  // if (rclcpp::spin_until_future_complete(node_->get_node_base_interface(),
+  // result) ==
+  //     rclcpp::FutureReturnCode::SUCCESS)
+  // {
+  //   RCLCPP_INFO(node_->get_logger(), "World paused successfully.");
+  // } else {
+  //   RCLCPP_ERROR(node_->get_logger(), "Failed to pause world.");
+  // }
+
+  // NOTE: hack to get blocking servic call
+  // if we do node_->get_node_base_interface() it tries to spin the same node
+  // that is already managed by the top level executor. In reality we should do
+  // an asynchronous call but here the point is to wait until completing before
+  // continuing.
+  // It actually might be fine to do the asynch call as this should not take
+  // very long...
+  //  rclcpp::executors::SingleThreadedExecutor exec;
+  //  exec.add_node(node_->get_node_base_interface());
+
+  // if (exec.spin_until_future_complete(result) ==
+  // rclcpp::FutureReturnCode::SUCCESS)
+  // {
+  //   RCLCPP_INFO(node_->get_logger(), "World paused successfully.");
+  // } else {
+  //   RCLCPP_ERROR(node_->get_logger(), "Failed to paused world.");
+  // }
+
+  // exec.remove_node(node_->get_node_base_interface());
+}
+
+void MPCEstimationVizRos::startWorld() {
+  RCLCPP_INFO(node_->get_logger(), "Starting simulation");
+
+  if (!checkWorldControlServiceAvailable()) {
+    RCLCPP_INFO(node_->get_logger(),
+                "Unable to start world: control service unavailable!");
+    return;
+  }
+
+  auto request = std::make_shared<ControlWorld::Request>();
+  request->world_control.pause = false;
+
+  using ServiceResponseFuture = rclcpp::Client<ControlWorld>::SharedFuture;
+  auto response_received_callback = [&](ServiceResponseFuture future) {
+    (void)future;  // service response is empty
+    RCLCPP_INFO(node_->get_logger(), "World unpaused successfully.");
+  };
+
+  world_control_client_->async_send_request(request,
+                                            response_received_callback);
+
+  // auto result = world_control_client_->async_send_request(request);
+  // if (rclcpp::spin_until_future_complete(node_->get_node_base_interface(),
+  // result) ==
+  //     rclcpp::FutureReturnCode::SUCCESS)
+  // {
+  //   RCLCPP_INFO(node_->get_logger(), "World unpaused successfully.");
+  // } else {
+  //   RCLCPP_ERROR(node_->get_logger(), "Failed to unpause world.");
+  // }
+
+  // rclcpp::executors::SingleThreadedExecutor exec;
+  // exec.add_node(node_->get_node_base_interface());
+
+  // if (exec.spin_until_future_complete(result) ==
+  // rclcpp::FutureReturnCode::SUCCESS)
+  // {
+  //   RCLCPP_INFO(node_->get_logger(), "World unpaused successfully.");
+  // } else {
+  //   RCLCPP_ERROR(node_->get_logger(), "Failed to unpaused world.");
+  // }
+
+  // exec.remove_node(node_->get_node_base_interface());
+}
+
+bool MPCEstimationVizRos::checkWorldControlServiceAvailable(int timeout_s) {
+  // return
+  // world_control_client_->wait_for_service(std::chrono::seconds(timeout_s));
+  return world_control_client_->service_is_ready();
 }
 
 }  // namespace dyno

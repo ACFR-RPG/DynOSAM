@@ -35,6 +35,7 @@
 #include "dynosam_ros/displays/dynamic_slam_displays/DSDCommonRos.hpp"
 #include "nav_msgs/msg/path.hpp"
 #include "rclcpp/node.hpp"
+#include "ros_gz_interfaces/srv/control_world.hpp"
 #include "tf2_ros/buffer.h"
 #include "tf2_ros/transform_listener.h"
 #include "visualization_msgs/msg/marker.hpp"
@@ -55,6 +56,13 @@ class MPCEstimationVizRos : public MPCEstimationViz {
  private:
   void publishLocalGoalMarker(const gtsam::Pose3& pose, Timestamp timestamp,
                               const std::string& name);
+  void inPreUpdate() override;
+  void inPostUpdate() override;
+
+  // for simulating testing ICRA 2026
+  void pauseWorld();
+  void startWorld();
+  bool checkWorldControlServiceAvailable(int timeout_s = 1);
 
  private:
   const DisplayParams params_;
@@ -71,6 +79,9 @@ class MPCEstimationVizRos : public MPCEstimationViz {
 
   tf2_ros::Buffer tf_buffer_;
   tf2_ros::TransformListener tf_listener_;
+
+  using ControlWorld = ros_gz_interfaces::srv::ControlWorld;
+  rclcpp::Client<ControlWorld>::SharedPtr world_control_client_;
 };
 
 }  // namespace dyno

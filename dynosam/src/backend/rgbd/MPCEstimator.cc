@@ -2067,8 +2067,14 @@ void MPCFormulation::otherUpdatesContext(
   LOG(INFO) << "MPCFormulation::otherUpdatesContext";
 }
 
+void MPCFormulation::preUpdate(const PreUpdateData& data) {
+  Base::preUpdate(data);
+  if (viz_) viz_->inPreUpdate();
+}
+
 void MPCFormulation::postUpdate(const PostUpdateData& data) {
   Base::postUpdate(data);
+  if (viz_) viz_->inPostUpdate();
 
   // if we get here the update must have been good
   FrameId frame_k = data.frame_id;

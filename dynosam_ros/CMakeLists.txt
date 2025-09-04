@@ -35,6 +35,9 @@ find_package(rclpy REQUIRED)
 find_package(message_filters REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
 
+# ONLY for dynompc testing!!!!
+find_package(ros_gz_interfaces REQUIRED)
+
 
 # setup targets
 include_directories(
@@ -69,6 +72,7 @@ set(TARGET_DEPS
   tf2_ros
   tf2_geometry_msgs
   message_filters
+  ros_gz_interfaces
 )
 
 set(TARGET_EXPORT_DEPS

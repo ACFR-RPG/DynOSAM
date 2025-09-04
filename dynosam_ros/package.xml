@@ -27,6 +27,7 @@
   <depend>message_filters</depend>
   <depend>rclpy</depend>
   <depend>tf2_geometry_msgs</depend>
+  <depend>ros_gz_interfaces</depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>

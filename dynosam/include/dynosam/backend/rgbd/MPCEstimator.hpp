@@ -178,6 +178,7 @@ class MPCFormulation : public RegularHybridFormulation,
   bool getLocalGoalFromGlobalPath(const gtsam::Pose3& X_k, size_t horizon,
                                   gtsam::Pose3& goal);
 
+  void preUpdate(const PreUpdateData& data) override;
   void postUpdate(const PostUpdateData& data) override;
 
   // void addPredictionObjectFactors(
@@ -282,6 +283,8 @@ class MPCEstimationViz {
   // starting point of the offset this transform is that static offset from
   // which the dynosam odometry is referenced gainnst
   virtual bool queryGlobalOffset(gtsam::Pose3& T_world_camera) = 0;
+  virtual void inPreUpdate() {}
+  virtual void inPostUpdate() {}
 
   virtual void spin(Timestamp timestamp, FrameId frame_id,
                     const MPCFormulation* formulation) = 0;
