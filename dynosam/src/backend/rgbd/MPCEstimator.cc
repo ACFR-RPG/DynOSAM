@@ -382,6 +382,21 @@ class SDFStaticObstacleHFactor : public SDFObstacleFactorBase {
   gtsam::Pose3 L_e_;
 };
 
+void MissionFactorBase::print(const std::string& s,
+                              const KeyFormatter& keyFormatter) const {
+  std::cout << s << "MissionFactorBase(" << keyFormatter(this->key1()) << ","
+            << keyFormatter(this->key2()) << ")\n";
+  this->noiseModel_->print("  noise model: ");
+}
+
+bool MissionFactorBase::isFuture(FrameId frame_k) const {
+  ObjectId object_id;
+  FrameId frame_id;
+  CHECK(reconstructMotionInfo(objectMotionKey(), object_id, frame_id));
+  (void)object_id;
+  return frame_id > frame_k;
+}
+
 struct DynamicObstacleFactorResidual {
   static gtsam::Vector residual(const gtsam::Pose3& X_k_se3,
                                 const gtsam::Pose3& H_W_e_k,
@@ -402,21 +417,18 @@ struct DynamicObstacleFactorResidual {
   }
 };
 
-class DynamicObstacleFactorBase
-    : public gtsam::NoiseModelFactor2<gtsam::Pose3, gtsam::Pose3>,
-      public DynamicObstacleFactorResidual {
+class DynamicObstacleFactorBase : public MissionFactorBase,
+                                  public DynamicObstacleFactorResidual {
  public:
   using shared_ptr = boost::shared_ptr<DynamicObstacleFactorBase>;
   using This = DynamicObstacleFactorBase;
-  using Base = gtsam::NoiseModelFactor2<gtsam::Pose3, gtsam::Pose3>;
+  using Base = MissionFactorBase;
 
   DynamicObstacleFactorBase(gtsam::Key X_k_key, gtsam::Key H_W_e_k_key,
                             const gtsam::Pose3& L_e, double safety_distance,
                             gtsam::SharedNoiseModel model)
-      : Base(model, X_k_key, H_W_e_k_key),
-        safety_distance_(safety_distance),
-        L_e_(L_e) {}
-
+      : Base(X_k_key, H_W_e_k_key, L_e, model),
+        safety_distance_(safety_distance) {}
   // Error function
   virtual gtsam::Vector evaluateError(
       const gtsam::Pose3& X_k, const gtsam::Pose3& H_W_e_k,
@@ -449,7 +461,6 @@ class DynamicObstacleFactorBase
 
  private:
   double safety_distance_;
-  gtsam::Pose3 L_e_;
 };
 
 template <size_t... ZeroIndices>
@@ -623,12 +634,11 @@ class Vec2LimitFactor : public gtsam::NoiseModelFactor1<gtsam::Vector2> {
   double dt_;    // Time step
 };
 
-class HybridMotionFollowJac0Factor
-    : public gtsam::NoiseModelFactor2<gtsam::Pose3, gtsam::Pose3> {
+class HybridMotionFollowJac0Factor : public MissionFactorBase {
  public:
   using shared_ptr = boost::shared_ptr<HybridMotionFollowJac0Factor>;
   using This = HybridMotionFollowJac0Factor;
-  using Base = gtsam::NoiseModelFactor2<gtsam::Pose3, gtsam::Pose3>;
+  using Base = MissionFactorBase;
 
   // Constructor
   HybridMotionFollowJac0Factor(gtsam::Key X_W_key_follower,
@@ -636,8 +646,7 @@ class HybridMotionFollowJac0Factor
                                const gtsam::Pose3& L_e_leader,
                                double des_distance, double des_heading,
                                gtsam::SharedNoiseModel model)
-      : Base(model, X_W_key_follower, H_W_e_k_key_leader),
-        L_e_leader_(L_e_leader),
+      : Base(X_W_key_follower, H_W_e_k_key_leader, L_e_leader, model),
         des_distance_(des_distance),
         des_heading_(des_heading) {}
 
@@ -695,7 +704,7 @@ class HybridMotionFollowJac0Factor
     gtsam::Pose2 X_W_follower(X_W_follower_3d.z(), -X_W_follower_3d.x(),
                               -X_W_follower_3d.rotation().pitch());
 
-    gtsam::Pose3 L_W_3d = H_W_e_k_leader_3d * L_e_leader_;
+    gtsam::Pose3 L_W_3d = H_W_e_k_leader_3d * L_e_;
 
     // gtsam::Pose2 L_W(L_W_3d.x(), L_W_3d.y(),
     //                         L_W_3d.rotation().yaw());
@@ -731,7 +740,6 @@ class HybridMotionFollowJac0Factor
   inline gtsam::Key H_W_e_k_key_leader() const { return key2(); }
 
  private:
-  gtsam::Pose3 L_e_leader_;
   double des_distance_;
   gtsam::Rot2 des_heading_;
 };
@@ -1663,13 +1671,58 @@ void MPCFormulation::otherUpdatesContext(
   }
 
   if (!object_available) {
-    VLOG(10) << "j=" << object_to_follow << "is unavailable at k=" << frame_k
-             << ". Unable to follow!";
+    VLOG(10) << "j=" << object_to_follow << "is unavailable at k=" << frame_k;
 
-    // check for any H's in the horizon window
-    FrameIds future_frames_with_motion_prediction;
+    // if we have no more (or just none at all) mission factors AND we're in
+    // follow mode
+    //  add a stabilising prior factor on the last pose
+    bool should_add_stabilising_prior_factor =
+        (mission_type_ == MissionType::FOLLOW);
+    // keep mission factors while variables are still within the time horizon
+    if (previous_mission_factors_.exists(object_to_follow)) {
+      VLOG(10) << "Found previous mission factors "
+               << info_string(frame_k, object_to_follow);
 
-    if (mission_type_ == MissionType::FOLLOW) {
+      MissionFactorGraph& current_mission_factors =
+          previous_mission_factors_.at(object_to_follow);
+      MissionFactorGraph factors_within_horizon;
+
+      for (auto mission_factor : current_mission_factors) {
+        if (mission_factor->isFuture(frame_k)) {
+          VLOG(10) << "Keeping mission factor "
+                   << formatter(mission_factor->cameraPoseKey()) << " "
+                   << formatter(mission_factor->objectMotionKey());
+          // TODO: lots of adding new factors and then deleting factors every
+          // time
+          //  this is very slow!!!
+          factors_within_horizon.add(mission_factor);
+          new_factors.add(mission_factor);
+          factors_to_remove_this_frame.add(mission_factor);
+        } else {
+          // delete factor immediately!
+          VLOG(10) << "Deleting mission factor "
+                   << formatter(mission_factor->cameraPoseKey()) << " "
+                   << formatter(mission_factor->objectMotionKey());
+          result.batch_update_params.factors_to_remove.add(mission_factor);
+        }
+      }
+      // update set of current mission factors in previous_mission_factors_
+      current_mission_factors = factors_within_horizon;
+
+      if (factors_within_horizon.empty()) {
+        VLOG(10) << "No more mission factors for "
+                 << info_string(frame_k, object_to_follow);
+        should_add_stabilising_prior_factor &= true;
+        // explicitly delete set of mission factors so we know there are none!!
+        previous_mission_factors_.erase(object_to_follow);
+      }
+    } else {
+      should_add_stabilising_prior_factor &= true;
+    }
+
+    if (should_add_stabilising_prior_factor) {
+      CHECK(mission_type_ == MissionType::FOLLOW);
+      VLOG(10) << "Adding stabilising prior factor ";
       // add factor on last pose if no object (for now) to stabilise planning
       // using value of latest real pose (ie frame k)
       auto camera_pose_k =
@@ -1727,15 +1780,10 @@ void MPCFormulation::otherUpdatesContext(
     LOG(INFO) << "Object " << info_string(frame_k, object_to_follow)
               << " good. Adding predictions!";
 
+    MissionFactorGraph mission_factors;
     if (object_reappeared) {
       // remove all stabilising factors as we're about to add new ones
       if (stabilising_object_factors_.exists(object_to_follow)) {
-        //   gtsam::NonlinearFactorGraph stabilising_motion_factors =
-        //     stabilising_object_factors_.at(object_to_follow);
-        // factors_to_remove_this_frame += stabilising_motion_factors;
-
-        // stabilising_object_factors_.erase(object_to_follow);
-
         // HACK (sort of) of object re-seen within horizon overlap
         // ie. there are still predicted motions from last time we saw the
         // object but these have timestamp < k (ie now in the past) we keep
@@ -1765,9 +1813,6 @@ void MPCFormulation::otherUpdatesContext(
               frame_id == frame_k_m1) {
             LOG(INFO) << "Removing stabilising factor "
                       << formatter(motion_key);
-            // stabilising_motion_factors_to_remove.push_back(factor);
-            // factors_to_remove_this_frame.add(factor);
-
             // NOTE: here we directly update the result with this factor so it
             // removes it immediately adding to factors_to_remove_this_frame
             // will remove it at the next frame! this only makes sense for other
@@ -1775,7 +1820,6 @@ void MPCFormulation::otherUpdatesContext(
             result.batch_update_params.factors_to_remove.add(factor);
           }
         }
-        // factors_to_remove_this_frame += stabilising_motion_factors_to_remove;
         // remove tracking of these factors as we'll never touch these
         // stabilishing factors again
         stabilising_object_factors_.erase(object_to_follow);
@@ -1830,13 +1874,6 @@ void MPCFormulation::otherUpdatesContext(
 
     ObjectIds objects_predicted{object_to_follow};
     predicted_objects_at_frame_.insert2(frame_k, objects_predicted);
-
-    // LOG(INFO) << "Predicting poses " << info_string(frame_k,
-    // object_to_follow) << " using constant H_W_km1_k " << H_W_km1_k
-    //   << " from frame e=" << reference_frame_e;
-    // LOG(INFO) << "Starting pose " <<  L_W_k << " using motion key " <<
-    // formatter(H_W_km1_k_query.key()) << " pose key " <<
-    // formatter(L_W_k_query.key());
 
     for (FrameId frame_id = frame_k + 1; frame_id < frame_N; frame_id++) {
       // progate frame L using constant realtive motion
@@ -1943,34 +1980,41 @@ void MPCFormulation::otherUpdatesContext(
             camera_pose_key_k_predicted, new_values));
       }
 
+      MissionFactorBase::shared_ptr mission_factor = nullptr;
       if (mission_type_ == MissionType::FOLLOW) {
         // add follow factors
-        auto follow_factor = boost::make_shared<HybridMotionFollowJac0Factor>(
+        mission_factor = boost::make_shared<HybridMotionFollowJac0Factor>(
             camera_pose_key_k_predicted, motion_key_k_predicted, L_e,
             desired_follow_distance_, desired_follow_heading_, follow_noise_);
-        new_factors.add(follow_factor);
-        factors_to_remove_this_frame.add(follow_factor);
 
       } else if (mission_type_ == MissionType::NAVIGATE) {
         if (use_directed_factors) {
           // prevent motion from being affected
-          auto dynamic_obstacle_factor =
-              boost::make_shared<DynamicObstacleFactor<2>>(
-                  camera_pose_key_k_predicted, motion_key_k_predicted, L_e,
-                  FLAGS_mpc_dynamic_obstacle_safety_distance,
-                  dynamic_obstacle_factor_);
-          new_factors.add(dynamic_obstacle_factor);
-          factors_to_remove_this_frame.add(dynamic_obstacle_factor);
+          mission_factor = boost::make_shared<DynamicObstacleFactor<2>>(
+              camera_pose_key_k_predicted, motion_key_k_predicted, L_e,
+              FLAGS_mpc_dynamic_obstacle_safety_distance,
+              dynamic_obstacle_factor_);
         } else {
-          auto dynamic_obstacle_factor =
-              boost::make_shared<DynamicObstacleFactor<>>(
-                  camera_pose_key_k_predicted, motion_key_k_predicted, L_e,
-                  FLAGS_mpc_dynamic_obstacle_safety_distance,
-                  dynamic_obstacle_factor_);
-          new_factors.add(dynamic_obstacle_factor);
-          factors_to_remove_this_frame.add(dynamic_obstacle_factor);
+          mission_factor = boost::make_shared<DynamicObstacleFactor<>>(
+              camera_pose_key_k_predicted, motion_key_k_predicted, L_e,
+              FLAGS_mpc_dynamic_obstacle_safety_distance,
+              dynamic_obstacle_factor_);
         }
       }
+      CHECK(mission_factor);
+      new_factors.add(mission_factor);
+      factors_to_remove_this_frame.add(mission_factor);
+      mission_factors.add(mission_factor);
+    }
+    // replace previous mission factors
+    if (!previous_mission_factors_.exists(object_to_follow)) {
+      previous_mission_factors_.insert2(object_to_follow, MissionFactorGraph{});
+    }
+
+    if (mission_factors.size() > 0) {
+      previous_mission_factors_[object_to_follow] = mission_factors;
+    } else {
+      previous_mission_factors_.erase(object_to_follow);
     }
   }
 

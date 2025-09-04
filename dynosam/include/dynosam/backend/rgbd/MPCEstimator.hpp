@@ -34,6 +34,48 @@
 #include "dynosam/backend/rgbd/HybridEstimator.hpp"
 
 namespace dyno {
+namespace mpc_factors {
+/**
+ * @brief Class connecting a ego-motion pose (X) with an object motion (H) that
+ * can be used as a mission factor.
+ *
+ * We expect the motion to be in the Hybrid motion form (Morris RA-L 2025) and
+ * so we also include the embedded frame L_e.
+ *
+ * Factor provides some additional functionality but does not implement any
+ * factor specific implementations (e.g. evaluateError etc...)
+ *
+ */
+class MissionFactorBase
+    : public gtsam::NoiseModelFactor2<gtsam::Pose3, gtsam::Pose3> {
+ public:
+  using shared_ptr = boost::shared_ptr<MissionFactorBase>;
+  using This = MissionFactorBase;
+  using Base = gtsam::NoiseModelFactor2<gtsam::Pose3, gtsam::Pose3>;
+  MissionFactorBase(gtsam::Key X_k_key, gtsam::Key H_W_e_k_key,
+                    const gtsam::Pose3& L_e, gtsam::SharedNoiseModel model)
+      : Base(model, X_k_key, H_W_e_k_key), L_e_(L_e) {}
+
+  gtsam::Key cameraPoseKey() const { return key1(); }
+  gtsam::Key objectMotionKey() const { return key2(); }
+
+  virtual void print(
+      const std::string& s = "",
+      const KeyFormatter& keyFormatter = DynoLikeKeyFormatter) const override;
+
+  virtual bool isFuture(FrameId frame_k) const;
+
+ protected:
+  gtsam::Pose3 L_e_;
+};
+}  // namespace mpc_factors
+
+class MissionFactorGraph
+    : public gtsam::FactorGraph<mpc_factors::MissionFactorBase> {
+ public:
+  using Base = gtsam::FactorGraph<mpc_factors::MissionFactorBase>;
+  MissionFactorGraph(){};
+};
 
 struct MPCFormulationProperties {
   static constexpr SymbolChar kControlCommandSymbolChar = 'c';
@@ -166,6 +208,11 @@ class MPCFormulation : public RegularHybridFormulation,
   //! latter if the object reapears!
   gtsam::FastMap<ObjectId, gtsam::NonlinearFactorGraph>
       stabilising_object_factors_;
+
+  //! Mission factors from previous frame
+  //! Will be removed immediately if the object is seen as we're going to add
+  //! new mission factors at this frame If the object is not seen that factors
+  gtsam::FastMap<ObjectId, MissionFactorGraph> previous_mission_factors_;
 
   // prediction pose prior
   gtsam::SharedNoiseModel vel2d_prior_noise_;

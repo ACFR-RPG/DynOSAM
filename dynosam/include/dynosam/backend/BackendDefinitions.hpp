@@ -176,6 +176,8 @@ class ApplyFunctionalSymbol {
   ApplyFunctionalSymbol& staticLandmark(const StaticLmkFunc&);
   ApplyFunctionalSymbol& dynamicLandmark(const DynamicLmkFunc&);
 
+  static std::optional<FrameId> getPoseMotionFrameId(gtsam::Key);
+
  protected:
   CameraPoseFunc pose_func_;
   ObjectMotionFunc object_motion_func_;

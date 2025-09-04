@@ -158,6 +158,21 @@ ApplyFunctionalSymbol& ApplyFunctionalSymbol::dynamicLandmark(
   return *this;
 }
 
+static std::optional<FrameId> getPoseMotionFrameId(gtsam::Key key) {
+  static ApplyFunctionalSymbol afs;
+  std::optional<FrameId> frame_id_of_symbol;
+  afs.cameraPose([&frame_id_of_symbol](FrameId frame_id, const gtsam::Symbol&) {
+    frame_id_of_symbol = frame_id;
+  });
+  afs.objectMotion([&frame_id_of_symbol](FrameId frame_id, ObjectId,
+                                         const gtsam::LabeledSymbol&) {
+    frame_id_of_symbol = frame_id;
+  });
+
+  afs(key);
+  return frame_id_of_symbol;
+}
+
 NoiseModels NoiseModels::fromBackendParams(
     const BackendParams& backend_params) {
   NoiseModels noise_models;

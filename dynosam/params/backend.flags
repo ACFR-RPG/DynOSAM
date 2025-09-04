@@ -91,8 +91,8 @@
 
 
 # Dyno MPC stuff
+# --mpc_horizon=30
 --mpc_horizon=30
-# --mpc_horizon=5
 --mpc_vel2d_prior_sigma=5e-3
 --mpc_vel2d_limit_sigma=1e-2
 
@@ -113,7 +113,7 @@
 --mpc_desired_follow_distance=3.0
 --mpc_desired_follow_heading=0.0
 
---mpc_static_sdf_X_safety_distance=0.4
+--mpc_static_sdf_X_safety_distance=1.15
 --mpc_static_sdf_H_safety_distance=0.2
 
 --mpc_dynamic_obstacle_safety_distance=0.7
