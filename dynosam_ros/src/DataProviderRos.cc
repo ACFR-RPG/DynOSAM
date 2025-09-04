@@ -77,7 +77,11 @@ const cv::Mat DataProviderRos::convertRosImage<ImageType::Depth>(
 
 const cv::Mat DataProviderRos::readRgbRosImage(
     const sensor_msgs::msg::Image::ConstSharedPtr& img_msg) const {
-  return convertRosImage<ImageType::RGBMono>(img_msg);
+  cv::Mat rgb_mono_image = convertRosImage<ImageType::RGBMono>(img_msg);
+  if (img_msg->encoding == "rgb8") {
+    cv::cvtColor(rgb_mono_image, rgb_mono_image, cv::COLOR_RGB2BGR);
+  }
+  return rgb_mono_image;
 }
 
 const cv::Mat DataProviderRos::readDepthRosImage(

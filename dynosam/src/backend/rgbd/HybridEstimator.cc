@@ -468,6 +468,99 @@ std::pair<FrameId, gtsam::Pose3> HybridFormulation::forceNewKeyFrame(
   LOG(INFO) << "Starting new range of object k=" << frame_id
             << " j=" << object_id;
   gtsam::Pose3 center = calculateObjectCentroid(object_id, frame_id);
+  gtsam::Point3 centroid_k = center.translation();
+  gtsam::Pose3 L_embedded = center;
+
+  // if no ground truth, but gt requested assume that calculateObjectCentroid
+  // will fail so that we never reach this condition We dont want a situation
+  // where we want ground truth L_e but end up calculating it differently!!
+  if (!FLAGS_init_object_pose_from_gt) {
+    // try finding an orientation that aligns two poses
+    auto frame_node_k = map()->getFrame(frame_id);
+    auto frame_node_km1 = map()->getFrame(frame_id - 1);
+    auto frame_node_kp1 = map()->getFrame(frame_id + 1);
+
+    // TODO: some of this logic can be improved as calculateObjectCentroid does
+    // a lot of internal checks that we repeat here to ensure the function does
+    // not fail! also returns pose (with assumed identity rotation!)
+    std::optional<gtsam::Point3> centroid_km1, centroid_kp1;
+    // try aligning the orientation of L_embedded with previous and or next
+    // frame
+    if (frame_node_km1 && frame_node_km1->objectObserved(object_id)) {
+      centroid_km1 =
+          calculateObjectCentroid(object_id, frame_node_km1->frame_id)
+              .translation();
+    }
+
+    if (frame_node_kp1 && frame_node_kp1->objectObserved(object_id)) {
+      centroid_kp1 =
+          calculateObjectCentroid(object_id, frame_node_kp1->frame_id)
+              .translation();
+    }
+
+    std::optional<gtsam::Point3> vec1, vec2;
+    if (centroid_km1 && centroid_kp1) {
+      // align L_e through k-1 to k+1
+      vec1 = centroid_km1;
+      vec2 = centroid_kp1;
+    } else if (centroid_km1) {
+      // align L_e through k-1 to k
+      vec1 = centroid_km1;
+      vec2 = centroid_k;
+    } else if (centroid_kp1) {
+      // align L_e through k to k+1
+      vec1 = centroid_k;
+      vec2 = centroid_kp1;
+    }
+
+    if (vec1 && vec2) {
+      // create rotation by aligning vec1 to vec2
+      auto rot3OpenCVZForward = [](
+                                    // mostly chat-gpt generated
+                                    const gtsam::Point3& p1,
+                                    const gtsam::Point3& p2) -> gtsam::Rot3 {
+        // a
+        gtsam::Unit3 u1(p1);
+        // b
+        gtsam::Unit3 u2(p2);
+
+        // a x b
+        gtsam::Unit3 cross_product = u1.cross(u2);
+        double c = u1.dot(u2);
+        // compute rotation such that R * a = b
+        // http://math.stackexchange.com/questions/180418/calculate-rotation-matrix-to-align-vector-a-to-vector-b-in-3d/476311#476311
+        gtsam::Rot3 R;
+        if (std::fabs(1 - c) < 1e-3) {
+          // Already aligned.
+          R = gtsam::Rot3();
+        } else if (std::fabs(1 + c) < 1e-3) {
+          // Degenerate condition a = -b
+          // Compute cross product with any nonparallel vector.
+          gtsam::Unit3 perturbed(u1.unitVector() + gtsam::Vector3(1, 2, 3));
+          cross_product = u1.cross(perturbed);
+
+          // If the resulting vector is still not a number
+          if (std::isnan(cross_product.unitVector()(0))) {
+            // Compute cross product with any nonparallel vector.
+            perturbed = gtsam::Unit3(u1.unitVector() + gtsam::Vector3(3, 2, 1));
+            cross_product = u1.cross(perturbed);
+          }
+          // 180 rotation around an axis perpendicular to both vectors
+          R = gtsam::Rot3::Expmap(cross_product.unitVector() * M_PI);
+        } else {
+          R = gtsam::Rot3::AlignPair(cross_product, u2, u1);
+        }
+
+        return R;
+      };
+
+      gtsam::Rot3 aligned_rotation = rot3OpenCVZForward(*vec1, *vec2);
+      L_embedded = gtsam::Pose3(aligned_rotation, centroid_k);
+    }
+    // else {
+    //   // use identity
+    // }
+  }
 
   auto result =
       key_frame_data_.startNewActiveRange(object_id, frame_id, center)
