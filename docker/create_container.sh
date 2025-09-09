@@ -5,18 +5,16 @@ CONTAINER_IMAGE_NAME=acfr-rpg/dyno_sam
 
 ### EDIT THIS TO WHEREVER YOU'RE STORING YOU DATA ###
 # folder should exist before you mount it
-LOCAL_DATA_FOLDER=/media/jmor6670/T7/datasets
+LOCAL_DATA_FOLDER=~/datasets
 LOCAL_RESULTS_FOLDER=~/results/
-LOCAL_DYNO_SAM_FOLDER=~/Code/src/DynOSAM/
-LOCAL_THIRD_PARTY_DYNO_SAM_FOLDER=~/Code/src/third_party_dynosam/
+LOCAL_DYNO_SAM_FOLDER=~/ros2_ws/src/DynOSAM/
+LOCAL_THIRD_PARTY_DYNO_SAM_FOLDER=~/ros2_ws/src/third_party_dynosam/
 
 
 CONTAINER_DATA_FOLDER=/root/data
 CONTAINER_RESULTS_FOLDER=/root/results
 CONTAINER_WORKSPACE_FOLDER=/home/user/dev_ws/src/core/
 CONTAINER_WORKSPACE_FOLDER_THIRD_PARTY=/home/user/dev_ws/src/third_parties/
-
-
 
 
 USE_NVIDIA=false

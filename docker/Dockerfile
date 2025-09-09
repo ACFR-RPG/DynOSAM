@@ -30,8 +30,8 @@ RUN apt-get install \
       ros-humble-ros2cli-common-extensions
 RUN apt-get install ros-humble-vision-opencv
 
-# other deps
-RUN apt-get install libpng++-dev/focal nlohmann-json3-dev/focal
+# other deps - The line below was updated c uz Jesse's one was wrong. "/focal"
+RUN apt-get update && apt-get install -y libpng++-dev nlohmann-json3-dev
 
 RUN python3 -m pip install pylatex evo setuptools pre-commit scipy argcomplete black pre-commit
 
@@ -64,8 +64,8 @@ RUN cd opencv/build && \
       -DOPENCV_EXTRA_MODULES_PATH=/root/opencv_contrib/modules .. && \
       make -j$(nproc) install
 
-
-RUN clone git@github.com:MIT-SPARK/config_utilities.git
+# "git" added and link changed
+RUN git clone https://github.com/MIT-SPARK/config_utilities.git
 RUN cd config_utilities/config_utilities && mkdir build && \
       cd build && \
       cmake .. && make -j$(nproc) install

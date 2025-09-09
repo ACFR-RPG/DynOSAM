@@ -1190,8 +1190,11 @@ MPCFormulation::MPCFormulation(const FormulationParams& params,
   object_prediction_constant_motion_noise_ =
       gtsam::noiseModel::Isotropic::Sigma(
           6u, FLAGS_mpc_object_prediction_constant_motion_sigma);
-  follow_noise_ =
-      gtsam::noiseModel::Isotropic::Sigma(2u, FLAGS_mpc_follow_sigma);
+  // follow_noise_ =
+  //     gtsam::noiseModel::Isotropic::Sigma(2u, FLAGS_mpc_follow_sigma);
+  // TODO: This noise shouldn't be isotropic. Distance is more important than heading.
+  // If heading cost is too strong, robot won't go around the obstacle
+  follow_noise_ = gtsam::noiseModel::Diagonal::Sigmas(gtsam::Vector2(FLAGS_mpc_follow_sigma, 1e2));
 
   goal_noise_ = gtsam::noiseModel::Isotropic::Sigma(3u, FLAGS_mpc_goal_sigma);
   static_obstacle_X_noise_ = gtsam::noiseModel::Isotropic::Sigma(
@@ -1202,10 +1205,21 @@ MPCFormulation::MPCFormulation(const FormulationParams& params,
   dynamic_obstacle_factor_ =
       gtsam::noiseModel::Isotropic::Sigma(1u, FLAGS_mpc_dynamic_obstacle_sigma);
 
-  lin_vel_ = Limits{-0.3, 1};
-  ang_vel_ = Limits{-0.5, 0.5};
-  lin_acc_ = Limits{-1.0, 0.5};
-  ang_acc_ = Limits{-0.5, 0.5};
+  // lin_vel_ = Limits{-0.3, 1.0};
+  // ang_vel_ = Limits{-0.5, 0.5};
+  // lin_acc_ = Limits{-1.0, 0.5};
+  // ang_acc_ = Limits{-0.5, 0.5};
+  
+  // lin_vel_ = Limits{-0.3, 1.2};
+  // ang_vel_ = Limits{-0.5, 0.5};
+  // lin_acc_ = Limits{-1.2, 0.8};
+  // ang_acc_ = Limits{-0.5, 0.5};
+
+  // For Following
+  lin_vel_ = Limits{-0.3, 1.8};
+  ang_vel_ = Limits{-0.8, 0.8};
+  lin_acc_ = Limits{-1.2, 0.7};
+  ang_acc_ = Limits{-0.8, 0.8};
 
   desired_follow_distance_ = FLAGS_mpc_desired_follow_distance;
   desired_follow_heading_ = FLAGS_mpc_desired_follow_heading;
@@ -1835,6 +1849,17 @@ void MPCFormulation::otherUpdatesContext(
         // appearing->disappearing->appearing...
         LOG(FATAL) << "Object has reappeared but no previous stabilising "
                       "factors. This means it REappeared without disappearing!";
+      }
+
+      //if object has re-appeared we need to delete all previous mission factors as we're about to add all new ones
+      if (previous_mission_factors_.exists(object_to_follow)) {
+        VLOG(10) << "Found previous mission factors "
+                << info_string(frame_k, object_to_follow) << ". Deleting all";
+
+        const MissionFactorGraph& remaining_mission_factor =
+            previous_mission_factors_.at(object_to_follow);
+        result.batch_update_params.factors_to_remove.add(remaining_mission_factor);
+        previous_mission_factors_.erase(object_to_follow);
       }
     }
 
