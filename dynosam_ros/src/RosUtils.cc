@@ -31,6 +31,7 @@
 
 #include <gtsam/geometry/Pose3.h>
 
+#include <dynosam/common/GroundTruthPacket.hpp>
 #include <dynosam/common/Types.hpp>
 #include <dynosam/visualizer/Colour.hpp>
 

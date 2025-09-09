@@ -135,30 +135,6 @@ RegularBackendModule::SpinReturn RegularBackendModule::boostrapSpinImpl(
   PostUpdateData post_update_data(frame_k, timestamp);
   addMeasurements(input, update_params, new_values, new_factors,
                   post_update_data);
-  // {
-  //   LOG(INFO) << "Starting updateStaticObservations";
-  //   utils::TimingStatsCollector timer("backend.update_static_obs");
-  //   post_update_data.static_update_result =
-  //       formulation_->updateStaticObservations(frame_k, new_values,
-  //       new_factors,
-  //                                              update_params);
-  // }
-  // // DONT run dynamic updates on the first frame (if any...)
-  // {
-  //   LOG(INFO) << "Starting updateDynamicObservations";
-  //   utils::TimingStatsCollector timer("backend.update_dynamic_obs");
-  //   post_update_data.dynamic_update_result =
-  //       formulation_->updateDynamicObservations(frame_k, new_values,
-  //                                               new_factors, update_params);
-  // }
-
-  // handleExternalMeasurements(frame_k, input->other_measurements,
-  //                            formulation_.get(), new_values, new_factors);
-
-  // if (post_formulation_update_cb_) {
-  //   post_formulation_update_cb_(formulation_, frame_k, new_values,
-  //   new_factors);
-  // }
 
   LOG(INFO) << "Starting any updates";
 

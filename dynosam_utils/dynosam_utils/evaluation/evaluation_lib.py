@@ -477,11 +477,11 @@ class MotionErrorEvaluator(Evaluator):
             object_trajectories_ref,
             plot_mode=plot_mode,
             plot_start_end_markers=True,
-            plot_axis_est=True,
-            plot_axis_ref=True,
+            plot_axis_est=False,
+            plot_axis_ref=False,
             # axis_marker_scale=1.0,
             downscale=0.1)
-        ax.get_legend().remove()
+        # ax.get_legend().remove()
 
 
         fig_all_object_traj.suptitle(r"Estimated \& Ground Truth Object Trajectories")

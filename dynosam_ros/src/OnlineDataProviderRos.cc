@@ -197,6 +197,16 @@ void OnlineDataProviderRos::imageSyncCallback(
   ImageContainer image_container(frame_id, timestamp);
   image_container.rgb(rgb).depth(depth).objectMotionMask(mask);
 
+  // try and send associated ground truth to the data-interface if we can!
+  if (ground_truth_handler_) {
+    ground_truth_handler_->emit(timestamp, frame_id);
+
+    // skip first frame so that we always have a previous gt
+    if (frame_id == 0u) {
+      return;
+    }
+  }
+
   // cv::Mat of_viz, motion_viz, depth_viz;
   // of_viz = ImageType::OpticalFlow::toRGB(flow);
   // motion_viz = ImageType::MotionMask::toRGB(mask);
