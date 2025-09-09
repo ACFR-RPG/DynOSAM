@@ -74,9 +74,9 @@ FrontendInputPacketBase::ConstPtr DataInterfacePipeline::getInputPacket() {
   GroundTruthInputPacket::Optional ground_truth;
   if (ground_truth_packets_.find(packet->frameId()) !=
       ground_truth_packets_.end()) {
-    VLOG(5) << "Gotten ground truth packet for frame id " << packet->frameId()
-            << ", timestamp=" << packet->timestamp();
     ground_truth = ground_truth_packets_.at(packet->frameId());
+    VLOG(5) << "Gotten ground truth packet for frame id " << packet->frameId()
+            << ", timestamp=" << packet->timestamp() << " " << *ground_truth;
   }
 
   const Timestamp& timestamp = packet->timestamp();

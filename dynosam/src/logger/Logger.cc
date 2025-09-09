@@ -405,7 +405,8 @@ bool EstimationModuleLogger::logObjectMotion(
         // if no packet for this object found, continue and do not log
         // return false;
       } else {
-        CHECK(object_gt_k.prev_H_current_world_);
+        CHECK(object_gt_k.prev_H_current_world_)
+            << "Missing gt motions at " << info_string(frame_id, object_id);
         gt_motion = *object_gt_k.prev_H_current_world_;
       }
     } else {

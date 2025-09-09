@@ -96,7 +96,8 @@ struct ObjectPoseGT {
    * at frame k-1. The previous_object_gt should have the same object ID and an
    * exception will be thrown if either of these checks fail.
    *
-   * Both ObjectPoseGT are expected to have the L_world_ variable set correctly.
+   * Both ObjectPoseGT are expected to have the L_world_ and L_camera_ variable
+   * set correctly.
    *
    * @param previous_motion const ObjectPoseGT&
    * @param prev_X_world const gtsam::Pose3& Camera pose at the previous frame

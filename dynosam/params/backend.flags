@@ -56,7 +56,7 @@
 --regular_backend_smoother_lag=25
 
 
---use_backend_logger=false
+--use_backend_logger=true
 
 # for ISAM2 params using ParallelObjectSAM
 --use_marginal_covariance=false

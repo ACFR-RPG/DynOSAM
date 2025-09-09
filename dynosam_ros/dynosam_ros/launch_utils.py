@@ -100,6 +100,7 @@ def load_dynosam_node(context, *args, **kwargs):
 
     world_frame_id = LaunchConfiguration("world_frame_id")
     camera_frame_id = LaunchConfiguration("camera_frame_id")
+    use_ground_truth = LaunchConfiguration("use_ground_truth")
 
     # remap topics
     camera_info_config = LaunchConfiguration("camera_info")
@@ -152,9 +153,6 @@ def load_dynosam_node(context, *args, **kwargs):
 
     # print(all_argv)
     # print(non_ros_argv)
-
-    def list_difference(a, b):
-        return [x for x in a if x not in b]
     # only_ros_argv = list_difference(all_argv, non_ros_argv)
     # argv = context.argv
     def construct_additional_arguments(argv):
@@ -197,7 +195,8 @@ def load_dynosam_node(context, *args, **kwargs):
         {"wait_for_camera_params": wait_for_camera_params_config},
         {"camera_params_timeout": camera_params_timeout_config},
         {"world_frame_id" : world_frame_id},
-        {"camera_frame_id": camera_frame_id}
+        {"camera_frame_id": camera_frame_id},
+        {"use_ground_truth": use_ground_truth}
     ]
 
     is_online = bool(online_config.perform(context))
@@ -304,7 +303,8 @@ def generate_dynosam_launch_description(**kwargs):
          "mpc_cmd_vel_topic": "control/cmd_vel",
          "mpc_global_plan_topic": "control/global_plan",
          "camera_frame_id": "camera",
-         "world_frame_id": "world"},
+         "world_frame_id": "world",
+         "use_ground_truth": False},
          **kwargs)
 
     return LaunchDescription([
