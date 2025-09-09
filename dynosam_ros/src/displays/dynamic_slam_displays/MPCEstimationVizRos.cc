@@ -227,22 +227,30 @@ void MPCEstimationVizRos::publishLocalGoalMarker(const gtsam::Pose3& pose,
       visualization_msgs::msg::Marker::ARROW;  // can be SPHERE, CUBE, etc.
   marker.action = visualization_msgs::msg::Marker::ADD;
 
+  // Arrow by default will display along X axis (which in opencv coordinates is
+  // to the right) We want the arrow to point forward so rotate -90 degree along
+  // y axis
+  const gtsam::Pose3 rot =
+      gtsam::Pose3(gtsam::Rot3::Ry(-M_PI / 2), gtsam::Point3(0, 0, 0));
+  gtsam::Pose3 rotated_pose = pose * rot;
+
   // Set position
-  marker.pose.position.x = pose.translation().x();
-  marker.pose.position.y = pose.translation().y();
-  marker.pose.position.z = pose.translation().z();
+  marker.pose.position.x = rotated_pose.translation().x();
+  marker.pose.position.y = rotated_pose.translation().y();
+  marker.pose.position.z = rotated_pose.translation().z();
 
   // Set orientation
-  auto q = pose.rotation().toQuaternion();  // gtsam::Quaternion
+  auto q = rotated_pose.rotation().toQuaternion();  // gtsam::Quaternion
   marker.pose.orientation.x = q.x();
   marker.pose.orientation.y = q.y();
   marker.pose.orientation.z = q.z();
   marker.pose.orientation.w = q.w();
 
   // Marker scale
-  marker.scale.x = 0.2;  // shaft length for arrow
-  marker.scale.y = 0.2;
-  marker.scale.z = 0.2;
+  marker.scale.x = 0.4;  // length
+  marker.scale.y = 0.1;  // width
+  marker.scale.z =
+      0.1;  // arrow height (should be same as height for a circular arrow)
 
   // Color (RGBA)
   marker.color.r = 0.0f;
@@ -256,7 +264,7 @@ void MPCEstimationVizRos::publishLocalGoalMarker(const gtsam::Pose3& pose,
   text_marker.id = 1;
   text_marker.type = visualization_msgs::msg::Marker::TEXT_VIEW_FACING;
   text_marker.text = name;
-  text_marker.pose.position.z += 0.3;  // offset above the arrow
+  text_marker.pose.position.y -= 0.3;  // offset above the arrow (opencv)
   text_marker.scale.z = 0.1;
   text_marker.color.r = 1.0f;
   text_marker.color.g = 1.0f;
