@@ -297,24 +297,16 @@ class SDFObstacleFactorBase : public gtsam::NoiseModelFactor1<gtsam::Pose3> {
   gtsam::Vector evaluateError(
       const gtsam::Pose3& pose,
       boost::optional<gtsam::Matrix&> J1 = boost::none) const override {
-    // TODO: repeated calculations!!
-    double distance = this->calculateDistance(pose);
 
+    // Note: We do not set up jacobian to 0 when the error is 0 because then the Numerical Derivative struggles
+    // and doesn't work for one of the sides of the obstacle.
     if (J1) {
-      // NOTE: condition on distance directly without limit (std::max) as in
-      // residual function!
-      if (distance >= safety_distance_) {
-        // if (distance <= safety_distance_) {
-        // Zero residual => zero Jacobian
-        *J1 = (gtsam::Matrix(1, 6) << 0.0, 0.0, 0.0, 0.0, 0.0, 0.0).finished();
-      } else {
-        Eigen::Matrix<double, 1, 6> df_f =
-            gtsam::numericalDerivative11<gtsam::Vector1, gtsam::Pose3>(
-                std::bind(&SDFObstacleFactorBase::residual, this,
-                          std::placeholders::_1),
-                pose);
-        *J1 = df_f;
-      }
+      Eigen::Matrix<double, 1, 6> df_f =
+          gtsam::numericalDerivative11<gtsam::Vector1, gtsam::Pose3>(
+              std::bind(&SDFObstacleFactorBase::residual, this,
+                        std::placeholders::_1),
+              pose);
+      *J1 = df_f;
     }
     gtsam::Vector e = residual(pose);
     // LOG(INFO) << "dist " << distance << " error " << e;
@@ -1206,10 +1198,10 @@ MPCFormulation::MPCFormulation(const FormulationParams& params,
   dynamic_obstacle_factor_ =
       gtsam::noiseModel::Isotropic::Sigma(1u, FLAGS_mpc_dynamic_obstacle_sigma);
 
-  // lin_vel_ = Limits{-0.3, 1.0};
-  // ang_vel_ = Limits{-0.5, 0.5};
-  // lin_acc_ = Limits{-1.0, 0.5};
-  // ang_acc_ = Limits{-0.5, 0.5};
+  lin_vel_ = Limits{-0.3, 1.0};
+  ang_vel_ = Limits{-0.5, 0.5};
+  lin_acc_ = Limits{-1.0, 0.5};
+  ang_acc_ = Limits{-0.5, 0.5};
 
   // lin_vel_ = Limits{-0.3, 1.2};
   // ang_vel_ = Limits{-0.5, 0.5};
@@ -1217,10 +1209,10 @@ MPCFormulation::MPCFormulation(const FormulationParams& params,
   // ang_acc_ = Limits{-0.5, 0.5};
 
   // For Following
-  lin_vel_ = Limits{-0.3, 1.8};
-  ang_vel_ = Limits{-0.8, 0.8};
-  lin_acc_ = Limits{-1.2, 0.7};
-  ang_acc_ = Limits{-0.8, 0.8};
+  // lin_vel_ = Limits{-0.3, 1.8};
+  // ang_vel_ = Limits{-0.8, 0.8};
+  // lin_acc_ = Limits{-1.2, 0.7};
+  // ang_acc_ = Limits{-0.8, 0.8};
 
   // For estimation task
   // lin_vel_ = Limits{-0.3, 1.0};
