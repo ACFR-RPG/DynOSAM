@@ -1221,6 +1221,12 @@ MPCFormulation::MPCFormulation(const FormulationParams& params,
   lin_acc_ = Limits{-1.2, 0.7};
   ang_acc_ = Limits{-0.8, 0.8};
 
+  // For estimation task
+  // lin_vel_ = Limits{-0.3, 1.0};
+  // ang_vel_ = Limits{-0.8, 0.8};
+  // lin_acc_ = Limits{-1.0, 0.5};
+  // ang_acc_ = Limits{-1.0, 1.0};
+
   desired_follow_distance_ = FLAGS_mpc_desired_follow_distance;
   desired_follow_heading_ = FLAGS_mpc_desired_follow_heading;
 
