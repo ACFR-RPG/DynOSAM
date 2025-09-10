@@ -1192,9 +1192,10 @@ MPCFormulation::MPCFormulation(const FormulationParams& params,
           6u, FLAGS_mpc_object_prediction_constant_motion_sigma);
   // follow_noise_ =
   //     gtsam::noiseModel::Isotropic::Sigma(2u, FLAGS_mpc_follow_sigma);
-  // TODO: This noise shouldn't be isotropic. Distance is more important than heading.
-  // If heading cost is too strong, robot won't go around the obstacle
-  follow_noise_ = gtsam::noiseModel::Diagonal::Sigmas(gtsam::Vector2(FLAGS_mpc_follow_sigma, 1e2));
+  // TODO: This noise shouldn't be isotropic. Distance is more important than
+  // heading. If heading cost is too strong, robot won't go around the obstacle
+  follow_noise_ = gtsam::noiseModel::Diagonal::Sigmas(
+      gtsam::Vector2(FLAGS_mpc_follow_sigma, 1e2));
 
   goal_noise_ = gtsam::noiseModel::Isotropic::Sigma(3u, FLAGS_mpc_goal_sigma);
   static_obstacle_X_noise_ = gtsam::noiseModel::Isotropic::Sigma(
@@ -1209,7 +1210,7 @@ MPCFormulation::MPCFormulation(const FormulationParams& params,
   // ang_vel_ = Limits{-0.5, 0.5};
   // lin_acc_ = Limits{-1.0, 0.5};
   // ang_acc_ = Limits{-0.5, 0.5};
-  
+
   // lin_vel_ = Limits{-0.3, 1.2};
   // ang_vel_ = Limits{-0.5, 0.5};
   // lin_acc_ = Limits{-1.2, 0.8};
@@ -1693,17 +1694,13 @@ void MPCFormulation::otherUpdatesContext(
   if (!object_available) {
     VLOG(10) << "j=" << object_to_follow << "is unavailable at k=" << frame_k;
 
-    // if we have no more (or just none at all) mission factors AND we're in
-    // follow mode
-    //  add a stabilising prior factor on the last pose
-    bool should_add_stabilising_prior_factor =
-        (mission_type_ == MissionType::FOLLOW);
+    bool mission_factors_expired = false;
     // keep mission factors while variables are still within the time horizon
     if (previous_mission_factors_.exists(object_to_follow)) {
       VLOG(10) << "Found previous mission factors "
                << info_string(frame_k, object_to_follow);
 
-      MissionFactorGraph& current_mission_factors =
+      const MissionFactorGraph& current_mission_factors =
           previous_mission_factors_.at(object_to_follow);
       MissionFactorGraph factors_within_horizon;
 
@@ -1727,21 +1724,22 @@ void MPCFormulation::otherUpdatesContext(
         }
       }
       // update set of current mission factors in previous_mission_factors_
-      current_mission_factors = factors_within_horizon;
+      previous_mission_factors_.at(object_to_follow) = factors_within_horizon;
 
       if (factors_within_horizon.empty()) {
         VLOG(10) << "No more mission factors for "
                  << info_string(frame_k, object_to_follow);
-        should_add_stabilising_prior_factor &= true;
+        mission_factors_expired = true;
         // explicitly delete set of mission factors so we know there are none!!
         previous_mission_factors_.erase(object_to_follow);
       }
     } else {
-      should_add_stabilising_prior_factor &= true;
+      mission_factors_expired = true;
     }
 
-    if (should_add_stabilising_prior_factor) {
-      CHECK(mission_type_ == MissionType::FOLLOW);
+    // if we have no more (or just none at all) mission factors AND we're in
+    // follow mode add a stabilising prior factor on the last pose
+    if (mission_factors_expired && mission_type_ == MissionType::FOLLOW) {
       VLOG(10) << "Adding stabilising prior factor ";
       // add factor on last pose if no object (for now) to stabilise planning
       // using value of latest real pose (ie frame k)
@@ -1801,6 +1799,10 @@ void MPCFormulation::otherUpdatesContext(
               << " good. Adding predictions!";
 
     MissionFactorGraph mission_factors;
+    // specicifically these are (existing) object motions that were in the
+    // future and now are in the past and therefore have a different keyframe.
+    // We will need to update the value to reflect the new keyframe
+    gtsam::KeySet motions_with_new_keyframes;
     if (object_reappeared) {
       // remove all stabilising factors as we're about to add new ones
       if (stabilising_object_factors_.exists(object_to_follow)) {
@@ -1838,6 +1840,7 @@ void MPCFormulation::otherUpdatesContext(
             // will remove it at the next frame! this only makes sense for other
             // factors...
             result.batch_update_params.factors_to_remove.add(factor);
+            motions_with_new_keyframes.insert(motion_key);
           }
         }
         // remove tracking of these factors as we'll never touch these
@@ -1857,14 +1860,16 @@ void MPCFormulation::otherUpdatesContext(
                       "factors. This means it REappeared without disappearing!";
       }
 
-      //if object has re-appeared we need to delete all previous mission factors as we're about to add all new ones
+      // if object has re-appeared we need to delete all previous mission
+      // factors as we're about to add all new ones
       if (previous_mission_factors_.exists(object_to_follow)) {
         VLOG(10) << "Found previous mission factors "
-                << info_string(frame_k, object_to_follow) << ". Deleting all";
+                 << info_string(frame_k, object_to_follow) << ". Deleting all";
 
         const MissionFactorGraph& remaining_mission_factor =
             previous_mission_factors_.at(object_to_follow);
-        result.batch_update_params.factors_to_remove.add(remaining_mission_factor);
+        result.batch_update_params.factors_to_remove.add(
+            remaining_mission_factor);
         previous_mission_factors_.erase(object_to_follow);
       }
     }
@@ -1897,6 +1902,32 @@ void MPCFormulation::otherUpdatesContext(
 
     const auto [reference_frame_e, L_e] =
         this->getObjectKeyFrame(object_to_follow, frame_k);
+
+    for (const auto& motion_key : motions_with_new_keyframes) {
+      VLOG(10) << "Correcting object motion with new linearization point "
+               << formatter(motion_key);
+
+      ObjectId object_id_internal;
+      FrameId frame_id_internal;
+      CHECK(reconstructMotionInfo(motion_key, object_id_internal,
+                                  frame_id_internal));
+
+      // ideally want to check what reference_frame_e these motions were
+      // associated with but as we have
+      // just made a new keyframe these frame_ids will be associated with the
+      // new frame e and not the previous one!
+      // const auto [reference_frame_e_internal, L_e_internal] =
+      //   this->getObjectKeyFrame(object_id_internal, frame_id_internal);
+
+      // CHECK_LT(reference_frame_e_internal, reference_frame_e);
+      // //these motions must be in the past now
+      // CHECK_LT(frame_id_internal, frame_k);
+      // //HACK set to identity and let the optimizer figure it out...
+      // really should be whatever computeInitialH calculates..?
+      result.batch_update_params.values_relinearize.insert(
+          motion_key, gtsam::Pose3::Identity());
+    }
+
     gtsam::Pose3 L_W_k = *L_W_k_query;
     gtsam::Pose3 H_W_km1_k = *H_W_km1_k_query;
     // gtsam::Pose3 H_W_km1_k = gtsam::Pose3(gtsam::Rot3::Identity(),
@@ -1923,6 +1954,7 @@ void MPCFormulation::otherUpdatesContext(
       auto motion_key_k_m2_predicted =
           ObjectMotionSymbol(object_to_follow, frame_id - 2u);
 
+      // motion does not exist so we should insert it
       if (auto hybrid_motion_query = accessor->queryWithTheta<gtsam::Pose3>(
               motion_key_k_predicted, new_values);
           !hybrid_motion_query) {

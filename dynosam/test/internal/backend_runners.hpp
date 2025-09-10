@@ -205,7 +205,23 @@ struct BatchTester : public RegularBackendTester {
 
 struct DefaultTester : public RegularBackendTester {
   DefaultTester(dyno::RegularBackendModule::Ptr backend_)
-      : RegularBackendTester(backend_) {}
+      : RegularBackendTester(backend_) {
+    // backend->registerPostFormulationUpdateCallback(
+    //     [&](const RegularBackendModule::FormulationType::UniquePtr&,
+    //         dyno::FrameId frame_id, const gtsam::Values&,
+    //         const gtsam::NonlinearFactorGraph&) -> void {
+    //       const auto [theta, factor_graph] =
+    //       backend->getActiveOptimisation();
+
+    //     factor_graph.saveGraph(
+    //         dyno::getOutputFilePath("active_graph_" +
+    //                                 std::to_string(spin_state_frame_id) + "_"
+    //                                 + backend->formulationName() + ".dot"),
+    //         dyno::DynoLikeKeyFormatter);
+    //     VLOG(10) << "Saving active graph for spin state frame id "
+    //             << spin_state_frame_id;
+    //     });
+  }
 
   void onFinish() override {}
   void postSpin() override {

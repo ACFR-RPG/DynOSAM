@@ -77,6 +77,8 @@ struct UpdateObservationResult {
     //! Since no batch algorithm (even fixed-lag smoothers) have a 1-to-1 factor
     //! index like ISAM2, this interface will find the factors manually
     gtsam::NonlinearFactorGraph factors_to_remove;
+    //! Set of existing values to update directly
+    gtsam::Values values_relinearize;
   };
 
   //! Batch update params.

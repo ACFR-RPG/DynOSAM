@@ -612,6 +612,8 @@ TEST(RegularBackendModule, testObjectCentricFormulations) {
               // motion only in x
               gtsam::Pose3(gtsam::Rot3::RzRyRx(0.2, 0.1, 0.0),
                            gtsam::Point3(4.7, 2.3, 0))),
+          // gtsam::Pose3(gtsam::Rot3::RzRyRx(0.0, 0.0, 0.0),
+          //                gtsam::Point3(4.7, 2.3, 0))),
           std::make_unique<dyno_testing::RandomOverlapObjectPointsVisitor>(
               num_points, obj1_overlap),
           object1_body_params);

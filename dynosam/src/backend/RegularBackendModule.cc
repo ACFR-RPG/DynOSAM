@@ -232,7 +232,7 @@ void RegularBackendModule::setupUpdates() {
 
     LevenbergMarquardtParams lm_params;
     sliding_window_ =
-        std::make_unique<gtsam::BatchFixedLagSmoother>(smoother_lag, lm_params);
+        std::make_unique<dyno::BatchFixedLagSmoother>(smoother_lag, lm_params);
   }
 
   if (optimization_mode == RegularOptimizationType::INCREMENTAL) {
@@ -261,8 +261,7 @@ RegularBackendModule::getActiveOptimisation() const {
     const auto graph = formulation_->getGraph();
     return {theta, graph};
   } else if (optimization_mode == RegularOptimizationType::SLIDING_WINDOW) {
-    using SmootherInterface =
-        IncrementalInterface<gtsam::BatchFixedLagSmoother>;
+    using SmootherInterface = IncrementalInterface<dyno::BatchFixedLagSmoother>;
     SmootherInterface smoother_interface(sliding_window_.get());
     const auto graph = smoother_interface.getFactors();
     const auto theta = smoother_interface.getLinearizationPoint();
@@ -459,7 +458,7 @@ void RegularBackendModule::updateSlidingWindow(
   //   formulation_->updateTheta(sw_result.result);
   // }
   CHECK(sliding_window_);
-  using SmootherInterface = IncrementalInterface<gtsam::BatchFixedLagSmoother>;
+  using SmootherInterface = IncrementalInterface<dyno::BatchFixedLagSmoother>;
   SmootherInterface smoother_interface(sliding_window_.get());
   // since it is actually batch dont do extra iterations
   smoother_interface.setMaxExtraIterations(0);
@@ -515,6 +514,9 @@ void RegularBackendModule::updateSlidingWindow(
       timestamps[key_value.key] = curr_id;
     }
   }
+  const gtsam::Values& values_relin =
+      post_update_data.other_update_result.batch_update_params
+          .values_relinearize;
 
   SmootherInterface::ResultType result;
   bool is_smoother_ok = smoother_interface.optimize(
@@ -525,6 +527,7 @@ void RegularBackendModule::updateSlidingWindow(
         update_arguments.new_factors = new_factors;
         update_arguments.timestamps = timestamps;
         update_arguments.factors_to_remove = factors_to_remove;
+        update_arguments.values_relin = values_relin;
       },
       error_hooks_);
 

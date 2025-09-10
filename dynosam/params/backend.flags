@@ -92,6 +92,7 @@
 
 # Dyno MPC stuff
 --mpc_horizon=30
+# --mpc_horizon=10/
 --mpc_vel2d_prior_sigma=5e-3
 --mpc_vel2d_limit_sigma=1e-2
 

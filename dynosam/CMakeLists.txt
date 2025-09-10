@@ -145,6 +145,7 @@ add_library(${PROJECT_NAME} SHARED
   src/backend/optimizers/ISAM2Clique.cc
   src/backend/optimizers/ISAM2Params.cc
   src/backend/optimizers/IncrementalOptimization.cc
+  src/backend/optimizers/BatchFixedLagSmoother.cc
 
   # src/backend/ISAM2Agent.cc
   #src/backend/rgbd/impl/ObjectTrackingIsamAgent.cc
