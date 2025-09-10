@@ -42,6 +42,8 @@
 // TODO: in latest gtsam this is in gtsam
 #include <gtsam_unstable/nonlinear/BatchFixedLagSmoother.h>
 
+#include "dynosam/backend/optimizers/BatchFixedLagSmoother.hpp"
+
 namespace dyno {
 
 /**
@@ -228,6 +230,45 @@ struct batch_fixed_lag_traits
   }
 };
 
+struct dyno_batch_fixed_lag_traits {
+  typedef dyno::BatchFixedLagSmoother Smoother;
+  typedef dyno::BatchFixedLagSmoother::Result ResultType;
+
+  struct DynoBatchFixedLagUpdateArguments
+      : public UpdateArguments,
+        public dyno::BatchFixedLagSmoother::UpdateParams {};
+
+  typedef DynoBatchFixedLagUpdateArguments UpdateArguments;
+
+  using FillArguments = std::function<void(const Smoother&, UpdateArguments&)>;
+
+  static ResultType update(dyno::BatchFixedLagSmoother& smoother,
+                           const UpdateArguments& update_arguments) {
+    return smoother.update(
+        update_arguments.new_factors, update_arguments.new_values,
+        update_arguments.timestamps, update_arguments.factors_to_remove);
+  }
+
+  static ResultType update(Smoother& smoother,
+                           const FillArguments& update_arguments_filler) {
+    UpdateArguments arguments;
+    update_arguments_filler(smoother, arguments);
+    return update(smoother, arguments);
+  }
+
+  static gtsam::NonlinearFactorGraph getFactors(const Smoother& smoother) {
+    return smoother.getFactors();
+  }
+
+  static gtsam::Values calculateEstimate(const Smoother& smoother) {
+    return smoother.calculateEstimate();
+  }
+
+  static gtsam::Values getLinearizationPoint(const Smoother& smoother) {
+    return smoother.getLinearizationPoint();
+  }
+};
+
 template <>
 struct iOptimizationTraits<gtsam::IncrementalFixedLagSmoother>
     : public incremental_fixed_lag_traits {};
@@ -235,6 +276,10 @@ struct iOptimizationTraits<gtsam::IncrementalFixedLagSmoother>
 template <>
 struct iOptimizationTraits<gtsam::BatchFixedLagSmoother>
     : public batch_fixed_lag_traits {};
+
+template <>
+struct iOptimizationTraits<dyno::BatchFixedLagSmoother>
+    : public dyno_batch_fixed_lag_traits {};
 
 struct ErrorHandlingHooks {
   ErrorHandlingHooks() {}

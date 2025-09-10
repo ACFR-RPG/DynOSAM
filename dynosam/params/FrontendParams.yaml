@@ -43,7 +43,7 @@ tracker_params:
   shrink_row: 0
   shrink_col: 0
   max_nr_keypoints_before_anms: 1000
-  max_features_per_frame: 200
+  max_features_per_frame: 300
   max_feature_track_age: 20
 
   max_dynamic_features_per_frame: 80

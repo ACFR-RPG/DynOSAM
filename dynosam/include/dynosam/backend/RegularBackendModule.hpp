@@ -32,7 +32,7 @@
 #include <gtsam/nonlinear/ISAM2.h>
 #include <gtsam/nonlinear/NonlinearFactorGraph.h>
 #include <gtsam/nonlinear/Values.h>
-#include <gtsam_unstable/nonlinear/BatchFixedLagSmoother.h>
+// #include <gtsam_unstable/nonlinear/BatchFixedLagSmoother.h>
 #include <gtsam_unstable/nonlinear/IncrementalFixedLagSmoother.h>
 
 #include "dynosam/backend/BackendDefinitions.hpp"
@@ -41,6 +41,7 @@
 #include "dynosam/backend/Formulation.hpp"
 #include "dynosam/backend/RegularBackendDefinitions.hpp"
 #include "dynosam/backend/VisionImuBackendModule.hpp"
+#include "dynosam/backend/optimizers/BatchFixedLagSmoother.hpp"
 #include "dynosam/backend/optimizers/ISAM2.hpp"
 #include "dynosam/backend/optimizers/IncrementalOptimization.hpp"
 // #include "dynosam/backend/optimizers/SlidingWindowOptimization.hpp"
@@ -168,7 +169,7 @@ class RegularBackendModule
 
   // optimizers are set in setupUpdates() depending on
   // SlidingWindowOptimization::UniquePtr sliding_window_opt_;
-  std::unique_ptr<gtsam::BatchFixedLagSmoother> sliding_window_;
+  std::unique_ptr<dyno::BatchFixedLagSmoother> sliding_window_;
   std::unique_ptr<dyno::ISAM2> smoother_;
 
   //! External callback containing formulation data and new values and factors
