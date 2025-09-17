@@ -392,14 +392,6 @@ void RegularBackendModule::updateIncremental(
   PostUpdateData::IncrementalResult incremental_result;
   incremental_result.factors = smoother_interface.getFactors();
 
-  // LOG(INFO) << "After increemental update " <<
-  // incremental_result.factors.size(); for(size_t i = 0; i <
-  // incremental_result.factors.size(); i++) {
-  //   std::cout << "idx " << i << " ";
-  //   incremental_result.factors.at(i)->print("");
-  //   std::cout << "\n";
-  // }
-
   convert(result, incremental_result.isam2);
 
   post_update_data.incremental_result = incremental_result;
@@ -538,6 +530,11 @@ void RegularBackendModule::updateSlidingWindow(
   LOG(INFO) << "BatchFixedLagSmoother result: error " << result.getError();
   gtsam::Values optimised_values = smoother_interface.calculateEstimate();
   formulation_->updateTheta(optimised_values);
+
+  // JUST FOR DYNO_MPC to log data at each frame
+  auto backend_info = createBackendMetadata();
+  backend_info.logging_suffix = "k_" + std::to_string(spin_state_.frame_id);
+  formulation_->logBackendFromMap(backend_info);
 }
 
 void RegularBackendModule::logIncrementalStats(
@@ -547,10 +544,6 @@ void RegularBackendModule::logIncrementalStats(
                              const std::string& file_type =
                                  ".csv") -> std::string {
     std::string file_name = formulation_->getFullyQualifiedName() + name;
-    // const std::string& suffix = base_params_.updater_suffix;
-    // if (!suffix.empty()) {
-    //   file_name += ("_" + suffix);
-    // }
     file_name += file_type;
     return getOutputFilePath(file_name);
   };
