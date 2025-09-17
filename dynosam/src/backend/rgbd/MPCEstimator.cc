@@ -1187,7 +1187,7 @@ MPCFormulation::MPCFormulation(const FormulationParams& params,
   // TODO: This noise shouldn't be isotropic. Distance is more important than
   // heading. If heading cost is too strong, robot won't go around the obstacle
   follow_noise_ = gtsam::noiseModel::Diagonal::Sigmas(
-      gtsam::Vector2(FLAGS_mpc_follow_sigma, 1e2));
+      gtsam::Vector2(FLAGS_mpc_follow_sigma, 5e-2));
 
   goal_noise_ = gtsam::noiseModel::Isotropic::Sigma(3u, FLAGS_mpc_goal_sigma);
   static_obstacle_X_noise_ = gtsam::noiseModel::Isotropic::Sigma(
@@ -1198,15 +1198,15 @@ MPCFormulation::MPCFormulation(const FormulationParams& params,
   dynamic_obstacle_factor_ =
       gtsam::noiseModel::Isotropic::Sigma(1u, FLAGS_mpc_dynamic_obstacle_sigma);
 
-  // lin_vel_ = Limits{-0.3, 1.0};
-  // ang_vel_ = Limits{-0.5, 0.5};
-  // lin_acc_ = Limits{-1.0, 0.5};
-  // ang_acc_ = Limits{-0.5, 0.5};
-
-  lin_vel_ = Limits{-0.3, 1.2};
+  lin_vel_ = Limits{-0.3, 1.0};
   ang_vel_ = Limits{-0.5, 0.5};
-  lin_acc_ = Limits{-1.2, 0.8};
+  lin_acc_ = Limits{-1.0, 0.5};
   ang_acc_ = Limits{-0.5, 0.5};
+
+  // lin_vel_ = Limits{-0.3, 1.2};
+  // ang_vel_ = Limits{-0.5, 0.5};
+  // lin_acc_ = Limits{-1.2, 0.8};
+  // ang_acc_ = Limits{-0.5, 0.5};
 
 
   // lin_vel_ = Limits{-0.5, 1.72};
