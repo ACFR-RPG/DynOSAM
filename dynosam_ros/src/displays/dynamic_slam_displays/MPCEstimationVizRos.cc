@@ -134,7 +134,7 @@ void MPCEstimationVizRos::spin(Timestamp timestamp, FrameId frame_k,
       formulation->getObjectPredictions(frame_k);
 
   LOG(INFO) << "Predicted poses of size " << predicted_camera_poses.size();
-
+  
   prediction_transport_.publishVisualOdometryPath(predicted_camera_poses,
                                                   timestamp);
 
@@ -247,15 +247,15 @@ void MPCEstimationVizRos::publishLocalGoalMarker(const gtsam::Pose3& pose,
   marker.pose.orientation.w = q.w();
 
   // Marker scale
-  marker.scale.x = 0.4;  // length
-  marker.scale.y = 0.1;  // width
+  marker.scale.x = 0.6;  // length
+  marker.scale.y = 0.2;  // width
   marker.scale.z =
-      0.1;  // arrow height (should be same as height for a circular arrow)
+      0.2;  // arrow height (should be same as width for a circular arrow)
 
   // Color (RGBA)
-  marker.color.r = 0.0f;
-  marker.color.g = 1.0f;
-  marker.color.b = 0.0f;
+  marker.color.r = 0.831; //1.0f;
+  marker.color.g = 0.4 ; //0.0f;
+  marker.color.b = 0.851; //0.0f;
   marker.color.a = 1.0f;
 
   // Optional: text marker for title
@@ -274,7 +274,7 @@ void MPCEstimationVizRos::publishLocalGoalMarker(const gtsam::Pose3& pose,
   // Publish as a MarkerArray
   visualization_msgs::msg::MarkerArray marker_array;
   marker_array.markers.push_back(marker);
-  marker_array.markers.push_back(text_marker);
+  // marker_array.markers.push_back(text_marker);
 
   local_goal_marker_pub_->publish(marker_array);
 }

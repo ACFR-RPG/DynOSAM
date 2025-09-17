@@ -1198,10 +1198,27 @@ MPCFormulation::MPCFormulation(const FormulationParams& params,
   dynamic_obstacle_factor_ =
       gtsam::noiseModel::Isotropic::Sigma(1u, FLAGS_mpc_dynamic_obstacle_sigma);
 
-  lin_vel_ = Limits{-0.3, 1.0};
+  // lin_vel_ = Limits{-0.3, 1.0};
+  // ang_vel_ = Limits{-0.5, 0.5};
+  // lin_acc_ = Limits{-1.0, 0.5};
+  // ang_acc_ = Limits{-0.5, 0.5};
+
+  lin_vel_ = Limits{-0.3, 1.2};
   ang_vel_ = Limits{-0.5, 0.5};
-  lin_acc_ = Limits{-1.0, 0.5};
+  lin_acc_ = Limits{-1.2, 0.8};
   ang_acc_ = Limits{-0.5, 0.5};
+
+
+  // lin_vel_ = Limits{-0.5, 1.72};
+  // ang_vel_ = Limits{-0.8, 0.8};
+  // lin_acc_ = Limits{-1.2, 0.8};
+  // ang_acc_ = Limits{-1.0, 1.0};
+
+
+  // lin_vel_ = Limits{-0.3, 1.6};
+  // ang_vel_ = Limits{-1.0, 1.0};
+  // lin_acc_ = Limits{-1.2, 1.2};
+  // ang_acc_ = Limits{-0.8, 0.8};
 
   // lin_vel_ = Limits{-0.3, 1.2};
   // ang_vel_ = Limits{-0.5, 0.5};
@@ -1215,10 +1232,15 @@ MPCFormulation::MPCFormulation(const FormulationParams& params,
   // ang_acc_ = Limits{-0.8, 0.8};
 
   // For estimation task
-  // lin_vel_ = Limits{-0.3, 1.0};
+  // lin_vel_ = Limits{-0.5, 1.72};
   // ang_vel_ = Limits{-0.8, 0.8};
-  // lin_acc_ = Limits{-1.0, 0.5};
+  // lin_acc_ = Limits{-1.2, 0.8};
   // ang_acc_ = Limits{-1.0, 1.0};
+
+  // lin_vel_ = Limits{-0.3, 1.6};
+  // ang_vel_ = Limits{-1.0, 1.0};
+  // lin_acc_ = Limits{-1.2, 1.2};
+  // ang_acc_ = Limits{-0.8, 0.8};
 
   desired_follow_distance_ = FLAGS_mpc_desired_follow_distance;
   desired_follow_heading_ = FLAGS_mpc_desired_follow_heading;
@@ -1545,7 +1567,7 @@ void MPCFormulation::otherUpdatesContext(
       if (frame_id == frame_k + 1) {
         if (use_directed_factors) {
           // add zero jacobian on first 'pair' of iteration
-          factor = boost::make_shared<MotionModelFactor<1>>(
+          factor = boost::make_shared<MotionModelFactor<1, 3>>(
               camera_key_previous, camera_key, control_key_previous,
               control_key, accel_key_previous, dynamic_factor_noise_, dt_);
         } else {
