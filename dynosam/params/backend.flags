@@ -101,7 +101,7 @@
 --mpc_accel2d_smoothing_sigma=5e3
 --mpc_dynamic_factor_sigma=1e-3
 --mpc_object_prediction_constant_motion_sigma=1e-2
---mpc_follow_sigma=5e1
+--mpc_follow_sigma=5e-2
 --mpc_goal_sigma=1e-1
 
 
@@ -121,11 +121,12 @@
 --mpc_static_sdf_H_safety_distance=0.7
 --mpc_dynamic_obstacle_safety_distance=1.4
 
+# To worsely tune planning but keep GTSAM not crashing
 # --mpc_static_sdf_X_safety_distance_sigma=1e-4
 # --mpc_goal_sigma=1e-2
 # --mpc_dynamic_factor_sigma=1e-5
 
---mpc_use_directed_factors=false
+--mpc_use_directed_factors=true
 
 --mpc_local_goal_horizin=120
 
