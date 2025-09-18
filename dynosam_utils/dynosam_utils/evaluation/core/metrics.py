@@ -97,8 +97,6 @@ class RME(APE):
         # -1 on timestamps so that the size matches the size of the motion error (ie. k...N)
         self.timestamps = np.array(traj_motion_est.timestamps)
 
-        print(f"object motion L {len(object_motion_L)}")
-
         object_traj_in_L = traj.PoseTrajectory3D(poses_se3=np.array(object_motion_L), timestamps=self.timestamps)
         object_traj_in_L_ref = traj.PoseTrajectory3D(poses_se3=np.array(object_motion_L_gt), timestamps=self.timestamps)
 
