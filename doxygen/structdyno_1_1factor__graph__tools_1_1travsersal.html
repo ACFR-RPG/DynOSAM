@@ -121,7 +121,7 @@ Static Public Member Functions</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="FactorGraphTools_8hpp_source.html#l00143">143</a> of file <a class="el" href="FactorGraphTools_8hpp_source.html">FactorGraphTools.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FactorGraphTools_8hpp_source.html#l00161">161</a> of file <a class="el" href="FactorGraphTools_8hpp_source.html">FactorGraphTools.hpp</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="a45d362dbd3a552e2b39b1a44c1e1548a" name="a45d362dbd3a552e2b39b1a44c1e1548a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a45d362dbd3a552e2b39b1a44c1e1548a">&#9670;&#160;</a></span>CliqueVisitor</h2>
@@ -137,7 +137,7 @@ template&lt;typename CLQUE &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="FactorGraphTools_8hpp_source.html#l00147">147</a> of file <a class="el" href="FactorGraphTools_8hpp_source.html">FactorGraphTools.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FactorGraphTools_8hpp_source.html#l00164">164</a> of file <a class="el" href="FactorGraphTools_8hpp_source.html">FactorGraphTools.hpp</a>.</p>
 
 </div>
 </div>
@@ -199,22 +199,25 @@ template&lt;typename CLIQUE &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="FactorGraphTools_8hpp_source.html#l00195">195</a> of file <a class="el" href="FactorGraphTools_8hpp_source.html">FactorGraphTools.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  196</span>                                                                                                                                             {</div>
-<div class="line"><span class="lineno">  197</span>        Data rootdata;</div>
-<div class="line"><span class="lineno">  198</span>        NodeVisitor&lt;CLIQUE&gt; post_visitor(post_op_visitor);</div>
-<div class="line"><span class="lineno">  199</span>        NodeVisitor&lt;CLIQUE&gt; pre_visitor(pre_op_visitor);</div>
-<div class="line"><span class="lineno">  200</span>        <span class="comment">//TODO: see gtsam/inference/inference-inst.h where the elimate function is actually called</span></div>
-<div class="line"><span class="lineno">  201</span>        <span class="comment">//they have both post and pre order traversal and i&#39;m not sure which one is used...</span></div>
-<div class="line"><span class="lineno">  202</span>        <span class="comment">//the bayes tree paper talkes about solving where a parse up from the leaves is computed and then a pass down where the optimal assignment</span></div>
-<div class="line"><span class="lineno">  203</span>        <span class="comment">//is retrieved</span></div>
-<div class="line"><span class="lineno">  204</span>        <span class="comment">//I believe that the pass up (which must be post-order) is also equivalent to the elimination ordering</span></div>
-<div class="line"><span class="lineno">  205</span> </div>
-<div class="line"><span class="lineno">  206</span>        <span class="comment">// NOTE: not using threaded version</span></div>
-<div class="line"><span class="lineno">  207</span>        <span class="comment">// TbbOpenMPMixedScope threadLimiter; // Limits OpenMP threads since we&#39;re mixing TBB and OpenMP</span></div>
-<div class="line"><span class="lineno">  208</span>        <span class="comment">// treeTraversal::DepthFirstForestParallel(bayesTree, rootData, preVisitor, postVisitor);</span></div>
-<div class="line"><span class="lineno">  209</span>        gtsam::treeTraversal::DepthFirstForest(bayes_tree, rootdata, pre_visitor, post_visitor);</div>
-<div class="line"><span class="lineno">  210</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="FactorGraphTools_8hpp_source.html#l00211">211</a> of file <a class="el" href="FactorGraphTools_8hpp_source.html">FactorGraphTools.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  213</span>                                                                               {</div>
+<div class="line"><span class="lineno">  214</span>    Data rootdata;</div>
+<div class="line"><span class="lineno">  215</span>    NodeVisitor&lt;CLIQUE&gt; post_visitor(post_op_visitor);</div>
+<div class="line"><span class="lineno">  216</span>    NodeVisitor&lt;CLIQUE&gt; pre_visitor(pre_op_visitor);</div>
+<div class="line"><span class="lineno">  217</span>    <span class="comment">// TODO: see gtsam/inference/inference-inst.h where the elimate function is</span></div>
+<div class="line"><span class="lineno">  218</span>    <span class="comment">// actually called they have both post and pre order traversal and i&#39;m not</span></div>
+<div class="line"><span class="lineno">  219</span>    <span class="comment">// sure which one is used... the bayes tree paper talkes about solving where</span></div>
+<div class="line"><span class="lineno">  220</span>    <span class="comment">// a parse up from the leaves is computed and then a pass down where the</span></div>
+<div class="line"><span class="lineno">  221</span>    <span class="comment">// optimal assignment is retrieved I believe that the pass up (which must be</span></div>
+<div class="line"><span class="lineno">  222</span>    <span class="comment">// post-order) is also equivalent to the elimination ordering</span></div>
+<div class="line"><span class="lineno">  223</span> </div>
+<div class="line"><span class="lineno">  224</span>    <span class="comment">// NOTE: not using threaded version</span></div>
+<div class="line"><span class="lineno">  225</span>    <span class="comment">// TbbOpenMPMixedScope threadLimiter; // Limits OpenMP threads since we&#39;re</span></div>
+<div class="line"><span class="lineno">  226</span>    <span class="comment">// mixing TBB and OpenMP treeTraversal::DepthFirstForestParallel(bayesTree,</span></div>
+<div class="line"><span class="lineno">  227</span>    <span class="comment">// rootData, preVisitor, postVisitor);</span></div>
+<div class="line"><span class="lineno">  228</span>    gtsam::treeTraversal::DepthFirstForest(bayes_tree, rootdata, pre_visitor,</div>
+<div class="line"><span class="lineno">  229</span>                                           post_visitor);</div>
+<div class="line"><span class="lineno">  230</span>  }</div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="structdyno_1_1factor__graph__tools_1_1travsersal.html#a1867e64242205b075bca6705803a047b">depthFirstTraversalEliminiationOrder()</a>.</p>
 <div class="dynheader">
@@ -267,11 +270,11 @@ template&lt;typename CLIQUE &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="FactorGraphTools_8hpp_source.html#l00213">213</a> of file <a class="el" href="FactorGraphTools_8hpp_source.html">FactorGraphTools.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  213</span>                                                                                                                                     {</div>
-<div class="line"><span class="lineno">  214</span>        <a class="code hl_function" href="structdyno_1_1factor__graph__tools_1_1travsersal.html#afcfb57d94f36bdf673765d1a758db18a">depthFirstTraversal</a>(bayes_tree, visitor, NoopCliqueVisitor&lt;CLIQUE&gt;);</div>
-<div class="line"><span class="lineno">  215</span>    }</div>
-<div class="ttc" id="astructdyno_1_1factor__graph__tools_1_1travsersal_html_afcfb57d94f36bdf673765d1a758db18a"><div class="ttname"><a href="structdyno_1_1factor__graph__tools_1_1travsersal.html#afcfb57d94f36bdf673765d1a758db18a">dyno::factor_graph_tools::travsersal::depthFirstTraversal</a></div><div class="ttdeci">static void depthFirstTraversal(const gtsam::BayesTree&lt; CLIQUE &gt; &amp;bayes_tree, const CliqueVisitor&lt; CLIQUE &gt; &amp;post_op_visitor, const CliqueVisitor&lt; CLIQUE &gt; &amp;pre_op_visitor)</div><div class="ttdoc">Traverses a tree and calls the user defined visitor function at every pre-visit.</div><div class="ttdef"><b>Definition:</b> <a href="FactorGraphTools_8hpp_source.html#l00195">FactorGraphTools.hpp:195</a></div></div>
+<p class="definition">Definition at line <a class="el" href="FactorGraphTools_8hpp_source.html#l00233">233</a> of file <a class="el" href="FactorGraphTools_8hpp_source.html">FactorGraphTools.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  235</span>                                            {</div>
+<div class="line"><span class="lineno">  236</span>    <a class="code hl_function" href="structdyno_1_1factor__graph__tools_1_1travsersal.html#afcfb57d94f36bdf673765d1a758db18a">depthFirstTraversal</a>(bayes_tree, visitor, NoopCliqueVisitor&lt;CLIQUE&gt;);</div>
+<div class="line"><span class="lineno">  237</span>  }</div>
+<div class="ttc" id="astructdyno_1_1factor__graph__tools_1_1travsersal_html_afcfb57d94f36bdf673765d1a758db18a"><div class="ttname"><a href="structdyno_1_1factor__graph__tools_1_1travsersal.html#afcfb57d94f36bdf673765d1a758db18a">dyno::factor_graph_tools::travsersal::depthFirstTraversal</a></div><div class="ttdeci">static void depthFirstTraversal(const gtsam::BayesTree&lt; CLIQUE &gt; &amp;bayes_tree, const CliqueVisitor&lt; CLIQUE &gt; &amp;post_op_visitor, const CliqueVisitor&lt; CLIQUE &gt; &amp;pre_op_visitor)</div><div class="ttdoc">Traverses a tree and calls the user defined visitor function at every pre-visit.</div><div class="ttdef"><b>Definition:</b> <a href="FactorGraphTools_8hpp_source.html#l00211">FactorGraphTools.hpp:211</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="structdyno_1_1factor__graph__tools_1_1travsersal.html#afcfb57d94f36bdf673765d1a758db18a">depthFirstTraversal()</a>.</p>
 
@@ -326,22 +329,24 @@ template&lt;typename CLIQUE &gt; </div>
 
 <p>Gets keys in elimination order by traversing the tree in post-order. </p>
 
-<p class="definition">Definition at line <a class="el" href="FactorGraphTools_8hpp_source.html#l00219">219</a> of file <a class="el" href="FactorGraphTools_8hpp_source.html">FactorGraphTools.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  219</span>                                                                                    {</div>
-<div class="line"><span class="lineno">  220</span>        gtsam::KeySet keys;</div>
-<div class="line"><span class="lineno">  221</span>        CliqueVisitor&lt;CLIQUE&gt; visitor = [&amp;keys](<span class="keyword">const</span> boost::shared_ptr&lt;CLIQUE&gt;&amp; clique) -&gt; <span class="keywordtype">void</span> {</div>
-<div class="line"><span class="lineno">  222</span>            <span class="keyword">auto</span> conditional = clique-&gt;conditional();</div>
-<div class="line"><span class="lineno">  223</span>            <span class="comment">//it is FACTOR::const_iterator</span></div>
-<div class="line"><span class="lineno">  224</span>            <span class="keywordflow">for</span>(<span class="keyword">auto</span> it = conditional-&gt;beginFrontals(); it != conditional-&gt;endFrontals(); it++) {</div>
-<div class="line"><span class="lineno">  225</span>                keys.insert(*it);</div>
-<div class="line"><span class="lineno">  226</span>            }</div>
-<div class="line"><span class="lineno">  227</span>        };</div>
-<div class="line"><span class="lineno">  228</span> </div>
-<div class="line"><span class="lineno">  229</span>        <a class="code hl_function" href="structdyno_1_1factor__graph__tools_1_1travsersal.html#a1867e64242205b075bca6705803a047b">depthFirstTraversalEliminiationOrder</a>(bayes_tree, visitor);</div>
-<div class="line"><span class="lineno">  230</span> </div>
-<div class="line"><span class="lineno">  231</span>        <span class="keywordflow">return</span> keys;</div>
-<div class="line"><span class="lineno">  232</span>    }</div>
-<div class="ttc" id="astructdyno_1_1factor__graph__tools_1_1travsersal_html_a1867e64242205b075bca6705803a047b"><div class="ttname"><a href="structdyno_1_1factor__graph__tools_1_1travsersal.html#a1867e64242205b075bca6705803a047b">dyno::factor_graph_tools::travsersal::depthFirstTraversalEliminiationOrder</a></div><div class="ttdeci">static void depthFirstTraversalEliminiationOrder(const gtsam::BayesTree&lt; CLIQUE &gt; &amp;bayes_tree, const CliqueVisitor&lt; CLIQUE &gt; &amp;visitor)</div><div class="ttdef"><b>Definition:</b> <a href="FactorGraphTools_8hpp_source.html#l00213">FactorGraphTools.hpp:213</a></div></div>
+<p class="definition">Definition at line <a class="el" href="FactorGraphTools_8hpp_source.html#l00241">241</a> of file <a class="el" href="FactorGraphTools_8hpp_source.html">FactorGraphTools.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  242</span>                                                {</div>
+<div class="line"><span class="lineno">  243</span>    gtsam::KeySet keys;</div>
+<div class="line"><span class="lineno">  244</span>    CliqueVisitor&lt;CLIQUE&gt; visitor =</div>
+<div class="line"><span class="lineno">  245</span>        [&amp;keys](<span class="keyword">const</span> boost::shared_ptr&lt;CLIQUE&gt;&amp; clique) -&gt; <span class="keywordtype">void</span> {</div>
+<div class="line"><span class="lineno">  246</span>      <span class="keyword">auto</span> conditional = clique-&gt;conditional();</div>
+<div class="line"><span class="lineno">  247</span>      <span class="comment">// it is FACTOR::const_iterator</span></div>
+<div class="line"><span class="lineno">  248</span>      <span class="keywordflow">for</span> (<span class="keyword">auto</span> it = conditional-&gt;beginFrontals();</div>
+<div class="line"><span class="lineno">  249</span>           it != conditional-&gt;endFrontals(); it++) {</div>
+<div class="line"><span class="lineno">  250</span>        keys.insert(*it);</div>
+<div class="line"><span class="lineno">  251</span>      }</div>
+<div class="line"><span class="lineno">  252</span>    };</div>
+<div class="line"><span class="lineno">  253</span> </div>
+<div class="line"><span class="lineno">  254</span>    <a class="code hl_function" href="structdyno_1_1factor__graph__tools_1_1travsersal.html#a1867e64242205b075bca6705803a047b">depthFirstTraversalEliminiationOrder</a>(bayes_tree, visitor);</div>
+<div class="line"><span class="lineno">  255</span> </div>
+<div class="line"><span class="lineno">  256</span>    <span class="keywordflow">return</span> keys;</div>
+<div class="line"><span class="lineno">  257</span>  }</div>
+<div class="ttc" id="astructdyno_1_1factor__graph__tools_1_1travsersal_html_a1867e64242205b075bca6705803a047b"><div class="ttname"><a href="structdyno_1_1factor__graph__tools_1_1travsersal.html#a1867e64242205b075bca6705803a047b">dyno::factor_graph_tools::travsersal::depthFirstTraversalEliminiationOrder</a></div><div class="ttdeci">static void depthFirstTraversalEliminiationOrder(const gtsam::BayesTree&lt; CLIQUE &gt; &amp;bayes_tree, const CliqueVisitor&lt; CLIQUE &gt; &amp;visitor)</div><div class="ttdef"><b>Definition:</b> <a href="FactorGraphTools_8hpp_source.html#l00233">FactorGraphTools.hpp:233</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="structdyno_1_1factor__graph__tools_1_1travsersal.html#a1867e64242205b075bca6705803a047b">depthFirstTraversalEliminiationOrder()</a>.</p>
 <div class="dynheader">
@@ -383,23 +388,25 @@ template&lt;typename CLIQUE &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="FactorGraphTools_8hpp_source.html#l00235">235</a> of file <a class="el" href="FactorGraphTools_8hpp_source.html">FactorGraphTools.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  235</span>                                                                             {</div>
-<div class="line"><span class="lineno">  236</span>        gtsam::KeySet keys;</div>
-<div class="line"><span class="lineno">  237</span>        CliqueVisitor&lt;CLIQUE&gt; visitor = [&amp;keys](<span class="keyword">const</span> boost::shared_ptr&lt;CLIQUE&gt;&amp; clique) -&gt; <span class="keywordtype">void</span> {</div>
-<div class="line"><span class="lineno">  238</span>            <span class="keywordflow">if</span>(clique-&gt;children.size() == 0u) {</div>
-<div class="line"><span class="lineno">  239</span>                <span class="keyword">auto</span> conditional = clique-&gt;conditional();</div>
-<div class="line"><span class="lineno">  240</span>                <span class="comment">//it is FACTOR::const_iterator</span></div>
-<div class="line"><span class="lineno">  241</span>                <span class="keywordflow">for</span>(<span class="keyword">auto</span> it = conditional-&gt;beginFrontals(); it != conditional-&gt;endFrontals(); it++) {</div>
-<div class="line"><span class="lineno">  242</span>                    keys.insert(*it);</div>
-<div class="line"><span class="lineno">  243</span>                }</div>
-<div class="line"><span class="lineno">  244</span>            }</div>
-<div class="line"><span class="lineno">  245</span>        };</div>
-<div class="line"><span class="lineno">  246</span> </div>
-<div class="line"><span class="lineno">  247</span>        <a class="code hl_function" href="structdyno_1_1factor__graph__tools_1_1travsersal.html#a1867e64242205b075bca6705803a047b">depthFirstTraversalEliminiationOrder</a>(bayes_tree, visitor);</div>
-<div class="line"><span class="lineno">  248</span> </div>
-<div class="line"><span class="lineno">  249</span>        <span class="keywordflow">return</span> keys;</div>
-<div class="line"><span class="lineno">  250</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="FactorGraphTools_8hpp_source.html#l00260">260</a> of file <a class="el" href="FactorGraphTools_8hpp_source.html">FactorGraphTools.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  260</span>                                                                           {</div>
+<div class="line"><span class="lineno">  261</span>    gtsam::KeySet keys;</div>
+<div class="line"><span class="lineno">  262</span>    CliqueVisitor&lt;CLIQUE&gt; visitor =</div>
+<div class="line"><span class="lineno">  263</span>        [&amp;keys](<span class="keyword">const</span> boost::shared_ptr&lt;CLIQUE&gt;&amp; clique) -&gt; <span class="keywordtype">void</span> {</div>
+<div class="line"><span class="lineno">  264</span>      <span class="keywordflow">if</span> (clique-&gt;children.size() == 0u) {</div>
+<div class="line"><span class="lineno">  265</span>        <span class="keyword">auto</span> conditional = clique-&gt;conditional();</div>
+<div class="line"><span class="lineno">  266</span>        <span class="comment">// it is FACTOR::const_iterator</span></div>
+<div class="line"><span class="lineno">  267</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span> it = conditional-&gt;beginFrontals();</div>
+<div class="line"><span class="lineno">  268</span>             it != conditional-&gt;endFrontals(); it++) {</div>
+<div class="line"><span class="lineno">  269</span>          keys.insert(*it);</div>
+<div class="line"><span class="lineno">  270</span>        }</div>
+<div class="line"><span class="lineno">  271</span>      }</div>
+<div class="line"><span class="lineno">  272</span>    };</div>
+<div class="line"><span class="lineno">  273</span> </div>
+<div class="line"><span class="lineno">  274</span>    <a class="code hl_function" href="structdyno_1_1factor__graph__tools_1_1travsersal.html#a1867e64242205b075bca6705803a047b">depthFirstTraversalEliminiationOrder</a>(bayes_tree, visitor);</div>
+<div class="line"><span class="lineno">  275</span> </div>
+<div class="line"><span class="lineno">  276</span>    <span class="keywordflow">return</span> keys;</div>
+<div class="line"><span class="lineno">  277</span>  }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="structdyno_1_1factor__graph__tools_1_1travsersal.html#a1867e64242205b075bca6705803a047b">depthFirstTraversalEliminiationOrder()</a>.</p>
 <div class="dynheader">
@@ -441,8 +448,8 @@ template&lt;typename CLQUE &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="FactorGraphTools_8hpp_source.html#l00151">151</a> of file <a class="el" href="FactorGraphTools_8hpp_source.html">FactorGraphTools.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  151</span>{}</div>
+<p class="definition">Definition at line <a class="el" href="FactorGraphTools_8hpp_source.html#l00168">168</a> of file <a class="el" href="FactorGraphTools_8hpp_source.html">FactorGraphTools.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  168</span>{}</div>
 </div><!-- fragment -->
 </div>
 </div>

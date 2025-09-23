@@ -1,5 +1,0 @@
-<map id="dyno::RGBDBackendModule::constructOutputPacket" name="dyno::RGBDBackendModule::constructOutputPacket">
-<area shape="rect" id="node1" title=" " alt="" coords="5,35,208,75"/>
-<area shape="rect" id="node2" href="$classdyno_1_1Formulation.html#a536dbcbdd6fcd6598fcedb7866cec1de" title="Public fucntion to access the Accessor for the derived formulation." alt="" coords="270,5,419,45"/>
-<area shape="rect" id="node3" href="$classdyno_1_1Formulation.html#aa882dfc5e5e0cc12a03184b08889ad7f" title="Get the map used by the formulation." alt="" coords="256,70,433,95"/>
-</map>

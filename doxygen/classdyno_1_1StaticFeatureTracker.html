@@ -116,14 +116,16 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ab192c0fe22aa7a3b7751cb47db62cf00"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abe8209cca8497b8303eaeb02d40f35f7"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1StaticFeatureTracker.html#abe8209cca8497b8303eaeb02d40f35f7">~StaticFeatureTracker</a> ()</td></tr>
 <tr class="separator:abe8209cca8497b8303eaeb02d40f35f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab4b4a016259ae0f82fe85d647a9bbb8c"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classdyno_1_1FeatureContainer.html">FeatureContainer</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1StaticFeatureTracker.html#ab4b4a016259ae0f82fe85d647a9bbb8c">trackStatic</a> (Frame::Ptr previous_frame, const <a class="el" href="classdyno_1_1ImageContainer.html">ImageContainer</a> &amp;image_container, <a class="el" href="structdyno_1_1FeatureTrackerInfo.html">FeatureTrackerInfo</a> &amp;tracker_info, const cv::Mat &amp;detection_mask)=0</td></tr>
-<tr class="memdesc:ab4b4a016259ae0f82fe85d647a9bbb8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Base function to perform feature tracking on static points.  <br /></td></tr>
-<tr class="separator:ab4b4a016259ae0f82fe85d647a9bbb8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab5545735043d644641b65dbed725b447"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classdyno_1_1FeatureContainer.html">FeatureContainer</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1StaticFeatureTracker.html#ab5545735043d644641b65dbed725b447">trackStatic</a> (Frame::Ptr previous_frame, const <a class="el" href="classdyno_1_1ImageContainer.html">ImageContainer</a> &amp;image_container, <a class="el" href="structdyno_1_1FeatureTrackerInfo.html">FeatureTrackerInfo</a> &amp;tracker_info, const cv::Mat &amp;detection_mask, const std::optional&lt; gtsam::Rot3 &gt; &amp;R_km1_k)=0</td></tr>
+<tr class="memdesc:ab5545735043d644641b65dbed725b447"><td class="mdescLeft">&#160;</td><td class="mdescRight">Base function to perform feature tracking on static points.  <br /></td></tr>
+<tr class="separator:ab5545735043d644641b65dbed725b447"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classdyno_1_1FeatureTrackerBase"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classdyno_1_1FeatureTrackerBase')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classdyno_1_1FeatureTrackerBase.html">dyno::FeatureTrackerBase</a></td></tr>
 <tr class="memitem:a4e2f1808b0a97e128df8f7a6695161d5 inherit pub_methods_classdyno_1_1FeatureTrackerBase"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1FeatureTrackerBase.html#a4e2f1808b0a97e128df8f7a6695161d5">FeatureTrackerBase</a> (const <a class="el" href="structdyno_1_1TrackerParams.html">TrackerParams</a> &amp;params, Camera::Ptr camera, <a class="el" href="namespacedyno.html#a6cc0b19d1d56a213497e94a199888977">ImageDisplayQueue</a> *display_queue)</td></tr>
 <tr class="separator:a4e2f1808b0a97e128df8f7a6695161d5 inherit pub_methods_classdyno_1_1FeatureTrackerBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa902950650699301214f776a905e3b77 inherit pub_methods_classdyno_1_1FeatureTrackerBase"><td class="memItemLeft" align="right" valign="top">cv::Mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1FeatureTrackerBase.html#aa902950650699301214f776a905e3b77">computeImageTracks</a> (const <a class="el" href="classdyno_1_1Frame.html">Frame</a> &amp;previous_frame, const <a class="el" href="classdyno_1_1Frame.html">Frame</a> &amp;current_frame, const <a class="el" href="structdyno_1_1FeatureTrackerBase_1_1ImageTracksParams.html">ImageTracksParams</a> &amp;config=false) const</td></tr>
+<tr class="memitem:aa902950650699301214f776a905e3b77 inherit pub_methods_classdyno_1_1FeatureTrackerBase"><td class="memItemLeft" align="right" valign="top">cv::Mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1FeatureTrackerBase.html#aa902950650699301214f776a905e3b77">computeImageTracks</a> (const <a class="el" href="classdyno_1_1Frame.html">Frame</a> &amp;previous_frame, const <a class="el" href="classdyno_1_1Frame.html">Frame</a> &amp;current_frame, const <a class="el" href="classdyno_1_1ImageTracksParams.html">ImageTracksParams</a> &amp;config=false) const</td></tr>
 <tr class="separator:aa902950650699301214f776a905e3b77 inherit pub_methods_classdyno_1_1FeatureTrackerBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aac4fd637116f1a55b857968d6f84d33d inherit pub_methods_classdyno_1_1FeatureTrackerBase"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1FeatureTrackerBase.html#aac4fd637116f1a55b857968d6f84d33d">predictKeypointsGivenRotation</a> (std::vector&lt; cv::Point2f &gt; &amp;predicted_pts_k, const std::vector&lt; cv::Point2f &gt; &amp;pts_km1, const gtsam::Rot3 &amp;R_km1_k) const</td></tr>
+<tr class="separator:aac4fd637116f1a55b857968d6f84d33d inherit pub_methods_classdyno_1_1FeatureTrackerBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="inherited" name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
@@ -131,6 +133,8 @@ Additional Inherited Members</h2></td></tr>
 <tr class="memitem:a32d80be7e74a096c2b816529b7fd2c69 inherit pro_methods_classdyno_1_1FeatureTrackerBase"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1FeatureTrackerBase.html#a32d80be7e74a096c2b816529b7fd2c69">isWithinShrunkenImage</a> (const <a class="el" href="namespacedyno.html#aaa260a8022691078c59e1ac6a4fa05b5">Keypoint</a> &amp;kp) const</td></tr>
 <tr class="memdesc:a32d80be7e74a096c2b816529b7fd2c69 inherit pro_methods_classdyno_1_1FeatureTrackerBase"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if a keypoint is within an image, taking into account the shrink row/col values in the params. If these values are zero, it just checks that the keypoint is within the image size, as given by the camera parameters.  <br /></td></tr>
 <tr class="separator:a32d80be7e74a096c2b816529b7fd2c69 inherit pro_methods_classdyno_1_1FeatureTrackerBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af4e17d3f13305f40698a9b284d767c74 inherit pro_methods_classdyno_1_1FeatureTrackerBase"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1FeatureTrackerBase.html#af4e17d3f13305f40698a9b284d767c74">isWithinShrunkenImage</a> (const cv::Point2f &amp;kp) const</td></tr>
+<tr class="separator:af4e17d3f13305f40698a9b284d767c74 inherit pro_methods_classdyno_1_1FeatureTrackerBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_classdyno_1_1FeatureTrackerBase"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classdyno_1_1FeatureTrackerBase')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classdyno_1_1FeatureTrackerBase.html">dyno::FeatureTrackerBase</a></td></tr>
 <tr class="memitem:a04f0948954381269fedd5a6856662cb7 inherit pro_attribs_classdyno_1_1FeatureTrackerBase"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structdyno_1_1TrackerParams.html">TrackerParams</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1FeatureTrackerBase.html#a04f0948954381269fedd5a6856662cb7">params_</a></td></tr>
 <tr class="separator:a04f0948954381269fedd5a6856662cb7 inherit pro_attribs_classdyno_1_1FeatureTrackerBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -180,7 +184,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="StaticFeatureTracker_8cc_source.html#l00043">43</a> of file <a class="el" href="StaticFeatureTracker_8cc_source.html">StaticFeatureTracker.cc</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">   46</span>    : <a class="code hl_function" href="classdyno_1_1FeatureTrackerBase.html#a4e2f1808b0a97e128df8f7a6695161d5">FeatureTrackerBase</a>(params, camera, display_queue) {}</div>
-<div class="ttc" id="aclassdyno_1_1FeatureTrackerBase_html_a4e2f1808b0a97e128df8f7a6695161d5"><div class="ttname"><a href="classdyno_1_1FeatureTrackerBase.html#a4e2f1808b0a97e128df8f7a6695161d5">dyno::FeatureTrackerBase::FeatureTrackerBase</a></div><div class="ttdeci">FeatureTrackerBase(const TrackerParams &amp;params, Camera::Ptr camera, ImageDisplayQueue *display_queue)</div><div class="ttdef"><b>Definition:</b> <a href="FeatureTrackerBase_8cc_source.html#l00041">FeatureTrackerBase.cc:41</a></div></div>
+<div class="ttc" id="aclassdyno_1_1FeatureTrackerBase_html_a4e2f1808b0a97e128df8f7a6695161d5"><div class="ttname"><a href="classdyno_1_1FeatureTrackerBase.html#a4e2f1808b0a97e128df8f7a6695161d5">dyno::FeatureTrackerBase::FeatureTrackerBase</a></div><div class="ttdeci">FeatureTrackerBase(const TrackerParams &amp;params, Camera::Ptr camera, ImageDisplayQueue *display_queue)</div><div class="ttdef"><b>Definition:</b> <a href="FeatureTrackerBase_8cc_source.html#l00042">FeatureTrackerBase.cc:42</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -213,8 +217,8 @@ Additional Inherited Members</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="ab4b4a016259ae0f82fe85d647a9bbb8c" name="ab4b4a016259ae0f82fe85d647a9bbb8c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab4b4a016259ae0f82fe85d647a9bbb8c">&#9670;&#160;</a></span>trackStatic()</h2>
+<a id="ab5545735043d644641b65dbed725b447" name="ab5545735043d644641b65dbed725b447"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab5545735043d644641b65dbed725b447">&#9670;&#160;</a></span>trackStatic()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -244,7 +248,13 @@ Additional Inherited Members</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const cv::Mat &amp;&#160;</td>
-          <td class="paramname"><em>detection_mask</em>&#160;</td>
+          <td class="paramname"><em>detection_mask</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::optional&lt; gtsam::Rot3 &gt; &amp;&#160;</td>
+          <td class="paramname"><em>R_km1_k</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -273,7 +283,7 @@ Additional Inherited Members</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><a class="el" href="classdyno_1_1FeatureContainer.html" title="Basic container mapping tracklet id&#39;s to a feature (pointer).">FeatureContainer</a> Contains all successsfully tracked features. </dd></dl>
 
-<p>Implemented in <a class="el" href="classdyno_1_1ExternalFlowFeatureTracker.html#a28dabdf87c24770c7541ad82b54cdad0">dyno::ExternalFlowFeatureTracker</a>, and <a class="el" href="classdyno_1_1KltFeatureTracker.html#a8b8b5f33830f3b76205863b9236539e4">dyno::KltFeatureTracker</a>.</p>
+<p>Implemented in <a class="el" href="classdyno_1_1ExternalFlowFeatureTracker.html#aedf0b07caf85d853756cb878f22d2ad7">dyno::ExternalFlowFeatureTracker</a>, and <a class="el" href="classdyno_1_1KltFeatureTracker.html#ab15aaa39f0c3adc62037d718b98039c0">dyno::KltFeatureTracker</a>.</p>
 
 </div>
 </div>

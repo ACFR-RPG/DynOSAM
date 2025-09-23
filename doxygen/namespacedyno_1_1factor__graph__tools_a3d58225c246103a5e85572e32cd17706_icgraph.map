@@ -1,4 +1,4 @@
 <map id="dyno::factor_graph_tools::addBetweenFactor" name="dyno::factor_graph_tools::addBetweenFactor">
-<area shape="rect" id="node1" title=" " alt="" coords="201,5,391,45"/>
-<area shape="rect" id="node2" href="$classdyno_1_1Formulation.html#ad3c2df3ba1ce22a47c529c07bba70bf8" title="Adds odometry factor betwene k&#45;1 and k using T_world_camera as the measurement at k and the existing ..." alt="" coords="5,5,153,45"/>
+<area shape="rect" id="node1" title=" " alt="" coords="284,5,473,45"/>
+<area shape="rect" id="node2" href="$classdyno_1_1VisionImuBackendModule.html#a67e4e733cd5724ba22900e531605d901" title=" " alt="" coords="5,5,236,45"/>
 </map>

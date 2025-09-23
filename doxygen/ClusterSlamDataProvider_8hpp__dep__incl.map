@@ -1,5 +1,6 @@
 <map id="dynosam/include/dynosam/dataprovider/ClusterSlamDataProvider.hpp" name="dynosam/include/dynosam/dataprovider/ClusterSlamDataProvider.hpp">
-<area shape="rect" id="node1" title=" " alt="" coords="109,5,332,60"/>
-<area shape="rect" id="node2" href="$ClusterSlamDataProvider_8cc.html" title=" " alt="" coords="5,108,212,148"/>
-<area shape="rect" id="node3" href="$DataProviderFactory_8cc.html" title=" " alt="" coords="237,108,429,148"/>
+<area shape="rect" id="node1" title=" " alt="" coords="201,5,423,60"/>
+<area shape="rect" id="node2" href="$dyno__sam_8cc.html" title=" " alt="" coords="5,108,184,148"/>
+<area shape="rect" id="node3" href="$ClusterSlamDataProvider_8cc.html" title=" " alt="" coords="209,108,415,148"/>
+<area shape="rect" id="node4" href="$DataProviderFactory_8cc.html" title=" " alt="" coords="440,108,632,148"/>
 </map>

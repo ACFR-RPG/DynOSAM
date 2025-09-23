@@ -78,6 +78,7 @@ $(function() {
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
+<a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="#pri-static-attribs">Static Private Attributes</a> &#124;
 <a href="#friends">Friends</a> &#124;
 <a href="structdyno_1_1Color-members.html">List of all members</a>  </div>
@@ -200,12 +201,22 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a3fbcccc0bd349c0e60395a80fc2939a3"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="structdyno_1_1Color.html">Color</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1Color.html#a3fbcccc0bd349c0e60395a80fc2939a3">rainbowId</a> (size_t id, size_t ids_per_revolution=16)</td></tr>
 <tr class="memdesc:a3fbcccc0bd349c0e60395a80fc2939a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generate a sequence of never repeating colors in the rainbow spectrum.  <br /></td></tr>
 <tr class="separator:a3fbcccc0bd349c0e60395a80fc2939a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4f52f9aec87e2c34370ad02e6d4e25fc"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="structdyno_1_1Color.html">Color</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1Color.html#a4f52f9aec87e2c34370ad02e6d4e25fc">uniqueId</a> (size_t id, float saturation=0.5f, float value=0.95f)</td></tr>
-<tr class="memdesc:a4f52f9aec87e2c34370ad02e6d4e25fc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates a sequence of never repeating colors using the golden ration to seperate the colours along the HSV ring spectrum.  <br /></td></tr>
-<tr class="separator:a4f52f9aec87e2c34370ad02e6d4e25fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6689af3d0ac5ceaa66000b5ca70becbd"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="structdyno_1_1Color.html">Color</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1Color.html#a6689af3d0ac5ceaa66000b5ca70becbd">uniqueId</a> (size_t id, float saturation=<a class="el" href="structdyno_1_1Color.html#a4384d1658f59f075baced8a91f2e253f">unique_id_default_saturation</a>, float value=<a class="el" href="structdyno_1_1Color.html#a95c3c0ecb35c81b6293a919b9a37a308">unique_id_default_value</a>)</td></tr>
+<tr class="memdesc:a6689af3d0ac5ceaa66000b5ca70becbd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates a sequence of never repeating colors using the golden ratio to seperate the colours along the HSV ring spectrum.  <br /></td></tr>
+<tr class="separator:a6689af3d0ac5ceaa66000b5ca70becbd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a233d8ceb1eec90b7b849ed1e2fa45e55"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="structdyno_1_1Color.html">Color</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1Color.html#a233d8ceb1eec90b7b849ed1e2fa45e55">uniqueObjectId</a> (<a class="el" href="namespacedyno.html#a38bb86e4154b86428b8d133be03fb2b5">ObjectId</a> id)</td></tr>
+<tr class="memdesc:a233d8ceb1eec90b7b849ed1e2fa45e55"><td class="mdescLeft">&#160;</td><td class="mdescRight">Overload of uniqueId that uses types specific for ObjectId. To allow a simpler function signature, this function only takes one argument where the saturation=0.5f and value=0.95f.  <br /></td></tr>
+<tr class="separator:a233d8ceb1eec90b7b849ed1e2fa45e55"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_static_methods_structdyno_1_1RGBA"><td colspan="2" onclick="javascript:toggleInherit('pub_static_methods_structdyno_1_1RGBA')"><img src="closed.png" alt="-"/>&#160;Static Public Member Functions inherited from <a class="el" href="structdyno_1_1RGBA.html">dyno::RGBA&lt; uint8_t &gt;</a></td></tr>
 <tr class="memitem:a2db20f63165c0765dc51eb4e67f33db6 inherit pub_static_methods_structdyno_1_1RGBA"><td class="memItemLeft" align="right" valign="top">static constexpr uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1RGBA.html#a2db20f63165c0765dc51eb4e67f33db6">max</a> ()</td></tr>
 <tr class="separator:a2db20f63165c0765dc51eb4e67f33db6 inherit pub_static_methods_structdyno_1_1RGBA"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
+Static Public Attributes</h2></td></tr>
+<tr class="memitem:a95c3c0ecb35c81b6293a919b9a37a308"><td class="memItemLeft" align="right" valign="top">static constexpr float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1Color.html#a95c3c0ecb35c81b6293a919b9a37a308">unique_id_default_value</a> = 0.95f</td></tr>
+<tr class="separator:a95c3c0ecb35c81b6293a919b9a37a308"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4384d1658f59f075baced8a91f2e253f"><td class="memItemLeft" align="right" valign="top">static constexpr float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1Color.html#a4384d1658f59f075baced8a91f2e253f">unique_id_default_saturation</a> = 0.5f</td></tr>
+<tr class="separator:a4384d1658f59f075baced8a91f2e253f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-static-attribs" name="pri-static-attribs"></a>
 Static Private Attributes</h2></td></tr>
@@ -262,56 +273,56 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="structdyno_1_1Color_a6bc55a80a463a481dbf4778c70d04733_icgraph.png" border="0" usemap="#astructdyno_1_1Color_a6bc55a80a463a481dbf4778c70d04733_icgraph" alt=""/></div>
 <map name="astructdyno_1_1Color_a6bc55a80a463a481dbf4778c70d04733_icgraph" id="astructdyno_1_1Color_a6bc55a80a463a481dbf4778c70d04733_icgraph">
-<area shape="rect" title=" " alt="" coords="1561,381,1700,407"/>
-<area shape="rect" href="structdyno_1_1Color.html#a2b3c7ad3f6b6039c5a81a62e1ee17993" title=" " alt="" coords="1363,5,1501,31"/>
-<area shape="rect" href="structdyno_1_1Color.html#a14649f2e6199e2a0ae4f21a1f6125b38" title="Blend another color with this one." alt="" coords="1362,55,1502,80"/>
-<area shape="rect" href="structdyno_1_1Color.html#ac6497975e0e9af4d28092f8bc07b3678" title=" " alt="" coords="1154,105,1286,131"/>
-<area shape="rect" href="structdyno_1_1Color.html#a7174a88a312b60ea39db28d0aa037f3a" title=" " alt="" coords="1365,307,1499,332"/>
-<area shape="rect" href="structdyno_1_1Color.html#ad9f3399ae3549ee33cfd61d09571815f" title=" " alt="" coords="1352,356,1512,381"/>
-<area shape="rect" href="structdyno_1_1Color.html#a08bcb6ea49861f6978858a2ff5159002" title=" " alt="" coords="1351,257,1513,283"/>
-<area shape="rect" href="structdyno_1_1Color.html#afee948af086d53ac0109f6402cf75cd7" title="Generate a gray&#45;scale color." alt="" coords="1365,405,1499,431"/>
-<area shape="rect" href="structdyno_1_1Color.html#a9357d7ddef94b17ace0420444b4cb7a2" title=" " alt="" coords="1149,155,1291,180"/>
-<area shape="rect" href="structdyno_1_1Color.html#a086d0768983e516cd8fdcf6b95f8619a" title=" " alt="" coords="1351,455,1513,480"/>
-<area shape="rect" href="structdyno_1_1Color.html#a636be51d49e91e20a890e358090af50c" title=" " alt="" coords="1357,504,1507,529"/>
-<area shape="rect" href="structdyno_1_1Color.html#abe59ab2d3c64d8a6ac528bbd90b83846" title=" " alt="" coords="1366,553,1498,579"/>
-<area shape="rect" href="structdyno_1_1Color.html#ac16e238ca3c80bb10f7892c260ae2d41" title=" " alt="" coords="1359,603,1505,628"/>
-<area shape="rect" href="structdyno_1_1Color.html#a1f5bf928657c46a7101ff27ce8a39247" title=" " alt="" coords="1355,652,1509,677"/>
-<area shape="rect" href="structdyno_1_1Color.html#a1b75c1200495de0d1a32e382393e8dd7" title=" " alt="" coords="1157,205,1283,231"/>
-<area shape="rect" href="structdyno_1_1Color.html#ac1157e0341f49c6c81c8e5417df49377" title=" " alt="" coords="1362,701,1502,727"/>
-<area shape="rect" href="structdyno_1_1Color.html#a1805ed56c1f519083678b61536b1ca65" title=" " alt="" coords="1359,751,1505,776"/>
-<area shape="rect" href="structdyno_1_1Color.html#a3c5f663788365ce23752d4cfcca64c35" title="Generate a color based on a spectrum of colors." alt="" coords="1137,5,1303,31"/>
-<area shape="rect" href="structdyno_1_1Color.html#ae28dde76a5a25818e4745afcf23e6d47" title="Generate a color based on a ironbow value." alt="" coords="894,5,1050,31"/>
-<area shape="rect" href="structdyno_1_1Color.html#a344fa4f600d8e61d65f4c432fb2e45e6" title="Merge another color into this one." alt="" coords="1147,55,1293,80"/>
-<area shape="rect" href="classdyno_1_1FeatureTrackerBase.html#aa902950650699301214f776a905e3b77" title=" " alt="" coords="877,98,1067,138"/>
-<area shape="rect" href="structdyno_1_1Color.html#a24ab8f421ba1414020d536fb64cba9da" title="Generate a color based on a rainbow value." alt="" coords="1142,560,1298,585"/>
-<area shape="rect" href="structdyno_1_1Color.html#a3fbcccc0bd349c0e60395a80fc2939a3" title="Generate a sequence of never repeating colors in the rainbow spectrum." alt="" coords="888,783,1056,808"/>
-<area shape="rect" href="structdyno_1_1Color.html#a4f52f9aec87e2c34370ad02e6d4e25fc" title="Generates a sequence of never repeating colors using the golden ration to seperate the colours along ..." alt="" coords="1140,357,1300,383"/>
-<area shape="rect" href="classdyno_1_1InbuiltDisplayCommon.html#ac1b0d24582458add8b4f64738872ff33" title="Constructs axis&#45;aligned BB (AABB) and oriented BB (OBB) marker arrays from a set of point clouds whic..." alt="" coords="855,314,1089,354"/>
-<area shape="rect" href="classdyno_1_1DSDTransport.html#a4eba9575230369796752df57fb9c478a" title=" " alt="" coords="857,379,1087,433"/>
-<area shape="rect" href="structdyno_1_1ObjectPoseGT.html#ada6ef6e0253d33690945f1d8dcf7be45" title="Draws the object label and bounding box on the provided image." alt="" coords="895,458,1049,498"/>
-<area shape="rect" href="classdyno_1_1Frame.html#a5e2adcdcb96143552fa891351b94dd22" title="From the detected list of objects (in Frame::object_observations_) draw the object masks as labelled ..." alt="" coords="871,522,1073,562"/>
-<area shape="rect" href="namespacedyno.html#ad2183909c7d4f0dd85c7db9ae1759b01" title="This function goes through the input 3D landmarks and group them into point clusters based on their o..." alt="" coords="883,587,1061,612"/>
-<area shape="rect" href="namespacedyno_1_1utils.html#a5abdff0c77884da4a8da55f0880d8cfb" title="Given an image that operates like a mask (ie. is a single channel image where each pixel value corres..." alt="" coords="869,733,1075,759"/>
-<area shape="rect" href="classdyno_1_1FrontendInbuiltDisplayRos.html#a4b6fefaf04a868c58cd85d8a741b4726" title=" " alt="" coords="263,213,492,253"/>
-<area shape="rect" href="classdyno_1_1InbuiltDisplayCommon.html#a70f9716db81c6643674174da5a5f5f90" title=" " alt="" coords="568,213,779,253"/>
-<area shape="rect" href="classdyno_1_1InbuiltDisplayCommon.html#a59e66ed2ccc103f7bfdd420547ecdcad" title=" " alt="" coords="568,277,779,317"/>
-<area shape="rect" href="structdyno_1_1DisplayCommon.html#ad9251fcb86a8c872c6b3736d0c2cd8f8" title=" " alt="" coords="887,637,1057,677"/>
-<area shape="rect" href="classdyno_1_1InbuiltDisplayCommon.html#a1b2fa923dc466d1357936bf793d65ce2" title=" " alt="" coords="568,341,779,381"/>
-<area shape="rect" href="classdyno_1_1BackendInbuiltDisplayRos.html#ae435d50beb86a1beecb8bf249e723bf4" title=" " alt="" coords="274,341,481,381"/>
-<area shape="rect" href="namespacedyno_1_1utils.html#a699bf9281c9c2c91ff538a4160975480" title="Same as labelMaskToRGB(mask, background label) but instead draws the mask over a black image so only ..." alt="" coords="570,733,777,759"/>
-<area shape="rect" href="KittiSemaniticToMotion_8cc.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="646,848,701,873"/>
-<area shape="rect" href="structdyno_1_1ImageType_1_1ClassSegmentation.html#afe839c69e62e5d1da10b813ca3bb824e" title=" " alt="" coords="540,898,807,938"/>
-<area shape="rect" href="structdyno_1_1ImageType_1_1MotionMask.html#a6b119596bef78424e2085d684d07cd43" title=" " alt="" coords="563,783,784,823"/>
-<area shape="rect" href="structdyno_1_1ImageType_1_1SemanticMask.html#aea33f14e71a1e9201d001f8c3abd61af" title=" " alt="" coords="572,669,775,709"/>
-<area shape="rect" href="classdyno_1_1OnlineDataProviderRos.html#a02b6aa8b0f6c6c732310c0852f54ef42" title=" " alt="" coords="283,751,472,791"/>
-<area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2" title=" " alt="" coords="271,815,483,855"/>
-<area shape="rect" href="classdyno_1_1FrontendInbuiltDisplayRos.html#a8e47d6ce98cd285d8b6d9674cbacf334" title=" " alt="" coords="5,245,215,285"/>
-<area shape="rect" href="classdyno_1_1FrontendInbuiltDisplayRos.html#acdc1be16deea0c706451e415f303342f" title=" " alt="" coords="273,277,482,317"/>
-<area shape="rect" href="classdyno_1_1DSDRos.html#a2c158ca365a2406ba990a1c8a60ba603" title=" " alt="" coords="560,541,787,581"/>
-<area shape="rect" href="classdyno_1_1InbuiltDisplayCommon.html#a5ea9ec6ffedf2a6cb3a84a71fe0590fd" title=" " alt="" coords="568,405,779,445"/>
-<area shape="rect" href="classdyno_1_1DSDRos.html#a2ea9ccc0e69485a7128c10b55ca60c99" title=" " alt="" coords="570,605,777,645"/>
-<area shape="rect" href="classdyno_1_1FrontendDSDRos.html#a9101c485338a62d8a86b37a56a68503e" title=" " alt="" coords="275,541,480,581"/>
-<area shape="rect" href="classdyno_1_1BackendDSDRos.html#a5316ec622424b5f5c3c5b111a56c4063" title=" " alt="" coords="293,605,462,645"/>
+<area shape="rect" title=" " alt="" coords="1527,407,1665,432"/>
+<area shape="rect" href="structdyno_1_1Color.html#a2b3c7ad3f6b6039c5a81a62e1ee17993" title=" " alt="" coords="1328,184,1467,209"/>
+<area shape="rect" href="structdyno_1_1Color.html#a14649f2e6199e2a0ae4f21a1f6125b38" title="Blend another color with this one." alt="" coords="1327,283,1467,308"/>
+<area shape="rect" href="structdyno_1_1Color.html#ac6497975e0e9af4d28092f8bc07b3678" title=" " alt="" coords="1119,5,1251,31"/>
+<area shape="rect" href="structdyno_1_1Color.html#a7174a88a312b60ea39db28d0aa037f3a" title=" " alt="" coords="1330,332,1465,357"/>
+<area shape="rect" href="structdyno_1_1Color.html#ad9f3399ae3549ee33cfd61d09571815f" title=" " alt="" coords="1317,381,1477,407"/>
+<area shape="rect" href="structdyno_1_1Color.html#a08bcb6ea49861f6978858a2ff5159002" title=" " alt="" coords="1316,233,1479,259"/>
+<area shape="rect" href="structdyno_1_1Color.html#afee948af086d53ac0109f6402cf75cd7" title="Generate a gray&#45;scale color." alt="" coords="1331,431,1464,456"/>
+<area shape="rect" href="structdyno_1_1Color.html#a9357d7ddef94b17ace0420444b4cb7a2" title=" " alt="" coords="1115,55,1256,80"/>
+<area shape="rect" href="structdyno_1_1Color.html#a086d0768983e516cd8fdcf6b95f8619a" title=" " alt="" coords="1316,480,1479,505"/>
+<area shape="rect" href="structdyno_1_1Color.html#a636be51d49e91e20a890e358090af50c" title=" " alt="" coords="1323,529,1472,555"/>
+<area shape="rect" href="structdyno_1_1Color.html#abe59ab2d3c64d8a6ac528bbd90b83846" title=" " alt="" coords="1331,579,1463,604"/>
+<area shape="rect" href="structdyno_1_1Color.html#ac16e238ca3c80bb10f7892c260ae2d41" title=" " alt="" coords="1325,628,1470,653"/>
+<area shape="rect" href="structdyno_1_1Color.html#a1f5bf928657c46a7101ff27ce8a39247" title=" " alt="" coords="1320,677,1475,703"/>
+<area shape="rect" href="structdyno_1_1Color.html#a1b75c1200495de0d1a32e382393e8dd7" title=" " alt="" coords="1123,105,1248,131"/>
+<area shape="rect" href="structdyno_1_1Color.html#ac1157e0341f49c6c81c8e5417df49377" title=" " alt="" coords="1327,727,1467,752"/>
+<area shape="rect" href="structdyno_1_1Color.html#a1805ed56c1f519083678b61536b1ca65" title=" " alt="" coords="1324,776,1471,801"/>
+<area shape="rect" href="classdyno_1_1Frame.html#af5e5ed1065480684da54421c6fcf395e" title=" " alt="" coords="844,205,1055,245"/>
+<area shape="rect" href="structdyno_1_1Color.html#a3c5f663788365ce23752d4cfcca64c35" title="Generate a color based on a spectrum of colors." alt="" coords="1103,157,1268,183"/>
+<area shape="rect" href="structdyno_1_1Color.html#ae28dde76a5a25818e4745afcf23e6d47" title="Generate a color based on a ironbow value." alt="" coords="871,155,1027,180"/>
+<area shape="rect" href="structdyno_1_1Color.html#a344fa4f600d8e61d65f4c432fb2e45e6" title="Merge another color into this one." alt="" coords="1112,584,1259,609"/>
+<area shape="rect" href="classdyno_1_1FeatureTrackerBase.html#aa902950650699301214f776a905e3b77" title=" " alt="" coords="586,97,775,137"/>
+<area shape="rect" href="structdyno_1_1Color.html#a24ab8f421ba1414020d536fb64cba9da" title="Generate a color based on a rainbow value." alt="" coords="1107,976,1263,1001"/>
+<area shape="rect" href="structdyno_1_1Color.html#a3fbcccc0bd349c0e60395a80fc2939a3" title="Generate a sequence of never repeating colors in the rainbow spectrum." alt="" coords="865,1323,1033,1348"/>
+<area shape="rect" href="structdyno_1_1Color.html#a6689af3d0ac5ceaa66000b5ca70becbd" title="Generates a sequence of never repeating colors using the golden ratio to seperate the colours along t..." alt="" coords="1105,535,1265,560"/>
+<area shape="rect" href="classdyno_1_1InbuiltDisplayCommon.html#ac1b0d24582458add8b4f64738872ff33" title="Constructs axis&#45;aligned BB (AABB) and oriented BB (OBB) marker arrays from a set of point clouds whic..." alt="" coords="283,503,517,543"/>
+<area shape="rect" href="classdyno_1_1DSDTransport.html#a6181566479bf9f5bad14d66c048afd9e" title=" " alt="" coords="285,733,515,788"/>
+<area shape="rect" href="namespacedyno.html#a8357d6a8de284f4d1fc3d074646b43bb" title=" " alt="" coords="894,944,1005,969"/>
+<area shape="rect" href="classdyno_1_1InbuiltDisplayCommon.html#a70f9716db81c6643674174da5a5f5f90" title=" " alt="" coords="295,1171,505,1211"/>
+<area shape="rect" href="classdyno_1_1FrontendInbuiltDisplayRos.html#a4b6fefaf04a868c58cd85d8a741b4726" title=" " alt="" coords="5,1171,235,1211"/>
+<area shape="rect" href="classdyno_1_1InbuiltDisplayCommon.html#a59e66ed2ccc103f7bfdd420547ecdcad" title=" " alt="" coords="295,863,505,903"/>
+<area shape="rect" href="structdyno_1_1ObjectPoseGT.html#ada6ef6e0253d33690945f1d8dcf7be45" title="Draws the object label and bounding box on the provided image." alt="" coords="873,1143,1026,1183"/>
+<area shape="rect" href="classdyno_1_1Frame.html#a5e2adcdcb96143552fa891351b94dd22" title="From the detected list of objects (in Frame::object_observations_) draw the object masks as labelled ..." alt="" coords="848,1207,1051,1247"/>
+<area shape="rect" href="namespacedyno.html#a2d0888a8627082384b75a95953f55c3c" title="This function goes through the input 3D landmarks and group them into point clusters based on their o..." alt="" coords="860,535,1039,560"/>
+<area shape="rect" href="classdyno_1_1BackendDSDRos.html#a0bebe1ff9e7c9bebda99cb5a9f1d9ba1" title=" " alt="" coords="565,574,796,614"/>
+<area shape="rect" href="namespacedyno_1_1utils.html#ab60d1512caf6ce316d53e53056b71f7e" title="Given an image that operates like a mask (ie. is a single channel image where each pixel value corres..." alt="" coords="846,320,1053,345"/>
+<area shape="rect" href="classdyno_1_1ParallelHybridBackendModule.html#a07ee75bebfcdf9cab20b6d2cc214b8e0" title=" " alt="" coords="845,370,1053,410"/>
+<area shape="rect" href="structdyno_1_1Color.html#a233d8ceb1eec90b7b849ed1e2fa45e55" title="Overload of uniqueId that uses types specific for ObjectId. To allow a simpler function signature,..." alt="" coords="848,485,1051,511"/>
+<area shape="rect" href="classdyno_1_1InbuiltDisplayCommon.html#a1b2fa923dc466d1357936bf793d65ce2" title=" " alt="" coords="15,503,225,543"/>
+<area shape="rect" href="classdyno_1_1DSDTransport.html#a68cd19d60a58b1b568f9006d5483ee97" title=" " alt="" coords="582,689,779,729"/>
+<area shape="rect" href="namespacedyno.html#a677d03304c34b8e68e9d7b664f089ddf" title=" " alt="" coords="612,1121,749,1147"/>
+<area shape="rect" href="classdyno_1_1InbuiltDisplayCommon.html#a878dd64b70f24d79067cef7437631fe3" title=" " alt="" coords="295,927,505,967"/>
+<area shape="rect" href="classdyno_1_1InbuiltDisplayCommon.html#a925cae0fcfe0b0f79074c1abd1bcc96b" title=" " alt="" coords="295,991,505,1031"/>
+<area shape="rect" href="namespacedyno_1_1utils.html#a367447d229280a53123017719e94f0d9" title="Convert ROS time to timestamp." alt="" coords="587,1171,774,1196"/>
+<area shape="rect" href="classdyno_1_1DSDTransport_1_1Publisher.html#a273d58dd87e02093d55d866ea687a29f" title="Broadcast the transform of each object using their pose. Transforms will be constructed between the P..." alt="" coords="307,1056,493,1111"/>
+<area shape="rect" href="namespacedyno_1_1utils.html#a81025ee06847cec0fd854eff05362d19" title="Converts Timestamp (in seconds) to ROS time." alt="" coords="597,919,765,944"/>
+<area shape="rect" href="classdyno_1_1ParallelObjectISAM.html#a96475152a11275ac46c4767b5dbae8aa" title=" " alt="" coords="587,854,774,894"/>
+<area shape="rect" href="classdyno_1_1HybridFormulation.html#a41a208f1552daac149906b0b98296bcd" title=" " alt="" coords="587,446,774,486"/>
+<area shape="rect" href="namespacedyno.html#a7f0a5ea8af1e41fad7b8d81e8c5cdb26" title="Overload of groupObjectCloud." alt="" coords="591,396,770,421"/>
+<area shape="rect" href="structdyno_1_1DisplayCommon.html#ad9251fcb86a8c872c6b3736d0c2cd8f8" title=" " alt="" coords="595,510,766,550"/>
 </map>
 </div>
 
@@ -430,18 +441,26 @@ Here is the caller graph for this function:</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="structdyno_1_1RGBA.html#a2526912638ea52dd23db5ab73e1ca0f4">dyno::RGBA&lt; uint8_t &gt;::a</a>, <a class="el" href="structdyno_1_1RGBA.html#aac359f541eb930ff5c066040ac3fa2cd">dyno::RGBA&lt; uint8_t &gt;::b</a>, <a class="el" href="structdyno_1_1RGBA.html#a05559e0861c75830ac02fc6b29c694f0">dyno::RGBA&lt; uint8_t &gt;::g</a>, and <a class="el" href="structdyno_1_1RGBA.html#a189f83de852c6909e0d6a4d31e237362">dyno::RGBA&lt; uint8_t &gt;::r</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1FeatureTrackerBase.html#aa902950650699301214f776a905e3b77">dyno::FeatureTrackerBase::computeImageTracks()</a>, <a class="el" href="structdyno_1_1ObjectPoseGT.html#ada6ef6e0253d33690945f1d8dcf7be45">dyno::ObjectPoseGT::drawBoundingBox()</a>, <a class="el" href="classdyno_1_1Frame.html#a5e2adcdcb96143552fa891351b94dd22">dyno::Frame::drawDetectedObjectBoxes()</a>, and <a class="el" href="classdyno_1_1FrontendInbuiltDisplayRos.html#a4b6fefaf04a868c58cd85d8a741b4726">dyno::FrontendInbuiltDisplayRos::processRGBDOutputpacket()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1FeatureTrackerBase.html#aa902950650699301214f776a905e3b77">dyno::FeatureTrackerBase::computeImageTracks()</a>, <a class="el" href="structdyno_1_1ObjectPoseGT.html#ada6ef6e0253d33690945f1d8dcf7be45">dyno::ObjectPoseGT::drawBoundingBox()</a>, <a class="el" href="classdyno_1_1Frame.html#a5e2adcdcb96143552fa891351b94dd22">dyno::Frame::drawDetectedObjectBoxes()</a>, <a class="el" href="namespacedyno_1_1utils.html#ab60d1512caf6ce316d53e53056b71f7e">dyno::utils::labelMaskToRGB()</a>, <a class="el" href="classdyno_1_1ParallelHybridBackendModule.html#a07ee75bebfcdf9cab20b6d2cc214b8e0">dyno::ParallelHybridBackendModule::nominalSpinImpl()</a>, and <a class="el" href="classdyno_1_1FrontendInbuiltDisplayRos.html#a4b6fefaf04a868c58cd85d8a741b4726">dyno::FrontendInbuiltDisplayRos::processRGBDOutputpacket()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="structdyno_1_1Color_a19ef171ae71fa3481957f66d420ced3b_icgraph.png" border="0" usemap="#astructdyno_1_1Color_a19ef171ae71fa3481957f66d420ced3b_icgraph" alt=""/></div>
 <map name="astructdyno_1_1Color_a19ef171ae71fa3481957f66d420ced3b_icgraph" id="astructdyno_1_1Color_a19ef171ae71fa3481957f66d420ced3b_icgraph">
-<area shape="rect" title="Return in BGRA format." alt="" coords="540,109,673,134"/>
-<area shape="rect" href="classdyno_1_1FeatureTrackerBase.html#aa902950650699301214f776a905e3b77" title=" " alt="" coords="283,5,472,45"/>
-<area shape="rect" href="structdyno_1_1ObjectPoseGT.html#ada6ef6e0253d33690945f1d8dcf7be45" title="Draws the object label and bounding box on the provided image." alt="" coords="301,69,454,109"/>
-<area shape="rect" href="classdyno_1_1Frame.html#a5e2adcdcb96143552fa891351b94dd22" title="From the detected list of objects (in Frame::object_observations_) draw the object masks as labelled ..." alt="" coords="276,133,479,173"/>
-<area shape="rect" href="classdyno_1_1FrontendInbuiltDisplayRos.html#a4b6fefaf04a868c58cd85d8a741b4726" title=" " alt="" coords="263,197,492,237"/>
-<area shape="rect" href="classdyno_1_1FrontendInbuiltDisplayRos.html#a8e47d6ce98cd285d8b6d9674cbacf334" title=" " alt="" coords="5,197,215,237"/>
+<area shape="rect" title="Return in BGRA format." alt="" coords="857,160,991,185"/>
+<area shape="rect" href="classdyno_1_1FeatureTrackerBase.html#aa902950650699301214f776a905e3b77" title=" " alt="" coords="304,6,493,46"/>
+<area shape="rect" href="structdyno_1_1ObjectPoseGT.html#ada6ef6e0253d33690945f1d8dcf7be45" title="Draws the object label and bounding box on the provided image." alt="" coords="618,59,771,99"/>
+<area shape="rect" href="classdyno_1_1Frame.html#a5e2adcdcb96143552fa891351b94dd22" title="From the detected list of objects (in Frame::object_observations_) draw the object masks as labelled ..." alt="" coords="593,123,796,163"/>
+<area shape="rect" href="namespacedyno_1_1utils.html#ab60d1512caf6ce316d53e53056b71f7e" title="Given an image that operates like a mask (ie. is a single channel image where each pixel value corres..." alt="" coords="591,188,798,213"/>
+<area shape="rect" href="classdyno_1_1ParallelHybridBackendModule.html#a07ee75bebfcdf9cab20b6d2cc214b8e0" title=" " alt="" coords="591,238,799,278"/>
+<area shape="rect" href="classdyno_1_1FrontendInbuiltDisplayRos.html#a4b6fefaf04a868c58cd85d8a741b4726" title=" " alt="" coords="580,330,809,370"/>
+<area shape="rect" href="namespacedyno_1_1utils.html#a5abdff0c77884da4a8da55f0880d8cfb" title="Given an image that operates like a mask (ie. is a single channel image where each pixel value corres..." alt="" coords="295,77,502,102"/>
+<area shape="rect" href="KittiSemaniticToMotion_8cc.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="371,126,426,152"/>
+<area shape="rect" href="structdyno_1_1ImageType_1_1ClassSegmentation.html#afe839c69e62e5d1da10b813ca3bb824e" title=" " alt="" coords="265,176,532,216"/>
+<area shape="rect" href="structdyno_1_1ImageType_1_1MotionMask.html#a6b119596bef78424e2085d684d07cd43" title=" " alt="" coords="288,240,509,280"/>
+<area shape="rect" href="structdyno_1_1ImageType_1_1SemanticMask.html#aea33f14e71a1e9201d001f8c3abd61af" title=" " alt="" coords="297,304,500,344"/>
+<area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2" title=" " alt="" coords="5,240,217,280"/>
+<area shape="rect" href="classdyno_1_1FrontendInbuiltDisplayRos.html#a8e47d6ce98cd285d8b6d9674cbacf334" title=" " alt="" coords="294,368,503,408"/>
 </map>
 </div>
 
@@ -476,7 +495,7 @@ Here is the caller graph for this function:</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="structdyno_1_1Color.html#a6bc55a80a463a481dbf4778c70d04733">Color()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="structdyno_1_1Color.html#a3c5f663788365ce23752d4cfcca64c35">spectrum()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1Frame.html#af5e5ed1065480684da54421c6fcf395e">dyno::Frame::projectToDenseCloud()</a>, and <a class="el" href="structdyno_1_1Color.html#a3c5f663788365ce23752d4cfcca64c35">spectrum()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -491,9 +510,10 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="structdyno_1_1Color_a2b3c7ad3f6b6039c5a81a62e1ee17993_icgraph.png" border="0" usemap="#astructdyno_1_1Color_a2b3c7ad3f6b6039c5a81a62e1ee17993_icgraph" alt=""/></div>
 <map name="astructdyno_1_1Color_a2b3c7ad3f6b6039c5a81a62e1ee17993_icgraph" id="astructdyno_1_1Color_a2b3c7ad3f6b6039c5a81a62e1ee17993_icgraph">
-<area shape="rect" title=" " alt="" coords="423,5,561,31"/>
-<area shape="rect" href="structdyno_1_1Color.html#a3c5f663788365ce23752d4cfcca64c35" title="Generate a color based on a spectrum of colors." alt="" coords="209,5,375,31"/>
-<area shape="rect" href="structdyno_1_1Color.html#ae28dde76a5a25818e4745afcf23e6d47" title="Generate a color based on a ironbow value." alt="" coords="5,5,161,31"/>
+<area shape="rect" title=" " alt="" coords="468,42,607,67"/>
+<area shape="rect" href="classdyno_1_1Frame.html#af5e5ed1065480684da54421c6fcf395e" title=" " alt="" coords="209,5,420,45"/>
+<area shape="rect" href="structdyno_1_1Color.html#a3c5f663788365ce23752d4cfcca64c35" title="Generate a color based on a spectrum of colors." alt="" coords="232,70,397,95"/>
+<area shape="rect" href="structdyno_1_1Color.html#ae28dde76a5a25818e4745afcf23e6d47" title="Generate a color based on a ironbow value." alt="" coords="5,70,161,95"/>
 </map>
 </div>
 
@@ -792,7 +812,7 @@ Here is the caller graph for this function:</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="structdyno_1_1Color.html#a6bc55a80a463a481dbf4778c70d04733">Color()</a>, and <a class="el" href="namespacedyno.html#ab0e74ec8992860404a618192cc694b83">dyno::rgbFromChromaHue()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="structdyno_1_1Color.html#a4f52f9aec87e2c34370ad02e6d4e25fc">uniqueId()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="structdyno_1_1Color.html#a6689af3d0ac5ceaa66000b5ca70becbd">uniqueId()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -808,38 +828,56 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="structdyno_1_1Color_a08bcb6ea49861f6978858a2ff5159002_icgraph.png" border="0" usemap="#astructdyno_1_1Color_a08bcb6ea49861f6978858a2ff5159002_icgraph" alt=""/></div>
 <map name="astructdyno_1_1Color_a08bcb6ea49861f6978858a2ff5159002_icgraph" id="astructdyno_1_1Color_a08bcb6ea49861f6978858a2ff5159002_icgraph">
-<area shape="rect" title=" " alt="" coords="1599,293,1761,318"/>
-<area shape="rect" href="structdyno_1_1Color.html#a4f52f9aec87e2c34370ad02e6d4e25fc" title="Generates a sequence of never repeating colors using the golden ration to seperate the colours along ..." alt="" coords="1391,293,1551,318"/>
-<area shape="rect" href="classdyno_1_1FeatureTrackerBase.html#aa902950650699301214f776a905e3b77" title=" " alt="" coords="1131,5,1320,45"/>
-<area shape="rect" href="classdyno_1_1InbuiltDisplayCommon.html#ac1b0d24582458add8b4f64738872ff33" title="Constructs axis&#45;aligned BB (AABB) and oriented BB (OBB) marker arrays from a set of point clouds whic..." alt="" coords="1108,69,1343,109"/>
-<area shape="rect" href="classdyno_1_1DSDTransport.html#a4eba9575230369796752df57fb9c478a" title=" " alt="" coords="1110,350,1341,405"/>
-<area shape="rect" href="structdyno_1_1ObjectPoseGT.html#ada6ef6e0253d33690945f1d8dcf7be45" title="Draws the object label and bounding box on the provided image." alt="" coords="1149,429,1302,469"/>
-<area shape="rect" href="classdyno_1_1Frame.html#a5e2adcdcb96143552fa891351b94dd22" title="From the detected list of objects (in Frame::object_observations_) draw the object masks as labelled ..." alt="" coords="1124,493,1327,533"/>
-<area shape="rect" href="namespacedyno.html#ad2183909c7d4f0dd85c7db9ae1759b01" title="This function goes through the input 3D landmarks and group them into point clusters based on their o..." alt="" coords="1136,558,1315,583"/>
-<area shape="rect" href="namespacedyno_1_1utils.html#a5abdff0c77884da4a8da55f0880d8cfb" title="Given an image that operates like a mask (ie. is a single channel image where each pixel value corres..." alt="" coords="1122,607,1329,633"/>
-<area shape="rect" href="classdyno_1_1FrontendInbuiltDisplayRos.html#a4b6fefaf04a868c58cd85d8a741b4726" title=" " alt="" coords="516,232,745,272"/>
-<area shape="rect" href="classdyno_1_1InbuiltDisplayCommon.html#a70f9716db81c6643674174da5a5f5f90" title=" " alt="" coords="821,171,1032,211"/>
-<area shape="rect" href="classdyno_1_1InbuiltDisplayCommon.html#a59e66ed2ccc103f7bfdd420547ecdcad" title=" " alt="" coords="821,107,1032,147"/>
-<area shape="rect" href="structdyno_1_1DisplayCommon.html#ad9251fcb86a8c872c6b3736d0c2cd8f8" title=" " alt="" coords="1140,285,1311,325"/>
-<area shape="rect" href="classdyno_1_1InbuiltDisplayCommon.html#a1b2fa923dc466d1357936bf793d65ce2" title=" " alt="" coords="821,43,1032,83"/>
-<area shape="rect" href="classdyno_1_1BackendInbuiltDisplayRos.html#ae435d50beb86a1beecb8bf249e723bf4" title=" " alt="" coords="527,104,734,144"/>
-<area shape="rect" href="namespacedyno_1_1utils.html#a699bf9281c9c2c91ff538a4160975480" title="Same as labelMaskToRGB(mask, background label) but instead draws the mask over a black image so only ..." alt="" coords="823,558,1030,583"/>
-<area shape="rect" href="KittiSemaniticToMotion_8cc.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="899,607,954,633"/>
-<area shape="rect" href="structdyno_1_1ImageType_1_1ClassSegmentation.html#afe839c69e62e5d1da10b813ca3bb824e" title=" " alt="" coords="793,657,1060,697"/>
-<area shape="rect" href="structdyno_1_1ImageType_1_1MotionMask.html#a6b119596bef78424e2085d684d07cd43" title=" " alt="" coords="816,721,1037,761"/>
-<area shape="rect" href="structdyno_1_1ImageType_1_1SemanticMask.html#aea33f14e71a1e9201d001f8c3abd61af" title=" " alt="" coords="825,493,1028,533"/>
-<area shape="rect" href="classdyno_1_1OnlineDataProviderRos.html#a02b6aa8b0f6c6c732310c0852f54ef42" title=" " alt="" coords="536,753,725,793"/>
-<area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2" title=" " alt="" coords="525,689,737,729"/>
-<area shape="rect" href="classdyno_1_1OnlineDataProviderRos.html#a3b7725856bc86407813c51804a26bea4" title="Connects all subscribers." alt="" coords="269,753,458,793"/>
-<area shape="rect" href="classdyno_1_1OnlineDataProviderRos.html#abea751b62c91dbf7bfac759680a434f7" title="Construct a new OnlineDataProviderRos." alt="" coords="5,753,211,793"/>
-<area shape="rect" href="classdyno_1_1FrontendInbuiltDisplayRos.html#a8e47d6ce98cd285d8b6d9674cbacf334" title=" " alt="" coords="259,200,468,240"/>
-<area shape="rect" href="classdyno_1_1FrontendInbuiltDisplayRos.html#acdc1be16deea0c706451e415f303342f" title=" " alt="" coords="526,168,735,208"/>
-<area shape="rect" href="classdyno_1_1DSDRos.html#a2c158ca365a2406ba990a1c8a60ba603" title=" " alt="" coords="813,413,1040,453"/>
-<area shape="rect" href="classdyno_1_1InbuiltDisplayCommon.html#a5ea9ec6ffedf2a6cb3a84a71fe0590fd" title=" " alt="" coords="821,285,1032,325"/>
-<area shape="rect" href="classdyno_1_1DSDRos.html#a2ea9ccc0e69485a7128c10b55ca60c99" title=" " alt="" coords="823,349,1030,389"/>
-<area shape="rect" href="classdyno_1_1FrontendDSDRos.html#a9101c485338a62d8a86b37a56a68503e" title=" " alt="" coords="528,413,733,453"/>
-<area shape="rect" href="classdyno_1_1BackendDSDRos.html#a5316ec622424b5f5c3c5b111a56c4063" title=" " alt="" coords="546,349,715,389"/>
-<area shape="rect" href="classdyno_1_1FrontendDSDRos.html#a633a457c51868257f25d44d1a99f0e12" title=" " alt="" coords="278,413,449,453"/>
+<area shape="rect" title=" " alt="" coords="1625,1634,1788,1659"/>
+<area shape="rect" href="structdyno_1_1Color.html#a6689af3d0ac5ceaa66000b5ca70becbd" title="Generates a sequence of never repeating colors using the golden ratio to seperate the colours along t..." alt="" coords="1417,1634,1577,1659"/>
+<area shape="rect" href="classdyno_1_1FeatureTrackerBase.html#aa902950650699301214f776a905e3b77" title=" " alt="" coords="883,5,1072,45"/>
+<area shape="rect" href="classdyno_1_1InbuiltDisplayCommon.html#ac1b0d24582458add8b4f64738872ff33" title="Constructs axis&#45;aligned BB (AABB) and oriented BB (OBB) marker arrays from a set of point clouds whic..." alt="" coords="561,592,796,632"/>
+<area shape="rect" href="classdyno_1_1DSDTransport.html#a6181566479bf9f5bad14d66c048afd9e" title=" " alt="" coords="5,1294,236,1349"/>
+<area shape="rect" href="namespacedyno.html#a8357d6a8de284f4d1fc3d074646b43bb" title=" " alt="" coords="1209,1333,1319,1358"/>
+<area shape="rect" href="classdyno_1_1InbuiltDisplayCommon.html#a70f9716db81c6643674174da5a5f5f90" title=" " alt="" coords="573,477,784,517"/>
+<area shape="rect" href="classdyno_1_1FrontendInbuiltDisplayRos.html#a4b6fefaf04a868c58cd85d8a741b4726" title=" " alt="" coords="284,363,513,403"/>
+<area shape="rect" href="classdyno_1_1InbuiltDisplayCommon.html#a59e66ed2ccc103f7bfdd420547ecdcad" title=" " alt="" coords="573,413,784,453"/>
+<area shape="rect" href="structdyno_1_1ObjectPoseGT.html#ada6ef6e0253d33690945f1d8dcf7be45" title="Draws the object label and bounding box on the provided image." alt="" coords="1187,1837,1341,1877"/>
+<area shape="rect" href="classdyno_1_1Frame.html#a5e2adcdcb96143552fa891351b94dd22" title="From the detected list of objects (in Frame::object_observations_) draw the object masks as labelled ..." alt="" coords="1163,1901,1365,1941"/>
+<area shape="rect" href="namespacedyno.html#a2d0888a8627082384b75a95953f55c3c" title="This function goes through the input 3D landmarks and group them into point clusters based on their o..." alt="" coords="1175,1738,1353,1763"/>
+<area shape="rect" href="classdyno_1_1BackendDSDRos.html#a0bebe1ff9e7c9bebda99cb5a9f1d9ba1" title=" " alt="" coords="862,1627,1093,1667"/>
+<area shape="rect" href="namespacedyno_1_1utils.html#ab60d1512caf6ce316d53e53056b71f7e" title="Given an image that operates like a mask (ie. is a single channel image where each pixel value corres..." alt="" coords="1161,191,1367,217"/>
+<area shape="rect" href="classdyno_1_1ParallelHybridBackendModule.html#a07ee75bebfcdf9cab20b6d2cc214b8e0" title=" " alt="" coords="1160,1965,1368,2005"/>
+<area shape="rect" href="classdyno_1_1Frame.html#af5e5ed1065480684da54421c6fcf395e" title=" " alt="" coords="1159,2029,1369,2069"/>
+<area shape="rect" href="structdyno_1_1Color.html#a233d8ceb1eec90b7b849ed1e2fa45e55" title="Overload of uniqueId that uses types specific for ObjectId. To allow a simpler function signature,..." alt="" coords="1163,1787,1365,1813"/>
+<area shape="rect" href="classdyno_1_1InbuiltDisplayCommon.html#a1b2fa923dc466d1357936bf793d65ce2" title=" " alt="" coords="293,592,504,632"/>
+<area shape="rect" href="classdyno_1_1BackendInbuiltDisplayRos.html#ae435d50beb86a1beecb8bf249e723bf4" title=" " alt="" coords="17,621,224,661"/>
+<area shape="rect" href="classdyno_1_1DSDTransport.html#a68cd19d60a58b1b568f9006d5483ee97" title=" " alt="" coords="300,949,497,989"/>
+<area shape="rect" href="namespacedyno.html#a677d03304c34b8e68e9d7b664f089ddf" title=" " alt="" coords="909,1423,1046,1449"/>
+<area shape="rect" href="classdyno_1_1InbuiltDisplayCommon.html#a878dd64b70f24d79067cef7437631fe3" title=" " alt="" coords="573,1181,784,1221"/>
+<area shape="rect" href="classdyno_1_1InbuiltDisplayCommon.html#a925cae0fcfe0b0f79074c1abd1bcc96b" title=" " alt="" coords="573,1296,784,1336"/>
+<area shape="rect" href="namespacedyno_1_1utils.html#a367447d229280a53123017719e94f0d9" title="Convert ROS time to timestamp." alt="" coords="884,1361,1071,1386"/>
+<area shape="rect" href="classdyno_1_1DSDTransport_1_1Publisher.html#a273d58dd87e02093d55d866ea687a29f" title="Broadcast the transform of each object using their pose. Transforms will be constructed between the P..." alt="" coords="585,1038,772,1093"/>
+<area shape="rect" href="namespacedyno_1_1utils.html#a81025ee06847cec0fd854eff05362d19" title="Converts Timestamp (in seconds) to ROS time." alt="" coords="893,847,1061,873"/>
+<area shape="rect" href="classdyno_1_1ParallelObjectISAM.html#a96475152a11275ac46c4767b5dbae8aa" title=" " alt="" coords="884,1487,1071,1527"/>
+<area shape="rect" href="classdyno_1_1DSDTransport.html#aa25a57f09531c34b256273e8b0fc2c63" title=" " alt="" coords="17,949,225,989"/>
+<area shape="rect" href="namespacedyno.html#ad295021193a35b4d2c0dbc9bd7d7b401" title=" " alt="" coords="623,1475,734,1501"/>
+<area shape="rect" href="classdyno_1_1InbuiltDisplayCommon.html#ac594eb8a8b81059e36f6b9174e9fe721" title=" " alt="" coords="293,1296,504,1336"/>
+<area shape="rect" href="classdyno_1_1OnlineDataProviderRos.html#a02b6aa8b0f6c6c732310c0852f54ef42" title=" " alt="" coords="584,1411,773,1451"/>
+<area shape="rect" href="classdyno_1_1FrontendDSDRos.html#a9101c485338a62d8a86b37a56a68503e" title=" " alt="" coords="296,885,501,925"/>
+<area shape="rect" href="namespacedyno_1_1utils.html#a7efb03484e6c5b1cc0d0eeeb43546ffa" title="Converts from input type to output type where output type is a ROS message with a header...." alt="" coords="590,757,767,797"/>
+<area shape="rect" href="classdyno_1_1FrontendInbuiltDisplayRos.html#acdc1be16deea0c706451e415f303342f" title=" " alt="" coords="294,528,503,568"/>
+<area shape="rect" href="structdyno_1_1DisplayCommon.html#aa626522a5e93ee7d72975e94260069a5" title=" " alt="" coords="313,707,484,747"/>
+<area shape="rect" href="classdyno_1_1FrontendDSDRos.html#a30a427c3d1b16b3fa99e2ddde0802c41" title=" " alt="" coords="311,821,486,861"/>
+<area shape="rect" href="classdyno_1_1DynoPipelineManagerRos.html#a9b111354972184ae191c76dfb88f6820" title=" " alt="" coords="576,923,781,963"/>
+<area shape="rect" href="classdyno_1_1DSDRos.html#ac605e3eed18e2608a66dc9674a2674ca" title=" " alt="" coords="574,1117,783,1157"/>
+<area shape="rect" href="classdyno_1_1FrontendInbuiltDisplayRos.html#a8e47d6ce98cd285d8b6d9674cbacf334" title=" " alt="" coords="16,445,225,485"/>
+<area shape="rect" href="classdyno_1_1BackendDSDRos.html#a5316ec622424b5f5c3c5b111a56c4063" title=" " alt="" coords="314,1175,483,1215"/>
+<area shape="rect" href="classdyno_1_1ParallelObjectISAM.html#aebe02d7a654d9829c361eece7374dd1f" title=" " alt="" coords="585,1525,772,1565"/>
+<area shape="rect" href="classdyno_1_1HybridFormulation.html#a41a208f1552daac149906b0b98296bcd" title=" " alt="" coords="884,1741,1071,1781"/>
+<area shape="rect" href="namespacedyno.html#a7f0a5ea8af1e41fad7b8d81e8c5cdb26" title="Overload of groupObjectCloud." alt="" coords="888,1870,1067,1895"/>
+<area shape="rect" href="structdyno_1_1DisplayCommon.html#ad9251fcb86a8c872c6b3736d0c2cd8f8" title=" " alt="" coords="892,1805,1063,1845"/>
+<area shape="rect" href="classdyno_1_1HybridFormulation.html#aa9c51eb4e4aaf1c5560b9cb75bf63699" title=" " alt="" coords="587,1741,770,1781"/>
+<area shape="rect" href="namespacedyno_1_1utils.html#a5abdff0c77884da4a8da55f0880d8cfb" title="Given an image that operates like a mask (ie. is a single channel image where each pixel value corres..." alt="" coords="874,313,1081,338"/>
+<area shape="rect" href="KittiSemaniticToMotion_8cc.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="950,70,1005,95"/>
+<area shape="rect" href="structdyno_1_1ImageType_1_1ClassSegmentation.html#afe839c69e62e5d1da10b813ca3bb824e" title=" " alt="" coords="844,120,1111,160"/>
+<area shape="rect" href="structdyno_1_1ImageType_1_1MotionMask.html#a6b119596bef78424e2085d684d07cd43" title=" " alt="" coords="867,184,1088,224"/>
+<area shape="rect" href="structdyno_1_1ImageType_1_1SemanticMask.html#aea33f14e71a1e9201d001f8c3abd61af" title=" " alt="" coords="876,248,1079,288"/>
 </map>
 </div>
 
@@ -982,7 +1020,7 @@ Here is the caller graph for this function:</div>
 
 <p class="definition">Definition at line <a class="el" href="ColourMap_8cc_source.html#l00140">140</a> of file <a class="el" href="ColourMap_8cc_source.html">ColourMap.cc</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">  140</span>{ <span class="keywordflow">return</span> <a class="code hl_function" href="structdyno_1_1Color.html#a3c5f663788365ce23752d4cfcca64c35">spectrum</a>(value, <a class="code hl_variable" href="structdyno_1_1Color.html#a0ad2464495e7a0051dc109e0b40aa982">ironbow_colors_</a>); }</div>
-<div class="ttc" id="astructdyno_1_1Color_html_a0ad2464495e7a0051dc109e0b40aa982"><div class="ttname"><a href="structdyno_1_1Color.html#a0ad2464495e7a0051dc109e0b40aa982">dyno::Color::ironbow_colors_</a></div><div class="ttdeci">static const std::vector&lt; Color &gt; ironbow_colors_</div><div class="ttdef"><b>Definition:</b> <a href="Colour_8hpp_source.html#l00250">Colour.hpp:250</a></div></div>
+<div class="ttc" id="astructdyno_1_1Color_html_a0ad2464495e7a0051dc109e0b40aa982"><div class="ttname"><a href="structdyno_1_1Color.html#a0ad2464495e7a0051dc109e0b40aa982">dyno::Color::ironbow_colors_</a></div><div class="ttdeci">static const std::vector&lt; Color &gt; ironbow_colors_</div><div class="ttdef"><b>Definition:</b> <a href="Colour_8hpp_source.html#l00266">Colour.hpp:266</a></div></div>
 <div class="ttc" id="astructdyno_1_1Color_html_a3c5f663788365ce23752d4cfcca64c35"><div class="ttname"><a href="structdyno_1_1Color.html#a3c5f663788365ce23752d4cfcca64c35">dyno::Color::spectrum</a></div><div class="ttdeci">static Color spectrum(float value, const std::vector&lt; Color &gt; &amp;colors)</div><div class="ttdoc">Generate a color based on a spectrum of colors.</div><div class="ttdef"><b>Definition:</b> <a href="ColourMap_8cc_source.html#l00126">ColourMap.cc:126</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="structdyno_1_1Color.html#a0ad2464495e7a0051dc109e0b40aa982">ironbow_colors_</a>, and <a class="el" href="structdyno_1_1Color.html#a3c5f663788365ce23752d4cfcca64c35">spectrum()</a>.</p>
@@ -1799,8 +1837,8 @@ Here is the caller graph for this function:</div>
 </div><!-- fragment -->
 </div>
 </div>
-<a id="a4f52f9aec87e2c34370ad02e6d4e25fc" name="a4f52f9aec87e2c34370ad02e6d4e25fc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4f52f9aec87e2c34370ad02e6d4e25fc">&#9670;&#160;</a></span>uniqueId()</h2>
+<a id="a6689af3d0ac5ceaa66000b5ca70becbd" name="a6689af3d0ac5ceaa66000b5ca70becbd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6689af3d0ac5ceaa66000b5ca70becbd">&#9670;&#160;</a></span>uniqueId()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1818,13 +1856,13 @@ Here is the caller graph for this function:</div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>saturation</em> = <code>0.5f</code>, </td>
+          <td class="paramname"><em>saturation</em> = <code><a class="el" href="structdyno_1_1Color.html#a4384d1658f59f075baced8a91f2e253f">unique_id_default_saturation</a></code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>value</em> = <code>0.95f</code>&#160;</td>
+          <td class="paramname"><em>value</em> = <code><a class="el" href="structdyno_1_1Color.html#a95c3c0ecb35c81b6293a919b9a37a308">unique_id_default_value</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1839,7 +1877,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p>Generates a sequence of never repeating colors using the golden ration to seperate the colours along the HSV ring spectrum. </p>
+<p>Generates a sequence of never repeating colors using the golden ratio to seperate the colours along the HSV ring spectrum. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">id</td><td>The id of the color in the sequence. </td></tr>
@@ -1863,13 +1901,13 @@ Here is the caller graph for this function:</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="structdyno_1_1Color.html#a08bcb6ea49861f6978858a2ff5159002">fromHSV()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1FeatureTrackerBase.html#aa902950650699301214f776a905e3b77">dyno::FeatureTrackerBase::computeImageTracks()</a>, <a class="el" href="classdyno_1_1InbuiltDisplayCommon.html#ac1b0d24582458add8b4f64738872ff33">dyno::InbuiltDisplayCommon::constructBoundingBoxeMarkers()</a>, <a class="el" href="classdyno_1_1DSDTransport.html#a4eba9575230369796752df57fb9c478a">dyno::DSDTransport::constructMultiObjectOdometryPaths()</a>, <a class="el" href="structdyno_1_1ObjectPoseGT.html#ada6ef6e0253d33690945f1d8dcf7be45">dyno::ObjectPoseGT::drawBoundingBox()</a>, <a class="el" href="classdyno_1_1Frame.html#a5e2adcdcb96143552fa891351b94dd22">dyno::Frame::drawDetectedObjectBoxes()</a>, <a class="el" href="namespacedyno.html#ad2183909c7d4f0dd85c7db9ae1759b01">dyno::groupObjectCloud()</a>, <a class="el" href="namespacedyno_1_1utils.html#a5abdff0c77884da4a8da55f0880d8cfb">dyno::utils::labelMaskToRGB()</a>, <a class="el" href="classdyno_1_1FrontendInbuiltDisplayRos.html#a4b6fefaf04a868c58cd85d8a741b4726">dyno::FrontendInbuiltDisplayRos::processRGBDOutputpacket()</a>, <a class="el" href="classdyno_1_1InbuiltDisplayCommon.html#a70f9716db81c6643674174da5a5f5f90">dyno::InbuiltDisplayCommon::publishObjectPaths()</a>, <a class="el" href="classdyno_1_1InbuiltDisplayCommon.html#a59e66ed2ccc103f7bfdd420547ecdcad">dyno::InbuiltDisplayCommon::publishObjectPositions()</a>, and <a class="el" href="structdyno_1_1DisplayCommon.html#ad9251fcb86a8c872c6b3736d0c2cd8f8">dyno::DisplayCommon::publishPointCloud()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1FeatureTrackerBase.html#aa902950650699301214f776a905e3b77">dyno::FeatureTrackerBase::computeImageTracks()</a>, <a class="el" href="classdyno_1_1InbuiltDisplayCommon.html#ac1b0d24582458add8b4f64738872ff33">dyno::InbuiltDisplayCommon::constructBoundingBoxeMarkers()</a>, <a class="el" href="classdyno_1_1DSDTransport.html#a6181566479bf9f5bad14d66c048afd9e">dyno::DSDTransport::constructMultiObjectOdometryPaths()</a>, <a class="el" href="namespacedyno.html#a8357d6a8de284f4d1fc3d074646b43bb">dyno::convert()</a>, <a class="el" href="structdyno_1_1ObjectPoseGT.html#ada6ef6e0253d33690945f1d8dcf7be45">dyno::ObjectPoseGT::drawBoundingBox()</a>, <a class="el" href="classdyno_1_1Frame.html#a5e2adcdcb96143552fa891351b94dd22">dyno::Frame::drawDetectedObjectBoxes()</a>, <a class="el" href="namespacedyno.html#a2d0888a8627082384b75a95953f55c3c">dyno::groupObjectCloud()</a>, <a class="el" href="namespacedyno_1_1utils.html#ab60d1512caf6ce316d53e53056b71f7e">dyno::utils::labelMaskToRGB()</a>, <a class="el" href="classdyno_1_1ParallelHybridBackendModule.html#a07ee75bebfcdf9cab20b6d2cc214b8e0">dyno::ParallelHybridBackendModule::nominalSpinImpl()</a>, <a class="el" href="classdyno_1_1FrontendInbuiltDisplayRos.html#a4b6fefaf04a868c58cd85d8a741b4726">dyno::FrontendInbuiltDisplayRos::processRGBDOutputpacket()</a>, <a class="el" href="classdyno_1_1Frame.html#af5e5ed1065480684da54421c6fcf395e">dyno::Frame::projectToDenseCloud()</a>, <a class="el" href="classdyno_1_1InbuiltDisplayCommon.html#a70f9716db81c6643674174da5a5f5f90">dyno::InbuiltDisplayCommon::publishObjectPaths()</a>, <a class="el" href="classdyno_1_1InbuiltDisplayCommon.html#a59e66ed2ccc103f7bfdd420547ecdcad">dyno::InbuiltDisplayCommon::publishObjectPositions()</a>, <a class="el" href="classdyno_1_1BackendDSDRos.html#a0bebe1ff9e7c9bebda99cb5a9f1d9ba1">dyno::BackendDSDRos::publishTemporalDynamicMaps()</a>, and <a class="el" href="structdyno_1_1Color.html#a233d8ceb1eec90b7b849ed1e2fa45e55">uniqueObjectId()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="structdyno_1_1Color_a4f52f9aec87e2c34370ad02e6d4e25fc_cgraph.png" border="0" usemap="#astructdyno_1_1Color_a4f52f9aec87e2c34370ad02e6d4e25fc_cgraph" alt=""/></div>
-<map name="astructdyno_1_1Color_a4f52f9aec87e2c34370ad02e6d4e25fc_cgraph" id="astructdyno_1_1Color_a4f52f9aec87e2c34370ad02e6d4e25fc_cgraph">
-<area shape="rect" title="Generates a sequence of never repeating colors using the golden ration to seperate the colours along ..." alt="" coords="5,31,165,56"/>
+<div class="center"><img src="structdyno_1_1Color_a6689af3d0ac5ceaa66000b5ca70becbd_cgraph.png" border="0" usemap="#astructdyno_1_1Color_a6689af3d0ac5ceaa66000b5ca70becbd_cgraph" alt=""/></div>
+<map name="astructdyno_1_1Color_a6689af3d0ac5ceaa66000b5ca70becbd_cgraph" id="astructdyno_1_1Color_a6689af3d0ac5ceaa66000b5ca70becbd_cgraph">
+<area shape="rect" title="Generates a sequence of never repeating colors using the golden ratio to seperate the colours along t..." alt="" coords="5,31,165,56"/>
 <area shape="rect" href="structdyno_1_1Color.html#a08bcb6ea49861f6978858a2ff5159002" title=" " alt="" coords="213,31,376,56"/>
 <area shape="rect" href="structdyno_1_1Color.html#a6bc55a80a463a481dbf4778c70d04733" title=" " alt="" coords="451,5,590,31"/>
 <area shape="rect" href="namespacedyno.html#ab0e74ec8992860404a618192cc694b83" title=" " alt="" coords="424,55,617,80"/>
@@ -1878,39 +1916,124 @@ Here is the call graph for this function:</div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="structdyno_1_1Color_a4f52f9aec87e2c34370ad02e6d4e25fc_icgraph.png" border="0" usemap="#astructdyno_1_1Color_a4f52f9aec87e2c34370ad02e6d4e25fc_icgraph" alt=""/></div>
-<map name="astructdyno_1_1Color_a4f52f9aec87e2c34370ad02e6d4e25fc_icgraph" id="astructdyno_1_1Color_a4f52f9aec87e2c34370ad02e6d4e25fc_icgraph">
-<area shape="rect" title="Generates a sequence of never repeating colors using the golden ration to seperate the colours along ..." alt="" coords="1391,293,1551,318"/>
-<area shape="rect" href="classdyno_1_1FeatureTrackerBase.html#aa902950650699301214f776a905e3b77" title=" " alt="" coords="1131,5,1320,45"/>
-<area shape="rect" href="classdyno_1_1InbuiltDisplayCommon.html#ac1b0d24582458add8b4f64738872ff33" title="Constructs axis&#45;aligned BB (AABB) and oriented BB (OBB) marker arrays from a set of point clouds whic..." alt="" coords="1108,69,1343,109"/>
-<area shape="rect" href="classdyno_1_1DSDTransport.html#a4eba9575230369796752df57fb9c478a" title=" " alt="" coords="1110,350,1341,405"/>
-<area shape="rect" href="structdyno_1_1ObjectPoseGT.html#ada6ef6e0253d33690945f1d8dcf7be45" title="Draws the object label and bounding box on the provided image." alt="" coords="1149,429,1302,469"/>
-<area shape="rect" href="classdyno_1_1Frame.html#a5e2adcdcb96143552fa891351b94dd22" title="From the detected list of objects (in Frame::object_observations_) draw the object masks as labelled ..." alt="" coords="1124,493,1327,533"/>
-<area shape="rect" href="namespacedyno.html#ad2183909c7d4f0dd85c7db9ae1759b01" title="This function goes through the input 3D landmarks and group them into point clusters based on their o..." alt="" coords="1136,558,1315,583"/>
-<area shape="rect" href="namespacedyno_1_1utils.html#a5abdff0c77884da4a8da55f0880d8cfb" title="Given an image that operates like a mask (ie. is a single channel image where each pixel value corres..." alt="" coords="1122,607,1329,633"/>
-<area shape="rect" href="classdyno_1_1FrontendInbuiltDisplayRos.html#a4b6fefaf04a868c58cd85d8a741b4726" title=" " alt="" coords="516,232,745,272"/>
-<area shape="rect" href="classdyno_1_1InbuiltDisplayCommon.html#a70f9716db81c6643674174da5a5f5f90" title=" " alt="" coords="821,171,1032,211"/>
-<area shape="rect" href="classdyno_1_1InbuiltDisplayCommon.html#a59e66ed2ccc103f7bfdd420547ecdcad" title=" " alt="" coords="821,107,1032,147"/>
-<area shape="rect" href="structdyno_1_1DisplayCommon.html#ad9251fcb86a8c872c6b3736d0c2cd8f8" title=" " alt="" coords="1140,285,1311,325"/>
-<area shape="rect" href="classdyno_1_1InbuiltDisplayCommon.html#a1b2fa923dc466d1357936bf793d65ce2" title=" " alt="" coords="821,43,1032,83"/>
-<area shape="rect" href="classdyno_1_1BackendInbuiltDisplayRos.html#ae435d50beb86a1beecb8bf249e723bf4" title=" " alt="" coords="527,104,734,144"/>
-<area shape="rect" href="namespacedyno_1_1utils.html#a699bf9281c9c2c91ff538a4160975480" title="Same as labelMaskToRGB(mask, background label) but instead draws the mask over a black image so only ..." alt="" coords="823,558,1030,583"/>
-<area shape="rect" href="KittiSemaniticToMotion_8cc.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="899,607,954,633"/>
-<area shape="rect" href="structdyno_1_1ImageType_1_1ClassSegmentation.html#afe839c69e62e5d1da10b813ca3bb824e" title=" " alt="" coords="793,657,1060,697"/>
-<area shape="rect" href="structdyno_1_1ImageType_1_1MotionMask.html#a6b119596bef78424e2085d684d07cd43" title=" " alt="" coords="816,721,1037,761"/>
-<area shape="rect" href="structdyno_1_1ImageType_1_1SemanticMask.html#aea33f14e71a1e9201d001f8c3abd61af" title=" " alt="" coords="825,493,1028,533"/>
-<area shape="rect" href="classdyno_1_1OnlineDataProviderRos.html#a02b6aa8b0f6c6c732310c0852f54ef42" title=" " alt="" coords="536,753,725,793"/>
-<area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2" title=" " alt="" coords="525,689,737,729"/>
-<area shape="rect" href="classdyno_1_1OnlineDataProviderRos.html#a3b7725856bc86407813c51804a26bea4" title="Connects all subscribers." alt="" coords="269,753,458,793"/>
-<area shape="rect" href="classdyno_1_1OnlineDataProviderRos.html#abea751b62c91dbf7bfac759680a434f7" title="Construct a new OnlineDataProviderRos." alt="" coords="5,753,211,793"/>
-<area shape="rect" href="classdyno_1_1FrontendInbuiltDisplayRos.html#a8e47d6ce98cd285d8b6d9674cbacf334" title=" " alt="" coords="259,200,468,240"/>
-<area shape="rect" href="classdyno_1_1FrontendInbuiltDisplayRos.html#acdc1be16deea0c706451e415f303342f" title=" " alt="" coords="526,168,735,208"/>
-<area shape="rect" href="classdyno_1_1DSDRos.html#a2c158ca365a2406ba990a1c8a60ba603" title=" " alt="" coords="813,413,1040,453"/>
-<area shape="rect" href="classdyno_1_1InbuiltDisplayCommon.html#a5ea9ec6ffedf2a6cb3a84a71fe0590fd" title=" " alt="" coords="821,285,1032,325"/>
-<area shape="rect" href="classdyno_1_1DSDRos.html#a2ea9ccc0e69485a7128c10b55ca60c99" title=" " alt="" coords="823,349,1030,389"/>
-<area shape="rect" href="classdyno_1_1FrontendDSDRos.html#a9101c485338a62d8a86b37a56a68503e" title=" " alt="" coords="528,413,733,453"/>
-<area shape="rect" href="classdyno_1_1BackendDSDRos.html#a5316ec622424b5f5c3c5b111a56c4063" title=" " alt="" coords="546,349,715,389"/>
-<area shape="rect" href="classdyno_1_1FrontendDSDRos.html#a633a457c51868257f25d44d1a99f0e12" title=" " alt="" coords="278,413,449,453"/>
+<div class="center"><img src="structdyno_1_1Color_a6689af3d0ac5ceaa66000b5ca70becbd_icgraph.png" border="0" usemap="#astructdyno_1_1Color_a6689af3d0ac5ceaa66000b5ca70becbd_icgraph" alt=""/></div>
+<map name="astructdyno_1_1Color_a6689af3d0ac5ceaa66000b5ca70becbd_icgraph" id="astructdyno_1_1Color_a6689af3d0ac5ceaa66000b5ca70becbd_icgraph">
+<area shape="rect" title="Generates a sequence of never repeating colors using the golden ratio to seperate the colours along t..." alt="" coords="1417,1639,1577,1665"/>
+<area shape="rect" href="classdyno_1_1FeatureTrackerBase.html#aa902950650699301214f776a905e3b77" title=" " alt="" coords="883,5,1072,45"/>
+<area shape="rect" href="classdyno_1_1InbuiltDisplayCommon.html#ac1b0d24582458add8b4f64738872ff33" title="Constructs axis&#45;aligned BB (AABB) and oriented BB (OBB) marker arrays from a set of point clouds whic..." alt="" coords="561,540,796,580"/>
+<area shape="rect" href="classdyno_1_1DSDTransport.html#a6181566479bf9f5bad14d66c048afd9e" title=" " alt="" coords="5,1366,236,1421"/>
+<area shape="rect" href="namespacedyno.html#a8357d6a8de284f4d1fc3d074646b43bb" title=" " alt="" coords="1209,1395,1319,1421"/>
+<area shape="rect" href="classdyno_1_1InbuiltDisplayCommon.html#a70f9716db81c6643674174da5a5f5f90" title=" " alt="" coords="573,412,784,452"/>
+<area shape="rect" href="classdyno_1_1FrontendInbuiltDisplayRos.html#a4b6fefaf04a868c58cd85d8a741b4726" title=" " alt="" coords="284,412,513,452"/>
+<area shape="rect" href="classdyno_1_1InbuiltDisplayCommon.html#a59e66ed2ccc103f7bfdd420547ecdcad" title=" " alt="" coords="573,476,784,516"/>
+<area shape="rect" href="structdyno_1_1ObjectPoseGT.html#ada6ef6e0253d33690945f1d8dcf7be45" title="Draws the object label and bounding box on the provided image." alt="" coords="1187,1841,1341,1881"/>
+<area shape="rect" href="classdyno_1_1Frame.html#a5e2adcdcb96143552fa891351b94dd22" title="From the detected list of objects (in Frame::object_observations_) draw the object masks as labelled ..." alt="" coords="1163,1905,1365,1945"/>
+<area shape="rect" href="namespacedyno.html#a2d0888a8627082384b75a95953f55c3c" title="This function goes through the input 3D landmarks and group them into point clusters based on their o..." alt="" coords="1175,1690,1353,1715"/>
+<area shape="rect" href="classdyno_1_1BackendDSDRos.html#a0bebe1ff9e7c9bebda99cb5a9f1d9ba1" title=" " alt="" coords="862,1817,1093,1857"/>
+<area shape="rect" href="namespacedyno_1_1utils.html#ab60d1512caf6ce316d53e53056b71f7e" title="Given an image that operates like a mask (ie. is a single channel image where each pixel value corres..." alt="" coords="1161,177,1367,202"/>
+<area shape="rect" href="classdyno_1_1ParallelHybridBackendModule.html#a07ee75bebfcdf9cab20b6d2cc214b8e0" title=" " alt="" coords="1160,1969,1368,2009"/>
+<area shape="rect" href="classdyno_1_1Frame.html#af5e5ed1065480684da54421c6fcf395e" title=" " alt="" coords="1159,2033,1369,2073"/>
+<area shape="rect" href="structdyno_1_1Color.html#a233d8ceb1eec90b7b849ed1e2fa45e55" title="Overload of uniqueId that uses types specific for ObjectId. To allow a simpler function signature,..." alt="" coords="1163,1791,1365,1817"/>
+<area shape="rect" href="classdyno_1_1InbuiltDisplayCommon.html#a1b2fa923dc466d1357936bf793d65ce2" title=" " alt="" coords="293,651,504,691"/>
+<area shape="rect" href="classdyno_1_1BackendInbuiltDisplayRos.html#ae435d50beb86a1beecb8bf249e723bf4" title=" " alt="" coords="17,713,224,753"/>
+<area shape="rect" href="classdyno_1_1DSDTransport.html#a68cd19d60a58b1b568f9006d5483ee97" title=" " alt="" coords="300,1208,497,1248"/>
+<area shape="rect" href="namespacedyno.html#a677d03304c34b8e68e9d7b664f089ddf" title=" " alt="" coords="909,1525,1046,1550"/>
+<area shape="rect" href="classdyno_1_1InbuiltDisplayCommon.html#a878dd64b70f24d79067cef7437631fe3" title=" " alt="" coords="573,604,784,644"/>
+<area shape="rect" href="classdyno_1_1InbuiltDisplayCommon.html#a925cae0fcfe0b0f79074c1abd1bcc96b" title=" " alt="" coords="573,719,784,759"/>
+<area shape="rect" href="namespacedyno_1_1utils.html#a367447d229280a53123017719e94f0d9" title="Convert ROS time to timestamp." alt="" coords="884,1366,1071,1391"/>
+<area shape="rect" href="classdyno_1_1DSDTransport_1_1Publisher.html#a273d58dd87e02093d55d866ea687a29f" title="Broadcast the transform of each object using their pose. Transforms will be constructed between the P..." alt="" coords="585,1229,772,1283"/>
+<area shape="rect" href="namespacedyno_1_1utils.html#a81025ee06847cec0fd854eff05362d19" title="Converts Timestamp (in seconds) to ROS time." alt="" coords="893,879,1061,905"/>
+<area shape="rect" href="classdyno_1_1ParallelObjectISAM.html#a96475152a11275ac46c4767b5dbae8aa" title=" " alt="" coords="884,1575,1071,1615"/>
+<area shape="rect" href="classdyno_1_1DSDTransport.html#aa25a57f09531c34b256273e8b0fc2c63" title=" " alt="" coords="17,1208,225,1248"/>
+<area shape="rect" href="namespacedyno.html#ad295021193a35b4d2c0dbc9bd7d7b401" title=" " alt="" coords="623,1525,734,1550"/>
+<area shape="rect" href="classdyno_1_1InbuiltDisplayCommon.html#ac594eb8a8b81059e36f6b9174e9fe721" title=" " alt="" coords="293,719,504,759"/>
+<area shape="rect" href="classdyno_1_1OnlineDataProviderRos.html#a02b6aa8b0f6c6c732310c0852f54ef42" title=" " alt="" coords="584,1359,773,1399"/>
+<area shape="rect" href="classdyno_1_1FrontendDSDRos.html#a9101c485338a62d8a86b37a56a68503e" title=" " alt="" coords="296,1323,501,1363"/>
+<area shape="rect" href="namespacedyno_1_1utils.html#a7efb03484e6c5b1cc0d0eeeb43546ffa" title="Converts from input type to output type where output type is a ROS message with a header...." alt="" coords="590,948,767,988"/>
+<area shape="rect" href="classdyno_1_1FrontendInbuiltDisplayRos.html#acdc1be16deea0c706451e415f303342f" title=" " alt="" coords="294,527,503,567"/>
+<area shape="rect" href="structdyno_1_1DisplayCommon.html#aa626522a5e93ee7d72975e94260069a5" title=" " alt="" coords="313,848,484,888"/>
+<area shape="rect" href="classdyno_1_1FrontendDSDRos.html#a30a427c3d1b16b3fa99e2ddde0802c41" title=" " alt="" coords="311,999,486,1039"/>
+<area shape="rect" href="classdyno_1_1DynoPipelineManagerRos.html#a9b111354972184ae191c76dfb88f6820" title=" " alt="" coords="576,884,781,924"/>
+<area shape="rect" href="classdyno_1_1DSDRos.html#ac605e3eed18e2608a66dc9674a2674ca" title=" " alt="" coords="574,1164,783,1204"/>
+<area shape="rect" href="classdyno_1_1FrontendInbuiltDisplayRos.html#a8e47d6ce98cd285d8b6d9674cbacf334" title=" " alt="" coords="16,469,225,509"/>
+<area shape="rect" href="classdyno_1_1BackendDSDRos.html#a5316ec622424b5f5c3c5b111a56c4063" title=" " alt="" coords="314,1689,483,1729"/>
+<area shape="rect" href="classdyno_1_1ParallelObjectISAM.html#aebe02d7a654d9829c361eece7374dd1f" title=" " alt="" coords="585,1575,772,1615"/>
+<area shape="rect" href="classdyno_1_1HybridFormulation.html#a41a208f1552daac149906b0b98296bcd" title=" " alt="" coords="884,1753,1071,1793"/>
+<area shape="rect" href="namespacedyno.html#a7f0a5ea8af1e41fad7b8d81e8c5cdb26" title="Overload of groupObjectCloud." alt="" coords="888,1882,1067,1907"/>
+<area shape="rect" href="structdyno_1_1DisplayCommon.html#ad9251fcb86a8c872c6b3736d0c2cd8f8" title=" " alt="" coords="892,1689,1063,1729"/>
+<area shape="rect" href="classdyno_1_1HybridFormulation.html#aa9c51eb4e4aaf1c5560b9cb75bf63699" title=" " alt="" coords="587,1753,770,1793"/>
+<area shape="rect" href="classdyno_1_1DSDRos.html#a2c158ca365a2406ba990a1c8a60ba603" title=" " alt="" coords="565,1689,792,1729"/>
+<area shape="rect" href="namespacedyno_1_1utils.html#a5abdff0c77884da4a8da55f0880d8cfb" title="Given an image that operates like a mask (ie. is a single channel image where each pixel value corres..." alt="" coords="874,70,1081,95"/>
+<area shape="rect" href="KittiSemaniticToMotion_8cc.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="950,119,1005,145"/>
+<area shape="rect" href="structdyno_1_1ImageType_1_1ClassSegmentation.html#afe839c69e62e5d1da10b813ca3bb824e" title=" " alt="" coords="844,169,1111,209"/>
+<area shape="rect" href="structdyno_1_1ImageType_1_1MotionMask.html#a6b119596bef78424e2085d684d07cd43" title=" " alt="" coords="867,233,1088,273"/>
+<area shape="rect" href="structdyno_1_1ImageType_1_1SemanticMask.html#aea33f14e71a1e9201d001f8c3abd61af" title=" " alt="" coords="876,297,1079,337"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a233d8ceb1eec90b7b849ed1e2fa45e55" name="a233d8ceb1eec90b7b849ed1e2fa45e55"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a233d8ceb1eec90b7b849ed1e2fa45e55">&#9670;&#160;</a></span>uniqueObjectId()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="structdyno_1_1Color.html">Color</a> dyno::Color::uniqueObjectId </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacedyno.html#a38bb86e4154b86428b8d133be03fb2b5">ObjectId</a>&#160;</td>
+          <td class="paramname"><em>id</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Overload of uniqueId that uses types specific for ObjectId. To allow a simpler function signature, this function only takes one argument where the saturation=0.5f and value=0.95f. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">id</td><td>ObjectId </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="structdyno_1_1Color.html">Color</a> </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="Colour_8hpp_source.html#l00261">261</a> of file <a class="el" href="Colour_8hpp_source.html">Colour.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  261</span>                                           {</div>
+<div class="line"><span class="lineno">  262</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="structdyno_1_1Color.html#a6689af3d0ac5ceaa66000b5ca70becbd">uniqueId</a>(<span class="keyword">static_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(<span class="keywordtype">id</span>));</div>
+<div class="line"><span class="lineno">  263</span>  }</div>
+<div class="ttc" id="astructdyno_1_1Color_html_a6689af3d0ac5ceaa66000b5ca70becbd"><div class="ttname"><a href="structdyno_1_1Color.html#a6689af3d0ac5ceaa66000b5ca70becbd">dyno::Color::uniqueId</a></div><div class="ttdeci">static Color uniqueId(size_t id, float saturation=unique_id_default_saturation, float value=unique_id_default_value)</div><div class="ttdoc">Generates a sequence of never repeating colors using the golden ratio to seperate the colours along t...</div><div class="ttdef"><b>Definition:</b> <a href="ColourMap_8cc_source.html#l00169">ColourMap.cc:169</a></div></div>
+</div><!-- fragment -->
+<p class="reference">References <a class="el" href="structdyno_1_1Color.html#a6689af3d0ac5ceaa66000b5ca70becbd">uniqueId()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="namespacedyno.html#a7f0a5ea8af1e41fad7b8d81e8c5cdb26">dyno::groupObjectCloud()</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="structdyno_1_1Color_a233d8ceb1eec90b7b849ed1e2fa45e55_cgraph.png" border="0" usemap="#astructdyno_1_1Color_a233d8ceb1eec90b7b849ed1e2fa45e55_cgraph" alt=""/></div>
+<map name="astructdyno_1_1Color_a233d8ceb1eec90b7b849ed1e2fa45e55_cgraph" id="astructdyno_1_1Color_a233d8ceb1eec90b7b849ed1e2fa45e55_cgraph">
+<area shape="rect" title="Overload of uniqueId that uses types specific for ObjectId. To allow a simpler function signature,..." alt="" coords="5,31,208,56"/>
+<area shape="rect" href="structdyno_1_1Color.html#a6689af3d0ac5ceaa66000b5ca70becbd" title="Generates a sequence of never repeating colors using the golden ratio to seperate the colours along t..." alt="" coords="256,31,416,56"/>
+<area shape="rect" href="structdyno_1_1Color.html#a08bcb6ea49861f6978858a2ff5159002" title=" " alt="" coords="464,31,627,56"/>
+<area shape="rect" href="structdyno_1_1Color.html#a6bc55a80a463a481dbf4778c70d04733" title=" " alt="" coords="702,5,841,31"/>
+<area shape="rect" href="namespacedyno.html#ab0e74ec8992860404a618192cc694b83" title=" " alt="" coords="675,55,868,80"/>
+</map>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="structdyno_1_1Color_a233d8ceb1eec90b7b849ed1e2fa45e55_icgraph.png" border="0" usemap="#astructdyno_1_1Color_a233d8ceb1eec90b7b849ed1e2fa45e55_icgraph" alt=""/></div>
+<map name="astructdyno_1_1Color_a233d8ceb1eec90b7b849ed1e2fa45e55_icgraph" id="astructdyno_1_1Color_a233d8ceb1eec90b7b849ed1e2fa45e55_icgraph">
+<area shape="rect" title="Overload of uniqueId that uses types specific for ObjectId. To allow a simpler function signature,..." alt="" coords="232,5,435,31"/>
+<area shape="rect" href="namespacedyno.html#a7f0a5ea8af1e41fad7b8d81e8c5cdb26" title="Overload of groupObjectCloud." alt="" coords="5,5,184,31"/>
 </map>
 </div>
 
@@ -2061,9 +2184,61 @@ Here is the call graph for this function:</div>
 <b>Initial value:</b><div class="fragment"><div class="line">= {</div>
 <div class="line">    {0, 0, 0}, {145, 20, 145}, {255, 138, 0}, {255, 230, 40}, {255, 255, 255}}</div>
 </div><!-- fragment -->
-<p class="definition">Definition at line <a class="el" href="Colour_8hpp_source.html#l00250">250</a> of file <a class="el" href="Colour_8hpp_source.html">Colour.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Colour_8hpp_source.html#l00266">266</a> of file <a class="el" href="Colour_8hpp_source.html">Colour.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="structdyno_1_1Color.html#ae28dde76a5a25818e4745afcf23e6d47">ironbow()</a>.</p>
+
+</div>
+</div>
+<a id="a4384d1658f59f075baced8a91f2e253f" name="a4384d1658f59f075baced8a91f2e253f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4384d1658f59f075baced8a91f2e253f">&#9670;&#160;</a></span>unique_id_default_saturation</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr float dyno::Color::unique_id_default_saturation = 0.5f</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Colour_8hpp_source.html#l00238">238</a> of file <a class="el" href="Colour_8hpp_source.html">Colour.hpp</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1BackendDSDRos.html#a0bebe1ff9e7c9bebda99cb5a9f1d9ba1">dyno::BackendDSDRos::publishTemporalDynamicMaps()</a>.</p>
+
+</div>
+</div>
+<a id="a95c3c0ecb35c81b6293a919b9a37a308" name="a95c3c0ecb35c81b6293a919b9a37a308"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a95c3c0ecb35c81b6293a919b9a37a308">&#9670;&#160;</a></span>unique_id_default_value</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr float dyno::Color::unique_id_default_value = 0.95f</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Colour_8hpp_source.html#l00237">237</a> of file <a class="el" href="Colour_8hpp_source.html">Colour.hpp</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1BackendDSDRos.html#a0bebe1ff9e7c9bebda99cb5a9f1d9ba1">dyno::BackendDSDRos::publishTemporalDynamicMaps()</a>.</p>
 
 </div>
 </div>

@@ -77,6 +77,7 @@ $(function() {
   <div class="summary">
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="#friends">Friends</a> &#124;
 <a href="classdyno_1_1MeasurementWithCovariance-members.html">List of all members</a>  </div>
@@ -84,17 +85,13 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>Defines a measurement with associated covariance matrix.  
+<p>Defines a measurement/value with associated covariance matrix.  
  <a href="classdyno_1_1MeasurementWithCovariance.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="SensorModels_8hpp_source.html">SensorModels.hpp</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a18d6c32f1ae692e8695328f42f4a23e6"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom">{ <a class="el" href="classdyno_1_1MeasurementWithCovariance.html#a18d6c32f1ae692e8695328f42f4a23e6a3f5299280e0062ead2d00cff56e6f716">dimension</a> = D
- }</td></tr>
-<tr class="memdesc:a18d6c32f1ae692e8695328f42f4a23e6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Need to have dimension to satisfy gtsam::dimemsions.  <a href="classdyno_1_1MeasurementWithCovariance.html#a18d6c32f1ae692e8695328f42f4a23e6">More...</a><br /></td></tr>
-<tr class="separator:a18d6c32f1ae692e8695328f42f4a23e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae0c34639c4b7f27c75b315ac870ea61e"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1MeasurementWithCovariance.html#ae0c34639c4b7f27c75b315ac870ea61e">This</a> = <a class="el" href="classdyno_1_1MeasurementWithCovariance.html">MeasurementWithCovariance</a>&lt; T, D &gt;</td></tr>
 <tr class="separator:ae0c34639c4b7f27c75b315ac870ea61e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a99ee96128bac6d2c22a3c8a22641e934"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1MeasurementWithCovariance.html#a99ee96128bac6d2c22a3c8a22641e934">Covariance</a> = Eigen::Matrix&lt; double, D, D &gt;</td></tr>
@@ -107,14 +104,19 @@ Public Types</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a8d44e192884b8719ad52e7206c59cd07"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1MeasurementWithCovariance.html#a8d44e192884b8719ad52e7206c59cd07">MeasurementWithCovariance</a> ()=default</td></tr>
+<tr class="memdesc:a8d44e192884b8719ad52e7206c59cd07"><td class="mdescLeft">&#160;</td><td class="mdescRight">Empty constructor.  <br /></td></tr>
 <tr class="separator:a8d44e192884b8719ad52e7206c59cd07"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a32783370a4c57d438bc33bec96430796"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1MeasurementWithCovariance.html#a32783370a4c57d438bc33bec96430796">MeasurementWithCovariance</a> (const T &amp;<a class="el" href="classdyno_1_1MeasurementWithCovariance.html#aa7db2e25e8482f5e84f28cbc11040531">measurement</a>, const gtsam::SharedGaussian &amp;<a class="el" href="classdyno_1_1MeasurementWithCovariance.html#a42b3c50cc30192945f64a4c9a8e0ad67">model</a>)</td></tr>
+<tr class="memdesc:a32783370a4c57d438bc33bec96430796"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct object using a measurement and a gtsam::SharedGaussian, representing the noise model/uncertainty of the measurement.  <br /></td></tr>
 <tr class="separator:a32783370a4c57d438bc33bec96430796"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a977dc2c22c55af5af9d8ed9e0e3a04e7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1MeasurementWithCovariance.html#a977dc2c22c55af5af9d8ed9e0e3a04e7">MeasurementWithCovariance</a> (const T &amp;<a class="el" href="classdyno_1_1MeasurementWithCovariance.html#aa7db2e25e8482f5e84f28cbc11040531">measurement</a>)</td></tr>
+<tr class="memdesc:a977dc2c22c55af5af9d8ed9e0e3a04e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct object using only a measurement type, indicatating there is no associated noise model/uncertainty. The resulting model will be none and the covariance matrix will be all zeros.  <br /></td></tr>
 <tr class="separator:a977dc2c22c55af5af9d8ed9e0e3a04e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adc7e0335ea2ee721490437901c413b46"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1MeasurementWithCovariance.html#adc7e0335ea2ee721490437901c413b46">MeasurementWithCovariance</a> (const T &amp;<a class="el" href="classdyno_1_1MeasurementWithCovariance.html#aa7db2e25e8482f5e84f28cbc11040531">measurement</a>, const <a class="el" href="classdyno_1_1MeasurementWithCovariance.html#a99ee96128bac6d2c22a3c8a22641e934">Covariance</a> &amp;<a class="el" href="classdyno_1_1MeasurementWithCovariance.html#af8bd4a9635e9c15f1121a099c00d623e">covariance</a>)</td></tr>
+<tr class="memdesc:adc7e0335ea2ee721490437901c413b46"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct object using a measurement type and associated covariance matrix. The covariance matrix is used to construct the underlying sensor noise model using gtsam::noiseModel::Gaussian.  <br /></td></tr>
 <tr class="separator:adc7e0335ea2ee721490437901c413b46"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7383537fd0ea9902d4ea8245ab9fc0ab"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1MeasurementWithCovariance.html#a7383537fd0ea9902d4ea8245ab9fc0ab">MeasurementWithCovariance</a> (const T &amp;<a class="el" href="classdyno_1_1MeasurementWithCovariance.html#aa7db2e25e8482f5e84f28cbc11040531">measurement</a>, const <a class="el" href="classdyno_1_1MeasurementWithCovariance.html#a402eb2a27fe00e4b233eccb57a47d16d">Sigmas</a> &amp;sigmas)</td></tr>
+<tr class="memdesc:a7383537fd0ea9902d4ea8245ab9fc0ab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct object using a measurement type and associated sigma vector. The sigma's represent the on-diagonal values for the covariance matrix and are used to construct the underlying sensor noise model using gtsam::noiseModel::Gaussian.  <br /></td></tr>
 <tr class="separator:a7383537fd0ea9902d4ea8245ab9fc0ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0f1248bcc0435618d7ea809e45ca8cc4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1MeasurementWithCovariance.html#a0f1248bcc0435618d7ea809e45ca8cc4">MeasurementWithCovariance</a> (const std::pair&lt; T, <a class="el" href="classdyno_1_1MeasurementWithCovariance.html#a99ee96128bac6d2c22a3c8a22641e934">Covariance</a> &gt; &amp;pair)</td></tr>
 <tr class="separator:a0f1248bcc0435618d7ea809e45ca8cc4"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -136,6 +138,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a9eb3d75e01f1365db1b35ddc3c2ce1d0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1MeasurementWithCovariance.html#a9eb3d75e01f1365db1b35ddc3c2ce1d0">equals</a> (const <a class="el" href="classdyno_1_1MeasurementWithCovariance.html">MeasurementWithCovariance</a> &amp;other, double tol=1e-8) const</td></tr>
 <tr class="separator:a9eb3d75e01f1365db1b35ddc3c2ce1d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
+Static Public Attributes</h2></td></tr>
+<tr class="memitem:a4c875df755cea840422ae29d672773cc"><td class="memItemLeft" align="right" valign="top">static constexpr auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1MeasurementWithCovariance.html#a4c875df755cea840422ae29d672773cc">dimension</a> = D</td></tr>
+<tr class="memdesc:a4c875df755cea840422ae29d672773cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Need to have dimension to satisfy gtsam::dimemsions.  <br /></td></tr>
+<tr class="separator:a4c875df755cea840422ae29d672773cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
 <tr class="memitem:a8f75e3ac451cf283c884114666480999"><td class="memItemLeft" align="right" valign="top">T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1MeasurementWithCovariance.html#a8f75e3ac451cf283c884114666480999">measurement_</a></td></tr>
@@ -151,9 +159,9 @@ Friends</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename T, int D = gtsam::traits&lt;T&gt;::dimension&gt;<br />
-class dyno::MeasurementWithCovariance&lt; T, D &gt;</div><p>Defines a measurement with associated covariance matrix. </p>
+class dyno::MeasurementWithCovariance&lt; T, D &gt;</div><p>Defines a measurement/value with associated covariance matrix. </p>
 <p>Depending on the context, this model can either represent the uncertainty on a measurement or the marginal covariance of an estimate. In the latter context, the name "Measurement"WithCovariance is misleading (as it would not be a measurement), so to all state-estimation people I profusely apologise.</p>
-<p>The covariance can be optionallty provided.</p>
+<p>The covariance can be optionally provided.</p>
 <p>We define the dimensions of this type and provide an equals function to make it compatible with gtsam::traits&lt;T&gt;::dimension and gtsam::traits&lt;T&gt;::Equals.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
@@ -163,7 +171,7 @@ class dyno::MeasurementWithCovariance&lt; T, D &gt;</div><p>Defines a measuremen
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="SensorModels_8hpp_source.html#l00198">198</a> of file <a class="el" href="SensorModels_8hpp_source.html">SensorModels.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SensorModels_8hpp_source.html#l00207">207</a> of file <a class="el" href="SensorModels_8hpp_source.html">SensorModels.hpp</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="a99ee96128bac6d2c22a3c8a22641e934" name="a99ee96128bac6d2c22a3c8a22641e934"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a99ee96128bac6d2c22a3c8a22641e934">&#9670;&#160;</a></span>Covariance</h2>
@@ -181,7 +189,7 @@ template&lt;typename T , int D = gtsam::traits&lt;T&gt;::dimension&gt; </div>
 
 <p>D x D covariance matrix. </p>
 
-<p class="definition">Definition at line <a class="el" href="SensorModels_8hpp_source.html#l00204">204</a> of file <a class="el" href="SensorModels_8hpp_source.html">SensorModels.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SensorModels_8hpp_source.html#l00213">213</a> of file <a class="el" href="SensorModels_8hpp_source.html">SensorModels.hpp</a>.</p>
 
 </div>
 </div>
@@ -201,7 +209,7 @@ template&lt;typename T , int D = gtsam::traits&lt;T&gt;::dimension&gt; </div>
 
 <p>D x 1 sigma matrix used to construct the covariance matrix. </p>
 
-<p class="definition">Definition at line <a class="el" href="SensorModels_8hpp_source.html#l00206">206</a> of file <a class="el" href="SensorModels_8hpp_source.html">SensorModels.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SensorModels_8hpp_source.html#l00215">215</a> of file <a class="el" href="SensorModels_8hpp_source.html">SensorModels.hpp</a>.</p>
 
 </div>
 </div>
@@ -219,34 +227,8 @@ template&lt;typename T , int D = gtsam::traits&lt;T&gt;::dimension&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="SensorModels_8hpp_source.html#l00200">200</a> of file <a class="el" href="SensorModels_8hpp_source.html">SensorModels.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SensorModels_8hpp_source.html#l00209">209</a> of file <a class="el" href="SensorModels_8hpp_source.html">SensorModels.hpp</a>.</p>
 
-</div>
-</div>
-<h2 class="groupheader">Member Enumeration Documentation</h2>
-<a id="a18d6c32f1ae692e8695328f42f4a23e6" name="a18d6c32f1ae692e8695328f42f4a23e6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a18d6c32f1ae692e8695328f42f4a23e6">&#9670;&#160;</a></span>anonymous enum</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T , int D = gtsam::traits&lt;T&gt;::dimension&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">anonymous enum</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Need to have dimension to satisfy gtsam::dimemsions. </p>
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a18d6c32f1ae692e8695328f42f4a23e6a3f5299280e0062ead2d00cff56e6f716" name="a18d6c32f1ae692e8695328f42f4a23e6a3f5299280e0062ead2d00cff56e6f716"></a>dimension&#160;</td><td class="fielddoc"></td></tr>
-</table>
-
-<p class="definition">Definition at line <a class="el" href="SensorModels_8hpp_source.html#l00202">202</a> of file <a class="el" href="SensorModels_8hpp_source.html">SensorModels.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  202</span>{ <a class="code hl_enumvalue" href="classdyno_1_1MeasurementWithCovariance.html#a18d6c32f1ae692e8695328f42f4a23e6a3f5299280e0062ead2d00cff56e6f716">dimension</a> = D };</div>
-<div class="ttc" id="aclassdyno_1_1MeasurementWithCovariance_html_a18d6c32f1ae692e8695328f42f4a23e6a3f5299280e0062ead2d00cff56e6f716"><div class="ttname"><a href="classdyno_1_1MeasurementWithCovariance.html#a18d6c32f1ae692e8695328f42f4a23e6a3f5299280e0062ead2d00cff56e6f716">dyno::MeasurementWithCovariance::dimension</a></div><div class="ttdeci">@ dimension</div><div class="ttdef"><b>Definition:</b> <a href="SensorModels_8hpp_source.html#l00202">SensorModels.hpp:202</a></div></div>
-</div><!-- fragment -->
 </div>
 </div>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
@@ -274,6 +256,8 @@ template&lt;typename T , int D = gtsam::traits&lt;T&gt;::dimension&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Empty constructor. </p>
 
 </div>
 </div>
@@ -313,13 +297,48 @@ template&lt;typename T , int D = gtsam::traits&lt;T&gt;::dimension&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="SensorModels_8hpp_source.html#l00208">208</a> of file <a class="el" href="SensorModels_8hpp_source.html">SensorModels.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  210</span>      : <a class="code hl_variable" href="classdyno_1_1MeasurementWithCovariance.html#a8f75e3ac451cf283c884114666480999">measurement_</a>(<a class="code hl_function" href="classdyno_1_1MeasurementWithCovariance.html#aa7db2e25e8482f5e84f28cbc11040531">measurement</a>), <a class="code hl_variable" href="classdyno_1_1MeasurementWithCovariance.html#add7deffcfe8c61090a3754e78ab82e9c">model_</a>(<a class="code hl_function" href="classdyno_1_1MeasurementWithCovariance.html#a42b3c50cc30192945f64a4c9a8e0ad67">model</a>) {}</div>
-<div class="ttc" id="aclassdyno_1_1MeasurementWithCovariance_html_a42b3c50cc30192945f64a4c9a8e0ad67"><div class="ttname"><a href="classdyno_1_1MeasurementWithCovariance.html#a42b3c50cc30192945f64a4c9a8e0ad67">dyno::MeasurementWithCovariance::model</a></div><div class="ttdeci">const gtsam::SharedGaussian &amp; model() const</div><div class="ttdef"><b>Definition:</b> <a href="SensorModels_8hpp_source.html#l00224">SensorModels.hpp:224</a></div></div>
-<div class="ttc" id="aclassdyno_1_1MeasurementWithCovariance_html_a8f75e3ac451cf283c884114666480999"><div class="ttname"><a href="classdyno_1_1MeasurementWithCovariance.html#a8f75e3ac451cf283c884114666480999">dyno::MeasurementWithCovariance::measurement_</a></div><div class="ttdeci">T measurement_</div><div class="ttdoc">Measurement.</div><div class="ttdef"><b>Definition:</b> <a href="SensorModels_8hpp_source.html#l00261">SensorModels.hpp:261</a></div></div>
-<div class="ttc" id="aclassdyno_1_1MeasurementWithCovariance_html_aa7db2e25e8482f5e84f28cbc11040531"><div class="ttname"><a href="classdyno_1_1MeasurementWithCovariance.html#aa7db2e25e8482f5e84f28cbc11040531">dyno::MeasurementWithCovariance::measurement</a></div><div class="ttdeci">const T &amp; measurement() const</div><div class="ttdef"><b>Definition:</b> <a href="SensorModels_8hpp_source.html#l00223">SensorModels.hpp:223</a></div></div>
-<div class="ttc" id="aclassdyno_1_1MeasurementWithCovariance_html_add7deffcfe8c61090a3754e78ab82e9c"><div class="ttname"><a href="classdyno_1_1MeasurementWithCovariance.html#add7deffcfe8c61090a3754e78ab82e9c">dyno::MeasurementWithCovariance::model_</a></div><div class="ttdeci">gtsam::SharedGaussian model_</div><div class="ttdef"><b>Definition:</b> <a href="SensorModels_8hpp_source.html#l00264">SensorModels.hpp:264</a></div></div>
+<p>Construct object using a measurement and a gtsam::SharedGaussian, representing the noise model/uncertainty of the measurement. </p>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="structdyno_1_1DynosamException.html">DynosamException</a></td><td>If the provided model has dimensions that do not match the templated dimensions D.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">measurement</td><td>const T&amp; </td></tr>
+    <tr><td class="paramname">model</td><td>const gtsam::SharedGaussian&amp; </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="SensorModels_8hpp_source.html#l00233">233</a> of file <a class="el" href="SensorModels_8hpp_source.html">SensorModels.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  235</span>      : <a class="code hl_variable" href="classdyno_1_1MeasurementWithCovariance.html#a8f75e3ac451cf283c884114666480999">measurement_</a>(<a class="code hl_function" href="classdyno_1_1MeasurementWithCovariance.html#aa7db2e25e8482f5e84f28cbc11040531">measurement</a>), <a class="code hl_variable" href="classdyno_1_1MeasurementWithCovariance.html#add7deffcfe8c61090a3754e78ab82e9c">model_</a>(CHECK_NOTNULL(<a class="code hl_function" href="classdyno_1_1MeasurementWithCovariance.html#a42b3c50cc30192945f64a4c9a8e0ad67">model</a>)) {</div>
+<div class="line"><span class="lineno">  236</span>    <span class="keywordflow">if</span> (<span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(<a class="code hl_function" href="classdyno_1_1MeasurementWithCovariance.html#a42b3c50cc30192945f64a4c9a8e0ad67">model</a>-&gt;dim()) != <a class="code hl_variable" href="classdyno_1_1MeasurementWithCovariance.html#a4c875df755cea840422ae29d672773cc">This::dimension</a>) {</div>
+<div class="line"><span class="lineno">  237</span>      <a class="code hl_define" href="Exceptions_8hpp.html#a9d686df8440f53a768cc6febc1fccff1">DYNO_THROW_MSG</a>(DynosamException)</div>
+<div class="line"><span class="lineno">  238</span>          &lt;&lt; <span class="stringliteral">&quot;Invalid gtsam::SharedGaussian model provided to &quot;</span></div>
+<div class="line"><span class="lineno">  239</span>          &lt;&lt; <span class="stringliteral">&quot;MeasurementWithCovariance. Type dimensions are &quot;</span></div>
+<div class="line"><span class="lineno">  240</span>          &lt;&lt; <a class="code hl_variable" href="classdyno_1_1MeasurementWithCovariance.html#a4c875df755cea840422ae29d672773cc">This::dimension</a> &lt;&lt; <span class="stringliteral">&quot; but noise models dims are &quot;</span> &lt;&lt; <a class="code hl_function" href="classdyno_1_1MeasurementWithCovariance.html#a42b3c50cc30192945f64a4c9a8e0ad67">model</a>-&gt;dim();</div>
+<div class="line"><span class="lineno">  241</span>    }</div>
+<div class="line"><span class="lineno">  242</span>  }</div>
+<div class="ttc" id="aExceptions_8hpp_html_a9d686df8440f53a768cc6febc1fccff1"><div class="ttname"><a href="Exceptions_8hpp.html#a9d686df8440f53a768cc6febc1fccff1">DYNO_THROW_MSG</a></div><div class="ttdeci">#define DYNO_THROW_MSG(exception_type)</div><div class="ttdef"><b>Definition:</b> <a href="Exceptions_8hpp_source.html#l00170">Exceptions.hpp:170</a></div></div>
+<div class="ttc" id="aclassdyno_1_1MeasurementWithCovariance_html_a42b3c50cc30192945f64a4c9a8e0ad67"><div class="ttname"><a href="classdyno_1_1MeasurementWithCovariance.html#a42b3c50cc30192945f64a4c9a8e0ad67">dyno::MeasurementWithCovariance::model</a></div><div class="ttdeci">const gtsam::SharedGaussian &amp; model() const</div><div class="ttdef"><b>Definition:</b> <a href="SensorModels_8hpp_source.html#l00286">SensorModels.hpp:286</a></div></div>
+<div class="ttc" id="aclassdyno_1_1MeasurementWithCovariance_html_a4c875df755cea840422ae29d672773cc"><div class="ttname"><a href="classdyno_1_1MeasurementWithCovariance.html#a4c875df755cea840422ae29d672773cc">dyno::MeasurementWithCovariance::dimension</a></div><div class="ttdeci">static constexpr auto dimension</div><div class="ttdoc">Need to have dimension to satisfy gtsam::dimemsions.</div><div class="ttdef"><b>Definition:</b> <a href="SensorModels_8hpp_source.html#l00211">SensorModels.hpp:211</a></div></div>
+<div class="ttc" id="aclassdyno_1_1MeasurementWithCovariance_html_a8f75e3ac451cf283c884114666480999"><div class="ttname"><a href="classdyno_1_1MeasurementWithCovariance.html#a8f75e3ac451cf283c884114666480999">dyno::MeasurementWithCovariance::measurement_</a></div><div class="ttdeci">T measurement_</div><div class="ttdoc">Measurement.</div><div class="ttdef"><b>Definition:</b> <a href="SensorModels_8hpp_source.html#l00323">SensorModels.hpp:323</a></div></div>
+<div class="ttc" id="aclassdyno_1_1MeasurementWithCovariance_html_aa7db2e25e8482f5e84f28cbc11040531"><div class="ttname"><a href="classdyno_1_1MeasurementWithCovariance.html#aa7db2e25e8482f5e84f28cbc11040531">dyno::MeasurementWithCovariance::measurement</a></div><div class="ttdeci">const T &amp; measurement() const</div><div class="ttdef"><b>Definition:</b> <a href="SensorModels_8hpp_source.html#l00285">SensorModels.hpp:285</a></div></div>
+<div class="ttc" id="aclassdyno_1_1MeasurementWithCovariance_html_add7deffcfe8c61090a3754e78ab82e9c"><div class="ttname"><a href="classdyno_1_1MeasurementWithCovariance.html#add7deffcfe8c61090a3754e78ab82e9c">dyno::MeasurementWithCovariance::model_</a></div><div class="ttdeci">gtsam::SharedGaussian model_</div><div class="ttdef"><b>Definition:</b> <a href="SensorModels_8hpp_source.html#l00326">SensorModels.hpp:326</a></div></div>
 </div><!-- fragment -->
+<p class="reference">References <a class="el" href="classdyno_1_1MeasurementWithCovariance.html#a4c875df755cea840422ae29d672773cc">dyno::MeasurementWithCovariance&lt; T, D &gt;::dimension</a>, <a class="el" href="Exceptions_8hpp.html#a9d686df8440f53a768cc6febc1fccff1">DYNO_THROW_MSG</a>, and <a class="el" href="classdyno_1_1MeasurementWithCovariance.html#a42b3c50cc30192945f64a4c9a8e0ad67">dyno::MeasurementWithCovariance&lt; T, D &gt;::model()</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classdyno_1_1MeasurementWithCovariance_a32783370a4c57d438bc33bec96430796_cgraph.png" border="0" usemap="#aclassdyno_1_1MeasurementWithCovariance_a32783370a4c57d438bc33bec96430796_cgraph" alt=""/></div>
+<map name="aclassdyno_1_1MeasurementWithCovariance_a32783370a4c57d438bc33bec96430796_cgraph" id="aclassdyno_1_1MeasurementWithCovariance_a32783370a4c57d438bc33bec96430796_cgraph">
+<area shape="rect" title="Construct object using a measurement and a gtsam::SharedGaussian, representing the noise model/uncert..." alt="" coords="5,5,260,45"/>
+<area shape="rect" href="classdyno_1_1MeasurementWithCovariance.html#a42b3c50cc30192945f64a4c9a8e0ad67" title=" " alt="" coords="308,5,563,45"/>
+</map>
+</div>
+
 </div>
 </div>
 <a id="a977dc2c22c55af5af9d8ed9e0e3a04e7" name="a977dc2c22c55af5af9d8ed9e0e3a04e7"></a>
@@ -343,13 +362,22 @@ template&lt;typename T , int D = gtsam::traits&lt;T&gt;::dimension&gt; </div>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">explicit</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="SensorModels_8hpp_source.html#l00211">211</a> of file <a class="el" href="SensorModels_8hpp_source.html">SensorModels.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  212</span>      : <a class="code hl_variable" href="classdyno_1_1MeasurementWithCovariance.html#a8f75e3ac451cf283c884114666480999">measurement_</a>(<a class="code hl_function" href="classdyno_1_1MeasurementWithCovariance.html#aa7db2e25e8482f5e84f28cbc11040531">measurement</a>), <a class="code hl_variable" href="classdyno_1_1MeasurementWithCovariance.html#add7deffcfe8c61090a3754e78ab82e9c">model_</a>(<span class="keyword">nullptr</span>) {}</div>
+<p>Construct object using only a measurement type, indicatating there is no associated noise model/uncertainty. The resulting model will be none and the covariance matrix will be all zeros. </p>
+<p>We ensure this constructor is explicit to prevent unintended implicit conversions</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">measurement</td><td>const T&amp; </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="SensorModels_8hpp_source.html#l00254">254</a> of file <a class="el" href="SensorModels_8hpp_source.html">SensorModels.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  255</span>      : <a class="code hl_variable" href="classdyno_1_1MeasurementWithCovariance.html#a8f75e3ac451cf283c884114666480999">measurement_</a>(<a class="code hl_function" href="classdyno_1_1MeasurementWithCovariance.html#aa7db2e25e8482f5e84f28cbc11040531">measurement</a>), <a class="code hl_variable" href="classdyno_1_1MeasurementWithCovariance.html#add7deffcfe8c61090a3754e78ab82e9c">model_</a>(<span class="keyword">nullptr</span>) {}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -389,10 +417,19 @@ template&lt;typename T , int D = gtsam::traits&lt;T&gt;::dimension&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="SensorModels_8hpp_source.html#l00213">213</a> of file <a class="el" href="SensorModels_8hpp_source.html">SensorModels.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  214</span>      : <a class="code hl_variable" href="classdyno_1_1MeasurementWithCovariance.html#a8f75e3ac451cf283c884114666480999">measurement_</a>(<a class="code hl_function" href="classdyno_1_1MeasurementWithCovariance.html#aa7db2e25e8482f5e84f28cbc11040531">measurement</a>),</div>
-<div class="line"><span class="lineno">  215</span>        <a class="code hl_variable" href="classdyno_1_1MeasurementWithCovariance.html#add7deffcfe8c61090a3754e78ab82e9c">model_</a>(gtsam::noiseModel::Gaussian::Covariance(<a class="code hl_function" href="classdyno_1_1MeasurementWithCovariance.html#af8bd4a9635e9c15f1121a099c00d623e">covariance</a>)) {}</div>
-<div class="ttc" id="aclassdyno_1_1MeasurementWithCovariance_html_af8bd4a9635e9c15f1121a099c00d623e"><div class="ttname"><a href="classdyno_1_1MeasurementWithCovariance.html#af8bd4a9635e9c15f1121a099c00d623e">dyno::MeasurementWithCovariance::covariance</a></div><div class="ttdeci">Covariance covariance() const</div><div class="ttdef"><b>Definition:</b> <a href="SensorModels_8hpp_source.html#l00227">SensorModels.hpp:227</a></div></div>
+<p>Construct object using a measurement type and associated covariance matrix. The covariance matrix is used to construct the underlying sensor noise model using gtsam::noiseModel::Gaussian. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">measurement</td><td>const T&amp; </td></tr>
+    <tr><td class="paramname">covariance</td><td>const Covariance&amp; </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="SensorModels_8hpp_source.html#l00265">265</a> of file <a class="el" href="SensorModels_8hpp_source.html">SensorModels.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  266</span>      : <a class="code hl_variable" href="classdyno_1_1MeasurementWithCovariance.html#a8f75e3ac451cf283c884114666480999">measurement_</a>(<a class="code hl_function" href="classdyno_1_1MeasurementWithCovariance.html#aa7db2e25e8482f5e84f28cbc11040531">measurement</a>),</div>
+<div class="line"><span class="lineno">  267</span>        <a class="code hl_variable" href="classdyno_1_1MeasurementWithCovariance.html#add7deffcfe8c61090a3754e78ab82e9c">model_</a>(gtsam::noiseModel::Gaussian::Covariance(<a class="code hl_function" href="classdyno_1_1MeasurementWithCovariance.html#af8bd4a9635e9c15f1121a099c00d623e">covariance</a>)) {}</div>
+<div class="ttc" id="aclassdyno_1_1MeasurementWithCovariance_html_af8bd4a9635e9c15f1121a099c00d623e"><div class="ttname"><a href="classdyno_1_1MeasurementWithCovariance.html#af8bd4a9635e9c15f1121a099c00d623e">dyno::MeasurementWithCovariance::covariance</a></div><div class="ttdeci">Covariance covariance() const</div><div class="ttdef"><b>Definition:</b> <a href="SensorModels_8hpp_source.html#l00289">SensorModels.hpp:289</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -432,9 +469,18 @@ template&lt;typename T , int D = gtsam::traits&lt;T&gt;::dimension&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="SensorModels_8hpp_source.html#l00216">216</a> of file <a class="el" href="SensorModels_8hpp_source.html">SensorModels.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  217</span>      : <a class="code hl_variable" href="classdyno_1_1MeasurementWithCovariance.html#a8f75e3ac451cf283c884114666480999">measurement_</a>(<a class="code hl_function" href="classdyno_1_1MeasurementWithCovariance.html#aa7db2e25e8482f5e84f28cbc11040531">measurement</a>),</div>
-<div class="line"><span class="lineno">  218</span>        <a class="code hl_variable" href="classdyno_1_1MeasurementWithCovariance.html#add7deffcfe8c61090a3754e78ab82e9c">model_</a>(gtsam::noiseModel::Diagonal::Sigmas(sigmas)) {}</div>
+<p>Construct object using a measurement type and associated sigma vector. The sigma's represent the on-diagonal values for the covariance matrix and are used to construct the underlying sensor noise model using gtsam::noiseModel::Gaussian. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">measurement</td><td>const T&amp; </td></tr>
+    <tr><td class="paramname">sigmas</td><td>const Sigmas&amp; </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="SensorModels_8hpp_source.html#l00278">278</a> of file <a class="el" href="SensorModels_8hpp_source.html">SensorModels.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  279</span>      : <a class="code hl_variable" href="classdyno_1_1MeasurementWithCovariance.html#a8f75e3ac451cf283c884114666480999">measurement_</a>(<a class="code hl_function" href="classdyno_1_1MeasurementWithCovariance.html#aa7db2e25e8482f5e84f28cbc11040531">measurement</a>),</div>
+<div class="line"><span class="lineno">  280</span>        <a class="code hl_variable" href="classdyno_1_1MeasurementWithCovariance.html#add7deffcfe8c61090a3754e78ab82e9c">model_</a>(gtsam::noiseModel::Diagonal::Sigmas(sigmas)) {}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -459,14 +505,14 @@ template&lt;typename T , int D = gtsam::traits&lt;T&gt;::dimension&gt; </div>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">explicit</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="SensorModels_8hpp_source.html#l00220">220</a> of file <a class="el" href="SensorModels_8hpp_source.html">SensorModels.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  221</span>      : <a class="code hl_function" href="classdyno_1_1MeasurementWithCovariance.html#a8d44e192884b8719ad52e7206c59cd07">MeasurementWithCovariance</a>(pair.first, pair.second) {}</div>
-<div class="ttc" id="aclassdyno_1_1MeasurementWithCovariance_html_a8d44e192884b8719ad52e7206c59cd07"><div class="ttname"><a href="classdyno_1_1MeasurementWithCovariance.html#a8d44e192884b8719ad52e7206c59cd07">dyno::MeasurementWithCovariance::MeasurementWithCovariance</a></div><div class="ttdeci">MeasurementWithCovariance()=default</div></div>
+<p class="definition">Definition at line <a class="el" href="SensorModels_8hpp_source.html#l00282">282</a> of file <a class="el" href="SensorModels_8hpp_source.html">SensorModels.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  283</span>      : <a class="code hl_function" href="classdyno_1_1MeasurementWithCovariance.html#a8d44e192884b8719ad52e7206c59cd07">MeasurementWithCovariance</a>(pair.first, pair.second) {}</div>
+<div class="ttc" id="aclassdyno_1_1MeasurementWithCovariance_html_a8d44e192884b8719ad52e7206c59cd07"><div class="ttname"><a href="classdyno_1_1MeasurementWithCovariance.html#a8d44e192884b8719ad52e7206c59cd07">dyno::MeasurementWithCovariance::MeasurementWithCovariance</a></div><div class="ttdeci">MeasurementWithCovariance()=default</div><div class="ttdoc">Empty constructor.</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -496,15 +542,15 @@ template&lt;typename T , int D = gtsam::traits&lt;T&gt;::dimension&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="SensorModels_8hpp_source.html#l00227">227</a> of file <a class="el" href="SensorModels_8hpp_source.html">SensorModels.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  227</span>                                {</div>
-<div class="line"><span class="lineno">  228</span>    <span class="keywordflow">if</span> (<a class="code hl_function" href="classdyno_1_1MeasurementWithCovariance.html#a7d175a775e720226e54b0d207852e19f">hasModel</a>()) {</div>
-<div class="line"><span class="lineno">  229</span>      <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1MeasurementWithCovariance.html#add7deffcfe8c61090a3754e78ab82e9c">model_</a>-&gt;covariance();</div>
-<div class="line"><span class="lineno">  230</span>    } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  231</span>      <span class="keywordflow">return</span> Covariance::Zero();</div>
-<div class="line"><span class="lineno">  232</span>    }</div>
-<div class="line"><span class="lineno">  233</span>  }</div>
-<div class="ttc" id="aclassdyno_1_1MeasurementWithCovariance_html_a7d175a775e720226e54b0d207852e19f"><div class="ttname"><a href="classdyno_1_1MeasurementWithCovariance.html#a7d175a775e720226e54b0d207852e19f">dyno::MeasurementWithCovariance::hasModel</a></div><div class="ttdeci">bool hasModel() const</div><div class="ttdef"><b>Definition:</b> <a href="SensorModels_8hpp_source.html#l00225">SensorModels.hpp:225</a></div></div>
+<p class="definition">Definition at line <a class="el" href="SensorModels_8hpp_source.html#l00289">289</a> of file <a class="el" href="SensorModels_8hpp_source.html">SensorModels.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  289</span>                                {</div>
+<div class="line"><span class="lineno">  290</span>    <span class="keywordflow">if</span> (<a class="code hl_function" href="classdyno_1_1MeasurementWithCovariance.html#a7d175a775e720226e54b0d207852e19f">hasModel</a>()) {</div>
+<div class="line"><span class="lineno">  291</span>      <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1MeasurementWithCovariance.html#add7deffcfe8c61090a3754e78ab82e9c">model_</a>-&gt;covariance();</div>
+<div class="line"><span class="lineno">  292</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  293</span>      <span class="keywordflow">return</span> Covariance::Zero();</div>
+<div class="line"><span class="lineno">  294</span>    }</div>
+<div class="line"><span class="lineno">  295</span>  }</div>
+<div class="ttc" id="aclassdyno_1_1MeasurementWithCovariance_html_a7d175a775e720226e54b0d207852e19f"><div class="ttname"><a href="classdyno_1_1MeasurementWithCovariance.html#a7d175a775e720226e54b0d207852e19f">dyno::MeasurementWithCovariance::hasModel</a></div><div class="ttdeci">bool hasModel() const</div><div class="ttdef"><b>Definition:</b> <a href="SensorModels_8hpp_source.html#l00287">SensorModels.hpp:287</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1MeasurementWithCovariance.html#a7d175a775e720226e54b0d207852e19f">dyno::MeasurementWithCovariance&lt; T, D &gt;::hasModel()</a>, and <a class="el" href="classdyno_1_1MeasurementWithCovariance.html#add7deffcfe8c61090a3754e78ab82e9c">dyno::MeasurementWithCovariance&lt; T, D &gt;::model_</a>.</p>
 
@@ -566,12 +612,12 @@ template&lt;typename T , int D = gtsam::traits&lt;T&gt;::dimension&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="SensorModels_8hpp_source.html#l00253">253</a> of file <a class="el" href="SensorModels_8hpp_source.html">SensorModels.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  254</span>                                              {</div>
-<div class="line"><span class="lineno">  255</span>    <span class="keywordflow">return</span> gtsam::traits&lt;T&gt;::Equals(<a class="code hl_variable" href="classdyno_1_1MeasurementWithCovariance.html#a8f75e3ac451cf283c884114666480999">measurement_</a>, other.measurement_, tol) &amp;&amp;</div>
-<div class="line"><span class="lineno">  256</span>           <a class="code hl_function" href="namespacedyno_1_1utils.html#a5781c8bd871c28cef89f302c50f3101d">utils::equateGtsamSharedValues</a>(<a class="code hl_variable" href="classdyno_1_1MeasurementWithCovariance.html#add7deffcfe8c61090a3754e78ab82e9c">model_</a>, other.model_, tol);</div>
-<div class="line"><span class="lineno">  257</span>  }</div>
-<div class="ttc" id="anamespacedyno_1_1utils_html_a5781c8bd871c28cef89f302c50f3101d"><div class="ttname"><a href="namespacedyno_1_1utils.html#a5781c8bd871c28cef89f302c50f3101d">dyno::utils::equateGtsamSharedValues</a></div><div class="ttdeci">bool equateGtsamSharedValues(const GtsamSharedPtr&lt; T &gt; &amp;a, const GtsamSharedPtr&lt; T &gt; &amp;b, double tol=1e-8)</div><div class="ttdef"><b>Definition:</b> <a href="GtsamUtils_8hpp_source.html#l00140">GtsamUtils.hpp:140</a></div></div>
+<p class="definition">Definition at line <a class="el" href="SensorModels_8hpp_source.html#l00315">315</a> of file <a class="el" href="SensorModels_8hpp_source.html">SensorModels.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  316</span>                                              {</div>
+<div class="line"><span class="lineno">  317</span>    <span class="keywordflow">return</span> gtsam::traits&lt;T&gt;::Equals(<a class="code hl_variable" href="classdyno_1_1MeasurementWithCovariance.html#a8f75e3ac451cf283c884114666480999">measurement_</a>, other.measurement_, tol) &amp;&amp;</div>
+<div class="line"><span class="lineno">  318</span>           <a class="code hl_function" href="namespacedyno_1_1utils.html#a5781c8bd871c28cef89f302c50f3101d">utils::equateGtsamSharedValues</a>(<a class="code hl_variable" href="classdyno_1_1MeasurementWithCovariance.html#add7deffcfe8c61090a3754e78ab82e9c">model_</a>, other.model_, tol);</div>
+<div class="line"><span class="lineno">  319</span>  }</div>
+<div class="ttc" id="anamespacedyno_1_1utils_html_a5781c8bd871c28cef89f302c50f3101d"><div class="ttname"><a href="namespacedyno_1_1utils.html#a5781c8bd871c28cef89f302c50f3101d">dyno::utils::equateGtsamSharedValues</a></div><div class="ttdeci">bool equateGtsamSharedValues(const GtsamSharedPtr&lt; T &gt; &amp;a, const GtsamSharedPtr&lt; T &gt; &amp;b, double tol=1e-8)</div><div class="ttdef"><b>Definition:</b> <a href="GtsamUtils_8hpp_source.html#l00145">GtsamUtils.hpp:145</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="namespacedyno_1_1utils.html#a5781c8bd871c28cef89f302c50f3101d">dyno::utils::equateGtsamSharedValues()</a>, <a class="el" href="classdyno_1_1MeasurementWithCovariance.html#a8f75e3ac451cf283c884114666480999">dyno::MeasurementWithCovariance&lt; T, D &gt;::measurement_</a>, and <a class="el" href="classdyno_1_1MeasurementWithCovariance.html#add7deffcfe8c61090a3754e78ab82e9c">dyno::MeasurementWithCovariance&lt; T, D &gt;::model_</a>.</p>
 <div class="dynheader">
@@ -611,20 +657,23 @@ template&lt;typename T , int D = gtsam::traits&lt;T&gt;::dimension&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="SensorModels_8hpp_source.html#l00225">225</a> of file <a class="el" href="SensorModels_8hpp_source.html">SensorModels.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  225</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1MeasurementWithCovariance.html#add7deffcfe8c61090a3754e78ab82e9c">model_</a> != <span class="keyword">nullptr</span>; }</div>
+<p class="definition">Definition at line <a class="el" href="SensorModels_8hpp_source.html#l00287">287</a> of file <a class="el" href="SensorModels_8hpp_source.html">SensorModels.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  287</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1MeasurementWithCovariance.html#add7deffcfe8c61090a3754e78ab82e9c">model_</a> != <span class="keyword">nullptr</span>; }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1MeasurementWithCovariance.html#add7deffcfe8c61090a3754e78ab82e9c">dyno::MeasurementWithCovariance&lt; T, D &gt;::model_</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1MeasurementWithCovariance.html#af8bd4a9635e9c15f1121a099c00d623e">dyno::MeasurementWithCovariance&lt; T, D &gt;::covariance()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1MeasurementWithCovariance.html#af8bd4a9635e9c15f1121a099c00d623e">dyno::MeasurementWithCovariance&lt; T, D &gt;::covariance()</a>, and <a class="el" href="classdyno_1_1ParallelObjectISAM.html#ad0ec7b6e8d9712fb5b16376f567b5126">dyno::ParallelObjectISAM::updateFormulation()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1MeasurementWithCovariance_a7d175a775e720226e54b0d207852e19f_icgraph.png" border="0" usemap="#aclassdyno_1_1MeasurementWithCovariance_a7d175a775e720226e54b0d207852e19f_icgraph" alt=""/></div>
 <map name="aclassdyno_1_1MeasurementWithCovariance_a7d175a775e720226e54b0d207852e19f_icgraph" id="aclassdyno_1_1MeasurementWithCovariance_a7d175a775e720226e54b0d207852e19f_icgraph">
-<area shape="rect" title=" " alt="" coords="611,5,865,45"/>
-<area shape="rect" href="classdyno_1_1MeasurementWithCovariance.html#af8bd4a9635e9c15f1121a099c00d623e" title=" " alt="" coords="308,5,563,45"/>
-<area shape="rect" href="classdyno_1_1MeasurementWithCovariance.html#a1092d83a60bfba8cb1ac940cbc43dcb5" title=" " alt="" coords="5,5,260,45"/>
+<area shape="rect" title=" " alt="" coords="845,37,1100,77"/>
+<area shape="rect" href="classdyno_1_1MeasurementWithCovariance.html#af8bd4a9635e9c15f1121a099c00d623e" title=" " alt="" coords="543,5,797,45"/>
+<area shape="rect" href="classdyno_1_1ParallelObjectISAM.html#ad0ec7b6e8d9712fb5b16376f567b5126" title=" " alt="" coords="577,69,763,109"/>
+<area shape="rect" href="classdyno_1_1MeasurementWithCovariance.html#a1092d83a60bfba8cb1ac940cbc43dcb5" title=" " alt="" coords="240,5,495,45"/>
+<area shape="rect" href="classdyno_1_1ParallelObjectISAM.html#a71b737a3ffd6f37722393df4f46d37f4" title=" " alt="" coords="274,69,461,109"/>
+<area shape="rect" href="classdyno_1_1ParallelObjectISAM.html#aebe02d7a654d9829c361eece7374dd1f" title=" " alt="" coords="5,69,192,109"/>
 </map>
 </div>
 
@@ -655,19 +704,22 @@ template&lt;typename T , int D = gtsam::traits&lt;T&gt;::dimension&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="SensorModels_8hpp_source.html#l00223">223</a> of file <a class="el" href="SensorModels_8hpp_source.html">SensorModels.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  223</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1MeasurementWithCovariance.html#a8f75e3ac451cf283c884114666480999">measurement_</a>; }</div>
+<p class="definition">Definition at line <a class="el" href="SensorModels_8hpp_source.html#l00285">285</a> of file <a class="el" href="SensorModels_8hpp_source.html">SensorModels.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  285</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1MeasurementWithCovariance.html#a8f75e3ac451cf283c884114666480999">measurement_</a>; }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1MeasurementWithCovariance.html#a8f75e3ac451cf283c884114666480999">dyno::MeasurementWithCovariance&lt; T, D &gt;::measurement_</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1MeasurementWithCovariance.html#abcb9f871ce338e8f5cbc3e89040f12e4">dyno::MeasurementWithCovariance&lt; Keypoint &gt;::operator const Keypoint &amp;()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1MeasurementWithCovariance.html#abcb9f871ce338e8f5cbc3e89040f12e4">dyno::MeasurementWithCovariance&lt; gtsam::Pose3 &gt;::operator const gtsam::Pose3 &amp;()</a>, and <a class="el" href="classdyno_1_1ParallelObjectISAM.html#ad0ec7b6e8d9712fb5b16376f567b5126">dyno::ParallelObjectISAM::updateFormulation()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1MeasurementWithCovariance_aa7db2e25e8482f5e84f28cbc11040531_icgraph.png" border="0" usemap="#aclassdyno_1_1MeasurementWithCovariance_aa7db2e25e8482f5e84f28cbc11040531_icgraph" alt=""/></div>
 <map name="aclassdyno_1_1MeasurementWithCovariance_aa7db2e25e8482f5e84f28cbc11040531_icgraph" id="aclassdyno_1_1MeasurementWithCovariance_aa7db2e25e8482f5e84f28cbc11040531_icgraph">
-<area shape="rect" title=" " alt="" coords="308,13,563,53"/>
-<area shape="rect" href="classdyno_1_1MeasurementWithCovariance.html#abcb9f871ce338e8f5cbc3e89040f12e4" title="Very important to have these cast operators so we can use Base::asType to cast to the internal data." alt="" coords="5,5,260,60"/>
+<area shape="rect" title=" " alt="" coords="777,37,1032,77"/>
+<area shape="rect" href="classdyno_1_1MeasurementWithCovariance.html#abcb9f871ce338e8f5cbc3e89040f12e4" title="Very important to have these cast operators so we can use Base::asType to cast to the internal data." alt="" coords="475,5,729,45"/>
+<area shape="rect" href="classdyno_1_1ParallelObjectISAM.html#ad0ec7b6e8d9712fb5b16376f567b5126" title=" " alt="" coords="509,69,695,109"/>
+<area shape="rect" href="classdyno_1_1ParallelObjectISAM.html#a71b737a3ffd6f37722393df4f46d37f4" title=" " alt="" coords="240,69,427,109"/>
+<area shape="rect" href="classdyno_1_1ParallelObjectISAM.html#aebe02d7a654d9829c361eece7374dd1f" title=" " alt="" coords="5,69,192,109"/>
 </map>
 </div>
 
@@ -698,10 +750,24 @@ template&lt;typename T , int D = gtsam::traits&lt;T&gt;::dimension&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="SensorModels_8hpp_source.html#l00224">224</a> of file <a class="el" href="SensorModels_8hpp_source.html">SensorModels.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  224</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1MeasurementWithCovariance.html#add7deffcfe8c61090a3754e78ab82e9c">model_</a>; }</div>
+<p class="definition">Definition at line <a class="el" href="SensorModels_8hpp_source.html#l00286">286</a> of file <a class="el" href="SensorModels_8hpp_source.html">SensorModels.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  286</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1MeasurementWithCovariance.html#add7deffcfe8c61090a3754e78ab82e9c">model_</a>; }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1MeasurementWithCovariance.html#add7deffcfe8c61090a3754e78ab82e9c">dyno::MeasurementWithCovariance&lt; T, D &gt;::model_</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1MeasurementWithCovariance.html#a32783370a4c57d438bc33bec96430796">dyno::MeasurementWithCovariance&lt; T, D &gt;::MeasurementWithCovariance()</a>, and <a class="el" href="classdyno_1_1ParallelObjectISAM.html#ad0ec7b6e8d9712fb5b16376f567b5126">dyno::ParallelObjectISAM::updateFormulation()</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classdyno_1_1MeasurementWithCovariance_a42b3c50cc30192945f64a4c9a8e0ad67_icgraph.png" border="0" usemap="#aclassdyno_1_1MeasurementWithCovariance_a42b3c50cc30192945f64a4c9a8e0ad67_icgraph" alt=""/></div>
+<map name="aclassdyno_1_1MeasurementWithCovariance_a42b3c50cc30192945f64a4c9a8e0ad67_icgraph" id="aclassdyno_1_1MeasurementWithCovariance_a42b3c50cc30192945f64a4c9a8e0ad67_icgraph">
+<area shape="rect" title=" " alt="" coords="777,37,1032,77"/>
+<area shape="rect" href="classdyno_1_1MeasurementWithCovariance.html#a32783370a4c57d438bc33bec96430796" title="Construct object using a measurement and a gtsam::SharedGaussian, representing the noise model/uncert..." alt="" coords="475,5,729,45"/>
+<area shape="rect" href="classdyno_1_1ParallelObjectISAM.html#ad0ec7b6e8d9712fb5b16376f567b5126" title=" " alt="" coords="509,69,695,109"/>
+<area shape="rect" href="classdyno_1_1ParallelObjectISAM.html#a71b737a3ffd6f37722393df4f46d37f4" title=" " alt="" coords="240,69,427,109"/>
+<area shape="rect" href="classdyno_1_1ParallelObjectISAM.html#aebe02d7a654d9829c361eece7374dd1f" title=" " alt="" coords="5,69,192,109"/>
+</map>
+</div>
 
 </div>
 </div>
@@ -732,8 +798,8 @@ template&lt;typename T , int D = gtsam::traits&lt;T&gt;::dimension&gt; </div>
 
 <p>Very important to have these cast operators so we can use Base::asType to cast to the internal data. </p>
 
-<p class="definition">Definition at line <a class="el" href="SensorModels_8hpp_source.html#l00238">238</a> of file <a class="el" href="SensorModels_8hpp_source.html">SensorModels.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  238</span>{ <span class="keywordflow">return</span> <a class="code hl_function" href="classdyno_1_1MeasurementWithCovariance.html#aa7db2e25e8482f5e84f28cbc11040531">measurement</a>(); }</div>
+<p class="definition">Definition at line <a class="el" href="SensorModels_8hpp_source.html#l00300">300</a> of file <a class="el" href="SensorModels_8hpp_source.html">SensorModels.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  300</span>{ <span class="keywordflow">return</span> <a class="code hl_function" href="classdyno_1_1MeasurementWithCovariance.html#aa7db2e25e8482f5e84f28cbc11040531">measurement</a>(); }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -762,8 +828,8 @@ template&lt;typename T , int D = gtsam::traits&lt;T&gt;::dimension&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="SensorModels_8hpp_source.html#l00239">239</a> of file <a class="el" href="SensorModels_8hpp_source.html">SensorModels.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  239</span>{ <span class="keywordflow">return</span> <a class="code hl_function" href="classdyno_1_1MeasurementWithCovariance.html#af8bd4a9635e9c15f1121a099c00d623e">covariance</a>(); }</div>
+<p class="definition">Definition at line <a class="el" href="SensorModels_8hpp_source.html#l00301">301</a> of file <a class="el" href="SensorModels_8hpp_source.html">SensorModels.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  301</span>{ <span class="keywordflow">return</span> <a class="code hl_function" href="classdyno_1_1MeasurementWithCovariance.html#af8bd4a9635e9c15f1121a099c00d623e">covariance</a>(); }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1MeasurementWithCovariance.html#af8bd4a9635e9c15f1121a099c00d623e">dyno::MeasurementWithCovariance&lt; T, D &gt;::covariance()</a>.</p>
 <div class="dynheader">
@@ -805,10 +871,10 @@ template&lt;typename T , int D = gtsam::traits&lt;T&gt;::dimension&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="SensorModels_8hpp_source.html#l00249">249</a> of file <a class="el" href="SensorModels_8hpp_source.html">SensorModels.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  249</span>                                                   {</div>
-<div class="line"><span class="lineno">  250</span>    std::cout &lt;&lt; s &lt;&lt; *<span class="keyword">this</span> &lt;&lt; std::endl;</div>
-<div class="line"><span class="lineno">  251</span>  }</div>
+<p class="definition">Definition at line <a class="el" href="SensorModels_8hpp_source.html#l00311">311</a> of file <a class="el" href="SensorModels_8hpp_source.html">SensorModels.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  311</span>                                                   {</div>
+<div class="line"><span class="lineno">  312</span>    std::cout &lt;&lt; s &lt;&lt; *<span class="keyword">this</span> &lt;&lt; std::endl;</div>
+<div class="line"><span class="lineno">  313</span>  }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -849,17 +915,47 @@ template&lt;typename T , int D = gtsam::traits&lt;T&gt;::dimension&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="SensorModels_8hpp_source.html#l00241">241</a> of file <a class="el" href="SensorModels_8hpp_source.html">SensorModels.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  242</span>                                                                    {</div>
-<div class="line"><span class="lineno">  243</span>    os &lt;&lt; <span class="stringliteral">&quot;m: &quot;</span> &lt;&lt; measurement_with_cov.measurement()</div>
-<div class="line"><span class="lineno">  244</span>       &lt;&lt; <span class="stringliteral">&quot;, cov: &quot;</span> &lt;&lt; measurement_with_cov.covariance()</div>
-<div class="line"><span class="lineno">  245</span>       &lt;&lt; <span class="stringliteral">&quot;, has model: &quot;</span> &lt;&lt; std::boolalpha &lt;&lt; measurement_with_cov.hasModel();</div>
-<div class="line"><span class="lineno">  246</span>    <span class="keywordflow">return</span> os;</div>
-<div class="line"><span class="lineno">  247</span>  }</div>
+<p class="definition">Definition at line <a class="el" href="SensorModels_8hpp_source.html#l00303">303</a> of file <a class="el" href="SensorModels_8hpp_source.html">SensorModels.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  304</span>                                                                    {</div>
+<div class="line"><span class="lineno">  305</span>    os &lt;&lt; <span class="stringliteral">&quot;m: &quot;</span> &lt;&lt; measurement_with_cov.measurement()</div>
+<div class="line"><span class="lineno">  306</span>       &lt;&lt; <span class="stringliteral">&quot;, cov: &quot;</span> &lt;&lt; measurement_with_cov.covariance()</div>
+<div class="line"><span class="lineno">  307</span>       &lt;&lt; <span class="stringliteral">&quot;, has model: &quot;</span> &lt;&lt; std::boolalpha &lt;&lt; measurement_with_cov.hasModel();</div>
+<div class="line"><span class="lineno">  308</span>    <span class="keywordflow">return</span> os;</div>
+<div class="line"><span class="lineno">  309</span>  }</div>
 </div><!-- fragment -->
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
+<a id="a4c875df755cea840422ae29d672773cc" name="a4c875df755cea840422ae29d672773cc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4c875df755cea840422ae29d672773cc">&#9670;&#160;</a></span>dimension</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T , int D = gtsam::traits&lt;T&gt;::dimension&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr auto <a class="el" href="classdyno_1_1MeasurementWithCovariance.html">dyno::MeasurementWithCovariance</a>&lt; T, D &gt;::dimension = D</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Need to have dimension to satisfy gtsam::dimemsions. </p>
+
+<p class="definition">Definition at line <a class="el" href="SensorModels_8hpp_source.html#l00211">211</a> of file <a class="el" href="SensorModels_8hpp_source.html">SensorModels.hpp</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1MeasurementWithCovariance.html#a32783370a4c57d438bc33bec96430796">dyno::MeasurementWithCovariance&lt; T, D &gt;::MeasurementWithCovariance()</a>.</p>
+
+</div>
+</div>
 <a id="a8f75e3ac451cf283c884114666480999" name="a8f75e3ac451cf283c884114666480999"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8f75e3ac451cf283c884114666480999">&#9670;&#160;</a></span>measurement_</h2>
 
@@ -884,7 +980,7 @@ template&lt;typename T , int D = gtsam::traits&lt;T&gt;::dimension&gt; </div>
 
 <p>Measurement. </p>
 
-<p class="definition">Definition at line <a class="el" href="SensorModels_8hpp_source.html#l00261">261</a> of file <a class="el" href="SensorModels_8hpp_source.html">SensorModels.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SensorModels_8hpp_source.html#l00323">323</a> of file <a class="el" href="SensorModels_8hpp_source.html">SensorModels.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1MeasurementWithCovariance.html#a9eb3d75e01f1365db1b35ddc3c2ce1d0">dyno::MeasurementWithCovariance&lt; T, D &gt;::equals()</a>, and <a class="el" href="classdyno_1_1MeasurementWithCovariance.html#aa7db2e25e8482f5e84f28cbc11040531">dyno::MeasurementWithCovariance&lt; T, D &gt;::measurement()</a>.</p>
 
@@ -913,7 +1009,7 @@ template&lt;typename T , int D = gtsam::traits&lt;T&gt;::dimension&gt; </div>
 </div><div class="memdoc">
 <p>Noise model which can either be used to represet the covariance matrix of an estimate or the noise model of measurement </p>
 
-<p class="definition">Definition at line <a class="el" href="SensorModels_8hpp_source.html#l00264">264</a> of file <a class="el" href="SensorModels_8hpp_source.html">SensorModels.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SensorModels_8hpp_source.html#l00326">326</a> of file <a class="el" href="SensorModels_8hpp_source.html">SensorModels.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1MeasurementWithCovariance.html#af8bd4a9635e9c15f1121a099c00d623e">dyno::MeasurementWithCovariance&lt; T, D &gt;::covariance()</a>, <a class="el" href="classdyno_1_1MeasurementWithCovariance.html#a9eb3d75e01f1365db1b35ddc3c2ce1d0">dyno::MeasurementWithCovariance&lt; T, D &gt;::equals()</a>, <a class="el" href="classdyno_1_1MeasurementWithCovariance.html#a7d175a775e720226e54b0d207852e19f">dyno::MeasurementWithCovariance&lt; T, D &gt;::hasModel()</a>, and <a class="el" href="classdyno_1_1MeasurementWithCovariance.html#a42b3c50cc30192945f64a4c9a8e0ad67">dyno::MeasurementWithCovariance&lt; T, D &gt;::model()</a>.</p>
 

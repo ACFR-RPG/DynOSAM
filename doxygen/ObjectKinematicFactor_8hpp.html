@@ -80,66 +80,66 @@ $(function() {
   <div class="headertitle"><div class="title">ObjectKinematicFactor.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;<a class="el" href="BackendDefinitions_8hpp_source.html">dynosam/backend/BackendDefinitions.hpp</a>&quot;</code><br />
+<div class="textblock"><code>#include &lt;gtsam/geometry/Point3.h&gt;</code><br />
 <code>#include &lt;gtsam/geometry/Pose3.h&gt;</code><br />
-<code>#include &lt;gtsam/geometry/Point3.h&gt;</code><br />
 <code>#include &lt;gtsam/nonlinear/Expression.h&gt;</code><br />
 <code>#include &lt;gtsam/nonlinear/NonlinearFactor.h&gt;</code><br />
+<code>#include &quot;<a class="el" href="BackendDefinitions_8hpp_source.html">dynosam/backend/BackendDefinitions.hpp</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for ObjectKinematicFactor.hpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="ObjectKinematicFactor_8hpp__incl.png" border="0" usemap="#adynosam_2include_2dynosam_2factors_2ObjectKinematicFactor_8hpp" alt=""/></div>
 <map name="adynosam_2include_2dynosam_2factors_2ObjectKinematicFactor_8hpp" id="adynosam_2include_2dynosam_2factors_2ObjectKinematicFactor_8hpp">
-<area shape="rect" title=" " alt="" coords="2799,5,3049,45"/>
-<area shape="rect" href="BackendDefinitions_8hpp.html" title=" " alt="" coords="1139,101,1437,126"/>
-<area shape="rect" title=" " alt="" coords="2606,519,2791,544"/>
-<area shape="rect" title=" " alt="" coords="2831,101,3017,126"/>
-<area shape="rect" title=" " alt="" coords="3042,101,3257,126"/>
-<area shape="rect" title=" " alt="" coords="3281,93,3476,133"/>
-<area shape="rect" title=" " alt="" coords="1578,189,1822,214"/>
-<area shape="rect" title=" " alt="" coords="62,277,255,302"/>
-<area shape="rect" title=" " alt="" coords="1897,189,2116,214"/>
-<area shape="rect" title=" " alt="" coords="2141,181,2347,221"/>
-<area shape="rect" title=" " alt="" coords="2372,181,2535,221"/>
-<area shape="rect" title=" " alt="" coords="587,519,674,544"/>
-<area shape="rect" title=" " alt="" coords="406,277,530,302"/>
-<area shape="rect" href="BackendParams_8hpp.html" title=" " alt="" coords="5,445,280,471"/>
-<area shape="rect" href="DynamicPointSymbol_8hpp.html" title=" " alt="" coords="251,181,485,221"/>
-<area shape="rect" href="Types_8hpp.html" title=" " alt="" coords="1505,445,1717,471"/>
-<area shape="rect" href="Camera_8hpp.html" title=" " alt="" coords="1369,277,1596,302"/>
-<area shape="rect" href="Exceptions_8hpp.html" title=" " alt="" coords="354,445,601,471"/>
-<area shape="rect" href="GroundTruthPacket_8hpp.html" title=" " alt="" coords="2115,269,2341,309"/>
-<area shape="rect" href="Frontend-Definitions_8hpp.html" title=" " alt="" coords="999,269,1201,309"/>
-<area shape="rect" href="Logger_8hpp.html" title=" " alt="" coords="1351,189,1553,214"/>
-<area shape="rect" title=" " alt="" coords="193,519,252,544"/>
-<area shape="rect" title=" " alt="" coords="481,592,597,617"/>
-<area shape="rect" title=" " alt="" coords="280,277,331,302"/>
-<area shape="rect" title=" " alt="" coords="2467,519,2581,544"/>
-<area shape="rect" title=" " alt="" coords="1527,519,1695,544"/>
-<area shape="rect" title=" " alt="" coords="1859,592,2015,617"/>
-<area shape="rect" title=" " alt="" coords="2061,519,2203,544"/>
-<area shape="rect" title=" " alt="" coords="2227,519,2442,544"/>
-<area shape="rect" title=" " alt="" coords="1281,592,1356,617"/>
-<area shape="rect" title=" " alt="" coords="1267,519,1365,544"/>
-<area shape="rect" title=" " alt="" coords="698,519,790,544"/>
-<area shape="rect" title=" " alt="" coords="1389,519,1451,544"/>
-<area shape="rect" href="Flags_8hpp.html" title=" " alt="" coords="815,519,1025,544"/>
-<area shape="rect" href="Macros_8hpp.html" title=" " alt="" coords="1050,519,1243,544"/>
-<area shape="rect" href="SensorModels_8hpp.html" title=" " alt="" coords="1719,519,1985,544"/>
-<area shape="rect" href="CameraParams_8hpp.html" title=" " alt="" coords="1940,365,2215,390"/>
-<area shape="rect" title=" " alt="" coords="2117,445,2315,471"/>
-<area shape="rect" title=" " alt="" coords="1300,365,1545,390"/>
-<area shape="rect" title=" " alt="" coords="477,519,563,544"/>
-<area shape="rect" title=" " alt="" coords="277,519,353,544"/>
-<area shape="rect" title=" " alt="" coords="377,519,452,544"/>
-<area shape="rect" href="PipelinePayload_8hpp.html" title=" " alt="" coords="1671,357,1865,397"/>
-<area shape="rect" title=" " alt="" coords="2289,365,2433,390"/>
-<area shape="rect" title=" " alt="" coords="2457,365,2604,390"/>
-<area shape="rect" title=" " alt="" coords="978,365,1174,390"/>
-<area shape="rect" href="ImageContainer_8hpp.html" title=" " alt="" coords="675,365,954,390"/>
-<area shape="rect" title=" " alt="" coords="1671,277,1742,302"/>
-<area shape="rect" title=" " alt="" coords="1767,277,1857,302"/>
-<area shape="rect" title=" " alt="" coords="1882,277,1955,302"/>
+<area shape="rect" title=" " alt="" coords="1261,5,1510,45"/>
+<area shape="rect" title=" " alt="" coords="746,101,932,126"/>
+<area shape="rect" title=" " alt="" coords="2282,526,2468,551"/>
+<area shape="rect" title=" " alt="" coords="1278,101,1493,126"/>
+<area shape="rect" title=" " alt="" coords="1518,93,1712,133"/>
+<area shape="rect" href="BackendDefinitions_8hpp.html" title=" " alt="" coords="957,101,1254,126"/>
+<area shape="rect" title=" " alt="" coords="1528,189,1772,214"/>
+<area shape="rect" title=" " alt="" coords="620,277,813,302"/>
+<area shape="rect" title=" " alt="" coords="46,189,264,214"/>
+<area shape="rect" title=" " alt="" coords="289,181,496,221"/>
+<area shape="rect" title=" " alt="" coords="520,181,683,221"/>
+<area shape="rect" title=" " alt="" coords="1697,680,1784,705"/>
+<area shape="rect" title=" " alt="" coords="964,277,1088,302"/>
+<area shape="rect" href="BackendParams_8hpp.html" title=" " alt="" coords="2594,526,2868,551"/>
+<area shape="rect" href="DynamicPointSymbol_8hpp.html" title=" " alt="" coords="808,181,1043,221"/>
+<area shape="rect" href="Types_8hpp.html" title=" " alt="" coords="1181,445,1393,471"/>
+<area shape="rect" href="Exceptions_8hpp.html" title=" " alt="" coords="533,607,780,632"/>
+<area shape="rect" href="Camera_8hpp.html" title=" " alt="" coords="1948,277,2175,302"/>
+<area shape="rect" href="GroundTruthPacket_8hpp.html" title=" " alt="" coords="1214,269,1440,309"/>
+<area shape="rect" href="Frontend-Definitions_8hpp.html" title=" " alt="" coords="392,269,595,309"/>
+<area shape="rect" href="Logger_8hpp.html" title=" " alt="" coords="1300,189,1503,214"/>
+<area shape="rect" title=" " alt="" coords="2222,607,2338,632"/>
+<area shape="rect" title=" " alt="" coords="2527,680,2586,705"/>
+<area shape="rect" title=" " alt="" coords="838,277,888,302"/>
+<area shape="rect" title=" " alt="" coords="470,526,584,551"/>
+<area shape="rect" title=" " alt="" coords="1804,526,1972,551"/>
+<area shape="rect" title=" " alt="" coords="1385,607,1541,632"/>
+<area shape="rect" title=" " alt="" coords="817,526,960,551"/>
+<area shape="rect" title=" " alt="" coords="230,526,445,551"/>
+<area shape="rect" title=" " alt="" coords="1808,607,1883,632"/>
+<area shape="rect" title=" " alt="" coords="1036,526,1133,551"/>
+<area shape="rect" title=" " alt="" coords="804,607,896,632"/>
+<area shape="rect" title=" " alt="" coords="1157,526,1220,551"/>
+<area shape="rect" href="Flags_8hpp.html" title=" " alt="" coords="2047,526,2258,551"/>
+<area shape="rect" href="Macros_8hpp.html" title=" " alt="" coords="1586,526,1780,551"/>
+<area shape="rect" href="SensorModels_8hpp.html" title=" " alt="" coords="1244,526,1511,551"/>
+<area shape="rect" href="Types-inl_8hpp.html" title=" " alt="" coords="608,519,792,559"/>
+<area shape="rect" title=" " alt="" coords="518,680,594,705"/>
+<area shape="rect" title=" " alt="" coords="619,680,694,705"/>
+<area shape="rect" title=" " alt="" coords="718,680,805,705"/>
+<area shape="rect" title=" " alt="" coords="2254,445,2453,471"/>
+<area shape="rect" title=" " alt="" coords="2223,365,2468,390"/>
+<area shape="rect" href="CameraParams_8hpp.html" title=" " alt="" coords="1924,365,2199,390"/>
+<area shape="rect" title=" " alt="" coords="1103,365,1250,390"/>
+<area shape="rect" href="PipelinePayload_8hpp.html" title=" " alt="" coords="1324,357,1519,397"/>
+<area shape="rect" title=" " alt="" coords="134,365,330,390"/>
+<area shape="rect" href="ImageContainer_8hpp.html" title=" " alt="" coords="354,365,633,390"/>
+<area shape="rect" title=" " alt="" coords="1728,277,1798,302"/>
+<area shape="rect" title=" " alt="" coords="1515,277,1606,302"/>
+<area shape="rect" title=" " alt="" coords="1630,277,1704,302"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -147,9 +147,9 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="ObjectKinematicFactor_8hpp__dep__incl.png" border="0" usemap="#adynosam_2include_2dynosam_2factors_2ObjectKinematicFactor_8hppdep" alt=""/></div>
 <map name="adynosam_2include_2dynosam_2factors_2ObjectKinematicFactor_8hppdep" id="adynosam_2include_2dynosam_2factors_2ObjectKinematicFactor_8hppdep">
-<area shape="rect" title=" " alt="" coords="79,5,328,45"/>
-<area shape="rect" href="RGBDBackendModule_8cc.html" title=" " alt="" coords="5,93,191,133"/>
-<area shape="rect" href="ObjectKinematicFactor_8cc.html" title=" " alt="" coords="215,93,405,133"/>
+<area shape="rect" title=" " alt="" coords="89,5,338,45"/>
+<area shape="rect" href="RegularBackendModule_8cc.html" title=" " alt="" coords="5,93,203,133"/>
+<area shape="rect" href="ObjectKinematicFactor_8cc.html" title=" " alt="" coords="227,93,418,133"/>
 </map>
 </div>
 </div>

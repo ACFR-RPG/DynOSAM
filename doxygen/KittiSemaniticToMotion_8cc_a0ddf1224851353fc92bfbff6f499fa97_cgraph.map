@@ -2,15 +2,19 @@
 <area shape="rect" id="node1" title=" " alt="" coords="5,133,60,159"/>
 <area shape="rect" id="node2" href="$KittiSemaniticToMotion_8cc.html#a818ad82fd6dd883f053c7b5de2bcb3ab" title=" " alt="" coords="141,5,304,31"/>
 <area shape="rect" id="node3" href="$KittiSemaniticToMotion_8cc.html#a9267df65145277baa91c35b1f2a4f2bf" title=" " alt="" coords="155,55,291,80"/>
-<area shape="rect" id="node4" href="$namespacedyno_1_1utils.html#a5abdff0c77884da4a8da55f0880d8cfb" title="Given an image that operates like a mask (ie. is a single channel image where each pixel value corres..." alt="" coords="119,104,326,129"/>
-<area shape="rect" id="node9" href="$structdyno_1_1__DynoDatasetConstructor.html#a5354a00794f43690a5bab204bda3879e" title=" " alt="" coords="108,154,337,194"/>
-<area shape="rect" id="node10" href="$classdyno_1_1DynoDatasetProvider.html#aa400624ddd0204276ce512486effa160" title="Spins the dataset for one &quot;step&quot; of the dataset." alt="" coords="122,218,323,258"/>
-<area shape="rect" id="node14" href="$KittiSemaniticToMotion_8cc.html#ac23fd7cd5ef0c43f8c35c5de1f9a62b5" title=" " alt="" coords="177,283,268,308"/>
-<area shape="rect" id="node5" href="$structdyno_1_1Color.html#a4f52f9aec87e2c34370ad02e6d4e25fc" title="Generates a sequence of never repeating colors using the golden ration to seperate the colours along ..." alt="" coords="415,100,575,125"/>
-<area shape="rect" id="node6" href="$structdyno_1_1Color.html#a08bcb6ea49861f6978858a2ff5159002" title=" " alt="" coords="652,100,815,125"/>
-<area shape="rect" id="node7" href="$structdyno_1_1Color.html#a6bc55a80a463a481dbf4778c70d04733" title=" " alt="" coords="890,75,1029,100"/>
-<area shape="rect" id="node8" href="$namespacedyno.html#ab0e74ec8992860404a618192cc694b83" title=" " alt="" coords="863,124,1056,149"/>
-<area shape="rect" id="node11" href="$classdyno_1_1DataProvider.html#aeed0a3ab688356858ca5831289ffaa1f" title=" " alt="" coords="405,150,584,190"/>
-<area shape="rect" id="node12" href="$classdyno_1_1DynoDataset.html#aaa8bfccc12b03c78f1881b2c49daab10" title="Returns true when setLoaders(...) has been called and the internal datasets have been constructed cor..." alt="" coords="397,215,592,269"/>
-<area shape="rect" id="node13" href="$classdyno_1_1DynoDataset.html#a2d23b68a541033ed6526f79e5caf226c" title=" " alt="" coords="385,294,604,334"/>
+<area shape="rect" id="node4" href="$namespacedyno_1_1utils.html#ab60d1512caf6ce316d53e53056b71f7e" title="Given an image that operates like a mask (ie. is a single channel image where each pixel value corres..." alt="" coords="119,104,326,129"/>
+<area shape="rect" id="node13" href="$structdyno_1_1__DynoDatasetConstructor.html#a5354a00794f43690a5bab204bda3879e" title=" " alt="" coords="108,154,337,194"/>
+<area shape="rect" id="node14" href="$classdyno_1_1DynoDatasetProvider.html#aa400624ddd0204276ce512486effa160" title="Spins the dataset for one &quot;step&quot; of the dataset." alt="" coords="122,218,323,258"/>
+<area shape="rect" id="node18" href="$KittiSemaniticToMotion_8cc.html#ac23fd7cd5ef0c43f8c35c5de1f9a62b5" title=" " alt="" coords="177,283,268,308"/>
+<area shape="rect" id="node5" href="$structdyno_1_1Color.html#a19ef171ae71fa3481957f66d420ced3b" title="Return in BGRA format." alt="" coords="428,5,561,31"/>
+<area shape="rect" id="node6" href="$namespacedyno_1_1utils.html#a79013aaf6365e9d7c81c0d88bb47df76" title=" " alt="" coords="407,55,583,80"/>
+<area shape="rect" id="node7" href="$classdyno_1_1ParallelOpenCVMat.html#a26501e537a3a343af8426b1015ea2fb3" title=" " alt="" coords="387,104,603,129"/>
+<area shape="rect" id="node9" href="$structdyno_1_1Color.html#a6689af3d0ac5ceaa66000b5ca70becbd" title="Generates a sequence of never repeating colors using the golden ratio to seperate the colours along t..." alt="" coords="415,153,575,179"/>
+<area shape="rect" id="node8" href="$classdyno_1_1ParallelOpenCVMat.html#a0ab08b50b67a25cf654dcdcda674ee2a" title=" " alt="" coords="652,93,839,133"/>
+<area shape="rect" id="node10" href="$structdyno_1_1Color.html#a08bcb6ea49861f6978858a2ff5159002" title=" " alt="" coords="664,157,827,183"/>
+<area shape="rect" id="node11" href="$structdyno_1_1Color.html#a6bc55a80a463a481dbf4778c70d04733" title=" " alt="" coords="914,132,1053,157"/>
+<area shape="rect" id="node12" href="$namespacedyno.html#ab0e74ec8992860404a618192cc694b83" title=" " alt="" coords="887,181,1080,207"/>
+<area shape="rect" id="node15" href="$classdyno_1_1DataProvider.html#aeed0a3ab688356858ca5831289ffaa1f" title=" " alt="" coords="405,203,584,243"/>
+<area shape="rect" id="node16" href="$classdyno_1_1DynoDataset.html#aaa8bfccc12b03c78f1881b2c49daab10" title="Returns true when setLoaders(...) has been called and the internal datasets have been constructed cor..." alt="" coords="397,268,592,323"/>
+<area shape="rect" id="node17" href="$classdyno_1_1DynoDataset.html#a2d23b68a541033ed6526f79e5caf226c" title=" " alt="" coords="385,347,604,387"/>
 </map>

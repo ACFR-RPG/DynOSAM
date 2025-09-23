@@ -78,13 +78,22 @@ $(function() {
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
-<a href="#pri-attribs">Private Attributes</a> &#124;
+<a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="classdyno_1_1Camera-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">dyno::Camera Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
 
 <p><code>#include &lt;<a class="el" href="Camera_8hpp_source.html">Camera.hpp</a>&gt;</code></p>
+<div class="dynheader">
+Inheritance diagram for dyno::Camera:</div>
+<div class="dyncontent">
+<div class="center"><img src="classdyno_1_1Camera__inherit__graph.png" border="0" usemap="#adyno_1_1Camera_inherit__map" alt="Inheritance graph"/></div>
+<map name="adyno_1_1Camera_inherit__map" id="adyno_1_1Camera_inherit__map">
+<area shape="rect" title=" " alt="" coords="24,5,137,31"/>
+<area shape="rect" href="classdyno_1_1RGBDCamera.html" title=" " alt="" coords="5,79,156,104"/>
+</map>
+<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
 Collaboration diagram for dyno::Camera:</div>
 <div class="dyncontent">
@@ -146,8 +155,8 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a1d466ae4c8ab805fcdc1fe61a49b7f9e"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespacedyno.html#a6c8dbdcd5e61797d494457220b875761">Landmark</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1Camera.html#a1d466ae4c8ab805fcdc1fe61a49b7f9e">cameraToWorldConvention</a> (const <a class="el" href="namespacedyno.html#a6c8dbdcd5e61797d494457220b875761">Landmark</a> &amp;lmk)</td></tr>
 <tr class="separator:a1d466ae4c8ab805fcdc1fe61a49b7f9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
-Private Attributes</h2></td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
+Protected Attributes</h2></td></tr>
 <tr class="memitem:aa314751071e993e4d18e7c6f19976f96"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classdyno_1_1CameraParams.html">CameraParams</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1Camera.html#aa314751071e993e4d18e7c6f19976f96">camera_params_</a></td></tr>
 <tr class="separator:aa314751071e993e4d18e7c6f19976f96"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad1bd2b1dc4ba2e67537a72dae8533280"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classdyno_1_1Camera.html#acd0cf4d89e94672703fa01e2507adb5a">CameraImpl</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1Camera.html#ad1bd2b1dc4ba2e67537a72dae8533280">camera_impl_</a></td></tr>
@@ -155,7 +164,7 @@ Private Attributes</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="Camera_8hpp_source.html#l00034">34</a> of file <a class="el" href="Camera_8hpp_source.html">Camera.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Camera_8hpp_source.html#l00041">41</a> of file <a class="el" href="Camera_8hpp_source.html">Camera.hpp</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="a553a1e3081bb239295adc3edac20fdca" name="a553a1e3081bb239295adc3edac20fdca"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a553a1e3081bb239295adc3edac20fdca">&#9670;&#160;</a></span>CalibrationType</h2>
@@ -169,7 +178,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Camera_8hpp_source.html#l00046">46</a> of file <a class="el" href="Camera_8hpp_source.html">Camera.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Camera_8hpp_source.html#l00052">52</a> of file <a class="el" href="Camera_8hpp_source.html">Camera.hpp</a>.</p>
 
 </div>
 </div>
@@ -185,7 +194,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Camera_8hpp_source.html#l00047">47</a> of file <a class="el" href="Camera_8hpp_source.html">Camera.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Camera_8hpp_source.html#l00053">53</a> of file <a class="el" href="Camera_8hpp_source.html">Camera.hpp</a>.</p>
 
 </div>
 </div>
@@ -217,9 +226,9 @@ Private Attributes</h2></td></tr>
 <div class="line"><span class="lineno">   37</span>    CHECK(<a class="code hl_variable" href="classdyno_1_1Camera.html#ad1bd2b1dc4ba2e67537a72dae8533280">camera_impl_</a>);</div>
 <div class="line"><span class="lineno">   38</span>}</div>
 <div class="ttc" id="aclassdyno_1_1CameraParams_html_ad3fbc73c9769293edc2839b5405ddb2a"><div class="ttname"><a href="classdyno_1_1CameraParams.html#ad3fbc73c9769293edc2839b5405ddb2a">dyno::CameraParams::constructGtsamCalibration</a></div><div class="ttdeci">CALIBRATION constructGtsamCalibration() const</div></div>
-<div class="ttc" id="aclassdyno_1_1Camera_html_a553a1e3081bb239295adc3edac20fdca"><div class="ttname"><a href="classdyno_1_1Camera.html#a553a1e3081bb239295adc3edac20fdca">dyno::Camera::CalibrationType</a></div><div class="ttdeci">gtsam::Cal3_S2 CalibrationType</div><div class="ttdef"><b>Definition:</b> <a href="Camera_8hpp_source.html#l00046">Camera.hpp:46</a></div></div>
-<div class="ttc" id="aclassdyno_1_1Camera_html_aa314751071e993e4d18e7c6f19976f96"><div class="ttname"><a href="classdyno_1_1Camera.html#aa314751071e993e4d18e7c6f19976f96">dyno::Camera::camera_params_</a></div><div class="ttdeci">const CameraParams camera_params_</div><div class="ttdef"><b>Definition:</b> <a href="Camera_8hpp_source.html#l00168">Camera.hpp:168</a></div></div>
-<div class="ttc" id="aclassdyno_1_1Camera_html_ad1bd2b1dc4ba2e67537a72dae8533280"><div class="ttname"><a href="classdyno_1_1Camera.html#ad1bd2b1dc4ba2e67537a72dae8533280">dyno::Camera::camera_impl_</a></div><div class="ttdeci">std::unique_ptr&lt; CameraImpl &gt; camera_impl_</div><div class="ttdef"><b>Definition:</b> <a href="Camera_8hpp_source.html#l00169">Camera.hpp:169</a></div></div>
+<div class="ttc" id="aclassdyno_1_1Camera_html_a553a1e3081bb239295adc3edac20fdca"><div class="ttname"><a href="classdyno_1_1Camera.html#a553a1e3081bb239295adc3edac20fdca">dyno::Camera::CalibrationType</a></div><div class="ttdeci">gtsam::Cal3_S2 CalibrationType</div><div class="ttdef"><b>Definition:</b> <a href="Camera_8hpp_source.html#l00052">Camera.hpp:52</a></div></div>
+<div class="ttc" id="aclassdyno_1_1Camera_html_aa314751071e993e4d18e7c6f19976f96"><div class="ttname"><a href="classdyno_1_1Camera.html#aa314751071e993e4d18e7c6f19976f96">dyno::Camera::camera_params_</a></div><div class="ttdeci">const CameraParams camera_params_</div><div class="ttdef"><b>Definition:</b> <a href="Camera_8hpp_source.html#l00183">Camera.hpp:183</a></div></div>
+<div class="ttc" id="aclassdyno_1_1Camera_html_ad1bd2b1dc4ba2e67537a72dae8533280"><div class="ttname"><a href="classdyno_1_1Camera.html#ad1bd2b1dc4ba2e67537a72dae8533280">dyno::Camera::camera_impl_</a></div><div class="ttdeci">std::unique_ptr&lt; CameraImpl &gt; camera_impl_</div><div class="ttdef"><b>Definition:</b> <a href="Camera_8hpp_source.html#l00184">Camera.hpp:184</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1Camera.html#ad1bd2b1dc4ba2e67537a72dae8533280">camera_impl_</a>, <a class="el" href="classdyno_1_1Camera.html#aa314751071e993e4d18e7c6f19976f96">camera_params_</a>, and <a class="el" href="classdyno_1_1CameraParams.html#ad3fbc73c9769293edc2839b5405ddb2a">dyno::CameraParams::constructGtsamCalibration()</a>.</p>
 <div class="dynheader">
@@ -425,7 +434,7 @@ Here is the call graph for this function:</div>
 <div class="line"><span class="lineno">   74</span>    lmks-&gt;push_back(lmk);</div>
 <div class="line"><span class="lineno">   75</span>  }</div>
 <div class="line"><span class="lineno">   76</span>}</div>
-<div class="ttc" id="anamespacedyno_html_a6c8dbdcd5e61797d494457220b875761"><div class="ttname"><a href="namespacedyno.html#a6c8dbdcd5e61797d494457220b875761">dyno::Landmark</a></div><div class="ttdeci">gtsam::Point3 Landmark</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00086">Types.hpp:86</a></div></div>
+<div class="ttc" id="anamespacedyno_html_a6c8dbdcd5e61797d494457220b875761"><div class="ttname"><a href="namespacedyno.html#a6c8dbdcd5e61797d494457220b875761">dyno::Landmark</a></div><div class="ttdeci">gtsam::Point3 Landmark</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00087">Types.hpp:87</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1Camera.html#a8a831e03d5899d787453947e7073f1ee">backProject()</a>, and <a class="el" href="classdyno_1_1Camera.html#ad1bd2b1dc4ba2e67537a72dae8533280">camera_impl_</a>.</p>
 
@@ -708,8 +717,8 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Camera_8hpp_source.html#l00161">161</a> of file <a class="el" href="Camera_8hpp_source.html">Camera.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  161</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1Camera.html#ad1bd2b1dc4ba2e67537a72dae8533280">camera_impl_</a>.get(); }</div>
+<p class="definition">Definition at line <a class="el" href="Camera_8hpp_source.html#l00178">178</a> of file <a class="el" href="Camera_8hpp_source.html">Camera.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  178</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1Camera.html#ad1bd2b1dc4ba2e67537a72dae8533280">camera_impl_</a>.get(); }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1Camera.html#ad1bd2b1dc4ba2e67537a72dae8533280">camera_impl_</a>.</p>
 
@@ -719,8 +728,10 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1Camera_afa242b874c0c1a185adb8d83a35171c8_icgraph.png" border="0" usemap="#aclassdyno_1_1Camera_afa242b874c0c1a185adb8d83a35171c8_icgraph" alt=""/></div>
 <map name="aclassdyno_1_1Camera_afa242b874c0c1a185adb8d83a35171c8_icgraph" id="aclassdyno_1_1Camera_afa242b874c0c1a185adb8d83a35171c8_icgraph">
-<area shape="rect" title=" " alt="" coords="257,13,480,38"/>
-<area shape="rect" href="namespacedyno_1_1vision__tools.html#a8cf2c16aa30d7bfa4ea4844abb555716" title="From a feature with valid depth, backproject to a 3D point in the camera frame with the associated co..." alt="" coords="5,5,209,45"/>
+<area shape="rect" title=" " alt="" coords="777,13,1000,38"/>
+<area shape="rect" href="namespacedyno_1_1vision__tools.html#a8cf2c16aa30d7bfa4ea4844abb555716" title="From a feature with valid depth, backproject to a 3D point in the camera frame with the associated co..." alt="" coords="525,5,729,45"/>
+<area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#a246f701e4605c98dc7cb6bbd6f657998" title=" " alt="" coords="265,5,477,45"/>
+<area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2" title=" " alt="" coords="5,5,217,45"/>
 </map>
 </div>
 
@@ -749,22 +760,23 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Camera_8hpp_source.html#l00163">163</a> of file <a class="el" href="Camera_8hpp_source.html">Camera.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  163</span>                                        {</div>
-<div class="line"><span class="lineno">  164</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1Camera.html#aa314751071e993e4d18e7c6f19976f96">camera_params_</a>;</div>
-<div class="line"><span class="lineno">  165</span>  }</div>
+<p class="definition">Definition at line <a class="el" href="Camera_8hpp_source.html#l00180">180</a> of file <a class="el" href="Camera_8hpp_source.html">Camera.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  180</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1Camera.html#aa314751071e993e4d18e7c6f19976f96">camera_params_</a>; }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1Camera.html#aa314751071e993e4d18e7c6f19976f96">camera_params_</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="namespacedyno_1_1vision__tools.html#a5d8b89d2b560b498934853c77a7d9f28">dyno::vision_tools::writeOutProjectMaskAndDepthMap()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1RGBDCamera.html#ae1e3ae993c328df6c0e4fe5687483f16">dyno::RGBDCamera::getFakeStereoCalib()</a>, <a class="el" href="classdyno_1_1RGBDCamera.html#a46946b835a2e627714f16a9195eb6d29">dyno::RGBDCamera::projectRight()</a>, and <a class="el" href="namespacedyno_1_1vision__tools.html#a5d8b89d2b560b498934853c77a7d9f28">dyno::vision_tools::writeOutProjectMaskAndDepthMap()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1Camera_af56ce3541d3ef8a7bcb2246e4634ca59_icgraph.png" border="0" usemap="#aclassdyno_1_1Camera_af56ce3541d3ef8a7bcb2246e4634ca59_icgraph" alt=""/></div>
 <map name="aclassdyno_1_1Camera_af56ce3541d3ef8a7bcb2246e4634ca59_icgraph" id="aclassdyno_1_1Camera_af56ce3541d3ef8a7bcb2246e4634ca59_icgraph">
-<area shape="rect" title=" " alt="" coords="572,13,763,38"/>
-<area shape="rect" href="namespacedyno_1_1vision__tools.html#a5d8b89d2b560b498934853c77a7d9f28" title="Saves a re&#45;projected 3D point cloud with labelled points to file as a cv::Mat." alt="" coords="265,5,524,45"/>
-<area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2" title=" " alt="" coords="5,5,217,45"/>
+<area shape="rect" title=" " alt="" coords="572,77,763,102"/>
+<area shape="rect" href="classdyno_1_1RGBDCamera.html#ae1e3ae993c328df6c0e4fe5687483f16" title="Get gtsam::Cal3_S2Stereo from rgbd camera and virtual baseline." alt="" coords="290,5,499,45"/>
+<area shape="rect" href="classdyno_1_1RGBDCamera.html#a46946b835a2e627714f16a9195eb6d29" title="Projects a feature with valid depth and a left keypoint (uL) into the right keypoint (uR) of the feat..." alt="" coords="293,69,497,109"/>
+<area shape="rect" href="namespacedyno_1_1vision__tools.html#a5d8b89d2b560b498934853c77a7d9f28" title="Saves a re&#45;projected 3D point cloud with labelled points to file as a cv::Mat." alt="" coords="265,133,524,173"/>
+<area shape="rect" href="classdyno_1_1RGBDCamera.html#a76250e0244602304395e8963772c7bae" title=" " alt="" coords="7,5,216,45"/>
+<area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2" title=" " alt="" coords="5,133,217,173"/>
 </map>
 </div>
 
@@ -932,7 +944,7 @@ false </dd></dl>
 <div class="line"><span class="lineno">  168</span>    <span class="keywordflow">return</span> result;</div>
 <div class="line"><span class="lineno">  169</span>}</div>
 <div class="ttc" id="aclassdyno_1_1Camera_html_a4b65a9e00aef7b4f7e2d58753d8d43b7"><div class="ttname"><a href="classdyno_1_1Camera.html#a4b65a9e00aef7b4f7e2d58753d8d43b7">dyno::Camera::project</a></div><div class="ttdeci">void project(const Landmark &amp;lmk, Keypoint *kpt) const</div><div class="ttdoc">Projects a 3D point in the camera frame into the image frame as a keypoint. Doesnt do any checks if t...</div><div class="ttdef"><b>Definition:</b> <a href="Camera_8cc_source.html#l00040">Camera.cc:40</a></div></div>
-<div class="ttc" id="anamespacedyno_html_aaa260a8022691078c59e1ac6a4fa05b5"><div class="ttname"><a href="namespacedyno.html#aaa260a8022691078c59e1ac6a4fa05b5">dyno::Keypoint</a></div><div class="ttdeci">gtsam::Point2 Keypoint</div><div class="ttdoc">Observed optical flow vector (ordered x, y)</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00094">Types.hpp:94</a></div></div>
+<div class="ttc" id="anamespacedyno_html_aaa260a8022691078c59e1ac6a4fa05b5"><div class="ttname"><a href="namespacedyno.html#aaa260a8022691078c59e1ac6a4fa05b5">dyno::Keypoint</a></div><div class="ttdeci">gtsam::Point2 Keypoint</div><div class="ttdoc">Observed optical flow vector (ordered x, y)</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00095">Types.hpp:95</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1Camera.html#a1b0a5c4c80d414218df4c5af0bf360c4">isKeypointContained()</a>, and <a class="el" href="classdyno_1_1Camera.html#a4b65a9e00aef7b4f7e2d58753d8d43b7">project()</a>.</p>
 <div class="dynheader">
@@ -1082,12 +1094,12 @@ Here is the call graph for this function:</div>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Camera_8hpp_source.html#l00169">169</a> of file <a class="el" href="Camera_8hpp_source.html">Camera.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Camera_8hpp_source.html#l00184">184</a> of file <a class="el" href="Camera_8hpp_source.html">Camera.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1Camera.html#a8a831e03d5899d787453947e7073f1ee">backProject()</a>, <a class="el" href="classdyno_1_1Camera.html#a29c9a3d8dcf0e6c194ffdae9df9f1979">backProjectFromZ()</a>, <a class="el" href="classdyno_1_1Camera.html#a14ca13ab60989ac4322fddb38beaefa8">Camera()</a>, <a class="el" href="classdyno_1_1Camera.html#afa242b874c0c1a185adb8d83a35171c8">getImplCamera()</a>, and <a class="el" href="classdyno_1_1Camera.html#a4b65a9e00aef7b4f7e2d58753d8d43b7">project()</a>.</p>
 
@@ -1108,12 +1120,12 @@ Here is the call graph for this function:</div>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Camera_8hpp_source.html#l00168">168</a> of file <a class="el" href="Camera_8hpp_source.html">Camera.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Camera_8hpp_source.html#l00183">183</a> of file <a class="el" href="Camera_8hpp_source.html">Camera.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1Camera.html#a14ca13ab60989ac4322fddb38beaefa8">Camera()</a>, <a class="el" href="classdyno_1_1Camera.html#af56ce3541d3ef8a7bcb2246e4634ca59">getParams()</a>, and <a class="el" href="classdyno_1_1Camera.html#a845f22af984678dddeed501bcdb26e51">isKeypointContained()</a>.</p>
 

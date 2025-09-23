@@ -89,12 +89,14 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a49d144a77a2a729d6bde2831e13dd6ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a032be0453492c51720c8a7bc207a3099"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1FormulationParams.html#a032be0453492c51720c8a7bc207a3099">min_static_observations</a> = 2u</td></tr>
 <tr class="separator:a032be0453492c51720c8a7bc207a3099"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0edc258f64653c039473ba5df1391465"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1FormulationParams.html#a0edc258f64653c039473ba5df1391465">use_smoothing_factor</a> = true</td></tr>
+<tr class="separator:a0edc258f64653c039473ba5df1391465"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac3367e0c0d80aec0900a00132becd768"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1FormulationParams.html#ac3367e0c0d80aec0900a00132becd768">suffix</a> = &quot;&quot;</td></tr>
 <tr class="separator:ac3367e0c0d80aec0900a00132becd768"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="Formulation_8hpp_source.html#l00117">117</a> of file <a class="el" href="Formulation_8hpp_source.html">Formulation.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Formulation_8hpp_source.html#l00168">168</a> of file <a class="el" href="Formulation_8hpp_source.html">Formulation.hpp</a>.</p>
 </div><h2 class="groupheader">Member Data Documentation</h2>
 <a id="a49d144a77a2a729d6bde2831e13dd6ba" name="a49d144a77a2a729d6bde2831e13dd6ba"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a49d144a77a2a729d6bde2831e13dd6ba">&#9670;&#160;</a></span>min_dynamic_observations</h2>
@@ -108,9 +110,9 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Formulation_8hpp_source.html#l00118">118</a> of file <a class="el" href="Formulation_8hpp_source.html">Formulation.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Formulation_8hpp_source.html#l00169">169</a> of file <a class="el" href="Formulation_8hpp_source.html">Formulation.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1RGBDBackendModule.html#aa8625763afa6e9f548a6fdee49f8d748">dyno::RGBDBackendModule::makeUpdater()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1RegularBackendModule.html#a981f45e602804746db51e10350a060b6">dyno::RegularBackendModule::makeFormulation()</a>, <a class="el" href="classdyno_1_1ParallelHybridBackendModule.html#a06ab247456bf85a1f6d67350f32eeb95">dyno::ParallelHybridBackendModule::ParallelHybridBackendModule()</a>, and <a class="el" href="classdyno_1_1ParallelObjectISAM.html#a75201da40040ae04fc9042a2f77696d8">dyno::ParallelObjectISAM::ParallelObjectISAM()</a>.</p>
 
 </div>
 </div>
@@ -126,9 +128,9 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Formulation_8hpp_source.html#l00119">119</a> of file <a class="el" href="Formulation_8hpp_source.html">Formulation.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Formulation_8hpp_source.html#l00170">170</a> of file <a class="el" href="Formulation_8hpp_source.html">Formulation.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1RGBDBackendModule.html#aa8625763afa6e9f548a6fdee49f8d748">dyno::RGBDBackendModule::makeUpdater()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1RegularBackendModule.html#a981f45e602804746db51e10350a060b6">dyno::RegularBackendModule::makeFormulation()</a>, and <a class="el" href="classdyno_1_1ParallelHybridBackendModule.html#a06ab247456bf85a1f6d67350f32eeb95">dyno::ParallelHybridBackendModule::ParallelHybridBackendModule()</a>.</p>
 
 </div>
 </div>
@@ -144,9 +146,27 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Formulation_8hpp_source.html#l00120">120</a> of file <a class="el" href="Formulation_8hpp_source.html">Formulation.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Formulation_8hpp_source.html#l00172">172</a> of file <a class="el" href="Formulation_8hpp_source.html">Formulation.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1RGBDBackendModule.html#aa8625763afa6e9f548a6fdee49f8d748">dyno::RGBDBackendModule::makeUpdater()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1ParallelHybridBackendModule.html#a06ab247456bf85a1f6d67350f32eeb95">dyno::ParallelHybridBackendModule::ParallelHybridBackendModule()</a>, and <a class="el" href="classdyno_1_1ParallelObjectISAM.html#a75201da40040ae04fc9042a2f77696d8">dyno::ParallelObjectISAM::ParallelObjectISAM()</a>.</p>
+
+</div>
+</div>
+<a id="a0edc258f64653c039473ba5df1391465" name="a0edc258f64653c039473ba5df1391465"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0edc258f64653c039473ba5df1391465">&#9670;&#160;</a></span>use_smoothing_factor</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool dyno::FormulationParams::use_smoothing_factor = true</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Formulation_8hpp_source.html#l00171">171</a> of file <a class="el" href="Formulation_8hpp_source.html">Formulation.hpp</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1RegularBackendModule.html#a981f45e602804746db51e10350a060b6">dyno::RegularBackendModule::makeFormulation()</a>, <a class="el" href="classdyno_1_1HybridFormulation.html#ad05af62c9b437ad6613a191defeecb07">dyno::HybridFormulation::objectUpdateContext()</a>, <a class="el" href="classdyno_1_1ParallelHybridBackendModule.html#a06ab247456bf85a1f6d67350f32eeb95">dyno::ParallelHybridBackendModule::ParallelHybridBackendModule()</a>, and <a class="el" href="classdyno_1_1ParallelObjectISAM.html#a75201da40040ae04fc9042a2f77696d8">dyno::ParallelObjectISAM::ParallelObjectISAM()</a>.</p>
 
 </div>
 </div>

@@ -1,5 +1,8 @@
 <map id="dyno::MeasurementWithCovariance::hasModel" name="dyno::MeasurementWithCovariance::hasModel">
-<area shape="rect" id="node1" title=" " alt="" coords="611,5,865,45"/>
-<area shape="rect" id="node2" href="$classdyno_1_1MeasurementWithCovariance.html#af8bd4a9635e9c15f1121a099c00d623e" title=" " alt="" coords="308,5,563,45"/>
-<area shape="rect" id="node3" href="$classdyno_1_1MeasurementWithCovariance.html#a1092d83a60bfba8cb1ac940cbc43dcb5" title=" " alt="" coords="5,5,260,45"/>
+<area shape="rect" id="node1" title=" " alt="" coords="845,37,1100,77"/>
+<area shape="rect" id="node2" href="$classdyno_1_1MeasurementWithCovariance.html#af8bd4a9635e9c15f1121a099c00d623e" title=" " alt="" coords="543,5,797,45"/>
+<area shape="rect" id="node4" href="$classdyno_1_1ParallelObjectISAM.html#ad0ec7b6e8d9712fb5b16376f567b5126" title=" " alt="" coords="577,69,763,109"/>
+<area shape="rect" id="node3" href="$classdyno_1_1MeasurementWithCovariance.html#a1092d83a60bfba8cb1ac940cbc43dcb5" title=" " alt="" coords="240,5,495,45"/>
+<area shape="rect" id="node5" href="$classdyno_1_1ParallelObjectISAM.html#a71b737a3ffd6f37722393df4f46d37f4" title=" " alt="" coords="274,69,461,109"/>
+<area shape="rect" id="node6" href="$classdyno_1_1ParallelObjectISAM.html#aebe02d7a654d9829c361eece7374dd1f" title=" " alt="" coords="5,69,192,109"/>
 </map>

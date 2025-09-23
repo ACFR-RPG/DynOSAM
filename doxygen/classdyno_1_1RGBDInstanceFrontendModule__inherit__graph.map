@@ -1,5 +1,6 @@
 <map id="dyno::RGBDInstanceFrontendModule" name="dyno::RGBDInstanceFrontendModule">
-<area shape="rect" id="node1" title=" " alt="" coords="19,181,231,221"/>
-<area shape="rect" id="node2" href="$classdyno_1_1FrontendModule.html" title="Base class to actually do processing. Data passed to this module from the frontend." alt="" coords="41,108,208,133"/>
+<area shape="rect" id="node1" title=" " alt="" coords="507,45,719,85"/>
+<area shape="rect" id="node2" href="$classdyno_1_1FrontendModule.html" title="Base class to actually do processing. Data passed to this module from the frontend." alt="" coords="292,52,459,77"/>
 <area shape="rect" id="node3" href="$classdyno_1_1ModuleBase.html" title=" " alt="" coords="5,5,244,60"/>
+<area shape="rect" id="node4" href="$structdyno_1_1SharedModuleInterface.html" title=" " alt="" coords="18,84,231,109"/>
 </map>

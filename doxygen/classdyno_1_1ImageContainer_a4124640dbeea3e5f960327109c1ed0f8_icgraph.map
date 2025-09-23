@@ -1,6 +1,0 @@
-<map id="dyno::ImageContainer::getSemanticMask" name="dyno::ImageContainer::getSemanticMask">
-<area shape="rect" id="node1" title=" " alt="" coords="435,41,601,81"/>
-<area shape="rect" id="node2" href="$classdyno_1_1ImageContainer.html#a9249d3580ffc65459f01a8d116c108a8" title=" " alt="" coords="220,12,387,52"/>
-<area shape="rect" id="node4" href="$classdyno_1_1ImageContainer.html#a5fa3552f938749b58ae95bedbdfdbb32" title="Validates that the input images (if not empty) are the same size. Throws ImageContainerConstructionEx..." alt="" coords="5,69,172,109"/>
-<area shape="rect" id="node3" href="$classdyno_1_1ImageContainer.html#ad8ae103311a01b0f0ff842501d692249" title=" " alt="" coords="5,5,172,45"/>
-</map>

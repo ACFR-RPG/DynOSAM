@@ -1,6 +1,0 @@
-<map id="dyno::RGBDBackendModule" name="dyno::RGBDBackendModule">
-<area shape="rect" id="node1" title=" " alt="" coords="35,255,237,280"/>
-<area shape="rect" id="node2" href="$classdyno_1_1BackendModuleType.html" title=" " alt="" coords="22,167,250,207"/>
-<area shape="rect" id="node3" href="$classdyno_1_1BackendModule.html" title="Base class to actually do processing. Data passed to this module from the frontend." alt="" coords="53,93,219,119"/>
-<area shape="rect" id="node4" href="$classdyno_1_1ModuleBase.html" title=" " alt="" coords="5,5,267,45"/>
-</map>

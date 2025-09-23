@@ -1,7 +1,7 @@
 <map id="dyno::Frame::updateDepths" name="dyno::Frame::updateDepths">
 <area shape="rect" id="node1" title="Update the depth values on all contained features. Clips the static and dynamic features (marking the..." alt="" coords="5,77,208,102"/>
-<area shape="rect" id="node2" href="$classdyno_1_1ImageContainerSubset.html#a2a5f209ab5d3013380346a3e5e8356a0" title="Gets the corresponding ImageWrapper corresponding to the ImageType. ImageType must be in the class pa..." alt="" coords="256,5,467,45"/>
-<area shape="rect" id="node3" href="$classdyno_1_1ImageContainer.html#ae6d8d0845eb77179dc00b4b865393ad7" title=" " alt="" coords="278,69,445,109"/>
-<area shape="rect" id="node5" href="$classdyno_1_1Frame.html#a79a48377696d64b7f2b4d6806cdd018f" title=" " alt="" coords="260,133,463,173"/>
-<area shape="rect" id="node4" href="$classdyno_1_1ImageContainer.html#a4cadfbf4fbd4eab24e8c0e0fe18e7759" title=" " alt="" coords="515,69,681,109"/>
+<area shape="rect" id="node2" href="$classdyno_1_1ImageContainer.html#af480442332a789297b20f8ac60ecd5f3" title=" " alt="" coords="274,5,441,45"/>
+<area shape="rect" id="node3" href="$classdyno_1_1ImageContainer.html#ae6d8d0845eb77179dc00b4b865393ad7" title=" " alt="" coords="274,69,441,109"/>
+<area shape="rect" id="node5" href="$classdyno_1_1Frame.html#a79a48377696d64b7f2b4d6806cdd018f" title=" " alt="" coords="256,133,459,173"/>
+<area shape="rect" id="node4" href="$classdyno_1_1ImageContainer.html#a2cd4807310bce124878792073e9122e9" title=" " alt="" coords="507,69,673,109"/>
 </map>

@@ -96,18 +96,18 @@ Public Types</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a6efe3e60a8d0f2851d18beb6f6ba363a"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:a6efe3e60a8d0f2851d18beb6f6ba363a"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classdyno_1_1JsonConverter.html#a6efe3e60a8d0f2851d18beb6f6ba363a">WriteOutJson</a> (const T &amp;value, const std::string &amp;filepath, const <a class="el" href="classdyno_1_1JsonConverter.html#a6f6ff6dc979983011066496232a81077">Format</a> &amp;fmt=<a class="el" href="classdyno_1_1JsonConverter.html#a6f6ff6dc979983011066496232a81077a3bbe9dadc3435bf55619f0c6ef8ef7ba">Format::BSON</a>)</td></tr>
-<tr class="separator:a6efe3e60a8d0f2851d18beb6f6ba363a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8e32724453feed273c0233b7adb01080"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a8e32724453feed273c0233b7adb01080"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classdyno_1_1JsonConverter.html#a8e32724453feed273c0233b7adb01080">WriteOutJson</a> (const T &amp;value, const std::string &amp;filepath, const <a class="el" href="classdyno_1_1JsonConverter.html#a6f6ff6dc979983011066496232a81077">Format</a> &amp;fmt=<a class="el" href="classdyno_1_1JsonConverter.html#a6f6ff6dc979983011066496232a81077a3bbe9dadc3435bf55619f0c6ef8ef7ba">Format::BSON</a>, bool append=false)</td></tr>
+<tr class="separator:a8e32724453feed273c0233b7adb01080"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2cf5f1cc724717fdec80c992ce9a4663"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:a2cf5f1cc724717fdec80c992ce9a4663"><td class="memTemplItemLeft" align="right" valign="top">static bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classdyno_1_1JsonConverter.html#a2cf5f1cc724717fdec80c992ce9a4663">ReadInJson</a> (T &amp;value, const std::string &amp;filepath, const <a class="el" href="classdyno_1_1JsonConverter.html#a6f6ff6dc979983011066496232a81077">Format</a> &amp;fmt=<a class="el" href="classdyno_1_1JsonConverter.html#a6f6ff6dc979983011066496232a81077a3bbe9dadc3435bf55619f0c6ef8ef7ba">Format::BSON</a>)</td></tr>
 <tr class="separator:a2cf5f1cc724717fdec80c992ce9a4663"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-static-methods" name="pri-static-methods"></a>
 Static Private Member Functions</h2></td></tr>
-<tr class="memitem:aab82de1ef0a47df6f917e28c64b5d77b"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:aab82de1ef0a47df6f917e28c64b5d77b"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classdyno_1_1JsonConverter.html#aab82de1ef0a47df6f917e28c64b5d77b">WriteBson</a> (const T &amp;value, const std::string &amp;filepath)</td></tr>
-<tr class="separator:aab82de1ef0a47df6f917e28c64b5d77b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a37af6ce2eba67b08b1a42520ecbcfc92"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a37af6ce2eba67b08b1a42520ecbcfc92"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classdyno_1_1JsonConverter.html#a37af6ce2eba67b08b1a42520ecbcfc92">WriteBson</a> (const T &amp;value, const std::string &amp;filepath, bool append)</td></tr>
+<tr class="separator:a37af6ce2eba67b08b1a42520ecbcfc92"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afa93060ae4b51ac24749d7aa9989601c"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:afa93060ae4b51ac24749d7aa9989601c"><td class="memTemplItemLeft" align="right" valign="top">static bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classdyno_1_1JsonConverter.html#afa93060ae4b51ac24749d7aa9989601c">ReadBson</a> (T &amp;value, const std::string &amp;filepath)</td></tr>
 <tr class="separator:afa93060ae4b51ac24749d7aa9989601c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -193,33 +193,33 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00208">208</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  208</span>                                                            {</div>
-<div class="line"><span class="lineno">  209</span>    VLOG(5) &lt;&lt; <span class="stringliteral">&quot;Reading bson data from filepath: &quot;</span> &lt;&lt; filepath;</div>
-<div class="line"><span class="lineno">  210</span>    std::ifstream file(filepath, std::ios::binary);</div>
-<div class="line"><span class="lineno">  211</span> </div>
-<div class="line"><span class="lineno">  212</span>    <span class="keywordflow">if</span> (!file.is_open()) {</div>
-<div class="line"><span class="lineno">  213</span>      <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">  214</span>    }</div>
-<div class="line"><span class="lineno">  215</span> </div>
-<div class="line"><span class="lineno">  216</span>    <span class="comment">// Get the size of the file</span></div>
-<div class="line"><span class="lineno">  217</span>    file.seekg(0, std::ios::end);</div>
-<div class="line"><span class="lineno">  218</span>    <span class="keyword">const</span> std::streamsize file_size = file.tellg();</div>
-<div class="line"><span class="lineno">  219</span>    file.seekg(0, std::ios::beg);</div>
-<div class="line"><span class="lineno">  220</span> </div>
-<div class="line"><span class="lineno">  221</span>    <span class="comment">// Create a vector to store the file content</span></div>
-<div class="line"><span class="lineno">  222</span>    std::vector&lt;std::uint8_t&gt; content;</div>
-<div class="line"><span class="lineno">  223</span>    content.reserve(file_size);  <span class="comment">// Reserve space to avoid reallocation</span></div>
-<div class="line"><span class="lineno">  224</span> </div>
-<div class="line"><span class="lineno">  225</span>    <span class="comment">// Read the file content into the vector</span></div>
-<div class="line"><span class="lineno">  226</span>    content.insert(content.begin(), std::istreambuf_iterator&lt;char&gt;(file),</div>
-<div class="line"><span class="lineno">  227</span>                   std::istreambuf_iterator&lt;char&gt;());</div>
-<div class="line"><span class="lineno">  228</span>    <span class="keyword">const</span> <a class="code hl_typedef" href="GroundTruthPacket_8hpp.html#ab701e3ac61a85b337ec5c1abaad6742d">json</a> json_instance_read = json::from_bson(content);</div>
-<div class="line"><span class="lineno">  229</span> </div>
-<div class="line"><span class="lineno">  230</span>    value = json_instance_read[<span class="stringliteral">&quot;data&quot;</span>].template get&lt;T&gt;();</div>
-<div class="line"><span class="lineno">  231</span>    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  232</span>  }</div>
-<div class="ttc" id="aGroundTruthPacket_8hpp_html_ab701e3ac61a85b337ec5c1abaad6742d"><div class="ttname"><a href="GroundTruthPacket_8hpp.html#ab701e3ac61a85b337ec5c1abaad6742d">json</a></div><div class="ttdeci">nlohmann::json json</div><div class="ttdef"><b>Definition:</b> <a href="GroundTruthPacket_8hpp_source.html#l00035">GroundTruthPacket.hpp:35</a></div></div>
+<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00216">216</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  216</span>                                                            {</div>
+<div class="line"><span class="lineno">  217</span>    VLOG(5) &lt;&lt; <span class="stringliteral">&quot;Reading bson data from filepath: &quot;</span> &lt;&lt; filepath;</div>
+<div class="line"><span class="lineno">  218</span>    std::ifstream file(filepath, std::ios::binary);</div>
+<div class="line"><span class="lineno">  219</span> </div>
+<div class="line"><span class="lineno">  220</span>    <span class="keywordflow">if</span> (!file.is_open()) {</div>
+<div class="line"><span class="lineno">  221</span>      <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">  222</span>    }</div>
+<div class="line"><span class="lineno">  223</span> </div>
+<div class="line"><span class="lineno">  224</span>    <span class="comment">// Get the size of the file</span></div>
+<div class="line"><span class="lineno">  225</span>    file.seekg(0, std::ios::end);</div>
+<div class="line"><span class="lineno">  226</span>    <span class="keyword">const</span> std::streamsize file_size = file.tellg();</div>
+<div class="line"><span class="lineno">  227</span>    file.seekg(0, std::ios::beg);</div>
+<div class="line"><span class="lineno">  228</span> </div>
+<div class="line"><span class="lineno">  229</span>    <span class="comment">// Create a vector to store the file content</span></div>
+<div class="line"><span class="lineno">  230</span>    std::vector&lt;std::uint8_t&gt; content;</div>
+<div class="line"><span class="lineno">  231</span>    content.reserve(file_size);  <span class="comment">// Reserve space to avoid reallocation</span></div>
+<div class="line"><span class="lineno">  232</span> </div>
+<div class="line"><span class="lineno">  233</span>    <span class="comment">// Read the file content into the vector</span></div>
+<div class="line"><span class="lineno">  234</span>    content.insert(content.begin(), std::istreambuf_iterator&lt;char&gt;(file),</div>
+<div class="line"><span class="lineno">  235</span>                   std::istreambuf_iterator&lt;char&gt;());</div>
+<div class="line"><span class="lineno">  236</span>    <span class="keyword">const</span> <a class="code hl_typedef" href="GroundTruthPacket_8hpp.html#ab701e3ac61a85b337ec5c1abaad6742d">json</a> json_instance_read = json::from_bson(content);</div>
+<div class="line"><span class="lineno">  237</span> </div>
+<div class="line"><span class="lineno">  238</span>    value = json_instance_read[<span class="stringliteral">&quot;data&quot;</span>].template get&lt;T&gt;();</div>
+<div class="line"><span class="lineno">  239</span>    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  240</span>  }</div>
+<div class="ttc" id="aGroundTruthPacket_8hpp_html_ab701e3ac61a85b337ec5c1abaad6742d"><div class="ttname"><a href="GroundTruthPacket_8hpp.html#ab701e3ac61a85b337ec5c1abaad6742d">json</a></div><div class="ttdeci">nlohmann::json json</div><div class="ttdef"><b>Definition:</b> <a href="GroundTruthPacket_8hpp_source.html#l00041">GroundTruthPacket.hpp:41</a></div></div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1JsonConverter.html#a2cf5f1cc724717fdec80c992ce9a4663">ReadInJson()</a>.</p>
 <div class="dynheader">
@@ -277,15 +277,15 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00183">183</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  184</span>                                                         {</div>
-<div class="line"><span class="lineno">  185</span>    <span class="keywordflow">if</span> (fmt == <a class="code hl_enumvalue" href="classdyno_1_1JsonConverter.html#a6f6ff6dc979983011066496232a81077a3bbe9dadc3435bf55619f0c6ef8ef7ba">Format::BSON</a>) {</div>
-<div class="line"><span class="lineno">  186</span>      <span class="keywordflow">return</span> <a class="code hl_function" href="classdyno_1_1JsonConverter.html#afa93060ae4b51ac24749d7aa9989601c">ReadBson</a>(value, filepath);</div>
-<div class="line"><span class="lineno">  187</span>    } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  188</span>      CHECK(<span class="keyword">false</span>) &lt;&lt; <span class="stringliteral">&quot;normal json not implemented&quot;</span>;</div>
-<div class="line"><span class="lineno">  189</span>    }</div>
-<div class="line"><span class="lineno">  190</span>  }</div>
-<div class="ttc" id="aclassdyno_1_1JsonConverter_html_afa93060ae4b51ac24749d7aa9989601c"><div class="ttname"><a href="classdyno_1_1JsonConverter.html#afa93060ae4b51ac24749d7aa9989601c">dyno::JsonConverter::ReadBson</a></div><div class="ttdeci">static bool ReadBson(T &amp;value, const std::string &amp;filepath)</div><div class="ttdef"><b>Definition:</b> <a href="Logger_8hpp_source.html#l00208">Logger.hpp:208</a></div></div>
+<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00184">184</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  185</span>                                                         {</div>
+<div class="line"><span class="lineno">  186</span>    <span class="keywordflow">if</span> (fmt == <a class="code hl_enumvalue" href="classdyno_1_1JsonConverter.html#a6f6ff6dc979983011066496232a81077a3bbe9dadc3435bf55619f0c6ef8ef7ba">Format::BSON</a>) {</div>
+<div class="line"><span class="lineno">  187</span>      <span class="keywordflow">return</span> <a class="code hl_function" href="classdyno_1_1JsonConverter.html#afa93060ae4b51ac24749d7aa9989601c">ReadBson</a>(value, filepath);</div>
+<div class="line"><span class="lineno">  188</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  189</span>      CHECK(<span class="keyword">false</span>) &lt;&lt; <span class="stringliteral">&quot;normal json not implemented&quot;</span>;</div>
+<div class="line"><span class="lineno">  190</span>    }</div>
+<div class="line"><span class="lineno">  191</span>  }</div>
+<div class="ttc" id="aclassdyno_1_1JsonConverter_html_afa93060ae4b51ac24749d7aa9989601c"><div class="ttname"><a href="classdyno_1_1JsonConverter.html#afa93060ae4b51ac24749d7aa9989601c">dyno::JsonConverter::ReadBson</a></div><div class="ttdeci">static bool ReadBson(T &amp;value, const std::string &amp;filepath)</div><div class="ttdef"><b>Definition:</b> <a href="Logger_8hpp_source.html#l00216">Logger.hpp:216</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1JsonConverter.html#a6f6ff6dc979983011066496232a81077a3bbe9dadc3435bf55619f0c6ef8ef7ba">BSON</a>, and <a class="el" href="classdyno_1_1JsonConverter.html#afa93060ae4b51ac24749d7aa9989601c">ReadBson()</a>.</p>
 
@@ -311,8 +311,8 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
-<a id="aab82de1ef0a47df6f917e28c64b5d77b" name="aab82de1ef0a47df6f917e28c64b5d77b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aab82de1ef0a47df6f917e28c64b5d77b">&#9670;&#160;</a></span>WriteBson()</h2>
+<a id="a37af6ce2eba67b08b1a42520ecbcfc92" name="a37af6ce2eba67b08b1a42520ecbcfc92"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a37af6ce2eba67b08b1a42520ecbcfc92">&#9670;&#160;</a></span>WriteBson()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -332,7 +332,13 @@ template&lt;typename T &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const std::string &amp;&#160;</td>
-          <td class="paramname"><em>filepath</em>&#160;</td>
+          <td class="paramname"><em>filepath</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>append</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -347,24 +353,30 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00194">194</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  194</span>                                                                   {</div>
-<div class="line"><span class="lineno">  195</span>    VLOG(5) &lt;&lt; <span class="stringliteral">&quot;Writing bson data to filepath: &quot;</span> &lt;&lt; filepath;</div>
-<div class="line"><span class="lineno">  196</span> </div>
-<div class="line"><span class="lineno">  197</span>    <a class="code hl_typedef" href="GroundTruthPacket_8hpp.html#ab701e3ac61a85b337ec5c1abaad6742d">json</a> j;</div>
-<div class="line"><span class="lineno">  198</span>    j[<span class="stringliteral">&quot;data&quot;</span>] = value;</div>
-<div class="line"><span class="lineno">  199</span>    <span class="keyword">auto</span> v_bson = json::to_bson(j);</div>
-<div class="line"><span class="lineno">  200</span> </div>
-<div class="line"><span class="lineno">  201</span>    std::ofstream bsonfile(filepath.c_str(),</div>
-<div class="line"><span class="lineno">  202</span>                           std::ios_base::out | std::ios::binary);</div>
-<div class="line"><span class="lineno">  203</span>    bsonfile.write((<span class="keywordtype">char</span>*)&amp;v_bson[0], v_bson.size() * <span class="keyword">sizeof</span>(v_bson[0]));</div>
-<div class="line"><span class="lineno">  204</span>    bsonfile.close();</div>
-<div class="line"><span class="lineno">  205</span>  }</div>
+<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00195">195</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  196</span>                                     {</div>
+<div class="line"><span class="lineno">  197</span>    VLOG(5) &lt;&lt; <span class="stringliteral">&quot;Writing bson data to filepath: &quot;</span> &lt;&lt; filepath;</div>
+<div class="line"><span class="lineno">  198</span> </div>
+<div class="line"><span class="lineno">  199</span>    <a class="code hl_typedef" href="GroundTruthPacket_8hpp.html#ab701e3ac61a85b337ec5c1abaad6742d">json</a> j;</div>
+<div class="line"><span class="lineno">  200</span>    j[<span class="stringliteral">&quot;data&quot;</span>] = value;</div>
+<div class="line"><span class="lineno">  201</span>    <span class="keyword">auto</span> v_bson = json::to_bson(j);</div>
+<div class="line"><span class="lineno">  202</span> </div>
+<div class="line"><span class="lineno">  203</span>    std::ofstream bsonfile;</div>
+<div class="line"><span class="lineno">  204</span>    <span class="keywordflow">if</span> (!append) {</div>
+<div class="line"><span class="lineno">  205</span>      bsonfile.open(filepath.c_str(), std::ios_base::out | std::ios::binary);</div>
+<div class="line"><span class="lineno">  206</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  207</span>      bsonfile.open(filepath.c_str(),</div>
+<div class="line"><span class="lineno">  208</span>                    std::ios_base::app | std::ios_base::out | std::ios::binary);</div>
+<div class="line"><span class="lineno">  209</span>    }</div>
+<div class="line"><span class="lineno">  210</span> </div>
+<div class="line"><span class="lineno">  211</span>    bsonfile.write((<span class="keywordtype">char</span>*)&amp;v_bson[0], v_bson.size() * <span class="keyword">sizeof</span>(v_bson[0]));</div>
+<div class="line"><span class="lineno">  212</span>    bsonfile.close();</div>
+<div class="line"><span class="lineno">  213</span>  }</div>
 </div><!-- fragment -->
 </div>
 </div>
-<a id="a6efe3e60a8d0f2851d18beb6f6ba363a" name="a6efe3e60a8d0f2851d18beb6f6ba363a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6efe3e60a8d0f2851d18beb6f6ba363a">&#9670;&#160;</a></span>WriteOutJson()</h2>
+<a id="a8e32724453feed273c0233b7adb01080" name="a8e32724453feed273c0233b7adb01080"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8e32724453feed273c0233b7adb01080">&#9670;&#160;</a></span>WriteOutJson()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -390,7 +402,13 @@ template&lt;typename T &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const <a class="el" href="classdyno_1_1JsonConverter.html#a6f6ff6dc979983011066496232a81077">Format</a> &amp;&#160;</td>
-          <td class="paramname"><em>fmt</em> = <code><a class="el" href="classdyno_1_1JsonConverter.html#a6f6ff6dc979983011066496232a81077a3bbe9dadc3435bf55619f0c6ef8ef7ba">Format::BSON</a></code>&#160;</td>
+          <td class="paramname"><em>fmt</em> = <code><a class="el" href="classdyno_1_1JsonConverter.html#a6f6ff6dc979983011066496232a81077a3bbe9dadc3435bf55619f0c6ef8ef7ba">Format::BSON</a></code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>append</em> = <code>false</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -406,25 +424,26 @@ template&lt;typename T &gt; </div>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00173">173</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  174</span>                                                           {</div>
-<div class="line"><span class="lineno">  175</span>    <span class="keywordflow">if</span> (fmt == <a class="code hl_enumvalue" href="classdyno_1_1JsonConverter.html#a6f6ff6dc979983011066496232a81077a3bbe9dadc3435bf55619f0c6ef8ef7ba">Format::BSON</a>) {</div>
-<div class="line"><span class="lineno">  176</span>      WriteBson&lt;T&gt;(value, filepath);</div>
-<div class="line"><span class="lineno">  177</span>    } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  178</span>      CHECK(<span class="keyword">false</span>) &lt;&lt; <span class="stringliteral">&quot;normal json not implemented&quot;</span>;</div>
-<div class="line"><span class="lineno">  179</span>    }</div>
-<div class="line"><span class="lineno">  180</span>  }</div>
+<div class="fragment"><div class="line"><span class="lineno">  175</span>                                                {</div>
+<div class="line"><span class="lineno">  176</span>    <span class="keywordflow">if</span> (fmt == <a class="code hl_enumvalue" href="classdyno_1_1JsonConverter.html#a6f6ff6dc979983011066496232a81077a3bbe9dadc3435bf55619f0c6ef8ef7ba">Format::BSON</a>) {</div>
+<div class="line"><span class="lineno">  177</span>      WriteBson&lt;T&gt;(value, filepath, append);</div>
+<div class="line"><span class="lineno">  178</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  179</span>      CHECK(<span class="keyword">false</span>) &lt;&lt; <span class="stringliteral">&quot;normal json not implemented&quot;</span>;</div>
+<div class="line"><span class="lineno">  180</span>    }</div>
+<div class="line"><span class="lineno">  181</span>  }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1JsonConverter.html#a6f6ff6dc979983011066496232a81077a3bbe9dadc3435bf55619f0c6ef8ef7ba">BSON</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1RGBDFrontendLogger.html#a995f34aa508a212beabf849225525ed3">dyno::RGBDFrontendLogger::~RGBDFrontendLogger()</a>, and <a class="el" href="classdyno_1_1RGBDInstanceFrontendModule.html#af1843d0ee370576857f07900c5e68226">dyno::RGBDInstanceFrontendModule::~RGBDInstanceFrontendModule()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1ParallelHybridBackendModule.html#a368912f3c84f148843f4b6ef653f4a0c">dyno::ParallelHybridBackendModule::~ParallelHybridBackendModule()</a>, <a class="el" href="classdyno_1_1RGBDFrontendLogger.html#a995f34aa508a212beabf849225525ed3">dyno::RGBDFrontendLogger::~RGBDFrontendLogger()</a>, and <a class="el" href="classdyno_1_1RGBDInstanceFrontendModule.html#af1843d0ee370576857f07900c5e68226">dyno::RGBDInstanceFrontendModule::~RGBDInstanceFrontendModule()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classdyno_1_1JsonConverter_a6efe3e60a8d0f2851d18beb6f6ba363a_icgraph.png" border="0" usemap="#aclassdyno_1_1JsonConverter_a6efe3e60a8d0f2851d18beb6f6ba363a_icgraph" alt=""/></div>
-<map name="aclassdyno_1_1JsonConverter_a6efe3e60a8d0f2851d18beb6f6ba363a_icgraph" id="aclassdyno_1_1JsonConverter_a6efe3e60a8d0f2851d18beb6f6ba363a_icgraph">
-<area shape="rect" title=" " alt="" coords="340,37,493,77"/>
-<area shape="rect" href="classdyno_1_1RGBDFrontendLogger.html#a995f34aa508a212beabf849225525ed3" title=" " alt="" coords="48,5,249,45"/>
-<area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#af1843d0ee370576857f07900c5e68226" title=" " alt="" coords="5,69,292,109"/>
+<div class="center"><img src="classdyno_1_1JsonConverter_a8e32724453feed273c0233b7adb01080_icgraph.png" border="0" usemap="#aclassdyno_1_1JsonConverter_a8e32724453feed273c0233b7adb01080_icgraph" alt=""/></div>
+<map name="aclassdyno_1_1JsonConverter_a8e32724453feed273c0233b7adb01080_icgraph" id="aclassdyno_1_1JsonConverter_a8e32724453feed273c0233b7adb01080_icgraph">
+<area shape="rect" title=" " alt="" coords="340,69,493,109"/>
+<area shape="rect" href="classdyno_1_1ParallelHybridBackendModule.html#a368912f3c84f148843f4b6ef653f4a0c" title=" " alt="" coords="7,5,290,45"/>
+<area shape="rect" href="classdyno_1_1RGBDFrontendLogger.html#a995f34aa508a212beabf849225525ed3" title=" " alt="" coords="48,69,249,109"/>
+<area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#af1843d0ee370576857f07900c5e68226" title=" " alt="" coords="5,133,292,173"/>
 </map>
 </div>
 

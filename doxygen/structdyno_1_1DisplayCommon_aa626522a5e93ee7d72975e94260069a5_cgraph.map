@@ -1,6 +1,13 @@
 <map id="dyno::DisplayCommon::publishOdometryPath" name="dyno::DisplayCommon::publishOdometryPath">
-<area shape="rect" id="node1" title=" " alt="" coords="5,35,176,75"/>
-<area shape="rect" id="node2" href="$namespacedyno_1_1utils.html#a7efb03484e6c5b1cc0d0eeeb43546ffa" title="Converts from input type to output type where output type is a ROS message with a header...." alt="" coords="224,5,401,45"/>
-<area shape="rect" id="node3" href="$namespacedyno_1_1utils.html#a81025ee06847cec0fd854eff05362d19" title="Converts Timestamp (in seconds) to ROS time." alt="" coords="449,42,617,67"/>
-<area shape="rect" id="node4" href="$namespacedyno.html#a2b18a1990bb26145cec08be631b0ef74" title=" " alt="" coords="665,42,776,67"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,99,176,139"/>
+<area shape="rect" id="node2" href="$namespacedyno_1_1utils.html#a7efb03484e6c5b1cc0d0eeeb43546ffa" title="Converts from input type to output type where output type is a ROS message with a header...." alt="" coords="224,69,401,109"/>
+<area shape="rect" id="node3" href="$namespacedyno_1_1utils.html#a81025ee06847cec0fd854eff05362d19" title="Converts Timestamp (in seconds) to ROS time." alt="" coords="449,106,617,131"/>
+<area shape="rect" id="node4" href="$namespacedyno.html#a8357d6a8de284f4d1fc3d074646b43bb" title=" " alt="" coords="665,106,776,131"/>
+<area shape="rect" id="node5" href="$classdyno_1_1TrackedValueStatus.html#a1741e83bf5442c885da98c9c5bb71f08" title="Returns true if the object lavel is equal to dyno::background_label." alt="" coords="824,5,1012,45"/>
+<area shape="rect" id="node6" href="$classdyno_1_1TrackedValueStatus.html#ae90b3059d173a9354cc6a55a55ef80ac" title="Get object id (j) for this status." alt="" coords="824,69,1012,109"/>
+<area shape="rect" id="node7" href="$structdyno_1_1Color.html#a6689af3d0ac5ceaa66000b5ca70becbd" title="Generates a sequence of never repeating colors using the golden ratio to seperate the colours along t..." alt="" coords="838,134,998,159"/>
+<area shape="rect" id="node11" href="$classdyno_1_1TrackedValueStatus.html#a828faf38cea11c1dcc7651d49b68d8e1" title="Get value. Const version." alt="" coords="824,184,1012,224"/>
+<area shape="rect" id="node8" href="$structdyno_1_1Color.html#a08bcb6ea49861f6978858a2ff5159002" title=" " alt="" coords="1060,134,1223,159"/>
+<area shape="rect" id="node9" href="$structdyno_1_1Color.html#a6bc55a80a463a481dbf4778c70d04733" title=" " alt="" coords="1298,109,1437,134"/>
+<area shape="rect" id="node10" href="$namespacedyno.html#ab0e74ec8992860404a618192cc694b83" title=" " alt="" coords="1271,158,1464,183"/>
 </map>

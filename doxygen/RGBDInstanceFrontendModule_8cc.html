@@ -82,13 +82,13 @@ $(function() {
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="RGBDInstanceFrontendModule_8hpp_source.html">dynosam/frontend/RGBDInstanceFrontendModule.hpp</a>&quot;</code><br />
 <code>#include &lt;glog/logging.h&gt;</code><br />
-<code>#include &lt;tbb/tbb.h&gt;</code><br />
 <code>#include &lt;opencv4/opencv2/opencv.hpp&gt;</code><br />
 <code>#include &quot;<a class="el" href="Flags_8hpp_source.html">dynosam/common/Flags.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="RGBDInstance-Definitions_8hpp_source.html">dynosam/frontend/RGBDInstance-Definitions.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="MotionSolver_8hpp_source.html">dynosam/frontend/vision/MotionSolver.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="Vision-Definitions_8hpp_source.html">dynosam/frontend/vision/Vision-Definitions.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="Logger_8hpp_source.html">dynosam/logger/Logger.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="OpenCVUtils_8hpp_source.html">dynosam/utils/OpenCVUtils.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="SafeCast_8hpp_source.html">dynosam/utils/SafeCast.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="TimingStats_8hpp_source.html">dynosam/utils/TimingStats.hpp</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
@@ -96,56 +96,56 @@ Include dependency graph for RGBDInstanceFrontendModule.cc:</div>
 <div class="dyncontent">
 <div class="center"><img src="RGBDInstanceFrontendModule_8cc__incl.png" border="0" usemap="#adynosam_2src_2frontend_2RGBDInstanceFrontendModule_8cc" alt=""/></div>
 <map name="adynosam_2src_2frontend_2RGBDInstanceFrontendModule_8cc" id="adynosam_2src_2frontend_2RGBDInstanceFrontendModule_8cc">
-<area shape="rect" title=" " alt="" coords="3732,5,3975,45"/>
-<area shape="rect" href="RGBDInstanceFrontendModule_8hpp.html" title=" " alt="" coords="3142,93,3381,133"/>
-<area shape="rect" title=" " alt="" coords="3424,797,3539,823"/>
-<area shape="rect" title=" " alt="" coords="482,797,697,823"/>
-<area shape="rect" href="Flags_8hpp.html" title=" " alt="" coords="3927,797,4137,823"/>
-<area shape="rect" href="RGBDInstance-Definitions_8hpp.html" title=" " alt="" coords="3526,277,3765,317"/>
-<area shape="rect" href="Vision-Definitions_8hpp.html" title=" " alt="" coords="684,460,868,500"/>
-<area shape="rect" href="Logger_8hpp.html" title=" " alt="" coords="3412,379,3615,405"/>
-<area shape="rect" href="MotionSolver_8hpp.html" title=" " alt="" coords="1904,181,2088,221"/>
-<area shape="rect" href="TimingStats_8hpp.html" title=" " alt="" coords="3023,379,3247,405"/>
-<area shape="rect" title=" " alt="" coords="4272,101,4352,126"/>
-<area shape="rect" href="SafeCast_8hpp.html" title=" " alt="" coords="4043,101,4247,126"/>
-<area shape="rect" href="Camera_8hpp.html" title=" " alt="" coords="1480,467,1707,493"/>
-<area shape="rect" href="FrontendModule_8hpp.html" title=" " alt="" coords="3299,277,3501,317"/>
-<area shape="rect" href="FeatureTracker_8hpp.html" title=" " alt="" coords="144,277,328,317"/>
-<area shape="rect" href="VisionTools_8hpp.html" title=" " alt="" coords="352,277,536,317"/>
-<area shape="rect" href="Types_8hpp.html" title=" " alt="" coords="2075,724,2287,749"/>
-<area shape="rect" title=" " alt="" coords="2460,797,2535,823"/>
-<area shape="rect" title=" " alt="" coords="3974,871,4090,896"/>
-<area shape="rect" href="FrontendOutputPacket_8hpp.html" title=" " alt="" coords="2045,372,2248,412"/>
-<area shape="rect" href="GroundTruthPacket_8hpp.html" title=" " alt="" coords="1917,636,2144,676"/>
-<area shape="rect" href="Frontend-Definitions_8hpp.html" title=" " alt="" coords="1708,548,1911,588"/>
-<area shape="rect" href="ImageContainer_8hpp.html" title=" " alt="" coords="533,643,811,669"/>
-<area shape="rect" href="OpenCVUtils_8hpp.html" title=" " alt="" coords="387,724,615,749"/>
-<area shape="rect" title=" " alt="" coords="2765,379,2947,405"/>
-<area shape="rect" href="PointCloudProcess_8hpp.html" title=" " alt="" coords="2371,460,2589,500"/>
-<area shape="rect" href="Frame_8hpp.html" title=" " alt="" coords="684,372,868,412"/>
-<area shape="rect" href="Feature_8hpp.html" title=" " alt="" coords="785,548,969,588"/>
-<area shape="rect" title=" " alt="" coords="3681,467,3751,493"/>
-<area shape="rect" title=" " alt="" coords="3776,467,3867,493"/>
-<area shape="rect" title=" " alt="" coords="3326,643,3399,669"/>
-<area shape="rect" title=" " alt="" coords="3584,643,3664,669"/>
-<area shape="rect" title=" " alt="" coords="2851,555,2909,581"/>
-<area shape="rect" title=" " alt="" coords="3326,467,3450,493"/>
-<area shape="rect" href="CsvParser_8hpp.html" title=" " alt="" coords="3377,555,3586,581"/>
-<area shape="rect" href="JsonUtils_8hpp.html" title=" " alt="" coords="2997,467,3200,493"/>
-<area shape="rect" title=" " alt="" coords="1340,277,1548,317"/>
-<area shape="rect" title=" " alt="" coords="1572,277,1740,317"/>
-<area shape="rect" title=" " alt="" coords="1815,277,1990,317"/>
-<area shape="rect" title=" " alt="" coords="2015,277,2164,317"/>
-<area shape="rect" title=" " alt="" coords="2188,277,2393,317"/>
-<area shape="rect" title=" " alt="" coords="2417,277,2580,317"/>
-<area shape="rect" title=" " alt="" coords="2605,284,2779,309"/>
-<area shape="rect" title=" " alt="" coords="2803,269,3015,324"/>
-<area shape="rect" title=" " alt="" coords="661,269,859,324"/>
-<area shape="rect" title=" " alt="" coords="884,269,1103,324"/>
-<area shape="rect" title=" " alt="" coords="1127,269,1316,324"/>
-<area shape="rect" href="MotionSolver-inl_8hpp.html" title=" " alt="" coords="3040,277,3224,317"/>
-<area shape="rect" href="Statistics_8hpp.html" title=" " alt="" coords="2665,467,2871,493"/>
-<area shape="rect" title=" " alt="" coords="4107,189,4184,214"/>
+<area shape="rect" title=" " alt="" coords="3601,5,3844,45"/>
+<area shape="rect" href="RGBDInstanceFrontendModule_8hpp.html" title=" " alt="" coords="3603,93,3842,133"/>
+<area shape="rect" title=" " alt="" coords="4529,871,4644,896"/>
+<area shape="rect" title=" " alt="" coords="2037,871,2251,896"/>
+<area shape="rect" href="Flags_8hpp.html" title=" " alt="" coords="4791,871,5001,896"/>
+<area shape="rect" href="OpenCVUtils_8hpp.html" title=" " alt="" coords="1827,717,2055,742"/>
+<area shape="rect" href="RGBDInstance-Definitions_8hpp.html" title=" " alt="" coords="3987,277,4226,317"/>
+<area shape="rect" href="Vision-Definitions_8hpp.html" title=" " alt="" coords="2476,460,2660,500"/>
+<area shape="rect" href="Logger_8hpp.html" title=" " alt="" coords="4015,467,4217,493"/>
+<area shape="rect" href="MotionSolver_8hpp.html" title=" " alt="" coords="1764,181,1948,221"/>
+<area shape="rect" href="TimingStats_8hpp.html" title=" " alt="" coords="1565,379,1789,405"/>
+<area shape="rect" href="SafeCast_8hpp.html" title=" " alt="" coords="4751,636,4955,661"/>
+<area shape="rect" title=" " alt="" coords="3474,189,3686,214"/>
+<area shape="rect" href="Camera_8hpp.html" title=" " alt="" coords="3200,467,3427,493"/>
+<area shape="rect" href="FrontendModule_8hpp.html" title=" " alt="" coords="3760,277,3963,317"/>
+<area shape="rect" href="ImuFrontend_8hpp.html" title=" " alt="" coords="4204,372,4375,412"/>
+<area shape="rect" href="FeatureTracker_8hpp.html" title=" " alt="" coords="3400,277,3584,317"/>
+<area shape="rect" href="VisionTools_8hpp.html" title=" " alt="" coords="3192,277,3376,317"/>
+<area shape="rect" href="ObjectTracker_8hpp.html" title=" " alt="" coords="3821,709,4005,749"/>
+<area shape="rect" href="Types_8hpp.html" title=" " alt="" coords="2887,797,3099,823"/>
+<area shape="rect" title=" " alt="" coords="985,871,1060,896"/>
+<area shape="rect" title=" " alt="" coords="4838,944,4954,969"/>
+<area shape="rect" href="FrontendOutputPacket_8hpp.html" title=" " alt="" coords="3465,372,3668,412"/>
+<area shape="rect" href="GroundTruthPacket_8hpp.html" title=" " alt="" coords="3056,548,3283,588"/>
+<area shape="rect" href="Frontend-Definitions_8hpp.html" title=" " alt="" coords="2368,548,2571,588"/>
+<area shape="rect" href="ImageContainer_8hpp.html" title=" " alt="" coords="2191,636,2470,661"/>
+<area shape="rect" title=" " alt="" coords="3895,379,4078,405"/>
+<area shape="rect" href="PointCloudProcess_8hpp.html" title=" " alt="" coords="3409,548,3626,588"/>
+<area shape="rect" href="Frame_8hpp.html" title=" " alt="" coords="2783,372,2967,412"/>
+<area shape="rect" href="Feature_8hpp.html" title=" " alt="" coords="2645,548,2829,588"/>
+<area shape="rect" title=" " alt="" coords="4287,555,4358,581"/>
+<area shape="rect" title=" " alt="" coords="4383,555,4473,581"/>
+<area shape="rect" title=" " alt="" coords="4002,555,4075,581"/>
+<area shape="rect" title=" " alt="" coords="4100,555,4180,581"/>
+<area shape="rect" title=" " alt="" coords="4204,555,4263,581"/>
+<area shape="rect" title=" " alt="" coords="3650,555,3774,581"/>
+<area shape="rect" title=" " alt="" coords="408,284,643,309"/>
+<area shape="rect" title=" " alt="" coords="667,277,875,317"/>
+<area shape="rect" title=" " alt="" coords="899,277,1067,317"/>
+<area shape="rect" title=" " alt="" coords="1142,277,1317,317"/>
+<area shape="rect" title=" " alt="" coords="1341,277,1491,317"/>
+<area shape="rect" title=" " alt="" coords="1824,277,2029,317"/>
+<area shape="rect" title=" " alt="" coords="2053,277,2216,317"/>
+<area shape="rect" title=" " alt="" coords="2241,284,2415,309"/>
+<area shape="rect" title=" " alt="" coords="2439,269,2651,324"/>
+<area shape="rect" title=" " alt="" coords="2675,269,2874,324"/>
+<area shape="rect" title=" " alt="" coords="2899,269,3117,324"/>
+<area shape="rect" title=" " alt="" coords="195,269,384,324"/>
+<area shape="rect" href="BackendDefinitions_8hpp.html" title=" " alt="" coords="2991,379,3289,405"/>
+<area shape="rect" href="MotionSolver-inl_8hpp.html" title=" " alt="" coords="1565,277,1749,317"/>
 </map>
 </div>
 </div>

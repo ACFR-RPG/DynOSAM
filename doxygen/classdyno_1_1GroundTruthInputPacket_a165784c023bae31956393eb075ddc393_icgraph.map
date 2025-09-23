@@ -1,9 +1,8 @@
 <map id="dyno::GroundTruthInputPacket::getObject" name="dyno::GroundTruthInputPacket::getObject">
-<area shape="rect" id="node1" title="Attempts to get the ObjectPoseGT with the requested id from the packet. If the object id does not exi..." alt="" coords="809,69,1025,109"/>
-<area shape="rect" id="node2" href="$classdyno_1_1EstimationModuleLogger.html#acb70c8cc277368b25d615612a1f4d8f4" title=" " alt="" coords="537,5,761,45"/>
-<area shape="rect" id="node3" href="$classdyno_1_1EstimationModuleLogger.html#a35d3a0c8b5a55cdbb35dcdbc2e340e04" title=" " alt="" coords="537,69,761,109"/>
-<area shape="rect" id="node4" href="$namespacedyno.html#a93c3e3c50ec5de7bfd1e2a373d20e77b" title="Propogated a map of object poses via their motions or otherwise." alt="" coords="545,134,753,159"/>
-<area shape="rect" id="node5" href="$classdyno_1_1WorldMotionAccessor.html#a0a396e6c748dc58cf38e5b1a70b2eea4" title="Virtual function that is called to indcate the associated formulation has been updated...." alt="" coords="276,95,479,135"/>
-<area shape="rect" id="node6" href="$classdyno_1_1RGBDInstanceFrontendModule.html#a3b8a72f00e038ce10f89be9ed52198da" title=" " alt="" coords="265,159,489,199"/>
-<area shape="rect" id="node7" href="$classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2" title=" " alt="" coords="5,159,217,199"/>
+<area shape="rect" id="node1" title="Attempts to get the ObjectPoseGT with the requested id from the packet. If the object id does not exi..." alt="" coords="528,69,744,109"/>
+<area shape="rect" id="node2" href="$classdyno_1_1EstimationModuleLogger.html#ac205d520305f7c6aa47cda9f155c4bfd" title=" " alt="" coords="256,5,480,45"/>
+<area shape="rect" id="node3" href="$classdyno_1_1EstimationModuleLogger.html#a1c47e839f270bb1b2e3971869d4fefc5" title=" " alt="" coords="256,69,480,109"/>
+<area shape="rect" id="node4" href="$namespacedyno.html#a93c3e3c50ec5de7bfd1e2a373d20e77b" title="Propogated a map of object poses via their motions or otherwise." alt="" coords="264,134,472,159"/>
+<area shape="rect" id="node5" href="$classdyno_1_1WorldMotionAccessor.html#a6485394be1e938b5ee3d9b9a65759cd8" title="Update the object pose (cache) estimation based on the latest set of estated values stored in theta!" alt="" coords="5,95,208,135"/>
+<area shape="rect" id="node6" href="$classdyno_1_1ObjectMotionSovlerF2F.html#a56d4a045e50a141600787ce3eb268cd3" title=" " alt="" coords="11,159,202,199"/>
 </map>

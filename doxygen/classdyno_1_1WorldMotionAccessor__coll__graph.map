@@ -1,7 +1,9 @@
 <map id="dyno::WorldMotionAccessor" name="dyno::WorldMotionAccessor">
-<area shape="rect" id="node1" title=" " alt="" coords="648,39,851,64"/>
-<area shape="rect" id="node2" href="$classdyno_1_1WorldPoseAccessor.html" title=" " alt="" coords="271,7,459,32"/>
-<area shape="rect" id="node3" href="$classdyno_1_1Accessor.html" title=" " alt="" coords="5,5,216,31"/>
-<area shape="rect" id="node4" href="$classdyno_1_1GenericObjectCentricMap.html" title=" " alt="" coords="265,59,465,99"/>
-<area shape="rect" id="node5" title=" " alt="" coords="10,55,211,109"/>
+<area shape="rect" id="node1" title=" " alt="" coords="1277,41,1480,66"/>
+<area shape="rect" id="node2" href="$classdyno_1_1WorldPoseAccessor.html" title=" " alt="" coords="901,10,1089,35"/>
+<area shape="rect" id="node3" href="$classdyno_1_1Accessor.html" title=" " alt="" coords="635,7,845,33"/>
+<area shape="rect" id="node4" href="$structdyno_1_1SharedFormulationData.html" title="Data shared between a Formulation and its accessor." alt="" coords="279,7,495,33"/>
+<area shape="rect" id="node5" href="$structdyno_1_1FormulationHooks.html" title="Defines a set of input hooks to the formulation that allow communication to outside the formulation." alt="" coords="5,7,187,33"/>
+<area shape="rect" id="node6" href="$classdyno_1_1GenericObjectCentricMap.html" title=" " alt="" coords="895,61,1095,101"/>
+<area shape="rect" id="node7" title=" " alt="" coords="639,57,841,111"/>
 </map>

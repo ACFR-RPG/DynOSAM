@@ -210,7 +210,7 @@ class dyno::LandmarkNode&lt; MEASUREMENT &gt;</div><p>Landmark node representing
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="MapNodes_8hpp_source.html#l00613">613</a> of file <a class="el" href="MapNodes_8hpp_source.html">MapNodes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="MapNodes_8hpp_source.html#l00653">653</a> of file <a class="el" href="MapNodes_8hpp_source.html">MapNodes.hpp</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="ad0defdab901c59f7b7860d43befdcac6" name="ad0defdab901c59f7b7860d43befdcac6"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad0defdab901c59f7b7860d43befdcac6">&#9670;&#160;</a></span>Base</h2>
@@ -226,7 +226,7 @@ template&lt;typename MEASUREMENT &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="MapNodes_8hpp_source.html#l00615">615</a> of file <a class="el" href="MapNodes_8hpp_source.html">MapNodes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="MapNodes_8hpp_source.html#l00655">655</a> of file <a class="el" href="MapNodes_8hpp_source.html">MapNodes.hpp</a>.</p>
 
 </div>
 </div>
@@ -244,7 +244,7 @@ template&lt;typename MEASUREMENT &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="MapNodes_8hpp_source.html#l00619">619</a> of file <a class="el" href="MapNodes_8hpp_source.html">MapNodes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="MapNodes_8hpp_source.html#l00659">659</a> of file <a class="el" href="MapNodes_8hpp_source.html">MapNodes.hpp</a>.</p>
 
 </div>
 </div>
@@ -262,7 +262,7 @@ template&lt;typename MEASUREMENT &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="MapNodes_8hpp_source.html#l00616">616</a> of file <a class="el" href="MapNodes_8hpp_source.html">MapNodes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="MapNodes_8hpp_source.html#l00656">656</a> of file <a class="el" href="MapNodes_8hpp_source.html">MapNodes.hpp</a>.</p>
 
 </div>
 </div>
@@ -293,8 +293,8 @@ template&lt;typename MEASUREMENT &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="MapNodes_8hpp_source.html#l00622">622</a> of file <a class="el" href="MapNodes_8hpp_source.html">MapNodes.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  623</span>      : MapNodeBase&lt;MEASUREMENT&gt;(map) {}</div>
+<p class="definition">Definition at line <a class="el" href="MapNodes_8hpp_source.html#l00662">662</a> of file <a class="el" href="MapNodes_8hpp_source.html">MapNodes.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  663</span>      : MapNodeBase&lt;MEASUREMENT&gt;(map) {}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -363,26 +363,26 @@ template&lt;typename MEASUREMENT &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="MapNodes-inl_8hpp_source.html#l00151">151</a> of file <a class="el" href="MapNodes-inl_8hpp_source.html">MapNodes-inl.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  152</span>                                                                    {</div>
-<div class="line"><span class="lineno">  153</span>  <a class="code hl_variable" href="structdyno_1_1LandmarkNode.html#ae13681e16407df074ac6f540bfc0a484">frames_seen_</a>.insert(frame_node);</div>
-<div class="line"><span class="lineno">  154</span> </div>
-<div class="line"><span class="lineno">  155</span>  <span class="comment">// add measurement to map</span></div>
-<div class="line"><span class="lineno">  156</span>  <span class="comment">// first check that we dont already have a measurement at this frame</span></div>
-<div class="line"><span class="lineno">  157</span>  <span class="keywordflow">if</span> (<a class="code hl_variable" href="structdyno_1_1LandmarkNode.html#a4e87a939a74bb3f7c40d228ccf6d264a">measurements_</a>.exists(frame_node)) {</div>
-<div class="line"><span class="lineno">  158</span>    <span class="keywordflow">throw</span> DynosamException(<span class="stringliteral">&quot;Unable to add new measurement to landmark node &quot;</span> +</div>
-<div class="line"><span class="lineno">  159</span>                           std::to_string(this-&gt;<a class="code hl_function" href="structdyno_1_1LandmarkNode.html#a57635eaf2cf3857e349f6a7d20275b55">getId</a>()) + <span class="stringliteral">&quot; at frame &quot;</span> +</div>
-<div class="line"><span class="lineno">  160</span>                           std::to_string(frame_node-&gt;getId()) +</div>
-<div class="line"><span class="lineno">  161</span>                           <span class="stringliteral">&quot; as a measurement already exists at this frame!&quot;</span>);</div>
-<div class="line"><span class="lineno">  162</span>  }</div>
-<div class="line"><span class="lineno">  163</span> </div>
-<div class="line"><span class="lineno">  164</span>  <a class="code hl_variable" href="structdyno_1_1LandmarkNode.html#a4e87a939a74bb3f7c40d228ccf6d264a">measurements_</a>.insert2(frame_node, measurement);</div>
-<div class="line"><span class="lineno">  165</span> </div>
-<div class="line"><span class="lineno">  166</span>  CHECK_EQ(<a class="code hl_variable" href="structdyno_1_1LandmarkNode.html#ae13681e16407df074ac6f540bfc0a484">frames_seen_</a>.size(), <a class="code hl_variable" href="structdyno_1_1LandmarkNode.html#a4e87a939a74bb3f7c40d228ccf6d264a">measurements_</a>.size());</div>
-<div class="line"><span class="lineno">  167</span>}</div>
-<div class="ttc" id="astructdyno_1_1LandmarkNode_html_a4e87a939a74bb3f7c40d228ccf6d264a"><div class="ttname"><a href="structdyno_1_1LandmarkNode.html#a4e87a939a74bb3f7c40d228ccf6d264a">dyno::LandmarkNode::measurements_</a></div><div class="ttdeci">Measurements measurements_</div><div class="ttdef"><b>Definition:</b> <a href="MapNodes_8hpp_source.html#l00774">MapNodes.hpp:774</a></div></div>
-<div class="ttc" id="astructdyno_1_1LandmarkNode_html_a57635eaf2cf3857e349f6a7d20275b55"><div class="ttname"><a href="structdyno_1_1LandmarkNode.html#a57635eaf2cf3857e349f6a7d20275b55">dyno::LandmarkNode::getId</a></div><div class="ttdeci">int getId() const override</div><div class="ttdoc">Returns the tracklet_id.</div><div class="ttdef"><b>Definition:</b> <a href="MapNodes-inl_8hpp_source.html#l00131">MapNodes-inl.hpp:131</a></div></div>
-<div class="ttc" id="astructdyno_1_1LandmarkNode_html_ae13681e16407df074ac6f540bfc0a484"><div class="ttname"><a href="structdyno_1_1LandmarkNode.html#ae13681e16407df074ac6f540bfc0a484">dyno::LandmarkNode::frames_seen_</a></div><div class="ttdeci">FrameNodePtrSet&lt; MEASUREMENT &gt; frames_seen_</div><div class="ttdef"><b>Definition:</b> <a href="MapNodes_8hpp_source.html#l00773">MapNodes.hpp:773</a></div></div>
+<p class="definition">Definition at line <a class="el" href="MapNodes-inl_8hpp_source.html#l00139">139</a> of file <a class="el" href="MapNodes-inl_8hpp_source.html">MapNodes-inl.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  140</span>                                                                    {</div>
+<div class="line"><span class="lineno">  141</span>  <a class="code hl_variable" href="structdyno_1_1LandmarkNode.html#ae13681e16407df074ac6f540bfc0a484">frames_seen_</a>.insert(frame_node);</div>
+<div class="line"><span class="lineno">  142</span> </div>
+<div class="line"><span class="lineno">  143</span>  <span class="comment">// add measurement to map</span></div>
+<div class="line"><span class="lineno">  144</span>  <span class="comment">// first check that we dont already have a measurement at this frame</span></div>
+<div class="line"><span class="lineno">  145</span>  <span class="keywordflow">if</span> (<a class="code hl_variable" href="structdyno_1_1LandmarkNode.html#a4e87a939a74bb3f7c40d228ccf6d264a">measurements_</a>.exists(frame_node)) {</div>
+<div class="line"><span class="lineno">  146</span>    <span class="keywordflow">throw</span> DynosamException(<span class="stringliteral">&quot;Unable to add new measurement to landmark node &quot;</span> +</div>
+<div class="line"><span class="lineno">  147</span>                           std::to_string(this-&gt;<a class="code hl_function" href="structdyno_1_1LandmarkNode.html#a57635eaf2cf3857e349f6a7d20275b55">getId</a>()) + <span class="stringliteral">&quot; at frame &quot;</span> +</div>
+<div class="line"><span class="lineno">  148</span>                           std::to_string(frame_node-&gt;getId()) +</div>
+<div class="line"><span class="lineno">  149</span>                           <span class="stringliteral">&quot; as a measurement already exists at this frame!&quot;</span>);</div>
+<div class="line"><span class="lineno">  150</span>  }</div>
+<div class="line"><span class="lineno">  151</span> </div>
+<div class="line"><span class="lineno">  152</span>  <a class="code hl_variable" href="structdyno_1_1LandmarkNode.html#a4e87a939a74bb3f7c40d228ccf6d264a">measurements_</a>.insert2(frame_node, measurement);</div>
+<div class="line"><span class="lineno">  153</span> </div>
+<div class="line"><span class="lineno">  154</span>  CHECK_EQ(<a class="code hl_variable" href="structdyno_1_1LandmarkNode.html#ae13681e16407df074ac6f540bfc0a484">frames_seen_</a>.size(), <a class="code hl_variable" href="structdyno_1_1LandmarkNode.html#a4e87a939a74bb3f7c40d228ccf6d264a">measurements_</a>.size());</div>
+<div class="line"><span class="lineno">  155</span>}</div>
+<div class="ttc" id="astructdyno_1_1LandmarkNode_html_a4e87a939a74bb3f7c40d228ccf6d264a"><div class="ttname"><a href="structdyno_1_1LandmarkNode.html#a4e87a939a74bb3f7c40d228ccf6d264a">dyno::LandmarkNode::measurements_</a></div><div class="ttdeci">Measurements measurements_</div><div class="ttdef"><b>Definition:</b> <a href="MapNodes_8hpp_source.html#l00814">MapNodes.hpp:814</a></div></div>
+<div class="ttc" id="astructdyno_1_1LandmarkNode_html_a57635eaf2cf3857e349f6a7d20275b55"><div class="ttname"><a href="structdyno_1_1LandmarkNode.html#a57635eaf2cf3857e349f6a7d20275b55">dyno::LandmarkNode::getId</a></div><div class="ttdeci">int getId() const override</div><div class="ttdoc">Returns the tracklet_id.</div><div class="ttdef"><b>Definition:</b> <a href="MapNodes-inl_8hpp_source.html#l00119">MapNodes-inl.hpp:119</a></div></div>
+<div class="ttc" id="astructdyno_1_1LandmarkNode_html_ae13681e16407df074ac6f540bfc0a484"><div class="ttname"><a href="structdyno_1_1LandmarkNode.html#ae13681e16407df074ac6f540bfc0a484">dyno::LandmarkNode::frames_seen_</a></div><div class="ttdeci">FrameNodePtrSet&lt; MEASUREMENT &gt; frames_seen_</div><div class="ttdef"><b>Definition:</b> <a href="MapNodes_8hpp_source.html#l00813">MapNodes.hpp:813</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -414,11 +414,11 @@ template&lt;typename MEASUREMENT &gt; </div>
 
 <p>Implements <a class="el" href="classdyno_1_1MapNodeBase.html#a158aae18c171e72d6b184c96b5dbbb7f">dyno::MapNodeBase&lt; MEASUREMENT &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="MapNodes-inl_8hpp_source.html#l00131">131</a> of file <a class="el" href="MapNodes-inl_8hpp_source.html">MapNodes-inl.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  131</span>                                           {</div>
-<div class="line"><span class="lineno">  132</span>  <span class="keywordflow">return</span> (<span class="keywordtype">int</span>)<a class="code hl_variable" href="structdyno_1_1LandmarkNode.html#af3b168405e909f8f4a77876e458b5d65">tracklet_id</a>;</div>
-<div class="line"><span class="lineno">  133</span>}</div>
-<div class="ttc" id="astructdyno_1_1LandmarkNode_html_af3b168405e909f8f4a77876e458b5d65"><div class="ttname"><a href="structdyno_1_1LandmarkNode.html#af3b168405e909f8f4a77876e458b5d65">dyno::LandmarkNode::tracklet_id</a></div><div class="ttdeci">TrackletId tracklet_id</div><div class="ttdoc">Unique tracklet (i) of the landmark/.</div><div class="ttdef"><b>Definition:</b> <a href="MapNodes_8hpp_source.html#l00627">MapNodes.hpp:627</a></div></div>
+<p class="definition">Definition at line <a class="el" href="MapNodes-inl_8hpp_source.html#l00119">119</a> of file <a class="el" href="MapNodes-inl_8hpp_source.html">MapNodes-inl.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  119</span>                                           {</div>
+<div class="line"><span class="lineno">  120</span>  <span class="keywordflow">return</span> (<span class="keywordtype">int</span>)<a class="code hl_variable" href="structdyno_1_1LandmarkNode.html#af3b168405e909f8f4a77876e458b5d65">tracklet_id</a>;</div>
+<div class="line"><span class="lineno">  121</span>}</div>
+<div class="ttc" id="astructdyno_1_1LandmarkNode_html_af3b168405e909f8f4a77876e458b5d65"><div class="ttname"><a href="structdyno_1_1LandmarkNode.html#af3b168405e909f8f4a77876e458b5d65">dyno::LandmarkNode::tracklet_id</a></div><div class="ttdeci">TrackletId tracklet_id</div><div class="ttdoc">Unique tracklet (i) of the landmark/.</div><div class="ttdef"><b>Definition:</b> <a href="MapNodes_8hpp_source.html#l00667">MapNodes.hpp:667</a></div></div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="structdyno_1_1LandmarkNode.html#aede044b1cf9d513984b5d086dbb8bbbf">dyno::LandmarkNode&lt; MEASUREMENT &gt;::toString()</a>.</p>
 <div class="dynheader">
@@ -460,18 +460,18 @@ template&lt;typename MEASUREMENT &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>const MEASUREMENT&amp; </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="MapNodes-inl_8hpp_source.html#l00192">192</a> of file <a class="el" href="MapNodes-inl_8hpp_source.html">MapNodes-inl.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  193</span>                            {</div>
-<div class="line"><span class="lineno">  194</span>  <span class="keywordflow">if</span> (!<a class="code hl_function" href="structdyno_1_1LandmarkNode.html#a36e427a41eab263baa6bc7ef6387b3f9">seenAtFrame</a>(frame_id)) {</div>
-<div class="line"><span class="lineno">  195</span>    <span class="keywordflow">throw</span> DynosamException(<span class="stringliteral">&quot;Missing measurement in landmark node with id &quot;</span> +</div>
-<div class="line"><span class="lineno">  196</span>                           std::to_string(<a class="code hl_variable" href="structdyno_1_1LandmarkNode.html#af3b168405e909f8f4a77876e458b5d65">tracklet_id</a>) + <span class="stringliteral">&quot; at frame &quot;</span> +</div>
-<div class="line"><span class="lineno">  197</span>                           std::to_string(frame_id));</div>
-<div class="line"><span class="lineno">  198</span>  }</div>
-<div class="line"><span class="lineno">  199</span>  <span class="keywordflow">return</span> <a class="code hl_function" href="structdyno_1_1LandmarkNode.html#a338b2a94a84fa50991a444ef06bbd3a4">getMeasurement</a>(this-&gt;<a class="code hl_variable" href="classdyno_1_1MapNodeBase.html#ad6da03cc5dccc3b224cfe83110c96676">map_ptr_</a>-&gt;template getFrame(frame_id));</div>
-<div class="line"><span class="lineno">  200</span>}</div>
+<p class="definition">Definition at line <a class="el" href="MapNodes-inl_8hpp_source.html#l00180">180</a> of file <a class="el" href="MapNodes-inl_8hpp_source.html">MapNodes-inl.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  181</span>                            {</div>
+<div class="line"><span class="lineno">  182</span>  <span class="keywordflow">if</span> (!<a class="code hl_function" href="structdyno_1_1LandmarkNode.html#a36e427a41eab263baa6bc7ef6387b3f9">seenAtFrame</a>(frame_id)) {</div>
+<div class="line"><span class="lineno">  183</span>    <span class="keywordflow">throw</span> DynosamException(<span class="stringliteral">&quot;Missing measurement in landmark node with id &quot;</span> +</div>
+<div class="line"><span class="lineno">  184</span>                           std::to_string(<a class="code hl_variable" href="structdyno_1_1LandmarkNode.html#af3b168405e909f8f4a77876e458b5d65">tracklet_id</a>) + <span class="stringliteral">&quot; at frame &quot;</span> +</div>
+<div class="line"><span class="lineno">  185</span>                           std::to_string(frame_id));</div>
+<div class="line"><span class="lineno">  186</span>  }</div>
+<div class="line"><span class="lineno">  187</span>  <span class="keywordflow">return</span> <a class="code hl_function" href="structdyno_1_1LandmarkNode.html#a338b2a94a84fa50991a444ef06bbd3a4">getMeasurement</a>(this-&gt;<a class="code hl_variable" href="classdyno_1_1MapNodeBase.html#ad6da03cc5dccc3b224cfe83110c96676">map_ptr_</a>-&gt;template getFrame(frame_id));</div>
+<div class="line"><span class="lineno">  188</span>}</div>
 <div class="ttc" id="aclassdyno_1_1MapNodeBase_html_ad6da03cc5dccc3b224cfe83110c96676"><div class="ttname"><a href="classdyno_1_1MapNodeBase.html#ad6da03cc5dccc3b224cfe83110c96676">dyno::MapNodeBase::map_ptr_</a></div><div class="ttdeci">std::shared_ptr&lt; Map&lt; MEASUREMENT &gt; &gt; map_ptr_</div><div class="ttdef"><b>Definition:</b> <a href="MapNodes_8hpp_source.html#l00067">MapNodes.hpp:67</a></div></div>
-<div class="ttc" id="astructdyno_1_1LandmarkNode_html_a338b2a94a84fa50991a444ef06bbd3a4"><div class="ttname"><a href="structdyno_1_1LandmarkNode.html#a338b2a94a84fa50991a444ef06bbd3a4">dyno::LandmarkNode::getMeasurement</a></div><div class="ttdeci">const MEASUREMENT &amp; getMeasurement(FrameNodePtr&lt; MEASUREMENT &gt; frame_node) const</div><div class="ttdoc">Get the measurement at the requested frame node. Throws DynosamException if no measurement existd at ...</div><div class="ttdef"><b>Definition:</b> <a href="MapNodes-inl_8hpp_source.html#l00180">MapNodes-inl.hpp:180</a></div></div>
-<div class="ttc" id="astructdyno_1_1LandmarkNode_html_a36e427a41eab263baa6bc7ef6387b3f9"><div class="ttname"><a href="structdyno_1_1LandmarkNode.html#a36e427a41eab263baa6bc7ef6387b3f9">dyno::LandmarkNode::seenAtFrame</a></div><div class="ttdeci">bool seenAtFrame(FrameId frame_id) const</div><div class="ttdoc">True if the landmark was observed at the requested frame.</div><div class="ttdef"><b>Definition:</b> <a href="MapNodes-inl_8hpp_source.html#l00170">MapNodes-inl.hpp:170</a></div></div>
+<div class="ttc" id="astructdyno_1_1LandmarkNode_html_a338b2a94a84fa50991a444ef06bbd3a4"><div class="ttname"><a href="structdyno_1_1LandmarkNode.html#a338b2a94a84fa50991a444ef06bbd3a4">dyno::LandmarkNode::getMeasurement</a></div><div class="ttdeci">const MEASUREMENT &amp; getMeasurement(FrameNodePtr&lt; MEASUREMENT &gt; frame_node) const</div><div class="ttdoc">Get the measurement at the requested frame node. Throws DynosamException if no measurement existd at ...</div><div class="ttdef"><b>Definition:</b> <a href="MapNodes-inl_8hpp_source.html#l00168">MapNodes-inl.hpp:168</a></div></div>
+<div class="ttc" id="astructdyno_1_1LandmarkNode_html_a36e427a41eab263baa6bc7ef6387b3f9"><div class="ttname"><a href="structdyno_1_1LandmarkNode.html#a36e427a41eab263baa6bc7ef6387b3f9">dyno::LandmarkNode::seenAtFrame</a></div><div class="ttdeci">bool seenAtFrame(FrameId frame_id) const</div><div class="ttdoc">True if the landmark was observed at the requested frame.</div><div class="ttdef"><b>Definition:</b> <a href="MapNodes-inl_8hpp_source.html#l00158">MapNodes-inl.hpp:158</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -502,17 +502,17 @@ template&lt;typename MEASUREMENT &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>const MEASUREMENT&amp; </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="MapNodes-inl_8hpp_source.html#l00180">180</a> of file <a class="el" href="MapNodes-inl_8hpp_source.html">MapNodes-inl.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  181</span>                                                {</div>
-<div class="line"><span class="lineno">  182</span>  CHECK_NOTNULL(frame_node);</div>
-<div class="line"><span class="lineno">  183</span>  <span class="keywordflow">if</span> (!<a class="code hl_function" href="structdyno_1_1LandmarkNode.html#a4757d1b3711f197e460ea59725b8a564">hasMeasurement</a>(frame_node-&gt;frame_id)) {</div>
-<div class="line"><span class="lineno">  184</span>    <span class="keywordflow">throw</span> DynosamException(<span class="stringliteral">&quot;Missing measurement in landmark node with id &quot;</span> +</div>
-<div class="line"><span class="lineno">  185</span>                           std::to_string(<a class="code hl_variable" href="structdyno_1_1LandmarkNode.html#af3b168405e909f8f4a77876e458b5d65">tracklet_id</a>) + <span class="stringliteral">&quot; at frame &quot;</span> +</div>
-<div class="line"><span class="lineno">  186</span>                           std::to_string(frame_node-&gt;frame_id));</div>
-<div class="line"><span class="lineno">  187</span>  }</div>
-<div class="line"><span class="lineno">  188</span>  <span class="keywordflow">return</span> <a class="code hl_variable" href="structdyno_1_1LandmarkNode.html#a4e87a939a74bb3f7c40d228ccf6d264a">measurements_</a>.at(frame_node);</div>
-<div class="line"><span class="lineno">  189</span>}</div>
-<div class="ttc" id="astructdyno_1_1LandmarkNode_html_a4757d1b3711f197e460ea59725b8a564"><div class="ttname"><a href="structdyno_1_1LandmarkNode.html#a4757d1b3711f197e460ea59725b8a564">dyno::LandmarkNode::hasMeasurement</a></div><div class="ttdeci">bool hasMeasurement(FrameId frame_id) const</div><div class="ttdoc">True if the landmark was a measurement at the requested frame. Should be true if seenAtFrame() is als...</div><div class="ttdef"><b>Definition:</b> <a href="MapNodes-inl_8hpp_source.html#l00175">MapNodes-inl.hpp:175</a></div></div>
+<p class="definition">Definition at line <a class="el" href="MapNodes-inl_8hpp_source.html#l00168">168</a> of file <a class="el" href="MapNodes-inl_8hpp_source.html">MapNodes-inl.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  169</span>                                                {</div>
+<div class="line"><span class="lineno">  170</span>  CHECK_NOTNULL(frame_node);</div>
+<div class="line"><span class="lineno">  171</span>  <span class="keywordflow">if</span> (!<a class="code hl_function" href="structdyno_1_1LandmarkNode.html#a4757d1b3711f197e460ea59725b8a564">hasMeasurement</a>(frame_node-&gt;frame_id)) {</div>
+<div class="line"><span class="lineno">  172</span>    <span class="keywordflow">throw</span> DynosamException(<span class="stringliteral">&quot;Missing measurement in landmark node with id &quot;</span> +</div>
+<div class="line"><span class="lineno">  173</span>                           std::to_string(<a class="code hl_variable" href="structdyno_1_1LandmarkNode.html#af3b168405e909f8f4a77876e458b5d65">tracklet_id</a>) + <span class="stringliteral">&quot; at frame &quot;</span> +</div>
+<div class="line"><span class="lineno">  174</span>                           std::to_string(frame_node-&gt;frame_id));</div>
+<div class="line"><span class="lineno">  175</span>  }</div>
+<div class="line"><span class="lineno">  176</span>  <span class="keywordflow">return</span> <a class="code hl_variable" href="structdyno_1_1LandmarkNode.html#a4e87a939a74bb3f7c40d228ccf6d264a">measurements_</a>.at(frame_node);</div>
+<div class="line"><span class="lineno">  177</span>}</div>
+<div class="ttc" id="astructdyno_1_1LandmarkNode_html_a4757d1b3711f197e460ea59725b8a564"><div class="ttname"><a href="structdyno_1_1LandmarkNode.html#a4757d1b3711f197e460ea59725b8a564">dyno::LandmarkNode::hasMeasurement</a></div><div class="ttdeci">bool hasMeasurement(FrameId frame_id) const</div><div class="ttdoc">True if the landmark was a measurement at the requested frame. Should be true if seenAtFrame() is als...</div><div class="ttdef"><b>Definition:</b> <a href="MapNodes-inl_8hpp_source.html#l00163">MapNodes-inl.hpp:163</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -544,8 +544,8 @@ template&lt;typename MEASUREMENT &gt; </div>
 <p>Get all the measurements for this landmark. </p>
 <dl class="section return"><dt>Returns</dt><dd>const Measurements&amp; </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="MapNodes_8hpp_source.html#l00692">692</a> of file <a class="el" href="MapNodes_8hpp_source.html">MapNodes.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  692</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="structdyno_1_1LandmarkNode.html#a4e87a939a74bb3f7c40d228ccf6d264a">measurements_</a>; }</div>
+<p class="definition">Definition at line <a class="el" href="MapNodes_8hpp_source.html#l00732">732</a> of file <a class="el" href="MapNodes_8hpp_source.html">MapNodes.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  732</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="structdyno_1_1LandmarkNode.html#a4e87a939a74bb3f7c40d228ccf6d264a">measurements_</a>; }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="structdyno_1_1LandmarkNode.html#a4e87a939a74bb3f7c40d228ccf6d264a">dyno::LandmarkNode&lt; MEASUREMENT &gt;::measurements_</a>.</p>
 
@@ -565,11 +565,11 @@ template&lt;typename MEASUREMENT &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="MapNodes-inl_8hpp_source.html#l00136">136</a> of file <a class="el" href="MapNodes-inl_8hpp_source.html">MapNodes-inl.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  136</span>                                                      {</div>
-<div class="line"><span class="lineno">  137</span>  <span class="keywordflow">return</span> <a class="code hl_variable" href="structdyno_1_1LandmarkNode.html#a5935fb10d6c15b880a3fdbfb9d985405">object_id</a>;</div>
-<div class="line"><span class="lineno">  138</span>}</div>
-<div class="ttc" id="astructdyno_1_1LandmarkNode_html_a5935fb10d6c15b880a3fdbfb9d985405"><div class="ttname"><a href="structdyno_1_1LandmarkNode.html#a5935fb10d6c15b880a3fdbfb9d985405">dyno::LandmarkNode::object_id</a></div><div class="ttdeci">ObjectId object_id</div><div class="ttdoc">Object label (j) of the landmark.</div><div class="ttdef"><b>Definition:</b> <a href="MapNodes_8hpp_source.html#l00629">MapNodes.hpp:629</a></div></div>
+<p class="definition">Definition at line <a class="el" href="MapNodes-inl_8hpp_source.html#l00124">124</a> of file <a class="el" href="MapNodes-inl_8hpp_source.html">MapNodes-inl.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  124</span>                                                      {</div>
+<div class="line"><span class="lineno">  125</span>  <span class="keywordflow">return</span> <a class="code hl_variable" href="structdyno_1_1LandmarkNode.html#a5935fb10d6c15b880a3fdbfb9d985405">object_id</a>;</div>
+<div class="line"><span class="lineno">  126</span>}</div>
+<div class="ttc" id="astructdyno_1_1LandmarkNode_html_a5935fb10d6c15b880a3fdbfb9d985405"><div class="ttname"><a href="structdyno_1_1LandmarkNode.html#a5935fb10d6c15b880a3fdbfb9d985405">dyno::LandmarkNode::object_id</a></div><div class="ttdeci">ObjectId object_id</div><div class="ttdoc">Object label (j) of the landmark.</div><div class="ttdef"><b>Definition:</b> <a href="MapNodes_8hpp_source.html#l00669">MapNodes.hpp:669</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -582,10 +582,7 @@ template&lt;typename MEASUREMENT &gt; </div>
 template&lt;typename MEASUREMENT &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespacedyno.html#a37e4e90d9f19c2d9db8b7e2be763af2e">FrameIds</a> <a class="el" href="structdyno_1_1LandmarkNode.html">dyno::LandmarkNode</a>&lt; MEASUREMENT &gt;::getSeenFrameIds </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
+          <td class="memname"><a class="el" href="namespacedyno.html#a37e4e90d9f19c2d9db8b7e2be763af2e">FrameIds</a> <a class="el" href="structdyno_1_1LandmarkNode.html">dyno::LandmarkNode</a>&lt; MEASUREMENT &gt;::getSeenFrameIds</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -593,6 +590,12 @@ template&lt;typename MEASUREMENT &gt; </div>
 <p>Get all the frame id's this landmark was observed in. </p>
 <dl class="section return"><dt>Returns</dt><dd>FrameIds </dd></dl>
 
+<p class="definition">Definition at line <a class="el" href="MapNodes-inl_8hpp_source.html#l00217">217</a> of file <a class="el" href="MapNodes-inl_8hpp_source.html">MapNodes-inl.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  217</span>                                                          {</div>
+<div class="line"><span class="lineno">  218</span>  <span class="keywordflow">return</span> <a class="code hl_function" href="structdyno_1_1LandmarkNode.html#a660a52c7a2a27f7a6a6096aec4af5ee6">getSeenFrames</a>().template collectIds&lt;FrameId&gt;();</div>
+<div class="line"><span class="lineno">  219</span>}</div>
+<div class="ttc" id="astructdyno_1_1LandmarkNode_html_a660a52c7a2a27f7a6a6096aec4af5ee6"><div class="ttname"><a href="structdyno_1_1LandmarkNode.html#a660a52c7a2a27f7a6a6096aec4af5ee6">dyno::LandmarkNode::getSeenFrames</a></div><div class="ttdeci">const FrameNodePtrSet&lt; MEASUREMENT &gt; &amp; getSeenFrames() const</div><div class="ttdoc">Get all the frame nodes this landmark was observed in.</div><div class="ttdef"><b>Definition:</b> <a href="MapNodes_8hpp_source.html#l00716">MapNodes.hpp:716</a></div></div>
+</div><!-- fragment -->
 </div>
 </div>
 <a id="a660a52c7a2a27f7a6a6096aec4af5ee6" name="a660a52c7a2a27f7a6a6096aec4af5ee6"></a>
@@ -623,10 +626,10 @@ template&lt;typename MEASUREMENT &gt; </div>
 <p>Get all the frame nodes this landmark was observed in. </p>
 <dl class="section return"><dt>Returns</dt><dd>const FrameNodePtrSet&lt;MEASUREMENT&gt;&amp; </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="MapNodes_8hpp_source.html#l00676">676</a> of file <a class="el" href="MapNodes_8hpp_source.html">MapNodes.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  676</span>                                                                   {</div>
-<div class="line"><span class="lineno">  677</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="structdyno_1_1LandmarkNode.html#ae13681e16407df074ac6f540bfc0a484">frames_seen_</a>;</div>
-<div class="line"><span class="lineno">  678</span>  }</div>
+<p class="definition">Definition at line <a class="el" href="MapNodes_8hpp_source.html#l00716">716</a> of file <a class="el" href="MapNodes_8hpp_source.html">MapNodes.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  716</span>                                                                   {</div>
+<div class="line"><span class="lineno">  717</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="structdyno_1_1LandmarkNode.html#ae13681e16407df074ac6f540bfc0a484">frames_seen_</a>;</div>
+<div class="line"><span class="lineno">  718</span>  }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="structdyno_1_1LandmarkNode.html#ae13681e16407df074ac6f540bfc0a484">dyno::LandmarkNode&lt; MEASUREMENT &gt;::frames_seen_</a>.</p>
 
@@ -661,10 +664,10 @@ template&lt;typename MEASUREMENT &gt; </div>
 <dd>
 false </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="MapNodes-inl_8hpp_source.html#l00175">175</a> of file <a class="el" href="MapNodes-inl_8hpp_source.html">MapNodes-inl.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  175</span>                                                                     {</div>
-<div class="line"><span class="lineno">  176</span>  <span class="keywordflow">return</span> this-&gt;<a class="code hl_function" href="structdyno_1_1LandmarkNode.html#a36e427a41eab263baa6bc7ef6387b3f9">seenAtFrame</a>(frame_id);</div>
-<div class="line"><span class="lineno">  177</span>}</div>
+<p class="definition">Definition at line <a class="el" href="MapNodes-inl_8hpp_source.html#l00163">163</a> of file <a class="el" href="MapNodes-inl_8hpp_source.html">MapNodes-inl.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  163</span>                                                                     {</div>
+<div class="line"><span class="lineno">  164</span>  <span class="keywordflow">return</span> this-&gt;<a class="code hl_function" href="structdyno_1_1LandmarkNode.html#a36e427a41eab263baa6bc7ef6387b3f9">seenAtFrame</a>(frame_id);</div>
+<div class="line"><span class="lineno">  165</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -688,11 +691,11 @@ template&lt;typename MEASUREMENT &gt; </div>
 <dd>
 false </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="MapNodes-inl_8hpp_source.html#l00141">141</a> of file <a class="el" href="MapNodes-inl_8hpp_source.html">MapNodes-inl.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  141</span>                                               {</div>
-<div class="line"><span class="lineno">  142</span>  <span class="keywordflow">return</span> <a class="code hl_variable" href="structdyno_1_1LandmarkNode.html#a5935fb10d6c15b880a3fdbfb9d985405">object_id</a> == <a class="code hl_variable" href="namespacedyno.html#ae78915ea0afc5025dafb398829f15ba3">background_label</a>;</div>
-<div class="line"><span class="lineno">  143</span>}</div>
-<div class="ttc" id="anamespacedyno_html_ae78915ea0afc5025dafb398829f15ba3"><div class="ttname"><a href="namespacedyno.html#ae78915ea0afc5025dafb398829f15ba3">dyno::background_label</a></div><div class="ttdeci">static constexpr ObjectId background_label</div><div class="ttdoc">Expected label for the background in a semantic or motion mask.</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00137">Types.hpp:137</a></div></div>
+<p class="definition">Definition at line <a class="el" href="MapNodes-inl_8hpp_source.html#l00129">129</a> of file <a class="el" href="MapNodes-inl_8hpp_source.html">MapNodes-inl.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  129</span>                                               {</div>
+<div class="line"><span class="lineno">  130</span>  <span class="keywordflow">return</span> <a class="code hl_variable" href="structdyno_1_1LandmarkNode.html#a5935fb10d6c15b880a3fdbfb9d985405">object_id</a> == <a class="code hl_variable" href="namespacedyno.html#ae78915ea0afc5025dafb398829f15ba3">background_label</a>;</div>
+<div class="line"><span class="lineno">  131</span>}</div>
+<div class="ttc" id="anamespacedyno_html_ae78915ea0afc5025dafb398829f15ba3"><div class="ttname"><a href="namespacedyno.html#ae78915ea0afc5025dafb398829f15ba3">dyno::background_label</a></div><div class="ttdeci">static constexpr ObjectId background_label</div><div class="ttdoc">Expected label for the background in a semantic or motion mask.</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00187">Types.hpp:187</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="namespacedyno.html#ae78915ea0afc5025dafb398829f15ba3">dyno::background_label</a>.</p>
 
@@ -737,11 +740,11 @@ template&lt;typename MEASUREMENT &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>gtsam::Key </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="MapNodes-inl_8hpp_source.html#l00213">213</a> of file <a class="el" href="MapNodes-inl_8hpp_source.html">MapNodes-inl.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  213</span>                                                                         {</div>
-<div class="line"><span class="lineno">  214</span>  <span class="keywordflow">return</span> (gtsam::Key)<a class="code hl_function" href="structdyno_1_1LandmarkNode.html#a7862e84d9a6ffcfd4a05e8e8b844a8a3">makeDynamicSymbol</a>(frame_id);</div>
-<div class="line"><span class="lineno">  215</span>}</div>
-<div class="ttc" id="astructdyno_1_1LandmarkNode_html_a7862e84d9a6ffcfd4a05e8e8b844a8a3"><div class="ttname"><a href="structdyno_1_1LandmarkNode.html#a7862e84d9a6ffcfd4a05e8e8b844a8a3">dyno::LandmarkNode::makeDynamicSymbol</a></div><div class="ttdeci">DynamicPointSymbol makeDynamicSymbol(FrameId frame_id) const</div><div class="ttdoc">Construcs a dynamic landmark symbol for this landmark. The frame id and tracklet id will be used to c...</div><div class="ttdef"><b>Definition:</b> <a href="MapNodes-inl_8hpp_source.html#l00218">MapNodes-inl.hpp:218</a></div></div>
+<p class="definition">Definition at line <a class="el" href="MapNodes-inl_8hpp_source.html#l00201">201</a> of file <a class="el" href="MapNodes-inl_8hpp_source.html">MapNodes-inl.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  201</span>                                                                         {</div>
+<div class="line"><span class="lineno">  202</span>  <span class="keywordflow">return</span> (gtsam::Key)<a class="code hl_function" href="structdyno_1_1LandmarkNode.html#a7862e84d9a6ffcfd4a05e8e8b844a8a3">makeDynamicSymbol</a>(frame_id);</div>
+<div class="line"><span class="lineno">  203</span>}</div>
+<div class="ttc" id="astructdyno_1_1LandmarkNode_html_a7862e84d9a6ffcfd4a05e8e8b844a8a3"><div class="ttname"><a href="structdyno_1_1LandmarkNode.html#a7862e84d9a6ffcfd4a05e8e8b844a8a3">dyno::LandmarkNode::makeDynamicSymbol</a></div><div class="ttdeci">DynamicPointSymbol makeDynamicSymbol(FrameId frame_id) const</div><div class="ttdoc">Construcs a dynamic landmark symbol for this landmark. The frame id and tracklet id will be used to c...</div><div class="ttdef"><b>Definition:</b> <a href="MapNodes-inl_8hpp_source.html#l00206">MapNodes-inl.hpp:206</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -778,17 +781,17 @@ template&lt;typename MEASUREMENT &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>gtsam::Key <a class="el" href="classdyno_1_1DynamicPointSymbol.html">DynamicPointSymbol</a> </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="MapNodes-inl_8hpp_source.html#l00218">218</a> of file <a class="el" href="MapNodes-inl_8hpp_source.html">MapNodes-inl.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  219</span>                            {</div>
-<div class="line"><span class="lineno">  220</span>  <span class="keyword">const</span> <span class="keyword">auto</span> key = <a class="code hl_function" href="namespacedyno.html#abd0ce4d0c7ed8fc398cc515654019802">DynamicLandmarkSymbol</a>(frame_id, this-&gt;<a class="code hl_variable" href="structdyno_1_1LandmarkNode.html#af3b168405e909f8f4a77876e458b5d65">tracklet_id</a>);</div>
-<div class="line"><span class="lineno">  221</span>  <span class="keywordflow">if</span> (this-&gt;<a class="code hl_function" href="structdyno_1_1LandmarkNode.html#a1e5afbaff6751716bf866e93c8d8fafa">isStatic</a>()) {</div>
-<div class="line"><span class="lineno">  222</span>    <span class="keywordflow">throw</span> InvalidLandmarkQuery(</div>
-<div class="line"><span class="lineno">  223</span>        key, <span class="stringliteral">&quot;Dynamic estimate requested but landmark is static!&quot;</span>);</div>
-<div class="line"><span class="lineno">  224</span>  }</div>
-<div class="line"><span class="lineno">  225</span>  <span class="keywordflow">return</span> key;</div>
-<div class="line"><span class="lineno">  226</span>}</div>
-<div class="ttc" id="anamespacedyno_html_abd0ce4d0c7ed8fc398cc515654019802"><div class="ttname"><a href="namespacedyno.html#abd0ce4d0c7ed8fc398cc515654019802">dyno::DynamicLandmarkSymbol</a></div><div class="ttdeci">DynamicPointSymbol DynamicLandmarkSymbol(FrameId frame_id, TrackletId tracklet_id)</div><div class="ttdef"><b>Definition:</b> <a href="BackendDefinitions_8hpp_source.html#l00076">BackendDefinitions.hpp:76</a></div></div>
-<div class="ttc" id="astructdyno_1_1LandmarkNode_html_a1e5afbaff6751716bf866e93c8d8fafa"><div class="ttname"><a href="structdyno_1_1LandmarkNode.html#a1e5afbaff6751716bf866e93c8d8fafa">dyno::LandmarkNode::isStatic</a></div><div class="ttdeci">bool isStatic() const</div><div class="ttdoc">Returns true if the landmark is static.</div><div class="ttdef"><b>Definition:</b> <a href="MapNodes-inl_8hpp_source.html#l00141">MapNodes-inl.hpp:141</a></div></div>
+<p class="definition">Definition at line <a class="el" href="MapNodes-inl_8hpp_source.html#l00206">206</a> of file <a class="el" href="MapNodes-inl_8hpp_source.html">MapNodes-inl.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  207</span>                            {</div>
+<div class="line"><span class="lineno">  208</span>  <span class="keyword">const</span> <span class="keyword">auto</span> key = <a class="code hl_function" href="namespacedyno.html#abd0ce4d0c7ed8fc398cc515654019802">DynamicLandmarkSymbol</a>(frame_id, this-&gt;<a class="code hl_variable" href="structdyno_1_1LandmarkNode.html#af3b168405e909f8f4a77876e458b5d65">tracklet_id</a>);</div>
+<div class="line"><span class="lineno">  209</span>  <span class="keywordflow">if</span> (this-&gt;<a class="code hl_function" href="structdyno_1_1LandmarkNode.html#a1e5afbaff6751716bf866e93c8d8fafa">isStatic</a>()) {</div>
+<div class="line"><span class="lineno">  210</span>    <span class="keywordflow">throw</span> InvalidLandmarkQuery(</div>
+<div class="line"><span class="lineno">  211</span>        key, <span class="stringliteral">&quot;Dynamic estimate requested but landmark is static!&quot;</span>);</div>
+<div class="line"><span class="lineno">  212</span>  }</div>
+<div class="line"><span class="lineno">  213</span>  <span class="keywordflow">return</span> key;</div>
+<div class="line"><span class="lineno">  214</span>}</div>
+<div class="ttc" id="anamespacedyno_html_abd0ce4d0c7ed8fc398cc515654019802"><div class="ttname"><a href="namespacedyno.html#abd0ce4d0c7ed8fc398cc515654019802">dyno::DynamicLandmarkSymbol</a></div><div class="ttdeci">DynamicPointSymbol DynamicLandmarkSymbol(FrameId frame_id, TrackletId tracklet_id)</div><div class="ttdef"><b>Definition:</b> <a href="BackendDefinitions_8hpp_source.html#l00078">BackendDefinitions.hpp:78</a></div></div>
+<div class="ttc" id="astructdyno_1_1LandmarkNode_html_a1e5afbaff6751716bf866e93c8d8fafa"><div class="ttname"><a href="structdyno_1_1LandmarkNode.html#a1e5afbaff6751716bf866e93c8d8fafa">dyno::LandmarkNode::isStatic</a></div><div class="ttdeci">bool isStatic() const</div><div class="ttdoc">Returns true if the landmark is static.</div><div class="ttdef"><b>Definition:</b> <a href="MapNodes-inl_8hpp_source.html#l00129">MapNodes-inl.hpp:129</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="namespacedyno.html#abd0ce4d0c7ed8fc398cc515654019802">dyno::DynamicLandmarkSymbol()</a>.</p>
 <div class="dynheader">
@@ -826,16 +829,16 @@ template&lt;typename MEASUREMENT &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>gtsam::Key </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="MapNodes-inl_8hpp_source.html#l00203">203</a> of file <a class="el" href="MapNodes-inl_8hpp_source.html">MapNodes-inl.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  203</span>                                                        {</div>
-<div class="line"><span class="lineno">  204</span>  <span class="keyword">const</span> <span class="keyword">auto</span> key = <a class="code hl_function" href="namespacedyno.html#a3809c2afbe3aa5963cf49dc945fb8dc6">StaticLandmarkSymbol</a>(this-&gt;<a class="code hl_variable" href="structdyno_1_1LandmarkNode.html#af3b168405e909f8f4a77876e458b5d65">tracklet_id</a>);</div>
-<div class="line"><span class="lineno">  205</span>  <span class="keywordflow">if</span> (!this-&gt;<a class="code hl_function" href="structdyno_1_1LandmarkNode.html#a1e5afbaff6751716bf866e93c8d8fafa">isStatic</a>()) {</div>
-<div class="line"><span class="lineno">  206</span>    <span class="keywordflow">throw</span> InvalidLandmarkQuery(</div>
-<div class="line"><span class="lineno">  207</span>        key, <span class="stringliteral">&quot;Static estimate requested but landmark is dynamic!&quot;</span>);</div>
-<div class="line"><span class="lineno">  208</span>  }</div>
-<div class="line"><span class="lineno">  209</span>  <span class="keywordflow">return</span> key;</div>
-<div class="line"><span class="lineno">  210</span>}</div>
-<div class="ttc" id="anamespacedyno_html_a3809c2afbe3aa5963cf49dc945fb8dc6"><div class="ttname"><a href="namespacedyno.html#a3809c2afbe3aa5963cf49dc945fb8dc6">dyno::StaticLandmarkSymbol</a></div><div class="ttdeci">gtsam::Symbol StaticLandmarkSymbol(TrackletId tracklet_id)</div><div class="ttdef"><b>Definition:</b> <a href="BackendDefinitions_8hpp_source.html#l00073">BackendDefinitions.hpp:73</a></div></div>
+<p class="definition">Definition at line <a class="el" href="MapNodes-inl_8hpp_source.html#l00191">191</a> of file <a class="el" href="MapNodes-inl_8hpp_source.html">MapNodes-inl.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  191</span>                                                        {</div>
+<div class="line"><span class="lineno">  192</span>  <span class="keyword">const</span> <span class="keyword">auto</span> key = <a class="code hl_function" href="namespacedyno.html#a3809c2afbe3aa5963cf49dc945fb8dc6">StaticLandmarkSymbol</a>(this-&gt;<a class="code hl_variable" href="structdyno_1_1LandmarkNode.html#af3b168405e909f8f4a77876e458b5d65">tracklet_id</a>);</div>
+<div class="line"><span class="lineno">  193</span>  <span class="keywordflow">if</span> (!this-&gt;<a class="code hl_function" href="structdyno_1_1LandmarkNode.html#a1e5afbaff6751716bf866e93c8d8fafa">isStatic</a>()) {</div>
+<div class="line"><span class="lineno">  194</span>    <span class="keywordflow">throw</span> InvalidLandmarkQuery(</div>
+<div class="line"><span class="lineno">  195</span>        key, <span class="stringliteral">&quot;Static estimate requested but landmark is dynamic!&quot;</span>);</div>
+<div class="line"><span class="lineno">  196</span>  }</div>
+<div class="line"><span class="lineno">  197</span>  <span class="keywordflow">return</span> key;</div>
+<div class="line"><span class="lineno">  198</span>}</div>
+<div class="ttc" id="anamespacedyno_html_a3809c2afbe3aa5963cf49dc945fb8dc6"><div class="ttname"><a href="namespacedyno.html#a3809c2afbe3aa5963cf49dc945fb8dc6">dyno::StaticLandmarkSymbol</a></div><div class="ttdeci">gtsam::Symbol StaticLandmarkSymbol(TrackletId tracklet_id)</div><div class="ttdef"><b>Definition:</b> <a href="BackendDefinitions_8hpp_source.html#l00075">BackendDefinitions.hpp:75</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="namespacedyno.html#a3809c2afbe3aa5963cf49dc945fb8dc6">dyno::StaticLandmarkSymbol()</a>.</p>
 <div class="dynheader">
@@ -867,10 +870,10 @@ template&lt;typename MEASUREMENT &gt; </div>
 <p>Number of observations of this landmark. </p>
 <dl class="section return"><dt>Returns</dt><dd>size_t </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="MapNodes-inl_8hpp_source.html#l00146">146</a> of file <a class="el" href="MapNodes-inl_8hpp_source.html">MapNodes-inl.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  146</span>                                                        {</div>
-<div class="line"><span class="lineno">  147</span>  <span class="keywordflow">return</span> <a class="code hl_variable" href="structdyno_1_1LandmarkNode.html#ae13681e16407df074ac6f540bfc0a484">frames_seen_</a>.size();</div>
-<div class="line"><span class="lineno">  148</span>}</div>
+<p class="definition">Definition at line <a class="el" href="MapNodes-inl_8hpp_source.html#l00134">134</a> of file <a class="el" href="MapNodes-inl_8hpp_source.html">MapNodes-inl.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  134</span>                                                        {</div>
+<div class="line"><span class="lineno">  135</span>  <span class="keywordflow">return</span> <a class="code hl_variable" href="structdyno_1_1LandmarkNode.html#ae13681e16407df074ac6f540bfc0a484">frames_seen_</a>.size();</div>
+<div class="line"><span class="lineno">  136</span>}</div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="structdyno_1_1LandmarkNode.html#aede044b1cf9d513984b5d086dbb8bbbf">dyno::LandmarkNode&lt; MEASUREMENT &gt;::toString()</a>.</p>
 <div class="dynheader">
@@ -914,10 +917,10 @@ template&lt;typename MEASUREMENT &gt; </div>
 <dd>
 false </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="MapNodes-inl_8hpp_source.html#l00170">170</a> of file <a class="el" href="MapNodes-inl_8hpp_source.html">MapNodes-inl.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  170</span>                                                                  {</div>
-<div class="line"><span class="lineno">  171</span>  <span class="keywordflow">return</span> <a class="code hl_variable" href="structdyno_1_1LandmarkNode.html#ae13681e16407df074ac6f540bfc0a484">frames_seen_</a>.exists(frame_id);</div>
-<div class="line"><span class="lineno">  172</span>}</div>
+<p class="definition">Definition at line <a class="el" href="MapNodes-inl_8hpp_source.html#l00158">158</a> of file <a class="el" href="MapNodes-inl_8hpp_source.html">MapNodes-inl.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  158</span>                                                                  {</div>
+<div class="line"><span class="lineno">  159</span>  <span class="keywordflow">return</span> <a class="code hl_variable" href="structdyno_1_1LandmarkNode.html#ae13681e16407df074ac6f540bfc0a484">frames_seen_</a>.exists(frame_id);</div>
+<div class="line"><span class="lineno">  160</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -948,20 +951,20 @@ template&lt;typename MEASUREMENT &gt; </div>
 
 <p>Implements <a class="el" href="classdyno_1_1MapNodeBase.html#abb90b8542b83bf6ea91140a38345ab9b">dyno::MapNodeBase&lt; MEASUREMENT &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="MapNodes_8hpp_source.html#l00638">638</a> of file <a class="el" href="MapNodes_8hpp_source.html">MapNodes.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  638</span>                                      {</div>
-<div class="line"><span class="lineno">  639</span>    std::stringstream ss;</div>
-<div class="line"><span class="lineno">  640</span>    <span class="keywordflow">if</span> (<a class="code hl_function" href="structdyno_1_1LandmarkNode.html#a1e5afbaff6751716bf866e93c8d8fafa">isStatic</a>()) {</div>
-<div class="line"><span class="lineno">  641</span>      ss &lt;&lt; <span class="stringliteral">&quot;Static point: &quot;</span>;</div>
-<div class="line"><span class="lineno">  642</span>    } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  643</span>      ss &lt;&lt; <span class="stringliteral">&quot;Dynamic point (&quot;</span> &lt;&lt; <a class="code hl_variable" href="structdyno_1_1LandmarkNode.html#a5935fb10d6c15b880a3fdbfb9d985405">object_id</a> &lt;&lt; <span class="stringliteral">&quot;): &quot;</span>;</div>
-<div class="line"><span class="lineno">  644</span>    }</div>
-<div class="line"><span class="lineno">  645</span>    <span class="comment">// tracklet ID</span></div>
-<div class="line"><span class="lineno">  646</span>    ss &lt;&lt; <a class="code hl_function" href="structdyno_1_1LandmarkNode.html#a57635eaf2cf3857e349f6a7d20275b55">getId</a>() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
-<div class="line"><span class="lineno">  647</span>    ss &lt;&lt; <span class="stringliteral">&quot;Num obs: &quot;</span> &lt;&lt; <a class="code hl_function" href="structdyno_1_1LandmarkNode.html#a4179bffe867942d314c711a20338446d">numObservations</a>();</div>
-<div class="line"><span class="lineno">  648</span>    <span class="keywordflow">return</span> ss.str();</div>
-<div class="line"><span class="lineno">  649</span>  }</div>
-<div class="ttc" id="astructdyno_1_1LandmarkNode_html_a4179bffe867942d314c711a20338446d"><div class="ttname"><a href="structdyno_1_1LandmarkNode.html#a4179bffe867942d314c711a20338446d">dyno::LandmarkNode::numObservations</a></div><div class="ttdeci">size_t numObservations() const</div><div class="ttdoc">Number of observations of this landmark.</div><div class="ttdef"><b>Definition:</b> <a href="MapNodes-inl_8hpp_source.html#l00146">MapNodes-inl.hpp:146</a></div></div>
+<p class="definition">Definition at line <a class="el" href="MapNodes_8hpp_source.html#l00678">678</a> of file <a class="el" href="MapNodes_8hpp_source.html">MapNodes.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  678</span>                                      {</div>
+<div class="line"><span class="lineno">  679</span>    std::stringstream ss;</div>
+<div class="line"><span class="lineno">  680</span>    <span class="keywordflow">if</span> (<a class="code hl_function" href="structdyno_1_1LandmarkNode.html#a1e5afbaff6751716bf866e93c8d8fafa">isStatic</a>()) {</div>
+<div class="line"><span class="lineno">  681</span>      ss &lt;&lt; <span class="stringliteral">&quot;Static point: &quot;</span>;</div>
+<div class="line"><span class="lineno">  682</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  683</span>      ss &lt;&lt; <span class="stringliteral">&quot;Dynamic point (&quot;</span> &lt;&lt; <a class="code hl_variable" href="structdyno_1_1LandmarkNode.html#a5935fb10d6c15b880a3fdbfb9d985405">object_id</a> &lt;&lt; <span class="stringliteral">&quot;): &quot;</span>;</div>
+<div class="line"><span class="lineno">  684</span>    }</div>
+<div class="line"><span class="lineno">  685</span>    <span class="comment">// tracklet ID</span></div>
+<div class="line"><span class="lineno">  686</span>    ss &lt;&lt; <a class="code hl_function" href="structdyno_1_1LandmarkNode.html#a57635eaf2cf3857e349f6a7d20275b55">getId</a>() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
+<div class="line"><span class="lineno">  687</span>    ss &lt;&lt; <span class="stringliteral">&quot;Num obs: &quot;</span> &lt;&lt; <a class="code hl_function" href="structdyno_1_1LandmarkNode.html#a4179bffe867942d314c711a20338446d">numObservations</a>();</div>
+<div class="line"><span class="lineno">  688</span>    <span class="keywordflow">return</span> ss.str();</div>
+<div class="line"><span class="lineno">  689</span>  }</div>
+<div class="ttc" id="astructdyno_1_1LandmarkNode_html_a4179bffe867942d314c711a20338446d"><div class="ttname"><a href="structdyno_1_1LandmarkNode.html#a4179bffe867942d314c711a20338446d">dyno::LandmarkNode::numObservations</a></div><div class="ttdeci">size_t numObservations() const</div><div class="ttdoc">Number of observations of this landmark.</div><div class="ttdef"><b>Definition:</b> <a href="MapNodes-inl_8hpp_source.html#l00134">MapNodes-inl.hpp:134</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="structdyno_1_1LandmarkNode.html#a57635eaf2cf3857e349f6a7d20275b55">dyno::LandmarkNode&lt; MEASUREMENT &gt;::getId()</a>, <a class="el" href="structdyno_1_1LandmarkNode.html#a1e5afbaff6751716bf866e93c8d8fafa">dyno::LandmarkNode&lt; MEASUREMENT &gt;::isStatic()</a>, <a class="el" href="structdyno_1_1LandmarkNode.html#a4179bffe867942d314c711a20338446d">dyno::LandmarkNode&lt; MEASUREMENT &gt;::numObservations()</a>, and <a class="el" href="structdyno_1_1LandmarkNode.html#a5935fb10d6c15b880a3fdbfb9d985405">dyno::LandmarkNode&lt; MEASUREMENT &gt;::object_id</a>.</p>
 <div class="dynheader">
@@ -1001,7 +1004,7 @@ template&lt;typename MEASUREMENT &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="MapNodes_8hpp_source.html#l00773">773</a> of file <a class="el" href="MapNodes_8hpp_source.html">MapNodes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="MapNodes_8hpp_source.html#l00813">813</a> of file <a class="el" href="MapNodes_8hpp_source.html">MapNodes.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="structdyno_1_1LandmarkNode.html#a660a52c7a2a27f7a6a6096aec4af5ee6">dyno::LandmarkNode&lt; MEASUREMENT &gt;::getSeenFrames()</a>.</p>
 
@@ -1029,7 +1032,7 @@ template&lt;typename MEASUREMENT &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="MapNodes_8hpp_source.html#l00774">774</a> of file <a class="el" href="MapNodes_8hpp_source.html">MapNodes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="MapNodes_8hpp_source.html#l00814">814</a> of file <a class="el" href="MapNodes_8hpp_source.html">MapNodes.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="structdyno_1_1LandmarkNode.html#a0a8f36725b341ac83c4704529e83fc28">dyno::LandmarkNode&lt; MEASUREMENT &gt;::getMeasurements()</a>.</p>
 
@@ -1051,7 +1054,7 @@ template&lt;typename MEASUREMENT &gt; </div>
 
 <p>Object label (j) of the landmark. </p>
 
-<p class="definition">Definition at line <a class="el" href="MapNodes_8hpp_source.html#l00629">629</a> of file <a class="el" href="MapNodes_8hpp_source.html">MapNodes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="MapNodes_8hpp_source.html#l00669">669</a> of file <a class="el" href="MapNodes_8hpp_source.html">MapNodes.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="structdyno_1_1LandmarkNode.html#aede044b1cf9d513984b5d086dbb8bbbf">dyno::LandmarkNode&lt; MEASUREMENT &gt;::toString()</a>.</p>
 
@@ -1073,7 +1076,7 @@ template&lt;typename MEASUREMENT &gt; </div>
 
 <p>Unique tracklet (i) of the landmark/. </p>
 
-<p class="definition">Definition at line <a class="el" href="MapNodes_8hpp_source.html#l00627">627</a> of file <a class="el" href="MapNodes_8hpp_source.html">MapNodes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="MapNodes_8hpp_source.html#l00667">667</a> of file <a class="el" href="MapNodes_8hpp_source.html">MapNodes.hpp</a>.</p>
 
 </div>
 </div>

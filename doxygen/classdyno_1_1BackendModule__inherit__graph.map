@@ -1,7 +1,11 @@
 <map id="dyno::BackendModule" name="dyno::BackendModule">
 <area shape="rect" id="node1" title="Base class to actually do processing. Data passed to this module from the frontend." alt="" coords="315,45,480,70"/>
-<area shape="rect" id="node3" href="$classdyno_1_1BackendModuleType.html" title=" " alt="" coords="528,5,756,45"/>
+<area shape="rect" id="node4" href="$classdyno_1_1BackendModuleType.html" title=" " alt="" coords="528,5,756,45"/>
 <area shape="rect" id="node5" href="$classdyno_1_1BackendModuleType.html" title=" " alt="" coords="545,69,739,109"/>
-<area shape="rect" id="node2" href="$classdyno_1_1ModuleBase.html" title=" " alt="" coords="5,37,267,77"/>
-<area shape="rect" id="node4" href="$classdyno_1_1RGBDBackendModule.html" title=" " alt="" coords="804,13,1007,38"/>
+<area shape="rect" id="node2" href="$classdyno_1_1ModuleBase.html" title=" " alt="" coords="5,8,267,48"/>
+<area shape="rect" id="node3" href="$structdyno_1_1SharedModuleInterface.html" title=" " alt="" coords="29,73,243,98"/>
+<area shape="rect" id="node6" href="$classdyno_1_1VisionImuBackendModule.html" title=" " alt="" coords="804,37,1035,77"/>
+<area shape="rect" id="node9" href="$classdyno_1_1VisionImuBackendModule.html" title="Class that handles the management of ego&#45;motion (NavState) states from VO and (optionally) IMU." alt="" coords="804,101,1035,141"/>
+<area shape="rect" id="node7" href="$classdyno_1_1ParallelHybridBackendModule.html" title=" " alt="" coords="1086,9,1294,49"/>
+<area shape="rect" id="node8" href="$classdyno_1_1RegularBackendModule.html" title=" " alt="" coords="1083,74,1297,99"/>
 </map>

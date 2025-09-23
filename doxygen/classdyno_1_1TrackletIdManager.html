@@ -96,6 +96,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ab7ec1738de58e54adbdad49f1f44f7ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5b83806eebd74cfafc4d706cd4182c6b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1TrackletIdManager.html#a5b83806eebd74cfafc4d706cd4182c6b">incrementTrackletIdCount</a> ()</td></tr>
 <tr class="separator:a5b83806eebd74cfafc4d706cd4182c6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acf6eded9b5e98917d2510d96074ef138"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacedyno.html#afdd174eb44901fb205371d796287378c">TrackletId</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1TrackletIdManager.html#acf6eded9b5e98917d2510d96074ef138">getAndIncrementTrackletId</a> ()</td></tr>
+<tr class="separator:acf6eded9b5e98917d2510d96074ef138"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
@@ -111,17 +113,19 @@ Private Member Functions</h2></td></tr>
 Private Attributes</h2></td></tr>
 <tr class="memitem:a17f8e9b506cbb16ccf7d973f6e2b3fd1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacedyno.html#afdd174eb44901fb205371d796287378c">TrackletId</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1TrackletIdManager.html#a17f8e9b506cbb16ccf7d973f6e2b3fd1">tracklet_count_</a> {0}</td></tr>
 <tr class="separator:a17f8e9b506cbb16ccf7d973f6e2b3fd1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af496cfa68a471fab6f0f2757484e4d42"><td class="memItemLeft" align="right" valign="top">std::mutex&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1TrackletIdManager.html#af496cfa68a471fab6f0f2757484e4d42">mutex_</a></td></tr>
+<tr class="memdesc:af496cfa68a471fab6f0f2757484e4d42"><td class="mdescLeft">&#160;</td><td class="mdescRight">Global TrackletId.  <br /></td></tr>
+<tr class="separator:af496cfa68a471fab6f0f2757484e4d42"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-static-attribs" name="pri-static-attribs"></a>
 Static Private Attributes</h2></td></tr>
 <tr class="memitem:a3a537f974e6dad483c298e93ab8b8eb3"><td class="memItemLeft" align="right" valign="top">static std::unique_ptr&lt; <a class="el" href="classdyno_1_1TrackletIdManager.html">TrackletIdManager</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1TrackletIdManager.html#a3a537f974e6dad483c298e93ab8b8eb3">instance_</a></td></tr>
-<tr class="memdesc:a3a537f974e6dad483c298e93ab8b8eb3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Global TrackletId.  <br /></td></tr>
 <tr class="separator:a3a537f974e6dad483c298e93ab8b8eb3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Singleton class to manage a global tracklet id for all trackers to ensure they are unique. </p>
 
-<p class="definition">Definition at line <a class="el" href="FeatureTrackerBase_8hpp_source.html#l00046">46</a> of file <a class="el" href="FeatureTrackerBase_8hpp_source.html">FeatureTrackerBase.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FeatureTrackerBase_8hpp_source.html#l00048">48</a> of file <a class="el" href="FeatureTrackerBase_8hpp_source.html">FeatureTrackerBase.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a2a115366087e907d04e6c0d62643ef20" name="a2a115366087e907d04e6c0d62643ef20"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2a115366087e907d04e6c0d62643ef20">&#9670;&#160;</a></span>TrackletIdManager()</h2>
@@ -152,22 +156,71 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1TrackletIdManager_a2a115366087e907d04e6c0d62643ef20_icgraph.png" border="0" usemap="#aclassdyno_1_1TrackletIdManager_a2a115366087e907d04e6c0d62643ef20_icgraph" alt=""/></div>
 <map name="aclassdyno_1_1TrackletIdManager_a2a115366087e907d04e6c0d62643ef20_icgraph" id="aclassdyno_1_1TrackletIdManager_a2a115366087e907d04e6c0d62643ef20_icgraph">
-<area shape="rect" title=" " alt="" coords="1192,107,1375,147"/>
-<area shape="rect" href="classdyno_1_1TrackletIdManager.html#a53cb3472fa0367b8dd2a9127111277b2" title=" " alt="" coords="961,107,1144,147"/>
-<area shape="rect" href="classdyno_1_1KltFeatureTracker.html#af29a1c043d097f368a86b346bcfe33e0" title="Construct a new static feature with a unique tracklet id." alt="" coords="708,13,913,53"/>
-<area shape="rect" href="classdyno_1_1KltFeatureTracker.html#a009ab3664d0280cb1fc6cb8b37a7a570" title="A more concise static feature constructor that the one in ExternalFlowFeatureTracker." alt="" coords="451,70,660,125"/>
-<area shape="rect" href="classdyno_1_1FeatureTracker.html#aeaff1c244270c93747ce92b36163c38d" title=" " alt="" coords="732,135,889,175"/>
-<area shape="rect" href="classdyno_1_1ExternalFlowFeatureTracker.html#a28dabdf87c24770c7541ad82b54cdad0" title="Base function to perform feature tracking on static points." alt="" coords="713,199,909,239"/>
-<area shape="rect" href="classdyno_1_1KltFeatureTracker.html#a4870d167d7dbd1a04a8d7d15a376a573" title=" " alt="" coords="468,5,643,45"/>
-<area shape="rect" href="classdyno_1_1KltFeatureTracker.html#a24e98ff72741e59ed48f5b14d5ecaf9b" title="Tracks features using KLT tracker between the previous image and the current one." alt="" coords="228,63,403,103"/>
-<area shape="rect" href="classdyno_1_1KltFeatureTracker.html#a8b8b5f33830f3b76205863b9236539e4" title="Track features between frames k&#45;1 and the current set of images (at k)." alt="" coords="5,35,180,75"/>
-<area shape="rect" href="classdyno_1_1FeatureTracker.html#a23296ac35b5935656d31a18450dc5e4c" title=" " alt="" coords="477,149,634,189"/>
+<area shape="rect" title=" " alt="" coords="1157,125,1340,165"/>
+<area shape="rect" href="classdyno_1_1TrackletIdManager.html#a53cb3472fa0367b8dd2a9127111277b2" title=" " alt="" coords="927,125,1109,165"/>
+<area shape="rect" href="classdyno_1_1KltFeatureTracker.html#af29a1c043d097f368a86b346bcfe33e0" title="Construct a new static feature with a unique tracklet id." alt="" coords="673,32,879,72"/>
+<area shape="rect" href="classdyno_1_1FeatureTracker.html#af6093d870bad67d12dee0c9cb913f87c" title=" " alt="" coords="697,96,855,136"/>
+<area shape="rect" href="classdyno_1_1FeatureTracker.html#a145614fe29bef7728075492870ac9c41" title=" " alt="" coords="459,123,617,163"/>
+<area shape="rect" href="classdyno_1_1ExternalFlowFeatureTracker.html#aedf0b07caf85d853756cb878f22d2ad7" title="Base function to perform feature tracking on static points." alt="" coords="678,211,874,251"/>
+<area shape="rect" href="classdyno_1_1KltFeatureTracker.html#a4870d167d7dbd1a04a8d7d15a376a573" title=" " alt="" coords="451,32,625,72"/>
+<area shape="rect" href="classdyno_1_1KltFeatureTracker.html#a8f26d8fe56edd3e579a879e82a40457f" title="Tracks features using KLT tracker between the previous image and the current one." alt="" coords="228,5,403,45"/>
+<area shape="rect" href="classdyno_1_1KltFeatureTracker.html#ab15aaa39f0c3adc62037d718b98039c0" title="Track features between frames k&#45;1 and the current set of images (at k)." alt="" coords="5,35,180,75"/>
+<area shape="rect" href="classdyno_1_1FeatureTracker.html#a9890ba0c11b5932b5b4954a86bd03948" title=" " alt="" coords="237,123,394,163"/>
 </map>
 </div>
 
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="acf6eded9b5e98917d2510d96074ef138" name="acf6eded9b5e98917d2510d96074ef138"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acf6eded9b5e98917d2510d96074ef138">&#9670;&#160;</a></span>getAndIncrementTrackletId()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespacedyno.html#afdd174eb44901fb205371d796287378c">TrackletId</a> dyno::TrackletIdManager::getAndIncrementTrackletId </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="FeatureTrackerBase_8hpp_source.html#l00068">68</a> of file <a class="el" href="FeatureTrackerBase_8hpp_source.html">FeatureTrackerBase.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   68</span>                                                {</div>
+<div class="line"><span class="lineno">   69</span>    <span class="comment">// tbb::mutex::scoped_lock lock(mutex_);</span></div>
+<div class="line"><span class="lineno">   70</span>    <span class="keyword">auto</span> tracklet = <a class="code hl_variable" href="classdyno_1_1TrackletIdManager.html#a17f8e9b506cbb16ccf7d973f6e2b3fd1">tracklet_count_</a>;</div>
+<div class="line"><span class="lineno">   71</span>    <a class="code hl_variable" href="classdyno_1_1TrackletIdManager.html#a17f8e9b506cbb16ccf7d973f6e2b3fd1">tracklet_count_</a>++;</div>
+<div class="line"><span class="lineno">   72</span>    <span class="keywordflow">return</span> tracklet;</div>
+<div class="line"><span class="lineno">   73</span>  }</div>
+<div class="ttc" id="aclassdyno_1_1TrackletIdManager_html_a17f8e9b506cbb16ccf7d973f6e2b3fd1"><div class="ttname"><a href="classdyno_1_1TrackletIdManager.html#a17f8e9b506cbb16ccf7d973f6e2b3fd1">dyno::TrackletIdManager::tracklet_count_</a></div><div class="ttdeci">TrackletId tracklet_count_</div><div class="ttdef"><b>Definition:</b> <a href="FeatureTrackerBase_8hpp_source.html#l00077">FeatureTrackerBase.hpp:77</a></div></div>
+</div><!-- fragment -->
+<p class="reference">References <a class="el" href="classdyno_1_1TrackletIdManager.html#a17f8e9b506cbb16ccf7d973f6e2b3fd1">tracklet_count_</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1FeatureTracker.html#af6093d870bad67d12dee0c9cb913f87c">dyno::FeatureTracker::sampleDynamic()</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classdyno_1_1TrackletIdManager_acf6eded9b5e98917d2510d96074ef138_icgraph.png" border="0" usemap="#aclassdyno_1_1TrackletIdManager_acf6eded9b5e98917d2510d96074ef138_icgraph" alt=""/></div>
+<map name="aclassdyno_1_1TrackletIdManager_acf6eded9b5e98917d2510d96074ef138_icgraph" id="aclassdyno_1_1TrackletIdManager_acf6eded9b5e98917d2510d96074ef138_icgraph">
+<area shape="rect" title=" " alt="" coords="621,5,827,45"/>
+<area shape="rect" href="classdyno_1_1FeatureTracker.html#af6093d870bad67d12dee0c9cb913f87c" title=" " alt="" coords="416,5,573,45"/>
+<area shape="rect" href="classdyno_1_1FeatureTracker.html#a145614fe29bef7728075492870ac9c41" title=" " alt="" coords="211,5,368,45"/>
+<area shape="rect" href="classdyno_1_1FeatureTracker.html#a9890ba0c11b5932b5b4954a86bd03948" title=" " alt="" coords="5,5,163,45"/>
+</map>
+</div>
+
+</div>
+</div>
 <a id="ab7ec1738de58e54adbdad49f1f44f7ae" name="ab7ec1738de58e54adbdad49f1f44f7ae"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab7ec1738de58e54adbdad49f1f44f7ae">&#9670;&#160;</a></span>getTrackletIdCount()</h2>
 
@@ -191,25 +244,28 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="FeatureTrackerBase_8hpp_source.html#l00057">57</a> of file <a class="el" href="FeatureTrackerBase_8hpp_source.html">FeatureTrackerBase.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   57</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1TrackletIdManager.html#a17f8e9b506cbb16ccf7d973f6e2b3fd1">tracklet_count_</a>; }</div>
-<div class="ttc" id="aclassdyno_1_1TrackletIdManager_html_a17f8e9b506cbb16ccf7d973f6e2b3fd1"><div class="ttname"><a href="classdyno_1_1TrackletIdManager.html#a17f8e9b506cbb16ccf7d973f6e2b3fd1">dyno::TrackletIdManager::tracklet_count_</a></div><div class="ttdeci">TrackletId tracklet_count_</div><div class="ttdef"><b>Definition:</b> <a href="FeatureTrackerBase_8hpp_source.html#l00062">FeatureTrackerBase.hpp:62</a></div></div>
+<p class="definition">Definition at line <a class="el" href="FeatureTrackerBase_8hpp_source.html#l00059">59</a> of file <a class="el" href="FeatureTrackerBase_8hpp_source.html">FeatureTrackerBase.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   59</span>                                               {</div>
+<div class="line"><span class="lineno">   60</span>    <span class="comment">// tbb::mutex::scoped_lock lock(mutex_);</span></div>
+<div class="line"><span class="lineno">   61</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1TrackletIdManager.html#a17f8e9b506cbb16ccf7d973f6e2b3fd1">tracklet_count_</a>;</div>
+<div class="line"><span class="lineno">   62</span>  }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1TrackletIdManager.html#a17f8e9b506cbb16ccf7d973f6e2b3fd1">tracklet_count_</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1KltFeatureTracker.html#af29a1c043d097f368a86b346bcfe33e0">dyno::KltFeatureTracker::constructNewStaticFeature()</a>, <a class="el" href="classdyno_1_1KltFeatureTracker.html#a009ab3664d0280cb1fc6cb8b37a7a570">dyno::KltFeatureTracker::constructStaticFeatureFromPrevious()</a>, and <a class="el" href="classdyno_1_1ExternalFlowFeatureTracker.html#a28dabdf87c24770c7541ad82b54cdad0">dyno::ExternalFlowFeatureTracker::trackStatic()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1KltFeatureTracker.html#af29a1c043d097f368a86b346bcfe33e0">dyno::KltFeatureTracker::constructNewStaticFeature()</a>, <a class="el" href="classdyno_1_1FeatureTracker.html#a145614fe29bef7728075492870ac9c41">dyno::FeatureTracker::trackDynamic()</a>, and <a class="el" href="classdyno_1_1ExternalFlowFeatureTracker.html#aedf0b07caf85d853756cb878f22d2ad7">dyno::ExternalFlowFeatureTracker::trackStatic()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1TrackletIdManager_ab7ec1738de58e54adbdad49f1f44f7ae_icgraph.png" border="0" usemap="#aclassdyno_1_1TrackletIdManager_ab7ec1738de58e54adbdad49f1f44f7ae_icgraph" alt=""/></div>
 <map name="aclassdyno_1_1TrackletIdManager_ab7ec1738de58e54adbdad49f1f44f7ae_icgraph" id="aclassdyno_1_1TrackletIdManager_ab7ec1738de58e54adbdad49f1f44f7ae_icgraph">
-<area shape="rect" title=" " alt="" coords="961,73,1144,113"/>
-<area shape="rect" href="classdyno_1_1KltFeatureTracker.html#af29a1c043d097f368a86b346bcfe33e0" title="Construct a new static feature with a unique tracklet id." alt="" coords="708,9,913,49"/>
-<area shape="rect" href="classdyno_1_1KltFeatureTracker.html#a009ab3664d0280cb1fc6cb8b37a7a570" title="A more concise static feature constructor that the one in ExternalFlowFeatureTracker." alt="" coords="451,70,660,125"/>
-<area shape="rect" href="classdyno_1_1ExternalFlowFeatureTracker.html#a28dabdf87c24770c7541ad82b54cdad0" title="Base function to perform feature tracking on static points." alt="" coords="713,131,909,171"/>
-<area shape="rect" href="classdyno_1_1KltFeatureTracker.html#a4870d167d7dbd1a04a8d7d15a376a573" title=" " alt="" coords="468,5,643,45"/>
-<area shape="rect" href="classdyno_1_1KltFeatureTracker.html#a24e98ff72741e59ed48f5b14d5ecaf9b" title="Tracks features using KLT tracker between the previous image and the current one." alt="" coords="228,63,403,103"/>
-<area shape="rect" href="classdyno_1_1KltFeatureTracker.html#a8b8b5f33830f3b76205863b9236539e4" title="Track features between frames k&#45;1 and the current set of images (at k)." alt="" coords="5,35,180,75"/>
+<area shape="rect" title=" " alt="" coords="927,97,1109,137"/>
+<area shape="rect" href="classdyno_1_1KltFeatureTracker.html#af29a1c043d097f368a86b346bcfe33e0" title="Construct a new static feature with a unique tracklet id." alt="" coords="673,33,879,73"/>
+<area shape="rect" href="classdyno_1_1FeatureTracker.html#a145614fe29bef7728075492870ac9c41" title=" " alt="" coords="697,97,855,137"/>
+<area shape="rect" href="classdyno_1_1ExternalFlowFeatureTracker.html#aedf0b07caf85d853756cb878f22d2ad7" title="Base function to perform feature tracking on static points." alt="" coords="678,161,874,201"/>
+<area shape="rect" href="classdyno_1_1KltFeatureTracker.html#a4870d167d7dbd1a04a8d7d15a376a573" title=" " alt="" coords="451,33,625,73"/>
+<area shape="rect" href="classdyno_1_1KltFeatureTracker.html#a8f26d8fe56edd3e579a879e82a40457f" title="Tracks features using KLT tracker between the previous image and the current one." alt="" coords="228,5,403,45"/>
+<area shape="rect" href="classdyno_1_1KltFeatureTracker.html#ab15aaa39f0c3adc62037d718b98039c0" title="Track features between frames k&#45;1 and the current set of images (at k)." alt="" coords="5,35,180,75"/>
+<area shape="rect" href="classdyno_1_1FeatureTracker.html#a9890ba0c11b5932b5b4954a86bd03948" title=" " alt="" coords="459,97,617,137"/>
 </map>
 </div>
 
@@ -238,24 +294,28 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="FeatureTrackerBase_8hpp_source.html#l00058">58</a> of file <a class="el" href="FeatureTrackerBase_8hpp_source.html">FeatureTrackerBase.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   58</span>{ <a class="code hl_variable" href="classdyno_1_1TrackletIdManager.html#a17f8e9b506cbb16ccf7d973f6e2b3fd1">tracklet_count_</a>++; }</div>
+<p class="definition">Definition at line <a class="el" href="FeatureTrackerBase_8hpp_source.html#l00063">63</a> of file <a class="el" href="FeatureTrackerBase_8hpp_source.html">FeatureTrackerBase.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   63</span>                                         {</div>
+<div class="line"><span class="lineno">   64</span>    <span class="comment">// tbb::mutex::scoped_lock lock(mutex_);</span></div>
+<div class="line"><span class="lineno">   65</span>    <a class="code hl_variable" href="classdyno_1_1TrackletIdManager.html#a17f8e9b506cbb16ccf7d973f6e2b3fd1">tracklet_count_</a>++;</div>
+<div class="line"><span class="lineno">   66</span>  }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1TrackletIdManager.html#a17f8e9b506cbb16ccf7d973f6e2b3fd1">tracklet_count_</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1KltFeatureTracker.html#af29a1c043d097f368a86b346bcfe33e0">dyno::KltFeatureTracker::constructNewStaticFeature()</a>, <a class="el" href="classdyno_1_1KltFeatureTracker.html#a009ab3664d0280cb1fc6cb8b37a7a570">dyno::KltFeatureTracker::constructStaticFeatureFromPrevious()</a>, and <a class="el" href="classdyno_1_1ExternalFlowFeatureTracker.html#a28dabdf87c24770c7541ad82b54cdad0">dyno::ExternalFlowFeatureTracker::trackStatic()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1KltFeatureTracker.html#af29a1c043d097f368a86b346bcfe33e0">dyno::KltFeatureTracker::constructNewStaticFeature()</a>, <a class="el" href="classdyno_1_1FeatureTracker.html#a145614fe29bef7728075492870ac9c41">dyno::FeatureTracker::trackDynamic()</a>, and <a class="el" href="classdyno_1_1ExternalFlowFeatureTracker.html#aedf0b07caf85d853756cb878f22d2ad7">dyno::ExternalFlowFeatureTracker::trackStatic()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1TrackletIdManager_a5b83806eebd74cfafc4d706cd4182c6b_icgraph.png" border="0" usemap="#aclassdyno_1_1TrackletIdManager_a5b83806eebd74cfafc4d706cd4182c6b_icgraph" alt=""/></div>
 <map name="aclassdyno_1_1TrackletIdManager_a5b83806eebd74cfafc4d706cd4182c6b_icgraph" id="aclassdyno_1_1TrackletIdManager_a5b83806eebd74cfafc4d706cd4182c6b_icgraph">
-<area shape="rect" title=" " alt="" coords="961,73,1159,113"/>
-<area shape="rect" href="classdyno_1_1KltFeatureTracker.html#af29a1c043d097f368a86b346bcfe33e0" title="Construct a new static feature with a unique tracklet id." alt="" coords="708,9,913,49"/>
-<area shape="rect" href="classdyno_1_1KltFeatureTracker.html#a009ab3664d0280cb1fc6cb8b37a7a570" title="A more concise static feature constructor that the one in ExternalFlowFeatureTracker." alt="" coords="451,70,660,125"/>
-<area shape="rect" href="classdyno_1_1ExternalFlowFeatureTracker.html#a28dabdf87c24770c7541ad82b54cdad0" title="Base function to perform feature tracking on static points." alt="" coords="713,131,909,171"/>
-<area shape="rect" href="classdyno_1_1KltFeatureTracker.html#a4870d167d7dbd1a04a8d7d15a376a573" title=" " alt="" coords="468,5,643,45"/>
-<area shape="rect" href="classdyno_1_1KltFeatureTracker.html#a24e98ff72741e59ed48f5b14d5ecaf9b" title="Tracks features using KLT tracker between the previous image and the current one." alt="" coords="228,63,403,103"/>
-<area shape="rect" href="classdyno_1_1KltFeatureTracker.html#a8b8b5f33830f3b76205863b9236539e4" title="Track features between frames k&#45;1 and the current set of images (at k)." alt="" coords="5,35,180,75"/>
+<area shape="rect" title=" " alt="" coords="927,97,1124,137"/>
+<area shape="rect" href="classdyno_1_1KltFeatureTracker.html#af29a1c043d097f368a86b346bcfe33e0" title="Construct a new static feature with a unique tracklet id." alt="" coords="673,33,879,73"/>
+<area shape="rect" href="classdyno_1_1FeatureTracker.html#a145614fe29bef7728075492870ac9c41" title=" " alt="" coords="697,97,855,137"/>
+<area shape="rect" href="classdyno_1_1ExternalFlowFeatureTracker.html#aedf0b07caf85d853756cb878f22d2ad7" title="Base function to perform feature tracking on static points." alt="" coords="678,161,874,201"/>
+<area shape="rect" href="classdyno_1_1KltFeatureTracker.html#a4870d167d7dbd1a04a8d7d15a376a573" title=" " alt="" coords="451,33,625,73"/>
+<area shape="rect" href="classdyno_1_1KltFeatureTracker.html#a8f26d8fe56edd3e579a879e82a40457f" title="Tracks features using KLT tracker between the previous image and the current one." alt="" coords="228,5,403,45"/>
+<area shape="rect" href="classdyno_1_1KltFeatureTracker.html#ab15aaa39f0c3adc62037d718b98039c0" title="Track features between frames k&#45;1 and the current set of images (at k)." alt="" coords="5,35,180,75"/>
+<area shape="rect" href="classdyno_1_1FeatureTracker.html#a9890ba0c11b5932b5b4954a86bd03948" title=" " alt="" coords="459,97,617,137"/>
 </map>
 </div>
 
@@ -284,19 +344,19 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="FeatureTrackerBase_8hpp_source.html#l00050">50</a> of file <a class="el" href="FeatureTrackerBase_8hpp_source.html">FeatureTrackerBase.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   50</span>                                       {</div>
-<div class="line"><span class="lineno">   51</span>    <span class="keywordflow">if</span> (!<a class="code hl_variable" href="classdyno_1_1TrackletIdManager.html#a3a537f974e6dad483c298e93ab8b8eb3">instance_</a>) {</div>
-<div class="line"><span class="lineno">   52</span>      <a class="code hl_variable" href="classdyno_1_1TrackletIdManager.html#a3a537f974e6dad483c298e93ab8b8eb3">instance_</a>.reset(<span class="keyword">new</span> <a class="code hl_function" href="classdyno_1_1TrackletIdManager.html#a2a115366087e907d04e6c0d62643ef20">TrackletIdManager</a>());</div>
-<div class="line"><span class="lineno">   53</span>    }</div>
-<div class="line"><span class="lineno">   54</span>    <span class="keywordflow">return</span> *<a class="code hl_variable" href="classdyno_1_1TrackletIdManager.html#a3a537f974e6dad483c298e93ab8b8eb3">instance_</a>;</div>
-<div class="line"><span class="lineno">   55</span>  }</div>
+<p class="definition">Definition at line <a class="el" href="FeatureTrackerBase_8hpp_source.html#l00052">52</a> of file <a class="el" href="FeatureTrackerBase_8hpp_source.html">FeatureTrackerBase.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   52</span>                                       {</div>
+<div class="line"><span class="lineno">   53</span>    <span class="keywordflow">if</span> (!<a class="code hl_variable" href="classdyno_1_1TrackletIdManager.html#a3a537f974e6dad483c298e93ab8b8eb3">instance_</a>) {</div>
+<div class="line"><span class="lineno">   54</span>      <a class="code hl_variable" href="classdyno_1_1TrackletIdManager.html#a3a537f974e6dad483c298e93ab8b8eb3">instance_</a>.reset(<span class="keyword">new</span> <a class="code hl_function" href="classdyno_1_1TrackletIdManager.html#a2a115366087e907d04e6c0d62643ef20">TrackletIdManager</a>());</div>
+<div class="line"><span class="lineno">   55</span>    }</div>
+<div class="line"><span class="lineno">   56</span>    <span class="keywordflow">return</span> *<a class="code hl_variable" href="classdyno_1_1TrackletIdManager.html#a3a537f974e6dad483c298e93ab8b8eb3">instance_</a>;</div>
+<div class="line"><span class="lineno">   57</span>  }</div>
 <div class="ttc" id="aclassdyno_1_1TrackletIdManager_html_a2a115366087e907d04e6c0d62643ef20"><div class="ttname"><a href="classdyno_1_1TrackletIdManager.html#a2a115366087e907d04e6c0d62643ef20">dyno::TrackletIdManager::TrackletIdManager</a></div><div class="ttdeci">TrackletIdManager()=default</div></div>
-<div class="ttc" id="aclassdyno_1_1TrackletIdManager_html_a3a537f974e6dad483c298e93ab8b8eb3"><div class="ttname"><a href="classdyno_1_1TrackletIdManager.html#a3a537f974e6dad483c298e93ab8b8eb3">dyno::TrackletIdManager::instance_</a></div><div class="ttdeci">static std::unique_ptr&lt; TrackletIdManager &gt; instance_</div><div class="ttdoc">Global TrackletId.</div><div class="ttdef"><b>Definition:</b> <a href="FeatureTrackerBase_8hpp_source.html#l00064">FeatureTrackerBase.hpp:64</a></div></div>
+<div class="ttc" id="aclassdyno_1_1TrackletIdManager_html_a3a537f974e6dad483c298e93ab8b8eb3"><div class="ttname"><a href="classdyno_1_1TrackletIdManager.html#a3a537f974e6dad483c298e93ab8b8eb3">dyno::TrackletIdManager::instance_</a></div><div class="ttdeci">static std::unique_ptr&lt; TrackletIdManager &gt; instance_</div><div class="ttdef"><b>Definition:</b> <a href="FeatureTrackerBase_8hpp_source.html#l00080">FeatureTrackerBase.hpp:80</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1TrackletIdManager.html#a3a537f974e6dad483c298e93ab8b8eb3">instance_</a>, and <a class="el" href="classdyno_1_1TrackletIdManager.html#a2a115366087e907d04e6c0d62643ef20">TrackletIdManager()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1KltFeatureTracker.html#af29a1c043d097f368a86b346bcfe33e0">dyno::KltFeatureTracker::constructNewStaticFeature()</a>, <a class="el" href="classdyno_1_1KltFeatureTracker.html#a009ab3664d0280cb1fc6cb8b37a7a570">dyno::KltFeatureTracker::constructStaticFeatureFromPrevious()</a>, <a class="el" href="classdyno_1_1FeatureTracker.html#aeaff1c244270c93747ce92b36163c38d">dyno::FeatureTracker::trackDynamic()</a>, and <a class="el" href="classdyno_1_1ExternalFlowFeatureTracker.html#a28dabdf87c24770c7541ad82b54cdad0">dyno::ExternalFlowFeatureTracker::trackStatic()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1KltFeatureTracker.html#af29a1c043d097f368a86b346bcfe33e0">dyno::KltFeatureTracker::constructNewStaticFeature()</a>, <a class="el" href="classdyno_1_1FeatureTracker.html#af6093d870bad67d12dee0c9cb913f87c">dyno::FeatureTracker::sampleDynamic()</a>, <a class="el" href="classdyno_1_1FeatureTracker.html#a145614fe29bef7728075492870ac9c41">dyno::FeatureTracker::trackDynamic()</a>, and <a class="el" href="classdyno_1_1ExternalFlowFeatureTracker.html#aedf0b07caf85d853756cb878f22d2ad7">dyno::ExternalFlowFeatureTracker::trackStatic()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -311,15 +371,15 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1TrackletIdManager_a53cb3472fa0367b8dd2a9127111277b2_icgraph.png" border="0" usemap="#aclassdyno_1_1TrackletIdManager_a53cb3472fa0367b8dd2a9127111277b2_icgraph" alt=""/></div>
 <map name="aclassdyno_1_1TrackletIdManager_a53cb3472fa0367b8dd2a9127111277b2_icgraph" id="aclassdyno_1_1TrackletIdManager_a53cb3472fa0367b8dd2a9127111277b2_icgraph">
-<area shape="rect" title=" " alt="" coords="961,107,1144,147"/>
-<area shape="rect" href="classdyno_1_1KltFeatureTracker.html#af29a1c043d097f368a86b346bcfe33e0" title="Construct a new static feature with a unique tracklet id." alt="" coords="708,13,913,53"/>
-<area shape="rect" href="classdyno_1_1KltFeatureTracker.html#a009ab3664d0280cb1fc6cb8b37a7a570" title="A more concise static feature constructor that the one in ExternalFlowFeatureTracker." alt="" coords="451,70,660,125"/>
-<area shape="rect" href="classdyno_1_1FeatureTracker.html#aeaff1c244270c93747ce92b36163c38d" title=" " alt="" coords="732,135,889,175"/>
-<area shape="rect" href="classdyno_1_1ExternalFlowFeatureTracker.html#a28dabdf87c24770c7541ad82b54cdad0" title="Base function to perform feature tracking on static points." alt="" coords="713,199,909,239"/>
-<area shape="rect" href="classdyno_1_1KltFeatureTracker.html#a4870d167d7dbd1a04a8d7d15a376a573" title=" " alt="" coords="468,5,643,45"/>
-<area shape="rect" href="classdyno_1_1KltFeatureTracker.html#a24e98ff72741e59ed48f5b14d5ecaf9b" title="Tracks features using KLT tracker between the previous image and the current one." alt="" coords="228,63,403,103"/>
-<area shape="rect" href="classdyno_1_1KltFeatureTracker.html#a8b8b5f33830f3b76205863b9236539e4" title="Track features between frames k&#45;1 and the current set of images (at k)." alt="" coords="5,35,180,75"/>
-<area shape="rect" href="classdyno_1_1FeatureTracker.html#a23296ac35b5935656d31a18450dc5e4c" title=" " alt="" coords="477,149,634,189"/>
+<area shape="rect" title=" " alt="" coords="927,125,1109,165"/>
+<area shape="rect" href="classdyno_1_1KltFeatureTracker.html#af29a1c043d097f368a86b346bcfe33e0" title="Construct a new static feature with a unique tracklet id." alt="" coords="673,32,879,72"/>
+<area shape="rect" href="classdyno_1_1FeatureTracker.html#af6093d870bad67d12dee0c9cb913f87c" title=" " alt="" coords="697,96,855,136"/>
+<area shape="rect" href="classdyno_1_1FeatureTracker.html#a145614fe29bef7728075492870ac9c41" title=" " alt="" coords="459,123,617,163"/>
+<area shape="rect" href="classdyno_1_1ExternalFlowFeatureTracker.html#aedf0b07caf85d853756cb878f22d2ad7" title="Base function to perform feature tracking on static points." alt="" coords="678,211,874,251"/>
+<area shape="rect" href="classdyno_1_1KltFeatureTracker.html#a4870d167d7dbd1a04a8d7d15a376a573" title=" " alt="" coords="451,32,625,72"/>
+<area shape="rect" href="classdyno_1_1KltFeatureTracker.html#a8f26d8fe56edd3e579a879e82a40457f" title="Tracks features using KLT tracker between the previous image and the current one." alt="" coords="228,5,403,45"/>
+<area shape="rect" href="classdyno_1_1KltFeatureTracker.html#ab15aaa39f0c3adc62037d718b98039c0" title="Track features between frames k&#45;1 and the current set of images (at k)." alt="" coords="5,35,180,75"/>
+<area shape="rect" href="classdyno_1_1FeatureTracker.html#a9890ba0c11b5932b5b4954a86bd03948" title=" " alt="" coords="237,123,394,163"/>
 </map>
 </div>
 
@@ -346,11 +406,35 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p>Global TrackletId. </p>
-
-<p class="definition">Definition at line <a class="el" href="FeatureTrackerBase_8hpp_source.html#l00064">64</a> of file <a class="el" href="FeatureTrackerBase_8hpp_source.html">FeatureTrackerBase.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FeatureTrackerBase_8hpp_source.html#l00080">80</a> of file <a class="el" href="FeatureTrackerBase_8hpp_source.html">FeatureTrackerBase.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1TrackletIdManager.html#a53cb3472fa0367b8dd2a9127111277b2">instance()</a>.</p>
+
+</div>
+</div>
+<a id="af496cfa68a471fab6f0f2757484e4d42" name="af496cfa68a471fab6f0f2757484e4d42"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af496cfa68a471fab6f0f2757484e4d42">&#9670;&#160;</a></span>mutex_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::mutex dyno::TrackletIdManager::mutex_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Global TrackletId. </p>
+
+<p class="definition">Definition at line <a class="el" href="FeatureTrackerBase_8hpp_source.html#l00078">78</a> of file <a class="el" href="FeatureTrackerBase_8hpp_source.html">FeatureTrackerBase.hpp</a>.</p>
 
 </div>
 </div>
@@ -374,9 +458,9 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="FeatureTrackerBase_8hpp_source.html#l00062">62</a> of file <a class="el" href="FeatureTrackerBase_8hpp_source.html">FeatureTrackerBase.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FeatureTrackerBase_8hpp_source.html#l00077">77</a> of file <a class="el" href="FeatureTrackerBase_8hpp_source.html">FeatureTrackerBase.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1TrackletIdManager.html#ab7ec1738de58e54adbdad49f1f44f7ae">getTrackletIdCount()</a>, and <a class="el" href="classdyno_1_1TrackletIdManager.html#a5b83806eebd74cfafc4d706cd4182c6b">incrementTrackletIdCount()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1TrackletIdManager.html#acf6eded9b5e98917d2510d96074ef138">getAndIncrementTrackletId()</a>, <a class="el" href="classdyno_1_1TrackletIdManager.html#ab7ec1738de58e54adbdad49f1f44f7ae">getTrackletIdCount()</a>, and <a class="el" href="classdyno_1_1TrackletIdManager.html#a5b83806eebd74cfafc4d706cd4182c6b">incrementTrackletIdCount()</a>.</p>
 
 </div>
 </div>

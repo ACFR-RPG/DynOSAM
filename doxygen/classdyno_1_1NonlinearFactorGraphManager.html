@@ -125,8 +125,8 @@ Public Types</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a49e64d937500432b32df06d41d69b0a4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1NonlinearFactorGraphManager.html#a49e64d937500432b32df06d41d69b0a4">NonlinearFactorGraphManager</a> (const gtsam::NonlinearFactorGraph &amp;graph, gtsam::Values &amp;values)</td></tr>
-<tr class="separator:a49e64d937500432b32df06d41d69b0a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5c22b1c28dd7668e7a59ea49ac4a939f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1NonlinearFactorGraphManager.html#a5c22b1c28dd7668e7a59ea49ac4a939f">NonlinearFactorGraphManager</a> (const gtsam::NonlinearFactorGraph &amp;graph, const gtsam::Values &amp;values)</td></tr>
+<tr class="separator:a5c22b1c28dd7668e7a59ea49ac4a939f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab034c0a406d4a3aff56a93fc776e594f"><td class="memItemLeft" align="right" valign="top">gtsam::GaussianFactorGraph::shared_ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1NonlinearFactorGraphManager.html#ab034c0a406d4a3aff56a93fc776e594f">linearize</a> () const override</td></tr>
 <tr class="separator:ab034c0a406d4a3aff56a93fc776e594f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a893a56df07b5a89f72910a532b1bf26e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1NonlinearFactorGraphManager.html#a893a56df07b5a89f72910a532b1bf26e">writeDynosamGraphFile</a> (const std::string &amp;filename) const</td></tr>
@@ -169,7 +169,7 @@ Protected Attributes</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="FactorGraphTools_8hpp_source.html#l00533">533</a> of file <a class="el" href="FactorGraphTools_8hpp_source.html">FactorGraphTools.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FactorGraphTools_8hpp_source.html#l00680">680</a> of file <a class="el" href="FactorGraphTools_8hpp_source.html">FactorGraphTools.hpp</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="a805c780256506d7b1a54c5b5d1e8d4e3" name="a805c780256506d7b1a54c5b5d1e8d4e3"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a805c780256506d7b1a54c5b5d1e8d4e3">&#9670;&#160;</a></span>Base</h2>
@@ -183,13 +183,13 @@ Protected Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="FactorGraphTools_8hpp_source.html#l00536">536</a> of file <a class="el" href="FactorGraphTools_8hpp_source.html">FactorGraphTools.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FactorGraphTools_8hpp_source.html#l00683">683</a> of file <a class="el" href="FactorGraphTools_8hpp_source.html">FactorGraphTools.hpp</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a49e64d937500432b32df06d41d69b0a4" name="a49e64d937500432b32df06d41d69b0a4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a49e64d937500432b32df06d41d69b0a4">&#9670;&#160;</a></span>NonlinearFactorGraphManager()</h2>
+<a id="a5c22b1c28dd7668e7a59ea49ac4a939f" name="a5c22b1c28dd7668e7a59ea49ac4a939f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5c22b1c28dd7668e7a59ea49ac4a939f">&#9670;&#160;</a></span>NonlinearFactorGraphManager()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -206,7 +206,7 @@ Protected Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">gtsam::Values &amp;&#160;</td>
+          <td class="paramtype">const gtsam::Values &amp;&#160;</td>
           <td class="paramname"><em>values</em>&#160;</td>
         </tr>
         <tr>
@@ -222,10 +222,10 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="FactorGraphTools_8hpp_source.html#l00538">538</a> of file <a class="el" href="FactorGraphTools_8hpp_source.html">FactorGraphTools.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  538</span>: <a class="code hl_typedef" href="classdyno_1_1NonlinearFactorGraphManager.html#a805c780256506d7b1a54c5b5d1e8d4e3">Base</a>(graph), <a class="code hl_variable" href="classdyno_1_1NonlinearFactorGraphManager.html#ac19c33989e9be1d996b65b0dcc0e12c3">values_</a>(values) {}</div>
-<div class="ttc" id="aclassdyno_1_1NonlinearFactorGraphManager_html_a805c780256506d7b1a54c5b5d1e8d4e3"><div class="ttname"><a href="classdyno_1_1NonlinearFactorGraphManager.html#a805c780256506d7b1a54c5b5d1e8d4e3">dyno::NonlinearFactorGraphManager::Base</a></div><div class="ttdeci">FactorGraphManager&lt; gtsam::NonlinearFactorGraph &gt; Base</div><div class="ttdef"><b>Definition:</b> <a href="FactorGraphTools_8hpp_source.html#l00536">FactorGraphTools.hpp:536</a></div></div>
-<div class="ttc" id="aclassdyno_1_1NonlinearFactorGraphManager_html_ac19c33989e9be1d996b65b0dcc0e12c3"><div class="ttname"><a href="classdyno_1_1NonlinearFactorGraphManager.html#ac19c33989e9be1d996b65b0dcc0e12c3">dyno::NonlinearFactorGraphManager::values_</a></div><div class="ttdeci">const gtsam::Values values_</div><div class="ttdef"><b>Definition:</b> <a href="FactorGraphTools_8hpp_source.html#l00560">FactorGraphTools.hpp:560</a></div></div>
+<p class="definition">Definition at line <a class="el" href="FactorGraphTools_8hpp_source.html#l00685">685</a> of file <a class="el" href="FactorGraphTools_8hpp_source.html">FactorGraphTools.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  687</span>      : <a class="code hl_typedef" href="classdyno_1_1NonlinearFactorGraphManager.html#a805c780256506d7b1a54c5b5d1e8d4e3">Base</a>(graph), <a class="code hl_variable" href="classdyno_1_1NonlinearFactorGraphManager.html#ac19c33989e9be1d996b65b0dcc0e12c3">values_</a>(values) {}</div>
+<div class="ttc" id="aclassdyno_1_1NonlinearFactorGraphManager_html_a805c780256506d7b1a54c5b5d1e8d4e3"><div class="ttname"><a href="classdyno_1_1NonlinearFactorGraphManager.html#a805c780256506d7b1a54c5b5d1e8d4e3">dyno::NonlinearFactorGraphManager::Base</a></div><div class="ttdeci">FactorGraphManager&lt; gtsam::NonlinearFactorGraph &gt; Base</div><div class="ttdef"><b>Definition:</b> <a href="FactorGraphTools_8hpp_source.html#l00683">FactorGraphTools.hpp:683</a></div></div>
+<div class="ttc" id="aclassdyno_1_1NonlinearFactorGraphManager_html_ac19c33989e9be1d996b65b0dcc0e12c3"><div class="ttname"><a href="classdyno_1_1NonlinearFactorGraphManager.html#ac19c33989e9be1d996b65b0dcc0e12c3">dyno::NonlinearFactorGraphManager::values_</a></div><div class="ttdeci">const gtsam::Values values_</div><div class="ttdef"><b>Definition:</b> <a href="FactorGraphTools_8hpp_source.html#l00714">FactorGraphTools.hpp:714</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -255,11 +255,11 @@ Protected Attributes</h2></td></tr>
 
 <p>Implements <a class="el" href="classdyno_1_1FactorGraphManager.html#a3bc490b3660f19b5f97b4f3bd5b98753">dyno::FactorGraphManager&lt; gtsam::NonlinearFactorGraph &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="FactorGraphTools_8hpp_source.html#l00540">540</a> of file <a class="el" href="FactorGraphTools_8hpp_source.html">FactorGraphTools.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  540</span>                                                                  {</div>
-<div class="line"><span class="lineno">  541</span>        <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1FactorGraphManager.html#a79fec17f3974da00ed0402910079978f">graph_</a>.linearize(<a class="code hl_variable" href="classdyno_1_1NonlinearFactorGraphManager.html#ac19c33989e9be1d996b65b0dcc0e12c3">values_</a>);</div>
-<div class="line"><span class="lineno">  542</span>    }</div>
-<div class="ttc" id="aclassdyno_1_1FactorGraphManager_html_a79fec17f3974da00ed0402910079978f"><div class="ttname"><a href="classdyno_1_1FactorGraphManager.html#a79fec17f3974da00ed0402910079978f">dyno::FactorGraphManager&lt; gtsam::NonlinearFactorGraph &gt;::graph_</a></div><div class="ttdeci">const FactorGraphType graph_</div><div class="ttdef"><b>Definition:</b> <a href="FactorGraphTools_8hpp_source.html#l00529">FactorGraphTools.hpp:529</a></div></div>
+<p class="definition">Definition at line <a class="el" href="FactorGraphTools_8hpp_source.html#l00689">689</a> of file <a class="el" href="FactorGraphTools_8hpp_source.html">FactorGraphTools.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  689</span>                                                                {</div>
+<div class="line"><span class="lineno">  690</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1FactorGraphManager.html#a79fec17f3974da00ed0402910079978f">graph_</a>.linearize(<a class="code hl_variable" href="classdyno_1_1NonlinearFactorGraphManager.html#ac19c33989e9be1d996b65b0dcc0e12c3">values_</a>);</div>
+<div class="line"><span class="lineno">  691</span>  }</div>
+<div class="ttc" id="aclassdyno_1_1FactorGraphManager_html_a79fec17f3974da00ed0402910079978f"><div class="ttname"><a href="classdyno_1_1FactorGraphManager.html#a79fec17f3974da00ed0402910079978f">dyno::FactorGraphManager&lt; gtsam::NonlinearFactorGraph &gt;::graph_</a></div><div class="ttdeci">const FactorGraphType graph_</div><div class="ttdef"><b>Definition:</b> <a href="FactorGraphTools_8hpp_source.html#l00677">FactorGraphTools.hpp:677</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1FactorGraphManager.html#a79fec17f3974da00ed0402910079978f">dyno::FactorGraphManager&lt; gtsam::NonlinearFactorGraph &gt;::graph_</a>, and <a class="el" href="classdyno_1_1NonlinearFactorGraphManager.html#ac19c33989e9be1d996b65b0dcc0e12c3">values_</a>.</p>
 
@@ -281,81 +281,105 @@ Protected Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="FactorGraphTools_8cc_source.html#l00315">315</a> of file <a class="el" href="FactorGraphTools_8cc_source.html">FactorGraphTools.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  315</span>                                                                                       {</div>
-<div class="line"><span class="lineno">  316</span>    std::ofstream of(filename.c_str());</div>
-<div class="line"><span class="lineno">  317</span> </div>
-<div class="line"><span class="lineno">  318</span>    LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Writing dynosam graph file: &quot;</span> &lt;&lt; filename;</div>
-<div class="line"><span class="lineno">  319</span> </div>
-<div class="line"><span class="lineno">  320</span>    <span class="keyword">using namespace </span>factor_graph_tools;</div>
-<div class="line"><span class="lineno">  321</span> </div>
-<div class="line"><span class="lineno">  322</span>    <span class="comment">//specalisations for dynosam factor graph</span></div>
-<div class="line"><span class="lineno">  323</span>    <span class="comment">//gtsam does not have a write function for the base factor class so we dont actually know</span></div>
-<div class="line"><span class="lineno">  324</span>    <span class="comment">//the types contained within the NonLinearFactorGraph so we have to test them</span></div>
-<div class="line"><span class="lineno">  325</span>    <span class="keyword">auto</span> write_factor =[](std::ofstream&amp; os, <span class="keyword">const</span> gtsam::NonlinearFactor::shared_ptr&amp; nl_factor) {</div>
-<div class="line"><span class="lineno">  326</span>        <span class="comment">//careful of mixing boost and std shared ptrs/casting here</span></div>
-<div class="line"><span class="lineno">  327</span>        <span class="keyword">auto</span> prior_factor = boost::dynamic_pointer_cast&lt;gtsam::PriorFactor&lt;gtsam::Pose3&gt;&gt;(nl_factor);</div>
-<div class="line"><span class="lineno">  328</span>        <span class="keywordflow">if</span>(prior_factor) seralizeFactorToGraphFileFormat&lt;gtsam::PriorFactor&lt;gtsam::Pose3&gt;&gt;(os, *prior_factor, <span class="stringliteral">&quot;SE3_PRIOR_FACTOR&quot;</span>);</div>
-<div class="line"><span class="lineno">  329</span> </div>
-<div class="line"><span class="lineno">  330</span> </div>
-<div class="line"><span class="lineno">  331</span>        <span class="comment">//TODO: should give a different name for odom/smoothing factors?</span></div>
-<div class="line"><span class="lineno">  332</span>        <span class="comment">//does not affect the graph structure but provides metadata?</span></div>
-<div class="line"><span class="lineno">  333</span>        <span class="keyword">auto</span> between_factor = boost::dynamic_pointer_cast&lt;gtsam::BetweenFactor&lt;gtsam::Pose3&gt;&gt;(nl_factor);</div>
-<div class="line"><span class="lineno">  334</span>        <span class="keywordflow">if</span>(between_factor) seralizeFactorToGraphFileFormat&lt;gtsam::BetweenFactor&lt;gtsam::Pose3&gt;&gt;(os, *between_factor, <span class="stringliteral">&quot;SE3_BETWEEN_FACTOR&quot;</span>);</div>
-<div class="line"><span class="lineno">  335</span> </div>
-<div class="line"><span class="lineno">  336</span>        <span class="keyword">auto</span> motion_factor = boost::dynamic_pointer_cast&lt;LandmarkMotionTernaryFactor&gt;(nl_factor);</div>
-<div class="line"><span class="lineno">  337</span>        <span class="keywordflow">if</span>(motion_factor) seralizeFactorToGraphFileFormat&lt;LandmarkMotionTernaryFactor&gt;(os, *motion_factor, <span class="stringliteral">&quot;SE3_MOTION_FACTOR&quot;</span>);</div>
-<div class="line"><span class="lineno">  338</span> </div>
-<div class="line"><span class="lineno">  339</span>        <span class="keyword">auto</span> pose_to_point_factor = boost::dynamic_pointer_cast&lt;gtsam::PoseToPointFactor&lt;gtsam::Pose3, Landmark&gt;&gt;(nl_factor);</div>
-<div class="line"><span class="lineno">  340</span>        <span class="keywordflow">if</span>(pose_to_point_factor) seralizeFactorToGraphFileFormat&lt;gtsam::PoseToPointFactor&lt;gtsam::Pose3, Landmark&gt;&gt;(os, *pose_to_point_factor, <span class="stringliteral">&quot;POSE_TO_POINT_FACTOR&quot;</span>);</div>
-<div class="line"><span class="lineno">  341</span>    };</div>
-<div class="line"><span class="lineno">  342</span> </div>
-<div class="line"><span class="lineno">  343</span>    <span class="keyword">auto</span> write_value = [](std::ofstream&amp; os, <span class="keyword">const</span> gtsam::Values&amp; value, gtsam::Key key) {</div>
-<div class="line"><span class="lineno">  344</span>        <a class="code hl_typedef" href="namespacedyno.html#a7ffce191936284983ac549a2a407e520">SymbolChar</a> chr = <a class="code hl_function" href="namespacedyno.html#a046549e3c97e6e7333d6321639af9f7e">DynoChrExtractor</a>(key);</div>
-<div class="line"><span class="lineno">  345</span> </div>
-<div class="line"><span class="lineno">  346</span>        <span class="keywordflow">if</span>(chr == <a class="code hl_variable" href="namespacedyno.html#aab49791c6804cc6570d43c9e6a4627b3">InvalidDynoSymbol</a>) {</div>
-<div class="line"><span class="lineno">  347</span>            <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;Cannot write value to (dynosam) graph file as the associated key is not a valid dynosam key!&quot;</span>);</div>
-<div class="line"><span class="lineno">  348</span>        }</div>
-<div class="line"><span class="lineno">  349</span> </div>
-<div class="line"><span class="lineno">  350</span>        <span class="keywordflow">switch</span>(chr) {</div>
-<div class="line"><span class="lineno">  351</span>            <span class="keywordflow">case</span> <a class="code hl_variable" href="namespacedyno.html#a0cdcb9e6ff47d4ddd07acb826f1ac613">kPoseSymbolChar</a>:</div>
-<div class="line"><span class="lineno">  352</span>                seralizeValueToGraphFileFormat&lt;gtsam::Pose3&gt;(os, value.at&lt;gtsam::Pose3&gt;(key),key, <span class="stringliteral">&quot;SE3_POSE_VALUE&quot;</span>);</div>
-<div class="line"><span class="lineno">  353</span>                <span class="keywordflow">break</span>;</div>
-<div class="line"><span class="lineno">  354</span>            <span class="keywordflow">case</span> <a class="code hl_variable" href="namespacedyno.html#a59fe8f7a9e862ddc8e917e2f966af105">kObjectMotionSymbolChar</a>:</div>
-<div class="line"><span class="lineno">  355</span>                seralizeValueToGraphFileFormat&lt;gtsam::Pose3&gt;(os, value.at&lt;gtsam::Pose3&gt;(key), key, <span class="stringliteral">&quot;SE3_MOTION_VALUE&quot;</span>);</div>
-<div class="line"><span class="lineno">  356</span>                <span class="keywordflow">break</span>;</div>
-<div class="line"><span class="lineno">  357</span>            <span class="keywordflow">case</span> <a class="code hl_variable" href="namespacedyno.html#adb188d99cd6bacbe957ed9a92fccdfa3">kStaticLandmarkSymbolChar</a>:</div>
-<div class="line"><span class="lineno">  358</span>                seralizeValueToGraphFileFormat&lt;gtsam::Point3&gt;(os, value.at&lt;gtsam::Point3&gt;(key), key, <span class="stringliteral">&quot;POINT3_STATIC_VALUE&quot;</span>);</div>
-<div class="line"><span class="lineno">  359</span>                <span class="keywordflow">break</span>;</div>
-<div class="line"><span class="lineno">  360</span>            <span class="keywordflow">case</span> <a class="code hl_variable" href="namespacedyno.html#a96c57f7a78fbfba5ab2bae9c1650796a">kDynamicLandmarkSymbolChar</a>:</div>
-<div class="line"><span class="lineno">  361</span>                seralizeValueToGraphFileFormat&lt;gtsam::Point3&gt;(os, value.at&lt;gtsam::Point3&gt;(key), key, <span class="stringliteral">&quot;POINT3_DYNAMIC_VALUE&quot;</span>);</div>
-<div class="line"><span class="lineno">  362</span>                <span class="keywordflow">break</span>;</div>
-<div class="line"><span class="lineno">  363</span>            <span class="keywordflow">default</span>:</div>
-<div class="line"><span class="lineno">  364</span>                LOG(FATAL) &lt;&lt; <span class="stringliteral">&quot;Should never reach here if DynoChrExtractor works!!&quot;</span>;</div>
-<div class="line"><span class="lineno">  365</span>        }</div>
-<div class="line"><span class="lineno">  366</span>    };</div>
-<div class="line"><span class="lineno">  367</span> </div>
-<div class="line"><span class="lineno">  368</span>    gtsam::KeySet seen_keys;</div>
-<div class="line"><span class="lineno">  369</span>    <span class="keywordflow">for</span>(<span class="keyword">const</span> <span class="keyword">auto</span>&amp; factor : *<span class="keyword">this</span>) {</div>
-<div class="line"><span class="lineno">  370</span>        write_factor(of, factor);</div>
-<div class="line"><span class="lineno">  371</span>        <span class="keywordflow">for</span>(<span class="keyword">const</span> <span class="keyword">auto</span> key : *factor) {</div>
-<div class="line"><span class="lineno">  372</span>            <span class="comment">//we have not seen this key before write it out to avoid duplication</span></div>
-<div class="line"><span class="lineno">  373</span>            <span class="keywordflow">if</span>(seen_keys.find(key) == seen_keys.end()) {</div>
-<div class="line"><span class="lineno">  374</span>                write_value(of, <a class="code hl_variable" href="classdyno_1_1NonlinearFactorGraphManager.html#ac19c33989e9be1d996b65b0dcc0e12c3">values_</a>, key);</div>
-<div class="line"><span class="lineno">  375</span>                seen_keys.insert(key);</div>
-<div class="line"><span class="lineno">  376</span>            }</div>
-<div class="line"><span class="lineno">  377</span>        }</div>
-<div class="line"><span class="lineno">  378</span>    }</div>
-<div class="line"><span class="lineno">  379</span> </div>
-<div class="line"><span class="lineno">  380</span>    std::flush(of);</div>
-<div class="line"><span class="lineno">  381</span>}</div>
-<div class="ttc" id="anamespacedyno_html_a046549e3c97e6e7333d6321639af9f7e"><div class="ttname"><a href="namespacedyno.html#a046549e3c97e6e7333d6321639af9f7e">dyno::DynoChrExtractor</a></div><div class="ttdeci">SymbolChar DynoChrExtractor(gtsam::Key)</div><div class="ttdef"><b>Definition:</b> <a href="BackendDefinitions_8cc_source.html#l00092">BackendDefinitions.cc:92</a></div></div>
+<p class="definition">Definition at line <a class="el" href="FactorGraphTools_8cc_source.html#l00435">435</a> of file <a class="el" href="FactorGraphTools_8cc_source.html">FactorGraphTools.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  436</span>                                     {</div>
+<div class="line"><span class="lineno">  437</span>  std::ofstream of(filename.c_str());</div>
+<div class="line"><span class="lineno">  438</span> </div>
+<div class="line"><span class="lineno">  439</span>  LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Writing dynosam graph file: &quot;</span> &lt;&lt; filename;</div>
+<div class="line"><span class="lineno">  440</span> </div>
+<div class="line"><span class="lineno">  441</span>  <span class="keyword">using namespace </span>factor_graph_tools;</div>
+<div class="line"><span class="lineno">  442</span> </div>
+<div class="line"><span class="lineno">  443</span>  <span class="comment">// specalisations for dynosam factor graph</span></div>
+<div class="line"><span class="lineno">  444</span>  <span class="comment">// gtsam does not have a write function for the base factor class so we dont</span></div>
+<div class="line"><span class="lineno">  445</span>  <span class="comment">// actually know the types contained within the NonLinearFactorGraph so we</span></div>
+<div class="line"><span class="lineno">  446</span>  <span class="comment">// have to test them</span></div>
+<div class="line"><span class="lineno">  447</span>  <span class="keyword">auto</span> write_factor = [](std::ofstream&amp; os,</div>
+<div class="line"><span class="lineno">  448</span>                         <span class="keyword">const</span> gtsam::NonlinearFactor::shared_ptr&amp; nl_factor) {</div>
+<div class="line"><span class="lineno">  449</span>    <span class="comment">// careful of mixing boost and std shared ptrs/casting here</span></div>
+<div class="line"><span class="lineno">  450</span>    <span class="keyword">auto</span> prior_factor =</div>
+<div class="line"><span class="lineno">  451</span>        boost::dynamic_pointer_cast&lt;gtsam::PriorFactor&lt;gtsam::Pose3&gt;&gt;(</div>
+<div class="line"><span class="lineno">  452</span>            nl_factor);</div>
+<div class="line"><span class="lineno">  453</span>    <span class="keywordflow">if</span> (prior_factor)</div>
+<div class="line"><span class="lineno">  454</span>      seralizeFactorToGraphFileFormat&lt;gtsam::PriorFactor&lt;gtsam::Pose3&gt;&gt;(</div>
+<div class="line"><span class="lineno">  455</span>          os, *prior_factor, <span class="stringliteral">&quot;SE3_PRIOR_FACTOR&quot;</span>);</div>
+<div class="line"><span class="lineno">  456</span> </div>
+<div class="line"><span class="lineno">  457</span>    <span class="comment">// TODO: should give a different name for odom/smoothing factors?</span></div>
+<div class="line"><span class="lineno">  458</span>    <span class="comment">// does not affect the graph structure but provides metadata?</span></div>
+<div class="line"><span class="lineno">  459</span>    <span class="keyword">auto</span> between_factor =</div>
+<div class="line"><span class="lineno">  460</span>        boost::dynamic_pointer_cast&lt;gtsam::BetweenFactor&lt;gtsam::Pose3&gt;&gt;(</div>
+<div class="line"><span class="lineno">  461</span>            nl_factor);</div>
+<div class="line"><span class="lineno">  462</span>    <span class="keywordflow">if</span> (between_factor)</div>
+<div class="line"><span class="lineno">  463</span>      seralizeFactorToGraphFileFormat&lt;gtsam::BetweenFactor&lt;gtsam::Pose3&gt;&gt;(</div>
+<div class="line"><span class="lineno">  464</span>          os, *between_factor, <span class="stringliteral">&quot;SE3_BETWEEN_FACTOR&quot;</span>);</div>
+<div class="line"><span class="lineno">  465</span> </div>
+<div class="line"><span class="lineno">  466</span>    <span class="keyword">auto</span> motion_factor =</div>
+<div class="line"><span class="lineno">  467</span>        boost::dynamic_pointer_cast&lt;LandmarkMotionTernaryFactor&gt;(nl_factor);</div>
+<div class="line"><span class="lineno">  468</span>    <span class="keywordflow">if</span> (motion_factor)</div>
+<div class="line"><span class="lineno">  469</span>      seralizeFactorToGraphFileFormat&lt;LandmarkMotionTernaryFactor&gt;(</div>
+<div class="line"><span class="lineno">  470</span>          os, *motion_factor, <span class="stringliteral">&quot;SE3_MOTION_FACTOR&quot;</span>);</div>
+<div class="line"><span class="lineno">  471</span> </div>
+<div class="line"><span class="lineno">  472</span>    <span class="keyword">auto</span> pose_to_point_factor = boost::dynamic_pointer_cast&lt;</div>
+<div class="line"><span class="lineno">  473</span>        gtsam::PoseToPointFactor&lt;gtsam::Pose3, Landmark&gt;&gt;(nl_factor);</div>
+<div class="line"><span class="lineno">  474</span>    <span class="keywordflow">if</span> (pose_to_point_factor)</div>
+<div class="line"><span class="lineno">  475</span>      <a class="code hl_function" href="namespacedyno_1_1factor__graph__tools.html#a13b0fd79878d4fc28598fa7f841e421f">seralizeFactorToGraphFileFormat</a>&lt;</div>
+<div class="line"><span class="lineno">  476</span>          gtsam::PoseToPointFactor&lt;gtsam::Pose3, Landmark&gt;&gt;(</div>
+<div class="line"><span class="lineno">  477</span>          os, *pose_to_point_factor, <span class="stringliteral">&quot;POSE_TO_POINT_FACTOR&quot;</span>);</div>
+<div class="line"><span class="lineno">  478</span>  };</div>
+<div class="line"><span class="lineno">  479</span> </div>
+<div class="line"><span class="lineno">  480</span>  <span class="keyword">auto</span> write_value = [](std::ofstream&amp; os, <span class="keyword">const</span> gtsam::Values&amp; value,</div>
+<div class="line"><span class="lineno">  481</span>                        gtsam::Key key) {</div>
+<div class="line"><span class="lineno">  482</span>    <a class="code hl_typedef" href="namespacedyno.html#a7ffce191936284983ac549a2a407e520">SymbolChar</a> chr = <a class="code hl_function" href="namespacedyno.html#a046549e3c97e6e7333d6321639af9f7e">DynoChrExtractor</a>(key);</div>
+<div class="line"><span class="lineno">  483</span> </div>
+<div class="line"><span class="lineno">  484</span>    <span class="keywordflow">if</span> (chr == <a class="code hl_variable" href="namespacedyno.html#aab49791c6804cc6570d43c9e6a4627b3">InvalidDynoSymbol</a>) {</div>
+<div class="line"><span class="lineno">  485</span>      <span class="keywordflow">throw</span> std::runtime_error(</div>
+<div class="line"><span class="lineno">  486</span>          <span class="stringliteral">&quot;Cannot write value to (dynosam) graph file as the associated key is &quot;</span></div>
+<div class="line"><span class="lineno">  487</span>          <span class="stringliteral">&quot;not a valid dynosam key!&quot;</span>);</div>
+<div class="line"><span class="lineno">  488</span>    }</div>
+<div class="line"><span class="lineno">  489</span> </div>
+<div class="line"><span class="lineno">  490</span>    <span class="keywordflow">switch</span> (chr) {</div>
+<div class="line"><span class="lineno">  491</span>      <span class="keywordflow">case</span> <a class="code hl_variable" href="namespacedyno.html#a0cdcb9e6ff47d4ddd07acb826f1ac613">kPoseSymbolChar</a>:</div>
+<div class="line"><span class="lineno">  492</span>        seralizeValueToGraphFileFormat&lt;gtsam::Pose3&gt;(</div>
+<div class="line"><span class="lineno">  493</span>            os, value.at&lt;gtsam::Pose3&gt;(key), key, <span class="stringliteral">&quot;SE3_POSE_VALUE&quot;</span>);</div>
+<div class="line"><span class="lineno">  494</span>        <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">  495</span>      <span class="keywordflow">case</span> <a class="code hl_variable" href="namespacedyno.html#a59fe8f7a9e862ddc8e917e2f966af105">kObjectMotionSymbolChar</a>:</div>
+<div class="line"><span class="lineno">  496</span>        seralizeValueToGraphFileFormat&lt;gtsam::Pose3&gt;(</div>
+<div class="line"><span class="lineno">  497</span>            os, value.at&lt;gtsam::Pose3&gt;(key), key, <span class="stringliteral">&quot;SE3_MOTION_VALUE&quot;</span>);</div>
+<div class="line"><span class="lineno">  498</span>        <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">  499</span>      <span class="keywordflow">case</span> <a class="code hl_variable" href="namespacedyno.html#adb188d99cd6bacbe957ed9a92fccdfa3">kStaticLandmarkSymbolChar</a>:</div>
+<div class="line"><span class="lineno">  500</span>        seralizeValueToGraphFileFormat&lt;gtsam::Point3&gt;(</div>
+<div class="line"><span class="lineno">  501</span>            os, value.at&lt;gtsam::Point3&gt;(key), key, <span class="stringliteral">&quot;POINT3_STATIC_VALUE&quot;</span>);</div>
+<div class="line"><span class="lineno">  502</span>        <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">  503</span>      <span class="keywordflow">case</span> <a class="code hl_variable" href="namespacedyno.html#a96c57f7a78fbfba5ab2bae9c1650796a">kDynamicLandmarkSymbolChar</a>:</div>
+<div class="line"><span class="lineno">  504</span>        seralizeValueToGraphFileFormat&lt;gtsam::Point3&gt;(</div>
+<div class="line"><span class="lineno">  505</span>            os, value.at&lt;gtsam::Point3&gt;(key), key, <span class="stringliteral">&quot;POINT3_DYNAMIC_VALUE&quot;</span>);</div>
+<div class="line"><span class="lineno">  506</span>        <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">  507</span>      <span class="keywordflow">default</span>:</div>
+<div class="line"><span class="lineno">  508</span>        LOG(FATAL) &lt;&lt; <span class="stringliteral">&quot;Should never reach here if DynoChrExtractor works!!&quot;</span>;</div>
+<div class="line"><span class="lineno">  509</span>    }</div>
+<div class="line"><span class="lineno">  510</span>  };</div>
+<div class="line"><span class="lineno">  511</span> </div>
+<div class="line"><span class="lineno">  512</span>  gtsam::KeySet seen_keys;</div>
+<div class="line"><span class="lineno">  513</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; factor : *<span class="keyword">this</span>) {</div>
+<div class="line"><span class="lineno">  514</span>    write_factor(of, factor);</div>
+<div class="line"><span class="lineno">  515</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> key : *factor) {</div>
+<div class="line"><span class="lineno">  516</span>      <span class="comment">// we have not seen this key before write it out to avoid duplication</span></div>
+<div class="line"><span class="lineno">  517</span>      <span class="keywordflow">if</span> (seen_keys.find(key) == seen_keys.end()) {</div>
+<div class="line"><span class="lineno">  518</span>        write_value(of, <a class="code hl_variable" href="classdyno_1_1NonlinearFactorGraphManager.html#ac19c33989e9be1d996b65b0dcc0e12c3">values_</a>, key);</div>
+<div class="line"><span class="lineno">  519</span>        seen_keys.insert(key);</div>
+<div class="line"><span class="lineno">  520</span>      }</div>
+<div class="line"><span class="lineno">  521</span>    }</div>
+<div class="line"><span class="lineno">  522</span>  }</div>
+<div class="line"><span class="lineno">  523</span> </div>
+<div class="line"><span class="lineno">  524</span>  std::flush(of);</div>
+<div class="line"><span class="lineno">  525</span>}</div>
+<div class="ttc" id="anamespacedyno_1_1factor__graph__tools_html_a13b0fd79878d4fc28598fa7f841e421f"><div class="ttname"><a href="namespacedyno_1_1factor__graph__tools.html#a13b0fd79878d4fc28598fa7f841e421f">dyno::factor_graph_tools::seralizeFactorToGraphFileFormat</a></div><div class="ttdeci">std::ostream &amp; seralizeFactorToGraphFileFormat(std::ostream &amp;os, const T &amp;t, const std::string &amp;tag)</div><div class="ttdef"><b>Definition:</b> <a href="FactorGraphTools_8hpp_source.html#l00550">FactorGraphTools.hpp:550</a></div></div>
+<div class="ttc" id="anamespacedyno_html_a046549e3c97e6e7333d6321639af9f7e"><div class="ttname"><a href="namespacedyno.html#a046549e3c97e6e7333d6321639af9f7e">dyno::DynoChrExtractor</a></div><div class="ttdeci">SymbolChar DynoChrExtractor(gtsam::Key)</div><div class="ttdef"><b>Definition:</b> <a href="BackendDefinitions_8cc_source.html#l00254">BackendDefinitions.cc:254</a></div></div>
 <div class="ttc" id="anamespacedyno_html_a0cdcb9e6ff47d4ddd07acb826f1ac613"><div class="ttname"><a href="namespacedyno.html#a0cdcb9e6ff47d4ddd07acb826f1ac613">dyno::kPoseSymbolChar</a></div><div class="ttdeci">static constexpr SymbolChar kPoseSymbolChar</div><div class="ttdef"><b>Definition:</b> <a href="BackendDefinitions_8hpp_source.html#l00057">BackendDefinitions.hpp:57</a></div></div>
-<div class="ttc" id="anamespacedyno_html_a59fe8f7a9e862ddc8e917e2f966af105"><div class="ttname"><a href="namespacedyno.html#a59fe8f7a9e862ddc8e917e2f966af105">dyno::kObjectMotionSymbolChar</a></div><div class="ttdeci">static constexpr SymbolChar kObjectMotionSymbolChar</div><div class="ttdef"><b>Definition:</b> <a href="BackendDefinitions_8hpp_source.html#l00058">BackendDefinitions.hpp:58</a></div></div>
+<div class="ttc" id="anamespacedyno_html_a59fe8f7a9e862ddc8e917e2f966af105"><div class="ttname"><a href="namespacedyno.html#a59fe8f7a9e862ddc8e917e2f966af105">dyno::kObjectMotionSymbolChar</a></div><div class="ttdeci">static constexpr SymbolChar kObjectMotionSymbolChar</div><div class="ttdef"><b>Definition:</b> <a href="BackendDefinitions_8hpp_source.html#l00059">BackendDefinitions.hpp:59</a></div></div>
 <div class="ttc" id="anamespacedyno_html_a7ffce191936284983ac549a2a407e520"><div class="ttname"><a href="namespacedyno.html#a7ffce191936284983ac549a2a407e520">dyno::SymbolChar</a></div><div class="ttdeci">unsigned char SymbolChar</div><div class="ttdef"><b>Definition:</b> <a href="BackendDefinitions_8hpp_source.html#l00056">BackendDefinitions.hpp:56</a></div></div>
-<div class="ttc" id="anamespacedyno_html_a96c57f7a78fbfba5ab2bae9c1650796a"><div class="ttname"><a href="namespacedyno.html#a96c57f7a78fbfba5ab2bae9c1650796a">dyno::kDynamicLandmarkSymbolChar</a></div><div class="ttdeci">static constexpr SymbolChar kDynamicLandmarkSymbolChar</div><div class="ttdef"><b>Definition:</b> <a href="BackendDefinitions_8hpp_source.html#l00061">BackendDefinitions.hpp:61</a></div></div>
-<div class="ttc" id="anamespacedyno_html_aab49791c6804cc6570d43c9e6a4627b3"><div class="ttname"><a href="namespacedyno.html#aab49791c6804cc6570d43c9e6a4627b3">dyno::InvalidDynoSymbol</a></div><div class="ttdeci">static constexpr SymbolChar InvalidDynoSymbol</div><div class="ttdef"><b>Definition:</b> <a href="BackendDefinitions_8hpp_source.html#l00151">BackendDefinitions.hpp:151</a></div></div>
-<div class="ttc" id="anamespacedyno_html_adb188d99cd6bacbe957ed9a92fccdfa3"><div class="ttname"><a href="namespacedyno.html#adb188d99cd6bacbe957ed9a92fccdfa3">dyno::kStaticLandmarkSymbolChar</a></div><div class="ttdeci">static constexpr SymbolChar kStaticLandmarkSymbolChar</div><div class="ttdef"><b>Definition:</b> <a href="BackendDefinitions_8hpp_source.html#l00060">BackendDefinitions.hpp:60</a></div></div>
+<div class="ttc" id="anamespacedyno_html_a96c57f7a78fbfba5ab2bae9c1650796a"><div class="ttname"><a href="namespacedyno.html#a96c57f7a78fbfba5ab2bae9c1650796a">dyno::kDynamicLandmarkSymbolChar</a></div><div class="ttdeci">static constexpr SymbolChar kDynamicLandmarkSymbolChar</div><div class="ttdef"><b>Definition:</b> <a href="BackendDefinitions_8hpp_source.html#l00062">BackendDefinitions.hpp:62</a></div></div>
+<div class="ttc" id="anamespacedyno_html_aab49791c6804cc6570d43c9e6a4627b3"><div class="ttname"><a href="namespacedyno.html#aab49791c6804cc6570d43c9e6a4627b3">dyno::InvalidDynoSymbol</a></div><div class="ttdeci">static constexpr SymbolChar InvalidDynoSymbol</div><div class="ttdef"><b>Definition:</b> <a href="BackendDefinitions_8hpp_source.html#l00221">BackendDefinitions.hpp:221</a></div></div>
+<div class="ttc" id="anamespacedyno_html_adb188d99cd6bacbe957ed9a92fccdfa3"><div class="ttname"><a href="namespacedyno.html#adb188d99cd6bacbe957ed9a92fccdfa3">dyno::kStaticLandmarkSymbolChar</a></div><div class="ttdeci">static constexpr SymbolChar kStaticLandmarkSymbolChar</div><div class="ttdef"><b>Definition:</b> <a href="BackendDefinitions_8hpp_source.html#l00061">BackendDefinitions.hpp:61</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="namespacedyno.html#a046549e3c97e6e7333d6321639af9f7e">dyno::DynoChrExtractor()</a>, <a class="el" href="namespacedyno.html#aab49791c6804cc6570d43c9e6a4627b3">dyno::InvalidDynoSymbol</a>, <a class="el" href="namespacedyno.html#a96c57f7a78fbfba5ab2bae9c1650796a">dyno::kDynamicLandmarkSymbolChar</a>, <a class="el" href="namespacedyno.html#a59fe8f7a9e862ddc8e917e2f966af105">dyno::kObjectMotionSymbolChar</a>, <a class="el" href="namespacedyno.html#a0cdcb9e6ff47d4ddd07acb826f1ac613">dyno::kPoseSymbolChar</a>, <a class="el" href="namespacedyno.html#adb188d99cd6bacbe957ed9a92fccdfa3">dyno::kStaticLandmarkSymbolChar</a>, and <a class="el" href="classdyno_1_1NonlinearFactorGraphManager.html#ac19c33989e9be1d996b65b0dcc0e12c3">values_</a>.</p>
 <div class="dynheader">
@@ -391,7 +415,7 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="FactorGraphTools_8hpp_source.html#l00560">560</a> of file <a class="el" href="FactorGraphTools_8hpp_source.html">FactorGraphTools.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FactorGraphTools_8hpp_source.html#l00714">714</a> of file <a class="el" href="FactorGraphTools_8hpp_source.html">FactorGraphTools.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1NonlinearFactorGraphManager.html#ab034c0a406d4a3aff56a93fc776e594f">linearize()</a>, and <a class="el" href="classdyno_1_1NonlinearFactorGraphManager.html#a893a56df07b5a89f72910a532b1bf26e">writeDynosamGraphFile()</a>.</p>
 

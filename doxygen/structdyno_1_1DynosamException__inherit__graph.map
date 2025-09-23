@@ -1,15 +1,18 @@
 <map id="dyno::DynosamException" name="dyno::DynosamException">
-<area shape="rect" id="node1" title=" " alt="" coords="192,256,380,281"/>
+<area shape="rect" id="node1" title=" " alt="" coords="192,325,380,351"/>
 <area shape="rect" id="node3" href="$classdyno_1_1DynoDatasetException.html" title=" " alt="" coords="447,5,657,31"/>
 <area shape="rect" id="node4" href="$classdyno_1_1ImageContainerConstructionException.html" title=" " alt="" coords="428,55,676,95"/>
-<area shape="rect" id="node5" href="$structdyno_1_1InvalidCsvHeaderException.html" title=" " alt="" coords="431,120,673,145"/>
-<area shape="rect" id="node6" href="$classdyno_1_1InvalidDefaultParameter.html" title="Exception thrown when a parameter is missing a default parameter and MUST be set by the user at runti..." alt="" coords="441,169,663,195"/>
-<area shape="rect" id="node7" href="$structdyno_1_1InvalidImageContainerException.html" title=" " alt="" coords="447,219,657,259"/>
-<area shape="rect" id="node8" href="$classdyno_1_1InvalidImageTypeException.html" title=" " alt="" coords="431,284,673,309"/>
-<area shape="rect" id="node9" href="$structdyno_1_1InvalidLandmarkException.html" title=" " alt="" coords="435,333,669,359"/>
-<area shape="rect" id="node11" href="$structdyno_1_1InvalidLandmarkQuery.html" title=" " alt="" coords="447,383,657,408"/>
-<area shape="rect" id="node12" href="$structdyno_1_1InvalidMapException.html" title=" " alt="" coords="453,432,651,457"/>
-<area shape="rect" id="node13" href="$classdyno_1_1TimestampDataFolderDoesNotExist.html" title=" " alt="" coords="449,482,655,522"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,256,144,281"/>
-<area shape="rect" id="node10" href="$structdyno_1_1MissingLandmarkException.html" title=" " alt="" coords="724,333,965,359"/>
+<area shape="rect" id="node5" href="$classdyno_1_1ImageKeyAlreadyExists.html" title=" " alt="" coords="444,120,660,145"/>
+<area shape="rect" id="node6" href="$classdyno_1_1ImageKeyDoesNotExist.html" title=" " alt="" coords="445,169,659,195"/>
+<area shape="rect" id="node7" href="$structdyno_1_1InvalidCsvHeaderException.html" title=" " alt="" coords="431,219,673,244"/>
+<area shape="rect" id="node8" href="$classdyno_1_1InvalidDefaultParameter.html" title="Exception thrown when a parameter is missing a default parameter and MUST be set by the user at runti..." alt="" coords="441,268,663,293"/>
+<area shape="rect" id="node9" href="$structdyno_1_1InvalidImageContainerException.html" title=" " alt="" coords="447,318,657,358"/>
+<area shape="rect" id="node10" href="$classdyno_1_1InvalidImageTypeException.html" title=" " alt="" coords="431,383,673,408"/>
+<area shape="rect" id="node11" href="$structdyno_1_1InvalidLandmarkException.html" title=" " alt="" coords="435,432,669,457"/>
+<area shape="rect" id="node13" href="$structdyno_1_1InvalidLandmarkQuery.html" title=" " alt="" coords="447,481,657,507"/>
+<area shape="rect" id="node14" href="$structdyno_1_1InvalidMapException.html" title=" " alt="" coords="453,531,651,556"/>
+<area shape="rect" id="node15" href="$classdyno_1_1MismatchedImageWrapperTypes.html" title=" " alt="" coords="433,581,671,621"/>
+<area shape="rect" id="node16" href="$classdyno_1_1TimestampDataFolderDoesNotExist.html" title=" " alt="" coords="449,645,655,685"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,325,144,351"/>
+<area shape="rect" id="node12" href="$structdyno_1_1MissingLandmarkException.html" title=" " alt="" coords="724,432,965,457"/>
 </map>

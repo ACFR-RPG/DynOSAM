@@ -152,13 +152,13 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="DisplaysCommon_8cc_source.html#l00051">51</a> of file <a class="el" href="DisplaysCommon_8cc_source.html">DisplaysCommon.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   51</span>                                                                                                                                                                               {</div>
-<div class="line"><span class="lineno">   52</span>    nav_msgs::msg::Odometry odom_msg;</div>
-<div class="line"><span class="lineno">   53</span>    <a class="code hl_function" href="namespacedyno_1_1utils.html#a7efb03484e6c5b1cc0d0eeeb43546ffa">utils::convertWithHeader</a>(T_world_camera, odom_msg, timestamp,</div>
-<div class="line"><span class="lineno">   54</span>                            frame_id, child_frame_id);</div>
-<div class="line"><span class="lineno">   55</span>    pub-&gt;publish(odom_msg);</div>
-<div class="line"><span class="lineno">   56</span>}</div>
+<p class="definition">Definition at line <a class="el" href="DisplaysCommon_8cc_source.html#l00045">45</a> of file <a class="el" href="DisplaysCommon_8cc_source.html">DisplaysCommon.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   49</span>                                                                     {</div>
+<div class="line"><span class="lineno">   50</span>  nav_msgs::msg::Odometry odom_msg;</div>
+<div class="line"><span class="lineno">   51</span>  <a class="code hl_function" href="namespacedyno_1_1utils.html#a7efb03484e6c5b1cc0d0eeeb43546ffa">utils::convertWithHeader</a>(T_world_camera, odom_msg, timestamp, frame_id,</div>
+<div class="line"><span class="lineno">   52</span>                           child_frame_id);</div>
+<div class="line"><span class="lineno">   53</span>  pub-&gt;publish(odom_msg);</div>
+<div class="line"><span class="lineno">   54</span>}</div>
 <div class="ttc" id="anamespacedyno_1_1utils_html_a7efb03484e6c5b1cc0d0eeeb43546ffa"><div class="ttname"><a href="namespacedyno_1_1utils.html#a7efb03484e6c5b1cc0d0eeeb43546ffa">dyno::utils::convertWithHeader</a></div><div class="ttdeci">bool convertWithHeader(const INPUT &amp;input, OUTPUT &amp;output, Timestamp timestamp, const std::string &amp;frame_id, std::optional&lt; std::string &gt; child_frame_id=std::nullopt)</div><div class="ttdoc">Converts from input type to output type where output type is a ROS message with a header....</div><div class="ttdef"><b>Definition:</b> <a href="RosUtils_8hpp_source.html#l00423">RosUtils.hpp:423</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="namespacedyno_1_1utils.html#a7efb03484e6c5b1cc0d0eeeb43546ffa">dyno::utils::convertWithHeader()</a>.</p>
@@ -169,10 +169,17 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="structdyno_1_1DisplayCommon_a865dbb6ad128fb59970d187897cdd4b5_cgraph.png" border="0" usemap="#astructdyno_1_1DisplayCommon_a865dbb6ad128fb59970d187897cdd4b5_cgraph" alt=""/></div>
 <map name="astructdyno_1_1DisplayCommon_a865dbb6ad128fb59970d187897cdd4b5_cgraph" id="astructdyno_1_1DisplayCommon_a865dbb6ad128fb59970d187897cdd4b5_cgraph">
-<area shape="rect" title=" " alt="" coords="5,5,176,45"/>
-<area shape="rect" href="namespacedyno_1_1utils.html#a7efb03484e6c5b1cc0d0eeeb43546ffa" title="Converts from input type to output type where output type is a ROS message with a header...." alt="" coords="224,5,401,45"/>
-<area shape="rect" href="namespacedyno_1_1utils.html#a81025ee06847cec0fd854eff05362d19" title="Converts Timestamp (in seconds) to ROS time." alt="" coords="449,13,617,38"/>
-<area shape="rect" href="namespacedyno.html#a2b18a1990bb26145cec08be631b0ef74" title=" " alt="" coords="665,13,776,38"/>
+<area shape="rect" title=" " alt="" coords="5,99,176,139"/>
+<area shape="rect" href="namespacedyno_1_1utils.html#a7efb03484e6c5b1cc0d0eeeb43546ffa" title="Converts from input type to output type where output type is a ROS message with a header...." alt="" coords="224,99,401,139"/>
+<area shape="rect" href="namespacedyno_1_1utils.html#a81025ee06847cec0fd854eff05362d19" title="Converts Timestamp (in seconds) to ROS time." alt="" coords="449,106,617,131"/>
+<area shape="rect" href="namespacedyno.html#a8357d6a8de284f4d1fc3d074646b43bb" title=" " alt="" coords="665,106,776,131"/>
+<area shape="rect" href="classdyno_1_1TrackedValueStatus.html#a1741e83bf5442c885da98c9c5bb71f08" title="Returns true if the object lavel is equal to dyno::background_label." alt="" coords="824,5,1012,45"/>
+<area shape="rect" href="classdyno_1_1TrackedValueStatus.html#ae90b3059d173a9354cc6a55a55ef80ac" title="Get object id (j) for this status." alt="" coords="824,69,1012,109"/>
+<area shape="rect" href="structdyno_1_1Color.html#a6689af3d0ac5ceaa66000b5ca70becbd" title="Generates a sequence of never repeating colors using the golden ratio to seperate the colours along t..." alt="" coords="838,134,998,159"/>
+<area shape="rect" href="classdyno_1_1TrackedValueStatus.html#a828faf38cea11c1dcc7651d49b68d8e1" title="Get value. Const version." alt="" coords="824,184,1012,224"/>
+<area shape="rect" href="structdyno_1_1Color.html#a08bcb6ea49861f6978858a2ff5159002" title=" " alt="" coords="1060,134,1223,159"/>
+<area shape="rect" href="structdyno_1_1Color.html#a6bc55a80a463a481dbf4778c70d04733" title=" " alt="" coords="1298,109,1437,134"/>
+<area shape="rect" href="namespacedyno.html#ab0e74ec8992860404a618192cc694b83" title=" " alt="" coords="1271,158,1464,183"/>
 </map>
 </div>
 <div class="dynheader">
@@ -239,20 +246,19 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="DisplaysCommon_8cc_source.html#l00059">59</a> of file <a class="el" href="DisplaysCommon_8cc_source.html">DisplaysCommon.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   59</span>                                                                                                                                                  {</div>
-<div class="line"><span class="lineno">   60</span> </div>
-<div class="line"><span class="lineno">   61</span>nav_msgs::msg::Path path;</div>
-<div class="line"><span class="lineno">   62</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> gtsam::Pose3&amp; odom : poses) {</div>
-<div class="line"><span class="lineno">   63</span>    geometry_msgs::msg::PoseStamped pose_stamped;</div>
-<div class="line"><span class="lineno">   64</span>    <a class="code hl_function" href="namespacedyno_1_1utils.html#a7efb03484e6c5b1cc0d0eeeb43546ffa">utils::convertWithHeader</a>(odom, pose_stamped, latest_timestamp,frame_id);</div>
-<div class="line"><span class="lineno">   65</span>    path.poses.push_back(pose_stamped);</div>
-<div class="line"><span class="lineno">   66</span>  }</div>
-<div class="line"><span class="lineno">   67</span> </div>
-<div class="line"><span class="lineno">   68</span>  path.header.stamp = <a class="code hl_function" href="namespacedyno_1_1utils.html#a81025ee06847cec0fd854eff05362d19">utils::toRosTime</a>(latest_timestamp);</div>
-<div class="line"><span class="lineno">   69</span>  path.header.frame_id = frame_id;</div>
-<div class="line"><span class="lineno">   70</span>  pub-&gt;publish(path);</div>
-<div class="line"><span class="lineno">   71</span>}</div>
+<p class="definition">Definition at line <a class="el" href="DisplaysCommon_8cc_source.html#l00056">56</a> of file <a class="el" href="DisplaysCommon_8cc_source.html">DisplaysCommon.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   59</span>                                                                   {</div>
+<div class="line"><span class="lineno">   60</span>  nav_msgs::msg::Path path;</div>
+<div class="line"><span class="lineno">   61</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> gtsam::Pose3&amp; odom : poses) {</div>
+<div class="line"><span class="lineno">   62</span>    geometry_msgs::msg::PoseStamped pose_stamped;</div>
+<div class="line"><span class="lineno">   63</span>    <a class="code hl_function" href="namespacedyno_1_1utils.html#a7efb03484e6c5b1cc0d0eeeb43546ffa">utils::convertWithHeader</a>(odom, pose_stamped, latest_timestamp, frame_id);</div>
+<div class="line"><span class="lineno">   64</span>    path.poses.push_back(pose_stamped);</div>
+<div class="line"><span class="lineno">   65</span>  }</div>
+<div class="line"><span class="lineno">   66</span> </div>
+<div class="line"><span class="lineno">   67</span>  path.header.stamp = <a class="code hl_function" href="namespacedyno_1_1utils.html#a81025ee06847cec0fd854eff05362d19">utils::toRosTime</a>(latest_timestamp);</div>
+<div class="line"><span class="lineno">   68</span>  path.header.frame_id = frame_id;</div>
+<div class="line"><span class="lineno">   69</span>  pub-&gt;publish(path);</div>
+<div class="line"><span class="lineno">   70</span>}</div>
 <div class="ttc" id="anamespacedyno_1_1utils_html_a81025ee06847cec0fd854eff05362d19"><div class="ttname"><a href="namespacedyno_1_1utils.html#a81025ee06847cec0fd854eff05362d19">dyno::utils::toRosTime</a></div><div class="ttdeci">rclcpp::Time toRosTime(Timestamp timestamp)</div><div class="ttdoc">Converts Timestamp (in seconds) to ROS time.</div><div class="ttdef"><b>Definition:</b> <a href="RosUtils_8cc_source.html#l00293">RosUtils.cc:293</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="namespacedyno_1_1utils.html#a7efb03484e6c5b1cc0d0eeeb43546ffa">dyno::utils::convertWithHeader()</a>, and <a class="el" href="namespacedyno_1_1utils.html#a81025ee06847cec0fd854eff05362d19">dyno::utils::toRosTime()</a>.</p>
@@ -263,10 +269,17 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="structdyno_1_1DisplayCommon_aa626522a5e93ee7d72975e94260069a5_cgraph.png" border="0" usemap="#astructdyno_1_1DisplayCommon_aa626522a5e93ee7d72975e94260069a5_cgraph" alt=""/></div>
 <map name="astructdyno_1_1DisplayCommon_aa626522a5e93ee7d72975e94260069a5_cgraph" id="astructdyno_1_1DisplayCommon_aa626522a5e93ee7d72975e94260069a5_cgraph">
-<area shape="rect" title=" " alt="" coords="5,35,176,75"/>
-<area shape="rect" href="namespacedyno_1_1utils.html#a7efb03484e6c5b1cc0d0eeeb43546ffa" title="Converts from input type to output type where output type is a ROS message with a header...." alt="" coords="224,5,401,45"/>
-<area shape="rect" href="namespacedyno_1_1utils.html#a81025ee06847cec0fd854eff05362d19" title="Converts Timestamp (in seconds) to ROS time." alt="" coords="449,42,617,67"/>
-<area shape="rect" href="namespacedyno.html#a2b18a1990bb26145cec08be631b0ef74" title=" " alt="" coords="665,42,776,67"/>
+<area shape="rect" title=" " alt="" coords="5,99,176,139"/>
+<area shape="rect" href="namespacedyno_1_1utils.html#a7efb03484e6c5b1cc0d0eeeb43546ffa" title="Converts from input type to output type where output type is a ROS message with a header...." alt="" coords="224,69,401,109"/>
+<area shape="rect" href="namespacedyno_1_1utils.html#a81025ee06847cec0fd854eff05362d19" title="Converts Timestamp (in seconds) to ROS time." alt="" coords="449,106,617,131"/>
+<area shape="rect" href="namespacedyno.html#a8357d6a8de284f4d1fc3d074646b43bb" title=" " alt="" coords="665,106,776,131"/>
+<area shape="rect" href="classdyno_1_1TrackedValueStatus.html#a1741e83bf5442c885da98c9c5bb71f08" title="Returns true if the object lavel is equal to dyno::background_label." alt="" coords="824,5,1012,45"/>
+<area shape="rect" href="classdyno_1_1TrackedValueStatus.html#ae90b3059d173a9354cc6a55a55ef80ac" title="Get object id (j) for this status." alt="" coords="824,69,1012,109"/>
+<area shape="rect" href="structdyno_1_1Color.html#a6689af3d0ac5ceaa66000b5ca70becbd" title="Generates a sequence of never repeating colors using the golden ratio to seperate the colours along t..." alt="" coords="838,134,998,159"/>
+<area shape="rect" href="classdyno_1_1TrackedValueStatus.html#a828faf38cea11c1dcc7651d49b68d8e1" title="Get value. Const version." alt="" coords="824,184,1012,224"/>
+<area shape="rect" href="structdyno_1_1Color.html#a08bcb6ea49861f6978858a2ff5159002" title=" " alt="" coords="1060,134,1223,159"/>
+<area shape="rect" href="structdyno_1_1Color.html#a6bc55a80a463a481dbf4778c70d04733" title=" " alt="" coords="1298,109,1437,134"/>
+<area shape="rect" href="namespacedyno.html#ab0e74ec8992860404a618192cc694b83" title=" " alt="" coords="1271,158,1464,183"/>
 </map>
 </div>
 <div class="dynheader">
@@ -332,50 +345,40 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="DisplaysCommon_8cc_source.html#l00015">15</a> of file <a class="el" href="DisplaysCommon_8cc_source.html">DisplaysCommon.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   15</span>                                                                                                                                                                               {</div>
-<div class="line"><span class="lineno">   16</span>    pcl::PointCloud&lt;pcl::PointXYZRGB&gt; cloud;</div>
-<div class="line"><span class="lineno">   17</span> </div>
-<div class="line"><span class="lineno">   18</span>  <a class="code hl_typedef" href="namespacedyno.html#aeed89004aa6762d0e7d140229a96766d">CloudPerObject</a> clouds_per_obj;</div>
-<div class="line"><span class="lineno">   19</span> </div>
-<div class="line"><span class="lineno">   20</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; status_estimate : landmarks) {</div>
-<div class="line"><span class="lineno">   21</span>    <a class="code hl_typedef" href="namespacedyno.html#a6c8dbdcd5e61797d494457220b875761">Landmark</a> lmk_world = status_estimate.value();</div>
-<div class="line"><span class="lineno">   22</span>    <span class="keyword">const</span> <a class="code hl_typedef" href="namespacedyno.html#a38bb86e4154b86428b8d133be03fb2b5">ObjectId</a> object_id = status_estimate.objectId();</div>
-<div class="line"><span class="lineno">   23</span>    <span class="keywordflow">if</span> (status_estimate.referenceFrame() == <a class="code hl_enumvalue" href="namespacedyno.html#a828b92ac8912e7d2ffc267eb0d08b74caa27154c3ecf3464fdba911247447813e">ReferenceFrame::LOCAL</a>) {</div>
-<div class="line"><span class="lineno">   24</span>      lmk_world = T_world_camera * status_estimate.value();</div>
-<div class="line"><span class="lineno">   25</span>    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (status_estimate.referenceFrame() == <a class="code hl_enumvalue" href="namespacedyno.html#a828b92ac8912e7d2ffc267eb0d08b74ca3f3c55d40da302eff6999f6634bc8237">ReferenceFrame::OBJECT</a>) {</div>
-<div class="line"><span class="lineno">   26</span>      <span class="keywordflow">throw</span> DynosamException(</div>
-<div class="line"><span class="lineno">   27</span>          <span class="stringliteral">&quot;Cannot display object point in the object reference frame&quot;</span>);</div>
-<div class="line"><span class="lineno">   28</span>    }</div>
-<div class="line"><span class="lineno">   29</span> </div>
-<div class="line"><span class="lineno">   30</span>    pcl::PointXYZRGB pt;</div>
-<div class="line"><span class="lineno">   31</span>    <span class="keywordflow">if</span> (status_estimate.isStatic()) {</div>
-<div class="line"><span class="lineno">   32</span>      <span class="comment">// publish static lmk&#39;s as white</span></div>
-<div class="line"><span class="lineno">   33</span>      pt = pcl::PointXYZRGB(lmk_world(0), lmk_world(1), lmk_world(2), 0, 0, 0);</div>
-<div class="line"><span class="lineno">   34</span>    } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">   35</span>      <span class="keyword">const</span> cv::Scalar colour = <a class="code hl_function" href="structdyno_1_1Color.html#a4f52f9aec87e2c34370ad02e6d4e25fc">Color::uniqueId</a>(object_id);</div>
-<div class="line"><span class="lineno">   36</span>      pt = pcl::PointXYZRGB(lmk_world(0), lmk_world(1), lmk_world(2), colour(0),</div>
-<div class="line"><span class="lineno">   37</span>                            colour(1), colour(2));</div>
-<div class="line"><span class="lineno">   38</span>    }</div>
-<div class="line"><span class="lineno">   39</span>    cloud.points.push_back(pt);</div>
-<div class="line"><span class="lineno">   40</span>    clouds_per_obj[object_id].push_back(pt);</div>
-<div class="line"><span class="lineno">   41</span>  }</div>
-<div class="line"><span class="lineno">   42</span> </div>
-<div class="line"><span class="lineno">   43</span>  sensor_msgs::msg::PointCloud2 pc2_msg;</div>
-<div class="line"><span class="lineno">   44</span>  pcl::toROSMsg(cloud, pc2_msg);</div>
-<div class="line"><span class="lineno">   45</span>  pc2_msg.header.frame_id = frame_id;</div>
-<div class="line"><span class="lineno">   46</span>  pub-&gt;publish(pc2_msg);</div>
-<div class="line"><span class="lineno">   47</span> </div>
-<div class="line"><span class="lineno">   48</span>  <span class="keywordflow">return</span> clouds_per_obj;</div>
-<div class="line"><span class="lineno">   49</span>}</div>
-<div class="ttc" id="anamespacedyno_html_a38bb86e4154b86428b8d133be03fb2b5"><div class="ttname"><a href="namespacedyno.html#a38bb86e4154b86428b8d133be03fb2b5">dyno::ObjectId</a></div><div class="ttdeci">int ObjectId</div><div class="ttdoc">Discrete object id, j.</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00068">Types.hpp:68</a></div></div>
-<div class="ttc" id="anamespacedyno_html_a6c8dbdcd5e61797d494457220b875761"><div class="ttname"><a href="namespacedyno.html#a6c8dbdcd5e61797d494457220b875761">dyno::Landmark</a></div><div class="ttdeci">gtsam::Point3 Landmark</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00086">Types.hpp:86</a></div></div>
-<div class="ttc" id="anamespacedyno_html_a828b92ac8912e7d2ffc267eb0d08b74ca3f3c55d40da302eff6999f6634bc8237"><div class="ttname"><a href="namespacedyno.html#a828b92ac8912e7d2ffc267eb0d08b74ca3f3c55d40da302eff6999f6634bc8237">dyno::OBJECT</a></div><div class="ttdeci">@ OBJECT</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00141">Types.hpp:141</a></div></div>
-<div class="ttc" id="anamespacedyno_html_a828b92ac8912e7d2ffc267eb0d08b74caa27154c3ecf3464fdba911247447813e"><div class="ttname"><a href="namespacedyno.html#a828b92ac8912e7d2ffc267eb0d08b74caa27154c3ecf3464fdba911247447813e">dyno::LOCAL</a></div><div class="ttdeci">@ LOCAL</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00141">Types.hpp:141</a></div></div>
-<div class="ttc" id="anamespacedyno_html_aeed89004aa6762d0e7d140229a96766d"><div class="ttname"><a href="namespacedyno.html#aeed89004aa6762d0e7d140229a96766d">dyno::CloudPerObject</a></div><div class="ttdeci">gtsam::FastMap&lt; ObjectId, pcl::PointCloud&lt; pcl::PointXYZRGB &gt; &gt; CloudPerObject</div><div class="ttdef"><b>Definition:</b> <a href="PointCloudProcess_8hpp_source.html#l00044">PointCloudProcess.hpp:45</a></div></div>
-<div class="ttc" id="astructdyno_1_1Color_html_a4f52f9aec87e2c34370ad02e6d4e25fc"><div class="ttname"><a href="structdyno_1_1Color.html#a4f52f9aec87e2c34370ad02e6d4e25fc">dyno::Color::uniqueId</a></div><div class="ttdeci">static Color uniqueId(size_t id, float saturation=0.5f, float value=0.95f)</div><div class="ttdoc">Generates a sequence of never repeating colors using the golden ration to seperate the colours along ...</div><div class="ttdef"><b>Definition:</b> <a href="ColourMap_8cc_source.html#l00169">ColourMap.cc:169</a></div></div>
+<p class="definition">Definition at line <a class="el" href="DisplaysCommon_8cc_source.html#l00014">14</a> of file <a class="el" href="DisplaysCommon_8cc_source.html">DisplaysCommon.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   16</span>                                                                 {</div>
+<div class="line"><span class="lineno">   17</span>  pcl::PointCloud&lt;pcl::PointXYZRGB&gt; cloud;</div>
+<div class="line"><span class="lineno">   18</span>  <a class="code hl_typedef" href="namespacedyno.html#aeed89004aa6762d0e7d140229a96766d">CloudPerObject</a> clouds_per_obj =</div>
+<div class="line"><span class="lineno">   19</span>      <a class="code hl_function" href="namespacedyno.html#a2d0888a8627082384b75a95953f55c3c">groupObjectCloud</a>(landmarks, T_world_camera,</div>
+<div class="line"><span class="lineno">   20</span>                       [&amp;cloud](<span class="keyword">const</span> pcl::PointXYZRGB&amp; point, <a class="code hl_typedef" href="namespacedyno.html#a38bb86e4154b86428b8d133be03fb2b5">ObjectId</a>) {</div>
+<div class="line"><span class="lineno">   21</span>                         cloud.points.push_back(point);</div>
+<div class="line"><span class="lineno">   22</span>                       });</div>
+<div class="line"><span class="lineno">   23</span> </div>
+<div class="line"><span class="lineno">   24</span>  pcl::PointCloud&lt;pcl::PointXYZRGB&gt; filtered_and_merged_cloud;</div>
+<div class="line"><span class="lineno">   25</span>  <span class="keywordflow">for</span> (<span class="keyword">auto</span> [_, obj_cloud] : clouds_per_obj) {</div>
+<div class="line"><span class="lineno">   26</span>    <span class="keyword">auto</span> cloud = pcl::make_shared&lt;pcl::PointCloud&lt;pcl::PointXYZRGB&gt;&gt;(obj_cloud);</div>
+<div class="line"><span class="lineno">   27</span>    pcl::PointCloud&lt;pcl::PointXYZRGB&gt;::Ptr cloud_filtered(</div>
+<div class="line"><span class="lineno">   28</span>        <span class="keyword">new</span> pcl::PointCloud&lt;pcl::PointXYZRGB&gt;);</div>
+<div class="line"><span class="lineno">   29</span>    pcl::StatisticalOutlierRemoval&lt;pcl::PointXYZRGB&gt; sor;</div>
+<div class="line"><span class="lineno">   30</span>    sor.setInputCloud(cloud);</div>
+<div class="line"><span class="lineno">   31</span>    sor.setMeanK(50);             <span class="comment">// Number of neighbors to analyze</span></div>
+<div class="line"><span class="lineno">   32</span>    sor.setStddevMulThresh(1.0);  <span class="comment">// Threshold based on std dev</span></div>
+<div class="line"><span class="lineno">   33</span>    sor.filter(*cloud_filtered);</div>
+<div class="line"><span class="lineno">   34</span>    filtered_and_merged_cloud += (*cloud_filtered);</div>
+<div class="line"><span class="lineno">   35</span>  }</div>
+<div class="line"><span class="lineno">   36</span> </div>
+<div class="line"><span class="lineno">   37</span>  sensor_msgs::msg::PointCloud2 pc2_msg;</div>
+<div class="line"><span class="lineno">   38</span>  pcl::toROSMsg(filtered_and_merged_cloud, pc2_msg);</div>
+<div class="line"><span class="lineno">   39</span>  pc2_msg.header.frame_id = frame_id;</div>
+<div class="line"><span class="lineno">   40</span>  pub-&gt;publish(pc2_msg);</div>
+<div class="line"><span class="lineno">   41</span> </div>
+<div class="line"><span class="lineno">   42</span>  <span class="keywordflow">return</span> clouds_per_obj;</div>
+<div class="line"><span class="lineno">   43</span>}</div>
+<div class="ttc" id="anamespacedyno_html_a2d0888a8627082384b75a95953f55c3c"><div class="ttname"><a href="namespacedyno.html#a2d0888a8627082384b75a95953f55c3c">dyno::groupObjectCloud</a></div><div class="ttdeci">CloudPerObject groupObjectCloud(const StatusLandmarkVector &amp;landmarks, const gtsam::Pose3 &amp;T_world_camera, std::function&lt; Color(ObjectId)&gt; colour_generator=Color::uniqueObjectId, std::function&lt; void(const pcl::PointXYZRGB &amp;, ObjectId)&gt; point_cb=nullptr)</div><div class="ttdoc">This function goes through the input 3D landmarks and group them into point clusters based on their o...</div><div class="ttdef"><b>Definition:</b> <a href="PointCloudProcess_8cc_source.html#l00097">PointCloudProcess.cc:97</a></div></div>
+<div class="ttc" id="anamespacedyno_html_a38bb86e4154b86428b8d133be03fb2b5"><div class="ttname"><a href="namespacedyno.html#a38bb86e4154b86428b8d133be03fb2b5">dyno::ObjectId</a></div><div class="ttdeci">int ObjectId</div><div class="ttdoc">Discrete object id, j.</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00069">Types.hpp:69</a></div></div>
+<div class="ttc" id="anamespacedyno_html_aeed89004aa6762d0e7d140229a96766d"><div class="ttname"><a href="namespacedyno.html#aeed89004aa6762d0e7d140229a96766d">dyno::CloudPerObject</a></div><div class="ttdeci">gtsam::FastMap&lt; ObjectId, pcl::PointCloud&lt; pcl::PointXYZRGB &gt; &gt; CloudPerObject</div><div class="ttdoc">Map of ObjectId's to XYZRGB Point Clouds.</div><div class="ttdef"><b>Definition:</b> <a href="PointCloudProcess_8hpp_source.html#l00044">PointCloudProcess.hpp:45</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="namespacedyno.html#a828b92ac8912e7d2ffc267eb0d08b74caa27154c3ecf3464fdba911247447813e">dyno::LOCAL</a>, <a class="el" href="namespacedyno.html#a828b92ac8912e7d2ffc267eb0d08b74ca3f3c55d40da302eff6999f6634bc8237">dyno::OBJECT</a>, and <a class="el" href="structdyno_1_1Color.html#a4f52f9aec87e2c34370ad02e6d4e25fc">dyno::Color::uniqueId()</a>.</p>
+<p class="reference">References <a class="el" href="namespacedyno.html#a2d0888a8627082384b75a95953f55c3c">dyno::groupObjectCloud()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1DSDRos.html#a2c158ca365a2406ba990a1c8a60ba603">dyno::DSDRos::publishDynamicPointCloud()</a>, <a class="el" href="classdyno_1_1InbuiltDisplayCommon.html#a5ea9ec6ffedf2a6cb3a84a71fe0590fd">dyno::InbuiltDisplayCommon::publishPointCloud()</a>, and <a class="el" href="classdyno_1_1DSDRos.html#a2ea9ccc0e69485a7128c10b55ca60c99">dyno::DSDRos::publishStaticPointCloud()</a>.</p>
 <div class="dynheader">
@@ -384,10 +387,11 @@ Here is the call graph for this function:</div>
 <div class="center"><img src="structdyno_1_1DisplayCommon_ad9251fcb86a8c872c6b3736d0c2cd8f8_cgraph.png" border="0" usemap="#astructdyno_1_1DisplayCommon_ad9251fcb86a8c872c6b3736d0c2cd8f8_cgraph" alt=""/></div>
 <map name="astructdyno_1_1DisplayCommon_ad9251fcb86a8c872c6b3736d0c2cd8f8_cgraph" id="astructdyno_1_1DisplayCommon_ad9251fcb86a8c872c6b3736d0c2cd8f8_cgraph">
 <area shape="rect" title=" " alt="" coords="5,23,176,63"/>
-<area shape="rect" href="structdyno_1_1Color.html#a4f52f9aec87e2c34370ad02e6d4e25fc" title="Generates a sequence of never repeating colors using the golden ration to seperate the colours along ..." alt="" coords="224,31,384,56"/>
-<area shape="rect" href="structdyno_1_1Color.html#a08bcb6ea49861f6978858a2ff5159002" title=" " alt="" coords="432,31,595,56"/>
-<area shape="rect" href="structdyno_1_1Color.html#a6bc55a80a463a481dbf4778c70d04733" title=" " alt="" coords="670,5,809,31"/>
-<area shape="rect" href="namespacedyno.html#ab0e74ec8992860404a618192cc694b83" title=" " alt="" coords="643,55,836,80"/>
+<area shape="rect" href="namespacedyno.html#a2d0888a8627082384b75a95953f55c3c" title="This function goes through the input 3D landmarks and group them into point clusters based on their o..." alt="" coords="224,31,403,56"/>
+<area shape="rect" href="structdyno_1_1Color.html#a6689af3d0ac5ceaa66000b5ca70becbd" title="Generates a sequence of never repeating colors using the golden ratio to seperate the colours along t..." alt="" coords="451,31,611,56"/>
+<area shape="rect" href="structdyno_1_1Color.html#a08bcb6ea49861f6978858a2ff5159002" title=" " alt="" coords="659,31,821,56"/>
+<area shape="rect" href="structdyno_1_1Color.html#a6bc55a80a463a481dbf4778c70d04733" title=" " alt="" coords="897,5,1035,31"/>
+<area shape="rect" href="namespacedyno.html#ab0e74ec8992860404a618192cc694b83" title=" " alt="" coords="869,55,1063,80"/>
 </map>
 </div>
 <div class="dynheader">

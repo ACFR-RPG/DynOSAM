@@ -167,7 +167,7 @@ Private Attributes</h2></td></tr>
 <div class="line"><span class="lineno">   45</span>  <span class="keywordtype">bool</span> queue_state = <span class="keyword">false</span>;</div>
 <div class="line"><span class="lineno">   46</span>  <span class="keywordflow">if</span> (<a class="code hl_variable" href="classdyno_1_1OpenCVImageDisplayQueue.html#a8c024dd92e08422f75027805ea442ae6">parallel_run_</a>) {</div>
 <div class="line"><span class="lineno">   47</span>    ImageToDisplay image_to_display;</div>
-<div class="line"><span class="lineno">   48</span>    queue_state = <a class="code hl_variable" href="classdyno_1_1OpenCVImageDisplayQueue.html#aaf4491e71724c9c7fbf0757c31da10fe">display_queue_</a>-&gt;<a class="code hl_function" href="classThreadsafeQueue.html#a06b3418f87d1703da2fb8af8cb689790">popBlocking</a>(image_to_display);</div>
+<div class="line"><span class="lineno">   48</span>    queue_state = <a class="code hl_variable" href="classdyno_1_1OpenCVImageDisplayQueue.html#aaf4491e71724c9c7fbf0757c31da10fe">display_queue_</a>-&gt;<a class="code hl_function" href="classThreadsafeQueue.html#a46d8add3de7c66d4b6e743020a5c3ffd">popBlockingWithTimeout</a>(image_to_display, 5);</div>
 <div class="line"><span class="lineno">   49</span> </div>
 <div class="line"><span class="lineno">   50</span>    <span class="keywordflow">if</span> (queue_state) {</div>
 <div class="line"><span class="lineno">   51</span>      <span class="comment">// cv::namedWindow(image_to_display.name_);</span></div>
@@ -186,10 +186,10 @@ Private Attributes</h2></td></tr>
 <div class="line"><span class="lineno">   64</span>    }</div>
 <div class="line"><span class="lineno">   65</span>  }</div>
 <div class="line"><span class="lineno">   66</span>}</div>
-<div class="ttc" id="aclassThreadsafeQueue_html_a06b3418f87d1703da2fb8af8cb689790"><div class="ttname"><a href="classThreadsafeQueue.html#a06b3418f87d1703da2fb8af8cb689790">ThreadsafeQueue::popBlocking</a></div><div class="ttdeci">bool popBlocking(T &amp;value) override</div><div class="ttdoc">Pop value. Waits for data to be available in the queue. Returns false if the queue has been shutdown.</div><div class="ttdef"><b>Definition:</b> <a href="ThreadSafeQueue_8hpp_source.html#l00280">ThreadSafeQueue.hpp:280</a></div></div>
 <div class="ttc" id="aclassThreadsafeQueue_html_a33b9409368f81487e5999e208d7f69c6"><div class="ttname"><a href="classThreadsafeQueue.html#a33b9409368f81487e5999e208d7f69c6">ThreadsafeQueue::popAll</a></div><div class="ttdeci">bool popAll(std::vector&lt; T &gt; &amp;data, size_t duration_ms=0u)</div><div class="ttdef"><b>Definition:</b> <a href="ThreadSafeQueue_8hpp_source.html#l00346">ThreadSafeQueue.hpp:346</a></div></div>
+<div class="ttc" id="aclassThreadsafeQueue_html_a46d8add3de7c66d4b6e743020a5c3ffd"><div class="ttname"><a href="classThreadsafeQueue.html#a46d8add3de7c66d4b6e743020a5c3ffd">ThreadsafeQueue::popBlockingWithTimeout</a></div><div class="ttdeci">bool popBlockingWithTimeout(T &amp;value, size_t duration_ms) override</div><div class="ttdoc">popBlockingUpToTime Same as Pop blocking, but further returns early if the given duration has passed....</div><div class="ttdef"><b>Definition:</b> <a href="ThreadSafeQueue_8hpp_source.html#l00306">ThreadSafeQueue.hpp:306</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="classdyno_1_1OpenCVImageDisplayQueue.html#aaf4491e71724c9c7fbf0757c31da10fe">display_queue_</a>, <a class="el" href="structdyno_1_1ImageToDisplay.html#a78e778d8f1106908312b7195bffd4c0c">dyno::ImageToDisplay::image_</a>, <a class="el" href="structdyno_1_1ImageToDisplay.html#aa7118752e1f98565460fc59adc484522">dyno::ImageToDisplay::name_</a>, <a class="el" href="classdyno_1_1OpenCVImageDisplayQueue.html#a8c024dd92e08422f75027805ea442ae6">parallel_run_</a>, <a class="el" href="classThreadsafeQueue.html#a33b9409368f81487e5999e208d7f69c6">ThreadsafeQueue&lt; T &gt;::popAll()</a>, and <a class="el" href="classThreadsafeQueue.html#a06b3418f87d1703da2fb8af8cb689790">ThreadsafeQueue&lt; T &gt;::popBlocking()</a>.</p>
+<p class="reference">References <a class="el" href="classdyno_1_1OpenCVImageDisplayQueue.html#aaf4491e71724c9c7fbf0757c31da10fe">display_queue_</a>, <a class="el" href="structdyno_1_1ImageToDisplay.html#a78e778d8f1106908312b7195bffd4c0c">dyno::ImageToDisplay::image_</a>, <a class="el" href="structdyno_1_1ImageToDisplay.html#aa7118752e1f98565460fc59adc484522">dyno::ImageToDisplay::name_</a>, <a class="el" href="classdyno_1_1OpenCVImageDisplayQueue.html#a8c024dd92e08422f75027805ea442ae6">parallel_run_</a>, <a class="el" href="classThreadsafeQueue.html#a33b9409368f81487e5999e208d7f69c6">ThreadsafeQueue&lt; T &gt;::popAll()</a>, and <a class="el" href="classThreadsafeQueue.html#a46d8add3de7c66d4b6e743020a5c3ffd">ThreadsafeQueue&lt; T &gt;::popBlockingWithTimeout()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1DynoPipelineManager.html#a088564a2b3ea645611764a41fc290e67">dyno::DynoPipelineManager::spinViz()</a>.</p>
 <div class="dynheader">
@@ -197,9 +197,9 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1OpenCVImageDisplayQueue_af8fa9a44165ec7c4fd83d4251fc416c4_cgraph.png" border="0" usemap="#aclassdyno_1_1OpenCVImageDisplayQueue_af8fa9a44165ec7c4fd83d4251fc416c4_cgraph" alt=""/></div>
 <map name="aclassdyno_1_1OpenCVImageDisplayQueue_af8fa9a44165ec7c4fd83d4251fc416c4_cgraph" id="aclassdyno_1_1OpenCVImageDisplayQueue_af8fa9a44165ec7c4fd83d4251fc416c4_cgraph">
-<area shape="rect" title=" " alt="" coords="5,23,209,63"/>
+<area shape="rect" title=" " alt="" coords="5,27,209,67"/>
 <area shape="rect" href="classThreadsafeQueue.html#a33b9409368f81487e5999e208d7f69c6" title=" " alt="" coords="277,5,463,31"/>
-<area shape="rect" href="classThreadsafeQueue.html#a06b3418f87d1703da2fb8af8cb689790" title="Pop value. Waits for data to be available in the queue. Returns false if the queue has been shutdown." alt="" coords="257,55,483,80"/>
+<area shape="rect" href="classThreadsafeQueue.html#a46d8add3de7c66d4b6e743020a5c3ffd" title="popBlockingUpToTime Same as Pop blocking, but further returns early if the given duration has passed...." alt="" coords="257,55,483,95"/>
 </map>
 </div>
 <div class="dynheader">

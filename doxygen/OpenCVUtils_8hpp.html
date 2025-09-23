@@ -75,22 +75,67 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
 <a href="#namespaces">Namespaces</a> &#124;
 <a href="#define-members">Macros</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">OpenCVUtils.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;opencv4/opencv2/opencv.hpp&gt;</code><br />
+<div class="textblock"><code>#include &lt;opencv4/opencv2/core/types.hpp&gt;</code><br />
+<code>#include &lt;opencv4/opencv2/opencv.hpp&gt;</code><br />
+<code>#include &quot;<a class="el" href="Types_8hpp_source.html">dynosam/common/Types.hpp</a>&quot;</code><br />
 <code>#include &lt;yaml-cpp/yaml.h&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for OpenCVUtils.hpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="OpenCVUtils_8hpp__incl.png" border="0" usemap="#adynosam_2include_2dynosam_2utils_2OpenCVUtils_8hpp" alt=""/></div>
 <map name="adynosam_2include_2dynosam_2utils_2OpenCVUtils_8hpp" id="adynosam_2include_2dynosam_2utils_2OpenCVUtils_8hpp">
-<area shape="rect" title=" " alt="" coords="113,5,310,45"/>
-<area shape="rect" title=" " alt="" coords="5,93,220,119"/>
-<area shape="rect" title=" " alt="" coords="244,93,376,119"/>
+<area shape="rect" title=" " alt="" coords="827,5,1025,45"/>
+<area shape="rect" title=" " alt="" coords="421,93,589,133"/>
+<area shape="rect" title=" " alt="" coords="5,350,220,375"/>
+<area shape="rect" href="Types_8hpp.html" title=" " alt="" coords="1121,101,1333,126"/>
+<area shape="rect" title=" " alt="" coords="1357,101,1489,126"/>
+<area shape="rect" title=" " alt="" coords="245,350,359,375"/>
+<area shape="rect" title=" " alt="" coords="3071,189,3239,214"/>
+<area shape="rect" title=" " alt="" coords="2739,438,2895,463"/>
+<area shape="rect" title=" " alt="" coords="384,350,569,375"/>
+<area shape="rect" title=" " alt="" coords="3264,189,3407,214"/>
+<area shape="rect" title=" " alt="" coords="594,350,669,375"/>
+<area shape="rect" title=" " alt="" coords="3431,189,3528,214"/>
+<area shape="rect" title=" " alt="" coords="693,350,785,375"/>
+<area shape="rect" title=" " alt="" coords="3552,189,3615,214"/>
+<area shape="rect" href="Flags_8hpp.html" title=" " alt="" coords="3670,189,3881,214"/>
+<area shape="rect" href="Macros_8hpp.html" title=" " alt="" coords="867,189,1060,214"/>
+<area shape="rect" href="SensorModels_8hpp.html" title=" " alt="" coords="2781,189,3047,214"/>
+<area shape="rect" href="Types-inl_8hpp.html" title=" " alt="" coords="1135,181,1319,221"/>
+<area shape="rect" title=" " alt="" coords="3748,269,3864,295"/>
+<area shape="rect" title=" " alt="" coords="925,269,1002,295"/>
+<area shape="rect" title=" " alt="" coords="2919,438,3074,463"/>
+<area shape="rect" title=" " alt="" coords="3002,269,3231,295"/>
+<area shape="rect" title=" " alt="" coords="3255,269,3453,295"/>
+<area shape="rect" href="Exceptions_8hpp.html" title=" " alt="" coords="3477,269,3724,295"/>
+<area shape="rect" href="GtsamUtils_8hpp.html" title=" " alt="" coords="1425,269,1643,295"/>
+<area shape="rect" title=" " alt="" coords="3352,350,3439,375"/>
+<area shape="rect" title=" " alt="" coords="3463,350,3539,375"/>
+<area shape="rect" title=" " alt="" coords="3563,350,3638,375"/>
+<area shape="rect" title=" " alt="" coords="3663,350,3749,375"/>
+<area shape="rect" title=" " alt="" coords="3774,350,3833,375"/>
+<area shape="rect" title=" " alt="" coords="809,350,1008,375"/>
+<area shape="rect" title=" " alt="" coords="1033,350,1219,375"/>
+<area shape="rect" title=" " alt="" coords="1243,350,1419,375"/>
+<area shape="rect" title=" " alt="" coords="1443,350,1625,375"/>
+<area shape="rect" title=" " alt="" coords="1649,350,1816,375"/>
+<area shape="rect" title=" " alt="" coords="1840,350,2033,375"/>
+<area shape="rect" title=" " alt="" coords="2058,350,2231,375"/>
+<area shape="rect" title=" " alt="" coords="2255,343,2450,383"/>
+<area shape="rect" title=" " alt="" coords="2474,350,2661,375"/>
+<area shape="rect" title=" " alt="" coords="2685,350,2825,375"/>
+<area shape="rect" href="Numerical_8hpp.html" title=" " alt="" coords="3082,350,3295,375"/>
+<area shape="rect" title=" " alt="" coords="3098,431,3279,471"/>
+<area shape="rect" title=" " alt="" coords="3303,431,3485,471"/>
+<area shape="rect" title=" " alt="" coords="3509,438,3589,463"/>
+<area shape="rect" title=" " alt="" coords="3613,438,3687,463"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -98,61 +143,68 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="OpenCVUtils_8hpp__dep__incl.png" border="0" usemap="#adynosam_2include_2dynosam_2utils_2OpenCVUtils_8hppdep" alt=""/></div>
 <map name="adynosam_2include_2dynosam_2utils_2OpenCVUtils_8hppdep" id="adynosam_2include_2dynosam_2utils_2OpenCVUtils_8hppdep">
-<area shape="rect" title=" " alt="" coords="1907,5,2104,45"/>
-<area shape="rect" href="ImageContainer_8hpp.html" title=" " alt="" coords="2032,181,2251,221"/>
-<area shape="rect" href="RGBDInstance-Definitions_8hpp.html" title=" " alt="" coords="2355,577,2552,632"/>
-<area shape="rect" href="VisionTools_8hpp.html" title=" " alt="" coords="1985,585,2215,625"/>
-<area shape="rect" href="ClusterSlamDataProvider_8cc.html" title=" " alt="" coords="1347,695,1554,735"/>
-<area shape="rect" href="DataProviderUtils_8cc.html" title=" " alt="" coords="3571,695,3763,735"/>
-<area shape="rect" href="OMDDataProvider_8cc.html" title=" " alt="" coords="159,695,351,735"/>
-<area shape="rect" href="FeatureTracker_8cc.html" title=" " alt="" coords="3315,695,3496,735"/>
-<area shape="rect" href="dataset__node_8cc.html" title=" " alt="" coords="375,695,580,735"/>
-<area shape="rect" href="FrontendInputPacket_8hpp.html" title=" " alt="" coords="1239,379,1484,419"/>
-<area shape="rect" href="ClusterSlamDataProvider_8hpp.html" title=" " alt="" coords="1486,475,1709,529"/>
-<area shape="rect" href="KittiDataProvider_8hpp.html" title=" " alt="" coords="665,482,917,522"/>
-<area shape="rect" href="OMDDataProvider_8hpp.html" title=" " alt="" coords="383,482,641,522"/>
-<area shape="rect" href="ProjectAriaDataProvider_8hpp.html" title=" " alt="" coords="145,475,359,529"/>
-<area shape="rect" href="ProjectAriaDataProvider_8cc.html" title=" " alt="" coords="117,585,315,625"/>
-<area shape="rect" href="VirtualKittiDataProvider_8hpp.html" title=" " alt="" coords="941,475,1155,529"/>
-<area shape="rect" href="ImageContainer_8cc.html" title=" " alt="" coords="1715,277,1882,317"/>
-<area shape="rect" href="ImageTypes_8hpp.html" title=" " alt="" coords="2839,93,3036,133"/>
-<area shape="rect" href="ImageTypes_8cc.html" title=" " alt="" coords="3626,181,3793,221"/>
-<area shape="rect" href="CameraParams_8cc.html" title=" " alt="" coords="3162,93,3329,133"/>
-<area shape="rect" href="GroundTruthPacket_8cc.html" title=" " alt="" coords="3353,93,3519,133"/>
-<area shape="rect" href="StereoCamera_8cc.html" title=" " alt="" coords="3543,93,3710,133"/>
-<area shape="rect" href="FeatureTrackerBase_8cc.html" title=" " alt="" coords="3734,93,3949,133"/>
-<area shape="rect" href="TrackerParams_8cc.html" title=" " alt="" coords="3973,93,4155,133"/>
-<area shape="rect" href="OpenCVUtils_8cc.html" title=" " alt="" coords="4179,101,4421,126"/>
-<area shape="rect" href="dyno__sam_8cc.html" title=" " alt="" coords="924,695,1103,735"/>
-<area shape="rect" href="ImageContainer-inl_8hpp.html" title=" " alt="" coords="2339,269,2536,324"/>
-<area shape="rect" href="Frontend-Definitions_8hpp.html" title=" " alt="" coords="2611,277,2856,317"/>
-<area shape="rect" href="Vision-Definitions_8hpp.html" title=" " alt="" coords="2475,372,2672,427"/>
-<area shape="rect" href="Frame_8hpp.html" title=" " alt="" coords="2073,482,2271,522"/>
-<area shape="rect" href="Feature_8hpp.html" title=" " alt="" coords="2109,277,2315,317"/>
-<area shape="rect" href="FrontendOutputPacket_8hpp.html" title=" " alt="" coords="2345,482,2601,522"/>
-<area shape="rect" href="MotionSolver_8hpp.html" title=" " alt="" coords="3049,695,3290,735"/>
-<area shape="rect" href="FrontendPipeline_8hpp.html" title=" " alt="" coords="1638,585,1861,625"/>
-<area shape="rect" href="JsonUtils_8cc.html" title=" " alt="" coords="2808,702,3024,727"/>
-<area shape="rect" href="RGBDBackendModule_8hpp.html" title=" " alt="" coords="2429,695,2683,735"/>
-<area shape="rect" href="RGBDInstanceFrontendModule_8hpp.html" title=" " alt="" coords="2827,797,3061,852"/>
-<area shape="rect" href="RGBDInstanceFrontendModule_8cc.html" title=" " alt="" coords="2917,900,3160,940"/>
-<area shape="rect" href="RGBDInstance-Definitions_8cc.html" title=" " alt="" coords="1679,695,1891,735"/>
-<area shape="rect" href="FrontendDSDRos_8hpp.html" title=" " alt="" coords="2222,680,2405,749"/>
-<area shape="rect" href="FrontendInbuiltDisplayRos_8hpp.html" title=" " alt="" coords="1915,680,2146,749"/>
-<area shape="rect" href="FrontendInbuiltDisplayRos_8cc.html" title=" " alt="" coords="1915,797,2146,852"/>
-<area shape="rect" href="VirtualKittidataProvider_8cc.html" title=" " alt="" coords="1127,695,1323,735"/>
-<area shape="rect" href="DataInterfacePipeline_8hpp.html" title=" " alt="" coords="1180,482,1463,522"/>
-<area shape="rect" href="DataProviderFactory_8cc.html" title=" " alt="" coords="565,585,757,625"/>
-<area shape="rect" href="KittiSemaniticToMotion_8cc.html" title=" " alt="" coords="781,585,976,625"/>
-<area shape="rect" href="ImageTypes-inl_8hpp.html" title=" " alt="" coords="3181,181,3395,221"/>
-<area shape="rect" href="StereoMatcher_8cc.html" title=" " alt="" coords="3420,181,3601,221"/>
-<area shape="rect" href="DataProviderRos_8hpp.html" title=" " alt="" coords="2850,181,3105,221"/>
-<area shape="rect" href="DataProviderRos_8cc.html" title=" " alt="" coords="3032,277,3253,317"/>
+<area shape="rect" title=" " alt="" coords="2118,5,2315,45"/>
+<area shape="rect" href="ImageContainer_8hpp.html" title=" " alt="" coords="2638,181,2857,221"/>
+<area shape="rect" href="RGBDInstance-Definitions_8hpp.html" title=" " alt="" coords="3105,577,3302,632"/>
+<area shape="rect" href="RGBDInstanceFrontendModule_8cc.html" title=" " alt="" coords="3337,783,3579,823"/>
+<area shape="rect" href="VisionTools_8hpp.html" title=" " alt="" coords="2655,585,2885,625"/>
+<area shape="rect" href="ClusterSlamDataProvider_8cc.html" title=" " alt="" coords="1476,687,1683,727"/>
+<area shape="rect" href="DataProviderUtils_8cc.html" title=" " alt="" coords="3571,687,3763,727"/>
+<area shape="rect" href="OMDDataProvider_8cc.html" title=" " alt="" coords="229,687,421,727"/>
+<area shape="rect" href="ProjectAriaDataProvider_8cc.html" title=" " alt="" coords="5,687,204,727"/>
+<area shape="rect" href="FeatureTracker_8cc.html" title=" " alt="" coords="1023,687,1205,727"/>
+<area shape="rect" href="dataset__node_8cc.html" title=" " alt="" coords="502,687,707,727"/>
+<area shape="rect" href="FrontendInputPacket_8hpp.html" title=" " alt="" coords="1883,379,2129,419"/>
+<area shape="rect" href="ClusterSlamDataProvider_8hpp.html" title=" " alt="" coords="1468,475,1691,529"/>
+<area shape="rect" href="KittiDataProvider_8hpp.html" title=" " alt="" coords="916,482,1168,522"/>
+<area shape="rect" href="OMDDataProvider_8hpp.html" title=" " alt="" coords="635,482,892,522"/>
+<area shape="rect" href="ProjectAriaDataProvider_8hpp.html" title=" " alt="" coords="396,475,611,529"/>
+<area shape="rect" href="TartanAirShibuya_8hpp.html" title=" " alt="" coords="1193,482,1443,522"/>
+<area shape="rect" href="TartanAirShibuya_8cc.html" title=" " alt="" coords="769,585,961,625"/>
+<area shape="rect" href="ViodeDataProvider_8hpp.html" title=" " alt="" coords="1715,482,1977,522"/>
+<area shape="rect" href="ViodeDataProvider_8cc.html" title=" " alt="" coords="1962,585,2154,625"/>
+<area shape="rect" href="VirtualKittiDataProvider_8hpp.html" title=" " alt="" coords="2360,475,2575,529"/>
+<area shape="rect" href="ImageContainer_8cc.html" title=" " alt="" coords="2305,277,2472,317"/>
+<area shape="rect" href="ImageTypes_8hpp.html" title=" " alt="" coords="3429,93,3626,133"/>
+<area shape="rect" href="ImageTypes_8cc.html" title=" " alt="" coords="4216,181,4383,221"/>
+<area shape="rect" href="CameraParams_8cc.html" title=" " alt="" coords="3752,93,3919,133"/>
+<area shape="rect" href="GroundTruthPacket_8cc.html" title=" " alt="" coords="3943,93,4109,133"/>
+<area shape="rect" href="StereoCamera_8cc.html" title=" " alt="" coords="4133,93,4300,133"/>
+<area shape="rect" href="FeatureTrackerBase_8cc.html" title=" " alt="" coords="4324,93,4539,133"/>
+<area shape="rect" href="TrackerParams_8cc.html" title=" " alt="" coords="4563,93,4745,133"/>
+<area shape="rect" href="OpenCVUtils_8cc.html" title=" " alt="" coords="4769,101,5011,126"/>
+<area shape="rect" href="dyno__sam_8cc.html" title=" " alt="" coords="1757,687,1935,727"/>
+<area shape="rect" href="ImageContainer-inl_8hpp.html" title=" " alt="" coords="2649,269,2846,324"/>
+<area shape="rect" href="Frontend-Definitions_8hpp.html" title=" " alt="" coords="2870,277,3115,317"/>
+<area shape="rect" href="Vision-Definitions_8hpp.html" title=" " alt="" coords="3055,372,3253,427"/>
+<area shape="rect" href="Frame_8hpp.html" title=" " alt="" coords="3133,482,3330,522"/>
+<area shape="rect" href="Feature_8hpp.html" title=" " alt="" coords="3190,277,3395,317"/>
+<area shape="rect" href="FrontendOutputPacket_8hpp.html" title=" " alt="" coords="2802,482,3058,522"/>
+<area shape="rect" href="FrontendPipeline_8hpp.html" title=" " alt="" coords="2359,585,2581,625"/>
+<area shape="rect" href="JsonUtils_8cc.html" title=" " alt="" coords="2939,695,3155,720"/>
+<area shape="rect" href="BackendModule_8hpp.html" title=" " alt="" coords="3180,687,3395,727"/>
+<area shape="rect" href="RGBDInstanceFrontendModule_8hpp.html" title=" " alt="" coords="2445,680,2679,735"/>
+<area shape="rect" href="RGBDInstance-Definitions_8cc.html" title=" " alt="" coords="2703,687,2915,727"/>
+<area shape="rect" href="VirtualKittidataProvider_8cc.html" title=" " alt="" coords="2224,687,2420,727"/>
+<area shape="rect" href="DataInterfacePipeline_8hpp.html" title=" " alt="" coords="2002,482,2285,522"/>
+<area shape="rect" href="DataProviderFactory_8cc.html" title=" " alt="" coords="1254,585,1446,625"/>
+<area shape="rect" href="KittiSemaniticToMotion_8cc.html" title=" " alt="" coords="985,585,1179,625"/>
+<area shape="rect" href="ImageTypes-inl_8hpp.html" title=" " alt="" coords="3771,181,3985,221"/>
+<area shape="rect" href="StereoMatcher_8cc.html" title=" " alt="" coords="4010,181,4191,221"/>
+<area shape="rect" href="DataProviderRos_8hpp.html" title=" " alt="" coords="3440,181,3695,221"/>
+<area shape="rect" href="DataProviderRos_8cc.html" title=" " alt="" coords="3622,277,3843,317"/>
 </map>
 </div>
 </div>
 <p><a href="OpenCVUtils_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1ParallelOpenCVMat.html">dyno::ParallelOpenCVMat&lt; T &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1FunctionalParallelOpenCVMat.html">dyno::FunctionalParallelOpenCVMat</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
 Namespaces</h2></td></tr>
 <tr class="memitem:namespacedyno"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno.html">dyno</a></td></tr>
@@ -167,8 +219,18 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ad47afe3893644f77bafab4d379af64f4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno_1_1utils.html#ad47afe3893644f77bafab4d379af64f4">dyno::utils::drawCircleInPlace</a> (cv::Mat &amp;img, const cv::Point2d &amp;point, const cv::Scalar &amp;colour, const double msize=0.4)</td></tr>
-<tr class="separator:ad47afe3893644f77bafab4d379af64f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6176c158eee250623d90248c77177fec"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno_1_1utils.html#a6176c158eee250623d90248c77177fec">dyno::utils::calculateIoU</a> (const cv::Rect &amp;a, const cv::Rect &amp;b)</td></tr>
+<tr class="separator:a6176c158eee250623d90248c77177fec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a79013aaf6365e9d7c81c0d88bb47df76"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno_1_1utils.html#a79013aaf6365e9d7c81c0d88bb47df76">dyno::utils::cvSizeEqual</a> (const cv::Size &amp;a, const cv::Size &amp;b)</td></tr>
+<tr class="separator:a79013aaf6365e9d7c81c0d88bb47df76"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abb253e2a293e106dc8dd1160e84f8db7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno_1_1utils.html#abb253e2a293e106dc8dd1160e84f8db7">dyno::utils::cvSizeEqual</a> (const cv::Mat &amp;a, const cv::Mat &amp;b)</td></tr>
+<tr class="separator:abb253e2a293e106dc8dd1160e84f8db7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a797a662d5fde8d649285484a2a04b038"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a797a662d5fde8d649285484a2a04b038"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacedyno_1_1utils.html#a797a662d5fde8d649285484a2a04b038">dyno::utils::matContains</a> (const cv::Mat &amp;mat, const cv::Point_&lt; T &gt; &amp;point)</td></tr>
+<tr class="memdesc:a797a662d5fde8d649285484a2a04b038"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true of the point is inside bounds of the cv::Mat.  <br /></td></tr>
+<tr class="separator:a797a662d5fde8d649285484a2a04b038"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2fe183e2a729ea1ccd22ac0a4d02e71d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno_1_1utils.html#a2fe183e2a729ea1ccd22ac0a4d02e71d">dyno::utils::drawCircleInPlace</a> (cv::Mat &amp;img, const cv::Point2d &amp;point, const cv::Scalar &amp;colour, const int radius=1, const int thickness=2)</td></tr>
+<tr class="separator:a2fe183e2a729ea1ccd22ac0a4d02e71d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4bed389606523e7a31694ad904523c4d"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno_1_1utils.html#a4bed389606523e7a31694ad904523c4d">dyno::utils::cvTypeToString</a> (int type)</td></tr>
 <tr class="separator:a4bed389606523e7a31694ad904523c4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac68f5949064af90a52da1b3890de7659"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno_1_1utils.html#ac68f5949064af90a52da1b3890de7659">dyno::utils::cvTypeToString</a> (const cv::Mat &amp;mat)</td></tr>
@@ -181,6 +243,9 @@ Functions</h2></td></tr>
 <tr class="separator:a43567366bb263fc12c811028ce68e9d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa8061bfcb1a6d9b02d88085bf851986d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno_1_1utils.html#aa8061bfcb1a6d9b02d88085bf851986d">dyno::utils::flowToRgb</a> (const cv::Mat &amp;flow, cv::Mat &amp;rgb)</td></tr>
 <tr class="separator:aa8061bfcb1a6d9b02d88085bf851986d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab60d1512caf6ce316d53e53056b71f7e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno_1_1utils.html#ab60d1512caf6ce316d53e53056b71f7e">dyno::utils::labelMaskToRGB</a> (const cv::Mat &amp;mask, const cv::Mat &amp;rgb_input, cv::Mat &amp;output, float alpha=0.7, int background_label=0)</td></tr>
+<tr class="memdesc:ab60d1512caf6ce316d53e53056b71f7e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Given an image that operates like a mask (ie. is a single channel image where each pixel value correspondes to a label of some type) draws the mask over an input image.  <br /></td></tr>
+<tr class="separator:ab60d1512caf6ce316d53e53056b71f7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5abdff0c77884da4a8da55f0880d8cfb"><td class="memItemLeft" align="right" valign="top">cv::Mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno_1_1utils.html#a5abdff0c77884da4a8da55f0880d8cfb">dyno::utils::labelMaskToRGB</a> (const cv::Mat &amp;mask, int background_label, const cv::Mat &amp;rgb)</td></tr>
 <tr class="memdesc:a5abdff0c77884da4a8da55f0880d8cfb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Given an image that operates like a mask (ie. is a single channel image where each pixel value correspondes to a label of some type) draws the mask over an input image.  <br /></td></tr>
 <tr class="separator:a5abdff0c77884da4a8da55f0880d8cfb"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -190,9 +255,12 @@ Functions</h2></td></tr>
 <tr class="memitem:a40e39763021c547fd3ddfd934637bebe"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno_1_1utils.html#a40e39763021c547fd3ddfd934637bebe">dyno::utils::getDisparityVis</a> (cv::InputArray src, cv::OutputArray dst, int unknown_disparity=16320)</td></tr>
 <tr class="memdesc:a40e39763021c547fd3ddfd934637bebe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allows visualization of disparity image (which is usually outputed as CV_16S or CV_32F from stereo depth reconstruction).  <br /></td></tr>
 <tr class="separator:a40e39763021c547fd3ddfd934637bebe"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab3245a3ae481133c8052ef2ba138c990"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno_1_1utils.html#ab3245a3ae481133c8052ef2ba138c990">dyno::utils::drawLabeledBoundingBox</a> (cv::Mat &amp;image, const std::string &amp;label, const cv::Scalar &amp;colour, const cv::Rect &amp;bounding_box)</td></tr>
-<tr class="memdesc:ab3245a3ae481133c8052ef2ba138c990"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draws a coloured bounding box and associated label onto a RGB image.  <br /></td></tr>
-<tr class="separator:ab3245a3ae481133c8052ef2ba138c990"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1ec9d7c1cdab85616f6622f915e768dd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno_1_1utils.html#a1ec9d7c1cdab85616f6622f915e768dd">dyno::utils::drawLabeledBoundingBox</a> (cv::Mat &amp;image, const std::string &amp;label, const cv::Scalar &amp;colour, const cv::Rect &amp;bounding_box, const int &amp;bb_thickness=2)</td></tr>
+<tr class="memdesc:a1ec9d7c1cdab85616f6622f915e768dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draws a coloured bounding box and associated label onto a RGB image.  <br /></td></tr>
+<tr class="separator:a1ec9d7c1cdab85616f6622f915e768dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a908a399e79c1e4a10e2f8901ad4acde2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno_1_1utils.html#a908a399e79c1e4a10e2f8901ad4acde2">dyno::utils::drawObjectPoseAxes</a> (cv::Mat &amp;image, const cv::Mat &amp;K, const cv::Mat &amp;D, const std::vector&lt; gtsam::Pose3 &gt; &amp;poses_c, float scale=0.2)</td></tr>
+<tr class="memdesc:a908a399e79c1e4a10e2f8901ad4acde2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Projects SE(3) poses onto the image as an RGB axes. Input poses are expected to be in the camera (local) frame.  <br /></td></tr>
+<tr class="separator:a908a399e79c1e4a10e2f8901ad4acde2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a46d2c367b18c5313273bd9225ff1af1f"><td class="memItemLeft" align="right" valign="top">cv::Mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno_1_1utils.html#a46d2c367b18c5313273bd9225ff1af1f">dyno::utils::readOpticalFlow</a> (const std::string &amp;path)</td></tr>
 <tr class="memdesc:a46d2c367b18c5313273bd9225ff1af1f"><td class="mdescLeft">&#160;</td><td class="mdescRight">The function readOpticalFlow loads a flow field from a file and returns it as a single matrix. Resulting Mat has a type CV_32FC2 - floating-point, 2-channel. First channel corresponds to the flow in the horizontal direction (u), second - vertical (v).  <br /></td></tr>
 <tr class="separator:a46d2c367b18c5313273bd9225ff1af1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -226,12 +294,14 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">  <span class="keyword">using namespace </span><a class="code hl_namespace" href="namespacedyno_1_1utils.html">dyno::utils</a>;                                                                                     \</div>
-<div class="line">  CHECK_EQ(mat1.type(), mat2.type()) &lt;&lt; <span class="stringliteral">&quot;Matricies should be of the same type ( &quot;</span> &lt;&lt; cvTypeToString(mat1.type())       \</div>
-<div class="line">                                     &lt;&lt; <span class="stringliteral">&quot; vs. &quot;</span> &lt;&lt; cvTypeToString(mat2.type()) &lt;&lt; <span class="stringliteral">&quot;).&quot;</span></div>
+<b>Value:</b><div class="fragment"><div class="line">  <span class="keyword">using namespace </span><a class="code hl_namespace" href="namespacedyno_1_1utils.html">dyno::utils</a>;                                                 \</div>
+<div class="line">  CHECK_EQ(mat1.type(), mat2.type())                                           \</div>
+<div class="line">      &lt;&lt; <span class="stringliteral">&quot;Matricies should be of the same type ( &quot;</span>                             \</div>
+<div class="line">      &lt;&lt; cvTypeToString(mat1.type()) &lt;&lt; <span class="stringliteral">&quot; vs. &quot;</span> &lt;&lt; cvTypeToString(mat2.type()) \</div>
+<div class="line">      &lt;&lt; <span class="stringliteral">&quot;).&quot;</span></div>
 <div class="ttc" id="anamespacedyno_1_1utils_html"><div class="ttname"><a href="namespacedyno_1_1utils.html">dyno::utils</a></div><div class="ttdef"><b>Definition:</b> <a href="Accumulator_8hpp_source.html#l00065">Accumulator.hpp:65</a></div></div>
 </div><!-- fragment -->
-<p class="definition">Definition at line <a class="el" href="OpenCVUtils_8hpp_source.html#l00029">29</a> of file <a class="el" href="OpenCVUtils_8hpp_source.html">OpenCVUtils.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="OpenCVUtils_8hpp_source.html#l00037">37</a> of file <a class="el" href="OpenCVUtils_8hpp_source.html">OpenCVUtils.hpp</a>.</p>
 
 </div>
 </div>

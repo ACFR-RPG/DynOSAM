@@ -1,4 +1,3 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classdyno_1_1Spinner.html" title="Class to handle the calling of a function within a thread. The spinner launches its own thread for ea..." alt="" coords="5,5,116,31"/>
-<area shape="rect" id="node2" href="$classdyno_1_1LoopingSpinner.html" title="A spinner that will take a non&#45;blocking function (spinOnce) and puts it in a loop with a given delay...." alt="" coords="164,5,327,31"/>
+<area shape="rect" id="node1" href="$structdyno_1_1MotionOnlyRefinementOptimizer_1_1Params.html" title=" " alt="" coords="5,5,217,45"/>
 </map>

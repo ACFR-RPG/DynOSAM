@@ -1,6 +1,10 @@
 <map id="dyno::UpdateObservationResult::updateAffectedObject" name="dyno::UpdateObservationResult::updateAffectedObject">
-<area shape="rect" id="node1" title=" " alt="" coords="276,69,505,109"/>
-<area shape="rect" id="node2" href="$classdyno_1_1WorldMotionFormulation.html#ad60f9621d41608943694144aad4d2e22" title=" " alt="" coords="5,5,228,45"/>
-<area shape="rect" id="node3" href="$classdyno_1_1WorldPoseFormulation.html#ad1e6e0a4af9b06496359ceb969405f0a" title=" " alt="" coords="5,69,228,109"/>
-<area shape="rect" id="node4" href="$classdyno_1_1Formulation.html#a74de91cf6b4755060af63627d28fed2c" title="Updates the static&#45;point part of the factor graph for frame k. This contains all the bookeeping logic..." alt="" coords="21,133,212,173"/>
+<area shape="rect" id="node1" title=" " alt="" coords="308,235,537,275"/>
+<area shape="rect" id="node2" href="$classdyno_1_1HybridFormulation.html#ae65a9c76b0363dde62eb86e6c0b2b832" title=" " alt="" coords="21,5,244,45"/>
+<area shape="rect" id="node3" href="$classdyno_1_1test__hybrid_1_1StructurelessDecoupledFormulation.html#aa836f90c5eaffd28eafa4d896cbc162f" title=" " alt="" coords="5,70,260,125"/>
+<area shape="rect" id="node4" href="$classdyno_1_1test__hybrid_1_1DecoupledFormulation.html#a8d4582a8d60a4c61c167577f519ca861" title=" " alt="" coords="21,149,244,203"/>
+<area shape="rect" id="node5" href="$classdyno_1_1test__hybrid_1_1StructurlessFormulation.html#a625de6bd79eb629ac2bd60fb2cd8c4df" title=" " alt="" coords="21,227,244,282"/>
+<area shape="rect" id="node6" href="$classdyno_1_1test__hybrid_1_1SmartStructurlessFormulation.html#a40673e16631d1d3e8775e33116f85f6a" title=" " alt="" coords="21,306,244,361"/>
+<area shape="rect" id="node7" href="$classdyno_1_1WorldMotionFormulation.html#ad60f9621d41608943694144aad4d2e22" title=" " alt="" coords="21,385,244,425"/>
+<area shape="rect" id="node8" href="$classdyno_1_1WorldPoseFormulation.html#ad1e6e0a4af9b06496359ceb969405f0a" title=" " alt="" coords="21,449,244,489"/>
 </map>

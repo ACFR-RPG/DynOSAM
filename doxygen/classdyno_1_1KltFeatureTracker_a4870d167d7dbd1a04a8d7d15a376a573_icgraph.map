@@ -1,5 +1,5 @@
 <map id="dyno::KltFeatureTracker::detectFeatures" name="dyno::KltFeatureTracker::detectFeatures">
 <area shape="rect" id="node1" title=" " alt="" coords="451,35,625,75"/>
-<area shape="rect" id="node2" href="$classdyno_1_1KltFeatureTracker.html#a24e98ff72741e59ed48f5b14d5ecaf9b" title="Tracks features using KLT tracker between the previous image and the current one." alt="" coords="228,5,403,45"/>
-<area shape="rect" id="node3" href="$classdyno_1_1KltFeatureTracker.html#a8b8b5f33830f3b76205863b9236539e4" title="Track features between frames k&#45;1 and the current set of images (at k)." alt="" coords="5,35,180,75"/>
+<area shape="rect" id="node2" href="$classdyno_1_1KltFeatureTracker.html#a8f26d8fe56edd3e579a879e82a40457f" title="Tracks features using KLT tracker between the previous image and the current one." alt="" coords="228,5,403,45"/>
+<area shape="rect" id="node3" href="$classdyno_1_1KltFeatureTracker.html#ab15aaa39f0c3adc62037d718b98039c0" title="Track features between frames k&#45;1 and the current set of images (at k)." alt="" coords="5,35,180,75"/>
 </map>

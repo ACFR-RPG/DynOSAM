@@ -1,4 +1,0 @@
-<map id="dyno::Formulation::setInitialPosePrior" name="dyno::Formulation::setInitialPosePrior">
-<area shape="rect" id="node1" title="Adds a pose prior on a value in the graph at frame k using the given pose value as the prior&#39;s mean." alt="" coords="5,5,153,45"/>
-<area shape="rect" id="node2" href="$namespacedyno.html#a314d7f58c130d0aa28270309ff7500c5" title=" " alt="" coords="201,13,395,38"/>
-</map>

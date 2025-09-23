@@ -1,9 +1,8 @@
 <map id="dyno::PipelineBase::isShutdown" name="dyno::PipelineBase::isShutdown">
-<area shape="rect" id="node1" title="Returns true if the pipeline has been shutdown by shutdown()." alt="" coords="839,69,985,109"/>
-<area shape="rect" id="node2" href="$classdyno_1_1DataInterfacePipeline.html#a9173a04b9b1ac30f2de87597b3be2200" title=" " alt="" coords="550,5,753,45"/>
-<area shape="rect" id="node3" href="$classdyno_1_1DataInterfacePipelineImu.html#a233e9d7d80e5caee6882ea5007a3fef9" title="getTimeSyncedImuMeasurements Time synchronizes the IMU buffer with the given timestamp (this is typic..." alt="" coords="512,69,791,109"/>
-<area shape="rect" id="node4" href="$classdyno_1_1PipelineBase.html#a56667b4574808e95f808d1b4d79a469b" title="Spins the pipeline via continuous calls to spinOnce until the pipeline is shutdown." alt="" coords="578,133,725,173"/>
-<area shape="rect" id="node5" href="$structdyno_1_1PipelineSpinner_1_1AsynchronousSpinnerPair.html#ab1673256404a04057a1514010e6cc677" title=" " alt="" coords="264,90,459,145"/>
-<area shape="rect" id="node6" href="$classdyno_1_1DynoPipelineManager.html#abe710e5db047895f61547936feb16637" title=" " alt="" coords="259,169,464,209"/>
-<area shape="rect" id="node7" href="$classdyno_1_1DynoPipelineManager.html#a5e1e8d2df3c6db2525115c4c6d7f366c" title=" " alt="" coords="5,169,211,209"/>
+<area shape="rect" id="node1" title="Returns true if the pipeline has been shutdown by shutdown()." alt="" coords="763,37,909,77"/>
+<area shape="rect" id="node2" href="$classdyno_1_1DataInterfacePipeline.html#a9173a04b9b1ac30f2de87597b3be2200" title=" " alt="" coords="512,5,715,45"/>
+<area shape="rect" id="node3" href="$classdyno_1_1PipelineBase.html#a56667b4574808e95f808d1b4d79a469b" title="Spins the pipeline via continuous calls to spinOnce until the pipeline is shutdown." alt="" coords="540,69,687,109"/>
+<area shape="rect" id="node4" href="$structdyno_1_1PipelineSpinner_1_1AsynchronousSpinnerPair.html#ab1673256404a04057a1514010e6cc677" title=" " alt="" coords="264,26,459,81"/>
+<area shape="rect" id="node5" href="$classdyno_1_1DynoPipelineManager.html#abe710e5db047895f61547936feb16637" title=" " alt="" coords="259,105,464,145"/>
+<area shape="rect" id="node6" href="$classdyno_1_1DynoPipelineManager.html#a283e891aa3d4ca8d2d671eb1e3d5d514" title=" " alt="" coords="5,105,211,145"/>
 </map>

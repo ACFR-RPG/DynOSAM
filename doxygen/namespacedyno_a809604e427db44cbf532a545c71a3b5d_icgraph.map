@@ -1,28 +1,30 @@
 <map id="dyno::to_string" name="dyno::to_string">
-<area shape="rect" id="node1" title=" " alt="" coords="903,362,1021,387"/>
+<area shape="rect" id="node1" title=" " alt="" coords="903,390,1021,415"/>
 <area shape="rect" id="node2" href="$namespacedyno.html#ae6f3fe7a04b3a8feff6a614dc1935964" title=" " alt="" coords="615,5,851,45"/>
 <area shape="rect" id="node3" href="$namespacedyno.html#a734a462a99c0955aeb0ed20c4b2a5c72" title=" " alt="" coords="615,69,851,109"/>
 <area shape="rect" id="node4" href="$namespacedyno.html#aac262659c180ffb97f49f3bc910505ca" title=" " alt="" coords="615,133,851,173"/>
 <area shape="rect" id="node5" href="$classdyno_1_1StereoCamera.html#a6ce9ba10820d974b32a081868c224fad" title="computeRectificationParameters" alt="" coords="612,197,855,237"/>
 <area shape="rect" id="node7" href="$classdyno_1_1CameraParams.html#a1e68df8520ebfa61c9ccb5c8fd62fb2a" title="Converts the DistortionModel enum to a distortion model string and associated camera model." alt="" coords="641,261,825,301"/>
 <area shape="rect" id="node9" href="$classdyno_1_1UndistorterRectifier.html#a4a4cf24ce89d70f3ec6c3c25051f4691" title="initUndistortRectifyMaps Initialize pixel to pixel maps for undistortion and rectification...." alt="" coords="638,325,829,365"/>
-<area shape="rect" id="node11" href="$classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2" title=" " alt="" coords="27,440,239,480"/>
-<area shape="rect" id="node12" href="$classdyno_1_1RGBDInstanceFrontendModule.html#a78935cca3751ad2a0c25019250d12230" title="Solves PnP between frame_k&#45;1 and frame_k using the tracked correspondances to estimate the frame of t..." alt="" coords="330,440,542,480"/>
-<area shape="rect" id="node13" href="$classdyno_1_1RGBDInstanceFrontendModule.html#ada2fe5067e732aa4734d96fc5e80f7f9" title=" " alt="" coords="627,497,839,537"/>
+<area shape="rect" id="node11" href="$classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2" title=" " alt="" coords="330,389,542,429"/>
+<area shape="rect" id="node12" href="$classdyno_1_1RGBDInstanceFrontendModule.html#ad89ae2ee89eaa41ef536e2e409809b69" title="Solves PnP between frame_k&#45;1 and frame_k using the tracked correspondances to estimate the frame of t..." alt="" coords="627,440,839,480"/>
+<area shape="rect" id="node13" href="$classdyno_1_1ObjectMotionSovlerF2F.html#a5e613d3a9e53e9664269de7110636986" title=" " alt="" coords="638,504,829,544"/>
 <area shape="rect" id="node15" href="$classdyno_1_1CameraParams.html#a7be21480072986b94e6484d9c4687ddf" title=" " alt="" coords="653,568,814,608"/>
-<area shape="rect" id="node20" href="$classdyno_1_1UndistorterRectifier.html#ae64676bd43fb299d9c72034fa3ee3c09" title="undistortRectifyKeypoints undistorts and rectifies" alt="" coords="634,704,833,744"/>
-<area shape="rect" id="node26" href="$classdyno_1_1ImageContainerSubset.html#a8a797aa01f221f90617b1e586e539f02" title="Validates that the input images (if not empty) are the same size. Throws ImageContainerConstructionEx..." alt="" coords="628,768,839,808"/>
+<area shape="rect" id="node20" href="$structdyno_1_1ImageBase.html#ac182daef2303850cd8e9d8463ea6481e" title=" " alt="" coords="636,643,831,669"/>
+<area shape="rect" id="node22" href="$classdyno_1_1UndistorterRectifier.html#ae64676bd43fb299d9c72034fa3ee3c09" title="undistortRectifyKeypoints undistorts and rectifies" alt="" coords="634,717,833,757"/>
+<area shape="rect" id="node28" href="$classdyno_1_1ImageContainerSubset.html#a8a797aa01f221f90617b1e586e539f02" title="Validates that the input images (if not empty) are the same size. Throws ImageContainerConstructionEx..." alt="" coords="628,781,839,821"/>
 <area shape="rect" id="node6" href="$classdyno_1_1StereoCamera.html#a2262c33a62cc297ecedbe5801fcd37df" title=" " alt="" coords="359,168,513,208"/>
 <area shape="rect" id="node8" href="$structrclcpp_1_1TypeAdapter_3_01dyno_1_1CameraParams_00_01sensor__msgs_1_1msg_1_1CameraInfo_01_4.html#a88de3493ecfc9c56e7812f9a8919d673" title=" " alt="" coords="321,232,551,301"/>
 <area shape="rect" id="node10" href="$classdyno_1_1UndistorterRectifier.html#aaffa018d8098ac0c4916029c05340d0b" title="UndistorterRectifier." alt="" coords="341,325,531,365"/>
-<area shape="rect" id="node14" href="$classdyno_1_1RGBDInstanceFrontendModule.html#a9bfb2e31fd68b5b6d6ffb834b6c201a1" title=" " alt="" coords="330,504,542,544"/>
-<area shape="rect" id="node16" href="$classdyno_1_1OMDOldAllLoader.html#a0bf74dd052ecef9baa3fd57050347dc3" title=" " alt="" coords="347,568,525,608"/>
-<area shape="rect" id="node18" href="$classdyno_1_1DataProviderRos.html#a1cb49fe70873ef4b7ed49afb75c013bc" title="Gets CameraParams from a sensor_msgs::msg::CameraInfo recieved on the specified topic...." alt="" coords="335,632,537,672"/>
-<area shape="rect" id="node17" href="$classdyno_1_1OMDOldAllLoader.html#a5407ba0dda29eaf6520c615807fe3b93" title=" " alt="" coords="44,568,221,608"/>
-<area shape="rect" id="node19" href="$classdyno_1_1OnlineDataProviderRos.html#abea751b62c91dbf7bfac759680a434f7" title="Construct a new OnlineDataProviderRos." alt="" coords="30,632,235,672"/>
-<area shape="rect" id="node21" href="$classdyno_1_1UndistorterRectifier.html#af102413f7c20a9120b1e1d0a7d848c41" title="UndistortKeypointAndGetVersor undistort a single pixel, and return the corresponding projected versor..." alt="" coords="308,697,564,751"/>
-<area shape="rect" id="node23" href="$classdyno_1_1UndistorterRectifier.html#a210fba595205f9c9f36eb76bb37a7b69" title="UndistortKeypointAndGetVersor undistort a single pixel, and return the corresponding versor...." alt="" coords="318,776,554,816"/>
-<area shape="rect" id="node25" href="$classdyno_1_1UndistorterRectifier.html#a870349a1e058dcd67b749bc8dcfbf9de" title="undistortRectifyKeypoints Undistorts and rectifies a sparse set of keypoints (instead of a whole imag..." alt="" coords="337,840,535,880"/>
-<area shape="rect" id="node22" href="$classdyno_1_1UndistorterRectifier.html#a80b4a50fd637142aee912e2aa0f200ee" title=" " alt="" coords="5,697,260,751"/>
-<area shape="rect" id="node24" href="$classdyno_1_1UndistorterRectifier.html#aa55a8cd2fa64ee3b968f2be1d6acf19f" title="Undistorts a single pixel and returns the corresponding versor (unit norm vector corresponding to bea..." alt="" coords="15,776,250,816"/>
+<area shape="rect" id="node14" href="$classdyno_1_1ObjectMotionSovlerF2F.html#a44b9156273fe0643acde6fa185efc665" title=" " alt="" coords="341,453,531,493"/>
+<area shape="rect" id="node16" href="$classdyno_1_1OMDOldAllLoader.html#a0bf74dd052ecef9baa3fd57050347dc3" title=" " alt="" coords="347,517,525,557"/>
+<area shape="rect" id="node18" href="$classdyno_1_1DataProviderRos.html#a1cb49fe70873ef4b7ed49afb75c013bc" title="Gets CameraParams from a sensor_msgs::msg::CameraInfo recieved on the specified topic...." alt="" coords="335,581,537,621"/>
+<area shape="rect" id="node17" href="$classdyno_1_1OMDOldAllLoader.html#a5407ba0dda29eaf6520c615807fe3b93" title=" " alt="" coords="44,517,221,557"/>
+<area shape="rect" id="node19" href="$classdyno_1_1OnlineDataProviderRos.html#abea751b62c91dbf7bfac759680a434f7" title="Construct a new OnlineDataProviderRos." alt="" coords="30,581,235,621"/>
+<area shape="rect" id="node21" href="$structdyno_1_1ImageWrapper.html#a7e5580492177779a9d8b9ab3b0ef2c9b" title=" " alt="" coords="357,645,515,685"/>
+<area shape="rect" id="node23" href="$classdyno_1_1UndistorterRectifier.html#af102413f7c20a9120b1e1d0a7d848c41" title="UndistortKeypointAndGetVersor undistort a single pixel, and return the corresponding projected versor..." alt="" coords="308,710,564,765"/>
+<area shape="rect" id="node25" href="$classdyno_1_1UndistorterRectifier.html#a210fba595205f9c9f36eb76bb37a7b69" title="UndistortKeypointAndGetVersor undistort a single pixel, and return the corresponding versor...." alt="" coords="318,789,554,829"/>
+<area shape="rect" id="node27" href="$classdyno_1_1UndistorterRectifier.html#a870349a1e058dcd67b749bc8dcfbf9de" title="undistortRectifyKeypoints Undistorts and rectifies a sparse set of keypoints (instead of a whole imag..." alt="" coords="337,853,535,893"/>
+<area shape="rect" id="node24" href="$classdyno_1_1UndistorterRectifier.html#a80b4a50fd637142aee912e2aa0f200ee" title=" " alt="" coords="5,710,260,765"/>
+<area shape="rect" id="node26" href="$classdyno_1_1UndistorterRectifier.html#aa55a8cd2fa64ee3b968f2be1d6acf19f" title="Undistorts a single pixel and returns the corresponding versor (unit norm vector corresponding to bea..." alt="" coords="15,789,250,829"/>
 </map>

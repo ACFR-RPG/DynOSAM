@@ -8,7 +8,8 @@ var searchData=
   ['anmsparams_5',['AnmsParams',['../structdyno_1_1TrackerParams_1_1AnmsParams.html',1,'dyno::TrackerParams']]],
   ['apply_6',['Apply',['../structdyno_1_1internal_1_1Apply.html',1,'dyno::internal']]],
   ['apply_3c_200_20_3e_7',['Apply&lt; 0 &gt;',['../structdyno_1_1internal_1_1Apply_3_010_01_4.html',1,'dyno::internal']]],
-  ['applymember_8',['ApplyMember',['../structdyno_1_1internal_1_1ApplyMember.html',1,'dyno::internal']]],
-  ['applymember_3c_200_20_3e_9',['ApplyMember&lt; 0 &gt;',['../structdyno_1_1internal_1_1ApplyMember_3_010_01_4.html',1,'dyno::internal']]],
-  ['asynchronousspinnerpair_10',['AsynchronousSpinnerPair',['../structdyno_1_1PipelineSpinner_1_1AsynchronousSpinnerPair.html',1,'dyno::PipelineSpinner']]]
+  ['applyfunctionalsymbol_8',['ApplyFunctionalSymbol',['../classdyno_1_1ApplyFunctionalSymbol.html',1,'dyno']]],
+  ['applymember_9',['ApplyMember',['../structdyno_1_1internal_1_1ApplyMember.html',1,'dyno::internal']]],
+  ['applymember_3c_200_20_3e_10',['ApplyMember&lt; 0 &gt;',['../structdyno_1_1internal_1_1ApplyMember_3_010_01_4.html',1,'dyno::internal']]],
+  ['asynchronousspinnerpair_11',['AsynchronousSpinnerPair',['../structdyno_1_1PipelineSpinner_1_1AsynchronousSpinnerPair.html',1,'dyno::PipelineSpinner']]]
 ];

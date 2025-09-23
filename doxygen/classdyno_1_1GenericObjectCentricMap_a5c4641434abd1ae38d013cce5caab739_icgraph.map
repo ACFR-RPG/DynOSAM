@@ -1,5 +1,7 @@
 <map id="dyno::GenericObjectCentricMap::collectByFrame" name="dyno::GenericObjectCentricMap::collectByFrame">
-<area shape="rect" id="node1" title="Collect all objects that appear in the query frame, as well as their value." alt="" coords="256,37,456,77"/>
-<area shape="rect" id="node2" href="$classdyno_1_1WorldMotionAccessor.html#a75fe4157ba60bd1aff73b7240847062d" title="Collects all object poses at some time&#45;step (k). This is equivalent to \mathcal{L}_k...." alt="" coords="5,5,208,45"/>
-<area shape="rect" id="node3" href="$classdyno_1_1WorldMotionAccessor.html#a0a396e6c748dc58cf38e5b1a70b2eea4" title="Virtual function that is called to indcate the associated formulation has been updated...." alt="" coords="5,69,208,109"/>
+<area shape="rect" id="node1" title="Collect all objects that appear in the query frame, as well as their value." alt="" coords="528,69,728,109"/>
+<area shape="rect" id="node2" href="$classdyno_1_1RGBDInstanceFrontendModule.html#a2be5bb20b25562755ca287277b16573b" title=" " alt="" coords="265,5,480,45"/>
+<area shape="rect" id="node4" href="$classdyno_1_1WorldMotionAccessor.html#a75fe4157ba60bd1aff73b7240847062d" title="Collects all object poses at some time&#45;step (k). This is equivalent to \mathcal{L}_k...." alt="" coords="271,69,474,109"/>
+<area shape="rect" id="node5" href="$classdyno_1_1WorldMotionAccessor.html#a6485394be1e938b5ee3d9b9a65759cd8" title="Update the object pose (cache) estimation based on the latest set of estated values stored in theta!" alt="" coords="271,133,474,173"/>
+<area shape="rect" id="node3" href="$classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2" title=" " alt="" coords="5,5,217,45"/>
 </map>

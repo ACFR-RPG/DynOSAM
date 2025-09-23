@@ -1,9 +1,13 @@
 <map id="dynosam/include/dynosam/backend/BackendModule.hpp" name="dynosam/include/dynosam/backend/BackendModule.hpp">
-<area shape="rect" id="node1" title=" " alt="" coords="443,5,657,45"/>
-<area shape="rect" id="node2" href="$RGBDBackendModule_8hpp.html" title=" " alt="" coords="169,93,422,133"/>
-<area shape="rect" id="node6" href="$ModuleFactory_8hpp.html" title=" " alt="" coords="446,93,654,133"/>
-<area shape="rect" id="node7" href="$BackendModule_8cc.html" title=" " alt="" coords="678,93,841,133"/>
-<area shape="rect" id="node3" href="$RGBDBackendModule_8cc.html" title=" " alt="" coords="5,181,191,221"/>
-<area shape="rect" id="node4" href="$PipelineManager_8cc.html" title=" " alt="" coords="215,181,376,221"/>
-<area shape="rect" id="node5" href="$backend__experiments__node_8cc.html" title=" " alt="" coords="401,181,611,221"/>
+<area shape="rect" id="node1" title=" " alt="" coords="581,5,796,45"/>
+<area shape="rect" id="node2" href="$ParallelHybridBackendModule_8hpp.html" title=" " alt="" coords="199,181,429,236"/>
+<area shape="rect" id="node6" href="$RGBDBackendDefinitions_8hpp.html" title=" " alt="" coords="162,93,437,133"/>
+<area shape="rect" id="node7" href="$RegularBackendModule_8hpp.html" title=" " alt="" coords="460,189,725,229"/>
+<area shape="rect" id="node9" href="$VisionImuBackendModule_8hpp.html" title=" " alt="" coords="461,93,741,133"/>
+<area shape="rect" id="node10" href="$ModuleFactory_8hpp.html" title=" " alt="" coords="815,93,1023,133"/>
+<area shape="rect" id="node11" href="$BackendModule_8cc.html" title=" " alt="" coords="1047,93,1210,133"/>
+<area shape="rect" id="node3" href="$ParallelHybridBackendModule_8cc.html" title=" " alt="" coords="5,284,244,324"/>
+<area shape="rect" id="node4" href="$PipelineManager_8cc.html" title=" " alt="" coords="268,284,429,324"/>
+<area shape="rect" id="node5" href="$backend__experiments__node_8cc.html" title=" " alt="" coords="454,284,665,324"/>
+<area shape="rect" id="node8" href="$RegularBackendModule_8cc.html" title=" " alt="" coords="689,284,886,324"/>
 </map>

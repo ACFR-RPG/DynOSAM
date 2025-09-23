@@ -1,8 +1,13 @@
 <map id="dynosam/include/dynosam/common/byte_tracker/Track.hpp" name="dynosam/include/dynosam/common/byte_tracker/Track.hpp">
-<area shape="rect" id="node1" title=" " alt="" coords="257,5,492,45"/>
-<area shape="rect" id="node2" href="$ByteTracker_8hpp.html" title=" " alt="" coords="63,93,337,133"/>
-<area shape="rect" id="node5" href="$ByteTracker_8cc.html" title=" " alt="" coords="273,181,477,221"/>
-<area shape="rect" id="node6" href="$Track_8cc.html" title=" " alt="" coords="413,93,579,133"/>
-<area shape="rect" id="node3" href="$ObjectTracker_8hpp.html" title=" " alt="" coords="5,181,248,221"/>
-<area shape="rect" id="node4" href="$ObjectTracker_8cc.html" title=" " alt="" coords="39,269,214,309"/>
+<area shape="rect" id="node1" title=" " alt="" coords="717,5,952,45"/>
+<area shape="rect" id="node2" href="$ByteTracker_8hpp.html" title=" " alt="" coords="523,93,797,133"/>
+<area shape="rect" id="node10" href="$ByteTracker_8cc.html" title=" " alt="" coords="733,181,937,221"/>
+<area shape="rect" id="node11" href="$Track_8cc.html" title=" " alt="" coords="873,93,1039,133"/>
+<area shape="rect" id="node3" href="$ObjectTracker_8hpp.html" title=" " alt="" coords="465,181,708,221"/>
+<area shape="rect" id="node4" href="$RGBDInstanceFrontendModule_8hpp.html" title=" " alt="" coords="355,269,589,324"/>
+<area shape="rect" id="node9" href="$ObjectTracker_8cc.html" title=" " alt="" coords="614,277,789,317"/>
+<area shape="rect" id="node5" href="$ModuleFactory_8hpp.html" title=" " alt="" coords="5,372,213,412"/>
+<area shape="rect" id="node6" href="$RGBDInstanceFrontendModule_8cc.html" title=" " alt="" coords="237,372,480,412"/>
+<area shape="rect" id="node7" href="$PipelineManager_8cc.html" title=" " alt="" coords="505,372,666,412"/>
+<area shape="rect" id="node8" href="$backend__experiments__node_8cc.html" title=" " alt="" coords="691,372,901,412"/>
 </map>

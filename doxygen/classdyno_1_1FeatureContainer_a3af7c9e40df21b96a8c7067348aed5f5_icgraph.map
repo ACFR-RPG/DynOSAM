@@ -1,9 +1,10 @@
 <map id="dyno::FeatureContainer::add" name="dyno::FeatureContainer::add">
 <area shape="rect" id="node1" title="Adds a new feature to the container. Uses feature.trackletId() to set the tracklet key." alt="" coords="673,123,880,149"/>
 <area shape="rect" id="node2" href="$classdyno_1_1KltFeatureTracker.html#a4870d167d7dbd1a04a8d7d15a376a573" title=" " alt="" coords="451,59,625,99"/>
-<area shape="rect" id="node3" href="$classdyno_1_1KltFeatureTracker.html#a24e98ff72741e59ed48f5b14d5ecaf9b" title="Tracks features using KLT tracker between the previous image and the current one." alt="" coords="228,5,403,45"/>
-<area shape="rect" id="node4" href="$classdyno_1_1KltFeatureTracker.html#a8b8b5f33830f3b76205863b9236539e4" title="Track features between frames k&#45;1 and the current set of images (at k)." alt="" coords="5,63,180,103"/>
+<area shape="rect" id="node3" href="$classdyno_1_1KltFeatureTracker.html#a8f26d8fe56edd3e579a879e82a40457f" title="Tracks features using KLT tracker between the previous image and the current one." alt="" coords="228,5,403,45"/>
+<area shape="rect" id="node4" href="$classdyno_1_1KltFeatureTracker.html#ab15aaa39f0c3adc62037d718b98039c0" title="Track features between frames k&#45;1 and the current set of images (at k)." alt="" coords="5,63,180,103"/>
 <area shape="rect" id="node5" href="$classdyno_1_1FeatureContainer.html#a623d1fd324327a2b21e3f5bac2a71413" title=" " alt="" coords="451,173,625,213"/>
-<area shape="rect" id="node6" href="$classdyno_1_1FeatureTracker.html#aeaff1c244270c93747ce92b36163c38d" title=" " alt="" coords="459,237,617,277"/>
-<area shape="rect" id="node7" href="$classdyno_1_1FeatureTracker.html#a23296ac35b5935656d31a18450dc5e4c" title=" " alt="" coords="237,237,394,277"/>
+<area shape="rect" id="node6" href="$classdyno_1_1FeatureTracker.html#af6093d870bad67d12dee0c9cb913f87c" title=" " alt="" coords="459,237,617,277"/>
+<area shape="rect" id="node7" href="$classdyno_1_1FeatureTracker.html#a145614fe29bef7728075492870ac9c41" title=" " alt="" coords="237,237,394,277"/>
+<area shape="rect" id="node8" href="$classdyno_1_1FeatureTracker.html#a9890ba0c11b5932b5b4954a86bd03948" title=" " alt="" coords="14,237,171,277"/>
 </map>

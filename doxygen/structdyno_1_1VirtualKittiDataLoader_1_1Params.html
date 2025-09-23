@@ -126,20 +126,20 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="VirtualKittidataProvider_8cc_source.html#l00958">958</a> of file <a class="el" href="VirtualKittidataProvider_8cc_source.html">VirtualKittidataProvider.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  958</span>                                                                                                  {</div>
-<div class="line"><span class="lineno">  959</span>    YamlParser yaml_parser(params_folder + <span class="stringliteral">&quot;DatasetParams.yaml&quot;</span>);</div>
-<div class="line"><span class="lineno">  960</span> </div>
-<div class="line"><span class="lineno">  961</span>    Params params;</div>
-<div class="line"><span class="lineno">  962</span> </div>
-<div class="line"><span class="lineno">  963</span>    std::string <a class="code hl_variable" href="structdyno_1_1VirtualKittiDataLoader_1_1Params.html#a703a7958acc6b4b06694ea612dcc5a32">mask_type</a>;</div>
-<div class="line"><span class="lineno">  964</span>    yaml_parser.getYamlParam(<span class="stringliteral">&quot;mask_type&quot;</span>, &amp;<a class="code hl_variable" href="structdyno_1_1VirtualKittiDataLoader_1_1Params.html#a703a7958acc6b4b06694ea612dcc5a32">mask_type</a>);</div>
-<div class="line"><span class="lineno">  965</span>    params.mask_type = <a class="code hl_function" href="namespacedyno.html#ad1503d5731c86c7a89381c90a9154663">maskTypeFromString</a>(<a class="code hl_variable" href="structdyno_1_1VirtualKittiDataLoader_1_1Params.html#a703a7958acc6b4b06694ea612dcc5a32">mask_type</a>);</div>
-<div class="line"><span class="lineno">  966</span> </div>
-<div class="line"><span class="lineno">  967</span>    yaml_parser.getYamlParam(<span class="stringliteral">&quot;scene&quot;</span>, &amp;params.scene);</div>
-<div class="line"><span class="lineno">  968</span>    yaml_parser.getYamlParam(<span class="stringliteral">&quot;scene_type&quot;</span>, &amp;params.scene_type);</div>
-<div class="line"><span class="lineno">  969</span>    <span class="keywordflow">return</span> params;</div>
-<div class="line"><span class="lineno">  970</span>}</div>
+<p class="definition">Definition at line <a class="el" href="VirtualKittidataProvider_8cc_source.html#l01022">1022</a> of file <a class="el" href="VirtualKittidataProvider_8cc_source.html">VirtualKittidataProvider.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno"> 1023</span>                                    {</div>
+<div class="line"><span class="lineno"> 1024</span>  YamlParser yaml_parser(params_folder + <span class="stringliteral">&quot;DatasetParams.yaml&quot;</span>);</div>
+<div class="line"><span class="lineno"> 1025</span> </div>
+<div class="line"><span class="lineno"> 1026</span>  Params params;</div>
+<div class="line"><span class="lineno"> 1027</span> </div>
+<div class="line"><span class="lineno"> 1028</span>  std::string <a class="code hl_variable" href="structdyno_1_1VirtualKittiDataLoader_1_1Params.html#a703a7958acc6b4b06694ea612dcc5a32">mask_type</a>;</div>
+<div class="line"><span class="lineno"> 1029</span>  yaml_parser.getYamlParam(<span class="stringliteral">&quot;mask_type&quot;</span>, &amp;<a class="code hl_variable" href="structdyno_1_1VirtualKittiDataLoader_1_1Params.html#a703a7958acc6b4b06694ea612dcc5a32">mask_type</a>);</div>
+<div class="line"><span class="lineno"> 1030</span>  params.mask_type = <a class="code hl_function" href="namespacedyno.html#ad1503d5731c86c7a89381c90a9154663">maskTypeFromString</a>(<a class="code hl_variable" href="structdyno_1_1VirtualKittiDataLoader_1_1Params.html#a703a7958acc6b4b06694ea612dcc5a32">mask_type</a>);</div>
+<div class="line"><span class="lineno"> 1031</span> </div>
+<div class="line"><span class="lineno"> 1032</span>  yaml_parser.getYamlParam(<span class="stringliteral">&quot;scene&quot;</span>, &amp;params.scene);</div>
+<div class="line"><span class="lineno"> 1033</span>  yaml_parser.getYamlParam(<span class="stringliteral">&quot;scene_type&quot;</span>, &amp;params.scene_type);</div>
+<div class="line"><span class="lineno"> 1034</span>  <span class="keywordflow">return</span> params;</div>
+<div class="line"><span class="lineno"> 1035</span>}</div>
 <div class="ttc" id="anamespacedyno_html_ad1503d5731c86c7a89381c90a9154663"><div class="ttname"><a href="namespacedyno.html#ad1503d5731c86c7a89381c90a9154663">dyno::maskTypeFromString</a></div><div class="ttdeci">MaskType maskTypeFromString(const std::string &amp;mask_type)</div><div class="ttdoc">Converts an input string into a enun MaskType.</div><div class="ttdef"><b>Definition:</b> <a href="DatasetLoader_8hpp_source.html#l00298">DatasetLoader.hpp:298</a></div></div>
 <div class="ttc" id="astructdyno_1_1VirtualKittiDataLoader_1_1Params_html_a703a7958acc6b4b06694ea612dcc5a32"><div class="ttname"><a href="structdyno_1_1VirtualKittiDataLoader_1_1Params.html#a703a7958acc6b4b06694ea612dcc5a32">dyno::VirtualKittiDataLoader::Params::mask_type</a></div><div class="ttdeci">MaskType mask_type</div><div class="ttdef"><b>Definition:</b> <a href="VirtualKittiDataProvider_8hpp_source.html#l00063">VirtualKittiDataProvider.hpp:63</a></div></div>
 </div><!-- fragment -->

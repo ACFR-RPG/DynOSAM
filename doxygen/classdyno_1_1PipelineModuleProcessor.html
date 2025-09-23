@@ -569,7 +569,7 @@ template&lt;typename INPUT , typename OUTPUT &gt; </div>
 <div class="fragment"><div class="line"><span class="lineno">   79</span>      : <a class="code hl_typedef" href="classdyno_1_1PipelineModuleProcessor.html#a26c2cbcd71e18291bd0f2cd96e6954f7">Base</a>(module_name, CHECK_NOTNULL(<a class="code hl_variable" href="classdyno_1_1SIMOPipelineModule.html#a5ea2014fd60fee0a975bcacf9766d323">input_queue</a>)),</div>
 <div class="line"><span class="lineno">   80</span>        <a class="code hl_variable" href="classdyno_1_1PipelineModuleProcessor.html#a3dd2dc288422dead3cd0849631725d65">module_</a>(CHECK_NOTNULL(module)) {}</div>
 <div class="ttc" id="aclassdyno_1_1PipelineModuleProcessor_html_a26c2cbcd71e18291bd0f2cd96e6954f7"><div class="ttname"><a href="classdyno_1_1PipelineModuleProcessor.html#a26c2cbcd71e18291bd0f2cd96e6954f7">dyno::PipelineModuleProcessor::Base</a></div><div class="ttdeci">SIMOPipelineModule&lt; Input, Output &gt; Base</div><div class="ttdef"><b>Definition:</b> <a href="PipelineModuleProcessor_8hpp_source.html#l00062">PipelineModuleProcessor.hpp:62</a></div></div>
-<div class="ttc" id="aclassdyno_1_1PipelineModuleProcessor_html_a3dd2dc288422dead3cd0849631725d65"><div class="ttname"><a href="classdyno_1_1PipelineModuleProcessor.html#a3dd2dc288422dead3cd0849631725d65">dyno::PipelineModuleProcessor::module_</a></div><div class="ttdeci">ModulePtr module_</div><div class="ttdef"><b>Definition:</b> <a href="PipelineModuleProcessor_8hpp_source.html#l00091">PipelineModuleProcessor.hpp:91</a></div></div>
+<div class="ttc" id="aclassdyno_1_1PipelineModuleProcessor_html_a3dd2dc288422dead3cd0849631725d65"><div class="ttname"><a href="classdyno_1_1PipelineModuleProcessor.html#a3dd2dc288422dead3cd0849631725d65">dyno::PipelineModuleProcessor::module_</a></div><div class="ttdeci">ModulePtr module_</div><div class="ttdef"><b>Definition:</b> <a href="PipelineModuleProcessor_8hpp_source.html#l00090">PipelineModuleProcessor.hpp:90</a></div></div>
 <div class="ttc" id="aclassdyno_1_1SIMOPipelineModule_html_a5ea2014fd60fee0a975bcacf9766d323"><div class="ttname"><a href="classdyno_1_1SIMOPipelineModule.html#a5ea2014fd60fee0a975bcacf9766d323">dyno::SIMOPipelineModule::input_queue</a></div><div class="ttdeci">InputQueue * input_queue</div><div class="ttdef"><b>Definition:</b> <a href="PipelineBase_8hpp_source.html#l00344">PipelineBase.hpp:344</a></div></div>
 </div><!-- fragment -->
 </div>
@@ -632,12 +632,10 @@ template&lt;typename INPUT , typename OUTPUT &gt; </div>
 
 <p class="definition">Definition at line <a class="el" href="PipelineModuleProcessor_8hpp_source.html#l00084">84</a> of file <a class="el" href="PipelineModuleProcessor_8hpp_source.html">PipelineModuleProcessor.hpp</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">   85</span>                                                 {</div>
-<div class="line"><span class="lineno">   86</span>    LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;In pipeline &quot;</span> &lt;&lt; this-&gt;<a class="code hl_variable" href="classdyno_1_1PipelineBase.html#aa08d3c035aed987a2f25cdde0a488115">module_name_</a>;</div>
-<div class="line"><span class="lineno">   87</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1PipelineModuleProcessor.html#a3dd2dc288422dead3cd0849631725d65">module_</a>-&gt;spinOnce(CHECK_NOTNULL(input));</div>
-<div class="line"><span class="lineno">   88</span>  }</div>
-<div class="ttc" id="aclassdyno_1_1PipelineBase_html_aa08d3c035aed987a2f25cdde0a488115"><div class="ttname"><a href="classdyno_1_1PipelineBase.html#aa08d3c035aed987a2f25cdde0a488115">dyno::PipelineBase::module_name_</a></div><div class="ttdeci">const std::string module_name_</div><div class="ttdef"><b>Definition:</b> <a href="PipelineBase_8hpp_source.html#l00134">PipelineBase.hpp:134</a></div></div>
+<div class="line"><span class="lineno">   86</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1PipelineModuleProcessor.html#a3dd2dc288422dead3cd0849631725d65">module_</a>-&gt;spinOnce(CHECK_NOTNULL(input));</div>
+<div class="line"><span class="lineno">   87</span>  }</div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="classdyno_1_1PipelineModuleProcessor.html#a3dd2dc288422dead3cd0849631725d65">dyno::PipelineModuleProcessor&lt; INPUT, OUTPUT &gt;::module_</a>, and <a class="el" href="classdyno_1_1PipelineBase.html#aa08d3c035aed987a2f25cdde0a488115">dyno::PipelineBase::module_name_</a>.</p>
+<p class="reference">References <a class="el" href="classdyno_1_1PipelineModuleProcessor.html#a3dd2dc288422dead3cd0849631725d65">dyno::PipelineModuleProcessor&lt; INPUT, OUTPUT &gt;::module_</a>.</p>
 
 </div>
 </div>
@@ -664,7 +662,7 @@ template&lt;typename INPUT , typename OUTPUT &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PipelineModuleProcessor_8hpp_source.html#l00091">91</a> of file <a class="el" href="PipelineModuleProcessor_8hpp_source.html">PipelineModuleProcessor.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="PipelineModuleProcessor_8hpp_source.html#l00090">90</a> of file <a class="el" href="PipelineModuleProcessor_8hpp_source.html">PipelineModuleProcessor.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1PipelineModuleProcessor.html#a8eecd2da10562c57b558626f8ccf7614">dyno::PipelineModuleProcessor&lt; INPUT, OUTPUT &gt;::process()</a>.</p>
 

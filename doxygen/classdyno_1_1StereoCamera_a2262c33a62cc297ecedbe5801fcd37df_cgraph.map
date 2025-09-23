@@ -1,6 +1,6 @@
 <map id="dyno::StereoCamera::StereoCamera" name="dyno::StereoCamera::StereoCamera">
 <area shape="rect" id="node1" title=" " alt="" coords="5,197,160,237"/>
-<area shape="rect" id="node2" href="$classdyno_1_1StereoCamera.html#a469d1da1b8c3528e74b707f2905e8aa4" title=" " alt="" coords="252,133,407,173"/>
+<area shape="rect" id="node2" href="$classdyno_1_1StereoCamera.html#a3af50e933e6c4acea73eedec1e1c7225" title=" " alt="" coords="252,133,407,173"/>
 <area shape="rect" id="node3" href="$classdyno_1_1StereoCamera.html#a6ce9ba10820d974b32a081868c224fad" title="computeRectificationParameters" alt="" coords="208,197,451,237"/>
 <area shape="rect" id="node13" href="$namespacedyno_1_1utils.html#abe851502ab3c4419cd7b6a4aa4caca69" title="Converts a 3x3 (or 3xM, M &gt; 3) camera matrix from opencv to gtsam::Cal3_S2." alt="" coords="229,262,430,287"/>
 <area shape="rect" id="node4" href="$classdyno_1_1CameraParams.html#ae50eb600c23415b3f7bd46e70553f96a" title=" " alt="" coords="511,5,672,45"/>

@@ -1,3 +1,17 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$structdyno_1_1BackendMetaData.html" title=" " alt="" coords="5,5,187,31"/>
+<area shape="rect" id="node1" href="$classdyno_1_1Accessor.html" title=" " alt="" coords="25,39,235,64"/>
+<area shape="rect" id="node2" href="$classdyno_1_1HybridAccessor.html" title=" " alt="" coords="325,63,488,88"/>
+<area shape="rect" id="node4" href="$classdyno_1_1WorldPoseAccessor.html" title=" " alt="" coords="313,9,501,35"/>
+<area shape="rect" id="node3" href="$classdyno_1_1test__hybrid_1_1SmartStructurlessAccessor.html" title=" " alt="" coords="588,55,784,95"/>
+<area shape="rect" id="node5" href="$classdyno_1_1WorldMotionAccessor.html" title=" " alt="" coords="585,5,787,31"/>
+<area shape="rect" id="node6" href="$classdyno_1_1Formulation.html" title=" " alt="" coords="55,239,205,279"/>
+<area shape="rect" id="node7" href="$classdyno_1_1HybridFormulation.html" title=" " alt="" coords="315,223,498,248"/>
+<area shape="rect" id="node13" href="$classdyno_1_1WorldPoseFormulation.html" title=" " alt="" coords="303,300,511,325"/>
+<area shape="rect" id="node8" href="$classdyno_1_1RegularHybridFormulation.html" title=" " alt="" coords="569,312,803,337"/>
+<area shape="rect" id="node10" href="$classdyno_1_1test__hybrid_1_1DecoupledFormulation.html" title=" " alt="" coords="601,119,771,159"/>
+<area shape="rect" id="node11" href="$classdyno_1_1test__hybrid_1_1StructurelessDecoupledFormulation.html" title=" " alt="" coords="559,183,813,223"/>
+<area shape="rect" id="node12" href="$classdyno_1_1test__hybrid_1_1StructurlessFormulation.html" title=" " alt="" coords="597,247,775,287"/>
+<area shape="rect" id="node9" href="$classdyno_1_1test__hybrid_1_1SmartStructurlessFormulation.html" title=" " alt="" coords="861,305,1077,345"/>
+<area shape="rect" id="node14" href="$classdyno_1_1WorldMotionFormulation.html" title=" " alt="" coords="575,361,797,387"/>
+<area shape="rect" id="node15" href="$structdyno_1_1HybridFormulationProperties.html" title=" " alt="" coords="5,143,255,168"/>
 </map>

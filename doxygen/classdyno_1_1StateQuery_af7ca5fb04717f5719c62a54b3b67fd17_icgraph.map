@@ -1,13 +1,36 @@
 <map id="dyno::StateQuery::get" name="dyno::StateQuery::get">
-<area shape="rect" id="node1" title=" " alt="" coords="552,191,715,217"/>
-<area shape="rect" id="node2" href="$classdyno_1_1Accessor.html#ab7c0aa6409651ee5ee49387e3272e930" title="Get all dynamic landmarks for object j at time&#45;step k." alt="" coords="294,12,501,52"/>
-<area shape="rect" id="node3" href="$classdyno_1_1Accessor.html#a1d29b55442543df1530b5784e745527b" title="Collects all object poses at some time&#45;step (k). This is equivalent to \mathcal{L}_k...." alt="" coords="302,76,493,116"/>
-<area shape="rect" id="node4" href="$namespacedyno.html#ad5ce0869676f7888164ba26aceda60a9" title="Safe getter to a StateQuery object. If the StateQuery is successful, result is set to the value of th..." alt="" coords="322,141,473,166"/>
-<area shape="rect" id="node8" href="$classdyno_1_1WorldPoseFormulation.html#a2fe402643436b3cdf4b38748317c284c" title=" " alt="" coords="20,197,228,237"/>
-<area shape="rect" id="node9" href="$classdyno_1_1Accessor.html#a143801da1d538d06b5825ae8885fa23a" title="Check if there exists an estimate for object motion at time&#45;step (k) for object id (j)...." alt="" coords="291,241,504,281"/>
-<area shape="rect" id="node10" href="$classdyno_1_1Accessor.html#ab3e5cd6c8bc67beb904bba9767b76869" title="Check if there exists an estimate for object pose at time&#45;step (k) for object id (j)...." alt="" coords="298,305,497,345"/>
-<area shape="rect" id="node11" href="$classdyno_1_1Formulation.html#a7a559d73e69e026a67b5af2e7b8c1eae" title="Logs all frames and values to file using Accessor and BackendLogger. The BackendMetaData provides met..." alt="" coords="318,369,477,409"/>
-<area shape="rect" id="node5" href="$classdyno_1_1WorldMotionFormulation.html#ad60f9621d41608943694144aad4d2e22" title=" " alt="" coords="13,5,235,45"/>
-<area shape="rect" id="node6" href="$classdyno_1_1WorldPoseFormulation.html#ad1e6e0a4af9b06496359ceb969405f0a" title=" " alt="" coords="13,69,235,109"/>
-<area shape="rect" id="node7" href="$classdyno_1_1Formulation.html#a3369b4fa4dd649495e5bace0e9b715d9" title=" " alt="" coords="5,133,243,173"/>
+<area shape="rect" id="node1" title=" " alt="" coords="949,773,1112,798"/>
+<area shape="rect" id="node2" href="$classdyno_1_1HybridFormulation.html#ab6c9ea5d69eacec56ccfd11f9f46191c" title=" " alt="" coords="342,152,525,192"/>
+<area shape="rect" id="node7" href="$classdyno_1_1HybridAccessor.html#a6ddab2629b303977d1acb42db391cb6c" title="Get all dynamic landmarks for object j at time&#45;step k." alt="" coords="5,548,244,588"/>
+<area shape="rect" id="node8" href="$classdyno_1_1HybridAccessor.html#ae7aef40f902a6179abc7996c27636482" title=" " alt="" coords="661,523,863,563"/>
+<area shape="rect" id="node11" href="$classdyno_1_1HybridAccessor.html#a6878cc88eb3a520f8e724bad2de857b5" title="Get all dynamic object estimates in the local object frame." alt="" coords="297,651,570,691"/>
+<area shape="rect" id="node12" href="$classdyno_1_1HybridFormulation.html#a996b7f4c58b61acfd0d1d09cec43ebed" title=" " alt="" coords="671,169,853,209"/>
+<area shape="rect" id="node13" href="$classdyno_1_1ParallelObjectISAM.html#a6e9451161e818b2032ebbb4d5ba2435c" title=" " alt="" coords="669,637,855,677"/>
+<area shape="rect" id="node15" href="$classdyno_1_1Accessor.html#aa7c020a22d7cea2bebd038cf4a1d3f92" title="Get all landmarks (static and dynamic) at time&#45;step k." alt="" coords="664,701,860,741"/>
+<area shape="rect" id="node16" href="$classdyno_1_1HybridAccessor.html#a80c4fda3bd35e70dad69f0b416a174e5" title="Get an absolute object motion (_{k&#45;1}^wH_k) from theta the requested time&#45;step (k) and object (j)." alt="" coords="681,765,843,805"/>
+<area shape="rect" id="node17" href="$classdyno_1_1Accessor.html#aad13431b3c1e7920f02be084c21af15c" title="Gets the absolute motion (_{k&#45;1}^wH_k) from theta the requested time&#45;step (k) and object (j) with the..." alt="" coords="667,829,857,869"/>
+<area shape="rect" id="node18" href="$classdyno_1_1HybridAccessor.html#ab0e3459519ed5ecbc91821b628e3ddfe" title="Get the pose (^wL_k) of an object (j) at time&#45;step (k)." alt="" coords="681,893,843,933"/>
+<area shape="rect" id="node20" href="$namespacedyno.html#ad5ce0869676f7888164ba26aceda60a9" title="Safe getter to a StateQuery object. If the StateQuery is successful, result is set to the value of th..." alt="" coords="358,323,509,349"/>
+<area shape="rect" id="node24" href="$classdyno_1_1WorldPoseFormulation.html#a2fe402643436b3cdf4b38748317c284c" title=" " alt="" coords="21,484,229,524"/>
+<area shape="rect" id="node25" href="$classdyno_1_1Accessor.html#a6ac7f822f520fac8f3ee93d24230abe4" title="Get all static landmarks at time&#45;step k." alt="" coords="645,957,879,997"/>
+<area shape="rect" id="node26" href="$classdyno_1_1Accessor.html#a143801da1d538d06b5825ae8885fa23a" title="Check if there exists an estimate for object motion at time&#45;step (k) for object id (j)...." alt="" coords="665,1021,859,1061"/>
+<area shape="rect" id="node27" href="$classdyno_1_1ParallelHybridBackendModule.html#a367a62d62ad07e49a2f2ef975e1bce8b" title=" " alt="" coords="634,1085,890,1125"/>
+<area shape="rect" id="node29" href="$classdyno_1_1Formulation.html#a7a559d73e69e026a67b5af2e7b8c1eae" title="Logs all frames and values to file using Accessor and BackendLogger. The BackendMetaData provides met..." alt="" coords="683,1149,841,1189"/>
+<area shape="rect" id="node31" href="$classdyno_1_1VisionImuBackendModule.html#abe9e1a10e39d420be21a1172e4f3173b" title=" " alt="" coords="647,1213,877,1253"/>
+<area shape="rect" id="node33" href="$classdyno_1_1ParallelHybridBackendModule.html#a07ee75bebfcdf9cab20b6d2cc214b8e0" title=" " alt="" coords="329,1305,537,1345"/>
+<area shape="rect" id="node34" href="$classdyno_1_1ParallelHybridBackendModule.html#a292225500c4604751ebd98e6564ac6ff" title=" " alt="" coords="623,1277,901,1317"/>
+<area shape="rect" id="node3" href="$classdyno_1_1HybridFormulation.html#ae65a9c76b0363dde62eb86e6c0b2b832" title=" " alt="" coords="13,69,236,109"/>
+<area shape="rect" id="node4" href="$classdyno_1_1test__hybrid_1_1DecoupledFormulation.html#a8d4582a8d60a4c61c167577f519ca861" title=" " alt="" coords="13,134,236,189"/>
+<area shape="rect" id="node5" href="$classdyno_1_1test__hybrid_1_1SmartStructurlessFormulation.html#a40673e16631d1d3e8775e33116f85f6a" title=" " alt="" coords="13,213,236,267"/>
+<area shape="rect" id="node6" href="$classdyno_1_1HybridFormulation.html#ad05af62c9b437ad6613a191defeecb07" title=" " alt="" coords="33,5,216,45"/>
+<area shape="rect" id="node9" href="$classdyno_1_1HybridAccessor.html#a393f72c835250a5fd7471fc764b95da7" title="Get a dynamic landmark (^wm_k) with tracklet id (i) at time&#45;step (k)." alt="" coords="346,523,521,563"/>
+<area shape="rect" id="node10" href="$classdyno_1_1HybridAccessor.html#a0c18ac82fc56a27c920d3c90c2981be0" title=" " alt="" coords="332,587,535,627"/>
+<area shape="rect" id="node14" href="$classdyno_1_1ParallelObjectISAM.html#a56c1b3d38c4e1909e29eef32bb9e8357" title=" " alt="" coords="340,715,527,755"/>
+<area shape="rect" id="node19" href="$classdyno_1_1HybridAccessor.html#ae9b76ce2fcb0c7bfec7fdbb6e497f44c" title=" " alt="" coords="341,893,525,933"/>
+<area shape="rect" id="node21" href="$classdyno_1_1WorldMotionFormulation.html#ad60f9621d41608943694144aad4d2e22" title=" " alt="" coords="13,292,236,332"/>
+<area shape="rect" id="node22" href="$classdyno_1_1WorldPoseFormulation.html#ad1e6e0a4af9b06496359ceb969405f0a" title=" " alt="" coords="13,356,236,396"/>
+<area shape="rect" id="node23" href="$classdyno_1_1Formulation.html#a3369b4fa4dd649495e5bace0e9b715d9" title=" " alt="" coords="6,420,243,460"/>
+<area shape="rect" id="node28" href="$classdyno_1_1ParallelHybridBackendModule.html#a368912f3c84f148843f4b6ef653f4a0c" title=" " alt="" coords="292,1085,575,1125"/>
+<area shape="rect" id="node30" href="$classdyno_1_1RegularBackendModule.html#a26a1f7ce71fdabc65cdb711e48892b62" title=" " alt="" coords="326,1149,541,1189"/>
+<area shape="rect" id="node32" href="$classdyno_1_1VisionImuBackendModule.html#ac68439ae4ce2b6253ae42f7e52f60abb" title=" " alt="" coords="310,1213,557,1253"/>
 </map>

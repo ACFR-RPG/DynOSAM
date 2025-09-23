@@ -1,7 +1,0 @@
-<map id="dyno::KltFeatureTracker::constructStaticFeatureFromPrevious" name="dyno::KltFeatureTracker::constructStaticFeatureFromPrevious">
-<area shape="rect" id="node1" title="A more concise static feature constructor that the one in ExternalFlowFeatureTracker." alt="" coords="5,62,215,117"/>
-<area shape="rect" id="node2" href="$classdyno_1_1TrackletIdManager.html#ab7ec1738de58e54adbdad49f1f44f7ae" title=" " alt="" coords="270,5,453,45"/>
-<area shape="rect" id="node3" href="$classdyno_1_1TrackletIdManager.html#a5b83806eebd74cfafc4d706cd4182c6b" title=" " alt="" coords="263,69,460,109"/>
-<area shape="rect" id="node4" href="$classdyno_1_1TrackletIdManager.html#a53cb3472fa0367b8dd2a9127111277b2" title=" " alt="" coords="270,133,453,173"/>
-<area shape="rect" id="node5" href="$classdyno_1_1TrackletIdManager.html#a2a115366087e907d04e6c0d62643ef20" title=" " alt="" coords="508,133,691,173"/>
-</map>

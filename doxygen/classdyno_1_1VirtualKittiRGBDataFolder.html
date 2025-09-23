@@ -152,7 +152,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="VirtualKittidataProvider_8cc_source.html#l00065">65</a> of file <a class="el" href="VirtualKittidataProvider_8cc_source.html">VirtualKittidataProvider.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="VirtualKittidataProvider_8cc_source.html#l00075">75</a> of file <a class="el" href="VirtualKittidataProvider_8cc_source.html">VirtualKittidataProvider.cc</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="aa9111602596e0bf3cfb11aa8c5445221" name="aa9111602596e0bf3cfb11aa8c5445221"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa9111602596e0bf3cfb11aa8c5445221">&#9670;&#160;</a></span>VirtualKittiRGBDataFolder()</h2>
@@ -178,9 +178,9 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="VirtualKittidataProvider_8cc_source.html#l00068">68</a> of file <a class="el" href="VirtualKittidataProvider_8cc_source.html">VirtualKittidataProvider.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   68</span>: <a class="code hl_function" href="classdyno_1_1GenericVirtualKittiImageLoader.html#a2f481b8dff673561e40804c3da1eacc5">GenericVirtualKittiImageLoader</a>(path) {}</div>
-<div class="ttc" id="aclassdyno_1_1GenericVirtualKittiImageLoader_html_a2f481b8dff673561e40804c3da1eacc5"><div class="ttname"><a href="classdyno_1_1GenericVirtualKittiImageLoader.html#a2f481b8dff673561e40804c3da1eacc5">dyno::GenericVirtualKittiImageLoader::GenericVirtualKittiImageLoader</a></div><div class="ttdeci">GenericVirtualKittiImageLoader(const std::string &amp;full_path)</div><div class="ttdef"><b>Definition:</b> <a href="VirtualKittidataProvider_8cc_source.html#l00059">VirtualKittidataProvider.cc:59</a></div></div>
+<p class="definition">Definition at line <a class="el" href="VirtualKittidataProvider_8cc_source.html#l00077">77</a> of file <a class="el" href="VirtualKittidataProvider_8cc_source.html">VirtualKittidataProvider.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   78</span>      : <a class="code hl_function" href="classdyno_1_1GenericVirtualKittiImageLoader.html#a2f481b8dff673561e40804c3da1eacc5">GenericVirtualKittiImageLoader</a>(path) {}</div>
+<div class="ttc" id="aclassdyno_1_1GenericVirtualKittiImageLoader_html_a2f481b8dff673561e40804c3da1eacc5"><div class="ttname"><a href="classdyno_1_1GenericVirtualKittiImageLoader.html#a2f481b8dff673561e40804c3da1eacc5">dyno::GenericVirtualKittiImageLoader::GenericVirtualKittiImageLoader</a></div><div class="ttdeci">GenericVirtualKittiImageLoader(const std::string &amp;full_path)</div><div class="ttdef"><b>Definition:</b> <a href="VirtualKittidataProvider_8cc_source.html#l00067">VirtualKittidataProvider.cc:67</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -221,23 +221,23 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classdyno_1_1DataFolder.html#a60162e20f359ad6f5ff58edf0964e3ac">dyno::DataFolder&lt; cv::Mat &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="VirtualKittidataProvider_8cc_source.html#l00069">69</a> of file <a class="el" href="VirtualKittidataProvider_8cc_source.html">VirtualKittidataProvider.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   69</span>                                       {</div>
-<div class="line"><span class="lineno">   70</span>        std::stringstream ss;</div>
-<div class="line"><span class="lineno">   71</span>        ss &lt;&lt; std::setfill(<span class="charliteral">&#39;0&#39;</span>) &lt;&lt; std::setw(5) &lt;&lt; idx;</div>
-<div class="line"><span class="lineno">   72</span>        <span class="keyword">const</span> std::string file_path = <a class="code hl_variable" href="classdyno_1_1GenericVirtualKittiImageLoader.html#af7115eae0f1f0a8e8b3e3fdd2926ee5c">full_path_</a>  + <span class="stringliteral">&quot;/rgb_&quot;</span> + ss.str() + <span class="stringliteral">&quot;.jpg&quot;</span>;</div>
-<div class="line"><span class="lineno">   73</span>        <a class="code hl_function" href="namespacedyno.html#a80d59abcebfb78b7fb237b1572429606">throwExceptionIfPathInvalid</a>(file_path);</div>
-<div class="line"><span class="lineno">   74</span> </div>
-<div class="line"><span class="lineno">   75</span>        cv::Mat rgb;</div>
-<div class="line"><span class="lineno">   76</span>        <a class="code hl_function" href="namespacedyno.html#a7fd811cad6c8cd6edb2fb0c2902952cd">loadRGB</a>(file_path, rgb);</div>
-<div class="line"><span class="lineno">   77</span> </div>
-<div class="line"><span class="lineno">   78</span>        <span class="keywordflow">return</span> rgb;</div>
-<div class="line"><span class="lineno">   79</span>    }</div>
-<div class="ttc" id="aclassdyno_1_1GenericVirtualKittiImageLoader_html_af7115eae0f1f0a8e8b3e3fdd2926ee5c"><div class="ttname"><a href="classdyno_1_1GenericVirtualKittiImageLoader.html#af7115eae0f1f0a8e8b3e3fdd2926ee5c">dyno::GenericVirtualKittiImageLoader::full_path_</a></div><div class="ttdeci">const std::string full_path_</div><div class="ttdef"><b>Definition:</b> <a href="VirtualKittidataProvider_8cc_source.html#l00062">VirtualKittidataProvider.cc:62</a></div></div>
-<div class="ttc" id="anamespacedyno_html_a7fd811cad6c8cd6edb2fb0c2902952cd"><div class="ttname"><a href="namespacedyno.html#a7fd811cad6c8cd6edb2fb0c2902952cd">dyno::loadRGB</a></div><div class="ttdeci">void loadRGB(const std::string &amp;image_path, cv::Mat &amp;img)</div><div class="ttdef"><b>Definition:</b> <a href="DataProviderUtils_8cc_source.html#l00051">DataProviderUtils.cc:51</a></div></div>
-<div class="ttc" id="anamespacedyno_html_a80d59abcebfb78b7fb237b1572429606"><div class="ttname"><a href="namespacedyno.html#a80d59abcebfb78b7fb237b1572429606">dyno::throwExceptionIfPathInvalid</a></div><div class="ttdeci">void throwExceptionIfPathInvalid(const std::string image_path)</div><div class="ttdef"><b>Definition:</b> <a href="DataProviderUtils_8cc_source.html#l00044">DataProviderUtils.cc:44</a></div></div>
+<p class="definition">Definition at line <a class="el" href="VirtualKittidataProvider_8cc_source.html#l00079">79</a> of file <a class="el" href="VirtualKittidataProvider_8cc_source.html">VirtualKittidataProvider.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   79</span>                                     {</div>
+<div class="line"><span class="lineno">   80</span>    std::stringstream ss;</div>
+<div class="line"><span class="lineno">   81</span>    ss &lt;&lt; std::setfill(<span class="charliteral">&#39;0&#39;</span>) &lt;&lt; std::setw(5) &lt;&lt; idx;</div>
+<div class="line"><span class="lineno">   82</span>    <span class="keyword">const</span> std::string file_path = <a class="code hl_variable" href="classdyno_1_1GenericVirtualKittiImageLoader.html#af7115eae0f1f0a8e8b3e3fdd2926ee5c">full_path_</a> + <span class="stringliteral">&quot;/rgb_&quot;</span> + ss.str() + <span class="stringliteral">&quot;.jpg&quot;</span>;</div>
+<div class="line"><span class="lineno">   83</span>    <a class="code hl_function" href="namespacedyno.html#a163cb16ef980acda5b09d45c3a156e6f">throwExceptionIfPathInvalid</a>(file_path);</div>
+<div class="line"><span class="lineno">   84</span> </div>
+<div class="line"><span class="lineno">   85</span>    cv::Mat rgb;</div>
+<div class="line"><span class="lineno">   86</span>    <a class="code hl_function" href="namespacedyno.html#a7fd811cad6c8cd6edb2fb0c2902952cd">loadRGB</a>(file_path, rgb);</div>
+<div class="line"><span class="lineno">   87</span> </div>
+<div class="line"><span class="lineno">   88</span>    <span class="keywordflow">return</span> rgb;</div>
+<div class="line"><span class="lineno">   89</span>  }</div>
+<div class="ttc" id="aclassdyno_1_1GenericVirtualKittiImageLoader_html_af7115eae0f1f0a8e8b3e3fdd2926ee5c"><div class="ttname"><a href="classdyno_1_1GenericVirtualKittiImageLoader.html#af7115eae0f1f0a8e8b3e3fdd2926ee5c">dyno::GenericVirtualKittiImageLoader::full_path_</a></div><div class="ttdeci">const std::string full_path_</div><div class="ttdef"><b>Definition:</b> <a href="VirtualKittidataProvider_8cc_source.html#l00072">VirtualKittidataProvider.cc:72</a></div></div>
+<div class="ttc" id="anamespacedyno_html_a163cb16ef980acda5b09d45c3a156e6f"><div class="ttname"><a href="namespacedyno.html#a163cb16ef980acda5b09d45c3a156e6f">dyno::throwExceptionIfPathInvalid</a></div><div class="ttdeci">void throwExceptionIfPathInvalid(const std::string &amp;image_path)</div><div class="ttdef"><b>Definition:</b> <a href="DataProviderUtils_8cc_source.html#l00048">DataProviderUtils.cc:48</a></div></div>
+<div class="ttc" id="anamespacedyno_html_a7fd811cad6c8cd6edb2fb0c2902952cd"><div class="ttname"><a href="namespacedyno.html#a7fd811cad6c8cd6edb2fb0c2902952cd">dyno::loadRGB</a></div><div class="ttdeci">void loadRGB(const std::string &amp;image_path, cv::Mat &amp;img)</div><div class="ttdef"><b>Definition:</b> <a href="DataProviderUtils_8cc_source.html#l00055">DataProviderUtils.cc:55</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="classdyno_1_1GenericVirtualKittiImageLoader.html#af7115eae0f1f0a8e8b3e3fdd2926ee5c">dyno::GenericVirtualKittiImageLoader::full_path_</a>, <a class="el" href="namespacedyno.html#a7fd811cad6c8cd6edb2fb0c2902952cd">dyno::loadRGB()</a>, and <a class="el" href="namespacedyno.html#a80d59abcebfb78b7fb237b1572429606">dyno::throwExceptionIfPathInvalid()</a>.</p>
+<p class="reference">References <a class="el" href="classdyno_1_1GenericVirtualKittiImageLoader.html#af7115eae0f1f0a8e8b3e3fdd2926ee5c">dyno::GenericVirtualKittiImageLoader::full_path_</a>, <a class="el" href="namespacedyno.html#a7fd811cad6c8cd6edb2fb0c2902952cd">dyno::loadRGB()</a>, and <a class="el" href="namespacedyno.html#a163cb16ef980acda5b09d45c3a156e6f">dyno::throwExceptionIfPathInvalid()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -245,7 +245,7 @@ Here is the call graph for this function:</div>
 <map name="aclassdyno_1_1VirtualKittiRGBDataFolder_aee9f5ca3b576bf0b3e6e057eda916979_cgraph" id="aclassdyno_1_1VirtualKittiRGBDataFolder_aee9f5ca3b576bf0b3e6e057eda916979_cgraph">
 <area shape="rect" title="Get the Item at an index in the dataset." alt="" coords="5,23,196,63"/>
 <area shape="rect" href="namespacedyno.html#a7fd811cad6c8cd6edb2fb0c2902952cd" title=" " alt="" coords="244,5,363,31"/>
-<area shape="rect" href="namespacedyno.html#a80d59abcebfb78b7fb237b1572429606" title=" " alt="" coords="411,23,611,63"/>
+<area shape="rect" href="namespacedyno.html#a163cb16ef980acda5b09d45c3a156e6f" title=" " alt="" coords="411,23,611,63"/>
 </map>
 </div>
 

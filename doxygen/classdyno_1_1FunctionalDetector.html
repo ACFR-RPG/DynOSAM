@@ -273,27 +273,29 @@ template&lt;&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="FeatureDetector_8cc_source.html#l00055">55</a> of file <a class="el" href="FeatureDetector_8cc_source.html">FeatureDetector.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   55</span>                                                                                                  {</div>
-<div class="line"><span class="lineno">   56</span>    LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Creating dyno::ORBextractor&quot;</span>;</div>
-<div class="line"><span class="lineno">   57</span> </div>
-<div class="line"><span class="lineno">   58</span>    <span class="keyword">auto</span> orb_detector_ = std::make_shared&lt;ORBextractor&gt;(</div>
-<div class="line"><span class="lineno">   59</span>        tracker_params.max_nr_keypoints_before_anms,</div>
-<div class="line"><span class="lineno">   60</span>        tracker_params.orb_params.scale_factor,</div>
-<div class="line"><span class="lineno">   61</span>        tracker_params.orb_params.n_levels,</div>
-<div class="line"><span class="lineno">   62</span>        tracker_params.orb_params.init_threshold_fast,</div>
-<div class="line"><span class="lineno">   63</span>        tracker_params.orb_params.min_threshold_fast);</div>
-<div class="line"><span class="lineno">   64</span> </div>
-<div class="line"><span class="lineno">   65</span>    <span class="comment">//NOTE that the mask is not used in this implementation</span></div>
-<div class="line"><span class="lineno">   66</span>    <span class="keyword">auto</span> functional_detector = [=](<span class="keyword">const</span> cv::Mat&amp; img, <a class="code hl_typedef" href="namespacedyno.html#ae45b8b62a0efd7dbcf047db8751f6739">KeypointsCV</a>&amp; keypoints, <span class="keyword">const</span> cv::Mat&amp;) -&gt; <span class="keywordtype">void</span> {</div>
-<div class="line"><span class="lineno">   67</span>        CHECK_NOTNULL(orb_detector_);</div>
-<div class="line"><span class="lineno">   68</span>        <span class="comment">//mask and descriptors are empty</span></div>
-<div class="line"><span class="lineno">   69</span>        orb_detector_-&gt;operator()(img, cv::Mat(), keypoints, cv::Mat());</div>
-<div class="line"><span class="lineno">   70</span>    };</div>
-<div class="line"><span class="lineno">   71</span> </div>
-<div class="line"><span class="lineno">   72</span>    <span class="keywordflow">return</span> std::make_shared&lt;FunctionalDetector&gt;(functional_detector);</div>
-<div class="line"><span class="lineno">   73</span>}</div>
-<div class="ttc" id="anamespacedyno_html_ae45b8b62a0efd7dbcf047db8751f6739"><div class="ttname"><a href="namespacedyno.html#ae45b8b62a0efd7dbcf047db8751f6739">dyno::KeypointsCV</a></div><div class="ttdeci">std::vector&lt; KeypointCV &gt; KeypointsCV</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00099">Types.hpp:99</a></div></div>
+<p class="definition">Definition at line <a class="el" href="FeatureDetector_8cc_source.html#l00065">65</a> of file <a class="el" href="FeatureDetector_8cc_source.html">FeatureDetector.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   66</span>                                         {</div>
+<div class="line"><span class="lineno">   67</span>  LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Creating dyno::ORBextractor&quot;</span>;</div>
+<div class="line"><span class="lineno">   68</span> </div>
+<div class="line"><span class="lineno">   69</span>  <span class="keyword">auto</span> orb_detector_ = std::make_shared&lt;ORBextractor&gt;(</div>
+<div class="line"><span class="lineno">   70</span>      tracker_params.max_nr_keypoints_before_anms,</div>
+<div class="line"><span class="lineno">   71</span>      tracker_params.orb_params.scale_factor,</div>
+<div class="line"><span class="lineno">   72</span>      tracker_params.orb_params.n_levels,</div>
+<div class="line"><span class="lineno">   73</span>      tracker_params.orb_params.init_threshold_fast,</div>
+<div class="line"><span class="lineno">   74</span>      tracker_params.orb_params.min_threshold_fast);</div>
+<div class="line"><span class="lineno">   75</span> </div>
+<div class="line"><span class="lineno">   76</span>  <span class="comment">// NOTE that the mask is not used in this implementation</span></div>
+<div class="line"><span class="lineno">   77</span>  <span class="keyword">auto</span> functional_detector = [=](<span class="keyword">const</span> cv::Mat&amp; img, <a class="code hl_typedef" href="namespacedyno.html#ae45b8b62a0efd7dbcf047db8751f6739">KeypointsCV</a>&amp; keypoints,</div>
+<div class="line"><span class="lineno">   78</span>                                 <span class="keyword">const</span> cv::Mat&amp;) -&gt; <span class="keywordtype">void</span> {</div>
+<div class="line"><span class="lineno">   79</span>    CHECK_NOTNULL(orb_detector_);</div>
+<div class="line"><span class="lineno">   80</span>    <span class="comment">// mask and descriptors are empty</span></div>
+<div class="line"><span class="lineno">   81</span>    cv::Mat descriptors;</div>
+<div class="line"><span class="lineno">   82</span>    orb_detector_-&gt;operator()(img, cv::Mat(), keypoints, descriptors);</div>
+<div class="line"><span class="lineno">   83</span>  };</div>
+<div class="line"><span class="lineno">   84</span> </div>
+<div class="line"><span class="lineno">   85</span>  <span class="keywordflow">return</span> std::make_shared&lt;FunctionalDetector&gt;(functional_detector);</div>
+<div class="line"><span class="lineno">   86</span>}</div>
+<div class="ttc" id="anamespacedyno_html_ae45b8b62a0efd7dbcf047db8751f6739"><div class="ttname"><a href="namespacedyno.html#ae45b8b62a0efd7dbcf047db8751f6739">dyno::KeypointsCV</a></div><div class="ttdeci">std::vector&lt; KeypointCV &gt; KeypointsCV</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00103">Types.hpp:103</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="structdyno_1_1TrackerParams_1_1OrbParams.html#ad4a405f820a3cee3c40a2e0e74e53a72">dyno::TrackerParams::OrbParams::init_threshold_fast</a>, <a class="el" href="structdyno_1_1TrackerParams.html#afcd63917887a64e0e7fe8a8c43b0da3c">dyno::TrackerParams::max_nr_keypoints_before_anms</a>, <a class="el" href="structdyno_1_1TrackerParams_1_1OrbParams.html#ad0a672a2e1fdb843144a6cba90dde151">dyno::TrackerParams::OrbParams::min_threshold_fast</a>, <a class="el" href="structdyno_1_1TrackerParams_1_1OrbParams.html#a23194f18103aae5138ae6fee146cea40">dyno::TrackerParams::OrbParams::n_levels</a>, <a class="el" href="structdyno_1_1TrackerParams.html#aad55fbdf1719bac9dab5280f08dc714d">dyno::TrackerParams::orb_params</a>, and <a class="el" href="structdyno_1_1TrackerParams_1_1OrbParams.html#a86aafd82514c48143bb751c5f0a19fdd">dyno::TrackerParams::OrbParams::scale_factor</a>.</p>
 
@@ -374,21 +376,20 @@ template&lt;&gt; </div>
 
 <p>Factory method that uses the <a class="el" href="structdyno_1_1TrackerParams.html#a8c5dcc9bc2ded3c66214340b3f9fd0a2">TrackerParams::feature_detector_type</a> to determine the detector. </p>
 
-<p class="definition">Definition at line <a class="el" href="FeatureDetector_8cc_source.html#l00076">76</a> of file <a class="el" href="FeatureDetector_8cc_source.html">FeatureDetector.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   76</span>                                                                                           {</div>
-<div class="line"><span class="lineno">   77</span>    <span class="keyword">using </span>FDT = <a class="code hl_enumeration" href="structdyno_1_1TrackerParams.html#ac3969dc4d041e14e4bafc0bd9013d49a">TrackerParams::FeatureDetectorType</a>;</div>
-<div class="line"><span class="lineno">   78</span>    <span class="keywordflow">switch</span> (tracker_params.feature_detector_type)</div>
-<div class="line"><span class="lineno">   79</span>    {</div>
-<div class="line"><span class="lineno">   80</span>    <span class="keywordflow">case</span> FDT::GFTT:</div>
-<div class="line"><span class="lineno">   81</span>        <span class="keywordflow">return</span> FunctionalDetector::Create&lt;cv::GFTTDetector&gt;(tracker_params);</div>
-<div class="line"><span class="lineno">   82</span>    <span class="keywordflow">case</span> FDT::ORB_SLAM_ORB:</div>
-<div class="line"><span class="lineno">   83</span>        <span class="keywordflow">return</span> FunctionalDetector::Create&lt;ORBextractor&gt;(tracker_params);</div>
-<div class="line"><span class="lineno">   84</span>    <span class="keywordflow">default</span>:</div>
-<div class="line"><span class="lineno">   85</span>        LOG(ERROR) &lt;&lt; <span class="stringliteral">&quot;Unknown Feature detection type!&quot;</span>;</div>
-<div class="line"><span class="lineno">   86</span>        <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
-<div class="line"><span class="lineno">   87</span>        <span class="keywordflow">break</span>;</div>
-<div class="line"><span class="lineno">   88</span>    }</div>
-<div class="line"><span class="lineno">   89</span>}</div>
+<p class="definition">Definition at line <a class="el" href="FeatureDetector_8cc_source.html#l00088">88</a> of file <a class="el" href="FeatureDetector_8cc_source.html">FeatureDetector.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   89</span>                                         {</div>
+<div class="line"><span class="lineno">   90</span>  <span class="keyword">using </span>FDT = <a class="code hl_enumeration" href="structdyno_1_1TrackerParams.html#ac3969dc4d041e14e4bafc0bd9013d49a">TrackerParams::FeatureDetectorType</a>;</div>
+<div class="line"><span class="lineno">   91</span>  <span class="keywordflow">switch</span> (tracker_params.feature_detector_type) {</div>
+<div class="line"><span class="lineno">   92</span>    <span class="keywordflow">case</span> FDT::GFTT:</div>
+<div class="line"><span class="lineno">   93</span>      <span class="keywordflow">return</span> FunctionalDetector::Create&lt;cv::GFTTDetector&gt;(tracker_params);</div>
+<div class="line"><span class="lineno">   94</span>    <span class="keywordflow">case</span> FDT::ORB_SLAM_ORB:</div>
+<div class="line"><span class="lineno">   95</span>      <span class="keywordflow">return</span> FunctionalDetector::Create&lt;ORBextractor&gt;(tracker_params);</div>
+<div class="line"><span class="lineno">   96</span>    <span class="keywordflow">default</span>:</div>
+<div class="line"><span class="lineno">   97</span>      LOG(ERROR) &lt;&lt; <span class="stringliteral">&quot;Unknown Feature detection type!&quot;</span>;</div>
+<div class="line"><span class="lineno">   98</span>      <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
+<div class="line"><span class="lineno">   99</span>      <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">  100</span>  }</div>
+<div class="line"><span class="lineno">  101</span>}</div>
 <div class="ttc" id="astructdyno_1_1TrackerParams_html_ac3969dc4d041e14e4bafc0bd9013d49a"><div class="ttname"><a href="structdyno_1_1TrackerParams.html#ac3969dc4d041e14e4bafc0bd9013d49a">dyno::TrackerParams::FeatureDetectorType</a></div><div class="ttdeci">FeatureDetectorType</div><div class="ttdef"><b>Definition:</b> <a href="TrackerParams_8hpp_source.html#l00049">TrackerParams.hpp:49</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="structdyno_1_1TrackerParams.html#a8c5dcc9bc2ded3c66214340b3f9fd0a2">dyno::TrackerParams::feature_detector_type</a>.</p>

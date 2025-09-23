@@ -85,11 +85,11 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a4f9cabac0fbafa5d7d4f2cad8bf2d576"><td class="memItemLeft" align="right" valign="top">cv::Size&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1TrackerParams_1_1SubPixelCornerRefinementParams.html#a4f9cabac0fbafa5d7d4f2cad8bf2d576">window_size</a> = cv::Size( 5, 5 )</td></tr>
+<tr class="memitem:a4f9cabac0fbafa5d7d4f2cad8bf2d576"><td class="memItemLeft" align="right" valign="top">cv::Size&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1TrackerParams_1_1SubPixelCornerRefinementParams.html#a4f9cabac0fbafa5d7d4f2cad8bf2d576">window_size</a> = cv::Size(5, 5)</td></tr>
 <tr class="separator:a4f9cabac0fbafa5d7d4f2cad8bf2d576"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7bb034c4e1a80a8eb168250d0256e48b"><td class="memItemLeft" align="right" valign="top">cv::Size&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1TrackerParams_1_1SubPixelCornerRefinementParams.html#a7bb034c4e1a80a8eb168250d0256e48b">zero_zone</a> = cv::Size( -1, -1 )</td></tr>
+<tr class="memitem:a7bb034c4e1a80a8eb168250d0256e48b"><td class="memItemLeft" align="right" valign="top">cv::Size&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1TrackerParams_1_1SubPixelCornerRefinementParams.html#a7bb034c4e1a80a8eb168250d0256e48b">zero_zone</a> = cv::Size(-1, -1)</td></tr>
 <tr class="separator:a7bb034c4e1a80a8eb168250d0256e48b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaf3de2cc4558400da0f3f44ef53e7f6a"><td class="memItemLeft" align="right" valign="top">cv::TermCriteria&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1TrackerParams_1_1SubPixelCornerRefinementParams.html#aaf3de2cc4558400da0f3f44ef53e7f6a">criteria</a> = cv::TermCriteria(cv::TermCriteria::EPS + cv::TermCriteria::COUNT, 40, 0.001 )</td></tr>
+<tr class="memitem:aaf3de2cc4558400da0f3f44ef53e7f6a"><td class="memItemLeft" align="right" valign="top">cv::TermCriteria&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1TrackerParams_1_1SubPixelCornerRefinementParams.html#aaf3de2cc4558400da0f3f44ef53e7f6a">criteria</a></td></tr>
 <tr class="separator:aaf3de2cc4558400da0f3f44ef53e7f6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -103,11 +103,13 @@ Public Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">cv::TermCriteria dyno::TrackerParams::SubPixelCornerRefinementParams::criteria = cv::TermCriteria(cv::TermCriteria::EPS + cv::TermCriteria::COUNT, 40, 0.001 )</td>
+          <td class="memname">cv::TermCriteria dyno::TrackerParams::SubPixelCornerRefinementParams::criteria</td>
         </tr>
       </table>
 </div><div class="memdoc">
-
+<b>Initial value:</b><div class="fragment"><div class="line">= cv::TermCriteria(</div>
+<div class="line">        cv::TermCriteria::EPS + cv::TermCriteria::COUNT, 40, 0.001)</div>
+</div><!-- fragment -->
 <p class="definition">Definition at line <a class="el" href="TrackerParams_8hpp_source.html#l00063">63</a> of file <a class="el" href="TrackerParams_8hpp_source.html">TrackerParams.hpp</a>.</p>
 
 </div>
@@ -119,14 +121,12 @@ Public Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">cv::Size dyno::TrackerParams::SubPixelCornerRefinementParams::window_size = cv::Size( 5, 5 )</td>
+          <td class="memname">cv::Size dyno::TrackerParams::SubPixelCornerRefinementParams::window_size = cv::Size(5, 5)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="TrackerParams_8hpp_source.html#l00061">61</a> of file <a class="el" href="TrackerParams_8hpp_source.html">TrackerParams.hpp</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="namespacedyno.html#a7ba0d71725ff97625dde97a1e4346c9b">dyno::declare_config()</a>.</p>
 
 </div>
 </div>
@@ -137,14 +137,12 @@ Public Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">cv::Size dyno::TrackerParams::SubPixelCornerRefinementParams::zero_zone = cv::Size( -1, -1 )</td>
+          <td class="memname">cv::Size dyno::TrackerParams::SubPixelCornerRefinementParams::zero_zone = cv::Size(-1, -1)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="TrackerParams_8hpp_source.html#l00062">62</a> of file <a class="el" href="TrackerParams_8hpp_source.html">TrackerParams.hpp</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="namespacedyno.html#a7ba0d71725ff97625dde97a1e4346c9b">dyno::declare_config()</a>.</p>
 
 </div>
 </div>

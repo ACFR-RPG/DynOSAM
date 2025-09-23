@@ -161,7 +161,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="OMDDataProvider_8cc_source.html#l01277">1277</a> of file <a class="el" href="OMDDataProvider_8cc_source.html">OMDDataProvider.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="OMDDataProvider_8cc_source.html#l01368">1368</a> of file <a class="el" href="OMDDataProvider_8cc_source.html">OMDDataProvider.cc</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="abc342cab12db6ed0d2ce4ee49ffc715c" name="abc342cab12db6ed0d2ce4ee49ffc715c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#abc342cab12db6ed0d2ce4ee49ffc715c">&#9670;&#160;</a></span>OMMTimestampLoader()</h2>
@@ -187,9 +187,9 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="OMDDataProvider_8cc_source.html#l01281">1281</a> of file <a class="el" href="OMDDataProvider_8cc_source.html">OMDDataProvider.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno"> 1281</span>: <a class="code hl_variable" href="structdyno_1_1OMMTimestampLoader.html#a8a4ae9fe51d676a24ee165421bd1eec5">loader_</a>(CHECK_NOTNULL(loader)) {}</div>
-<div class="ttc" id="astructdyno_1_1OMMTimestampLoader_html_a8a4ae9fe51d676a24ee165421bd1eec5"><div class="ttname"><a href="structdyno_1_1OMMTimestampLoader.html#a8a4ae9fe51d676a24ee165421bd1eec5">dyno::OMMTimestampLoader::loader_</a></div><div class="ttdeci">OMDOldAllLoader::Ptr loader_</div><div class="ttdef"><b>Definition:</b> <a href="OMDDataProvider_8cc_source.html#l01279">OMDDataProvider.cc:1279</a></div></div>
+<p class="definition">Definition at line <a class="el" href="OMDDataProvider_8cc_source.html#l01371">1371</a> of file <a class="el" href="OMDDataProvider_8cc_source.html">OMDDataProvider.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno"> 1372</span>      : <a class="code hl_variable" href="structdyno_1_1OMMTimestampLoader.html#a8a4ae9fe51d676a24ee165421bd1eec5">loader_</a>(CHECK_NOTNULL(loader)) {}</div>
+<div class="ttc" id="astructdyno_1_1OMMTimestampLoader_html_a8a4ae9fe51d676a24ee165421bd1eec5"><div class="ttname"><a href="structdyno_1_1OMMTimestampLoader.html#a8a4ae9fe51d676a24ee165421bd1eec5">dyno::OMMTimestampLoader::loader_</a></div><div class="ttdeci">OMDOldAllLoader::Ptr loader_</div><div class="ttdef"><b>Definition:</b> <a href="OMDDataProvider_8cc_source.html#l01369">OMDDataProvider.cc:1369</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -219,8 +219,8 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classdyno_1_1DataFolder.html#a63d64595445016c30e623154c45260b6">dyno::DataFolder&lt; double &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="OMDDataProvider_8cc_source.html#l01282">1282</a> of file <a class="el" href="OMDDataProvider_8cc_source.html">OMDDataProvider.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno"> 1282</span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;&quot;</span>; }</div>
+<p class="definition">Definition at line <a class="el" href="OMDDataProvider_8cc_source.html#l01373">1373</a> of file <a class="el" href="OMDDataProvider_8cc_source.html">OMDDataProvider.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno"> 1373</span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;&quot;</span>; }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -260,10 +260,8 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classdyno_1_1DataFolder.html#a60162e20f359ad6f5ff58edf0964e3ac">dyno::DataFolder&lt; double &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="OMDDataProvider_8cc_source.html#l01288">1288</a> of file <a class="el" href="OMDDataProvider_8cc_source.html">OMDDataProvider.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno"> 1288</span>                                        {</div>
-<div class="line"><span class="lineno"> 1289</span>        <span class="keywordflow">return</span> <a class="code hl_variable" href="structdyno_1_1OMMTimestampLoader.html#a8a4ae9fe51d676a24ee165421bd1eec5">loader_</a>-&gt;getTimestamp(idx);</div>
-<div class="line"><span class="lineno"> 1290</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="OMDDataProvider_8cc_source.html#l01377">1377</a> of file <a class="el" href="OMDDataProvider_8cc_source.html">OMDDataProvider.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno"> 1377</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="structdyno_1_1OMMTimestampLoader.html#a8a4ae9fe51d676a24ee165421bd1eec5">loader_</a>-&gt;getTimestamp(idx); }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="structdyno_1_1OMMTimestampLoader.html#a8a4ae9fe51d676a24ee165421bd1eec5">loader_</a>.</p>
 
@@ -294,10 +292,8 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classdyno_1_1TimestampBaseLoader.html#a3bc26c1238108a76d4ff116455a1f629">dyno::TimestampBaseLoader</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="OMDDataProvider_8cc_source.html#l01284">1284</a> of file <a class="el" href="OMDDataProvider_8cc_source.html">OMDDataProvider.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno"> 1284</span>                                 {</div>
-<div class="line"><span class="lineno"> 1285</span>        <span class="keywordflow">return</span> <a class="code hl_variable" href="structdyno_1_1OMMTimestampLoader.html#a8a4ae9fe51d676a24ee165421bd1eec5">loader_</a>-&gt;size();</div>
-<div class="line"><span class="lineno"> 1286</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="OMDDataProvider_8cc_source.html#l01375">1375</a> of file <a class="el" href="OMDDataProvider_8cc_source.html">OMDDataProvider.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno"> 1375</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="structdyno_1_1OMMTimestampLoader.html#a8a4ae9fe51d676a24ee165421bd1eec5">loader_</a>-&gt;size(); }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="structdyno_1_1OMMTimestampLoader.html#a8a4ae9fe51d676a24ee165421bd1eec5">loader_</a>.</p>
 
@@ -316,7 +312,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="OMDDataProvider_8cc_source.html#l01279">1279</a> of file <a class="el" href="OMDDataProvider_8cc_source.html">OMDDataProvider.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="OMDDataProvider_8cc_source.html#l01369">1369</a> of file <a class="el" href="OMDDataProvider_8cc_source.html">OMDDataProvider.cc</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="structdyno_1_1OMMTimestampLoader.html#ad06a0c8178452df360a7b58f7e37c9b4">getItem()</a>, and <a class="el" href="structdyno_1_1OMMTimestampLoader.html#a686babab254c60e7a6f0c53a7c2df356">size()</a>.</p>
 

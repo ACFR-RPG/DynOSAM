@@ -1,5 +1,0 @@
-<map id="dyno::Accessor::getObjectPoses" name="dyno::Accessor::getObjectPoses">
-<area shape="rect" id="node1" title="Collects all object poses at some time&#45;step (k). This is equivalent to \mathcal{L}_k...." alt="" coords="5,5,196,45"/>
-<area shape="rect" id="node2" href="$classdyno_1_1StateQuery.html#af7ca5fb04717f5719c62a54b3b67fd17" title=" " alt="" coords="244,13,407,38"/>
-<area shape="rect" id="node3" href="$namespacedyno.html#a2d6f925680f57dbc72ada75daefdb2f9" title=" " alt="" coords="455,13,665,38"/>
-</map>

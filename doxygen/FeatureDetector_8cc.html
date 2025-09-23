@@ -81,65 +81,67 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="FeatureDetector_8hpp_source.html">dynosam/frontend/vision/FeatureDetector.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="ORBextractor_8hpp_source.html">dynosam/frontend/vision/ORBextractor.hpp</a>&quot;</code><br />
-<code>#include &lt;opencv2/imgproc.hpp&gt;</code><br />
-<code>#include &lt;opencv2/features2d.hpp&gt;</code><br />
-<code>#include &lt;opencv2/video/tracking.hpp&gt;</code><br />
-<code>#include &lt;opencv2/opencv.hpp&gt;</code><br />
 <code>#include &lt;glog/logging.h&gt;</code><br />
+<code>#include &lt;opencv2/features2d.hpp&gt;</code><br />
+<code>#include &lt;opencv2/imgproc.hpp&gt;</code><br />
+<code>#include &lt;opencv2/opencv.hpp&gt;</code><br />
+<code>#include &lt;opencv2/video/tracking.hpp&gt;</code><br />
+<code>#include &quot;<a class="el" href="ORBextractor_8hpp_source.html">dynosam/frontend/vision/ORBextractor.hpp</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for FeatureDetector.cc:</div>
 <div class="dyncontent">
 <div class="center"><img src="FeatureDetector_8cc__incl.png" border="0" usemap="#adynosam_2src_2frontend_2vision_2FeatureDetector_8cc" alt=""/></div>
 <map name="adynosam_2src_2frontend_2vision_2FeatureDetector_8cc" id="adynosam_2src_2frontend_2vision_2FeatureDetector_8cc">
-<area shape="rect" title=" " alt="" coords="4002,5,4193,45"/>
-<area shape="rect" href="FeatureDetector_8hpp.html" title=" " alt="" coords="3451,93,3635,133"/>
-<area shape="rect" title=" " alt="" coords="2776,438,2891,463"/>
-<area shape="rect" title=" " alt="" coords="3905,357,4060,383"/>
-<area shape="rect" href="ORBextractor_8hpp.html" title=" " alt="" coords="4135,269,4319,309"/>
-<area shape="rect" title=" " alt="" coords="4135,101,4297,126"/>
-<area shape="rect" title=" " alt="" coords="4321,101,4500,126"/>
-<area shape="rect" title=" " alt="" coords="4524,101,4727,126"/>
-<area shape="rect" title=" " alt="" coords="3418,189,3505,214"/>
-<area shape="rect" title=" " alt="" coords="3761,438,3975,463"/>
-<area shape="rect" href="Types_8hpp.html" title=" " alt="" coords="2702,189,2914,214"/>
-<area shape="rect" href="Macros_8hpp.html" title=" " alt="" coords="3238,357,3431,383"/>
-<area shape="rect" href="NonMaximumSuppression_8h.html" title="Base class for non maximum suppression interface." alt="" coords="3390,269,3599,309"/>
-<area shape="rect" href="TrackerParams_8hpp.html" title=" " alt="" coords="3607,181,3791,221"/>
-<area shape="rect" title=" " alt="" coords="2603,277,2771,302"/>
-<area shape="rect" title=" " alt="" coords="798,526,954,551"/>
-<area shape="rect" title=" " alt="" coords="2566,438,2751,463"/>
-<area shape="rect" title=" " alt="" coords="2846,277,2989,302"/>
-<area shape="rect" title=" " alt="" coords="2915,438,2989,463"/>
-<area shape="rect" title=" " alt="" coords="3065,277,3162,302"/>
-<area shape="rect" title=" " alt="" coords="121,438,213,463"/>
-<area shape="rect" title=" " alt="" coords="3582,357,3645,383"/>
-<area shape="rect" href="Flags_8hpp.html" title=" " alt="" coords="2317,277,2528,302"/>
-<area shape="rect" href="SensorModels_8hpp.html" title=" " alt="" coords="1812,277,2079,302"/>
-<area shape="rect" title=" " alt="" coords="2369,357,2485,383"/>
-<area shape="rect" title=" " alt="" coords="3296,438,3373,463"/>
-<area shape="rect" title=" " alt="" coords="5,526,160,551"/>
-<area shape="rect" title=" " alt="" coords="1965,357,2163,383"/>
-<area shape="rect" href="GtsamUtils_8hpp.html" title=" " alt="" coords="1723,357,1941,383"/>
-<area shape="rect" title=" " alt="" coords="1931,438,2130,463"/>
-<area shape="rect" title=" " alt="" coords="2155,438,2341,463"/>
-<area shape="rect" title=" " alt="" coords="2365,438,2541,463"/>
-<area shape="rect" title=" " alt="" coords="525,438,707,463"/>
-<area shape="rect" title=" " alt="" coords="731,438,898,463"/>
-<area shape="rect" title=" " alt="" coords="922,438,1115,463"/>
-<area shape="rect" title=" " alt="" coords="1140,438,1313,463"/>
-<area shape="rect" title=" " alt="" coords="1337,431,1532,471"/>
-<area shape="rect" title=" " alt="" coords="1556,438,1743,463"/>
-<area shape="rect" title=" " alt="" coords="1767,438,1907,463"/>
-<area shape="rect" href="Numerical_8hpp.html" title=" " alt="" coords="237,438,451,463"/>
-<area shape="rect" title=" " alt="" coords="387,519,568,559"/>
-<area shape="rect" title=" " alt="" coords="592,519,773,559"/>
-<area shape="rect" title=" " alt="" coords="184,526,264,551"/>
-<area shape="rect" title=" " alt="" coords="289,526,362,551"/>
-<area shape="rect" title=" " alt="" coords="3455,357,3558,383"/>
-<area shape="rect" title=" " alt="" coords="3623,277,3774,302"/>
-<area shape="rect" title=" " alt="" coords="3799,269,3959,309"/>
-<area shape="rect" title=" " alt="" coords="4147,357,4189,383"/>
+<area shape="rect" title=" " alt="" coords="3540,5,3731,45"/>
+<area shape="rect" href="FeatureDetector_8hpp.html" title=" " alt="" coords="2814,93,2998,133"/>
+<area shape="rect" title=" " alt="" coords="2877,438,2991,463"/>
+<area shape="rect" title=" " alt="" coords="3194,357,3349,383"/>
+<area shape="rect" title=" " alt="" coords="3546,101,3725,126"/>
+<area shape="rect" title=" " alt="" coords="3749,101,3911,126"/>
+<area shape="rect" title=" " alt="" coords="3935,101,4138,126"/>
+<area shape="rect" href="ORBextractor_8hpp.html" title=" " alt="" coords="3546,269,3730,309"/>
+<area shape="rect" title=" " alt="" coords="5,438,92,463"/>
+<area shape="rect" title=" " alt="" coords="3300,438,3515,463"/>
+<area shape="rect" href="Types_8hpp.html" title=" " alt="" coords="1691,189,1903,214"/>
+<area shape="rect" href="Macros_8hpp.html" title=" " alt="" coords="2721,357,2915,383"/>
+<area shape="rect" href="NonMaximumSuppression_8h.html" title="Base class for non maximum suppression interface." alt="" coords="2801,269,3011,309"/>
+<area shape="rect" href="TrackerParams_8hpp.html" title=" " alt="" coords="3018,181,3202,221"/>
+<area shape="rect" title=" " alt="" coords="642,277,810,302"/>
+<area shape="rect" title=" " alt="" coords="2265,357,2421,383"/>
+<area shape="rect" title=" " alt="" coords="416,438,601,463"/>
+<area shape="rect" title=" " alt="" coords="835,277,977,302"/>
+<area shape="rect" title=" " alt="" coords="3015,438,3090,463"/>
+<area shape="rect" title=" " alt="" coords="1307,277,1404,302"/>
+<area shape="rect" title=" " alt="" coords="116,438,208,463"/>
+<area shape="rect" title=" " alt="" coords="3065,357,3128,383"/>
+<area shape="rect" href="Flags_8hpp.html" title=" " alt="" coords="1429,277,1639,302"/>
+<area shape="rect" href="SensorModels_8hpp.html" title=" " alt="" coords="1663,277,1930,302"/>
+<area shape="rect" href="Types-inl_8hpp.html" title=" " alt="" coords="383,269,567,309"/>
+<area shape="rect" title=" " alt="" coords="752,357,868,383"/>
+<area shape="rect" title=" " alt="" coords="3114,438,3191,463"/>
+<area shape="rect" title=" " alt="" coords="1611,357,1766,383"/>
+<area shape="rect" title=" " alt="" coords="1790,357,2019,383"/>
+<area shape="rect" title=" " alt="" coords="2043,357,2241,383"/>
+<area shape="rect" href="Exceptions_8hpp.html" title=" " alt="" coords="892,357,1139,383"/>
+<area shape="rect" href="GtsamUtils_8hpp.html" title=" " alt="" coords="1369,357,1587,383"/>
+<area shape="rect" title=" " alt="" coords="316,438,392,463"/>
+<area shape="rect" title=" " alt="" coords="626,438,701,463"/>
+<area shape="rect" title=" " alt="" coords="725,438,812,463"/>
+<area shape="rect" title=" " alt="" coords="233,438,291,463"/>
+<area shape="rect" title=" " alt="" coords="1845,438,2044,463"/>
+<area shape="rect" title=" " alt="" coords="2069,438,2255,463"/>
+<area shape="rect" title=" " alt="" coords="2279,438,2455,463"/>
+<area shape="rect" title=" " alt="" coords="2479,438,2661,463"/>
+<area shape="rect" title=" " alt="" coords="2685,438,2852,463"/>
+<area shape="rect" title=" " alt="" coords="836,438,1029,463"/>
+<area shape="rect" title=" " alt="" coords="1054,438,1227,463"/>
+<area shape="rect" title=" " alt="" coords="1251,431,1446,471"/>
+<area shape="rect" title=" " alt="" coords="1470,438,1657,463"/>
+<area shape="rect" title=" " alt="" coords="1681,438,1821,463"/>
+<area shape="rect" title=" " alt="" coords="2939,357,3041,383"/>
+<area shape="rect" title=" " alt="" coords="3210,269,3370,309"/>
+<area shape="rect" title=" " alt="" coords="3035,277,3185,302"/>
+<area shape="rect" title=" " alt="" coords="3617,357,3659,383"/>
 </map>
 </div>
 </div>

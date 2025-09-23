@@ -97,8 +97,12 @@ Inheritance diagram for dyno::BackendModule:</div>
 <area shape="rect" title="Base class to actually do processing. Data passed to this module from the frontend." alt="" coords="315,45,480,70"/>
 <area shape="rect" href="classdyno_1_1BackendModuleType.html" title=" " alt="" coords="528,5,756,45"/>
 <area shape="rect" href="classdyno_1_1BackendModuleType.html" title=" " alt="" coords="545,69,739,109"/>
-<area shape="rect" href="classdyno_1_1ModuleBase.html" title=" " alt="" coords="5,37,267,77"/>
-<area shape="rect" href="classdyno_1_1RGBDBackendModule.html" title=" " alt="" coords="804,13,1007,38"/>
+<area shape="rect" href="classdyno_1_1ModuleBase.html" title=" " alt="" coords="5,8,267,48"/>
+<area shape="rect" href="structdyno_1_1SharedModuleInterface.html" title=" " alt="" coords="29,73,243,98"/>
+<area shape="rect" href="classdyno_1_1VisionImuBackendModule.html" title=" " alt="" coords="804,37,1035,77"/>
+<area shape="rect" href="classdyno_1_1VisionImuBackendModule.html" title="Class that handles the management of ego&#45;motion (NavState) states from VO and (optionally) IMU." alt="" coords="804,101,1035,141"/>
+<area shape="rect" href="classdyno_1_1ParallelHybridBackendModule.html" title=" " alt="" coords="1086,9,1294,49"/>
+<area shape="rect" href="classdyno_1_1RegularBackendModule.html" title=" " alt="" coords="1083,74,1297,99"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
@@ -106,13 +110,17 @@ Collaboration diagram for dyno::BackendModule:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1BackendModule__coll__graph.png" border="0" usemap="#adyno_1_1BackendModule_coll__map" alt="Collaboration graph"/></div>
 <map name="adyno_1_1BackendModule_coll__map" id="adyno_1_1BackendModule_coll__map">
-<area shape="rect" title="Base class to actually do processing. Data passed to this module from the frontend." alt="" coords="676,119,841,145"/>
-<area shape="rect" href="classdyno_1_1ModuleBase.html" title=" " alt="" coords="261,5,523,45"/>
-<area shape="rect" href="structdyno_1_1BackendParams.html" title=" " alt="" coords="309,70,475,95"/>
-<area shape="rect" href="classThreadsafeQueue.html" title=" " alt="" coords="305,119,479,145"/>
-<area shape="rect" href="classThreadsafeQueueBase.html" title=" " alt="" coords="5,119,212,145"/>
-<area shape="rect" href="structdyno_1_1BackendSpinState.html" title=" " alt="" coords="303,169,481,194"/>
-<area shape="rect" href="structdyno_1_1NoiseModels.html" title=" " alt="" coords="319,218,465,243"/>
+<area shape="rect" title="Base class to actually do processing. Data passed to this module from the frontend." alt="" coords="1428,143,1593,169"/>
+<area shape="rect" href="classdyno_1_1ModuleBase.html" title=" " alt="" coords="1013,5,1275,45"/>
+<area shape="rect" href="structdyno_1_1SharedModuleInterface.html" title=" " alt="" coords="1037,70,1251,95"/>
+<area shape="rect" href="classdyno_1_1SharedModuleInfo.html" title=" " alt="" coords="635,70,815,95"/>
+<area shape="rect" href="classdyno_1_1GroundTruthPacketMap.html" title="FastMap from frame id to GroundTruthInputPacket." alt="" coords="252,70,463,95"/>
+<area shape="rect" title=" " alt="" coords="5,63,203,103"/>
+<area shape="rect" href="structdyno_1_1BackendParams.html" title=" " alt="" coords="1061,119,1227,145"/>
+<area shape="rect" href="classThreadsafeQueue.html" title=" " alt="" coords="1057,169,1231,194"/>
+<area shape="rect" href="classThreadsafeQueueBase.html" title=" " alt="" coords="621,169,828,194"/>
+<area shape="rect" href="structdyno_1_1BackendSpinState.html" title=" " alt="" coords="1055,218,1233,243"/>
+<area shape="rect" href="structdyno_1_1NoiseModels.html" title=" " alt="" coords="1071,267,1217,293"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -148,8 +156,12 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a719631280fcd29fedc11ba2a54f15caa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abf09b1449fde7d851df18278d16eada0"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1BackendModule.html#abf09b1449fde7d851df18278d16eada0">~BackendModule</a> ()=default</td></tr>
 <tr class="separator:abf09b1449fde7d851df18278d16eada0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac2ca6ac0b1b2a8058823bf86ecd6e940"><td class="memItemLeft" align="right" valign="top">std::optional&lt; <a class="el" href="namespacedyno.html#aabd3e91b81782562a6d3ff5d235e1011">GroundTruthPacketMap</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1BackendModule.html#ac2ca6ac0b1b2a8058823bf86ecd6e940">getGroundTruthPackets</a> () const</td></tr>
-<tr class="separator:ac2ca6ac0b1b2a8058823bf86ecd6e940"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6bcfb713f06215d64f607b8e3e577b6a"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structdyno_1_1BackendParams.html">BackendParams</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1BackendModule.html#a6bcfb713f06215d64f607b8e3e577b6a">getParams</a> () const</td></tr>
+<tr class="separator:a6bcfb713f06215d64f607b8e3e577b6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a66737a912311cd392f7264443cc5aa0a"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structdyno_1_1NoiseModels.html">NoiseModels</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1BackendModule.html#a66737a912311cd392f7264443cc5aa0a">getNoiseModels</a> () const</td></tr>
+<tr class="separator:a66737a912311cd392f7264443cc5aa0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac15bb8ad2c07c99e54ae7e6a3263542b"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structdyno_1_1BackendSpinState.html">BackendSpinState</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1BackendModule.html#ac15bb8ad2c07c99e54ae7e6a3263542b">getSpinState</a> () const</td></tr>
+<tr class="separator:ac15bb8ad2c07c99e54ae7e6a3263542b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classdyno_1_1ModuleBase"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classdyno_1_1ModuleBase')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classdyno_1_1ModuleBase.html">dyno::ModuleBase&lt; BackendInputPacket, BackendOutputPacket &gt;</a></td></tr>
 <tr class="memitem:a329b6e9ab24d2b49a35d0d97106003d1 inherit pub_methods_classdyno_1_1ModuleBase"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1ModuleBase.html#a329b6e9ab24d2b49a35d0d97106003d1">ModuleBase</a> (const std::string &amp;name)</td></tr>
 <tr class="separator:a329b6e9ab24d2b49a35d0d97106003d1 inherit pub_methods_classdyno_1_1ModuleBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -190,8 +202,6 @@ Protected Member Functions</h2></td></tr>
 Protected Attributes</h2></td></tr>
 <tr class="memitem:a273b119d1f4c38b9216c95d3ce7b76f9"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structdyno_1_1BackendParams.html">BackendParams</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1BackendModule.html#a273b119d1f4c38b9216c95d3ce7b76f9">base_params_</a></td></tr>
 <tr class="separator:a273b119d1f4c38b9216c95d3ce7b76f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a653672954d104063127a7645451a901d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacedyno.html#aabd3e91b81782562a6d3ff5d235e1011">GroundTruthPacketMap</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1BackendModule.html#a653672954d104063127a7645451a901d">gt_packet_map_</a></td></tr>
-<tr class="separator:a653672954d104063127a7645451a901d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a86c8256dd694e78db30a7ffe4445a758"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacedyno.html#a6cc0b19d1d56a213497e94a199888977">ImageDisplayQueue</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1BackendModule.html#a86c8256dd694e78db30a7ffe4445a758">display_queue_</a> {nullptr}</td></tr>
 <tr class="separator:a86c8256dd694e78db30a7ffe4445a758"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0fa2685fdfae16c75f537b5a86e98493"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structdyno_1_1BackendSpinState.html">BackendSpinState</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1BackendModule.html#a0fa2685fdfae16c75f537b5a86e98493">spin_state_</a></td></tr>
@@ -199,11 +209,17 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:a0fa2685fdfae16c75f537b5a86e98493"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af1fd7b04a90c2a06ddc832b4647ff77d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structdyno_1_1NoiseModels.html">NoiseModels</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1BackendModule.html#af1fd7b04a90c2a06ddc832b4647ff77d">noise_models_</a></td></tr>
 <tr class="separator:af1fd7b04a90c2a06ddc832b4647ff77d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="inherited" name="inherited"></a>
+Additional Inherited Members</h2></td></tr>
+<tr class="inherit_header pub_attribs_structdyno_1_1SharedModuleInterface"><td colspan="2" onclick="javascript:toggleInherit('pub_attribs_structdyno_1_1SharedModuleInterface')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="structdyno_1_1SharedModuleInterface.html">dyno::SharedModuleInterface</a></td></tr>
+<tr class="memitem:afeac0a42a7ca31317d9267747e78b9e7 inherit pub_attribs_structdyno_1_1SharedModuleInterface"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classdyno_1_1SharedModuleInfo.html">SharedModuleInfo</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1SharedModuleInterface.html#afeac0a42a7ca31317d9267747e78b9e7">shared_module_info</a> = <a class="el" href="classdyno_1_1SharedModuleInfo.html#a75ec166db0c37e57b9ed31e425b86599">SharedModuleInfo::instance</a>()</td></tr>
+<tr class="separator:afeac0a42a7ca31317d9267747e78b9e7 inherit pub_attribs_structdyno_1_1SharedModuleInterface"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Base class to actually do processing. Data passed to this module from the frontend. </p>
 
-<p class="definition">Definition at line <a class="el" href="BackendModule_8hpp_source.html#l00067">67</a> of file <a class="el" href="BackendModule_8hpp_source.html">BackendModule.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="BackendModule_8hpp_source.html#l00071">71</a> of file <a class="el" href="BackendModule_8hpp_source.html">BackendModule.hpp</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="a380b1543b1e1d90de3e5df9fc3d19d3f" name="a380b1543b1e1d90de3e5df9fc3d19d3f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a380b1543b1e1d90de3e5df9fc3d19d3f">&#9670;&#160;</a></span>Base</h2>
@@ -217,7 +233,7 @@ Protected Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="BackendModule_8hpp_source.html#l00072">72</a> of file <a class="el" href="BackendModule_8hpp_source.html">BackendModule.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="BackendModule_8hpp_source.html#l00077">77</a> of file <a class="el" href="BackendModule_8hpp_source.html">BackendModule.hpp</a>.</p>
 
 </div>
 </div>
@@ -241,7 +257,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="BackendModule_8hpp_source.html#l00097">97</a> of file <a class="el" href="BackendModule_8hpp_source.html">BackendModule.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="BackendModule_8hpp_source.html#l00101">101</a> of file <a class="el" href="BackendModule_8hpp_source.html">BackendModule.hpp</a>.</p>
 
 </div>
 </div>
@@ -265,7 +281,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="BackendModule_8hpp_source.html#l00096">96</a> of file <a class="el" href="BackendModule_8hpp_source.html">BackendModule.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="BackendModule_8hpp_source.html#l00100">100</a> of file <a class="el" href="BackendModule_8hpp_source.html">BackendModule.hpp</a>.</p>
 
 </div>
 </div>
@@ -296,47 +312,53 @@ Protected Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="BackendModule_8cc_source.html#l00031">31</a> of file <a class="el" href="BackendModule_8cc_source.html">BackendModule.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   32</span>    :   <a class="code hl_typedef" href="classdyno_1_1BackendModule.html#a380b1543b1e1d90de3e5df9fc3d19d3f">Base</a>(<span class="stringliteral">&quot;backend&quot;</span>),</div>
-<div class="line"><span class="lineno">   33</span>        <a class="code hl_variable" href="classdyno_1_1BackendModule.html#a273b119d1f4c38b9216c95d3ce7b76f9">base_params_</a>(params),</div>
-<div class="line"><span class="lineno">   34</span>        <a class="code hl_variable" href="classdyno_1_1BackendModule.html#a86c8256dd694e78db30a7ffe4445a758">display_queue_</a>(display_queue)</div>
-<div class="line"><span class="lineno">   35</span> </div>
-<div class="line"><span class="lineno">   36</span>{</div>
-<div class="line"><span class="lineno">   37</span>    <a class="code hl_function" href="classdyno_1_1BackendModule.html#a1803b6a19bd4c08d24cb46d5e066e56f">setFactorParams</a>(params);</div>
-<div class="line"><span class="lineno">   38</span> </div>
-<div class="line"><span class="lineno">   39</span>    <span class="comment">//create callback to update gt_packet_map_ values so the derived classes dont need to manage this</span></div>
-<div class="line"><span class="lineno">   40</span>    <span class="comment">//TODO: this logic is exactly the same as in FrontendModule - functionalise!!</span></div>
-<div class="line"><span class="lineno">   41</span>    <a class="code hl_function" href="classdyno_1_1ModuleBase.html#a3a2819e9de31d4057773353d92925986">registerInputCallback</a>([=](BackendInputPacket::ConstPtr input) {</div>
-<div class="line"><span class="lineno">   42</span>        <span class="keywordflow">if</span>(input-&gt;gt_packet_) <a class="code hl_variable" href="classdyno_1_1BackendModule.html#a653672954d104063127a7645451a901d">gt_packet_map_</a>.insert2(input-&gt;getFrameId(), *input-&gt;gt_packet_);</div>
-<div class="line"><span class="lineno">   43</span> </div>
-<div class="line"><span class="lineno">   44</span>        <span class="keyword">const</span> BackendSpinState previous_spin_state = <a class="code hl_variable" href="classdyno_1_1BackendModule.html#a0fa2685fdfae16c75f537b5a86e98493">spin_state_</a>;</div>
-<div class="line"><span class="lineno">   45</span> </div>
-<div class="line"><span class="lineno">   46</span>        <span class="comment">//update spin state</span></div>
-<div class="line"><span class="lineno">   47</span>        <a class="code hl_variable" href="classdyno_1_1BackendModule.html#a0fa2685fdfae16c75f537b5a86e98493">spin_state_</a> = BackendSpinState(</div>
-<div class="line"><span class="lineno">   48</span>            input-&gt;getFrameId(),</div>
-<div class="line"><span class="lineno">   49</span>            input-&gt;getTimestamp(),</div>
-<div class="line"><span class="lineno">   50</span>            previous_spin_state.iteration + 1</div>
-<div class="line"><span class="lineno">   51</span>        );</div>
-<div class="line"><span class="lineno">   52</span> </div>
-<div class="line"><span class="lineno">   53</span>    });</div>
-<div class="line"><span class="lineno">   54</span>}</div>
+<p class="definition">Definition at line <a class="el" href="BackendModule_8cc_source.html#l00039">39</a> of file <a class="el" href="BackendModule_8cc_source.html">BackendModule.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   41</span>    : <a class="code hl_typedef" href="classdyno_1_1BackendModule.html#a380b1543b1e1d90de3e5df9fc3d19d3f">Base</a>(<span class="stringliteral">&quot;backend&quot;</span>),</div>
+<div class="line"><span class="lineno">   42</span>      <a class="code hl_variable" href="classdyno_1_1BackendModule.html#a273b119d1f4c38b9216c95d3ce7b76f9">base_params_</a>(params),</div>
+<div class="line"><span class="lineno">   43</span>      <a class="code hl_variable" href="classdyno_1_1BackendModule.html#a86c8256dd694e78db30a7ffe4445a758">display_queue_</a>(display_queue)</div>
+<div class="line"><span class="lineno">   44</span> </div>
+<div class="line"><span class="lineno">   45</span>{</div>
+<div class="line"><span class="lineno">   46</span>  <a class="code hl_function" href="classdyno_1_1BackendModule.html#a1803b6a19bd4c08d24cb46d5e066e56f">setFactorParams</a>(params);</div>
+<div class="line"><span class="lineno">   47</span> </div>
+<div class="line"><span class="lineno">   48</span>  <span class="comment">// create callback to update gt_packet_map_ values so the derived classes dont</span></div>
+<div class="line"><span class="lineno">   49</span>  <span class="comment">// need to manage this</span></div>
+<div class="line"><span class="lineno">   50</span>  <span class="comment">// TODO: this logic is exactly the same as in FrontendModule - functionalise!!</span></div>
+<div class="line"><span class="lineno">   51</span>  <a class="code hl_function" href="classdyno_1_1ModuleBase.html#a3a2819e9de31d4057773353d92925986">registerInputCallback</a>([=](BackendInputPacket::ConstPtr input) {</div>
+<div class="line"><span class="lineno">   52</span>    <span class="keywordflow">if</span> (input-&gt;gt_packet_)</div>
+<div class="line"><span class="lineno">   53</span>      <a class="code hl_variable" href="structdyno_1_1SharedModuleInterface.html#afeac0a42a7ca31317d9267747e78b9e7">shared_module_info</a>.<a class="code hl_function" href="classdyno_1_1SharedModuleInfo.html#acd861bcac956ec0797bde56aa44034f6">updateGroundTruthPacket</a>(input-&gt;getFrameId(),</div>
+<div class="line"><span class="lineno">   54</span>                                                 *input-&gt;gt_packet_);</div>
+<div class="line"><span class="lineno">   55</span>    <a class="code hl_variable" href="structdyno_1_1SharedModuleInterface.html#afeac0a42a7ca31317d9267747e78b9e7">shared_module_info</a>.<a class="code hl_function" href="classdyno_1_1SharedModuleInfo.html#a1ebc41ec3d56d8ea770a523193662c25">updateTimestampMapping</a>(input-&gt;getFrameId(),</div>
+<div class="line"><span class="lineno">   56</span>                                              input-&gt;getTimestamp());</div>
+<div class="line"><span class="lineno">   57</span> </div>
+<div class="line"><span class="lineno">   58</span>    <span class="keyword">const</span> BackendSpinState previous_spin_state = <a class="code hl_variable" href="classdyno_1_1BackendModule.html#a0fa2685fdfae16c75f537b5a86e98493">spin_state_</a>;</div>
+<div class="line"><span class="lineno">   59</span> </div>
+<div class="line"><span class="lineno">   60</span>    <span class="comment">// update spin state</span></div>
+<div class="line"><span class="lineno">   61</span>    <a class="code hl_variable" href="classdyno_1_1BackendModule.html#a0fa2685fdfae16c75f537b5a86e98493">spin_state_</a> = BackendSpinState(input-&gt;getFrameId(), input-&gt;getTimestamp(),</div>
+<div class="line"><span class="lineno">   62</span>                                   previous_spin_state.iteration + 1);</div>
+<div class="line"><span class="lineno">   63</span>  });</div>
+<div class="line"><span class="lineno">   64</span>}</div>
 <div class="ttc" id="aclassdyno_1_1BackendModule_html_a0fa2685fdfae16c75f537b5a86e98493"><div class="ttname"><a href="classdyno_1_1BackendModule.html#a0fa2685fdfae16c75f537b5a86e98493">dyno::BackendModule::spin_state_</a></div><div class="ttdeci">BackendSpinState spin_state_</div><div class="ttdoc">Optional display queue.</div><div class="ttdef"><b>Definition:</b> <a href="BackendModule_8hpp_source.html#l00108">BackendModule.hpp:108</a></div></div>
-<div class="ttc" id="aclassdyno_1_1BackendModule_html_a1803b6a19bd4c08d24cb46d5e066e56f"><div class="ttname"><a href="classdyno_1_1BackendModule.html#a1803b6a19bd4c08d24cb46d5e066e56f">dyno::BackendModule::setFactorParams</a></div><div class="ttdeci">void setFactorParams(const BackendParams &amp;backend_params)</div><div class="ttdef"><b>Definition:</b> <a href="BackendModule_8cc_source.html#l00056">BackendModule.cc:56</a></div></div>
-<div class="ttc" id="aclassdyno_1_1BackendModule_html_a273b119d1f4c38b9216c95d3ce7b76f9"><div class="ttname"><a href="classdyno_1_1BackendModule.html#a273b119d1f4c38b9216c95d3ce7b76f9">dyno::BackendModule::base_params_</a></div><div class="ttdeci">const BackendParams base_params_</div><div class="ttdef"><b>Definition:</b> <a href="BackendModule_8hpp_source.html#l00100">BackendModule.hpp:100</a></div></div>
-<div class="ttc" id="aclassdyno_1_1BackendModule_html_a380b1543b1e1d90de3e5df9fc3d19d3f"><div class="ttname"><a href="classdyno_1_1BackendModule.html#a380b1543b1e1d90de3e5df9fc3d19d3f">dyno::BackendModule::Base</a></div><div class="ttdeci">ModuleBase&lt; BackendInputPacket, BackendOutputPacket &gt; Base</div><div class="ttdef"><b>Definition:</b> <a href="BackendModule_8hpp_source.html#l00072">BackendModule.hpp:72</a></div></div>
-<div class="ttc" id="aclassdyno_1_1BackendModule_html_a653672954d104063127a7645451a901d"><div class="ttname"><a href="classdyno_1_1BackendModule.html#a653672954d104063127a7645451a901d">dyno::BackendModule::gt_packet_map_</a></div><div class="ttdeci">GroundTruthPacketMap gt_packet_map_</div><div class="ttdef"><b>Definition:</b> <a href="BackendModule_8hpp_source.html#l00103">BackendModule.hpp:103</a></div></div>
+<div class="ttc" id="aclassdyno_1_1BackendModule_html_a1803b6a19bd4c08d24cb46d5e066e56f"><div class="ttname"><a href="classdyno_1_1BackendModule.html#a1803b6a19bd4c08d24cb46d5e066e56f">dyno::BackendModule::setFactorParams</a></div><div class="ttdeci">void setFactorParams(const BackendParams &amp;backend_params)</div><div class="ttdef"><b>Definition:</b> <a href="BackendModule_8cc_source.html#l00066">BackendModule.cc:66</a></div></div>
+<div class="ttc" id="aclassdyno_1_1BackendModule_html_a273b119d1f4c38b9216c95d3ce7b76f9"><div class="ttname"><a href="classdyno_1_1BackendModule.html#a273b119d1f4c38b9216c95d3ce7b76f9">dyno::BackendModule::base_params_</a></div><div class="ttdeci">const BackendParams base_params_</div><div class="ttdef"><b>Definition:</b> <a href="BackendModule_8hpp_source.html#l00104">BackendModule.hpp:104</a></div></div>
+<div class="ttc" id="aclassdyno_1_1BackendModule_html_a380b1543b1e1d90de3e5df9fc3d19d3f"><div class="ttname"><a href="classdyno_1_1BackendModule.html#a380b1543b1e1d90de3e5df9fc3d19d3f">dyno::BackendModule::Base</a></div><div class="ttdeci">ModuleBase&lt; BackendInputPacket, BackendOutputPacket &gt; Base</div><div class="ttdef"><b>Definition:</b> <a href="BackendModule_8hpp_source.html#l00077">BackendModule.hpp:77</a></div></div>
 <div class="ttc" id="aclassdyno_1_1BackendModule_html_a86c8256dd694e78db30a7ffe4445a758"><div class="ttname"><a href="classdyno_1_1BackendModule.html#a86c8256dd694e78db30a7ffe4445a758">dyno::BackendModule::display_queue_</a></div><div class="ttdeci">ImageDisplayQueue * display_queue_</div><div class="ttdef"><b>Definition:</b> <a href="BackendModule_8hpp_source.html#l00105">BackendModule.hpp:105</a></div></div>
 <div class="ttc" id="aclassdyno_1_1ModuleBase_html_a3a2819e9de31d4057773353d92925986"><div class="ttname"><a href="classdyno_1_1ModuleBase.html#a3a2819e9de31d4057773353d92925986">dyno::ModuleBase&lt; BackendInputPacket, BackendOutputPacket &gt;::registerInputCallback</a></div><div class="ttdeci">void registerInputCallback(const InputCallback &amp;input_callback)</div><div class="ttdoc">Registeres a function callback to be triggered prior to nominal/bootstrapSpin being called.</div><div class="ttdef"><b>Definition:</b> <a href="ModuleBase_8hpp_source.html#l00109">ModuleBase.hpp:109</a></div></div>
+<div class="ttc" id="aclassdyno_1_1SharedModuleInfo_html_a1ebc41ec3d56d8ea770a523193662c25"><div class="ttname"><a href="classdyno_1_1SharedModuleInfo.html#a1ebc41ec3d56d8ea770a523193662c25">dyno::SharedModuleInfo::updateTimestampMapping</a></div><div class="ttdeci">SharedModuleInfo &amp; updateTimestampMapping(FrameId frame_id, Timestamp timestamp)</div><div class="ttdef"><b>Definition:</b> <a href="SharedModuleInfo_8cc_source.html#l00080">SharedModuleInfo.cc:80</a></div></div>
+<div class="ttc" id="aclassdyno_1_1SharedModuleInfo_html_acd861bcac956ec0797bde56aa44034f6"><div class="ttname"><a href="classdyno_1_1SharedModuleInfo.html#acd861bcac956ec0797bde56aa44034f6">dyno::SharedModuleInfo::updateGroundTruthPacket</a></div><div class="ttdeci">SharedModuleInfo &amp; updateGroundTruthPacket(FrameId frame_id, const GroundTruthInputPacket &amp;ground_truth_packet)</div><div class="ttdef"><b>Definition:</b> <a href="SharedModuleInfo_8cc_source.html#l00073">SharedModuleInfo.cc:73</a></div></div>
+<div class="ttc" id="astructdyno_1_1SharedModuleInterface_html_afeac0a42a7ca31317d9267747e78b9e7"><div class="ttname"><a href="structdyno_1_1SharedModuleInterface.html#afeac0a42a7ca31317d9267747e78b9e7">dyno::SharedModuleInterface::shared_module_info</a></div><div class="ttdeci">SharedModuleInfo &amp; shared_module_info</div><div class="ttdef"><b>Definition:</b> <a href="SharedModuleInfo_8hpp_source.html#l00064">SharedModuleInfo.hpp:64</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="classdyno_1_1BackendModule.html#a653672954d104063127a7645451a901d">gt_packet_map_</a>, <a class="el" href="classdyno_1_1ModuleBase.html#a3a2819e9de31d4057773353d92925986">dyno::ModuleBase&lt; BackendInputPacket, BackendOutputPacket &gt;::registerInputCallback()</a>, <a class="el" href="classdyno_1_1BackendModule.html#a1803b6a19bd4c08d24cb46d5e066e56f">setFactorParams()</a>, and <a class="el" href="classdyno_1_1BackendModule.html#a0fa2685fdfae16c75f537b5a86e98493">spin_state_</a>.</p>
+<p class="reference">References <a class="el" href="classdyno_1_1ModuleBase.html#a3a2819e9de31d4057773353d92925986">dyno::ModuleBase&lt; BackendInputPacket, BackendOutputPacket &gt;::registerInputCallback()</a>, <a class="el" href="classdyno_1_1BackendModule.html#a1803b6a19bd4c08d24cb46d5e066e56f">setFactorParams()</a>, <a class="el" href="structdyno_1_1SharedModuleInterface.html#afeac0a42a7ca31317d9267747e78b9e7">dyno::SharedModuleInterface::shared_module_info</a>, <a class="el" href="classdyno_1_1BackendModule.html#a0fa2685fdfae16c75f537b5a86e98493">spin_state_</a>, <a class="el" href="classdyno_1_1SharedModuleInfo.html#acd861bcac956ec0797bde56aa44034f6">dyno::SharedModuleInfo::updateGroundTruthPacket()</a>, and <a class="el" href="classdyno_1_1SharedModuleInfo.html#a1ebc41ec3d56d8ea770a523193662c25">dyno::SharedModuleInfo::updateTimestampMapping()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1BackendModule_a719631280fcd29fedc11ba2a54f15caa_cgraph.png" border="0" usemap="#aclassdyno_1_1BackendModule_a719631280fcd29fedc11ba2a54f15caa_cgraph" alt=""/></div>
 <map name="aclassdyno_1_1BackendModule_a719631280fcd29fedc11ba2a54f15caa_cgraph" id="aclassdyno_1_1BackendModule_a719631280fcd29fedc11ba2a54f15caa_cgraph">
-<area shape="rect" title=" " alt="" coords="5,49,171,89"/>
+<area shape="rect" title=" " alt="" coords="5,117,171,157"/>
 <area shape="rect" href="classdyno_1_1ModuleBase.html#a3a2819e9de31d4057773353d92925986" title="Registeres a function callback to be triggered prior to nominal/bootstrapSpin being called." alt="" coords="219,5,465,60"/>
 <area shape="rect" href="classdyno_1_1BackendModule.html#a1803b6a19bd4c08d24cb46d5e066e56f" title=" " alt="" coords="259,85,425,125"/>
+<area shape="rect" href="classdyno_1_1SharedModuleInfo.html#acd861bcac956ec0797bde56aa44034f6" title=" " alt="" coords="244,149,440,189"/>
+<area shape="rect" href="classdyno_1_1SharedModuleInfo.html#a1ebc41ec3d56d8ea770a523193662c25" title=" " alt="" coords="239,213,445,253"/>
+<area shape="rect" href="structdyno_1_1NoiseModels.html#a8bef4bd578329e14ca739315ad597879" title=" " alt="" coords="513,85,669,125"/>
 </map>
 </div>
 
@@ -368,8 +390,8 @@ Here is the call graph for this function:</div>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="ac2ca6ac0b1b2a8058823bf86ecd6e940" name="ac2ca6ac0b1b2a8058823bf86ecd6e940"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac2ca6ac0b1b2a8058823bf86ecd6e940">&#9670;&#160;</a></span>getGroundTruthPackets()</h2>
+<a id="a66737a912311cd392f7264443cc5aa0a" name="a66737a912311cd392f7264443cc5aa0a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a66737a912311cd392f7264443cc5aa0a">&#9670;&#160;</a></span>getNoiseModels()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -378,7 +400,7 @@ Here is the call graph for this function:</div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::optional&lt; <a class="el" href="namespacedyno.html#aabd3e91b81782562a6d3ff5d235e1011">GroundTruthPacketMap</a> &gt; dyno::BackendModule::getGroundTruthPackets </td>
+          <td class="memname">const <a class="el" href="structdyno_1_1NoiseModels.html">NoiseModels</a> &amp; dyno::BackendModule::getNoiseModels </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -391,27 +413,71 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="BackendModule_8hpp_source.html#l00080">80</a> of file <a class="el" href="BackendModule_8hpp_source.html">BackendModule.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   80</span>                                                                  {</div>
-<div class="line"><span class="lineno">   81</span>    <span class="keywordflow">if</span> (<a class="code hl_variable" href="classdyno_1_1BackendModule.html#a653672954d104063127a7645451a901d">gt_packet_map_</a>.empty()) {</div>
-<div class="line"><span class="lineno">   82</span>      <span class="keywordflow">return</span> {};</div>
-<div class="line"><span class="lineno">   83</span>    }</div>
-<div class="line"><span class="lineno">   84</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1BackendModule.html#a653672954d104063127a7645451a901d">gt_packet_map_</a>;</div>
-<div class="line"><span class="lineno">   85</span>  }</div>
+<p class="definition">Definition at line <a class="el" href="BackendModule_8hpp_source.html#l00084">84</a> of file <a class="el" href="BackendModule_8hpp_source.html">BackendModule.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   84</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1BackendModule.html#af1fd7b04a90c2a06ddc832b4647ff77d">noise_models_</a>; }</div>
+<div class="ttc" id="aclassdyno_1_1BackendModule_html_af1fd7b04a90c2a06ddc832b4647ff77d"><div class="ttname"><a href="classdyno_1_1BackendModule.html#af1fd7b04a90c2a06ddc832b4647ff77d">dyno::BackendModule::noise_models_</a></div><div class="ttdeci">NoiseModels noise_models_</div><div class="ttdef"><b>Definition:</b> <a href="BackendModule_8hpp_source.html#l00110">BackendModule.hpp:110</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="classdyno_1_1BackendModule.html#a653672954d104063127a7645451a901d">gt_packet_map_</a>.</p>
+<p class="reference">References <a class="el" href="classdyno_1_1BackendModule.html#af1fd7b04a90c2a06ddc832b4647ff77d">noise_models_</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1RGBDBackendModule.html#a9484cb840c3c82033d4929bd202bc7a8">dyno::RGBDBackendModule::nominalSpinImpl()</a>, and <a class="el" href="classdyno_1_1RGBDBackendModule.html#aac8c85d7df0dd2a848b9d737005d529f">dyno::RGBDBackendModule::~RGBDBackendModule()</a>.</p>
-<div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="classdyno_1_1BackendModule_ac2ca6ac0b1b2a8058823bf86ecd6e940_icgraph.png" border="0" usemap="#aclassdyno_1_1BackendModule_ac2ca6ac0b1b2a8058823bf86ecd6e940_icgraph" alt=""/></div>
-<map name="aclassdyno_1_1BackendModule_ac2ca6ac0b1b2a8058823bf86ecd6e940_icgraph" id="aclassdyno_1_1BackendModule_ac2ca6ac0b1b2a8058823bf86ecd6e940_icgraph">
-<area shape="rect" title=" " alt="" coords="256,37,435,77"/>
-<area shape="rect" href="classdyno_1_1RGBDBackendModule.html#a9484cb840c3c82033d4929bd202bc7a8" title=" " alt="" coords="5,5,208,45"/>
-<area shape="rect" href="classdyno_1_1RGBDBackendModule.html#aac8c85d7df0dd2a848b9d737005d529f" title=" " alt="" coords="5,69,208,109"/>
-</map>
 </div>
+</div>
+<a id="a6bcfb713f06215d64f607b8e3e577b6a" name="a6bcfb713f06215d64f607b8e3e577b6a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6bcfb713f06215d64f607b8e3e577b6a">&#9670;&#160;</a></span>getParams()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="structdyno_1_1BackendParams.html">BackendParams</a> &amp; dyno::BackendModule::getParams </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="BackendModule_8hpp_source.html#l00083">83</a> of file <a class="el" href="BackendModule_8hpp_source.html">BackendModule.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   83</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1BackendModule.html#a273b119d1f4c38b9216c95d3ce7b76f9">base_params_</a>; }</div>
+</div><!-- fragment -->
+<p class="reference">References <a class="el" href="classdyno_1_1BackendModule.html#a273b119d1f4c38b9216c95d3ce7b76f9">base_params_</a>.</p>
+
+</div>
+</div>
+<a id="ac15bb8ad2c07c99e54ae7e6a3263542b" name="ac15bb8ad2c07c99e54ae7e6a3263542b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac15bb8ad2c07c99e54ae7e6a3263542b">&#9670;&#160;</a></span>getSpinState()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="structdyno_1_1BackendSpinState.html">BackendSpinState</a> &amp; dyno::BackendModule::getSpinState </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="BackendModule_8hpp_source.html#l00085">85</a> of file <a class="el" href="BackendModule_8hpp_source.html">BackendModule.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   85</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1BackendModule.html#a0fa2685fdfae16c75f537b5a86e98493">spin_state_</a>; }</div>
+</div><!-- fragment -->
+<p class="reference">References <a class="el" href="classdyno_1_1BackendModule.html#a0fa2685fdfae16c75f537b5a86e98493">spin_state_</a>.</p>
 
 </div>
 </div>
@@ -439,46 +505,24 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="BackendModule_8cc_source.html#l00056">56</a> of file <a class="el" href="BackendModule_8cc_source.html">BackendModule.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   56</span>                                                                       {</div>
-<div class="line"><span class="lineno">   57</span>    <span class="comment">//set static noise</span></div>
-<div class="line"><span class="lineno">   58</span>    <span class="comment">// noise_models_.static_pixel_noise = gtsam::noiseModel::Isotropic::Sigma(2u, backend_params.static_smart_projection_noise_sigma_);</span></div>
-<div class="line"><span class="lineno">   59</span>    <span class="comment">// CHECK(noise_models_.static_pixel_noise);</span></div>
-<div class="line"><span class="lineno">   60</span> </div>
-<div class="line"><span class="lineno">   61</span>    <span class="comment">//set dynamic noise</span></div>
-<div class="line"><span class="lineno">   62</span>    <span class="comment">// noise_models_.dynamic_pixel_noise = gtsam::noiseModel::Isotropic::Sigma(2u, backend_params.dynamic_smart_projection_noise_sigma_);</span></div>
-<div class="line"><span class="lineno">   63</span>    <span class="comment">// CHECK(noise_models_.dynamic_pixel_noise);</span></div>
-<div class="line"><span class="lineno">   64</span> </div>
-<div class="line"><span class="lineno">   65</span>    gtsam::Vector6 odom_sigmas;</div>
-<div class="line"><span class="lineno">   66</span>    odom_sigmas.head&lt;3&gt;().setConstant(backend_params.odometry_rotation_sigma_);</div>
-<div class="line"><span class="lineno">   67</span>    odom_sigmas.tail&lt;3&gt;().setConstant(</div>
-<div class="line"><span class="lineno">   68</span>        backend_params.odometry_translation_sigma_);</div>
-<div class="line"><span class="lineno">   69</span>    <a class="code hl_variable" href="classdyno_1_1BackendModule.html#af1fd7b04a90c2a06ddc832b4647ff77d">noise_models_</a>.<a class="code hl_variable" href="structdyno_1_1NoiseModels.html#a8c89c4f869e6ec9ea6ebe16c5de8e73c">odometry_noise</a> = gtsam::noiseModel::Diagonal::Sigmas(odom_sigmas);</div>
-<div class="line"><span class="lineno">   70</span>    CHECK(<a class="code hl_variable" href="classdyno_1_1BackendModule.html#af1fd7b04a90c2a06ddc832b4647ff77d">noise_models_</a>.<a class="code hl_variable" href="structdyno_1_1NoiseModels.html#a8c89c4f869e6ec9ea6ebe16c5de8e73c">odometry_noise</a>);</div>
-<div class="line"><span class="lineno">   71</span> </div>
-<div class="line"><span class="lineno">   72</span>    <a class="code hl_variable" href="classdyno_1_1BackendModule.html#af1fd7b04a90c2a06ddc832b4647ff77d">noise_models_</a>.<a class="code hl_variable" href="structdyno_1_1NoiseModels.html#a8c1059db7ca3353919cd1789b1891c54">initial_pose_prior</a> =  gtsam::noiseModel::Isotropic::Sigma(6u, 0.0001);</div>
-<div class="line"><span class="lineno">   73</span>    CHECK(<a class="code hl_variable" href="classdyno_1_1BackendModule.html#af1fd7b04a90c2a06ddc832b4647ff77d">noise_models_</a>.<a class="code hl_variable" href="structdyno_1_1NoiseModels.html#a8c1059db7ca3353919cd1789b1891c54">initial_pose_prior</a>);</div>
-<div class="line"><span class="lineno">   74</span> </div>
-<div class="line"><span class="lineno">   75</span>    <a class="code hl_variable" href="classdyno_1_1BackendModule.html#af1fd7b04a90c2a06ddc832b4647ff77d">noise_models_</a>.<a class="code hl_variable" href="structdyno_1_1NoiseModels.html#a83368aae44c18d90239c00dcf557729a">landmark_motion_noise</a> = gtsam::noiseModel::Isotropic::Sigma(3u, backend_params.motion_ternary_factor_noise_sigma_);</div>
-<div class="line"><span class="lineno">   76</span>    CHECK(<a class="code hl_variable" href="classdyno_1_1BackendModule.html#af1fd7b04a90c2a06ddc832b4647ff77d">noise_models_</a>.<a class="code hl_variable" href="structdyno_1_1NoiseModels.html#a83368aae44c18d90239c00dcf557729a">landmark_motion_noise</a>);</div>
-<div class="line"><span class="lineno">   77</span> </div>
-<div class="line"><span class="lineno">   78</span>    gtsam::Vector6 object_constant_vel_sigmas;</div>
-<div class="line"><span class="lineno">   79</span>    object_constant_vel_sigmas.head&lt;3&gt;().setConstant(backend_params.constant_object_motion_rotation_sigma_);</div>
-<div class="line"><span class="lineno">   80</span>    object_constant_vel_sigmas.tail&lt;3&gt;().setConstant(</div>
-<div class="line"><span class="lineno">   81</span>        backend_params.constant_object_motion_translation_sigma_);</div>
-<div class="line"><span class="lineno">   82</span>    <a class="code hl_variable" href="classdyno_1_1BackendModule.html#af1fd7b04a90c2a06ddc832b4647ff77d">noise_models_</a>.<a class="code hl_variable" href="structdyno_1_1NoiseModels.html#acf038fec49e230c17c8481d74b4e1f26">object_smoothing_noise</a> = gtsam::noiseModel::Diagonal::Sigmas(object_constant_vel_sigmas);</div>
-<div class="line"><span class="lineno">   83</span>    CHECK(<a class="code hl_variable" href="classdyno_1_1BackendModule.html#af1fd7b04a90c2a06ddc832b4647ff77d">noise_models_</a>.<a class="code hl_variable" href="structdyno_1_1NoiseModels.html#acf038fec49e230c17c8481d74b4e1f26">object_smoothing_noise</a>);</div>
-<div class="line"><span class="lineno">   84</span> </div>
-<div class="line"><span class="lineno">   85</span>}</div>
-<div class="ttc" id="aclassdyno_1_1BackendModule_html_af1fd7b04a90c2a06ddc832b4647ff77d"><div class="ttname"><a href="classdyno_1_1BackendModule.html#af1fd7b04a90c2a06ddc832b4647ff77d">dyno::BackendModule::noise_models_</a></div><div class="ttdeci">NoiseModels noise_models_</div><div class="ttdef"><b>Definition:</b> <a href="BackendModule_8hpp_source.html#l00110">BackendModule.hpp:110</a></div></div>
-<div class="ttc" id="astructdyno_1_1NoiseModels_html_a83368aae44c18d90239c00dcf557729a"><div class="ttname"><a href="structdyno_1_1NoiseModels.html#a83368aae44c18d90239c00dcf557729a">dyno::NoiseModels::landmark_motion_noise</a></div><div class="ttdeci">gtsam::SharedNoiseModel landmark_motion_noise</div><div class="ttdoc">Noise on the landmark tenrary factor.</div><div class="ttdef"><b>Definition:</b> <a href="BackendDefinitions_8hpp_source.html#l00101">BackendDefinitions.hpp:101</a></div></div>
-<div class="ttc" id="astructdyno_1_1NoiseModels_html_a8c1059db7ca3353919cd1789b1891c54"><div class="ttname"><a href="structdyno_1_1NoiseModels.html#a8c1059db7ca3353919cd1789b1891c54">dyno::NoiseModels::initial_pose_prior</a></div><div class="ttdeci">gtsam::SharedNoiseModel initial_pose_prior</div><div class="ttdef"><b>Definition:</b> <a href="BackendDefinitions_8hpp_source.html#l00097">BackendDefinitions.hpp:97</a></div></div>
-<div class="ttc" id="astructdyno_1_1NoiseModels_html_a8c89c4f869e6ec9ea6ebe16c5de8e73c"><div class="ttname"><a href="structdyno_1_1NoiseModels.html#a8c89c4f869e6ec9ea6ebe16c5de8e73c">dyno::NoiseModels::odometry_noise</a></div><div class="ttdeci">gtsam::SharedNoiseModel odometry_noise</div><div class="ttdoc">Between factor noise for between two consequative poses.</div><div class="ttdef"><b>Definition:</b> <a href="BackendDefinitions_8hpp_source.html#l00099">BackendDefinitions.hpp:99</a></div></div>
-<div class="ttc" id="astructdyno_1_1NoiseModels_html_acf038fec49e230c17c8481d74b4e1f26"><div class="ttname"><a href="structdyno_1_1NoiseModels.html#acf038fec49e230c17c8481d74b4e1f26">dyno::NoiseModels::object_smoothing_noise</a></div><div class="ttdeci">gtsam::SharedNoiseModel object_smoothing_noise</div><div class="ttdoc">Contant velocity noise model between motions.</div><div class="ttdef"><b>Definition:</b> <a href="BackendDefinitions_8hpp_source.html#l00103">BackendDefinitions.hpp:103</a></div></div>
+<p class="definition">Definition at line <a class="el" href="BackendModule_8cc_source.html#l00066">66</a> of file <a class="el" href="BackendModule_8cc_source.html">BackendModule.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   66</span>                                                                       {</div>
+<div class="line"><span class="lineno">   67</span>  <a class="code hl_variable" href="classdyno_1_1BackendModule.html#af1fd7b04a90c2a06ddc832b4647ff77d">noise_models_</a> = <a class="code hl_function" href="structdyno_1_1NoiseModels.html#a8bef4bd578329e14ca739315ad597879">NoiseModels::fromBackendParams</a>(backend_params);</div>
+<div class="line"><span class="lineno">   68</span>}</div>
+<div class="ttc" id="astructdyno_1_1NoiseModels_html_a8bef4bd578329e14ca739315ad597879"><div class="ttname"><a href="structdyno_1_1NoiseModels.html#a8bef4bd578329e14ca739315ad597879">dyno::NoiseModels::fromBackendParams</a></div><div class="ttdeci">static NoiseModels fromBackendParams(const BackendParams &amp;)</div><div class="ttdef"><b>Definition:</b> <a href="BackendDefinitions_8cc_source.html#l00161">BackendDefinitions.cc:161</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="structdyno_1_1BackendParams.html#acfbba206fd30c213abf6da97d2f2e3b5">dyno::BackendParams::constant_object_motion_rotation_sigma_</a>, <a class="el" href="structdyno_1_1BackendParams.html#ab2b9ed3551df5f9c66637454ce2c94be">dyno::BackendParams::constant_object_motion_translation_sigma_</a>, <a class="el" href="structdyno_1_1NoiseModels.html#a8c1059db7ca3353919cd1789b1891c54">dyno::NoiseModels::initial_pose_prior</a>, <a class="el" href="structdyno_1_1NoiseModels.html#a83368aae44c18d90239c00dcf557729a">dyno::NoiseModels::landmark_motion_noise</a>, <a class="el" href="structdyno_1_1BackendParams.html#a0f956a9cb197f1b8013772b81f9c2fed">dyno::BackendParams::motion_ternary_factor_noise_sigma_</a>, <a class="el" href="classdyno_1_1BackendModule.html#af1fd7b04a90c2a06ddc832b4647ff77d">noise_models_</a>, <a class="el" href="structdyno_1_1NoiseModels.html#acf038fec49e230c17c8481d74b4e1f26">dyno::NoiseModels::object_smoothing_noise</a>, <a class="el" href="structdyno_1_1NoiseModels.html#a8c89c4f869e6ec9ea6ebe16c5de8e73c">dyno::NoiseModels::odometry_noise</a>, <a class="el" href="structdyno_1_1BackendParams.html#a19effdd93e47448a8befb6e7f44321fd">dyno::BackendParams::odometry_rotation_sigma_</a>, and <a class="el" href="structdyno_1_1BackendParams.html#a2388f57e5904ef5a6f862be7afb96805">dyno::BackendParams::odometry_translation_sigma_</a>.</p>
+<p class="reference">References <a class="el" href="structdyno_1_1NoiseModels.html#a8bef4bd578329e14ca739315ad597879">dyno::NoiseModels::fromBackendParams()</a>, and <a class="el" href="classdyno_1_1BackendModule.html#af1fd7b04a90c2a06ddc832b4647ff77d">noise_models_</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1BackendModule.html#a719631280fcd29fedc11ba2a54f15caa">BackendModule()</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classdyno_1_1BackendModule_a1803b6a19bd4c08d24cb46d5e066e56f_cgraph.png" border="0" usemap="#aclassdyno_1_1BackendModule_a1803b6a19bd4c08d24cb46d5e066e56f_cgraph" alt=""/></div>
+<map name="aclassdyno_1_1BackendModule_a1803b6a19bd4c08d24cb46d5e066e56f_cgraph" id="aclassdyno_1_1BackendModule_a1803b6a19bd4c08d24cb46d5e066e56f_cgraph">
+<area shape="rect" title=" " alt="" coords="5,5,171,45"/>
+<area shape="rect" href="structdyno_1_1NoiseModels.html#a8bef4bd578329e14ca739315ad597879" title=" " alt="" coords="219,5,375,45"/>
+</map>
+</div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -515,10 +559,8 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="BackendModule_8cc_source.html#l00088">88</a> of file <a class="el" href="BackendModule_8cc_source.html">BackendModule.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   88</span>                                                                         {</div>
-<div class="line"><span class="lineno">   89</span> </div>
-<div class="line"><span class="lineno">   90</span>}</div>
+<p class="definition">Definition at line <a class="el" href="BackendModule_8cc_source.html#l00073">73</a> of file <a class="el" href="BackendModule_8cc_source.html">BackendModule.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   73</span>{}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -543,9 +585,9 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="BackendModule_8hpp_source.html#l00100">100</a> of file <a class="el" href="BackendModule_8hpp_source.html">BackendModule.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="BackendModule_8hpp_source.html#l00104">104</a> of file <a class="el" href="BackendModule_8hpp_source.html">BackendModule.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1RGBDBackendModule.html#aa8625763afa6e9f548a6fdee49f8d748">dyno::RGBDBackendModule::makeUpdater()</a>, <a class="el" href="classdyno_1_1RGBDBackendModule.html#a9484cb840c3c82033d4929bd202bc7a8">dyno::RGBDBackendModule::nominalSpinImpl()</a>, and <a class="el" href="classdyno_1_1RGBDBackendModule.html#aac8c85d7df0dd2a848b9d737005d529f">dyno::RGBDBackendModule::~RGBDBackendModule()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1RegularBackendModule.html#ab63dc8dd69d582874b25dc62828c14d2">dyno::RegularBackendModule::createBackendMetadata()</a>, <a class="el" href="classdyno_1_1ParallelHybridBackendModule.html#afcfb8db249efb4497490497c4c19366f">dyno::ParallelHybridBackendModule::getEstimator()</a>, <a class="el" href="classdyno_1_1BackendModule.html#a6bcfb713f06215d64f607b8e3e577b6a">getParams()</a>, <a class="el" href="classdyno_1_1RegularBackendModule.html#a981f45e602804746db51e10350a060b6">dyno::RegularBackendModule::makeFormulation()</a>, <a class="el" href="classdyno_1_1ParallelHybridBackendModule.html#a06ab247456bf85a1f6d67350f32eeb95">dyno::ParallelHybridBackendModule::ParallelHybridBackendModule()</a>, <a class="el" href="classdyno_1_1RegularBackendModule.html#aedf9cc9f68a38e7c6e91811ebda74f82">dyno::RegularBackendModule::updateBatch()</a>, <a class="el" href="classdyno_1_1ParallelHybridBackendModule.html#a368912f3c84f148843f4b6ef653f4a0c">dyno::ParallelHybridBackendModule::~ParallelHybridBackendModule()</a>, and <a class="el" href="classdyno_1_1RegularBackendModule.html#a26a1f7ce71fdabc65cdb711e48892b62">dyno::RegularBackendModule::~RegularBackendModule()</a>.</p>
 
 </div>
 </div>
@@ -568,35 +610,8 @@ Here is the caller graph for this function:</div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Updated in the backend module base via InputCallback (see <a class="el" href="classdyno_1_1BackendModule.html" title="Base class to actually do processing. Data passed to this module from the frontend.">BackendModule</a> constructor). </p>
 
 <p class="definition">Definition at line <a class="el" href="BackendModule_8hpp_source.html#l00105">105</a> of file <a class="el" href="BackendModule_8hpp_source.html">BackendModule.hpp</a>.</p>
-
-</div>
-</div>
-<a id="a653672954d104063127a7645451a901d" name="a653672954d104063127a7645451a901d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a653672954d104063127a7645451a901d">&#9670;&#160;</a></span>gt_packet_map_</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="namespacedyno.html#aabd3e91b81782562a6d3ff5d235e1011">GroundTruthPacketMap</a> dyno::BackendModule::gt_packet_map_</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="BackendModule_8hpp_source.html#l00103">103</a> of file <a class="el" href="BackendModule_8hpp_source.html">BackendModule.hpp</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1BackendModule.html#a719631280fcd29fedc11ba2a54f15caa">BackendModule()</a>, and <a class="el" href="classdyno_1_1BackendModule.html#ac2ca6ac0b1b2a8058823bf86ecd6e940">getGroundTruthPackets()</a>.</p>
 
 </div>
 </div>
@@ -623,7 +638,7 @@ Here is the caller graph for this function:</div>
 
 <p class="definition">Definition at line <a class="el" href="BackendModule_8hpp_source.html#l00110">110</a> of file <a class="el" href="BackendModule_8hpp_source.html">BackendModule.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1RGBDBackendModule.html#aa8625763afa6e9f548a6fdee49f8d748">dyno::RGBDBackendModule::makeUpdater()</a>, <a class="el" href="classdyno_1_1RGBDBackendModule.html#a647d2f0e4471c0bd0e271ef36f48a654">dyno::RGBDBackendModule::RGBDBackendModule()</a>, and <a class="el" href="classdyno_1_1BackendModule.html#a1803b6a19bd4c08d24cb46d5e066e56f">setFactorParams()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1RegularBackendModule.html#a408697b902cf0e36fac59ff90bdb589e">dyno::RegularBackendModule::addInitialStates()</a>, <a class="el" href="classdyno_1_1RegularBackendModule.html#aa589e2cb149ee1ad82181f396e9aa2ec">dyno::RegularBackendModule::addStates()</a>, <a class="el" href="classdyno_1_1BackendModule.html#a66737a912311cd392f7264443cc5aa0a">getNoiseModels()</a>, <a class="el" href="classdyno_1_1RegularBackendModule.html#a981f45e602804746db51e10350a060b6">dyno::RegularBackendModule::makeFormulation()</a>, <a class="el" href="classdyno_1_1ParallelHybridBackendModule.html#a292225500c4604751ebd98e6564ac6ff">dyno::ParallelHybridBackendModule::nominalUpdateStaticEstimator()</a>, <a class="el" href="classdyno_1_1ParallelHybridBackendModule.html#a06ab247456bf85a1f6d67350f32eeb95">dyno::ParallelHybridBackendModule::ParallelHybridBackendModule()</a>, and <a class="el" href="classdyno_1_1BackendModule.html#a1803b6a19bd4c08d24cb46d5e066e56f">setFactorParams()</a>.</p>
 
 </div>
 </div>
@@ -651,7 +666,7 @@ Here is the caller graph for this function:</div>
 
 <p class="definition">Definition at line <a class="el" href="BackendModule_8hpp_source.html#l00108">108</a> of file <a class="el" href="BackendModule_8hpp_source.html">BackendModule.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1BackendModule.html#a719631280fcd29fedc11ba2a54f15caa">BackendModule()</a>, <a class="el" href="classdyno_1_1RGBDBackendModule.html#ad3a6fd297b894813137fa08aa212e96e">dyno::RGBDBackendModule::boostrapSpinImpl()</a>, and <a class="el" href="classdyno_1_1RGBDBackendModule.html#a9484cb840c3c82033d4929bd202bc7a8">dyno::RGBDBackendModule::nominalSpinImpl()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1BackendModule.html#a719631280fcd29fedc11ba2a54f15caa">BackendModule()</a>, <a class="el" href="classdyno_1_1RegularBackendModule.html#a4934e902605fc58d5430cfd15b0a9ba8">dyno::RegularBackendModule::boostrapSpinImpl()</a>, <a class="el" href="classdyno_1_1ParallelHybridBackendModule.html#acffc6b621d970cbf65f6a4fea1fd8e59">dyno::ParallelHybridBackendModule::bootstrapUpdateStaticEstimator()</a>, <a class="el" href="classdyno_1_1BackendModule.html#ac15bb8ad2c07c99e54ae7e6a3263542b">getSpinState()</a>, <a class="el" href="classdyno_1_1ParallelHybridBackendModule.html#a367a62d62ad07e49a2f2ef975e1bce8b">dyno::ParallelHybridBackendModule::logBackendFromEstimators()</a>, <a class="el" href="classdyno_1_1ParallelHybridBackendModule.html#a0da19e58aa04386a4d5bd6be23c038f8">dyno::ParallelHybridBackendModule::logGraphs()</a>, <a class="el" href="classdyno_1_1RegularBackendModule.html#aa79b2f6d63914e52a7adbfbaa65c32b1">dyno::RegularBackendModule::nominalSpinImpl()</a>, <a class="el" href="classdyno_1_1ParallelHybridBackendModule.html#a292225500c4604751ebd98e6564ac6ff">dyno::ParallelHybridBackendModule::nominalUpdateStaticEstimator()</a>, and <a class="el" href="classdyno_1_1RegularBackendModule.html#a26a1f7ce71fdabc65cdb711e48892b62">dyno::RegularBackendModule::~RegularBackendModule()</a>.</p>
 
 </div>
 </div>

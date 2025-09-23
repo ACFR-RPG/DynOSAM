@@ -1,7 +1,8 @@
 <map id="dyno::CameraParams::constructGtsamCalibration" name="dyno::CameraParams::constructGtsamCalibration">
-<area shape="rect" id="node1" title=" " alt="" coords="307,77,511,117"/>
-<area shape="rect" id="node2" href="$classdyno_1_1Camera.html#a14ca13ab60989ac4322fddb38beaefa8" title=" " alt="" coords="46,5,218,31"/>
-<area shape="rect" id="node3" href="$classdyno_1_1Frame.html#a9c0307a7dc6fa76cc4647b3d88e8da38" title="Constructs a GTSAM camera for this frame using the current pose of this camera (T_world_camera)" alt="" coords="20,55,244,80"/>
-<area shape="rect" id="node4" href="$classdyno_1_1RGBDBackendModule.html#afd3ab862e80e0394dbb89c318db057be" title=" " alt="" coords="31,105,233,145"/>
-<area shape="rect" id="node5" href="$classdyno_1_1ObjectMotionSovler.html#a1b847558346a89cfa173de6810e952a3" title=" " alt="" coords="5,169,259,209"/>
+<area shape="rect" id="node1" title=" " alt="" coords="535,85,739,125"/>
+<area shape="rect" id="node2" href="$classdyno_1_1Camera.html#a14ca13ab60989ac4322fddb38beaefa8" title=" " alt="" coords="289,5,461,31"/>
+<area shape="rect" id="node3" href="$classdyno_1_1RGBDCamera.html#ae1e3ae993c328df6c0e4fe5687483f16" title="Get gtsam::Cal3_S2Stereo from rgbd camera and virtual baseline." alt="" coords="270,55,479,95"/>
+<area shape="rect" id="node5" href="$classdyno_1_1Frame.html#a9c0307a7dc6fa76cc4647b3d88e8da38" title="Constructs a GTSAM camera for this frame using the current pose of this camera (T_world_camera)" alt="" coords="263,120,487,145"/>
+<area shape="rect" id="node6" href="$classdyno_1_1RegularBackendModule.html#a6954b74321ae4faaa246acf4b452edc9" title=" " alt="" coords="267,170,482,210"/>
+<area shape="rect" id="node4" href="$classdyno_1_1RGBDCamera.html#a76250e0244602304395e8963772c7bae" title=" " alt="" coords="5,55,215,95"/>
 </map>

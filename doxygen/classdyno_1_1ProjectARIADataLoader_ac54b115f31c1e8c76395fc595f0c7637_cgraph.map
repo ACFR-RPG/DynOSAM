@@ -1,10 +1,10 @@
 <map id="dyno::ProjectARIADataLoader::ProjectARIADataLoader" name="dyno::ProjectARIADataLoader::ProjectARIADataLoader">
-<area shape="rect" id="node1" title="The dataset path is /path/to/dataset/ /rgb /depth /calibration.json .... /optical_flow /instance_mask..." alt="" coords="5,129,219,169"/>
-<area shape="rect" id="node2" href="$classdyno_1_1ImageContainer.html#a5b0f2449742264ffb55c9062bc58c06f" title="Construct an image container equivalent to RGBD + Semantic Mask input." alt="" coords="305,29,471,69"/>
-<area shape="rect" id="node3" href="$classdyno_1_1ProjectARIADataLoader.html#afdc738dbc509f28c068da9d3f82046af" title="Provides functionality to get camera paramters for the main pipeline, as these may be available from ..." alt="" coords="281,93,495,133"/>
-<area shape="rect" id="node4" href="$structdyno_1_1__DynoDatasetConstructor.html#a5354a00794f43690a5bab204bda3879e" title=" " alt="" coords="267,158,509,213"/>
-<area shape="rect" id="node5" href="$classdyno_1_1DynoDatasetProvider.html#aca00b7dce03a97517c126aacb60a3332" title=" " alt="" coords="287,237,489,277"/>
-<area shape="rect" id="node6" href="$classdyno_1_1DynoDatasetProvider.html#a981618d669ffbb6284bc2be9d0fc6f9b" title=" " alt="" coords="557,205,795,245"/>
-<area shape="rect" id="node8" href="$classdyno_1_1DynoDataset.html#a1178220b7c572207b0b49ff0f5fffb49" title=" " alt="" coords="576,269,776,309"/>
-<area shape="rect" id="node7" href="$classdyno_1_1DynoDataset.html#ac5d0052a9ce06bd1e964d855469d4e05" title=" " alt="" coords="843,205,1071,245"/>
+<area shape="rect" id="node1" title="The dataset path is /path/to/dataset/ /rgb /depth /calibration.json .... /optical_flow /instance_mask..." alt="" coords="5,95,219,135"/>
+<area shape="rect" id="node2" href="$classdyno_1_1ProjectARIADataLoader.html#afdc738dbc509f28c068da9d3f82046af" title="Provides functionality to get camera paramters for the main pipeline, as these may be available from ..." alt="" coords="281,5,495,45"/>
+<area shape="rect" id="node3" href="$classdyno_1_1ImageContainer.html#a6f35259f95c31b861ff6515c159e1ee3" title=" " alt="" coords="291,70,485,95"/>
+<area shape="rect" id="node4" href="$structdyno_1_1__DynoDatasetConstructor.html#a5354a00794f43690a5bab204bda3879e" title=" " alt="" coords="267,119,509,174"/>
+<area shape="rect" id="node5" href="$classdyno_1_1DynoDatasetProvider.html#aca00b7dce03a97517c126aacb60a3332" title=" " alt="" coords="287,199,489,239"/>
+<area shape="rect" id="node6" href="$classdyno_1_1DynoDatasetProvider.html#a981618d669ffbb6284bc2be9d0fc6f9b" title=" " alt="" coords="557,167,795,207"/>
+<area shape="rect" id="node8" href="$classdyno_1_1DynoDataset.html#a1178220b7c572207b0b49ff0f5fffb49" title=" " alt="" coords="576,231,776,271"/>
+<area shape="rect" id="node7" href="$classdyno_1_1DynoDataset.html#ac5d0052a9ce06bd1e964d855469d4e05" title=" " alt="" coords="843,167,1071,207"/>
 </map>

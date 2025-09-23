@@ -157,6 +157,8 @@ Private Attributes</h2></td></tr>
 <tr class="separator:a90803608af861e0c2480bdd9f62ec882"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a765b409eb864e2d2360e70adbea99763"><td class="memItemLeft" align="right" valign="top">PathPub::SharedPtr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1FrontendDSDRos.html#a765b409eb864e2d2360e70adbea99763">vo_path_ground_truth_publisher_</a></td></tr>
 <tr class="separator:a765b409eb864e2d2360e70adbea99763"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0cdf1f92855c125e4f54792145628ce1"><td class="memItemLeft" align="right" valign="top">rclcpp::Publisher&lt; sensor_msgs::msg::PointCloud2 &gt;::SharedPtr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1FrontendDSDRos.html#a0cdf1f92855c125e4f54792145628ce1">dense_dynamic_cloud_pub_</a></td></tr>
+<tr class="separator:a0cdf1f92855c125e4f54792145628ce1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_attribs_classdyno_1_1DSDRos"><td colspan="2" onclick="javascript:toggleInherit('pub_attribs_classdyno_1_1DSDRos')"><img src="closed.png" alt="-"/>&#160;Private Attributes inherited from <a class="el" href="classdyno_1_1DSDRos.html">dyno::DSDRos</a></td></tr>
 <tr class="memitem:a0af02d16138ba34ce2fcce9217751cc5 inherit pub_attribs_classdyno_1_1DSDRos"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structdyno_1_1DisplayParams.html">DisplayParams</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DSDRos.html#a0af02d16138ba34ce2fcce9217751cc5">params_</a></td></tr>
 <tr class="separator:a0af02d16138ba34ce2fcce9217751cc5 inherit pub_attribs_classdyno_1_1DSDRos"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -217,29 +219,36 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="FrontendDSDRos_8cc_source.html#l00041">41</a> of file <a class="el" href="FrontendDSDRos_8cc_source.html">FrontendDSDRos.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   43</span>    : <a class="code hl_typedef" href="namespacedyno.html#a0a66118fd18dcfb3c3016e7bb54a2b9e">FrontendDisplay</a>(), <a class="code hl_function" href="classdyno_1_1DSDRos.html#a4cae2e496b8d739607e3826b052db4de">DSDRos</a>(params, node) {</div>
-<div class="line"><span class="lineno">   44</span>  <a class="code hl_variable" href="classdyno_1_1FrontendDSDRos.html#a671ac9c7011bdb18a0f15b79b2294df8">tracking_image_pub_</a> =</div>
-<div class="line"><span class="lineno">   45</span>      image_transport::create_publisher(node.get(), <span class="stringliteral">&quot;tracking_image&quot;</span>);</div>
-<div class="line"><span class="lineno">   46</span> </div>
-<div class="line"><span class="lineno">   47</span>  <span class="keyword">auto</span> ground_truth_node = node-&gt;create_sub_node(<span class="stringliteral">&quot;ground_truth&quot;</span>);</div>
-<div class="line"><span class="lineno">   48</span>  <a class="code hl_variable" href="classdyno_1_1FrontendDSDRos.html#afcc031dd7a27f94ccd54950eca8fafb4">dsd_ground_truth_transport_</a> =</div>
-<div class="line"><span class="lineno">   49</span>      std::make_unique&lt;DSDTransport&gt;(ground_truth_node);</div>
-<div class="line"><span class="lineno">   50</span>  <a class="code hl_variable" href="classdyno_1_1FrontendDSDRos.html#a90803608af861e0c2480bdd9f62ec882">vo_ground_truth_publisher_</a> =</div>
-<div class="line"><span class="lineno">   51</span>      ground_truth_node-&gt;create_publisher&lt;nav_msgs::msg::Odometry&gt;(<span class="stringliteral">&quot;odometry&quot;</span>,</div>
-<div class="line"><span class="lineno">   52</span>                                                                   1);</div>
-<div class="line"><span class="lineno">   53</span>  <a class="code hl_variable" href="classdyno_1_1FrontendDSDRos.html#a765b409eb864e2d2360e70adbea99763">vo_path_ground_truth_publisher_</a> =</div>
-<div class="line"><span class="lineno">   54</span>      ground_truth_node-&gt;create_publisher&lt;nav_msgs::msg::Path&gt;(<span class="stringliteral">&quot;odometry_path&quot;</span>,</div>
-<div class="line"><span class="lineno">   55</span>                                                               1);</div>
-<div class="line"><span class="lineno">   56</span>}</div>
-<div class="ttc" id="aclassdyno_1_1DSDRos_html_a4cae2e496b8d739607e3826b052db4de"><div class="ttname"><a href="classdyno_1_1DSDRos.html#a4cae2e496b8d739607e3826b052db4de">dyno::DSDRos::DSDRos</a></div><div class="ttdeci">DSDRos(const DisplayParams &amp;params, rclcpp::Node::SharedPtr node)</div><div class="ttdef"><b>Definition:</b> <a href="DSDCommonRos_8cc_source.html#l00192">DSDCommonRos.cc:192</a></div></div>
+<p class="definition">Definition at line <a class="el" href="FrontendDSDRos_8cc_source.html#l00042">42</a> of file <a class="el" href="FrontendDSDRos_8cc_source.html">FrontendDSDRos.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   44</span>    : <a class="code hl_typedef" href="namespacedyno.html#a0a66118fd18dcfb3c3016e7bb54a2b9e">FrontendDisplay</a>(), <a class="code hl_function" href="classdyno_1_1DSDRos.html#a4cae2e496b8d739607e3826b052db4de">DSDRos</a>(params, node) {</div>
+<div class="line"><span class="lineno">   45</span>  <a class="code hl_variable" href="classdyno_1_1FrontendDSDRos.html#a671ac9c7011bdb18a0f15b79b2294df8">tracking_image_pub_</a> =</div>
+<div class="line"><span class="lineno">   46</span>      image_transport::create_publisher(node.get(), <span class="stringliteral">&quot;tracking_image&quot;</span>);</div>
+<div class="line"><span class="lineno">   47</span> </div>
+<div class="line"><span class="lineno">   48</span>  <span class="comment">// const rclcpp::SensorDataQoS sensor_qos;</span></div>
+<div class="line"><span class="lineno">   49</span> </div>
+<div class="line"><span class="lineno">   50</span>  <span class="keyword">auto</span> ground_truth_node = node-&gt;create_sub_node(<span class="stringliteral">&quot;ground_truth&quot;</span>);</div>
+<div class="line"><span class="lineno">   51</span>  <a class="code hl_variable" href="classdyno_1_1FrontendDSDRos.html#afcc031dd7a27f94ccd54950eca8fafb4">dsd_ground_truth_transport_</a> =</div>
+<div class="line"><span class="lineno">   52</span>      std::make_unique&lt;DSDTransport&gt;(ground_truth_node);</div>
+<div class="line"><span class="lineno">   53</span>  <a class="code hl_variable" href="classdyno_1_1FrontendDSDRos.html#a90803608af861e0c2480bdd9f62ec882">vo_ground_truth_publisher_</a> =</div>
+<div class="line"><span class="lineno">   54</span>      ground_truth_node-&gt;create_publisher&lt;nav_msgs::msg::Odometry&gt;(<span class="stringliteral">&quot;odometry&quot;</span>,</div>
+<div class="line"><span class="lineno">   55</span>                                                                   1);</div>
+<div class="line"><span class="lineno">   56</span>  <a class="code hl_variable" href="classdyno_1_1FrontendDSDRos.html#a765b409eb864e2d2360e70adbea99763">vo_path_ground_truth_publisher_</a> =</div>
+<div class="line"><span class="lineno">   57</span>      ground_truth_node-&gt;create_publisher&lt;nav_msgs::msg::Path&gt;(<span class="stringliteral">&quot;odometry_path&quot;</span>,</div>
+<div class="line"><span class="lineno">   58</span>                                                               1);</div>
+<div class="line"><span class="lineno">   59</span> </div>
+<div class="line"><span class="lineno">   60</span>  <a class="code hl_variable" href="classdyno_1_1FrontendDSDRos.html#a0cdf1f92855c125e4f54792145628ce1">dense_dynamic_cloud_pub_</a> =</div>
+<div class="line"><span class="lineno">   61</span>      node-&gt;create_publisher&lt;sensor_msgs::msg::PointCloud2&gt;(</div>
+<div class="line"><span class="lineno">   62</span>          <span class="stringliteral">&quot;dense_labelled_cloud&quot;</span>, 1);</div>
+<div class="line"><span class="lineno">   63</span>}</div>
+<div class="ttc" id="aclassdyno_1_1DSDRos_html_a4cae2e496b8d739607e3826b052db4de"><div class="ttname"><a href="classdyno_1_1DSDRos.html#a4cae2e496b8d739607e3826b052db4de">dyno::DSDRos::DSDRos</a></div><div class="ttdeci">DSDRos(const DisplayParams &amp;params, rclcpp::Node::SharedPtr node)</div><div class="ttdef"><b>Definition:</b> <a href="DSDCommonRos_8cc_source.html#l00257">DSDCommonRos.cc:257</a></div></div>
+<div class="ttc" id="aclassdyno_1_1FrontendDSDRos_html_a0cdf1f92855c125e4f54792145628ce1"><div class="ttname"><a href="classdyno_1_1FrontendDSDRos.html#a0cdf1f92855c125e4f54792145628ce1">dyno::FrontendDSDRos::dense_dynamic_cloud_pub_</a></div><div class="ttdeci">rclcpp::Publisher&lt; sensor_msgs::msg::PointCloud2 &gt;::SharedPtr dense_dynamic_cloud_pub_</div><div class="ttdef"><b>Definition:</b> <a href="FrontendDSDRos_8hpp_source.html#l00075">FrontendDSDRos.hpp:75</a></div></div>
 <div class="ttc" id="aclassdyno_1_1FrontendDSDRos_html_a671ac9c7011bdb18a0f15b79b2294df8"><div class="ttname"><a href="classdyno_1_1FrontendDSDRos.html#a671ac9c7011bdb18a0f15b79b2294df8">dyno::FrontendDSDRos::tracking_image_pub_</a></div><div class="ttdeci">image_transport::Publisher tracking_image_pub_</div><div class="ttdoc">Image Transport for tracking image.</div><div class="ttdef"><b>Definition:</b> <a href="FrontendDSDRos_8hpp_source.html#l00069">FrontendDSDRos.hpp:69</a></div></div>
 <div class="ttc" id="aclassdyno_1_1FrontendDSDRos_html_a765b409eb864e2d2360e70adbea99763"><div class="ttname"><a href="classdyno_1_1FrontendDSDRos.html#a765b409eb864e2d2360e70adbea99763">dyno::FrontendDSDRos::vo_path_ground_truth_publisher_</a></div><div class="ttdeci">PathPub::SharedPtr vo_path_ground_truth_publisher_</div><div class="ttdef"><b>Definition:</b> <a href="FrontendDSDRos_8hpp_source.html#l00072">FrontendDSDRos.hpp:72</a></div></div>
 <div class="ttc" id="aclassdyno_1_1FrontendDSDRos_html_a90803608af861e0c2480bdd9f62ec882"><div class="ttname"><a href="classdyno_1_1FrontendDSDRos.html#a90803608af861e0c2480bdd9f62ec882">dyno::FrontendDSDRos::vo_ground_truth_publisher_</a></div><div class="ttdeci">OdometryPub::SharedPtr vo_ground_truth_publisher_</div><div class="ttdef"><b>Definition:</b> <a href="FrontendDSDRos_8hpp_source.html#l00071">FrontendDSDRos.hpp:71</a></div></div>
 <div class="ttc" id="aclassdyno_1_1FrontendDSDRos_html_afcc031dd7a27f94ccd54950eca8fafb4"><div class="ttname"><a href="classdyno_1_1FrontendDSDRos.html#afcc031dd7a27f94ccd54950eca8fafb4">dyno::FrontendDSDRos::dsd_ground_truth_transport_</a></div><div class="ttdeci">DSDTransport::UniquePtr dsd_ground_truth_transport_</div><div class="ttdoc">Transport for ground truth publishing.</div><div class="ttdef"><b>Definition:</b> <a href="FrontendDSDRos_8hpp_source.html#l00067">FrontendDSDRos.hpp:67</a></div></div>
 <div class="ttc" id="anamespacedyno_html_a0a66118fd18dcfb3c3016e7bb54a2b9e"><div class="ttname"><a href="namespacedyno.html#a0a66118fd18dcfb3c3016e7bb54a2b9e">dyno::FrontendDisplay</a></div><div class="ttdeci">DisplayBase&lt; FrontendOutputPacketBase &gt; FrontendDisplay</div><div class="ttdef"><b>Definition:</b> <a href="Display_8hpp_source.html#l00052">Display.hpp:52</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="classdyno_1_1FrontendDSDRos.html#afcc031dd7a27f94ccd54950eca8fafb4">dsd_ground_truth_transport_</a>, <a class="el" href="classdyno_1_1FrontendDSDRos.html#a671ac9c7011bdb18a0f15b79b2294df8">tracking_image_pub_</a>, <a class="el" href="classdyno_1_1FrontendDSDRos.html#a90803608af861e0c2480bdd9f62ec882">vo_ground_truth_publisher_</a>, and <a class="el" href="classdyno_1_1FrontendDSDRos.html#a765b409eb864e2d2360e70adbea99763">vo_path_ground_truth_publisher_</a>.</p>
+<p class="reference">References <a class="el" href="classdyno_1_1FrontendDSDRos.html#a0cdf1f92855c125e4f54792145628ce1">dense_dynamic_cloud_pub_</a>, <a class="el" href="classdyno_1_1FrontendDSDRos.html#afcc031dd7a27f94ccd54950eca8fafb4">dsd_ground_truth_transport_</a>, <a class="el" href="classdyno_1_1FrontendDSDRos.html#a671ac9c7011bdb18a0f15b79b2294df8">tracking_image_pub_</a>, <a class="el" href="classdyno_1_1FrontendDSDRos.html#a90803608af861e0c2480bdd9f62ec882">vo_ground_truth_publisher_</a>, and <a class="el" href="classdyno_1_1FrontendDSDRos.html#a765b409eb864e2d2360e70adbea99763">vo_path_ground_truth_publisher_</a>.</p>
 
 </div>
 </div>
@@ -293,44 +302,55 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="FrontendDSDRos_8cc_source.html#l00164">164</a> of file <a class="el" href="FrontendDSDRos_8cc_source.html">FrontendDSDRos.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  165</span>                                                         {</div>
-<div class="line"><span class="lineno">  166</span>  <span class="comment">// publish path</span></div>
-<div class="line"><span class="lineno">  167</span>  <span class="comment">// why the camera poses are only in the RGBDInstanceOutputPacket and not in</span></div>
-<div class="line"><span class="lineno">  168</span>  <span class="comment">// the base... I have no idea :)</span></div>
-<div class="line"><span class="lineno">  169</span>  this-&gt;<a class="code hl_function" href="classdyno_1_1DSDRos.html#aa4452574a86458239f83078514acb7d3">publishVisualOdometryPath</a>(rgbd_packet-&gt;camera_poses_,</div>
-<div class="line"><span class="lineno">  170</span>                                  rgbd_packet-&gt;getTimestamp());</div>
-<div class="line"><span class="lineno">  171</span> </div>
-<div class="line"><span class="lineno">  172</span>  <span class="comment">// publish static cloud</span></div>
-<div class="line"><span class="lineno">  173</span>  CHECK(rgbd_packet);</div>
-<div class="line"><span class="lineno">  174</span>  this-&gt;<a class="code hl_function" href="classdyno_1_1DSDRos.html#a2ea9ccc0e69485a7128c10b55ca60c99">publishStaticPointCloud</a>(rgbd_packet-&gt;static_landmarks_,</div>
-<div class="line"><span class="lineno">  175</span>                                rgbd_packet-&gt;T_world_camera_);</div>
-<div class="line"><span class="lineno">  176</span> </div>
-<div class="line"><span class="lineno">  177</span>  <span class="comment">// publish and collect dynamic cloud</span></div>
-<div class="line"><span class="lineno">  178</span>  <a class="code hl_typedef" href="namespacedyno.html#aeed89004aa6762d0e7d140229a96766d">CloudPerObject</a> clouds_per_obj = this-&gt;<a class="code hl_function" href="classdyno_1_1DSDRos.html#a2c158ca365a2406ba990a1c8a60ba603">publishDynamicPointCloud</a>(</div>
-<div class="line"><span class="lineno">  179</span>      rgbd_packet-&gt;dynamic_landmarks_, rgbd_packet-&gt;T_world_camera_);</div>
-<div class="line"><span class="lineno">  180</span> </div>
-<div class="line"><span class="lineno">  181</span>  <span class="keyword">const</span> <span class="keyword">auto</span>&amp; object_motions = rgbd_packet-&gt;estimated_motions_;</div>
-<div class="line"><span class="lineno">  182</span>  <span class="keyword">const</span> <span class="keyword">auto</span>&amp; object_poses = rgbd_packet-&gt;propogated_object_poses_;</div>
-<div class="line"><span class="lineno">  183</span> </div>
-<div class="line"><span class="lineno">  184</span>  DSDTransport::Publisher object_poses_publisher = <a class="code hl_variable" href="classdyno_1_1DSDRos.html#ab5590d391ae05fdbdd53ae9d5a5099d8">dsd_transport_</a>.<a class="code hl_function" href="classdyno_1_1DSDTransport.html#ad9cdb5d62021540daf75331e6a7bea3e">addObjectInfo</a>(</div>
-<div class="line"><span class="lineno">  185</span>      object_motions, object_poses, <a class="code hl_variable" href="classdyno_1_1DSDRos.html#a0af02d16138ba34ce2fcce9217751cc5">params_</a>.<a class="code hl_variable" href="structdyno_1_1DisplayParams.html#a2847fed65922f575311e2181add1933e">world_frame_id</a>,</div>
-<div class="line"><span class="lineno">  186</span>      rgbd_packet-&gt;getFrameId(), rgbd_packet-&gt;getTimestamp());</div>
-<div class="line"><span class="lineno">  187</span>  object_poses_publisher.<a class="code hl_function" href="classdyno_1_1DSDTransport_1_1Publisher.html#abc29c1b60f2e108c53ae19470960980c">publishObjectOdometry</a>();</div>
-<div class="line"><span class="lineno">  188</span>  object_poses_publisher.publishObjectTransforms();</div>
-<div class="line"><span class="lineno">  189</span>  object_poses_publisher.publishObjectPaths();</div>
-<div class="line"><span class="lineno">  190</span>}</div>
-<div class="ttc" id="aclassdyno_1_1DSDRos_html_a0af02d16138ba34ce2fcce9217751cc5"><div class="ttname"><a href="classdyno_1_1DSDRos.html#a0af02d16138ba34ce2fcce9217751cc5">dyno::DSDRos::params_</a></div><div class="ttdeci">const DisplayParams params_</div><div class="ttdef"><b>Definition:</b> <a href="DSDCommonRos_8hpp_source.html#l00252">DSDCommonRos.hpp:252</a></div></div>
-<div class="ttc" id="aclassdyno_1_1DSDRos_html_a2c158ca365a2406ba990a1c8a60ba603"><div class="ttname"><a href="classdyno_1_1DSDRos.html#a2c158ca365a2406ba990a1c8a60ba603">dyno::DSDRos::publishDynamicPointCloud</a></div><div class="ttdeci">CloudPerObject publishDynamicPointCloud(const StatusLandmarkVector &amp;landmarks, const gtsam::Pose3 &amp;T_world_camera)</div><div class="ttdef"><b>Definition:</b> <a href="DSDCommonRos_8cc_source.html#l00234">DSDCommonRos.cc:234</a></div></div>
-<div class="ttc" id="aclassdyno_1_1DSDRos_html_a2ea9ccc0e69485a7128c10b55ca60c99"><div class="ttname"><a href="classdyno_1_1DSDRos.html#a2ea9ccc0e69485a7128c10b55ca60c99">dyno::DSDRos::publishStaticPointCloud</a></div><div class="ttdeci">CloudPerObject publishStaticPointCloud(const StatusLandmarkVector &amp;landmarks, const gtsam::Pose3 &amp;T_world_camera)</div><div class="ttdef"><b>Definition:</b> <a href="DSDCommonRos_8cc_source.html#l00229">DSDCommonRos.cc:229</a></div></div>
-<div class="ttc" id="aclassdyno_1_1DSDRos_html_aa4452574a86458239f83078514acb7d3"><div class="ttname"><a href="classdyno_1_1DSDRos.html#aa4452574a86458239f83078514acb7d3">dyno::DSDRos::publishVisualOdometryPath</a></div><div class="ttdeci">void publishVisualOdometryPath(const gtsam::Pose3Vector &amp;poses, Timestamp latest_timestamp)</div><div class="ttdef"><b>Definition:</b> <a href="DSDCommonRos_8cc_source.html#l00223">DSDCommonRos.cc:223</a></div></div>
-<div class="ttc" id="aclassdyno_1_1DSDRos_html_ab5590d391ae05fdbdd53ae9d5a5099d8"><div class="ttname"><a href="classdyno_1_1DSDRos.html#ab5590d391ae05fdbdd53ae9d5a5099d8">dyno::DSDRos::dsd_transport_</a></div><div class="ttdeci">DSDTransport dsd_transport_</div><div class="ttdoc">Dynamic SLAM display transport for estimated object odometry.</div><div class="ttdef"><b>Definition:</b> <a href="DSDCommonRos_8hpp_source.html#l00255">DSDCommonRos.hpp:255</a></div></div>
-<div class="ttc" id="aclassdyno_1_1DSDTransport_1_1Publisher_html_abc29c1b60f2e108c53ae19470960980c"><div class="ttname"><a href="classdyno_1_1DSDTransport_1_1Publisher.html#abc29c1b60f2e108c53ae19470960980c">dyno::DSDTransport::Publisher::publishObjectOdometry</a></div><div class="ttdeci">void publishObjectOdometry()</div><div class="ttdoc">Publish the contained object odometries.</div><div class="ttdef"><b>Definition:</b> <a href="DSDCommonRos_8cc_source.html#l00143">DSDCommonRos.cc:143</a></div></div>
-<div class="ttc" id="aclassdyno_1_1DSDTransport_html_ad9cdb5d62021540daf75331e6a7bea3e"><div class="ttname"><a href="classdyno_1_1DSDTransport.html#ad9cdb5d62021540daf75331e6a7bea3e">dyno::DSDTransport::addObjectInfo</a></div><div class="ttdeci">Publisher addObjectInfo(const MotionEstimateMap &amp;motions_k, const ObjectPoseMap &amp;poses, const std::string &amp;frame_id_link, FrameId frame_id, Timestamp timestamp)</div><div class="ttdoc">Create a object odometry Publisher given object state (motion and pose) information for a given frame...</div><div class="ttdef"><b>Definition:</b> <a href="DSDCommonRos_8cc_source.html#l00184">DSDCommonRos.cc:184</a></div></div>
-<div class="ttc" id="anamespacedyno_html_aeed89004aa6762d0e7d140229a96766d"><div class="ttname"><a href="namespacedyno.html#aeed89004aa6762d0e7d140229a96766d">dyno::CloudPerObject</a></div><div class="ttdeci">gtsam::FastMap&lt; ObjectId, pcl::PointCloud&lt; pcl::PointXYZRGB &gt; &gt; CloudPerObject</div><div class="ttdef"><b>Definition:</b> <a href="PointCloudProcess_8hpp_source.html#l00044">PointCloudProcess.hpp:45</a></div></div>
+<p class="definition">Definition at line <a class="el" href="FrontendDSDRos_8cc_source.html#l00177">177</a> of file <a class="el" href="FrontendDSDRos_8cc_source.html">FrontendDSDRos.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  178</span>                                                         {</div>
+<div class="line"><span class="lineno">  179</span>  <span class="comment">// publish path</span></div>
+<div class="line"><span class="lineno">  180</span>  <span class="comment">// why the camera poses are only in the RGBDInstanceOutputPacket and not in</span></div>
+<div class="line"><span class="lineno">  181</span>  <span class="comment">// the base... I have no idea :)</span></div>
+<div class="line"><span class="lineno">  182</span>  this-&gt;<a class="code hl_function" href="classdyno_1_1DSDRos.html#aa4452574a86458239f83078514acb7d3">publishVisualOdometryPath</a>(rgbd_packet-&gt;camera_poses_,</div>
+<div class="line"><span class="lineno">  183</span>                                  rgbd_packet-&gt;getTimestamp());</div>
+<div class="line"><span class="lineno">  184</span> </div>
+<div class="line"><span class="lineno">  185</span>  <span class="comment">// publish static cloud</span></div>
+<div class="line"><span class="lineno">  186</span>  CHECK(rgbd_packet);</div>
+<div class="line"><span class="lineno">  187</span>  this-&gt;<a class="code hl_function" href="classdyno_1_1DSDRos.html#a2ea9ccc0e69485a7128c10b55ca60c99">publishStaticPointCloud</a>(rgbd_packet-&gt;static_landmarks_,</div>
+<div class="line"><span class="lineno">  188</span>                                rgbd_packet-&gt;T_world_camera_);</div>
+<div class="line"><span class="lineno">  189</span> </div>
+<div class="line"><span class="lineno">  190</span>  <span class="comment">// publish and collect dynamic cloud</span></div>
+<div class="line"><span class="lineno">  191</span>  <a class="code hl_typedef" href="namespacedyno.html#aeed89004aa6762d0e7d140229a96766d">CloudPerObject</a> clouds_per_obj = this-&gt;<a class="code hl_function" href="classdyno_1_1DSDRos.html#a2c158ca365a2406ba990a1c8a60ba603">publishDynamicPointCloud</a>(</div>
+<div class="line"><span class="lineno">  192</span>      rgbd_packet-&gt;dynamic_landmarks_, rgbd_packet-&gt;T_world_camera_);</div>
+<div class="line"><span class="lineno">  193</span> </div>
+<div class="line"><span class="lineno">  194</span>  <span class="keyword">const</span> <span class="keyword">auto</span>&amp; object_motions = rgbd_packet-&gt;object_motions_;</div>
+<div class="line"><span class="lineno">  195</span>  <span class="keyword">const</span> <span class="keyword">auto</span>&amp; object_poses = rgbd_packet-&gt;propogated_object_poses_;</div>
+<div class="line"><span class="lineno">  196</span>  <span class="keyword">const</span> <span class="keyword">auto</span>&amp; timestamp_map = rgbd_packet-&gt;involved_timestamps_;</div>
+<div class="line"><span class="lineno">  197</span> </div>
+<div class="line"><span class="lineno">  198</span>  DSDTransport::Publisher object_poses_publisher = <a class="code hl_variable" href="classdyno_1_1DSDRos.html#ab5590d391ae05fdbdd53ae9d5a5099d8">dsd_transport_</a>.<a class="code hl_function" href="classdyno_1_1DSDTransport.html#af3de22d3c37040622cda31ab745955fe">addObjectInfo</a>(</div>
+<div class="line"><span class="lineno">  199</span>      object_motions, object_poses, <a class="code hl_variable" href="classdyno_1_1DSDRos.html#a0af02d16138ba34ce2fcce9217751cc5">params_</a>.<a class="code hl_variable" href="structdyno_1_1DisplayParams.html#a2847fed65922f575311e2181add1933e">world_frame_id</a>, timestamp_map,</div>
+<div class="line"><span class="lineno">  200</span>      rgbd_packet-&gt;getFrameId(), rgbd_packet-&gt;getTimestamp());</div>
+<div class="line"><span class="lineno">  201</span>  object_poses_publisher.<a class="code hl_function" href="classdyno_1_1DSDTransport_1_1Publisher.html#abc29c1b60f2e108c53ae19470960980c">publishObjectOdometry</a>();</div>
+<div class="line"><span class="lineno">  202</span>  object_poses_publisher.publishObjectTransforms();</div>
+<div class="line"><span class="lineno">  203</span>  object_poses_publisher.publishObjectPaths();</div>
+<div class="line"><span class="lineno">  204</span> </div>
+<div class="line"><span class="lineno">  205</span>  <span class="keywordflow">if</span> (rgbd_packet-&gt;dense_labelled_cloud_) {</div>
+<div class="line"><span class="lineno">  206</span>    sensor_msgs::msg::PointCloud2 pc2_msg;</div>
+<div class="line"><span class="lineno">  207</span>    pcl::toROSMsg(*rgbd_packet-&gt;dense_labelled_cloud_, pc2_msg);</div>
+<div class="line"><span class="lineno">  208</span>    pc2_msg.header.frame_id = <a class="code hl_variable" href="classdyno_1_1DSDRos.html#a0af02d16138ba34ce2fcce9217751cc5">params_</a>.<a class="code hl_variable" href="structdyno_1_1DisplayParams.html#abb3118ecfcfde5b12fab686f48eca829">camera_frame_id</a>;</div>
+<div class="line"><span class="lineno">  209</span>    pc2_msg.header.stamp = <a class="code hl_function" href="namespacedyno_1_1utils.html#a81025ee06847cec0fd854eff05362d19">utils::toRosTime</a>(rgbd_packet-&gt;getTimestamp());</div>
+<div class="line"><span class="lineno">  210</span>    <a class="code hl_variable" href="classdyno_1_1FrontendDSDRos.html#a0cdf1f92855c125e4f54792145628ce1">dense_dynamic_cloud_pub_</a>-&gt;publish(pc2_msg);</div>
+<div class="line"><span class="lineno">  211</span>  }</div>
+<div class="line"><span class="lineno">  212</span>}</div>
+<div class="ttc" id="aclassdyno_1_1DSDRos_html_a0af02d16138ba34ce2fcce9217751cc5"><div class="ttname"><a href="classdyno_1_1DSDRos.html#a0af02d16138ba34ce2fcce9217751cc5">dyno::DSDRos::params_</a></div><div class="ttdeci">const DisplayParams params_</div><div class="ttdef"><b>Definition:</b> <a href="DSDCommonRos_8hpp_source.html#l00255">DSDCommonRos.hpp:255</a></div></div>
+<div class="ttc" id="aclassdyno_1_1DSDRos_html_a2c158ca365a2406ba990a1c8a60ba603"><div class="ttname"><a href="classdyno_1_1DSDRos.html#a2c158ca365a2406ba990a1c8a60ba603">dyno::DSDRos::publishDynamicPointCloud</a></div><div class="ttdeci">CloudPerObject publishDynamicPointCloud(const StatusLandmarkVector &amp;landmarks, const gtsam::Pose3 &amp;T_world_camera)</div><div class="ttdef"><b>Definition:</b> <a href="DSDCommonRos_8cc_source.html#l00300">DSDCommonRos.cc:300</a></div></div>
+<div class="ttc" id="aclassdyno_1_1DSDRos_html_a2ea9ccc0e69485a7128c10b55ca60c99"><div class="ttname"><a href="classdyno_1_1DSDRos.html#a2ea9ccc0e69485a7128c10b55ca60c99">dyno::DSDRos::publishStaticPointCloud</a></div><div class="ttdeci">CloudPerObject publishStaticPointCloud(const StatusLandmarkVector &amp;landmarks, const gtsam::Pose3 &amp;T_world_camera)</div><div class="ttdef"><b>Definition:</b> <a href="DSDCommonRos_8cc_source.html#l00295">DSDCommonRos.cc:295</a></div></div>
+<div class="ttc" id="aclassdyno_1_1DSDRos_html_aa4452574a86458239f83078514acb7d3"><div class="ttname"><a href="classdyno_1_1DSDRos.html#aa4452574a86458239f83078514acb7d3">dyno::DSDRos::publishVisualOdometryPath</a></div><div class="ttdeci">void publishVisualOdometryPath(const gtsam::Pose3Vector &amp;poses, Timestamp latest_timestamp)</div><div class="ttdef"><b>Definition:</b> <a href="DSDCommonRos_8cc_source.html#l00289">DSDCommonRos.cc:289</a></div></div>
+<div class="ttc" id="aclassdyno_1_1DSDRos_html_ab5590d391ae05fdbdd53ae9d5a5099d8"><div class="ttname"><a href="classdyno_1_1DSDRos.html#ab5590d391ae05fdbdd53ae9d5a5099d8">dyno::DSDRos::dsd_transport_</a></div><div class="ttdeci">DSDTransport dsd_transport_</div><div class="ttdoc">Dynamic SLAM display transport for estimated object odometry.</div><div class="ttdef"><b>Definition:</b> <a href="DSDCommonRos_8hpp_source.html#l00258">DSDCommonRos.hpp:258</a></div></div>
+<div class="ttc" id="aclassdyno_1_1DSDTransport_1_1Publisher_html_abc29c1b60f2e108c53ae19470960980c"><div class="ttname"><a href="classdyno_1_1DSDTransport_1_1Publisher.html#abc29c1b60f2e108c53ae19470960980c">dyno::DSDTransport::Publisher::publishObjectOdometry</a></div><div class="ttdeci">void publishObjectOdometry()</div><div class="ttdoc">Publish the contained object odometries.</div><div class="ttdef"><b>Definition:</b> <a href="DSDCommonRos_8cc_source.html#l00203">DSDCommonRos.cc:203</a></div></div>
+<div class="ttc" id="aclassdyno_1_1DSDTransport_html_af3de22d3c37040622cda31ab745955fe"><div class="ttname"><a href="classdyno_1_1DSDTransport.html#af3de22d3c37040622cda31ab745955fe">dyno::DSDTransport::addObjectInfo</a></div><div class="ttdeci">Publisher addObjectInfo(const ObjectMotionMap &amp;motions, const ObjectPoseMap &amp;poses, const std::string &amp;frame_id_link, const FrameIdTimestampMap &amp;frame_timestamp_map, FrameId frame_id, Timestamp timestamp)</div><div class="ttdoc">Create a object odometry Publisher given object state (motion and pose) information up to a given fra...</div><div class="ttdef"><b>Definition:</b> <a href="DSDCommonRos_8cc_source.html#l00246">DSDCommonRos.cc:246</a></div></div>
+<div class="ttc" id="anamespacedyno_1_1utils_html_a81025ee06847cec0fd854eff05362d19"><div class="ttname"><a href="namespacedyno_1_1utils.html#a81025ee06847cec0fd854eff05362d19">dyno::utils::toRosTime</a></div><div class="ttdeci">rclcpp::Time toRosTime(Timestamp timestamp)</div><div class="ttdoc">Converts Timestamp (in seconds) to ROS time.</div><div class="ttdef"><b>Definition:</b> <a href="RosUtils_8cc_source.html#l00293">RosUtils.cc:293</a></div></div>
+<div class="ttc" id="anamespacedyno_html_aeed89004aa6762d0e7d140229a96766d"><div class="ttname"><a href="namespacedyno.html#aeed89004aa6762d0e7d140229a96766d">dyno::CloudPerObject</a></div><div class="ttdeci">gtsam::FastMap&lt; ObjectId, pcl::PointCloud&lt; pcl::PointXYZRGB &gt; &gt; CloudPerObject</div><div class="ttdoc">Map of ObjectId's to XYZRGB Point Clouds.</div><div class="ttdef"><b>Definition:</b> <a href="PointCloudProcess_8hpp_source.html#l00044">PointCloudProcess.hpp:45</a></div></div>
 <div class="ttc" id="astructdyno_1_1DisplayParams_html_a2847fed65922f575311e2181add1933e"><div class="ttname"><a href="structdyno_1_1DisplayParams.html#a2847fed65922f575311e2181add1933e">dyno::DisplayParams::world_frame_id</a></div><div class="ttdeci">std::string world_frame_id</div><div class="ttdef"><b>Definition:</b> <a href="Display-Definitions_8hpp_source.html#l00038">Display-Definitions.hpp:38</a></div></div>
+<div class="ttc" id="astructdyno_1_1DisplayParams_html_abb3118ecfcfde5b12fab686f48eca829"><div class="ttname"><a href="structdyno_1_1DisplayParams.html#abb3118ecfcfde5b12fab686f48eca829">dyno::DisplayParams::camera_frame_id</a></div><div class="ttdeci">std::string camera_frame_id</div><div class="ttdef"><b>Definition:</b> <a href="Display-Definitions_8hpp_source.html#l00039">Display-Definitions.hpp:39</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="classdyno_1_1DSDTransport.html#ad9cdb5d62021540daf75331e6a7bea3e">dyno::DSDTransport::addObjectInfo()</a>, <a class="el" href="classdyno_1_1DSDRos.html#ab5590d391ae05fdbdd53ae9d5a5099d8">dyno::DSDRos::dsd_transport_</a>, <a class="el" href="classdyno_1_1DSDRos.html#a0af02d16138ba34ce2fcce9217751cc5">dyno::DSDRos::params_</a>, <a class="el" href="classdyno_1_1DSDRos.html#a2c158ca365a2406ba990a1c8a60ba603">dyno::DSDRos::publishDynamicPointCloud()</a>, <a class="el" href="classdyno_1_1DSDTransport_1_1Publisher.html#abc29c1b60f2e108c53ae19470960980c">dyno::DSDTransport::Publisher::publishObjectOdometry()</a>, <a class="el" href="classdyno_1_1DSDTransport_1_1Publisher.html#a13fa5d59dbc73f40fd2969b33a2f7c9d">dyno::DSDTransport::Publisher::publishObjectPaths()</a>, <a class="el" href="classdyno_1_1DSDTransport_1_1Publisher.html#a273d58dd87e02093d55d866ea687a29f">dyno::DSDTransport::Publisher::publishObjectTransforms()</a>, <a class="el" href="classdyno_1_1DSDRos.html#a2ea9ccc0e69485a7128c10b55ca60c99">dyno::DSDRos::publishStaticPointCloud()</a>, <a class="el" href="classdyno_1_1DSDRos.html#aa4452574a86458239f83078514acb7d3">dyno::DSDRos::publishVisualOdometryPath()</a>, and <a class="el" href="structdyno_1_1DisplayParams.html#a2847fed65922f575311e2181add1933e">dyno::DisplayParams::world_frame_id</a>.</p>
+<p class="reference">References <a class="el" href="classdyno_1_1DSDTransport.html#af3de22d3c37040622cda31ab745955fe">dyno::DSDTransport::addObjectInfo()</a>, <a class="el" href="structdyno_1_1DisplayParams.html#abb3118ecfcfde5b12fab686f48eca829">dyno::DisplayParams::camera_frame_id</a>, <a class="el" href="classdyno_1_1FrontendDSDRos.html#a0cdf1f92855c125e4f54792145628ce1">dense_dynamic_cloud_pub_</a>, <a class="el" href="classdyno_1_1DSDRos.html#ab5590d391ae05fdbdd53ae9d5a5099d8">dyno::DSDRos::dsd_transport_</a>, <a class="el" href="classdyno_1_1DSDRos.html#a0af02d16138ba34ce2fcce9217751cc5">dyno::DSDRos::params_</a>, <a class="el" href="classdyno_1_1DSDRos.html#a2c158ca365a2406ba990a1c8a60ba603">dyno::DSDRos::publishDynamicPointCloud()</a>, <a class="el" href="classdyno_1_1DSDTransport_1_1Publisher.html#abc29c1b60f2e108c53ae19470960980c">dyno::DSDTransport::Publisher::publishObjectOdometry()</a>, <a class="el" href="classdyno_1_1DSDTransport_1_1Publisher.html#a13fa5d59dbc73f40fd2969b33a2f7c9d">dyno::DSDTransport::Publisher::publishObjectPaths()</a>, <a class="el" href="classdyno_1_1DSDTransport_1_1Publisher.html#a273d58dd87e02093d55d866ea687a29f">dyno::DSDTransport::Publisher::publishObjectTransforms()</a>, <a class="el" href="classdyno_1_1DSDRos.html#a2ea9ccc0e69485a7128c10b55ca60c99">dyno::DSDRos::publishStaticPointCloud()</a>, <a class="el" href="classdyno_1_1DSDRos.html#aa4452574a86458239f83078514acb7d3">dyno::DSDRos::publishVisualOdometryPath()</a>, <a class="el" href="namespacedyno_1_1utils.html#a81025ee06847cec0fd854eff05362d19">dyno::utils::toRosTime()</a>, and <a class="el" href="structdyno_1_1DisplayParams.html#a2847fed65922f575311e2181add1933e">dyno::DisplayParams::world_frame_id</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1FrontendDSDRos.html#a633a457c51868257f25d44d1a99f0e12">spinOnce()</a>.</p>
 <div class="dynheader">
@@ -338,23 +358,27 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1FrontendDSDRos_a9101c485338a62d8a86b37a56a68503e_cgraph.png" border="0" usemap="#aclassdyno_1_1FrontendDSDRos_a9101c485338a62d8a86b37a56a68503e_cgraph" alt=""/></div>
 <map name="aclassdyno_1_1FrontendDSDRos_a9101c485338a62d8a86b37a56a68503e_cgraph" id="aclassdyno_1_1FrontendDSDRos_a9101c485338a62d8a86b37a56a68503e_cgraph">
-<area shape="rect" title=" " alt="" coords="5,220,211,260"/>
-<area shape="rect" href="classdyno_1_1DSDTransport.html#ad9cdb5d62021540daf75331e6a7bea3e" title="Create a object odometry Publisher given object state (motion and pose) information for a given frame..." alt="" coords="297,5,447,45"/>
+<area shape="rect" title=" " alt="" coords="5,256,211,296"/>
+<area shape="rect" href="classdyno_1_1DSDTransport.html#af3de22d3c37040622cda31ab745955fe" title="Create a object odometry Publisher given object state (motion and pose) information up to a given fra..." alt="" coords="297,5,447,45"/>
 <area shape="rect" href="classdyno_1_1DSDRos.html#a2c158ca365a2406ba990a1c8a60ba603" title=" " alt="" coords="259,69,485,109"/>
 <area shape="rect" href="classdyno_1_1DSDTransport_1_1Publisher.html#abc29c1b60f2e108c53ae19470960980c" title="Publish the contained object odometries." alt="" coords="279,134,465,189"/>
 <area shape="rect" href="classdyno_1_1DSDTransport_1_1Publisher.html#a13fa5d59dbc73f40fd2969b33a2f7c9d" title=" " alt="" coords="279,213,465,267"/>
-<area shape="rect" href="classdyno_1_1DSDTransport_1_1Publisher.html#a273d58dd87e02093d55d866ea687a29f" title="Broadcast the transform of each object using their pose. Transforms will be constructed between the P..." alt="" coords="533,338,720,393"/>
+<area shape="rect" href="classdyno_1_1DSDTransport_1_1Publisher.html#a273d58dd87e02093d55d866ea687a29f" title="Broadcast the transform of each object using their pose. Transforms will be constructed between the P..." alt="" coords="752,327,939,382"/>
+<area shape="rect" href="namespacedyno_1_1utils.html#a81025ee06847cec0fd854eff05362d19" title="Converts Timestamp (in seconds) to ROS time." alt="" coords="992,407,1160,433"/>
 <area shape="rect" href="classdyno_1_1DSDRos.html#a2ea9ccc0e69485a7128c10b55ca60c99" title=" " alt="" coords="269,292,475,332"/>
-<area shape="rect" href="classdyno_1_1DSDRos.html#aa4452574a86458239f83078514acb7d3" title=" " alt="" coords="267,411,477,451"/>
-<area shape="rect" href="structdyno_1_1DisplayCommon.html#ad9251fcb86a8c872c6b3736d0c2cd8f8" title=" " alt="" coords="541,253,712,293"/>
-<area shape="rect" href="structdyno_1_1Color.html#a4f52f9aec87e2c34370ad02e6d4e25fc" title="Generates a sequence of never repeating colors using the golden ration to seperate the colours along ..." alt="" coords="777,261,937,286"/>
-<area shape="rect" href="structdyno_1_1Color.html#a08bcb6ea49861f6978858a2ff5159002" title=" " alt="" coords="996,261,1159,286"/>
-<area shape="rect" href="structdyno_1_1Color.html#a6bc55a80a463a481dbf4778c70d04733" title=" " alt="" coords="1237,250,1375,275"/>
-<area shape="rect" href="namespacedyno.html#ab0e74ec8992860404a618192cc694b83" title=" " alt="" coords="1209,299,1403,325"/>
-<area shape="rect" href="namespacedyno.html#a2b18a1990bb26145cec08be631b0ef74" title=" " alt="" coords="1251,363,1361,389"/>
-<area shape="rect" href="structdyno_1_1DisplayCommon.html#aa626522a5e93ee7d72975e94260069a5" title=" " alt="" coords="541,417,712,457"/>
-<area shape="rect" href="namespacedyno_1_1utils.html#a7efb03484e6c5b1cc0d0eeeb43546ffa" title="Converts from input type to output type where output type is a ROS message with a header...." alt="" coords="768,403,945,443"/>
-<area shape="rect" href="namespacedyno_1_1utils.html#a81025ee06847cec0fd854eff05362d19" title="Converts Timestamp (in seconds) to ROS time." alt="" coords="993,410,1161,435"/>
+<area shape="rect" href="classdyno_1_1DSDRos.html#aa4452574a86458239f83078514acb7d3" title=" " alt="" coords="267,457,477,497"/>
+<area shape="rect" href="structdyno_1_1DisplayCommon.html#ad9251fcb86a8c872c6b3736d0c2cd8f8" title=" " alt="" coords="533,259,704,299"/>
+<area shape="rect" href="namespacedyno.html#a2d0888a8627082384b75a95953f55c3c" title="This function goes through the input 3D landmarks and group them into point clusters based on their o..." alt="" coords="987,266,1165,291"/>
+<area shape="rect" href="structdyno_1_1Color.html#a6689af3d0ac5ceaa66000b5ca70becbd" title="Generates a sequence of never repeating colors using the golden ratio to seperate the colours along t..." alt="" coords="1386,266,1546,291"/>
+<area shape="rect" href="structdyno_1_1Color.html#a08bcb6ea49861f6978858a2ff5159002" title=" " alt="" coords="1608,266,1771,291"/>
+<area shape="rect" href="structdyno_1_1Color.html#a6bc55a80a463a481dbf4778c70d04733" title=" " alt="" coords="1846,241,1985,266"/>
+<area shape="rect" href="namespacedyno.html#ab0e74ec8992860404a618192cc694b83" title=" " alt="" coords="1819,290,2012,315"/>
+<area shape="rect" href="namespacedyno.html#a8357d6a8de284f4d1fc3d074646b43bb" title=" " alt="" coords="1213,359,1324,385"/>
+<area shape="rect" href="classdyno_1_1TrackedValueStatus.html#a1741e83bf5442c885da98c9c5bb71f08" title="Returns true if the object lavel is equal to dyno::background_label." alt="" coords="1372,316,1560,356"/>
+<area shape="rect" href="classdyno_1_1TrackedValueStatus.html#ae90b3059d173a9354cc6a55a55ef80ac" title="Get object id (j) for this status." alt="" coords="1372,380,1560,420"/>
+<area shape="rect" href="classdyno_1_1TrackedValueStatus.html#a828faf38cea11c1dcc7651d49b68d8e1" title="Get value. Const version." alt="" coords="1372,444,1560,484"/>
+<area shape="rect" href="structdyno_1_1DisplayCommon.html#aa626522a5e93ee7d72975e94260069a5" title=" " alt="" coords="533,457,704,497"/>
+<area shape="rect" href="namespacedyno_1_1utils.html#a7efb03484e6c5b1cc0d0eeeb43546ffa" title="Converts from input type to output type where output type is a ROS message with a header...." alt="" coords="757,508,934,548"/>
 </map>
 </div>
 <div class="dynheader">
@@ -393,28 +417,28 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="FrontendDSDRos_8cc_source.html#l00058">58</a> of file <a class="el" href="FrontendDSDRos_8cc_source.html">FrontendDSDRos.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   59</span>                                                             {</div>
-<div class="line"><span class="lineno">   60</span>  <span class="comment">// publish debug imagery</span></div>
-<div class="line"><span class="lineno">   61</span>  <a class="code hl_function" href="classdyno_1_1FrontendDSDRos.html#a92502a5ff7a1d04355bdd55d31d9d02f">tryPublishDebugImagery</a>(frontend_output);</div>
-<div class="line"><span class="lineno">   62</span> </div>
-<div class="line"><span class="lineno">   63</span>  <span class="comment">// publish ground truth</span></div>
-<div class="line"><span class="lineno">   64</span>  <a class="code hl_function" href="classdyno_1_1FrontendDSDRos.html#a30a427c3d1b16b3fa99e2ddde0802c41">tryPublishGroundTruth</a>(frontend_output);</div>
-<div class="line"><span class="lineno">   65</span> </div>
-<div class="line"><span class="lineno">   66</span>  <span class="comment">// publish odometry</span></div>
-<div class="line"><span class="lineno">   67</span>  <a class="code hl_function" href="classdyno_1_1FrontendDSDRos.html#a2749865fe05f0fa621464098b9a7ba1d">tryPublishVisualOdometry</a>(frontend_output);</div>
-<div class="line"><span class="lineno">   68</span> </div>
-<div class="line"><span class="lineno">   69</span>  <span class="comment">// attempt cast</span></div>
-<div class="line"><span class="lineno">   70</span>  RGBDInstanceOutputPacket::ConstPtr rgbd_output =</div>
-<div class="line"><span class="lineno">   71</span>      safeCast&lt;FrontendOutputPacketBase, RGBDInstanceOutputPacket&gt;(</div>
-<div class="line"><span class="lineno">   72</span>          frontend_output);</div>
-<div class="line"><span class="lineno">   73</span>  <span class="comment">// publish object info</span></div>
-<div class="line"><span class="lineno">   74</span>  <span class="keywordflow">if</span> (rgbd_output) <a class="code hl_function" href="classdyno_1_1FrontendDSDRos.html#a9101c485338a62d8a86b37a56a68503e">processRGBDOutputpacket</a>(rgbd_output);</div>
-<div class="line"><span class="lineno">   75</span>}</div>
-<div class="ttc" id="aclassdyno_1_1FrontendDSDRos_html_a2749865fe05f0fa621464098b9a7ba1d"><div class="ttname"><a href="classdyno_1_1FrontendDSDRos.html#a2749865fe05f0fa621464098b9a7ba1d">dyno::FrontendDSDRos::tryPublishVisualOdometry</a></div><div class="ttdeci">void tryPublishVisualOdometry(const FrontendOutputPacketBase::ConstPtr &amp;frontend_output)</div><div class="ttdef"><b>Definition:</b> <a href="FrontendDSDRos_8cc_source.html#l00155">FrontendDSDRos.cc:155</a></div></div>
-<div class="ttc" id="aclassdyno_1_1FrontendDSDRos_html_a30a427c3d1b16b3fa99e2ddde0802c41"><div class="ttname"><a href="classdyno_1_1FrontendDSDRos.html#a30a427c3d1b16b3fa99e2ddde0802c41">dyno::FrontendDSDRos::tryPublishGroundTruth</a></div><div class="ttdeci">void tryPublishGroundTruth(const FrontendOutputPacketBase::ConstPtr &amp;frontend_output)</div><div class="ttdef"><b>Definition:</b> <a href="FrontendDSDRos_8cc_source.html#l00091">FrontendDSDRos.cc:91</a></div></div>
-<div class="ttc" id="aclassdyno_1_1FrontendDSDRos_html_a9101c485338a62d8a86b37a56a68503e"><div class="ttname"><a href="classdyno_1_1FrontendDSDRos.html#a9101c485338a62d8a86b37a56a68503e">dyno::FrontendDSDRos::processRGBDOutputpacket</a></div><div class="ttdeci">void processRGBDOutputpacket(const RGBDInstanceOutputPacket::ConstPtr &amp;rgbd_packet)</div><div class="ttdef"><b>Definition:</b> <a href="FrontendDSDRos_8cc_source.html#l00164">FrontendDSDRos.cc:164</a></div></div>
-<div class="ttc" id="aclassdyno_1_1FrontendDSDRos_html_a92502a5ff7a1d04355bdd55d31d9d02f"><div class="ttname"><a href="classdyno_1_1FrontendDSDRos.html#a92502a5ff7a1d04355bdd55d31d9d02f">dyno::FrontendDSDRos::tryPublishDebugImagery</a></div><div class="ttdeci">void tryPublishDebugImagery(const FrontendOutputPacketBase::ConstPtr &amp;frontend_output)</div><div class="ttdef"><b>Definition:</b> <a href="FrontendDSDRos_8cc_source.html#l00077">FrontendDSDRos.cc:77</a></div></div>
+<p class="definition">Definition at line <a class="el" href="FrontendDSDRos_8cc_source.html#l00065">65</a> of file <a class="el" href="FrontendDSDRos_8cc_source.html">FrontendDSDRos.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   66</span>                                                             {</div>
+<div class="line"><span class="lineno">   67</span>  <span class="comment">// publish debug imagery</span></div>
+<div class="line"><span class="lineno">   68</span>  <a class="code hl_function" href="classdyno_1_1FrontendDSDRos.html#a92502a5ff7a1d04355bdd55d31d9d02f">tryPublishDebugImagery</a>(frontend_output);</div>
+<div class="line"><span class="lineno">   69</span> </div>
+<div class="line"><span class="lineno">   70</span>  <span class="comment">// publish ground truth</span></div>
+<div class="line"><span class="lineno">   71</span>  <a class="code hl_function" href="classdyno_1_1FrontendDSDRos.html#a30a427c3d1b16b3fa99e2ddde0802c41">tryPublishGroundTruth</a>(frontend_output);</div>
+<div class="line"><span class="lineno">   72</span> </div>
+<div class="line"><span class="lineno">   73</span>  <span class="comment">// publish odometry</span></div>
+<div class="line"><span class="lineno">   74</span>  <a class="code hl_function" href="classdyno_1_1FrontendDSDRos.html#a2749865fe05f0fa621464098b9a7ba1d">tryPublishVisualOdometry</a>(frontend_output);</div>
+<div class="line"><span class="lineno">   75</span> </div>
+<div class="line"><span class="lineno">   76</span>  <span class="comment">// attempt cast</span></div>
+<div class="line"><span class="lineno">   77</span>  RGBDInstanceOutputPacket::ConstPtr rgbd_output =</div>
+<div class="line"><span class="lineno">   78</span>      safeCast&lt;FrontendOutputPacketBase, RGBDInstanceOutputPacket&gt;(</div>
+<div class="line"><span class="lineno">   79</span>          frontend_output);</div>
+<div class="line"><span class="lineno">   80</span>  <span class="comment">// publish object info</span></div>
+<div class="line"><span class="lineno">   81</span>  <span class="keywordflow">if</span> (rgbd_output) <a class="code hl_function" href="classdyno_1_1FrontendDSDRos.html#a9101c485338a62d8a86b37a56a68503e">processRGBDOutputpacket</a>(rgbd_output);</div>
+<div class="line"><span class="lineno">   82</span>}</div>
+<div class="ttc" id="aclassdyno_1_1FrontendDSDRos_html_a2749865fe05f0fa621464098b9a7ba1d"><div class="ttname"><a href="classdyno_1_1FrontendDSDRos.html#a2749865fe05f0fa621464098b9a7ba1d">dyno::FrontendDSDRos::tryPublishVisualOdometry</a></div><div class="ttdeci">void tryPublishVisualOdometry(const FrontendOutputPacketBase::ConstPtr &amp;frontend_output)</div><div class="ttdef"><b>Definition:</b> <a href="FrontendDSDRos_8cc_source.html#l00168">FrontendDSDRos.cc:168</a></div></div>
+<div class="ttc" id="aclassdyno_1_1FrontendDSDRos_html_a30a427c3d1b16b3fa99e2ddde0802c41"><div class="ttname"><a href="classdyno_1_1FrontendDSDRos.html#a30a427c3d1b16b3fa99e2ddde0802c41">dyno::FrontendDSDRos::tryPublishGroundTruth</a></div><div class="ttdeci">void tryPublishGroundTruth(const FrontendOutputPacketBase::ConstPtr &amp;frontend_output)</div><div class="ttdef"><b>Definition:</b> <a href="FrontendDSDRos_8cc_source.html#l00098">FrontendDSDRos.cc:98</a></div></div>
+<div class="ttc" id="aclassdyno_1_1FrontendDSDRos_html_a9101c485338a62d8a86b37a56a68503e"><div class="ttname"><a href="classdyno_1_1FrontendDSDRos.html#a9101c485338a62d8a86b37a56a68503e">dyno::FrontendDSDRos::processRGBDOutputpacket</a></div><div class="ttdeci">void processRGBDOutputpacket(const RGBDInstanceOutputPacket::ConstPtr &amp;rgbd_packet)</div><div class="ttdef"><b>Definition:</b> <a href="FrontendDSDRos_8cc_source.html#l00177">FrontendDSDRos.cc:177</a></div></div>
+<div class="ttc" id="aclassdyno_1_1FrontendDSDRos_html_a92502a5ff7a1d04355bdd55d31d9d02f"><div class="ttname"><a href="classdyno_1_1FrontendDSDRos.html#a92502a5ff7a1d04355bdd55d31d9d02f">dyno::FrontendDSDRos::tryPublishDebugImagery</a></div><div class="ttdeci">void tryPublishDebugImagery(const FrontendOutputPacketBase::ConstPtr &amp;frontend_output)</div><div class="ttdef"><b>Definition:</b> <a href="FrontendDSDRos_8cc_source.html#l00084">FrontendDSDRos.cc:84</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1FrontendDSDRos.html#a9101c485338a62d8a86b37a56a68503e">processRGBDOutputpacket()</a>, <a class="el" href="classdyno_1_1FrontendDSDRos.html#a92502a5ff7a1d04355bdd55d31d9d02f">tryPublishDebugImagery()</a>, <a class="el" href="classdyno_1_1FrontendDSDRos.html#a30a427c3d1b16b3fa99e2ddde0802c41">tryPublishGroundTruth()</a>, and <a class="el" href="classdyno_1_1FrontendDSDRos.html#a2749865fe05f0fa621464098b9a7ba1d">tryPublishVisualOdometry()</a>.</p>
 <div class="dynheader">
@@ -422,33 +446,38 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1FrontendDSDRos_a633a457c51868257f25d44d1a99f0e12_cgraph.png" border="0" usemap="#aclassdyno_1_1FrontendDSDRos_a633a457c51868257f25d44d1a99f0e12_cgraph" alt=""/></div>
 <map name="aclassdyno_1_1FrontendDSDRos_a633a457c51868257f25d44d1a99f0e12_cgraph" id="aclassdyno_1_1FrontendDSDRos_a633a457c51868257f25d44d1a99f0e12_cgraph">
-<area shape="rect" title=" " alt="" coords="5,501,176,541"/>
-<area shape="rect" href="classdyno_1_1FrontendDSDRos.html#a9101c485338a62d8a86b37a56a68503e" title=" " alt="" coords="224,228,429,268"/>
-<area shape="rect" href="classdyno_1_1FrontendDSDRos.html#a92502a5ff7a1d04355bdd55d31d9d02f" title=" " alt="" coords="231,597,422,637"/>
-<area shape="rect" href="classdyno_1_1FrontendDSDRos.html#a30a427c3d1b16b3fa99e2ddde0802c41" title=" " alt="" coords="239,533,414,573"/>
-<area shape="rect" href="classdyno_1_1FrontendDSDRos.html#a2749865fe05f0fa621464098b9a7ba1d" title=" " alt="" coords="227,469,427,509"/>
-<area shape="rect" href="classdyno_1_1DSDTransport.html#ad9cdb5d62021540daf75331e6a7bea3e" title="Create a object odometry Publisher given object state (motion and pose) information for a given frame..." alt="" coords="515,264,666,304"/>
-<area shape="rect" href="classdyno_1_1DSDRos.html#a2c158ca365a2406ba990a1c8a60ba603" title=" " alt="" coords="477,69,704,109"/>
-<area shape="rect" href="classdyno_1_1DSDTransport_1_1Publisher.html#abc29c1b60f2e108c53ae19470960980c" title="Publish the contained object odometries." alt="" coords="497,393,684,447"/>
-<area shape="rect" href="classdyno_1_1DSDTransport_1_1Publisher.html#a13fa5d59dbc73f40fd2969b33a2f7c9d" title=" " alt="" coords="497,185,684,239"/>
-<area shape="rect" href="classdyno_1_1DSDTransport_1_1Publisher.html#a273d58dd87e02093d55d866ea687a29f" title="Broadcast the transform of each object using their pose. Transforms will be constructed between the P..." alt="" coords="1007,131,1193,186"/>
+<area shape="rect" title=" " alt="" coords="5,491,176,531"/>
+<area shape="rect" href="classdyno_1_1FrontendDSDRos.html#a9101c485338a62d8a86b37a56a68503e" title=" " alt="" coords="224,264,429,304"/>
+<area shape="rect" href="classdyno_1_1FrontendDSDRos.html#a92502a5ff7a1d04355bdd55d31d9d02f" title=" " alt="" coords="231,459,422,499"/>
+<area shape="rect" href="classdyno_1_1FrontendDSDRos.html#a30a427c3d1b16b3fa99e2ddde0802c41" title=" " alt="" coords="239,608,414,648"/>
+<area shape="rect" href="classdyno_1_1FrontendDSDRos.html#a2749865fe05f0fa621464098b9a7ba1d" title=" " alt="" coords="227,523,427,563"/>
+<area shape="rect" href="classdyno_1_1DSDTransport.html#af3de22d3c37040622cda31ab745955fe" title="Create a object odometry Publisher given object state (motion and pose) information up to a given fra..." alt="" coords="515,264,666,304"/>
+<area shape="rect" href="classdyno_1_1DSDRos.html#a2c158ca365a2406ba990a1c8a60ba603" title=" " alt="" coords="477,149,704,189"/>
+<area shape="rect" href="classdyno_1_1DSDTransport_1_1Publisher.html#abc29c1b60f2e108c53ae19470960980c" title="Publish the contained object odometries." alt="" coords="497,443,684,498"/>
+<area shape="rect" href="classdyno_1_1DSDTransport_1_1Publisher.html#a13fa5d59dbc73f40fd2969b33a2f7c9d" title=" " alt="" coords="497,70,684,125"/>
+<area shape="rect" href="classdyno_1_1DSDTransport_1_1Publisher.html#a273d58dd87e02093d55d866ea687a29f" title="Broadcast the transform of each object using their pose. Transforms will be constructed between the P..." alt="" coords="1007,262,1193,317"/>
+<area shape="rect" href="namespacedyno_1_1utils.html#a81025ee06847cec0fd854eff05362d19" title="Converts Timestamp (in seconds) to ROS time." alt="" coords="1264,393,1432,418"/>
 <area shape="rect" href="classdyno_1_1DSDRos.html#a2ea9ccc0e69485a7128c10b55ca60c99" title=" " alt="" coords="487,5,694,45"/>
 <area shape="rect" href="classdyno_1_1DSDRos.html#aa4452574a86458239f83078514acb7d3" title=" " alt="" coords="486,328,695,368"/>
-<area shape="rect" href="structdyno_1_1DisplayCommon.html#ad9251fcb86a8c872c6b3736d0c2cd8f8" title=" " alt="" coords="767,67,937,107"/>
-<area shape="rect" href="structdyno_1_1Color.html#a4f52f9aec87e2c34370ad02e6d4e25fc" title="Generates a sequence of never repeating colors using the golden ration to seperate the colours along ..." alt="" coords="1020,74,1180,99"/>
-<area shape="rect" href="structdyno_1_1Color.html#a08bcb6ea49861f6978858a2ff5159002" title=" " alt="" coords="1267,74,1429,99"/>
-<area shape="rect" href="structdyno_1_1Color.html#a6bc55a80a463a481dbf4778c70d04733" title=" " alt="" coords="1523,99,1662,125"/>
-<area shape="rect" href="namespacedyno.html#ab0e74ec8992860404a618192cc694b83" title=" " alt="" coords="1496,50,1689,75"/>
-<area shape="rect" href="namespacedyno.html#a2b18a1990bb26145cec08be631b0ef74" title=" " alt="" coords="1537,302,1648,327"/>
-<area shape="rect" href="structdyno_1_1DisplayCommon.html#aa626522a5e93ee7d72975e94260069a5" title=" " alt="" coords="767,408,937,448"/>
-<area shape="rect" href="namespacedyno_1_1utils.html#a7efb03484e6c5b1cc0d0eeeb43546ffa" title="Converts from input type to output type where output type is a ROS message with a header...." alt="" coords="1011,471,1189,511"/>
-<area shape="rect" href="namespacedyno_1_1utils.html#a81025ee06847cec0fd854eff05362d19" title="Converts Timestamp (in seconds) to ROS time." alt="" coords="1264,447,1432,473"/>
-<area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html#abfce9b218241a024c0f66400200bbd58" title="Handy insert function allowing direct insertion to the nested map structure." alt="" coords="491,637,691,677"/>
-<area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html#af6ce62ffab5aadf1981a0ec04c3fad1e" title=" " alt="" coords="1248,661,1448,701"/>
-<area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html#a974563b8edd3f4b0cb6fe17615d04fbd" title=" " alt="" coords="752,691,952,731"/>
-<area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html#a33450c8ce82ab7fbfa2541ee0c6b20e3" title="Helper function to determine if the query exists. Operates like a regular exists function but also se..." alt="" coords="1000,691,1200,731"/>
-<area shape="rect" href="classdyno_1_1DSDRos.html#ac605e3eed18e2608a66dc9674a2674ca" title=" " alt="" coords="486,472,695,512"/>
-<area shape="rect" href="structdyno_1_1DisplayCommon.html#a865dbb6ad128fb59970d187897cdd4b5" title=" " alt="" coords="767,472,937,512"/>
+<area shape="rect" href="structdyno_1_1DisplayCommon.html#ad9251fcb86a8c872c6b3736d0c2cd8f8" title=" " alt="" coords="767,149,937,189"/>
+<area shape="rect" href="namespacedyno.html#a2d0888a8627082384b75a95953f55c3c" title="This function goes through the input 3D landmarks and group them into point clusters based on their o..." alt="" coords="1259,157,1437,182"/>
+<area shape="rect" href="structdyno_1_1Color.html#a6689af3d0ac5ceaa66000b5ca70becbd" title="Generates a sequence of never repeating colors using the golden ratio to seperate the colours along t..." alt="" coords="1758,157,1918,182"/>
+<area shape="rect" href="structdyno_1_1Color.html#a08bcb6ea49861f6978858a2ff5159002" title=" " alt="" coords="1980,157,2143,182"/>
+<area shape="rect" href="structdyno_1_1Color.html#a6bc55a80a463a481dbf4778c70d04733" title=" " alt="" coords="2218,131,2357,157"/>
+<area shape="rect" href="namespacedyno.html#ab0e74ec8992860404a618192cc694b83" title=" " alt="" coords="2191,181,2384,206"/>
+<area shape="rect" href="namespacedyno.html#a8357d6a8de284f4d1fc3d074646b43bb" title=" " alt="" coords="1541,278,1651,303"/>
+<area shape="rect" href="classdyno_1_1TrackedValueStatus.html#a1741e83bf5442c885da98c9c5bb71f08" title="Returns true if the object lavel is equal to dyno::background_label." alt="" coords="1744,271,1932,311"/>
+<area shape="rect" href="classdyno_1_1TrackedValueStatus.html#ae90b3059d173a9354cc6a55a55ef80ac" title="Get object id (j) for this status." alt="" coords="1744,335,1932,375"/>
+<area shape="rect" href="classdyno_1_1TrackedValueStatus.html#a828faf38cea11c1dcc7651d49b68d8e1" title="Get value. Const version." alt="" coords="1744,207,1932,247"/>
+<area shape="rect" href="structdyno_1_1DisplayCommon.html#aa626522a5e93ee7d72975e94260069a5" title=" " alt="" coords="767,328,937,368"/>
+<area shape="rect" href="namespacedyno_1_1utils.html#a7efb03484e6c5b1cc0d0eeeb43546ffa" title="Converts from input type to output type where output type is a ROS message with a header...." alt="" coords="1011,448,1189,488"/>
+<area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html#a17a56757b25128ea6a018d1e5909de81" title=" " alt="" coords="491,688,691,728"/>
+<area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html#abfce9b218241a024c0f66400200bbd58" title="Handy insert function allowing direct insertion to the nested map structure." alt="" coords="752,688,952,728"/>
+<area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html#af6ce62ffab5aadf1981a0ec04c3fad1e" title=" " alt="" coords="1496,712,1696,752"/>
+<area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html#a974563b8edd3f4b0cb6fe17615d04fbd" title=" " alt="" coords="1000,741,1200,781"/>
+<area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html#a33450c8ce82ab7fbfa2541ee0c6b20e3" title="Helper function to determine if the query exists. Operates like a regular exists function but also se..." alt="" coords="1248,741,1448,781"/>
+<area shape="rect" href="classdyno_1_1DSDRos.html#ac605e3eed18e2608a66dc9674a2674ca" title=" " alt="" coords="486,523,695,563"/>
+<area shape="rect" href="structdyno_1_1DisplayCommon.html#a865dbb6ad128fb59970d187897cdd4b5" title=" " alt="" coords="767,453,937,493"/>
 </map>
 </div>
 
@@ -478,19 +507,19 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="FrontendDSDRos_8cc_source.html#l00077">77</a> of file <a class="el" href="FrontendDSDRos_8cc_source.html">FrontendDSDRos.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   78</span>                                                             {</div>
-<div class="line"><span class="lineno">   79</span>  <span class="keywordflow">if</span> (!frontend_output-&gt;debug_imagery_) <span class="keywordflow">return</span>;</div>
-<div class="line"><span class="lineno">   80</span> </div>
-<div class="line"><span class="lineno">   81</span>  <span class="keyword">const</span> DebugImagery&amp; debug_imagery = *frontend_output-&gt;debug_imagery_;</div>
-<div class="line"><span class="lineno">   82</span>  <span class="keywordflow">if</span> (debug_imagery.tracking_image.empty()) <span class="keywordflow">return</span>;</div>
-<div class="line"><span class="lineno">   83</span> </div>
-<div class="line"><span class="lineno">   84</span>  std_msgs::msg::Header hdr;</div>
-<div class="line"><span class="lineno">   85</span>  sensor_msgs::msg::Image::SharedPtr msg =</div>
-<div class="line"><span class="lineno">   86</span>      cv_bridge::CvImage(hdr, <span class="stringliteral">&quot;bgr8&quot;</span>, debug_imagery.tracking_image)</div>
-<div class="line"><span class="lineno">   87</span>          .toImageMsg();</div>
-<div class="line"><span class="lineno">   88</span>  <a class="code hl_variable" href="classdyno_1_1FrontendDSDRos.html#a671ac9c7011bdb18a0f15b79b2294df8">tracking_image_pub_</a>.publish(msg);</div>
-<div class="line"><span class="lineno">   89</span>}</div>
+<p class="definition">Definition at line <a class="el" href="FrontendDSDRos_8cc_source.html#l00084">84</a> of file <a class="el" href="FrontendDSDRos_8cc_source.html">FrontendDSDRos.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   85</span>                                                             {</div>
+<div class="line"><span class="lineno">   86</span>  <span class="keywordflow">if</span> (!frontend_output-&gt;debug_imagery_) <span class="keywordflow">return</span>;</div>
+<div class="line"><span class="lineno">   87</span> </div>
+<div class="line"><span class="lineno">   88</span>  <span class="keyword">const</span> DebugImagery&amp; debug_imagery = *frontend_output-&gt;debug_imagery_;</div>
+<div class="line"><span class="lineno">   89</span>  <span class="keywordflow">if</span> (debug_imagery.tracking_image.empty()) <span class="keywordflow">return</span>;</div>
+<div class="line"><span class="lineno">   90</span> </div>
+<div class="line"><span class="lineno">   91</span>  std_msgs::msg::Header hdr;</div>
+<div class="line"><span class="lineno">   92</span>  sensor_msgs::msg::Image::SharedPtr msg =</div>
+<div class="line"><span class="lineno">   93</span>      cv_bridge::CvImage(hdr, <span class="stringliteral">&quot;bgr8&quot;</span>, debug_imagery.tracking_image)</div>
+<div class="line"><span class="lineno">   94</span>          .toImageMsg();</div>
+<div class="line"><span class="lineno">   95</span>  <a class="code hl_variable" href="classdyno_1_1FrontendDSDRos.html#a671ac9c7011bdb18a0f15b79b2294df8">tracking_image_pub_</a>.publish(msg);</div>
+<div class="line"><span class="lineno">   96</span>}</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="structdyno_1_1DebugImagery.html#a58b5ec255b240035c3220fccaaaaa519">dyno::DebugImagery::tracking_image</a>, and <a class="el" href="classdyno_1_1FrontendDSDRos.html#a671ac9c7011bdb18a0f15b79b2294df8">tracking_image_pub_</a>.</p>
 
@@ -531,78 +560,85 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="FrontendDSDRos_8cc_source.html#l00091">91</a> of file <a class="el" href="FrontendDSDRos_8cc_source.html">FrontendDSDRos.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   92</span>                                                             {</div>
-<div class="line"><span class="lineno">   93</span>  <span class="keywordflow">if</span> (!frontend_output-&gt;gt_packet_ || !frontend_output-&gt;debug_imagery_) <span class="keywordflow">return</span>;</div>
-<div class="line"><span class="lineno">   94</span> </div>
-<div class="line"><span class="lineno">   95</span>  <span class="keyword">const</span> DebugImagery&amp; debug_imagery = *frontend_output-&gt;debug_imagery_;</div>
-<div class="line"><span class="lineno">   96</span>  <span class="keyword">const</span> cv::Mat&amp; rgb_image = debug_imagery.rgb_viz;</div>
-<div class="line"><span class="lineno">   97</span>  <span class="keyword">const</span> <span class="keyword">auto</span> timestamp = frontend_output-&gt;getTimestamp();</div>
-<div class="line"><span class="lineno">   98</span>  <span class="keyword">const</span> <span class="keyword">auto</span> frame_id = frontend_output-&gt;getFrameId();</div>
-<div class="line"><span class="lineno">   99</span> </div>
-<div class="line"><span class="lineno">  100</span>  <span class="keywordflow">if</span> (rgb_image.empty()) <span class="keywordflow">return</span>;</div>
+<p class="definition">Definition at line <a class="el" href="FrontendDSDRos_8cc_source.html#l00098">98</a> of file <a class="el" href="FrontendDSDRos_8cc_source.html">FrontendDSDRos.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   99</span>                                                             {</div>
+<div class="line"><span class="lineno">  100</span>  <span class="keywordflow">if</span> (!frontend_output-&gt;gt_packet_ || !frontend_output-&gt;debug_imagery_) <span class="keywordflow">return</span>;</div>
 <div class="line"><span class="lineno">  101</span> </div>
-<div class="line"><span class="lineno">  102</span>  <span class="comment">// collect gt poses and motions</span></div>
-<div class="line"><span class="lineno">  103</span>  <a class="code hl_typedef" href="namespacedyno.html#a47c0a08523c12765d4bd6e243f900c16">ObjectPoseMap</a> poses;</div>
-<div class="line"><span class="lineno">  104</span>  <a class="code hl_typedef" href="namespacedyno.html#acef42ad0a1e53f5876f1000defc23e3b">MotionEstimateMap</a> motions;</div>
-<div class="line"><span class="lineno">  105</span> </div>
-<div class="line"><span class="lineno">  106</span>  <span class="keyword">const</span> GroundTruthInputPacket&amp; gt_packet = frontend_output-&gt;gt_packet_.value();</div>
-<div class="line"><span class="lineno">  107</span> </div>
-<div class="line"><span class="lineno">  108</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; object_pose_gt : gt_packet.object_poses_) {</div>
-<div class="line"><span class="lineno">  109</span>    <span class="comment">// check we have a gt motion here</span></div>
-<div class="line"><span class="lineno">  110</span>    <span class="comment">// in the case that we dont, this might be the first time the object</span></div>
-<div class="line"><span class="lineno">  111</span>    <span class="comment">// appears...</span></div>
-<div class="line"><span class="lineno">  112</span>    <span class="keywordflow">if</span> (!object_pose_gt.prev_H_current_world_) {</div>
-<div class="line"><span class="lineno">  113</span>      <span class="keywordflow">continue</span>;</div>
-<div class="line"><span class="lineno">  114</span>    }</div>
+<div class="line"><span class="lineno">  102</span>  <span class="keyword">const</span> DebugImagery&amp; debug_imagery = *frontend_output-&gt;debug_imagery_;</div>
+<div class="line"><span class="lineno">  103</span>  <span class="keyword">const</span> cv::Mat&amp; rgb_image = debug_imagery.rgb_viz;</div>
+<div class="line"><span class="lineno">  104</span>  <span class="keyword">const</span> <span class="keyword">auto</span> timestamp = frontend_output-&gt;getTimestamp();</div>
+<div class="line"><span class="lineno">  105</span>  <span class="keyword">const</span> <span class="keyword">auto</span> frame_id = frontend_output-&gt;getFrameId();</div>
+<div class="line"><span class="lineno">  106</span> </div>
+<div class="line"><span class="lineno">  107</span>  <span class="keywordflow">if</span> (rgb_image.empty()) <span class="keywordflow">return</span>;</div>
+<div class="line"><span class="lineno">  108</span> </div>
+<div class="line"><span class="lineno">  109</span>  <span class="comment">// collect gt poses and motions</span></div>
+<div class="line"><span class="lineno">  110</span>  <span class="keyword">static</span> <a class="code hl_typedef" href="namespacedyno.html#a47c0a08523c12765d4bd6e243f900c16">ObjectPoseMap</a> poses;</div>
+<div class="line"><span class="lineno">  111</span>  <span class="keyword">static</span> <a class="code hl_typedef" href="namespacedyno.html#af0e7693f6363b7c2b87803049135cf43">ObjectMotionMap</a> motions;</div>
+<div class="line"><span class="lineno">  112</span>  <span class="keyword">static</span> <a class="code hl_typedef" href="namespacedyno.html#a3a5fbf92c649a119093d4cc3b0636871">FrameIdTimestampMap</a> timestamp_map;</div>
+<div class="line"><span class="lineno">  113</span>  <span class="comment">// hack! recreate the timestamp since it is not in the frontend base packet!!</span></div>
+<div class="line"><span class="lineno">  114</span>  timestamp_map.insert2(frame_id, timestamp);</div>
 <div class="line"><span class="lineno">  115</span> </div>
-<div class="line"><span class="lineno">  116</span>    poses.insert22(object_pose_gt.object_id_, gt_packet.frame_id_,</div>
-<div class="line"><span class="lineno">  117</span>                   object_pose_gt.L_world_);</div>
-<div class="line"><span class="lineno">  118</span> </div>
-<div class="line"><span class="lineno">  119</span>    ReferenceFrameValue&lt;gtsam::Pose3&gt; gt_motion(</div>
-<div class="line"><span class="lineno">  120</span>        *object_pose_gt.prev_H_current_world_, <a class="code hl_enumvalue" href="namespacedyno.html#a828b92ac8912e7d2ffc267eb0d08b74cae456468cc146bd360464043f0645212e">ReferenceFrame::GLOBAL</a>);</div>
-<div class="line"><span class="lineno">  121</span>    motions.insert({object_pose_gt.object_id_, gt_motion});</div>
-<div class="line"><span class="lineno">  122</span>  }</div>
-<div class="line"><span class="lineno">  123</span> </div>
-<div class="line"><span class="lineno">  124</span>  <span class="comment">// will this result in confusing tf&#39;s since the gt object and estimated</span></div>
-<div class="line"><span class="lineno">  125</span>  <span class="comment">// objects use the same link?</span></div>
-<div class="line"><span class="lineno">  126</span>  DSDTransport::Publisher publisher =</div>
-<div class="line"><span class="lineno">  127</span>      <a class="code hl_variable" href="classdyno_1_1FrontendDSDRos.html#afcc031dd7a27f94ccd54950eca8fafb4">dsd_ground_truth_transport_</a>-&gt;addObjectInfo(</div>
-<div class="line"><span class="lineno">  128</span>          motions, poses, <a class="code hl_variable" href="classdyno_1_1DSDRos.html#a0af02d16138ba34ce2fcce9217751cc5">params_</a>.<a class="code hl_variable" href="structdyno_1_1DisplayParams.html#a2847fed65922f575311e2181add1933e">world_frame_id</a>, frame_id, timestamp);</div>
-<div class="line"><span class="lineno">  129</span>  publisher.publishObjectOdometry();</div>
-<div class="line"><span class="lineno">  130</span> </div>
-<div class="line"><span class="lineno">  131</span>  <span class="comment">// publish ground truth odom</span></div>
-<div class="line"><span class="lineno">  132</span>  <span class="keyword">const</span> gtsam::Pose3&amp; T_world_camera = gt_packet.X_world_;</div>
-<div class="line"><span class="lineno">  133</span>  nav_msgs::msg::Odometry odom_msg;</div>
-<div class="line"><span class="lineno">  134</span>  <a class="code hl_function" href="namespacedyno_1_1utils.html#a7efb03484e6c5b1cc0d0eeeb43546ffa">utils::convertWithHeader</a>(T_world_camera, odom_msg, timestamp,</div>
-<div class="line"><span class="lineno">  135</span>                           <a class="code hl_variable" href="classdyno_1_1DSDRos.html#a0af02d16138ba34ce2fcce9217751cc5">params_</a>.<a class="code hl_variable" href="structdyno_1_1DisplayParams.html#a2847fed65922f575311e2181add1933e">world_frame_id</a>, <a class="code hl_variable" href="classdyno_1_1DSDRos.html#a0af02d16138ba34ce2fcce9217751cc5">params_</a>.<a class="code hl_variable" href="structdyno_1_1DisplayParams.html#abb3118ecfcfde5b12fab686f48eca829">camera_frame_id</a>);</div>
-<div class="line"><span class="lineno">  136</span>  <a class="code hl_variable" href="classdyno_1_1FrontendDSDRos.html#a90803608af861e0c2480bdd9f62ec882">vo_ground_truth_publisher_</a>-&gt;publish(odom_msg);</div>
-<div class="line"><span class="lineno">  137</span> </div>
-<div class="line"><span class="lineno">  138</span>  <span class="comment">// odom path gt</span></div>
-<div class="line"><span class="lineno">  139</span>  <span class="comment">// make static variable since we dont build up the path anywhere else</span></div>
-<div class="line"><span class="lineno">  140</span>  <span class="comment">// and just append the last gt camera pose to the path msg</span></div>
-<div class="line"><span class="lineno">  141</span>  <span class="keyword">static</span> nav_msgs::msg::Path gt_odom_path_msg;</div>
-<div class="line"><span class="lineno">  142</span>  <span class="keyword">static</span> std_msgs::msg::Header header;</div>
+<div class="line"><span class="lineno">  116</span>  <span class="keyword">const</span> GroundTruthInputPacket&amp; gt_packet = frontend_output-&gt;gt_packet_.value();</div>
+<div class="line"><span class="lineno">  117</span> </div>
+<div class="line"><span class="lineno">  118</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; object_pose_gt : gt_packet.object_poses_) {</div>
+<div class="line"><span class="lineno">  119</span>    <span class="comment">// check we have a gt motion here</span></div>
+<div class="line"><span class="lineno">  120</span>    <span class="comment">// in the case that we dont, this might be the first time the object</span></div>
+<div class="line"><span class="lineno">  121</span>    <span class="comment">// appears...</span></div>
+<div class="line"><span class="lineno">  122</span>    <span class="keywordflow">if</span> (!object_pose_gt.prev_H_current_world_) {</div>
+<div class="line"><span class="lineno">  123</span>      <span class="keywordflow">continue</span>;</div>
+<div class="line"><span class="lineno">  124</span>    }</div>
+<div class="line"><span class="lineno">  125</span> </div>
+<div class="line"><span class="lineno">  126</span>    poses.insert22(object_pose_gt.object_id_, gt_packet.frame_id_,</div>
+<div class="line"><span class="lineno">  127</span>                   object_pose_gt.L_world_);</div>
+<div class="line"><span class="lineno">  128</span> </div>
+<div class="line"><span class="lineno">  129</span>    <span class="comment">// motion in world k-1 to k</span></div>
+<div class="line"><span class="lineno">  130</span>    <a class="code hl_typedef" href="namespacedyno.html#a1773d4e61e0cc7d3e489f97d43943b1f">Motion3ReferenceFrame</a> gt_motion(</div>
+<div class="line"><span class="lineno">  131</span>        *object_pose_gt.prev_H_current_world_, <a class="code hl_enumvalue" href="namespacedyno.html#aae74b3913f6c02a0c3364cd02a68b255a8992882dfbd013c73ead4128d267edf5">MotionRepresentationStyle::F2F</a>,</div>
+<div class="line"><span class="lineno">  132</span>        <a class="code hl_enumvalue" href="namespacedyno.html#a828b92ac8912e7d2ffc267eb0d08b74cae456468cc146bd360464043f0645212e">ReferenceFrame::GLOBAL</a>, gt_packet.frame_id_ - 1u, gt_packet.frame_id_);</div>
+<div class="line"><span class="lineno">  133</span>    motions.insert22(object_pose_gt.object_id_, gt_packet.frame_id_, gt_motion);</div>
+<div class="line"><span class="lineno">  134</span>  }</div>
+<div class="line"><span class="lineno">  135</span> </div>
+<div class="line"><span class="lineno">  136</span>  <span class="comment">// will this result in confusing tf&#39;s since the gt object and estimated</span></div>
+<div class="line"><span class="lineno">  137</span>  <span class="comment">// objects use the same link?</span></div>
+<div class="line"><span class="lineno">  138</span>  DSDTransport::Publisher publisher =</div>
+<div class="line"><span class="lineno">  139</span>      <a class="code hl_variable" href="classdyno_1_1FrontendDSDRos.html#afcc031dd7a27f94ccd54950eca8fafb4">dsd_ground_truth_transport_</a>-&gt;addObjectInfo(</div>
+<div class="line"><span class="lineno">  140</span>          motions, poses, <a class="code hl_variable" href="classdyno_1_1DSDRos.html#a0af02d16138ba34ce2fcce9217751cc5">params_</a>.<a class="code hl_variable" href="structdyno_1_1DisplayParams.html#a2847fed65922f575311e2181add1933e">world_frame_id</a>, timestamp_map, frame_id,</div>
+<div class="line"><span class="lineno">  141</span>          timestamp);</div>
+<div class="line"><span class="lineno">  142</span>  publisher.publishObjectOdometry();</div>
 <div class="line"><span class="lineno">  143</span> </div>
-<div class="line"><span class="lineno">  144</span>  geometry_msgs::msg::PoseStamped pose_stamped;</div>
-<div class="line"><span class="lineno">  145</span>  <a class="code hl_function" href="namespacedyno_1_1utils.html#a7efb03484e6c5b1cc0d0eeeb43546ffa">utils::convertWithHeader</a>(T_world_camera, pose_stamped, timestamp,</div>
-<div class="line"><span class="lineno">  146</span>                           <a class="code hl_variable" href="classdyno_1_1DSDRos.html#a0af02d16138ba34ce2fcce9217751cc5">params_</a>.<a class="code hl_variable" href="structdyno_1_1DisplayParams.html#a2847fed65922f575311e2181add1933e">world_frame_id</a>);</div>
-<div class="line"><span class="lineno">  147</span> </div>
-<div class="line"><span class="lineno">  148</span>  header.stamp = <a class="code hl_function" href="namespacedyno_1_1utils.html#a81025ee06847cec0fd854eff05362d19">utils::toRosTime</a>(timestamp);</div>
-<div class="line"><span class="lineno">  149</span>  header.frame_id = <a class="code hl_variable" href="classdyno_1_1DSDRos.html#a0af02d16138ba34ce2fcce9217751cc5">params_</a>.<a class="code hl_variable" href="structdyno_1_1DisplayParams.html#a2847fed65922f575311e2181add1933e">world_frame_id</a>;</div>
-<div class="line"><span class="lineno">  150</span>  gt_odom_path_msg.header = header;</div>
-<div class="line"><span class="lineno">  151</span>  gt_odom_path_msg.poses.push_back(pose_stamped);</div>
-<div class="line"><span class="lineno">  152</span> </div>
-<div class="line"><span class="lineno">  153</span>  <a class="code hl_variable" href="classdyno_1_1FrontendDSDRos.html#a765b409eb864e2d2360e70adbea99763">vo_path_ground_truth_publisher_</a>-&gt;publish(gt_odom_path_msg);</div>
-<div class="line"><span class="lineno">  154</span>}</div>
+<div class="line"><span class="lineno">  144</span>  <span class="comment">// publish ground truth odom</span></div>
+<div class="line"><span class="lineno">  145</span>  <span class="keyword">const</span> gtsam::Pose3&amp; T_world_camera = gt_packet.X_world_;</div>
+<div class="line"><span class="lineno">  146</span>  nav_msgs::msg::Odometry odom_msg;</div>
+<div class="line"><span class="lineno">  147</span>  <a class="code hl_function" href="namespacedyno_1_1utils.html#a7efb03484e6c5b1cc0d0eeeb43546ffa">utils::convertWithHeader</a>(T_world_camera, odom_msg, timestamp,</div>
+<div class="line"><span class="lineno">  148</span>                           <a class="code hl_variable" href="classdyno_1_1DSDRos.html#a0af02d16138ba34ce2fcce9217751cc5">params_</a>.<a class="code hl_variable" href="structdyno_1_1DisplayParams.html#a2847fed65922f575311e2181add1933e">world_frame_id</a>, <a class="code hl_variable" href="classdyno_1_1DSDRos.html#a0af02d16138ba34ce2fcce9217751cc5">params_</a>.<a class="code hl_variable" href="structdyno_1_1DisplayParams.html#abb3118ecfcfde5b12fab686f48eca829">camera_frame_id</a>);</div>
+<div class="line"><span class="lineno">  149</span>  <a class="code hl_variable" href="classdyno_1_1FrontendDSDRos.html#a90803608af861e0c2480bdd9f62ec882">vo_ground_truth_publisher_</a>-&gt;publish(odom_msg);</div>
+<div class="line"><span class="lineno">  150</span> </div>
+<div class="line"><span class="lineno">  151</span>  <span class="comment">// odom path gt</span></div>
+<div class="line"><span class="lineno">  152</span>  <span class="comment">// make static variable since we dont build up the path anywhere else</span></div>
+<div class="line"><span class="lineno">  153</span>  <span class="comment">// and just append the last gt camera pose to the path msg</span></div>
+<div class="line"><span class="lineno">  154</span>  <span class="keyword">static</span> nav_msgs::msg::Path gt_odom_path_msg;</div>
+<div class="line"><span class="lineno">  155</span>  <span class="keyword">static</span> std_msgs::msg::Header header;</div>
+<div class="line"><span class="lineno">  156</span> </div>
+<div class="line"><span class="lineno">  157</span>  geometry_msgs::msg::PoseStamped pose_stamped;</div>
+<div class="line"><span class="lineno">  158</span>  <a class="code hl_function" href="namespacedyno_1_1utils.html#a7efb03484e6c5b1cc0d0eeeb43546ffa">utils::convertWithHeader</a>(T_world_camera, pose_stamped, timestamp,</div>
+<div class="line"><span class="lineno">  159</span>                           <a class="code hl_variable" href="classdyno_1_1DSDRos.html#a0af02d16138ba34ce2fcce9217751cc5">params_</a>.<a class="code hl_variable" href="structdyno_1_1DisplayParams.html#a2847fed65922f575311e2181add1933e">world_frame_id</a>);</div>
+<div class="line"><span class="lineno">  160</span> </div>
+<div class="line"><span class="lineno">  161</span>  header.stamp = <a class="code hl_function" href="namespacedyno_1_1utils.html#a81025ee06847cec0fd854eff05362d19">utils::toRosTime</a>(timestamp);</div>
+<div class="line"><span class="lineno">  162</span>  header.frame_id = <a class="code hl_variable" href="classdyno_1_1DSDRos.html#a0af02d16138ba34ce2fcce9217751cc5">params_</a>.<a class="code hl_variable" href="structdyno_1_1DisplayParams.html#a2847fed65922f575311e2181add1933e">world_frame_id</a>;</div>
+<div class="line"><span class="lineno">  163</span>  gt_odom_path_msg.header = header;</div>
+<div class="line"><span class="lineno">  164</span>  gt_odom_path_msg.poses.push_back(pose_stamped);</div>
+<div class="line"><span class="lineno">  165</span> </div>
+<div class="line"><span class="lineno">  166</span>  <a class="code hl_variable" href="classdyno_1_1FrontendDSDRos.html#a765b409eb864e2d2360e70adbea99763">vo_path_ground_truth_publisher_</a>-&gt;publish(gt_odom_path_msg);</div>
+<div class="line"><span class="lineno">  167</span>}</div>
 <div class="ttc" id="anamespacedyno_1_1utils_html_a7efb03484e6c5b1cc0d0eeeb43546ffa"><div class="ttname"><a href="namespacedyno_1_1utils.html#a7efb03484e6c5b1cc0d0eeeb43546ffa">dyno::utils::convertWithHeader</a></div><div class="ttdeci">bool convertWithHeader(const INPUT &amp;input, OUTPUT &amp;output, Timestamp timestamp, const std::string &amp;frame_id, std::optional&lt; std::string &gt; child_frame_id=std::nullopt)</div><div class="ttdoc">Converts from input type to output type where output type is a ROS message with a header....</div><div class="ttdef"><b>Definition:</b> <a href="RosUtils_8hpp_source.html#l00423">RosUtils.hpp:423</a></div></div>
-<div class="ttc" id="anamespacedyno_1_1utils_html_a81025ee06847cec0fd854eff05362d19"><div class="ttname"><a href="namespacedyno_1_1utils.html#a81025ee06847cec0fd854eff05362d19">dyno::utils::toRosTime</a></div><div class="ttdeci">rclcpp::Time toRosTime(Timestamp timestamp)</div><div class="ttdoc">Converts Timestamp (in seconds) to ROS time.</div><div class="ttdef"><b>Definition:</b> <a href="RosUtils_8cc_source.html#l00293">RosUtils.cc:293</a></div></div>
-<div class="ttc" id="anamespacedyno_html_a47c0a08523c12765d4bd6e243f900c16"><div class="ttname"><a href="namespacedyno.html#a47c0a08523c12765d4bd6e243f900c16">dyno::ObjectPoseMap</a></div><div class="ttdeci">GenericObjectCentricMap&lt; gtsam::Pose3 &gt; ObjectPoseMap</div><div class="ttdoc">Map of object poses per object per frame.</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00531">Types.hpp:531</a></div></div>
-<div class="ttc" id="anamespacedyno_html_a828b92ac8912e7d2ffc267eb0d08b74cae456468cc146bd360464043f0645212e"><div class="ttname"><a href="namespacedyno.html#a828b92ac8912e7d2ffc267eb0d08b74cae456468cc146bd360464043f0645212e">dyno::GLOBAL</a></div><div class="ttdeci">@ GLOBAL</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00141">Types.hpp:141</a></div></div>
-<div class="ttc" id="anamespacedyno_html_acef42ad0a1e53f5876f1000defc23e3b"><div class="ttname"><a href="namespacedyno.html#acef42ad0a1e53f5876f1000defc23e3b">dyno::MotionEstimateMap</a></div><div class="ttdeci">EstimateMap&lt; ObjectId, Motion3 &gt; MotionEstimateMap</div><div class="ttdoc">Map of object ids to ReferenceFrameValue's of motions.</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00388">Types.hpp:388</a></div></div>
-<div class="ttc" id="astructdyno_1_1DisplayParams_html_abb3118ecfcfde5b12fab686f48eca829"><div class="ttname"><a href="structdyno_1_1DisplayParams.html#abb3118ecfcfde5b12fab686f48eca829">dyno::DisplayParams::camera_frame_id</a></div><div class="ttdeci">std::string camera_frame_id</div><div class="ttdef"><b>Definition:</b> <a href="Display-Definitions_8hpp_source.html#l00039">Display-Definitions.hpp:39</a></div></div>
+<div class="ttc" id="anamespacedyno_html_a1773d4e61e0cc7d3e489f97d43943b1f"><div class="ttname"><a href="namespacedyno.html#a1773d4e61e0cc7d3e489f97d43943b1f">dyno::Motion3ReferenceFrame</a></div><div class="ttdeci">MotionReferenceFrame&lt; Motion3 &gt; Motion3ReferenceFrame</div><div class="ttdoc">Alias of a MotionReferenceFrame using Motion3 (Pose3)</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00505">Types.hpp:505</a></div></div>
+<div class="ttc" id="anamespacedyno_html_a3a5fbf92c649a119093d4cc3b0636871"><div class="ttname"><a href="namespacedyno.html#a3a5fbf92c649a119093d4cc3b0636871">dyno::FrameIdTimestampMap</a></div><div class="ttdeci">gtsam::FastMap&lt; FrameId, Timestamp &gt; FrameIdTimestampMap</div><div class="ttdoc">Map of tracklet ids to Motion3 (gtsam::Pose3)</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00111">Types.hpp:111</a></div></div>
+<div class="ttc" id="anamespacedyno_html_a47c0a08523c12765d4bd6e243f900c16"><div class="ttname"><a href="namespacedyno.html#a47c0a08523c12765d4bd6e243f900c16">dyno::ObjectPoseMap</a></div><div class="ttdeci">GenericObjectCentricMap&lt; gtsam::Pose3 &gt; ObjectPoseMap</div><div class="ttdoc">Map of object poses per object per frame.</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00684">Types.hpp:684</a></div></div>
+<div class="ttc" id="anamespacedyno_html_a828b92ac8912e7d2ffc267eb0d08b74cae456468cc146bd360464043f0645212e"><div class="ttname"><a href="namespacedyno.html#a828b92ac8912e7d2ffc267eb0d08b74cae456468cc146bd360464043f0645212e">dyno::GLOBAL</a></div><div class="ttdeci">@ GLOBAL</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00191">Types.hpp:191</a></div></div>
+<div class="ttc" id="anamespacedyno_html_aae74b3913f6c02a0c3364cd02a68b255a8992882dfbd013c73ead4128d267edf5"><div class="ttname"><a href="namespacedyno.html#aae74b3913f6c02a0c3364cd02a68b255a8992882dfbd013c73ead4128d267edf5">dyno::F2F</a></div><div class="ttdeci">@ F2F</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00232">Types.hpp:232</a></div></div>
+<div class="ttc" id="anamespacedyno_html_af0e7693f6363b7c2b87803049135cf43"><div class="ttname"><a href="namespacedyno.html#af0e7693f6363b7c2b87803049135cf43">dyno::ObjectMotionMap</a></div><div class="ttdeci">GenericObjectCentricMap&lt; Motion3ReferenceFrame &gt; ObjectMotionMap</div><div class="ttdoc">Map of object motions per object per frame.</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00686">Types.hpp:686</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="structdyno_1_1DisplayParams.html#abb3118ecfcfde5b12fab686f48eca829">dyno::DisplayParams::camera_frame_id</a>, <a class="el" href="namespacedyno_1_1utils.html#a7efb03484e6c5b1cc0d0eeeb43546ffa">dyno::utils::convertWithHeader()</a>, <a class="el" href="classdyno_1_1FrontendDSDRos.html#afcc031dd7a27f94ccd54950eca8fafb4">dsd_ground_truth_transport_</a>, <a class="el" href="classdyno_1_1GroundTruthInputPacket.html#ae238ed8f6d692bb1749eac2f497b793b">dyno::GroundTruthInputPacket::frame_id_</a>, <a class="el" href="namespacedyno.html#a828b92ac8912e7d2ffc267eb0d08b74cae456468cc146bd360464043f0645212e">dyno::GLOBAL</a>, <a class="el" href="classdyno_1_1GenericObjectCentricMap.html#abfce9b218241a024c0f66400200bbd58">dyno::GenericObjectCentricMap&lt; VALUE &gt;::insert22()</a>, <a class="el" href="classdyno_1_1GroundTruthInputPacket.html#a2321023f36df5bc75d24755a8793b3cf">dyno::GroundTruthInputPacket::object_poses_</a>, <a class="el" href="classdyno_1_1DSDRos.html#a0af02d16138ba34ce2fcce9217751cc5">dyno::DSDRos::params_</a>, <a class="el" href="classdyno_1_1DSDTransport_1_1Publisher.html#abc29c1b60f2e108c53ae19470960980c">dyno::DSDTransport::Publisher::publishObjectOdometry()</a>, <a class="el" href="structdyno_1_1DebugImagery.html#afffaad54495081759c0e87a61e894786">dyno::DebugImagery::rgb_viz</a>, <a class="el" href="namespacedyno_1_1utils.html#a81025ee06847cec0fd854eff05362d19">dyno::utils::toRosTime()</a>, <a class="el" href="classdyno_1_1FrontendDSDRos.html#a90803608af861e0c2480bdd9f62ec882">vo_ground_truth_publisher_</a>, <a class="el" href="classdyno_1_1FrontendDSDRos.html#a765b409eb864e2d2360e70adbea99763">vo_path_ground_truth_publisher_</a>, <a class="el" href="structdyno_1_1DisplayParams.html#a2847fed65922f575311e2181add1933e">dyno::DisplayParams::world_frame_id</a>, and <a class="el" href="classdyno_1_1GroundTruthInputPacket.html#a343e782543b55700fa6adba76533b5fc">dyno::GroundTruthInputPacket::X_world_</a>.</p>
+<p class="reference">References <a class="el" href="structdyno_1_1DisplayParams.html#abb3118ecfcfde5b12fab686f48eca829">dyno::DisplayParams::camera_frame_id</a>, <a class="el" href="namespacedyno_1_1utils.html#a7efb03484e6c5b1cc0d0eeeb43546ffa">dyno::utils::convertWithHeader()</a>, <a class="el" href="classdyno_1_1FrontendDSDRos.html#afcc031dd7a27f94ccd54950eca8fafb4">dsd_ground_truth_transport_</a>, <a class="el" href="namespacedyno.html#aae74b3913f6c02a0c3364cd02a68b255a8992882dfbd013c73ead4128d267edf5">dyno::F2F</a>, <a class="el" href="classdyno_1_1GroundTruthInputPacket.html#ae238ed8f6d692bb1749eac2f497b793b">dyno::GroundTruthInputPacket::frame_id_</a>, <a class="el" href="namespacedyno.html#a828b92ac8912e7d2ffc267eb0d08b74cae456468cc146bd360464043f0645212e">dyno::GLOBAL</a>, <a class="el" href="classdyno_1_1GenericObjectCentricMap.html#a17a56757b25128ea6a018d1e5909de81">dyno::GenericObjectCentricMap&lt; VALUE &gt;::insert2()</a>, <a class="el" href="classdyno_1_1GenericObjectCentricMap.html#abfce9b218241a024c0f66400200bbd58">dyno::GenericObjectCentricMap&lt; VALUE &gt;::insert22()</a>, <a class="el" href="classdyno_1_1GroundTruthInputPacket.html#a2321023f36df5bc75d24755a8793b3cf">dyno::GroundTruthInputPacket::object_poses_</a>, <a class="el" href="classdyno_1_1DSDRos.html#a0af02d16138ba34ce2fcce9217751cc5">dyno::DSDRos::params_</a>, <a class="el" href="classdyno_1_1DSDTransport_1_1Publisher.html#abc29c1b60f2e108c53ae19470960980c">dyno::DSDTransport::Publisher::publishObjectOdometry()</a>, <a class="el" href="structdyno_1_1DebugImagery.html#afffaad54495081759c0e87a61e894786">dyno::DebugImagery::rgb_viz</a>, <a class="el" href="namespacedyno_1_1utils.html#a81025ee06847cec0fd854eff05362d19">dyno::utils::toRosTime()</a>, <a class="el" href="classdyno_1_1FrontendDSDRos.html#a90803608af861e0c2480bdd9f62ec882">vo_ground_truth_publisher_</a>, <a class="el" href="classdyno_1_1FrontendDSDRos.html#a765b409eb864e2d2360e70adbea99763">vo_path_ground_truth_publisher_</a>, <a class="el" href="structdyno_1_1DisplayParams.html#a2847fed65922f575311e2181add1933e">dyno::DisplayParams::world_frame_id</a>, and <a class="el" href="classdyno_1_1GroundTruthInputPacket.html#a343e782543b55700fa6adba76533b5fc">dyno::GroundTruthInputPacket::X_world_</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1FrontendDSDRos.html#a633a457c51868257f25d44d1a99f0e12">spinOnce()</a>.</p>
 <div class="dynheader">
@@ -610,15 +646,23 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1FrontendDSDRos_a30a427c3d1b16b3fa99e2ddde0802c41_cgraph.png" border="0" usemap="#aclassdyno_1_1FrontendDSDRos_a30a427c3d1b16b3fa99e2ddde0802c41_cgraph" alt=""/></div>
 <map name="aclassdyno_1_1FrontendDSDRos_a30a427c3d1b16b3fa99e2ddde0802c41_cgraph" id="aclassdyno_1_1FrontendDSDRos_a30a427c3d1b16b3fa99e2ddde0802c41_cgraph">
-<area shape="rect" title=" " alt="" coords="5,92,180,132"/>
-<area shape="rect" href="namespacedyno_1_1utils.html#a7efb03484e6c5b1cc0d0eeeb43546ffa" title="Converts from input type to output type where output type is a ROS message with a header...." alt="" coords="239,5,417,45"/>
-<area shape="rect" href="namespacedyno_1_1utils.html#a81025ee06847cec0fd854eff05362d19" title="Converts Timestamp (in seconds) to ROS time." alt="" coords="492,42,660,67"/>
-<area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html#abfce9b218241a024c0f66400200bbd58" title="Handy insert function allowing direct insertion to the nested map structure." alt="" coords="228,120,428,160"/>
-<area shape="rect" href="classdyno_1_1DSDTransport_1_1Publisher.html#abc29c1b60f2e108c53ae19470960980c" title="Publish the contained object odometries." alt="" coords="235,185,421,239"/>
-<area shape="rect" href="namespacedyno.html#a2b18a1990bb26145cec08be631b0ef74" title=" " alt="" coords="769,42,879,67"/>
-<area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html#af6ce62ffab5aadf1981a0ec04c3fad1e" title=" " alt="" coords="972,147,1172,187"/>
-<area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html#a974563b8edd3f4b0cb6fe17615d04fbd" title=" " alt="" coords="476,175,676,215"/>
-<area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html#a33450c8ce82ab7fbfa2541ee0c6b20e3" title="Helper function to determine if the query exists. Operates like a regular exists function but also se..." alt="" coords="724,175,924,215"/>
+<area shape="rect" title=" " alt="" coords="5,241,180,281"/>
+<area shape="rect" href="namespacedyno_1_1utils.html#a7efb03484e6c5b1cc0d0eeeb43546ffa" title="Converts from input type to output type where output type is a ROS message with a header...." alt="" coords="239,127,417,167"/>
+<area shape="rect" href="namespacedyno_1_1utils.html#a81025ee06847cec0fd854eff05362d19" title="Converts Timestamp (in seconds) to ROS time." alt="" coords="492,134,660,159"/>
+<area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html#a17a56757b25128ea6a018d1e5909de81" title=" " alt="" coords="228,241,428,281"/>
+<area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html#abfce9b218241a024c0f66400200bbd58" title="Handy insert function allowing direct insertion to the nested map structure." alt="" coords="476,241,676,281"/>
+<area shape="rect" href="classdyno_1_1DSDTransport_1_1Publisher.html#abc29c1b60f2e108c53ae19470960980c" title="Publish the contained object odometries." alt="" coords="235,357,421,411"/>
+<area shape="rect" href="namespacedyno.html#a8357d6a8de284f4d1fc3d074646b43bb" title=" " alt="" coords="769,134,879,159"/>
+<area shape="rect" href="classdyno_1_1TrackedValueStatus.html#a1741e83bf5442c885da98c9c5bb71f08" title="Returns true if the object lavel is equal to dyno::background_label." alt="" coords="978,5,1166,45"/>
+<area shape="rect" href="classdyno_1_1TrackedValueStatus.html#ae90b3059d173a9354cc6a55a55ef80ac" title="Get object id (j) for this status." alt="" coords="978,69,1166,109"/>
+<area shape="rect" href="structdyno_1_1Color.html#a6689af3d0ac5ceaa66000b5ca70becbd" title="Generates a sequence of never repeating colors using the golden ratio to seperate the colours along t..." alt="" coords="992,134,1152,159"/>
+<area shape="rect" href="classdyno_1_1TrackedValueStatus.html#a828faf38cea11c1dcc7651d49b68d8e1" title="Get value. Const version." alt="" coords="978,184,1166,224"/>
+<area shape="rect" href="structdyno_1_1Color.html#a08bcb6ea49861f6978858a2ff5159002" title=" " alt="" coords="1239,134,1401,159"/>
+<area shape="rect" href="structdyno_1_1Color.html#a6bc55a80a463a481dbf4778c70d04733" title=" " alt="" coords="1495,109,1634,134"/>
+<area shape="rect" href="namespacedyno.html#ab0e74ec8992860404a618192cc694b83" title=" " alt="" coords="1468,158,1661,183"/>
+<area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html#af6ce62ffab5aadf1981a0ec04c3fad1e" title=" " alt="" coords="1220,269,1420,309"/>
+<area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html#a974563b8edd3f4b0cb6fe17615d04fbd" title=" " alt="" coords="724,299,924,339"/>
+<area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html#a33450c8ce82ab7fbfa2541ee0c6b20e3" title="Helper function to determine if the query exists. Operates like a regular exists function but also se..." alt="" coords="972,299,1172,339"/>
 </map>
 </div>
 <div class="dynheader">
@@ -657,15 +701,15 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="FrontendDSDRos_8cc_source.html#l00155">155</a> of file <a class="el" href="FrontendDSDRos_8cc_source.html">FrontendDSDRos.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  156</span>                                                             {</div>
-<div class="line"><span class="lineno">  157</span>  <span class="comment">// publish vo</span></div>
-<div class="line"><span class="lineno">  158</span>  <span class="keyword">constexpr</span> <span class="keyword">static</span> <span class="keywordtype">bool</span> kPublishOdomAsTf = <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  159</span>  this-&gt;<a class="code hl_function" href="classdyno_1_1DSDRos.html#ac605e3eed18e2608a66dc9674a2674ca">publishVisualOdometry</a>(frontend_output-&gt;T_world_camera_,</div>
-<div class="line"><span class="lineno">  160</span>                              frontend_output-&gt;getTimestamp(),</div>
-<div class="line"><span class="lineno">  161</span>                              kPublishOdomAsTf);</div>
-<div class="line"><span class="lineno">  162</span>}</div>
-<div class="ttc" id="aclassdyno_1_1DSDRos_html_ac605e3eed18e2608a66dc9674a2674ca"><div class="ttname"><a href="classdyno_1_1DSDRos.html#ac605e3eed18e2608a66dc9674a2674ca">dyno::DSDRos::publishVisualOdometry</a></div><div class="ttdeci">void publishVisualOdometry(const gtsam::Pose3 &amp;T_world_camera, Timestamp timestamp, const bool publish_tf)</div><div class="ttdef"><b>Definition:</b> <a href="DSDCommonRos_8cc_source.html#l00206">DSDCommonRos.cc:206</a></div></div>
+<p class="definition">Definition at line <a class="el" href="FrontendDSDRos_8cc_source.html#l00168">168</a> of file <a class="el" href="FrontendDSDRos_8cc_source.html">FrontendDSDRos.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  169</span>                                                             {</div>
+<div class="line"><span class="lineno">  170</span>  <span class="comment">// publish vo</span></div>
+<div class="line"><span class="lineno">  171</span>  <span class="keyword">constexpr</span> <span class="keyword">static</span> <span class="keywordtype">bool</span> kPublishOdomAsTf = <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  172</span>  this-&gt;<a class="code hl_function" href="classdyno_1_1DSDRos.html#ac605e3eed18e2608a66dc9674a2674ca">publishVisualOdometry</a>(frontend_output-&gt;T_world_camera_,</div>
+<div class="line"><span class="lineno">  173</span>                              frontend_output-&gt;getTimestamp(),</div>
+<div class="line"><span class="lineno">  174</span>                              kPublishOdomAsTf);</div>
+<div class="line"><span class="lineno">  175</span>}</div>
+<div class="ttc" id="aclassdyno_1_1DSDRos_html_ac605e3eed18e2608a66dc9674a2674ca"><div class="ttname"><a href="classdyno_1_1DSDRos.html#ac605e3eed18e2608a66dc9674a2674ca">dyno::DSDRos::publishVisualOdometry</a></div><div class="ttdeci">void publishVisualOdometry(const gtsam::Pose3 &amp;T_world_camera, Timestamp timestamp, const bool publish_tf)</div><div class="ttdef"><b>Definition:</b> <a href="DSDCommonRos_8cc_source.html#l00271">DSDCommonRos.cc:271</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1DSDRos.html#ac605e3eed18e2608a66dc9674a2674ca">dyno::DSDRos::publishVisualOdometry()</a>.</p>
 
@@ -675,12 +719,19 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1FrontendDSDRos_a2749865fe05f0fa621464098b9a7ba1d_cgraph.png" border="0" usemap="#aclassdyno_1_1FrontendDSDRos_a2749865fe05f0fa621464098b9a7ba1d_cgraph" alt=""/></div>
 <map name="aclassdyno_1_1FrontendDSDRos_a2749865fe05f0fa621464098b9a7ba1d_cgraph" id="aclassdyno_1_1FrontendDSDRos_a2749865fe05f0fa621464098b9a7ba1d_cgraph">
-<area shape="rect" title=" " alt="" coords="5,5,205,45"/>
-<area shape="rect" href="classdyno_1_1DSDRos.html#ac605e3eed18e2608a66dc9674a2674ca" title=" " alt="" coords="253,5,463,45"/>
-<area shape="rect" href="structdyno_1_1DisplayCommon.html#a865dbb6ad128fb59970d187897cdd4b5" title=" " alt="" coords="511,5,681,45"/>
-<area shape="rect" href="namespacedyno_1_1utils.html#a7efb03484e6c5b1cc0d0eeeb43546ffa" title="Converts from input type to output type where output type is a ROS message with a header...." alt="" coords="729,5,907,45"/>
-<area shape="rect" href="namespacedyno_1_1utils.html#a81025ee06847cec0fd854eff05362d19" title="Converts Timestamp (in seconds) to ROS time." alt="" coords="955,13,1123,38"/>
-<area shape="rect" href="namespacedyno.html#a2b18a1990bb26145cec08be631b0ef74" title=" " alt="" coords="1171,13,1281,38"/>
+<area shape="rect" title=" " alt="" coords="5,99,205,139"/>
+<area shape="rect" href="classdyno_1_1DSDRos.html#ac605e3eed18e2608a66dc9674a2674ca" title=" " alt="" coords="253,99,463,139"/>
+<area shape="rect" href="structdyno_1_1DisplayCommon.html#a865dbb6ad128fb59970d187897cdd4b5" title=" " alt="" coords="511,69,681,109"/>
+<area shape="rect" href="namespacedyno_1_1utils.html#a81025ee06847cec0fd854eff05362d19" title="Converts Timestamp (in seconds) to ROS time." alt="" coords="955,106,1123,131"/>
+<area shape="rect" href="namespacedyno_1_1utils.html#a7efb03484e6c5b1cc0d0eeeb43546ffa" title="Converts from input type to output type where output type is a ROS message with a header...." alt="" coords="729,69,907,109"/>
+<area shape="rect" href="namespacedyno.html#a8357d6a8de284f4d1fc3d074646b43bb" title=" " alt="" coords="1171,106,1281,131"/>
+<area shape="rect" href="classdyno_1_1TrackedValueStatus.html#a1741e83bf5442c885da98c9c5bb71f08" title="Returns true if the object lavel is equal to dyno::background_label." alt="" coords="1329,5,1517,45"/>
+<area shape="rect" href="classdyno_1_1TrackedValueStatus.html#ae90b3059d173a9354cc6a55a55ef80ac" title="Get object id (j) for this status." alt="" coords="1329,69,1517,109"/>
+<area shape="rect" href="structdyno_1_1Color.html#a6689af3d0ac5ceaa66000b5ca70becbd" title="Generates a sequence of never repeating colors using the golden ratio to seperate the colours along t..." alt="" coords="1343,134,1503,159"/>
+<area shape="rect" href="classdyno_1_1TrackedValueStatus.html#a828faf38cea11c1dcc7651d49b68d8e1" title="Get value. Const version." alt="" coords="1329,184,1517,224"/>
+<area shape="rect" href="structdyno_1_1Color.html#a08bcb6ea49861f6978858a2ff5159002" title=" " alt="" coords="1565,134,1728,159"/>
+<area shape="rect" href="structdyno_1_1Color.html#a6bc55a80a463a481dbf4778c70d04733" title=" " alt="" coords="1803,109,1942,134"/>
+<area shape="rect" href="namespacedyno.html#ab0e74ec8992860404a618192cc694b83" title=" " alt="" coords="1776,158,1969,183"/>
 </map>
 </div>
 <div class="dynheader">
@@ -696,6 +747,32 @@ Here is the caller graph for this function:</div>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
+<a id="a0cdf1f92855c125e4f54792145628ce1" name="a0cdf1f92855c125e4f54792145628ce1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0cdf1f92855c125e4f54792145628ce1">&#9670;&#160;</a></span>dense_dynamic_cloud_pub_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">rclcpp::Publisher&lt;sensor_msgs::msg::PointCloud2&gt;::SharedPtr dyno::FrontendDSDRos::dense_dynamic_cloud_pub_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="FrontendDSDRos_8hpp_source.html#l00075">75</a> of file <a class="el" href="FrontendDSDRos_8hpp_source.html">FrontendDSDRos.hpp</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1FrontendDSDRos.html#a02964b0ebb2222de37d93eeaab43eb7c">FrontendDSDRos()</a>, and <a class="el" href="classdyno_1_1FrontendDSDRos.html#a9101c485338a62d8a86b37a56a68503e">processRGBDOutputpacket()</a>.</p>
+
+</div>
+</div>
 <a id="afcc031dd7a27f94ccd54950eca8fafb4" name="afcc031dd7a27f94ccd54950eca8fafb4"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#afcc031dd7a27f94ccd54950eca8fafb4">&#9670;&#160;</a></span>dsd_ground_truth_transport_</h2>
 

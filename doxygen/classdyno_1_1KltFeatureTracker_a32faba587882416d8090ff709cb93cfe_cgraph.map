@@ -1,7 +1,7 @@
 <map id="dyno::KltFeatureTracker::equalizeImage" name="dyno::KltFeatureTracker::equalizeImage">
-<area shape="rect" id="node1" title="Outputs a CLAHE equalized greyscale image from the input RGB, which will be used to detect and track ..." alt="" coords="5,69,180,109"/>
-<area shape="rect" id="node2" href="$classdyno_1_1ImageContainerSubset.html#a2a5f209ab5d3013380346a3e5e8356a0" title="Gets the corresponding ImageWrapper corresponding to the ImageType. ImageType must be in the class pa..." alt="" coords="228,5,439,45"/>
-<area shape="rect" id="node3" href="$structdyno_1_1ImageType_1_1RGBMono.html#ac6c656492aaeff4bb8b60f42b0cfa7a3" title=" " alt="" coords="231,69,436,109"/>
-<area shape="rect" id="node5" href="$structdyno_1_1ImageWrapper.html#a6b631c61d9d29c4317e7660f75d85a45" title=" " alt="" coords="254,133,413,173"/>
-<area shape="rect" id="node4" href="$namespacedyno.html#a80329a3506c3ccb953481bb403dd320f" title=" " alt="" coords="487,77,663,102"/>
+<area shape="rect" id="node1" title="Outputs a CLAHE equalized greyscale image from the input RGB, which will be used to detect and track ..." alt="" coords="5,55,180,95"/>
+<area shape="rect" id="node2" href="$classdyno_1_1ImageContainer.html#a6f35259f95c31b861ff6515c159e1ee3" title=" " alt="" coords="233,5,428,31"/>
+<area shape="rect" id="node3" href="$structdyno_1_1ImageType_1_1RGBMono.html#ac6c656492aaeff4bb8b60f42b0cfa7a3" title=" " alt="" coords="228,55,433,95"/>
+<area shape="rect" id="node5" href="$structdyno_1_1ImageWrapper.html#a6b631c61d9d29c4317e7660f75d85a45" title=" " alt="" coords="251,119,410,159"/>
+<area shape="rect" id="node4" href="$namespacedyno.html#a80329a3506c3ccb953481bb403dd320f" title=" " alt="" coords="481,63,657,88"/>
 </map>

@@ -87,16 +87,18 @@ Collaboration diagram for dyno::FrontendParams:</div>
 <div class="dyncontent">
 <div class="center"><img src="structdyno_1_1FrontendParams__coll__graph.png" border="0" usemap="#adyno_1_1FrontendParams_coll__map" alt="Collaboration graph"/></div>
 <map name="adyno_1_1FrontendParams_coll__map" id="adyno_1_1FrontendParams_coll__map">
-<area shape="rect" title=" " alt="" coords="835,81,1001,106"/>
-<area shape="rect" href="structdyno_1_1ObjectMotionSovler_1_1Params.html" title=" " alt="" coords="451,73,641,113"/>
+<area shape="rect" title=" " alt="" coords="865,241,1032,266"/>
+<area shape="rect" href="structdyno_1_1ObjectMotionSovlerF2F_1_1Params.html" title=" " alt="" coords="451,104,642,144"/>
 <area shape="rect" href="structdyno_1_1EgoMotionSolver_1_1Params.html" title=" " alt="" coords="25,5,197,45"/>
-<area shape="rect" href="structdyno_1_1OpticalFlowAndPoseOptimizer_1_1Params.html" title=" " alt="" coords="14,71,209,111"/>
-<area shape="rect" href="structdyno_1_1MotionOnlyRefinementOptimizer_1_1Params.html" title=" " alt="" coords="5,135,217,175"/>
-<area shape="rect" href="structdyno_1_1TrackerParams.html" title="Params for the feature tracker but also the feature detector." alt="" coords="468,278,624,303"/>
-<area shape="rect" href="structdyno_1_1TrackerParams_1_1AnmsParams.html" title=" " alt="" coords="33,199,189,239"/>
-<area shape="rect" href="structdyno_1_1TrackerParams_1_1SubPixelCornerRefinementParams.html" title=" " alt="" coords="10,263,213,318"/>
-<area shape="rect" href="structdyno_1_1TrackerParams_1_1GFFTParams.html" title=" " alt="" coords="33,343,189,383"/>
-<area shape="rect" href="structdyno_1_1TrackerParams_1_1OrbParams.html" title=" " alt="" coords="33,407,189,447"/>
+<area shape="rect" href="structdyno_1_1OpticalFlowAndPoseOptimizer_1_1Params.html" title=" " alt="" coords="14,69,209,109"/>
+<area shape="rect" href="structdyno_1_1MotionOnlyRefinementOptimizer_1_1Params.html" title=" " alt="" coords="5,133,217,173"/>
+<area shape="rect" href="structdyno_1_1TrackerParams.html" title="Params for the feature tracker but also the feature detector." alt="" coords="469,241,625,266"/>
+<area shape="rect" href="structdyno_1_1TrackerParams_1_1AnmsParams.html" title=" " alt="" coords="33,197,189,237"/>
+<area shape="rect" href="structdyno_1_1TrackerParams_1_1SubPixelCornerRefinementParams.html" title=" " alt="" coords="10,262,213,317"/>
+<area shape="rect" href="structdyno_1_1TrackerParams_1_1GFFTParams.html" title=" " alt="" coords="33,341,189,381"/>
+<area shape="rect" href="structdyno_1_1TrackerParams_1_1OrbParams.html" title=" " alt="" coords="33,405,189,445"/>
+<area shape="rect" href="classdyno_1_1ImageTracksParams.html" title="Parameter struct to control the visualisation for FeatureTrackerBase::computeImageTracks." alt="" coords="451,290,643,315"/>
+<area shape="rect" href="structdyno_1_1ImuParams.html" title=" " alt="" coords="479,339,614,365"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -111,23 +113,25 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:ab31b237e23ca95dbc327cc3f9b80a81b"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1FrontendParams.html#ab31b237e23ca95dbc327cc3f9b80a81b">max_object_depth</a> = 25.0</td></tr>
 <tr class="separator:ab31b237e23ca95dbc327cc3f9b80a81b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a606a4126729a5781af504e37fce62a6b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1FrontendParams.html#a606a4126729a5781af504e37fce62a6b">use_ego_motion_pnp</a> = true</td></tr>
-<tr class="memdesc:a606a4126729a5781af504e37fce62a6b"><td class="mdescLeft">&#160;</td><td class="mdescRight">When using RGBD pipeline, ego-motion will be sovled using pnp (3d2d correspondences). Else, stereo.  <br /></td></tr>
 <tr class="separator:a606a4126729a5781af504e37fce62a6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae40cb4a8653523f99d3f4db8589f1bfe"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1FrontendParams.html#ae40cb4a8653523f99d3f4db8589f1bfe">use_object_motion_pnp</a> = true</td></tr>
-<tr class="memdesc:ae40cb4a8653523f99d3f4db8589f1bfe"><td class="mdescLeft">&#160;</td><td class="mdescRight">When using RGBD pipeline, object motion will be sovled using pnp (3d2d correspondences). Else, stereo.  <br /></td></tr>
 <tr class="separator:ae40cb4a8653523f99d3f4db8589f1bfe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1477e857845f703c1ef6210b45e15560"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1FrontendParams.html#a1477e857845f703c1ef6210b45e15560">refine_camera_pose_with_joint_of</a> = true</td></tr>
 <tr class="separator:a1477e857845f703c1ef6210b45e15560"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a54f7c61a2dfc9cf8bc31c0d29eaf40d9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structdyno_1_1ObjectMotionSovler_1_1Params.html">ObjectMotionSovler::Params</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1FrontendParams.html#a54f7c61a2dfc9cf8bc31c0d29eaf40d9">object_motion_solver_params</a> = <a class="el" href="structdyno_1_1ObjectMotionSovler_1_1Params.html">ObjectMotionSovler::Params</a>()</td></tr>
-<tr class="separator:a54f7c61a2dfc9cf8bc31c0d29eaf40d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab751f5d7c6675ad2a95674dae47e9f0a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structdyno_1_1ObjectMotionSovlerF2F_1_1Params.html">ObjectMotionSovlerF2F::Params</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1FrontendParams.html#ab751f5d7c6675ad2a95674dae47e9f0a">object_motion_solver_params</a></td></tr>
+<tr class="separator:ab751f5d7c6675ad2a95674dae47e9f0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0552616d81d9b593cbd352590344d474"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structdyno_1_1EgoMotionSolver_1_1Params.html">EgoMotionSolver::Params</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1FrontendParams.html#a0552616d81d9b593cbd352590344d474">ego_motion_solver_params</a> = <a class="el" href="structdyno_1_1EgoMotionSolver_1_1Params.html">EgoMotionSolver::Params</a>()</td></tr>
 <tr class="separator:a0552616d81d9b593cbd352590344d474"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6a99c9f2ac61d71c11b4e1d07df3681c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structdyno_1_1TrackerParams.html">TrackerParams</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1FrontendParams.html#a6a99c9f2ac61d71c11b4e1d07df3681c">tracker_params</a> = <a class="el" href="structdyno_1_1TrackerParams.html">TrackerParams</a>()</td></tr>
 <tr class="separator:a6a99c9f2ac61d71c11b4e1d07df3681c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0f018e74e9b9b2f5c7fdf96767e22620"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classdyno_1_1ImageTracksParams.html">ImageTracksParams</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1FrontendParams.html#a0f018e74e9b9b2f5c7fdf96767e22620">image_tracks_vis_params</a> = <a class="el" href="classdyno_1_1ImageTracksParams.html">ImageTracksParams</a>()</td></tr>
+<tr class="separator:a0f018e74e9b9b2f5c7fdf96767e22620"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9c20fdd7a05cc86a1ea47894245f886f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structdyno_1_1ImuParams.html">ImuParams</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1FrontendParams.html#a9c20fdd7a05cc86a1ea47894245f886f">imu_params</a> = <a class="el" href="structdyno_1_1ImuParams.html">ImuParams</a>()</td></tr>
+<tr class="separator:a9c20fdd7a05cc86a1ea47894245f886f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="FrontendParams_8hpp_source.html#l00035">35</a> of file <a class="el" href="FrontendParams_8hpp_source.html">FrontendParams.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FrontendParams_8hpp_source.html#l00043">43</a> of file <a class="el" href="FrontendParams_8hpp_source.html">FrontendParams.hpp</a>.</p>
 </div><h2 class="groupheader">Member Data Documentation</h2>
 <a id="a0552616d81d9b593cbd352590344d474" name="a0552616d81d9b593cbd352590344d474"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a0552616d81d9b593cbd352590344d474">&#9670;&#160;</a></span>ego_motion_solver_params</h2>
@@ -141,9 +145,43 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="FrontendParams_8hpp_source.html#l00058">58</a> of file <a class="el" href="FrontendParams_8hpp_source.html">FrontendParams.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FrontendParams_8hpp_source.html#l00068">68</a> of file <a class="el" href="FrontendParams_8hpp_source.html">FrontendParams.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="namespacedyno.html#a05351b6034a40d04f02baed7cf409be2">dyno::declare_config()</a>.</p>
+</div>
+</div>
+<a id="a0f018e74e9b9b2f5c7fdf96767e22620" name="a0f018e74e9b9b2f5c7fdf96767e22620"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0f018e74e9b9b2f5c7fdf96767e22620">&#9670;&#160;</a></span>image_tracks_vis_params</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classdyno_1_1ImageTracksParams.html">ImageTracksParams</a> dyno::FrontendParams::image_tracks_vis_params = <a class="el" href="classdyno_1_1ImageTracksParams.html">ImageTracksParams</a>()</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="FrontendParams_8hpp_source.html#l00071">71</a> of file <a class="el" href="FrontendParams_8hpp_source.html">FrontendParams.hpp</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1RGBDInstanceFrontendModule.html#a2be5bb20b25562755ca287277b16573b">dyno::RGBDInstanceFrontendModule::createTrackingImage()</a>.</p>
+
+</div>
+</div>
+<a id="a9c20fdd7a05cc86a1ea47894245f886f" name="a9c20fdd7a05cc86a1ea47894245f886f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9c20fdd7a05cc86a1ea47894245f886f">&#9670;&#160;</a></span>imu_params</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structdyno_1_1ImuParams.html">ImuParams</a> dyno::FrontendParams::imu_params = <a class="el" href="structdyno_1_1ImuParams.html">ImuParams</a>()</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="FrontendParams_8hpp_source.html#l00072">72</a> of file <a class="el" href="FrontendParams_8hpp_source.html">FrontendParams.hpp</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1DynoPipelineManager.html#a283e891aa3d4ca8d2d671eb1e3d5d514">dyno::DynoPipelineManager::DynoPipelineManager()</a>.</p>
 
 </div>
 </div>
@@ -159,9 +197,9 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="FrontendParams_8hpp_source.html#l00042">42</a> of file <a class="el" href="FrontendParams_8hpp_source.html">FrontendParams.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FrontendParams_8hpp_source.html#l00049">49</a> of file <a class="el" href="FrontendParams_8hpp_source.html">FrontendParams.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="namespacedyno.html#a05351b6034a40d04f02baed7cf409be2">dyno::declare_config()</a>, and <a class="el" href="classdyno_1_1FeatureTracker.html#a23296ac35b5935656d31a18450dc5e4c">dyno::FeatureTracker::track()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1FeatureTracker.html#a9890ba0c11b5932b5b4954a86bd03948">dyno::FeatureTracker::track()</a>.</p>
 
 </div>
 </div>
@@ -177,27 +215,29 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="FrontendParams_8hpp_source.html#l00043">43</a> of file <a class="el" href="FrontendParams_8hpp_source.html">FrontendParams.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FrontendParams_8hpp_source.html#l00050">50</a> of file <a class="el" href="FrontendParams_8hpp_source.html">FrontendParams.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="namespacedyno.html#a05351b6034a40d04f02baed7cf409be2">dyno::declare_config()</a>, and <a class="el" href="classdyno_1_1FeatureTracker.html#a23296ac35b5935656d31a18450dc5e4c">dyno::FeatureTracker::track()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1FeatureTracker.html#a9890ba0c11b5932b5b4954a86bd03948">dyno::FeatureTracker::track()</a>.</p>
 
 </div>
 </div>
-<a id="a54f7c61a2dfc9cf8bc31c0d29eaf40d9" name="a54f7c61a2dfc9cf8bc31c0d29eaf40d9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a54f7c61a2dfc9cf8bc31c0d29eaf40d9">&#9670;&#160;</a></span>object_motion_solver_params</h2>
+<a id="ab751f5d7c6675ad2a95674dae47e9f0a" name="ab751f5d7c6675ad2a95674dae47e9f0a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab751f5d7c6675ad2a95674dae47e9f0a">&#9670;&#160;</a></span>object_motion_solver_params</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="structdyno_1_1ObjectMotionSovler_1_1Params.html">ObjectMotionSovler::Params</a> dyno::FrontendParams::object_motion_solver_params = <a class="el" href="structdyno_1_1ObjectMotionSovler_1_1Params.html">ObjectMotionSovler::Params</a>()</td>
+          <td class="memname"><a class="el" href="structdyno_1_1ObjectMotionSovlerF2F_1_1Params.html">ObjectMotionSovlerF2F::Params</a> dyno::FrontendParams::object_motion_solver_params</td>
         </tr>
       </table>
 </div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">=</div>
+<div class="line">      ObjectMotionSovlerF2F::Params()</div>
+</div><!-- fragment -->
+<p class="definition">Definition at line <a class="el" href="FrontendParams_8hpp_source.html#l00066">66</a> of file <a class="el" href="FrontendParams_8hpp_source.html">FrontendParams.hpp</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="FrontendParams_8hpp_source.html#l00057">57</a> of file <a class="el" href="FrontendParams_8hpp_source.html">FrontendParams.hpp</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="namespacedyno.html#a05351b6034a40d04f02baed7cf409be2">dyno::declare_config()</a>, and <a class="el" href="classdyno_1_1RGBDInstanceFrontendModule.html#a78935cca3751ad2a0c25019250d12230">dyno::RGBDInstanceFrontendModule::solveCameraMotion()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1RGBDInstanceFrontendModule.html#aa49fd74a92296c69f3bb0e1f964f089a">dyno::RGBDInstanceFrontendModule::RGBDInstanceFrontendModule()</a>, and <a class="el" href="classdyno_1_1RGBDInstanceFrontendModule.html#ad89ae2ee89eaa41ef536e2e409809b69">dyno::RGBDInstanceFrontendModule::solveCameraMotion()</a>.</p>
 
 </div>
 </div>
@@ -213,9 +253,9 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="FrontendParams_8hpp_source.html#l00055">55</a> of file <a class="el" href="FrontendParams_8hpp_source.html">FrontendParams.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FrontendParams_8hpp_source.html#l00064">64</a> of file <a class="el" href="FrontendParams_8hpp_source.html">FrontendParams.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="namespacedyno.html#a05351b6034a40d04f02baed7cf409be2">dyno::declare_config()</a>, and <a class="el" href="classdyno_1_1RGBDInstanceFrontendModule.html#a78935cca3751ad2a0c25019250d12230">dyno::RGBDInstanceFrontendModule::solveCameraMotion()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1RGBDInstanceFrontendModule.html#ad89ae2ee89eaa41ef536e2e409809b69">dyno::RGBDInstanceFrontendModule::solveCameraMotion()</a>.</p>
 
 </div>
 </div>
@@ -231,9 +271,9 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="FrontendParams_8hpp_source.html#l00038">38</a> of file <a class="el" href="FrontendParams_8hpp_source.html">FrontendParams.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FrontendParams_8hpp_source.html#l00045">45</a> of file <a class="el" href="FrontendParams_8hpp_source.html">FrontendParams.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="namespacedyno.html#a05351b6034a40d04f02baed7cf409be2">dyno::declare_config()</a>, and <a class="el" href="namespacedyno_1_1vision__tools.html#a70f3daa5a2a0fb3a715ffb1fb65992cb">dyno::vision_tools::trackDynamic()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="namespacedyno_1_1vision__tools.html#a70f3daa5a2a0fb3a715ffb1fb65992cb">dyno::vision_tools::trackDynamic()</a>.</p>
 
 </div>
 </div>
@@ -249,9 +289,9 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="FrontendParams_8hpp_source.html#l00039">39</a> of file <a class="el" href="FrontendParams_8hpp_source.html">FrontendParams.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FrontendParams_8hpp_source.html#l00046">46</a> of file <a class="el" href="FrontendParams_8hpp_source.html">FrontendParams.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="namespacedyno.html#a05351b6034a40d04f02baed7cf409be2">dyno::declare_config()</a>, and <a class="el" href="namespacedyno_1_1vision__tools.html#a70f3daa5a2a0fb3a715ffb1fb65992cb">dyno::vision_tools::trackDynamic()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="namespacedyno_1_1vision__tools.html#a70f3daa5a2a0fb3a715ffb1fb65992cb">dyno::vision_tools::trackDynamic()</a>.</p>
 
 </div>
 </div>
@@ -267,9 +307,9 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="FrontendParams_8hpp_source.html#l00061">61</a> of file <a class="el" href="FrontendParams_8hpp_source.html">FrontendParams.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FrontendParams_8hpp_source.html#l00070">70</a> of file <a class="el" href="FrontendParams_8hpp_source.html">FrontendParams.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="namespacedyno.html#a05351b6034a40d04f02baed7cf409be2">dyno::declare_config()</a>, and <a class="el" href="classdyno_1_1FeatureTracker.html#aa1858ceb580cb42aff98e3b57bfe9303">dyno::FeatureTracker::FeatureTracker()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1FeatureTracker.html#aa1858ceb580cb42aff98e3b57bfe9303">dyno::FeatureTracker::FeatureTracker()</a>, and <a class="el" href="dyno__sam_8cc.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>.</p>
 
 </div>
 </div>
@@ -284,12 +324,11 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>When using RGBD pipeline, ego-motion will be sovled using pnp (3d2d correspondences). Else, stereo </p>
 
-<p>When using RGBD pipeline, ego-motion will be sovled using pnp (3d2d correspondences). Else, stereo. </p>
+<p class="definition">Definition at line <a class="el" href="FrontendParams_8hpp_source.html#l00057">57</a> of file <a class="el" href="FrontendParams_8hpp_source.html">FrontendParams.hpp</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="FrontendParams_8hpp_source.html#l00049">49</a> of file <a class="el" href="FrontendParams_8hpp_source.html">FrontendParams.hpp</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="namespacedyno.html#a05351b6034a40d04f02baed7cf409be2">dyno::declare_config()</a>, and <a class="el" href="classdyno_1_1RGBDInstanceFrontendModule.html#a78935cca3751ad2a0c25019250d12230">dyno::RGBDInstanceFrontendModule::solveCameraMotion()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1RGBDInstanceFrontendModule.html#ad89ae2ee89eaa41ef536e2e409809b69">dyno::RGBDInstanceFrontendModule::solveCameraMotion()</a>.</p>
 
 </div>
 </div>
@@ -304,12 +343,9 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>When using RGBD pipeline, object motion will be sovled using pnp (3d2d correspondences). Else, stereo </p>
 
-<p>When using RGBD pipeline, object motion will be sovled using pnp (3d2d correspondences). Else, stereo. </p>
-
-<p class="definition">Definition at line <a class="el" href="FrontendParams_8hpp_source.html#l00052">52</a> of file <a class="el" href="FrontendParams_8hpp_source.html">FrontendParams.hpp</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="namespacedyno.html#a05351b6034a40d04f02baed7cf409be2">dyno::declare_config()</a>, and <a class="el" href="classdyno_1_1RGBDInstanceFrontendModule.html#ada2fe5067e732aa4734d96fc5e80f7f9">dyno::RGBDInstanceFrontendModule::solveObjectMotion()</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FrontendParams_8hpp_source.html#l00061">61</a> of file <a class="el" href="FrontendParams_8hpp_source.html">FrontendParams.hpp</a>.</p>
 
 </div>
 </div>

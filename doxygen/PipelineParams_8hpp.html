@@ -77,76 +77,80 @@ $(function() {
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#namespaces">Namespaces</a> &#124;
-<a href="#func-members">Functions</a>  </div>
+<a href="#typedef-members">Typedefs</a> &#124;
+<a href="#enum-members">Enumerations</a> &#124;
+<a href="#func-members">Functions</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle"><div class="title">PipelineParams.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;<a class="el" href="Macros_8hpp_source.html">dynosam/utils/Macros.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="FrontendParams_8hpp_source.html">dynosam/frontend/FrontendParams.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="BackendParams_8hpp_source.html">dynosam/backend/BackendParams.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="CameraParams_8hpp_source.html">dynosam/common/CameraParams.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="Frontend-Definitions_8hpp_source.html">dynosam/frontend/Frontend-Definitions.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="BackendDefinitions_8hpp_source.html">dynosam/backend/BackendDefinitions.hpp</a>&quot;</code><br />
+<div class="textblock"><code>#include &lt;glog/logging.h&gt;</code><br />
 <code>#include &lt;iomanip&gt;</code><br />
 <code>#include &lt;ostream&gt;</code><br />
 <code>#include &lt;sstream&gt;</code><br />
 <code>#include &lt;string&gt;</code><br />
-<code>#include &lt;glog/logging.h&gt;</code><br />
+<code>#include &quot;<a class="el" href="BackendDefinitions_8hpp_source.html">dynosam/backend/BackendDefinitions.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="BackendParams_8hpp_source.html">dynosam/backend/BackendParams.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="CameraParams_8hpp_source.html">dynosam/common/CameraParams.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="Types_8hpp_source.html">dynosam/common/Types.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="Frontend-Definitions_8hpp_source.html">dynosam/frontend/Frontend-Definitions.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="FrontendParams_8hpp_source.html">dynosam/frontend/FrontendParams.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="Macros_8hpp_source.html">dynosam/utils/Macros.hpp</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for PipelineParams.hpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="PipelineParams_8hpp__incl.png" border="0" usemap="#adynosam_2include_2dynosam_2pipeline_2PipelineParams_8hpp" alt=""/></div>
 <map name="adynosam_2include_2dynosam_2pipeline_2PipelineParams_8hpp" id="adynosam_2include_2dynosam_2pipeline_2PipelineParams_8hpp">
-<area shape="rect" title=" " alt="" coords="3279,5,3490,45"/>
-<area shape="rect" href="Macros_8hpp.html" title=" " alt="" coords="838,533,1032,559"/>
-<area shape="rect" href="FrontendParams_8hpp.html" title=" " alt="" coords="607,93,810,133"/>
-<area shape="rect" title=" " alt="" coords="3348,607,3407,632"/>
-<area shape="rect" title=" " alt="" coords="1628,533,1743,559"/>
-<area shape="rect" href="Frontend-Definitions_8hpp.html" title=" " alt="" coords="1174,269,1376,309"/>
-<area shape="rect" title=" " alt="" coords="3641,607,3717,632"/>
-<area shape="rect" title=" " alt="" coords="3846,607,3920,632"/>
-<area shape="rect" href="BackendParams_8hpp.html" title=" " alt="" coords="3574,277,3848,302"/>
-<area shape="rect" href="CameraParams_8hpp.html" title=" " alt="" coords="2532,365,2807,390"/>
-<area shape="rect" href="BackendDefinitions_8hpp.html" title=" " alt="" coords="2221,189,2518,214"/>
-<area shape="rect" title=" " alt="" coords="3974,101,4048,126"/>
-<area shape="rect" title=" " alt="" coords="1403,607,1480,632"/>
-<area shape="rect" title=" " alt="" coords="898,607,972,632"/>
-<area shape="rect" title=" " alt="" coords="529,189,592,214"/>
-<area shape="rect" href="TrackerParams_8hpp.html" title=" " alt="" coords="478,357,662,397"/>
-<area shape="rect" href="MotionSolver_8hpp.html" title=" " alt="" coords="616,181,800,221"/>
-<area shape="rect" href="NonMaximumSuppression_8h.html" title="Base class for non maximum suppression interface." alt="" coords="465,445,674,485"/>
-<area shape="rect" title=" " alt="" coords="1056,533,1270,559"/>
-<area shape="rect" title=" " alt="" coords="750,453,901,478"/>
-<area shape="rect" title=" " alt="" coords="1083,445,1243,485"/>
-<area shape="rect" title=" " alt="" coords="499,269,707,309"/>
-<area shape="rect" title=" " alt="" coords="731,269,899,309"/>
-<area shape="rect" title=" " alt="" coords="924,269,1098,309"/>
-<area shape="rect" title=" " alt="" coords="46,269,195,309"/>
-<area shape="rect" title=" " alt="" coords="270,269,475,309"/>
-<area shape="rect" href="Types_8hpp.html" title=" " alt="" coords="1268,453,1480,478"/>
-<area shape="rect" title=" " alt="" coords="1346,533,1532,559"/>
-<area shape="rect" title=" " alt="" coords="788,365,984,390"/>
-<area shape="rect" href="ImageContainer_8hpp.html" title=" " alt="" coords="1513,365,1792,390"/>
-<area shape="rect" href="Exceptions_8hpp.html" title=" " alt="" coords="3202,533,3449,559"/>
-<area shape="rect" title=" " alt="" coords="1756,453,1842,478"/>
-<area shape="rect" title=" " alt="" coords="2617,607,2704,632"/>
-<area shape="rect" title=" " alt="" coords="3653,365,3769,390"/>
-<area shape="rect" title=" " alt="" coords="3196,453,3397,478"/>
-<area shape="rect" title=" " alt="" coords="2581,453,2806,478"/>
-<area shape="rect" title=" " alt="" coords="2018,453,2217,478"/>
-<area shape="rect" title=" " alt="" coords="2830,453,2970,478"/>
-<area shape="rect" title=" " alt="" coords="2994,453,3172,478"/>
-<area shape="rect" href="YamlParser_8hpp.html" title=" " alt="" coords="2291,453,2507,478"/>
-<area shape="rect" title=" " alt="" coords="2852,277,3096,302"/>
-<area shape="rect" title=" " alt="" coords="2132,365,2325,390"/>
-<area shape="rect" title=" " alt="" coords="1779,277,1998,302"/>
-<area shape="rect" title=" " alt="" coords="2433,269,2640,309"/>
-<area shape="rect" title=" " alt="" coords="2664,269,2827,309"/>
-<area shape="rect" title=" " alt="" coords="1973,365,2097,390"/>
-<area shape="rect" href="DynamicPointSymbol_8hpp.html" title=" " alt="" coords="2072,269,2307,309"/>
-<area shape="rect" href="Camera_8hpp.html" title=" " alt="" coords="3120,277,3347,302"/>
-<area shape="rect" href="GroundTruthPacket_8hpp.html" title=" " alt="" coords="1059,357,1286,397"/>
-<area shape="rect" href="Logger_8hpp.html" title=" " alt="" coords="1552,277,1755,302"/>
+<area shape="rect" title=" " alt="" coords="805,5,1015,45"/>
+<area shape="rect" title=" " alt="" coords="1193,438,1307,463"/>
+<area shape="rect" title=" " alt="" coords="45,93,119,119"/>
+<area shape="rect" title=" " alt="" coords="251,592,327,617"/>
+<area shape="rect" title=" " alt="" coords="749,592,823,617"/>
+<area shape="rect" title=" " alt="" coords="1046,592,1105,617"/>
+<area shape="rect" href="BackendDefinitions_8hpp.html" title=" " alt="" coords="2413,93,2711,119"/>
+<area shape="rect" href="BackendParams_8hpp.html" title=" " alt="" coords="3483,262,3758,287"/>
+<area shape="rect" href="Types_8hpp.html" title=" " alt="" coords="2248,350,2460,375"/>
+<area shape="rect" href="Macros_8hpp.html" title=" " alt="" coords="2504,438,2697,463"/>
+<area shape="rect" href="CameraParams_8hpp.html" title=" " alt="" coords="1163,262,1438,287"/>
+<area shape="rect" href="Frontend-Definitions_8hpp.html" title=" " alt="" coords="1645,167,1847,207"/>
+<area shape="rect" href="FrontendParams_8hpp.html" title=" " alt="" coords="295,167,498,207"/>
+<area shape="rect" title=" " alt="" coords="3029,174,3273,199"/>
+<area shape="rect" title=" " alt="" coords="2809,262,3003,287"/>
+<area shape="rect" title=" " alt="" coords="3298,174,3517,199"/>
+<area shape="rect" title=" " alt="" coords="1923,167,2129,207"/>
+<area shape="rect" title=" " alt="" coords="2154,167,2317,207"/>
+<area shape="rect" title=" " alt="" coords="2480,592,2567,617"/>
+<area shape="rect" title=" " alt="" coords="2609,262,2733,287"/>
+<area shape="rect" href="DynamicPointSymbol_8hpp.html" title=" " alt="" coords="2669,167,2903,207"/>
+<area shape="rect" href="Exceptions_8hpp.html" title=" " alt="" coords="872,519,1119,544"/>
+<area shape="rect" href="Camera_8hpp.html" title=" " alt="" coords="1386,174,1613,199"/>
+<area shape="rect" href="GroundTruthPacket_8hpp.html" title=" " alt="" coords="2257,255,2483,295"/>
+<area shape="rect" href="Logger_8hpp.html" title=" " alt="" coords="2391,174,2594,199"/>
+<area shape="rect" title=" " alt="" coords="3223,519,3339,544"/>
+<area shape="rect" title=" " alt="" coords="2093,438,2261,463"/>
+<area shape="rect" title=" " alt="" coords="1683,519,1839,544"/>
+<area shape="rect" title=" " alt="" coords="1332,438,1517,463"/>
+<area shape="rect" title=" " alt="" coords="2285,438,2428,463"/>
+<area shape="rect" title=" " alt="" coords="3267,438,3481,463"/>
+<area shape="rect" title=" " alt="" coords="2495,519,2570,544"/>
+<area shape="rect" title=" " alt="" coords="1884,438,1981,463"/>
+<area shape="rect" title=" " alt="" coords="2897,519,2989,544"/>
+<area shape="rect" title=" " alt="" coords="2005,438,2068,463"/>
+<area shape="rect" href="Flags_8hpp.html" title=" " alt="" coords="3031,438,3242,463"/>
+<area shape="rect" href="SensorModels_8hpp.html" title=" " alt="" coords="1542,438,1809,463"/>
+<area shape="rect" href="Types-inl_8hpp.html" title=" " alt="" coords="2722,431,2906,471"/>
+<area shape="rect" title=" " alt="" coords="1421,350,1620,375"/>
+<area shape="rect" title=" " alt="" coords="397,343,557,383"/>
+<area shape="rect" title=" " alt="" coords="947,350,1148,375"/>
+<area shape="rect" title=" " alt="" coords="1172,350,1397,375"/>
+<area shape="rect" title=" " alt="" coords="581,350,721,375"/>
+<area shape="rect" title=" " alt="" coords="1644,350,1731,375"/>
+<area shape="rect" title=" " alt="" coords="745,350,923,375"/>
+<area shape="rect" href="YamlParser_8hpp.html" title=" " alt="" coords="1806,350,2022,375"/>
+<area shape="rect" title=" " alt="" coords="1581,262,1777,287"/>
+<area shape="rect" href="ImageContainer_8hpp.html" title=" " alt="" coords="1801,262,2080,287"/>
+<area shape="rect" title=" " alt="" coords="296,262,359,287"/>
+<area shape="rect" href="ImuParams_8hpp.html" title=" " alt="" coords="485,255,655,295"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -154,14 +158,13 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="PipelineParams_8hpp__dep__incl.png" border="0" usemap="#adynosam_2include_2dynosam_2pipeline_2PipelineParams_8hppdep" alt=""/></div>
 <map name="adynosam_2include_2dynosam_2pipeline_2PipelineParams_8hppdep" id="adynosam_2include_2dynosam_2pipeline_2PipelineParams_8hppdep">
-<area shape="rect" title=" " alt="" coords="509,5,720,45"/>
+<area shape="rect" title=" " alt="" coords="436,5,647,45"/>
 <area shape="rect" href="dyno__sam_8cc.html" title=" " alt="" coords="5,181,184,221"/>
 <area shape="rect" href="ModuleFactory_8hpp.html" title=" " alt="" coords="127,93,335,133"/>
 <area shape="rect" href="PipelineManager_8hpp.html" title=" " alt="" coords="359,93,577,133"/>
 <area shape="rect" href="PipelineRos_8hpp.html" title=" " alt="" coords="403,181,624,221"/>
 <area shape="rect" href="PipelineRos_8cc.html" title=" " alt="" coords="609,269,797,309"/>
-<area shape="rect" href="Pipeline-Definitions_8cc.html" title=" " alt="" coords="703,93,873,133"/>
-<area shape="rect" href="PipelineParams_8cc.html" title=" " alt="" coords="898,93,1059,133"/>
+<area shape="rect" href="PipelineParams_8cc.html" title=" " alt="" coords="703,93,865,133"/>
 <area shape="rect" href="PipelineManager_8cc.html" title=" " alt="" coords="217,181,378,221"/>
 <area shape="rect" href="backend__experiments__node_8cc.html" title=" " alt="" coords="133,269,344,309"/>
 <area shape="rect" href="dynosam__node_8cc.html" title=" " alt="" coords="368,269,584,309"/>
@@ -172,6 +175,8 @@ This graph shows which files directly or indirectly include this file:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1internal_1_1EnableBitMaskOperators_3_01RuntimeSensorOptions_01_4.html">dyno::internal::EnableBitMaskOperators&lt; RuntimeSensorOptions &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DynoParams.html">dyno::DynoParams</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1DynoParams_1_1PipelineParams.html">dyno::DynoParams::PipelineParams</a></td></tr>
@@ -182,10 +187,28 @@ Namespaces</h2></td></tr>
 <tr class="memitem:namespacedyno"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno.html">dyno</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:aab67f4300e91bd397d41c9c4303f920b"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno.html#aab67f4300e91bd397d41c9c4303f920b">dyno::RuntimeSensorFlags</a> = Flags&lt; RuntimeSensorOptions &gt;</td></tr>
+<tr class="separator:aab67f4300e91bd397d41c9c4303f920b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
+Enumerations</h2></td></tr>
+<tr class="memitem:a166cd57d1f85e33854e989c3ad66fc68"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno.html#a166cd57d1f85e33854e989c3ad66fc68">dyno::RuntimeSensorOptions</a> : std::uint8_t { <a class="el" href="namespacedyno.html#a166cd57d1f85e33854e989c3ad66fc68a41dd082d357f3352a4c1accf4dbd2f54">dyno::PreferSensor</a> = 1 &lt;&lt; 0
+, <a class="el" href="namespacedyno.html#a166cd57d1f85e33854e989c3ad66fc68a4da89a7d784afd5eb859df70e9abb98f">dyno::AcceptNoSensor</a> = 1 &lt;&lt; 1
+, <a class="el" href="namespacedyno.html#a166cd57d1f85e33854e989c3ad66fc68af0423d085a57327a7bf09fb317764d5f">dyno::FailOnNoSensor</a> = 1 &lt;&lt; 2
+ }</td></tr>
+<tr class="separator:a166cd57d1f85e33854e989c3ad66fc68"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:af815ac342e3a428f7f75b49a1dd4695d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno.html#af815ac342e3a428f7f75b49a1dd4695d">dyno::declare_config</a> (DynoParams::PipelineParams &amp;config)</td></tr>
 <tr class="separator:af815ac342e3a428f7f75b49a1dd4695d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:a410a5e259aae6363ae55993dc4acc2cd"><td class="memItemLeft" align="right" valign="top">static constexpr RuntimeSensorOptions&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno.html#a410a5e259aae6363ae55993dc4acc2cd">dyno::DefaultRuntimeSensorOptions</a></td></tr>
+<tr class="separator:a410a5e259aae6363ae55993dc4acc2cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- start footer part -->

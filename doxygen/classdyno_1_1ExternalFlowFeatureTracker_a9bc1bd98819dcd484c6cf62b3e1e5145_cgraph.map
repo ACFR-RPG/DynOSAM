@@ -1,8 +1,10 @@
 <map id="dyno::ExternalFlowFeatureTracker::constructStaticFeature" name="dyno::ExternalFlowFeatureTracker::constructStaticFeature">
-<area shape="rect" id="node1" title=" " alt="" coords="5,88,228,128"/>
-<area shape="rect" id="node2" href="$classdyno_1_1Feature.html#a37dbbe8da704c2f51e237d38760534fb" title=" " alt="" coords="305,5,485,45"/>
-<area shape="rect" id="node4" href="$classdyno_1_1ImageContainerSubset.html#a11ceb8e3325f28bf683b6480d53427a0" title="Gets the corresponding image (cv::Mat) corresponding to the requested ImageType. ImageType must be in..." alt="" coords="276,70,515,95"/>
-<area shape="rect" id="node5" href="$structdyno_1_1functional__keypoint.html#a3896d96a6f95b5311ae768cdd0ad97e8" title=" " alt="" coords="292,119,499,145"/>
-<area shape="rect" id="node6" href="$structdyno_1_1functional__keypoint.html#a24933450cad8bc70b7b76b339756cd94" title=" " alt="" coords="292,169,499,194"/>
-<area shape="rect" id="node3" href="$classdyno_1_1Feature.html#ada9f9980d950874a7a157a82b9921f8a" title="Gets keypoint observation." alt="" coords="563,13,737,38"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,163,228,203"/>
+<area shape="rect" id="node2" href="$classdyno_1_1Feature.html#a37dbbe8da704c2f51e237d38760534fb" title=" " alt="" coords="289,5,469,45"/>
+<area shape="rect" id="node4" href="$classdyno_1_1ImageContainer.html#ae5eead678f02be0ab9de7464e1833c55" title=" " alt="" coords="296,69,463,109"/>
+<area shape="rect" id="node5" href="$classdyno_1_1ImageContainer.html#a460749ede77f3694f4f2dfaab76531f7" title=" " alt="" coords="296,133,463,173"/>
+<area shape="rect" id="node6" href="$classdyno_1_1ImageContainer.html#a6f35259f95c31b861ff6515c159e1ee3" title=" " alt="" coords="282,198,477,223"/>
+<area shape="rect" id="node7" href="$structdyno_1_1functional__keypoint.html#a3896d96a6f95b5311ae768cdd0ad97e8" title=" " alt="" coords="276,247,483,273"/>
+<area shape="rect" id="node8" href="$structdyno_1_1functional__keypoint.html#a24933450cad8bc70b7b76b339756cd94" title=" " alt="" coords="276,297,483,322"/>
+<area shape="rect" id="node3" href="$classdyno_1_1Feature.html#ada9f9980d950874a7a157a82b9921f8a" title="Gets keypoint observation." alt="" coords="531,13,705,38"/>
 </map>

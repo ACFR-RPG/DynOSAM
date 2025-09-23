@@ -1,4 +1,0 @@
-<map id="dyno::ThreadsafeImuBuffer::getImuDataInterpolatedUpperBorder" name="dyno::ThreadsafeImuBuffer::getImuDataInterpolatedUpperBorder">
-<area shape="rect" id="node1" title="Return a list of the IMU measurements between the specified timestamps. ONLY the IMU newest value get..." alt="" coords="332,5,600,45"/>
-<area shape="rect" id="node2" href="$classdyno_1_1DataInterfacePipelineImu.html#a233e9d7d80e5caee6882ea5007a3fef9" title="getTimeSyncedImuMeasurements Time synchronizes the IMU buffer with the given timestamp (this is typic..." alt="" coords="5,5,284,45"/>
-</map>

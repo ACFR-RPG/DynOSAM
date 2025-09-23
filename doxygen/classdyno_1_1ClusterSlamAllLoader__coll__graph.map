@@ -1,4 +1,6 @@
 <map id="dyno::ClusterSlamAllLoader" name="dyno::ClusterSlamAllLoader">
-<area shape="rect" id="node1" title="As there is so much interdependancy between the folders in the dataset, we just have the one loader s..." alt="" coords="5,93,208,119"/>
-<area shape="rect" id="node2" href="$classdyno_1_1CameraParams.html" title=" " alt="" coords="26,5,187,31"/>
+<area shape="rect" id="node1" title="As there is so much interdependancy between the folders in the dataset, we just have the one loader s..." alt="" coords="73,183,275,208"/>
+<area shape="rect" id="node2" href="$classdyno_1_1CameraParams.html" title=" " alt="" coords="5,95,167,120"/>
+<area shape="rect" id="node3" href="$classdyno_1_1GroundTruthPacketMap.html" title="FastMap from frame id to GroundTruthInputPacket." alt="" coords="191,95,402,120"/>
+<area shape="rect" id="node4" title=" " alt="" coords="198,5,395,45"/>
 </map>

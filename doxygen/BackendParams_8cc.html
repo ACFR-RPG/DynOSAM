@@ -87,8 +87,8 @@ Include dependency graph for BackendParams.cc:</div>
 <map name="adynosam_2src_2backend_2BackendParams_8cc" id="adynosam_2src_2backend_2BackendParams_8cc">
 <area shape="rect" title=" " alt="" coords="61,5,224,45"/>
 <area shape="rect" href="BackendParams_8hpp.html" title=" " alt="" coords="5,93,280,119"/>
-<area shape="rect" title=" " alt="" coords="57,167,116,192"/>
-<area shape="rect" title=" " alt="" coords="141,167,257,192"/>
+<area shape="rect" title=" " alt="" coords="29,167,145,192"/>
+<area shape="rect" title=" " alt="" coords="169,167,228,192"/>
 </map>
 </div>
 </div>
@@ -98,8 +98,8 @@ Include dependency graph for BackendParams.cc:</div>
 Functions</h2></td></tr>
 <tr class="memitem:aa7009f580b51bdaf36a63f47cd529e0a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="BackendParams_8cc.html#aa7009f580b51bdaf36a63f47cd529e0a">DEFINE_double</a> (static_point_sigma, 2.0, &quot;Isotropic pixel noise used <a class="el" href="plot__triangulation_8m.html#ac88aa5a5c67076097e4a0e87a0709ea0">on</a> static points&quot;)</td></tr>
 <tr class="separator:aa7009f580b51bdaf36a63f47cd529e0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af4daa83e2b4e0e7c81df581761007cd1"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="BackendParams_8cc.html#af4daa83e2b4e0e7c81df581761007cd1">DEFINE_double</a> (dynamic_point_sigma, 2,&quot;Isotropic pixel noise used <a class="el" href="plot__triangulation_8m.html#ac88aa5a5c67076097e4a0e87a0709ea0">on</a> dynamic points&quot;)</td></tr>
-<tr class="separator:af4daa83e2b4e0e7c81df581761007cd1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaccbb1c8d7248f6b7ddbc2793e06c421"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="BackendParams_8cc.html#aaccbb1c8d7248f6b7ddbc2793e06c421">DEFINE_double</a> (dynamic_point_sigma, 2, &quot;Isotropic pixel noise used <a class="el" href="plot__triangulation_8m.html#ac88aa5a5c67076097e4a0e87a0709ea0">on</a> dynamic points&quot;)</td></tr>
+<tr class="separator:aaccbb1c8d7248f6b7ddbc2793e06c421"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a18182c44d34584df26d6c24f481ad09a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="BackendParams_8cc.html#a18182c44d34584df26d6c24f481ad09a">DEFINE_double</a> (constant_object_motion_rotation_sigma, 0.01, &quot;Noise used <a class="el" href="plot__triangulation_8m.html#ac88aa5a5c67076097e4a0e87a0709ea0">on</a> rotation componenent of smoothing factor&quot;)</td></tr>
 <tr class="separator:a18182c44d34584df26d6c24f481ad09a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6a3a1f97b4ccbbb915f1c4232dabaaa2"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="BackendParams_8cc.html#a6a3a1f97b4ccbbb915f1c4232dabaaa2">DEFINE_double</a> (constant_object_motion_translation_sigma, 0.1, &quot;Noise used <a class="el" href="plot__triangulation_8m.html#ac88aa5a5c67076097e4a0e87a0709ea0">on</a> translation componenent of smoothing factor&quot;)</td></tr>
@@ -114,8 +114,44 @@ Functions</h2></td></tr>
 <tr class="separator:a5c5339525201122f5d323a959fff646c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad320f2f0b21f753b2e104365ee9b08ab"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="BackendParams_8cc.html#ad320f2f0b21f753b2e104365ee9b08ab">DEFINE_double</a> (dynamic_point_noise_sigma, 0.0625, &quot;Isotropic noise used <a class="el" href="plot__triangulation_8m.html#ac88aa5a5c67076097e4a0e87a0709ea0">on</a> PoseToPointFactor for dynamic points&quot;)</td></tr>
 <tr class="separator:ad320f2f0b21f753b2e104365ee9b08ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae73b7f7694ffed06260fb2da91845901"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="BackendParams_8cc.html#ae73b7f7694ffed06260fb2da91845901">DEFINE_bool</a> (use_smoothing_factor, true, &quot;If the backend should use the smoothing factor between motions&quot;)</td></tr>
+<tr class="separator:ae73b7f7694ffed06260fb2da91845901"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
+<a id="ae73b7f7694ffed06260fb2da91845901" name="ae73b7f7694ffed06260fb2da91845901"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae73b7f7694ffed06260fb2da91845901">&#9670;&#160;</a></span>DEFINE_bool()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">DEFINE_bool </td>
+          <td>(</td>
+          <td class="paramtype">use_smoothing_factor&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">true&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&quot;If the backend should use the smoothing factor between motions&quot;&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a18182c44d34584df26d6c24f481ad09a" name="a18182c44d34584df26d6c24f481ad09a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a18182c44d34584df26d6c24f481ad09a">&#9670;&#160;</a></span>DEFINE_double() <span class="overload">[1/9]</span></h2>
 
@@ -218,8 +254,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="af4daa83e2b4e0e7c81df581761007cd1" name="af4daa83e2b4e0e7c81df581761007cd1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af4daa83e2b4e0e7c81df581761007cd1">&#9670;&#160;</a></span>DEFINE_double() <span class="overload">[4/9]</span></h2>
+<a id="aaccbb1c8d7248f6b7ddbc2793e06c421" name="aaccbb1c8d7248f6b7ddbc2793e06c421"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaccbb1c8d7248f6b7ddbc2793e06c421">&#9670;&#160;</a></span>DEFINE_double() <span class="overload">[4/9]</span></h2>
 
 <div class="memitem">
 <div class="memproto">

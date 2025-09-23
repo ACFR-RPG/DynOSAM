@@ -97,13 +97,15 @@ Inheritance diagram for dyno::DataProvider:</div>
 <area shape="rect" title="A data provider is a module that actually gets the inididual image and/or IMU data from some source a..." alt="" coords="5,84,152,109"/>
 <area shape="rect" href="classdyno_1_1DynoDatasetProvider.html" title=" " alt="" coords="200,5,447,60"/>
 <area shape="rect" href="classdyno_1_1DataProviderRos.html" title="Base Dataprovider for ROS that implements common image processing functionalities." alt="" coords="238,84,409,109"/>
-<area shape="rect" href="classdyno_1_1DynoDatasetProvider.html" title=" " alt="" coords="223,167,424,207"/>
+<area shape="rect" href="classdyno_1_1DynoDatasetProvider.html" title=" " alt="" coords="223,217,424,257"/>
 <area shape="rect" href="classdyno_1_1KittiDataLoader.html" title=" " alt="" coords="521,20,685,45"/>
 <area shape="rect" href="classdyno_1_1OnlineDataProviderRos.html" title="Online data&#45;provider for DynoSAM." alt="" coords="496,76,709,101"/>
 <area shape="rect" href="classdyno_1_1ClusterSlamDataLoader.html" title="Data loader for the cluster slam datasets as provided at: https://huangjh&#45;pub.github...." alt="" coords="495,125,711,151"/>
 <area shape="rect" href="classdyno_1_1OMDDataLoader.html" title="Data loader for the oxford multi motion (omd) datasets as provided at: https://robotic&#45;esp...." alt="" coords="518,175,687,200"/>
 <area shape="rect" href="classdyno_1_1ProjectARIADataLoader.html" title="Data loader for the PREPROCESSED Project ARIA for MP testing team (dataset so far closest source)" alt="" coords="496,224,709,249"/>
-<area shape="rect" href="classdyno_1_1VirtualKittiDataLoader.html" title=" " alt="" coords="499,273,706,299"/>
+<area shape="rect" href="classdyno_1_1TartanAirShibuyaLoader.html" title="Data loader for the TartanAir Shibuya datasets as provided at:https://github.com/haleqiu/tartanair&#45;sh..." alt="" coords="495,273,711,299"/>
+<area shape="rect" href="classdyno_1_1ViodeLoader.html" title=" " alt="" coords="531,323,674,348"/>
+<area shape="rect" href="classdyno_1_1VirtualKittiDataLoader.html" title=" " alt="" coords="499,372,706,397"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -122,10 +124,6 @@ Public Types</h2></td></tr>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:aad6d856034b3333ff6c9df69be2a271a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DataProvider.html#aad6d856034b3333ff6c9df69be2a271a">DataProvider</a> ()=default</td></tr>
 <tr class="separator:aad6d856034b3333ff6c9df69be2a271a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac3dd1f8f4aafda392b89a2348b2026ac"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DataProvider.html#ac3dd1f8f4aafda392b89a2348b2026ac">DataProvider</a> (<a class="el" href="classdyno_1_1DataInterfacePipeline.html">DataInterfacePipeline</a> *module)</td></tr>
-<tr class="separator:ac3dd1f8f4aafda392b89a2348b2026ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae57527fb3be1d1894e0f5f7ec0568390"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DataProvider.html#ae57527fb3be1d1894e0f5f7ec0568390">DataProvider</a> (<a class="el" href="classdyno_1_1DataInterfacePipelineImu.html">DataInterfacePipelineImu</a> *module)</td></tr>
-<tr class="separator:ae57527fb3be1d1894e0f5f7ec0568390"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adda0f52bfea3dcc51b3ccfd9e06c4f8b"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DataProvider.html#adda0f52bfea3dcc51b3ccfd9e06c4f8b">~DataProvider</a> ()</td></tr>
 <tr class="separator:adda0f52bfea3dcc51b3ccfd9e06c4f8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a107b3898bf7f793093c76c4405c608f0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DataProvider.html#a107b3898bf7f793093c76c4405c608f0">registerImuSingleCallback</a> (const <a class="el" href="classdyno_1_1DataProvider.html#ada0c50fb63e4e328da1a89f65c83470e">ImuSingleInputCallback</a> &amp;callback)</td></tr>
@@ -152,6 +150,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a7ad37ecec178b81be71cd7ec8657160d"><td class="memItemLeft" align="right" valign="top">virtual CameraParams::Optional&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DataProvider.html#a7ad37ecec178b81be71cd7ec8657160d">getCameraParams</a> () const</td></tr>
 <tr class="memdesc:a7ad37ecec178b81be71cd7ec8657160d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Provides functionality to get camera paramters for the main pipeline, as these may be available from the dataset.  <br /></td></tr>
 <tr class="separator:a7ad37ecec178b81be71cd7ec8657160d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af26a9e848a9c6261fb18d249fc8282e8"><td class="memItemLeft" align="right" valign="top">virtual ImuParams::Optional&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DataProvider.html#af26a9e848a9c6261fb18d249fc8282e8">getImuParams</a> () const</td></tr>
+<tr class="separator:af26a9e848a9c6261fb18d249fc8282e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
@@ -179,7 +179,7 @@ Private Attributes</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>A data provider is a module that actually gets the inididual image and/or IMU data from some source and packets it into a <a class="el" href="classdyno_1_1Frame.html">Frame</a> and IMU form and sends it the the <a class="el" href="classdyno_1_1DataInterfacePipeline.html" title="Takes data, synchronizes it and sends it to the output queue which should be connected to the fronten...">DataInterfacePipeline</a> via callback functions where the data is synchronized and sent to the frontend. </p>
 
-<p class="definition">Definition at line <a class="el" href="DataProvider_8hpp_source.html#l00025">25</a> of file <a class="el" href="DataProvider_8hpp_source.html">DataProvider.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="DataProvider_8hpp_source.html#l00026">26</a> of file <a class="el" href="DataProvider_8hpp_source.html">DataProvider.hpp</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="a94437a44fed773c176b62932164fa40d" name="a94437a44fed773c176b62932164fa40d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a94437a44fed773c176b62932164fa40d">&#9670;&#160;</a></span>GroundTruthPacketCallback</h2>
@@ -193,7 +193,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="DataProvider_8hpp_source.html#l00037">37</a> of file <a class="el" href="DataProvider_8hpp_source.html">DataProvider.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="DataProvider_8hpp_source.html#l00035">35</a> of file <a class="el" href="DataProvider_8hpp_source.html">DataProvider.hpp</a>.</p>
 
 </div>
 </div>
@@ -209,7 +209,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="DataProvider_8hpp_source.html#l00033">33</a> of file <a class="el" href="DataProvider_8hpp_source.html">DataProvider.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="DataProvider_8hpp_source.html#l00031">31</a> of file <a class="el" href="DataProvider_8hpp_source.html">DataProvider.hpp</a>.</p>
 
 </div>
 </div>
@@ -225,7 +225,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="DataProvider_8hpp_source.html#l00035">35</a> of file <a class="el" href="DataProvider_8hpp_source.html">DataProvider.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="DataProvider_8hpp_source.html#l00033">33</a> of file <a class="el" href="DataProvider_8hpp_source.html">DataProvider.hpp</a>.</p>
 
 </div>
 </div>
@@ -241,13 +241,13 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="DataProvider_8hpp_source.html#l00034">34</a> of file <a class="el" href="DataProvider_8hpp_source.html">DataProvider.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="DataProvider_8hpp_source.html#l00032">32</a> of file <a class="el" href="DataProvider_8hpp_source.html">DataProvider.hpp</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="aad6d856034b3333ff6c9df69be2a271a" name="aad6d856034b3333ff6c9df69be2a271a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aad6d856034b3333ff6c9df69be2a271a">&#9670;&#160;</a></span>DataProvider() <span class="overload">[1/3]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aad6d856034b3333ff6c9df69be2a271a">&#9670;&#160;</a></span>DataProvider()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -268,105 +268,6 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-
-</div>
-</div>
-<a id="ac3dd1f8f4aafda392b89a2348b2026ac" name="ac3dd1f8f4aafda392b89a2348b2026ac"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac3dd1f8f4aafda392b89a2348b2026ac">&#9670;&#160;</a></span>DataProvider() <span class="overload">[2/3]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">dyno::DataProvider::DataProvider </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classdyno_1_1DataInterfacePipeline.html">DataInterfacePipeline</a> *&#160;</td>
-          <td class="paramname"><em>module</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="DataProvider_8cc_source.html#l00033">33</a> of file <a class="el" href="DataProvider_8cc_source.html">DataProvider.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   33</span>                                                        {</div>
-<div class="line"><span class="lineno">   34</span>    CHECK_NOTNULL(module);</div>
-<div class="line"><span class="lineno">   35</span>    <a class="code hl_function" href="classdyno_1_1DataProvider.html#ac659e4b4c130951d5862acb68d69d3b2">registerImageContainerCallback</a>(std::bind(&amp;<a class="code hl_function" href="classdyno_1_1DataInterfacePipeline.html#af34076d538c787a0044eb444586eed95">DataInterfacePipeline::fillImageContainerQueue</a>, module, std::placeholders::_1));</div>
-<div class="line"><span class="lineno">   36</span>    CHECK(<a class="code hl_variable" href="classdyno_1_1DataProvider.html#aa11672e30d895d97f113076391bc02cc">image_container_callback_</a>);</div>
-<div class="line"><span class="lineno">   37</span> </div>
-<div class="line"><span class="lineno">   38</span>}</div>
-<div class="ttc" id="aclassdyno_1_1DataInterfacePipeline_html_af34076d538c787a0044eb444586eed95"><div class="ttname"><a href="classdyno_1_1DataInterfacePipeline.html#af34076d538c787a0044eb444586eed95">dyno::DataInterfacePipeline::fillImageContainerQueue</a></div><div class="ttdeci">virtual void fillImageContainerQueue(ImageContainer::Ptr image_container)</div><div class="ttdef"><b>Definition:</b> <a href="DataInterfacePipeline_8hpp_source.html#l00042">DataInterfacePipeline.hpp:42</a></div></div>
-<div class="ttc" id="aclassdyno_1_1DataProvider_html_aa11672e30d895d97f113076391bc02cc"><div class="ttname"><a href="classdyno_1_1DataProvider.html#aa11672e30d895d97f113076391bc02cc">dyno::DataProvider::image_container_callback_</a></div><div class="ttdeci">ImageContainerCallback image_container_callback_</div><div class="ttdef"><b>Definition:</b> <a href="DataProvider_8hpp_source.html#l00124">DataProvider.hpp:124</a></div></div>
-<div class="ttc" id="aclassdyno_1_1DataProvider_html_ac659e4b4c130951d5862acb68d69d3b2"><div class="ttname"><a href="classdyno_1_1DataProvider.html#ac659e4b4c130951d5862acb68d69d3b2">dyno::DataProvider::registerImageContainerCallback</a></div><div class="ttdeci">void registerImageContainerCallback(const ImageContainerCallback &amp;callback)</div><div class="ttdef"><b>Definition:</b> <a href="DataProvider_8hpp_source.html#l00056">DataProvider.hpp:56</a></div></div>
-</div><!-- fragment -->
-<p class="reference">References <a class="el" href="classdyno_1_1DataInterfacePipeline.html#af34076d538c787a0044eb444586eed95">dyno::DataInterfacePipeline::fillImageContainerQueue()</a>, <a class="el" href="classdyno_1_1DataProvider.html#aa11672e30d895d97f113076391bc02cc">image_container_callback_</a>, and <a class="el" href="classdyno_1_1DataProvider.html#ac659e4b4c130951d5862acb68d69d3b2">registerImageContainerCallback()</a>.</p>
-<div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="classdyno_1_1DataProvider_ac3dd1f8f4aafda392b89a2348b2026ac_cgraph.png" border="0" usemap="#aclassdyno_1_1DataProvider_ac3dd1f8f4aafda392b89a2348b2026ac_cgraph" alt=""/></div>
-<map name="aclassdyno_1_1DataProvider_ac3dd1f8f4aafda392b89a2348b2026ac_cgraph" id="aclassdyno_1_1DataProvider_ac3dd1f8f4aafda392b89a2348b2026ac_cgraph">
-<area shape="rect" title=" " alt="" coords="5,37,152,77"/>
-<area shape="rect" href="classdyno_1_1DataInterfacePipeline.html#af34076d538c787a0044eb444586eed95" title=" " alt="" coords="219,5,421,45"/>
-<area shape="rect" href="classdyno_1_1DataProvider.html#ac659e4b4c130951d5862acb68d69d3b2" title=" " alt="" coords="200,69,440,109"/>
-<area shape="rect" href="classThreadsafeQueue.html#ae3ac884e8d8f4646ce7524038aa4cd2c" title="Push by value. Returns false if the queue has been shutdown. Not optimal, since it will make two move..." alt="" coords="488,13,664,38"/>
-</map>
-</div>
-
-</div>
-</div>
-<a id="ae57527fb3be1d1894e0f5f7ec0568390" name="ae57527fb3be1d1894e0f5f7ec0568390"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae57527fb3be1d1894e0f5f7ec0568390">&#9670;&#160;</a></span>DataProvider() <span class="overload">[3/3]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">dyno::DataProvider::DataProvider </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classdyno_1_1DataInterfacePipelineImu.html">DataInterfacePipelineImu</a> *&#160;</td>
-          <td class="paramname"><em>module</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="DataProvider_8cc_source.html#l00050">50</a> of file <a class="el" href="DataProvider_8cc_source.html">DataProvider.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   50</span>                                                           : <a class="code hl_function" href="classdyno_1_1DataProvider.html#aad6d856034b3333ff6c9df69be2a271a">DataProvider</a>(<span class="keyword">dynamic_cast&lt;</span>DataInterfacePipeline*<span class="keyword">&gt;</span>(module)) {</div>
-<div class="line"><span class="lineno">   51</span>    CHECK_NOTNULL(module);</div>
-<div class="line"><span class="lineno">   52</span>    <a class="code hl_function" href="classdyno_1_1DataProvider.html#a0a0672d90d8b622cabf141f9c7a11479">registerImuMultiCallback</a>(std::bind(</div>
-<div class="line"><span class="lineno">   53</span>        <span class="keyword">static_cast&lt;</span><span class="keywordtype">void</span>(DataInterfacePipelineImu::*)(<span class="keyword">const </span>ImuMeasurements&amp;)<span class="keyword">&gt;</span>(&amp;<a class="code hl_function" href="classdyno_1_1DataInterfacePipelineImu.html#a1645ef07d1fca9349fd7587d8905be8f">DataInterfacePipelineImu::fillImuQueue</a>),</div>
-<div class="line"><span class="lineno">   54</span>        module,</div>
-<div class="line"><span class="lineno">   55</span>        std::placeholders::_1));</div>
-<div class="line"><span class="lineno">   56</span>    <a class="code hl_function" href="classdyno_1_1DataProvider.html#a107b3898bf7f793093c76c4405c608f0">registerImuSingleCallback</a>(std::bind(</div>
-<div class="line"><span class="lineno">   57</span>        <span class="keyword">static_cast&lt;</span><span class="keywordtype">void</span>(DataInterfacePipelineImu::*)(<span class="keyword">const </span>ImuMeasurement&amp;)<span class="keyword">&gt;</span>(&amp;<a class="code hl_function" href="classdyno_1_1DataInterfacePipelineImu.html#a1645ef07d1fca9349fd7587d8905be8f">DataInterfacePipelineImu::fillImuQueue</a>),</div>
-<div class="line"><span class="lineno">   58</span>        module,</div>
-<div class="line"><span class="lineno">   59</span>        std::placeholders::_1));</div>
-<div class="line"><span class="lineno">   60</span> </div>
-<div class="line"><span class="lineno">   61</span>    CHECK(<a class="code hl_variable" href="classdyno_1_1DataProvider.html#a9eb6049732fcc7725e4de30d6ec79ec6">imu_multi_input_callback_</a>);</div>
-<div class="line"><span class="lineno">   62</span>    CHECK(<a class="code hl_variable" href="classdyno_1_1DataProvider.html#a7fec88275bd9e687cc846a1c9095f767">imu_single_input_callback_</a>);</div>
-<div class="line"><span class="lineno">   63</span>}</div>
-<div class="ttc" id="aclassdyno_1_1DataInterfacePipelineImu_html_a1645ef07d1fca9349fd7587d8905be8f"><div class="ttname"><a href="classdyno_1_1DataInterfacePipelineImu.html#a1645ef07d1fca9349fd7587d8905be8f">dyno::DataInterfacePipelineImu::fillImuQueue</a></div><div class="ttdeci">virtual void fillImuQueue(const ImuMeasurements &amp;imu_measurements)</div><div class="ttdef"><b>Definition:</b> <a href="DataInterfacePipeline_8hpp_source.html#l00092">DataInterfacePipeline.hpp:92</a></div></div>
-<div class="ttc" id="aclassdyno_1_1DataProvider_html_a0a0672d90d8b622cabf141f9c7a11479"><div class="ttname"><a href="classdyno_1_1DataProvider.html#a0a0672d90d8b622cabf141f9c7a11479">dyno::DataProvider::registerImuMultiCallback</a></div><div class="ttdeci">void registerImuMultiCallback(const ImuMultiInputCallback &amp;callback)</div><div class="ttdef"><b>Definition:</b> <a href="DataProvider_8hpp_source.html#l00052">DataProvider.hpp:52</a></div></div>
-<div class="ttc" id="aclassdyno_1_1DataProvider_html_a107b3898bf7f793093c76c4405c608f0"><div class="ttname"><a href="classdyno_1_1DataProvider.html#a107b3898bf7f793093c76c4405c608f0">dyno::DataProvider::registerImuSingleCallback</a></div><div class="ttdeci">void registerImuSingleCallback(const ImuSingleInputCallback &amp;callback)</div><div class="ttdef"><b>Definition:</b> <a href="DataProvider_8hpp_source.html#l00047">DataProvider.hpp:47</a></div></div>
-<div class="ttc" id="aclassdyno_1_1DataProvider_html_a7fec88275bd9e687cc846a1c9095f767"><div class="ttname"><a href="classdyno_1_1DataProvider.html#a7fec88275bd9e687cc846a1c9095f767">dyno::DataProvider::imu_single_input_callback_</a></div><div class="ttdeci">ImuSingleInputCallback imu_single_input_callback_</div><div class="ttdef"><b>Definition:</b> <a href="DataProvider_8hpp_source.html#l00125">DataProvider.hpp:125</a></div></div>
-<div class="ttc" id="aclassdyno_1_1DataProvider_html_a9eb6049732fcc7725e4de30d6ec79ec6"><div class="ttname"><a href="classdyno_1_1DataProvider.html#a9eb6049732fcc7725e4de30d6ec79ec6">dyno::DataProvider::imu_multi_input_callback_</a></div><div class="ttdeci">ImuMultiInputCallback imu_multi_input_callback_</div><div class="ttdef"><b>Definition:</b> <a href="DataProvider_8hpp_source.html#l00126">DataProvider.hpp:126</a></div></div>
-<div class="ttc" id="aclassdyno_1_1DataProvider_html_aad6d856034b3333ff6c9df69be2a271a"><div class="ttname"><a href="classdyno_1_1DataProvider.html#aad6d856034b3333ff6c9df69be2a271a">dyno::DataProvider::DataProvider</a></div><div class="ttdeci">DataProvider()=default</div></div>
-</div><!-- fragment -->
-<p class="reference">References <a class="el" href="classdyno_1_1DataInterfacePipelineImu.html#a1645ef07d1fca9349fd7587d8905be8f">dyno::DataInterfacePipelineImu::fillImuQueue()</a>, <a class="el" href="classdyno_1_1DataProvider.html#a9eb6049732fcc7725e4de30d6ec79ec6">imu_multi_input_callback_</a>, <a class="el" href="classdyno_1_1DataProvider.html#a7fec88275bd9e687cc846a1c9095f767">imu_single_input_callback_</a>, <a class="el" href="classdyno_1_1DataProvider.html#a0a0672d90d8b622cabf141f9c7a11479">registerImuMultiCallback()</a>, and <a class="el" href="classdyno_1_1DataProvider.html#a107b3898bf7f793093c76c4405c608f0">registerImuSingleCallback()</a>.</p>
-<div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="classdyno_1_1DataProvider_ae57527fb3be1d1894e0f5f7ec0568390_cgraph.png" border="0" usemap="#aclassdyno_1_1DataProvider_ae57527fb3be1d1894e0f5f7ec0568390_cgraph" alt=""/></div>
-<map name="aclassdyno_1_1DataProvider_ae57527fb3be1d1894e0f5f7ec0568390_cgraph" id="aclassdyno_1_1DataProvider_ae57527fb3be1d1894e0f5f7ec0568390_cgraph">
-<area shape="rect" title=" " alt="" coords="5,101,152,141"/>
-<area shape="rect" href="classdyno_1_1DataInterfacePipelineImu.html#a1645ef07d1fca9349fd7587d8905be8f" title=" " alt="" coords="200,37,403,77"/>
-<area shape="rect" href="classdyno_1_1DataProvider.html#a0a0672d90d8b622cabf141f9c7a11479" title=" " alt="" coords="204,101,399,141"/>
-<area shape="rect" href="classdyno_1_1DataProvider.html#a107b3898bf7f793093c76c4405c608f0" title=" " alt="" coords="201,165,402,205"/>
-<area shape="rect" href="classdyno_1_1ThreadsafeImuBuffer.html#a4620846c124831ecaa7c871fd8616583" title=" " alt="" coords="451,37,649,77"/>
-<area shape="rect" href="classdyno_1_1ThreadsafeImuBuffer.html#a50cd006e61ecb908cec8ede163e05cb5" title=" " alt="" coords="697,37,896,77"/>
-<area shape="rect" href="classdyno_1_1ThreadsafeTemporalBuffer.html#a30fcdd7ef2886e0b0fd10d3d220bf3ca" title=" " alt="" coords="944,5,1139,45"/>
-<area shape="rect" href="classdyno_1_1ThreadsafeTemporalBuffer.html#a3679b5d8321550cd5ce21fade6ba4352" title=" " alt="" coords="944,69,1139,109"/>
-</map>
-</div>
 
 </div>
 </div>
@@ -393,11 +294,9 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="DataProvider_8cc_source.html#l00040">40</a> of file <a class="el" href="DataProvider_8cc_source.html">DataProvider.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   40</span>                            {</div>
-<div class="line"><span class="lineno">   41</span>    <a class="code hl_function" href="classdyno_1_1DataProvider.html#aab837117aea198eb0b7afb261ff757fb">shutdown</a>();</div>
-<div class="line"><span class="lineno">   42</span>}</div>
-<div class="ttc" id="aclassdyno_1_1DataProvider_html_aab837117aea198eb0b7afb261ff757fb"><div class="ttname"><a href="classdyno_1_1DataProvider.html#aab837117aea198eb0b7afb261ff757fb">dyno::DataProvider::shutdown</a></div><div class="ttdeci">virtual void shutdown()</div><div class="ttdef"><b>Definition:</b> <a href="DataProvider_8cc_source.html#l00044">DataProvider.cc:44</a></div></div>
+<p class="definition">Definition at line <a class="el" href="DataProvider_8cc_source.html#l00041">41</a> of file <a class="el" href="DataProvider_8cc_source.html">DataProvider.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   41</span>{ <a class="code hl_function" href="classdyno_1_1DataProvider.html#aab837117aea198eb0b7afb261ff757fb">shutdown</a>(); }</div>
+<div class="ttc" id="aclassdyno_1_1DataProvider_html_aab837117aea198eb0b7afb261ff757fb"><div class="ttname"><a href="classdyno_1_1DataProvider.html#aab837117aea198eb0b7afb261ff757fb">dyno::DataProvider::shutdown</a></div><div class="ttdeci">virtual void shutdown()</div><div class="ttdef"><b>Definition:</b> <a href="DataProvider_8cc_source.html#l00043">DataProvider.cc:43</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1DataProvider.html#aab837117aea198eb0b7afb261ff757fb">shutdown()</a>.</p>
 <div class="dynheader">
@@ -466,11 +365,11 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="DataProvider_8hpp_source.html#l00118">118</a> of file <a class="el" href="DataProvider_8hpp_source.html">DataProvider.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  118</span>                                 {</div>
-<div class="line"><span class="lineno">  119</span>        <span class="keywordflow">for</span>(<span class="keyword">auto</span> cb : <a class="code hl_variable" href="classdyno_1_1DataProvider.html#a0cf002ffa75c76b45592fbdc9723e273">on_finish_callbacks_</a>) cb();</div>
-<div class="line"><span class="lineno">  120</span>    }</div>
-<div class="ttc" id="aclassdyno_1_1DataProvider_html_a0cf002ffa75c76b45592fbdc9723e273"><div class="ttname"><a href="classdyno_1_1DataProvider.html#a0cf002ffa75c76b45592fbdc9723e273">dyno::DataProvider::on_finish_callbacks_</a></div><div class="ttdeci">std::vector&lt; std::function&lt; void()&gt; &gt; on_finish_callbacks_</div><div class="ttdef"><b>Definition:</b> <a href="DataProvider_8hpp_source.html#l00134">DataProvider.hpp:134</a></div></div>
+<p class="definition">Definition at line <a class="el" href="DataProvider_8hpp_source.html#l00121">121</a> of file <a class="el" href="DataProvider_8hpp_source.html">DataProvider.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  121</span>                               {</div>
+<div class="line"><span class="lineno">  122</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> cb : <a class="code hl_variable" href="classdyno_1_1DataProvider.html#a0cf002ffa75c76b45592fbdc9723e273">on_finish_callbacks_</a>) cb();</div>
+<div class="line"><span class="lineno">  123</span>  }</div>
+<div class="ttc" id="aclassdyno_1_1DataProvider_html_a0cf002ffa75c76b45592fbdc9723e273"><div class="ttname"><a href="classdyno_1_1DataProvider.html#a0cf002ffa75c76b45592fbdc9723e273">dyno::DataProvider::on_finish_callbacks_</a></div><div class="ttdeci">std::vector&lt; std::function&lt; void()&gt; &gt; on_finish_callbacks_</div><div class="ttdef"><b>Definition:</b> <a href="DataProvider_8hpp_source.html#l00136">DataProvider.hpp:136</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1DataProvider.html#a0cf002ffa75c76b45592fbdc9723e273">on_finish_callbacks_</a>.</p>
 
@@ -515,10 +414,40 @@ Here is the caller graph for this function:</div>
 <p>By default returns std::nullopt but the derived data-provider can overwrite this and return the loaded params</p>
 <dl class="section return"><dt>Returns</dt><dd>CameraParams::Optional </dd></dl>
 
-<p>Reimplemented in <a class="el" href="classdyno_1_1ClusterSlamDataLoader.html#ac2df8b8870306d0d5840d9b3f7a3d9ed">dyno::ClusterSlamDataLoader</a>, <a class="el" href="classdyno_1_1KittiDataLoader.html#a1ae7994314d13f355483a3c4efa013a1">dyno::KittiDataLoader</a>, <a class="el" href="classdyno_1_1OMDDataLoader.html#a90e7bdf43e040e0bfa83cc7b7e2ebacd">dyno::OMDDataLoader</a>, <a class="el" href="classdyno_1_1ProjectARIADataLoader.html#afdc738dbc509f28c068da9d3f82046af">dyno::ProjectARIADataLoader</a>, <a class="el" href="classdyno_1_1VirtualKittiDataLoader.html#aa62d6f7d9e04fea95ea44e0877d97211">dyno::VirtualKittiDataLoader</a>, and <a class="el" href="classdyno_1_1DataProviderRos.html#a7afae88aebb8a7b0f873a700ea961e7b">dyno::DataProviderRos</a>.</p>
+<p>Reimplemented in <a class="el" href="classdyno_1_1ClusterSlamDataLoader.html#ac2df8b8870306d0d5840d9b3f7a3d9ed">dyno::ClusterSlamDataLoader</a>, <a class="el" href="classdyno_1_1KittiDataLoader.html#a1ae7994314d13f355483a3c4efa013a1">dyno::KittiDataLoader</a>, <a class="el" href="classdyno_1_1OMDDataLoader.html#a90e7bdf43e040e0bfa83cc7b7e2ebacd">dyno::OMDDataLoader</a>, <a class="el" href="classdyno_1_1ProjectARIADataLoader.html#afdc738dbc509f28c068da9d3f82046af">dyno::ProjectARIADataLoader</a>, <a class="el" href="classdyno_1_1TartanAirShibuyaLoader.html#a75c43f11ba6d8f22f00a51d53200d988">dyno::TartanAirShibuyaLoader</a>, <a class="el" href="classdyno_1_1ViodeLoader.html#a6bebc9c1b828792666901098863e2cf3">dyno::ViodeLoader</a>, <a class="el" href="classdyno_1_1VirtualKittiDataLoader.html#aa62d6f7d9e04fea95ea44e0877d97211">dyno::VirtualKittiDataLoader</a>, and <a class="el" href="classdyno_1_1DataProviderRos.html#a7afae88aebb8a7b0f873a700ea961e7b">dyno::DataProviderRos</a>.</p>
 
 <p class="definition">Definition at line <a class="el" href="DataProvider_8hpp_source.html#l00111">111</a> of file <a class="el" href="DataProvider_8hpp_source.html">DataProvider.hpp</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">  111</span>{ <span class="keywordflow">return</span> {}; }</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="af26a9e848a9c6261fb18d249fc8282e8" name="af26a9e848a9c6261fb18d249fc8282e8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af26a9e848a9c6261fb18d249fc8282e8">&#9670;&#160;</a></span>getImuParams()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual ImuParams::Optional dyno::DataProvider::getImuParams </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented in <a class="el" href="classdyno_1_1ViodeLoader.html#ae9f1b1eed666cdc37de3010e30ede1d6">dyno::ViodeLoader</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="DataProvider_8hpp_source.html#l00113">113</a> of file <a class="el" href="DataProvider_8hpp_source.html">DataProvider.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  113</span>{ <span class="keywordflow">return</span> {}; }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -558,19 +487,19 @@ Here is the caller graph for this function:</div>
 
 <p>Reimplemented in <a class="el" href="classdyno_1_1KittiDataLoader.html#ad4db6b1ce7226d92c95e929bc4aea255">dyno::KittiDataLoader</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="DataProvider_8hpp_source.html#l00075">75</a> of file <a class="el" href="DataProvider_8hpp_source.html">DataProvider.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   75</span>                                                                                                   {</div>
-<div class="line"><span class="lineno">   76</span>        <span class="keywordflow">return</span> image_container;</div>
-<div class="line"><span class="lineno">   77</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="DataProvider_8hpp_source.html#l00074">74</a> of file <a class="el" href="DataProvider_8hpp_source.html">DataProvider.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   75</span>                                         {</div>
+<div class="line"><span class="lineno">   76</span>    <span class="keywordflow">return</span> image_container;</div>
+<div class="line"><span class="lineno">   77</span>  }</div>
 </div><!-- fragment -->
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1DynoPipelineManager.html#a5e1e8d2df3c6db2525115c4c6d7f366c">dyno::DynoPipelineManager::DynoPipelineManager()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1DynoPipelineManager.html#a283e891aa3d4ca8d2d671eb1e3d5d514">dyno::DynoPipelineManager::DynoPipelineManager()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1DataProvider_a45d3385ae82257c8cfcf6552ba7f0670_icgraph.png" border="0" usemap="#aclassdyno_1_1DataProvider_a45d3385ae82257c8cfcf6552ba7f0670_icgraph" alt=""/></div>
 <map name="aclassdyno_1_1DataProvider_a45d3385ae82257c8cfcf6552ba7f0670_icgraph" id="aclassdyno_1_1DataProvider_a45d3385ae82257c8cfcf6552ba7f0670_icgraph">
 <area shape="rect" title="Virtual Image Container Preprocessor function that is registered to the data interface pipeline." alt="" coords="259,5,477,45"/>
-<area shape="rect" href="classdyno_1_1DynoPipelineManager.html#a5e1e8d2df3c6db2525115c4c6d7f366c" title=" " alt="" coords="5,5,211,45"/>
+<area shape="rect" href="classdyno_1_1DynoPipelineManager.html#a283e891aa3d4ca8d2d671eb1e3d5d514" title=" " alt="" coords="5,5,211,45"/>
 </map>
 </div>
 
@@ -600,11 +529,11 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="DataProvider_8hpp_source.html#l00060">60</a> of file <a class="el" href="DataProvider_8hpp_source.html">DataProvider.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   60</span>                                                                                             {</div>
-<div class="line"><span class="lineno">   61</span>        <a class="code hl_variable" href="classdyno_1_1DataProvider.html#a1691b6605c29a0bfda5fea991c6bc199">ground_truth_packet_callback_</a> = callback;</div>
-<div class="line"><span class="lineno">   62</span>    }</div>
-<div class="ttc" id="aclassdyno_1_1DataProvider_html_a1691b6605c29a0bfda5fea991c6bc199"><div class="ttname"><a href="classdyno_1_1DataProvider.html#a1691b6605c29a0bfda5fea991c6bc199">dyno::DataProvider::ground_truth_packet_callback_</a></div><div class="ttdeci">GroundTruthPacketCallback ground_truth_packet_callback_</div><div class="ttdef"><b>Definition:</b> <a href="DataProvider_8hpp_source.html#l00128">DataProvider.hpp:128</a></div></div>
+<p class="definition">Definition at line <a class="el" href="DataProvider_8hpp_source.html#l00057">57</a> of file <a class="el" href="DataProvider_8hpp_source.html">DataProvider.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   58</span>                                                 {</div>
+<div class="line"><span class="lineno">   59</span>    <a class="code hl_variable" href="classdyno_1_1DataProvider.html#a1691b6605c29a0bfda5fea991c6bc199">ground_truth_packet_callback_</a> = callback;</div>
+<div class="line"><span class="lineno">   60</span>  }</div>
+<div class="ttc" id="aclassdyno_1_1DataProvider_html_a1691b6605c29a0bfda5fea991c6bc199"><div class="ttname"><a href="classdyno_1_1DataProvider.html#a1691b6605c29a0bfda5fea991c6bc199">dyno::DataProvider::ground_truth_packet_callback_</a></div><div class="ttdeci">GroundTruthPacketCallback ground_truth_packet_callback_</div><div class="ttdef"><b>Definition:</b> <a href="DataProvider_8hpp_source.html#l00130">DataProvider.hpp:130</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1DataProvider.html#a1691b6605c29a0bfda5fea991c6bc199">ground_truth_packet_callback_</a>.</p>
 
@@ -634,23 +563,13 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="DataProvider_8hpp_source.html#l00056">56</a> of file <a class="el" href="DataProvider_8hpp_source.html">DataProvider.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   56</span>                                                                                       {</div>
-<div class="line"><span class="lineno">   57</span>        <a class="code hl_variable" href="classdyno_1_1DataProvider.html#aa11672e30d895d97f113076391bc02cc">image_container_callback_</a> = callback;</div>
-<div class="line"><span class="lineno">   58</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="DataProvider_8hpp_source.html#l00052">52</a> of file <a class="el" href="DataProvider_8hpp_source.html">DataProvider.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   53</span>                                              {</div>
+<div class="line"><span class="lineno">   54</span>    <a class="code hl_variable" href="classdyno_1_1DataProvider.html#aa11672e30d895d97f113076391bc02cc">image_container_callback_</a> = callback;</div>
+<div class="line"><span class="lineno">   55</span>  }</div>
+<div class="ttc" id="aclassdyno_1_1DataProvider_html_aa11672e30d895d97f113076391bc02cc"><div class="ttname"><a href="classdyno_1_1DataProvider.html#aa11672e30d895d97f113076391bc02cc">dyno::DataProvider::image_container_callback_</a></div><div class="ttdeci">ImageContainerCallback image_container_callback_</div><div class="ttdef"><b>Definition:</b> <a href="DataProvider_8hpp_source.html#l00126">DataProvider.hpp:126</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1DataProvider.html#aa11672e30d895d97f113076391bc02cc">image_container_callback_</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1DataProvider.html#ac3dd1f8f4aafda392b89a2348b2026ac">DataProvider()</a>.</p>
-<div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="classdyno_1_1DataProvider_ac659e4b4c130951d5862acb68d69d3b2_icgraph.png" border="0" usemap="#aclassdyno_1_1DataProvider_ac659e4b4c130951d5862acb68d69d3b2_icgraph" alt=""/></div>
-<map name="aclassdyno_1_1DataProvider_ac659e4b4c130951d5862acb68d69d3b2_icgraph" id="aclassdyno_1_1DataProvider_ac659e4b4c130951d5862acb68d69d3b2_icgraph">
-<area shape="rect" title=" " alt="" coords="200,5,440,45"/>
-<area shape="rect" href="classdyno_1_1DataProvider.html#ac3dd1f8f4aafda392b89a2348b2026ac" title=" " alt="" coords="5,5,152,45"/>
-</map>
-</div>
 
 </div>
 </div>
@@ -678,23 +597,13 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="DataProvider_8hpp_source.html#l00052">52</a> of file <a class="el" href="DataProvider_8hpp_source.html">DataProvider.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   52</span>                                                                                {</div>
-<div class="line"><span class="lineno">   53</span>        <a class="code hl_variable" href="classdyno_1_1DataProvider.html#a9eb6049732fcc7725e4de30d6ec79ec6">imu_multi_input_callback_</a> = callback;</div>
-<div class="line"><span class="lineno">   54</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="DataProvider_8hpp_source.html#l00048">48</a> of file <a class="el" href="DataProvider_8hpp_source.html">DataProvider.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   48</span>                                                                              {</div>
+<div class="line"><span class="lineno">   49</span>    <a class="code hl_variable" href="classdyno_1_1DataProvider.html#a9eb6049732fcc7725e4de30d6ec79ec6">imu_multi_input_callback_</a> = callback;</div>
+<div class="line"><span class="lineno">   50</span>  }</div>
+<div class="ttc" id="aclassdyno_1_1DataProvider_html_a9eb6049732fcc7725e4de30d6ec79ec6"><div class="ttname"><a href="classdyno_1_1DataProvider.html#a9eb6049732fcc7725e4de30d6ec79ec6">dyno::DataProvider::imu_multi_input_callback_</a></div><div class="ttdeci">ImuMultiInputCallback imu_multi_input_callback_</div><div class="ttdef"><b>Definition:</b> <a href="DataProvider_8hpp_source.html#l00128">DataProvider.hpp:128</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1DataProvider.html#a9eb6049732fcc7725e4de30d6ec79ec6">imu_multi_input_callback_</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1DataProvider.html#ae57527fb3be1d1894e0f5f7ec0568390">DataProvider()</a>.</p>
-<div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="classdyno_1_1DataProvider_a0a0672d90d8b622cabf141f9c7a11479_icgraph.png" border="0" usemap="#aclassdyno_1_1DataProvider_a0a0672d90d8b622cabf141f9c7a11479_icgraph" alt=""/></div>
-<map name="aclassdyno_1_1DataProvider_a0a0672d90d8b622cabf141f9c7a11479_icgraph" id="aclassdyno_1_1DataProvider_a0a0672d90d8b622cabf141f9c7a11479_icgraph">
-<area shape="rect" title=" " alt="" coords="200,5,395,45"/>
-<area shape="rect" href="classdyno_1_1DataProvider.html#ae57527fb3be1d1894e0f5f7ec0568390" title=" " alt="" coords="5,5,152,45"/>
-</map>
-</div>
 
 </div>
 </div>
@@ -722,23 +631,13 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="DataProvider_8hpp_source.html#l00047">47</a> of file <a class="el" href="DataProvider_8hpp_source.html">DataProvider.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   48</span>                                              {</div>
-<div class="line"><span class="lineno">   49</span>        <a class="code hl_variable" href="classdyno_1_1DataProvider.html#a7fec88275bd9e687cc846a1c9095f767">imu_single_input_callback_</a> = callback;</div>
-<div class="line"><span class="lineno">   50</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="DataProvider_8hpp_source.html#l00043">43</a> of file <a class="el" href="DataProvider_8hpp_source.html">DataProvider.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   44</span>                                              {</div>
+<div class="line"><span class="lineno">   45</span>    <a class="code hl_variable" href="classdyno_1_1DataProvider.html#a7fec88275bd9e687cc846a1c9095f767">imu_single_input_callback_</a> = callback;</div>
+<div class="line"><span class="lineno">   46</span>  }</div>
+<div class="ttc" id="aclassdyno_1_1DataProvider_html_a7fec88275bd9e687cc846a1c9095f767"><div class="ttname"><a href="classdyno_1_1DataProvider.html#a7fec88275bd9e687cc846a1c9095f767">dyno::DataProvider::imu_single_input_callback_</a></div><div class="ttdeci">ImuSingleInputCallback imu_single_input_callback_</div><div class="ttdef"><b>Definition:</b> <a href="DataProvider_8hpp_source.html#l00127">DataProvider.hpp:127</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1DataProvider.html#a7fec88275bd9e687cc846a1c9095f767">imu_single_input_callback_</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1DataProvider.html#ae57527fb3be1d1894e0f5f7ec0568390">DataProvider()</a>.</p>
-<div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="classdyno_1_1DataProvider_a107b3898bf7f793093c76c4405c608f0_icgraph.png" border="0" usemap="#aclassdyno_1_1DataProvider_a107b3898bf7f793093c76c4405c608f0_icgraph" alt=""/></div>
-<map name="aclassdyno_1_1DataProvider_a107b3898bf7f793093c76c4405c608f0_icgraph" id="aclassdyno_1_1DataProvider_a107b3898bf7f793093c76c4405c608f0_icgraph">
-<area shape="rect" title=" " alt="" coords="200,5,401,45"/>
-<area shape="rect" href="classdyno_1_1DataProvider.html#ae57527fb3be1d1894e0f5f7ec0568390" title=" " alt="" coords="5,5,152,45"/>
-</map>
-</div>
 
 </div>
 </div>
@@ -767,9 +666,9 @@ Here is the caller graph for this function:</div>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="DataProvider_8hpp_source.html#l00079">79</a> of file <a class="el" href="DataProvider_8hpp_source.html">DataProvider.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   79</span>                                                                              {</div>
-<div class="line"><span class="lineno">   80</span>        <a class="code hl_variable" href="classdyno_1_1DataProvider.html#a0cf002ffa75c76b45592fbdc9723e273">on_finish_callbacks_</a>.push_back(callback);</div>
-<div class="line"><span class="lineno">   81</span>    }</div>
+<div class="fragment"><div class="line"><span class="lineno">   79</span>                                                                            {</div>
+<div class="line"><span class="lineno">   80</span>    <a class="code hl_variable" href="classdyno_1_1DataProvider.html#a0cf002ffa75c76b45592fbdc9723e273">on_finish_callbacks_</a>.push_back(callback);</div>
+<div class="line"><span class="lineno">   81</span>  }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1DataProvider.html#a0cf002ffa75c76b45592fbdc9723e273">on_finish_callbacks_</a>.</p>
 
@@ -800,12 +699,12 @@ Here is the caller graph for this function:</div>
 
 <p>Reimplemented in <a class="el" href="classdyno_1_1OnlineDataProviderRos.html#a7a29e46f09c1a033d158e4c43585e508">dyno::OnlineDataProviderRos</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="DataProvider_8cc_source.html#l00044">44</a> of file <a class="el" href="DataProvider_8cc_source.html">DataProvider.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   44</span>                            {</div>
-<div class="line"><span class="lineno">   45</span>    LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Shutting down data provider and associated module&quot;</span>;</div>
-<div class="line"><span class="lineno">   46</span>    <a class="code hl_variable" href="classdyno_1_1DataProvider.html#a4a1d8a48c87a76d781858b1af69e2def">shutdown_</a> = <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">   47</span>}</div>
-<div class="ttc" id="aclassdyno_1_1DataProvider_html_a4a1d8a48c87a76d781858b1af69e2def"><div class="ttname"><a href="classdyno_1_1DataProvider.html#a4a1d8a48c87a76d781858b1af69e2def">dyno::DataProvider::shutdown_</a></div><div class="ttdeci">std::atomic_bool shutdown_</div><div class="ttdef"><b>Definition:</b> <a href="DataProvider_8hpp_source.html#l00131">DataProvider.hpp:131</a></div></div>
+<p class="definition">Definition at line <a class="el" href="DataProvider_8cc_source.html#l00043">43</a> of file <a class="el" href="DataProvider_8cc_source.html">DataProvider.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   43</span>                            {</div>
+<div class="line"><span class="lineno">   44</span>  LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Shutting down data provider and associated module&quot;</span>;</div>
+<div class="line"><span class="lineno">   45</span>  <a class="code hl_variable" href="classdyno_1_1DataProvider.html#a4a1d8a48c87a76d781858b1af69e2def">shutdown_</a> = <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">   46</span>}</div>
+<div class="ttc" id="aclassdyno_1_1DataProvider_html_a4a1d8a48c87a76d781858b1af69e2def"><div class="ttname"><a href="classdyno_1_1DataProvider.html#a4a1d8a48c87a76d781858b1af69e2def">dyno::DataProvider::shutdown_</a></div><div class="ttdeci">std::atomic_bool shutdown_</div><div class="ttdef"><b>Definition:</b> <a href="DataProvider_8hpp_source.html#l00133">DataProvider.hpp:133</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1DataProvider.html#a4a1d8a48c87a76d781858b1af69e2def">shutdown_</a>.</p>
 
@@ -875,9 +774,9 @@ false </dd></dl>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="DataProvider_8hpp_source.html#l00128">128</a> of file <a class="el" href="DataProvider_8hpp_source.html">DataProvider.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="DataProvider_8hpp_source.html#l00130">130</a> of file <a class="el" href="DataProvider_8hpp_source.html">DataProvider.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1ClusterSlamDataLoader.html#a08661c0ee53d2504e5b6d2c931df1f97">dyno::ClusterSlamDataLoader::ClusterSlamDataLoader()</a>, <a class="el" href="classdyno_1_1KittiDataLoader.html#ac3950a2ffba6caf37cefb51459336862">dyno::KittiDataLoader::KittiDataLoader()</a>, <a class="el" href="classdyno_1_1OMDDataLoader.html#ac5ff322c63be13db32c7ad810c85ea08">dyno::OMDDataLoader::OMDDataLoader()</a>, <a class="el" href="classdyno_1_1DataProvider.html#aad9b4cf15074068c1d185a4be3c54568">registerGroundTruthPacketCallback()</a>, and <a class="el" href="classdyno_1_1VirtualKittiDataLoader.html#aac90985e4a9dee128c448148e218aed5">dyno::VirtualKittiDataLoader::VirtualKittiDataLoader()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1ClusterSlamDataLoader.html#a08661c0ee53d2504e5b6d2c931df1f97">dyno::ClusterSlamDataLoader::ClusterSlamDataLoader()</a>, <a class="el" href="classdyno_1_1KittiDataLoader.html#ac3950a2ffba6caf37cefb51459336862">dyno::KittiDataLoader::KittiDataLoader()</a>, <a class="el" href="classdyno_1_1OMDDataLoader.html#ac5ff322c63be13db32c7ad810c85ea08">dyno::OMDDataLoader::OMDDataLoader()</a>, <a class="el" href="classdyno_1_1DataProvider.html#aad9b4cf15074068c1d185a4be3c54568">registerGroundTruthPacketCallback()</a>, <a class="el" href="classdyno_1_1TartanAirShibuyaLoader.html#a174041e4559db39e9865a0260b691e38">dyno::TartanAirShibuyaLoader::TartanAirShibuyaLoader()</a>, <a class="el" href="classdyno_1_1ViodeLoader.html#af043296a2e18c763356eaf2d51cb728f">dyno::ViodeLoader::ViodeLoader()</a>, and <a class="el" href="classdyno_1_1VirtualKittiDataLoader.html#aac90985e4a9dee128c448148e218aed5">dyno::VirtualKittiDataLoader::VirtualKittiDataLoader()</a>.</p>
 
 </div>
 </div>
@@ -901,9 +800,9 @@ false </dd></dl>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="DataProvider_8hpp_source.html#l00124">124</a> of file <a class="el" href="DataProvider_8hpp_source.html">DataProvider.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="DataProvider_8hpp_source.html#l00126">126</a> of file <a class="el" href="DataProvider_8hpp_source.html">DataProvider.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1ClusterSlamDataLoader.html#a08661c0ee53d2504e5b6d2c931df1f97">dyno::ClusterSlamDataLoader::ClusterSlamDataLoader()</a>, <a class="el" href="classdyno_1_1DataProvider.html#ac3dd1f8f4aafda392b89a2348b2026ac">DataProvider()</a>, <a class="el" href="classdyno_1_1OnlineDataProviderRos.html#a02b6aa8b0f6c6c732310c0852f54ef42">dyno::OnlineDataProviderRos::imageSyncCallback()</a>, <a class="el" href="classdyno_1_1KittiDataLoader.html#ac3950a2ffba6caf37cefb51459336862">dyno::KittiDataLoader::KittiDataLoader()</a>, <a class="el" href="classdyno_1_1OMDDataLoader.html#ac5ff322c63be13db32c7ad810c85ea08">dyno::OMDDataLoader::OMDDataLoader()</a>, <a class="el" href="classdyno_1_1ProjectARIADataLoader.html#ac54b115f31c1e8c76395fc595f0c7637">dyno::ProjectARIADataLoader::ProjectARIADataLoader()</a>, <a class="el" href="classdyno_1_1DataProvider.html#ac659e4b4c130951d5862acb68d69d3b2">registerImageContainerCallback()</a>, and <a class="el" href="classdyno_1_1VirtualKittiDataLoader.html#aac90985e4a9dee128c448148e218aed5">dyno::VirtualKittiDataLoader::VirtualKittiDataLoader()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1ClusterSlamDataLoader.html#a08661c0ee53d2504e5b6d2c931df1f97">dyno::ClusterSlamDataLoader::ClusterSlamDataLoader()</a>, <a class="el" href="classdyno_1_1OnlineDataProviderRos.html#a02b6aa8b0f6c6c732310c0852f54ef42">dyno::OnlineDataProviderRos::imageSyncCallback()</a>, <a class="el" href="classdyno_1_1KittiDataLoader.html#ac3950a2ffba6caf37cefb51459336862">dyno::KittiDataLoader::KittiDataLoader()</a>, <a class="el" href="classdyno_1_1OMDDataLoader.html#ac5ff322c63be13db32c7ad810c85ea08">dyno::OMDDataLoader::OMDDataLoader()</a>, <a class="el" href="classdyno_1_1ProjectARIADataLoader.html#ac54b115f31c1e8c76395fc595f0c7637">dyno::ProjectARIADataLoader::ProjectARIADataLoader()</a>, <a class="el" href="classdyno_1_1DataProvider.html#ac659e4b4c130951d5862acb68d69d3b2">registerImageContainerCallback()</a>, <a class="el" href="classdyno_1_1TartanAirShibuyaLoader.html#a174041e4559db39e9865a0260b691e38">dyno::TartanAirShibuyaLoader::TartanAirShibuyaLoader()</a>, <a class="el" href="classdyno_1_1ViodeLoader.html#af043296a2e18c763356eaf2d51cb728f">dyno::ViodeLoader::ViodeLoader()</a>, and <a class="el" href="classdyno_1_1VirtualKittiDataLoader.html#aac90985e4a9dee128c448148e218aed5">dyno::VirtualKittiDataLoader::VirtualKittiDataLoader()</a>.</p>
 
 </div>
 </div>
@@ -927,9 +826,9 @@ false </dd></dl>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="DataProvider_8hpp_source.html#l00126">126</a> of file <a class="el" href="DataProvider_8hpp_source.html">DataProvider.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="DataProvider_8hpp_source.html#l00128">128</a> of file <a class="el" href="DataProvider_8hpp_source.html">DataProvider.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1DataProvider.html#ae57527fb3be1d1894e0f5f7ec0568390">DataProvider()</a>, and <a class="el" href="classdyno_1_1DataProvider.html#a0a0672d90d8b622cabf141f9c7a11479">registerImuMultiCallback()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1DataProvider.html#a0a0672d90d8b622cabf141f9c7a11479">registerImuMultiCallback()</a>.</p>
 
 </div>
 </div>
@@ -953,9 +852,9 @@ false </dd></dl>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="DataProvider_8hpp_source.html#l00125">125</a> of file <a class="el" href="DataProvider_8hpp_source.html">DataProvider.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="DataProvider_8hpp_source.html#l00127">127</a> of file <a class="el" href="DataProvider_8hpp_source.html">DataProvider.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1DataProvider.html#ae57527fb3be1d1894e0f5f7ec0568390">DataProvider()</a>, and <a class="el" href="classdyno_1_1DataProvider.html#a107b3898bf7f793093c76c4405c608f0">registerImuSingleCallback()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1DataProvider.html#a107b3898bf7f793093c76c4405c608f0">registerImuSingleCallback()</a>, and <a class="el" href="classdyno_1_1ViodeLoader.html#af043296a2e18c763356eaf2d51cb728f">dyno::ViodeLoader::ViodeLoader()</a>.</p>
 
 </div>
 </div>
@@ -979,7 +878,7 @@ false </dd></dl>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="DataProvider_8hpp_source.html#l00134">134</a> of file <a class="el" href="DataProvider_8hpp_source.html">DataProvider.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="DataProvider_8hpp_source.html#l00136">136</a> of file <a class="el" href="DataProvider_8hpp_source.html">DataProvider.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1DataProvider.html#aeed0a3ab688356858ca5831289ffaa1f">emitOnFinishCallbacks()</a>, and <a class="el" href="classdyno_1_1DataProvider.html#a7ebaced11d2ae130a6dbcb463c14e3ab">registerOnFinishCallback()</a>.</p>
 
@@ -1005,7 +904,7 @@ false </dd></dl>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="DataProvider_8hpp_source.html#l00131">131</a> of file <a class="el" href="DataProvider_8hpp_source.html">DataProvider.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="DataProvider_8hpp_source.html#l00133">133</a> of file <a class="el" href="DataProvider_8hpp_source.html">DataProvider.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1OnlineDataProviderRos.html#a3b7725856bc86407813c51804a26bea4">dyno::OnlineDataProviderRos::connect()</a>, <a class="el" href="classdyno_1_1OnlineDataProviderRos.html#abea751b62c91dbf7bfac759680a434f7">dyno::OnlineDataProviderRos::OnlineDataProviderRos()</a>, <a class="el" href="classdyno_1_1DataProvider.html#aab837117aea198eb0b7afb261ff757fb">shutdown()</a>, <a class="el" href="classdyno_1_1OnlineDataProviderRos.html#a7a29e46f09c1a033d158e4c43585e508">dyno::OnlineDataProviderRos::shutdown()</a>, and <a class="el" href="classdyno_1_1OnlineDataProviderRos.html#ace65280b44a739073adfba0fad1ae759">dyno::OnlineDataProviderRos::spin()</a>.</p>
 

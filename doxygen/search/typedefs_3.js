@@ -17,6 +17,7 @@ var searchData=
   ['difference_5ftype_14',['difference_type',['../structdyno_1_1internal_1_1filter__iterator__base.html#a06c45fa8d8adc192c6349de1095721fb',1,'dyno::internal::filter_iterator_base::difference_type()'],['../classdyno_1_1CsvReader_1_1RowIterator.html#af3d6ea5ba82e94460a6d6fad4ea2e758',1,'dyno::CsvReader::RowIterator::difference_type()'],['../classdyno_1_1FeatureContainer.html#a7e97232149e7559b94df27bcf63bc316',1,'dyno::FeatureContainer::difference_type()'],['../structdyno_1_1internal_1_1filter__iterator__detail.html#a06c45fa8d8adc192c6349de1095721fb',1,'dyno::internal::filter_iterator_detail::difference_type()']]],
   ['display_15',['Display',['../classdyno_1_1DisplayPipeline.html#a4a18136beb1693183a78f125d8af6391',1,'dyno::DisplayPipeline']]],
   ['distortioncoeffs_16',['DistortionCoeffs',['../classdyno_1_1CameraParams.html#a8349ad5f0c727d6ef16a1b127e620eae',1,'dyno::CameraParams']]],
-  ['dynamicobjectobservations_17',['DynamicObjectObservations',['../namespacedyno.html#a3cd7855c4528423617777513b714042c',1,'dyno']]],
-  ['dynodatatypestuple_18',['DynoDataTypesTuple',['../structdyno_1_1__DynoDatasetConstructor.html#acc7118d203ad832567e7cff6349f3318',1,'dyno::_DynoDatasetConstructor::DynoDataTypesTuple()'],['../classdyno_1_1DynoDataset.html#a32f6aaec83ff6c7584240334b572849c',1,'dyno::DynoDataset::DynoDataTypesTuple()']]]
+  ['dynamiclmkfunc_17',['DynamicLmkFunc',['../classdyno_1_1ApplyFunctionalSymbol.html#aa7f6ceb6061d59a2b15d7cf0c4e9a373',1,'dyno::ApplyFunctionalSymbol']]],
+  ['dynamicobjectobservations_18',['DynamicObjectObservations',['../namespacedyno.html#a3cd7855c4528423617777513b714042c',1,'dyno']]],
+  ['dynodatatypestuple_19',['DynoDataTypesTuple',['../structdyno_1_1__DynoDatasetConstructor.html#acc7118d203ad832567e7cff6349f3318',1,'dyno::_DynoDatasetConstructor::DynoDataTypesTuple()'],['../classdyno_1_1DynoDataset.html#a32f6aaec83ff6c7584240334b572849c',1,'dyno::DynoDataset::DynoDataTypesTuple()']]]
 ];

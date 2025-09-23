@@ -89,10 +89,12 @@ Public Attributes</h2></td></tr>
 <tr class="separator:ab28873ec59906f1a1c7b266a6b454f77"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaca4a55e978d91915de6b99e98e8ae3d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1UpdateObservationParams.html#aaca4a55e978d91915de6b99e98e8ae3d">enable_debug_info</a> = true</td></tr>
 <tr class="separator:aaca4a55e978d91915de6b99e98e8ae3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5a4aa842503f39f16bbe823aee4a824e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1UpdateObservationParams.html#a5a4aa842503f39f16bbe823aee4a824e">enable_incremental_detail</a> = false</td></tr>
+<tr class="separator:a5a4aa842503f39f16bbe823aee4a824e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="Formulation_8hpp_source.html#l00107">107</a> of file <a class="el" href="Formulation_8hpp_source.html">Formulation.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Formulation_8hpp_source.html#l00053">53</a> of file <a class="el" href="Formulation_8hpp_source.html">Formulation.hpp</a>.</p>
 </div><h2 class="groupheader">Member Data Documentation</h2>
 <a id="ab28873ec59906f1a1c7b266a6b454f77" name="ab28873ec59906f1a1c7b266a6b454f77"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab28873ec59906f1a1c7b266a6b454f77">&#9670;&#160;</a></span>do_backtrack</h2>
@@ -107,9 +109,9 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p>If true, vision related updated will backtrack to the start of a new tracklet and all the measurements to the graph should make false in batch case where we want to be explicit about which frames are added! </p>
 
-<p class="definition">Definition at line <a class="el" href="Formulation_8hpp_source.html#l00110">110</a> of file <a class="el" href="Formulation_8hpp_source.html">Formulation.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Formulation_8hpp_source.html#l00057">57</a> of file <a class="el" href="Formulation_8hpp_source.html">Formulation.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1RGBDBackendModule.html#a0e74cbcf2a43e1836fc41d0152cc9e82">dyno::RGBDBackendModule::constructGraph()</a>, <a class="el" href="classdyno_1_1RGBDBackendModule.html#a9484cb840c3c82033d4929bd202bc7a8">dyno::RGBDBackendModule::nominalSpinImpl()</a>, and <a class="el" href="classdyno_1_1Formulation.html#a74de91cf6b4755060af63627d28fed2c">dyno::Formulation&lt; MAP &gt;::updateStaticObservations()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1RegularBackendModule.html#aa79b2f6d63914e52a7adbfbaa65c32b1">dyno::RegularBackendModule::nominalSpinImpl()</a>, <a class="el" href="classdyno_1_1ParallelHybridBackendModule.html#a292225500c4604751ebd98e6564ac6ff">dyno::ParallelHybridBackendModule::nominalUpdateStaticEstimator()</a>, <a class="el" href="classdyno_1_1ParallelObjectISAM.html#ad0ec7b6e8d9712fb5b16376f567b5126">dyno::ParallelObjectISAM::updateFormulation()</a>, and <a class="el" href="classdyno_1_1Formulation.html#a1b5ff63de3f707bd29838b65ef7a2ec9">dyno::Formulation&lt; Map3d2d &gt;::updateTheta()</a>.</p>
 
 </div>
 </div>
@@ -125,9 +127,25 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Formulation_8hpp_source.html#l00111">111</a> of file <a class="el" href="Formulation_8hpp_source.html">Formulation.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Formulation_8hpp_source.html#l00058">58</a> of file <a class="el" href="Formulation_8hpp_source.html">Formulation.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1RGBDBackendModule.html#a0e74cbcf2a43e1836fc41d0152cc9e82">dyno::RGBDBackendModule::constructGraph()</a>, <a class="el" href="classdyno_1_1RGBDBackendModule.html#a9484cb840c3c82033d4929bd202bc7a8">dyno::RGBDBackendModule::nominalSpinImpl()</a>, and <a class="el" href="classdyno_1_1Formulation.html#a74de91cf6b4755060af63627d28fed2c">dyno::Formulation&lt; MAP &gt;::updateStaticObservations()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1RegularBackendModule.html#aa79b2f6d63914e52a7adbfbaa65c32b1">dyno::RegularBackendModule::nominalSpinImpl()</a>, <a class="el" href="classdyno_1_1ParallelHybridBackendModule.html#a292225500c4604751ebd98e6564ac6ff">dyno::ParallelHybridBackendModule::nominalUpdateStaticEstimator()</a>, <a class="el" href="classdyno_1_1ParallelObjectISAM.html#ad0ec7b6e8d9712fb5b16376f567b5126">dyno::ParallelObjectISAM::updateFormulation()</a>, and <a class="el" href="structdyno_1_1UpdateObservationResult.html#ab069f0de92d758540c65728505feff0a">dyno::UpdateObservationResult::UpdateObservationResult()</a>.</p>
+
+</div>
+</div>
+<a id="a5a4aa842503f39f16bbe823aee4a824e" name="a5a4aa842503f39f16bbe823aee4a824e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5a4aa842503f39f16bbe823aee4a824e">&#9670;&#160;</a></span>enable_incremental_detail</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool dyno::UpdateObservationParams::enable_incremental_detail = false</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Formulation_8hpp_source.html#l00059">59</a> of file <a class="el" href="Formulation_8hpp_source.html">Formulation.hpp</a>.</p>
 
 </div>
 </div>

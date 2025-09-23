@@ -75,7 +75,6 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="#pro-attribs">Protected Attributes</a> &#124;
@@ -113,24 +112,22 @@ Collaboration diagram for dyno::FeatureTrackerBase:</div>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
-Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1FeatureTrackerBase_1_1ImageTracksParams.html">ImageTracksParams</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parameter struct to control the visualisation for <a class="el" href="classdyno_1_1FeatureTrackerBase.html#aa902950650699301214f776a905e3b77">FeatureTrackerBase::computeImageTracks</a>.  <a href="structdyno_1_1FeatureTrackerBase_1_1ImageTracksParams.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a4e2f1808b0a97e128df8f7a6695161d5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1FeatureTrackerBase.html#a4e2f1808b0a97e128df8f7a6695161d5">FeatureTrackerBase</a> (const <a class="el" href="structdyno_1_1TrackerParams.html">TrackerParams</a> &amp;params, Camera::Ptr camera, <a class="el" href="namespacedyno.html#a6cc0b19d1d56a213497e94a199888977">ImageDisplayQueue</a> *display_queue)</td></tr>
 <tr class="separator:a4e2f1808b0a97e128df8f7a6695161d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa902950650699301214f776a905e3b77"><td class="memItemLeft" align="right" valign="top">cv::Mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1FeatureTrackerBase.html#aa902950650699301214f776a905e3b77">computeImageTracks</a> (const <a class="el" href="classdyno_1_1Frame.html">Frame</a> &amp;previous_frame, const <a class="el" href="classdyno_1_1Frame.html">Frame</a> &amp;current_frame, const <a class="el" href="structdyno_1_1FeatureTrackerBase_1_1ImageTracksParams.html">ImageTracksParams</a> &amp;config=false) const</td></tr>
+<tr class="memitem:aa902950650699301214f776a905e3b77"><td class="memItemLeft" align="right" valign="top">cv::Mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1FeatureTrackerBase.html#aa902950650699301214f776a905e3b77">computeImageTracks</a> (const <a class="el" href="classdyno_1_1Frame.html">Frame</a> &amp;previous_frame, const <a class="el" href="classdyno_1_1Frame.html">Frame</a> &amp;current_frame, const <a class="el" href="classdyno_1_1ImageTracksParams.html">ImageTracksParams</a> &amp;config=false) const</td></tr>
 <tr class="separator:aa902950650699301214f776a905e3b77"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aac4fd637116f1a55b857968d6f84d33d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1FeatureTrackerBase.html#aac4fd637116f1a55b857968d6f84d33d">predictKeypointsGivenRotation</a> (std::vector&lt; cv::Point2f &gt; &amp;predicted_pts_k, const std::vector&lt; cv::Point2f &gt; &amp;pts_km1, const gtsam::Rot3 &amp;R_km1_k) const</td></tr>
+<tr class="separator:aac4fd637116f1a55b857968d6f84d33d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
 <tr class="memitem:a32d80be7e74a096c2b816529b7fd2c69"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1FeatureTrackerBase.html#a32d80be7e74a096c2b816529b7fd2c69">isWithinShrunkenImage</a> (const <a class="el" href="namespacedyno.html#aaa260a8022691078c59e1ac6a4fa05b5">Keypoint</a> &amp;kp) const</td></tr>
 <tr class="memdesc:a32d80be7e74a096c2b816529b7fd2c69"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if a keypoint is within an image, taking into account the shrink row/col values in the params. If these values are zero, it just checks that the keypoint is within the image size, as given by the camera parameters.  <br /></td></tr>
 <tr class="separator:a32d80be7e74a096c2b816529b7fd2c69"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af4e17d3f13305f40698a9b284d767c74"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1FeatureTrackerBase.html#af4e17d3f13305f40698a9b284d767c74">isWithinShrunkenImage</a> (const cv::Point2f &amp;kp) const</td></tr>
+<tr class="separator:af4e17d3f13305f40698a9b284d767c74"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
@@ -146,7 +143,7 @@ Protected Attributes</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="FeatureTrackerBase_8hpp_source.html#l00067">67</a> of file <a class="el" href="FeatureTrackerBase_8hpp_source.html">FeatureTrackerBase.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FeatureTrackerBase_8hpp_source.html#l00134">134</a> of file <a class="el" href="FeatureTrackerBase_8hpp_source.html">FeatureTrackerBase.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a4e2f1808b0a97e128df8f7a6695161d5" name="a4e2f1808b0a97e128df8f7a6695161d5"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4e2f1808b0a97e128df8f7a6695161d5">&#9670;&#160;</a></span>FeatureTrackerBase()</h2>
@@ -180,15 +177,15 @@ Protected Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="FeatureTrackerBase_8cc_source.html#l00041">41</a> of file <a class="el" href="FeatureTrackerBase_8cc_source.html">FeatureTrackerBase.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   44</span>    : <a class="code hl_variable" href="classdyno_1_1FeatureTrackerBase.html#a04f0948954381269fedd5a6856662cb7">params_</a>(params),</div>
-<div class="line"><span class="lineno">   45</span>      <a class="code hl_variable" href="classdyno_1_1FeatureTrackerBase.html#a23d0ec748366b789be491e61e536839c">img_size_</a>(camera-&gt;getParams().imageSize()),</div>
-<div class="line"><span class="lineno">   46</span>      <a class="code hl_variable" href="classdyno_1_1FeatureTrackerBase.html#abf6eba19baf18b1c3648347401c15a56">camera_</a>(camera),</div>
-<div class="line"><span class="lineno">   47</span>      <a class="code hl_variable" href="classdyno_1_1FeatureTrackerBase.html#a26a7bdd81c43eb39b8578403f9c7a9d2">display_queue_</a>(display_queue) {}</div>
-<div class="ttc" id="aclassdyno_1_1FeatureTrackerBase_html_a04f0948954381269fedd5a6856662cb7"><div class="ttname"><a href="classdyno_1_1FeatureTrackerBase.html#a04f0948954381269fedd5a6856662cb7">dyno::FeatureTrackerBase::params_</a></div><div class="ttdeci">const TrackerParams params_</div><div class="ttdef"><b>Definition:</b> <a href="FeatureTrackerBase_8hpp_source.html#l00113">FeatureTrackerBase.hpp:113</a></div></div>
-<div class="ttc" id="aclassdyno_1_1FeatureTrackerBase_html_a23d0ec748366b789be491e61e536839c"><div class="ttname"><a href="classdyno_1_1FeatureTrackerBase.html#a23d0ec748366b789be491e61e536839c">dyno::FeatureTrackerBase::img_size_</a></div><div class="ttdeci">const cv::Size img_size_</div><div class="ttdef"><b>Definition:</b> <a href="FeatureTrackerBase_8hpp_source.html#l00114">FeatureTrackerBase.hpp:114</a></div></div>
-<div class="ttc" id="aclassdyno_1_1FeatureTrackerBase_html_a26a7bdd81c43eb39b8578403f9c7a9d2"><div class="ttname"><a href="classdyno_1_1FeatureTrackerBase.html#a26a7bdd81c43eb39b8578403f9c7a9d2">dyno::FeatureTrackerBase::display_queue_</a></div><div class="ttdeci">ImageDisplayQueue * display_queue_</div><div class="ttdef"><b>Definition:</b> <a href="FeatureTrackerBase_8hpp_source.html#l00117">FeatureTrackerBase.hpp:117</a></div></div>
-<div class="ttc" id="aclassdyno_1_1FeatureTrackerBase_html_abf6eba19baf18b1c3648347401c15a56"><div class="ttname"><a href="classdyno_1_1FeatureTrackerBase.html#abf6eba19baf18b1c3648347401c15a56">dyno::FeatureTrackerBase::camera_</a></div><div class="ttdeci">Camera::Ptr camera_</div><div class="ttdoc">Expected image size from the camera.</div><div class="ttdef"><b>Definition:</b> <a href="FeatureTrackerBase_8hpp_source.html#l00116">FeatureTrackerBase.hpp:116</a></div></div>
+<p class="definition">Definition at line <a class="el" href="FeatureTrackerBase_8cc_source.html#l00042">42</a> of file <a class="el" href="FeatureTrackerBase_8cc_source.html">FeatureTrackerBase.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   45</span>    : <a class="code hl_variable" href="classdyno_1_1FeatureTrackerBase.html#a04f0948954381269fedd5a6856662cb7">params_</a>(params),</div>
+<div class="line"><span class="lineno">   46</span>      <a class="code hl_variable" href="classdyno_1_1FeatureTrackerBase.html#a23d0ec748366b789be491e61e536839c">img_size_</a>(camera-&gt;getParams().imageSize()),</div>
+<div class="line"><span class="lineno">   47</span>      <a class="code hl_variable" href="classdyno_1_1FeatureTrackerBase.html#abf6eba19baf18b1c3648347401c15a56">camera_</a>(camera),</div>
+<div class="line"><span class="lineno">   48</span>      <a class="code hl_variable" href="classdyno_1_1FeatureTrackerBase.html#a26a7bdd81c43eb39b8578403f9c7a9d2">display_queue_</a>(display_queue) {}</div>
+<div class="ttc" id="aclassdyno_1_1FeatureTrackerBase_html_a04f0948954381269fedd5a6856662cb7"><div class="ttname"><a href="classdyno_1_1FeatureTrackerBase.html#a04f0948954381269fedd5a6856662cb7">dyno::FeatureTrackerBase::params_</a></div><div class="ttdeci">const TrackerParams params_</div><div class="ttdef"><b>Definition:</b> <a href="FeatureTrackerBase_8hpp_source.html#l00166">FeatureTrackerBase.hpp:166</a></div></div>
+<div class="ttc" id="aclassdyno_1_1FeatureTrackerBase_html_a23d0ec748366b789be491e61e536839c"><div class="ttname"><a href="classdyno_1_1FeatureTrackerBase.html#a23d0ec748366b789be491e61e536839c">dyno::FeatureTrackerBase::img_size_</a></div><div class="ttdeci">const cv::Size img_size_</div><div class="ttdef"><b>Definition:</b> <a href="FeatureTrackerBase_8hpp_source.html#l00167">FeatureTrackerBase.hpp:167</a></div></div>
+<div class="ttc" id="aclassdyno_1_1FeatureTrackerBase_html_a26a7bdd81c43eb39b8578403f9c7a9d2"><div class="ttname"><a href="classdyno_1_1FeatureTrackerBase.html#a26a7bdd81c43eb39b8578403f9c7a9d2">dyno::FeatureTrackerBase::display_queue_</a></div><div class="ttdeci">ImageDisplayQueue * display_queue_</div><div class="ttdef"><b>Definition:</b> <a href="FeatureTrackerBase_8hpp_source.html#l00170">FeatureTrackerBase.hpp:170</a></div></div>
+<div class="ttc" id="aclassdyno_1_1FeatureTrackerBase_html_abf6eba19baf18b1c3648347401c15a56"><div class="ttname"><a href="classdyno_1_1FeatureTrackerBase.html#abf6eba19baf18b1c3648347401c15a56">dyno::FeatureTrackerBase::camera_</a></div><div class="ttdeci">Camera::Ptr camera_</div><div class="ttdoc">Expected image size from the camera.</div><div class="ttdef"><b>Definition:</b> <a href="FeatureTrackerBase_8hpp_source.html#l00169">FeatureTrackerBase.hpp:169</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -214,7 +211,7 @@ Protected Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="structdyno_1_1FeatureTrackerBase_1_1ImageTracksParams.html">ImageTracksParams</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="classdyno_1_1ImageTracksParams.html">ImageTracksParams</a> &amp;&#160;</td>
           <td class="paramname"><em>config</em> = <code>false</code>&#160;</td>
         </tr>
         <tr>
@@ -225,177 +222,236 @@ Protected Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="FeatureTrackerBase_8cc_source.html#l00051">51</a> of file <a class="el" href="FeatureTrackerBase_8cc_source.html">FeatureTrackerBase.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   53</span>                                           {</div>
-<div class="line"><span class="lineno">   54</span>  cv::Mat img_rgb;</div>
-<div class="line"><span class="lineno">   55</span> </div>
-<div class="line"><span class="lineno">   56</span>  <span class="keyword">const</span> cv::Mat&amp; rgb = current_frame.image_container_.get&lt;ImageType::RGBMono&gt;();</div>
-<div class="line"><span class="lineno">   57</span>  rgb.copyTo(img_rgb);</div>
-<div class="line"><span class="lineno">   58</span> </div>
-<div class="line"><span class="lineno">   59</span>  <span class="keyword">const</span> <span class="keywordtype">bool</span> debug = config.is_debug;</div>
-<div class="line"><span class="lineno">   60</span>  <span class="keyword">const</span> <span class="keywordtype">bool</span> show_frame_info = debug &amp;&amp; config.show_frame_info;</div>
-<div class="line"><span class="lineno">   61</span>  <span class="keyword">const</span> <span class="keywordtype">bool</span> show_intermediate_tracking =</div>
-<div class="line"><span class="lineno">   62</span>      debug &amp;&amp; config.show_intermediate_tracking;</div>
-<div class="line"><span class="lineno">   63</span> </div>
-<div class="line"><span class="lineno">   64</span>  <span class="keyword">static</span> <span class="keyword">const</span> cv::Scalar red(<a class="code hl_function" href="structdyno_1_1Color.html#a1b75c1200495de0d1a32e382393e8dd7">Color::red</a>().bgra());</div>
-<div class="line"><span class="lineno">   65</span>  <span class="keyword">static</span> <span class="keyword">const</span> cv::Scalar green(<a class="code hl_function" href="structdyno_1_1Color.html#a9357d7ddef94b17ace0420444b4cb7a2">Color::green</a>().bgra());</div>
-<div class="line"><span class="lineno">   66</span>  <span class="keyword">static</span> <span class="keyword">const</span> cv::Scalar blue(<a class="code hl_function" href="structdyno_1_1Color.html#ac6497975e0e9af4d28092f8bc07b3678">Color::blue</a>().bgra());</div>
-<div class="line"><span class="lineno">   67</span> </div>
-<div class="line"><span class="lineno">   68</span>  <span class="keyword">constexpr</span> <span class="keyword">static</span> <span class="keywordtype">int</span> kFeatureThicknessDebug = 5;</div>
-<div class="line"><span class="lineno">   69</span>  <span class="keyword">constexpr</span> <span class="keyword">static</span> <span class="keywordtype">int</span> kFeatureThickness = 4;</div>
-<div class="line"><span class="lineno">   70</span>  <span class="comment">// constexpr static int kFeatureThickness = 7;</span></div>
-<div class="line"><span class="lineno">   71</span>  <span class="keywordtype">int</span> static_point_thickness =</div>
-<div class="line"><span class="lineno">   72</span>      debug ? kFeatureThicknessDebug : kFeatureThickness;</div>
-<div class="line"><span class="lineno">   73</span> </div>
-<div class="line"><span class="lineno">   74</span>  <span class="keywordtype">int</span> num_static_tracks = 0;</div>
-<div class="line"><span class="lineno">   75</span>  <span class="comment">// Add all keypoints in cur_frame with the tracks.</span></div>
-<div class="line"><span class="lineno">   76</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> Feature::Ptr&amp; feature : current_frame.static_features_) {</div>
-<div class="line"><span class="lineno">   77</span>    <span class="keyword">const</span> <a class="code hl_typedef" href="namespacedyno.html#aaa260a8022691078c59e1ac6a4fa05b5">Keypoint</a>&amp; px_cur = feature-&gt;keypoint();</div>
-<div class="line"><span class="lineno">   78</span>    <span class="keyword">const</span> <span class="keyword">auto</span> pc_cur = <a class="code hl_function" href="namespacedyno_1_1utils.html#a566e85133acf8b739daa549be74d2e1c">utils::gtsamPointToCv</a>(px_cur);</div>
-<div class="line"><span class="lineno">   79</span>    <span class="keywordflow">if</span> (!feature-&gt;usable() &amp;&amp;</div>
-<div class="line"><span class="lineno">   80</span>        show_intermediate_tracking) {  <span class="comment">// Untracked landmarks are red.</span></div>
-<div class="line"><span class="lineno">   81</span>      cv::circle(img_rgb, pc_cur, static_point_thickness, red, 2);</div>
-<div class="line"><span class="lineno">   82</span>    } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">   83</span>      <span class="keyword">const</span> Feature::Ptr&amp; prev_feature =</div>
-<div class="line"><span class="lineno">   84</span>          previous_frame.static_features_.getByTrackletId(</div>
-<div class="line"><span class="lineno">   85</span>              feature-&gt;trackletId());</div>
-<div class="line"><span class="lineno">   86</span>      <span class="keywordflow">if</span> (prev_feature) {</div>
-<div class="line"><span class="lineno">   87</span>        <span class="comment">// If feature was in previous frame, display tracked feature with</span></div>
-<div class="line"><span class="lineno">   88</span>        <span class="comment">// green circle/line:</span></div>
-<div class="line"><span class="lineno">   89</span>        cv::circle(img_rgb, pc_cur, static_point_thickness, green, 1);</div>
-<div class="line"><span class="lineno">   90</span> </div>
-<div class="line"><span class="lineno">   91</span>        <span class="comment">// draw the optical flow arrow</span></div>
-<div class="line"><span class="lineno">   92</span>        <span class="keyword">const</span> <span class="keyword">auto</span> pc_prev = <a class="code hl_function" href="namespacedyno_1_1utils.html#a566e85133acf8b739daa549be74d2e1c">utils::gtsamPointToCv</a>(prev_feature-&gt;keypoint());</div>
-<div class="line"><span class="lineno">   93</span>        cv::arrowedLine(img_rgb, pc_prev, pc_cur, green, 1);</div>
-<div class="line"><span class="lineno">   94</span> </div>
-<div class="line"><span class="lineno">   95</span>        num_static_tracks++;</div>
-<div class="line"><span class="lineno">   96</span> </div>
-<div class="line"><span class="lineno">   97</span>      } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (debug &amp;&amp;</div>
-<div class="line"><span class="lineno">   98</span>                 show_intermediate_tracking) {  <span class="comment">// New feature tracks are blue.</span></div>
-<div class="line"><span class="lineno">   99</span>        cv::circle(img_rgb, pc_cur, 6, blue, 1);</div>
-<div class="line"><span class="lineno">  100</span>      }</div>
-<div class="line"><span class="lineno">  101</span>    }</div>
-<div class="line"><span class="lineno">  102</span>  }</div>
-<div class="line"><span class="lineno">  103</span> </div>
-<div class="line"><span class="lineno">  104</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> Feature::Ptr&amp; feature : current_frame.dynamic_features_) {</div>
-<div class="line"><span class="lineno">  105</span>    <span class="keyword">const</span> <a class="code hl_typedef" href="namespacedyno.html#aaa260a8022691078c59e1ac6a4fa05b5">Keypoint</a>&amp; px_cur = feature-&gt;keypoint();</div>
-<div class="line"><span class="lineno">  106</span>    <span class="keywordflow">if</span> (!feature-&gt;usable()) {  <span class="comment">// Untracked landmarks are red.</span></div>
-<div class="line"><span class="lineno">  107</span>      <span class="comment">// cv::circle(img_rgb,  utils::gtsamPointToCv(px_cur), 1, red, 2);</span></div>
-<div class="line"><span class="lineno">  108</span>    } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  109</span>      <span class="keyword">const</span> Feature::Ptr&amp; prev_feature =</div>
-<div class="line"><span class="lineno">  110</span>          previous_frame.dynamic_features_.getByTrackletId(</div>
-<div class="line"><span class="lineno">  111</span>              feature-&gt;trackletId());</div>
-<div class="line"><span class="lineno">  112</span>      <span class="keywordflow">if</span> (prev_feature) {</div>
-<div class="line"><span class="lineno">  113</span>        <span class="comment">// If feature was in previous frame, display tracked feature with</span></div>
-<div class="line"><span class="lineno">  114</span>        <span class="comment">// green circle/line:</span></div>
-<div class="line"><span class="lineno">  115</span>        <span class="comment">// cv::circle(img_rgb,  utils::gtsamPointToCv(px_cur), 6, green, 1);</span></div>
-<div class="line"><span class="lineno">  116</span>        <span class="keyword">const</span> <a class="code hl_typedef" href="namespacedyno.html#aaa260a8022691078c59e1ac6a4fa05b5">Keypoint</a>&amp; px_prev = prev_feature-&gt;keypoint();</div>
-<div class="line"><span class="lineno">  117</span>        <span class="keyword">const</span> cv::Scalar colour = <a class="code hl_function" href="structdyno_1_1Color.html#a4f52f9aec87e2c34370ad02e6d4e25fc">Color::uniqueId</a>(feature-&gt;objectId()).<a class="code hl_function" href="structdyno_1_1Color.html#a19ef171ae71fa3481957f66d420ced3b">bgra</a>();</div>
-<div class="line"><span class="lineno">  118</span>        cv::arrowedLine(img_rgb, <a class="code hl_function" href="namespacedyno_1_1utils.html#a566e85133acf8b739daa549be74d2e1c">utils::gtsamPointToCv</a>(px_prev),</div>
-<div class="line"><span class="lineno">  119</span>                        <a class="code hl_function" href="namespacedyno_1_1utils.html#a566e85133acf8b739daa549be74d2e1c">utils::gtsamPointToCv</a>(px_cur), colour, 1);</div>
-<div class="line"><span class="lineno">  120</span>      } <span class="keywordflow">else</span> {  <span class="comment">// New feature tracks are blue.</span></div>
-<div class="line"><span class="lineno">  121</span>        <span class="comment">// cv::circle(img_rgb, utils::gtsamPointToCv(px_cur), 1, blue, 1);</span></div>
-<div class="line"><span class="lineno">  122</span>      }</div>
-<div class="line"><span class="lineno">  123</span>    }</div>
-<div class="line"><span class="lineno">  124</span>  }</div>
-<div class="line"><span class="lineno">  125</span> </div>
-<div class="line"><span class="lineno">  126</span>  std::vector&lt;ObjectId&gt; objects_to_print;</div>
-<div class="line"><span class="lineno">  127</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; object_observation_pair :</div>
-<div class="line"><span class="lineno">  128</span>       current_frame.object_observations_) {</div>
-<div class="line"><span class="lineno">  129</span>    <span class="keyword">const</span> <a class="code hl_typedef" href="namespacedyno.html#a38bb86e4154b86428b8d133be03fb2b5">ObjectId</a> object_id = object_observation_pair.first;</div>
-<div class="line"><span class="lineno">  130</span>    <span class="keyword">const</span> cv::Rect&amp; bb = object_observation_pair.second.bounding_box_;</div>
-<div class="line"><span class="lineno">  131</span> </div>
-<div class="line"><span class="lineno">  132</span>    <span class="comment">// TODO: if its marked as moving!!</span></div>
-<div class="line"><span class="lineno">  133</span>    <span class="keywordflow">if</span> (bb.empty()) {</div>
-<div class="line"><span class="lineno">  134</span>      <span class="keywordflow">continue</span>;</div>
-<div class="line"><span class="lineno">  135</span>    }</div>
-<div class="line"><span class="lineno">  136</span> </div>
-<div class="line"><span class="lineno">  137</span>    objects_to_print.push_back(object_id);</div>
-<div class="line"><span class="lineno">  138</span>    <span class="keyword">const</span> cv::Scalar colour = <a class="code hl_function" href="structdyno_1_1Color.html#a4f52f9aec87e2c34370ad02e6d4e25fc">Color::uniqueId</a>(object_id).<a class="code hl_function" href="structdyno_1_1Color.html#a19ef171ae71fa3481957f66d420ced3b">bgra</a>();</div>
+<p class="definition">Definition at line <a class="el" href="FeatureTrackerBase_8cc_source.html#l00131">131</a> of file <a class="el" href="FeatureTrackerBase_8cc_source.html">FeatureTrackerBase.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  133</span>                                           {</div>
+<div class="line"><span class="lineno">  134</span>  <span class="keyword">const</span> ImageWrapper&lt;ImageType::RGBMono&gt;&amp; img_wrapper =</div>
+<div class="line"><span class="lineno">  135</span>      current_frame.image_container_.rgb();</div>
+<div class="line"><span class="lineno">  136</span>  cv::Mat img_rgb = img_wrapper.toRGB().clone();</div>
+<div class="line"><span class="lineno">  137</span>  <span class="keyword">const</span> cv::Mat&amp; object_mask =</div>
+<div class="line"><span class="lineno">  138</span>      current_frame.image_container_.objectMotionMask();</div>
 <div class="line"><span class="lineno">  139</span> </div>
-<div class="line"><span class="lineno">  140</span>    <span class="keyword">const</span> std::string label = <span class="stringliteral">&quot;object &quot;</span> + std::to_string(object_id);</div>
-<div class="line"><span class="lineno">  141</span>    <a class="code hl_function" href="namespacedyno_1_1utils.html#ab3245a3ae481133c8052ef2ba138c990">utils::drawLabeledBoundingBox</a>(img_rgb, label, colour, bb);</div>
-<div class="line"><span class="lineno">  142</span>  }</div>
-<div class="line"><span class="lineno">  143</span> </div>
-<div class="line"><span class="lineno">  144</span>  <span class="comment">// draw text info</span></div>
-<div class="line"><span class="lineno">  145</span>  std::stringstream ss;</div>
-<div class="line"><span class="lineno">  146</span>  ss &lt;&lt; <span class="stringliteral">&quot;Frame ID: &quot;</span> &lt;&lt; current_frame.getFrameId() &lt;&lt; <span class="stringliteral">&quot; | &quot;</span>;</div>
-<div class="line"><span class="lineno">  147</span>  ss &lt;&lt; <span class="stringliteral">&quot;VO tracks: &quot;</span> &lt;&lt; num_static_tracks &lt;&lt; <span class="stringliteral">&quot; | &quot;</span>;</div>
-<div class="line"><span class="lineno">  148</span>  ss &lt;&lt; <span class="stringliteral">&quot;Objects: &quot;</span>;</div>
-<div class="line"><span class="lineno">  149</span> </div>
-<div class="line"><span class="lineno">  150</span>  <span class="keywordflow">if</span> (objects_to_print.empty()) {</div>
-<div class="line"><span class="lineno">  151</span>    ss &lt;&lt; <span class="stringliteral">&quot;None&quot;</span>;</div>
-<div class="line"><span class="lineno">  152</span>  } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  153</span>    ss &lt;&lt; <span class="stringliteral">&quot;[&quot;</span>;</div>
-<div class="line"><span class="lineno">  154</span>    <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; objects_to_print.size(); ++i) {</div>
-<div class="line"><span class="lineno">  155</span>      ss &lt;&lt; objects_to_print[i];</div>
-<div class="line"><span class="lineno">  156</span>      <span class="keywordflow">if</span> (i != objects_to_print.size() - 1) {</div>
-<div class="line"><span class="lineno">  157</span>        ss &lt;&lt; <span class="stringliteral">&quot;, &quot;</span>;  <span class="comment">// Add comma between elements</span></div>
-<div class="line"><span class="lineno">  158</span>      }</div>
-<div class="line"><span class="lineno">  159</span>    }</div>
-<div class="line"><span class="lineno">  160</span>    ss &lt;&lt; <span class="stringliteral">&quot;]&quot;</span>;</div>
-<div class="line"><span class="lineno">  161</span>  }</div>
-<div class="line"><span class="lineno">  162</span> </div>
-<div class="line"><span class="lineno">  163</span>  <span class="keyword">constexpr</span> <span class="keyword">static</span> <span class="keywordtype">double</span> kFontScale = 0.6;</div>
-<div class="line"><span class="lineno">  164</span>  <span class="keyword">constexpr</span> <span class="keyword">static</span> <span class="keywordtype">int</span> kFontFace = cv::FONT_HERSHEY_SIMPLEX;</div>
-<div class="line"><span class="lineno">  165</span>  <span class="keyword">constexpr</span> <span class="keyword">static</span> <span class="keywordtype">int</span> kThickness = 1;</div>
-<div class="line"><span class="lineno">  166</span> </div>
-<div class="line"><span class="lineno">  167</span>  <span class="keywordflow">if</span> (debug &amp;&amp; show_frame_info) {</div>
-<div class="line"><span class="lineno">  168</span>    <span class="comment">// taken from ORB-SLAM2 ;)</span></div>
-<div class="line"><span class="lineno">  169</span>    <span class="keywordtype">int</span> base_line;</div>
-<div class="line"><span class="lineno">  170</span>    cv::Size text_size = cv::getTextSize(ss.str(), kFontFace, kFontScale,</div>
-<div class="line"><span class="lineno">  171</span>                                         kThickness, &amp;base_line);</div>
-<div class="line"><span class="lineno">  172</span>    cv::Mat image_text = cv::Mat(img_rgb.rows + text_size.height + 10,</div>
-<div class="line"><span class="lineno">  173</span>                                 img_rgb.cols, img_rgb.type());</div>
-<div class="line"><span class="lineno">  174</span>    img_rgb.copyTo(</div>
-<div class="line"><span class="lineno">  175</span>        image_text.rowRange(0, img_rgb.rows).colRange(0, img_rgb.cols));</div>
-<div class="line"><span class="lineno">  176</span>    image_text.rowRange(img_rgb.rows, image_text.rows) =</div>
-<div class="line"><span class="lineno">  177</span>        cv::Mat::zeros(text_size.height + 10, img_rgb.cols, img_rgb.type());</div>
-<div class="line"><span class="lineno">  178</span>    cv::putText(image_text, ss.str(), cv::Point(5, image_text.rows - 5),</div>
-<div class="line"><span class="lineno">  179</span>                kFontFace, kFontScale, cv::Scalar(255, 255, 255), kThickness);</div>
-<div class="line"><span class="lineno">  180</span>    <span class="keywordflow">return</span> image_text;</div>
-<div class="line"><span class="lineno">  181</span>  } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  182</span>    <span class="keywordflow">return</span> img_rgb;</div>
-<div class="line"><span class="lineno">  183</span>  }</div>
-<div class="line"><span class="lineno">  184</span>}</div>
-<div class="ttc" id="anamespacedyno_1_1utils_html_a566e85133acf8b739daa549be74d2e1c"><div class="ttname"><a href="namespacedyno_1_1utils.html#a566e85133acf8b739daa549be74d2e1c">dyno::utils::gtsamPointToCv</a></div><div class="ttdeci">cv::Point_&lt; T &gt; gtsamPointToCv(const gtsam::Point2 &amp;point)</div><div class="ttdef"><b>Definition:</b> <a href="GtsamUtils_8hpp_source.html#l00243">GtsamUtils.hpp:243</a></div></div>
-<div class="ttc" id="anamespacedyno_1_1utils_html_ab3245a3ae481133c8052ef2ba138c990"><div class="ttname"><a href="namespacedyno_1_1utils.html#ab3245a3ae481133c8052ef2ba138c990">dyno::utils::drawLabeledBoundingBox</a></div><div class="ttdeci">void drawLabeledBoundingBox(cv::Mat &amp;image, const std::string &amp;label, const cv::Scalar &amp;colour, const cv::Rect &amp;bounding_box)</div><div class="ttdoc">Draws a coloured bounding box and associated label onto a RGB image.</div><div class="ttdef"><b>Definition:</b> <a href="OpenCVUtils_8cc_source.html#l00238">OpenCVUtils.cc:238</a></div></div>
-<div class="ttc" id="anamespacedyno_html_a38bb86e4154b86428b8d133be03fb2b5"><div class="ttname"><a href="namespacedyno.html#a38bb86e4154b86428b8d133be03fb2b5">dyno::ObjectId</a></div><div class="ttdeci">int ObjectId</div><div class="ttdoc">Discrete object id, j.</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00068">Types.hpp:68</a></div></div>
-<div class="ttc" id="anamespacedyno_html_aaa260a8022691078c59e1ac6a4fa05b5"><div class="ttname"><a href="namespacedyno.html#aaa260a8022691078c59e1ac6a4fa05b5">dyno::Keypoint</a></div><div class="ttdeci">gtsam::Point2 Keypoint</div><div class="ttdoc">Observed optical flow vector (ordered x, y)</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00094">Types.hpp:94</a></div></div>
+<div class="line"><span class="lineno">  140</span>  <span class="keyword">const</span> <span class="keywordtype">bool</span>&amp; debug = <a class="code hl_namespace" href="namespaceconfig.html">config</a>.isDebug();</div>
+<div class="line"><span class="lineno">  141</span>  <span class="keyword">const</span> <span class="keywordtype">bool</span>&amp; show_intermediate_tracking = <a class="code hl_namespace" href="namespaceconfig.html">config</a>.showIntermediateTracking();</div>
+<div class="line"><span class="lineno">  142</span> </div>
+<div class="line"><span class="lineno">  143</span>  <span class="keyword">const</span> <span class="keywordtype">int</span> static_point_thickness = <a class="code hl_namespace" href="namespaceconfig.html">config</a>.featureThickness();</div>
+<div class="line"><span class="lineno">  144</span> </div>
+<div class="line"><span class="lineno">  145</span>  <span class="keyword">static</span> <span class="keyword">const</span> cv::Scalar red(<a class="code hl_function" href="structdyno_1_1Color.html#a1b75c1200495de0d1a32e382393e8dd7">Color::red</a>().bgra());</div>
+<div class="line"><span class="lineno">  146</span>  <span class="keyword">static</span> <span class="keyword">const</span> cv::Scalar green(<a class="code hl_function" href="structdyno_1_1Color.html#a9357d7ddef94b17ace0420444b4cb7a2">Color::green</a>().bgra());</div>
+<div class="line"><span class="lineno">  147</span>  <span class="keyword">static</span> <span class="keyword">const</span> cv::Scalar blue(<a class="code hl_function" href="structdyno_1_1Color.html#ac6497975e0e9af4d28092f8bc07b3678">Color::blue</a>().bgra());</div>
+<div class="line"><span class="lineno">  148</span> </div>
+<div class="line"><span class="lineno">  149</span>  <span class="keywordtype">int</span> num_static_tracks = 0;</div>
+<div class="line"><span class="lineno">  150</span>  <span class="comment">// Add all keypoints in cur_frame with the tracks.</span></div>
+<div class="line"><span class="lineno">  151</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> Feature::Ptr&amp; feature : current_frame.static_features_) {</div>
+<div class="line"><span class="lineno">  152</span>    <span class="keyword">const</span> <a class="code hl_typedef" href="namespacedyno.html#aaa260a8022691078c59e1ac6a4fa05b5">Keypoint</a>&amp; px_cur = feature-&gt;keypoint();</div>
+<div class="line"><span class="lineno">  153</span>    <span class="keyword">const</span> <span class="keyword">auto</span> pc_cur = <a class="code hl_function" href="namespacedyno_1_1utils.html#a566e85133acf8b739daa549be74d2e1c">utils::gtsamPointToCv</a>(px_cur);</div>
+<div class="line"><span class="lineno">  154</span>    <span class="keywordflow">if</span> (!feature-&gt;usable() &amp;&amp;</div>
+<div class="line"><span class="lineno">  155</span>        show_intermediate_tracking) {  <span class="comment">// Untracked landmarks are red.</span></div>
+<div class="line"><span class="lineno">  156</span>      cv::circle(img_rgb, pc_cur, static_point_thickness, red, 2);</div>
+<div class="line"><span class="lineno">  157</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  158</span>      <span class="keyword">const</span> Feature::Ptr&amp; prev_feature =</div>
+<div class="line"><span class="lineno">  159</span>          previous_frame.static_features_.getByTrackletId(</div>
+<div class="line"><span class="lineno">  160</span>              feature-&gt;trackletId());</div>
+<div class="line"><span class="lineno">  161</span>      <span class="keywordflow">if</span> (prev_feature) {</div>
+<div class="line"><span class="lineno">  162</span>        <span class="comment">// If feature was in previous frame, display tracked feature with</span></div>
+<div class="line"><span class="lineno">  163</span>        <span class="comment">// green circle/line:</span></div>
+<div class="line"><span class="lineno">  164</span>        cv::circle(img_rgb, pc_cur, static_point_thickness, green, 1);</div>
+<div class="line"><span class="lineno">  165</span> </div>
+<div class="line"><span class="lineno">  166</span>        <span class="comment">// draw the optical flow arrow</span></div>
+<div class="line"><span class="lineno">  167</span>        <span class="keyword">const</span> <span class="keyword">auto</span> pc_prev = <a class="code hl_function" href="namespacedyno_1_1utils.html#a566e85133acf8b739daa549be74d2e1c">utils::gtsamPointToCv</a>(prev_feature-&gt;keypoint());</div>
+<div class="line"><span class="lineno">  168</span>        cv::arrowedLine(img_rgb, pc_prev, pc_cur, green, 1);</div>
+<div class="line"><span class="lineno">  169</span> </div>
+<div class="line"><span class="lineno">  170</span>        num_static_tracks++;</div>
+<div class="line"><span class="lineno">  171</span> </div>
+<div class="line"><span class="lineno">  172</span>      } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (debug &amp;&amp;</div>
+<div class="line"><span class="lineno">  173</span>                 show_intermediate_tracking) {  <span class="comment">// New feature tracks are blue.</span></div>
+<div class="line"><span class="lineno">  174</span>        cv::circle(img_rgb, pc_cur, 6, blue, 1);</div>
+<div class="line"><span class="lineno">  175</span>      }</div>
+<div class="line"><span class="lineno">  176</span>    }</div>
+<div class="line"><span class="lineno">  177</span>  }</div>
+<div class="line"><span class="lineno">  178</span> </div>
+<div class="line"><span class="lineno">  179</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> Feature::Ptr&amp; feature : current_frame.dynamic_features_) {</div>
+<div class="line"><span class="lineno">  180</span>    <span class="keyword">const</span> <a class="code hl_typedef" href="namespacedyno.html#aaa260a8022691078c59e1ac6a4fa05b5">Keypoint</a>&amp; px_cur = feature-&gt;keypoint();</div>
+<div class="line"><span class="lineno">  181</span>    <span class="keywordflow">if</span> (!feature-&gt;usable()) {  <span class="comment">// Untracked landmarks are red.</span></div>
+<div class="line"><span class="lineno">  182</span>      <span class="comment">// cv::circle(img_rgb,  utils::gtsamPointToCv(px_cur), 1, red, 2);</span></div>
+<div class="line"><span class="lineno">  183</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  184</span>      <span class="keyword">const</span> Feature::Ptr&amp; prev_feature =</div>
+<div class="line"><span class="lineno">  185</span>          previous_frame.dynamic_features_.getByTrackletId(</div>
+<div class="line"><span class="lineno">  186</span>              feature-&gt;trackletId());</div>
+<div class="line"><span class="lineno">  187</span>      <span class="keywordflow">if</span> (prev_feature) {</div>
+<div class="line"><span class="lineno">  188</span>        <span class="comment">// If feature was in previous frame, display tracked feature with</span></div>
+<div class="line"><span class="lineno">  189</span>        <span class="comment">// green circle/line:</span></div>
+<div class="line"><span class="lineno">  190</span>        <span class="comment">// cv::circle(img_rgb,  utils::gtsamPointToCv(px_cur), 6, green, 1);</span></div>
+<div class="line"><span class="lineno">  191</span>        <span class="keyword">const</span> <a class="code hl_typedef" href="namespacedyno.html#aaa260a8022691078c59e1ac6a4fa05b5">Keypoint</a>&amp; px_prev = prev_feature-&gt;keypoint();</div>
+<div class="line"><span class="lineno">  192</span>        <span class="keyword">const</span> cv::Scalar colour = <a class="code hl_function" href="structdyno_1_1Color.html#a6689af3d0ac5ceaa66000b5ca70becbd">Color::uniqueId</a>(feature-&gt;objectId()).<a class="code hl_function" href="structdyno_1_1Color.html#a19ef171ae71fa3481957f66d420ced3b">bgra</a>();</div>
+<div class="line"><span class="lineno">  193</span>        cv::arrowedLine(img_rgb, <a class="code hl_function" href="namespacedyno_1_1utils.html#a566e85133acf8b739daa549be74d2e1c">utils::gtsamPointToCv</a>(px_prev),</div>
+<div class="line"><span class="lineno">  194</span>                        <a class="code hl_function" href="namespacedyno_1_1utils.html#a566e85133acf8b739daa549be74d2e1c">utils::gtsamPointToCv</a>(px_cur), colour, 1);</div>
+<div class="line"><span class="lineno">  195</span>      } <span class="keywordflow">else</span> {  <span class="comment">// New feature tracks are blue.</span></div>
+<div class="line"><span class="lineno">  196</span>        <span class="comment">// cv::circle(img_rgb, utils::gtsamPointToCv(px_cur), 1, blue, 1);</span></div>
+<div class="line"><span class="lineno">  197</span>      }</div>
+<div class="line"><span class="lineno">  198</span>    }</div>
+<div class="line"><span class="lineno">  199</span>  }</div>
+<div class="line"><span class="lineno">  200</span> </div>
+<div class="line"><span class="lineno">  201</span>  <span class="keyword">const</span> <span class="keywordtype">int</span> bbox_thickness = <a class="code hl_namespace" href="namespaceconfig.html">config</a>.bboxThickness();</div>
+<div class="line"><span class="lineno">  202</span> </div>
+<div class="line"><span class="lineno">  203</span>  std::vector&lt;ObjectId&gt; objects_to_print;</div>
+<div class="line"><span class="lineno">  204</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; object_observation_pair :</div>
+<div class="line"><span class="lineno">  205</span>       current_frame.object_observations_) {</div>
+<div class="line"><span class="lineno">  206</span>    <span class="keyword">const</span> <a class="code hl_typedef" href="namespacedyno.html#a38bb86e4154b86428b8d133be03fb2b5">ObjectId</a> object_id = object_observation_pair.first;</div>
+<div class="line"><span class="lineno">  207</span>    <span class="keyword">const</span> cv::Rect&amp; bb = object_observation_pair.second.bounding_box_;</div>
+<div class="line"><span class="lineno">  208</span> </div>
+<div class="line"><span class="lineno">  209</span>    <span class="comment">// TODO: if its marked as moving!!</span></div>
+<div class="line"><span class="lineno">  210</span>    <span class="keywordflow">if</span> (bb.empty()) {</div>
+<div class="line"><span class="lineno">  211</span>      <span class="keywordflow">continue</span>;</div>
+<div class="line"><span class="lineno">  212</span>    }</div>
+<div class="line"><span class="lineno">  213</span> </div>
+<div class="line"><span class="lineno">  214</span>    objects_to_print.push_back(object_id);</div>
+<div class="line"><span class="lineno">  215</span> </div>
+<div class="line"><span class="lineno">  216</span>    <span class="keywordflow">if</span> (<a class="code hl_namespace" href="namespaceconfig.html">config</a>.drawObjectBoundingBox()) {</div>
+<div class="line"><span class="lineno">  217</span>      <span class="keyword">const</span> cv::Scalar colour = <a class="code hl_function" href="structdyno_1_1Color.html#a6689af3d0ac5ceaa66000b5ca70becbd">Color::uniqueId</a>(object_id).<a class="code hl_function" href="structdyno_1_1Color.html#a19ef171ae71fa3481957f66d420ced3b">bgra</a>();</div>
+<div class="line"><span class="lineno">  218</span>      <span class="keyword">const</span> std::string label = <span class="stringliteral">&quot;object &quot;</span> + std::to_string(object_id);</div>
+<div class="line"><span class="lineno">  219</span>      <a class="code hl_function" href="namespacedyno_1_1utils.html#a1ec9d7c1cdab85616f6622f915e768dd">utils::drawLabeledBoundingBox</a>(img_rgb, label, colour, bb, bbox_thickness);</div>
+<div class="line"><span class="lineno">  220</span>    }</div>
+<div class="line"><span class="lineno">  221</span>  }</div>
+<div class="line"><span class="lineno">  222</span> </div>
+<div class="line"><span class="lineno">  223</span>  <span class="keywordflow">if</span> (<a class="code hl_namespace" href="namespaceconfig.html">config</a>.drawObjectMask()) {</div>
+<div class="line"><span class="lineno">  224</span>    <span class="keyword">constexpr</span> <span class="keyword">static</span> <span class="keywordtype">float</span> kAlpha = 0.7;</div>
+<div class="line"><span class="lineno">  225</span>    <a class="code hl_function" href="namespacedyno_1_1utils.html#ab60d1512caf6ce316d53e53056b71f7e">utils::labelMaskToRGB</a>(object_mask, img_rgb, img_rgb, kAlpha);</div>
+<div class="line"><span class="lineno">  226</span>  }</div>
+<div class="line"><span class="lineno">  227</span> </div>
+<div class="line"><span class="lineno">  228</span>  <span class="comment">// draw text info</span></div>
+<div class="line"><span class="lineno">  229</span>  std::stringstream ss;</div>
+<div class="line"><span class="lineno">  230</span>  ss &lt;&lt; <span class="stringliteral">&quot;Frame ID: &quot;</span> &lt;&lt; current_frame.getFrameId() &lt;&lt; <span class="stringliteral">&quot; | &quot;</span>;</div>
+<div class="line"><span class="lineno">  231</span>  ss &lt;&lt; <span class="stringliteral">&quot;VO tracks: &quot;</span> &lt;&lt; num_static_tracks &lt;&lt; <span class="stringliteral">&quot; | &quot;</span>;</div>
+<div class="line"><span class="lineno">  232</span>  ss &lt;&lt; <span class="stringliteral">&quot;Objects: &quot;</span>;</div>
+<div class="line"><span class="lineno">  233</span> </div>
+<div class="line"><span class="lineno">  234</span>  <span class="keywordflow">if</span> (objects_to_print.empty()) {</div>
+<div class="line"><span class="lineno">  235</span>    ss &lt;&lt; <span class="stringliteral">&quot;None&quot;</span>;</div>
+<div class="line"><span class="lineno">  236</span>  } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  237</span>    ss &lt;&lt; <span class="stringliteral">&quot;[&quot;</span>;</div>
+<div class="line"><span class="lineno">  238</span>    <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; objects_to_print.size(); ++i) {</div>
+<div class="line"><span class="lineno">  239</span>      ss &lt;&lt; objects_to_print[i];</div>
+<div class="line"><span class="lineno">  240</span>      <span class="keywordflow">if</span> (i != objects_to_print.size() - 1) {</div>
+<div class="line"><span class="lineno">  241</span>        ss &lt;&lt; <span class="stringliteral">&quot;, &quot;</span>;  <span class="comment">// Add comma between elements</span></div>
+<div class="line"><span class="lineno">  242</span>      }</div>
+<div class="line"><span class="lineno">  243</span>    }</div>
+<div class="line"><span class="lineno">  244</span>    ss &lt;&lt; <span class="stringliteral">&quot;]&quot;</span>;</div>
+<div class="line"><span class="lineno">  245</span>  }</div>
+<div class="line"><span class="lineno">  246</span> </div>
+<div class="line"><span class="lineno">  247</span>  <span class="keyword">constexpr</span> <span class="keyword">static</span> <span class="keywordtype">double</span> kFontScale = 0.6;</div>
+<div class="line"><span class="lineno">  248</span>  <span class="keyword">constexpr</span> <span class="keyword">static</span> <span class="keywordtype">int</span> kFontFace = cv::FONT_HERSHEY_SIMPLEX;</div>
+<div class="line"><span class="lineno">  249</span>  <span class="keyword">constexpr</span> <span class="keyword">static</span> <span class="keywordtype">int</span> kThickness = 1;</div>
+<div class="line"><span class="lineno">  250</span> </div>
+<div class="line"><span class="lineno">  251</span>  <span class="keywordflow">if</span> (<a class="code hl_namespace" href="namespaceconfig.html">config</a>.showFrameInfo()) {</div>
+<div class="line"><span class="lineno">  252</span>    <span class="comment">// taken from ORB-SLAM2 ;)</span></div>
+<div class="line"><span class="lineno">  253</span>    <span class="keywordtype">int</span> base_line;</div>
+<div class="line"><span class="lineno">  254</span>    cv::Size text_size = cv::getTextSize(ss.str(), kFontFace, kFontScale,</div>
+<div class="line"><span class="lineno">  255</span>                                         kThickness, &amp;base_line);</div>
+<div class="line"><span class="lineno">  256</span>    cv::Mat image_text = cv::Mat(img_rgb.rows + text_size.height + 10,</div>
+<div class="line"><span class="lineno">  257</span>                                 img_rgb.cols, img_rgb.type());</div>
+<div class="line"><span class="lineno">  258</span>    img_rgb.copyTo(</div>
+<div class="line"><span class="lineno">  259</span>        image_text.rowRange(0, img_rgb.rows).colRange(0, img_rgb.cols));</div>
+<div class="line"><span class="lineno">  260</span>    image_text.rowRange(img_rgb.rows, image_text.rows) =</div>
+<div class="line"><span class="lineno">  261</span>        cv::Mat::zeros(text_size.height + 10, img_rgb.cols, img_rgb.type());</div>
+<div class="line"><span class="lineno">  262</span>    cv::putText(image_text, ss.str(), cv::Point(5, image_text.rows - 5),</div>
+<div class="line"><span class="lineno">  263</span>                kFontFace, kFontScale, cv::Scalar(255, 255, 255), kThickness);</div>
+<div class="line"><span class="lineno">  264</span>    <span class="keywordflow">return</span> image_text;</div>
+<div class="line"><span class="lineno">  265</span>  } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  266</span>    <span class="keywordflow">return</span> img_rgb;</div>
+<div class="line"><span class="lineno">  267</span>  }</div>
+<div class="line"><span class="lineno">  268</span>}</div>
+<div class="ttc" id="anamespaceconfig_html"><div class="ttname"><a href="namespaceconfig.html">config</a></div><div class="ttdef"><b>Definition:</b> <a href="CameraParams_8cc_source.html#l00355">CameraParams.cc:355</a></div></div>
+<div class="ttc" id="anamespacedyno_1_1utils_html_a1ec9d7c1cdab85616f6622f915e768dd"><div class="ttname"><a href="namespacedyno_1_1utils.html#a1ec9d7c1cdab85616f6622f915e768dd">dyno::utils::drawLabeledBoundingBox</a></div><div class="ttdeci">void drawLabeledBoundingBox(cv::Mat &amp;image, const std::string &amp;label, const cv::Scalar &amp;colour, const cv::Rect &amp;bounding_box, const int &amp;bb_thickness=2)</div><div class="ttdoc">Draws a coloured bounding box and associated label onto a RGB image.</div><div class="ttdef"><b>Definition:</b> <a href="OpenCVUtils_8cc_source.html#l00295">OpenCVUtils.cc:295</a></div></div>
+<div class="ttc" id="anamespacedyno_1_1utils_html_a566e85133acf8b739daa549be74d2e1c"><div class="ttname"><a href="namespacedyno_1_1utils.html#a566e85133acf8b739daa549be74d2e1c">dyno::utils::gtsamPointToCv</a></div><div class="ttdeci">cv::Point_&lt; T &gt; gtsamPointToCv(const gtsam::Point2 &amp;point)</div><div class="ttdef"><b>Definition:</b> <a href="GtsamUtils_8hpp_source.html#l00254">GtsamUtils.hpp:254</a></div></div>
+<div class="ttc" id="anamespacedyno_1_1utils_html_ab60d1512caf6ce316d53e53056b71f7e"><div class="ttname"><a href="namespacedyno_1_1utils.html#ab60d1512caf6ce316d53e53056b71f7e">dyno::utils::labelMaskToRGB</a></div><div class="ttdeci">void labelMaskToRGB(const cv::Mat &amp;mask, const cv::Mat &amp;rgb_input, cv::Mat &amp;output, float alpha=0.7, int background_label=0)</div><div class="ttdoc">Given an image that operates like a mask (ie. is a single channel image where each pixel value corres...</div><div class="ttdef"><b>Definition:</b> <a href="OpenCVUtils_8cc_source.html#l00222">OpenCVUtils.cc:222</a></div></div>
+<div class="ttc" id="anamespacedyno_html_a38bb86e4154b86428b8d133be03fb2b5"><div class="ttname"><a href="namespacedyno.html#a38bb86e4154b86428b8d133be03fb2b5">dyno::ObjectId</a></div><div class="ttdeci">int ObjectId</div><div class="ttdoc">Discrete object id, j.</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00069">Types.hpp:69</a></div></div>
+<div class="ttc" id="anamespacedyno_html_aaa260a8022691078c59e1ac6a4fa05b5"><div class="ttname"><a href="namespacedyno.html#aaa260a8022691078c59e1ac6a4fa05b5">dyno::Keypoint</a></div><div class="ttdeci">gtsam::Point2 Keypoint</div><div class="ttdoc">Observed optical flow vector (ordered x, y)</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00095">Types.hpp:95</a></div></div>
 <div class="ttc" id="astructdyno_1_1Color_html_a19ef171ae71fa3481957f66d420ced3b"><div class="ttname"><a href="structdyno_1_1Color.html#a19ef171ae71fa3481957f66d420ced3b">dyno::Color::bgra</a></div><div class="ttdeci">cv::Scalar bgra() const</div><div class="ttdoc">Return in BGRA format.</div><div class="ttdef"><b>Definition:</b> <a href="Colour_8hpp_source.html#l00140">Colour.hpp:140</a></div></div>
 <div class="ttc" id="astructdyno_1_1Color_html_a1b75c1200495de0d1a32e382393e8dd7"><div class="ttname"><a href="structdyno_1_1Color.html#a1b75c1200495de0d1a32e382393e8dd7">dyno::Color::red</a></div><div class="ttdeci">static Color red()</div><div class="ttdef"><b>Definition:</b> <a href="Colour_8hpp_source.html#l00178">Colour.hpp:178</a></div></div>
-<div class="ttc" id="astructdyno_1_1Color_html_a4f52f9aec87e2c34370ad02e6d4e25fc"><div class="ttname"><a href="structdyno_1_1Color.html#a4f52f9aec87e2c34370ad02e6d4e25fc">dyno::Color::uniqueId</a></div><div class="ttdeci">static Color uniqueId(size_t id, float saturation=0.5f, float value=0.95f)</div><div class="ttdoc">Generates a sequence of never repeating colors using the golden ration to seperate the colours along ...</div><div class="ttdef"><b>Definition:</b> <a href="ColourMap_8cc_source.html#l00169">ColourMap.cc:169</a></div></div>
+<div class="ttc" id="astructdyno_1_1Color_html_a6689af3d0ac5ceaa66000b5ca70becbd"><div class="ttname"><a href="structdyno_1_1Color.html#a6689af3d0ac5ceaa66000b5ca70becbd">dyno::Color::uniqueId</a></div><div class="ttdeci">static Color uniqueId(size_t id, float saturation=unique_id_default_saturation, float value=unique_id_default_value)</div><div class="ttdoc">Generates a sequence of never repeating colors using the golden ratio to seperate the colours along t...</div><div class="ttdef"><b>Definition:</b> <a href="ColourMap_8cc_source.html#l00169">ColourMap.cc:169</a></div></div>
 <div class="ttc" id="astructdyno_1_1Color_html_a9357d7ddef94b17ace0420444b4cb7a2"><div class="ttname"><a href="structdyno_1_1Color.html#a9357d7ddef94b17ace0420444b4cb7a2">dyno::Color::green</a></div><div class="ttdeci">static Color green()</div><div class="ttdef"><b>Definition:</b> <a href="Colour_8hpp_source.html#l00179">Colour.hpp:179</a></div></div>
 <div class="ttc" id="astructdyno_1_1Color_html_ac6497975e0e9af4d28092f8bc07b3678"><div class="ttname"><a href="structdyno_1_1Color.html#ac6497975e0e9af4d28092f8bc07b3678">dyno::Color::blue</a></div><div class="ttdeci">static Color blue()</div><div class="ttdef"><b>Definition:</b> <a href="Colour_8hpp_source.html#l00180">Colour.hpp:180</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="structdyno_1_1Color.html#a19ef171ae71fa3481957f66d420ced3b">dyno::Color::bgra()</a>, <a class="el" href="structdyno_1_1Color.html#ac6497975e0e9af4d28092f8bc07b3678">dyno::Color::blue()</a>, <a class="el" href="namespacedyno_1_1utils.html#ab3245a3ae481133c8052ef2ba138c990">dyno::utils::drawLabeledBoundingBox()</a>, <a class="el" href="classdyno_1_1Frame.html#a25df20e3d82010bd6d0fb5d9106ea5ff">dyno::Frame::dynamic_features_</a>, <a class="el" href="classdyno_1_1ImageContainerSubset.html#a11ceb8e3325f28bf683b6480d53427a0">dyno::ImageContainerSubset&lt; ImageTypes &gt;::get()</a>, <a class="el" href="classdyno_1_1FeatureContainer.html#a5b73e75d2f4063ac9c16dd0fd565f8da">dyno::FeatureContainer::getByTrackletId()</a>, <a class="el" href="classdyno_1_1Frame.html#aa6350c198dbedee19ce2cc32b99b1400">dyno::Frame::getFrameId()</a>, <a class="el" href="structdyno_1_1Color.html#a9357d7ddef94b17ace0420444b4cb7a2">dyno::Color::green()</a>, <a class="el" href="namespacedyno_1_1utils.html#a566e85133acf8b739daa549be74d2e1c">dyno::utils::gtsamPointToCv()</a>, <a class="el" href="classdyno_1_1Frame.html#a220da715dd2380e42f2b036936b79e36">dyno::Frame::image_container_</a>, <a class="el" href="structdyno_1_1FeatureTrackerBase_1_1ImageTracksParams.html#a0c6eb403ed0761113fe7f77aa6942ae4">dyno::FeatureTrackerBase::ImageTracksParams::is_debug</a>, <a class="el" href="classdyno_1_1Frame.html#ab94e6b81ca803f90c543aa79dffbc3aa">dyno::Frame::object_observations_</a>, <a class="el" href="structdyno_1_1Color.html#a1b75c1200495de0d1a32e382393e8dd7">dyno::Color::red()</a>, <a class="el" href="structdyno_1_1FeatureTrackerBase_1_1ImageTracksParams.html#a888539c5c7bc7e0c14773c92dca8af5a">dyno::FeatureTrackerBase::ImageTracksParams::show_frame_info</a>, <a class="el" href="structdyno_1_1FeatureTrackerBase_1_1ImageTracksParams.html#a4a456521a69eb487798eb475f98d6b58">dyno::FeatureTrackerBase::ImageTracksParams::show_intermediate_tracking</a>, <a class="el" href="classdyno_1_1Frame.html#a2a90598a1f6f58b3756c3c588e6bab4f">dyno::Frame::static_features_</a>, and <a class="el" href="structdyno_1_1Color.html#a4f52f9aec87e2c34370ad02e6d4e25fc">dyno::Color::uniqueId()</a>.</p>
+<p class="reference">References <a class="el" href="structdyno_1_1Color.html#a19ef171ae71fa3481957f66d420ced3b">dyno::Color::bgra()</a>, <a class="el" href="structdyno_1_1Color.html#ac6497975e0e9af4d28092f8bc07b3678">dyno::Color::blue()</a>, <a class="el" href="namespacedyno_1_1utils.html#a1ec9d7c1cdab85616f6622f915e768dd">dyno::utils::drawLabeledBoundingBox()</a>, <a class="el" href="classdyno_1_1Frame.html#a25df20e3d82010bd6d0fb5d9106ea5ff">dyno::Frame::dynamic_features_</a>, <a class="el" href="classdyno_1_1FeatureContainer.html#a5b73e75d2f4063ac9c16dd0fd565f8da">dyno::FeatureContainer::getByTrackletId()</a>, <a class="el" href="classdyno_1_1Frame.html#aa6350c198dbedee19ce2cc32b99b1400">dyno::Frame::getFrameId()</a>, <a class="el" href="structdyno_1_1Color.html#a9357d7ddef94b17ace0420444b4cb7a2">dyno::Color::green()</a>, <a class="el" href="namespacedyno_1_1utils.html#a566e85133acf8b739daa549be74d2e1c">dyno::utils::gtsamPointToCv()</a>, <a class="el" href="classdyno_1_1Frame.html#a220da715dd2380e42f2b036936b79e36">dyno::Frame::image_container_</a>, <a class="el" href="namespacedyno_1_1utils.html#ab60d1512caf6ce316d53e53056b71f7e">dyno::utils::labelMaskToRGB()</a>, <a class="el" href="classdyno_1_1Frame.html#ab94e6b81ca803f90c543aa79dffbc3aa">dyno::Frame::object_observations_</a>, <a class="el" href="classdyno_1_1ImageContainer.html#ae5eead678f02be0ab9de7464e1833c55">dyno::ImageContainer::objectMotionMask()</a>, <a class="el" href="structdyno_1_1Color.html#a1b75c1200495de0d1a32e382393e8dd7">dyno::Color::red()</a>, <a class="el" href="classdyno_1_1ImageContainer.html#a6f35259f95c31b861ff6515c159e1ee3">dyno::ImageContainer::rgb()</a>, <a class="el" href="classdyno_1_1Frame.html#a2a90598a1f6f58b3756c3c588e6bab4f">dyno::Frame::static_features_</a>, <a class="el" href="structdyno_1_1ImageWrapper.html#a6b631c61d9d29c4317e7660f75d85a45">dyno::ImageWrapper&lt; IMAGETYPE &gt;::toRGB()</a>, and <a class="el" href="structdyno_1_1Color.html#a6689af3d0ac5ceaa66000b5ca70becbd">dyno::Color::uniqueId()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1FeatureTrackerBase_aa902950650699301214f776a905e3b77_cgraph.png" border="0" usemap="#aclassdyno_1_1FeatureTrackerBase_aa902950650699301214f776a905e3b77_cgraph" alt=""/></div>
 <map name="aclassdyno_1_1FeatureTrackerBase_aa902950650699301214f776a905e3b77_cgraph" id="aclassdyno_1_1FeatureTrackerBase_aa902950650699301214f776a905e3b77_cgraph">
-<area shape="rect" title=" " alt="" coords="5,250,195,290"/>
-<area shape="rect" href="structdyno_1_1Color.html#a19ef171ae71fa3481957f66d420ced3b" title="Return in BGRA format." alt="" coords="295,5,429,31"/>
-<area shape="rect" href="structdyno_1_1Color.html#ac6497975e0e9af4d28092f8bc07b3678" title=" " alt="" coords="551,113,683,139"/>
-<area shape="rect" href="namespacedyno_1_1utils.html#ab3245a3ae481133c8052ef2ba138c990" title="Draws a coloured bounding box and associated label onto a RGB image." alt="" coords="271,106,453,146"/>
-<area shape="rect" href="classdyno_1_1ImageContainerSubset.html#a11ceb8e3325f28bf683b6480d53427a0" title="Gets the corresponding image (cv::Mat) corresponding to the requested ImageType. ImageType must be in..." alt="" coords="243,171,481,196"/>
-<area shape="rect" href="classdyno_1_1FeatureContainer.html#a5b73e75d2f4063ac9c16dd0fd565f8da" title="Gets a feature given its tracklet id. If the feature does not exist, nullptr is returned." alt="" coords="275,221,449,261"/>
-<area shape="rect" href="classdyno_1_1Frame.html#aa6350c198dbedee19ce2cc32b99b1400" title=" " alt="" coords="269,285,455,311"/>
-<area shape="rect" href="structdyno_1_1Color.html#a9357d7ddef94b17ace0420444b4cb7a2" title=" " alt="" coords="546,361,687,387"/>
-<area shape="rect" href="namespacedyno_1_1utils.html#a566e85133acf8b739daa549be74d2e1c" title=" " alt="" coords="261,387,463,412"/>
-<area shape="rect" href="structdyno_1_1Color.html#a1b75c1200495de0d1a32e382393e8dd7" title=" " alt="" coords="554,425,679,451"/>
-<area shape="rect" href="structdyno_1_1Color.html#a4f52f9aec87e2c34370ad02e6d4e25fc" title="Generates a sequence of never repeating colors using the golden ration to seperate the colours along ..." alt="" coords="282,488,442,513"/>
-<area shape="rect" href="structdyno_1_1Color.html#a6bc55a80a463a481dbf4778c70d04733" title=" " alt="" coords="779,375,918,400"/>
-<area shape="rect" href="classdyno_1_1FeatureContainer.html#abf2f2d568f5dc17944cc122c537a65f5" title="Returns true if a feature with the given tracklet id exists." alt="" coords="529,221,704,261"/>
-<area shape="rect" href="structdyno_1_1Color.html#a08bcb6ea49861f6978858a2ff5159002" title=" " alt="" coords="535,475,698,500"/>
-<area shape="rect" href="namespacedyno.html#ab0e74ec8992860404a618192cc694b83" title=" " alt="" coords="752,475,945,500"/>
+<area shape="rect" title=" " alt="" coords="5,355,195,395"/>
+<area shape="rect" href="structdyno_1_1Color.html#a19ef171ae71fa3481957f66d420ced3b" title="Return in BGRA format." alt="" coords="539,5,672,31"/>
+<area shape="rect" href="structdyno_1_1Color.html#ac6497975e0e9af4d28092f8bc07b3678" title=" " alt="" coords="789,255,921,280"/>
+<area shape="rect" href="namespacedyno_1_1utils.html#a1ec9d7c1cdab85616f6622f915e768dd" title="Draws a coloured bounding box and associated label onto a RGB image." alt="" coords="255,355,437,395"/>
+<area shape="rect" href="classdyno_1_1FeatureContainer.html#a5b73e75d2f4063ac9c16dd0fd565f8da" title="Gets a feature given its tracklet id. If the feature does not exist, nullptr is returned." alt="" coords="259,419,433,459"/>
+<area shape="rect" href="classdyno_1_1Frame.html#aa6350c198dbedee19ce2cc32b99b1400" title=" " alt="" coords="253,484,439,509"/>
+<area shape="rect" href="structdyno_1_1Color.html#a9357d7ddef94b17ace0420444b4cb7a2" title=" " alt="" coords="784,205,925,231"/>
+<area shape="rect" href="namespacedyno_1_1utils.html#a566e85133acf8b739daa549be74d2e1c" title=" " alt="" coords="245,533,447,559"/>
+<area shape="rect" href="namespacedyno_1_1utils.html#ab60d1512caf6ce316d53e53056b71f7e" title="Given an image that operates like a mask (ie. is a single channel image where each pixel value corres..." alt="" coords="243,103,449,128"/>
+<area shape="rect" href="structdyno_1_1Color.html#a6689af3d0ac5ceaa66000b5ca70becbd" title="Generates a sequence of never repeating colors using the golden ratio to seperate the colours along t..." alt="" coords="525,153,685,179"/>
+<area shape="rect" href="classdyno_1_1ImageContainer.html#ae5eead678f02be0ab9de7464e1833c55" title=" " alt="" coords="263,583,429,623"/>
+<area shape="rect" href="structdyno_1_1Color.html#a1b75c1200495de0d1a32e382393e8dd7" title=" " alt="" coords="792,304,917,329"/>
+<area shape="rect" href="classdyno_1_1ImageContainer.html#a6f35259f95c31b861ff6515c159e1ee3" title=" " alt="" coords="249,648,443,673"/>
+<area shape="rect" href="structdyno_1_1ImageWrapper.html#a6b631c61d9d29c4317e7660f75d85a45" title=" " alt="" coords="267,698,425,738"/>
+<area shape="rect" href="structdyno_1_1Color.html#a6bc55a80a463a481dbf4778c70d04733" title=" " alt="" coords="1023,229,1162,255"/>
+<area shape="rect" href="classdyno_1_1FeatureContainer.html#abf2f2d568f5dc17944cc122c537a65f5" title="Returns true if a feature with the given tracklet id exists." alt="" coords="518,419,693,459"/>
+<area shape="rect" href="namespacedyno_1_1utils.html#a79013aaf6365e9d7c81c0d88bb47df76" title=" " alt="" coords="517,55,693,80"/>
+<area shape="rect" href="classdyno_1_1ParallelOpenCVMat.html#a26501e537a3a343af8426b1015ea2fb3" title=" " alt="" coords="497,104,713,129"/>
+<area shape="rect" href="classdyno_1_1ParallelOpenCVMat.html#a0ab08b50b67a25cf654dcdcda674ee2a" title=" " alt="" coords="761,91,948,131"/>
+<area shape="rect" href="structdyno_1_1Color.html#a08bcb6ea49861f6978858a2ff5159002" title=" " alt="" coords="773,156,936,181"/>
+<area shape="rect" href="namespacedyno.html#ab0e74ec8992860404a618192cc694b83" title=" " alt="" coords="996,156,1189,181"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="af4e17d3f13305f40698a9b284d767c74" name="af4e17d3f13305f40698a9b284d767c74"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af4e17d3f13305f40698a9b284d767c74">&#9670;&#160;</a></span>isWithinShrunkenImage() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool dyno::FeatureTrackerBase::isWithinShrunkenImage </td>
+          <td>(</td>
+          <td class="paramtype">const cv::Point2f &amp;&#160;</td>
+          <td class="paramname"><em>kp</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="FeatureTrackerBase_8cc_source.html#l00285">285</a> of file <a class="el" href="FeatureTrackerBase_8cc_source.html">FeatureTrackerBase.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  285</span>                                                                        {</div>
+<div class="line"><span class="lineno">  286</span>  <span class="keywordflow">return</span> <a class="code hl_function" href="classdyno_1_1FeatureTrackerBase.html#a32d80be7e74a096c2b816529b7fd2c69">isWithinShrunkenImage</a>(<a class="code hl_function" href="namespacedyno_1_1utils.html#a9aea810e02cf5553bace774ccd4cdd0e">utils::cvPointToGtsam</a>(kp));</div>
+<div class="line"><span class="lineno">  287</span>}</div>
+<div class="ttc" id="aclassdyno_1_1FeatureTrackerBase_html_a32d80be7e74a096c2b816529b7fd2c69"><div class="ttname"><a href="classdyno_1_1FeatureTrackerBase.html#a32d80be7e74a096c2b816529b7fd2c69">dyno::FeatureTrackerBase::isWithinShrunkenImage</a></div><div class="ttdeci">bool isWithinShrunkenImage(const Keypoint &amp;kp) const</div><div class="ttdoc">Checks if a keypoint is within an image, taking into account the shrink row/col values in the params....</div><div class="ttdef"><b>Definition:</b> <a href="FeatureTrackerBase_8cc_source.html#l00270">FeatureTrackerBase.cc:270</a></div></div>
+<div class="ttc" id="anamespacedyno_1_1utils_html_a9aea810e02cf5553bace774ccd4cdd0e"><div class="ttname"><a href="namespacedyno_1_1utils.html#a9aea810e02cf5553bace774ccd4cdd0e">dyno::utils::cvPointToGtsam</a></div><div class="ttdeci">gtsam::Point2 cvPointToGtsam(const cv::Point_&lt; T &gt; &amp;point)</div><div class="ttdef"><b>Definition:</b> <a href="GtsamUtils_8hpp_source.html#l00234">GtsamUtils.hpp:234</a></div></div>
+</div><!-- fragment -->
+<p class="reference">References <a class="el" href="namespacedyno_1_1utils.html#a9aea810e02cf5553bace774ccd4cdd0e">dyno::utils::cvPointToGtsam()</a>, and <a class="el" href="classdyno_1_1FeatureTrackerBase.html#a32d80be7e74a096c2b816529b7fd2c69">isWithinShrunkenImage()</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classdyno_1_1FeatureTrackerBase_af4e17d3f13305f40698a9b284d767c74_cgraph.png" border="0" usemap="#aclassdyno_1_1FeatureTrackerBase_af4e17d3f13305f40698a9b284d767c74_cgraph" alt=""/></div>
+<map name="aclassdyno_1_1FeatureTrackerBase_af4e17d3f13305f40698a9b284d767c74_cgraph" id="aclassdyno_1_1FeatureTrackerBase_af4e17d3f13305f40698a9b284d767c74_cgraph">
+<area shape="rect" title=" " alt="" coords="5,27,195,67"/>
+<area shape="rect" href="namespacedyno_1_1utils.html#a9aea810e02cf5553bace774ccd4cdd0e" title=" " alt="" coords="243,5,445,31"/>
+<area shape="rect" href="classdyno_1_1FeatureTrackerBase.html#a32d80be7e74a096c2b816529b7fd2c69" title="Checks if a keypoint is within an image, taking into account the shrink row/col values in the params...." alt="" coords="249,55,439,95"/>
+<area shape="rect" href="structdyno_1_1functional__keypoint.html#a3896d96a6f95b5311ae768cdd0ad97e8" title=" " alt="" coords="493,37,700,63"/>
+<area shape="rect" href="structdyno_1_1functional__keypoint.html#a24933450cad8bc70b7b76b339756cd94" title=" " alt="" coords="493,87,700,112"/>
 </map>
 </div>
 
 </div>
 </div>
 <a id="a32d80be7e74a096c2b816529b7fd2c69" name="a32d80be7e74a096c2b816529b7fd2c69"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a32d80be7e74a096c2b816529b7fd2c69">&#9670;&#160;</a></span>isWithinShrunkenImage()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a32d80be7e74a096c2b816529b7fd2c69">&#9670;&#160;</a></span>isWithinShrunkenImage() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -421,7 +477,7 @@ Here is the call graph for this function:</div>
 <p>Checks if a keypoint is within an image, taking into account the shrink row/col values in the params. If these values are zero, it just checks that the keypoint is within the image size, as given by the camera parameters. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">kp</td><td></td></tr>
+    <tr><td class="paramname">kp</td><td>const Keypoint&amp; </td></tr>
   </table>
   </dd>
 </dl>
@@ -429,29 +485,29 @@ Here is the call graph for this function:</div>
 <dd>
 false </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="FeatureTrackerBase_8cc_source.html#l00186">186</a> of file <a class="el" href="FeatureTrackerBase_8cc_source.html">FeatureTrackerBase.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  186</span>                                                                       {</div>
-<div class="line"><span class="lineno">  187</span>  <span class="keyword">const</span> <span class="keyword">auto</span> shrunken_row = <a class="code hl_variable" href="classdyno_1_1FeatureTrackerBase.html#a04f0948954381269fedd5a6856662cb7">params_</a>.<a class="code hl_variable" href="structdyno_1_1TrackerParams.html#a5a07146a297dab08c1366819dba3c26a">shrink_row</a>;</div>
-<div class="line"><span class="lineno">  188</span>  <span class="keyword">const</span> <span class="keyword">auto</span> shrunken_col = <a class="code hl_variable" href="classdyno_1_1FeatureTrackerBase.html#a04f0948954381269fedd5a6856662cb7">params_</a>.<a class="code hl_variable" href="structdyno_1_1TrackerParams.html#ab29d208e92e86410093fbfa6e1d0e72a">shrink_col</a>;</div>
-<div class="line"><span class="lineno">  189</span> </div>
-<div class="line"><span class="lineno">  190</span>  <span class="keyword">const</span> <span class="keywordtype">int</span> predicted_col = <a class="code hl_function" href="structdyno_1_1functional__keypoint.html#a3896d96a6f95b5311ae768cdd0ad97e8">functional_keypoint::u</a>(kp);</div>
-<div class="line"><span class="lineno">  191</span>  <span class="keyword">const</span> <span class="keywordtype">int</span> predicted_row = <a class="code hl_function" href="structdyno_1_1functional__keypoint.html#a24933450cad8bc70b7b76b339756cd94">functional_keypoint::v</a>(kp);</div>
-<div class="line"><span class="lineno">  192</span> </div>
-<div class="line"><span class="lineno">  193</span>  <span class="keyword">const</span> <span class="keyword">auto</span> image_rows = <a class="code hl_variable" href="classdyno_1_1FeatureTrackerBase.html#a23d0ec748366b789be491e61e536839c">img_size_</a>.height;</div>
-<div class="line"><span class="lineno">  194</span>  <span class="keyword">const</span> <span class="keyword">auto</span> image_cols = <a class="code hl_variable" href="classdyno_1_1FeatureTrackerBase.html#a23d0ec748366b789be491e61e536839c">img_size_</a>.width;</div>
-<div class="line"><span class="lineno">  195</span>  <span class="keywordflow">return</span> (predicted_row &gt; shrunken_row &amp;&amp;</div>
-<div class="line"><span class="lineno">  196</span>          predicted_row &lt; (image_rows - shrunken_row) &amp;&amp;</div>
-<div class="line"><span class="lineno">  197</span>          predicted_col &gt; shrunken_col &amp;&amp;</div>
-<div class="line"><span class="lineno">  198</span>          predicted_col &lt; (image_cols - shrunken_col));</div>
-<div class="line"><span class="lineno">  199</span>}</div>
-<div class="ttc" id="astructdyno_1_1TrackerParams_html_a5a07146a297dab08c1366819dba3c26a"><div class="ttname"><a href="structdyno_1_1TrackerParams.html#a5a07146a297dab08c1366819dba3c26a">dyno::TrackerParams::shrink_row</a></div><div class="ttdeci">int shrink_row</div><div class="ttdoc">Number of rows to shrink the input image by.</div><div class="ttdef"><b>Definition:</b> <a href="TrackerParams_8hpp_source.html#l00109">TrackerParams.hpp:109</a></div></div>
-<div class="ttc" id="astructdyno_1_1TrackerParams_html_ab29d208e92e86410093fbfa6e1d0e72a"><div class="ttname"><a href="structdyno_1_1TrackerParams.html#ab29d208e92e86410093fbfa6e1d0e72a">dyno::TrackerParams::shrink_col</a></div><div class="ttdeci">int shrink_col</div><div class="ttdoc">Number of cols to shrink the input image by.</div><div class="ttdef"><b>Definition:</b> <a href="TrackerParams_8hpp_source.html#l00111">TrackerParams.hpp:111</a></div></div>
+<p class="definition">Definition at line <a class="el" href="FeatureTrackerBase_8cc_source.html#l00270">270</a> of file <a class="el" href="FeatureTrackerBase_8cc_source.html">FeatureTrackerBase.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  270</span>                                                                       {</div>
+<div class="line"><span class="lineno">  271</span>  <span class="keyword">const</span> <span class="keyword">auto</span> shrunken_row = <a class="code hl_variable" href="classdyno_1_1FeatureTrackerBase.html#a04f0948954381269fedd5a6856662cb7">params_</a>.<a class="code hl_variable" href="structdyno_1_1TrackerParams.html#a5a07146a297dab08c1366819dba3c26a">shrink_row</a>;</div>
+<div class="line"><span class="lineno">  272</span>  <span class="keyword">const</span> <span class="keyword">auto</span> shrunken_col = <a class="code hl_variable" href="classdyno_1_1FeatureTrackerBase.html#a04f0948954381269fedd5a6856662cb7">params_</a>.<a class="code hl_variable" href="structdyno_1_1TrackerParams.html#ab29d208e92e86410093fbfa6e1d0e72a">shrink_col</a>;</div>
+<div class="line"><span class="lineno">  273</span> </div>
+<div class="line"><span class="lineno">  274</span>  <span class="keyword">const</span> <span class="keywordtype">int</span> predicted_col = <a class="code hl_function" href="structdyno_1_1functional__keypoint.html#a3896d96a6f95b5311ae768cdd0ad97e8">functional_keypoint::u</a>(kp);</div>
+<div class="line"><span class="lineno">  275</span>  <span class="keyword">const</span> <span class="keywordtype">int</span> predicted_row = <a class="code hl_function" href="structdyno_1_1functional__keypoint.html#a24933450cad8bc70b7b76b339756cd94">functional_keypoint::v</a>(kp);</div>
+<div class="line"><span class="lineno">  276</span> </div>
+<div class="line"><span class="lineno">  277</span>  <span class="keyword">const</span> <span class="keyword">auto</span> image_rows = <a class="code hl_variable" href="classdyno_1_1FeatureTrackerBase.html#a23d0ec748366b789be491e61e536839c">img_size_</a>.height;</div>
+<div class="line"><span class="lineno">  278</span>  <span class="keyword">const</span> <span class="keyword">auto</span> image_cols = <a class="code hl_variable" href="classdyno_1_1FeatureTrackerBase.html#a23d0ec748366b789be491e61e536839c">img_size_</a>.width;</div>
+<div class="line"><span class="lineno">  279</span>  <span class="keywordflow">return</span> (predicted_row &gt; shrunken_row &amp;&amp;</div>
+<div class="line"><span class="lineno">  280</span>          predicted_row &lt; (image_rows - shrunken_row) &amp;&amp;</div>
+<div class="line"><span class="lineno">  281</span>          predicted_col &gt; shrunken_col &amp;&amp;</div>
+<div class="line"><span class="lineno">  282</span>          predicted_col &lt; (image_cols - shrunken_col));</div>
+<div class="line"><span class="lineno">  283</span>}</div>
+<div class="ttc" id="astructdyno_1_1TrackerParams_html_a5a07146a297dab08c1366819dba3c26a"><div class="ttname"><a href="structdyno_1_1TrackerParams.html#a5a07146a297dab08c1366819dba3c26a">dyno::TrackerParams::shrink_row</a></div><div class="ttdeci">int shrink_row</div><div class="ttdoc">Number of rows to shrink the input image by.</div><div class="ttdef"><b>Definition:</b> <a href="TrackerParams_8hpp_source.html#l00115">TrackerParams.hpp:115</a></div></div>
+<div class="ttc" id="astructdyno_1_1TrackerParams_html_ab29d208e92e86410093fbfa6e1d0e72a"><div class="ttname"><a href="structdyno_1_1TrackerParams.html#ab29d208e92e86410093fbfa6e1d0e72a">dyno::TrackerParams::shrink_col</a></div><div class="ttdeci">int shrink_col</div><div class="ttdoc">Number of cols to shrink the input image by.</div><div class="ttdef"><b>Definition:</b> <a href="TrackerParams_8hpp_source.html#l00117">TrackerParams.hpp:117</a></div></div>
 <div class="ttc" id="astructdyno_1_1functional__keypoint_html_a24933450cad8bc70b7b76b339756cd94"><div class="ttname"><a href="structdyno_1_1functional__keypoint.html#a24933450cad8bc70b7b76b339756cd94">dyno::functional_keypoint::v</a></div><div class="ttdeci">static int v(const Keypoint &amp;kp)</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00051">Feature.hpp:51</a></div></div>
 <div class="ttc" id="astructdyno_1_1functional__keypoint_html_a3896d96a6f95b5311ae768cdd0ad97e8"><div class="ttname"><a href="structdyno_1_1functional__keypoint.html#a3896d96a6f95b5311ae768cdd0ad97e8">dyno::functional_keypoint::u</a></div><div class="ttdeci">static T u(const Keypoint &amp;kp)</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00046">Feature.hpp:46</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1FeatureTrackerBase.html#a23d0ec748366b789be491e61e536839c">img_size_</a>, <a class="el" href="classdyno_1_1FeatureTrackerBase.html#a04f0948954381269fedd5a6856662cb7">params_</a>, <a class="el" href="structdyno_1_1TrackerParams.html#ab29d208e92e86410093fbfa6e1d0e72a">dyno::TrackerParams::shrink_col</a>, <a class="el" href="structdyno_1_1TrackerParams.html#a5a07146a297dab08c1366819dba3c26a">dyno::TrackerParams::shrink_row</a>, <a class="el" href="structdyno_1_1functional__keypoint.html#a3896d96a6f95b5311ae768cdd0ad97e8">dyno::functional_keypoint::u()</a>, and <a class="el" href="structdyno_1_1functional__keypoint.html#a24933450cad8bc70b7b76b339756cd94">dyno::functional_keypoint::v()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1KltFeatureTracker.html#a4870d167d7dbd1a04a8d7d15a376a573">dyno::KltFeatureTracker::detectFeatures()</a>, <a class="el" href="classdyno_1_1FeatureTracker.html#a7877773d1c6d5b9cef0c379cd701c1e4">dyno::FeatureTracker::propogateMask()</a>, <a class="el" href="classdyno_1_1FeatureTracker.html#aeaff1c244270c93747ce92b36163c38d">dyno::FeatureTracker::trackDynamic()</a>, and <a class="el" href="classdyno_1_1KltFeatureTracker.html#a24e98ff72741e59ed48f5b14d5ecaf9b">dyno::KltFeatureTracker::trackPoints()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1KltFeatureTracker.html#a4870d167d7dbd1a04a8d7d15a376a573">dyno::KltFeatureTracker::detectFeatures()</a>, <a class="el" href="classdyno_1_1FeatureTrackerBase.html#af4e17d3f13305f40698a9b284d767c74">isWithinShrunkenImage()</a>, <a class="el" href="classdyno_1_1FeatureTrackerBase.html#aac4fd637116f1a55b857968d6f84d33d">predictKeypointsGivenRotation()</a>, <a class="el" href="classdyno_1_1FeatureTracker.html#af6093d870bad67d12dee0c9cb913f87c">dyno::FeatureTracker::sampleDynamic()</a>, <a class="el" href="classdyno_1_1FeatureTracker.html#a145614fe29bef7728075492870ac9c41">dyno::FeatureTracker::trackDynamic()</a>, and <a class="el" href="classdyno_1_1KltFeatureTracker.html#a8f26d8fe56edd3e579a879e82a40457f">dyno::KltFeatureTracker::trackPoints()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -467,13 +523,134 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1FeatureTrackerBase_a32d80be7e74a096c2b816529b7fd2c69_icgraph.png" border="0" usemap="#aclassdyno_1_1FeatureTrackerBase_a32d80be7e74a096c2b816529b7fd2c69_icgraph" alt=""/></div>
 <map name="aclassdyno_1_1FeatureTrackerBase_a32d80be7e74a096c2b816529b7fd2c69_icgraph" id="aclassdyno_1_1FeatureTrackerBase_a32d80be7e74a096c2b816529b7fd2c69_icgraph">
-<area shape="rect" title="Checks if a keypoint is within an image, taking into account the shrink row/col values in the params...." alt="" coords="673,95,863,135"/>
-<area shape="rect" href="classdyno_1_1KltFeatureTracker.html#a4870d167d7dbd1a04a8d7d15a376a573" title=" " alt="" coords="451,63,625,103"/>
-<area shape="rect" href="classdyno_1_1KltFeatureTracker.html#a24e98ff72741e59ed48f5b14d5ecaf9b" title="Tracks features using KLT tracker between the previous image and the current one." alt="" coords="228,5,403,45"/>
-<area shape="rect" href="classdyno_1_1FeatureTracker.html#a7877773d1c6d5b9cef0c379cd701c1e4" title=" " alt="" coords="459,127,617,167"/>
-<area shape="rect" href="classdyno_1_1FeatureTracker.html#aeaff1c244270c93747ce92b36163c38d" title=" " alt="" coords="459,191,617,231"/>
-<area shape="rect" href="classdyno_1_1KltFeatureTracker.html#a8b8b5f33830f3b76205863b9236539e4" title="Track features between frames k&#45;1 and the current set of images (at k)." alt="" coords="5,35,180,75"/>
-<area shape="rect" href="classdyno_1_1FeatureTracker.html#a23296ac35b5935656d31a18450dc5e4c" title=" " alt="" coords="237,159,394,199"/>
+<area shape="rect" title="Checks if a keypoint is within an image, taking into account the shrink row/col values in the params...." alt="" coords="731,152,920,192"/>
+<area shape="rect" href="classdyno_1_1KltFeatureTracker.html#a4870d167d7dbd1a04a8d7d15a376a573" title=" " alt="" coords="479,5,654,45"/>
+<area shape="rect" href="classdyno_1_1KltFeatureTracker.html#a8f26d8fe56edd3e579a879e82a40457f" title="Tracks features using KLT tracker between the previous image and the current one." alt="" coords="228,63,403,103"/>
+<area shape="rect" href="classdyno_1_1FeatureTrackerBase.html#af4e17d3f13305f40698a9b284d767c74" title=" " alt="" coords="472,120,661,160"/>
+<area shape="rect" href="classdyno_1_1FeatureTrackerBase.html#aac4fd637116f1a55b857968d6f84d33d" title=" " alt="" coords="451,184,683,224"/>
+<area shape="rect" href="classdyno_1_1FeatureTracker.html#af6093d870bad67d12dee0c9cb913f87c" title=" " alt="" coords="488,248,645,288"/>
+<area shape="rect" href="classdyno_1_1FeatureTracker.html#a145614fe29bef7728075492870ac9c41" title=" " alt="" coords="237,276,394,316"/>
+<area shape="rect" href="classdyno_1_1KltFeatureTracker.html#ab15aaa39f0c3adc62037d718b98039c0" title="Track features between frames k&#45;1 and the current set of images (at k)." alt="" coords="5,35,180,75"/>
+<area shape="rect" href="classdyno_1_1FeatureTracker.html#a9890ba0c11b5932b5b4954a86bd03948" title=" " alt="" coords="14,276,171,316"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="aac4fd637116f1a55b857968d6f84d33d" name="aac4fd637116f1a55b857968d6f84d33d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aac4fd637116f1a55b857968d6f84d33d">&#9670;&#160;</a></span>predictKeypointsGivenRotation()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool dyno::FeatureTrackerBase::predictKeypointsGivenRotation </td>
+          <td>(</td>
+          <td class="paramtype">std::vector&lt; cv::Point2f &gt; &amp;&#160;</td>
+          <td class="paramname"><em>predicted_pts_k</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::vector&lt; cv::Point2f &gt; &amp;&#160;</td>
+          <td class="paramname"><em>pts_km1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const gtsam::Rot3 &amp;&#160;</td>
+          <td class="paramname"><em>R_km1_k</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="FeatureTrackerBase_8cc_source.html#l00050">50</a> of file <a class="el" href="FeatureTrackerBase_8cc_source.html">FeatureTrackerBase.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   52</span>                                                                         {</div>
+<div class="line"><span class="lineno">   53</span>  <span class="comment">// Handle case when rotation is small: just copy prev_kps</span></div>
+<div class="line"><span class="lineno">   54</span>  <span class="comment">// Removed bcs even small rotations lead to huge optical flow at the borders</span></div>
+<div class="line"><span class="lineno">   55</span>  <span class="comment">// of the image.</span></div>
+<div class="line"><span class="lineno">   56</span>  <span class="comment">// Keep because then you save a lot of computation.</span></div>
+<div class="line"><span class="lineno">   57</span>  <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">double</span> kSmallRotationTol = 1e-4;</div>
+<div class="line"><span class="lineno">   58</span>  <span class="keywordflow">if</span> (std::abs(1.0 - std::abs(R_km1_k.toQuaternion().w())) &lt;</div>
+<div class="line"><span class="lineno">   59</span>      kSmallRotationTol) {</div>
+<div class="line"><span class="lineno">   60</span>    predicted_pts_k = pts_km1;</div>
+<div class="line"><span class="lineno">   61</span>    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">   62</span>  }</div>
+<div class="line"><span class="lineno">   63</span> </div>
+<div class="line"><span class="lineno">   64</span>  <span class="keyword">const</span> gtsam::Matrix K = <a class="code hl_variable" href="classdyno_1_1FeatureTrackerBase.html#abf6eba19baf18b1c3648347401c15a56">camera_</a>-&gt;getParams().getCameraMatrixEigen();</div>
+<div class="line"><span class="lineno">   65</span>  <span class="keyword">const</span> gtsam::Matrix K_inv = K.inverse();</div>
+<div class="line"><span class="lineno">   66</span> </div>
+<div class="line"><span class="lineno">   67</span>  <span class="keyword">const</span> cv::Matx33f K_cv = <a class="code hl_function" href="namespacedyno_1_1utils.html#a1acd48b0777dc5cc242c9a1fa2cac2d4">utils::gtsamMatrix3ToCvMat</a>(K);</div>
+<div class="line"><span class="lineno">   68</span>  <span class="keyword">const</span> cv::Matx33f K_inv_cv = <a class="code hl_function" href="namespacedyno_1_1utils.html#a1acd48b0777dc5cc242c9a1fa2cac2d4">utils::gtsamMatrix3ToCvMat</a>(K_inv);</div>
+<div class="line"><span class="lineno">   69</span>  <span class="comment">// R is a relative rotation which takes a vector from the last frame to</span></div>
+<div class="line"><span class="lineno">   70</span>  <span class="comment">// the current frame.</span></div>
+<div class="line"><span class="lineno">   71</span>  <span class="keyword">const</span> cv::Matx33f R = <a class="code hl_function" href="namespacedyno_1_1utils.html#a1acd48b0777dc5cc242c9a1fa2cac2d4">utils::gtsamMatrix3ToCvMat</a>(R_km1_k.matrix());</div>
+<div class="line"><span class="lineno">   72</span>  <span class="comment">// Get bearing vector for kpt, rotate knowing frame to frame rotation,</span></div>
+<div class="line"><span class="lineno">   73</span>  <span class="comment">// get keypoints again</span></div>
+<div class="line"><span class="lineno">   74</span>  <span class="keyword">const</span> cv::Matx33f <a class="code hl_function" href="namespacedyno.html#a362927fda6438780973f55111b77455c">H</a> = K_cv * R * K_inv_cv;</div>
+<div class="line"><span class="lineno">   75</span> </div>
+<div class="line"><span class="lineno">   76</span>  <span class="keyword">const</span> <span class="keywordtype">size_t</span>&amp; n_kps = pts_km1.size();</div>
+<div class="line"><span class="lineno">   77</span>  predicted_pts_k.reserve(n_kps);</div>
+<div class="line"><span class="lineno">   78</span>  <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0u; i &lt; n_kps; ++i) {</div>
+<div class="line"><span class="lineno">   79</span>    <span class="comment">// Create homogeneous keypoints.</span></div>
+<div class="line"><span class="lineno">   80</span>    <span class="keyword">const</span> <span class="keyword">auto</span>&amp; prev_kpt = pts_km1[i];</div>
+<div class="line"><span class="lineno">   81</span>    cv::Vec3f p1(prev_kpt.x, prev_kpt.y, 1.0f);</div>
+<div class="line"><span class="lineno">   82</span> </div>
+<div class="line"><span class="lineno">   83</span>    cv::Vec3f p2 = <a class="code hl_function" href="namespacedyno.html#a362927fda6438780973f55111b77455c">H</a> * p1;</div>
+<div class="line"><span class="lineno">   84</span> </div>
+<div class="line"><span class="lineno">   85</span>    <span class="comment">// Project predicted bearing vectors to 2D again and re-homogenize.</span></div>
+<div class="line"><span class="lineno">   86</span>    cv::Point2f new_kpt;</div>
+<div class="line"><span class="lineno">   87</span>    <span class="keywordflow">if</span> (p2[2] &gt; 0.0f) {</div>
+<div class="line"><span class="lineno">   88</span>      new_kpt = cv::Point2f(p2[0] / p2[2], p2[1] / p2[2]);</div>
+<div class="line"><span class="lineno">   89</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">   90</span>      LOG(WARNING) &lt;&lt; <span class="stringliteral">&quot;Landmark behind the camera:\n&quot;</span></div>
+<div class="line"><span class="lineno">   91</span>                   &lt;&lt; <span class="stringliteral">&quot;- p1: &quot;</span> &lt;&lt; p1 &lt;&lt; <span class="charliteral">&#39;\n&#39;</span></div>
+<div class="line"><span class="lineno">   92</span>                   &lt;&lt; <span class="stringliteral">&quot;- p2: &quot;</span> &lt;&lt; p2;</div>
+<div class="line"><span class="lineno">   93</span>      new_kpt = prev_kpt;</div>
+<div class="line"><span class="lineno">   94</span>    }</div>
+<div class="line"><span class="lineno">   95</span>    <span class="comment">// Check that keypoints remain inside the image boundaries!</span></div>
+<div class="line"><span class="lineno">   96</span>    <span class="keywordflow">if</span> (<a class="code hl_function" href="classdyno_1_1FeatureTrackerBase.html#a32d80be7e74a096c2b816529b7fd2c69">isWithinShrunkenImage</a>(new_kpt)) {</div>
+<div class="line"><span class="lineno">   97</span>      predicted_pts_k.push_back(new_kpt);</div>
+<div class="line"><span class="lineno">   98</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">   99</span>      <span class="comment">// Otw copy-paste previous keypoint.</span></div>
+<div class="line"><span class="lineno">  100</span>      predicted_pts_k.push_back(prev_kpt);</div>
+<div class="line"><span class="lineno">  101</span>    }</div>
+<div class="line"><span class="lineno">  102</span>  }</div>
+<div class="line"><span class="lineno">  103</span> </div>
+<div class="line"><span class="lineno">  104</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  105</span>}</div>
+<div class="ttc" id="anamespacedyno_1_1utils_html_a1acd48b0777dc5cc242c9a1fa2cac2d4"><div class="ttname"><a href="namespacedyno_1_1utils.html#a1acd48b0777dc5cc242c9a1fa2cac2d4">dyno::utils::gtsamMatrix3ToCvMat</a></div><div class="ttdeci">cv::Mat gtsamMatrix3ToCvMat(const gtsam::Matrix3 &amp;rot)</div><div class="ttdef"><b>Definition:</b> <a href="GtsamUtils_8cc_source.html#l00130">GtsamUtils.cc:130</a></div></div>
+<div class="ttc" id="anamespacedyno_html_a362927fda6438780973f55111b77455c"><div class="ttname"><a href="namespacedyno.html#a362927fda6438780973f55111b77455c">dyno::H</a></div><div class="ttdeci">gtsam::Key H(unsigned char label, std::uint64_t j)</div><div class="ttdef"><b>Definition:</b> <a href="BackendDefinitions_8hpp_source.html#l00065">BackendDefinitions.hpp:65</a></div></div>
+</div><!-- fragment -->
+<p class="reference">References <a class="el" href="classdyno_1_1FeatureTrackerBase.html#abf6eba19baf18b1c3648347401c15a56">camera_</a>, <a class="el" href="namespacedyno_1_1utils.html#a1acd48b0777dc5cc242c9a1fa2cac2d4">dyno::utils::gtsamMatrix3ToCvMat()</a>, <a class="el" href="namespacedyno.html#a362927fda6438780973f55111b77455c">dyno::H()</a>, and <a class="el" href="classdyno_1_1FeatureTrackerBase.html#a32d80be7e74a096c2b816529b7fd2c69">isWithinShrunkenImage()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1KltFeatureTracker.html#a8f26d8fe56edd3e579a879e82a40457f">dyno::KltFeatureTracker::trackPoints()</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classdyno_1_1FeatureTrackerBase_aac4fd637116f1a55b857968d6f84d33d_cgraph.png" border="0" usemap="#aclassdyno_1_1FeatureTrackerBase_aac4fd637116f1a55b857968d6f84d33d_cgraph" alt=""/></div>
+<map name="aclassdyno_1_1FeatureTrackerBase_aac4fd637116f1a55b857968d6f84d33d_cgraph" id="aclassdyno_1_1FeatureTrackerBase_aac4fd637116f1a55b857968d6f84d33d_cgraph">
+<area shape="rect" title=" " alt="" coords="5,63,237,103"/>
+<area shape="rect" href="namespacedyno_1_1utils.html#a1acd48b0777dc5cc242c9a1fa2cac2d4" title=" " alt="" coords="285,5,475,45"/>
+<area shape="rect" href="namespacedyno.html#a362927fda6438780973f55111b77455c" title=" " alt="" coords="344,70,416,95"/>
+<area shape="rect" href="classdyno_1_1FeatureTrackerBase.html#a32d80be7e74a096c2b816529b7fd2c69" title="Checks if a keypoint is within an image, taking into account the shrink row/col values in the params...." alt="" coords="285,120,475,160"/>
+<area shape="rect" href="structdyno_1_1functional__keypoint.html#a3896d96a6f95b5311ae768cdd0ad97e8" title=" " alt="" coords="523,102,729,127"/>
+<area shape="rect" href="structdyno_1_1functional__keypoint.html#a24933450cad8bc70b7b76b339756cd94" title=" " alt="" coords="523,151,729,177"/>
+</map>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classdyno_1_1FeatureTrackerBase_aac4fd637116f1a55b857968d6f84d33d_icgraph.png" border="0" usemap="#aclassdyno_1_1FeatureTrackerBase_aac4fd637116f1a55b857968d6f84d33d_icgraph" alt=""/></div>
+<map name="aclassdyno_1_1FeatureTrackerBase_aac4fd637116f1a55b857968d6f84d33d_icgraph" id="aclassdyno_1_1FeatureTrackerBase_aac4fd637116f1a55b857968d6f84d33d_icgraph">
+<area shape="rect" title=" " alt="" coords="451,5,683,45"/>
+<area shape="rect" href="classdyno_1_1KltFeatureTracker.html#a8f26d8fe56edd3e579a879e82a40457f" title="Tracks features using KLT tracker between the previous image and the current one." alt="" coords="228,5,403,45"/>
+<area shape="rect" href="classdyno_1_1KltFeatureTracker.html#ab15aaa39f0c3adc62037d718b98039c0" title="Track features between frames k&#45;1 and the current set of images (at k)." alt="" coords="5,5,180,45"/>
 </map>
 </div>
 
@@ -502,9 +679,9 @@ Here is the caller graph for this function:</div>
 
 <p>Expected image size from the camera. </p>
 
-<p class="definition">Definition at line <a class="el" href="FeatureTrackerBase_8hpp_source.html#l00116">116</a> of file <a class="el" href="FeatureTrackerBase_8hpp_source.html">FeatureTrackerBase.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FeatureTrackerBase_8hpp_source.html#l00169">169</a> of file <a class="el" href="FeatureTrackerBase_8hpp_source.html">FeatureTrackerBase.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1ExternalFlowFeatureTracker.html#a9bc1bd98819dcd484c6cf62b3e1e5145">dyno::ExternalFlowFeatureTracker::constructStaticFeature()</a>, <a class="el" href="classdyno_1_1KltFeatureTracker.html#a4870d167d7dbd1a04a8d7d15a376a573">dyno::KltFeatureTracker::detectFeatures()</a>, <a class="el" href="classdyno_1_1FeatureTracker.html#a23296ac35b5935656d31a18450dc5e4c">dyno::FeatureTracker::track()</a>, <a class="el" href="classdyno_1_1FeatureTracker.html#aeaff1c244270c93747ce92b36163c38d">dyno::FeatureTracker::trackDynamic()</a>, <a class="el" href="classdyno_1_1KltFeatureTracker.html#a24e98ff72741e59ed48f5b14d5ecaf9b">dyno::KltFeatureTracker::trackPoints()</a>, and <a class="el" href="classdyno_1_1ExternalFlowFeatureTracker.html#a28dabdf87c24770c7541ad82b54cdad0">dyno::ExternalFlowFeatureTracker::trackStatic()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1ExternalFlowFeatureTracker.html#a9bc1bd98819dcd484c6cf62b3e1e5145">dyno::ExternalFlowFeatureTracker::constructStaticFeature()</a>, <a class="el" href="classdyno_1_1KltFeatureTracker.html#a4870d167d7dbd1a04a8d7d15a376a573">dyno::KltFeatureTracker::detectFeatures()</a>, <a class="el" href="classdyno_1_1FeatureTrackerBase.html#aac4fd637116f1a55b857968d6f84d33d">predictKeypointsGivenRotation()</a>, <a class="el" href="classdyno_1_1FeatureTracker.html#a31f607c5d1fca4c1ace6af223abb5ead">dyno::FeatureTracker::stereoTrack()</a>, <a class="el" href="classdyno_1_1FeatureTracker.html#a9890ba0c11b5932b5b4954a86bd03948">dyno::FeatureTracker::track()</a>, <a class="el" href="classdyno_1_1FeatureTracker.html#a145614fe29bef7728075492870ac9c41">dyno::FeatureTracker::trackDynamic()</a>, <a class="el" href="classdyno_1_1KltFeatureTracker.html#a8f26d8fe56edd3e579a879e82a40457f">dyno::KltFeatureTracker::trackPoints()</a>, and <a class="el" href="classdyno_1_1ExternalFlowFeatureTracker.html#aedf0b07caf85d853756cb878f22d2ad7">dyno::ExternalFlowFeatureTracker::trackStatic()</a>.</p>
 
 </div>
 </div>
@@ -528,7 +705,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="FeatureTrackerBase_8hpp_source.html#l00117">117</a> of file <a class="el" href="FeatureTrackerBase_8hpp_source.html">FeatureTrackerBase.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FeatureTrackerBase_8hpp_source.html#l00170">170</a> of file <a class="el" href="FeatureTrackerBase_8hpp_source.html">FeatureTrackerBase.hpp</a>.</p>
 
 </div>
 </div>
@@ -552,9 +729,9 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="FeatureTrackerBase_8hpp_source.html#l00114">114</a> of file <a class="el" href="FeatureTrackerBase_8hpp_source.html">FeatureTrackerBase.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FeatureTrackerBase_8hpp_source.html#l00167">167</a> of file <a class="el" href="FeatureTrackerBase_8hpp_source.html">FeatureTrackerBase.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1ExternalFlowFeatureTracker.html#a0181662d79f3c451929ceb09e71bca89">dyno::ExternalFlowFeatureTracker::ExternalFlowFeatureTracker()</a>, <a class="el" href="classdyno_1_1FeatureTracker.html#aa1858ceb580cb42aff98e3b57bfe9303">dyno::FeatureTracker::FeatureTracker()</a>, <a class="el" href="classdyno_1_1FeatureTrackerBase.html#a32d80be7e74a096c2b816529b7fd2c69">isWithinShrunkenImage()</a>, <a class="el" href="classdyno_1_1FeatureTracker.html#a23296ac35b5935656d31a18450dc5e4c">dyno::FeatureTracker::track()</a>, and <a class="el" href="classdyno_1_1FeatureTracker.html#aeaff1c244270c93747ce92b36163c38d">dyno::FeatureTracker::trackDynamic()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1ExternalFlowFeatureTracker.html#a0181662d79f3c451929ceb09e71bca89">dyno::ExternalFlowFeatureTracker::ExternalFlowFeatureTracker()</a>, <a class="el" href="classdyno_1_1FeatureTracker.html#aa1858ceb580cb42aff98e3b57bfe9303">dyno::FeatureTracker::FeatureTracker()</a>, <a class="el" href="classdyno_1_1FeatureTrackerBase.html#a32d80be7e74a096c2b816529b7fd2c69">isWithinShrunkenImage()</a>, and <a class="el" href="classdyno_1_1FeatureTracker.html#a9890ba0c11b5932b5b4954a86bd03948">dyno::FeatureTracker::track()</a>.</p>
 
 </div>
 </div>
@@ -578,9 +755,9 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="FeatureTrackerBase_8hpp_source.html#l00113">113</a> of file <a class="el" href="FeatureTrackerBase_8hpp_source.html">FeatureTrackerBase.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FeatureTrackerBase_8hpp_source.html#l00166">166</a> of file <a class="el" href="FeatureTrackerBase_8hpp_source.html">FeatureTrackerBase.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1KltFeatureTracker.html#a009ab3664d0280cb1fc6cb8b37a7a570">dyno::KltFeatureTracker::constructStaticFeatureFromPrevious()</a>, <a class="el" href="classdyno_1_1KltFeatureTracker.html#a4870d167d7dbd1a04a8d7d15a376a573">dyno::KltFeatureTracker::detectFeatures()</a>, <a class="el" href="classdyno_1_1FeatureTrackerBase.html#a32d80be7e74a096c2b816529b7fd2c69">isWithinShrunkenImage()</a>, <a class="el" href="classdyno_1_1FeatureTracker.html#a23296ac35b5935656d31a18450dc5e4c">dyno::FeatureTracker::track()</a>, <a class="el" href="classdyno_1_1FeatureTracker.html#aeaff1c244270c93747ce92b36163c38d">dyno::FeatureTracker::trackDynamic()</a>, <a class="el" href="classdyno_1_1KltFeatureTracker.html#a24e98ff72741e59ed48f5b14d5ecaf9b">dyno::KltFeatureTracker::trackPoints()</a>, and <a class="el" href="classdyno_1_1ExternalFlowFeatureTracker.html#a28dabdf87c24770c7541ad82b54cdad0">dyno::ExternalFlowFeatureTracker::trackStatic()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1KltFeatureTracker.html#a009ab3664d0280cb1fc6cb8b37a7a570">dyno::KltFeatureTracker::constructStaticFeatureFromPrevious()</a>, <a class="el" href="classdyno_1_1KltFeatureTracker.html#a4870d167d7dbd1a04a8d7d15a376a573">dyno::KltFeatureTracker::detectFeatures()</a>, <a class="el" href="classdyno_1_1FeatureTrackerBase.html#a32d80be7e74a096c2b816529b7fd2c69">isWithinShrunkenImage()</a>, <a class="el" href="classdyno_1_1FeatureTracker.html#af6093d870bad67d12dee0c9cb913f87c">dyno::FeatureTracker::sampleDynamic()</a>, <a class="el" href="classdyno_1_1FeatureTracker.html#a9890ba0c11b5932b5b4954a86bd03948">dyno::FeatureTracker::track()</a>, <a class="el" href="classdyno_1_1FeatureTracker.html#a145614fe29bef7728075492870ac9c41">dyno::FeatureTracker::trackDynamic()</a>, <a class="el" href="classdyno_1_1KltFeatureTracker.html#a8f26d8fe56edd3e579a879e82a40457f">dyno::KltFeatureTracker::trackPoints()</a>, and <a class="el" href="classdyno_1_1ExternalFlowFeatureTracker.html#aedf0b07caf85d853756cb878f22d2ad7">dyno::ExternalFlowFeatureTracker::trackStatic()</a>.</p>
 
 </div>
 </div>

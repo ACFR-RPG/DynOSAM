@@ -100,7 +100,7 @@ Static Public Member Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Defines the input RGB/greyscale (mono) image. </p>
 
-<p class="definition">Definition at line <a class="el" href="ImageTypes_8hpp_source.html#l00107">107</a> of file <a class="el" href="ImageTypes_8hpp_source.html">ImageTypes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ImageTypes_8hpp_source.html#l00167">167</a> of file <a class="el" href="ImageTypes_8hpp_source.html">ImageTypes.hpp</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="a39a33578707104941e9766ab7686c4e4" name="a39a33578707104941e9766ab7686c4e4"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a39a33578707104941e9766ab7686c4e4">&#9670;&#160;</a></span>name()</h2>
@@ -125,8 +125,8 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ImageTypes_8hpp_source.html#l00109">109</a> of file <a class="el" href="ImageTypes_8hpp_source.html">ImageTypes.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  109</span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;RGBMono&quot;</span>; }</div>
+<p class="definition">Definition at line <a class="el" href="ImageTypes_8hpp_source.html#l00169">169</a> of file <a class="el" href="ImageTypes_8hpp_source.html">ImageTypes.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  169</span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;RGBMono&quot;</span>; }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -154,15 +154,15 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ImageTypes_8cc_source.html#l00115">115</a> of file <a class="el" href="ImageTypes_8cc_source.html">ImageTypes.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  115</span>                                                                 {</div>
-<div class="line"><span class="lineno">  116</span>  <span class="keywordflow">return</span> <a class="code hl_function" href="namespacedyno.html#a80329a3506c3ccb953481bb403dd320f">RGBMonoToMono</a>(image);</div>
-<div class="line"><span class="lineno">  117</span>}</div>
-<div class="ttc" id="anamespacedyno_html_a80329a3506c3ccb953481bb403dd320f"><div class="ttname"><a href="namespacedyno.html#a80329a3506c3ccb953481bb403dd320f">dyno::RGBMonoToMono</a></div><div class="ttdeci">cv::Mat RGBMonoToMono(const cv::Mat &amp;mat)</div><div class="ttdef"><b>Definition:</b> <a href="ImageTypes_8cc_source.html#l00088">ImageTypes.cc:88</a></div></div>
+<p class="definition">Definition at line <a class="el" href="ImageTypes_8cc_source.html#l00119">119</a> of file <a class="el" href="ImageTypes_8cc_source.html">ImageTypes.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  119</span>                                                                 {</div>
+<div class="line"><span class="lineno">  120</span>  <span class="keywordflow">return</span> <a class="code hl_function" href="namespacedyno.html#a80329a3506c3ccb953481bb403dd320f">RGBMonoToMono</a>(image);</div>
+<div class="line"><span class="lineno">  121</span>}</div>
+<div class="ttc" id="anamespacedyno_html_a80329a3506c3ccb953481bb403dd320f"><div class="ttname"><a href="namespacedyno.html#a80329a3506c3ccb953481bb403dd320f">dyno::RGBMonoToMono</a></div><div class="ttdeci">cv::Mat RGBMonoToMono(const cv::Mat &amp;mat)</div><div class="ttdef"><b>Definition:</b> <a href="ImageTypes_8cc_source.html#l00092">ImageTypes.cc:92</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="namespacedyno.html#a80329a3506c3ccb953481bb403dd320f">dyno::RGBMonoToMono()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1StereoMatcher.html#afe57452a9951b94bb69fae54ec8ebaaf">dyno::StereoMatcher::disparityRectifiedReconstruction()</a>, <a class="el" href="classdyno_1_1KltFeatureTracker.html#a32faba587882416d8090ff709cb93cfe">dyno::KltFeatureTracker::equalizeImage()</a>, and <a class="el" href="classdyno_1_1ExternalFlowFeatureTracker.html#a28dabdf87c24770c7541ad82b54cdad0">dyno::ExternalFlowFeatureTracker::trackStatic()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1StereoMatcher.html#afe57452a9951b94bb69fae54ec8ebaaf">dyno::StereoMatcher::disparityRectifiedReconstruction()</a>, <a class="el" href="classdyno_1_1KltFeatureTracker.html#a32faba587882416d8090ff709cb93cfe">dyno::KltFeatureTracker::equalizeImage()</a>, <a class="el" href="classdyno_1_1FeatureTracker.html#a31f607c5d1fca4c1ace6af223abb5ead">dyno::FeatureTracker::stereoTrack()</a>, and <a class="el" href="classdyno_1_1ExternalFlowFeatureTracker.html#aedf0b07caf85d853756cb878f22d2ad7">dyno::ExternalFlowFeatureTracker::trackStatic()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -177,12 +177,13 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="structdyno_1_1ImageType_1_1RGBMono_ac6c656492aaeff4bb8b60f42b0cfa7a3_icgraph.png" border="0" usemap="#astructdyno_1_1ImageType_1_1RGBMono_ac6c656492aaeff4bb8b60f42b0cfa7a3_icgraph" alt=""/></div>
 <map name="astructdyno_1_1ImageType_1_1RGBMono_ac6c656492aaeff4bb8b60f42b0cfa7a3_icgraph" id="astructdyno_1_1ImageType_1_1RGBMono_ac6c656492aaeff4bb8b60f42b0cfa7a3_icgraph">
-<area shape="rect" title=" " alt="" coords="551,69,756,109"/>
+<area shape="rect" title=" " alt="" coords="551,101,756,141"/>
 <area shape="rect" href="classdyno_1_1StereoMatcher.html#afe57452a9951b94bb69fae54ec8ebaaf" title="Dense stereo reconstruction from two (undistored, rectified) images and produces a disparity map." alt="" coords="261,5,503,45"/>
 <area shape="rect" href="classdyno_1_1KltFeatureTracker.html#a32faba587882416d8090ff709cb93cfe" title="Outputs a CLAHE equalized greyscale image from the input RGB, which will be used to detect and track ..." alt="" coords="295,69,469,109"/>
-<area shape="rect" href="classdyno_1_1ExternalFlowFeatureTracker.html#a28dabdf87c24770c7541ad82b54cdad0" title="Base function to perform feature tracking on static points." alt="" coords="284,133,480,173"/>
+<area shape="rect" href="classdyno_1_1FeatureTracker.html#a31f607c5d1fca4c1ace6af223abb5ead" title=" " alt="" coords="303,133,461,173"/>
+<area shape="rect" href="classdyno_1_1ExternalFlowFeatureTracker.html#aedf0b07caf85d853756cb878f22d2ad7" title="Base function to perform feature tracking on static points." alt="" coords="284,197,480,237"/>
 <area shape="rect" href="classdyno_1_1StereoMatcher.html#a80a925f47436fb14d55bfe199260431e" title="Dense stereo reconstruction from two (distored, non&#45;rectified) images and produces a dense depth map." alt="" coords="5,5,213,45"/>
-<area shape="rect" href="classdyno_1_1KltFeatureTracker.html#a8b8b5f33830f3b76205863b9236539e4" title="Track features between frames k&#45;1 and the current set of images (at k)." alt="" coords="22,69,197,109"/>
+<area shape="rect" href="classdyno_1_1KltFeatureTracker.html#ab15aaa39f0c3adc62037d718b98039c0" title="Track features between frames k&#45;1 and the current set of images (at k)." alt="" coords="22,69,197,109"/>
 </map>
 </div>
 
@@ -212,11 +213,11 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ImageTypes_8cc_source.html#l00111">111</a> of file <a class="el" href="ImageTypes_8cc_source.html">ImageTypes.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  111</span>                                                                {</div>
-<div class="line"><span class="lineno">  112</span>  <span class="keywordflow">return</span> <a class="code hl_function" href="namespacedyno.html#a2dbddc9a0aef317602644f200828e890">RGBMonoToRGB</a>(image);</div>
-<div class="line"><span class="lineno">  113</span>}</div>
-<div class="ttc" id="anamespacedyno_html_a2dbddc9a0aef317602644f200828e890"><div class="ttname"><a href="namespacedyno.html#a2dbddc9a0aef317602644f200828e890">dyno::RGBMonoToRGB</a></div><div class="ttdeci">cv::Mat RGBMonoToRGB(const cv::Mat &amp;mat)</div><div class="ttdef"><b>Definition:</b> <a href="ImageTypes_8cc_source.html#l00070">ImageTypes.cc:70</a></div></div>
+<p class="definition">Definition at line <a class="el" href="ImageTypes_8cc_source.html#l00115">115</a> of file <a class="el" href="ImageTypes_8cc_source.html">ImageTypes.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  115</span>                                                                {</div>
+<div class="line"><span class="lineno">  116</span>  <span class="keywordflow">return</span> <a class="code hl_function" href="namespacedyno.html#a2dbddc9a0aef317602644f200828e890">RGBMonoToRGB</a>(image);</div>
+<div class="line"><span class="lineno">  117</span>}</div>
+<div class="ttc" id="anamespacedyno_html_a2dbddc9a0aef317602644f200828e890"><div class="ttname"><a href="namespacedyno.html#a2dbddc9a0aef317602644f200828e890">dyno::RGBMonoToRGB</a></div><div class="ttdeci">cv::Mat RGBMonoToRGB(const cv::Mat &amp;mat)</div><div class="ttdef"><b>Definition:</b> <a href="ImageTypes_8cc_source.html#l00074">ImageTypes.cc:74</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="namespacedyno.html#a2dbddc9a0aef317602644f200828e890">dyno::RGBMonoToRGB()</a>.</p>
 
@@ -266,11 +267,11 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ImageTypes_8cc_source.html#l00107">107</a> of file <a class="el" href="ImageTypes_8cc_source.html">ImageTypes.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  107</span>                                                  {</div>
-<div class="line"><span class="lineno">  108</span>  <a class="code hl_function" href="namespacedyno.html#a20619017f0a1f5c3757915ac41c84df2">validateRGBMono</a>(input);</div>
-<div class="line"><span class="lineno">  109</span>}</div>
-<div class="ttc" id="anamespacedyno_html_a20619017f0a1f5c3757915ac41c84df2"><div class="ttname"><a href="namespacedyno.html#a20619017f0a1f5c3757915ac41c84df2">dyno::validateRGBMono</a></div><div class="ttdeci">void validateRGBMono(const cv::Mat &amp;input)</div><div class="ttdef"><b>Definition:</b> <a href="ImageTypes_8cc_source.html#l00051">ImageTypes.cc:51</a></div></div>
+<p class="definition">Definition at line <a class="el" href="ImageTypes_8cc_source.html#l00111">111</a> of file <a class="el" href="ImageTypes_8cc_source.html">ImageTypes.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  111</span>                                                  {</div>
+<div class="line"><span class="lineno">  112</span>  <a class="code hl_function" href="namespacedyno.html#a20619017f0a1f5c3757915ac41c84df2">validateRGBMono</a>(input);</div>
+<div class="line"><span class="lineno">  113</span>}</div>
+<div class="ttc" id="anamespacedyno_html_a20619017f0a1f5c3757915ac41c84df2"><div class="ttname"><a href="namespacedyno.html#a20619017f0a1f5c3757915ac41c84df2">dyno::validateRGBMono</a></div><div class="ttdeci">void validateRGBMono(const cv::Mat &amp;input)</div><div class="ttdef"><b>Definition:</b> <a href="ImageTypes_8cc_source.html#l00055">ImageTypes.cc:55</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="namespacedyno.html#a20619017f0a1f5c3757915ac41c84df2">dyno::validateRGBMono()</a>.</p>
 <div class="dynheader">

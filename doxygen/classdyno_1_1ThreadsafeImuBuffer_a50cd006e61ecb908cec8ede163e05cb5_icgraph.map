@@ -1,7 +1,7 @@
 <map id="dyno::ThreadsafeImuBuffer::addMeasurement" name="dyno::ThreadsafeImuBuffer::addMeasurement">
-<area shape="rect" id="node1" title=" " alt="" coords="701,37,900,77"/>
-<area shape="rect" id="node2" href="$classdyno_1_1ThreadsafeImuBuffer.html#a4620846c124831ecaa7c871fd8616583" title=" " alt="" coords="453,5,651,45"/>
-<area shape="rect" id="node5" href="$classdyno_1_1DataInterfacePipelineImu.html#a689536a74ae1875e2ed59c628ebcaf88" title=" " alt="" coords="451,69,653,109"/>
-<area shape="rect" id="node3" href="$classdyno_1_1DataInterfacePipelineImu.html#a1645ef07d1fca9349fd7587d8905be8f" title=" " alt="" coords="200,5,403,45"/>
-<area shape="rect" id="node4" href="$classdyno_1_1DataProvider.html#ae57527fb3be1d1894e0f5f7ec0568390" title=" " alt="" coords="5,5,152,45"/>
+<area shape="rect" id="node1" title=" " alt="" coords="749,37,948,77"/>
+<area shape="rect" id="node2" href="$classdyno_1_1ThreadsafeImuBuffer.html#a4620846c124831ecaa7c871fd8616583" title=" " alt="" coords="503,5,701,45"/>
+<area shape="rect" id="node5" href="$classdyno_1_1ImuInterfaceHandler.html#ac9790e91bcf3c6b28ae731c9834a9a0c" title=" " alt="" coords="504,69,700,109"/>
+<area shape="rect" id="node3" href="$classdyno_1_1ImuInterfaceHandler.html#a29a70c20fb0f39ddaeadc08fe0d1e11b" title=" " alt="" coords="259,5,455,45"/>
+<area shape="rect" id="node4" href="$classdyno_1_1DynoPipelineManager.html#a283e891aa3d4ca8d2d671eb1e3d5d514" title=" " alt="" coords="5,5,211,45"/>
 </map>

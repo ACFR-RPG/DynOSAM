@@ -1,5 +1,7 @@
 <map id="dyno::loadMask" name="dyno::loadMask">
-<area shape="rect" id="node1" title=" " alt="" coords="256,45,381,70"/>
+<area shape="rect" id="node1" title=" " alt="" coords="256,109,381,134"/>
 <area shape="rect" id="node2" href="$classdyno_1_1ClusterSlamAllLoader.html#a6dbf46c48ea9477aa915bff62ee98ea8" title=" " alt="" coords="5,5,208,45"/>
 <area shape="rect" id="node3" href="$classdyno_1_1ProjectAriaAllLoader.html#aadc1a14a0b67880dc979bc9ee8e85593" title=" " alt="" coords="9,69,204,109"/>
+<area shape="rect" id="node4" href="$classdyno_1_1TartanAirShibuyaAllLoader.html#a3b9dfdcd11754b4a94e1573eb681fdba" title=" " alt="" coords="12,133,201,173"/>
+<area shape="rect" id="node5" href="$classdyno_1_1ViodeAllLoader.html#a3a483aa6a5774688ed2f07db2cb00697" title=" " alt="" coords="27,197,187,237"/>
 </map>

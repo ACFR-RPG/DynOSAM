@@ -99,6 +99,10 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1internal_1_1CppParameterType.html">CppParameterType</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type trait to retrieve a.  <a href="structdyno_1_1internal_1_1CppParameterType.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1internal_1_1EnableBitMaskOperators.html">EnableBitMaskOperators</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1internal_1_1EnableBitMaskOperators_3_01RuntimeSensorOptions_01_4.html">EnableBitMaskOperators&lt; RuntimeSensorOptions &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1internal_1_1filter__iterator__base.html">filter_iterator_base</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1internal_1_1filter__iterator__detail.html">filter_iterator_detail</a></td></tr>
@@ -124,6 +128,9 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1internal_1_1is__variant__member.html">is_variant_member</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><b>is_variant_member&lt; T, std::variant&lt; Variants... &gt; &gt;</b></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1internal_1_1isam2__like__traits.html">isam2_like_traits</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structdyno_1_1iOptimizationTraits.html" title="Defines a traits interface to any incremental smoother. This must be defined for each type.">iOptimizationTraits</a> for something that looks exactly like <a class="el" href="classdyno_1_1ISAM2.html">ISAM2</a> Really only exists becuase we have a custom <a class="el" href="classdyno_1_1ISAM2.html">dyno::ISAM2</a> class  <a href="structdyno_1_1internal_1_1isam2__like__traits.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1internal_1_1RosParameterType.html">RosParameterType</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -164,6 +171,15 @@ Typedefs</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:a0b09703461a36e951ef7077827023a5d"><td class="memTemplParams" colspan="2">template&lt;typename E &gt; </td></tr>
+<tr class="memitem:a0b09703461a36e951ef7077827023a5d"><td class="memTemplItemLeft" align="right" valign="top">constexpr std::enable_if_t&lt; <a class="el" href="structdyno_1_1internal_1_1EnableBitMaskOperators.html">EnableBitMaskOperators</a>&lt; E &gt;::value, E &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacedyno_1_1internal.html#a0b09703461a36e951ef7077827023a5d">operator|</a> (E lhs, E rhs)</td></tr>
+<tr class="separator:a0b09703461a36e951ef7077827023a5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a21b1c558dc486d3fe29bac83cba8a2ac"><td class="memTemplParams" colspan="2">template&lt;typename E &gt; </td></tr>
+<tr class="memitem:a21b1c558dc486d3fe29bac83cba8a2ac"><td class="memTemplItemLeft" align="right" valign="top">constexpr std::enable_if_t&lt; <a class="el" href="structdyno_1_1internal_1_1EnableBitMaskOperators.html">EnableBitMaskOperators</a>&lt; E &gt;::value, E &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacedyno_1_1internal.html#a21b1c558dc486d3fe29bac83cba8a2ac">operator&amp;</a> (E lhs, E rhs)</td></tr>
+<tr class="separator:a21b1c558dc486d3fe29bac83cba8a2ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7cfdad5f4e74240a1f225b8e9370fdef"><td class="memTemplParams" colspan="2">template&lt;typename E &gt; </td></tr>
+<tr class="memitem:a7cfdad5f4e74240a1f225b8e9370fdef"><td class="memTemplItemLeft" align="right" valign="top">constexpr std::enable_if_t&lt; <a class="el" href="structdyno_1_1internal_1_1EnableBitMaskOperators.html">EnableBitMaskOperators</a>&lt; E &gt;::value, E &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacedyno_1_1internal.html#a7cfdad5f4e74240a1f225b8e9370fdef">operator~</a> (E e)</td></tr>
+<tr class="separator:a7cfdad5f4e74240a1f225b8e9370fdef"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af5f69e62462118d90abe1eb2ba7af71b"><td class="memTemplParams" colspan="2">template&lt;class Function , std::size_t... Is&gt; </td></tr>
 <tr class="memitem:af5f69e62462118d90abe1eb2ba7af71b"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacedyno_1_1internal.html#af5f69e62462118d90abe1eb2ba7af71b">index_apply_impl</a> (Function f, std::index_sequence&lt; Is... &gt;)</td></tr>
 <tr class="separator:af5f69e62462118d90abe1eb2ba7af71b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -188,6 +204,10 @@ Functions</h2></td></tr>
 <tr class="memitem:a83a83b227f4519ab857427a74f1ffc1d"><td class="memTemplParams" colspan="2">template&lt;typename U , typename... T&gt; </td></tr>
 <tr class="memitem:a83a83b227f4519ab857427a74f1ffc1d"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacedyno_1_1internal.html#a83a83b227f4519ab857427a74f1ffc1d">contains</a> (std::tuple&lt; T... &gt;)</td></tr>
 <tr class="separator:a83a83b227f4519ab857427a74f1ffc1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a35df6955bb63b53316c47099f513c571"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno_1_1internal.html#a35df6955bb63b53316c47099f513c571">optimizeInPlace</a> (const <a class="el" href="classdyno_1_1ISAM2.html#a1d31dd01d48733c972497c10051e88b8">ISAM2::sharedClique</a> &amp;clique, VectorValues *result)</td></tr>
+<tr class="separator:a35df6955bb63b53316c47099f513c571"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab59eaf9a9e6593b1859012fbf52bd1a7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno_1_1internal.html#ab59eaf9a9e6593b1859012fbf52bd1a7">updateRgProd</a> (const <a class="el" href="classdyno_1_1ISAM2.html#a1d31dd01d48733c972497c10051e88b8">ISAM2::sharedClique</a> &amp;clique, const gtsam::KeySet &amp;replacedKeys, const gtsam::VectorValues &amp;grad, gtsam::VectorValues *RgProd, size_t *varsUpdated)</td></tr>
+<tr class="separator:ab59eaf9a9e6593b1859012fbf52bd1a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
@@ -216,7 +236,7 @@ template&lt;typename Iter &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00386">386</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00421">421</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
 
 </div>
 </div>
@@ -234,7 +254,7 @@ template&lt;typename Container &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="StructuredContainers_8hpp_source.html#l00168">168</a> of file <a class="el" href="StructuredContainers_8hpp_source.html">StructuredContainers.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="StructuredContainers_8hpp_source.html#l00185">185</a> of file <a class="el" href="StructuredContainers_8hpp_source.html">StructuredContainers.hpp</a>.</p>
 
 </div>
 </div>
@@ -252,7 +272,7 @@ template&lt;typename Container &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="StructuredContainers_8hpp_source.html#l00165">165</a> of file <a class="el" href="StructuredContainers_8hpp_source.html">StructuredContainers.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="StructuredContainers_8hpp_source.html#l00181">181</a> of file <a class="el" href="StructuredContainers_8hpp_source.html">StructuredContainers.hpp</a>.</p>
 
 </div>
 </div>
@@ -278,7 +298,7 @@ template&lt;typename Iter &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00382">382</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00417">417</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
 
 </div>
 </div>
@@ -646,6 +666,261 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
+<a id="a21b1c558dc486d3fe29bac83cba8a2ac" name="a21b1c558dc486d3fe29bac83cba8a2ac"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a21b1c558dc486d3fe29bac83cba8a2ac">&#9670;&#160;</a></span>operator&amp;()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename E &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr std::enable_if_t&lt; <a class="el" href="structdyno_1_1internal_1_1EnableBitMaskOperators.html">EnableBitMaskOperators</a>&lt; E &gt;::value, E &gt; dyno::internal::operator&amp; </td>
+          <td>(</td>
+          <td class="paramtype">E&#160;</td>
+          <td class="paramname"><em>lhs</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">E&#160;</td>
+          <td class="paramname"><em>rhs</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Types-inl_8hpp_source.html#l00052">52</a> of file <a class="el" href="Types-inl_8hpp_source.html">Types-inl.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   53</span>                  {</div>
+<div class="line"><span class="lineno">   54</span>  <span class="keyword">using </span>U = std::underlying_type_t&lt;E&gt;;</div>
+<div class="line"><span class="lineno">   55</span>  <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span>E<span class="keyword">&gt;</span>(<span class="keyword">static_cast&lt;</span>U<span class="keyword">&gt;</span>(lhs) &amp; <span class="keyword">static_cast&lt;</span>U<span class="keyword">&gt;</span>(rhs));</div>
+<div class="line"><span class="lineno">   56</span>}</div>
+</div><!-- fragment -->
+<p class="reference">References <a class="el" href="namespacedyno_1_1internal.html#a21b1c558dc486d3fe29bac83cba8a2ac">operator&amp;()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="namespacedyno_1_1internal.html#a21b1c558dc486d3fe29bac83cba8a2ac">operator&amp;()</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="namespacedyno_1_1internal_a21b1c558dc486d3fe29bac83cba8a2ac_cgraph.png" border="0" usemap="#anamespacedyno_1_1internal_a21b1c558dc486d3fe29bac83cba8a2ac_cgraph" alt=""/></div>
+<map name="anamespacedyno_1_1internal_a21b1c558dc486d3fe29bac83cba8a2ac_cgraph" id="anamespacedyno_1_1internal_a21b1c558dc486d3fe29bac83cba8a2ac_cgraph">
+<area shape="rect" title=" " alt="" coords="5,29,191,55"/>
+</map>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="namespacedyno_1_1internal_a21b1c558dc486d3fe29bac83cba8a2ac_icgraph.png" border="0" usemap="#anamespacedyno_1_1internal_a21b1c558dc486d3fe29bac83cba8a2ac_icgraph" alt=""/></div>
+<map name="anamespacedyno_1_1internal_a21b1c558dc486d3fe29bac83cba8a2ac_icgraph" id="anamespacedyno_1_1internal_a21b1c558dc486d3fe29bac83cba8a2ac_icgraph">
+<area shape="rect" title=" " alt="" coords="5,29,191,55"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a0b09703461a36e951ef7077827023a5d" name="a0b09703461a36e951ef7077827023a5d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0b09703461a36e951ef7077827023a5d">&#9670;&#160;</a></span>operator|()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename E &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr std::enable_if_t&lt; <a class="el" href="structdyno_1_1internal_1_1EnableBitMaskOperators.html">EnableBitMaskOperators</a>&lt; E &gt;::value, E &gt; dyno::internal::operator| </td>
+          <td>(</td>
+          <td class="paramtype">E&#160;</td>
+          <td class="paramname"><em>lhs</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">E&#160;</td>
+          <td class="paramname"><em>rhs</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Types-inl_8hpp_source.html#l00045">45</a> of file <a class="el" href="Types-inl_8hpp_source.html">Types-inl.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   46</span>                  {</div>
+<div class="line"><span class="lineno">   47</span>  <span class="keyword">using </span>U = std::underlying_type_t&lt;E&gt;;</div>
+<div class="line"><span class="lineno">   48</span>  <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span>E<span class="keyword">&gt;</span>(<span class="keyword">static_cast&lt;</span>U<span class="keyword">&gt;</span>(lhs) | <span class="keyword">static_cast&lt;</span>U<span class="keyword">&gt;</span>(rhs));</div>
+<div class="line"><span class="lineno">   49</span>}</div>
+</div><!-- fragment -->
+<p class="reference">References <a class="el" href="namespacedyno_1_1internal.html#a0b09703461a36e951ef7077827023a5d">operator|()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="namespacedyno_1_1internal.html#a0b09703461a36e951ef7077827023a5d">operator|()</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="namespacedyno_1_1internal_a0b09703461a36e951ef7077827023a5d_cgraph.png" border="0" usemap="#anamespacedyno_1_1internal_a0b09703461a36e951ef7077827023a5d_cgraph" alt=""/></div>
+<map name="anamespacedyno_1_1internal_a0b09703461a36e951ef7077827023a5d_cgraph" id="anamespacedyno_1_1internal_a0b09703461a36e951ef7077827023a5d_cgraph">
+<area shape="rect" title=" " alt="" coords="5,29,184,55"/>
+</map>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="namespacedyno_1_1internal_a0b09703461a36e951ef7077827023a5d_icgraph.png" border="0" usemap="#anamespacedyno_1_1internal_a0b09703461a36e951ef7077827023a5d_icgraph" alt=""/></div>
+<map name="anamespacedyno_1_1internal_a0b09703461a36e951ef7077827023a5d_icgraph" id="anamespacedyno_1_1internal_a0b09703461a36e951ef7077827023a5d_icgraph">
+<area shape="rect" title=" " alt="" coords="5,29,184,55"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a7cfdad5f4e74240a1f225b8e9370fdef" name="a7cfdad5f4e74240a1f225b8e9370fdef"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7cfdad5f4e74240a1f225b8e9370fdef">&#9670;&#160;</a></span>operator~()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename E &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr std::enable_if_t&lt; <a class="el" href="structdyno_1_1internal_1_1EnableBitMaskOperators.html">EnableBitMaskOperators</a>&lt; E &gt;::value, E &gt; dyno::internal::operator~ </td>
+          <td>(</td>
+          <td class="paramtype">E&#160;</td>
+          <td class="paramname"><em>e</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Types-inl_8hpp_source.html#l00059">59</a> of file <a class="el" href="Types-inl_8hpp_source.html">Types-inl.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   59</span>                                                                           {</div>
+<div class="line"><span class="lineno">   60</span>  <span class="keyword">using </span>U = std::underlying_type_t&lt;E&gt;;</div>
+<div class="line"><span class="lineno">   61</span>  <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span>E<span class="keyword">&gt;</span>(~static_cast&lt;U&gt;(e));</div>
+<div class="line"><span class="lineno">   62</span>}</div>
+</div><!-- fragment -->
+<p class="reference">References <a class="el" href="namespacedyno_1_1internal.html#a7cfdad5f4e74240a1f225b8e9370fdef">operator~()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="namespacedyno_1_1internal.html#a7cfdad5f4e74240a1f225b8e9370fdef">operator~()</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="namespacedyno_1_1internal_a7cfdad5f4e74240a1f225b8e9370fdef_cgraph.png" border="0" usemap="#anamespacedyno_1_1internal_a7cfdad5f4e74240a1f225b8e9370fdef_cgraph" alt=""/></div>
+<map name="anamespacedyno_1_1internal_a7cfdad5f4e74240a1f225b8e9370fdef_cgraph" id="anamespacedyno_1_1internal_a7cfdad5f4e74240a1f225b8e9370fdef_cgraph">
+<area shape="rect" title=" " alt="" coords="5,29,192,55"/>
+</map>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="namespacedyno_1_1internal_a7cfdad5f4e74240a1f225b8e9370fdef_icgraph.png" border="0" usemap="#anamespacedyno_1_1internal_a7cfdad5f4e74240a1f225b8e9370fdef_icgraph" alt=""/></div>
+<map name="anamespacedyno_1_1internal_a7cfdad5f4e74240a1f225b8e9370fdef_icgraph" id="anamespacedyno_1_1internal_a7cfdad5f4e74240a1f225b8e9370fdef_icgraph">
+<area shape="rect" title=" " alt="" coords="5,29,192,55"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a35df6955bb63b53316c47099f513c571" name="a35df6955bb63b53316c47099f513c571"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a35df6955bb63b53316c47099f513c571">&#9670;&#160;</a></span>optimizeInPlace()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void dyno::internal::optimizeInPlace </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classdyno_1_1ISAM2.html#a1d31dd01d48733c972497c10051e88b8">ISAM2::sharedClique</a> &amp;&#160;</td>
+          <td class="paramname"><em>clique</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">VectorValues *&#160;</td>
+          <td class="paramname"><em>result</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="ISAM2-impl_8cc_source.html#l00049">49</a> of file <a class="el" href="ISAM2-impl_8cc_source.html">ISAM2-impl.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   50</span>                                                         {</div>
+<div class="line"><span class="lineno">   51</span>  <span class="comment">// parents are assumed to already be solved and available in result</span></div>
+<div class="line"><span class="lineno">   52</span>  result-&gt;update(clique-&gt;conditional()-&gt;solve(*result));</div>
+<div class="line"><span class="lineno">   53</span> </div>
+<div class="line"><span class="lineno">   54</span>  <span class="comment">// starting from the root, call optimize on each conditional</span></div>
+<div class="line"><span class="lineno">   55</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <a class="code hl_typedef" href="classdyno_1_1ISAM2.html#a1d31dd01d48733c972497c10051e88b8">ISAM2::sharedClique</a>&amp; child : clique-&gt;children)</div>
+<div class="line"><span class="lineno">   56</span>    <a class="code hl_function" href="namespacedyno_1_1internal.html#a35df6955bb63b53316c47099f513c571">optimizeInPlace</a>(child, result);</div>
+<div class="line"><span class="lineno">   57</span>}</div>
+<div class="ttc" id="aclassdyno_1_1ISAM2_html_a1d31dd01d48733c972497c10051e88b8"><div class="ttname"><a href="classdyno_1_1ISAM2.html#a1d31dd01d48733c972497c10051e88b8">dyno::ISAM2::sharedClique</a></div><div class="ttdeci">Base::sharedClique sharedClique</div><div class="ttdoc">Shared pointer to a clique.</div><div class="ttdef"><b>Definition:</b> <a href="ISAM2_8hpp_source.html#l00102">ISAM2.hpp:102</a></div></div>
+<div class="ttc" id="anamespacedyno_1_1internal_html_a35df6955bb63b53316c47099f513c571"><div class="ttname"><a href="namespacedyno_1_1internal.html#a35df6955bb63b53316c47099f513c571">dyno::internal::optimizeInPlace</a></div><div class="ttdeci">static void optimizeInPlace(const ISAM2::sharedClique &amp;clique, VectorValues *result)</div><div class="ttdef"><b>Definition:</b> <a href="ISAM2-impl_8cc_source.html#l00049">ISAM2-impl.cc:49</a></div></div>
+</div><!-- fragment -->
+<p class="reference">References <a class="el" href="namespacedyno_1_1internal.html#a35df6955bb63b53316c47099f513c571">optimizeInPlace()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="namespacedyno_1_1internal.html#a35df6955bb63b53316c47099f513c571">optimizeInPlace()</a>, and <a class="el" href="structdyno_1_1DeltaImpl.html#afc72e85b3e88e3eeb879f125c9363118">dyno::DeltaImpl::UpdateGaussNewtonDelta()</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="namespacedyno_1_1internal_a35df6955bb63b53316c47099f513c571_cgraph.png" border="0" usemap="#anamespacedyno_1_1internal_a35df6955bb63b53316c47099f513c571_cgraph" alt=""/></div>
+<map name="anamespacedyno_1_1internal_a35df6955bb63b53316c47099f513c571_cgraph" id="anamespacedyno_1_1internal_a35df6955bb63b53316c47099f513c571_cgraph">
+<area shape="rect" title=" " alt="" coords="5,29,183,69"/>
+</map>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="namespacedyno_1_1internal_a35df6955bb63b53316c47099f513c571_icgraph.png" border="0" usemap="#anamespacedyno_1_1internal_a35df6955bb63b53316c47099f513c571_icgraph" alt=""/></div>
+<map name="anamespacedyno_1_1internal_a35df6955bb63b53316c47099f513c571_icgraph" id="anamespacedyno_1_1internal_a35df6955bb63b53316c47099f513c571_icgraph">
+<area shape="rect" title=" " alt="" coords="1040,35,1217,75"/>
+<area shape="rect" href="structdyno_1_1DeltaImpl.html#afc72e85b3e88e3eeb879f125c9363118" title=" " alt="" coords="771,35,992,75"/>
+<area shape="rect" href="classdyno_1_1ISAM2.html#a944653044b18575fcb2dd048656fb3c1" title=" " alt="" coords="531,42,723,67"/>
+<area shape="rect" href="classdyno_1_1ISAM2.html#a0bb058dd96bf558ec0617c3b71df029a" title=" " alt="" coords="283,5,483,45"/>
+<area shape="rect" href="classdyno_1_1ISAM2.html#a1a0f2be4c1764abfb584c2dc0dbd7bea" title=" " alt="" coords="299,70,467,95"/>
+<area shape="rect" href="classdyno_1_1ISAM2.html#a27eddb589249ad539b3fd5ff5367ac95" title=" " alt="" coords="5,70,235,95"/>
+</map>
+</div>
+
+</div>
+</div>
 <a id="a86193f9569a7857759391b9b8a0ae0e6" name="a86193f9569a7857759391b9b8a0ae0e6"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a86193f9569a7857759391b9b8a0ae0e6">&#9670;&#160;</a></span>select_apply()</h2>
 
@@ -682,6 +957,126 @@ template&lt;std::size_t N, class Function &gt; </div>
 <div class="line"><span class="lineno">   87</span>  });</div>
 <div class="line"><span class="lineno">   88</span>}</div>
 </div><!-- fragment -->
+</div>
+</div>
+<a id="ab59eaf9a9e6593b1859012fbf52bd1a7" name="ab59eaf9a9e6593b1859012fbf52bd1a7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab59eaf9a9e6593b1859012fbf52bd1a7">&#9670;&#160;</a></span>updateRgProd()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void dyno::internal::updateRgProd </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classdyno_1_1ISAM2.html#a1d31dd01d48733c972497c10051e88b8">ISAM2::sharedClique</a> &amp;&#160;</td>
+          <td class="paramname"><em>clique</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const gtsam::KeySet &amp;&#160;</td>
+          <td class="paramname"><em>replacedKeys</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const gtsam::VectorValues &amp;&#160;</td>
+          <td class="paramname"><em>grad</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gtsam::VectorValues *&#160;</td>
+          <td class="paramname"><em>RgProd</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t *&#160;</td>
+          <td class="paramname"><em>varsUpdated</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="ISAM2-impl_8cc_source.html#l00092">92</a> of file <a class="el" href="ISAM2-impl_8cc_source.html">ISAM2-impl.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   95</span>                                       {</div>
+<div class="line"><span class="lineno">   96</span>  <span class="comment">// Check if any frontal or separator keys were recalculated, if so, we need</span></div>
+<div class="line"><span class="lineno">   97</span>  <span class="comment">// update deltas and recurse to children, but if not, we do not need to</span></div>
+<div class="line"><span class="lineno">   98</span>  <span class="comment">// recurse further because of the running separator property.</span></div>
+<div class="line"><span class="lineno">   99</span>  <span class="keywordtype">bool</span> anyReplaced = <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">  100</span>  <span class="keywordflow">for</span> (gtsam::Key j : *clique-&gt;conditional()) {</div>
+<div class="line"><span class="lineno">  101</span>    <span class="keywordflow">if</span> (replacedKeys.exists(j)) {</div>
+<div class="line"><span class="lineno">  102</span>      anyReplaced = <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  103</span>      <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">  104</span>    }</div>
+<div class="line"><span class="lineno">  105</span>  }</div>
+<div class="line"><span class="lineno">  106</span> </div>
+<div class="line"><span class="lineno">  107</span>  <span class="keywordflow">if</span> (anyReplaced) {</div>
+<div class="line"><span class="lineno">  108</span>    <span class="comment">// Update the current variable</span></div>
+<div class="line"><span class="lineno">  109</span>    <span class="comment">// Get VectorValues slice corresponding to current variables</span></div>
+<div class="line"><span class="lineno">  110</span>    gtsam::Vector gR =</div>
+<div class="line"><span class="lineno">  111</span>        grad.vector(KeyVector(clique-&gt;conditional()-&gt;beginFrontals(),</div>
+<div class="line"><span class="lineno">  112</span>                              clique-&gt;conditional()-&gt;endFrontals()));</div>
+<div class="line"><span class="lineno">  113</span>    gtsam::Vector gS =</div>
+<div class="line"><span class="lineno">  114</span>        grad.vector(KeyVector(clique-&gt;conditional()-&gt;beginParents(),</div>
+<div class="line"><span class="lineno">  115</span>                              clique-&gt;conditional()-&gt;endParents()));</div>
+<div class="line"><span class="lineno">  116</span> </div>
+<div class="line"><span class="lineno">  117</span>    <span class="comment">// Compute R*g and S*g for this clique</span></div>
+<div class="line"><span class="lineno">  118</span>    gtsam::Vector RSgProd =</div>
+<div class="line"><span class="lineno">  119</span>        clique-&gt;conditional()-&gt;R() * gR + clique-&gt;conditional()-&gt;S() * gS;</div>
+<div class="line"><span class="lineno">  120</span> </div>
+<div class="line"><span class="lineno">  121</span>    <span class="comment">// Write into RgProd vector</span></div>
+<div class="line"><span class="lineno">  122</span>    gtsam::DenseIndex vectorPosition = 0;</div>
+<div class="line"><span class="lineno">  123</span>    <span class="keywordflow">for</span> (gtsam::Key frontal : clique-&gt;conditional()-&gt;frontals()) {</div>
+<div class="line"><span class="lineno">  124</span>      gtsam::Vector&amp; RgProdValue = (*RgProd)[frontal];</div>
+<div class="line"><span class="lineno">  125</span>      RgProdValue = RSgProd.segment(vectorPosition, RgProdValue.size());</div>
+<div class="line"><span class="lineno">  126</span>      vectorPosition += RgProdValue.size();</div>
+<div class="line"><span class="lineno">  127</span>    }</div>
+<div class="line"><span class="lineno">  128</span> </div>
+<div class="line"><span class="lineno">  129</span>    <span class="comment">// Now solve the part of the Newton&#39;s method point for this clique</span></div>
+<div class="line"><span class="lineno">  130</span>    <span class="comment">// (back-substitution)</span></div>
+<div class="line"><span class="lineno">  131</span>    <span class="comment">// (*clique)-&gt;solveInPlace(deltaNewton);</span></div>
+<div class="line"><span class="lineno">  132</span> </div>
+<div class="line"><span class="lineno">  133</span>    *varsUpdated += clique-&gt;conditional()-&gt;nrFrontals();</div>
+<div class="line"><span class="lineno">  134</span> </div>
+<div class="line"><span class="lineno">  135</span>    <span class="comment">// Recurse to children</span></div>
+<div class="line"><span class="lineno">  136</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> ISAM2::sharedClique&amp; child : clique-&gt;children) {</div>
+<div class="line"><span class="lineno">  137</span>      <a class="code hl_function" href="namespacedyno_1_1internal.html#ab59eaf9a9e6593b1859012fbf52bd1a7">updateRgProd</a>(child, replacedKeys, grad, RgProd, varsUpdated);</div>
+<div class="line"><span class="lineno">  138</span>    }</div>
+<div class="line"><span class="lineno">  139</span>  }</div>
+<div class="line"><span class="lineno">  140</span>}</div>
+<div class="ttc" id="anamespacedyno_1_1internal_html_ab59eaf9a9e6593b1859012fbf52bd1a7"><div class="ttname"><a href="namespacedyno_1_1internal.html#ab59eaf9a9e6593b1859012fbf52bd1a7">dyno::internal::updateRgProd</a></div><div class="ttdeci">void updateRgProd(const ISAM2::sharedClique &amp;clique, const gtsam::KeySet &amp;replacedKeys, const gtsam::VectorValues &amp;grad, gtsam::VectorValues *RgProd, size_t *varsUpdated)</div><div class="ttdef"><b>Definition:</b> <a href="ISAM2-impl_8cc_source.html#l00092">ISAM2-impl.cc:92</a></div></div>
+</div><!-- fragment -->
+<p class="reference">References <a class="el" href="namespacedyno_1_1internal.html#ab59eaf9a9e6593b1859012fbf52bd1a7">updateRgProd()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="structdyno_1_1DeltaImpl.html#a504a311492c4980ec9059371dc83c63b">dyno::DeltaImpl::UpdateRgProd()</a>, and <a class="el" href="namespacedyno_1_1internal.html#ab59eaf9a9e6593b1859012fbf52bd1a7">updateRgProd()</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="namespacedyno_1_1internal_ab59eaf9a9e6593b1859012fbf52bd1a7_cgraph.png" border="0" usemap="#anamespacedyno_1_1internal_ab59eaf9a9e6593b1859012fbf52bd1a7_cgraph" alt=""/></div>
+<map name="anamespacedyno_1_1internal_ab59eaf9a9e6593b1859012fbf52bd1a7_cgraph" id="anamespacedyno_1_1internal_ab59eaf9a9e6593b1859012fbf52bd1a7_cgraph">
+<area shape="rect" title=" " alt="" coords="5,29,216,55"/>
+</map>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="namespacedyno_1_1internal_ab59eaf9a9e6593b1859012fbf52bd1a7_icgraph.png" border="0" usemap="#anamespacedyno_1_1internal_ab59eaf9a9e6593b1859012fbf52bd1a7_icgraph" alt=""/></div>
+<map name="anamespacedyno_1_1internal_ab59eaf9a9e6593b1859012fbf52bd1a7_icgraph" id="anamespacedyno_1_1internal_ab59eaf9a9e6593b1859012fbf52bd1a7_icgraph">
+<area shape="rect" title=" " alt="" coords="1045,42,1256,67"/>
+<area shape="rect" href="structdyno_1_1DeltaImpl.html#a504a311492c4980ec9059371dc83c63b" title=" " alt="" coords="771,42,997,67"/>
+<area shape="rect" href="classdyno_1_1ISAM2.html#a944653044b18575fcb2dd048656fb3c1" title=" " alt="" coords="531,42,723,67"/>
+<area shape="rect" href="classdyno_1_1ISAM2.html#a0bb058dd96bf558ec0617c3b71df029a" title=" " alt="" coords="283,5,483,45"/>
+<area shape="rect" href="classdyno_1_1ISAM2.html#a1a0f2be4c1764abfb584c2dc0dbd7bea" title=" " alt="" coords="299,70,467,95"/>
+<area shape="rect" href="classdyno_1_1ISAM2.html#a27eddb589249ad539b3fd5ff5367ac95" title=" " alt="" coords="5,70,235,95"/>
+</map>
+</div>
+
 </div>
 </div>
 <h2 class="groupheader">Variable Documentation</h2>

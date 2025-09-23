@@ -1,6 +1,6 @@
 <map id="dyno::WorldMotionAccessor::getObjectPose" name="dyno::WorldMotionAccessor::getObjectPose">
 <area shape="rect" id="node1" title="Get the pose (^wL_k) of an object (j) at time&#45;step (k)." alt="" coords="5,63,208,103"/>
-<area shape="rect" id="node2" href="$classdyno_1_1WorldMotionAccessor.html#a9d627311e2ce84b2e6c5784d173b5c2a" title="Collects all object poses for frame 0 to k. (Non&#45;pure )Virtual function that may be overwritten &#45; def..." alt="" coords="262,5,465,45"/>
+<area shape="rect" id="node2" href="$classdyno_1_1WorldMotionAccessor.html#a9d627311e2ce84b2e6c5784d173b5c2a" title="Collects all object poses for frame 0 to K. (Non&#45;pure )Virtual function that may be overwritten &#45; def..." alt="" coords="262,5,465,45"/>
 <area shape="rect" id="node3" href="$classdyno_1_1StateQuery.html#a11630f8b7aa055e0418c3008de72be4c" title=" " alt="" coords="256,70,471,95"/>
 <area shape="rect" id="node5" href="$namespacedyno.html#a3ddefad6204b5a599687d5a17b09f2bf" title=" " alt="" coords="271,119,455,145"/>
 <area shape="rect" id="node4" href="$classdyno_1_1StateQuery.html#a0fcc50e2a6b7bf7125d86af0a9bbc9ae" title=" " alt="" coords="519,70,733,95"/>

@@ -110,9 +110,9 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-methods" name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
-<tr class="memitem:a1f9bf7eab4fa58654ae8481ab4c97f85"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DSDTransport_1_1Publisher.html#a1f9bf7eab4fa58654ae8481ab4c97f85">Publisher</a> (rclcpp::Node::SharedPtr node, ObjectOdometryPub::SharedPtr object_odom_publisher, MultiObjectOdometryPathPub::SharedPtr multi_object_odom_path_publisher, std::shared_ptr&lt; tf2_ros::TransformBroadcaster &gt; tf_broadcaster, const <a class="el" href="namespacedyno.html#acef42ad0a1e53f5876f1000defc23e3b">MotionEstimateMap</a> &amp;motions, const <a class="el" href="namespacedyno.html#a47c0a08523c12765d4bd6e243f900c16">ObjectPoseMap</a> &amp;poses, const std::string &amp;frame_id_link, <a class="el" href="namespacedyno.html#ac4303d6fafb755f794b072d76f9cfb41">FrameId</a> frame_id, <a class="el" href="namespacedyno.html#a7fda67c0575c4b7a8210dcc8ae227370">Timestamp</a> timestamp)</td></tr>
-<tr class="memdesc:a1f9bf7eab4fa58654ae8481ab4c97f85"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a new <a class="el" href="classdyno_1_1DSDTransport_1_1Publisher.html" title="Nested Publisher that publishes all the object odometries for a single frame/timestamp....">Publisher</a> object. Upon construction the publisher will broadcast to the 'object_odometry' topic under the effective namespace of the provided node.  <br /></td></tr>
-<tr class="separator:a1f9bf7eab4fa58654ae8481ab4c97f85"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a53d016dcbd71212ceb50dbd34e1973eb"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DSDTransport_1_1Publisher.html#a53d016dcbd71212ceb50dbd34e1973eb">Publisher</a> (rclcpp::Node::SharedPtr node, ObjectOdometryPub::SharedPtr object_odom_publisher, MultiObjectOdometryPathPub::SharedPtr multi_object_odom_path_publisher, std::shared_ptr&lt; tf2_ros::TransformBroadcaster &gt; tf_broadcaster, const <a class="el" href="namespacedyno.html#af0e7693f6363b7c2b87803049135cf43">ObjectMotionMap</a> &amp;motions, const <a class="el" href="namespacedyno.html#a47c0a08523c12765d4bd6e243f900c16">ObjectPoseMap</a> &amp;poses, const std::string &amp;frame_id_link, const <a class="el" href="namespacedyno.html#a3a5fbf92c649a119093d4cc3b0636871">FrameIdTimestampMap</a> &amp;frame_timestamp_map, <a class="el" href="namespacedyno.html#ac4303d6fafb755f794b072d76f9cfb41">FrameId</a> frame_id, <a class="el" href="namespacedyno.html#a7fda67c0575c4b7a8210dcc8ae227370">Timestamp</a> timestamp)</td></tr>
+<tr class="memdesc:a53d016dcbd71212ceb50dbd34e1973eb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a new <a class="el" href="classdyno_1_1DSDTransport_1_1Publisher.html" title="Nested Publisher that publishes all the object odometries for a single frame/timestamp....">Publisher</a> object. Upon construction the publisher will broadcast to the 'object_odometry' topic under the effective namespace of the provided node.  <br /></td></tr>
+<tr class="separator:a53d016dcbd71212ceb50dbd34e1973eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
@@ -144,10 +144,10 @@ Friends</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Nested <a class="el" href="classdyno_1_1DSDTransport_1_1Publisher.html" title="Nested Publisher that publishes all the object odometries for a single frame/timestamp....">Publisher</a> that publishes all the object odometries for a single frame/timestamp. Object odometries are set on construction. Functionality for publishing the object odom's themselves and broadcasting their position on the tf tree using the object current pose is addionally included. </p>
 
-<p class="definition">Definition at line <a class="el" href="DSDCommonRos_8hpp_source.html#l00108">108</a> of file <a class="el" href="DSDCommonRos_8hpp_source.html">DSDCommonRos.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="DSDCommonRos_8hpp_source.html#l00109">109</a> of file <a class="el" href="DSDCommonRos_8hpp_source.html">DSDCommonRos.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a1f9bf7eab4fa58654ae8481ab4c97f85" name="a1f9bf7eab4fa58654ae8481ab4c97f85"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1f9bf7eab4fa58654ae8481ab4c97f85">&#9670;&#160;</a></span>Publisher()</h2>
+<a id="a53d016dcbd71212ceb50dbd34e1973eb" name="a53d016dcbd71212ceb50dbd34e1973eb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a53d016dcbd71212ceb50dbd34e1973eb">&#9670;&#160;</a></span>Publisher()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -182,7 +182,7 @@ Friends</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="namespacedyno.html#acef42ad0a1e53f5876f1000defc23e3b">MotionEstimateMap</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="namespacedyno.html#af0e7693f6363b7c2b87803049135cf43">ObjectMotionMap</a> &amp;&#160;</td>
           <td class="paramname"><em>motions</em>, </td>
         </tr>
         <tr>
@@ -196,6 +196,12 @@ Friends</h2></td></tr>
           <td></td>
           <td class="paramtype">const std::string &amp;&#160;</td>
           <td class="paramname"><em>frame_id_link</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="namespacedyno.html#a3a5fbf92c649a119093d4cc3b0636871">FrameIdTimestampMap</a> &amp;&#160;</td>
+          <td class="paramname"><em>frame_timestamp_map</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -229,7 +235,7 @@ Friends</h2></td></tr>
     <tr><td class="paramname">object_odom_publisher</td><td>ObjectOdometryPub::SharedPtr Object odom publisher to share between all Publishers. </td></tr>
     <tr><td class="paramname">multi_object_odom_path_publisher</td><td>MultiObjectOdometryPathPub::SharedPtr </td></tr>
     <tr><td class="paramname">tf_broadcaster</td><td>std::shared_ptr&lt;tf2_ros::TransformBroadcaster&gt; TF broadcaster to share between all Publishers. </td></tr>
-    <tr><td class="paramname">motions</td><td>const MotionEstimateMap&amp; estimated motions at time (k) </td></tr>
+    <tr><td class="paramname">motions</td><td>const ObjectMotionMap&amp; motions at time (... to k) </td></tr>
     <tr><td class="paramname">poses</td><td>const ObjectPoseMap&amp; poses at time (... to k) </td></tr>
     <tr><td class="paramname">frame_id_link</td><td>const std::string&amp; parent tf tree link (e.g. odom/world.) </td></tr>
     <tr><td class="paramname">frame_id</td><td>FrameId current frame (k) </td></tr>
@@ -238,29 +244,29 @@ Friends</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="DSDCommonRos_8cc_source.html#l00165">165</a> of file <a class="el" href="DSDCommonRos_8cc_source.html">DSDCommonRos.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  172</span>    : <a class="code hl_variable" href="classdyno_1_1DSDTransport_1_1Publisher.html#ac53c735f6d4ba8ca2a0a632cadf737f5">node_</a>(node),</div>
-<div class="line"><span class="lineno">  173</span>      <a class="code hl_variable" href="classdyno_1_1DSDTransport_1_1Publisher.html#aee10b8b3f44a42dfad4fbfd92da93d2b">object_odom_publisher_</a>(object_odom_publisher),</div>
-<div class="line"><span class="lineno">  174</span>      <a class="code hl_variable" href="classdyno_1_1DSDTransport_1_1Publisher.html#a971cb998c142e0b326ceef25b4aa8839">multi_object_odom_path_publisher_</a>(multi_object_odom_path_publisher),</div>
-<div class="line"><span class="lineno">  175</span>      <a class="code hl_variable" href="classdyno_1_1DSDTransport_1_1Publisher.html#a4ecd05d9927fce6f2905636783d68de2">tf_broadcaster_</a>(tf_broadcaster),</div>
-<div class="line"><span class="lineno">  176</span>      <a class="code hl_variable" href="classdyno_1_1DSDTransport_1_1Publisher.html#af7749599aefdf3a8fe7f8ac389028741">frame_id_link_</a>(frame_id_link),</div>
-<div class="line"><span class="lineno">  177</span>      <a class="code hl_variable" href="classdyno_1_1DSDTransport_1_1Publisher.html#afcc2aeb65387f89cf377d18d81e5a817">frame_id_</a>(frame_id),</div>
-<div class="line"><span class="lineno">  178</span>      <a class="code hl_variable" href="classdyno_1_1DSDTransport_1_1Publisher.html#af75983efee0ab9410f53d5ba373e051f">timestamp_</a>(timestamp),</div>
-<div class="line"><span class="lineno">  179</span>      <a class="code hl_variable" href="classdyno_1_1DSDTransport_1_1Publisher.html#a15e2dc7007104a5eb44a4327f6c33383">object_odometries_</a>(<a class="code hl_function" href="classdyno_1_1DSDTransport.html#a73f0554c9013b1e5be9fda71990706bf">DSDTransport::constructObjectOdometries</a>(</div>
-<div class="line"><span class="lineno">  180</span>          motions, poses, frame_id, timestamp, frame_id_link)),</div>
-<div class="line"><span class="lineno">  181</span>      <a class="code hl_variable" href="classdyno_1_1DSDTransport_1_1Publisher.html#a1128ee559b63dc9cebcfe77bffeb1d39">object_paths_</a>(<a class="code hl_function" href="classdyno_1_1DSDTransport.html#a4eba9575230369796752df57fb9c478a">DSDTransport::constructMultiObjectOdometryPaths</a>(</div>
-<div class="line"><span class="lineno">  182</span>          motions, poses, frame_id, timestamp, node-&gt;now(), frame_id_link)) {}</div>
-<div class="ttc" id="aclassdyno_1_1DSDTransport_1_1Publisher_html_a1128ee559b63dc9cebcfe77bffeb1d39"><div class="ttname"><a href="classdyno_1_1DSDTransport_1_1Publisher.html#a1128ee559b63dc9cebcfe77bffeb1d39">dyno::DSDTransport::Publisher::object_paths_</a></div><div class="ttdeci">MultiObjectOdometryPath object_paths_</div><div class="ttdef"><b>Definition:</b> <a href="DSDCommonRos_8hpp_source.html#l00152">DSDCommonRos.hpp:152</a></div></div>
-<div class="ttc" id="aclassdyno_1_1DSDTransport_1_1Publisher_html_a15e2dc7007104a5eb44a4327f6c33383"><div class="ttname"><a href="classdyno_1_1DSDTransport_1_1Publisher.html#a15e2dc7007104a5eb44a4327f6c33383">dyno::DSDTransport::Publisher::object_odometries_</a></div><div class="ttdeci">ObjectOdometryMap object_odometries_</div><div class="ttdoc">Object odometries for this frame.</div><div class="ttdef"><b>Definition:</b> <a href="DSDCommonRos_8hpp_source.html#l00151">DSDCommonRos.hpp:151</a></div></div>
-<div class="ttc" id="aclassdyno_1_1DSDTransport_1_1Publisher_html_a4ecd05d9927fce6f2905636783d68de2"><div class="ttname"><a href="classdyno_1_1DSDTransport_1_1Publisher.html#a4ecd05d9927fce6f2905636783d68de2">dyno::DSDTransport::Publisher::tf_broadcaster_</a></div><div class="ttdeci">std::shared_ptr&lt; tf2_ros::TransformBroadcaster &gt; tf_broadcaster_</div><div class="ttdef"><b>Definition:</b> <a href="DSDCommonRos_8hpp_source.html#l00145">DSDCommonRos.hpp:145</a></div></div>
-<div class="ttc" id="aclassdyno_1_1DSDTransport_1_1Publisher_html_a971cb998c142e0b326ceef25b4aa8839"><div class="ttname"><a href="classdyno_1_1DSDTransport_1_1Publisher.html#a971cb998c142e0b326ceef25b4aa8839">dyno::DSDTransport::Publisher::multi_object_odom_path_publisher_</a></div><div class="ttdeci">MultiObjectOdometryPathPub::SharedPtr multi_object_odom_path_publisher_</div><div class="ttdef"><b>Definition:</b> <a href="DSDCommonRos_8hpp_source.html#l00144">DSDCommonRos.hpp:144</a></div></div>
-<div class="ttc" id="aclassdyno_1_1DSDTransport_1_1Publisher_html_ac53c735f6d4ba8ca2a0a632cadf737f5"><div class="ttname"><a href="classdyno_1_1DSDTransport_1_1Publisher.html#ac53c735f6d4ba8ca2a0a632cadf737f5">dyno::DSDTransport::Publisher::node_</a></div><div class="ttdeci">rclcpp::Node::SharedPtr node_</div><div class="ttdef"><b>Definition:</b> <a href="DSDCommonRos_8hpp_source.html#l00142">DSDCommonRos.hpp:142</a></div></div>
-<div class="ttc" id="aclassdyno_1_1DSDTransport_1_1Publisher_html_aee10b8b3f44a42dfad4fbfd92da93d2b"><div class="ttname"><a href="classdyno_1_1DSDTransport_1_1Publisher.html#aee10b8b3f44a42dfad4fbfd92da93d2b">dyno::DSDTransport::Publisher::object_odom_publisher_</a></div><div class="ttdeci">ObjectOdometryPub::SharedPtr object_odom_publisher_</div><div class="ttdef"><b>Definition:</b> <a href="DSDCommonRos_8hpp_source.html#l00143">DSDCommonRos.hpp:143</a></div></div>
-<div class="ttc" id="aclassdyno_1_1DSDTransport_1_1Publisher_html_af75983efee0ab9410f53d5ba373e051f"><div class="ttname"><a href="classdyno_1_1DSDTransport_1_1Publisher.html#af75983efee0ab9410f53d5ba373e051f">dyno::DSDTransport::Publisher::timestamp_</a></div><div class="ttdeci">Timestamp timestamp_</div><div class="ttdef"><b>Definition:</b> <a href="DSDCommonRos_8hpp_source.html#l00148">DSDCommonRos.hpp:148</a></div></div>
-<div class="ttc" id="aclassdyno_1_1DSDTransport_1_1Publisher_html_af7749599aefdf3a8fe7f8ac389028741"><div class="ttname"><a href="classdyno_1_1DSDTransport_1_1Publisher.html#af7749599aefdf3a8fe7f8ac389028741">dyno::DSDTransport::Publisher::frame_id_link_</a></div><div class="ttdeci">std::string frame_id_link_</div><div class="ttdef"><b>Definition:</b> <a href="DSDCommonRos_8hpp_source.html#l00146">DSDCommonRos.hpp:146</a></div></div>
-<div class="ttc" id="aclassdyno_1_1DSDTransport_1_1Publisher_html_afcc2aeb65387f89cf377d18d81e5a817"><div class="ttname"><a href="classdyno_1_1DSDTransport_1_1Publisher.html#afcc2aeb65387f89cf377d18d81e5a817">dyno::DSDTransport::Publisher::frame_id_</a></div><div class="ttdeci">FrameId frame_id_</div><div class="ttdef"><b>Definition:</b> <a href="DSDCommonRos_8hpp_source.html#l00147">DSDCommonRos.hpp:147</a></div></div>
-<div class="ttc" id="aclassdyno_1_1DSDTransport_html_a4eba9575230369796752df57fb9c478a"><div class="ttname"><a href="classdyno_1_1DSDTransport.html#a4eba9575230369796752df57fb9c478a">dyno::DSDTransport::constructMultiObjectOdometryPaths</a></div><div class="ttdeci">static MultiObjectOdometryPath constructMultiObjectOdometryPaths(const MotionEstimateMap &amp;motions_k, const ObjectPoseMap &amp;poses, FrameId frame_id_k, Timestamp timestamp_k, rclcpp::Time ros_time_now, const std::string &amp;frame_id_link)</div><div class="ttdef"><b>Definition:</b> <a href="DSDCommonRos_8cc_source.html#l00084">DSDCommonRos.cc:84</a></div></div>
-<div class="ttc" id="aclassdyno_1_1DSDTransport_html_a73f0554c9013b1e5be9fda71990706bf"><div class="ttname"><a href="classdyno_1_1DSDTransport.html#a73f0554c9013b1e5be9fda71990706bf">dyno::DSDTransport::constructObjectOdometries</a></div><div class="ttdeci">static ObjectOdometryMap constructObjectOdometries(const MotionEstimateMap &amp;motions_k, const ObjectPoseMap &amp;poses, FrameId frame_id_k, Timestamp timestamp_k, const std::string &amp;frame_id_link)</div><div class="ttdef"><b>Definition:</b> <a href="DSDCommonRos_8cc_source.html#l00051">DSDCommonRos.cc:51</a></div></div>
+<p class="definition">Definition at line <a class="el" href="DSDCommonRos_8cc_source.html#l00225">225</a> of file <a class="el" href="DSDCommonRos_8cc_source.html">DSDCommonRos.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  234</span>    : <a class="code hl_variable" href="classdyno_1_1DSDTransport_1_1Publisher.html#ac53c735f6d4ba8ca2a0a632cadf737f5">node_</a>(node),</div>
+<div class="line"><span class="lineno">  235</span>      <a class="code hl_variable" href="classdyno_1_1DSDTransport_1_1Publisher.html#aee10b8b3f44a42dfad4fbfd92da93d2b">object_odom_publisher_</a>(object_odom_publisher),</div>
+<div class="line"><span class="lineno">  236</span>      <a class="code hl_variable" href="classdyno_1_1DSDTransport_1_1Publisher.html#a971cb998c142e0b326ceef25b4aa8839">multi_object_odom_path_publisher_</a>(multi_object_odom_path_publisher),</div>
+<div class="line"><span class="lineno">  237</span>      <a class="code hl_variable" href="classdyno_1_1DSDTransport_1_1Publisher.html#a4ecd05d9927fce6f2905636783d68de2">tf_broadcaster_</a>(tf_broadcaster),</div>
+<div class="line"><span class="lineno">  238</span>      <a class="code hl_variable" href="classdyno_1_1DSDTransport_1_1Publisher.html#af7749599aefdf3a8fe7f8ac389028741">frame_id_link_</a>(frame_id_link),</div>
+<div class="line"><span class="lineno">  239</span>      <a class="code hl_variable" href="classdyno_1_1DSDTransport_1_1Publisher.html#afcc2aeb65387f89cf377d18d81e5a817">frame_id_</a>(frame_id),</div>
+<div class="line"><span class="lineno">  240</span>      <a class="code hl_variable" href="classdyno_1_1DSDTransport_1_1Publisher.html#af75983efee0ab9410f53d5ba373e051f">timestamp_</a>(timestamp),</div>
+<div class="line"><span class="lineno">  241</span>      <a class="code hl_variable" href="classdyno_1_1DSDTransport_1_1Publisher.html#a15e2dc7007104a5eb44a4327f6c33383">object_odometries_</a>(<a class="code hl_function" href="classdyno_1_1DSDTransport.html#aa25a57f09531c34b256273e8b0fc2c63">DSDTransport::constructObjectOdometries</a>(</div>
+<div class="line"><span class="lineno">  242</span>          motions, poses, frame_id, timestamp, frame_id_link)),</div>
+<div class="line"><span class="lineno">  243</span>      <a class="code hl_variable" href="classdyno_1_1DSDTransport_1_1Publisher.html#a1128ee559b63dc9cebcfe77bffeb1d39">object_paths_</a>(<a class="code hl_function" href="classdyno_1_1DSDTransport.html#a6181566479bf9f5bad14d66c048afd9e">DSDTransport::constructMultiObjectOdometryPaths</a>(</div>
+<div class="line"><span class="lineno">  244</span>          motions, poses, timestamp, frame_timestamp_map, frame_id_link)) {}</div>
+<div class="ttc" id="aclassdyno_1_1DSDTransport_1_1Publisher_html_a1128ee559b63dc9cebcfe77bffeb1d39"><div class="ttname"><a href="classdyno_1_1DSDTransport_1_1Publisher.html#a1128ee559b63dc9cebcfe77bffeb1d39">dyno::DSDTransport::Publisher::object_paths_</a></div><div class="ttdeci">MultiObjectOdometryPath object_paths_</div><div class="ttdef"><b>Definition:</b> <a href="DSDCommonRos_8hpp_source.html#l00153">DSDCommonRos.hpp:153</a></div></div>
+<div class="ttc" id="aclassdyno_1_1DSDTransport_1_1Publisher_html_a15e2dc7007104a5eb44a4327f6c33383"><div class="ttname"><a href="classdyno_1_1DSDTransport_1_1Publisher.html#a15e2dc7007104a5eb44a4327f6c33383">dyno::DSDTransport::Publisher::object_odometries_</a></div><div class="ttdeci">ObjectOdometryMap object_odometries_</div><div class="ttdoc">Object odometries for this frame.</div><div class="ttdef"><b>Definition:</b> <a href="DSDCommonRos_8hpp_source.html#l00152">DSDCommonRos.hpp:152</a></div></div>
+<div class="ttc" id="aclassdyno_1_1DSDTransport_1_1Publisher_html_a4ecd05d9927fce6f2905636783d68de2"><div class="ttname"><a href="classdyno_1_1DSDTransport_1_1Publisher.html#a4ecd05d9927fce6f2905636783d68de2">dyno::DSDTransport::Publisher::tf_broadcaster_</a></div><div class="ttdeci">std::shared_ptr&lt; tf2_ros::TransformBroadcaster &gt; tf_broadcaster_</div><div class="ttdef"><b>Definition:</b> <a href="DSDCommonRos_8hpp_source.html#l00146">DSDCommonRos.hpp:146</a></div></div>
+<div class="ttc" id="aclassdyno_1_1DSDTransport_1_1Publisher_html_a971cb998c142e0b326ceef25b4aa8839"><div class="ttname"><a href="classdyno_1_1DSDTransport_1_1Publisher.html#a971cb998c142e0b326ceef25b4aa8839">dyno::DSDTransport::Publisher::multi_object_odom_path_publisher_</a></div><div class="ttdeci">MultiObjectOdometryPathPub::SharedPtr multi_object_odom_path_publisher_</div><div class="ttdef"><b>Definition:</b> <a href="DSDCommonRos_8hpp_source.html#l00145">DSDCommonRos.hpp:145</a></div></div>
+<div class="ttc" id="aclassdyno_1_1DSDTransport_1_1Publisher_html_ac53c735f6d4ba8ca2a0a632cadf737f5"><div class="ttname"><a href="classdyno_1_1DSDTransport_1_1Publisher.html#ac53c735f6d4ba8ca2a0a632cadf737f5">dyno::DSDTransport::Publisher::node_</a></div><div class="ttdeci">rclcpp::Node::SharedPtr node_</div><div class="ttdef"><b>Definition:</b> <a href="DSDCommonRos_8hpp_source.html#l00143">DSDCommonRos.hpp:143</a></div></div>
+<div class="ttc" id="aclassdyno_1_1DSDTransport_1_1Publisher_html_aee10b8b3f44a42dfad4fbfd92da93d2b"><div class="ttname"><a href="classdyno_1_1DSDTransport_1_1Publisher.html#aee10b8b3f44a42dfad4fbfd92da93d2b">dyno::DSDTransport::Publisher::object_odom_publisher_</a></div><div class="ttdeci">ObjectOdometryPub::SharedPtr object_odom_publisher_</div><div class="ttdef"><b>Definition:</b> <a href="DSDCommonRos_8hpp_source.html#l00144">DSDCommonRos.hpp:144</a></div></div>
+<div class="ttc" id="aclassdyno_1_1DSDTransport_1_1Publisher_html_af75983efee0ab9410f53d5ba373e051f"><div class="ttname"><a href="classdyno_1_1DSDTransport_1_1Publisher.html#af75983efee0ab9410f53d5ba373e051f">dyno::DSDTransport::Publisher::timestamp_</a></div><div class="ttdeci">Timestamp timestamp_</div><div class="ttdef"><b>Definition:</b> <a href="DSDCommonRos_8hpp_source.html#l00149">DSDCommonRos.hpp:149</a></div></div>
+<div class="ttc" id="aclassdyno_1_1DSDTransport_1_1Publisher_html_af7749599aefdf3a8fe7f8ac389028741"><div class="ttname"><a href="classdyno_1_1DSDTransport_1_1Publisher.html#af7749599aefdf3a8fe7f8ac389028741">dyno::DSDTransport::Publisher::frame_id_link_</a></div><div class="ttdeci">std::string frame_id_link_</div><div class="ttdef"><b>Definition:</b> <a href="DSDCommonRos_8hpp_source.html#l00147">DSDCommonRos.hpp:147</a></div></div>
+<div class="ttc" id="aclassdyno_1_1DSDTransport_1_1Publisher_html_afcc2aeb65387f89cf377d18d81e5a817"><div class="ttname"><a href="classdyno_1_1DSDTransport_1_1Publisher.html#afcc2aeb65387f89cf377d18d81e5a817">dyno::DSDTransport::Publisher::frame_id_</a></div><div class="ttdeci">FrameId frame_id_</div><div class="ttdef"><b>Definition:</b> <a href="DSDCommonRos_8hpp_source.html#l00148">DSDCommonRos.hpp:148</a></div></div>
+<div class="ttc" id="aclassdyno_1_1DSDTransport_html_a6181566479bf9f5bad14d66c048afd9e"><div class="ttname"><a href="classdyno_1_1DSDTransport.html#a6181566479bf9f5bad14d66c048afd9e">dyno::DSDTransport::constructMultiObjectOdometryPaths</a></div><div class="ttdeci">static MultiObjectOdometryPath constructMultiObjectOdometryPaths(const ObjectMotionMap &amp;motions, const ObjectPoseMap &amp;poses, Timestamp timestamp_k, const FrameIdTimestampMap &amp;frame_timestamp_map, const std::string &amp;frame_id_link, bool interpolate_missing_segments=true)</div><div class="ttdef"><b>Definition:</b> <a href="DSDCommonRos_8cc_source.html#l00090">DSDCommonRos.cc:90</a></div></div>
+<div class="ttc" id="aclassdyno_1_1DSDTransport_html_aa25a57f09531c34b256273e8b0fc2c63"><div class="ttname"><a href="classdyno_1_1DSDTransport.html#aa25a57f09531c34b256273e8b0fc2c63">dyno::DSDTransport::constructObjectOdometries</a></div><div class="ttdeci">static ObjectOdometryMap constructObjectOdometries(const ObjectMotionMap &amp;motions, const ObjectPoseMap &amp;poses, FrameId frame_id_k, Timestamp timestamp_k, const std::string &amp;frame_id_link)</div><div class="ttdef"><b>Definition:</b> <a href="DSDCommonRos_8cc_source.html#l00052">DSDCommonRos.cc:52</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -291,8 +297,8 @@ Friends</h2></td></tr>
 <p>Get the frame id. </p>
 <dl class="section return"><dt>Returns</dt><dd>FrameId </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="DSDCommonRos_8hpp_source.html#l00131">131</a> of file <a class="el" href="DSDCommonRos_8hpp_source.html">DSDCommonRos.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  131</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1DSDTransport_1_1Publisher.html#afcc2aeb65387f89cf377d18d81e5a817">frame_id_</a>; }</div>
+<p class="definition">Definition at line <a class="el" href="DSDCommonRos_8hpp_source.html#l00132">132</a> of file <a class="el" href="DSDCommonRos_8hpp_source.html">DSDCommonRos.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  132</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1DSDTransport_1_1Publisher.html#afcc2aeb65387f89cf377d18d81e5a817">frame_id_</a>; }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1DSDTransport_1_1Publisher.html#afcc2aeb65387f89cf377d18d81e5a817">frame_id_</a>.</p>
 
@@ -324,8 +330,8 @@ Friends</h2></td></tr>
 <p>Get the (tf) frame id used as the parent of the tree. </p>
 <dl class="section return"><dt>Returns</dt><dd>const std::string&amp; </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="DSDCommonRos_8hpp_source.html#l00139">139</a> of file <a class="el" href="DSDCommonRos_8hpp_source.html">DSDCommonRos.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  139</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1DSDTransport_1_1Publisher.html#af7749599aefdf3a8fe7f8ac389028741">frame_id_link_</a>; }</div>
+<p class="definition">Definition at line <a class="el" href="DSDCommonRos_8hpp_source.html#l00140">140</a> of file <a class="el" href="DSDCommonRos_8hpp_source.html">DSDCommonRos.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  140</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1DSDTransport_1_1Publisher.html#af7749599aefdf3a8fe7f8ac389028741">frame_id_link_</a>; }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1DSDTransport_1_1Publisher.html#af7749599aefdf3a8fe7f8ac389028741">frame_id_link_</a>.</p>
 
@@ -354,8 +360,8 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="DSDCommonRos_8hpp_source.html#l00132">132</a> of file <a class="el" href="DSDCommonRos_8hpp_source.html">DSDCommonRos.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  132</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1DSDTransport_1_1Publisher.html#af75983efee0ab9410f53d5ba373e051f">timestamp_</a>; }</div>
+<p class="definition">Definition at line <a class="el" href="DSDCommonRos_8hpp_source.html#l00133">133</a> of file <a class="el" href="DSDCommonRos_8hpp_source.html">DSDCommonRos.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  133</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1DSDTransport_1_1Publisher.html#af75983efee0ab9410f53d5ba373e051f">timestamp_</a>; }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1DSDTransport_1_1Publisher.html#af75983efee0ab9410f53d5ba373e051f">timestamp_</a>.</p>
 
@@ -378,11 +384,11 @@ Friends</h2></td></tr>
 
 <p>Publish the contained object odometries. </p>
 
-<p class="definition">Definition at line <a class="el" href="DSDCommonRos_8cc_source.html#l00143">143</a> of file <a class="el" href="DSDCommonRos_8cc_source.html">DSDCommonRos.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  143</span>                                                  {</div>
-<div class="line"><span class="lineno">  144</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [_, object_odom] : <a class="code hl_variable" href="classdyno_1_1DSDTransport_1_1Publisher.html#a15e2dc7007104a5eb44a4327f6c33383">object_odometries_</a>)</div>
-<div class="line"><span class="lineno">  145</span>    <a class="code hl_variable" href="classdyno_1_1DSDTransport_1_1Publisher.html#aee10b8b3f44a42dfad4fbfd92da93d2b">object_odom_publisher_</a>-&gt;publish(object_odom);</div>
-<div class="line"><span class="lineno">  146</span>}</div>
+<p class="definition">Definition at line <a class="el" href="DSDCommonRos_8cc_source.html#l00203">203</a> of file <a class="el" href="DSDCommonRos_8cc_source.html">DSDCommonRos.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  203</span>                                                  {</div>
+<div class="line"><span class="lineno">  204</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [_, object_odom] : <a class="code hl_variable" href="classdyno_1_1DSDTransport_1_1Publisher.html#a15e2dc7007104a5eb44a4327f6c33383">object_odometries_</a>)</div>
+<div class="line"><span class="lineno">  205</span>    <a class="code hl_variable" href="classdyno_1_1DSDTransport_1_1Publisher.html#aee10b8b3f44a42dfad4fbfd92da93d2b">object_odom_publisher_</a>-&gt;publish(object_odom);</div>
+<div class="line"><span class="lineno">  206</span>}</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1DSDTransport_1_1Publisher.html#aee10b8b3f44a42dfad4fbfd92da93d2b">object_odom_publisher_</a>, and <a class="el" href="classdyno_1_1DSDTransport_1_1Publisher.html#a15e2dc7007104a5eb44a4327f6c33383">object_odometries_</a>.</p>
 
@@ -417,10 +423,10 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="DSDCommonRos_8cc_source.html#l00161">161</a> of file <a class="el" href="DSDCommonRos_8cc_source.html">DSDCommonRos.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  161</span>                                               {</div>
-<div class="line"><span class="lineno">  162</span>  <a class="code hl_variable" href="classdyno_1_1DSDTransport_1_1Publisher.html#a971cb998c142e0b326ceef25b4aa8839">multi_object_odom_path_publisher_</a>-&gt;publish(<a class="code hl_variable" href="classdyno_1_1DSDTransport_1_1Publisher.html#a1128ee559b63dc9cebcfe77bffeb1d39">object_paths_</a>);</div>
-<div class="line"><span class="lineno">  163</span>}</div>
+<p class="definition">Definition at line <a class="el" href="DSDCommonRos_8cc_source.html#l00221">221</a> of file <a class="el" href="DSDCommonRos_8cc_source.html">DSDCommonRos.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  221</span>                                               {</div>
+<div class="line"><span class="lineno">  222</span>  <a class="code hl_variable" href="classdyno_1_1DSDTransport_1_1Publisher.html#a971cb998c142e0b326ceef25b4aa8839">multi_object_odom_path_publisher_</a>-&gt;publish(<a class="code hl_variable" href="classdyno_1_1DSDTransport_1_1Publisher.html#a1128ee559b63dc9cebcfe77bffeb1d39">object_paths_</a>);</div>
+<div class="line"><span class="lineno">  223</span>}</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1DSDTransport.html#a8a8b65f994b5d8e6de606f1c63e45515">dyno::DSDTransport::multi_object_odom_path_publisher_</a>.</p>
 
@@ -456,22 +462,23 @@ Here is the caller graph for this function:</div>
 
 <p>Broadcast the transform of each object using their pose. Transforms will be constructed between the <a class="el" href="classdyno_1_1DSDTransport_1_1Publisher.html#af7749599aefdf3a8fe7f8ac389028741">Publisher::frame_id_link_</a> and object frame link (as the child_frame_id). </p>
 
-<p class="definition">Definition at line <a class="el" href="DSDCommonRos_8cc_source.html#l00148">148</a> of file <a class="el" href="DSDCommonRos_8cc_source.html">DSDCommonRos.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  148</span>                                                    {</div>
-<div class="line"><span class="lineno">  149</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [object_child_frame, object_odom] : <a class="code hl_variable" href="classdyno_1_1DSDTransport_1_1Publisher.html#a15e2dc7007104a5eb44a4327f6c33383">object_odometries_</a>) {</div>
-<div class="line"><span class="lineno">  150</span>    geometry_msgs::msg::TransformStamped t;</div>
-<div class="line"><span class="lineno">  151</span>    <a class="code hl_function" href="namespacedyno.html#a2b18a1990bb26145cec08be631b0ef74">dyno::convert</a>(object_odom.odom.pose.pose, t.transform);</div>
-<div class="line"><span class="lineno">  152</span> </div>
-<div class="line"><span class="lineno">  153</span>    t.header.stamp = <a class="code hl_variable" href="classdyno_1_1DSDTransport_1_1Publisher.html#ac53c735f6d4ba8ca2a0a632cadf737f5">node_</a>-&gt;now();</div>
-<div class="line"><span class="lineno">  154</span>    t.header.frame_id = <a class="code hl_variable" href="classdyno_1_1DSDTransport_1_1Publisher.html#af7749599aefdf3a8fe7f8ac389028741">frame_id_link_</a>;</div>
-<div class="line"><span class="lineno">  155</span>    t.child_frame_id = object_child_frame;</div>
-<div class="line"><span class="lineno">  156</span> </div>
-<div class="line"><span class="lineno">  157</span>    <a class="code hl_variable" href="classdyno_1_1DSDTransport_1_1Publisher.html#a4ecd05d9927fce6f2905636783d68de2">tf_broadcaster_</a>-&gt;sendTransform(t);</div>
-<div class="line"><span class="lineno">  158</span>  }</div>
-<div class="line"><span class="lineno">  159</span>}</div>
-<div class="ttc" id="anamespacedyno_html_a2b18a1990bb26145cec08be631b0ef74"><div class="ttname"><a href="namespacedyno.html#a2b18a1990bb26145cec08be631b0ef74">dyno::convert</a></div><div class="ttdeci">bool convert(const Input &amp;, Output &amp;)</div></div>
+<p class="definition">Definition at line <a class="el" href="DSDCommonRos_8cc_source.html#l00208">208</a> of file <a class="el" href="DSDCommonRos_8cc_source.html">DSDCommonRos.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  208</span>                                                    {</div>
+<div class="line"><span class="lineno">  209</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [object_child_frame, object_odom] : <a class="code hl_variable" href="classdyno_1_1DSDTransport_1_1Publisher.html#a15e2dc7007104a5eb44a4327f6c33383">object_odometries_</a>) {</div>
+<div class="line"><span class="lineno">  210</span>    geometry_msgs::msg::TransformStamped t;</div>
+<div class="line"><span class="lineno">  211</span>    <a class="code hl_function" href="namespacedyno.html#a8357d6a8de284f4d1fc3d074646b43bb">dyno::convert</a>(object_odom.odom.pose.pose, t.transform);</div>
+<div class="line"><span class="lineno">  212</span> </div>
+<div class="line"><span class="lineno">  213</span>    t.header.stamp = <a class="code hl_function" href="namespacedyno_1_1utils.html#a81025ee06847cec0fd854eff05362d19">utils::toRosTime</a>(<a class="code hl_variable" href="classdyno_1_1DSDTransport_1_1Publisher.html#af75983efee0ab9410f53d5ba373e051f">timestamp_</a>);</div>
+<div class="line"><span class="lineno">  214</span>    t.header.frame_id = <a class="code hl_variable" href="classdyno_1_1DSDTransport_1_1Publisher.html#af7749599aefdf3a8fe7f8ac389028741">frame_id_link_</a>;</div>
+<div class="line"><span class="lineno">  215</span>    t.child_frame_id = object_child_frame;</div>
+<div class="line"><span class="lineno">  216</span> </div>
+<div class="line"><span class="lineno">  217</span>    <a class="code hl_variable" href="classdyno_1_1DSDTransport_1_1Publisher.html#a4ecd05d9927fce6f2905636783d68de2">tf_broadcaster_</a>-&gt;sendTransform(t);</div>
+<div class="line"><span class="lineno">  218</span>  }</div>
+<div class="line"><span class="lineno">  219</span>}</div>
+<div class="ttc" id="anamespacedyno_1_1utils_html_a81025ee06847cec0fd854eff05362d19"><div class="ttname"><a href="namespacedyno_1_1utils.html#a81025ee06847cec0fd854eff05362d19">dyno::utils::toRosTime</a></div><div class="ttdeci">rclcpp::Time toRosTime(Timestamp timestamp)</div><div class="ttdoc">Converts Timestamp (in seconds) to ROS time.</div><div class="ttdef"><b>Definition:</b> <a href="RosUtils_8cc_source.html#l00293">RosUtils.cc:293</a></div></div>
+<div class="ttc" id="anamespacedyno_html_a8357d6a8de284f4d1fc3d074646b43bb"><div class="ttname"><a href="namespacedyno.html#a8357d6a8de284f4d1fc3d074646b43bb">dyno::convert</a></div><div class="ttdeci">bool convert(const LandmarkStatus &amp;status, pcl::PointXYZRGB &amp;point)</div><div class="ttdef"><b>Definition:</b> <a href="PointCloudProcess_8hpp_source.html#l00055">PointCloudProcess.hpp:55</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="namespacedyno.html#a2b18a1990bb26145cec08be631b0ef74">dyno::convert()</a>, <a class="el" href="classdyno_1_1DSDTransport.html#a696520d40317a597358aa2629dea0855">dyno::DSDTransport::node_</a>, and <a class="el" href="classdyno_1_1DSDTransport.html#abdeb10314e5bd23a2f1ac076cf2ddcaf">dyno::DSDTransport::tf_broadcaster_</a>.</p>
+<p class="reference">References <a class="el" href="namespacedyno.html#a8357d6a8de284f4d1fc3d074646b43bb">dyno::convert()</a>, <a class="el" href="classdyno_1_1DSDTransport.html#abdeb10314e5bd23a2f1ac076cf2ddcaf">dyno::DSDTransport::tf_broadcaster_</a>, and <a class="el" href="namespacedyno_1_1utils.html#a81025ee06847cec0fd854eff05362d19">dyno::utils::toRosTime()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1FrontendDSDRos.html#a9101c485338a62d8a86b37a56a68503e">dyno::FrontendDSDRos::processRGBDOutputpacket()</a>.</p>
 <div class="dynheader">
@@ -479,8 +486,16 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1DSDTransport_1_1Publisher_a273d58dd87e02093d55d866ea687a29f_cgraph.png" border="0" usemap="#aclassdyno_1_1DSDTransport_1_1Publisher_a273d58dd87e02093d55d866ea687a29f_cgraph" alt=""/></div>
 <map name="aclassdyno_1_1DSDTransport_1_1Publisher_a273d58dd87e02093d55d866ea687a29f_cgraph" id="aclassdyno_1_1DSDTransport_1_1Publisher_a273d58dd87e02093d55d866ea687a29f_cgraph">
-<area shape="rect" title="Broadcast the transform of each object using their pose. Transforms will be constructed between the P..." alt="" coords="5,5,192,60"/>
-<area shape="rect" href="namespacedyno.html#a2b18a1990bb26145cec08be631b0ef74" title=" " alt="" coords="240,20,351,45"/>
+<area shape="rect" title="Broadcast the transform of each object using their pose. Transforms will be constructed between the P..." alt="" coords="5,91,192,146"/>
+<area shape="rect" href="namespacedyno.html#a8357d6a8de284f4d1fc3d074646b43bb" title=" " alt="" coords="456,106,567,131"/>
+<area shape="rect" href="namespacedyno_1_1utils.html#a81025ee06847cec0fd854eff05362d19" title="Converts Timestamp (in seconds) to ROS time." alt="" coords="240,131,408,157"/>
+<area shape="rect" href="classdyno_1_1TrackedValueStatus.html#a1741e83bf5442c885da98c9c5bb71f08" title="Returns true if the object lavel is equal to dyno::background_label." alt="" coords="615,5,803,45"/>
+<area shape="rect" href="classdyno_1_1TrackedValueStatus.html#ae90b3059d173a9354cc6a55a55ef80ac" title="Get object id (j) for this status." alt="" coords="615,69,803,109"/>
+<area shape="rect" href="structdyno_1_1Color.html#a6689af3d0ac5ceaa66000b5ca70becbd" title="Generates a sequence of never repeating colors using the golden ratio to seperate the colours along t..." alt="" coords="629,134,789,159"/>
+<area shape="rect" href="classdyno_1_1TrackedValueStatus.html#a828faf38cea11c1dcc7651d49b68d8e1" title="Get value. Const version." alt="" coords="615,184,803,224"/>
+<area shape="rect" href="structdyno_1_1Color.html#a08bcb6ea49861f6978858a2ff5159002" title=" " alt="" coords="851,134,1013,159"/>
+<area shape="rect" href="structdyno_1_1Color.html#a6bc55a80a463a481dbf4778c70d04733" title=" " alt="" coords="1089,109,1227,134"/>
+<area shape="rect" href="namespacedyno.html#ab0e74ec8992860404a618192cc694b83" title=" " alt="" coords="1061,158,1255,183"/>
 </map>
 </div>
 <div class="dynheader">
@@ -517,7 +532,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="DSDCommonRos_8hpp_source.html#l00154">154</a> of file <a class="el" href="DSDCommonRos_8hpp_source.html">DSDCommonRos.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="DSDCommonRos_8hpp_source.html#l00155">155</a> of file <a class="el" href="DSDCommonRos_8hpp_source.html">DSDCommonRos.hpp</a>.</p>
 
 </div>
 </div>
@@ -542,7 +557,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="DSDCommonRos_8hpp_source.html#l00147">147</a> of file <a class="el" href="DSDCommonRos_8hpp_source.html">DSDCommonRos.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="DSDCommonRos_8hpp_source.html#l00148">148</a> of file <a class="el" href="DSDCommonRos_8hpp_source.html">DSDCommonRos.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1DSDTransport_1_1Publisher.html#afcfb99a60a2766ac6536324f4ef524fb">getFrameId()</a>.</p>
 
@@ -568,7 +583,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="DSDCommonRos_8hpp_source.html#l00146">146</a> of file <a class="el" href="DSDCommonRos_8hpp_source.html">DSDCommonRos.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="DSDCommonRos_8hpp_source.html#l00147">147</a> of file <a class="el" href="DSDCommonRos_8hpp_source.html">DSDCommonRos.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1DSDTransport_1_1Publisher.html#a03c2c61db1db39e9b5c37491d572c0bb">getFrameIdLink()</a>.</p>
 
@@ -594,7 +609,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="DSDCommonRos_8hpp_source.html#l00144">144</a> of file <a class="el" href="DSDCommonRos_8hpp_source.html">DSDCommonRos.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="DSDCommonRos_8hpp_source.html#l00145">145</a> of file <a class="el" href="DSDCommonRos_8hpp_source.html">DSDCommonRos.hpp</a>.</p>
 
 </div>
 </div>
@@ -618,7 +633,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="DSDCommonRos_8hpp_source.html#l00142">142</a> of file <a class="el" href="DSDCommonRos_8hpp_source.html">DSDCommonRos.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="DSDCommonRos_8hpp_source.html#l00143">143</a> of file <a class="el" href="DSDCommonRos_8hpp_source.html">DSDCommonRos.hpp</a>.</p>
 
 </div>
 </div>
@@ -642,7 +657,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="DSDCommonRos_8hpp_source.html#l00143">143</a> of file <a class="el" href="DSDCommonRos_8hpp_source.html">DSDCommonRos.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="DSDCommonRos_8hpp_source.html#l00144">144</a> of file <a class="el" href="DSDCommonRos_8hpp_source.html">DSDCommonRos.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1DSDTransport_1_1Publisher.html#abc29c1b60f2e108c53ae19470960980c">publishObjectOdometry()</a>.</p>
 
@@ -670,7 +685,7 @@ Here is the caller graph for this function:</div>
 
 <p>Object odometries for this frame. </p>
 
-<p class="definition">Definition at line <a class="el" href="DSDCommonRos_8hpp_source.html#l00151">151</a> of file <a class="el" href="DSDCommonRos_8hpp_source.html">DSDCommonRos.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="DSDCommonRos_8hpp_source.html#l00152">152</a> of file <a class="el" href="DSDCommonRos_8hpp_source.html">DSDCommonRos.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1DSDTransport_1_1Publisher.html#abc29c1b60f2e108c53ae19470960980c">publishObjectOdometry()</a>.</p>
 
@@ -696,7 +711,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="DSDCommonRos_8hpp_source.html#l00152">152</a> of file <a class="el" href="DSDCommonRos_8hpp_source.html">DSDCommonRos.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="DSDCommonRos_8hpp_source.html#l00153">153</a> of file <a class="el" href="DSDCommonRos_8hpp_source.html">DSDCommonRos.hpp</a>.</p>
 
 </div>
 </div>
@@ -720,7 +735,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="DSDCommonRos_8hpp_source.html#l00145">145</a> of file <a class="el" href="DSDCommonRos_8hpp_source.html">DSDCommonRos.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="DSDCommonRos_8hpp_source.html#l00146">146</a> of file <a class="el" href="DSDCommonRos_8hpp_source.html">DSDCommonRos.hpp</a>.</p>
 
 </div>
 </div>
@@ -744,7 +759,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="DSDCommonRos_8hpp_source.html#l00148">148</a> of file <a class="el" href="DSDCommonRos_8hpp_source.html">DSDCommonRos.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="DSDCommonRos_8hpp_source.html#l00149">149</a> of file <a class="el" href="DSDCommonRos_8hpp_source.html">DSDCommonRos.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1DSDTransport_1_1Publisher.html#a246c17df3b209a14d60d273bd76adcaf">getTimestamp()</a>.</p>
 

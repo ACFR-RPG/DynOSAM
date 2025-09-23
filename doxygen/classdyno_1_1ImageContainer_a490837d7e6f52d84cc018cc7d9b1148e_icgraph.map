@@ -1,6 +1,0 @@
-<map id="dyno::ImageContainer::getImage" name="dyno::ImageContainer::getImage">
-<area shape="rect" id="node1" title="Returns image. Could be RGB or greyscale." alt="" coords="435,37,601,77"/>
-<area shape="rect" id="node2" href="$classdyno_1_1ImageContainer.html#ab1a215ac3480c3d6e8414109d4fef25c" title="True if the image has 3 channels and is therefore expected to be RGB. The alternative is greyscale." alt="" coords="220,5,387,45"/>
-<area shape="rect" id="node4" href="$classdyno_1_1ImageContainer.html#a5fa3552f938749b58ae95bedbdfdbb32" title="Validates that the input images (if not empty) are the same size. Throws ImageContainerConstructionEx..." alt="" coords="220,69,387,109"/>
-<area shape="rect" id="node3" href="$classdyno_1_1ImageContainer.html#ad8ae103311a01b0f0ff842501d692249" title=" " alt="" coords="5,5,172,45"/>
-</map>

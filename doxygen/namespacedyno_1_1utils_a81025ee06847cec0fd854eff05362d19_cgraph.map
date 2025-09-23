@@ -1,4 +1,11 @@
 <map id="dyno::utils::toRosTime" name="dyno::utils::toRosTime">
-<area shape="rect" id="node1" title="Converts Timestamp (in seconds) to ROS time." alt="" coords="5,5,173,31"/>
-<area shape="rect" id="node2" href="$namespacedyno.html#a2b18a1990bb26145cec08be631b0ef74" title=" " alt="" coords="221,5,332,31"/>
+<area shape="rect" id="node1" title="Converts Timestamp (in seconds) to ROS time." alt="" coords="5,106,173,131"/>
+<area shape="rect" id="node2" href="$namespacedyno.html#a8357d6a8de284f4d1fc3d074646b43bb" title=" " alt="" coords="221,106,332,131"/>
+<area shape="rect" id="node3" href="$classdyno_1_1TrackedValueStatus.html#a1741e83bf5442c885da98c9c5bb71f08" title="Returns true if the object lavel is equal to dyno::background_label." alt="" coords="380,5,568,45"/>
+<area shape="rect" id="node4" href="$classdyno_1_1TrackedValueStatus.html#ae90b3059d173a9354cc6a55a55ef80ac" title="Get object id (j) for this status." alt="" coords="380,69,568,109"/>
+<area shape="rect" id="node5" href="$structdyno_1_1Color.html#a6689af3d0ac5ceaa66000b5ca70becbd" title="Generates a sequence of never repeating colors using the golden ratio to seperate the colours along t..." alt="" coords="394,134,554,159"/>
+<area shape="rect" id="node9" href="$classdyno_1_1TrackedValueStatus.html#a828faf38cea11c1dcc7651d49b68d8e1" title="Get value. Const version." alt="" coords="380,184,568,224"/>
+<area shape="rect" id="node6" href="$structdyno_1_1Color.html#a08bcb6ea49861f6978858a2ff5159002" title=" " alt="" coords="616,134,779,159"/>
+<area shape="rect" id="node7" href="$structdyno_1_1Color.html#a6bc55a80a463a481dbf4778c70d04733" title=" " alt="" coords="854,109,993,134"/>
+<area shape="rect" id="node8" href="$namespacedyno.html#ab0e74ec8992860404a618192cc694b83" title=" " alt="" coords="827,158,1020,183"/>
 </map>

@@ -75,7 +75,6 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pri-static-methods">Static Private Member Functions</a> &#124;
 <a href="#pri-attribs">Private Attributes</a> &#124;
@@ -86,11 +85,6 @@ $(function() {
 
 <p><code>#include &lt;<a class="el" href="StereoCamera_8hpp_source.html">StereoCamera.hpp</a>&gt;</code></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
-Public Types</h2></td></tr>
-<tr class="memitem:aeeed391bd0994b69d57e03cebdacd368"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1StereoCamera.html#aeeed391bd0994b69d57e03cebdacd368">Baseline</a> = double</td></tr>
-<tr class="separator:aeeed391bd0994b69d57e03cebdacd368"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a2262c33a62cc297ecedbe5801fcd37df"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1StereoCamera.html#a2262c33a62cc297ecedbe5801fcd37df">StereoCamera</a> (Camera::ConstPtr left_camera, Camera::ConstPtr right_camera)</td></tr>
@@ -119,7 +113,7 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a053cabcecff99770ba8a8c4e6460e690"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0d966147713c1ac7a993b00b331b2408"><td class="memItemLeft" align="right" valign="top">cv::Rect&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1StereoCamera.html#a0d966147713c1ac7a993b00b331b2408">getROI2</a> () const</td></tr>
 <tr class="separator:a0d966147713c1ac7a993b00b331b2408"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a68be0f336756fe8cdde7c5490a70231b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classdyno_1_1StereoCamera.html#aeeed391bd0994b69d57e03cebdacd368">Baseline</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1StereoCamera.html#a68be0f336756fe8cdde7c5490a70231b">getBaseline</a> () const</td></tr>
+<tr class="memitem:a68be0f336756fe8cdde7c5490a70231b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacedyno.html#a91d298bd1bd857652b40cee0a001169b">Baseline</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1StereoCamera.html#a68be0f336756fe8cdde7c5490a70231b">getBaseline</a> () const</td></tr>
 <tr class="separator:a68be0f336756fe8cdde7c5490a70231b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab4a01ac140f0cbfdb0fdf9994be1f099"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1StereoCamera.html#ab4a01ac140f0cbfdb0fdf9994be1f099">undistortRectifyImages</a> (cv::Mat &amp;rectify_left, cv::Mat &amp;rectify_right, const cv::Mat &amp;left, const cv::Mat &amp;right) const</td></tr>
 <tr class="separator:ab4a01ac140f0cbfdb0fdf9994be1f099"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -129,8 +123,8 @@ Static Private Member Functions</h2></td></tr>
 <tr class="memitem:a6ce9ba10820d974b32a081868c224fad"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1StereoCamera.html#a6ce9ba10820d974b32a081868c224fad">computeRectificationParameters</a> (const <a class="el" href="classdyno_1_1CameraParams.html">CameraParams</a> &amp;left_cam_params, const <a class="el" href="classdyno_1_1CameraParams.html">CameraParams</a> &amp;right_cam_params, cv::Mat &amp;R1, cv::Mat &amp;R2, cv::Mat &amp;P1, cv::Mat &amp;P2, cv::Mat &amp;Q, cv::Rect &amp;ROI1, cv::Rect &amp;ROI2)</td></tr>
 <tr class="memdesc:a6ce9ba10820d974b32a081868c224fad"><td class="mdescLeft">&#160;</td><td class="mdescRight">computeRectificationParameters  <br /></td></tr>
 <tr class="separator:a6ce9ba10820d974b32a081868c224fad"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a469d1da1b8c3528e74b707f2905e8aa4"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1StereoCamera.html#a469d1da1b8c3528e74b707f2905e8aa4">calculateBaseLine</a> (<a class="el" href="classdyno_1_1StereoCamera.html#aeeed391bd0994b69d57e03cebdacd368">StereoCamera::Baseline</a> &amp;base_line, const cv::Mat &amp;Q)</td></tr>
-<tr class="separator:a469d1da1b8c3528e74b707f2905e8aa4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3af50e933e6c4acea73eedec1e1c7225"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1StereoCamera.html#a3af50e933e6c4acea73eedec1e1c7225">calculateBaseLine</a> (<a class="el" href="namespacedyno.html#a91d298bd1bd857652b40cee0a001169b">Baseline</a> &amp;base_line, const cv::Mat &amp;Q)</td></tr>
+<tr class="separator:a3af50e933e6c4acea73eedec1e1c7225"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
@@ -164,31 +158,14 @@ Private Attributes</h2></td></tr>
 <tr class="separator:a254f977aec6500c2f8adfc870b03da40"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a913f1be48195a94bf548d465657fdfc1"><td class="memItemLeft" align="right" valign="top">cv::Rect&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1StereoCamera.html#a913f1be48195a94bf548d465657fdfc1">ROI2_</a></td></tr>
 <tr class="separator:a913f1be48195a94bf548d465657fdfc1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa71645e64829318cfc220ff880ad0a07"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classdyno_1_1StereoCamera.html#aeeed391bd0994b69d57e03cebdacd368">Baseline</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1StereoCamera.html#aa71645e64829318cfc220ff880ad0a07">stereo_baseline_</a></td></tr>
+<tr class="memitem:aa71645e64829318cfc220ff880ad0a07"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacedyno.html#a91d298bd1bd857652b40cee0a001169b">Baseline</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1StereoCamera.html#aa71645e64829318cfc220ff880ad0a07">stereo_baseline_</a></td></tr>
 <tr class="memdesc:aa71645e64829318cfc220ff880ad0a07"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stereo baseline.  <br /></td></tr>
 <tr class="separator:aa71645e64829318cfc220ff880ad0a07"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="StereoCamera_8hpp_source.html#l00038">38</a> of file <a class="el" href="StereoCamera_8hpp_source.html">StereoCamera.hpp</a>.</p>
-</div><h2 class="groupheader">Member Typedef Documentation</h2>
-<a id="aeeed391bd0994b69d57e03cebdacd368" name="aeeed391bd0994b69d57e03cebdacd368"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aeeed391bd0994b69d57e03cebdacd368">&#9670;&#160;</a></span>Baseline</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">using <a class="el" href="classdyno_1_1StereoCamera.html#aeeed391bd0994b69d57e03cebdacd368">dyno::StereoCamera::Baseline</a> =  double</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="StereoCamera_8hpp_source.html#l00043">43</a> of file <a class="el" href="StereoCamera_8hpp_source.html">StereoCamera.hpp</a>.</p>
-
-</div>
-</div>
-<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<p class="definition">Definition at line <a class="el" href="StereoCamera_8hpp_source.html#l00045">45</a> of file <a class="el" href="StereoCamera_8hpp_source.html">StereoCamera.hpp</a>.</p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a2262c33a62cc297ecedbe5801fcd37df" name="a2262c33a62cc297ecedbe5801fcd37df"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2262c33a62cc297ecedbe5801fcd37df">&#9670;&#160;</a></span>StereoCamera() <span class="overload">[1/2]</span></h2>
 
@@ -218,72 +195,62 @@ Private Attributes</h2></td></tr>
 <p>Create undistort rectifiers: these should be called after computeRectificationParameters.</p>
 <p>Create stereo camera implementation. As per all dynosam cameras, make camera in the local frame</p>
 
-<p class="definition">Definition at line <a class="el" href="StereoCamera_8cc_source.html#l00039">39</a> of file <a class="el" href="StereoCamera_8cc_source.html">StereoCamera.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   40</span>        :   <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#a082eda1a778444e79e9d47eec58945d3">original_left_camera_</a>(CHECK_NOTNULL(left_camera)),</div>
-<div class="line"><span class="lineno">   41</span>            <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#a8475e3db31c7e0fcf7f620512bca0678">original_right_camera_</a>(CHECK_NOTNULL(right_camera)),</div>
-<div class="line"><span class="lineno">   42</span>            <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#a80a7bb0352d858ce6499fadb7e89c7be">undistorted_rectified_stereo_camera_impl_</a>(),</div>
-<div class="line"><span class="lineno">   43</span>            <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#a2c1b2162b3343e3ce7c06a59317ac742">stereo_calibration_</a>(<span class="keyword">nullptr</span>),</div>
-<div class="line"><span class="lineno">   44</span>            <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#acaced9e229fca262e99e8258bb43d26c">left_cam_undistort_rectifier_</a>(<span class="keyword">nullptr</span>),</div>
-<div class="line"><span class="lineno">   45</span>            <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#ae43411bfe164d28021c8b5402052ebb9">right_cam_undistort_rectifier_</a>(<span class="keyword">nullptr</span>),</div>
-<div class="line"><span class="lineno">   46</span>            <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#aa71645e64829318cfc220ff880ad0a07">stereo_baseline_</a>(0.0) {</div>
-<div class="line"><span class="lineno">   47</span> </div>
-<div class="line"><span class="lineno">   48</span>    <a class="code hl_function" href="classdyno_1_1StereoCamera.html#a6ce9ba10820d974b32a081868c224fad">computeRectificationParameters</a>(left_camera-&gt;getParams(),</div>
-<div class="line"><span class="lineno">   49</span>                                 right_camera-&gt;getParams(),</div>
-<div class="line"><span class="lineno">   50</span>                                 <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#a8f08670ac8ee77b775827fde7a1419d3">R1_</a>,</div>
-<div class="line"><span class="lineno">   51</span>                                 <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#a7f4824c20c3803c0231456e625bc4fbb">R2_</a>,</div>
-<div class="line"><span class="lineno">   52</span>                                 <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#a6a51501ba8b407197902bc8a6ad04387">P1_</a>,</div>
-<div class="line"><span class="lineno">   53</span>                                 <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#a525eca2002e59de75e288d20f0da8098">P2_</a>,</div>
-<div class="line"><span class="lineno">   54</span>                                 <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#a3af635f406f13f78c48a1bc67d4f6c05">Q_</a>,</div>
-<div class="line"><span class="lineno">   55</span>                                 <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#a254f977aec6500c2f8adfc870b03da40">ROI1_</a>,</div>
-<div class="line"><span class="lineno">   56</span>                                 <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#a913f1be48195a94bf548d465657fdfc1">ROI2_</a>);</div>
-<div class="line"><span class="lineno">   57</span>    <a class="code hl_function" href="classdyno_1_1StereoCamera.html#a469d1da1b8c3528e74b707f2905e8aa4">calculateBaseLine</a>(<a class="code hl_variable" href="classdyno_1_1StereoCamera.html#aa71645e64829318cfc220ff880ad0a07">stereo_baseline_</a>, <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#a3af635f406f13f78c48a1bc67d4f6c05">Q_</a>);</div>
-<div class="line"><span class="lineno">   58</span> </div>
-<div class="line"><span class="lineno">   60</span>    <span class="keyword">const</span> <span class="keyword">auto</span> left_undist_rect_cam_mat = <a class="code hl_function" href="namespacedyno_1_1utils.html#abe851502ab3c4419cd7b6a4aa4caca69">utils::Cvmat2Cal3_S2</a>(<a class="code hl_variable" href="classdyno_1_1StereoCamera.html#a6a51501ba8b407197902bc8a6ad04387">P1_</a>);</div>
-<div class="line"><span class="lineno">   61</span>    <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#a2c1b2162b3343e3ce7c06a59317ac742">stereo_calibration_</a>.reset(</div>
-<div class="line"><span class="lineno">   62</span>      <span class="keyword">new</span> gtsam::Cal3_S2Stereo(left_undist_rect_cam_mat.fx(),</div>
-<div class="line"><span class="lineno">   63</span>                               left_undist_rect_cam_mat.fy(),</div>
-<div class="line"><span class="lineno">   64</span>                               left_undist_rect_cam_mat.skew(),</div>
-<div class="line"><span class="lineno">   65</span>                               left_undist_rect_cam_mat.px(),</div>
-<div class="line"><span class="lineno">   66</span>                               left_undist_rect_cam_mat.py(),</div>
-<div class="line"><span class="lineno">   67</span>                               <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#aa71645e64829318cfc220ff880ad0a07">stereo_baseline_</a>));</div>
-<div class="line"><span class="lineno">   68</span> </div>
-<div class="line"><span class="lineno">   71</span>    <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#acaced9e229fca262e99e8258bb43d26c">left_cam_undistort_rectifier_</a> =</div>
-<div class="line"><span class="lineno">   72</span>        std::make_unique&lt;UndistorterRectifier&gt;(<a class="code hl_variable" href="classdyno_1_1StereoCamera.html#a6a51501ba8b407197902bc8a6ad04387">P1_</a>, left_camera-&gt;getParams(), <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#a8f08670ac8ee77b775827fde7a1419d3">R1_</a>);</div>
-<div class="line"><span class="lineno">   73</span>    <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#ae43411bfe164d28021c8b5402052ebb9">right_cam_undistort_rectifier_</a> =</div>
-<div class="line"><span class="lineno">   74</span>        std::make_unique&lt;UndistorterRectifier&gt;(<a class="code hl_variable" href="classdyno_1_1StereoCamera.html#a525eca2002e59de75e288d20f0da8098">P2_</a>, right_camera-&gt;getParams(), <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#a7f4824c20c3803c0231456e625bc4fbb">R2_</a>);</div>
-<div class="line"><span class="lineno">   75</span> </div>
-<div class="line"><span class="lineno">   77</span>    <span class="comment">//TODO: is this right? In the original implementation (Kimera) we use the rectified pose of the left image</span></div>
-<div class="line"><span class="lineno">   78</span>    <span class="comment">// which SHOULD still be local!!</span></div>
-<div class="line"><span class="lineno">   79</span>    <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#a80a7bb0352d858ce6499fadb7e89c7be">undistorted_rectified_stereo_camera_impl_</a> =</div>
-<div class="line"><span class="lineno">   80</span>      gtsam::StereoCamera(gtsam::Pose3::Identity(), <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#a2c1b2162b3343e3ce7c06a59317ac742">stereo_calibration_</a>);</div>
-<div class="line"><span class="lineno">   81</span> </div>
-<div class="line"><span class="lineno">   82</span>    }</div>
-<div class="ttc" id="aclassdyno_1_1StereoCamera_html_a082eda1a778444e79e9d47eec58945d3"><div class="ttname"><a href="classdyno_1_1StereoCamera.html#a082eda1a778444e79e9d47eec58945d3">dyno::StereoCamera::original_left_camera_</a></div><div class="ttdeci">Camera::ConstPtr original_left_camera_</div><div class="ttdef"><b>Definition:</b> <a href="StereoCamera_8hpp_source.html#l00126">StereoCamera.hpp:126</a></div></div>
-<div class="ttc" id="aclassdyno_1_1StereoCamera_html_a254f977aec6500c2f8adfc870b03da40"><div class="ttname"><a href="classdyno_1_1StereoCamera.html#a254f977aec6500c2f8adfc870b03da40">dyno::StereoCamera::ROI1_</a></div><div class="ttdeci">cv::Rect ROI1_</div><div class="ttdoc">Regions of interest in the left/right image.</div><div class="ttdef"><b>Definition:</b> <a href="StereoCamera_8hpp_source.html#l00154">StereoCamera.hpp:154</a></div></div>
-<div class="ttc" id="aclassdyno_1_1StereoCamera_html_a2c1b2162b3343e3ce7c06a59317ac742"><div class="ttname"><a href="classdyno_1_1StereoCamera.html#a2c1b2162b3343e3ce7c06a59317ac742">dyno::StereoCamera::stereo_calibration_</a></div><div class="ttdeci">gtsam::Cal3_S2Stereo::shared_ptr stereo_calibration_</div><div class="ttdoc">Stereo camera calibration.</div><div class="ttdef"><b>Definition:</b> <a href="StereoCamera_8hpp_source.html#l00133">StereoCamera.hpp:133</a></div></div>
-<div class="ttc" id="aclassdyno_1_1StereoCamera_html_a3af635f406f13f78c48a1bc67d4f6c05"><div class="ttname"><a href="classdyno_1_1StereoCamera.html#a3af635f406f13f78c48a1bc67d4f6c05">dyno::StereoCamera::Q_</a></div><div class="ttdeci">cv::Mat Q_</div><div class="ttdef"><b>Definition:</b> <a href="StereoCamera_8hpp_source.html#l00151">StereoCamera.hpp:151</a></div></div>
-<div class="ttc" id="aclassdyno_1_1StereoCamera_html_a469d1da1b8c3528e74b707f2905e8aa4"><div class="ttname"><a href="classdyno_1_1StereoCamera.html#a469d1da1b8c3528e74b707f2905e8aa4">dyno::StereoCamera::calculateBaseLine</a></div><div class="ttdeci">static void calculateBaseLine(StereoCamera::Baseline &amp;base_line, const cv::Mat &amp;Q)</div><div class="ttdef"><b>Definition:</b> <a href="StereoCamera_8cc_source.html#l00188">StereoCamera.cc:188</a></div></div>
-<div class="ttc" id="aclassdyno_1_1StereoCamera_html_a525eca2002e59de75e288d20f0da8098"><div class="ttname"><a href="classdyno_1_1StereoCamera.html#a525eca2002e59de75e288d20f0da8098">dyno::StereoCamera::P2_</a></div><div class="ttdeci">cv::Mat P2_</div><div class="ttdef"><b>Definition:</b> <a href="StereoCamera_8hpp_source.html#l00143">StereoCamera.hpp:143</a></div></div>
-<div class="ttc" id="aclassdyno_1_1StereoCamera_html_a6a51501ba8b407197902bc8a6ad04387"><div class="ttname"><a href="classdyno_1_1StereoCamera.html#a6a51501ba8b407197902bc8a6ad04387">dyno::StereoCamera::P1_</a></div><div class="ttdeci">cv::Mat P1_</div><div class="ttdef"><b>Definition:</b> <a href="StereoCamera_8hpp_source.html#l00143">StereoCamera.hpp:143</a></div></div>
-<div class="ttc" id="aclassdyno_1_1StereoCamera_html_a6ce9ba10820d974b32a081868c224fad"><div class="ttname"><a href="classdyno_1_1StereoCamera.html#a6ce9ba10820d974b32a081868c224fad">dyno::StereoCamera::computeRectificationParameters</a></div><div class="ttdeci">static void computeRectificationParameters(const CameraParams &amp;left_cam_params, const CameraParams &amp;right_cam_params, cv::Mat &amp;R1, cv::Mat &amp;R2, cv::Mat &amp;P1, cv::Mat &amp;P2, cv::Mat &amp;Q, cv::Rect &amp;ROI1, cv::Rect &amp;ROI2)</div><div class="ttdoc">computeRectificationParameters</div><div class="ttdef"><b>Definition:</b> <a href="StereoCamera_8cc_source.html#l00095">StereoCamera.cc:95</a></div></div>
-<div class="ttc" id="aclassdyno_1_1StereoCamera_html_a7f4824c20c3803c0231456e625bc4fbb"><div class="ttname"><a href="classdyno_1_1StereoCamera.html#a7f4824c20c3803c0231456e625bc4fbb">dyno::StereoCamera::R2_</a></div><div class="ttdeci">cv::Mat R2_</div><div class="ttdef"><b>Definition:</b> <a href="StereoCamera_8hpp_source.html#l00147">StereoCamera.hpp:147</a></div></div>
-<div class="ttc" id="aclassdyno_1_1StereoCamera_html_a80a7bb0352d858ce6499fadb7e89c7be"><div class="ttname"><a href="classdyno_1_1StereoCamera.html#a80a7bb0352d858ce6499fadb7e89c7be">dyno::StereoCamera::undistorted_rectified_stereo_camera_impl_</a></div><div class="ttdeci">gtsam::StereoCamera undistorted_rectified_stereo_camera_impl_</div><div class="ttdoc">Stereo camera implementation.</div><div class="ttdef"><b>Definition:</b> <a href="StereoCamera_8hpp_source.html#l00130">StereoCamera.hpp:130</a></div></div>
-<div class="ttc" id="aclassdyno_1_1StereoCamera_html_a8475e3db31c7e0fcf7f620512bca0678"><div class="ttname"><a href="classdyno_1_1StereoCamera.html#a8475e3db31c7e0fcf7f620512bca0678">dyno::StereoCamera::original_right_camera_</a></div><div class="ttdeci">Camera::ConstPtr original_right_camera_</div><div class="ttdef"><b>Definition:</b> <a href="StereoCamera_8hpp_source.html#l00127">StereoCamera.hpp:127</a></div></div>
-<div class="ttc" id="aclassdyno_1_1StereoCamera_html_a8f08670ac8ee77b775827fde7a1419d3"><div class="ttname"><a href="classdyno_1_1StereoCamera.html#a8f08670ac8ee77b775827fde7a1419d3">dyno::StereoCamera::R1_</a></div><div class="ttdeci">cv::Mat R1_</div><div class="ttdef"><b>Definition:</b> <a href="StereoCamera_8hpp_source.html#l00147">StereoCamera.hpp:147</a></div></div>
-<div class="ttc" id="aclassdyno_1_1StereoCamera_html_a913f1be48195a94bf548d465657fdfc1"><div class="ttname"><a href="classdyno_1_1StereoCamera.html#a913f1be48195a94bf548d465657fdfc1">dyno::StereoCamera::ROI2_</a></div><div class="ttdeci">cv::Rect ROI2_</div><div class="ttdef"><b>Definition:</b> <a href="StereoCamera_8hpp_source.html#l00154">StereoCamera.hpp:154</a></div></div>
-<div class="ttc" id="aclassdyno_1_1StereoCamera_html_aa71645e64829318cfc220ff880ad0a07"><div class="ttname"><a href="classdyno_1_1StereoCamera.html#aa71645e64829318cfc220ff880ad0a07">dyno::StereoCamera::stereo_baseline_</a></div><div class="ttdeci">Baseline stereo_baseline_</div><div class="ttdoc">Stereo baseline.</div><div class="ttdef"><b>Definition:</b> <a href="StereoCamera_8hpp_source.html#l00157">StereoCamera.hpp:157</a></div></div>
-<div class="ttc" id="aclassdyno_1_1StereoCamera_html_acaced9e229fca262e99e8258bb43d26c"><div class="ttname"><a href="classdyno_1_1StereoCamera.html#acaced9e229fca262e99e8258bb43d26c">dyno::StereoCamera::left_cam_undistort_rectifier_</a></div><div class="ttdeci">UndistorterRectifier::UniquePtr left_cam_undistort_rectifier_</div><div class="ttdoc">Undistortion rectification pre-computed maps for cv::remap.</div><div class="ttdef"><b>Definition:</b> <a href="StereoCamera_8hpp_source.html#l00136">StereoCamera.hpp:136</a></div></div>
-<div class="ttc" id="aclassdyno_1_1StereoCamera_html_ae43411bfe164d28021c8b5402052ebb9"><div class="ttname"><a href="classdyno_1_1StereoCamera.html#ae43411bfe164d28021c8b5402052ebb9">dyno::StereoCamera::right_cam_undistort_rectifier_</a></div><div class="ttdeci">UndistorterRectifier::UniquePtr right_cam_undistort_rectifier_</div><div class="ttdef"><b>Definition:</b> <a href="StereoCamera_8hpp_source.html#l00137">StereoCamera.hpp:137</a></div></div>
-<div class="ttc" id="anamespacedyno_1_1utils_html_abe851502ab3c4419cd7b6a4aa4caca69"><div class="ttname"><a href="namespacedyno_1_1utils.html#abe851502ab3c4419cd7b6a4aa4caca69">dyno::utils::Cvmat2Cal3_S2</a></div><div class="ttdeci">gtsam::Cal3_S2 Cvmat2Cal3_S2(const cv::Mat &amp;M)</div><div class="ttdoc">Converts a 3x3 (or 3xM, M &gt; 3) camera matrix from opencv to gtsam::Cal3_S2.</div><div class="ttdef"><b>Definition:</b> <a href="GtsamUtils_8cc_source.html#l00109">GtsamUtils.cc:109</a></div></div>
+<p class="definition">Definition at line <a class="el" href="StereoCamera_8cc_source.html#l00044">44</a> of file <a class="el" href="StereoCamera_8cc_source.html">StereoCamera.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   46</span>    : <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#a082eda1a778444e79e9d47eec58945d3">original_left_camera_</a>(CHECK_NOTNULL(left_camera)),</div>
+<div class="line"><span class="lineno">   47</span>      <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#a8475e3db31c7e0fcf7f620512bca0678">original_right_camera_</a>(CHECK_NOTNULL(right_camera)),</div>
+<div class="line"><span class="lineno">   48</span>      <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#a80a7bb0352d858ce6499fadb7e89c7be">undistorted_rectified_stereo_camera_impl_</a>(),</div>
+<div class="line"><span class="lineno">   49</span>      <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#a2c1b2162b3343e3ce7c06a59317ac742">stereo_calibration_</a>(<span class="keyword">nullptr</span>),</div>
+<div class="line"><span class="lineno">   50</span>      <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#acaced9e229fca262e99e8258bb43d26c">left_cam_undistort_rectifier_</a>(<span class="keyword">nullptr</span>),</div>
+<div class="line"><span class="lineno">   51</span>      <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#ae43411bfe164d28021c8b5402052ebb9">right_cam_undistort_rectifier_</a>(<span class="keyword">nullptr</span>),</div>
+<div class="line"><span class="lineno">   52</span>      <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#aa71645e64829318cfc220ff880ad0a07">stereo_baseline_</a>(0.0) {</div>
+<div class="line"><span class="lineno">   53</span>  <a class="code hl_function" href="classdyno_1_1StereoCamera.html#a6ce9ba10820d974b32a081868c224fad">computeRectificationParameters</a>(left_camera-&gt;getParams(),</div>
+<div class="line"><span class="lineno">   54</span>                                 right_camera-&gt;getParams(), <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#a8f08670ac8ee77b775827fde7a1419d3">R1_</a>, <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#a7f4824c20c3803c0231456e625bc4fbb">R2_</a>, <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#a6a51501ba8b407197902bc8a6ad04387">P1_</a>, <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#a525eca2002e59de75e288d20f0da8098">P2_</a>,</div>
+<div class="line"><span class="lineno">   55</span>                                 <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#a3af635f406f13f78c48a1bc67d4f6c05">Q_</a>, <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#a254f977aec6500c2f8adfc870b03da40">ROI1_</a>, <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#a913f1be48195a94bf548d465657fdfc1">ROI2_</a>);</div>
+<div class="line"><span class="lineno">   56</span>  <a class="code hl_function" href="classdyno_1_1StereoCamera.html#a3af50e933e6c4acea73eedec1e1c7225">calculateBaseLine</a>(<a class="code hl_variable" href="classdyno_1_1StereoCamera.html#aa71645e64829318cfc220ff880ad0a07">stereo_baseline_</a>, <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#a3af635f406f13f78c48a1bc67d4f6c05">Q_</a>);</div>
+<div class="line"><span class="lineno">   57</span> </div>
+<div class="line"><span class="lineno">   59</span>  <span class="keyword">const</span> <span class="keyword">auto</span> left_undist_rect_cam_mat = <a class="code hl_function" href="namespacedyno_1_1utils.html#abe851502ab3c4419cd7b6a4aa4caca69">utils::Cvmat2Cal3_S2</a>(<a class="code hl_variable" href="classdyno_1_1StereoCamera.html#a6a51501ba8b407197902bc8a6ad04387">P1_</a>);</div>
+<div class="line"><span class="lineno">   60</span>  <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#a2c1b2162b3343e3ce7c06a59317ac742">stereo_calibration_</a>.reset(<span class="keyword">new</span> gtsam::Cal3_S2Stereo(</div>
+<div class="line"><span class="lineno">   61</span>      left_undist_rect_cam_mat.fx(), left_undist_rect_cam_mat.fy(),</div>
+<div class="line"><span class="lineno">   62</span>      left_undist_rect_cam_mat.skew(), left_undist_rect_cam_mat.px(),</div>
+<div class="line"><span class="lineno">   63</span>      left_undist_rect_cam_mat.py(), <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#aa71645e64829318cfc220ff880ad0a07">stereo_baseline_</a>));</div>
+<div class="line"><span class="lineno">   64</span> </div>
+<div class="line"><span class="lineno">   67</span>  <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#acaced9e229fca262e99e8258bb43d26c">left_cam_undistort_rectifier_</a> = std::make_unique&lt;UndistorterRectifier&gt;(</div>
+<div class="line"><span class="lineno">   68</span>      <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#a6a51501ba8b407197902bc8a6ad04387">P1_</a>, left_camera-&gt;getParams(), <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#a8f08670ac8ee77b775827fde7a1419d3">R1_</a>);</div>
+<div class="line"><span class="lineno">   69</span>  <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#ae43411bfe164d28021c8b5402052ebb9">right_cam_undistort_rectifier_</a> = std::make_unique&lt;UndistorterRectifier&gt;(</div>
+<div class="line"><span class="lineno">   70</span>      <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#a525eca2002e59de75e288d20f0da8098">P2_</a>, right_camera-&gt;getParams(), <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#a7f4824c20c3803c0231456e625bc4fbb">R2_</a>);</div>
+<div class="line"><span class="lineno">   71</span> </div>
+<div class="line"><span class="lineno">   74</span>  <span class="comment">// TODO: is this right? In the original implementation (Kimera) we use the</span></div>
+<div class="line"><span class="lineno">   75</span>  <span class="comment">// rectified pose of the left image</span></div>
+<div class="line"><span class="lineno">   76</span>  <span class="comment">//  which SHOULD still be local!!</span></div>
+<div class="line"><span class="lineno">   77</span>  <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#a80a7bb0352d858ce6499fadb7e89c7be">undistorted_rectified_stereo_camera_impl_</a> =</div>
+<div class="line"><span class="lineno">   78</span>      gtsam::StereoCamera(gtsam::Pose3::Identity(), <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#a2c1b2162b3343e3ce7c06a59317ac742">stereo_calibration_</a>);</div>
+<div class="line"><span class="lineno">   79</span>}</div>
+<div class="ttc" id="aclassdyno_1_1StereoCamera_html_a082eda1a778444e79e9d47eec58945d3"><div class="ttname"><a href="classdyno_1_1StereoCamera.html#a082eda1a778444e79e9d47eec58945d3">dyno::StereoCamera::original_left_camera_</a></div><div class="ttdeci">Camera::ConstPtr original_left_camera_</div><div class="ttdef"><b>Definition:</b> <a href="StereoCamera_8hpp_source.html#l00123">StereoCamera.hpp:123</a></div></div>
+<div class="ttc" id="aclassdyno_1_1StereoCamera_html_a254f977aec6500c2f8adfc870b03da40"><div class="ttname"><a href="classdyno_1_1StereoCamera.html#a254f977aec6500c2f8adfc870b03da40">dyno::StereoCamera::ROI1_</a></div><div class="ttdeci">cv::Rect ROI1_</div><div class="ttdoc">Regions of interest in the left/right image.</div><div class="ttdef"><b>Definition:</b> <a href="StereoCamera_8hpp_source.html#l00151">StereoCamera.hpp:151</a></div></div>
+<div class="ttc" id="aclassdyno_1_1StereoCamera_html_a2c1b2162b3343e3ce7c06a59317ac742"><div class="ttname"><a href="classdyno_1_1StereoCamera.html#a2c1b2162b3343e3ce7c06a59317ac742">dyno::StereoCamera::stereo_calibration_</a></div><div class="ttdeci">gtsam::Cal3_S2Stereo::shared_ptr stereo_calibration_</div><div class="ttdoc">Stereo camera calibration.</div><div class="ttdef"><b>Definition:</b> <a href="StereoCamera_8hpp_source.html#l00130">StereoCamera.hpp:130</a></div></div>
+<div class="ttc" id="aclassdyno_1_1StereoCamera_html_a3af50e933e6c4acea73eedec1e1c7225"><div class="ttname"><a href="classdyno_1_1StereoCamera.html#a3af50e933e6c4acea73eedec1e1c7225">dyno::StereoCamera::calculateBaseLine</a></div><div class="ttdeci">static void calculateBaseLine(Baseline &amp;base_line, const cv::Mat &amp;Q)</div><div class="ttdef"><b>Definition:</b> <a href="StereoCamera_8cc_source.html#l00160">StereoCamera.cc:160</a></div></div>
+<div class="ttc" id="aclassdyno_1_1StereoCamera_html_a3af635f406f13f78c48a1bc67d4f6c05"><div class="ttname"><a href="classdyno_1_1StereoCamera.html#a3af635f406f13f78c48a1bc67d4f6c05">dyno::StereoCamera::Q_</a></div><div class="ttdeci">cv::Mat Q_</div><div class="ttdef"><b>Definition:</b> <a href="StereoCamera_8hpp_source.html#l00148">StereoCamera.hpp:148</a></div></div>
+<div class="ttc" id="aclassdyno_1_1StereoCamera_html_a525eca2002e59de75e288d20f0da8098"><div class="ttname"><a href="classdyno_1_1StereoCamera.html#a525eca2002e59de75e288d20f0da8098">dyno::StereoCamera::P2_</a></div><div class="ttdeci">cv::Mat P2_</div><div class="ttdef"><b>Definition:</b> <a href="StereoCamera_8hpp_source.html#l00140">StereoCamera.hpp:140</a></div></div>
+<div class="ttc" id="aclassdyno_1_1StereoCamera_html_a6a51501ba8b407197902bc8a6ad04387"><div class="ttname"><a href="classdyno_1_1StereoCamera.html#a6a51501ba8b407197902bc8a6ad04387">dyno::StereoCamera::P1_</a></div><div class="ttdeci">cv::Mat P1_</div><div class="ttdef"><b>Definition:</b> <a href="StereoCamera_8hpp_source.html#l00140">StereoCamera.hpp:140</a></div></div>
+<div class="ttc" id="aclassdyno_1_1StereoCamera_html_a6ce9ba10820d974b32a081868c224fad"><div class="ttname"><a href="classdyno_1_1StereoCamera.html#a6ce9ba10820d974b32a081868c224fad">dyno::StereoCamera::computeRectificationParameters</a></div><div class="ttdeci">static void computeRectificationParameters(const CameraParams &amp;left_cam_params, const CameraParams &amp;right_cam_params, cv::Mat &amp;R1, cv::Mat &amp;R2, cv::Mat &amp;P1, cv::Mat &amp;P2, cv::Mat &amp;Q, cv::Rect &amp;ROI1, cv::Rect &amp;ROI2)</div><div class="ttdoc">computeRectificationParameters</div><div class="ttdef"><b>Definition:</b> <a href="StereoCamera_8cc_source.html#l00094">StereoCamera.cc:94</a></div></div>
+<div class="ttc" id="aclassdyno_1_1StereoCamera_html_a7f4824c20c3803c0231456e625bc4fbb"><div class="ttname"><a href="classdyno_1_1StereoCamera.html#a7f4824c20c3803c0231456e625bc4fbb">dyno::StereoCamera::R2_</a></div><div class="ttdeci">cv::Mat R2_</div><div class="ttdef"><b>Definition:</b> <a href="StereoCamera_8hpp_source.html#l00144">StereoCamera.hpp:144</a></div></div>
+<div class="ttc" id="aclassdyno_1_1StereoCamera_html_a80a7bb0352d858ce6499fadb7e89c7be"><div class="ttname"><a href="classdyno_1_1StereoCamera.html#a80a7bb0352d858ce6499fadb7e89c7be">dyno::StereoCamera::undistorted_rectified_stereo_camera_impl_</a></div><div class="ttdeci">gtsam::StereoCamera undistorted_rectified_stereo_camera_impl_</div><div class="ttdoc">Stereo camera implementation.</div><div class="ttdef"><b>Definition:</b> <a href="StereoCamera_8hpp_source.html#l00127">StereoCamera.hpp:127</a></div></div>
+<div class="ttc" id="aclassdyno_1_1StereoCamera_html_a8475e3db31c7e0fcf7f620512bca0678"><div class="ttname"><a href="classdyno_1_1StereoCamera.html#a8475e3db31c7e0fcf7f620512bca0678">dyno::StereoCamera::original_right_camera_</a></div><div class="ttdeci">Camera::ConstPtr original_right_camera_</div><div class="ttdef"><b>Definition:</b> <a href="StereoCamera_8hpp_source.html#l00124">StereoCamera.hpp:124</a></div></div>
+<div class="ttc" id="aclassdyno_1_1StereoCamera_html_a8f08670ac8ee77b775827fde7a1419d3"><div class="ttname"><a href="classdyno_1_1StereoCamera.html#a8f08670ac8ee77b775827fde7a1419d3">dyno::StereoCamera::R1_</a></div><div class="ttdeci">cv::Mat R1_</div><div class="ttdef"><b>Definition:</b> <a href="StereoCamera_8hpp_source.html#l00144">StereoCamera.hpp:144</a></div></div>
+<div class="ttc" id="aclassdyno_1_1StereoCamera_html_a913f1be48195a94bf548d465657fdfc1"><div class="ttname"><a href="classdyno_1_1StereoCamera.html#a913f1be48195a94bf548d465657fdfc1">dyno::StereoCamera::ROI2_</a></div><div class="ttdeci">cv::Rect ROI2_</div><div class="ttdef"><b>Definition:</b> <a href="StereoCamera_8hpp_source.html#l00151">StereoCamera.hpp:151</a></div></div>
+<div class="ttc" id="aclassdyno_1_1StereoCamera_html_aa71645e64829318cfc220ff880ad0a07"><div class="ttname"><a href="classdyno_1_1StereoCamera.html#aa71645e64829318cfc220ff880ad0a07">dyno::StereoCamera::stereo_baseline_</a></div><div class="ttdeci">Baseline stereo_baseline_</div><div class="ttdoc">Stereo baseline.</div><div class="ttdef"><b>Definition:</b> <a href="StereoCamera_8hpp_source.html#l00154">StereoCamera.hpp:154</a></div></div>
+<div class="ttc" id="aclassdyno_1_1StereoCamera_html_acaced9e229fca262e99e8258bb43d26c"><div class="ttname"><a href="classdyno_1_1StereoCamera.html#acaced9e229fca262e99e8258bb43d26c">dyno::StereoCamera::left_cam_undistort_rectifier_</a></div><div class="ttdeci">UndistorterRectifier::UniquePtr left_cam_undistort_rectifier_</div><div class="ttdoc">Undistortion rectification pre-computed maps for cv::remap.</div><div class="ttdef"><b>Definition:</b> <a href="StereoCamera_8hpp_source.html#l00133">StereoCamera.hpp:133</a></div></div>
+<div class="ttc" id="aclassdyno_1_1StereoCamera_html_ae43411bfe164d28021c8b5402052ebb9"><div class="ttname"><a href="classdyno_1_1StereoCamera.html#ae43411bfe164d28021c8b5402052ebb9">dyno::StereoCamera::right_cam_undistort_rectifier_</a></div><div class="ttdeci">UndistorterRectifier::UniquePtr right_cam_undistort_rectifier_</div><div class="ttdef"><b>Definition:</b> <a href="StereoCamera_8hpp_source.html#l00134">StereoCamera.hpp:134</a></div></div>
+<div class="ttc" id="anamespacedyno_1_1utils_html_abe851502ab3c4419cd7b6a4aa4caca69"><div class="ttname"><a href="namespacedyno_1_1utils.html#abe851502ab3c4419cd7b6a4aa4caca69">dyno::utils::Cvmat2Cal3_S2</a></div><div class="ttdeci">gtsam::Cal3_S2 Cvmat2Cal3_S2(const cv::Mat &amp;M)</div><div class="ttdoc">Converts a 3x3 (or 3xM, M &gt; 3) camera matrix from opencv to gtsam::Cal3_S2.</div><div class="ttdef"><b>Definition:</b> <a href="GtsamUtils_8cc_source.html#l00106">GtsamUtils.cc:106</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="classdyno_1_1StereoCamera.html#a469d1da1b8c3528e74b707f2905e8aa4">calculateBaseLine()</a>, <a class="el" href="classdyno_1_1StereoCamera.html#a6ce9ba10820d974b32a081868c224fad">computeRectificationParameters()</a>, <a class="el" href="namespacedyno_1_1utils.html#abe851502ab3c4419cd7b6a4aa4caca69">dyno::utils::Cvmat2Cal3_S2()</a>, <a class="el" href="classdyno_1_1StereoCamera.html#acaced9e229fca262e99e8258bb43d26c">left_cam_undistort_rectifier_</a>, <a class="el" href="classdyno_1_1StereoCamera.html#a6a51501ba8b407197902bc8a6ad04387">P1_</a>, <a class="el" href="classdyno_1_1StereoCamera.html#a525eca2002e59de75e288d20f0da8098">P2_</a>, <a class="el" href="classdyno_1_1StereoCamera.html#a3af635f406f13f78c48a1bc67d4f6c05">Q_</a>, <a class="el" href="classdyno_1_1StereoCamera.html#a8f08670ac8ee77b775827fde7a1419d3">R1_</a>, <a class="el" href="classdyno_1_1StereoCamera.html#a7f4824c20c3803c0231456e625bc4fbb">R2_</a>, <a class="el" href="classdyno_1_1StereoCamera.html#ae43411bfe164d28021c8b5402052ebb9">right_cam_undistort_rectifier_</a>, <a class="el" href="classdyno_1_1StereoCamera.html#a254f977aec6500c2f8adfc870b03da40">ROI1_</a>, <a class="el" href="classdyno_1_1StereoCamera.html#a913f1be48195a94bf548d465657fdfc1">ROI2_</a>, <a class="el" href="classdyno_1_1StereoCamera.html#aa71645e64829318cfc220ff880ad0a07">stereo_baseline_</a>, <a class="el" href="classdyno_1_1StereoCamera.html#a2c1b2162b3343e3ce7c06a59317ac742">stereo_calibration_</a>, and <a class="el" href="classdyno_1_1StereoCamera.html#a80a7bb0352d858ce6499fadb7e89c7be">undistorted_rectified_stereo_camera_impl_</a>.</p>
+<p class="reference">References <a class="el" href="classdyno_1_1StereoCamera.html#a3af50e933e6c4acea73eedec1e1c7225">calculateBaseLine()</a>, <a class="el" href="classdyno_1_1StereoCamera.html#a6ce9ba10820d974b32a081868c224fad">computeRectificationParameters()</a>, <a class="el" href="namespacedyno_1_1utils.html#abe851502ab3c4419cd7b6a4aa4caca69">dyno::utils::Cvmat2Cal3_S2()</a>, <a class="el" href="classdyno_1_1StereoCamera.html#acaced9e229fca262e99e8258bb43d26c">left_cam_undistort_rectifier_</a>, <a class="el" href="classdyno_1_1StereoCamera.html#a6a51501ba8b407197902bc8a6ad04387">P1_</a>, <a class="el" href="classdyno_1_1StereoCamera.html#a525eca2002e59de75e288d20f0da8098">P2_</a>, <a class="el" href="classdyno_1_1StereoCamera.html#a3af635f406f13f78c48a1bc67d4f6c05">Q_</a>, <a class="el" href="classdyno_1_1StereoCamera.html#a8f08670ac8ee77b775827fde7a1419d3">R1_</a>, <a class="el" href="classdyno_1_1StereoCamera.html#a7f4824c20c3803c0231456e625bc4fbb">R2_</a>, <a class="el" href="classdyno_1_1StereoCamera.html#ae43411bfe164d28021c8b5402052ebb9">right_cam_undistort_rectifier_</a>, <a class="el" href="classdyno_1_1StereoCamera.html#a254f977aec6500c2f8adfc870b03da40">ROI1_</a>, <a class="el" href="classdyno_1_1StereoCamera.html#a913f1be48195a94bf548d465657fdfc1">ROI2_</a>, <a class="el" href="classdyno_1_1StereoCamera.html#aa71645e64829318cfc220ff880ad0a07">stereo_baseline_</a>, <a class="el" href="classdyno_1_1StereoCamera.html#a2c1b2162b3343e3ce7c06a59317ac742">stereo_calibration_</a>, and <a class="el" href="classdyno_1_1StereoCamera.html#a80a7bb0352d858ce6499fadb7e89c7be">undistorted_rectified_stereo_camera_impl_</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1StereoCamera_a2262c33a62cc297ecedbe5801fcd37df_cgraph.png" border="0" usemap="#aclassdyno_1_1StereoCamera_a2262c33a62cc297ecedbe5801fcd37df_cgraph" alt=""/></div>
 <map name="aclassdyno_1_1StereoCamera_a2262c33a62cc297ecedbe5801fcd37df_cgraph" id="aclassdyno_1_1StereoCamera_a2262c33a62cc297ecedbe5801fcd37df_cgraph">
 <area shape="rect" title=" " alt="" coords="5,197,160,237"/>
-<area shape="rect" href="classdyno_1_1StereoCamera.html#a469d1da1b8c3528e74b707f2905e8aa4" title=" " alt="" coords="252,133,407,173"/>
+<area shape="rect" href="classdyno_1_1StereoCamera.html#a3af50e933e6c4acea73eedec1e1c7225" title=" " alt="" coords="252,133,407,173"/>
 <area shape="rect" href="classdyno_1_1StereoCamera.html#a6ce9ba10820d974b32a081868c224fad" title="computeRectificationParameters" alt="" coords="208,197,451,237"/>
 <area shape="rect" href="namespacedyno_1_1utils.html#abe851502ab3c4419cd7b6a4aa4caca69" title="Converts a 3x3 (or 3xM, M &gt; 3) camera matrix from opencv to gtsam::Cal3_S2." alt="" coords="229,262,430,287"/>
 <area shape="rect" href="classdyno_1_1CameraParams.html#ae50eb600c23415b3f7bd46e70553f96a" title=" " alt="" coords="511,5,672,45"/>
@@ -326,15 +293,16 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="StereoCamera_8cc_source.html#l00084">84</a> of file <a class="el" href="StereoCamera_8cc_source.html">StereoCamera.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   87</span>    :   <a class="code hl_function" href="classdyno_1_1StereoCamera.html#a2262c33a62cc297ecedbe5801fcd37df">StereoCamera</a>(std::make_shared&lt;Camera&gt;(left_cam_params),std::make_shared&lt;Camera&gt;(right_cam_params)) {}</div>
-<div class="ttc" id="aclassdyno_1_1StereoCamera_html_a2262c33a62cc297ecedbe5801fcd37df"><div class="ttname"><a href="classdyno_1_1StereoCamera.html#a2262c33a62cc297ecedbe5801fcd37df">dyno::StereoCamera::StereoCamera</a></div><div class="ttdeci">StereoCamera(Camera::ConstPtr left_camera, Camera::ConstPtr right_camera)</div><div class="ttdef"><b>Definition:</b> <a href="StereoCamera_8cc_source.html#l00039">StereoCamera.cc:39</a></div></div>
+<p class="definition">Definition at line <a class="el" href="StereoCamera_8cc_source.html#l00081">81</a> of file <a class="el" href="StereoCamera_8cc_source.html">StereoCamera.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   83</span>    : <a class="code hl_function" href="classdyno_1_1StereoCamera.html#a2262c33a62cc297ecedbe5801fcd37df">StereoCamera</a>(std::make_shared&lt;Camera&gt;(left_cam_params),</div>
+<div class="line"><span class="lineno">   84</span>                   std::make_shared&lt;Camera&gt;(right_cam_params)) {}</div>
+<div class="ttc" id="aclassdyno_1_1StereoCamera_html_a2262c33a62cc297ecedbe5801fcd37df"><div class="ttname"><a href="classdyno_1_1StereoCamera.html#a2262c33a62cc297ecedbe5801fcd37df">dyno::StereoCamera::StereoCamera</a></div><div class="ttdeci">StereoCamera(Camera::ConstPtr left_camera, Camera::ConstPtr right_camera)</div><div class="ttdef"><b>Definition:</b> <a href="StereoCamera_8cc_source.html#l00044">StereoCamera.cc:44</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a469d1da1b8c3528e74b707f2905e8aa4" name="a469d1da1b8c3528e74b707f2905e8aa4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a469d1da1b8c3528e74b707f2905e8aa4">&#9670;&#160;</a></span>calculateBaseLine()</h2>
+<a id="a3af50e933e6c4acea73eedec1e1c7225" name="a3af50e933e6c4acea73eedec1e1c7225"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3af50e933e6c4acea73eedec1e1c7225">&#9670;&#160;</a></span>calculateBaseLine()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -345,7 +313,7 @@ Here is the call graph for this function:</div>
         <tr>
           <td class="memname">void dyno::StereoCamera::calculateBaseLine </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classdyno_1_1StereoCamera.html#aeeed391bd0994b69d57e03cebdacd368">StereoCamera::Baseline</a> &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="namespacedyno.html#a91d298bd1bd857652b40cee0a001169b">Baseline</a> &amp;&#160;</td>
           <td class="paramname"><em>base_line</em>, </td>
         </tr>
         <tr>
@@ -367,22 +335,22 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="StereoCamera_8cc_source.html#l00188">188</a> of file <a class="el" href="StereoCamera_8cc_source.html">StereoCamera.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  188</span>                                                                        {</div>
-<div class="line"><span class="lineno">  189</span>  <span class="comment">// Calc baseline (see L.2700 and L.2616 in</span></div>
-<div class="line"><span class="lineno">  190</span>  <span class="comment">// https://github.com/opencv/opencv/blob/master/modules/calib3d/src/calibration.cpp</span></div>
-<div class="line"><span class="lineno">  191</span>  <span class="comment">// NOTE: OpenCV pose convention is the opposite, therefore the missing -1.0</span></div>
-<div class="line"><span class="lineno">  192</span>  CHECK_NE(Q.at&lt;<span class="keywordtype">double</span>&gt;(3, 2), 0.0);</div>
-<div class="line"><span class="lineno">  193</span>  base_line = 1.0 / Q.at&lt;<span class="keywordtype">double</span>&gt;(3, 2);</div>
-<div class="line"><span class="lineno">  194</span>  CHECK_GT(base_line, 0.0);</div>
-<div class="line"><span class="lineno">  195</span>}</div>
+<p class="definition">Definition at line <a class="el" href="StereoCamera_8cc_source.html#l00160">160</a> of file <a class="el" href="StereoCamera_8cc_source.html">StereoCamera.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  160</span>                                                                        {</div>
+<div class="line"><span class="lineno">  161</span>  <span class="comment">// Calc baseline (see L.2700 and L.2616 in</span></div>
+<div class="line"><span class="lineno">  162</span>  <span class="comment">// https://github.com/opencv/opencv/blob/master/modules/calib3d/src/calibration.cpp</span></div>
+<div class="line"><span class="lineno">  163</span>  <span class="comment">// NOTE: OpenCV pose convention is the opposite, therefore the missing -1.0</span></div>
+<div class="line"><span class="lineno">  164</span>  CHECK_NE(Q.at&lt;<span class="keywordtype">double</span>&gt;(3, 2), 0.0);</div>
+<div class="line"><span class="lineno">  165</span>  base_line = 1.0 / Q.at&lt;<span class="keywordtype">double</span>&gt;(3, 2);</div>
+<div class="line"><span class="lineno">  166</span>  CHECK_GT(base_line, 0.0);</div>
+<div class="line"><span class="lineno">  167</span>}</div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1StereoCamera.html#a2262c33a62cc297ecedbe5801fcd37df">StereoCamera()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classdyno_1_1StereoCamera_a469d1da1b8c3528e74b707f2905e8aa4_icgraph.png" border="0" usemap="#aclassdyno_1_1StereoCamera_a469d1da1b8c3528e74b707f2905e8aa4_icgraph" alt=""/></div>
-<map name="aclassdyno_1_1StereoCamera_a469d1da1b8c3528e74b707f2905e8aa4_icgraph" id="aclassdyno_1_1StereoCamera_a469d1da1b8c3528e74b707f2905e8aa4_icgraph">
+<div class="center"><img src="classdyno_1_1StereoCamera_a3af50e933e6c4acea73eedec1e1c7225_icgraph.png" border="0" usemap="#aclassdyno_1_1StereoCamera_a3af50e933e6c4acea73eedec1e1c7225_icgraph" alt=""/></div>
+<map name="aclassdyno_1_1StereoCamera_a3af50e933e6c4acea73eedec1e1c7225_icgraph" id="aclassdyno_1_1StereoCamera_a3af50e933e6c4acea73eedec1e1c7225_icgraph">
 <area shape="rect" title=" " alt="" coords="208,5,363,45"/>
 <area shape="rect" href="classdyno_1_1StereoCamera.html#a2262c33a62cc297ecedbe5801fcd37df" title=" " alt="" coords="5,5,160,45"/>
 </map>
@@ -476,7 +444,7 @@ Here is the caller graph for this function:</div>
     <tr><td class="paramname">R2</td><td>Output 3x3 rectification transform (rotation matrix) for the second camera. </td></tr>
     <tr><td class="paramname">P1</td><td>Output 3x4 projection matrix in the new (rectified) coordinate systems for the first camera. </td></tr>
     <tr><td class="paramname">P2</td><td>Output 3x4 projection matrix in the new (rectified) coordinate systems for the second camera. </td></tr>
-    <tr><td class="paramname">Q</td><td>Output <picture><source srcset="form_0_dark.png" media="(prefers-color-scheme: dark)"/><img class="formulaInl" alt="$4 \times 4$" src="form_0.png"/></picture> disparity-to-depth mapping matrix (see reprojectImageTo3D ). </td></tr>
+    <tr><td class="paramname">Q</td><td>Output <picture><source srcset="form_5_dark.png" media="(prefers-color-scheme: dark)"/><img class="formulaInl" alt="$4 \times 4$" src="form_5.png"/></picture> disparity-to-depth mapping matrix (see reprojectImageTo3D ). </td></tr>
     <tr><td class="paramname">ROI1</td><td>Region of interest in image 1. </td></tr>
     <tr><td class="paramname">ROI2</td><td>Region of interest in image 2. </td></tr>
   </table>
@@ -484,90 +452,69 @@ Here is the caller graph for this function:</div>
 </dl>
 <p>check extrinsics are not identity!</p>
 
-<p class="definition">Definition at line <a class="el" href="StereoCamera_8cc_source.html#l00095">95</a> of file <a class="el" href="StereoCamera_8cc_source.html">StereoCamera.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  104</span>                  {</div>
-<div class="line"><span class="lineno">  105</span> </div>
-<div class="line"><span class="lineno">  106</span>    <span class="comment">// ! Extrinsics of the stereo (not rectified) relative pose between cameras</span></div>
-<div class="line"><span class="lineno">  107</span>    gtsam::Pose3 camL_Pose_camR =</div>
-<div class="line"><span class="lineno">  108</span>        (left_cam_params.getExtrinsics()).between(right_cam_params.getExtrinsics());</div>
-<div class="line"><span class="lineno">  109</span> </div>
-<div class="line"><span class="lineno">  110</span> </div>
-<div class="line"><span class="lineno">  112</span>    CHECK(!camL_Pose_camR.equals(gtsam::Pose3::Identity())) &lt;&lt; <span class="stringliteral">&quot;Relative pose between cameras cannot be identity - camL_Pose_camR = &quot;</span> &lt;&lt; camL_Pose_camR;</div>
-<div class="line"><span class="lineno">  113</span> </div>
-<div class="line"><span class="lineno">  114</span>    <span class="comment">// Get extrinsics in open CV format.</span></div>
-<div class="line"><span class="lineno">  115</span>    <span class="comment">// NOTE: openCV pose convention is the opposite, that&#39;s why we have to</span></div>
-<div class="line"><span class="lineno">  116</span>    <span class="comment">// invert</span></div>
-<div class="line"><span class="lineno">  117</span>    cv::Mat camL_Rot_camR, camL_Tran_camR;</div>
-<div class="line"><span class="lineno">  118</span>    std::tie(camL_Rot_camR, camL_Tran_camR) =</div>
-<div class="line"><span class="lineno">  119</span>        <a class="code hl_function" href="namespacedyno_1_1utils.html#ae07df9c266ca251a8892fd9ad371dab5">utils::Pose2cvmats</a>(camL_Pose_camR.inverse());</div>
-<div class="line"><span class="lineno">  120</span> </div>
-<div class="line"><span class="lineno">  121</span>    LOG(INFO) &lt;&lt; camL_Rot_camR;</div>
-<div class="line"><span class="lineno">  122</span>    LOG(INFO) &lt;&lt; camL_Tran_camR;</div>
-<div class="line"><span class="lineno">  123</span> </div>
-<div class="line"><span class="lineno">  124</span>    <span class="keyword">const</span> <span class="keyword">auto</span> left_k = left_cam_params.getCameraMatrix();</div>
-<div class="line"><span class="lineno">  125</span>    <span class="keyword">const</span> <span class="keyword">auto</span> left_d = left_cam_params.getDistortionCoeffs();</div>
+<p class="definition">Definition at line <a class="el" href="StereoCamera_8cc_source.html#l00094">94</a> of file <a class="el" href="StereoCamera_8cc_source.html">StereoCamera.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   97</span>                                {</div>
+<div class="line"><span class="lineno">   98</span>  <span class="comment">// ! Extrinsics of the stereo (not rectified) relative pose between cameras</span></div>
+<div class="line"><span class="lineno">   99</span>  gtsam::Pose3 camL_Pose_camR = (left_cam_params.getExtrinsics())</div>
+<div class="line"><span class="lineno">  100</span>                                    .between(right_cam_params.getExtrinsics());</div>
+<div class="line"><span class="lineno">  101</span> </div>
+<div class="line"><span class="lineno">  102</span>  LOG(INFO) &lt;&lt; camL_Pose_camR;</div>
+<div class="line"><span class="lineno">  103</span> </div>
+<div class="line"><span class="lineno">  105</span>  CHECK(!camL_Pose_camR.equals(gtsam::Pose3::Identity()))</div>
+<div class="line"><span class="lineno">  106</span>      &lt;&lt; <span class="stringliteral">&quot;Relative pose between cameras cannot be identity - camL_Pose_camR = &quot;</span></div>
+<div class="line"><span class="lineno">  107</span>      &lt;&lt; camL_Pose_camR;</div>
+<div class="line"><span class="lineno">  108</span> </div>
+<div class="line"><span class="lineno">  109</span>  <span class="comment">// Get extrinsics in open CV format.</span></div>
+<div class="line"><span class="lineno">  110</span>  <span class="comment">// NOTE: openCV pose convention is the opposite, that&#39;s why we have to</span></div>
+<div class="line"><span class="lineno">  111</span>  <span class="comment">// invert</span></div>
+<div class="line"><span class="lineno">  112</span>  cv::Mat camL_Rot_camR, camL_Tran_camR;</div>
+<div class="line"><span class="lineno">  113</span>  std::tie(camL_Rot_camR, camL_Tran_camR) =</div>
+<div class="line"><span class="lineno">  114</span>      <a class="code hl_function" href="namespacedyno_1_1utils.html#ae07df9c266ca251a8892fd9ad371dab5">utils::Pose2cvmats</a>(camL_Pose_camR.inverse());</div>
+<div class="line"><span class="lineno">  115</span> </div>
+<div class="line"><span class="lineno">  116</span>  LOG(INFO) &lt;&lt; camL_Rot_camR;</div>
+<div class="line"><span class="lineno">  117</span>  LOG(INFO) &lt;&lt; camL_Tran_camR;</div>
+<div class="line"><span class="lineno">  118</span> </div>
+<div class="line"><span class="lineno">  119</span>  <span class="keyword">const</span> <span class="keyword">auto</span> left_k = left_cam_params.getCameraMatrix();</div>
+<div class="line"><span class="lineno">  120</span>  <span class="keyword">const</span> <span class="keyword">auto</span> left_d = left_cam_params.getDistortionCoeffs();</div>
+<div class="line"><span class="lineno">  121</span> </div>
+<div class="line"><span class="lineno">  122</span>  <span class="keyword">const</span> <span class="keyword">auto</span> right_k = right_cam_params.getCameraMatrix();</div>
+<div class="line"><span class="lineno">  123</span>  <span class="keyword">const</span> <span class="keyword">auto</span> right_d = right_cam_params.getDistortionCoeffs();</div>
+<div class="line"><span class="lineno">  124</span> </div>
+<div class="line"><span class="lineno">  125</span>  <span class="keyword">const</span> <span class="keyword">auto</span> size = left_cam_params.imageSize();</div>
 <div class="line"><span class="lineno">  126</span> </div>
-<div class="line"><span class="lineno">  127</span>    <span class="keyword">const</span> <span class="keyword">auto</span> right_k = right_cam_params.getCameraMatrix();</div>
-<div class="line"><span class="lineno">  128</span>    <span class="keyword">const</span> <span class="keyword">auto</span> right_d = right_cam_params.getDistortionCoeffs();</div>
-<div class="line"><span class="lineno">  129</span> </div>
-<div class="line"><span class="lineno">  130</span>    <span class="keyword">const</span> <span class="keyword">auto</span> size = left_cam_params.imageSize();</div>
-<div class="line"><span class="lineno">  131</span> </div>
-<div class="line"><span class="lineno">  132</span>    <span class="comment">// kAlpha is -1 by default, but that introduces invalid keypoints!</span></div>
-<div class="line"><span class="lineno">  133</span>    <span class="comment">// here we should use kAlpha = 0 so we get only valid pixels...</span></div>
-<div class="line"><span class="lineno">  134</span>    <span class="comment">// But that has an issue that it removes large part of the image, check:</span></div>
-<div class="line"><span class="lineno">  135</span>    <span class="comment">// https://github.com/opencv/opencv/issues/7240 for this issue with kAlpha</span></div>
-<div class="line"><span class="lineno">  136</span>    <span class="comment">// Setting to -1 to make it easy, but it should NOT be -1!</span></div>
-<div class="line"><span class="lineno">  137</span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">int</span> kAlpha = 0;</div>
-<div class="line"><span class="lineno">  138</span>    <span class="keywordflow">switch</span> (left_cam_params.getDistortionModel()) {</div>
-<div class="line"><span class="lineno">  139</span>        <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="namespacedyno.html#a7118762ab4c63de4996b3983b5b82356a57d07fba056969bb09dcb1459746cde5">DistortionModel::RADTAN</a>: {</div>
-<div class="line"><span class="lineno">  140</span>        cv::stereoRectify(</div>
-<div class="line"><span class="lineno">  141</span>            <span class="comment">// Input</span></div>
-<div class="line"><span class="lineno">  142</span>            left_k,</div>
-<div class="line"><span class="lineno">  143</span>            left_d,</div>
-<div class="line"><span class="lineno">  144</span>            right_k,</div>
-<div class="line"><span class="lineno">  145</span>            right_d,</div>
-<div class="line"><span class="lineno">  146</span>            size,</div>
-<div class="line"><span class="lineno">  147</span>            camL_Rot_camR,</div>
-<div class="line"><span class="lineno">  148</span>            camL_Tran_camR,</div>
-<div class="line"><span class="lineno">  149</span>            <span class="comment">// Output</span></div>
-<div class="line"><span class="lineno">  150</span>            R1,</div>
-<div class="line"><span class="lineno">  151</span>            R2,</div>
-<div class="line"><span class="lineno">  152</span>            P1,</div>
-<div class="line"><span class="lineno">  153</span>            P2,</div>
-<div class="line"><span class="lineno">  154</span>            Q,</div>
-<div class="line"><span class="lineno">  155</span>            cv::CALIB_ZERO_DISPARITY,</div>
-<div class="line"><span class="lineno">  156</span>            kAlpha,</div>
-<div class="line"><span class="lineno">  157</span>            cv::Size(),</div>
-<div class="line"><span class="lineno">  158</span>            &amp;ROI1,</div>
-<div class="line"><span class="lineno">  159</span>            &amp;ROI2);</div>
-<div class="line"><span class="lineno">  160</span>        } <span class="keywordflow">break</span>;</div>
-<div class="line"><span class="lineno">  161</span>        <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="namespacedyno.html#a7118762ab4c63de4996b3983b5b82356a00d0cd9f6b32fb176671646968102e78">DistortionModel::EQUIDISTANT</a>: {</div>
-<div class="line"><span class="lineno">  162</span>        cv::fisheye::stereoRectify(</div>
-<div class="line"><span class="lineno">  163</span>            <span class="comment">// Input</span></div>
-<div class="line"><span class="lineno">  164</span>            left_k,</div>
-<div class="line"><span class="lineno">  165</span>            left_d,</div>
-<div class="line"><span class="lineno">  166</span>            right_k,</div>
-<div class="line"><span class="lineno">  167</span>            right_d,</div>
-<div class="line"><span class="lineno">  168</span>            size,</div>
-<div class="line"><span class="lineno">  169</span>            camL_Rot_camR,</div>
-<div class="line"><span class="lineno">  170</span>            camL_Tran_camR,</div>
-<div class="line"><span class="lineno">  171</span>            <span class="comment">// Output</span></div>
-<div class="line"><span class="lineno">  172</span>            R1,</div>
-<div class="line"><span class="lineno">  173</span>            R2,</div>
-<div class="line"><span class="lineno">  174</span>            P1,</div>
-<div class="line"><span class="lineno">  175</span>            P2,</div>
-<div class="line"><span class="lineno">  176</span>            Q,</div>
-<div class="line"><span class="lineno">  177</span>            <span class="comment">// TODO: Flag to maximise area???</span></div>
-<div class="line"><span class="lineno">  178</span>            cv::CALIB_ZERO_DISPARITY);</div>
-<div class="line"><span class="lineno">  179</span>        } <span class="keywordflow">break</span>;</div>
-<div class="line"><span class="lineno">  180</span>        <span class="keywordflow">default</span>: {</div>
-<div class="line"><span class="lineno">  181</span>        LOG(FATAL) &lt;&lt; <span class="stringliteral">&quot;Unknown DistortionModel: &quot;</span> &lt;&lt; <a class="code hl_function" href="namespacedyno.html#a809604e427db44cbf532a545c71a3b5d">to_string</a>(left_cam_params.getDistortionModel());</div>
-<div class="line"><span class="lineno">  182</span>        }</div>
-<div class="line"><span class="lineno">  183</span>    }</div>
-<div class="line"><span class="lineno">  184</span> </div>
-<div class="line"><span class="lineno">  185</span>    LOG(INFO) &lt;&lt; Q;</div>
-<div class="line"><span class="lineno">  186</span>}</div>
-<div class="ttc" id="anamespacedyno_1_1utils_html_ae07df9c266ca251a8892fd9ad371dab5"><div class="ttname"><a href="namespacedyno_1_1utils.html#ae07df9c266ca251a8892fd9ad371dab5">dyno::utils::Pose2cvmats</a></div><div class="ttdeci">std::pair&lt; cv::Mat, cv::Mat &gt; Pose2cvmats(const gtsam::Pose3 &amp;pose)</div><div class="ttdoc">Converts a gtsam pose3 to a 3x3 rotation matrix and translation vector in opencv format (note: the fu...</div><div class="ttdef"><b>Definition:</b> <a href="GtsamUtils_8cc_source.html#l00126">GtsamUtils.cc:126</a></div></div>
+<div class="line"><span class="lineno">  127</span>  <span class="comment">// kAlpha is -1 by default, but that introduces invalid keypoints!</span></div>
+<div class="line"><span class="lineno">  128</span>  <span class="comment">// here we should use kAlpha = 0 so we get only valid pixels...</span></div>
+<div class="line"><span class="lineno">  129</span>  <span class="comment">// But that has an issue that it removes large part of the image, check:</span></div>
+<div class="line"><span class="lineno">  130</span>  <span class="comment">// https://github.com/opencv/opencv/issues/7240 for this issue with kAlpha</span></div>
+<div class="line"><span class="lineno">  131</span>  <span class="comment">// Setting to -1 to make it easy, but it should NOT be -1!</span></div>
+<div class="line"><span class="lineno">  132</span>  <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">int</span> kAlpha = 0;</div>
+<div class="line"><span class="lineno">  133</span>  <span class="keywordflow">switch</span> (left_cam_params.getDistortionModel()) {</div>
+<div class="line"><span class="lineno">  134</span>    <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="namespacedyno.html#a7118762ab4c63de4996b3983b5b82356a57d07fba056969bb09dcb1459746cde5">DistortionModel::RADTAN</a>: {</div>
+<div class="line"><span class="lineno">  135</span>      cv::stereoRectify(</div>
+<div class="line"><span class="lineno">  136</span>          <span class="comment">// Input</span></div>
+<div class="line"><span class="lineno">  137</span>          left_k, left_d, right_k, right_d, size, camL_Rot_camR, camL_Tran_camR,</div>
+<div class="line"><span class="lineno">  138</span>          <span class="comment">// Output</span></div>
+<div class="line"><span class="lineno">  139</span>          R1, R2, P1, P2, Q, cv::CALIB_ZERO_DISPARITY, kAlpha, cv::Size(),</div>
+<div class="line"><span class="lineno">  140</span>          &amp;ROI1, &amp;ROI2);</div>
+<div class="line"><span class="lineno">  141</span>    } <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">  142</span>    <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="namespacedyno.html#a7118762ab4c63de4996b3983b5b82356a00d0cd9f6b32fb176671646968102e78">DistortionModel::EQUIDISTANT</a>: {</div>
+<div class="line"><span class="lineno">  143</span>      cv::fisheye::stereoRectify(</div>
+<div class="line"><span class="lineno">  144</span>          <span class="comment">// Input</span></div>
+<div class="line"><span class="lineno">  145</span>          left_k, left_d, right_k, right_d, size, camL_Rot_camR, camL_Tran_camR,</div>
+<div class="line"><span class="lineno">  146</span>          <span class="comment">// Output</span></div>
+<div class="line"><span class="lineno">  147</span>          R1, R2, P1, P2, Q,</div>
+<div class="line"><span class="lineno">  148</span>          <span class="comment">// TODO: Flag to maximise area???</span></div>
+<div class="line"><span class="lineno">  149</span>          cv::CALIB_ZERO_DISPARITY);</div>
+<div class="line"><span class="lineno">  150</span>    } <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">  151</span>    <span class="keywordflow">default</span>: {</div>
+<div class="line"><span class="lineno">  152</span>      LOG(FATAL) &lt;&lt; <span class="stringliteral">&quot;Unknown DistortionModel: &quot;</span></div>
+<div class="line"><span class="lineno">  153</span>                 &lt;&lt; <a class="code hl_function" href="namespacedyno.html#a809604e427db44cbf532a545c71a3b5d">to_string</a>(left_cam_params.getDistortionModel());</div>
+<div class="line"><span class="lineno">  154</span>    }</div>
+<div class="line"><span class="lineno">  155</span>  }</div>
+<div class="line"><span class="lineno">  156</span> </div>
+<div class="line"><span class="lineno">  157</span>  LOG(INFO) &lt;&lt; Q;</div>
+<div class="line"><span class="lineno">  158</span>}</div>
+<div class="ttc" id="anamespacedyno_1_1utils_html_ae07df9c266ca251a8892fd9ad371dab5"><div class="ttname"><a href="namespacedyno_1_1utils.html#ae07df9c266ca251a8892fd9ad371dab5">dyno::utils::Pose2cvmats</a></div><div class="ttdeci">std::pair&lt; cv::Mat, cv::Mat &gt; Pose2cvmats(const gtsam::Pose3 &amp;pose)</div><div class="ttdoc">Converts a gtsam pose3 to a 3x3 rotation matrix and translation vector in opencv format (note: the fu...</div><div class="ttdef"><b>Definition:</b> <a href="GtsamUtils_8cc_source.html#l00123">GtsamUtils.cc:123</a></div></div>
 <div class="ttc" id="anamespacedyno_html_a7118762ab4c63de4996b3983b5b82356a00d0cd9f6b32fb176671646968102e78"><div class="ttname"><a href="namespacedyno.html#a7118762ab4c63de4996b3983b5b82356a00d0cd9f6b32fb176671646968102e78">dyno::DistortionModel::EQUIDISTANT</a></div><div class="ttdeci">@ EQUIDISTANT</div></div>
 <div class="ttc" id="anamespacedyno_html_a7118762ab4c63de4996b3983b5b82356a57d07fba056969bb09dcb1459746cde5"><div class="ttname"><a href="namespacedyno.html#a7118762ab4c63de4996b3983b5b82356a57d07fba056969bb09dcb1459746cde5">dyno::DistortionModel::RADTAN</a></div><div class="ttdeci">@ RADTAN</div></div>
 <div class="ttc" id="anamespacedyno_html_a809604e427db44cbf532a545c71a3b5d"><div class="ttname"><a href="namespacedyno.html#a809604e427db44cbf532a545c71a3b5d">dyno::to_string</a></div><div class="ttdeci">std::string to_string(const T &amp;t)</div></div>
@@ -614,7 +561,7 @@ Here is the caller graph for this function:</div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classdyno_1_1StereoCamera.html#aeeed391bd0994b69d57e03cebdacd368">Baseline</a> dyno::StereoCamera::getBaseline </td>
+          <td class="memname"><a class="el" href="namespacedyno.html#a91d298bd1bd857652b40cee0a001169b">Baseline</a> dyno::StereoCamera::getBaseline </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -627,8 +574,8 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="StereoCamera_8hpp_source.html#l00083">83</a> of file <a class="el" href="StereoCamera_8hpp_source.html">StereoCamera.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   83</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#aa71645e64829318cfc220ff880ad0a07">stereo_baseline_</a>; }</div>
+<p class="definition">Definition at line <a class="el" href="StereoCamera_8hpp_source.html#l00085">85</a> of file <a class="el" href="StereoCamera_8hpp_source.html">StereoCamera.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   85</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#aa71645e64829318cfc220ff880ad0a07">stereo_baseline_</a>; }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1StereoCamera.html#aa71645e64829318cfc220ff880ad0a07">stereo_baseline_</a>.</p>
 
@@ -657,10 +604,10 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="StereoCamera_8hpp_source.html#l00053">53</a> of file <a class="el" href="StereoCamera_8hpp_source.html">StereoCamera.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   53</span>                                                               {</div>
-<div class="line"><span class="lineno">   54</span>        <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#a082eda1a778444e79e9d47eec58945d3">original_left_camera_</a>;</div>
-<div class="line"><span class="lineno">   55</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="StereoCamera_8hpp_source.html#l00055">55</a> of file <a class="el" href="StereoCamera_8hpp_source.html">StereoCamera.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   55</span>                                                             {</div>
+<div class="line"><span class="lineno">   56</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#a082eda1a778444e79e9d47eec58945d3">original_left_camera_</a>;</div>
+<div class="line"><span class="lineno">   57</span>  }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1StereoCamera.html#a082eda1a778444e79e9d47eec58945d3">original_left_camera_</a>.</p>
 
@@ -689,10 +636,10 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="StereoCamera_8hpp_source.html#l00057">57</a> of file <a class="el" href="StereoCamera_8hpp_source.html">StereoCamera.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   57</span>                                                                {</div>
-<div class="line"><span class="lineno">   58</span>        <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#a8475e3db31c7e0fcf7f620512bca0678">original_right_camera_</a>;</div>
-<div class="line"><span class="lineno">   59</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="StereoCamera_8hpp_source.html#l00059">59</a> of file <a class="el" href="StereoCamera_8hpp_source.html">StereoCamera.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   59</span>                                                              {</div>
+<div class="line"><span class="lineno">   60</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#a8475e3db31c7e0fcf7f620512bca0678">original_right_camera_</a>;</div>
+<div class="line"><span class="lineno">   61</span>  }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1StereoCamera.html#a8475e3db31c7e0fcf7f620512bca0678">original_right_camera_</a>.</p>
 
@@ -721,8 +668,8 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="StereoCamera_8hpp_source.html#l00069">69</a> of file <a class="el" href="StereoCamera_8hpp_source.html">StereoCamera.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   69</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#a6a51501ba8b407197902bc8a6ad04387">P1_</a>; }</div>
+<p class="definition">Definition at line <a class="el" href="StereoCamera_8hpp_source.html#l00071">71</a> of file <a class="el" href="StereoCamera_8hpp_source.html">StereoCamera.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   71</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#a6a51501ba8b407197902bc8a6ad04387">P1_</a>; }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1StereoCamera.html#a6a51501ba8b407197902bc8a6ad04387">P1_</a>.</p>
 
@@ -751,8 +698,8 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="StereoCamera_8hpp_source.html#l00071">71</a> of file <a class="el" href="StereoCamera_8hpp_source.html">StereoCamera.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   71</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#a525eca2002e59de75e288d20f0da8098">P2_</a>; }</div>
+<p class="definition">Definition at line <a class="el" href="StereoCamera_8hpp_source.html#l00073">73</a> of file <a class="el" href="StereoCamera_8hpp_source.html">StereoCamera.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   73</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#a525eca2002e59de75e288d20f0da8098">P2_</a>; }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1StereoCamera.html#a525eca2002e59de75e288d20f0da8098">P2_</a>.</p>
 
@@ -781,8 +728,8 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="StereoCamera_8hpp_source.html#l00077">77</a> of file <a class="el" href="StereoCamera_8hpp_source.html">StereoCamera.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   77</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#a3af635f406f13f78c48a1bc67d4f6c05">Q_</a>; }</div>
+<p class="definition">Definition at line <a class="el" href="StereoCamera_8hpp_source.html#l00079">79</a> of file <a class="el" href="StereoCamera_8hpp_source.html">StereoCamera.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   79</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#a3af635f406f13f78c48a1bc67d4f6c05">Q_</a>; }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1StereoCamera.html#a3af635f406f13f78c48a1bc67d4f6c05">Q_</a>.</p>
 
@@ -811,8 +758,8 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="StereoCamera_8hpp_source.html#l00073">73</a> of file <a class="el" href="StereoCamera_8hpp_source.html">StereoCamera.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   73</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#a8f08670ac8ee77b775827fde7a1419d3">R1_</a>; }</div>
+<p class="definition">Definition at line <a class="el" href="StereoCamera_8hpp_source.html#l00075">75</a> of file <a class="el" href="StereoCamera_8hpp_source.html">StereoCamera.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   75</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#a8f08670ac8ee77b775827fde7a1419d3">R1_</a>; }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1StereoCamera.html#a8f08670ac8ee77b775827fde7a1419d3">R1_</a>.</p>
 
@@ -841,8 +788,8 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="StereoCamera_8hpp_source.html#l00075">75</a> of file <a class="el" href="StereoCamera_8hpp_source.html">StereoCamera.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   75</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#a7f4824c20c3803c0231456e625bc4fbb">R2_</a>; }</div>
+<p class="definition">Definition at line <a class="el" href="StereoCamera_8hpp_source.html#l00077">77</a> of file <a class="el" href="StereoCamera_8hpp_source.html">StereoCamera.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   77</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#a7f4824c20c3803c0231456e625bc4fbb">R2_</a>; }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1StereoCamera.html#a7f4824c20c3803c0231456e625bc4fbb">R2_</a>.</p>
 
@@ -871,8 +818,8 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="StereoCamera_8hpp_source.html#l00079">79</a> of file <a class="el" href="StereoCamera_8hpp_source.html">StereoCamera.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   79</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#a254f977aec6500c2f8adfc870b03da40">ROI1_</a>; }</div>
+<p class="definition">Definition at line <a class="el" href="StereoCamera_8hpp_source.html#l00081">81</a> of file <a class="el" href="StereoCamera_8hpp_source.html">StereoCamera.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   81</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#a254f977aec6500c2f8adfc870b03da40">ROI1_</a>; }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1StereoCamera.html#a254f977aec6500c2f8adfc870b03da40">ROI1_</a>.</p>
 
@@ -901,8 +848,8 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="StereoCamera_8hpp_source.html#l00081">81</a> of file <a class="el" href="StereoCamera_8hpp_source.html">StereoCamera.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   81</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#a913f1be48195a94bf548d465657fdfc1">ROI2_</a>; }</div>
+<p class="definition">Definition at line <a class="el" href="StereoCamera_8hpp_source.html#l00083">83</a> of file <a class="el" href="StereoCamera_8hpp_source.html">StereoCamera.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   83</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#a913f1be48195a94bf548d465657fdfc1">ROI2_</a>; }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1StereoCamera.html#a913f1be48195a94bf548d465657fdfc1">ROI2_</a>.</p>
 
@@ -931,10 +878,10 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="StereoCamera_8hpp_source.html#l00065">65</a> of file <a class="el" href="StereoCamera_8hpp_source.html">StereoCamera.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   65</span>                                                                        {</div>
-<div class="line"><span class="lineno">   66</span>        <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#a80a7bb0352d858ce6499fadb7e89c7be">undistorted_rectified_stereo_camera_impl_</a>.calibration();</div>
-<div class="line"><span class="lineno">   67</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="StereoCamera_8hpp_source.html#l00067">67</a> of file <a class="el" href="StereoCamera_8hpp_source.html">StereoCamera.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   67</span>                                                                      {</div>
+<div class="line"><span class="lineno">   68</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#a80a7bb0352d858ce6499fadb7e89c7be">undistorted_rectified_stereo_camera_impl_</a>.calibration();</div>
+<div class="line"><span class="lineno">   69</span>  }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1StereoCamera.html#a80a7bb0352d858ce6499fadb7e89c7be">undistorted_rectified_stereo_camera_impl_</a>.</p>
 
@@ -963,10 +910,10 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="StereoCamera_8hpp_source.html#l00061">61</a> of file <a class="el" href="StereoCamera_8hpp_source.html">StereoCamera.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   61</span>                                                                         {</div>
-<div class="line"><span class="lineno">   62</span>        <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#a80a7bb0352d858ce6499fadb7e89c7be">undistorted_rectified_stereo_camera_impl_</a>;</div>
-<div class="line"><span class="lineno">   63</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="StereoCamera_8hpp_source.html#l00063">63</a> of file <a class="el" href="StereoCamera_8hpp_source.html">StereoCamera.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   63</span>                                                                       {</div>
+<div class="line"><span class="lineno">   64</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#a80a7bb0352d858ce6499fadb7e89c7be">undistorted_rectified_stereo_camera_impl_</a>;</div>
+<div class="line"><span class="lineno">   65</span>  }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1StereoCamera.html#a80a7bb0352d858ce6499fadb7e89c7be">undistorted_rectified_stereo_camera_impl_</a>.</p>
 
@@ -1010,10 +957,10 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="StereoCamera_8cc_source.html#l00089">89</a> of file <a class="el" href="StereoCamera_8cc_source.html">StereoCamera.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   89</span>                                                                                                                                {</div>
-<div class="line"><span class="lineno">   90</span>    <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#acaced9e229fca262e99e8258bb43d26c">left_cam_undistort_rectifier_</a>-&gt;undistortRectifyImage(left, rectify_left);</div>
-<div class="line"><span class="lineno">   91</span>    <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#ae43411bfe164d28021c8b5402052ebb9">right_cam_undistort_rectifier_</a>-&gt;undistortRectifyImage(right, rectify_right);</div>
+<p class="definition">Definition at line <a class="el" href="StereoCamera_8cc_source.html#l00086">86</a> of file <a class="el" href="StereoCamera_8cc_source.html">StereoCamera.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   89</span>                                                                    {</div>
+<div class="line"><span class="lineno">   90</span>  <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#acaced9e229fca262e99e8258bb43d26c">left_cam_undistort_rectifier_</a>-&gt;undistortRectifyImage(left, rectify_left);</div>
+<div class="line"><span class="lineno">   91</span>  <a class="code hl_variable" href="classdyno_1_1StereoCamera.html#ae43411bfe164d28021c8b5402052ebb9">right_cam_undistort_rectifier_</a>-&gt;undistortRectifyImage(right, rectify_right);</div>
 <div class="line"><span class="lineno">   92</span>}</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1StereoCamera.html#acaced9e229fca262e99e8258bb43d26c">left_cam_undistort_rectifier_</a>, and <a class="el" href="classdyno_1_1StereoCamera.html#ae43411bfe164d28021c8b5402052ebb9">right_cam_undistort_rectifier_</a>.</p>
@@ -1043,7 +990,7 @@ Here is the caller graph for this function:</div>
 
 <p>Undistortion rectification pre-computed maps for cv::remap. </p>
 
-<p class="definition">Definition at line <a class="el" href="StereoCamera_8hpp_source.html#l00136">136</a> of file <a class="el" href="StereoCamera_8hpp_source.html">StereoCamera.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="StereoCamera_8hpp_source.html#l00133">133</a> of file <a class="el" href="StereoCamera_8hpp_source.html">StereoCamera.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1StereoCamera.html#a2262c33a62cc297ecedbe5801fcd37df">StereoCamera()</a>, and <a class="el" href="classdyno_1_1StereoCamera.html#ab4a01ac140f0cbfdb0fdf9994be1f099">undistortRectifyImages()</a>.</p>
 
@@ -1069,7 +1016,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="StereoCamera_8hpp_source.html#l00126">126</a> of file <a class="el" href="StereoCamera_8hpp_source.html">StereoCamera.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="StereoCamera_8hpp_source.html#l00123">123</a> of file <a class="el" href="StereoCamera_8hpp_source.html">StereoCamera.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1StereoCamera.html#adadb22b1ea1494d925904001e34da724">getOriginalLeftCamera()</a>.</p>
 
@@ -1095,7 +1042,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="StereoCamera_8hpp_source.html#l00127">127</a> of file <a class="el" href="StereoCamera_8hpp_source.html">StereoCamera.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="StereoCamera_8hpp_source.html#l00124">124</a> of file <a class="el" href="StereoCamera_8hpp_source.html">StereoCamera.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1StereoCamera.html#a6bcdcddd53d49c4f00447d8c62fc5bbc">getOriginalRightCamera()</a>.</p>
 
@@ -1122,7 +1069,7 @@ Here is the caller graph for this function:</div>
 </div><div class="memdoc">
 <p>Projection matrices after rectification P1,P2 Output 3x4 projection matrix in the new (rectified) coordinate systems for the left and right camera (see cv::stereoRectify). </p>
 
-<p class="definition">Definition at line <a class="el" href="StereoCamera_8hpp_source.html#l00143">143</a> of file <a class="el" href="StereoCamera_8hpp_source.html">StereoCamera.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="StereoCamera_8hpp_source.html#l00140">140</a> of file <a class="el" href="StereoCamera_8hpp_source.html">StereoCamera.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1StereoCamera.html#a3c6d687ddfdea683fd6d589017417c44">getP1()</a>, and <a class="el" href="classdyno_1_1StereoCamera.html#a2262c33a62cc297ecedbe5801fcd37df">StereoCamera()</a>.</p>
 
@@ -1148,7 +1095,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="StereoCamera_8hpp_source.html#l00143">143</a> of file <a class="el" href="StereoCamera_8hpp_source.html">StereoCamera.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="StereoCamera_8hpp_source.html#l00140">140</a> of file <a class="el" href="StereoCamera_8hpp_source.html">StereoCamera.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1StereoCamera.html#ab2522bf5420d2f8ab0b6c3a2164680f0">getP2()</a>, and <a class="el" href="classdyno_1_1StereoCamera.html#a2262c33a62cc297ecedbe5801fcd37df">StereoCamera()</a>.</p>
 
@@ -1175,7 +1122,7 @@ Here is the caller graph for this function:</div>
 </div><div class="memdoc">
 <p>Q Output 4x4 disparity-to-depth mapping matrix (see cv::reprojectImageTo3D or cv::stereoRectify). </p>
 
-<p class="definition">Definition at line <a class="el" href="StereoCamera_8hpp_source.html#l00151">151</a> of file <a class="el" href="StereoCamera_8hpp_source.html">StereoCamera.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="StereoCamera_8hpp_source.html#l00148">148</a> of file <a class="el" href="StereoCamera_8hpp_source.html">StereoCamera.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1StereoCamera.html#a24fed133e58992eecbf7a40dce013cf2">getQ()</a>, and <a class="el" href="classdyno_1_1StereoCamera.html#a2262c33a62cc297ecedbe5801fcd37df">StereoCamera()</a>.</p>
 
@@ -1202,7 +1149,7 @@ Here is the caller graph for this function:</div>
 </div><div class="memdoc">
 <p>R1,R2 Output 3x3 rectification transform (rotation matrix) for the left and for the right camera. </p>
 
-<p class="definition">Definition at line <a class="el" href="StereoCamera_8hpp_source.html#l00147">147</a> of file <a class="el" href="StereoCamera_8hpp_source.html">StereoCamera.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="StereoCamera_8hpp_source.html#l00144">144</a> of file <a class="el" href="StereoCamera_8hpp_source.html">StereoCamera.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1StereoCamera.html#a00bc4a49e8a64377176fc3fbe6a43940">getR1()</a>, and <a class="el" href="classdyno_1_1StereoCamera.html#a2262c33a62cc297ecedbe5801fcd37df">StereoCamera()</a>.</p>
 
@@ -1228,7 +1175,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="StereoCamera_8hpp_source.html#l00147">147</a> of file <a class="el" href="StereoCamera_8hpp_source.html">StereoCamera.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="StereoCamera_8hpp_source.html#l00144">144</a> of file <a class="el" href="StereoCamera_8hpp_source.html">StereoCamera.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1StereoCamera.html#a9c8f48c9c6b583083415b5f3895dfe4f">getR2()</a>, and <a class="el" href="classdyno_1_1StereoCamera.html#a2262c33a62cc297ecedbe5801fcd37df">StereoCamera()</a>.</p>
 
@@ -1254,7 +1201,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="StereoCamera_8hpp_source.html#l00137">137</a> of file <a class="el" href="StereoCamera_8hpp_source.html">StereoCamera.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="StereoCamera_8hpp_source.html#l00134">134</a> of file <a class="el" href="StereoCamera_8hpp_source.html">StereoCamera.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1StereoCamera.html#a2262c33a62cc297ecedbe5801fcd37df">StereoCamera()</a>, and <a class="el" href="classdyno_1_1StereoCamera.html#ab4a01ac140f0cbfdb0fdf9994be1f099">undistortRectifyImages()</a>.</p>
 
@@ -1282,7 +1229,7 @@ Here is the caller graph for this function:</div>
 
 <p>Regions of interest in the left/right image. </p>
 
-<p class="definition">Definition at line <a class="el" href="StereoCamera_8hpp_source.html#l00154">154</a> of file <a class="el" href="StereoCamera_8hpp_source.html">StereoCamera.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="StereoCamera_8hpp_source.html#l00151">151</a> of file <a class="el" href="StereoCamera_8hpp_source.html">StereoCamera.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1StereoCamera.html#a053cabcecff99770ba8a8c4e6460e690">getROI1()</a>, and <a class="el" href="classdyno_1_1StereoCamera.html#a2262c33a62cc297ecedbe5801fcd37df">StereoCamera()</a>.</p>
 
@@ -1308,7 +1255,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="StereoCamera_8hpp_source.html#l00154">154</a> of file <a class="el" href="StereoCamera_8hpp_source.html">StereoCamera.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="StereoCamera_8hpp_source.html#l00151">151</a> of file <a class="el" href="StereoCamera_8hpp_source.html">StereoCamera.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1StereoCamera.html#a0d966147713c1ac7a993b00b331b2408">getROI2()</a>, and <a class="el" href="classdyno_1_1StereoCamera.html#a2262c33a62cc297ecedbe5801fcd37df">StereoCamera()</a>.</p>
 
@@ -1324,7 +1271,7 @@ Here is the caller graph for this function:</div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classdyno_1_1StereoCamera.html#aeeed391bd0994b69d57e03cebdacd368">Baseline</a> dyno::StereoCamera::stereo_baseline_</td>
+          <td class="memname"><a class="el" href="namespacedyno.html#a91d298bd1bd857652b40cee0a001169b">Baseline</a> dyno::StereoCamera::stereo_baseline_</td>
         </tr>
       </table>
   </td>
@@ -1336,7 +1283,7 @@ Here is the caller graph for this function:</div>
 
 <p>Stereo baseline. </p>
 
-<p class="definition">Definition at line <a class="el" href="StereoCamera_8hpp_source.html#l00157">157</a> of file <a class="el" href="StereoCamera_8hpp_source.html">StereoCamera.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="StereoCamera_8hpp_source.html#l00154">154</a> of file <a class="el" href="StereoCamera_8hpp_source.html">StereoCamera.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1StereoCamera.html#a68be0f336756fe8cdde7c5490a70231b">getBaseline()</a>, and <a class="el" href="classdyno_1_1StereoCamera.html#a2262c33a62cc297ecedbe5801fcd37df">StereoCamera()</a>.</p>
 
@@ -1364,7 +1311,7 @@ Here is the caller graph for this function:</div>
 
 <p>Stereo camera calibration. </p>
 
-<p class="definition">Definition at line <a class="el" href="StereoCamera_8hpp_source.html#l00133">133</a> of file <a class="el" href="StereoCamera_8hpp_source.html">StereoCamera.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="StereoCamera_8hpp_source.html#l00130">130</a> of file <a class="el" href="StereoCamera_8hpp_source.html">StereoCamera.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1StereoCamera.html#a2262c33a62cc297ecedbe5801fcd37df">StereoCamera()</a>.</p>
 
@@ -1392,7 +1339,7 @@ Here is the caller graph for this function:</div>
 
 <p>Stereo camera implementation. </p>
 
-<p class="definition">Definition at line <a class="el" href="StereoCamera_8hpp_source.html#l00130">130</a> of file <a class="el" href="StereoCamera_8hpp_source.html">StereoCamera.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="StereoCamera_8hpp_source.html#l00127">127</a> of file <a class="el" href="StereoCamera_8hpp_source.html">StereoCamera.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1StereoCamera.html#a9061f943bdb82191f693646754400849">getStereoCameraCalibration()</a>, <a class="el" href="classdyno_1_1StereoCamera.html#ad90c713df99974417fdc882b88c0f171">getUndistortedRectifiedStereoCamera()</a>, and <a class="el" href="classdyno_1_1StereoCamera.html#a2262c33a62cc297ecedbe5801fcd37df">StereoCamera()</a>.</p>
 

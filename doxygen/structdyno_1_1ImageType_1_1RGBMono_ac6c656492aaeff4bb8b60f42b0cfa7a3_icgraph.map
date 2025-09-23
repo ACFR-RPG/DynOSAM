@@ -1,8 +1,9 @@
 <map id="dyno::ImageType::RGBMono::toMono" name="dyno::ImageType::RGBMono::toMono">
-<area shape="rect" id="node1" title=" " alt="" coords="551,69,756,109"/>
+<area shape="rect" id="node1" title=" " alt="" coords="551,101,756,141"/>
 <area shape="rect" id="node2" href="$classdyno_1_1StereoMatcher.html#afe57452a9951b94bb69fae54ec8ebaaf" title="Dense stereo reconstruction from two (undistored, rectified) images and produces a disparity map." alt="" coords="261,5,503,45"/>
 <area shape="rect" id="node4" href="$classdyno_1_1KltFeatureTracker.html#a32faba587882416d8090ff709cb93cfe" title="Outputs a CLAHE equalized greyscale image from the input RGB, which will be used to detect and track ..." alt="" coords="295,69,469,109"/>
-<area shape="rect" id="node6" href="$classdyno_1_1ExternalFlowFeatureTracker.html#a28dabdf87c24770c7541ad82b54cdad0" title="Base function to perform feature tracking on static points." alt="" coords="284,133,480,173"/>
+<area shape="rect" id="node6" href="$classdyno_1_1FeatureTracker.html#a31f607c5d1fca4c1ace6af223abb5ead" title=" " alt="" coords="303,133,461,173"/>
+<area shape="rect" id="node7" href="$classdyno_1_1ExternalFlowFeatureTracker.html#aedf0b07caf85d853756cb878f22d2ad7" title="Base function to perform feature tracking on static points." alt="" coords="284,197,480,237"/>
 <area shape="rect" id="node3" href="$classdyno_1_1StereoMatcher.html#a80a925f47436fb14d55bfe199260431e" title="Dense stereo reconstruction from two (distored, non&#45;rectified) images and produces a dense depth map." alt="" coords="5,5,213,45"/>
-<area shape="rect" id="node5" href="$classdyno_1_1KltFeatureTracker.html#a8b8b5f33830f3b76205863b9236539e4" title="Track features between frames k&#45;1 and the current set of images (at k)." alt="" coords="22,69,197,109"/>
+<area shape="rect" id="node5" href="$classdyno_1_1KltFeatureTracker.html#ab15aaa39f0c3adc62037d718b98039c0" title="Track features between frames k&#45;1 and the current set of images (at k)." alt="" coords="22,69,197,109"/>
 </map>

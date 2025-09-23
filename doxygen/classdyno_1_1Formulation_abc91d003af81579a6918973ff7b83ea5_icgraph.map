@@ -1,4 +1,10 @@
 <map id="dyno::Formulation::setFullyQualifiedName" name="dyno::Formulation::setFullyQualifiedName">
-<area shape="rect" id="node1" title=" " alt="" coords="224,5,395,45"/>
-<area shape="rect" id="node2" href="$classdyno_1_1Formulation.html#a6b9b3b3a6c14748b57725bee233bcca4" title="Get the fully qualified name of this formulation which is derived from the loggerPrefix and optionall..." alt="" coords="5,5,176,45"/>
+<area shape="rect" id="node1" title=" " alt="" coords="1275,80,1445,120"/>
+<area shape="rect" id="node2" href="$classdyno_1_1Formulation.html#a6b9b3b3a6c14748b57725bee233bcca4" title="Get the fully qualified name of this formulation which is derived from the loggerPrefix and optionall..." alt="" coords="1056,80,1227,120"/>
+<area shape="rect" id="node3" href="$classdyno_1_1RegularBackendModule.html#a0e068ff275a512d764404995b61fd73a" title=" " alt="" coords="793,108,1008,148"/>
+<area shape="rect" id="node4" href="$classdyno_1_1RegularBackendModule.html#afd39e13f9f84ae0ec38fef7ae9f7eeff" title=" " alt="" coords="531,73,745,113"/>
+<area shape="rect" id="node7" href="$classdyno_1_1RegularBackendModule.html#aa79b2f6d63914e52a7adbfbaa65c32b1" title=" " alt="" coords="5,147,220,187"/>
+<area shape="rect" id="node8" href="$classdyno_1_1RegularBackendModule.html#aedf9cc9f68a38e7c6e91811ebda74f82" title=" " alt="" coords="531,5,745,45"/>
+<area shape="rect" id="node5" href="$classdyno_1_1RegularBackendModule.html#ab6db6281369251dc76538085a92280c6" title=" " alt="" coords="268,73,483,113"/>
+<area shape="rect" id="node6" href="$classdyno_1_1RegularBackendModule.html#a4934e902605fc58d5430cfd15b0a9ba8" title=" " alt="" coords="5,73,220,113"/>
 </map>

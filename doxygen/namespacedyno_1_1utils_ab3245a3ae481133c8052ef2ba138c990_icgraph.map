@@ -1,6 +1,0 @@
-<map id="dyno::utils::drawLabeledBoundingBox" name="dyno::utils::drawLabeledBoundingBox">
-<area shape="rect" id="node1" title="Draws a coloured bounding box and associated label onto a RGB image." alt="" coords="256,69,437,109"/>
-<area shape="rect" id="node2" href="$classdyno_1_1FeatureTrackerBase.html#aa902950650699301214f776a905e3b77" title=" " alt="" coords="12,5,201,45"/>
-<area shape="rect" id="node3" href="$structdyno_1_1ObjectPoseGT.html#ada6ef6e0253d33690945f1d8dcf7be45" title="Draws the object label and bounding box on the provided image." alt="" coords="30,69,183,109"/>
-<area shape="rect" id="node4" href="$classdyno_1_1Frame.html#a5e2adcdcb96143552fa891351b94dd22" title="From the detected list of objects (in Frame::object_observations_) draw the object masks as labelled ..." alt="" coords="5,133,208,173"/>
-</map>

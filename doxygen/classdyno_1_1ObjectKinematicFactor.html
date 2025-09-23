@@ -124,7 +124,7 @@ Static Private Member Functions</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="ObjectKinematicFactor_8hpp_source.html#l00035">35</a> of file <a class="el" href="ObjectKinematicFactor_8hpp_source.html">ObjectKinematicFactor.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ObjectKinematicFactor_8hpp_source.html#l00042">42</a> of file <a class="el" href="ObjectKinematicFactor_8hpp_source.html">ObjectKinematicFactor.hpp</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="a1a31cb5e54e122c8ea91e8a3945f56e1" name="a1a31cb5e54e122c8ea91e8a3945f56e1"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1a31cb5e54e122c8ea91e8a3945f56e1">&#9670;&#160;</a></span>shared_ptr</h2>
@@ -138,7 +138,7 @@ Static Private Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ObjectKinematicFactor_8hpp_source.html#l00042">42</a> of file <a class="el" href="ObjectKinematicFactor_8hpp_source.html">ObjectKinematicFactor.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ObjectKinematicFactor_8hpp_source.html#l00052">52</a> of file <a class="el" href="ObjectKinematicFactor_8hpp_source.html">ObjectKinematicFactor.hpp</a>.</p>
 
 </div>
 </div>
@@ -273,11 +273,11 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ObjectKinematicFactor_8hpp_source.html#l00047">47</a> of file <a class="el" href="ObjectKinematicFactor_8hpp_source.html">ObjectKinematicFactor.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   48</span>  {</div>
-<div class="line"><span class="lineno">   49</span>    <span class="keywordflow">return</span> boost::static_pointer_cast&lt;gtsam::NonlinearFactor&gt;(</div>
-<div class="line"><span class="lineno">   50</span>        gtsam::NonlinearFactor::shared_ptr(<span class="keyword">new</span> <a class="code hl_function" href="classdyno_1_1ObjectKinematicFactor.html#ab8e54571eebb50bbcf52d52ee9ed0823">ObjectKinematicFactor</a>(*<span class="keyword">this</span>)));</div>
-<div class="line"><span class="lineno">   51</span>  }</div>
+<p class="definition">Definition at line <a class="el" href="ObjectKinematicFactor_8hpp_source.html#l00058">58</a> of file <a class="el" href="ObjectKinematicFactor_8hpp_source.html">ObjectKinematicFactor.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   58</span>                                                        {</div>
+<div class="line"><span class="lineno">   59</span>    <span class="keywordflow">return</span> boost::static_pointer_cast&lt;gtsam::NonlinearFactor&gt;(</div>
+<div class="line"><span class="lineno">   60</span>        gtsam::NonlinearFactor::shared_ptr(<span class="keyword">new</span> <a class="code hl_function" href="classdyno_1_1ObjectKinematicFactor.html#ab8e54571eebb50bbcf52d52ee9ed0823">ObjectKinematicFactor</a>(*<span class="keyword">this</span>)));</div>
+<div class="line"><span class="lineno">   61</span>  }</div>
 <div class="ttc" id="aclassdyno_1_1ObjectKinematicFactor_html_ab8e54571eebb50bbcf52d52ee9ed0823"><div class="ttname"><a href="classdyno_1_1ObjectKinematicFactor.html#ab8e54571eebb50bbcf52d52ee9ed0823">dyno::ObjectKinematicFactor::ObjectKinematicFactor</a></div><div class="ttdeci">ObjectKinematicFactor(gtsam::Key motionKey, gtsam::Key previousObjectPoseKey, gtsam::Key currentObjectPoseKey, gtsam::SharedNoiseModel model)</div><div class="ttdef"><b>Definition:</b> <a href="ObjectKinematicFactor_8cc_source.html#l00029">ObjectKinematicFactor.cc:29</a></div></div>
 </div><!-- fragment -->
 </div>

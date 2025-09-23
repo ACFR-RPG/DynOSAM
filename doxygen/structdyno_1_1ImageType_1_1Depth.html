@@ -101,7 +101,7 @@ Static Public Attributes</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="ImageTypes_8hpp_source.html#l00117">117</a> of file <a class="el" href="ImageTypes_8hpp_source.html">ImageTypes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ImageTypes_8hpp_source.html#l00177">177</a> of file <a class="el" href="ImageTypes_8hpp_source.html">ImageTypes.hpp</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="a4a0863040392b45683f313b47c875fde" name="a4a0863040392b45683f313b47c875fde"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4a0863040392b45683f313b47c875fde">&#9670;&#160;</a></span>name()</h2>
@@ -126,8 +126,8 @@ Static Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ImageTypes_8hpp_source.html#l00121">121</a> of file <a class="el" href="ImageTypes_8hpp_source.html">ImageTypes.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  121</span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;Depth&quot;</span>; }</div>
+<p class="definition">Definition at line <a class="el" href="ImageTypes_8hpp_source.html#l00181">181</a> of file <a class="el" href="ImageTypes_8hpp_source.html">ImageTypes.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  181</span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;Depth&quot;</span>; }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -155,51 +155,52 @@ Static Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ImageTypes_8cc_source.html#l00126">126</a> of file <a class="el" href="ImageTypes_8cc_source.html">ImageTypes.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  126</span>                                                            {</div>
-<div class="line"><span class="lineno">  127</span>  cv::Mat metric_depth_map = image.clone();</div>
-<div class="line"><span class="lineno">  128</span>  <span class="comment">// convert to floats to allow patch nan&#39;s to work</span></div>
-<div class="line"><span class="lineno">  129</span>  metric_depth_map.convertTo(metric_depth_map, CV_32F);</div>
-<div class="line"><span class="lineno">  130</span> </div>
-<div class="line"><span class="lineno">  131</span>  <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">float</span> max_value = 25.0;</div>
-<div class="line"><span class="lineno">  132</span> </div>
-<div class="line"><span class="lineno">  133</span>  cv::patchNaNs(metric_depth_map, max_value);</div>
-<div class="line"><span class="lineno">  134</span>  <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; metric_depth_map.rows; ++i) {</div>
-<div class="line"><span class="lineno">  135</span>    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> j = 0; j &lt; metric_depth_map.cols; ++j) {</div>
-<div class="line"><span class="lineno">  136</span>      <span class="keywordtype">float</span>&amp; pixel = metric_depth_map.at&lt;<span class="keywordtype">float</span>&gt;(i, j);</div>
-<div class="line"><span class="lineno">  137</span>      <span class="keywordflow">if</span> (std::isinf(pixel)) {</div>
-<div class="line"><span class="lineno">  138</span>        pixel = 0.0;  <span class="comment">// Replace Inf with small value so image is not saturated</span></div>
-<div class="line"><span class="lineno">  139</span>                      <span class="comment">// to a large number</span></div>
-<div class="line"><span class="lineno">  140</span>      }</div>
-<div class="line"><span class="lineno">  141</span>    }</div>
-<div class="line"><span class="lineno">  142</span>  }</div>
-<div class="line"><span class="lineno">  143</span> </div>
-<div class="line"><span class="lineno">  144</span>  <span class="comment">// // truncate to max value (e.g. there is some outlier in the depth value</span></div>
-<div class="line"><span class="lineno">  145</span>  <span class="comment">// that is a super larger number) cv::threshold(metric_depth_map,</span></div>
-<div class="line"><span class="lineno">  146</span>  <span class="comment">// metric_depth_map, max_value, max_value, cv::THRESH_TRUNC);</span></div>
+<p class="definition">Definition at line <a class="el" href="ImageTypes_8cc_source.html#l00130">130</a> of file <a class="el" href="ImageTypes_8cc_source.html">ImageTypes.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  130</span>                                                            {</div>
+<div class="line"><span class="lineno">  131</span>  cv::Mat metric_depth_map = image.clone();</div>
+<div class="line"><span class="lineno">  132</span>  <span class="comment">// convert to floats to allow patch nan&#39;s to work</span></div>
+<div class="line"><span class="lineno">  133</span>  metric_depth_map.convertTo(metric_depth_map, CV_32F);</div>
+<div class="line"><span class="lineno">  134</span> </div>
+<div class="line"><span class="lineno">  135</span>  <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">float</span> max_value = 25.0;</div>
+<div class="line"><span class="lineno">  136</span> </div>
+<div class="line"><span class="lineno">  137</span>  cv::patchNaNs(metric_depth_map, max_value);</div>
+<div class="line"><span class="lineno">  138</span>  <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; metric_depth_map.rows; ++i) {</div>
+<div class="line"><span class="lineno">  139</span>    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> j = 0; j &lt; metric_depth_map.cols; ++j) {</div>
+<div class="line"><span class="lineno">  140</span>      <span class="keywordtype">float</span>&amp; pixel = metric_depth_map.at&lt;<span class="keywordtype">float</span>&gt;(i, j);</div>
+<div class="line"><span class="lineno">  141</span>      <span class="keywordflow">if</span> (std::isinf(pixel)) {</div>
+<div class="line"><span class="lineno">  142</span>        pixel = 0.0;  <span class="comment">// Replace Inf with small value so image is not saturated</span></div>
+<div class="line"><span class="lineno">  143</span>                      <span class="comment">// to a large number</span></div>
+<div class="line"><span class="lineno">  144</span>      }</div>
+<div class="line"><span class="lineno">  145</span>    }</div>
+<div class="line"><span class="lineno">  146</span>  }</div>
 <div class="line"><span class="lineno">  147</span> </div>
-<div class="line"><span class="lineno">  148</span>  <span class="comment">// //fix a pixel as the maximum depth to avoid flickering!!</span></div>
-<div class="line"><span class="lineno">  149</span>  <span class="comment">// metric_depth_map.at&lt;float&gt;(1, 1) = max_value;</span></div>
-<div class="line"><span class="lineno">  150</span> </div>
-<div class="line"><span class="lineno">  151</span>  <span class="comment">// Normalize the depth map to the range [0, 1]</span></div>
-<div class="line"><span class="lineno">  152</span>  cv::Mat normalised_depth_map;</div>
-<div class="line"><span class="lineno">  153</span>  cv::normalize(metric_depth_map, normalised_depth_map, 0.0, 1.0,</div>
-<div class="line"><span class="lineno">  154</span>                cv::NORM_MINMAX);</div>
-<div class="line"><span class="lineno">  155</span>  <span class="comment">// // Convert the normalized depth map to an 8-bit image [0, 255]</span></div>
-<div class="line"><span class="lineno">  156</span>  cv::Mat depth_map_8u;</div>
-<div class="line"><span class="lineno">  157</span>  normalised_depth_map.convertTo(depth_map_8u, CV_8U, 255.0, 20.0);</div>
-<div class="line"><span class="lineno">  158</span> </div>
-<div class="line"><span class="lineno">  159</span>  <span class="keywordflow">return</span> depth_map_8u;</div>
-<div class="line"><span class="lineno">  160</span>}</div>
+<div class="line"><span class="lineno">  148</span>  <span class="comment">// // truncate to max value (e.g. there is some outlier in the depth value</span></div>
+<div class="line"><span class="lineno">  149</span>  <span class="comment">// that is a super larger number) cv::threshold(metric_depth_map,</span></div>
+<div class="line"><span class="lineno">  150</span>  <span class="comment">// metric_depth_map, max_value, max_value, cv::THRESH_TRUNC);</span></div>
+<div class="line"><span class="lineno">  151</span> </div>
+<div class="line"><span class="lineno">  152</span>  <span class="comment">// //fix a pixel as the maximum depth to avoid flickering!!</span></div>
+<div class="line"><span class="lineno">  153</span>  <span class="comment">// metric_depth_map.at&lt;float&gt;(1, 1) = max_value;</span></div>
+<div class="line"><span class="lineno">  154</span> </div>
+<div class="line"><span class="lineno">  155</span>  <span class="comment">// Normalize the depth map to the range [0, 1]</span></div>
+<div class="line"><span class="lineno">  156</span>  cv::Mat normalised_depth_map;</div>
+<div class="line"><span class="lineno">  157</span>  cv::normalize(metric_depth_map, normalised_depth_map, 0.0, 1.0,</div>
+<div class="line"><span class="lineno">  158</span>                cv::NORM_MINMAX);</div>
+<div class="line"><span class="lineno">  159</span>  <span class="comment">// // Convert the normalized depth map to an 8-bit image [0, 255]</span></div>
+<div class="line"><span class="lineno">  160</span>  cv::Mat depth_map_8u;</div>
+<div class="line"><span class="lineno">  161</span>  normalised_depth_map.convertTo(depth_map_8u, CV_8U, 255.0, 20.0);</div>
+<div class="line"><span class="lineno">  162</span> </div>
+<div class="line"><span class="lineno">  163</span>  <span class="keywordflow">return</span> depth_map_8u;</div>
+<div class="line"><span class="lineno">  164</span>}</div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="structdyno_1_1ImageWrapper.html#af0c4d5fe3a46105c7789a8915c6e7521">dyno::ImageWrapper&lt; IMAGETYPE &gt;::clone()</a>.</p>
+<p class="reference">References <a class="el" href="structdyno_1_1ImageWrapper.html#abcaf26857bf12946dc1c7d0873f37641">dyno::ImageWrapper&lt; IMAGETYPE &gt;::clone()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="structdyno_1_1ImageType_1_1Depth_a6415e19a2a9ba5f3279e06e5aa70fa33_cgraph.png" border="0" usemap="#astructdyno_1_1ImageType_1_1Depth_a6415e19a2a9ba5f3279e06e5aa70fa33_cgraph" alt=""/></div>
 <map name="astructdyno_1_1ImageType_1_1Depth_a6415e19a2a9ba5f3279e06e5aa70fa33_cgraph" id="astructdyno_1_1ImageType_1_1Depth_a6415e19a2a9ba5f3279e06e5aa70fa33_cgraph">
 <area shape="rect" title=" " alt="" coords="5,5,185,45"/>
-<area shape="rect" href="structdyno_1_1ImageWrapper.html#af0c4d5fe3a46105c7789a8915c6e7521" title="Returns an ImageWrapper with the underlying image data cloned." alt="" coords="233,5,392,45"/>
+<area shape="rect" href="structdyno_1_1ImageWrapper.html#abcaf26857bf12946dc1c7d0873f37641" title=" " alt="" coords="233,5,392,45"/>
+<area shape="rect" href="structdyno_1_1ImageWrapper.html#aeaaf2c866029c9deccaff4a368716cca" title=" " alt="" coords="440,5,599,45"/>
 </map>
 </div>
 
@@ -231,13 +232,13 @@ Here is the call graph for this function:</div>
 
 <p>Expected opencv image type for depth (or disparity) image. </p>
 
-<p class="definition">Definition at line <a class="el" href="ImageTypes_8cc_source.html#l00120">120</a> of file <a class="el" href="ImageTypes_8cc_source.html">ImageTypes.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  120</span>                                                {</div>
-<div class="line"><span class="lineno">  121</span>  <a class="code hl_function" href="namespacedyno.html#a25a3a8e4594d1ad2eec31dcd73eb972a">validateSingleImage</a>(input, <a class="code hl_variable" href="structdyno_1_1ImageType_1_1Depth.html#ab5104cce4886bcea42c98da9ed713c61">OpenCVType</a>, <a class="code hl_function" href="structdyno_1_1ImageType_1_1Depth.html#a4a0863040392b45683f313b47c875fde">name</a>());</div>
-<div class="line"><span class="lineno">  122</span>}</div>
-<div class="ttc" id="anamespacedyno_html_a25a3a8e4594d1ad2eec31dcd73eb972a"><div class="ttname"><a href="namespacedyno.html#a25a3a8e4594d1ad2eec31dcd73eb972a">dyno::validateSingleImage</a></div><div class="ttdeci">void validateSingleImage(const cv::Mat &amp;input, int expected_type, const std::string &amp;name)</div><div class="ttdef"><b>Definition:</b> <a href="ImageTypes_8cc_source.html#l00061">ImageTypes.cc:61</a></div></div>
-<div class="ttc" id="astructdyno_1_1ImageType_1_1Depth_html_a4a0863040392b45683f313b47c875fde"><div class="ttname"><a href="structdyno_1_1ImageType_1_1Depth.html#a4a0863040392b45683f313b47c875fde">dyno::ImageType::Depth::name</a></div><div class="ttdeci">static std::string name()</div><div class="ttdef"><b>Definition:</b> <a href="ImageTypes_8hpp_source.html#l00121">ImageTypes.hpp:121</a></div></div>
-<div class="ttc" id="astructdyno_1_1ImageType_1_1Depth_html_ab5104cce4886bcea42c98da9ed713c61"><div class="ttname"><a href="structdyno_1_1ImageType_1_1Depth.html#ab5104cce4886bcea42c98da9ed713c61">dyno::ImageType::Depth::OpenCVType</a></div><div class="ttdeci">static constexpr int OpenCVType</div><div class="ttdef"><b>Definition:</b> <a href="ImageTypes_8hpp_source.html#l00118">ImageTypes.hpp:118</a></div></div>
+<p class="definition">Definition at line <a class="el" href="ImageTypes_8cc_source.html#l00124">124</a> of file <a class="el" href="ImageTypes_8cc_source.html">ImageTypes.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  124</span>                                                {</div>
+<div class="line"><span class="lineno">  125</span>  <a class="code hl_function" href="namespacedyno.html#a25a3a8e4594d1ad2eec31dcd73eb972a">validateSingleImage</a>(input, <a class="code hl_variable" href="structdyno_1_1ImageType_1_1Depth.html#ab5104cce4886bcea42c98da9ed713c61">OpenCVType</a>, <a class="code hl_function" href="structdyno_1_1ImageType_1_1Depth.html#a4a0863040392b45683f313b47c875fde">name</a>());</div>
+<div class="line"><span class="lineno">  126</span>}</div>
+<div class="ttc" id="anamespacedyno_html_a25a3a8e4594d1ad2eec31dcd73eb972a"><div class="ttname"><a href="namespacedyno.html#a25a3a8e4594d1ad2eec31dcd73eb972a">dyno::validateSingleImage</a></div><div class="ttdeci">void validateSingleImage(const cv::Mat &amp;input, int expected_type, const std::string &amp;name)</div><div class="ttdef"><b>Definition:</b> <a href="ImageTypes_8cc_source.html#l00065">ImageTypes.cc:65</a></div></div>
+<div class="ttc" id="astructdyno_1_1ImageType_1_1Depth_html_a4a0863040392b45683f313b47c875fde"><div class="ttname"><a href="structdyno_1_1ImageType_1_1Depth.html#a4a0863040392b45683f313b47c875fde">dyno::ImageType::Depth::name</a></div><div class="ttdeci">static std::string name()</div><div class="ttdef"><b>Definition:</b> <a href="ImageTypes_8hpp_source.html#l00181">ImageTypes.hpp:181</a></div></div>
+<div class="ttc" id="astructdyno_1_1ImageType_1_1Depth_html_ab5104cce4886bcea42c98da9ed713c61"><div class="ttname"><a href="structdyno_1_1ImageType_1_1Depth.html#ab5104cce4886bcea42c98da9ed713c61">dyno::ImageType::Depth::OpenCVType</a></div><div class="ttdeci">static constexpr int OpenCVType</div><div class="ttdef"><b>Definition:</b> <a href="ImageTypes_8hpp_source.html#l00178">ImageTypes.hpp:178</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="namespacedyno.html#a25a3a8e4594d1ad2eec31dcd73eb972a">dyno::validateSingleImage()</a>.</p>
 <div class="dynheader">
@@ -276,7 +277,7 @@ Here is the call graph for this function:</div>
 <b>Initial value:</b><div class="fragment"><div class="line">=</div>
 <div class="line">        CV_64F</div>
 </div><!-- fragment -->
-<p class="definition">Definition at line <a class="el" href="ImageTypes_8hpp_source.html#l00118">118</a> of file <a class="el" href="ImageTypes_8hpp_source.html">ImageTypes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ImageTypes_8hpp_source.html#l00178">178</a> of file <a class="el" href="ImageTypes_8hpp_source.html">ImageTypes.hpp</a>.</p>
 
 </div>
 </div>

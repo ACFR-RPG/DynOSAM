@@ -1,20 +1,12 @@
 var searchData=
 [
-  ['landmark_0',['Landmark',['../namespacedyno.html#a6c8dbdcd5e61797d494457220b875761',1,'dyno']]],
-  ['landmarkkeypointstatus_1',['LandmarkKeypointStatus',['../namespacedyno.html#a8380e50c5b47c05c6b33d0cb5b740b49',1,'dyno']]],
-  ['landmarkmap_2',['LandmarkMap',['../namespacedyno.html#a714bf51d628f575d182ba224c88b4702',1,'dyno']]],
-  ['landmarkmeasurementpair_3',['LandmarkMeasurementPair',['../structdyno_1_1FrameNode.html#ac611dedd541f8e419efffe178f9cbaa3',1,'dyno::FrameNode']]],
-  ['landmarknode_4',['LandmarkNode',['../structdyno_1_1MapTraits.html#a78ae1b7bae3a6a6efd665ec088282e74',1,'dyno::MapTraits']]],
-  ['landmarknode2d_5',['LandmarkNode2d',['../namespacedyno.html#a6c1820248e309be16308e3722729a2d8',1,'dyno']]],
-  ['landmarknode2ddepth_6',['LandmarkNode2dDepth',['../namespacedyno.html#a754e885505e727871c18390e74cafd44',1,'dyno']]],
-  ['landmarknode3d_7',['LandmarkNode3d',['../namespacedyno.html#a615f62beb140d206849b55366fc3fdf7',1,'dyno']]],
-  ['landmarknode3d2d_8',['LandmarkNode3d2d',['../namespacedyno.html#a4f60b54921992dd8e305f84741c9b650',1,'dyno']]],
-  ['landmarknodem_9',['LandmarkNodeM',['../classdyno_1_1Map.html#a7d77f5bf6db83f049d33b22036dab814',1,'dyno::Map']]],
-  ['landmarknodeptr_10',['LandmarkNodePtr',['../structdyno_1_1MapTraits.html#a72db8cc0191a116471646c6302bea29b',1,'dyno::MapTraits::LandmarkNodePtr()'],['../namespacedyno.html#a5ce4b4530fd96228549420052208d24c',1,'dyno::LandmarkNodePtr()']]],
-  ['landmarknodeptrset_11',['LandmarkNodePtrSet',['../namespacedyno.html#adaa0588bcf16572686aa33c8ed9feb47',1,'dyno']]],
-  ['landmarks_12',['Landmarks',['../namespacedyno.html#a3b1a15112ac529701e4a47133a578a16',1,'dyno']]],
-  ['landmarksmap_13',['LandmarksMap',['../classdyno_1_1ClusterSlamAllLoader.html#ad3bef542e9d9f88b33249bb25d81da19',1,'dyno::ClusterSlamAllLoader']]],
-  ['landmarksmapperframe_14',['LandmarksMapPerFrame',['../classdyno_1_1ClusterSlamAllLoader.html#a81de593f9fe8cc542e4ce0990914585b',1,'dyno::ClusterSlamAllLoader']]],
-  ['landmarkstatus_15',['LandmarkStatus',['../namespacedyno.html#aa313fb04a7d4231aefd8353ce2448c43',1,'dyno']]],
-  ['list_5ft_16',['list_t',['../classdyno_1_1utils_1_1Statistics.html#ad74fc9c2baa7ae05f3ae85451c10fad3',1,'dyno::utils::Statistics']]]
+  ['keyframedata_0',['KeyFrameData',['../namespacedyno.html#af5d243c16b99cce3981093d5a9dcbdce',1,'dyno']]],
+  ['keyframerange_1',['KeyFrameRange',['../namespacedyno.html#a42ef5baa5b1db3e1099c0000ce3ab826',1,'dyno']]],
+  ['keyframeranges_2',['KeyFrameRanges',['../namespacedyno.html#aec31ebc29e7f08d7302491fcaa65c967',1,'dyno']]],
+  ['keypoint_3',['Keypoint',['../namespacedyno.html#aaa260a8022691078c59e1ac6a4fa05b5',1,'dyno']]],
+  ['keypointcv_4',['KeypointCV',['../namespacedyno.html#ae0b7b312ca1880ca7030acdbe981966a',1,'dyno']]],
+  ['keypointmeasurement_5',['KeypointMeasurement',['../namespacedyno.html#abc873e7d92e4fd1f86e6c0deed65bce3',1,'dyno']]],
+  ['keypoints_6',['Keypoints',['../namespacedyno.html#a6e4b9811fc666e292979ad077f5cca41',1,'dyno']]],
+  ['keypointscv_7',['KeypointsCV',['../namespacedyno.html#ae45b8b62a0efd7dbcf047db8751f6739',1,'dyno']]],
+  ['keypointstatus_8',['KeypointStatus',['../namespacedyno.html#af911cd33910f0fae61d3ff5048eed8fc',1,'dyno']]]
 ];

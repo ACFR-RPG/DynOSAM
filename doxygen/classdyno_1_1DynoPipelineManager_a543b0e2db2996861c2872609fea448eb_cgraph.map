@@ -3,6 +3,6 @@
 <area shape="rect" id="node2" href="$classdyno_1_1DynoParams.html#ab02ca24dcf94affa7705e9cdc63bd2d4" title=" " alt="" coords="259,5,485,31"/>
 <area shape="rect" id="node3" href="$classdyno_1_1DynoPipelineManager.html#a088564a2b3ea645611764a41fc290e67" title=" " alt="" coords="269,55,475,95"/>
 <area shape="rect" id="node4" href="$classdyno_1_1OpenCVImageDisplayQueue.html#af8fa9a44165ec7c4fd83d4251fc416c4" title=" " alt="" coords="533,55,737,95"/>
-<area shape="rect" id="node5" href="$classThreadsafeQueue.html#a33b9409368f81487e5999e208d7f69c6" title=" " alt="" coords="805,37,991,63"/>
-<area shape="rect" id="node6" href="$classThreadsafeQueue.html#a06b3418f87d1703da2fb8af8cb689790" title="Pop value. Waits for data to be available in the queue. Returns false if the queue has been shutdown." alt="" coords="785,87,1011,112"/>
+<area shape="rect" id="node5" href="$classThreadsafeQueue.html#a33b9409368f81487e5999e208d7f69c6" title=" " alt="" coords="805,33,991,59"/>
+<area shape="rect" id="node6" href="$classThreadsafeQueue.html#a46d8add3de7c66d4b6e743020a5c3ffd" title="popBlockingUpToTime Same as Pop blocking, but further returns early if the given duration has passed...." alt="" coords="785,83,1011,123"/>
 </map>

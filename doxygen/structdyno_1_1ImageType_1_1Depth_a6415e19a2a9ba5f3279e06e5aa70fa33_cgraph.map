@@ -1,4 +1,5 @@
 <map id="dyno::ImageType::Depth::toRGB" name="dyno::ImageType::Depth::toRGB">
 <area shape="rect" id="node1" title=" " alt="" coords="5,5,185,45"/>
-<area shape="rect" id="node2" href="$structdyno_1_1ImageWrapper.html#af0c4d5fe3a46105c7789a8915c6e7521" title="Returns an ImageWrapper with the underlying image data cloned." alt="" coords="233,5,392,45"/>
+<area shape="rect" id="node2" href="$structdyno_1_1ImageWrapper.html#abcaf26857bf12946dc1c7d0873f37641" title=" " alt="" coords="233,5,392,45"/>
+<area shape="rect" id="node3" href="$structdyno_1_1ImageWrapper.html#aeaaf2c866029c9deccaff4a368716cca" title=" " alt="" coords="440,5,599,45"/>
 </map>

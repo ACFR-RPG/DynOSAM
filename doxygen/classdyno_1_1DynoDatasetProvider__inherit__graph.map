@@ -1,10 +1,12 @@
 <map id="dyno::DynoDatasetProvider&lt; DataTypes &gt;" name="dyno::DynoDatasetProvider&lt; DataTypes &gt;">
-<area shape="rect" id="node1" title=" " alt="" coords="489,73,691,113"/>
+<area shape="rect" id="node1" title=" " alt="" coords="489,122,691,162"/>
 <area shape="rect" id="node5" href="$classdyno_1_1ClusterSlamDataLoader.html" title="Data loader for the cluster slam datasets as provided at: https://huangjh&#45;pub.github...." alt="" coords="739,5,955,31"/>
 <area shape="rect" id="node6" href="$classdyno_1_1OMDDataLoader.html" title="Data loader for the oxford multi motion (omd) datasets as provided at: https://robotic&#45;esp...." alt="" coords="762,55,931,80"/>
 <area shape="rect" id="node7" href="$classdyno_1_1ProjectARIADataLoader.html" title="Data loader for the PREPROCESSED Project ARIA for MP testing team (dataset so far closest source)" alt="" coords="740,104,953,129"/>
-<area shape="rect" id="node8" href="$classdyno_1_1VirtualKittiDataLoader.html" title=" " alt="" coords="743,153,950,179"/>
-<area shape="rect" id="node2" href="$classdyno_1_1DynoDataset.html" title=" " alt="" coords="283,43,441,83"/>
-<area shape="rect" id="node3" href="$structdyno_1_1__DynoDatasetConstructor.html" title=" " alt="" coords="5,36,235,91"/>
-<area shape="rect" id="node4" href="$classdyno_1_1DataProvider.html" title="A data provider is a module that actually gets the inididual image and/or IMU data from some source a..." alt="" coords="289,108,435,133"/>
+<area shape="rect" id="node8" href="$classdyno_1_1TartanAirShibuyaLoader.html" title="Data loader for the TartanAir Shibuya datasets as provided at:https://github.com/haleqiu/tartanair&#45;sh..." alt="" coords="739,153,955,179"/>
+<area shape="rect" id="node9" href="$classdyno_1_1ViodeLoader.html" title=" " alt="" coords="775,203,918,228"/>
+<area shape="rect" id="node10" href="$classdyno_1_1VirtualKittiDataLoader.html" title=" " alt="" coords="743,252,950,277"/>
+<area shape="rect" id="node2" href="$classdyno_1_1DynoDataset.html" title=" " alt="" coords="283,93,441,133"/>
+<area shape="rect" id="node3" href="$structdyno_1_1__DynoDatasetConstructor.html" title=" " alt="" coords="5,85,235,140"/>
+<area shape="rect" id="node4" href="$classdyno_1_1DataProvider.html" title="A data provider is a module that actually gets the inididual image and/or IMU data from some source a..." alt="" coords="289,157,435,183"/>
 </map>

@@ -1,5 +1,5 @@
 <map id="dyno::OMDDataLoader::getCameraParams" name="dyno::OMDDataLoader::getCameraParams">
 <area shape="rect" id="node1" title="Provides functionality to get camera paramters for the main pipeline, as these may be available from ..." alt="" coords="223,27,392,67"/>
-<area shape="rect" id="node2" href="$dyno__sam_8cc.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="63,5,117,31"/>
+<area shape="rect" id="node2" href="$dataset__node_8cc.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="63,5,117,31"/>
 <area shape="rect" id="node3" href="$classdyno_1_1OMDDataLoader.html#ac5ff322c63be13db32c7ad810c85ea08" title="Construct a new Cluster Slam Data Loader object." alt="" coords="5,55,175,95"/>
 </map>

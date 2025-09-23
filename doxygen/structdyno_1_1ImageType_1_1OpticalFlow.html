@@ -101,7 +101,7 @@ Static Public Attributes</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="ImageTypes_8hpp_source.html#l00124">124</a> of file <a class="el" href="ImageTypes_8hpp_source.html">ImageTypes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ImageTypes_8hpp_source.html#l00184">184</a> of file <a class="el" href="ImageTypes_8hpp_source.html">ImageTypes.hpp</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="ad6e92c59e5e99d980a07c393ddcb238b" name="ad6e92c59e5e99d980a07c393ddcb238b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad6e92c59e5e99d980a07c393ddcb238b">&#9670;&#160;</a></span>name()</h2>
@@ -126,8 +126,8 @@ Static Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ImageTypes_8hpp_source.html#l00128">128</a> of file <a class="el" href="ImageTypes_8hpp_source.html">ImageTypes.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  128</span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;OpticalFlow&quot;</span>; }</div>
+<p class="definition">Definition at line <a class="el" href="ImageTypes_8hpp_source.html#l00188">188</a> of file <a class="el" href="ImageTypes_8hpp_source.html">ImageTypes.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  188</span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;OpticalFlow&quot;</span>; }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -155,14 +155,14 @@ Static Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ImageTypes_8cc_source.html#l00166">166</a> of file <a class="el" href="ImageTypes_8cc_source.html">ImageTypes.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  166</span>                                                                        {</div>
-<div class="line"><span class="lineno">  167</span>  <span class="keyword">const</span> cv::Mat&amp; optical_flow = image;</div>
-<div class="line"><span class="lineno">  168</span>  cv::Mat flow_viz;</div>
-<div class="line"><span class="lineno">  169</span>  <a class="code hl_function" href="namespacedyno_1_1utils.html#aa8061bfcb1a6d9b02d88085bf851986d">utils::flowToRgb</a>(optical_flow, flow_viz);</div>
-<div class="line"><span class="lineno">  170</span>  <span class="keywordflow">return</span> flow_viz;</div>
-<div class="line"><span class="lineno">  171</span>}</div>
-<div class="ttc" id="anamespacedyno_1_1utils_html_aa8061bfcb1a6d9b02d88085bf851986d"><div class="ttname"><a href="namespacedyno_1_1utils.html#aa8061bfcb1a6d9b02d88085bf851986d">dyno::utils::flowToRgb</a></div><div class="ttdeci">void flowToRgb(const cv::Mat &amp;flow, cv::Mat &amp;rgb)</div><div class="ttdef"><b>Definition:</b> <a href="OpenCVUtils_8cc_source.html#l00161">OpenCVUtils.cc:161</a></div></div>
+<p class="definition">Definition at line <a class="el" href="ImageTypes_8cc_source.html#l00170">170</a> of file <a class="el" href="ImageTypes_8cc_source.html">ImageTypes.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  170</span>                                                                        {</div>
+<div class="line"><span class="lineno">  171</span>  <span class="keyword">const</span> cv::Mat&amp; optical_flow = image;</div>
+<div class="line"><span class="lineno">  172</span>  cv::Mat flow_viz;</div>
+<div class="line"><span class="lineno">  173</span>  <a class="code hl_function" href="namespacedyno_1_1utils.html#aa8061bfcb1a6d9b02d88085bf851986d">utils::flowToRgb</a>(optical_flow, flow_viz);</div>
+<div class="line"><span class="lineno">  174</span>  <span class="keywordflow">return</span> flow_viz;</div>
+<div class="line"><span class="lineno">  175</span>}</div>
+<div class="ttc" id="anamespacedyno_1_1utils_html_aa8061bfcb1a6d9b02d88085bf851986d"><div class="ttname"><a href="namespacedyno_1_1utils.html#aa8061bfcb1a6d9b02d88085bf851986d">dyno::utils::flowToRgb</a></div><div class="ttdeci">void flowToRgb(const cv::Mat &amp;flow, cv::Mat &amp;rgb)</div><div class="ttdef"><b>Definition:</b> <a href="OpenCVUtils_8cc_source.html#l00197">OpenCVUtils.cc:197</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="namespacedyno_1_1utils.html#aa8061bfcb1a6d9b02d88085bf851986d">dyno::utils::flowToRgb()</a>.</p>
 <div class="dynheader">
@@ -203,13 +203,13 @@ Here is the call graph for this function:</div>
 
 <p>Expected opencv image type <a class="el" href="structdyno_1_1ImageType_1_1OpticalFlow.html">OpticalFlow</a> image. </p>
 
-<p class="definition">Definition at line <a class="el" href="ImageTypes_8cc_source.html#l00162">162</a> of file <a class="el" href="ImageTypes_8cc_source.html">ImageTypes.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  162</span>                                                      {</div>
-<div class="line"><span class="lineno">  163</span>  <a class="code hl_function" href="namespacedyno.html#a25a3a8e4594d1ad2eec31dcd73eb972a">validateSingleImage</a>(input, <a class="code hl_variable" href="structdyno_1_1ImageType_1_1OpticalFlow.html#a5a7ec41a2edf93841c7e05de4d5eac46">OpenCVType</a>, <a class="code hl_function" href="structdyno_1_1ImageType_1_1OpticalFlow.html#ad6e92c59e5e99d980a07c393ddcb238b">name</a>());</div>
-<div class="line"><span class="lineno">  164</span>}</div>
-<div class="ttc" id="anamespacedyno_html_a25a3a8e4594d1ad2eec31dcd73eb972a"><div class="ttname"><a href="namespacedyno.html#a25a3a8e4594d1ad2eec31dcd73eb972a">dyno::validateSingleImage</a></div><div class="ttdeci">void validateSingleImage(const cv::Mat &amp;input, int expected_type, const std::string &amp;name)</div><div class="ttdef"><b>Definition:</b> <a href="ImageTypes_8cc_source.html#l00061">ImageTypes.cc:61</a></div></div>
-<div class="ttc" id="astructdyno_1_1ImageType_1_1OpticalFlow_html_a5a7ec41a2edf93841c7e05de4d5eac46"><div class="ttname"><a href="structdyno_1_1ImageType_1_1OpticalFlow.html#a5a7ec41a2edf93841c7e05de4d5eac46">dyno::ImageType::OpticalFlow::OpenCVType</a></div><div class="ttdeci">static constexpr int OpenCVType</div><div class="ttdef"><b>Definition:</b> <a href="ImageTypes_8hpp_source.html#l00125">ImageTypes.hpp:125</a></div></div>
-<div class="ttc" id="astructdyno_1_1ImageType_1_1OpticalFlow_html_ad6e92c59e5e99d980a07c393ddcb238b"><div class="ttname"><a href="structdyno_1_1ImageType_1_1OpticalFlow.html#ad6e92c59e5e99d980a07c393ddcb238b">dyno::ImageType::OpticalFlow::name</a></div><div class="ttdeci">static std::string name()</div><div class="ttdef"><b>Definition:</b> <a href="ImageTypes_8hpp_source.html#l00128">ImageTypes.hpp:128</a></div></div>
+<p class="definition">Definition at line <a class="el" href="ImageTypes_8cc_source.html#l00166">166</a> of file <a class="el" href="ImageTypes_8cc_source.html">ImageTypes.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  166</span>                                                      {</div>
+<div class="line"><span class="lineno">  167</span>  <a class="code hl_function" href="namespacedyno.html#a25a3a8e4594d1ad2eec31dcd73eb972a">validateSingleImage</a>(input, <a class="code hl_variable" href="structdyno_1_1ImageType_1_1OpticalFlow.html#a5a7ec41a2edf93841c7e05de4d5eac46">OpenCVType</a>, <a class="code hl_function" href="structdyno_1_1ImageType_1_1OpticalFlow.html#ad6e92c59e5e99d980a07c393ddcb238b">name</a>());</div>
+<div class="line"><span class="lineno">  168</span>}</div>
+<div class="ttc" id="anamespacedyno_html_a25a3a8e4594d1ad2eec31dcd73eb972a"><div class="ttname"><a href="namespacedyno.html#a25a3a8e4594d1ad2eec31dcd73eb972a">dyno::validateSingleImage</a></div><div class="ttdeci">void validateSingleImage(const cv::Mat &amp;input, int expected_type, const std::string &amp;name)</div><div class="ttdef"><b>Definition:</b> <a href="ImageTypes_8cc_source.html#l00065">ImageTypes.cc:65</a></div></div>
+<div class="ttc" id="astructdyno_1_1ImageType_1_1OpticalFlow_html_a5a7ec41a2edf93841c7e05de4d5eac46"><div class="ttname"><a href="structdyno_1_1ImageType_1_1OpticalFlow.html#a5a7ec41a2edf93841c7e05de4d5eac46">dyno::ImageType::OpticalFlow::OpenCVType</a></div><div class="ttdeci">static constexpr int OpenCVType</div><div class="ttdef"><b>Definition:</b> <a href="ImageTypes_8hpp_source.html#l00185">ImageTypes.hpp:185</a></div></div>
+<div class="ttc" id="astructdyno_1_1ImageType_1_1OpticalFlow_html_ad6e92c59e5e99d980a07c393ddcb238b"><div class="ttname"><a href="structdyno_1_1ImageType_1_1OpticalFlow.html#ad6e92c59e5e99d980a07c393ddcb238b">dyno::ImageType::OpticalFlow::name</a></div><div class="ttdeci">static std::string name()</div><div class="ttdef"><b>Definition:</b> <a href="ImageTypes_8hpp_source.html#l00188">ImageTypes.hpp:188</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="namespacedyno.html#a25a3a8e4594d1ad2eec31dcd73eb972a">dyno::validateSingleImage()</a>.</p>
 <div class="dynheader">
@@ -248,7 +248,7 @@ Here is the call graph for this function:</div>
 <b>Initial value:</b><div class="fragment"><div class="line">=</div>
 <div class="line">        CV_32FC2</div>
 </div><!-- fragment -->
-<p class="definition">Definition at line <a class="el" href="ImageTypes_8hpp_source.html#l00125">125</a> of file <a class="el" href="ImageTypes_8hpp_source.html">ImageTypes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ImageTypes_8hpp_source.html#l00185">185</a> of file <a class="el" href="ImageTypes_8hpp_source.html">ImageTypes.hpp</a>.</p>
 
 </div>
 </div>

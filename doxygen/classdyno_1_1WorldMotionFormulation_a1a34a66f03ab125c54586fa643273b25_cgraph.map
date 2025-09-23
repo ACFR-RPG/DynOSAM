@@ -1,4 +1,0 @@
-<map id="dyno::WorldMotionFormulation::createAccessor" name="dyno::WorldMotionFormulation::createAccessor">
-<area shape="rect" id="node1" title="Creates the associated Accessor for the derived formulation. The accessor will contain a pointer to T..." alt="" coords="5,5,228,45"/>
-<area shape="rect" id="node2" href="$classdyno_1_1Formulation.html#aa882dfc5e5e0cc12a03184b08889ad7f" title="Get the map used by the formulation." alt="" coords="276,5,427,45"/>
-</map>

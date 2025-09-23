@@ -1,6 +1,7 @@
 <map id="dyno::GenericObjectCentricMap::insert22" name="dyno::GenericObjectCentricMap::insert22">
-<area shape="rect" id="node1" title="Handy insert function allowing direct insertion to the nested map structure." alt="" coords="5,5,205,45"/>
-<area shape="rect" id="node2" href="$classdyno_1_1GenericObjectCentricMap.html#af6ce62ffab5aadf1981a0ec04c3fad1e" title=" " alt="" coords="749,5,949,45"/>
-<area shape="rect" id="node3" href="$classdyno_1_1GenericObjectCentricMap.html#a974563b8edd3f4b0cb6fe17615d04fbd" title=" " alt="" coords="253,33,453,73"/>
-<area shape="rect" id="node4" href="$classdyno_1_1GenericObjectCentricMap.html#a33450c8ce82ab7fbfa2541ee0c6b20e3" title="Helper function to determine if the query exists. Operates like a regular exists function but also se..." alt="" coords="501,33,701,73"/>
+<area shape="rect" id="node1" title="Handy insert function allowing direct insertion to the nested map structure." alt="" coords="5,72,205,112"/>
+<area shape="rect" id="node2" href="$classdyno_1_1GenericObjectCentricMap.html#af6ce62ffab5aadf1981a0ec04c3fad1e" title=" " alt="" coords="749,12,949,52"/>
+<area shape="rect" id="node3" href="$classdyno_1_1GenericObjectCentricMap.html#a974563b8edd3f4b0cb6fe17615d04fbd" title=" " alt="" coords="253,40,453,80"/>
+<area shape="rect" id="node5" href="$classdyno_1_1GenericObjectCentricMap.html#a17a56757b25128ea6a018d1e5909de81" title=" " alt="" coords="253,104,453,144"/>
+<area shape="rect" id="node4" href="$classdyno_1_1GenericObjectCentricMap.html#a33450c8ce82ab7fbfa2541ee0c6b20e3" title="Helper function to determine if the query exists. Operates like a regular exists function but also se..." alt="" coords="501,40,701,80"/>
 </map>

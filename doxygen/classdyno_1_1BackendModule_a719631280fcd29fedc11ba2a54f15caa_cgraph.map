@@ -1,5 +1,8 @@
 <map id="dyno::BackendModule::BackendModule" name="dyno::BackendModule::BackendModule">
-<area shape="rect" id="node1" title=" " alt="" coords="5,49,171,89"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,117,171,157"/>
 <area shape="rect" id="node2" href="$classdyno_1_1ModuleBase.html#a3a2819e9de31d4057773353d92925986" title="Registeres a function callback to be triggered prior to nominal/bootstrapSpin being called." alt="" coords="219,5,465,60"/>
 <area shape="rect" id="node3" href="$classdyno_1_1BackendModule.html#a1803b6a19bd4c08d24cb46d5e066e56f" title=" " alt="" coords="259,85,425,125"/>
+<area shape="rect" id="node5" href="$classdyno_1_1SharedModuleInfo.html#acd861bcac956ec0797bde56aa44034f6" title=" " alt="" coords="244,149,440,189"/>
+<area shape="rect" id="node6" href="$classdyno_1_1SharedModuleInfo.html#a1ebc41ec3d56d8ea770a523193662c25" title=" " alt="" coords="239,213,445,253"/>
+<area shape="rect" id="node4" href="$structdyno_1_1NoiseModels.html#a8bef4bd578329e14ca739315ad597879" title=" " alt="" coords="513,85,669,125"/>
 </map>

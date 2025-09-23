@@ -1,17 +1,26 @@
 <map id="dyno::getOutputFilePath" name="dyno::getOutputFilePath">
-<area shape="rect" id="node1" title="Constructs a file path (using the file name) where the root of the path is defined by the FLAGS_outpu..." alt="" coords="635,253,813,278"/>
-<area shape="rect" id="node2" href="$classdyno_1_1BackendExperimentsNode.html#ab5270451ea207126ab1937ea3f54f521" title=" " alt="" coords="326,5,561,45"/>
-<area shape="rect" id="node3" href="$classdyno_1_1DynoPipelineManager.html#a7253b9241873476c79d38c607c95dea7" title=" " alt="" coords="341,69,546,109"/>
-<area shape="rect" id="node5" href="$structdyno_1_1factor__graph__tools_1_1SparsityStats.html#a635623c3f5bd58ead16725bd35e6fe49" title=" " alt="" coords="366,134,521,189"/>
-<area shape="rect" id="node8" href="$namespacedyno_1_1vision__tools.html#a5d8b89d2b560b498934853c77a7d9f28" title="Saves a re&#45;projected 3D point cloud with labelled points to file as a cv::Mat." alt="" coords="314,213,573,253"/>
-<area shape="rect" id="node10" href="$namespacedyno.html#a6b079f28613a22782fffd05b29fd81a7" title="Writes statistics per module to csv files on path defined by getOutputFilePath(). Interrnally uses Wr..." alt="" coords="342,277,545,317"/>
-<area shape="rect" id="node13" href="$namespacedyno.html#a9ee85912019a84727f7945f60292952f" title="Writes all the statistics to a csv file on the path defined by getOutputFilePath(file_name)." alt="" coords="338,341,549,381"/>
-<area shape="rect" id="node14" href="$namespacedyno.html#a7a61130ee387637b5f36d0d16e0aac49" title="Writes a summary of the statistics to a csv file on the path defined by getOutputFilePath(file_name)." alt="" coords="334,405,553,445"/>
-<area shape="rect" id="node15" href="$classdyno_1_1RGBDInstanceFrontendModule.html#af1843d0ee370576857f07900c5e68226" title=" " alt="" coords="300,469,587,509"/>
-<area shape="rect" id="node4" href="$classdyno_1_1DynoPipelineManager.html#a5e1e8d2df3c6db2525115c4c6d7f366c" title=" " alt="" coords="26,21,231,61"/>
-<area shape="rect" id="node6" href="$classdyno_1_1FactorGraphManager.html#aa9ac7e858b1e9e1e7ce1ef6c0c1ca427" title=" " alt="" coords="16,85,241,125"/>
-<area shape="rect" id="node7" href="$classdyno_1_1FactorGraphManager.html#ae546e28bb9ead21dbaed6b674ef15deb" title=" " alt="" coords="15,149,243,189"/>
-<area shape="rect" id="node9" href="$classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2" title=" " alt="" coords="23,213,235,253"/>
-<area shape="rect" id="node11" href="$classdyno_1_1BackendExperimentsNode.html#a747ee5b920ae612ea209704d6aa7a1a6" title=" " alt="" coords="5,277,252,317"/>
-<area shape="rect" id="node12" href="$classdyno_1_1DynoPipelineManager.html#a58b6b33fbf9f6a1ddc825e36c3ddb563" title=" " alt="" coords="26,341,231,381"/>
+<area shape="rect" id="node1" title="Constructs a file path (using the file name) where the root of the path is defined by the FLAGS_outpu..." alt="" coords="1160,381,1339,406"/>
+<area shape="rect" id="node2" href="$classdyno_1_1BackendExperimentsNode.html#ab5270451ea207126ab1937ea3f54f521" title=" " alt="" coords="851,5,1086,45"/>
+<area shape="rect" id="node3" href="$classdyno_1_1DynoPipelineManager.html#a7253b9241873476c79d38c607c95dea7" title=" " alt="" coords="866,69,1071,109"/>
+<area shape="rect" id="node5" href="$classdyno_1_1ParallelHybridBackendModule.html#a0da19e58aa04386a4d5bd6be23c038f8" title=" " alt="" coords="865,133,1073,173"/>
+<area shape="rect" id="node6" href="$classdyno_1_1RegularBackendModule.html#a0e068ff275a512d764404995b61fd73a" title=" " alt="" coords="861,197,1076,237"/>
+<area shape="rect" id="node11" href="$structdyno_1_1factor__graph__tools_1_1SparsityStats.html#a635623c3f5bd58ead16725bd35e6fe49" title=" " alt="" coords="891,262,1046,317"/>
+<area shape="rect" id="node14" href="$classdyno_1_1ParallelObjectISAM.html#a96475152a11275ac46c4767b5dbae8aa" title=" " alt="" coords="875,341,1062,381"/>
+<area shape="rect" id="node16" href="$namespacedyno_1_1vision__tools.html#a5d8b89d2b560b498934853c77a7d9f28" title="Saves a re&#45;projected 3D point cloud with labelled points to file as a cv::Mat." alt="" coords="839,405,1098,445"/>
+<area shape="rect" id="node18" href="$namespacedyno.html#a6b079f28613a22782fffd05b29fd81a7" title="Writes statistics per module to csv files on path defined by getOutputFilePath(). Interrnally uses Wr..." alt="" coords="867,469,1070,509"/>
+<area shape="rect" id="node21" href="$namespacedyno.html#a9ee85912019a84727f7945f60292952f" title="Writes all the statistics to a csv file on the path defined by getOutputFilePath(file_name)." alt="" coords="863,533,1074,573"/>
+<area shape="rect" id="node22" href="$namespacedyno.html#a7a61130ee387637b5f36d0d16e0aac49" title="Writes a summary of the statistics to a csv file on the path defined by getOutputFilePath(file_name)." alt="" coords="859,597,1078,637"/>
+<area shape="rect" id="node23" href="$classdyno_1_1ParallelHybridBackendModule.html#a368912f3c84f148843f4b6ef653f4a0c" title=" " alt="" coords="827,661,1110,701"/>
+<area shape="rect" id="node24" href="$classdyno_1_1RGBDInstanceFrontendModule.html#af1843d0ee370576857f07900c5e68226" title=" " alt="" coords="825,725,1112,765"/>
+<area shape="rect" id="node4" href="$classdyno_1_1DynoPipelineManager.html#a283e891aa3d4ca8d2d671eb1e3d5d514" title=" " alt="" coords="551,69,757,109"/>
+<area shape="rect" id="node7" href="$classdyno_1_1RegularBackendModule.html#afd39e13f9f84ae0ec38fef7ae9f7eeff" title=" " alt="" coords="547,149,761,189"/>
+<area shape="rect" id="node8" href="$classdyno_1_1RegularBackendModule.html#ab6db6281369251dc76538085a92280c6" title=" " alt="" coords="268,149,483,189"/>
+<area shape="rect" id="node9" href="$classdyno_1_1RegularBackendModule.html#a4934e902605fc58d5430cfd15b0a9ba8" title=" " alt="" coords="5,117,220,157"/>
+<area shape="rect" id="node10" href="$classdyno_1_1RegularBackendModule.html#aa79b2f6d63914e52a7adbfbaa65c32b1" title=" " alt="" coords="5,181,220,221"/>
+<area shape="rect" id="node12" href="$classdyno_1_1FactorGraphManager.html#aa9ac7e858b1e9e1e7ce1ef6c0c1ca427" title=" " alt="" coords="541,213,767,253"/>
+<area shape="rect" id="node13" href="$classdyno_1_1FactorGraphManager.html#ae546e28bb9ead21dbaed6b674ef15deb" title=" " alt="" coords="540,277,768,317"/>
+<area shape="rect" id="node15" href="$classdyno_1_1ParallelObjectISAM.html#aebe02d7a654d9829c361eece7374dd1f" title=" " alt="" coords="561,341,747,381"/>
+<area shape="rect" id="node17" href="$classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2" title=" " alt="" coords="548,405,760,445"/>
+<area shape="rect" id="node19" href="$classdyno_1_1BackendExperimentsNode.html#a747ee5b920ae612ea209704d6aa7a1a6" title=" " alt="" coords="531,469,777,509"/>
+<area shape="rect" id="node20" href="$classdyno_1_1DynoPipelineManager.html#a58b6b33fbf9f6a1ddc825e36c3ddb563" title=" " alt="" coords="551,533,757,573"/>
 </map>

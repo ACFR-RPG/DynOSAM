@@ -1,10 +1,10 @@
 <map id="dynosam/include/dynosam/backend/rgbd/WorldPoseEstimator.hpp" name="dynosam/include/dynosam/backend/rgbd/WorldPoseEstimator.hpp">
-<area shape="rect" id="node1" title=" " alt="" coords="341,5,615,45"/>
-<area shape="rect" id="node2" href="$RGBDBackendModule_8hpp.html" title=" " alt="" coords="169,181,422,221"/>
-<area shape="rect" id="node6" href="$WorldMotionEstimator_8hpp.html" title=" " alt="" coords="333,93,623,133"/>
-<area shape="rect" id="node8" href="$WorldPoseEstimator_8cc.html" title=" " alt="" coords="647,93,853,133"/>
-<area shape="rect" id="node3" href="$RGBDBackendModule_8cc.html" title=" " alt="" coords="5,269,191,309"/>
-<area shape="rect" id="node4" href="$PipelineManager_8cc.html" title=" " alt="" coords="215,269,376,309"/>
-<area shape="rect" id="node5" href="$backend__experiments__node_8cc.html" title=" " alt="" coords="401,269,611,309"/>
-<area shape="rect" id="node7" href="$WorldMotionEstimator_8cc.html" title=" " alt="" coords="446,181,667,221"/>
+<area shape="rect" id="node1" title=" " alt="" coords="353,5,628,45"/>
+<area shape="rect" id="node2" href="$RegularBackendModule_8hpp.html" title=" " alt="" coords="175,181,441,221"/>
+<area shape="rect" id="node6" href="$WorldMotionEstimator_8hpp.html" title=" " alt="" coords="346,93,635,133"/>
+<area shape="rect" id="node8" href="$WorldPoseEstimator_8cc.html" title=" " alt="" coords="659,93,866,133"/>
+<area shape="rect" id="node3" href="$RegularBackendModule_8cc.html" title=" " alt="" coords="5,269,203,309"/>
+<area shape="rect" id="node4" href="$PipelineManager_8cc.html" title=" " alt="" coords="227,269,389,309"/>
+<area shape="rect" id="node5" href="$backend__experiments__node_8cc.html" title=" " alt="" coords="413,269,624,309"/>
+<area shape="rect" id="node7" href="$WorldMotionEstimator_8cc.html" title=" " alt="" coords="465,181,687,221"/>
 </map>

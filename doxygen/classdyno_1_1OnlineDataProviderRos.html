@@ -153,10 +153,6 @@ Public Member Functions</h2></td></tr>
 <tr class="inherit_header pub_methods_classdyno_1_1DataProvider"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classdyno_1_1DataProvider')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classdyno_1_1DataProvider.html">dyno::DataProvider</a></td></tr>
 <tr class="memitem:aad6d856034b3333ff6c9df69be2a271a inherit pub_methods_classdyno_1_1DataProvider"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DataProvider.html#aad6d856034b3333ff6c9df69be2a271a">DataProvider</a> ()=default</td></tr>
 <tr class="separator:aad6d856034b3333ff6c9df69be2a271a inherit pub_methods_classdyno_1_1DataProvider"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac3dd1f8f4aafda392b89a2348b2026ac inherit pub_methods_classdyno_1_1DataProvider"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DataProvider.html#ac3dd1f8f4aafda392b89a2348b2026ac">DataProvider</a> (<a class="el" href="classdyno_1_1DataInterfacePipeline.html">DataInterfacePipeline</a> *module)</td></tr>
-<tr class="separator:ac3dd1f8f4aafda392b89a2348b2026ac inherit pub_methods_classdyno_1_1DataProvider"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae57527fb3be1d1894e0f5f7ec0568390 inherit pub_methods_classdyno_1_1DataProvider"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DataProvider.html#ae57527fb3be1d1894e0f5f7ec0568390">DataProvider</a> (<a class="el" href="classdyno_1_1DataInterfacePipelineImu.html">DataInterfacePipelineImu</a> *module)</td></tr>
-<tr class="separator:ae57527fb3be1d1894e0f5f7ec0568390 inherit pub_methods_classdyno_1_1DataProvider"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adda0f52bfea3dcc51b3ccfd9e06c4f8b inherit pub_methods_classdyno_1_1DataProvider"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DataProvider.html#adda0f52bfea3dcc51b3ccfd9e06c4f8b">~DataProvider</a> ()</td></tr>
 <tr class="separator:adda0f52bfea3dcc51b3ccfd9e06c4f8b inherit pub_methods_classdyno_1_1DataProvider"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a107b3898bf7f793093c76c4405c608f0 inherit pub_methods_classdyno_1_1DataProvider"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DataProvider.html#a107b3898bf7f793093c76c4405c608f0">registerImuSingleCallback</a> (const <a class="el" href="classdyno_1_1DataProvider.html#ada0c50fb63e4e328da1a89f65c83470e">ImuSingleInputCallback</a> &amp;callback)</td></tr>
@@ -183,6 +179,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a7ad37ecec178b81be71cd7ec8657160d inherit pub_methods_classdyno_1_1DataProvider"><td class="memItemLeft" align="right" valign="top">virtual CameraParams::Optional&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DataProvider.html#a7ad37ecec178b81be71cd7ec8657160d">getCameraParams</a> () const</td></tr>
 <tr class="memdesc:a7ad37ecec178b81be71cd7ec8657160d inherit pub_methods_classdyno_1_1DataProvider"><td class="mdescLeft">&#160;</td><td class="mdescRight">Provides functionality to get camera paramters for the main pipeline, as these may be available from the dataset.  <br /></td></tr>
 <tr class="separator:a7ad37ecec178b81be71cd7ec8657160d inherit pub_methods_classdyno_1_1DataProvider"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af26a9e848a9c6261fb18d249fc8282e8 inherit pub_methods_classdyno_1_1DataProvider"><td class="memItemLeft" align="right" valign="top">virtual ImuParams::Optional&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DataProvider.html#af26a9e848a9c6261fb18d249fc8282e8">getImuParams</a> () const</td></tr>
+<tr class="separator:af26a9e848a9c6261fb18d249fc8282e8 inherit pub_methods_classdyno_1_1DataProvider"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-types" name="pri-types"></a>
 Private Types</h2></td></tr>
@@ -327,7 +325,7 @@ Additional Inherited Members</h2></td></tr>
 <div class="line"><span class="lineno">   47</span>}</div>
 <div class="ttc" id="aclassdyno_1_1DataProviderRos_html_a1cb49fe70873ef4b7ed49afb75c013bc"><div class="ttname"><a href="classdyno_1_1DataProviderRos.html#a1cb49fe70873ef4b7ed49afb75c013bc">dyno::DataProviderRos::waitAndSetCameraParams</a></div><div class="ttdeci">const CameraParams &amp; waitAndSetCameraParams(const std::chrono::duration&lt; Rep, Period &gt; &amp;time_to_wait=std::chrono::duration&lt; Rep, Period &gt;(-1), const std::string &amp;topic=&quot;image/camera_info&quot;)</div><div class="ttdoc">Gets CameraParams from a sensor_msgs::msg::CameraInfo recieved on the specified topic....</div><div class="ttdef"><b>Definition:</b> <a href="DataProviderRos_8hpp_source.html#l00119">DataProviderRos.hpp:119</a></div></div>
 <div class="ttc" id="aclassdyno_1_1DataProviderRos_html_acce86da16f15747e39fdb17a045df17c"><div class="ttname"><a href="classdyno_1_1DataProviderRos.html#acce86da16f15747e39fdb17a045df17c">dyno::DataProviderRos::DataProviderRos</a></div><div class="ttdeci">DataProviderRos(rclcpp::Node::SharedPtr node)</div><div class="ttdef"><b>Definition:</b> <a href="DataProviderRos_8cc_source.html#l00041">DataProviderRos.cc:41</a></div></div>
-<div class="ttc" id="aclassdyno_1_1DataProvider_html_a4a1d8a48c87a76d781858b1af69e2def"><div class="ttname"><a href="classdyno_1_1DataProvider.html#a4a1d8a48c87a76d781858b1af69e2def">dyno::DataProvider::shutdown_</a></div><div class="ttdeci">std::atomic_bool shutdown_</div><div class="ttdef"><b>Definition:</b> <a href="DataProvider_8hpp_source.html#l00131">DataProvider.hpp:131</a></div></div>
+<div class="ttc" id="aclassdyno_1_1DataProvider_html_a4a1d8a48c87a76d781858b1af69e2def"><div class="ttname"><a href="classdyno_1_1DataProvider.html#a4a1d8a48c87a76d781858b1af69e2def">dyno::DataProvider::shutdown_</a></div><div class="ttdeci">std::atomic_bool shutdown_</div><div class="ttdef"><b>Definition:</b> <a href="DataProvider_8hpp_source.html#l00133">DataProvider.hpp:133</a></div></div>
 <div class="ttc" id="aclassdyno_1_1OnlineDataProviderRos_html_a3b7725856bc86407813c51804a26bea4"><div class="ttname"><a href="classdyno_1_1OnlineDataProviderRos.html#a3b7725856bc86407813c51804a26bea4">dyno::OnlineDataProviderRos::connect</a></div><div class="ttdeci">void connect()</div><div class="ttdoc">Connects all subscribers.</div><div class="ttdef"><b>Definition:</b> <a href="OnlineDataProviderRos_8cc_source.html#l00064">OnlineDataProviderRos.cc:64</a></div></div>
 <div class="ttc" id="aclassdyno_1_1OnlineDataProviderRos_html_ae8d393df189c517d6cc8273fcf6f2e99"><div class="ttname"><a href="classdyno_1_1OnlineDataProviderRos.html#ae8d393df189c517d6cc8273fcf6f2e99">dyno::OnlineDataProviderRos::frame_id_</a></div><div class="ttdeci">FrameId frame_id_</div><div class="ttdef"><b>Definition:</b> <a href="OnlineDataProviderRos_8hpp_source.html#l00111">OnlineDataProviderRos.hpp:111</a></div></div>
 </div><!-- fragment -->
@@ -337,32 +335,32 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1OnlineDataProviderRos_abea751b62c91dbf7bfac759680a434f7_cgraph.png" border="0" usemap="#aclassdyno_1_1OnlineDataProviderRos_abea751b62c91dbf7bfac759680a434f7_cgraph" alt=""/></div>
 <map name="aclassdyno_1_1OnlineDataProviderRos_abea751b62c91dbf7bfac759680a434f7_cgraph" id="aclassdyno_1_1OnlineDataProviderRos_abea751b62c91dbf7bfac759680a434f7_cgraph">
-<area shape="rect" title="Construct a new OnlineDataProviderRos." alt="" coords="5,439,211,479"/>
-<area shape="rect" href="classdyno_1_1OnlineDataProviderRos.html#a3b7725856bc86407813c51804a26bea4" title="Connects all subscribers." alt="" coords="265,352,455,392"/>
-<area shape="rect" href="classdyno_1_1DataProviderRos.html#a1cb49fe70873ef4b7ed49afb75c013bc" title="Gets CameraParams from a sensor_msgs::msg::CameraInfo recieved on the specified topic...." alt="" coords="259,471,461,511"/>
-<area shape="rect" href="classdyno_1_1OnlineDataProviderRos.html#a02b6aa8b0f6c6c732310c0852f54ef42" title=" " alt="" coords="509,240,699,280"/>
-<area shape="rect" href="classdyno_1_1ImageContainer.html#a5b0f2449742264ffb55c9062bc58c06f" title="Construct an image container equivalent to RGBD + Semantic Mask input." alt="" coords="774,29,941,69"/>
-<area shape="rect" href="namespacedyno_1_1utils.html#a367447d229280a53123017719e94f0d9" title="Convert ROS time to timestamp." alt="" coords="764,94,951,119"/>
-<area shape="rect" href="classdyno_1_1DataProviderRos.html#ad01ad2683eb35b1d6f76981c55ad7ee4" title="Convers a sensor_msgs::msg::Image to a cv::Mat while testing that the input has the correct datatype ..." alt="" coords="772,144,943,184"/>
-<area shape="rect" href="classdyno_1_1DataProviderRos.html#a1c795369f59e7383817adce94f164eaf" title="Convers a sensor_msgs::msg::Image to a cv::Mat while testing that the input has the correct datatype ..." alt="" coords="772,208,943,248"/>
-<area shape="rect" href="classdyno_1_1DataProviderRos.html#ae12caad2bd612a1a1d4fa0f93c17279d" title="Convers a sensor_msgs::msg::Image to a cv::Mat while testing that the input has the correct datatype ..." alt="" coords="772,272,943,312"/>
-<area shape="rect" href="classdyno_1_1DataProviderRos.html#a9432150f495ce791c2789badbcc88652" title="Convers a sensor_msgs::msg::Image to a cv::Mat while testing that the input has the correct datatype ..." alt="" coords="772,336,943,376"/>
-<area shape="rect" href="structdyno_1_1ImageType_1_1MotionMask.html#a6b119596bef78424e2085d684d07cd43" title=" " alt="" coords="747,400,968,440"/>
-<area shape="rect" href="namespacedyno.html#a2b18a1990bb26145cec08be631b0ef74" title=" " alt="" coords="1064,94,1175,119"/>
-<area shape="rect" href="structdyno_1_1ImageWrapper.html#af0c4d5fe3a46105c7789a8915c6e7521" title="Returns an ImageWrapper with the underlying image data cloned." alt="" coords="1040,372,1199,412"/>
-<area shape="rect" href="namespacedyno_1_1utils.html#a5abdff0c77884da4a8da55f0880d8cfb" title="Given an image that operates like a mask (ie. is a single channel image where each pixel value corres..." alt="" coords="1016,437,1223,462"/>
-<area shape="rect" href="structdyno_1_1Color.html#a4f52f9aec87e2c34370ad02e6d4e25fc" title="Generates a sequence of never repeating colors using the golden ration to seperate the colours along ..." alt="" coords="1271,437,1431,462"/>
-<area shape="rect" href="structdyno_1_1Color.html#a08bcb6ea49861f6978858a2ff5159002" title=" " alt="" coords="1479,437,1641,462"/>
-<area shape="rect" href="structdyno_1_1Color.html#a6bc55a80a463a481dbf4778c70d04733" title=" " alt="" coords="1717,411,1855,437"/>
-<area shape="rect" href="namespacedyno.html#ab0e74ec8992860404a618192cc694b83" title=" " alt="" coords="1689,461,1883,486"/>
-<area shape="rect" href="classdyno_1_1CameraParams.html#a7be21480072986b94e6484d9c4687ddf" title=" " alt="" coords="523,580,685,620"/>
-<area shape="rect" href="classdyno_1_1CameraParams.html#a0bd613ed86d45b2eb3597147c78f44cb" title=" " alt="" coords="765,465,949,490"/>
-<area shape="rect" href="classdyno_1_1CameraParams.html#a11332373807121719cbd13b3c0aa5dfa" title=" " alt="" coords="765,514,949,539"/>
-<area shape="rect" href="classdyno_1_1CameraParams.html#a006fa38075052f41cc49509fa16ba864" title=" " alt="" coords="766,563,949,589"/>
-<area shape="rect" href="classdyno_1_1CameraParams.html#af593866ca855cd9cf008275735596450" title=" " alt="" coords="767,613,948,638"/>
-<area shape="rect" href="classdyno_1_1CameraParams.html#a75e96fd0df57691134425ac9b9d55f09" title=" " alt="" coords="777,663,938,703"/>
-<area shape="rect" href="classdyno_1_1CameraParams.html#ae09360028f240f884ad9fcb72e4f4cf1" title=" " alt="" coords="777,727,938,767"/>
-<area shape="rect" href="namespacedyno.html#a809604e427db44cbf532a545c71a3b5d" title=" " alt="" coords="798,791,917,817"/>
+<area shape="rect" title="Construct a new OnlineDataProviderRos." alt="" coords="5,495,211,535"/>
+<area shape="rect" href="classdyno_1_1OnlineDataProviderRos.html#a3b7725856bc86407813c51804a26bea4" title="Connects all subscribers." alt="" coords="265,336,455,376"/>
+<area shape="rect" href="classdyno_1_1DataProviderRos.html#a1cb49fe70873ef4b7ed49afb75c013bc" title="Gets CameraParams from a sensor_msgs::msg::CameraInfo recieved on the specified topic...." alt="" coords="259,527,461,567"/>
+<area shape="rect" href="classdyno_1_1OnlineDataProviderRos.html#a02b6aa8b0f6c6c732310c0852f54ef42" title=" " alt="" coords="509,284,699,324"/>
+<area shape="rect" href="namespacedyno_1_1utils.html#a367447d229280a53123017719e94f0d9" title="Convert ROS time to timestamp." alt="" coords="751,106,937,131"/>
+<area shape="rect" href="classdyno_1_1DataProviderRos.html#ad01ad2683eb35b1d6f76981c55ad7ee4" title="Convers a sensor_msgs::msg::Image to a cv::Mat while testing that the input has the correct datatype ..." alt="" coords="759,156,929,196"/>
+<area shape="rect" href="classdyno_1_1DataProviderRos.html#a1c795369f59e7383817adce94f164eaf" title="Convers a sensor_msgs::msg::Image to a cv::Mat while testing that the input has the correct datatype ..." alt="" coords="759,220,929,260"/>
+<area shape="rect" href="classdyno_1_1DataProviderRos.html#ae12caad2bd612a1a1d4fa0f93c17279d" title="Convers a sensor_msgs::msg::Image to a cv::Mat while testing that the input has the correct datatype ..." alt="" coords="759,284,929,324"/>
+<area shape="rect" href="classdyno_1_1DataProviderRos.html#a9432150f495ce791c2789badbcc88652" title="Convers a sensor_msgs::msg::Image to a cv::Mat while testing that the input has the correct datatype ..." alt="" coords="759,348,929,388"/>
+<area shape="rect" href="classdyno_1_1ImageContainer.html#a6f35259f95c31b861ff6515c159e1ee3" title=" " alt="" coords="747,413,941,438"/>
+<area shape="rect" href="namespacedyno.html#a8357d6a8de284f4d1fc3d074646b43bb" title=" " alt="" coords="989,106,1100,131"/>
+<area shape="rect" href="classdyno_1_1TrackedValueStatus.html#a1741e83bf5442c885da98c9c5bb71f08" title="Returns true if the object lavel is equal to dyno::background_label." alt="" coords="1148,5,1336,45"/>
+<area shape="rect" href="classdyno_1_1TrackedValueStatus.html#ae90b3059d173a9354cc6a55a55ef80ac" title="Get object id (j) for this status." alt="" coords="1148,69,1336,109"/>
+<area shape="rect" href="structdyno_1_1Color.html#a6689af3d0ac5ceaa66000b5ca70becbd" title="Generates a sequence of never repeating colors using the golden ratio to seperate the colours along t..." alt="" coords="1162,134,1322,159"/>
+<area shape="rect" href="classdyno_1_1TrackedValueStatus.html#a828faf38cea11c1dcc7651d49b68d8e1" title="Get value. Const version." alt="" coords="1148,184,1336,224"/>
+<area shape="rect" href="structdyno_1_1Color.html#a08bcb6ea49861f6978858a2ff5159002" title=" " alt="" coords="1384,134,1547,159"/>
+<area shape="rect" href="structdyno_1_1Color.html#a6bc55a80a463a481dbf4778c70d04733" title=" " alt="" coords="1622,109,1761,134"/>
+<area shape="rect" href="namespacedyno.html#ab0e74ec8992860404a618192cc694b83" title=" " alt="" coords="1595,158,1788,183"/>
+<area shape="rect" href="classdyno_1_1CameraParams.html#a7be21480072986b94e6484d9c4687ddf" title=" " alt="" coords="523,579,685,619"/>
+<area shape="rect" href="classdyno_1_1CameraParams.html#a0bd613ed86d45b2eb3597147c78f44cb" title=" " alt="" coords="752,462,936,487"/>
+<area shape="rect" href="classdyno_1_1CameraParams.html#a11332373807121719cbd13b3c0aa5dfa" title=" " alt="" coords="752,511,936,537"/>
+<area shape="rect" href="classdyno_1_1CameraParams.html#a006fa38075052f41cc49509fa16ba864" title=" " alt="" coords="753,561,935,586"/>
+<area shape="rect" href="classdyno_1_1CameraParams.html#af593866ca855cd9cf008275735596450" title=" " alt="" coords="753,610,935,635"/>
+<area shape="rect" href="classdyno_1_1CameraParams.html#a75e96fd0df57691134425ac9b9d55f09" title=" " alt="" coords="763,660,925,700"/>
+<area shape="rect" href="classdyno_1_1CameraParams.html#ae09360028f240f884ad9fcb72e4f4cf1" title=" " alt="" coords="763,724,925,764"/>
+<area shape="rect" href="namespacedyno.html#a809604e427db44cbf532a545c71a3b5d" title=" " alt="" coords="785,789,903,814"/>
 </map>
 </div>
 
@@ -433,22 +431,22 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1OnlineDataProviderRos_a3b7725856bc86407813c51804a26bea4_cgraph.png" border="0" usemap="#aclassdyno_1_1OnlineDataProviderRos_a3b7725856bc86407813c51804a26bea4_cgraph" alt=""/></div>
 <map name="aclassdyno_1_1OnlineDataProviderRos_a3b7725856bc86407813c51804a26bea4_cgraph" id="aclassdyno_1_1OnlineDataProviderRos_a3b7725856bc86407813c51804a26bea4_cgraph">
-<area shape="rect" title="Connects all subscribers." alt="" coords="5,208,195,248"/>
-<area shape="rect" href="classdyno_1_1OnlineDataProviderRos.html#a02b6aa8b0f6c6c732310c0852f54ef42" title=" " alt="" coords="243,208,432,248"/>
-<area shape="rect" href="classdyno_1_1ImageContainer.html#a5b0f2449742264ffb55c9062bc58c06f" title="Construct an image container equivalent to RGBD + Semantic Mask input." alt="" coords="507,29,674,69"/>
-<area shape="rect" href="namespacedyno_1_1utils.html#a367447d229280a53123017719e94f0d9" title="Convert ROS time to timestamp." alt="" coords="497,94,684,119"/>
-<area shape="rect" href="classdyno_1_1DataProviderRos.html#ad01ad2683eb35b1d6f76981c55ad7ee4" title="Convers a sensor_msgs::msg::Image to a cv::Mat while testing that the input has the correct datatype ..." alt="" coords="505,144,676,184"/>
-<area shape="rect" href="classdyno_1_1DataProviderRos.html#a1c795369f59e7383817adce94f164eaf" title="Convers a sensor_msgs::msg::Image to a cv::Mat while testing that the input has the correct datatype ..." alt="" coords="505,208,676,248"/>
-<area shape="rect" href="classdyno_1_1DataProviderRos.html#ae12caad2bd612a1a1d4fa0f93c17279d" title="Convers a sensor_msgs::msg::Image to a cv::Mat while testing that the input has the correct datatype ..." alt="" coords="505,272,676,312"/>
-<area shape="rect" href="classdyno_1_1DataProviderRos.html#a9432150f495ce791c2789badbcc88652" title="Convers a sensor_msgs::msg::Image to a cv::Mat while testing that the input has the correct datatype ..." alt="" coords="505,336,676,376"/>
-<area shape="rect" href="structdyno_1_1ImageType_1_1MotionMask.html#a6b119596bef78424e2085d684d07cd43" title=" " alt="" coords="480,400,701,440"/>
-<area shape="rect" href="namespacedyno.html#a2b18a1990bb26145cec08be631b0ef74" title=" " alt="" coords="797,94,908,119"/>
-<area shape="rect" href="structdyno_1_1ImageWrapper.html#af0c4d5fe3a46105c7789a8915c6e7521" title="Returns an ImageWrapper with the underlying image data cloned." alt="" coords="773,371,932,411"/>
-<area shape="rect" href="namespacedyno_1_1utils.html#a5abdff0c77884da4a8da55f0880d8cfb" title="Given an image that operates like a mask (ie. is a single channel image where each pixel value corres..." alt="" coords="749,435,956,461"/>
-<area shape="rect" href="structdyno_1_1Color.html#a4f52f9aec87e2c34370ad02e6d4e25fc" title="Generates a sequence of never repeating colors using the golden ration to seperate the colours along ..." alt="" coords="1004,435,1164,461"/>
-<area shape="rect" href="structdyno_1_1Color.html#a08bcb6ea49861f6978858a2ff5159002" title=" " alt="" coords="1212,435,1375,461"/>
-<area shape="rect" href="structdyno_1_1Color.html#a6bc55a80a463a481dbf4778c70d04733" title=" " alt="" coords="1450,410,1589,435"/>
-<area shape="rect" href="namespacedyno.html#ab0e74ec8992860404a618192cc694b83" title=" " alt="" coords="1423,459,1616,485"/>
+<area shape="rect" title="Connects all subscribers." alt="" coords="5,252,195,292"/>
+<area shape="rect" href="classdyno_1_1OnlineDataProviderRos.html#a02b6aa8b0f6c6c732310c0852f54ef42" title=" " alt="" coords="243,252,432,292"/>
+<area shape="rect" href="namespacedyno_1_1utils.html#a367447d229280a53123017719e94f0d9" title="Convert ROS time to timestamp." alt="" coords="484,106,671,131"/>
+<area shape="rect" href="classdyno_1_1DataProviderRos.html#ad01ad2683eb35b1d6f76981c55ad7ee4" title="Convers a sensor_msgs::msg::Image to a cv::Mat while testing that the input has the correct datatype ..." alt="" coords="492,156,663,196"/>
+<area shape="rect" href="classdyno_1_1DataProviderRos.html#a1c795369f59e7383817adce94f164eaf" title="Convers a sensor_msgs::msg::Image to a cv::Mat while testing that the input has the correct datatype ..." alt="" coords="492,220,663,260"/>
+<area shape="rect" href="classdyno_1_1DataProviderRos.html#ae12caad2bd612a1a1d4fa0f93c17279d" title="Convers a sensor_msgs::msg::Image to a cv::Mat while testing that the input has the correct datatype ..." alt="" coords="492,284,663,324"/>
+<area shape="rect" href="classdyno_1_1DataProviderRos.html#a9432150f495ce791c2789badbcc88652" title="Convers a sensor_msgs::msg::Image to a cv::Mat while testing that the input has the correct datatype ..." alt="" coords="492,348,663,388"/>
+<area shape="rect" href="classdyno_1_1ImageContainer.html#a6f35259f95c31b861ff6515c159e1ee3" title=" " alt="" coords="480,413,675,438"/>
+<area shape="rect" href="namespacedyno.html#a8357d6a8de284f4d1fc3d074646b43bb" title=" " alt="" coords="723,106,833,131"/>
+<area shape="rect" href="classdyno_1_1TrackedValueStatus.html#a1741e83bf5442c885da98c9c5bb71f08" title="Returns true if the object lavel is equal to dyno::background_label." alt="" coords="881,5,1069,45"/>
+<area shape="rect" href="classdyno_1_1TrackedValueStatus.html#ae90b3059d173a9354cc6a55a55ef80ac" title="Get object id (j) for this status." alt="" coords="881,69,1069,109"/>
+<area shape="rect" href="structdyno_1_1Color.html#a6689af3d0ac5ceaa66000b5ca70becbd" title="Generates a sequence of never repeating colors using the golden ratio to seperate the colours along t..." alt="" coords="895,134,1055,159"/>
+<area shape="rect" href="classdyno_1_1TrackedValueStatus.html#a828faf38cea11c1dcc7651d49b68d8e1" title="Get value. Const version." alt="" coords="881,184,1069,224"/>
+<area shape="rect" href="structdyno_1_1Color.html#a08bcb6ea49861f6978858a2ff5159002" title=" " alt="" coords="1117,134,1280,159"/>
+<area shape="rect" href="structdyno_1_1Color.html#a6bc55a80a463a481dbf4778c70d04733" title=" " alt="" coords="1355,109,1494,134"/>
+<area shape="rect" href="namespacedyno.html#ab0e74ec8992860404a618192cc694b83" title=" " alt="" coords="1328,158,1521,183"/>
 </map>
 </div>
 <div class="dynheader">
@@ -560,37 +558,27 @@ Here is the caller graph for this function:</div>
 <div class="line"><span class="lineno">  112</span>  <span class="keyword">const</span> <a class="code hl_typedef" href="namespacedyno.html#ac4303d6fafb755f794b072d76f9cfb41">FrameId</a> frame_id = <a class="code hl_variable" href="classdyno_1_1OnlineDataProviderRos.html#ae8d393df189c517d6cc8273fcf6f2e99">frame_id_</a>;</div>
 <div class="line"><span class="lineno">  113</span>  <a class="code hl_variable" href="classdyno_1_1OnlineDataProviderRos.html#ae8d393df189c517d6cc8273fcf6f2e99">frame_id_</a>++;</div>
 <div class="line"><span class="lineno">  114</span> </div>
-<div class="line"><span class="lineno">  115</span>  ImageContainer::Ptr image_container = <a class="code hl_function" href="classdyno_1_1ImageContainer.html#a5b0f2449742264ffb55c9062bc58c06f">ImageContainer::Create</a>(</div>
-<div class="line"><span class="lineno">  116</span>      timestamp, frame_id, ImageWrapper&lt;ImageType::RGBMono&gt;(rgb),</div>
-<div class="line"><span class="lineno">  117</span>      ImageWrapper&lt;ImageType::Depth&gt;(depth),</div>
-<div class="line"><span class="lineno">  118</span>      ImageWrapper&lt;ImageType::OpticalFlow&gt;(flow),</div>
-<div class="line"><span class="lineno">  119</span>      ImageWrapper&lt;ImageType::MotionMask&gt;(mask));</div>
-<div class="line"><span class="lineno">  120</span>  CHECK(image_container);</div>
-<div class="line"><span class="lineno">  121</span> </div>
-<div class="line"><span class="lineno">  122</span>  cv::Mat of_viz, motion_viz, depth_viz;</div>
-<div class="line"><span class="lineno">  123</span>  of_viz = ImageType::OpticalFlow::toRGB(flow);</div>
-<div class="line"><span class="lineno">  124</span>  motion_viz = <a class="code hl_function" href="structdyno_1_1ImageType_1_1MotionMask.html#a6b119596bef78424e2085d684d07cd43">ImageType::MotionMask::toRGB</a>(mask);</div>
-<div class="line"><span class="lineno">  125</span>  depth_viz = ImageType::Depth::toRGB(depth);</div>
-<div class="line"><span class="lineno">  126</span> </div>
-<div class="line"><span class="lineno">  127</span>  <span class="comment">// cv::imshow(&quot;Optical Flow&quot;, of_viz);</span></div>
-<div class="line"><span class="lineno">  128</span>  <span class="comment">// cv::imshow(&quot;Motion mask&quot;, motion_viz);</span></div>
-<div class="line"><span class="lineno">  129</span>  <span class="comment">// cv::imshow(&quot;Depth&quot;, depth_viz);</span></div>
-<div class="line"><span class="lineno">  130</span>  <span class="comment">// cv::waitKey(1);</span></div>
-<div class="line"><span class="lineno">  131</span>  <span class="comment">// trigger callback to send data to the DataInterface!</span></div>
-<div class="line"><span class="lineno">  132</span>  <a class="code hl_variable" href="classdyno_1_1DataProvider.html#aa11672e30d895d97f113076391bc02cc">image_container_callback_</a>(image_container);</div>
-<div class="line"><span class="lineno">  133</span>}</div>
+<div class="line"><span class="lineno">  115</span>  ImageContainer image_container(frame_id, timestamp);</div>
+<div class="line"><span class="lineno">  116</span>  image_container.rgb(rgb).depth(depth).opticalFlow(flow).objectMotionMask(</div>
+<div class="line"><span class="lineno">  117</span>      mask);</div>
+<div class="line"><span class="lineno">  118</span> </div>
+<div class="line"><span class="lineno">  119</span>  <span class="comment">// cv::imshow(&quot;Optical Flow&quot;, of_viz);</span></div>
+<div class="line"><span class="lineno">  120</span>  <span class="comment">// cv::imshow(&quot;Motion mask&quot;, motion_viz);</span></div>
+<div class="line"><span class="lineno">  121</span>  <span class="comment">// cv::imshow(&quot;Depth&quot;, depth_viz);</span></div>
+<div class="line"><span class="lineno">  122</span>  <span class="comment">// cv::waitKey(1);</span></div>
+<div class="line"><span class="lineno">  123</span>  <span class="comment">// trigger callback to send data to the DataInterface!</span></div>
+<div class="line"><span class="lineno">  124</span>  <a class="code hl_variable" href="classdyno_1_1DataProvider.html#aa11672e30d895d97f113076391bc02cc">image_container_callback_</a>(std::make_shared&lt;ImageContainer&gt;(image_container));</div>
+<div class="line"><span class="lineno">  125</span>}</div>
 <div class="ttc" id="aclassdyno_1_1DataProviderRos_html_a1c795369f59e7383817adce94f164eaf"><div class="ttname"><a href="classdyno_1_1DataProviderRos.html#a1c795369f59e7383817adce94f164eaf">dyno::DataProviderRos::readFlowRosImage</a></div><div class="ttdeci">const cv::Mat readFlowRosImage(const sensor_msgs::msg::Image::ConstSharedPtr &amp;img_msg) const</div><div class="ttdoc">Convers a sensor_msgs::msg::Image to a cv::Mat while testing that the input has the correct datatype ...</div><div class="ttdef"><b>Definition:</b> <a href="DataProviderRos_8cc_source.html#l00054">DataProviderRos.cc:54</a></div></div>
 <div class="ttc" id="aclassdyno_1_1DataProviderRos_html_a9432150f495ce791c2789badbcc88652"><div class="ttname"><a href="classdyno_1_1DataProviderRos.html#a9432150f495ce791c2789badbcc88652">dyno::DataProviderRos::readRgbRosImage</a></div><div class="ttdeci">const cv::Mat readRgbRosImage(const sensor_msgs::msg::Image::ConstSharedPtr &amp;img_msg) const</div><div class="ttdoc">Convers a sensor_msgs::msg::Image to a cv::Mat while testing that the input has the correct datatype ...</div><div class="ttdef"><b>Definition:</b> <a href="DataProviderRos_8cc_source.html#l00044">DataProviderRos.cc:44</a></div></div>
 <div class="ttc" id="aclassdyno_1_1DataProviderRos_html_ad01ad2683eb35b1d6f76981c55ad7ee4"><div class="ttname"><a href="classdyno_1_1DataProviderRos.html#ad01ad2683eb35b1d6f76981c55ad7ee4">dyno::DataProviderRos::readDepthRosImage</a></div><div class="ttdeci">const cv::Mat readDepthRosImage(const sensor_msgs::msg::Image::ConstSharedPtr &amp;img_msg) const</div><div class="ttdoc">Convers a sensor_msgs::msg::Image to a cv::Mat while testing that the input has the correct datatype ...</div><div class="ttdef"><b>Definition:</b> <a href="DataProviderRos_8cc_source.html#l00049">DataProviderRos.cc:49</a></div></div>
 <div class="ttc" id="aclassdyno_1_1DataProviderRos_html_ae12caad2bd612a1a1d4fa0f93c17279d"><div class="ttname"><a href="classdyno_1_1DataProviderRos.html#ae12caad2bd612a1a1d4fa0f93c17279d">dyno::DataProviderRos::readMaskRosImage</a></div><div class="ttdeci">const cv::Mat readMaskRosImage(const sensor_msgs::msg::Image::ConstSharedPtr &amp;img_msg) const</div><div class="ttdoc">Convers a sensor_msgs::msg::Image to a cv::Mat while testing that the input has the correct datatype ...</div><div class="ttdef"><b>Definition:</b> <a href="DataProviderRos_8cc_source.html#l00059">DataProviderRos.cc:59</a></div></div>
-<div class="ttc" id="aclassdyno_1_1DataProvider_html_aa11672e30d895d97f113076391bc02cc"><div class="ttname"><a href="classdyno_1_1DataProvider.html#aa11672e30d895d97f113076391bc02cc">dyno::DataProvider::image_container_callback_</a></div><div class="ttdeci">ImageContainerCallback image_container_callback_</div><div class="ttdef"><b>Definition:</b> <a href="DataProvider_8hpp_source.html#l00124">DataProvider.hpp:124</a></div></div>
-<div class="ttc" id="aclassdyno_1_1ImageContainer_html_a5b0f2449742264ffb55c9062bc58c06f"><div class="ttname"><a href="classdyno_1_1ImageContainer.html#a5b0f2449742264ffb55c9062bc58c06f">dyno::ImageContainer::Create</a></div><div class="ttdeci">static ImageContainer::Ptr Create(const Timestamp timestamp, const FrameId frame_id, const ImageWrapper&lt; ImageType::RGBMono &gt; &amp;img, const ImageWrapper&lt; ImageType::Depth &gt; &amp;depth, const ImageWrapper&lt; ImageType::OpticalFlow &gt; &amp;optical_flow, const ImageWrapper&lt; ImageType::SemanticMask &gt; &amp;semantic_mask)</div><div class="ttdoc">Construct an image container equivalent to RGBD + Semantic Mask input.</div><div class="ttdef"><b>Definition:</b> <a href="ImageContainer_8cc_source.html#l00112">ImageContainer.cc:112</a></div></div>
+<div class="ttc" id="aclassdyno_1_1DataProvider_html_aa11672e30d895d97f113076391bc02cc"><div class="ttname"><a href="classdyno_1_1DataProvider.html#aa11672e30d895d97f113076391bc02cc">dyno::DataProvider::image_container_callback_</a></div><div class="ttdeci">ImageContainerCallback image_container_callback_</div><div class="ttdef"><b>Definition:</b> <a href="DataProvider_8hpp_source.html#l00126">DataProvider.hpp:126</a></div></div>
 <div class="ttc" id="anamespacedyno_1_1utils_html_a367447d229280a53123017719e94f0d9"><div class="ttname"><a href="namespacedyno_1_1utils.html#a367447d229280a53123017719e94f0d9">dyno::utils::fromRosTime</a></div><div class="ttdeci">Timestamp fromRosTime(const rclcpp::Time &amp;time)</div><div class="ttdoc">Convert ROS time to timestamp.</div><div class="ttdef"><b>Definition:</b> <a href="RosUtils_8cc_source.html#l00287">RosUtils.cc:287</a></div></div>
 <div class="ttc" id="anamespacedyno_html_a7fda67c0575c4b7a8210dcc8ae227370"><div class="ttname"><a href="namespacedyno.html#a7fda67c0575c4b7a8210dcc8ae227370">dyno::Timestamp</a></div><div class="ttdeci">double Timestamp</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00064">Types.hpp:64</a></div></div>
-<div class="ttc" id="anamespacedyno_html_ac4303d6fafb755f794b072d76f9cfb41"><div class="ttname"><a href="namespacedyno.html#ac4303d6fafb755f794b072d76f9cfb41">dyno::FrameId</a></div><div class="ttdeci">size_t FrameId</div><div class="ttdoc">Discrete time-step k.</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00072">Types.hpp:72</a></div></div>
-<div class="ttc" id="astructdyno_1_1ImageType_1_1MotionMask_html_a6b119596bef78424e2085d684d07cd43"><div class="ttname"><a href="structdyno_1_1ImageType_1_1MotionMask.html#a6b119596bef78424e2085d684d07cd43">dyno::ImageType::MotionMask::toRGB</a></div><div class="ttdeci">static cv::Mat toRGB(const ImageWrapper&lt; MotionMask &gt; &amp;image)</div><div class="ttdef"><b>Definition:</b> <a href="ImageTypes_8cc_source.html#l00187">ImageTypes.cc:187</a></div></div>
+<div class="ttc" id="anamespacedyno_html_ac4303d6fafb755f794b072d76f9cfb41"><div class="ttname"><a href="namespacedyno.html#ac4303d6fafb755f794b072d76f9cfb41">dyno::FrameId</a></div><div class="ttdeci">size_t FrameId</div><div class="ttdoc">Discrete time-step k.</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00073">Types.hpp:73</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="classdyno_1_1ImageContainer.html#a5b0f2449742264ffb55c9062bc58c06f">dyno::ImageContainer::Create()</a>, <a class="el" href="classdyno_1_1OnlineDataProviderRos.html#ae8d393df189c517d6cc8273fcf6f2e99">frame_id_</a>, <a class="el" href="namespacedyno_1_1utils.html#a367447d229280a53123017719e94f0d9">dyno::utils::fromRosTime()</a>, <a class="el" href="classdyno_1_1DataProvider.html#aa11672e30d895d97f113076391bc02cc">dyno::DataProvider::image_container_callback_</a>, <a class="el" href="classdyno_1_1DataProviderRos.html#a8114936181e3a44e6941fee36d0518cb">dyno::DataProviderRos::node_</a>, <a class="el" href="classdyno_1_1DataProviderRos.html#ad01ad2683eb35b1d6f76981c55ad7ee4">dyno::DataProviderRos::readDepthRosImage()</a>, <a class="el" href="classdyno_1_1DataProviderRos.html#a1c795369f59e7383817adce94f164eaf">dyno::DataProviderRos::readFlowRosImage()</a>, <a class="el" href="classdyno_1_1DataProviderRos.html#ae12caad2bd612a1a1d4fa0f93c17279d">dyno::DataProviderRos::readMaskRosImage()</a>, <a class="el" href="classdyno_1_1DataProviderRos.html#a9432150f495ce791c2789badbcc88652">dyno::DataProviderRos::readRgbRosImage()</a>, and <a class="el" href="structdyno_1_1ImageType_1_1MotionMask.html#a6b119596bef78424e2085d684d07cd43">dyno::ImageType::MotionMask::toRGB()</a>.</p>
+<p class="reference">References <a class="el" href="classdyno_1_1OnlineDataProviderRos.html#ae8d393df189c517d6cc8273fcf6f2e99">frame_id_</a>, <a class="el" href="namespacedyno_1_1utils.html#a367447d229280a53123017719e94f0d9">dyno::utils::fromRosTime()</a>, <a class="el" href="classdyno_1_1DataProvider.html#aa11672e30d895d97f113076391bc02cc">dyno::DataProvider::image_container_callback_</a>, <a class="el" href="classdyno_1_1DataProviderRos.html#a8114936181e3a44e6941fee36d0518cb">dyno::DataProviderRos::node_</a>, <a class="el" href="classdyno_1_1DataProviderRos.html#ad01ad2683eb35b1d6f76981c55ad7ee4">dyno::DataProviderRos::readDepthRosImage()</a>, <a class="el" href="classdyno_1_1DataProviderRos.html#a1c795369f59e7383817adce94f164eaf">dyno::DataProviderRos::readFlowRosImage()</a>, <a class="el" href="classdyno_1_1DataProviderRos.html#ae12caad2bd612a1a1d4fa0f93c17279d">dyno::DataProviderRos::readMaskRosImage()</a>, <a class="el" href="classdyno_1_1DataProviderRos.html#a9432150f495ce791c2789badbcc88652">dyno::DataProviderRos::readRgbRosImage()</a>, and <a class="el" href="classdyno_1_1ImageContainer.html#a6f35259f95c31b861ff6515c159e1ee3">dyno::ImageContainer::rgb()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1OnlineDataProviderRos.html#a3b7725856bc86407813c51804a26bea4">connect()</a>.</p>
 <div class="dynheader">
@@ -598,21 +586,21 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1OnlineDataProviderRos_a02b6aa8b0f6c6c732310c0852f54ef42_cgraph.png" border="0" usemap="#aclassdyno_1_1OnlineDataProviderRos_a02b6aa8b0f6c6c732310c0852f54ef42_cgraph" alt=""/></div>
 <map name="aclassdyno_1_1OnlineDataProviderRos_a02b6aa8b0f6c6c732310c0852f54ef42_cgraph" id="aclassdyno_1_1OnlineDataProviderRos_a02b6aa8b0f6c6c732310c0852f54ef42_cgraph">
-<area shape="rect" title=" " alt="" coords="5,208,195,248"/>
-<area shape="rect" href="classdyno_1_1ImageContainer.html#a5b0f2449742264ffb55c9062bc58c06f" title="Construct an image container equivalent to RGBD + Semantic Mask input." alt="" coords="270,29,437,69"/>
-<area shape="rect" href="namespacedyno_1_1utils.html#a367447d229280a53123017719e94f0d9" title="Convert ROS time to timestamp." alt="" coords="260,94,447,119"/>
-<area shape="rect" href="classdyno_1_1DataProviderRos.html#ad01ad2683eb35b1d6f76981c55ad7ee4" title="Convers a sensor_msgs::msg::Image to a cv::Mat while testing that the input has the correct datatype ..." alt="" coords="268,144,439,184"/>
-<area shape="rect" href="classdyno_1_1DataProviderRos.html#a1c795369f59e7383817adce94f164eaf" title="Convers a sensor_msgs::msg::Image to a cv::Mat while testing that the input has the correct datatype ..." alt="" coords="268,208,439,248"/>
-<area shape="rect" href="classdyno_1_1DataProviderRos.html#ae12caad2bd612a1a1d4fa0f93c17279d" title="Convers a sensor_msgs::msg::Image to a cv::Mat while testing that the input has the correct datatype ..." alt="" coords="268,272,439,312"/>
-<area shape="rect" href="classdyno_1_1DataProviderRos.html#a9432150f495ce791c2789badbcc88652" title="Convers a sensor_msgs::msg::Image to a cv::Mat while testing that the input has the correct datatype ..." alt="" coords="268,336,439,376"/>
-<area shape="rect" href="structdyno_1_1ImageType_1_1MotionMask.html#a6b119596bef78424e2085d684d07cd43" title=" " alt="" coords="243,400,464,440"/>
-<area shape="rect" href="namespacedyno.html#a2b18a1990bb26145cec08be631b0ef74" title=" " alt="" coords="560,94,671,119"/>
-<area shape="rect" href="structdyno_1_1ImageWrapper.html#af0c4d5fe3a46105c7789a8915c6e7521" title="Returns an ImageWrapper with the underlying image data cloned." alt="" coords="536,371,695,411"/>
-<area shape="rect" href="namespacedyno_1_1utils.html#a5abdff0c77884da4a8da55f0880d8cfb" title="Given an image that operates like a mask (ie. is a single channel image where each pixel value corres..." alt="" coords="512,435,719,461"/>
-<area shape="rect" href="structdyno_1_1Color.html#a4f52f9aec87e2c34370ad02e6d4e25fc" title="Generates a sequence of never repeating colors using the golden ration to seperate the colours along ..." alt="" coords="767,435,927,461"/>
-<area shape="rect" href="structdyno_1_1Color.html#a08bcb6ea49861f6978858a2ff5159002" title=" " alt="" coords="975,435,1137,461"/>
-<area shape="rect" href="structdyno_1_1Color.html#a6bc55a80a463a481dbf4778c70d04733" title=" " alt="" coords="1213,410,1351,435"/>
-<area shape="rect" href="namespacedyno.html#ab0e74ec8992860404a618192cc694b83" title=" " alt="" coords="1185,459,1379,485"/>
+<area shape="rect" title=" " alt="" coords="5,252,195,292"/>
+<area shape="rect" href="namespacedyno_1_1utils.html#a367447d229280a53123017719e94f0d9" title="Convert ROS time to timestamp." alt="" coords="247,106,433,131"/>
+<area shape="rect" href="classdyno_1_1DataProviderRos.html#ad01ad2683eb35b1d6f76981c55ad7ee4" title="Convers a sensor_msgs::msg::Image to a cv::Mat while testing that the input has the correct datatype ..." alt="" coords="255,156,425,196"/>
+<area shape="rect" href="classdyno_1_1DataProviderRos.html#a1c795369f59e7383817adce94f164eaf" title="Convers a sensor_msgs::msg::Image to a cv::Mat while testing that the input has the correct datatype ..." alt="" coords="255,220,425,260"/>
+<area shape="rect" href="classdyno_1_1DataProviderRos.html#ae12caad2bd612a1a1d4fa0f93c17279d" title="Convers a sensor_msgs::msg::Image to a cv::Mat while testing that the input has the correct datatype ..." alt="" coords="255,284,425,324"/>
+<area shape="rect" href="classdyno_1_1DataProviderRos.html#a9432150f495ce791c2789badbcc88652" title="Convers a sensor_msgs::msg::Image to a cv::Mat while testing that the input has the correct datatype ..." alt="" coords="255,348,425,388"/>
+<area shape="rect" href="classdyno_1_1ImageContainer.html#a6f35259f95c31b861ff6515c159e1ee3" title=" " alt="" coords="243,413,437,438"/>
+<area shape="rect" href="namespacedyno.html#a8357d6a8de284f4d1fc3d074646b43bb" title=" " alt="" coords="485,106,596,131"/>
+<area shape="rect" href="classdyno_1_1TrackedValueStatus.html#a1741e83bf5442c885da98c9c5bb71f08" title="Returns true if the object lavel is equal to dyno::background_label." alt="" coords="644,5,832,45"/>
+<area shape="rect" href="classdyno_1_1TrackedValueStatus.html#ae90b3059d173a9354cc6a55a55ef80ac" title="Get object id (j) for this status." alt="" coords="644,69,832,109"/>
+<area shape="rect" href="structdyno_1_1Color.html#a6689af3d0ac5ceaa66000b5ca70becbd" title="Generates a sequence of never repeating colors using the golden ratio to seperate the colours along t..." alt="" coords="658,134,818,159"/>
+<area shape="rect" href="classdyno_1_1TrackedValueStatus.html#a828faf38cea11c1dcc7651d49b68d8e1" title="Get value. Const version." alt="" coords="644,184,832,224"/>
+<area shape="rect" href="structdyno_1_1Color.html#a08bcb6ea49861f6978858a2ff5159002" title=" " alt="" coords="880,134,1043,159"/>
+<area shape="rect" href="structdyno_1_1Color.html#a6bc55a80a463a481dbf4778c70d04733" title=" " alt="" coords="1118,109,1257,134"/>
+<area shape="rect" href="namespacedyno.html#ab0e74ec8992860404a618192cc694b83" title=" " alt="" coords="1091,158,1284,183"/>
 </map>
 </div>
 <div class="dynheader">

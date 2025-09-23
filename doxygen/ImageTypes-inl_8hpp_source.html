@@ -78,63 +78,62 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 <a href="ImageTypes-inl_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/*</span></div>
-<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment"> *   Copyright (c) 2024 ACFR-RPG, University of Sydney, Jesse Morris (jesse.morris@sydney.edu.au)</span></div>
-<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment"> *   All rights reserved.</span></div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment"></span> </div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="comment"> *   Permission is hereby granted, free of charge, to any person obtaining a copy</span></div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="comment"> *   of this software and associated documentation files (the &quot;Software&quot;), to deal</span></div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="comment"> *   in the Software without restriction, including without limitation the rights</span></div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="comment"> *   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell</span></div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="comment"> *   copies of the Software, and to permit persons to whom the Software is</span></div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="comment"> *   furnished to do so, subject to the following conditions:</span></div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="comment"></span> </div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="comment"> *   The above copyright notice and this permission notice shall be included in all</span></div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="comment"> *   copies or substantial portions of the Software.</span></div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="comment"></span> </div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="comment"> *   THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR</span></div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="comment"> *   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,</span></div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="comment"> *   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE</span></div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="comment"> *   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER</span></div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="comment"> *   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,</span></div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="comment"> *   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE</span></div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="comment"> *   SOFTWARE.</span></div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="comment"> */</span></div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#pragma once</span></div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#include &quot;<a class="code" href="ImageTypes_8hpp.html">dynosam/common/ImageTypes.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacedyno.html">dyno</a> {</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="keyword">template</span>&lt;<span class="keyword">typename</span> IMAGETYPE&gt;</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno"><a class="line" href="structdyno_1_1ImageWrapper.html#a661516ef5b7e07b135a371c51f09bf5f">   31</a></span><a class="code hl_function" href="structdyno_1_1ImageWrapper.html#a7311dda9eb34de6032764bf9aec1a019">ImageWrapper&lt;IMAGETYPE&gt;::ImageWrapper</a>(<span class="keyword">const</span> cv::Mat&amp; img) : image(img) {</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    <span class="keyword">const</span> std::string name = Type::name();</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span> </div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    <span class="keywordflow">if</span>(img.empty()) {</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>        <span class="keywordflow">throw</span> <a class="code hl_class" href="classdyno_1_1InvalidImageTypeException.html">InvalidImageTypeException</a>(<span class="stringliteral">&quot;Image was empty for type &quot;</span> + name);</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    }</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    <span class="comment">//should throw excpetion if problematic</span></div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    Type::validate(img);</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>}</div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment"> *   Copyright (c) 2024 ACFR-RPG, University of Sydney, Jesse Morris</span></div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment"> (jesse.morris@sydney.edu.au)</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment"> *   All rights reserved.</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="comment"></span> </div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="comment"> *   Permission is hereby granted, free of charge, to any person obtaining a</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="comment"> copy</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="comment"> *   of this software and associated documentation files (the &quot;Software&quot;), to</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="comment"> deal</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="comment"> *   in the Software without restriction, including without limitation the</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="comment"> rights</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="comment"> *   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="comment"> *   copies of the Software, and to permit persons to whom the Software is</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="comment"> *   furnished to do so, subject to the following conditions:</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="comment"></span> </div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="comment"> *   The above copyright notice and this permission notice shall be included in</span></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="comment"> all</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="comment"> *   copies or substantial portions of the Software.</span></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="comment"></span> </div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="comment"> *   THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="comment"> *   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="comment"> *   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="comment"> *   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER</span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="comment"> *   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="comment"> FROM,</span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="comment"> *   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="comment"> THE</span></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="comment"> *   SOFTWARE.</span></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="comment"> */</span></div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="preprocessor">#pragma once</span></div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="preprocessor">#include &quot;<a class="code" href="ImageTypes_8hpp.html">dynosam/common/ImageTypes.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacedyno.html">dyno</a> {</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> IMAGETYPE&gt;</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno"><a class="line" href="structdyno_1_1ImageWrapper.html#a661516ef5b7e07b135a371c51f09bf5f">   38</a></span><a class="code hl_function" href="structdyno_1_1ImageWrapper.html#a7311dda9eb34de6032764bf9aec1a019">ImageWrapper&lt;IMAGETYPE&gt;::ImageWrapper</a>(<span class="keyword">const</span> cv::Mat&amp; img) : <a class="code hl_struct" href="structdyno_1_1ImageBase.html">ImageBase</a>(img) {</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>  <span class="keyword">const</span> std::string name = Type::name();</div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="keyword">template</span>&lt;<span class="keyword">typename</span> IMAGETYPE&gt;</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno"><a class="line" href="structdyno_1_1ImageWrapper.html#af0c4d5fe3a46105c7789a8915c6e7521">   42</a></span><a class="code hl_struct" href="structdyno_1_1ImageWrapper.html">ImageWrapper&lt;IMAGETYPE&gt;</a> <a class="code hl_function" href="structdyno_1_1ImageWrapper.html#af0c4d5fe3a46105c7789a8915c6e7521">ImageWrapper&lt;IMAGETYPE&gt;::clone</a>()<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <span class="keywordflow">return</span> <a class="code hl_struct" href="structdyno_1_1ImageWrapper.html">ImageWrapper&lt;IMAGETYPE&gt;</a>(image.clone());</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>}</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="keyword">template</span>&lt;<span class="keyword">typename</span> IMAGETYPE&gt;</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno"><a class="line" href="structdyno_1_1ImageWrapper.html#a80c2de4097b1ad139b752b4ad9f9e83c">   48</a></span><span class="keywordtype">bool</span> <a class="code hl_function" href="structdyno_1_1ImageWrapper.html#a80c2de4097b1ad139b752b4ad9f9e83c">ImageWrapper&lt;IMAGETYPE&gt;::exists</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> !image.empty(); }</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>} <span class="comment">//dyno</span></div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>  <span class="keywordflow">if</span> (img.empty()) {</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    <span class="keywordflow">throw</span> <a class="code hl_class" href="classdyno_1_1InvalidImageTypeException.html">InvalidImageTypeException</a>(<span class="stringliteral">&quot;Image was empty for type &quot;</span> + name);</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>  }</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>  <span class="comment">// should throw excpetion if problematic</span></div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>  Type::validate(img);</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>}</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> IMAGETYPE&gt;</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno"><a class="line" href="structdyno_1_1ImageWrapper.html#af6a37db775eecb89c507ee451356bf6d">   49</a></span><a class="code hl_function" href="structdyno_1_1ImageWrapper.html#a7311dda9eb34de6032764bf9aec1a019">ImageWrapper&lt;IMAGETYPE&gt;::ImageWrapper</a>(<span class="keyword">const</span> <a class="code hl_struct" href="structdyno_1_1ImageBase.html">ImageBase</a>&amp; image_base)</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    : <a class="code hl_struct" href="structdyno_1_1ImageBase.html">ImageBase</a>(image_base) {}</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span> </div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>}  <span class="comment">// namespace dyno</span></div>
 <div class="ttc" id="aImageTypes_8hpp_html"><div class="ttname"><a href="ImageTypes_8hpp.html">ImageTypes.hpp</a></div></div>
 <div class="ttc" id="aclassdyno_1_1InvalidImageTypeException_html"><div class="ttname"><a href="classdyno_1_1InvalidImageTypeException.html">dyno::InvalidImageTypeException</a></div><div class="ttdef"><b>Definition:</b> <a href="ImageTypes_8hpp_source.html#l00049">ImageTypes.hpp:49</a></div></div>
 <div class="ttc" id="anamespacedyno_html"><div class="ttname"><a href="namespacedyno.html">dyno</a></div><div class="ttdef"><b>Definition:</b> <a href="Accessor-impl_8hpp_source.html#l00037">Accessor-impl.hpp:37</a></div></div>
-<div class="ttc" id="astructdyno_1_1ImageWrapper_html"><div class="ttname"><a href="structdyno_1_1ImageWrapper.html">dyno::ImageWrapper</a></div><div class="ttdoc">ImageWrapper for a ImageType that defines a particular type of input image. The ImageType template is...</div><div class="ttdef"><b>Definition:</b> <a href="ImageTypes_8hpp_source.html#l00078">ImageTypes.hpp:78</a></div></div>
-<div class="ttc" id="astructdyno_1_1ImageWrapper_html_a7311dda9eb34de6032764bf9aec1a019"><div class="ttname"><a href="structdyno_1_1ImageWrapper.html#a7311dda9eb34de6032764bf9aec1a019">dyno::ImageWrapper::ImageWrapper</a></div><div class="ttdeci">ImageWrapper()=default</div><div class="ttdoc">Underlying image.</div></div>
-<div class="ttc" id="astructdyno_1_1ImageWrapper_html_a80c2de4097b1ad139b752b4ad9f9e83c"><div class="ttname"><a href="structdyno_1_1ImageWrapper.html#a80c2de4097b1ad139b752b4ad9f9e83c">dyno::ImageWrapper::exists</a></div><div class="ttdeci">bool exists() const</div><div class="ttdef"><b>Definition:</b> <a href="ImageTypes-inl_8hpp_source.html#l00048">ImageTypes-inl.hpp:48</a></div></div>
-<div class="ttc" id="astructdyno_1_1ImageWrapper_html_af0c4d5fe3a46105c7789a8915c6e7521"><div class="ttname"><a href="structdyno_1_1ImageWrapper.html#af0c4d5fe3a46105c7789a8915c6e7521">dyno::ImageWrapper::clone</a></div><div class="ttdeci">ImageWrapper&lt; Type &gt; clone() const</div><div class="ttdoc">Returns an ImageWrapper with the underlying image data cloned.</div><div class="ttdef"><b>Definition:</b> <a href="ImageTypes-inl_8hpp_source.html#l00042">ImageTypes-inl.hpp:42</a></div></div>
+<div class="ttc" id="astructdyno_1_1ImageBase_html"><div class="ttname"><a href="structdyno_1_1ImageBase.html">dyno::ImageBase</a></div><div class="ttdef"><b>Definition:</b> <a href="ImageTypes_8hpp_source.html#l00074">ImageTypes.hpp:74</a></div></div>
+<div class="ttc" id="astructdyno_1_1ImageWrapper_html_a7311dda9eb34de6032764bf9aec1a019"><div class="ttname"><a href="structdyno_1_1ImageWrapper.html#a7311dda9eb34de6032764bf9aec1a019">dyno::ImageWrapper::ImageWrapper</a></div><div class="ttdeci">ImageWrapper()=default</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

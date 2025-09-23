@@ -1,3 +1,0 @@
-<map id="dyno::ImageContainer::Create" name="dyno::ImageContainer::Create">
-<area shape="rect" id="node1" title="Construct an image container equivalent to RGBD + Semantic Mask input." alt="" coords="5,29,172,69"/>
-</map>

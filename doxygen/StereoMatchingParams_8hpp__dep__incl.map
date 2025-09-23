@@ -1,6 +1,7 @@
 <map id="dynosam/include/dynosam/frontend/vision/StereoMatchingParams.hpp" name="dynosam/include/dynosam/frontend/vision/StereoMatchingParams.hpp">
-<area shape="rect" id="node1" title=" " alt="" coords="103,5,333,60"/>
-<area shape="rect" id="node2" href="$StereoMatcher_8hpp.html" title=" " alt="" coords="93,108,343,148"/>
+<area shape="rect" id="node1" title=" " alt="" coords="217,5,448,60"/>
+<area shape="rect" id="node2" href="$StereoMatcher_8hpp.html" title=" " alt="" coords="207,108,458,148"/>
 <area shape="rect" id="node3" href="$ClusterSlamDataProvider_8cc.html" title=" " alt="" coords="5,196,212,236"/>
-<area shape="rect" id="node4" href="$StereoMatcher_8cc.html" title=" " alt="" coords="237,196,418,236"/>
+<area shape="rect" id="node4" href="$ViodeDataProvider_8cc.html" title=" " alt="" coords="237,196,429,236"/>
+<area shape="rect" id="node5" href="$StereoMatcher_8cc.html" title=" " alt="" coords="453,196,634,236"/>
 </map>

@@ -1,5 +1,5 @@
 <map id="dyno::Map::updateObjectMotionMeasurements" name="dyno::Map::updateObjectMotionMeasurements">
-<area shape="rect" id="node1" title=" " alt="" coords="5,5,236,45"/>
+<area shape="rect" id="node1" title="Updates object motion measurements for the given frame. Does not make a new frame node if it does not..." alt="" coords="5,5,236,45"/>
 <area shape="rect" id="node2" href="$classdyno_1_1Map.html#a245a6857bfee37eae36e78fd48946680" title="Get the Frame object. If the frame does not exist, return nullptr." alt="" coords="284,13,444,38"/>
 <area shape="rect" id="node3" href="$classdyno_1_1Map.html#a03e8a74c8bb5177056a67b74b2d8c982" title="Check a frame exists at the requested frame id." alt="" coords="492,13,668,38"/>
 </map>

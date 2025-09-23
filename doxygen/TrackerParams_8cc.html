@@ -81,31 +81,66 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="TrackerParams_8hpp_source.html">dynosam/frontend/vision/TrackerParams.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="OpenCVUtils_8hpp_source.html">dynosam/utils/OpenCVUtils.hpp</a>&quot;</code><br />
 <code>#include &lt;config_utilities/config_utilities.h&gt;</code><br />
 <code>#include &lt;config_utilities/types/eigen_matrix.h&gt;</code><br />
 <code>#include &lt;gflags/gflags.h&gt;</code><br />
+<code>#include &lt;glog/logging.h&gt;</code><br />
+<code>#include &quot;<a class="el" href="OpenCVUtils_8hpp_source.html">dynosam/utils/OpenCVUtils.hpp</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for TrackerParams.cc:</div>
 <div class="dyncontent">
 <div class="center"><img src="TrackerParams_8cc__incl.png" border="0" usemap="#adynosam_2src_2frontend_2vision_2TrackerParams_8cc" alt=""/></div>
 <map name="adynosam_2src_2frontend_2vision_2TrackerParams_8cc" id="adynosam_2src_2frontend_2vision_2TrackerParams_8cc">
-<area shape="rect" title=" " alt="" coords="645,5,826,45"/>
-<area shape="rect" href="TrackerParams_8hpp.html" title=" " alt="" coords="514,93,698,133"/>
-<area shape="rect" title=" " alt="" coords="809,181,969,221"/>
-<area shape="rect" href="OpenCVUtils_8hpp.html" title=" " alt="" coords="155,101,383,126"/>
-<area shape="rect" title=" " alt="" coords="773,93,930,133"/>
-<area shape="rect" title=" " alt="" coords="955,101,1071,126"/>
-<area shape="rect" href="NonMaximumSuppression_8h.html" title="Base class for non maximum suppression interface." alt="" coords="400,181,609,221"/>
-<area shape="rect" title=" " alt="" coords="161,189,376,214"/>
-<area shape="rect" title=" " alt="" coords="633,189,784,214"/>
-<area shape="rect" title=" " alt="" coords="241,269,395,295"/>
-<area shape="rect" title=" " alt="" coords="420,269,483,295"/>
-<area shape="rect" title=" " alt="" coords="507,269,609,295"/>
-<area shape="rect" href="Macros_8hpp.html" title=" " alt="" coords="633,269,827,295"/>
-<area shape="rect" title=" " alt="" coords="641,343,718,368"/>
-<area shape="rect" title=" " alt="" coords="742,343,817,368"/>
-<area shape="rect" title=" " alt="" coords="5,189,137,214"/>
+<area shape="rect" title=" " alt="" coords="2020,5,2201,45"/>
+<area shape="rect" href="TrackerParams_8hpp.html" title=" " alt="" coords="224,93,408,133"/>
+<area shape="rect" title=" " alt="" coords="5,181,165,221"/>
+<area shape="rect" title=" " alt="" coords="3816,93,3973,133"/>
+<area shape="rect" title=" " alt="" coords="3201,357,3317,383"/>
+<area shape="rect" title=" " alt="" coords="3649,438,3764,463"/>
+<area shape="rect" href="OpenCVUtils_8hpp.html" title=" " alt="" coords="898,101,1126,126"/>
+<area shape="rect" title=" " alt="" coords="241,189,391,214"/>
+<area shape="rect" title=" " alt="" coords="99,438,314,463"/>
+<area shape="rect" href="NonMaximumSuppression_8h.html" title="Base class for non maximum suppression interface." alt="" coords="415,181,625,221"/>
+<area shape="rect" title=" " alt="" coords="368,277,523,302"/>
+<area shape="rect" title=" " alt="" coords="598,277,661,302"/>
+<area shape="rect" title=" " alt="" coords="241,277,343,302"/>
+<area shape="rect" href="Macros_8hpp.html" title=" " alt="" coords="685,277,878,302"/>
+<area shape="rect" title=" " alt="" coords="632,357,709,383"/>
+<area shape="rect" title=" " alt="" coords="339,438,413,463"/>
+<area shape="rect" title=" " alt="" coords="649,181,817,221"/>
+<area shape="rect" href="Types_8hpp.html" title=" " alt="" coords="1513,189,1725,214"/>
+<area shape="rect" title=" " alt="" coords="842,189,974,214"/>
+<area shape="rect" title=" " alt="" coords="953,277,1121,302"/>
+<area shape="rect" title=" " alt="" coords="3231,526,3387,551"/>
+<area shape="rect" title=" " alt="" coords="3323,438,3509,463"/>
+<area shape="rect" title=" " alt="" coords="1146,277,1289,302"/>
+<area shape="rect" title=" " alt="" coords="1313,277,1410,302"/>
+<area shape="rect" title=" " alt="" coords="3533,438,3625,463"/>
+<area shape="rect" href="Flags_8hpp.html" title=" " alt="" coords="3033,277,3244,302"/>
+<area shape="rect" href="SensorModels_8hpp.html" title=" " alt="" coords="1485,277,1752,302"/>
+<area shape="rect" href="Types-inl_8hpp.html" title=" " alt="" coords="2724,269,2908,309"/>
+<area shape="rect" title=" " alt="" coords="1876,526,2031,551"/>
+<area shape="rect" title=" " alt="" coords="1383,357,1612,383"/>
+<area shape="rect" title=" " alt="" coords="1636,357,1833,383"/>
+<area shape="rect" href="Exceptions_8hpp.html" title=" " alt="" coords="885,357,1131,383"/>
+<area shape="rect" href="GtsamUtils_8hpp.html" title=" " alt="" coords="1973,357,2192,383"/>
+<area shape="rect" title=" " alt="" coords="833,438,919,463"/>
+<area shape="rect" title=" " alt="" coords="438,438,514,463"/>
+<area shape="rect" title=" " alt="" coords="539,438,613,463"/>
+<area shape="rect" title=" " alt="" coords="638,438,725,463"/>
+<area shape="rect" title=" " alt="" coords="749,438,808,463"/>
+<area shape="rect" title=" " alt="" coords="1159,438,1358,463"/>
+<area shape="rect" title=" " alt="" coords="1383,438,1569,463"/>
+<area shape="rect" title=" " alt="" coords="1593,438,1769,463"/>
+<area shape="rect" title=" " alt="" coords="1793,438,1975,463"/>
+<area shape="rect" title=" " alt="" coords="1999,438,2166,463"/>
+<area shape="rect" title=" " alt="" coords="2190,438,2383,463"/>
+<area shape="rect" title=" " alt="" coords="2408,438,2581,463"/>
+<area shape="rect" title=" " alt="" coords="2605,431,2800,471"/>
+<area shape="rect" title=" " alt="" coords="2824,438,3011,463"/>
+<area shape="rect" title=" " alt="" coords="995,438,1135,463"/>
+<area shape="rect" href="Numerical_8hpp.html" title=" " alt="" coords="3035,438,3248,463"/>
+<area shape="rect" title=" " alt="" coords="3025,519,3207,559"/>
 </map>
 </div>
 </div>
@@ -122,8 +157,8 @@ Functions</h2></td></tr>
 <tr class="separator:a9ae0704302e6d6b7f7edec35d7c77246"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3dd7ce6b2cf1e4d6976c560b91116ddd"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="TrackerParams_8cc.html#a3dd7ce6b2cf1e4d6976c560b91116ddd">DEFINE_int32</a> (shrink_col, 0, &quot;Number of cols to shrink the tracking image by&quot;)</td></tr>
 <tr class="separator:a3dd7ce6b2cf1e4d6976c560b91116ddd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a66e71b39f03db7f1da88e80ac53fcaf0"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="TrackerParams_8cc.html#a66e71b39f03db7f1da88e80ac53fcaf0">DEFINE_int32</a> (semantic_mask_step_size, 3, &quot;The step sized used across the semantic mask when sampling points&quot;)</td></tr>
-<tr class="separator:a66e71b39f03db7f1da88e80ac53fcaf0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aebeaf6e8146039f310f44bae8a92ff1e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="TrackerParams_8cc.html#aebeaf6e8146039f310f44bae8a92ff1e">DEFINE_int32</a> (max_dynamic_features_per_frame, 50, &quot;Maximum dynamic features to detect per object per frame&quot;)</td></tr>
+<tr class="separator:aebeaf6e8146039f310f44bae8a92ff1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aae7b29fb7682b1388232fa291212331f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="TrackerParams_8cc.html#aae7b29fb7682b1388232fa291212331f">DEFINE_bool</a> (use_propogate_mask, true, &quot;If true, the semantic mask will be propogated with optical flow&quot;)</td></tr>
 <tr class="separator:aae7b29fb7682b1388232fa291212331f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1ae76d7cb08294ea4b83ba533ad8f87d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno.html#a1ae76d7cb08294ea4b83ba533ad8f87d">dyno::declare_config</a> (TrackerParams::AnmsParams &amp;config)</td></tr>
@@ -178,8 +213,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a66e71b39f03db7f1da88e80ac53fcaf0" name="a66e71b39f03db7f1da88e80ac53fcaf0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a66e71b39f03db7f1da88e80ac53fcaf0">&#9670;&#160;</a></span>DEFINE_int32() <span class="overload">[1/3]</span></h2>
+<a id="aebeaf6e8146039f310f44bae8a92ff1e" name="aebeaf6e8146039f310f44bae8a92ff1e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aebeaf6e8146039f310f44bae8a92ff1e">&#9670;&#160;</a></span>DEFINE_int32() <span class="overload">[1/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -187,19 +222,19 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">DEFINE_int32 </td>
           <td>(</td>
-          <td class="paramtype">semantic_mask_step_size&#160;</td>
+          <td class="paramtype">max_dynamic_features_per_frame&#160;</td>
           <td class="paramname">, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">3&#160;</td>
+          <td class="paramtype">50&#160;</td>
           <td class="paramname">, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&quot;The step sized used across the semantic mask when sampling points&quot;&#160;</td>
+          <td class="paramtype">&quot;Maximum dynamic features to detect per object per frame&quot;&#160;</td>
           <td class="paramname">&#160;</td>
         </tr>
         <tr>

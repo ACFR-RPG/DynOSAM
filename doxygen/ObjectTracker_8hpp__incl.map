@@ -1,48 +1,52 @@
 <map id="dynosam/include/dynosam/frontend/vision/ObjectTracker.hpp" name="dynosam/include/dynosam/frontend/vision/ObjectTracker.hpp">
-<area shape="rect" id="node1" title=" " alt="" coords="2706,5,2949,45"/>
-<area shape="rect" id="node2" href="$Types_8hpp.html" title=" " alt="" coords="1988,189,2200,214"/>
-<area shape="rect" id="node36" href="$ByteTracker_8hpp.html" title=" " alt="" coords="3061,93,3242,133"/>
-<area shape="rect" id="node3" title=" " alt="" coords="2716,453,2830,478"/>
-<area shape="rect" id="node4" title=" " alt="" coords="2733,277,2901,302"/>
-<area shape="rect" id="node5" title=" " alt="" coords="206,541,362,566"/>
-<area shape="rect" id="node6" title=" " alt="" coords="2855,453,3040,478"/>
-<area shape="rect" id="node7" title=" " alt="" coords="290,277,432,302"/>
-<area shape="rect" id="node8" title=" " alt="" coords="31,453,246,478"/>
-<area shape="rect" id="node9" title=" " alt="" coords="3116,453,3190,478"/>
-<area shape="rect" id="node10" title=" " alt="" coords="1839,277,1936,302"/>
-<area shape="rect" id="node11" title=" " alt="" coords="322,453,414,478"/>
-<area shape="rect" id="node12" title=" " alt="" coords="2976,277,3039,302"/>
-<area shape="rect" id="node13" href="$Flags_8hpp.html" title=" " alt="" coords="56,277,266,302"/>
-<area shape="rect" id="node15" href="$Macros_8hpp.html" title=" " alt="" coords="3039,365,3232,390"/>
-<area shape="rect" id="node17" href="$SensorModels_8hpp.html" title=" " alt="" coords="1961,277,2228,302"/>
-<area shape="rect" id="node14" title=" " alt="" coords="79,365,195,390"/>
-<area shape="rect" id="node16" title=" " alt="" coords="3232,453,3309,478"/>
-<area shape="rect" id="node18" title=" " alt="" coords="2937,541,3092,566"/>
-<area shape="rect" id="node19" title=" " alt="" coords="1534,365,1732,390"/>
-<area shape="rect" id="node20" href="$GtsamUtils_8hpp.html" title=" " alt="" coords="1756,365,1974,390"/>
-<area shape="rect" id="node21" title=" " alt="" coords="2255,453,2454,478"/>
-<area shape="rect" id="node22" title=" " alt="" coords="438,453,625,478"/>
-<area shape="rect" id="node23" title=" " alt="" coords="649,453,825,478"/>
-<area shape="rect" id="node24" title=" " alt="" coords="849,453,1030,478"/>
-<area shape="rect" id="node25" title=" " alt="" coords="1055,453,1222,478"/>
-<area shape="rect" id="node26" title=" " alt="" coords="1246,453,1439,478"/>
-<area shape="rect" id="node27" title=" " alt="" coords="1464,453,1637,478"/>
-<area shape="rect" id="node28" title=" " alt="" coords="1661,445,1856,485"/>
-<area shape="rect" id="node29" title=" " alt="" coords="1880,453,2066,478"/>
-<area shape="rect" id="node30" title=" " alt="" coords="2091,453,2231,478"/>
-<area shape="rect" id="node31" href="$Numerical_8hpp.html" title=" " alt="" coords="2478,453,2692,478"/>
-<area shape="rect" id="node32" title=" " alt="" coords="2197,533,2378,573"/>
-<area shape="rect" id="node33" title=" " alt="" coords="2402,533,2584,573"/>
-<area shape="rect" id="node34" title=" " alt="" coords="2608,541,2688,566"/>
-<area shape="rect" id="node35" title=" " alt="" coords="2712,541,2786,566"/>
-<area shape="rect" id="node37" href="$Detection_8hpp.html" title=" " alt="" coords="3140,269,3316,309"/>
-<area shape="rect" id="node40" href="$Track_8hpp.html" title=" " alt="" coords="3329,181,3505,221"/>
-<area shape="rect" id="node43" title=" " alt="" coords="3654,277,3724,302"/>
-<area shape="rect" id="node44" title=" " alt="" coords="3082,189,3141,214"/>
-<area shape="rect" id="node45" title=" " alt="" coords="3166,189,3220,214"/>
-<area shape="rect" id="node46" title=" " alt="" coords="3244,189,3304,214"/>
-<area shape="rect" id="node38" href="$Rect_8hpp.html" title=" " alt="" coords="3390,357,3566,397"/>
-<area shape="rect" id="node39" title=" " alt="" coords="3394,445,3562,485"/>
-<area shape="rect" id="node41" href="$KalmanFilter_8hpp.html" title=" " alt="" coords="3442,269,3630,309"/>
-<area shape="rect" id="node42" title=" " alt="" coords="3591,365,3742,390"/>
+<area shape="rect" id="node1" title=" " alt="" coords="2752,5,2995,45"/>
+<area shape="rect" id="node2" href="$Types_8hpp.html" title=" " alt="" coords="1205,189,1417,214"/>
+<area shape="rect" id="node40" href="$ByteTracker_8hpp.html" title=" " alt="" coords="4268,93,4449,133"/>
+<area shape="rect" id="node3" title=" " alt="" coords="3981,453,4096,478"/>
+<area shape="rect" id="node4" title=" " alt="" coords="240,277,408,302"/>
+<area shape="rect" id="node5" title=" " alt="" coords="791,533,947,559"/>
+<area shape="rect" id="node6" title=" " alt="" coords="4121,453,4306,478"/>
+<area shape="rect" id="node7" title=" " alt="" coords="433,277,575,302"/>
+<area shape="rect" id="node8" title=" " alt="" coords="1413,453,1627,478"/>
+<area shape="rect" id="node9" title=" " alt="" coords="4331,453,4405,478"/>
+<area shape="rect" id="node10" title=" " alt="" coords="599,277,697,302"/>
+<area shape="rect" id="node11" title=" " alt="" coords="689,453,781,478"/>
+<area shape="rect" id="node12" title=" " alt="" coords="4185,277,4247,302"/>
+<area shape="rect" id="node13" href="$Flags_8hpp.html" title=" " alt="" coords="5,277,216,302"/>
+<area shape="rect" id="node15" href="$Macros_8hpp.html" title=" " alt="" coords="4254,365,4447,390"/>
+<area shape="rect" id="node17" href="$SensorModels_8hpp.html" title=" " alt="" coords="1348,277,1615,302"/>
+<area shape="rect" id="node39" href="$Types-inl_8hpp.html" title=" " alt="" coords="772,269,956,309"/>
+<area shape="rect" id="node14" title=" " alt="" coords="53,365,169,390"/>
+<area shape="rect" id="node16" title=" " alt="" coords="4447,453,4524,478"/>
+<area shape="rect" id="node18" title=" " alt="" coords="2773,533,2928,559"/>
+<area shape="rect" id="node19" title=" " alt="" coords="1357,365,1587,390"/>
+<area shape="rect" id="node20" title=" " alt="" coords="1611,365,1808,390"/>
+<area shape="rect" id="node21" href="$Exceptions_8hpp.html" title=" " alt="" coords="1027,365,1274,390"/>
+<area shape="rect" id="node27" href="$GtsamUtils_8hpp.html" title=" " alt="" coords="2704,365,2923,390"/>
+<area shape="rect" id="node22" title=" " alt="" coords="1302,453,1389,478"/>
+<area shape="rect" id="node23" title=" " alt="" coords="907,453,983,478"/>
+<area shape="rect" id="node24" title=" " alt="" coords="1008,453,1083,478"/>
+<area shape="rect" id="node25" title=" " alt="" coords="1107,453,1194,478"/>
+<area shape="rect" id="node26" title=" " alt="" coords="1219,453,1277,478"/>
+<area shape="rect" id="node28" title=" " alt="" coords="1890,453,2089,478"/>
+<area shape="rect" id="node29" title=" " alt="" coords="2113,453,2300,478"/>
+<area shape="rect" id="node30" title=" " alt="" coords="2324,453,2500,478"/>
+<area shape="rect" id="node31" title=" " alt="" coords="2524,453,2705,478"/>
+<area shape="rect" id="node32" title=" " alt="" coords="2730,453,2897,478"/>
+<area shape="rect" id="node33" title=" " alt="" coords="2921,453,3114,478"/>
+<area shape="rect" id="node34" title=" " alt="" coords="3139,453,3312,478"/>
+<area shape="rect" id="node35" title=" " alt="" coords="3336,445,3531,485"/>
+<area shape="rect" id="node36" title=" " alt="" coords="3555,453,3741,478"/>
+<area shape="rect" id="node37" title=" " alt="" coords="3766,453,3906,478"/>
+<area shape="rect" id="node38" href="$Numerical_8hpp.html" title=" " alt="" coords="1652,453,1865,478"/>
+<area shape="rect" id="node41" href="$Detection_8hpp.html" title=" " alt="" coords="4347,269,4523,309"/>
+<area shape="rect" id="node44" href="$Track_8hpp.html" title=" " alt="" coords="4536,181,4712,221"/>
+<area shape="rect" id="node47" title=" " alt="" coords="4861,277,4931,302"/>
+<area shape="rect" id="node48" title=" " alt="" coords="4289,189,4348,214"/>
+<area shape="rect" id="node49" title=" " alt="" coords="4373,189,4427,214"/>
+<area shape="rect" id="node50" title=" " alt="" coords="4451,189,4511,214"/>
+<area shape="rect" id="node42" href="$Rect_8hpp.html" title=" " alt="" coords="4597,357,4773,397"/>
+<area shape="rect" id="node43" title=" " alt="" coords="4601,445,4769,485"/>
+<area shape="rect" id="node45" href="$KalmanFilter_8hpp.html" title=" " alt="" coords="4649,269,4837,309"/>
+<area shape="rect" id="node46" title=" " alt="" coords="4798,365,4949,390"/>
 </map>

@@ -1,6 +1,7 @@
 <map id="dyno::utils::gtsamVector3ToCvMat" name="dyno::utils::gtsamVector3ToCvMat">
-<area shape="rect" id="node1" title=" " alt="" coords="732,5,920,45"/>
-<area shape="rect" id="node2" href="$namespacedyno_1_1utils.html#ae07df9c266ca251a8892fd9ad371dab5" title="Converts a gtsam pose3 to a 3x3 rotation matrix and translation vector in opencv format (note: the fu..." alt="" coords="499,13,684,38"/>
+<area shape="rect" id="node1" title=" " alt="" coords="732,35,920,75"/>
+<area shape="rect" id="node2" href="$namespacedyno_1_1utils.html#ae07df9c266ca251a8892fd9ad371dab5" title="Converts a gtsam pose3 to a 3x3 rotation matrix and translation vector in opencv format (note: the fu..." alt="" coords="499,42,684,67"/>
 <area shape="rect" id="node3" href="$classdyno_1_1StereoCamera.html#a6ce9ba10820d974b32a081868c224fad" title="computeRectificationParameters" alt="" coords="208,5,451,45"/>
+<area shape="rect" id="node5" href="$namespacedyno_1_1utils.html#a908a399e79c1e4a10e2f8901ad4acde2" title="Projects SE(3) poses onto the image as an RGB axes. Input poses are expected to be in the camera (loc..." alt="" coords="212,70,447,95"/>
 <area shape="rect" id="node4" href="$classdyno_1_1StereoCamera.html#a2262c33a62cc297ecedbe5801fcd37df" title=" " alt="" coords="5,5,160,45"/>
 </map>

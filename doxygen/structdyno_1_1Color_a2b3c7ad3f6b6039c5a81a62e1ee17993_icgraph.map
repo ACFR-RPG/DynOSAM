@@ -1,5 +1,6 @@
 <map id="dyno::Color::black" name="dyno::Color::black">
-<area shape="rect" id="node1" title=" " alt="" coords="423,5,561,31"/>
-<area shape="rect" id="node2" href="$structdyno_1_1Color.html#a3c5f663788365ce23752d4cfcca64c35" title="Generate a color based on a spectrum of colors." alt="" coords="209,5,375,31"/>
-<area shape="rect" id="node3" href="$structdyno_1_1Color.html#ae28dde76a5a25818e4745afcf23e6d47" title="Generate a color based on a ironbow value." alt="" coords="5,5,161,31"/>
+<area shape="rect" id="node1" title=" " alt="" coords="468,42,607,67"/>
+<area shape="rect" id="node2" href="$classdyno_1_1Frame.html#af5e5ed1065480684da54421c6fcf395e" title=" " alt="" coords="209,5,420,45"/>
+<area shape="rect" id="node3" href="$structdyno_1_1Color.html#a3c5f663788365ce23752d4cfcca64c35" title="Generate a color based on a spectrum of colors." alt="" coords="232,70,397,95"/>
+<area shape="rect" id="node4" href="$structdyno_1_1Color.html#ae28dde76a5a25818e4745afcf23e6d47" title="Generate a color based on a ironbow value." alt="" coords="5,70,161,95"/>
 </map>

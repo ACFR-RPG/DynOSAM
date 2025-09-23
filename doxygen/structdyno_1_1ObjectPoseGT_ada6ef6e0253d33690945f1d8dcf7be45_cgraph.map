@@ -1,8 +1,8 @@
 <map id="dyno::ObjectPoseGT::drawBoundingBox" name="dyno::ObjectPoseGT::drawBoundingBox">
 <area shape="rect" id="node1" title="Draws the object label and bounding box on the provided image." alt="" coords="5,55,159,95"/>
 <area shape="rect" id="node2" href="$structdyno_1_1Color.html#a19ef171ae71fa3481957f66d420ced3b" title="Return in BGRA format." alt="" coords="231,5,364,31"/>
-<area shape="rect" id="node3" href="$namespacedyno_1_1utils.html#ab3245a3ae481133c8052ef2ba138c990" title="Draws a coloured bounding box and associated label onto a RGB image." alt="" coords="207,55,388,95"/>
-<area shape="rect" id="node4" href="$structdyno_1_1Color.html#a4f52f9aec87e2c34370ad02e6d4e25fc" title="Generates a sequence of never repeating colors using the golden ration to seperate the colours along ..." alt="" coords="217,120,377,145"/>
+<area shape="rect" id="node3" href="$namespacedyno_1_1utils.html#a1ec9d7c1cdab85616f6622f915e768dd" title="Draws a coloured bounding box and associated label onto a RGB image." alt="" coords="207,55,388,95"/>
+<area shape="rect" id="node4" href="$structdyno_1_1Color.html#a6689af3d0ac5ceaa66000b5ca70becbd" title="Generates a sequence of never repeating colors using the golden ratio to seperate the colours along t..." alt="" coords="217,120,377,145"/>
 <area shape="rect" id="node5" href="$structdyno_1_1Color.html#a08bcb6ea49861f6978858a2ff5159002" title=" " alt="" coords="436,120,599,145"/>
 <area shape="rect" id="node6" href="$structdyno_1_1Color.html#a6bc55a80a463a481dbf4778c70d04733" title=" " alt="" coords="674,95,813,120"/>
 <area shape="rect" id="node7" href="$namespacedyno.html#ab0e74ec8992860404a618192cc694b83" title=" " alt="" coords="647,144,840,169"/>

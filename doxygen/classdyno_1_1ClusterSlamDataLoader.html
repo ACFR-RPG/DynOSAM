@@ -169,10 +169,6 @@ Public Member Functions</h2></td></tr>
 <tr class="inherit_header pub_methods_classdyno_1_1DataProvider"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classdyno_1_1DataProvider')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classdyno_1_1DataProvider.html">dyno::DataProvider</a></td></tr>
 <tr class="memitem:aad6d856034b3333ff6c9df69be2a271a inherit pub_methods_classdyno_1_1DataProvider"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DataProvider.html#aad6d856034b3333ff6c9df69be2a271a">DataProvider</a> ()=default</td></tr>
 <tr class="separator:aad6d856034b3333ff6c9df69be2a271a inherit pub_methods_classdyno_1_1DataProvider"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac3dd1f8f4aafda392b89a2348b2026ac inherit pub_methods_classdyno_1_1DataProvider"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DataProvider.html#ac3dd1f8f4aafda392b89a2348b2026ac">DataProvider</a> (<a class="el" href="classdyno_1_1DataInterfacePipeline.html">DataInterfacePipeline</a> *module)</td></tr>
-<tr class="separator:ac3dd1f8f4aafda392b89a2348b2026ac inherit pub_methods_classdyno_1_1DataProvider"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae57527fb3be1d1894e0f5f7ec0568390 inherit pub_methods_classdyno_1_1DataProvider"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DataProvider.html#ae57527fb3be1d1894e0f5f7ec0568390">DataProvider</a> (<a class="el" href="classdyno_1_1DataInterfacePipelineImu.html">DataInterfacePipelineImu</a> *module)</td></tr>
-<tr class="separator:ae57527fb3be1d1894e0f5f7ec0568390 inherit pub_methods_classdyno_1_1DataProvider"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adda0f52bfea3dcc51b3ccfd9e06c4f8b inherit pub_methods_classdyno_1_1DataProvider"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DataProvider.html#adda0f52bfea3dcc51b3ccfd9e06c4f8b">~DataProvider</a> ()</td></tr>
 <tr class="separator:adda0f52bfea3dcc51b3ccfd9e06c4f8b inherit pub_methods_classdyno_1_1DataProvider"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a107b3898bf7f793093c76c4405c608f0 inherit pub_methods_classdyno_1_1DataProvider"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DataProvider.html#a107b3898bf7f793093c76c4405c608f0">registerImuSingleCallback</a> (const <a class="el" href="classdyno_1_1DataProvider.html#ada0c50fb63e4e328da1a89f65c83470e">ImuSingleInputCallback</a> &amp;callback)</td></tr>
@@ -199,6 +195,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a7ad37ecec178b81be71cd7ec8657160d inherit pub_methods_classdyno_1_1DataProvider"><td class="memItemLeft" align="right" valign="top">virtual CameraParams::Optional&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DataProvider.html#a7ad37ecec178b81be71cd7ec8657160d">getCameraParams</a> () const</td></tr>
 <tr class="memdesc:a7ad37ecec178b81be71cd7ec8657160d inherit pub_methods_classdyno_1_1DataProvider"><td class="mdescLeft">&#160;</td><td class="mdescRight">Provides functionality to get camera paramters for the main pipeline, as these may be available from the dataset.  <br /></td></tr>
 <tr class="separator:a7ad37ecec178b81be71cd7ec8657160d inherit pub_methods_classdyno_1_1DataProvider"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af26a9e848a9c6261fb18d249fc8282e8 inherit pub_methods_classdyno_1_1DataProvider"><td class="memItemLeft" align="right" valign="top">virtual ImuParams::Optional&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DataProvider.html#af26a9e848a9c6261fb18d249fc8282e8">getImuParams</a> () const</td></tr>
+<tr class="separator:af26a9e848a9c6261fb18d249fc8282e8 inherit pub_methods_classdyno_1_1DataProvider"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
@@ -277,7 +275,7 @@ Additional Inherited Members</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Data loader for the cluster slam datasets as provided at: <a href="https://huangjh-pub.github.io/page/clusterslam-dataset/">https://huangjh-pub.github.io/page/clusterslam-dataset/</a>. </p>
 
-<p class="definition">Definition at line <a class="el" href="ClusterSlamDataProvider_8hpp_source.html#l00044">44</a> of file <a class="el" href="ClusterSlamDataProvider_8hpp_source.html">ClusterSlamDataProvider.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ClusterSlamDataProvider_8hpp_source.html#l00051">51</a> of file <a class="el" href="ClusterSlamDataProvider_8hpp_source.html">ClusterSlamDataProvider.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a08661c0ee53d2504e5b6d2c931df1f97" name="a08661c0ee53d2504e5b6d2c931df1f97"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a08661c0ee53d2504e5b6d2c931df1f97">&#9670;&#160;</a></span>ClusterSlamDataLoader()</h2>
@@ -305,112 +303,95 @@ Additional Inherited Members</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ClusterSlamDataProvider_8cc_source.html#l00693">693</a> of file <a class="el" href="ClusterSlamDataProvider_8cc_source.html">ClusterSlamDataProvider.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  693</span>                                                                       : <a class="code hl_typedef" href="namespacedyno.html#a6ffcacecab66eb9f8fe5a3973003c0a4">ClusterSlamDatasetProvider</a>(dataset_path)</div>
-<div class="line"><span class="lineno">  694</span>{</div>
-<div class="line"><span class="lineno">  695</span>    LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Starting ClusterSlamDataLoader with path&quot;</span> &lt;&lt; dataset_path;</div>
-<div class="line"><span class="lineno">  696</span> </div>
-<div class="line"><span class="lineno">  697</span>    <span class="comment">//this would go out of scope but we capture it in the functional loaders</span></div>
-<div class="line"><span class="lineno">  698</span>    <span class="keyword">auto</span> loader = std::make_shared&lt;ClusterSlamAllLoader&gt;(dataset_path);</div>
-<div class="line"><span class="lineno">  699</span>    <span class="keyword">auto</span> timestamp_loader = std::make_shared&lt;ClusterSlamTimestampLoader&gt;(loader);</div>
-<div class="line"><span class="lineno">  700</span> </div>
-<div class="line"><span class="lineno">  701</span>    <a class="code hl_variable" href="classdyno_1_1ClusterSlamDataLoader.html#a056631f13fda181e107f6ee609d98a92">left_camera_params_</a> = loader-&gt;getLeftCameraParams();</div>
-<div class="line"><span class="lineno">  702</span> </div>
-<div class="line"><span class="lineno">  703</span>    CHECK(<a class="code hl_function" href="classdyno_1_1ClusterSlamDataLoader.html#ac2df8b8870306d0d5840d9b3f7a3d9ed">getCameraParams</a>());</div>
-<div class="line"><span class="lineno">  704</span> </div>
-<div class="line"><span class="lineno">  705</span>    <span class="keyword">auto</span> rgb_loader = std::make_shared&lt;FunctionalDataFolder&lt;cv::Mat&gt;&gt;(</div>
-<div class="line"><span class="lineno">  706</span>        [loader](<span class="keywordtype">size_t</span> idx) {</div>
-<div class="line"><span class="lineno">  707</span>            <span class="keywordflow">return</span> loader-&gt;getRGB(idx);</div>
-<div class="line"><span class="lineno">  708</span>        }</div>
-<div class="line"><span class="lineno">  709</span>    );</div>
-<div class="line"><span class="lineno">  710</span> </div>
-<div class="line"><span class="lineno">  711</span>    <span class="keyword">auto</span> optical_flow_loader = std::make_shared&lt;FunctionalDataFolder&lt;cv::Mat&gt;&gt;(</div>
-<div class="line"><span class="lineno">  712</span>        [loader](<span class="keywordtype">size_t</span> idx) {</div>
-<div class="line"><span class="lineno">  713</span>            <span class="keywordflow">return</span> loader-&gt;getOpticalFlow(idx);</div>
-<div class="line"><span class="lineno">  714</span>        }</div>
-<div class="line"><span class="lineno">  715</span>    );</div>
-<div class="line"><span class="lineno">  716</span> </div>
-<div class="line"><span class="lineno">  717</span>    <span class="keyword">auto</span> depth_loader = std::make_shared&lt;FunctionalDataFolder&lt;cv::Mat&gt;&gt;(</div>
-<div class="line"><span class="lineno">  718</span>        [loader](<span class="keywordtype">size_t</span> idx) {</div>
-<div class="line"><span class="lineno">  719</span>            <span class="keywordflow">return</span> loader-&gt;getDepthImage(idx);</div>
-<div class="line"><span class="lineno">  720</span>        }</div>
-<div class="line"><span class="lineno">  721</span>    );</div>
-<div class="line"><span class="lineno">  722</span> </div>
-<div class="line"><span class="lineno">  723</span>    <span class="keyword">auto</span> instance_mask_loader = std::make_shared&lt;FunctionalDataFolder&lt;cv::Mat&gt;&gt;(</div>
-<div class="line"><span class="lineno">  724</span>        [loader](<span class="keywordtype">size_t</span> idx) {</div>
-<div class="line"><span class="lineno">  725</span>            <span class="keywordflow">return</span> loader-&gt;getInstanceMask(idx);</div>
-<div class="line"><span class="lineno">  726</span>        }</div>
-<div class="line"><span class="lineno">  727</span>    );</div>
-<div class="line"><span class="lineno">  728</span> </div>
-<div class="line"><span class="lineno">  729</span> </div>
-<div class="line"><span class="lineno">  730</span>    <span class="keyword">auto</span> gt_loader = std::make_shared&lt;FunctionalDataFolder&lt;GroundTruthInputPacket&gt;&gt;(</div>
-<div class="line"><span class="lineno">  731</span>        [loader](<span class="keywordtype">size_t</span> idx) {</div>
-<div class="line"><span class="lineno">  732</span>            <span class="keywordflow">return</span> loader-&gt;getGtPacket(idx);</div>
-<div class="line"><span class="lineno">  733</span>        }</div>
-<div class="line"><span class="lineno">  734</span>    );</div>
-<div class="line"><span class="lineno">  735</span> </div>
-<div class="line"><span class="lineno">  736</span>    this-&gt;<a class="code hl_function" href="classdyno_1_1DynoDatasetProvider.html#aca00b7dce03a97517c126aacb60a3332">setLoaders</a>(</div>
-<div class="line"><span class="lineno">  737</span>        timestamp_loader,</div>
-<div class="line"><span class="lineno">  738</span>        rgb_loader,</div>
-<div class="line"><span class="lineno">  739</span>        optical_flow_loader,</div>
-<div class="line"><span class="lineno">  740</span>        depth_loader,</div>
-<div class="line"><span class="lineno">  741</span>        instance_mask_loader,</div>
-<div class="line"><span class="lineno">  742</span>        gt_loader</div>
-<div class="line"><span class="lineno">  743</span>    );</div>
-<div class="line"><span class="lineno">  744</span> </div>
-<div class="line"><span class="lineno">  745</span>     <span class="keyword">auto</span> callback = [&amp;](<span class="keywordtype">size_t</span> frame_id,</div>
-<div class="line"><span class="lineno">  746</span>        <a class="code hl_typedef" href="namespacedyno.html#a7fda67c0575c4b7a8210dcc8ae227370">Timestamp</a> timestamp,</div>
-<div class="line"><span class="lineno">  747</span>        cv::Mat rgb,</div>
-<div class="line"><span class="lineno">  748</span>        cv::Mat optical_flow,</div>
-<div class="line"><span class="lineno">  749</span>        cv::Mat depth,</div>
-<div class="line"><span class="lineno">  750</span>        cv::Mat instance_mask,</div>
-<div class="line"><span class="lineno">  751</span>        GroundTruthInputPacket gt_object_pose_gt) -&gt; <span class="keywordtype">bool</span></div>
-<div class="line"><span class="lineno">  752</span>    {</div>
-<div class="line"><span class="lineno">  753</span>        CHECK_EQ(timestamp, gt_object_pose_gt.timestamp_);</div>
-<div class="line"><span class="lineno">  754</span> </div>
-<div class="line"><span class="lineno">  755</span>        CHECK(<a class="code hl_variable" href="classdyno_1_1DataProvider.html#a1691b6605c29a0bfda5fea991c6bc199">ground_truth_packet_callback_</a>);</div>
-<div class="line"><span class="lineno">  756</span>        <span class="keywordflow">if</span>(<a class="code hl_variable" href="classdyno_1_1DataProvider.html#a1691b6605c29a0bfda5fea991c6bc199">ground_truth_packet_callback_</a>) <a class="code hl_variable" href="classdyno_1_1DataProvider.html#a1691b6605c29a0bfda5fea991c6bc199">ground_truth_packet_callback_</a>(gt_object_pose_gt);</div>
-<div class="line"><span class="lineno">  757</span> </div>
-<div class="line"><span class="lineno">  758</span>        ImageContainer::Ptr image_container = <span class="keyword">nullptr</span>;</div>
-<div class="line"><span class="lineno">  759</span>        image_container = <a class="code hl_function" href="classdyno_1_1ImageContainer.html#a5b0f2449742264ffb55c9062bc58c06f">ImageContainer::Create</a>(</div>
-<div class="line"><span class="lineno">  760</span>                timestamp,</div>
-<div class="line"><span class="lineno">  761</span>                frame_id,</div>
-<div class="line"><span class="lineno">  762</span>                ImageWrapper&lt;ImageType::RGBMono&gt;(rgb),</div>
-<div class="line"><span class="lineno">  763</span>                ImageWrapper&lt;ImageType::Depth&gt;(depth),</div>
-<div class="line"><span class="lineno">  764</span>                ImageWrapper&lt;ImageType::OpticalFlow&gt;(optical_flow),</div>
-<div class="line"><span class="lineno">  765</span>                ImageWrapper&lt;ImageType::MotionMask&gt;(instance_mask));</div>
-<div class="line"><span class="lineno">  766</span>        CHECK(image_container);</div>
-<div class="line"><span class="lineno">  767</span>        CHECK(<a class="code hl_variable" href="classdyno_1_1DataProvider.html#aa11672e30d895d97f113076391bc02cc">image_container_callback_</a>);</div>
-<div class="line"><span class="lineno">  768</span>        <span class="keywordflow">if</span>(<a class="code hl_variable" href="classdyno_1_1DataProvider.html#aa11672e30d895d97f113076391bc02cc">image_container_callback_</a>) <a class="code hl_variable" href="classdyno_1_1DataProvider.html#aa11672e30d895d97f113076391bc02cc">image_container_callback_</a>(image_container);</div>
-<div class="line"><span class="lineno">  769</span>        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  770</span>    };</div>
-<div class="line"><span class="lineno">  771</span> </div>
-<div class="line"><span class="lineno">  772</span>    this-&gt;<a class="code hl_function" href="structdyno_1_1__DynoDatasetConstructor.html#a5354a00794f43690a5bab204bda3879e">setCallback</a>(callback);</div>
-<div class="line"><span class="lineno">  773</span>}</div>
-<div class="ttc" id="aclassdyno_1_1ClusterSlamDataLoader_html_a056631f13fda181e107f6ee609d98a92"><div class="ttname"><a href="classdyno_1_1ClusterSlamDataLoader.html#a056631f13fda181e107f6ee609d98a92">dyno::ClusterSlamDataLoader::left_camera_params_</a></div><div class="ttdeci">CameraParams left_camera_params_</div><div class="ttdef"><b>Definition:</b> <a href="ClusterSlamDataProvider_8hpp_source.html#l00073">ClusterSlamDataProvider.hpp:73</a></div></div>
-<div class="ttc" id="aclassdyno_1_1ClusterSlamDataLoader_html_ac2df8b8870306d0d5840d9b3f7a3d9ed"><div class="ttname"><a href="classdyno_1_1ClusterSlamDataLoader.html#ac2df8b8870306d0d5840d9b3f7a3d9ed">dyno::ClusterSlamDataLoader::getCameraParams</a></div><div class="ttdeci">CameraParams::Optional getCameraParams() const override</div><div class="ttdoc">Provides functionality to get camera paramters for the main pipeline, as these may be available from ...</div><div class="ttdef"><b>Definition:</b> <a href="ClusterSlamDataProvider_8hpp_source.html#l00068">ClusterSlamDataProvider.hpp:68</a></div></div>
-<div class="ttc" id="aclassdyno_1_1DataProvider_html_a1691b6605c29a0bfda5fea991c6bc199"><div class="ttname"><a href="classdyno_1_1DataProvider.html#a1691b6605c29a0bfda5fea991c6bc199">dyno::DataProvider::ground_truth_packet_callback_</a></div><div class="ttdeci">GroundTruthPacketCallback ground_truth_packet_callback_</div><div class="ttdef"><b>Definition:</b> <a href="DataProvider_8hpp_source.html#l00128">DataProvider.hpp:128</a></div></div>
-<div class="ttc" id="aclassdyno_1_1DataProvider_html_aa11672e30d895d97f113076391bc02cc"><div class="ttname"><a href="classdyno_1_1DataProvider.html#aa11672e30d895d97f113076391bc02cc">dyno::DataProvider::image_container_callback_</a></div><div class="ttdeci">ImageContainerCallback image_container_callback_</div><div class="ttdef"><b>Definition:</b> <a href="DataProvider_8hpp_source.html#l00124">DataProvider.hpp:124</a></div></div>
+<p class="definition">Definition at line <a class="el" href="ClusterSlamDataProvider_8cc_source.html#l00774">774</a> of file <a class="el" href="ClusterSlamDataProvider_8cc_source.html">ClusterSlamDataProvider.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  775</span>    : <a class="code hl_typedef" href="namespacedyno.html#a8f649100f90df5d38fe9201328223f74">ClusterSlamDatasetProvider</a>(dataset_path) {</div>
+<div class="line"><span class="lineno">  776</span>  LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Starting ClusterSlamDataLoader with path&quot;</span> &lt;&lt; dataset_path;</div>
+<div class="line"><span class="lineno">  777</span> </div>
+<div class="line"><span class="lineno">  778</span>  <span class="comment">// this would go out of scope but we capture it in the functional loaders</span></div>
+<div class="line"><span class="lineno">  779</span>  <span class="keyword">auto</span> loader = std::make_shared&lt;ClusterSlamAllLoader&gt;(dataset_path);</div>
+<div class="line"><span class="lineno">  780</span>  <span class="keyword">auto</span> timestamp_loader = std::make_shared&lt;ClusterSlamTimestampLoader&gt;(loader);</div>
+<div class="line"><span class="lineno">  781</span> </div>
+<div class="line"><span class="lineno">  782</span>  <a class="code hl_variable" href="classdyno_1_1ClusterSlamDataLoader.html#a056631f13fda181e107f6ee609d98a92">left_camera_params_</a> = loader-&gt;getLeftCameraParams();</div>
+<div class="line"><span class="lineno">  783</span> </div>
+<div class="line"><span class="lineno">  784</span>  CHECK(<a class="code hl_function" href="classdyno_1_1ClusterSlamDataLoader.html#ac2df8b8870306d0d5840d9b3f7a3d9ed">getCameraParams</a>());</div>
+<div class="line"><span class="lineno">  785</span> </div>
+<div class="line"><span class="lineno">  786</span>  <span class="keyword">auto</span> rgb_loader = std::make_shared&lt;FunctionalDataFolder&lt;cv::Mat&gt;&gt;(</div>
+<div class="line"><span class="lineno">  787</span>      [loader](<span class="keywordtype">size_t</span> idx) { <span class="keywordflow">return</span> loader-&gt;getRGB(idx); });</div>
+<div class="line"><span class="lineno">  788</span> </div>
+<div class="line"><span class="lineno">  789</span>  <span class="keyword">auto</span> optical_flow_loader = std::make_shared&lt;FunctionalDataFolder&lt;cv::Mat&gt;&gt;(</div>
+<div class="line"><span class="lineno">  790</span>      [loader](<span class="keywordtype">size_t</span> idx) { <span class="keywordflow">return</span> loader-&gt;getOpticalFlow(idx); });</div>
+<div class="line"><span class="lineno">  791</span> </div>
+<div class="line"><span class="lineno">  792</span>  <span class="keyword">auto</span> depth_loader = std::make_shared&lt;FunctionalDataFolder&lt;cv::Mat&gt;&gt;(</div>
+<div class="line"><span class="lineno">  793</span>      [loader](<span class="keywordtype">size_t</span> idx) { <span class="keywordflow">return</span> loader-&gt;getDepthImage(idx); });</div>
+<div class="line"><span class="lineno">  794</span> </div>
+<div class="line"><span class="lineno">  795</span>  <span class="keyword">auto</span> instance_mask_loader = std::make_shared&lt;FunctionalDataFolder&lt;cv::Mat&gt;&gt;(</div>
+<div class="line"><span class="lineno">  796</span>      [loader](<span class="keywordtype">size_t</span> idx) { <span class="keywordflow">return</span> loader-&gt;getInstanceMask(idx); });</div>
+<div class="line"><span class="lineno">  797</span> </div>
+<div class="line"><span class="lineno">  798</span>  <span class="keyword">auto</span> gt_loader =</div>
+<div class="line"><span class="lineno">  799</span>      std::make_shared&lt;FunctionalDataFolder&lt;GroundTruthInputPacket&gt;&gt;(</div>
+<div class="line"><span class="lineno">  800</span>          [loader](<span class="keywordtype">size_t</span> idx) { <span class="keywordflow">return</span> loader-&gt;getGtPacket(idx); });</div>
+<div class="line"><span class="lineno">  801</span> </div>
+<div class="line"><span class="lineno">  802</span>  <span class="keyword">auto</span> rgb_right_loader =</div>
+<div class="line"><span class="lineno">  803</span>      std::make_shared&lt;FunctionalDataFolder&lt;std::optional&lt;cv::Mat&gt;&gt;&gt;(</div>
+<div class="line"><span class="lineno">  804</span>          [loader](<span class="keywordtype">size_t</span> idx) { <span class="keywordflow">return</span> loader-&gt;getRightRGB(idx); });</div>
+<div class="line"><span class="lineno">  805</span> </div>
+<div class="line"><span class="lineno">  806</span>  this-&gt;<a class="code hl_function" href="classdyno_1_1DynoDatasetProvider.html#aca00b7dce03a97517c126aacb60a3332">setLoaders</a>(timestamp_loader, rgb_loader, optical_flow_loader,</div>
+<div class="line"><span class="lineno">  807</span>                   depth_loader, instance_mask_loader, gt_loader,</div>
+<div class="line"><span class="lineno">  808</span>                   rgb_right_loader);</div>
+<div class="line"><span class="lineno">  809</span> </div>
+<div class="line"><span class="lineno">  810</span>  <span class="keyword">auto</span> callback = [&amp;](<span class="keywordtype">size_t</span> frame_id, <a class="code hl_typedef" href="namespacedyno.html#a7fda67c0575c4b7a8210dcc8ae227370">Timestamp</a> timestamp, cv::Mat rgb,</div>
+<div class="line"><span class="lineno">  811</span>                      cv::Mat optical_flow, cv::Mat depth,</div>
+<div class="line"><span class="lineno">  812</span>                      cv::Mat instance_mask,</div>
+<div class="line"><span class="lineno">  813</span>                      GroundTruthInputPacket gt_object_pose_gt,</div>
+<div class="line"><span class="lineno">  814</span>                      std::optional&lt;cv::Mat&gt; right_rgb) -&gt; <span class="keywordtype">bool</span> {</div>
+<div class="line"><span class="lineno">  815</span>    CHECK_EQ(timestamp, gt_object_pose_gt.timestamp_);</div>
+<div class="line"><span class="lineno">  816</span> </div>
+<div class="line"><span class="lineno">  817</span>    CHECK(<a class="code hl_variable" href="classdyno_1_1DataProvider.html#a1691b6605c29a0bfda5fea991c6bc199">ground_truth_packet_callback_</a>);</div>
+<div class="line"><span class="lineno">  818</span>    <span class="keywordflow">if</span> (<a class="code hl_variable" href="classdyno_1_1DataProvider.html#a1691b6605c29a0bfda5fea991c6bc199">ground_truth_packet_callback_</a>)</div>
+<div class="line"><span class="lineno">  819</span>      <a class="code hl_variable" href="classdyno_1_1DataProvider.html#a1691b6605c29a0bfda5fea991c6bc199">ground_truth_packet_callback_</a>(gt_object_pose_gt);</div>
+<div class="line"><span class="lineno">  820</span> </div>
+<div class="line"><span class="lineno">  821</span>    ImageContainer image_container(frame_id, timestamp);</div>
+<div class="line"><span class="lineno">  822</span>    image_container.rgb(rgb)</div>
+<div class="line"><span class="lineno">  823</span>        .depth(depth)</div>
+<div class="line"><span class="lineno">  824</span>        .opticalFlow(optical_flow)</div>
+<div class="line"><span class="lineno">  825</span>        .objectMotionMask(instance_mask);</div>
+<div class="line"><span class="lineno">  826</span> </div>
+<div class="line"><span class="lineno">  827</span>    <span class="comment">// TODO: currently cannot use this as frontend does not take RGBDCamera as</span></div>
+<div class="line"><span class="lineno">  828</span>    <span class="comment">// input (ie no baseline!!)</span></div>
+<div class="line"><span class="lineno">  829</span>    <span class="comment">//  if (right_rgb) image_container.rightRgb(right_rgb.value());</span></div>
+<div class="line"><span class="lineno">  830</span> </div>
+<div class="line"><span class="lineno">  831</span>    CHECK(<a class="code hl_variable" href="classdyno_1_1DataProvider.html#aa11672e30d895d97f113076391bc02cc">image_container_callback_</a>);</div>
+<div class="line"><span class="lineno">  832</span>    <span class="keywordflow">if</span> (<a class="code hl_variable" href="classdyno_1_1DataProvider.html#aa11672e30d895d97f113076391bc02cc">image_container_callback_</a>)</div>
+<div class="line"><span class="lineno">  833</span>      <a class="code hl_variable" href="classdyno_1_1DataProvider.html#aa11672e30d895d97f113076391bc02cc">image_container_callback_</a>(</div>
+<div class="line"><span class="lineno">  834</span>          std::make_shared&lt;ImageContainer&gt;(image_container));</div>
+<div class="line"><span class="lineno">  835</span>    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  836</span>  };</div>
+<div class="line"><span class="lineno">  837</span> </div>
+<div class="line"><span class="lineno">  838</span>  this-&gt;<a class="code hl_function" href="structdyno_1_1__DynoDatasetConstructor.html#a5354a00794f43690a5bab204bda3879e">setCallback</a>(callback);</div>
+<div class="line"><span class="lineno">  839</span>}</div>
+<div class="ttc" id="aclassdyno_1_1ClusterSlamDataLoader_html_a056631f13fda181e107f6ee609d98a92"><div class="ttname"><a href="classdyno_1_1ClusterSlamDataLoader.html#a056631f13fda181e107f6ee609d98a92">dyno::ClusterSlamDataLoader::left_camera_params_</a></div><div class="ttdeci">CameraParams left_camera_params_</div><div class="ttdef"><b>Definition:</b> <a href="ClusterSlamDataProvider_8hpp_source.html#l00078">ClusterSlamDataProvider.hpp:78</a></div></div>
+<div class="ttc" id="aclassdyno_1_1ClusterSlamDataLoader_html_ac2df8b8870306d0d5840d9b3f7a3d9ed"><div class="ttname"><a href="classdyno_1_1ClusterSlamDataLoader.html#ac2df8b8870306d0d5840d9b3f7a3d9ed">dyno::ClusterSlamDataLoader::getCameraParams</a></div><div class="ttdeci">CameraParams::Optional getCameraParams() const override</div><div class="ttdoc">Provides functionality to get camera paramters for the main pipeline, as these may be available from ...</div><div class="ttdef"><b>Definition:</b> <a href="ClusterSlamDataProvider_8hpp_source.html#l00073">ClusterSlamDataProvider.hpp:73</a></div></div>
+<div class="ttc" id="aclassdyno_1_1DataProvider_html_a1691b6605c29a0bfda5fea991c6bc199"><div class="ttname"><a href="classdyno_1_1DataProvider.html#a1691b6605c29a0bfda5fea991c6bc199">dyno::DataProvider::ground_truth_packet_callback_</a></div><div class="ttdeci">GroundTruthPacketCallback ground_truth_packet_callback_</div><div class="ttdef"><b>Definition:</b> <a href="DataProvider_8hpp_source.html#l00130">DataProvider.hpp:130</a></div></div>
+<div class="ttc" id="aclassdyno_1_1DataProvider_html_aa11672e30d895d97f113076391bc02cc"><div class="ttname"><a href="classdyno_1_1DataProvider.html#aa11672e30d895d97f113076391bc02cc">dyno::DataProvider::image_container_callback_</a></div><div class="ttdeci">ImageContainerCallback image_container_callback_</div><div class="ttdef"><b>Definition:</b> <a href="DataProvider_8hpp_source.html#l00126">DataProvider.hpp:126</a></div></div>
 <div class="ttc" id="aclassdyno_1_1DynoDatasetProvider_html_aca00b7dce03a97517c126aacb60a3332"><div class="ttname"><a href="classdyno_1_1DynoDatasetProvider.html#aca00b7dce03a97517c126aacb60a3332">dyno::DynoDatasetProvider::setLoaders</a></div><div class="ttdeci">void setLoaders(TimestampBaseLoader::Ptr timestamp_loader, dyno::DataFolder&lt; cv::Mat &gt;::Ptr rgb_loader, dyno::DataFolder&lt; cv::Mat &gt;::Ptr optical_flow_loader, typename DataFolder&lt; DataTypes &gt;::Ptr... data_folders) override</div><div class="ttdef"><b>Definition:</b> <a href="DatasetProvider_8hpp_source.html#l00340">DatasetProvider.hpp:340</a></div></div>
-<div class="ttc" id="aclassdyno_1_1ImageContainer_html_a5b0f2449742264ffb55c9062bc58c06f"><div class="ttname"><a href="classdyno_1_1ImageContainer.html#a5b0f2449742264ffb55c9062bc58c06f">dyno::ImageContainer::Create</a></div><div class="ttdeci">static ImageContainer::Ptr Create(const Timestamp timestamp, const FrameId frame_id, const ImageWrapper&lt; ImageType::RGBMono &gt; &amp;img, const ImageWrapper&lt; ImageType::Depth &gt; &amp;depth, const ImageWrapper&lt; ImageType::OpticalFlow &gt; &amp;optical_flow, const ImageWrapper&lt; ImageType::SemanticMask &gt; &amp;semantic_mask)</div><div class="ttdoc">Construct an image container equivalent to RGBD + Semantic Mask input.</div><div class="ttdef"><b>Definition:</b> <a href="ImageContainer_8cc_source.html#l00112">ImageContainer.cc:112</a></div></div>
-<div class="ttc" id="anamespacedyno_html_a6ffcacecab66eb9f8fe5a3973003c0a4"><div class="ttname"><a href="namespacedyno.html#a6ffcacecab66eb9f8fe5a3973003c0a4">dyno::ClusterSlamDatasetProvider</a></div><div class="ttdeci">DynoDatasetProvider&lt; cv::Mat, cv::Mat, GroundTruthInputPacket &gt; ClusterSlamDatasetProvider</div><div class="ttdef"><b>Definition:</b> <a href="ClusterSlamDataProvider_8hpp_source.html#l00038">ClusterSlamDataProvider.hpp:38</a></div></div>
 <div class="ttc" id="anamespacedyno_html_a7fda67c0575c4b7a8210dcc8ae227370"><div class="ttname"><a href="namespacedyno.html#a7fda67c0575c4b7a8210dcc8ae227370">dyno::Timestamp</a></div><div class="ttdeci">double Timestamp</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00064">Types.hpp:64</a></div></div>
+<div class="ttc" id="anamespacedyno_html_a8f649100f90df5d38fe9201328223f74"><div class="ttname"><a href="namespacedyno.html#a8f649100f90df5d38fe9201328223f74">dyno::ClusterSlamDatasetProvider</a></div><div class="ttdeci">DynoDatasetProvider&lt; cv::Mat, cv::Mat, GroundTruthInputPacket, std::optional&lt; cv::Mat &gt; &gt; ClusterSlamDatasetProvider</div><div class="ttdef"><b>Definition:</b> <a href="ClusterSlamDataProvider_8hpp_source.html#l00042">ClusterSlamDataProvider.hpp:44</a></div></div>
 <div class="ttc" id="astructdyno_1_1__DynoDatasetConstructor_html_a5354a00794f43690a5bab204bda3879e"><div class="ttname"><a href="structdyno_1_1__DynoDatasetConstructor.html#a5354a00794f43690a5bab204bda3879e">dyno::_DynoDatasetConstructor&lt; Timestamp, cv::Mat, cv::Mat, DataTypes... &gt;::setCallback</a></div><div class="ttdeci">void setCallback(const DataInputCallback &amp;data_input_callback)</div><div class="ttdef"><b>Definition:</b> <a href="DatasetProvider_8hpp_source.html#l00067">DatasetProvider.hpp:67</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="classdyno_1_1ImageContainer.html#a5b0f2449742264ffb55c9062bc58c06f">dyno::ImageContainer::Create()</a>, <a class="el" href="classdyno_1_1ClusterSlamDataLoader.html#ac2df8b8870306d0d5840d9b3f7a3d9ed">getCameraParams()</a>, <a class="el" href="classdyno_1_1DataProvider.html#a1691b6605c29a0bfda5fea991c6bc199">dyno::DataProvider::ground_truth_packet_callback_</a>, <a class="el" href="classdyno_1_1DataProvider.html#aa11672e30d895d97f113076391bc02cc">dyno::DataProvider::image_container_callback_</a>, <a class="el" href="classdyno_1_1ClusterSlamDataLoader.html#a056631f13fda181e107f6ee609d98a92">left_camera_params_</a>, <a class="el" href="structdyno_1_1__DynoDatasetConstructor.html#a5354a00794f43690a5bab204bda3879e">dyno::_DynoDatasetConstructor&lt; Timestamp, cv::Mat, cv::Mat, DataTypes... &gt;::setCallback()</a>, and <a class="el" href="classdyno_1_1DynoDatasetProvider.html#aca00b7dce03a97517c126aacb60a3332">dyno::DynoDatasetProvider&lt; DataTypes &gt;::setLoaders()</a>.</p>
+<p class="reference">References <a class="el" href="classdyno_1_1ClusterSlamDataLoader.html#ac2df8b8870306d0d5840d9b3f7a3d9ed">getCameraParams()</a>, <a class="el" href="classdyno_1_1DataProvider.html#a1691b6605c29a0bfda5fea991c6bc199">dyno::DataProvider::ground_truth_packet_callback_</a>, <a class="el" href="classdyno_1_1DataProvider.html#aa11672e30d895d97f113076391bc02cc">dyno::DataProvider::image_container_callback_</a>, <a class="el" href="classdyno_1_1ClusterSlamDataLoader.html#a056631f13fda181e107f6ee609d98a92">left_camera_params_</a>, <a class="el" href="classdyno_1_1ImageContainer.html#a6f35259f95c31b861ff6515c159e1ee3">dyno::ImageContainer::rgb()</a>, <a class="el" href="structdyno_1_1__DynoDatasetConstructor.html#a5354a00794f43690a5bab204bda3879e">dyno::_DynoDatasetConstructor&lt; Timestamp, cv::Mat, cv::Mat, DataTypes... &gt;::setCallback()</a>, and <a class="el" href="classdyno_1_1DynoDatasetProvider.html#aca00b7dce03a97517c126aacb60a3332">dyno::DynoDatasetProvider&lt; DataTypes &gt;::setLoaders()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1ClusterSlamDataLoader_a08661c0ee53d2504e5b6d2c931df1f97_cgraph.png" border="0" usemap="#aclassdyno_1_1ClusterSlamDataLoader_a08661c0ee53d2504e5b6d2c931df1f97_cgraph" alt=""/></div>
 <map name="aclassdyno_1_1ClusterSlamDataLoader_a08661c0ee53d2504e5b6d2c931df1f97_cgraph" id="aclassdyno_1_1ClusterSlamDataLoader_a08661c0ee53d2504e5b6d2c931df1f97_cgraph">
-<area shape="rect" title="Construct a new Cluster Slam Data Loader object." alt="" coords="5,129,221,169"/>
-<area shape="rect" href="classdyno_1_1ImageContainer.html#a5b0f2449742264ffb55c9062bc58c06f" title="Construct an image container equivalent to RGBD + Semantic Mask input." alt="" coords="307,29,474,69"/>
-<area shape="rect" href="classdyno_1_1ClusterSlamDataLoader.html#ac2df8b8870306d0d5840d9b3f7a3d9ed" title="Provides functionality to get camera paramters for the main pipeline, as these may be available from ..." alt="" coords="283,93,499,133"/>
-<area shape="rect" href="structdyno_1_1__DynoDatasetConstructor.html#a5354a00794f43690a5bab204bda3879e" title=" " alt="" coords="269,158,512,213"/>
-<area shape="rect" href="classdyno_1_1DynoDatasetProvider.html#aca00b7dce03a97517c126aacb60a3332" title=" " alt="" coords="290,237,491,277"/>
-<area shape="rect" href="classdyno_1_1DynoDatasetProvider.html#a981618d669ffbb6284bc2be9d0fc6f9b" title=" " alt="" coords="560,205,797,245"/>
-<area shape="rect" href="classdyno_1_1DynoDataset.html#a1178220b7c572207b0b49ff0f5fffb49" title=" " alt="" coords="579,269,779,309"/>
-<area shape="rect" href="classdyno_1_1DynoDataset.html#ac5d0052a9ce06bd1e964d855469d4e05" title=" " alt="" coords="845,205,1073,245"/>
+<area shape="rect" title="Construct a new Cluster Slam Data Loader object." alt="" coords="5,95,221,135"/>
+<area shape="rect" href="classdyno_1_1ClusterSlamDataLoader.html#ac2df8b8870306d0d5840d9b3f7a3d9ed" title="Provides functionality to get camera paramters for the main pipeline, as these may be available from ..." alt="" coords="283,5,499,45"/>
+<area shape="rect" href="classdyno_1_1ImageContainer.html#a6f35259f95c31b861ff6515c159e1ee3" title=" " alt="" coords="293,70,488,95"/>
+<area shape="rect" href="structdyno_1_1__DynoDatasetConstructor.html#a5354a00794f43690a5bab204bda3879e" title=" " alt="" coords="269,119,512,174"/>
+<area shape="rect" href="classdyno_1_1DynoDatasetProvider.html#aca00b7dce03a97517c126aacb60a3332" title=" " alt="" coords="290,199,491,239"/>
+<area shape="rect" href="classdyno_1_1DynoDatasetProvider.html#a981618d669ffbb6284bc2be9d0fc6f9b" title=" " alt="" coords="560,167,797,207"/>
+<area shape="rect" href="classdyno_1_1DynoDataset.html#a1178220b7c572207b0b49ff0f5fffb49" title=" " alt="" coords="579,231,779,271"/>
+<area shape="rect" href="classdyno_1_1DynoDataset.html#ac5d0052a9ce06bd1e964d855469d4e05" title=" " alt="" coords="845,167,1073,207"/>
 </map>
 </div>
 
@@ -446,10 +427,10 @@ Here is the call graph for this function:</div>
 
 <p>Reimplemented from <a class="el" href="classdyno_1_1DataProvider.html#a7ad37ecec178b81be71cd7ec8657160d">dyno::DataProvider</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="ClusterSlamDataProvider_8hpp_source.html#l00068">68</a> of file <a class="el" href="ClusterSlamDataProvider_8hpp_source.html">ClusterSlamDataProvider.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   68</span>                                                           {</div>
-<div class="line"><span class="lineno">   69</span>        <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1ClusterSlamDataLoader.html#a056631f13fda181e107f6ee609d98a92">left_camera_params_</a>;</div>
-<div class="line"><span class="lineno">   70</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="ClusterSlamDataProvider_8hpp_source.html#l00073">73</a> of file <a class="el" href="ClusterSlamDataProvider_8hpp_source.html">ClusterSlamDataProvider.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   73</span>                                                        {</div>
+<div class="line"><span class="lineno">   74</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1ClusterSlamDataLoader.html#a056631f13fda181e107f6ee609d98a92">left_camera_params_</a>;</div>
+<div class="line"><span class="lineno">   75</span>  }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1ClusterSlamDataLoader.html#a056631f13fda181e107f6ee609d98a92">left_camera_params_</a>.</p>
 
@@ -487,7 +468,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ClusterSlamDataProvider_8hpp_source.html#l00073">73</a> of file <a class="el" href="ClusterSlamDataProvider_8hpp_source.html">ClusterSlamDataProvider.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ClusterSlamDataProvider_8hpp_source.html#l00078">78</a> of file <a class="el" href="ClusterSlamDataProvider_8hpp_source.html">ClusterSlamDataProvider.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1ClusterSlamDataLoader.html#a08661c0ee53d2504e5b6d2c931df1f97">ClusterSlamDataLoader()</a>, and <a class="el" href="classdyno_1_1ClusterSlamDataLoader.html#ac2df8b8870306d0d5840d9b3f7a3d9ed">getCameraParams()</a>.</p>
 

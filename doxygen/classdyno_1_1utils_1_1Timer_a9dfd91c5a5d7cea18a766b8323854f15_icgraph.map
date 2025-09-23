@@ -1,6 +1,11 @@
 <map id="dyno::utils::Timer::tic" name="dyno::utils::Timer::tic">
-<area shape="rect" id="node1" title=" " alt="" coords="289,92,449,117"/>
-<area shape="rect" id="node2" href="$classdyno_1_1ThreadsafeImuBuffer.html#a801e12f38e80e2f87ba7293bfa2bfa58" title=" " alt="" coords="5,5,241,60"/>
-<area shape="rect" id="node3" href="$classdyno_1_1MIMOPipelineModule.html#ad0993bad6118d7521ec6f844b8f9be8c" title=" " alt="" coords="23,85,223,125"/>
-<area shape="rect" id="node4" href="$classdyno_1_1utils_1_1TimingStatsCollector.html#a2fb15570927fa9faf9bf7d97702ff15b" title="Resets the current tic_time and sets is_valid = true, such that when the collector tries to toc,..." alt="" coords="35,149,211,189"/>
+<area shape="rect" id="node1" title=" " alt="" coords="588,188,748,213"/>
+<area shape="rect" id="node2" href="$classdyno_1_1ThreadsafeImuBuffer.html#a801e12f38e80e2f87ba7293bfa2bfa58" title=" " alt="" coords="283,5,519,60"/>
+<area shape="rect" id="node3" href="$classdyno_1_1ParallelHybridBackendModule.html#a292225500c4604751ebd98e6564ac6ff" title=" " alt="" coords="261,85,540,125"/>
+<area shape="rect" id="node5" href="$classdyno_1_1MIMOPipelineModule.html#ad0993bad6118d7521ec6f844b8f9be8c" title=" " alt="" coords="301,149,501,189"/>
+<area shape="rect" id="node6" href="$classdyno_1_1utils_1_1TimingStatsCollector.html#a2fb15570927fa9faf9bf7d97702ff15b" title="Resets the current tic_time and sets is_valid = true, such that when the collector tries to toc,..." alt="" coords="313,213,489,253"/>
+<area shape="rect" id="node7" href="$classdyno_1_1BackendDSDRos.html#a5316ec622424b5f5c3c5b111a56c4063" title=" " alt="" coords="316,277,485,317"/>
+<area shape="rect" id="node8" href="$classdyno_1_1ParallelObjectISAM.html#a71b737a3ffd6f37722393df4f46d37f4" title=" " alt="" coords="307,341,494,381"/>
+<area shape="rect" id="node4" href="$classdyno_1_1ParallelHybridBackendModule.html#a07ee75bebfcdf9cab20b6d2cc214b8e0" title=" " alt="" coords="5,85,213,125"/>
+<area shape="rect" id="node9" href="$classdyno_1_1ParallelObjectISAM.html#aebe02d7a654d9829c361eece7374dd1f" title=" " alt="" coords="16,341,203,381"/>
 </map>

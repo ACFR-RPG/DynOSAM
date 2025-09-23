@@ -1,4 +1,4 @@
 <map id="dyno::WorldMotionAccessor::getObjectPoses" name="dyno::WorldMotionAccessor::getObjectPoses">
-<area shape="rect" id="node1" title="Collects all object poses for frame 0 to k. (Non&#45;pure )Virtual function that may be overwritten &#45; def..." alt="" coords="256,5,459,45"/>
+<area shape="rect" id="node1" title="Collects all object poses for frame 0 to K. (Non&#45;pure )Virtual function that may be overwritten &#45; def..." alt="" coords="256,5,459,45"/>
 <area shape="rect" id="node2" href="$classdyno_1_1WorldMotionAccessor.html#a261be7df36333929259a315767fc6578" title="Get the pose (^wL_k) of an object (j) at time&#45;step (k)." alt="" coords="5,5,208,45"/>
 </map>

@@ -1,10 +1,4 @@
 <map id="dyno::FeatureTracker::propogateMask" name="dyno::FeatureTracker::propogateMask">
-<area shape="rect" id="node1" title=" " alt="" coords="5,137,163,177"/>
-<area shape="rect" id="node2" href="$classdyno_1_1Feature.html#a37dbbe8da704c2f51e237d38760534fb" title=" " alt="" coords="240,5,420,45"/>
-<area shape="rect" id="node4" href="$classdyno_1_1ImageContainerSubset.html#a11ceb8e3325f28bf683b6480d53427a0" title="Gets the corresponding image (cv::Mat) corresponding to the requested ImageType. ImageType must be in..." alt="" coords="211,70,449,95"/>
-<area shape="rect" id="node5" href="$classdyno_1_1Feature.html#a6ef4cbae2843a4646954bcb53f63c7a8" title=" " alt="" coords="241,119,419,145"/>
-<area shape="rect" id="node6" href="$classdyno_1_1FeatureTrackerBase.html#a32d80be7e74a096c2b816529b7fd2c69" title="Checks if a keypoint is within an image, taking into account the shrink row/col values in the params...." alt="" coords="235,220,425,260"/>
-<area shape="rect" id="node7" href="$structdyno_1_1functional__keypoint.html#a3896d96a6f95b5311ae768cdd0ad97e8" title=" " alt="" coords="497,201,704,226"/>
-<area shape="rect" id="node8" href="$structdyno_1_1functional__keypoint.html#a24933450cad8bc70b7b76b339756cd94" title=" " alt="" coords="497,254,704,279"/>
-<area shape="rect" id="node3" href="$classdyno_1_1Feature.html#ada9f9980d950874a7a157a82b9921f8a" title="Gets keypoint observation." alt="" coords="513,13,688,38"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,5,163,45"/>
+<area shape="rect" id="node2" href="$classdyno_1_1ImageContainer.html#ae5eead678f02be0ab9de7464e1833c55" title=" " alt="" coords="211,5,377,45"/>
 </map>

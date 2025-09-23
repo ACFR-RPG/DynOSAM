@@ -1,6 +1,5 @@
 <map id="dyno::ImageContainer::hasDepth" name="dyno::ImageContainer::hasDepth">
-<area shape="rect" id="node1" title=" " alt="" coords="256,69,423,109"/>
-<area shape="rect" id="node2" href="$classdyno_1_1ImageContainer.html#afd2f7a3a41c3a3d745fdd2fec97ca175" title="Returns true if the set of input images does not contain depth and therefore should be used as part o..." alt="" coords="23,5,190,45"/>
-<area shape="rect" id="node3" href="$classdyno_1_1ImageContainer.html#ad8ae103311a01b0f0ff842501d692249" title=" " alt="" coords="23,69,190,109"/>
-<area shape="rect" id="node4" href="$classdyno_1_1Frame.html#a1d378252c37b147d489923e1d30235f0" title="Update the depth values on all contained features. Clips the static and dynamic features (marking the..." alt="" coords="5,134,208,159"/>
+<area shape="rect" id="node1" title=" " alt="" coords="264,35,431,75"/>
+<area shape="rect" id="node2" href="$classdyno_1_1Frame.html#af5e5ed1065480684da54421c6fcf395e" title=" " alt="" coords="5,5,216,45"/>
+<area shape="rect" id="node3" href="$classdyno_1_1Frame.html#a1d378252c37b147d489923e1d30235f0" title="Update the depth values on all contained features. Clips the static and dynamic features (marking the..." alt="" coords="9,70,212,95"/>
 </map>

@@ -1,5 +1,5 @@
 <map id="dyno::KltFeatureTracker::geometricVerification" name="dyno::KltFeatureTracker::geometricVerification">
 <area shape="rect" id="node1" title="Geometric verification using homograph + RANSAC. Input vectors have the same size and are a 1&#45;to&#45;1 of..." alt="" coords="451,5,625,45"/>
-<area shape="rect" id="node2" href="$classdyno_1_1KltFeatureTracker.html#a24e98ff72741e59ed48f5b14d5ecaf9b" title="Tracks features using KLT tracker between the previous image and the current one." alt="" coords="228,5,403,45"/>
-<area shape="rect" id="node3" href="$classdyno_1_1KltFeatureTracker.html#a8b8b5f33830f3b76205863b9236539e4" title="Track features between frames k&#45;1 and the current set of images (at k)." alt="" coords="5,5,180,45"/>
+<area shape="rect" id="node2" href="$classdyno_1_1KltFeatureTracker.html#a8f26d8fe56edd3e579a879e82a40457f" title="Tracks features using KLT tracker between the previous image and the current one." alt="" coords="228,5,403,45"/>
+<area shape="rect" id="node3" href="$classdyno_1_1KltFeatureTracker.html#ab15aaa39f0c3adc62037d718b98039c0" title="Track features between frames k&#45;1 and the current set of images (at k)." alt="" coords="5,5,180,45"/>
 </map>

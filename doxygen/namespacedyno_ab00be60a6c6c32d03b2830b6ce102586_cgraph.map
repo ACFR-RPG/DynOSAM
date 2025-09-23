@@ -1,4 +1,4 @@
 <map id="dyno::type_name" name="dyno::type_name">
 <area shape="rect" id="node1" title="Get demangled class name of type T from an instance." alt="" coords="5,5,140,31"/>
-<area shape="rect" id="node2" href="$namespacedyno.html#a1b5b67db2d2a5b28501c1aa6e9d72b5c" title="Map of tracklet ids to Motion3 (gtsam::Pose3)" alt="" coords="188,5,315,31"/>
+<area shape="rect" id="node2" href="$namespacedyno.html#a1b5b67db2d2a5b28501c1aa6e9d72b5c" title="Get demangled class name." alt="" coords="188,5,315,31"/>
 </map>

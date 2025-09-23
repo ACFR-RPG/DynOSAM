@@ -85,7 +85,7 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>The <a class="el" href="classdyno_1_1UndistorterRectifier.html" title="The UndistorterRectifier class Computes undistortion maps and undistorts on a per-image basis....">UndistorterRectifier</a> class Computes undistortion maps and undistorts on a per-image basis. Optionally, one can also apply image rectification by providing a corresponding rotation matrix R.  
+<p>The <a class="el" href="classdyno_1_1UndistorterRectifier.html" title="The UndistorterRectifier class Computes undistortion maps and undistorts on a per-image basis....">UndistorterRectifier</a> class Computes undistortion maps and undistorts on a per-image basis. Optionally, one can also apply image rectification by providing a corresponding rotation matrix <a class="el" href="structdyno_1_1R.html">R</a>.  
  <a href="classdyno_1_1UndistorterRectifier.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="UndistortRectifier_8hpp_source.html">UndistortRectifier.hpp</a>&gt;</code></p>
@@ -101,13 +101,13 @@ Collaboration diagram for dyno::UndistorterRectifier:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aaffa018d8098ac0c4916029c05340d0b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1UndistorterRectifier.html#aaffa018d8098ac0c4916029c05340d0b">UndistorterRectifier</a> (const cv::Mat &amp;P, const <a class="el" href="classdyno_1_1CameraParams.html">CameraParams</a> &amp;cam_params, const cv::Mat &amp;R=cv::Mat())</td></tr>
+<tr class="memitem:aaffa018d8098ac0c4916029c05340d0b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1UndistorterRectifier.html#aaffa018d8098ac0c4916029c05340d0b">UndistorterRectifier</a> (const cv::Mat &amp;P, const <a class="el" href="classdyno_1_1CameraParams.html">CameraParams</a> &amp;cam_params, const cv::Mat &amp;<a class="el" href="structdyno_1_1R.html">R</a>=cv::Mat())</td></tr>
 <tr class="memdesc:aaffa018d8098ac0c4916029c05340d0b"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classdyno_1_1UndistorterRectifier.html" title="The UndistorterRectifier class Computes undistortion maps and undistorts on a per-image basis....">UndistorterRectifier</a>.  <br /></td></tr>
 <tr class="separator:aaffa018d8098ac0c4916029c05340d0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abd1a5646e0b689009ac1d5b7454f65bb"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1UndistorterRectifier.html#abd1a5646e0b689009ac1d5b7454f65bb">~UndistorterRectifier</a> ()=default</td></tr>
 <tr class="separator:abd1a5646e0b689009ac1d5b7454f65bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa55a8cd2fa64ee3b968f2be1d6acf19f"><td class="memItemLeft" align="right" valign="top">gtsam::Vector3&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1UndistorterRectifier.html#aa55a8cd2fa64ee3b968f2be1d6acf19f">undistortKeypointAndGetVersor</a> (const <a class="el" href="namespacedyno.html#aaa260a8022691078c59e1ac6a4fa05b5">Keypoint</a> &amp;keypoint) const</td></tr>
-<tr class="memdesc:aa55a8cd2fa64ee3b968f2be1d6acf19f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Undistorts a single pixel and returns the corresponding versor (unit norm vector corresponding to bearing). The rectifciation and new camera matrix (R and P) are used from construction.  <br /></td></tr>
+<tr class="memdesc:aa55a8cd2fa64ee3b968f2be1d6acf19f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Undistorts a single pixel and returns the corresponding versor (unit norm vector corresponding to bearing). The rectifciation and new camera matrix (<a class="el" href="structdyno_1_1R.html">R</a> and P) are used from construction.  <br /></td></tr>
 <tr class="separator:aa55a8cd2fa64ee3b968f2be1d6acf19f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a80b4a50fd637142aee912e2aa0f200ee"><td class="memItemLeft" align="right" valign="top">gtsam::Vector3&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1UndistorterRectifier.html#a80b4a50fd637142aee912e2aa0f200ee">undistortKeypointAndGetProjectedVersor</a> (const <a class="el" href="namespacedyno.html#aaa260a8022691078c59e1ac6a4fa05b5">Keypoint</a> &amp;keypoint) const</td></tr>
 <tr class="separator:a80b4a50fd637142aee912e2aa0f200ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -120,20 +120,20 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:ae64676bd43fb299d9c72034fa3ee3c09"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1UndistorterRectifier.html#ae64676bd43fb299d9c72034fa3ee3c09">UndistortRectifyKeypoints</a> (const <a class="el" href="namespacedyno.html#a6e4b9811fc666e292979ad077f5cca41">Keypoints</a> &amp;keypoints, <a class="el" href="namespacedyno.html#a6e4b9811fc666e292979ad077f5cca41">Keypoints</a> &amp;undistorted_keypoints, const <a class="el" href="classdyno_1_1CameraParams.html">CameraParams</a> &amp;cam_params, std::optional&lt; cv::Mat &gt; P={}, std::optional&lt; cv::Mat &gt; R={})</td></tr>
+<tr class="memitem:ae64676bd43fb299d9c72034fa3ee3c09"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1UndistorterRectifier.html#ae64676bd43fb299d9c72034fa3ee3c09">UndistortRectifyKeypoints</a> (const <a class="el" href="namespacedyno.html#a6e4b9811fc666e292979ad077f5cca41">Keypoints</a> &amp;keypoints, <a class="el" href="namespacedyno.html#a6e4b9811fc666e292979ad077f5cca41">Keypoints</a> &amp;undistorted_keypoints, const <a class="el" href="classdyno_1_1CameraParams.html">CameraParams</a> &amp;cam_params, std::optional&lt; cv::Mat &gt; P={}, std::optional&lt; cv::Mat &gt; <a class="el" href="structdyno_1_1R.html">R</a>={})</td></tr>
 <tr class="memdesc:ae64676bd43fb299d9c72034fa3ee3c09"><td class="mdescLeft">&#160;</td><td class="mdescRight">undistortRectifyKeypoints undistorts and rectifies  <br /></td></tr>
 <tr class="separator:ae64676bd43fb299d9c72034fa3ee3c09"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a210fba595205f9c9f36eb76bb37a7b69"><td class="memItemLeft" align="right" valign="top">static gtsam::Vector3&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1UndistorterRectifier.html#a210fba595205f9c9f36eb76bb37a7b69">UndistortKeypointAndGetVersor</a> (const <a class="el" href="namespacedyno.html#aaa260a8022691078c59e1ac6a4fa05b5">Keypoint</a> &amp;keypoint, const <a class="el" href="classdyno_1_1CameraParams.html">CameraParams</a> &amp;cam_params, std::optional&lt; cv::Mat &gt; R={})</td></tr>
+<tr class="memitem:a210fba595205f9c9f36eb76bb37a7b69"><td class="memItemLeft" align="right" valign="top">static gtsam::Vector3&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1UndistorterRectifier.html#a210fba595205f9c9f36eb76bb37a7b69">UndistortKeypointAndGetVersor</a> (const <a class="el" href="namespacedyno.html#aaa260a8022691078c59e1ac6a4fa05b5">Keypoint</a> &amp;keypoint, const <a class="el" href="classdyno_1_1CameraParams.html">CameraParams</a> &amp;cam_params, std::optional&lt; cv::Mat &gt; <a class="el" href="structdyno_1_1R.html">R</a>={})</td></tr>
 <tr class="memdesc:a210fba595205f9c9f36eb76bb37a7b69"><td class="mdescLeft">&#160;</td><td class="mdescRight">UndistortKeypointAndGetVersor undistort a single pixel, and return the corresponding versor. (unit norm vector corresponding to bearing).  <br /></td></tr>
 <tr class="separator:a210fba595205f9c9f36eb76bb37a7b69"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af102413f7c20a9120b1e1d0a7d848c41"><td class="memItemLeft" align="right" valign="top">static gtsam::Vector3&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1UndistorterRectifier.html#af102413f7c20a9120b1e1d0a7d848c41">UndistortKeypointAndGetProjectedVersor</a> (const <a class="el" href="namespacedyno.html#aaa260a8022691078c59e1ac6a4fa05b5">Keypoint</a> &amp;keypoint, const <a class="el" href="classdyno_1_1CameraParams.html">CameraParams</a> &amp;cam_params, std::optional&lt; cv::Mat &gt; P={}, std::optional&lt; cv::Mat &gt; R={})</td></tr>
+<tr class="memitem:af102413f7c20a9120b1e1d0a7d848c41"><td class="memItemLeft" align="right" valign="top">static gtsam::Vector3&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1UndistorterRectifier.html#af102413f7c20a9120b1e1d0a7d848c41">UndistortKeypointAndGetProjectedVersor</a> (const <a class="el" href="namespacedyno.html#aaa260a8022691078c59e1ac6a4fa05b5">Keypoint</a> &amp;keypoint, const <a class="el" href="classdyno_1_1CameraParams.html">CameraParams</a> &amp;cam_params, std::optional&lt; cv::Mat &gt; P={}, std::optional&lt; cv::Mat &gt; <a class="el" href="structdyno_1_1R.html">R</a>={})</td></tr>
 <tr class="memdesc:af102413f7c20a9120b1e1d0a7d848c41"><td class="mdescLeft">&#160;</td><td class="mdescRight">UndistortKeypointAndGetVersor undistort a single pixel, and return the corresponding projected versor using the new camera matrix P If P is not provided, the camera matrix, K is used.  <br /></td></tr>
 <tr class="separator:af102413f7c20a9120b1e1d0a7d848c41"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
-<tr class="memitem:a4a4cf24ce89d70f3ec6c3c25051f4691"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1UndistorterRectifier.html#a4a4cf24ce89d70f3ec6c3c25051f4691">initUndistortRectifyMaps</a> (const <a class="el" href="classdyno_1_1CameraParams.html">CameraParams</a> &amp;cam_params, const cv::Mat &amp;R, const cv::Mat &amp;P, cv::Mat *map_x, cv::Mat *map_y)</td></tr>
-<tr class="memdesc:a4a4cf24ce89d70f3ec6c3c25051f4691"><td class="mdescLeft">&#160;</td><td class="mdescRight">initUndistortRectifyMaps Initialize pixel to pixel maps for undistortion and rectification. If rectification is not needed, as is the case with a monocular camera, the identity matrix should be passed as R.  <br /></td></tr>
+<tr class="memitem:a4a4cf24ce89d70f3ec6c3c25051f4691"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1UndistorterRectifier.html#a4a4cf24ce89d70f3ec6c3c25051f4691">initUndistortRectifyMaps</a> (const <a class="el" href="classdyno_1_1CameraParams.html">CameraParams</a> &amp;cam_params, const cv::Mat &amp;<a class="el" href="structdyno_1_1R.html">R</a>, const cv::Mat &amp;P, cv::Mat *map_x, cv::Mat *map_y)</td></tr>
+<tr class="memdesc:a4a4cf24ce89d70f3ec6c3c25051f4691"><td class="mdescLeft">&#160;</td><td class="mdescRight">initUndistortRectifyMaps Initialize pixel to pixel maps for undistortion and rectification. If rectification is not needed, as is the case with a monocular camera, the identity matrix should be passed as <a class="el" href="structdyno_1_1R.html">R</a>.  <br /></td></tr>
 <tr class="separator:a4a4cf24ce89d70f3ec6c3c25051f4691"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
@@ -159,7 +159,7 @@ Static Protected Attributes</h2></td></tr>
 <tr class="separator:aab8943538ce56715b0157d460b92f6a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>The <a class="el" href="classdyno_1_1UndistorterRectifier.html" title="The UndistorterRectifier class Computes undistortion maps and undistorts on a per-image basis....">UndistorterRectifier</a> class Computes undistortion maps and undistorts on a per-image basis. Optionally, one can also apply image rectification by providing a corresponding rotation matrix R. </p>
+<div class="textblock"><p>The <a class="el" href="classdyno_1_1UndistorterRectifier.html" title="The UndistorterRectifier class Computes undistortion maps and undistorts on a per-image basis....">UndistorterRectifier</a> class Computes undistortion maps and undistorts on a per-image basis. Optionally, one can also apply image rectification by providing a corresponding rotation matrix <a class="el" href="structdyno_1_1R.html">R</a>. </p>
 
 <p class="definition">Definition at line <a class="el" href="UndistortRectifier_8hpp_source.html#l00058">58</a> of file <a class="el" href="UndistortRectifier_8hpp_source.html">UndistortRectifier.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
@@ -200,7 +200,7 @@ Static Protected Attributes</h2></td></tr>
   <table class="params">
     <tr><td class="paramname">P</td><td>new projection matrix after stereo rectification (identity if no stereo rectification needed). In the case of the monocular camera, P (new camera matrix) is usually equal to K (the camera matrix). See: <a href="https://docs.opencv.org/4.x/d9/d0c/group__calib3d.html#ga7dfb72c9cf9780a347fbe3d1c47e5d5a">https://docs.opencv.org/4.x/d9/d0c/group__calib3d.html#ga7dfb72c9cf9780a347fbe3d1c47e5d5a</a> P is normally set to P1 or P2 computed by cv::stereoRectify. </td></tr>
     <tr><td class="paramname">cam_params</td><td><a class="el" href="classdyno_1_1Camera.html">Camera</a> Parameters. </td></tr>
-    <tr><td class="paramname">R</td><td>optional rotation matrix if you want to rectify image (aka apply a rotation matrix) typically computed by cv::stereoRectify. If you have a mono camera, you typically don't set this matrix. </td></tr>
+    <tr><td class="paramname"><a class="el" href="structdyno_1_1R.html">R</a></td><td>optional rotation matrix if you want to rectify image (aka apply a rotation matrix) typically computed by cv::stereoRectify. If you have a mono camera, you typically don't set this matrix. </td></tr>
   </table>
   </dd>
 </dl>
@@ -312,13 +312,13 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p>initUndistortRectifyMaps Initialize pixel to pixel maps for undistortion and rectification. If rectification is not needed, as is the case with a monocular camera, the identity matrix should be passed as R. </p>
+<p>initUndistortRectifyMaps Initialize pixel to pixel maps for undistortion and rectification. If rectification is not needed, as is the case with a monocular camera, the identity matrix should be passed as <a class="el" href="structdyno_1_1R.html">R</a>. </p>
 <p>The function computes the joint undistortion and rectification transformation and represents the result in the form of maps for remap. The undistorted image looks like original, as if it is captured with a camera using the camera matrix = P and zero distortion. In case of a monocular camera, P is usually equal to cameraMatrix, or it can be computed by cv::getOptimalNewCameraMatrix for a better control over scaling. In case of a stereo camera, it is the output of stereo rectification (cv::stereoRectify)</p>
 <p>NOTE: for stereo cameras, cam_params.P_ should be already computed using cv::stereoRectify().</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">cam_params</td><td><a class="el" href="classdyno_1_1Camera.html">Camera</a> Parameters. </td></tr>
-    <tr><td class="paramname">R</td><td>optional rotation matrix if you want to rectify image (aka apply a rotation matrix typically computed by cv::stereoRectify). </td></tr>
+    <tr><td class="paramname"><a class="el" href="structdyno_1_1R.html">R</a></td><td>optional rotation matrix if you want to rectify image (aka apply a rotation matrix typically computed by cv::stereoRectify). </td></tr>
     <tr><td class="paramname">P</td><td>new projection matrix after stereo rectification (identity if no stereo rectification needed). P is normally set to P1 or P2 computed by cv::stereoRectify. </td></tr>
   </table>
   </dd>
@@ -515,7 +515,7 @@ Here is the call graph for this function:</div>
     <tr><td class="paramname">keypoint</td><td>const Keypoints&amp; </td></tr>
     <tr><td class="paramname">cam_params</td><td>const <a class="el" href="classdyno_1_1CameraParams.html">CameraParams</a>&amp; </td></tr>
     <tr><td class="paramname">P</td><td>std::optional&lt;cv::Mat&gt; new camera matrix used for the projections </td></tr>
-    <tr><td class="paramname">R</td><td>std::optional&lt;cv::Mat&gt; not needed in the monocular case </td></tr>
+    <tr><td class="paramname"><a class="el" href="structdyno_1_1R.html">R</a></td><td>std::optional&lt;cv::Mat&gt; not needed in the monocular case </td></tr>
   </table>
   </dd>
 </dl>
@@ -550,7 +550,7 @@ Here is the call graph for this function:</div>
 <div class="line"><span class="lineno">  149</span> </div>
 <div class="line"><span class="lineno">  150</span>}</div>
 <div class="ttc" id="aclassdyno_1_1UndistorterRectifier_html_ae64676bd43fb299d9c72034fa3ee3c09"><div class="ttname"><a href="classdyno_1_1UndistorterRectifier.html#ae64676bd43fb299d9c72034fa3ee3c09">dyno::UndistorterRectifier::UndistortRectifyKeypoints</a></div><div class="ttdeci">static void UndistortRectifyKeypoints(const Keypoints &amp;keypoints, Keypoints &amp;undistorted_keypoints, const CameraParams &amp;cam_params, std::optional&lt; cv::Mat &gt; P={}, std::optional&lt; cv::Mat &gt; R={})</div><div class="ttdoc">undistortRectifyKeypoints undistorts and rectifies</div><div class="ttdef"><b>Definition:</b> <a href="UndistortRectifier_8cc_source.html#l00043">UndistortRectifier.cc:43</a></div></div>
-<div class="ttc" id="anamespacedyno_html_a6e4b9811fc666e292979ad077f5cca41"><div class="ttname"><a href="namespacedyno.html#a6e4b9811fc666e292979ad077f5cca41">dyno::Keypoints</a></div><div class="ttdeci">gtsam::Point2Vector Keypoints</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00095">Types.hpp:95</a></div></div>
+<div class="ttc" id="anamespacedyno_html_a6e4b9811fc666e292979ad077f5cca41"><div class="ttname"><a href="namespacedyno.html#a6e4b9811fc666e292979ad077f5cca41">dyno::Keypoints</a></div><div class="ttdeci">gtsam::Point2Vector Keypoints</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00096">Types.hpp:96</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1CameraParams.html#ae50eb600c23415b3f7bd46e70553f96a">dyno::CameraParams::getCameraMatrix()</a>, and <a class="el" href="classdyno_1_1UndistorterRectifier.html#ae64676bd43fb299d9c72034fa3ee3c09">UndistortRectifyKeypoints()</a>.</p>
 
@@ -598,7 +598,7 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p>Undistorts a single pixel and returns the corresponding versor (unit norm vector corresponding to bearing). The rectifciation and new camera matrix (R and P) are used from construction. </p>
+<p>Undistorts a single pixel and returns the corresponding versor (unit norm vector corresponding to bearing). The rectifciation and new camera matrix (<a class="el" href="structdyno_1_1R.html">R</a> and P) are used from construction. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">keypoint</td><td></td></tr>
@@ -678,7 +678,7 @@ Here is the call graph for this function:</div>
   <table class="params">
     <tr><td class="paramname">cv_px</td><td>keypoint </td></tr>
     <tr><td class="paramname">cam_params</td><td><a class="el" href="classdyno_1_1CameraParams.html">CameraParams</a> instance </td></tr>
-    <tr><td class="paramname">R</td><td>std::optional&lt;cv::Mat&gt; not needed in the monocular case </td></tr>
+    <tr><td class="paramname"><a class="el" href="structdyno_1_1R.html">R</a></td><td>std::optional&lt;cv::Mat&gt; not needed in the monocular case </td></tr>
   </table>
   </dd>
 </dl>
@@ -796,14 +796,14 @@ Here is the caller graph for this function:</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1UndistorterRectifier.html#aab8943538ce56715b0157d460b92f6a5">kRectifyImageType</a>, <a class="el" href="classdyno_1_1UndistorterRectifier.html#af3048fe6825ee5417c7a1c06dd8b6bbf">map_x_</a>, <a class="el" href="classdyno_1_1UndistorterRectifier.html#a7aaab8874540dccd0815892f7a8292b3">map_y_</a>, <a class="el" href="classdyno_1_1UndistorterRectifier.html#a67854f4361d9cfc41898656abdc3334a">remap_interpolation_type_</a>, and <a class="el" href="classdyno_1_1UndistorterRectifier.html#a01cc178f9ad842ad8c06ba87c2a249e0">remap_use_constant_border_type_</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1ImageContainer.html#a1ca4c0a57616da9fa0dfd1e3bae9c469">dyno::ImageContainer::RectifyImages()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1ImageContainerDeprecate.html#a00b784789d921adf59846618daae9b89">dyno::ImageContainerDeprecate::RectifyImages()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1UndistorterRectifier_acc5dd76c4ccb8e8ffb31a0ef7fe20853_icgraph.png" border="0" usemap="#aclassdyno_1_1UndistorterRectifier_acc5dd76c4ccb8e8ffb31a0ef7fe20853_icgraph" alt=""/></div>
 <map name="aclassdyno_1_1UndistorterRectifier_acc5dd76c4ccb8e8ffb31a0ef7fe20853_icgraph" id="aclassdyno_1_1UndistorterRectifier_acc5dd76c4ccb8e8ffb31a0ef7fe20853_icgraph">
-<area shape="rect" title="undistortRectifyImage Given distorted (and optionally non&#45;rectified) image, returns a distortion&#45;free..." alt="" coords="220,5,409,45"/>
-<area shape="rect" href="classdyno_1_1ImageContainer.html#a1ca4c0a57616da9fa0dfd1e3bae9c469" title=" " alt="" coords="5,5,172,45"/>
+<area shape="rect" title="undistortRectifyImage Given distorted (and optionally non&#45;rectified) image, returns a distortion&#45;free..." alt="" coords="287,5,476,45"/>
+<area shape="rect" href="classdyno_1_1ImageContainerDeprecate.html#a00b784789d921adf59846618daae9b89" title=" " alt="" coords="5,5,239,45"/>
 </map>
 </div>
 
@@ -965,8 +965,8 @@ Here is the call graph for this function:</div>
 <div class="line"><span class="lineno">   85</span>    undistorted_keypoints.clear();</div>
 <div class="line"><span class="lineno">   86</span>    undistorted_keypoints = <a class="code hl_function" href="namespacedyno_1_1utils.html#af331019717c52781bef4bf816e2165b2">utils::cvPointsToGtsam</a>(undistorted_keypoints_cv);</div>
 <div class="line"><span class="lineno">   87</span>}</div>
-<div class="ttc" id="anamespacedyno_1_1utils_html_af331019717c52781bef4bf816e2165b2"><div class="ttname"><a href="namespacedyno_1_1utils.html#af331019717c52781bef4bf816e2165b2">dyno::utils::cvPointsToGtsam</a></div><div class="ttdeci">gtsam::Point2Vector cvPointsToGtsam(const std::vector&lt; cv::Point_&lt; T &gt; &gt; &amp;points)</div><div class="ttdef"><b>Definition:</b> <a href="GtsamUtils_8hpp_source.html#l00234">GtsamUtils.hpp:234</a></div></div>
-<div class="ttc" id="anamespacedyno_1_1utils_html_af59783e0798baa636b8a23535a676f37"><div class="ttname"><a href="namespacedyno_1_1utils.html#af59783e0798baa636b8a23535a676f37">dyno::utils::gtsamPointsToCv</a></div><div class="ttdeci">std::vector&lt; cv::Point_&lt; T &gt; &gt; gtsamPointsToCv(const std::vector&lt; gtsam::Point2, Allocator &gt; &amp;points)</div><div class="ttdef"><b>Definition:</b> <a href="GtsamUtils_8hpp_source.html#l00248">GtsamUtils.hpp:248</a></div></div>
+<div class="ttc" id="anamespacedyno_1_1utils_html_af331019717c52781bef4bf816e2165b2"><div class="ttname"><a href="namespacedyno_1_1utils.html#af331019717c52781bef4bf816e2165b2">dyno::utils::cvPointsToGtsam</a></div><div class="ttdeci">gtsam::Point2Vector cvPointsToGtsam(const std::vector&lt; cv::Point_&lt; T &gt; &gt; &amp;points)</div><div class="ttdef"><b>Definition:</b> <a href="GtsamUtils_8hpp_source.html#l00245">GtsamUtils.hpp:245</a></div></div>
+<div class="ttc" id="anamespacedyno_1_1utils_html_af59783e0798baa636b8a23535a676f37"><div class="ttname"><a href="namespacedyno_1_1utils.html#af59783e0798baa636b8a23535a676f37">dyno::utils::gtsamPointsToCv</a></div><div class="ttdeci">std::vector&lt; cv::Point_&lt; T &gt; &gt; gtsamPointsToCv(const std::vector&lt; gtsam::Point2, Allocator &gt; &amp;points)</div><div class="ttdef"><b>Definition:</b> <a href="GtsamUtils_8hpp_source.html#l00267">GtsamUtils.hpp:267</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="namespacedyno_1_1utils.html#af331019717c52781bef4bf816e2165b2">dyno::utils::cvPointsToGtsam()</a>, <a class="el" href="namespacedyno.html#a7118762ab4c63de4996b3983b5b82356a00d0cd9f6b32fb176671646968102e78">dyno::EQUIDISTANT</a>, <a class="el" href="classdyno_1_1CameraParams.html#ae50eb600c23415b3f7bd46e70553f96a">dyno::CameraParams::getCameraMatrix()</a>, <a class="el" href="classdyno_1_1CameraParams.html#a19bbd8710bfeec7e1dc1096f1ea773cd">dyno::CameraParams::getDistortionCoeffs()</a>, <a class="el" href="classdyno_1_1CameraParams.html#ad824176d6c92a8162e6360c0760fa304">dyno::CameraParams::getDistortionModel()</a>, <a class="el" href="namespacedyno_1_1utils.html#af59783e0798baa636b8a23535a676f37">dyno::utils::gtsamPointsToCv()</a>, <a class="el" href="namespacedyno.html#a7118762ab4c63de4996b3983b5b82356a57d07fba056969bb09dcb1459746cde5">dyno::RADTAN</a>, and <a class="el" href="namespacedyno.html#a809604e427db44cbf532a545c71a3b5d">dyno::to_string()</a>.</p>
 

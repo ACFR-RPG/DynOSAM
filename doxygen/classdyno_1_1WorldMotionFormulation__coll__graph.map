@@ -1,7 +1,8 @@
 <map id="dyno::WorldMotionFormulation" name="dyno::WorldMotionFormulation">
-<area shape="rect" id="node1" title=" " alt="" coords="84,257,307,283"/>
-<area shape="rect" id="node2" href="$classdyno_1_1WorldPoseFormulation.html" title=" " alt="" coords="91,183,299,208"/>
-<area shape="rect" id="node3" href="$classdyno_1_1Formulation.html" title=" " alt="" coords="120,93,271,133"/>
+<area shape="rect" id="node1" title=" " alt="" coords="180,257,403,283"/>
+<area shape="rect" id="node2" href="$classdyno_1_1WorldPoseFormulation.html" title=" " alt="" coords="187,183,395,208"/>
+<area shape="rect" id="node3" href="$classdyno_1_1Formulation.html" title=" " alt="" coords="216,93,367,133"/>
 <area shape="rect" id="node4" href="$structdyno_1_1FormulationParams.html" title=" " alt="" coords="5,5,193,31"/>
 <area shape="rect" id="node5" href="$structdyno_1_1NoiseModels.html" title=" " alt="" coords="218,5,365,31"/>
+<area shape="rect" id="node6" href="$structdyno_1_1FormulationHooks.html" title="Defines a set of input hooks to the formulation that allow communication to outside the formulation." alt="" coords="389,5,570,31"/>
 </map>

@@ -149,8 +149,8 @@ Protected Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="NonMaximumSupression_8cc_source.html#l00031">31</a> of file <a class="el" href="NonMaximumSupression_8cc_source.html">NonMaximumSupression.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   33</span>    : <a class="code hl_function" href="classdyno_1_1NonMaximumSuppression.html#aaa9304761c8bd1bd8fd93cb0f3566689">NonMaximumSuppression</a>(), <a class="code hl_variable" href="classdyno_1_1AdaptiveNonMaximumSuppression.html#aa912ff8b033a97d0416408da53bdb6fb">anms_algorithm_type_</a>(anms_algorithm_type){};</div>
+<p class="definition">Definition at line <a class="el" href="NonMaximumSupression_8cc_source.html#l00029">29</a> of file <a class="el" href="NonMaximumSupression_8cc_source.html">NonMaximumSupression.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   31</span>    : <a class="code hl_function" href="classdyno_1_1NonMaximumSuppression.html#aaa9304761c8bd1bd8fd93cb0f3566689">NonMaximumSuppression</a>(), <a class="code hl_variable" href="classdyno_1_1AdaptiveNonMaximumSuppression.html#aa912ff8b033a97d0416408da53bdb6fb">anms_algorithm_type_</a>(anms_algorithm_type){};</div>
 <div class="ttc" id="aclassdyno_1_1AdaptiveNonMaximumSuppression_html_aa912ff8b033a97d0416408da53bdb6fb"><div class="ttname"><a href="classdyno_1_1AdaptiveNonMaximumSuppression.html#aa912ff8b033a97d0416408da53bdb6fb">dyno::AdaptiveNonMaximumSuppression::anms_algorithm_type_</a></div><div class="ttdeci">AnmsAlgorithmType anms_algorithm_type_</div><div class="ttdef"><b>Definition:</b> <a href="NonMaximumSuppression_8h_source.html#l00108">NonMaximumSuppression.h:108</a></div></div>
 <div class="ttc" id="aclassdyno_1_1NonMaximumSuppression_html_aaa9304761c8bd1bd8fd93cb0f3566689"><div class="ttname"><a href="classdyno_1_1NonMaximumSuppression.html#aaa9304761c8bd1bd8fd93cb0f3566689">dyno::NonMaximumSuppression::NonMaximumSuppression</a></div><div class="ttdeci">NonMaximumSuppression()=default</div></div>
 </div><!-- fragment -->
@@ -238,45 +238,45 @@ Protected Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="NonMaximumSupression_8cc_source.html#l00131">131</a> of file <a class="el" href="NonMaximumSupression_8cc_source.html">NonMaximumSupression.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  138</span>                                       {</div>
-<div class="line"><span class="lineno">  139</span>  <span class="keywordflow">if</span> (<span class="keyword">static_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(numKptsToRetain) &gt; keyPoints.size()) {</div>
-<div class="line"><span class="lineno">  140</span>    <span class="keywordflow">return</span> keyPoints;</div>
-<div class="line"><span class="lineno">  141</span>  }</div>
-<div class="line"><span class="lineno">  142</span> </div>
-<div class="line"><span class="lineno">  143</span>  <span class="keywordtype">float</span> binRowSize = float(imgRows) / float(nr_vertical_bins);</div>
-<div class="line"><span class="lineno">  144</span>  <span class="keywordtype">float</span> binColSize = float(imgCols) / float(nr_horizontal_bins);</div>
-<div class="line"><span class="lineno">  145</span> </div>
-<div class="line"><span class="lineno">  146</span>  <span class="comment">// Note: features should be already sorted by score at this point from detect</span></div>
-<div class="line"><span class="lineno">  147</span> </div>
-<div class="line"><span class="lineno">  148</span>  <span class="comment">// 0. count the number of valid bins (as specified by the user in the yaml</span></div>
-<div class="line"><span class="lineno">  149</span>  <span class="keywordtype">float</span> nrActiveBins = binning_mask.sum();  <span class="comment">// sum of 1&#39;s in binary mask</span></div>
-<div class="line"><span class="lineno">  150</span> </div>
-<div class="line"><span class="lineno">  151</span>  <span class="comment">// 1. compute how many features we want to retain in each bin</span></div>
-<div class="line"><span class="lineno">  152</span>  <span class="comment">// numRetPointsPerBin</span></div>
-<div class="line"><span class="lineno">  153</span>  <span class="keyword">const</span> <span class="keywordtype">int</span> numRetPointsPerBin =</div>
-<div class="line"><span class="lineno">  154</span>      std::round(<span class="keywordtype">float</span>(numKptsToRetain) / <span class="keywordtype">float</span>(nrActiveBins));</div>
-<div class="line"><span class="lineno">  155</span> </div>
-<div class="line"><span class="lineno">  156</span>  <span class="comment">// 2. assign keypoints to bins and retain top numRetPointsPerBin for each bin</span></div>
-<div class="line"><span class="lineno">  157</span>  std::vector&lt;cv::KeyPoint&gt; binnedKpts;  <span class="comment">// binned keypoints we want to output</span></div>
-<div class="line"><span class="lineno">  158</span>  Eigen::MatrixXd nrKptsInBin = Eigen::MatrixXd::Zero(</div>
-<div class="line"><span class="lineno">  159</span>      nr_vertical_bins,</div>
-<div class="line"><span class="lineno">  160</span>      nr_horizontal_bins);  <span class="comment">// store number of kpts for each bin</span></div>
-<div class="line"><span class="lineno">  161</span>  <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; keyPoints.size(); i++) {</div>
-<div class="line"><span class="lineno">  162</span>    <span class="keyword">const</span> <span class="keywordtype">size_t</span> binRowInd =</div>
-<div class="line"><span class="lineno">  163</span>        <span class="keyword">static_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(keyPoints[i].pt.y / binRowSize);</div>
-<div class="line"><span class="lineno">  164</span>    <span class="keyword">const</span> <span class="keywordtype">size_t</span> binColInd =</div>
-<div class="line"><span class="lineno">  165</span>        <span class="keyword">static_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(keyPoints[i].pt.x / binColSize);</div>
-<div class="line"><span class="lineno">  166</span>    <span class="comment">// if bin is active and needs more keypoints</span></div>
-<div class="line"><span class="lineno">  167</span>    <span class="keywordflow">if</span> (binning_mask(binRowInd, binColInd) == 1 &amp;&amp;</div>
-<div class="line"><span class="lineno">  168</span>        nrKptsInBin(binRowInd, binColInd) &lt;</div>
-<div class="line"><span class="lineno">  169</span>            numRetPointsPerBin) {  <span class="comment">// if we need more kpts in that bin</span></div>
-<div class="line"><span class="lineno">  170</span>      binnedKpts.push_back(keyPoints[i]);</div>
-<div class="line"><span class="lineno">  171</span>      nrKptsInBin(binRowInd, binColInd) += 1;</div>
-<div class="line"><span class="lineno">  172</span>    }</div>
-<div class="line"><span class="lineno">  173</span>  }</div>
-<div class="line"><span class="lineno">  174</span>  <span class="keywordflow">return</span> binnedKpts;</div>
-<div class="line"><span class="lineno">  175</span>}</div>
+<p class="definition">Definition at line <a class="el" href="NonMaximumSupression_8cc_source.html#l00119">119</a> of file <a class="el" href="NonMaximumSupression_8cc_source.html">NonMaximumSupression.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  122</span>                                                                    {</div>
+<div class="line"><span class="lineno">  123</span>  <span class="keywordflow">if</span> (<span class="keyword">static_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(numKptsToRetain) &gt; keyPoints.size()) {</div>
+<div class="line"><span class="lineno">  124</span>    <span class="keywordflow">return</span> keyPoints;</div>
+<div class="line"><span class="lineno">  125</span>  }</div>
+<div class="line"><span class="lineno">  126</span> </div>
+<div class="line"><span class="lineno">  127</span>  <span class="keywordtype">float</span> binRowSize = float(imgRows) / float(nr_vertical_bins);</div>
+<div class="line"><span class="lineno">  128</span>  <span class="keywordtype">float</span> binColSize = float(imgCols) / float(nr_horizontal_bins);</div>
+<div class="line"><span class="lineno">  129</span> </div>
+<div class="line"><span class="lineno">  130</span>  <span class="comment">// Note: features should be already sorted by score at this point from detect</span></div>
+<div class="line"><span class="lineno">  131</span> </div>
+<div class="line"><span class="lineno">  132</span>  <span class="comment">// 0. count the number of valid bins (as specified by the user in the yaml</span></div>
+<div class="line"><span class="lineno">  133</span>  <span class="keywordtype">float</span> nrActiveBins = binning_mask.sum();  <span class="comment">// sum of 1&#39;s in binary mask</span></div>
+<div class="line"><span class="lineno">  134</span> </div>
+<div class="line"><span class="lineno">  135</span>  <span class="comment">// 1. compute how many features we want to retain in each bin</span></div>
+<div class="line"><span class="lineno">  136</span>  <span class="comment">// numRetPointsPerBin</span></div>
+<div class="line"><span class="lineno">  137</span>  <span class="keyword">const</span> <span class="keywordtype">int</span> numRetPointsPerBin =</div>
+<div class="line"><span class="lineno">  138</span>      std::round(<span class="keywordtype">float</span>(numKptsToRetain) / <span class="keywordtype">float</span>(nrActiveBins));</div>
+<div class="line"><span class="lineno">  139</span> </div>
+<div class="line"><span class="lineno">  140</span>  <span class="comment">// 2. assign keypoints to bins and retain top numRetPointsPerBin for each bin</span></div>
+<div class="line"><span class="lineno">  141</span>  std::vector&lt;cv::KeyPoint&gt; binnedKpts;  <span class="comment">// binned keypoints we want to output</span></div>
+<div class="line"><span class="lineno">  142</span>  Eigen::MatrixXd nrKptsInBin = Eigen::MatrixXd::Zero(</div>
+<div class="line"><span class="lineno">  143</span>      nr_vertical_bins,</div>
+<div class="line"><span class="lineno">  144</span>      nr_horizontal_bins);  <span class="comment">// store number of kpts for each bin</span></div>
+<div class="line"><span class="lineno">  145</span>  <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; keyPoints.size(); i++) {</div>
+<div class="line"><span class="lineno">  146</span>    <span class="keyword">const</span> <span class="keywordtype">size_t</span> binRowInd =</div>
+<div class="line"><span class="lineno">  147</span>        <span class="keyword">static_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(keyPoints[i].pt.y / binRowSize);</div>
+<div class="line"><span class="lineno">  148</span>    <span class="keyword">const</span> <span class="keywordtype">size_t</span> binColInd =</div>
+<div class="line"><span class="lineno">  149</span>        <span class="keyword">static_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(keyPoints[i].pt.x / binColSize);</div>
+<div class="line"><span class="lineno">  150</span>    <span class="comment">// if bin is active and needs more keypoints</span></div>
+<div class="line"><span class="lineno">  151</span>    <span class="keywordflow">if</span> (binning_mask(binRowInd, binColInd) == 1 &amp;&amp;</div>
+<div class="line"><span class="lineno">  152</span>        nrKptsInBin(binRowInd, binColInd) &lt;</div>
+<div class="line"><span class="lineno">  153</span>            numRetPointsPerBin) {  <span class="comment">// if we need more kpts in that bin</span></div>
+<div class="line"><span class="lineno">  154</span>      binnedKpts.push_back(keyPoints[i]);</div>
+<div class="line"><span class="lineno">  155</span>      nrKptsInBin(binRowInd, binColInd) += 1;</div>
+<div class="line"><span class="lineno">  156</span>    }</div>
+<div class="line"><span class="lineno">  157</span>  }</div>
+<div class="line"><span class="lineno">  158</span>  <span class="keywordflow">return</span> binnedKpts;</div>
+<div class="line"><span class="lineno">  159</span>}</div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1AdaptiveNonMaximumSuppression.html#a5efbd5583824ca1f6b80d8fe133d0f8c">suppressNonMax()</a>.</p>
 <div class="dynheader">
@@ -402,94 +402,88 @@ Here is the caller graph for this function:</div>
 
 <p>Implements <a class="el" href="classdyno_1_1NonMaximumSuppression.html#a58f0a7f7d45ba397e5d4339c63d541a5">dyno::NonMaximumSuppression</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="NonMaximumSupression_8cc_source.html#l00035">35</a> of file <a class="el" href="NonMaximumSupression_8cc_source.html">NonMaximumSupression.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   43</span>                                       {</div>
+<p class="definition">Definition at line <a class="el" href="NonMaximumSupression_8cc_source.html#l00033">33</a> of file <a class="el" href="NonMaximumSupression_8cc_source.html">NonMaximumSupression.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   37</span>                                       {</div>
+<div class="line"><span class="lineno">   38</span>  utils::TimingStatsCollector timer(<span class="stringliteral">&quot;anms_timer&quot;</span>);</div>
+<div class="line"><span class="lineno">   39</span> </div>
+<div class="line"><span class="lineno">   40</span>  <span class="keywordflow">if</span> (keyPoints.size() == 0) {</div>
+<div class="line"><span class="lineno">   41</span>    std::cout &lt;&lt; <span class="stringliteral">&quot;No keypoints for non-max suppression...&quot;</span> &lt;&lt; std::endl;</div>
+<div class="line"><span class="lineno">   42</span>    <span class="keywordflow">return</span> std::vector&lt;cv::KeyPoint&gt;();</div>
+<div class="line"><span class="lineno">   43</span>  }</div>
 <div class="line"><span class="lineno">   44</span> </div>
-<div class="line"><span class="lineno">   45</span>  utils::TimingStatsCollector timer(<span class="stringliteral">&quot;anms_timer&quot;</span>);</div>
-<div class="line"><span class="lineno">   46</span> </div>
-<div class="line"><span class="lineno">   47</span>  <span class="keywordflow">if</span> (keyPoints.size() == 0) {</div>
-<div class="line"><span class="lineno">   48</span>    std::cout &lt;&lt; <span class="stringliteral">&quot;No keypoints for non-max suppression...&quot;</span> &lt;&lt;std::endl;</div>
-<div class="line"><span class="lineno">   49</span>    <span class="keywordflow">return</span> std::vector&lt;cv::KeyPoint&gt;();</div>
+<div class="line"><span class="lineno">   45</span>  <span class="comment">// Sorting keypoints by deacreasing order of strength</span></div>
+<div class="line"><span class="lineno">   46</span>  <span class="comment">//   VLOG(5) &lt;&lt; &quot;Sorting keypoints in decreasing order of strength.&quot;;</span></div>
+<div class="line"><span class="lineno">   47</span>  std::vector&lt;int&gt; responseVector;</div>
+<div class="line"><span class="lineno">   48</span>  <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i = 0; i &lt; keyPoints.size(); i++) {</div>
+<div class="line"><span class="lineno">   49</span>    responseVector.push_back(keyPoints[i].response);</div>
 <div class="line"><span class="lineno">   50</span>  }</div>
-<div class="line"><span class="lineno">   51</span> </div>
-<div class="line"><span class="lineno">   52</span>  <span class="comment">// Sorting keypoints by deacreasing order of strength</span></div>
-<div class="line"><span class="lineno">   53</span><span class="comment">//   VLOG(5) &lt;&lt; &quot;Sorting keypoints in decreasing order of strength.&quot;;</span></div>
-<div class="line"><span class="lineno">   54</span>  std::vector&lt;int&gt; responseVector;</div>
+<div class="line"><span class="lineno">   51</span>  std::vector&lt;int&gt; Indx(responseVector.size());</div>
+<div class="line"><span class="lineno">   52</span>  std::iota(std::begin(Indx), std::end(Indx), 0);</div>
+<div class="line"><span class="lineno">   53</span>  cv::sortIdx(responseVector, Indx, cv::SortFlags::SORT_DESCENDING);</div>
+<div class="line"><span class="lineno">   54</span>  std::vector&lt;cv::KeyPoint&gt; keyPointsSorted;</div>
 <div class="line"><span class="lineno">   55</span>  <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i = 0; i &lt; keyPoints.size(); i++) {</div>
-<div class="line"><span class="lineno">   56</span>    responseVector.push_back(keyPoints[i].response);</div>
+<div class="line"><span class="lineno">   56</span>    keyPointsSorted.push_back(keyPoints[Indx[i]]);</div>
 <div class="line"><span class="lineno">   57</span>  }</div>
-<div class="line"><span class="lineno">   58</span>  std::vector&lt;int&gt; Indx(responseVector.size());</div>
-<div class="line"><span class="lineno">   59</span>  std::iota(std::begin(Indx), std::end(Indx), 0);</div>
-<div class="line"><span class="lineno">   60</span>  cv::sortIdx(responseVector, Indx, cv::SortFlags::SORT_DESCENDING);</div>
-<div class="line"><span class="lineno">   61</span>  std::vector&lt;cv::KeyPoint&gt; keyPointsSorted;</div>
-<div class="line"><span class="lineno">   62</span>  <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i = 0; i &lt; keyPoints.size(); i++) {</div>
-<div class="line"><span class="lineno">   63</span>    keyPointsSorted.push_back(keyPoints[Indx[i]]);</div>
-<div class="line"><span class="lineno">   64</span>  }</div>
-<div class="line"><span class="lineno">   65</span> </div>
-<div class="line"><span class="lineno">   66</span>  std::vector&lt;cv::KeyPoint&gt; keypoints;</div>
-<div class="line"><span class="lineno">   67</span><span class="comment">//   VLOG(5) &lt;&lt; &quot;Starting Adaptive Non-Maximum Suppression.&quot;;</span></div>
-<div class="line"><span class="lineno">   68</span>  <span class="keywordflow">switch</span> (<a class="code hl_variable" href="classdyno_1_1AdaptiveNonMaximumSuppression.html#aa912ff8b033a97d0416408da53bdb6fb">anms_algorithm_type_</a>) {</div>
-<div class="line"><span class="lineno">   69</span>    <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="namespacedyno.html#aaa3fc401755b74df984257e66999d2d5ab9f0cd909054e1419b7d418587459d29">AnmsAlgorithmType::TopN</a>: {</div>
-<div class="line"><span class="lineno">   70</span>    <span class="comment">//   VLOG(1) &lt;&lt; &quot;Running TopN: &quot; &lt;&lt; VIO::to_underlying(anms_algorithm_type_);</span></div>
-<div class="line"><span class="lineno">   71</span>      keypoints = anms::TopN(keyPoints, numRetPoints);</div>
+<div class="line"><span class="lineno">   58</span> </div>
+<div class="line"><span class="lineno">   59</span>  std::vector&lt;cv::KeyPoint&gt; keypoints;</div>
+<div class="line"><span class="lineno">   60</span>  <span class="comment">//   VLOG(5) &lt;&lt; &quot;Starting Adaptive Non-Maximum Suppression.&quot;;</span></div>
+<div class="line"><span class="lineno">   61</span>  <span class="keywordflow">switch</span> (<a class="code hl_variable" href="classdyno_1_1AdaptiveNonMaximumSuppression.html#aa912ff8b033a97d0416408da53bdb6fb">anms_algorithm_type_</a>) {</div>
+<div class="line"><span class="lineno">   62</span>    <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="namespacedyno.html#aaa3fc401755b74df984257e66999d2d5ab9f0cd909054e1419b7d418587459d29">AnmsAlgorithmType::TopN</a>: {</div>
+<div class="line"><span class="lineno">   63</span>      <span class="comment">//   VLOG(1) &lt;&lt; &quot;Running TopN: &quot; &lt;&lt;</span></div>
+<div class="line"><span class="lineno">   64</span>      <span class="comment">//   VIO::to_underlying(anms_algorithm_type_);</span></div>
+<div class="line"><span class="lineno">   65</span>      keypoints = anms::TopN(keyPoints, numRetPoints);</div>
+<div class="line"><span class="lineno">   66</span>      <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">   67</span>    };</div>
+<div class="line"><span class="lineno">   68</span>    <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="namespacedyno.html#aaa3fc401755b74df984257e66999d2d5a0aa8568175b76f7e2a66d0cbdacb50f5">AnmsAlgorithmType::BrownANMS</a>: {</div>
+<div class="line"><span class="lineno">   69</span>      <span class="comment">//   VLOG(1) &lt;&lt; &quot;Running BrownANMS: &quot;</span></div>
+<div class="line"><span class="lineno">   70</span>      <span class="comment">//   &lt;&lt; VIO::to_underlying(anms_algorithm_type_);</span></div>
+<div class="line"><span class="lineno">   71</span>      keypoints = anms::BrownANMS(keyPoints, numRetPoints);</div>
 <div class="line"><span class="lineno">   72</span>      <span class="keywordflow">break</span>;</div>
 <div class="line"><span class="lineno">   73</span>    };</div>
-<div class="line"><span class="lineno">   74</span>    <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="namespacedyno.html#aaa3fc401755b74df984257e66999d2d5a0aa8568175b76f7e2a66d0cbdacb50f5">AnmsAlgorithmType::BrownANMS</a>: {</div>
-<div class="line"><span class="lineno">   75</span>    <span class="comment">//   VLOG(1) &lt;&lt; &quot;Running BrownANMS: &quot;</span></div>
-<div class="line"><span class="lineno">   76</span>            <span class="comment">//   &lt;&lt; VIO::to_underlying(anms_algorithm_type_);</span></div>
-<div class="line"><span class="lineno">   77</span>      keypoints = anms::BrownANMS(keyPoints, numRetPoints);</div>
-<div class="line"><span class="lineno">   78</span>      <span class="keywordflow">break</span>;</div>
-<div class="line"><span class="lineno">   79</span>    };</div>
-<div class="line"><span class="lineno">   80</span>    <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="namespacedyno.html#aaa3fc401755b74df984257e66999d2d5a24b237263b4442c4631fdf34e44ad835">AnmsAlgorithmType::SDC</a>: {</div>
-<div class="line"><span class="lineno">   81</span>    <span class="comment">//   VLOG(1) &lt;&lt; &quot;Running SDC: &quot; &lt;&lt; VIO::to_underlying(anms_algorithm_type_);</span></div>
-<div class="line"><span class="lineno">   82</span>      keypoints =</div>
-<div class="line"><span class="lineno">   83</span>          anms::Sdc(keyPointsSorted, numRetPoints, tolerance, cols, rows);</div>
-<div class="line"><span class="lineno">   84</span>      <span class="keywordflow">break</span>;</div>
-<div class="line"><span class="lineno">   85</span>    };</div>
-<div class="line"><span class="lineno">   86</span>    <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="namespacedyno.html#aaa3fc401755b74df984257e66999d2d5ab24799ce6f859552c56415432ce2f529">AnmsAlgorithmType::KdTree</a>: {</div>
-<div class="line"><span class="lineno">   87</span>    <span class="comment">//   VLOG(1) &lt;&lt; &quot;Running KdTree: &quot; &lt;&lt; VIO::to_underlying(anms_algorithm_type_);</span></div>
-<div class="line"><span class="lineno">   88</span>      keypoints =</div>
-<div class="line"><span class="lineno">   89</span>          anms::KdTree(keyPointsSorted, numRetPoints, tolerance, cols, rows);</div>
-<div class="line"><span class="lineno">   90</span>      <span class="keywordflow">break</span>;</div>
-<div class="line"><span class="lineno">   91</span>    };</div>
-<div class="line"><span class="lineno">   92</span>    <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="namespacedyno.html#aaa3fc401755b74df984257e66999d2d5a118dc0373611bb2cf01e2d3b3b4bc65b">AnmsAlgorithmType::RangeTree</a>: {</div>
-<div class="line"><span class="lineno">   93</span>        std::cout &lt;&lt; <span class="stringliteral">&quot;Running RangeTree &quot;</span> &lt;&lt; keyPointsSorted.size() &lt;&lt; std::endl;</div>
-<div class="line"><span class="lineno">   94</span>        std::cout &lt;&lt; numRetPoints &lt;&lt; std::endl;</div>
-<div class="line"><span class="lineno">   95</span>    <span class="comment">//   VLOG(1) &lt;&lt; &quot;Running RangeTree: &quot;</span></div>
-<div class="line"><span class="lineno">   96</span>            <span class="comment">//   &lt;&lt; VIO::to_underlying(anms_algorithm_type_);</span></div>
-<div class="line"><span class="lineno">   97</span>      keypoints =</div>
-<div class="line"><span class="lineno">   98</span>          anms::RangeTree(keyPointsSorted, numRetPoints, tolerance, cols, rows);</div>
-<div class="line"><span class="lineno">   99</span>      <span class="keywordflow">break</span>;</div>
-<div class="line"><span class="lineno">  100</span>    };</div>
-<div class="line"><span class="lineno">  101</span>    <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="namespacedyno.html#aaa3fc401755b74df984257e66999d2d5a999531b4b4ed623f6e62dcccc7081498">AnmsAlgorithmType::Ssc</a>: {</div>
-<div class="line"><span class="lineno">  102</span>    <span class="comment">//   VLOG(1) &lt;&lt; &quot;Running SSC: &quot; &lt;&lt; VIO::to_underlying(anms_algorithm_type_);</span></div>
-<div class="line"><span class="lineno">  103</span>      keypoints =</div>
-<div class="line"><span class="lineno">  104</span>          anms::Ssc(keyPointsSorted, numRetPoints, tolerance, cols, rows);</div>
+<div class="line"><span class="lineno">   74</span>    <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="namespacedyno.html#aaa3fc401755b74df984257e66999d2d5a24b237263b4442c4631fdf34e44ad835">AnmsAlgorithmType::SDC</a>: {</div>
+<div class="line"><span class="lineno">   75</span>      <span class="comment">//   VLOG(1) &lt;&lt; &quot;Running SDC: &quot; &lt;&lt;</span></div>
+<div class="line"><span class="lineno">   76</span>      <span class="comment">//   VIO::to_underlying(anms_algorithm_type_);</span></div>
+<div class="line"><span class="lineno">   77</span>      keypoints =</div>
+<div class="line"><span class="lineno">   78</span>          anms::Sdc(keyPointsSorted, numRetPoints, tolerance, cols, rows);</div>
+<div class="line"><span class="lineno">   79</span>      <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">   80</span>    };</div>
+<div class="line"><span class="lineno">   81</span>    <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="namespacedyno.html#aaa3fc401755b74df984257e66999d2d5ab24799ce6f859552c56415432ce2f529">AnmsAlgorithmType::KdTree</a>: {</div>
+<div class="line"><span class="lineno">   82</span>      <span class="comment">//   VLOG(1) &lt;&lt; &quot;Running KdTree: &quot; &lt;&lt;</span></div>
+<div class="line"><span class="lineno">   83</span>      <span class="comment">//   VIO::to_underlying(anms_algorithm_type_);</span></div>
+<div class="line"><span class="lineno">   84</span>      keypoints =</div>
+<div class="line"><span class="lineno">   85</span>          anms::KdTree(keyPointsSorted, numRetPoints, tolerance, cols, rows);</div>
+<div class="line"><span class="lineno">   86</span>      <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">   87</span>    };</div>
+<div class="line"><span class="lineno">   88</span>    <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="namespacedyno.html#aaa3fc401755b74df984257e66999d2d5a118dc0373611bb2cf01e2d3b3b4bc65b">AnmsAlgorithmType::RangeTree</a>: {</div>
+<div class="line"><span class="lineno">   89</span>      keypoints =</div>
+<div class="line"><span class="lineno">   90</span>          anms::RangeTree(keyPointsSorted, numRetPoints, tolerance, cols, rows);</div>
+<div class="line"><span class="lineno">   91</span>      <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">   92</span>    };</div>
+<div class="line"><span class="lineno">   93</span>    <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="namespacedyno.html#aaa3fc401755b74df984257e66999d2d5a999531b4b4ed623f6e62dcccc7081498">AnmsAlgorithmType::Ssc</a>: {</div>
+<div class="line"><span class="lineno">   94</span>      <span class="comment">//   VLOG(1) &lt;&lt; &quot;Running SSC: &quot; &lt;&lt;</span></div>
+<div class="line"><span class="lineno">   95</span>      <span class="comment">//   VIO::to_underlying(anms_algorithm_type_);</span></div>
+<div class="line"><span class="lineno">   96</span>      keypoints =</div>
+<div class="line"><span class="lineno">   97</span>          anms::Ssc(keyPointsSorted, numRetPoints, tolerance, cols, rows);</div>
+<div class="line"><span class="lineno">   98</span>      <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">   99</span>    };</div>
+<div class="line"><span class="lineno">  100</span>    <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="namespacedyno.html#aaa3fc401755b74df984257e66999d2d5acb163716eec370d7416d85bb511fff60">AnmsAlgorithmType::Binning</a>: {</div>
+<div class="line"><span class="lineno">  101</span>      <span class="comment">//   VLOG(1) &lt;&lt; &quot;Running Binning: &quot;</span></div>
+<div class="line"><span class="lineno">  102</span>      <span class="comment">//   &lt;&lt; VIO::to_underlying(anms_algorithm_type_);</span></div>
+<div class="line"><span class="lineno">  103</span>      keypoints = <a class="code hl_function" href="classdyno_1_1AdaptiveNonMaximumSuppression.html#ac17d555f57b2892e730c3183772a97e6">binning</a>(keyPointsSorted, numRetPoints, cols, rows,</div>
+<div class="line"><span class="lineno">  104</span>                          nr_horizontal_bins, nr_vertical_bins, binning_mask);</div>
 <div class="line"><span class="lineno">  105</span>      <span class="keywordflow">break</span>;</div>
 <div class="line"><span class="lineno">  106</span>    };</div>
-<div class="line"><span class="lineno">  107</span>    <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="namespacedyno.html#aaa3fc401755b74df984257e66999d2d5acb163716eec370d7416d85bb511fff60">AnmsAlgorithmType::Binning</a>: {</div>
-<div class="line"><span class="lineno">  108</span>    <span class="comment">//   VLOG(1) &lt;&lt; &quot;Running Binning: &quot;</span></div>
-<div class="line"><span class="lineno">  109</span>            <span class="comment">//   &lt;&lt; VIO::to_underlying(anms_algorithm_type_);</span></div>
-<div class="line"><span class="lineno">  110</span>      keypoints = <a class="code hl_function" href="classdyno_1_1AdaptiveNonMaximumSuppression.html#ac17d555f57b2892e730c3183772a97e6">binning</a>(keyPointsSorted,</div>
-<div class="line"><span class="lineno">  111</span>                          numRetPoints,</div>
-<div class="line"><span class="lineno">  112</span>                          cols,</div>
-<div class="line"><span class="lineno">  113</span>                          rows,</div>
-<div class="line"><span class="lineno">  114</span>                          nr_horizontal_bins,</div>
-<div class="line"><span class="lineno">  115</span>                          nr_vertical_bins,</div>
-<div class="line"><span class="lineno">  116</span>                          binning_mask);</div>
-<div class="line"><span class="lineno">  117</span>      <span class="keywordflow">break</span>;</div>
-<div class="line"><span class="lineno">  118</span>    };</div>
-<div class="line"><span class="lineno">  119</span>    <span class="keywordflow">default</span>: {</div>
-<div class="line"><span class="lineno">  120</span>    <span class="comment">//   VLOG(1) &lt;&lt; &quot;Unknown ANMS algorithm requested: &quot;</span></div>
-<div class="line"><span class="lineno">  121</span>            <span class="comment">//   &lt;&lt; VIO::to_underlying(anms_algorithm_type_);</span></div>
-<div class="line"><span class="lineno">  122</span>      <span class="keywordflow">break</span>;</div>
-<div class="line"><span class="lineno">  123</span>    };</div>
-<div class="line"><span class="lineno">  124</span>  }</div>
-<div class="line"><span class="lineno">  125</span><span class="comment">//   VLOG(1) &lt;&lt; &quot;Non Maximum Suppression Timing [ms]: &quot;</span></div>
-<div class="line"><span class="lineno">  126</span><span class="comment">//           &lt;&lt; utils::Timer::toc(tic).count();</span></div>
-<div class="line"><span class="lineno">  127</span>  <span class="keywordflow">return</span> keypoints;</div>
-<div class="line"><span class="lineno">  128</span>}</div>
-<div class="ttc" id="aclassdyno_1_1AdaptiveNonMaximumSuppression_html_ac17d555f57b2892e730c3183772a97e6"><div class="ttname"><a href="classdyno_1_1AdaptiveNonMaximumSuppression.html#ac17d555f57b2892e730c3183772a97e6">dyno::AdaptiveNonMaximumSuppression::binning</a></div><div class="ttdeci">std::vector&lt; cv::KeyPoint &gt; binning(const std::vector&lt; cv::KeyPoint &gt; &amp;keyPoints, const int &amp;numRetPoints, const int &amp;cols, const int &amp;rows, const int &amp;nr_horizontal_bins, const int &amp;nr_vertical_bins, const Eigen::MatrixXd &amp;binning_mask)</div><div class="ttdef"><b>Definition:</b> <a href="NonMaximumSupression_8cc_source.html#l00131">NonMaximumSupression.cc:131</a></div></div>
+<div class="line"><span class="lineno">  107</span>    <span class="keywordflow">default</span>: {</div>
+<div class="line"><span class="lineno">  108</span>      <span class="comment">//   VLOG(1) &lt;&lt; &quot;Unknown ANMS algorithm requested: &quot;</span></div>
+<div class="line"><span class="lineno">  109</span>      <span class="comment">//   &lt;&lt; VIO::to_underlying(anms_algorithm_type_);</span></div>
+<div class="line"><span class="lineno">  110</span>      <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">  111</span>    };</div>
+<div class="line"><span class="lineno">  112</span>  }</div>
+<div class="line"><span class="lineno">  113</span>  <span class="comment">//   VLOG(1) &lt;&lt; &quot;Non Maximum Suppression Timing [ms]: &quot;</span></div>
+<div class="line"><span class="lineno">  114</span>  <span class="comment">//           &lt;&lt; utils::Timer::toc(tic).count();</span></div>
+<div class="line"><span class="lineno">  115</span>  <span class="keywordflow">return</span> keypoints;</div>
+<div class="line"><span class="lineno">  116</span>}</div>
+<div class="ttc" id="aclassdyno_1_1AdaptiveNonMaximumSuppression_html_ac17d555f57b2892e730c3183772a97e6"><div class="ttname"><a href="classdyno_1_1AdaptiveNonMaximumSuppression.html#ac17d555f57b2892e730c3183772a97e6">dyno::AdaptiveNonMaximumSuppression::binning</a></div><div class="ttdeci">std::vector&lt; cv::KeyPoint &gt; binning(const std::vector&lt; cv::KeyPoint &gt; &amp;keyPoints, const int &amp;numRetPoints, const int &amp;cols, const int &amp;rows, const int &amp;nr_horizontal_bins, const int &amp;nr_vertical_bins, const Eigen::MatrixXd &amp;binning_mask)</div><div class="ttdef"><b>Definition:</b> <a href="NonMaximumSupression_8cc_source.html#l00119">NonMaximumSupression.cc:119</a></div></div>
 <div class="ttc" id="anamespacedyno_html_aaa3fc401755b74df984257e66999d2d5a0aa8568175b76f7e2a66d0cbdacb50f5"><div class="ttname"><a href="namespacedyno.html#aaa3fc401755b74df984257e66999d2d5a0aa8568175b76f7e2a66d0cbdacb50f5">dyno::AnmsAlgorithmType::BrownANMS</a></div><div class="ttdeci">@ BrownANMS</div></div>
 <div class="ttc" id="anamespacedyno_html_aaa3fc401755b74df984257e66999d2d5a118dc0373611bb2cf01e2d3b3b4bc65b"><div class="ttname"><a href="namespacedyno.html#aaa3fc401755b74df984257e66999d2d5a118dc0373611bb2cf01e2d3b3b4bc65b">dyno::AnmsAlgorithmType::RangeTree</a></div><div class="ttdeci">@ RangeTree</div></div>
 <div class="ttc" id="anamespacedyno_html_aaa3fc401755b74df984257e66999d2d5a24b237263b4442c4631fdf34e44ad835"><div class="ttname"><a href="namespacedyno.html#aaa3fc401755b74df984257e66999d2d5a24b237263b4442c4631fdf34e44ad835">dyno::AnmsAlgorithmType::SDC</a></div><div class="ttdeci">@ SDC</div></div>

@@ -1,5 +1,0 @@
-<map id="dyno::ImageContainer::isMonocular" name="dyno::ImageContainer::isMonocular">
-<area shape="rect" id="node1" title="Returns true if the set of input images does not contain depth and therefore should be used as part o..." alt="" coords="5,5,172,45"/>
-<area shape="rect" id="node2" href="$classdyno_1_1ImageContainer.html#ae6d8d0845eb77179dc00b4b865393ad7" title=" " alt="" coords="220,5,387,45"/>
-<area shape="rect" id="node3" href="$classdyno_1_1ImageContainer.html#a4cadfbf4fbd4eab24e8c0e0fe18e7759" title=" " alt="" coords="435,5,601,45"/>
-</map>

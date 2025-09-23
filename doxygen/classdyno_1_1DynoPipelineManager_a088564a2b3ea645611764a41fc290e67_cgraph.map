@@ -1,6 +1,6 @@
 <map id="dyno::DynoPipelineManager::spinViz" name="dyno::DynoPipelineManager::spinViz">
-<area shape="rect" id="node1" title=" " alt="" coords="5,23,211,63"/>
-<area shape="rect" id="node2" href="$classdyno_1_1OpenCVImageDisplayQueue.html#af8fa9a44165ec7c4fd83d4251fc416c4" title=" " alt="" coords="259,23,463,63"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,27,211,67"/>
+<area shape="rect" id="node2" href="$classdyno_1_1OpenCVImageDisplayQueue.html#af8fa9a44165ec7c4fd83d4251fc416c4" title=" " alt="" coords="259,27,463,67"/>
 <area shape="rect" id="node3" href="$classThreadsafeQueue.html#a33b9409368f81487e5999e208d7f69c6" title=" " alt="" coords="530,5,717,31"/>
-<area shape="rect" id="node4" href="$classThreadsafeQueue.html#a06b3418f87d1703da2fb8af8cb689790" title="Pop value. Waits for data to be available in the queue. Returns false if the queue has been shutdown." alt="" coords="511,55,736,80"/>
+<area shape="rect" id="node4" href="$classThreadsafeQueue.html#a46d8add3de7c66d4b6e743020a5c3ffd" title="popBlockingUpToTime Same as Pop blocking, but further returns early if the given duration has passed...." alt="" coords="511,55,736,95"/>
 </map>

@@ -103,10 +103,12 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a6db385cd65e3eb551ded02123b81168b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a06692783ddcafdce0d64b317d1646f4d"><td class="memItemLeft" align="right" valign="top">GroundTruthInputPacket::Optional&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1FrontendInputPacketBase.html#a06692783ddcafdce0d64b317d1646f4d">optional_gt_</a></td></tr>
 <tr class="separator:a06692783ddcafdce0d64b317d1646f4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:addd4e3b3643e5c288537956051de0a8f"><td class="memItemLeft" align="right" valign="top">ImuMeasurements::Optional&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1FrontendInputPacketBase.html#addd4e3b3643e5c288537956051de0a8f">imu_measurements</a></td></tr>
+<tr class="separator:addd4e3b3643e5c288537956051de0a8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="FrontendInputPacket_8hpp_source.html#l00046">46</a> of file <a class="el" href="FrontendInputPacket_8hpp_source.html">FrontendInputPacket.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FrontendInputPacket_8hpp_source.html#l00053">53</a> of file <a class="el" href="FrontendInputPacket_8hpp_source.html">FrontendInputPacket.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a5d2f7a19c9f589307604dabda47c1f38" name="a5d2f7a19c9f589307604dabda47c1f38"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a5d2f7a19c9f589307604dabda47c1f38">&#9670;&#160;</a></span>FrontendInputPacketBase() <span class="overload">[1/2]</span></h2>
@@ -131,10 +133,10 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="FrontendInputPacket_8hpp_source.html#l00053">53</a> of file <a class="el" href="FrontendInputPacket_8hpp_source.html">FrontendInputPacket.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   53</span>: <a class="code hl_variable" href="structdyno_1_1FrontendInputPacketBase.html#a6db385cd65e3eb551ded02123b81168b">image_container_</a>(<span class="keyword">nullptr</span>), <a class="code hl_variable" href="structdyno_1_1FrontendInputPacketBase.html#a06692783ddcafdce0d64b317d1646f4d">optional_gt_</a>(std::nullopt) {}</div>
-<div class="ttc" id="astructdyno_1_1FrontendInputPacketBase_html_a06692783ddcafdce0d64b317d1646f4d"><div class="ttname"><a href="structdyno_1_1FrontendInputPacketBase.html#a06692783ddcafdce0d64b317d1646f4d">dyno::FrontendInputPacketBase::optional_gt_</a></div><div class="ttdeci">GroundTruthInputPacket::Optional optional_gt_</div><div class="ttdef"><b>Definition:</b> <a href="FrontendInputPacket_8hpp_source.html#l00051">FrontendInputPacket.hpp:51</a></div></div>
-<div class="ttc" id="astructdyno_1_1FrontendInputPacketBase_html_a6db385cd65e3eb551ded02123b81168b"><div class="ttname"><a href="structdyno_1_1FrontendInputPacketBase.html#a6db385cd65e3eb551ded02123b81168b">dyno::FrontendInputPacketBase::image_container_</a></div><div class="ttdeci">ImageContainer::Ptr image_container_</div><div class="ttdef"><b>Definition:</b> <a href="FrontendInputPacket_8hpp_source.html#l00050">FrontendInputPacket.hpp:50</a></div></div>
+<p class="definition">Definition at line <a class="el" href="FrontendInputPacket_8hpp_source.html#l00060">60</a> of file <a class="el" href="FrontendInputPacket_8hpp_source.html">FrontendInputPacket.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   61</span>      : <a class="code hl_variable" href="structdyno_1_1FrontendInputPacketBase.html#a6db385cd65e3eb551ded02123b81168b">image_container_</a>(<span class="keyword">nullptr</span>), <a class="code hl_variable" href="structdyno_1_1FrontendInputPacketBase.html#a06692783ddcafdce0d64b317d1646f4d">optional_gt_</a>(std::nullopt) {}</div>
+<div class="ttc" id="astructdyno_1_1FrontendInputPacketBase_html_a06692783ddcafdce0d64b317d1646f4d"><div class="ttname"><a href="structdyno_1_1FrontendInputPacketBase.html#a06692783ddcafdce0d64b317d1646f4d">dyno::FrontendInputPacketBase::optional_gt_</a></div><div class="ttdeci">GroundTruthInputPacket::Optional optional_gt_</div><div class="ttdef"><b>Definition:</b> <a href="FrontendInputPacket_8hpp_source.html#l00057">FrontendInputPacket.hpp:57</a></div></div>
+<div class="ttc" id="astructdyno_1_1FrontendInputPacketBase_html_a6db385cd65e3eb551ded02123b81168b"><div class="ttname"><a href="structdyno_1_1FrontendInputPacketBase.html#a6db385cd65e3eb551ded02123b81168b">dyno::FrontendInputPacketBase::image_container_</a></div><div class="ttdeci">ImageContainer::Ptr image_container_</div><div class="ttdef"><b>Definition:</b> <a href="FrontendInputPacket_8hpp_source.html#l00056">FrontendInputPacket.hpp:56</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -172,15 +174,14 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="FrontendInputPacket_8hpp_source.html#l00055">55</a> of file <a class="el" href="FrontendInputPacket_8hpp_source.html">FrontendInputPacket.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   56</span>    : <a class="code hl_variable" href="structdyno_1_1FrontendInputPacketBase.html#a6db385cd65e3eb551ded02123b81168b">image_container_</a>(image_container), <a class="code hl_variable" href="structdyno_1_1FrontendInputPacketBase.html#a06692783ddcafdce0d64b317d1646f4d">optional_gt_</a>(optional_gt)</div>
-<div class="line"><span class="lineno">   57</span>    {</div>
-<div class="line"><span class="lineno">   58</span>        CHECK(<a class="code hl_variable" href="structdyno_1_1FrontendInputPacketBase.html#a6db385cd65e3eb551ded02123b81168b">image_container_</a>);</div>
-<div class="line"><span class="lineno">   59</span> </div>
-<div class="line"><span class="lineno">   60</span>        <span class="keywordflow">if</span>(optional_gt) {</div>
-<div class="line"><span class="lineno">   61</span>            CHECK_EQ(<a class="code hl_variable" href="structdyno_1_1FrontendInputPacketBase.html#a06692783ddcafdce0d64b317d1646f4d">optional_gt_</a>-&gt;frame_id_, <a class="code hl_variable" href="structdyno_1_1FrontendInputPacketBase.html#a6db385cd65e3eb551ded02123b81168b">image_container_</a>-&gt;getFrameId());</div>
-<div class="line"><span class="lineno">   62</span>        }</div>
-<div class="line"><span class="lineno">   63</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="FrontendInputPacket_8hpp_source.html#l00063">63</a> of file <a class="el" href="FrontendInputPacket_8hpp_source.html">FrontendInputPacket.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   66</span>      : <a class="code hl_variable" href="structdyno_1_1FrontendInputPacketBase.html#a6db385cd65e3eb551ded02123b81168b">image_container_</a>(image_container), <a class="code hl_variable" href="structdyno_1_1FrontendInputPacketBase.html#a06692783ddcafdce0d64b317d1646f4d">optional_gt_</a>(optional_gt) {</div>
+<div class="line"><span class="lineno">   67</span>    CHECK(<a class="code hl_variable" href="structdyno_1_1FrontendInputPacketBase.html#a6db385cd65e3eb551ded02123b81168b">image_container_</a>);</div>
+<div class="line"><span class="lineno">   68</span> </div>
+<div class="line"><span class="lineno">   69</span>    <span class="keywordflow">if</span> (optional_gt) {</div>
+<div class="line"><span class="lineno">   70</span>      CHECK_EQ(<a class="code hl_variable" href="structdyno_1_1FrontendInputPacketBase.html#a06692783ddcafdce0d64b317d1646f4d">optional_gt_</a>-&gt;frame_id_, <a class="code hl_variable" href="structdyno_1_1FrontendInputPacketBase.html#a6db385cd65e3eb551ded02123b81168b">image_container_</a>-&gt;frameId());</div>
+<div class="line"><span class="lineno">   71</span>    }</div>
+<div class="line"><span class="lineno">   72</span>  }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="structdyno_1_1FrontendInputPacketBase.html#a6db385cd65e3eb551ded02123b81168b">image_container_</a>, and <a class="el" href="structdyno_1_1FrontendInputPacketBase.html#a06692783ddcafdce0d64b317d1646f4d">optional_gt_</a>.</p>
 
@@ -235,10 +236,10 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="FrontendInputPacket_8hpp_source.html#l00065">65</a> of file <a class="el" href="FrontendInputPacket_8hpp_source.html">FrontendInputPacket.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   65</span>                                      {</div>
-<div class="line"><span class="lineno">   66</span>        <span class="keywordflow">return</span> CHECK_NOTNULL(<a class="code hl_variable" href="structdyno_1_1FrontendInputPacketBase.html#a6db385cd65e3eb551ded02123b81168b">image_container_</a>)-&gt;getFrameId();</div>
-<div class="line"><span class="lineno">   67</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="FrontendInputPacket_8hpp_source.html#l00074">74</a> of file <a class="el" href="FrontendInputPacket_8hpp_source.html">FrontendInputPacket.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   74</span>                                    {</div>
+<div class="line"><span class="lineno">   75</span>    <span class="keywordflow">return</span> CHECK_NOTNULL(<a class="code hl_variable" href="structdyno_1_1FrontendInputPacketBase.html#a6db385cd65e3eb551ded02123b81168b">image_container_</a>)-&gt;frameId();</div>
+<div class="line"><span class="lineno">   76</span>  }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="structdyno_1_1FrontendInputPacketBase.html#a6db385cd65e3eb551ded02123b81168b">image_container_</a>.</p>
 
@@ -267,10 +268,10 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="FrontendInputPacket_8hpp_source.html#l00069">69</a> of file <a class="el" href="FrontendInputPacket_8hpp_source.html">FrontendInputPacket.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   69</span>                                          {</div>
-<div class="line"><span class="lineno">   70</span>        <span class="keywordflow">return</span> CHECK_NOTNULL(<a class="code hl_variable" href="structdyno_1_1FrontendInputPacketBase.html#a6db385cd65e3eb551ded02123b81168b">image_container_</a>)-&gt;getTimestamp();</div>
-<div class="line"><span class="lineno">   71</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="FrontendInputPacket_8hpp_source.html#l00078">78</a> of file <a class="el" href="FrontendInputPacket_8hpp_source.html">FrontendInputPacket.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   78</span>                                        {</div>
+<div class="line"><span class="lineno">   79</span>    <span class="keywordflow">return</span> CHECK_NOTNULL(<a class="code hl_variable" href="structdyno_1_1FrontendInputPacketBase.html#a6db385cd65e3eb551ded02123b81168b">image_container_</a>)-&gt;timestamp();</div>
+<div class="line"><span class="lineno">   80</span>  }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="structdyno_1_1FrontendInputPacketBase.html#a6db385cd65e3eb551ded02123b81168b">image_container_</a>.</p>
 
@@ -289,9 +290,25 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="FrontendInputPacket_8hpp_source.html#l00050">50</a> of file <a class="el" href="FrontendInputPacket_8hpp_source.html">FrontendInputPacket.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FrontendInputPacket_8hpp_source.html#l00056">56</a> of file <a class="el" href="FrontendInputPacket_8hpp_source.html">FrontendInputPacket.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="structdyno_1_1FrontendInputPacketBase.html#a1a1687685a09ada188330a357d28eaf4">FrontendInputPacketBase()</a>, <a class="el" href="structdyno_1_1FrontendInputPacketBase.html#ade313d145976c148197eeb2b2e77ee06">getFrameId()</a>, and <a class="el" href="structdyno_1_1FrontendInputPacketBase.html#ac3bbc592af8731d0a7d05242c17181fe">getTimestamp()</a>.</p>
+
+</div>
+</div>
+<a id="addd4e3b3643e5c288537956051de0a8f" name="addd4e3b3643e5c288537956051de0a8f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#addd4e3b3643e5c288537956051de0a8f">&#9670;&#160;</a></span>imu_measurements</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">ImuMeasurements::Optional dyno::FrontendInputPacketBase::imu_measurements</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="FrontendInputPacket_8hpp_source.html#l00058">58</a> of file <a class="el" href="FrontendInputPacket_8hpp_source.html">FrontendInputPacket.hpp</a>.</p>
 
 </div>
 </div>
@@ -307,7 +324,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="FrontendInputPacket_8hpp_source.html#l00051">51</a> of file <a class="el" href="FrontendInputPacket_8hpp_source.html">FrontendInputPacket.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FrontendInputPacket_8hpp_source.html#l00057">57</a> of file <a class="el" href="FrontendInputPacket_8hpp_source.html">FrontendInputPacket.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="structdyno_1_1FrontendInputPacketBase.html#a1a1687685a09ada188330a357d28eaf4">FrontendInputPacketBase()</a>.</p>
 

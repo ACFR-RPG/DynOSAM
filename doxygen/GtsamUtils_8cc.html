@@ -81,9 +81,9 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="GtsamUtils_8hpp_source.html">dynosam/utils/GtsamUtils.hpp</a>&quot;</code><br />
+<code>#include &lt;glog/logging.h&gt;</code><br />
 <code>#include &lt;eigen3/Eigen/Dense&gt;</code><br />
 <code>#include &lt;opencv4/opencv2/core/eigen.hpp&gt;</code><br />
-<code>#include &lt;glog/logging.h&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for GtsamUtils.cc:</div>
 <div class="dyncontent">
@@ -150,7 +150,7 @@ Functions</h2></td></tr>
 <tr class="memitem:ab865cdc19c9890284a5bb8622ff2ad74"><td class="memItemLeft" align="right" valign="top">gtsam::Pose3&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno_1_1utils.html#ab865cdc19c9890284a5bb8622ff2ad74">dyno::utils::openGvTfToGtsamPose3</a> (const opengv::transformation_t &amp;RT)</td></tr>
 <tr class="separator:ab865cdc19c9890284a5bb8622ff2ad74"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae07df9c266ca251a8892fd9ad371dab5"><td class="memItemLeft" align="right" valign="top">std::pair&lt; cv::Mat, cv::Mat &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno_1_1utils.html#ae07df9c266ca251a8892fd9ad371dab5">dyno::utils::Pose2cvmats</a> (const gtsam::Pose3 &amp;pose)</td></tr>
-<tr class="memdesc:ae07df9c266ca251a8892fd9ad371dab5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a gtsam pose3 to a 3x3 rotation matrix and translation vector in opencv format (note: the function only extracts R and t, without changing them)  <br /></td></tr>
+<tr class="memdesc:ae07df9c266ca251a8892fd9ad371dab5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a gtsam pose3 to a 3x3 rotation matrix and translation vector in opencv format (note: the function only extracts <a class="el" href="structdyno_1_1R.html">R</a> and t, without changing them)  <br /></td></tr>
 <tr class="separator:ae07df9c266ca251a8892fd9ad371dab5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1acd48b0777dc5cc242c9a1fa2cac2d4"><td class="memItemLeft" align="right" valign="top">cv::Mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno_1_1utils.html#a1acd48b0777dc5cc242c9a1fa2cac2d4">dyno::utils::gtsamMatrix3ToCvMat</a> (const gtsam::Matrix3 &amp;rot)</td></tr>
 <tr class="separator:a1acd48b0777dc5cc242c9a1fa2cac2d4"><td class="memSeparator" colspan="2">&#160;</td></tr>

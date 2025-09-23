@@ -1,4 +1,6 @@
 <map id="dyno::Camera::getImplCamera" name="dyno::Camera::getImplCamera">
-<area shape="rect" id="node1" title=" " alt="" coords="257,13,480,38"/>
-<area shape="rect" id="node2" href="$namespacedyno_1_1vision__tools.html#a8cf2c16aa30d7bfa4ea4844abb555716" title="From a feature with valid depth, backproject to a 3D point in the camera frame with the associated co..." alt="" coords="5,5,209,45"/>
+<area shape="rect" id="node1" title=" " alt="" coords="777,13,1000,38"/>
+<area shape="rect" id="node2" href="$namespacedyno_1_1vision__tools.html#a8cf2c16aa30d7bfa4ea4844abb555716" title="From a feature with valid depth, backproject to a 3D point in the camera frame with the associated co..." alt="" coords="525,5,729,45"/>
+<area shape="rect" id="node3" href="$classdyno_1_1RGBDInstanceFrontendModule.html#a246f701e4605c98dc7cb6bbd6f657998" title=" " alt="" coords="265,5,477,45"/>
+<area shape="rect" id="node4" href="$classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2" title=" " alt="" coords="5,5,217,45"/>
 </map>

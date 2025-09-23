@@ -1,6 +1,10 @@
 <map id="dyno::utils::gtsamMatrix3ToCvMat" name="dyno::utils::gtsamMatrix3ToCvMat">
-<area shape="rect" id="node1" title=" " alt="" coords="732,5,921,45"/>
-<area shape="rect" id="node2" href="$namespacedyno_1_1utils.html#ae07df9c266ca251a8892fd9ad371dab5" title="Converts a gtsam pose3 to a 3x3 rotation matrix and translation vector in opencv format (note: the fu..." alt="" coords="499,13,684,38"/>
-<area shape="rect" id="node3" href="$classdyno_1_1StereoCamera.html#a6ce9ba10820d974b32a081868c224fad" title="computeRectificationParameters" alt="" coords="208,5,451,45"/>
-<area shape="rect" id="node4" href="$classdyno_1_1StereoCamera.html#a2262c33a62cc297ecedbe5801fcd37df" title=" " alt="" coords="5,5,160,45"/>
+<area shape="rect" id="node1" title=" " alt="" coords="799,92,988,132"/>
+<area shape="rect" id="node2" href="$namespacedyno_1_1utils.html#ae07df9c266ca251a8892fd9ad371dab5" title="Converts a gtsam pose3 to a 3x3 rotation matrix and translation vector in opencv format (note: the fu..." alt="" coords="542,70,727,95"/>
+<area shape="rect" id="node6" href="$classdyno_1_1FeatureTrackerBase.html#aac4fd637116f1a55b857968d6f84d33d" title=" " alt="" coords="519,120,751,160"/>
+<area shape="rect" id="node3" href="$classdyno_1_1StereoCamera.html#a6ce9ba10820d974b32a081868c224fad" title="computeRectificationParameters" alt="" coords="228,5,471,45"/>
+<area shape="rect" id="node5" href="$namespacedyno_1_1utils.html#a908a399e79c1e4a10e2f8901ad4acde2" title="Projects SE(3) poses onto the image as an RGB axes. Input poses are expected to be in the camera (loc..." alt="" coords="232,70,467,95"/>
+<area shape="rect" id="node4" href="$classdyno_1_1StereoCamera.html#a2262c33a62cc297ecedbe5801fcd37df" title=" " alt="" coords="15,5,170,45"/>
+<area shape="rect" id="node7" href="$classdyno_1_1KltFeatureTracker.html#a8f26d8fe56edd3e579a879e82a40457f" title="Tracks features using KLT tracker between the previous image and the current one." alt="" coords="262,120,437,160"/>
+<area shape="rect" id="node8" href="$classdyno_1_1KltFeatureTracker.html#ab15aaa39f0c3adc62037d718b98039c0" title="Track features between frames k&#45;1 and the current set of images (at k)." alt="" coords="5,120,180,160"/>
 </map>

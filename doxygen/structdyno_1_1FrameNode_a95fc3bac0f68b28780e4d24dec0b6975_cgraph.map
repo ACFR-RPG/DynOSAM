@@ -1,6 +1,7 @@
 <map id="dyno::FrameNode::toString" name="dyno::FrameNode::toString">
-<area shape="rect" id="node1" title=" " alt="" coords="5,77,201,102"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,109,201,134"/>
 <area shape="rect" id="node2" href="$namespacedyno.html#a17d3c448677824ae83870358b2a3e01d" title=" " alt="" coords="294,5,437,45"/>
-<area shape="rect" id="node3" href="$structdyno_1_1FrameNode.html#ad7c6e24fb31032de05d77d3dc15ab2f3" title="Number of dynamic measurements for this frame." alt="" coords="249,69,481,109"/>
-<area shape="rect" id="node4" href="$structdyno_1_1FrameNode.html#af0287156595740882fd899088c7777f2" title="Number of static measurements for this frame." alt="" coords="260,133,471,173"/>
+<area shape="rect" id="node3" href="$structdyno_1_1FrameNode.html#a9de09adaaec699595f7e7c83736c029a" title="Get the ids (j) of objects observed at this frame." alt="" coords="251,69,479,109"/>
+<area shape="rect" id="node4" href="$structdyno_1_1FrameNode.html#ad7c6e24fb31032de05d77d3dc15ab2f3" title="Number of dynamic measurements for this frame." alt="" coords="249,133,481,173"/>
+<area shape="rect" id="node5" href="$structdyno_1_1FrameNode.html#af0287156595740882fd899088c7777f2" title="Number of static measurements for this frame." alt="" coords="260,197,471,237"/>
 </map>

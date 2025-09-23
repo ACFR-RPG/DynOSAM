@@ -89,6 +89,16 @@ $(function() {
  <a href="classdyno_1_1Accessor.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="Accessor_8hpp_source.html">Accessor.hpp</a>&gt;</code></p>
+<div class="dynheader">
+Collaboration diagram for dyno::Accessor&lt; MAP &gt;:</div>
+<div class="dyncontent">
+<div class="center"><img src="classdyno_1_1Accessor__coll__graph.png" border="0" usemap="#adyno_1_1Accessor_3_01MAP_01_4_coll__map" alt="Collaboration graph"/></div>
+<map name="adyno_1_1Accessor_3_01MAP_01_4_coll__map" id="adyno_1_1Accessor_3_01MAP_01_4_coll__map">
+<area shape="rect" title="Accessor defines the interface between the structured output of a BackendModule and any formulation u..." alt="" coords="24,181,203,207"/>
+<area shape="rect" href="structdyno_1_1SharedFormulationData.html" title="Data shared between a Formulation and its accessor." alt="" coords="5,93,221,119"/>
+<area shape="rect" href="structdyno_1_1FormulationHooks.html" title="Defines a set of input hooks to the formulation that allow communication to outside the formulation." alt="" coords="23,5,204,31"/>
+</map>
+<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
@@ -99,8 +109,8 @@ Public Types</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a56af341546f0ed53acaa8a87628f7f20"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1Accessor.html#a56af341546f0ed53acaa8a87628f7f20">Accessor</a> (const gtsam::Values *theta, typename Map::Ptr <a class="el" href="classdyno_1_1Accessor.html#a7204bf6ab3ea8d16809049aa1553bccc">map</a>)</td></tr>
-<tr class="separator:a56af341546f0ed53acaa8a87628f7f20"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7b789659db900bf960b564f55a2417ed"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1Accessor.html#a7b789659db900bf960b564f55a2417ed">Accessor</a> (const <a class="el" href="structdyno_1_1SharedFormulationData.html">SharedFormulationData</a> &amp;shared_data, typename Map::Ptr <a class="el" href="classdyno_1_1Accessor.html#a7204bf6ab3ea8d16809049aa1553bccc">map</a>)</td></tr>
+<tr class="separator:a7b789659db900bf960b564f55a2417ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af6d10b8c333c522b3a2562406e1064d9"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1Accessor.html#af6d10b8c333c522b3a2562406e1064d9">~Accessor</a> ()</td></tr>
 <tr class="separator:af6d10b8c333c522b3a2562406e1064d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aec48e5cad35635c805675f294fb1505a"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classdyno_1_1StateQuery.html">StateQuery</a>&lt; gtsam::Pose3 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1Accessor.html#aec48e5cad35635c805675f294fb1505a">getSensorPose</a> (<a class="el" href="namespacedyno.html#ac4303d6fafb755f794b072d76f9cfb41">FrameId</a> frame_id) const =0</td></tr>
@@ -109,6 +119,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ab1126afc0b0ea953532c2770e033aee5"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classdyno_1_1StateQuery.html">StateQuery</a>&lt; gtsam::Pose3 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1Accessor.html#ab1126afc0b0ea953532c2770e033aee5">getObjectMotion</a> (<a class="el" href="namespacedyno.html#ac4303d6fafb755f794b072d76f9cfb41">FrameId</a> frame_id, <a class="el" href="namespacedyno.html#a38bb86e4154b86428b8d133be03fb2b5">ObjectId</a> object_id) const =0</td></tr>
 <tr class="memdesc:ab1126afc0b0ea953532c2770e033aee5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get an absolute object motion (_{k-1}^wH_k) from theta the requested time-step (k) and object (j).  <br /></td></tr>
 <tr class="separator:ab1126afc0b0ea953532c2770e033aee5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aad13431b3c1e7920f02be084c21af15c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classdyno_1_1StateQuery.html">StateQuery</a>&lt; <a class="el" href="namespacedyno.html#a1773d4e61e0cc7d3e489f97d43943b1f">Motion3ReferenceFrame</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1Accessor.html#aad13431b3c1e7920f02be084c21af15c">getObjectMotionReferenceFrame</a> (<a class="el" href="namespacedyno.html#ac4303d6fafb755f794b072d76f9cfb41">FrameId</a> frame_id, <a class="el" href="namespacedyno.html#a38bb86e4154b86428b8d133be03fb2b5">ObjectId</a> object_id) const</td></tr>
+<tr class="memdesc:aad13431b3c1e7920f02be084c21af15c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the absolute motion (_{k-1}^wH_k) from theta the requested time-step (k) and object (j) with the associated reference frame. Internally this uses getObjectMotion and constructs a Motion3ReferenceFrame using the global frame, k-1 and k. No checks are done on the underlying function call so it assumes that the virtual getObjectMotion function has been implemented correctly and returns a motion in the right representation.  <br /></td></tr>
+<tr class="separator:aad13431b3c1e7920f02be084c21af15c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab87c1b26d6cbf30ff87cb69553fe1077"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classdyno_1_1StateQuery.html">StateQuery</a>&lt; gtsam::Pose3 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1Accessor.html#ab87c1b26d6cbf30ff87cb69553fe1077">getObjectPose</a> (<a class="el" href="namespacedyno.html#ac4303d6fafb755f794b072d76f9cfb41">FrameId</a> frame_id, <a class="el" href="namespacedyno.html#a38bb86e4154b86428b8d133be03fb2b5">ObjectId</a> object_id) const =0</td></tr>
 <tr class="memdesc:ab87c1b26d6cbf30ff87cb69553fe1077"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the pose (^wL_k) of an object (j) at time-step (k).  <br /></td></tr>
 <tr class="separator:ab87c1b26d6cbf30ff87cb69553fe1077"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -121,12 +134,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a1d29b55442543df1530b5784e745527b"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacedyno.html#a657d4fbbb462bb3f05806e6de62ff1be">EstimateMap</a>&lt; <a class="el" href="namespacedyno.html#a38bb86e4154b86428b8d133be03fb2b5">ObjectId</a>, gtsam::Pose3 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1Accessor.html#a1d29b55442543df1530b5784e745527b">getObjectPoses</a> (<a class="el" href="namespacedyno.html#ac4303d6fafb755f794b072d76f9cfb41">FrameId</a> frame_id) const</td></tr>
 <tr class="memdesc:a1d29b55442543df1530b5784e745527b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Collects all object poses at some time-step (k). This is equivalent to \mathcal{L}_k. Is a (non-pure) virtual function so may be overwritten - default implementation uses the pure-virtual getObjectPose function to collect all object poses.  <br /></td></tr>
 <tr class="separator:a1d29b55442543df1530b5784e745527b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8f0b21c13a50f295337a92c340f17f3d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacedyno.html#acef42ad0a1e53f5876f1000defc23e3b">MotionEstimateMap</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1Accessor.html#a8f0b21c13a50f295337a92c340f17f3d">getObjectMotions</a> (<a class="el" href="namespacedyno.html#ac4303d6fafb755f794b072d76f9cfb41">FrameId</a> frame_id) const</td></tr>
+<tr class="memitem:a8f0b21c13a50f295337a92c340f17f3d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacedyno.html#acbe4f073028205068f6ad3fb9ef92d66">MotionEstimateMap</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1Accessor.html#a8f0b21c13a50f295337a92c340f17f3d">getObjectMotions</a> (<a class="el" href="namespacedyno.html#ac4303d6fafb755f794b072d76f9cfb41">FrameId</a> frame_id) const</td></tr>
 <tr class="memdesc:a8f0b21c13a50f295337a92c340f17f3d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Collects all object motions from some time-step (k-1) to k. This is equivalent to \mathcal{H}_k. Uses the pure-virtual getObjectMotion function to collect all object motions.  <br /></td></tr>
 <tr class="separator:a8f0b21c13a50f295337a92c340f17f3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad3537bb0e6372a81e1ab9edaa902b4d6"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1Accessor.html#ad3537bb0e6372a81e1ab9edaa902b4d6">postUpdateCallback</a> (const <a class="el" href="structdyno_1_1BackendMetaData.html">BackendMetaData</a> &amp;)</td></tr>
-<tr class="memdesc:ad3537bb0e6372a81e1ab9edaa902b4d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Virtual function that is called to indcate the associated formulation has been updated. This can be used to trigger an internal update of variables/cache if necessary.  <br /></td></tr>
-<tr class="separator:ad3537bb0e6372a81e1ab9edaa902b4d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2f6b27bc9bcfe4f286cb6e89b97c305e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacedyno.html#a657d4fbbb462bb3f05806e6de62ff1be">EstimateMap</a>&lt; <a class="el" href="namespacedyno.html#a38bb86e4154b86428b8d133be03fb2b5">ObjectId</a>, std::pair&lt; <a class="el" href="namespacedyno.html#a6549470bc523e57ef4bfa81eed756659">Motion3</a>, gtsam::Pose3 &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1Accessor.html#a2f6b27bc9bcfe4f286cb6e89b97c305e">getObjectPrevPosePair</a> (<a class="el" href="namespacedyno.html#ac4303d6fafb755f794b072d76f9cfb41">FrameId</a> frame_id) const</td></tr>
 <tr class="memdesc:a2f6b27bc9bcfe4f286cb6e89b97c305e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets an estimate map of objects with their motion and and PREVIOUS pose. This will find motions and poses (using the internal API) and return a motion from k-1 to k and the associated pose at k-1.  <br /></td></tr>
 <tr class="separator:a2f6b27bc9bcfe4f286cb6e89b97c305e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -134,12 +144,15 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:ac884db6db629c038328ab24bf91d4073"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets an estimate map of objects with their motion and and CURRENT pose. This will find motions and poses (using the internal API) and return a motion from k-1 to k and the associated pose at k.  <br /></td></tr>
 <tr class="separator:ac884db6db629c038328ab24bf91d4073"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a724e8bbef287e354030f9ae6d42b3c6d"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacedyno.html#a47c0a08523c12765d4bd6e243f900c16">ObjectPoseMap</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1Accessor.html#a724e8bbef287e354030f9ae6d42b3c6d">getObjectPoses</a> () const</td></tr>
-<tr class="memdesc:a724e8bbef287e354030f9ae6d42b3c6d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Collects all object poses for frame 0 to k. (Non-pure )Virtual function that may be overwritten - default implementation uses the pure-virtual getObjectPoses to collect all poses.  <br /></td></tr>
+<tr class="memdesc:a724e8bbef287e354030f9ae6d42b3c6d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Collects all object poses for frame 0 to K. (Non-pure )Virtual function that may be overwritten - default implementation uses the pure-virtual getObjectPoses to collect all poses.  <br /></td></tr>
 <tr class="separator:a724e8bbef287e354030f9ae6d42b3c6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9561ba94ab4409ac5cb803cac709bb62"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacedyno.html#af0e7693f6363b7c2b87803049135cf43">ObjectMotionMap</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1Accessor.html#a9561ba94ab4409ac5cb803cac709bb62">getObjectMotions</a> () const</td></tr>
+<tr class="memdesc:a9561ba94ab4409ac5cb803cac709bb62"><td class="mdescLeft">&#160;</td><td class="mdescRight">Collects all object motions from 1 to K (with the first motion being from k-1 to k). (Non-pure) Virtual function that may be overwritten - default implementation uses the pure-virtual getObjectPoses to collect all motions.  <br /></td></tr>
+<tr class="separator:a9561ba94ab4409ac5cb803cac709bb62"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af91179bb0910c2e6ec232b6e155d4011"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacedyno.html#afa01ab54e33c616353a643645cd2aaee">StatusLandmarkVector</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1Accessor.html#af91179bb0910c2e6ec232b6e155d4011">getDynamicLandmarkEstimates</a> (<a class="el" href="namespacedyno.html#ac4303d6fafb755f794b072d76f9cfb41">FrameId</a> frame_id) const</td></tr>
 <tr class="memdesc:af91179bb0910c2e6ec232b6e155d4011"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get all dynamic landmarks for all objects (\mathcal{J}_k) at time-step k.  <br /></td></tr>
 <tr class="separator:af91179bb0910c2e6ec232b6e155d4011"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab7c0aa6409651ee5ee49387e3272e930"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacedyno.html#afa01ab54e33c616353a643645cd2aaee">StatusLandmarkVector</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1Accessor.html#ab7c0aa6409651ee5ee49387e3272e930">getDynamicLandmarkEstimates</a> (<a class="el" href="namespacedyno.html#ac4303d6fafb755f794b072d76f9cfb41">FrameId</a> frame_id, <a class="el" href="namespacedyno.html#a38bb86e4154b86428b8d133be03fb2b5">ObjectId</a> object_id) const</td></tr>
+<tr class="memitem:ab7c0aa6409651ee5ee49387e3272e930"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacedyno.html#afa01ab54e33c616353a643645cd2aaee">StatusLandmarkVector</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1Accessor.html#ab7c0aa6409651ee5ee49387e3272e930">getDynamicLandmarkEstimates</a> (<a class="el" href="namespacedyno.html#ac4303d6fafb755f794b072d76f9cfb41">FrameId</a> frame_id, <a class="el" href="namespacedyno.html#a38bb86e4154b86428b8d133be03fb2b5">ObjectId</a> object_id) const</td></tr>
 <tr class="memdesc:ab7c0aa6409651ee5ee49387e3272e930"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get all dynamic landmarks for object j at time-step k.  <br /></td></tr>
 <tr class="separator:ab7c0aa6409651ee5ee49387e3272e930"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6ac7f822f520fac8f3ee93d24230abe4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacedyno.html#afa01ab54e33c616353a643645cd2aaee">StatusLandmarkVector</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1Accessor.html#a6ac7f822f520fac8f3ee93d24230abe4">getStaticLandmarkEstimates</a> (<a class="el" href="namespacedyno.html#ac4303d6fafb755f794b072d76f9cfb41">FrameId</a> frame_id) const</td></tr>
@@ -181,6 +194,10 @@ Public Member Functions</h2></td></tr>
 Protected Member Functions</h2></td></tr>
 <tr class="memitem:a7204bf6ab3ea8d16809049aa1553bccc"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1Accessor.html#a7204bf6ab3ea8d16809049aa1553bccc">map</a> () const</td></tr>
 <tr class="separator:a7204bf6ab3ea8d16809049aa1553bccc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad1dcc1b61d79647eed9b4551e158b188"><td class="memItemLeft" align="right" valign="top">const gtsam::Values &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1Accessor.html#ad1dcc1b61d79647eed9b4551e158b188">values</a> () const</td></tr>
+<tr class="separator:ad1dcc1b61d79647eed9b4551e158b188"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3fda7147ee8e4ce144e2ce46e5f2cde4"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structdyno_1_1FormulationHooks.html">FormulationHooks</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1Accessor.html#a3fda7147ee8e4ce144e2ce46e5f2cde4">hooks</a> () const</td></tr>
+<tr class="separator:a3fda7147ee8e4ce144e2ce46e5f2cde4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-methods" name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
@@ -190,8 +207,8 @@ Private Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
-<tr class="memitem:af0454d2faf0d60320bb51dcb91d0c569"><td class="memItemLeft" align="right" valign="top">const gtsam::Values *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1Accessor.html#af0454d2faf0d60320bb51dcb91d0c569">theta_</a></td></tr>
-<tr class="separator:af0454d2faf0d60320bb51dcb91d0c569"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad6488a7509de3c0d30bd55be1291cb88"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structdyno_1_1SharedFormulationData.html">SharedFormulationData</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1Accessor.html#ad6488a7509de3c0d30bd55be1291cb88">shared_data_</a></td></tr>
+<tr class="separator:ad6488a7509de3c0d30bd55be1291cb88"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa9e71b12c3a05618316597d54a895f9d"><td class="memItemLeft" align="right" valign="top">Map::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1Accessor.html#aa9e71b12c3a05618316597d54a895f9d">map_</a></td></tr>
 <tr class="separator:aa9e71b12c3a05618316597d54a895f9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -245,8 +262,8 @@ template&lt;class MAP &gt; </div>
 </div>
 </div>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a56af341546f0ed53acaa8a87628f7f20" name="a56af341546f0ed53acaa8a87628f7f20"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a56af341546f0ed53acaa8a87628f7f20">&#9670;&#160;</a></span>Accessor()</h2>
+<a id="a7b789659db900bf960b564f55a2417ed" name="a7b789659db900bf960b564f55a2417ed"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7b789659db900bf960b564f55a2417ed">&#9670;&#160;</a></span>Accessor()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -256,8 +273,8 @@ template&lt;class MAP &gt; </div>
         <tr>
           <td class="memname"><a class="el" href="classdyno_1_1Accessor.html">dyno::Accessor</a>&lt; MAP &gt;::Accessor </td>
           <td>(</td>
-          <td class="paramtype">const gtsam::Values *&#160;</td>
-          <td class="paramname"><em>theta</em>, </td>
+          <td class="paramtype">const <a class="el" href="structdyno_1_1SharedFormulationData.html">SharedFormulationData</a> &amp;&#160;</td>
+          <td class="paramname"><em>shared_data</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -274,11 +291,16 @@ template&lt;class MAP &gt; </div>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="Accessor-impl_8hpp_source.html#l00040">40</a> of file <a class="el" href="Accessor-impl_8hpp_source.html">Accessor-impl.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   41</span>    : <a class="code hl_variable" href="classdyno_1_1Accessor.html#af0454d2faf0d60320bb51dcb91d0c569">theta_</a>(theta), <a class="code hl_variable" href="classdyno_1_1Accessor.html#aa9e71b12c3a05618316597d54a895f9d">map_</a>(<a class="code hl_function" href="classdyno_1_1Accessor.html#a7204bf6ab3ea8d16809049aa1553bccc">map</a>) {}</div>
-<div class="ttc" id="aclassdyno_1_1Accessor_html_a7204bf6ab3ea8d16809049aa1553bccc"><div class="ttname"><a href="classdyno_1_1Accessor.html#a7204bf6ab3ea8d16809049aa1553bccc">dyno::Accessor::map</a></div><div class="ttdeci">auto map() const</div><div class="ttdef"><b>Definition:</b> <a href="Accessor_8hpp_source.html#l00322">Accessor.hpp:322</a></div></div>
-<div class="ttc" id="aclassdyno_1_1Accessor_html_aa9e71b12c3a05618316597d54a895f9d"><div class="ttname"><a href="classdyno_1_1Accessor.html#aa9e71b12c3a05618316597d54a895f9d">dyno::Accessor::map_</a></div><div class="ttdeci">Map::Ptr map_</div><div class="ttdef"><b>Definition:</b> <a href="Accessor_8hpp_source.html#l00341">Accessor.hpp:341</a></div></div>
-<div class="ttc" id="aclassdyno_1_1Accessor_html_af0454d2faf0d60320bb51dcb91d0c569"><div class="ttname"><a href="classdyno_1_1Accessor.html#af0454d2faf0d60320bb51dcb91d0c569">dyno::Accessor::theta_</a></div><div class="ttdeci">const gtsam::Values * theta_</div><div class="ttdef"><b>Definition:</b> <a href="Accessor_8hpp_source.html#l00339">Accessor.hpp:339</a></div></div>
+<div class="fragment"><div class="line"><span class="lineno">   42</span>    : <a class="code hl_variable" href="classdyno_1_1Accessor.html#ad6488a7509de3c0d30bd55be1291cb88">shared_data_</a>(shared_data), <a class="code hl_variable" href="classdyno_1_1Accessor.html#aa9e71b12c3a05618316597d54a895f9d">map_</a>(<a class="code hl_function" href="classdyno_1_1Accessor.html#a7204bf6ab3ea8d16809049aa1553bccc">map</a>) {</div>
+<div class="line"><span class="lineno">   43</span>  CHECK_NOTNULL(shared_data.values);</div>
+<div class="line"><span class="lineno">   44</span>  CHECK_NOTNULL(shared_data.hooks);</div>
+<div class="line"><span class="lineno">   45</span>}</div>
+<div class="ttc" id="aclassdyno_1_1Accessor_html_a7204bf6ab3ea8d16809049aa1553bccc"><div class="ttname"><a href="classdyno_1_1Accessor.html#a7204bf6ab3ea8d16809049aa1553bccc">dyno::Accessor::map</a></div><div class="ttdeci">auto map() const</div><div class="ttdef"><b>Definition:</b> <a href="Accessor_8hpp_source.html#l00339">Accessor.hpp:339</a></div></div>
+<div class="ttc" id="aclassdyno_1_1Accessor_html_aa9e71b12c3a05618316597d54a895f9d"><div class="ttname"><a href="classdyno_1_1Accessor.html#aa9e71b12c3a05618316597d54a895f9d">dyno::Accessor::map_</a></div><div class="ttdeci">Map::Ptr map_</div><div class="ttdef"><b>Definition:</b> <a href="Accessor_8hpp_source.html#l00367">Accessor.hpp:367</a></div></div>
+<div class="ttc" id="aclassdyno_1_1Accessor_html_ad6488a7509de3c0d30bd55be1291cb88"><div class="ttname"><a href="classdyno_1_1Accessor.html#ad6488a7509de3c0d30bd55be1291cb88">dyno::Accessor::shared_data_</a></div><div class="ttdeci">const SharedFormulationData shared_data_</div><div class="ttdef"><b>Definition:</b> <a href="Accessor_8hpp_source.html#l00366">Accessor.hpp:366</a></div></div>
 </div><!-- fragment -->
+<p class="reference">References <a class="el" href="structdyno_1_1SharedFormulationData.html#ae9b3c70345c050a19ff22557c7478f83">dyno::SharedFormulationData::hooks</a>, and <a class="el" href="structdyno_1_1SharedFormulationData.html#afe4ada7a2dbeba9b68e6026a5db506d5">dyno::SharedFormulationData::values</a>.</p>
+
 </div>
 </div>
 <a id="af6d10b8c333c522b3a2562406e1064d9" name="af6d10b8c333c522b3a2562406e1064d9"></a>
@@ -351,39 +373,38 @@ template&lt;class MAP &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>std::tuple&lt;gtsam::Point3, bool&gt; </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Accessor-impl_8hpp_source.html#l00294">294</a> of file <a class="el" href="Accessor-impl_8hpp_source.html">Accessor-impl.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  295</span>                                                {</div>
-<div class="line"><span class="lineno">  296</span>  <span class="keyword">const</span> <a class="code hl_typedef" href="namespacedyno.html#afa01ab54e33c616353a643645cd2aaee">StatusLandmarkVector</a>&amp; dynamic_lmks =</div>
-<div class="line"><span class="lineno">  297</span>      this-&gt;<a class="code hl_function" href="classdyno_1_1Accessor.html#af91179bb0910c2e6ec232b6e155d4011">getDynamicLandmarkEstimates</a>(frame_id, object_id);</div>
-<div class="line"><span class="lineno">  298</span> </div>
-<div class="line"><span class="lineno">  299</span>  <span class="comment">// convert to point cloud - should be a map with only one map in it</span></div>
-<div class="line"><span class="lineno">  300</span>  <a class="code hl_typedef" href="namespacedyno.html#aeed89004aa6762d0e7d140229a96766d">CloudPerObject</a> object_clouds =</div>
-<div class="line"><span class="lineno">  301</span>      <a class="code hl_function" href="namespacedyno.html#ad2183909c7d4f0dd85c7db9ae1759b01">groupObjectCloud</a>(dynamic_lmks, this-&gt;<a class="code hl_function" href="classdyno_1_1Accessor.html#aec48e5cad35635c805675f294fb1505a">getSensorPose</a>(frame_id).get());</div>
-<div class="line"><span class="lineno">  302</span>  <span class="keywordflow">if</span> (object_clouds.size() == 0) {</div>
-<div class="line"><span class="lineno">  303</span>    <span class="comment">// TODO: why does this happen so much!!!</span></div>
-<div class="line"><span class="lineno">  304</span>    VLOG(20) &lt;&lt; <span class="stringliteral">&quot;Cannot collect object clouds from dynamic landmarks of &quot;</span></div>
-<div class="line"><span class="lineno">  305</span>             &lt;&lt; object_id &lt;&lt; <span class="stringliteral">&quot; and frame &quot;</span> &lt;&lt; frame_id &lt;&lt; <span class="stringliteral">&quot;!! &quot;</span></div>
-<div class="line"><span class="lineno">  306</span>             &lt;&lt; <span class="stringliteral">&quot; # Dynamic lmks in the map for this object at this frame was &quot;</span></div>
-<div class="line"><span class="lineno">  307</span>             &lt;&lt; dynamic_lmks.size();  <span class="comment">//&lt;&lt; &quot; but reocrded lmks was &quot; &lt;&lt;</span></div>
-<div class="line"><span class="lineno">  308</span>                                      <span class="comment">// dynamic_landmarks.size();</span></div>
-<div class="line"><span class="lineno">  309</span>    <span class="keywordflow">return</span> {gtsam::Point3{}, <span class="keyword">false</span>};</div>
-<div class="line"><span class="lineno">  310</span>  }</div>
-<div class="line"><span class="lineno">  311</span>  CHECK_EQ(object_clouds.size(), 1);</div>
-<div class="line"><span class="lineno">  312</span>  CHECK(object_clouds.exists(object_id));</div>
-<div class="line"><span class="lineno">  313</span> </div>
-<div class="line"><span class="lineno">  314</span>  <span class="keyword">const</span> <span class="keyword">auto</span> dynamic_point_cloud = object_clouds.at(object_id);</div>
-<div class="line"><span class="lineno">  315</span>  pcl::PointXYZ centroid;</div>
-<div class="line"><span class="lineno">  316</span>  pcl::computeCentroid(dynamic_point_cloud, centroid);</div>
-<div class="line"><span class="lineno">  317</span>  <span class="comment">// TODO: outlier reject?</span></div>
-<div class="line"><span class="lineno">  318</span>  gtsam::Point3 translation = <a class="code hl_function" href="namespacedyno.html#ac813bb3d37948e5e5c8d32a690e2c320">pclPointToGtsam</a>(centroid);</div>
-<div class="line"><span class="lineno">  319</span>  <span class="keywordflow">return</span> {translation, <span class="keyword">true</span>};</div>
-<div class="line"><span class="lineno">  320</span>}</div>
+<p class="definition">Definition at line <a class="el" href="Accessor-impl_8hpp_source.html#l00330">330</a> of file <a class="el" href="Accessor-impl_8hpp_source.html">Accessor-impl.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  331</span>                                                {</div>
+<div class="line"><span class="lineno">  332</span>  <span class="keyword">const</span> <a class="code hl_typedef" href="namespacedyno.html#afa01ab54e33c616353a643645cd2aaee">StatusLandmarkVector</a>&amp; dynamic_lmks =</div>
+<div class="line"><span class="lineno">  333</span>      this-&gt;<a class="code hl_function" href="classdyno_1_1Accessor.html#af91179bb0910c2e6ec232b6e155d4011">getDynamicLandmarkEstimates</a>(frame_id, object_id);</div>
+<div class="line"><span class="lineno">  334</span> </div>
+<div class="line"><span class="lineno">  335</span>  <span class="comment">// convert to point cloud - should be a map with only one map in it</span></div>
+<div class="line"><span class="lineno">  336</span>  <a class="code hl_typedef" href="namespacedyno.html#aeed89004aa6762d0e7d140229a96766d">CloudPerObject</a> object_clouds =</div>
+<div class="line"><span class="lineno">  337</span>      <a class="code hl_function" href="namespacedyno.html#a2d0888a8627082384b75a95953f55c3c">groupObjectCloud</a>(dynamic_lmks, this-&gt;<a class="code hl_function" href="classdyno_1_1Accessor.html#aec48e5cad35635c805675f294fb1505a">getSensorPose</a>(frame_id).get());</div>
+<div class="line"><span class="lineno">  338</span>  <span class="keywordflow">if</span> (object_clouds.size() == 0) {</div>
+<div class="line"><span class="lineno">  339</span>    VLOG(20) &lt;&lt; <span class="stringliteral">&quot;Cannot collect object clouds from dynamic landmarks of &quot;</span></div>
+<div class="line"><span class="lineno">  340</span>             &lt;&lt; object_id &lt;&lt; <span class="stringliteral">&quot; and frame &quot;</span> &lt;&lt; frame_id &lt;&lt; <span class="stringliteral">&quot;!! &quot;</span></div>
+<div class="line"><span class="lineno">  341</span>             &lt;&lt; <span class="stringliteral">&quot; # Dynamic lmks in the map for this object at this frame was &quot;</span></div>
+<div class="line"><span class="lineno">  342</span>             &lt;&lt; dynamic_lmks.size();  <span class="comment">//&lt;&lt; &quot; but reocrded lmks was &quot; &lt;&lt;</span></div>
+<div class="line"><span class="lineno">  343</span>                                      <span class="comment">// dynamic_landmarks.size();</span></div>
+<div class="line"><span class="lineno">  344</span>    <span class="keywordflow">return</span> {gtsam::Point3{}, <span class="keyword">false</span>};</div>
+<div class="line"><span class="lineno">  345</span>  }</div>
+<div class="line"><span class="lineno">  346</span>  CHECK_EQ(object_clouds.size(), 1);</div>
+<div class="line"><span class="lineno">  347</span>  CHECK(object_clouds.exists(object_id));</div>
+<div class="line"><span class="lineno">  348</span> </div>
+<div class="line"><span class="lineno">  349</span>  <span class="keyword">const</span> <span class="keyword">auto</span> dynamic_point_cloud = object_clouds.at(object_id);</div>
+<div class="line"><span class="lineno">  350</span>  pcl::PointXYZ centroid;</div>
+<div class="line"><span class="lineno">  351</span>  pcl::computeCentroid(dynamic_point_cloud, centroid);</div>
+<div class="line"><span class="lineno">  352</span>  <span class="comment">// TODO: outlier reject?</span></div>
+<div class="line"><span class="lineno">  353</span>  gtsam::Point3 translation = <a class="code hl_function" href="namespacedyno.html#ac813bb3d37948e5e5c8d32a690e2c320">pclPointToGtsam</a>(centroid);</div>
+<div class="line"><span class="lineno">  354</span>  <span class="keywordflow">return</span> {translation, <span class="keyword">true</span>};</div>
+<div class="line"><span class="lineno">  355</span>}</div>
 <div class="ttc" id="aclassdyno_1_1Accessor_html_aec48e5cad35635c805675f294fb1505a"><div class="ttname"><a href="classdyno_1_1Accessor.html#aec48e5cad35635c805675f294fb1505a">dyno::Accessor::getSensorPose</a></div><div class="ttdeci">virtual StateQuery&lt; gtsam::Pose3 &gt; getSensorPose(FrameId frame_id) const =0</div><div class="ttdoc">Get the sensor pose (^wX_k) from theta at the requested time-step.</div></div>
-<div class="ttc" id="aclassdyno_1_1Accessor_html_af91179bb0910c2e6ec232b6e155d4011"><div class="ttname"><a href="classdyno_1_1Accessor.html#af91179bb0910c2e6ec232b6e155d4011">dyno::Accessor::getDynamicLandmarkEstimates</a></div><div class="ttdeci">StatusLandmarkVector getDynamicLandmarkEstimates(FrameId frame_id) const</div><div class="ttdoc">Get all dynamic landmarks for all objects (\mathcal{J}_k) at time-step k.</div><div class="ttdef"><b>Definition:</b> <a href="Accessor-impl_8hpp_source.html#l00118">Accessor-impl.hpp:118</a></div></div>
-<div class="ttc" id="anamespacedyno_html_ac813bb3d37948e5e5c8d32a690e2c320"><div class="ttname"><a href="namespacedyno.html#ac813bb3d37948e5e5c8d32a690e2c320">dyno::pclPointToGtsam</a></div><div class="ttdeci">gtsam::Point3 pclPointToGtsam(const PointT &amp;point)</div><div class="ttdoc">Constructs a gtsam::Point3 from the x,y,z components of the PointT.</div><div class="ttdef"><b>Definition:</b> <a href="PointCloudProcess_8hpp_source.html#l00057">PointCloudProcess.hpp:57</a></div></div>
-<div class="ttc" id="anamespacedyno_html_ad2183909c7d4f0dd85c7db9ae1759b01"><div class="ttname"><a href="namespacedyno.html#ad2183909c7d4f0dd85c7db9ae1759b01">dyno::groupObjectCloud</a></div><div class="ttdeci">CloudPerObject groupObjectCloud(const StatusLandmarkVector &amp;landmarks, const gtsam::Pose3 &amp;T_world_camera)</div><div class="ttdoc">This function goes through the input 3D landmarks and group them into point clusters based on their o...</div><div class="ttdef"><b>Definition:</b> <a href="PointCloudProcess_8cc_source.html#l00097">PointCloudProcess.cc:97</a></div></div>
-<div class="ttc" id="anamespacedyno_html_aeed89004aa6762d0e7d140229a96766d"><div class="ttname"><a href="namespacedyno.html#aeed89004aa6762d0e7d140229a96766d">dyno::CloudPerObject</a></div><div class="ttdeci">gtsam::FastMap&lt; ObjectId, pcl::PointCloud&lt; pcl::PointXYZRGB &gt; &gt; CloudPerObject</div><div class="ttdef"><b>Definition:</b> <a href="PointCloudProcess_8hpp_source.html#l00044">PointCloudProcess.hpp:45</a></div></div>
-<div class="ttc" id="anamespacedyno_html_afa01ab54e33c616353a643645cd2aaee"><div class="ttname"><a href="namespacedyno.html#afa01ab54e33c616353a643645cd2aaee">dyno::StatusLandmarkVector</a></div><div class="ttdeci">GenericTrackedStatusVector&lt; LandmarkStatus &gt; StatusLandmarkVector</div><div class="ttdoc">A vector of LandmarkStatus.</div><div class="ttdef"><b>Definition:</b> <a href="SensorModels_8hpp_source.html#l00318">SensorModels.hpp:318</a></div></div>
+<div class="ttc" id="aclassdyno_1_1Accessor_html_af91179bb0910c2e6ec232b6e155d4011"><div class="ttname"><a href="classdyno_1_1Accessor.html#af91179bb0910c2e6ec232b6e155d4011">dyno::Accessor::getDynamicLandmarkEstimates</a></div><div class="ttdeci">StatusLandmarkVector getDynamicLandmarkEstimates(FrameId frame_id) const</div><div class="ttdoc">Get all dynamic landmarks for all objects (\mathcal{J}_k) at time-step k.</div><div class="ttdef"><b>Definition:</b> <a href="Accessor-impl_8hpp_source.html#l00154">Accessor-impl.hpp:154</a></div></div>
+<div class="ttc" id="anamespacedyno_html_a2d0888a8627082384b75a95953f55c3c"><div class="ttname"><a href="namespacedyno.html#a2d0888a8627082384b75a95953f55c3c">dyno::groupObjectCloud</a></div><div class="ttdeci">CloudPerObject groupObjectCloud(const StatusLandmarkVector &amp;landmarks, const gtsam::Pose3 &amp;T_world_camera, std::function&lt; Color(ObjectId)&gt; colour_generator=Color::uniqueObjectId, std::function&lt; void(const pcl::PointXYZRGB &amp;, ObjectId)&gt; point_cb=nullptr)</div><div class="ttdoc">This function goes through the input 3D landmarks and group them into point clusters based on their o...</div><div class="ttdef"><b>Definition:</b> <a href="PointCloudProcess_8cc_source.html#l00097">PointCloudProcess.cc:97</a></div></div>
+<div class="ttc" id="anamespacedyno_html_ac813bb3d37948e5e5c8d32a690e2c320"><div class="ttname"><a href="namespacedyno.html#ac813bb3d37948e5e5c8d32a690e2c320">dyno::pclPointToGtsam</a></div><div class="ttdeci">gtsam::Point3 pclPointToGtsam(const PointT &amp;point)</div><div class="ttdoc">Constructs a gtsam::Point3 from the x,y,z components of the PointT.</div><div class="ttdef"><b>Definition:</b> <a href="PointCloudProcess_8hpp_source.html#l00102">PointCloudProcess.hpp:102</a></div></div>
+<div class="ttc" id="anamespacedyno_html_aeed89004aa6762d0e7d140229a96766d"><div class="ttname"><a href="namespacedyno.html#aeed89004aa6762d0e7d140229a96766d">dyno::CloudPerObject</a></div><div class="ttdeci">gtsam::FastMap&lt; ObjectId, pcl::PointCloud&lt; pcl::PointXYZRGB &gt; &gt; CloudPerObject</div><div class="ttdoc">Map of ObjectId's to XYZRGB Point Clouds.</div><div class="ttdef"><b>Definition:</b> <a href="PointCloudProcess_8hpp_source.html#l00044">PointCloudProcess.hpp:45</a></div></div>
+<div class="ttc" id="anamespacedyno_html_afa01ab54e33c616353a643645cd2aaee"><div class="ttname"><a href="namespacedyno.html#afa01ab54e33c616353a643645cd2aaee">dyno::StatusLandmarkVector</a></div><div class="ttdeci">GenericTrackedStatusVector&lt; LandmarkStatus &gt; StatusLandmarkVector</div><div class="ttdoc">A vector of LandmarkStatus.</div><div class="ttdef"><b>Definition:</b> <a href="SensorModels_8hpp_source.html#l00410">SensorModels.hpp:410</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -415,28 +436,28 @@ template&lt;class MAP &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>gtsam::FastMap&lt;ObjectId, gtsam::Point3&gt; </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Accessor-impl_8hpp_source.html#l00272">272</a> of file <a class="el" href="Accessor-impl_8hpp_source.html">Accessor-impl.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  273</span>                            {</div>
-<div class="line"><span class="lineno">  274</span>  gtsam::FastMap&lt;ObjectId, gtsam::Point3&gt; centroids;</div>
-<div class="line"><span class="lineno">  275</span> </div>
-<div class="line"><span class="lineno">  276</span>  <span class="keyword">const</span> <span class="keyword">auto</span> frame_node = <a class="code hl_function" href="classdyno_1_1Accessor.html#a7204bf6ab3ea8d16809049aa1553bccc">map</a>()-&gt;getFrame(frame_id);</div>
-<div class="line"><span class="lineno">  277</span>  <span class="keywordflow">if</span> (!frame_node) {</div>
-<div class="line"><span class="lineno">  278</span>    <span class="keywordflow">return</span> centroids;</div>
-<div class="line"><span class="lineno">  279</span>  }</div>
-<div class="line"><span class="lineno">  280</span> </div>
-<div class="line"><span class="lineno">  281</span>  <span class="keyword">const</span> <span class="keyword">auto</span> object_seen =</div>
-<div class="line"><span class="lineno">  282</span>      frame_node-&gt;objects_seen.template collectIds&lt;ObjectId&gt;();</div>
-<div class="line"><span class="lineno">  283</span>  <span class="keywordflow">for</span> (<a class="code hl_typedef" href="namespacedyno.html#a38bb86e4154b86428b8d133be03fb2b5">ObjectId</a> object_id : object_seen) {</div>
-<div class="line"><span class="lineno">  284</span>    <span class="keyword">const</span> <span class="keyword">auto</span> [centroid, result] = <a class="code hl_function" href="classdyno_1_1Accessor.html#a6bdf9069924545cbef78952f10509f1b">computeObjectCentroid</a>(frame_id, object_id);</div>
-<div class="line"><span class="lineno">  285</span> </div>
-<div class="line"><span class="lineno">  286</span>    <span class="keywordflow">if</span> (result) {</div>
-<div class="line"><span class="lineno">  287</span>      centroids.insert2(object_id, centroid);</div>
-<div class="line"><span class="lineno">  288</span>    }</div>
-<div class="line"><span class="lineno">  289</span>  }</div>
-<div class="line"><span class="lineno">  290</span>  <span class="keywordflow">return</span> centroids;</div>
-<div class="line"><span class="lineno">  291</span>}</div>
-<div class="ttc" id="aclassdyno_1_1Accessor_html_a6bdf9069924545cbef78952f10509f1b"><div class="ttname"><a href="classdyno_1_1Accessor.html#a6bdf9069924545cbef78952f10509f1b">dyno::Accessor::computeObjectCentroid</a></div><div class="ttdeci">std::tuple&lt; gtsam::Point3, bool &gt; computeObjectCentroid(FrameId frame_id, ObjectId object_id) const</div><div class="ttdoc">Computes the centroid of the requested object using the estimated dynamic points.</div><div class="ttdef"><b>Definition:</b> <a href="Accessor-impl_8hpp_source.html#l00294">Accessor-impl.hpp:294</a></div></div>
-<div class="ttc" id="anamespacedyno_html_a38bb86e4154b86428b8d133be03fb2b5"><div class="ttname"><a href="namespacedyno.html#a38bb86e4154b86428b8d133be03fb2b5">dyno::ObjectId</a></div><div class="ttdeci">int ObjectId</div><div class="ttdoc">Discrete object id, j.</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00068">Types.hpp:68</a></div></div>
+<p class="definition">Definition at line <a class="el" href="Accessor-impl_8hpp_source.html#l00308">308</a> of file <a class="el" href="Accessor-impl_8hpp_source.html">Accessor-impl.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  309</span>                            {</div>
+<div class="line"><span class="lineno">  310</span>  gtsam::FastMap&lt;ObjectId, gtsam::Point3&gt; centroids;</div>
+<div class="line"><span class="lineno">  311</span> </div>
+<div class="line"><span class="lineno">  312</span>  <span class="keyword">const</span> <span class="keyword">auto</span> frame_node = <a class="code hl_function" href="classdyno_1_1Accessor.html#a7204bf6ab3ea8d16809049aa1553bccc">map</a>()-&gt;getFrame(frame_id);</div>
+<div class="line"><span class="lineno">  313</span>  <span class="keywordflow">if</span> (!frame_node) {</div>
+<div class="line"><span class="lineno">  314</span>    <span class="keywordflow">return</span> centroids;</div>
+<div class="line"><span class="lineno">  315</span>  }</div>
+<div class="line"><span class="lineno">  316</span> </div>
+<div class="line"><span class="lineno">  317</span>  <span class="keyword">const</span> <span class="keyword">auto</span> object_seen =</div>
+<div class="line"><span class="lineno">  318</span>      frame_node-&gt;objects_seen.template collectIds&lt;ObjectId&gt;();</div>
+<div class="line"><span class="lineno">  319</span>  <span class="keywordflow">for</span> (<a class="code hl_typedef" href="namespacedyno.html#a38bb86e4154b86428b8d133be03fb2b5">ObjectId</a> object_id : object_seen) {</div>
+<div class="line"><span class="lineno">  320</span>    <span class="keyword">const</span> <span class="keyword">auto</span> [centroid, result] = <a class="code hl_function" href="classdyno_1_1Accessor.html#a6bdf9069924545cbef78952f10509f1b">computeObjectCentroid</a>(frame_id, object_id);</div>
+<div class="line"><span class="lineno">  321</span> </div>
+<div class="line"><span class="lineno">  322</span>    <span class="keywordflow">if</span> (result) {</div>
+<div class="line"><span class="lineno">  323</span>      centroids.insert2(object_id, centroid);</div>
+<div class="line"><span class="lineno">  324</span>    }</div>
+<div class="line"><span class="lineno">  325</span>  }</div>
+<div class="line"><span class="lineno">  326</span>  <span class="keywordflow">return</span> centroids;</div>
+<div class="line"><span class="lineno">  327</span>}</div>
+<div class="ttc" id="aclassdyno_1_1Accessor_html_a6bdf9069924545cbef78952f10509f1b"><div class="ttname"><a href="classdyno_1_1Accessor.html#a6bdf9069924545cbef78952f10509f1b">dyno::Accessor::computeObjectCentroid</a></div><div class="ttdeci">std::tuple&lt; gtsam::Point3, bool &gt; computeObjectCentroid(FrameId frame_id, ObjectId object_id) const</div><div class="ttdoc">Computes the centroid of the requested object using the estimated dynamic points.</div><div class="ttdef"><b>Definition:</b> <a href="Accessor-impl_8hpp_source.html#l00330">Accessor-impl.hpp:330</a></div></div>
+<div class="ttc" id="anamespacedyno_html_a38bb86e4154b86428b8d133be03fb2b5"><div class="ttname"><a href="namespacedyno.html#a38bb86e4154b86428b8d133be03fb2b5">dyno::ObjectId</a></div><div class="ttdeci">int ObjectId</div><div class="ttdoc">Discrete object id, j.</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00069">Types.hpp:69</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -469,10 +490,13 @@ template&lt;class MAP &gt; </div>
 <dd>
 false </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Accessor-impl_8hpp_source.html#l00350">350</a> of file <a class="el" href="Accessor-impl_8hpp_source.html">Accessor-impl.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  350</span>                                             {</div>
-<div class="line"><span class="lineno">  351</span>  <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1Accessor.html#af0454d2faf0d60320bb51dcb91d0c569">theta_</a>-&gt;exists(key);</div>
-<div class="line"><span class="lineno">  352</span>}</div>
+<p class="definition">Definition at line <a class="el" href="Accessor-impl_8hpp_source.html#l00385">385</a> of file <a class="el" href="Accessor-impl_8hpp_source.html">Accessor-impl.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  385</span>                                             {</div>
+<div class="line"><span class="lineno">  386</span>  <span class="keyword">const</span> gtsam::Values* theta = <a class="code hl_variable" href="classdyno_1_1Accessor.html#ad6488a7509de3c0d30bd55be1291cb88">shared_data_</a>.<a class="code hl_variable" href="structdyno_1_1SharedFormulationData.html#afe4ada7a2dbeba9b68e6026a5db506d5">values</a>;</div>
+<div class="line"><span class="lineno">  387</span>  CHECK_NOTNULL(theta);</div>
+<div class="line"><span class="lineno">  388</span>  <span class="keywordflow">return</span> theta-&gt;exists(key);</div>
+<div class="line"><span class="lineno">  389</span>}</div>
+<div class="ttc" id="astructdyno_1_1SharedFormulationData_html_afe4ada7a2dbeba9b68e6026a5db506d5"><div class="ttname"><a href="structdyno_1_1SharedFormulationData.html#afe4ada7a2dbeba9b68e6026a5db506d5">dyno::SharedFormulationData::values</a></div><div class="ttdeci">const gtsam::Values * values</div><div class="ttdef"><b>Definition:</b> <a href="BackendDefinitions_8hpp_source.html#l00189">BackendDefinitions.hpp:189</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -520,9 +544,9 @@ template&lt;class MAP &gt; </div>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>StateQuery&lt;gtsam::Point3&gt; </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="classdyno_1_1StateQuery.html">StateQuery&lt;gtsam::Point3&gt;</a> </dd></dl>
 
-<p>Implemented in <a class="el" href="classdyno_1_1WorldPoseAccessor.html#a8cdab6c6ee370768c7f658a8fdc045b4">dyno::WorldPoseAccessor</a>.</p>
+<p>Implemented in <a class="el" href="classdyno_1_1HybridAccessor.html#a393f72c835250a5fd7471fc764b95da7">dyno::HybridAccessor</a>, and <a class="el" href="classdyno_1_1WorldPoseAccessor.html#a8cdab6c6ee370768c7f658a8fdc045b4">dyno::WorldPoseAccessor</a>.</p>
 
 </div>
 </div>
@@ -553,19 +577,19 @@ template&lt;class MAP &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>StatusLandmarkVector </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Accessor-impl_8hpp_source.html#l00118">118</a> of file <a class="el" href="Accessor-impl_8hpp_source.html">Accessor-impl.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  119</span>                            {</div>
-<div class="line"><span class="lineno">  120</span>  <span class="keyword">const</span> <span class="keyword">auto</span> frame_node = <a class="code hl_function" href="classdyno_1_1Accessor.html#a7204bf6ab3ea8d16809049aa1553bccc">map</a>()-&gt;getFrame(frame_id);</div>
-<div class="line"><span class="lineno">  121</span>  CHECK_NOTNULL(frame_node);</div>
-<div class="line"><span class="lineno">  122</span> </div>
-<div class="line"><span class="lineno">  123</span>  <a class="code hl_typedef" href="namespacedyno.html#afa01ab54e33c616353a643645cd2aaee">StatusLandmarkVector</a> estimates;</div>
-<div class="line"><span class="lineno">  124</span>  <span class="keyword">const</span> <span class="keyword">auto</span> object_seen =</div>
-<div class="line"><span class="lineno">  125</span>      frame_node-&gt;objects_seen.template collectIds&lt;ObjectId&gt;();</div>
-<div class="line"><span class="lineno">  126</span>  <span class="keywordflow">for</span> (<a class="code hl_typedef" href="namespacedyno.html#a38bb86e4154b86428b8d133be03fb2b5">ObjectId</a> object_id : object_seen) {</div>
-<div class="line"><span class="lineno">  127</span>    estimates += this-&gt;<a class="code hl_function" href="classdyno_1_1Accessor.html#af91179bb0910c2e6ec232b6e155d4011">getDynamicLandmarkEstimates</a>(frame_id, object_id);</div>
-<div class="line"><span class="lineno">  128</span>  }</div>
-<div class="line"><span class="lineno">  129</span>  <span class="keywordflow">return</span> estimates;</div>
-<div class="line"><span class="lineno">  130</span>}</div>
+<p class="definition">Definition at line <a class="el" href="Accessor-impl_8hpp_source.html#l00154">154</a> of file <a class="el" href="Accessor-impl_8hpp_source.html">Accessor-impl.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  155</span>                            {</div>
+<div class="line"><span class="lineno">  156</span>  <span class="keyword">const</span> <span class="keyword">auto</span> frame_node = <a class="code hl_function" href="classdyno_1_1Accessor.html#a7204bf6ab3ea8d16809049aa1553bccc">map</a>()-&gt;getFrame(frame_id);</div>
+<div class="line"><span class="lineno">  157</span>  CHECK_NOTNULL(frame_node);</div>
+<div class="line"><span class="lineno">  158</span> </div>
+<div class="line"><span class="lineno">  159</span>  <a class="code hl_typedef" href="namespacedyno.html#afa01ab54e33c616353a643645cd2aaee">StatusLandmarkVector</a> estimates;</div>
+<div class="line"><span class="lineno">  160</span>  <span class="keyword">const</span> <span class="keyword">auto</span> object_seen =</div>
+<div class="line"><span class="lineno">  161</span>      frame_node-&gt;objects_seen.template collectIds&lt;ObjectId&gt;();</div>
+<div class="line"><span class="lineno">  162</span>  <span class="keywordflow">for</span> (<a class="code hl_typedef" href="namespacedyno.html#a38bb86e4154b86428b8d133be03fb2b5">ObjectId</a> object_id : object_seen) {</div>
+<div class="line"><span class="lineno">  163</span>    estimates += this-&gt;<a class="code hl_function" href="classdyno_1_1Accessor.html#af91179bb0910c2e6ec232b6e155d4011">getDynamicLandmarkEstimates</a>(frame_id, object_id);</div>
+<div class="line"><span class="lineno">  164</span>  }</div>
+<div class="line"><span class="lineno">  165</span>  <span class="keywordflow">return</span> estimates;</div>
+<div class="line"><span class="lineno">  166</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -576,6 +600,9 @@ template&lt;class MAP &gt; </div>
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class MAP &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="namespacedyno.html#afa01ab54e33c616353a643645cd2aaee">StatusLandmarkVector</a> <a class="el" href="classdyno_1_1Accessor.html">dyno::Accessor</a>&lt; MAP &gt;::getDynamicLandmarkEstimates </td>
@@ -595,6 +622,11 @@ template&lt;class MAP &gt; </div>
           <td></td><td> const</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p>Get all dynamic landmarks for object j at time-step k. </p>
@@ -607,54 +639,43 @@ template&lt;class MAP &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>StatusLandmarkVector </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Accessor-impl_8hpp_source.html#l00133">133</a> of file <a class="el" href="Accessor-impl_8hpp_source.html">Accessor-impl.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  134</span>                                                {</div>
-<div class="line"><span class="lineno">  135</span>  <span class="keyword">const</span> <span class="keyword">auto</span> frame_node = <a class="code hl_function" href="classdyno_1_1Accessor.html#a7204bf6ab3ea8d16809049aa1553bccc">map</a>()-&gt;getFrame(frame_id);</div>
-<div class="line"><span class="lineno">  136</span>  CHECK_NOTNULL(frame_node);</div>
-<div class="line"><span class="lineno">  137</span> </div>
-<div class="line"><span class="lineno">  138</span>  <span class="keywordflow">if</span> (!frame_node-&gt;objectObserved(object_id)) {</div>
-<div class="line"><span class="lineno">  139</span>    <span class="keywordflow">return</span> <a class="code hl_typedef" href="namespacedyno.html#afa01ab54e33c616353a643645cd2aaee">StatusLandmarkVector</a>{};</div>
-<div class="line"><span class="lineno">  140</span>  }</div>
-<div class="line"><span class="lineno">  141</span> </div>
-<div class="line"><span class="lineno">  142</span>  <a class="code hl_typedef" href="namespacedyno.html#afa01ab54e33c616353a643645cd2aaee">StatusLandmarkVector</a> estimates;</div>
-<div class="line"><span class="lineno">  143</span>  <span class="keyword">const</span> <span class="keyword">auto</span>&amp; dynamic_landmarks = frame_node-&gt;dynamic_landmarks;</div>
-<div class="line"><span class="lineno">  144</span>  <span class="keywordflow">for</span> (<span class="keyword">auto</span> lmk_node : dynamic_landmarks) {</div>
-<div class="line"><span class="lineno">  145</span>    <span class="keyword">const</span> <span class="keyword">auto</span> tracklet_id = lmk_node-&gt;tracklet_id;</div>
-<div class="line"><span class="lineno">  146</span> </div>
-<div class="line"><span class="lineno">  147</span>    <span class="keywordflow">if</span> (object_id != lmk_node-&gt;object_id) {</div>
-<div class="line"><span class="lineno">  148</span>      <span class="keywordflow">continue</span>;</div>
-<div class="line"><span class="lineno">  149</span>    }</div>
-<div class="line"><span class="lineno">  150</span> </div>
-<div class="line"><span class="lineno">  151</span>    <span class="comment">// user defined function should put point in the world frame</span></div>
-<div class="line"><span class="lineno">  152</span>    StateQuery&lt;gtsam::Point3&gt; lmk_query =</div>
-<div class="line"><span class="lineno">  153</span>        this-&gt;<a class="code hl_function" href="classdyno_1_1Accessor.html#a66e723b20c5e2ed225d6edefb7331bbe">getDynamicLandmark</a>(frame_id, tracklet_id);</div>
-<div class="line"><span class="lineno">  154</span>    <span class="keywordflow">if</span> (lmk_query) {</div>
-<div class="line"><span class="lineno">  155</span>      estimates.push_back(</div>
-<div class="line"><span class="lineno">  156</span>          <a class="code hl_function" href="structdyno_1_1VisualMeasurementStatus.html#a7a3a62d23ee741da1f790e01f38b20a8">LandmarkStatus::DynamicInGLobal</a>(lmk_query.get(),  <span class="comment">// estimate</span></div>
-<div class="line"><span class="lineno">  157</span>                                          frame_id, tracklet_id,</div>
-<div class="line"><span class="lineno">  158</span>                                          object_id)  <span class="comment">// status</span></div>
-<div class="line"><span class="lineno">  159</span>      );</div>
-<div class="line"><span class="lineno">  160</span>    }</div>
-<div class="line"><span class="lineno">  161</span>  }</div>
-<div class="line"><span class="lineno">  162</span>  <span class="keywordflow">return</span> estimates;</div>
-<div class="line"><span class="lineno">  163</span>}</div>
-<div class="ttc" id="aclassdyno_1_1Accessor_html_a66e723b20c5e2ed225d6edefb7331bbe"><div class="ttname"><a href="classdyno_1_1Accessor.html#a66e723b20c5e2ed225d6edefb7331bbe">dyno::Accessor::getDynamicLandmark</a></div><div class="ttdeci">virtual StateQuery&lt; gtsam::Point3 &gt; getDynamicLandmark(FrameId frame_id, TrackletId tracklet_id) const =0</div><div class="ttdoc">Get a dynamic landmark (^wm_k) with tracklet id (i) at time-step (k).</div></div>
-<div class="ttc" id="astructdyno_1_1VisualMeasurementStatus_html_a7a3a62d23ee741da1f790e01f38b20a8"><div class="ttname"><a href="structdyno_1_1VisualMeasurementStatus.html#a7a3a62d23ee741da1f790e01f38b20a8">dyno::VisualMeasurementStatus::DynamicInGLobal</a></div><div class="ttdeci">static VisualMeasurementStatus DynamicInGLobal(const T &amp;m, FrameId frame_id, TrackletId tracklet_id, ObjectId label)</div><div class="ttdoc">Constructs a dynamic Visual Measurement Status in the global frame.</div><div class="ttdef"><b>Definition:</b> <a href="SensorModels_8hpp_source.html#l00168">SensorModels.hpp:168</a></div></div>
-</div><!-- fragment -->
-<p class="reference">References <a class="el" href="structdyno_1_1VisualMeasurementStatus.html#a7a3a62d23ee741da1f790e01f38b20a8">dyno::VisualMeasurementStatus&lt; T &gt;::DynamicInGLobal()</a>, and <a class="el" href="classdyno_1_1StateQuery.html#af7ca5fb04717f5719c62a54b3b67fd17">dyno::StateQuery&lt; ValueType &gt;::get()</a>.</p>
-<div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="classdyno_1_1Accessor_ab7c0aa6409651ee5ee49387e3272e930_cgraph.png" border="0" usemap="#aclassdyno_1_1Accessor_ab7c0aa6409651ee5ee49387e3272e930_cgraph" alt=""/></div>
-<map name="aclassdyno_1_1Accessor_ab7c0aa6409651ee5ee49387e3272e930_cgraph" id="aclassdyno_1_1Accessor_ab7c0aa6409651ee5ee49387e3272e930_cgraph">
-<area shape="rect" title="Get all dynamic landmarks for object j at time&#45;step k." alt="" coords="5,35,212,75"/>
-<area shape="rect" href="structdyno_1_1VisualMeasurementStatus.html#a7a3a62d23ee741da1f790e01f38b20a8" title="Constructs a dynamic Visual Measurement Status in the global frame." alt="" coords="260,5,493,45"/>
-<area shape="rect" href="classdyno_1_1StateQuery.html#af7ca5fb04717f5719c62a54b3b67fd17" title=" " alt="" coords="295,70,458,95"/>
-<area shape="rect" href="structdyno_1_1VisualMeasurementStatus.html#ad66ca6db15c3f8796c5857ce0607af77" title="Default constructor for IO." alt="" coords="541,5,775,45"/>
-<area shape="rect" href="namespacedyno.html#a2d6f925680f57dbc72ada75daefdb2f9" title=" " alt="" coords="553,70,763,95"/>
-</map>
-</div>
+<p>Reimplemented in <a class="el" href="classdyno_1_1HybridAccessor.html#a6ddab2629b303977d1acb42db391cb6c">dyno::HybridAccessor</a>.</p>
 
+<p class="definition">Definition at line <a class="el" href="Accessor-impl_8hpp_source.html#l00169">169</a> of file <a class="el" href="Accessor-impl_8hpp_source.html">Accessor-impl.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  170</span>                                                {</div>
+<div class="line"><span class="lineno">  171</span>  <span class="keyword">const</span> <span class="keyword">auto</span> frame_node = <a class="code hl_function" href="classdyno_1_1Accessor.html#a7204bf6ab3ea8d16809049aa1553bccc">map</a>()-&gt;getFrame(frame_id);</div>
+<div class="line"><span class="lineno">  172</span>  CHECK_NOTNULL(frame_node);</div>
+<div class="line"><span class="lineno">  173</span> </div>
+<div class="line"><span class="lineno">  174</span>  <span class="keywordflow">if</span> (!frame_node-&gt;objectObserved(object_id)) {</div>
+<div class="line"><span class="lineno">  175</span>    <span class="keywordflow">return</span> <a class="code hl_typedef" href="namespacedyno.html#afa01ab54e33c616353a643645cd2aaee">StatusLandmarkVector</a>{};</div>
+<div class="line"><span class="lineno">  176</span>  }</div>
+<div class="line"><span class="lineno">  177</span> </div>
+<div class="line"><span class="lineno">  178</span>  <a class="code hl_typedef" href="namespacedyno.html#afa01ab54e33c616353a643645cd2aaee">StatusLandmarkVector</a> estimates;</div>
+<div class="line"><span class="lineno">  179</span>  <span class="keyword">const</span> <span class="keyword">auto</span>&amp; dynamic_landmarks = frame_node-&gt;dynamic_landmarks;</div>
+<div class="line"><span class="lineno">  180</span>  <span class="keywordflow">for</span> (<span class="keyword">auto</span> lmk_node : dynamic_landmarks) {</div>
+<div class="line"><span class="lineno">  181</span>    <span class="keyword">const</span> <span class="keyword">auto</span> tracklet_id = lmk_node-&gt;tracklet_id;</div>
+<div class="line"><span class="lineno">  182</span> </div>
+<div class="line"><span class="lineno">  183</span>    <span class="keywordflow">if</span> (object_id != lmk_node-&gt;object_id) {</div>
+<div class="line"><span class="lineno">  184</span>      <span class="keywordflow">continue</span>;</div>
+<div class="line"><span class="lineno">  185</span>    }</div>
+<div class="line"><span class="lineno">  186</span> </div>
+<div class="line"><span class="lineno">  187</span>    <span class="comment">// user defined function should put point in the world frame</span></div>
+<div class="line"><span class="lineno">  188</span>    StateQuery&lt;gtsam::Point3&gt; lmk_query =</div>
+<div class="line"><span class="lineno">  189</span>        this-&gt;<a class="code hl_function" href="classdyno_1_1Accessor.html#a66e723b20c5e2ed225d6edefb7331bbe">getDynamicLandmark</a>(frame_id, tracklet_id);</div>
+<div class="line"><span class="lineno">  190</span>    <span class="keywordflow">if</span> (lmk_query) {</div>
+<div class="line"><span class="lineno">  191</span>      estimates.push_back(<a class="code hl_function" href="structdyno_1_1VisualMeasurementStatus.html#a7a3a62d23ee741da1f790e01f38b20a8">LandmarkStatus::DynamicInGLobal</a>(</div>
+<div class="line"><span class="lineno">  192</span>          <a class="code hl_typedef" href="namespacedyno.html#ac95aab181c160d73db10b83883f77080">Point3Measurement</a>(lmk_query.get()),  <span class="comment">// estimate</span></div>
+<div class="line"><span class="lineno">  193</span>          frame_id, tracklet_id,</div>
+<div class="line"><span class="lineno">  194</span>          object_id)  <span class="comment">// status</span></div>
+<div class="line"><span class="lineno">  195</span>      );</div>
+<div class="line"><span class="lineno">  196</span>    }</div>
+<div class="line"><span class="lineno">  197</span>  }</div>
+<div class="line"><span class="lineno">  198</span>  <span class="keywordflow">return</span> estimates;</div>
+<div class="line"><span class="lineno">  199</span>}</div>
+<div class="ttc" id="aclassdyno_1_1Accessor_html_a66e723b20c5e2ed225d6edefb7331bbe"><div class="ttname"><a href="classdyno_1_1Accessor.html#a66e723b20c5e2ed225d6edefb7331bbe">dyno::Accessor::getDynamicLandmark</a></div><div class="ttdeci">virtual StateQuery&lt; gtsam::Point3 &gt; getDynamicLandmark(FrameId frame_id, TrackletId tracklet_id) const =0</div><div class="ttdoc">Get a dynamic landmark (^wm_k) with tracklet id (i) at time-step (k).</div></div>
+<div class="ttc" id="anamespacedyno_html_ac95aab181c160d73db10b83883f77080"><div class="ttname"><a href="namespacedyno.html#ac95aab181c160d73db10b83883f77080">dyno::Point3Measurement</a></div><div class="ttdeci">MeasurementWithCovariance&lt; gtsam::Point3 &gt; Point3Measurement</div><div class="ttdoc">(gtsam) Point3 with covariance</div><div class="ttdef"><b>Definition:</b> <a href="SensorModels_8hpp_source.html#l00333">SensorModels.hpp:333</a></div></div>
+<div class="ttc" id="astructdyno_1_1VisualMeasurementStatus_html_a7a3a62d23ee741da1f790e01f38b20a8"><div class="ttname"><a href="structdyno_1_1VisualMeasurementStatus.html#a7a3a62d23ee741da1f790e01f38b20a8">dyno::VisualMeasurementStatus::DynamicInGLobal</a></div><div class="ttdeci">static VisualMeasurementStatus DynamicInGLobal(const T &amp;m, FrameId frame_id, TrackletId tracklet_id, ObjectId label)</div><div class="ttdoc">Constructs a dynamic Visual Measurement Status in the global frame.</div><div class="ttdef"><b>Definition:</b> <a href="SensorModels_8hpp_source.html#l00177">SensorModels.hpp:177</a></div></div>
+</div><!-- fragment -->
 </div>
 </div>
 <a id="ab4707f246d3e4711b8a411d19dde4cf8" name="ab4707f246d3e4711b8a411d19dde4cf8"></a>
@@ -674,32 +695,32 @@ template&lt;class MAP &gt; </div>
 <p>Get all static landmarks from time-step 0 to k. </p>
 <dl class="section return"><dt>Returns</dt><dd>StatusLandmarkVector </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Accessor-impl_8hpp_source.html#l00194">194</a> of file <a class="el" href="Accessor-impl_8hpp_source.html">Accessor-impl.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  194</span>                                                           {</div>
-<div class="line"><span class="lineno">  195</span>  <span class="comment">// dont go over the frames as this contains references to the landmarks</span></div>
-<div class="line"><span class="lineno">  196</span>  <span class="comment">// multiple times e.g. the ones seen in that frame</span></div>
-<div class="line"><span class="lineno">  197</span>  <a class="code hl_typedef" href="namespacedyno.html#afa01ab54e33c616353a643645cd2aaee">StatusLandmarkVector</a> estimates;</div>
-<div class="line"><span class="lineno">  198</span>  <span class="keyword">const</span> <span class="keyword">auto</span> landmarks = <a class="code hl_function" href="classdyno_1_1Accessor.html#a7204bf6ab3ea8d16809049aa1553bccc">map</a>()-&gt;getLandmarks();</div>
-<div class="line"><span class="lineno">  199</span> </div>
-<div class="line"><span class="lineno">  200</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [_, landmark_node] : landmarks) {</div>
-<div class="line"><span class="lineno">  201</span>    <span class="keywordflow">if</span> (landmark_node-&gt;isStatic()) {</div>
-<div class="line"><span class="lineno">  202</span>      StateQuery&lt;gtsam::Point3&gt; lmk_query =</div>
-<div class="line"><span class="lineno">  203</span>          <a class="code hl_function" href="classdyno_1_1Accessor.html#a6add2ebf27c59509af589368e8b96960">getStaticLandmark</a>(landmark_node-&gt;tracklet_id);</div>
-<div class="line"><span class="lineno">  204</span>      <span class="keywordflow">if</span> (lmk_query) {</div>
-<div class="line"><span class="lineno">  205</span>        estimates.push_back(<a class="code hl_function" href="structdyno_1_1VisualMeasurementStatus.html#aa30d67af765bf6c1b241821f367a77ba">LandmarkStatus::StaticInGlobal</a>(</div>
-<div class="line"><span class="lineno">  206</span>            lmk_query.get(),  <span class="comment">// estimate</span></div>
-<div class="line"><span class="lineno">  207</span>            <a class="code hl_variable" href="classdyno_1_1TrackedValueStatus.html#ab6b1b237d31c9c11b4151fbdbfdbb3bd">LandmarkStatus::MeaninglessFrame</a>,</div>
-<div class="line"><span class="lineno">  208</span>            landmark_node-&gt;getId()  <span class="comment">// tracklet id</span></div>
-<div class="line"><span class="lineno">  209</span>            )                       <span class="comment">// status</span></div>
-<div class="line"><span class="lineno">  210</span>        );</div>
-<div class="line"><span class="lineno">  211</span>      }</div>
-<div class="line"><span class="lineno">  212</span>    }</div>
-<div class="line"><span class="lineno">  213</span>  }</div>
-<div class="line"><span class="lineno">  214</span>  <span class="keywordflow">return</span> estimates;</div>
-<div class="line"><span class="lineno">  215</span>}</div>
-<div class="ttc" id="aclassdyno_1_1Accessor_html_a6add2ebf27c59509af589368e8b96960"><div class="ttname"><a href="classdyno_1_1Accessor.html#a6add2ebf27c59509af589368e8b96960">dyno::Accessor::getStaticLandmark</a></div><div class="ttdeci">virtual StateQuery&lt; gtsam::Point3 &gt; getStaticLandmark(TrackletId tracklet_id) const</div><div class="ttdoc">Get a static landmark (^wm) with tracklet id (i).</div><div class="ttdef"><b>Definition:</b> <a href="Accessor-impl_8hpp_source.html#l00044">Accessor-impl.hpp:44</a></div></div>
-<div class="ttc" id="aclassdyno_1_1TrackedValueStatus_html_ab6b1b237d31c9c11b4151fbdbfdbb3bd"><div class="ttname"><a href="classdyno_1_1TrackedValueStatus.html#ab6b1b237d31c9c11b4151fbdbfdbb3bd">dyno::TrackedValueStatus&lt; T &gt;::MeaninglessFrame</a></div><div class="ttdeci">static constexpr auto MeaninglessFrame</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00184">Types.hpp:184</a></div></div>
-<div class="ttc" id="astructdyno_1_1VisualMeasurementStatus_html_aa30d67af765bf6c1b241821f367a77ba"><div class="ttname"><a href="structdyno_1_1VisualMeasurementStatus.html#aa30d67af765bf6c1b241821f367a77ba">dyno::VisualMeasurementStatus::StaticInGlobal</a></div><div class="ttdeci">static VisualMeasurementStatus StaticInGlobal(const T &amp;m, FrameId frame_id, TrackletId tracklet_id)</div><div class="ttdoc">Constructs a static Visual Measurement Status in the global frame.</div><div class="ttdef"><b>Definition:</b> <a href="SensorModels_8hpp_source.html#l00153">SensorModels.hpp:153</a></div></div>
+<p class="definition">Definition at line <a class="el" href="Accessor-impl_8hpp_source.html#l00230">230</a> of file <a class="el" href="Accessor-impl_8hpp_source.html">Accessor-impl.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  230</span>                                                           {</div>
+<div class="line"><span class="lineno">  231</span>  <span class="comment">// dont go over the frames as this contains references to the landmarks</span></div>
+<div class="line"><span class="lineno">  232</span>  <span class="comment">// multiple times e.g. the ones seen in that frame</span></div>
+<div class="line"><span class="lineno">  233</span>  <a class="code hl_typedef" href="namespacedyno.html#afa01ab54e33c616353a643645cd2aaee">StatusLandmarkVector</a> estimates;</div>
+<div class="line"><span class="lineno">  234</span>  <span class="keyword">const</span> <span class="keyword">auto</span> landmarks = <a class="code hl_function" href="classdyno_1_1Accessor.html#a7204bf6ab3ea8d16809049aa1553bccc">map</a>()-&gt;getLandmarks();</div>
+<div class="line"><span class="lineno">  235</span> </div>
+<div class="line"><span class="lineno">  236</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [_, landmark_node] : landmarks) {</div>
+<div class="line"><span class="lineno">  237</span>    <span class="keywordflow">if</span> (landmark_node-&gt;isStatic()) {</div>
+<div class="line"><span class="lineno">  238</span>      StateQuery&lt;gtsam::Point3&gt; lmk_query =</div>
+<div class="line"><span class="lineno">  239</span>          <a class="code hl_function" href="classdyno_1_1Accessor.html#a6add2ebf27c59509af589368e8b96960">getStaticLandmark</a>(landmark_node-&gt;tracklet_id);</div>
+<div class="line"><span class="lineno">  240</span>      <span class="keywordflow">if</span> (lmk_query) {</div>
+<div class="line"><span class="lineno">  241</span>        estimates.push_back(<a class="code hl_function" href="structdyno_1_1VisualMeasurementStatus.html#aa30d67af765bf6c1b241821f367a77ba">LandmarkStatus::StaticInGlobal</a>(</div>
+<div class="line"><span class="lineno">  242</span>            <a class="code hl_typedef" href="namespacedyno.html#ac95aab181c160d73db10b83883f77080">Point3Measurement</a>(lmk_query.get()),  <span class="comment">// estimate</span></div>
+<div class="line"><span class="lineno">  243</span>            <a class="code hl_variable" href="classdyno_1_1TrackedValueStatus.html#ab6b1b237d31c9c11b4151fbdbfdbb3bd">LandmarkStatus::MeaninglessFrame</a>,</div>
+<div class="line"><span class="lineno">  244</span>            landmark_node-&gt;getId()  <span class="comment">// tracklet id</span></div>
+<div class="line"><span class="lineno">  245</span>            )                       <span class="comment">// status</span></div>
+<div class="line"><span class="lineno">  246</span>        );</div>
+<div class="line"><span class="lineno">  247</span>      }</div>
+<div class="line"><span class="lineno">  248</span>    }</div>
+<div class="line"><span class="lineno">  249</span>  }</div>
+<div class="line"><span class="lineno">  250</span>  <span class="keywordflow">return</span> estimates;</div>
+<div class="line"><span class="lineno">  251</span>}</div>
+<div class="ttc" id="aclassdyno_1_1Accessor_html_a6add2ebf27c59509af589368e8b96960"><div class="ttname"><a href="classdyno_1_1Accessor.html#a6add2ebf27c59509af589368e8b96960">dyno::Accessor::getStaticLandmark</a></div><div class="ttdeci">virtual StateQuery&lt; gtsam::Point3 &gt; getStaticLandmark(TrackletId tracklet_id) const</div><div class="ttdoc">Get a static landmark (^wm) with tracklet id (i).</div><div class="ttdef"><b>Definition:</b> <a href="Accessor-impl_8hpp_source.html#l00048">Accessor-impl.hpp:48</a></div></div>
+<div class="ttc" id="aclassdyno_1_1TrackedValueStatus_html_ab6b1b237d31c9c11b4151fbdbfdbb3bd"><div class="ttname"><a href="classdyno_1_1TrackedValueStatus.html#ab6b1b237d31c9c11b4151fbdbfdbb3bd">dyno::TrackedValueStatus&lt; T &gt;::MeaninglessFrame</a></div><div class="ttdeci">static constexpr auto MeaninglessFrame</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00291">Types.hpp:291</a></div></div>
+<div class="ttc" id="astructdyno_1_1VisualMeasurementStatus_html_aa30d67af765bf6c1b241821f367a77ba"><div class="ttname"><a href="structdyno_1_1VisualMeasurementStatus.html#aa30d67af765bf6c1b241821f367a77ba">dyno::VisualMeasurementStatus::StaticInGlobal</a></div><div class="ttdeci">static VisualMeasurementStatus StaticInGlobal(const T &amp;m, FrameId frame_id, TrackletId tracklet_id)</div><div class="ttdoc">Constructs a static Visual Measurement Status in the global frame.</div><div class="ttdef"><b>Definition:</b> <a href="SensorModels_8hpp_source.html#l00162">SensorModels.hpp:162</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -730,14 +751,14 @@ template&lt;class MAP &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>StatusLandmarkVector </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Accessor-impl_8hpp_source.html#l00218">218</a> of file <a class="el" href="Accessor-impl_8hpp_source.html">Accessor-impl.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  219</span>                            {</div>
-<div class="line"><span class="lineno">  220</span>  <a class="code hl_typedef" href="namespacedyno.html#afa01ab54e33c616353a643645cd2aaee">StatusLandmarkVector</a> estimates;</div>
-<div class="line"><span class="lineno">  221</span>  estimates += <a class="code hl_function" href="classdyno_1_1Accessor.html#a6ac7f822f520fac8f3ee93d24230abe4">getStaticLandmarkEstimates</a>(frame_id);</div>
-<div class="line"><span class="lineno">  222</span>  estimates += <a class="code hl_function" href="classdyno_1_1Accessor.html#af91179bb0910c2e6ec232b6e155d4011">getDynamicLandmarkEstimates</a>(frame_id);</div>
-<div class="line"><span class="lineno">  223</span>  <span class="keywordflow">return</span> estimates;</div>
-<div class="line"><span class="lineno">  224</span>}</div>
-<div class="ttc" id="aclassdyno_1_1Accessor_html_a6ac7f822f520fac8f3ee93d24230abe4"><div class="ttname"><a href="classdyno_1_1Accessor.html#a6ac7f822f520fac8f3ee93d24230abe4">dyno::Accessor::getStaticLandmarkEstimates</a></div><div class="ttdeci">StatusLandmarkVector getStaticLandmarkEstimates(FrameId frame_id) const</div><div class="ttdoc">Get all static landmarks at time-step k.</div><div class="ttdef"><b>Definition:</b> <a href="Accessor-impl_8hpp_source.html#l00166">Accessor-impl.hpp:166</a></div></div>
+<p class="definition">Definition at line <a class="el" href="Accessor-impl_8hpp_source.html#l00254">254</a> of file <a class="el" href="Accessor-impl_8hpp_source.html">Accessor-impl.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  255</span>                            {</div>
+<div class="line"><span class="lineno">  256</span>  <a class="code hl_typedef" href="namespacedyno.html#afa01ab54e33c616353a643645cd2aaee">StatusLandmarkVector</a> estimates;</div>
+<div class="line"><span class="lineno">  257</span>  estimates += <a class="code hl_function" href="classdyno_1_1Accessor.html#a6ac7f822f520fac8f3ee93d24230abe4">getStaticLandmarkEstimates</a>(frame_id);</div>
+<div class="line"><span class="lineno">  258</span>  estimates += <a class="code hl_function" href="classdyno_1_1Accessor.html#af91179bb0910c2e6ec232b6e155d4011">getDynamicLandmarkEstimates</a>(frame_id);</div>
+<div class="line"><span class="lineno">  259</span>  <span class="keywordflow">return</span> estimates;</div>
+<div class="line"><span class="lineno">  260</span>}</div>
+<div class="ttc" id="aclassdyno_1_1Accessor_html_a6ac7f822f520fac8f3ee93d24230abe4"><div class="ttname"><a href="classdyno_1_1Accessor.html#a6ac7f822f520fac8f3ee93d24230abe4">dyno::Accessor::getStaticLandmarkEstimates</a></div><div class="ttdeci">StatusLandmarkVector getStaticLandmarkEstimates(FrameId frame_id) const</div><div class="ttdoc">Get all static landmarks at time-step k.</div><div class="ttdef"><b>Definition:</b> <a href="Accessor-impl_8hpp_source.html#l00202">Accessor-impl.hpp:202</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -785,14 +806,14 @@ template&lt;class MAP &gt; </div>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>StateQuery&lt;gtsam::Pose3&gt; </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="classdyno_1_1StateQuery.html">StateQuery&lt;gtsam::Pose3&gt;</a> </dd></dl>
 
-<p>Implemented in <a class="el" href="classdyno_1_1WorldMotionAccessor.html#a9eedc23bd4557438eb2bfa4484a7bffc">dyno::WorldMotionAccessor</a>, and <a class="el" href="classdyno_1_1WorldPoseAccessor.html#a3208d2b3d549ea804cfa783ad06e06cc">dyno::WorldPoseAccessor</a>.</p>
+<p>Implemented in <a class="el" href="classdyno_1_1HybridAccessor.html#a80c4fda3bd35e70dad69f0b416a174e5">dyno::HybridAccessor</a>, <a class="el" href="classdyno_1_1WorldMotionAccessor.html#a9eedc23bd4557438eb2bfa4484a7bffc">dyno::WorldMotionAccessor</a>, and <a class="el" href="classdyno_1_1WorldPoseAccessor.html#a3208d2b3d549ea804cfa783ad06e06cc">dyno::WorldPoseAccessor</a>.</p>
 
 </div>
 </div>
-<a id="a8f0b21c13a50f295337a92c340f17f3d" name="a8f0b21c13a50f295337a92c340f17f3d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8f0b21c13a50f295337a92c340f17f3d">&#9670;&#160;</a></span>getObjectMotions()</h2>
+<a id="aad13431b3c1e7920f02be084c21af15c" name="aad13431b3c1e7920f02be084c21af15c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aad13431b3c1e7920f02be084c21af15c">&#9670;&#160;</a></span>getObjectMotionReferenceFrame()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -800,7 +821,142 @@ template&lt;class MAP &gt; </div>
 template&lt;class MAP &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespacedyno.html#acef42ad0a1e53f5876f1000defc23e3b">MotionEstimateMap</a> <a class="el" href="classdyno_1_1Accessor.html">dyno::Accessor</a>&lt; MAP &gt;::getObjectMotions </td>
+          <td class="memname"><a class="el" href="classdyno_1_1StateQuery.html">StateQuery</a>&lt; <a class="el" href="namespacedyno.html#a1773d4e61e0cc7d3e489f97d43943b1f">Motion3ReferenceFrame</a> &gt; <a class="el" href="classdyno_1_1Accessor.html">dyno::Accessor</a>&lt; MAP &gt;::getObjectMotionReferenceFrame </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacedyno.html#ac4303d6fafb755f794b072d76f9cfb41">FrameId</a>&#160;</td>
+          <td class="paramname"><em>frame_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacedyno.html#a38bb86e4154b86428b8d133be03fb2b5">ObjectId</a>&#160;</td>
+          <td class="paramname"><em>object_id</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Gets the absolute motion (_{k-1}^wH_k) from theta the requested time-step (k) and object (j) with the associated reference frame. Internally this uses getObjectMotion and constructs a Motion3ReferenceFrame using the global frame, k-1 and k. No checks are done on the underlying function call so it assumes that the virtual getObjectMotion function has been implemented correctly and returns a motion in the right representation. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">frame_id</td><td>FrameId </td></tr>
+    <tr><td class="paramname">object_id</td><td>ObjectId </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>StateQuery&lt;Motion3ReferenceFrame&gt; </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="Accessor-impl_8hpp_source.html#l00076">76</a> of file <a class="el" href="Accessor-impl_8hpp_source.html">Accessor-impl.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   77</span>                                                {</div>
+<div class="line"><span class="lineno">   78</span>  StateQuery&lt;Motion3&gt; motion_query = this-&gt;<a class="code hl_function" href="classdyno_1_1Accessor.html#ab1126afc0b0ea953532c2770e033aee5">getObjectMotion</a>(frame_id, object_id);</div>
+<div class="line"><span class="lineno">   79</span>  <span class="keywordflow">if</span> (motion_query) {</div>
+<div class="line"><span class="lineno">   80</span>    <span class="keywordflow">return</span> StateQuery&lt;Motion3ReferenceFrame&gt;(</div>
+<div class="line"><span class="lineno">   81</span>        motion_query.key_,</div>
+<div class="line"><span class="lineno">   82</span>        <a class="code hl_typedef" href="namespacedyno.html#a1773d4e61e0cc7d3e489f97d43943b1f">Motion3ReferenceFrame</a>(motion_query.get(),</div>
+<div class="line"><span class="lineno">   83</span>                              Motion3ReferenceFrame::Style::F2F,</div>
+<div class="line"><span class="lineno">   84</span>                              <a class="code hl_enumvalue" href="namespacedyno.html#a828b92ac8912e7d2ffc267eb0d08b74cae456468cc146bd360464043f0645212e">ReferenceFrame::GLOBAL</a>, frame_id - 1u, frame_id));</div>
+<div class="line"><span class="lineno">   85</span>  } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">   86</span>    <span class="keywordflow">return</span> StateQuery&lt;Motion3ReferenceFrame&gt;(motion_query.key_,</div>
+<div class="line"><span class="lineno">   87</span>                                             motion_query.status_);</div>
+<div class="line"><span class="lineno">   88</span>  }</div>
+<div class="line"><span class="lineno">   89</span>}</div>
+<div class="ttc" id="aclassdyno_1_1Accessor_html_ab1126afc0b0ea953532c2770e033aee5"><div class="ttname"><a href="classdyno_1_1Accessor.html#ab1126afc0b0ea953532c2770e033aee5">dyno::Accessor::getObjectMotion</a></div><div class="ttdeci">virtual StateQuery&lt; gtsam::Pose3 &gt; getObjectMotion(FrameId frame_id, ObjectId object_id) const =0</div><div class="ttdoc">Get an absolute object motion (_{k-1}^wH_k) from theta the requested time-step (k) and object (j).</div></div>
+<div class="ttc" id="anamespacedyno_html_a1773d4e61e0cc7d3e489f97d43943b1f"><div class="ttname"><a href="namespacedyno.html#a1773d4e61e0cc7d3e489f97d43943b1f">dyno::Motion3ReferenceFrame</a></div><div class="ttdeci">MotionReferenceFrame&lt; Motion3 &gt; Motion3ReferenceFrame</div><div class="ttdoc">Alias of a MotionReferenceFrame using Motion3 (Pose3)</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00505">Types.hpp:505</a></div></div>
+<div class="ttc" id="anamespacedyno_html_a828b92ac8912e7d2ffc267eb0d08b74cae456468cc146bd360464043f0645212e"><div class="ttname"><a href="namespacedyno.html#a828b92ac8912e7d2ffc267eb0d08b74cae456468cc146bd360464043f0645212e">dyno::GLOBAL</a></div><div class="ttdeci">@ GLOBAL</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00191">Types.hpp:191</a></div></div>
+</div><!-- fragment -->
+<p class="reference">References <a class="el" href="classdyno_1_1StateQuery.html#af7ca5fb04717f5719c62a54b3b67fd17">dyno::StateQuery&lt; ValueType &gt;::get()</a>, <a class="el" href="namespacedyno.html#a828b92ac8912e7d2ffc267eb0d08b74cae456468cc146bd360464043f0645212e">dyno::GLOBAL</a>, <a class="el" href="classdyno_1_1StateQuery.html#ae9d4bef4abcca864abaec3d60fe78ed3">dyno::StateQuery&lt; ValueType &gt;::key_</a>, and <a class="el" href="classdyno_1_1StateQuery.html#aa6ce5d90e9e4bd0aef2a00f8ce163601">dyno::StateQuery&lt; ValueType &gt;::status_</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classdyno_1_1Accessor_aad13431b3c1e7920f02be084c21af15c_cgraph.png" border="0" usemap="#aclassdyno_1_1Accessor_aad13431b3c1e7920f02be084c21af15c_cgraph" alt=""/></div>
+<map name="aclassdyno_1_1Accessor_aad13431b3c1e7920f02be084c21af15c_cgraph" id="aclassdyno_1_1Accessor_aad13431b3c1e7920f02be084c21af15c_cgraph">
+<area shape="rect" title="Gets the absolute motion (_{k&#45;1}^wH_k) from theta the requested time&#45;step (k) and object (j) with the..." alt="" coords="5,5,196,45"/>
+<area shape="rect" href="classdyno_1_1StateQuery.html#af7ca5fb04717f5719c62a54b3b67fd17" title=" " alt="" coords="244,13,407,38"/>
+<area shape="rect" href="namespacedyno.html#a2d6f925680f57dbc72ada75daefdb2f9" title=" " alt="" coords="455,13,665,38"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a9561ba94ab4409ac5cb803cac709bb62" name="a9561ba94ab4409ac5cb803cac709bb62"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9561ba94ab4409ac5cb803cac709bb62">&#9670;&#160;</a></span>getObjectMotions() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class MAP &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespacedyno.html#af0e7693f6363b7c2b87803049135cf43">ObjectMotionMap</a> <a class="el" href="classdyno_1_1Accessor.html">dyno::Accessor</a>&lt; MAP &gt;::getObjectMotions</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Collects all object motions from 1 to K (with the first motion being from k-1 to k). (Non-pure) Virtual function that may be overwritten - default implementation uses the pure-virtual getObjectPoses to collect all motions. </p>
+<dl class="section return"><dt>Returns</dt><dd>ObjectMotionMap </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="Accessor-impl_8hpp_source.html#l00136">136</a> of file <a class="el" href="Accessor-impl_8hpp_source.html">Accessor-impl.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  136</span>                                                      {</div>
+<div class="line"><span class="lineno">  137</span>  <a class="code hl_typedef" href="namespacedyno.html#af0e7693f6363b7c2b87803049135cf43">ObjectMotionMap</a> object_motions;</div>
+<div class="line"><span class="lineno">  138</span>  <span class="keywordflow">for</span> (<a class="code hl_typedef" href="namespacedyno.html#ac4303d6fafb755f794b072d76f9cfb41">FrameId</a> frame_id : <a class="code hl_function" href="classdyno_1_1Accessor.html#a7204bf6ab3ea8d16809049aa1553bccc">map</a>()-&gt;getFrameIds()) {</div>
+<div class="line"><span class="lineno">  139</span>    <a class="code hl_typedef" href="namespacedyno.html#acbe4f073028205068f6ad3fb9ef92d66">MotionEstimateMap</a> per_object_motions = this-&gt;<a class="code hl_function" href="classdyno_1_1Accessor.html#a9561ba94ab4409ac5cb803cac709bb62">getObjectMotions</a>(frame_id);</div>
+<div class="line"><span class="lineno">  140</span> </div>
+<div class="line"><span class="lineno">  141</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [object_id, motion] : per_object_motions) {</div>
+<div class="line"><span class="lineno">  142</span>      <span class="keywordflow">if</span> (!object_motions.exists(object_id)) {</div>
+<div class="line"><span class="lineno">  143</span>        object_motions.insert2(object_id, <a class="code hl_typedef" href="classdyno_1_1GenericObjectCentricMap.html#a53a585342dbedce97ac9e9f5d840ca09">ObjectMotionMap::NestedBase</a>{});</div>
+<div class="line"><span class="lineno">  144</span>      }</div>
+<div class="line"><span class="lineno">  145</span> </div>
+<div class="line"><span class="lineno">  146</span>      <span class="keyword">auto</span>&amp; per_frame_motion = object_motions.at(object_id);</div>
+<div class="line"><span class="lineno">  147</span>      per_frame_motion.insert2(frame_id, motion);</div>
+<div class="line"><span class="lineno">  148</span>    }</div>
+<div class="line"><span class="lineno">  149</span>  }</div>
+<div class="line"><span class="lineno">  150</span>  <span class="keywordflow">return</span> object_motions;</div>
+<div class="line"><span class="lineno">  151</span>}</div>
+<div class="ttc" id="aclassdyno_1_1Accessor_html_a9561ba94ab4409ac5cb803cac709bb62"><div class="ttname"><a href="classdyno_1_1Accessor.html#a9561ba94ab4409ac5cb803cac709bb62">dyno::Accessor::getObjectMotions</a></div><div class="ttdeci">virtual ObjectMotionMap getObjectMotions() const</div><div class="ttdoc">Collects all object motions from 1 to K (with the first motion being from k-1 to k)....</div><div class="ttdef"><b>Definition:</b> <a href="Accessor-impl_8hpp_source.html#l00136">Accessor-impl.hpp:136</a></div></div>
+<div class="ttc" id="aclassdyno_1_1GenericObjectCentricMap_html_a53a585342dbedce97ac9e9f5d840ca09"><div class="ttname"><a href="classdyno_1_1GenericObjectCentricMap.html#a53a585342dbedce97ac9e9f5d840ca09">dyno::GenericObjectCentricMap&lt; Motion3ReferenceFrame &gt;::NestedBase</a></div><div class="ttdeci">gtsam::FastMap&lt; FrameId, Motion3ReferenceFrame &gt; NestedBase</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00521">Types.hpp:521</a></div></div>
+<div class="ttc" id="anamespacedyno_html_ac4303d6fafb755f794b072d76f9cfb41"><div class="ttname"><a href="namespacedyno.html#ac4303d6fafb755f794b072d76f9cfb41">dyno::FrameId</a></div><div class="ttdeci">size_t FrameId</div><div class="ttdoc">Discrete time-step k.</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00073">Types.hpp:73</a></div></div>
+<div class="ttc" id="anamespacedyno_html_acbe4f073028205068f6ad3fb9ef92d66"><div class="ttname"><a href="namespacedyno.html#acbe4f073028205068f6ad3fb9ef92d66">dyno::MotionEstimateMap</a></div><div class="ttdeci">MotionReferenceEstimateMap&lt; ObjectId, Motion3 &gt; MotionEstimateMap</div><div class="ttdoc">Map of object id's to MotionReferenceFrame with Motion3.</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00502">Types.hpp:502</a></div></div>
+<div class="ttc" id="anamespacedyno_html_af0e7693f6363b7c2b87803049135cf43"><div class="ttname"><a href="namespacedyno.html#af0e7693f6363b7c2b87803049135cf43">dyno::ObjectMotionMap</a></div><div class="ttdeci">GenericObjectCentricMap&lt; Motion3ReferenceFrame &gt; ObjectMotionMap</div><div class="ttdoc">Map of object motions per object per frame.</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00686">Types.hpp:686</a></div></div>
+</div><!-- fragment -->
+<p class="reference">References <a class="el" href="classdyno_1_1GenericObjectCentricMap.html#af6ce62ffab5aadf1981a0ec04c3fad1e">dyno::GenericObjectCentricMap&lt; VALUE &gt;::at()</a>, <a class="el" href="classdyno_1_1GenericObjectCentricMap.html#a974563b8edd3f4b0cb6fe17615d04fbd">dyno::GenericObjectCentricMap&lt; VALUE &gt;::exists()</a>, and <a class="el" href="classdyno_1_1GenericObjectCentricMap.html#a17a56757b25128ea6a018d1e5909de81">dyno::GenericObjectCentricMap&lt; VALUE &gt;::insert2()</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classdyno_1_1Accessor_a9561ba94ab4409ac5cb803cac709bb62_cgraph.png" border="0" usemap="#aclassdyno_1_1Accessor_a9561ba94ab4409ac5cb803cac709bb62_cgraph" alt=""/></div>
+<map name="aclassdyno_1_1Accessor_a9561ba94ab4409ac5cb803cac709bb62_cgraph" id="aclassdyno_1_1Accessor_a9561ba94ab4409ac5cb803cac709bb62_cgraph">
+<area shape="rect" title="Collects all object motions from 1 to K (with the first motion being from k&#45;1 to k)...." alt="" coords="5,39,196,79"/>
+<area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html#af6ce62ffab5aadf1981a0ec04c3fad1e" title=" " alt="" coords="1236,43,1436,83"/>
+<area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html#a974563b8edd3f4b0cb6fe17615d04fbd" title=" " alt="" coords="740,43,940,83"/>
+<area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html#a17a56757b25128ea6a018d1e5909de81" title=" " alt="" coords="244,96,444,136"/>
+<area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html#a33450c8ce82ab7fbfa2541ee0c6b20e3" title="Helper function to determine if the query exists. Operates like a regular exists function but also se..." alt="" coords="988,43,1188,83"/>
+<area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html#abfce9b218241a024c0f66400200bbd58" title="Handy insert function allowing direct insertion to the nested map structure." alt="" coords="492,96,692,136"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a8f0b21c13a50f295337a92c340f17f3d" name="a8f0b21c13a50f295337a92c340f17f3d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8f0b21c13a50f295337a92c340f17f3d">&#9670;&#160;</a></span>getObjectMotions() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class MAP &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespacedyno.html#acbe4f073028205068f6ad3fb9ef92d66">MotionEstimateMap</a> <a class="el" href="classdyno_1_1Accessor.html">dyno::Accessor</a>&lt; MAP &gt;::getObjectMotions </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="namespacedyno.html#ac4303d6fafb755f794b072d76f9cfb41">FrameId</a>&#160;</td>
           <td class="paramname"><em>frame_id</em></td><td>)</td>
@@ -818,31 +974,27 @@ template&lt;class MAP &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>MotionEstimateMap </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Accessor-impl_8hpp_source.html#l00051">51</a> of file <a class="el" href="Accessor-impl_8hpp_source.html">Accessor-impl.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   51</span>                                                                        {</div>
-<div class="line"><span class="lineno">   52</span>  <a class="code hl_typedef" href="namespacedyno.html#acef42ad0a1e53f5876f1000defc23e3b">MotionEstimateMap</a> motion_estimates;</div>
-<div class="line"><span class="lineno">   53</span> </div>
-<div class="line"><span class="lineno">   54</span>  <span class="keyword">const</span> <span class="keyword">auto</span> frame_node = <a class="code hl_function" href="classdyno_1_1Accessor.html#a7204bf6ab3ea8d16809049aa1553bccc">map</a>()-&gt;getFrame(frame_id);</div>
-<div class="line"><span class="lineno">   55</span>  <span class="keywordflow">if</span> (!frame_node) {</div>
-<div class="line"><span class="lineno">   56</span>    <span class="keywordflow">return</span> motion_estimates;</div>
-<div class="line"><span class="lineno">   57</span>  }</div>
-<div class="line"><span class="lineno">   58</span> </div>
-<div class="line"><span class="lineno">   59</span>  <span class="keyword">const</span> <span class="keyword">auto</span> object_seen =</div>
-<div class="line"><span class="lineno">   60</span>      frame_node-&gt;objects_seen.template collectIds&lt;ObjectId&gt;();</div>
-<div class="line"><span class="lineno">   61</span>  <span class="keywordflow">for</span> (<a class="code hl_typedef" href="namespacedyno.html#a38bb86e4154b86428b8d133be03fb2b5">ObjectId</a> object_id : object_seen) {</div>
-<div class="line"><span class="lineno">   62</span>    StateQuery&lt;Motion3&gt; motion_query =</div>
-<div class="line"><span class="lineno">   63</span>        this-&gt;<a class="code hl_function" href="classdyno_1_1Accessor.html#ab1126afc0b0ea953532c2770e033aee5">getObjectMotion</a>(frame_id, object_id);</div>
-<div class="line"><span class="lineno">   64</span>    <span class="keywordflow">if</span> (motion_query) {</div>
-<div class="line"><span class="lineno">   65</span>      motion_estimates.insert2(</div>
-<div class="line"><span class="lineno">   66</span>          object_id, ReferenceFrameValue&lt;Motion3&gt;(motion_query.get(),</div>
-<div class="line"><span class="lineno">   67</span>                                                  <a class="code hl_enumvalue" href="namespacedyno.html#a828b92ac8912e7d2ffc267eb0d08b74cae456468cc146bd360464043f0645212e">ReferenceFrame::GLOBAL</a>));</div>
-<div class="line"><span class="lineno">   68</span>    }</div>
-<div class="line"><span class="lineno">   69</span>  }</div>
-<div class="line"><span class="lineno">   70</span>  <span class="keywordflow">return</span> motion_estimates;</div>
-<div class="line"><span class="lineno">   71</span>}</div>
-<div class="ttc" id="aclassdyno_1_1Accessor_html_ab1126afc0b0ea953532c2770e033aee5"><div class="ttname"><a href="classdyno_1_1Accessor.html#ab1126afc0b0ea953532c2770e033aee5">dyno::Accessor::getObjectMotion</a></div><div class="ttdeci">virtual StateQuery&lt; gtsam::Pose3 &gt; getObjectMotion(FrameId frame_id, ObjectId object_id) const =0</div><div class="ttdoc">Get an absolute object motion (_{k-1}^wH_k) from theta the requested time-step (k) and object (j).</div></div>
-<div class="ttc" id="anamespacedyno_html_a828b92ac8912e7d2ffc267eb0d08b74cae456468cc146bd360464043f0645212e"><div class="ttname"><a href="namespacedyno.html#a828b92ac8912e7d2ffc267eb0d08b74cae456468cc146bd360464043f0645212e">dyno::GLOBAL</a></div><div class="ttdeci">@ GLOBAL</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00141">Types.hpp:141</a></div></div>
-<div class="ttc" id="anamespacedyno_html_acef42ad0a1e53f5876f1000defc23e3b"><div class="ttname"><a href="namespacedyno.html#acef42ad0a1e53f5876f1000defc23e3b">dyno::MotionEstimateMap</a></div><div class="ttdeci">EstimateMap&lt; ObjectId, Motion3 &gt; MotionEstimateMap</div><div class="ttdoc">Map of object ids to ReferenceFrameValue's of motions.</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00388">Types.hpp:388</a></div></div>
+<p class="definition">Definition at line <a class="el" href="Accessor-impl_8hpp_source.html#l00055">55</a> of file <a class="el" href="Accessor-impl_8hpp_source.html">Accessor-impl.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   55</span>                                                                        {</div>
+<div class="line"><span class="lineno">   56</span>  <a class="code hl_typedef" href="namespacedyno.html#acbe4f073028205068f6ad3fb9ef92d66">MotionEstimateMap</a> motion_estimates;</div>
+<div class="line"><span class="lineno">   57</span> </div>
+<div class="line"><span class="lineno">   58</span>  <span class="keyword">const</span> <span class="keyword">auto</span> frame_node = <a class="code hl_function" href="classdyno_1_1Accessor.html#a7204bf6ab3ea8d16809049aa1553bccc">map</a>()-&gt;getFrame(frame_id);</div>
+<div class="line"><span class="lineno">   59</span>  <span class="keywordflow">if</span> (!frame_node) {</div>
+<div class="line"><span class="lineno">   60</span>    <span class="keywordflow">return</span> motion_estimates;</div>
+<div class="line"><span class="lineno">   61</span>  }</div>
+<div class="line"><span class="lineno">   62</span> </div>
+<div class="line"><span class="lineno">   63</span>  <span class="keyword">const</span> <span class="keyword">auto</span> object_seen =</div>
+<div class="line"><span class="lineno">   64</span>      frame_node-&gt;objects_seen.template collectIds&lt;ObjectId&gt;();</div>
+<div class="line"><span class="lineno">   65</span>  <span class="keywordflow">for</span> (<a class="code hl_typedef" href="namespacedyno.html#a38bb86e4154b86428b8d133be03fb2b5">ObjectId</a> object_id : object_seen) {</div>
+<div class="line"><span class="lineno">   66</span>    StateQuery&lt;Motion3ReferenceFrame&gt; motion_query =</div>
+<div class="line"><span class="lineno">   67</span>        this-&gt;<a class="code hl_function" href="classdyno_1_1Accessor.html#aad13431b3c1e7920f02be084c21af15c">getObjectMotionReferenceFrame</a>(frame_id, object_id);</div>
+<div class="line"><span class="lineno">   68</span>    <span class="keywordflow">if</span> (motion_query) {</div>
+<div class="line"><span class="lineno">   69</span>      motion_estimates.insert2(object_id, motion_query.get());</div>
+<div class="line"><span class="lineno">   70</span>    }</div>
+<div class="line"><span class="lineno">   71</span>  }</div>
+<div class="line"><span class="lineno">   72</span>  <span class="keywordflow">return</span> motion_estimates;</div>
+<div class="line"><span class="lineno">   73</span>}</div>
+<div class="ttc" id="aclassdyno_1_1Accessor_html_aad13431b3c1e7920f02be084c21af15c"><div class="ttname"><a href="classdyno_1_1Accessor.html#aad13431b3c1e7920f02be084c21af15c">dyno::Accessor::getObjectMotionReferenceFrame</a></div><div class="ttdeci">StateQuery&lt; Motion3ReferenceFrame &gt; getObjectMotionReferenceFrame(FrameId frame_id, ObjectId object_id) const</div><div class="ttdoc">Gets the absolute motion (_{k-1}^wH_k) from theta the requested time-step (k) and object (j) with the...</div><div class="ttdef"><b>Definition:</b> <a href="Accessor-impl_8hpp_source.html#l00076">Accessor-impl.hpp:76</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -890,9 +1042,9 @@ template&lt;class MAP &gt; </div>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>StateQuery&lt;gtsam::Pose3&gt; </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="classdyno_1_1StateQuery.html">StateQuery&lt;gtsam::Pose3&gt;</a> </dd></dl>
 
-<p>Implemented in <a class="el" href="classdyno_1_1WorldMotionAccessor.html#a261be7df36333929259a315767fc6578">dyno::WorldMotionAccessor</a>, and <a class="el" href="classdyno_1_1WorldPoseAccessor.html#a0751d4c15e4628e05912d6e139a05417">dyno::WorldPoseAccessor</a>.</p>
+<p>Implemented in <a class="el" href="classdyno_1_1HybridAccessor.html#ab0e3459519ed5ecbc91821b628e3ddfe">dyno::HybridAccessor</a>, <a class="el" href="classdyno_1_1WorldMotionAccessor.html#a261be7df36333929259a315767fc6578">dyno::WorldMotionAccessor</a>, and <a class="el" href="classdyno_1_1WorldPoseAccessor.html#a0751d4c15e4628e05912d6e139a05417">dyno::WorldPoseAccessor</a>.</p>
 
 </div>
 </div>
@@ -947,33 +1099,32 @@ template&lt;class MAP &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Collects all object poses for frame 0 to k. (Non-pure )Virtual function that may be overwritten - default implementation uses the pure-virtual getObjectPoses to collect all poses. </p>
+<p>Collects all object poses for frame 0 to K. (Non-pure )Virtual function that may be overwritten - default implementation uses the pure-virtual getObjectPoses to collect all poses. </p>
 <dl class="section return"><dt>Returns</dt><dd>ObjectPoseMap </dd></dl>
 
 <p>Reimplemented in <a class="el" href="classdyno_1_1WorldMotionAccessor.html#a9d627311e2ce84b2e6c5784d173b5c2a">dyno::WorldMotionAccessor</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="Accessor-impl_8hpp_source.html#l00098">98</a> of file <a class="el" href="Accessor-impl_8hpp_source.html">Accessor-impl.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   98</span>                                                  {</div>
-<div class="line"><span class="lineno">   99</span>  <a class="code hl_typedef" href="namespacedyno.html#a47c0a08523c12765d4bd6e243f900c16">ObjectPoseMap</a> object_poses;</div>
-<div class="line"><span class="lineno">  100</span>  <span class="keywordflow">for</span> (<a class="code hl_typedef" href="namespacedyno.html#ac4303d6fafb755f794b072d76f9cfb41">FrameId</a> frame_id : <a class="code hl_function" href="classdyno_1_1Accessor.html#a7204bf6ab3ea8d16809049aa1553bccc">map</a>()-&gt;getFrameIds()) {</div>
-<div class="line"><span class="lineno">  101</span>    EstimateMap&lt;ObjectId, gtsam::Pose3&gt; per_object_pose =</div>
-<div class="line"><span class="lineno">  102</span>        this-&gt;<a class="code hl_function" href="classdyno_1_1Accessor.html#a724e8bbef287e354030f9ae6d42b3c6d">getObjectPoses</a>(frame_id);</div>
-<div class="line"><span class="lineno">  103</span> </div>
-<div class="line"><span class="lineno">  104</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [object_id, pose] : per_object_pose) {</div>
-<div class="line"><span class="lineno">  105</span>      <span class="keywordflow">if</span> (!object_poses.exists(object_id)) {</div>
-<div class="line"><span class="lineno">  106</span>        object_poses.insert2(object_id,</div>
-<div class="line"><span class="lineno">  107</span>                             gtsam::FastMap&lt;FrameId, gtsam::Pose3&gt;{});</div>
-<div class="line"><span class="lineno">  108</span>      }</div>
-<div class="line"><span class="lineno">  109</span> </div>
-<div class="line"><span class="lineno">  110</span>      <span class="keyword">auto</span>&amp; per_frame_pose = object_poses.at(object_id);</div>
-<div class="line"><span class="lineno">  111</span>      per_frame_pose.insert2(frame_id, pose);</div>
-<div class="line"><span class="lineno">  112</span>    }</div>
-<div class="line"><span class="lineno">  113</span>  }</div>
-<div class="line"><span class="lineno">  114</span>  <span class="keywordflow">return</span> object_poses;</div>
-<div class="line"><span class="lineno">  115</span>}</div>
-<div class="ttc" id="aclassdyno_1_1Accessor_html_a724e8bbef287e354030f9ae6d42b3c6d"><div class="ttname"><a href="classdyno_1_1Accessor.html#a724e8bbef287e354030f9ae6d42b3c6d">dyno::Accessor::getObjectPoses</a></div><div class="ttdeci">virtual ObjectPoseMap getObjectPoses() const</div><div class="ttdoc">Collects all object poses for frame 0 to k. (Non-pure )Virtual function that may be overwritten - def...</div><div class="ttdef"><b>Definition:</b> <a href="Accessor-impl_8hpp_source.html#l00098">Accessor-impl.hpp:98</a></div></div>
-<div class="ttc" id="anamespacedyno_html_a47c0a08523c12765d4bd6e243f900c16"><div class="ttname"><a href="namespacedyno.html#a47c0a08523c12765d4bd6e243f900c16">dyno::ObjectPoseMap</a></div><div class="ttdeci">GenericObjectCentricMap&lt; gtsam::Pose3 &gt; ObjectPoseMap</div><div class="ttdoc">Map of object poses per object per frame.</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00531">Types.hpp:531</a></div></div>
-<div class="ttc" id="anamespacedyno_html_ac4303d6fafb755f794b072d76f9cfb41"><div class="ttname"><a href="namespacedyno.html#ac4303d6fafb755f794b072d76f9cfb41">dyno::FrameId</a></div><div class="ttdeci">size_t FrameId</div><div class="ttdoc">Discrete time-step k.</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00072">Types.hpp:72</a></div></div>
+<p class="definition">Definition at line <a class="el" href="Accessor-impl_8hpp_source.html#l00116">116</a> of file <a class="el" href="Accessor-impl_8hpp_source.html">Accessor-impl.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  116</span>                                                  {</div>
+<div class="line"><span class="lineno">  117</span>  <a class="code hl_typedef" href="namespacedyno.html#a47c0a08523c12765d4bd6e243f900c16">ObjectPoseMap</a> object_poses;</div>
+<div class="line"><span class="lineno">  118</span>  <span class="keywordflow">for</span> (<a class="code hl_typedef" href="namespacedyno.html#ac4303d6fafb755f794b072d76f9cfb41">FrameId</a> frame_id : <a class="code hl_function" href="classdyno_1_1Accessor.html#a7204bf6ab3ea8d16809049aa1553bccc">map</a>()-&gt;getFrameIds()) {</div>
+<div class="line"><span class="lineno">  119</span>    EstimateMap&lt;ObjectId, gtsam::Pose3&gt; per_object_pose =</div>
+<div class="line"><span class="lineno">  120</span>        this-&gt;<a class="code hl_function" href="classdyno_1_1Accessor.html#a724e8bbef287e354030f9ae6d42b3c6d">getObjectPoses</a>(frame_id);</div>
+<div class="line"><span class="lineno">  121</span> </div>
+<div class="line"><span class="lineno">  122</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [object_id, pose] : per_object_pose) {</div>
+<div class="line"><span class="lineno">  123</span>      <span class="keywordflow">if</span> (!object_poses.exists(object_id)) {</div>
+<div class="line"><span class="lineno">  124</span>        object_poses.insert2(object_id,</div>
+<div class="line"><span class="lineno">  125</span>                             gtsam::FastMap&lt;FrameId, gtsam::Pose3&gt;{});</div>
+<div class="line"><span class="lineno">  126</span>      }</div>
+<div class="line"><span class="lineno">  127</span> </div>
+<div class="line"><span class="lineno">  128</span>      <span class="keyword">auto</span>&amp; per_frame_pose = object_poses.at(object_id);</div>
+<div class="line"><span class="lineno">  129</span>      per_frame_pose.insert2(frame_id, pose);</div>
+<div class="line"><span class="lineno">  130</span>    }</div>
+<div class="line"><span class="lineno">  131</span>  }</div>
+<div class="line"><span class="lineno">  132</span>  <span class="keywordflow">return</span> object_poses;</div>
+<div class="line"><span class="lineno">  133</span>}</div>
+<div class="ttc" id="aclassdyno_1_1Accessor_html_a724e8bbef287e354030f9ae6d42b3c6d"><div class="ttname"><a href="classdyno_1_1Accessor.html#a724e8bbef287e354030f9ae6d42b3c6d">dyno::Accessor::getObjectPoses</a></div><div class="ttdeci">virtual ObjectPoseMap getObjectPoses() const</div><div class="ttdoc">Collects all object poses for frame 0 to K. (Non-pure )Virtual function that may be overwritten - def...</div><div class="ttdef"><b>Definition:</b> <a href="Accessor-impl_8hpp_source.html#l00116">Accessor-impl.hpp:116</a></div></div>
+<div class="ttc" id="anamespacedyno_html_a47c0a08523c12765d4bd6e243f900c16"><div class="ttname"><a href="namespacedyno.html#a47c0a08523c12765d4bd6e243f900c16">dyno::ObjectPoseMap</a></div><div class="ttdeci">GenericObjectCentricMap&lt; gtsam::Pose3 &gt; ObjectPoseMap</div><div class="ttdoc">Map of object poses per object per frame.</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00684">Types.hpp:684</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1GenericObjectCentricMap.html#a974563b8edd3f4b0cb6fe17615d04fbd">dyno::GenericObjectCentricMap&lt; VALUE &gt;::exists()</a>.</p>
 <div class="dynheader">
@@ -981,7 +1132,7 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1Accessor_a724e8bbef287e354030f9ae6d42b3c6d_cgraph.png" border="0" usemap="#aclassdyno_1_1Accessor_a724e8bbef287e354030f9ae6d42b3c6d_cgraph" alt=""/></div>
 <map name="aclassdyno_1_1Accessor_a724e8bbef287e354030f9ae6d42b3c6d_cgraph" id="aclassdyno_1_1Accessor_a724e8bbef287e354030f9ae6d42b3c6d_cgraph">
-<area shape="rect" title="Collects all object poses for frame 0 to k. (Non&#45;pure )Virtual function that may be overwritten &#45; def..." alt="" coords="5,5,196,45"/>
+<area shape="rect" title="Collects all object poses for frame 0 to K. (Non&#45;pure )Virtual function that may be overwritten &#45; def..." alt="" coords="5,5,196,45"/>
 <area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html#a974563b8edd3f4b0cb6fe17615d04fbd" title=" " alt="" coords="244,5,444,45"/>
 <area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html#a33450c8ce82ab7fbfa2541ee0c6b20e3" title="Helper function to determine if the query exists. Operates like a regular exists function but also se..." alt="" coords="492,5,692,45"/>
 <area shape="rect" href="classdyno_1_1GenericObjectCentricMap.html#af6ce62ffab5aadf1981a0ec04c3fad1e" title=" " alt="" coords="740,5,940,45"/>
@@ -1027,42 +1178,30 @@ template&lt;class MAP &gt; </div>
 
 <p>Reimplemented in <a class="el" href="classdyno_1_1WorldMotionAccessor.html#a75fe4157ba60bd1aff73b7240847062d">dyno::WorldMotionAccessor</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="Accessor-impl_8hpp_source.html#l00074">74</a> of file <a class="el" href="Accessor-impl_8hpp_source.html">Accessor-impl.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   75</span>                            {</div>
-<div class="line"><span class="lineno">   76</span>  EstimateMap&lt;ObjectId, gtsam::Pose3&gt; pose_estimates;</div>
-<div class="line"><span class="lineno">   77</span> </div>
-<div class="line"><span class="lineno">   78</span>  <span class="keyword">const</span> <span class="keyword">auto</span> frame_node = <a class="code hl_function" href="classdyno_1_1Accessor.html#a7204bf6ab3ea8d16809049aa1553bccc">map</a>()-&gt;getFrame(frame_id);</div>
-<div class="line"><span class="lineno">   79</span>  <span class="keywordflow">if</span> (!frame_node) {</div>
-<div class="line"><span class="lineno">   80</span>    <span class="keywordflow">return</span> pose_estimates;</div>
-<div class="line"><span class="lineno">   81</span>  }</div>
-<div class="line"><span class="lineno">   82</span> </div>
-<div class="line"><span class="lineno">   83</span>  <span class="keyword">const</span> <span class="keyword">auto</span> object_seen =</div>
-<div class="line"><span class="lineno">   84</span>      frame_node-&gt;objects_seen.template collectIds&lt;ObjectId&gt;();</div>
-<div class="line"><span class="lineno">   85</span>  <span class="keywordflow">for</span> (<a class="code hl_typedef" href="namespacedyno.html#a38bb86e4154b86428b8d133be03fb2b5">ObjectId</a> object_id : object_seen) {</div>
-<div class="line"><span class="lineno">   86</span>    StateQuery&lt;gtsam::Pose3&gt; object_pose =</div>
-<div class="line"><span class="lineno">   87</span>        this-&gt;<a class="code hl_function" href="classdyno_1_1Accessor.html#ab87c1b26d6cbf30ff87cb69553fe1077">getObjectPose</a>(frame_id, object_id);</div>
-<div class="line"><span class="lineno">   88</span>    <span class="keywordflow">if</span> (object_pose) {</div>
-<div class="line"><span class="lineno">   89</span>      pose_estimates.insert2(</div>
-<div class="line"><span class="lineno">   90</span>          object_id, ReferenceFrameValue&lt;gtsam::Pose3&gt;(object_pose.get(),</div>
-<div class="line"><span class="lineno">   91</span>                                                       <a class="code hl_enumvalue" href="namespacedyno.html#a828b92ac8912e7d2ffc267eb0d08b74cae456468cc146bd360464043f0645212e">ReferenceFrame::GLOBAL</a>));</div>
-<div class="line"><span class="lineno">   92</span>    }</div>
-<div class="line"><span class="lineno">   93</span>  }</div>
-<div class="line"><span class="lineno">   94</span>  <span class="keywordflow">return</span> pose_estimates;</div>
-<div class="line"><span class="lineno">   95</span>}</div>
+<p class="definition">Definition at line <a class="el" href="Accessor-impl_8hpp_source.html#l00092">92</a> of file <a class="el" href="Accessor-impl_8hpp_source.html">Accessor-impl.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   93</span>                            {</div>
+<div class="line"><span class="lineno">   94</span>  EstimateMap&lt;ObjectId, gtsam::Pose3&gt; pose_estimates;</div>
+<div class="line"><span class="lineno">   95</span> </div>
+<div class="line"><span class="lineno">   96</span>  <span class="keyword">const</span> <span class="keyword">auto</span> frame_node = <a class="code hl_function" href="classdyno_1_1Accessor.html#a7204bf6ab3ea8d16809049aa1553bccc">map</a>()-&gt;getFrame(frame_id);</div>
+<div class="line"><span class="lineno">   97</span>  <span class="keywordflow">if</span> (!frame_node) {</div>
+<div class="line"><span class="lineno">   98</span>    <span class="keywordflow">return</span> pose_estimates;</div>
+<div class="line"><span class="lineno">   99</span>  }</div>
+<div class="line"><span class="lineno">  100</span> </div>
+<div class="line"><span class="lineno">  101</span>  <span class="keyword">const</span> <span class="keyword">auto</span> object_seen =</div>
+<div class="line"><span class="lineno">  102</span>      frame_node-&gt;objects_seen.template collectIds&lt;ObjectId&gt;();</div>
+<div class="line"><span class="lineno">  103</span>  <span class="keywordflow">for</span> (<a class="code hl_typedef" href="namespacedyno.html#a38bb86e4154b86428b8d133be03fb2b5">ObjectId</a> object_id : object_seen) {</div>
+<div class="line"><span class="lineno">  104</span>    StateQuery&lt;gtsam::Pose3&gt; object_pose =</div>
+<div class="line"><span class="lineno">  105</span>        this-&gt;<a class="code hl_function" href="classdyno_1_1Accessor.html#ab87c1b26d6cbf30ff87cb69553fe1077">getObjectPose</a>(frame_id, object_id);</div>
+<div class="line"><span class="lineno">  106</span>    <span class="keywordflow">if</span> (object_pose) {</div>
+<div class="line"><span class="lineno">  107</span>      pose_estimates.insert2(</div>
+<div class="line"><span class="lineno">  108</span>          object_id, ReferenceFrameValue&lt;gtsam::Pose3&gt;(object_pose.get(),</div>
+<div class="line"><span class="lineno">  109</span>                                                       <a class="code hl_enumvalue" href="namespacedyno.html#a828b92ac8912e7d2ffc267eb0d08b74cae456468cc146bd360464043f0645212e">ReferenceFrame::GLOBAL</a>));</div>
+<div class="line"><span class="lineno">  110</span>    }</div>
+<div class="line"><span class="lineno">  111</span>  }</div>
+<div class="line"><span class="lineno">  112</span>  <span class="keywordflow">return</span> pose_estimates;</div>
+<div class="line"><span class="lineno">  113</span>}</div>
 <div class="ttc" id="aclassdyno_1_1Accessor_html_ab87c1b26d6cbf30ff87cb69553fe1077"><div class="ttname"><a href="classdyno_1_1Accessor.html#ab87c1b26d6cbf30ff87cb69553fe1077">dyno::Accessor::getObjectPose</a></div><div class="ttdeci">virtual StateQuery&lt; gtsam::Pose3 &gt; getObjectPose(FrameId frame_id, ObjectId object_id) const =0</div><div class="ttdoc">Get the pose (^wL_k) of an object (j) at time-step (k).</div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="classdyno_1_1StateQuery.html#af7ca5fb04717f5719c62a54b3b67fd17">dyno::StateQuery&lt; ValueType &gt;::get()</a>, and <a class="el" href="namespacedyno.html#a828b92ac8912e7d2ffc267eb0d08b74cae456468cc146bd360464043f0645212e">dyno::GLOBAL</a>.</p>
-<div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="classdyno_1_1Accessor_a1d29b55442543df1530b5784e745527b_cgraph.png" border="0" usemap="#aclassdyno_1_1Accessor_a1d29b55442543df1530b5784e745527b_cgraph" alt=""/></div>
-<map name="aclassdyno_1_1Accessor_a1d29b55442543df1530b5784e745527b_cgraph" id="aclassdyno_1_1Accessor_a1d29b55442543df1530b5784e745527b_cgraph">
-<area shape="rect" title="Collects all object poses at some time&#45;step (k). This is equivalent to \mathcal{L}_k...." alt="" coords="5,5,196,45"/>
-<area shape="rect" href="classdyno_1_1StateQuery.html#af7ca5fb04717f5719c62a54b3b67fd17" title=" " alt="" coords="244,13,407,38"/>
-<area shape="rect" href="namespacedyno.html#a2d6f925680f57dbc72ada75daefdb2f9" title=" " alt="" coords="455,13,665,38"/>
-</map>
-</div>
-
 </div>
 </div>
 <a id="a2f6b27bc9bcfe4f286cb6e89b97c305e" name="a2f6b27bc9bcfe4f286cb6e89b97c305e"></a>
@@ -1140,31 +1279,30 @@ template&lt;class MAP &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><a class="el" href="namespacedyno.html#a657d4fbbb462bb3f05806e6de62ff1be" title="Map of key to an estimate containting a reference frame.">EstimateMap&lt;ObjectId, std::pair&lt;Motion3, gtsam::Pose3&gt;&gt;</a> </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Accessor-impl_8hpp_source.html#l00324">324</a> of file <a class="el" href="Accessor-impl_8hpp_source.html">Accessor-impl.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  325</span>                                                                       {</div>
-<div class="line"><span class="lineno">  326</span>  <span class="keyword">const</span> <a class="code hl_typedef" href="namespacedyno.html#acef42ad0a1e53f5876f1000defc23e3b">MotionEstimateMap</a> motions_k = this-&gt;<a class="code hl_function" href="classdyno_1_1Accessor.html#a8f0b21c13a50f295337a92c340f17f3d">getObjectMotions</a>(motion_frame_id);</div>
-<div class="line"><span class="lineno">  327</span>  <span class="keyword">const</span> EstimateMap&lt;ObjectId, gtsam::Pose3&gt; poses_k =</div>
-<div class="line"><span class="lineno">  328</span>      this-&gt;<a class="code hl_function" href="classdyno_1_1Accessor.html#a724e8bbef287e354030f9ae6d42b3c6d">getObjectPoses</a>(pose_frame_id);</div>
-<div class="line"><span class="lineno">  329</span> </div>
-<div class="line"><span class="lineno">  330</span>  EstimateMap&lt;ObjectId, std::pair&lt;Motion3, gtsam::Pose3&gt;&gt; result;</div>
-<div class="line"><span class="lineno">  331</span>  <span class="comment">// collect common objects</span></div>
-<div class="line"><span class="lineno">  332</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [object_id, _] : motions_k) {</div>
-<div class="line"><span class="lineno">  333</span>    <span class="keywordflow">if</span> (poses_k.exists(object_id)) {</div>
-<div class="line"><span class="lineno">  334</span>      <span class="keyword">auto</span> motion_reference_values = motions_k.at(object_id);</div>
-<div class="line"><span class="lineno">  335</span>      <span class="keyword">auto</span> pose_reference_values = poses_k.at(object_id);</div>
-<div class="line"><span class="lineno">  336</span> </div>
-<div class="line"><span class="lineno">  337</span>      CHECK_EQ(motion_reference_values.frame_, pose_reference_values.frame_);</div>
-<div class="line"><span class="lineno">  338</span> </div>
-<div class="line"><span class="lineno">  339</span>      ReferenceFrameValue&lt;std::pair&lt;Motion3, gtsam::Pose3&gt;&gt; estimate(</div>
-<div class="line"><span class="lineno">  340</span>          std::make_pair(motion_reference_values.estimate_,</div>
-<div class="line"><span class="lineno">  341</span>                         pose_reference_values.estimate_),</div>
-<div class="line"><span class="lineno">  342</span>          motion_reference_values.frame_);</div>
-<div class="line"><span class="lineno">  343</span>      result.insert2(object_id, estimate);</div>
-<div class="line"><span class="lineno">  344</span>    }</div>
-<div class="line"><span class="lineno">  345</span>  }</div>
-<div class="line"><span class="lineno">  346</span>  <span class="keywordflow">return</span> result;</div>
-<div class="line"><span class="lineno">  347</span>}</div>
-<div class="ttc" id="aclassdyno_1_1Accessor_html_a8f0b21c13a50f295337a92c340f17f3d"><div class="ttname"><a href="classdyno_1_1Accessor.html#a8f0b21c13a50f295337a92c340f17f3d">dyno::Accessor::getObjectMotions</a></div><div class="ttdeci">MotionEstimateMap getObjectMotions(FrameId frame_id) const</div><div class="ttdoc">Collects all object motions from some time-step (k-1) to k. This is equivalent to \mathcal{H}_k....</div><div class="ttdef"><b>Definition:</b> <a href="Accessor-impl_8hpp_source.html#l00051">Accessor-impl.hpp:51</a></div></div>
+<p class="definition">Definition at line <a class="el" href="Accessor-impl_8hpp_source.html#l00359">359</a> of file <a class="el" href="Accessor-impl_8hpp_source.html">Accessor-impl.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  360</span>                                                                       {</div>
+<div class="line"><span class="lineno">  361</span>  <span class="keyword">const</span> <a class="code hl_typedef" href="namespacedyno.html#acbe4f073028205068f6ad3fb9ef92d66">MotionEstimateMap</a> motions_k = this-&gt;<a class="code hl_function" href="classdyno_1_1Accessor.html#a9561ba94ab4409ac5cb803cac709bb62">getObjectMotions</a>(motion_frame_id);</div>
+<div class="line"><span class="lineno">  362</span>  <span class="keyword">const</span> EstimateMap&lt;ObjectId, gtsam::Pose3&gt; poses_k =</div>
+<div class="line"><span class="lineno">  363</span>      this-&gt;<a class="code hl_function" href="classdyno_1_1Accessor.html#a724e8bbef287e354030f9ae6d42b3c6d">getObjectPoses</a>(pose_frame_id);</div>
+<div class="line"><span class="lineno">  364</span> </div>
+<div class="line"><span class="lineno">  365</span>  EstimateMap&lt;ObjectId, std::pair&lt;Motion3, gtsam::Pose3&gt;&gt; result;</div>
+<div class="line"><span class="lineno">  366</span>  <span class="comment">// collect common objects</span></div>
+<div class="line"><span class="lineno">  367</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [object_id, _] : motions_k) {</div>
+<div class="line"><span class="lineno">  368</span>    <span class="keywordflow">if</span> (poses_k.exists(object_id)) {</div>
+<div class="line"><span class="lineno">  369</span>      <span class="keyword">auto</span> motion_reference_values = motions_k.at(object_id);</div>
+<div class="line"><span class="lineno">  370</span>      <span class="keyword">auto</span> pose_reference_values = poses_k.at(object_id);</div>
+<div class="line"><span class="lineno">  371</span> </div>
+<div class="line"><span class="lineno">  372</span>      CHECK_EQ(motion_reference_values.frame_, pose_reference_values.frame_);</div>
+<div class="line"><span class="lineno">  373</span> </div>
+<div class="line"><span class="lineno">  374</span>      ReferenceFrameValue&lt;std::pair&lt;Motion3, gtsam::Pose3&gt;&gt; estimate(</div>
+<div class="line"><span class="lineno">  375</span>          std::make_pair(motion_reference_values.estimate_,</div>
+<div class="line"><span class="lineno">  376</span>                         pose_reference_values.estimate_),</div>
+<div class="line"><span class="lineno">  377</span>          motion_reference_values.frame_);</div>
+<div class="line"><span class="lineno">  378</span>      result.insert2(object_id, estimate);</div>
+<div class="line"><span class="lineno">  379</span>    }</div>
+<div class="line"><span class="lineno">  380</span>  }</div>
+<div class="line"><span class="lineno">  381</span>  <span class="keywordflow">return</span> result;</div>
+<div class="line"><span class="lineno">  382</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1201,9 +1339,9 @@ template&lt;class MAP &gt; </div>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>StateQuery&lt;gtsam::Pose3&gt; </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="classdyno_1_1StateQuery.html">StateQuery&lt;gtsam::Pose3&gt;</a> </dd></dl>
 
-<p>Implemented in <a class="el" href="classdyno_1_1WorldPoseAccessor.html#a969e5006a351bded81359891d3ee647c">dyno::WorldPoseAccessor</a>.</p>
+<p>Implemented in <a class="el" href="classdyno_1_1HybridAccessor.html#a148c39a56ccc3262be583437ae7050fa">dyno::HybridAccessor</a>, and <a class="el" href="classdyno_1_1WorldPoseAccessor.html#a969e5006a351bded81359891d3ee647c">dyno::WorldPoseAccessor</a>.</p>
 
 </div>
 </div>
@@ -1240,13 +1378,13 @@ template&lt;class MAP &gt; </div>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>StateQuery&lt;gtsam::Point3&gt; </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="classdyno_1_1StateQuery.html">StateQuery&lt;gtsam::Point3&gt;</a> </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Accessor-impl_8hpp_source.html#l00044">44</a> of file <a class="el" href="Accessor-impl_8hpp_source.html">Accessor-impl.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   45</span>                                  {</div>
-<div class="line"><span class="lineno">   46</span>  <span class="keyword">const</span> <span class="keyword">auto</span> lmk = CHECK_NOTNULL(<a class="code hl_function" href="classdyno_1_1Accessor.html#a7204bf6ab3ea8d16809049aa1553bccc">map</a>()-&gt;getLandmark(tracklet_id));</div>
-<div class="line"><span class="lineno">   47</span>  <span class="keywordflow">return</span> this-&gt;query&lt;gtsam::Point3&gt;(lmk-&gt;makeStaticKey());</div>
-<div class="line"><span class="lineno">   48</span>}</div>
+<p class="definition">Definition at line <a class="el" href="Accessor-impl_8hpp_source.html#l00048">48</a> of file <a class="el" href="Accessor-impl_8hpp_source.html">Accessor-impl.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   49</span>                                  {</div>
+<div class="line"><span class="lineno">   50</span>  <span class="keyword">const</span> <span class="keyword">auto</span> lmk = CHECK_NOTNULL(<a class="code hl_function" href="classdyno_1_1Accessor.html#a7204bf6ab3ea8d16809049aa1553bccc">map</a>()-&gt;getLandmark(tracklet_id));</div>
+<div class="line"><span class="lineno">   51</span>  <span class="keywordflow">return</span> this-&gt;query&lt;gtsam::Point3&gt;(lmk-&gt;makeStaticKey());</div>
+<div class="line"><span class="lineno">   52</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1277,32 +1415,32 @@ template&lt;class MAP &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>StatusLandmarkVector </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Accessor-impl_8hpp_source.html#l00166">166</a> of file <a class="el" href="Accessor-impl_8hpp_source.html">Accessor-impl.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  167</span>                            {</div>
-<div class="line"><span class="lineno">  168</span>  <span class="comment">// dont go over the frames as this contains references to the landmarks</span></div>
-<div class="line"><span class="lineno">  169</span>  <span class="comment">// multiple times</span></div>
-<div class="line"><span class="lineno">  170</span>  <span class="comment">// e.g. the ones seen in that frame</span></div>
-<div class="line"><span class="lineno">  171</span>  <a class="code hl_typedef" href="namespacedyno.html#afa01ab54e33c616353a643645cd2aaee">StatusLandmarkVector</a> estimates;</div>
-<div class="line"><span class="lineno">  172</span> </div>
-<div class="line"><span class="lineno">  173</span>  <span class="keyword">const</span> <span class="keyword">auto</span> frame_node = <a class="code hl_function" href="classdyno_1_1Accessor.html#a7204bf6ab3ea8d16809049aa1553bccc">map</a>()-&gt;getFrame(frame_id);</div>
-<div class="line"><span class="lineno">  174</span>  CHECK_NOTNULL(frame_node);</div>
-<div class="line"><span class="lineno">  175</span> </div>
-<div class="line"><span class="lineno">  176</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; landmark_node : frame_node-&gt;static_landmarks) {</div>
-<div class="line"><span class="lineno">  177</span>    <span class="keywordflow">if</span> (landmark_node-&gt;isStatic()) {</div>
-<div class="line"><span class="lineno">  178</span>      StateQuery&lt;gtsam::Point3&gt; lmk_query =</div>
-<div class="line"><span class="lineno">  179</span>          <a class="code hl_function" href="classdyno_1_1Accessor.html#a6add2ebf27c59509af589368e8b96960">getStaticLandmark</a>(landmark_node-&gt;tracklet_id);</div>
-<div class="line"><span class="lineno">  180</span>      <span class="keywordflow">if</span> (lmk_query) {</div>
-<div class="line"><span class="lineno">  181</span>        estimates.push_back(<a class="code hl_function" href="structdyno_1_1VisualMeasurementStatus.html#aa30d67af765bf6c1b241821f367a77ba">LandmarkStatus::StaticInGlobal</a>(</div>
-<div class="line"><span class="lineno">  182</span>            lmk_query.get(),  <span class="comment">// estimate</span></div>
-<div class="line"><span class="lineno">  183</span>            <a class="code hl_variable" href="classdyno_1_1TrackedValueStatus.html#ab6b1b237d31c9c11b4151fbdbfdbb3bd">LandmarkStatus::MeaninglessFrame</a>,</div>
-<div class="line"><span class="lineno">  184</span>            landmark_node-&gt;getId()  <span class="comment">// tracklet id</span></div>
-<div class="line"><span class="lineno">  185</span>            )                       <span class="comment">// status</span></div>
-<div class="line"><span class="lineno">  186</span>        );</div>
-<div class="line"><span class="lineno">  187</span>      }</div>
-<div class="line"><span class="lineno">  188</span>    }</div>
-<div class="line"><span class="lineno">  189</span>  }</div>
-<div class="line"><span class="lineno">  190</span>  <span class="keywordflow">return</span> estimates;</div>
-<div class="line"><span class="lineno">  191</span>}</div>
+<p class="definition">Definition at line <a class="el" href="Accessor-impl_8hpp_source.html#l00202">202</a> of file <a class="el" href="Accessor-impl_8hpp_source.html">Accessor-impl.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  203</span>                            {</div>
+<div class="line"><span class="lineno">  204</span>  <span class="comment">// dont go over the frames as this contains references to the landmarks</span></div>
+<div class="line"><span class="lineno">  205</span>  <span class="comment">// multiple times</span></div>
+<div class="line"><span class="lineno">  206</span>  <span class="comment">// e.g. the ones seen in that frame</span></div>
+<div class="line"><span class="lineno">  207</span>  <a class="code hl_typedef" href="namespacedyno.html#afa01ab54e33c616353a643645cd2aaee">StatusLandmarkVector</a> estimates;</div>
+<div class="line"><span class="lineno">  208</span> </div>
+<div class="line"><span class="lineno">  209</span>  <span class="keyword">const</span> <span class="keyword">auto</span> frame_node = <a class="code hl_function" href="classdyno_1_1Accessor.html#a7204bf6ab3ea8d16809049aa1553bccc">map</a>()-&gt;getFrame(frame_id);</div>
+<div class="line"><span class="lineno">  210</span>  CHECK_NOTNULL(frame_node);</div>
+<div class="line"><span class="lineno">  211</span> </div>
+<div class="line"><span class="lineno">  212</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; landmark_node : frame_node-&gt;static_landmarks) {</div>
+<div class="line"><span class="lineno">  213</span>    <span class="keywordflow">if</span> (landmark_node-&gt;isStatic()) {</div>
+<div class="line"><span class="lineno">  214</span>      StateQuery&lt;gtsam::Point3&gt; lmk_query =</div>
+<div class="line"><span class="lineno">  215</span>          <a class="code hl_function" href="classdyno_1_1Accessor.html#a6add2ebf27c59509af589368e8b96960">getStaticLandmark</a>(landmark_node-&gt;tracklet_id);</div>
+<div class="line"><span class="lineno">  216</span>      <span class="keywordflow">if</span> (lmk_query) {</div>
+<div class="line"><span class="lineno">  217</span>        estimates.push_back(<a class="code hl_function" href="structdyno_1_1VisualMeasurementStatus.html#aa30d67af765bf6c1b241821f367a77ba">LandmarkStatus::StaticInGlobal</a>(</div>
+<div class="line"><span class="lineno">  218</span>            <a class="code hl_typedef" href="namespacedyno.html#ac95aab181c160d73db10b83883f77080">Point3Measurement</a>(lmk_query.get()),  <span class="comment">// estimate</span></div>
+<div class="line"><span class="lineno">  219</span>            <a class="code hl_variable" href="classdyno_1_1TrackedValueStatus.html#ab6b1b237d31c9c11b4151fbdbfdbb3bd">LandmarkStatus::MeaninglessFrame</a>,</div>
+<div class="line"><span class="lineno">  220</span>            landmark_node-&gt;getId()  <span class="comment">// tracklet id</span></div>
+<div class="line"><span class="lineno">  221</span>            )                       <span class="comment">// status</span></div>
+<div class="line"><span class="lineno">  222</span>        );</div>
+<div class="line"><span class="lineno">  223</span>      }</div>
+<div class="line"><span class="lineno">  224</span>    }</div>
+<div class="line"><span class="lineno">  225</span>  }</div>
+<div class="line"><span class="lineno">  226</span>  <span class="keywordflow">return</span> estimates;</div>
+<div class="line"><span class="lineno">  227</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1353,11 +1491,11 @@ template&lt;class MAP &gt; </div>
 <dd>
 false </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Accessor-impl_8hpp_source.html#l00243">243</a> of file <a class="el" href="Accessor-impl_8hpp_source.html">Accessor-impl.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  245</span>                                                                   {</div>
-<div class="line"><span class="lineno">  246</span>  <span class="keywordflow">return</span> <a class="code hl_function" href="classdyno_1_1Accessor.html#a143801da1d538d06b5825ae8885fa23a">hasObjectMotionEstimate</a>(frame_id, object_id, &amp;motion);</div>
-<div class="line"><span class="lineno">  247</span>}</div>
-<div class="ttc" id="aclassdyno_1_1Accessor_html_a143801da1d538d06b5825ae8885fa23a"><div class="ttname"><a href="classdyno_1_1Accessor.html#a143801da1d538d06b5825ae8885fa23a">dyno::Accessor::hasObjectMotionEstimate</a></div><div class="ttdeci">bool hasObjectMotionEstimate(FrameId frame_id, ObjectId object_id, Motion3 *motion=nullptr) const</div><div class="ttdoc">Check if there exists an estimate for object motion at time-step (k) for object id (j)....</div><div class="ttdef"><b>Definition:</b> <a href="Accessor-impl_8hpp_source.html#l00227">Accessor-impl.hpp:227</a></div></div>
+<p class="definition">Definition at line <a class="el" href="Accessor-impl_8hpp_source.html#l00279">279</a> of file <a class="el" href="Accessor-impl_8hpp_source.html">Accessor-impl.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  281</span>                                                                   {</div>
+<div class="line"><span class="lineno">  282</span>  <span class="keywordflow">return</span> <a class="code hl_function" href="classdyno_1_1Accessor.html#a143801da1d538d06b5825ae8885fa23a">hasObjectMotionEstimate</a>(frame_id, object_id, &amp;motion);</div>
+<div class="line"><span class="lineno">  283</span>}</div>
+<div class="ttc" id="aclassdyno_1_1Accessor_html_a143801da1d538d06b5825ae8885fa23a"><div class="ttname"><a href="classdyno_1_1Accessor.html#a143801da1d538d06b5825ae8885fa23a">dyno::Accessor::hasObjectMotionEstimate</a></div><div class="ttdeci">bool hasObjectMotionEstimate(FrameId frame_id, ObjectId object_id, Motion3 *motion=nullptr) const</div><div class="ttdoc">Check if there exists an estimate for object motion at time-step (k) for object id (j)....</div><div class="ttdef"><b>Definition:</b> <a href="Accessor-impl_8hpp_source.html#l00263">Accessor-impl.hpp:263</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1408,20 +1546,32 @@ template&lt;class MAP &gt; </div>
 <dd>
 false </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Accessor-impl_8hpp_source.html#l00227">227</a> of file <a class="el" href="Accessor-impl_8hpp_source.html">Accessor-impl.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  229</span>                                                                   {</div>
-<div class="line"><span class="lineno">  230</span>  <span class="keyword">const</span> <span class="keyword">auto</span> frame_node = <a class="code hl_function" href="classdyno_1_1Accessor.html#a7204bf6ab3ea8d16809049aa1553bccc">map</a>()-&gt;getFrame(frame_id);</div>
-<div class="line"><span class="lineno">  231</span>  StateQuery&lt;Motion3&gt; motion_query = this-&gt;<a class="code hl_function" href="classdyno_1_1Accessor.html#ab1126afc0b0ea953532c2770e033aee5">getObjectMotion</a>(frame_id, object_id);</div>
-<div class="line"><span class="lineno">  232</span> </div>
-<div class="line"><span class="lineno">  233</span>  <span class="keywordflow">if</span> (motion_query) {</div>
-<div class="line"><span class="lineno">  234</span>    <span class="keywordflow">if</span> (motion) {</div>
-<div class="line"><span class="lineno">  235</span>      *motion = motion_query.get();</div>
-<div class="line"><span class="lineno">  236</span>    }</div>
-<div class="line"><span class="lineno">  237</span>    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  238</span>  }</div>
-<div class="line"><span class="lineno">  239</span>  <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">  240</span>}</div>
+<p class="definition">Definition at line <a class="el" href="Accessor-impl_8hpp_source.html#l00263">263</a> of file <a class="el" href="Accessor-impl_8hpp_source.html">Accessor-impl.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  265</span>                                                                   {</div>
+<div class="line"><span class="lineno">  266</span>  <span class="keyword">const</span> <span class="keyword">auto</span> frame_node = <a class="code hl_function" href="classdyno_1_1Accessor.html#a7204bf6ab3ea8d16809049aa1553bccc">map</a>()-&gt;getFrame(frame_id);</div>
+<div class="line"><span class="lineno">  267</span>  StateQuery&lt;Motion3&gt; motion_query = this-&gt;<a class="code hl_function" href="classdyno_1_1Accessor.html#ab1126afc0b0ea953532c2770e033aee5">getObjectMotion</a>(frame_id, object_id);</div>
+<div class="line"><span class="lineno">  268</span> </div>
+<div class="line"><span class="lineno">  269</span>  <span class="keywordflow">if</span> (motion_query) {</div>
+<div class="line"><span class="lineno">  270</span>    <span class="keywordflow">if</span> (motion) {</div>
+<div class="line"><span class="lineno">  271</span>      *motion = motion_query.get();</div>
+<div class="line"><span class="lineno">  272</span>    }</div>
+<div class="line"><span class="lineno">  273</span>    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  274</span>  }</div>
+<div class="line"><span class="lineno">  275</span>  <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">  276</span>}</div>
 </div><!-- fragment -->
+<p class="reference">References <a class="el" href="classdyno_1_1StateQuery.html#af7ca5fb04717f5719c62a54b3b67fd17">dyno::StateQuery&lt; ValueType &gt;::get()</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classdyno_1_1Accessor_a143801da1d538d06b5825ae8885fa23a_cgraph.png" border="0" usemap="#aclassdyno_1_1Accessor_a143801da1d538d06b5825ae8885fa23a_cgraph" alt=""/></div>
+<map name="aclassdyno_1_1Accessor_a143801da1d538d06b5825ae8885fa23a_cgraph" id="aclassdyno_1_1Accessor_a143801da1d538d06b5825ae8885fa23a_cgraph">
+<area shape="rect" title="Check if there exists an estimate for object motion at time&#45;step (k) for object id (j)...." alt="" coords="5,5,199,45"/>
+<area shape="rect" href="classdyno_1_1StateQuery.html#af7ca5fb04717f5719c62a54b3b67fd17" title=" " alt="" coords="247,13,409,38"/>
+<area shape="rect" href="namespacedyno.html#a2d6f925680f57dbc72ada75daefdb2f9" title=" " alt="" coords="457,13,668,38"/>
+</map>
+</div>
+
 </div>
 </div>
 <a id="a61b2fe6460a4cecad3bc44239e4185bc" name="a61b2fe6460a4cecad3bc44239e4185bc"></a>
@@ -1471,11 +1621,11 @@ template&lt;class MAP &gt; </div>
 <dd>
 false </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Accessor-impl_8hpp_source.html#l00266">266</a> of file <a class="el" href="Accessor-impl_8hpp_source.html">Accessor-impl.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  267</span>                                                                  {</div>
-<div class="line"><span class="lineno">  268</span>  <span class="keywordflow">return</span> <a class="code hl_function" href="classdyno_1_1Accessor.html#ab3e5cd6c8bc67beb904bba9767b76869">hasObjectPoseEstimate</a>(frame_id, object_id, &amp;pose);</div>
-<div class="line"><span class="lineno">  269</span>}</div>
-<div class="ttc" id="aclassdyno_1_1Accessor_html_ab3e5cd6c8bc67beb904bba9767b76869"><div class="ttname"><a href="classdyno_1_1Accessor.html#ab3e5cd6c8bc67beb904bba9767b76869">dyno::Accessor::hasObjectPoseEstimate</a></div><div class="ttdeci">bool hasObjectPoseEstimate(FrameId frame_id, ObjectId object_id, gtsam::Pose3 *pose=nullptr) const</div><div class="ttdoc">Check if there exists an estimate for object pose at time-step (k) for object id (j)....</div><div class="ttdef"><b>Definition:</b> <a href="Accessor-impl_8hpp_source.html#l00250">Accessor-impl.hpp:250</a></div></div>
+<p class="definition">Definition at line <a class="el" href="Accessor-impl_8hpp_source.html#l00302">302</a> of file <a class="el" href="Accessor-impl_8hpp_source.html">Accessor-impl.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  303</span>                                                                  {</div>
+<div class="line"><span class="lineno">  304</span>  <span class="keywordflow">return</span> <a class="code hl_function" href="classdyno_1_1Accessor.html#ab3e5cd6c8bc67beb904bba9767b76869">hasObjectPoseEstimate</a>(frame_id, object_id, &amp;pose);</div>
+<div class="line"><span class="lineno">  305</span>}</div>
+<div class="ttc" id="aclassdyno_1_1Accessor_html_ab3e5cd6c8bc67beb904bba9767b76869"><div class="ttname"><a href="classdyno_1_1Accessor.html#ab3e5cd6c8bc67beb904bba9767b76869">dyno::Accessor::hasObjectPoseEstimate</a></div><div class="ttdeci">bool hasObjectPoseEstimate(FrameId frame_id, ObjectId object_id, gtsam::Pose3 *pose=nullptr) const</div><div class="ttdoc">Check if there exists an estimate for object pose at time-step (k) for object id (j)....</div><div class="ttdef"><b>Definition:</b> <a href="Accessor-impl_8hpp_source.html#l00286">Accessor-impl.hpp:286</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1526,21 +1676,56 @@ template&lt;class MAP &gt; </div>
 <dd>
 false </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Accessor-impl_8hpp_source.html#l00250">250</a> of file <a class="el" href="Accessor-impl_8hpp_source.html">Accessor-impl.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  251</span>                                                                  {</div>
-<div class="line"><span class="lineno">  252</span>  <span class="keyword">const</span> <span class="keyword">auto</span> frame_node = <a class="code hl_function" href="classdyno_1_1Accessor.html#a7204bf6ab3ea8d16809049aa1553bccc">map</a>()-&gt;getFrame(frame_id);</div>
-<div class="line"><span class="lineno">  253</span>  StateQuery&lt;gtsam::Pose3&gt; pose_query =</div>
-<div class="line"><span class="lineno">  254</span>      this-&gt;<a class="code hl_function" href="classdyno_1_1Accessor.html#ab87c1b26d6cbf30ff87cb69553fe1077">getObjectPose</a>(frame_id, object_id);</div>
-<div class="line"><span class="lineno">  255</span> </div>
-<div class="line"><span class="lineno">  256</span>  <span class="keywordflow">if</span> (pose_query) {</div>
-<div class="line"><span class="lineno">  257</span>    <span class="keywordflow">if</span> (pose) {</div>
-<div class="line"><span class="lineno">  258</span>      *pose = pose_query.get();</div>
-<div class="line"><span class="lineno">  259</span>    }</div>
-<div class="line"><span class="lineno">  260</span>    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  261</span>  }</div>
-<div class="line"><span class="lineno">  262</span>  <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">  263</span>}</div>
+<p class="definition">Definition at line <a class="el" href="Accessor-impl_8hpp_source.html#l00286">286</a> of file <a class="el" href="Accessor-impl_8hpp_source.html">Accessor-impl.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  287</span>                                                                  {</div>
+<div class="line"><span class="lineno">  288</span>  <span class="keyword">const</span> <span class="keyword">auto</span> frame_node = <a class="code hl_function" href="classdyno_1_1Accessor.html#a7204bf6ab3ea8d16809049aa1553bccc">map</a>()-&gt;getFrame(frame_id);</div>
+<div class="line"><span class="lineno">  289</span>  StateQuery&lt;gtsam::Pose3&gt; pose_query =</div>
+<div class="line"><span class="lineno">  290</span>      this-&gt;<a class="code hl_function" href="classdyno_1_1Accessor.html#ab87c1b26d6cbf30ff87cb69553fe1077">getObjectPose</a>(frame_id, object_id);</div>
+<div class="line"><span class="lineno">  291</span> </div>
+<div class="line"><span class="lineno">  292</span>  <span class="keywordflow">if</span> (pose_query) {</div>
+<div class="line"><span class="lineno">  293</span>    <span class="keywordflow">if</span> (pose) {</div>
+<div class="line"><span class="lineno">  294</span>      *pose = pose_query.get();</div>
+<div class="line"><span class="lineno">  295</span>    }</div>
+<div class="line"><span class="lineno">  296</span>    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  297</span>  }</div>
+<div class="line"><span class="lineno">  298</span>  <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">  299</span>}</div>
 </div><!-- fragment -->
+</div>
+</div>
+<a id="a3fda7147ee8e4ce144e2ce46e5f2cde4" name="a3fda7147ee8e4ce144e2ce46e5f2cde4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3fda7147ee8e4ce144e2ce46e5f2cde4">&#9670;&#160;</a></span>hooks()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class MAP &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="structdyno_1_1FormulationHooks.html">FormulationHooks</a> &amp; <a class="el" href="classdyno_1_1Accessor.html">dyno::Accessor</a>&lt; MAP &gt;::hooks </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Accessor_8hpp_source.html#l00344">344</a> of file <a class="el" href="Accessor_8hpp_source.html">Accessor.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  344</span>                                        {</div>
+<div class="line"><span class="lineno">  345</span>    <span class="keywordflow">return</span> *CHECK_NOTNULL(<a class="code hl_variable" href="classdyno_1_1Accessor.html#ad6488a7509de3c0d30bd55be1291cb88">shared_data_</a>.<a class="code hl_variable" href="structdyno_1_1SharedFormulationData.html#ae9b3c70345c050a19ff22557c7478f83">hooks</a>);</div>
+<div class="line"><span class="lineno">  346</span>  }</div>
+<div class="ttc" id="astructdyno_1_1SharedFormulationData_html_ae9b3c70345c050a19ff22557c7478f83"><div class="ttname"><a href="structdyno_1_1SharedFormulationData.html#ae9b3c70345c050a19ff22557c7478f83">dyno::SharedFormulationData::hooks</a></div><div class="ttdeci">const FormulationHooks * hooks</div><div class="ttdef"><b>Definition:</b> <a href="BackendDefinitions_8hpp_source.html#l00190">BackendDefinitions.hpp:190</a></div></div>
+</div><!-- fragment -->
+<p class="reference">References <a class="el" href="structdyno_1_1SharedFormulationData.html#ae9b3c70345c050a19ff22557c7478f83">dyno::SharedFormulationData::hooks</a>, and <a class="el" href="classdyno_1_1Accessor.html#ad6488a7509de3c0d30bd55be1291cb88">dyno::Accessor&lt; MAP &gt;::shared_data_</a>.</p>
+
 </div>
 </div>
 <a id="a7204bf6ab3ea8d16809049aa1553bccc" name="a7204bf6ab3ea8d16809049aa1553bccc"></a>
@@ -1568,52 +1753,11 @@ template&lt;class MAP &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Accessor_8hpp_source.html#l00322">322</a> of file <a class="el" href="Accessor_8hpp_source.html">Accessor.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  322</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1Accessor.html#aa9e71b12c3a05618316597d54a895f9d">map_</a>; }</div>
+<p class="definition">Definition at line <a class="el" href="Accessor_8hpp_source.html#l00339">339</a> of file <a class="el" href="Accessor_8hpp_source.html">Accessor.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  339</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1Accessor.html#aa9e71b12c3a05618316597d54a895f9d">map_</a>; }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1Accessor.html#aa9e71b12c3a05618316597d54a895f9d">dyno::Accessor&lt; MAP &gt;::map_</a>.</p>
 
-</div>
-</div>
-<a id="ad3537bb0e6372a81e1ab9edaa902b4d6" name="ad3537bb0e6372a81e1ab9edaa902b4d6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad3537bb0e6372a81e1ab9edaa902b4d6">&#9670;&#160;</a></span>postUpdateCallback()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class MAP &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual void <a class="el" href="classdyno_1_1Accessor.html">dyno::Accessor</a>&lt; MAP &gt;::postUpdateCallback </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="structdyno_1_1BackendMetaData.html">BackendMetaData</a> &amp;&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Virtual function that is called to indcate the associated formulation has been updated. This can be used to trigger an internal update of variables/cache if necessary. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">const</td><td><a class="el" href="structdyno_1_1BackendMetaData.html">BackendMetaData</a>&amp; </td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p>Reimplemented in <a class="el" href="classdyno_1_1WorldMotionAccessor.html#a0a396e6c748dc58cf38e5b1a70b2eea4">dyno::WorldMotionAccessor</a>.</p>
-
-<p class="definition">Definition at line <a class="el" href="Accessor_8hpp_source.html#l00141">141</a> of file <a class="el" href="Accessor_8hpp_source.html">Accessor.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  141</span>{};</div>
-</div><!-- fragment -->
 </div>
 </div>
 <a id="a8adb62db84c73c20403fc8a3b750a8d1" name="a8adb62db84c73c20403fc8a3b750a8d1"></a>
@@ -1651,16 +1795,17 @@ template&lt;typename ValueType &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>StateQuery&lt;ValueType&gt; </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Accessor-impl_8hpp_source.html#l00356">356</a> of file <a class="el" href="Accessor-impl_8hpp_source.html">Accessor-impl.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  356</span>                                                             {</div>
-<div class="line"><span class="lineno">  357</span>  CHECK_NOTNULL(<a class="code hl_variable" href="classdyno_1_1Accessor.html#af0454d2faf0d60320bb51dcb91d0c569">theta_</a>);</div>
-<div class="line"><span class="lineno">  358</span>  <span class="keywordflow">if</span> (<a class="code hl_variable" href="classdyno_1_1Accessor.html#af0454d2faf0d60320bb51dcb91d0c569">theta_</a>-&gt;exists(key)) {</div>
-<div class="line"><span class="lineno">  359</span>    <span class="keywordflow">return</span> StateQuery&lt;ValueType&gt;(key, <a class="code hl_variable" href="classdyno_1_1Accessor.html#af0454d2faf0d60320bb51dcb91d0c569">theta_</a>-&gt;at&lt;ValueType&gt;(key));</div>
-<div class="line"><span class="lineno">  360</span>  } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  361</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="classdyno_1_1StateQuery.html#ad7e4445ee38e5e376aee9f95ec21d26e">StateQuery&lt;ValueType&gt;::NotInMap</a>(key);</div>
-<div class="line"><span class="lineno">  362</span>  }</div>
-<div class="line"><span class="lineno">  363</span>}</div>
-<div class="ttc" id="aclassdyno_1_1StateQuery_html_ad7e4445ee38e5e376aee9f95ec21d26e"><div class="ttname"><a href="classdyno_1_1StateQuery.html#ad7e4445ee38e5e376aee9f95ec21d26e">dyno::StateQuery::NotInMap</a></div><div class="ttdeci">static StateQuery NotInMap(gtsam::Key key)</div><div class="ttdef"><b>Definition:</b> <a href="MapNodes_8hpp_source.html#l00310">MapNodes.hpp:310</a></div></div>
+<p class="definition">Definition at line <a class="el" href="Accessor-impl_8hpp_source.html#l00393">393</a> of file <a class="el" href="Accessor-impl_8hpp_source.html">Accessor-impl.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  393</span>                                                             {</div>
+<div class="line"><span class="lineno">  394</span>  <span class="keyword">const</span> gtsam::Values* theta = <a class="code hl_variable" href="classdyno_1_1Accessor.html#ad6488a7509de3c0d30bd55be1291cb88">shared_data_</a>.<a class="code hl_variable" href="structdyno_1_1SharedFormulationData.html#afe4ada7a2dbeba9b68e6026a5db506d5">values</a>;</div>
+<div class="line"><span class="lineno">  395</span>  CHECK_NOTNULL(theta);</div>
+<div class="line"><span class="lineno">  396</span>  <span class="keywordflow">if</span> (theta-&gt;exists(key)) {</div>
+<div class="line"><span class="lineno">  397</span>    <span class="keywordflow">return</span> StateQuery&lt;ValueType&gt;(key, theta-&gt;at&lt;ValueType&gt;(key));</div>
+<div class="line"><span class="lineno">  398</span>  } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  399</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="classdyno_1_1StateQuery.html#ad7e4445ee38e5e376aee9f95ec21d26e">StateQuery&lt;ValueType&gt;::NotInMap</a>(key);</div>
+<div class="line"><span class="lineno">  400</span>  }</div>
+<div class="line"><span class="lineno">  401</span>}</div>
+<div class="ttc" id="aclassdyno_1_1StateQuery_html_ad7e4445ee38e5e376aee9f95ec21d26e"><div class="ttname"><a href="classdyno_1_1StateQuery.html#ad7e4445ee38e5e376aee9f95ec21d26e">dyno::StateQuery::NotInMap</a></div><div class="ttdeci">static StateQuery NotInMap(gtsam::Key key)</div><div class="ttdef"><b>Definition:</b> <a href="MapNodes_8hpp_source.html#l00323">MapNodes.hpp:323</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1StateQuery.html#ad7e4445ee38e5e376aee9f95ec21d26e">dyno::StateQuery&lt; ValueType &gt;::NotInMap()</a>.</p>
 <div class="dynheader">
@@ -1668,11 +1813,46 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1Accessor_a8adb62db84c73c20403fc8a3b750a8d1_cgraph.png" border="0" usemap="#aclassdyno_1_1Accessor_a8adb62db84c73c20403fc8a3b750a8d1_cgraph" alt=""/></div>
 <map name="aclassdyno_1_1Accessor_a8adb62db84c73c20403fc8a3b750a8d1_cgraph" id="aclassdyno_1_1Accessor_a8adb62db84c73c20403fc8a3b750a8d1_cgraph">
-<area shape="rect" title="Access a key in the current theta." alt="" coords="5,5,171,31"/>
-<area shape="rect" href="classdyno_1_1StateQuery.html#ad7e4445ee38e5e376aee9f95ec21d26e" title=" " alt="" coords="219,5,424,31"/>
-<area shape="rect" href="classdyno_1_1StateQuery.html#a0fcc50e2a6b7bf7125d86af0a9bbc9ae" title=" " alt="" coords="472,5,687,31"/>
+<area shape="rect" title="Access a key in the current theta." alt="" coords="5,31,171,56"/>
+<area shape="rect" href="classdyno_1_1StateQuery.html#ad7e4445ee38e5e376aee9f95ec21d26e" title=" " alt="" coords="219,31,424,56"/>
+<area shape="rect" href="classdyno_1_1StateQuery.html#a224233e23a7072deba7c672487a9e99b" title=" " alt="" coords="497,5,662,31"/>
+<area shape="rect" href="classdyno_1_1StateQuery.html#a0fcc50e2a6b7bf7125d86af0a9bbc9ae" title=" " alt="" coords="472,55,687,80"/>
 </map>
 </div>
+
+</div>
+</div>
+<a id="ad1dcc1b61d79647eed9b4551e158b188" name="ad1dcc1b61d79647eed9b4551e158b188"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad1dcc1b61d79647eed9b4551e158b188">&#9670;&#160;</a></span>values()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class MAP &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const gtsam::Values &amp; <a class="el" href="classdyno_1_1Accessor.html">dyno::Accessor</a>&lt; MAP &gt;::values </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Accessor_8hpp_source.html#l00341">341</a> of file <a class="el" href="Accessor_8hpp_source.html">Accessor.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  341</span>                                    {</div>
+<div class="line"><span class="lineno">  342</span>    <span class="keywordflow">return</span> *CHECK_NOTNULL(<a class="code hl_variable" href="classdyno_1_1Accessor.html#ad6488a7509de3c0d30bd55be1291cb88">shared_data_</a>.<a class="code hl_variable" href="structdyno_1_1SharedFormulationData.html#afe4ada7a2dbeba9b68e6026a5db506d5">values</a>);</div>
+<div class="line"><span class="lineno">  343</span>  }</div>
+</div><!-- fragment -->
+<p class="reference">References <a class="el" href="classdyno_1_1Accessor.html#ad6488a7509de3c0d30bd55be1291cb88">dyno::Accessor&lt; MAP &gt;::shared_data_</a>, and <a class="el" href="structdyno_1_1SharedFormulationData.html#afe4ada7a2dbeba9b68e6026a5db506d5">dyno::SharedFormulationData::values</a>.</p>
 
 </div>
 </div>
@@ -1698,16 +1878,15 @@ template&lt;class MAP &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Pointer to the set of current values stored in the associated formulation </p>
 
-<p class="definition">Definition at line <a class="el" href="Accessor_8hpp_source.html#l00341">341</a> of file <a class="el" href="Accessor_8hpp_source.html">Accessor.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Accessor_8hpp_source.html#l00367">367</a> of file <a class="el" href="Accessor_8hpp_source.html">Accessor.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1Accessor.html#a7204bf6ab3ea8d16809049aa1553bccc">dyno::Accessor&lt; MAP &gt;::map()</a>.</p>
 
 </div>
 </div>
-<a id="af0454d2faf0d60320bb51dcb91d0c569" name="af0454d2faf0d60320bb51dcb91d0c569"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af0454d2faf0d60320bb51dcb91d0c569">&#9670;&#160;</a></span>theta_</h2>
+<a id="ad6488a7509de3c0d30bd55be1291cb88" name="ad6488a7509de3c0d30bd55be1291cb88"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad6488a7509de3c0d30bd55be1291cb88">&#9670;&#160;</a></span>shared_data_</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1718,7 +1897,7 @@ template&lt;class MAP &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const gtsam::Values* <a class="el" href="classdyno_1_1Accessor.html">dyno::Accessor</a>&lt; MAP &gt;::theta_</td>
+          <td class="memname">const <a class="el" href="structdyno_1_1SharedFormulationData.html">SharedFormulationData</a> <a class="el" href="classdyno_1_1Accessor.html">dyno::Accessor</a>&lt; MAP &gt;::shared_data_</td>
         </tr>
       </table>
   </td>
@@ -1728,7 +1907,9 @@ template&lt;class MAP &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Accessor_8hpp_source.html#l00339">339</a> of file <a class="el" href="Accessor_8hpp_source.html">Accessor.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Accessor_8hpp_source.html#l00366">366</a> of file <a class="el" href="Accessor_8hpp_source.html">Accessor.hpp</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1Accessor.html#a3fda7147ee8e4ce144e2ce46e5f2cde4">dyno::Accessor&lt; MAP &gt;::hooks()</a>, and <a class="el" href="classdyno_1_1Accessor.html#ad1dcc1b61d79647eed9b4551e158b188">dyno::Accessor&lt; MAP &gt;::values()</a>.</p>
 
 </div>
 </div>

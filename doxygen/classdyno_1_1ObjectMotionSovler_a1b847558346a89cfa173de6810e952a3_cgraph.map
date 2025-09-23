@@ -1,7 +1,0 @@
-<map id="dyno::ObjectMotionSovler::motionModelOutlierRejection3d2d" name="dyno::ObjectMotionSovler::motionModelOutlierRejection3d2d">
-<area shape="rect" id="node1" title=" " alt="" coords="5,85,259,125"/>
-<area shape="rect" id="node2" href="$classdyno_1_1utils_1_1Accumulator.html#a901a2142a502b3e6c6296ee3d428ef3a" title=" " alt="" coords="307,5,520,31"/>
-<area shape="rect" id="node3" href="$classdyno_1_1CameraParams.html#ad3fbc73c9769293edc2839b5405ddb2a" title=" " alt="" coords="311,55,515,95"/>
-<area shape="rect" id="node4" href="$namespacedyno.html#af008198dcb75012836115300a522ca86" title="From a set a tracklets and a subset (of the tracklet) inliers, calculate the remaining subset of outl..." alt="" coords="317,120,509,145"/>
-<area shape="rect" id="node5" href="$classdyno_1_1utils_1_1Accumulator.html#a0003879178e22617b53f39e5e9aa2612" title=" " alt="" coords="323,170,503,210"/>
-</map>

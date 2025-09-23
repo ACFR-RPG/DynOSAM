@@ -138,7 +138,7 @@ Private Attributes</h2></td></tr>
 <div class="textblock"><p>Joinly refines optical flow with with the given pose using the error term: e = [u,v]_{k_1} + f_{k-1, k} - \pi(X^{-1} \: m_k) where f is flow, [u,v]_{k-1} is the observed keypoint at k-1, X is the pose and m_k is the back-projected keypoint at k. </p>
 <p>The parsed tracklets are the set of correspondances with which to build the optimisation problem and the refined inliers will be a subset of these tracklets. THe number of refined flows should be the number of refined inliers and be a 1-to-1 match </p>
 
-<p class="definition">Definition at line <a class="el" href="MotionSolver_8hpp_source.html#l00127">127</a> of file <a class="el" href="MotionSolver_8hpp_source.html">MotionSolver.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="MotionSolver_8hpp_source.html#l00130">130</a> of file <a class="el" href="MotionSolver_8hpp_source.html">MotionSolver.hpp</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="a09e6319df4385bc229ac07b3555d6589" name="a09e6319df4385bc229ac07b3555d6589"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a09e6319df4385bc229ac07b3555d6589">&#9670;&#160;</a></span>Result</h2>
@@ -152,7 +152,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="MotionSolver_8hpp_source.html#l00146">146</a> of file <a class="el" href="MotionSolver_8hpp_source.html">MotionSolver.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="MotionSolver_8hpp_source.html#l00149">149</a> of file <a class="el" href="MotionSolver_8hpp_source.html">MotionSolver.hpp</a>.</p>
 
 </div>
 </div>
@@ -181,9 +181,9 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="MotionSolver_8hpp_source.html#l00148">148</a> of file <a class="el" href="MotionSolver_8hpp_source.html">MotionSolver.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  148</span>: <a class="code hl_variable" href="classdyno_1_1OpticalFlowAndPoseOptimizer.html#afd94858cb502bb37ae83cb4d482f7d0e">params_</a>(params) {}</div>
-<div class="ttc" id="aclassdyno_1_1OpticalFlowAndPoseOptimizer_html_afd94858cb502bb37ae83cb4d482f7d0e"><div class="ttname"><a href="classdyno_1_1OpticalFlowAndPoseOptimizer.html#afd94858cb502bb37ae83cb4d482f7d0e">dyno::OpticalFlowAndPoseOptimizer::params_</a></div><div class="ttdeci">Params params_</div><div class="ttdef"><b>Definition:</b> <a href="MotionSolver_8hpp_source.html#l00207">MotionSolver.hpp:207</a></div></div>
+<p class="definition">Definition at line <a class="el" href="MotionSolver_8hpp_source.html#l00151">151</a> of file <a class="el" href="MotionSolver_8hpp_source.html">MotionSolver.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  151</span>: <a class="code hl_variable" href="classdyno_1_1OpticalFlowAndPoseOptimizer.html#afd94858cb502bb37ae83cb4d482f7d0e">params_</a>(params) {}</div>
+<div class="ttc" id="aclassdyno_1_1OpticalFlowAndPoseOptimizer_html_afd94858cb502bb37ae83cb4d482f7d0e"><div class="ttname"><a href="classdyno_1_1OpticalFlowAndPoseOptimizer.html#afd94858cb502bb37ae83cb4d482f7d0e">dyno::OpticalFlowAndPoseOptimizer::params_</a></div><div class="ttdeci">Params params_</div><div class="ttdef"><b>Definition:</b> <a href="MotionSolver_8hpp_source.html#l00210">MotionSolver.hpp:210</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -422,17 +422,17 @@ template&lt;typename CALIBRATION &gt; </div>
 <div class="line"><span class="lineno">  261</span>  CHECK_EQ(tracklets.size(), result.inliers.size() + result.outliers.size());</div>
 <div class="line"><span class="lineno">  262</span>  <span class="keywordflow">return</span> result;</div>
 <div class="line"><span class="lineno">  263</span>}</div>
-<div class="ttc" id="aclassdyno_1_1OpticalFlowAndPoseOptimizer_html_a09e6319df4385bc229ac07b3555d6589"><div class="ttname"><a href="classdyno_1_1OpticalFlowAndPoseOptimizer.html#a09e6319df4385bc229ac07b3555d6589">dyno::OpticalFlowAndPoseOptimizer::Result</a></div><div class="ttdeci">SolverResult&lt; ResultType &gt; Result</div><div class="ttdef"><b>Definition:</b> <a href="MotionSolver_8hpp_source.html#l00146">MotionSolver.hpp:146</a></div></div>
+<div class="ttc" id="aclassdyno_1_1OpticalFlowAndPoseOptimizer_html_a09e6319df4385bc229ac07b3555d6589"><div class="ttname"><a href="classdyno_1_1OpticalFlowAndPoseOptimizer.html#a09e6319df4385bc229ac07b3555d6589">dyno::OpticalFlowAndPoseOptimizer::Result</a></div><div class="ttdeci">SolverResult&lt; ResultType &gt; Result</div><div class="ttdef"><b>Definition:</b> <a href="MotionSolver_8hpp_source.html#l00149">MotionSolver.hpp:149</a></div></div>
 <div class="ttc" id="aclassdyno_1_1utils_1_1StatsCollectorImpl_html_ab92087ce27dbec18730bf779e48d6aec"><div class="ttname"><a href="classdyno_1_1utils_1_1StatsCollectorImpl.html#ab92087ce27dbec18730bf779e48d6aec">dyno::utils::StatsCollectorImpl::AddSample</a></div><div class="ttdeci">void AddSample(double sample) const</div><div class="ttdef"><b>Definition:</b> <a href="Statistics_8cc_source.html#l00127">Statistics.cc:127</a></div></div>
-<div class="ttc" id="anamespacedyno_1_1factor__graph__tools_html_af7b6cb76226919a10ad3cdac2ba3ac6a"><div class="ttname"><a href="namespacedyno_1_1factor__graph__tools.html#af7b6cb76226919a10ad3cdac2ba3ac6a">dyno::factor_graph_tools::determineFactorOutliers</a></div><div class="ttdeci">gtsam::FactorIndices determineFactorOutliers(const gtsam::NonlinearFactorGraph &amp;graph, const gtsam::Values &amp;values, double confidence=0.99)</div><div class="ttdef"><b>Definition:</b> <a href="FactorGraphTools_8hpp_source.html#l00070">FactorGraphTools.hpp:70</a></div></div>
+<div class="ttc" id="anamespacedyno_1_1factor__graph__tools_html_af7b6cb76226919a10ad3cdac2ba3ac6a"><div class="ttname"><a href="namespacedyno_1_1factor__graph__tools.html#af7b6cb76226919a10ad3cdac2ba3ac6a">dyno::factor_graph_tools::determineFactorOutliers</a></div><div class="ttdeci">gtsam::FactorIndices determineFactorOutliers(const gtsam::NonlinearFactorGraph &amp;graph, const gtsam::Values &amp;values, double confidence=0.99)</div><div class="ttdef"><b>Definition:</b> <a href="FactorGraphTools_8hpp_source.html#l00077">FactorGraphTools.hpp:77</a></div></div>
 <div class="ttc" id="anamespacedyno_1_1utils_html_a2a0bf9b09c753fdfa86ae7ebb92a0746"><div class="ttname"><a href="namespacedyno_1_1utils.html#a2a0bf9b09c753fdfa86ae7ebb92a0746">dyno::utils::StatsCollector</a></div><div class="ttdeci">StatsCollectorImpl StatsCollector</div><div class="ttdef"><b>Definition:</b> <a href="Statistics_8hpp_source.html#l00296">Statistics.hpp:296</a></div></div>
-<div class="ttc" id="anamespacedyno_html_a6154f8a946fc0fe72c0286a45ed9d51d"><div class="ttname"><a href="namespacedyno.html#a6154f8a946fc0fe72c0286a45ed9d51d">dyno::Depth</a></div><div class="ttdeci">double Depth</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00075">Types.hpp:75</a></div></div>
-<div class="ttc" id="anamespacedyno_html_aaa260a8022691078c59e1ac6a4fa05b5"><div class="ttname"><a href="namespacedyno.html#aaa260a8022691078c59e1ac6a4fa05b5">dyno::Keypoint</a></div><div class="ttdeci">gtsam::Point2 Keypoint</div><div class="ttdoc">Observed optical flow vector (ordered x, y)</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00094">Types.hpp:94</a></div></div>
-<div class="ttc" id="anamespacedyno_html_afdd174eb44901fb205371d796287378c"><div class="ttname"><a href="namespacedyno.html#afdd174eb44901fb205371d796287378c">dyno::TrackletId</a></div><div class="ttdeci">long int TrackletId</div><div class="ttdoc">Unique tracklet/landmark id, i.</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00079">Types.hpp:79</a></div></div>
-<div class="ttc" id="astructdyno_1_1OpticalFlowAndPoseOptimizer_1_1Params_html_a3d8f270eb76364610027ab5a466334ac"><div class="ttname"><a href="structdyno_1_1OpticalFlowAndPoseOptimizer_1_1Params.html#a3d8f270eb76364610027ab5a466334ac">dyno::OpticalFlowAndPoseOptimizer::Params::flow_sigma</a></div><div class="ttdeci">double flow_sigma</div><div class="ttdef"><b>Definition:</b> <a href="MotionSolver_8hpp_source.html#l00130">MotionSolver.hpp:130</a></div></div>
-<div class="ttc" id="astructdyno_1_1OpticalFlowAndPoseOptimizer_1_1Params_html_a679c707ed2f40d369c7292ce94537d2f"><div class="ttname"><a href="structdyno_1_1OpticalFlowAndPoseOptimizer_1_1Params.html#a679c707ed2f40d369c7292ce94537d2f">dyno::OpticalFlowAndPoseOptimizer::Params::flow_prior_sigma</a></div><div class="ttdeci">double flow_prior_sigma</div><div class="ttdef"><b>Definition:</b> <a href="MotionSolver_8hpp_source.html#l00131">MotionSolver.hpp:131</a></div></div>
-<div class="ttc" id="astructdyno_1_1OpticalFlowAndPoseOptimizer_1_1Params_html_a76b47510da87424e5eefdfee9d22e79c"><div class="ttname"><a href="structdyno_1_1OpticalFlowAndPoseOptimizer_1_1Params.html#a76b47510da87424e5eefdfee9d22e79c">dyno::OpticalFlowAndPoseOptimizer::Params::outlier_reject</a></div><div class="ttdeci">bool outlier_reject</div><div class="ttdef"><b>Definition:</b> <a href="MotionSolver_8hpp_source.html#l00133">MotionSolver.hpp:133</a></div></div>
-<div class="ttc" id="astructdyno_1_1OpticalFlowAndPoseOptimizer_1_1Params_html_abad2967ead84f407fe0652b9193120da"><div class="ttname"><a href="structdyno_1_1OpticalFlowAndPoseOptimizer_1_1Params.html#abad2967ead84f407fe0652b9193120da">dyno::OpticalFlowAndPoseOptimizer::Params::k_huber</a></div><div class="ttdeci">double k_huber</div><div class="ttdef"><b>Definition:</b> <a href="MotionSolver_8hpp_source.html#l00132">MotionSolver.hpp:132</a></div></div>
+<div class="ttc" id="anamespacedyno_html_a6154f8a946fc0fe72c0286a45ed9d51d"><div class="ttname"><a href="namespacedyno.html#a6154f8a946fc0fe72c0286a45ed9d51d">dyno::Depth</a></div><div class="ttdeci">double Depth</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00076">Types.hpp:76</a></div></div>
+<div class="ttc" id="anamespacedyno_html_aaa260a8022691078c59e1ac6a4fa05b5"><div class="ttname"><a href="namespacedyno.html#aaa260a8022691078c59e1ac6a4fa05b5">dyno::Keypoint</a></div><div class="ttdeci">gtsam::Point2 Keypoint</div><div class="ttdoc">Observed optical flow vector (ordered x, y)</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00095">Types.hpp:95</a></div></div>
+<div class="ttc" id="anamespacedyno_html_afdd174eb44901fb205371d796287378c"><div class="ttname"><a href="namespacedyno.html#afdd174eb44901fb205371d796287378c">dyno::TrackletId</a></div><div class="ttdeci">long int TrackletId</div><div class="ttdoc">Unique tracklet/landmark id, i.</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00080">Types.hpp:80</a></div></div>
+<div class="ttc" id="astructdyno_1_1OpticalFlowAndPoseOptimizer_1_1Params_html_a3d8f270eb76364610027ab5a466334ac"><div class="ttname"><a href="structdyno_1_1OpticalFlowAndPoseOptimizer_1_1Params.html#a3d8f270eb76364610027ab5a466334ac">dyno::OpticalFlowAndPoseOptimizer::Params::flow_sigma</a></div><div class="ttdeci">double flow_sigma</div><div class="ttdef"><b>Definition:</b> <a href="MotionSolver_8hpp_source.html#l00133">MotionSolver.hpp:133</a></div></div>
+<div class="ttc" id="astructdyno_1_1OpticalFlowAndPoseOptimizer_1_1Params_html_a679c707ed2f40d369c7292ce94537d2f"><div class="ttname"><a href="structdyno_1_1OpticalFlowAndPoseOptimizer_1_1Params.html#a679c707ed2f40d369c7292ce94537d2f">dyno::OpticalFlowAndPoseOptimizer::Params::flow_prior_sigma</a></div><div class="ttdeci">double flow_prior_sigma</div><div class="ttdef"><b>Definition:</b> <a href="MotionSolver_8hpp_source.html#l00134">MotionSolver.hpp:134</a></div></div>
+<div class="ttc" id="astructdyno_1_1OpticalFlowAndPoseOptimizer_1_1Params_html_a76b47510da87424e5eefdfee9d22e79c"><div class="ttname"><a href="structdyno_1_1OpticalFlowAndPoseOptimizer_1_1Params.html#a76b47510da87424e5eefdfee9d22e79c">dyno::OpticalFlowAndPoseOptimizer::Params::outlier_reject</a></div><div class="ttdeci">bool outlier_reject</div><div class="ttdef"><b>Definition:</b> <a href="MotionSolver_8hpp_source.html#l00136">MotionSolver.hpp:136</a></div></div>
+<div class="ttc" id="astructdyno_1_1OpticalFlowAndPoseOptimizer_1_1Params_html_abad2967ead84f407fe0652b9193120da"><div class="ttname"><a href="structdyno_1_1OpticalFlowAndPoseOptimizer_1_1Params.html#abad2967ead84f407fe0652b9193120da">dyno::OpticalFlowAndPoseOptimizer::Params::k_huber</a></div><div class="ttdeci">double k_huber</div><div class="ttdef"><b>Definition:</b> <a href="MotionSolver_8hpp_source.html#l00135">MotionSolver.hpp:135</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1utils_1_1StatsCollectorImpl.html#ab92087ce27dbec18730bf779e48d6aec">dyno::utils::StatsCollectorImpl::AddSample()</a>, <a class="el" href="structdyno_1_1SolverResult.html#ac780db495ed8f4f6bc1d469033e1b88f">dyno::SolverResult&lt; T &gt;::best_result</a>, <a class="el" href="namespacedyno_1_1factor__graph__tools.html#af7b6cb76226919a10ad3cdac2ba3ac6a">dyno::factor_graph_tools::determineFactorOutliers()</a>, <a class="el" href="structdyno_1_1SolverResult.html#a8c86fc4c025fb11bd0ca7875b52fa968">dyno::SolverResult&lt; T &gt;::error_after</a>, <a class="el" href="structdyno_1_1SolverResult.html#a6c1465c8e7ba4ecb74854c8693af7fd4">dyno::SolverResult&lt; T &gt;::error_before</a>, <a class="el" href="structdyno_1_1OpticalFlowAndPoseOptimizer_1_1Params.html#a679c707ed2f40d369c7292ce94537d2f">dyno::OpticalFlowAndPoseOptimizer::Params::flow_prior_sigma</a>, <a class="el" href="structdyno_1_1OpticalFlowAndPoseOptimizer_1_1Params.html#a3d8f270eb76364610027ab5a466334ac">dyno::OpticalFlowAndPoseOptimizer::Params::flow_sigma</a>, <a class="el" href="structdyno_1_1SolverResult.html#a72ed8a5ed98d840f15e5e62863da2457">dyno::SolverResult&lt; T &gt;::inliers</a>, <a class="el" href="structdyno_1_1OpticalFlowAndPoseOptimizer_1_1Params.html#abad2967ead84f407fe0652b9193120da">dyno::OpticalFlowAndPoseOptimizer::Params::k_huber</a>, <a class="el" href="structdyno_1_1OpticalFlowAndPoseOptimizer_1_1Params.html#a76b47510da87424e5eefdfee9d22e79c">dyno::OpticalFlowAndPoseOptimizer::Params::outlier_reject</a>, <a class="el" href="structdyno_1_1SolverResult.html#ae673e2cd839da80eee3a46267cf4516b">dyno::SolverResult&lt; T &gt;::outliers</a>, and <a class="el" href="classdyno_1_1OpticalFlowAndPoseOptimizer.html#afd94858cb502bb37ae83cb4d482f7d0e">params_</a>.</p>
 <div class="dynheader">
@@ -517,11 +517,11 @@ template&lt;typename CALIBRATION &gt; </div>
 <div class="line"><span class="lineno">  272</span>  <a class="code hl_function" href="classdyno_1_1OpticalFlowAndPoseOptimizer.html#af1037c8661213cd6e602b30918b6b3ec">updateFrameOutliersWithResult</a>(result, frame_k_1, frame_k);</div>
 <div class="line"><span class="lineno">  273</span>  <span class="keywordflow">return</span> result;</div>
 <div class="line"><span class="lineno">  274</span>}</div>
-<div class="ttc" id="aclassdyno_1_1OpticalFlowAndPoseOptimizer_html_af1037c8661213cd6e602b30918b6b3ec"><div class="ttname"><a href="classdyno_1_1OpticalFlowAndPoseOptimizer.html#af1037c8661213cd6e602b30918b6b3ec">dyno::OpticalFlowAndPoseOptimizer::updateFrameOutliersWithResult</a></div><div class="ttdeci">void updateFrameOutliersWithResult(const Result &amp;result, Frame::Ptr frame_k_1, Frame::Ptr frame_k) const</div><div class="ttdef"><b>Definition:</b> <a href="MotionSolver_8cc_source.html#l00289">MotionSolver.cc:289</a></div></div>
+<div class="ttc" id="aclassdyno_1_1OpticalFlowAndPoseOptimizer_html_af1037c8661213cd6e602b30918b6b3ec"><div class="ttname"><a href="classdyno_1_1OpticalFlowAndPoseOptimizer.html#af1037c8661213cd6e602b30918b6b3ec">dyno::OpticalFlowAndPoseOptimizer::updateFrameOutliersWithResult</a></div><div class="ttdeci">void updateFrameOutliersWithResult(const Result &amp;result, Frame::Ptr frame_k_1, Frame::Ptr frame_k) const</div><div class="ttdef"><b>Definition:</b> <a href="MotionSolver_8cc_source.html#l00293">MotionSolver.cc:293</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1OpticalFlowAndPoseOptimizer.html#af1037c8661213cd6e602b30918b6b3ec">updateFrameOutliersWithResult()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1ObjectMotionSovler.html#a45c8404687be14c0a548a8b6800aa985">dyno::ObjectMotionSovler::geometricOutlierRejection3d2d()</a>, and <a class="el" href="classdyno_1_1RGBDInstanceFrontendModule.html#a78935cca3751ad2a0c25019250d12230">dyno::RGBDInstanceFrontendModule::solveCameraMotion()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1ObjectMotionSovlerF2F.html#a432924457f5c458282c63002648b99a9">dyno::ObjectMotionSovlerF2F::geometricOutlierRejection3d2d()</a>, and <a class="el" href="classdyno_1_1RGBDInstanceFrontendModule.html#ad89ae2ee89eaa41ef536e2e409809b69">dyno::RGBDInstanceFrontendModule::solveCameraMotion()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -540,12 +540,10 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1OpticalFlowAndPoseOptimizer_ad96216e768fc5dea6e6411222bac0ddd_icgraph.png" border="0" usemap="#aclassdyno_1_1OpticalFlowAndPoseOptimizer_ad96216e768fc5dea6e6411222bac0ddd_icgraph" alt=""/></div>
 <map name="aclassdyno_1_1OpticalFlowAndPoseOptimizer_ad96216e768fc5dea6e6411222bac0ddd_icgraph" id="aclassdyno_1_1OpticalFlowAndPoseOptimizer_ad96216e768fc5dea6e6411222bac0ddd_icgraph">
-<area shape="rect" title="Builds the factor&#45;graph problem using the set of specificed correspondences (tracklets) in frame k&#45;1 ..." alt="" coords="1067,39,1289,79"/>
-<area shape="rect" href="classdyno_1_1ObjectMotionSovler.html#a45c8404687be14c0a548a8b6800aa985" title=" " alt="" coords="785,8,1019,48"/>
-<area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#a78935cca3751ad2a0c25019250d12230" title="Solves PnP between frame_k&#45;1 and frame_k using the tracked correspondances to estimate the frame of t..." alt="" coords="525,69,737,109"/>
-<area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#ada2fe5067e732aa4734d96fc5e80f7f9" title=" " alt="" coords="525,5,737,45"/>
-<area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#a9bfb2e31fd68b5b6d6ffb834b6c201a1" title=" " alt="" coords="265,8,477,48"/>
-<area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2" title=" " alt="" coords="5,39,217,79"/>
+<area shape="rect" title="Builds the factor&#45;graph problem using the set of specificed correspondences (tracklets) in frame k&#45;1 ..." alt="" coords="569,37,792,77"/>
+<area shape="rect" href="classdyno_1_1ObjectMotionSovlerF2F.html#a432924457f5c458282c63002648b99a9" title=" " alt="" coords="265,5,521,45"/>
+<area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#ad89ae2ee89eaa41ef536e2e409809b69" title="Solves PnP between frame_k&#45;1 and frame_k using the tracked correspondances to estimate the frame of t..." alt="" coords="287,69,499,109"/>
+<area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2" title=" " alt="" coords="5,69,217,109"/>
 </map>
 </div>
 
@@ -591,83 +589,81 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="MotionSolver_8cc_source.html#l00289">289</a> of file <a class="el" href="MotionSolver_8cc_source.html">MotionSolver.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  290</span>                                                                      {</div>
-<div class="line"><span class="lineno">  291</span>  <span class="comment">// //original flow image that goes from k to k+1 (gross, im sorry!)</span></div>
-<div class="line"><span class="lineno">  292</span>  <span class="comment">// TODO: use flow_is_future param</span></div>
-<div class="line"><span class="lineno">  293</span>  <span class="keyword">const</span> cv::Mat&amp; flow_image =</div>
-<div class="line"><span class="lineno">  294</span>      frame_k-&gt;image_container_.get&lt;ImageType::OpticalFlow&gt;();</div>
-<div class="line"><span class="lineno">  295</span>  <span class="keyword">const</span> cv::Mat&amp; motion_mask =</div>
-<div class="line"><span class="lineno">  296</span>      frame_k-&gt;image_container_.get&lt;ImageType::MotionMask&gt;();</div>
-<div class="line"><span class="lineno">  297</span> </div>
-<div class="line"><span class="lineno">  298</span>  <span class="keyword">auto</span> camera = frame_k-&gt;camera_;</div>
-<div class="line"><span class="lineno">  299</span>  <span class="keyword">const</span> <span class="keyword">auto</span>&amp; refined_inliers = result.inliers;</div>
-<div class="line"><span class="lineno">  300</span>  <span class="keyword">const</span> <span class="keyword">auto</span>&amp; refined_flows = result.best_result.refined_flows;</div>
-<div class="line"><span class="lineno">  301</span> </div>
-<div class="line"><span class="lineno">  302</span>  <span class="comment">// outliers from the result. We will update this vector with new outliers</span></div>
-<div class="line"><span class="lineno">  303</span>  <span class="keyword">auto</span> refined_outliers = result.outliers;</div>
-<div class="line"><span class="lineno">  304</span> </div>
-<div class="line"><span class="lineno">  305</span>  <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; refined_inliers.size(); i++) {</div>
-<div class="line"><span class="lineno">  306</span>    <a class="code hl_typedef" href="namespacedyno.html#afdd174eb44901fb205371d796287378c">TrackletId</a> tracklet_id = refined_inliers.at(i);</div>
-<div class="line"><span class="lineno">  307</span>    gtsam::Point2 refined_flow = refined_flows.at(i);</div>
-<div class="line"><span class="lineno">  308</span> </div>
-<div class="line"><span class="lineno">  309</span>    <span class="keyword">const</span> Feature::Ptr feature_k_1 = frame_k_1-&gt;at(tracklet_id);</div>
-<div class="line"><span class="lineno">  310</span>    Feature::Ptr feature_k = frame_k-&gt;at(tracklet_id);</div>
-<div class="line"><span class="lineno">  311</span> </div>
-<div class="line"><span class="lineno">  312</span>    CHECK_EQ(feature_k-&gt;objectId(), result.best_result.object_id);</div>
+<p class="definition">Definition at line <a class="el" href="MotionSolver_8cc_source.html#l00293">293</a> of file <a class="el" href="MotionSolver_8cc_source.html">MotionSolver.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  294</span>                                                                      {</div>
+<div class="line"><span class="lineno">  295</span>  <span class="comment">// //original flow image that goes from k to k+1 (gross, im sorry!)</span></div>
+<div class="line"><span class="lineno">  296</span>  <span class="comment">// TODO: use flow_is_future param</span></div>
+<div class="line"><span class="lineno">  297</span>  <span class="keyword">const</span> cv::Mat&amp; flow_image = frame_k-&gt;image_container_.opticalFlow();</div>
+<div class="line"><span class="lineno">  298</span>  <span class="keyword">const</span> cv::Mat&amp; motion_mask = frame_k-&gt;image_container_.objectMotionMask();</div>
+<div class="line"><span class="lineno">  299</span> </div>
+<div class="line"><span class="lineno">  300</span>  <span class="keyword">auto</span> camera = frame_k-&gt;camera_;</div>
+<div class="line"><span class="lineno">  301</span>  <span class="keyword">const</span> <span class="keyword">auto</span>&amp; refined_inliers = result.inliers;</div>
+<div class="line"><span class="lineno">  302</span>  <span class="keyword">const</span> <span class="keyword">auto</span>&amp; refined_flows = result.best_result.refined_flows;</div>
+<div class="line"><span class="lineno">  303</span> </div>
+<div class="line"><span class="lineno">  304</span>  <span class="comment">// outliers from the result. We will update this vector with new outliers</span></div>
+<div class="line"><span class="lineno">  305</span>  <span class="keyword">auto</span> refined_outliers = result.outliers;</div>
+<div class="line"><span class="lineno">  306</span> </div>
+<div class="line"><span class="lineno">  307</span>  <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; refined_inliers.size(); i++) {</div>
+<div class="line"><span class="lineno">  308</span>    <a class="code hl_typedef" href="namespacedyno.html#afdd174eb44901fb205371d796287378c">TrackletId</a> tracklet_id = refined_inliers.at(i);</div>
+<div class="line"><span class="lineno">  309</span>    gtsam::Point2 refined_flow = refined_flows.at(i);</div>
+<div class="line"><span class="lineno">  310</span> </div>
+<div class="line"><span class="lineno">  311</span>    <span class="keyword">const</span> Feature::Ptr feature_k_1 = frame_k_1-&gt;at(tracklet_id);</div>
+<div class="line"><span class="lineno">  312</span>    Feature::Ptr feature_k = frame_k-&gt;at(tracklet_id);</div>
 <div class="line"><span class="lineno">  313</span> </div>
-<div class="line"><span class="lineno">  314</span>    <span class="keyword">const</span> <a class="code hl_typedef" href="namespacedyno.html#aaa260a8022691078c59e1ac6a4fa05b5">Keypoint</a> kp_k_1 = feature_k_1-&gt;keypoint();</div>
-<div class="line"><span class="lineno">  315</span>    <a class="code hl_typedef" href="namespacedyno.html#aaa260a8022691078c59e1ac6a4fa05b5">Keypoint</a> refined_keypoint = kp_k_1 + refined_flow;</div>
-<div class="line"><span class="lineno">  316</span> </div>
-<div class="line"><span class="lineno">  317</span>    <span class="comment">// check boundaries?</span></div>
-<div class="line"><span class="lineno">  318</span>    <span class="keywordflow">if</span> (!camera-&gt;isKeypointContained(refined_keypoint)) {</div>
-<div class="line"><span class="lineno">  319</span>      refined_outliers.push_back(tracklet_id);</div>
-<div class="line"><span class="lineno">  320</span>      <span class="keywordflow">continue</span>;</div>
-<div class="line"><span class="lineno">  321</span>    }</div>
-<div class="line"><span class="lineno">  322</span> </div>
-<div class="line"><span class="lineno">  323</span>    feature_k-&gt;keypoint(refined_keypoint);</div>
-<div class="line"><span class="lineno">  324</span>    <a class="code hl_typedef" href="namespacedyno.html#a38bb86e4154b86428b8d133be03fb2b5">ObjectId</a> predicted_label =</div>
-<div class="line"><span class="lineno">  325</span>        functional_keypoint::at&lt;ObjectId&gt;(refined_keypoint, motion_mask);</div>
-<div class="line"><span class="lineno">  326</span>    <span class="keywordflow">if</span> (predicted_label != result.best_result.object_id) {</div>
-<div class="line"><span class="lineno">  327</span>      refined_outliers.push_back(tracklet_id);</div>
-<div class="line"><span class="lineno">  328</span>      <span class="comment">// TODO: other fields of the feature does not get updated? Inconsistencies</span></div>
-<div class="line"><span class="lineno">  329</span>      <span class="comment">// as measured flow, predicted kp etc are no longer correct!!?</span></div>
-<div class="line"><span class="lineno">  330</span>      <span class="keywordflow">continue</span>;</div>
-<div class="line"><span class="lineno">  331</span>    }</div>
-<div class="line"><span class="lineno">  332</span> </div>
-<div class="line"><span class="lineno">  333</span>    <span class="comment">// we now have to update the prediced keypoint using the original flow!!</span></div>
-<div class="line"><span class="lineno">  334</span>    <span class="comment">// TODO: code copied from feature tracker</span></div>
-<div class="line"><span class="lineno">  335</span>    <span class="keyword">const</span> <span class="keywordtype">int</span> x = <a class="code hl_function" href="structdyno_1_1functional__keypoint.html#a3896d96a6f95b5311ae768cdd0ad97e8">functional_keypoint::u</a>(refined_keypoint);</div>
-<div class="line"><span class="lineno">  336</span>    <span class="keyword">const</span> <span class="keywordtype">int</span> y = <a class="code hl_function" href="structdyno_1_1functional__keypoint.html#a24933450cad8bc70b7b76b339756cd94">functional_keypoint::v</a>(refined_keypoint);</div>
-<div class="line"><span class="lineno">  337</span>    <span class="keywordtype">double</span> flow_xe = <span class="keyword">static_cast&lt;</span><span class="keywordtype">double</span><span class="keyword">&gt;</span>(flow_image.at&lt;cv::Vec2f&gt;(y, x)[0]);</div>
-<div class="line"><span class="lineno">  338</span>    <span class="keywordtype">double</span> flow_ye = <span class="keyword">static_cast&lt;</span><span class="keywordtype">double</span><span class="keyword">&gt;</span>(flow_image.at&lt;cv::Vec2f&gt;(y, x)[1]);</div>
-<div class="line"><span class="lineno">  339</span>    <span class="comment">// the measured flow after the origin has been updated</span></div>
-<div class="line"><span class="lineno">  340</span>    <a class="code hl_typedef" href="namespacedyno.html#aba8bf92162160923c6e5c7249892d5f8">OpticalFlow</a> new_measured_flow(flow_xe, flow_ye);</div>
-<div class="line"><span class="lineno">  341</span>    feature_k-&gt;measuredFlow(new_measured_flow);</div>
-<div class="line"><span class="lineno">  342</span>    <span class="comment">// TODO: check predicted flow is within image</span></div>
-<div class="line"><span class="lineno">  343</span>    <a class="code hl_typedef" href="namespacedyno.html#aaa260a8022691078c59e1ac6a4fa05b5">Keypoint</a> predicted_kp = <a class="code hl_function" href="classdyno_1_1Feature.html#a37dbbe8da704c2f51e237d38760534fb">Feature::CalculatePredictedKeypoint</a>(</div>
-<div class="line"><span class="lineno">  344</span>        refined_keypoint, new_measured_flow);</div>
-<div class="line"><span class="lineno">  345</span>    feature_k-&gt;predictedKeypoint(predicted_kp);</div>
-<div class="line"><span class="lineno">  346</span>  }</div>
-<div class="line"><span class="lineno">  347</span> </div>
-<div class="line"><span class="lineno">  348</span>  <span class="comment">// update tracks</span></div>
-<div class="line"><span class="lineno">  349</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; outlier_tracklet : refined_outliers) {</div>
-<div class="line"><span class="lineno">  350</span>    Feature::Ptr feature_k_1 = frame_k_1-&gt;at(outlier_tracklet);</div>
-<div class="line"><span class="lineno">  351</span>    Feature::Ptr feature_k = frame_k-&gt;at(outlier_tracklet);</div>
-<div class="line"><span class="lineno">  352</span> </div>
-<div class="line"><span class="lineno">  353</span>    CHECK(feature_k_1-&gt;usable());</div>
-<div class="line"><span class="lineno">  354</span>    CHECK(feature_k-&gt;usable());</div>
-<div class="line"><span class="lineno">  355</span> </div>
-<div class="line"><span class="lineno">  356</span>    feature_k-&gt;markOutlier();</div>
-<div class="line"><span class="lineno">  357</span>    feature_k_1-&gt;markOutlier();</div>
-<div class="line"><span class="lineno">  358</span>  }</div>
-<div class="line"><span class="lineno">  359</span> </div>
-<div class="line"><span class="lineno">  360</span>  <span class="comment">// refresh depth information for each frame</span></div>
-<div class="line"><span class="lineno">  361</span>  CHECK(frame_k-&gt;updateDepths());</div>
-<div class="line"><span class="lineno">  362</span>}</div>
-<div class="ttc" id="aclassdyno_1_1Feature_html_a37dbbe8da704c2f51e237d38760534fb"><div class="ttname"><a href="classdyno_1_1Feature.html#a37dbbe8da704c2f51e237d38760534fb">dyno::Feature::CalculatePredictedKeypoint</a></div><div class="ttdeci">static Keypoint CalculatePredictedKeypoint(const Keypoint &amp;keypoint, const OpticalFlow &amp;measured_flow)</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00210">Feature.hpp:210</a></div></div>
-<div class="ttc" id="anamespacedyno_html_a38bb86e4154b86428b8d133be03fb2b5"><div class="ttname"><a href="namespacedyno.html#a38bb86e4154b86428b8d133be03fb2b5">dyno::ObjectId</a></div><div class="ttdeci">int ObjectId</div><div class="ttdoc">Discrete object id, j.</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00068">Types.hpp:68</a></div></div>
-<div class="ttc" id="anamespacedyno_html_aba8bf92162160923c6e5c7249892d5f8"><div class="ttname"><a href="namespacedyno.html#aba8bf92162160923c6e5c7249892d5f8">dyno::OpticalFlow</a></div><div class="ttdeci">gtsam::Point2 OpticalFlow</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00091">Types.hpp:92</a></div></div>
+<div class="line"><span class="lineno">  314</span>    CHECK_EQ(feature_k-&gt;objectId(), result.best_result.object_id);</div>
+<div class="line"><span class="lineno">  315</span> </div>
+<div class="line"><span class="lineno">  316</span>    <span class="keyword">const</span> <a class="code hl_typedef" href="namespacedyno.html#aaa260a8022691078c59e1ac6a4fa05b5">Keypoint</a> kp_k_1 = feature_k_1-&gt;keypoint();</div>
+<div class="line"><span class="lineno">  317</span>    <a class="code hl_typedef" href="namespacedyno.html#aaa260a8022691078c59e1ac6a4fa05b5">Keypoint</a> refined_keypoint = kp_k_1 + refined_flow;</div>
+<div class="line"><span class="lineno">  318</span> </div>
+<div class="line"><span class="lineno">  319</span>    <span class="comment">// check boundaries?</span></div>
+<div class="line"><span class="lineno">  320</span>    <span class="keywordflow">if</span> (!camera-&gt;isKeypointContained(refined_keypoint)) {</div>
+<div class="line"><span class="lineno">  321</span>      refined_outliers.push_back(tracklet_id);</div>
+<div class="line"><span class="lineno">  322</span>      <span class="keywordflow">continue</span>;</div>
+<div class="line"><span class="lineno">  323</span>    }</div>
+<div class="line"><span class="lineno">  324</span> </div>
+<div class="line"><span class="lineno">  325</span>    feature_k-&gt;keypoint(refined_keypoint);</div>
+<div class="line"><span class="lineno">  326</span>    <a class="code hl_typedef" href="namespacedyno.html#a38bb86e4154b86428b8d133be03fb2b5">ObjectId</a> predicted_label =</div>
+<div class="line"><span class="lineno">  327</span>        functional_keypoint::at&lt;ObjectId&gt;(refined_keypoint, motion_mask);</div>
+<div class="line"><span class="lineno">  328</span>    <span class="keywordflow">if</span> (predicted_label != result.best_result.object_id) {</div>
+<div class="line"><span class="lineno">  329</span>      refined_outliers.push_back(tracklet_id);</div>
+<div class="line"><span class="lineno">  330</span>      <span class="comment">// TODO: other fields of the feature does not get updated? Inconsistencies</span></div>
+<div class="line"><span class="lineno">  331</span>      <span class="comment">// as measured flow, predicted kp etc are no longer correct!!?</span></div>
+<div class="line"><span class="lineno">  332</span>      <span class="keywordflow">continue</span>;</div>
+<div class="line"><span class="lineno">  333</span>    }</div>
+<div class="line"><span class="lineno">  334</span> </div>
+<div class="line"><span class="lineno">  335</span>    <span class="comment">// we now have to update the prediced keypoint using the original flow!!</span></div>
+<div class="line"><span class="lineno">  336</span>    <span class="comment">// TODO: code copied from feature tracker</span></div>
+<div class="line"><span class="lineno">  337</span>    <span class="keyword">const</span> <span class="keywordtype">int</span> x = <a class="code hl_function" href="structdyno_1_1functional__keypoint.html#a3896d96a6f95b5311ae768cdd0ad97e8">functional_keypoint::u</a>(refined_keypoint);</div>
+<div class="line"><span class="lineno">  338</span>    <span class="keyword">const</span> <span class="keywordtype">int</span> y = <a class="code hl_function" href="structdyno_1_1functional__keypoint.html#a24933450cad8bc70b7b76b339756cd94">functional_keypoint::v</a>(refined_keypoint);</div>
+<div class="line"><span class="lineno">  339</span>    <span class="keywordtype">double</span> flow_xe = <span class="keyword">static_cast&lt;</span><span class="keywordtype">double</span><span class="keyword">&gt;</span>(flow_image.at&lt;cv::Vec2f&gt;(y, x)[0]);</div>
+<div class="line"><span class="lineno">  340</span>    <span class="keywordtype">double</span> flow_ye = <span class="keyword">static_cast&lt;</span><span class="keywordtype">double</span><span class="keyword">&gt;</span>(flow_image.at&lt;cv::Vec2f&gt;(y, x)[1]);</div>
+<div class="line"><span class="lineno">  341</span>    <span class="comment">// the measured flow after the origin has been updated</span></div>
+<div class="line"><span class="lineno">  342</span>    <a class="code hl_typedef" href="namespacedyno.html#aba8bf92162160923c6e5c7249892d5f8">OpticalFlow</a> new_measured_flow(flow_xe, flow_ye);</div>
+<div class="line"><span class="lineno">  343</span>    feature_k-&gt;measuredFlow(new_measured_flow);</div>
+<div class="line"><span class="lineno">  344</span>    <span class="comment">// TODO: check predicted flow is within image</span></div>
+<div class="line"><span class="lineno">  345</span>    <a class="code hl_typedef" href="namespacedyno.html#aaa260a8022691078c59e1ac6a4fa05b5">Keypoint</a> predicted_kp = <a class="code hl_function" href="classdyno_1_1Feature.html#a37dbbe8da704c2f51e237d38760534fb">Feature::CalculatePredictedKeypoint</a>(</div>
+<div class="line"><span class="lineno">  346</span>        refined_keypoint, new_measured_flow);</div>
+<div class="line"><span class="lineno">  347</span>    feature_k-&gt;predictedKeypoint(predicted_kp);</div>
+<div class="line"><span class="lineno">  348</span>  }</div>
+<div class="line"><span class="lineno">  349</span> </div>
+<div class="line"><span class="lineno">  350</span>  <span class="comment">// update tracks</span></div>
+<div class="line"><span class="lineno">  351</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; outlier_tracklet : refined_outliers) {</div>
+<div class="line"><span class="lineno">  352</span>    Feature::Ptr feature_k_1 = frame_k_1-&gt;at(outlier_tracklet);</div>
+<div class="line"><span class="lineno">  353</span>    Feature::Ptr feature_k = frame_k-&gt;at(outlier_tracklet);</div>
+<div class="line"><span class="lineno">  354</span> </div>
+<div class="line"><span class="lineno">  355</span>    CHECK(feature_k_1-&gt;usable());</div>
+<div class="line"><span class="lineno">  356</span>    CHECK(feature_k-&gt;usable());</div>
+<div class="line"><span class="lineno">  357</span> </div>
+<div class="line"><span class="lineno">  358</span>    feature_k-&gt;markOutlier();</div>
+<div class="line"><span class="lineno">  359</span>    feature_k_1-&gt;markOutlier();</div>
+<div class="line"><span class="lineno">  360</span>  }</div>
+<div class="line"><span class="lineno">  361</span> </div>
+<div class="line"><span class="lineno">  362</span>  <span class="comment">// refresh depth information for each frame</span></div>
+<div class="line"><span class="lineno">  363</span>  CHECK(frame_k-&gt;updateDepths());</div>
+<div class="line"><span class="lineno">  364</span>}</div>
+<div class="ttc" id="aclassdyno_1_1Feature_html_a37dbbe8da704c2f51e237d38760534fb"><div class="ttname"><a href="classdyno_1_1Feature.html#a37dbbe8da704c2f51e237d38760534fb">dyno::Feature::CalculatePredictedKeypoint</a></div><div class="ttdeci">static Keypoint CalculatePredictedKeypoint(const Keypoint &amp;keypoint, const OpticalFlow &amp;measured_flow)</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00225">Feature.hpp:225</a></div></div>
+<div class="ttc" id="anamespacedyno_html_a38bb86e4154b86428b8d133be03fb2b5"><div class="ttname"><a href="namespacedyno.html#a38bb86e4154b86428b8d133be03fb2b5">dyno::ObjectId</a></div><div class="ttdeci">int ObjectId</div><div class="ttdoc">Discrete object id, j.</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00069">Types.hpp:69</a></div></div>
+<div class="ttc" id="anamespacedyno_html_aba8bf92162160923c6e5c7249892d5f8"><div class="ttname"><a href="namespacedyno.html#aba8bf92162160923c6e5c7249892d5f8">dyno::OpticalFlow</a></div><div class="ttdeci">gtsam::Point2 OpticalFlow</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00092">Types.hpp:93</a></div></div>
 <div class="ttc" id="astructdyno_1_1functional__keypoint_html_a24933450cad8bc70b7b76b339756cd94"><div class="ttname"><a href="structdyno_1_1functional__keypoint.html#a24933450cad8bc70b7b76b339756cd94">dyno::functional_keypoint::v</a></div><div class="ttdeci">static int v(const Keypoint &amp;kp)</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00051">Feature.hpp:51</a></div></div>
 <div class="ttc" id="astructdyno_1_1functional__keypoint_html_a3896d96a6f95b5311ae768cdd0ad97e8"><div class="ttname"><a href="structdyno_1_1functional__keypoint.html#a3896d96a6f95b5311ae768cdd0ad97e8">dyno::functional_keypoint::u</a></div><div class="ttdeci">static T u(const Keypoint &amp;kp)</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00046">Feature.hpp:46</a></div></div>
 </div><!-- fragment -->
@@ -691,13 +687,11 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1OpticalFlowAndPoseOptimizer_af1037c8661213cd6e602b30918b6b3ec_icgraph.png" border="0" usemap="#aclassdyno_1_1OpticalFlowAndPoseOptimizer_af1037c8661213cd6e602b30918b6b3ec_icgraph" alt=""/></div>
 <map name="aclassdyno_1_1OpticalFlowAndPoseOptimizer_af1037c8661213cd6e602b30918b6b3ec_icgraph" id="aclassdyno_1_1OpticalFlowAndPoseOptimizer_af1037c8661213cd6e602b30918b6b3ec_icgraph">
-<area shape="rect" title=" " alt="" coords="1337,31,1568,86"/>
-<area shape="rect" href="classdyno_1_1OpticalFlowAndPoseOptimizer.html#ad96216e768fc5dea6e6411222bac0ddd" title="Builds the factor&#45;graph problem using the set of specificed correspondences (tracklets) in frame k&#45;1 ..." alt="" coords="1067,39,1289,79"/>
-<area shape="rect" href="classdyno_1_1ObjectMotionSovler.html#a45c8404687be14c0a548a8b6800aa985" title=" " alt="" coords="785,8,1019,48"/>
-<area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#a78935cca3751ad2a0c25019250d12230" title="Solves PnP between frame_k&#45;1 and frame_k using the tracked correspondances to estimate the frame of t..." alt="" coords="525,69,737,109"/>
-<area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#ada2fe5067e732aa4734d96fc5e80f7f9" title=" " alt="" coords="525,5,737,45"/>
-<area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#a9bfb2e31fd68b5b6d6ffb834b6c201a1" title=" " alt="" coords="265,8,477,48"/>
-<area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2" title=" " alt="" coords="5,39,217,79"/>
+<area shape="rect" title=" " alt="" coords="840,30,1071,85"/>
+<area shape="rect" href="classdyno_1_1OpticalFlowAndPoseOptimizer.html#ad96216e768fc5dea6e6411222bac0ddd" title="Builds the factor&#45;graph problem using the set of specificed correspondences (tracklets) in frame k&#45;1 ..." alt="" coords="569,37,792,77"/>
+<area shape="rect" href="classdyno_1_1ObjectMotionSovlerF2F.html#a432924457f5c458282c63002648b99a9" title=" " alt="" coords="265,5,521,45"/>
+<area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#ad89ae2ee89eaa41ef536e2e409809b69" title="Solves PnP between frame_k&#45;1 and frame_k using the tracked correspondances to estimate the frame of t..." alt="" coords="287,69,499,109"/>
+<area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2" title=" " alt="" coords="5,69,217,109"/>
 </map>
 </div>
 
@@ -724,7 +718,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="MotionSolver_8hpp_source.html#l00207">207</a> of file <a class="el" href="MotionSolver_8hpp_source.html">MotionSolver.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="MotionSolver_8hpp_source.html#l00210">210</a> of file <a class="el" href="MotionSolver_8hpp_source.html">MotionSolver.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1OpticalFlowAndPoseOptimizer.html#a4ed1443b579b5e4847a00b4a85da81d9">optimize()</a>.</p>
 

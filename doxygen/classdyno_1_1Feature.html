@@ -142,6 +142,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aa1dad2ea2a931bbccb56ae5b53822943"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacedyno.html#a6154f8a946fc0fe72c0286a45ed9d51d">Depth</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1Feature.html#aa1dad2ea2a931bbccb56ae5b53822943">depth</a> () const</td></tr>
 <tr class="memdesc:aa1dad2ea2a931bbccb56ae5b53822943"><td class="mdescLeft">&#160;</td><td class="mdescRight">Depth of this keypoint (will be <a class="el" href="classdyno_1_1Feature.html#accf6ffabf83a7c9945fdced2e687d6cb">Feature::invalid_depth</a> is depth is not set).  <br /></td></tr>
 <tr class="separator:aa1dad2ea2a931bbccb56ae5b53822943"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac926056c7f06cfff5eb90f90e1038190"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1Feature.html#ac926056c7f06cfff5eb90f90e1038190">rightKeypoint</a> () const</td></tr>
+<tr class="memdesc:ac926056c7f06cfff5eb90f90e1038190"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the right keypoint (uR). The value will be <a class="el" href="classdyno_1_1Feature.html#accf6ffabf83a7c9945fdced2e687d6cb">Feature::invalid_depth</a> if not set.  <br /></td></tr>
+<tr class="separator:ac926056c7f06cfff5eb90f90e1038190"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a01bbe09de30e6892a5cb9cfb89eb131a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1Feature.html#a01bbe09de30e6892a5cb9cfb89eb131a">setPredictedKeypoint</a> (const <a class="el" href="namespacedyno.html#aba8bf92162160923c6e5c7249892d5f8">OpticalFlow</a> &amp;measured_flow)</td></tr>
 <tr class="memdesc:a01bbe09de30e6892a5cb9cfb89eb131a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the measured optical flow (which should start at the features keypoint) and updates the predicted keypoint using the flow: predicted_keypoint_ = keypoint_ + measured_flow_;.  <br /></td></tr>
 <tr class="separator:a01bbe09de30e6892a5cb9cfb89eb131a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -163,6 +166,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ac617a5984c96db8936f0305640f29ba3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab7383e8f81df4949a4d2b3ce12324c53"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classdyno_1_1Feature.html">Feature</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1Feature.html#ab7383e8f81df4949a4d2b3ce12324c53">depth</a> (<a class="el" href="namespacedyno.html#a6154f8a946fc0fe72c0286a45ed9d51d">Depth</a> d)</td></tr>
 <tr class="separator:ab7383e8f81df4949a4d2b3ce12324c53"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1c2d26de2f440c7a45c0a1d70c28b5d5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classdyno_1_1Feature.html">Feature</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1Feature.html#a1c2d26de2f440c7a45c0a1d70c28b5d5">rightKeypoint</a> (double uR)</td></tr>
+<tr class="separator:a1c2d26de2f440c7a45c0a1d70c28b5d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3135a4ec8e529e4aeefe4cdcdf2abd58"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1Feature.html#a3135a4ec8e529e4aeefe4cdcdf2abd58">usable</a> () const</td></tr>
 <tr class="memdesc:a3135a4ec8e529e4aeefe4cdcdf2abd58"><td class="mdescLeft">&#160;</td><td class="mdescRight">If the feature is valid - a combination of inlier and if the tracklet Id != -1.  <br /></td></tr>
 <tr class="separator:a3135a4ec8e529e4aeefe4cdcdf2abd58"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -176,6 +181,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:aa869ff62fbc666d42f585a47f18fc590"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae7d554f489558630f69b617f82c24173"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1Feature.html#ae7d554f489558630f69b617f82c24173">hasDepth</a> () const</td></tr>
 <tr class="separator:ae7d554f489558630f69b617f82c24173"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a83fdfc4e338ef1b30edae48ed6eaf9c7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1Feature.html#a83fdfc4e338ef1b30edae48ed6eaf9c7">hasRightKeypoint</a> () const</td></tr>
+<tr class="separator:a83fdfc4e338ef1b30edae48ed6eaf9c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
@@ -204,7 +211,7 @@ Private Attributes</h2></td></tr>
 <div class="textblock"><p>2D tracking and id information for a feature observation at a single frame. </p>
 <p>Modifcation and access to <a class="el" href="classdyno_1_1Feature.html" title="2D tracking and id information for a feature observation at a single frame.">Feature</a> is thread safe. </p>
 
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00078">78</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00082">82</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a3f85765e0d9ec7f99facce53226b00e2" name="a3f85765e0d9ec7f99facce53226b00e2"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a3f85765e0d9ec7f99facce53226b00e2">&#9670;&#160;</a></span>Feature() <span class="overload">[1/2]</span></h2>
@@ -230,9 +237,9 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p>nan is used to indicate the absense of a depth value (since we have double) </p>
 
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00090">90</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   90</span>: <a class="code hl_variable" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>() {}</div>
-<div class="ttc" id="aclassdyno_1_1Feature_html_a7986429be203d153f391bb095a291678"><div class="ttname"><a href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">dyno::Feature::data_</a></div><div class="ttdeci">impl data_</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00364">Feature.hpp:364</a></div></div>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00094">94</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   94</span>: <a class="code hl_variable" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>() {}</div>
+<div class="ttc" id="aclassdyno_1_1Feature_html_a7986429be203d153f391bb095a291678"><div class="ttname"><a href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">dyno::Feature::data_</a></div><div class="ttdeci">impl data_</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00391">Feature.hpp:391</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -260,12 +267,12 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00092">92</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   92</span>                                {</div>
-<div class="line"><span class="lineno">   93</span>    <span class="comment">// TODO: use both mutexs?</span></div>
-<div class="line"><span class="lineno">   94</span>    std::lock_guard&lt;std::mutex&gt; lk(other.mutex_);</div>
-<div class="line"><span class="lineno">   95</span>    <a class="code hl_variable" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a> = other.data_;</div>
-<div class="line"><span class="lineno">   96</span>  }</div>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00096">96</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   96</span>                                {</div>
+<div class="line"><span class="lineno">   97</span>    <span class="comment">// TODO: use both mutexs?</span></div>
+<div class="line"><span class="lineno">   98</span>    std::lock_guard&lt;std::mutex&gt; lk(other.mutex_);</div>
+<div class="line"><span class="lineno">   99</span>    <a class="code hl_variable" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a> = other.data_;</div>
+<div class="line"><span class="lineno">  100</span>  }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>, and <a class="el" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>.</p>
 
@@ -298,13 +305,13 @@ Private Attributes</h2></td></tr>
 <p>Get the number of consequative frames this feature has been successfully tracked in. </p>
 <dl class="section return"><dt>Returns</dt><dd>size_t </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00142">142</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  142</span>                     {</div>
-<div class="line"><span class="lineno">  143</span>    std::lock_guard&lt;std::mutex&gt; lk(<a class="code hl_variable" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>);</div>
-<div class="line"><span class="lineno">  144</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>.<a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#a79e713020e6499af0ebcdb0120837c95">age</a>;</div>
-<div class="line"><span class="lineno">  145</span>  }</div>
-<div class="ttc" id="aclassdyno_1_1Feature_html_ae6a975328f68857c63a1dbb33d9aaa04"><div class="ttname"><a href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">dyno::Feature::mutex_</a></div><div class="ttdeci">std::mutex mutex_</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00365">Feature.hpp:365</a></div></div>
-<div class="ttc" id="astructdyno_1_1Feature_1_1impl_html_a79e713020e6499af0ebcdb0120837c95"><div class="ttname"><a href="structdyno_1_1Feature_1_1impl.html#a79e713020e6499af0ebcdb0120837c95">dyno::Feature::impl::age</a></div><div class="ttdeci">size_t age</div><div class="ttdoc">from optical flow</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00337">Feature.hpp:337</a></div></div>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00146">146</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  146</span>                     {</div>
+<div class="line"><span class="lineno">  147</span>    std::lock_guard&lt;std::mutex&gt; lk(<a class="code hl_variable" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>);</div>
+<div class="line"><span class="lineno">  148</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>.<a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#a79e713020e6499af0ebcdb0120837c95">age</a>;</div>
+<div class="line"><span class="lineno">  149</span>  }</div>
+<div class="ttc" id="aclassdyno_1_1Feature_html_ae6a975328f68857c63a1dbb33d9aaa04"><div class="ttname"><a href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">dyno::Feature::mutex_</a></div><div class="ttdeci">std::mutex mutex_</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00392">Feature.hpp:392</a></div></div>
+<div class="ttc" id="astructdyno_1_1Feature_1_1impl_html_a79e713020e6499af0ebcdb0120837c95"><div class="ttname"><a href="structdyno_1_1Feature_1_1impl.html#a79e713020e6499af0ebcdb0120837c95">dyno::Feature::impl::age</a></div><div class="ttdeci">size_t age</div><div class="ttdoc">from optical flow</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00363">Feature.hpp:363</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="structdyno_1_1Feature_1_1impl.html#a79e713020e6499af0ebcdb0120837c95">dyno::Feature::impl::age</a>, <a class="el" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>, and <a class="el" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>.</p>
 
@@ -334,12 +341,12 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00249">249</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  249</span>                                {</div>
-<div class="line"><span class="lineno">  250</span>    std::lock_guard&lt;std::mutex&gt; lk(<a class="code hl_variable" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>);</div>
-<div class="line"><span class="lineno">  251</span>    <a class="code hl_variable" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>.<a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#a79e713020e6499af0ebcdb0120837c95">age</a> = a;</div>
-<div class="line"><span class="lineno">  252</span>    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
-<div class="line"><span class="lineno">  253</span>  }</div>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00264">264</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  264</span>                                {</div>
+<div class="line"><span class="lineno">  265</span>    std::lock_guard&lt;std::mutex&gt; lk(<a class="code hl_variable" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>);</div>
+<div class="line"><span class="lineno">  266</span>    <a class="code hl_variable" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>.<a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#a79e713020e6499af0ebcdb0120837c95">age</a> = a;</div>
+<div class="line"><span class="lineno">  267</span>    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><span class="lineno">  268</span>  }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="structdyno_1_1Feature_1_1impl.html#a79e713020e6499af0ebcdb0120837c95">dyno::Feature::impl::age</a>, <a class="el" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>, and <a class="el" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>.</p>
 
@@ -379,15 +386,15 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00210">210</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  211</span>                                                                               {</div>
-<div class="line"><span class="lineno">  212</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="classdyno_1_1Feature.html#ada9f9980d950874a7a157a82b9921f8a">keypoint</a> + measured_flow;</div>
-<div class="line"><span class="lineno">  213</span>  }</div>
-<div class="ttc" id="aclassdyno_1_1Feature_html_ada9f9980d950874a7a157a82b9921f8a"><div class="ttname"><a href="classdyno_1_1Feature.html#ada9f9980d950874a7a157a82b9921f8a">dyno::Feature::keypoint</a></div><div class="ttdeci">Keypoint keypoint() const</div><div class="ttdoc">Gets keypoint observation.</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00105">Feature.hpp:105</a></div></div>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00225">225</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  226</span>                                                                               {</div>
+<div class="line"><span class="lineno">  227</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="classdyno_1_1Feature.html#ada9f9980d950874a7a157a82b9921f8a">keypoint</a> + measured_flow;</div>
+<div class="line"><span class="lineno">  228</span>  }</div>
+<div class="ttc" id="aclassdyno_1_1Feature_html_ada9f9980d950874a7a157a82b9921f8a"><div class="ttname"><a href="classdyno_1_1Feature.html#ada9f9980d950874a7a157a82b9921f8a">dyno::Feature::keypoint</a></div><div class="ttdeci">Keypoint keypoint() const</div><div class="ttdoc">Gets keypoint observation.</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00109">Feature.hpp:109</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1Feature.html#ada9f9980d950874a7a157a82b9921f8a">keypoint()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1ExternalFlowFeatureTracker.html#a9bc1bd98819dcd484c6cf62b3e1e5145">dyno::ExternalFlowFeatureTracker::constructStaticFeature()</a>, <a class="el" href="classdyno_1_1FeatureTracker.html#a7877773d1c6d5b9cef0c379cd701c1e4">dyno::FeatureTracker::propogateMask()</a>, <a class="el" href="classdyno_1_1Feature.html#a01bbe09de30e6892a5cb9cfb89eb131a">setPredictedKeypoint()</a>, <a class="el" href="classdyno_1_1FeatureTracker.html#aeaff1c244270c93747ce92b36163c38d">dyno::FeatureTracker::trackDynamic()</a>, and <a class="el" href="classdyno_1_1OpticalFlowAndPoseOptimizer.html#af1037c8661213cd6e602b30918b6b3ec">dyno::OpticalFlowAndPoseOptimizer::updateFrameOutliersWithResult()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1ExternalFlowFeatureTracker.html#a9bc1bd98819dcd484c6cf62b3e1e5145">dyno::ExternalFlowFeatureTracker::constructStaticFeature()</a>, <a class="el" href="classdyno_1_1FeatureTracker.html#af6093d870bad67d12dee0c9cb913f87c">dyno::FeatureTracker::sampleDynamic()</a>, <a class="el" href="classdyno_1_1Feature.html#a01bbe09de30e6892a5cb9cfb89eb131a">setPredictedKeypoint()</a>, <a class="el" href="classdyno_1_1FeatureTracker.html#a145614fe29bef7728075492870ac9c41">dyno::FeatureTracker::trackDynamic()</a>, and <a class="el" href="classdyno_1_1OpticalFlowAndPoseOptimizer.html#af1037c8661213cd6e602b30918b6b3ec">dyno::OpticalFlowAndPoseOptimizer::updateFrameOutliersWithResult()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -402,20 +409,18 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1Feature_a37dbbe8da704c2f51e237d38760534fb_icgraph.png" border="0" usemap="#aclassdyno_1_1Feature_a37dbbe8da704c2f51e237d38760534fb_icgraph" alt=""/></div>
 <map name="aclassdyno_1_1Feature_a37dbbe8da704c2f51e237d38760534fb_icgraph" id="aclassdyno_1_1Feature_a37dbbe8da704c2f51e237d38760534fb_icgraph">
-<area shape="rect" title=" " alt="" coords="1616,133,1796,173"/>
-<area shape="rect" href="classdyno_1_1ExternalFlowFeatureTracker.html#a9bc1bd98819dcd484c6cf62b3e1e5145" title=" " alt="" coords="1341,5,1564,45"/>
-<area shape="rect" href="classdyno_1_1FeatureTracker.html#a7877773d1c6d5b9cef0c379cd701c1e4" title=" " alt="" coords="1374,69,1531,109"/>
-<area shape="rect" href="classdyno_1_1Feature.html#a01bbe09de30e6892a5cb9cfb89eb131a" title="Sets the measured optical flow (which should start at the features keypoint) and updates the predicte..." alt="" coords="1353,133,1553,173"/>
-<area shape="rect" href="classdyno_1_1FeatureTracker.html#aeaff1c244270c93747ce92b36163c38d" title=" " alt="" coords="1374,197,1531,237"/>
-<area shape="rect" href="classdyno_1_1OpticalFlowAndPoseOptimizer.html#af1037c8661213cd6e602b30918b6b3ec" title=" " alt="" coords="1337,262,1568,317"/>
-<area shape="rect" href="classdyno_1_1ExternalFlowFeatureTracker.html#a28dabdf87c24770c7541ad82b54cdad0" title="Base function to perform feature tracking on static points." alt="" coords="1080,5,1276,45"/>
-<area shape="rect" href="classdyno_1_1FeatureTracker.html#a23296ac35b5935656d31a18450dc5e4c" title=" " alt="" coords="1099,133,1257,173"/>
-<area shape="rect" href="classdyno_1_1OpticalFlowAndPoseOptimizer.html#ad96216e768fc5dea6e6411222bac0ddd" title="Builds the factor&#45;graph problem using the set of specificed correspondences (tracklets) in frame k&#45;1 ..." alt="" coords="1067,269,1289,309"/>
-<area shape="rect" href="classdyno_1_1ObjectMotionSovler.html#a45c8404687be14c0a548a8b6800aa985" title=" " alt="" coords="785,239,1019,279"/>
-<area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#a78935cca3751ad2a0c25019250d12230" title="Solves PnP between frame_k&#45;1 and frame_k using the tracked correspondances to estimate the frame of t..." alt="" coords="525,300,737,340"/>
-<area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#ada2fe5067e732aa4734d96fc5e80f7f9" title=" " alt="" coords="525,236,737,276"/>
-<area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#a9bfb2e31fd68b5b6d6ffb834b6c201a1" title=" " alt="" coords="265,239,477,279"/>
-<area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2" title=" " alt="" coords="5,269,217,309"/>
+<area shape="rect" title=" " alt="" coords="1119,127,1299,167"/>
+<area shape="rect" href="classdyno_1_1ExternalFlowFeatureTracker.html#a9bc1bd98819dcd484c6cf62b3e1e5145" title=" " alt="" coords="844,5,1067,45"/>
+<area shape="rect" href="classdyno_1_1FeatureTracker.html#af6093d870bad67d12dee0c9cb913f87c" title=" " alt="" coords="877,69,1034,109"/>
+<area shape="rect" href="classdyno_1_1FeatureTracker.html#a145614fe29bef7728075492870ac9c41" title=" " alt="" coords="602,99,759,139"/>
+<area shape="rect" href="classdyno_1_1Feature.html#a01bbe09de30e6892a5cb9cfb89eb131a" title="Sets the measured optical flow (which should start at the features keypoint) and updates the predicte..." alt="" coords="855,184,1055,224"/>
+<area shape="rect" href="classdyno_1_1OpticalFlowAndPoseOptimizer.html#af1037c8661213cd6e602b30918b6b3ec" title=" " alt="" coords="840,249,1071,303"/>
+<area shape="rect" href="classdyno_1_1ExternalFlowFeatureTracker.html#aedf0b07caf85d853756cb878f22d2ad7" title="Base function to perform feature tracking on static points." alt="" coords="583,5,779,45"/>
+<area shape="rect" href="classdyno_1_1FeatureTracker.html#a9890ba0c11b5932b5b4954a86bd03948" title=" " alt="" coords="315,99,472,139"/>
+<area shape="rect" href="classdyno_1_1OpticalFlowAndPoseOptimizer.html#ad96216e768fc5dea6e6411222bac0ddd" title="Builds the factor&#45;graph problem using the set of specificed correspondences (tracklets) in frame k&#45;1 ..." alt="" coords="569,256,792,296"/>
+<area shape="rect" href="classdyno_1_1ObjectMotionSovlerF2F.html#a432924457f5c458282c63002648b99a9" title=" " alt="" coords="265,224,521,264"/>
+<area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#ad89ae2ee89eaa41ef536e2e409809b69" title="Solves PnP between frame_k&#45;1 and frame_k using the tracked correspondances to estimate the frame of t..." alt="" coords="287,288,499,328"/>
+<area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2" title=" " alt="" coords="5,288,217,328"/>
 </map>
 </div>
 
@@ -447,12 +452,12 @@ Here is the caller graph for this function:</div>
 <p>Depth of this keypoint (will be <a class="el" href="classdyno_1_1Feature.html#accf6ffabf83a7c9945fdced2e687d6cb">Feature::invalid_depth</a> is depth is not set). </p>
 <dl class="section return"><dt>Returns</dt><dd>Depth </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00205">205</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  205</span>                      {</div>
-<div class="line"><span class="lineno">  206</span>    std::lock_guard&lt;std::mutex&gt; lk(<a class="code hl_variable" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>);</div>
-<div class="line"><span class="lineno">  207</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>.<a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#a541092f3dbb1430115d2668adb660609">depth</a>;</div>
-<div class="line"><span class="lineno">  208</span>  }</div>
-<div class="ttc" id="astructdyno_1_1Feature_1_1impl_html_a541092f3dbb1430115d2668adb660609"><div class="ttname"><a href="structdyno_1_1Feature_1_1impl.html#a541092f3dbb1430115d2668adb660609">dyno::Feature::impl::depth</a></div><div class="ttdeci">Depth depth</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00347">Feature.hpp:347</a></div></div>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00209">209</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  209</span>                      {</div>
+<div class="line"><span class="lineno">  210</span>    std::lock_guard&lt;std::mutex&gt; lk(<a class="code hl_variable" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>);</div>
+<div class="line"><span class="lineno">  211</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>.<a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#a541092f3dbb1430115d2668adb660609">depth</a>;</div>
+<div class="line"><span class="lineno">  212</span>  }</div>
+<div class="ttc" id="astructdyno_1_1Feature_1_1impl_html_a541092f3dbb1430115d2668adb660609"><div class="ttname"><a href="structdyno_1_1Feature_1_1impl.html#a541092f3dbb1430115d2668adb660609">dyno::Feature::impl::depth</a></div><div class="ttdeci">Depth depth</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00373">Feature.hpp:373</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>, <a class="el" href="structdyno_1_1Feature_1_1impl.html#a541092f3dbb1430115d2668adb660609">dyno::Feature::impl::depth</a>, and <a class="el" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>.</p>
 
@@ -462,8 +467,10 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1Feature_aa1dad2ea2a931bbccb56ae5b53822943_icgraph.png" border="0" usemap="#aclassdyno_1_1Feature_aa1dad2ea2a931bbccb56ae5b53822943_icgraph" alt=""/></div>
 <map name="aclassdyno_1_1Feature_aa1dad2ea2a931bbccb56ae5b53822943_icgraph" id="aclassdyno_1_1Feature_aa1dad2ea2a931bbccb56ae5b53822943_icgraph">
-<area shape="rect" title="Depth of this keypoint (will be Feature::invalid_depth is depth is not set)." alt="" coords="257,13,413,38"/>
-<area shape="rect" href="namespacedyno_1_1vision__tools.html#a8cf2c16aa30d7bfa4ea4844abb555716" title="From a feature with valid depth, backproject to a 3D point in the camera frame with the associated co..." alt="" coords="5,5,209,45"/>
+<area shape="rect" title="Depth of this keypoint (will be Feature::invalid_depth is depth is not set)." alt="" coords="777,13,933,38"/>
+<area shape="rect" href="namespacedyno_1_1vision__tools.html#a8cf2c16aa30d7bfa4ea4844abb555716" title="From a feature with valid depth, backproject to a 3D point in the camera frame with the associated co..." alt="" coords="525,5,729,45"/>
+<area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#a246f701e4605c98dc7cb6bbd6f657998" title=" " alt="" coords="265,5,477,45"/>
+<area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2" title=" " alt="" coords="5,5,217,45"/>
 </map>
 </div>
 
@@ -493,12 +500,12 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00279">279</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  279</span>                          {</div>
-<div class="line"><span class="lineno">  280</span>    std::lock_guard&lt;std::mutex&gt; lk(<a class="code hl_variable" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>);</div>
-<div class="line"><span class="lineno">  281</span>    <a class="code hl_variable" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>.<a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#a541092f3dbb1430115d2668adb660609">depth</a> = d;</div>
-<div class="line"><span class="lineno">  282</span>    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
-<div class="line"><span class="lineno">  283</span>  }</div>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00294">294</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  294</span>                          {</div>
+<div class="line"><span class="lineno">  295</span>    std::lock_guard&lt;std::mutex&gt; lk(<a class="code hl_variable" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>);</div>
+<div class="line"><span class="lineno">  296</span>    <a class="code hl_variable" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>.<a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#a541092f3dbb1430115d2668adb660609">depth</a> = d;</div>
+<div class="line"><span class="lineno">  297</span>    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><span class="lineno">  298</span>  }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>, <a class="el" href="structdyno_1_1Feature_1_1impl.html#a541092f3dbb1430115d2668adb660609">dyno::Feature::impl::depth</a>, and <a class="el" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>.</p>
 
@@ -530,12 +537,12 @@ Here is the caller graph for this function:</div>
 <p>Get the frame id this feature was observed in (ie. k). </p>
 <dl class="section return"><dt>Returns</dt><dd>FrameId </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00172">172</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  172</span>                          {</div>
-<div class="line"><span class="lineno">  173</span>    std::lock_guard&lt;std::mutex&gt; lk(<a class="code hl_variable" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>);</div>
-<div class="line"><span class="lineno">  174</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>.<a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#ab49bc00e533c81bc1796c60f4bd95c76">frame_id</a>;</div>
-<div class="line"><span class="lineno">  175</span>  }</div>
-<div class="ttc" id="astructdyno_1_1Feature_1_1impl_html_ab49bc00e533c81bc1796c60f4bd95c76"><div class="ttname"><a href="structdyno_1_1Feature_1_1impl.html#ab49bc00e533c81bc1796c60f4bd95c76">dyno::Feature::impl::frame_id</a></div><div class="ttdeci">FrameId frame_id</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00340">Feature.hpp:340</a></div></div>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00176">176</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  176</span>                          {</div>
+<div class="line"><span class="lineno">  177</span>    std::lock_guard&lt;std::mutex&gt; lk(<a class="code hl_variable" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>);</div>
+<div class="line"><span class="lineno">  178</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>.<a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#ab49bc00e533c81bc1796c60f4bd95c76">frame_id</a>;</div>
+<div class="line"><span class="lineno">  179</span>  }</div>
+<div class="ttc" id="astructdyno_1_1Feature_1_1impl_html_ab49bc00e533c81bc1796c60f4bd95c76"><div class="ttname"><a href="structdyno_1_1Feature_1_1impl.html#ab49bc00e533c81bc1796c60f4bd95c76">dyno::Feature::impl::frame_id</a></div><div class="ttdeci">FrameId frame_id</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00366">Feature.hpp:366</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>, <a class="el" href="structdyno_1_1Feature_1_1impl.html#ab49bc00e533c81bc1796c60f4bd95c76">dyno::Feature::impl::frame_id</a>, and <a class="el" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>.</p>
 
@@ -565,12 +572,12 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00267">267</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  267</span>                                            {</div>
-<div class="line"><span class="lineno">  268</span>    std::lock_guard&lt;std::mutex&gt; lk(<a class="code hl_variable" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>);</div>
-<div class="line"><span class="lineno">  269</span>    <a class="code hl_variable" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>.<a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#ab49bc00e533c81bc1796c60f4bd95c76">frame_id</a> = frame_id;</div>
-<div class="line"><span class="lineno">  270</span>    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
-<div class="line"><span class="lineno">  271</span>  }</div>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00282">282</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  282</span>                                            {</div>
+<div class="line"><span class="lineno">  283</span>    std::lock_guard&lt;std::mutex&gt; lk(<a class="code hl_variable" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>);</div>
+<div class="line"><span class="lineno">  284</span>    <a class="code hl_variable" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>.<a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#ab49bc00e533c81bc1796c60f4bd95c76">frame_id</a> = frame_id;</div>
+<div class="line"><span class="lineno">  285</span>    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><span class="lineno">  286</span>  }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>, <a class="el" href="structdyno_1_1Feature_1_1impl.html#ab49bc00e533c81bc1796c60f4bd95c76">dyno::Feature::impl::frame_id</a>, and <a class="el" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>.</p>
 
@@ -599,11 +606,11 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00322">322</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  322</span>                               {</div>
-<div class="line"><span class="lineno">  323</span>    std::lock_guard&lt;std::mutex&gt; lk(<a class="code hl_variable" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>);</div>
-<div class="line"><span class="lineno">  324</span>    <span class="keywordflow">return</span> !std::isnan(<a class="code hl_variable" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>.<a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#a541092f3dbb1430115d2668adb660609">depth</a>);</div>
-<div class="line"><span class="lineno">  325</span>  }</div>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00343">343</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  343</span>                               {</div>
+<div class="line"><span class="lineno">  344</span>    std::lock_guard&lt;std::mutex&gt; lk(<a class="code hl_variable" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>);</div>
+<div class="line"><span class="lineno">  345</span>    <span class="keywordflow">return</span> !std::isnan(<a class="code hl_variable" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>.<a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#a541092f3dbb1430115d2668adb660609">depth</a>);</div>
+<div class="line"><span class="lineno">  346</span>  }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>, <a class="el" href="structdyno_1_1Feature_1_1impl.html#a541092f3dbb1430115d2668adb660609">dyno::Feature::impl::depth</a>, and <a class="el" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>.</p>
 
@@ -613,10 +620,46 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1Feature_ae7d554f489558630f69b617f82c24173_icgraph.png" border="0" usemap="#aclassdyno_1_1Feature_ae7d554f489558630f69b617f82c24173_icgraph" alt=""/></div>
 <map name="aclassdyno_1_1Feature_ae7d554f489558630f69b617f82c24173_icgraph" id="aclassdyno_1_1Feature_ae7d554f489558630f69b617f82c24173_icgraph">
-<area shape="rect" title=" " alt="" coords="257,13,439,38"/>
-<area shape="rect" href="namespacedyno_1_1vision__tools.html#a8cf2c16aa30d7bfa4ea4844abb555716" title="From a feature with valid depth, backproject to a 3D point in the camera frame with the associated co..." alt="" coords="5,5,209,45"/>
+<area shape="rect" title=" " alt="" coords="777,13,959,38"/>
+<area shape="rect" href="namespacedyno_1_1vision__tools.html#a8cf2c16aa30d7bfa4ea4844abb555716" title="From a feature with valid depth, backproject to a 3D point in the camera frame with the associated co..." alt="" coords="525,5,729,45"/>
+<area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#a246f701e4605c98dc7cb6bbd6f657998" title=" " alt="" coords="265,5,477,45"/>
+<area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2" title=" " alt="" coords="5,5,217,45"/>
 </map>
 </div>
+
+</div>
+</div>
+<a id="a83fdfc4e338ef1b30edae48ed6eaf9c7" name="a83fdfc4e338ef1b30edae48ed6eaf9c7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a83fdfc4e338ef1b30edae48ed6eaf9c7">&#9670;&#160;</a></span>hasRightKeypoint()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool dyno::Feature::hasRightKeypoint </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00348">348</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  348</span>                                       {</div>
+<div class="line"><span class="lineno">  349</span>    std::lock_guard&lt;std::mutex&gt; lk(<a class="code hl_variable" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>);</div>
+<div class="line"><span class="lineno">  350</span>    <span class="keywordflow">return</span> !std::isnan(<a class="code hl_variable" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>.<a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#a65ad0be3f8287d5960edcb1294470f83">uR</a>);</div>
+<div class="line"><span class="lineno">  351</span>  }</div>
+<div class="ttc" id="astructdyno_1_1Feature_1_1impl_html_a65ad0be3f8287d5960edcb1294470f83"><div class="ttname"><a href="structdyno_1_1Feature_1_1impl.html#a65ad0be3f8287d5960edcb1294470f83">dyno::Feature::impl::uR</a></div><div class="ttdeci">double uR</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00375">Feature.hpp:375</a></div></div>
+</div><!-- fragment -->
+<p class="reference">References <a class="el" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>, <a class="el" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>, and <a class="el" href="structdyno_1_1Feature_1_1impl.html#a65ad0be3f8287d5960edcb1294470f83">dyno::Feature::impl::uR</a>.</p>
 
 </div>
 </div>
@@ -648,12 +691,12 @@ Here is the caller graph for this function:</div>
 <dd>
 false </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00183">183</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  183</span>                      {</div>
-<div class="line"><span class="lineno">  184</span>    std::lock_guard&lt;std::mutex&gt; lk(<a class="code hl_variable" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>);</div>
-<div class="line"><span class="lineno">  185</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>.<a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#a32a44c2018ac870b7a51d5dd06ceb59d">inlier</a>;</div>
-<div class="line"><span class="lineno">  186</span>  }</div>
-<div class="ttc" id="astructdyno_1_1Feature_1_1impl_html_a32a44c2018ac870b7a51d5dd06ceb59d"><div class="ttname"><a href="structdyno_1_1Feature_1_1impl.html#a32a44c2018ac870b7a51d5dd06ceb59d">dyno::Feature::impl::inlier</a></div><div class="ttdeci">bool inlier</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00341">Feature.hpp:341</a></div></div>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00187">187</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  187</span>                      {</div>
+<div class="line"><span class="lineno">  188</span>    std::lock_guard&lt;std::mutex&gt; lk(<a class="code hl_variable" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>);</div>
+<div class="line"><span class="lineno">  189</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>.<a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#a32a44c2018ac870b7a51d5dd06ceb59d">inlier</a>;</div>
+<div class="line"><span class="lineno">  190</span>  }</div>
+<div class="ttc" id="astructdyno_1_1Feature_1_1impl_html_a32a44c2018ac870b7a51d5dd06ceb59d"><div class="ttname"><a href="structdyno_1_1Feature_1_1impl.html#a32a44c2018ac870b7a51d5dd06ceb59d">dyno::Feature::impl::inlier</a></div><div class="ttdeci">bool inlier</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00367">Feature.hpp:367</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>, <a class="el" href="structdyno_1_1Feature_1_1impl.html#a32a44c2018ac870b7a51d5dd06ceb59d">dyno::Feature::impl::inlier</a>, and <a class="el" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>.</p>
 
@@ -683,21 +726,9 @@ false </dd></dl>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00329">329</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  329</span>{ <span class="keywordflow">return</span> f != <span class="keyword">nullptr</span>; }</div>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00355">355</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  355</span>{ <span class="keywordflow">return</span> f != <span class="keyword">nullptr</span>; }</div>
 </div><!-- fragment -->
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1FeatureTracker.html#a7877773d1c6d5b9cef0c379cd701c1e4">dyno::FeatureTracker::propogateMask()</a>.</p>
-<div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="classdyno_1_1Feature_a6ef4cbae2843a4646954bcb53f63c7a8_icgraph.png" border="0" usemap="#aclassdyno_1_1Feature_a6ef4cbae2843a4646954bcb53f63c7a8_icgraph" alt=""/></div>
-<map name="aclassdyno_1_1Feature_a6ef4cbae2843a4646954bcb53f63c7a8_icgraph" id="aclassdyno_1_1Feature_a6ef4cbae2843a4646954bcb53f63c7a8_icgraph">
-<area shape="rect" title=" " alt="" coords="416,13,595,38"/>
-<area shape="rect" href="classdyno_1_1FeatureTracker.html#a7877773d1c6d5b9cef0c379cd701c1e4" title=" " alt="" coords="211,5,368,45"/>
-<area shape="rect" href="classdyno_1_1FeatureTracker.html#a23296ac35b5935656d31a18450dc5e4c" title=" " alt="" coords="5,5,163,45"/>
-</map>
-</div>
-
 </div>
 </div>
 <a id="af8ecd1b5b7d9484dde99aff5544e91ed" name="af8ecd1b5b7d9484dde99aff5544e91ed"></a>
@@ -723,13 +754,13 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00299">299</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  299</span>                               {</div>
-<div class="line"><span class="lineno">  300</span>    std::lock_guard&lt;std::mutex&gt; lk(<a class="code hl_variable" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>);</div>
-<div class="line"><span class="lineno">  301</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>.<a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#ac66ef7a83384411f5cf8bacccb37844d">type</a> == <a class="code hl_enumvalue" href="namespacedyno.html#ad6aa767541eb74e30fc5a7b018322952aa7ffd97a62d9e9295b5f90cea20c2833">KeyPointType::STATIC</a>;</div>
-<div class="line"><span class="lineno">  302</span>  }</div>
-<div class="ttc" id="anamespacedyno_html_ad6aa767541eb74e30fc5a7b018322952aa7ffd97a62d9e9295b5f90cea20c2833"><div class="ttname"><a href="namespacedyno.html#ad6aa767541eb74e30fc5a7b018322952aa7ffd97a62d9e9295b5f90cea20c2833">dyno::STATIC</a></div><div class="ttdeci">@ STATIC</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00139">Types.hpp:139</a></div></div>
-<div class="ttc" id="astructdyno_1_1Feature_1_1impl_html_ac66ef7a83384411f5cf8bacccb37844d"><div class="ttname"><a href="structdyno_1_1Feature_1_1impl.html#ac66ef7a83384411f5cf8bacccb37844d">dyno::Feature::impl::type</a></div><div class="ttdeci">KeyPointType type</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00338">Feature.hpp:338</a></div></div>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00320">320</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  320</span>                               {</div>
+<div class="line"><span class="lineno">  321</span>    std::lock_guard&lt;std::mutex&gt; lk(<a class="code hl_variable" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>);</div>
+<div class="line"><span class="lineno">  322</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>.<a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#ac66ef7a83384411f5cf8bacccb37844d">type</a> == <a class="code hl_enumvalue" href="namespacedyno.html#ad6aa767541eb74e30fc5a7b018322952aa7ffd97a62d9e9295b5f90cea20c2833">KeyPointType::STATIC</a>;</div>
+<div class="line"><span class="lineno">  323</span>  }</div>
+<div class="ttc" id="anamespacedyno_html_ad6aa767541eb74e30fc5a7b018322952aa7ffd97a62d9e9295b5f90cea20c2833"><div class="ttname"><a href="namespacedyno.html#ad6aa767541eb74e30fc5a7b018322952aa7ffd97a62d9e9295b5f90cea20c2833">dyno::STATIC</a></div><div class="ttdeci">@ STATIC</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00189">Types.hpp:189</a></div></div>
+<div class="ttc" id="astructdyno_1_1Feature_1_1impl_html_ac66ef7a83384411f5cf8bacccb37844d"><div class="ttname"><a href="structdyno_1_1Feature_1_1impl.html#ac66ef7a83384411f5cf8bacccb37844d">dyno::Feature::impl::type</a></div><div class="ttdeci">KeyPointType type</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00364">Feature.hpp:364</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>, <a class="el" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>, <a class="el" href="namespacedyno.html#ad6aa767541eb74e30fc5a7b018322952aa7ffd97a62d9e9295b5f90cea20c2833">dyno::STATIC</a>, and <a class="el" href="structdyno_1_1Feature_1_1impl.html#ac66ef7a83384411f5cf8bacccb37844d">dyno::Feature::impl::type</a>.</p>
 
@@ -759,32 +790,32 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00327">327</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  327</span>{ <span class="keywordflow">return</span> f-&gt;usable(); }</div>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00353">353</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  353</span>{ <span class="keywordflow">return</span> f-&gt;usable(); }</div>
 </div><!-- fragment -->
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1FeatureContainer.html#ab6187d4cb946a12bcea18482caf4e115">dyno::FeatureContainer::beginUsable()</a>, and <a class="el" href="classdyno_1_1Frame.html#acd53bfdd333a0577003c2c85f7d60dbd">dyno::Frame::getDynamicCorrespondences()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1FeatureContainer.html#ab6187d4cb946a12bcea18482caf4e115">dyno::FeatureContainer::beginUsable()</a>, <a class="el" href="classdyno_1_1RGBDInstanceFrontendModule.html#a246f701e4605c98dc7cb6bbd6f657998">dyno::RGBDInstanceFrontendModule::constructOutput()</a>, and <a class="el" href="classdyno_1_1Frame.html#acd53bfdd333a0577003c2c85f7d60dbd">dyno::Frame::getDynamicCorrespondences()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1Feature_af6d8414c9ac11dc48a8c6a80c4eb4635_icgraph.png" border="0" usemap="#aclassdyno_1_1Feature_af6d8414c9ac11dc48a8c6a80c4eb4635_icgraph" alt=""/></div>
 <map name="aclassdyno_1_1Feature_af6d8414c9ac11dc48a8c6a80c4eb4635_icgraph" id="aclassdyno_1_1Feature_af6d8414c9ac11dc48a8c6a80c4eb4635_icgraph">
-<area shape="rect" title=" " alt="" coords="1291,309,1465,334"/>
-<area shape="rect" href="classdyno_1_1FeatureContainer.html#ab6187d4cb946a12bcea18482caf4e115" title=" " alt="" coords="1004,219,1179,259"/>
-<area shape="rect" href="classdyno_1_1Frame.html#acd53bfdd333a0577003c2c85f7d60dbd" title="Gets the set of tracked pairs between this frame and the previous frame for a tracked dynamic object ..." alt="" coords="940,390,1243,415"/>
-<area shape="rect" href="classdyno_1_1Frame.html#ab038b536516e42beb788f1b794801270" title=" " alt="" coords="626,161,855,201"/>
-<area shape="rect" href="classdyno_1_1Frame.html#ada0730ff21a241c8948dfa6a4c233ce9" title=" " alt="" coords="589,226,892,251"/>
-<area shape="rect" href="classdyno_1_1Frame.html#a2dae0d4fd6d5ae47802ff8f6602d652b" title=" " alt="" coords="600,275,881,301"/>
-<area shape="rect" href="classdyno_1_1KltFeatureTracker.html#a8b8b5f33830f3b76205863b9236539e4" title="Track features between frames k&#45;1 and the current set of images (at k)." alt="" coords="653,325,828,365"/>
-<area shape="rect" href="classdyno_1_1Frame.html#a7769d1c2fe4f5831191dc4da47d4404c" title=" " alt="" coords="635,5,847,45"/>
-<area shape="rect" href="classdyno_1_1Frame.html#ab036fb95341546a33d93bdd54d871452" title=" " alt="" coords="645,97,836,137"/>
-<area shape="rect" href="classdyno_1_1Frame.html#a5553af4c0c310c23d0f39e0c1daf0478" title=" " alt="" coords="343,198,495,223"/>
-<area shape="rect" href="classdyno_1_1Frame.html#a0ee3d3a6479eada0e5443feb48613cdc" title="Gets the set of tracked pairs between this frame and the previous frame. All correspondences will be ..." alt="" coords="297,358,541,383"/>
-<area shape="rect" href="classdyno_1_1Frame.html#a40ef74f44116cf581522314b3a053c3a" title=" " alt="" coords="5,358,249,383"/>
-<area shape="rect" href="classdyno_1_1Frame.html#abbc9eb125f3b9d963b45857a99e9c8a4" title="Gets the total number of dynamic inlier features." alt="" coords="298,5,541,45"/>
-<area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#a6ef0b6a5c8ab9d3e4c731fc9bb521b7d" title=" " alt="" coords="313,133,525,173"/>
-<area shape="rect" href="classdyno_1_1Frame.html#a6b8a9f20ec398a8046dc25f77277fc15" title="Gets the total number of static inlier features." alt="" coords="308,69,531,109"/>
-<area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2" title=" " alt="" coords="21,133,233,173"/>
-<area shape="rect" href="classdyno_1_1Frame.html#a2efd60e3d057b2519572ef951308dd8c" title=" " alt="" coords="589,390,892,415"/>
+<area shape="rect" title=" " alt="" coords="1291,231,1465,257"/>
+<area shape="rect" href="classdyno_1_1FeatureContainer.html#ab6187d4cb946a12bcea18482caf4e115" title=" " alt="" coords="1004,224,1179,264"/>
+<area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#a246f701e4605c98dc7cb6bbd6f657998" title=" " alt="" coords="313,5,525,45"/>
+<area shape="rect" href="classdyno_1_1Frame.html#acd53bfdd333a0577003c2c85f7d60dbd" title="Gets the set of tracked pairs between this frame and the previous frame for a tracked dynamic object ..." alt="" coords="940,425,1243,450"/>
+<area shape="rect" href="classdyno_1_1Frame.html#ab038b536516e42beb788f1b794801270" title=" " alt="" coords="626,195,855,235"/>
+<area shape="rect" href="classdyno_1_1Frame.html#ada0730ff21a241c8948dfa6a4c233ce9" title=" " alt="" coords="589,259,892,285"/>
+<area shape="rect" href="classdyno_1_1Frame.html#a2dae0d4fd6d5ae47802ff8f6602d652b" title=" " alt="" coords="600,374,881,399"/>
+<area shape="rect" href="classdyno_1_1KltFeatureTracker.html#ab15aaa39f0c3adc62037d718b98039c0" title="Track features between frames k&#45;1 and the current set of images (at k)." alt="" coords="653,309,828,349"/>
+<area shape="rect" href="classdyno_1_1Frame.html#a7769d1c2fe4f5831191dc4da47d4404c" title=" " alt="" coords="635,67,847,107"/>
+<area shape="rect" href="classdyno_1_1Frame.html#ab036fb95341546a33d93bdd54d871452" title=" " alt="" coords="645,131,836,171"/>
+<area shape="rect" href="classdyno_1_1Frame.html#a5553af4c0c310c23d0f39e0c1daf0478" title=" " alt="" coords="343,202,495,227"/>
+<area shape="rect" href="classdyno_1_1Frame.html#a0ee3d3a6479eada0e5443feb48613cdc" title="Gets the set of tracked pairs between this frame and the previous frame. All correspondences will be ..." alt="" coords="297,399,541,425"/>
+<area shape="rect" href="classdyno_1_1Frame.html#a40ef74f44116cf581522314b3a053c3a" title=" " alt="" coords="5,399,249,425"/>
+<area shape="rect" href="classdyno_1_1Frame.html#abbc9eb125f3b9d963b45857a99e9c8a4" title="Gets the total number of dynamic inlier features." alt="" coords="298,69,541,109"/>
+<area shape="rect" href="classdyno_1_1Frame.html#a6b8a9f20ec398a8046dc25f77277fc15" title="Gets the total number of static inlier features." alt="" coords="308,133,531,173"/>
+<area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2" title=" " alt="" coords="21,5,233,45"/>
+<area shape="rect" href="classdyno_1_1Frame.html#a2efd60e3d057b2519572ef951308dd8c" title=" " alt="" coords="589,475,892,501"/>
 </map>
 </div>
 
@@ -816,12 +847,12 @@ Here is the caller graph for this function:</div>
 <p>Gets keypoint observation. </p>
 <dl class="section return"><dt>Returns</dt><dd>Keypoint </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00105">105</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  105</span>                            {</div>
-<div class="line"><span class="lineno">  106</span>    std::lock_guard&lt;std::mutex&gt; lk(<a class="code hl_variable" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>);</div>
-<div class="line"><span class="lineno">  107</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>.<a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#a0e26894a8159608acba0c8580cb7c64b">keypoint</a>;</div>
-<div class="line"><span class="lineno">  108</span>  }</div>
-<div class="ttc" id="astructdyno_1_1Feature_1_1impl_html_a0e26894a8159608acba0c8580cb7c64b"><div class="ttname"><a href="structdyno_1_1Feature_1_1impl.html#a0e26894a8159608acba0c8580cb7c64b">dyno::Feature::impl::keypoint</a></div><div class="ttdeci">Keypoint keypoint</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00333">Feature.hpp:333</a></div></div>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00109">109</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  109</span>                            {</div>
+<div class="line"><span class="lineno">  110</span>    std::lock_guard&lt;std::mutex&gt; lk(<a class="code hl_variable" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>);</div>
+<div class="line"><span class="lineno">  111</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>.<a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#a0e26894a8159608acba0c8580cb7c64b">keypoint</a>;</div>
+<div class="line"><span class="lineno">  112</span>  }</div>
+<div class="ttc" id="astructdyno_1_1Feature_1_1impl_html_a0e26894a8159608acba0c8580cb7c64b"><div class="ttname"><a href="structdyno_1_1Feature_1_1impl.html#a0e26894a8159608acba0c8580cb7c64b">dyno::Feature::impl::keypoint</a></div><div class="ttdeci">Keypoint keypoint</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00359">Feature.hpp:359</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>, <a class="el" href="structdyno_1_1Feature_1_1impl.html#a0e26894a8159608acba0c8580cb7c64b">dyno::Feature::impl::keypoint</a>, and <a class="el" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>.</p>
 
@@ -831,22 +862,21 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1Feature_ada9f9980d950874a7a157a82b9921f8a_icgraph.png" border="0" usemap="#aclassdyno_1_1Feature_ada9f9980d950874a7a157a82b9921f8a_icgraph" alt=""/></div>
 <map name="aclassdyno_1_1Feature_ada9f9980d950874a7a157a82b9921f8a_icgraph" id="aclassdyno_1_1Feature_ada9f9980d950874a7a157a82b9921f8a_icgraph">
-<area shape="rect" title="Gets keypoint observation." alt="" coords="1868,109,2043,134"/>
-<area shape="rect" href="namespacedyno_1_1vision__tools.html#a8cf2c16aa30d7bfa4ea4844abb555716" title="From a feature with valid depth, backproject to a 3D point in the camera frame with the associated co..." alt="" coords="1616,69,1820,109"/>
-<area shape="rect" href="classdyno_1_1Feature.html#a37dbbe8da704c2f51e237d38760534fb" title=" " alt="" coords="1628,133,1808,173"/>
-<area shape="rect" href="classdyno_1_1ExternalFlowFeatureTracker.html#a9bc1bd98819dcd484c6cf62b3e1e5145" title=" " alt="" coords="1341,5,1564,45"/>
-<area shape="rect" href="classdyno_1_1FeatureTracker.html#a7877773d1c6d5b9cef0c379cd701c1e4" title=" " alt="" coords="1374,69,1531,109"/>
-<area shape="rect" href="classdyno_1_1Feature.html#a01bbe09de30e6892a5cb9cfb89eb131a" title="Sets the measured optical flow (which should start at the features keypoint) and updates the predicte..." alt="" coords="1353,133,1553,173"/>
-<area shape="rect" href="classdyno_1_1FeatureTracker.html#aeaff1c244270c93747ce92b36163c38d" title=" " alt="" coords="1374,197,1531,237"/>
-<area shape="rect" href="classdyno_1_1OpticalFlowAndPoseOptimizer.html#af1037c8661213cd6e602b30918b6b3ec" title=" " alt="" coords="1337,262,1568,317"/>
-<area shape="rect" href="classdyno_1_1ExternalFlowFeatureTracker.html#a28dabdf87c24770c7541ad82b54cdad0" title="Base function to perform feature tracking on static points." alt="" coords="1080,5,1276,45"/>
-<area shape="rect" href="classdyno_1_1FeatureTracker.html#a23296ac35b5935656d31a18450dc5e4c" title=" " alt="" coords="1099,133,1257,173"/>
-<area shape="rect" href="classdyno_1_1OpticalFlowAndPoseOptimizer.html#ad96216e768fc5dea6e6411222bac0ddd" title="Builds the factor&#45;graph problem using the set of specificed correspondences (tracklets) in frame k&#45;1 ..." alt="" coords="1067,269,1289,309"/>
-<area shape="rect" href="classdyno_1_1ObjectMotionSovler.html#a45c8404687be14c0a548a8b6800aa985" title=" " alt="" coords="785,239,1019,279"/>
-<area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#a78935cca3751ad2a0c25019250d12230" title="Solves PnP between frame_k&#45;1 and frame_k using the tracked correspondances to estimate the frame of t..." alt="" coords="525,300,737,340"/>
-<area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#ada2fe5067e732aa4734d96fc5e80f7f9" title=" " alt="" coords="525,236,737,276"/>
-<area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#a9bfb2e31fd68b5b6d6ffb834b6c201a1" title=" " alt="" coords="265,239,477,279"/>
-<area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2" title=" " alt="" coords="5,269,217,309"/>
+<area shape="rect" title="Gets keypoint observation." alt="" coords="1371,131,1545,157"/>
+<area shape="rect" href="namespacedyno_1_1vision__tools.html#a8cf2c16aa30d7bfa4ea4844abb555716" title="From a feature with valid depth, backproject to a 3D point in the camera frame with the associated co..." alt="" coords="1119,49,1323,89"/>
+<area shape="rect" href="classdyno_1_1Feature.html#a37dbbe8da704c2f51e237d38760534fb" title=" " alt="" coords="1131,156,1311,196"/>
+<area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#a246f701e4605c98dc7cb6bbd6f657998" title=" " alt="" coords="575,5,787,45"/>
+<area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2" title=" " alt="" coords="5,195,217,235"/>
+<area shape="rect" href="classdyno_1_1ExternalFlowFeatureTracker.html#a9bc1bd98819dcd484c6cf62b3e1e5145" title=" " alt="" coords="844,63,1067,103"/>
+<area shape="rect" href="classdyno_1_1FeatureTracker.html#af6093d870bad67d12dee0c9cb913f87c" title=" " alt="" coords="877,127,1034,167"/>
+<area shape="rect" href="classdyno_1_1FeatureTracker.html#a145614fe29bef7728075492870ac9c41" title=" " alt="" coords="602,159,759,199"/>
+<area shape="rect" href="classdyno_1_1Feature.html#a01bbe09de30e6892a5cb9cfb89eb131a" title="Sets the measured optical flow (which should start at the features keypoint) and updates the predicte..." alt="" coords="855,241,1055,281"/>
+<area shape="rect" href="classdyno_1_1OpticalFlowAndPoseOptimizer.html#af1037c8661213cd6e602b30918b6b3ec" title=" " alt="" coords="840,306,1071,361"/>
+<area shape="rect" href="classdyno_1_1ExternalFlowFeatureTracker.html#aedf0b07caf85d853756cb878f22d2ad7" title="Base function to perform feature tracking on static points." alt="" coords="583,69,779,109"/>
+<area shape="rect" href="classdyno_1_1FeatureTracker.html#a9890ba0c11b5932b5b4954a86bd03948" title=" " alt="" coords="315,159,472,199"/>
+<area shape="rect" href="classdyno_1_1OpticalFlowAndPoseOptimizer.html#ad96216e768fc5dea6e6411222bac0ddd" title="Builds the factor&#45;graph problem using the set of specificed correspondences (tracklets) in frame k&#45;1 ..." alt="" coords="569,287,792,327"/>
+<area shape="rect" href="classdyno_1_1ObjectMotionSovlerF2F.html#a432924457f5c458282c63002648b99a9" title=" " alt="" coords="265,223,521,263"/>
+<area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#ad89ae2ee89eaa41ef536e2e409809b69" title="Solves PnP between frame_k&#45;1 and frame_k using the tracked correspondances to estimate the frame of t..." alt="" coords="287,287,499,327"/>
 </map>
 </div>
 
@@ -876,12 +906,12 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00231">231</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  231</span>                                        {</div>
-<div class="line"><span class="lineno">  232</span>    std::lock_guard&lt;std::mutex&gt; lk(<a class="code hl_variable" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>);</div>
-<div class="line"><span class="lineno">  233</span>    <a class="code hl_variable" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>.<a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#a0e26894a8159608acba0c8580cb7c64b">keypoint</a> = kp;</div>
-<div class="line"><span class="lineno">  234</span>    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
-<div class="line"><span class="lineno">  235</span>  }</div>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00246">246</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  246</span>                                        {</div>
+<div class="line"><span class="lineno">  247</span>    std::lock_guard&lt;std::mutex&gt; lk(<a class="code hl_variable" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>);</div>
+<div class="line"><span class="lineno">  248</span>    <a class="code hl_variable" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>.<a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#a0e26894a8159608acba0c8580cb7c64b">keypoint</a> = kp;</div>
+<div class="line"><span class="lineno">  249</span>    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><span class="lineno">  250</span>  }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>, <a class="el" href="structdyno_1_1Feature_1_1impl.html#a0e26894a8159608acba0c8580cb7c64b">dyno::Feature::impl::keypoint</a>, and <a class="el" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>.</p>
 
@@ -913,11 +943,11 @@ Here is the caller graph for this function:</div>
 <p>Get keypoint type (static or dynamci). </p>
 <dl class="section return"><dt>Returns</dt><dd>KeyPointType </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00152">152</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  152</span>                                    {</div>
-<div class="line"><span class="lineno">  153</span>    std::lock_guard&lt;std::mutex&gt; lk(<a class="code hl_variable" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>);</div>
-<div class="line"><span class="lineno">  154</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>.<a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#ac66ef7a83384411f5cf8bacccb37844d">type</a>;</div>
-<div class="line"><span class="lineno">  155</span>  }</div>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00156">156</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  156</span>                                    {</div>
+<div class="line"><span class="lineno">  157</span>    std::lock_guard&lt;std::mutex&gt; lk(<a class="code hl_variable" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>);</div>
+<div class="line"><span class="lineno">  158</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>.<a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#ac66ef7a83384411f5cf8bacccb37844d">type</a>;</div>
+<div class="line"><span class="lineno">  159</span>  }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>, <a class="el" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>, and <a class="el" href="structdyno_1_1Feature_1_1impl.html#ac66ef7a83384411f5cf8bacccb37844d">dyno::Feature::impl::type</a>.</p>
 
@@ -947,12 +977,12 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00255">255</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  255</span>                                                     {</div>
-<div class="line"><span class="lineno">  256</span>    std::lock_guard&lt;std::mutex&gt; lk(<a class="code hl_variable" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>);</div>
-<div class="line"><span class="lineno">  257</span>    <a class="code hl_variable" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>.<a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#ac66ef7a83384411f5cf8bacccb37844d">type</a> = kp_type;</div>
-<div class="line"><span class="lineno">  258</span>    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
-<div class="line"><span class="lineno">  259</span>  }</div>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00270">270</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  270</span>                                                     {</div>
+<div class="line"><span class="lineno">  271</span>    std::lock_guard&lt;std::mutex&gt; lk(<a class="code hl_variable" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>);</div>
+<div class="line"><span class="lineno">  272</span>    <a class="code hl_variable" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>.<a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#ac66ef7a83384411f5cf8bacccb37844d">type</a> = kp_type;</div>
+<div class="line"><span class="lineno">  273</span>    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><span class="lineno">  274</span>  }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>, <a class="el" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>, and <a class="el" href="structdyno_1_1Feature_1_1impl.html#ac66ef7a83384411f5cf8bacccb37844d">dyno::Feature::impl::type</a>.</p>
 
@@ -981,12 +1011,12 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00310">310</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  310</span>                        {</div>
-<div class="line"><span class="lineno">  311</span>    std::lock_guard&lt;std::mutex&gt; lk(<a class="code hl_variable" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>);</div>
-<div class="line"><span class="lineno">  312</span>    <a class="code hl_variable" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>.<a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#a32a44c2018ac870b7a51d5dd06ceb59d">inlier</a> = <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  313</span>    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
-<div class="line"><span class="lineno">  314</span>  }</div>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00331">331</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  331</span>                        {</div>
+<div class="line"><span class="lineno">  332</span>    std::lock_guard&lt;std::mutex&gt; lk(<a class="code hl_variable" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>);</div>
+<div class="line"><span class="lineno">  333</span>    <a class="code hl_variable" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>.<a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#a32a44c2018ac870b7a51d5dd06ceb59d">inlier</a> = <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  334</span>    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><span class="lineno">  335</span>  }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>, <a class="el" href="structdyno_1_1Feature_1_1impl.html#a32a44c2018ac870b7a51d5dd06ceb59d">dyno::Feature::impl::inlier</a>, and <a class="el" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>.</p>
 
@@ -1015,14 +1045,14 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00316">316</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  316</span>                         {</div>
-<div class="line"><span class="lineno">  317</span>    std::lock_guard&lt;std::mutex&gt; lk(<a class="code hl_variable" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>);</div>
-<div class="line"><span class="lineno">  318</span>    <a class="code hl_variable" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>.<a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#a5d56a8c05702e5912cf19b8ba4cab365">tracklet_id</a> = <a class="code hl_variable" href="classdyno_1_1Feature.html#a493d3377da8ad3bddf1fae41a18e29d5">invalid_id</a>;</div>
-<div class="line"><span class="lineno">  319</span>    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
-<div class="line"><span class="lineno">  320</span>  }</div>
-<div class="ttc" id="aclassdyno_1_1Feature_html_a493d3377da8ad3bddf1fae41a18e29d5"><div class="ttname"><a href="classdyno_1_1Feature.html#a493d3377da8ad3bddf1fae41a18e29d5">dyno::Feature::invalid_id</a></div><div class="ttdeci">static constexpr TrackletId invalid_id</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00082">Feature.hpp:82</a></div></div>
-<div class="ttc" id="astructdyno_1_1Feature_1_1impl_html_a5d56a8c05702e5912cf19b8ba4cab365"><div class="ttname"><a href="structdyno_1_1Feature_1_1impl.html#a5d56a8c05702e5912cf19b8ba4cab365">dyno::Feature::impl::tracklet_id</a></div><div class="ttdeci">TrackletId tracklet_id</div><div class="ttdoc">starts STATIC</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00339">Feature.hpp:339</a></div></div>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00337">337</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  337</span>                         {</div>
+<div class="line"><span class="lineno">  338</span>    std::lock_guard&lt;std::mutex&gt; lk(<a class="code hl_variable" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>);</div>
+<div class="line"><span class="lineno">  339</span>    <a class="code hl_variable" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>.<a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#a5d56a8c05702e5912cf19b8ba4cab365">tracklet_id</a> = <a class="code hl_variable" href="classdyno_1_1Feature.html#a493d3377da8ad3bddf1fae41a18e29d5">invalid_id</a>;</div>
+<div class="line"><span class="lineno">  340</span>    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><span class="lineno">  341</span>  }</div>
+<div class="ttc" id="aclassdyno_1_1Feature_html_a493d3377da8ad3bddf1fae41a18e29d5"><div class="ttname"><a href="classdyno_1_1Feature.html#a493d3377da8ad3bddf1fae41a18e29d5">dyno::Feature::invalid_id</a></div><div class="ttdeci">static constexpr TrackletId invalid_id</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00086">Feature.hpp:86</a></div></div>
+<div class="ttc" id="astructdyno_1_1Feature_1_1impl_html_a5d56a8c05702e5912cf19b8ba4cab365"><div class="ttname"><a href="structdyno_1_1Feature_1_1impl.html#a5d56a8c05702e5912cf19b8ba4cab365">dyno::Feature::impl::tracklet_id</a></div><div class="ttdeci">TrackletId tracklet_id</div><div class="ttdoc">starts STATIC</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00365">Feature.hpp:365</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>, <a class="el" href="classdyno_1_1Feature.html#a493d3377da8ad3bddf1fae41a18e29d5">invalid_id</a>, <a class="el" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>, and <a class="el" href="structdyno_1_1Feature_1_1impl.html#a5d56a8c05702e5912cf19b8ba4cab365">dyno::Feature::impl::tracklet_id</a>.</p>
 
@@ -1051,12 +1081,12 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00304">304</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  304</span>                         {</div>
-<div class="line"><span class="lineno">  305</span>    std::lock_guard&lt;std::mutex&gt; lk(<a class="code hl_variable" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>);</div>
-<div class="line"><span class="lineno">  306</span>    <a class="code hl_variable" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>.<a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#a32a44c2018ac870b7a51d5dd06ceb59d">inlier</a> = <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">  307</span>    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
-<div class="line"><span class="lineno">  308</span>  }</div>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00325">325</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  325</span>                         {</div>
+<div class="line"><span class="lineno">  326</span>    std::lock_guard&lt;std::mutex&gt; lk(<a class="code hl_variable" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>);</div>
+<div class="line"><span class="lineno">  327</span>    <a class="code hl_variable" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>.<a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#a32a44c2018ac870b7a51d5dd06ceb59d">inlier</a> = <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">  328</span>    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><span class="lineno">  329</span>  }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>, <a class="el" href="structdyno_1_1Feature_1_1impl.html#a32a44c2018ac870b7a51d5dd06ceb59d">dyno::Feature::impl::inlier</a>, and <a class="el" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>.</p>
 
@@ -1088,12 +1118,12 @@ Here is the caller graph for this function:</div>
 <p>Gets the measured flow. </p>
 <dl class="section return"><dt>Returns</dt><dd>OpticalFlow </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00115">115</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  115</span>                                   {</div>
-<div class="line"><span class="lineno">  116</span>    std::lock_guard&lt;std::mutex&gt; lk(<a class="code hl_variable" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>);</div>
-<div class="line"><span class="lineno">  117</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>.<a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#a16b11020ef1ab510de95176e521b9517">measured_flow</a>;</div>
-<div class="line"><span class="lineno">  118</span>  }</div>
-<div class="ttc" id="astructdyno_1_1Feature_1_1impl_html_a16b11020ef1ab510de95176e521b9517"><div class="ttname"><a href="structdyno_1_1Feature_1_1impl.html#a16b11020ef1ab510de95176e521b9517">dyno::Feature::impl::measured_flow</a></div><div class="ttdeci">OpticalFlow measured_flow</div><div class="ttdoc">u,v keypoint at this frame (frame_id)</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00334">Feature.hpp:334</a></div></div>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00119">119</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  119</span>                                   {</div>
+<div class="line"><span class="lineno">  120</span>    std::lock_guard&lt;std::mutex&gt; lk(<a class="code hl_variable" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>);</div>
+<div class="line"><span class="lineno">  121</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>.<a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#a16b11020ef1ab510de95176e521b9517">measured_flow</a>;</div>
+<div class="line"><span class="lineno">  122</span>  }</div>
+<div class="ttc" id="astructdyno_1_1Feature_1_1impl_html_a16b11020ef1ab510de95176e521b9517"><div class="ttname"><a href="structdyno_1_1Feature_1_1impl.html#a16b11020ef1ab510de95176e521b9517">dyno::Feature::impl::measured_flow</a></div><div class="ttdeci">OpticalFlow measured_flow</div><div class="ttdoc">u,v keypoint at this frame (frame_id)</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00360">Feature.hpp:360</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>, <a class="el" href="structdyno_1_1Feature_1_1impl.html#a16b11020ef1ab510de95176e521b9517">dyno::Feature::impl::measured_flow</a>, and <a class="el" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>.</p>
 
@@ -1123,12 +1153,12 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00237">237</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  237</span>                                                          {</div>
-<div class="line"><span class="lineno">  238</span>    std::lock_guard&lt;std::mutex&gt; lk(<a class="code hl_variable" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>);</div>
-<div class="line"><span class="lineno">  239</span>    <a class="code hl_variable" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>.<a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#a16b11020ef1ab510de95176e521b9517">measured_flow</a> = measured_flow;</div>
-<div class="line"><span class="lineno">  240</span>    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
-<div class="line"><span class="lineno">  241</span>  }</div>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00252">252</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  252</span>                                                          {</div>
+<div class="line"><span class="lineno">  253</span>    std::lock_guard&lt;std::mutex&gt; lk(<a class="code hl_variable" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>);</div>
+<div class="line"><span class="lineno">  254</span>    <a class="code hl_variable" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>.<a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#a16b11020ef1ab510de95176e521b9517">measured_flow</a> = measured_flow;</div>
+<div class="line"><span class="lineno">  255</span>    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><span class="lineno">  256</span>  }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>, <a class="el" href="structdyno_1_1Feature_1_1impl.html#a16b11020ef1ab510de95176e521b9517">dyno::Feature::impl::measured_flow</a>, and <a class="el" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>.</p>
 
@@ -1160,12 +1190,12 @@ Here is the caller graph for this function:</div>
 <p>Get the object id associated with this feature (0 if background, 1...N for object. ie. j) </p>
 <dl class="section return"><dt>Returns</dt><dd>ObjectId </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00194">194</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  194</span>                            {</div>
-<div class="line"><span class="lineno">  195</span>    std::lock_guard&lt;std::mutex&gt; lk(<a class="code hl_variable" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>);</div>
-<div class="line"><span class="lineno">  196</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>.<a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#a88ab3b54141d1726d99a9532aefb1bf1">tracking_label</a>;</div>
-<div class="line"><span class="lineno">  197</span>  }</div>
-<div class="ttc" id="astructdyno_1_1Feature_1_1impl_html_a88ab3b54141d1726d99a9532aefb1bf1"><div class="ttname"><a href="structdyno_1_1Feature_1_1impl.html#a88ab3b54141d1726d99a9532aefb1bf1">dyno::Feature::impl::tracking_label</a></div><div class="ttdeci">ObjectId tracking_label</div><div class="ttdoc">instance label as provided by the input mask</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00344">Feature.hpp:344</a></div></div>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00198">198</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  198</span>                            {</div>
+<div class="line"><span class="lineno">  199</span>    std::lock_guard&lt;std::mutex&gt; lk(<a class="code hl_variable" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>);</div>
+<div class="line"><span class="lineno">  200</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>.<a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#a88ab3b54141d1726d99a9532aefb1bf1">tracking_label</a>;</div>
+<div class="line"><span class="lineno">  201</span>  }</div>
+<div class="ttc" id="astructdyno_1_1Feature_1_1impl_html_a88ab3b54141d1726d99a9532aefb1bf1"><div class="ttname"><a href="structdyno_1_1Feature_1_1impl.html#a88ab3b54141d1726d99a9532aefb1bf1">dyno::Feature::impl::tracking_label</a></div><div class="ttdeci">ObjectId tracking_label</div><div class="ttdoc">instance label as provided by the input mask</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00370">Feature.hpp:370</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>, <a class="el" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>, and <a class="el" href="structdyno_1_1Feature_1_1impl.html#a88ab3b54141d1726d99a9532aefb1bf1">dyno::Feature::impl::tracking_label</a>.</p>
 
@@ -1195,12 +1225,12 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00273">273</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  273</span>                                 {</div>
-<div class="line"><span class="lineno">  274</span>    std::lock_guard&lt;std::mutex&gt; lk(<a class="code hl_variable" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>);</div>
-<div class="line"><span class="lineno">  275</span>    <a class="code hl_variable" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>.<a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#a88ab3b54141d1726d99a9532aefb1bf1">tracking_label</a> = id;</div>
-<div class="line"><span class="lineno">  276</span>    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
-<div class="line"><span class="lineno">  277</span>  }</div>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00288">288</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  288</span>                                 {</div>
+<div class="line"><span class="lineno">  289</span>    std::lock_guard&lt;std::mutex&gt; lk(<a class="code hl_variable" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>);</div>
+<div class="line"><span class="lineno">  290</span>    <a class="code hl_variable" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>.<a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#a88ab3b54141d1726d99a9532aefb1bf1">tracking_label</a> = id;</div>
+<div class="line"><span class="lineno">  291</span>    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><span class="lineno">  292</span>  }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>, <a class="el" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>, and <a class="el" href="structdyno_1_1Feature_1_1impl.html#a88ab3b54141d1726d99a9532aefb1bf1">dyno::Feature::impl::tracking_label</a>.</p>
 
@@ -1230,8 +1260,8 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00098">98</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   98</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a> == other.data_; }</div>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00102">102</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  102</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a> == other.data_; }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>.</p>
 
@@ -1264,12 +1294,12 @@ Here is the caller graph for this function:</div>
 <p>NOTE: due to historical implementations, the optical-flow used to track the (dynamic) points was k to k+1 which is how we are able to get a predicted keypoint. In the current implementation, this is still how we track the dynamic points and for static points we just fill in the predicted keypoint once we actually track the keypoint from k-1 to k.</p>
 <dl class="section return"><dt>Returns</dt><dd>Keypoint </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00131">131</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  131</span>                                     {</div>
-<div class="line"><span class="lineno">  132</span>    std::lock_guard&lt;std::mutex&gt; lk(<a class="code hl_variable" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>);</div>
-<div class="line"><span class="lineno">  133</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>.<a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#a4738cc4af5b5602964437c41577202b7">predicted_keypoint</a>;</div>
-<div class="line"><span class="lineno">  134</span>  }</div>
-<div class="ttc" id="astructdyno_1_1Feature_1_1impl_html_a4738cc4af5b5602964437c41577202b7"><div class="ttname"><a href="structdyno_1_1Feature_1_1impl.html#a4738cc4af5b5602964437c41577202b7">dyno::Feature::impl::predicted_keypoint</a></div><div class="ttdeci">Keypoint predicted_keypoint</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00336">Feature.hpp:336</a></div></div>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00135">135</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  135</span>                                     {</div>
+<div class="line"><span class="lineno">  136</span>    std::lock_guard&lt;std::mutex&gt; lk(<a class="code hl_variable" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>);</div>
+<div class="line"><span class="lineno">  137</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>.<a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#a4738cc4af5b5602964437c41577202b7">predicted_keypoint</a>;</div>
+<div class="line"><span class="lineno">  138</span>  }</div>
+<div class="ttc" id="astructdyno_1_1Feature_1_1impl_html_a4738cc4af5b5602964437c41577202b7"><div class="ttname"><a href="structdyno_1_1Feature_1_1impl.html#a4738cc4af5b5602964437c41577202b7">dyno::Feature::impl::predicted_keypoint</a></div><div class="ttdeci">Keypoint predicted_keypoint</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00362">Feature.hpp:362</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>, <a class="el" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>, and <a class="el" href="structdyno_1_1Feature_1_1impl.html#a4738cc4af5b5602964437c41577202b7">dyno::Feature::impl::predicted_keypoint</a>.</p>
 
@@ -1299,14 +1329,85 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00243">243</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  243</span>                                                           {</div>
-<div class="line"><span class="lineno">  244</span>    std::lock_guard&lt;std::mutex&gt; lk(<a class="code hl_variable" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>);</div>
-<div class="line"><span class="lineno">  245</span>    <a class="code hl_variable" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>.<a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#a4738cc4af5b5602964437c41577202b7">predicted_keypoint</a> = predicted_kp;</div>
-<div class="line"><span class="lineno">  246</span>    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
-<div class="line"><span class="lineno">  247</span>  }</div>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00258">258</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  258</span>                                                           {</div>
+<div class="line"><span class="lineno">  259</span>    std::lock_guard&lt;std::mutex&gt; lk(<a class="code hl_variable" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>);</div>
+<div class="line"><span class="lineno">  260</span>    <a class="code hl_variable" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>.<a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#a4738cc4af5b5602964437c41577202b7">predicted_keypoint</a> = predicted_kp;</div>
+<div class="line"><span class="lineno">  261</span>    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><span class="lineno">  262</span>  }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>, <a class="el" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>, and <a class="el" href="structdyno_1_1Feature_1_1impl.html#a4738cc4af5b5602964437c41577202b7">dyno::Feature::impl::predicted_keypoint</a>.</p>
+
+</div>
+</div>
+<a id="ac926056c7f06cfff5eb90f90e1038190" name="ac926056c7f06cfff5eb90f90e1038190"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac926056c7f06cfff5eb90f90e1038190">&#9670;&#160;</a></span>rightKeypoint() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">double dyno::Feature::rightKeypoint </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Gets the right keypoint (uR). The value will be <a class="el" href="classdyno_1_1Feature.html#accf6ffabf83a7c9945fdced2e687d6cb">Feature::invalid_depth</a> if not set. </p>
+<dl class="section return"><dt>Returns</dt><dd>double </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00220">220</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  220</span>                               {</div>
+<div class="line"><span class="lineno">  221</span>    std::lock_guard&lt;std::mutex&gt; lk(<a class="code hl_variable" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>);</div>
+<div class="line"><span class="lineno">  222</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>.<a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#a65ad0be3f8287d5960edcb1294470f83">uR</a>;</div>
+<div class="line"><span class="lineno">  223</span>  }</div>
+</div><!-- fragment -->
+<p class="reference">References <a class="el" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>, <a class="el" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>, and <a class="el" href="structdyno_1_1Feature_1_1impl.html#a65ad0be3f8287d5960edcb1294470f83">dyno::Feature::impl::uR</a>.</p>
+
+</div>
+</div>
+<a id="a1c2d26de2f440c7a45c0a1d70c28b5d5" name="a1c2d26de2f440c7a45c0a1d70c28b5d5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1c2d26de2f440c7a45c0a1d70c28b5d5">&#9670;&#160;</a></span>rightKeypoint() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classdyno_1_1Feature.html">Feature</a> &amp; dyno::Feature::rightKeypoint </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>uR</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00300">300</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  300</span>                                    {</div>
+<div class="line"><span class="lineno">  301</span>    std::lock_guard&lt;std::mutex&gt; lk(<a class="code hl_variable" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>);</div>
+<div class="line"><span class="lineno">  302</span>    <a class="code hl_variable" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>.<a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#a65ad0be3f8287d5960edcb1294470f83">uR</a> = uR;</div>
+<div class="line"><span class="lineno">  303</span>    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><span class="lineno">  304</span>  }</div>
+</div><!-- fragment -->
+<p class="reference">References <a class="el" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>, <a class="el" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>, and <a class="el" href="structdyno_1_1Feature_1_1impl.html#a65ad0be3f8287d5960edcb1294470f83">dyno::Feature::impl::uR</a>.</p>
 
 </div>
 </div>
@@ -1343,14 +1444,14 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00224">224</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  224</span>                                                              {</div>
-<div class="line"><span class="lineno">  225</span>    std::lock_guard&lt;std::mutex&gt; lk(<a class="code hl_variable" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>);</div>
-<div class="line"><span class="lineno">  226</span>    <a class="code hl_variable" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>.<a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#a16b11020ef1ab510de95176e521b9517">measured_flow</a> = measured_flow;</div>
-<div class="line"><span class="lineno">  227</span>    <a class="code hl_variable" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>.<a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#a4738cc4af5b5602964437c41577202b7">predicted_keypoint</a> =</div>
-<div class="line"><span class="lineno">  228</span>        <a class="code hl_function" href="classdyno_1_1Feature.html#a37dbbe8da704c2f51e237d38760534fb">CalculatePredictedKeypoint</a>(<a class="code hl_variable" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>.<a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#a0e26894a8159608acba0c8580cb7c64b">keypoint</a>, measured_flow);</div>
-<div class="line"><span class="lineno">  229</span>  }</div>
-<div class="ttc" id="aclassdyno_1_1Feature_html_a37dbbe8da704c2f51e237d38760534fb"><div class="ttname"><a href="classdyno_1_1Feature.html#a37dbbe8da704c2f51e237d38760534fb">dyno::Feature::CalculatePredictedKeypoint</a></div><div class="ttdeci">static Keypoint CalculatePredictedKeypoint(const Keypoint &amp;keypoint, const OpticalFlow &amp;measured_flow)</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00210">Feature.hpp:210</a></div></div>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00239">239</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  239</span>                                                              {</div>
+<div class="line"><span class="lineno">  240</span>    std::lock_guard&lt;std::mutex&gt; lk(<a class="code hl_variable" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>);</div>
+<div class="line"><span class="lineno">  241</span>    <a class="code hl_variable" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>.<a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#a16b11020ef1ab510de95176e521b9517">measured_flow</a> = measured_flow;</div>
+<div class="line"><span class="lineno">  242</span>    <a class="code hl_variable" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>.<a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#a4738cc4af5b5602964437c41577202b7">predicted_keypoint</a> =</div>
+<div class="line"><span class="lineno">  243</span>        <a class="code hl_function" href="classdyno_1_1Feature.html#a37dbbe8da704c2f51e237d38760534fb">CalculatePredictedKeypoint</a>(<a class="code hl_variable" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>.<a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#a0e26894a8159608acba0c8580cb7c64b">keypoint</a>, measured_flow);</div>
+<div class="line"><span class="lineno">  244</span>  }</div>
+<div class="ttc" id="aclassdyno_1_1Feature_html_a37dbbe8da704c2f51e237d38760534fb"><div class="ttname"><a href="classdyno_1_1Feature.html#a37dbbe8da704c2f51e237d38760534fb">dyno::Feature::CalculatePredictedKeypoint</a></div><div class="ttdeci">static Keypoint CalculatePredictedKeypoint(const Keypoint &amp;keypoint, const OpticalFlow &amp;measured_flow)</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00225">Feature.hpp:225</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1Feature.html#a37dbbe8da704c2f51e237d38760534fb">CalculatePredictedKeypoint()</a>, <a class="el" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>, <a class="el" href="structdyno_1_1Feature_1_1impl.html#a0e26894a8159608acba0c8580cb7c64b">dyno::Feature::impl::keypoint</a>, <a class="el" href="structdyno_1_1Feature_1_1impl.html#a16b11020ef1ab510de95176e521b9517">dyno::Feature::impl::measured_flow</a>, <a class="el" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>, and <a class="el" href="structdyno_1_1Feature_1_1impl.html#a4738cc4af5b5602964437c41577202b7">dyno::Feature::impl::predicted_keypoint</a>.</p>
 <div class="dynheader">
@@ -1392,11 +1493,11 @@ Here is the call graph for this function:</div>
 <p>Get the keypoints unique tracklet id (ie. i). </p>
 <dl class="section return"><dt>Returns</dt><dd>TrackletId </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00162">162</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  162</span>                                {</div>
-<div class="line"><span class="lineno">  163</span>    std::lock_guard&lt;std::mutex&gt; lk(<a class="code hl_variable" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>);</div>
-<div class="line"><span class="lineno">  164</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>.<a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#a5d56a8c05702e5912cf19b8ba4cab365">tracklet_id</a>;</div>
-<div class="line"><span class="lineno">  165</span>  }</div>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00166">166</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  166</span>                                {</div>
+<div class="line"><span class="lineno">  167</span>    std::lock_guard&lt;std::mutex&gt; lk(<a class="code hl_variable" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>);</div>
+<div class="line"><span class="lineno">  168</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>.<a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#a5d56a8c05702e5912cf19b8ba4cab365">tracklet_id</a>;</div>
+<div class="line"><span class="lineno">  169</span>  }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>, <a class="el" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>, and <a class="el" href="structdyno_1_1Feature_1_1impl.html#a5d56a8c05702e5912cf19b8ba4cab365">dyno::Feature::impl::tracklet_id</a>.</p>
 
@@ -1426,12 +1527,12 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00261">261</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  261</span>                                                     {</div>
-<div class="line"><span class="lineno">  262</span>    std::lock_guard&lt;std::mutex&gt; lk(<a class="code hl_variable" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>);</div>
-<div class="line"><span class="lineno">  263</span>    <a class="code hl_variable" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>.<a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#a5d56a8c05702e5912cf19b8ba4cab365">tracklet_id</a> = tracklet_id;</div>
-<div class="line"><span class="lineno">  264</span>    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
-<div class="line"><span class="lineno">  265</span>  }</div>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00276">276</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  276</span>                                                     {</div>
+<div class="line"><span class="lineno">  277</span>    std::lock_guard&lt;std::mutex&gt; lk(<a class="code hl_variable" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>);</div>
+<div class="line"><span class="lineno">  278</span>    <a class="code hl_variable" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>.<a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#a5d56a8c05702e5912cf19b8ba4cab365">tracklet_id</a> = tracklet_id;</div>
+<div class="line"><span class="lineno">  279</span>    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><span class="lineno">  280</span>  }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>, <a class="el" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>, and <a class="el" href="structdyno_1_1Feature_1_1impl.html#a5d56a8c05702e5912cf19b8ba4cab365">dyno::Feature::impl::tracklet_id</a>.</p>
 
@@ -1466,11 +1567,11 @@ Here is the call graph for this function:</div>
 <dd>
 false </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00294">294</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  294</span>                             {</div>
-<div class="line"><span class="lineno">  295</span>    std::lock_guard&lt;std::mutex&gt; lk(<a class="code hl_variable" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>);</div>
-<div class="line"><span class="lineno">  296</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>.<a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#a32a44c2018ac870b7a51d5dd06ceb59d">inlier</a> &amp;&amp; <a class="code hl_variable" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>.<a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#a5d56a8c05702e5912cf19b8ba4cab365">tracklet_id</a> != <a class="code hl_variable" href="classdyno_1_1Feature.html#a493d3377da8ad3bddf1fae41a18e29d5">invalid_id</a>;</div>
-<div class="line"><span class="lineno">  297</span>  }</div>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00315">315</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  315</span>                             {</div>
+<div class="line"><span class="lineno">  316</span>    std::lock_guard&lt;std::mutex&gt; lk(<a class="code hl_variable" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>);</div>
+<div class="line"><span class="lineno">  317</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>.<a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#a32a44c2018ac870b7a51d5dd06ceb59d">inlier</a> &amp;&amp; <a class="code hl_variable" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>.<a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#a5d56a8c05702e5912cf19b8ba4cab365">tracklet_id</a> != <a class="code hl_variable" href="classdyno_1_1Feature.html#a493d3377da8ad3bddf1fae41a18e29d5">invalid_id</a>;</div>
+<div class="line"><span class="lineno">  318</span>  }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1Feature.html#a7986429be203d153f391bb095a291678">data_</a>, <a class="el" href="structdyno_1_1Feature_1_1impl.html#a32a44c2018ac870b7a51d5dd06ceb59d">dyno::Feature::impl::inlier</a>, <a class="el" href="classdyno_1_1Feature.html#a493d3377da8ad3bddf1fae41a18e29d5">invalid_id</a>, <a class="el" href="classdyno_1_1Feature.html#ae6a975328f68857c63a1dbb33d9aaa04">mutex_</a>, and <a class="el" href="structdyno_1_1Feature_1_1impl.html#a5d56a8c05702e5912cf19b8ba4cab365">dyno::Feature::impl::tracklet_id</a>.</p>
 
@@ -1497,9 +1598,9 @@ false </dd></dl>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00364">364</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00391">391</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1Feature.html#af8f99706ad246f779ea9334863f479da">age()</a>, <a class="el" href="classdyno_1_1Feature.html#aa1dad2ea2a931bbccb56ae5b53822943">depth()</a>, <a class="el" href="classdyno_1_1Feature.html#a1e4fb60f2d137643a5027e138aea7604">Feature()</a>, <a class="el" href="classdyno_1_1Feature.html#a71203f342bdd4af7b5f883cd86259b26">frameId()</a>, <a class="el" href="classdyno_1_1Feature.html#ae7d554f489558630f69b617f82c24173">hasDepth()</a>, <a class="el" href="classdyno_1_1Feature.html#a323d04b529f39ce489a8e86589fcfc74">inlier()</a>, <a class="el" href="classdyno_1_1Feature.html#af8ecd1b5b7d9484dde99aff5544e91ed">isStatic()</a>, <a class="el" href="classdyno_1_1Feature.html#ada9f9980d950874a7a157a82b9921f8a">keypoint()</a>, <a class="el" href="classdyno_1_1Feature.html#a4840858a89dc722db07380a0cf62a94b">keypointType()</a>, <a class="el" href="classdyno_1_1Feature.html#abdac649e20fd337d4bec6644a8b294ae">markInlier()</a>, <a class="el" href="classdyno_1_1Feature.html#aa869ff62fbc666d42f585a47f18fc590">markInvalid()</a>, <a class="el" href="classdyno_1_1Feature.html#a8ba41c7616bbb4f726b711f5c2e4b835">markOutlier()</a>, <a class="el" href="classdyno_1_1Feature.html#ae7fa1721a1738a778637bba285a9064f">measuredFlow()</a>, <a class="el" href="classdyno_1_1Feature.html#a93ac27ea317b53fd8a72a7689b48ce9b">objectId()</a>, <a class="el" href="classdyno_1_1Feature.html#aea923f3e780ddd5bc527bbc6188ca16e">operator==()</a>, <a class="el" href="classdyno_1_1Feature.html#abdeaa93a327f02d856407a41e8244622">predictedKeypoint()</a>, <a class="el" href="classdyno_1_1Feature.html#a01bbe09de30e6892a5cb9cfb89eb131a">setPredictedKeypoint()</a>, <a class="el" href="classdyno_1_1Feature.html#a6cd1826958eef55d51382228bd06f651">trackletId()</a>, and <a class="el" href="classdyno_1_1Feature.html#a3135a4ec8e529e4aeefe4cdcdf2abd58">usable()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1Feature.html#af8f99706ad246f779ea9334863f479da">age()</a>, <a class="el" href="classdyno_1_1Feature.html#aa1dad2ea2a931bbccb56ae5b53822943">depth()</a>, <a class="el" href="classdyno_1_1Feature.html#a1e4fb60f2d137643a5027e138aea7604">Feature()</a>, <a class="el" href="classdyno_1_1Feature.html#a71203f342bdd4af7b5f883cd86259b26">frameId()</a>, <a class="el" href="classdyno_1_1Feature.html#ae7d554f489558630f69b617f82c24173">hasDepth()</a>, <a class="el" href="classdyno_1_1Feature.html#a83fdfc4e338ef1b30edae48ed6eaf9c7">hasRightKeypoint()</a>, <a class="el" href="classdyno_1_1Feature.html#a323d04b529f39ce489a8e86589fcfc74">inlier()</a>, <a class="el" href="classdyno_1_1Feature.html#af8ecd1b5b7d9484dde99aff5544e91ed">isStatic()</a>, <a class="el" href="classdyno_1_1Feature.html#ada9f9980d950874a7a157a82b9921f8a">keypoint()</a>, <a class="el" href="classdyno_1_1Feature.html#a4840858a89dc722db07380a0cf62a94b">keypointType()</a>, <a class="el" href="classdyno_1_1Feature.html#abdac649e20fd337d4bec6644a8b294ae">markInlier()</a>, <a class="el" href="classdyno_1_1Feature.html#aa869ff62fbc666d42f585a47f18fc590">markInvalid()</a>, <a class="el" href="classdyno_1_1Feature.html#a8ba41c7616bbb4f726b711f5c2e4b835">markOutlier()</a>, <a class="el" href="classdyno_1_1Feature.html#ae7fa1721a1738a778637bba285a9064f">measuredFlow()</a>, <a class="el" href="classdyno_1_1Feature.html#a93ac27ea317b53fd8a72a7689b48ce9b">objectId()</a>, <a class="el" href="classdyno_1_1Feature.html#aea923f3e780ddd5bc527bbc6188ca16e">operator==()</a>, <a class="el" href="classdyno_1_1Feature.html#abdeaa93a327f02d856407a41e8244622">predictedKeypoint()</a>, <a class="el" href="classdyno_1_1Feature.html#ac926056c7f06cfff5eb90f90e1038190">rightKeypoint()</a>, <a class="el" href="classdyno_1_1Feature.html#a01bbe09de30e6892a5cb9cfb89eb131a">setPredictedKeypoint()</a>, <a class="el" href="classdyno_1_1Feature.html#a6cd1826958eef55d51382228bd06f651">trackletId()</a>, and <a class="el" href="classdyno_1_1Feature.html#a3135a4ec8e529e4aeefe4cdcdf2abd58">usable()</a>.</p>
 
 </div>
 </div>
@@ -1527,7 +1628,7 @@ false </dd></dl>
 <div class="ttc" id="anamespacedyno_html_aa9297665cadd44539c6b64879869c834"><div class="ttname"><a href="namespacedyno.html#aa9297665cadd44539c6b64879869c834">dyno::NaN</a></div><div class="ttdeci">static constexpr auto NaN</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00062">Types.hpp:62</a></div></div>
 </div><!-- fragment --><p>can refer to and invalid id label (of type int) including tracklet id, instance and tracking label </p>
 
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00086">86</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00090">90</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1Frame.html#a79a48377696d64b7f2b4d6806cdd018f">dyno::Frame::updateDepthsFeatureContainer()</a>.</p>
 
@@ -1555,7 +1656,7 @@ false </dd></dl>
 <b>Initial value:</b><div class="fragment"><div class="line">=</div>
 <div class="line">      -1</div>
 </div><!-- fragment -->
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00082">82</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00086">86</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1Feature.html#aa869ff62fbc666d42f585a47f18fc590">markInvalid()</a>, and <a class="el" href="classdyno_1_1Feature.html#a3135a4ec8e529e4aeefe4cdcdf2abd58">usable()</a>.</p>
 
@@ -1581,9 +1682,9 @@ false </dd></dl>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00365">365</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00392">392</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1Feature.html#af8f99706ad246f779ea9334863f479da">age()</a>, <a class="el" href="classdyno_1_1Feature.html#aa1dad2ea2a931bbccb56ae5b53822943">depth()</a>, <a class="el" href="classdyno_1_1Feature.html#a1e4fb60f2d137643a5027e138aea7604">Feature()</a>, <a class="el" href="classdyno_1_1Feature.html#a71203f342bdd4af7b5f883cd86259b26">frameId()</a>, <a class="el" href="classdyno_1_1Feature.html#ae7d554f489558630f69b617f82c24173">hasDepth()</a>, <a class="el" href="classdyno_1_1Feature.html#a323d04b529f39ce489a8e86589fcfc74">inlier()</a>, <a class="el" href="classdyno_1_1Feature.html#af8ecd1b5b7d9484dde99aff5544e91ed">isStatic()</a>, <a class="el" href="classdyno_1_1Feature.html#ada9f9980d950874a7a157a82b9921f8a">keypoint()</a>, <a class="el" href="classdyno_1_1Feature.html#a4840858a89dc722db07380a0cf62a94b">keypointType()</a>, <a class="el" href="classdyno_1_1Feature.html#abdac649e20fd337d4bec6644a8b294ae">markInlier()</a>, <a class="el" href="classdyno_1_1Feature.html#aa869ff62fbc666d42f585a47f18fc590">markInvalid()</a>, <a class="el" href="classdyno_1_1Feature.html#a8ba41c7616bbb4f726b711f5c2e4b835">markOutlier()</a>, <a class="el" href="classdyno_1_1Feature.html#ae7fa1721a1738a778637bba285a9064f">measuredFlow()</a>, <a class="el" href="classdyno_1_1Feature.html#a93ac27ea317b53fd8a72a7689b48ce9b">objectId()</a>, <a class="el" href="classdyno_1_1Feature.html#abdeaa93a327f02d856407a41e8244622">predictedKeypoint()</a>, <a class="el" href="classdyno_1_1Feature.html#a01bbe09de30e6892a5cb9cfb89eb131a">setPredictedKeypoint()</a>, <a class="el" href="classdyno_1_1Feature.html#a6cd1826958eef55d51382228bd06f651">trackletId()</a>, and <a class="el" href="classdyno_1_1Feature.html#a3135a4ec8e529e4aeefe4cdcdf2abd58">usable()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1Feature.html#af8f99706ad246f779ea9334863f479da">age()</a>, <a class="el" href="classdyno_1_1Feature.html#aa1dad2ea2a931bbccb56ae5b53822943">depth()</a>, <a class="el" href="classdyno_1_1Feature.html#a1e4fb60f2d137643a5027e138aea7604">Feature()</a>, <a class="el" href="classdyno_1_1Feature.html#a71203f342bdd4af7b5f883cd86259b26">frameId()</a>, <a class="el" href="classdyno_1_1Feature.html#ae7d554f489558630f69b617f82c24173">hasDepth()</a>, <a class="el" href="classdyno_1_1Feature.html#a83fdfc4e338ef1b30edae48ed6eaf9c7">hasRightKeypoint()</a>, <a class="el" href="classdyno_1_1Feature.html#a323d04b529f39ce489a8e86589fcfc74">inlier()</a>, <a class="el" href="classdyno_1_1Feature.html#af8ecd1b5b7d9484dde99aff5544e91ed">isStatic()</a>, <a class="el" href="classdyno_1_1Feature.html#ada9f9980d950874a7a157a82b9921f8a">keypoint()</a>, <a class="el" href="classdyno_1_1Feature.html#a4840858a89dc722db07380a0cf62a94b">keypointType()</a>, <a class="el" href="classdyno_1_1Feature.html#abdac649e20fd337d4bec6644a8b294ae">markInlier()</a>, <a class="el" href="classdyno_1_1Feature.html#aa869ff62fbc666d42f585a47f18fc590">markInvalid()</a>, <a class="el" href="classdyno_1_1Feature.html#a8ba41c7616bbb4f726b711f5c2e4b835">markOutlier()</a>, <a class="el" href="classdyno_1_1Feature.html#ae7fa1721a1738a778637bba285a9064f">measuredFlow()</a>, <a class="el" href="classdyno_1_1Feature.html#a93ac27ea317b53fd8a72a7689b48ce9b">objectId()</a>, <a class="el" href="classdyno_1_1Feature.html#abdeaa93a327f02d856407a41e8244622">predictedKeypoint()</a>, <a class="el" href="classdyno_1_1Feature.html#ac926056c7f06cfff5eb90f90e1038190">rightKeypoint()</a>, <a class="el" href="classdyno_1_1Feature.html#a01bbe09de30e6892a5cb9cfb89eb131a">setPredictedKeypoint()</a>, <a class="el" href="classdyno_1_1Feature.html#a6cd1826958eef55d51382228bd06f651">trackletId()</a>, and <a class="el" href="classdyno_1_1Feature.html#a3135a4ec8e529e4aeefe4cdcdf2abd58">usable()</a>.</p>
 
 </div>
 </div>

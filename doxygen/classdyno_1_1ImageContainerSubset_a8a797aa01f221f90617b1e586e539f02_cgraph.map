@@ -2,5 +2,5 @@
 <area shape="rect" id="node1" title="Validates that the input images (if not empty) are the same size. Throws ImageContainerConstructionEx..." alt="" coords="5,23,216,63"/>
 <area shape="rect" id="node2" href="$namespacedyno.html#a809604e427db44cbf532a545c71a3b5d" title=" " alt="" coords="272,5,391,31"/>
 <area shape="rect" id="node3" href="$namespacedyno.html#ae258e3ba8437bfdf2658a3fd7c362cc3" title="Get a demangled class name of type T from a templated type." alt="" coords="264,55,399,80"/>
-<area shape="rect" id="node4" href="$namespacedyno.html#a1b5b67db2d2a5b28501c1aa6e9d72b5c" title="Map of tracklet ids to Motion3 (gtsam::Pose3)" alt="" coords="447,55,573,80"/>
+<area shape="rect" id="node4" href="$namespacedyno.html#a1b5b67db2d2a5b28501c1aa6e9d72b5c" title="Get demangled class name." alt="" coords="447,55,573,80"/>
 </map>

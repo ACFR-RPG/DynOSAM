@@ -1,11 +1,11 @@
 <map id="dyno::vision_tools::findObjectBoundingBox" name="dyno::vision_tools::findObjectBoundingBox">
 <area shape="rect" id="node1" title="From a instance/semantic mask type img, construct the bounding box for the mask of object_id." alt="" coords="565,133,748,173"/>
 <area shape="rect" id="node2" href="$classdyno_1_1ClusterSlamAllLoader.html#a074af7358c98d715599460ca2671ecc4" title=" " alt="" coords="266,5,507,45"/>
-<area shape="rect" id="node4" href="$namespacedyno_1_1vision__tools.html#a2c6285cb428d1df8a2ea1071d9a06757" title="From an input instance/semantic mask type img construct a image mask (binary) that has True values ar..." alt="" coords="256,69,517,109"/>
+<area shape="rect" id="node4" href="$namespacedyno_1_1vision__tools.html#ad7347d14d7f68183415227f23bbd6f7d" title="From an input instance/semantic mask type img construct a image mask (binary) that has True values ar..." alt="" coords="256,69,517,109"/>
 <area shape="rect" id="node6" href="$classdyno_1_1Frame.html#ab038b536516e42beb788f1b794801270" title=" " alt="" coords="272,133,501,173"/>
 <area shape="rect" id="node8" href="$namespacedyno_1_1vision__tools.html#a46d0411291384b813e022cf32c66a82b" title="From a instance/semantic mask type img, construct the bounding box for the mask of object_id." alt="" coords="295,197,478,237"/>
 <area shape="rect" id="node9" href="$classdyno_1_1ByteObjectTracker.html#aeb79dc19fb881160be780b9f4a2b2240" title=" " alt="" coords="297,285,477,325"/>
 <area shape="rect" id="node3" href="$classdyno_1_1ClusterSlamAllLoader.html#a6dbf46c48ea9477aa915bff62ee98ea8" title=" " alt="" coords="5,5,208,45"/>
-<area shape="rect" id="node5" href="$classdyno_1_1FeatureTracker.html#a23296ac35b5935656d31a18450dc5e4c" title=" " alt="" coords="28,69,185,109"/>
+<area shape="rect" id="node5" href="$classdyno_1_1FeatureTracker.html#a9890ba0c11b5932b5b4954a86bd03948" title=" " alt="" coords="28,69,185,109"/>
 <area shape="rect" id="node7" href="$classdyno_1_1Frame.html#a5553af4c0c310c23d0f39e0c1daf0478" title=" " alt="" coords="31,141,183,166"/>
 </map>

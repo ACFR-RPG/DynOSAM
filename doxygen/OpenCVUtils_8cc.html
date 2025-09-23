@@ -81,61 +81,70 @@ $(function() {
   <div class="headertitle"><div class="title">OpenCVUtils.cc File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;<a class="el" href="Types_8hpp_source.html">dynosam/common/Types.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="OpenCVUtils_8hpp_source.html">dynosam/utils/OpenCVUtils.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="ColourMap_8hpp_source.html">dynosam/visualizer/ColourMap.hpp</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="OpenCVUtils_8hpp_source.html">dynosam/utils/OpenCVUtils.hpp</a>&quot;</code><br />
 <code>#include &lt;config_utilities/config_utilities.h&gt;</code><br />
-<code>#include &lt;opencv4/opencv2/opencv.hpp&gt;</code><br />
 <code>#include &lt;glog/logging.h&gt;</code><br />
-<code>#include &lt;iostream&gt;</code><br />
 <code>#include &lt;fstream&gt;</code><br />
+<code>#include &lt;iostream&gt;</code><br />
+<code>#include &lt;opencv4/opencv2/opencv.hpp&gt;</code><br />
+<code>#include &quot;<a class="el" href="Types_8hpp_source.html">dynosam/common/Types.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="GtsamUtils_8hpp_source.html">dynosam/utils/GtsamUtils.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="ColourMap_8hpp_source.html">dynosam/visualizer/ColourMap.hpp</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for OpenCVUtils.cc:</div>
 <div class="dyncontent">
 <div class="center"><img src="OpenCVUtils_8cc__incl.png" border="0" usemap="#adynosam_2src_2utils_2OpenCVUtils_8cc" alt=""/></div>
 <map name="adynosam_2src_2utils_2OpenCVUtils_8cc" id="adynosam_2src_2utils_2OpenCVUtils_8cc">
-<area shape="rect" title=" " alt="" coords="775,5,1017,31"/>
-<area shape="rect" href="Types_8hpp.html" title=" " alt="" coords="953,255,1165,280"/>
-<area shape="rect" title=" " alt="" coords="3165,482,3280,507"/>
-<area shape="rect" title=" " alt="" coords="71,482,286,507"/>
-<area shape="rect" title=" " alt="" coords="5,570,85,595"/>
-<area shape="rect" title=" " alt="" coords="2086,570,2159,595"/>
-<area shape="rect" href="OpenCVUtils_8hpp.html" title=" " alt="" coords="229,86,457,111"/>
-<area shape="rect" href="ColourMap_8hpp.html" title=" " alt="" coords="556,79,705,119"/>
-<area shape="rect" title=" " alt="" coords="3355,79,3515,119"/>
-<area shape="rect" title=" " alt="" coords="1948,328,2116,353"/>
-<area shape="rect" title=" " alt="" coords="533,570,689,595"/>
-<area shape="rect" title=" " alt="" coords="2839,482,3025,507"/>
-<area shape="rect" title=" " alt="" coords="647,328,790,353"/>
-<area shape="rect" title=" " alt="" coords="548,482,623,507"/>
-<area shape="rect" title=" " alt="" coords="814,328,911,353"/>
-<area shape="rect" title=" " alt="" coords="3049,482,3141,507"/>
-<area shape="rect" title=" " alt="" coords="1513,328,1575,353"/>
-<area shape="rect" href="Flags_8hpp.html" title=" " alt="" coords="987,328,1197,353"/>
-<area shape="rect" href="Macros_8hpp.html" title=" " alt="" coords="378,328,571,353"/>
-<area shape="rect" href="SensorModels_8hpp.html" title=" " alt="" coords="1221,328,1488,353"/>
-<area shape="rect" title=" " alt="" coords="698,401,814,427"/>
-<area shape="rect" title=" " alt="" coords="495,401,572,427"/>
-<area shape="rect" title=" " alt="" coords="713,570,868,595"/>
-<area shape="rect" title=" " alt="" coords="1625,401,1823,427"/>
-<area shape="rect" href="GtsamUtils_8hpp.html" title=" " alt="" coords="1383,401,1601,427"/>
-<area shape="rect" title=" " alt="" coords="2405,482,2603,507"/>
-<area shape="rect" title=" " alt="" coords="2628,482,2815,507"/>
-<area shape="rect" title=" " alt="" coords="799,482,975,507"/>
-<area shape="rect" title=" " alt="" coords="999,482,1180,507"/>
-<area shape="rect" title=" " alt="" coords="1205,482,1371,507"/>
-<area shape="rect" title=" " alt="" coords="1395,482,1589,507"/>
-<area shape="rect" title=" " alt="" coords="1613,482,1787,507"/>
-<area shape="rect" title=" " alt="" coords="1811,475,2005,515"/>
-<area shape="rect" title=" " alt="" coords="2029,482,2216,507"/>
-<area shape="rect" title=" " alt="" coords="2241,482,2381,507"/>
-<area shape="rect" href="Numerical_8hpp.html" title=" " alt="" coords="311,482,524,507"/>
-<area shape="rect" title=" " alt="" coords="121,563,303,603"/>
-<area shape="rect" title=" " alt="" coords="327,563,508,603"/>
-<area shape="rect" title=" " alt="" coords="277,174,409,199"/>
-<area shape="rect" href="Colour_8hpp.html" title=" " alt="" coords="489,167,639,207"/>
-<area shape="rect" title=" " alt="" coords="271,255,334,280"/>
-<area shape="rect" title=" " alt="" coords="359,255,527,280"/>
+<area shape="rect" title=" " alt="" coords="2447,5,2688,31"/>
+<area shape="rect" href="OpenCVUtils_8hpp.html" title=" " alt="" coords="468,174,696,199"/>
+<area shape="rect" title=" " alt="" coords="627,511,841,537"/>
+<area shape="rect" href="Types_8hpp.html" title=" " alt="" coords="1652,262,1864,287"/>
+<area shape="rect" title=" " alt="" coords="3569,511,3683,537"/>
+<area shape="rect" href="GtsamUtils_8hpp.html" title=" " alt="" coords="2115,431,2334,456"/>
+<area shape="rect" title=" " alt="" coords="3629,599,3709,625"/>
+<area shape="rect" title=" " alt="" coords="3764,599,3837,625"/>
+<area shape="rect" title=" " alt="" coords="3619,79,3779,119"/>
+<area shape="rect" href="ColourMap_8hpp.html" title=" " alt="" coords="2605,79,2754,119"/>
+<area shape="rect" title=" " alt="" coords="377,255,545,295"/>
+<area shape="rect" title=" " alt="" coords="220,262,352,287"/>
+<area shape="rect" title=" " alt="" coords="1553,350,1721,375"/>
+<area shape="rect" title=" " alt="" coords="39,599,195,625"/>
+<area shape="rect" title=" " alt="" coords="3121,511,3307,537"/>
+<area shape="rect" title=" " alt="" coords="1796,350,1939,375"/>
+<area shape="rect" title=" " alt="" coords="866,511,941,537"/>
+<area shape="rect" title=" " alt="" coords="2015,350,2112,375"/>
+<area shape="rect" title=" " alt="" coords="965,511,1057,537"/>
+<area shape="rect" title=" " alt="" coords="1196,350,1259,375"/>
+<area shape="rect" href="Flags_8hpp.html" title=" " alt="" coords="619,350,830,375"/>
+<area shape="rect" href="Macros_8hpp.html" title=" " alt="" coords="1335,350,1528,375"/>
+<area shape="rect" href="SensorModels_8hpp.html" title=" " alt="" coords="854,350,1121,375"/>
+<area shape="rect" href="Types-inl_8hpp.html" title=" " alt="" coords="2137,343,2321,383"/>
+<area shape="rect" title=" " alt="" coords="32,431,148,456"/>
+<area shape="rect" title=" " alt="" coords="1334,431,1411,456"/>
+<area shape="rect" title=" " alt="" coords="1745,599,1899,625"/>
+<area shape="rect" title=" " alt="" coords="891,431,1121,456"/>
+<area shape="rect" title=" " alt="" coords="670,431,867,456"/>
+<area shape="rect" href="Exceptions_8hpp.html" title=" " alt="" coords="291,431,537,456"/>
+<area shape="rect" title=" " alt="" coords="265,511,352,537"/>
+<area shape="rect" title=" " alt="" coords="376,511,452,537"/>
+<area shape="rect" title=" " alt="" coords="477,511,551,537"/>
+<area shape="rect" title=" " alt="" coords="155,511,241,537"/>
+<area shape="rect" title=" " alt="" coords="1245,511,1444,537"/>
+<area shape="rect" title=" " alt="" coords="1469,511,1655,537"/>
+<area shape="rect" title=" " alt="" coords="1679,511,1855,537"/>
+<area shape="rect" title=" " alt="" coords="1879,511,2061,537"/>
+<area shape="rect" title=" " alt="" coords="2085,511,2252,537"/>
+<area shape="rect" title=" " alt="" coords="2276,511,2469,537"/>
+<area shape="rect" title=" " alt="" coords="2494,511,2667,537"/>
+<area shape="rect" title=" " alt="" coords="2691,504,2886,544"/>
+<area shape="rect" title=" " alt="" coords="2910,511,3097,537"/>
+<area shape="rect" title=" " alt="" coords="1081,511,1221,537"/>
+<area shape="rect" href="Numerical_8hpp.html" title=" " alt="" coords="3331,511,3545,537"/>
+<area shape="rect" title=" " alt="" coords="3157,592,3338,632"/>
+<area shape="rect" title=" " alt="" coords="3362,592,3543,632"/>
+<area shape="rect" href="Colour_8hpp.html" title=" " alt="" coords="2605,167,2754,207"/>
+<area shape="rect" title=" " alt="" coords="2949,262,3012,287"/>
+<area shape="rect" title=" " alt="" coords="2706,262,2874,287"/>
 </map>
 </div>
 </div>
@@ -156,8 +165,14 @@ Functions</h2></td></tr>
 <tr class="memitem:a8404c7bca638c768f310c162f2e73f53"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
 <tr class="memitem:a8404c7bca638c768f310c162f2e73f53"><td class="memTemplItemLeft" align="right" valign="top">std::string&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacedyno.html#a8404c7bca638c768f310c162f2e73f53">dyno::to_string&lt; cv::Rect &gt;</a> (const cv::Rect &amp;t)</td></tr>
 <tr class="separator:a8404c7bca638c768f310c162f2e73f53"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad47afe3893644f77bafab4d379af64f4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno_1_1utils.html#ad47afe3893644f77bafab4d379af64f4">dyno::utils::drawCircleInPlace</a> (cv::Mat &amp;img, const cv::Point2d &amp;point, const cv::Scalar &amp;colour, const double msize=0.4)</td></tr>
-<tr class="separator:ad47afe3893644f77bafab4d379af64f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6176c158eee250623d90248c77177fec"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno_1_1utils.html#a6176c158eee250623d90248c77177fec">dyno::utils::calculateIoU</a> (const cv::Rect &amp;a, const cv::Rect &amp;b)</td></tr>
+<tr class="separator:a6176c158eee250623d90248c77177fec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a79013aaf6365e9d7c81c0d88bb47df76"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno_1_1utils.html#a79013aaf6365e9d7c81c0d88bb47df76">dyno::utils::cvSizeEqual</a> (const cv::Size &amp;a, const cv::Size &amp;b)</td></tr>
+<tr class="separator:a79013aaf6365e9d7c81c0d88bb47df76"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abb253e2a293e106dc8dd1160e84f8db7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno_1_1utils.html#abb253e2a293e106dc8dd1160e84f8db7">dyno::utils::cvSizeEqual</a> (const cv::Mat &amp;a, const cv::Mat &amp;b)</td></tr>
+<tr class="separator:abb253e2a293e106dc8dd1160e84f8db7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2fe183e2a729ea1ccd22ac0a4d02e71d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno_1_1utils.html#a2fe183e2a729ea1ccd22ac0a4d02e71d">dyno::utils::drawCircleInPlace</a> (cv::Mat &amp;img, const cv::Point2d &amp;point, const cv::Scalar &amp;colour, const int radius=1, const int thickness=2)</td></tr>
+<tr class="separator:a2fe183e2a729ea1ccd22ac0a4d02e71d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4bed389606523e7a31694ad904523c4d"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno_1_1utils.html#a4bed389606523e7a31694ad904523c4d">dyno::utils::cvTypeToString</a> (int type)</td></tr>
 <tr class="separator:a4bed389606523e7a31694ad904523c4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac68f5949064af90a52da1b3890de7659"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno_1_1utils.html#ac68f5949064af90a52da1b3890de7659">dyno::utils::cvTypeToString</a> (const cv::Mat &amp;mat)</td></tr>
@@ -168,6 +183,9 @@ Functions</h2></td></tr>
 <tr class="separator:a43567366bb263fc12c811028ce68e9d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa8061bfcb1a6d9b02d88085bf851986d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno_1_1utils.html#aa8061bfcb1a6d9b02d88085bf851986d">dyno::utils::flowToRgb</a> (const cv::Mat &amp;flow, cv::Mat &amp;rgb)</td></tr>
 <tr class="separator:aa8061bfcb1a6d9b02d88085bf851986d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab60d1512caf6ce316d53e53056b71f7e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno_1_1utils.html#ab60d1512caf6ce316d53e53056b71f7e">dyno::utils::labelMaskToRGB</a> (const cv::Mat &amp;mask, const cv::Mat &amp;rgb_input, cv::Mat &amp;output, float alpha=0.7, int background_label=0)</td></tr>
+<tr class="memdesc:ab60d1512caf6ce316d53e53056b71f7e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Given an image that operates like a mask (ie. is a single channel image where each pixel value correspondes to a label of some type) draws the mask over an input image.  <br /></td></tr>
+<tr class="separator:ab60d1512caf6ce316d53e53056b71f7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5abdff0c77884da4a8da55f0880d8cfb"><td class="memItemLeft" align="right" valign="top">cv::Mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno_1_1utils.html#a5abdff0c77884da4a8da55f0880d8cfb">dyno::utils::labelMaskToRGB</a> (const cv::Mat &amp;mask, int background_label, const cv::Mat &amp;rgb)</td></tr>
 <tr class="memdesc:a5abdff0c77884da4a8da55f0880d8cfb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Given an image that operates like a mask (ie. is a single channel image where each pixel value correspondes to a label of some type) draws the mask over an input image.  <br /></td></tr>
 <tr class="separator:a5abdff0c77884da4a8da55f0880d8cfb"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -177,9 +195,12 @@ Functions</h2></td></tr>
 <tr class="memitem:a40e39763021c547fd3ddfd934637bebe"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno_1_1utils.html#a40e39763021c547fd3ddfd934637bebe">dyno::utils::getDisparityVis</a> (cv::InputArray src, cv::OutputArray dst, int unknown_disparity=16320)</td></tr>
 <tr class="memdesc:a40e39763021c547fd3ddfd934637bebe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allows visualization of disparity image (which is usually outputed as CV_16S or CV_32F from stereo depth reconstruction).  <br /></td></tr>
 <tr class="separator:a40e39763021c547fd3ddfd934637bebe"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab3245a3ae481133c8052ef2ba138c990"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno_1_1utils.html#ab3245a3ae481133c8052ef2ba138c990">dyno::utils::drawLabeledBoundingBox</a> (cv::Mat &amp;image, const std::string &amp;label, const cv::Scalar &amp;colour, const cv::Rect &amp;bounding_box)</td></tr>
-<tr class="memdesc:ab3245a3ae481133c8052ef2ba138c990"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draws a coloured bounding box and associated label onto a RGB image.  <br /></td></tr>
-<tr class="separator:ab3245a3ae481133c8052ef2ba138c990"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1ec9d7c1cdab85616f6622f915e768dd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno_1_1utils.html#a1ec9d7c1cdab85616f6622f915e768dd">dyno::utils::drawLabeledBoundingBox</a> (cv::Mat &amp;image, const std::string &amp;label, const cv::Scalar &amp;colour, const cv::Rect &amp;bounding_box, const int &amp;bb_thickness=2)</td></tr>
+<tr class="memdesc:a1ec9d7c1cdab85616f6622f915e768dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draws a coloured bounding box and associated label onto a RGB image.  <br /></td></tr>
+<tr class="separator:a1ec9d7c1cdab85616f6622f915e768dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a908a399e79c1e4a10e2f8901ad4acde2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno_1_1utils.html#a908a399e79c1e4a10e2f8901ad4acde2">dyno::utils::drawObjectPoseAxes</a> (cv::Mat &amp;image, const cv::Mat &amp;K, const cv::Mat &amp;D, const std::vector&lt; gtsam::Pose3 &gt; &amp;poses_c, float scale=0.2)</td></tr>
+<tr class="memdesc:a908a399e79c1e4a10e2f8901ad4acde2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Projects SE(3) poses onto the image as an RGB axes. Input poses are expected to be in the camera (local) frame.  <br /></td></tr>
+<tr class="separator:a908a399e79c1e4a10e2f8901ad4acde2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac8ff128f0c488db144db269ca8d8856e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno_1_1utils.html#ac8ff128f0c488db144db269ca8d8856e">dyno::utils::compareCvMatsUpToTol</a> (const cv::Mat &amp;mat1, const cv::Mat &amp;mat2, const double &amp;tol=1e-7)</td></tr>
 <tr class="separator:ac8ff128f0c488db144db269ca8d8856e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a46d2c367b18c5313273bd9225ff1af1f"><td class="memItemLeft" align="right" valign="top">cv::Mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno_1_1utils.html#a46d2c367b18c5313273bd9225ff1af1f">dyno::utils::readOpticalFlow</a> (const std::string &amp;path)</td></tr>

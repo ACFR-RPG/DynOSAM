@@ -1,8 +1,16 @@
 <map id="dyno::Color::bgra" name="dyno::Color::bgra">
-<area shape="rect" id="node1" title="Return in BGRA format." alt="" coords="540,109,673,134"/>
-<area shape="rect" id="node2" href="$classdyno_1_1FeatureTrackerBase.html#aa902950650699301214f776a905e3b77" title=" " alt="" coords="283,5,472,45"/>
-<area shape="rect" id="node3" href="$structdyno_1_1ObjectPoseGT.html#ada6ef6e0253d33690945f1d8dcf7be45" title="Draws the object label and bounding box on the provided image." alt="" coords="301,69,454,109"/>
-<area shape="rect" id="node4" href="$classdyno_1_1Frame.html#a5e2adcdcb96143552fa891351b94dd22" title="From the detected list of objects (in Frame::object_observations_) draw the object masks as labelled ..." alt="" coords="276,133,479,173"/>
-<area shape="rect" id="node5" href="$classdyno_1_1FrontendInbuiltDisplayRos.html#a4b6fefaf04a868c58cd85d8a741b4726" title=" " alt="" coords="263,197,492,237"/>
-<area shape="rect" id="node6" href="$classdyno_1_1FrontendInbuiltDisplayRos.html#a8e47d6ce98cd285d8b6d9674cbacf334" title=" " alt="" coords="5,197,215,237"/>
+<area shape="rect" id="node1" title="Return in BGRA format." alt="" coords="857,160,991,185"/>
+<area shape="rect" id="node2" href="$classdyno_1_1FeatureTrackerBase.html#aa902950650699301214f776a905e3b77" title=" " alt="" coords="304,6,493,46"/>
+<area shape="rect" id="node3" href="$structdyno_1_1ObjectPoseGT.html#ada6ef6e0253d33690945f1d8dcf7be45" title="Draws the object label and bounding box on the provided image." alt="" coords="618,59,771,99"/>
+<area shape="rect" id="node4" href="$classdyno_1_1Frame.html#a5e2adcdcb96143552fa891351b94dd22" title="From the detected list of objects (in Frame::object_observations_) draw the object masks as labelled ..." alt="" coords="593,123,796,163"/>
+<area shape="rect" id="node5" href="$namespacedyno_1_1utils.html#ab60d1512caf6ce316d53e53056b71f7e" title="Given an image that operates like a mask (ie. is a single channel image where each pixel value corres..." alt="" coords="591,188,798,213"/>
+<area shape="rect" id="node12" href="$classdyno_1_1ParallelHybridBackendModule.html#a07ee75bebfcdf9cab20b6d2cc214b8e0" title=" " alt="" coords="591,238,799,278"/>
+<area shape="rect" id="node13" href="$classdyno_1_1FrontendInbuiltDisplayRos.html#a4b6fefaf04a868c58cd85d8a741b4726" title=" " alt="" coords="580,330,809,370"/>
+<area shape="rect" id="node6" href="$namespacedyno_1_1utils.html#a5abdff0c77884da4a8da55f0880d8cfb" title="Given an image that operates like a mask (ie. is a single channel image where each pixel value corres..." alt="" coords="295,77,502,102"/>
+<area shape="rect" id="node7" href="$KittiSemaniticToMotion_8cc.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="371,126,426,152"/>
+<area shape="rect" id="node8" href="$structdyno_1_1ImageType_1_1ClassSegmentation.html#afe839c69e62e5d1da10b813ca3bb824e" title=" " alt="" coords="265,176,532,216"/>
+<area shape="rect" id="node9" href="$structdyno_1_1ImageType_1_1MotionMask.html#a6b119596bef78424e2085d684d07cd43" title=" " alt="" coords="288,240,509,280"/>
+<area shape="rect" id="node11" href="$structdyno_1_1ImageType_1_1SemanticMask.html#aea33f14e71a1e9201d001f8c3abd61af" title=" " alt="" coords="297,304,500,344"/>
+<area shape="rect" id="node10" href="$classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2" title=" " alt="" coords="5,240,217,280"/>
+<area shape="rect" id="node14" href="$classdyno_1_1FrontendInbuiltDisplayRos.html#a8e47d6ce98cd285d8b6d9674cbacf334" title=" " alt="" coords="294,368,503,408"/>
 </map>

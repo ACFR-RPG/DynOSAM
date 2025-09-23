@@ -96,6 +96,8 @@ Static Public Member Functions</h2></td></tr>
 <tr class="separator:a8af592fb4c008b2900a311bc49e2b789"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afa05dba09ce4e91d2494aee28bced415"><td class="memItemLeft" align="right" valign="top">static std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1image__traits__impl.html#afa05dba09ce4e91d2494aee28bced415">name</a> ()</td></tr>
 <tr class="separator:afa05dba09ce4e91d2494aee28bced415"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a639d6a51dc312d0abe7436a9a00b5911"><td class="memItemLeft" align="right" valign="top">static cv::Mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1image__traits__impl.html#a639d6a51dc312d0abe7436a9a00b5911">convertTo</a> (cv::Mat mat, bool clone=false)</td></tr>
+<tr class="separator:a639d6a51dc312d0abe7436a9a00b5911"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
@@ -126,6 +128,57 @@ template&lt;typename IMAGETYPE &gt; </div>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a639d6a51dc312d0abe7436a9a00b5911" name="a639d6a51dc312d0abe7436a9a00b5911"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a639d6a51dc312d0abe7436a9a00b5911">&#9670;&#160;</a></span>convertTo()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename IMAGETYPE &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static cv::Mat <a class="el" href="structdyno_1_1image__traits__impl.html">dyno::image_traits_impl</a>&lt; IMAGETYPE &gt;::convertTo </td>
+          <td>(</td>
+          <td class="paramtype">cv::Mat&#160;</td>
+          <td class="paramname"><em>mat</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>clone</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="ImageTypes_8hpp_source.html#l00061">61</a> of file <a class="el" href="ImageTypes_8hpp_source.html">ImageTypes.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   61</span>                                                        {</div>
+<div class="line"><span class="lineno">   62</span>    cv::Mat converted_mat = mat;</div>
+<div class="line"><span class="lineno">   63</span>    <span class="keywordflow">if</span> (clone) {</div>
+<div class="line"><span class="lineno">   64</span>      converted_mat = mat.clone();</div>
+<div class="line"><span class="lineno">   65</span>    }</div>
+<div class="line"><span class="lineno">   66</span>    converted_mat.convertTo(converted_mat, <a class="code hl_variable" href="structdyno_1_1image__traits__impl.html#ade84b97b239bf910cfa1a20d867115fa">OpenCVType</a>);</div>
+<div class="line"><span class="lineno">   67</span>    <span class="keywordflow">return</span> converted_mat;</div>
+<div class="line"><span class="lineno">   68</span>  }</div>
+<div class="ttc" id="astructdyno_1_1image__traits__impl_html_ade84b97b239bf910cfa1a20d867115fa"><div class="ttname"><a href="structdyno_1_1image__traits__impl.html#ade84b97b239bf910cfa1a20d867115fa">dyno::image_traits_impl::OpenCVType</a></div><div class="ttdeci">static constexpr int OpenCVType</div><div class="ttdef"><b>Definition:</b> <a href="ImageTypes_8hpp_source.html#l00058">ImageTypes.hpp:58</a></div></div>
+</div><!-- fragment -->
+<p class="reference">References <a class="el" href="structdyno_1_1image__traits__impl.html#ade84b97b239bf910cfa1a20d867115fa">dyno::image_traits_impl&lt; IMAGETYPE &gt;::OpenCVType</a>.</p>
+
+</div>
+</div>
 <a id="afa05dba09ce4e91d2494aee28bced415" name="afa05dba09ce4e91d2494aee28bced415"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#afa05dba09ce4e91d2494aee28bced415">&#9670;&#160;</a></span>name()</h2>
 
@@ -211,6 +264,8 @@ template&lt;typename IMAGETYPE &gt; </div>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="ImageTypes_8hpp_source.html#l00058">58</a> of file <a class="el" href="ImageTypes_8hpp_source.html">ImageTypes.hpp</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="structdyno_1_1image__traits__impl.html#a639d6a51dc312d0abe7436a9a00b5911">dyno::image_traits_impl&lt; IMAGETYPE &gt;::convertTo()</a>.</p>
 
 </div>
 </div>

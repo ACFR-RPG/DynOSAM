@@ -90,7 +90,7 @@ Static Public Member Functions</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="DataProviderFactory_8hpp_source.html#l00042">42</a> of file <a class="el" href="DataProviderFactory_8hpp_source.html">DataProviderFactory.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="DataProviderFactory_8hpp_source.html#l00047">47</a> of file <a class="el" href="DataProviderFactory_8hpp_source.html">DataProviderFactory.hpp</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="ab0b11d2d2d9773c6a36743e1ef5f552a" name="ab0b11d2d2d9773c6a36743e1ef5f552a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab0b11d2d2d9773c6a36743e1ef5f552a">&#9670;&#160;</a></span>Create()</h2>
@@ -132,59 +132,77 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="DataProviderFactory_8cc_source.html#l00042">42</a> of file <a class="el" href="DataProviderFactory_8cc_source.html">DataProviderFactory.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   42</span>                                                                                                                                               {</div>
-<div class="line"><span class="lineno">   43</span>    <span class="keywordflow">if</span>(dataset_type == <a class="code hl_enumvalue" href="namespacedyno.html#ada04b22647b53dd4feb5a6b9b9c94480a06aa651364a6a0e1181317b8ed5f1b0d">DatasetType::KITTI</a>) {</div>
-<div class="line"><span class="lineno">   44</span>        LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Using KITTI dataset at path: &quot;</span> &lt;&lt; dataset_folder_path;</div>
-<div class="line"><span class="lineno">   45</span>        KittiDataLoader::Params params = <a class="code hl_function" href="structdyno_1_1KittiDataLoader_1_1Params.html#a48b0a50d7f9066da3edf421d77154f36">KittiDataLoader::Params::fromYaml</a>(params_folder_path);</div>
-<div class="line"><span class="lineno">   46</span>        <span class="keyword">auto</span> loader =  std::make_shared&lt;KittiDataLoader&gt;(dataset_folder_path, params);</div>
-<div class="line"><span class="lineno">   47</span> </div>
-<div class="line"><span class="lineno">   48</span>        loader-&gt;setStartingFrame(FLAGS_starting_frame);</div>
-<div class="line"><span class="lineno">   49</span>        loader-&gt;setEndingFrame(FLAGS_ending_frame);</div>
-<div class="line"><span class="lineno">   50</span>        <span class="keywordflow">return</span> loader;</div>
-<div class="line"><span class="lineno">   51</span>    }</div>
-<div class="line"><span class="lineno">   52</span>    <span class="keywordflow">else</span> <span class="keywordflow">if</span>(dataset_type == <a class="code hl_enumvalue" href="namespacedyno.html#ada04b22647b53dd4feb5a6b9b9c94480aa1f04a0f11b787c7605a72f2ddd705b6">DatasetType::VIRTUAL_KITTI</a>) {</div>
-<div class="line"><span class="lineno">   53</span>        LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Using Virtual KITTI dataset at path: &quot;</span> &lt;&lt; dataset_folder_path;</div>
-<div class="line"><span class="lineno">   54</span>        VirtualKittiDataLoader::Params params = <a class="code hl_function" href="structdyno_1_1VirtualKittiDataLoader_1_1Params.html#a6d941f69683e696948874f4d0b955f9a">VirtualKittiDataLoader::Params::fromYaml</a>(params_folder_path);</div>
-<div class="line"><span class="lineno">   55</span>        <span class="keyword">auto</span> loader = std::make_shared&lt;VirtualKittiDataLoader&gt;(dataset_folder_path, params);</div>
-<div class="line"><span class="lineno">   56</span>        loader-&gt;setStartingFrame(FLAGS_starting_frame);</div>
-<div class="line"><span class="lineno">   57</span>        loader-&gt;setEndingFrame(FLAGS_ending_frame);</div>
-<div class="line"><span class="lineno">   58</span>        <span class="keywordflow">return</span> loader;</div>
-<div class="line"><span class="lineno">   59</span>    }</div>
-<div class="line"><span class="lineno">   60</span>    <span class="keywordflow">else</span> <span class="keywordflow">if</span>(dataset_type == <a class="code hl_enumvalue" href="namespacedyno.html#ada04b22647b53dd4feb5a6b9b9c94480a08d4e856fb5c0815301498b91e068be9">DatasetType::CLUSTER</a>) {</div>
-<div class="line"><span class="lineno">   61</span>        LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Using Cluster (SLAM) dataset at path: &quot;</span> &lt;&lt; dataset_folder_path;</div>
-<div class="line"><span class="lineno">   62</span>        <span class="keyword">auto</span> loader = std::make_shared&lt;ClusterSlamDataLoader&gt;(dataset_folder_path);</div>
-<div class="line"><span class="lineno">   63</span>        loader-&gt;setStartingFrame(FLAGS_starting_frame);</div>
-<div class="line"><span class="lineno">   64</span>        loader-&gt;setEndingFrame(FLAGS_ending_frame);</div>
-<div class="line"><span class="lineno">   65</span>        <span class="keywordflow">return</span> loader;</div>
-<div class="line"><span class="lineno">   66</span>    }</div>
-<div class="line"><span class="lineno">   67</span>    <span class="keywordflow">else</span> <span class="keywordflow">if</span> (dataset_type == <a class="code hl_enumvalue" href="namespacedyno.html#ada04b22647b53dd4feb5a6b9b9c94480ae0020aa6e7775690b490ab1e601aa712">DatasetType::OMD</a>) {</div>
-<div class="line"><span class="lineno">   68</span>        LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Using Oxford Multi-motion Dataset dataset at path: &quot;</span> &lt;&lt; dataset_folder_path;</div>
-<div class="line"><span class="lineno">   69</span>        <span class="keyword">auto</span> loader = std::make_shared&lt;OMDDataLoader&gt;(dataset_folder_path);</div>
-<div class="line"><span class="lineno">   70</span>        loader-&gt;setStartingFrame(FLAGS_starting_frame);</div>
-<div class="line"><span class="lineno">   71</span>        loader-&gt;setEndingFrame(FLAGS_ending_frame);</div>
-<div class="line"><span class="lineno">   72</span>        <span class="keywordflow">return</span> loader;</div>
-<div class="line"><span class="lineno">   73</span>    }</div>
-<div class="line"><span class="lineno">   74</span>    <span class="keywordflow">else</span> <span class="keywordflow">if</span> (dataset_type == <a class="code hl_enumvalue" href="namespacedyno.html#ada04b22647b53dd4feb5a6b9b9c94480a4daf8a23ebca72ee763180771f4d7e9c">DatasetType::ARIA</a>) {</div>
-<div class="line"><span class="lineno">   75</span>        LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Using ARIA dataset at path: &quot;</span> &lt;&lt; dataset_folder_path;</div>
-<div class="line"><span class="lineno">   76</span>        <span class="keyword">auto</span> loader = std::make_shared&lt;ProjectARIADataLoader&gt;(dataset_folder_path);</div>
-<div class="line"><span class="lineno">   77</span>        loader-&gt;setStartingFrame(FLAGS_starting_frame);</div>
-<div class="line"><span class="lineno">   78</span>        loader-&gt;setEndingFrame(FLAGS_ending_frame);</div>
-<div class="line"><span class="lineno">   79</span>        <span class="keywordflow">return</span> loader;</div>
-<div class="line"><span class="lineno">   80</span>    }</div>
-<div class="line"><span class="lineno">   81</span>    <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">   82</span>        <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;Unable to construct Dataprovider - unknown dataset type: &quot;</span> + <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(dataset_type));</div>
-<div class="line"><span class="lineno">   83</span>    }</div>
-<div class="line"><span class="lineno">   84</span>}</div>
-<div class="ttc" id="anamespacedyno_html_ada04b22647b53dd4feb5a6b9b9c94480a06aa651364a6a0e1181317b8ed5f1b0d"><div class="ttname"><a href="namespacedyno.html#ada04b22647b53dd4feb5a6b9b9c94480a06aa651364a6a0e1181317b8ed5f1b0d">dyno::KITTI</a></div><div class="ttdeci">@ KITTI</div><div class="ttdef"><b>Definition:</b> <a href="DataProviderFactory_8hpp_source.html#l00034">DataProviderFactory.hpp:34</a></div></div>
-<div class="ttc" id="anamespacedyno_html_ada04b22647b53dd4feb5a6b9b9c94480a08d4e856fb5c0815301498b91e068be9"><div class="ttname"><a href="namespacedyno.html#ada04b22647b53dd4feb5a6b9b9c94480a08d4e856fb5c0815301498b91e068be9">dyno::CLUSTER</a></div><div class="ttdeci">@ CLUSTER</div><div class="ttdef"><b>Definition:</b> <a href="DataProviderFactory_8hpp_source.html#l00036">DataProviderFactory.hpp:36</a></div></div>
-<div class="ttc" id="anamespacedyno_html_ada04b22647b53dd4feb5a6b9b9c94480a4daf8a23ebca72ee763180771f4d7e9c"><div class="ttname"><a href="namespacedyno.html#ada04b22647b53dd4feb5a6b9b9c94480a4daf8a23ebca72ee763180771f4d7e9c">dyno::ARIA</a></div><div class="ttdeci">@ ARIA</div><div class="ttdef"><b>Definition:</b> <a href="DataProviderFactory_8hpp_source.html#l00039">DataProviderFactory.hpp:38</a></div></div>
-<div class="ttc" id="anamespacedyno_html_ada04b22647b53dd4feb5a6b9b9c94480aa1f04a0f11b787c7605a72f2ddd705b6"><div class="ttname"><a href="namespacedyno.html#ada04b22647b53dd4feb5a6b9b9c94480aa1f04a0f11b787c7605a72f2ddd705b6">dyno::VIRTUAL_KITTI</a></div><div class="ttdeci">@ VIRTUAL_KITTI</div><div class="ttdef"><b>Definition:</b> <a href="DataProviderFactory_8hpp_source.html#l00035">DataProviderFactory.hpp:35</a></div></div>
-<div class="ttc" id="anamespacedyno_html_ada04b22647b53dd4feb5a6b9b9c94480ae0020aa6e7775690b490ab1e601aa712"><div class="ttname"><a href="namespacedyno.html#ada04b22647b53dd4feb5a6b9b9c94480ae0020aa6e7775690b490ab1e601aa712">dyno::OMD</a></div><div class="ttdeci">@ OMD</div><div class="ttdef"><b>Definition:</b> <a href="DataProviderFactory_8hpp_source.html#l00037">DataProviderFactory.hpp:37</a></div></div>
+<p class="definition">Definition at line <a class="el" href="DataProviderFactory_8cc_source.html#l00054">54</a> of file <a class="el" href="DataProviderFactory_8cc_source.html">DataProviderFactory.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   56</span>                                                                   {</div>
+<div class="line"><span class="lineno">   57</span>  <span class="keywordflow">if</span> (dataset_type == <a class="code hl_enumvalue" href="namespacedyno.html#ada04b22647b53dd4feb5a6b9b9c94480a06aa651364a6a0e1181317b8ed5f1b0d">DatasetType::KITTI</a>) {</div>
+<div class="line"><span class="lineno">   58</span>    LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Using KITTI dataset at path: &quot;</span> &lt;&lt; dataset_folder_path;</div>
+<div class="line"><span class="lineno">   59</span>    KittiDataLoader::Params params =</div>
+<div class="line"><span class="lineno">   60</span>        <a class="code hl_function" href="structdyno_1_1KittiDataLoader_1_1Params.html#a48b0a50d7f9066da3edf421d77154f36">KittiDataLoader::Params::fromYaml</a>(params_folder_path);</div>
+<div class="line"><span class="lineno">   61</span>    <span class="keyword">auto</span> loader =</div>
+<div class="line"><span class="lineno">   62</span>        std::make_shared&lt;KittiDataLoader&gt;(dataset_folder_path, params);</div>
+<div class="line"><span class="lineno">   63</span> </div>
+<div class="line"><span class="lineno">   64</span>    loader-&gt;setStartingFrame(FLAGS_starting_frame);</div>
+<div class="line"><span class="lineno">   65</span>    loader-&gt;setEndingFrame(FLAGS_ending_frame);</div>
+<div class="line"><span class="lineno">   66</span>    <span class="keywordflow">return</span> loader;</div>
+<div class="line"><span class="lineno">   67</span>  } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (dataset_type == <a class="code hl_enumvalue" href="namespacedyno.html#ada04b22647b53dd4feb5a6b9b9c94480aa1f04a0f11b787c7605a72f2ddd705b6">DatasetType::VIRTUAL_KITTI</a>) {</div>
+<div class="line"><span class="lineno">   68</span>    LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Using Virtual KITTI dataset at path: &quot;</span> &lt;&lt; dataset_folder_path;</div>
+<div class="line"><span class="lineno">   69</span>    VirtualKittiDataLoader::Params params =</div>
+<div class="line"><span class="lineno">   70</span>        <a class="code hl_function" href="structdyno_1_1VirtualKittiDataLoader_1_1Params.html#a6d941f69683e696948874f4d0b955f9a">VirtualKittiDataLoader::Params::fromYaml</a>(params_folder_path);</div>
+<div class="line"><span class="lineno">   71</span>    <span class="keyword">auto</span> loader =</div>
+<div class="line"><span class="lineno">   72</span>        std::make_shared&lt;VirtualKittiDataLoader&gt;(dataset_folder_path, params);</div>
+<div class="line"><span class="lineno">   73</span>    loader-&gt;setStartingFrame(FLAGS_starting_frame);</div>
+<div class="line"><span class="lineno">   74</span>    loader-&gt;setEndingFrame(FLAGS_ending_frame);</div>
+<div class="line"><span class="lineno">   75</span>    <span class="keywordflow">return</span> loader;</div>
+<div class="line"><span class="lineno">   76</span>  } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (dataset_type == <a class="code hl_enumvalue" href="namespacedyno.html#ada04b22647b53dd4feb5a6b9b9c94480a08d4e856fb5c0815301498b91e068be9">DatasetType::CLUSTER</a>) {</div>
+<div class="line"><span class="lineno">   77</span>    LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Using Cluster (SLAM) dataset at path: &quot;</span></div>
+<div class="line"><span class="lineno">   78</span>              &lt;&lt; dataset_folder_path;</div>
+<div class="line"><span class="lineno">   79</span>    <span class="keyword">auto</span> loader = std::make_shared&lt;ClusterSlamDataLoader&gt;(dataset_folder_path);</div>
+<div class="line"><span class="lineno">   80</span>    loader-&gt;setStartingFrame(FLAGS_starting_frame);</div>
+<div class="line"><span class="lineno">   81</span>    loader-&gt;setEndingFrame(FLAGS_ending_frame);</div>
+<div class="line"><span class="lineno">   82</span>    <span class="keywordflow">return</span> loader;</div>
+<div class="line"><span class="lineno">   83</span>  } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (dataset_type == <a class="code hl_enumvalue" href="namespacedyno.html#ada04b22647b53dd4feb5a6b9b9c94480ae0020aa6e7775690b490ab1e601aa712">DatasetType::OMD</a>) {</div>
+<div class="line"><span class="lineno">   84</span>    LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Using Oxford Multi-motion Dataset dataset at path: &quot;</span></div>
+<div class="line"><span class="lineno">   85</span>              &lt;&lt; dataset_folder_path;</div>
+<div class="line"><span class="lineno">   86</span>    <span class="keyword">auto</span> loader = std::make_shared&lt;OMDDataLoader&gt;(dataset_folder_path);</div>
+<div class="line"><span class="lineno">   87</span>    loader-&gt;setStartingFrame(FLAGS_starting_frame);</div>
+<div class="line"><span class="lineno">   88</span>    loader-&gt;setEndingFrame(FLAGS_ending_frame);</div>
+<div class="line"><span class="lineno">   89</span>    <span class="keywordflow">return</span> loader;</div>
+<div class="line"><span class="lineno">   90</span>  } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (dataset_type == <a class="code hl_enumvalue" href="namespacedyno.html#ada04b22647b53dd4feb5a6b9b9c94480a4daf8a23ebca72ee763180771f4d7e9c">DatasetType::ARIA</a>) {</div>
+<div class="line"><span class="lineno">   91</span>    LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Using ARIA dataset at path: &quot;</span> &lt;&lt; dataset_folder_path;</div>
+<div class="line"><span class="lineno">   92</span>    <span class="keyword">auto</span> loader = std::make_shared&lt;ProjectARIADataLoader&gt;(dataset_folder_path);</div>
+<div class="line"><span class="lineno">   93</span>    loader-&gt;setStartingFrame(FLAGS_starting_frame);</div>
+<div class="line"><span class="lineno">   94</span>    loader-&gt;setEndingFrame(FLAGS_ending_frame);</div>
+<div class="line"><span class="lineno">   95</span>    <span class="keywordflow">return</span> loader;</div>
+<div class="line"><span class="lineno">   96</span>  } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (dataset_type == <a class="code hl_enumvalue" href="namespacedyno.html#ada04b22647b53dd4feb5a6b9b9c94480a6599ef5694014b495caee1cc10a04f00">DatasetType::TARTAN_AIR_SHIBUYA</a>) {</div>
+<div class="line"><span class="lineno">   97</span>    LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Using TARTAN_AIR_SHIBUYA dataset at path: &quot;</span></div>
+<div class="line"><span class="lineno">   98</span>              &lt;&lt; dataset_folder_path;</div>
+<div class="line"><span class="lineno">   99</span>    <span class="keyword">auto</span> loader = std::make_shared&lt;TartanAirShibuyaLoader&gt;(dataset_folder_path);</div>
+<div class="line"><span class="lineno">  100</span>    loader-&gt;setStartingFrame(FLAGS_starting_frame);</div>
+<div class="line"><span class="lineno">  101</span>    loader-&gt;setEndingFrame(FLAGS_ending_frame);</div>
+<div class="line"><span class="lineno">  102</span>    <span class="keywordflow">return</span> loader;</div>
+<div class="line"><span class="lineno">  103</span>  } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (dataset_type == <a class="code hl_enumvalue" href="namespacedyno.html#ada04b22647b53dd4feb5a6b9b9c94480a497c308f5e95273bb545f79bffab8a5a">DatasetType::VIODE</a>) {</div>
+<div class="line"><span class="lineno">  104</span>    LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Using VIODE dataset at path: &quot;</span> &lt;&lt; dataset_folder_path;</div>
+<div class="line"><span class="lineno">  105</span>    <span class="keyword">auto</span> loader = std::make_shared&lt;ViodeLoader&gt;(dataset_folder_path);</div>
+<div class="line"><span class="lineno">  106</span>    loader-&gt;setStartingFrame(FLAGS_starting_frame);</div>
+<div class="line"><span class="lineno">  107</span>    loader-&gt;setEndingFrame(FLAGS_ending_frame);</div>
+<div class="line"><span class="lineno">  108</span>    <span class="keywordflow">return</span> loader;</div>
+<div class="line"><span class="lineno">  109</span>  } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  110</span>    <span class="keywordflow">throw</span> std::runtime_error(</div>
+<div class="line"><span class="lineno">  111</span>        <span class="stringliteral">&quot;Unable to construct Dataprovider - unknown dataset type: &quot;</span> +</div>
+<div class="line"><span class="lineno">  112</span>        <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(dataset_type));</div>
+<div class="line"><span class="lineno">  113</span>  }</div>
+<div class="line"><span class="lineno">  114</span>}</div>
+<div class="ttc" id="anamespacedyno_html_ada04b22647b53dd4feb5a6b9b9c94480a06aa651364a6a0e1181317b8ed5f1b0d"><div class="ttname"><a href="namespacedyno.html#ada04b22647b53dd4feb5a6b9b9c94480a06aa651364a6a0e1181317b8ed5f1b0d">dyno::KITTI</a></div><div class="ttdeci">@ KITTI</div><div class="ttdef"><b>Definition:</b> <a href="DataProviderFactory_8hpp_source.html#l00038">DataProviderFactory.hpp:38</a></div></div>
+<div class="ttc" id="anamespacedyno_html_ada04b22647b53dd4feb5a6b9b9c94480a08d4e856fb5c0815301498b91e068be9"><div class="ttname"><a href="namespacedyno.html#ada04b22647b53dd4feb5a6b9b9c94480a08d4e856fb5c0815301498b91e068be9">dyno::CLUSTER</a></div><div class="ttdeci">@ CLUSTER</div><div class="ttdef"><b>Definition:</b> <a href="DataProviderFactory_8hpp_source.html#l00040">DataProviderFactory.hpp:40</a></div></div>
+<div class="ttc" id="anamespacedyno_html_ada04b22647b53dd4feb5a6b9b9c94480a497c308f5e95273bb545f79bffab8a5a"><div class="ttname"><a href="namespacedyno.html#ada04b22647b53dd4feb5a6b9b9c94480a497c308f5e95273bb545f79bffab8a5a">dyno::VIODE</a></div><div class="ttdeci">@ VIODE</div><div class="ttdef"><b>Definition:</b> <a href="DataProviderFactory_8hpp_source.html#l00045">DataProviderFactory.hpp:44</a></div></div>
+<div class="ttc" id="anamespacedyno_html_ada04b22647b53dd4feb5a6b9b9c94480a4daf8a23ebca72ee763180771f4d7e9c"><div class="ttname"><a href="namespacedyno.html#ada04b22647b53dd4feb5a6b9b9c94480a4daf8a23ebca72ee763180771f4d7e9c">dyno::ARIA</a></div><div class="ttdeci">@ ARIA</div><div class="ttdef"><b>Definition:</b> <a href="DataProviderFactory_8hpp_source.html#l00042">DataProviderFactory.hpp:42</a></div></div>
+<div class="ttc" id="anamespacedyno_html_ada04b22647b53dd4feb5a6b9b9c94480a6599ef5694014b495caee1cc10a04f00"><div class="ttname"><a href="namespacedyno.html#ada04b22647b53dd4feb5a6b9b9c94480a6599ef5694014b495caee1cc10a04f00">dyno::TARTAN_AIR_SHIBUYA</a></div><div class="ttdeci">@ TARTAN_AIR_SHIBUYA</div><div class="ttdef"><b>Definition:</b> <a href="DataProviderFactory_8hpp_source.html#l00043">DataProviderFactory.hpp:43</a></div></div>
+<div class="ttc" id="anamespacedyno_html_ada04b22647b53dd4feb5a6b9b9c94480aa1f04a0f11b787c7605a72f2ddd705b6"><div class="ttname"><a href="namespacedyno.html#ada04b22647b53dd4feb5a6b9b9c94480aa1f04a0f11b787c7605a72f2ddd705b6">dyno::VIRTUAL_KITTI</a></div><div class="ttdeci">@ VIRTUAL_KITTI</div><div class="ttdef"><b>Definition:</b> <a href="DataProviderFactory_8hpp_source.html#l00039">DataProviderFactory.hpp:39</a></div></div>
+<div class="ttc" id="anamespacedyno_html_ada04b22647b53dd4feb5a6b9b9c94480ae0020aa6e7775690b490ab1e601aa712"><div class="ttname"><a href="namespacedyno.html#ada04b22647b53dd4feb5a6b9b9c94480ae0020aa6e7775690b490ab1e601aa712">dyno::OMD</a></div><div class="ttdeci">@ OMD</div><div class="ttdef"><b>Definition:</b> <a href="DataProviderFactory_8hpp_source.html#l00041">DataProviderFactory.hpp:41</a></div></div>
 <div class="ttc" id="astructdyno_1_1KittiDataLoader_1_1Params_html_a48b0a50d7f9066da3edf421d77154f36"><div class="ttname"><a href="structdyno_1_1KittiDataLoader_1_1Params.html#a48b0a50d7f9066da3edf421d77154f36">dyno::KittiDataLoader::Params::fromYaml</a></div><div class="ttdeci">static Params fromYaml(const std::string &amp;params_folder)</div><div class="ttdef"><b>Definition:</b> <a href="KittiDataProvider_8hpp_source.html#l00364">KittiDataProvider.hpp:364</a></div></div>
-<div class="ttc" id="astructdyno_1_1VirtualKittiDataLoader_1_1Params_html_a6d941f69683e696948874f4d0b955f9a"><div class="ttname"><a href="structdyno_1_1VirtualKittiDataLoader_1_1Params.html#a6d941f69683e696948874f4d0b955f9a">dyno::VirtualKittiDataLoader::Params::fromYaml</a></div><div class="ttdeci">static Params fromYaml(const std::string &amp;params_folder)</div><div class="ttdef"><b>Definition:</b> <a href="VirtualKittidataProvider_8cc_source.html#l00958">VirtualKittidataProvider.cc:958</a></div></div>
+<div class="ttc" id="astructdyno_1_1VirtualKittiDataLoader_1_1Params_html_a6d941f69683e696948874f4d0b955f9a"><div class="ttname"><a href="structdyno_1_1VirtualKittiDataLoader_1_1Params.html#a6d941f69683e696948874f4d0b955f9a">dyno::VirtualKittiDataLoader::Params::fromYaml</a></div><div class="ttdeci">static Params fromYaml(const std::string &amp;params_folder)</div><div class="ttdef"><b>Definition:</b> <a href="VirtualKittidataProvider_8cc_source.html#l01022">VirtualKittidataProvider.cc:1022</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="namespacedyno.html#ada04b22647b53dd4feb5a6b9b9c94480a4daf8a23ebca72ee763180771f4d7e9c">dyno::ARIA</a>, <a class="el" href="namespacedyno.html#ada04b22647b53dd4feb5a6b9b9c94480a08d4e856fb5c0815301498b91e068be9">dyno::CLUSTER</a>, <a class="el" href="structdyno_1_1KittiDataLoader_1_1Params.html#a48b0a50d7f9066da3edf421d77154f36">dyno::KittiDataLoader::Params::fromYaml()</a>, <a class="el" href="structdyno_1_1VirtualKittiDataLoader_1_1Params.html#a6d941f69683e696948874f4d0b955f9a">dyno::VirtualKittiDataLoader::Params::fromYaml()</a>, <a class="el" href="namespacedyno.html#ada04b22647b53dd4feb5a6b9b9c94480a06aa651364a6a0e1181317b8ed5f1b0d">dyno::KITTI</a>, <a class="el" href="namespacedyno.html#ada04b22647b53dd4feb5a6b9b9c94480ae0020aa6e7775690b490ab1e601aa712">dyno::OMD</a>, and <a class="el" href="namespacedyno.html#ada04b22647b53dd4feb5a6b9b9c94480aa1f04a0f11b787c7605a72f2ddd705b6">dyno::VIRTUAL_KITTI</a>.</p>
+<p class="reference">References <a class="el" href="namespacedyno.html#ada04b22647b53dd4feb5a6b9b9c94480a4daf8a23ebca72ee763180771f4d7e9c">dyno::ARIA</a>, <a class="el" href="namespacedyno.html#ada04b22647b53dd4feb5a6b9b9c94480a08d4e856fb5c0815301498b91e068be9">dyno::CLUSTER</a>, <a class="el" href="structdyno_1_1KittiDataLoader_1_1Params.html#a48b0a50d7f9066da3edf421d77154f36">dyno::KittiDataLoader::Params::fromYaml()</a>, <a class="el" href="structdyno_1_1VirtualKittiDataLoader_1_1Params.html#a6d941f69683e696948874f4d0b955f9a">dyno::VirtualKittiDataLoader::Params::fromYaml()</a>, <a class="el" href="namespacedyno.html#ada04b22647b53dd4feb5a6b9b9c94480a06aa651364a6a0e1181317b8ed5f1b0d">dyno::KITTI</a>, <a class="el" href="namespacedyno.html#ada04b22647b53dd4feb5a6b9b9c94480ae0020aa6e7775690b490ab1e601aa712">dyno::OMD</a>, <a class="el" href="namespacedyno.html#ada04b22647b53dd4feb5a6b9b9c94480a6599ef5694014b495caee1cc10a04f00">dyno::TARTAN_AIR_SHIBUYA</a>, <a class="el" href="namespacedyno.html#ada04b22647b53dd4feb5a6b9b9c94480a497c308f5e95273bb545f79bffab8a5a">dyno::VIODE</a>, and <a class="el" href="namespacedyno.html#ada04b22647b53dd4feb5a6b9b9c94480aa1f04a0f11b787c7605a72f2ddd705b6">dyno::VIRTUAL_KITTI</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1DynoNode.html#ad5ec1dc5c7b6faa13607bed8444e49c6">dyno::DynoNode::createDataProvider()</a>.</p>
 <div class="dynheader">

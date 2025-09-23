@@ -1,9 +1,11 @@
 <map id="dyno::fpEqual" name="dyno::fpEqual">
-<area shape="rect" id="node1" title="Float point comparison up to a tolerance." alt="" coords="541,99,652,125"/>
-<area shape="rect" id="node2" href="$namespacedyno.html#ab5ae05966c6056b343a960a80c5b1db3" title=" " alt="" coords="257,13,451,38"/>
-<area shape="rect" id="node4" href="$classdyno_1_1DataInterfacePipelineImu.html#a233e9d7d80e5caee6882ea5007a3fef9" title="getTimeSyncedImuMeasurements Time synchronizes the IMU buffer with the given timestamp (this is typic..." alt="" coords="215,63,493,103"/>
-<area shape="rect" id="node5" href="$namespacedyno.html#ae4cd7803a61b7b2c596c1e86792fecf2" title="Checks if a double value is zero up to a tolerance." alt="" coords="300,127,408,153"/>
-<area shape="rect" id="node7" href="$structdyno_1_1Feature_1_1impl.html#a09ae6afc37d19908327767ab444be67c" title=" " alt="" coords="280,177,428,217"/>
-<area shape="rect" id="node3" href="$classdyno_1_1CameraParams.html#aed0b3bb94f86ce7d95789c4113a74bd6" title=" " alt="" coords="5,5,167,45"/>
-<area shape="rect" id="node6" href="$structdyno_1_1RGBA.html#a2a70eb9235e32432b2c71e5b3a39b96f" title=" " alt="" coords="14,127,158,153"/>
+<area shape="rect" id="node1" title="Float point comparison up to a tolerance." alt="" coords="868,130,979,155"/>
+<area shape="rect" id="node2" href="$namespacedyno.html#ab5ae05966c6056b343a960a80c5b1db3" title=" " alt="" coords="625,77,820,102"/>
+<area shape="rect" id="node7" href="$namespacedyno.html#ae4cd7803a61b7b2c596c1e86792fecf2" title="Checks if a double value is zero up to a tolerance." alt="" coords="669,130,777,155"/>
+<area shape="rect" id="node9" href="$structdyno_1_1Feature_1_1impl.html#a09ae6afc37d19908327767ab444be67c" title="Possible stereo keypoint in the right image." alt="" coords="649,180,797,220"/>
+<area shape="rect" id="node3" href="$classdyno_1_1CameraParams.html#aed0b3bb94f86ce7d95789c4113a74bd6" title=" " alt="" coords="416,5,577,45"/>
+<area shape="rect" id="node4" href="$classdyno_1_1FeatureTracker.html#ab50422938e62bccc34295c155357213a" title="Check which objects require new features to be detected on them based on a set of &#39;keyframing&#39; criter..." alt="" coords="418,69,575,109"/>
+<area shape="rect" id="node5" href="$classdyno_1_1FeatureTracker.html#a145614fe29bef7728075492870ac9c41" title=" " alt="" coords="211,69,368,109"/>
+<area shape="rect" id="node6" href="$classdyno_1_1FeatureTracker.html#a9890ba0c11b5932b5b4954a86bd03948" title=" " alt="" coords="5,69,163,109"/>
+<area shape="rect" id="node8" href="$structdyno_1_1RGBA.html#a2a70eb9235e32432b2c71e5b3a39b96f" title=" " alt="" coords="425,134,569,159"/>
 </map>

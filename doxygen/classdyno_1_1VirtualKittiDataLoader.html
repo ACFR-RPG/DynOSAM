@@ -173,10 +173,6 @@ Public Member Functions</h2></td></tr>
 <tr class="inherit_header pub_methods_classdyno_1_1DataProvider"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classdyno_1_1DataProvider')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classdyno_1_1DataProvider.html">dyno::DataProvider</a></td></tr>
 <tr class="memitem:aad6d856034b3333ff6c9df69be2a271a inherit pub_methods_classdyno_1_1DataProvider"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DataProvider.html#aad6d856034b3333ff6c9df69be2a271a">DataProvider</a> ()=default</td></tr>
 <tr class="separator:aad6d856034b3333ff6c9df69be2a271a inherit pub_methods_classdyno_1_1DataProvider"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac3dd1f8f4aafda392b89a2348b2026ac inherit pub_methods_classdyno_1_1DataProvider"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DataProvider.html#ac3dd1f8f4aafda392b89a2348b2026ac">DataProvider</a> (<a class="el" href="classdyno_1_1DataInterfacePipeline.html">DataInterfacePipeline</a> *module)</td></tr>
-<tr class="separator:ac3dd1f8f4aafda392b89a2348b2026ac inherit pub_methods_classdyno_1_1DataProvider"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae57527fb3be1d1894e0f5f7ec0568390 inherit pub_methods_classdyno_1_1DataProvider"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DataProvider.html#ae57527fb3be1d1894e0f5f7ec0568390">DataProvider</a> (<a class="el" href="classdyno_1_1DataInterfacePipelineImu.html">DataInterfacePipelineImu</a> *module)</td></tr>
-<tr class="separator:ae57527fb3be1d1894e0f5f7ec0568390 inherit pub_methods_classdyno_1_1DataProvider"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adda0f52bfea3dcc51b3ccfd9e06c4f8b inherit pub_methods_classdyno_1_1DataProvider"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DataProvider.html#adda0f52bfea3dcc51b3ccfd9e06c4f8b">~DataProvider</a> ()</td></tr>
 <tr class="separator:adda0f52bfea3dcc51b3ccfd9e06c4f8b inherit pub_methods_classdyno_1_1DataProvider"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a107b3898bf7f793093c76c4405c608f0 inherit pub_methods_classdyno_1_1DataProvider"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DataProvider.html#a107b3898bf7f793093c76c4405c608f0">registerImuSingleCallback</a> (const <a class="el" href="classdyno_1_1DataProvider.html#ada0c50fb63e4e328da1a89f65c83470e">ImuSingleInputCallback</a> &amp;callback)</td></tr>
@@ -203,6 +199,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a7ad37ecec178b81be71cd7ec8657160d inherit pub_methods_classdyno_1_1DataProvider"><td class="memItemLeft" align="right" valign="top">virtual CameraParams::Optional&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DataProvider.html#a7ad37ecec178b81be71cd7ec8657160d">getCameraParams</a> () const</td></tr>
 <tr class="memdesc:a7ad37ecec178b81be71cd7ec8657160d inherit pub_methods_classdyno_1_1DataProvider"><td class="mdescLeft">&#160;</td><td class="mdescRight">Provides functionality to get camera paramters for the main pipeline, as these may be available from the dataset.  <br /></td></tr>
 <tr class="separator:a7ad37ecec178b81be71cd7ec8657160d inherit pub_methods_classdyno_1_1DataProvider"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af26a9e848a9c6261fb18d249fc8282e8 inherit pub_methods_classdyno_1_1DataProvider"><td class="memItemLeft" align="right" valign="top">virtual ImuParams::Optional&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DataProvider.html#af26a9e848a9c6261fb18d249fc8282e8">getImuParams</a> () const</td></tr>
+<tr class="separator:af26a9e848a9c6261fb18d249fc8282e8 inherit pub_methods_classdyno_1_1DataProvider"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-methods" name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
@@ -333,120 +331,135 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="VirtualKittidataProvider_8cc_source.html#l00838">838</a> of file <a class="el" href="VirtualKittidataProvider_8cc_source.html">VirtualKittidataProvider.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  838</span>                                                                                                : <a class="code hl_typedef" href="namespacedyno.html#a34bd86d1981e4f2f8f53e488ed978409">VirtualKittiDatasetProvider</a>(dataset_path), <a class="code hl_variable" href="classdyno_1_1VirtualKittiDataLoader.html#a9d0bf477d2065f71ef478d94ba88bf6b">params_</a>(params) {</div>
-<div class="line"><span class="lineno">  839</span>    <span class="keyword">const</span> std::string&amp; scene = params.<a class="code hl_variable" href="structdyno_1_1VirtualKittiDataLoader_1_1Params.html#a78cd68acaf84e5888fab3382e9b641dc">scene</a>;</div>
-<div class="line"><span class="lineno">  840</span>    <span class="keyword">const</span> std::string&amp; scene_type = params.scene_type;</div>
-<div class="line"><span class="lineno">  841</span>    <span class="keyword">const</span> <span class="keyword">auto</span>&amp; mask_type = params.mask_type;</div>
-<div class="line"><span class="lineno">  842</span>    <span class="keyword">const</span> std::string path = dataset_path;</div>
-<div class="line"><span class="lineno">  843</span> </div>
-<div class="line"><span class="lineno">  844</span>    LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Starting VirtualKittiDataLoader with path &quot;</span> &lt;&lt; path &lt;&lt; <span class="stringliteral">&quot; requested scene &quot;</span> &lt;&lt; scene &lt;&lt; <span class="stringliteral">&quot; and scene type &quot;</span> &lt;&lt; scene_type;</div>
-<div class="line"><span class="lineno">  845</span>    <span class="keyword">const</span> std::string depth_folder = path + <span class="stringliteral">&quot;/&quot;</span> + <a class="code hl_variable" href="classdyno_1_1VirtualKittiDataLoader.html#a5f837eea868f703e448aca51c45b7116">v_depth_folder</a> + <span class="stringliteral">&quot;/&quot;</span> + scene + <span class="stringliteral">&quot;/&quot;</span> + scene_type + <span class="stringliteral">&quot;/frames/depth/Camera_0&quot;</span>;</div>
-<div class="line"><span class="lineno">  846</span>    <span class="keyword">const</span> std::string forward_flow_folder = path + <span class="stringliteral">&quot;/&quot;</span> + <a class="code hl_variable" href="classdyno_1_1VirtualKittiDataLoader.html#a27bb376bd99804345aa69e4221d93e72">v_forward_flow_folder</a> + <span class="stringliteral">&quot;/&quot;</span> + scene + <span class="stringliteral">&quot;/&quot;</span> + scene_type + <span class="stringliteral">&quot;/frames/forwardFlow/Camera_0&quot;</span>;</div>
-<div class="line"><span class="lineno">  847</span>    <span class="keyword">const</span> std::string backward_flow_folder = path + <span class="stringliteral">&quot;/&quot;</span> + <a class="code hl_variable" href="classdyno_1_1VirtualKittiDataLoader.html#a6c0a50306ced80141679aabcc9c78b98">v_backward_flow_folder</a> + <span class="stringliteral">&quot;/&quot;</span> + scene + <span class="stringliteral">&quot;/&quot;</span> + scene_type + <span class="stringliteral">&quot;/frames/backwardFlow/Camera_0&quot;</span>;</div>
-<div class="line"><span class="lineno">  848</span>    <span class="keyword">const</span> std::string forward_scene_flow_folder = path + <span class="stringliteral">&quot;/&quot;</span> + <a class="code hl_variable" href="classdyno_1_1VirtualKittiDataLoader.html#a74742a01382a532ee8d59c3783f21d85">v_forward_scene_flow_folder</a> + <span class="stringliteral">&quot;/&quot;</span> + scene + <span class="stringliteral">&quot;/&quot;</span> + scene_type + <span class="stringliteral">&quot;/frames/forwardsceneFlow/Camera_0&quot;</span>;</div>
-<div class="line"><span class="lineno">  849</span>    <span class="keyword">const</span> std::string class_semantics_folder = path + <span class="stringliteral">&quot;/&quot;</span> + <a class="code hl_variable" href="classdyno_1_1VirtualKittiDataLoader.html#a4e00fae2b88904299f386fd67340a320">v_class_semantics_folder</a> + <span class="stringliteral">&quot;/&quot;</span> + scene + <span class="stringliteral">&quot;/&quot;</span> + scene_type + <span class="stringliteral">&quot;/frames/classSegmentation/Camera_0&quot;</span>;</div>
-<div class="line"><span class="lineno">  850</span>    <span class="keyword">const</span> std::string instance_segmentation_folder = path + <span class="stringliteral">&quot;/&quot;</span> + <a class="code hl_variable" href="classdyno_1_1VirtualKittiDataLoader.html#a5305ea2d8a72cf2864c6c9a4e06fb401">v_instance_segmentation_folder</a> + <span class="stringliteral">&quot;/&quot;</span> + scene + <span class="stringliteral">&quot;/&quot;</span> + scene_type + <span class="stringliteral">&quot;/frames/instanceSegmentation/Camera_0&quot;</span>;</div>
-<div class="line"><span class="lineno">  851</span>    <span class="keyword">const</span> std::string rgb_folder = path + <span class="stringliteral">&quot;/&quot;</span> + <a class="code hl_variable" href="classdyno_1_1VirtualKittiDataLoader.html#a8e66d3ab592d9982d0683937bad1c6e5">v_rgb_folder</a> + <span class="stringliteral">&quot;/&quot;</span> + scene + <span class="stringliteral">&quot;/&quot;</span> + scene_type + <span class="stringliteral">&quot;/frames/rgb/Camera_0&quot;</span>;</div>
-<div class="line"><span class="lineno">  852</span>    <span class="keyword">const</span> std::string text_gt_folder = path + <span class="stringliteral">&quot;/&quot;</span> + <a class="code hl_variable" href="classdyno_1_1VirtualKittiDataLoader.html#a3951698e24b588b93709777789c72bc9">v_text_gt_folder</a> + <span class="stringliteral">&quot;/&quot;</span> + scene + <span class="stringliteral">&quot;/&quot;</span> + scene_type;</div>
-<div class="line"><span class="lineno">  853</span> </div>
-<div class="line"><span class="lineno">  854</span>    <a class="code hl_function" href="namespacedyno.html#a80d59abcebfb78b7fb237b1572429606">throwExceptionIfPathInvalid</a>(depth_folder);</div>
-<div class="line"><span class="lineno">  855</span>    <a class="code hl_function" href="namespacedyno.html#a80d59abcebfb78b7fb237b1572429606">throwExceptionIfPathInvalid</a>(forward_flow_folder);</div>
-<div class="line"><span class="lineno">  856</span>    <a class="code hl_function" href="namespacedyno.html#a80d59abcebfb78b7fb237b1572429606">throwExceptionIfPathInvalid</a>(forward_scene_flow_folder);</div>
-<div class="line"><span class="lineno">  857</span>    <a class="code hl_function" href="namespacedyno.html#a80d59abcebfb78b7fb237b1572429606">throwExceptionIfPathInvalid</a>(class_semantics_folder);</div>
-<div class="line"><span class="lineno">  858</span>    <a class="code hl_function" href="namespacedyno.html#a80d59abcebfb78b7fb237b1572429606">throwExceptionIfPathInvalid</a>(instance_segmentation_folder);</div>
-<div class="line"><span class="lineno">  859</span>    <a class="code hl_function" href="namespacedyno.html#a80d59abcebfb78b7fb237b1572429606">throwExceptionIfPathInvalid</a>(rgb_folder);</div>
-<div class="line"><span class="lineno">  860</span>    <a class="code hl_function" href="namespacedyno.html#a80d59abcebfb78b7fb237b1572429606">throwExceptionIfPathInvalid</a>(text_gt_folder);</div>
-<div class="line"><span class="lineno">  861</span> </div>
-<div class="line"><span class="lineno">  862</span>    <span class="keyword">auto</span> gt_loader = std::make_shared&lt;VirtualKittiTextGtLoader&gt;(text_gt_folder);</div>
-<div class="line"><span class="lineno">  863</span> </div>
-<div class="line"><span class="lineno">  864</span>    <span class="keyword">auto</span> timestamp_folder = std::make_shared&lt;VirtualKittiTimestampLoader&gt;(gt_loader-&gt;size());</div>
-<div class="line"><span class="lineno">  865</span>    <span class="keyword">auto</span> rgb_loader = std::make_shared&lt;VirtualKittiRGBDataFolder&gt;(rgb_folder);</div>
-<div class="line"><span class="lineno">  866</span>    <span class="keyword">auto</span> optical_flow_loader = std::make_shared&lt;VirtualKittiFlowDataFolder&gt;(forward_flow_folder);</div>
-<div class="line"><span class="lineno">  867</span>    <span class="keyword">auto</span> depth_loader = std::make_shared&lt;VirtualKittiDepthDataFolder&gt;(depth_folder);</div>
-<div class="line"><span class="lineno">  868</span> </div>
-<div class="line"><span class="lineno">  869</span>    VirtualKittiGenericInstanceSegFolder::Ptr motion_mask_loader = <span class="keyword">nullptr</span>;</div>
-<div class="line"><span class="lineno">  870</span>    <span class="keywordflow">if</span>(mask_type == <a class="code hl_enumvalue" href="namespacedyno.html#aaa09ef374edf57e1a3edc9b15a52e080a15df8a43ae809c71a3d7cf35b5b14209">MaskType::MOTION</a>) {</div>
-<div class="line"><span class="lineno">  871</span>        LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Using MaskType::MOTION for loading mask&quot;</span>;</div>
-<div class="line"><span class="lineno">  872</span>        motion_mask_loader =  std::make_shared&lt;VirtualKittiMotionSegFolder&gt;(instance_segmentation_folder, gt_loader);</div>
-<div class="line"><span class="lineno">  873</span>    }</div>
-<div class="line"><span class="lineno">  874</span>    <span class="keywordflow">else</span> <span class="keywordflow">if</span>(mask_type == <a class="code hl_enumvalue" href="namespacedyno.html#aaa09ef374edf57e1a3edc9b15a52e080ab73bd40e28290e1a3126255f053f82c1">MaskType::SEMANTIC_INSTANCE</a>) {</div>
-<div class="line"><span class="lineno">  875</span>        LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Using MaskType::SEMANTIC_INSTANCE for loading mask&quot;</span>;</div>
-<div class="line"><span class="lineno">  876</span>        motion_mask_loader = std::make_shared&lt;VirtualKittiInstanceSegFolder&gt;(instance_segmentation_folder, gt_loader);</div>
-<div class="line"><span class="lineno">  877</span>    }</div>
-<div class="line"><span class="lineno">  878</span>    <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  879</span>        LOG(FATAL) &lt;&lt; <span class="stringliteral">&quot;Unknown MaskType for KittiDataLoader&quot;</span>;</div>
-<div class="line"><span class="lineno">  880</span>    }</div>
-<div class="line"><span class="lineno">  881</span>    CHECK_NOTNULL(motion_mask_loader);</div>
-<div class="line"><span class="lineno">  882</span> </div>
-<div class="line"><span class="lineno">  883</span>    <span class="keyword">auto</span> gt_loader_folder = std::make_shared&lt;VirtualKittiGTFolder&gt;(gt_loader, timestamp_folder);</div>
-<div class="line"><span class="lineno">  884</span>    <span class="keyword">auto</span> class_semantics_loader = std::make_shared&lt;VirtualKittiClassSegmentationDataFolder&gt;(class_semantics_folder);</div>
-<div class="line"><span class="lineno">  885</span> </div>
-<div class="line"><span class="lineno">  886</span>    this-&gt;<a class="code hl_function" href="classdyno_1_1DynoDatasetProvider.html#aca00b7dce03a97517c126aacb60a3332">setLoaders</a>(</div>
-<div class="line"><span class="lineno">  887</span>        timestamp_folder,</div>
-<div class="line"><span class="lineno">  888</span>        rgb_loader,</div>
-<div class="line"><span class="lineno">  889</span>        optical_flow_loader,</div>
-<div class="line"><span class="lineno">  890</span>        depth_loader,</div>
-<div class="line"><span class="lineno">  891</span>        motion_mask_loader,</div>
-<div class="line"><span class="lineno">  892</span>        class_semantics_loader,</div>
-<div class="line"><span class="lineno">  893</span>        gt_loader_folder</div>
-<div class="line"><span class="lineno">  894</span>    );</div>
-<div class="line"><span class="lineno">  895</span> </div>
-<div class="line"><span class="lineno">  896</span>    <span class="keyword">auto</span> callback = [&amp;](<span class="keywordtype">size_t</span> frame_id,</div>
-<div class="line"><span class="lineno">  897</span>        <a class="code hl_typedef" href="namespacedyno.html#a7fda67c0575c4b7a8210dcc8ae227370">Timestamp</a> timestamp,</div>
-<div class="line"><span class="lineno">  898</span>        cv::Mat rgb,</div>
-<div class="line"><span class="lineno">  899</span>        cv::Mat optical_flow,</div>
-<div class="line"><span class="lineno">  900</span>        cv::Mat depth,</div>
-<div class="line"><span class="lineno">  901</span>        cv::Mat instance_mask,</div>
-<div class="line"><span class="lineno">  902</span>        cv::Mat class_semantics,</div>
-<div class="line"><span class="lineno">  903</span>        GroundTruthInputPacket gt_object_pose_gt) -&gt; <span class="keywordtype">bool</span></div>
-<div class="line"><span class="lineno">  904</span>    {</div>
-<div class="line"><span class="lineno">  905</span>        CHECK(timestamp == gt_object_pose_gt.timestamp_);</div>
-<div class="line"><span class="lineno">  906</span> </div>
-<div class="line"><span class="lineno">  907</span>        CHECK(<a class="code hl_variable" href="classdyno_1_1DataProvider.html#a1691b6605c29a0bfda5fea991c6bc199">ground_truth_packet_callback_</a>);</div>
-<div class="line"><span class="lineno">  908</span>        <span class="keywordflow">if</span>(<a class="code hl_variable" href="classdyno_1_1DataProvider.html#a1691b6605c29a0bfda5fea991c6bc199">ground_truth_packet_callback_</a>) <a class="code hl_variable" href="classdyno_1_1DataProvider.html#a1691b6605c29a0bfda5fea991c6bc199">ground_truth_packet_callback_</a>(gt_object_pose_gt);</div>
-<div class="line"><span class="lineno">  909</span> </div>
-<div class="line"><span class="lineno">  910</span>        ImageContainer::Ptr image_container = <span class="keyword">nullptr</span>;</div>
-<div class="line"><span class="lineno">  911</span> </div>
-<div class="line"><span class="lineno">  912</span>        <span class="keywordflow">if</span>(<a class="code hl_variable" href="classdyno_1_1VirtualKittiDataLoader.html#a9d0bf477d2065f71ef478d94ba88bf6b">params_</a>.<a class="code hl_variable" href="structdyno_1_1VirtualKittiDataLoader_1_1Params.html#a703a7958acc6b4b06694ea612dcc5a32">mask_type</a> == <a class="code hl_enumvalue" href="namespacedyno.html#aaa09ef374edf57e1a3edc9b15a52e080a15df8a43ae809c71a3d7cf35b5b14209">MaskType::MOTION</a>) {</div>
-<div class="line"><span class="lineno">  913</span>            image_container = <a class="code hl_function" href="classdyno_1_1ImageContainer.html#a5b0f2449742264ffb55c9062bc58c06f">ImageContainer::Create</a>(</div>
-<div class="line"><span class="lineno">  914</span>                timestamp,</div>
-<div class="line"><span class="lineno">  915</span>                frame_id,</div>
-<div class="line"><span class="lineno">  916</span>                ImageWrapper&lt;ImageType::RGBMono&gt;(rgb),</div>
-<div class="line"><span class="lineno">  917</span>                ImageWrapper&lt;ImageType::Depth&gt;(depth),</div>
-<div class="line"><span class="lineno">  918</span>                ImageWrapper&lt;ImageType::OpticalFlow&gt;(optical_flow),</div>
-<div class="line"><span class="lineno">  919</span>                ImageWrapper&lt;ImageType::MotionMask&gt;(instance_mask),</div>
-<div class="line"><span class="lineno">  920</span>                ImageWrapper&lt;ImageType::ClassSegmentation&gt;(class_semantics));</div>
-<div class="line"><span class="lineno">  921</span>        }</div>
-<div class="line"><span class="lineno">  922</span>        <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  923</span>            image_container = <a class="code hl_function" href="classdyno_1_1ImageContainer.html#a5b0f2449742264ffb55c9062bc58c06f">ImageContainer::Create</a>(</div>
-<div class="line"><span class="lineno">  924</span>                timestamp,</div>
-<div class="line"><span class="lineno">  925</span>                frame_id,</div>
-<div class="line"><span class="lineno">  926</span>                ImageWrapper&lt;ImageType::RGBMono&gt;(rgb),</div>
-<div class="line"><span class="lineno">  927</span>                ImageWrapper&lt;ImageType::Depth&gt;(depth),</div>
-<div class="line"><span class="lineno">  928</span>                ImageWrapper&lt;ImageType::OpticalFlow&gt;(optical_flow),</div>
-<div class="line"><span class="lineno">  929</span>                ImageWrapper&lt;ImageType::SemanticMask&gt;(instance_mask));</div>
-<div class="line"><span class="lineno">  930</span>        }</div>
-<div class="line"><span class="lineno">  931</span> </div>
-<div class="line"><span class="lineno">  932</span> </div>
-<div class="line"><span class="lineno">  933</span>        CHECK(image_container);</div>
-<div class="line"><span class="lineno">  934</span>        CHECK(<a class="code hl_variable" href="classdyno_1_1DataProvider.html#aa11672e30d895d97f113076391bc02cc">image_container_callback_</a>);</div>
-<div class="line"><span class="lineno">  935</span>        <span class="keywordflow">if</span>(<a class="code hl_variable" href="classdyno_1_1DataProvider.html#aa11672e30d895d97f113076391bc02cc">image_container_callback_</a>) <a class="code hl_variable" href="classdyno_1_1DataProvider.html#aa11672e30d895d97f113076391bc02cc">image_container_callback_</a>(image_container);</div>
-<div class="line"><span class="lineno">  936</span>        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  937</span>    };</div>
-<div class="line"><span class="lineno">  938</span> </div>
-<div class="line"><span class="lineno">  939</span>    this-&gt;<a class="code hl_function" href="structdyno_1_1__DynoDatasetConstructor.html#a5354a00794f43690a5bab204bda3879e">setCallback</a>(callback);</div>
-<div class="line"><span class="lineno">  940</span> </div>
-<div class="line"><span class="lineno">  941</span> </div>
-<div class="line"><span class="lineno">  942</span>    <span class="comment">//TODO: virtual function in base class to validate starting/end frames as it may be different between datasets?</span></div>
-<div class="line"><span class="lineno">  943</span>    <a class="code hl_function" href="classdyno_1_1DynoDatasetProvider.html#adcfd94e1bbddb293b1585c27f81838ee">setStartingFrame</a>(1u); <span class="comment">//have to start at at least 1 so we can index backwards with optical flow</span></div>
-<div class="line"><span class="lineno">  944</span> </div>
-<div class="line"><span class="lineno">  945</span>}</div>
-<div class="ttc" id="aclassdyno_1_1DataProvider_html_a1691b6605c29a0bfda5fea991c6bc199"><div class="ttname"><a href="classdyno_1_1DataProvider.html#a1691b6605c29a0bfda5fea991c6bc199">dyno::DataProvider::ground_truth_packet_callback_</a></div><div class="ttdeci">GroundTruthPacketCallback ground_truth_packet_callback_</div><div class="ttdef"><b>Definition:</b> <a href="DataProvider_8hpp_source.html#l00128">DataProvider.hpp:128</a></div></div>
-<div class="ttc" id="aclassdyno_1_1DataProvider_html_aa11672e30d895d97f113076391bc02cc"><div class="ttname"><a href="classdyno_1_1DataProvider.html#aa11672e30d895d97f113076391bc02cc">dyno::DataProvider::image_container_callback_</a></div><div class="ttdeci">ImageContainerCallback image_container_callback_</div><div class="ttdef"><b>Definition:</b> <a href="DataProvider_8hpp_source.html#l00124">DataProvider.hpp:124</a></div></div>
+<p class="definition">Definition at line <a class="el" href="VirtualKittidataProvider_8cc_source.html#l00886">886</a> of file <a class="el" href="VirtualKittidataProvider_8cc_source.html">VirtualKittidataProvider.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  888</span>    : <a class="code hl_typedef" href="namespacedyno.html#a34bd86d1981e4f2f8f53e488ed978409">VirtualKittiDatasetProvider</a>(dataset_path), <a class="code hl_variable" href="classdyno_1_1VirtualKittiDataLoader.html#a9d0bf477d2065f71ef478d94ba88bf6b">params_</a>(params) {</div>
+<div class="line"><span class="lineno">  889</span>  <span class="keyword">const</span> std::string&amp; scene = params.<a class="code hl_variable" href="structdyno_1_1VirtualKittiDataLoader_1_1Params.html#a78cd68acaf84e5888fab3382e9b641dc">scene</a>;</div>
+<div class="line"><span class="lineno">  890</span>  <span class="keyword">const</span> std::string&amp; scene_type = params.scene_type;</div>
+<div class="line"><span class="lineno">  891</span>  <span class="keyword">const</span> <span class="keyword">auto</span>&amp; mask_type = params.mask_type;</div>
+<div class="line"><span class="lineno">  892</span>  <span class="keyword">const</span> std::string path = dataset_path;</div>
+<div class="line"><span class="lineno">  893</span> </div>
+<div class="line"><span class="lineno">  894</span>  LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Starting VirtualKittiDataLoader with path &quot;</span> &lt;&lt; path</div>
+<div class="line"><span class="lineno">  895</span>            &lt;&lt; <span class="stringliteral">&quot; requested scene &quot;</span> &lt;&lt; scene &lt;&lt; <span class="stringliteral">&quot; and scene type &quot;</span> &lt;&lt; scene_type;</div>
+<div class="line"><span class="lineno">  896</span>  <span class="keyword">const</span> std::string depth_folder = path + <span class="stringliteral">&quot;/&quot;</span> + <a class="code hl_variable" href="classdyno_1_1VirtualKittiDataLoader.html#a5f837eea868f703e448aca51c45b7116">v_depth_folder</a> + <span class="stringliteral">&quot;/&quot;</span> + scene +</div>
+<div class="line"><span class="lineno">  897</span>                                   <span class="stringliteral">&quot;/&quot;</span> + scene_type + <span class="stringliteral">&quot;/frames/depth/Camera_0&quot;</span>;</div>
+<div class="line"><span class="lineno">  898</span>  <span class="keyword">const</span> std::string forward_flow_folder = path + <span class="stringliteral">&quot;/&quot;</span> + <a class="code hl_variable" href="classdyno_1_1VirtualKittiDataLoader.html#a27bb376bd99804345aa69e4221d93e72">v_forward_flow_folder</a> +</div>
+<div class="line"><span class="lineno">  899</span>                                          <span class="stringliteral">&quot;/&quot;</span> + scene + <span class="stringliteral">&quot;/&quot;</span> + scene_type +</div>
+<div class="line"><span class="lineno">  900</span>                                          <span class="stringliteral">&quot;/frames/forwardFlow/Camera_0&quot;</span>;</div>
+<div class="line"><span class="lineno">  901</span>  <span class="keyword">const</span> std::string backward_flow_folder = path + <span class="stringliteral">&quot;/&quot;</span> + <a class="code hl_variable" href="classdyno_1_1VirtualKittiDataLoader.html#a6c0a50306ced80141679aabcc9c78b98">v_backward_flow_folder</a> +</div>
+<div class="line"><span class="lineno">  902</span>                                           <span class="stringliteral">&quot;/&quot;</span> + scene + <span class="stringliteral">&quot;/&quot;</span> + scene_type +</div>
+<div class="line"><span class="lineno">  903</span>                                           <span class="stringliteral">&quot;/frames/backwardFlow/Camera_0&quot;</span>;</div>
+<div class="line"><span class="lineno">  904</span>  <span class="keyword">const</span> std::string forward_scene_flow_folder =</div>
+<div class="line"><span class="lineno">  905</span>      path + <span class="stringliteral">&quot;/&quot;</span> + <a class="code hl_variable" href="classdyno_1_1VirtualKittiDataLoader.html#a74742a01382a532ee8d59c3783f21d85">v_forward_scene_flow_folder</a> + <span class="stringliteral">&quot;/&quot;</span> + scene + <span class="stringliteral">&quot;/&quot;</span> +</div>
+<div class="line"><span class="lineno">  906</span>      scene_type + <span class="stringliteral">&quot;/frames/forwardsceneFlow/Camera_0&quot;</span>;</div>
+<div class="line"><span class="lineno">  907</span>  <span class="keyword">const</span> std::string class_semantics_folder =</div>
+<div class="line"><span class="lineno">  908</span>      path + <span class="stringliteral">&quot;/&quot;</span> + <a class="code hl_variable" href="classdyno_1_1VirtualKittiDataLoader.html#a4e00fae2b88904299f386fd67340a320">v_class_semantics_folder</a> + <span class="stringliteral">&quot;/&quot;</span> + scene + <span class="stringliteral">&quot;/&quot;</span> + scene_type +</div>
+<div class="line"><span class="lineno">  909</span>      <span class="stringliteral">&quot;/frames/classSegmentation/Camera_0&quot;</span>;</div>
+<div class="line"><span class="lineno">  910</span>  <span class="keyword">const</span> std::string instance_segmentation_folder =</div>
+<div class="line"><span class="lineno">  911</span>      path + <span class="stringliteral">&quot;/&quot;</span> + <a class="code hl_variable" href="classdyno_1_1VirtualKittiDataLoader.html#a5305ea2d8a72cf2864c6c9a4e06fb401">v_instance_segmentation_folder</a> + <span class="stringliteral">&quot;/&quot;</span> + scene + <span class="stringliteral">&quot;/&quot;</span> +</div>
+<div class="line"><span class="lineno">  912</span>      scene_type + <span class="stringliteral">&quot;/frames/instanceSegmentation/Camera_0&quot;</span>;</div>
+<div class="line"><span class="lineno">  913</span>  <span class="keyword">const</span> std::string rgb_folder = path + <span class="stringliteral">&quot;/&quot;</span> + <a class="code hl_variable" href="classdyno_1_1VirtualKittiDataLoader.html#a8e66d3ab592d9982d0683937bad1c6e5">v_rgb_folder</a> + <span class="stringliteral">&quot;/&quot;</span> + scene + <span class="stringliteral">&quot;/&quot;</span> +</div>
+<div class="line"><span class="lineno">  914</span>                                 scene_type + <span class="stringliteral">&quot;/frames/rgb/Camera_0&quot;</span>;</div>
+<div class="line"><span class="lineno">  915</span>  <span class="keyword">const</span> std::string text_gt_folder =</div>
+<div class="line"><span class="lineno">  916</span>      path + <span class="stringliteral">&quot;/&quot;</span> + <a class="code hl_variable" href="classdyno_1_1VirtualKittiDataLoader.html#a3951698e24b588b93709777789c72bc9">v_text_gt_folder</a> + <span class="stringliteral">&quot;/&quot;</span> + scene + <span class="stringliteral">&quot;/&quot;</span> + scene_type;</div>
+<div class="line"><span class="lineno">  917</span> </div>
+<div class="line"><span class="lineno">  918</span>  <a class="code hl_function" href="namespacedyno.html#a163cb16ef980acda5b09d45c3a156e6f">throwExceptionIfPathInvalid</a>(depth_folder);</div>
+<div class="line"><span class="lineno">  919</span>  <a class="code hl_function" href="namespacedyno.html#a163cb16ef980acda5b09d45c3a156e6f">throwExceptionIfPathInvalid</a>(forward_flow_folder);</div>
+<div class="line"><span class="lineno">  920</span>  <a class="code hl_function" href="namespacedyno.html#a163cb16ef980acda5b09d45c3a156e6f">throwExceptionIfPathInvalid</a>(forward_scene_flow_folder);</div>
+<div class="line"><span class="lineno">  921</span>  <a class="code hl_function" href="namespacedyno.html#a163cb16ef980acda5b09d45c3a156e6f">throwExceptionIfPathInvalid</a>(class_semantics_folder);</div>
+<div class="line"><span class="lineno">  922</span>  <a class="code hl_function" href="namespacedyno.html#a163cb16ef980acda5b09d45c3a156e6f">throwExceptionIfPathInvalid</a>(instance_segmentation_folder);</div>
+<div class="line"><span class="lineno">  923</span>  <a class="code hl_function" href="namespacedyno.html#a163cb16ef980acda5b09d45c3a156e6f">throwExceptionIfPathInvalid</a>(rgb_folder);</div>
+<div class="line"><span class="lineno">  924</span>  <a class="code hl_function" href="namespacedyno.html#a163cb16ef980acda5b09d45c3a156e6f">throwExceptionIfPathInvalid</a>(text_gt_folder);</div>
+<div class="line"><span class="lineno">  925</span> </div>
+<div class="line"><span class="lineno">  926</span>  <span class="keyword">auto</span> gt_loader = std::make_shared&lt;VirtualKittiTextGtLoader&gt;(text_gt_folder);</div>
+<div class="line"><span class="lineno">  927</span> </div>
+<div class="line"><span class="lineno">  928</span>  <span class="keyword">auto</span> timestamp_folder =</div>
+<div class="line"><span class="lineno">  929</span>      std::make_shared&lt;VirtualKittiTimestampLoader&gt;(gt_loader-&gt;size());</div>
+<div class="line"><span class="lineno">  930</span>  <span class="keyword">auto</span> rgb_loader = std::make_shared&lt;VirtualKittiRGBDataFolder&gt;(rgb_folder);</div>
+<div class="line"><span class="lineno">  931</span>  <span class="keyword">auto</span> optical_flow_loader =</div>
+<div class="line"><span class="lineno">  932</span>      std::make_shared&lt;VirtualKittiFlowDataFolder&gt;(forward_flow_folder);</div>
+<div class="line"><span class="lineno">  933</span>  <span class="keyword">auto</span> depth_loader =</div>
+<div class="line"><span class="lineno">  934</span>      std::make_shared&lt;VirtualKittiDepthDataFolder&gt;(depth_folder);</div>
+<div class="line"><span class="lineno">  935</span> </div>
+<div class="line"><span class="lineno">  936</span>  VirtualKittiGenericInstanceSegFolder::Ptr motion_mask_loader = <span class="keyword">nullptr</span>;</div>
+<div class="line"><span class="lineno">  937</span>  <span class="keywordflow">if</span> (mask_type == <a class="code hl_enumvalue" href="namespacedyno.html#aaa09ef374edf57e1a3edc9b15a52e080a15df8a43ae809c71a3d7cf35b5b14209">MaskType::MOTION</a>) {</div>
+<div class="line"><span class="lineno">  938</span>    LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Using MaskType::MOTION for loading mask&quot;</span>;</div>
+<div class="line"><span class="lineno">  939</span>    motion_mask_loader = std::make_shared&lt;VirtualKittiMotionSegFolder&gt;(</div>
+<div class="line"><span class="lineno">  940</span>        instance_segmentation_folder, gt_loader);</div>
+<div class="line"><span class="lineno">  941</span>  } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (mask_type == <a class="code hl_enumvalue" href="namespacedyno.html#aaa09ef374edf57e1a3edc9b15a52e080ab73bd40e28290e1a3126255f053f82c1">MaskType::SEMANTIC_INSTANCE</a>) {</div>
+<div class="line"><span class="lineno">  942</span>    LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Using MaskType::SEMANTIC_INSTANCE for loading mask&quot;</span>;</div>
+<div class="line"><span class="lineno">  943</span>    motion_mask_loader = std::make_shared&lt;VirtualKittiInstanceSegFolder&gt;(</div>
+<div class="line"><span class="lineno">  944</span>        instance_segmentation_folder, gt_loader);</div>
+<div class="line"><span class="lineno">  945</span>  } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  946</span>    LOG(FATAL) &lt;&lt; <span class="stringliteral">&quot;Unknown MaskType for KittiDataLoader&quot;</span>;</div>
+<div class="line"><span class="lineno">  947</span>  }</div>
+<div class="line"><span class="lineno">  948</span>  CHECK_NOTNULL(motion_mask_loader);</div>
+<div class="line"><span class="lineno">  949</span> </div>
+<div class="line"><span class="lineno">  950</span>  <span class="keyword">auto</span> gt_loader_folder =</div>
+<div class="line"><span class="lineno">  951</span>      std::make_shared&lt;VirtualKittiGTFolder&gt;(gt_loader, timestamp_folder);</div>
+<div class="line"><span class="lineno">  952</span>  <span class="keyword">auto</span> class_semantics_loader =</div>
+<div class="line"><span class="lineno">  953</span>      std::make_shared&lt;VirtualKittiClassSegmentationDataFolder&gt;(</div>
+<div class="line"><span class="lineno">  954</span>          class_semantics_folder);</div>
+<div class="line"><span class="lineno">  955</span> </div>
+<div class="line"><span class="lineno">  956</span>  this-&gt;<a class="code hl_function" href="classdyno_1_1DynoDatasetProvider.html#aca00b7dce03a97517c126aacb60a3332">setLoaders</a>(timestamp_folder, rgb_loader, optical_flow_loader,</div>
+<div class="line"><span class="lineno">  957</span>                   depth_loader, motion_mask_loader, class_semantics_loader,</div>
+<div class="line"><span class="lineno">  958</span>                   gt_loader_folder);</div>
+<div class="line"><span class="lineno">  959</span> </div>
+<div class="line"><span class="lineno">  960</span>  <span class="keyword">auto</span> callback = [&amp;](<span class="keywordtype">size_t</span> frame_id, <a class="code hl_typedef" href="namespacedyno.html#a7fda67c0575c4b7a8210dcc8ae227370">Timestamp</a> timestamp, cv::Mat rgb,</div>
+<div class="line"><span class="lineno">  961</span>                      cv::Mat optical_flow, cv::Mat depth,</div>
+<div class="line"><span class="lineno">  962</span>                      cv::Mat instance_mask, cv::Mat class_semantics,</div>
+<div class="line"><span class="lineno">  963</span>                      GroundTruthInputPacket gt_object_pose_gt) -&gt; <span class="keywordtype">bool</span> {</div>
+<div class="line"><span class="lineno">  964</span>    CHECK(timestamp == gt_object_pose_gt.timestamp_);</div>
+<div class="line"><span class="lineno">  965</span> </div>
+<div class="line"><span class="lineno">  966</span>    CHECK(<a class="code hl_variable" href="classdyno_1_1DataProvider.html#a1691b6605c29a0bfda5fea991c6bc199">ground_truth_packet_callback_</a>);</div>
+<div class="line"><span class="lineno">  967</span>    <span class="keywordflow">if</span> (<a class="code hl_variable" href="classdyno_1_1DataProvider.html#a1691b6605c29a0bfda5fea991c6bc199">ground_truth_packet_callback_</a>)</div>
+<div class="line"><span class="lineno">  968</span>      <a class="code hl_variable" href="classdyno_1_1DataProvider.html#a1691b6605c29a0bfda5fea991c6bc199">ground_truth_packet_callback_</a>(gt_object_pose_gt);</div>
+<div class="line"><span class="lineno">  969</span> </div>
+<div class="line"><span class="lineno">  970</span>    <span class="comment">// ImageContainer::Ptr image_container = nullptr;</span></div>
+<div class="line"><span class="lineno">  971</span>    ImageContainer image_container(frame_id, timestamp);</div>
+<div class="line"><span class="lineno">  972</span>    image_container.rgb(rgb)</div>
+<div class="line"><span class="lineno">  973</span>        .depth(depth)</div>
+<div class="line"><span class="lineno">  974</span>        .opticalFlow(optical_flow)</div>
+<div class="line"><span class="lineno">  975</span>        .objectMotionMask(instance_mask);</div>
+<div class="line"><span class="lineno">  976</span> </div>
+<div class="line"><span class="lineno">  977</span>    <span class="comment">// if(params_.mask_type == MaskType::MOTION) {</span></div>
+<div class="line"><span class="lineno">  978</span>    <span class="comment">//     image_container = ImageContainer::Create(</span></div>
+<div class="line"><span class="lineno">  979</span>    <span class="comment">//         timestamp,</span></div>
+<div class="line"><span class="lineno">  980</span>    <span class="comment">//         frame_id,</span></div>
+<div class="line"><span class="lineno">  981</span>    <span class="comment">//         ImageWrapper&lt;ImageType::RGBMono&gt;(rgb),</span></div>
+<div class="line"><span class="lineno">  982</span>    <span class="comment">//         ImageWrapper&lt;ImageType::Depth&gt;(depth),</span></div>
+<div class="line"><span class="lineno">  983</span>    <span class="comment">//         ImageWrapper&lt;ImageType::OpticalFlow&gt;(optical_flow),</span></div>
+<div class="line"><span class="lineno">  984</span>    <span class="comment">//         ImageWrapper&lt;ImageType::MotionMask&gt;(instance_mask),</span></div>
+<div class="line"><span class="lineno">  985</span>    <span class="comment">//         ImageWrapper&lt;ImageType::ClassSegmentation&gt;(class_semantics));</span></div>
+<div class="line"><span class="lineno">  986</span>    <span class="comment">// }</span></div>
+<div class="line"><span class="lineno">  987</span>    <span class="comment">// else {</span></div>
+<div class="line"><span class="lineno">  988</span>    <span class="comment">//     image_container = ImageContainer::Create(</span></div>
+<div class="line"><span class="lineno">  989</span>    <span class="comment">//         timestamp,</span></div>
+<div class="line"><span class="lineno">  990</span>    <span class="comment">//         frame_id,</span></div>
+<div class="line"><span class="lineno">  991</span>    <span class="comment">//         ImageWrapper&lt;ImageType::RGBMono&gt;(rgb),</span></div>
+<div class="line"><span class="lineno">  992</span>    <span class="comment">//         ImageWrapper&lt;ImageType::Depth&gt;(depth),</span></div>
+<div class="line"><span class="lineno">  993</span>    <span class="comment">//         ImageWrapper&lt;ImageType::OpticalFlow&gt;(optical_flow),</span></div>
+<div class="line"><span class="lineno">  994</span>    <span class="comment">//         ImageWrapper&lt;ImageType::SemanticMask&gt;(instance_mask));</span></div>
+<div class="line"><span class="lineno">  995</span>    <span class="comment">// }</span></div>
+<div class="line"><span class="lineno">  996</span> </div>
+<div class="line"><span class="lineno">  997</span>    <span class="comment">// CHECK(image_container);</span></div>
+<div class="line"><span class="lineno">  998</span>    CHECK(<a class="code hl_variable" href="classdyno_1_1DataProvider.html#aa11672e30d895d97f113076391bc02cc">image_container_callback_</a>);</div>
+<div class="line"><span class="lineno">  999</span>    <span class="keywordflow">if</span> (<a class="code hl_variable" href="classdyno_1_1DataProvider.html#aa11672e30d895d97f113076391bc02cc">image_container_callback_</a>)</div>
+<div class="line"><span class="lineno"> 1000</span>      <a class="code hl_variable" href="classdyno_1_1DataProvider.html#aa11672e30d895d97f113076391bc02cc">image_container_callback_</a>(</div>
+<div class="line"><span class="lineno"> 1001</span>          std::make_shared&lt;ImageContainer&gt;(image_container));</div>
+<div class="line"><span class="lineno"> 1002</span>    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno"> 1003</span>  };</div>
+<div class="line"><span class="lineno"> 1004</span> </div>
+<div class="line"><span class="lineno"> 1005</span>  this-&gt;<a class="code hl_function" href="structdyno_1_1__DynoDatasetConstructor.html#a5354a00794f43690a5bab204bda3879e">setCallback</a>(callback);</div>
+<div class="line"><span class="lineno"> 1006</span> </div>
+<div class="line"><span class="lineno"> 1007</span>  <span class="comment">// TODO: virtual function in base class to validate starting/end frames as it</span></div>
+<div class="line"><span class="lineno"> 1008</span>  <span class="comment">// may be different between datasets?</span></div>
+<div class="line"><span class="lineno"> 1009</span>  <a class="code hl_function" href="classdyno_1_1DynoDatasetProvider.html#adcfd94e1bbddb293b1585c27f81838ee">setStartingFrame</a>(1u);  <span class="comment">// have to start at at least 1 so we can index</span></div>
+<div class="line"><span class="lineno"> 1010</span>                         <span class="comment">// backwards with optical flow</span></div>
+<div class="line"><span class="lineno"> 1011</span>}</div>
+<div class="ttc" id="aclassdyno_1_1DataProvider_html_a1691b6605c29a0bfda5fea991c6bc199"><div class="ttname"><a href="classdyno_1_1DataProvider.html#a1691b6605c29a0bfda5fea991c6bc199">dyno::DataProvider::ground_truth_packet_callback_</a></div><div class="ttdeci">GroundTruthPacketCallback ground_truth_packet_callback_</div><div class="ttdef"><b>Definition:</b> <a href="DataProvider_8hpp_source.html#l00130">DataProvider.hpp:130</a></div></div>
+<div class="ttc" id="aclassdyno_1_1DataProvider_html_aa11672e30d895d97f113076391bc02cc"><div class="ttname"><a href="classdyno_1_1DataProvider.html#aa11672e30d895d97f113076391bc02cc">dyno::DataProvider::image_container_callback_</a></div><div class="ttdeci">ImageContainerCallback image_container_callback_</div><div class="ttdef"><b>Definition:</b> <a href="DataProvider_8hpp_source.html#l00126">DataProvider.hpp:126</a></div></div>
 <div class="ttc" id="aclassdyno_1_1DynoDatasetProvider_html_aca00b7dce03a97517c126aacb60a3332"><div class="ttname"><a href="classdyno_1_1DynoDatasetProvider.html#aca00b7dce03a97517c126aacb60a3332">dyno::DynoDatasetProvider::setLoaders</a></div><div class="ttdeci">void setLoaders(TimestampBaseLoader::Ptr timestamp_loader, dyno::DataFolder&lt; cv::Mat &gt;::Ptr rgb_loader, dyno::DataFolder&lt; cv::Mat &gt;::Ptr optical_flow_loader, typename DataFolder&lt; DataTypes &gt;::Ptr... data_folders) override</div><div class="ttdef"><b>Definition:</b> <a href="DatasetProvider_8hpp_source.html#l00340">DatasetProvider.hpp:340</a></div></div>
 <div class="ttc" id="aclassdyno_1_1DynoDatasetProvider_html_adcfd94e1bbddb293b1585c27f81838ee"><div class="ttname"><a href="classdyno_1_1DynoDatasetProvider.html#adcfd94e1bbddb293b1585c27f81838ee">dyno::DynoDatasetProvider::setStartingFrame</a></div><div class="ttdeci">void setStartingFrame(int starting_frame)</div><div class="ttdef"><b>Definition:</b> <a href="DatasetProvider_8hpp_source.html#l00276">DatasetProvider.hpp:276</a></div></div>
-<div class="ttc" id="aclassdyno_1_1ImageContainer_html_a5b0f2449742264ffb55c9062bc58c06f"><div class="ttname"><a href="classdyno_1_1ImageContainer.html#a5b0f2449742264ffb55c9062bc58c06f">dyno::ImageContainer::Create</a></div><div class="ttdeci">static ImageContainer::Ptr Create(const Timestamp timestamp, const FrameId frame_id, const ImageWrapper&lt; ImageType::RGBMono &gt; &amp;img, const ImageWrapper&lt; ImageType::Depth &gt; &amp;depth, const ImageWrapper&lt; ImageType::OpticalFlow &gt; &amp;optical_flow, const ImageWrapper&lt; ImageType::SemanticMask &gt; &amp;semantic_mask)</div><div class="ttdoc">Construct an image container equivalent to RGBD + Semantic Mask input.</div><div class="ttdef"><b>Definition:</b> <a href="ImageContainer_8cc_source.html#l00112">ImageContainer.cc:112</a></div></div>
 <div class="ttc" id="aclassdyno_1_1VirtualKittiDataLoader_html_a27bb376bd99804345aa69e4221d93e72"><div class="ttname"><a href="classdyno_1_1VirtualKittiDataLoader.html#a27bb376bd99804345aa69e4221d93e72">dyno::VirtualKittiDataLoader::v_forward_flow_folder</a></div><div class="ttdeci">const std::string v_forward_flow_folder</div><div class="ttdef"><b>Definition:</b> <a href="VirtualKittiDataProvider_8hpp_source.html#l00083">VirtualKittiDataProvider.hpp:83</a></div></div>
 <div class="ttc" id="aclassdyno_1_1VirtualKittiDataLoader_html_a3951698e24b588b93709777789c72bc9"><div class="ttname"><a href="classdyno_1_1VirtualKittiDataLoader.html#a3951698e24b588b93709777789c72bc9">dyno::VirtualKittiDataLoader::v_text_gt_folder</a></div><div class="ttdeci">const std::string v_text_gt_folder</div><div class="ttdef"><b>Definition:</b> <a href="VirtualKittiDataProvider_8hpp_source.html#l00091">VirtualKittiDataProvider.hpp:91</a></div></div>
 <div class="ttc" id="aclassdyno_1_1VirtualKittiDataLoader_html_a4e00fae2b88904299f386fd67340a320"><div class="ttname"><a href="classdyno_1_1VirtualKittiDataLoader.html#a4e00fae2b88904299f386fd67340a320">dyno::VirtualKittiDataLoader::v_class_semantics_folder</a></div><div class="ttdeci">const std::string v_class_semantics_folder</div><div class="ttdef"><b>Definition:</b> <a href="VirtualKittiDataProvider_8hpp_source.html#l00087">VirtualKittiDataProvider.hpp:87</a></div></div>
@@ -456,30 +469,29 @@ Additional Inherited Members</h2></td></tr>
 <div class="ttc" id="aclassdyno_1_1VirtualKittiDataLoader_html_a74742a01382a532ee8d59c3783f21d85"><div class="ttname"><a href="classdyno_1_1VirtualKittiDataLoader.html#a74742a01382a532ee8d59c3783f21d85">dyno::VirtualKittiDataLoader::v_forward_scene_flow_folder</a></div><div class="ttdeci">const std::string v_forward_scene_flow_folder</div><div class="ttdef"><b>Definition:</b> <a href="VirtualKittiDataProvider_8hpp_source.html#l00085">VirtualKittiDataProvider.hpp:85</a></div></div>
 <div class="ttc" id="aclassdyno_1_1VirtualKittiDataLoader_html_a8e66d3ab592d9982d0683937bad1c6e5"><div class="ttname"><a href="classdyno_1_1VirtualKittiDataLoader.html#a8e66d3ab592d9982d0683937bad1c6e5">dyno::VirtualKittiDataLoader::v_rgb_folder</a></div><div class="ttdeci">const std::string v_rgb_folder</div><div class="ttdef"><b>Definition:</b> <a href="VirtualKittiDataProvider_8hpp_source.html#l00090">VirtualKittiDataProvider.hpp:90</a></div></div>
 <div class="ttc" id="aclassdyno_1_1VirtualKittiDataLoader_html_a9d0bf477d2065f71ef478d94ba88bf6b"><div class="ttname"><a href="classdyno_1_1VirtualKittiDataLoader.html#a9d0bf477d2065f71ef478d94ba88bf6b">dyno::VirtualKittiDataLoader::params_</a></div><div class="ttdeci">const Params params_</div><div class="ttdef"><b>Definition:</b> <a href="VirtualKittiDataProvider_8hpp_source.html#l00080">VirtualKittiDataProvider.hpp:80</a></div></div>
+<div class="ttc" id="anamespacedyno_html_a163cb16ef980acda5b09d45c3a156e6f"><div class="ttname"><a href="namespacedyno.html#a163cb16ef980acda5b09d45c3a156e6f">dyno::throwExceptionIfPathInvalid</a></div><div class="ttdeci">void throwExceptionIfPathInvalid(const std::string &amp;image_path)</div><div class="ttdef"><b>Definition:</b> <a href="DataProviderUtils_8cc_source.html#l00048">DataProviderUtils.cc:48</a></div></div>
 <div class="ttc" id="anamespacedyno_html_a34bd86d1981e4f2f8f53e488ed978409"><div class="ttname"><a href="namespacedyno.html#a34bd86d1981e4f2f8f53e488ed978409">dyno::VirtualKittiDatasetProvider</a></div><div class="ttdeci">DynoDatasetProvider&lt; cv::Mat, cv::Mat, cv::Mat, GroundTruthInputPacket &gt; VirtualKittiDatasetProvider</div><div class="ttdef"><b>Definition:</b> <a href="VirtualKittiDataProvider_8hpp_source.html#l00042">VirtualKittiDataProvider.hpp:43</a></div></div>
 <div class="ttc" id="anamespacedyno_html_a7fda67c0575c4b7a8210dcc8ae227370"><div class="ttname"><a href="namespacedyno.html#a7fda67c0575c4b7a8210dcc8ae227370">dyno::Timestamp</a></div><div class="ttdeci">double Timestamp</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00064">Types.hpp:64</a></div></div>
-<div class="ttc" id="anamespacedyno_html_a80d59abcebfb78b7fb237b1572429606"><div class="ttname"><a href="namespacedyno.html#a80d59abcebfb78b7fb237b1572429606">dyno::throwExceptionIfPathInvalid</a></div><div class="ttdeci">void throwExceptionIfPathInvalid(const std::string image_path)</div><div class="ttdef"><b>Definition:</b> <a href="DataProviderUtils_8cc_source.html#l00044">DataProviderUtils.cc:44</a></div></div>
 <div class="ttc" id="anamespacedyno_html_aaa09ef374edf57e1a3edc9b15a52e080a15df8a43ae809c71a3d7cf35b5b14209"><div class="ttname"><a href="namespacedyno.html#aaa09ef374edf57e1a3edc9b15a52e080a15df8a43ae809c71a3d7cf35b5b14209">dyno::MOTION</a></div><div class="ttdeci">@ MOTION</div><div class="ttdef"><b>Definition:</b> <a href="DatasetLoader_8hpp_source.html#l00287">DatasetLoader.hpp:287</a></div></div>
 <div class="ttc" id="anamespacedyno_html_aaa09ef374edf57e1a3edc9b15a52e080ab73bd40e28290e1a3126255f053f82c1"><div class="ttname"><a href="namespacedyno.html#aaa09ef374edf57e1a3edc9b15a52e080ab73bd40e28290e1a3126255f053f82c1">dyno::SEMANTIC_INSTANCE</a></div><div class="ttdeci">@ SEMANTIC_INSTANCE</div><div class="ttdef"><b>Definition:</b> <a href="DatasetLoader_8hpp_source.html#l00289">DatasetLoader.hpp:288</a></div></div>
-<div class="ttc" id="astructdyno_1_1VirtualKittiDataLoader_1_1Params_html_a703a7958acc6b4b06694ea612dcc5a32"><div class="ttname"><a href="structdyno_1_1VirtualKittiDataLoader_1_1Params.html#a703a7958acc6b4b06694ea612dcc5a32">dyno::VirtualKittiDataLoader::Params::mask_type</a></div><div class="ttdeci">MaskType mask_type</div><div class="ttdef"><b>Definition:</b> <a href="VirtualKittiDataProvider_8hpp_source.html#l00063">VirtualKittiDataProvider.hpp:63</a></div></div>
 <div class="ttc" id="astructdyno_1_1VirtualKittiDataLoader_1_1Params_html_a78cd68acaf84e5888fab3382e9b641dc"><div class="ttname"><a href="structdyno_1_1VirtualKittiDataLoader_1_1Params.html#a78cd68acaf84e5888fab3382e9b641dc">dyno::VirtualKittiDataLoader::Params::scene</a></div><div class="ttdeci">std::string scene</div><div class="ttdef"><b>Definition:</b> <a href="VirtualKittiDataProvider_8hpp_source.html#l00061">VirtualKittiDataProvider.hpp:61</a></div></div>
 <div class="ttc" id="astructdyno_1_1__DynoDatasetConstructor_html_a5354a00794f43690a5bab204bda3879e"><div class="ttname"><a href="structdyno_1_1__DynoDatasetConstructor.html#a5354a00794f43690a5bab204bda3879e">dyno::_DynoDatasetConstructor&lt; Timestamp, cv::Mat, cv::Mat, DataTypes... &gt;::setCallback</a></div><div class="ttdeci">void setCallback(const DataInputCallback &amp;data_input_callback)</div><div class="ttdef"><b>Definition:</b> <a href="DatasetProvider_8hpp_source.html#l00067">DatasetProvider.hpp:67</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="classdyno_1_1ImageContainer.html#a5b0f2449742264ffb55c9062bc58c06f">dyno::ImageContainer::Create()</a>, <a class="el" href="classdyno_1_1DataProvider.html#a1691b6605c29a0bfda5fea991c6bc199">dyno::DataProvider::ground_truth_packet_callback_</a>, <a class="el" href="classdyno_1_1DataProvider.html#aa11672e30d895d97f113076391bc02cc">dyno::DataProvider::image_container_callback_</a>, <a class="el" href="structdyno_1_1VirtualKittiDataLoader_1_1Params.html#a703a7958acc6b4b06694ea612dcc5a32">dyno::VirtualKittiDataLoader::Params::mask_type</a>, <a class="el" href="namespacedyno.html#aaa09ef374edf57e1a3edc9b15a52e080a15df8a43ae809c71a3d7cf35b5b14209">dyno::MOTION</a>, <a class="el" href="classdyno_1_1VirtualKittiDataLoader.html#a9d0bf477d2065f71ef478d94ba88bf6b">params_</a>, <a class="el" href="structdyno_1_1VirtualKittiDataLoader_1_1Params.html#a78cd68acaf84e5888fab3382e9b641dc">dyno::VirtualKittiDataLoader::Params::scene</a>, <a class="el" href="structdyno_1_1VirtualKittiDataLoader_1_1Params.html#a535ea614de361c2b493ada5732e14a8b">dyno::VirtualKittiDataLoader::Params::scene_type</a>, <a class="el" href="namespacedyno.html#aaa09ef374edf57e1a3edc9b15a52e080ab73bd40e28290e1a3126255f053f82c1">dyno::SEMANTIC_INSTANCE</a>, <a class="el" href="structdyno_1_1__DynoDatasetConstructor.html#a5354a00794f43690a5bab204bda3879e">dyno::_DynoDatasetConstructor&lt; Timestamp, cv::Mat, cv::Mat, DataTypes... &gt;::setCallback()</a>, <a class="el" href="classdyno_1_1DynoDatasetProvider.html#aca00b7dce03a97517c126aacb60a3332">dyno::DynoDatasetProvider&lt; DataTypes &gt;::setLoaders()</a>, <a class="el" href="classdyno_1_1DynoDatasetProvider.html#adcfd94e1bbddb293b1585c27f81838ee">dyno::DynoDatasetProvider&lt; DataTypes &gt;::setStartingFrame()</a>, <a class="el" href="namespacedyno.html#a80d59abcebfb78b7fb237b1572429606">dyno::throwExceptionIfPathInvalid()</a>, <a class="el" href="classdyno_1_1VirtualKittiDataLoader.html#a6c0a50306ced80141679aabcc9c78b98">v_backward_flow_folder</a>, <a class="el" href="classdyno_1_1VirtualKittiDataLoader.html#a4e00fae2b88904299f386fd67340a320">v_class_semantics_folder</a>, <a class="el" href="classdyno_1_1VirtualKittiDataLoader.html#a5f837eea868f703e448aca51c45b7116">v_depth_folder</a>, <a class="el" href="classdyno_1_1VirtualKittiDataLoader.html#a27bb376bd99804345aa69e4221d93e72">v_forward_flow_folder</a>, <a class="el" href="classdyno_1_1VirtualKittiDataLoader.html#a74742a01382a532ee8d59c3783f21d85">v_forward_scene_flow_folder</a>, <a class="el" href="classdyno_1_1VirtualKittiDataLoader.html#a5305ea2d8a72cf2864c6c9a4e06fb401">v_instance_segmentation_folder</a>, <a class="el" href="classdyno_1_1VirtualKittiDataLoader.html#a8e66d3ab592d9982d0683937bad1c6e5">v_rgb_folder</a>, and <a class="el" href="classdyno_1_1VirtualKittiDataLoader.html#a3951698e24b588b93709777789c72bc9">v_text_gt_folder</a>.</p>
+<p class="reference">References <a class="el" href="classdyno_1_1DataProvider.html#a1691b6605c29a0bfda5fea991c6bc199">dyno::DataProvider::ground_truth_packet_callback_</a>, <a class="el" href="classdyno_1_1DataProvider.html#aa11672e30d895d97f113076391bc02cc">dyno::DataProvider::image_container_callback_</a>, <a class="el" href="structdyno_1_1VirtualKittiDataLoader_1_1Params.html#a703a7958acc6b4b06694ea612dcc5a32">dyno::VirtualKittiDataLoader::Params::mask_type</a>, <a class="el" href="namespacedyno.html#aaa09ef374edf57e1a3edc9b15a52e080a15df8a43ae809c71a3d7cf35b5b14209">dyno::MOTION</a>, <a class="el" href="classdyno_1_1ImageContainer.html#a6f35259f95c31b861ff6515c159e1ee3">dyno::ImageContainer::rgb()</a>, <a class="el" href="structdyno_1_1VirtualKittiDataLoader_1_1Params.html#a78cd68acaf84e5888fab3382e9b641dc">dyno::VirtualKittiDataLoader::Params::scene</a>, <a class="el" href="structdyno_1_1VirtualKittiDataLoader_1_1Params.html#a535ea614de361c2b493ada5732e14a8b">dyno::VirtualKittiDataLoader::Params::scene_type</a>, <a class="el" href="namespacedyno.html#aaa09ef374edf57e1a3edc9b15a52e080ab73bd40e28290e1a3126255f053f82c1">dyno::SEMANTIC_INSTANCE</a>, <a class="el" href="structdyno_1_1__DynoDatasetConstructor.html#a5354a00794f43690a5bab204bda3879e">dyno::_DynoDatasetConstructor&lt; Timestamp, cv::Mat, cv::Mat, DataTypes... &gt;::setCallback()</a>, <a class="el" href="classdyno_1_1DynoDatasetProvider.html#aca00b7dce03a97517c126aacb60a3332">dyno::DynoDatasetProvider&lt; DataTypes &gt;::setLoaders()</a>, <a class="el" href="classdyno_1_1DynoDatasetProvider.html#adcfd94e1bbddb293b1585c27f81838ee">dyno::DynoDatasetProvider&lt; DataTypes &gt;::setStartingFrame()</a>, <a class="el" href="namespacedyno.html#a163cb16ef980acda5b09d45c3a156e6f">dyno::throwExceptionIfPathInvalid()</a>, <a class="el" href="classdyno_1_1VirtualKittiDataLoader.html#a6c0a50306ced80141679aabcc9c78b98">v_backward_flow_folder</a>, <a class="el" href="classdyno_1_1VirtualKittiDataLoader.html#a4e00fae2b88904299f386fd67340a320">v_class_semantics_folder</a>, <a class="el" href="classdyno_1_1VirtualKittiDataLoader.html#a5f837eea868f703e448aca51c45b7116">v_depth_folder</a>, <a class="el" href="classdyno_1_1VirtualKittiDataLoader.html#a27bb376bd99804345aa69e4221d93e72">v_forward_flow_folder</a>, <a class="el" href="classdyno_1_1VirtualKittiDataLoader.html#a74742a01382a532ee8d59c3783f21d85">v_forward_scene_flow_folder</a>, <a class="el" href="classdyno_1_1VirtualKittiDataLoader.html#a5305ea2d8a72cf2864c6c9a4e06fb401">v_instance_segmentation_folder</a>, <a class="el" href="classdyno_1_1VirtualKittiDataLoader.html#a8e66d3ab592d9982d0683937bad1c6e5">v_rgb_folder</a>, and <a class="el" href="classdyno_1_1VirtualKittiDataLoader.html#a3951698e24b588b93709777789c72bc9">v_text_gt_folder</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1VirtualKittiDataLoader_aac90985e4a9dee128c448148e218aed5_cgraph.png" border="0" usemap="#aclassdyno_1_1VirtualKittiDataLoader_aac90985e4a9dee128c448148e218aed5_cgraph" alt=""/></div>
 <map name="aclassdyno_1_1VirtualKittiDataLoader_aac90985e4a9dee128c448148e218aed5_cgraph" id="aclassdyno_1_1VirtualKittiDataLoader_aac90985e4a9dee128c448148e218aed5_cgraph">
-<area shape="rect" title=" " alt="" coords="5,173,212,213"/>
-<area shape="rect" href="classdyno_1_1ImageContainer.html#a5b0f2449742264ffb55c9062bc58c06f" title="Construct an image container equivalent to RGBD + Semantic Mask input." alt="" coords="298,29,465,69"/>
-<area shape="rect" href="structdyno_1_1__DynoDatasetConstructor.html#a5354a00794f43690a5bab204bda3879e" title=" " alt="" coords="260,94,503,149"/>
-<area shape="rect" href="classdyno_1_1DynoDatasetProvider.html#aca00b7dce03a97517c126aacb60a3332" title=" " alt="" coords="281,237,482,277"/>
-<area shape="rect" href="classdyno_1_1DynoDatasetProvider.html#adcfd94e1bbddb293b1585c27f81838ee" title=" " alt="" coords="281,173,482,213"/>
-<area shape="rect" href="namespacedyno.html#a80d59abcebfb78b7fb237b1572429606" title=" " alt="" coords="281,301,481,341"/>
-<area shape="rect" href="classdyno_1_1DynoDatasetProvider.html#a981618d669ffbb6284bc2be9d0fc6f9b" title=" " alt="" coords="551,173,788,213"/>
-<area shape="rect" href="classdyno_1_1DynoDataset.html#a1178220b7c572207b0b49ff0f5fffb49" title=" " alt="" coords="569,237,769,277"/>
-<area shape="rect" href="classdyno_1_1DynoDataset.html#ac5d0052a9ce06bd1e964d855469d4e05" title=" " alt="" coords="836,173,1064,213"/>
+<area shape="rect" title=" " alt="" coords="5,134,212,174"/>
+<area shape="rect" href="classdyno_1_1ImageContainer.html#a6f35259f95c31b861ff6515c159e1ee3" title=" " alt="" coords="284,5,479,31"/>
+<area shape="rect" href="structdyno_1_1__DynoDatasetConstructor.html#a5354a00794f43690a5bab204bda3879e" title=" " alt="" coords="260,55,503,109"/>
+<area shape="rect" href="classdyno_1_1DynoDatasetProvider.html#aca00b7dce03a97517c126aacb60a3332" title=" " alt="" coords="281,198,482,238"/>
+<area shape="rect" href="classdyno_1_1DynoDatasetProvider.html#adcfd94e1bbddb293b1585c27f81838ee" title=" " alt="" coords="281,134,482,174"/>
+<area shape="rect" href="namespacedyno.html#a163cb16ef980acda5b09d45c3a156e6f" title=" " alt="" coords="281,262,481,302"/>
+<area shape="rect" href="classdyno_1_1DynoDatasetProvider.html#a981618d669ffbb6284bc2be9d0fc6f9b" title=" " alt="" coords="551,134,788,174"/>
+<area shape="rect" href="classdyno_1_1DynoDataset.html#a1178220b7c572207b0b49ff0f5fffb49" title=" " alt="" coords="569,198,769,238"/>
+<area shape="rect" href="classdyno_1_1DynoDataset.html#ac5d0052a9ce06bd1e964d855469d4e05" title=" " alt="" coords="836,134,1064,174"/>
 </map>
 </div>
 
@@ -548,14 +560,15 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="VirtualKittidataProvider_8cc_source.html#l00948">948</a> of file <a class="el" href="VirtualKittidataProvider_8cc_source.html">VirtualKittidataProvider.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  948</span>                                             {</div>
-<div class="line"><span class="lineno">  949</span>    <a class="code hl_typedef" href="classdyno_1_1CameraParams.html#a2b2c8e9993ec05e2be9bbee6c3b73760">CameraParams::IntrinsicsCoeffs</a> intrinsics({ 725.0087, 725.0087, 620.5, 187});</div>
-<div class="line"><span class="lineno">  950</span>    <a class="code hl_typedef" href="classdyno_1_1CameraParams.html#a8349ad5f0c727d6ef16a1b127e620eae">CameraParams::DistortionCoeffs</a> distortion({ 0, 0, 0, 0 });</div>
-<div class="line"><span class="lineno">  951</span> </div>
-<div class="line"><span class="lineno">  952</span>    cv::Size image_size(1242, 375);</div>
-<div class="line"><span class="lineno">  953</span>    <a class="code hl_variable" href="classdyno_1_1VirtualKittiDataLoader.html#ae059525e57112d0b1677d556a9d107b2">camera_params_</a>= CameraParams(intrinsics, distortion, image_size, <span class="stringliteral">&quot;radial-tangential&quot;</span>);</div>
-<div class="line"><span class="lineno">  954</span>}</div>
+<p class="definition">Definition at line <a class="el" href="VirtualKittidataProvider_8cc_source.html#l01013">1013</a> of file <a class="el" href="VirtualKittidataProvider_8cc_source.html">VirtualKittidataProvider.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno"> 1013</span>                                             {</div>
+<div class="line"><span class="lineno"> 1014</span>  <a class="code hl_typedef" href="classdyno_1_1CameraParams.html#a2b2c8e9993ec05e2be9bbee6c3b73760">CameraParams::IntrinsicsCoeffs</a> intrinsics({725.0087, 725.0087, 620.5, 187});</div>
+<div class="line"><span class="lineno"> 1015</span>  <a class="code hl_typedef" href="classdyno_1_1CameraParams.html#a8349ad5f0c727d6ef16a1b127e620eae">CameraParams::DistortionCoeffs</a> distortion({0, 0, 0, 0});</div>
+<div class="line"><span class="lineno"> 1016</span> </div>
+<div class="line"><span class="lineno"> 1017</span>  cv::Size image_size(1242, 375);</div>
+<div class="line"><span class="lineno"> 1018</span>  <a class="code hl_variable" href="classdyno_1_1VirtualKittiDataLoader.html#ae059525e57112d0b1677d556a9d107b2">camera_params_</a> =</div>
+<div class="line"><span class="lineno"> 1019</span>      CameraParams(intrinsics, distortion, image_size, <span class="stringliteral">&quot;radial-tangential&quot;</span>);</div>
+<div class="line"><span class="lineno"> 1020</span>}</div>
 <div class="ttc" id="aclassdyno_1_1CameraParams_html_a2b2c8e9993ec05e2be9bbee6c3b73760"><div class="ttname"><a href="classdyno_1_1CameraParams.html#a2b2c8e9993ec05e2be9bbee6c3b73760">dyno::CameraParams::IntrinsicsCoeffs</a></div><div class="ttdeci">std::vector&lt; double &gt; IntrinsicsCoeffs</div><div class="ttdef"><b>Definition:</b> <a href="CameraParams_8hpp_source.html#l00062">CameraParams.hpp:62</a></div></div>
 <div class="ttc" id="aclassdyno_1_1CameraParams_html_a8349ad5f0c727d6ef16a1b127e620eae"><div class="ttname"><a href="classdyno_1_1CameraParams.html#a8349ad5f0c727d6ef16a1b127e620eae">dyno::CameraParams::DistortionCoeffs</a></div><div class="ttdeci">std::vector&lt; double &gt; DistortionCoeffs</div><div class="ttdef"><b>Definition:</b> <a href="CameraParams_8hpp_source.html#l00060">CameraParams.hpp:60</a></div></div>
 </div><!-- fragment -->
@@ -611,8 +624,6 @@ Here is the call graph for this function:</div>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="VirtualKittiDataProvider_8hpp_source.html#l00080">80</a> of file <a class="el" href="VirtualKittiDataProvider_8hpp_source.html">VirtualKittiDataProvider.hpp</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1VirtualKittiDataLoader.html#aac90985e4a9dee128c448148e218aed5">VirtualKittiDataLoader()</a>.</p>
 
 </div>
 </div>

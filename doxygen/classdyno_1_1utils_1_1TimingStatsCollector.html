@@ -119,12 +119,12 @@ Private Attributes</h2></td></tr>
 <tr class="memitem:a535acaebb340187a5a21b1080118df5e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacedyno_1_1utils.html#a2a0bf9b09c753fdfa86ae7ebb92a0746">StatsCollector</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1utils_1_1TimingStatsCollector.html#a535acaebb340187a5a21b1080118df5e">collector_</a></td></tr>
 <tr class="memdesc:a535acaebb340187a5a21b1080118df5e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Time on creation (the time to compare against)  <br /></td></tr>
 <tr class="separator:a535acaebb340187a5a21b1080118df5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad912f4f2d8321f09a3826326d60a8e13"><td class="memItemLeft" align="right" valign="top">std::atomic_bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1utils_1_1TimingStatsCollector.html#ad912f4f2d8321f09a3826326d60a8e13">is_valid_</a> {true}</td></tr>
+<tr class="memitem:ad912f4f2d8321f09a3826326d60a8e13"><td class="memItemLeft" align="right" valign="top">std::atomic_bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1utils_1_1TimingStatsCollector.html#ad912f4f2d8321f09a3826326d60a8e13">is_valid_</a></td></tr>
 <tr class="separator:ad912f4f2d8321f09a3826326d60a8e13"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="TimingStats_8hpp_source.html#l00033">33</a> of file <a class="el" href="TimingStats_8hpp_source.html">TimingStats.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TimingStats_8hpp_source.html#l00104">104</a> of file <a class="el" href="TimingStats_8hpp_source.html">TimingStats.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a33c7cb0f292b401e2ed60760ea3ae5c2" name="a33c7cb0f292b401e2ed60760ea3ae5c2"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a33c7cb0f292b401e2ed60760ea3ae5c2">&#9670;&#160;</a></span>TimingStatsCollector()</h2>
@@ -142,11 +142,11 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TimingStats_8cc_source.html#l00029">29</a> of file <a class="el" href="TimingStats_8cc_source.html">TimingStats.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   30</span>    :   <a class="code hl_variable" href="classdyno_1_1utils_1_1TimingStatsCollector.html#a291f6d7c3ce6d51f43d060c7a5dfa9b6">tic_time_</a>(<a class="code hl_function" href="classdyno_1_1utils_1_1Timer.html#a9dfd91c5a5d7cea18a766b8323854f15">Timer::tic</a>()), <a class="code hl_variable" href="classdyno_1_1utils_1_1TimingStatsCollector.html#a535acaebb340187a5a21b1080118df5e">collector_</a>(tag + <span class="stringliteral">&quot; [ms]&quot;</span>) {}</div>
+<p class="definition">Definition at line <a class="el" href="TimingStats_8cc_source.html#l00042">42</a> of file <a class="el" href="TimingStats_8cc_source.html">TimingStats.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   43</span>    : <a class="code hl_variable" href="classdyno_1_1utils_1_1TimingStatsCollector.html#a291f6d7c3ce6d51f43d060c7a5dfa9b6">tic_time_</a>(<a class="code hl_function" href="classdyno_1_1utils_1_1Timer.html#a9dfd91c5a5d7cea18a766b8323854f15">Timer::tic</a>()), <a class="code hl_variable" href="classdyno_1_1utils_1_1TimingStatsCollector.html#a535acaebb340187a5a21b1080118df5e">collector_</a>(tag + <span class="stringliteral">&quot; [ms]&quot;</span>) {}</div>
 <div class="ttc" id="aclassdyno_1_1utils_1_1Timer_html_a9dfd91c5a5d7cea18a766b8323854f15"><div class="ttname"><a href="classdyno_1_1utils_1_1Timer.html#a9dfd91c5a5d7cea18a766b8323854f15">dyno::utils::Timer::tic</a></div><div class="ttdeci">static TimePoint tic()</div><div class="ttdef"><b>Definition:</b> <a href="Timing_8hpp_source.html#l00041">Timing.hpp:41</a></div></div>
-<div class="ttc" id="aclassdyno_1_1utils_1_1TimingStatsCollector_html_a291f6d7c3ce6d51f43d060c7a5dfa9b6"><div class="ttname"><a href="classdyno_1_1utils_1_1TimingStatsCollector.html#a291f6d7c3ce6d51f43d060c7a5dfa9b6">dyno::utils::TimingStatsCollector::tic_time_</a></div><div class="ttdeci">Timer::TimePoint tic_time_</div><div class="ttdef"><b>Definition:</b> <a href="TimingStats_8hpp_source.html#l00060">TimingStats.hpp:60</a></div></div>
-<div class="ttc" id="aclassdyno_1_1utils_1_1TimingStatsCollector_html_a535acaebb340187a5a21b1080118df5e"><div class="ttname"><a href="classdyno_1_1utils_1_1TimingStatsCollector.html#a535acaebb340187a5a21b1080118df5e">dyno::utils::TimingStatsCollector::collector_</a></div><div class="ttdeci">StatsCollector collector_</div><div class="ttdoc">Time on creation (the time to compare against)</div><div class="ttdef"><b>Definition:</b> <a href="TimingStats_8hpp_source.html#l00061">TimingStats.hpp:61</a></div></div>
+<div class="ttc" id="aclassdyno_1_1utils_1_1TimingStatsCollector_html_a291f6d7c3ce6d51f43d060c7a5dfa9b6"><div class="ttname"><a href="classdyno_1_1utils_1_1TimingStatsCollector.html#a291f6d7c3ce6d51f43d060c7a5dfa9b6">dyno::utils::TimingStatsCollector::tic_time_</a></div><div class="ttdeci">Timer::TimePoint tic_time_</div><div class="ttdef"><b>Definition:</b> <a href="TimingStats_8hpp_source.html#l00135">TimingStats.hpp:135</a></div></div>
+<div class="ttc" id="aclassdyno_1_1utils_1_1TimingStatsCollector_html_a535acaebb340187a5a21b1080118df5e"><div class="ttname"><a href="classdyno_1_1utils_1_1TimingStatsCollector.html#a535acaebb340187a5a21b1080118df5e">dyno::utils::TimingStatsCollector::collector_</a></div><div class="ttdeci">StatsCollector collector_</div><div class="ttdoc">Time on creation (the time to compare against)</div><div class="ttdef"><b>Definition:</b> <a href="TimingStats_8hpp_source.html#l00136">TimingStats.hpp:136</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -165,11 +165,9 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TimingStats_8cc_source.html#l00033">33</a> of file <a class="el" href="TimingStats_8cc_source.html">TimingStats.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   33</span>                                            {</div>
-<div class="line"><span class="lineno">   34</span>    <a class="code hl_function" href="classdyno_1_1utils_1_1TimingStatsCollector.html#a5ea6857430a09c6d219f505adace45dc">tocAndLog</a>();</div>
-<div class="line"><span class="lineno">   35</span>}</div>
-<div class="ttc" id="aclassdyno_1_1utils_1_1TimingStatsCollector_html_a5ea6857430a09c6d219f505adace45dc"><div class="ttname"><a href="classdyno_1_1utils_1_1TimingStatsCollector.html#a5ea6857430a09c6d219f505adace45dc">dyno::utils::TimingStatsCollector::tocAndLog</a></div><div class="ttdeci">void tocAndLog()</div><div class="ttdoc">Creates a toc time to compare against the latest tic time and logs the diff as sample to the collecto...</div><div class="ttdef"><b>Definition:</b> <a href="TimingStats_8cc_source.html#l00046">TimingStats.cc:46</a></div></div>
+<p class="definition">Definition at line <a class="el" href="TimingStats_8cc_source.html#l00045">45</a> of file <a class="el" href="TimingStats_8cc_source.html">TimingStats.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   45</span>{ <a class="code hl_function" href="classdyno_1_1utils_1_1TimingStatsCollector.html#a5ea6857430a09c6d219f505adace45dc">tocAndLog</a>(); }</div>
+<div class="ttc" id="aclassdyno_1_1utils_1_1TimingStatsCollector_html_a5ea6857430a09c6d219f505adace45dc"><div class="ttname"><a href="classdyno_1_1utils_1_1TimingStatsCollector.html#a5ea6857430a09c6d219f505adace45dc">dyno::utils::TimingStatsCollector::tocAndLog</a></div><div class="ttdeci">void tocAndLog()</div><div class="ttdoc">Creates a toc time to compare against the latest tic time and logs the diff as sample to the collecto...</div><div class="ttdef"><b>Definition:</b> <a href="TimingStats_8cc_source.html#l00054">TimingStats.cc:54</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1utils_1_1TimingStatsCollector.html#a5ea6857430a09c6d219f505adace45dc">tocAndLog()</a>.</p>
 <div class="dynheader">
@@ -203,11 +201,9 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TimingStats_8cc_source.html#l00042">42</a> of file <a class="el" href="TimingStats_8cc_source.html">TimingStats.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   42</span>                                         {</div>
-<div class="line"><span class="lineno">   43</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1utils_1_1TimingStatsCollector.html#ad912f4f2d8321f09a3826326d60a8e13">is_valid_</a>;</div>
-<div class="line"><span class="lineno">   44</span>}</div>
-<div class="ttc" id="aclassdyno_1_1utils_1_1TimingStatsCollector_html_ad912f4f2d8321f09a3826326d60a8e13"><div class="ttname"><a href="classdyno_1_1utils_1_1TimingStatsCollector.html#ad912f4f2d8321f09a3826326d60a8e13">dyno::utils::TimingStatsCollector::is_valid_</a></div><div class="ttdeci">std::atomic_bool is_valid_</div><div class="ttdef"><b>Definition:</b> <a href="TimingStats_8hpp_source.html#l00063">TimingStats.hpp:63</a></div></div>
+<p class="definition">Definition at line <a class="el" href="TimingStats_8cc_source.html#l00052">52</a> of file <a class="el" href="TimingStats_8cc_source.html">TimingStats.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   52</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1utils_1_1TimingStatsCollector.html#ad912f4f2d8321f09a3826326d60a8e13">is_valid_</a>; }</div>
+<div class="ttc" id="aclassdyno_1_1utils_1_1TimingStatsCollector_html_ad912f4f2d8321f09a3826326d60a8e13"><div class="ttname"><a href="classdyno_1_1utils_1_1TimingStatsCollector.html#ad912f4f2d8321f09a3826326d60a8e13">dyno::utils::TimingStatsCollector::is_valid_</a></div><div class="ttdeci">std::atomic_bool is_valid_</div><div class="ttdef"><b>Definition:</b> <a href="TimingStats_8hpp_source.html#l00138">TimingStats.hpp:138</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1utils_1_1TimingStatsCollector.html#ad912f4f2d8321f09a3826326d60a8e13">is_valid_</a>.</p>
 
@@ -230,11 +226,11 @@ Here is the call graph for this function:</div>
 
 <p>Resets the current tic_time and sets is_valid = true, such that when the collector tries to toc, the tic (comparison time) will be valid. </p>
 
-<p class="definition">Definition at line <a class="el" href="TimingStats_8cc_source.html#l00037">37</a> of file <a class="el" href="TimingStats_8cc_source.html">TimingStats.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   37</span>                                 {</div>
-<div class="line"><span class="lineno">   38</span>    <a class="code hl_variable" href="classdyno_1_1utils_1_1TimingStatsCollector.html#a291f6d7c3ce6d51f43d060c7a5dfa9b6">tic_time_</a> = <a class="code hl_function" href="classdyno_1_1utils_1_1Timer.html#a9dfd91c5a5d7cea18a766b8323854f15">Timer::tic</a>();</div>
-<div class="line"><span class="lineno">   39</span>    <a class="code hl_variable" href="classdyno_1_1utils_1_1TimingStatsCollector.html#ad912f4f2d8321f09a3826326d60a8e13">is_valid_</a> = <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">   40</span>}</div>
+<p class="definition">Definition at line <a class="el" href="TimingStats_8cc_source.html#l00047">47</a> of file <a class="el" href="TimingStats_8cc_source.html">TimingStats.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   47</span>                                 {</div>
+<div class="line"><span class="lineno">   48</span>  <a class="code hl_variable" href="classdyno_1_1utils_1_1TimingStatsCollector.html#a291f6d7c3ce6d51f43d060c7a5dfa9b6">tic_time_</a> = <a class="code hl_function" href="classdyno_1_1utils_1_1Timer.html#a9dfd91c5a5d7cea18a766b8323854f15">Timer::tic</a>();</div>
+<div class="line"><span class="lineno">   49</span>  <a class="code hl_variable" href="classdyno_1_1utils_1_1TimingStatsCollector.html#ad912f4f2d8321f09a3826326d60a8e13">is_valid_</a> = <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">   50</span>}</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1utils_1_1TimingStatsCollector.html#ad912f4f2d8321f09a3826326d60a8e13">is_valid_</a>, <a class="el" href="classdyno_1_1utils_1_1Timer.html#a9dfd91c5a5d7cea18a766b8323854f15">dyno::utils::Timer::tic()</a>, and <a class="el" href="classdyno_1_1utils_1_1TimingStatsCollector.html#a291f6d7c3ce6d51f43d060c7a5dfa9b6">tic_time_</a>.</p>
 <div class="dynheader">
@@ -275,15 +271,16 @@ Here is the call graph for this function:</div>
 <p>Creates a toc time to compare against the latest tic time and logs the diff as sample to the collector. </p>
 <p>Only logs if is_valid_ == true, after which is_valid will be set to false. The collector then needs to be reset to be used again </p>
 
-<p class="definition">Definition at line <a class="el" href="TimingStats_8cc_source.html#l00046">46</a> of file <a class="el" href="TimingStats_8cc_source.html">TimingStats.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   46</span>                                     {</div>
-<div class="line"><span class="lineno">   47</span>    <span class="keywordflow">if</span>(<a class="code hl_variable" href="classdyno_1_1utils_1_1TimingStatsCollector.html#ad912f4f2d8321f09a3826326d60a8e13">is_valid_</a>) {</div>
-<div class="line"><span class="lineno">   48</span>        <span class="keyword">auto</span> toc = Timer::toc&lt;std::chrono::nanoseconds&gt;(<a class="code hl_variable" href="classdyno_1_1utils_1_1TimingStatsCollector.html#a291f6d7c3ce6d51f43d060c7a5dfa9b6">tic_time_</a>);</div>
-<div class="line"><span class="lineno">   49</span>        <span class="keyword">auto</span> milliseconds = std::chrono::duration_cast&lt;std::chrono::milliseconds&gt;(toc);</div>
-<div class="line"><span class="lineno">   50</span>        <a class="code hl_variable" href="classdyno_1_1utils_1_1TimingStatsCollector.html#a535acaebb340187a5a21b1080118df5e">collector_</a>.<a class="code hl_function" href="classdyno_1_1utils_1_1StatsCollectorImpl.html#ab92087ce27dbec18730bf779e48d6aec">AddSample</a>( <span class="keyword">static_cast&lt;</span><span class="keywordtype">double</span><span class="keyword">&gt;</span>(milliseconds.count()));</div>
-<div class="line"><span class="lineno">   51</span>        <a class="code hl_variable" href="classdyno_1_1utils_1_1TimingStatsCollector.html#ad912f4f2d8321f09a3826326d60a8e13">is_valid_</a> = <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">   52</span>    }</div>
-<div class="line"><span class="lineno">   53</span>}</div>
+<p class="definition">Definition at line <a class="el" href="TimingStats_8cc_source.html#l00054">54</a> of file <a class="el" href="TimingStats_8cc_source.html">TimingStats.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   54</span>                                     {</div>
+<div class="line"><span class="lineno">   55</span>  <span class="keywordflow">if</span> (<a class="code hl_variable" href="classdyno_1_1utils_1_1TimingStatsCollector.html#ad912f4f2d8321f09a3826326d60a8e13">is_valid_</a>) {</div>
+<div class="line"><span class="lineno">   56</span>    <span class="keyword">auto</span> toc = Timer::toc&lt;std::chrono::nanoseconds&gt;(<a class="code hl_variable" href="classdyno_1_1utils_1_1TimingStatsCollector.html#a291f6d7c3ce6d51f43d060c7a5dfa9b6">tic_time_</a>);</div>
+<div class="line"><span class="lineno">   57</span>    <span class="keyword">auto</span> milliseconds =</div>
+<div class="line"><span class="lineno">   58</span>        std::chrono::duration_cast&lt;std::chrono::milliseconds&gt;(toc);</div>
+<div class="line"><span class="lineno">   59</span>    <a class="code hl_variable" href="classdyno_1_1utils_1_1TimingStatsCollector.html#a535acaebb340187a5a21b1080118df5e">collector_</a>.<a class="code hl_function" href="classdyno_1_1utils_1_1StatsCollectorImpl.html#ab92087ce27dbec18730bf779e48d6aec">AddSample</a>(<span class="keyword">static_cast&lt;</span><span class="keywordtype">double</span><span class="keyword">&gt;</span>(milliseconds.count()));</div>
+<div class="line"><span class="lineno">   60</span>    <a class="code hl_variable" href="classdyno_1_1utils_1_1TimingStatsCollector.html#ad912f4f2d8321f09a3826326d60a8e13">is_valid_</a> = <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">   61</span>  }</div>
+<div class="line"><span class="lineno">   62</span>}</div>
 <div class="ttc" id="aclassdyno_1_1utils_1_1StatsCollectorImpl_html_ab92087ce27dbec18730bf779e48d6aec"><div class="ttname"><a href="classdyno_1_1utils_1_1StatsCollectorImpl.html#ab92087ce27dbec18730bf779e48d6aec">dyno::utils::StatsCollectorImpl::AddSample</a></div><div class="ttdeci">void AddSample(double sample) const</div><div class="ttdef"><b>Definition:</b> <a href="Statistics_8cc_source.html#l00127">Statistics.cc:127</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1utils_1_1StatsCollectorImpl.html#ab92087ce27dbec18730bf779e48d6aec">dyno::utils::StatsCollectorImpl::AddSample()</a>, <a class="el" href="classdyno_1_1utils_1_1TimingStatsCollector.html#a535acaebb340187a5a21b1080118df5e">collector_</a>, <a class="el" href="classdyno_1_1utils_1_1TimingStatsCollector.html#ad912f4f2d8321f09a3826326d60a8e13">is_valid_</a>, and <a class="el" href="classdyno_1_1utils_1_1TimingStatsCollector.html#a291f6d7c3ce6d51f43d060c7a5dfa9b6">tic_time_</a>.</p>
@@ -335,7 +332,7 @@ Here is the caller graph for this function:</div>
 
 <p>Time on creation (the time to compare against) </p>
 
-<p class="definition">Definition at line <a class="el" href="TimingStats_8hpp_source.html#l00061">61</a> of file <a class="el" href="TimingStats_8hpp_source.html">TimingStats.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TimingStats_8hpp_source.html#l00136">136</a> of file <a class="el" href="TimingStats_8hpp_source.html">TimingStats.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1utils_1_1TimingStatsCollector.html#a5ea6857430a09c6d219f505adace45dc">tocAndLog()</a>.</p>
 
@@ -351,7 +348,7 @@ Here is the caller graph for this function:</div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::atomic_bool dyno::utils::TimingStatsCollector::is_valid_ {true}</td>
+          <td class="memname">std::atomic_bool dyno::utils::TimingStatsCollector::is_valid_</td>
         </tr>
       </table>
   </td>
@@ -360,8 +357,10 @@ Here is the caller graph for this function:</div>
   </tr>
 </table>
 </div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="TimingStats_8hpp_source.html#l00063">63</a> of file <a class="el" href="TimingStats_8hpp_source.html">TimingStats.hpp</a>.</p>
+<b>Initial value:</b><div class="fragment"><div class="line">{</div>
+<div class="line">      <span class="keyword">true</span>}</div>
+</div><!-- fragment -->
+<p class="definition">Definition at line <a class="el" href="TimingStats_8hpp_source.html#l00138">138</a> of file <a class="el" href="TimingStats_8hpp_source.html">TimingStats.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1utils_1_1TimingStatsCollector.html#a98fb7ef2e89eb74a4e595aefd4f01c53">isValid()</a>, <a class="el" href="classdyno_1_1utils_1_1TimingStatsCollector.html#a2fb15570927fa9faf9bf7d97702ff15b">reset()</a>, and <a class="el" href="classdyno_1_1utils_1_1TimingStatsCollector.html#a5ea6857430a09c6d219f505adace45dc">tocAndLog()</a>.</p>
 
@@ -387,7 +386,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TimingStats_8hpp_source.html#l00060">60</a> of file <a class="el" href="TimingStats_8hpp_source.html">TimingStats.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TimingStats_8hpp_source.html#l00135">135</a> of file <a class="el" href="TimingStats_8hpp_source.html">TimingStats.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1utils_1_1TimingStatsCollector.html#a2fb15570927fa9faf9bf7d97702ff15b">reset()</a>, and <a class="el" href="classdyno_1_1utils_1_1TimingStatsCollector.html#a5ea6857430a09c6d219f505adace45dc">tocAndLog()</a>.</p>
 
