@@ -93,7 +93,6 @@ struct DebugImagery {
   DYNO_POINTER_TYPEDEFS(DebugImagery)
 
   // TODO: make const!!
-  cv::Mat detected_bounding_boxes;
   cv::Mat tracking_image;
   // TODO: for now!
   cv::Mat rgb_viz;

@@ -68,136 +68,147 @@ void getCorrespondences(FeaturePairs& correspondences,
 
 ObjectIds getObjectLabels(const cv::Mat& image) {
   CHECK(!image.empty());
-  std::set<ObjectId> unique_labels;
+  std::unordered_set<ObjectId> unique_labels;
   for (auto it = image.begin<ObjectId>(); it != image.end<ObjectId>(); ++it) {
     if (*it != background_label) {
       unique_labels.insert(*it);
     }
   }
   return ObjectIds(unique_labels.begin(), unique_labels.end());
+  // std::vector<ObjectId> v(image.ptr<ObjectId>(), image.ptr<ObjectId>() +
+  // image.total()); std::sort(v.begin(), v.end()); auto last =
+  // std::unique(v.begin(), v.end()); v.erase(last, v.end());
+  // v.erase(std::remove(v.begin(), v.end(), 0), v.end());
+  // return v;
 }
 
-std::vector<std::vector<int>> trackDynamic(const FrontendParams& params,
-                                           const Frame& previous_frame,
-                                           Frame::Ptr current_frame) {
-  auto& objects_by_instance_label = current_frame->object_observations_;
+// std::vector<std::vector<int>> trackDynamic(const FrontendParams& params,
+//                                            const Frame& previous_frame,
+//                                            Frame::Ptr current_frame) {
+//   auto& objects_by_instance_label = current_frame->object_observations_;
 
-  auto& previous_dynamic_feature_container = previous_frame.dynamic_features_;
-  auto& current_dynamic_feature_container = current_frame->dynamic_features_;
+//   auto& previous_dynamic_feature_container =
+//   previous_frame.dynamic_features_; auto& current_dynamic_feature_container =
+//   current_frame->dynamic_features_;
 
-  ObjectIds instance_labels_to_remove;
+//   ObjectIds instance_labels_to_remove;
 
-  for (auto& [instance_label, object_observation] : objects_by_instance_label) {
-    double obj_center_depth = 0, sf_min = 100, sf_max = 0, sf_mean = 0,
-           sf_count = 0;
-    std::vector<int> sf_range(10, 0);
+//   for (auto& [instance_label, object_observation] :
+//   objects_by_instance_label) {
+//     double obj_center_depth = 0, sf_min = 100, sf_max = 0, sf_mean = 0,
+//            sf_count = 0;
+//     std::vector<int> sf_range(10, 0);
 
-    const size_t num_object_features =
-        object_observation.object_features_.size();
-    // LOG(INFO) << "tracking object observation with instance label " <<
-    // instance_label << " and " << num_object_features << " features";
+//     const size_t num_object_features =
+//         object_observation.object_features_.size();
+//     // LOG(INFO) << "tracking object observation with instance label " <<
+//     // instance_label << " and " << num_object_features << " features";
 
-    int feature_pairs_valid = 0;
-    int num_found = 0;
-    for (const TrackletId tracklet_id : object_observation.object_features_) {
-      if (previous_dynamic_feature_container.exists(tracklet_id)) {
-        num_found++;
-        CHECK(current_dynamic_feature_container.exists(tracklet_id));
+//     int feature_pairs_valid = 0;
+//     int num_found = 0;
+//     for (const TrackletId tracklet_id : object_observation.object_features_)
+//     {
+//       if (previous_dynamic_feature_container.exists(tracklet_id)) {
+//         num_found++;
+//         CHECK(current_dynamic_feature_container.exists(tracklet_id));
 
-        Feature::Ptr current_feature =
-            current_dynamic_feature_container.getByTrackletId(tracklet_id);
-        Feature::Ptr previous_feature =
-            previous_dynamic_feature_container.getByTrackletId(tracklet_id);
+//         Feature::Ptr current_feature =
+//             current_dynamic_feature_container.getByTrackletId(tracklet_id);
+//         Feature::Ptr previous_feature =
+//             previous_dynamic_feature_container.getByTrackletId(tracklet_id);
 
-        if (!previous_feature->usable()) {
-          current_feature->markInvalid();
-          continue;
-        }
+//         if (!previous_feature->usable()) {
+//           current_feature->markInvalid();
+//           continue;
+//         }
 
-        // this can happen in situations such as the updateDepths when depths >
-        // thresh are marked invalud
-        if (!current_feature->usable()) {
-          continue;
-        }
+//         // this can happen in situations such as the updateDepths when depths
+//         >
+//         // thresh are marked invalud
+//         if (!current_feature->usable()) {
+//           continue;
+//         }
 
-        CHECK(!previous_feature->isStatic());
-        CHECK(!current_feature->isStatic());
+//         CHECK(!previous_feature->isStatic());
+//         CHECK(!current_feature->isStatic());
 
-        Landmark lmk_previous = previous_frame.backProjectToWorld(tracklet_id);
-        Landmark lmk_current = current_frame->backProjectToWorld(tracklet_id);
+//         Landmark lmk_previous =
+//         previous_frame.backProjectToWorld(tracklet_id); Landmark lmk_current
+//         = current_frame->backProjectToWorld(tracklet_id);
 
-        Landmark flow_world = lmk_current - lmk_previous;
-        double sf_norm = flow_world.norm();
+//         Landmark flow_world = lmk_current - lmk_previous;
+//         double sf_norm = flow_world.norm();
 
-        feature_pairs_valid++;
+//         feature_pairs_valid++;
 
-        if (sf_norm < params.scene_flow_magnitude) sf_count = sf_count + 1;
-        if (sf_norm < sf_min) sf_min = sf_norm;
-        if (sf_norm > sf_max) sf_max = sf_norm;
-        sf_mean = sf_mean + sf_norm;
+//         if (sf_norm < params.scene_flow_magnitude) sf_count = sf_count + 1;
+//         if (sf_norm < sf_min) sf_min = sf_norm;
+//         if (sf_norm > sf_max) sf_max = sf_norm;
+//         sf_mean = sf_mean + sf_norm;
 
-        {
-          if (0.0 <= sf_norm && sf_norm < 0.05)
-            sf_range[0] = sf_range[0] + 1;
-          else if (0.05 <= sf_norm && sf_norm < 0.1)
-            sf_range[1] = sf_range[1] + 1;
-          else if (0.1 <= sf_norm && sf_norm < 0.2)
-            sf_range[2] = sf_range[2] + 1;
-          else if (0.2 <= sf_norm && sf_norm < 0.4)
-            sf_range[3] = sf_range[3] + 1;
-          else if (0.4 <= sf_norm && sf_norm < 0.8)
-            sf_range[4] = sf_range[4] + 1;
-          else if (0.8 <= sf_norm && sf_norm < 1.6)
-            sf_range[5] = sf_range[5] + 1;
-          else if (1.6 <= sf_norm && sf_norm < 3.2)
-            sf_range[6] = sf_range[6] + 1;
-          else if (3.2 <= sf_norm && sf_norm < 6.4)
-            sf_range[7] = sf_range[7] + 1;
-          else if (6.4 <= sf_norm && sf_norm < 12.8)
-            sf_range[8] = sf_range[8] + 1;
-          else if (12.8 <= sf_norm && sf_norm < 25.6)
-            sf_range[9] = sf_range[9] + 1;
-        }
-      }
-    }
+//         {
+//           if (0.0 <= sf_norm && sf_norm < 0.05)
+//             sf_range[0] = sf_range[0] + 1;
+//           else if (0.05 <= sf_norm && sf_norm < 0.1)
+//             sf_range[1] = sf_range[1] + 1;
+//           else if (0.1 <= sf_norm && sf_norm < 0.2)
+//             sf_range[2] = sf_range[2] + 1;
+//           else if (0.2 <= sf_norm && sf_norm < 0.4)
+//             sf_range[3] = sf_range[3] + 1;
+//           else if (0.4 <= sf_norm && sf_norm < 0.8)
+//             sf_range[4] = sf_range[4] + 1;
+//           else if (0.8 <= sf_norm && sf_norm < 1.6)
+//             sf_range[5] = sf_range[5] + 1;
+//           else if (1.6 <= sf_norm && sf_norm < 3.2)
+//             sf_range[6] = sf_range[6] + 1;
+//           else if (3.2 <= sf_norm && sf_norm < 6.4)
+//             sf_range[7] = sf_range[7] + 1;
+//           else if (6.4 <= sf_norm && sf_norm < 12.8)
+//             sf_range[8] = sf_range[8] + 1;
+//           else if (12.8 <= sf_norm && sf_norm < 25.6)
+//             sf_range[9] = sf_range[9] + 1;
+//         }
+//       }
+//     }
 
-    VLOG(10) << "Number feature pairs valid " << feature_pairs_valid
-             << " out of " << num_object_features << " for instance  "
-             << instance_label << " num found " << num_found;
+//     VLOG(10) << "Number feature pairs valid " << feature_pairs_valid
+//              << " out of " << num_object_features << " for instance  "
+//              << instance_label << " num found " << num_found;
 
-    // if no points found (i.e tracked)
-    // dont do anything as this is a new object so we cannot say if its dynamic
-    // or not
-    if (num_found == 0) {
-      // TODO: i guess?
-      object_observation.marked_as_moving_ = true;
-    }
-    if (sf_count / num_object_features > params.scene_flow_percentage ||
-        num_object_features < 30)
-    // else if (sf_count/num_object_features>params.scene_flow_percentage ||
-    // num_object_features < 15)
-    {
-      // label this object as static background
-      // LOG(INFO) << "Instance object " << instance_label << " to static for
-      // frame " << current_frame->frame_id_;
-      instance_labels_to_remove.push_back(instance_label);
-    } else {
-      // LOG(INFO) << "Instance object " << instance_label << " marked as
-      // dynamic";
-      object_observation.marked_as_moving_ = true;
-    }
-  }
+//     // if no points found (i.e tracked)
+//     // dont do anything as this is a new object so we cannot say if its
+//     dynamic
+//     // or not
+//     if (num_found == 0) {
+//       // TODO: i guess?
+//       object_observation.marked_as_moving_ = true;
+//     }
+//     if (sf_count / num_object_features > params.scene_flow_percentage ||
+//         num_object_features < 30)
+//     // else if (sf_count/num_object_features>params.scene_flow_percentage ||
+//     // num_object_features < 15)
+//     {
+//       // label this object as static background
+//       // LOG(INFO) << "Instance object " << instance_label << " to static for
+//       // frame " << current_frame->frame_id_;
+//       instance_labels_to_remove.push_back(instance_label);
+//     } else {
+//       // LOG(INFO) << "Instance object " << instance_label << " marked as
+//       // dynamic";
+//       object_observation.marked_as_moving_ = true;
+//     }
+//   }
 
-  // we do the removal after the iteration so as not to mess up the loop
-  for (const auto label : instance_labels_to_remove) {
-    VLOG(30) << "Removing label " << label;
-    // TODO: this is really really slow!!
-    current_frame->moveObjectToStatic(label);
-    // LOG(INFO) << "Done Removing label " << label;
-  }
+//   // we do the removal after the iteration so as not to mess up the loop
+//   for (const auto label : instance_labels_to_remove) {
+//     VLOG(30) << "Removing label " << label;
+//     // TODO: this is really really slow!!
+//     current_frame->moveObjectToStatic(label);
+//     // LOG(INFO) << "Done Removing label " << label;
+//   }
 
-  return std::vector<std::vector<int>>();
-}
+//   return std::vector<std::vector<int>>();
+// }
 
 bool findObjectBoundingBox(
     const cv::Mat& mask, ObjectId object_id, cv::Rect& detected_rect,
@@ -391,7 +402,7 @@ gtsam::FastMap<ObjectId, Histogram> makeTrackletLengthHistorgram(
     Histogram hist(bh::make_histogram(bh::axis::variable<>(bins)));
     hist.name_ = "tacklet-length-" + std::to_string(object_id);
 
-    for (auto tracklet_id : observations.object_features_) {
+    for (auto tracklet_id : observations.object_features) {
       const Feature::Ptr feature = frame->at(tracklet_id);
       CHECK(feature);
       if (feature->usable()) {

@@ -38,6 +38,7 @@
 #include <opencv2/video/tracking.hpp>
 
 #include "dynosam/frontend/vision/ORBextractor.hpp"
+#include "dynosam/utils/TimingStats.hpp"
 
 namespace dyno {
 
@@ -124,7 +125,10 @@ void SparseFeatureDetector::detect(const cv::Mat& image, KeypointsCV& keypoints,
   if (clahe_) clahe_->apply(processed_image, processed_image);
 
   std::vector<cv::KeyPoint> raw_keypoints;
-  feature_detector_->detect(processed_image, raw_keypoints, detection_mask);
+  {
+    utils::TimingStatsCollector timer("feature_detector.detect");
+    feature_detector_->detect(processed_image, raw_keypoints, detection_mask);
+  }
 
   std::vector<cv::KeyPoint>& max_keypoints = raw_keypoints;
   if (tracker_params_.use_anms) {
@@ -137,10 +141,13 @@ void SparseFeatureDetector::detect(const cv::Mat& image, KeypointsCV& keypoints,
     const auto& anms_params = tracker_params_.anms_params;
     Eigen::MatrixXd binning_mask = anms_params.binning_mask;
 
-    max_keypoints = non_maximum_supression_->suppressNonMax(
-        raw_keypoints, nr_corners_needed, tolerance, processed_image.cols,
-        processed_image.rows, anms_params.nr_horizontal_bins,
-        anms_params.nr_vertical_bins, binning_mask);
+    {
+      utils::TimingStatsCollector timer("feature_detector.anms");
+      max_keypoints = non_maximum_supression_->suppressNonMax(
+          raw_keypoints, nr_corners_needed, tolerance, processed_image.cols,
+          processed_image.rows, anms_params.nr_horizontal_bins,
+          anms_params.nr_vertical_bins, binning_mask);
+    }
   }
 
   if (tracker_params_.use_subpixel_corner_refinement &&
@@ -151,6 +158,7 @@ void SparseFeatureDetector::detect(const cv::Mat& image, KeypointsCV& keypoints,
 
     const auto& subpixel_corner_refinement_params =
         tracker_params_.subpixel_corner_refinement_params;
+    utils::TimingStatsCollector timer("feature_detector.sub_pix");
     cv::cornerSubPix(processed_image, points,
                      subpixel_corner_refinement_params.window_size,
                      subpixel_corner_refinement_params.zero_zone,

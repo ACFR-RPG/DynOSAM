@@ -387,15 +387,67 @@ TEST(FeatureContainer, basicAdd) {
 
   Feature f;
   f.trackletId(1);
+  f.objectId(0);
 
   fc.add(f);
   EXPECT_EQ(fc.size(), 1u);
   EXPECT_TRUE(fc.exists(1));
 
+  auto tracklets = fc.getByObject(0);
+  EXPECT_EQ(tracklets.size(), 1);
+  EXPECT_EQ(tracklets.at(0), 1);
+
   // this implicitly tests map access
   auto fr = fc.getByTrackletId(1);
   EXPECT_TRUE(fr != nullptr);
   EXPECT_EQ(*fr, f);
+}
+
+TEST(FeatureContainer, basicAddMultipleObjects) {
+  FeatureContainer fc;
+
+  {
+    Feature f;
+    f.trackletId(1);
+    f.objectId(1);
+    fc.add(f);
+  }
+
+  {
+    Feature f;
+    f.trackletId(2);
+    f.objectId(1);
+    fc.add(f);
+  }
+
+  {
+    Feature f;
+    f.trackletId(3);
+    f.objectId(1);
+    fc.add(f);
+  }
+
+  {
+    Feature f;
+    f.trackletId(4);
+    f.objectId(2);
+    fc.add(f);
+  }
+
+  EXPECT_EQ(fc.size(), 4u);
+  EXPECT_TRUE(fc.exists(1));
+
+  {
+    auto tracklets = fc.getByObject(1);
+    EXPECT_THAT(tracklets,
+                ::testing::UnorderedElementsAreArray(TrackletIds{1, 2, 3}));
+  }
+
+  {
+    auto tracklets = fc.getByObject(2);
+    EXPECT_THAT(tracklets,
+                ::testing::UnorderedElementsAreArray(TrackletIds{4}));
+  }
 }
 
 TEST(FeatureContainer, basicRemove) {
@@ -404,12 +456,19 @@ TEST(FeatureContainer, basicRemove) {
 
   Feature f;
   f.trackletId(1);
+  f.objectId(1);
 
   fc.add(f);
   EXPECT_EQ(fc.size(), 1u);
+  EXPECT_EQ(fc.size(1), 1);
+  EXPECT_EQ(fc.size(2), 0);
+  EXPECT_EQ(fc.getByObject(1).size(), 1);
 
   fc.remove(1);
   EXPECT_FALSE(fc.exists(1));
+  EXPECT_EQ(fc.size(1), 0);
+  EXPECT_EQ(fc.size(2), 0);
+  EXPECT_EQ(fc.getByObject(1).size(), 0);
 
   auto fr = fc.getByTrackletId(1);
   EXPECT_TRUE(fr == nullptr);

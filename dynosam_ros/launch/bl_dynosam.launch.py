@@ -57,9 +57,14 @@ def first_steps(
     output_path="/root/results/DynoSAM",
     online=False,
     wait_for_camera_params=True,
-    camera_params_timeout=-1):
+    camera_params_timeout=-1,
+    camera_frame_id="camera",
+    world_frame_id="world",
+    world_to_robot_tf = True,
+    **kwargs):
 
     bl = BetterLaunch()
+
 
 
     if params_folder_path is None:
@@ -69,19 +74,29 @@ def first_steps(
     params_folder_path = validate_path(params_folder_path)
     cmd_args = _append_flag_files(params_folder_path)
 
+    #parse kwargs as gflags. Do this after we append flag files so that any additionally provded commands
+    # override the ones in the flag files
+    for key, value in kwargs.items():
+        if key.startswith("FLAGS_"):
+            # strip flags
+            key = key.strip("FLAGS_")
+            cmd_args.append(f"--{key}={value}")
+
+
     params = {
             "dataset_path": dataset_path,
             "params_folder_path": params_folder_path,
             "output_path": output_path,
             "online": online,
             "wait_for_camera_params": wait_for_camera_params,
-            "camera_params_timeout": camera_params_timeout
+            "camera_params_timeout": camera_params_timeout,
+            "camera_frame_id": camera_frame_id,
+            "world_frame_id": world_frame_id
         }
 
     if online:
         params.update({"use_sim_time": True})
 
-    # print(params)
     with bl.group("dynosam"):
         bl.node(
             "dynosam_ros",
@@ -90,9 +105,20 @@ def first_steps(
             params=params,
             cmd_args=cmd_args,
             log_level = None,
-
-            # remaps=remappings
         )
 
-    # if params_folder_path:
-    #     dynosam_node.set_live_params({"params_folder_path": params_folder_path})
+    if world_to_robot_tf:
+            bl.node(
+                "tf2_ros",
+                "static_transform_publisher",
+                cmd_args=[
+                    "--x", "0.0",
+                    "--y", "0.0",
+                    "--z", "0.0",
+                    "--pitch", "-1.57",
+                    "--yaw", "0.0",
+                    "--roll", "-1.57",
+                    "--frame-id", str(world_frame_id),
+                    "--child-frame-id", "robot"],
+                raw=True
+            )

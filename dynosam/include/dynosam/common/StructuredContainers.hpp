@@ -31,6 +31,7 @@
 #pragma once
 
 #include <glog/logging.h>
+#include <gtsam/base/FastDefaultAllocator.h>
 
 #include <functional>
 #include <memory>
@@ -335,6 +336,64 @@ class MultiFrameRangeData {
 
  private:
   gtsam::FastMap<V, FrameRangeDataTVector> ranges;
+};
+
+/**
+ * FastUnorderedMap is a thin wrapper around std::unordered that uses the boost
+ * fast_pool_allocator instead of the default STL allocator.  This is just a
+ * convenience to avoid having lengthy types in the code.  Through timing,
+ * we've seen that the fast_pool_allocator can lead to speedups of several
+ * percent.
+ * @ingroup base
+ */
+template <typename KEY, typename VALUE>
+class FastUnorderedMap
+    : public std::unordered_map<KEY, VALUE, std::hash<KEY>, std::equal_to<KEY>,
+                                typename gtsam::internal::FastDefaultAllocator<
+                                    std::pair<const KEY, VALUE>>::type> {
+ public:
+  typedef std::unordered_map<KEY, VALUE, std::hash<KEY>, std::equal_to<KEY>,
+                             typename gtsam::internal::FastDefaultAllocator<
+                                 std::pair<const KEY, VALUE>>::type>
+      Base;
+
+  /** Default constructor */
+  FastUnorderedMap() {}
+
+  /** Constructor from a range, passes through to base class */
+  template <typename INPUTITERATOR>
+  explicit FastUnorderedMap(INPUTITERATOR first, INPUTITERATOR last)
+      : Base(first, last) {}
+
+  /** Copy constructor from another FastUnorderedMap */
+  FastUnorderedMap(const FastUnorderedMap<KEY, VALUE>& x) : Base(x) {}
+
+  /** Copy constructor from the base map class */
+  FastUnorderedMap(const Base& x) : Base(x) {}
+
+  /** Move constructor */
+  FastUnorderedMap(FastUnorderedMap&& x) noexcept = default;
+
+  /** Copy assignment */
+  FastUnorderedMap& operator=(const FastUnorderedMap& x) = default;
+
+  /** Move assignment */
+  FastUnorderedMap& operator=(FastUnorderedMap&& x) noexcept = default;
+
+  /** Conversion to a standard STL container */
+  operator std::unordered_map<KEY, VALUE>() const {
+    return std::unordered_map<KEY, VALUE>(this->begin(), this->end());
+  }
+
+  /** Handy 'insert' function for Matlab wrapper */
+  bool insert2(const KEY& key, const VALUE& val) {
+    return Base::insert(std::make_pair(key, val)).second;
+  }
+
+  /** Handy 'exists' function */
+  bool exists(const KEY& e) const { return this->find(e) != this->end(); }
+
+ private:
 };
 
 }  // namespace dyno

@@ -74,15 +74,6 @@ void getCorrespondences(FeaturePairs& correspondences,
  */
 ObjectIds getObjectLabels(const cv::Mat& image);
 
-/// @brief Depricate ;)
-/// @param params
-/// @param previous_frame
-/// @param current_frame
-/// @return
-std::vector<std::vector<int>> trackDynamic(const FrontendParams& params,
-                                           const Frame& previous_frame,
-                                           Frame::Ptr current_frame);
-
 /**
  * @brief Shrinks all found object masks by a given ammount.
  *

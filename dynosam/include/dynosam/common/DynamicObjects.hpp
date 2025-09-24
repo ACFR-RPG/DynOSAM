@@ -37,26 +37,20 @@
 
 namespace dyno {
 
+// TODO: this data structure is really unncessary as it REALLY is only used to
+// indicates which objects we have detected and their bounding boxes which are
+// ONLY used for visualisation!!
 struct DynamicObjectObservation {
-  TrackletIds object_features_;  //! Tracklet id's of object features within the
-                                 //! frame. Does not indicate usability
-  ObjectId tracking_label_;  // tracking id (not necessarily instance label???),
-                             // -1 if not tracked yet
-  ObjectId instance_label_;  // this shoudl really be constant and part of the
-                             // constructor as we get this straight from the
-                             // input image and will never change
-  cv::Rect bounding_box_{};  // reconstructed from the object mask and not
-                             // directly from the object features, although all
-                             // features should lie in this cv::Rect
-  bool marked_as_moving_{false};
+  ObjectId object_id;
+  TrackletIds object_features;  //! Tracklet id's of object features within the
+                                //! frame. Does not indicate usability
 
-  DynamicObjectObservation() : object_features_(), tracking_label_(-1) {}
-  DynamicObjectObservation(const TrackletIds& object_features,
-                           ObjectId tracking_label)
-      : object_features_(object_features), tracking_label_(tracking_label) {}
+  cv::Rect bounding_box{};  // reconstructed from the object mask and not
+                            // directly from the object features, although all
+                            // features should lie in this cv::Rect
 
-  inline size_t numFeatures() const { return object_features_.size(); }
-  inline bool hasBoundingBox() const { return !bounding_box_.empty(); }
+  inline size_t numFeatures() const { return object_features.size(); }
+  inline bool hasBoundingBox() const { return !bounding_box.empty(); }
 };
 
 /**

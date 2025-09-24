@@ -507,6 +507,8 @@ using Motion3ReferenceFrame = MotionReferenceFrame<Motion3>;
 /// @brief Map of object id's to gtsam::Pose3
 using PoseEstimateMap = gtsam::FastMap<ObjectId, gtsam::Pose3>;
 
+// TODO: outer layer should be a unorderd map!
+// TODO: should be more generic than encoding a FrameId!
 /**
  * @brief Generic mapping of Object Id to FrameId to VALUE within a nested
  * gtsam::FastMap structure. This is a common datastrcture used to

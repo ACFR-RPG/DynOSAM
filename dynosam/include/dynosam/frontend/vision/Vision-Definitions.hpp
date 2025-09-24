@@ -30,6 +30,8 @@
 
 #pragma once
 
+#include <mutex>
+
 #include "dynosam/common/ImageContainer.hpp"
 #include "dynosam/common/Types.hpp"
 #include "dynosam/frontend/Frontend-Definitions.hpp"
@@ -98,21 +100,14 @@ struct FeatureTrackerInfo {
   size_t static_track_detections;
 
   inline PerObjectStatus& getObjectStatus(ObjectId object_id) {
-    // tbb::concurrent_hash_map<ObjectId, PerObjectStatus>::accessor acc;
     if (!dynamic_track.exists(object_id)) {
       dynamic_track.insert2(object_id, PerObjectStatus(object_id));
     }
-    // if (dynamic_track.insert(acc, object_id)) {
-    //     acc->second = PerObjectStatus(object_id);  // Initialize with an
-    //     empty vector
-    // }
-
+    // CHECK(dynamic_track.exists(object_id));
     return dynamic_track.at(object_id);
-    // return acc->second;
   }
 
   gtsam::FastMap<ObjectId, PerObjectStatus> dynamic_track;
-  // tbb::concurrent_hash_map<ObjectId, PerObjectStatus> dynamic_track;
 };
 
 template <>

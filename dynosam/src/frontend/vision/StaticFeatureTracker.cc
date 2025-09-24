@@ -37,6 +37,7 @@
 
 #include "dynosam/common/Types.hpp"
 #include "dynosam/frontend/vision/VisionTools.hpp"
+#include "dynosam/utils/TimingStats.hpp"
 
 namespace dyno {
 
@@ -359,8 +360,12 @@ bool KltFeatureTracker::detectFeatures(const cv::Mat& processed_img,
                cv::Scalar(0), cv::FILLED);
   }
 
-  std::vector<cv::Point2f> detected_points = detectRawFeatures(
-      processed_img, current_features.size(), detection_mask_impl);
+  std::vector<cv::Point2f> detected_points;
+  {
+    utils::TimingStatsCollector timer("static_feature_track.detect_raw");
+    detected_points = detectRawFeatures(processed_img, current_features.size(),
+                                        detection_mask_impl);
+  }
 
   for (const cv::Point2f& detected_point : detected_points) {
     Keypoint kp(static_cast<double>(detected_point.x),
@@ -423,7 +428,6 @@ bool KltFeatureTracker::trackPoints(const cv::Mat& current_processed_img,
   // used as flags argument for calcOpticalFlowPyrLK - initially starts as
   // default (0) flag
   int klt_flags = 0;
-
   std::vector<cv::Point2f> current_points;
   if (R_km1_k) {
     predictKeypointsGivenRotation(current_points, previous_pts, *R_km1_k);
@@ -434,24 +438,27 @@ bool KltFeatureTracker::trackPoints(const cv::Mat& current_processed_img,
   }
   CHECK_EQ(current_points.size(), previous_pts.size());
 
-  cv::calcOpticalFlowPyrLK(previous_processed_img, current_processed_img,
-                           previous_pts, current_points, status, err,
-                           klt_window_size, klt_max_level, klt_criteria,
-                           klt_flags);
+  {
+    utils::TimingStatsCollector timer("static_feature_track.calc_LK");
+    cv::calcOpticalFlowPyrLK(previous_processed_img, current_processed_img,
+                             previous_pts, current_points, status, err,
+                             klt_window_size, klt_max_level, klt_criteria,
+                             klt_flags);
 
-  // if we used OPTFLOW_USE_INITIAL_FLOW check that we actually got good flow
-  if (klt_flags == cv::OPTFLOW_USE_INITIAL_FLOW) {
-    static constexpr int kMinSuccessTracks = 10;
-    int succ_num = 0;
-    for (size_t i = 0; i < status.size(); i++) {
-      if (status[i]) succ_num++;
-    }
-    if (succ_num < kMinSuccessTracks) {
-      LOG(WARNING) << "Using initial flow for KLT tracking failed: only "
-                   << succ_num << " tracked!";
-      cv::calcOpticalFlowPyrLK(previous_processed_img, current_processed_img,
-                               previous_pts, current_points, status, err,
-                               klt_window_size, klt_max_level, klt_criteria);
+    // if we used OPTFLOW_USE_INITIAL_FLOW check that we actually got good flow
+    if (klt_flags == cv::OPTFLOW_USE_INITIAL_FLOW) {
+      static constexpr int kMinSuccessTracks = 10;
+      int succ_num = 0;
+      for (size_t i = 0; i < status.size(); i++) {
+        if (status[i]) succ_num++;
+      }
+      if (succ_num < kMinSuccessTracks) {
+        LOG(WARNING) << "Using initial flow for KLT tracking failed: only "
+                     << succ_num << " tracked!";
+        cv::calcOpticalFlowPyrLK(previous_processed_img, current_processed_img,
+                                 previous_pts, current_points, status, err,
+                                 klt_window_size, klt_max_level, klt_criteria);
+      }
     }
   }
 
@@ -521,14 +528,18 @@ bool KltFeatureTracker::trackPoints(const cv::Mat& current_processed_img,
   // image) or (will eventually) have new tracklets after a new detection takes
   // place we just want the set difference between the original features and
   // ones we KNOW are outliers
-  determineOutlierIds(verified_tracklets, tracklet_ids,
-                      outlier_previous_features);
+  {
+    utils::TimingStatsCollector timer("static_feature_track.find_outliers");
+    determineOutlierIds(verified_tracklets, tracklet_ids,
+                        outlier_previous_features);
+  }
 
   const auto& n_tracked = tracked_features.size();
   tracker_info.static_track_optical_flow = n_tracked;
 
   if (tracked_features.size() <
-      static_cast<size_t>(params_.max_features_per_frame)) {
+      static_cast<size_t>(params_.min_features_per_frame)) {
+    utils::TimingStatsCollector timer("static_feature_track.detect");
     // if we do not have enough features, detect more on the current image
     detectFeatures(current_processed_img, image_container, tracked_features,
                    tracked_features, detection_mask);

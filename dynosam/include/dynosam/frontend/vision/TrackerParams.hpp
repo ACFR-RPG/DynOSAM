@@ -106,9 +106,11 @@ struct TrackerParams {
   //! mask
   int min_distance_btw_tracked_and_detected_static_features = 8;
   int min_distance_btw_tracked_and_detected_dynamic_features = 2;
+  //! Maximum number of features to be detected after ANMS
+  int max_features_per_frame = 400;
   //! Threshold for the number of features to keep tracking - if num tracks drop
   //! below this number, new features are detected
-  int max_features_per_frame = 400;
+  int min_features_per_frame = 200;
   //! We relabel the track as a new track for any features longer that this
   size_t max_feature_track_age = 25;
   //! Number of rows to shrink the input image by

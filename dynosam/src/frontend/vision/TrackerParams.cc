@@ -102,6 +102,7 @@ void declare_config(TrackerParams& config) {
   field(config.min_distance_btw_tracked_and_detected_dynamic_features,
         "min_distance_btw_tracked_and_detected_dynamic_features");
   field(config.max_features_per_frame, "max_features_per_frame");
+  field(config.min_features_per_frame, "min_features_per_frame");
   field(config.max_feature_track_age, "max_feature_track_age");
 
   field(config.shrink_row, "shrink_row");

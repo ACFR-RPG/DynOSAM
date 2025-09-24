@@ -32,6 +32,7 @@
 #include <map>
 #include <mutex>
 #include <type_traits>
+#include <unordered_set>
 #include <vector>
 
 #include "dynosam/common/ImageContainer.hpp"
@@ -440,7 +441,7 @@ using enable_if_feature_ptr_iterator =
  */
 class FeatureContainer {
  public:
-  using TrackletToFeatureMap = std::map<TrackletId, Feature::Ptr>;
+  using TrackletToFeatureMap = std::unordered_map<TrackletId, Feature::Ptr>;
 
   /**
    * @brief Internal iterator type allowing iteration over the features directly
@@ -590,6 +591,8 @@ class FeatureContainer {
    */
   size_t size() const;
 
+  // TODO: could now use the object_feature_map_ to directtly get the size but
+  // currently no tests
   /**
    * @brief Returns number of features in the container per object id.
    *
@@ -618,8 +621,12 @@ class FeatureContainer {
 
   FeatureContainer& operator+=(const FeatureContainer& other) {
     feature_map_.insert(other.feature_map_.begin(), other.feature_map_.end());
+    object_feature_map_.insert(other.object_feature_map_.begin(),
+                               other.object_feature_map_.end());
     return *this;
   }
+
+  TrackletIds getByObject(ObjectId) const;
 
   // vector begin
   inline vector_iterator begin() {
@@ -657,6 +664,10 @@ class FeatureContainer {
 
  private:
   TrackletToFeatureMap feature_map_;
+
+  using ObjectToFeatureMap =
+      FastUnorderedMap<ObjectId, std::unordered_set<TrackletId>>;
+  ObjectToFeatureMap object_feature_map_;
 };
 
 /// @brief filter iterator over a FeatureContainer class

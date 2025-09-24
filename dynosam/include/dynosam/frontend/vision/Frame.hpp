@@ -76,6 +76,13 @@ class Frame {
         const ImageContainer& image_container,
         const FeatureContainer& static_features,
         const FeatureContainer& dynamic_features,
+        const std::map<ObjectId, DynamicObjectObservation>& object_observations,
+        std::optional<FeatureTrackerInfo> tracking_info = {});
+
+  Frame(FrameId frame_id, Timestamp timestamp, Camera::Ptr camera,
+        const ImageContainer& image_container,
+        const FeatureContainer& static_features,
+        const FeatureContainer& dynamic_features,
         std::optional<FeatureTrackerInfo> tracking_info = {});
 
   inline FrameId getFrameId() const { return frame_id_; }
@@ -244,27 +251,17 @@ class Frame {
    */
   bool updateDepths();
 
-  /**
-   * @brief From the detected list of objects (in Frame::object_observations_)
-   * draw the object masks as labelled bounding boxes.
-   *
-   * The function uses the MotionMask and RGBMono image types contained witin
-   * Frame::tracking_images_;
-   *
-   * @return cv::Mat RGB image with drawn bounding boxes and labels
-   */
-  cv::Mat drawDetectedObjectBoxes() const;
-
   Frame& setMaxBackgroundDepth(double thresh);
   Frame& setMaxObjectDepth(double thresh);
 
-  // TODO: this really needs testing
-  void moveObjectToStatic(ObjectId instance_label);
-  // TODO: testing
-  // also updates all the tracking_labels of the features associated with this
-  // object
-  void updateObjectTrackingLabel(const DynamicObjectObservation& observation,
-                                 ObjectId new_tracking_label);
+  // // TODO: this really needs testing
+  // void moveObjectToStatic(ObjectId instance_label);
+  // // TODO: testing
+  // // also updates all the tracking_labels of the features associated with
+  // this
+  // // object
+  // void updateObjectTrackingLabel(const DynamicObjectObservation& observation,
+  //                                ObjectId new_tracking_label);
 
   /**
    * @brief Gets the set of tracked pairs between this frame and the previous

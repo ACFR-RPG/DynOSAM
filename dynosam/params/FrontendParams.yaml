@@ -1,9 +1,11 @@
 
 scene_flow_mag_threshold: 0.12
 scene_flow_dist_threshold: 0.5
-max_background_depth: 50.0
+# max_background_depth: 50.0
+# # max_object_depth: 30.0
+# max_object_depth: 20.0
+max_background_depth: 40.0
 max_object_depth: 30.0
-# max_object_depth: 10.0
 
 # max_object_depth: 8.0 #indoors
 
@@ -11,7 +13,7 @@ max_object_depth: 30.0
 use_ego_motion_pnp: True
 # When using rgbd-pipeline, camera-motion will be solved using 3d-2d pnp, not stereo (3d-3d) pnp
 use_object_motion_pnp: True
-refine_camera_pose_with_joint_of: False
+refine_camera_pose_with_joint_of: True
 
 object_motion_solver:
   ransac_threshold_pnp: 1.0
@@ -39,13 +41,19 @@ camera_motion_solver:
 tracker_params:
   shrink_row: 0
   shrink_col: 0
-  max_nr_keypoints_before_anms: 2000
-  max_features_per_frame: 300
+  max_nr_keypoints_before_anms: 800
+  max_features_per_frame: 600
   max_feature_track_age: 20
+
+  min_features_per_frame: 300
+
+  subpixel_corner_refinement_params: true
+  use_clahe_filter: false
 
   max_dynamic_features_per_frame: 400
   min_distance_btw_tracked_and_detected_dynamic_features: 2
   max_dynamic_feature_age: 20
+
 
   # dynamic keyframing criteria
   dynamic_feature_age_buffer: 3
@@ -55,6 +63,6 @@ tracker_params:
 image_tracks_vis_params:
   is_debug: true
   show_frame_info: true
-  show_intermediate_tracking: true
+  show_intermediate_tracking: false
   draw_object_bounding_box: false
   draw_object_mask: true

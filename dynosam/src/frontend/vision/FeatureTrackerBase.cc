@@ -204,7 +204,7 @@ cv::Mat FeatureTrackerBase::computeImageTracks(
   for (const auto& object_observation_pair :
        current_frame.object_observations_) {
     const ObjectId object_id = object_observation_pair.first;
-    const cv::Rect& bb = object_observation_pair.second.bounding_box_;
+    const cv::Rect& bb = object_observation_pair.second.bounding_box;
 
     // TODO: if its marked as moving!!
     if (bb.empty()) {

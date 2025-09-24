@@ -41,20 +41,21 @@ namespace dyno {
 
 ObjectId Frame::global_object_id{1};
 
-Frame::Frame(FrameId frame_id, Timestamp timestamp, Camera::Ptr camera,
-             const ImageContainer& image_container,
-             const FeatureContainer& static_features,
-             const FeatureContainer& dynamic_features,
-             std::optional<FeatureTrackerInfo> tracking_info)
+Frame::Frame(
+    FrameId frame_id, Timestamp timestamp, Camera::Ptr camera,
+    const ImageContainer& image_container,
+    const FeatureContainer& static_features,
+    const FeatureContainer& dynamic_features,
+    const std::map<ObjectId, DynamicObjectObservation>& object_observations,
+    std::optional<FeatureTrackerInfo> tracking_info)
     : frame_id_(frame_id),
       timestamp_(timestamp),
       camera_(camera),
       image_container_(image_container),
       static_features_(static_features),
       dynamic_features_(dynamic_features),
+      object_observations_(object_observations),
       tracking_info_(tracking_info) {
-  constructDynamicObservations();
-
   // NOTE: no rectification, use camera matrix as P for cv::undistortPoints
   // see
   // https://stackoverflow.com/questions/22027419/bad-results-when-undistorting-points-using-opencv-in-python
@@ -63,6 +64,17 @@ Frame::Frame(FrameId frame_id, Timestamp timestamp, Camera::Ptr camera,
   cv::Mat P = cam_params.getCameraMatrix();
   cv::Mat R = cv::Mat::eye(3, 3, CV_32FC1);
   undistorter_ = std::make_shared<UndistorterRectifier>(P, cam_params, R);
+}
+
+Frame::Frame(FrameId frame_id, Timestamp timestamp, Camera::Ptr camera,
+             const ImageContainer& image_container,
+             const FeatureContainer& static_features,
+             const FeatureContainer& dynamic_features,
+             std::optional<FeatureTrackerInfo> tracking_info)
+    : Frame(frame_id, timestamp, camera, image_container, static_features,
+            dynamic_features, {}, tracking_info) {
+  // dynamic info is not pre-calculated so calculate it here! SLOW!
+  constructDynamicObservations();
 }
 
 bool Frame::exists(TrackletId tracklet_id) const {
@@ -250,26 +262,6 @@ Frame& Frame::setMaxObjectDepth(double thresh) {
   CHECK_GT(thresh, 0);
   max_object_threshold_ = thresh;
   return *this;
-}
-
-cv::Mat Frame::drawDetectedObjectBoxes() const {
-  cv::Mat rgb_objects = image_container_.rgb().clone();
-  // image_container_.cloneImage<ImageType::RGBMono>(rgb_objects);
-
-  for (auto& object_observation_pair : object_observations_) {
-    const ObjectId object_id = object_observation_pair.first;
-    const cv::Rect& bb = object_observation_pair.second.bounding_box_;
-
-    if (bb.empty()) {
-      continue;
-    }
-
-    const cv::Scalar colour = Color::uniqueId(object_id).bgra();
-    const std::string label = "Obj " + std::to_string(object_id);
-    utils::drawLabeledBoundingBox(rgb_objects, label, colour, bb);
-  }
-
-  return rgb_objects;
 }
 
 bool Frame::getCorrespondences(FeaturePairs& correspondences,
@@ -487,22 +479,20 @@ void Frame::constructDynamicObservations() {
     CHECK(!dynamic_feature->isStatic());
     CHECK(dynamic_feature->usable());
 
-    const ObjectId instance_label = dynamic_feature->objectId();
+    const ObjectId object_id = dynamic_feature->objectId();
     // this check is just for sanity!
     CHECK(std::find(instance_labels.begin(), instance_labels.end(),
-                    instance_label) != instance_labels.end())
-        << "Missing " << instance_label << " in "
+                    object_id) != instance_labels.end())
+        << "Missing " << object_id << " in "
         << container_to_string(instance_labels);
 
-    if (object_observations_.find(instance_label) ==
-        object_observations_.end()) {
+    if (object_observations_.find(object_id) == object_observations_.end()) {
       DynamicObjectObservation observation;
-      observation.tracking_label_ = -1;
-      observation.instance_label_ = instance_label;
-      object_observations_[instance_label] = observation;
+      observation.object_id = object_id;
+      object_observations_[object_id] = observation;
     }
 
-    object_observations_[instance_label].object_features_.push_back(
+    object_observations_[object_id].object_features.push_back(
         dynamic_feature->trackletId());
   }
 
@@ -515,59 +505,61 @@ void Frame::constructDynamicObservations() {
   for (auto& object_observation_pair : object_observations_) {
     const ObjectId object_id = object_observation_pair.first;
     DynamicObjectObservation& obs = object_observation_pair.second;
-    vision_tools::findObjectBoundingBox(mask, object_id, obs.bounding_box_);
+    vision_tools::findObjectBoundingBox(mask, object_id, obs.bounding_box);
   }
 }
 
-void Frame::moveObjectToStatic(ObjectId instance_label) {
-  auto it = object_observations_.find(instance_label);
-  CHECK(it != object_observations_.end());
+// void Frame::moveObjectToStatic(ObjectId instance_label) {
+//   auto it = object_observations_.find(instance_label);
+//   CHECK(it != object_observations_.end());
 
-  DynamicObjectObservation& observation = it->second;
-  observation.marked_as_moving_ = false;
-  CHECK(observation.instance_label_ == instance_label);
-  // go through all features, move them to from dynamic structure and add them
-  // to static
-  for (TrackletId tracklet_id : observation.object_features_) {
-    CHECK(dynamic_features_.exists(tracklet_id));
-    Feature::Ptr dynamic_feature =
-        dynamic_features_.getByTrackletId(tracklet_id);
+//   DynamicObjectObservation& observation = it->second;
+//   observation.marked_as_moving_ = false;
+//   CHECK(observation.instance_label_ == instance_label);
+//   // go through all features, move them to from dynamic structure and add
+//   them
+//   // to static
+//   for (TrackletId tracklet_id : observation.object_features_) {
+//     CHECK(dynamic_features_.exists(tracklet_id));
+//     Feature::Ptr dynamic_feature =
+//         dynamic_features_.getByTrackletId(tracklet_id);
 
-    if (!dynamic_feature->usable()) {
-      continue;
-    }
+//     if (!dynamic_feature->usable()) {
+//       continue;
+//     }
 
-    CHECK(!dynamic_feature->isStatic());
-    CHECK_EQ(dynamic_feature->trackletId(), tracklet_id);
-    CHECK_EQ(dynamic_feature->objectId(), instance_label);
-    dynamic_feature->keypointType(KeyPointType::STATIC);
-    dynamic_feature->objectId(background_label);
-    // dynamic_feature->tracking_label_ = background_label;
+//     CHECK(!dynamic_feature->isStatic());
+//     CHECK_EQ(dynamic_feature->trackletId(), tracklet_id);
+//     CHECK_EQ(dynamic_feature->objectId(), instance_label);
+//     dynamic_feature->keypointType(KeyPointType::STATIC);
+//     dynamic_feature->objectId(background_label);
+//     // dynamic_feature->tracking_label_ = background_label;
 
-    dynamic_features_.remove(tracklet_id);
-    // Jesse: no, do not move points (these are dense) to static - instrad we
-    // need to mark the AREA around the object as static and then retrack all
-    // points in there!!
-    //  static_features_.add(dynamic_feature);
-  }
+//     dynamic_features_.remove(tracklet_id);
+//     // Jesse: no, do not move points (these are dense) to static - instrad we
+//     // need to mark the AREA around the object as static and then retrack all
+//     // points in there!!
+//     //  static_features_.add(dynamic_feature);
+//   }
 
-  object_observations_.erase(it);
-}
+//   object_observations_.erase(it);
+// }
 
-void Frame::updateObjectTrackingLabel(
-    const DynamicObjectObservation& observation, ObjectId new_tracking_label) {
-  auto it = object_observations_.find(observation.instance_label_);
-  CHECK(it != object_observations_.end());
+// void Frame::updateObjectTrackingLabel(
+//     const DynamicObjectObservation& observation, ObjectId new_tracking_label)
+//     {
+//   auto it = object_observations_.find(observation.instance_label_);
+//   CHECK(it != object_observations_.end());
 
-  auto& obs = it->second;
-  obs.tracking_label_ = new_tracking_label;
-  // update all features
-  for (TrackletId tracklet_id : obs.object_features_) {
-    Feature::Ptr feature = dynamic_features_.getByTrackletId(tracklet_id);
-    CHECK(feature);
-    feature->objectId(new_tracking_label);
-  }
-}
+//   auto& obs = it->second;
+//   obs.tracking_label_ = new_tracking_label;
+//   // update all features
+//   for (TrackletId tracklet_id : obs.object_features_) {
+//     Feature::Ptr feature = dynamic_features_.getByTrackletId(tracklet_id);
+//     CHECK(feature);
+//     feature->objectId(new_tracking_label);
+//   }
+// }
 
 FeatureFilterIterator Frame::usableStaticFeaturesBegin() {
   return static_features_.beginUsable();

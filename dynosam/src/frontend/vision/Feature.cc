@@ -52,6 +52,13 @@ void FeatureContainer::add(Feature::Ptr feature) {
       << "Feailure in FeatureContainer::add - Tracklet Id "
       << feature->trackletId() << " already exists";
   feature_map_[feature->trackletId()] = feature;
+
+  // TODO: what if object id is not valid!
+  if (!object_feature_map_.exists(feature->objectId())) {
+    object_feature_map_.insert2(feature->objectId(),
+                                std::unordered_set<TrackletId>{});
+  }
+  object_feature_map_[feature->objectId()].insert(feature->trackletId());
 }
 
 // TODO: test
@@ -64,6 +71,20 @@ void FeatureContainer::remove(TrackletId tracklet_id) {
                              " as feature does not exist!");
   }
 
+  auto feature = this->getByTrackletId(tracklet_id);
+  const auto object_id = feature->objectId();
+  // check object id exists in map
+  CHECK(object_feature_map_.exists(object_id));
+  // remove tracklet id from tracklet set and if the set is now empty
+  // remove object id entirely
+  auto& tracklets_per_object = object_feature_map_.at(object_id);
+  tracklets_per_object.erase(tracklet_id);
+
+  if (tracklets_per_object.empty()) {
+    object_feature_map_.erase(object_id);
+  }
+
+  // remove from main feature map
   feature_map_.erase(tracklet_id);
 }
 
@@ -82,9 +103,15 @@ void FeatureContainer::removeByObjectId(ObjectId object_id) {
   for (const auto tracklet_id : tracklets_to_remove) {
     this->remove(tracklet_id);
   }
+
+  // TODO: remove from object_feature_map_
+  object_feature_map_.erase(object_id);
 }
 
-void FeatureContainer::clear() { feature_map_.clear(); }
+void FeatureContainer::clear() {
+  feature_map_.clear();
+  object_feature_map_.clear();
+}
 
 // TODO: else if logic needs test!!
 TrackletIds FeatureContainer::collectTracklets(bool only_usable) const {
@@ -128,6 +155,15 @@ Feature::Ptr FeatureContainer::getByTrackletId(TrackletId tracklet_id) const {
 
 bool FeatureContainer::exists(TrackletId tracklet_id) const {
   return feature_map_.find(tracklet_id) != feature_map_.end();
+}
+
+TrackletIds FeatureContainer::getByObject(ObjectId object_id) const {
+  if (object_feature_map_.exists(object_id)) {
+    const auto& tracklets = object_feature_map_.at(object_id);
+    return TrackletIds(tracklets.begin(), tracklets.end());
+  } else {
+    return TrackletIds{};
+  }
 }
 
 FeatureContainer::FilterIterator FeatureContainer::beginUsable() {

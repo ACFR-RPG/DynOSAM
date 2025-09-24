@@ -333,6 +333,7 @@ Pose3Measurement ParallelHybridBackendModule::bootstrapUpdateStaticEstimator(
   std::map<gtsam::Key, double> timestamps;
   double curr_id = static_cast<double>(this->spin_state_.iteration);
   for (const auto& key_value : new_values) {
+    // LOG(INFO) << DynoLikeKeyFormatter(key_value.key);
     timestamps[key_value.key] = curr_id;
   }
 
@@ -384,6 +385,7 @@ Pose3Measurement ParallelHybridBackendModule::nominalUpdateStaticEstimator(
   std::map<gtsam::Key, double> timestamps;
   double curr_id = static_cast<double>(this->spin_state_.iteration);
   for (const auto& key_value : new_values) {
+    // LOG(INFO) << DynoLikeKeyFormatter(key_value.key);
     timestamps[key_value.key] = curr_id;
   }
 

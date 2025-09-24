@@ -199,10 +199,10 @@ FrontendModule::SpinReturn RGBDInstanceFrontendModule::nominalSpin(
     imu_frontend_.resetIntegration();
   }
 
-  if (FLAGS_use_dynamic_track) {
-    utils::TimingStatsCollector track_dynamic_timer("tracking_dynamic");
-    vision_tools::trackDynamic(getFrontendParams(), *previous_frame, frame);
-  }
+  // if (FLAGS_use_dynamic_track) {
+  //   utils::TimingStatsCollector track_dynamic_timer("tracking_dynamic");
+  //   vision_tools::trackDynamic(getFrontendParams(), *previous_frame, frame);
+  // }
 
   const auto [object_motions, object_poses] =
       object_motion_solver_->solve(frame, previous_frame);
@@ -232,7 +232,6 @@ FrontendModule::SpinReturn RGBDInstanceFrontendModule::nominalSpin(
     display_queue_->push(
         ImageToDisplay("Tracks", debug_imagery.tracking_image));
 
-  debug_imagery.detected_bounding_boxes = frame->drawDetectedObjectBoxes();
   vision_imu_packet->debugImagery(debug_imagery);
 
   // // const cv::Mat& board_detection_mask =
@@ -399,10 +398,20 @@ void RGBDInstanceFrontendModule::fillOutputPacketWithTracks(
 
           // This can come from either stereo or rgbd
           if (f->hasDepth()) {
-            MeasurementWithCovariance<Landmark> landmark_measurement(
-                // assume sigma_u and sigma_v are identical
-                vision_tools::backProjectAndCovariance(
-                    *f, camera, pixel_sigmas(0), depth_sigma));
+            // MeasurementWithCovariance<Landmark> landmark_measurement(
+            //     // assume sigma_u and sigma_v are identical
+            //     vision_tools::backProjectAndCovariance(
+            //         *f, camera, pixel_sigmas(0), depth_sigma));
+            // camera_measurement.landmark(landmark_measurement);
+            Landmark landmark;
+            camera.backProject(kp, f->depth(), &landmark);
+
+            gtsam::Vector3 sigmas;
+            sigmas << depth_sigma, depth_sigma, depth_sigma;
+
+            MeasurementWithCovariance<Landmark> landmark_measurement =
+                MeasurementWithCovariance<Landmark>::FromSigmas(landmark,
+                                                                sigmas);
             camera_measurement.landmark(landmark_measurement);
           }
 
