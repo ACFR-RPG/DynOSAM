@@ -191,6 +191,7 @@ bool DynoPipelineManager::spin() {
           frontend_pipeline_->spinOnce();
           if (backend_pipeline_) backend_pipeline_->spinOnce();
         }
+        // TODO: this definately takes some time...
         spinViz();  // for now
         // a later problem!
         return true;

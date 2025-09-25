@@ -45,7 +45,7 @@ void OpenCVImageDisplayQueue::process() {
   bool queue_state = false;
   if (parallel_run_) {
     ImageToDisplay image_to_display;
-    queue_state = display_queue_->popBlockingWithTimeout(image_to_display, 5);
+    queue_state = display_queue_->popBlockingWithTimeout(image_to_display, 2);
 
     if (queue_state) {
       // cv::namedWindow(image_to_display.name_);
@@ -54,7 +54,7 @@ void OpenCVImageDisplayQueue::process() {
     }
   } else {
     std::vector<ImageToDisplay> images_to_display;
-    queue_state = display_queue_->popAll(images_to_display, 3);
+    queue_state = display_queue_->popAll(images_to_display, 2);
 
     if (queue_state) {
       for (const auto& image_to_display : images_to_display) {

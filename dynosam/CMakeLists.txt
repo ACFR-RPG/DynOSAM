@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.8)
 project(dynosam)
 
 # set(CMAKE_C_FLAGS "-std=gnu11 -Wall -Wextra -O3 -march=sandybridge -flto")
-set(CMAKE_C_FLAGS "-Wall -Wextra")
+set(CMAKE_C_FLAGS "-Wall -Wextra  -O3")
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
