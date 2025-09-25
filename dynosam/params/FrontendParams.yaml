@@ -6,7 +6,7 @@ scene_flow_dist_threshold: 0.5
 # max_object_depth: 20.0
 # max_background_depth: 40.0
 max_background_depth: 500.0
-max_object_depth: 30.0
+max_object_depth: 20.0
 
 # max_object_depth: 8.0 #indoors
 
@@ -25,10 +25,12 @@ object_motion_solver:
   ransac_probability:  0.995
 
   joint_optical_flow:
-    outlier_reject: True
+    outlier_reject: False
+    k_huber: 0.1
 
   object_motion_3d_refinement:
     outlier_reject: True
+    k_huber: 0.01
 
 
 
@@ -43,10 +45,10 @@ tracker_params:
   shrink_row: 0
   shrink_col: 0
   max_nr_keypoints_before_anms: 800
-  max_features_per_frame: 600
+  max_features_per_frame: 300
   max_feature_track_age: 20
 
-  min_features_per_frame: 600
+  min_features_per_frame: 300
 
   subpixel_corner_refinement_params: true
   use_clahe_filter: true

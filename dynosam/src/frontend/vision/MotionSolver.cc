@@ -298,6 +298,7 @@ Pose3SolverResult EgoMotionSolver::geometricOutlierRejection3d2d(
 
 void OpticalFlowAndPoseOptimizer::updateFrameOutliersWithResult(
     const Result& result, Frame::Ptr frame_k_1, Frame::Ptr frame_k) const {
+  utils::TimingStatsCollector timer("of_motion_solver.update_frame");
   // //original flow image that goes from k to k+1 (gross, im sorry!)
   // TODO: use flow_is_future param
   const cv::Mat& flow_image = frame_k->image_container_.opticalFlow();
@@ -328,7 +329,6 @@ void OpticalFlowAndPoseOptimizer::updateFrameOutliersWithResult(
       continue;
     }
 
-    feature_k->keypoint(refined_keypoint);
     ObjectId predicted_label =
         functional_keypoint::at<ObjectId>(refined_keypoint, motion_mask);
     if (predicted_label != result.best_result.object_id) {
@@ -351,6 +351,7 @@ void OpticalFlowAndPoseOptimizer::updateFrameOutliersWithResult(
     Keypoint predicted_kp = Feature::CalculatePredictedKeypoint(
         refined_keypoint, new_measured_flow);
     feature_k->predictedKeypoint(predicted_kp);
+    feature_k->keypoint(refined_keypoint);
   }
 
   // update tracks

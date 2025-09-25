@@ -10,7 +10,7 @@
 # --constant_object_motion_translation_sigma=0.2
 
 
---constant_object_motion_rotation_sigma=0.1
+--constant_object_motion_rotation_sigma=0.01
 --constant_object_motion_translation_sigma=0.2
 
 

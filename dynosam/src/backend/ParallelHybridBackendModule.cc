@@ -393,6 +393,7 @@ Pose3Measurement ParallelHybridBackendModule::nominalUpdateStaticEstimator(
   VLOG(10) << "Starting static estimator update...";
   auto tic = utils::Timer::tic();
   static_estimator_.update(new_factors, new_values, timestamps);
+  static_estimator_.update();
   auto toc = utils::Timer::toc<std::chrono::nanoseconds>(tic);
   int64_t milliseconds =
       std::chrono::duration_cast<std::chrono::milliseconds>(toc).count();

@@ -96,6 +96,15 @@ FrontendInputPacketBase::ConstPtr DataInterfacePipeline::getInputPacket() {
   auto frontend_input =
       std::make_shared<FrontendInputPacketBase>(packet, ground_truth);
   frontend_input->imu_measurements = imu_meas;
+
+  // in some cases (ie datasets) we know ahead of time which imu packet is
+  // associated with which frame
+  //  if it is provided, check that our getTimeSyncedImuMeasurements did the
+  //  right thing
+  if (imu_meas && imu_meas->synchronised_frame_id) {
+    CHECK_EQ(packet->frameId(), imu_meas->synchronised_frame_id.value());
+  }
+
   return frontend_input;
 }
 
