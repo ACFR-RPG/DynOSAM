@@ -54,15 +54,9 @@ def parser():
 
 
 if __name__ == '__main__':
-    from dynosam_utils.evaluation.runner import run
     import argcomplete
     import sys
 
-    # import rclpy
-    # rclpy.init()
-
-    # non_ros_args = rclpy.utilities.remove_ros_args(sys.argv)
-    # print(f"Sys argv {sys.argv}")
 
     ###
     parser = parser()
@@ -72,5 +66,30 @@ if __name__ == '__main__':
     # the user wants to parse to the LaunchService as real args to be used as GFLAGS.
     args, unknown = parser.parse_known_args()
     args_dictionary = vars(args)
+    # try:
+    #     from dynosam_utils.evaluation.runner import bl_run
+    #     print("Running with betrer launch")
 
+    #     unpacked_args = args_dictionary
+    #     # in this case we will treat unknown args as the **kwargs expected by better_launch
+    #     # this could be gflags or argumnts expected by the launch function
+    #     # in EITHER case better_launch expect something in the form "<key> <value>"
+    #     # if key is a parameter of the dynosam launch file it will be parsed as such
+    #     # if key is in the forn "--<key>" it will be considered as a kwarg of the launch file!
+    #     # either way we expect unknown args to be in pairs of two and construct our kwargs from that!
+    #     assert (
+    #         len(unknown) % 2 == 0
+    #     ), "unkown arguments need to be equivalent to '<key> <value>' tuples"
+    #     for i in range(0, len(unknown), 2):
+    #         key = unknown[i]
+    #         val = unknown[i + 1]
+    #         unpacked_args[key] = val
+
+
+
+    #     sys.exit(bl_run(**unpacked_args))
+    # except Exception as e:
+    #     print(f"Running with ros2 {e}")
+        # from dynosam_utils.evaluation.runner import run
+        # args_dictionary = vars(args)
     sys.exit(run(args_dictionary, unknown))

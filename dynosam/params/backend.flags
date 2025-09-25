@@ -10,7 +10,7 @@
 # --constant_object_motion_translation_sigma=0.2
 
 
---constant_object_motion_rotation_sigma=0.4
+--constant_object_motion_rotation_sigma=0.1
 --constant_object_motion_translation_sigma=0.2
 
 
@@ -24,12 +24,12 @@
 # --odometry_rotation_sigma=0.005
 # --odometry_translation_sigma=0.001
 
---odometry_rotation_sigma=0.005
+--odometry_rotation_sigma=0.05
 --odometry_translation_sigma=0.01
 
 
---static_point_noise_sigma=0.05
---dynamic_point_noise_sigma=0.05
+--static_point_noise_sigma=0.01
+--dynamic_point_noise_sigma=0.01
 
 --static_pixel_noise_sigma=1.0
 --dynamic_pixel_noise_sigma=1.0

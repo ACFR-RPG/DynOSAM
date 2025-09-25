@@ -209,6 +209,8 @@ Pose3SolverResult EgoMotionSolver::geometricOutlierRejection3d2d(
   // TODO: change to use landmarkWorldProjectedBearingCorrespondance and then
   // change motion solver to take already projected bearing vectors
   {
+    utils::TimingStatsCollector timer(
+        "motion_solver.solve_3d2d.correspondances");
     frame_k->getCorrespondences(correspondences, *frame_k_1,
                                 KeyPointType::STATIC,
                                 frame_k->landmarkWorldKeypointCorrespondance());
@@ -266,11 +268,15 @@ Pose3SolverResult EgoMotionSolver::geometricOutlierRejection3d2d(
   gtsam::Pose3 best_result;
   std::vector<int> ransac_inliers;
 
-  bool success = runRansac<AbsolutePoseProblem>(
-      std::make_shared<AbsolutePoseProblem>(adapter,
-                                            AbsolutePoseProblem::KNEIP),
-      threshold, params_.ransac_iterations, params_.ransac_probability,
-      params_.optimize_3d2d_pose_from_inliers, best_result, ransac_inliers);
+  bool success;
+  {
+    utils::TimingStatsCollector timer("motion_solver.solve_3d2d.ransac");
+    success = runRansac<AbsolutePoseProblem>(
+        std::make_shared<AbsolutePoseProblem>(adapter,
+                                              AbsolutePoseProblem::KNEIP),
+        threshold, params_.ransac_iterations, params_.ransac_probability,
+        params_.optimize_3d2d_pose_from_inliers, best_result, ransac_inliers);
+  }
 
   constructTrackletInliers(result.inliers, result.outliers, correspondences,
                            ransac_inliers, tracklets);

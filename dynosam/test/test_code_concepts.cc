@@ -530,6 +530,359 @@ TEST(CodeConcepts, testConnectivityISAM2) {
   update_and_save(isam2, graph, values, 4);
 }
 
+// test get unique labels speed
+#include <algorithm>
+#include <chrono>
+#include <execution>
+#include <future>
+#include <iostream>
+#include <opencv2/opencv.hpp>
+#include <random>
+#include <set>
+#include <thread>
+#include <unordered_set>
+#include <vector>
+
+// Method 1: Using std::set
+std::vector<int> getUniqueLabels(const cv::Mat& mask) {
+  std::set<int> uniqueLabels;
+
+  for (int i = 0; i < mask.rows; ++i) {
+    const int* row = mask.ptr<int>(i);
+    for (int j = 0; j < mask.cols; ++j) {
+      uniqueLabels.insert(row[j]);
+    }
+  }
+
+  return std::vector<int>(uniqueLabels.begin(), uniqueLabels.end());
+}
+
+// Method 2: Using std::unordered_set
+std::vector<int> getUniqueLabelsFast(const cv::Mat& mask) {
+  std::unordered_set<int> uniqueLabels;
+
+  const int* data = reinterpret_cast<const int*>(mask.data);
+  int totalPixels = mask.rows * mask.cols;
+
+  for (int i = 0; i < totalPixels; ++i) {
+    uniqueLabels.insert(data[i]);
+  }
+
+  std::vector<int> result(uniqueLabels.begin(), uniqueLabels.end());
+  std::sort(result.begin(), result.end());  // Sort for consistent comparison
+  return result;
+}
+
+// Method 3: OpenCV's Built-in Approach (Original - Slow)
+std::vector<int> getUniqueLabelsOpenCV(const cv::Mat& mask) {
+  // Flatten to a single row vector for proper sorting
+  cv::Mat flatMask = mask.reshape(1, 1);
+  cv::Mat sortedMask;
+  cv::sort(flatMask, sortedMask, cv::SORT_ASCENDING);
+
+  std::vector<int> unique;
+  if (sortedMask.cols == 0) return unique;
+
+  int lastVal = sortedMask.at<int>(0, 0);
+  unique.push_back(lastVal);
+
+  for (int i = 1; i < sortedMask.cols; ++i) {
+    int currentVal = sortedMask.at<int>(0, i);
+    if (currentVal != lastVal) {
+      unique.push_back(currentVal);
+      lastVal = currentVal;
+    }
+  }
+
+  return unique;
+}
+
+// Method 3a: OpenCV with std::sort (Much Faster)
+std::vector<int> getUniqueLabelsOpenCVFast(const cv::Mat& mask) {
+  // Copy data to std::vector for faster sorting
+  std::vector<int> data;
+  data.reserve(mask.rows * mask.cols);
+
+  const int* ptr = reinterpret_cast<const int*>(mask.data);
+  int totalPixels = mask.rows * mask.cols;
+
+  for (int i = 0; i < totalPixels; ++i) {
+    data.push_back(ptr[i]);
+  }
+
+  // std::sort is typically faster than cv::sort
+  std::sort(data.begin(), data.end());
+
+  // Remove duplicates
+  std::vector<int> unique;
+  if (!data.empty()) {
+    unique.push_back(data[0]);
+    for (size_t i = 1; i < data.size(); ++i) {
+      if (data[i] != data[i - 1]) {
+        unique.push_back(data[i]);
+      }
+    }
+  }
+
+  return unique;
+}
+
+// Method 5c: Row-parallel processing
+std::vector<int> getUniqueLabelsRowParallel(const cv::Mat& mask) {
+  const int numThreads =
+      std::min(std::thread::hardware_concurrency(), (unsigned int)mask.rows);
+  const int rowsPerThread = mask.rows / numThreads;
+
+  std::vector<std::future<std::unordered_set<int>>> futures;
+
+  // Launch threads to process row chunks
+  for (int t = 0; t < numThreads; ++t) {
+    int startRow = t * rowsPerThread;
+    int endRow = (t == numThreads - 1) ? mask.rows : (t + 1) * rowsPerThread;
+
+    futures.push_back(
+        std::async(std::launch::async, [&mask, startRow, endRow]() {
+          std::unordered_set<int> localUnique;
+          for (int row = startRow; row < endRow; ++row) {
+            const int* rowPtr = mask.ptr<int>(row);
+            for (int col = 0; col < mask.cols; ++col) {
+              localUnique.insert(rowPtr[col]);
+            }
+          }
+          return localUnique;
+        }));
+  }
+
+  // Merge results
+  std::unordered_set<int> globalUnique;
+  for (auto& future : futures) {
+    auto localSet = future.get();
+    globalUnique.insert(localSet.begin(), localSet.end());
+  }
+
+  // Convert to sorted vector
+  std::vector<int> result(globalUnique.begin(), globalUnique.end());
+  // std::sort(result.begin(), result.end());
+
+  return result;
+}
+
+// Method 3b: OpenCV with partial sort optimization
+std::vector<int> getUniqueLabelsOpenCVPartial(const cv::Mat& mask) {
+  std::unordered_set<int> uniqueSet;
+
+  const int* ptr = reinterpret_cast<const int*>(mask.data);
+  int totalPixels = mask.rows * mask.cols;
+
+  // First pass: collect unique values (no sorting needed)
+  for (int i = 0; i < totalPixels; ++i) {
+    uniqueSet.insert(ptr[i]);
+  }
+
+  // Convert to sorted vector
+  std::vector<int> unique(uniqueSet.begin(), uniqueSet.end());
+  std::sort(unique.begin(), unique.end());
+
+  return unique;
+}
+
+// Method 4: Histogram-based
+std::vector<int> getUniqueLabelsHistogram(const cv::Mat& mask,
+                                          int maxLabel = 1000) {
+  std::vector<bool> present(maxLabel + 1, false);
+
+  const int* data = reinterpret_cast<const int*>(mask.data);
+  int totalPixels = mask.rows * mask.cols;
+
+  for (int i = 0; i < totalPixels; ++i) {
+    if (data[i] <= maxLabel && data[i] >= 0) {
+      present[data[i]] = true;
+    }
+  }
+
+  std::vector<int> unique;
+  for (int i = 0; i <= maxLabel; ++i) {
+    if (present[i]) {
+      unique.push_back(i);
+    }
+  }
+
+  return unique;
+}
+
+// Function to create a synthetic instance segmentation mask
+cv::Mat createTestMask(int width, int height, int numLabels) {
+  cv::Mat mask(height, width, CV_32SC1);
+
+  std::random_device rd;
+  std::mt19937 gen(42);  // Fixed seed for reproducibility
+  std::uniform_int_distribution<int> labelDist(0, numLabels - 1);
+
+  // Fill with random labels to simulate instance segmentation
+  for (int i = 0; i < height; ++i) {
+    int* row = mask.ptr<int>(i);
+    for (int j = 0; j < width; ++j) {
+      row[j] = labelDist(gen);
+    }
+  }
+
+  // Add some larger regions to make it more realistic
+  for (int region = 0; region < numLabels / 4; ++region) {
+    std::uniform_int_distribution<int> xDist(50, width - 100);
+    std::uniform_int_distribution<int> yDist(50, height - 100);
+    std::uniform_int_distribution<int> sizeDist(20, 80);
+
+    int x = xDist(gen);
+    int y = yDist(gen);
+    int w = sizeDist(gen);
+    int h = sizeDist(gen);
+    int label = labelDist(gen);
+
+    cv::Rect rect(x, y, std::min(w, width - x), std::min(h, height - y));
+    mask(rect) = label;
+  }
+
+  return mask;
+}
+
+// Benchmark function
+template <typename Func>
+double benchmarkFunction(Func func, const cv::Mat& mask,
+                         const std::string& name, int iterations = 100) {
+  auto start = std::chrono::high_resolution_clock::now();
+
+  std::vector<int> result;
+  for (int i = 0; i < iterations; ++i) {
+    result = func(mask);
+  }
+
+  auto end = std::chrono::high_resolution_clock::now();
+  auto duration =
+      std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+
+  double avgTime = duration.count() / static_cast<double>(iterations);
+  std::cout << name << ":\n";
+  std::cout << "  Average time: " << avgTime << " microseconds\n";
+  std::cout << "  Found " << result.size() << " unique labels\n";
+  std::cout << "  First 10 labels: ";
+  for (size_t i = 0; i < std::min(size_t(10), result.size()); ++i) {
+    std::cout << result[i] << " ";
+  }
+  std::cout << "\n\n";
+
+  return avgTime;
+}
+
+TEST(CodeConcepts, uniqueLabelSpeed) {
+  // / Test parameters
+  const int width = 640;
+  const int height = 480;
+  const int numLabels = 6;
+  const int iterations = 100;
+
+  // Create test mask
+  cv::Mat testMask = createTestMask(width, height, numLabels);
+
+  std::cout << "Running benchmarks (" << iterations << " iterations each):\n\n";
+
+  // Benchmark all methods
+  std::vector<std::pair<std::string, double>> results;
+
+  results.push_back(
+      {"Method 1 (std::set)",
+       benchmarkFunction(
+           [](const cv::Mat& mask) { return getUniqueLabels(mask); }, testMask,
+           "Method 1 (std::set)", iterations)});
+
+  results.push_back(
+      {"Method 2 (std::unordered_set)",
+       benchmarkFunction(
+           [](const cv::Mat& mask) { return getUniqueLabelsFast(mask); },
+           testMask, "Method 2 (std::unordered_set)", iterations)});
+
+  results.push_back(
+      {"Method 3 (OpenCV sort - Original)",
+       benchmarkFunction(
+           [](const cv::Mat& mask) { return getUniqueLabelsOpenCV(mask); },
+           testMask, "Method 3 (OpenCV sort - Original)", iterations)});
+
+  results.push_back(
+      {"Method 3a (OpenCV + std::sort)",
+       benchmarkFunction(
+           [](const cv::Mat& mask) { return getUniqueLabelsOpenCVFast(mask); },
+           testMask, "Method 3a (OpenCV + std::sort)", iterations)});
+
+  results.push_back(
+      {"Method 3b (OpenCV partial sort)",
+       benchmarkFunction(
+           [](const cv::Mat& mask) {
+             return getUniqueLabelsOpenCVPartial(mask);
+           },
+           testMask, "Method 3b (OpenCV partial sort)", iterations)});
+
+  results.push_back({"Method 4 (Histogram)",
+                     benchmarkFunction(
+                         [](const cv::Mat& mask) {
+                           return getUniqueLabelsHistogram(mask, 1000);
+                         },
+                         testMask, "Method 4 (Histogram)", iterations)});
+
+  results.push_back(
+      {"Method 5 (Row-parallel)",
+       benchmarkFunction(
+           [](const cv::Mat& mask) { return getUniqueLabelsRowParallel(mask); },
+           testMask, "Method 5 (Row-Parallel)", iterations)});
+
+  // Sort results by performance
+  std::sort(results.begin(), results.end(),
+            [](const auto& a, const auto& b) { return a.second < b.second; });
+
+  std::cout << "=== PERFORMANCE RANKING (fastest to slowest) ===\n";
+  for (size_t i = 0; i < results.size(); ++i) {
+    std::cout << (i + 1) << ". " << results[i].first << ": "
+              << results[i].second << " μs\n";
+  }
+
+  // Calculate speedup
+  std::cout << "\n=== SPEEDUP FACTORS ===\n";
+  double slowest = results.back().second;
+  for (const auto& result : results) {
+    double speedup = slowest / result.second;
+    std::cout << result.first << ": " << speedup << "x faster than slowest\n";
+  }
+
+  // Verify all methods produce the same results
+  std::cout << "\n=== CORRECTNESS VERIFICATION ===\n";
+  auto result1 = getUniqueLabels(testMask);
+  auto result2 = getUniqueLabelsFast(testMask);
+  auto result3 = getUniqueLabelsOpenCV(testMask);
+  auto result3a = getUniqueLabelsOpenCVFast(testMask);
+  auto result3b = getUniqueLabelsOpenCVPartial(testMask);
+  auto result4 = getUniqueLabelsHistogram(testMask, 1000);
+  auto result5 = getUniqueLabelsRowParallel(testMask);
+
+  std::sort(result1.begin(), result1.end());
+  std::sort(result2.begin(), result2.end());
+  std::sort(result3.begin(), result3.end());
+  std::sort(result3a.begin(), result3a.end());
+  std::sort(result3b.begin(), result3b.end());
+  std::sort(result4.begin(), result4.end());
+  std::sort(result5.begin(), result5.end());
+
+  bool allMatch = (result1 == result2) && (result2 == result3) &&
+                  (result3 == result3a) && (result3a == result3b) &&
+                  (result3b == result4) && (result4 == result5);
+  std::cout << "All methods produce identical results: "
+            << (allMatch ? "YES" : "NO") << "\n";
+
+  if (!allMatch) {
+    std::cout << "Result sizes: " << result1.size() << ", " << result2.size()
+              << ", " << result3.size() << ", " << result3a.size() << ", "
+              << result3b.size() << ", " << result4.size() << ", "
+              << result5.size() << "\n";
+  }
+}
+
 // TEST(CodeConcepts, getISAM2Ordering) {
 //     using namespace gtsam;
 //     Cal3_S2::shared_ptr K(new Cal3_S2(50.0, 50.0, 0.0, 50.0, 50.0));

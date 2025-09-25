@@ -128,6 +128,8 @@ void declare_config(TrackerParams& config) {
 
   field(config.use_propogate_mask, "use_propogate_mask");
 
+  field(config.prefer_provided_optical_flow, "prefer_provided_optical_flow");
+
   // update with FLAGS
   // config.semantic_mask_step_size = FLAGS_semantic_mask_step_size;
   config.use_propogate_mask = FLAGS_use_propogate_mask;

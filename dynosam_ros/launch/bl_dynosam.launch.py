@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 import os
-
 from better_launch import BetterLaunch, launch_this
-
 from ament_index_python.packages import get_package_share_directory
 import sys
 
@@ -65,7 +63,7 @@ def first_steps(
 
     bl = BetterLaunch()
 
-
+    print(f"DYNOAM kwargs {kwargs}")
 
     if params_folder_path is None:
         bl.logger.info("Loading default dynosam params folder path which is expected to be in the share directory of the dynosam package")

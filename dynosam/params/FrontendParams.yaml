@@ -4,7 +4,8 @@ scene_flow_dist_threshold: 0.5
 # max_background_depth: 50.0
 # # max_object_depth: 30.0
 # max_object_depth: 20.0
-max_background_depth: 40.0
+# max_background_depth: 40.0
+max_background_depth: 500.0
 max_object_depth: 30.0
 
 # max_object_depth: 8.0 #indoors
@@ -45,10 +46,11 @@ tracker_params:
   max_features_per_frame: 600
   max_feature_track_age: 20
 
-  min_features_per_frame: 300
+  min_features_per_frame: 600
 
   subpixel_corner_refinement_params: true
-  use_clahe_filter: false
+  use_clahe_filter: true
+  prefer_provided_optical_flow: false
 
   max_dynamic_features_per_frame: 400
   min_distance_btw_tracked_and_detected_dynamic_features: 2

@@ -32,6 +32,9 @@
 
 #include <algorithm>  // std::set_difference, std::sort
 #include <cmath>
+#include <execution>
+#include <future>
+#include <thread>
 #include <vector>  // std::vector
 
 #include "dynosam/frontend/FrontendParams.hpp"
@@ -67,19 +70,61 @@ void getCorrespondences(FeaturePairs& correspondences,
 }
 
 ObjectIds getObjectLabels(const cv::Mat& image) {
-  CHECK(!image.empty());
-  std::unordered_set<ObjectId> unique_labels;
-  for (auto it = image.begin<ObjectId>(); it != image.end<ObjectId>(); ++it) {
-    if (*it != background_label) {
-      unique_labels.insert(*it);
-    }
-  }
-  return ObjectIds(unique_labels.begin(), unique_labels.end());
+  // CHECK(!image.empty());
+  // std::unordered_set<ObjectId> unique_labels;
+  // for (auto it = image.begin<ObjectId>(); it != image.end<ObjectId>(); ++it)
+  // {
+  //   if (*it != background_label) {
+  //     unique_labels.insert(*it);
+  //   }
+  // }
+  // return ObjectIds(unique_labels.begin(), unique_labels.end());
   // std::vector<ObjectId> v(image.ptr<ObjectId>(), image.ptr<ObjectId>() +
   // image.total()); std::sort(v.begin(), v.end()); auto last =
   // std::unique(v.begin(), v.end()); v.erase(last, v.end());
   // v.erase(std::remove(v.begin(), v.end(), 0), v.end());
   // return v;
+
+  // from testing in test_code_concepts.cc (CodeConcepts.uniqueLabelSpeed)
+  // this implementation is up to 28x faster than a simple a std::set approach!!
+  const int numThreads =
+      std::min(std::thread::hardware_concurrency(), (unsigned int)image.rows);
+  const int rowsPerThread = image.rows / numThreads;
+
+  std::vector<std::future<std::unordered_set<int>>> futures;
+
+  // Launch threads to process row chunks
+  for (int t = 0; t < numThreads; ++t) {
+    int startRow = t * rowsPerThread;
+    int endRow = (t == numThreads - 1) ? image.rows : (t + 1) * rowsPerThread;
+
+    futures.push_back(
+        std::async(std::launch::async, [&image, startRow, endRow]() {
+          std::unordered_set<int> localUnique;
+          for (int row = startRow; row < endRow; ++row) {
+            const int* rowPtr = image.ptr<int>(row);
+            for (int col = 0; col < image.cols; ++col) {
+              localUnique.insert(rowPtr[col]);
+            }
+          }
+          return localUnique;
+        }));
+  }
+
+  // Merge results
+  std::unordered_set<int> globalUnique;
+  for (auto& future : futures) {
+    auto localSet = future.get();
+    globalUnique.insert(localSet.begin(), localSet.end());
+  }
+  // dont include background label!!
+  globalUnique.erase(background_label);
+
+  // Convert to vector (NOTE: not sorted!!)
+  std::vector<int> result(globalUnique.begin(), globalUnique.end());
+  // std::sort(result.begin(), result.end());
+
+  return result;
 }
 
 // std::vector<std::vector<int>> trackDynamic(const FrontendParams& params,

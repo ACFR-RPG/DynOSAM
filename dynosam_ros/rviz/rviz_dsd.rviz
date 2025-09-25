@@ -432,7 +432,7 @@ Visualization Manager:
             Reliability Policy: Reliable
             Value: /dynosam/frontend/odometry_path
           Value: true
-      Enabled: false
+      Enabled: true
       Name: Frontend
     - Class: rviz_common/Group
       Displays:
@@ -587,7 +587,7 @@ Visualization Manager:
   Enabled: true
   Global Options:
     Background Color: 186; 189; 182
-    Fixed Frame: robot
+    Fixed Frame: world
     Frame Rate: 30
   Name: root
   Tools:
@@ -630,25 +630,25 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 17.59905242919922
+      Distance: 22.58460235595703
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 0.725656270980835
-        Y: -3.861809492111206
-        Z: -2.4969186782836914
+        X: -115.2574691772461
+        Y: -2.8020074367523193
+        Z: -27.205873489379883
       Focal Shape Fixed Size: false
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.5853989124298096
+      Pitch: -0.6852031946182251
       Target Frame: camera
       Value: Orbit (rviz_default_plugins)
-      Yaw: 1.6053324937820435
+      Yaw: 4.740396976470947
     Saved: ~
 Window Geometry:
   Displays:

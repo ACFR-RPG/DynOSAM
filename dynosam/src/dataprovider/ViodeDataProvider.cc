@@ -405,8 +405,8 @@ class ViodeAllLoader {
     stereo_matcher_ = std::make_shared<StereoMatcher>(
         stereo_camera_, StereoMatchingParams{}, dense_stereo_params);
 
-    imu_params_.acc_noise_density = 0.05;
     imu_params_.acc_noise_density = 0.2;
+    imu_params_.gyro_noise_density = 0.05;
 
     imu_params_.gyro_random_walk = 4.0e-5;
     imu_params_.acc_random_walk = 0.02;

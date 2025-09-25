@@ -106,31 +106,49 @@ Frame::Ptr FeatureTracker::track(FrameId frame_id, Timestamp timestamp,
   // NOTE: importantly this will calculate the observed objects in this frame so
   // we dont need to recalculate!
   vision_tools::ObjectBoundaryMaskResult boundary_mask_result;
-  vision_tools::computeObjectMaskBoundaryMask(boundary_mask_result,
-                                              input_images.objectMotionMask(),
-                                              kUseAsFeatureDetectionMask);
-
-  FeatureContainer static_features;
   {
+    utils::TimingStatsCollector f_timer("tracking_timer.object_identification");
+    vision_tools::computeObjectMaskBoundaryMask(
+        boundary_mask_result, input_images.objectMotionMask(),
+        scaled_boarder_thickness, kUseAsFeatureDetectionMask);
+  }
+
+  auto static_track = [&](FeatureContainer& static_features) {
     VLOG(20) << "Starting static track";
     utils::TimingStatsCollector static_track_timer("static_feature_track");
     static_features = static_feature_tracker_->trackStatic(
         previous_frame_, input_images, info_,
         boundary_mask_result.boundary_mask, R_km1_k);
-  }
+  };
 
-  FeatureContainer dynamic_features;
-  {
-    VLOG(20) << "Starting dynamic track";
-    // utils::TimingStatsCollector dynamic_track_timer("dynamic_feature_track");
-    // trackDynamic(frame_id, input_images, dynamic_features, object_keyframes,
-    //              boundary_mask_result);
+  auto dynamic_track = [&](FeatureContainer& dynamic_features) {
+    VLOG(30) << "Starting dynamic track";
+    if (params_.prefer_provided_optical_flow && input_images.hasOpticalFlow()) {
+      VLOG(30) << "Starting dense object feature tracking";
+      utils::TimingStatsCollector dynamic_track_timer("dynamic_feature_track");
+      trackDynamic(frame_id, input_images, dynamic_features, object_keyframes,
+                   boundary_mask_result);
+    } else {
+      if (params_.prefer_provided_optical_flow &&
+          !input_images.hasOpticalFlow()) {
+        LOG(WARNING) << "Params specify prefer provided optical flow but input "
+                        "is missing! Falling back to KLT";
+      }
+      VLOG(30) << "Starting KLT object feature tracking";
+      utils::TimingStatsCollector dynamic_track_timer(
+          "dynamic_feature_track_klt");
+      trackDynamicKLT(frame_id, input_images, dynamic_features,
+                      object_keyframes, boundary_mask_result);
+    }
+  };
 
-    utils::TimingStatsCollector dynamic_track_timer(
-        "dynamic_feature_track_klt");
-    trackDynamicKLT(frame_id, input_images, dynamic_features, object_keyframes,
-                    boundary_mask_result);
-  }
+  // start tracking threads since we can do this independantly
+  FeatureContainer static_features, dynamic_features;
+  std::thread static_track_thread(static_track, std::ref(static_features));
+  std::thread dynamic_track_thread(dynamic_track, std::ref(dynamic_features));
+
+  static_track_thread.join();
+  dynamic_track_thread.join();
 
   previous_tracked_frame_ = previous_frame_;  // Update previous frame (previous
                                               // to the newly created frame)
@@ -153,8 +171,7 @@ Frame::Ptr FeatureTracker::track(FrameId frame_id, Timestamp timestamp,
     object_observations[object_id] = observation;
   }
 
-  utils::TimingStatsCollector dynamic_track_timer(
-      "tracking.frame_construction");
+  utils::TimingStatsCollector f_timer("tracking_timer.frame_construction");
   auto new_frame = std::make_shared<Frame>(
       frame_id, timestamp, camera_, input_images, static_features,
       dynamic_features, object_observations, info_);
@@ -392,8 +409,7 @@ void FeatureTracker::trackDynamic(
         // limit point tracking of a certain age
         TrackletId tracklet_to_use = tracklet_id;
         if (new_age > params_.max_dynamic_feature_age) {
-          tracklet_to_use = tracked_id_manager.getTrackletIdCount();
-          tracked_id_manager.incrementTrackletIdCount();
+          tracklet_to_use = tracked_id_manager.getAndIncrementTrackletId();
           new_age = 0;
         }
 
@@ -487,9 +503,7 @@ void FeatureTracker::trackDynamicKLT(
       return nullptr;
     }
 
-    TrackletIdManager& tracked_id_manager = TrackletIdManager::instance();
-    TrackletId tracklet_to_use = tracked_id_manager.getTrackletIdCount();
-    tracked_id_manager.incrementTrackletIdCount();
+    TrackletId tracklet_to_use = tracked_id_manager.getAndIncrementTrackletId();
 
     Feature::Ptr feature = std::make_shared<Feature>();
     (*feature)
@@ -934,12 +948,8 @@ void FeatureTracker::sampleDynamic(FrameId frame_id,
           const KeypointData& cached_data = cached_keypoint_data[cache_index];
 
           CHECK(isWithinShrunkenImage(keypoint));
-          TrackletId tracklet_id;
-          {
-            const std::lock_guard<std::mutex> lock(mutex);
-            tracklet_id = tracked_id_manager.getAndIncrementTrackletId();
-          }
-
+          TrackletId tracklet_id =
+              tracked_id_manager.getAndIncrementTrackletId();
           Feature::Ptr feature = std::make_shared<Feature>();
           (*feature)
               .objectId(object_id)

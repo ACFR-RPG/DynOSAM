@@ -343,6 +343,8 @@ bool RGBDInstanceFrontendModule::solveCameraMotion(
 
     if (frontend_params.refine_camera_pose_with_joint_of) {
       VLOG(10) << "Refining camera pose with joint of";
+      utils::TimingStatsCollector timer(
+          "frontend.solve_camera_motion.of_refine");
       OpticalFlowAndPoseOptimizer flow_optimizer(
           frontend_params.object_motion_solver_params.joint_of_params);
 

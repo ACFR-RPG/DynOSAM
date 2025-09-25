@@ -118,6 +118,8 @@ struct TrackerParams {
   //! Number of cols to shrink the input image by
   int shrink_col = 0;
 
+  bool prefer_provided_optical_flow = true;
+
   //! Good features to track params
   GFFTParams gfft_params = GFFTParams();
   OrbParams orb_params = OrbParams();

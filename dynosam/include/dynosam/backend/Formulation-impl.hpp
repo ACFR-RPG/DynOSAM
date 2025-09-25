@@ -244,7 +244,7 @@ UpdateObservationResult Formulation<MAP>::updateStaticObservations(
         gtsam::SharedNoiseModel measurement_covariance;
         std::tie(measured_point_local, measurement_covariance) =
             MeasurementTraits::pointWithCovariance(
-                lmk_node->getMeasurement(frame_id_k));
+                lmk_node->getMeasurement(seen_frame_id));
         CHECK(measurement_covariance);
 
         if (params_.makeStaticMeasurementsRobust()) {

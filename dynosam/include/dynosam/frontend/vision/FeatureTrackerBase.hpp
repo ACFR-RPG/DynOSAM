@@ -42,7 +42,9 @@ namespace dyno {
 
 /**
  * @brief Singleton class to manage a global tracklet id for all trackers to
- * ensure they are unique
+ * ensure they are unique.
+ *
+ * Accessors and modifiers are thread-safe.
  *
  */
 class TrackletIdManager {
@@ -57,16 +59,16 @@ class TrackletIdManager {
   }
 
   inline TrackletId getTrackletIdCount() const {
-    // tbb::mutex::scoped_lock lock(mutex_);
+    const std::lock_guard<std::mutex> l(mutex_);
     return tracklet_count_;
   }
   inline void incrementTrackletIdCount() {
-    // tbb::mutex::scoped_lock lock(mutex_);
+    const std::lock_guard<std::mutex> l(mutex_);
     tracklet_count_++;
   }
 
   inline TrackletId getAndIncrementTrackletId() {
-    // tbb::mutex::scoped_lock lock(mutex_);
+    const std::lock_guard<std::mutex> l(mutex_);
     auto tracklet = tracklet_count_;
     tracklet_count_++;
     return tracklet;
@@ -75,7 +77,8 @@ class TrackletIdManager {
  private:
   TrackletIdManager() = default;
   TrackletId tracklet_count_{0};  //! Global TrackletId
-  std::mutex mutex_;
+
+  mutable std::mutex mutex_;
 
   static std::unique_ptr<TrackletIdManager> instance_;
 };
