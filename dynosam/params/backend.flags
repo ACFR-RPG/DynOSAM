@@ -61,7 +61,7 @@
 
 --m_relinearize_threshold=20.0
 
---num_dynamic_optimize=3
+--num_dynamic_optimize=0
 
 --save_per_frame_dynamic_cloud=false
 

@@ -35,6 +35,7 @@
 
 #include <fstream>
 #include <iostream>
+#include <opencv4/opencv2/core.hpp>
 #include <opencv4/opencv2/opencv.hpp>
 // #include <opencv4/opencv2/core/parallel/backend/
 
@@ -435,11 +436,11 @@ cv::Mat readOpticalFlow(const std::string& path) {
 
   Mat_<Point2f> flow;
   std::ifstream file(path.c_str(), std::ios_base::binary);
-  if (!file.good()) return CV_CXX_MOVE(flow);  // no file - return empty matrix
+  if (!file.good()) return flow;  // no file - return empty matrix
 
   float tag;
   file.read((char*)&tag, sizeof(float));
-  if (tag != FLOW_TAG_FLOAT) return CV_CXX_MOVE(flow);
+  if (tag != FLOW_TAG_FLOAT) return flow;
 
   int width, height;
 
@@ -455,14 +456,14 @@ cv::Mat readOpticalFlow(const std::string& path) {
       file.read((char*)&u.y, sizeof(float));
       if (!file.good()) {
         flow.release();
-        return CV_CXX_MOVE(flow);
+        return flow;
       }
 
       flow(i, j) = u;
     }
   }
   file.close();
-  return CV_CXX_MOVE(flow);
+  return flow;
 }
 
 bool writeOpticalFlow(const std::string& path, const cv::Mat& flow) {

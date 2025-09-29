@@ -77,7 +77,7 @@ class ParallelHybridBackendModule
   // SHOULD Returns objects with successful sovle
   void parallelObjectSolve(VisionImuPacket::ConstPtr input,
                            const Pose3Measurement& X_W_k);
-  bool implSolvePerObject(FrameId frame_id, ObjectId object_id,
+  void implSolvePerObject(FrameId frame_id, ObjectId object_id,
                           const VisionImuPacket::ObjectTracks& object_update,
                           const Pose3Measurement& X_W_k);
 

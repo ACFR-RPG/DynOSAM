@@ -20,10 +20,9 @@
   <depend>diagnostic_updater</depend>
   <depend>eigen_catkin</depend>
 
-  <depend>ament_index_cpp</depend>
-
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
+  <test_depend>ament_index_cpp</test_depend>
 
   <exec_depend>ros2launch</exec_depend>
 

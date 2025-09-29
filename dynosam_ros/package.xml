@@ -20,9 +20,11 @@
   <depend>tf2_ros</depend>
   <depend>geometry_msgs</depend>
   <depend>dynamic_slam_interfaces</depend>
+  <depend>pcl_conversions</depend>
   <depend>visualization_msgs</depend>
   <depend>diagnostic_updater</depend>
   <depend>image_transport</depend>
+  <depend>nav_msgs</depend>
   <depend>cv_bridge</depend>
   <depend>message_filters</depend>
   <depend>rclpy</depend>

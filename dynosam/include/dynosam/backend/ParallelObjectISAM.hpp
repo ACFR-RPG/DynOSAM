@@ -109,6 +109,7 @@ class ParallelObjectISAM {
     result_.frame_id = frame_k;
     result_.was_smoother_ok = false;
 
+    VLOG(50) << "ParallelObjectISAM::updateMap, j=" << object_id_;
     this->updateMap(frame_k, measurements, X_world_k, motion_frame);
 
     if (!update_smoother) {
@@ -117,9 +118,11 @@ class ParallelObjectISAM {
 
     // updating the smoothing will update the formulation and run
     // update on the optimizer. the internal results_ object is updated
+    VLOG(50) << "ParallelObjectISAM::updateSmoother, j=" << object_id_;
     const bool is_smoother_ok = this->updateSmoother(frame_k, X_world_k);
 
     if (is_smoother_ok) {
+      VLOG(50) << "ParallelObjectISAM::updateStates, j=" << object_id_;
       updateStates();
     }
   }
@@ -159,7 +162,6 @@ class ParallelObjectISAM {
                  const Motion3ReferenceFrame& motion_frame) {
     map_->updateObservations(measurements);
     map_->updateSensorPoseMeasurement(frame_k, X_world_k);
-
     const FrameId to = motion_frame.to();
     if (to != frame_k) {
       throw DynosamException(

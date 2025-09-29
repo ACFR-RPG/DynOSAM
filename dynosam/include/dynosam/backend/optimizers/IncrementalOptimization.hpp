@@ -253,6 +253,8 @@ class IncrementalInterface {
     gtsam::NonlinearFactorGraph new_factors = smoother_arguments.new_factors;
 
     try {
+      VLOG(100) << "Starting IncrementalInterface<" << type_name<Smoother>()
+                << ">::update";
       *result = SmootherTraitsType::update(*smoother_, smoother_arguments);
 
     } catch (gtsam::IndeterminantLinearSystemException& e) {

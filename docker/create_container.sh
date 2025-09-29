@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 CONTAINER_NAME=dyno_sam
-CONTAINER_IMAGE_NAME=acfr-rpg/dyno_sam
+CONTAINER_IMAGE_NAME=acfr_rpg/dyno_sam_cuda
 
 ### EDIT THIS TO WHEREVER YOU'RE STORING YOU DATA ###
 # folder should exist before you mount it
@@ -67,6 +67,7 @@ if [ -z "$NVIDIA_SOS" ]; then
 fi
 for so in $NVIDIA_SOS; do DOCKER_NVIDIA_SO_VOLUMES+="--volume $so:$so "; done
 
+
 USE_NVIDIA=true
 
 if "$USE_NVIDIA"; then
@@ -80,8 +81,10 @@ if "$USE_NVIDIA"; then
     # Create the container based on the launchfile it's launching (if any)
     # removes '.launch' from the last argument
     echo "Container name will be: $CONTAINER_NAME"
-    docker run $DOCKER_NVIDIA_SO_VOLUMES \
+    # docker run $DOCKER_NVIDIA_SO_VOLUMES \
+     docker run \
         --privileged \
+        --gpus all \
         -i -d \
         --volume $XSOCK:$XSOCK:rw \
         -v $LOCAL_DATA_FOLDER:$CONTAINER_DATA_FOLDER \

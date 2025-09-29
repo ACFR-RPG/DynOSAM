@@ -31,9 +31,9 @@
 #pragma once
 
 #include "dynosam_ros/DataProviderRos.hpp"
-#include "message_filters/subscriber.h"
-#include "message_filters/sync_policies/exact_time.h"
-#include "message_filters/synchronizer.h"
+#include "message_filters/subscriber.hpp"
+#include "message_filters/sync_policies/exact_time.hpp"
+#include "message_filters/synchronizer.hpp"
 #include "rclcpp/node.hpp"
 #include "rclcpp/node_options.hpp"
 #include "sensor_msgs/msg/image.hpp"

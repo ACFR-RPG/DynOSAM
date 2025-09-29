@@ -35,7 +35,7 @@
 #include <dynosam/dataprovider/DataProvider.hpp>
 #include <opencv4/opencv2/opencv.hpp>
 
-#include "cv_bridge/cv_bridge.h"
+#include "cv_bridge/cv_bridge.hpp"
 #include "dynosam_ros/adaptors/CameraParamsAdaptor.hpp"
 #include "rclcpp/node.hpp"
 #include "rclcpp/node_options.hpp"

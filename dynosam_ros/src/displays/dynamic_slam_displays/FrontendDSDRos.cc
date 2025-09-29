@@ -30,10 +30,9 @@
 
 #include "dynosam_ros/displays/dynamic_slam_displays/FrontendDSDRos.hpp"
 
-#include <cv_bridge/cv_bridge.h>
-
 #include <dynosam/utils/SafeCast.hpp>
 
+#include "cv_bridge/cv_bridge.hpp"
 #include "dynosam_ros/RosUtils.hpp"
 #include "rclcpp/qos.hpp"
 
@@ -69,7 +68,7 @@ void FrontendDSDRos::spinOnceImpl(
   // publish debug imagery
   tryPublishDebugImagery(frontend_output);
 
-  // publish ground truth
+  // // publish ground truth
   tryPublishGroundTruth(frontend_output);
 
   // publish odometry

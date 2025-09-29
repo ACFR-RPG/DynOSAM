@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 3.11)
 
 project(dynosam)
 
@@ -11,8 +11,14 @@ endif()
 
 set(CMAKE_CXX_STANDARD 17)
 
-
+# Must be set **before** find_package(PCL)
 list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_SOURCE_DIR}/cmake)
+
+include(FetchContent)
+
+
+
+set(WITH_MPI OFF CACHE BOOL "Disable MPI in PCL")
 
 find_package(ament_cmake REQUIRED)
 find_package(ament_index_cpp REQUIRED)
@@ -24,9 +30,9 @@ find_package(opengv REQUIRED)
 find_package(GTSAM REQUIRED)
 find_package(eigen3_cmake_module REQUIRED)
 find_package(Eigen3 REQUIRED)
-find_package(PCL REQUIRED)
-find_package(nlohmann_json 3.2.0 REQUIRED) #nlohmann-json3-dev
+find_package(PCL REQUIRED COMPONENTS common io filters features)
 find_package(TBB REQUIRED) # should be packaged with GTSAM
+find_package(nlohmann_json 3.11.3 REQUIRED)
 find_package(config_utilities REQUIRED)
 
 
@@ -44,7 +50,6 @@ option(DYNO_VERIFY_GTSAM_CONFIG "Check that GTSAM was compiled with the right op
 if (DYNO_VERIFY_GTSAM_CONFIG)
     verify_gtsam_config()
 endif()
-
 
 
 # setup targets
@@ -184,16 +189,12 @@ add_library(${PROJECT_NAME} SHARED
 # eigen3_cmake_module
 # Eigen3
 
-ament_target_dependencies(${PROJECT_NAME}
-  rclcpp
-  std_msgs
-  sensor_msgs
-  opengv
-  GTSAM
-  OpenCV)
 
 target_link_libraries(${PROJECT_NAME}
-  # PRIVATE
+  PUBLIC
+  ${std_msgs_TARGETS}
+  ${sensor_msgs_TARGETS}
+  rclcpp::rclcpp
   opengv
   nlohmann_json::nlohmann_json
   config_utilities::config_utilities
@@ -220,9 +221,11 @@ ament_export_libraries(${PROJECT_NAME}
   opengv
   Boost::boost
   config_utilities::config_utilities
+  nlohmann_json::nlohmann_json
   gtsam
   # gtsamDebug
   ${OpenCV_LIBRARIES}
+  ${PCL_LIBRARIES}
   png
   TBB::tbb
   TBB::tbbmalloc
@@ -233,7 +236,11 @@ set(DYNO_EXPORT_DEPS
   rclcpp
   std_msgs
   sensor_msgs
-  OpenCV opengv
+  nlohmann_json
+  config_utilities
+  OpenCV
+  opengv
+  PCL
   GTSAM
   eigen3_cmake_module
   Eigen3
@@ -271,6 +278,7 @@ install(
 
 install(
   TARGETS ${PROJECT_NAME}
+  EXPORT export_${PROJECT_NAME}
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin
@@ -282,13 +290,14 @@ install(DIRECTORY
   DESTINATION share/${PROJECT_NAME}
 )
 
+ament_export_targets(export_${PROJECT_NAME} HAS_LIBRARY_TARGET)
+
 
 #####exec test#########
 add_executable(dyno_sam example/dyno_sam.cc)
 target_link_libraries(dyno_sam
   ${PROJECT_NAME}
 )
-ament_target_dependencies(dyno_sam "rclcpp" "std_msgs")
 
 
 
@@ -302,6 +311,7 @@ if(BUILD_TESTING)
   # find_package(ament_cmake_gtest REQUIRED)
   find_package(ament_cmake_gmock REQUIRED)
   find_package(ament_lint_auto REQUIRED)
+  find_package(ament_index_cpp REQUIRED)
 
   ament_lint_auto_find_test_dependencies()
 
@@ -339,7 +349,22 @@ if(BUILD_TESTING)
     test/test_optimizations.cc
 )
 
-  target_link_libraries(${PROJECT_NAME}_test ${PROJECT_NAME} ${rclcpp_LIBRARIES})
+  target_include_directories(${PROJECT_NAME}_test
+    PRIVATE
+     ${ament_index_cpp_INCLUDE_DIRS}
+  )
+
+  target_link_libraries(
+    ${PROJECT_NAME}_test
+    ${PROJECT_NAME}
+    ${rclcpp_LIBRARIES}
+    ${ament_index_cpp_TARGETS}
+    config_utilities::config_utilities
+    gtsam
+    ${OpenCV_LIBRARIES}
+  )
+
+
 
   install(TARGETS
   ${PROJECT_NAME}_test

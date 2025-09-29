@@ -194,6 +194,7 @@ FrontendModule::SpinReturn RGBDInstanceFrontendModule::nominalSpin(
   // will be wrong (currently!!)
   previous_nav_state_ =
       gtsam::NavState(frame->T_world_camera_, nav_state_.velocity());
+  // previous_nav_state_ = nav_state_;
 
   if (R_curr_ref) {
     imu_frontend_.resetIntegration();
@@ -244,6 +245,7 @@ FrontendModule::SpinReturn RGBDInstanceFrontendModule::nominalSpin(
   //   output_packet_record_.insert({output->getFrameId(), output});
 
   sendToFrontendLogger(frame, vision_imu_packet);
+
   // if (FLAGS_log_projected_masks)
   //   vision_tools::writeOutProjectMaskAndDepthMap(
   //       frame->image_container_.depth(),
@@ -301,7 +303,7 @@ bool RGBDInstanceFrontendModule::solveCameraMotion(
     // way of checking that we HAVE an imu). If we do we can use the nav state
     // directly to update the current pose as the nav state is the forward
     // prediction from the IMU
-    if (last_imu_nav_state_update_ == frame_k_1->getFrameId()) {
+    if (last_imu_nav_state_update_ == frame_k->getFrameId()) {
       frame_k->T_world_camera_ = nav_state_.pose();
       ss << "Nav state was previous updated with IMU. Using predicted pose to "
             "set camera transform; k"

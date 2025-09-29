@@ -72,11 +72,12 @@ bool dyno::convert(const RGBA<float>& colour, std_msgs::msg::ColorRGBA& msg) {
   msg.g = colour.g;
   msg.b = colour.b;
   msg.a = colour.a;
+  return true;
 }
 
 template <>
 bool dyno::convert(const Color& colour, std_msgs::msg::ColorRGBA& msg) {
-  convert(RGBA<float>(colour), msg);
+  return convert(RGBA<float>(colour), msg);
 }
 
 template <>
@@ -131,6 +132,7 @@ bool dyno::convert(const geometry_msgs::msg::Pose& pose,
   transform.rotation.y = pose.orientation.y;
   transform.rotation.z = pose.orientation.z;
   transform.rotation.w = pose.orientation.w;
+  return true;
 }
 
 template <>

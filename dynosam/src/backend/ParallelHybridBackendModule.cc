@@ -504,7 +504,7 @@ void ParallelHybridBackendModule::parallelObjectSolve(
       });
 }
 
-bool ParallelHybridBackendModule::implSolvePerObject(
+void ParallelHybridBackendModule::implSolvePerObject(
     FrameId frame_id_k, ObjectId object_id,
     const VisionImuPacket::ObjectTracks& object_update,
     const Pose3Measurement& X_W_k) {

@@ -93,19 +93,20 @@ MultiObjectOdometryPath DSDTransport::constructMultiObjectOdometryPaths(
     const std::string& frame_id_link, bool interpolate_missing_segments) {
   MultiObjectOdometryPath multi_path;
   multi_path.header.stamp = utils::toRosTime(timestamp_k);
+
   multi_path.header.frame_id = frame_id_link;
 
   // TODO: right now dont have the motion for every timestep so... just leave
   // blank?
   for (const auto& [object_id, frame_pose_map] : poses) {
     const std::string child_frame_id_link = constructObjectFrameLink(object_id);
-    FrameId previous_frame_id = -1;
+    // NOTE: cannot use FrameId for type (size_t)
+    int previous_frame_id = -1;
     bool first = true;
     int path_segment = 0;
 
     std_msgs::msg::ColorRGBA colour_msg;
     convert(Color::uniqueId(object_id), colour_msg);
-
     // paths for this object, broken into segments
     gtsam::FastMap<int, ObjectOdometryPath> segmented_paths;
 
@@ -118,6 +119,7 @@ MultiObjectOdometryPath DSDTransport::constructMultiObjectOdometryPaths(
         //     ObjectMotionMap";
         continue;
       }
+
       const gtsam::Pose3& object_motion = motions.at(object_id, frame_id);
 
       if (!frame_timestamp_map.exists(frame_id)) {
@@ -127,13 +129,14 @@ MultiObjectOdometryPath DSDTransport::constructMultiObjectOdometryPaths(
                         "FrameIdTimestampMap";
         continue;
       }
+
       const Timestamp& timestamp = frame_timestamp_map.at(frame_id);
 
-      if (!first && frame_id != previous_frame_id + 1) {
+      if (!first && static_cast<int>(frame_id) != previous_frame_id + 1) {
         path_segment++;
       }
       first = false;
-      previous_frame_id = frame_id;
+      previous_frame_id = static_cast<int>(frame_id);
 
       // RIGHT NOW MOTION IDENTITY
       // timestamp is wrong
