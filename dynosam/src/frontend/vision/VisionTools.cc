@@ -37,12 +37,40 @@
 #include <thread>
 #include <vector>  // std::vector
 
+#include "dynosam/common/Cuda.hpp"
 #include "dynosam/frontend/FrontendParams.hpp"
 #include "dynosam/logger/Logger.hpp"
+#include "dynosam/utils/OpenCVUtils.hpp"
 
 namespace dyno {
 
 namespace vision_tools {
+
+// LKWrapper::LKWrapper(const cv::Size& win_size,
+//               int max_level,
+//               const cv::TermCriteria& criteria,
+//               int flags,
+//               double min_eig_threshold,)
+//         : win_size_(win_size),
+//         max_level_(max_level),
+//         criteria_(criteria),
+//         flags_(flags),
+//         min_eig_threshold_(min_eig_threshold)
+// {
+
+//   use_cuda_ = false;
+//   #ifdef DYNO_CUDA_OPENCV_ENABLED
+//     if(utils::opencvCudaAvailable()) {
+//       lk_cuda_ = cv::cuda::OpticalFlowPyrLK::create(win_size_, max_level_,
+//                                                           criteria_.maxCount,
+//                                                           criteria_.epsilon,
+//                                                           flags_,
+//                                                           min_eig_threshold_);
+//       use_cuda_ = true;
+//     }
+//   #endif
+
+// }
 
 void getCorrespondences(FeaturePairs& correspondences,
                         const FeatureFilterIterator& previous_features,

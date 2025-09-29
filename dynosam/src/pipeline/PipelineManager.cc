@@ -128,6 +128,11 @@ DynoPipelineManager::DynoPipelineManager(
   params_.frontend_params_.imu_params = imu_params;
 
   loadPipelines(camera_params, frontend_display, backend_display);
+
+  std::string cuda_enabled_message;
+  utils::opencvCudaAvailable(&cuda_enabled_message);
+  LOG(INFO) << cuda_enabled_message;
+
   launchSpinners();
 }
 

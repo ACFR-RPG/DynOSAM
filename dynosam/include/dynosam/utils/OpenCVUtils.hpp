@@ -101,6 +101,10 @@ class FunctionalParallelOpenCVMat
 
 namespace utils {
 
+// TODO: this function is really if opencv AVAILABLE, not just enabled (ie. it
+// is enabled AND can find a GPU!)
+bool opencvCudaAvailable(std::string* message = nullptr);
+
 double calculateIoU(const cv::Rect& a, const cv::Rect& b);
 
 bool cvSizeEqual(const cv::Size& a, const cv::Size& b);

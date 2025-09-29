@@ -154,7 +154,7 @@ def run_viodes():
 
 #     run_ecmr_experiment_sequences("/root/data/VIODE/city_day/mid", "viode_city_day_mid", viode, "--v=100")
     # run_ecmr_experiment_sequences("/root/data/VIODE/city_day/high","viode_city_day_high", viode, "--ending_frame=1110")
-    run_ecmr_experiment_sequences("/root/data/VIODE/city_day/high","test_viode", viode,"--ending_frame=1110", "--v=100",  "--use_backend=true")
+    run_ecmr_experiment_sequences("/root/data/VIODE/city_day/high","test_viode", viode,"--ending_frame=1110", "--v=100",  "--use_backend=false")
 # # zero_elements_ratio
 #     run_ecmr_experiment_sequences("/root/data/VIODE/city_night/mid", "viode_city_night_mid", viode)
     # run_ecmr_experiment_sequences("/root/data/VIODE/city_night/high", "viode_city_night_high", viode)
@@ -193,11 +193,11 @@ def run_kitti():
     # run_ecmr_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0018/", "test", kitti_dataset, "--shrink_row=25", "--shrink_col=50")
     # run_ecmr_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0020/", "kitti_0020", kitti_dataset, "--shrink_row=25", "--shrink_col=50")
 
-    run_ecmr_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0004/", "test", kitti_dataset, "--shrink_row=25", "--shrink_col=50", "--use_backend=false")
+    run_ecmr_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0004/", "test", kitti_dataset, "--shrink_row=25", "--shrink_col=50", "--use_backend=true")
 
 
 def run_aria():
-    run_ecmr_experiment_sequences("/root/data/zed/acfr_2_moving_small", "test_small", aria, "--use_backend=false")
+    run_ecmr_experiment_sequences("/root/data/zed/acfr_2_moving_small", "test_small", aria, "--use_backend=true")
 
 
 if __name__ == '__main__':
@@ -207,11 +207,11 @@ if __name__ == '__main__':
     #     "--ending_frame=150"
     # )
 
-    run_viodes()
+    # run_viodes()
     # run_tartan_air()
     # run_cluster()
     # run_omd()
-    # run_aria()
+    run_aria()
     # run_kitti()
     # run_analysis("kitti_0004_test")
     # run_analysis("kitti_0020")

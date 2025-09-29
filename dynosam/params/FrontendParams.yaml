@@ -42,6 +42,8 @@ camera_motion_solver:
 
 
 tracker_params:
+  feature_detector_type: "GFFT_CUDA"
+
   shrink_row: 0
   shrink_col: 0
   max_nr_keypoints_before_anms: 800

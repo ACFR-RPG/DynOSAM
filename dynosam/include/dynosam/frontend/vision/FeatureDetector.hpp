@@ -37,6 +37,7 @@
 #include "dynosam/frontend/anms/NonMaximumSuppression.h"
 #include "dynosam/frontend/vision/TrackerParams.hpp"
 #include "dynosam/utils/Macros.hpp"
+#include "dynosam/utils/OpenCVUtils.hpp"
 
 namespace dyno {
 

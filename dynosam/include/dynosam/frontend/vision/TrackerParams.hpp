@@ -46,7 +46,11 @@ namespace dyno {
 struct TrackerParams {
   // GFTT is goodFeaturesToTrack detector.
   // ORB_SLAM_ORB is the ORB implementation from OrbSLAM
-  enum class FeatureDetectorType : unsigned int { GFTT = 0, ORB_SLAM_ORB = 1 };
+  enum class FeatureDetectorType : unsigned int {
+    GFTT = 0,
+    ORB_SLAM_ORB = 1,
+    GFFT_CUDA = 2
+  };
 
   struct AnmsParams {
     AnmsAlgorithmType non_max_suppression_type = AnmsAlgorithmType::RangeTree;

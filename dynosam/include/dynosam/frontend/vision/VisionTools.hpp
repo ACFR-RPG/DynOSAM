@@ -35,6 +35,7 @@
 #include <opencv4/opencv2/opencv.hpp>
 
 #include "dynosam/common/Camera.hpp"
+#include "dynosam/common/Cuda.hpp"
 #include "dynosam/common/ImageContainer.hpp"
 #include "dynosam/common/Types.hpp"
 #include "dynosam/frontend/vision/Frame.hpp"
@@ -44,11 +45,61 @@
 #include "dynosam/utils/OpenCVUtils.hpp"
 #include "dynosam/visualizer/Visualizer-Definitions.hpp"
 
+#ifdef DYNO_CUDA_OPENCV_ENABLED
+#include <opencv2/cudaoptflow.hpp>
+#endif
+
 namespace dyno {
 
 class FrontendParams;
 
 namespace vision_tools {
+
+// class KLTWrapper {
+
+// public:
+//     LKWrapper(const cv::Size& win_size = cv::Size(21,21),
+//               int max_level = 3,
+//               const cv::TermCriteria& criteria =
+//               cv::TermCriteria(cv::TermCriteria::COUNT +
+//               cv::TermCriteria::EPS, 30, 0.01), int flags = 0, double
+//               min_eig_threshold = 1e-4);
+
+//     template<typename ImgType>
+//     void calc(const ImgType& prev_img, const ImgType& next_img,
+//               const std::vector<cv::Point2f>& prev_pts,
+//               std::vector<cv::Point2f>& next_pts,
+//               std::vector<uchar>& status,
+//               std::vector<float>& err,
+//               bool return_gpu = false)
+//     {
+//         if constexpr (std::is_same_v<ImgType, cv::Mat>) {
+//             if()
+
+//         }
+//         else if constexpr (std::is_same_v<ImgType, cv::cuda::GpuMat>) {
+
+//         }
+//         else {
+//             static_assert(False, "Unsupported image type");
+//         }
+//     }
+
+// private:
+//     cv::Size win_size_;
+//     int max_level_;
+//     cv::TermCriteria criteria_;
+//     int flags_;
+//     double min_eig_threshold_;
+//     bool use_cuda_;
+//     bool first_run_;
+
+//     #ifdef DYNO_CUDA_OPENCV_ENABLED
+//     cv::Ptr<cv::cuda::OpticalFlowPyrLK> lk_cuda_;
+//     cv::cuda::GpuMat d_prev_, d_next_;
+//     cv::cuda::GpuMat d_next_pts_, d_status_, d_err_;
+//     #endif
+// };
 
 // void disparityToDepth(const FrontendParams& params, const cv::Mat& disparity,
 // cv::Mat& depth);

@@ -37,6 +37,8 @@
 #include <iostream>
 #include <opencv4/opencv2/core.hpp>
 #include <opencv4/opencv2/opencv.hpp>
+
+#include "dynosam/common/Cuda.hpp"
 // #include <opencv4/opencv2/core/parallel/backend/
 
 #include "dynosam/common/Types.hpp"  //for template to_string
@@ -59,6 +61,28 @@ std::string to_string<cv::Rect>(const cv::Rect& t) {
 }
 
 namespace utils {
+
+bool opencvCudaAvailable(std::string* message) {
+  if constexpr (isOpencvCudaEnabled()) {
+    if (cv::cuda::getCudaEnabledDeviceCount() > 0) {
+      if (message)
+        *message = "OpenCV CUDA support found. Devices available: " +
+                   std::to_string(cv::cuda::getCudaEnabledDeviceCount());
+      return true;
+    } else {
+      if (message)
+        *message =
+            "OpenCV CUDA support found but No CUDA support or no CUDA devices";
+      return false;
+    }
+  } else {
+    if (message)
+      *message =
+          "OPENCV CUDA not detected from OpenCV itself. Check it has been "
+          "compiled correctly!";
+    return false;
+  }
+}
 
 double calculateIoU(const cv::Rect& a, const cv::Rect& b) {
   cv::Rect intersection = a & b;

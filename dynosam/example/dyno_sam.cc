@@ -77,6 +77,8 @@ int main(int argc, char* argv[]) {
   // ViodeLoader loader("/root/data/VIODE/city_day/mid");
 
   FrontendParams fp;
+  fp.tracker_params.feature_detector_type =
+      TrackerParams::FeatureDetectorType::GFFT_CUDA;
   fp.tracker_params.max_dynamic_features_per_frame = 300;
   // fp.tracker_params.feature_detector_type =
   // TrackerParams::FeatureDetectorType::ORB_SLAM_ORB;

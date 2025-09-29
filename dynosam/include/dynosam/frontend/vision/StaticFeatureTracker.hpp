@@ -29,6 +29,7 @@
  */
 #pragma once
 
+#include <opencv2/cudaoptflow.hpp>
 #include <opencv4/opencv2/opencv.hpp>
 
 #include "dynosam/common/Camera.hpp"
@@ -278,6 +279,9 @@ class KltFeatureTracker : public StaticFeatureTracker {
 
  private:
   SparseFeatureDetector::Ptr detector_;
+
+  // for now!
+  cv::Ptr<cv::cuda::SparsePyrLKOpticalFlow> lk_cuda_tracker_;
 };
 
 }  // namespace dyno

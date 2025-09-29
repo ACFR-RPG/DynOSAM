@@ -42,6 +42,7 @@
 #include <type_traits>
 #include <vector>
 
+#include "dynosam/common/Cuda.hpp"
 #include "dynosam/common/Flags.hpp"  //for common glags DECLARATIONS
 #include "dynosam/utils/Macros.hpp"
 

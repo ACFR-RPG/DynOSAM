@@ -90,7 +90,7 @@ void declare_config(TrackerParams& config) {
   name("TrackerParams");
 
   enum_field(config.feature_detector_type, "feature_detector_type",
-             std::vector<std::string>({"GFTT", "ORB_SLAM_ORB"}));
+             std::vector<std::string>({"GFTT", "ORB_SLAM_ORB", "GFFT_CUDA"}));
 
   field(config.use_anms, "use_anms");
   field(config.use_subpixel_corner_refinement,
