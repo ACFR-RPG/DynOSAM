@@ -34,6 +34,7 @@
 #include <gtsam/inference/Symbol.h>
 #include <gtsam/slam/ProjectionFactor.h>
 #include <gtsam/slam/SmartProjectionPoseFactor.h>
+#include <gtsam/slam/StereoFactor.h>
 #include <gtsam_unstable/slam/PoseToPointFactor.h>
 
 #include <functional>
@@ -256,6 +257,7 @@ using SmartProjectionFactor = gtsam::SmartProjectionPoseFactor<CalibrationType>;
 using GenericProjectionFactor =
     gtsam::GenericProjectionFactor<gtsam::Pose3, gtsam::Point3,
                                    CalibrationType>;
+using GenericStereoFactor = gtsam::GenericStereoFactor<gtsam::Pose3, Landmark>;
 
 using SmartProjectionFactorParams = gtsam::SmartProjectionParams;
 

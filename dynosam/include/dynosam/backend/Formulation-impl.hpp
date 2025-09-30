@@ -33,9 +33,309 @@
 #include "dynosam/backend/BackendParams.hpp"
 #include "dynosam/backend/FactorGraphTools.hpp"
 #include "dynosam/backend/Formulation.hpp"
+#include "dynosam/common/RGBDCamera.hpp"  // only for StereoCalibPtr
 #include "dynosam/utils/TimingStats.hpp"
 
 namespace dyno {
+
+namespace internal {
+
+/**
+ * @brief Base class helper for the static formulation updater. This forms the
+ * basis for "regular" Visual SLAM and creates factors between static points and
+ * camera poses
+ *
+ * @tparam MAP
+ */
+template <typename MAP>
+class StaticFormulationUpdaterImpl {
+ public:
+  using FormulationType = Formulation<MAP>;
+  using LmkNode = typename MapTraits<MAP>::LandmarkNodePtr;
+  using FrameNode = typename MapTraits<MAP>::FrameNodePtr;
+  using MeasurementType = typename MapTraits<MAP>::MeasurementType;
+  using MeasurementTraits = measurement_traits<MeasurementType>;
+
+  StaticFormulationUpdaterImpl(FormulationType* formulation)
+      : formulation_(formulation) {}
+
+  virtual gtsam::NonlinearFactor::shared_ptr makeFactor(const LmkNode& lmk,
+                                                        const FrameNode& frame,
+                                                        FrameId frame_k) = 0;
+
+  virtual gtsam::Values makeInitialValues(const LmkNode& lmk,
+                                          FrameId frame_k) = 0;
+
+  // some heper base functions
+  bool isRobust() const {
+    return formulation_->params().makeStaticMeasurementsRobust();
+  }
+
+  // NOTE: pass pointer by reference as we want to change the object the
+  // noise_model points too
+  //  since robustifyHuber returns a new model
+  void robustifyHuber(gtsam::SharedNoiseModel& noise_model) {
+    if (isRobust()) {
+      noise_model = factor_graph_tools::robustifyHuber(
+          formulation_->params().k_huber_3d_points_, noise_model);
+    }
+  }
+
+ protected:
+  FormulationType* formulation_;
+};
+
+template <typename MAP>
+class StaticFormulationUpdater : public StaticFormulationUpdaterImpl<MAP> {
+ public:
+  using MethodType = FormulationParams::StaticFormulationType;
+  using Base = StaticFormulationUpdaterImpl<MAP>;
+  using FormulationType = typename Base::FormulationType;
+  using LmkNode = typename Base::LmkNode;
+  using FrameNode = typename Base::FrameNode;
+  using MeasurementTraits = typename Base::MeasurementTraits;
+
+  StaticFormulationUpdater(FormulationType* formulation)
+      : Base(formulation), impl_(std::move(makeImpl(formulation))) {
+    CHECK_NOTNULL(impl_);
+  }
+
+  gtsam::NonlinearFactor::shared_ptr makeFactor(const LmkNode& lmk,
+                                                const FrameNode& frame,
+                                                FrameId frame_k) override {
+    return impl_->makeFactor(lmk, frame, frame_k);
+  }
+
+  gtsam::Values makeInitialValues(const LmkNode& lmk,
+                                  FrameId frame_k) override {
+    return impl_->makeInitialValues(lmk, frame_k);
+  }
+
+ private:
+  /**
+   * @brief Implementation for the Point-to-Pose (PTP) functions for Visual
+   * SLAM.
+   *
+   */
+  struct PTP : public Base {
+    PTP(FormulationType* formulation) : Base(formulation) {}
+
+    gtsam::NonlinearFactor::shared_ptr makeFactor(const LmkNode& lmk,
+                                                  const FrameNode& frame,
+                                                  FrameId frame_k) override {
+      const gtsam::Key point_key = lmk->makeStaticKey();
+      const gtsam::Key pose_key = frame->makePoseKey();
+
+      auto [measured_point_local, measurement_covariance] =
+          MeasurementTraits::pointWithCovariance(lmk->getMeasurement(frame_k));
+      CHECK_NOTNULL(measurement_covariance);
+
+      this->robustifyHuber(measurement_covariance);
+
+      auto factor =
+          boost::make_shared<gtsam::PoseToPointFactor<gtsam::Pose3, Landmark>>(
+              pose_key, point_key, measured_point_local,
+              measurement_covariance);
+      return factor;
+    }
+
+    gtsam::Values makeInitialValues(const LmkNode& lmk,
+                                    FrameId frame_k) override {
+      const Landmark& measured =
+          MeasurementTraits::point(lmk->getMeasurement(frame_k));
+
+      // TODO: should use getInitialOrLinearizedSensorPose
+      gtsam::Pose3 T_W_X;
+      CHECK(this->formulation_->map()->hasInitialSensorPose(frame_k, &T_W_X));
+
+      const gtsam::Key point_key = lmk->makeStaticKey();
+      gtsam::Point3 l_W_initial = T_W_X * measured;
+
+      gtsam::Values values;
+      values.insert(point_key, l_W_initial);
+
+      return values;
+    }
+  };
+
+  struct GenericProjection : public Base {
+    GenericProjection(FormulationType* formulation)
+        : Base(formulation),
+          camera_(CHECK_NOTNULL(formulation->sensors().camera)) {
+      K_ = camera_->getGtsamCalibration();
+      CHECK_NOTNULL(K_);
+    }
+
+    // requires at least two obsevrations! Not enfoced by this class but in the
+    // Formulatiln bad design! absolutely no checks for parallax etc so
+    // definitely things will break using this implementatioN!!! for not rely on
+    // PTP ot Stereo!
+    gtsam::NonlinearFactor::shared_ptr makeFactor(const LmkNode& lmk,
+                                                  const FrameNode& frame,
+                                                  FrameId frame_k) override {
+      const gtsam::Key point_key = lmk->makeStaticKey();
+      const gtsam::Key pose_key = frame->makePoseKey();
+
+      auto [measured_keypoint_local, measurement_covariance] =
+          MeasurementTraits::keypointWithCovariance(
+              lmk->getMeasurement(frame_k));
+      CHECK_NOTNULL(measurement_covariance);
+
+      this->robustifyHuber(measurement_covariance);
+
+      auto factor = boost::make_shared<GenericProjectionFactor>(
+          measured_keypoint_local, measurement_covariance, pose_key, point_key,
+          K_);
+      return factor;
+    }
+    gtsam::Values makeInitialValues(const LmkNode& lmk,
+                                    FrameId frame_k) override {
+      // FOR NOW! rely on the fact that the frontend has initalised/triangulated
+      // the point!
+      const Landmark& measured =
+          MeasurementTraits::point(lmk->getMeasurement(frame_k));
+
+      // TODO: should use getInitialOrLinearizedSensorPose
+      gtsam::Pose3 T_W_X;
+      CHECK(this->formulation_->map()->hasInitialSensorPose(frame_k, &T_W_X));
+
+      const gtsam::Key point_key = lmk->makeStaticKey();
+      gtsam::Point3 l_W_initial = T_W_X * measured;
+
+      gtsam::Values values;
+      values.insert(point_key, l_W_initial);
+
+      return values;
+    }
+
+    std::shared_ptr<Camera> camera_;
+    Camera::CalibrationType::shared_ptr K_;
+  };
+
+  struct StereoProjection : public Base {
+    StereoProjection(FormulationType* formulation) : Base(formulation) {
+      std::shared_ptr<Camera> camera =
+          CHECK_NOTNULL(formulation->sensors().camera);
+      std::shared_ptr<RGBDCamera> rgbd_camera =
+          CHECK_NOTNULL(camera->safeGetRGBDCamera());
+      K_stereo_ = rgbd_camera->getFakeStereoCalib();
+      CHECK_NOTNULL(K_stereo_);
+
+      K_stereo_->print("Stero K\n");
+      K_ = camera->getGtsamCalibration();
+    }
+
+    gtsam::NonlinearFactor::shared_ptr makeFactor(const LmkNode& lmk,
+                                                  const FrameNode& frame,
+                                                  FrameId frame_k) override {
+      const gtsam::Key point_key = lmk->makeStaticKey();
+      const gtsam::Key pose_key = frame->makePoseKey();
+
+      auto stereo_measurement =
+          MeasurementTraits::stereo(lmk->getMeasurement(frame_k));
+      // FOR NOW
+      CHECK(stereo_measurement);
+      auto [measurement, model] = *stereo_measurement;
+
+      this->robustifyHuber(model);
+
+      auto factor = boost::make_shared<GenericStereoFactor>(
+          measurement, model, pose_key, point_key, K_stereo_);
+      // factor->print("Stereo factor\n");
+      return factor;
+    }
+    gtsam::Values makeInitialValues(const LmkNode& lmk,
+                                    FrameId frame_k) override {
+      // FOR NOW! rely on the fact that the frontend has initalised/triangulated
+      // the point!
+      const Landmark& measured =
+          MeasurementTraits::point(lmk->getMeasurement(frame_k));
+
+      // TODO: should use getInitialOrLinearizedSensorPose
+      gtsam::Pose3 T_W_X;
+      CHECK(this->formulation_->map()->hasInitialSensorPose(frame_k, &T_W_X));
+
+      const gtsam::Key point_key = lmk->makeStaticKey();
+      gtsam::Point3 l_W_initial_from_depth = T_W_X * measured;
+
+      using GtsamCamera = Camera::CameraImpl;
+      CameraSet<GtsamCamera> camera_set;
+      gtsam::Point2Vector measurements;
+      gtsam::SharedNoiseModel model;
+      const auto& seen_frames = lmk->getSeenFrames();
+      for (const auto& frame_node_i : seen_frames) {
+        FrameId frame_id_i = frame_node_i->getId();
+        gtsam::Pose3 X_W_i =
+            this->formulation_->getInitialOrLinearizedSensorPose(frame_id_i);
+
+        // updates the model each time, just uses the last one!
+        auto [keypoint, model] = MeasurementTraits::keypointWithCovariance(
+            lmk->getMeasurement(frame_id_i));
+
+        camera_set.push_back(GtsamCamera(X_W_i, *K_));
+        measurements.push_back(keypoint);
+      }
+
+      gtsam::TriangulationParameters triangulation_params;
+      // triangulation_params.useLOST = true;
+      triangulation_params.noiseModel = model;
+
+      auto triangulation_result = gtsam::triangulateSafe<GtsamCamera>(
+          camera_set, measurements, triangulation_params);
+
+      gtsam::Values values;
+
+      if (triangulation_result) {
+        LOG(INFO) << "LMK init from depth " << l_W_initial_from_depth
+                  << " from triangulation " << *triangulation_result;
+        values.insert(point_key, *triangulation_result);
+
+      } else {
+        LOG(FATAL) << "Triangulation failed " << triangulation_result
+                   << container_to_string(measurements);
+      }
+
+      // gtsam::Point3 triangulated_point = gtsam::triangulateSafe<Camera>(
+      //   poses,
+      //   K_,
+      //   measurements,
+      //   1e-9,
+      //   false,
+      //   model,
+      //   true
+      // );
+
+      return values;
+    }
+
+    Camera::CalibrationType::shared_ptr K_;
+    StereoCalibPtr K_stereo_;
+  };
+
+  static std::unique_ptr<Base> makeImpl(FormulationType* formulation) {
+    const MethodType& method_type =
+        CHECK_NOTNULL(formulation)->params().static_formulation;
+    switch (method_type) {
+      case MethodType::PTP:
+        VLOG(20) << "Using Point-to-Pose formulation for Visual SLAM";
+        return std::make_unique<PTP>(formulation);
+      case MethodType::GENERIC_PROJECTION:
+        VLOG(20) << "Using Generic Projection formulation for Visual SLAM";
+        return std::make_unique<GenericProjection>(formulation);
+      case MethodType::STEREO_PROJECTION:
+        VLOG(20) << "Using Stereo Projection formulation for Visual SLAM";
+        return std::make_unique<StereoProjection>(formulation);
+      default:
+        LOG(FATAL) << "Unknown method type for Static Formulation!";
+        return nullptr;
+    }
+  }
+
+ private:
+  std::unique_ptr<Base> impl_;
+};
+
+}  // namespace internal
 
 template <typename MAP>
 Formulation<MAP>::Formulation(const FormulationParams& params,
@@ -168,22 +468,18 @@ UpdateObservationResult Formulation<MAP>::updateStaticObservations(
 
   UpdateObservationResult result(update_params);
 
-  // // VIODE!!
-  // double fx = 376.0;
-  // double fy = 376.0;
-  // double cx = 376.0;
-  // double cy = 240.0;
-  // double skew = 0.0;  // assuming zero skew
-
-  // const auto K = boost::make_shared<gtsam::Cal3_S2>(fx, fy, skew, cx, cy);
+  const size_t initial_factors_size = new_factors.size();
+  const size_t initial_values_size = new_values.size();
 
   const auto frame_node_k = map->getFrame(frame_id_k);
   CHECK_NOTNULL(frame_node_k);
 
-  // pose estimate from frontend
+  // // pose estimate from frontend
   gtsam::Pose3 T_world_camera_frontend;
   CHECK(
       this->map()->hasInitialSensorPose(frame_id_k, &T_world_camera_frontend));
+
+  internal::StaticFormulationUpdater<MAP> static_updater(this);
 
   VLOG(20) << "Looping over " << frame_node_k->static_landmarks.size()
            << " static lmks for frame " << frame_id_k;
@@ -192,24 +488,25 @@ UpdateObservationResult Formulation<MAP>::updateStaticObservations(
     // check if lmk node is already in map (which should mean it is equivalently
     // in isam)
     if (is_other_values_in_map.exists(point_key)) {
-      Landmark measured_point_local;
-      gtsam::SharedNoiseModel measurement_covariance;
-      std::tie(measured_point_local, measurement_covariance) =
-          MeasurementTraits::pointWithCovariance(
-              lmk_node->getMeasurement(frame_id_k));
-      CHECK(measurement_covariance);
+      // Landmark measured_point_local;
+      // gtsam::SharedNoiseModel measurement_covariance;
+      // std::tie(measured_point_local, measurement_covariance) =
+      //     MeasurementTraits::pointWithCovariance(
+      //         lmk_node->getMeasurement(frame_id_k));
+      // CHECK(measurement_covariance);
 
-      if (params_.makeStaticMeasurementsRobust()) {
-        measurement_covariance = factor_graph_tools::robustifyHuber(
-            params_.k_huber_3d_points_, measurement_covariance);
-      }
+      // if (params_.makeStaticMeasurementsRobust()) {
+      //   measurement_covariance = factor_graph_tools::robustifyHuber(
+      //       params_.k_huber_3d_points_, measurement_covariance);
+      // }
+      // internal_new_factors
+      //     .emplace_shared<gtsam::PoseToPointFactor<gtsam::Pose3, Landmark>>(
+      //         frame_node_k->makePoseKey(),  // pose key for this frame
+      //         point_key, measured_point_local, measurement_covariance);
 
-      internal_new_factors
-          .emplace_shared<gtsam::PoseToPointFactor<gtsam::Pose3, Landmark>>(
-              frame_node_k->makePoseKey(),  // pose key for this frame
-              point_key, measured_point_local, measurement_covariance);
+      internal_new_factors.add(
+          static_updater.makeFactor(lmk_node, frame_node_k, frame_id_k));
 
-      if (result.debug_info) result.debug_info->num_static_factors++;
       result.updateAffectedObject(frame_id_k, 0);
 
       // LOG(INFO) << point_key << " adding factor for frame" << frame_id_k
@@ -240,40 +537,50 @@ UpdateObservationResult Formulation<MAP>::updateStaticObservations(
           continue;
         }
 
-        Landmark measured_point_local;
-        gtsam::SharedNoiseModel measurement_covariance;
-        std::tie(measured_point_local, measurement_covariance) =
-            MeasurementTraits::pointWithCovariance(
-                lmk_node->getMeasurement(seen_frame_id));
-        CHECK(measurement_covariance);
+        // Landmark measured_point_local;
+        // gtsam::SharedNoiseModel measurement_covariance;
+        // std::tie(measured_point_local, measurement_covariance) =
+        //     MeasurementTraits::pointWithCovariance(
+        //         lmk_node->getMeasurement(seen_frame_id));
+        // CHECK(measurement_covariance);
 
-        if (params_.makeStaticMeasurementsRobust()) {
-          measurement_covariance = factor_graph_tools::robustifyHuber(
-              params_.k_huber_3d_points_, measurement_covariance);
-        }
+        // if (params_.makeStaticMeasurementsRobust()) {
+        //   measurement_covariance = factor_graph_tools::robustifyHuber(
+        //       params_.k_huber_3d_points_, measurement_covariance);
+        // }
 
-        internal_new_factors.emplace_shared<PoseToPointFactor>(
-            seen_frame->makePoseKey(),  // pose key at previous frames
-            point_key, measured_point_local, measurement_covariance);
+        // internal_new_factors.emplace_shared<PoseToPointFactor>(
+        //     seen_frame->makePoseKey(),  // pose key at previous frames
+        //     point_key, measured_point_local, measurement_covariance);
 
-        if (result.debug_info) result.debug_info->num_static_factors++;
+        internal_new_factors.add(
+            static_updater.makeFactor(lmk_node, seen_frame, seen_frame_id));
+
         result.updateAffectedObject(seen_frame_id, 0);
       }
 
-      // pick the one in this frame
-      const Landmark& measured =
-          MeasurementTraits::point(lmk_node->getMeasurement(frame_id_k));
-      // add initial value, either from measurement or previous estimate
-      gtsam::Point3 lmk_world;
-      getSafeQuery(lmk_world,
-                   accessor->getStaticLandmark(lmk_node->tracklet_id),
-                   gtsam::Point3(T_world_camera_frontend * measured));
-      new_values.insert(point_key, lmk_world);
+      // // pick the one in this frame
+      // const Landmark& measured =
+      //     MeasurementTraits::point(lmk_node->getMeasurement(frame_id_k));
+      // // add initial value, either from measurement or previous estimate
+      // gtsam::Point3 lmk_world = T_world_camera_frontend * measured;
+      // // getSafeQuery(lmk_world,
+      // //              accessor->getStaticLandmark(lmk_node->tracklet_id),
+      // //              gtsam::Point3(T_world_camera_frontend * measured));
+      // new_values.insert(point_key, lmk_world);
+
+      new_values.insert(static_updater.makeInitialValues(lmk_node, frame_id_k));
       is_other_values_in_map.insert2(point_key, true);
 
-      if (result.debug_info) result.debug_info->num_new_static_points++;
       result.updateAffectedObject(frame_id_k, 0);
     }
+  }
+
+  if (result.debug_info) {
+    result.debug_info->num_static_factors =
+        internal_new_factors.size() - initial_factors_size;
+    result.debug_info->num_new_static_points =
+        new_values.size() - initial_values_size;
   }
 
   // update internal data structures

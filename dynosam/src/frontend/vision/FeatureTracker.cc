@@ -238,7 +238,8 @@ bool FeatureTracker::stereoTrack(FeaturePtrs& stereo_features,
       good_stereo_tracklets.push_back(tracklet_id);
     }
   }
-  LOG(INFO) << "Stereo KLT tracked: " << pts_left_tracked.size() << " points";
+  // LOG(INFO) << "Stereo KLT tracked: " << pts_left_tracked.size() << "
+  // points";
 
   // need more than 8 points for fundamental matrix calc with ransac
   TrackletIds inlier_stereo_tracklets;
@@ -277,21 +278,24 @@ bool FeatureTracker::stereoTrack(FeaturePtrs& stereo_features,
       CHECK(feature->usable());
 
       double uL = static_cast<double>(pts_left_inlier[i].x);
-      double vL = static_cast<double>(pts_left_inlier[i].y);
+      double v = static_cast<double>(pts_left_inlier[i].y);
       double uR = static_cast<double>(pts_right_inlier[i].x);
 
       double disparity = uL - uR;
       // Reject near-zero disparity
       // this will also mean far away points.... multi-view triangulation
       // across frames is needed here... fall back on depth map...
-      if (disparity <= 1.0) {
-        // feature->markOutlier();
+      if (disparity <= 1.0 || uR < 0.0f) {
+        feature->markOutlier();
+        continue;
       }
 
+      // TODO: should use RGBDCamera class!
       double depth = fx * virtual_baseline / disparity;
+      // for testing
       // TODO: no max depth
       feature->depth(depth);
-      feature->rightKeypoint(Keypoint(uL, uR));
+      feature->rightKeypoint(Keypoint(uR, v));
 
       stereo_features.push_back(feature);
     }
@@ -1031,7 +1035,7 @@ void FeatureTracker::requiresSampling(
   // it takes a few frames for the feature to end up in the backend (ie. at
   // least twice, to ensure a valid track) so we want to track new points
   // earlier than that to ensure we dont have a frame with NO points
-  const auto& age_buffer = std::max(3, params_.dynamic_feature_age_buffer);
+  const auto age_buffer = std::max(3, params_.dynamic_feature_age_buffer);
   const auto& min_dynamic_tracks = params_.min_dynamic_tracks;
   const auto& min_iou = params_.min_dynamic_mask_iou;
   const size_t expiry_age =

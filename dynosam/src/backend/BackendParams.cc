@@ -46,6 +46,9 @@ DEFINE_double(odometry_translation_sigma, 0.01,
 DEFINE_int32(optimization_mode, 0,
              "0: Full-batch, 1: sliding-window, 2: incremental");
 
+DEFINE_int32(static_formulation_type, 0,
+             "0: PTP, 1: Generic Projection, 2: Stereo Projection");
+
 DEFINE_double(static_point_noise_sigma, 0.2,
               "Point (depth) noise for static points");
 DEFINE_double(dynamic_point_noise_sigma, 0.2,

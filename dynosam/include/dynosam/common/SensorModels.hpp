@@ -42,11 +42,7 @@
 namespace dyno {
 
 template <typename M>
-struct measurement_traits {
-  // Template for derivation
-  static constexpr bool has_point = false;
-  static constexpr bool has_keypoint = false;
-};
+struct measurement_traits {};
 
 /**
  * @brief Defines a single visual measurement with tracking label, object id,
@@ -305,6 +301,20 @@ class MeasurementWithCovariance {
   operator const T&() const { return measurement(); }
   operator Covariance() const { return covariance(); }
 
+  /**
+   * @brief Cast operator to a std::pair<T, gtsam::SharedNoiseModel>
+   *
+   * Note thiat this returns a SharedNoiseModel NOT a SharedGaussianModel
+   *
+   * We also proivde  Tuple-like support for structured bindings to allow direct
+   * accesing of the measurement and model e.g. auto [measurement, model] =
+   * measurement_with_covariance
+   *
+   */
+  operator std::pair<T, gtsam::SharedNoiseModel>() const {
+    return {measurement(), model()};
+  }
+
   friend std::ostream& operator<<(std::ostream& os,
                                   const This& measurement_with_cov) {
     os << "m: " << measurement_with_cov.measurement()
@@ -340,65 +350,8 @@ typedef MeasurementWithCovariance<gtsam::Point3> Point3Measurement;
 /// @brief Keypoint with covariance
 typedef MeasurementWithCovariance<Keypoint> KeypointMeasurement;
 
-/**
- * @brief Struct containing landmark and keypoint measurements (with covariance)
- * Landmark is constructed from the depth measurement and the associated
- * keypoint.
- *
- * Used to construct the final measurement information to be passed to the
- * backend and can be obtained from an RGBD style sensor
- *
- */
-struct LandmarkKeypoint {
-  LandmarkKeypoint() = default;
-
-  /**
-   * @brief Construct a LandmarkKeypoint struct using measurement only values
-   * (no noise model/covariance)
-   *
-   * @param l const Landmark&
-   * @param kp  const Keypoint&
-   */
-  LandmarkKeypoint(const Landmark& l, const Keypoint& kp)
-      : landmark(Point3Measurement(l)), keypoint(KeypointMeasurement(kp)) {}
-
-  /**
-   * @brief  Construct a LandmarkKeypoint struct using full
-   * MeasurementWithCovariance objects (which may or may not contain noise
-   * models)/.
-   *
-   * @param l const MeasurementWithCovariance<Landmark>&
-   * @param kp const MeasurementWithCovariance<Keypoint>&
-   */
-  LandmarkKeypoint(const MeasurementWithCovariance<Landmark>& l,
-                   const MeasurementWithCovariance<Keypoint>& kp)
-      : landmark(l), keypoint(kp) {}
-
-  //! Landmark measurement with covariance
-  MeasurementWithCovariance<Landmark> landmark;
-  //! Keypoint measurement with covariance
-  MeasurementWithCovariance<Keypoint> keypoint;
-
-  friend std::ostream& operator<<(std::ostream& os,
-                                  const LandmarkKeypoint& status) {
-    os << "landmark: " << status.landmark << ", keypoint " << status.keypoint;
-    return os;
-  }
-};
-
-/**
- * @brief Keypoint with depth
- *
- */
-struct KeypointDepth {
- public:
-  KeypointDepth() = default;
-  KeypointDepth(const Keypoint& p, const Depth& d) : keypoint(p), depth(d) {}
-
- public:
-  Keypoint keypoint;
-  Depth depth;
-};
+/// @brief Stereo Keypoint with covariance
+typedef MeasurementWithCovariance<gtsam::StereoPoint2> StereoMeasurement;
 
 /**
  * @brief Structure to contain all possible visual measurements from a camera
@@ -429,6 +382,8 @@ class CameraMeasurement {
   const MeasurementWithCovariance<Landmark>& landmark() const;
   const MeasurementWithCovariance<Depth>& depth() const;
   const MeasurementWithCovariance<Keypoint>& rightKeypoint() const;
+
+  StereoMeasurement::Optional stereoMeasurement() const;
 
  protected:
   //! 2D keypoint measurement with covariance.
@@ -465,7 +420,6 @@ typedef VisualMeasurementWithCovStatus<Depth> DepthStatus;
 /// @brief Alias for a stereo measurement with 3x3 covariance.
 typedef VisualMeasurementWithCovStatus<gtsam::StereoPoint2> StereoStatus;
 
-using LandmarkKeypointStatus = TrackedValueStatus<LandmarkKeypoint>;
 using CameraMeasurementStatus = TrackedValueStatus<CameraMeasurement>;
 
 /// @brief A vector of LandmarkStatus
@@ -476,33 +430,8 @@ typedef GenericTrackedStatusVector<KeypointStatus> StatusKeypointVector;
 typedef GenericTrackedStatusVector<CameraMeasurementStatus>
     CameraMeasurementStatusVector;
 
-// TODO: I think can depricate this...?
-template <>
-struct measurement_traits<LandmarkKeypoint> {
-  // TODO: probably cant use constant traits (ie. some measurement may or may
-  // not have a certain measurement)
-  static constexpr bool has_point = true;
-  static constexpr bool has_keypoint = true;
-
-  static Landmark point(const LandmarkKeypoint& measurement) {
-    return measurement.landmark;
-  }
-
-  static std::pair<Landmark, gtsam::SharedNoiseModel> pointWithCovariance(
-      const LandmarkKeypoint& measurement) {
-    return {measurement.landmark.measurement(), measurement.landmark.model()};
-  }
-
-  static Keypoint keypoint(const LandmarkKeypoint& measurement) {
-    return measurement.keypoint;
-  }
-
-  static std::pair<Keypoint, gtsam::SharedNoiseModel> keypointWithCovariance(
-      const LandmarkKeypoint& measurement) {
-    return {measurement.keypoint.measurement(), measurement.keypoint.model()};
-  }
-};
-
+// TODO: streamline this strucure SHould return an option if not exists and
+// just return the masurement itsself!!
 template <>
 struct measurement_traits<CameraMeasurement> {
   // static constexpr bool has_point = true;
@@ -537,6 +466,11 @@ struct measurement_traits<CameraMeasurement> {
     return {measurement.rightKeypoint().measurement(),
             measurement.rightKeypoint().model()};
   }
+
+  static StereoMeasurement::Optional stereo(
+      const CameraMeasurement& measurement) {
+    return measurement.stereoMeasurement();
+  }
 };
 
 }  // namespace dyno
@@ -548,3 +482,30 @@ struct gtsam::traits<dyno::MeasurementWithCovariance<T, D>>
 template <typename T, int D>
 struct gtsam::traits<const dyno::MeasurementWithCovariance<T, D>>
     : public gtsam::Testable<dyno::MeasurementWithCovariance<T, D>> {};
+
+// allow convenience tuple like getters for MeasurementWithCovariance
+namespace std {
+template <typename T, int D>
+struct tuple_size<dyno::MeasurementWithCovariance<T, D>>
+    : std::integral_constant<size_t, 2> {};
+
+template <typename T, int D>
+struct tuple_element<0, dyno::MeasurementWithCovariance<T, D>> {
+  using type = T;
+};
+
+template <typename T, int D>
+struct tuple_element<1, dyno::MeasurementWithCovariance<T, D>> {
+  using type = gtsam::SharedNoiseModel;
+};
+}  // namespace std
+
+namespace dyno {
+template <size_t N, typename T, int D>
+auto get(const MeasurementWithCovariance<T, D>& p) {
+  if constexpr (N == 0)
+    return p.measurement();
+  else if constexpr (N == 1)
+    return p.model();
+}
+}  // namespace dyno

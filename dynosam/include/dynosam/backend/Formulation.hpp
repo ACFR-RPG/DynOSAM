@@ -427,6 +427,7 @@ class Formulation {
   const FormulationHooks& hooks() const { return hooks_; }
   const NoiseModels& noiseModels() const { return noise_models_; }
   const Sensors& sensors() const { return sensors_; }
+  const FormulationParams& params() const { return params_; }
 
   /**
    * @brief Custom gtsam::Key formatter for this formulation.
@@ -562,9 +563,9 @@ class Formulation {
    */
   virtual void postUpdate(const PostUpdateData&){};
 
- protected:
   gtsam::Pose3 getInitialOrLinearizedSensorPose(FrameId frame_id) const;
 
+ protected:
   void clearGraph() { factors_.resize(0); }
 
  private:

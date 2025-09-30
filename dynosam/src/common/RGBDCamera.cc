@@ -62,6 +62,7 @@ bool RGBDCamera::projectRight(Feature::Ptr feature) const {
   CHECK(feature);
   if (feature->hasDepth()) {
     double uL = feature->keypoint()(0);
+    double v = feature->keypoint()(1);
     double uR = rightKeypoint(feature->depth(), uL);
 
     // out of image bounds
@@ -69,7 +70,7 @@ bool RGBDCamera::projectRight(Feature::Ptr feature) const {
       return false;
     }
 
-    feature->rightKeypoint(Keypoint(uL, uR));
+    feature->rightKeypoint(Keypoint(uR, v));
     return true;
   }
   return false;

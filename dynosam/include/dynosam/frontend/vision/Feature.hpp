@@ -316,12 +316,12 @@ class Feature {
    * @return true
    * @return false
    */
-  inline bool usable() const {
+  bool usable() const {
     std::lock_guard<std::mutex> lk(mutex_);
-    return data_.inlier && data_.tracklet_id != invalid_id;
+    return data_.inlier && (data_.tracklet_id != invalid_id);
   }
 
-  inline bool isStatic() const {
+  bool isStatic() const {
     std::lock_guard<std::mutex> lk(mutex_);
     return data_.type == KeyPointType::STATIC;
   }
@@ -344,12 +344,12 @@ class Feature {
     return *this;
   }
 
-  inline bool hasDepth() const {
+  bool hasDepth() const {
     std::lock_guard<std::mutex> lk(mutex_);
     return !std::isnan(data_.depth);
   }
 
-  inline bool hasRightKeypoint() const {
+  bool hasRightKeypoint() const {
     std::lock_guard<std::mutex> lk(mutex_);
     return data_.right_kp.has_value();
   }

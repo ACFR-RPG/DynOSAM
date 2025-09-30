@@ -268,6 +268,48 @@ cv::Mat FeatureTrackerBase::computeImageTracks(
   }
 }
 
+bool FeatureTrackerBase::drawStereoMatches(cv::Mat& output_image,
+                                           const Frame& current_frame) const {
+  // for now only static tracks
+  if (!current_frame.image_container_.hasRightRgb()) {
+    return false;
+  }
+
+  const ImageWrapper<ImageType::RGBMono>& left_img_wrapper =
+      current_frame.image_container_.rgb();
+  cv::Mat img_rgb_left = left_img_wrapper.toRGB().clone();
+
+  const ImageWrapper<ImageType::RGBMono>& right_img_wrapper =
+      current_frame.image_container_.rightRgb();
+  cv::Mat img_rgb_right = right_img_wrapper.toRGB().clone();
+
+  // Stack side by side
+  cv::Mat canvas;
+  cv::hconcat(img_rgb_left, img_rgb_right, canvas);
+
+  int w1 = img_rgb_left.cols;
+
+  auto itr = current_frame.static_features_.beginUsable();
+  for (const auto& feature : itr) {
+    if (!feature->hasRightKeypoint()) {
+      continue;
+    }
+
+    const auto kp_left = utils::gtsamPointToCv(feature->keypoint());
+    const auto kp_right = utils::gtsamPointToCv(feature->rightKeypoint()) +
+                          cv::Point2f((float)w1, 0.0f);
+
+    cv::circle(canvas, kp_left, 4, cv::Scalar(0, 0, 255), cv::FILLED,
+               cv::LINE_AA);
+    cv::circle(canvas, kp_right, 4, cv::Scalar(0, 0, 255), cv::FILLED,
+               cv::LINE_AA);
+    cv::line(canvas, kp_left, kp_right, cv::Scalar(0, 0, 255), 1, cv::LINE_AA);
+  }
+
+  output_image = canvas;
+  return true;
+}
+
 bool FeatureTrackerBase::isWithinShrunkenImage(const Keypoint& kp) const {
   const auto shrunken_row = params_.shrink_row;
   const auto shrunken_col = params_.shrink_col;

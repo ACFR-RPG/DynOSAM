@@ -31,8 +31,8 @@
 --static_point_noise_sigma=0.01
 --dynamic_point_noise_sigma=0.01
 
---static_pixel_noise_sigma=1.0
---dynamic_pixel_noise_sigma=1.0
+--static_pixel_noise_sigma=0.1
+--dynamic_pixel_noise_sigma=3.0
 
 # --static_point_noise_sigma=0.01
 # --dynamic_point_noise_sigma=0.4
@@ -47,6 +47,12 @@
 
 # 0: Full-batch, 1: sliding-window, 2: incremental
 --optimization_mode=0
+
+# 0: PTP, 1: Generic Projection, 2: Stereo Projection
+--static_formulation_type=0
+
+--min_static_observations=3
+--min_dynamic_observations=2
 
 
 # for ISAM2 params using ParallelObjectSAM

@@ -143,6 +143,9 @@ class FeatureTrackerBase {
                              const Frame& current_frame,
                              const ImageTracksParams& config = false) const;
 
+  bool drawStereoMatches(cv::Mat& output_image,
+                         const Frame& current_frame) const;
+
   bool predictKeypointsGivenRotation(std::vector<cv::Point2f>& predicted_pts_k,
                                      const std::vector<cv::Point2f>& pts_km1,
                                      const gtsam::Rot3& R_km1_k) const;

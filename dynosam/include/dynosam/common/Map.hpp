@@ -488,16 +488,6 @@ class Map : public std::enable_shared_from_this<Map<MEASUREMENT>> {
 };
 
 // TODO: can depricate most of these...
-using Map2dDepth = Map<KeypointDepth>;
-using ObjectNode2dDepth = Map2dDepth::ObjectNodeM;
-using LandmarkNode2dDepth = Map2dDepth::LandmarkNodeM;
-using FrameNode2dDepth = Map2dDepth::FrameNodeM;
-
-using Map3d2d = Map<LandmarkKeypoint>;
-using ObjectNode3d2d = Map3d2d::ObjectNodeM;
-using LandmarkNode3d2d = Map3d2d::LandmarkNodeM;
-using FrameNode3d2d = Map3d2d::FrameNodeM;
-
 using Map3d = Map<Landmark>;
 using ObjectNode3d = Map3d::ObjectNodeM;
 using LandmarkNode3d = Map3d::LandmarkNodeM;

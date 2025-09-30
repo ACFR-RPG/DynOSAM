@@ -96,8 +96,8 @@ struct FeatureTrackerInfo {
   Timestamp timestamp;
 
   // static track info
-  size_t static_track_optical_flow;
-  size_t static_track_detections;
+  size_t static_track_optical_flow{0};
+  size_t static_track_detections{0};
 
   inline PerObjectStatus& getObjectStatus(ObjectId object_id) {
     if (!dynamic_track.exists(object_id)) {

@@ -26,7 +26,7 @@ def get_default_dynosam_params_path():
     share_folders = os.listdir(dynosam_share_dir)
     if "params" not in share_folders:
         raise FileNotFoundError(
-            "dynosam package share directory exists but \'params'\ folder does not exist at {}. "
+            "dynosam package share directory exists but 'params' folder does not exist at {}. "
             "Has the params folder been exported in the dynosam CMakeLists.txt like:\n"
             "\'install(DIRECTORY\n"
             "\tparams\n"
@@ -62,8 +62,6 @@ def first_steps(
     **kwargs):
 
     bl = BetterLaunch()
-
-    print(f"DYNOAM kwargs {kwargs}")
 
     if params_folder_path is None:
         bl.logger.info("Loading default dynosam params folder path which is expected to be in the share directory of the dynosam package")

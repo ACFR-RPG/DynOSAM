@@ -178,6 +178,7 @@ class Camera {
                            Keypoint* keypoint = nullptr) const;
 
   CameraImpl* getImplCamera() const { return camera_impl_.get(); }
+  CalibrationType::shared_ptr getGtsamCalibration() const;
 
   const CameraParams& getParams() const { return camera_params_; }
 

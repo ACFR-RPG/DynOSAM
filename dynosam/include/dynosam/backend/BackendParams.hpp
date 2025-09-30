@@ -58,6 +58,7 @@ DECLARE_bool(use_vo_factor);
 DECLARE_bool(dynamic_point_noise_as_robust);
 
 DECLARE_int32(optimization_mode);
+DECLARE_int32(static_formulation_type);
 
 DECLARE_string(updater_suffix);
 
@@ -77,9 +78,10 @@ struct BackendParams {
   enum StaticFormulationType {
     PTP = 0,  //! Pose-to-point factor with 3D projection residual in the camera
               //! frame
-    PROJECTION = 1,  //! Regular projection factor with 2D projection residual
-                     //! on the image plane
-    SMART_PROJECTION = 2
+    GENERIC_PROJECTION = 1,  //! Regular projection factor with 2D projection
+                             //! residual on the image plane
+    STEREO_PROJECTION = 2,
+    SMART_PROJECTION = 3
   };
 
   //! RGBD/Stereo
@@ -132,7 +134,8 @@ struct BackendParams {
   size_t min_static_observations = FLAGS_min_static_observations;
   size_t min_dynamic_observations = FLAGS_min_dynamic_observations;
 
-  StaticFormulationType static_formulation = StaticFormulationType::PTP;
+  StaticFormulationType static_formulation =
+      static_cast<StaticFormulationType>(FLAGS_static_formulation_type);
 
   static BackendParams fromYaml(const std::string& file_path);
 

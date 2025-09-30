@@ -144,7 +144,7 @@ def run_ecmr_experiment_sequences(dataset_path, dataset_name, dataset_loader, *a
 
     # pass
     # run the two batches again but with increemntal mode and additional suffix so we can individual logs!!!
-    # run_sequnce(dataset_path, dataset_name, dataset_loader, full_hybrid, *append_args_list("--optimization_mode=2","--updater_suffix=inc", "--use_robust_kernals=true", "--dynamic_point_noise_as_robust=true"), run_as_frontend=False, run_as_experiment=False, run_analysis=False)
+    # run_sequnce(dataset_path, dataset_name, dataset_loader, full_hybrid, *append_args_list("--optimization_mode=1"), run_as_frontend=False, run_as_experiment=False, run_analysis=False)
     # run_sequnce(dataset_path, dataset_name, dataset_loader, motion_world_backend_type, *append_args_list("--optimization_mode=2", "--regular_backend_relinearize_skip=10","--updater_suffix=inc"), run_as_frontend=False, run_as_experiment=False, run_analysis=True)
 
     # run_sequnce(dataset_path, dataset_name, dataset_loader, full_hybrid, *append_args_list("--optimization_mode=2", "--regular_backend_relinearize_skip=1","--updater_suffix=inc_relin1"), run_as_frontend=False, run_as_experiment=False, run_analysis=True)
@@ -154,7 +154,7 @@ def run_viodes():
 
 #     run_ecmr_experiment_sequences("/root/data/VIODE/city_day/mid", "viode_city_day_mid", viode, "--v=100")
     # run_ecmr_experiment_sequences("/root/data/VIODE/city_day/high","viode_city_day_high", viode, "--ending_frame=1110")
-    run_ecmr_experiment_sequences("/root/data/VIODE/city_day/high","test_viode", viode,"--ending_frame=1110", "--v=100",  "--use_backend=false")
+    run_ecmr_experiment_sequences("/root/data/VIODE/city_day/high","test_viode", viode,"--starting_frame=400", "--ending_frame=1110", "--v=30",  "--use_backend=true")
 # # zero_elements_ratio
 #     run_ecmr_experiment_sequences("/root/data/VIODE/city_night/mid", "viode_city_night_mid", viode)
     # run_ecmr_experiment_sequences("/root/data/VIODE/city_night/high", "viode_city_night_high", viode)
@@ -207,11 +207,11 @@ if __name__ == '__main__':
     #     "--ending_frame=150"
     # )
 
-    # run_viodes()
+    run_viodes()
     # run_tartan_air()
     # run_cluster()
     # run_omd()
-    run_aria()
+    # run_aria()
     # run_kitti()
     # run_analysis("kitti_0004_test")
     # run_analysis("kitti_0020")

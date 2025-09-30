@@ -357,6 +357,7 @@ class ViodeAllLoader {
 
     camera_params_ = CameraParams(K, D, cv::Size(752, 480),
                                   DistortionModel::RADTAN, extrinsics_left);
+    camera_params_.setDepthParams(0.05);
 
     // the original dataset actually has some rotation in it but we ignore this
     // as this is just the cv-to-robotic convention

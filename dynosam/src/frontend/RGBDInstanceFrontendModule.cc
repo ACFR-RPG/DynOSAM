@@ -35,6 +35,7 @@
 #include <opencv4/opencv2/opencv.hpp>
 
 #include "dynosam/common/Flags.hpp"  //for common flags
+#include "dynosam/common/RGBDCamera.hpp"
 #include "dynosam/frontend/RGBDInstance-Definitions.hpp"
 #include "dynosam/frontend/vision/MotionSolver.hpp"
 #include "dynosam/frontend/vision/Vision-Definitions.hpp"
@@ -145,6 +146,7 @@ FrontendModule::SpinReturn RGBDInstanceFrontendModule::nominalSpin(
   VLOG(1) << to_string(tracker_->getTrackerInfo());
 
   {
+    // this will mark some points as invalid if they are out of depth range
     utils::TimingStatsCollector update_depths_timer("depth_updater");
     frame->updateDepths();
   }
@@ -156,6 +158,10 @@ FrontendModule::SpinReturn RGBDInstanceFrontendModule::nominalSpin(
   if (has_stereo) {
     const cv::Mat& left_rgb = image_container->rgb();
     const cv::Mat& right_rgb = image_container->rightRgb();
+
+    auto usable_iterator = frame->static_features_.beginUsable();
+    LOG(INFO) << "Counted intliers "
+              << std::distance(usable_iterator.begin(), usable_iterator.end());
 
     FeaturePtrs stereo_features_1;
     stereo_result =
@@ -229,9 +235,16 @@ FrontendModule::SpinReturn RGBDInstanceFrontendModule::nominalSpin(
   debug_imagery.depth_viz =
       ImageType::Depth::toRGB(processed_image_container.depth());
 
-  if (display_queue_)
+  if (display_queue_) {
     display_queue_->push(
         ImageToDisplay("Tracks", debug_imagery.tracking_image));
+
+    // cv::Mat stereo_matches;
+    // if(tracker_->drawStereoMatches(stereo_matches, *frame)){
+    //   display_queue_->push(
+    //     ImageToDisplay("Stereo Matches", stereo_matches));
+    // }
+  }
 
   vision_imu_packet->debugImagery(debug_imagery);
 
@@ -389,6 +402,8 @@ void RGBDInstanceFrontendModule::fillOutputPacketWithTracks(
       [&camera](FeatureFilterIterator it,
                 CameraMeasurementStatusVector* measurements, FrameId frame_id,
                 const gtsam::Vector2& pixel_sigmas, double depth_sigma) {
+        std::shared_ptr<RGBDCamera> rgbd_camera = camera.safeGetRGBDCamera();
+
         for (const Feature::Ptr& f : it) {
           const TrackletId tracklet_id = f->trackletId();
           const Keypoint& kp = f->keypoint();
@@ -422,6 +437,22 @@ void RGBDInstanceFrontendModule::fillOutputPacketWithTracks(
           if (f->hasRightKeypoint()) {
             CHECK(f->hasDepth())
                 << "Right keypoint set for feature but no depth!";
+            MeasurementWithCovariance<Keypoint> right_kp_measurement =
+                MeasurementWithCovariance<Keypoint>::FromSigmas(
+                    f->rightKeypoint(), pixel_sigmas);
+            camera_measurement.rightKeypoint(right_kp_measurement);
+          }
+          // no right keypoint and has rgbd camera and has depth, project
+          // keypoint into right camera
+          else if (rgbd_camera && f->hasDepth()) {
+            bool right_projection_result = rgbd_camera->projectRight(f);
+            if (!right_projection_result) {
+              // TODO: for now mark as outlier and ignore point
+              f->markOutlier();
+              continue;
+            }
+
+            CHECK(f->hasRightKeypoint());
             MeasurementWithCovariance<Keypoint> right_kp_measurement =
                 MeasurementWithCovariance<Keypoint>::FromSigmas(
                     f->rightKeypoint(), pixel_sigmas);

@@ -186,6 +186,10 @@ bool Camera::isLandmarkContained(const Landmark& lmk,
   return result;
 }
 
+Camera::CalibrationType::shared_ptr Camera::getGtsamCalibration() const {
+  return boost::make_shared<CalibrationType>(getImplCamera()->calibration());
+}
+
 RGBDCamera Camera::getRGBDCamera() const {
   return RGBDCamera(this->getParams());
 }

@@ -523,12 +523,28 @@ TEST(FeatureContainer, testusableIterator) {
   fc.markOutliers({3});
   fc.markOutliers({4});
 
+  fc.getByTrackletId(1)->markOutlier();
+
   {
     auto usable_iterator = fc.beginUsable();
-    EXPECT_EQ(std::distance(usable_iterator.begin(), usable_iterator.end()), 8);
+    EXPECT_EQ(std::distance(usable_iterator.begin(), usable_iterator.end()), 7);
 
-    for (const auto& i : usable_iterator) {
-      EXPECT_TRUE(i->trackletId() != 3 || i->trackletId() != 4);
+    for (const auto& f : fc) {
+      if (f->trackletId() == 3 || f->trackletId() == 4 ||
+          f->trackletId() == 1) {
+        EXPECT_FALSE(f->usable());
+        EXPECT_FALSE(f->inlier());
+      } else {
+        EXPECT_TRUE(f->inlier());
+        EXPECT_TRUE(f->usable());
+      }
+    }
+
+    for (const auto& f : usable_iterator.begin()) {
+      EXPECT_TRUE(f->trackletId() == 0 || f->trackletId() == 2 ||
+                  f->trackletId() == 5 || f->trackletId() == 6 ||
+                  f->trackletId() == 7 || f->trackletId() == 8 ||
+                  f->trackletId() == 9);
     }
   }
 }

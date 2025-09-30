@@ -252,6 +252,8 @@ Pose3SolverResult EgoMotionSolver::geometricOutlierRejection3d2d(
     tracklets.push_back(corres.tracklet_id_);
   }
 
+  VLOG(20) << "Collected " << tracklets.size() << " initial correspondances";
+
   const double reprojection_error = params_.ransac_threshold_pnp;
   const double avg_focal_length =
       0.5 * static_cast<double>(camera_params_.fx() + camera_params_.fy());

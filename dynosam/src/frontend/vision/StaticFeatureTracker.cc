@@ -429,7 +429,7 @@ bool KltFeatureTracker::trackPoints(const cv::Mat& current_processed_img,
   TrackletIds tracklet_ids;
 
   std::vector<cv::Point2f> previous_pts =
-      previous_features.toOpenCV(&tracklet_ids);
+      previous_features.toOpenCV(&tracklet_ids, true);
   CHECK_EQ(previous_pts.size(), previous_features.size());
   CHECK_EQ(previous_pts.size(), tracklet_ids.size());
 
@@ -456,10 +456,10 @@ bool KltFeatureTracker::trackPoints(const cv::Mat& current_processed_img,
     cv::cuda::GpuMat gpu_prev_img(previous_processed_img);
     cv::cuda::GpuMat gpu_current_img(current_processed_img);
 
-    cv::cuda::GpuMat d_points1(previous_pts);  // upload points
-    cv::cuda::GpuMat d_points2;                // output points
-    cv::cuda::GpuMat d_status;                 // status of each point
-    cv::cuda::GpuMat d_err;                    // error for each point
+    cv::cuda::GpuMat d_points1(previous_pts);    // upload points
+    cv::cuda::GpuMat d_points2(current_points);  // output points
+    cv::cuda::GpuMat d_status;                   // status of each point
+    cv::cuda::GpuMat d_err;                      // error for each point
 
     lk_cuda_tracker_->calc(gpu_prev_img, gpu_current_img, d_points1, d_points2,
                            d_status, d_err);
@@ -571,11 +571,12 @@ bool KltFeatureTracker::trackPoints(const cv::Mat& current_processed_img,
       static_cast<size_t>(params_.min_features_per_frame)) {
     utils::TimingStatsCollector timer("static_feature_track.detect");
     // if we do not have enough features, detect more on the current image
+    FeatureContainer detections;
     detectFeatures(current_processed_img, image_container, tracked_features,
-                   tracked_features, detection_mask);
+                   detections, detection_mask);
 
-    const auto n_detected = tracked_features.size() - n_tracked;
-    tracker_info.static_track_detections += n_detected;
+    tracker_info.static_track_detections += detections.size();
+    tracked_features += detections;
   }
 
   return true;
@@ -638,8 +639,7 @@ Feature::Ptr KltFeatureTracker::constructNewStaticFeature(
   static const auto kAge = 0u;
 
   TrackletIdManager& tracked_id_manager = TrackletIdManager::instance();
-  TrackletId tracklet_to_use = tracked_id_manager.getTrackletIdCount();
-  tracked_id_manager.incrementTrackletIdCount();
+  TrackletId tracklet_to_use = tracked_id_manager.getAndIncrementTrackletId();
 
   Feature::Ptr feature = std::make_shared<Feature>();
   (*feature)
