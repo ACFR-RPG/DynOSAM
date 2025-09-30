@@ -290,9 +290,12 @@ class StaticFormulationUpdater : public StaticFormulationUpdaterImpl<MAP> {
                   << " from triangulation " << *triangulation_result;
         values.insert(point_key, *triangulation_result);
 
+        // TODO: should throw this out (formulation should try and initalise the
+        // result first and then if successful, add all other factors!!)
       } else {
-        LOG(FATAL) << "Triangulation failed " << triangulation_result
+        LOG(ERROR) << "Triangulation failed " << triangulation_result
                    << container_to_string(measurements);
+        values.insert(point_key, l_W_initial_from_depth);
       }
 
       // gtsam::Point3 triangulated_point = gtsam::triangulateSafe<Camera>(
@@ -513,6 +516,9 @@ UpdateObservationResult Formulation<MAP>::updateStaticObservations(
       //           << " with m: " << lmk_node->numObservations();
 
     } else {
+      // TODO: for a new point we should try and trignaulate first and then add
+      // new factors if necessary!
+
       // see if we have enough observations to add this lmk
       if (lmk_node->numObservations() < params_.min_static_observations) {
         continue;

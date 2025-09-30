@@ -154,7 +154,7 @@ def run_viodes():
 
 #     run_ecmr_experiment_sequences("/root/data/VIODE/city_day/mid", "viode_city_day_mid", viode, "--v=100")
     # run_ecmr_experiment_sequences("/root/data/VIODE/city_day/high","viode_city_day_high", viode, "--ending_frame=1110")
-    run_ecmr_experiment_sequences("/root/data/VIODE/city_day/high","test_viode", viode,"--starting_frame=400", "--ending_frame=1110", "--v=30",  "--use_backend=true")
+    run_ecmr_experiment_sequences("/root/data/VIODE/city_day/high","test_viode", viode,"--starting_frame=0", "--ending_frame=1110", "--v=30",  "--use_backend=true")
 # # zero_elements_ratio
 #     run_ecmr_experiment_sequences("/root/data/VIODE/city_night/mid", "viode_city_night_mid", viode)
     # run_ecmr_experiment_sequences("/root/data/VIODE/city_night/high", "viode_city_night_high", viode)
