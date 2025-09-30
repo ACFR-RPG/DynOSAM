@@ -348,21 +348,34 @@ bool KltFeatureTracker::detectFeatures(const cv::Mat& processed_img,
     detection_mask_impl = cv::Mat(motion_mask.size(), CV_8U, cv::Scalar(255));
   }
   CHECK_EQ(detection_mask_impl.type(), CV_8U);
+  // create mask from object mask so that all pixels > 0 are ignored (by setting
+  // the value in the new mask to 0 at these locations) start with an invalid
+  // mask
+  cv::Mat object_feature_mask = cv::Mat::zeros(motion_mask.size(), CV_8U);
+  // Set background pixels (0 in motion_mask) -> valid (1 in
+  // object_feature_mask)
+  object_feature_mask.setTo(255, motion_mask == 0);
+  // combine with existing mask information (from current features)
+  cv::bitwise_and(detection_mask_impl, object_feature_mask,
+                  detection_mask_impl);
 
   // slow
   // add mask over objects detected in the scene
-  for (int i = 0; i < motion_mask.rows; i++) {
-    for (int j = 0; j < motion_mask.cols; j++) {
-      const ObjectId label = motion_mask.at<ObjectId>(i, j);
+  // TODO: should just be a masking operation but treating all non-zero pixels
+  // as 1 (ie make binary) and then inveverting the mask so that object pixels
+  // (originally 1) become 0, indicating they should not be used! for (int i =
+  // 0; i < motion_mask.rows; i++) {
+  //   for (int j = 0; j < motion_mask.cols; j++) {
+  //     const ObjectId label = motion_mask.at<ObjectId>(i, j);
 
-      if (label != background_label) {
-        cv::circle(
-            detection_mask_impl, cv::Point2f(j, i),
-            params_.min_distance_btw_tracked_and_detected_static_features,
-            cv::Scalar(0), cv::FILLED);
-      }
-    }
-  }
+  //     if (label != background_label) {
+  //       cv::circle(
+  //           detection_mask_impl, cv::Point2f(j, i),
+  //           params_.min_distance_btw_tracked_and_detected_static_features,
+  //           cv::Scalar(0), cv::FILLED);
+  //     }
+  //   }
+  // }
 
   // add mask over current static features
   for (const auto& feature : current_features) {
