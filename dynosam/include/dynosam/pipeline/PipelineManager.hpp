@@ -31,14 +31,14 @@
 #pragma once
 
 #include "dynosam/backend/BackendPipeline.hpp"
-#include "dynosam/common/Types.hpp"
 #include "dynosam/dataprovider/DataInterfacePipeline.hpp"
 #include "dynosam/dataprovider/DataProvider.hpp"
 #include "dynosam/frontend/FrontendPipeline.hpp"
 #include "dynosam/pipeline/PipelineHooks.hpp"
 #include "dynosam/pipeline/PipelineParams.hpp"
-#include "dynosam/utils/Spinner.hpp"
 #include "dynosam/visualizer/VisualizerPipelines.hpp"
+#include "dynosam_common/Types.hpp"
+#include "dynosam_common/utils/Spinner.hpp"
 
 namespace dyno {
 

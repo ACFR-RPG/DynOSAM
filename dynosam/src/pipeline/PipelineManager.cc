@@ -33,10 +33,10 @@
 #include <glog/logging.h>
 
 #include "dynosam/backend/BackendFactory.hpp"
-#include "dynosam/common/Map.hpp"
 #include "dynosam/frontend/RGBDInstanceFrontendModule.hpp"
-#include "dynosam/logger/Logger.hpp"
-#include "dynosam/utils/TimingStats.hpp"
+#include "dynosam_common/Map.hpp"
+#include "dynosam_common/logger/Logger.hpp"
+#include "dynosam_common/utils/TimingStats.hpp"
 
 DEFINE_bool(use_backend, false, "If any backend should be initalised");
 

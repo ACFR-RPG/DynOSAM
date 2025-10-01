@@ -36,8 +36,8 @@
 #include <functional>
 
 #include "dynosam/backend/BackendDefinitions.hpp"
-#include "dynosam/common/Types.hpp"
-#include "dynosam/utils/Timing.hpp"
+#include "dynosam_common/Types.hpp"
+#include "dynosam_common/utils/Timing.hpp"
 
 namespace dyno {
 
@@ -260,7 +260,7 @@ class IncrementalInterface {
     } catch (gtsam::IndeterminantLinearSystemException& e) {
       const gtsam::Key& var = e.nearbyVariable();
       LOG(ERROR) << "gtsam::IndeterminantLinearSystemException with variable "
-                 << DynoLikeKeyFormatter(var);
+                 << DynosamKeyFormatter(var);
 
       if (!error_hooks.handle_ils_exception) {
         throw e;
@@ -275,7 +275,7 @@ class IncrementalInterface {
           ils_handle_result.pior_factors;
 
       if (pior_factors.size() == 0) {
-        LOG(WARNING) << DynoLikeKeyFormatter(var)
+        LOG(WARNING) << DynosamKeyFormatter(var)
                      << " not recognised in indeterminant exception handling";
         return false;
       }
@@ -316,7 +316,7 @@ class IncrementalInterface {
 
     } catch (gtsam::ValuesKeyDoesNotExist& e) {
       LOG(FATAL) << "gtsam::ValuesKeyDoesNotExist with variable "
-                 << DynoLikeKeyFormatter(e.key());
+                 << DynosamKeyFormatter(e.key());
     }
     return true;
   }
@@ -335,3 +335,70 @@ class IncrementalInterface {
 };
 
 }  // namespace dyno
+
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;
+
+namespace nlohmann {
+// begin ISAM2Result::DetailedResults::VariableStatus
+template <>
+struct adl_serializer<gtsam::ISAM2Result::DetailedResults::VariableStatus> {
+  static void to_json(json& j,
+                      const gtsam::ISAM2Result::DetailedResults::VariableStatus&
+                          variable_status) {
+    j["is_reeliminated"] = variable_status.isReeliminated;
+    j["is_above_relin_threshold"] = variable_status.isAboveRelinThreshold;
+    j["is_relinearized_involved"] = variable_status.isRelinearizeInvolved;
+    j["is_relinearized"] = variable_status.isRelinearized;
+    j["is_observed"] = variable_status.isObserved;
+    j["is_new"] = variable_status.isNew;
+    j["is_root_clique"] = variable_status.inRootClique;
+  }
+
+  static void from_json(const json&,
+                        gtsam::ISAM2Result::DetailedResults::VariableStatus&) {
+    // TODO:
+  }
+};
+// end ISAM2Result::DetailedResults::VariableStatus
+
+// begin ISAM2Result::DetailedResults
+template <>
+struct adl_serializer<gtsam::ISAM2Result::DetailedResults> {
+  static void to_json(
+      json& j, const gtsam::ISAM2Result::DetailedResults& detailed_result) {
+    j["variable_status"] = detailed_result.variableStatus;
+  }
+
+  static void from_json(const json&, gtsam::ISAM2Result::DetailedResults&) {
+    // TODO:
+  }
+};
+// end ISAM2Result::DetailedResults
+
+// begin ISAM2Result
+template <>
+struct adl_serializer<gtsam::ISAM2Result> {
+  static void to_json(json& j, const gtsam::ISAM2Result& result) {
+    j["error_before"] = result.errorBefore;
+    j["error_after"] = result.errorAfter;
+    j["variables_relinearized"] = result.variablesRelinearized;
+    j["variables_reeliminated"] = result.variablesReeliminated;
+    j["factors_recalculated"] = result.factorsRecalculated;
+    j["cliques"] = result.cliques;
+    j["error_after"] = result.errorAfter;
+    j["unused_keys"] = result.unusedKeys;
+    j["observed_keys"] = result.observedKeys;
+    j["observed_keys"] = result.observedKeys;
+    j["keys_with_factors_removed"] = result.keysWithRemovedFactors;
+    j["marked_keys"] = result.markedKeys;
+    j["detailed_results"] = result.detail;
+  }
+
+  static void from_json(const json&, gtsam::ISAM2Result&) {
+    // TODO
+  }
+};
+// end ISAM2Result
+
+}  // namespace nlohmann

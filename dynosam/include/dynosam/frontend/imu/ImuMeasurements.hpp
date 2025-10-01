@@ -30,8 +30,8 @@
 
 #pragma once
 
-#include "dynosam/common/Types.hpp"  //for timestamp
 #include "dynosam/frontend/imu/Imu-Definitions.hpp"
+#include "dynosam_common/Types.hpp"  //for timestamp
 
 namespace dyno {
 

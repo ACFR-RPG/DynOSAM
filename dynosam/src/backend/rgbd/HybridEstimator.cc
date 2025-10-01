@@ -714,7 +714,7 @@ void HybridFormulation::objectUpdateContext(
     // gtsam::Pose3 motion;
     const gtsam::Pose3 X_world = getInitialOrLinearizedSensorPose(frame_id);
     gtsam::Pose3 motion = computeInitialH(object_id, frame_id);
-    VLOG(5) << "Added motion at  " << DynoLikeKeyFormatter(object_motion_key_k);
+    VLOG(5) << "Added motion at  " << DynosamKeyFormatter(object_motion_key_k);
     // gtsam::Pose3 motion;
     new_values.insert(object_motion_key_k, motion);
     is_other_values_in_map.insert2(object_motion_key_k, true);

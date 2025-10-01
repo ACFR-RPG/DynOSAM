@@ -35,14 +35,14 @@
 #include "dynosam/backend/BackendOutputPacket.hpp"
 #include "dynosam/backend/BackendParams.hpp"
 #include "dynosam/backend/Formulation.hpp"
-#include "dynosam/common/Exceptions.hpp"
-#include "dynosam/common/Map.hpp"
-#include "dynosam/common/ModuleBase.hpp"
-#include "dynosam/common/SharedModuleInfo.hpp"
-#include "dynosam/common/Types.hpp"
 #include "dynosam/frontend/RGBDInstance-Definitions.hpp"  //for RGBDInstanceOutputPacket
-#include "dynosam/utils/SafeCast.hpp"
 #include "dynosam/visualizer/Visualizer-Definitions.hpp"  //for ImageDisplayQueueOptional,
+#include "dynosam_common/Exceptions.hpp"
+#include "dynosam_common/Map.hpp"
+#include "dynosam_common/ModuleBase.hpp"
+#include "dynosam_common/SharedModuleInfo.hpp"
+#include "dynosam_common/Types.hpp"
+#include "dynosam_common/utils/SafeCast.hpp"
 
 // DECLARE_string(updater_suffix);
 

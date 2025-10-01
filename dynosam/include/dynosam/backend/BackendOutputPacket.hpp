@@ -31,7 +31,7 @@
 #pragma once
 
 #include "dynosam/backend/BackendDefinitions.hpp"  //for TemporalObjectMetaData
-#include "dynosam/common/Types.hpp"
+#include "dynosam_common/Types.hpp"
 
 namespace dyno {
 

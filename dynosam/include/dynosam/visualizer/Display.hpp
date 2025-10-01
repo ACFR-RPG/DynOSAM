@@ -31,9 +31,9 @@
 #pragma once
 
 #include "dynosam/backend/BackendOutputPacket.hpp"
-#include "dynosam/common/SharedModuleInfo.hpp"
-#include "dynosam/common/Types.hpp"
 #include "dynosam/frontend/VisionImuOutputPacket.hpp"
+#include "dynosam_common/SharedModuleInfo.hpp"
+#include "dynosam_common/Types.hpp"
 
 namespace dyno {
 

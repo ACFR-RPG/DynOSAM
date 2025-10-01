@@ -31,9 +31,8 @@
 
 #include <gtsam/geometry/Pose3.h>
 
-#include <dynosam/common/Types.hpp>
-#include <dynosam/visualizer/Colour.hpp>
-
+#include "dynosam_common/Types.hpp"
+#include "dynosam_common/viz/Colour.hpp"
 #include "geometry_msgs/msg/pose.hpp"
 #include "geometry_msgs/msg/pose_stamped.hpp"
 #include "geometry_msgs/msg/transform.hpp"

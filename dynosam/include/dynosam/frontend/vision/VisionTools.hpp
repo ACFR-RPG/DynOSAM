@@ -34,16 +34,16 @@
 
 #include <opencv4/opencv2/opencv.hpp>
 
-#include "dynosam/common/Camera.hpp"
-#include "dynosam/common/Cuda.hpp"
-#include "dynosam/common/ImageContainer.hpp"
-#include "dynosam/common/Types.hpp"
 #include "dynosam/frontend/vision/Frame.hpp"
 #include "dynosam/frontend/vision/Vision-Definitions.hpp"
-#include "dynosam/utils/GtsamUtils.hpp"
-#include "dynosam/utils/Histogram.hpp"
-#include "dynosam/utils/OpenCVUtils.hpp"
 #include "dynosam/visualizer/Visualizer-Definitions.hpp"
+#include "dynosam_common/Cuda.hpp"
+#include "dynosam_common/Types.hpp"
+#include "dynosam_common/utils/GtsamUtils.hpp"
+#include "dynosam_common/utils/Histogram.hpp"
+#include "dynosam_common/utils/OpenCVUtils.hpp"
+#include "dynosam_vision_common/Camera.hpp"
+#include "dynosam_vision_common/ImageContainer.hpp"
 
 #ifdef DYNO_CUDA_OPENCV_ENABLED
 #include <opencv2/cudaoptflow.hpp>

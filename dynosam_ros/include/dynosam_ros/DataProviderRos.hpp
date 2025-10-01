@@ -30,13 +30,13 @@
 
 #pragma once
 
-#include <dynosam/common/Exceptions.hpp>
-#include <dynosam/common/ImageTypes.hpp>
-#include <dynosam/dataprovider/DataProvider.hpp>
 #include <opencv4/opencv2/opencv.hpp>
 
 #include "cv_bridge/cv_bridge.hpp"
+#include "dynosam/dataprovider/DataProvider.hpp"
+#include "dynosam_common/Exceptions.hpp"
 #include "dynosam_ros/adaptors/CameraParamsAdaptor.hpp"
+#include "dynosam_vision_common/ImageTypes.hpp"
 #include "rclcpp/node.hpp"
 #include "rclcpp/node_options.hpp"
 #include "rclcpp/wait_for_message.hpp"

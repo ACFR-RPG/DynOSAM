@@ -32,7 +32,7 @@
 
 #include <functional>
 
-#include "dynosam/common/Types.hpp"
+#include "dynosam_common/Types.hpp"
 
 namespace dyno {
 

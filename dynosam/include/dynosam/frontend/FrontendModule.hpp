@@ -30,16 +30,16 @@
 
 #pragma once
 
-#include "dynosam/common/Exceptions.hpp"
-#include "dynosam/common/ModuleBase.hpp"
-#include "dynosam/common/SharedModuleInfo.hpp"
-#include "dynosam/common/Types.hpp"
 #include "dynosam/frontend/FrontendParams.hpp"
 #include "dynosam/frontend/VisionImuOutputPacket.hpp"
 #include "dynosam/pipeline/PipelineParams.hpp"
 #include "dynosam/visualizer/Visualizer-Definitions.hpp"
+#include "dynosam_common/Exceptions.hpp"
+#include "dynosam_common/ModuleBase.hpp"
+#include "dynosam_common/SharedModuleInfo.hpp"
+#include "dynosam_common/Types.hpp"
 
-// #include "dynosam/common"
+// #include "dynosam_common"
 
 #include <type_traits>
 

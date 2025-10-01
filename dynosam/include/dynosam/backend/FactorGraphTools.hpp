@@ -44,11 +44,11 @@
 #include <unordered_set>
 
 #include "dynosam/backend/BackendDefinitions.hpp"
-#include "dynosam/common/Types.hpp"
-#include "dynosam/logger/Logger.hpp"
-#include "dynosam/utils/GtsamUtils.hpp"
-#include "dynosam/utils/Numerical.hpp"
-#include "dynosam/visualizer/ColourMap.hpp"
+#include "dynosam_common/Types.hpp"
+#include "dynosam_common/logger/Logger.hpp"
+#include "dynosam_common/utils/GtsamUtils.hpp"
+#include "dynosam_common/utils/Numerical.hpp"
+#include "dynosam_common/viz/Colour.hpp"
 
 namespace dyno {
 
@@ -526,7 +526,7 @@ struct DrawBlockJacobiansOptions {
    * @brief Constructs a set of options which has the label formatter and colour
    * selector set to the Dyno sam versions.
    *
-   * Specifcially the label formatter uses DynoLikeKeyFormatter and the colour
+   * Specifcially the label formatter uses DynosamKeyFormatter and the colour
    * selector uses knowledge of the keys in our graph structructure to pick
    * colours for our variables
    *
@@ -539,7 +539,7 @@ struct DrawBlockJacobiansOptions {
     if (options) dyno_sam_options = *options;
 
     // override label and colour formatter fucntion for dynosam
-    dyno_sam_options.label_formatter = DynoLikeKeyFormatter;
+    dyno_sam_options.label_formatter = DynosamKeyFormatter;
 
     auto dyno_sam_colour_selector = [](gtsam::Key key) {
       return Color::uniqueId((size_t)gtsam::Symbol(key).chr()).bgra();
@@ -772,7 +772,7 @@ class BayesTreeMarginalizationHelper {
       std::cout << "BayesTreeMarginalizationHelper: Additional keys to "
                    "re-eliminate: ";
       for (const Key& key : additionalKeys) {
-        std::cout << DynoLikeKeyFormatter(key) << " ";
+        std::cout << DynosamKeyFormatter(key) << " ";
       }
       std::cout << std::endl;
     }
@@ -796,7 +796,7 @@ class BayesTreeMarginalizationHelper {
     // Check each clique that contains a marginalizable key
     for (const Clique* clique :
          getCliquesContainingKeys(bayesTree, marginalizableKeySet)) {
-      // clique->print("Clique: ", DynoLikeKeyFormatter);
+      // clique->print("Clique: ", DynosamKeyFormatter);
       if (additionalCliques.count(clique)) {
         // The clique has already been visited. This can happen when an
         // ancestor of the current clique also contain some marginalizable
@@ -829,7 +829,7 @@ class BayesTreeMarginalizationHelper {
     std::unordered_set<const Clique*> cliques;
     for (const Key& key : keysOfInterest) {
       CHECK(bayesTree.nodes().exists(key))
-          << "Key does not exist in bayesTree " << DynoLikeKeyFormatter(key);
+          << "Key does not exist in bayesTree " << DynosamKeyFormatter(key);
       cliques.insert(bayesTree[key].get());
     }
     return cliques;

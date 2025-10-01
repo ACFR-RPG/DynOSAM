@@ -33,11 +33,11 @@
 #include <glog/logging.h>
 
 #include "dynosam/backend/BackendOutputPacket.hpp"
-#include "dynosam/common/Types.hpp"
 #include "dynosam/frontend/VisionImuOutputPacket.hpp"
 #include "dynosam/pipeline/PipelineBase.hpp"
-#include "dynosam/pipeline/ThreadSafeQueue.hpp"
+#include "dynosam/pipeline/PipelinePayload.hpp"
 #include "dynosam/visualizer/Display.hpp"
+#include "dynosam_common/Types.hpp"
 
 namespace dyno {
 

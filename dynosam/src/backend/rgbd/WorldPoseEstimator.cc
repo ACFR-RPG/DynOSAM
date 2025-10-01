@@ -253,7 +253,7 @@ void WorldPoseFormulation::objectUpdateContext(
     new_values.insert(object_pose_key_k, object_pose_k);
     is_other_values_in_map.insert2(object_pose_key_k, true);
     VLOG(50) << "Adding object pose key "
-             << DynoLikeKeyFormatter(object_pose_key_k);
+             << DynosamKeyFormatter(object_pose_key_k);
   }
 
   if (FLAGS_use_smoothing_factor) {
@@ -306,8 +306,8 @@ void WorldPoseFormulation::objectUpdateContext(
         result.debug_info->getObjectInfo(object_id).smoothing_factor_added =
             true;
       VLOG(50) << "Adding smoothing "
-               << DynoLikeKeyFormatter(object_pose_key_k_2) << " -> "
-               << DynoLikeKeyFormatter(object_pose_key_k);
+               << DynosamKeyFormatter(object_pose_key_k_2) << " -> "
+               << DynosamKeyFormatter(object_pose_key_k);
     }
   }
 }

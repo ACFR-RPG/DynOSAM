@@ -37,10 +37,10 @@
 #include <thread>
 #include <vector>  // std::vector
 
-#include "dynosam/common/Cuda.hpp"
 #include "dynosam/frontend/FrontendParams.hpp"
-#include "dynosam/logger/Logger.hpp"
-#include "dynosam/utils/OpenCVUtils.hpp"
+#include "dynosam_common/Cuda.hpp"
+#include "dynosam_common/logger/Logger.hpp"
+#include "dynosam_common/utils/OpenCVUtils.hpp"
 
 namespace dyno {
 

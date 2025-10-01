@@ -32,7 +32,6 @@
 
 #include <gtsam/navigation/NavState.h>
 
-#include "dynosam/common/Camera.hpp"
 #include "dynosam/frontend/FrontendModule.hpp"
 #include "dynosam/frontend/RGBDInstance-Definitions.hpp"
 #include "dynosam/frontend/imu/ImuFrontend.hpp"
@@ -40,6 +39,7 @@
 #include "dynosam/frontend/vision/MotionSolver.hpp"
 #include "dynosam/frontend/vision/ObjectTracker.hpp"
 #include "dynosam/frontend/vision/VisionTools.hpp"
+#include "dynosam_vision_common/Camera.hpp"
 
 namespace dyno {
 

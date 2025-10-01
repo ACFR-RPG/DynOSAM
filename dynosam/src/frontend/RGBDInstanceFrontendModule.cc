@@ -34,15 +34,15 @@
 
 #include <opencv4/opencv2/opencv.hpp>
 
-#include "dynosam/common/Flags.hpp"  //for common flags
-#include "dynosam/common/RGBDCamera.hpp"
 #include "dynosam/frontend/RGBDInstance-Definitions.hpp"
 #include "dynosam/frontend/vision/MotionSolver.hpp"
 #include "dynosam/frontend/vision/Vision-Definitions.hpp"
-#include "dynosam/logger/Logger.hpp"
-#include "dynosam/utils/OpenCVUtils.hpp"
-#include "dynosam/utils/SafeCast.hpp"
-#include "dynosam/utils/TimingStats.hpp"
+#include "dynosam_common/Flags.hpp"  //for common flags
+#include "dynosam_common/logger/Logger.hpp"
+#include "dynosam_common/utils/OpenCVUtils.hpp"
+#include "dynosam_common/utils/SafeCast.hpp"
+#include "dynosam_common/utils/TimingStats.hpp"
+#include "dynosam_vision_common/RGBDCamera.hpp"
 
 DEFINE_bool(use_frontend_logger, false,
             "If true, the frontend logger will be used");

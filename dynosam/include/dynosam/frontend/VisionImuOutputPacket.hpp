@@ -30,14 +30,14 @@
 
 #pragma once
 
-#include "dynosam/common/Camera.hpp"
-#include "dynosam/common/GroundTruthPacket.hpp"
-#include "dynosam/common/PointCloudProcess.hpp"
-#include "dynosam/common/SensorModels.hpp"
-#include "dynosam/common/Types.hpp"
 #include "dynosam/frontend/Frontend-Definitions.hpp"
 #include "dynosam/frontend/FrontendInputPacket.hpp"
 #include "dynosam/frontend/imu/ImuFrontend.hpp"
+#include "dynosam_common/GroundTruthPacket.hpp"
+#include "dynosam_common/PointCloudProcess.hpp"
+#include "dynosam_common/SensorModels.hpp"
+#include "dynosam_common/Types.hpp"
+#include "dynosam_vision_common/Camera.hpp"
 
 namespace dyno {
 
@@ -191,3 +191,15 @@ class VisionImuPacket {
 };
 
 }  // namespace dyno
+
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;
+
+namespace nlohmann {
+
+template <>
+struct adl_serializer<dyno::VisionImuPacket> {
+  static void to_json(json& j, const dyno::VisionImuPacket& input);
+  static dyno::VisionImuPacket from_json(const json& j);
+};
+}  // namespace nlohmann

@@ -30,10 +30,11 @@
 
 #pragma once
 
+#include <nlohmann/json.hpp>
 #include <opencv4/opencv2/core.hpp>
 
-#include "dynosam/common/ImageContainer.hpp"
-#include "dynosam/common/Types.hpp"
+#include "dynosam_common/Types.hpp"
+#include "dynosam_vision_common/ImageContainer.hpp"
 
 namespace dyno {
 
@@ -100,5 +101,30 @@ struct DebugImagery {
   cv::Mat depth_viz;
   cv::Mat mask_viz;
 };
+
+using json = nlohmann::json;
+
+// map KeyPointType values to JSON as strings
+NLOHMANN_JSON_SERIALIZE_ENUM(KeyPointType, {
+                                               {STATIC, "static"},
+                                               {DYNAMIC, "dynamic"},
+                                           })
+
+// map ReferenceFrame values to JSON as strings
+NLOHMANN_JSON_SERIALIZE_ENUM(ReferenceFrame, {
+                                                 {GLOBAL, "global"},
+                                                 {LOCAL, "local"},
+                                                 {OBJECT, "object"},
+                                             })
+
+NLOHMANN_JSON_SERIALIZE_ENUM(FrontendType, {
+                                               {kRGBD, "RGB"},
+                                               {kMono, "Mono"},
+                                           })
+
+NLOHMANN_JSON_SERIALIZE_ENUM(MotionRepresentationStyle, {
+                                                            {F2F, "F2F"},
+                                                            {KF, "KF"},
+                                                        })
 
 }  // namespace dyno

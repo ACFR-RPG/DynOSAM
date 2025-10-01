@@ -37,9 +37,9 @@
 #include <opencv2/opencv.hpp>
 #include <opencv2/video/tracking.hpp>
 
-#include "dynosam/common/Cuda.hpp"
 #include "dynosam/frontend/vision/ORBextractor.hpp"
-#include "dynosam/utils/TimingStats.hpp"
+#include "dynosam_common/Cuda.hpp"
+#include "dynosam_common/utils/TimingStats.hpp"
 
 #ifdef DYNO_CUDA_OPENCV_ENABLED
 #include <opencv2/core/cuda.hpp>

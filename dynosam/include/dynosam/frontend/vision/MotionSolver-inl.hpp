@@ -38,7 +38,7 @@
 #include "dynosam/factors/LandmarkMotionTernaryFactor.hpp"
 #include "dynosam/factors/Pose3FlowProjectionFactor.h"
 #include "dynosam/frontend/vision/MotionSolver.hpp"
-#include "dynosam/utils/TimingStats.hpp"
+#include "dynosam_common/utils/TimingStats.hpp"
 
 namespace dyno {
 

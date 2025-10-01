@@ -31,8 +31,8 @@
 #pragma once
 
 #include "dynosam/pipeline/PipelineBase.hpp"
-#include "dynosam/utils/Timing.hpp"
-#include "dynosam/utils/TimingStats.hpp"
+#include "dynosam_common/utils/Timing.hpp"
+#include "dynosam_common/utils/TimingStats.hpp"
 
 namespace dyno {
 

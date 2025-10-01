@@ -32,8 +32,8 @@
 
 #include <cmath>
 
-#include "dynosam/common/Types.hpp"
 #include "dynosam/frontend/vision/VisionTools.hpp"
+#include "dynosam_common/Types.hpp"
 #include "internal/helpers.hpp"
 
 using namespace dyno;

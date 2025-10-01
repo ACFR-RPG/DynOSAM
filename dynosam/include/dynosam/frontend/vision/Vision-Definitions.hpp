@@ -32,10 +32,10 @@
 
 #include <mutex>
 
-#include "dynosam/common/ImageContainer.hpp"
-#include "dynosam/common/Types.hpp"
 #include "dynosam/frontend/Frontend-Definitions.hpp"
-#include "dynosam/frontend/vision/Feature.hpp"
+#include "dynosam_common/Types.hpp"
+#include "dynosam_vision_common/Feature.hpp"
+#include "dynosam_vision_common/ImageContainer.hpp"
 
 namespace dyno {
 

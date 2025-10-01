@@ -33,7 +33,7 @@
 #include <config_utilities/config_utilities.h>
 #include <gtsam/base/Vector.h>
 
-#include <dynosam/common/Types.hpp>
+#include "dynosam_common/Types.hpp"
 
 namespace dyno {
 

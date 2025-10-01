@@ -32,8 +32,9 @@
 
 #include "dynosam/frontend/FrontendInputPacket.hpp"
 #include "dynosam/frontend/VisionImuOutputPacket.hpp"
-#include "dynosam/logger/Logger.hpp"
 #include "dynosam/pipeline/PipelineModuleProcessor.hpp"
+#include "dynosam/pipeline/PipelinePayload.hpp"
+#include "dynosam_common/logger/Logger.hpp"
 
 namespace dyno {
 

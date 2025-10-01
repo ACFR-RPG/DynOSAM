@@ -6,12 +6,12 @@
 
 #include <functional>
 
-#include "dynosam/common/CameraParams.hpp"
-#include "dynosam/common/Exceptions.hpp"
-#include "dynosam/common/Types.hpp"
 #include "dynosam/dataprovider/DataInterfacePipeline.hpp"
 #include "dynosam/frontend/imu/ImuParams.hpp"
 #include "dynosam/frontend/vision/Frame.hpp"
+#include "dynosam_common/Exceptions.hpp"
+#include "dynosam_common/Types.hpp"
+#include "dynosam_vision_common/CameraParams.hpp"
 
 namespace dyno {
 

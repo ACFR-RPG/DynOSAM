@@ -4,7 +4,7 @@
 
 #include "dynosam/backend/rgbd/impl/test_HybridFormulations.hpp"
 #include "dynosam/factors/HybridFormulationFactors.hpp"
-#include "dynosam/utils/GtsamUtils.hpp"
+#include "dynosam_common/utils/GtsamUtils.hpp"
 #include "internal/helpers.hpp"
 #include "internal/simulator.hpp"
 

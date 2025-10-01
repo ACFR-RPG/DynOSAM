@@ -32,10 +32,10 @@
 
 #include <glog/logging.h>
 
-#include "dynosam/common/Types.hpp"
 #include "dynosam/frontend/vision/VisionTools.hpp"
-#include "dynosam/logger/Logger.hpp"
-#include "dynosam/utils/Histogram.hpp"
+#include "dynosam_common/Types.hpp"
+#include "dynosam_common/logger/Logger.hpp"
+#include "dynosam_common/utils/Histogram.hpp"
 
 namespace dyno {
 

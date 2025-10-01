@@ -39,11 +39,11 @@
 
 #include "dynosam/backend/BackendDefinitions.hpp"
 #include "dynosam/backend/BackendParams.hpp"
-#include "dynosam/common/CameraParams.hpp"
-#include "dynosam/common/Types.hpp"
 #include "dynosam/frontend/Frontend-Definitions.hpp"
 #include "dynosam/frontend/FrontendParams.hpp"
-#include "dynosam/utils/Macros.hpp"
+#include "dynosam_common/Types.hpp"
+#include "dynosam_common/utils/Macros.hpp"
+#include "dynosam_vision_common/CameraParams.hpp"
 
 namespace dyno {
 

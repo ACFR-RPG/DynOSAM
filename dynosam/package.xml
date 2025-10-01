@@ -13,6 +13,9 @@
 
  <buildtool_depend>ament_cmake</buildtool_depend>
  <depend>gtsam</depend>
+ <depend>dynosam_common</depend>
+ <depend>dynosam_vision_common</depend>
+
 
   <depend>rclcpp</depend>
   <depend>std_msgs</depend>

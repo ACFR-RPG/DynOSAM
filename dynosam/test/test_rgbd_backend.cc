@@ -47,9 +47,9 @@
 #include "dynosam/backend/FactorGraphTools.hpp"
 #include "dynosam/backend/ParallelHybridBackendModule.hpp"
 #include "dynosam/backend/RegularBackendModule.hpp"
-#include "dynosam/common/Map.hpp"
 #include "dynosam/factors/LandmarkMotionTernaryFactor.hpp"
 #include "dynosam/frontend/FrontendPipeline.hpp"
+#include "dynosam_common/Map.hpp"
 #include "internal/backend_runners.hpp"
 #include "internal/helpers.hpp"
 #include "internal/simulator.hpp"
@@ -59,11 +59,11 @@ void printSymbolicTreeHelper(const gtsam::ISAM2Clique::shared_ptr& clique,
   // Print the current clique
   std::cout << indent << "P( ";
   for (auto key : clique->conditional()->frontals()) {
-    std::cout << dyno::DynoLikeKeyFormatter(key) << " ";
+    std::cout << dyno::DynosamKeyFormatter(key) << " ";
   }
   if (clique->conditional()->nrParents() > 0) std::cout << "| ";
   for (auto key : clique->conditional()->parents()) {
-    std::cout << dyno::DynoLikeKeyFormatter(key) << " ";
+    std::cout << dyno::DynosamKeyFormatter(key) << " ";
   }
   std::cout << ")" << std::endl;
 
@@ -119,7 +119,7 @@ TEST(RegularBackendModule, smallKITTIDataset) {
         isam2.getFactorsUnsafe().saveGraph(
             dyno::getOutputFilePath("small_isam_graph_" +
                                     std::to_string(frame_id) + ".dot"),
-            dyno::DynoLikeKeyFormatter);
+            dyno::DynosamKeyFormatter);
 
         gtsam::FastMap<gtsam::Key, std::string> coloured_affected_keys;
         for (const auto& key : result.markedKeys) {
@@ -130,7 +130,7 @@ TEST(RegularBackendModule, smallKITTIDataset) {
             isam2,
             dyno::getOutputFilePath("small_oc_bayes_tree_" +
                                     std::to_string(frame_id) + ".dot"),
-            dyno::DynoLikeKeyFormatter, coloured_affected_keys);
+            dyno::DynosamKeyFormatter, coloured_affected_keys);
       });
 
   auto output = offline_frontend->process(offline_frontend->getInputPacket());
@@ -318,7 +318,7 @@ TEST(RegularBackendModule, smallKITTIDataset) {
 //       isam2.getFactorsUnsafe().saveGraph(
 //           dyno::getOutputFilePath("isam_graph_" + std::to_string(frame_id) +
 //                                   ".dot"),
-//           dyno::DynoLikeKeyFormatter);
+//           dyno::DynosamKeyFormatter);
 
 //       if (marginalizableKeys.size() > 0) {
 //           gtsam::FastList<gtsam::Key> leafKeys(marginalizableKeys.begin(),
@@ -366,20 +366,20 @@ TEST(RegularBackendModule, smallKITTIDataset) {
 //     //     dyno::getOutputFilePath("oc_bayes_tree_" +
 //     std::to_string(frame_id) +
 //     //                             ".dot"),
-//     //     dyno::DynoLikeKeyFormatter,
+//     //     dyno::DynosamKeyFormatter,
 //     //     coloured_affected_keys);
 
 //     dyno::factor_graph_tools::saveBayesTree(
 //         isam2,
 //         dyno::getOutputFilePath("oc_bayes_tree_" + std::to_string(frame_id) +
 //                                 ".dot"),
-//         dyno::DynoLikeKeyFormatter, coloured_affected_keys);
+//         dyno::DynosamKeyFormatter, coloured_affected_keys);
 //     //  dyno::factor_graph_tools::saveBayesTree(
 //     //     isam.bayesTree(),
 //     //     dyno::getOutputFilePath("oc_bayes_tree_" +
 //     std::to_string(frame_id) +
 //     //                             ".dot"),
-//     //     dyno::DynoLikeKeyFormatter,
+//     //     dyno::DynosamKeyFormatter,
 //     //     coloured_affected_keys);
 
 //     LOG(INFO) << "ISAM2 result. Error before " << result.getErrorBefore()
@@ -413,7 +413,7 @@ TEST(RegularBackendModule, smallKITTIDataset) {
 //   gtsam::Values initial_estimate = backend.formulation()->getTheta();
 //   full_graph.saveGraph(
 //       dyno::getOutputFilePath("construct_simple_graph_test.dot"),
-//       dyno::DynoLikeKeyFormatter);
+//       dyno::DynosamKeyFormatter);
 
 //   // log results of LM optimisation with different suffix
 //   dyno::BackendMetaData backend_info;
@@ -913,7 +913,7 @@ TEST(RegularBackendModule, testObjectCentric) {
           dyno::ObjectId object_id;
           dyno::FrameId k;
           if (dyno::reconstructMotionInfo(key, object_id, k))
-            LOG(INFO) << "New motion key " << dyno::DynoLikeKeyFormatter(key);
+            LOG(INFO) << "New motion key " << dyno::DynosamKeyFormatter(key);
         }
 
         const auto old_keys = isam2.getLinearizationPoint().keys();
@@ -922,7 +922,7 @@ TEST(RegularBackendModule, testObjectCentric) {
           dyno::ObjectId object_id;
           dyno::FrameId k;
           if (dyno::reconstructMotionInfo(key, object_id, k))
-            LOG(INFO) << "Old motion key " << dyno::DynoLikeKeyFormatter(key);
+            LOG(INFO) << "Old motion key " << dyno::DynosamKeyFormatter(key);
         }
 
         // how does IFLS work when smoothing lag is 0??!!! Will the keys not be
@@ -992,7 +992,7 @@ TEST(RegularBackendModule, testObjectCentric) {
             constrained_keys[key] = 0;
           }
 
-          // LOG(INFO) << "Consrained key: " << dyno::DynoLikeKeyFormatter(key)
+          // LOG(INFO) << "Consrained key: " << dyno::DynosamKeyFormatter(key)
           // << " group: " << constrained_keys[key];
         }
 
@@ -1008,7 +1008,7 @@ TEST(RegularBackendModule, testObjectCentric) {
         //  }
 
         for (auto key : marginalizableKeys) {
-          LOG(INFO) << "Marginal keys " << dyno::DynoLikeKeyFormatter(key);
+          LOG(INFO) << "Marginal keys " << dyno::DynosamKeyFormatter(key);
         }
 
         // atm we only add leaf ndes to marginalizableKeys so the additional
@@ -1025,7 +1025,7 @@ TEST(RegularBackendModule, testObjectCentric) {
         // update_params.extraReelimKeys = additionalMarkedKeys;
 
         // for (const auto& factors : new_factors) {
-        //   factors->printKeys("Factor: ", dyno::DynoLikeKeyFormatter);
+        //   factors->printKeys("Factor: ", dyno::DynosamKeyFormatter);
         // }
 
         gtsam::ISAM2Result result;
@@ -1039,7 +1039,7 @@ TEST(RegularBackendModule, testObjectCentric) {
           isam2.getFactorsUnsafe().saveGraph(
               dyno::getOutputFilePath("isam_graph_" + std::to_string(frame_id) +
                                       ".dot"),
-              dyno::DynoLikeKeyFormatter);
+              dyno::DynosamKeyFormatter);
 
           //   if (marginalizableKeys.size() > 0) {
           //       gtsam::FastList<gtsam::Key>
@@ -1060,7 +1060,7 @@ TEST(RegularBackendModule, testObjectCentric) {
                                       std::to_string(frame_id) + ".dot"));
         } catch (gtsam::ValuesKeyDoesNotExist& e) {
           LOG(INFO) << "Caught exception ValuesKeyDoesNotExist:"
-                    << dyno::DynoLikeKeyFormatter(e.key());
+                    << dyno::DynosamKeyFormatter(e.key());
           throw e;
         }
 
@@ -1079,20 +1079,20 @@ TEST(RegularBackendModule, testObjectCentric) {
         //     dyno::getOutputFilePath("oc_bayes_tree_" +
         //     std::to_string(frame_id) +
         //                             ".dot"),
-        //     dyno::DynoLikeKeyFormatter,
+        //     dyno::DynosamKeyFormatter,
         //     coloured_affected_keys);
 
         dyno::factor_graph_tools::saveBayesTree(
             isam2,
             dyno::getOutputFilePath("oc_bayes_tree_" +
                                     std::to_string(frame_id) + ".dot"),
-            dyno::DynoLikeKeyFormatter, coloured_affected_keys);
+            dyno::DynosamKeyFormatter, coloured_affected_keys);
         //  dyno::factor_graph_tools::saveBayesTree(
         //     isam.bayesTree(),
         //     dyno::getOutputFilePath("oc_bayes_tree_" +
         //     std::to_string(frame_id) +
         //                             ".dot"),
-        //     dyno::DynoLikeKeyFormatter,
+        //     dyno::DynosamKeyFormatter,
         //     coloured_affected_keys);
 
         LOG(INFO) << "ISAM2 result. Error before " << result.getErrorBefore()
@@ -1125,7 +1125,7 @@ TEST(RegularBackendModule, testObjectCentric) {
   gtsam::Values initial_estimate = backend.formulation()->getTheta();
   full_graph.saveGraph(
       dyno::getOutputFilePath("construct_simple_graph_test.dot"),
-      dyno::DynoLikeKeyFormatter);
+      dyno::DynosamKeyFormatter);
 
   // log results of LM optimisation with different suffix
   dyno::BackendMetaData backend_info;
@@ -1313,7 +1313,7 @@ TEST(RegularBackendModule, testCliques) {
   nlfgm.writeDynosamGraphFile(dyno::getOutputFilePath("test_graph.g2o"));
 
   // graph.saveGraph(dyno::getOutputFilePath("small_graph.dot"),
-  // dyno::DynoLikeKeyFormatter);
+  // dyno::DynosamKeyFormatter);
   gtsam::ISAM2BayesTree::shared_ptr bayesTree = nullptr;
   {  //
     // gtsam::ISAM2 isam2;
@@ -1328,7 +1328,7 @@ TEST(RegularBackendModule, testCliques) {
                     .first;
 
     bayesTree->saveGraph(dyno::getOutputFilePath("elimated_tree.dot"),
-                         dyno::DynoLikeKeyFormatter);
+                         dyno::DynosamKeyFormatter);
   }
 
   // {
@@ -1362,7 +1362,7 @@ TEST(RegularBackendModule, testCliques) {
   // }
 
   // isam2.saveGraph(dyno::getOutputFilePath("small_tree_original.dot"),
-  // dyno::DynoLikeKeyFormatter);
+  // dyno::DynosamKeyFormatter);
 
   // add new factors to  motion
   // the simplest dynamic graph
@@ -1435,13 +1435,13 @@ TEST(RegularBackendModule, testCliques) {
                     .first;
 
     bayesTree->saveGraph(dyno::getOutputFilePath("elimated_tree_1.dot"),
-                         dyno::DynoLikeKeyFormatter);
+                         dyno::DynosamKeyFormatter);
   }
 
   // gtsam::NonlinearFactorGraph all = graph;
   // all.add_factors(new_graph);
   // all.saveGraph(dyno::getOutputFilePath("small_graph_updated.dot"),
-  // dyno::DynoLikeKeyFormatter);
+  // dyno::DynosamKeyFormatter);
 
   //  {
 
@@ -1468,7 +1468,7 @@ TEST(RegularBackendModule, testCliques) {
   // }
 
   // isam2.saveGraph(dyno::getOutputFilePath("small_tree_updated.dot"),
-  // dyno::DynoLikeKeyFormatter);
+  // dyno::DynosamKeyFormatter);
 }
 
 TEST(RegularBackendModule, writeOutSimpleGraph) {
@@ -1645,7 +1645,7 @@ TEST(RegularBackendModule, writeOutSimpleGraph) {
   // nlfgm.writeDynosamGraphFile(dyno::getOutputFilePath("test_graph.g2o"));
 
   graph.saveGraph(dyno::getOutputFilePath("simple_dynamic_graph.dot"),
-                  dyno::DynoLikeKeyFormatter);
+                  dyno::DynosamKeyFormatter);
   gtsam::GaussianFactorGraph::shared_ptr linearised_graph = nlfgm.linearize();
   gtsam::JacobianFactor jacobian_factor(*linearised_graph);
   gtsam::Matrix information = jacobian_factor.information();

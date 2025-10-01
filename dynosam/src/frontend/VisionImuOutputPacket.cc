@@ -195,3 +195,20 @@ void VisionImuPacket::fillLandmarkMeasurements(
 }
 
 }  // namespace dyno
+
+namespace nlohmann {
+void adl_serializer<dyno::VisionImuPacket>::to_json(
+    json& j, const dyno::VisionImuPacket& input) {
+  using namespace dyno;
+  throw DynosamException(
+      "nlohmann::to_json not implemented for dyno::VisionImuPacket");
+}
+
+// TODO:
+dyno::VisionImuPacket adl_serializer<dyno::VisionImuPacket>::from_json(
+    const json& j) {
+  using namespace dyno;
+  throw DynosamException(
+      "nlohmann::from_json not implemented for dyno::VisionImuPacket");
+}
+}  // namespace nlohmann

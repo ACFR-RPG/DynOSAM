@@ -31,9 +31,9 @@
 
 #include <glog/logging.h>
 
-#include "dynosam/utils/Numerical.hpp"
-#include "dynosam/utils/SafeCast.hpp"
-#include "dynosam/utils/Statistics.hpp"
+#include "dynosam_common/utils/Numerical.hpp"
+#include "dynosam_common/utils/SafeCast.hpp"
+#include "dynosam_common/utils/Statistics.hpp"
 
 namespace dyno {
 

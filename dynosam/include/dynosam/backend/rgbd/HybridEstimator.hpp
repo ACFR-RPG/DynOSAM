@@ -37,10 +37,10 @@
 #include "dynosam/backend/Accessor.hpp"
 #include "dynosam/backend/BackendDefinitions.hpp"
 #include "dynosam/backend/Formulation.hpp"
-#include "dynosam/common/Map.hpp"
-#include "dynosam/common/StructuredContainers.hpp"  //for FrameRange
-#include "dynosam/common/Types.hpp"                 //only needed for factors
 #include "dynosam/factors/HybridFormulationFactors.hpp"
+#include "dynosam_common/Map.hpp"
+#include "dynosam_common/StructuredContainers.hpp"  //for FrameRange
+#include "dynosam_common/Types.hpp"                 //only needed for factors
 
 namespace dyno {
 
@@ -159,10 +159,10 @@ class SmartMotionFactor : public gtsam::NonlinearFactor,
 
   void print(const std::string& s = "",
              const gtsam::KeyFormatter& keyFormatter =
-                 DynoLikeKeyFormatter) const override {
+                 DynosamKeyFormatter) const override {
     std::cout << s << "SmartMotionFactor\n";
     std::cout << "result:\n" << result_ << std::endl;
-    Base::print("", DynoLikeKeyFormatter);
+    Base::print("", DynosamKeyFormatter);
   }
 
   /// Return the 2D measurements (ZDim, in general).

@@ -36,8 +36,8 @@
 #include "dynosam/backend/Accessor.hpp"
 #include "dynosam/backend/BackendDefinitions.hpp"
 #include "dynosam/backend/BackendParams.hpp"
-#include "dynosam/common/Map.hpp"
-#include "dynosam/common/Types.hpp"
+#include "dynosam_common/Map.hpp"
+#include "dynosam_common/Types.hpp"
 
 namespace dyno {
 
@@ -431,11 +431,11 @@ class Formulation {
 
   /**
    * @brief Custom gtsam::Key formatter for this formulation.
-   * Defaults to DynoLikeKeyFormatter.
+   * Defaults to DynosamKeyFormatter.
    *
    * @return gtsam::KeyFormatter
    */
-  virtual gtsam::KeyFormatter formatter() const { return DynoLikeKeyFormatter; }
+  virtual gtsam::KeyFormatter formatter() const { return DynosamKeyFormatter; }
 
   /**
    * @brief Get the fully qualified name of this formulation which is derived

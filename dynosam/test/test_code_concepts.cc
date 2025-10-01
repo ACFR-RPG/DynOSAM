@@ -58,9 +58,10 @@
 
 #include "dynosam/backend/BackendDefinitions.hpp"
 #include "dynosam/backend/FactorGraphTools.hpp"
-#include "dynosam/logger/Logger.hpp"
-#include "dynosam/utils/OpenCVUtils.hpp"
-#include "dynosam/visualizer/ColourMap.hpp"
+#include "dynosam_common/logger/Logger.hpp"
+#include "dynosam_common/utils/FileSystem.hpp"
+#include "dynosam_common/utils/OpenCVUtils.hpp"
+#include "dynosam_common/viz/Colour.hpp"
 
 std::vector<gtsam::Point3> createPoints() {
   // Create the set of ground-truth landmarks
@@ -307,7 +308,7 @@ struct Node {
     // it is FACTOR::const_iterator
     for (auto it = conditional->beginFrontals();
          it != conditional->endFrontals(); it++) {
-      LOG(INFO) << dyno::DynoLikeKeyFormatter(*it);
+      LOG(INFO) << dyno::DynosamKeyFormatter(*it);
     }
   }
 };
@@ -339,11 +340,11 @@ static void printSymbolicTreeHelper(
   // Print the current clique
   std::cout << indent << "P( ";
   for (auto key : clique->conditional()->frontals()) {
-    std::cout << dyno::DynoLikeKeyFormatter(key) << " ";
+    std::cout << dyno::DynosamKeyFormatter(key) << " ";
   }
   if (clique->conditional()->nrParents() > 0) std::cout << "| ";
   for (auto key : clique->conditional()->parents()) {
-    std::cout << dyno::DynoLikeKeyFormatter(key) << " ";
+    std::cout << dyno::DynosamKeyFormatter(key) << " ";
   }
   std::cout << ")" << std::endl;
 
@@ -1526,7 +1527,7 @@ TEST(CodeConcepts, dynamicObjectSampling) {
 
   cv::Size size(1242, 375);
   cv::Mat mask;
-  dyno::loadSemanticMask(mask_path, size, mask);
+  dyno::utils::loadSemanticMask(mask_path, size, mask);
 
   gtsam::FastMap<ObjectId, std::vector<cv::KeyPoint>> sampled_keypoints;
   for (int i = 0; i < mask.rows; i++) {

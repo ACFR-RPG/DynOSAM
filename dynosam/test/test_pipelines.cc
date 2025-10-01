@@ -35,11 +35,11 @@
 #include <variant>
 
 #include "dynosam/backend/RegularBackendModule.hpp"
-#include "dynosam/common/ModuleBase.hpp"
 #include "dynosam/frontend/FrontendPipeline.hpp"
 #include "dynosam/pipeline/PipelineBase.hpp"
 #include "dynosam/pipeline/PipelinePayload.hpp"
-#include "dynosam/utils/SafeCast.hpp"
+#include "dynosam_common/ModuleBase.hpp"
+#include "dynosam_common/utils/SafeCast.hpp"
 #include "internal/helpers.hpp"
 #include "internal/simulator.hpp"
 

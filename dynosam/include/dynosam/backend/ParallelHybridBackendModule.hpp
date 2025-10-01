@@ -40,8 +40,8 @@
 #include "dynosam/backend/ParallelObjectISAM.hpp"
 #include "dynosam/backend/RegularBackendDefinitions.hpp"
 #include "dynosam/backend/VisionImuBackendModule.hpp"
-#include "dynosam/common/Flags.hpp"
-#include "dynosam/common/Map.hpp"
+#include "dynosam_common/Flags.hpp"
+#include "dynosam_common/Map.hpp"
 
 namespace dyno {
 

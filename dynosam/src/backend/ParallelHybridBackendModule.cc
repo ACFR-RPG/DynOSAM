@@ -78,7 +78,7 @@ ParallelHybridBackendModule::ParallelHybridBackendModule(
   LOG(INFO) << "Creating ParallelHybridBackendModule";
 
   // TODO: set isam params
-  dynamic_isam2_params_.keyFormatter = DynoLikeKeyFormatter;
+  dynamic_isam2_params_.keyFormatter = DynosamKeyFormatter;
   dynamic_isam2_params_.evaluateNonlinearError = true;
   dynamic_isam2_params_.enableDetailedResults = true;
   dynamic_isam2_params_.relinearizeSkip = FLAGS_relinearize_skip;
@@ -114,7 +114,7 @@ ParallelHybridBackendModule::ParallelHybridBackendModule(
     dynamic_isam2_params_.relinearizeThreshold = thresholds;
   }
 
-  static_isam2_params_.keyFormatter = DynoLikeKeyFormatter;
+  static_isam2_params_.keyFormatter = DynosamKeyFormatter;
   static_isam2_params_.evaluateNonlinearError = true;
   // this value is very important for accuracy
   static_isam2_params_.relinearizeThreshold = 0.01;
@@ -333,7 +333,7 @@ Pose3Measurement ParallelHybridBackendModule::bootstrapUpdateStaticEstimator(
   std::map<gtsam::Key, double> timestamps;
   double curr_id = static_cast<double>(this->spin_state_.iteration);
   for (const auto& key_value : new_values) {
-    // LOG(INFO) << DynoLikeKeyFormatter(key_value.key);
+    // LOG(INFO) << DynosamKeyFormatter(key_value.key);
     timestamps[key_value.key] = curr_id;
   }
 
@@ -385,7 +385,7 @@ Pose3Measurement ParallelHybridBackendModule::nominalUpdateStaticEstimator(
   std::map<gtsam::Key, double> timestamps;
   double curr_id = static_cast<double>(this->spin_state_.iteration);
   for (const auto& key_value : new_values) {
-    // LOG(INFO) << DynoLikeKeyFormatter(key_value.key);
+    // LOG(INFO) << DynosamKeyFormatter(key_value.key);
     timestamps[key_value.key] = curr_id;
   }
 
@@ -661,7 +661,7 @@ void ParallelHybridBackendModule::logGraphs() {
         dyno::getOutputFilePath("parallel_object_sam_k" +
                                 std::to_string(frame_id_k) + "_j" +
                                 std::to_string(object_id) + ".dot"),
-        dyno::DynoLikeKeyFormatter);
+        dyno::DynosamKeyFormatter);
 
     if (!smoother.empty()) {
       const auto isam_result = estimator->getResult().isam_result;
@@ -675,7 +675,7 @@ void ParallelHybridBackendModule::logGraphs() {
           dyno::getOutputFilePath("parallel_object_sam_btree_k" +
                                   std::to_string(frame_id_k) + "_j" +
                                   std::to_string(object_id) + ".dot"),
-          dyno::DynoLikeKeyFormatter, colour_map);
+          dyno::DynosamKeyFormatter, colour_map);
     }
   }
 
@@ -683,7 +683,7 @@ void ParallelHybridBackendModule::logGraphs() {
   static_estimator_.getFactors().saveGraph(
       dyno::getOutputFilePath("parallel_object_sam_k" +
                               std::to_string(frame_id_k) + "_static.dot"),
-      dyno::DynoLikeKeyFormatter);
+      dyno::DynosamKeyFormatter);
 
   const auto& smoother = static_estimator_.getISAM2();
   if (!smoother.empty()) {
@@ -691,7 +691,7 @@ void ParallelHybridBackendModule::logGraphs() {
         smoother,
         dyno::getOutputFilePath("parallel_object_sam_btree_k" +
                                 std::to_string(frame_id_k) + "_static.dot"),
-        dyno::DynoLikeKeyFormatter);
+        dyno::DynosamKeyFormatter);
   }
 }
 

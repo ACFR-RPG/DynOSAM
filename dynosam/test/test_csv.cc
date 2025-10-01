@@ -31,7 +31,7 @@
 #include <glog/logging.h>
 #include <gtest/gtest.h>
 
-#include "dynosam/utils/CsvParser.hpp"
+#include "dynosam_common/utils/CsvParser.hpp"
 
 using namespace dyno;
 

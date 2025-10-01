@@ -4,9 +4,8 @@
 #include <pcl/common/common.h>
 #include <pcl/memory.h>
 
-#include <dynosam/common/PointCloudProcess.hpp>
-#include <dynosam/visualizer/ColourMap.hpp>
-
+#include "dynosam_common/PointCloudProcess.hpp"
+#include "dynosam_common/viz/Colour.hpp"
 #include "dynosam_ros/RosUtils.hpp"
 
 namespace dyno {

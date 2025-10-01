@@ -42,10 +42,10 @@
 #include "dynosam/backend/optimizers/ISAM2UpdateParams.hpp"
 #include "dynosam/backend/optimizers/IncrementalOptimization.hpp"
 #include "dynosam/backend/optimizers/SlidingWindowOptimization.hpp"
-#include "dynosam/common/Flags.hpp"
-#include "dynosam/logger/Logger.hpp"
-#include "dynosam/utils/SafeCast.hpp"
-#include "dynosam/utils/TimingStats.hpp"
+#include "dynosam_common/Flags.hpp"
+#include "dynosam_common/logger/Logger.hpp"
+#include "dynosam_common/utils/SafeCast.hpp"
+#include "dynosam_common/utils/TimingStats.hpp"
 
 DEFINE_int32(opt_window_size, 10, "Sliding window size for optimisation");
 DEFINE_int32(opt_window_overlap, 4, "Overlap for window size optimisation");
@@ -239,7 +239,7 @@ void RegularBackendModule::setupUpdates() {
     dyno::ISAM2Params isam2_params;
     isam2_params.relinearizeThreshold = 0.01;
     isam2_params.relinearizeSkip = FLAGS_regular_backend_relinearize_skip;
-    isam2_params.keyFormatter = DynoLikeKeyFormatter;
+    isam2_params.keyFormatter = DynosamKeyFormatter;
     // isam2_params.enablePartialRelinearizationCheck = true;
     isam2_params.evaluateNonlinearError = true;
     smoother_ = std::make_unique<dyno::ISAM2>(isam2_params);
@@ -320,7 +320,7 @@ void RegularBackendModule::updateIncremental(
         //    *update_arguments.update_params.newAffectedKeys) {
         //     std::stringstream ss;
         //     for(const auto& key : affected_keys) ss <<
-        //     DynoLikeKeyFormatter(key) << " "; LOG(INFO) << "Factor affected
+        //     DynosamKeyFormatter(key) << " "; LOG(INFO) << "Factor affected
         //     " << idx << " keys: " << ss.str();
         //   }
         // }

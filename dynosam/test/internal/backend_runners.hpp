@@ -110,7 +110,7 @@ struct IncrementalTester : public RegularBackendTester {
               dyno::getOutputFilePath(
                   "isam_graph_" + std::to_string(frame_id) + "_" +
                   formulation->getFullyQualifiedName() + ".dot"),
-              dyno::DynoLikeKeyFormatter);
+              dyno::DynosamKeyFormatter);
 
           if (!isam->empty()) {
             dyno::factor_graph_tools::saveBayesTree(
@@ -118,7 +118,7 @@ struct IncrementalTester : public RegularBackendTester {
                 dyno::getOutputFilePath(
                     "bayes_tree_" + std::to_string(frame_id) + "_" +
                     formulation->getFullyQualifiedName() + ".dot"),
-                dyno::DynoLikeKeyFormatter);
+                dyno::DynosamKeyFormatter);
           }
         });
 
@@ -168,7 +168,7 @@ struct BatchTester : public RegularBackendTester {
               dyno::getOutputFilePath(
                   "batch_graph_" + std::to_string(frame_id) + "_" +
                   formulation->getFullyQualifiedName() + ".dot"),
-              dyno::DynoLikeKeyFormatter);
+              dyno::DynosamKeyFormatter);
         });
   }
 

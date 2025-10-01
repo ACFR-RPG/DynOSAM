@@ -30,7 +30,7 @@
 
 #include "dynosam_ros/displays/dynamic_slam_displays/BackendDSDRos.hpp"
 
-#include <dynosam/utils/Timing.hpp>
+#include "dynosam_common/utils/Timing.hpp"
 
 namespace dyno {
 

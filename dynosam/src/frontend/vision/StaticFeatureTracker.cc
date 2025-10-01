@@ -35,9 +35,9 @@
 #include <opencv2/opencv.hpp>
 #include <opencv2/video/tracking.hpp>
 
-#include "dynosam/common/Types.hpp"
 #include "dynosam/frontend/vision/VisionTools.hpp"
-#include "dynosam/utils/TimingStats.hpp"
+#include "dynosam_common/Types.hpp"
+#include "dynosam_common/utils/TimingStats.hpp"
 
 namespace dyno {
 

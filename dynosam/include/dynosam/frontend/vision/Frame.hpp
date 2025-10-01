@@ -31,15 +31,15 @@
 
 #include <functional>
 
-#include "dynosam/common/Camera.hpp"
-#include "dynosam/common/DynamicObjects.hpp"
-#include "dynosam/common/ImageContainer.hpp"
-#include "dynosam/common/PointCloudProcess.hpp"
-#include "dynosam/common/StructuredContainers.hpp"
-#include "dynosam/common/Types.hpp"
-#include "dynosam/frontend/vision/Feature.hpp"
-#include "dynosam/frontend/vision/UndistortRectifier.hpp"
 #include "dynosam/frontend/vision/Vision-Definitions.hpp"
+#include "dynosam_common/DynamicObjects.hpp"
+#include "dynosam_common/PointCloudProcess.hpp"
+#include "dynosam_common/StructuredContainers.hpp"
+#include "dynosam_common/Types.hpp"
+#include "dynosam_vision_common/Camera.hpp"
+#include "dynosam_vision_common/Feature.hpp"
+#include "dynosam_vision_common/ImageContainer.hpp"
+#include "dynosam_vision_common/UndistortRectifier.hpp"
 
 namespace dyno {
 

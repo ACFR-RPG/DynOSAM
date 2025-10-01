@@ -46,11 +46,11 @@
 #include <optional>
 
 #include "dynosam/backend/BackendDefinitions.hpp"  //for formulation hooks
-#include "dynosam/common/Types.hpp"
 #include "dynosam/frontend/Frontend-Definitions.hpp"
 #include "dynosam/frontend/vision/Frame.hpp"
 #include "dynosam/frontend/vision/Vision-Definitions.hpp"
 #include "dynosam/frontend/vision/VisionTools.hpp"
+#include "dynosam_common/Types.hpp"
 
 // PnP (3d2d)
 using AbsolutePoseProblem =

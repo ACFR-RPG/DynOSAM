@@ -33,15 +33,13 @@
 #include <opencv2/cudaoptflow.hpp>
 #include <opencv4/opencv2/opencv.hpp>
 
-#include "dynosam/common/Camera.hpp"
 #include "dynosam/frontend/FrontendParams.hpp"
-#include "dynosam/frontend/vision/Feature.hpp"
 #include "dynosam/frontend/vision/FeatureTrackerBase.hpp"
 #include "dynosam/frontend/vision/Frame.hpp"
-#include "dynosam/frontend/vision/ORBextractor.hpp"
-#include "dynosam/frontend/vision/OccupancyGrid2D.hpp"
 #include "dynosam/frontend/vision/StaticFeatureTracker.hpp"
 #include "dynosam/visualizer/Visualizer-Definitions.hpp"
+#include "dynosam_vision_common/Camera.hpp"
+#include "dynosam_vision_common/Feature.hpp"
 
 namespace dyno {
 

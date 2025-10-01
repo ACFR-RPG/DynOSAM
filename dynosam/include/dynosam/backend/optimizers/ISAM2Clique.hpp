@@ -97,9 +97,8 @@ class ISAM2Clique
   bool equals(const This& other, double tol = 1e-9) const;
 
   /** print this node */
-  void print(const std::string& s = "",
-             const gtsam::KeyFormatter& formatter =
-                 DynoLikeKeyFormatter) const override;
+  void print(const std::string& s = "", const gtsam::KeyFormatter& formatter =
+                                            DynosamKeyFormatter) const override;
 
   void optimizeWildfire(const gtsam::KeySet& replaced, double threshold,
                         gtsam::KeySet* changed, gtsam::VectorValues* delta,

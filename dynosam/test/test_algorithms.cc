@@ -34,7 +34,7 @@
 #include <cmath>
 #include <exception>
 
-#include "dynosam/common/Algorithms.hpp"
+#include "dynosam_common/Algorithms.hpp"
 
 using namespace dyno;
 

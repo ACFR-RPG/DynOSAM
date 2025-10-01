@@ -33,12 +33,11 @@
 #include <gflags/gflags.h>
 #include <glog/logging.h>
 
-#include <dynosam/dataprovider/DataProviderFactory.hpp>
-#include <dynosam/dataprovider/DataProviderUtils.hpp>
-#include <dynosam/pipeline/PipelineHooks.hpp>
-#include <dynosam/pipeline/PipelineParams.hpp>
-#include <dynosam/visualizer/OpenCVFrontendDisplay.hpp>
-
+#include "dynosam/dataprovider/DataProviderFactory.hpp"
+#include "dynosam/dataprovider/DataProviderUtils.hpp"
+#include "dynosam/pipeline/PipelineHooks.hpp"
+#include "dynosam/pipeline/PipelineParams.hpp"
+#include "dynosam/visualizer/OpenCVFrontendDisplay.hpp"
 #include "dynosam_ros/Display-Definitions.hpp"
 #include "dynosam_ros/OnlineDataProviderRos.hpp"
 #include "dynosam_ros/RosUtils.hpp"
@@ -115,7 +114,7 @@ std::string DynoNode::searchForPathWithParams(const std::string& param_name,
                                .description(description)
                                .finish()
                                .get<std::string>();
-  throwExceptionIfPathInvalid(path);
+  utils::throwExceptionIfPathInvalid(path);
   return path;
 }
 

@@ -30,12 +30,11 @@
 
 #pragma once
 
-#include <dynosam/common/Types.hpp>
-#include <dynosam/utils/Macros.hpp>
-
 #include "dynamic_slam_interfaces/msg/multi_object_odometry_path.hpp"
 #include "dynamic_slam_interfaces/msg/object_odometry.hpp"
 #include "dynamic_slam_interfaces/msg/object_odometry_path.hpp"
+#include "dynosam_common/Types.hpp"
+#include "dynosam_common/utils/Macros.hpp"
 #include "dynosam_ros/Display-Definitions.hpp"
 #include "dynosam_ros/displays/DisplaysCommon.hpp"
 #include "rclcpp/rclcpp.hpp"

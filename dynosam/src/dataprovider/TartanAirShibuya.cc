@@ -30,11 +30,11 @@
 
 #include "dynosam/dataprovider/TartanAirShibuya.hpp"
 
-#include "dynosam/common/CameraParams.hpp"
 #include "dynosam/dataprovider/DataProviderUtils.hpp"
-#include "dynosam/utils/GtsamUtils.hpp"
-#include "dynosam/utils/OpenCVUtils.hpp"
-#include "dynosam/visualizer/ColourMap.hpp"
+#include "dynosam_common/utils/GtsamUtils.hpp"
+#include "dynosam_common/utils/OpenCVUtils.hpp"
+#include "dynosam_common/viz/Colour.hpp"
+#include "dynosam_vision_common/CameraParams.hpp"
 
 namespace dyno {
 
@@ -45,7 +45,7 @@ class TartanAirShibuyaAllLoader {
   TartanAirShibuyaAllLoader(const std::string& file_path) {
     // load flow images
     const auto flow_image_path = file_path + "/flow_0/";
-    throwExceptionIfPathInvalid(flow_image_path);
+    utils::throwExceptionIfPathInvalid(flow_image_path);
     loadFlowImagesAndSize(flow_0_paths_, dataset_size_, flow_image_path);
 
     // load images
@@ -53,9 +53,9 @@ class TartanAirShibuyaAllLoader {
     const auto depth_image_path = file_path + "/depth_0/";
     const auto mask_image_path = file_path + "/mask_0/";
 
-    throwExceptionIfPathInvalid(rgb_image_path);
-    throwExceptionIfPathInvalid(depth_image_path);
-    throwExceptionIfPathInvalid(mask_image_path);
+    utils::throwExceptionIfPathInvalid(rgb_image_path);
+    utils::throwExceptionIfPathInvalid(depth_image_path);
+    utils::throwExceptionIfPathInvalid(mask_image_path);
 
     loadImages(image_0_paths_, rgb_image_path);
     loadImages(depth_0_paths_, depth_image_path);
@@ -68,11 +68,11 @@ class TartanAirShibuyaAllLoader {
                      cv::Size(640, 360), DistortionModel::RADTAN);
 
     const auto times_file_path = file_path + "/times.txt";
-    throwExceptionIfPathInvalid(times_file_path);
+    utils::throwExceptionIfPathInvalid(times_file_path);
     loadTimes(times_file_path);
 
     const auto gt_file_path = file_path + "/gt_pose.txt";
-    throwExceptionIfPathInvalid(gt_file_path);
+    utils::throwExceptionIfPathInvalid(gt_file_path);
     loadGroundTruth(gt_file_path);
   }
 
@@ -80,7 +80,7 @@ class TartanAirShibuyaAllLoader {
     CHECK_LT(idx, flow_0_paths_.size());
 
     cv::Mat flow;
-    loadFlow(flow_0_paths_.at(idx), flow);
+    utils::loadFlow(flow_0_paths_.at(idx), flow);
     CHECK(!flow.empty());
     return flow;
   }
@@ -88,7 +88,7 @@ class TartanAirShibuyaAllLoader {
   cv::Mat getRGB(size_t idx) const {
     CHECK_LT(idx, image_0_paths_.size());
     cv::Mat rgb;
-    loadRGB(image_0_paths_.at(idx), rgb);
+    utils::loadRGB(image_0_paths_.at(idx), rgb);
     CHECK(!rgb.empty());
     return rgb;
   }
@@ -98,7 +98,7 @@ class TartanAirShibuyaAllLoader {
     CHECK_LT(idx, dataset_size_);
 
     cv::Mat mask;
-    loadMask(masks_0_paths_.at(idx), mask);
+    utils::loadMask(masks_0_paths_.at(idx), mask);
     CHECK(!mask.empty());
 
     return mask;
@@ -109,7 +109,7 @@ class TartanAirShibuyaAllLoader {
     CHECK_LT(idx, dataset_size_);
 
     cv::Mat depth;
-    loadDepth(depth_0_paths_.at(idx), depth);
+    utils::loadDepth(depth_0_paths_.at(idx), depth);
     CHECK(!depth.empty());
 
     return depth;
@@ -134,12 +134,12 @@ class TartanAirShibuyaAllLoader {
                              size_t& dataset_size,
                              const std::string& flow_image_path) {
     std::vector<std::filesystem::path> files_in_directory =
-        getAllFilesInDir(flow_image_path);
+        utils::getAllFilesInDir(flow_image_path);
     dataset_size = files_in_directory.size();
     CHECK_GT(dataset_size, 0);
 
     for (const std::string file_path : files_in_directory) {
-      throwExceptionIfPathInvalid(file_path);
+      utils::throwExceptionIfPathInvalid(file_path);
       images_paths.push_back(file_path);
     }
   }
@@ -147,10 +147,10 @@ class TartanAirShibuyaAllLoader {
   void loadImages(std::vector<std::string>& images_paths,
                   const std::string& image_folder) {
     std::vector<std::filesystem::path> files_in_directory =
-        getAllFilesInDir(image_folder);
+        utils::getAllFilesInDir(image_folder);
 
     for (const std::filesystem::path& file_path : files_in_directory) {
-      throwExceptionIfPathInvalid(file_path);
+      utils::throwExceptionIfPathInvalid(file_path);
 
       // only load png files
       auto ext = file_path.extension().string();

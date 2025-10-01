@@ -4,11 +4,11 @@
  */
 #pragma once
 
-#include "dynosam/common/Types.hpp"
 #include "dynosam/frontend/FrontendInputPacket.hpp"
 #include "dynosam/frontend/imu/ThreadSafeImuBuffer.hpp"
 #include "dynosam/pipeline/PipelineBase.hpp"
 #include "dynosam/pipeline/ThreadSafeQueue.hpp"
+#include "dynosam_common/Types.hpp"
 
 namespace dyno {
 

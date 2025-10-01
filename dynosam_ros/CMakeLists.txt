@@ -34,14 +34,15 @@ find_package(PCL REQUIRED conversions)
 find_package(rclpy REQUIRED)
 find_package(message_filters REQUIRED)
 
+
 # setup targets
 include_directories(
   include
   ${rclcpp_INCLUDE_DIRS}
   ${EIGEN3_INCLUDE_DIRS}
   ${PCL_INCLUDE_DIRS}
+  ${dynosam_INCLUDE_DIRS}
 )
-
 
 
 set(SRC_FILES

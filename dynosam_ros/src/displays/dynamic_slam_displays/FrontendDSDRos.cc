@@ -30,9 +30,8 @@
 
 #include "dynosam_ros/displays/dynamic_slam_displays/FrontendDSDRos.hpp"
 
-#include <dynosam/utils/SafeCast.hpp>
-
 #include "cv_bridge/cv_bridge.hpp"
+#include "dynosam_common/utils/SafeCast.hpp"
 #include "dynosam_ros/RosUtils.hpp"
 #include "rclcpp/qos.hpp"
 

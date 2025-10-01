@@ -33,7 +33,7 @@
 #include <dynosam/backend/BackendFactory.hpp>
 #include <dynosam/common/Map.hpp>
 #include <dynosam/frontend/RGBDInstanceFrontendModule.hpp>
-#include <dynosam/logger/Logger.hpp>
+#include <dynosam_common/logger/Logger.hpp>
 
 #include "dynosam_ros/PipelineRos.hpp"
 #include "dynosam_ros/Utils.hpp"

@@ -22,7 +22,7 @@
 
 #include "dynosam/frontend/anms/NonMaximumSuppression.h"
 #include "dynosam/frontend/anms/anms/anms.h"
-#include "dynosam/utils/TimingStats.hpp"
+#include "dynosam_common/utils/TimingStats.hpp"
 
 namespace dyno {
 

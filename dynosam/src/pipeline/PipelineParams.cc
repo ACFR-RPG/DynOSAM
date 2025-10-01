@@ -34,7 +34,7 @@
 #include <config_utilities/parsing/yaml.h>
 #include <gflags/gflags.h>
 
-#include "dynosam/utils/YamlParser.hpp"
+#include "dynosam_common/utils/YamlParser.hpp"
 
 DEFINE_int32(
     data_provider_type, 0,

@@ -43,8 +43,8 @@
 #include "dynosam/backend/optimizers/ISAM2.hpp"
 #include "dynosam/backend/optimizers/IncrementalOptimization.hpp"
 #include "dynosam/backend/optimizers/SlidingWindowOptimization.hpp"
-#include "dynosam/common/Flags.hpp"
-#include "dynosam/common/Map.hpp"
+#include "dynosam_common/Flags.hpp"
+#include "dynosam_common/Map.hpp"
 
 namespace dyno {
 

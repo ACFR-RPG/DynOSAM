@@ -30,8 +30,8 @@
 
 #pragma once
 
-#include "dynosam/common/Types.hpp"
-#include "dynosam/common/byte_tracker/ByteTracker.hpp"
+#include "dynosam_common/Types.hpp"
+#include "dynosam_common/byte_tracker/ByteTracker.hpp"
 
 namespace dyno {
 

@@ -33,11 +33,11 @@
 #include <functional>
 #include <opencv4/opencv2/opencv.hpp>
 
-#include "dynosam/common/Types.hpp"
 #include "dynosam/frontend/anms/NonMaximumSuppression.h"
 #include "dynosam/frontend/vision/TrackerParams.hpp"
-#include "dynosam/utils/Macros.hpp"
-#include "dynosam/utils/OpenCVUtils.hpp"
+#include "dynosam_common/Types.hpp"
+#include "dynosam_common/utils/Macros.hpp"
+#include "dynosam_common/utils/OpenCVUtils.hpp"
 
 namespace dyno {
 

@@ -35,11 +35,11 @@
 #include <optional>
 #include <variant>
 
-#include "dynosam/common/Camera.hpp"
-#include "dynosam/common/StructuredContainers.hpp"
-#include "dynosam/common/Types.hpp"
 #include "dynosam/frontend/VisionImuOutputPacket.hpp"
-#include "dynosam/utils/GtsamUtils.hpp"
+#include "dynosam_common/StructuredContainers.hpp"
+#include "dynosam_common/Types.hpp"
+#include "dynosam_common/utils/GtsamUtils.hpp"
+#include "dynosam_vision_common/Camera.hpp"
 #include "helpers.hpp"
 
 namespace dyno_testing {

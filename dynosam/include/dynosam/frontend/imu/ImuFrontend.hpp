@@ -33,9 +33,9 @@
 #include <gtsam/navigation/ImuBias.h>
 #include <gtsam/navigation/ImuFactor.h>
 
-#include "dynosam/common/Types.hpp"
 #include "dynosam/frontend/imu/ImuMeasurements.hpp"
 #include "dynosam/frontend/imu/ImuParams.hpp"
+#include "dynosam_common/Types.hpp"
 
 // TODO: eventually replace with Kimera or otherwise
 namespace dyno {

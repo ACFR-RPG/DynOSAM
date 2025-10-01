@@ -36,7 +36,7 @@
 #include <gtsam/nonlinear/NonlinearFactorGraph.h>
 #include <gtsam/nonlinear/Values.h>
 
-#include "dynosam/common/Types.hpp"
+#include "dynosam_common/Types.hpp"
 
 namespace dyno {
 

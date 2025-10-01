@@ -2,9 +2,8 @@
 
 #include <glog/logging.h>
 
-#include <dynosam/common/DynamicObjects.hpp>
-#include <dynosam/visualizer/Colour.hpp>
-
+#include "dynosam_common/DynamicObjects.hpp"
+#include "dynosam_common/viz/Colour.hpp"
 #include "dynosam_ros/RosUtils.hpp"
 #include "dynosam_ros/displays/DisplaysCommon.hpp"
 

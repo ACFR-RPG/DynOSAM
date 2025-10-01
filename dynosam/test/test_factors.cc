@@ -43,7 +43,7 @@
 #include "dynosam/factors/LandmarkMotionPoseFactor.hpp"
 #include "dynosam/factors/LandmarkMotionTernaryFactor.hpp"
 #include "dynosam/factors/Pose3FlowProjectionFactor.h"
-#include "dynosam/utils/GtsamUtils.hpp"
+#include "dynosam_common/utils/GtsamUtils.hpp"
 #include "internal/helpers.hpp"
 
 using namespace dyno;

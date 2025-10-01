@@ -34,8 +34,6 @@
 #include <Eigen/Dense>
 #include <png++/png.hpp>
 
-#include "dynosam/common/Camera.hpp"
-#include "dynosam/common/ImageContainer.hpp"
 #include "dynosam/dataprovider/ClusterSlamDataProvider.hpp"
 #include "dynosam/dataprovider/KittiDataProvider.hpp"
 #include "dynosam/dataprovider/TartanAirShibuya.hpp"
@@ -45,8 +43,10 @@
 #include "dynosam/frontend/vision/Frame.hpp"
 #include "dynosam/pipeline/PipelineManager.hpp"
 #include "dynosam/pipeline/PipelineParams.hpp"
-#include "dynosam/visualizer/ColourMap.hpp"
 #include "dynosam/visualizer/OpenCVFrontendDisplay.hpp"
+#include "dynosam_common/viz/Colour.hpp"
+#include "dynosam_vision_common/Camera.hpp"
+#include "dynosam_vision_common/ImageContainer.hpp"
 
 DEFINE_string(path_to_kitti, "/root/data/kitti", "Path to KITTI dataset");
 // TODO: (jesse) many better ways to do this with ros - just for now

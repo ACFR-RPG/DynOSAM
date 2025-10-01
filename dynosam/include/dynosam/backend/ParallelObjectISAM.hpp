@@ -40,9 +40,9 @@
 #include "dynosam/backend/BackendDefinitions.hpp"
 #include "dynosam/backend/optimizers/IncrementalOptimization.hpp"
 #include "dynosam/backend/rgbd/HybridEstimator.hpp"
-#include "dynosam/common/Exceptions.hpp"
-#include "dynosam/common/Map.hpp"
-#include "dynosam/common/Types.hpp"  //only needed for factors
+#include "dynosam_common/Exceptions.hpp"
+#include "dynosam_common/Map.hpp"
+#include "dynosam_common/Types.hpp"  //only needed for factors
 
 namespace dyno {
 

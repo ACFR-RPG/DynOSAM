@@ -31,9 +31,9 @@
 #include "dynosam/frontend/vision/FeatureTrackerBase.hpp"
 
 #include "dynosam/frontend/anms/NonMaximumSuppression.h"
-#include "dynosam/utils/GtsamUtils.hpp"
-#include "dynosam/utils/OpenCVUtils.hpp"
-#include "dynosam/visualizer/ColourMap.hpp"
+#include "dynosam_common/utils/GtsamUtils.hpp"
+#include "dynosam_common/utils/OpenCVUtils.hpp"
+#include "dynosam_common/viz/Colour.hpp"
 
 namespace dyno {
 

@@ -32,12 +32,12 @@
 
 #include <png++/png.hpp>
 
-#include "dynosam/common/Camera.hpp"
-#include "dynosam/common/Types.hpp"
 #include "dynosam/dataprovider/DatasetProvider.hpp"
 #include "dynosam/frontend/FrontendInputPacket.hpp"
-#include "dynosam/utils/GtsamUtils.hpp"
-#include "dynosam/utils/OpenCVUtils.hpp"
+#include "dynosam_common/Types.hpp"
+#include "dynosam_common/utils/GtsamUtils.hpp"
+#include "dynosam_common/utils/OpenCVUtils.hpp"
+#include "dynosam_vision_common/Camera.hpp"
 
 namespace dyno {
 
@@ -320,7 +320,7 @@ class KittiClassSegmentationDataFolder : public dyno::DataFolder<cv::Mat> {
     ss << std::setfill('0') << std::setw(6) << idx;
     const std::string file_path =
         (std::string)getAbsolutePath() + "/" + ss.str() + ".png";
-    throwExceptionIfPathInvalid(file_path);
+    utils::throwExceptionIfPathInvalid(file_path);
 
     png::image<png::rgb_pixel> index_image(file_path);
 

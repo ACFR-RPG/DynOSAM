@@ -34,7 +34,7 @@
 
 #include "dynosam/backend/FactorGraphTools.hpp"
 #include "dynosam/backend/optimizers/IncrementalOptimization.hpp"
-#include "dynosam/utils/TimingStats.hpp"
+#include "dynosam_common/utils/TimingStats.hpp"
 
 DEFINE_bool(save_per_frame_dynamic_cloud, false,
             "To save the local map of each object after every update! WARNING: "
@@ -279,7 +279,7 @@ void ParallelObjectISAM::updateStates() {
           FrameId frame_id;
           CHECK(reconstructMotionInfo(motion_key, object_id, frame_id));
 
-          // LOG(INFO) << "Motion key" << DynoLikeKeyFormatter(motion_key) << "
+          // LOG(INFO) << "Motion key" << DynosamKeyFormatter(motion_key) << "
           // at k=" << frame_id << " key= "<< motion_key;
           CHECK_EQ(object_id, object_id_);
           // add variable status associated with the frame id of this motion

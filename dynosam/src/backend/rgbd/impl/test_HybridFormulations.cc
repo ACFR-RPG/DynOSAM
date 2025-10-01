@@ -561,14 +561,14 @@ void SmartStructurlessFormulation::postUpdate(const PostUpdateData& data) {
       const auto shptr =
           dynamic_cast<const HybridSmartFactor*>(isam2_factors.at(slot).get());
 
-      // isam2_factors.at(slot)->print("Not shf: ", DynoLikeKeyFormatter);
-      // it->second.first->print("shf: ", DynoLikeKeyFormatter);
+      // isam2_factors.at(slot)->print("Not shf: ", DynosamKeyFormatter);
+      // it->second.first->print("shf: ", DynosamKeyFormatter);
 
       CHECK(shptr);
       // check the factors are the same!!!
       if (shptr != it->second.first.get()) {
-        isam2_factors.at(slot)->print("Not shf: ", DynoLikeKeyFormatter);
-        it->second.first->print("shf: ", DynoLikeKeyFormatter);
+        isam2_factors.at(slot)->print("Not shf: ", DynosamKeyFormatter);
+        it->second.first->print("shf: ", DynosamKeyFormatter);
         CHECK_EQ(shptr, it->second.first.get());
       }
 

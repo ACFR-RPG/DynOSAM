@@ -32,10 +32,10 @@
 
 #include <tbb/parallel_for.h>
 
-#include "dynosam/common/Types.hpp"
 #include "dynosam/frontend/vision/VisionTools.hpp"
-#include "dynosam/utils/TimingStats.hpp"
-#include "dynosam/visualizer/ColourMap.hpp"
+#include "dynosam_common/Types.hpp"
+#include "dynosam_common/utils/TimingStats.hpp"
+#include "dynosam_common/viz/Colour.hpp"
 
 namespace dyno {
 

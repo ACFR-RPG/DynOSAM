@@ -44,15 +44,15 @@
 
 #include "dynosam/backend/BackendDefinitions.hpp"
 #include "dynosam/backend/FactorGraphTools.hpp"  //TODO: clean
-#include "dynosam/common/Flags.hpp"
-#include "dynosam/common/Types.hpp"
 #include "dynosam/factors/LandmarkMotionTernaryFactor.hpp"
 #include "dynosam/factors/Pose3FlowProjectionFactor.h"
 #include "dynosam/frontend/vision/VisionTools.hpp"
-#include "dynosam/utils/Accumulator.hpp"
-#include "dynosam/utils/GtsamUtils.hpp"
-#include "dynosam/utils/Numerical.hpp"
-#include "dynosam/utils/TimingStats.hpp"
+#include "dynosam_common/Flags.hpp"
+#include "dynosam_common/Types.hpp"
+#include "dynosam_common/utils/Accumulator.hpp"
+#include "dynosam_common/utils/GtsamUtils.hpp"
+#include "dynosam_common/utils/Numerical.hpp"
+#include "dynosam_common/utils/TimingStats.hpp"
 
 namespace dyno {
 

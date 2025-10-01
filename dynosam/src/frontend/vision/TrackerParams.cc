@@ -35,7 +35,7 @@
 #include <gflags/gflags.h>
 #include <glog/logging.h>
 
-#include "dynosam/utils/OpenCVUtils.hpp"
+#include "dynosam_common/utils/OpenCVUtils.hpp"
 
 DEFINE_int32(shrink_row, 0, "Number of rows to shrink the tracking image by");
 DEFINE_int32(shrink_col, 0, "Number of cols to shrink the tracking image by");

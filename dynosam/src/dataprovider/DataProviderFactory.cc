@@ -40,7 +40,7 @@
 #include "dynosam/dataprovider/TartanAirShibuya.hpp"
 #include "dynosam/dataprovider/ViodeDataProvider.hpp"
 #include "dynosam/dataprovider/VirtualKittiDataProvider.hpp"
-#include "dynosam/utils/YamlParser.hpp"
+#include "dynosam_common/utils/YamlParser.hpp"
 
 DEFINE_int32(starting_frame, -1,
              "Starting frame of the dataset. If -1 use the default which is "

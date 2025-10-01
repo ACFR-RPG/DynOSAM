@@ -37,12 +37,12 @@
 #include <mutex>
 #include <opencv4/opencv2/opencv.hpp>
 
-#include "dynosam/common/Types.hpp"
 #include "dynosam/frontend/anms/NonMaximumSuppression.h"
 #include "dynosam/frontend/vision/VisionTools.hpp"
-#include "dynosam/utils/GtsamUtils.hpp"
-#include "dynosam/utils/OpenCVUtils.hpp"
-#include "dynosam/utils/TimingStats.hpp"
+#include "dynosam_common/Types.hpp"
+#include "dynosam_common/utils/GtsamUtils.hpp"
+#include "dynosam_common/utils/OpenCVUtils.hpp"
+#include "dynosam_common/utils/TimingStats.hpp"
 
 namespace dyno {
 

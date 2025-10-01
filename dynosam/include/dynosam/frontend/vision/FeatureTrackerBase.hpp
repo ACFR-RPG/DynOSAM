@@ -32,11 +32,11 @@
 
 #include <config_utilities/config_utilities.h>
 
-#include "dynosam/common/Camera.hpp"
-#include "dynosam/common/Types.hpp"
 #include "dynosam/frontend/vision/Frame.hpp"
 #include "dynosam/frontend/vision/TrackerParams.hpp"
 #include "dynosam/visualizer/Visualizer-Definitions.hpp"
+#include "dynosam_common/Types.hpp"
+#include "dynosam_vision_common/Camera.hpp"
 
 namespace dyno {
 

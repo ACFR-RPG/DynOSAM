@@ -34,7 +34,7 @@
 
 #include <string>
 
-#include "dynosam/common/Flags.hpp"
+#include "dynosam_common/Flags.hpp"
 
 DEFINE_bool(refine_motion_estimate, true,
             "If true, 3D motion refinement will be used");

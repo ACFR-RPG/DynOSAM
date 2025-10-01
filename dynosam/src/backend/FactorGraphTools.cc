@@ -38,7 +38,7 @@
 
 #include "dynosam/backend/BackendDefinitions.hpp"
 #include "dynosam/factors/LandmarkMotionTernaryFactor.hpp"
-#include "dynosam/utils/Numerical.hpp"  //for saveMatrixAsUpperTriangular
+#include "dynosam_common/utils/Numerical.hpp"  //for saveMatrixAsUpperTriangular
 #include "gtsam/linear/GaussianConditional.h"
 
 namespace dyno {
