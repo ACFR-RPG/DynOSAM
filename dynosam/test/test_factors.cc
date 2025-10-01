@@ -38,12 +38,12 @@
 #include <exception>
 
 #include "dynosam/backend/BackendDefinitions.hpp"
-#include "dynosam/backend/FactorGraphTools.hpp"
 #include "dynosam/backend/rgbd/HybridEstimator.hpp"  //TODO: move implementation to factors?
 #include "dynosam/factors/LandmarkMotionPoseFactor.hpp"
 #include "dynosam/factors/LandmarkMotionTernaryFactor.hpp"
 #include "dynosam/factors/Pose3FlowProjectionFactor.h"
 #include "dynosam_common/utils/GtsamUtils.hpp"
+#include "dynosam_opt_common/FactorGraphTools.hpp"
 #include "internal/helpers.hpp"
 
 using namespace dyno;

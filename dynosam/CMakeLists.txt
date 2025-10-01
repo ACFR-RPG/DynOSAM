@@ -27,6 +27,7 @@ find_package(std_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(dynosam_common REQUIRED)
 find_package(dynosam_vision_common REQUIRED)
+find_package(dynosam_opt_common REQUIRED)
 # find_package(OpenCV REQUIRED)
 # find_package(opengv REQUIRED)
 # find_package(GTSAM REQUIRED)
@@ -59,6 +60,7 @@ include_directories(
   include
   ${dynosam_common_INCLUDE_DIRS}
   ${dynosam_vision_common_INCLUDE_DIRS}
+  ${dynosam_opt_common_INCLUDE_DIRS}
   ${rclcpp_INCLUDE_DIRS}
   ${EIGEN3_INCLUDE_DIRS}
   ${OpenCV_INCLUDE_DIRS}
@@ -110,7 +112,6 @@ add_library(${PROJECT_NAME} SHARED
   src/backend/BackendPipeline.cc
   src/backend/BackendModule.cc
   src/backend/BackendParams.cc
-  src/backend/FactorGraphTools.cc
   src/backend/RegularBackendModule.cc
   src/backend/rgbd/WorldMotionEstimator.cc
   src/backend/rgbd/WorldPoseEstimator.cc
@@ -159,6 +160,7 @@ target_link_libraries(${PROJECT_NAME}
   ${sensor_msgs_TARGETS}
   dynosam_common::dynosam_common
   dynosam_vision_common::dynosam_vision_common
+  dynosam_opt_common::dynosam_opt_common
   # rclcpp::rclcpp
   # opengv
   # nlohmann_json::nlohmann_json
@@ -196,6 +198,7 @@ ament_export_libraries(${PROJECT_NAME}
   # TBB::tbbmalloc
   dynosam_common::dynosam_common
   dynosam_vision_common::dynosam_vision_common
+  dynosam_opt_common::dynosam_opt_common
 )
 
 
@@ -213,6 +216,7 @@ set(DYNO_EXPORT_DEPS
   # Eigen3
   dynosam_common
   dynosam_vision_common
+  dynosam_opt_common
 )
 
 

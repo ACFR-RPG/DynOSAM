@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>dynosam_vision_common</name>
+  <name>dynosam_opt_common</name>
   <version>0.0.1</version>
-  <description>DynOSAM Vision Common package</description>
+  <description>DynOSAM Optimization Common package</description>
 
   <maintainer email="jesse.morris@sydney.edu.au">Jesse Morris</maintainer>
   <license>BSD</license>

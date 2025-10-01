@@ -43,25 +43,16 @@
 #include <unordered_map>
 #include <unordered_set>
 
-#include "dynosam/backend/BackendDefinitions.hpp"
 #include "dynosam_common/Types.hpp"
 #include "dynosam_common/logger/Logger.hpp"
 #include "dynosam_common/utils/GtsamUtils.hpp"
 #include "dynosam_common/utils/Numerical.hpp"
 #include "dynosam_common/viz/Colour.hpp"
+#include "dynosam_opt_common/Symbols.hpp"
 
 namespace dyno {
 
 namespace factor_graph_tools {
-
-SmartProjectionFactor::shared_ptr constructSmartProjectionFactor(
-    gtsam::SharedNoiseModel smart_noise, boost::shared_ptr<CalibrationType> K,
-    SmartProjectionFactorParams projection_params);
-
-SmartProjectionFactor::shared_ptr constructSmartProjectionFactor(
-    gtsam::SharedNoiseModel smart_noise, boost::shared_ptr<CalibrationType> K,
-    SmartProjectionFactorParams projection_params, Keypoint measurement,
-    FrameId frame_id);
 
 /**
  * @brief Wrapper on the creation of a robust Huber noise model from a Shared
@@ -77,10 +68,6 @@ void addBetweenFactor(FrameId from_frame, FrameId to_frame,
                       const gtsam::Pose3 from_pose_to,
                       gtsam::SharedNoiseModel noise_model,
                       gtsam::NonlinearFactorGraph& graph);
-
-void addSmartProjectionMeasurement(
-    SmartProjectionFactor::shared_ptr smart_factor, Keypoint measurement,
-    FrameId frame_id);
 
 // expects DERIVEDFACTOR to be a NoiseModelFactor so that we can use
 // whitenedError
@@ -487,17 +474,6 @@ std::pair<SparsityStats, cv::Mat> computeRFactor(
   return std::make_pair(SparsityStats{}, R_img);
 }
 
-class ISAM2Visualiser : public gtsam::ISAM2 {
- public:
-  using Base = gtsam::ISAM2;
-  explicit ISAM2Visualiser(const gtsam::ISAM2Params& params) : Base(params) {}
-
-  virtual gtsam::ISAM2Result update(
-      const gtsam::NonlinearFactorGraph& newFactors,
-      const gtsam::Values& newTheta,
-      const gtsam::ISAM2UpdateParams& updateParams) override;
-};
-
 std::pair<SparsityStats, cv::Mat> computeRFactor(
     gtsam::GaussianFactorGraph::shared_ptr gaussian_fg,
     const gtsam::Ordering ordering);
@@ -554,40 +530,41 @@ cv::Mat drawBlockJacobians(gtsam::GaussianFactorGraph::shared_ptr gaussian_fg,
                            const gtsam::Ordering& ordering,
                            const DrawBlockJacobiansOptions& options);
 
-template <typename T>
-void toGraphFileFormat(std::ostream& os, const T& t);
+// template <typename T>
+// void toGraphFileFormat(std::ostream& os, const T& t);
 
-template <typename T>
-std::ostream& seralizeFactorToGraphFileFormat(std::ostream& os, const T& t,
-                                              const std::string& tag) {
-  static_assert(is_gtsam_factor_v<T>);
+// template <typename T>
+// std::ostream& seralizeFactorToGraphFileFormat(std::ostream& os, const T& t,
+//                                               const std::string& tag) {
+//   static_assert(is_gtsam_factor_v<T>);
 
-  // TAG <keys> VALUE
-  // where the value is provided by toGraphFileFormat and should be in the form
-  // <measurement> <covaraince>
+//   // TAG <keys> VALUE
+//   // where the value is provided by toGraphFileFormat and should be in the
+//   form
+//   // <measurement> <covaraince>
 
-  os << tag << " ";
-  const gtsam::Factor& factor = static_cast<const gtsam::Factor&>(t);
-  for (const gtsam::Key key : factor) {
-    os << key << " ";
-  }
-  toGraphFileFormat<T>(os, t);
-  os << '\n';
-  return os;
-}
+//   os << tag << " ";
+//   const gtsam::Factor& factor = static_cast<const gtsam::Factor&>(t);
+//   for (const gtsam::Key key : factor) {
+//     os << key << " ";
+//   }
+//   toGraphFileFormat<T>(os, t);
+//   os << '\n';
+//   return os;
+// }
 
-template <typename T>
-std::ostream& seralizeValueToGraphFileFormat(std::ostream& os, const T& t,
-                                             gtsam::Key key,
-                                             const std::string& tag) {
-  os << tag << " " << key << " ";
-  // TAG <key> VALUE
-  // where the value is provided by toGraphFileFormat and should be the value
-  // itself
-  toGraphFileFormat<T>(os, t);
-  os << '\n';
-  return os;
-}
+// template <typename T>
+// std::ostream& seralizeValueToGraphFileFormat(std::ostream& os, const T& t,
+//                                              gtsam::Key key,
+//                                              const std::string& tag) {
+//   os << tag << " " << key << " ";
+//   // TAG <key> VALUE
+//   // where the value is provided by toGraphFileFormat and should be the value
+//   // itself
+//   toGraphFileFormat<T>(os, t);
+//   os << '\n';
+//   return os;
+// }
 
 }  // namespace factor_graph_tools
 
@@ -706,7 +683,7 @@ class NonlinearFactorGraphManager
   // we use the type of symbol and the characters here to determine the type of
   // factor and the USE of this factor (e.g. a between factor could be a
   // smoothing factor or an odom factor)
-  void writeDynosamGraphFile(const std::string& filename) const;
+  // void writeDynosamGraphFile(const std::string& filename) const;
 
   // /**
   //  * @brief Constructs a factor_graph_tools::DrawBlockJacobiansOptions where

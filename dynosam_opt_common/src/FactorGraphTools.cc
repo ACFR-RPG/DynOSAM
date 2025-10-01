@@ -28,7 +28,7 @@
  *   SOFTWARE.
  */
 
-#include "dynosam/backend/FactorGraphTools.hpp"
+#include "dynosam_opt_common/FactorGraphTools.hpp"
 
 #include <gtsam/linear/LossFunctions.h>
 #include <gtsam/slam/BetweenFactor.h>
@@ -36,36 +36,13 @@
 
 #include <opencv4/opencv2/viz/types.hpp>
 
-#include "dynosam/backend/BackendDefinitions.hpp"
-#include "dynosam/factors/LandmarkMotionTernaryFactor.hpp"
 #include "dynosam_common/utils/Numerical.hpp"  //for saveMatrixAsUpperTriangular
+#include "dynosam_opt_common/Symbols.hpp"
 #include "gtsam/linear/GaussianConditional.h"
 
 namespace dyno {
 
 namespace factor_graph_tools {
-
-SmartProjectionFactor::shared_ptr constructSmartProjectionFactor(
-    gtsam::SharedNoiseModel smart_noise, boost::shared_ptr<CalibrationType> K,
-    SmartProjectionFactorParams projection_params) {
-  CHECK(smart_noise);
-  CHECK(K);
-
-  return boost::make_shared<SmartProjectionFactor>(smart_noise, K,
-                                                   projection_params);
-}
-
-SmartProjectionFactor::shared_ptr constructSmartProjectionFactor(
-    gtsam::SharedNoiseModel smart_noise, boost::shared_ptr<CalibrationType> K,
-    SmartProjectionFactorParams projection_params, Keypoint measurement,
-    FrameId frame_id) {
-  SmartProjectionFactor::shared_ptr smart_factor =
-      constructSmartProjectionFactor(smart_noise, K, projection_params);
-  CHECK(smart_factor);
-
-  addSmartProjectionMeasurement(smart_factor, measurement, frame_id);
-  return smart_factor;
-}
 
 gtsam::SharedNoiseModel robustifyHuber(double k,
                                        gtsam::SharedNoiseModel model) {
@@ -83,12 +60,6 @@ void addBetweenFactor(FrameId from_frame, FrameId to_frame,
   graph.emplace_shared<gtsam::BetweenFactor<gtsam::Pose3>>(
       CameraPoseSymbol(from_frame), CameraPoseSymbol(to_frame), from_pose_to,
       noise_model);
-}
-
-void addSmartProjectionMeasurement(
-    SmartProjectionFactor::shared_ptr smart_factor, Keypoint measurement,
-    FrameId frame_id) {
-  smart_factor->add(measurement, CameraPoseSymbol(frame_id));
 }
 
 SparsityStats computeCholeskySparsityStats(
@@ -239,14 +210,6 @@ std::pair<SparsityStats, cv::Mat> computeRFactor(
   return std::make_pair(SparsityStats{}, R_img);
 }
 
-gtsam::ISAM2Result ISAM2Visualiser::update(
-    const gtsam::NonlinearFactorGraph& newFactors,
-    const gtsam::Values& newTheta,
-    const gtsam::ISAM2UpdateParams& updateParams) {
-  const gtsam::ISAM2Result result =
-      Base::update(newFactors, newTheta, updateParams);
-}
-
 cv::Mat drawBlockJacobians(gtsam::GaussianFactorGraph::shared_ptr gaussian_fg,
                            const gtsam::Ordering& ordering,
                            const DrawBlockJacobiansOptions& options) {
@@ -373,163 +336,166 @@ cv::Mat drawBlockJacobians(gtsam::GaussianFactorGraph::shared_ptr gaussian_fg,
 }
 
 // specalisation of values
-template <>
-void toGraphFileFormat<gtsam::Point3>(std::ostream& os,
-                                      const gtsam::Point3& t) {
-  os << t.x() << " " << t.y() << " " << t.z();
-}
+// template <>
+// void toGraphFileFormat<gtsam::Point3>(std::ostream& os,
+//                                       const gtsam::Point3& t) {
+//   os << t.x() << " " << t.y() << " " << t.z();
+// }
 
-template <>
-void toGraphFileFormat<gtsam::Pose3>(std::ostream& os, const gtsam::Pose3& t) {
-  const gtsam::Point3 p = t.translation();
-  const auto q = t.rotation().toQuaternion();
-  os << p.x() << " " << p.y() << " " << p.z() << " " << q.x() << " " << q.y()
-     << " " << q.z() << " " << q.w();
-}
+// template <>
+// void toGraphFileFormat<gtsam::Pose3>(std::ostream& os, const gtsam::Pose3& t)
+// {
+//   const gtsam::Point3 p = t.translation();
+//   const auto q = t.rotation().toQuaternion();
+//   os << p.x() << " " << p.y() << " " << p.z() << " " << q.x() << " " << q.y()
+//      << " " << q.z() << " " << q.w();
+// }
 
-// specalisation of factors
-template <>
-void toGraphFileFormat<gtsam::PriorFactor<gtsam::Pose3>>(
-    std::ostream& os, const gtsam::PriorFactor<gtsam::Pose3>& t) {
-  const gtsam::Pose3 measurement = t.prior();
-  toGraphFileFormat(os, measurement);
+// // specalisation of factors
+// template <>
+// void toGraphFileFormat<gtsam::PriorFactor<gtsam::Pose3>>(
+//     std::ostream& os, const gtsam::PriorFactor<gtsam::Pose3>& t) {
+//   const gtsam::Pose3 measurement = t.prior();
+//   toGraphFileFormat(os, measurement);
 
-  auto gaussianModel =
-      boost::dynamic_pointer_cast<gtsam::noiseModel::Gaussian>(t.noiseModel());
-  gtsam::Matrix Info = gaussianModel->information();
-  saveMatrixAsUpperTriangular(os, Info);
-}
+//   auto gaussianModel =
+//       boost::dynamic_pointer_cast<gtsam::noiseModel::Gaussian>(t.noiseModel());
+//   gtsam::Matrix Info = gaussianModel->information();
+//   saveMatrixAsUpperTriangular(os, Info);
+// }
 
-template <>
-void toGraphFileFormat<gtsam::BetweenFactor<gtsam::Pose3>>(
-    std::ostream& os, const gtsam::BetweenFactor<gtsam::Pose3>& t) {
-  const gtsam::Pose3 measurement = t.measured();
-  toGraphFileFormat(os, measurement);
+// template <>
+// void toGraphFileFormat<gtsam::BetweenFactor<gtsam::Pose3>>(
+//     std::ostream& os, const gtsam::BetweenFactor<gtsam::Pose3>& t) {
+//   const gtsam::Pose3 measurement = t.measured();
+//   toGraphFileFormat(os, measurement);
 
-  auto gaussianModel =
-      boost::dynamic_pointer_cast<gtsam::noiseModel::Gaussian>(t.noiseModel());
-  gtsam::Matrix Info = gaussianModel->information();
-  saveMatrixAsUpperTriangular(os, Info);
-}
+//   auto gaussianModel =
+//       boost::dynamic_pointer_cast<gtsam::noiseModel::Gaussian>(t.noiseModel());
+//   gtsam::Matrix Info = gaussianModel->information();
+//   saveMatrixAsUpperTriangular(os, Info);
+// }
 
-template <>
-void toGraphFileFormat<LandmarkMotionTernaryFactor>(
-    std::ostream& os, const LandmarkMotionTernaryFactor& t) {
-  const gtsam::Point3 measurement(0, 0, 0);
-  toGraphFileFormat(os, measurement);
+// template <>
+// void toGraphFileFormat<LandmarkMotionTernaryFactor>(
+//     std::ostream& os, const LandmarkMotionTernaryFactor& t) {
+//   const gtsam::Point3 measurement(0, 0, 0);
+//   toGraphFileFormat(os, measurement);
 
-  auto gaussianModel =
-      boost::dynamic_pointer_cast<gtsam::noiseModel::Gaussian>(t.noiseModel());
-  gtsam::Matrix Info = gaussianModel->information();
-  saveMatrixAsUpperTriangular(os, Info);
-}
+//   auto gaussianModel =
+//       boost::dynamic_pointer_cast<gtsam::noiseModel::Gaussian>(t.noiseModel());
+//   gtsam::Matrix Info = gaussianModel->information();
+//   saveMatrixAsUpperTriangular(os, Info);
+// }
 
-template <>
-void toGraphFileFormat<gtsam::PoseToPointFactor<gtsam::Pose3, Landmark>>(
-    std::ostream& os,
-    const gtsam::PoseToPointFactor<gtsam::Pose3, Landmark>& t) {
-  const gtsam::Point3 measurement = t.measured();
-  toGraphFileFormat(os, measurement);
+// template <>
+// void toGraphFileFormat<gtsam::PoseToPointFactor<gtsam::Pose3, Landmark>>(
+//     std::ostream& os,
+//     const gtsam::PoseToPointFactor<gtsam::Pose3, Landmark>& t) {
+//   const gtsam::Point3 measurement = t.measured();
+//   toGraphFileFormat(os, measurement);
 
-  auto gaussianModel =
-      boost::dynamic_pointer_cast<gtsam::noiseModel::Gaussian>(t.noiseModel());
-  gtsam::Matrix Info = gaussianModel->information();
-  saveMatrixAsUpperTriangular(os, Info);
-}
+//   auto gaussianModel =
+//       boost::dynamic_pointer_cast<gtsam::noiseModel::Gaussian>(t.noiseModel());
+//   gtsam::Matrix Info = gaussianModel->information();
+//   saveMatrixAsUpperTriangular(os, Info);
+// }
 
 }  // namespace factor_graph_tools
 
-void NonlinearFactorGraphManager::writeDynosamGraphFile(
-    const std::string& filename) const {
-  std::ofstream of(filename.c_str());
+// void NonlinearFactorGraphManager::writeDynosamGraphFile(
+//     const std::string& filename) const {
+//   std::ofstream of(filename.c_str());
 
-  LOG(INFO) << "Writing dynosam graph file: " << filename;
+//   LOG(INFO) << "Writing dynosam graph file: " << filename;
 
-  using namespace factor_graph_tools;
+//   using namespace factor_graph_tools;
 
-  // specalisations for dynosam factor graph
-  // gtsam does not have a write function for the base factor class so we dont
-  // actually know the types contained within the NonLinearFactorGraph so we
-  // have to test them
-  auto write_factor = [](std::ofstream& os,
-                         const gtsam::NonlinearFactor::shared_ptr& nl_factor) {
-    // careful of mixing boost and std shared ptrs/casting here
-    auto prior_factor =
-        boost::dynamic_pointer_cast<gtsam::PriorFactor<gtsam::Pose3>>(
-            nl_factor);
-    if (prior_factor)
-      seralizeFactorToGraphFileFormat<gtsam::PriorFactor<gtsam::Pose3>>(
-          os, *prior_factor, "SE3_PRIOR_FACTOR");
+//   // specalisations for dynosam factor graph
+//   // gtsam does not have a write function for the base factor class so we
+//   dont
+//   // actually know the types contained within the NonLinearFactorGraph so we
+//   // have to test them
+//   auto write_factor = [](std::ofstream& os,
+//                          const gtsam::NonlinearFactor::shared_ptr& nl_factor)
+//                          {
+//     // careful of mixing boost and std shared ptrs/casting here
+//     auto prior_factor =
+//         boost::dynamic_pointer_cast<gtsam::PriorFactor<gtsam::Pose3>>(
+//             nl_factor);
+//     if (prior_factor)
+//       seralizeFactorToGraphFileFormat<gtsam::PriorFactor<gtsam::Pose3>>(
+//           os, *prior_factor, "SE3_PRIOR_FACTOR");
 
-    // TODO: should give a different name for odom/smoothing factors?
-    // does not affect the graph structure but provides metadata?
-    auto between_factor =
-        boost::dynamic_pointer_cast<gtsam::BetweenFactor<gtsam::Pose3>>(
-            nl_factor);
-    if (between_factor)
-      seralizeFactorToGraphFileFormat<gtsam::BetweenFactor<gtsam::Pose3>>(
-          os, *between_factor, "SE3_BETWEEN_FACTOR");
+//     // TODO: should give a different name for odom/smoothing factors?
+//     // does not affect the graph structure but provides metadata?
+//     auto between_factor =
+//         boost::dynamic_pointer_cast<gtsam::BetweenFactor<gtsam::Pose3>>(
+//             nl_factor);
+//     if (between_factor)
+//       seralizeFactorToGraphFileFormat<gtsam::BetweenFactor<gtsam::Pose3>>(
+//           os, *between_factor, "SE3_BETWEEN_FACTOR");
 
-    auto motion_factor =
-        boost::dynamic_pointer_cast<LandmarkMotionTernaryFactor>(nl_factor);
-    if (motion_factor)
-      seralizeFactorToGraphFileFormat<LandmarkMotionTernaryFactor>(
-          os, *motion_factor, "SE3_MOTION_FACTOR");
+//     auto motion_factor =
+//         boost::dynamic_pointer_cast<LandmarkMotionTernaryFactor>(nl_factor);
+//     if (motion_factor)
+//       seralizeFactorToGraphFileFormat<LandmarkMotionTernaryFactor>(
+//           os, *motion_factor, "SE3_MOTION_FACTOR");
 
-    auto pose_to_point_factor = boost::dynamic_pointer_cast<
-        gtsam::PoseToPointFactor<gtsam::Pose3, Landmark>>(nl_factor);
-    if (pose_to_point_factor)
-      seralizeFactorToGraphFileFormat<
-          gtsam::PoseToPointFactor<gtsam::Pose3, Landmark>>(
-          os, *pose_to_point_factor, "POSE_TO_POINT_FACTOR");
-  };
+//     auto pose_to_point_factor = boost::dynamic_pointer_cast<
+//         gtsam::PoseToPointFactor<gtsam::Pose3, Landmark>>(nl_factor);
+//     if (pose_to_point_factor)
+//       seralizeFactorToGraphFileFormat<
+//           gtsam::PoseToPointFactor<gtsam::Pose3, Landmark>>(
+//           os, *pose_to_point_factor, "POSE_TO_POINT_FACTOR");
+//   };
 
-  auto write_value = [](std::ofstream& os, const gtsam::Values& value,
-                        gtsam::Key key) {
-    SymbolChar chr = DynoChrExtractor(key);
+//   auto write_value = [](std::ofstream& os, const gtsam::Values& value,
+//                         gtsam::Key key) {
+//     SymbolChar chr = DynoChrExtractor(key);
 
-    if (chr == InvalidDynoSymbol) {
-      throw std::runtime_error(
-          "Cannot write value to (dynosam) graph file as the associated key is "
-          "not a valid dynosam key!");
-    }
+//     if (chr == InvalidDynoSymbol) {
+//       throw std::runtime_error(
+//           "Cannot write value to (dynosam) graph file as the associated key
+//           is " "not a valid dynosam key!");
+//     }
 
-    switch (chr) {
-      case kPoseSymbolChar:
-        seralizeValueToGraphFileFormat<gtsam::Pose3>(
-            os, value.at<gtsam::Pose3>(key), key, "SE3_POSE_VALUE");
-        break;
-      case kObjectMotionSymbolChar:
-        seralizeValueToGraphFileFormat<gtsam::Pose3>(
-            os, value.at<gtsam::Pose3>(key), key, "SE3_MOTION_VALUE");
-        break;
-      case kStaticLandmarkSymbolChar:
-        seralizeValueToGraphFileFormat<gtsam::Point3>(
-            os, value.at<gtsam::Point3>(key), key, "POINT3_STATIC_VALUE");
-        break;
-      case kDynamicLandmarkSymbolChar:
-        seralizeValueToGraphFileFormat<gtsam::Point3>(
-            os, value.at<gtsam::Point3>(key), key, "POINT3_DYNAMIC_VALUE");
-        break;
-      default:
-        LOG(FATAL) << "Should never reach here if DynoChrExtractor works!!";
-    }
-  };
+//     switch (chr) {
+//       case kPoseSymbolChar:
+//         seralizeValueToGraphFileFormat<gtsam::Pose3>(
+//             os, value.at<gtsam::Pose3>(key), key, "SE3_POSE_VALUE");
+//         break;
+//       case kObjectMotionSymbolChar:
+//         seralizeValueToGraphFileFormat<gtsam::Pose3>(
+//             os, value.at<gtsam::Pose3>(key), key, "SE3_MOTION_VALUE");
+//         break;
+//       case kStaticLandmarkSymbolChar:
+//         seralizeValueToGraphFileFormat<gtsam::Point3>(
+//             os, value.at<gtsam::Point3>(key), key, "POINT3_STATIC_VALUE");
+//         break;
+//       case kDynamicLandmarkSymbolChar:
+//         seralizeValueToGraphFileFormat<gtsam::Point3>(
+//             os, value.at<gtsam::Point3>(key), key, "POINT3_DYNAMIC_VALUE");
+//         break;
+//       default:
+//         LOG(FATAL) << "Should never reach here if DynoChrExtractor works!!";
+//     }
+//   };
 
-  gtsam::KeySet seen_keys;
-  for (const auto& factor : *this) {
-    write_factor(of, factor);
-    for (const auto key : *factor) {
-      // we have not seen this key before write it out to avoid duplication
-      if (seen_keys.find(key) == seen_keys.end()) {
-        write_value(of, values_, key);
-        seen_keys.insert(key);
-      }
-    }
-  }
+//   gtsam::KeySet seen_keys;
+//   for (const auto& factor : *this) {
+//     write_factor(of, factor);
+//     for (const auto key : *factor) {
+//       // we have not seen this key before write it out to avoid duplication
+//       if (seen_keys.find(key) == seen_keys.end()) {
+//         write_value(of, values_, key);
+//         seen_keys.insert(key);
+//       }
+//     }
+//   }
 
-  std::flush(of);
-}
+//   std::flush(of);
+// }
 
 bool ISAM2Helper::marginalizeKeys(gtsam::ISAM2Result* result,
                                   gtsam::ISAM2* smoother,

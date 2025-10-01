@@ -207,12 +207,12 @@ if __name__ == '__main__':
     #     "--ending_frame=150"
     # )
 
-    # run_viodes()
+    run_viodes()
     # run_tartan_air()
     # run_cluster()
     # run_omd()
     # run_aria()
-    run_kitti()
+    # run_kitti()
     # run_analysis("kitti_0004_test")
     # run_analysis("kitti_0020")
     sys.exit(0)

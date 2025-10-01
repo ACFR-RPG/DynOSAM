@@ -31,7 +31,7 @@
 
 #include "dynosam_common/Map.hpp"
 #include "dynosam_common/MapNodes.hpp"
-#include "dynosam_common/OptimizationDefinitions.hpp"
+#include "dynosam_opt_common/Symbols.hpp"
 
 namespace dyno {
 

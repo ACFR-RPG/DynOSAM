@@ -44,12 +44,12 @@
 #include <vector>
 
 #include "dynosam/backend/BackendPipeline.hpp"
-#include "dynosam/backend/FactorGraphTools.hpp"
 #include "dynosam/backend/ParallelHybridBackendModule.hpp"
 #include "dynosam/backend/RegularBackendModule.hpp"
 #include "dynosam/factors/LandmarkMotionTernaryFactor.hpp"
 #include "dynosam/frontend/FrontendPipeline.hpp"
 #include "dynosam_common/Map.hpp"
+#include "dynosam_opt_common/FactorGraphTools.hpp"
 #include "internal/backend_runners.hpp"
 #include "internal/helpers.hpp"
 #include "internal/simulator.hpp"
@@ -1310,7 +1310,7 @@ TEST(RegularBackendModule, testCliques) {
   initial.insert(CameraPoseSymbol(2), pose2);
 
   dyno::NonlinearFactorGraphManager nlfgm(graph, initial);
-  nlfgm.writeDynosamGraphFile(dyno::getOutputFilePath("test_graph.g2o"));
+  //   nlfgm.writeDynosamGraphFile(dyno::getOutputFilePath("test_graph.g2o"));
 
   // graph.saveGraph(dyno::getOutputFilePath("small_graph.dot"),
   // dyno::DynosamKeyFormatter);

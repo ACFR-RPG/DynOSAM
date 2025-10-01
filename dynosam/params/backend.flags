@@ -34,9 +34,6 @@
 --static_pixel_noise_sigma=0.1
 --dynamic_pixel_noise_sigma=3.0
 
-# --static_point_noise_sigma=0.01
-# --dynamic_point_noise_sigma=0.4
-# --dynamic_point_noise_sigma=0.00006
 
 --opt_window_size=10
 --opt_window_overlap=4
@@ -51,7 +48,7 @@
 # 0: PTP, 1: Generic Projection, 2: Stereo Projection
 --static_formulation_type=0
 
---min_static_observations=3
+--min_static_observations=2
 --min_dynamic_observations=2
 
 

@@ -28,7 +28,7 @@
  *   SOFTWARE.
  */
 
-#include "dynosam_common/OptimizationDefinitions.hpp"
+#include "dynosam_opt_common/Symbols.hpp"
 
 #include <glog/logging.h>
 

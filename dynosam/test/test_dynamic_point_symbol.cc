@@ -33,7 +33,7 @@
 
 #include <exception>
 
-#include "dynosam_common/OptimizationDefinitions.hpp"
+#include "dynosam_opt_common/Symbols.hpp"
 
 using namespace dyno;
 

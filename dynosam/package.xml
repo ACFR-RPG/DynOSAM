@@ -15,6 +15,7 @@
  <depend>gtsam</depend>
  <depend>dynosam_common</depend>
  <depend>dynosam_vision_common</depend>
+ <depend>dynosam_opt_common</depend>
 
 
   <depend>rclcpp</depend>

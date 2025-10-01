@@ -61,13 +61,10 @@ add_library(${PROJECT_NAME} SHARED
     src/GroundTruthPacket.cc
     src/StructuredContainers.cc
     src/DynamicObjects.cc
-    src/Map.cc
-    src/MapNodes.cc
     src/PointCloudProcess.cc
     src/Algorithms.cc
     src/SharedModuleInfo.cc
     src/SensorModels.cc
-    src/OptimizationDefinitions.cc
 
     src/byte_tracker/ByteTracker.cc
     src/byte_tracker/Detection.cc

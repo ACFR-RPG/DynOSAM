@@ -213,7 +213,6 @@ if(BUILD_TESTING)
     test/test_ros_utils.cc
     test/test_adaptors.cc
     test/test_online_dataprovider_ros.cc
-    test/darin_simulations.cc
 )
 
 target_include_directories(${PROJECT_NAME}_test

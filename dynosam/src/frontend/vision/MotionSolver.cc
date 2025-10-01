@@ -43,7 +43,6 @@
 #include <opengv/types.hpp>
 
 #include "dynosam/backend/BackendDefinitions.hpp"
-#include "dynosam/backend/FactorGraphTools.hpp"  //TODO: clean
 #include "dynosam/factors/LandmarkMotionTernaryFactor.hpp"
 #include "dynosam/factors/Pose3FlowProjectionFactor.h"
 #include "dynosam/frontend/vision/VisionTools.hpp"
@@ -53,6 +52,7 @@
 #include "dynosam_common/utils/GtsamUtils.hpp"
 #include "dynosam_common/utils/Numerical.hpp"
 #include "dynosam_common/utils/TimingStats.hpp"
+#include "dynosam_opt_common/FactorGraphTools.hpp"  //TODO: clean
 
 namespace dyno {
 

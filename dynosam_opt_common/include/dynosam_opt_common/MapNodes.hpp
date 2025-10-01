@@ -37,8 +37,8 @@
 #include <set>
 #include <type_traits>
 
-#include "dynosam_common/OptimizationDefinitions.hpp"
 #include "dynosam_common/Types.hpp"
+#include "dynosam_opt_common/Symbols.hpp"
 
 namespace dyno {
 

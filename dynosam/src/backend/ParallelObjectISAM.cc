@@ -32,9 +32,9 @@
 
 #include <pcl/io/pcd_io.h>  //for dynamic map IO
 
-#include "dynosam/backend/FactorGraphTools.hpp"
 #include "dynosam/backend/optimizers/IncrementalOptimization.hpp"
 #include "dynosam_common/utils/TimingStats.hpp"
+#include "dynosam_opt_common/FactorGraphTools.hpp"
 
 DEFINE_bool(save_per_frame_dynamic_cloud, false,
             "To save the local map of each object after every update! WARNING: "
