@@ -30,6 +30,7 @@
 
 #pragma once
 
+#include "dynosam/backend/BackendFormulationFactory.hpp"
 #include "dynosam/backend/BackendInputPacket.hpp"
 #include "dynosam/backend/BackendModule.hpp"
 
@@ -38,4 +39,8 @@ namespace dyno {
 using RegularBackendModuleTraits =
     BackendModuleTraits<VisionImuPacket, CameraMeasurement>;
 
-}
+/// @brief BackendFormulationFactory templated on the regular map type
+using RegularFormulationFactory =
+    BackendFormulationFactory<RegularBackendModuleTraits::MapType>;
+
+}  // namespace dyno

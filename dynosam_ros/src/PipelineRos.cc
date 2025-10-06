@@ -33,11 +33,14 @@
 #include <gflags/gflags.h>
 #include <glog/logging.h>
 
+#include "dynosam/backend/BackendFactory.hpp"
+#include "dynosam/backend/RegularBackendDefinitions.hpp"  //just for the MAP!
 #include "dynosam/dataprovider/DataProviderFactory.hpp"
 #include "dynosam/dataprovider/DataProviderUtils.hpp"
 #include "dynosam/pipeline/PipelineHooks.hpp"
 #include "dynosam/pipeline/PipelineParams.hpp"
 #include "dynosam/visualizer/OpenCVFrontendDisplay.hpp"
+#include "dynosam_ros/BackendDisplayPolicyRos.hpp"
 #include "dynosam_ros/Display-Definitions.hpp"
 #include "dynosam_ros/OnlineDataProviderRos.hpp"
 #include "dynosam_ros/RosUtils.hpp"
@@ -166,9 +169,18 @@ void DynoPipelineManagerRos::initalisePipeline() {
     };
   }
 
+  using RosBackendFactory = BackendFactory<BackendModulePolicyRos,
+                                           RegularBackendModuleTraits::MapType>;
+  // for now we just support regular backend ... in fact this design means we
+  // should depricate any other map...
+  //   auto factory =
+  //   DefaultBackendFactory<RegularBackendModuleTraits::MapType>::Create(params.backend_type);
+  auto factory = RosBackendFactory::Create(params.backend_type, display_params,
+                                           this->create_sub_node("backend"));
+
   auto data_loader = createDataProvider();
   pipeline_ = std::make_unique<DynoPipelineManager>(
-      params, data_loader, frontend_display, backend_display, hooks);
+      params, data_loader, frontend_display, backend_display, factory, hooks);
 }
 
 }  // namespace dyno

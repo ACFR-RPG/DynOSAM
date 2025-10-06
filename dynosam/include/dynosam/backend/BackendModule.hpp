@@ -35,7 +35,6 @@
 #include "dynosam/backend/BackendOutputPacket.hpp"
 #include "dynosam/backend/BackendParams.hpp"
 #include "dynosam/backend/Formulation.hpp"
-#include "dynosam/frontend/RGBDInstance-Definitions.hpp"  //for RGBDInstanceOutputPacket
 #include "dynosam/visualizer/Visualizer-Definitions.hpp"  //for ImageDisplayQueueOptional,
 #include "dynosam_common/Exceptions.hpp"
 #include "dynosam_common/Map.hpp"
@@ -61,6 +60,7 @@ struct BackendModuleTraits {
   static_assert(std::is_base_of_v<BasePacketType, DerivedPacketType>);
 
   using MeasurementType = MEASUREMENT_TYPE;
+  using MapType = Map<MeasurementType>;
 };
 
 /**
@@ -121,7 +121,7 @@ class BackendModuleType : public BackendModule {
   using This = BackendModuleType<ModuleTraits>;
   using Base = BackendModule;
 
-  using MapType = Map<MeasurementType>;
+  using MapType = typename ModuleTraits::MapType;
   using FormulationType = Formulation<MapType>;
 
   DYNO_POINTER_TYPEDEFS(This)

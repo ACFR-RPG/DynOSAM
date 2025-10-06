@@ -1,0 +1,24 @@
+#pragma once
+
+#include "dynosam/visualizer/VisualizerPipelines.hpp"  //for BackendModuleDisplay
+#include "dynosam_ros/Display-Definitions.hpp"
+#include "rclcpp/node.hpp"
+#include "rclcpp/node_options.hpp"
+
+namespace dyno {
+
+class BackendModuleDisplayRos : public BackendModuleDisplay {
+ public:
+  DYNO_POINTER_TYPEDEFS(BackendModuleDisplayRos)
+
+  BackendModuleDisplayRos(const DisplayParams& params,
+                          rclcpp::Node::SharedPtr node)
+      : params_(params), node_(node) {}
+  virtual ~BackendModuleDisplayRos() = default;
+
+ protected:
+  DisplayParams params_;
+  rclcpp::Node::SharedPtr node_;
+};
+
+}  // namespace dyno

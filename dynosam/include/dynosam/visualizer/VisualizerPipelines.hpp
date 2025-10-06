@@ -75,4 +75,19 @@ class DisplayPipeline : public SIMOPipelineModule<INPUT, NullPipelinePayload> {
 using FrontendVizPipeline = DisplayPipeline<VisionImuPacket>;
 using BackendVizPipeline = DisplayPipeline<BackendOutputPacket>;
 
+/**
+ * @brief Vizualisation class that can be associated with a
+ * BackendModule/formulation to allow custom vizualistions for the specifics of
+ * the BackendModule/formulation in addition to the standard frontend/backend
+ * output
+ *
+ */
+class BackendModuleDisplay {
+ public:
+  DYNO_POINTER_TYPEDEFS(BackendModuleDisplay)
+
+  BackendModuleDisplay() = default;
+  virtual ~BackendModuleDisplay() = default;
+};
+
 }  // namespace dyno

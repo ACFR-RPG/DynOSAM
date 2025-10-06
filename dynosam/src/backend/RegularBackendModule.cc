@@ -74,13 +74,11 @@ DEFINE_bool(
 
 namespace dyno {
 
-RegularBackendModule::RegularBackendModule(const BackendParams& backend_params,
-                                           Camera::Ptr camera,
-                                           const BackendType& updater_type,
-                                           ImageDisplayQueue* display_queue)
-    : Base(backend_params, display_queue),
-      camera_(CHECK_NOTNULL(camera)),
-      backend_type_(updater_type) {
+RegularBackendModule::RegularBackendModule(
+    const BackendParams& backend_params, Camera::Ptr camera,
+    std::shared_ptr<RegularFormulationFactory> factory,
+    ImageDisplayQueue* display_queue)
+    : Base(backend_params, display_queue), camera_(CHECK_NOTNULL(camera)) {
   CHECK_NOTNULL(map_);
 
   noise_models_.print("RegularBackend noise models ");
@@ -89,8 +87,18 @@ RegularBackendModule::RegularBackendModule(const BackendParams& backend_params,
   setupUpdates();
 
   // set up formulation/some error handling
-  formulation_ = std::move(makeFormulation());
+  setFormulation(factory);
 }
+
+RegularBackendModule::RegularBackendModule(const BackendParams& backend_params,
+                                           Camera::Ptr camera,
+                                           const BackendType& backend_type,
+                                           ImageDisplayQueue* display_queue)
+    : RegularBackendModule(
+          backend_params, camera,
+          DefaultBackendFactory<RegularBackendModule::RGBDMap>::Create(
+              backend_type),
+          display_queue) {}
 
 RegularBackendModule::~RegularBackendModule() {
   LOG(INFO) << "Destructing RegularBackendModule";
@@ -553,8 +561,8 @@ void RegularBackendModule::updateMapWithMeasurements(
   map_->updateObjectMotionMeasurements(frame_id_k, object_motions);
 }
 
-Formulation<RegularBackendModule::RGBDMap>::UniquePtr
-RegularBackendModule::makeFormulation() {
+void RegularBackendModule::setFormulation(
+    std::shared_ptr<RegularFormulationFactory> factory) {
   // setup error hooks
   ErrorHandlingHooks error_hooks;
   error_hooks.handle_ils_exception = [](const gtsam::Values& current_values,
@@ -600,14 +608,25 @@ RegularBackendModule::makeFormulation() {
   Sensors sensors;
   sensors.camera = camera_;
 
-  Formulation<RegularBackendModule::RGBDMap>::UniquePtr formulation =
-      BackendFactory::createFormulation(backend_type_, formulation_params,
-                                        getMap(), noise_models_, sensors,
-                                        createFormulationHooks());
+  auto map = getMap();
+  auto formulation_hooks = createFormulationHooks();
 
-  CHECK_NOTNULL(formulation);
+  CHECK_NOTNULL(factory);
+
+  // Formulation<RegularBackendModule::RGBDMap>::Ptr formulation =
+  //     BackendFactory::createFormulation(backend_type, formulation_params,
+  //                                       getMap(), noise_models_, sensors,
+  //                                       createFormulationHooks());
+  FormulationVizWrapper<RGBDMap> wrapper = factory->createFormulation(
+      formulation_params, map, noise_models_, sensors, formulation_hooks);
+
+  formulation_ = wrapper.formulation;
+  formulation_display_ = wrapper.display;
+
+  CHECK_NOTNULL(formulation_);
   // add additional error handling for incremental based on formulation
-  auto* hybrid_formulation = static_cast<HybridFormulation*>(formulation.get());
+  auto* hybrid_formulation =
+      static_cast<HybridFormulation*>(formulation_.get());
   if (hybrid_formulation) {
     LOG(INFO) << "Adding additional error hooks for Hybrid formulation";
     error_hooks.handle_failed_object =
@@ -621,8 +640,6 @@ RegularBackendModule::makeFormulation() {
         };
   }
   error_hooks_ = error_hooks;
-
-  return formulation;
 }
 
 BackendMetaData RegularBackendModule::createBackendMetadata() const {
@@ -653,7 +670,7 @@ BackendOutputPacket::Ptr RegularBackendModule::constructOutputPacket(
 }
 
 BackendOutputPacket::Ptr RegularBackendModule::constructOutputPacket(
-    const Formulation<RGBDMap>::UniquePtr& formulation, FrameId frame_k,
+    const Formulation<RGBDMap>::Ptr& formulation, FrameId frame_k,
     Timestamp timestamp) {
   auto accessor = formulation->accessorFromTheta();
 

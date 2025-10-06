@@ -30,15 +30,21 @@
 
 #pragma once
 
+#include <memory>
+
+#include "dynosam/backend/BackendFormulationFactory.hpp"
 #include "dynosam/backend/BackendModule.hpp"
+#include "dynosam/backend/BackendModuleFactory.hpp"
 #include "dynosam/backend/BackendParams.hpp"
 #include "dynosam/backend/Formulation.hpp"
 #include "dynosam/backend/ParallelHybridBackendModule.hpp"
 #include "dynosam/backend/RegularBackendModule.hpp"
+#include "dynosam/backend/optimizers/IncrementalOptimization.hpp"  // for ErrorHandlingHooks
 #include "dynosam/backend/rgbd/HybridEstimator.hpp"
 #include "dynosam/backend/rgbd/WorldMotionEstimator.hpp"
 #include "dynosam/backend/rgbd/WorldPoseEstimator.hpp"
 #include "dynosam/backend/rgbd/impl/test_HybridFormulations.hpp"
+#include "dynosam/visualizer/VisualizerPipelines.hpp"  //for BackendModuleDisplay
 
 namespace dyno {
 
@@ -48,71 +54,257 @@ class IncorrectParallelHybridConstruction : public DynosamException {
       : DynosamException(what) {}
 };
 
-class BackendFactory {
- public:
-  DYNO_DELETE_COPY_CONSTRUCTORS(BackendFactory)
-  BackendFactory() = delete;
-  virtual ~BackendFactory() = default;
+template <typename Policy, typename MAP>
+class BackendFactory
+    : public BackendFormulationFactory<MAP>,
+      public Policy,
+      public BackendModuleFactory,
+      public std::enable_shared_from_this<BackendFactory<Policy, MAP>> {
+  struct PrivateBackendType {
+    const BackendType backend_type;
+    PrivateBackendType(const BackendType& type) : backend_type(type) {}
+  };
 
-  static BackendModule::Ptr createModule(
-      const BackendType& backend_type, const BackendParams& backend_params,
-      Camera::Ptr camera, ImageDisplayQueue* display_queue = nullptr) {
-    if (backend_type == BackendType::PARALLEL_HYBRID) {
-      return std::make_shared<ParallelHybridBackendModule>(
-          backend_params, camera, display_queue);
-    } else {
-      return std::make_shared<RegularBackendModule>(
-          backend_params, camera, backend_type, display_queue);
-    }
+ public:
+  using This = BackendFactory<Policy, MAP>;
+  DYNO_POINTER_TYPEDEFS(This)
+
+  BackendFactory(const PrivateBackendType& p_type, const Policy& policy)
+      : BackendFormulationFactory<MAP>(p_type.backend_type), Policy(policy) {}
+
+  template <typename... Args>
+  BackendFactory(const PrivateBackendType& p_type, Args&&... args)
+      : BackendFormulationFactory<MAP>(p_type.backend_type),
+        Policy(std::forward<Args>(args)...) {}
+
+  // Return a shared_ptr to this factory
+  std::shared_ptr<This> getPtr() { return this->shared_from_this(); }
+
+  static std::shared_ptr<This> Create(const BackendType& backend_type,
+                                      const Policy& policy) {
+    return std::make_shared<This>(PrivateBackendType{backend_type}, policy);
   }
 
-  template <typename MAP>
-  static typename Formulation<MAP>::UniquePtr createFormulation(
-      const BackendType& backend_type,
+  template <typename... Args>
+  static std::shared_ptr<This> Create(const BackendType& backend_type,
+                                      Args&&... args) {
+    return std::make_shared<This>(PrivateBackendType{backend_type},
+                                  std::forward<Args>(args)...);
+  }
+
+  virtual ~BackendFactory() = default;
+
+  BackendWrapper createModule(const ModuleParams& params) override {
+    BackendWrapper wrapper;
+
+    if (this->backend_type_ == BackendType::PARALLEL_HYBRID) {
+      std::shared_ptr<ParallelHybridBackendModule> backend =
+          std::make_shared<ParallelHybridBackendModule>(params.backend_params,
+                                                        params.sensors.camera,
+                                                        params.display_queue);
+
+      wrapper.backend = backend;
+      // Parallel Hybrid is a special case where we have a vizualiser over the
+      // whole module
+      wrapper.backend_viz = this->createDisplay(backend);
+      VLOG(20) << "Creating ParallelHybridBackendModule"
+               << (wrapper.backend_viz ? " with additional display"
+                                       : " without additional display");
+
+    } else {
+      std::shared_ptr<BackendFormulationFactory<MAP>> formulation_factory =
+          std::dynamic_pointer_cast<BackendFormulationFactory<MAP>>(
+              this->getPtr());
+
+      CHECK_NOTNULL(formulation_factory);
+
+      std::shared_ptr<RegularBackendModule> backend =
+          std::make_shared<RegularBackendModule>(
+              params.backend_params, params.sensors.camera, formulation_factory,
+              params.display_queue);
+
+      wrapper.backend = backend;
+
+      // the formulation is tighly wrapper in the regular backend module and can
+      // be any formulation (while the Parallel Hybrid has to be Hybrid) so we
+      // now retrieve the visualiser
+      wrapper.backend_viz = backend->formulationDisplay();
+      VLOG(20) << "Creating RegularBackendModule"
+               << (wrapper.backend_viz ? " with additional display"
+                                       : " without additional display");
+    }
+    return wrapper;
+  }
+
+ private:
+  FormulationVizWrapper<MAP> createFormulation(
       const FormulationParams& formulation_params, std::shared_ptr<MAP> map,
       const NoiseModels& noise_models, const Sensors& sensors,
-      const FormulationHooks& formulation_hooks) {
-    if (backend_type == BackendType::PARALLEL_HYBRID) {
+      const FormulationHooks& formulation_hooks) override {
+    FormulationVizWrapper<MAP> wrapper;
+
+    if (this->backend_type_ == BackendType::PARALLEL_HYBRID) {
       DYNO_THROW_MSG(IncorrectParallelHybridConstruction)
           << "Cannot construct PARALLEL_HYBRID backend with a call to "
              "BackendFactory::createFormulation"
           << " Use BackendFactory::createModule instead!";
-      return nullptr;
-    } else if (backend_type == BackendType::WCME) {
+      return wrapper;
+    } else if (this->backend_type_ == BackendType::WCME) {
       LOG(INFO) << "Using WCME";
-      return std::make_unique<WorldMotionFormulation>(
-          formulation_params, map, noise_models, sensors, formulation_hooks);
+      std::shared_ptr<WorldMotionFormulation> formulation =
+          std::make_shared<WorldMotionFormulation>(formulation_params, map,
+                                                   noise_models, sensors,
+                                                   formulation_hooks);
 
-    } else if (backend_type == BackendType::WCPE) {
+      // call polciy function
+      wrapper.display = this->createDisplay(formulation);
+      wrapper.formulation = formulation;
+
+    } else if (this->backend_type_ == BackendType::WCPE) {
       LOG(INFO) << "Using WCPE";
-      return std::make_unique<WorldPoseFormulation>(
-          formulation_params, map, noise_models, sensors, formulation_hooks);
-    } else if (backend_type == BackendType::HYBRID) {
+      std::shared_ptr<WorldPoseFormulation> formulation =
+          std::make_shared<WorldPoseFormulation>(formulation_params, map,
+                                                 noise_models, sensors,
+                                                 formulation_hooks);
+      // call polciy function
+      wrapper.display = this->createDisplay(formulation);
+      wrapper.formulation = formulation;
+
+    } else if (this->backend_type_ == BackendType::HYBRID) {
       LOG(INFO) << "Using HYBRID";
-      return std::make_unique<RegularHybridFormulation>(
-          formulation_params, map, noise_models, sensors, formulation_hooks);
-    } else if (backend_type == BackendType::TESTING_HYBRID_SD) {
+      std::shared_ptr<RegularHybridFormulation> formulation =
+          std::make_shared<RegularHybridFormulation>(formulation_params, map,
+                                                     noise_models, sensors,
+                                                     formulation_hooks);
+
+      // call polciy function
+      wrapper.display = this->createDisplay(formulation);
+      wrapper.formulation = formulation;
+
+    } else if (this->backend_type_ == BackendType::TESTING_HYBRID_SD) {
       LOG(FATAL) << "Using Hybrid Structureless Decoupled. Warning this is a "
                     "testing only formulation!";
-    } else if (backend_type == BackendType::TESTING_HYBRID_D) {
+    } else if (this->backend_type_ == BackendType::TESTING_HYBRID_D) {
       LOG(FATAL) << "Using Hybrid Decoupled. Warning this is a testing only "
                     "formulation!";
-    } else if (backend_type == BackendType::TESTING_HYBRID_S) {
+    } else if (this->backend_type_ == BackendType::TESTING_HYBRID_S) {
       LOG(FATAL) << "Using Hybrid Structurless. Warning this is a testing only "
                     "formulation!";
-    } else if (backend_type == BackendType::TESTING_HYBRID_SMF) {
+    } else if (this->backend_type_ == BackendType::TESTING_HYBRID_SMF) {
       LOG(INFO)
           << "Using Hybrid Smart Motion Factor. Warning this is a testing "
              "only formulation!";
       FormulationParams fp = formulation_params;
       fp.min_dynamic_observations = 1u;
-      return std::make_unique<test_hybrid::SmartStructurlessFormulation>(
-          fp, map, noise_models, sensors, formulation_hooks);
+      std::shared_ptr<test_hybrid::SmartStructurlessFormulation> formulation =
+          std::make_shared<test_hybrid::SmartStructurlessFormulation>(
+              fp, map, noise_models, sensors, formulation_hooks);
+      wrapper.display = this->createDisplay(formulation);
+      wrapper.formulation = formulation;
+
     } else {
       CHECK(false) << "Not implemented";
-      return nullptr;
+      return wrapper;
     }
+
+    return wrapper;
+  }
+
+ private:
+};
+
+struct NoVizPolicy {
+  template <typename Formulation>
+  BackendModuleDisplay::Ptr createDisplay(std::shared_ptr<Formulation>) {
+    VLOG(20) << "No display will be created for formulation "
+             << type_name<Formulation>();
+    return nullptr;
   }
 };
+
+/// @brief a BackendFactory with a Policy that creates no additional displays
+template <typename MAP>
+using DefaultBackendFactory = BackendFactory<NoVizPolicy, MAP>;
+
+/// @brief BackendModuleFactory templated on the correct map type and with the
+/// default (NoVizPolicy) policy
+using DefaultRegularBackendModuleFactory =
+    DefaultBackendFactory<RegularBackendModuleTraits::MapType>;
+
+/// @brief BackendModuleFactory templated on the regular map type but with a
+/// templated Policy
+template <typename Policy>
+using RegularBackendModuleFactory =
+    BackendFactory<Policy, RegularBackendModuleTraits::MapType>;
+
+// class BackendFactory {
+//  public:
+//   DYNO_DELETE_COPY_CONSTRUCTORS(BackendFactory)
+//   BackendFactory() = delete;
+//   virtual ~BackendFactory() = default;
+
+//   static BackendModule::Ptr createModule(
+//       const BackendType& backend_type, const BackendParams& backend_params,
+//       Camera::Ptr camera, ImageDisplayQueue* display_queue = nullptr) {
+//     if (backend_type == BackendType::PARALLEL_HYBRID) {
+//       return std::make_shared<ParallelHybridBackendModule>(
+//           backend_params, camera, display_queue);
+//     } else {
+//       return std::make_shared<RegularBackendModule>(
+//           backend_params, camera, backend_type, display_queue);
+//     }
+//   }
+
+//   template <typename MAP>
+//   static typename Formulation<MAP>::Ptr createFormulation(
+//       const BackendType& backend_type,
+//       const FormulationParams& formulation_params, std::shared_ptr<MAP> map,
+//       const NoiseModels& noise_models, const Sensors& sensors,
+//       const FormulationHooks& formulation_hooks) {
+//     if (backend_type == BackendType::PARALLEL_HYBRID) {
+//       DYNO_THROW_MSG(IncorrectParallelHybridConstruction)
+//           << "Cannot construct PARALLEL_HYBRID backend with a call to "
+//              "BackendFactory::createFormulation"
+//           << " Use BackendFactory::createModule instead!";
+//       return nullptr;
+//     } else if (backend_type == BackendType::WCME) {
+//       LOG(INFO) << "Using WCME";
+//       return std::make_shared<WorldMotionFormulation>(
+//           formulation_params, map, noise_models, sensors, formulation_hooks);
+
+//     } else if (backend_type == BackendType::WCPE) {
+//       LOG(INFO) << "Using WCPE";
+//       return std::make_shared<WorldPoseFormulation>(
+//           formulation_params, map, noise_models, sensors, formulation_hooks);
+//     } else if (backend_type == BackendType::HYBRID) {
+//       LOG(INFO) << "Using HYBRID";
+//       return std::make_shared<RegularHybridFormulation>(
+//           formulation_params, map, noise_models, sensors, formulation_hooks);
+//     } else if (backend_type == BackendType::TESTING_HYBRID_SD) {
+//       LOG(FATAL) << "Using Hybrid Structureless Decoupled. Warning this is a
+//       "
+//                     "testing only formulation!";
+//     } else if (backend_type == BackendType::TESTING_HYBRID_D) {
+//       LOG(FATAL) << "Using Hybrid Decoupled. Warning this is a testing only "
+//                     "formulation!";
+//     } else if (backend_type == BackendType::TESTING_HYBRID_S) {
+//       LOG(FATAL) << "Using Hybrid Structurless. Warning this is a testing
+//       only "
+//                     "formulation!";
+//     } else if (backend_type == BackendType::TESTING_HYBRID_SMF) {
+//       LOG(INFO)
+//           << "Using Hybrid Smart Motion Factor. Warning this is a testing "
+//              "only formulation!";
+//       FormulationParams fp = formulation_params;
+//       fp.min_dynamic_observations = 1u;
+//       return std::make_shared<test_hybrid::SmartStructurlessFormulation>(
+//           fp, map, noise_models, sensors, formulation_hooks);
+//     } else {
+//       CHECK(false) << "Not implemented";
+//       return nullptr;
+//     }
+//   }
+
+// };
 
 }  // namespace dyno

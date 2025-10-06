@@ -108,8 +108,7 @@ TEST(RegularBackendModule, smallKITTIDataset) {
   // gtsam::IncrementalFixedLagSmoother smoother(2.0, isam2_params);
 
   backend.registerPostFormulationUpdateCallback(
-      [&](const dyno::RegularBackendModule::FormulationType::UniquePtr&
-              formulation,
+      [&](const dyno::RegularBackendModule::FormulationType::Ptr& formulation,
           dyno::FrameId frame_id, const gtsam::Values& new_values,
           const gtsam::NonlinearFactorGraph& new_factors) -> void {
         LOG(INFO) << "In backend callback " << frame_id;
@@ -885,8 +884,7 @@ TEST(RegularBackendModule, testObjectCentric) {
   gtsam::Values opt_values;
 
   backend.registerPostFormulationUpdateCallback(
-      [&](const dyno::RegularBackendModule::FormulationType::UniquePtr&
-              formulation,
+      [&](const dyno::RegularBackendModule::FormulationType::Ptr& formulation,
           dyno::FrameId frame_id, const gtsam::Values& new_values,
           const gtsam::NonlinearFactorGraph& new_factors) -> void {
         LOG(INFO) << "In backend callback " << frame_id;

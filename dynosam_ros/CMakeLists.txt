@@ -49,9 +49,12 @@ set(SRC_FILES
   src/PipelineRos.cc
   src/RosUtils.cc
   src/Utils.cc
-  src/displays/DisplaysCommon.cc
   src/DataProviderRos.cc
   src/OnlineDataProviderRos.cc
+
+  src/displays/backend_impl/HybridBackendDisplay.cc
+  src/displays/DisplaysCommon.cc
+
 )
 
 set(LINK_LIBS
@@ -213,6 +216,7 @@ if(BUILD_TESTING)
     test/test_ros_utils.cc
     test/test_adaptors.cc
     test/test_online_dataprovider_ros.cc
+    # test/test_backend_display_factory.cc
 )
 
 target_include_directories(${PROJECT_NAME}_test

@@ -39,7 +39,18 @@
 #include "dynosam_common/Map.hpp"
 #include "dynosam_common/Types.hpp"
 
+// really this should be in a more 'core' file
+#include "dynosam/backend/optimizers/IncrementalOptimization.hpp"  // only for ErrorHandlingHooks
+
 namespace dyno {
+
+template <typename FORMULATION>
+struct FormulationWrapper {
+  std::shared_ptr<FORMULATION> formulation;
+  // TODO: actually maybe the formulation should make the error hooks.... with a
+  // virtual fucntion!
+  std::optional<ErrorHandlingHooks> error_hooks;
+};
 
 template <typename MAP>
 struct MapTraits {

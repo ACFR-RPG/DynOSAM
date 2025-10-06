@@ -45,7 +45,7 @@ namespace dyno {
 DynoPipelineManager::DynoPipelineManager(
     const DynoParams& params, DataProvider::Ptr data_loader,
     FrontendDisplay::Ptr frontend_display, BackendDisplay::Ptr backend_display,
-    const ExternalHooks::Ptr external_hooks)
+    BackendModuleFactory::Ptr factory, const ExternalHooks::Ptr external_hooks)
     : params_(params),
       use_offline_frontend_(FLAGS_frontend_from_file),
       data_loader_(std::move(data_loader)),
@@ -127,7 +127,7 @@ DynoPipelineManager::DynoPipelineManager(
   // update the imu params that will actually get sent to the frontend
   params_.frontend_params_.imu_params = imu_params;
 
-  loadPipelines(camera_params, frontend_display, backend_display);
+  loadPipelines(camera_params, frontend_display, backend_display, factory);
 
   std::string cuda_enabled_message;
   utils::opencvCudaAvailable(&cuda_enabled_message);
@@ -250,7 +250,8 @@ void DynoPipelineManager::launchSpinners() {
 
 void DynoPipelineManager::loadPipelines(const CameraParams& camera_params,
                                         FrontendDisplay::Ptr frontend_display,
-                                        BackendDisplay::Ptr backend_display) {
+                                        BackendDisplay::Ptr backend_display,
+                                        BackendModuleFactory::Ptr factory) {
   BackendModule::Ptr backend = nullptr;
   // the registra for the frontend pipeline
   // this is agnostic to the actual pipeline type so we can add/register
@@ -338,9 +339,17 @@ void DynoPipelineManager::loadPipelines(const CameraParams& camera_params,
         LOG(INFO) << "Construcing RGBD backend";
         params_.backend_params_.full_batch_frame = (int)get_dataset_size_();
 
-        const auto& backend_type = params_.backend_type;
-        backend = BackendFactory::createModule(
-            backend_type, params_.backend_params_, camera, &display_queue_);
+        Sensors sensors;
+        sensors.camera = camera;
+
+        ModuleParams module_params;
+        module_params.backend_params = params_.backend_params_;
+        module_params.sensors = sensors;
+        module_params.display_queue = &display_queue_;
+
+        BackendWrapper backend_wrapper = factory->createModule(module_params);
+
+        backend = backend_wrapper.backend;
         CHECK(backend);
 
         // if(frontend && backend) {

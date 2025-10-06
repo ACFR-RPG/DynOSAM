@@ -29,11 +29,6 @@
  */
 #pragma once
 
-#include <gtsam/nonlinear/ISAM2.h>
-#include <gtsam/nonlinear/NonlinearFactorGraph.h>
-#include <gtsam/nonlinear/Values.h>
-#include <gtsam_unstable/nonlinear/IncrementalFixedLagSmoother.h>
-
 #include "dynosam/backend/BackendDefinitions.hpp"
 #include "dynosam/backend/BackendInputPacket.hpp"
 #include "dynosam/backend/BackendModule.hpp"
@@ -43,6 +38,7 @@
 #include "dynosam/backend/optimizers/ISAM2.hpp"
 #include "dynosam/backend/optimizers/IncrementalOptimization.hpp"
 #include "dynosam/backend/optimizers/SlidingWindowOptimization.hpp"
+#include "dynosam/visualizer/Visualizer-Definitions.hpp"  //for ImageDisplayQueueOptional,
 #include "dynosam_common/Flags.hpp"
 #include "dynosam_common/Map.hpp"
 
@@ -58,20 +54,43 @@ class RegularBackendModule
   using FormulationType = Base::FormulationType;
 
   RegularBackendModule(const BackendParams& backend_params, Camera::Ptr camera,
-                       const BackendType& updater_type,
+                       std::shared_ptr<RegularFormulationFactory> factory,
                        ImageDisplayQueue* display_queue = nullptr);
+
+  // TODO: comment as to why we have two constructors!!
+
+  /**
+   * @brief A secondary constructor the RegularBackend that does not take an
+   * explicit factory but instead just the type of formulation to be used. In
+   * this case the DefaultBackendFactory will be used which has no special
+   * behaviour.
+   *
+   * This constructor is mostly used for unit-tests
+   * @param backend_params
+   * @param camera
+   * @param display_queue
+   */
+  RegularBackendModule(const BackendParams& backend_params, Camera::Ptr camera,
+                       const BackendType& backend_type,
+                       ImageDisplayQueue* display_queue = nullptr);
+
   ~RegularBackendModule();
 
   using SpinReturn = Base::SpinReturn;
 
-  const FormulationType* formulation() const { return formulation_.get(); }
+  // const FormulationType* formulation() const { return formulation_.get(); }
 
   // also provide non-const access (this should only be used with caution and is
   // really only there to enable specific unit-tests!)
-  FormulationType* formulation() { return formulation_.get(); }
+  const typename FormulationType::Ptr formulation() const {
+    return formulation_;
+  }
+  BackendModuleDisplay::Ptr formulationDisplay() const {
+    return formulation_display_;
+  }
 
   using PostFormulationUpdateCallback = std::function<void(
-      const Formulation<RGBDMap>::UniquePtr&, FrameId, const gtsam::Values&,
+      const Formulation<RGBDMap>::Ptr&, FrameId, const gtsam::Values&,
       const gtsam::NonlinearFactorGraph&)>;
   void registerPostFormulationUpdateCallback(
       const PostFormulationUpdateCallback& cb) {
@@ -133,19 +152,20 @@ class RegularBackendModule
 
  private:
   // Also sets up error hooks based on the formulation
-  Formulation<RGBDMap>::UniquePtr makeFormulation();
+  void setFormulation(std::shared_ptr<RegularFormulationFactory> factory);
 
   BackendMetaData createBackendMetadata() const;
   FormulationHooks createFormulationHooks() const;
   BackendOutputPacket::Ptr constructOutputPacket(FrameId frame_k,
                                                  Timestamp timestamp) const;
   static BackendOutputPacket::Ptr constructOutputPacket(
-      const Formulation<RGBDMap>::UniquePtr& formulation, FrameId frame_k,
+      const Formulation<RGBDMap>::Ptr& formulation, FrameId frame_k,
       Timestamp timestamp);
 
   Camera::Ptr camera_;
-  const BackendType backend_type_;
-  Formulation<RGBDMap>::UniquePtr formulation_;
+  Formulation<RGBDMap>::Ptr formulation_;
+  BackendModuleDisplay::Ptr formulation_display_;
+
   // new calibration every time
   inline auto getGtsamCalibration() const {
     const CameraParams& camera_params = camera_->getParams();
