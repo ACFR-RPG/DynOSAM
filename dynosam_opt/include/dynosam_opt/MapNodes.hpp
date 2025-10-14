@@ -814,4 +814,4 @@ class LandmarkNode : public MapNodeBase<MEASUREMENT> {
 
 }  // namespace dyno
 
-#include "dynosam_common/MapNodes-inl.hpp"
+#include "dynosam_opt/MapNodes-inl.hpp"

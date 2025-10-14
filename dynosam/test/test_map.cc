@@ -34,8 +34,8 @@
 #include <exception>
 
 #include "dynosam/frontend/vision/Frame.hpp"
-#include "dynosam_common/Map.hpp"
 #include "dynosam_common/Types.hpp"
+#include "dynosam_opt/Map.hpp"
 #include "internal/helpers.hpp"
 
 using namespace dyno;

@@ -32,7 +32,7 @@
 
 #include "dynosam/backend/Accessor.hpp"
 #include "dynosam/backend/Formulation.hpp"
-#include "dynosam_common/Map.hpp"
+#include "dynosam_opt/Map.hpp"
 
 namespace dyno {
 

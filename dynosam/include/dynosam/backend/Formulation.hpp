@@ -36,8 +36,8 @@
 #include "dynosam/backend/Accessor.hpp"
 #include "dynosam/backend/BackendDefinitions.hpp"
 #include "dynosam/backend/BackendParams.hpp"
-#include "dynosam_common/Map.hpp"
 #include "dynosam_common/Types.hpp"
+#include "dynosam_opt/Map.hpp"
 
 // really this should be in a more 'core' file
 #include "dynosam_opt/IncrementalOptimization.hpp"  // only for ErrorHandlingHooks

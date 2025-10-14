@@ -36,10 +36,10 @@
 #include <type_traits>
 
 #include "dynosam_common/DynamicObjects.hpp"
-#include "dynosam_common/MapNodes.hpp"
 #include "dynosam_common/Types.hpp"
 #include "dynosam_common/logger/Logger.hpp"
 #include "dynosam_common/utils/GtsamUtils.hpp"
+#include "dynosam_opt/MapNodes.hpp"
 #include "dynosam_opt/Symbols.hpp"  //for all the chr's used in the keys
 
 namespace dyno {

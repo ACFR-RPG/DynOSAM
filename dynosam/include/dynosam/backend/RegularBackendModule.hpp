@@ -37,9 +37,9 @@
 #include "dynosam/backend/VisionImuBackendModule.hpp"
 #include "dynosam/visualizer/Visualizer-Definitions.hpp"  //for ImageDisplayQueueOptional,
 #include "dynosam_common/Flags.hpp"
-#include "dynosam_common/Map.hpp"
 #include "dynosam_opt/ISAM2.hpp"
 #include "dynosam_opt/IncrementalOptimization.hpp"
+#include "dynosam_opt/Map.hpp"
 #include "dynosam_opt/SlidingWindowOptimization.hpp"
 
 namespace dyno {

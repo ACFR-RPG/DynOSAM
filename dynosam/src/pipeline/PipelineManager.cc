@@ -34,9 +34,9 @@
 
 #include "dynosam/backend/BackendFactory.hpp"
 #include "dynosam/frontend/RGBDInstanceFrontendModule.hpp"
-#include "dynosam_common/Map.hpp"
 #include "dynosam_common/logger/Logger.hpp"
 #include "dynosam_common/utils/TimingStats.hpp"
+#include "dynosam_opt/Map.hpp"
 
 DEFINE_bool(use_backend, false, "If any backend should be initalised");
 

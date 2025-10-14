@@ -31,8 +31,8 @@
 #pragma once
 
 #include "dynosam/backend/BackendDefinitions.hpp"
-#include "dynosam_common/Map.hpp"
 #include "dynosam_common/Types.hpp"
+#include "dynosam_opt/Map.hpp"
 
 namespace dyno {
 

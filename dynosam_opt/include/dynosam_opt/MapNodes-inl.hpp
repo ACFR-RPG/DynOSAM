@@ -29,8 +29,8 @@
  */
 #pragma once
 
-#include "dynosam_common/Map.hpp"
-#include "dynosam_common/MapNodes.hpp"
+#include "dynosam_opt/Map.hpp"
+#include "dynosam_opt/MapNodes.hpp"
 #include "dynosam_opt/Symbols.hpp"
 
 namespace dyno {

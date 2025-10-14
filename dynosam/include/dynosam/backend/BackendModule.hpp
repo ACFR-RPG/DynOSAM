@@ -37,11 +37,11 @@
 #include "dynosam/backend/Formulation.hpp"
 #include "dynosam/visualizer/Visualizer-Definitions.hpp"  //for ImageDisplayQueueOptional,
 #include "dynosam_common/Exceptions.hpp"
-#include "dynosam_common/Map.hpp"
 #include "dynosam_common/ModuleBase.hpp"
 #include "dynosam_common/SharedModuleInfo.hpp"
 #include "dynosam_common/Types.hpp"
 #include "dynosam_common/utils/SafeCast.hpp"
+#include "dynosam_opt/Map.hpp"
 
 // DECLARE_string(updater_suffix);
 

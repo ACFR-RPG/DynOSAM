@@ -41,7 +41,7 @@
 #include "dynosam/backend/RegularBackendDefinitions.hpp"
 #include "dynosam/backend/VisionImuBackendModule.hpp"
 #include "dynosam_common/Flags.hpp"
-#include "dynosam_common/Map.hpp"
+#include "dynosam_opt/Map.hpp"
 
 namespace dyno {
 
