@@ -179,7 +179,7 @@ def run_tartan_air():
 
 def run_cluster():
     # run_ecmr_experiment_sequences("/root/data/cluster_slam/CARLA-L2/", "cluster_l2", cluster_dataset)
-    run_ecmr_experiment_sequences("/root/data/cluster_slam/CARLA-L1/", "cluster_l1", cluster_dataset)
+    run_ecmr_experiment_sequences("/root/data/cluster_slam/CARLA-L1/", "cluster_l1", cluster_dataset, "--use_backend=false", "--starting_frame=550")
     # run_ecmr_experiment_sequences("/root/data/cluster_slam/CARLA-S2/", "cluster_s2", cluster_dataset)
     # run_ecmr_experiment_sequences("/root/data/cluster_slam/CARLA-S1/", "cluster_s1", cluster_dataset)
 
@@ -197,7 +197,7 @@ def run_kitti():
 
 
 def run_aria():
-    run_ecmr_experiment_sequences("/root/data/zed/acfr_2_moving_small", "test_small", aria, "--use_backend=true")
+    run_ecmr_experiment_sequences("/root/data/zed/acfr_2_moving_small", "test_small", aria, "--use_backend=true", "--v=0")
 
 
 if __name__ == '__main__':

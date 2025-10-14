@@ -36,7 +36,7 @@
 #include "dynosam/frontend/vision/TrackerParams.hpp"
 #include "dynosam/visualizer/Visualizer-Definitions.hpp"
 #include "dynosam_common/Types.hpp"
-#include "dynosam_vision_common/Camera.hpp"
+#include "dynosam_cv/Camera.hpp"
 
 namespace dyno {
 
@@ -123,6 +123,7 @@ class ImageTracksParams {
   int bbox_thickness_debug{kBBoxThicknessDebug};
   int bbox_thickness{kBBoxThickness};
 
+ public:
   //! Fine-grained control
   //! To show current frame info as text
   bool show_frame_info{true};

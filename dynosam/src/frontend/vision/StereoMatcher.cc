@@ -30,7 +30,7 @@
 
 #include "dynosam/frontend/vision/StereoMatcher.hpp"
 
-#include "dynosam_vision_common/ImageTypes.hpp"  //for depth image
+#include "dynosam_cv/ImageTypes.hpp"  //for depth image
 
 namespace dyno {
 

@@ -188,6 +188,41 @@ struct tuple_element_index {
                 "type does not appear in tuple");
 };
 
+// https://stackoverflow.com/questions/33511753/how-can-i-generate-a-tuple-of-n-type-ts
+template <typename /*LEFT_TUPLE*/, typename /*RIGHT_TUPLE*/>
+struct join_tuples {};
+
+template <typename... LEFT, typename... RIGHT>
+struct join_tuples<std::tuple<LEFT...>, std::tuple<RIGHT...>> {
+  typedef std::tuple<LEFT..., RIGHT...> type;
+};
+
+template <typename T, unsigned N>
+struct generate_tuple_type {
+  typedef typename generate_tuple_type<T, N / 2>::type left;
+  typedef typename generate_tuple_type<T, N / 2 + N % 2>::type right;
+  typedef typename join_tuples<left, right>::type type;
+};
+
+template <typename T>
+struct generate_tuple_type<T, 1> {
+  typedef std::tuple<T> type;
+};
+
+template <typename T>
+struct generate_tuple_type<T, 0> {
+  typedef std::tuple<> type;
+};
+
+// Extract type pack from tuple
+template <typename Tuple>
+struct tuple_to_types;
+
+template <typename... Ts>
+struct tuple_to_types<std::tuple<Ts...>> {
+  using type = std::tuple<Ts...>;
+};
+
 /**
  * @brief Actual templated class to determine the index of a type in a tuple
  * It asks the helper to do the work and validates that the resulting value is
@@ -200,6 +235,11 @@ struct tuple_element_index {
 template <typename T, typename Tuple>
 inline constexpr std::size_t tuple_element_index_v =
     tuple_element_index<T, Tuple>::value;
+
+template <typename T, std::size_t N>
+struct repeat_type {
+  using type = typename generate_tuple_type<T, N>::type;
+};
 
 }  // namespace internal
 }  // namespace dyno

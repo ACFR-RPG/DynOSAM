@@ -66,6 +66,14 @@ bool dyno::convert(const dyno::Timestamp& time_seconds,
 }
 
 template <>
+bool dyno::convert(const builtin_interfaces::msg::Time& time,
+                   dyno::Timestamp& time_seconds) {
+  rclcpp::Time ros_time = time;
+  convert(ros_time, time_seconds);
+  return true;
+}
+
+template <>
 bool dyno::convert(const RGBA<float>& colour, std_msgs::msg::ColorRGBA& msg) {
   msg.r = colour.r;
   msg.g = colour.g;

@@ -11,14 +11,13 @@ class BackendModuleDisplayRos : public BackendModuleDisplay {
  public:
   DYNO_POINTER_TYPEDEFS(BackendModuleDisplayRos)
 
-  BackendModuleDisplayRos(const DisplayParams& params,
-                          rclcpp::Node::SharedPtr node)
-      : params_(params), node_(node) {}
+  BackendModuleDisplayRos(const DisplayParams& params, rclcpp::Node* node)
+      : params_(params), node_(CHECK_NOTNULL(node)) {}
   virtual ~BackendModuleDisplayRos() = default;
 
  protected:
   DisplayParams params_;
-  rclcpp::Node::SharedPtr node_;
+  rclcpp::Node* node_;
 };
 
 }  // namespace dyno

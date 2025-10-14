@@ -52,7 +52,7 @@
 #include "dynosam_common/utils/GtsamUtils.hpp"
 #include "dynosam_common/utils/Numerical.hpp"
 #include "dynosam_common/utils/TimingStats.hpp"
-#include "dynosam_opt_common/FactorGraphTools.hpp"  //TODO: clean
+#include "dynosam_opt/FactorGraphTools.hpp"  //TODO: clean
 
 namespace dyno {
 

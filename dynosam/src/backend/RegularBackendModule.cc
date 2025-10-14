@@ -37,15 +37,15 @@
 #include "dynosam/backend/Accessor.hpp"
 #include "dynosam/backend/BackendFactory.hpp"
 #include "dynosam/backend/Formulation.hpp"
-#include "dynosam/backend/optimizers/ISAM2Params.hpp"
-#include "dynosam/backend/optimizers/ISAM2UpdateParams.hpp"
-#include "dynosam/backend/optimizers/IncrementalOptimization.hpp"
-#include "dynosam/backend/optimizers/SlidingWindowOptimization.hpp"
 #include "dynosam_common/Flags.hpp"
 #include "dynosam_common/logger/Logger.hpp"
 #include "dynosam_common/utils/SafeCast.hpp"
 #include "dynosam_common/utils/TimingStats.hpp"
-#include "dynosam_opt_common/FactorGraphTools.hpp"
+#include "dynosam_opt/FactorGraphTools.hpp"
+#include "dynosam_opt/ISAM2Params.hpp"
+#include "dynosam_opt/ISAM2UpdateParams.hpp"
+#include "dynosam_opt/IncrementalOptimization.hpp"
+#include "dynosam_opt/SlidingWindowOptimization.hpp"
 
 DEFINE_int32(opt_window_size, 10, "Sliding window size for optimisation");
 DEFINE_int32(opt_window_overlap, 4, "Overlap for window size optimisation");

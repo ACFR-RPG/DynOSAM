@@ -60,6 +60,10 @@ class ParallelHybridBackendModule
 
   void logGraphs();
 
+  const gtsam::FastMap<ObjectId, ParallelObjectISAM::Ptr>& objectEstimators()
+      const;
+  HybridFormulation::Ptr staticEstimator() const;
+
  private:
   using SpinReturn = Base::SpinReturn;
 
@@ -92,7 +96,7 @@ class ParallelHybridBackendModule
   mutable std::mutex mutex_;
 
   gtsam::ISAM2Params static_isam2_params_;
-  HybridFormulation::UniquePtr static_formulation_;
+  HybridFormulation::Ptr static_formulation_;
   gtsam::IncrementalFixedLagSmoother static_estimator_;
 
   gtsam::ISAM2Params dynamic_isam2_params_;

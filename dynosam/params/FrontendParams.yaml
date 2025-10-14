@@ -69,6 +69,6 @@ tracker_params:
 image_tracks_vis_params:
   is_debug: true
   show_frame_info: true
-  show_intermediate_tracking: false
+  show_intermediate_tracking: true
   draw_object_bounding_box: false
   draw_object_mask: true

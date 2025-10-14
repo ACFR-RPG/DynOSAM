@@ -29,7 +29,7 @@
  */
 
 #include "dynosam/backend/BackendDefinitions.hpp"
-#include "dynosam_opt_common/FactorGraphTools.hpp"
+#include "dynosam_opt/FactorGraphTools.hpp"
 
 using namespace dyno;
 

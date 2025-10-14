@@ -34,7 +34,7 @@
 #include <opencv4/opencv2/core.hpp>
 
 #include "dynosam_common/Types.hpp"
-#include "dynosam_vision_common/ImageContainer.hpp"
+#include "dynosam_cv/ImageContainer.hpp"
 
 namespace dyno {
 

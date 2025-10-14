@@ -152,6 +152,7 @@ struct PipelineTypeTraits {
   using Type = TYPE;
   using TypeConstSharedPtr = std::shared_ptr<const Type>;
   using TypeQueue = ThreadsafeQueue<TypeConstSharedPtr>;
+  using TypeCallback = std::function<void(const TypeConstSharedPtr&)>;
 };
 
 /**
@@ -224,10 +225,13 @@ struct QueueRegistra {
  public:
   using This = QueueRegistra<PAYLOAD>;
   using Queue = typename PipelineTypeTraits<PAYLOAD>::TypeQueue;
+  using Callback = typename PipelineTypeTraits<PAYLOAD>::TypeCallback;
 
   DYNO_POINTER_TYPEDEFS(This)
 
-  QueueRegistra(std::vector<Queue*>* queues) : queues_(CHECK_NOTNULL(queues)) {}
+  QueueRegistra(std::vector<Queue*>* queues, std::vector<Callback>* callbacks)
+      : queues_(CHECK_NOTNULL(queues)),
+        output_callbacks_(CHECK_NOTNULL(callbacks)) {}
 
   void registerQueue(Queue* queue) {
     CHECK_NOTNULL(queue);
@@ -236,11 +240,19 @@ struct QueueRegistra {
     queues_->push_back(queue);
   }
 
+  void registerCallback(Callback callback) {
+    CHECK_NOTNULL(callback);
+    CHECK_NOTNULL(output_callbacks_);
+    // TODO: not thread safe?
+    output_callbacks_->push_back(callback);
+  }
+
  private:
   //! Poitner to a vector of queue pointers (owned by the PipelineModule)
   //! Will only have the lifetime of the derived MIMOPipelineModule that created
   //! it
   std::vector<Queue*>* queues_;
+  std::vector<Callback>* output_callbacks_;
 };
 
 // MultiInputMultiOutput -> abstract class and user must implement the
@@ -259,15 +271,15 @@ class MIMOPipelineModule : public PipelineModule<INPUT, OUTPUT> {
   using typename Base::OutputQueue;
 
   using OutputRegistra = QueueRegistra<OUTPUT>;
+  using OutputCallback = typename PipelineTypeTraits<OUTPUT>::TypeCallback;
 
-  //! Callback used to send data to other pipeline modules, makes use of
-  //! shared pointer since the data may be shared between several modules.
-  using OutputCallback =
-      std::function<void(const OutputConstSharedPtr& output)>;
-
-  MIMOPipelineModule(const std::string& module_name) : Base(module_name) {}
+  MIMOPipelineModule(const std::string& module_name) : Base(module_name) {
+    output_registra_ =
+        std::make_shared<OutputRegistra>(&output_queues_, &output_callbacks_);
+  }
 
   void registerOutputQueue(OutputQueue* output_queue);
+  void registerOutputCallback(OutputCallback output_callback);
 
   /**
    * @brief Constructs an output registra for the internal vector of output
@@ -278,18 +290,18 @@ class MIMOPipelineModule : public PipelineModule<INPUT, OUTPUT> {
    *
    * @return typename QueueRegistra<OUTPUT>::Ptr
    */
-  typename OutputRegistra::Ptr getOutputRegistra() {
-    return std::make_shared<OutputRegistra>(&output_queues_);
-  }
+  typename OutputRegistra::Ptr getOutputRegistra() { return output_registra_; }
 
  protected:
   bool pushOutputPacket(
       const OutputConstSharedPtr& output_packet) const override;
 
  private:
+  typename OutputRegistra::Ptr output_registra_;
   //! Output callbacks that will be called on each spinOnce if
   //! an output is present.
   std::vector<OutputQueue*> output_queues_;
+  std::vector<OutputCallback> output_callbacks_;
 };
 
 /** @brief SIMOPipelineModule Single Input Multiple Output (SIMO) pipeline

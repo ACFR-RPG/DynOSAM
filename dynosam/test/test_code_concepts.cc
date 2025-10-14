@@ -61,7 +61,7 @@
 #include "dynosam_common/utils/FileSystem.hpp"
 #include "dynosam_common/utils/OpenCVUtils.hpp"
 #include "dynosam_common/viz/Colour.hpp"
-#include "dynosam_opt_common/FactorGraphTools.hpp"
+#include "dynosam_opt/FactorGraphTools.hpp"
 
 std::vector<gtsam::Point3> createPoints() {
   // Create the set of ground-truth landmarks

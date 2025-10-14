@@ -1,8 +1,8 @@
 #pragma once
 
 #include "dynosam/backend/BackendModule.hpp"
-#include "dynosam/backend/optimizers/IncrementalOptimization.hpp"  // for ErrorHandlingHooks
 #include "dynosam/visualizer/VisualizerPipelines.hpp"  //for BackendModuleDisplay
+#include "dynosam_opt/IncrementalOptimization.hpp"     // for ErrorHandlingHooks
 
 namespace dyno {
 /**

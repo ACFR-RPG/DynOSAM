@@ -39,7 +39,7 @@
 #include "dynosam_common/StructuredContainers.hpp"
 #include "dynosam_common/Types.hpp"
 #include "dynosam_common/utils/GtsamUtils.hpp"
-#include "dynosam_vision_common/Camera.hpp"
+#include "dynosam_cv/Camera.hpp"
 #include "helpers.hpp"
 
 namespace dyno_testing {

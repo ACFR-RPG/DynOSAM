@@ -38,7 +38,7 @@
 #include "dynosam_common/utils/JsonUtils.hpp"
 #include "dynosam_common/utils/Statistics.hpp"
 #include "dynosam_common/utils/Variant.hpp"
-#include "dynosam_vision_common/Feature.hpp"
+#include "dynosam_cv/Feature.hpp"
 #include "internal/helpers.hpp"
 #include "internal/simulator.hpp"
 

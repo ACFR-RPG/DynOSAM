@@ -15,21 +15,29 @@ struct BackendModuleDisplayTraits;
 class ParalleHybridModuleDisplay : public BackendModuleDisplayRos {
  public:
   ParalleHybridModuleDisplay(
-      const DisplayParams& params, rclcpp::Node::SharedPtr node,
+      const DisplayParams& params, rclcpp::Node* node,
       std::shared_ptr<ParallelHybridBackendModule> module)
-      : BackendModuleDisplayRos(params, node) {
-    CHECK_NOTNULL(module);
-  }
+      : BackendModuleDisplayRos(params, node), module_(CHECK_NOTNULL(module)) {}
+
+  void spin(Timestamp timestamp, FrameId frame_id) override {}
+
+ private:
+  std::shared_ptr<ParallelHybridBackendModule> module_;
 };
 
 class RegularHybridFormulationDisplay : public BackendModuleDisplayRos {
  public:
   RegularHybridFormulationDisplay(
-      const DisplayParams& params, rclcpp::Node::SharedPtr node,
+      const DisplayParams& params, rclcpp::Node* node,
       std::shared_ptr<RegularHybridFormulation> module)
-      : BackendModuleDisplayRos(params, node) {
+      : BackendModuleDisplayRos(params, node), module_(CHECK_NOTNULL(module)) {
     CHECK_NOTNULL(module);
   }
+
+  void spin(Timestamp timestamp, FrameId frame_id) override {}
+
+ private:
+  std::shared_ptr<RegularHybridFormulation> module_;
 };
 
 /// @brief Register ParalleHybridModuleDisplay as the acting backend display for

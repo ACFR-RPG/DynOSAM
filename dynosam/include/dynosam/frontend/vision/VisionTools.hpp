@@ -42,8 +42,8 @@
 #include "dynosam_common/utils/GtsamUtils.hpp"
 #include "dynosam_common/utils/Histogram.hpp"
 #include "dynosam_common/utils/OpenCVUtils.hpp"
-#include "dynosam_vision_common/Camera.hpp"
-#include "dynosam_vision_common/ImageContainer.hpp"
+#include "dynosam_cv/Camera.hpp"
+#include "dynosam_cv/ImageContainer.hpp"
 
 #ifdef DYNO_CUDA_OPENCV_ENABLED
 #include <opencv2/cudaoptflow.hpp>

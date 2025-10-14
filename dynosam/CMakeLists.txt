@@ -26,8 +26,8 @@ find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(dynosam_common REQUIRED)
-find_package(dynosam_vision_common REQUIRED)
-find_package(dynosam_opt_common REQUIRED)
+find_package(dynosam_cv REQUIRED)
+find_package(dynosam_opt REQUIRED)
 # find_package(OpenCV REQUIRED)
 # find_package(opengv REQUIRED)
 # find_package(GTSAM REQUIRED)
@@ -59,8 +59,8 @@ endif()
 include_directories(
   include
   ${dynosam_common_INCLUDE_DIRS}
-  ${dynosam_vision_common_INCLUDE_DIRS}
-  ${dynosam_opt_common_INCLUDE_DIRS}
+  ${dynosam_cv_INCLUDE_DIRS}
+  ${dynosam_opt_INCLUDE_DIRS}
   ${rclcpp_INCLUDE_DIRS}
   ${EIGEN3_INCLUDE_DIRS}
   ${OpenCV_INCLUDE_DIRS}
@@ -119,13 +119,6 @@ add_library(${PROJECT_NAME} SHARED
   src/backend/rgbd/impl/test_HybridFormulations.cc
   src/backend/ParallelObjectISAM.cc
   src/backend/ParallelHybridBackendModule.cc
-  src/backend/optimizers/SlidingWindowOptimization.cc
-
-  src/backend/optimizers/ISAM2-impl.cc
-  src/backend/optimizers/ISAM2.cc
-  src/backend/optimizers/ISAM2Clique.cc
-  src/backend/optimizers/ISAM2Params.cc
-  src/backend/optimizers/IncrementalOptimization.cc
 
   # src/backend/ISAM2Agent.cc
   #src/backend/rgbd/impl/ObjectTrackingIsamAgent.cc
@@ -159,8 +152,8 @@ target_link_libraries(${PROJECT_NAME}
   ${std_msgs_TARGETS}
   ${sensor_msgs_TARGETS}
   dynosam_common::dynosam_common
-  dynosam_vision_common::dynosam_vision_common
-  dynosam_opt_common::dynosam_opt_common
+  dynosam_cv::dynosam_cv
+  dynosam_opt::dynosam_opt
   # rclcpp::rclcpp
   # opengv
   # nlohmann_json::nlohmann_json
@@ -197,8 +190,8 @@ ament_export_libraries(${PROJECT_NAME}
   # TBB::tbb
   # TBB::tbbmalloc
   dynosam_common::dynosam_common
-  dynosam_vision_common::dynosam_vision_common
-  dynosam_opt_common::dynosam_opt_common
+  dynosam_cv::dynosam_cv
+  dynosam_opt::dynosam_opt
 )
 
 
@@ -215,8 +208,8 @@ set(DYNO_EXPORT_DEPS
   # eigen3_cmake_module
   # Eigen3
   dynosam_common
-  dynosam_vision_common
-  dynosam_opt_common
+  dynosam_cv
+  dynosam_opt
 )
 
 

@@ -88,6 +88,8 @@ class BackendModuleDisplay {
 
   BackendModuleDisplay() = default;
   virtual ~BackendModuleDisplay() = default;
+
+  virtual void spin(Timestamp timestamp, FrameId frame_id) = 0;
 };
 
 }  // namespace dyno

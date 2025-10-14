@@ -33,8 +33,8 @@
 #include "dynosam/backend/BackendParams.hpp"
 #include "dynosam/backend/Formulation.hpp"
 #include "dynosam_common/utils/TimingStats.hpp"
-#include "dynosam_opt_common/FactorGraphTools.hpp"
-#include "dynosam_vision_common/RGBDCamera.hpp"  // only for StereoCalibPtr
+#include "dynosam_cv/RGBDCamera.hpp"  // only for StereoCalibPtr
+#include "dynosam_opt/FactorGraphTools.hpp"
 
 namespace dyno {
 

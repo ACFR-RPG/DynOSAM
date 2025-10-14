@@ -175,8 +175,10 @@ void DynoPipelineManagerRos::initalisePipeline() {
   // should depricate any other map...
   //   auto factory =
   //   DefaultBackendFactory<RegularBackendModuleTraits::MapType>::Create(params.backend_type);
-  auto factory = RosBackendFactory::Create(params.backend_type, display_params,
-                                           this->create_sub_node("backend"));
+  //   auto this_node = this->shared_from_this();
+  //   CHECK_NOTNULL(this_node);
+  auto factory =
+      RosBackendFactory::Create(params.backend_type, display_params, this);
 
   auto data_loader = createDataProvider();
   pipeline_ = std::make_unique<DynoPipelineManager>(

@@ -44,8 +44,8 @@
 #include "dynosam_common/GroundTruthPacket.hpp"
 #include "dynosam_common/Types.hpp"
 #include "dynosam_common/logger/Logger.hpp"
-#include "dynosam_opt_common/Symbols.hpp"
-#include "dynosam_vision_common/Camera.hpp"  //for calibration type
+#include "dynosam_cv/Camera.hpp"  //for calibration type
+#include "dynosam_opt/Symbols.hpp"
 
 namespace dyno {
 

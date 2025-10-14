@@ -253,6 +253,7 @@ void DynoPipelineManager::loadPipelines(const CameraParams& camera_params,
                                         BackendDisplay::Ptr backend_display,
                                         BackendModuleFactory::Ptr factory) {
   BackendModule::Ptr backend = nullptr;
+  BackendModuleDisplay::Ptr additional_backend_display = nullptr;
   // the registra for the frontend pipeline
   // this is agnostic to the actual pipeline type so we can add/register
   // a new queue to it regardless of the derived type (as long as it is at least
@@ -350,6 +351,7 @@ void DynoPipelineManager::loadPipelines(const CameraParams& camera_params,
         BackendWrapper backend_wrapper = factory->createModule(module_params);
 
         backend = backend_wrapper.backend;
+        additional_backend_display = backend_wrapper.backend_viz;
         CHECK(backend);
 
         // if(frontend && backend) {
@@ -388,6 +390,16 @@ void DynoPipelineManager::loadPipelines(const CameraParams& camera_params,
     frontend_output_registra->registerQueue(&backend_input_queue_);
 
     backend_pipeline_->registerOutputQueue(&backend_output_queue_);
+
+    if (additional_backend_display) {
+      VLOG(10) << "Connecting BackendModuleDisplay";
+      backend_pipeline_->registerOutputCallback(
+          [additional_backend_display](const auto& output) -> void {
+            auto timestamp = output->getTimestamp();
+            auto frame_id = output->getFrameId();
+            additional_backend_display->spin(timestamp, frame_id);
+          });
+    }
   }
 
   // right now we cannot use the viz when we load from file as do not load

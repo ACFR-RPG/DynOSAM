@@ -33,7 +33,7 @@
 
 #include <exception>
 
-#include "dynosam_opt_common/Symbols.hpp"
+#include "dynosam_opt/Symbols.hpp"
 
 using namespace dyno;
 

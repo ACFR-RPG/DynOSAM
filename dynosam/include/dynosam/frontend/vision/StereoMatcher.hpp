@@ -36,7 +36,7 @@
 
 #include "dynosam/frontend/vision/StereoMatchingParams.hpp"
 #include "dynosam_common/Types.hpp"
-#include "dynosam_vision_common/StereoCamera.hpp"
+#include "dynosam_cv/StereoCamera.hpp"
 
 namespace dyno {
 

@@ -67,9 +67,6 @@ void BackendModule::setFactorParams(const BackendParams& backend_params) {
   noise_models_ = NoiseModels::fromBackendParams(backend_params);
 }
 
-// void BackendModule::optimize(FrameId frame_id_k, gtsam::Values& new_values,
-// gtsam::NonlinearFactorGraph& new_factors) const;
-
 void BackendModule::validateInput(const BackendInputPacket::ConstPtr&) const {}
 
 }  // namespace dyno

@@ -40,7 +40,7 @@
 #include "dynosam_common/Types.hpp"
 
 // really this should be in a more 'core' file
-#include "dynosam/backend/optimizers/IncrementalOptimization.hpp"  // only for ErrorHandlingHooks
+#include "dynosam_opt/IncrementalOptimization.hpp"  // only for ErrorHandlingHooks
 
 namespace dyno {
 

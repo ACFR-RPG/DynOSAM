@@ -43,7 +43,7 @@
 #include "dynosam/frontend/FrontendParams.hpp"
 #include "dynosam_common/Types.hpp"
 #include "dynosam_common/utils/Macros.hpp"
-#include "dynosam_vision_common/CameraParams.hpp"
+#include "dynosam_cv/CameraParams.hpp"
 
 namespace dyno {
 

@@ -45,8 +45,8 @@
 #include "dynosam/pipeline/PipelineParams.hpp"
 #include "dynosam/visualizer/OpenCVFrontendDisplay.hpp"
 #include "dynosam_common/viz/Colour.hpp"
-#include "dynosam_vision_common/Camera.hpp"
-#include "dynosam_vision_common/ImageContainer.hpp"
+#include "dynosam_cv/Camera.hpp"
+#include "dynosam_cv/ImageContainer.hpp"
 
 DEFINE_string(path_to_kitti, "/root/data/kitti", "Path to KITTI dataset");
 // TODO: (jesse) many better ways to do this with ros - just for now
@@ -66,9 +66,10 @@ int main(int argc, char* argv[]) {
   FLAGS_colorlogtostderr = 1;
   FLAGS_log_prefix = 1;
 
-  KittiDataLoader::Params params;
-  KittiDataLoader loader("/root/data/vdo_slam/kitti/kitti/0004/", params);
-  // ClusterSlamDataLoader loader("/root/data/cluster_slam/CARLA-L1");
+  // KittiDataLoader::Params params;
+  // KittiDataLoader loader("/root/data/vdo_slam/kitti/kitti/0004/", params);
+  ClusterSlamDataLoader loader("/root/data/cluster_slam/CARLA-L1");
+  loader.setStartingFrame(600);
   // OMDDataLoader loader(
   //     "/root/data/vdo_slam/omd/omd/swinging_4_unconstrained_stereo/");
 
@@ -93,8 +94,8 @@ int main(int argc, char* argv[]) {
   //                        std::optional<cv::Mat>) -> bool {
   loader.setCallback([&](dyno::FrameId frame_id, dyno::Timestamp timestamp,
                          cv::Mat rgb, cv::Mat optical_flow, cv::Mat depth,
-                         cv::Mat motion, gtsam::Pose3,
-                         GroundTruthInputPacket) -> bool {
+                         cv::Mat motion, GroundTruthInputPacket,
+                         std::optional<cv::Mat>) -> bool {
     LOG(INFO) << frame_id << " " << timestamp;
 
     cv::Mat of_viz, motion_viz, depth_viz;
@@ -136,14 +137,19 @@ int main(int argc, char* argv[]) {
 
     // cv::imshow("RGB", rgb);
     // cv::imshow("OF", of_viz);
-    cv::imshow("Motion", motion_viz);
-    // cv::waitKey(1);
-    cv::imshow("Depth", depth_viz);
+    // cv::imshow("Motion", motion_viz);
+    // // cv::waitKey(1);
+    // cv::imshow("Depth", depth_viz);
 
     std::set<ObjectId> object_keyframes;
     auto frame =
         tracker->track(frame_id, timestamp, image_container, object_keyframes);
     Frame::Ptr previous_frame = tracker->getPreviousFrame();
+
+    // if(frame_id == 605) {
+    //   auto all_tracks = frame->static_features_.collectTracklets();
+    //   frame->static_features_.markOutliers(all_tracks);
+    // }
 
     // // motion_viz =
     // ImageType::MotionMask::toRGB(frame->image_container_.get<ImageType::MotionMask>());
@@ -151,7 +157,10 @@ int main(int argc, char* argv[]) {
 
     cv::Mat tracking;
     if (previous_frame) {
-      tracking = tracker->computeImageTracks(*previous_frame, *frame, false);
+      ImageTracksParams track_viz_params(true);
+      track_viz_params.show_intermediate_tracking = true;
+      tracking = tracker->computeImageTracks(*previous_frame, *frame,
+                                             track_viz_params);
 
       // if (imu_measurements) {
       //   const auto previous_timestamp = previous_frame->getTimestamp();
@@ -172,14 +181,16 @@ int main(int argc, char* argv[]) {
 
     LOG(INFO) << to_string(tracker->getTrackerInfo());
     const std::string path = "/root/results/misc/";
-    // if ((char)cv::waitKey(0) == 's') {
-    //   LOG(INFO) << "Saving...";
-    //   // cv::imwrite(path + "omd_su4_rgb.png", rgb);
-    //   // cv::imwrite(path + "omd_su4_of.png", of_viz);
-    //   // cv::imwrite(path + "omd_su4_motion.png", motion_viz);
-    //   // cv::imwrite(path + "omd_su4_depth.png", depth_viz);
-    //   cv::imwrite(path + "omd_tracking.png", tracking);
-    // }
+    if (previous_frame && (char)cv::waitKey(0) == 's') {
+      LOG(INFO) << "Saving...";
+      // cv::imwrite(path + "omd_su4_rgb.png", rgb);
+      // cv::imwrite(path + "omd_su4_of.png", of_viz);
+      // cv::imwrite(path + "omd_su4_motion.png", motion_viz);
+      // cv::imwrite(path + "omd_su4_depth.png", depth_viz);
+      cv::imwrite(
+          path + "cluster_tracking_new" + std::to_string(frame_id) + ".png",
+          tracking);
+    }
     cv::waitKey(1);
 
     return true;

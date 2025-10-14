@@ -38,8 +38,8 @@
 #include "dynosam/frontend/vision/Frame.hpp"
 #include "dynosam/frontend/vision/StaticFeatureTracker.hpp"
 #include "dynosam/visualizer/Visualizer-Definitions.hpp"
-#include "dynosam_vision_common/Camera.hpp"
-#include "dynosam_vision_common/Feature.hpp"
+#include "dynosam_cv/Camera.hpp"
+#include "dynosam_cv/Feature.hpp"
 
 namespace dyno {
 

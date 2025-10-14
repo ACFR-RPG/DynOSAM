@@ -11,7 +11,7 @@
 #include "dynosam/frontend/vision/Frame.hpp"
 #include "dynosam_common/Exceptions.hpp"
 #include "dynosam_common/Types.hpp"
-#include "dynosam_vision_common/CameraParams.hpp"
+#include "dynosam_cv/CameraParams.hpp"
 
 namespace dyno {
 

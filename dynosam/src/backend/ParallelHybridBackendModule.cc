@@ -140,7 +140,7 @@ ParallelHybridBackendModule::ParallelHybridBackendModule(
   FormulationParams formulation_params(base_params_);
   formulation_params.updater_suffix = "static";
 
-  static_formulation_ = std::make_unique<HybridFormulation>(
+  static_formulation_ = std::make_shared<HybridFormulation>(
       formulation_params, RGBDMap::create(), noise_models_, sensors, hooks);
 }
 
@@ -152,7 +152,6 @@ ParallelHybridBackendModule::~ParallelHybridBackendModule() {
 
     std::string file_name = "parallel_isam2_results";
     const std::string suffix = base_params_.updater_suffix;
-    ;
     if (!suffix.empty()) {
       file_name += ("_" + suffix);
     }
@@ -164,8 +163,15 @@ ParallelHybridBackendModule::~ParallelHybridBackendModule() {
   }
 }
 
-// implementation taken from ObjectMotionSolverSAM
-// TODO: update api
+const gtsam::FastMap<ObjectId, ParallelObjectISAM::Ptr>&
+ParallelHybridBackendModule::objectEstimators() const {
+  return sam_estimators_;
+}
+
+HybridFormulation::Ptr ParallelHybridBackendModule::staticEstimator() const {
+  return static_formulation_;
+}
+
 ParallelHybridBackendModule::SpinReturn
 ParallelHybridBackendModule::boostrapSpinImpl(VisionImuPacket::ConstPtr input) {
   const FrameId frame_k = input->frameId();

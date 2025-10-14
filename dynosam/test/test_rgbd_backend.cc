@@ -49,7 +49,7 @@
 #include "dynosam/factors/LandmarkMotionTernaryFactor.hpp"
 #include "dynosam/frontend/FrontendPipeline.hpp"
 #include "dynosam_common/Map.hpp"
-#include "dynosam_opt_common/FactorGraphTools.hpp"
+#include "dynosam_opt/FactorGraphTools.hpp"
 #include "internal/backend_runners.hpp"
 #include "internal/helpers.hpp"
 #include "internal/simulator.hpp"

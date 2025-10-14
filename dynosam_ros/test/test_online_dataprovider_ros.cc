@@ -35,6 +35,7 @@
 #include <chrono>
 #include <dynosam/test/helpers.hpp>
 
+#include "dynosam_ros/MultiImageSync.hpp"
 #include "dynosam_ros/OnlineDataProviderRos.hpp"
 #include "sensor_msgs/msg/camera_info.hpp"
 

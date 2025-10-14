@@ -32,12 +32,11 @@ struct has_backend_module_display<
 
 class BackendModulePolicyRos {
  public:
-  BackendModulePolicyRos(const DisplayParams& params,
-                         rclcpp::Node::SharedPtr node)
+  BackendModulePolicyRos(const DisplayParams& params, rclcpp::Node* node)
       : params_(params), node_(node) {
     VLOG(10) << "Creating BackendModulePolicyRos";
   }
-  // makeViz only enabled if VizOf<T>::type exists
+
   template <typename T>
   std::shared_ptr<BackendModuleDisplayRos> createDisplay(
       std::shared_ptr<T> module) {
@@ -54,7 +53,7 @@ class BackendModulePolicyRos {
 
  private:
   DisplayParams params_;
-  rclcpp::Node::SharedPtr node_;
+  rclcpp::Node* node_;
 };
 
 // class BackendModuleFactoryRos : public BackendModuleFactory {

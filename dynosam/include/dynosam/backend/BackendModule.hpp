@@ -146,10 +146,6 @@ class BackendModuleType : public BackendModule {
   virtual SpinReturn boostrapSpinImpl(InputConstPtr input) = 0;
   virtual SpinReturn nominalSpinImpl(InputConstPtr input) = 0;
 
-  void optimize(FrameId frame_id_k, FormulationType* formulation,
-                gtsam::Values& new_values,
-                gtsam::NonlinearFactorGraph& new_factors);
-
   typename MapType::Ptr map_;
 
  private:

@@ -39,7 +39,7 @@
 #include "dynosam/frontend/vision/MotionSolver.hpp"
 #include "dynosam/frontend/vision/ObjectTracker.hpp"
 #include "dynosam/frontend/vision/VisionTools.hpp"
-#include "dynosam_vision_common/Camera.hpp"
+#include "dynosam_cv/Camera.hpp"
 
 namespace dyno {
 

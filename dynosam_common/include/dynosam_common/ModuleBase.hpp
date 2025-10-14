@@ -79,7 +79,7 @@ class ModuleBase {
 
     SpinReturn spin_return{State::Boostrap, nullptr};
 
-    if (input_callback_) input_callback_(input);
+    emitInputCallbacks(input);
 
     switch (module_state_) {
       case State::Boostrap: {
@@ -94,7 +94,7 @@ class ModuleBase {
       }
     }
 
-    if (output_callback_) output_callback_(spin_return.second);
+    if (spin_return.second) emitOutputCallbacks(spin_return.second);
 
     module_state_ = spin_return.first;
     return spin_return.second;
@@ -107,7 +107,7 @@ class ModuleBase {
    * @param input_callback const InputCallback&
    */
   inline void registerInputCallback(const InputCallback& input_callback) {
-    input_callback_ = input_callback;
+    input_callbacks_.push_back(input_callback);
   }
 
   /**
@@ -117,7 +117,7 @@ class ModuleBase {
    * @param output_callback const OutputCallback&
    */
   inline void registerOutputCallback(const OutputCallback& output_callback) {
-    output_callback_ = output_callback;
+    output_callbacks_.push_back(output_callback);
   }
 
  protected:
@@ -136,12 +136,25 @@ class ModuleBase {
   virtual SpinReturn nominalSpin(InputConstPtr input) = 0;
 
  private:
+  void emitInputCallbacks(InputConstPtr input) {
+    for (auto cb : input_callbacks_) {
+      cb(input);
+    }
+  }
+
+  void emitOutputCallbacks(OutputConstPtr output) {
+    for (auto cb : output_callbacks_) {
+      cb(output);
+    }
+  }
+
+ private:
   const std::string name_;
   std::atomic<State> module_state_;
   std::atomic<State> previous_module_state_;
 
-  InputCallback input_callback_;
-  OutputCallback output_callback_;
+  std::vector<InputCallback> input_callbacks_;
+  std::vector<OutputCallback> output_callbacks_;
 };
 
 }  // namespace dyno

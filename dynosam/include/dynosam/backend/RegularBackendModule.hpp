@@ -35,12 +35,12 @@
 #include "dynosam/backend/Formulation.hpp"
 #include "dynosam/backend/RegularBackendDefinitions.hpp"
 #include "dynosam/backend/VisionImuBackendModule.hpp"
-#include "dynosam/backend/optimizers/ISAM2.hpp"
-#include "dynosam/backend/optimizers/IncrementalOptimization.hpp"
-#include "dynosam/backend/optimizers/SlidingWindowOptimization.hpp"
 #include "dynosam/visualizer/Visualizer-Definitions.hpp"  //for ImageDisplayQueueOptional,
 #include "dynosam_common/Flags.hpp"
 #include "dynosam_common/Map.hpp"
+#include "dynosam_opt/ISAM2.hpp"
+#include "dynosam_opt/IncrementalOptimization.hpp"
+#include "dynosam_opt/SlidingWindowOptimization.hpp"
 
 namespace dyno {
 

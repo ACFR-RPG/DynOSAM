@@ -62,6 +62,12 @@ void OnlineDataProviderRos::shutdown() {
 }
 
 void OnlineDataProviderRos::connect() {
+  connectImages();
+  connectImu();
+  shutdown_ = false;
+}
+
+void OnlineDataProviderRos::connectImages() {
   rclcpp::Node *node_ptr = node_.get();
   CHECK_NOTNULL(node_ptr);
   rgb_image_sub_.subscribe(node_ptr, "image/rgb");
@@ -87,9 +93,46 @@ void OnlineDataProviderRos::connect() {
           << depth_image_sub_.getSubscriber()->get_topic_name() << " "
           << flow_image_sub_.getSubscriber()->get_topic_name() << " "
           << mask_image_sub_.getSubscriber()->get_topic_name() << ".");
-
-  shutdown_ = false;
 }
+
+void OnlineDataProviderRos::connectImu() {
+  if (imu_sub_) imu_sub_.reset();
+
+  imu_callback_group_ = node_->create_callback_group(
+      rclcpp::CallbackGroupType::MutuallyExclusive);
+
+  rclcpp::SubscriptionOptions imu_sub_options;
+  imu_sub_options.callback_group = imu_callback_group_;
+
+  imu_sub_ = node_->create_subscription<ImuAdaptedType>(
+      "imu", rclcpp::SensorDataQoS(),
+      [&](const dyno::ImuMeasurement &imu) -> void {
+        if (!imu_single_input_callback_) {
+          RCLCPP_ERROR_THROTTLE(
+              node_->get_logger(), *node_->get_clock(), 1000,
+              "Imu callback triggered but "
+              "imu_single_input_callback_ is not registered!");
+          return;
+        }
+        imu_single_input_callback_(imu);
+      },
+      imu_sub_options);
+}
+
+// void OnlineDataProviderRos::setMultiImageSyncFromParams() {
+//   //for now set all
+//   static const std::array<std::string, 4>& topics =
+//   {
+//     "image/rgb",
+//     "image/depth",
+//     "image/flow",
+//     "image/mask"
+//   };
+
+//   rclcpp::Node& node_ref = *node_;
+//   image_subscriber_ = std::make_shared<MultiImageSync4>(node_ref, topics, 20,
+//   image_container_callback_);
+// }
 
 void OnlineDataProviderRos::imageSyncCallback(
     const sensor_msgs::msg::Image::ConstSharedPtr &rgb_msg,

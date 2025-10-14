@@ -39,12 +39,12 @@
 #include "dynosam/backend/Formulation.hpp"
 #include "dynosam/backend/ParallelHybridBackendModule.hpp"
 #include "dynosam/backend/RegularBackendModule.hpp"
-#include "dynosam/backend/optimizers/IncrementalOptimization.hpp"  // for ErrorHandlingHooks
 #include "dynosam/backend/rgbd/HybridEstimator.hpp"
 #include "dynosam/backend/rgbd/WorldMotionEstimator.hpp"
 #include "dynosam/backend/rgbd/WorldPoseEstimator.hpp"
 #include "dynosam/backend/rgbd/impl/test_HybridFormulations.hpp"
 #include "dynosam/visualizer/VisualizerPipelines.hpp"  //for BackendModuleDisplay
+#include "dynosam_opt/IncrementalOptimization.hpp"     // for ErrorHandlingHooks
 
 namespace dyno {
 
@@ -54,6 +54,8 @@ class IncorrectParallelHybridConstruction : public DynosamException {
       : DynosamException(what) {}
 };
 
+/// Policy must implement a createDisplay function which takes a FORMULATION as
+/// input
 template <typename Policy, typename MAP>
 class BackendFactory
     : public BackendFormulationFactory<MAP>,
@@ -137,6 +139,7 @@ class BackendFactory
   }
 
  private:
+  // implements the BackendFormulationFactory<MAP> class
   FormulationVizWrapper<MAP> createFormulation(
       const FormulationParams& formulation_params, std::shared_ptr<MAP> map,
       const NoiseModels& noise_models, const Sensors& sensors,
@@ -236,75 +239,5 @@ using DefaultRegularBackendModuleFactory =
 template <typename Policy>
 using RegularBackendModuleFactory =
     BackendFactory<Policy, RegularBackendModuleTraits::MapType>;
-
-// class BackendFactory {
-//  public:
-//   DYNO_DELETE_COPY_CONSTRUCTORS(BackendFactory)
-//   BackendFactory() = delete;
-//   virtual ~BackendFactory() = default;
-
-//   static BackendModule::Ptr createModule(
-//       const BackendType& backend_type, const BackendParams& backend_params,
-//       Camera::Ptr camera, ImageDisplayQueue* display_queue = nullptr) {
-//     if (backend_type == BackendType::PARALLEL_HYBRID) {
-//       return std::make_shared<ParallelHybridBackendModule>(
-//           backend_params, camera, display_queue);
-//     } else {
-//       return std::make_shared<RegularBackendModule>(
-//           backend_params, camera, backend_type, display_queue);
-//     }
-//   }
-
-//   template <typename MAP>
-//   static typename Formulation<MAP>::Ptr createFormulation(
-//       const BackendType& backend_type,
-//       const FormulationParams& formulation_params, std::shared_ptr<MAP> map,
-//       const NoiseModels& noise_models, const Sensors& sensors,
-//       const FormulationHooks& formulation_hooks) {
-//     if (backend_type == BackendType::PARALLEL_HYBRID) {
-//       DYNO_THROW_MSG(IncorrectParallelHybridConstruction)
-//           << "Cannot construct PARALLEL_HYBRID backend with a call to "
-//              "BackendFactory::createFormulation"
-//           << " Use BackendFactory::createModule instead!";
-//       return nullptr;
-//     } else if (backend_type == BackendType::WCME) {
-//       LOG(INFO) << "Using WCME";
-//       return std::make_shared<WorldMotionFormulation>(
-//           formulation_params, map, noise_models, sensors, formulation_hooks);
-
-//     } else if (backend_type == BackendType::WCPE) {
-//       LOG(INFO) << "Using WCPE";
-//       return std::make_shared<WorldPoseFormulation>(
-//           formulation_params, map, noise_models, sensors, formulation_hooks);
-//     } else if (backend_type == BackendType::HYBRID) {
-//       LOG(INFO) << "Using HYBRID";
-//       return std::make_shared<RegularHybridFormulation>(
-//           formulation_params, map, noise_models, sensors, formulation_hooks);
-//     } else if (backend_type == BackendType::TESTING_HYBRID_SD) {
-//       LOG(FATAL) << "Using Hybrid Structureless Decoupled. Warning this is a
-//       "
-//                     "testing only formulation!";
-//     } else if (backend_type == BackendType::TESTING_HYBRID_D) {
-//       LOG(FATAL) << "Using Hybrid Decoupled. Warning this is a testing only "
-//                     "formulation!";
-//     } else if (backend_type == BackendType::TESTING_HYBRID_S) {
-//       LOG(FATAL) << "Using Hybrid Structurless. Warning this is a testing
-//       only "
-//                     "formulation!";
-//     } else if (backend_type == BackendType::TESTING_HYBRID_SMF) {
-//       LOG(INFO)
-//           << "Using Hybrid Smart Motion Factor. Warning this is a testing "
-//              "only formulation!";
-//       FormulationParams fp = formulation_params;
-//       fp.min_dynamic_observations = 1u;
-//       return std::make_shared<test_hybrid::SmartStructurlessFormulation>(
-//           fp, map, noise_models, sensors, formulation_hooks);
-//     } else {
-//       CHECK(false) << "Not implemented";
-//       return nullptr;
-//     }
-//   }
-
-// };
 
 }  // namespace dyno

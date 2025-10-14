@@ -42,7 +42,7 @@
 #include "dynosam_common/utils/OpenCVUtils.hpp"
 #include "dynosam_common/utils/SafeCast.hpp"
 #include "dynosam_common/utils/TimingStats.hpp"
-#include "dynosam_vision_common/RGBDCamera.hpp"
+#include "dynosam_cv/RGBDCamera.hpp"
 
 DEFINE_bool(use_frontend_logger, false,
             "If true, the frontend logger will be used");
