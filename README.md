@@ -15,7 +15,14 @@ DynoSAM current provides full-batch and sliding-window optimisation procedures a
 The offical code used for our paper:
 - [Jesse Morris](https://jessemorris.github.io/), Yiduo Wang, Mikolaj Kliniewski, Viorela Ila, [*DynoSAM: Open-Source Smoothing and Mapping Framework for Dynamic SLAM*](https://arxiv.org/pdf/2501.11893), Arxiv.  Submitted Transactions on Robotics (T-RO) Visual SLAM Special Issue (2025).
 
-We kindly ask to cite our paper if you find this work useful:
+
+#### ** Update September 2025 **
+This code now also contains the code for our new work
+- J.Morris, Y. Wang, V. Ila. [*Online Dynamic SLAM with Incremental Smoothing and Mapping*](https://www.arxiv.org/abs/2509.08197), Arxiv. Submitted RA-L (2025)
+
+
+We kindly ask to cite our papers if you find these works useful:
+
 
 ```bibtex
 
@@ -29,7 +36,14 @@ We kindly ask to cite our paper if you find this work useful:
       url={https://arxiv.org/abs/2501.11893},
 }
 
+@article{morris2025online,
+  title={Online Dynamic SLAM with Incremental Smoothing and Mapping},
+  author={Morris, Jesse and Wang, Yiduo and Ila, Viorela},
+  journal={arXiv preprint arXiv:2509.08197},
+  year={2025}
+}
 ```
+
 ## Related Publications
 
 DynoSAM was build as a culmination of several works:
@@ -68,12 +82,13 @@ External dependancies (for visualization) not required for compilation.
 - [rviz_dynamic_slam_plugins](https://github.com/ACFR-RPG/rviz_dynamic_slam_plugins) (Plugin to display custom `dynamic_slam_interfaces` messages which are advertised by default.)
 
 
+> NOTE: Cuda acceleration... documentation coming soon...
+
 ## Installation Instructions
 DynoSAM is currently built within the ROS2 infrastructure (if there is enough interest I will split out each component into ROS and non-ROS modules.)
 
 We provide a development [Dockerfile](./docker/Dockerfile) that will install all dependancies but expects DynoSAM to be cloned locally. The associated [container creation](./docker/create_container.sh) will then mount the local DynoSAM folder into the container along with local results/dataset folders.
 
-> NOTE: there are some minor issues with the current dockerfile which will be fixed intime.
 
 The general ROS2 build procedure holds as all relevant subfolders in DynoSAM are built as packages.
 
@@ -148,6 +163,18 @@ All the cmdline functionality can be replicated programtically using python in o
 See [run_experiments_tro.py](./dynosam_utils/src/run_experiments_tro.py) for examples.
 
 
+## Running different backends
+Most of the research here is associated with different backend formulations.
+To run the different backends set `--backend_updater_enum`
+
+> NOTE: this enum value is mapped to the enum [RGBDFormulationType](./dynosam/include/dynosam/backend/RGBDBackendDefinitions.hpp)
+
+- WCME (`backend_updater_enum=0`) and WCPE(`backend_updater_enum=1`) are from TRO-2025, ICRA 2024 and previous works
+- HYBRID (`backend_updater_enum=2`) and PARALLEL_HYBRID (`backend_updater_enum=3`) are from RA-L 2025
+
+All others are internal/experimental.
+
+
 ## Tests
 We use [gtest](https://github.com/google/googletest) for unit testing. This is installed automagically. When building with ROS, all tests will go into the install folder.
 
@@ -166,8 +193,8 @@ run dynosam_ros run_dynosam_gtest.py --package=dynosam_ros --gtest_filter=TestCo
 
 We provide a number of data providers which process datasets into the input format specified by DynoSAM which includes input images for the pipeline and ground truth data for evaluation.
 
-
-[Download](https://unisyd-my.sharepoint.com/:f:/g/personal/jesse_morris_sydney_edu_au/EhK53_rmAqRDtHslS9HEuwwByFpR2oX59A_CKQTKrc9dAA?e=nbmM8h) processed version of the KITTI tracking and OMD sequences. The other sequences were used in their raw form.
+All datasets (including pre-processed images) can be found at the [ACFR-RPG Datasets page](https://data.acfr.usyd.edu.au/rpg/).
+The provided dataset loaders are written to parse the datasets as provided.
 
 ### i. KITTI Tracking Dataset
 We use a modified version of the KITTI tracking dataset which includes ground truth motion data, as well dense optical-flow, depth and segmentation masks.
@@ -178,14 +205,12 @@ The required dataset loader can be specified by setting `--data_provider_type=0`
 Raw data can be downloaded from the [project page](https://robotic-esp.com/datasets/omd/).
 For our 2024 T-RO paper we used a modified version of the dataset which can be downloaded from the above link.
 
-C++ code to parse the raw dataset (although not used) is also provided and the code used to pre-process the dataset (as optical flow and segmentation masks are not provided in the raw dataset) will also be provided soon.
-
 The required dataset loader can be specified by setting `--data_provider_type=3`
 
 
 
 ### iii. Cluster Dataset
-Access [raw dataset](https://huangjh-pub.github.io/page/clusterslam-dataset/) and download the CARLA-* sequences. No pre-processing is needed on this dataset and the raw data can be parsed by DynoSAM directly.
+The [raw dataset](https://huangjh-pub.github.io/page/clusterslam-dataset/) can be downloaded for the the CARLA-* sequences, although we recommend using our provided data.
 
 The required dataset loader can be specified by setting `--data_provider_type=2`
 
@@ -193,6 +218,13 @@ The required dataset loader can be specified by setting `--data_provider_type=2`
 Access [raw dataset](https://europe.naverlabs.com/research/computer-vision/proxy-virtual-worlds-vkitti-2/) and extract in a folder. No pre-processing is needed on this dataset and the raw data can be parsed by DynoSAM directly.
 
 The required dataset loader can be specified by setting `--data_provider_type=1`
+
+### v. TartanAir Shibuya
+Details coming soon...
+
+
+### vi. VIODE
+Details coming soon...
 
 ### Online Dataprovider
 An online data-provider can be specified using the ROS arg `online:=True`.
@@ -214,6 +246,9 @@ We also provide a launch file specified for online usage:
 ros2 launch dynosam_ros dyno_sam_online_launch.py
 ```
 > NOTE: see the launch file for example topic remapping
+
+### IMU integration
+We additionally support IMU integration using the `PreintegrationFactor` from GTSAM in the backend. However, this has only been tested on VIODE.
 
 
 ## ROS Visualisation
@@ -293,6 +328,19 @@ If the param `prefer_data_provider_camera_params` is set to True, the parameters
 This allows each data-loader to specfy/loaded the camera params from the dataset itself, without having to additionally specify the intrinsics in another file.
 
 # 4. Evaluation
+
+## Replicating results from papers
+This code base contains implementations for many papers (as noted in Related Publications).
+The `main` or `devel` branches should be able to run each method as described in the papers, however their may be discrepencies as new updates are added to different parts of the system.
+
+Additionally, I try to maintain backwards compatability as new code gets pushed to main but cannot ensure this.
+
+See different package releases associated with a paper.
+
+When running evaluations for each paper there usually is an associated python script that includes all the experiments.
+- [TRO 2025 experiments](./dynosam_utils/src/run_experiments_tro.py)
+- [RAL 2025 experiments](./dynosam_utils/src/run_experiments_ecmr.py)
+
 
 ## Output logs
 When the DynoSAM pipeline is run it will output log files in the given output directory. The log files record the output of the state-estimation as well as various interal data.
@@ -395,9 +443,11 @@ As per our key contributions, our back-end is structured to facilitate new imple
 
 - [`Accessor`](./dynosam/include/dynosam/backend/Accessor.hpp) defines the interface between the derived `Formulation` and the backend modules and facilitates the extraction and conversion of variables into a format that aligns with backend expectations. This format is specified in our paper as $\mathcal{O}_k$.
 
-Each formulation will need to derive from `Formulation` and define their own `Accessor`. The two formulations discussed in our paper are implemented as
+Each formulation will need to derive from `Formulation` and define their own `Accessor`. The formulations discussed in our various works are implemented as
   - [`WorldMotionFormulation`](./dynosam/include/dynosam/backend/rgbd/WorldMotionEstimator.hpp)
   - [`WorldPoseFormulation`](./dynosam/include/dynosam/backend/rgbd/WorldPoseEstimator.hpp)
+  - [`Hybrid`](./dynosam/include/dynosam/backend/rgbd/HybridEstimator.hpp)
+  - [`Parallel-Hybrid`](./dynosam/include/dynosam/backend/ParallelHybridBackendModule.hpp)
 
 
 # 6. Contribution Guidelines
