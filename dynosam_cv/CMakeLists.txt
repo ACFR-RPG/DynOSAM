@@ -61,6 +61,39 @@ install(
 ament_export_targets(export_${PROJECT_NAME} HAS_LIBRARY_TARGET)
 ament_export_include_directories(include)
 
+if(BUILD_TESTING)
+  # find_package(ament_cmake_gtest REQUIRED)
+  find_package(ament_cmake_gmock REQUIRED)
+  find_package(ament_lint_auto REQUIRED)
+
+  ament_lint_auto_find_test_dependencies()
+
+  # Run all lint tests in package.xml except those listed above
+  ament_lint_auto_find_test_dependencies()
+  ament_add_gmock(${PROJECT_NAME}_test
+    test/test_main.cc
+    test/test_cuda_cache.cc
+)
+
+  target_include_directories(${PROJECT_NAME}_test
+    PRIVATE
+     ${ament_index_cpp_INCLUDE_DIRS}
+  )
+
+  target_link_libraries(
+    ${PROJECT_NAME}_test
+    ${PROJECT_NAME}
+    dynosam_common::dynosam_common
+  )
+
+
+
+  install(TARGETS
+  ${PROJECT_NAME}_test
+      DESTINATION test/)
+
+endif()
+
 
 
 ament_package()

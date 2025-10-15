@@ -324,4 +324,130 @@ class ImageContainer {
                                   const ImageContainer& image_container);
 };
 
+// #ifdef DYNO_CUDA_OPENCV_ENABLED
+
+// Forward declaration
+// class GpuImagePool;
+
+// class GpuImageHandle {
+// private:
+//     GpuImageHandle() = default;
+
+//     GpuImageHandle(std::weak_ptr<GpuImagePool> pool, size_t id,
+//     cv::cuda::GpuMat gpu_mat)
+//         : pool_(std::move(pool)), id_(id), gpu_mat_(std::move(gpu_mat)) {}
+
+// public:
+//     GpuImageHandle(const GpuImageHandle& other) = delete;
+
+//     GpuImageHandle& operator=(const GpuImageHandle& other) {
+//         if (this != &other) {
+//             // release();
+//             pool_ = other.pool_;
+//             id_ = other.id_;
+//             gpu_mat_ = other.gpu_mat_;
+//             if (auto pool = pool_.lock()) pool->markInUse(id_);
+//         }
+//         return *this;
+//     }
+
+//     ~GpuImageHandle() {  }
+
+//     cv::cuda::GpuMat& mat() { return gpu_mat_; }
+//     const cv::cuda::GpuMat& mat() const { return gpu_mat_; }
+
+//     bool valid() const { return !gpu_mat_.empty(); }
+
+// private:
+//     friend class GpuImagePool;
+//     std::weak_ptr<GpuImagePool> pool_;
+//     int id_ = -1;
+//     cv::cuda::GpuMat gpu_mat_;
+// };
+
+// class GpuImagePool : public std::enable_shared_from_this<GpuImagePool> {
+// public:
+//     // using Ptr = std::shared_ptr<GpuImagePool>;
+
+//     static Ptr create() { return std::make_shared<GpuImagePool>(); }
+
+//     // Acquire a GPU buffer
+//     GpuImageHandle acquire(int rows, int cols, int type) {
+//         // Find an available buffer
+//         for (auto& [id, entry] : all_entries_) {
+//             if (!entry.in_use && entry.gpu_mat.rows == rows &&
+//                 entry.gpu_mat.cols == cols && entry.gpu_mat.type() == type) {
+//                 entry.in_use = true;
+//                 active_entries_.push_back(id);
+//                 std::cout << "Reusing buffer id=" << id << std::endl;
+//                 return GpuImageHandle(shared_from_this(), id, entry.gpu_mat);
+//             }
+//         }
+
+//         // Allocate a new one if none available
+//         size_t new_id = next_id_++;
+//         GpuPoolEntry entry;
+//         entry.gpu_mat.create(rows, cols, type);
+//         entry.in_use = true;
+//         all_entries_[new_id] = std::move(entry);
+//         active_entries_.push_back(new_id);
+
+//         std::cout << "Allocated new buffer id=" << new_id
+//                   << " (" << rows << "x" << cols << ")\n";
+
+//         return GpuImageHandle(shared_from_this(), new_id,
+//         all_entries_[new_id].gpu_mat);
+//     }
+
+//     GpuImageHandle upload(const cv::Mat& img_cpu) {
+//         auto handle = acquire(img_cpu.rows, img_cpu.cols, img_cpu.type());
+//         handle.mat().upload(img_cpu);
+//         return handle;
+//     }
+
+//     void markInUse(size_t id) {
+//         if (auto it = all_entries_.find(id); it != all_entries_.end()) {
+//             if (!it->second.in_use) {
+//                 it->second.in_use = true;
+//                 active_entries_.push_back(id);
+//             }
+//         }
+//     }
+
+//     void markFree(size_t id) {
+//         if (auto it = all_entries_.find(id); it != all_entries_.end()) {
+//             it->second.in_use = false;
+//             active_entries_.erase(std::remove(active_entries_.begin(),
+//                                               active_entries_.end(), id),
+//                                   active_entries_.end());
+//             std::cout << "Released buffer id=" << id << std::endl;
+//         }
+//     }
+
+//     void clear() {
+//         all_entries_.clear();
+//         active_entries_.clear();
+//         std::cout << "Cleared all GPU buffers\n";
+//     }
+
+//     void printStats() const {
+//         std::cout << "Active: " << active_entries_.size()
+//                   << " / Total: " << all_entries_.size() << "\n";
+//     }
+
+//     void debugList() const {
+//         std::cout << "Active buffer IDs: ";
+//         for (auto id : active_entries_) std::cout << id << " ";
+//         std::cout << "\n";
+//     }
+
+// private:
+//     std::unordered_map<size_t, GpuPoolEntry> all_entries_;
+//     std::vector<size_t> active_entries_;
+//     size_t next_id_ = 0;
+//     friend class GpuImageHandle;
+// };
+
+// #endif
+
 }  // namespace dyno
