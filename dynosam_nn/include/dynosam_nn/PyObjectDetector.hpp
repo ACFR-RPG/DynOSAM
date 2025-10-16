@@ -22,7 +22,6 @@ class PyObjectDetectorWrapper : public ObjectDetectionEngine {
   ~PyObjectDetectorWrapper();
 
   ObjectDetectionResult process(const cv::Mat& image) override;
-  bool loadModel() override;
   bool onDestruction() override;
   ObjectDetectionResult result() override;
 

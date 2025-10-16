@@ -4,10 +4,18 @@
 
 #include <opencv4/opencv2/opencv.hpp>
 
+#include "ament_index_cpp/get_package_share_directory.hpp"
+
 namespace bp = boost::python;
 namespace np = boost::python::numpy;
+namespace fs = std::filesystem;
 
 namespace dyno {
+
+fs::path getNNWeightsPath() {
+  return fs::path(ament_index_cpp::get_package_share_directory("dynosam_nn")) /
+         "weights";
+}
 
 // Conversion functions taken from:
 // https://gist.github.com/aFewThings/c79e124f649ea9928bfc7bb8827f1a1c

@@ -2,6 +2,7 @@
 #include <pybind11/numpy.h>
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
+#include <pybind11/stl/filesystem.h>  // important!
 
 #include "dynosam_nn/ObjectDetector.hpp"
 #include "dynosam_nn/PyWrapper.hpp"
@@ -22,10 +23,6 @@ class ObjectDetectorEnginePy : public ObjectDetectionEngine {
                            process, image);
   }
 
-  bool loadModel() override {
-    PYBIND11_OVERRIDE_PURE(bool, ObjectDetectionEngine, loadModel);
-  }
-
   bool onDestruction() override {
     PYBIND11_OVERRIDE_PURE(bool, ObjectDetectionEngine, onDestruction);
   }
@@ -38,12 +35,88 @@ class ObjectDetectorEnginePy : public ObjectDetectionEngine {
 
 }  // namespace dyno
 
+namespace py = pybind11;
+// Convert cv::Mat → NumPy array (shares memory)
+inline py::array MatToNDArray(const cv::Mat &mat) {
+  std::vector<size_t> shape;
+  std::vector<size_t> strides;
+
+  int channels = mat.channels();
+  if (channels == 1) {
+    shape = {(size_t)mat.rows, (size_t)mat.cols};
+    strides = {(size_t)mat.step, (size_t)mat.elemSize()};
+  } else {
+    shape = {(size_t)mat.rows, (size_t)mat.cols, (size_t)channels};
+    strides = {(size_t)mat.step, (size_t)(mat.elemSize() * channels),
+               (size_t)mat.elemSize1()};
+  }
+
+  std::string format;
+  switch (mat.depth()) {
+    case CV_8U:
+      format = py::format_descriptor<uint8_t>::format();
+      break;
+    case CV_8S:
+      format = py::format_descriptor<int8_t>::format();
+      break;
+    case CV_16U:
+      format = py::format_descriptor<uint16_t>::format();
+      break;
+    case CV_16S:
+      format = py::format_descriptor<int16_t>::format();
+      break;
+    case CV_32S:
+      format = py::format_descriptor<int32_t>::format();
+      break;
+    case CV_32F:
+      format = py::format_descriptor<float>::format();
+      break;
+    case CV_64F:
+      format = py::format_descriptor<double>::format();
+      break;
+    default:
+      throw std::runtime_error("Unsupported cv::Mat type");
+  }
+
+  return py::array(py::buffer_info(mat.data, mat.elemSize1(), format,
+                                   shape.size(), shape, strides));
+}
+
+// Convert NumPy array → cv::Mat
+inline cv::Mat NDArrayToMat(py::array arr) {
+  py::buffer_info info = arr.request();
+
+  int rows = static_cast<int>(info.shape[0]);
+  int cols = static_cast<int>(info.shape[1]);
+  int channels = info.ndim == 3 ? static_cast<int>(info.shape[2]) : 1;
+
+  int cv_type = 0;
+  if (info.format == py::format_descriptor<uint8_t>::format())
+    cv_type = CV_8UC(channels);
+  else if (info.format == py::format_descriptor<int8_t>::format())
+    cv_type = CV_8SC(channels);
+  else if (info.format == py::format_descriptor<uint16_t>::format())
+    cv_type = CV_16UC(channels);
+  else if (info.format == py::format_descriptor<int16_t>::format())
+    cv_type = CV_16SC(channels);
+  else if (info.format == py::format_descriptor<int32_t>::format())
+    cv_type = CV_32SC(channels);
+  else if (info.format == py::format_descriptor<float>::format())
+    cv_type = CV_32FC(channels);
+  else if (info.format == py::format_descriptor<double>::format())
+    cv_type = CV_64FC(channels);
+  else
+    throw std::runtime_error("Unsupported numpy dtype for cv::Mat");
+
+  return cv::Mat(rows, cols, cv_type, info.ptr)
+      .clone();  // clone ensures ownership
+}
+
 PYBIND11_MODULE(_core, m) {
   pybind11::class_<dyno::ObjectDetectionEngine, dyno::ObjectDetectorEnginePy>(
       m, "ObjectDetectionEngine")
       .def(pybind11::init<>())  // <-- now fine, trampoline makes it concrete
       .def("process", &dyno::ObjectDetectionEngine::process)
-      .def("load_model", &dyno::ObjectDetectionEngine::loadModel)
       .def("on_destruction", &dyno::ObjectDetectionEngine::onDestruction)
       .def("mask", &dyno::ObjectDetectionEngine::mask);
 
@@ -78,10 +151,11 @@ PYBIND11_MODULE(_core, m) {
       .def_property(
           "labelled_mask",
           [](const dyno::ObjectDetectionResult &r) {
-            return dyno::ConvertMatToNDArray(r.labelled_mask);
+            // return dyno::ConvertMatToNDArray(r.labelled_mask);
+            return MatToNDArray(r.labelled_mask);
           },
-          [](dyno::ObjectDetectionResult &r, const cv::Mat &m) {
-            r.labelled_mask = m;
+          [](dyno::ObjectDetectionResult &r, pybind11::array arr) {
+            r.labelled_mask = NDArrayToMat(arr);
           })
       .def("__repr__",
            [](const dyno::ObjectDetectionResult &r) {
@@ -94,4 +168,6 @@ PYBIND11_MODULE(_core, m) {
         oss << r;
         return oss.str();
       });
+
+  m.def("get_nn_weights_path", &dyno::getNNWeightsPath);
 }

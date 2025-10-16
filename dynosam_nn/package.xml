@@ -13,6 +13,13 @@
  <buildtool_depend>ament_cmake</buildtool_depend>
  <depend>dynosam_common</depend>
  <depend>ament_cmake_python</depend>
+ <depend>ament_index_cpp</depend>
+
+ <depend>cv_bridge</depend>
+ <depend>rclcpp</depend>
+ <depend>sensor_msgs</depend>
+ <depend>image_transport</depend>
+
 
   <export>
     <build_type>ament_cmake</build_type>

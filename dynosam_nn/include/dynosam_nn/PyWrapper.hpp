@@ -4,12 +4,16 @@
 
 #include <boost/python.hpp>
 #include <boost/python/numpy.hpp>
+#include <filesystem>
 #include <opencv2/core.hpp>
 
 namespace bp = boost::python;
 namespace np = boost::python::numpy;
+namespace fs = std::filesystem;
 
 namespace dyno {
+
+fs::path getNNWeightsPath();
 
 // Helper function to convert a cv::Mat to a NumPy array.
 np::ndarray ConvertMatToNDArray(const cv::Mat& mat);

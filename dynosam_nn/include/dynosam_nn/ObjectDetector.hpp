@@ -26,7 +26,6 @@ class ObjectDetectionEngine {
   virtual ~ObjectDetectionEngine() {}
 
   virtual ObjectDetectionResult process(const cv::Mat& image) = 0;
-  virtual bool loadModel() = 0;
   virtual bool onDestruction() = 0;
   virtual ObjectDetectionResult result() = 0;
 

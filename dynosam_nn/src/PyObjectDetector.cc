@@ -71,13 +71,6 @@ ObjectDetectionResult PyObjectDetectorWrapper::process(const cv::Mat& image) {
   });
 }
 
-bool PyObjectDetectorWrapper::loadModel() {
-  return executePythonCall([&]() -> bool {
-    bp::object result = engine_.attr("load_model")();
-    return bp::extract<bool>(result);
-  });
-}
-
 bool PyObjectDetectorWrapper::onDestruction() {
   return executePythonCall([&]() -> bool {
     bp::object result = engine_.attr("on_destruction")();
