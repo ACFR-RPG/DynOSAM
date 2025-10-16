@@ -37,17 +37,22 @@
 
 namespace dyno {
 
+struct ObjectDetection {
+  ObjectId object_id;
+  cv::Rect bounding_box{};
+};
+
 // TODO: this data structure is really unncessary as it REALLY is only used to
 // indicates which objects we have detected and their bounding boxes which are
 // ONLY used for visualisation!!
-struct DynamicObjectObservation {
-  ObjectId object_id;
+struct DynamicObjectObservation : public ObjectDetection {
   TrackletIds object_features;  //! Tracklet id's of object features within the
                                 //! frame. Does not indicate usability
 
-  cv::Rect bounding_box{};  // reconstructed from the object mask and not
-                            // directly from the object features, although all
-                            // features should lie in this cv::Rect
+  // cv::Rect bounding_box{};  // reconstructed from the object mask and not
+  //                           // directly from the object features, although
+  //                           all
+  //                           // features should lie in this cv::Rect
 
   inline size_t numFeatures() const { return object_features.size(); }
   inline bool hasBoundingBox() const { return !bounding_box.empty(); }
