@@ -11,6 +11,7 @@
 class ImageSegmenterNode : public rclcpp::Node {
  public:
   ImageSegmenterNode() : Node("image_subscriber_node") {
+    engine_ = dyno::PyObjectDetectorWrapper::CreateYoloDetector();
     // Use image_transport for efficiency (handles compressed images too)
     subscription_ = this->create_subscription<sensor_msgs::msg::Image>(
         "/camera/color/image_rect_color", 10,
@@ -31,13 +32,13 @@ class ImageSegmenterNode : public rclcpp::Node {
       // Print image info
       RCLCPP_INFO(this->get_logger(), "Received image %dx%d", frame.cols,
                   frame.rows);
-      auto r = engine_.process(frame);
+      auto r = engine_->process(frame);
 
-      LOG(INFO) << r;
+      // LOG(INFO) << r;
 
-      // Optional: visualize (disable in headless mode)
-      // cv::imshow("View", frame);
-      // cv::waitKey(1);
+      // // // Optional: visualize (disable in headless mode)
+      cv::imshow("View", r.colouredMask());
+      cv::waitKey(1);
 
     } catch (const cv_bridge::Exception &e) {
       RCLCPP_ERROR(this->get_logger(), "cv_bridge exception: %s", e.what());
@@ -45,7 +46,7 @@ class ImageSegmenterNode : public rclcpp::Node {
   }
 
   rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr subscription_;
-  dyno::PyObjectDetectorWrapper engine_;
+  dyno::ObjectDetectionEngine::Ptr engine_;
 };
 
 int main(int argc, char **argv) {

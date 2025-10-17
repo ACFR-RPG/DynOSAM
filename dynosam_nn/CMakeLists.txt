@@ -35,7 +35,8 @@ include_directories(
 add_library(${PROJECT_NAME} SHARED
   src/PyObjectDetector.cc
   src/ObjectDetector.cc
-  src/PyWrapper.cc)
+  src/bindings/PyBoostWrapper.cc
+)
 
 
 
@@ -105,7 +106,10 @@ ament_export_include_directories(include)
 
 
 
-pybind11_add_module(_core MODULE src/PyBindWrapper.cc)
+pybind11_add_module(_core MODULE
+src/bindings/PyBindings.cc
+src/bindings/cvnp.cc
+src/bindings/cvnp_synonyms.cc)
 target_link_libraries(_core
   PUBLIC
    ${Boost_LIBRARIES}

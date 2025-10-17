@@ -5,3 +5,7 @@
 # Install
 - python3 -m pip install "ultralytics==8.3.0" "numpy<2.0" "opencv-python<5.0"
 - sudo apt install python3-pybind11
+
+
+## Details
+The OpenCV/Numpy converion code was taken verbatum from https://gitverse.ru/githubcopy/cvnp/content/master

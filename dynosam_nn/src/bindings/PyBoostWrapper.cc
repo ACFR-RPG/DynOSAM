@@ -1,4 +1,4 @@
-#include "dynosam_nn/PyWrapper.hpp"
+#include "dynosam_nn/bindings/PyBoostWrapper.hpp"
 
 #include <glog/logging.h>
 
