@@ -43,6 +43,7 @@
 #include "dynosam_common/utils/GtsamUtils.hpp"
 #include "dynosam_common/utils/OpenCVUtils.hpp"
 #include "dynosam_common/utils/TimingStats.hpp"
+#include "dynosam_nn/PyObjectDetector.hpp"
 
 namespace dyno {
 
@@ -58,6 +59,11 @@ FeatureTracker::FeatureTracker(const FrontendParams& params, Camera::Ptr camera,
   static const int klt_max_level = 3;             // Max pyramid levels for KLT
   lk_cuda_tracker_ = cv::cuda::SparsePyrLKOpticalFlow::create(
       klt_window_size, klt_max_level, 30);
+
+  if (!params_.prefer_provided_object_detection) {
+    LOG(INFO) << "Creating object detection engine";
+    object_detection_ = PyObjectDetectorWrapper::CreateYoloDetector();
+  }
 }
 
 Frame::Ptr FeatureTracker::track(FrameId frame_id, Timestamp timestamp,
@@ -82,39 +88,21 @@ Frame::Ptr FeatureTracker::track(FrameId frame_id, Timestamp timestamp,
     CHECK_EQ(img_size_.height, other_size.height);
     initial_computation_ = false;
   } else {
-    if (params_.use_propogate_mask) {
-      utils::TimingStatsCollector timer("propogate_mask");
-      propogateMask(input_images);
-    }
     CHECK(previous_frame_);
     CHECK_EQ(previous_frame_->frame_id_, frame_id - 1u)
         << "Incoming frame id must be consequative";
   }
 
-  // from some experimental testing 10 pixles is a good boarder to add around
-  // objects when the image is 640x480 assuming we have some scaling factor r,
-  // width/height * r = 10 and for 640/480, r = (approx) 7.51 for images not
-  // this size we will try and keep the same ratio as this seemed to work well
-  double image_ratio =
-      static_cast<double>(img_size_.width * img_size_.height) / (640.0 * 480.0);
-  static constexpr double kScalingFactorR = 7.51;
-  // desired boarder thickness in pixels for a 640 x 480 image
-  const int scaled_boarder_thickness =
-      std::round(image_ratio * 640.0 / 480.0 * kScalingFactorR);
-  // create detection mask around the boarder of each dynamic object with some
-  // thickness this prevents static and dynamic points being detected around the
-  // edge of the dynamic object as there are lots of inconsistencies here the
-  // detection mask is in the opencv mask form: CV_8UC1 where white pixels (255)
-  // are valid and black pixels (0) should not be detected on
-  static constexpr bool kUseAsFeatureDetectionMask = true;
-  // NOTE: importantly this will calculate the observed objects in this frame so
-  // we dont need to recalculate!
+  // compute the ObjectBoundaryMaskResult AND detect/track object on the image
+  // if required using the ObjectDetectionEngine (currently we throw away the
+  // result after the function call) ObjectDetectionEngine is used if
+  // params_.prefer_provided_object_detection is false
   vision_tools::ObjectBoundaryMaskResult boundary_mask_result;
-  {
-    utils::TimingStatsCollector f_timer("tracking_timer.object_identification");
-    vision_tools::computeObjectMaskBoundaryMask(
-        boundary_mask_result, input_images.objectMotionMask(),
-        scaled_boarder_thickness, kUseAsFeatureDetectionMask);
+  objectDetection(boundary_mask_result, input_images);
+
+  if (!initial_computation_ && params_.use_propogate_mask) {
+    utils::TimingStatsCollector timer("propogate_mask");
+    propogateMask(input_images);
   }
 
   // data-structure to handle which objects required re-tracking/sampling
@@ -1118,6 +1106,68 @@ void FeatureTracker::requiresSampling(
       VLOG(5) << "Object " << info_string(info.frame_id, object_id)
               << " requires sampling. Sampling reason: new object";
     }
+  }
+}
+
+bool FeatureTracker::objectDetection(
+    vision_tools::ObjectBoundaryMaskResult& boundary_mask_result,
+    ImageContainer& image_container) {
+  // from some experimental testing 10 pixles is a good boarder to add around
+  // objects when the image is 640x480 assuming we have some scaling factor r,
+  // width/height * r = 10 and for 640/480, r = (approx) 7.51 for images not
+  // this size we will try and keep the same ratio as this seemed to work well
+  // NOTE: assumes img_size_ has been set
+  double image_ratio =
+      static_cast<double>(img_size_.width * img_size_.height) / (640.0 * 480.0);
+  static constexpr double kScalingFactorR = 7.51;
+  // desired boarder thickness in pixels for a 640 x 480 image
+  const int scaled_boarder_thickness =
+      std::round(image_ratio * 640.0 / 480.0 * kScalingFactorR);
+  // create detection mask around the boarder of each dynamic object with some
+  // thickness this prevents static and dynamic points being detected around the
+  // edge of the dynamic object as there are lots of inconsistencies here the
+  // detection mask is in the opencv mask form: CV_8UC1 where white pixels (255)
+  // are valid and black pixels (0) should not be detected on
+  static constexpr bool kUseAsFeatureDetectionMask = true;
+  // else run etection
+  if (params_.prefer_provided_object_detection) {
+    if (image_container.hasObjectMask()) {
+      cv::Mat object_mask = image_container.objectMotionMask();
+      // NOTE: importantly this will calculate the observed objects in this
+      // frame so we dont need to recalculate!
+      VLOG(30) << "Using provided object detection mask k="
+               << image_container.frameId();
+      vision_tools::computeObjectMaskBoundaryMask(
+          boundary_mask_result, object_mask, scaled_boarder_thickness,
+          kUseAsFeatureDetectionMask);
+      return false;
+    } else {
+      LOG(FATAL) << "Params specify prefer provided object mask but input "
+                    "is missing!";
+    }
+  } else {
+    CHECK(object_detection_);
+    VLOG(30) << "Running object detection and tracking inference k="
+             << image_container.frameId();
+    ObjectDetectionResult detection_result;
+    {
+      utils::TimingStatsCollector timing("tracking_timer.detection_inference");
+      detection_result = object_detection_->process(image_container.rgb());
+    }
+    cv::Mat object_mask = detection_result.labelled_mask;
+
+    {
+      utils::TimingStatsCollector timing(
+          "tracking_timer.compute_boundary_mask");
+      vision_tools::computeObjectMaskBoundaryMask(
+          boundary_mask_result, detection_result, scaled_boarder_thickness,
+          kUseAsFeatureDetectionMask);
+    }
+
+    // update or insert image container with object mask
+    image_container.replace<ImageType::MotionMask>(ImageContainer::kObjectMask,
+                                                   object_mask);
+    return true;
   }
 }
 

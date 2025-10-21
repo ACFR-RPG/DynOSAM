@@ -66,9 +66,10 @@ int main(int argc, char* argv[]) {
   FLAGS_logtostderr = 1;
   FLAGS_colorlogtostderr = 1;
   FLAGS_log_prefix = 1;
+  FLAGS_v = 30;
 
   KittiDataLoader::Params params;
-  KittiDataLoader loader("/root/data/vdo_slam/kitti/kitti/0018/", params);
+  KittiDataLoader loader("/root/data/vdo_slam/kitti/kitti/0020/", params);
   // ClusterSlamDataLoader loader("/root/data/cluster_slam/CARLA-L1");
   // loader.setStartingFrame(600);
   // OMDDataLoader loader(
@@ -78,13 +79,15 @@ int main(int argc, char* argv[]) {
   // loader("/root/data/TartanAir_shibuya/RoadCrossing07/");
   // ViodeLoader loader("/root/data/VIODE/city_day/mid");
 
-  auto detector = dyno::PyObjectDetectorWrapper::CreateYoloDetector();
-  CHECK_NOTNULL(detector);
+  // auto detector = dyno::PyObjectDetectorWrapper::CreateYoloDetector();
+  // CHECK_NOTNULL(detector);
 
   FrontendParams fp;
   fp.tracker_params.feature_detector_type =
       TrackerParams::FeatureDetectorType::GFFT_CUDA;
   fp.tracker_params.max_dynamic_features_per_frame = 300;
+  fp.tracker_params.prefer_provided_optical_flow = false;
+  fp.tracker_params.prefer_provided_object_detection = false;
   // fp.tracker_params.feature_detector_type =
   // TrackerParams::FeatureDetectorType::ORB_SLAM_ORB;
 
@@ -95,6 +98,7 @@ int main(int argc, char* argv[]) {
                          cv::Mat rgb, cv::Mat optical_flow, cv::Mat depth,
                          cv::Mat motion, gtsam::Pose3,
                          GroundTruthInputPacket) -> bool {
+    LOG(INFO) << utils::Statistics::Print();
     // loader.setCallback([&](dyno::FrameId frame_id, dyno::Timestamp timestamp,
     //                        cv::Mat rgb, cv::Mat optical_flow, cv::Mat depth,
     //                        cv::Mat motion, GroundTruthInputPacket,
@@ -143,15 +147,15 @@ int main(int argc, char* argv[]) {
     // // cv::waitKey(1);
     // cv::imshow("Depth", depth_viz);
 
-    auto object_detection_result = detector->process(rgb);
-    cv::imshow("Detection Result", object_detection_result.colouredMask());
+    // auto object_detection_result = detector->process(rgb);
+    // cv::imshow("Detection Result", object_detection_result.colouredMask());
 
     ImageContainer image_container(frame_id, timestamp);
-    image_container.rgb(rgb)
-        .depth(depth)
-        .opticalFlow(optical_flow)
-        .objectMotionMask(object_detection_result.labelled_mask);
-
+    // image_container.rgb(rgb)
+    //     .depth(depth)
+    //     .opticalFlow(optical_flow)
+    //     .objectMotionMask(object_detection_result.labelled_mask);
+    image_container.rgb(rgb).depth(depth).opticalFlow(optical_flow);
     auto frame = tracker->track(frame_id, timestamp, image_container);
     Frame::Ptr previous_frame = tracker->getPreviousFrame();
 

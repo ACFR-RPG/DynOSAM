@@ -54,7 +54,9 @@ tracker_params:
 
   subpixel_corner_refinement_params: true
   use_clahe_filter: true
+
   prefer_provided_optical_flow: false
+  prefer_provided_object_detection: false
 
   max_dynamic_features_per_frame: 400
   min_distance_btw_tracked_and_detected_dynamic_features: 2

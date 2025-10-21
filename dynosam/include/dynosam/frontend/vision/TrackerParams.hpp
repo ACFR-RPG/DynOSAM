@@ -123,6 +123,7 @@ struct TrackerParams {
   int shrink_col = 0;
 
   bool prefer_provided_optical_flow = true;
+  bool prefer_provided_object_detection = true;
 
   //! Good features to track params
   GFFTParams gfft_params = GFFTParams();

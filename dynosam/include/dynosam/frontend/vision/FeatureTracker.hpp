@@ -41,6 +41,9 @@
 #include "dynosam_cv/Camera.hpp"
 #include "dynosam_cv/Feature.hpp"
 
+// #include "dynosam_common/DynamicObjects.hpp"
+#include "dynosam_nn/ObjectDetector.hpp"
+
 namespace dyno {
 
 /**
@@ -141,6 +144,12 @@ class FeatureTracker : public FeatureTrackerBase {
   void propogateMask(ImageContainer& image_container);
 
  private:
+  // TODO: for now we loose the actual object detection result if inference was
+  // run!
+  bool objectDetection(
+      vision_tools::ObjectBoundaryMaskResult& boundary_mask_result,
+      ImageContainer& image_container);
+
   void computeImageBounds(const cv::Size& size, int& min_x, int& max_x,
                           int& min_y, int& max_y) const;
 
@@ -165,6 +174,7 @@ class FeatureTracker : public FeatureTrackerBase {
 
   // for now!
   cv::Ptr<cv::cuda::SparsePyrLKOpticalFlow> lk_cuda_tracker_;
+  ObjectDetectionEngine::Ptr object_detection_;
 };
 
 }  // namespace dyno

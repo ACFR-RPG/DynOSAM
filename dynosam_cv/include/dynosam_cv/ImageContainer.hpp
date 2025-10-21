@@ -273,6 +273,17 @@ class ImageContainer {
   }
 
   template <typename IMAGETYPE>
+  ImageContainer& replace(const std::string& key, const cv::Mat& image) {
+    if (!exists(key)) {
+      return this->add<IMAGETYPE>(key, image);
+    }
+
+    KeyImagePair key_image = KeyImagePair::Create<IMAGETYPE>(key, image);
+    images_.insert_or_assign(key, std::move(key_image));
+    return *this;
+  }
+
+  template <typename IMAGETYPE>
   const ImageWrapper<IMAGETYPE>& at(const std::string& key) const {
     return atImpl<const ImageContainer, IMAGETYPE>(this, key);
   }
