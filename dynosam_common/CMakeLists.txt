@@ -139,6 +139,7 @@ set(DYNO_EXPORT_DEPS
   GTSAM
   eigen3_cmake_module
   Eigen3
+  Boost
 )
 
 

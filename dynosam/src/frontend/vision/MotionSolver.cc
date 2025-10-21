@@ -468,7 +468,7 @@ ObjectMotionSovlerF2F::Result ObjectMotionSovlerF2F::solve(
     tbb::parallel_for_each(
         frame_k->object_observations_.begin(),
         frame_k->object_observations_.end(),
-        [&](const std::pair<ObjectId, DynamicObjectObservation>& pair) {
+        [&](const std::pair<ObjectId, SingleDetectionResult>& pair) {
           const auto object_id = pair.first;
           if (!solveImpl(frame_k, frame_k_1, object_id, motion_estimates)) {
             VLOG(5) << "Could not solve motion for object " << object_id

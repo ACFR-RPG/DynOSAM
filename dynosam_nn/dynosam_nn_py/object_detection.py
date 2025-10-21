@@ -9,25 +9,23 @@ from dynosam_nn_py._core import (
 import cv2
 import torch
 
+from ultralytics.engine.model import Model as UltralyticsModel
 
-class YOLODetectionEngine(ObjectDetectionEngine):
+
+class UltralyticsDetectionEngine(ObjectDetectionEngine):
 
     out_mask_dype = np.int32
 
     def __init__(self, *args, **kwargs):
         super().__init__()
         self._result: ObjectDetectionResult = ObjectDetectionResult()
-        from ultralytics import YOLO
-        import os
-        download_path = get_nn_weights_path()
 
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
         print(f"[INFO] Using device: {self.device}")
 
-        model_name: str = "yolov8n-seg.pt"
-        # download_path = kwargs.get("download_dir", get_weights_folder())
-        model_path = os.path.join(download_path, model_name)
-        self._model = YOLO(model_path)
+        self._model: UltralyticsModel = self.load_model(**kwargs)
+        if self._model is None:
+            raise Exception("Ultraltics model is none! Failed to load object detection model")
         self._model.to(self.device)
 
          # which class names (e.g. person, bicycle...) to include
@@ -48,6 +46,8 @@ class YOLODetectionEngine(ObjectDetectionEngine):
         # while YOLO takes their own class ids which we update once we know the mapping
         # of class names to YOLO id's
         if "classes" in kwargs:
+            print(f"[WARNING] User defined argument 'classes' found in kwargs."
+                    "Please specify 'include_classes' instead as we remap these to the models internal class labels!")
             del kwargs["classes"]
 
         # list of included classes via their ids not a string to identify them in YOLO
@@ -58,36 +58,40 @@ class YOLODetectionEngine(ObjectDetectionEngine):
         self._global_object_id = 1
         self._kwargs = kwargs
 
+    def load_model(self, **kwargs) -> UltralyticsModel:
+        raise NotImplementedError
 
     def process(self, image: np.ndarray) -> ObjectDetectionResult:
-        # for now resize manually
-        image_resize = cv2.resize(image, (640,480), interpolation=cv2.INTER_AREA)
         # do we need to put everything back on the CPU?
-        # odel_result =  self._model.track(img, persist=True, verbose=self._verbose, classes=self._included_classes_ids)[0].cpu()
         with torch.no_grad():
             model_result =  self._model.track(
-                image_resize,
+                image,
                 persist=True,
                 classes=self._included_classes_ids,
+                retina_masks=True,
+                imgsz=640,
                 **self._kwargs)[0].cpu()
+
+            names = model_result.names # dicionary of classifciation id to label (e.g 0: person). This is the entire dictionary of possible classes
+            self._set_included_classes_ids(names)
+            # reset result
+            # reset info before checks so we can return safetly from this function
+            self._result.labelled_mask = np.zeros(image.shape[:2], dtype=UltralyticsDetectionEngine.out_mask_dype)
+            self._result.input_image = image
+            self._result.detections.clear()
+
+            if model_result.masks is None:
+                return self._result
+
 
             # #assume image is in W, H, C
             class_ids = model_result.boxes.cls.cpu().numpy()    # cls, (N, 1), classifciation id
             probs = model_result.boxes.conf.cpu().numpy()  # confidence score, (N, 1)
             boxes = model_result.boxes.xyxy.cpu().numpy()   # box with xyxy format, (N, 4)
-            names = model_result.names # dicionary of classifciation id to label (e.g 0: person). This is the entire dictionary of possible classes
 
-            self._set_included_classes_ids(names)
-
-            # reset result
-            # reset info before checks so we can return safetly from this function
-            self._result.labelled_mask = np.zeros(image_resize.shape[:2], dtype=YOLODetectionEngine.out_mask_dype)
-            self._result.input_image = image_resize
-            self._result.detections.clear()
 
             # ignore if track was false?
             if not model_result.boxes.is_track:
-                # self._update_coloured_mask()
                 return self._result
 
             track_ids = model_result.boxes.id.int().cpu().tolist()
@@ -104,7 +108,7 @@ class YOLODetectionEngine(ObjectDetectionEngine):
                 masks = np.moveaxis(masks, -1, 0) # masks, (N, H, W)
                 return masks
 
-            detection_masks = process_masks(detection_masks, image_resize)
+            detection_masks = process_masks(detection_masks, image)
 
             # converts box in x_min, y_min, x_max, y_max to x,y, width, height
             def bb_converter(box):
@@ -125,7 +129,7 @@ class YOLODetectionEngine(ObjectDetectionEngine):
                 # assert track_id > 0
                 object_id = self._asign_obj_label(track_id)
 
-                detection_mask_img = np.where(detection_mask != 0, object_id, 0).astype(YOLODetectionEngine.out_mask_dype)
+                detection_mask_img = np.where(detection_mask != 0, object_id, 0).astype(UltralyticsDetectionEngine.out_mask_dype)
                 self._result.labelled_mask += detection_mask_img
 
 
@@ -164,3 +168,36 @@ class YOLODetectionEngine(ObjectDetectionEngine):
                 if class_name in self._included_classes:
                     self._included_classes_ids.append(class_id)
             print(f"Setting included classes ids {self._included_classes_ids}")
+
+
+class YOLODetectionEngine(UltralyticsDetectionEngine):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def load_model(self, **kwargs) -> UltralyticsModel:
+        download_path = get_nn_weights_path()
+        model_name: str = "yolov8n-seg.pt"
+
+        import os
+        model_path = os.path.join(download_path, model_name)
+
+        from ultralytics import YOLO
+        return YOLO(model_path)
+
+
+class RTDETRDetectionEngine(UltralyticsDetectionEngine):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def load_model(self, **kwargs) -> UltralyticsModel:
+        # download_path = get_nn_weights_path()
+        # model_name: str = "rtdetr-l.pt"
+
+        # import os
+        # model_path = os.path.join(download_path, model_name)
+
+        # from ultralytics import RTDETR
+        # return RTDETR(model_path)
+        raise Exception("RTDETRDetectionEngine not implemented!")

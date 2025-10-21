@@ -30,6 +30,7 @@ class PyObjectDetectorWrapper : public ObjectDetectionEngine {
   ~PyObjectDetectorWrapper();
 
   static ObjectDetectionEngine::Ptr CreateYoloDetector();
+  static ObjectDetectionEngine::Ptr CreateRTDETRDetector();
 
   ObjectDetectionResult process(const cv::Mat& image) override;
   bool onDestruction() override;

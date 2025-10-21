@@ -38,6 +38,7 @@
 #include "dynosam/frontend/vision/Vision-Definitions.hpp"
 #include "dynosam/visualizer/Visualizer-Definitions.hpp"
 #include "dynosam_common/Cuda.hpp"
+#include "dynosam_common/DynamicObjects.hpp"
 #include "dynosam_common/Types.hpp"
 #include "dynosam_common/utils/GtsamUtils.hpp"
 #include "dynosam_common/utils/Histogram.hpp"
@@ -225,6 +226,21 @@ struct ObjectBoundaryMaskResult {
 void computeObjectMaskBoundaryMask(ObjectBoundaryMaskResult& result,
                                    const cv::Mat& mask, int thickness,
                                    bool use_as_feature_detection_mask = true);
+
+/**
+ * @brief Same as computeObjectMaskBoundaryMask but we construct the result from
+ * the pre-computed object mask and list of detected object labels. This saves a
+ * lot of compute and uses the detection result directly.
+ *
+ * @param result
+ * @param detection_result
+ * @param thickness
+ * @param use_as_feature_detection_mask
+ */
+void computeObjectMaskBoundaryMask(
+    ObjectBoundaryMaskResult& result,
+    const ObjectDetectionResult& detection_result, int thickness,
+    bool use_as_feature_detection_mask = true);
 
 void relabelMasks(const cv::Mat& mask, cv::Mat& relabelled_mask,
                   const ObjectIds& old_labels, const ObjectIds& new_labels);

@@ -358,9 +358,10 @@ void shrinkMask(const cv::Mat& mask, cv::Mat& shrunk_mask, int erosion_size) {
   }
 }
 
-void computeObjectMaskBoundaryMask(ObjectBoundaryMaskResult& result,
-                                   const cv::Mat& mask, int thickness,
-                                   bool use_as_feature_detection_mask) {
+void computeObjectMaskBoundaryMaskHelper(
+    ObjectBoundaryMaskResult& result, const cv::Mat& mask, int thickness,
+    bool use_as_feature_detection_mask,
+    std::function<ObjectIds()> get_object_labels) {
   cv::Mat thicc_boarder;  // god im so funny
   cv::Scalar fill_colour;
 
@@ -377,25 +378,22 @@ void computeObjectMaskBoundaryMask(ObjectBoundaryMaskResult& result,
     fill_colour = cv::Scalar(255);
   }
 
-  result.objects_detected = vision_tools::getObjectLabels(mask);
+  result.objects_detected = get_object_labels();
   // this basically just creates a full mask over the existing masks using the
   // detected contours
   for (const auto object_id : result.objects_detected) {
     std::vector<std::vector<cv::Point>> detected_contours;
+    // NOTE: if we use the object detection result I guess the discovered
+    // rectangle here could be different to detection rectangle!
     cv::Rect detected_rect;
     vision_tools::findObjectBoundingBox(mask, object_id, detected_rect,
                                         detected_contours);
 
-    // cv::drawContours(thicc_boarder, detected_contours, -1, 255, cv::FILLED);
     CHECK_LE(object_id, 255);  // works only with uint8 types...
     cv::drawContours(thicc_boarder, detected_contours, -1, object_id,
                      cv::FILLED);
     result.object_bounding_boxes.push_back(detected_rect);
   }
-  // cv::Mat thicc_boarder_8u; //viz
-  // cv::threshold(thicc_boarder, thicc_boarder_8u, 0, 255, cv::THRESH_BINARY);
-  // cv::imshow("Thicc boarder", thicc_boarder_8u);
-  // cv::waitKey(1);
 
   // Dilate the mask to expand outwards by 'thickness' pixels
   cv::Mat dilated_mask;
@@ -440,6 +438,29 @@ void computeObjectMaskBoundaryMask(ObjectBoundaryMaskResult& result,
   result.is_feature_detection_mask = use_as_feature_detection_mask;
 }
 
+void computeObjectMaskBoundaryMask(ObjectBoundaryMaskResult& result,
+                                   const cv::Mat& mask, int thickness,
+                                   bool use_as_feature_detection_mask) {
+  computeObjectMaskBoundaryMaskHelper(
+      result, mask, thickness, use_as_feature_detection_mask,
+      [&mask]() -> ObjectIds { return vision_tools::getObjectLabels(mask); });
+}
+
+void computeObjectMaskBoundaryMask(
+    ObjectBoundaryMaskResult& result,
+    const ObjectDetectionResult& detection_result, int thickness,
+    bool use_as_feature_detection_mask) {
+  if (detection_result.num() == 0) {
+    return;
+  }
+
+  computeObjectMaskBoundaryMaskHelper(result, detection_result.labelled_mask,
+                                      thickness, use_as_feature_detection_mask,
+                                      [&detection_result]() -> ObjectIds {
+                                        return detection_result.objectIds();
+                                      });
+}
+
 void relabelMasks(const cv::Mat& mask, cv::Mat& relabelled_mask,
                   const ObjectIds& old_labels, const ObjectIds& new_labels) {
   if (old_labels.size() != new_labels.size()) {
@@ -470,13 +491,16 @@ gtsam::FastMap<ObjectId, Histogram> makeTrackletLengthHistorgram(
   // one for every object + 1 for static points
   gtsam::FastMap<ObjectId, Histogram> histograms;
 
-  // collect dynamic features
-  for (const auto& [object_id, observations] : frame->getObjectObservations()) {
+  const auto& dyamic_features = frame->dynamic_features_;
+  auto itr = dyamic_features.beginObjectIterator();
+  for (itr; itr != dyamic_features.endObjectIterator(); itr++) {
+    auto [object_id, tracklet_ids] = *itr;
+
     Histogram hist(bh::make_histogram(bh::axis::variable<>(bins)));
     hist.name_ = "tacklet-length-" + std::to_string(object_id);
 
-    for (auto tracklet_id : observations.object_features) {
-      const Feature::Ptr feature = frame->at(tracklet_id);
+    for (auto tracklet_id : tracklet_ids) {
+      const Feature::Ptr feature = dyamic_features.getByTrackletId(tracklet_id);
       CHECK(feature);
       if (feature->usable()) {
         hist.histogram_(feature->age());
@@ -485,6 +509,23 @@ gtsam::FastMap<ObjectId, Histogram> makeTrackletLengthHistorgram(
 
     histograms.insert2(object_id, hist);
   }
+
+  // collect dynamic features
+  // for (const auto& [object_id, observations] :
+  // frame->getObjectObservations()) {
+  //   Histogram hist(bh::make_histogram(bh::axis::variable<>(bins)));
+  //   hist.name_ = "tacklet-length-" + std::to_string(object_id);
+
+  //   // for (auto tracklet_id : observations.object_features) {
+  //   //   // const Feature::Ptr feature = frame->at(tracklet_id);
+  //   //   // CHECK(feature);
+  //   //   // if (feature->usable()) {
+  //   //   //   hist.histogram_(feature->age());
+  //   //   // }
+  //   // }
+
+  //   histograms.insert2(object_id, hist);
+  // }
 
   // collect static features
   Histogram static_hist(bh::make_histogram(bh::axis::variable<>(bins)));

@@ -31,11 +31,8 @@
 #pragma once
 
 #include "dynosam_ros/DataProviderRos.hpp"
-#include "dynosam_ros/MultiImageSync.hpp"
+#include "dynosam_ros/MultiSync.hpp"
 #include "dynosam_ros/adaptors/ImuMeasurementAdaptor.hpp"
-#include "message_filters/subscriber.hpp"
-#include "message_filters/sync_policies/exact_time.hpp"
-#include "message_filters/synchronizer.hpp"
 #include "rclcpp/node.hpp"
 #include "rclcpp/node_options.hpp"
 #include "sensor_msgs/msg/image.hpp"
@@ -103,28 +100,26 @@ class OnlineDataProviderRos : public DataProviderRos {
   void connectImages();
   void connectImu();
 
-  void setMultiImageSyncFromParams();
+  // using SyncPolicy = message_filters::sync_policies::ExactTime<
+  //     sensor_msgs::msg::Image, sensor_msgs::msg::Image,
+  //     sensor_msgs::msg::Image, sensor_msgs::msg::Image>;
 
-  using SyncPolicy = message_filters::sync_policies::ExactTime<
-      sensor_msgs::msg::Image, sensor_msgs::msg::Image, sensor_msgs::msg::Image,
-      sensor_msgs::msg::Image>;
-
-  void imageSyncCallback(
-      const sensor_msgs::msg::Image::ConstSharedPtr &rgb_msg,
-      const sensor_msgs::msg::Image::ConstSharedPtr &depth_msg,
-      const sensor_msgs::msg::Image::ConstSharedPtr &flow_msg,
-      const sensor_msgs::msg::Image::ConstSharedPtr &mask_msg);
+  // void imageSyncCallback(
+  //     const sensor_msgs::msg::Image::ConstSharedPtr &rgb_msg,
+  //     const sensor_msgs::msg::Image::ConstSharedPtr &depth_msg,
+  //     const sensor_msgs::msg::Image::ConstSharedPtr &flow_msg,
+  //     const sensor_msgs::msg::Image::ConstSharedPtr &mask_msg);
 
  private:
   FrameId frame_id_;
 
-  message_filters::Subscriber<sensor_msgs::msg::Image> rgb_image_sub_;
-  message_filters::Subscriber<sensor_msgs::msg::Image> depth_image_sub_;
-  message_filters::Subscriber<sensor_msgs::msg::Image> flow_image_sub_;
-  message_filters::Subscriber<sensor_msgs::msg::Image> mask_image_sub_;
+  // message_filters::Subscriber<sensor_msgs::msg::Image> rgb_image_sub_;
+  // message_filters::Subscriber<sensor_msgs::msg::Image> depth_image_sub_;
+  // message_filters::Subscriber<sensor_msgs::msg::Image> flow_image_sub_;
+  // message_filters::Subscriber<sensor_msgs::msg::Image> mask_image_sub_;
 
-  std::shared_ptr<message_filters::Synchronizer<SyncPolicy>> sync_;
-  // MultiImageSyncBase::Ptr image_subscriber_;
+  // std::shared_ptr<message_filters::Synchronizer<SyncPolicy>> sync_;
+  MultiSyncBase::Ptr image_subscriber_;
 
   rclcpp::CallbackGroup::SharedPtr imu_callback_group_;
   using ImuAdaptedType =

@@ -104,7 +104,7 @@ void FeatureContainer::removeByObjectId(ObjectId object_id) {
     this->remove(tracklet_id);
   }
 
-  // TODO: remove from object_feature_map_
+  // remove from object_feature_map_
   object_feature_map_.erase(object_id);
 }
 
@@ -176,6 +176,24 @@ FeatureContainer::FilterIterator FeatureContainer::beginUsable() const {
   FeatureContainer& t = const_cast<FeatureContainer&>(*this);
   return FilterIterator(
       t, [](const Feature::Ptr& f) -> bool { return Feature::IsUsable(f); });
+}
+
+FeatureContainer::ObjectToFeatureMap::iterator
+FeatureContainer::beginObjectIterator() {
+  return object_feature_map_.begin();
+}
+FeatureContainer::ObjectToFeatureMap::iterator
+FeatureContainer::endObjectIterator() {
+  return object_feature_map_.end();
+}
+
+FeatureContainer::ObjectToFeatureMap::const_iterator
+FeatureContainer::beginObjectIterator() const {
+  return object_feature_map_.begin();
+}
+FeatureContainer::ObjectToFeatureMap::const_iterator
+FeatureContainer::endObjectIterator() const {
+  return object_feature_map_.end();
 }
 
 // TODO: else if logic needs test!!

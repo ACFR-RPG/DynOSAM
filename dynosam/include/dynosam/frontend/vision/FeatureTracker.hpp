@@ -64,7 +64,6 @@ class FeatureTracker : public FeatureTrackerBase {
   // this data? Put in frame or get as function?
   Frame::Ptr track(FrameId frame_id, Timestamp timestamp,
                    const ImageContainer& image_container,
-                   std::set<ObjectId>& object_keyframes,
                    const std::optional<gtsam::Rot3>& R_km1_k = {});
 
   bool stereoTrack(FeaturePtrs& stereo_features,

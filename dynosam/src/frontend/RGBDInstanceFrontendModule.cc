@@ -104,10 +104,8 @@ FrontendModule::SpinReturn RGBDInstanceFrontendModule::boostrapSpin(
     FrontendInputPacketBase::ConstPtr input) {
   ImageContainer::Ptr image_container = input->image_container_;
 
-  std::set<ObjectId> keyframed_objects;
   Frame::Ptr frame = tracker_->track(input->getFrameId(), input->getTimestamp(),
-                                     *image_container, keyframed_objects);
-  (void)keyframed_objects;
+                                     *image_container);
   CHECK(frame->updateDepths());
 
   return {State::Nominal, nullptr};
@@ -135,10 +133,8 @@ FrontendModule::SpinReturn RGBDInstanceFrontendModule::nominalSpin(
         previous_nav_state_.attitude().inverse() * nav_state_.attitude();
   }
 
-  std::set<ObjectId> keyframed_objects;
-  Frame::Ptr frame =
-      tracker_->track(input->getFrameId(), input->getTimestamp(),
-                      *image_container, keyframed_objects, R_curr_ref);
+  Frame::Ptr frame = tracker_->track(input->getFrameId(), input->getTimestamp(),
+                                     *image_container, R_curr_ref);
 
   Frame::Ptr previous_frame = tracker_->getPreviousFrame();
   CHECK(previous_frame);

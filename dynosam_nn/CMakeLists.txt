@@ -16,7 +16,7 @@ find_package(ament_cmake_python REQUIRED)
 find_package(ament_index_cpp REQUIRED)
 find_package(pybind11 REQUIRED)
 find_package(Python3 3.10 COMPONENTS Interpreter Development REQUIRED)
-find_package(Boost COMPONENTS python3 numpy3 REQUIRED)
+find_package(Boost REQUIRED python3 numpy3)
 
 find_package(cv_bridge REQUIRED)
 find_package(image_transport REQUIRED)
@@ -24,12 +24,13 @@ find_package(rclcpp REQUIRED)
 find_package(sensor_msgs REQUIRED)
 
 
-
 # setup targets
 include_directories(
   include
   ${dynosam_common_INCLUDE_DIRS}
   ${ament_index_cpp_INCLUDE_DIRS}
+  ${Python3_INCLUDE_DIRS}
+  ${Boost_INCLUDE_DIRS}
 )
 
 add_library(${PROJECT_NAME} SHARED
@@ -41,13 +42,19 @@ add_library(${PROJECT_NAME} SHARED
 
 
 target_link_libraries(${PROJECT_NAME}
-  PUBLIC
-   ${Boost_LIBRARIES}
+PUBLIC
+  #  ${Boost_LIBRARIES}
+  Boost::python3
+  Boost::numpy3
    ${Python3_LIBRARIES}
    ${ament_index_cpp_TARGETS}
   dynosam_common::dynosam_common
 )
 
+# ament_export_libraries(${PROJECT_NAME}
+#   ${Boost_LIBRARIES}
+#   ${Python3_LIBRARIES}
+# )
 
 target_include_directories(${PROJECT_NAME}
   PUBLIC
@@ -68,8 +75,6 @@ install(DIRECTORY
   DESTINATION share/${PROJECT_NAME}
 )
 
-
-
 install(
   TARGETS ${PROJECT_NAME}
   EXPORT export_${PROJECT_NAME}
@@ -77,6 +82,10 @@ install(
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin
 )
+
+ament_export_targets(export_${PROJECT_NAME} HAS_LIBRARY_TARGET)
+ament_export_include_directories(include)
+ament_export_dependencies(Boost Python3)
 
 add_executable(test_nn nodes/test_nn.cc)
 target_link_libraries(test_nn
@@ -100,9 +109,6 @@ target_link_libraries(image_segmenter_node
 install(TARGETS
   image_segmenter_node
   DESTINATION lib/${PROJECT_NAME})
-
-ament_export_targets(export_${PROJECT_NAME} HAS_LIBRARY_TARGET)
-ament_export_include_directories(include)
 
 
 
@@ -128,4 +134,6 @@ install(
 #install python scripts/modules
 ament_python_install_package(${PROJECT_NAME}_py)
 
-ament_package()
+# so boost components can be found correctly
+# https://robotics.stackexchange.com/questions/93010/ament-export-dependenciesboost-not-working
+ament_package(CONFIG_EXTRAS "cmake/ConfigExtras.cmake")

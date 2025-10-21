@@ -86,7 +86,9 @@ bp::dict makeKwargs(const PyObjectDetectorWrapper::Kwargs& args) {
 PyObjectDetectorWrapper::PyObjectDetectorWrapper(
     const std::string& package, const std::string& engine_class,
     const Kwargs& args) {
-  PyGILGuard guard;
+  // NOTE: not wrapped in PyGILGuard becuase we initalise the PythonInterepter
+  // inside this constructor and PyGILGuard can only be used after initalisation
+  //  PyGILGuard guard;
   try {
     // Initialize Python and NumPy if needed.
     if (!Py_IsInitialized()) {
@@ -94,7 +96,7 @@ PyObjectDetectorWrapper::PyObjectDetectorWrapper(
     }
     np::initialize();
 
-    google::InitGoogleLogging("YOLODetectionEngine");
+    // google::InitGoogleLogging("YOLODetectionEngine");
 
     LOG(INFO) << "Initalising PyObjectDetectorWarpper with package: " << package
               << ", engine class: " << engine_class;
@@ -121,12 +123,15 @@ PyObjectDetectorWrapper::PyObjectDetectorWrapper(
 }
 
 PyObjectDetectorWrapper::~PyObjectDetectorWrapper() {
-  PyGILGuard guard;
-  try {
-    engine_.attr("on_destruction")();
-  } catch (bp::error_already_set&) {
-    PyErr_Print();
+  {
+    PyGILGuard guard;
+    try {
+      engine_.attr("on_destruction")();
+    } catch (bp::error_already_set&) {
+      PyErr_Print();
+    }
   }
+  Py_FinalizeEx();
 }
 
 ObjectDetectionEngine::Ptr PyObjectDetectorWrapper::CreateYoloDetector() {
@@ -136,6 +141,15 @@ ObjectDetectionEngine::Ptr PyObjectDetectorWrapper::CreateYoloDetector() {
   kwargs["half"] = true;
   return std::make_shared<PyObjectDetectorWrapper>(
       "dynosam_nn_py", "YOLODetectionEngine", kwargs);
+}
+
+ObjectDetectionEngine::Ptr PyObjectDetectorWrapper::CreateRTDETRDetector() {
+  Kwargs kwargs;
+  kwargs["verbose"] = false;
+  kwargs["agnostic_nms"] = true;
+  kwargs["half"] = true;
+  return std::make_shared<PyObjectDetectorWrapper>(
+      "dynosam_nn_py", "RTDETRDetectionEngine", kwargs);
 }
 
 ObjectDetectionResult PyObjectDetectorWrapper::process(const cv::Mat& image) {

@@ -443,6 +443,9 @@ class FeatureContainer {
  public:
   using TrackletToFeatureMap = std::unordered_map<TrackletId, Feature::Ptr>;
 
+  using ObjectToFeatureMap =
+      FastUnorderedMap<ObjectId, std::unordered_set<TrackletId>>;
+
   /**
    * @brief Internal iterator type allowing iteration over the features directly
    * e.g for(Feature::Ptr : container). This type satisfies constraints for a
@@ -645,6 +648,12 @@ class FeatureContainer {
   FilterIterator beginUsable();
   FilterIterator beginUsable() const;
 
+  ObjectToFeatureMap::iterator beginObjectIterator();
+  ObjectToFeatureMap::iterator endObjectIterator();
+
+  ObjectToFeatureMap::const_iterator beginObjectIterator() const;
+  ObjectToFeatureMap::const_iterator endObjectIterator() const;
+
   /**
    * @brief Converts the keypoints of all features in the container to
    * cv::Point2f representation. This makes them compatible with OpenCV
@@ -664,9 +673,6 @@ class FeatureContainer {
 
  private:
   TrackletToFeatureMap feature_map_;
-
-  using ObjectToFeatureMap =
-      FastUnorderedMap<ObjectId, std::unordered_set<TrackletId>>;
   ObjectToFeatureMap object_feature_map_;
 };
 

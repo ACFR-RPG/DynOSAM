@@ -57,16 +57,16 @@ class Frame {
   FeatureContainer static_features_;
   FeatureContainer dynamic_features_;
 
+  //! Objects that required new detection/sampling this frame.
+  ObjectIds retracked_objects_;
+
   std::optional<FeatureTrackerInfo>
       tracking_info_;  //! information from the tracker that was used to created
                        //! this frame
 
-  //! Depricate as unused!
-  static ObjectId global_object_id;
-
   // semantic instance label to object observation (by the actual observations
   // in the image) set in constructor
-  std::map<ObjectId, DynamicObjectObservation> object_observations_;
+  std::map<ObjectId, SingleDetectionResult> object_observations_;
   MotionEstimateMap
       motion_estimates_;  // map of object ids to object motions that take the
                           // object from k-1 to k in W. Updated in the frontend
@@ -76,7 +76,7 @@ class Frame {
         const ImageContainer& image_container,
         const FeatureContainer& static_features,
         const FeatureContainer& dynamic_features,
-        const std::map<ObjectId, DynamicObjectObservation>& object_observations,
+        const std::map<ObjectId, SingleDetectionResult>& object_observations,
         std::optional<FeatureTrackerInfo> tracking_info = {});
 
   Frame(FrameId frame_id, Timestamp timestamp, Camera::Ptr camera,
@@ -98,11 +98,11 @@ class Frame {
    */
   const gtsam::Pose3& getPose() const { return T_world_camera_; }
 
-  inline const std::map<ObjectId, DynamicObjectObservation>&
+  inline const std::map<ObjectId, SingleDetectionResult>&
   getObjectObservations() const {
     return object_observations_;
   }
-  inline std::map<ObjectId, DynamicObjectObservation>& getObjectObservations() {
+  inline std::map<ObjectId, SingleDetectionResult>& getObjectObservations() {
     return object_observations_;
   }
 
@@ -260,7 +260,7 @@ class Frame {
   // // also updates all the tracking_labels of the features associated with
   // this
   // // object
-  // void updateObjectTrackingLabel(const DynamicObjectObservation& observation,
+  // void updateObjectTrackingLabel(const SingleDetectionResult& observation,
   //                                ObjectId new_tracking_label);
 
   /**

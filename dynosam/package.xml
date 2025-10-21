@@ -16,6 +16,7 @@
  <depend>dynosam_common</depend>
  <depend>dynosam_cv</depend>
  <depend>dynosam_opt</depend>
+ <depend>dynosam_nn</depend>
 
 
   <depend>rclcpp</depend>

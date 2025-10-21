@@ -42,20 +42,36 @@ struct ObjectDetection {
   cv::Rect bounding_box{};
 };
 
-// TODO: this data structure is really unncessary as it REALLY is only used to
-// indicates which objects we have detected and their bounding boxes which are
-// ONLY used for visualisation!!
-struct DynamicObjectObservation : public ObjectDetection {
-  TrackletIds object_features;  //! Tracklet id's of object features within the
-                                //! frame. Does not indicate usability
+struct SingleDetectionResult : public ObjectDetection {
+  //! Indicates the source of the result
+  //! If detection it means inference (likely a NN was run on an imput image)
+  //! If mask, it means some pre-processing was done and only a tracking mask
+  //! was used to generate this detection result. In this case only the object
+  //! id and bounding box should be used (ie. class_name and confidence will
+  //! likely not be set)
+  enum Source { DETECTION, MASK };
 
-  // cv::Rect bounding_box{};  // reconstructed from the object mask and not
-  //                           // directly from the object features, although
-  //                           all
-  //                           // features should lie in this cv::Rect
+  std::string class_name;
+  float confidence;
+  Source source = Source::MASK;
+};
 
-  inline size_t numFeatures() const { return object_features.size(); }
-  inline bool hasBoundingBox() const { return !bounding_box.empty(); }
+/**
+ * @brief Holds object detection/tracking result
+ *
+ */
+struct ObjectDetectionResult {
+  std::vector<SingleDetectionResult> detections;
+  cv::Mat labelled_mask;
+  cv::Mat input_image;  // Should be a 3 channel RGB image. Should always be set
+
+  cv::Mat colouredMask() const;
+  //! number of detections
+  inline size_t num() const { return detections.size(); }
+  ObjectIds objectIds() const;
+
+  friend std::ostream& operator<<(std::ostream& os,
+                                  const dyno::ObjectDetectionResult& res);
 };
 
 /**
@@ -68,8 +84,6 @@ struct DynamicObjectObservation : public ObjectDetection {
  */
 gtsam::Vector3 calculateBodyMotion(const gtsam::Pose3& w_k_1_H_k,
                                    const gtsam::Pose3& w_L_k_1);
-
-using DynamicObjectObservations = std::vector<DynamicObjectObservation>;
 
 enum PropogateType {
   InitGT,

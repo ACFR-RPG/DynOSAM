@@ -7,25 +7,6 @@
 
 namespace dyno {
 
-struct SingleDetectionResult : public ObjectDetection {
-  std::string class_name;
-  float confidence;
-};
-
-struct ObjectDetectionResult {
-  std::vector<SingleDetectionResult> detections;
-  cv::Mat labelled_mask;
-  cv::Mat input_image;  // Should be a 3 channel RGB image. Should always be set
-
-  cv::Mat colouredMask() const;
-  //! number of detections
-  inline size_t num() const { return detections.size(); }
-  ObjectIds objectIds() const;
-
-  friend std::ostream& operator<<(std::ostream& os,
-                                  const dyno::ObjectDetectionResult& res);
-};
-
 /**
  * @brief Base class for a ObjectDetection network
  *

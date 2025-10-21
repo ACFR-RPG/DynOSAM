@@ -39,14 +39,12 @@
 
 namespace dyno {
 
-ObjectId Frame::global_object_id{1};
-
 Frame::Frame(
     FrameId frame_id, Timestamp timestamp, Camera::Ptr camera,
     const ImageContainer& image_container,
     const FeatureContainer& static_features,
     const FeatureContainer& dynamic_features,
-    const std::map<ObjectId, DynamicObjectObservation>& object_observations,
+    const std::map<ObjectId, SingleDetectionResult>& object_observations,
     std::optional<FeatureTrackerInfo> tracking_info)
     : frame_id_(frame_id),
       timestamp_(timestamp),
@@ -370,7 +368,7 @@ bool Frame::getDynamicCorrespondences(FeaturePairs& correspondences,
     return false;
   }
 
-  // const DynamicObjectObservation& observation =
+  // const SingleDetectionResult& observation =
   // object_observations_.at(object_id);
   // // TODO: need to put back on - if we have motion mask, we should just mark
   // all objects as moving CHECK(observation.marked_as_moving_); const
@@ -487,13 +485,13 @@ void Frame::constructDynamicObservations() {
         << container_to_string(instance_labels);
 
     if (object_observations_.find(object_id) == object_observations_.end()) {
-      DynamicObjectObservation observation;
+      SingleDetectionResult observation;
       observation.object_id = object_id;
       object_observations_[object_id] = observation;
     }
 
-    object_observations_[object_id].object_features.push_back(
-        dynamic_feature->trackletId());
+    // object_observations_[object_id].object_features.push_back(
+    //     dynamic_feature->trackletId());
   }
 
   // now construct image masks from tracking mask
@@ -504,7 +502,7 @@ void Frame::constructDynamicObservations() {
   const cv::Mat& mask = image_container_.objectMotionMask();
   for (auto& object_observation_pair : object_observations_) {
     const ObjectId object_id = object_observation_pair.first;
-    DynamicObjectObservation& obs = object_observation_pair.second;
+    SingleDetectionResult& obs = object_observation_pair.second;
     vision_tools::findObjectBoundingBox(mask, object_id, obs.bounding_box);
   }
 }
@@ -513,7 +511,7 @@ void Frame::constructDynamicObservations() {
 //   auto it = object_observations_.find(instance_label);
 //   CHECK(it != object_observations_.end());
 
-//   DynamicObjectObservation& observation = it->second;
+//   SingleDetectionResult& observation = it->second;
 //   observation.marked_as_moving_ = false;
 //   CHECK(observation.instance_label_ == instance_label);
 //   // go through all features, move them to from dynamic structure and add
@@ -546,7 +544,7 @@ void Frame::constructDynamicObservations() {
 // }
 
 // void Frame::updateObjectTrackingLabel(
-//     const DynamicObjectObservation& observation, ObjectId new_tracking_label)
+//     const SingleDetectionResult& observation, ObjectId new_tracking_label)
 //     {
 //   auto it = object_observations_.find(observation.instance_label_);
 //   CHECK(it != object_observations_.end());

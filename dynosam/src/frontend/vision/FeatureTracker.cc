@@ -62,7 +62,6 @@ FeatureTracker::FeatureTracker(const FrontendParams& params, Camera::Ptr camera,
 
 Frame::Ptr FeatureTracker::track(FrameId frame_id, Timestamp timestamp,
                                  const ImageContainer& image_container,
-                                 std::set<ObjectId>& object_keyframes,
                                  const std::optional<gtsam::Rot3>& R_km1_k) {
   // take "copy" of tracking_images which is then given to the frame
   // this will mean that the tracking images (input) are not necessarily the
@@ -118,6 +117,9 @@ Frame::Ptr FeatureTracker::track(FrameId frame_id, Timestamp timestamp,
         scaled_boarder_thickness, kUseAsFeatureDetectionMask);
   }
 
+  // data-structure to handle which objects required re-tracking/sampling
+  std::set<ObjectId> object_keyframes;
+
   auto static_track = [&](FeatureContainer& static_features) {
     VLOG(20) << "Starting static track";
     utils::TimingStatsCollector static_track_timer("static_feature_track");
@@ -159,18 +161,18 @@ Frame::Ptr FeatureTracker::track(FrameId frame_id, Timestamp timestamp,
                                               // to the newly created frame)
 
   // calculate dynamic observations for existing data
-  // TODO: DynamicObjectObservation really does not need the tracklet ids they
+  // TODO: SingleDetectionResult really does not need the tracklet ids they
   // are never actually used!! this prevents the frame from needing to do the
   // same calculations we've alrady done
-  std::map<ObjectId, DynamicObjectObservation> object_observations;
+  std::map<ObjectId, SingleDetectionResult> object_observations;
   for (size_t i = 0; i < boundary_mask_result.objects_detected.size(); i++) {
     ObjectId object_id = boundary_mask_result.objects_detected.at(i);
     const cv::Rect& bb_detection =
         boundary_mask_result.object_bounding_boxes.at(i);
 
-    DynamicObjectObservation observation;
+    SingleDetectionResult observation;
     observation.object_id = object_id;
-    observation.object_features = dynamic_features.getByObject(object_id);
+    // observation.object_features = dynamic_features.getByObject(object_id);
     observation.bounding_box = bb_detection;
 
     object_observations[object_id] = observation;
@@ -180,6 +182,10 @@ Frame::Ptr FeatureTracker::track(FrameId frame_id, Timestamp timestamp,
   auto new_frame = std::make_shared<Frame>(
       frame_id, timestamp, camera_, input_images, static_features,
       dynamic_features, object_observations, info_);
+
+  // update tracking/sampling information for dynamic obejcts
+  new_frame->retracked_objects_ =
+      ObjectIds(object_keyframes.begin(), object_keyframes.end());
 
   // update depth threshold information
   new_frame->setMaxBackgroundDepth(frontend_params_.max_background_depth);

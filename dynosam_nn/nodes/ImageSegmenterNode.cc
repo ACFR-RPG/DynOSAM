@@ -29,10 +29,13 @@ class ImageSegmenterNode : public rclcpp::Node {
       // Convert to OpenCV image (BGR8)
       cv::Mat frame = cv_bridge::toCvShare(msg, "bgr8")->image;
 
+      cv::Mat resized;
+      cv::resize(frame, resized, cv::Size(640, 480), 0, 0, cv::INTER_LINEAR);
+
       // Print image info
-      RCLCPP_INFO(this->get_logger(), "Received image %dx%d", frame.cols,
-                  frame.rows);
-      auto r = engine_->process(frame);
+      RCLCPP_INFO(this->get_logger(), "Received image %dx%d", resized.cols,
+                  resized.rows);
+      auto r = engine_->process(resized);
 
       // LOG(INFO) << r;
 
@@ -51,7 +54,7 @@ class ImageSegmenterNode : public rclcpp::Node {
 
 int main(int argc, char **argv) {
   rclcpp::init(argc, argv);
-  Py_Initialize();
+  // Py_Initialize();
   {
     auto node = std::make_shared<ImageSegmenterNode>();
     FLAGS_logtostderr = 1;
@@ -62,6 +65,6 @@ int main(int argc, char **argv) {
   }
   rclcpp::shutdown();
   // Finalize the Python interpreter.
-  Py_FinalizeEx();
+  // Py_FinalizeEx();
   return 0;
 }

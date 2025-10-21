@@ -20,6 +20,7 @@ include(FetchContent)
 
 set(WITH_MPI OFF CACHE BOOL "Disable MPI in PCL")
 
+
 find_package(ament_cmake REQUIRED)
 find_package(ament_index_cpp REQUIRED)
 find_package(rclcpp REQUIRED)
@@ -28,24 +29,8 @@ find_package(sensor_msgs REQUIRED)
 find_package(dynosam_common REQUIRED)
 find_package(dynosam_cv REQUIRED)
 find_package(dynosam_opt REQUIRED)
-# find_package(OpenCV REQUIRED)
-# find_package(opengv REQUIRED)
-# find_package(GTSAM REQUIRED)
-# find_package(eigen3_cmake_module REQUIRED)
-# find_package(Eigen3 REQUIRED)
-# find_package(PCL REQUIRED COMPONENTS common io filters features)
-# find_package(TBB REQUIRED) # should be packaged with GTSAM
-# find_package(nlohmann_json 3.11.3 REQUIRED)
-# find_package(config_utilities REQUIRED)
+find_package(dynosam_nn REQUIRED)
 
-
-find_package(Boost REQUIRED)
-if(NOT TARGET Boost::boost)
-  add_library(Boost::boost INTERFACE IMPORTED)
-  set_target_properties(Boost::boost PROPERTIES
-  INTERFACE_LINK_LIBRARIES "${Boost_LIBRARIES}"
-  INTERFACE_INCLUDE_DIRECTORIES "${Boost_INCLUDE_DIRS}")
-endif()
 
 
 include(VerifyGtsamConfig)
@@ -61,6 +46,7 @@ include_directories(
   ${dynosam_common_INCLUDE_DIRS}
   ${dynosam_cv_INCLUDE_DIRS}
   ${dynosam_opt_INCLUDE_DIRS}
+  ${dynosam_nn_INCLUDE_DIRS}
   ${rclcpp_INCLUDE_DIRS}
   ${EIGEN3_INCLUDE_DIRS}
   ${OpenCV_INCLUDE_DIRS}
@@ -154,6 +140,7 @@ target_link_libraries(${PROJECT_NAME}
   dynosam_common::dynosam_common
   dynosam_cv::dynosam_cv
   dynosam_opt::dynosam_opt
+  dynosam_nn::dynosam_nn
   # rclcpp::rclcpp
   # opengv
   # nlohmann_json::nlohmann_json
@@ -192,6 +179,7 @@ ament_export_libraries(${PROJECT_NAME}
   dynosam_common::dynosam_common
   dynosam_cv::dynosam_cv
   dynosam_opt::dynosam_opt
+  dynosam_nn::dynosam_nn
 )
 
 
@@ -210,6 +198,7 @@ set(DYNO_EXPORT_DEPS
   dynosam_common
   dynosam_cv
   dynosam_opt
+  dynosam_nn
 )
 
 
