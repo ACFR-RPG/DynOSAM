@@ -9,3 +9,4 @@
 
 ## Details
 The OpenCV/Numpy converion code was taken verbatum from https://gitverse.ru/githubcopy/cvnp/content/master
+Much of the TensorRT code and structure of the Model class was taken from https://github.com/MIT-SPARK/semantic_inference

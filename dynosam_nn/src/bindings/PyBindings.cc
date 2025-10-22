@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "dynosam_common/utils/OpenCVUtils.hpp"
+#include "dynosam_nn/ModelConfig.hpp"
 #include "dynosam_nn/ObjectDetector.hpp"
 #include "dynosam_nn/bindings/PyBoostWrapper.hpp"
 #include "dynosam_nn/bindings/cvnp.hpp"

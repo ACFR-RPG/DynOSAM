@@ -10,6 +10,8 @@ endif()
 
 set(CMAKE_CXX_STANDARD 17)
 
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+
 find_package(dynosam_common REQUIRED)
 find_package(cv_bridge REQUIRED)
 find_package(ament_cmake_python REQUIRED)
@@ -23,6 +25,21 @@ find_package(image_transport REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(sensor_msgs REQUIRED)
 
+option(DYNOSAM_NN_USE_TRT "Build with TensorRT" ON)
+
+find_package(CUDAToolkit)
+find_package(TensorRT COMPONENTS onnxparser infer_plugin)
+
+set(ENABLE_TENSORRT_CXX_VALUE 1)
+if(DYNOSAM_NN_USE_TRT AND (NOT CUDAToolkit_FOUND OR NOT TensorRT_FOUND))
+  message(WARNING "TensorRT is required for inference to run!"
+                  " Follow the install instructions (if possible) to enable inference"
+  )
+  set(ENABLE_TENSORRT_CXX_VALUE 0)
+elseif(NOT DYNOSAM_NN_USE_TRT)
+  message(STATUS "Disabling TensorRT! Inference will not work!")
+  set(ENABLE_TENSORRT_CXX_VALUE 0)
+endif()
 
 # setup targets
 include_directories(
@@ -31,11 +48,15 @@ include_directories(
   ${ament_index_cpp_INCLUDE_DIRS}
   ${Python3_INCLUDE_DIRS}
   ${Boost_INCLUDE_DIRS}
+  ${CUDAToolkit_INCLUDE_DIRS}
 )
 
 add_library(${PROJECT_NAME} SHARED
   src/PyObjectDetector.cc
   src/ObjectDetector.cc
+  src/TrtUtilities.cc
+  src/ModelConfig.cc
+
   src/bindings/PyBoostWrapper.cc
 )
 
@@ -49,14 +70,15 @@ PUBLIC
    ${Python3_LIBRARIES}
    ${ament_index_cpp_TARGETS}
   dynosam_common::dynosam_common
+PRIVATE
+  TensorRT::TensorRT
+  CUDA::cudart
 )
 
-# ament_export_libraries(${PROJECT_NAME}
-#   ${Boost_LIBRARIES}
-#   ${Python3_LIBRARIES}
-# )
-
 target_include_directories(${PROJECT_NAME}
+  PRIVATE
+    ${TENSORRT_INCLUDE_DIRS}
+    ${CUDAToolkit_INCLUDE_DIRS}
   PUBLIC
     ${Boost_INCLUDE_DIRS}
     ${Python3_INCLUDE_DIRS}
@@ -104,6 +126,7 @@ target_link_libraries(image_segmenter_node
   image_transport::image_transport
   sensor_msgs::sensor_msgs_library
   cv_bridge::cv_bridge
+  CUDA::cudart
 )
 
 install(TARGETS
@@ -136,4 +159,5 @@ ament_python_install_package(${PROJECT_NAME}_py)
 
 # so boost components can be found correctly
 # https://robotics.stackexchange.com/questions/93010/ament-export-dependenciesboost-not-working
+# TODO: honestly should try and make boost and Python private: there is no need to export them!!
 ament_package(CONFIG_EXTRAS "cmake/ConfigExtras.cmake")
