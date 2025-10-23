@@ -40,6 +40,8 @@
 #include <fstream>
 #include <map>
 
+#include "dynosam_common/Exceptions.hpp"
+
 // #include "semantic_inference/logging.h"
 
 namespace dyno {
@@ -59,6 +61,104 @@ Severity stringToSeverity(const std::string& severity) {
       {"VERBOSE", Severity::kVERBOSE}};
   auto iter = level_map.find(severity);
   return iter == level_map.end() ? Severity::kINFO : iter->second;
+}
+
+int TensorInfo::size() const {
+  int total_size = 1;
+  for (int i = 0; i < dims.nbDims; ++i) {
+    auto dim = dims.d[i];
+    // one of the dimensions is dynamic and therefore cannot calculate size
+    if (dim < 0) {
+      return -1;
+    }
+    total_size *= static_cast<int>(dim);
+  }
+  // assert positive
+  CHECK_GT(total_size, 0);
+  return total_size;
+}
+
+int TensorInfo::isDynamic() const { return dyno::isDynamic(dims); }
+
+std::ostream& operator<<(std::ostream& out, const TensorInfo& info) {
+  out << "<name=" << info.name << ", layout=" << toString(info.dims) << " ("
+      << toString(info.dtype) << ")>";
+  return out;
+}
+
+std::optional<ImageTensorInfo::Shape> getShapeFromDimsHelper(
+    const nvinfer1::Dims& dims) {
+  // expect something in the form [1 x C X H X W] likely from pytorch/tensorrt
+  // but also maybe [1 x W X H X C] or even just [W X H X C]]
+  if (dims.nbDims < 3) {
+    return {};
+  }
+
+  const auto start = dims.nbDims - 3;
+  const auto end = dims.nbDims - 1;
+
+  // channels will either be the first one or the last one (which indicates CHW
+  // or HWC order)
+  const bool is_color = dims.d[start] == 3 || dims.d[end] == 3;
+  // if is colour the number of channels is 3 otherwise 1
+  const int expected_channels = is_color ? 3 : 1;
+  // if the first dimension is either 1 or 3 (ie channels)
+  // if not then we assume W X H X C
+  const bool chw_order = dims.d[start] == expected_channels;
+
+  ImageTensorInfo::Shape shape;
+  shape.chw_order = chw_order;
+  if (shape.chw_order) {
+    shape.height = dims.d[start + 1];
+    shape.width = dims.d[start + 2];
+    shape.channels = dims.d[start];
+  } else {
+    shape.height = dims.d[start];
+    shape.width = dims.d[start + 1];
+    shape.channels = dims.d[start + 2];
+  }
+  return shape;
+}
+
+ImageTensorInfo::ImageTensorInfo(const TensorInfo& info) {
+  static_cast<TensorInfo&>(*this) = info;
+  auto maybe_shape = getShapeFromDimsHelper(dims);
+  if (!maybe_shape) {
+    DYNO_THROW_MSG(DynosamException)
+        << "ImageTensorInfo is not a valid image with info " << info;
+    throw;
+  }
+  shape_ = maybe_shape.value();
+}
+
+ImageTensorInfo& ImageTensorInfo::operator=(const TensorInfo& info) {
+  if (this != &info) {
+    ImageTensorInfo image_info(info);
+    std::swap(*this, image_info);
+  }
+  return *this;
+}
+
+std::ostream& operator<<(std::ostream& out,
+                         const ImageTensorInfo::Shape& shape) {
+  out << "w= " << shape.width << " h= " << shape.height
+      << " c=" << shape.channels.value_or(-1)
+      << " chw_order= " << std::boolalpha << shape.chw_order;
+  return out;
+}
+std::ostream& operator<<(std::ostream& out, const ImageTensorInfo& info) {
+  out << static_cast<const TensorInfo&>(info) << ", shape: " << info.shape();
+  return out;
+}
+
+bool isDynamic(const nvinfer1::Dims& dims) {
+  for (int i = 0; i < dims.nbDims; ++i) {
+    if (dims.d[i] < 0) {
+      return true;
+    }
+  }
+
+  return false;
 }
 
 class LoggingShim : public nvinfer1::ILogger {
@@ -130,57 +230,97 @@ void CudaMemoryManager::Delete::operator()(void* object) {
   }
 }
 
-Shape Shape::updateFrom(const cv::Mat& input) {
-  int new_width = width == -1 ? input.cols : width;
-  int new_height = height == -1 ? input.rows : height;
-  return {new_width, new_height, channels, chw_order};
-}
-
-nvinfer1::Dims Shape::dims() const {
-  return chw_order ? nvinfer1::Dims3(channels.value_or(1), height, width)
-                   : nvinfer1::Dims3(height, width, channels.value_or(1));
-}
-
-size_t Shape::numel() const {
-  if (width == -1 || height == -1) {
-    return 0;
-  }
-
-  return width * height * channels.value_or(1);
-}
-
-bool Shape::operator==(const Shape& other) const {
-  return other.width == width && other.height == height &&
-         other.channels == channels;
-}
-
-bool ImageMemoryPair::updateShape(const Shape& new_shape) {
-  if (new_shape.width == -1 || new_shape.height == -1) {
-    // LOG(ERROR) << "Cannot create matrices with unspecified sizes!";
-    return false;
-  }
-
-  if (shape == new_shape) {
-    return true;
-  }
-
-  shape = new_shape;
-
-  std::vector<int> dims;
-  if (shape.chw_order) {
-    dims = {shape.channels.value_or(1), shape.height, shape.width};
+TRTEngine::TRTEngine(const ModelConfig& config)
+    : runtime_(getRuntime(config.log_severity)),
+      engine_(deserializeEngine(*runtime_, config.enginePath())) {
+  if (!engine_) {
+    LOG(WARNING) << "Failed buildong engine file rebuilding...";
+    engine_ = buildEngineFromOnnx(config, *runtime_);
+    LOG(INFO) << "Finished building engine";
+    CHECK(engine_);
   } else {
-    dims = {shape.height, shape.width, shape.channels.value_or(1)};
+    LOG(INFO) << "Loaded engine file";
   }
 
-  // this is not relevant for us!!
-  host_image = cv::Mat(dims, CV_32FC1);
-  device_image.reset(
-      reinterpret_cast<float*>(CudaMemoryManager::alloc(size())));
-  return true;
+  if (!engine_) {
+    LOG(ERROR) << "Building engine from onnx failed!";
+    throw std::runtime_error("failed to load or build engine");
+  }
+
+  context_.reset(engine_->createExecutionContext());
+  if (!context_) {
+    LOG(ERROR) << "Failed to create execution context";
+    throw std::runtime_error("failed to set up trt context");
+  }
+
+  if (cudaStreamCreate(&stream_) != cudaSuccess) {
+    LOG(ERROR) << "Creating cuda stream failed!";
+    throw std::runtime_error("failed to set up cuda stream");
+  } else {
+    LOG(INFO) << "CUDA stream started";
+  }
+
+  initialized_ = true;
 }
 
-size_t ImageMemoryPair::size() const { return shape.numel() * sizeof(float); }
+TRTEngine::~TRTEngine() {
+  if (initialized_) {
+    cudaStreamDestroy(stream_);
+  }
+}
+
+// Shape Shape::updateFrom(const cv::Mat& input) {
+//   int new_width = width == -1 ? input.cols : width;
+//   int new_height = height == -1 ? input.rows : height;
+//   return {new_width, new_height, channels, chw_order};
+// }
+
+// nvinfer1::Dims Shape::dims() const {
+//   return chw_order ? nvinfer1::Dims3(channels.value_or(1), height, width)
+//                    : nvinfer1::Dims3(height, width, channels.value_or(1));
+// }
+
+// size_t Shape::numel() const {
+//   if (width == -1 || height == -1) {
+//     return 0;
+//   }
+
+//   return width * height * channels.value_or(1);
+// }
+
+// bool Shape::operator==(const Shape& other) const {
+//   return other.width == width && other.height == height &&
+//          other.channels == channels;
+// }
+
+// bool ImageMemoryPair::updateShape(const Shape& new_shape) {
+//   if (new_shape.width == -1 || new_shape.height == -1) {
+//     // LOG(ERROR) << "Cannot create matrices with unspecified sizes!";
+//     return false;
+//   }
+
+//   if (shape == new_shape) {
+//     return true;
+//   }
+
+//   shape = new_shape;
+
+//   std::vector<int> dims;
+//   if (shape.chw_order) {
+//     dims = {shape.channels.value_or(1), shape.height, shape.width};
+//   } else {
+//     dims = {shape.height, shape.width, shape.channels.value_or(1)};
+//   }
+
+//   // this is not relevant for us!!
+//   host_image = cv::Mat(dims, CV_32FC1);
+//   device_image.reset(
+//       reinterpret_cast<float*>(CudaMemoryManager::alloc(size())));
+//   return true;
+// }
+
+// size_t ImageMemoryPair::size() const { return shape.numel() * sizeof(float);
+// }
 
 std::string toString(const nvinfer1::Dims& dims) {
   std::stringstream ss;
@@ -260,16 +400,6 @@ EnginePtr deserializeEngine(IRuntime& runtime,
   return engine;
 }
 
-inline bool isDynamic(const nvinfer1::Dims& dims) {
-  for (int i = 0; i < dims.nbDims; ++i) {
-    if (dims.d[i] < 0) {
-      return true;
-    }
-  }
-
-  return false;
-}
-
 inline nvinfer1::Dims replaceDynamic(const nvinfer1::Dims& dims,
                                      int64_t new_value) {
   auto new_dims = dims;
@@ -281,34 +411,6 @@ inline nvinfer1::Dims replaceDynamic(const nvinfer1::Dims& dims,
 
   return new_dims;
 }
-
-// EnginePtr buildEngineFromEngine(const ModelConfig& model_config,
-// nvinfer1::IRuntime& runtime) {
-//   const auto model_path = model_config.enginePath();
-//   LOG(INFO) << "Building engine from " << model_path << "...";
-
-//   // 2. Read the engine file into a buffer
-//   std::ifstream engineFile(model_path, std::ios::binary);
-//   if (!engineFile) {
-//       LOG(ERROR) << "Failed to open engine file: " << model_path;
-//       return nullptr;
-//   }
-//   model_path.seekg(0, std::ios::end);
-//   long int fsize = model_path.tellg();
-//   model_path.seekg(0, std::ios::beg);
-//   std::vector<char> engineData(fsize);
-//   model_path.read(engineData.data(), fsize);
-//   model_path.close();
-
-//   // 3. Deserialize the engine
-//   EnginePtr engine(runtime.deserializeCudaEngine(engineData.data(), fsize));
-//   if (!engine) {
-//       LOG(ERROR) << "Failed to deserialize CUDA engine.";
-//       // runtime->destroy();
-//       return nullptr;
-//   }
-//   return engine;
-// }
 
 EnginePtr buildEngineFromOnnx(const ModelConfig& model_config,
                               IRuntime& runtime) {

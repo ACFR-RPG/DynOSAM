@@ -56,6 +56,7 @@ add_library(${PROJECT_NAME} SHARED
   src/ObjectDetector.cc
   src/TrtUtilities.cc
   src/ModelConfig.cc
+  src/YoloObjectDetector.cc
 
   src/bindings/PyBoostWrapper.cc
 )

@@ -10,6 +10,7 @@
 #include "dynosam_nn/ModelConfig.hpp"
 #include "dynosam_nn/PyObjectDetector.hpp"
 #include "dynosam_nn/TrtUtilities.hpp"
+#include "dynosam_nn/YoloObjectDetector.hpp"
 #include "image_transport/image_transport.hpp"
 #include "rclcpp/rclcpp.hpp"
 #include "sensor_msgs/image_encodings.hpp"
@@ -24,6 +25,8 @@ class Logger : public ILogger {
       std::cout << "[TRT] " << msg << std::endl;
   }
 };
+
+#ifdef FAKE
 
 // trt_utilities
 namespace dyno {
@@ -189,39 +192,6 @@ class ModelInfo {
           }
         }
       }
-
-      //   if (tmode == nvinfer1::TensorIOMode::kINPUT) {
-      //     if (!setIfUnset(info, images_)) {
-      //       LOG(ERROR) << "Multiple outputs detected! Rejecting " << tname;
-      //     } else {
-      //       LOG(INFO) << "info " << info << " for images";
-      //     }
-
-      //     continue;
-      //   }
-
-      //   assert(tmode == nvinfer1::TensorIOMode::kOUTPUT);
-      //   const auto dim_info = getDimInfo(dims);
-      //   if (!dim_info.is_image) {
-      //     SLOG(WARNING) << "Found input tensor with invalid layout: " <<
-      //     info; continue;
-      //   }
-
-      //   if (dim_info.is_color) {
-      //     if (!setIfUnset(info, color_)) {
-      //       SLOG(ERROR) << "Multiple color inputs detect! Rejecting " <<
-      //       tname;
-      //     } else {
-      //       SLOG(DEBUG) << "Set " << info << " for color!";
-      //     }
-      //   } else {
-      //     if (!setIfUnset(info, depth_)) {
-      //       SLOG(ERROR) << "Multiple depth inputs detect! Rejecting " <<
-      //       tname;
-      //     } else {
-      //       SLOG(DEBUG) << "Set " << info << " for depth!";
-      //     }
-      // }
     }
   }
 
@@ -950,13 +920,16 @@ struct Model {
 
 }  // namespace dyno
 
+#endif
+
 class ImageSegmenterNode : public rclcpp::Node {
  public:
   ImageSegmenterNode() : Node("image_subscriber_node") {
     // engine_ = dyno::PyObjectDetectorWrapper::CreateYoloDetector();
     dyno::ModelConfig config;
     config.model_file = "yolov8n-seg.pt";
-    model_ = std::make_unique<dyno::Model>(config);
+    engine_ = std::make_unique<dyno::YoloV8ObjectDetector>(config);
+    // model_ = std::make_unique<dyno::Model>(config);
     // Use image_transport for efficiency (handles compressed images too)
     subscription_ = this->create_subscription<sensor_msgs::msg::Image>(
         "/camera/color/image_rect_color", 10,
@@ -974,7 +947,8 @@ class ImageSegmenterNode : public rclcpp::Node {
       // Convert to OpenCV image (BGR8)
       cv::Mat frame = cv_bridge::toCvShare(msg, "bgr8")->image;
 
-      if (model_) model_->infer(frame);
+      // if (model_) model_->infer(frame);
+      engine_->process(frame);
 
       // cv::Mat resized;
       // cv::resize(frame, resized, cv::Size(640, 480), 0, 0, cv::INTER_LINEAR);
@@ -996,8 +970,8 @@ class ImageSegmenterNode : public rclcpp::Node {
   }
 
   rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr subscription_;
-  // dyno::ObjectDetectionEngine::Ptr engine_;
-  std::unique_ptr<dyno::Model> model_;
+  dyno::ObjectDetectionEngine::UniquePtr engine_;
+  // std::unique_ptr<dyno::Model> model_;
 };
 
 int main(int argc, char** argv) {
@@ -1007,8 +981,6 @@ int main(int argc, char** argv) {
   FLAGS_logtostderr = 1;
   FLAGS_colorlogtostderr = 1;
   FLAGS_log_prefix = 1;
-
-  const int inputH = 640, inputW = 640;
 
   // const std::string enginePath = dyno::getNNWeightsPath() /
   // "yolov8n-seg.engine";
