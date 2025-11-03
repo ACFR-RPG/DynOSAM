@@ -42,7 +42,7 @@ class ObjectTracker {
 
   virtual ~ObjectTracker() = default;
   virtual std::vector<SingleDetectionResult> track(
-      const std::vector<ObjectDetection>& detections, FrameId frame_id) = 0;
+      const std::vector<ObjectDetection>& detections) = 0;
 };
 
 class ByteObjectTracker : public ObjectTracker {
@@ -50,8 +50,7 @@ class ByteObjectTracker : public ObjectTracker {
   // always need 1-to-1 intput/output arguments sizes. If track invalid mark it
   // as such
   std::vector<SingleDetectionResult> track(
-      const std::vector<ObjectDetection>& detections,
-      FrameId frame_id) override;
+      const std::vector<ObjectDetection>& detections) override;
 
  private:
   ::byte_track::ByteTracker impl_tracker_;

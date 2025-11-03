@@ -65,7 +65,6 @@ add_library(${PROJECT_NAME} SHARED
   src/trackers/byte_tracker/lapjv.cc
   src/trackers/byte_tracker/Rect.cc
   src/trackers/byte_tracker/STrack.cc
-
   src/trackers/ObjectTracker.cc
 
   src/bindings/PyBoostWrapper.cc

@@ -32,7 +32,6 @@ struct YoloV8ObjectDetector::Impl {
   bool preprocess(const ImageTensorInfo& input_info, const cv::Mat& rgb,
                   std::vector<float>& processed_vector) {
     const cv::Size required_size = input_info.shape();
-    const cv::Size original_size = rgb.size();
 
     // preprocess image according to YOLO training pre-procesing
     cv::Mat letterbox_image;
@@ -262,7 +261,7 @@ struct YoloV8ObjectDetector::Impl {
 
       binary_detection_masks.push_back(final_binary_mask);
 
-      ObjectDetection detection{final_binary_mask, bounding_box, "NA",
+      ObjectDetection detection{final_binary_mask, bounding_box, class_label,
                                 confidence};
       detections.push_back(detection);
     }
@@ -270,13 +269,8 @@ struct YoloV8ObjectDetector::Impl {
     cv::Mat labelled_mask =
         cv::Mat::zeros(original_size, ObjectDetectionEngine::MaskDType);
 
-    static FrameId frame_id = 0;
-    // track detections
-    // not all dectecions may be valid but we need 1-to-1 input/output to then
-    // associate the detection with the mask
     std::vector<SingleDetectionResult> tracking_result =
-        tracker_->track(detections, ++frame_id);
-    // CHECK_EQ(tracking_result.size(), binary_detection_masks.size());
+        tracker_->track(detections);
 
     // //construct label mask from tracked result
     for (size_t i = 0; i < tracking_result.size(); i++) {
@@ -515,10 +509,11 @@ ObjectDetectionResult YoloV8ObjectDetector::process(const cv::Mat& image) {
   impl_->postprocess(input_info, image, output0_data, output1_data,
                      output0_dims, output1_dims, result);
 
-  return result;
+  result_ = result;
+  return result_;
 }
 
-ObjectDetectionResult YoloV8ObjectDetector::result() const {}
+ObjectDetectionResult YoloV8ObjectDetector::result() const { return result_; }
 
 YoloV8ModelInfo::YoloV8ModelInfo(const nvinfer1::ICudaEngine& engine) {
   auto num_tensors = engine.getNbIOTensors();

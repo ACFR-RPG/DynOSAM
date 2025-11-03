@@ -786,9 +786,6 @@ void FeatureTracker::trackDynamicKLT(
       "dynamic_feature_track_klt.detection");
   tbb::parallel_for_each(
       object_keyframes.begin(), object_keyframes.end(), [&](auto& object_id) {
-        // for (auto object_id : object_keyframes) {
-        LOG(INFO) << "Object requires sampling " << object_id;
-
         cv::Mat obj_mask = (motion_mask == object_id);
         // ignore additonal features from the tracking mask
         cv::Mat combined_mask;

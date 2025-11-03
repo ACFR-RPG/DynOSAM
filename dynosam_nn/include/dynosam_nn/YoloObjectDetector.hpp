@@ -83,6 +83,9 @@ class YoloV8ObjectDetector : public ObjectDetectionEngine, public TRTEngine {
   std::unique_ptr<Impl> impl_;
   YoloV8ModelInfo model_info_;
 
+  //! Latest result set by calling process
+  ObjectDetectionResult result_;
+
   DeviceMemory<float> input_device_ptr_;
   DeviceMemory<float> output0_device_ptr_;
   DeviceMemory<float> output1_device_ptr_;
