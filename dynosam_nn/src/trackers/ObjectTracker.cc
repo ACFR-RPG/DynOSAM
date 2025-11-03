@@ -28,14 +28,39 @@
  *   SOFTWARE.
  */
 
-#pragma once
-
-#include <cstddef>
-#include <vector>
+#include "dynosam_nn/trackers/ObjectTracker.hpp"
 
 namespace dyno {
-namespace byte_track {
-int lapjv_internal(const size_t n, const std::vector<float>& cost,
-                   std::vector<int>& x, std::vector<int>& y);
-}  // namespace byte_track
+
+std::vector<SingleDetectionResult> ByteObjectTracker::track(
+    const std::vector<ObjectDetection>& detections, FrameId frame_id) {
+  std::vector<byte_track::STrackPtr> object_tracks =
+      impl_tracker_.update(detections);
+
+  std::vector<SingleDetectionResult> output;
+  for (size_t i = 0; i < object_tracks.size(); i++) {
+    const auto& object_track = object_tracks.at(i);
+    const byte_track::Rect<float>& filtered_bb = object_track->getRect();
+
+    SingleDetectionResult single_result;
+
+    cv::Rect bb(static_cast<int>(filtered_bb.x()),
+                static_cast<int>(filtered_bb.y()),
+                static_cast<int>(filtered_bb.width()),
+                static_cast<int>(filtered_bb.height()));
+    single_result.bounding_box = bb;
+    single_result.mask = object_track->getMask();
+    //   single_result.class_name = detection.class_name;
+    single_result.confidence = object_track->getScore();
+
+    single_result.object_id = static_cast<ObjectId>(object_track->getTrackId());
+    //   //is this the only indicater we should be using!?
+    single_result.well_tracked = object_track->isActivated();
+
+    output.push_back(single_result);
+  }
+
+  return output;
+}
+
 }  // namespace dyno

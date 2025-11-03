@@ -5,8 +5,8 @@ scene_flow_dist_threshold: 0.5
 # # max_object_depth: 30.0
 # max_object_depth: 20.0
 # max_background_depth: 40.0
-max_background_depth: 500.0
-max_object_depth: 20.0
+max_background_depth: 100.0
+max_object_depth: 25.0
 
 # max_object_depth: 8.0 #indoors
 
@@ -46,14 +46,17 @@ tracker_params:
 
   shrink_row: 0
   shrink_col: 0
-  max_nr_keypoints_before_anms: 800
-  max_features_per_frame: 300
+  max_nr_keypoints_before_anms: 1000
+  max_features_per_frame: 600
   max_feature_track_age: 20
+  min_features_per_frame: 600
+  # This should be wide to get a good spread.
+  # Ideally should be calculated as some function of the input image size
+  min_distance_btw_tracked_and_detected_static_features: 15
 
-  min_features_per_frame: 300
 
-  subpixel_corner_refinement_params: true
-  use_clahe_filter: true
+  # subpixel_corner_refinement_params: true
+  # use_clahe_filter: false
 
   prefer_provided_optical_flow: false
   prefer_provided_object_detection: false

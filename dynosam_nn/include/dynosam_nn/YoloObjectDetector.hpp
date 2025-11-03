@@ -1,10 +1,5 @@
 #pragma once
 
-#include <NvInfer.h>
-#include <NvInferRuntime.h>
-#include <cuda_runtime.h>
-#include <cuda_runtime_api.h>
-
 #include <opencv4/opencv2/opencv.hpp>
 
 #include "dynosam_nn/ModelConfig.hpp"
@@ -12,6 +7,20 @@
 #include "dynosam_nn/TrtUtilities.hpp"
 
 namespace dyno {
+
+struct YoloConfig {
+  //! Minimum confidence needed to consider a bounding box and compared against
+  //! the detection confidence Used in both considering a bounding box, nms and
+  //! in tracking
+  float conf_threshold = 0.5;
+  //! IoU threshold for NMS
+  float nms_threshold = 0.4;
+
+  //! Class labels to include when tracking - all other classes will be excluded
+  //! If empty, all classes will be considered
+  std::vector<std::string> included_classes = {
+      "person", "bicycle", "car", "motorcycle", "bus", "train", "truck"};
+};
 
 class YoloV8ModelInfo {
  public:
@@ -22,6 +31,19 @@ class YoloV8ModelInfo {
   const ImageTensorInfo& input() const { return images_.value(); }
   const TensorInfo& output0() const { return output0_.value(); }
   const TensorInfo& output1() const { return output1_.value(); }
+
+  /**
+   * @brief Constants from model architecture used to access output data
+   *
+   */
+  struct Constants {
+    constexpr static int BoxOffset = 0;
+    constexpr static int ClassConfOffset = 4;
+
+    static int MaskCoeffOffset(int num_classes) {
+      return num_classes + ClassConfOffset;
+    }
+  };
 
  private:
   // T is constructable from TensorInfo
@@ -49,14 +71,13 @@ std::ostream& operator<<(std::ostream& out, const YoloV8ModelInfo& info);
 
 class YoloV8ObjectDetector : public ObjectDetectionEngine, public TRTEngine {
  public:
-  YoloV8ObjectDetector(const ModelConfig& config);
+  YoloV8ObjectDetector(const ModelConfig& config,
+                       const YoloConfig& yolo_config);
   ~YoloV8ObjectDetector();
 
   ObjectDetectionResult process(const cv::Mat& image) override;
-  bool onDestruction() override;
   ObjectDetectionResult result() const override;
 
- private:
  private:
   struct Impl;
   std::unique_ptr<Impl> impl_;

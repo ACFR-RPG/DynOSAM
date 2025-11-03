@@ -14,28 +14,39 @@
 #include "dynosam_nn/bindings/cvnp.hpp"
 
 namespace dyno {
+
+/**
+ * @brief Trampoline class allowing additional python specific virtual functions
+ * to be defined
+ *
+ */
+class PyObjectDetectionEngineTrampoline : public ObjectDetectionEngine {
+ public:
+  using ObjectDetectionEngine::ObjectDetectionEngine;
+  virtual bool onDestruction() = 0;
+};
+
 /**
  * @brief Python Wrapper for ObjectDetectionEngine allowing implementation in
  * pure python. Python classes should inherit directly from this class (i.e not
  * from ObjectDetectionEngine)
  *
  */
-class ObjectDetectorEnginePy : public ObjectDetectionEngine {
+class ObjectDetectorEnginePy : public PyObjectDetectionEngineTrampoline {
  public:
-  using ObjectDetectionEngine::ObjectDetectionEngine;
+  using Base = PyObjectDetectionEngineTrampoline;
+  using Base::Base;
 
   ObjectDetectionResult process(const cv::Mat &image) override {
-    PYBIND11_OVERRIDE_PURE(ObjectDetectionResult, ObjectDetectionEngine,
-                           process, image);
-  }
-
-  bool onDestruction() override {
-    PYBIND11_OVERRIDE_PURE(bool, ObjectDetectionEngine, onDestruction);
+    PYBIND11_OVERRIDE_PURE(ObjectDetectionResult, Base, process, image);
   }
 
   ObjectDetectionResult result() const override {
-    PYBIND11_OVERRIDE_PURE(ObjectDetectionResult, ObjectDetectionEngine,
-                           result);
+    PYBIND11_OVERRIDE_PURE(ObjectDetectionResult, Base, result);
+  }
+
+  bool onDestruction() override {
+    PYBIND11_OVERRIDE_PURE(bool, Base, onDestruction);
   }
 };
 
@@ -45,26 +56,34 @@ class ObjectDetectorEnginePy : public ObjectDetectionEngine {
 PYBIND11_MAKE_OPAQUE(std::vector<dyno::SingleDetectionResult>);
 
 PYBIND11_MODULE(_core, m) {
-  pybind11::class_<dyno::ObjectDetectionEngine, dyno::ObjectDetectorEnginePy>(
-      m, "ObjectDetectionEngine")
+  pybind11::class_<dyno::PyObjectDetectionEngineTrampoline,
+                   dyno::ObjectDetectorEnginePy>(m, "ObjectDetectionEngine")
       .def(pybind11::init<>())  // <-- now fine, trampoline makes it concrete
+      // we need to translate this to a np.dtype (ie. np.int32!!)
+      //  .def_readonly_static("MaskDType",
+      //  &dyno::ObjectDetectionEngine::MaskDType)
       .def("process", &dyno::ObjectDetectionEngine::process)
-      .def("on_destruction", &dyno::ObjectDetectionEngine::onDestruction)
-      .def("mask", &dyno::ObjectDetectionEngine::mask);
+      .def("on_destruction",
+           &dyno::PyObjectDetectionEngineTrampoline::onDestruction)
+      .def("mask", &dyno::ObjectDetectionEngine::mask)
+      .def("coloured_mask", &dyno::ObjectDetectionEngine::colouredMask)
+      .def("result", &dyno::ObjectDetectionEngine::result);
 
   // ObjectDetection
   // NOTE: this class is actaully from the dynosam_common package...
   pybind11::class_<dyno::ObjectDetection>(m, "ObjectDetection")
       .def(pybind11::init<>())
-      .def_readwrite("object_id", &dyno::ObjectDetection::object_id)
-      .def_readwrite("bounding_box", &dyno::ObjectDetection::bounding_box);
+      .def_readwrite("bounding_box", &dyno::ObjectDetection::bounding_box)
+      .def_readwrite("class_name", &dyno::ObjectDetection::class_name)
+      .def_readwrite("confidence", &dyno::ObjectDetection::confidence);
 
   // SingleDetectionResult
   pybind11::class_<dyno::SingleDetectionResult, dyno::ObjectDetection>(
       m, "SingleDetectionResult")
       .def(pybind11::init<>())
-      .def_readwrite("class_name", &dyno::SingleDetectionResult::class_name)
-      .def_readwrite("confidence", &dyno::SingleDetectionResult::confidence);
+      .def_readwrite("object_id", &dyno::SingleDetectionResult::object_id)
+      .def_readwrite("well_tracked", &dyno::SingleDetectionResult::well_tracked)
+      .def("is_valid", &dyno::SingleDetectionResult::isValid);
 
   pybind11::bind_vector<std::vector<dyno::SingleDetectionResult>>(
       m, "SingleDetectionResults");

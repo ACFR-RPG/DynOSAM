@@ -184,11 +184,11 @@ OpticalFlowAndPoseOptimizer::Result OpticalFlowAndPoseOptimizer::optimize(
 
   gtsam::LevenbergMarquardtParams opt_params;
   // for speed
-  opt_params.setMaxIterations(5);
+  opt_params.setMaxIterations(10);
   // this is basically a set of prior looking factors on a pose so we know we
   // need to eliminate the pose last to avoid fill in therefore we use our own
   // custom ordering that has the pose last
-  opt_params.setOrdering(ordering);
+  // opt_params.setOrdering(ordering);
   if (VLOG_IS_ON(200))
     opt_params.verbosity = gtsam::NonlinearOptimizerParams::Verbosity::ERROR;
 

@@ -277,8 +277,7 @@ bool RGBDInstanceFrontendModule::solveCameraMotion(
   } else {
     // TODO: untested
     LOG(FATAL) << "Not tested";
-    // result = motion_solver_.geometricOutlierRejection3d3d(frame_k_1,
-    // frame_k);
+    // result = motion_solver_.geometricOutlierRejection3d3d(frame_k_1,frame_k);
   }
 
   VLOG(15) << (frontend_params.use_ego_motion_pnp ? "3D2D" : "3D3D")

@@ -58,7 +58,7 @@ std::ostream& operator<<(std::ostream& os,
   os << "ObjectDetectionResult:\n";
   os << "  detections (" << res.detections.size() << "):\n";
   for (const auto& det : res.detections) {
-    os << "    id=" << det.object_id << ", class=" << det.class_name
+    os << "    object id=" << det.object_id << ", class=" << det.class_name
        << ", confidence=" << det.confidence << ", bbox=(" << det.bounding_box.x
        << "," << det.bounding_box.y << "," << det.bounding_box.width << ","
        << det.bounding_box.height << ")\n";

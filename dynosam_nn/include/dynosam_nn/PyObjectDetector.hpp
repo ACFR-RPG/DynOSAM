@@ -33,12 +33,11 @@ class PyObjectDetectorWrapper : public ObjectDetectionEngine {
   static ObjectDetectionEngine::Ptr CreateRTDETRDetector();
 
   ObjectDetectionResult process(const cv::Mat& image) override;
-  bool onDestruction() override;
   ObjectDetectionResult result() const override;
 
  private:
-  bp::object
-      engine_;  // The wrapped ObjectDetectionEngine Python Engine instance.
+  //! The wrapped ObjectDetectionEngine Python Engine instance.
+  bp::object engine_;
 };
 
 }  // namespace dyno

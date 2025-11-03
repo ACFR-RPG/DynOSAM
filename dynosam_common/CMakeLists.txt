@@ -66,13 +66,6 @@ add_library(${PROJECT_NAME} SHARED
     src/SharedModuleInfo.cc
     src/SensorModels.cc
 
-    src/byte_tracker/ByteTracker.cc
-    src/byte_tracker/Detection.cc
-    src/byte_tracker/KalmanFilter.cc
-    src/byte_tracker/Lapjv.cc
-    src/byte_tracker/Rect.cc
-    src/byte_tracker/Track.cc
-
     src/utils/OpenCVUtils.cc
     src/utils/GtsamUtils.cc
     src/utils/Spinner.cc

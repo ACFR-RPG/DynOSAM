@@ -378,6 +378,8 @@ void computeObjectMaskBoundaryMaskHelper(
     fill_colour = cv::Scalar(255);
   }
 
+  cv::Mat viz = cv::Mat(mask.size(), CV_8UC3, cv::Scalar(0));
+
   result.objects_detected = get_object_labels();
   // this basically just creates a full mask over the existing masks using the
   // detected contours
@@ -386,8 +388,8 @@ void computeObjectMaskBoundaryMaskHelper(
     // NOTE: if we use the object detection result I guess the discovered
     // rectangle here could be different to detection rectangle!
     cv::Rect detected_rect;
-    vision_tools::findObjectBoundingBox(mask, object_id, detected_rect,
-                                        detected_contours);
+    CHECK(vision_tools::findObjectBoundingBox(mask, object_id, detected_rect,
+                                              detected_contours));
 
     CHECK_LE(object_id, 255);  // works only with uint8 types...
     cv::drawContours(thicc_boarder, detected_contours, -1, object_id,

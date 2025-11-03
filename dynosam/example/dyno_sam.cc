@@ -69,8 +69,8 @@ int main(int argc, char* argv[]) {
   FLAGS_v = 30;
 
   KittiDataLoader::Params params;
-  KittiDataLoader loader("/root/data/vdo_slam/kitti/kitti/0020/", params);
-  // ClusterSlamDataLoader loader("/root/data/cluster_slam/CARLA-L1");
+  KittiDataLoader loader("/root/data/vdo_slam/kitti/kitti/0004/", params);
+  // ClusterSlamDataLoader loader("/root/data/cluster_slam/CARLA-S2");
   // loader.setStartingFrame(600);
   // OMDDataLoader loader(
   //     "/root/data/vdo_slam/omd/omd/swinging_4_unconstrained_stereo/");
@@ -98,7 +98,7 @@ int main(int argc, char* argv[]) {
                          cv::Mat rgb, cv::Mat optical_flow, cv::Mat depth,
                          cv::Mat motion, gtsam::Pose3,
                          GroundTruthInputPacket) -> bool {
-    LOG(INFO) << utils::Statistics::Print();
+    // LOG(INFO) << utils::Statistics::Print();
     // loader.setCallback([&](dyno::FrameId frame_id, dyno::Timestamp timestamp,
     //                        cv::Mat rgb, cv::Mat optical_flow, cv::Mat depth,
     //                        cv::Mat motion, GroundTruthInputPacket,
@@ -151,11 +151,11 @@ int main(int argc, char* argv[]) {
     // cv::imshow("Detection Result", object_detection_result.colouredMask());
 
     ImageContainer image_container(frame_id, timestamp);
-    // image_container.rgb(rgb)
-    //     .depth(depth)
-    //     .opticalFlow(optical_flow)
-    //     .objectMotionMask(object_detection_result.labelled_mask);
-    image_container.rgb(rgb).depth(depth).opticalFlow(optical_flow);
+    image_container.rgb(rgb)
+        .depth(depth)
+        .opticalFlow(optical_flow)
+        .objectMotionMask(motion);
+    // image_container.rgb(rgb).depth(depth).opticalFlow(optical_flow);
     auto frame = tracker->track(frame_id, timestamp, image_container);
     Frame::Ptr previous_frame = tracker->getPreviousFrame();
 

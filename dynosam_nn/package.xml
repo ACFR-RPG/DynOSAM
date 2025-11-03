@@ -12,6 +12,7 @@
 
  <buildtool_depend>ament_cmake</buildtool_depend>
  <depend>dynosam_common</depend>
+ <depend>dynosam_cv</depend>
  <depend>ament_cmake_python</depend>
  <depend>ament_index_cpp</depend>
 

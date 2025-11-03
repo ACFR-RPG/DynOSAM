@@ -269,59 +269,6 @@ TRTEngine::~TRTEngine() {
   }
 }
 
-// Shape Shape::updateFrom(const cv::Mat& input) {
-//   int new_width = width == -1 ? input.cols : width;
-//   int new_height = height == -1 ? input.rows : height;
-//   return {new_width, new_height, channels, chw_order};
-// }
-
-// nvinfer1::Dims Shape::dims() const {
-//   return chw_order ? nvinfer1::Dims3(channels.value_or(1), height, width)
-//                    : nvinfer1::Dims3(height, width, channels.value_or(1));
-// }
-
-// size_t Shape::numel() const {
-//   if (width == -1 || height == -1) {
-//     return 0;
-//   }
-
-//   return width * height * channels.value_or(1);
-// }
-
-// bool Shape::operator==(const Shape& other) const {
-//   return other.width == width && other.height == height &&
-//          other.channels == channels;
-// }
-
-// bool ImageMemoryPair::updateShape(const Shape& new_shape) {
-//   if (new_shape.width == -1 || new_shape.height == -1) {
-//     // LOG(ERROR) << "Cannot create matrices with unspecified sizes!";
-//     return false;
-//   }
-
-//   if (shape == new_shape) {
-//     return true;
-//   }
-
-//   shape = new_shape;
-
-//   std::vector<int> dims;
-//   if (shape.chw_order) {
-//     dims = {shape.channels.value_or(1), shape.height, shape.width};
-//   } else {
-//     dims = {shape.height, shape.width, shape.channels.value_or(1)};
-//   }
-
-//   // this is not relevant for us!!
-//   host_image = cv::Mat(dims, CV_32FC1);
-//   device_image.reset(
-//       reinterpret_cast<float*>(CudaMemoryManager::alloc(size())));
-//   return true;
-// }
-
-// size_t ImageMemoryPair::size() const { return shape.numel() * sizeof(float);
-// }
-
 std::string toString(const nvinfer1::Dims& dims) {
   std::stringstream ss;
   ss << "[";

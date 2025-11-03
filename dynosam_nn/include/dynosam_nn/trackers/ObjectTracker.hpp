@@ -30,60 +30,31 @@
 
 #pragma once
 
-#include <cstddef>
-#include <memory>
-
-#include "dynosam_common/byte_tracker/Detection.hpp"
-#include "dynosam_common/byte_tracker/KalmanFilter.hpp"
-#include "dynosam_common/byte_tracker/Rect.hpp"
-#include "dynosam_common/utils/Macros.hpp"
+#include "dynosam_common/DynamicObjects.hpp"
+#include "dynosam_common/Types.hpp"
+#include "dynosam_nn/trackers/byte_tracker/ByteTracker.hpp"
 
 namespace dyno {
-namespace byte_track {
 
-enum class TrackState {
-  Tracked = 0,
-  Lost = 1,
+class ObjectTracker {
+ public:
+  DYNO_POINTER_TYPEDEFS(ObjectTracker)
+
+  virtual ~ObjectTracker() = default;
+  virtual std::vector<SingleDetectionResult> track(
+      const std::vector<ObjectDetection>& detections, FrameId frame_id) = 0;
 };
 
-class Track {
+class ByteObjectTracker : public ObjectTracker {
  public:
-  DYNO_POINTER_TYPEDEFS(Track)
-
-  Track() = delete;
-  Track(DetectionBase::Ptr detection, size_t start_frame_id, size_t track_id);
-
-  const TrackState& get_track_state() const;
-  bool is_confirmed() const;
-  size_t get_track_id() const;
-  size_t get_frame_id() const;
-  size_t get_start_frame_id() const;
-  size_t get_tracklet_length() const;
-
-  const DetectionBase::ConstPtr get_detection() const;
-  TlwhRect get_prediction() const;
-
- protected:
-  friend class ByteTracker;
-
-  DetectionBase::Ptr detection_;
-  TlwhRect predicted_rect_;
-
-  void predict();
-  void update(const DetectionBase::Ptr& new_track, size_t frame_id);
-
-  void mark_as_lost();
-  void mark_as_confirmed();
+  // always need 1-to-1 intput/output arguments sizes. If track invalid mark it
+  // as such
+  std::vector<SingleDetectionResult> track(
+      const std::vector<ObjectDetection>& detections,
+      FrameId frame_id) override;
 
  private:
-  KalmanFilter kalman_filter_;
-
-  TrackState state_;
-  bool is_confirmed_;
-  size_t track_id_;
-  size_t frame_id_;
-  size_t start_frame_id_;
-  size_t tracklet_len_;
+  ::byte_track::ByteTracker impl_tracker_;
 };
-}  // namespace byte_track
+
 }  // namespace dyno

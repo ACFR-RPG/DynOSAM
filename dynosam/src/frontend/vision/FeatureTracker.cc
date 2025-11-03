@@ -43,7 +43,7 @@
 #include "dynosam_common/utils/GtsamUtils.hpp"
 #include "dynosam_common/utils/OpenCVUtils.hpp"
 #include "dynosam_common/utils/TimingStats.hpp"
-#include "dynosam_nn/PyObjectDetector.hpp"
+#include "dynosam_nn/YoloObjectDetector.hpp"
 
 namespace dyno {
 
@@ -62,7 +62,11 @@ FeatureTracker::FeatureTracker(const FrontendParams& params, Camera::Ptr camera,
 
   if (!params_.prefer_provided_object_detection) {
     LOG(INFO) << "Creating object detection engine";
-    object_detection_ = PyObjectDetectorWrapper::CreateYoloDetector();
+    dyno::YoloConfig yolo_config;
+    dyno::ModelConfig model_config;
+    model_config.model_file = "yolov8n-seg.pt";
+    object_detection_ =
+        std::make_shared<dyno::YoloV8ObjectDetector>(model_config, yolo_config);
   }
 }
 

@@ -37,9 +37,16 @@
 
 namespace dyno {
 
+/**
+ * @brief The result of an object detection from a detection network
+ *
+ */
 struct ObjectDetection {
-  ObjectId object_id;
+  //! Binary object mask of type CV_8U
+  cv::Mat mask;
   cv::Rect bounding_box{};
+  std::string class_name;
+  float confidence;
 };
 
 struct SingleDetectionResult : public ObjectDetection {
@@ -51,9 +58,16 @@ struct SingleDetectionResult : public ObjectDetection {
   //! likely not be set)
   enum Source { DETECTION, MASK };
 
-  std::string class_name;
-  float confidence;
+  ObjectId object_id{-1};
+  bool well_tracked{false};
   Source source = Source::MASK;
+
+  bool isValid() const {
+    // This is implicitly checks that object_id is not -1 (ie not set)
+    // AND is a valiid object label (i.e. is non-zero which is the background
+    // label)
+    return object_id > background_label || well_tracked;
+  }
 };
 
 /**

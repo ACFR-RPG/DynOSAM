@@ -676,7 +676,8 @@ class CameraPoseEvaluator(Evaluator):
         traj_est_vo = self.camera_pose_traj
         traj_ref_vo = self.camera_pose_traj_ref
 
-        traj_est_vo, traj_ref_vo = tools.sync_and_align_trajectories(traj_est_vo, traj_ref_vo)
+        traj_est_vo, traj_ref_vo = tools.sync_and_align_trajectories(traj_est_vo, traj_ref_vo, do_alignment=False, correct_scale=False)
+        # traj_est_vo.align_origin(traj_ref_vo)
 
         # alignment_transformation = lie_algebra.sim3(
         #     *traj_est_vo.align(traj_ref_vo, False, False, n=-1))

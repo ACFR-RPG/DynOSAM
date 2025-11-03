@@ -126,6 +126,8 @@ PyObjectDetectorWrapper::~PyObjectDetectorWrapper() {
   {
     PyGILGuard guard;
     try {
+      // manually call the on destruction function that is required by the
+      // python object detection engine
       engine_.attr("on_destruction")();
     } catch (bp::error_already_set&) {
       PyErr_Print();
@@ -157,13 +159,6 @@ ObjectDetectionResult PyObjectDetectorWrapper::process(const cv::Mat& image) {
     np::ndarray np_img = ConvertMatToNDArray(image);
     bp::object result = engine_.attr("process")(np_img);
     return convertDetectionResult(result);
-  });
-}
-
-bool PyObjectDetectorWrapper::onDestruction() {
-  return executePythonCall([&]() -> bool {
-    bp::object result = engine_.attr("on_destruction")();
-    return bp::extract<bool>(result);
   });
 }
 

@@ -11,7 +11,7 @@ import dynosam_utils.evaluation.formatting_utils as formatting
 
 
 plt.rcdefaults()
-startup_plotting(40, line_width=3.0)
+startup_plotting(20, line_width=3.0)
 
 
 def print_timing(file, actual_last_frame = None):
@@ -235,10 +235,10 @@ def draw_objects_frames(ax, motion_error_evaluator = None, result_path=None, dat
 
 
 def plot_timing(ax, result_path, title, do_ph_evaluation = False, **kwargs):
-    hybrid_file = result_path + "hybrid_isam2_timing_inc_relin1.csv"
-    wcme_file = result_path + "wcme_isam2_timing_inc_relin1.csv"
-    # hybrid_file = result_path + "hybrid_isam2_timing_inc.csv"
-    # wcme_file = result_path + "wcme_isam2_timing_inc.csv"
+    # hybrid_file = result_path + "hybrid_isam2_timing_inc_relin1.csv"
+    # wcme_file = result_path + "wcme_isam2_timing_inc_relin1.csv"
+    hybrid_file = result_path + "hybrid_isam2_timing_inc.csv"
+    wcme_file = result_path + "wcme_isam2_timing_inc.csv"
 
 
     dataset_eval = eval.DatasetEvaluator(result_path)
@@ -309,7 +309,8 @@ def plot_timing(ax, result_path, title, do_ph_evaluation = False, **kwargs):
 
     ax.set_ylabel("Timing [ms]")
     ax.set_xlabel("Frame")
-    ax.legend(loc="lower right")
+    # ax.legend(loc="lower right")
+    ax.legend(loc="lower center")
     ax.grid(True)
 
 import itertools
@@ -472,13 +473,15 @@ def plot_wc_hybrid_isam_results(ax, result_path, variable_to_plot, scale='linear
 
 
 # sequence = "tas_rc7"
-sequence = "kitti_0020_mem"
-result_path = f"/root/results/Dynosam_ecmr2024/{sequence}/"
+sequence = "parking_lot_night_mid"
+# sequence = "kitti_0020_mem"
+# sequence = "kitti_0020"
+result_path = f"/root/results/Dynosam_ral2024/{sequence}/"
 
 
-plot_comparison = True
+plot_comparison = False
 plot_nnz = False
-plot_per_frame_timing = False
+plot_per_frame_timing = True
 
 # fig = plt.figure(figsize=(13,6), constrained_layout=True)
 # fig = plt.figure(figsize=(20,20), constrained_layout=True)
@@ -534,7 +537,7 @@ if plot_nnz:
 
 
 if plot_per_frame_timing:
-    fig = plt.figure(figsize=(13,6), constrained_layout=True)
+    fig = plt.figure(figsize=(10,3), constrained_layout=True)
     ax = fig.gca()
     # ph_frames, ph_timing = load_parallel_hybrid_data(result_path + "parallel_isam2_results_dkp_50.bson", variable_name="num_variables")
     # ax.plot(ph_frames ,ph_timing, label="Kp=50")
@@ -569,10 +572,12 @@ if plot_per_frame_timing:
     # ax.set_yscale("log")
     # ax.legend()
 
-    plot_timing(ax, result_path, None, do_ph_evaluation=True, y_failure_offset=-2, x_failure_offset=0.15)
+    plot_timing(ax, result_path, None, do_ph_evaluation=True, y_failure_offset=-1, x_failure_offset=0.15)
+    # plot_timing(ax, result_path, None, do_ph_evaluation=True, y_failure_offset=-0.5, x_failure_offset=0.15)
+    fig.savefig(f"/root/results/Dynosam_ral2024/{sequence}_timing_narrow.pdf", format="pdf")
 
     # # fig.tight_layout()
-plt.show()
+# plt.show()
 
     # fig.savefig(f"/root/results/Dynosam_ecmr2024/{sequence}_timing.pdf", format="pdf")
     # fig.savefig(f"/root/results/Dynosam_ecmr2024/{sequence}_dkp_timing.pdf", format="pdf")

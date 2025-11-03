@@ -49,7 +49,17 @@ def so3_from_euler(euler_angles: np.ndarray, order:str = "xyz", degrees: bool = 
 
 def so3_from_xyzw(quaternion: np.ndarray) -> np.ndarray:
     from scipy.spatial.transform import Rotation as R
-    return R.from_quat(quaternion, scalar_first=False).as_matrix()
+    """
+    Convert quaternion [x, y, z, w] to a rotation matrix.
+    Works for both old (<1.10) and new (>=1.10) SciPy APIs.
+    """
+    try:
+        # Old API: supports scalar_first
+        rot = R.from_quat(quaternion, scalar_first=False)
+    except TypeError:
+        # New API: no scalar_first argument
+        rot = R.from_quat(quaternion)
+    return rot.as_matrix()
 
 def load_pose_from_row(row) -> Tuple[np.ndarray, np.ndarray]:
 
@@ -366,7 +376,9 @@ class ObjectMotionTrajectory(object):
 def sync_and_align_trajectories(traj_est: Union[evo_trajectory.PosePath3D, evo_trajectory.PoseTrajectory3D],
                                 traj_ref: Union[evo_trajectory.PosePath3D, evo_trajectory.PoseTrajectory3D],
                                 discard_n_end_poses=-1,
-                                max_diff=0.01) -> Union[evo_trajectory.PosePath3D, evo_trajectory.PoseTrajectory3D]:
+                                max_diff=0.01,
+                                do_alignment = True,
+                                correct_scale = False) -> Union[evo_trajectory.PosePath3D, evo_trajectory.PoseTrajectory3D]:
     import copy
     from .tools import align_trajectory
     # We copy to distinguish another version that may be created
@@ -376,8 +388,9 @@ def sync_and_align_trajectories(traj_est: Union[evo_trajectory.PosePath3D, evo_t
     # assume synched and in order!
     if isinstance(traj_est, evo_trajectory.PoseTrajectory3D) and isinstance(traj_ref, evo_trajectory.PoseTrajectory3D):
         traj_ref, traj_est = evo_sync.associate_trajectories(traj_ref, traj_est,max_diff=max_diff)
-    traj_est = align_trajectory(traj_est, traj_ref, correct_scale = False,
-                                                   n=discard_n_end_poses)
+    if do_alignment:
+        traj_est = align_trajectory(traj_est, traj_ref, correct_scale = correct_scale,
+                                                    n=discard_n_end_poses)
     return traj_est, traj_ref
 
 

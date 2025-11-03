@@ -37,7 +37,6 @@
 #include "dynosam/frontend/imu/ImuFrontend.hpp"
 #include "dynosam/frontend/vision/FeatureTracker.hpp"
 #include "dynosam/frontend/vision/MotionSolver.hpp"
-#include "dynosam/frontend/vision/ObjectTracker.hpp"
 #include "dynosam/frontend/vision/VisionTools.hpp"
 #include "dynosam_cv/Camera.hpp"
 

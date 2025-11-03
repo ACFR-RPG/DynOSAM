@@ -13,6 +13,7 @@ set(CMAKE_CXX_STANDARD 17)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 find_package(dynosam_common REQUIRED)
+find_package(dynosam_cv REQUIRED)
 find_package(cv_bridge REQUIRED)
 find_package(ament_cmake_python REQUIRED)
 find_package(ament_index_cpp REQUIRED)
@@ -45,6 +46,7 @@ endif()
 include_directories(
   include
   ${dynosam_common_INCLUDE_DIRS}
+  ${dynosam_cv_INCLUDE_DIRS}
   ${ament_index_cpp_INCLUDE_DIRS}
   ${Python3_INCLUDE_DIRS}
   ${Boost_INCLUDE_DIRS}
@@ -57,6 +59,14 @@ add_library(${PROJECT_NAME} SHARED
   src/TrtUtilities.cc
   src/ModelConfig.cc
   src/YoloObjectDetector.cc
+
+  src/trackers/byte_tracker/ByteTracker.cc
+  src/trackers/byte_tracker/KalmanFilter.cc
+  src/trackers/byte_tracker/lapjv.cc
+  src/trackers/byte_tracker/Rect.cc
+  src/trackers/byte_tracker/STrack.cc
+
+  src/trackers/ObjectTracker.cc
 
   src/bindings/PyBoostWrapper.cc
 )
@@ -71,6 +81,7 @@ PUBLIC
    ${Python3_LIBRARIES}
    ${ament_index_cpp_TARGETS}
   dynosam_common::dynosam_common
+  dynosam_cv::dynosam_cv
 PRIVATE
   TensorRT::TensorRT
   CUDA::cudart
@@ -79,8 +90,8 @@ PRIVATE
 target_include_directories(${PROJECT_NAME}
   PRIVATE
     ${TENSORRT_INCLUDE_DIRS}
-    ${CUDAToolkit_INCLUDE_DIRS}
   PUBLIC
+    ${CUDAToolkit_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
     ${Python3_INCLUDE_DIRS}
     ${ament_index_cpp_INCLUDE_DIRS}
@@ -95,6 +106,11 @@ install(
 
 install(DIRECTORY
   weights
+  DESTINATION share/${PROJECT_NAME}
+)
+
+install(DIRECTORY
+  resources
   DESTINATION share/${PROJECT_NAME}
 )
 
