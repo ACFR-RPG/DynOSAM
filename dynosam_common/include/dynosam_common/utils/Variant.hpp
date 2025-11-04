@@ -33,6 +33,13 @@
 #include <type_traits>
 #include <variant>
 
+template <class... Ts>
+struct overload : Ts... {
+  using Ts::operator()...;
+};
+template <class... Ts>
+overload(Ts...) -> overload<Ts...>;  // line not needed in C++20...
+
 namespace dyno {
 namespace internal {
 

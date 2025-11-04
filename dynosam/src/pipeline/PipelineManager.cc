@@ -395,9 +395,7 @@ void DynoPipelineManager::loadPipelines(const CameraParams& camera_params,
       VLOG(10) << "Connecting BackendModuleDisplay";
       backend_pipeline_->registerOutputCallback(
           [additional_backend_display](const auto& output) -> void {
-            auto timestamp = output->getTimestamp();
-            auto frame_id = output->getFrameId();
-            additional_backend_display->spin(timestamp, frame_id);
+            additional_backend_display->spin(output);
           });
     }
   }

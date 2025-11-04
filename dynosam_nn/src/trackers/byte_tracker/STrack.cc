@@ -3,12 +3,13 @@
 #include <cstddef>
 
 byte_track::STrack::STrack(const Rect<float>& rect, const cv::Mat& mask,
-                           const float& score)
+                           const std::string& class_name, const float& score)
     : kalman_filter_(),
       mean_(),
       covariance_(),
       rect_(rect),
       mask_(mask),
+      class_name_(class_name_),
       state_(STrackState::New),
       is_activated_(false),
       score_(score),
@@ -21,6 +22,10 @@ byte_track::STrack::~STrack() {}
 
 const byte_track::Rect<float>& byte_track::STrack::getRect() const {
   return rect_;
+}
+
+const std::string& byte_track::STrack::getClassName() const {
+  return class_name_;
 }
 
 cv::Mat byte_track::STrack::getMask() const { return mask_; }
@@ -67,6 +72,7 @@ void byte_track::STrack::reActivate(const STrack& new_track,
 
   updateRect();
   mask_ = new_track.getMask();
+  class_name_ = new_track.getClassName();
 
   state_ = STrackState::Tracked;
   is_activated_ = true;
@@ -91,6 +97,7 @@ void byte_track::STrack::update(const STrack& new_track,
 
   updateRect();
   mask_ = new_track.getMask();
+  class_name_ = new_track.getClassName();
 
   state_ = STrackState::Tracked;
   is_activated_ = true;

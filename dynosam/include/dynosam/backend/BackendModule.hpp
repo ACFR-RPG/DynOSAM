@@ -142,6 +142,9 @@ class BackendModuleType : public BackendModule {
 
   inline const typename MapType::Ptr getMap() { return map_; }
 
+  virtual std::pair<gtsam::Values, gtsam::NonlinearFactorGraph>
+  getActiveOptimisation() const = 0;
+
  protected:
   virtual SpinReturn boostrapSpinImpl(InputConstPtr input) = 0;
   virtual SpinReturn nominalSpinImpl(InputConstPtr input) = 0;

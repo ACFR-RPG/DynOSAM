@@ -37,8 +37,8 @@ std::vector<byte_track::STrackPtr> byte_track::ByteTracker::update(
     const cv::Rect_<float> cv_rect_f = object.bounding_box;
     byte_track::Rect<float> rect(cv_rect_f.x, cv_rect_f.y, cv_rect_f.width,
                                  cv_rect_f.height);
-    const auto strack =
-        std::make_shared<STrack>(rect, object.mask, object.confidence);
+    const auto strack = std::make_shared<STrack>(
+        rect, object.mask, object.class_name, object.confidence);
     if (object.confidence >= track_thresh_) {
       det_stracks.push_back(strack);
     } else {

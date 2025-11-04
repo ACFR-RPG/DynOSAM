@@ -50,7 +50,6 @@ std::vector<SingleDetectionResult> ByteObjectTracker::track(
 
     SingleDetectionResult single_result;
     single_result.bounding_box = fromByeTrackRect(object_track->getRect());
-    ;
     single_result.mask = object_track->getMask();
     //   single_result.class_name = detection.class_name;
     single_result.confidence = object_track->getScore();

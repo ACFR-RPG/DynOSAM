@@ -9,7 +9,7 @@
 
 DynoSAM is a Stereo/RGB-D Visual Odometry pipeline for Dynamic SLAM and estiamtes camera poses, object motions/poses as well as static background and temporal dynamic object maps.
 
-DynoSAM current provides full-batch and sliding-window optimisation procedures and is integrated with ROS2.
+DynoSAM current provides full-batch, sliding-window and incremental optimisation procedures and is integrated with ROS2.
 
 ## Publication
 The offical code used for our paper:
@@ -82,7 +82,16 @@ External dependancies (for visualization) not required for compilation.
 - [rviz_dynamic_slam_plugins](https://github.com/ACFR-RPG/rviz_dynamic_slam_plugins) (Plugin to display custom `dynamic_slam_interfaces` messages which are advertised by default.)
 
 
-> NOTE: Cuda acceleration... documentation coming soon...
+GPU acceleration:
+- [TensorRT](https://github.com/NVIDIA/TensorRT)
+- [CUDA](https://docs.nvidia.com/cuda/cuda-runtime-api/index.html)
+
+are now supported with the new Docker image.
+This provides support for TensorRT accellerated object-instance segmentation (which is now part of the DynoSAM pipeline) and CUDA acceleration in the front-end.
+Backwards compatability (i.e no CUDA support) is not currently a priority.
+> NOTE: documentation coming soon...
+
+
 
 ## Installation Instructions
 DynoSAM is currently built within the ROS2 infrastructure (if there is enough interest I will split out each component into ROS and non-ROS modules.)
@@ -193,8 +202,12 @@ run dynosam_ros run_dynosam_gtest.py --package=dynosam_ros --gtest_filter=TestCo
 
 We provide a number of data providers which process datasets into the input format specified by DynoSAM which includes input images for the pipeline and ground truth data for evaluation.
 
+The provided dataset loaders are written to parse the datasets as provided and only
+`--data_provider_type` and `--dataset_path` must be set to load the data.
+
 All datasets (including pre-processed images) can be found at the [ACFR-RPG Datasets page](https://data.acfr.usyd.edu.au/rpg/).
-The provided dataset loaders are written to parse the datasets as provided.
+
+To download the datasets use the [`curl`](https://www.geeksforgeeks.org/linux-unix/curl-command-in-linux-with-examples/) command.
 
 ### i. KITTI Tracking Dataset
 We use a modified version of the KITTI tracking dataset which includes ground truth motion data, as well dense optical-flow, depth and segmentation masks.
@@ -220,21 +233,23 @@ Access [raw dataset](https://europe.naverlabs.com/research/computer-vision/proxy
 The required dataset loader can be specified by setting `--data_provider_type=1`
 
 ### v. TartanAir Shibuya
-Details coming soon...
+The required dataset loader can be specified by setting `--data_provider_type=5`
 
 
 ### vi. VIODE
-Details coming soon...
+The required dataset loader can be specified by setting `--data_provider_type=6`
 
 ### Online Dataprovider
 An online data-provider can be specified using the ROS arg `online:=True`.
-This node subscribes to five topics:
+
+By default this node subscribes to five topics:
  - `dataprovider/image/camera_info` (sensor_msgs.msg.CameraInfo)
  - `dataprovider/image/rgb` (sensor_msgs.msg.Image)
  - `dataprovider/image/depth` (sensor_msgs.msg.Image)
  - `dataprovider/image/mask` (sensor_msgs.msg.Image)
  - `dataprovider/image/flow` (sensor_msgs.msg.Image)
 
+where each topic represents one of the expected input images in the following form:
 The __rgb__ image is expected to be a valid 8bit image (1, 3 and 4 channel images are accepted).
 The __depth__ must be a _CV_64F_ image where the value of each pixel represents the _metric depth_.
 The __mask__ must be a CV_32SC1 where the static background is of value 0 and all other objects are lablled with a tracking label $j$.
@@ -246,6 +261,13 @@ We also provide a launch file specified for online usage:
 ros2 launch dynosam_ros dyno_sam_online_launch.py
 ```
 > NOTE: see the launch file for example topic remapping
+
+Prior to September 2025 DynoSAM relied on pre-computing the flow and segmentation mask data offline.
+
+New features have been added to allow the segementation and feature tracking to be done internally, with specific caviats; this means that only RGB and Depth images must be provided, replicating a proper RGB-D pipeline.
+
+Specific launch files for this are coming soon...
+
 
 ### IMU integration
 We additionally support IMU integration using the `PreintegrationFactor` from GTSAM in the backend. However, this has only been tested on VIODE.
@@ -269,8 +291,15 @@ DynoSAM requires input image data in the form:
 
 and can usually be obtained by pre-processing the input RGB image.
 
-All datasets includes already have been pre-processed to include these images.
-The code used to do this preprocessing is coming soon...
+As of November 2025 we no longer fully rely on dense optical flow and instead use sparse tracking for static features and optionally for dynamic features.
+
+A dense optical flow image can be provided in the input `ImageContainer`. To use a provided optical flow image, set `prefer_provided_optical_flow: true`. Usually we use RAFT to generate dense optical flow. If this argument is true but no image is provided, it falls back to sparse KLT tracking.
+
+A similar logic follows with the dense semantic instance mask where each pixel value $>0$ represents the tracked object index $j$ and background pixels are labelled $0$.
+If `prefer_provided_object_detection: true` then this data is expected to be provided in the input `ImageContainer`. For example, this is how we load data from all datasets.
+
+As of November 2025 we can also generate tracked objects masks _online_ using TensorRT accelerated inference. This is the default option if `prefer_provided_object_detection: false`.
+See the [dynosam_nn](./dynosam_nn/) package for details.
 
 
 # 3. Parameters
@@ -391,7 +420,7 @@ The `DatasetEvaluator` does most of the heavy lifting and can be found in the [e
 
 
 <div align="center">
-  <img src="docs/media/dynosam_system_diagram.png"/>
+  <img src="docs/media/tro2025_system_diagram.png"/>
 </div>
 
 
@@ -450,10 +479,20 @@ Each formulation will need to derive from `Formulation` and define their own `Ac
   - [`Parallel-Hybrid`](./dynosam/include/dynosam/backend/ParallelHybridBackendModule.hpp)
 
 
+
+
 # 6. Contribution Guidelines
 
 We strongly encourage you to submit issues, feedback and potential improvements.
 We follow the branch, open PR, review, and merge workflow.
+
+
+### Support ###
+
+The developpers will be happy to assist you or to consider bug reports / feature requests. But
+questions that can be answered reading this document will be ignored. Please contact
+jesse.morris@sydney.edu.au.
+
 
 As of Nov 2024 I am still actively developing this project as part of my PhD at the [ACFR](https://www.sydney.edu.au/engineering/our-research/robotics-and-intelligent-systems/australian-centre-for-robotics.html). Things may change but I will do my best to ensure versions are tagged etc... as a result I will also be happy to address all bugs and feature requests! Send 'em through!!
 

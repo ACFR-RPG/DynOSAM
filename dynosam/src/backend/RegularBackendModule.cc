@@ -279,6 +279,28 @@ void RegularBackendModule::addMeasurements(
   }
 }
 
+std::pair<gtsam::Values, gtsam::NonlinearFactorGraph>
+RegularBackendModule::getActiveOptimisation() const {
+  const RegularOptimizationType& optimization_mode =
+      base_params_.optimization_mode;
+  if (optimization_mode == RegularOptimizationType::FULL_BATCH) {
+    const auto theta = formulation_->getTheta();
+    const auto graph = formulation_->getGraph();
+    return {theta, graph};
+  } else if (optimization_mode == RegularOptimizationType::SLIDING_WINDOW) {
+    LOG(FATAL) << "Not implemented!";
+
+  } else if (optimization_mode == RegularOptimizationType::INCREMENTAL) {
+    using SmootherInterface = IncrementalInterface<dyno::ISAM2>;
+    SmootherInterface smoother_interface(smoother_.get());
+    const auto graph = smoother_interface.getFactors();
+    const auto theta = smoother_interface.getLinearizationPoint();
+    return {theta, graph};
+  } else {
+    LOG(FATAL) << "Unknown optimisation mode" << optimization_mode;
+  }
+}
+
 void RegularBackendModule::updateAndOptimize(
     FrameId frame_id_k, const gtsam::Values& new_values,
     const gtsam::NonlinearFactorGraph& new_factors,
@@ -664,15 +686,7 @@ FormulationHooks RegularBackendModule::createFormulationHooks() const {
 
 BackendOutputPacket::Ptr RegularBackendModule::constructOutputPacket(
     FrameId frame_k, Timestamp timestamp) const {
-  CHECK_NOTNULL(formulation_);
-  return RegularBackendModule::constructOutputPacket(formulation_, frame_k,
-                                                     timestamp);
-}
-
-BackendOutputPacket::Ptr RegularBackendModule::constructOutputPacket(
-    const Formulation<RGBDMap>::Ptr& formulation, FrameId frame_k,
-    Timestamp timestamp) {
-  auto accessor = formulation->accessorFromTheta();
+  auto accessor = formulation_->accessorFromTheta();
 
   auto backend_output = std::make_shared<BackendOutputPacket>();
   backend_output->timestamp = timestamp;
@@ -683,7 +697,7 @@ BackendOutputPacket::Ptr RegularBackendModule::constructOutputPacket(
   //     accessor->getObjectMotions(frame_k);
   backend_output->dynamic_landmarks =
       accessor->getDynamicLandmarkEstimates(frame_k);
-  auto map = formulation->map();
+  auto map = formulation_->map();
   for (FrameId frame_id : map->getFrameIds()) {
     backend_output->optimized_camera_poses.push_back(
         accessor->getSensorPose(frame_id).get());
@@ -705,6 +719,11 @@ BackendOutputPacket::Ptr RegularBackendModule::constructOutputPacket(
 
   backend_output->optimized_object_motions = accessor->getObjectMotions();
   backend_output->optimized_object_poses = accessor->getObjectPoses();
+
+  const auto [active_values, active_graph] = this->getActiveOptimisation();
+  backend_output->active_values = active_values;
+  backend_output->active_graph = active_graph;
+
   return backend_output;
 }
 

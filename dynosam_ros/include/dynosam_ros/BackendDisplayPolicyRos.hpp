@@ -10,7 +10,7 @@
 // TODO: for now a simple solution for testing
 //  puts BackendModuleDisplayTraits into one file explicitly for SFINAE
 //  definitions!
-#include "dynosam_ros/displays/backend_impl/HybridBackendDisplay.hpp"
+#include "dynosam_ros/displays/backend_displays/HybridBackendDisplay.hpp"
 
 namespace dyno {
 
@@ -30,6 +30,18 @@ struct has_backend_module_display<
     T, std::void_t<typename BackendModuleDisplayTraits<T>::type>>
     : std::true_type {};
 
+/**
+ * @brief Creates a ROS based visualisation policy based on the templated type T
+ * which will almost always be a Formulation or some kind of BackendModule (e.g.
+ * in the case of ParallelHybrid).
+ *
+ * The policy is implemented as a Policy type as expected by the
+ * BackendFactory<Policy, Map> class and must implement the templated
+ * createDisplay<T>(std::shared_ptr<T> module) function where module is loaded
+ * by the factory itself. This is used when creating both the module and a
+ * formulation.
+ *
+ */
 class BackendModulePolicyRos {
  public:
   BackendModulePolicyRos(const DisplayParams& params, rclcpp::Node* node)
@@ -37,6 +49,21 @@ class BackendModulePolicyRos {
     VLOG(10) << "Creating BackendModulePolicyRos";
   }
 
+  /**
+   * @brief Create a display associated with a specific module in the backend,
+   * which is of type T. This will almost always be a Formulation or some kind
+   * of BackendModule (e.g. in the case of ParallelHybrid).
+   *
+   * If the module has an associated display type (derived from
+   * BackendModuleDisplayRos) it will be constructed. The display type
+   * (DisplayT) must have a constructor in the form DisplayT(const
+   * DisplayParams&, rclcpp::Node*, std::shared_ptr<T>).
+   *
+   *
+   * @tparam T
+   * @param module
+   * @return std::shared_ptr<BackendModuleDisplayRos>
+   */
   template <typename T>
   std::shared_ptr<BackendModuleDisplayRos> createDisplay(
       std::shared_ptr<T> module) {

@@ -4,10 +4,27 @@
 
 namespace dyno {
 
+/**
+ * @brief Specifies the default location of all weights used by dynosam_nn.
+ * This should in the dynosam_nn share package location + weights (e.g.
+ * /dynosam_nn/share/dynosam_nn/weights)
+ *
+ * @return std::filesystem::path
+ */
 std::filesystem::path getNNWeightsPath();
+
+/**
+ * @brief Specifies the default location of all weights used by dynosam_nn.
+ * This should in the dynosam_nn share package location + resources (e.g.
+ * /dynosam_nn/share/dynosam_nn/resouces)
+ *
+ * @return std::filesystem::path
+ */
 std::filesystem::path getNNResourcesPath();
 
 struct ModelConfig {
+  //! The file name (only) of the models weights. Should have some suffix
+  //! (likely .pt e.g. from YOLO)
   std::filesystem::path model_file;
   std::string log_severity = "INFO";
   //! If true, then the model path will be

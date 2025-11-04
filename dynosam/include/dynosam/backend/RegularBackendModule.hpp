@@ -29,6 +29,8 @@
  */
 #pragma once
 
+#include <variant>
+
 #include "dynosam/backend/BackendDefinitions.hpp"
 #include "dynosam/backend/BackendInputPacket.hpp"
 #include "dynosam/backend/BackendModule.hpp"
@@ -56,8 +58,6 @@ class RegularBackendModule
   RegularBackendModule(const BackendParams& backend_params, Camera::Ptr camera,
                        std::shared_ptr<RegularFormulationFactory> factory,
                        ImageDisplayQueue* display_queue = nullptr);
-
-  // TODO: comment as to why we have two constructors!!
 
   /**
    * @brief A secondary constructor the RegularBackend that does not take an
@@ -96,6 +96,9 @@ class RegularBackendModule
       const PostFormulationUpdateCallback& cb) {
     post_formulation_update_cb_ = cb;
   }
+
+  std::pair<gtsam::Values, gtsam::NonlinearFactorGraph> getActiveOptimisation()
+      const override;
 
  protected:
   void setupUpdates();
@@ -158,9 +161,6 @@ class RegularBackendModule
   FormulationHooks createFormulationHooks() const;
   BackendOutputPacket::Ptr constructOutputPacket(FrameId frame_k,
                                                  Timestamp timestamp) const;
-  static BackendOutputPacket::Ptr constructOutputPacket(
-      const Formulation<RGBDMap>::Ptr& formulation, FrameId frame_k,
-      Timestamp timestamp);
 
   Camera::Ptr camera_;
   Formulation<RGBDMap>::Ptr formulation_;

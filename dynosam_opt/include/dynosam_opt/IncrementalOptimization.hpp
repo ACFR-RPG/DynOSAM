@@ -32,6 +32,9 @@
 
 #include <gtsam/nonlinear/ISAM2.h>
 #include <gtsam/nonlinear/NonlinearFactorGraph.h>
+#include <gtsam_unstable/nonlinear/IncrementalFixedLagSmoother.h>
+// TODO: in latest gtsam this is in gtsam
+#include <gtsam_unstable/nonlinear/BatchFixedLagSmoother.h>
 
 #include <functional>
 
@@ -121,12 +124,155 @@ struct isam2_like_traits {
     return smoother.template getLinearizationPoint();
   }
 };
+
+//  does not implement the
+//  static ResultType update(Smoother& smoother, const UpdateArguments&
+//  update_arguments) since these are slightly different between implementations
+template <typename _Smoother, typename _Result = typename _Smoother::Result>
+struct fixed_lag_smoother_traits {
+  typedef fixed_lag_smoother_traits<_Smoother, _Result> This;
+  typedef _Smoother Smoother;
+  typedef _Result ResultType;
+
+  struct FixedLagUpdateArguments : public UpdateArguments {
+    std::map<gtsam::Key, double> timestamps;
+    gtsam::FactorIndices factors_to_remove = gtsam::FactorIndices();
+  };
+  typedef FixedLagUpdateArguments UpdateArguments;
+
+  using FillArguments = std::function<void(const Smoother&, UpdateArguments&)>;
+
+  // Missing function requirement on purpose!!
+  // ResultType update(gtsam::IncrementalFixedLagSmoother& smoother, const
+  // Base::UpdateArguments& update_arguments)
+
+  static ResultType update(Smoother& smoother,
+                           const FillArguments& update_arguments_filler) {
+    UpdateArguments arguments;
+    update_arguments_filler(smoother, arguments);
+    return This::update(smoother, arguments);
+  }
+
+  static gtsam::NonlinearFactorGraph getFactors(const Smoother& smoother) {
+    return smoother.template getFactors();
+  }
+
+  static gtsam::Values calculateEstimate(const Smoother& smoother) {
+    return smoother.template calculateEstimate();
+  }
+
+  static gtsam::Values getLinearizationPoint(const Smoother& smoother) {
+    return smoother.template getLinearizationPoint();
+  }
+};
+
 }  // namespace internal
 
 template <>
 struct iOptimizationTraits<gtsam::ISAM2>
     : public internal::isam2_like_traits<gtsam::ISAM2, gtsam::ISAM2Result,
                                          gtsam::ISAM2UpdateParams> {};
+
+/**
+ * @brief Struct that implements the update function (as required by
+ * iOptimizationTraits) for the gtsam::IncrementalFixedLagSmoother.
+ *
+ * Other functions and typedefs are defined by the common
+ * internal::fixed_lag_smoother_traits
+ *
+ */
+struct incremental_fixed_lag_traits
+    : public internal::fixed_lag_smoother_traits<
+          gtsam::IncrementalFixedLagSmoother, gtsam::ISAM2Result> {
+  using Base =
+      internal::fixed_lag_smoother_traits<gtsam::IncrementalFixedLagSmoother,
+                                          gtsam::ISAM2Result>;
+  using Base::ResultType;
+  using Base::Smoother;
+  using Base::UpdateArguments;
+
+  static gtsam::ISAM2Result update(
+      gtsam::IncrementalFixedLagSmoother& smoother,
+      const Base::UpdateArguments& update_arguments) {
+    smoother.update(update_arguments.new_factors, update_arguments.new_values,
+                    update_arguments.timestamps,
+                    update_arguments.factors_to_remove);
+    return smoother.getISAM2Result();
+  }
+};
+
+/**
+ * @brief Struct that implements the update function (as required by
+ * iOptimizationTraits) for the gtsam::BatchFixedLagSmoother.
+ *
+ * Other functions and typedefs are defined by the common
+ * internal::fixed_lag_smoother_traits
+ *
+ */
+struct batch_fixed_lag_traits
+    : public internal::fixed_lag_smoother_traits<gtsam::BatchFixedLagSmoother> {
+  using Base =
+      internal::fixed_lag_smoother_traits<gtsam::BatchFixedLagSmoother>;
+  using Base::ResultType;
+  using Base::Smoother;
+  using Base::UpdateArguments;
+
+  static Base::ResultType update(
+      gtsam::BatchFixedLagSmoother& smoother,
+      const Base::UpdateArguments& update_arguments) {
+    return smoother.update(
+        update_arguments.new_factors, update_arguments.new_values,
+        update_arguments.timestamps, update_arguments.factors_to_remove);
+  }
+};
+
+// struct dyno_batch_fixed_lag_traits {
+//   typedef dyno::BatchFixedLagSmoother Smoother;
+//   typedef dyno::BatchFixedLagSmoother::Result ResultType;
+
+//   struct DynoBatchFixedLagUpdateArguments
+//       : public UpdateArguments,
+//         public dyno::BatchFixedLagSmoother::UpdateParams {};
+
+//   typedef DynoBatchFixedLagUpdateArguments UpdateArguments;
+
+//   using FillArguments = std::function<void(const Smoother&,
+//   UpdateArguments&)>;
+
+//   static ResultType update(dyno::BatchFixedLagSmoother& smoother,
+//                            const UpdateArguments& update_arguments) {
+//     return smoother.update(
+//         update_arguments.new_factors, update_arguments.new_values,
+//         update_arguments.timestamps, update_arguments.factors_to_remove);
+//   }
+
+//   static ResultType update(Smoother& smoother,
+//                            const FillArguments& update_arguments_filler) {
+//     UpdateArguments arguments;
+//     update_arguments_filler(smoother, arguments);
+//     return update(smoother, arguments);
+//   }
+
+//   static gtsam::NonlinearFactorGraph getFactors(const Smoother& smoother) {
+//     return smoother.getFactors();
+//   }
+
+//   static gtsam::Values calculateEstimate(const Smoother& smoother) {
+//     return smoother.calculateEstimate();
+//   }
+
+//   static gtsam::Values getLinearizationPoint(const Smoother& smoother) {
+//     return smoother.getLinearizationPoint();
+//   }
+// };
+
+template <>
+struct iOptimizationTraits<gtsam::IncrementalFixedLagSmoother>
+    : public incremental_fixed_lag_traits {};
+
+template <>
+struct iOptimizationTraits<gtsam::BatchFixedLagSmoother>
+    : public batch_fixed_lag_traits {};
 
 struct ErrorHandlingHooks {
   ErrorHandlingHooks() {}

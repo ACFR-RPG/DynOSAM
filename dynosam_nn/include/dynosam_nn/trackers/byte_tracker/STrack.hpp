@@ -17,11 +17,13 @@ enum class STrackState {
 
 class STrack {
  public:
-  STrack(const Rect<float>& rect, const cv::Mat& mask, const float& score);
+  STrack(const Rect<float>& rect, const cv::Mat& mask,
+         const std::string& class_name, const float& score);
   ~STrack();
 
   const Rect<float>& getRect() const;
   cv::Mat getMask() const;
+  const std::string& getClassName() const;
   const STrackState& getSTrackState() const;
 
   const bool& isActivated() const;
@@ -48,6 +50,7 @@ class STrack {
 
   Rect<float> rect_;
   cv::Mat mask_;
+  std::string class_name_;
   STrackState state_;
 
   bool is_activated_;

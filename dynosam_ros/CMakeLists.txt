@@ -52,7 +52,7 @@ set(SRC_FILES
   src/DataProviderRos.cc
   src/OnlineDataProviderRos.cc
 
-  src/displays/backend_impl/HybridBackendDisplay.cc
+  src/displays/backend_displays/HybridBackendDisplay.cc
   src/displays/DisplaysCommon.cc
 
 )

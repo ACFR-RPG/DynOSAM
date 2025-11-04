@@ -301,6 +301,30 @@ ParallelHybridBackendModule::nominalSpinImpl(VisionImuPacket::ConstPtr input) {
   return {State::Nominal, backend_output};
 }
 
+std::pair<gtsam::Values, gtsam::NonlinearFactorGraph>
+ParallelHybridBackendModule::getActiveOptimisation() const {
+  // get static variables
+  using StaticSmootherInterface =
+      IncrementalInterface<decltype(static_estimator_)>;
+  // need to make non-const
+  StaticSmootherInterface static_smoother_interface(
+      const_cast<StaticSmootherInterface::Smoother*>(&static_estimator_));
+
+  auto graph = static_smoother_interface.getFactors();
+  auto theta = static_smoother_interface.getLinearizationPoint();
+
+  for (const auto& [object_id, estimator] : sam_estimators_) {
+    auto object_smoother = estimator->getSmoother();
+    using DynamicSmootherInterface =
+        IncrementalInterface<decltype(object_smoother)>;
+    DynamicSmootherInterface dynamic_smoother_interface(&object_smoother);
+
+    graph += dynamic_smoother_interface.getFactors();
+    theta.insert(dynamic_smoother_interface.getLinearizationPoint());
+  }
+  return {theta, graph};
+}
+
 Pose3Measurement ParallelHybridBackendModule::bootstrapUpdateStaticEstimator(
     VisionImuPacket::ConstPtr input) {
   utils::TimingStatsCollector timer("parallel_object_sam.static_estimator");
@@ -613,6 +637,10 @@ BackendOutputPacket::Ptr ParallelHybridBackendModule::constructOutputPacket(
     backend_output->optimized_camera_poses.push_back(
         accessor->getSensorPose(frame_id).get());
   }
+
+  const auto [active_values, active_graph] = this->getActiveOptimisation();
+  backend_output->active_values = active_values;
+  backend_output->active_graph = active_graph;
 
   return backend_output;
 }

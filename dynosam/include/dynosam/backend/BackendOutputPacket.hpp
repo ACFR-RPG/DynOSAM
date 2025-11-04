@@ -49,6 +49,8 @@ struct BackendOutputPacket {
   ObjectPoseMap optimized_object_poses;
   gtsam::Pose3Vector optimized_camera_poses;
   std::vector<TemporalObjectMetaData> temporal_object_data;
+  gtsam::Values active_values;
+  gtsam::NonlinearFactorGraph active_graph;
   // streamline imagery with incremental visualisation tools!
   cv::Mat debug_image;
 

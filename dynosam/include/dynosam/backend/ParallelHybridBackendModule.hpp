@@ -64,6 +64,9 @@ class ParallelHybridBackendModule
       const;
   HybridFormulation::Ptr staticEstimator() const;
 
+  std::pair<gtsam::Values, gtsam::NonlinearFactorGraph> getActiveOptimisation()
+      const override;
+
  private:
   using SpinReturn = Base::SpinReturn;
 

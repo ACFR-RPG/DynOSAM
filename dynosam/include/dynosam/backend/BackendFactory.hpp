@@ -54,8 +54,28 @@ class IncorrectParallelHybridConstruction : public DynosamException {
       : DynosamException(what) {}
 };
 
-/// Policy must implement a createDisplay function which takes a FORMULATION as
-/// input
+/**
+ * @brief Factory to create the backend module and associated formulations.
+ * This class is quite complex due to the interdepencies between backend and
+ * formulations.
+ *
+ * In general a module refers to some derived BackendModule which represents the
+ * whole backend (e.g. RegularBackendModule, but also
+ * ParallelHybridBackendModule which is a special backend) while a formulation
+ * is derived from Formulation<MAP>.
+ *
+ * We also template the BackendFactory on a Policy class which must implement
+ * createDisplay<T>(std::shared_ptr<T> module) ->
+ * std::shared_ptr<BackendModuleDisplayRos> where T is a Formulation (except in
+ * the Parallel-Hybrid case where it is the BackendModule itself) but can be
+ * anything loaded by the BackendFactory. This allows module/formulation
+ * specific displays to be written independantly from the class and injected
+ * into the loader. If non null, this display will be called once per iteration
+ * after the backend has spun.
+ *
+ * @tparam Policy
+ * @tparam MAP
+ */
 template <typename Policy, typename MAP>
 class BackendFactory
     : public BackendFormulationFactory<MAP>,
@@ -79,7 +99,6 @@ class BackendFactory
       : BackendFormulationFactory<MAP>(p_type.backend_type),
         Policy(std::forward<Args>(args)...) {}
 
-  // Return a shared_ptr to this factory
   std::shared_ptr<This> getPtr() { return this->shared_from_this(); }
 
   static std::shared_ptr<This> Create(const BackendType& backend_type,

@@ -100,25 +100,9 @@ class OnlineDataProviderRos : public DataProviderRos {
   void connectImages();
   void connectImu();
 
-  // using SyncPolicy = message_filters::sync_policies::ExactTime<
-  //     sensor_msgs::msg::Image, sensor_msgs::msg::Image,
-  //     sensor_msgs::msg::Image, sensor_msgs::msg::Image>;
-
-  // void imageSyncCallback(
-  //     const sensor_msgs::msg::Image::ConstSharedPtr &rgb_msg,
-  //     const sensor_msgs::msg::Image::ConstSharedPtr &depth_msg,
-  //     const sensor_msgs::msg::Image::ConstSharedPtr &flow_msg,
-  //     const sensor_msgs::msg::Image::ConstSharedPtr &mask_msg);
-
  private:
+  //! Driving frame id for the enture dynosam pipeline
   FrameId frame_id_;
-
-  // message_filters::Subscriber<sensor_msgs::msg::Image> rgb_image_sub_;
-  // message_filters::Subscriber<sensor_msgs::msg::Image> depth_image_sub_;
-  // message_filters::Subscriber<sensor_msgs::msg::Image> flow_image_sub_;
-  // message_filters::Subscriber<sensor_msgs::msg::Image> mask_image_sub_;
-
-  // std::shared_ptr<message_filters::Synchronizer<SyncPolicy>> sync_;
   MultiSyncBase::Ptr image_subscriber_;
 
   rclcpp::CallbackGroup::SharedPtr imu_callback_group_;

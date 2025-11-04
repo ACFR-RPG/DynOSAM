@@ -47,8 +47,6 @@ class ObjectTracker {
 
 class ByteObjectTracker : public ObjectTracker {
  public:
-  // always need 1-to-1 intput/output arguments sizes. If track invalid mark it
-  // as such
   std::vector<SingleDetectionResult> track(
       const std::vector<ObjectDetection>& detections) override;
 

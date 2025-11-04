@@ -1,11 +1,8 @@
 #pragma once
 
-#include "dynosam_ros/displays/BackendDisplayRos.hpp"
-// #include "dynosam_ros/BackendDisplayPolicyRos.hpp" //for
-// BackendModuleDisplayTraits
-
 #include "dynosam/backend/ParallelHybridBackendModule.hpp"
 #include "dynosam/backend/rgbd/HybridEstimator.hpp"
+#include "dynosam_ros/displays/BackendDisplayRos.hpp"
 
 namespace dyno {
 
@@ -19,7 +16,7 @@ class ParalleHybridModuleDisplay : public BackendModuleDisplayRos {
       std::shared_ptr<ParallelHybridBackendModule> module)
       : BackendModuleDisplayRos(params, node), module_(CHECK_NOTNULL(module)) {}
 
-  void spin(Timestamp timestamp, FrameId frame_id) override {}
+  void spin(const BackendOutputPacket::ConstPtr& output) override;
 
  private:
   std::shared_ptr<ParallelHybridBackendModule> module_;
@@ -34,7 +31,7 @@ class RegularHybridFormulationDisplay : public BackendModuleDisplayRos {
     CHECK_NOTNULL(module);
   }
 
-  void spin(Timestamp timestamp, FrameId frame_id) override {}
+  void spin(const BackendOutputPacket::ConstPtr& output) override;
 
  private:
   std::shared_ptr<RegularHybridFormulation> module_;
