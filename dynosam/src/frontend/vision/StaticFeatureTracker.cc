@@ -436,7 +436,7 @@ bool KltFeatureTracker::trackPoints(const cv::Mat& current_processed_img,
   const cv::Mat& motion_mask = image_container.objectMotionMask();
   const FrameId frame_k = image_container.frameId();
 
-  std::vector<uchar> status;
+  std::vector<uchar> klt_status;
   std::vector<float> err;
   // All tracklet ids from the set of previous features to track
   TrackletIds tracklet_ids;
@@ -484,7 +484,7 @@ bool KltFeatureTracker::trackPoints(const cv::Mat& current_processed_img,
     // d_status.download(status);
 
     cv::calcOpticalFlowPyrLK(previous_processed_img, current_processed_img,
-                             previous_pts, current_points, status, err,
+                             previous_pts, current_points, klt_status, err,
                              klt_window_size, klt_max_level, klt_criteria,
                              klt_flags);
 
@@ -492,27 +492,56 @@ bool KltFeatureTracker::trackPoints(const cv::Mat& current_processed_img,
     if (klt_flags == cv::OPTFLOW_USE_INITIAL_FLOW) {
       static constexpr int kMinSuccessTracks = 10;
       int succ_num = 0;
-      for (size_t i = 0; i < status.size(); i++) {
-        if (status[i]) succ_num++;
+      for (size_t i = 0; i < klt_status.size(); i++) {
+        if (klt_status[i]) succ_num++;
       }
       if (succ_num < kMinSuccessTracks) {
         LOG(WARNING) << "Using initial flow for KLT tracking failed: only "
                      << succ_num << " tracked!";
         cv::calcOpticalFlowPyrLK(previous_processed_img, current_processed_img,
-                                 previous_pts, current_points, status, err,
+                                 previous_pts, current_points, klt_status, err,
                                  klt_window_size, klt_max_level, klt_criteria);
+      }
+    }
+
+    // check flow back
+    std::vector<cv::Point2f> reverse_previous_feature_points = current_points;
+    std::vector<uchar> klt_reverse_status;
+    cv::calcOpticalFlowPyrLK(current_processed_img, previous_processed_img,
+                             current_points, reverse_previous_feature_points,
+                             klt_reverse_status, err, cv::Size(21, 21), 5);
+    CHECK_EQ(klt_reverse_status.size(), tracklet_ids.size());
+
+    auto distance = [](const cv::Point2f& pt1,
+                       const cv::Point2f& pt2) -> float {
+      float dx = pt1.x - pt2.x;
+      float dy = pt1.y - pt2.y;
+      return std::sqrt(dx * dx + dy * dy);
+    };
+    // update klt status based on result from flow
+    for (size_t i = 0; i < klt_status.size(); i++) {
+      const bool both_status_good =
+          klt_status.at(i) && klt_reverse_status.at(i);
+      const bool within_distance =
+          distance(previous_pts.at(i), reverse_previous_feature_points.at(i)) <=
+          0.5;
+
+      if (both_status_good && within_distance) {
+        klt_status.at(i) = 1;
+      } else {
+        klt_status.at(i) = 0;
       }
     }
   }
 
   CHECK_EQ(previous_pts.size(), current_points.size());
-  CHECK_EQ(status.size(), current_points.size());
+  CHECK_EQ(klt_status.size(), current_points.size());
 
   std::vector<cv::Point2f> good_current, good_previous;
   TrackletIds good_tracklets;
   // can also look at the err?
-  for (size_t i = 0; i < status.size(); i++) {
-    if (status[i]) {
+  for (size_t i = 0; i < klt_status.size(); i++) {
+    if (klt_status[i]) {
       good_current.push_back(current_points.at(i));
       good_previous.push_back(previous_pts.at(i));
       good_tracklets.push_back(tracklet_ids.at(i));

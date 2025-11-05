@@ -273,7 +273,8 @@ void DynoPipelineManager::loadPipelines(const CameraParams& camera_params,
       //  only update camera to rgbd if the data provider has not already set
       if (!mutable_camera_params.hasDepthParams()) {
         LOG(INFO) << "Updating camera params: converting to Fake Stereo camera";
-        mutable_camera_params.setDepthParams(0.07);
+        // mutable_camera_params.setDepthParams(0.07);
+        mutable_camera_params.setDepthParams(0.1);
       }
       Camera::Ptr camera = std::make_shared<Camera>(mutable_camera_params);
       CHECK_NOTNULL(camera);

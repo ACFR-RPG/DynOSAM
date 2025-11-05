@@ -303,15 +303,8 @@ ParallelHybridBackendModule::nominalSpinImpl(VisionImuPacket::ConstPtr input) {
 
 std::pair<gtsam::Values, gtsam::NonlinearFactorGraph>
 ParallelHybridBackendModule::getActiveOptimisation() const {
-  // get static variables
-  using StaticSmootherInterface =
-      IncrementalInterface<decltype(static_estimator_)>;
-  // need to make non-const
-  StaticSmootherInterface static_smoother_interface(
-      const_cast<StaticSmootherInterface::Smoother*>(&static_estimator_));
-
-  auto graph = static_smoother_interface.getFactors();
-  auto theta = static_smoother_interface.getLinearizationPoint();
+  gtsam::NonlinearFactorGraph graph;
+  gtsam::Values theta;
 
   for (const auto& [object_id, estimator] : sam_estimators_) {
     auto object_smoother = estimator->getSmoother();
@@ -320,8 +313,20 @@ ParallelHybridBackendModule::getActiveOptimisation() const {
     DynamicSmootherInterface dynamic_smoother_interface(&object_smoother);
 
     graph += dynamic_smoother_interface.getFactors();
-    theta.insert(dynamic_smoother_interface.getLinearizationPoint());
+    // must assign becuase the smoothers will share the camera pose values
+    theta.insert_or_assign(dynamic_smoother_interface.getLinearizationPoint());
   }
+
+  // get static variables last as they contain the same camera pose variables
+  // which we will override
+  using StaticSmootherInterface =
+      IncrementalInterface<decltype(static_estimator_)>;
+  // need to make non-const
+  StaticSmootherInterface static_smoother_interface(
+      const_cast<StaticSmootherInterface::Smoother*>(&static_estimator_));
+  graph += static_smoother_interface.getFactors();
+  theta.insert_or_assign(static_smoother_interface.getLinearizationPoint());
+
   return {theta, graph};
 }
 

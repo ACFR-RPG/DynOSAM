@@ -148,8 +148,11 @@ FrontendModule::SpinReturn RGBDInstanceFrontendModule::nominalSpin(
   }
 
   bool stereo_result = false;
-  static const double base_line = 0.05;  // VIODE
-  // static const double base_line = 0.12;  // ZED
+  std::shared_ptr<RGBDCamera> rgbd_camera = camera_->safeGetRGBDCamera();
+
+  if (has_stereo) {
+    CHECK(rgbd_camera) << "Stereo imagery provided but rgbd camera is null!";
+  }
 
   if (has_stereo) {
     const cv::Mat& left_rgb = image_container->rgb();
@@ -162,7 +165,7 @@ FrontendModule::SpinReturn RGBDInstanceFrontendModule::nominalSpin(
     FeaturePtrs stereo_features_1;
     stereo_result =
         tracker_->stereoTrack(stereo_features_1, frame->static_features_,
-                              left_rgb, right_rgb, base_line);
+                              left_rgb, right_rgb, rgbd_camera->baseline());
   }
 
   // this includes the refine correspondances with joint optical flow
@@ -180,7 +183,7 @@ FrontendModule::SpinReturn RGBDInstanceFrontendModule::nominalSpin(
     FeaturePtrs stereo_features_2;
     stereo_result &=
         tracker_->stereoTrack(stereo_features_2, frame->static_features_,
-                              left_rgb, right_rgb, base_line);
+                              left_rgb, right_rgb, rgbd_camera->baseline());
   }
 
   // VERY important calculation

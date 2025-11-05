@@ -218,6 +218,11 @@ struct Sensors {
   Sensors() {}
 };
 
+namespace internal {
+template <typename MAP>
+class StaticFormulationUpdaterImpl;
+}
+
 /**
  * @brief Base class for a formulation that defines the structure and
  * implementation for a factor-graph based Dynamic SLAM solution. Derived
@@ -600,6 +605,8 @@ class Formulation {
   //! Full name of the formulation and accounts for the additional configuration
   //! from the FormulationParams
   mutable std::optional<std::string> fully_qualified_name_{std::nullopt};
+
+  friend class internal::StaticFormulationUpdaterImpl<MAP>;
 };
 
 }  // namespace dyno

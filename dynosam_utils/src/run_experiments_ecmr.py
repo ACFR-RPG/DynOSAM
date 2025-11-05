@@ -163,7 +163,7 @@ def run_viodes():
     # run_ecmr_experiment_sequences("/root/data/VIODE/parking_lot/high", "parking_lot_night_high", viode)
 
 def run_omd():
-    run_ecmr_experiment_sequences("/root/data/vdo_slam/omd/omd/swinging_4_unconstrained_stereo/","omd_s4u_static_only", omd_dataset, "--ending_frame=300")
+    run_ecmr_experiment_sequences("/root/data/vdo_slam/omd/omd/swinging_4_unconstrained_stereo/","test", omd_dataset, "--ending_frame=300")
 
 
 def run_tartan_air():
@@ -206,12 +206,12 @@ if __name__ == '__main__':
     #     "--ending_frame=150"
     # )
 
-    run_viodes()
+    # run_viodes()
     # run_tartan_air()
     # run_cluster()
     # run_omd()
     # run_aria()
-    # run_kitti()
+    run_kitti()
     # run_analysis("kitti_0001_static_only")
     # run_analysis("kitti_0002_static_only")
     # run_analysis("kitti_0003_static_only")

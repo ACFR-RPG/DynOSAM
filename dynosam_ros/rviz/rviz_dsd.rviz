@@ -9,6 +9,7 @@ Panels:
         - /Backend1
         - /Backend1/Visual Odometry1/Status1
         - /Backend1/Visual Odometry1/Shape1
+        - /Frontend1
         - /Frontend1/Static Map1
         - /Frontend1/Visual Odometry1/Shape1
         - /Ground Truth1
@@ -32,7 +33,7 @@ Panels:
     Experimental: false
     Name: Time
     SyncMode: 0
-    SyncSource: ""
+    SyncSource: Static Map
 Visualization Manager:
   Class: ""
   Displays:
@@ -112,7 +113,7 @@ Visualization Manager:
           Selectable: true
           Size (Pixels): 3
           Size (m): 0.07000000029802322
-          Style: Flat Squares
+          Style: Points
           Topic:
             Depth: 5
             Durability Policy: Volatile
@@ -300,7 +301,7 @@ Visualization Manager:
           Selectable: true
           Size (Pixels): 3
           Size (m): 0.10000000149011612
-          Style: Flat Squares
+          Style: Points
           Topic:
             Depth: 5
             Durability Policy: Volatile
@@ -625,25 +626,25 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 44.577999114990234
+      Distance: 8.840835571289062
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: -115.2574691772461
-        Y: -2.8020074367523193
-        Z: -27.205873489379883
+        X: 0.019038256257772446
+        Y: -1.3721035718917847
+        Z: 0.9078776240348816
       Focal Shape Fixed Size: false
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: -0.6852031946182251
+      Pitch: -0.9497978687286377
       Target Frame: camera
       Value: Orbit (rviz_default_plugins)
-      Yaw: 4.740396976470947
+      Yaw: 4.900396823883057
     Saved: ~
 Window Geometry:
   Displays:

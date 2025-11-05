@@ -24,14 +24,17 @@
 # --odometry_rotation_sigma=0.005
 # --odometry_translation_sigma=0.001
 
---odometry_rotation_sigma=0.05
---odometry_translation_sigma=0.01
+#--odometry_rotation_sigma=0.05
+#--odometry_translation_sigma=0.01
+
+--odometry_rotation_sigma=0.2
+--odometry_translation_sigma=0.4
 
 
 --static_point_noise_sigma=0.01
 --dynamic_point_noise_sigma=0.01
 
---static_pixel_noise_sigma=0.1
+--static_pixel_noise_sigma=1.0
 --dynamic_pixel_noise_sigma=3.0
 
 
@@ -46,7 +49,7 @@
 --optimization_mode=0
 
 # 0: PTP, 1: Generic Projection, 2: Stereo Projection
---static_formulation_type=0
+--static_formulation_type=2
 
 --min_static_observations=2
 --min_dynamic_observations=2

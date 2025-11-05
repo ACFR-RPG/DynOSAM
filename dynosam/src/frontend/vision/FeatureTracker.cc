@@ -224,6 +224,35 @@ bool FeatureTracker::stereoTrack(FeaturePtrs& stereo_features,
                            right_feature_points, klt_status, err,
                            cv::Size(21, 21), 5);
   CHECK_EQ(klt_status.size(), tracklets_ids.size());
+
+  // check flow back
+  std::vector<cv::Point2f> reverse_left_feature_points = right_feature_points;
+  std::vector<uchar> klt_reverse_status;
+  cv::calcOpticalFlowPyrLK(right_mono, left_mono, right_feature_points,
+                           reverse_left_feature_points, klt_reverse_status, err,
+                           cv::Size(21, 21), 5);
+  CHECK_EQ(klt_reverse_status.size(), tracklets_ids.size());
+
+  auto distance = [](const cv::Point2f& pt1, const cv::Point2f& pt2) -> float {
+    float dx = pt1.x - pt2.x;
+    float dy = pt1.y - pt2.y;
+    return std::sqrt(dx * dx + dy * dy);
+  };
+  // update klt status based on result from flow
+  for (size_t i = 0; i < klt_status.size(); i++) {
+    const bool both_status_good = klt_status.at(i) && klt_reverse_status.at(i);
+    const bool within_image = isWithinShrunkenImage(right_feature_points.at(i));
+    const bool within_distance =
+        distance(left_feature_points.at(i),
+                 reverse_left_feature_points.at(i)) <= 0.5;
+
+    if (both_status_good && within_image && within_distance) {
+      klt_status.at(i) = 1;
+    } else {
+      klt_status.at(i) = 0;
+    }
+  }
+
   TrackletIds good_stereo_tracklets;
 
   std::vector<cv::Point2f> pts_left_tracked, pts_right_tracked;
