@@ -1,25 +1,35 @@
 /*
- *   Copyright (c) 2023 ACFR-RPG, University of Sydney, Jesse Morris (jesse.morris@sydney.edu.au)
+ *   Copyright (c) 2023 ACFR-RPG, University of Sydney, Jesse Morris
+ (jesse.morris@sydney.edu.au)
  *   All rights reserved.
 
- *   Permission is hereby granted, free of charge, to any person obtaining a copy
- *   of this software and associated documentation files (the "Software"), to deal
- *   in the Software without restriction, including without limitation the rights
+ *   Permission is hereby granted, free of charge, to any person obtaining a
+ copy
+ *   of this software and associated documentation files (the "Software"), to
+ deal
+ *   in the Software without restriction, including without limitation the
+ rights
  *   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  *   copies of the Software, and to permit persons to whom the Software is
  *   furnished to do so, subject to the following conditions:
 
- *   The above copyright notice and this permission notice shall be included in all
+ *   The above copyright notice and this permission notice shall be included in
+ all
  *   copies or substantial portions of the Software.
 
  *   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  *   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  *   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
  *   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- *   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- *   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ *   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ FROM,
+ *   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ THE
  *   SOFTWARE.
  */
+
+#include <glog/logging.h>
+#include <gtest/gtest.h>
 
 #include <chrono>
 #include <iostream>
@@ -28,20 +38,13 @@
 #include <thread>
 #include <vector>
 
-#include <glog/logging.h>
-#include <gtest/gtest.h>
-
 #include "dynosam/pipeline/ThreadSafeQueue.hpp"
 
-
 void consumer(ThreadsafeQueue<std::string>& q,  // NOLINT
-              const std::atomic_bool& kill_switch)
-{
-  while (!kill_switch)
-  {
+              const std::atomic_bool& kill_switch) {
+  while (!kill_switch) {
     std::string msg = "No msg!";
-    if (q.popBlocking(msg))
-    {
+    if (q.popBlocking(msg)) {
       VLOG(1) << "Got msg: " << msg << '\n';
     }
   }
@@ -49,10 +52,8 @@ void consumer(ThreadsafeQueue<std::string>& q,  // NOLINT
 }
 
 void producer_milliseconds(ThreadsafeQueue<std::string>& q,  // NOLINT
-                           const std::atomic_bool& kill_switch, int delay)
-{
-  while (!kill_switch)
-  {
+                           const std::atomic_bool& kill_switch, int delay) {
+  while (!kill_switch) {
     std::this_thread::sleep_for(std::chrono::milliseconds(delay));
     q.push("Hello World!");
   }
@@ -60,10 +61,8 @@ void producer_milliseconds(ThreadsafeQueue<std::string>& q,  // NOLINT
 }
 
 void producer(ThreadsafeQueue<std::string>& q,  // NOLINT
-              const std::atomic_bool& kill_switch)
-{
-  while (!kill_switch)
-  {
+              const std::atomic_bool& kill_switch) {
+  while (!kill_switch) {
     std::this_thread::sleep_for(std::chrono::milliseconds(200));
     q.push("Hello World!");
   }
@@ -71,10 +70,8 @@ void producer(ThreadsafeQueue<std::string>& q,  // NOLINT
 }
 
 void blockingProducer(ThreadsafeQueue<std::string>& q,  // NOLINT
-                      const std::atomic_bool& kill_switch)
-{
-  while (!kill_switch)
-  {
+                      const std::atomic_bool& kill_switch) {
+  while (!kill_switch) {
     std::this_thread::sleep_for(std::chrono::milliseconds(20));
     q.pushBlockingIfFull("Hello World!", 5);
   }
@@ -82,8 +79,7 @@ void blockingProducer(ThreadsafeQueue<std::string>& q,  // NOLINT
 }
 
 /* ************************************************************************* */
-TEST(testThreadsafeQueue, popBlocking_by_reference)
-{
+TEST(testThreadsafeQueue, popBlocking_by_reference) {
   ThreadsafeQueue<std::string> q;
   std::thread p([&] {
     q.push("Hello World!");
@@ -105,8 +101,7 @@ TEST(testThreadsafeQueue, popBlocking_by_reference)
 }
 
 /* ************************************************************************* */
-TEST(testThreadsafeQueue, popBlocking_by_shared_ptr)
-{
+TEST(testThreadsafeQueue, popBlocking_by_shared_ptr) {
   ThreadsafeQueue<std::string> q;
   std::thread p([&] {
     q.push("Hello World!");
@@ -126,8 +121,7 @@ TEST(testThreadsafeQueue, popBlocking_by_shared_ptr)
 }
 
 /* ************************************************************************* */
-TEST(testThreadsafeQueue, push)
-{
+TEST(testThreadsafeQueue, push) {
   ThreadsafeQueue<std::string> q;
   std::thread p([&] {
     q.push(std::string("Hello World!"));
@@ -147,8 +141,7 @@ TEST(testThreadsafeQueue, push)
   p.join();
 }
 
-TEST(testThreadsafeQueue, pointerContainer)
-{
+TEST(testThreadsafeQueue, pointerContainer) {
   ThreadsafeQueue<std::shared_ptr<std::string>> q;
   std::thread p([&] {
     q.push(std::make_shared<std::string>("Hello World!"));
@@ -171,8 +164,7 @@ TEST(testThreadsafeQueue, pointerContainer)
 }
 
 /* ************************************************************************* */
-TEST(testThreadsafeQueue, pushBlockingIfFull)
-{
+TEST(testThreadsafeQueue, pushBlockingIfFull) {
   // Here we test only its nominal push behavior, not the blocking behavior
   ThreadsafeQueue<std::string> q;
   std::thread p([&] {
@@ -194,8 +186,7 @@ TEST(testThreadsafeQueue, pushBlockingIfFull)
 }
 
 /* ************************************************************************* */
-TEST(testThreadsafeQueue, producer_consumer)
-{
+TEST(testThreadsafeQueue, producer_consumer) {
   ThreadsafeQueue<std::string> q;
   std::atomic_bool kill_switch(false);
   std::thread c(consumer, std::ref(q), std::ref(kill_switch));
@@ -221,8 +212,7 @@ TEST(testThreadsafeQueue, producer_consumer)
 }
 
 /* ************************************************************************* */
-TEST(testThreadsafeQueue, blocking_producer)
-{
+TEST(testThreadsafeQueue, blocking_producer) {
   ThreadsafeQueue<std::string> q;
   std::atomic_bool kill_switch(false);
   std::thread p(blockingProducer, std::ref(q), std::ref(kill_switch));
@@ -253,8 +243,7 @@ TEST(testThreadsafeQueue, blocking_producer)
   // Expect non-empty queue.
   EXPECT_TRUE(!q.empty());
   size_t queue_size = 0;
-  while (!q.empty())
-  {
+  while (!q.empty()) {
     std::string output;
     EXPECT_TRUE(q.pop(output));
     EXPECT_EQ(output, "Hello World!");
@@ -265,27 +254,24 @@ TEST(testThreadsafeQueue, blocking_producer)
 }
 
 /* ************************************************************************* */
-TEST(testThreadsafeQueue, stress_test)
-{
+TEST(testThreadsafeQueue, stress_test) {
   ThreadsafeQueue<std::string> q;
   std::atomic_bool kill_switch(false);
   std::vector<std::thread> cs;
-  for (size_t i = 0; i < 10; i++)
-  {
+  for (size_t i = 0; i < 10; i++) {
     // Create 10 consumers.
     cs.push_back(std::thread(consumer, std::ref(q), std::ref(kill_switch)));
   }
   std::vector<std::thread> ps;
-  for (size_t i = 0; i < 10; i++)
-  {
+  for (size_t i = 0; i < 10; i++) {
     // Create 10 producers.
     ps.push_back(std::thread(producer, std::ref(q), std::ref(kill_switch)));
   }
   std::vector<std::thread> blocking_ps;
-  for (size_t i = 0; i < 10; i++)
-  {
+  for (size_t i = 0; i < 10; i++) {
     // Create 10 producers.
-    ps.push_back(std::thread(blockingProducer, std::ref(q), std::ref(kill_switch)));
+    ps.push_back(
+        std::thread(blockingProducer, std::ref(q), std::ref(kill_switch)));
   }
 
   std::this_thread::sleep_for(std::chrono::milliseconds(200));
@@ -302,29 +288,25 @@ TEST(testThreadsafeQueue, stress_test)
 
   VLOG(1) << "Joining threads.\n";
   kill_switch = true;
-  for (size_t i = 0; i < cs.size(); i++)
-  {
+  for (size_t i = 0; i < cs.size(); i++) {
     cs[i].join();
   }
-  for (size_t i = 0; i < ps.size(); i++)
-  {
+  for (size_t i = 0; i < ps.size(); i++) {
     ps[i].join();
   }
-  for (size_t i = 0; i < blocking_ps.size(); i++)
-  {
+  for (size_t i = 0; i < blocking_ps.size(); i++) {
     blocking_ps[i].join();
   }
   VLOG(1) << "Threads joined.\n";
 }
 
-TEST(testThreadsafeQueue, limited_queue_size)
-{
+TEST(testThreadsafeQueue, limited_queue_size) {
   ThreadsafeQueue<std::string> q(5);
   std::atomic_bool kill_switch(false);
   std::thread p(producer_milliseconds, std::ref(q), std::ref(kill_switch), 10);
 
-  // Give plenty of time to the producer_milliseconds to fill-in completely the queue
-  // and be blocked.
+  // Give plenty of time to the producer_milliseconds to fill-in completely the
+  // queue and be blocked.
   std::this_thread::sleep_for(std::chrono::milliseconds(200));
   // Expect the size of the queue to be the maximum size of the queue
   EXPECT_EQ(q.size(), 5u);

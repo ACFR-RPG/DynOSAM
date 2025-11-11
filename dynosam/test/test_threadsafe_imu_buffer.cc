@@ -1,23 +1,30 @@
 /*
- *   Copyright (c) 2023 ACFR-RPG, University of Sydney, Jesse Morris (jesse.morris@sydney.edu.au)
+ *   Copyright (c) 2023 ACFR-RPG, University of Sydney, Jesse Morris
+ (jesse.morris@sydney.edu.au)
  *   All rights reserved.
 
- *   Permission is hereby granted, free of charge, to any person obtaining a copy
- *   of this software and associated documentation files (the "Software"), to deal
- *   in the Software without restriction, including without limitation the rights
+ *   Permission is hereby granted, free of charge, to any person obtaining a
+ copy
+ *   of this software and associated documentation files (the "Software"), to
+ deal
+ *   in the Software without restriction, including without limitation the
+ rights
  *   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  *   copies of the Software, and to permit persons to whom the Software is
  *   furnished to do so, subject to the following conditions:
 
- *   The above copyright notice and this permission notice shall be included in all
+ *   The above copyright notice and this permission notice shall be included in
+ all
  *   copies or substantial portions of the Software.
 
  *   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  *   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  *   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
  *   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- *   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- *   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ *   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ FROM,
+ *   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ THE
  *   SOFTWARE.
  */
 
@@ -58,12 +65,12 @@
    limitations under the License.
 *********************************************************************************/
 
-#include "dynosam/frontend/imu/ThreadSafeImuBuffer.hpp"
-#include "dynosam/frontend/imu/Imu-Definitions.hpp"
-#include "dynosam/frontend/imu/ImuMeasurements.hpp"
-
 #include <glog/logging.h>
 #include <gtest/gtest.h>
+
+#include "dynosam/frontend/imu/Imu-Definitions.hpp"
+#include "dynosam/frontend/imu/ImuMeasurements.hpp"
+#include "dynosam/frontend/imu/ThreadSafeImuBuffer.hpp"
 
 namespace dyno {
 
@@ -76,8 +83,7 @@ TEST(ThreadsafeImuBuffer, PopFromEmptyBuffer) {
     dyno::ThreadsafeImuBuffer::QueryResult success =
         buffer.getImuDataBtwTimestamps(50, 100, &imu_timestamps,
                                        &imu_measurements);
-    EXPECT_EQ(success,
-              ThreadsafeImuBuffer::QueryResult::kDataNotYetAvailable);
+    EXPECT_EQ(success, ThreadsafeImuBuffer::QueryResult::kDataNotYetAvailable);
     EXPECT_EQ(0u, imu_timestamps.size());
     EXPECT_EQ(0u, imu_measurements.size());
   }
@@ -85,8 +91,7 @@ TEST(ThreadsafeImuBuffer, PopFromEmptyBuffer) {
     dyno::ThreadsafeImuBuffer::QueryResult success =
         buffer.getImuDataBtwTimestamps(50, 100, &imu_timestamps,
                                        &imu_measurements, true);
-    EXPECT_EQ(success,
-              ThreadsafeImuBuffer::QueryResult::kDataNotYetAvailable);
+    EXPECT_EQ(success, ThreadsafeImuBuffer::QueryResult::kDataNotYetAvailable);
     EXPECT_EQ(0u, imu_timestamps.size());
     EXPECT_EQ(0u, imu_measurements.size());
   }
@@ -94,8 +99,7 @@ TEST(ThreadsafeImuBuffer, PopFromEmptyBuffer) {
     dyno::ThreadsafeImuBuffer::QueryResult success =
         buffer.getImuDataInterpolatedUpperBorder(50, 100, &imu_timestamps,
                                                  &imu_measurements);
-    EXPECT_EQ(success,
-              ThreadsafeImuBuffer::QueryResult::kDataNotYetAvailable);
+    EXPECT_EQ(success, ThreadsafeImuBuffer::QueryResult::kDataNotYetAvailable);
     EXPECT_EQ(0u, imu_timestamps.size());
     EXPECT_EQ(0u, imu_measurements.size());
   }
@@ -103,8 +107,7 @@ TEST(ThreadsafeImuBuffer, PopFromEmptyBuffer) {
     dyno::ThreadsafeImuBuffer::QueryResult success =
         buffer.getImuDataInterpolatedBorders(50, 100, &imu_timestamps,
                                              &imu_measurements);
-    EXPECT_EQ(success,
-              ThreadsafeImuBuffer::QueryResult::kDataNotYetAvailable);
+    EXPECT_EQ(success, ThreadsafeImuBuffer::QueryResult::kDataNotYetAvailable);
     EXPECT_EQ(0u, imu_timestamps.size());
     EXPECT_EQ(0u, imu_measurements.size());
   }
@@ -134,8 +137,7 @@ TEST(ThreadsafeImuBuffer, getImuDataBtwTimestamps) {
   // Test aligned getter.
   result = buffer.getImuDataBtwTimestamps(20, 30, &imu_timestamps,
                                           &imu_measurements);
-  EXPECT_EQ(result,
-            dyno::ThreadsafeImuBuffer::QueryResult::kDataAvailable);
+  EXPECT_EQ(result, dyno::ThreadsafeImuBuffer::QueryResult::kDataAvailable);
   EXPECT_EQ(imu_timestamps.cols(), 1);
   EXPECT_EQ(imu_measurements.cols(), 1);
   EXPECT_EQ(imu_timestamps(0), 25);
@@ -144,8 +146,7 @@ TEST(ThreadsafeImuBuffer, getImuDataBtwTimestamps) {
   // Test aligned getter, but asking for lower bound
   result = buffer.getImuDataBtwTimestamps(20, 30, &imu_timestamps,
                                           &imu_measurements, true);
-  EXPECT_EQ(result,
-            dyno::ThreadsafeImuBuffer::QueryResult::kDataAvailable);
+  EXPECT_EQ(result, dyno::ThreadsafeImuBuffer::QueryResult::kDataAvailable);
   EXPECT_EQ(imu_timestamps.cols(), 2);
   EXPECT_EQ(imu_measurements.cols(), 2);
   EXPECT_EQ(imu_timestamps(0), 20);
@@ -156,8 +157,7 @@ TEST(ThreadsafeImuBuffer, getImuDataBtwTimestamps) {
   // Test unaligned getter (no lower/upper-interpolation).
   result = buffer.getImuDataBtwTimestamps(19, 31, &imu_timestamps,
                                           &imu_measurements);
-  EXPECT_EQ(result,
-            dyno::ThreadsafeImuBuffer::QueryResult::kDataAvailable);
+  EXPECT_EQ(result, dyno::ThreadsafeImuBuffer::QueryResult::kDataAvailable);
   EXPECT_EQ(imu_timestamps.cols(), 3);
   EXPECT_EQ(imu_measurements.cols(), 3);
   EXPECT_EQ(imu_timestamps(0), 20);
@@ -170,8 +170,7 @@ TEST(ThreadsafeImuBuffer, getImuDataBtwTimestamps) {
   // Test unaligned getter but asking for lower bound.
   result = buffer.getImuDataBtwTimestamps(19, 31, &imu_timestamps,
                                           &imu_measurements, true);
-  EXPECT_EQ(result,
-            dyno::ThreadsafeImuBuffer::QueryResult::kDataAvailable);
+  EXPECT_EQ(result, dyno::ThreadsafeImuBuffer::QueryResult::kDataAvailable);
   EXPECT_EQ(imu_timestamps.cols(), 3);
   EXPECT_EQ(imu_measurements.cols(), 3);
   EXPECT_EQ(imu_timestamps(0), 20);
@@ -204,30 +203,32 @@ TEST(ThreadsafeImuBuffer, getImuDataBtwTimestamps) {
   // Query in between two values: return nothing.
   result = buffer.getImuDataBtwTimestamps(21, 24, &imu_timestamps,
                                           &imu_measurements);
-  EXPECT_EQ(result, dyno::ThreadsafeImuBuffer::QueryResult::
-                        kTooFewMeasurementsAvailable);
+  EXPECT_EQ(
+      result,
+      dyno::ThreadsafeImuBuffer::QueryResult::kTooFewMeasurementsAvailable);
   EXPECT_EQ(imu_timestamps.cols(), 0);
   EXPECT_EQ(imu_measurements.cols(), 0);
   result = buffer.getImuDataBtwTimestamps(21, 24, &imu_timestamps,
                                           &imu_measurements, true);
-  EXPECT_EQ(result, dyno::ThreadsafeImuBuffer::QueryResult::
-                        kTooFewMeasurementsAvailable);
+  EXPECT_EQ(
+      result,
+      dyno::ThreadsafeImuBuffer::QueryResult::kTooFewMeasurementsAvailable);
   EXPECT_EQ(imu_timestamps.cols(), 0);
   EXPECT_EQ(imu_measurements.cols(), 0);
 
   // Query right between two values: return nothing.
   result = buffer.getImuDataBtwTimestamps(20, 25, &imu_timestamps,
                                           &imu_measurements);
-  EXPECT_EQ(result, dyno::ThreadsafeImuBuffer::QueryResult::
-                        kTooFewMeasurementsAvailable);
+  EXPECT_EQ(
+      result,
+      dyno::ThreadsafeImuBuffer::QueryResult::kTooFewMeasurementsAvailable);
   EXPECT_EQ(imu_timestamps.cols(), 0);
   EXPECT_EQ(imu_measurements.cols(), 0);
 
   // Query right between two values but ask for lower bound: return lower bound.
   result = buffer.getImuDataBtwTimestamps(20, 25, &imu_timestamps,
                                           &imu_measurements, true);
-  EXPECT_EQ(result,
-            dyno::ThreadsafeImuBuffer::QueryResult::kDataAvailable);
+  EXPECT_EQ(result, dyno::ThreadsafeImuBuffer::QueryResult::kDataAvailable);
   EXPECT_EQ(imu_timestamps.cols(), 1);
   EXPECT_EQ(imu_measurements.cols(), 1);
   EXPECT_EQ(imu_timestamps(0), 20);
@@ -251,8 +252,7 @@ TEST(ThreadsafeImuBuffer, getImuDataInterpolatedBorders) {
   // Test aligned getter (no-interpolation, only border values).
   result = buffer.getImuDataInterpolatedBorders(20, 30, &imu_timestamps,
                                                 &imu_measurements);
-  EXPECT_EQ(result,
-            dyno::ThreadsafeImuBuffer::QueryResult::kDataAvailable);
+  EXPECT_EQ(result, dyno::ThreadsafeImuBuffer::QueryResult::kDataAvailable);
   EXPECT_EQ(imu_timestamps.cols(), 3);
   EXPECT_EQ(imu_measurements.cols(), 3);
   EXPECT_EQ(imu_timestamps(0), 20);
@@ -265,8 +265,7 @@ TEST(ThreadsafeImuBuffer, getImuDataInterpolatedBorders) {
   // Test aligned getter (no-interpolation).
   result = buffer.getImuDataInterpolatedBorders(20, 40, &imu_timestamps,
                                                 &imu_measurements);
-  EXPECT_EQ(result,
-            dyno::ThreadsafeImuBuffer::QueryResult::kDataAvailable);
+  EXPECT_EQ(result, dyno::ThreadsafeImuBuffer::QueryResult::kDataAvailable);
   EXPECT_EQ(imu_timestamps.cols(), 4);
   EXPECT_EQ(imu_measurements.cols(), 4);
   EXPECT_EQ(imu_timestamps(0), 20);
@@ -281,8 +280,7 @@ TEST(ThreadsafeImuBuffer, getImuDataInterpolatedBorders) {
   // Test unaligned getter (lower/upper-interpolation).
   result = buffer.getImuDataInterpolatedBorders(19, 21, &imu_timestamps,
                                                 &imu_measurements);
-  EXPECT_EQ(result,
-            dyno::ThreadsafeImuBuffer::QueryResult::kDataAvailable);
+  EXPECT_EQ(result, dyno::ThreadsafeImuBuffer::QueryResult::kDataAvailable);
   EXPECT_EQ(imu_timestamps.cols(), 3);
   EXPECT_EQ(imu_measurements.cols(), 3);
   EXPECT_EQ(imu_timestamps(0), 19);
@@ -315,8 +313,7 @@ TEST(ThreadsafeImuBuffer, getImuDataInterpolatedBorders) {
   // Query between two values: return the border values.
   result = buffer.getImuDataInterpolatedBorders(21, 29, &imu_timestamps,
                                                 &imu_measurements);
-  EXPECT_EQ(result,
-            dyno::ThreadsafeImuBuffer::QueryResult::kDataAvailable);
+  EXPECT_EQ(result, dyno::ThreadsafeImuBuffer::QueryResult::kDataAvailable);
   EXPECT_EQ(imu_timestamps.cols(), 3);
   EXPECT_EQ(imu_measurements.cols(), 3);
   EXPECT_EQ(imu_timestamps(0), 21);
@@ -344,8 +341,7 @@ TEST(ThreadsafeImuBuffer, getImuDataInterpolatedUpperBorder) {
   // Test aligned getter (no-interpolation).
   result = buffer.getImuDataInterpolatedUpperBorder(20, 40, &imu_timestamps,
                                                     &imu_measurements);
-  EXPECT_EQ(result,
-            dyno::ThreadsafeImuBuffer::QueryResult::kDataAvailable);
+  EXPECT_EQ(result, dyno::ThreadsafeImuBuffer::QueryResult::kDataAvailable);
   EXPECT_EQ(imu_timestamps.cols(), 4);
   EXPECT_EQ(imu_measurements.cols(), 4);
   EXPECT_EQ(imu_timestamps(0), 20);
@@ -360,8 +356,7 @@ TEST(ThreadsafeImuBuffer, getImuDataInterpolatedUpperBorder) {
   // Test unaligned getter (only upper-interpolation).
   result = buffer.getImuDataInterpolatedUpperBorder(19, 21, &imu_timestamps,
                                                     &imu_measurements);
-  EXPECT_EQ(result,
-            dyno::ThreadsafeImuBuffer::QueryResult::kDataAvailable);
+  EXPECT_EQ(result, dyno::ThreadsafeImuBuffer::QueryResult::kDataAvailable);
   EXPECT_EQ(imu_timestamps.cols(), 2);
   EXPECT_EQ(imu_measurements.cols(), 2);
   EXPECT_EQ(imu_timestamps(0), 20);
@@ -394,8 +389,9 @@ TEST(ThreadsafeImuBuffer, getImuDataInterpolatedUpperBorder) {
   // given timestamps.
   result = buffer.getImuDataInterpolatedUpperBorder(21, 24, &imu_timestamps,
                                                     &imu_measurements);
-  EXPECT_EQ(result, dyno::ThreadsafeImuBuffer::QueryResult::
-                        kTooFewMeasurementsAvailable);
+  EXPECT_EQ(
+      result,
+      dyno::ThreadsafeImuBuffer::QueryResult::kTooFewMeasurementsAvailable);
   EXPECT_EQ(imu_timestamps.cols(), 0);
   EXPECT_EQ(imu_measurements.cols(), 0);
 
@@ -404,8 +400,7 @@ TEST(ThreadsafeImuBuffer, getImuDataInterpolatedUpperBorder) {
   // and one measurement
   result = buffer.getImuDataInterpolatedUpperBorder(21, 29, &imu_timestamps,
                                                     &imu_measurements);
-  EXPECT_EQ(result,
-            dyno::ThreadsafeImuBuffer::QueryResult::kDataAvailable);
+  EXPECT_EQ(result, dyno::ThreadsafeImuBuffer::QueryResult::kDataAvailable);
   EXPECT_EQ(imu_timestamps.cols(), 2);
   EXPECT_EQ(imu_measurements.cols(), 2);
   EXPECT_EQ(imu_timestamps(0), 25);

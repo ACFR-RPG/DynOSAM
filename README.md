@@ -54,13 +54,17 @@ DynoSAM was build as a culmination of several works:
 
 ## Demo
 
-Example output running on the Oxford Multimotion Dataset (OMD, _swinging_4_unconstrained_).
+
+<div align="center">
+  <img src="./docs/media/aria_demo_parallel_hybrid.gif"/>
+   <p style="font-style: italic; color: gray;"> DynoSAM running Parallel-Hybrid formulation in incremental optimisation mode on a indoor sequence recorded with an Intel RealSense. Playback is 2x speed.</p>
+</div>
 
 <div align="center">
   <img src="./docs/media/omd-demo.gif"/>
+  <p style="font-style: italic; color: gray;"> Example output running on the Oxford Multimotion Dataset (OMD, 'Swinging 4 Unconstrained'). This visualisation was generated using playback after full-batch optimisation.</p>
 </div>
 
-> NOTE: this visualisation was generated using playback and is does not reflect the realtime output of our system.
 
 ## Feature Updates
 November 2025

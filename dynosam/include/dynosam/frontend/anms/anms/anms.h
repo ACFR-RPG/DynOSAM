@@ -25,10 +25,10 @@ SOFTWARE.
 #pragma once
 
 #include <stdlib.h>
-#include <iostream>
-#include <vector>
 
+#include <iostream>
 #include <opencv2/opencv.hpp>
+#include <vector>
 
 #include "dynosam/frontend/anms/anms/range-tree/ranget.h"
 
@@ -49,9 +49,7 @@ std::vector<cv::KeyPoint> BrownANMS(const std::vector<cv::KeyPoint>& keyPoints,
                                     int numRetPoints);
 
 std::vector<cv::KeyPoint> Sdc(const std::vector<cv::KeyPoint>& keyPoints,
-                              int numRetPoints,
-                              float tolerance,
-                              int cols,
+                              int numRetPoints, float tolerance, int cols,
                               int rows);
 
 /*kdtree algorithm*/
@@ -66,8 +64,7 @@ struct PointCloud {
   }  // Must return the number of data points
   // Returns the distance between the std::vector "p1[0:size-1]" and the data
   // point with index "idx_p2" stored in the class:
-  inline T kdtree_distance(const T* p1,
-                           const size_t idx_p2,
+  inline T kdtree_distance(const T* p1, const size_t idx_p2,
                            size_t /*size*/) const {
     const T d0 = p1[0] - pts[idx_p2].x;
     const T d1 = p1[1] - pts[idx_p2].y;
@@ -106,25 +103,18 @@ inline void generatePointCloud(PointCloud<T>& point,
 }
 
 std::vector<cv::KeyPoint> KdTree(const std::vector<cv::KeyPoint>& keyPoints,
-                                 int numRetPoints,
-                                 float tolerance,
-                                 int cols,
+                                 int numRetPoints, float tolerance, int cols,
                                  int rows);
 
 std::vector<cv::KeyPoint> RangeTree(const std::vector<cv::KeyPoint>& keyPoints,
-                                    int numRetPoints,
-                                    float tolerance,
-                                    int cols,
+                                    int numRetPoints, float tolerance, int cols,
                                     int rows);
 
 std::vector<cv::KeyPoint> Ssc(const std::vector<cv::KeyPoint>& keyPoints,
-                              int numRetPoints,
-                              float tolerance,
-                              int cols,
+                              int numRetPoints, float tolerance, int cols,
                               int rows);
 
-void VisualizeAll(cv::Mat Image,
-                  std::vector<cv::KeyPoint> keyPoints,
+void VisualizeAll(cv::Mat Image, std::vector<cv::KeyPoint> keyPoints,
                   string figureTitle);
 
 }  // namespace anms

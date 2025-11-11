@@ -1,23 +1,30 @@
 /*
- *   Copyright (c) 2024 ACFR-RPG, University of Sydney, Jesse Morris (jesse.morris@sydney.edu.au)
+ *   Copyright (c) 2024 ACFR-RPG, University of Sydney, Jesse Morris
+ (jesse.morris@sydney.edu.au)
  *   All rights reserved.
 
- *   Permission is hereby granted, free of charge, to any person obtaining a copy
- *   of this software and associated documentation files (the "Software"), to deal
- *   in the Software without restriction, including without limitation the rights
+ *   Permission is hereby granted, free of charge, to any person obtaining a
+ copy
+ *   of this software and associated documentation files (the "Software"), to
+ deal
+ *   in the Software without restriction, including without limitation the
+ rights
  *   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  *   copies of the Software, and to permit persons to whom the Software is
  *   furnished to do so, subject to the following conditions:
 
- *   The above copyright notice and this permission notice shall be included in all
+ *   The above copyright notice and this permission notice shall be included in
+ all
  *   copies or substantial portions of the Software.
 
  *   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  *   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  *   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
  *   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- *   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- *   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ *   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ FROM,
+ *   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ THE
  *   SOFTWARE.
  */
 
@@ -27,28 +34,26 @@
 
 namespace dyno {
 
-//TODO: make parsable
+// TODO: make parsable
 struct StereoMatchingParams {
-
-    double tolerance_template_matching_ = 0.15;
-    double nominal_baseline_ = 0.11;
-    int templ_cols_ = 101;       // must be odd
-    int templ_rows_ = 11;        // must be odd
-    int stripe_extra_rows_ = 0;  // must be even
-    // stereo points triangulated below this distance are discarded.
-    double min_point_dist_ = 0.1;
-    // stereo points triangulated beyond this distance are discarded.
-    double max_point_dist_ = 15.0;
-    // check best match left->right and right->left
-    bool bidirectional_matching_ = false;
-    // refine stereo matches with subpixel accuracy
-    bool subpixel_refinement_ = false;
-    // do equalize image before processing options to use RGB-D vs. stereo.
-    bool equalize_image_ = false;
-
+  double tolerance_template_matching_ = 0.15;
+  double nominal_baseline_ = 0.11;
+  int templ_cols_ = 101;       // must be odd
+  int templ_rows_ = 11;        // must be odd
+  int stripe_extra_rows_ = 0;  // must be even
+  // stereo points triangulated below this distance are discarded.
+  double min_point_dist_ = 0.1;
+  // stereo points triangulated beyond this distance are discarded.
+  double max_point_dist_ = 15.0;
+  // check best match left->right and right->left
+  bool bidirectional_matching_ = false;
+  // refine stereo matches with subpixel accuracy
+  bool subpixel_refinement_ = false;
+  // do equalize image before processing options to use RGB-D vs. stereo.
+  bool equalize_image_ = false;
 };
 
-//TODO: make parsable
+// TODO: make parsable
 struct DenseStereoParams {
   bool use_sgbm_ = true;
   bool post_filter_disparity_ = false;
@@ -71,4 +76,4 @@ struct DenseStereoParams {
   bool use_mode_HH_ = true;
 };
 
-};
+};  // namespace dyno

@@ -1,49 +1,51 @@
 /*
- *   Copyright (c) 2023 ACFR-RPG, University of Sydney, Jesse Morris (jesse.morris@sydney.edu.au)
+ *   Copyright (c) 2023 ACFR-RPG, University of Sydney, Jesse Morris
+ (jesse.morris@sydney.edu.au)
  *   All rights reserved.
 
- *   Permission is hereby granted, free of charge, to any person obtaining a copy
- *   of this software and associated documentation files (the "Software"), to deal
- *   in the Software without restriction, including without limitation the rights
+ *   Permission is hereby granted, free of charge, to any person obtaining a
+ copy
+ *   of this software and associated documentation files (the "Software"), to
+ deal
+ *   in the Software without restriction, including without limitation the
+ rights
  *   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  *   copies of the Software, and to permit persons to whom the Software is
  *   furnished to do so, subject to the following conditions:
 
- *   The above copyright notice and this permission notice shall be included in all
+ *   The above copyright notice and this permission notice shall be included in
+ all
  *   copies or substantial portions of the Software.
 
  *   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  *   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  *   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
  *   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- *   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- *   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ *   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ FROM,
+ *   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ THE
  *   SOFTWARE.
  */
-
-#include <chrono>
-#include <thread>
 
 #include <gflags/gflags.h>
 #include <glog/logging.h>
 #include <gtest/gtest.h>
 
+#include <chrono>
+#include <thread>
+
 #include "dynosam/pipeline/ThreadSafeTemporalBuffer.hpp"
 
-namespace dyno
-{
-struct TestData
-{
-  explicit TestData(Timestamp time) : timestamp(time)
-  {
-  }
+namespace dyno {
+struct TestData {
+  explicit TestData(Timestamp time) : timestamp(time) {}
   TestData() = default;
 
   Timestamp timestamp;
 };
 
-TEST(ThreadsafeTemporalBuffer, testEqualsOverloading)
-{
+TEST(ThreadsafeTemporalBuffer, testEqualsOverloading) {
   ThreadsafeTemporalBuffer<TestData> buffer_1(-1);
   ThreadsafeTemporalBuffer<TestData> buffer_2(100);
 
@@ -70,8 +72,7 @@ TEST(ThreadsafeTemporalBuffer, testEqualsOverloading)
   EXPECT_EQ(buffer_2.size(), 3u);
 }
 
-TEST(ThreadsafeTemporalBuffer, testLagSizeInfinite)
-{
+TEST(ThreadsafeTemporalBuffer, testLagSizeInfinite) {
   ThreadsafeTemporalBuffer<TestData> buffer_(-1);
   buffer_.addValue(0, TestData(0));
   EXPECT_EQ(buffer_.size(), 1u);
@@ -81,14 +82,14 @@ TEST(ThreadsafeTemporalBuffer, testLagSizeInfinite)
   EXPECT_EQ(buffer_.size(), 3u);
 }
 
-TEST(ThreadsafeTemporalBuffer, testLagSize10)
-{
+TEST(ThreadsafeTemporalBuffer, testLagSize10) {
   ThreadsafeTemporalBuffer<TestData> buffer_(10);
   buffer_.addValue(0, TestData(0));
 
   const double kMaxDelta = 0.01;
   TestData retrieved_item;
-  // check that we can retrieve this value now so wer can be sure we cannot retrieve it later
+  // check that we can retrieve this value now so wer can be sure we cannot
+  // retrieve it later
   EXPECT_TRUE(buffer_.getNearestValueToTime(0, kMaxDelta, &retrieved_item));
   EXPECT_EQ(retrieved_item.timestamp, 0);
 
@@ -98,30 +99,24 @@ TEST(ThreadsafeTemporalBuffer, testLagSize10)
   buffer_.addValue(9.9, TestData(9.9));
   EXPECT_EQ(buffer_.size(), 3u);
 
-  // add time past the buffer -> this data should stay in the buffer but push out the 0th value
+  // add time past the buffer -> this data should stay in the buffer but push
+  // out the 0th value
   buffer_.addValue(10.3, TestData(10.3));
   EXPECT_EQ(buffer_.size(), 3u);
   EXPECT_FALSE(buffer_.getNearestValueToTime(0, kMaxDelta, &retrieved_item));
-  EXPECT_TRUE(buffer_.getNearestValueToTime(10.2999, kMaxDelta, &retrieved_item));
+  EXPECT_TRUE(
+      buffer_.getNearestValueToTime(10.2999, kMaxDelta, &retrieved_item));
   EXPECT_EQ(retrieved_item.timestamp, 10.3);
 }
 
-class ThreadsafeTemporalBufferFixture : public ::testing::Test
-{
-public:
-  ThreadsafeTemporalBufferFixture() : buffer_(kBufferLengthS)
-  {
-  }
+class ThreadsafeTemporalBufferFixture : public ::testing::Test {
+ public:
+  ThreadsafeTemporalBufferFixture() : buffer_(kBufferLengthS) {}
 
-protected:
-  virtual void SetUp()
-  {
-  }
-  virtual void TearDown()
-  {
-  }  //
-  void addValue(const TestData& data)
-  {
+ protected:
+  virtual void SetUp() {}
+  virtual void TearDown() {}  //
+  void addValue(const TestData& data) {
     buffer_.addValue(data.timestamp, data);
   }
 
@@ -129,8 +124,7 @@ protected:
   ThreadsafeTemporalBuffer<TestData> buffer_;
 };
 
-TEST_F(ThreadsafeTemporalBufferFixture, SizeEmptyClearWork)
-{
+TEST_F(ThreadsafeTemporalBufferFixture, SizeEmptyClearWork) {
   EXPECT_TRUE(buffer_.empty());
   EXPECT_EQ(buffer_.size(), 0u);
 
@@ -144,8 +138,7 @@ TEST_F(ThreadsafeTemporalBufferFixture, SizeEmptyClearWork)
   EXPECT_EQ(buffer_.size(), 0u);
 }
 
-TEST_F(ThreadsafeTemporalBufferFixture, GetValueAtTimeWorks)
-{
+TEST_F(ThreadsafeTemporalBufferFixture, GetValueAtTimeWorks) {
   addValue(TestData(3.1));
   addValue(TestData(10));
   addValue(TestData(0.004));
@@ -167,8 +160,7 @@ TEST_F(ThreadsafeTemporalBufferFixture, GetValueAtTimeWorks)
   EXPECT_EQ(retrieved_item.timestamp, 40.234);
 }
 
-TEST_F(ThreadsafeTemporalBufferFixture, GetNearestValueToTimeWorks)
-{
+TEST_F(ThreadsafeTemporalBufferFixture, GetNearestValueToTimeWorks) {
   addValue(TestData(3.00));
   addValue(TestData(1.004));
   addValue(TestData(6.32));
@@ -194,8 +186,7 @@ TEST_F(ThreadsafeTemporalBufferFixture, GetNearestValueToTimeWorks)
   EXPECT_EQ(retrieved_item.timestamp, 34);
 }
 
-TEST_F(ThreadsafeTemporalBufferFixture, GetNearestValueToTimeMaxDeltaWorks)
-{
+TEST_F(ThreadsafeTemporalBufferFixture, GetNearestValueToTimeMaxDeltaWorks) {
   addValue(TestData(30));
   addValue(TestData(10));
   addValue(TestData(20));
@@ -250,8 +241,8 @@ TEST_F(ThreadsafeTemporalBufferFixture, GetNearestValueToTimeMaxDeltaWorks)
   EXPECT_TRUE(!buffer_.getNearestValueToTime(16, kMaxDelta, &retrieved_item));
 }
 
-TEST_F(ThreadsafeTemporalBufferFixture, GetNearestValueToTimeMaxDeltaSmallWorks)
-{
+TEST_F(ThreadsafeTemporalBufferFixture,
+       GetNearestValueToTimeMaxDeltaSmallWorks) {
   addValue(TestData(0.05));
   addValue(TestData(0.06));
   addValue(TestData(0.057));
@@ -262,25 +253,27 @@ TEST_F(ThreadsafeTemporalBufferFixture, GetNearestValueToTimeMaxDeltaSmallWorks)
   EXPECT_TRUE(buffer_.getNearestValueToTime(0.05, kMaxDelta, &retrieved_item));
   EXPECT_EQ(retrieved_item.timestamp, 0.05);
 
-  EXPECT_FALSE(buffer_.getNearestValueToTime(0.04, kMaxDelta, &retrieved_item));  //!
+  EXPECT_FALSE(
+      buffer_.getNearestValueToTime(0.04, kMaxDelta, &retrieved_item));  //!
 
   EXPECT_TRUE(buffer_.getNearestValueToTime(0.058, kMaxDelta, &retrieved_item));
   EXPECT_EQ(retrieved_item.timestamp, 0.057);
 
-  EXPECT_FALSE(buffer_.getNearestValueToTime(0.066, kMaxDelta, &retrieved_item));  //!
+  EXPECT_FALSE(
+      buffer_.getNearestValueToTime(0.066, kMaxDelta, &retrieved_item));  //!
 
   EXPECT_TRUE(buffer_.getNearestValueToTime(0.063, kMaxDelta, &retrieved_item));
   EXPECT_EQ(retrieved_item.timestamp, 0.06);
 
   Timestamp retrieved_timestamp;
-  EXPECT_TRUE(buffer_.getNearestValueToTime(0.063, kMaxDelta, &retrieved_item, &retrieved_timestamp));
+  EXPECT_TRUE(buffer_.getNearestValueToTime(0.063, kMaxDelta, &retrieved_item,
+                                            &retrieved_timestamp));
   EXPECT_EQ(retrieved_timestamp, 0.06);
 
   buffer_.clear();
 }
 
-TEST_F(ThreadsafeTemporalBufferFixture, GetValueAtOrBeforeTimeWorks)
-{
+TEST_F(ThreadsafeTemporalBufferFixture, GetValueAtOrBeforeTimeWorks) {
   addValue(TestData(30));
   addValue(TestData(10));
   addValue(TestData(20));
@@ -308,8 +301,7 @@ TEST_F(ThreadsafeTemporalBufferFixture, GetValueAtOrBeforeTimeWorks)
   EXPECT_TRUE(!buffer_.getValueAtOrBeforeTime(5, &timestamp, &retrieved_item));
 }
 
-TEST_F(ThreadsafeTemporalBufferFixture, GetValueAtOrAfterTimeWorks)
-{
+TEST_F(ThreadsafeTemporalBufferFixture, GetValueAtOrAfterTimeWorks) {
   addValue(TestData(30));
   addValue(TestData(10));
   addValue(TestData(20));
@@ -337,8 +329,7 @@ TEST_F(ThreadsafeTemporalBufferFixture, GetValueAtOrAfterTimeWorks)
   EXPECT_TRUE(!buffer_.getValueAtOrAfterTime(45, &timestamp, &retrieved_item));
 }
 
-TEST_F(ThreadsafeTemporalBufferFixture, GetOldestNewestValueWork)
-{
+TEST_F(ThreadsafeTemporalBufferFixture, GetOldestNewestValueWork) {
   TestData retrieved_item;
   EXPECT_TRUE(!buffer_.getOldestValue(&retrieved_item));
   EXPECT_TRUE(!buffer_.getNewestValue(&retrieved_item));
@@ -358,8 +349,7 @@ TEST_F(ThreadsafeTemporalBufferFixture, GetOldestNewestValueWork)
   EXPECT_DOUBLE_EQ(retrieved_item.timestamp, 40.8);
 }
 
-TEST_F(ThreadsafeTemporalBufferFixture, GetValuesBetweenTimesWorks)
-{
+TEST_F(ThreadsafeTemporalBufferFixture, GetValuesBetweenTimesWorks) {
   addValue(TestData(10));
   addValue(TestData(20));
   addValue(TestData(30));
@@ -418,8 +408,7 @@ TEST_F(ThreadsafeTemporalBufferFixture, GetValuesBetweenTimesWorks)
   // EXPECT_DEATH(buffer_.getValuesBetweenTimes(40, 30, &values), "^");
 }
 
-TEST_F(ThreadsafeTemporalBufferFixture, MaintaingBufferLengthWorks)
-{
+TEST_F(ThreadsafeTemporalBufferFixture, MaintaingBufferLengthWorks) {
   addValue(TestData(0));
   addValue(TestData(50));
   addValue(TestData(100));
@@ -436,8 +425,7 @@ TEST_F(ThreadsafeTemporalBufferFixture, MaintaingBufferLengthWorks)
   EXPECT_EQ(retrieved_item.timestamp, 150);
 }
 
-TEST_F(ThreadsafeTemporalBufferFixture, DeltetingValuesAtTimestampsWork)
-{
+TEST_F(ThreadsafeTemporalBufferFixture, DeltetingValuesAtTimestampsWork) {
   addValue(TestData(12.4));
   addValue(TestData(0.001));
   addValue(TestData(56));
@@ -449,14 +437,16 @@ TEST_F(ThreadsafeTemporalBufferFixture, DeltetingValuesAtTimestampsWork)
   EXPECT_TRUE(buffer_.getValueAtOrAfterTime(12.4, &timestamp, &retrieved_item));
   EXPECT_EQ(buffer_.size(), 4u);
   EXPECT_TRUE(buffer_.deleteValueAtTime(timestamp));
-  EXPECT_TRUE(buffer_.getValueAtOrBeforeTime(12.4, &timestamp, &retrieved_item));
+  EXPECT_TRUE(
+      buffer_.getValueAtOrBeforeTime(12.4, &timestamp, &retrieved_item));
   EXPECT_EQ(retrieved_item.timestamp, 0.001);
   EXPECT_FALSE(buffer_.getNearestValueToTime(12.2, 1, &retrieved_item));
   EXPECT_EQ(buffer_.size(), 3u);
 
   // delete value using non-exact timestamp
   Timestamp stored_timestamp;
-  EXPECT_TRUE(buffer_.getNearestValueToTime(59, 4, &retrieved_item, &stored_timestamp));
+  EXPECT_TRUE(
+      buffer_.getNearestValueToTime(59, 4, &retrieved_item, &stored_timestamp));
   EXPECT_EQ(retrieved_item.timestamp, 56);
   EXPECT_EQ(stored_timestamp, 56);
   EXPECT_TRUE(buffer_.deleteValueAtTime(stored_timestamp));

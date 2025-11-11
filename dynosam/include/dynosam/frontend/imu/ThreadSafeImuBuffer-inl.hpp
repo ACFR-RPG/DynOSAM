@@ -2,25 +2,30 @@
  *   Copyright (c) 2023 Jesse Morris (jesse.morris@sydney.edu.au)
  *   All rights reserved.
 
- *   Permission is hereby granted, free of charge, to any person obtaining a copy
- *   of this software and associated documentation files (the "Software"), to deal
- *   in the Software without restriction, including without limitation the rights
+ *   Permission is hereby granted, free of charge, to any person obtaining a
+ copy
+ *   of this software and associated documentation files (the "Software"), to
+ deal
+ *   in the Software without restriction, including without limitation the
+ rights
  *   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  *   copies of the Software, and to permit persons to whom the Software is
  *   furnished to do so, subject to the following conditions:
 
- *   The above copyright notice and this permission notice shall be included in all
+ *   The above copyright notice and this permission notice shall be included in
+ all
  *   copies or substantial portions of the Software.
 
  *   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  *   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  *   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
  *   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- *   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- *   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ *   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ FROM,
+ *   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ THE
  *   SOFTWARE.
  */
-
 
 /*******************************************************************************
  * MIT License
@@ -34,8 +39,8 @@
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in
+ *all copies or substantial portions of the Software.
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -44,7 +49,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
-*******************************************************************************/
+ *******************************************************************************/
 
 /********************************************************************************
  Copyright 2017 Autonomous Systems Lab, ETH Zurich, Switzerland
@@ -66,26 +71,22 @@
 
 #include <glog/logging.h>
 
-#include "dynosam/frontend/imu/ThreadSafeImuBuffer.hpp"
 #include "dynosam/frontend/imu/Imu-Definitions.hpp"
 #include "dynosam/frontend/imu/ImuMeasurements.hpp"
-
+#include "dynosam/frontend/imu/ThreadSafeImuBuffer.hpp"
 
 namespace dyno {
 
-
 inline void ThreadsafeImuBuffer::addMeasurement(
-    const Timestamp& timestamp_nanoseconds,
-    const ImuAccGyr& imu_measurement) {
+    const Timestamp& timestamp_nanoseconds, const ImuAccGyr& imu_measurement) {
   // Enforce strict time-wise ordering.
   ImuMeasurement last_value;
   if (buffer_.getNewestValue(&last_value)) {
     CHECK_GT(timestamp_nanoseconds, last_value.timestamp_)
         << "Timestamps not strictly increasing.";
   }
-  buffer_.addValue(
-      timestamp_nanoseconds,
-      ImuMeasurement(timestamp_nanoseconds, imu_measurement));
+  buffer_.addValue(timestamp_nanoseconds,
+                   ImuMeasurement(timestamp_nanoseconds, imu_measurement));
 
   // Notify possibly waiting consumers.
   cv_new_measurement_.notify_all();
@@ -103,17 +104,13 @@ inline void ThreadsafeImuBuffer::addMeasurements(
   }
 }
 
-inline void ThreadsafeImuBuffer::clear() {
-  buffer_.clear();
-}
+inline void ThreadsafeImuBuffer::clear() { buffer_.clear(); }
 
-inline size_t ThreadsafeImuBuffer::size() const {
-  return buffer_.size();
-}
+inline size_t ThreadsafeImuBuffer::size() const { return buffer_.size(); }
 
 inline void ThreadsafeImuBuffer::shutdown() {
   shutdown_ = true;
   cv_new_measurement_.notify_all();
 }
 
-} // dyno
+}  // namespace dyno

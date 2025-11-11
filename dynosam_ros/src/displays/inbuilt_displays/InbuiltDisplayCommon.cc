@@ -29,7 +29,6 @@
  */
 
 #include "dynosam_ros/displays/inbuilt_displays/InbuiltDisplayCommon.hpp"
-#include "dynosam_ros/displays/DisplaysCommon.hpp"
 
 #include <pcl/common/centroid.h>
 #include <pcl/common/common.h>
@@ -39,6 +38,7 @@
 #include <dynosam/visualizer/ColourMap.hpp>
 
 #include "dynosam_ros/RosUtils.hpp"
+#include "dynosam_ros/displays/DisplaysCommon.hpp"
 
 namespace dyno {
 
@@ -49,20 +49,23 @@ InbuiltDisplayCommon::InbuiltDisplayCommon(const DisplayParams& params,
 CloudPerObject InbuiltDisplayCommon::publishPointCloud(
     PointCloud2Pub::SharedPtr pub, const StatusLandmarkVector& landmarks,
     const gtsam::Pose3& T_world_camera) {
-  return DisplayCommon::publishPointCloud(pub, landmarks, T_world_camera, params_.world_frame_id);
+  return DisplayCommon::publishPointCloud(pub, landmarks, T_world_camera,
+                                          params_.world_frame_id);
 }
 
 void InbuiltDisplayCommon::publishOdometry(OdometryPub::SharedPtr pub,
                                            const gtsam::Pose3& T_world_camera,
                                            Timestamp timestamp) {
   DisplayCommon::publishOdometry(pub, T_world_camera, timestamp,
-                           params_.world_frame_id, params_.camera_frame_id);
+                                 params_.world_frame_id,
+                                 params_.camera_frame_id);
 }
 
 void InbuiltDisplayCommon::publishOdometryPath(PathPub::SharedPtr pub,
                                                const gtsam::Pose3Vector& poses,
                                                Timestamp latest_timestamp) {
-  DisplayCommon::publishOdometryPath(pub, poses, latest_timestamp, params_.world_frame_id);
+  DisplayCommon::publishOdometryPath(pub, poses, latest_timestamp,
+                                     params_.world_frame_id);
 }
 
 void InbuiltDisplayCommon::publishObjectPositions(

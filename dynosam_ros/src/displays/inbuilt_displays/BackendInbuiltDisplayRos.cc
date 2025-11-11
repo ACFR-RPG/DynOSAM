@@ -69,8 +69,7 @@ BackendInbuiltDisplayRos::BackendInbuiltDisplayRos(const DisplayParams params,
 void BackendInbuiltDisplayRos::spinOnce(
     const BackendOutputPacket::ConstPtr& backend_output) {
   publishPointCloud(static_tracked_points_pub_,
-                    backend_output->static_landmarks,
-                    backend_output->pose());
+                    backend_output->static_landmarks, backend_output->pose());
   CloudPerObject clouds_per_obj = publishPointCloud(
       dynamic_tracked_points_pub_, backend_output->dynamic_landmarks,
       backend_output->pose());
@@ -82,9 +81,10 @@ void BackendInbuiltDisplayRos::spinOnce(
       object_pose_pub_, backend_output->optimized_object_poses,
       backend_output->getFrameId(), backend_output->getTimestamp(), "backend");
 
-  publishObjectPaths(
-      object_pose_path_pub_, backend_output->optimized_object_poses,
-      backend_output->getFrameId(), backend_output->getTimestamp(), "backend", 60);
+  publishObjectPaths(object_pose_path_pub_,
+                     backend_output->optimized_object_poses,
+                     backend_output->getFrameId(),
+                     backend_output->getTimestamp(), "backend", 60);
 
   {
     nav_msgs::msg::Odometry odom_msg;
