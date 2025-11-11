@@ -12,8 +12,7 @@ repos:
     hooks:
       -
         id: check-added-large-files # prevents giant files from being committed.
-        exclude: 'docs/\*.png'
-        exclude: 'docs/\*.gif'
+        exclude: 'docs/\*.png|docs/\*.gif'
       - id: check-case-conflict # checks for files that would conflict in case-insensitive filesystems.
       - id: check-executables-have-shebangs # ensures that (non-binary) executables have a shebang.
       - id: check-json # checks json files for parseable syntax.
