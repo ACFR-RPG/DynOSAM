@@ -32,6 +32,7 @@
 #include <gtsam/nonlinear/ISAM2.h>
 #include <gtsam/nonlinear/LevenbergMarquardtOptimizer.h>
 
+#include "dynosam/backend/ParallelHybridBackendModule.hpp"
 #include "dynosam/backend/RegularBackendModule.hpp"
 
 namespace dyno_testing {
@@ -41,27 +42,51 @@ using namespace dyno;
 struct TesterBase {
   virtual ~TesterBase() = default;
 
-  virtual bool addBackend(dyno::RegularBackendModule::Ptr backend) = 0;
+  virtual BackendModule::Ptr getBackend() = 0;
   virtual void onFinish() = 0;
+  virtual void preSpin() {}
+  virtual void postSpin() {}
 };
 
-struct IncrementalTester : public TesterBase {
+struct RegularBackendTester : public TesterBase {
+  RegularBackendTester(dyno::RegularBackendModule::Ptr backend_)
+      : backend(backend_) {}
+
+  BackendModule::Ptr getBackend() override { return backend; }
+
+  dyno::RegularBackendModule::Ptr backend;
+};
+
+struct ParallelHybridBackendTester : public TesterBase {
+  ParallelHybridBackendTester(dyno::ParallelHybridBackendModule::Ptr backend_)
+      : backend(backend_) {}
+
+  BackendModule::Ptr getBackend() override { return backend; }
+
+  virtual void postSpin() { CHECK_NOTNULL(backend)->logGraphs(); }
+
+  void onFinish() override {}
+
+  dyno::ParallelHybridBackendModule::Ptr backend;
+};
+
+struct IncrementalTester : public RegularBackendTester {
   struct Data {
     dyno::RegularBackendModule::Ptr backend;
     std::shared_ptr<gtsam::ISAM2> isam2;
     gtsam::Values opt_values;
   };
 
-  bool addBackend(dyno::RegularBackendModule::Ptr backend) override {
+  IncrementalTester(dyno::RegularBackendModule::Ptr backend_)
+      : RegularBackendTester(backend_) {
     data = std::make_shared<Data>();
-
     gtsam::ISAM2Params isam2_params;
     isam2_params.evaluateNonlinearError = true;
     isam2_params.factorization = gtsam::ISAM2Params::Factorization::CHOLESKY;
     data->isam2 = std::make_shared<gtsam::ISAM2>(isam2_params);
 
     backend->registerPostFormulationUpdateCallback(
-        [&](const dyno::Formulation<dyno::Map3d2d>::UniquePtr& formulation,
+        [&](const RegularBackendModule::FormulationType::Ptr& formulation,
             dyno::FrameId frame_id, const gtsam::Values& new_values,
             const gtsam::NonlinearFactorGraph& new_factors) -> void {
           LOG(INFO) << "Running isam2 update " << frame_id
@@ -85,20 +110,19 @@ struct IncrementalTester : public TesterBase {
               dyno::getOutputFilePath(
                   "isam_graph_" + std::to_string(frame_id) + "_" +
                   formulation->getFullyQualifiedName() + ".dot"),
-              dyno::DynoLikeKeyFormatter);
+              dyno::DynosamKeyFormatter);
 
           if (!isam->empty()) {
             dyno::factor_graph_tools::saveBayesTree(
                 *isam,
                 dyno::getOutputFilePath(
-                    "oc_bayes_tree_" + std::to_string(frame_id) + "_" +
+                    "bayes_tree_" + std::to_string(frame_id) + "_" +
                     formulation->getFullyQualifiedName() + ".dot"),
-                dyno::DynoLikeKeyFormatter);
+                dyno::DynosamKeyFormatter);
           }
         });
 
     data->backend = backend;
-    return true;
   }
 
   void onFinish() override {
@@ -119,7 +143,7 @@ struct IncrementalTester : public TesterBase {
   std::shared_ptr<Data> data;
 };
 
-struct BatchTester : public TesterBase {
+struct BatchTester : public RegularBackendTester {
   struct Data {
     dyno::RegularBackendModule::Ptr backend;
 
@@ -127,12 +151,14 @@ struct BatchTester : public TesterBase {
     gtsam::NonlinearFactorGraph factors;
   };
 
-  bool addBackend(dyno::RegularBackendModule::Ptr backend) override {
+  BatchTester(dyno::RegularBackendModule::Ptr backend_)
+      : RegularBackendTester(backend_) {
     data = std::make_shared<Data>();
+    CHECK(backend);
     data->backend = backend;
 
     backend->registerPostFormulationUpdateCallback(
-        [&](const dyno::Formulation<dyno::Map3d2d>::UniquePtr& formulation,
+        [&](const RegularBackendModule::FormulationType::Ptr& formulation,
             dyno::FrameId frame_id, const gtsam::Values& new_values,
             const gtsam::NonlinearFactorGraph& new_factors) -> void {
           data->values = formulation->getTheta();
@@ -142,9 +168,8 @@ struct BatchTester : public TesterBase {
               dyno::getOutputFilePath(
                   "batch_graph_" + std::to_string(frame_id) + "_" +
                   formulation->getFullyQualifiedName() + ".dot"),
-              dyno::DynoLikeKeyFormatter);
+              dyno::DynosamKeyFormatter);
         });
-    return true;
   }
 
   void onFinish() override {
@@ -160,6 +185,8 @@ struct BatchTester : public TesterBase {
     LOG(INFO) << "Starting batch opt";
     try {
       gtsam::LevenbergMarquardtParams opt_params;
+      opt_params.verbosityLM =
+          gtsam::LevenbergMarquardtParams::VerbosityLM::SUMMARY;
       gtsam::Values opt_values = gtsam::LevenbergMarquardtOptimizer(
                                      data->factors, data->values, opt_params)
                                      .optimize();
@@ -175,20 +202,20 @@ struct BatchTester : public TesterBase {
 };
 
 struct RGBDBackendTester {
-  template <typename TESTER>
-  dyno::RegularBackendModule::Ptr addTester(
-      dyno::RegularBackendModule::Ptr backend) {
-    std::shared_ptr<TesterBase> tester = std::make_shared<TESTER>();
-    tester->addBackend(backend);
-    testers.push_back(tester);
-    backends.push_back(backend);
-    return backend;
-  }
+  void addTester(std::shared_ptr<TesterBase> t) { testers.push_back(t); }
 
-  void processAll(dyno::RGBDInstanceOutputPacket::Ptr output_packet) {
-    for (auto b : backends) {
-      b->spinOnce(output_packet);
+  void processAll(dyno::VisionImuPacket::Ptr output_packet) {
+    for (auto t : testers) {
+      t->preSpin();
+      auto backend = t->getBackend();
+      CHECK(backend);
+      backend->spinOnce(output_packet);
+      t->postSpin();
     }
+    // for (auto b : backends) {
+    //   b->
+    //   b->spinOnce(output_packet);
+    // }
   }
 
   void finishAll() {
@@ -198,7 +225,6 @@ struct RGBDBackendTester {
   }
 
   std::vector<std::shared_ptr<TesterBase>> testers;
-  std::vector<dyno::RegularBackendModule::Ptr> backends;
 };
 
 }  // namespace dyno_testing

@@ -15,12 +15,11 @@
 
 #pragma once
 
+#include <Eigen/Dense>
 #include <opencv2/opencv.hpp>
 #include <vector>
-#include <Eigen/Dense>
 
-
-#include "dynosam/utils/Macros.hpp"
+#include "dynosam_common/utils/Macros.hpp"
 
 namespace dyno {
 
@@ -37,13 +36,9 @@ class NonMaximumSuppression {
 
  public:
   virtual std::vector<cv::KeyPoint> suppressNonMax(
-      const std::vector<cv::KeyPoint>& keyPoints,
-      const int& numRetPoints,
-      const float& tolerance,
-      const int& cols,
-      const int& rows,
-      const int& nr_horizontal_bins,
-      const int& nr_vertical_bins,
+      const std::vector<cv::KeyPoint>& keyPoints, const int& numRetPoints,
+      const float& tolerance, const int& cols, const int& rows,
+      const int& nr_horizontal_bins, const int& nr_vertical_bins,
       const Eigen::MatrixXd& binning_mask) = 0;
 };
 
@@ -78,18 +73,13 @@ class AdaptiveNonMaximumSuppression : public NonMaximumSuppression {
 
  public:
   std::vector<cv::KeyPoint> suppressNonMax(
-      const std::vector<cv::KeyPoint>& keyPoints,
-      const int& numRetPoints,
-      const float& tolerance,
-      const int& cols,
-      const int& rows,
-      const int& nr_horizontal_bins,
-      const int& nr_vertical_bins,
+      const std::vector<cv::KeyPoint>& keyPoints, const int& numRetPoints,
+      const float& tolerance, const int& cols, const int& rows,
+      const int& nr_horizontal_bins, const int& nr_vertical_bins,
       const Eigen::MatrixXd& binning_mask) override;
 
   std::vector<cv::KeyPoint> binning(const std::vector<cv::KeyPoint>& keyPoints,
-                                    const int& numRetPoints,
-                                    const int& cols,
+                                    const int& numRetPoints, const int& cols,
                                     const int& rows,
                                     const int& nr_horizontal_bins,
                                     const int& nr_vertical_bins,

@@ -89,6 +89,9 @@ def run_tests_for_package(package_name, unknown_args):
     for exec in executables:
         run_executable(exec, unknown_args)
 
+possible_packages = ["dynosam", "dynosam_ros", "dynosam_cv"]
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="""Utility to run gtests for dynosam C++ packages.
@@ -101,11 +104,10 @@ if __name__ == "__main__":
         nargs="?",
         type=str,
         default="dynosam",
-        help="Which package tests to run. Options are any dynosam, dynosam_ros or all",
+        help=f"Which package tests to run. Options are any of {possible_packages} or all",
     )
 
     args, unknown_args = parser.parse_known_args()
-    possible_packages = ["dynosam", "dynosam_ros"]
 
     if args.package == "all":
         pass

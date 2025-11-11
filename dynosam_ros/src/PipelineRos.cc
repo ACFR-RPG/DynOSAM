@@ -33,12 +33,14 @@
 #include <gflags/gflags.h>
 #include <glog/logging.h>
 
-#include <dynosam/dataprovider/DataProviderFactory.hpp>
-#include <dynosam/dataprovider/DataProviderUtils.hpp>
-#include <dynosam/pipeline/PipelineHooks.hpp>
-#include <dynosam/pipeline/PipelineParams.hpp>
-#include <dynosam/visualizer/OpenCVFrontendDisplay.hpp>
-
+#include "dynosam/backend/BackendFactory.hpp"
+#include "dynosam/backend/RegularBackendDefinitions.hpp"  //just for the MAP!
+#include "dynosam/dataprovider/DataProviderFactory.hpp"
+#include "dynosam/dataprovider/DataProviderUtils.hpp"
+#include "dynosam/pipeline/PipelineHooks.hpp"
+#include "dynosam/pipeline/PipelineParams.hpp"
+#include "dynosam/visualizer/OpenCVFrontendDisplay.hpp"
+#include "dynosam_ros/BackendDisplayPolicyRos.hpp"
 #include "dynosam_ros/Display-Definitions.hpp"
 #include "dynosam_ros/OnlineDataProviderRos.hpp"
 #include "dynosam_ros/RosUtils.hpp"
@@ -115,7 +117,7 @@ std::string DynoNode::searchForPathWithParams(const std::string& param_name,
                                .description(description)
                                .finish()
                                .get<std::string>();
-  throwExceptionIfPathInvalid(path);
+  utils::throwExceptionIfPathInvalid(path);
   return path;
 }
 
@@ -167,9 +169,20 @@ void DynoPipelineManagerRos::initalisePipeline() {
     };
   }
 
+  using RosBackendFactory = BackendFactory<BackendModulePolicyRos,
+                                           RegularBackendModuleTraits::MapType>;
+  // for now we just support regular backend ... in fact this design means we
+  // should depricate any other map...
+  //   auto factory =
+  //   DefaultBackendFactory<RegularBackendModuleTraits::MapType>::Create(params.backend_type);
+  //   auto this_node = this->shared_from_this();
+  //   CHECK_NOTNULL(this_node);
+  auto factory =
+      RosBackendFactory::Create(params.backend_type, display_params, this);
+
   auto data_loader = createDataProvider();
   pipeline_ = std::make_unique<DynoPipelineManager>(
-      params, data_loader, frontend_display, backend_display, hooks);
+      params, data_loader, frontend_display, backend_display, factory, hooks);
 }
 
 }  // namespace dyno

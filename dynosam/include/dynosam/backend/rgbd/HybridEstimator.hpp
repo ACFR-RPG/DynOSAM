@@ -37,10 +37,10 @@
 #include "dynosam/backend/Accessor.hpp"
 #include "dynosam/backend/BackendDefinitions.hpp"
 #include "dynosam/backend/Formulation.hpp"
-#include "dynosam/common/Map.hpp"
-#include "dynosam/common/StructuredContainers.hpp"  //for FrameRange
-#include "dynosam/common/Types.hpp"                 //only needed for factors
 #include "dynosam/factors/HybridFormulationFactors.hpp"
+#include "dynosam_common/StructuredContainers.hpp"  //for FrameRange
+#include "dynosam_common/Types.hpp"                 //only needed for factors
+#include "dynosam_opt/Map.hpp"
 
 namespace dyno {
 
@@ -82,6 +82,8 @@ struct MotionFactorTraits {
 struct SmartMotionFactorParams {
   //! Threshold to decide whether to re-triangulate
   double retriangulation_threshold = 1e-5;
+  double landmark_distance_threshold = -1;
+  double dyanmic_outlier_rejection_threshold = -1;
 };
 
 // should be object centric smart factor... :)
@@ -122,8 +124,9 @@ class SmartMotionFactor : public gtsam::NonlinearFactor,
 
   SmartMotionFactor(const gtsam::Pose3& L_e,
                     const gtsam::SharedNoiseModel& noise_model,
+                    const SmartMotionFactorParams& params = {},
                     std::optional<gtsam::Point3> initial_point_l = {})
-      : Base(), L_e_(L_e), noise_model_(noise_model) {
+      : Base(), L_e_(L_e), noise_model_(noise_model), params_(params) {
     if (initial_point_l) {
       result_ = gtsam::TriangulationResult(initial_point_l.value());
     }
@@ -154,6 +157,14 @@ class SmartMotionFactor : public gtsam::NonlinearFactor,
     this->pose_keys_.push_back(pose_key);
   }
 
+  void print(const std::string& s = "",
+             const gtsam::KeyFormatter& keyFormatter =
+                 DynosamKeyFormatter) const override {
+    std::cout << s << "SmartMotionFactor\n";
+    std::cout << "result:\n" << result_ << std::endl;
+    Base::print("", DynosamKeyFormatter);
+  }
+
   /// Return the 2D measurements (ZDim, in general).
   const ZVector& measured() const { return measured_; }
 
@@ -176,21 +187,34 @@ class SmartMotionFactor : public gtsam::NonlinearFactor,
     return poses;
   }
 
+  /**
+   * @brief Get the objects embedded frame {^WL_e} associated with this tracklet
+   *
+   * @return const gtsam::Pose3&
+   */
+  const gtsam::Pose3& embeddedFrame() const { return L_e_; }
+
   double totalReprojectionError(
       const Motions& motions, const Poses& poses,
       boost::optional<gtsam::Point3> external_point = {}) const {
     TriangulationResult point;
 
+    // if (external_point) {
+    //   point = TriangulationResult(*external_point);
+    // } else {
+    //   // do triangulation without updating the internal 3d point result
+    //   point = triangulatePoint3Internal(motions, poses);
+    // }
+
     if (external_point) {
-      point = TriangulationResult(*external_point);
+      result_ = TriangulationResult(*external_point);
     } else {
-      // do triangulation without updating the internal 3d point result
-      point = triangulatePoint3Internal(motions, poses);
+      result_ = triangulateSafe(motions, poses);
     }
 
     if (result_) {
       // All good, just use version in base class
-      return this->totalReprojectionError(motions, poses, *point);
+      return this->totalReprojectionError(motions, poses, *result_);
       // else if (params_.degeneracyMode == HANDLE_INFINITY) {
       //   // Otherwise, manage the exceptions with rotation-only factors
       //   Unit3 backprojected = cameras.front().backprojectPointAtInfinity(
@@ -233,23 +257,6 @@ class SmartMotionFactor : public gtsam::NonlinearFactor,
     return This::reprojectionError(motions, poses, point_l, Gs, Fs, Es);
   }
 
-  // TODO: unhitened error?
-  // template <class... OptArgs,
-  //           typename = std::enable_if_t<sizeof...(OptArgs) != 0>>
-  // gtsam::Vector unwhitenedError(const Motions& motions, const Poses& poses,
-  //                               const gtsam::Point3& point_l,
-  //                               OptArgs&&... optArgs) const {
-  //   return unwhitenedError(motions, poses, point_l, (&optArgs)...);
-  // }
-
-  // TODO:computeJacobians
-
-  // template<>
-  // gtsam::Vector reprojectionError<3>(const Motions& motions, const Poses&
-  // poses, const gtsam::Point3& point_w) const {
-  //   CHECK_EQ(motions.size(), poses.size());
-  // }
-
   // TODO: clean up and provide better call structure
   // see SmartProjectionFactor where external point can be used to recalculate
   // the internal result?
@@ -280,7 +287,7 @@ class SmartMotionFactor : public gtsam::NonlinearFactor,
     if (result) {
       return this->reprojectionError(motions, poses, *result, Gs, Fs, Es);
     } else {
-      throw std::runtime_error("Result not computed!");
+      return Vector::Zero(ZDim * numMeasurements());
     }
   }
 
@@ -331,6 +338,7 @@ class SmartMotionFactor : public gtsam::NonlinearFactor,
     // TODo: when to retriangulate point?
     // linearizeDamped(values)
     return createHessianFactor(motions(c), poses(c));
+    // return directQRElimination(motions(c), poses(c));
   }
 
   gtsam::SymmetricBlockMatrix createReducedMatrix(
@@ -353,7 +361,7 @@ class SmartMotionFactor : public gtsam::NonlinearFactor,
     // compute G, F, E and b blocks
     computeJacobiansWithTriangulatedPoint(motions, poses, Gs, Fs, Es, b);
     // TODO: add back in will fail tests!!!
-    //  whitenJacobians(Gs, Fs, Es, b);
+    whitenJacobians(Gs, Fs, Es, b);
 
     const size_t m = numMeasurements();
     CHECK_EQ(m, Es.size());
@@ -387,40 +395,62 @@ class SmartMotionFactor : public gtsam::NonlinearFactor,
     return augmentedHessian;
   }
 
+  boost::shared_ptr<gtsam::GaussianFactor> directQRElimination(
+      const Motions& motions, const Poses& poses) const {
+    triangulateSafe(motions, poses);
+
+    GBlocks Gs;
+    FBlocks Fs;
+    EBlocks Es;
+    gtsam::Vector b;
+
+    // compute G, F, E and b blocks
+    computeJacobiansWithTriangulatedPoint(motions, poses, Gs, Fs, Es, b);
+
+    // gtsam::SharedDiagonal noise_model =
+    // std::dynamic_pointer_cast<gtsam::SharedDiagonal>(
+
+    // )
+
+    // gtsam::GaussianFactorGraph gfg;
+    // gtsam::Symbol pointKey('p', 0);
+    // for (size_t k = 0; k < Gs.size(); ++k) {
+    //   gtsam::Key motion_key = this->motion_keys_.at(k);
+    //   gtsam::Key pose_key = this->pose_keys_.at(k);
+
+    //   const gtsam::Matrix& E = Es[k];
+    //   const gtsam::Matrix& G = Gs[k];
+    //   const gtsam::Matrix& F = Fs[k];
+    //   gfg.add(pointKey, E, motion_key, G, pose_key, F,
+    //       b.segment < ZDim > (ZDim * k), noise_model_);
+    // }
+
+    // gtsam::KeyVector variables;
+    // variables.push_back(pointKey);
+    // const auto [_, fg] = gfg.eliminatePartialSequential(variables,
+    // gtsam::EliminateQR);
+
+    // return boost::make_shared<gtsam::JacobianFactor>(*fg);
+  }
+
   boost::shared_ptr<gtsam::RegularHessianFactor<HDim>> createHessianFactor(
       const Motions& motions, const Poses& poses, const double lambda = 0.0,
       bool diagonalDamping = false) const {
-    const size_t m = this->numMeasurements();
-    constexpr static auto HessianDim = MotionTraits::HessianDim;
-
     // retriangulateHere!!!!!
     triangulateSafe(motions, poses);
 
     // if (params_.degeneracyMode == ZERO_ON_DEGENERACY && !result_) {
-    if (!result_) {
-      LOG(FATAL) << "Shoudl not get here";
-      // gtsam::Matrix b = gtsam::Matrix::Zero(ZDim * num_measurements, 1);
-      // gtsam::Matrix g = gtsam::Matrix::Zero(HessianDim * num_measurements,
-      // 1); gtsam::Matrix G = gtsam::Matrix::Zero(HessianDim *
-      // num_measurements, HessianDim * num_measurements);
+    // if (result_.outlier()) {
+    //   return boost::make_shared<gtsam::RegularHessianFactor<HDim>>(
+    //       this->keys_, constructSymmetricBlockMatrix(m));
 
-      // gtsam::Matrix augmented_information(HessianDim * num_measurements + 1,
-      // HessianDim * num_measurements + 1);
-      gtsam::Matrix augmented_information =
-          gtsam::Matrix::Zero(HessianDim * m + 1, HessianDim * m + 1);
-      // augmented_information << G, g, g.transpose(), b.squaredNorm();
-
-      return boost::make_shared<gtsam::RegularHessianFactor<HDim>>(
-          this->keys_, constructSymmetricBlockMatrix(m, augmented_information));
-
-    }
-
-    else {
-      gtsam::SymmetricBlockMatrix augmented_hessian =
-          createReducedMatrix(motions, poses, lambda, diagonalDamping);
-      return boost::make_shared<gtsam::RegularHessianFactor<HDim>>(
-          this->keys_, augmented_hessian);
-    }
+    // }
+    // else {
+    gtsam::SymmetricBlockMatrix augmented_hessian =
+        createReducedMatrix(motions, poses, lambda, diagonalDamping);
+    return boost::make_shared<gtsam::RegularHessianFactor<HDim>>(
+        this->keys_, augmented_hessian);
+    // }
   }
 
   //  private:
@@ -431,7 +461,11 @@ class SmartMotionFactor : public gtsam::NonlinearFactor,
     if (result_) {
       computeJacobians(motions, poses, *result_, Gs, Fs, Es, b);
     } else {
-      throw std::runtime_error("Result not computed!");
+      // TODO: this is in place of the backprojectPointAtInfinity in the regular
+      // SmartProjectionFactor... not sure what we sould do here?
+      gtsam::Point3 projected = HybridObjectMotion::projectToObject3(
+          poses.at(0), motions.at(0), embeddedFrame(), this->measured_.at(0));
+      computeJacobians(motions, poses, projected, Gs, Fs, Es, b);
     }
   }
 
@@ -478,11 +512,39 @@ class SmartMotionFactor : public gtsam::NonlinearFactor,
   // does not modify any variables
   gtsam::TriangulationResult triangulatePoint3Internal(
       const Motions& motions, const Poses& poses) const {
-    // TODo: if less than param make degnerate
+    if (numMeasurements() < 2) {
+      return gtsam::TriangulationResult::Degenerate();
+    }
+
     gtsam::TriangulationResult result = triangulateLinear(motions, poses);
     if (result) {
       // should we always calculate the non-linear result?
       result = triangulateNonlinear(motions, poses, result.value());
+      double max_repr_error = 0.0;
+      const gtsam::Point3& m_object = *result;
+      // Check landmark distance and re-projection errors to avoid outliers
+      for (size_t i = 0; i < numMeasurements(); i++) {
+        const auto& object_motion = motions.at(i);
+        const auto& camera_pose = poses.at(i);
+
+        const gtsam::Point3 m_camera = HybridObjectMotion::projectToCamera3(
+            camera_pose, object_motion, embeddedFrame(), m_object);
+
+        if (params_.landmark_distance_threshold > 0 &&
+            gtsam::distance3(camera_pose.translation(), m_camera) >
+                params_.landmark_distance_threshold) {
+          return TriangulationResult::FarPoint();
+        }
+
+        const auto& z = measured_.at(i);
+        gtsam::Vector3 reprojection_error = m_camera - z;
+        max_repr_error = std::max(max_repr_error, reprojection_error.norm());
+      }
+
+      if (params_.dyanmic_outlier_rejection_threshold > 0 &&
+          max_repr_error > params_.dyanmic_outlier_rejection_threshold) {
+        return TriangulationResult::Outlier();
+      }
     }
     return result;
   }
@@ -948,7 +1010,7 @@ class SmartMotionFactor : public gtsam::NonlinearFactor,
     utils::TimingStatsCollector timer("smf_SchurComplement");
     // a single point is observed in m cameras
     size_t m = GFs.size();
-    gtsam::Matrix Et = E.transpose();
+    // gtsam::Matrix Et = E.transpose();
 
     gtsam::Matrix F_block_matrix(m * 3, m * HessianDim);
     F_block_matrix.setZero();
@@ -968,8 +1030,37 @@ class SmartMotionFactor : public gtsam::NonlinearFactor,
 
     auto gg_timer =
         std::make_unique<utils::TimingStatsCollector>("smf_Gg_calc");
-    gtsam::Matrix g = Ft * (b - E * P * Et * b);
-    gtsam::Matrix G = Ft * F - Ft * E * P * Et * F;
+    // gtsam::Matrix g = Ft * (b - E * P * Et * b);
+    // gtsam::Matrix G = Ft * F - Ft * E * P * Et * F;
+
+    // gtsam::Matrix EPtF = E.transpose() * F;  // 3×n
+    // gtsam::Matrix EPtb = E.transpose() * b;  // 3×1
+
+    // gtsam::Matrix P_EPtF = P * EPtF;         // 3×n
+    // gtsam::Vector P_EPtb = P * EPtb;         // 3×1
+
+    // gtsam::Matrix G = Ft * F - Ft * E * P_EPtF;
+    // gtsam::Vector g = Ft * b - Ft * E * P_EPtb;
+
+    // Step 1: Compute full QR decomposition of E
+    Eigen::HouseholderQR<gtsam::Matrix> qr(E);
+    gtsam::Matrix Q = qr.householderQ();  // Q is m x m
+
+    const int nm = E.rows();  // number of residuals
+    const int nr = E.cols();  // should be 3
+
+    // Step 2: Extract the nullspace basis N = Q.rightCols(m - r)
+    const int null_dim = nm - nr;
+    gtsam::Matrix N = Q.rightCols(null_dim);  // m x (m - 3)
+
+    // Step 3: Project F and b into the nullspace
+    gtsam::Matrix NF = N.transpose() * F;  // (m-3) x n
+    gtsam::Vector Nb = N.transpose() * b;  // (m-3) x 1
+
+    // Step 4: Build reduced system
+    gtsam::Matrix G = NF.transpose() * NF;  // n x n
+    gtsam::Matrix g = NF.transpose() * Nb;  // n x 1
+
     gg_timer.reset();
 
     // size of schur = num measurements * Hessian size + 1
@@ -1086,15 +1177,15 @@ struct SharedHybridFormulationData {
   const gtsam::FastMap<TrackletId, FrameId>* tracklet_id_to_keyframe;
 };
 
-class HybridAccessor : public Accessor<Map3d2d>,
+class HybridAccessor : public AccessorT<MapVision>,
                        public HybridFormulationProperties {
  public:
   DYNO_POINTER_TYPEDEFS(HybridAccessor)
 
   HybridAccessor(
-      const SharedFormulationData& shared_data, Map3d2d::Ptr map,
+      const SharedFormulationData& shared_data, MapVision::Ptr map,
       const SharedHybridFormulationData& shared_hybrid_formulation_data)
-      : Accessor<Map3d2d>(shared_data, map),
+      : AccessorT<MapVision>(shared_data, map),
         shared_hybrid_formulation_data_(shared_hybrid_formulation_data) {}
   virtual ~HybridAccessor() {}
 
@@ -1152,20 +1243,27 @@ class HybridAccessor : public Accessor<Map3d2d>,
   const SharedHybridFormulationData shared_hybrid_formulation_data_;
 };
 
-class HybridFormulation : public Formulation<Map3d2d>,
+// TODO: for future proofing with new measurement stuff the formulation (at the
+// top level)
+//  should be templated on the map and then we use type traits to extract the
+//  measurements care about so it can be measurement generic... eventually need
+//  way to define (AND CHECK, becuase we cannot assume all types have the same
+//  compile-time properties) and get the measurement we are interested in
+class HybridFormulation : public Formulation<MapVision>,
                           public HybridFormulationProperties {
  public:
-  using Base = Formulation<Map3d2d>;
+  using Base = Formulation<MapVision>;
   using Base::AccessorTypePointer;
+  using Base::MapTraitsType;
   using Base::ObjectUpdateContextType;
   using Base::PointUpdateContextType;
 
   DYNO_POINTER_TYPEDEFS(HybridFormulation)
 
   HybridFormulation(const FormulationParams& params, typename Map::Ptr map,
-                    const NoiseModels& noise_models,
+                    const NoiseModels& noise_models, const Sensors& sensors,
                     const FormulationHooks& hooks)
-      : Base(params, map, noise_models, hooks) {}
+      : Base(params, map, noise_models, sensors, hooks) {}
   virtual ~HybridFormulation() {}
 
   virtual void dynamicPointUpdateCallback(
@@ -1178,7 +1276,7 @@ class HybridFormulation : public Formulation<Map3d2d>,
       gtsam::NonlinearFactorGraph& new_factors) override;
 
   inline bool isDynamicTrackletInMap(
-      const LandmarkNode3d2d::Ptr& lmk_node) const override {
+      const typename MapTraitsType::LandmarkNodePtr& lmk_node) const override {
     const TrackletId tracklet_id = lmk_node->tracklet_id;
     return is_dynamic_tracklet_in_map_.exists(tracklet_id);
   }
@@ -1281,8 +1379,9 @@ class RegularHybridFormulation : public HybridFormulation {
   RegularHybridFormulation(const FormulationParams& params,
                            typename Map::Ptr map,
                            const NoiseModels& noise_models,
+                           const Sensors& sensors,
                            const FormulationHooks& hooks)
-      : Base(params, map, noise_models, hooks) {}
+      : Base(params, map, noise_models, sensors, hooks) {}
 
   // using previous (postUdpate) check when the last time an object was updated
   // (in the estimator) if more than 1 frame ago, create new keyframe - this
@@ -1291,7 +1390,7 @@ class RegularHybridFormulation : public HybridFormulation {
   void preUpdate(const PreUpdateData& data) override;
   // use post update information to set internal data about when objects were
   // last udpated!!
-  void postUpdate(const PostUpdateData& data) override;
+  virtual void postUpdate(const PostUpdateData& data) override;
 
  protected:
   struct ObjectUpdateData {

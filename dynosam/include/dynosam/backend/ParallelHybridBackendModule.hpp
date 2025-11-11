@@ -38,19 +38,19 @@
 #include "dynosam/backend/BackendModule.hpp"
 #include "dynosam/backend/Formulation.hpp"
 #include "dynosam/backend/ParallelObjectISAM.hpp"
-#include "dynosam/backend/RGBDBackendDefinitions.hpp"
+#include "dynosam/backend/RegularBackendDefinitions.hpp"
 #include "dynosam/backend/VisionImuBackendModule.hpp"
-#include "dynosam/common/Flags.hpp"
-#include "dynosam/common/Map.hpp"
+#include "dynosam_common/Flags.hpp"
+#include "dynosam_opt/Map.hpp"
 
 namespace dyno {
 
 class ParallelHybridBackendModule
-    : public VisionImuBackendModule<RGBDBackendModuleTraits> {
+    : public VisionImuBackendModule<RegularBackendModuleTraits> {
  public:
   DYNO_POINTER_TYPEDEFS(ParallelHybridBackendModule)
 
-  using Base = VisionImuBackendModule<RGBDBackendModuleTraits>;
+  using Base = VisionImuBackendModule<RegularBackendModuleTraits>;
   using RGBDMap = Base::MapType;
 
   ParallelHybridBackendModule(const BackendParams& backend_params,
@@ -60,36 +60,33 @@ class ParallelHybridBackendModule
 
   void logGraphs();
 
+  const gtsam::FastMap<ObjectId, ParallelObjectISAM::Ptr>& objectEstimators()
+      const;
+  HybridFormulation::Ptr staticEstimator() const;
+
+  std::pair<gtsam::Values, gtsam::NonlinearFactorGraph> getActiveOptimisation()
+      const override;
+
  private:
   using SpinReturn = Base::SpinReturn;
 
-  SpinReturn boostrapSpinImpl(
-      RGBDInstanceOutputPacket::ConstPtr input) override;
-  SpinReturn nominalSpinImpl(RGBDInstanceOutputPacket::ConstPtr input) override;
+  SpinReturn boostrapSpinImpl(VisionImuPacket::ConstPtr input) override;
+  SpinReturn nominalSpinImpl(VisionImuPacket::ConstPtr input) override;
 
   Pose3Measurement bootstrapUpdateStaticEstimator(
-      RGBDInstanceOutputPacket::ConstPtr input);
+      VisionImuPacket::ConstPtr input);
   Pose3Measurement nominalUpdateStaticEstimator(
-      RGBDInstanceOutputPacket::ConstPtr input,
-      bool should_calculate_covariance = true);
-
-  struct PerObjectUpdate {
-    FrameId frame_id;
-    ObjectId object_id;
-    GenericTrackedStatusVector<LandmarkKeypointStatus> measurements;
-    Pose3Measurement X_k_measurement;
-    Motion3ReferenceFrame H_k_measurement;
-    bool is_keyframe = false;
-  };
-
-  std::vector<PerObjectUpdate> collectPerObjectUpdates(
-      RGBDInstanceOutputPacket::ConstPtr input) const;
+      VisionImuPacket::ConstPtr input, bool should_calculate_covariance = true);
 
   ParallelObjectISAM::Ptr getEstimator(ObjectId object_id,
                                        bool* is_object_new = nullptr);
 
-  void parallelObjectSolve(const std::vector<PerObjectUpdate>& object_updates);
-  bool implSolvePerObject(const PerObjectUpdate& object_update);
+  // SHOULD Returns objects with successful sovle
+  void parallelObjectSolve(VisionImuPacket::ConstPtr input,
+                           const Pose3Measurement& X_W_k);
+  void implSolvePerObject(FrameId frame_id, ObjectId object_id,
+                          const VisionImuPacket::ObjectTracks& object_update,
+                          const Pose3Measurement& X_W_k);
 
   BackendOutputPacket::Ptr constructOutputPacket(FrameId frame_k,
                                                  Timestamp timestamp) const;
@@ -102,7 +99,7 @@ class ParallelHybridBackendModule
   mutable std::mutex mutex_;
 
   gtsam::ISAM2Params static_isam2_params_;
-  HybridFormulation::UniquePtr static_formulation_;
+  HybridFormulation::Ptr static_formulation_;
   gtsam::IncrementalFixedLagSmoother static_estimator_;
 
   gtsam::ISAM2Params dynamic_isam2_params_;

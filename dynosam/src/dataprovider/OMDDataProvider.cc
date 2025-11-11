@@ -34,14 +34,14 @@
 
 #include <filesystem>
 
-#include "dynosam/common/Algorithms.hpp"
 #include "dynosam/dataprovider/DataProviderUtils.hpp"
 #include "dynosam/frontend/vision/VisionTools.hpp"  //for getObjectLabels
 #include "dynosam/pipeline/ThreadSafeTemporalBuffer.hpp"
-#include "dynosam/utils/CsvParser.hpp"
-#include "dynosam/utils/GtsamUtils.hpp"
-#include "dynosam/utils/OpenCVUtils.hpp"
-#include "dynosam/visualizer/ColourMap.hpp"
+#include "dynosam_common/Algorithms.hpp"
+#include "dynosam_common/utils/CsvParser.hpp"
+#include "dynosam_common/utils/GtsamUtils.hpp"
+#include "dynosam_common/utils/OpenCVUtils.hpp"
+#include "dynosam_common/viz/Colour.hpp"
 
 namespace dyno {
 
@@ -59,12 +59,12 @@ namespace dyno {
 //         kalibr_file_path_(file_path + "/kalibr.yaml"),
 //         vicon_calibration_file_path_(file_path + "/vicon.yaml")
 //     {
-//         throwExceptionIfPathInvalid(rgbd_folder_path_);
-//         throwExceptionIfPathInvalid(instance_masks_folder_);
-//         throwExceptionIfPathInvalid(optical_flow_folder_path_);
-//         throwExceptionIfPathInvalid(vicon_file_path_);
-//         throwExceptionIfPathInvalid(kalibr_file_path_);
-//         throwExceptionIfPathInvalid(vicon_calibration_file_path_);
+//         utils::throwExceptionIfPathInvalid(rgbd_folder_path_);
+//         utils::throwExceptionIfPathInvalid(instance_masks_folder_);
+//         utils::throwExceptionIfPathInvalid(optical_flow_folder_path_);
+//         utils::throwExceptionIfPathInvalid(vicon_file_path_);
+//         utils::throwExceptionIfPathInvalid(kalibr_file_path_);
+//         utils::throwExceptionIfPathInvalid(vicon_calibration_file_path_);
 
 //         //first load images and size
 //         //the size will be used as a refernce for all other loaders
@@ -74,13 +74,14 @@ namespace dyno {
 //         //optical flow as the flow ids index t to t+1 (which is gross, I
 //         know!!)
 //         //TODO: code and comments replicated in ClusterSlamDataProvider
-//         loadFlowImagesAndSize(optical_flow_image_paths_, dataset_size_);
+//         utils::loadFlowImagesAndSize(optical_flow_image_paths_,
+//         dataset_size_);
 
 //         //load rgb and aligned depth image file paths into rgb_image_paths_
 //         and aligned_depth_image_paths_
 //         //does some sanity checks
 //         //as well as timestamps
-//         loadRGBDImagesAndTime();
+//         utils::loadRGBDImagesAndTime();
 
 //         //load instance masks
 //         loadPathsInDirectory(instance_masks_image_paths_,
@@ -107,7 +108,7 @@ namespace dyno {
 //         CHECK_LT(idx, rgb_image_paths_.size());
 
 //         cv::Mat rgb;
-//         loadRGB(rgb_image_paths_.at(idx), rgb);
+//         utils::loadRGB(rgb_image_paths_.at(idx), rgb);
 //         CHECK(!rgb.empty());
 
 //         //this set of images are loaded as 8UC4
@@ -133,7 +134,7 @@ namespace dyno {
 //         CHECK_LT(idx,optical_flow_image_paths_.size());
 
 //         cv::Mat flow;
-//         loadFlow(optical_flow_image_paths_.at(idx), flow);
+//         utils::loadFlow(optical_flow_image_paths_.at(idx), flow);
 //         CHECK(!flow.empty());
 //         return flow;
 //     }
@@ -143,7 +144,7 @@ namespace dyno {
 //         CHECK_LT(idx, dataset_size_);
 
 //         cv::Mat mask, relabelled_mask;
-//         loadMask(instance_masks_image_paths_.at(idx), mask);
+//         utils::loadMask(instance_masks_image_paths_.at(idx), mask);
 //         CHECK(!mask.empty());
 
 //         associateGTWithObject(mask, getDepthImage(idx), idx,
@@ -162,8 +163,8 @@ namespace dyno {
 //         CHECK_LT(idx, aligned_depth_image_paths_.size());
 
 //         cv::Mat depth;
-//         loadDepth(aligned_depth_image_paths_.at(idx), depth);
-//         // loadRGB(aligned_depth_image_paths_.at(idx), depth);
+//         utils::loadDepth(aligned_depth_image_paths_.at(idx), depth);
+//         // utils::loadRGB(aligned_depth_image_paths_.at(idx), depth);
 //         CHECK(!depth.empty());
 //         // CHECK(depth.type() == CV_16UC1);
 //         // depth.convertTo(depth, CV_64F);
@@ -248,14 +249,14 @@ namespace dyno {
 //     }
 
 // private:
-//     void loadFlowImagesAndSize(std::vector<std::string>& images_paths,
+//     void utils::loadFlowImagesAndSize(std::vector<std::string>& images_paths,
 //     size_t& dataset_size) {
 //         std::vector<std::filesystem::path> files_in_directory =
 //         getAllFilesInDir(optical_flow_folder_path_); dataset_size =
 //         files_in_directory.size(); CHECK_GT(dataset_size, 0);
 
 //         for (const std::string file_path : files_in_directory) {
-//             throwExceptionIfPathInvalid(file_path);
+//             utils::throwExceptionIfPathInvalid(file_path);
 //             images_paths.push_back(file_path);
 //         }
 //    }
@@ -265,7 +266,7 @@ namespace dyno {
 //     static_cast<Timestamp>(time_nsec) / 1e+9;
 //    }
 
-//    void loadRGBDImagesAndTime() {
+//    void utils::loadRGBDImagesAndTime() {
 //         // from dataset contains *_aligned_depth.png and *_color.png
 //         // need to construct both
 //         auto image_files = getAllFilesInDir(rgbd_folder_path_);
@@ -978,7 +979,7 @@ class OMDOldAllLoader {
     CHECK_LT(idx, rgb_file_names_.size());
 
     cv::Mat rgb;
-    loadRGB(rgb_file_names_.at(idx), rgb);
+    utils::loadRGB(rgb_file_names_.at(idx), rgb);
     CHECK(!rgb.empty()) << "Empty at  " << rgb_file_names_.at(idx);
 
     img_size_ = rgb.size();
@@ -989,7 +990,7 @@ class OMDOldAllLoader {
     CHECK_LT(idx, depth_file_names_.size());
 
     cv::Mat disp;
-    loadDepth(depth_file_names_.at(idx), disp);
+    utils::loadDepth(depth_file_names_.at(idx), disp);
     CHECK(!disp.empty());
 
     constexpr auto depth_type = ImageType::Depth::OpenCVType;
@@ -1019,7 +1020,7 @@ class OMDOldAllLoader {
     CHECK_LT(idx, flow_file_names_.size());
 
     cv::Mat rgb;
-    loadFlow(flow_file_names_.at(idx), rgb);
+    utils::loadFlow(flow_file_names_.at(idx), rgb);
     CHECK(!rgb.empty());
 
     return rgb;
@@ -1029,7 +1030,7 @@ class OMDOldAllLoader {
     CHECK_LT(idx, semantic_file_names_.size());
 
     cv::Mat rgb;
-    loadSemanticMask(semantic_file_names_.at(idx), img_size_, rgb);
+    utils::loadSemanticMask(semantic_file_names_.at(idx), img_size_, rgb);
     CHECK(!rgb.empty());
 
     return rgb;
@@ -1042,7 +1043,7 @@ class OMDOldAllLoader {
   void loadAll(const std::string& path_to_sequence) {
     std::ifstream times_stream;
     std::string strPathTimeFile = path_to_sequence + "/times.txt";
-    throwExceptionIfPathInvalid(strPathTimeFile);
+    utils::throwExceptionIfPathInvalid(strPathTimeFile);
 
     const gtsam::Pose3 T_cv_robotic =
         gtsam::Pose3(gtsam::Rot3(1, 0, 0, 0, 0, -1, 0, 1, 0),
@@ -1077,20 +1078,21 @@ class OMDOldAllLoader {
     // depth_file_names_.resize(nTimes);
     // semantic_file_names_.resize(nTimes);
     // flow_file_names_.resize(nTimes);
-    loadPathsInDirectory(
+    utils::loadPathsInDirectory(
         rgb_file_names_, strPrefixImage, [](const std::string& file) -> bool {
           return boost::algorithm::ends_with(&file[0], ".png");  // true
         });
-    loadPathsInDirectory(
+    utils::loadPathsInDirectory(
         depth_file_names_, strPrefixDepth, [](const std::string& file) -> bool {
           return boost::algorithm::ends_with(&file[0], ".png");  // true
         });
-    loadPathsInDirectory(semantic_file_names_, strPrefixSemantic,
-                         [](const std::string& file) -> bool {
-                           return boost::algorithm::ends_with(&file[0],
-                                                              ".txt");  // true
-                         });
-    loadPathsInDirectory(
+    utils::loadPathsInDirectory(
+        semantic_file_names_, strPrefixSemantic,
+        [](const std::string& file) -> bool {
+          return boost::algorithm::ends_with(&file[0],
+                                             ".txt");  // true
+        });
+    utils::loadPathsInDirectory(
         flow_file_names_, strPrefixFlow, [](const std::string& file) -> bool {
           return boost::algorithm::ends_with(&file[0], ".flo");  // true
         });
@@ -1114,7 +1116,7 @@ class OMDOldAllLoader {
     // +++ ground truth pose +++
     std::string strFilenamePose =
         path_to_sequence + "/pose_gt.txt";  //  pose_gt.txt kevin_extrinsics.txt
-    throwExceptionIfPathInvalid(strFilenamePose);
+    utils::throwExceptionIfPathInvalid(strFilenamePose);
     // vPoseGT.resize(nTimes);
     std::ifstream fPose;
     fPose.open(strFilenamePose.c_str());
@@ -1164,7 +1166,7 @@ class OMDOldAllLoader {
 
     // +++ ground truth object pose +++
     std::string strFilenameObjPose = path_to_sequence + "/object_pose.txt";
-    throwExceptionIfPathInvalid(strFilenameObjPose);
+    utils::throwExceptionIfPathInvalid(strFilenameObjPose);
     std::ifstream fObjPose;
     fObjPose.open(strFilenameObjPose.c_str());
     LOG(INFO) << "Opened object pose file";

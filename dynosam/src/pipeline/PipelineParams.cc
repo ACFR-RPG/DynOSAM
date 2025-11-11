@@ -34,11 +34,15 @@
 #include <config_utilities/parsing/yaml.h>
 #include <gflags/gflags.h>
 
-#include "dynosam/utils/YamlParser.hpp"
+#include "dynosam_common/utils/YamlParser.hpp"
 
 DEFINE_int32(
     data_provider_type, 0,
     "Which data provider (loader) to use. Associated with specific datasets");
+
+DEFINE_int32(backend_updater_enum, 0,
+             "Which BackendType the backend should use and should match an "
+             "enum in whatever backend module type is loaded");
 
 namespace dyno {
 
@@ -64,6 +68,8 @@ DynoParams::DynoParams(const std::string& params_folder_path) {
       params_folder_path + "FrontendParams.yaml");
   imu_params_ =
       config::fromYamlFile<ImuParams>(params_folder_path + "ImuParams.yaml");
+
+  backend_type = static_cast<BackendType>(FLAGS_backend_updater_enum);
 }
 
 void DynoParams::printAllParams(bool print_glog_params) const {
@@ -77,6 +83,12 @@ void DynoParams::printAllParams(bool print_glog_params) const {
   //  LOG(INFO) << "Camera Params: " << config::toString(camera_params_);
 
   if (print_glog_params) google::ShowUsageWithFlags("");
+}
+
+bool DynoParams::incrementalBackend() const {
+  return backend_type == BackendType::PARALLEL_HYBRID ||
+         backend_params_.optimization_mode ==
+             RegularOptimizationType::INCREMENTAL;
 }
 
 }  // namespace dyno

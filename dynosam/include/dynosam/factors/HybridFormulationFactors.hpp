@@ -31,7 +31,7 @@
 #include <gtsam/base/numericalDerivative.h>  //only needed for factors
 
 #include "dynosam/backend/BackendDefinitions.hpp"
-#include "dynosam/common/Types.hpp"  //only needed for factors
+#include "dynosam_common/Types.hpp"  //only needed for factors
 
 namespace dyno {
 

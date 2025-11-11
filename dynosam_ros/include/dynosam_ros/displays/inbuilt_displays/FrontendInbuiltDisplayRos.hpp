@@ -53,7 +53,7 @@ class FrontendInbuiltDisplayRos : public FrontendDisplay, InbuiltDisplayCommon {
                             rclcpp::Node::SharedPtr node);
   ~FrontendInbuiltDisplayRos();
 
-  void spinOnce(
+  void spinOnceImpl(
       const FrontendOutputPacketBase::ConstPtr& frontend_output) override;
 
  private:

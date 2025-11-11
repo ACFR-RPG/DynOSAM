@@ -47,7 +47,8 @@ class BackendInbuiltDisplayRos : public BackendDisplay, InbuiltDisplayCommon {
   BackendInbuiltDisplayRos(const DisplayParams params,
                            rclcpp::Node::SharedPtr node);
 
-  void spinOnce(const BackendOutputPacket::ConstPtr& backend_output) override;
+  void spinOnceImpl(
+      const BackendOutputPacket::ConstPtr& backend_output) override;
 
  private:
   rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr

@@ -30,10 +30,10 @@
 
 #pragma once
 
-#include <dynosam/common/Exceptions.hpp>
-#include <dynosam/common/Types.hpp>
 #include <type_traits>
 
+#include "dynosam_common/Exceptions.hpp"
+#include "dynosam_common/Types.hpp"
 #include "rcl_interfaces/msg/parameter.hpp"
 #include "rclcpp/node.hpp"
 #include "rclcpp/parameter.hpp"

@@ -34,9 +34,9 @@
 
 #include "dynosam/dataprovider/DataProviderUtils.hpp"
 #include "dynosam/frontend/vision/VisionTools.hpp"
-#include "dynosam/utils/CsvParser.hpp"
-#include "dynosam/utils/GtsamUtils.hpp"
-#include "dynosam/utils/OpenCVUtils.hpp"
+#include "dynosam_common/utils/CsvParser.hpp"
+#include "dynosam_common/utils/GtsamUtils.hpp"
+#include "dynosam_common/utils/OpenCVUtils.hpp"
 
 namespace dyno {
 
@@ -53,12 +53,12 @@ class ProjectAriaAllLoader {
         intrinsics_file_path_(file_path + "/calibration_undistort.json"),
         rgb_timestamps_file_path_(file_path + "/sync_timestamp.csv") {
     // Initialize folders and file paths
-    throwExceptionIfPathInvalid(rgb_images_folder_path_);
-    throwExceptionIfPathInvalid(depth_images_folder_path_);
-    throwExceptionIfPathInvalid(optical_flow_folder_path_);
-    throwExceptionIfPathInvalid(instance_masks_folder_);
-    // throwExceptionIfPathInvalid(intrinsics_file_path_);
-    // throwExceptionIfPathInvalid(rgb_timestamps_file_path_);
+    utils::throwExceptionIfPathInvalid(rgb_images_folder_path_);
+    utils::throwExceptionIfPathInvalid(depth_images_folder_path_);
+    utils::throwExceptionIfPathInvalid(optical_flow_folder_path_);
+    utils::throwExceptionIfPathInvalid(instance_masks_folder_);
+    // utils::throwExceptionIfPathInvalid(intrinsics_file_path_);
+    // utils::throwExceptionIfPathInvalid(rgb_timestamps_file_path_);
 
     // first load images and size
     // the size will be used as a refernce for all other loaders
@@ -81,7 +81,7 @@ class ProjectAriaAllLoader {
     CHECK_LT(idx, optical_flow_image_paths_.size());
 
     cv::Mat flow;
-    loadFlow(optical_flow_image_paths_.at(idx), flow);
+    utils::loadFlow(optical_flow_image_paths_.at(idx), flow);
     CHECK(!flow.empty());
     return flow;
   }
@@ -90,7 +90,7 @@ class ProjectAriaAllLoader {
     CHECK_LT(idx, rgb_image_paths_.size());
 
     cv::Mat rgb;
-    loadRGB(rgb_image_paths_.at(idx), rgb);
+    utils::loadRGB(rgb_image_paths_.at(idx), rgb);
     CHECK(!rgb.empty());
 
     return rgb;
@@ -100,7 +100,7 @@ class ProjectAriaAllLoader {
     CHECK_LT(idx, right_rgb_image_paths_.size());
 
     cv::Mat rgb;
-    loadRGB(right_rgb_image_paths_.at(idx), rgb);
+    utils::loadRGB(right_rgb_image_paths_.at(idx), rgb);
     CHECK(!rgb.empty());
 
     return rgb;
@@ -115,7 +115,7 @@ class ProjectAriaAllLoader {
     static ObjectId current_max_label = 1u;
 
     cv::Mat mask;
-    loadMask(instance_masks_image_paths_.at(idx), mask);
+    utils::loadMask(instance_masks_image_paths_.at(idx), mask);
     CHECK(!mask.empty());
 
     ObjectIds labels = vision_tools::getObjectLabels(mask);
@@ -140,7 +140,7 @@ class ProjectAriaAllLoader {
     CHECK_LT(idx, depth_image_paths_.size());
 
     cv::Mat depth;
-    loadDepth(depth_image_paths_.at(idx), depth);
+    utils::loadDepth(depth_image_paths_.at(idx), depth);
     CHECK(!depth.empty());
 
     return depth;
@@ -157,13 +157,13 @@ class ProjectAriaAllLoader {
   void loadFlowImagesAndSize(std::vector<std::string>& images_paths,
                              size_t& dataset_size) {
     std::vector<std::filesystem::path> files_in_directory =
-        getAllFilesInDir(optical_flow_folder_path_);
+        utils::getAllFilesInDir(optical_flow_folder_path_);
     dataset_size = files_in_directory.size();
     CHECK_GT(dataset_size, 0);
 
     for (const std::filesystem::path& path : files_in_directory) {
       const std::string file_path = path;
-      throwExceptionIfPathInvalid(file_path);
+      utils::throwExceptionIfPathInvalid(file_path);
       images_paths.push_back(file_path);
 
       std::string timestamp_str = path.stem();
@@ -174,11 +174,12 @@ class ProjectAriaAllLoader {
   }
 
   void loadOtherImages() {
-    auto rgb_image_files = getAllFilesInDir(rgb_images_folder_path_);
+    auto rgb_image_files = utils::getAllFilesInDir(rgb_images_folder_path_);
     auto right_rgb_images_files =
-        getAllFilesInDir(right_rgb_images_folder_path_);
-    auto depth_image_files = getAllFilesInDir(depth_images_folder_path_);
-    auto instance_masks_image_files = getAllFilesInDir(instance_masks_folder_);
+        utils::getAllFilesInDir(right_rgb_images_folder_path_);
+    auto depth_image_files = utils::getAllFilesInDir(depth_images_folder_path_);
+    auto instance_masks_image_files =
+        utils::getAllFilesInDir(instance_masks_folder_);
 
     for (auto f : rgb_image_files) {
       rgb_image_paths_.push_back(f);

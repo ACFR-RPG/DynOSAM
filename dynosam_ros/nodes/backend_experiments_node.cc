@@ -30,11 +30,10 @@
 
 #include <glog/logging.h>
 
-#include <dynosam/backend/ParallelHybridBackendModule.hpp>
-#include <dynosam/backend/RegularBackendModule.hpp>
+#include <dynosam/backend/BackendFactory.hpp>
 #include <dynosam/common/Map.hpp>
 #include <dynosam/frontend/RGBDInstanceFrontendModule.hpp>
-#include <dynosam/logger/Logger.hpp>
+#include <dynosam_common/logger/Logger.hpp>
 
 #include "dynosam_ros/PipelineRos.hpp"
 #include "dynosam_ros/Utils.hpp"
@@ -84,28 +83,13 @@ class BackendExperimentsNode : public DynoNode {
     // we need it in the lambda function which is a temporary solution
     OfflineFrontend* offline_frontend_ptr = offline_frontend.get();
 
-    // TODO: make better params!!
-    auto updater_type = static_cast<RegularBackendModule::UpdaterType>(
-        FLAGS_backend_updater_enum);
+    BackendModule::Ptr backend = nullptr;
+    params.backend_params_.full_batch_frame = offline_frontend->endingFrame();
 
-    BackendModuleType<RGBDBackendModuleTraits>::Ptr backend = nullptr;
-
-    if (updater_type == RGBDFormulationType::PARALLEL_HYBRID) {
-      backend = std::make_shared<ParallelHybridBackendModule>(
-          params.backend_params_, camera);
-    } else {
-      params.backend_params_.full_batch_frame = offline_frontend->endingFrame();
-
-      backend = std::make_shared<RegularBackendModule>(params.backend_params_,
-                                                       camera, updater_type);
-    }
-
-    // params.backend_params_.full_batch_frame =
-    // offline_frontend->endingFrame();
-
-    // auto backend =
-    // std::make_shared<RegularBackendModule>(params.backend_params_,
-    //                                                    camera, updater_type);
+    const auto& backend_type = params.backend_type;
+    backend = BackendFactory::createModule(backend_type, params.backend_params_,
+                                           camera);
+    CHECK(backend);
 
     backend_pipeline_ = std::make_unique<BackendPipeline>(
         "backend-pipeline", &backend_input_queue_, backend);

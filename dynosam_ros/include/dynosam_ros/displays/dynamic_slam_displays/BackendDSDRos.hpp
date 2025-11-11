@@ -28,12 +28,11 @@
  *   SOFTWARE.
  */
 
-#include <dynosam/backend/BackendOutputPacket.hpp>
-#include <dynosam/common/GroundTruthPacket.hpp>
-#include <dynosam/common/SharedModuleInfo.hpp>
-#include <dynosam/visualizer/Display.hpp>
-
 #include "dynamic_slam_interfaces/msg/object_odometry.hpp"
+#include "dynosam/backend/BackendOutputPacket.hpp"
+#include "dynosam/visualizer/Display.hpp"
+#include "dynosam_common/GroundTruthPacket.hpp"
+#include "dynosam_common/SharedModuleInfo.hpp"
 #include "dynosam_ros/Display-Definitions.hpp"
 #include "dynosam_ros/displays/DisplaysCommon.hpp"
 #include "dynosam_ros/displays/dynamic_slam_displays/DSDCommonRos.hpp"
@@ -46,7 +45,8 @@ class BackendDSDRos : public BackendDisplay, DSDRos {
   BackendDSDRos(const DisplayParams params, rclcpp::Node::SharedPtr node);
   ~BackendDSDRos() = default;
 
-  void spinOnce(const BackendOutputPacket::ConstPtr& backend_output) override;
+  void spinOnceImpl(
+      const BackendOutputPacket::ConstPtr& backend_output) override;
 
  private:
   void publishTemporalDynamicMaps(

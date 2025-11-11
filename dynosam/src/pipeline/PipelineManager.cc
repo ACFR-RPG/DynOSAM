@@ -32,12 +32,11 @@
 
 #include <glog/logging.h>
 
-#include "dynosam/backend/ParallelHybridBackendModule.hpp"
-#include "dynosam/backend/RegularBackendModule.hpp"
-#include "dynosam/common/Map.hpp"
+#include "dynosam/backend/BackendFactory.hpp"
 #include "dynosam/frontend/RGBDInstanceFrontendModule.hpp"
-#include "dynosam/logger/Logger.hpp"
-#include "dynosam/utils/TimingStats.hpp"
+#include "dynosam_common/logger/Logger.hpp"
+#include "dynosam_common/utils/TimingStats.hpp"
+#include "dynosam_opt/Map.hpp"
 
 DEFINE_bool(use_backend, false, "If any backend should be initalised");
 
@@ -46,7 +45,7 @@ namespace dyno {
 DynoPipelineManager::DynoPipelineManager(
     const DynoParams& params, DataProvider::Ptr data_loader,
     FrontendDisplay::Ptr frontend_display, BackendDisplay::Ptr backend_display,
-    const ExternalHooks::Ptr external_hooks)
+    BackendModuleFactory::Ptr factory, const ExternalHooks::Ptr external_hooks)
     : params_(params),
       use_offline_frontend_(FLAGS_frontend_from_file),
       data_loader_(std::move(data_loader)),
@@ -128,7 +127,12 @@ DynoPipelineManager::DynoPipelineManager(
   // update the imu params that will actually get sent to the frontend
   params_.frontend_params_.imu_params = imu_params;
 
-  loadPipelines(camera_params, frontend_display, backend_display);
+  loadPipelines(camera_params, frontend_display, backend_display, factory);
+
+  std::string cuda_enabled_message;
+  utils::opencvCudaAvailable(&cuda_enabled_message);
+  LOG(INFO) << cuda_enabled_message;
+
   launchSpinners();
 }
 
@@ -192,6 +196,7 @@ bool DynoPipelineManager::spin() {
           frontend_pipeline_->spinOnce();
           if (backend_pipeline_) backend_pipeline_->spinOnce();
         }
+        // TODO: this definately takes some time...
         spinViz();  // for now
         // a later problem!
         return true;
@@ -245,8 +250,10 @@ void DynoPipelineManager::launchSpinners() {
 
 void DynoPipelineManager::loadPipelines(const CameraParams& camera_params,
                                         FrontendDisplay::Ptr frontend_display,
-                                        BackendDisplay::Ptr backend_display) {
+                                        BackendDisplay::Ptr backend_display,
+                                        BackendModuleFactory::Ptr factory) {
   BackendModule::Ptr backend = nullptr;
+  BackendModuleDisplay::Ptr additional_backend_display = nullptr;
   // the registra for the frontend pipeline
   // this is agnostic to the actual pipeline type so we can add/register
   // a new queue to it regardless of the derived type (as long as it is at least
@@ -261,40 +268,51 @@ void DynoPipelineManager::loadPipelines(const CameraParams& camera_params,
       LOG(INFO) << "Making RGBDInstance frontend";
       FrontendModule::Ptr frontend = nullptr;
 
-      Camera::Ptr camera = std::make_shared<Camera>(camera_params);
+      CameraParams mutable_camera_params = camera_params;
+      // TODO: make this conversion to RGBD param based
+      //  only update camera to rgbd if the data provider has not already set
+      if (!mutable_camera_params.hasDepthParams()) {
+        LOG(INFO) << "Updating camera params: converting to Fake Stereo camera";
+        // mutable_camera_params.setDepthParams(0.07);
+        mutable_camera_params.setDepthParams(0.1);
+      }
+      Camera::Ptr camera = std::make_shared<Camera>(mutable_camera_params);
       CHECK_NOTNULL(camera);
 
       if (use_offline_frontend_) {
-        LOG(INFO) << "Offline RGBD frontend";
-        using OfflineFrontend =
-            FrontendOfflinePipeline<RegularBackendModule::ModuleTraits>;
-        const std::string file_path =
-            getOutputFilePath(kRgbdFrontendOutputJsonFile);
-        LOG(INFO) << "Loading RGBD frontend output packets from " << file_path;
+        // TODO: bring back!
+        LOG(FATAL) << "Not reimplemented";
+        // LOG(INFO) << "Offline RGBD frontend";
+        // using OfflineFrontend =
+        //     FrontendOfflinePipeline<RegularBackendModule::ModuleTraits>;
+        // const std::string file_path =
+        //     getOutputFilePath(kRgbdFrontendOutputJsonFile);
+        // LOG(INFO) << "Loading RGBD frontend output packets from " <<
+        // file_path;
 
-        OfflineFrontend::UniquePtr offline_frontend =
-            std::make_unique<OfflineFrontend>("offline-rgbdfrontend",
-                                              file_path);
-        // make registra so we can register queues with this pipeline
-        frontend_output_registra = offline_frontend->getOutputRegistra();
-        // raw ptr type becuase we cannot copy the unique ptr!! This is only
-        // becuase we need it in the lambda function which is a temporary
-        // solution
-        OfflineFrontend* offline_frontend_ptr = offline_frontend.get();
-        // set get dataset size function (bit of a hack for now, and only for
-        // the batch optimizer so it knows when to optimize!!)
-        get_dataset_size_ = [offline_frontend_ptr]() -> FrameId {
-          // get frame id of the final frame saved
-          return CHECK_NOTNULL(offline_frontend_ptr)
-              ->getFrontendOutputPackets()
-              .rbegin()
-              ->first;
-        };
-        // convert pipeline to base type
-        frontend_pipeline_ = std::move(offline_frontend);
+        // OfflineFrontend::UniquePtr offline_frontend =
+        //     std::make_unique<OfflineFrontend>("offline-rgbdfrontend",
+        //                                       file_path);
+        // // make registra so we can register queues with this pipeline
+        // frontend_output_registra = offline_frontend->getOutputRegistra();
+        // // raw ptr type becuase we cannot copy the unique ptr!! This is only
+        // // becuase we need it in the lambda function which is a temporary
+        // // solution
+        // OfflineFrontend* offline_frontend_ptr = offline_frontend.get();
+        // // set get dataset size function (bit of a hack for now, and only for
+        // // the batch optimizer so it knows when to optimize!!)
+        // get_dataset_size_ = [offline_frontend_ptr]() -> FrameId {
+        //   // get frame id of the final frame saved
+        //   return CHECK_NOTNULL(offline_frontend_ptr)
+        //       ->getFrontendOutputPackets()
+        //       .rbegin()
+        //       ->first;
+        // };
+        // // convert pipeline to base type
+        // frontend_pipeline_ = std::move(offline_frontend);
       } else {
         frontend = std::make_shared<RGBDInstanceFrontendModule>(
-            params_.frontend_params_, camera, &display_queue_);
+            params_, camera, &display_queue_);
         LOG(INFO) << "Made RGBDInstanceFrontendModule";
         // need to make the derived pipeline so we can set parallel run etc
         // the manager takes a pointer to the base MIMO so we can have different
@@ -321,22 +339,21 @@ void DynoPipelineManager::loadPipelines(const CameraParams& camera_params,
 
       if (FLAGS_use_backend) {
         LOG(INFO) << "Construcing RGBD backend";
+        params_.backend_params_.full_batch_frame = (int)get_dataset_size_();
 
-        // TODO: make better params and hhow they are used in each backend!
-        // right now they affect which backend is used AND the formulation in
-        // that backend
-        auto updater_type =
-            static_cast<RGBDFormulationType>(FLAGS_backend_updater_enum);
+        Sensors sensors;
+        sensors.camera = camera;
 
-        if (updater_type == RGBDFormulationType::PARALLEL_HYBRID) {
-          backend = std::make_shared<ParallelHybridBackendModule>(
-              params_.backend_params_, camera, &display_queue_);
-        } else {
-          params_.backend_params_.full_batch_frame = (int)get_dataset_size_();
+        ModuleParams module_params;
+        module_params.backend_params = params_.backend_params_;
+        module_params.sensors = sensors;
+        module_params.display_queue = &display_queue_;
 
-          backend = std::make_shared<RegularBackendModule>(
-              params_.backend_params_, camera, updater_type, &display_queue_);
-        }
+        BackendWrapper backend_wrapper = factory->createModule(module_params);
+
+        backend = backend_wrapper.backend;
+        additional_backend_display = backend_wrapper.backend_viz;
+        CHECK(backend);
 
         // if(frontend && backend) {
         //   backend->registerMapUpdater(std::bind(&FrontendModule::mapUpdate,
@@ -374,6 +391,14 @@ void DynoPipelineManager::loadPipelines(const CameraParams& camera_params,
     frontend_output_registra->registerQueue(&backend_input_queue_);
 
     backend_pipeline_->registerOutputQueue(&backend_output_queue_);
+
+    if (additional_backend_display) {
+      VLOG(10) << "Connecting BackendModuleDisplay";
+      backend_pipeline_->registerOutputCallback(
+          [additional_backend_display](const auto& output) -> void {
+            additional_backend_display->spin(output);
+          });
+    }
   }
 
   // right now we cannot use the viz when we load from file as do not load
@@ -388,13 +413,5 @@ void DynoPipelineManager::loadPipelines(const CameraParams& camera_params,
         "frontend-viz-pipeline", &frontend_viz_input_queue_, frontend_display);
   }
 }
-
-// PipelineBase::UniquePtr DynoPipelineManager::makeFrontendPipeline(Camera::Ptr
-// camera, bool offline_frontend) {
-
-// }
-// BackendPipeline::UniquePtr DynoPipelineManager::makeBackendPipeline() {
-
-// }
 
 }  // namespace dyno

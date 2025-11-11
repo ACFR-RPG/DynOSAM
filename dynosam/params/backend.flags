@@ -1,5 +1,3 @@
-#!/bin/bash
-
 # good for omd
 # --constant_object_motion_rotation_sigma=1.0
 # --constant_object_motion_translation_sigma=0.7
@@ -7,6 +5,10 @@
 # good for carla
 # --constant_object_motion_rotation_sigma=0.1
 # --constant_object_motion_translation_sigma=0.01
+
+# --constant_object_motion_rotation_sigma=0.01
+# --constant_object_motion_translation_sigma=0.2
+
 
 --constant_object_motion_rotation_sigma=0.01
 --constant_object_motion_translation_sigma=0.2
@@ -16,17 +18,25 @@
 # --motion_ternary_factor_noise_sigma=0.00000000001
 --motion_ternary_factor_noise_sigma=0.001
 
---odometry_rotation_sigma=0.05
---odometry_translation_sigma=0.01
+# --odometry_rotation_sigma=0.05
+# --odometry_translation_sigma=0.01
 
 # --odometry_rotation_sigma=0.005
 # --odometry_translation_sigma=0.001
 
+#--odometry_rotation_sigma=0.05
+#--odometry_translation_sigma=0.01
+
+--odometry_rotation_sigma=0.2
+--odometry_translation_sigma=0.4
 
 
 --static_point_noise_sigma=0.01
 --dynamic_point_noise_sigma=0.01
-# --dynamic_point_noise_sigma=0.00006
+
+--static_pixel_noise_sigma=1.0
+--dynamic_pixel_noise_sigma=3.0
+
 
 --opt_window_size=10
 --opt_window_overlap=4
@@ -37,6 +47,12 @@
 
 # 0: Full-batch, 1: sliding-window, 2: incremental
 --optimization_mode=0
+
+# 0: PTP, 1: Generic Projection, 2: Stereo Projection
+--static_formulation_type=2
+
+--min_static_observations=2
+--min_dynamic_observations=2
 
 
 # for ISAM2 params using ParallelObjectSAM
@@ -51,7 +67,7 @@
 
 --m_relinearize_threshold=20.0
 
---num_dynamic_optimize=3
+--num_dynamic_optimize=0
 
 --save_per_frame_dynamic_cloud=false
 

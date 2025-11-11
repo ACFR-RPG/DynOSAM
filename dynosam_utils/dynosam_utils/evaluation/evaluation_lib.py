@@ -676,7 +676,8 @@ class CameraPoseEvaluator(Evaluator):
         traj_est_vo = self.camera_pose_traj
         traj_ref_vo = self.camera_pose_traj_ref
 
-        traj_est_vo, traj_ref_vo = tools.sync_and_align_trajectories(traj_est_vo, traj_ref_vo)
+        traj_est_vo, traj_ref_vo = tools.sync_and_align_trajectories(traj_est_vo, traj_ref_vo, do_alignment=False, correct_scale=False)
+        # traj_est_vo.align_origin(traj_ref_vo)
 
         # alignment_transformation = lie_algebra.sim3(
         #     *traj_est_vo.align(traj_ref_vo, False, False, n=-1))
@@ -809,38 +810,6 @@ class MapPlotter3D(Evaluator):
 
         camera_traj = copy.deepcopy(self._camera_eval.camera_pose_traj)
         camera_traj_ref = copy.deepcopy(self._camera_eval.camera_pose_traj_ref)
-        object_trajs = copy.deepcopy(self._object_eval.object_poses_traj)
-
-        trajectory_helper = TrajectoryHelper()
-        # trajectory_helper.append(camera_traj)
-        trajectory_helper.append(object_trajs)
-
-        # do gross renamign
-        all_traj = object_trajs
-        all_gt_traj = copy.deepcopy(self._object_eval.object_poses_traj_ref)
-
-        import itertools
-
-        # list for the object trajectory generator
-        colour_list = []
-        # map for the point cloud plot per object id
-        colour_generator_map = {}
-
-        plot_velocities = self.kwargs.get("plot_velocities", False)
-
-        colour_map_names = itertools.cycle(MapPlotter3D.SEQUENTIAL_COLOUR_MAPS)
-        for object_id, t in all_traj.items():
-            id = int(object_id)
-            # get colour map
-            colour_map  = matplotlib.colormaps[next(colour_map_names)]
-
-            trajectory_and_velocity_colour = colour_map(0.8)
-            colour_list.append(trajectory_and_velocity_colour)
-            colour_generator_map[id] = colour_map
-            object_trajectory = self._object_eval.make_object_trajectory(object_id)
-
-            if object_trajectory and plot_velocities:
-                core.plotting.plot_velocities(ax, object_trajectory, color=trajectory_and_velocity_colour)
 
         camera_ref_dict = None
         if plot_gt_camera:
@@ -859,8 +828,66 @@ class MapPlotter3D(Evaluator):
                                        traj_linewidth=3.0)
 
 
-        static_points = []
+        import itertools
 
+         # list for the object trajectory generator
+        colour_list = []
+        trajectory_helper = TrajectoryHelper()
+
+        if self._object_eval is not None:
+
+            object_trajs = copy.deepcopy(self._object_eval.object_poses_traj)
+
+
+            # trajectory_helper.append(camera_traj)
+            trajectory_helper.append(object_trajs)
+
+            # do gross renamign
+            all_traj = object_trajs
+            all_gt_traj = copy.deepcopy(self._object_eval.object_poses_traj_ref)
+
+            # map for the point cloud plot per object id
+            colour_generator_map = {}
+
+            plot_velocities = self.kwargs.get("plot_velocities", False)
+
+            colour_map_names = itertools.cycle(MapPlotter3D.SEQUENTIAL_COLOUR_MAPS)
+            for object_id, t in all_traj.items():
+                id = int(object_id)
+                # get colour map
+                colour_map  = matplotlib.colormaps[next(colour_map_names)]
+
+                trajectory_and_velocity_colour = colour_map(0.8)
+                colour_list.append(trajectory_and_velocity_colour)
+                colour_generator_map[id] = colour_map
+                object_trajectory = self._object_eval.make_object_trajectory(object_id)
+
+                if object_trajectory and plot_velocities:
+                    core.plotting.plot_velocities(ax, object_trajectory, color=trajectory_and_velocity_colour)
+
+            core.plotting.plot_object_trajectories(map_fig, all_traj,
+                                       plot_mode=evo_plot.PlotMode.xyz,
+                                       colours=colour_list,
+                                       plot_axis_est=True,
+                                       plot_start_end_markers=True,
+                                       axis_marker_scale=0.1,
+                                       traj_zorder=30,
+                                       est_name_prefix="Object",
+                                       traj_linewidth=3.0)
+            if plot_gt_objects:
+                core.plotting.plot_object_trajectories(map_fig, all_gt_traj,
+                                            plot_mode=evo_plot.PlotMode.xyz,
+                                            colours=colour_list,
+                                            plot_axis_est=True,
+                                            plot_start_end_markers=True,
+                                            axis_marker_scale=0.1,
+                                            traj_zorder=30,
+                                            est_style="--",
+                                            est_name_prefix="Object GT",
+                                            traj_linewidth=3.0)
+
+
+        static_points = []
         object_points = {}
 
         tracklet_set = set()
@@ -941,6 +968,7 @@ class MapPlotter3D(Evaluator):
 
 
 
+
         ax.view_init(azim=0, elev=90)
         ax.patch.set_facecolor('white')
         ax.axis('off')
@@ -964,27 +992,6 @@ class MapPlotter3D(Evaluator):
         ax.scatter(static_points[:,0], static_points[:,1], static_points[:,2], s=2.0, c='black',alpha=1.0, zorder=0, marker=".")
         for (_, data), object_colour in zip(object_points.items(), colour_list):
             ax.scatter(data[0], data[1], data[2], s=3.0, alpha=0.7, c=object_colour)
-
-        core.plotting.plot_object_trajectories(map_fig, all_traj,
-                                       plot_mode=evo_plot.PlotMode.xyz,
-                                       colours=colour_list,
-                                       plot_axis_est=True,
-                                       plot_start_end_markers=True,
-                                       axis_marker_scale=0.1,
-                                       traj_zorder=30,
-                                       est_name_prefix="Object",
-                                       traj_linewidth=3.0)
-        if plot_gt_objects:
-            core.plotting.plot_object_trajectories(map_fig, all_gt_traj,
-                                        plot_mode=evo_plot.PlotMode.xyz,
-                                        colours=colour_list,
-                                        plot_axis_est=True,
-                                        plot_start_end_markers=True,
-                                        axis_marker_scale=0.1,
-                                        traj_zorder=30,
-                                        est_style="--",
-                                        est_name_prefix="Object GT",
-                                        traj_linewidth=3.0)
 
 
         trajectory_helper.set_ax_limits(map_fig.gca())

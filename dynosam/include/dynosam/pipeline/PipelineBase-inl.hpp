@@ -31,8 +31,8 @@
 #pragma once
 
 #include "dynosam/pipeline/PipelineBase.hpp"
-#include "dynosam/utils/Timing.hpp"
-#include "dynosam/utils/TimingStats.hpp"
+#include "dynosam_common/utils/Timing.hpp"
+#include "dynosam_common/utils/TimingStats.hpp"
 
 namespace dyno {
 
@@ -108,6 +108,13 @@ void MIMOPipelineModule<INPUT, OUTPUT>::registerOutputQueue(
 }
 
 template <typename INPUT, typename OUTPUT>
+void MIMOPipelineModule<INPUT, OUTPUT>::registerOutputCallback(
+    OutputCallback output_callback) {
+  CHECK(output_callback);
+  output_callbacks_.push_back(output_callback);
+}
+
+template <typename INPUT, typename OUTPUT>
 bool MIMOPipelineModule<INPUT, OUTPUT>::pushOutputPacket(
     const typename Base::OutputConstSharedPtr& output_packet) const {
   auto tic_callbacks = utils::Timer::tic();
@@ -118,6 +125,10 @@ bool MIMOPipelineModule<INPUT, OUTPUT>::pushOutputPacket(
     CHECK(queue);
     queue->push(output_packet);
   }
+  for (OutputCallback cb : output_callbacks_) {
+    cb(output_packet);
+  }
+
   static constexpr auto kTimeLimitCallbacks = std::chrono::milliseconds(10);
   auto callbacks_duration = utils::Timer::toc(tic_callbacks);
   LOG_IF(WARNING, callbacks_duration > kTimeLimitCallbacks)

@@ -39,9 +39,10 @@
 
 #include "dynosam/backend/BackendDefinitions.hpp"
 #include "dynosam/backend/rgbd/HybridEstimator.hpp"
-#include "dynosam/common/Exceptions.hpp"
-#include "dynosam/common/Map.hpp"
-#include "dynosam/common/Types.hpp"  //only needed for factors
+#include "dynosam_common/Exceptions.hpp"
+#include "dynosam_common/Types.hpp"  //only needed for factors
+#include "dynosam_opt/IncrementalOptimization.hpp"
+#include "dynosam_opt/Map.hpp"
 
 namespace dyno {
 
@@ -52,6 +53,7 @@ class ParallelObjectISAM {
   struct Params {
     //! Number additional iSAM updates to run
     int num_optimzie = 2;
+    FormulationParams formulation{};
     gtsam::ISAM2Params isam{};
   };
 
@@ -88,7 +90,7 @@ class ParallelObjectISAM {
   using MeasurementStatusVector = Map::MeasurementStatusVector<DERIVEDSTATUS>;
 
   ParallelObjectISAM(const Params& params, ObjectId object_id,
-                     const NoiseModels& noise_models,
+                     const NoiseModels& noise_models, const Sensors& sensors,
                      const FormulationHooks& formulation_hooks);
 
   // what motion representation should this be in? GLOBAL? Do ne need a new
@@ -107,6 +109,7 @@ class ParallelObjectISAM {
     result_.frame_id = frame_k;
     result_.was_smoother_ok = false;
 
+    VLOG(50) << "ParallelObjectISAM::updateMap, j=" << object_id_;
     this->updateMap(frame_k, measurements, X_world_k, motion_frame);
 
     if (!update_smoother) {
@@ -115,9 +118,11 @@ class ParallelObjectISAM {
 
     // updating the smoothing will update the formulation and run
     // update on the optimizer. the internal results_ object is updated
+    VLOG(50) << "ParallelObjectISAM::updateSmoother, j=" << object_id_;
     const bool is_smoother_ok = this->updateSmoother(frame_k, X_world_k);
 
     if (is_smoother_ok) {
+      VLOG(50) << "ParallelObjectISAM::updateStates, j=" << object_id_;
       updateStates();
     }
   }
@@ -157,7 +162,6 @@ class ParallelObjectISAM {
                  const Motion3ReferenceFrame& motion_frame) {
     map_->updateObservations(measurements);
     map_->updateSensorPoseMeasurement(frame_k, X_world_k);
-
     const FrameId to = motion_frame.to();
     if (to != frame_k) {
       throw DynosamException(
@@ -184,14 +188,9 @@ class ParallelObjectISAM {
                          gtsam::NonlinearFactorGraph& new_factors,
                          gtsam::Values& new_values);
 
-  // bool optimize(
-  //     gtsam::ISAM2Result* result,
-  //     const gtsam::NonlinearFactorGraph& new_factors =
-  //         gtsam::NonlinearFactorGraph(),
-  //     const gtsam::Values& new_values = gtsam::Values(),
-  //     const ISAM2UpdateParams& update_params = gtsam::ISAM2UpdateParams());
-
   void updateStates();
+
+  void setupErrorHandlingHooks();
 
  private:
   const Params params_;
@@ -204,6 +203,7 @@ class ParallelObjectISAM {
   //! style of motion expected to be used as input. Set on the first run and all
   //! motions are expected to then follow the same style
   std::optional<MotionRepresentationStyle> expected_style_;
+  ErrorHandlingHooks error_hooks_;
 };
 
 using json = nlohmann::json;

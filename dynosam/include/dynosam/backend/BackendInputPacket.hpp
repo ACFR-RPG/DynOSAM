@@ -30,11 +30,11 @@
 
 #pragma once
 
-#include "dynosam/frontend/FrontendOutputPacket.hpp"
+#include "dynosam/frontend/VisionImuOutputPacket.hpp"
 
 namespace dyno {
 
 /// @brief Define the BackendInputPacket as the output of the frontend
-using BackendInputPacket = FrontendOutputPacketBase;
+using BackendInputPacket = VisionImuPacket;
 
 }  // namespace dyno

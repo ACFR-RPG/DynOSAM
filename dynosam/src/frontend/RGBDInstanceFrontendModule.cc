@@ -34,14 +34,15 @@
 
 #include <opencv4/opencv2/opencv.hpp>
 
-#include "dynosam/common/Flags.hpp"  //for common flags
 #include "dynosam/frontend/RGBDInstance-Definitions.hpp"
 #include "dynosam/frontend/vision/MotionSolver.hpp"
 #include "dynosam/frontend/vision/Vision-Definitions.hpp"
-#include "dynosam/logger/Logger.hpp"
-#include "dynosam/utils/OpenCVUtils.hpp"
-#include "dynosam/utils/SafeCast.hpp"
-#include "dynosam/utils/TimingStats.hpp"
+#include "dynosam_common/Flags.hpp"  //for common flags
+#include "dynosam_common/logger/Logger.hpp"
+#include "dynosam_common/utils/OpenCVUtils.hpp"
+#include "dynosam_common/utils/SafeCast.hpp"
+#include "dynosam_common/utils/TimingStats.hpp"
+#include "dynosam_cv/RGBDCamera.hpp"
 
 DEFINE_bool(use_frontend_logger, false,
             "If true, the frontend logger will be used");
@@ -54,16 +55,16 @@ DEFINE_bool(log_projected_masks, false,
 namespace dyno {
 
 RGBDInstanceFrontendModule::RGBDInstanceFrontendModule(
-    const FrontendParams& frontend_params, Camera::Ptr camera,
+    const DynoParams& params, Camera::Ptr camera,
     ImageDisplayQueue* display_queue)
-    : FrontendModule(frontend_params, display_queue),
+    : FrontendModule(params, display_queue),
       camera_(camera),
-      motion_solver_(frontend_params.ego_motion_solver_params,
+      motion_solver_(params.frontend_params_.ego_motion_solver_params,
                      camera->getParams()),
-      imu_frontend_(frontend_params.imu_params) {
+      imu_frontend_(params.frontend_params_.imu_params) {
   CHECK_NOTNULL(camera_);
-  tracker_ =
-      std::make_unique<FeatureTracker>(frontend_params, camera_, display_queue);
+  tracker_ = std::make_unique<FeatureTracker>(getFrontendParams(), camera_,
+                                              display_queue);
 
   if (FLAGS_use_frontend_logger) {
     LOG(INFO) << "Using front-end logger!";
@@ -71,7 +72,7 @@ RGBDInstanceFrontendModule::RGBDInstanceFrontendModule(
   }
 
   ObjectMotionSovlerF2F::Params object_motion_solver_params =
-      frontend_params.object_motion_solver_params;
+      getFrontendParams().object_motion_solver_params;
   // add ground truth hook
   object_motion_solver_params.ground_truth_packets_request = [&]() {
     return this->shared_module_info.getGroundTruthPackets();
@@ -87,8 +88,8 @@ RGBDInstanceFrontendModule::~RGBDInstanceFrontendModule() {
     LOG(INFO) << "Saving frontend output as json";
     const std::string file_path =
         getOutputFilePath(kRgbdFrontendOutputJsonFile);
-    JsonConverter::WriteOutJson(output_packet_record_, file_path,
-                                JsonConverter::Format::BSON);
+    // JsonConverter::WriteOutJson(output_packet_record_, file_path,
+    //                             JsonConverter::Format::BSON);
   }
 }
 
@@ -103,10 +104,8 @@ FrontendModule::SpinReturn RGBDInstanceFrontendModule::boostrapSpin(
     FrontendInputPacketBase::ConstPtr input) {
   ImageContainer::Ptr image_container = input->image_container_;
 
-  std::set<ObjectId> keyframed_objects;
   Frame::Ptr frame = tracker_->track(input->getFrameId(), input->getTimestamp(),
-                                     *image_container, keyframed_objects);
-  (void)keyframed_objects;
+                                     *image_container);
   CHECK(frame->updateDepths());
 
   return {State::Nominal, nullptr};
@@ -134,10 +133,8 @@ FrontendModule::SpinReturn RGBDInstanceFrontendModule::nominalSpin(
         previous_nav_state_.attitude().inverse() * nav_state_.attitude();
   }
 
-  std::set<ObjectId> keyframed_objects;
-  Frame::Ptr frame =
-      tracker_->track(input->getFrameId(), input->getTimestamp(),
-                      *image_container, keyframed_objects, R_curr_ref);
+  Frame::Ptr frame = tracker_->track(input->getFrameId(), input->getTimestamp(),
+                                     *image_container, R_curr_ref);
 
   Frame::Ptr previous_frame = tracker_->getPreviousFrame();
   CHECK(previous_frame);
@@ -145,22 +142,30 @@ FrontendModule::SpinReturn RGBDInstanceFrontendModule::nominalSpin(
   VLOG(1) << to_string(tracker_->getTrackerInfo());
 
   {
+    // this will mark some points as invalid if they are out of depth range
     utils::TimingStatsCollector update_depths_timer("depth_updater");
     frame->updateDepths();
   }
 
   bool stereo_result = false;
-  static const double base_line = 0.05;  // VIODE
-  // static const double base_line = 0.12;  // ZED
+  std::shared_ptr<RGBDCamera> rgbd_camera = camera_->safeGetRGBDCamera();
+
+  if (has_stereo) {
+    CHECK(rgbd_camera) << "Stereo imagery provided but rgbd camera is null!";
+  }
 
   if (has_stereo) {
     const cv::Mat& left_rgb = image_container->rgb();
     const cv::Mat& right_rgb = image_container->rightRgb();
 
+    auto usable_iterator = frame->static_features_.beginUsable();
+    LOG(INFO) << "Counted intliers "
+              << std::distance(usable_iterator.begin(), usable_iterator.end());
+
     FeaturePtrs stereo_features_1;
     stereo_result =
         tracker_->stereoTrack(stereo_features_1, frame->static_features_,
-                              left_rgb, right_rgb, base_line);
+                              left_rgb, right_rgb, rgbd_camera->baseline());
   }
 
   // this includes the refine correspondances with joint optical flow
@@ -178,12 +183,13 @@ FrontendModule::SpinReturn RGBDInstanceFrontendModule::nominalSpin(
     FeaturePtrs stereo_features_2;
     stereo_result &=
         tracker_->stereoTrack(stereo_features_2, frame->static_features_,
-                              left_rgb, right_rgb, base_line);
+                              left_rgb, right_rgb, rgbd_camera->baseline());
   }
 
   // VERY important calculation
   const gtsam::Pose3 T_k_1_k =
       previous_nav_state_.pose().inverse() * frame->T_world_camera_;
+  vo_velocity_ = T_k_1_k;
 
   // we currently use the frame pose as the nav state - this value can come from
   // either the VO OR the IMU, depending on the result from the
@@ -193,52 +199,31 @@ FrontendModule::SpinReturn RGBDInstanceFrontendModule::nominalSpin(
   // will be wrong (currently!!)
   previous_nav_state_ =
       gtsam::NavState(frame->T_world_camera_, nav_state_.velocity());
+  // previous_nav_state_ = nav_state_;
 
   if (R_curr_ref) {
     imu_frontend_.resetIntegration();
   }
 
-  if (FLAGS_use_dynamic_track) {
-    utils::TimingStatsCollector track_dynamic_timer("tracking_dynamic");
-    vision_tools::trackDynamic(base_params_, *previous_frame, frame);
-  }
+  // if (FLAGS_use_dynamic_track) {
+  //   utils::TimingStatsCollector track_dynamic_timer("tracking_dynamic");
+  //   vision_tools::trackDynamic(getFrontendParams(), *previous_frame, frame);
+  // }
 
-  ObjectMotionMap object_motions;
-  ObjectPoseMap object_poses;
-  // MotionEstimateMap motion_estimates;
-  std::tie(object_motions, object_poses) =
+  const auto [object_motions, object_poses] =
       object_motion_solver_->solve(frame, previous_frame);
 
-  // motions in this frame (ie. new motions!!)
-  MotionEstimateMap motion_estimates =
-      object_motions.toEstimateMap(frame->getFrameId());
-
-  // const cv::Mat& board_detection_mask = tracker_->getBoarderDetectionMask();
-  // PointCloudLabelRGB::Ptr dense_labelled_cloud =
-  //     frame->projectToDenseCloud(&board_detection_mask);
-  PointCloudLabelRGB::Ptr dense_labelled_cloud = nullptr;
-
-  if (logger_) {
-    auto ground_truths = this->shared_module_info.getGroundTruthPackets();
-    logger_->logCameraPose(frame->getFrameId(), frame->getPose(),
-                           ground_truths);
-    // TODO: this is now wrong as we dont log all the corrected motions!!!!
-    logger_->logObjectMotion(frame->getFrameId(), motion_estimates,
-                             ground_truths);
-    logger_->logTrackingLengthHistogram(frame);
-    logger_->logFrameIdToTimestamp(frame->getFrameId(), frame->getTimestamp());
-  }
+  VisionImuPacket::Ptr vision_imu_packet = std::make_shared<VisionImuPacket>();
+  vision_imu_packet->frameId(frame->getFrameId());
+  vision_imu_packet->timestamp(frame->getTimestamp());
+  vision_imu_packet->pim(pim);
+  vision_imu_packet->groundTruthPacket(input->optional_gt_);
+  fillOutputPacketWithTracks(vision_imu_packet, *frame, T_k_1_k, object_motions,
+                             object_poses);
 
   DebugImagery debug_imagery;
   debug_imagery.tracking_image =
       createTrackingImage(frame, previous_frame, object_poses);
-
-  if (display_queue_)
-    display_queue_->push(
-        ImageToDisplay("Tracks", debug_imagery.tracking_image));
-
-  debug_imagery.detected_bounding_boxes = frame->drawDetectedObjectBoxes();
-
   const ImageContainer& processed_image_container = frame->image_container_;
   debug_imagery.rgb_viz =
       ImageType::RGBMono::toRGB(processed_image_container.rgb());
@@ -249,35 +234,37 @@ FrontendModule::SpinReturn RGBDInstanceFrontendModule::nominalSpin(
   debug_imagery.depth_viz =
       ImageType::Depth::toRGB(processed_image_container.depth());
 
-  LOG(INFO) << "Done debug imagery";
+  if (display_queue_) {
+    display_queue_->push(
+        ImageToDisplay("Tracks", debug_imagery.tracking_image));
 
-  RGBDInstanceOutputPacket::Ptr output = constructOutput(
-      *frame, object_motions, object_poses, frame->T_world_camera_,
-      input->optional_gt_, debug_imagery, dense_labelled_cloud);
-
-  output->pim_ = pim;
-  output->T_k_1_k_ = T_k_1_k;
-  vo_velocity_ = T_k_1_k;
-  // output->is_keyframe_ = keyframed_objects;
-
-  if (FLAGS_save_frontend_json)
-    output_packet_record_.insert({output->getFrameId(), output});
-
-  if (FLAGS_log_projected_masks)
-    vision_tools::writeOutProjectMaskAndDepthMap(
-        frame->image_container_.depth(),
-        frame->image_container_.objectMotionMask(), *frame->getCamera(),
-        frame->getFrameId());
-
-  if (logger_) {
-    auto ground_truths = this->shared_module_info.getGroundTruthPackets();
-    logger_->logPoints(output->getFrameId(), output->T_world_camera_,
-                       output->dynamic_landmarks_);
-    // object_poses_ are in frontend module
-    logger_->logObjectPose(output->getFrameId(), object_poses, ground_truths);
-    logger_->logObjectBbxes(output->getFrameId(), output->getObjectBbxes());
+    // cv::Mat stereo_matches;
+    // if(tracker_->drawStereoMatches(stereo_matches, *frame)){
+    //   display_queue_->push(
+    //     ImageToDisplay("Stereo Matches", stereo_matches));
+    // }
   }
-  return {State::Nominal, output};
+
+  vision_imu_packet->debugImagery(debug_imagery);
+
+  // // const cv::Mat& board_detection_mask =
+  // tracker_->getBoarderDetectionMask(); PointCloudLabelRGB::Ptr
+  // dense_labelled_cloud =
+  //     frame->projectToDenseCloud(&board_detection_mask);
+  PointCloudLabelRGB::Ptr dense_labelled_cloud = nullptr;
+
+  // if (FLAGS_save_frontend_json)
+  //   output_packet_record_.insert({output->getFrameId(), output});
+
+  sendToFrontendLogger(frame, vision_imu_packet);
+
+  // if (FLAGS_log_projected_masks)
+  //   vision_tools::writeOutProjectMaskAndDepthMap(
+  //       frame->image_container_.depth(),
+  //       frame->image_container_.objectMotionMask(), *frame->getCamera(),
+  //       frame->getFrameId());
+
+  return {State::Nominal, vision_imu_packet};
 }
 
 bool RGBDInstanceFrontendModule::solveCameraMotion(
@@ -285,17 +272,18 @@ bool RGBDInstanceFrontendModule::solveCameraMotion(
     std::optional<gtsam::Rot3> R_curr_ref) {
   utils::TimingStatsCollector timer("frontend.solve_camera_motion");
   Pose3SolverResult result;
-  if (base_params_.use_ego_motion_pnp) {
+
+  const auto& frontend_params = getFrontendParams();
+  if (frontend_params.use_ego_motion_pnp) {
     result = motion_solver_.geometricOutlierRejection3d2d(frame_k_1, frame_k,
                                                           R_curr_ref);
   } else {
     // TODO: untested
     LOG(FATAL) << "Not tested";
-    // result = motion_solver_.geometricOutlierRejection3d3d(frame_k_1,
-    // frame_k);
+    // result = motion_solver_.geometricOutlierRejection3d3d(frame_k_1,frame_k);
   }
 
-  VLOG(15) << (base_params_.use_ego_motion_pnp ? "3D2D" : "3D3D")
+  VLOG(15) << (frontend_params.use_ego_motion_pnp ? "3D2D" : "3D3D")
            << "camera pose estimate at frame " << frame_k->frame_id_
            << (result.status == TrackingStatus::VALID ? " success "
                                                       : " failure ")
@@ -326,7 +314,7 @@ bool RGBDInstanceFrontendModule::solveCameraMotion(
     // way of checking that we HAVE an imu). If we do we can use the nav state
     // directly to update the current pose as the nav state is the forward
     // prediction from the IMU
-    if (last_imu_nav_state_update_ == frame_k_1->getFrameId()) {
+    if (last_imu_nav_state_update_ == frame_k->getFrameId()) {
       frame_k->T_world_camera_ = nav_state_.pose();
       ss << "Nav state was previous updated with IMU. Using predicted pose to "
             "set camera transform; k"
@@ -366,10 +354,12 @@ bool RGBDInstanceFrontendModule::solveCameraMotion(
   } else {
     frame_k->T_world_camera_ = result.best_result;
 
-    if (base_params_.refine_camera_pose_with_joint_of) {
+    if (frontend_params.refine_camera_pose_with_joint_of) {
       VLOG(10) << "Refining camera pose with joint of";
+      utils::TimingStatsCollector timer(
+          "frontend.solve_camera_motion.of_refine");
       OpticalFlowAndPoseOptimizer flow_optimizer(
-          base_params_.object_motion_solver_params.joint_of_params);
+          frontend_params.object_motion_solver_params.joint_of_params);
 
       auto flow_opt_result = flow_optimizer.optimizeAndUpdate<CalibrationType>(
           frame_k_1, frame_k, result.inliers, result.best_result);
@@ -382,98 +372,171 @@ bool RGBDInstanceFrontendModule::solveCameraMotion(
   }
 }
 
-RGBDInstanceOutputPacket::Ptr RGBDInstanceFrontendModule::constructOutput(
-    const Frame& frame, const ObjectMotionMap& object_motions,
-    const ObjectPoseMap& object_poses, const gtsam::Pose3& T_world_camera,
-    const GroundTruthInputPacket::Optional& gt_packet,
-    const DebugImagery::Optional& debug_imagery,
-    const PointCloudLabelRGB::Ptr dense_labelled_cloud) {
-  StatusKeypointVector static_keypoint_measurements;
-  StatusLandmarkVector static_landmarks;
-  for (const Feature::Ptr& f : frame.usableStaticFeaturesBegin()) {
-    const TrackletId tracklet_id = f->trackletId();
-    const Keypoint kp = f->keypoint();
-    CHECK(f->isStatic());
-    CHECK(Feature::IsUsable(f));
+void RGBDInstanceFrontendModule::fillOutputPacketWithTracks(
+    VisionImuPacket::Ptr vision_imu_packet, const Frame& frame,
+    const gtsam::Pose3& T_k_1_k, const ObjectMotionMap& object_motions,
+    const ObjectPoseMap& object_poses) const {
+  CHECK(vision_imu_packet);
+  const auto frame_id = frame.getFrameId();
+  // construct image tracks
+  const double& static_pixel_sigma =
+      params_.backend_params_.static_pixel_noise_sigma;
+  const double& static_point_sigma =
+      params_.backend_params_.static_point_noise_sigma;
 
-    // dont include features that have only been seen once as we havent had a
-    // // chance to validate it yet
-    if (f->age() < 1) {
-      continue;
-    }
+  const double& dynamic_pixel_sigma =
+      params_.backend_params_.dynamic_pixel_noise_sigma;
+  const double& dynamic_point_sigma =
+      params_.backend_params_.dynamic_point_noise_sigma;
 
-    MeasurementWithCovariance<Keypoint> kp_measurement(kp);
-    MeasurementWithCovariance<Landmark> landmark_measurement(
-        vision_tools::backProjectAndCovariance(*f, *camera_, 0.2, 0.1));
+  gtsam::Vector2 static_pixel_sigmas;
+  static_pixel_sigmas << static_pixel_sigma, static_pixel_sigma;
 
-    static_keypoint_measurements.push_back(KeypointStatus::StaticInLocal(
-        kp_measurement, frame.getFrameId(), tracklet_id));
+  gtsam::Vector2 dynamic_pixel_sigmas;
+  dynamic_pixel_sigmas << dynamic_pixel_sigma, dynamic_pixel_sigma;
 
-    static_landmarks.push_back(LandmarkStatus::StaticInLocal(
-        landmark_measurement, frame.getFrameId(), tracklet_id));
-  }
+  auto& camera = *this->camera_;
+  auto fill_camera_measurements =
+      [&camera](FeatureFilterIterator it,
+                CameraMeasurementStatusVector* measurements, FrameId frame_id,
+                const gtsam::Vector2& pixel_sigmas, double depth_sigma) {
+        std::shared_ptr<RGBDCamera> rgbd_camera = camera.safeGetRGBDCamera();
 
-  StatusKeypointVector dynamic_keypoint_measurements;
-  StatusLandmarkVector dynamic_landmarks;
-  for (const auto& [object_id, obs] : frame.object_observations_) {
-    CHECK_EQ(object_id, obs.instance_label_);
-    // TODO: add back in?
-    //  CHECK(obs.marked_as_moving_);
+        for (const Feature::Ptr& f : it) {
+          const TrackletId tracklet_id = f->trackletId();
+          const Keypoint& kp = f->keypoint();
+          const ObjectId object_id = f->objectId();
+          CHECK_EQ(f->objectId(), object_id);
+          CHECK(Feature::IsUsable(f));
 
-    for (const TrackletId tracklet : obs.object_features_) {
-      if (frame.isFeatureUsable(tracklet)) {
-        const Feature::Ptr f = frame.at(tracklet);
-        CHECK(!f->isStatic());
-        CHECK_EQ(f->objectId(), object_id);
+          MeasurementWithCovariance<Keypoint> kp_measurement =
+              MeasurementWithCovariance<Keypoint>::FromSigmas(kp, pixel_sigmas);
+          CameraMeasurement camera_measurement(kp_measurement);
 
-        // dont include features that have only been seen once as we havent had
-        // a chance to validate it yet
-        if (f->age() < 1) {
-          continue;
+          // This can come from either stereo or rgbd
+          if (f->hasDepth()) {
+            // MeasurementWithCovariance<Landmark> landmark_measurement(
+            //     // assume sigma_u and sigma_v are identical
+            //     vision_tools::backProjectAndCovariance(
+            //         *f, camera, pixel_sigmas(0), depth_sigma));
+            // camera_measurement.landmark(landmark_measurement);
+            Landmark landmark;
+            camera.backProject(kp, f->depth(), &landmark);
+
+            gtsam::Vector3 sigmas;
+            sigmas << depth_sigma, depth_sigma, depth_sigma;
+
+            MeasurementWithCovariance<Landmark> landmark_measurement =
+                MeasurementWithCovariance<Landmark>::FromSigmas(landmark,
+                                                                sigmas);
+            camera_measurement.landmark(landmark_measurement);
+          }
+
+          if (f->hasRightKeypoint()) {
+            CHECK(f->hasDepth())
+                << "Right keypoint set for feature but no depth!";
+            MeasurementWithCovariance<Keypoint> right_kp_measurement =
+                MeasurementWithCovariance<Keypoint>::FromSigmas(
+                    f->rightKeypoint(), pixel_sigmas);
+            camera_measurement.rightKeypoint(right_kp_measurement);
+          }
+          // no right keypoint and has rgbd camera and has depth, project
+          // keypoint into right camera
+          else if (rgbd_camera && f->hasDepth()) {
+            bool right_projection_result = rgbd_camera->projectRight(f);
+            if (!right_projection_result) {
+              // TODO: for now mark as outlier and ignore point
+              f->markOutlier();
+              continue;
+            }
+
+            CHECK(f->hasRightKeypoint());
+            MeasurementWithCovariance<Keypoint> right_kp_measurement =
+                MeasurementWithCovariance<Keypoint>::FromSigmas(
+                    f->rightKeypoint(), pixel_sigmas);
+            camera_measurement.rightKeypoint(right_kp_measurement);
+          }
+
+          if (f->keypointType() == KeyPointType::STATIC) {
+            CHECK_EQ(object_id, background_label);
+          } else {
+            CHECK_NE(object_id, background_label);
+          }
+
+          measurements->push_back(
+              CameraMeasurementStatus(camera_measurement, frame_id, tracklet_id,
+                                      object_id, ReferenceFrame::LOCAL));
         }
+      };
 
-        const TrackletId tracklet_id = f->trackletId();
-        const Keypoint kp = f->keypoint();
+  // TODO: fill ttracking status?
+  VisionImuPacket::CameraTracks camera_tracks;
+  auto* static_measurements = &camera_tracks.measurements;
+  fill_camera_measurements(frame.usableStaticFeaturesBegin(),
+                           static_measurements, frame_id, static_pixel_sigmas,
+                           static_point_sigma);
+  camera_tracks.X_W_k = frame.getPose();
+  camera_tracks.T_k_1_k = T_k_1_k;
+  vision_imu_packet->cameraTracks(camera_tracks);
 
-        MeasurementWithCovariance<Keypoint> kp_measurement(kp);
-        MeasurementWithCovariance<Landmark> landmark_measurement(
-            vision_tools::backProjectAndCovariance(*f, *camera_, 0.2, 0.1));
+  // First collect all dynamic measurements then split them by object
+  // This is a bit silly
+  CameraMeasurementStatusVector dynamic_measurements;
+  fill_camera_measurements(frame.usableDynamicFeaturesBegin(),
+                           &dynamic_measurements, frame_id,
+                           dynamic_pixel_sigmas, dynamic_point_sigma);
 
-        dynamic_keypoint_measurements.push_back(KeypointStatus::DynamicInLocal(
-            kp_measurement, frame.frame_id_, tracklet_id, object_id));
+  VisionImuPacket::ObjectTrackMap object_tracks;
+  // motions in this frame (ie. new motions!!)
+  MotionEstimateMap motion_estimates = object_motions.toEstimateMap(frame_id);
+  auto pose_estimates = object_poses.toEstimateMap(frame_id);
 
-        dynamic_landmarks.push_back(LandmarkStatus::DynamicInLocal(
-            landmark_measurement, frame.frame_id_, tracklet_id, object_id));
-      }
+  // fill object tracks based on valid motions
+  for (const auto& [object_id, motion_reference_estimate] : motion_estimates) {
+    CHECK(pose_estimates.exists(object_id))
+        << "Object pose missing " << info_string(frame_id, object_id)
+        << " but frontend motion available";
+    const auto& L_W_k = pose_estimates.at(object_id);
+
+    VisionImuPacket::ObjectTracks object_track;
+    object_track.H_W_k_1_k = motion_reference_estimate;
+    object_track.L_W_k = L_W_k;
+    object_tracks.insert2(object_id, object_track);
+  }
+
+  for (const auto& dm : dynamic_measurements) {
+    const auto& object_id = dm.objectId();
+    // throw out features detected on objects where the tracking failed
+    if (object_tracks.exists(object_id)) {
+      VisionImuPacket::ObjectTracks& object_track = object_tracks.at(object_id);
+      object_track.measurements.push_back(dm);
     }
   }
+  vision_imu_packet->objectTracks(object_tracks);
+}
 
-  // update trajectory of camera poses to be visualised by the frontend viz
-  // module
-  camera_poses_.push_back(T_world_camera);
-
-  // create timestamps for the provided frames
-  // TODO: maybe a more efficient way later!!!
-  const FrameIdTimestampMap& all_timestamp_map =
-      shared_module_info.getTimestampMap();
-  FrameIdTimestampMap involved_timestamps;
-  for (const FrameId& frame_id : object_motions.getInvovledFrameIds()) {
-    CHECK(all_timestamp_map.exists(frame_id));
-    involved_timestamps.insert2(frame_id, all_timestamp_map.at(frame_id));
+void RGBDInstanceFrontendModule::sendToFrontendLogger(
+    const Frame::Ptr& frame, const VisionImuPacket::Ptr& vision_imu_packet) {
+  if (logger_) {
+    auto ground_truths = this->shared_module_info.getGroundTruthPackets();
+    logger_->logCameraPose(frame->getFrameId(), vision_imu_packet->cameraPose(),
+                           ground_truths);
+    logger_->logObjectMotion(frame->getFrameId(),
+                             vision_imu_packet->objectMotions(), ground_truths);
+    logger_->logObjectPose(frame->getFrameId(),
+                           vision_imu_packet->objectPoses(), ground_truths);
+    logger_->logTrackingLengthHistogram(frame);
+    logger_->logPoints(frame->getFrameId(), vision_imu_packet->cameraPose(),
+                       vision_imu_packet->dynamicLandmarkMeasurements());
+    logger_->logFrameIdToTimestamp(frame->getFrameId(), frame->getTimestamp());
   }
-
-  return std::make_shared<RGBDInstanceOutputPacket>(
-      static_keypoint_measurements, dynamic_keypoint_measurements,
-      static_landmarks, dynamic_landmarks, T_world_camera, frame.timestamp_,
-      frame.frame_id_, object_motions, object_poses, camera_poses_, camera_,
-      gt_packet, debug_imagery, dense_labelled_cloud, involved_timestamps);
 }
 
 cv::Mat RGBDInstanceFrontendModule::createTrackingImage(
     const Frame::Ptr& frame_k, const Frame::Ptr& frame_k_1,
     const ObjectPoseMap& object_poses) const {
   cv::Mat tracking_image = tracker_->computeImageTracks(
-      *frame_k_1, *frame_k, base_params_.image_tracks_vis_params);
+      *frame_k_1, *frame_k, getFrontendParams().image_tracks_vis_params);
 
   const auto& camera_params = camera_->getParams();
   const auto& K = camera_params.getCameraMatrix();

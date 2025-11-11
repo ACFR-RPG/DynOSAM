@@ -1,23 +1,30 @@
 /*
- *   Copyright (c) 2023 ACFR-RPG, University of Sydney, Jesse Morris (jesse.morris@sydney.edu.au)
+ *   Copyright (c) 2023 ACFR-RPG, University of Sydney, Jesse Morris
+ (jesse.morris@sydney.edu.au)
  *   All rights reserved.
 
- *   Permission is hereby granted, free of charge, to any person obtaining a copy
- *   of this software and associated documentation files (the "Software"), to deal
- *   in the Software without restriction, including without limitation the rights
+ *   Permission is hereby granted, free of charge, to any person obtaining a
+ copy
+ *   of this software and associated documentation files (the "Software"), to
+ deal
+ *   in the Software without restriction, including without limitation the
+ rights
  *   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  *   copies of the Software, and to permit persons to whom the Software is
  *   furnished to do so, subject to the following conditions:
 
- *   The above copyright notice and this permission notice shall be included in all
+ *   The above copyright notice and this permission notice shall be included in
+ all
  *   copies or substantial portions of the Software.
 
  *   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  *   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  *   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
  *   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- *   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- *   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ *   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ FROM,
+ *   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ THE
  *   SOFTWARE.
  */
 
@@ -53,19 +60,17 @@
  * @author Antoni Rosinol
  */
 
-#include <chrono>
-#include <iostream>
-
-#include <algorithm>
-
 #include <gflags/gflags.h>
 #include <glog/logging.h>
 
+#include <algorithm>
+#include <chrono>
+#include <iostream>
+
 #include "dynosam/frontend/imu/ThreadSafeImuBuffer.hpp"
-#include "dynosam/utils/Timing.hpp"
+#include "dynosam_common/utils/Timing.hpp"
 
 namespace dyno {
-
 
 template <template <typename, typename> class Container, typename Type>
 using Aligned = Container<Type, Eigen::aligned_allocator<Type>>;
@@ -104,8 +109,7 @@ void ThreadsafeImuBuffer::linearInterpolate(const Timestamp& t0,
                                             const ImuAccGyr& y0,
                                             const Timestamp& t1,
                                             const ImuAccGyr& y1,
-                                            const Timestamp& t,
-                                            ImuAccGyr* y) {
+                                            const Timestamp& t, ImuAccGyr* y) {
   CHECK_NOTNULL(y);
   CHECK_LE(t0, t);
   CHECK_LE(t, t1);
@@ -115,10 +119,8 @@ void ThreadsafeImuBuffer::linearInterpolate(const Timestamp& t0,
 }
 
 ThreadsafeImuBuffer::QueryResult ThreadsafeImuBuffer::getImuDataBtwTimestamps(
-    const Timestamp& timestamp_ns_from,
-    const Timestamp& timestamp_ns_to,
-    Timestamps* imu_timestamps,
-    ImuAccGyrs* imu_measurements,
+    const Timestamp& timestamp_ns_from, const Timestamp& timestamp_ns_to,
+    Timestamps* imu_timestamps, ImuAccGyrs* imu_measurements,
     bool get_lower_bound) {
   CHECK_NOTNULL(imu_timestamps);
   CHECK_NOTNULL(imu_measurements);
@@ -161,10 +163,8 @@ ThreadsafeImuBuffer::QueryResult ThreadsafeImuBuffer::getImuDataBtwTimestamps(
 
 ThreadsafeImuBuffer::QueryResult
 ThreadsafeImuBuffer::getImuDataInterpolatedUpperBorder(
-    const Timestamp& timestamp_ns_from,
-    const Timestamp& timestamp_ns_to,
-    Timestamps* imu_timestamps,
-    ImuAccGyrs* imu_measurements) {
+    const Timestamp& timestamp_ns_from, const Timestamp& timestamp_ns_to,
+    Timestamps* imu_timestamps, ImuAccGyrs* imu_measurements) {
   CHECK_NOTNULL(imu_timestamps);
   CHECK_NOTNULL(imu_measurements);
   DCHECK_LT(timestamp_ns_from, timestamp_ns_to);
@@ -198,10 +198,8 @@ ThreadsafeImuBuffer::getImuDataInterpolatedUpperBorder(
 
 ThreadsafeImuBuffer::QueryResult
 ThreadsafeImuBuffer::getImuDataInterpolatedBorders(
-    const Timestamp& timestamp_ns_from,
-    const Timestamp& timestamp_ns_to,
-    Timestamps* imu_timestamps,
-    ImuAccGyrs* imu_measurements) {
+    const Timestamp& timestamp_ns_from, const Timestamp& timestamp_ns_to,
+    Timestamps* imu_timestamps, ImuAccGyrs* imu_measurements) {
   CHECK_NOTNULL(imu_timestamps);
   CHECK_NOTNULL(imu_measurements);
   // Get data.
@@ -246,8 +244,7 @@ ThreadsafeImuBuffer::getImuDataInterpolatedBorders(
 }
 
 void ThreadsafeImuBuffer::interpolateValueAtTimestamp(
-    const Timestamp& timestamp_ns,
-    ImuAccGyr* interpolated_imu_measurement) {
+    const Timestamp& timestamp_ns, ImuAccGyr* interpolated_imu_measurement) {
   CHECK_NOTNULL(interpolated_imu_measurement);
   Timestamp pre_border_timestamp, post_border_timestamp;
   ImuMeasurement pre_border_value, post_border_value;
@@ -261,20 +258,15 @@ void ThreadsafeImuBuffer::interpolateValueAtTimestamp(
       << "The IMU buffer seems not to contain measurements at or after time: "
       << timestamp_ns;
   CHECK_EQ(post_border_timestamp, post_border_value.timestamp_);
-  linearInterpolate(pre_border_value.timestamp_,
-                    pre_border_value.acc_gyr_,
-                    post_border_value.timestamp_,
-                    post_border_value.acc_gyr_,
-                    timestamp_ns,
-                    interpolated_imu_measurement);
+  linearInterpolate(pre_border_value.timestamp_, pre_border_value.acc_gyr_,
+                    post_border_value.timestamp_, post_border_value.acc_gyr_,
+                    timestamp_ns, interpolated_imu_measurement);
 }
 
 ThreadsafeImuBuffer::QueryResult
 ThreadsafeImuBuffer::getImuDataInterpolatedBordersBlocking(
-    const Timestamp& timestamp_ns_from,
-    const Timestamp& timestamp_ns_to,
-    long int wait_timeout_nanoseconds,
-    Timestamps* imu_timestamps,
+    const Timestamp& timestamp_ns_from, const Timestamp& timestamp_ns_to,
+    long int wait_timeout_nanoseconds, Timestamps* imu_timestamps,
     ImuAccGyrs* imu_measurements) {
   CHECK_NOTNULL(imu_timestamps);
   CHECK_NOTNULL(imu_measurements);

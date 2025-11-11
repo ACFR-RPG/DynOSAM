@@ -43,16 +43,16 @@
 #include <opengv/types.hpp>
 
 #include "dynosam/backend/BackendDefinitions.hpp"
-#include "dynosam/backend/FactorGraphTools.hpp"  //TODO: clean
-#include "dynosam/common/Flags.hpp"
-#include "dynosam/common/Types.hpp"
 #include "dynosam/factors/LandmarkMotionTernaryFactor.hpp"
 #include "dynosam/factors/Pose3FlowProjectionFactor.h"
 #include "dynosam/frontend/vision/VisionTools.hpp"
-#include "dynosam/utils/Accumulator.hpp"
-#include "dynosam/utils/GtsamUtils.hpp"
-#include "dynosam/utils/Numerical.hpp"
-#include "dynosam/utils/TimingStats.hpp"
+#include "dynosam_common/Flags.hpp"
+#include "dynosam_common/Types.hpp"
+#include "dynosam_common/utils/Accumulator.hpp"
+#include "dynosam_common/utils/GtsamUtils.hpp"
+#include "dynosam_common/utils/Numerical.hpp"
+#include "dynosam_common/utils/TimingStats.hpp"
+#include "dynosam_opt/FactorGraphTools.hpp"  //TODO: clean
 
 namespace dyno {
 
@@ -209,6 +209,8 @@ Pose3SolverResult EgoMotionSolver::geometricOutlierRejection3d2d(
   // TODO: change to use landmarkWorldProjectedBearingCorrespondance and then
   // change motion solver to take already projected bearing vectors
   {
+    utils::TimingStatsCollector timer(
+        "motion_solver.solve_3d2d.correspondances");
     frame_k->getCorrespondences(correspondences, *frame_k_1,
                                 KeyPointType::STATIC,
                                 frame_k->landmarkWorldKeypointCorrespondance());
@@ -250,6 +252,8 @@ Pose3SolverResult EgoMotionSolver::geometricOutlierRejection3d2d(
     tracklets.push_back(corres.tracklet_id_);
   }
 
+  VLOG(20) << "Collected " << tracklets.size() << " initial correspondances";
+
   const double reprojection_error = params_.ransac_threshold_pnp;
   const double avg_focal_length =
       0.5 * static_cast<double>(camera_params_.fx() + camera_params_.fy());
@@ -266,11 +270,15 @@ Pose3SolverResult EgoMotionSolver::geometricOutlierRejection3d2d(
   gtsam::Pose3 best_result;
   std::vector<int> ransac_inliers;
 
-  bool success = runRansac<AbsolutePoseProblem>(
-      std::make_shared<AbsolutePoseProblem>(adapter,
-                                            AbsolutePoseProblem::KNEIP),
-      threshold, params_.ransac_iterations, params_.ransac_probability,
-      params_.optimize_3d2d_pose_from_inliers, best_result, ransac_inliers);
+  bool success;
+  {
+    utils::TimingStatsCollector timer("motion_solver.solve_3d2d.ransac");
+    success = runRansac<AbsolutePoseProblem>(
+        std::make_shared<AbsolutePoseProblem>(adapter,
+                                              AbsolutePoseProblem::KNEIP),
+        threshold, params_.ransac_iterations, params_.ransac_probability,
+        params_.optimize_3d2d_pose_from_inliers, best_result, ransac_inliers);
+  }
 
   constructTrackletInliers(result.inliers, result.outliers, correspondences,
                            ransac_inliers, tracklets);
@@ -292,6 +300,7 @@ Pose3SolverResult EgoMotionSolver::geometricOutlierRejection3d2d(
 
 void OpticalFlowAndPoseOptimizer::updateFrameOutliersWithResult(
     const Result& result, Frame::Ptr frame_k_1, Frame::Ptr frame_k) const {
+  utils::TimingStatsCollector timer("of_motion_solver.update_frame");
   // //original flow image that goes from k to k+1 (gross, im sorry!)
   // TODO: use flow_is_future param
   const cv::Mat& flow_image = frame_k->image_container_.opticalFlow();
@@ -322,7 +331,6 @@ void OpticalFlowAndPoseOptimizer::updateFrameOutliersWithResult(
       continue;
     }
 
-    feature_k->keypoint(refined_keypoint);
     ObjectId predicted_label =
         functional_keypoint::at<ObjectId>(refined_keypoint, motion_mask);
     if (predicted_label != result.best_result.object_id) {
@@ -345,6 +353,7 @@ void OpticalFlowAndPoseOptimizer::updateFrameOutliersWithResult(
     Keypoint predicted_kp = Feature::CalculatePredictedKeypoint(
         refined_keypoint, new_measured_flow);
     feature_k->predictedKeypoint(predicted_kp);
+    feature_k->keypoint(refined_keypoint);
   }
 
   // update tracks
@@ -459,7 +468,7 @@ ObjectMotionSovlerF2F::Result ObjectMotionSovlerF2F::solve(
     tbb::parallel_for_each(
         frame_k->object_observations_.begin(),
         frame_k->object_observations_.end(),
-        [&](const std::pair<ObjectId, DynamicObjectObservation>& pair) {
+        [&](const std::pair<ObjectId, SingleDetectionResult>& pair) {
           const auto object_id = pair.first;
           if (!solveImpl(frame_k, frame_k_1, object_id, motion_estimates)) {
             VLOG(5) << "Could not solve motion for object " << object_id

@@ -28,7 +28,7 @@ def run_sequnce(path, name, data_loader_num, backend_type, *args, **kwargs):
 
     additional_args = [
         "--data_provider_type={}".format(data_loader_num),
-        "--v=20"
+        "--v=30"
     ]
 
     parsed_args["launch_file"] = "dyno_sam_launch.py"
@@ -136,15 +136,15 @@ def run_ecmr_experiment_sequences(dataset_path, dataset_name, dataset_loader, *a
         args_list.extend(list(specific_args))
         return args_list
     # run fukk hybrid in (full)batch mode to get results!!
-    # run_sequnce(dataset_path, dataset_name, dataset_loader, parallel_hybrid,  *append_args_list(), run_as_frontend=False, run_as_experiment=False, run_analysis=False)
+    run_sequnce(dataset_path, dataset_name, dataset_loader, parallel_hybrid,  *append_args_list(), run_as_frontend=False, run_as_experiment=False, run_analysis=False)
     # run_sequnce(dataset_path, dataset_name, dataset_loader, full_hybrid, *append_args_list("--optimization_mode=0"), run_as_frontend=False, run_as_experiment=False, run_analysis=False)
     # run_sequnce(dataset_path, dataset_name, dataset_loader, motion_world_backend_type, *append_args_list("--optimization_mode=0"), run_as_frontend=False, run_as_experiment=False, run_analysis=True)
 
-    # run_sequnce(dataset_path, dataset_name, dataset_loader, test_hybrid_smf, *append_args_list("--optimization_mode=1"), run_as_frontend=False, run_as_experiment=False, run_analysis=False)
+    # run_sequnce(dataset_path, dataset_name, dataset_loader, test_hybrid_smf, *append_args_list("--optimization_mode=2", "--use_robust_kernals=true", "--dynamic_point_noise_as_robust=false"), run_as_frontend=False, run_as_experiment=False, run_analysis=False)
 
     # pass
     # run the two batches again but with increemntal mode and additional suffix so we can individual logs!!!
-    run_sequnce(dataset_path, dataset_name, dataset_loader, full_hybrid, *append_args_list("--optimization_mode=2", "--regular_backend_relinearize_skip=10","--updater_suffix=inc"), run_as_frontend=False, run_as_experiment=False, run_analysis=False)
+    # run_sequnce(dataset_path, dataset_name, dataset_loader, full_hybrid, *append_args_list("--optimization_mode=2"), run_as_frontend=False, run_as_experiment=False, run_analysis=False)
     # run_sequnce(dataset_path, dataset_name, dataset_loader, motion_world_backend_type, *append_args_list("--optimization_mode=2", "--regular_backend_relinearize_skip=10","--updater_suffix=inc"), run_as_frontend=False, run_as_experiment=False, run_analysis=True)
 
     # run_sequnce(dataset_path, dataset_name, dataset_loader, full_hybrid, *append_args_list("--optimization_mode=2", "--regular_backend_relinearize_skip=1","--updater_suffix=inc_relin1"), run_as_frontend=False, run_as_experiment=False, run_analysis=True)
@@ -154,7 +154,7 @@ def run_viodes():
 
 #     run_ecmr_experiment_sequences("/root/data/VIODE/city_day/mid", "viode_city_day_mid", viode, "--v=100")
     # run_ecmr_experiment_sequences("/root/data/VIODE/city_day/high","viode_city_day_high", viode, "--ending_frame=1110")
-    run_ecmr_experiment_sequences("/root/data/VIODE/city_day/high","test_viode", viode, "--starting_frame=500","--ending_frame=1110")
+    run_ecmr_experiment_sequences("/root/data/VIODE/city_day/high","test_viode", viode,"--starting_frame=0", "--ending_frame=1110", "--v=30",  "--use_backend=true")
 # # zero_elements_ratio
 #     run_ecmr_experiment_sequences("/root/data/VIODE/city_night/mid", "viode_city_night_mid", viode)
     # run_ecmr_experiment_sequences("/root/data/VIODE/city_night/high", "viode_city_night_high", viode)
@@ -178,26 +178,25 @@ def run_tartan_air():
     # run_ecmr_experiment_sequences("/root/data/TartanAir_shibuya/Standing02", "tas_s2", tartan_air)
 
 def run_cluster():
-    # run_ecmr_experiment_sequences("/root/data/cluster_slam/CARLA-L2/", "cluster_l2", cluster_dataset)
-    run_ecmr_experiment_sequences("/root/data/cluster_slam/CARLA-L1/", "cluster_l1", cluster_dataset)
-    # run_ecmr_experiment_sequences("/root/data/cluster_slam/CARLA-S2/", "cluster_s2", cluster_dataset)
-    # run_ecmr_experiment_sequences("/root/data/cluster_slam/CARLA-S1/", "cluster_s1", cluster_dataset)
+    run_ecmr_experiment_sequences("/root/data/cluster_slam/CARLA-L2/", "cluster_l2_static_only", cluster_dataset)
+    # run_ecmr_experiment_sequences("/root/data/cluster_slam/CARLA-L1/", "cluster_l1_static_only", cluster_dataset)
+    run_ecmr_experiment_sequences("/root/data/cluster_slam/CARLA-S2/", "cluster_s2_static_only", cluster_dataset)
+    run_ecmr_experiment_sequences("/root/data/cluster_slam/CARLA-S1/", "cluster_s1_static_only", cluster_dataset)
 
 def run_kitti():
-    # run_ecmr_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0000/", "test", kitti_dataset, "--shrink_row=25", "--shrink_col=300")
-    # run_ecmr_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0001/", "kitti_0001", kitti_dataset, "--shrink_row=25", "--shrink_col=50")
-    # run_ecmr_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0002/", "kitti_0002", kitti_dataset, "--shrink_row=25", "--shrink_col=50")
-    run_ecmr_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0003/", "test", kitti_dataset, "--shrink_row=25", "--shrink_col=50", "--save_per_frame_dynamic_cloud=false")
-    # run_ecmr_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0005/", "kitti_0005", kitti_dataset, "--shrink_row=25", "--shrink_col=50")
-    # run_ecmr_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0006/", "kitti_0006", kitti_dataset, "--shrink_row=25", "--shrink_col=50")
-    # run_ecmr_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0018/", "test", kitti_dataset, "--shrink_row=25", "--shrink_col=50")
-    # run_ecmr_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0020/", "kitti_0020", kitti_dataset, "--shrink_row=25", "--shrink_col=50")
-
-    # run_ecmr_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0004/", "test_smf", kitti_dataset, "--shrink_row=25", "--shrink_col=50")
+    # run_ecmr_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0000/", "test", kitti_dataset, "--shrink_row=25", "--shrink_col=50")
+    # run_ecmr_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0001/", "kitti_0001_static_only", kitti_dataset, "--shrink_row=25", "--shrink_col=50")
+    # run_ecmr_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0002/", "kitti_0002_static_only", kitti_dataset, "--shrink_row=25", "--shrink_col=50")
+    # run_ecmr_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0003/", "kitti_0003_static_only", kitti_dataset, "--shrink_row=25", "--shrink_col=50", "--save_per_frame_dynamic_cloud=false")
+    # run_ecmr_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0005/", "kitti_0005_static_only", kitti_dataset, "--shrink_row=25", "--shrink_col=50")
+    # run_ecmr_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0006/", "kitti_0006_static_only", kitti_dataset, "--shrink_row=25", "--shrink_col=50")
+    # run_ecmr_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0018/", "kitti_0018_static_only", kitti_dataset, "--shrink_row=25", "--shrink_col=50")
+    run_ecmr_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0020/", "kitti_0020_static_only", kitti_dataset, "--shrink_row=25", "--shrink_col=50")
+    # run_ecmr_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0004/", "test", kitti_dataset, "--shrink_row=25", "--shrink_col=50", "--use_backend=true")
 
 
 def run_aria():
-    run_ecmr_experiment_sequences("/root/data/zed/acfr_2_moving_small", "test_small", aria)
+    run_ecmr_experiment_sequences("/root/data/zed/acfr_2_moving_small", "test_small", aria, "--use_backend=true", "--v=0")
 
 
 if __name__ == '__main__':
@@ -210,10 +209,24 @@ if __name__ == '__main__':
     # run_viodes()
     # run_tartan_air()
     # run_cluster()
-    # run_omd()
+    run_omd()
     # run_aria()
-    run_kitti()
-    # run_analysis("kitti_0004_test")
+    # run_kitti()
+    # run_analysis("kitti_0001_static_only")
+    # run_analysis("kitti_0002_static_only")
+    # run_analysis("kitti_0003_static_only")
+    # run_analysis("kitti_0004_static_only")
+    # run_analysis("kitti_0005_static_only")
+    # run_analysis("kitti_0006_static_only")
+    # run_analysis("kitti_0018_static_only")
+    # run_analysis("kitti_0020_static_only")
+    # run_analysis("omd_s4u_static_only")
+
+    # run_analysis("cluster_l2_static_only")
+    # run_analysis("cluster_l1_static_only")
+    # run_analysis("cluster_s2_static_only")
+    # run_analysis("cluster_s1_static_only")
+
     # run_analysis("kitti_0020")
     sys.exit(0)
 

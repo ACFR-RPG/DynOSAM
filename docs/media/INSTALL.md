@@ -4,6 +4,23 @@ Tested on Ubuntu 20.04
 
 > NOTE: this instructions are taken essentially verbatum from the included [Dockerfile](./../../docker/Dockerfile)
 
+## CUDA dependancies
+As of September 2025 we are adding cuda dependancies for certain OpenCV operations (and evenautually for running inference on images).
+
+> NOTE: I have a very old GPU (RTX 2080 which is only running CIDA 12.2 with Driver Version: 535.183.01), get CUDA support however you are able!
+
+The docker file has been updated and based off the [docker-ros-ml-images](https://github.com/ika-rwth-aachen/docker-ros-ml-images?tab=readme-ov-file#rwthikaros2-torch-ros-2-nvidia-cuda-nvidia-tensorrt-pytorch) to include
+- CUDA
+- TensorRT
+- Pytorch
+built ontop of ROS2.
+
+The CUDA dependancies are mostly for OpenCV modules but also eventually for adding DNN inference into DynoSAM itself so processing of images
+can be handled internally (ie YOLO).
+
+- **Important:** Check [GPU Compute Capability](https://developer.nvidia.com/cuda-gpus) to set `CUDA_ARCH_BIN` flag
+- NVIDIA GeForce RTX 2080 is 7.5
+
 ## Dependancies
 
 ```bash

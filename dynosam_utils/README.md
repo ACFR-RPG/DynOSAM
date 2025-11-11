@@ -23,8 +23,13 @@ b'lp'...)
 
 ```
 Possibly missing rendering packages: sudo apt-get install texlive-latex-extra texlive-fonts-recommended dvipng cm-super
+Maybe also
+`
+sudo apt-get install texlive-science
+`
 
 Need scipy version 1.14.1
 need gtsam
 
-need pip install pymongo
+
+need `pip install pymongo` for bson

@@ -32,8 +32,8 @@
 
 #include <glog/logging.h>
 
-#include "dynosam/common/ModuleBase.hpp"
 #include "dynosam/pipeline/PipelineBase.hpp"
+#include "dynosam_common/ModuleBase.hpp"
 
 namespace dyno {
 

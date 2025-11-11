@@ -9,6 +9,12 @@ import errno
 from shutil import rmtree, move
 import os
 
+try:
+    import better_launch
+    print("Found better_launch package")
+except ImportError:
+    better_launch = None
+
 
 def create_full_path_if_not_exists(file_path):
     if not os.path.exists(file_path):
@@ -149,3 +155,36 @@ def run(parsed_args, unknown_args):
         return 0
     else:
         return 1
+
+
+if better_launch is not None:
+    from better_launch import BetterLaunch
+
+
+    def bl_run(
+            name,
+            output_path,
+            dataset_path,
+            run_pipeline=True,
+            run_anaysis=True,
+            **kwargs):
+        bl = BetterLaunch()
+
+        print(kwargs)
+
+        output_folder_path = os.path.join(output_path, name)
+        create_full_path_if_not_exists(output_folder_path)
+
+        if run_pipeline:
+            # NOTE: because bl_run is not marked as a lunch file
+            # pass_launch_func_args does not work!
+            bl.logger.info("Running dynosam pipeline")
+            bl.include(
+                "dynosam_ros",
+                "bl_dynosam.launch.py",
+                dataset_path=dataset_path,
+                output_path=output_folder_path,
+                **kwargs)
+
+        if run_anaysis:
+            bl.logger.info("Running dynosam analysis")

@@ -13,6 +13,11 @@
 
  <buildtool_depend>ament_cmake</buildtool_depend>
  <depend>gtsam</depend>
+ <depend>dynosam_common</depend>
+ <depend>dynosam_cv</depend>
+ <depend>dynosam_opt</depend>
+ <depend>dynosam_nn</depend>
+
 
   <depend>rclcpp</depend>
   <depend>std_msgs</depend>
@@ -20,10 +25,9 @@
   <depend>diagnostic_updater</depend>
   <depend>eigen_catkin</depend>
 
-  <depend>ament_index_cpp</depend>
-
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
+  <test_depend>ament_index_cpp</test_depend>
 
   <exec_depend>ros2launch</exec_depend>
 

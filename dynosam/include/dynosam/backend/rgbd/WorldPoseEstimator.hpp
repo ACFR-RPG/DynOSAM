@@ -32,14 +32,15 @@
 
 #include "dynosam/backend/Accessor.hpp"
 #include "dynosam/backend/Formulation.hpp"
-#include "dynosam/common/Map.hpp"
+#include "dynosam_opt/Map.hpp"
 
 namespace dyno {
 
-class WorldPoseAccessor : public Accessor<Map3d2d> {
+class WorldPoseAccessor : public AccessorT<MapVision> {
  public:
-  WorldPoseAccessor(const SharedFormulationData& shared_data, Map3d2d::Ptr map)
-      : Accessor<Map3d2d>(shared_data, map) {}
+  WorldPoseAccessor(const SharedFormulationData& shared_data,
+                    MapVision::Ptr map)
+      : AccessorT<MapVision>(shared_data, map) {}
   virtual ~WorldPoseAccessor() {}
 
   StateQuery<gtsam::Pose3> getSensorPose(FrameId frame_id) const override;
@@ -51,19 +52,20 @@ class WorldPoseAccessor : public Accessor<Map3d2d> {
       FrameId frame_id, TrackletId tracklet_id) const override;
 };
 
-class WorldPoseFormulation : public Formulation<Map3d2d> {
+class WorldPoseFormulation : public Formulation<MapVision> {
  public:
-  using Base = Formulation<Map3d2d>;
+  using Base = Formulation<MapVision>;
   using Base::AccessorTypePointer;
+  using Base::MapTraitsType;
   using Base::ObjectUpdateContextType;
   using Base::PointUpdateContextType;
 
   DYNO_POINTER_TYPEDEFS(WorldPoseFormulation)
 
   WorldPoseFormulation(const FormulationParams& params, typename Map::Ptr map,
-                       const NoiseModels& noise_models,
+                       const NoiseModels& noise_models, const Sensors& sensors,
                        const FormulationHooks& hooks)
-      : Base(params, map, noise_models, hooks) {}
+      : Base(params, map, noise_models, sensors, hooks) {}
   virtual ~WorldPoseFormulation() {}
 
   void dynamicPointUpdateCallback(
@@ -76,7 +78,7 @@ class WorldPoseFormulation : public Formulation<Map3d2d> {
                            gtsam::NonlinearFactorGraph& new_factors) override;
 
   inline bool isDynamicTrackletInMap(
-      const LandmarkNode3d2d::Ptr& lmk_node) const override {
+      const typename MapTraitsType::LandmarkNodePtr& lmk_node) const override {
     const TrackletId tracklet_id = lmk_node->tracklet_id;
     return is_dynamic_tracklet_in_map_.exists(tracklet_id);
   }

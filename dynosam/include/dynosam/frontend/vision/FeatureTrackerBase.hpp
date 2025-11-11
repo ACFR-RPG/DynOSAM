@@ -32,17 +32,19 @@
 
 #include <config_utilities/config_utilities.h>
 
-#include "dynosam/common/Camera.hpp"
-#include "dynosam/common/Types.hpp"
 #include "dynosam/frontend/vision/Frame.hpp"
 #include "dynosam/frontend/vision/TrackerParams.hpp"
 #include "dynosam/visualizer/Visualizer-Definitions.hpp"
+#include "dynosam_common/Types.hpp"
+#include "dynosam_cv/Camera.hpp"
 
 namespace dyno {
 
 /**
  * @brief Singleton class to manage a global tracklet id for all trackers to
- * ensure they are unique
+ * ensure they are unique.
+ *
+ * Accessors and modifiers are thread-safe.
  *
  */
 class TrackletIdManager {
@@ -57,16 +59,16 @@ class TrackletIdManager {
   }
 
   inline TrackletId getTrackletIdCount() const {
-    // tbb::mutex::scoped_lock lock(mutex_);
+    const std::lock_guard<std::mutex> l(mutex_);
     return tracklet_count_;
   }
   inline void incrementTrackletIdCount() {
-    // tbb::mutex::scoped_lock lock(mutex_);
+    const std::lock_guard<std::mutex> l(mutex_);
     tracklet_count_++;
   }
 
   inline TrackletId getAndIncrementTrackletId() {
-    // tbb::mutex::scoped_lock lock(mutex_);
+    const std::lock_guard<std::mutex> l(mutex_);
     auto tracklet = tracklet_count_;
     tracklet_count_++;
     return tracklet;
@@ -75,7 +77,8 @@ class TrackletIdManager {
  private:
   TrackletIdManager() = default;
   TrackletId tracklet_count_{0};  //! Global TrackletId
-  std::mutex mutex_;
+
+  mutable std::mutex mutex_;
 
   static std::unique_ptr<TrackletIdManager> instance_;
 };
@@ -120,6 +123,7 @@ class ImageTracksParams {
   int bbox_thickness_debug{kBBoxThicknessDebug};
   int bbox_thickness{kBBoxThickness};
 
+ public:
   //! Fine-grained control
   //! To show current frame info as text
   bool show_frame_info{true};
@@ -139,6 +143,9 @@ class FeatureTrackerBase {
   cv::Mat computeImageTracks(const Frame& previous_frame,
                              const Frame& current_frame,
                              const ImageTracksParams& config = false) const;
+
+  bool drawStereoMatches(cv::Mat& output_image,
+                         const Frame& current_frame) const;
 
   bool predictKeypointsGivenRotation(std::vector<cv::Point2f>& predicted_pts_k,
                                      const std::vector<cv::Point2f>& pts_km1,

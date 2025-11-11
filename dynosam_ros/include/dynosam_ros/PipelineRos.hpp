@@ -30,11 +30,9 @@
 
 #pragma once
 
-#include <dynosam/dataprovider/DataProvider.hpp>
-#include <dynosam/pipeline/PipelineManager.hpp>
-#include <dynosam/pipeline/PipelineParams.hpp>
-#include <dynosam/utils/Statistics.hpp>
-
+#include "dynosam/dataprovider/DataProvider.hpp"
+#include "dynosam/pipeline/PipelineManager.hpp"
+#include "dynosam/pipeline/PipelineParams.hpp"
 #include "rclcpp/node.hpp"
 #include "rclcpp/node_options.hpp"
 

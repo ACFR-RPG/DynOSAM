@@ -53,75 +53,79 @@ void OnlineDataProviderRos::shutdown() {
   // shutdown synchronizer
   RCLCPP_INFO_STREAM(node_->get_logger(),
                      "Shutting down OnlineDataProviderRos");
-  if (sync_) sync_.reset();
-
-  rgb_image_sub_.unsubscribe();
-  depth_image_sub_.unsubscribe();
-  flow_image_sub_.unsubscribe();
-  mask_image_sub_.unsubscribe();
+  image_subscriber_->shutdown();
 }
 
 void OnlineDataProviderRos::connect() {
-  rclcpp::Node *node_ptr = node_.get();
-  CHECK_NOTNULL(node_ptr);
-  rgb_image_sub_.subscribe(node_ptr, "image/rgb");
-  depth_image_sub_.subscribe(node_ptr, "image/depth");
-  flow_image_sub_.subscribe(node_ptr, "image/flow");
-  mask_image_sub_.subscribe(node_ptr, "image/mask");
-
-  if (sync_) sync_.reset();
-
-  static constexpr size_t kQueueSize = 20u;
-  sync_ = std::make_shared<message_filters::Synchronizer<SyncPolicy>>(
-      SyncPolicy(kQueueSize), rgb_image_sub_, depth_image_sub_, flow_image_sub_,
-      mask_image_sub_);
-
-  sync_->registerCallback(std::bind(
-      &OnlineDataProviderRos::imageSyncCallback, this, std::placeholders::_1,
-      std::placeholders::_2, std::placeholders::_3, std::placeholders::_4));
-
-  RCLCPP_INFO_STREAM(
-      node_->get_logger(),
-      "OnlineDataProviderRos has been connected. Subscribed to image topics: "
-          << rgb_image_sub_.getSubscriber()->get_topic_name() << " "
-          << depth_image_sub_.getSubscriber()->get_topic_name() << " "
-          << flow_image_sub_.getSubscriber()->get_topic_name() << " "
-          << mask_image_sub_.getSubscriber()->get_topic_name() << ".");
-
+  connectImages();
+  connectImu();
   shutdown_ = false;
 }
 
-void OnlineDataProviderRos::imageSyncCallback(
-    const sensor_msgs::msg::Image::ConstSharedPtr &rgb_msg,
-    const sensor_msgs::msg::Image::ConstSharedPtr &depth_msg,
-    const sensor_msgs::msg::Image::ConstSharedPtr &flow_msg,
-    const sensor_msgs::msg::Image::ConstSharedPtr &mask_msg) {
-  if (!image_container_callback_) {
-    RCLCPP_ERROR_THROTTLE(node_->get_logger(), *node_->get_clock(), 1000,
-                          "Image Sync callback triggered but "
-                          "image_container_callback_ is not registered!");
-    return;
-  }
+void OnlineDataProviderRos::connectImages() {
+  rclcpp::Node &node_ref = *node_;
 
-  const cv::Mat rgb = readRgbRosImage(rgb_msg);
-  const cv::Mat depth = readDepthRosImage(depth_msg);
-  const cv::Mat flow = readFlowRosImage(flow_msg);
-  const cv::Mat mask = readMaskRosImage(mask_msg);
+  static const std::array<std::string, 4> &topics = {
+      "image/rgb", "image/depth", "image/flow", "image/mask"};
 
-  const Timestamp timestamp = utils::fromRosTime(rgb_msg->header.stamp);
-  const FrameId frame_id = frame_id_;
-  frame_id_++;
+  std::shared_ptr<MultiImageSync4> multi_image_sync =
+      std::make_shared<MultiImageSync4>(node_ref, topics, 20);
+  multi_image_sync->registerCallback(
+      [this](const sensor_msgs::msg::Image::ConstSharedPtr &rgb_msg,
+             const sensor_msgs::msg::Image::ConstSharedPtr &depth_msg,
+             const sensor_msgs::msg::Image::ConstSharedPtr &flow_msg,
+             const sensor_msgs::msg::Image::ConstSharedPtr &mask_msg) {
+        if (!image_container_callback_) {
+          RCLCPP_ERROR_THROTTLE(node_->get_logger(), *node_->get_clock(), 1000,
+                                "Image Sync callback triggered but "
+                                "image_container_callback_ is not registered!");
+          return;
+        }
 
-  ImageContainer image_container(frame_id, timestamp);
-  image_container.rgb(rgb).depth(depth).opticalFlow(flow).objectMotionMask(
-      mask);
+        const cv::Mat rgb = readRgbRosImage(rgb_msg);
+        const cv::Mat depth = readDepthRosImage(depth_msg);
+        const cv::Mat flow = readFlowRosImage(flow_msg);
+        const cv::Mat mask = readMaskRosImage(mask_msg);
 
-  // cv::imshow("Optical Flow", of_viz);
-  // cv::imshow("Motion mask", motion_viz);
-  // cv::imshow("Depth", depth_viz);
-  // cv::waitKey(1);
-  // trigger callback to send data to the DataInterface!
-  image_container_callback_(std::make_shared<ImageContainer>(image_container));
+        const Timestamp timestamp = utils::fromRosTime(rgb_msg->header.stamp);
+        const FrameId frame_id = frame_id_;
+        frame_id_++;
+
+        ImageContainer image_container(frame_id, timestamp);
+        image_container.rgb(rgb)
+            .depth(depth)
+            .opticalFlow(flow)
+            .objectMotionMask(mask);
+
+        image_container_callback_(
+            std::make_shared<ImageContainer>(image_container));
+      });
+  CHECK(multi_image_sync->connect());
+  image_subscriber_ = multi_image_sync;
+}
+
+void OnlineDataProviderRos::connectImu() {
+  if (imu_sub_) imu_sub_.reset();
+
+  imu_callback_group_ = node_->create_callback_group(
+      rclcpp::CallbackGroupType::MutuallyExclusive);
+
+  rclcpp::SubscriptionOptions imu_sub_options;
+  imu_sub_options.callback_group = imu_callback_group_;
+
+  imu_sub_ = node_->create_subscription<ImuAdaptedType>(
+      "imu", rclcpp::SensorDataQoS(),
+      [&](const dyno::ImuMeasurement &imu) -> void {
+        if (!imu_single_input_callback_) {
+          RCLCPP_ERROR_THROTTLE(
+              node_->get_logger(), *node_->get_clock(), 1000,
+              "Imu callback triggered but "
+              "imu_single_input_callback_ is not registered!");
+          return;
+        }
+        imu_single_input_callback_(imu);
+      },
+      imu_sub_options);
 }
 
 }  // namespace dyno

@@ -1,9 +1,9 @@
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 3.11)
 
 project(dynosam)
 
 # set(CMAKE_C_FLAGS "-std=gnu11 -Wall -Wextra -O3 -march=sandybridge -flto")
-set(CMAKE_C_FLAGS "-Wall -Wextra")
+set(CMAKE_C_FLAGS "-Wall -Wextra  -O3")
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
@@ -11,32 +11,26 @@ endif()
 
 set(CMAKE_CXX_STANDARD 17)
 
-
+# Must be set **before** find_package(PCL)
 list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_SOURCE_DIR}/cmake)
+
+include(FetchContent)
+
+
+
+set(WITH_MPI OFF CACHE BOOL "Disable MPI in PCL")
+
 
 find_package(ament_cmake REQUIRED)
 find_package(ament_index_cpp REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
-find_package(OpenCV REQUIRED)
-find_package(opengv REQUIRED)
-find_package(GTSAM REQUIRED)
-find_package(eigen3_cmake_module REQUIRED)
-find_package(Eigen3 REQUIRED)
-find_package(PCL REQUIRED)
-find_package(nlohmann_json 3.2.0 REQUIRED) #nlohmann-json3-dev
-find_package(TBB REQUIRED) # should be packaged with GTSAM
-find_package(config_utilities REQUIRED)
+find_package(dynosam_common REQUIRED)
+find_package(dynosam_cv REQUIRED)
+find_package(dynosam_opt REQUIRED)
+find_package(dynosam_nn REQUIRED)
 
-
-find_package(Boost REQUIRED)
-if(NOT TARGET Boost::boost)
-  add_library(Boost::boost INTERFACE IMPORTED)
-  set_target_properties(Boost::boost PROPERTIES
-  INTERFACE_LINK_LIBRARIES "${Boost_LIBRARIES}"
-  INTERFACE_INCLUDE_DIRECTORIES "${Boost_INCLUDE_DIRS}")
-endif()
 
 
 include(VerifyGtsamConfig)
@@ -46,10 +40,13 @@ if (DYNO_VERIFY_GTSAM_CONFIG)
 endif()
 
 
-
 # setup targets
 include_directories(
   include
+  ${dynosam_common_INCLUDE_DIRS}
+  ${dynosam_cv_INCLUDE_DIRS}
+  ${dynosam_opt_INCLUDE_DIRS}
+  ${dynosam_nn_INCLUDE_DIRS}
   ${rclcpp_INCLUDE_DIRS}
   ${EIGEN3_INCLUDE_DIRS}
   ${OpenCV_INCLUDE_DIRS}
@@ -59,31 +56,6 @@ include_directories(
 
 # build library
 add_library(${PROJECT_NAME} SHARED
-
-  src/common/Types.cc
-  src/common/CameraParams.cc
-  src/common/Camera.cc
-  src/common/GroundTruthPacket.cc
-  src/common/ImageContainer.cc
-  src/common/ImageTypes.cc
-  src/common/StructuredContainers.cc
-  src/common/DynamicObjects.cc
-  src/common/Map.cc
-  src/common/MapNodes.cc
-  src/common/PointCloudProcess.cc
-  src/common/Algorithms.cc
-  src/common/StereoCamera.cc
-  src/common/RGBDCamera.cc
-  src/common/SharedModuleInfo.cc
-  src/common/SensorModels.cc
-
-  src/common/byte_tracker/ByteTracker.cc
-  src/common/byte_tracker/Detection.cc
-  src/common/byte_tracker/KalmanFilter.cc
-  src/common/byte_tracker/Lapjv.cc
-  src/common/byte_tracker/Rect.cc
-  src/common/byte_tracker/Track.cc
-
   src/dataprovider/DataInterfacePipeline.cc
   src/dataprovider/DataProvider.cc
   src/dataprovider/DatasetLoader.cc
@@ -101,16 +73,14 @@ add_library(${PROJECT_NAME} SHARED
   src/frontend/imu/ImuFrontend.cc
   src/frontend/imu/ImuParams.cc
 
-  src/frontend/vision/Feature.cc
-  src/frontend/vision/UndistortRectifier.cc
   src/frontend/vision/Frame.cc
   src/frontend/FrontendPipeline.cc
   src/frontend/FrontendModule.cc
   src/frontend/FrontendParams.cc
   src/frontend/RGBDInstanceFrontendModule.cc
+  src/frontend/VisionImuOutputPacket.cc
   src/frontend/vision/ORBextractor.cc
   src/frontend/vision/FeatureTracker.cc
-  src/frontend/vision/ObjectTracker.cc
   src/frontend/vision/VisionTools.cc
   src/frontend/vision/MotionSolver.cc
   src/frontend/vision/StereoMatcher.cc
@@ -123,12 +93,11 @@ add_library(${PROJECT_NAME} SHARED
   src/frontend/anms/NonMaximumSupression.cc
   src/frontend/anms/anms.cc
 
+  src/backend/Accessor.cc
   src/backend/BackendDefinitions.cc
   src/backend/BackendPipeline.cc
   src/backend/BackendModule.cc
   src/backend/BackendParams.cc
-  src/backend/FactorGraphTools.cc
-  src/backend/DynamicPointSymbol.cc
   src/backend/RegularBackendModule.cc
   src/backend/rgbd/WorldMotionEstimator.cc
   src/backend/rgbd/WorldPoseEstimator.cc
@@ -136,13 +105,6 @@ add_library(${PROJECT_NAME} SHARED
   src/backend/rgbd/impl/test_HybridFormulations.cc
   src/backend/ParallelObjectISAM.cc
   src/backend/ParallelHybridBackendModule.cc
-  src/backend/optimizers/SlidingWindowOptimization.cc
-
-  src/backend/optimizers/ISAM2-impl.cc
-  src/backend/optimizers/ISAM2.cc
-  src/backend/optimizers/ISAM2Clique.cc
-  src/backend/optimizers/ISAM2Params.cc
-  src/backend/optimizers/IncrementalOptimization.cc
 
   # src/backend/ISAM2Agent.cc
   #src/backend/rgbd/impl/ObjectTrackingIsamAgent.cc
@@ -159,19 +121,6 @@ add_library(${PROJECT_NAME} SHARED
   src/pipeline/PipelineBase.cc
   src/pipeline/PipelineSpinner.cc
 
-  src/logger/Logger.cc
-
-  src/utils/OpenCVUtils.cc
-  src/utils/GtsamUtils.cc
-  src/utils/Spinner.cc
-  src/utils/Statistics.cc
-  src/utils/TimingStats.cc
-  src/utils/Metrics.cc
-  src/utils/CsvParser.cc
-  src/utils/Histogram.cc
-  src/utils/JsonUtils.cc
-
-  src/visualizer/ColourMap.cc
   src/visualizer/VisualizerPipelines.cc
   src/visualizer/OpenCVFrontendDisplay.cc
   src/visualizer/Visualizer-Definitions.cc
@@ -183,59 +132,73 @@ add_library(${PROJECT_NAME} SHARED
 # eigen3_cmake_module
 # Eigen3
 
-ament_target_dependencies(${PROJECT_NAME}
-  rclcpp
-  std_msgs
-  sensor_msgs
-  opengv
-  GTSAM
-  OpenCV)
 
 target_link_libraries(${PROJECT_NAME}
-  # PRIVATE
-  opengv
-  nlohmann_json::nlohmann_json
-  config_utilities::config_utilities
-  # PUBLIC
-  ${rclcpp_LIBRARIES}
-  glog
-  gflags
-  gtsam
-  gtsam_unstable
-  Boost::boost
-  png # We need png++ (libpng-dev) for png manipulation in VirtualKittiDatasetLoader
-  # Eigen3::Eigen
-  ${OpenCV_LIBRARIES}
-  ${PCL_LIBRARIES}
-  TBB::tbb
-  TBB::tbbmalloc
+  PUBLIC
+  ${std_msgs_TARGETS}
+  ${sensor_msgs_TARGETS}
+  dynosam_common::dynosam_common
+  dynosam_cv::dynosam_cv
+  dynosam_opt::dynosam_opt
+  dynosam_nn::dynosam_nn
+  # rclcpp::rclcpp
+  # opengv
+  # nlohmann_json::nlohmann_json
+  # config_utilities::config_utilities
+  # # PUBLIC
+  # ${rclcpp_LIBRARIES}
+  # glog
+  # gflags
+  # gtsam
+  # gtsam_unstable
+  # Boost::boost
+  # png # We need png++ (libpng-dev) for png manipulation in VirtualKittiDatasetLoader
+  # # Eigen3::Eigen
+  # ${OpenCV_LIBRARIES}
+  # ${PCL_LIBRARIES}
+  # TBB::tbb
+  # TBB::tbbmalloc
   # PRIVATE
 )
 
 
 ament_export_libraries(${PROJECT_NAME}
-  glog
-  gflags
-  opengv
-  Boost::boost
-  config_utilities::config_utilities
-  gtsam
-  # gtsamDebug
-  ${OpenCV_LIBRARIES}
-  png
-  TBB::tbb
-  TBB::tbbmalloc
+  # glog
+  # gflags
+  # opengv
+  # Boost::boost
+  # config_utilities::config_utilities
+  # nlohmann_json::nlohmann_json
+  # gtsam
+  # # gtsamDebug
+  # ${OpenCV_LIBRARIES}
+  # ${PCL_LIBRARIES}
+  # png
+  # TBB::tbb
+  # TBB::tbbmalloc
+  dynosam_common::dynosam_common
+  dynosam_cv::dynosam_cv
+  dynosam_opt::dynosam_opt
+  dynosam_nn::dynosam_nn
 )
 
 
 set(DYNO_EXPORT_DEPS
-  rclcpp
-  std_msgs
-  sensor_msgs
-  OpenCV opengv
-  GTSAM
-  eigen3_cmake_module
-  Eigen3
+  # rclcpp
+  # std_msgs
+  # sensor_msgs
+  # nlohmann_json
+  # config_utilities
+  # OpenCV
+  # opengv
+  # PCL
+  # GTSAM
+  # eigen3_cmake_module
+  # Eigen3
+  dynosam_common
+  dynosam_cv
+  dynosam_opt
+  dynosam_nn
 )
 
 
@@ -252,7 +215,10 @@ target_include_directories(${PROJECT_NAME}
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>)
 
-ament_export_include_directories(include  ${GTSAM_INCLUDE_DIR} ${OPENGV_INCLUDE_DIR})
+ament_export_include_directories(
+  include
+)
+
 ament_export_libraries(${PROJECT_NAME})
 
 install(
@@ -270,6 +236,7 @@ install(
 
 install(
   TARGETS ${PROJECT_NAME}
+  EXPORT export_${PROJECT_NAME}
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin
@@ -281,13 +248,14 @@ install(DIRECTORY
   DESTINATION share/${PROJECT_NAME}
 )
 
+ament_export_targets(export_${PROJECT_NAME} HAS_LIBRARY_TARGET)
+
 
 #####exec test#########
 add_executable(dyno_sam example/dyno_sam.cc)
 target_link_libraries(dyno_sam
   ${PROJECT_NAME}
 )
-ament_target_dependencies(dyno_sam "rclcpp" "std_msgs")
 
 
 
@@ -301,6 +269,7 @@ if(BUILD_TESTING)
   # find_package(ament_cmake_gtest REQUIRED)
   find_package(ament_cmake_gmock REQUIRED)
   find_package(ament_lint_auto REQUIRED)
+  find_package(ament_index_cpp REQUIRED)
 
   ament_lint_auto_find_test_dependencies()
 
@@ -338,7 +307,22 @@ if(BUILD_TESTING)
     test/test_optimizations.cc
 )
 
-  target_link_libraries(${PROJECT_NAME}_test ${PROJECT_NAME} ${rclcpp_LIBRARIES})
+  target_include_directories(${PROJECT_NAME}_test
+    PRIVATE
+     ${ament_index_cpp_INCLUDE_DIRS}
+  )
+
+  target_link_libraries(
+    ${PROJECT_NAME}_test
+    ${PROJECT_NAME}
+    ${rclcpp_LIBRARIES}
+    ${ament_index_cpp_TARGETS}
+    config_utilities::config_utilities
+    gtsam
+    ${OpenCV_LIBRARIES}
+  )
+
+
 
   install(TARGETS
   ${PROJECT_NAME}_test

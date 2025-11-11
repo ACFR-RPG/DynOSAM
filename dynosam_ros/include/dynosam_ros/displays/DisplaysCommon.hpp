@@ -32,10 +32,10 @@
 
 #include <pcl_conversions/pcl_conversions.h>
 
-#include <dynosam/common/PointCloudProcess.hpp>  //for CloudPerObject
-#include <dynosam/common/Types.hpp>
 #include <sensor_msgs/msg/point_cloud2.hpp>
 
+#include "dynosam_common/PointCloudProcess.hpp"  //for CloudPerObject
+#include "dynosam_common/Types.hpp"
 #include "dynosam_ros/Display-Definitions.hpp"
 #include "image_transport/image_transport.hpp"
 #include "nav_msgs/msg/odometry.hpp"
@@ -48,7 +48,8 @@ namespace dyno {
 
 using PointCloud2 = sensor_msgs::msg::PointCloud2;
 using MarkerArray =
-    visualization_msgs::msg::MarkerArray;  //! Typedef for MarkerArray msg
+    visualization_msgs::msg::MarkerArray;        //! Typedef for MarkerArray msg
+using Marker = visualization_msgs::msg::Marker;  //! Typedef for Marker msg
 
 using PointCloud2Pub = rclcpp::Publisher<sensor_msgs::msg::PointCloud2>;
 using OdometryPub = rclcpp::Publisher<nav_msgs::msg::Odometry>;
@@ -72,6 +73,10 @@ struct DisplayCommon {
                                   const gtsam::Pose3Vector& poses,
                                   Timestamp latest_timestamp,
                                   const std::string& frame_id);
+
+  static std::vector<Marker> objectBBXToRvizMarker(
+      const ObjectBBX& bounding_box, const ObjectId object_id,
+      const Timestamp latest_timestamp, const std::string& frame_id);
 };
 
 }  // namespace dyno

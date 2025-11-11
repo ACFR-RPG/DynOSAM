@@ -31,7 +31,7 @@
 #include <glog/logging.h>
 #include <gtest/gtest.h>
 
-#include <dynosam/backend/optimizers/IncrementalOptimization.hpp>
+#include <dynosam_opt/IncrementalOptimization.hpp>
 
 using namespace dyno;
 

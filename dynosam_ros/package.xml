@@ -4,8 +4,7 @@
   <version>0.0.1</version>
   <description>DynOSAM ROS Interface</description>
 
-  <maintainer email="yiduo.wang@sydney.edu.au">Yiduo Wang</maintainer>
-  <maintainer email="jesse.morris@sydney.edu.au">Jessie Morris</maintainer>
+  <maintainer email="jesse.morris@sydney.edu.au">Jesse Morris</maintainer>
   <license>BSD</license>
 
   <buildtool_depend>catkin</buildtool_depend>
@@ -20,9 +19,11 @@
   <depend>tf2_ros</depend>
   <depend>geometry_msgs</depend>
   <depend>dynamic_slam_interfaces</depend>
+  <depend>pcl_conversions</depend>
   <depend>visualization_msgs</depend>
   <depend>diagnostic_updater</depend>
   <depend>image_transport</depend>
+  <depend>nav_msgs</depend>
   <depend>cv_bridge</depend>
   <depend>message_filters</depend>
   <depend>rclpy</depend>

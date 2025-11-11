@@ -30,17 +30,19 @@
 
 #pragma once
 
+#include <opencv2/cudaoptflow.hpp>
 #include <opencv4/opencv2/opencv.hpp>
 
-#include "dynosam/common/Camera.hpp"
 #include "dynosam/frontend/FrontendParams.hpp"
-#include "dynosam/frontend/vision/Feature.hpp"
 #include "dynosam/frontend/vision/FeatureTrackerBase.hpp"
 #include "dynosam/frontend/vision/Frame.hpp"
-#include "dynosam/frontend/vision/ORBextractor.hpp"
-#include "dynosam/frontend/vision/OccupancyGrid2D.hpp"
 #include "dynosam/frontend/vision/StaticFeatureTracker.hpp"
 #include "dynosam/visualizer/Visualizer-Definitions.hpp"
+#include "dynosam_cv/Camera.hpp"
+#include "dynosam_cv/Feature.hpp"
+
+// #include "dynosam_common/DynamicObjects.hpp"
+#include "dynosam_nn/ObjectDetector.hpp"
 
 namespace dyno {
 
@@ -65,7 +67,6 @@ class FeatureTracker : public FeatureTrackerBase {
   // this data? Put in frame or get as function?
   Frame::Ptr track(FrameId frame_id, Timestamp timestamp,
                    const ImageContainer& image_container,
-                   std::set<ObjectId>& object_keyframes,
                    const std::optional<gtsam::Rot3>& R_km1_k = {});
 
   bool stereoTrack(FeaturePtrs& stereo_features,
@@ -108,6 +109,11 @@ class FeatureTracker : public FeatureTrackerBase {
       FeatureContainer& dynamic_features, std::set<ObjectId>& object_keyframes,
       const vision_tools::ObjectBoundaryMaskResult& boundary_mask_result);
 
+  void trackDynamicKLT(
+      FrameId frame_id, const ImageContainer& image_container,
+      FeatureContainer& dynamic_features, std::set<ObjectId>& object_keyframes,
+      const vision_tools::ObjectBoundaryMaskResult& boundary_mask_result);
+
   void sampleDynamic(FrameId frame_id, const ImageContainer& image_container,
                      const std::set<ObjectId>& objects_to_sample,
                      FeatureContainer& dynamic_features,
@@ -138,6 +144,12 @@ class FeatureTracker : public FeatureTrackerBase {
   void propogateMask(ImageContainer& image_container);
 
  private:
+  // TODO: for now we loose the actual object detection result if inference was
+  // run!
+  bool objectDetection(
+      vision_tools::ObjectBoundaryMaskResult& boundary_mask_result,
+      ImageContainer& image_container);
+
   void computeImageBounds(const cv::Size& size, int& min_x, int& max_x,
                           int& min_y, int& max_y) const;
 
@@ -159,6 +171,10 @@ class FeatureTracker : public FeatureTrackerBase {
 
   // OccupandyGrid2D static_grid_; //! Grid used to feature bin static features
   bool initial_computation_{true};
+
+  // for now!
+  cv::Ptr<cv::cuda::SparsePyrLKOpticalFlow> lk_cuda_tracker_;
+  ObjectDetectionEngine::Ptr object_detection_;
 };
 
 }  // namespace dyno

@@ -33,14 +33,14 @@
 #include "dynosam/backend/Accessor.hpp"
 #include "dynosam/backend/Formulation.hpp"
 #include "dynosam/backend/rgbd/WorldPoseEstimator.hpp"
-#include "dynosam/common/Map.hpp"
+#include "dynosam_opt/Map.hpp"
 
 namespace dyno {
 
 class WorldMotionAccessor : public WorldPoseAccessor {
  public:
   WorldMotionAccessor(const SharedFormulationData& shared_data,
-                      Map3d2d::Ptr map)
+                      MapVision::Ptr map)
       : WorldPoseAccessor(shared_data, map) {}
 
   StateQuery<gtsam::Pose3> getObjectMotion(FrameId frame_id,
@@ -79,8 +79,8 @@ class WorldMotionFormulation : public WorldPoseFormulation {
 
   WorldMotionFormulation(const FormulationParams& params, typename Map::Ptr map,
                          const NoiseModels& noise_models,
-                         const FormulationHooks& hooks)
-      : WorldPoseFormulation(params, map, noise_models, hooks) {
+                         const Sensors& sensors, const FormulationHooks& hooks)
+      : WorldPoseFormulation(params, map, noise_models, sensors, hooks) {
     derived_accessor_ = derivedAccessor<WorldMotionAccessor>();
     CHECK_NOTNULL(derived_accessor_);
   }

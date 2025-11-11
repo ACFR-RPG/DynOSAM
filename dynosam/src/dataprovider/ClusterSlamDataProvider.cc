@@ -35,14 +35,14 @@
 #include <fstream>
 #include <png++/png.hpp>  //libpng-dev
 
-#include "dynosam/common/Algorithms.hpp"
-#include "dynosam/common/StereoCamera.hpp"
 #include "dynosam/dataprovider/DataProviderUtils.hpp"
 #include "dynosam/frontend/vision/StereoMatcher.hpp"
 #include "dynosam/frontend/vision/VisionTools.hpp"  //for getObjectLabels
-#include "dynosam/utils/GtsamUtils.hpp"
-#include "dynosam/utils/OpenCVUtils.hpp"
-#include "dynosam/visualizer/ColourMap.hpp"
+#include "dynosam_common/Algorithms.hpp"
+#include "dynosam_common/utils/GtsamUtils.hpp"
+#include "dynosam_common/utils/OpenCVUtils.hpp"
+#include "dynosam_common/viz/Colour.hpp"
+#include "dynosam_cv/StereoCamera.hpp"
 
 namespace dyno {
 
@@ -75,14 +75,14 @@ class ClusterSlamAllLoader {
         left_landmarks_folder_(file_path + "/landmarks/left"),
         landmark_mapping_file_path_(file_path + "/landmark_mapping.txt"),
         intrinsics_file_path_(file_path + "/intrinsic.txt") {
-    throwExceptionIfPathInvalid(left_images_folder_path_);
-    throwExceptionIfPathInvalid(right_images_folder_path_);
-    throwExceptionIfPathInvalid(optical_flow_folder_path_);
-    throwExceptionIfPathInvalid(pose_folder_path_);
-    throwExceptionIfPathInvalid(instance_masks_folder_);
-    throwExceptionIfPathInvalid(left_landmarks_folder_);
-    throwExceptionIfPathInvalid(landmark_mapping_file_path_);
-    throwExceptionIfPathInvalid(intrinsics_file_path_);
+    utils::throwExceptionIfPathInvalid(left_images_folder_path_);
+    utils::throwExceptionIfPathInvalid(right_images_folder_path_);
+    utils::throwExceptionIfPathInvalid(optical_flow_folder_path_);
+    utils::throwExceptionIfPathInvalid(pose_folder_path_);
+    utils::throwExceptionIfPathInvalid(instance_masks_folder_);
+    utils::throwExceptionIfPathInvalid(left_landmarks_folder_);
+    utils::throwExceptionIfPathInvalid(landmark_mapping_file_path_);
+    utils::throwExceptionIfPathInvalid(intrinsics_file_path_);
 
     // first load images and size
     // the size will be used as a refernce for all other loaders
@@ -117,7 +117,7 @@ class ClusterSlamAllLoader {
     CHECK_LT(idx, optical_flow_image_paths_.size());
 
     cv::Mat flow;
-    loadFlow(optical_flow_image_paths_.at(idx), flow);
+    utils::loadFlow(optical_flow_image_paths_.at(idx), flow);
     CHECK(!flow.empty());
     return flow;
   }
@@ -126,7 +126,7 @@ class ClusterSlamAllLoader {
     CHECK_LT(idx, left_rgb_image_paths_.size());
 
     cv::Mat rgb;
-    loadRGB(left_rgb_image_paths_.at(idx), rgb);
+    utils::loadRGB(left_rgb_image_paths_.at(idx), rgb);
     CHECK(!rgb.empty());
 
     return rgb;
@@ -136,7 +136,7 @@ class ClusterSlamAllLoader {
     cv::Mat rgb_right;
     CHECK_LT(idx, right_rgb_image_paths_.size());
 
-    loadRGB(right_rgb_image_paths_.at(idx), rgb_right);
+    utils::loadRGB(right_rgb_image_paths_.at(idx), rgb_right);
     CHECK(!rgb_right.empty());
 
     return rgb_right;
@@ -147,7 +147,7 @@ class ClusterSlamAllLoader {
     CHECK_LT(idx, dataset_size_);
 
     cv::Mat mask, relabelled_mask;
-    loadMask(instance_masks_image_paths_.at(idx), mask);
+    utils::loadMask(instance_masks_image_paths_.at(idx), mask);
     CHECK(!mask.empty());
 
     associateDetectedBBWithObject(mask, idx, relabelled_mask);
@@ -176,12 +176,12 @@ class ClusterSlamAllLoader {
   void loadFlowImagesAndSize(std::vector<std::string>& images_paths,
                              size_t& dataset_size) {
     std::vector<std::filesystem::path> files_in_directory =
-        getAllFilesInDir(optical_flow_folder_path_);
+        utils::getAllFilesInDir(optical_flow_folder_path_);
     dataset_size = files_in_directory.size();
     CHECK_GT(dataset_size, 0);
 
     for (const std::string file_path : files_in_directory) {
-      throwExceptionIfPathInvalid(file_path);
+      utils::throwExceptionIfPathInvalid(file_path);
       images_paths.push_back(file_path);
     }
   }
@@ -189,20 +189,20 @@ class ClusterSlamAllLoader {
   void loadImages(std::vector<std::string>& images_paths,
                   const std::string& image_folder) {
     std::vector<std::filesystem::path> files_in_directory =
-        getAllFilesInDir(image_folder);
+        utils::getAllFilesInDir(image_folder);
 
     for (const std::string file_path : files_in_directory) {
-      throwExceptionIfPathInvalid(file_path);
+      utils::throwExceptionIfPathInvalid(file_path);
       images_paths.push_back(file_path);
     }
   }
 
   void loadInstanceMasksImages(std::vector<std::string>& images_paths) {
     std::vector<std::filesystem::path> files_in_directory =
-        getAllFilesInDir(instance_masks_folder_);
+        utils::getAllFilesInDir(instance_masks_folder_);
 
     for (const std::string file_path : files_in_directory) {
-      throwExceptionIfPathInvalid(file_path);
+      utils::throwExceptionIfPathInvalid(file_path);
       images_paths.push_back(file_path);
     }
   }
@@ -358,7 +358,7 @@ class ClusterSlamAllLoader {
 
   void loadLeftLandmarks(LandmarksMapPerFrame& detected_landmarks) {
     std::vector<std::filesystem::path> files_in_directory =
-        getAllFilesInDir(left_landmarks_folder_);
+        utils::getAllFilesInDir(left_landmarks_folder_);
 
     for (const std::filesystem::path& file_path : files_in_directory) {
       // this should be the file name which we will then decompose into the
@@ -383,7 +383,7 @@ class ClusterSlamAllLoader {
       constexpr static size_t kExpectedSize = 3u;
       while (!fstream.eof()) {
         std::vector<std::string> split_line;
-        if (!getLine(fstream, split_line)) continue;
+        if (!utils::getLine(fstream, split_line)) continue;
 
         CHECK_EQ(split_line.size(), kExpectedSize)
             << "Line present in landmarks file does not have the right length "
@@ -419,7 +419,7 @@ class ClusterSlamAllLoader {
     constexpr static size_t kExpectedSize = 2u;
     while (!fstream.eof()) {
       std::vector<std::string> split_line;
-      if (!getLine(fstream, split_line)) continue;
+      if (!utils::getLine(fstream, split_line)) continue;
 
       CHECK_EQ(split_line.size(), kExpectedSize)
           << "Line present in landmark mapping file does not have the right "
@@ -564,7 +564,7 @@ class ClusterSlamAllLoader {
     // will index from 1 expect the file name to give us the frame we are
     // working with!!
     std::vector<std::filesystem::path> files_in_directory =
-        getAllFilesInDir(pose_folder_path_);
+        utils::getAllFilesInDir(pose_folder_path_);
 
     gtsam::Pose3 initial_pose = gtsam::Pose3::Identity();
     bool initial_frame_set = false;
@@ -706,7 +706,7 @@ class ClusterSlamAllLoader {
     gtsam::Pose3Vector poses;
     while (!fstream.eof()) {
       std::vector<std::string> split_line;
-      if (!getLine(fstream, split_line)) continue;
+      if (!utils::getLine(fstream, split_line)) continue;
 
       CHECK_EQ(split_line.size(), kExpectedSize)
           << "Line present in pose file does not have the right length - "

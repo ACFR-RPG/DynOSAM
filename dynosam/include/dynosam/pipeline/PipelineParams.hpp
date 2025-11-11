@@ -39,11 +39,11 @@
 
 #include "dynosam/backend/BackendDefinitions.hpp"
 #include "dynosam/backend/BackendParams.hpp"
-#include "dynosam/common/CameraParams.hpp"
-#include "dynosam/common/Types.hpp"
 #include "dynosam/frontend/Frontend-Definitions.hpp"
 #include "dynosam/frontend/FrontendParams.hpp"
-#include "dynosam/utils/Macros.hpp"
+#include "dynosam_common/Types.hpp"
+#include "dynosam_common/utils/Macros.hpp"
+#include "dynosam_cv/CameraParams.hpp"
 
 namespace dyno {
 
@@ -107,6 +107,8 @@ class DynoParams {
     return pipeline_params_.prefer_data_provider_imu_params;
   }
 
+  bool incrementalBackend() const;
+
  public:
   PipelineParams pipeline_params_;
   FrontendParams frontend_params_;
@@ -115,6 +117,7 @@ class DynoParams {
   ImuParams imu_params_;
 
   FrontendType frontend_type_ = FrontendType::kRGBD;
+  BackendType backend_type = BackendType::PARALLEL_HYBRID;
 
  private:
 };

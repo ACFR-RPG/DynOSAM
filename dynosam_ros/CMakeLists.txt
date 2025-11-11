@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 3.11)
 
 project(dynosam_ros)
 
@@ -30,9 +30,10 @@ find_package(cv_bridge REQUIRED)
 find_package(eigen3_cmake_module REQUIRED)
 find_package(Eigen3 REQUIRED)
 find_package(dynosam REQUIRED)
-find_package(PCL REQUIRED)
+find_package(PCL REQUIRED conversions)
 find_package(rclpy REQUIRED)
 find_package(message_filters REQUIRED)
+
 
 # setup targets
 include_directories(
@@ -40,32 +41,39 @@ include_directories(
   ${rclcpp_INCLUDE_DIRS}
   ${EIGEN3_INCLUDE_DIRS}
   ${PCL_INCLUDE_DIRS}
+  ${dynosam_INCLUDE_DIRS}
 )
-
 
 
 set(SRC_FILES
   src/PipelineRos.cc
   src/RosUtils.cc
   src/Utils.cc
-  src/displays/DisplaysCommon.cc
   src/DataProviderRos.cc
   src/OnlineDataProviderRos.cc
+
+  src/displays/backend_displays/HybridBackendDisplay.cc
+  src/displays/DisplaysCommon.cc
+
 )
 
-set(TARGET_DEPS
-  rclcpp
-  std_msgs
-  sensor_msgs
-  visualization_msgs
-  nav_msgs
-  geometry_msgs
-  dynosam
-  image_transport
-  cv_bridge
-  pcl_conversions
-  tf2_ros
-  message_filters
+set(LINK_LIBS
+  ${geometry_msgs_TARGETS}
+  ${nav_msgs_TARGETS}
+  ${sensor_msgs_TARGETS}
+  ${std_msgs_TARGETS}
+  ${visualization_msgs_TARGETS}
+  cv_bridge::cv_bridge
+  dynamic_slam_interfaces::dynamic_slam_interfaces_library
+  dynosam::dynosam
+  image_transport::image_transport
+  message_filters::message_filters
+  pcl_conversions::pcl_conversions
+  rclcpp::rclcpp
+  sensor_msgs::sensor_msgs_library
+  tf2_ros::static_transform_broadcaster_node
+  tf2_ros::tf2_ros
+
 )
 
 set(TARGET_EXPORT_DEPS
@@ -73,6 +81,7 @@ set(TARGET_EXPORT_DEPS
   std_msgs
   sensor_msgs
   dynosam
+  nav_msgs
   message_filters
 )
 
@@ -82,7 +91,7 @@ if(ENABLE_DYNAMIC_SLAM_INTERFACES)
   add_definitions(-DUSE_DYNAMIC_SLAM_INTERFACES)
 
   find_package(dynamic_slam_interfaces REQUIRED)
-  list(APPEND TARGET_DEPS dynamic_slam_interfaces)
+  list(APPEND LINK_LIBS   ${dynamic_slam_interfaces_TARGETS})
   list(APPEND TARGET_EXPORT_DEPS dynamic_slam_interfaces)
 
   list(APPEND SRC_FILES
@@ -103,15 +112,12 @@ endif()
 # build library
 add_library(${PROJECT_NAME} SHARED ${SRC_FILES})
 
-ament_target_dependencies(${PROJECT_NAME}
-  ${TARGET_DEPS}
-)
-
 target_link_libraries(${PROJECT_NAME}
-  ${rclcpp_LIBRARIES}
+  ${LINK_LIBS}
   glog
   gflags
 )
+
 ament_export_libraries(${PROJECT_NAME}
   glog
   gflags
@@ -156,38 +162,12 @@ target_link_libraries(dynosam_node
   ${PCL_LIBRARIES}
 
 )
-ament_target_dependencies(dynosam_node "rclcpp" "std_msgs" "dynosam")
 
 install(TARGETS
   dynosam_node
   DESTINATION lib/${PROJECT_NAME})
 
 
-
-add_executable(dynosam_experiments_node nodes/backend_experiments_node.cc)
-target_link_libraries(dynosam_experiments_node
-  ${PROJECT_NAME}
-  ${PCL_LIBRARIES}
-)
-
-ament_target_dependencies(dynosam_experiments_node "rclcpp" "std_msgs" "dynosam")
-
-install(TARGETS
-dynosam_experiments_node
-  DESTINATION lib/${PROJECT_NAME})
-
-
-add_executable(dynosam_dataset_node nodes/dataset_node.cc)
-target_link_libraries(dynosam_dataset_node
-  ${PROJECT_NAME}
-  ${PCL_LIBRARIES}
-)
-
-ament_target_dependencies(dynosam_dataset_node "rclcpp" "std_msgs" "dynosam")
-
-install(TARGETS
-dynosam_dataset_node
-  DESTINATION lib/${PROJECT_NAME})
 
 
     # Install Python executables
@@ -201,6 +181,8 @@ if(BUILD_TESTING)
   # find_package(ament_cmake_gtest REQUIRED)
   find_package(ament_cmake_gmock REQUIRED)
   find_package(ament_lint_auto REQUIRED)
+    find_package(ament_index_cpp REQUIRED)
+
 
   ament_lint_auto_find_test_dependencies()
 
@@ -211,10 +193,15 @@ if(BUILD_TESTING)
     test/test_ros_utils.cc
     test/test_adaptors.cc
     test/test_online_dataprovider_ros.cc
-    test/darin_simulations.cc
 )
 
-  target_link_libraries(${PROJECT_NAME}_test ${PROJECT_NAME} ${rclcpp_LIBRARIES})
+target_include_directories(${PROJECT_NAME}_test
+    PRIVATE
+     ${ament_index_cpp_INCLUDE_DIRS}
+  )
+
+target_link_libraries(${PROJECT_NAME}_test ${PROJECT_NAME} ${rclcpp_LIBRARIES} ${ament_index_cpp_TARGETS})
+
 
   install(TARGETS
   ${PROJECT_NAME}_test

@@ -78,7 +78,7 @@ ParallelHybridBackendModule::ParallelHybridBackendModule(
   LOG(INFO) << "Creating ParallelHybridBackendModule";
 
   // TODO: set isam params
-  dynamic_isam2_params_.keyFormatter = DynoLikeKeyFormatter;
+  dynamic_isam2_params_.keyFormatter = DynosamKeyFormatter;
   dynamic_isam2_params_.evaluateNonlinearError = true;
   dynamic_isam2_params_.enableDetailedResults = true;
   dynamic_isam2_params_.relinearizeSkip = FLAGS_relinearize_skip;
@@ -114,7 +114,7 @@ ParallelHybridBackendModule::ParallelHybridBackendModule(
     dynamic_isam2_params_.relinearizeThreshold = thresholds;
   }
 
-  static_isam2_params_.keyFormatter = DynoLikeKeyFormatter;
+  static_isam2_params_.keyFormatter = DynosamKeyFormatter;
   static_isam2_params_.evaluateNonlinearError = true;
   // this value is very important for accuracy
   static_isam2_params_.relinearizeThreshold = 0.01;
@@ -128,21 +128,20 @@ ParallelHybridBackendModule::ParallelHybridBackendModule(
       gtsam::IncrementalFixedLagSmoother(25.0, static_isam2_params_);
   // static_estimator_ = gtsam::ISAM2(static_isam2_params_);
 
+  Sensors sensors;
+  sensors.camera = camera;
+
   FormulationHooks hooks;
   hooks.ground_truth_packets_request =
       [&]() -> std::optional<GroundTruthPacketMap> {
     return shared_module_info.getGroundTruthPackets();
   };
 
-  FormulationParams formulation_params;
-  formulation_params.min_static_observations = base_params_.min_static_obs_;
-  // formulation_params.min_static_observations = 4;
-  formulation_params.min_dynamic_observations = base_params_.min_dynamic_obs_;
-  formulation_params.use_smoothing_factor = base_params_.use_smoothing_factor;
-  formulation_params.suffix = "static";
+  FormulationParams formulation_params(base_params_);
+  formulation_params.updater_suffix = "static";
 
-  static_formulation_ = std::make_unique<HybridFormulation>(
-      formulation_params, RGBDMap::create(), noise_models_, hooks);
+  static_formulation_ = std::make_shared<HybridFormulation>(
+      formulation_params, RGBDMap::create(), noise_models_, sensors, hooks);
 }
 
 ParallelHybridBackendModule::~ParallelHybridBackendModule() {
@@ -152,7 +151,7 @@ ParallelHybridBackendModule::~ParallelHybridBackendModule() {
     logBackendFromEstimators();
 
     std::string file_name = "parallel_isam2_results";
-    const std::string suffix = FLAGS_updater_suffix;
+    const std::string suffix = base_params_.updater_suffix;
     if (!suffix.empty()) {
       file_name += ("_" + suffix);
     }
@@ -164,29 +163,30 @@ ParallelHybridBackendModule::~ParallelHybridBackendModule() {
   }
 }
 
-// implementation taken from ObjectMotionSolverSAM
-// TODO: update api
+const gtsam::FastMap<ObjectId, ParallelObjectISAM::Ptr>&
+ParallelHybridBackendModule::objectEstimators() const {
+  return sam_estimators_;
+}
+
+HybridFormulation::Ptr ParallelHybridBackendModule::staticEstimator() const {
+  return static_formulation_;
+}
+
 ParallelHybridBackendModule::SpinReturn
-ParallelHybridBackendModule::boostrapSpinImpl(
-    RGBDInstanceOutputPacket::ConstPtr input) {
-  const FrameId frame_k = input->getFrameId();
-  const Timestamp timestamp = input->getTimestamp();
+ParallelHybridBackendModule::boostrapSpinImpl(VisionImuPacket::ConstPtr input) {
+  const FrameId frame_k = input->frameId();
+  const Timestamp timestamp = input->timestamp();
   // TODO: sovle smoother
   //  non-sequentially?
-  std::vector<PerObjectUpdate> dynamic_updates = collectPerObjectUpdates(input);
   Pose3Measurement optimized_camera_pose =
       bootstrapUpdateStaticEstimator(input);
 
-  for (PerObjectUpdate& update : dynamic_updates) {
-    update.X_k_measurement = optimized_camera_pose;
-  }
-
-  parallelObjectSolve(dynamic_updates);
+  parallelObjectSolve(input, optimized_camera_pose);
 
   // lazy update (not parallel)
-  for (const PerObjectUpdate& update : dynamic_updates) {
-    const auto object_id = update.object_id;
+  for (const ObjectId& object_id : input->getObjectIds()) {
     ParallelObjectISAM::Ptr estimator = getEstimator(object_id);
+    CHECK(estimator) << "Somehow no estimator for j=" << object_id;
     const auto result = estimator->getResult();
 
     if (!result.was_smoother_ok) {
@@ -204,23 +204,19 @@ ParallelHybridBackendModule::boostrapSpinImpl(
 }
 
 ParallelHybridBackendModule::SpinReturn
-ParallelHybridBackendModule::nominalSpinImpl(
-    RGBDInstanceOutputPacket::ConstPtr input) {
-  const FrameId frame_k = input->getFrameId();
-  const Timestamp timestamp = input->getTimestamp();
-  // TODO: sovle smoother
-  std::vector<PerObjectUpdate> dynamic_updates = collectPerObjectUpdates(input);
-  bool has_objects = dynamic_updates.size() > 0u;
-  bool requires_covariance_calc = has_objects;
+ParallelHybridBackendModule::nominalSpinImpl(VisionImuPacket::ConstPtr input) {
+  const FrameId frame_k = input->frameId();
+  const Timestamp timestamp = input->timestamp();
+
+  const ObjectIds tracked_objects = input->getObjectIds();
+  const bool has_objects = tracked_objects.size() > 0u;
+  const bool requires_covariance_calc = has_objects;
   //  non-sequentially?
   Pose3Measurement optimized_camera_pose =
       nominalUpdateStaticEstimator(input, requires_covariance_calc);
 
   if (has_objects) {
-    for (PerObjectUpdate& update : dynamic_updates) {
-      update.X_k_measurement = optimized_camera_pose;
-    }
-    parallelObjectSolve(dynamic_updates);
+    parallelObjectSolve(input, optimized_camera_pose);
   }
   // get estimator
   // should add previous measurements
@@ -238,14 +234,14 @@ ParallelHybridBackendModule::nominalSpinImpl(
   const int current_frame = static_cast<int>(frame_k);
   int start_frame = std::max(current_frame - kWindow, 1);
 
-  if (input->debug_imagery_ && !input->debug_imagery_->rgb_viz.empty()) {
-    const cv::Mat& rgb = input->debug_imagery_->rgb_viz;
+  if (input->debugImagery() && !input->debugImagery()->rgb_viz.empty()) {
+    const cv::Mat& rgb = input->debugImagery()->rgb_viz;
     rgb.copyTo(backend_output->debug_image);
   }
 
-  for (const PerObjectUpdate& update : dynamic_updates) {
-    const auto object_id = update.object_id;
+  for (const ObjectId& object_id : tracked_objects) {
     ParallelObjectISAM::Ptr estimator = getEstimator(object_id);
+    CHECK(estimator) << "Somehow no estimator for j=" << object_id;
     HybridAccessor::Ptr accessor = estimator->accessor();
     const auto result = estimator->getResult();
 
@@ -305,24 +301,55 @@ ParallelHybridBackendModule::nominalSpinImpl(
   return {State::Nominal, backend_output};
 }
 
+std::pair<gtsam::Values, gtsam::NonlinearFactorGraph>
+ParallelHybridBackendModule::getActiveOptimisation() const {
+  gtsam::NonlinearFactorGraph graph;
+  gtsam::Values theta;
+
+  for (const auto& [object_id, estimator] : sam_estimators_) {
+    auto object_smoother = estimator->getSmoother();
+    using DynamicSmootherInterface =
+        IncrementalInterface<decltype(object_smoother)>;
+    DynamicSmootherInterface dynamic_smoother_interface(&object_smoother);
+
+    graph += dynamic_smoother_interface.getFactors();
+    // must assign becuase the smoothers will share the camera pose values
+    theta.insert_or_assign(dynamic_smoother_interface.getLinearizationPoint());
+  }
+
+  // get static variables last as they contain the same camera pose variables
+  // which we will override
+  using StaticSmootherInterface =
+      IncrementalInterface<decltype(static_estimator_)>;
+  // need to make non-const
+  StaticSmootherInterface static_smoother_interface(
+      const_cast<StaticSmootherInterface::Smoother*>(&static_estimator_));
+  graph += static_smoother_interface.getFactors();
+  theta.insert_or_assign(static_smoother_interface.getLinearizationPoint());
+
+  return {theta, graph};
+}
+
 Pose3Measurement ParallelHybridBackendModule::bootstrapUpdateStaticEstimator(
-    RGBDInstanceOutputPacket::ConstPtr input) {
+    VisionImuPacket::ConstPtr input) {
   utils::TimingStatsCollector timer("parallel_object_sam.static_estimator");
 
-  const FrameId frame_k = input->getFrameId();
+  const FrameId frame_k = input->frameId();
   auto map = static_formulation_->map();
 
-  const auto& X_k_initial = input->T_world_camera_;
+  const auto& X_k_initial = input->cameraPose();
 
-  map->updateObservations(input->collectStaticLandmarkKeypointMeasurements());
+  map->updateObservations(input->staticMeasurements());
   map->updateSensorPoseMeasurement(frame_k, Pose3Measurement(X_k_initial));
 
   gtsam::Values new_values;
   gtsam::NonlinearFactorGraph new_factors;
 
   // update formulation with initial states
+  // TODO: I think exactly the same as RegularBackendModule so could put into
+  // base class?
   gtsam::NavState nav_state;
-  if (input->pim_) {
+  if (input->pim()) {
     LOG(INFO) << "Initialising backend with IMU states!";
     nav_state = this->addInitialVisualInertialState(
         frame_k, static_formulation_.get(), new_values, new_factors,
@@ -341,6 +368,7 @@ Pose3Measurement ParallelHybridBackendModule::bootstrapUpdateStaticEstimator(
   std::map<gtsam::Key, double> timestamps;
   double curr_id = static_cast<double>(this->spin_state_.iteration);
   for (const auto& key_value : new_values) {
+    // LOG(INFO) << DynosamKeyFormatter(key_value.key);
     timestamps[key_value.key] = curr_id;
   }
 
@@ -362,22 +390,19 @@ Pose3Measurement ParallelHybridBackendModule::bootstrapUpdateStaticEstimator(
 }
 
 Pose3Measurement ParallelHybridBackendModule::nominalUpdateStaticEstimator(
-    RGBDInstanceOutputPacket::ConstPtr input,
-    bool should_calculate_covariance) {
+    VisionImuPacket::ConstPtr input, bool should_calculate_covariance) {
   utils::TimingStatsCollector timer("parallel_object_sam.static_estimator");
 
-  const FrameId frame_k = input->getFrameId();
+  const FrameId frame_k = input->frameId();
   auto map = static_formulation_->map();
-  map->updateObservations(input->collectStaticLandmarkKeypointMeasurements());
+  map->updateObservations(input->staticMeasurements());
 
   gtsam::Values new_values;
   gtsam::NonlinearFactorGraph new_factors;
 
-  // timestamps[CameraPoseSymbol(frame_k)] = curr_id;
-
   const gtsam::NavState predicted_nav_state = this->addVisualInertialStates(
       frame_k, static_formulation_.get(), new_values, new_factors,
-      noise_models_, input->T_k_1_k_, input->pim_);
+      noise_models_, input->relativeCameraTransform(), input->pim());
   // we dont have an uncertainty from the frontend
   map->updateSensorPoseMeasurement(
       frame_k, Pose3Measurement(predicted_nav_state.pose()));
@@ -395,6 +420,7 @@ Pose3Measurement ParallelHybridBackendModule::nominalUpdateStaticEstimator(
   std::map<gtsam::Key, double> timestamps;
   double curr_id = static_cast<double>(this->spin_state_.iteration);
   for (const auto& key_value : new_values) {
+    // LOG(INFO) << DynosamKeyFormatter(key_value.key);
     timestamps[key_value.key] = curr_id;
   }
 
@@ -402,6 +428,7 @@ Pose3Measurement ParallelHybridBackendModule::nominalUpdateStaticEstimator(
   VLOG(10) << "Starting static estimator update...";
   auto tic = utils::Timer::tic();
   static_estimator_.update(new_factors, new_values, timestamps);
+  static_estimator_.update();
   auto toc = utils::Timer::toc<std::chrono::nanoseconds>(tic);
   int64_t milliseconds =
       std::chrono::duration_cast<std::chrono::milliseconds>(toc).count();
@@ -463,56 +490,6 @@ Pose3Measurement ParallelHybridBackendModule::nominalUpdateStaticEstimator(
   }
 }
 
-std::vector<ParallelHybridBackendModule::PerObjectUpdate>
-ParallelHybridBackendModule::collectPerObjectUpdates(
-    RGBDInstanceOutputPacket::ConstPtr input) const {
-  GenericTrackedStatusVector<LandmarkKeypointStatus> all_dynamic_measurements =
-      input->collectDynamicLandmarkKeypointMeasurements();
-
-  gtsam::FastMap<ObjectId, GenericTrackedStatusVector<LandmarkKeypointStatus>>
-      measurements_by_object;
-  for (const auto& measurement : all_dynamic_measurements) {
-    const auto& object_id = measurement.objectId();
-    if (!measurements_by_object.exists(object_id)) {
-      measurements_by_object.insert2(
-          object_id, GenericTrackedStatusVector<LandmarkKeypointStatus>{});
-    }
-    measurements_by_object.at(object_id).push_back(measurement);
-  }
-
-  const auto frame_id_k = input->getFrameId();
-  const auto& estimated_motions =
-      input->object_motions_.toEstimateMap(frame_id_k);
-
-  std::vector<PerObjectUpdate> object_updates;
-  std::stringstream ss;
-  ss << "Objects with updates: ";
-  for (const auto& [object_id, collected_measurements] :
-       measurements_by_object) {
-    PerObjectUpdate object_update;
-    object_update.frame_id = frame_id_k;
-    object_update.object_id = object_id;
-
-    if (input->is_keyframe_.find(object_id) != input->is_keyframe_.end()) {
-      object_update.is_keyframe = true;
-    }
-
-    object_update.measurements = collected_measurements;
-    // object_update.X_k_measurement = X_k_measurement;
-
-    CHECK(estimated_motions.exists(object_id));
-    object_update.H_k_measurement = estimated_motions.at(object_id);
-
-    object_updates.push_back(object_update);
-    ss << object_id << " (KF: " << object_update.is_keyframe << ") ";
-  }
-
-  // log inf
-  LOG(INFO) << ss.str();
-
-  return object_updates;
-}
-
 ParallelObjectISAM::Ptr ParallelHybridBackendModule::getEstimator(
     ObjectId object_id, bool* is_object_new) {
   std::lock_guard<std::mutex> lock(mutex_);
@@ -528,14 +505,18 @@ ParallelObjectISAM::Ptr ParallelHybridBackendModule::getEstimator(
       return shared_module_info.getGroundTruthPackets();
     };
 
+    Sensors sensors;
+    sensors.camera = camera_;
+
     ParallelObjectISAM::Params params;
     params.num_optimzie = FLAGS_num_dynamic_optimize;
     params.isam = dynamic_isam2_params_;
+    params.formulation = FormulationParams(base_params_);
     // // make this prior not SO small
     NoiseModels noise_models = NoiseModels::fromBackendParams(base_params_);
     sam_estimators_.insert2(
-        object_id, std::make_shared<ParallelObjectISAM>(params, object_id,
-                                                        noise_models, hooks));
+        object_id, std::make_shared<ParallelObjectISAM>(
+                       params, object_id, noise_models, sensors, hooks));
 
     is_new = true;
   }
@@ -547,19 +528,21 @@ ParallelObjectISAM::Ptr ParallelHybridBackendModule::getEstimator(
 }
 
 void ParallelHybridBackendModule::parallelObjectSolve(
-    const std::vector<PerObjectUpdate>& object_updates) {
+    VisionImuPacket::ConstPtr input, const Pose3Measurement& X_W_k) {
   utils::TimingStatsCollector timer("parallel_object_sam.dynamic_estimator");
+  const auto frame_id = input->frameId();
+  const auto& object_tracks = input->objectTracks();
   tbb::parallel_for_each(
-      object_updates.begin(), object_updates.end(),
-      [&](const PerObjectUpdate& update) { this->implSolvePerObject(update); });
+      object_tracks.begin(), object_tracks.end(),
+      [&](const std::pair<ObjectId, VisionImuPacket::ObjectTracks>& update) {
+        this->implSolvePerObject(frame_id, update.first, update.second, X_W_k);
+      });
 }
 
-bool ParallelHybridBackendModule::implSolvePerObject(
-    const PerObjectUpdate& object_update) {
-  const auto object_id = object_update.object_id;
-  const auto frame_id_k = object_update.frame_id;
-  const auto& measurements = object_update.measurements;
-
+void ParallelHybridBackendModule::implSolvePerObject(
+    FrameId frame_id_k, ObjectId object_id,
+    const VisionImuPacket::ObjectTracks& object_update,
+    const Pose3Measurement& X_W_k) {
   bool is_object_new;
   ParallelObjectISAM::Ptr estimator = getEstimator(object_id, &is_object_new);
 
@@ -569,8 +552,7 @@ bool ParallelHybridBackendModule::implSolvePerObject(
   CHECK_NOTNULL(estimator);
   auto map = estimator->map();
 
-  const Pose3Measurement& X_k_measurement = object_update.X_k_measurement;
-  const Motion3ReferenceFrame& H_k = object_update.H_k_measurement;
+  const Motion3ReferenceFrame& H_W_k_1_k = object_update.H_W_k_1_k;
 
   // hack for now - if the object is new only update its map
   // this will create nodes in the Map but not update the estimator
@@ -598,7 +580,7 @@ bool ParallelHybridBackendModule::implSolvePerObject(
     needs_new_key_frame = true;
   }
 
-  estimator->update(frame_id_k, measurements, X_k_measurement, H_k,
+  estimator->update(frame_id_k, object_update.measurements, X_W_k, H_W_k_1_k,
                     should_update_smoother);
 
   if (needs_new_key_frame) {
@@ -661,6 +643,10 @@ BackendOutputPacket::Ptr ParallelHybridBackendModule::constructOutputPacket(
         accessor->getSensorPose(frame_id).get());
   }
 
+  const auto [active_values, active_graph] = this->getActiveOptimisation();
+  backend_output->active_values = active_values;
+  backend_output->active_graph = active_graph;
+
   return backend_output;
 }
 
@@ -668,7 +654,7 @@ void ParallelHybridBackendModule::logBackendFromEstimators() {
   // TODO: name + suffix
   std::string name = "parallel_hybrid";
 
-  const std::string suffix = FLAGS_updater_suffix;
+  const std::string suffix = base_params_.updater_suffix;
   if (!suffix.empty()) {
     name += ("_" + suffix);
   }
@@ -714,15 +700,21 @@ void ParallelHybridBackendModule::logGraphs() {
         dyno::getOutputFilePath("parallel_object_sam_k" +
                                 std::to_string(frame_id_k) + "_j" +
                                 std::to_string(object_id) + ".dot"),
-        dyno::DynoLikeKeyFormatter);
+        dyno::DynosamKeyFormatter);
 
     if (!smoother.empty()) {
+      const auto isam_result = estimator->getResult().isam_result;
+      gtsam::FastMap<gtsam::Key, std::string> colour_map;
+      for (const auto& affected_keys : isam_result.markedKeys) {
+        colour_map.insert2(affected_keys, "red");
+      }
+
       dyno::factor_graph_tools::saveBayesTree(
           smoother,
           dyno::getOutputFilePath("parallel_object_sam_btree_k" +
                                   std::to_string(frame_id_k) + "_j" +
                                   std::to_string(object_id) + ".dot"),
-          dyno::DynoLikeKeyFormatter);
+          dyno::DynosamKeyFormatter, colour_map);
     }
   }
 
@@ -730,7 +722,7 @@ void ParallelHybridBackendModule::logGraphs() {
   static_estimator_.getFactors().saveGraph(
       dyno::getOutputFilePath("parallel_object_sam_k" +
                               std::to_string(frame_id_k) + "_static.dot"),
-      dyno::DynoLikeKeyFormatter);
+      dyno::DynosamKeyFormatter);
 
   const auto& smoother = static_estimator_.getISAM2();
   if (!smoother.empty()) {
@@ -738,7 +730,7 @@ void ParallelHybridBackendModule::logGraphs() {
         smoother,
         dyno::getOutputFilePath("parallel_object_sam_btree_k" +
                                 std::to_string(frame_id_k) + "_static.dot"),
-        dyno::DynoLikeKeyFormatter);
+        dyno::DynosamKeyFormatter);
   }
 }
 

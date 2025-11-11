@@ -44,12 +44,12 @@
 #include <vector>
 
 #include "dynosam/backend/BackendPipeline.hpp"
-#include "dynosam/backend/FactorGraphTools.hpp"
 #include "dynosam/backend/ParallelHybridBackendModule.hpp"
 #include "dynosam/backend/RegularBackendModule.hpp"
-#include "dynosam/common/Map.hpp"
 #include "dynosam/factors/LandmarkMotionTernaryFactor.hpp"
 #include "dynosam/frontend/FrontendPipeline.hpp"
+#include "dynosam_opt/FactorGraphTools.hpp"
+#include "dynosam_opt/Map.hpp"
 #include "internal/backend_runners.hpp"
 #include "internal/helpers.hpp"
 #include "internal/simulator.hpp"
@@ -59,11 +59,11 @@ void printSymbolicTreeHelper(const gtsam::ISAM2Clique::shared_ptr& clique,
   // Print the current clique
   std::cout << indent << "P( ";
   for (auto key : clique->conditional()->frontals()) {
-    std::cout << dyno::DynoLikeKeyFormatter(key) << " ";
+    std::cout << dyno::DynosamKeyFormatter(key) << " ";
   }
   if (clique->conditional()->nrParents() > 0) std::cout << "| ";
   for (auto key : clique->conditional()->parents()) {
-    std::cout << dyno::DynoLikeKeyFormatter(key) << " ";
+    std::cout << dyno::DynosamKeyFormatter(key) << " ";
   }
   std::cout << ")" << std::endl;
 
@@ -94,11 +94,11 @@ TEST(RegularBackendModule, smallKITTIDataset) {
 
   dyno::BackendParams backend_params;
   backend_params.useLogger(false);
-  backend_params.min_dynamic_obs_ = 1u;
+  backend_params.min_dynamic_observations = 1u;
 
-  dyno::RegularBackendModule backend(
-      backend_params, dyno_testing::makeDefaultCameraPtr(),
-      dyno::RegularBackendModule::UpdaterType::HYBRID);
+  dyno::RegularBackendModule backend(backend_params,
+                                     dyno_testing::makeDefaultCameraPtr(),
+                                     dyno::BackendType::HYBRID);
 
   gtsam::ISAM2Params isam2_params;
   isam2_params.factorization = gtsam::ISAM2Params::Factorization::QR;
@@ -108,7 +108,7 @@ TEST(RegularBackendModule, smallKITTIDataset) {
   // gtsam::IncrementalFixedLagSmoother smoother(2.0, isam2_params);
 
   backend.registerPostFormulationUpdateCallback(
-      [&](const dyno::Formulation<dyno::Map3d2d>::UniquePtr& formulation,
+      [&](const dyno::RegularBackendModule::FormulationType::Ptr& formulation,
           dyno::FrameId frame_id, const gtsam::Values& new_values,
           const gtsam::NonlinearFactorGraph& new_factors) -> void {
         LOG(INFO) << "In backend callback " << frame_id;
@@ -118,7 +118,7 @@ TEST(RegularBackendModule, smallKITTIDataset) {
         isam2.getFactorsUnsafe().saveGraph(
             dyno::getOutputFilePath("small_isam_graph_" +
                                     std::to_string(frame_id) + ".dot"),
-            dyno::DynoLikeKeyFormatter);
+            dyno::DynosamKeyFormatter);
 
         gtsam::FastMap<gtsam::Key, std::string> coloured_affected_keys;
         for (const auto& key : result.markedKeys) {
@@ -129,7 +129,7 @@ TEST(RegularBackendModule, smallKITTIDataset) {
             isam2,
             dyno::getOutputFilePath("small_oc_bayes_tree_" +
                                     std::to_string(frame_id) + ".dot"),
-            dyno::DynoLikeKeyFormatter, coloured_affected_keys);
+            dyno::DynosamKeyFormatter, coloured_affected_keys);
       });
 
   auto output = offline_frontend->process(offline_frontend->getInputPacket());
@@ -198,7 +198,7 @@ TEST(RegularBackendModule, smallKITTIDataset) {
 //   //   CHECK(ISDEBUG("IncrementalFixedLagSmoother update"));
 //   dyno::BackendParams backend_params;
 //   backend_params.useLogger(false);
-//   backend_params.min_dynamic_obs_ = 3u;
+//   backend_params.min_dynamic_observations = 3u;
 //   backend_params.dynamic_point_noise_sigma_ = dynamic_point_sigma;
 
 //   //   dyno::FormulationHooks hooks;
@@ -213,7 +213,7 @@ TEST(RegularBackendModule, smallKITTIDataset) {
 
 //   dyno::RegularBackendModule backend(
 //       backend_params, dyno_testing::makeDefaultCameraPtr(),
-//       dyno::RegularBackendModule::UpdaterType::ObjectCentric);
+//       dyno::RegularBackendModule::BackendType::ObjectCentric);
 
 //   gtsam::ISAM2Params isam2_params;
 //   isam2_params.evaluateNonlinearError = true;
@@ -317,7 +317,7 @@ TEST(RegularBackendModule, smallKITTIDataset) {
 //       isam2.getFactorsUnsafe().saveGraph(
 //           dyno::getOutputFilePath("isam_graph_" + std::to_string(frame_id) +
 //                                   ".dot"),
-//           dyno::DynoLikeKeyFormatter);
+//           dyno::DynosamKeyFormatter);
 
 //       if (marginalizableKeys.size() > 0) {
 //           gtsam::FastList<gtsam::Key> leafKeys(marginalizableKeys.begin(),
@@ -365,20 +365,20 @@ TEST(RegularBackendModule, smallKITTIDataset) {
 //     //     dyno::getOutputFilePath("oc_bayes_tree_" +
 //     std::to_string(frame_id) +
 //     //                             ".dot"),
-//     //     dyno::DynoLikeKeyFormatter,
+//     //     dyno::DynosamKeyFormatter,
 //     //     coloured_affected_keys);
 
 //     dyno::factor_graph_tools::saveBayesTree(
 //         isam2,
 //         dyno::getOutputFilePath("oc_bayes_tree_" + std::to_string(frame_id) +
 //                                 ".dot"),
-//         dyno::DynoLikeKeyFormatter, coloured_affected_keys);
+//         dyno::DynosamKeyFormatter, coloured_affected_keys);
 //     //  dyno::factor_graph_tools::saveBayesTree(
 //     //     isam.bayesTree(),
 //     //     dyno::getOutputFilePath("oc_bayes_tree_" +
 //     std::to_string(frame_id) +
 //     //                             ".dot"),
-//     //     dyno::DynoLikeKeyFormatter,
+//     //     dyno::DynosamKeyFormatter,
 //     //     coloured_affected_keys);
 
 //     LOG(INFO) << "ISAM2 result. Error before " << result.getErrorBefore()
@@ -412,7 +412,7 @@ TEST(RegularBackendModule, smallKITTIDataset) {
 //   gtsam::Values initial_estimate = backend.formulation()->getTheta();
 //   full_graph.saveGraph(
 //       dyno::getOutputFilePath("construct_simple_graph_test.dot"),
-//       dyno::DynoLikeKeyFormatter);
+//       dyno::DynosamKeyFormatter);
 
 //   // log results of LM optimisation with different suffix
 //   dyno::BackendMetaData backend_info;
@@ -458,13 +458,14 @@ TEST(RegularBackendModule, testParallelRGBDBackend) {
   dyno_testing::RGBDScenario::NoiseParams noise_params;
   noise_params.H_R_sigma = H_R_sigma;
   noise_params.H_t_sigma = H_t_sigma;
-  noise_params.dynamic_point_sigma = dynamic_point_sigma;
+  noise_params.dynamic_point_noise =
+      dyno_testing::RGBDScenario::NaivePoint3dNoiseParams(dynamic_point_sigma);
   noise_params.X_R_sigma = X_R_sigma;
   noise_params.X_t_sigma = X_t_sigma;
 
   dyno_testing::RGBDScenario scenario(
       camera,
-      std::make_shared<dyno_testing::SimpleStaticPointsGenerator>(10, 7),
+      std::make_shared<dyno_testing::SimpleStaticPointsGenerator>(25, 7),
       noise_params);
 
   // add one obect
@@ -511,8 +512,8 @@ TEST(RegularBackendModule, testParallelRGBDBackend) {
 
   dyno::BackendParams backend_params;
   backend_params.useLogger(true);
-  backend_params.min_dynamic_obs_ = 3u;
-  backend_params.dynamic_point_noise_sigma_ = dynamic_point_sigma;
+  backend_params.min_dynamic_observations = 3u;
+  //   backend_params.dynamic_point_noise_sigma = dynamic_point_sigma;
   backend_params.odometry_rotation_sigma_ = X_R_sigma;
   backend_params.odometry_translation_sigma_ = X_t_sigma;
 
@@ -520,8 +521,7 @@ TEST(RegularBackendModule, testParallelRGBDBackend) {
       backend_params, dyno_testing::makeDefaultCameraPtr());
 
   for (size_t i = 0; i < 20; i++) {
-    dyno::RGBDInstanceOutputPacket::Ptr output_gt, output_noisy;
-    std::tie(output_gt, output_noisy) = scenario.getOutput(i);
+    auto [output_gt, output_noisy] = scenario.getOutput(i);
 
     backend.spinOnce(output_noisy);
     backend.logGraphs();
@@ -550,43 +550,61 @@ TEST(RegularBackendModule, testObjectCentricFormulations) {
           std::make_unique<dyno_testing::ConstantMotionBodyVisitor>(
               gtsam::Pose3::Identity(),
               // motion only in x
-              gtsam::Pose3(gtsam::Rot3::RzRyRx(0.3, 0.1, 0.0),
-                           gtsam::Point3(0.1, 0.2, 0))));
+              gtsam::Pose3(gtsam::Rot3::RzRyRx(0.3, 0.2, 0.0),
+                           gtsam::Point3(1.4, 3.8, 0))));
   // needs to be at least 3 overlap so we can meet requirements in graph
   // TODO: how can we do 1 point but with lots of overlap (even infinity
   // overlap?)
 
-  const double H_R_sigma = 0.05;
-  const double H_t_sigma = 0.08;
-  const double dynamic_point_sigma = 0.2;
+  const double H_R_sigma = 0.08;
+  const double H_t_sigma = 0.35;
+  const double dynamic_point_sigma = 0.3;
+  const double static_point_sigma = 0.01;
 
   const double X_R_sigma = 0.01;
-  const double X_t_sigma = 0.01;
+  const double X_t_sigma = 0.2;
 
   dyno_testing::RGBDScenario::NoiseParams noise_params;
   noise_params.H_R_sigma = H_R_sigma;
   noise_params.H_t_sigma = H_t_sigma;
-  noise_params.dynamic_point_sigma = dynamic_point_sigma;
+  noise_params.static_point_noise =
+      dyno_testing::RGBDScenario::Point3NoiseParams(static_point_sigma,
+                                                    static_point_sigma);
+  // noise_params.static_point_noise =
+  // dyno_testing::RGBDScenario::NaivePoint3dNoiseParams(static_point_sigma);
+  //   noise_params.dynamic_point_noise =
+  //       dyno_testing::RGBDScenario::Point3NoiseParams(dynamic_point_sigma,
+  //                                                     dynamic_point_sigma);
+  noise_params.dynamic_point_noise =
+      dyno_testing::RGBDScenario::NaivePoint3dNoiseParams(dynamic_point_sigma);
   noise_params.X_R_sigma = X_R_sigma;
   noise_params.X_t_sigma = X_t_sigma;
 
+  dyno_testing::RGBDScenario::Params scenario_params;
+  // scenario_params.dynamic_outlier_ratio = 0.4;
+
   dyno_testing::RGBDScenario scenario(
       camera,
-      std::make_shared<dyno_testing::SimpleStaticPointsGenerator>(22, 7),
-      noise_params);
+      std::make_shared<dyno_testing::OverlappingStaticPointsGenerator>(camera),
+      noise_params, scenario_params);
+
+  // dyno_testing::RGBDScenario scenario(
+  //     camera,
+  //     std::make_shared<dyno_testing::SimpleStaticPointsGenerator>(5, 3),
+  //     noise_params, scenario_params);
 
   // add one obect
-  const size_t num_points = 30;
-  const size_t obj1_overlap = 6;
-  const size_t obj2_overlap = 7;
-  const size_t obj3_overlap = 7;
+  const size_t num_points = 15;
+  const size_t obj1_overlap = 4;
+  const size_t obj2_overlap = 4;
+  const size_t obj3_overlap = 4;
   dyno_testing::ObjectBody::Ptr object1 =
       std::make_shared<dyno_testing::ObjectBody>(
           std::make_unique<dyno_testing::ConstantMotionBodyVisitor>(
               gtsam::Pose3(gtsam::Rot3::Identity(), gtsam::Point3(2, 0, 0)),
               // motion only in x
               gtsam::Pose3(gtsam::Rot3::RzRyRx(0.2, 0.1, 0.0),
-                           gtsam::Point3(0.2, 0, 0))),
+                           gtsam::Point3(4.7, 2.3, 0))),
           std::make_unique<dyno_testing::RandomOverlapObjectPointsVisitor>(
               num_points, obj1_overlap),
           dyno_testing::ObjectBodyParams(0, 16));
@@ -596,7 +614,8 @@ TEST(RegularBackendModule, testObjectCentricFormulations) {
           std::make_unique<dyno_testing::ConstantMotionBodyVisitor>(
               gtsam::Pose3(gtsam::Rot3::Identity(), gtsam::Point3(1, 0.4, 0.1)),
               // motion only in x
-              gtsam::Pose3(gtsam::Rot3::Identity(), gtsam::Point3(0.2, 0, 0))),
+              gtsam::Pose3(gtsam::Rot3::Identity(),
+                           gtsam::Point3(3.2, 1.2, 4.1))),
           std::make_unique<dyno_testing::RandomOverlapObjectPointsVisitor>(
               num_points, obj2_overlap),
           dyno_testing::ObjectBodyParams(0, 15));
@@ -605,10 +624,10 @@ TEST(RegularBackendModule, testObjectCentricFormulations) {
       std::make_shared<dyno_testing::ObjectBody>(
           std::make_unique<dyno_testing::ConstantMotionBodyVisitor>(
               gtsam::Pose3(gtsam::Rot3::RzRyRx(0.3, 0.2, 0.1),
-                           gtsam::Point3(1.1, 0.2, 1.2)),
+                           gtsam::Point3(3.1, 2.2, 5.2)),
               // motion only in x
               gtsam::Pose3(gtsam::Rot3::RzRyRx(0.2, 0.1, 0.0),
-                           gtsam::Point3(0.2, 0.3, 0))),
+                           gtsam::Point3(3.2, 2.3, 6.2))),
           std::make_unique<dyno_testing::RandomOverlapObjectPointsVisitor>(
               num_points, obj3_overlap),
           dyno_testing::ObjectBodyParams(0, 19));
@@ -618,19 +637,34 @@ TEST(RegularBackendModule, testObjectCentricFormulations) {
   scenario.addObjectBody(3, object3);
 
   dyno::BackendParams backend_params;
-  backend_params.use_robust_kernals_ = false;
+  backend_params.use_robust_kernals_ = true;
   backend_params.useLogger(false);
-  backend_params.min_dynamic_obs_ = 1u;
-  backend_params.dynamic_point_noise_sigma_ = dynamic_point_sigma;
-  backend_params.odometry_rotation_sigma_ = X_R_sigma;
-  backend_params.odometry_translation_sigma_ = X_t_sigma;
+  backend_params.min_dynamic_observations = 1u;
+  backend_params.min_static_observations = 0u;
+  backend_params.static_point_noise_sigma = static_point_sigma;
+  backend_params.dynamic_point_noise_sigma = dynamic_point_sigma;
 
   dyno_testing::RGBDBackendTester tester;
+  backend_params.optimization_mode = dyno::RegularOptimizationType::INCREMENTAL;
   //   auto object_centric_backend =
-  //       tester.addTester<dyno_testing::IncrementalTester>(
-  //           std::make_shared<dyno::RegularBackendModule>(
-  //               backend_params, dyno_testing::makeDefaultCameraPtr(),
-  //               dyno::RegularBackendModule::UpdaterType::HYBRID));
+  //   tester.addTester<dyno_testing::BatchTester>(
+  //       std::make_shared<dyno::RegularBackendModule>(
+  //           backend_params, dyno_testing::makeDefaultCameraPtr(),
+  //           dyno::RegularBackendModule::BackendType::HYBRID));
+
+  tester.addTester(std::make_shared<dyno_testing::BatchTester>(
+      std::make_shared<dyno::RegularBackendModule>(
+          backend_params, dyno_testing::makeDefaultCameraPtr(),
+          dyno::BackendType::HYBRID)));
+
+  // tester.addTester(std::make_shared<dyno_testing::ParallelHybridBackendTester>(
+  //      std::make_shared<dyno::ParallelHybridBackendModule>(
+  //         backend_params, dyno_testing::makeDefaultCameraPtr())
+  // ));
+
+  // tester.addTester<dyno_testing::ParallelHybridTester>(
+  //   std::make_shared<dyno::ParallelHybridBackendModule>(
+  //       backend_params, dyno_testing::makeDefaultCameraPtr()));
 
   //   auto oc_noise_models = object_centric_backend->getNoiseModels();
   //   CHECK(!oc_noise_models.initial_pose_prior->isConstrained());
@@ -641,33 +675,71 @@ TEST(RegularBackendModule, testObjectCentricFormulations) {
   //   CHECK(!oc_noise_models.dynamic_point_noise->isConstrained());
   //   CHECK(!oc_noise_models.static_point_noise->isConstrained());
 
-  //   auto world_centric_backend =
-  //       tester.addTester<dyno_testing::IncrementalTester>(
-  //           std::make_shared<dyno::RegularBackendModule>(
-  //               backend_params, dyno_testing::makeDefaultCameraPtr(),
-  //               dyno::RegularBackendModule::UpdaterType::WCME));
+  //   //   auto world_centric_backend =
+  //         tester.addTester<dyno_testing::BatchTester>(
+  //             std::make_shared<dyno::RegularBackendModule>(
+  //                 backend_params, dyno_testing::makeDefaultCameraPtr(),
+  //                 dyno::RegularBackendModule::BackendType::WCME));
 
   //   tester.addTester<IncrementalTester>(std::make_shared<dyno::RegularBackendModule>(
   //       backend_params, dyno_testing::makeDefaultCameraPtr(),
-  //       dyno::RegularBackendModule::UpdaterType::OC_D));
+  //       dyno::RegularBackendModule::BackendType::OC_D));
 
   //   tester.addTester<IncrementalTester>(std::make_shared<dyno::RegularBackendModule>(
   //       backend_params, dyno_testing::makeDefaultCameraPtr(),
-  //       dyno::RegularBackendModule::UpdaterType::OC_S));
+  //       dyno::RegularBackendModule::BackendType::OC_S));
 
-  tester.addTester<dyno_testing::BatchTester>(
-      std::make_shared<dyno::RegularBackendModule>(
-          backend_params, dyno_testing::makeDefaultCameraPtr(),
-          dyno::RegularBackendModule::UpdaterType::HYBRID));
+  //   backend_params.optimization_mode = 2;
+  //   backend_params.constant_object_motion_rotation_sigma_ = 0.4;
+  //   backend_params.constant_object_motion_translation_sigma_ = 0.2;
+  // //   backend_params.updater_suffix = "not_robust";
+  //   backend_params.use_robust_kernals_ = false;
+  //   tester.addTester<dyno_testing::BatchTester>(
+  //       std::make_shared<dyno::RegularBackendModule>(
+  //           backend_params, dyno_testing::makeDefaultCameraPtr(),
+  //           dyno::RegularBackendModule::BackendType::TESTING_HYBRID_SMF));
 
-  auto oc_smf_backend = tester.addTester<dyno_testing::BatchTester>(
-      std::make_shared<dyno::RegularBackendModule>(
-          backend_params, dyno_testing::makeDefaultCameraPtr(),
-          dyno::RegularBackendModule::UpdaterType::TESTING_HYBRID_SMF));
+  //   tester.addTester<dyno_testing::BatchTester>(
+  //       std::make_shared<dyno::RegularBackendModule>(
+  //           backend_params, dyno_testing::makeDefaultCameraPtr(),
+  //           dyno::RegularBackendModule::BackendType::HYBRID));
+
+  //   backend_params.updater_suffix = "static_robust";
+  backend_params.optimization_mode = dyno::RegularOptimizationType::FULL_BATCH;
+  //   backend_params.use_robust_kernals_ = true;
+  //   backend_params.static_point_noise_as_robust = true;
+  //   backend_params.dynamic_point_noise_as_robust = false;
+  //   tester.addTester<dyno_testing::BatchTester>(
+  //       std::make_shared<dyno::RegularBackendModule>(
+  //           backend_params, dyno_testing::makeDefaultCameraPtr(),
+  //           dyno::RegularBackendModule::BackendType::TESTING_HYBRID_SMF));
+
+  //   backend_params.use_vo = false;
+  //   backend_params.optimization_mode = 0;
+  //   backend_params.dynamic_point_noise_as_robust = true;
+  //   tester.addTester<dyno_testing::BatchTester>(
+  //       std::make_shared<dyno::RegularBackendModule>(
+  //           backend_params, dyno_testing::makeDefaultCameraPtr(),
+  //           dyno::RegularBackendModule::BackendType::HYBRID));
+
+  //   backend_params.updater_suffix = "dynamic_not_robust";
+  //   tester.addTester<dyno_testing::BatchTester>(
+  //       std::make_shared<dyno::RegularBackendModule>(
+  //           backend_params, dyno_testing::makeDefaultCameraPtr(),
+  //           dyno::RegularBackendModule::BackendType::HYBRID));
+
+  //     backend_params.updater_suffix = "all_robust";
+  //   backend_params.use_robust_kernals_ = true;
+  //   backend_params.static_point_noise_as_robust = true;
+  //   backend_params.dynamic_point_noise_as_robust = true;
+
+  //    tester.addTester<dyno_testing::BatchTester>(
+  //       std::make_shared<dyno::RegularBackendModule>(
+  //           backend_params, dyno_testing::makeDefaultCameraPtr(),
+  //           dyno::RegularBackendModule::BackendType::HYBRID));
 
   for (size_t i = 0; i < 20; i++) {
-    dyno::RGBDInstanceOutputPacket::Ptr output_gt, output_noisy;
-    std::tie(output_gt, output_noisy) = scenario.getOutput(i);
+    auto [output_gt, output_noisy] = scenario.getOutput(i);
 
     tester.processAll(output_noisy);
   }
@@ -704,7 +776,7 @@ TEST(RegularBackendModule, testObjectCentricFormulations) {
   //     // auto options =
   //     //
   //     dyno::factor_graph_tools::DrawBlockJacobiansOptions::makeDynoSamOptions();
-  //     // options.desired_size = cv::Size(1200, 700);
+  //     // options.desired_size = cv::Size(1200, 700);FrontendDSDRos
   //     //   cv::Mat block_jacobians =
   //     //       nlfgm.drawBlockJacobian(gtsam::Ordering::OrderingType::COLAMD,
   //     //       options);
@@ -757,7 +829,8 @@ TEST(RegularBackendModule, testObjectCentric) {
   dyno_testing::RGBDScenario::NoiseParams noise_params;
   noise_params.H_R_sigma = H_R_sigma;
   noise_params.H_t_sigma = H_t_sigma;
-  noise_params.dynamic_point_sigma = dynamic_point_sigma;
+  noise_params.static_point_noise =
+      dyno_testing::RGBDScenario::NaivePoint3dNoiseParams(dynamic_point_sigma);
 
   dyno_testing::RGBDScenario scenario(
       camera, std::make_shared<dyno_testing::SimpleStaticPointsGenerator>(7, 5),
@@ -791,12 +864,12 @@ TEST(RegularBackendModule, testObjectCentric) {
 
   dyno::BackendParams backend_params;
   backend_params.useLogger(false);
-  backend_params.min_dynamic_obs_ = 3u;
-  backend_params.dynamic_point_noise_sigma_ = dynamic_point_sigma;
+  backend_params.min_dynamic_observations = 3u;
+  backend_params.dynamic_point_noise_sigma = dynamic_point_sigma;
 
-  dyno::RegularBackendModule backend(
-      backend_params, dyno_testing::makeDefaultCameraPtr(),
-      dyno::RegularBackendModule::UpdaterType::TESTING_HYBRID_SD);
+  dyno::RegularBackendModule backend(backend_params,
+                                     dyno_testing::makeDefaultCameraPtr(),
+                                     dyno::BackendType::TESTING_HYBRID_SD);
 
   gtsam::ISAM2Params isam2_params;
   isam2_params.evaluateNonlinearError = true;
@@ -811,7 +884,7 @@ TEST(RegularBackendModule, testObjectCentric) {
   gtsam::Values opt_values;
 
   backend.registerPostFormulationUpdateCallback(
-      [&](const dyno::Formulation<dyno::Map3d2d>::UniquePtr& formulation,
+      [&](const dyno::RegularBackendModule::FormulationType::Ptr& formulation,
           dyno::FrameId frame_id, const gtsam::Values& new_values,
           const gtsam::NonlinearFactorGraph& new_factors) -> void {
         LOG(INFO) << "In backend callback " << frame_id;
@@ -838,7 +911,7 @@ TEST(RegularBackendModule, testObjectCentric) {
           dyno::ObjectId object_id;
           dyno::FrameId k;
           if (dyno::reconstructMotionInfo(key, object_id, k))
-            LOG(INFO) << "New motion key " << dyno::DynoLikeKeyFormatter(key);
+            LOG(INFO) << "New motion key " << dyno::DynosamKeyFormatter(key);
         }
 
         const auto old_keys = isam2.getLinearizationPoint().keys();
@@ -847,7 +920,7 @@ TEST(RegularBackendModule, testObjectCentric) {
           dyno::ObjectId object_id;
           dyno::FrameId k;
           if (dyno::reconstructMotionInfo(key, object_id, k))
-            LOG(INFO) << "Old motion key " << dyno::DynoLikeKeyFormatter(key);
+            LOG(INFO) << "Old motion key " << dyno::DynosamKeyFormatter(key);
         }
 
         // how does IFLS work when smoothing lag is 0??!!! Will the keys not be
@@ -917,7 +990,7 @@ TEST(RegularBackendModule, testObjectCentric) {
             constrained_keys[key] = 0;
           }
 
-          // LOG(INFO) << "Consrained key: " << dyno::DynoLikeKeyFormatter(key)
+          // LOG(INFO) << "Consrained key: " << dyno::DynosamKeyFormatter(key)
           // << " group: " << constrained_keys[key];
         }
 
@@ -933,7 +1006,7 @@ TEST(RegularBackendModule, testObjectCentric) {
         //  }
 
         for (auto key : marginalizableKeys) {
-          LOG(INFO) << "Marginal keys " << dyno::DynoLikeKeyFormatter(key);
+          LOG(INFO) << "Marginal keys " << dyno::DynosamKeyFormatter(key);
         }
 
         // atm we only add leaf ndes to marginalizableKeys so the additional
@@ -950,7 +1023,7 @@ TEST(RegularBackendModule, testObjectCentric) {
         // update_params.extraReelimKeys = additionalMarkedKeys;
 
         // for (const auto& factors : new_factors) {
-        //   factors->printKeys("Factor: ", dyno::DynoLikeKeyFormatter);
+        //   factors->printKeys("Factor: ", dyno::DynosamKeyFormatter);
         // }
 
         gtsam::ISAM2Result result;
@@ -964,7 +1037,7 @@ TEST(RegularBackendModule, testObjectCentric) {
           isam2.getFactorsUnsafe().saveGraph(
               dyno::getOutputFilePath("isam_graph_" + std::to_string(frame_id) +
                                       ".dot"),
-              dyno::DynoLikeKeyFormatter);
+              dyno::DynosamKeyFormatter);
 
           //   if (marginalizableKeys.size() > 0) {
           //       gtsam::FastList<gtsam::Key>
@@ -985,7 +1058,7 @@ TEST(RegularBackendModule, testObjectCentric) {
                                       std::to_string(frame_id) + ".dot"));
         } catch (gtsam::ValuesKeyDoesNotExist& e) {
           LOG(INFO) << "Caught exception ValuesKeyDoesNotExist:"
-                    << dyno::DynoLikeKeyFormatter(e.key());
+                    << dyno::DynosamKeyFormatter(e.key());
           throw e;
         }
 
@@ -1004,20 +1077,20 @@ TEST(RegularBackendModule, testObjectCentric) {
         //     dyno::getOutputFilePath("oc_bayes_tree_" +
         //     std::to_string(frame_id) +
         //                             ".dot"),
-        //     dyno::DynoLikeKeyFormatter,
+        //     dyno::DynosamKeyFormatter,
         //     coloured_affected_keys);
 
         dyno::factor_graph_tools::saveBayesTree(
             isam2,
             dyno::getOutputFilePath("oc_bayes_tree_" +
                                     std::to_string(frame_id) + ".dot"),
-            dyno::DynoLikeKeyFormatter, coloured_affected_keys);
+            dyno::DynosamKeyFormatter, coloured_affected_keys);
         //  dyno::factor_graph_tools::saveBayesTree(
         //     isam.bayesTree(),
         //     dyno::getOutputFilePath("oc_bayes_tree_" +
         //     std::to_string(frame_id) +
         //                             ".dot"),
-        //     dyno::DynoLikeKeyFormatter,
+        //     dyno::DynosamKeyFormatter,
         //     coloured_affected_keys);
 
         LOG(INFO) << "ISAM2 result. Error before " << result.getErrorBefore()
@@ -1034,8 +1107,7 @@ TEST(RegularBackendModule, testObjectCentric) {
       });
 
   for (size_t i = 0; i < 15; i++) {
-    dyno::RGBDInstanceOutputPacket::Ptr output_gt, output_noisy;
-    std::tie(output_gt, output_noisy) = scenario.getOutput(i);
+    auto [output_gt, output_noisy] = scenario.getOutput(i);
 
     // std::stringstream ss;
     // ss << output_gt->T_world_camera_ << "\n";
@@ -1051,7 +1123,7 @@ TEST(RegularBackendModule, testObjectCentric) {
   gtsam::Values initial_estimate = backend.formulation()->getTheta();
   full_graph.saveGraph(
       dyno::getOutputFilePath("construct_simple_graph_test.dot"),
-      dyno::DynoLikeKeyFormatter);
+      dyno::DynosamKeyFormatter);
 
   // log results of LM optimisation with different suffix
   dyno::BackendMetaData backend_info;
@@ -1236,10 +1308,10 @@ TEST(RegularBackendModule, testCliques) {
   initial.insert(CameraPoseSymbol(2), pose2);
 
   dyno::NonlinearFactorGraphManager nlfgm(graph, initial);
-  nlfgm.writeDynosamGraphFile(dyno::getOutputFilePath("test_graph.g2o"));
+  //   nlfgm.writeDynosamGraphFile(dyno::getOutputFilePath("test_graph.g2o"));
 
   // graph.saveGraph(dyno::getOutputFilePath("small_graph.dot"),
-  // dyno::DynoLikeKeyFormatter);
+  // dyno::DynosamKeyFormatter);
   gtsam::ISAM2BayesTree::shared_ptr bayesTree = nullptr;
   {  //
     // gtsam::ISAM2 isam2;
@@ -1254,7 +1326,7 @@ TEST(RegularBackendModule, testCliques) {
                     .first;
 
     bayesTree->saveGraph(dyno::getOutputFilePath("elimated_tree.dot"),
-                         dyno::DynoLikeKeyFormatter);
+                         dyno::DynosamKeyFormatter);
   }
 
   // {
@@ -1288,7 +1360,7 @@ TEST(RegularBackendModule, testCliques) {
   // }
 
   // isam2.saveGraph(dyno::getOutputFilePath("small_tree_original.dot"),
-  // dyno::DynoLikeKeyFormatter);
+  // dyno::DynosamKeyFormatter);
 
   // add new factors to  motion
   // the simplest dynamic graph
@@ -1361,13 +1433,13 @@ TEST(RegularBackendModule, testCliques) {
                     .first;
 
     bayesTree->saveGraph(dyno::getOutputFilePath("elimated_tree_1.dot"),
-                         dyno::DynoLikeKeyFormatter);
+                         dyno::DynosamKeyFormatter);
   }
 
   // gtsam::NonlinearFactorGraph all = graph;
   // all.add_factors(new_graph);
   // all.saveGraph(dyno::getOutputFilePath("small_graph_updated.dot"),
-  // dyno::DynoLikeKeyFormatter);
+  // dyno::DynosamKeyFormatter);
 
   //  {
 
@@ -1394,7 +1466,7 @@ TEST(RegularBackendModule, testCliques) {
   // }
 
   // isam2.saveGraph(dyno::getOutputFilePath("small_tree_updated.dot"),
-  // dyno::DynoLikeKeyFormatter);
+  // dyno::DynosamKeyFormatter);
 }
 
 TEST(RegularBackendModule, writeOutSimpleGraph) {
@@ -1571,7 +1643,7 @@ TEST(RegularBackendModule, writeOutSimpleGraph) {
   // nlfgm.writeDynosamGraphFile(dyno::getOutputFilePath("test_graph.g2o"));
 
   graph.saveGraph(dyno::getOutputFilePath("simple_dynamic_graph.dot"),
-                  dyno::DynoLikeKeyFormatter);
+                  dyno::DynosamKeyFormatter);
   gtsam::GaussianFactorGraph::shared_ptr linearised_graph = nlfgm.linearize();
   gtsam::JacobianFactor jacobian_factor(*linearised_graph);
   gtsam::Matrix information = jacobian_factor.information();

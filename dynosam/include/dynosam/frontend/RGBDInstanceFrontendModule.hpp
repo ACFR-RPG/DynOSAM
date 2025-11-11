@@ -32,21 +32,19 @@
 
 #include <gtsam/navigation/NavState.h>
 
-#include "dynosam/common/Camera.hpp"
 #include "dynosam/frontend/FrontendModule.hpp"
 #include "dynosam/frontend/RGBDInstance-Definitions.hpp"
 #include "dynosam/frontend/imu/ImuFrontend.hpp"
 #include "dynosam/frontend/vision/FeatureTracker.hpp"
 #include "dynosam/frontend/vision/MotionSolver.hpp"
-#include "dynosam/frontend/vision/ObjectTracker.hpp"
 #include "dynosam/frontend/vision/VisionTools.hpp"
+#include "dynosam_cv/Camera.hpp"
 
 namespace dyno {
 
 class RGBDInstanceFrontendModule : public FrontendModule {
  public:
-  RGBDInstanceFrontendModule(const FrontendParams& frontend_params,
-                             Camera::Ptr camera,
+  RGBDInstanceFrontendModule(const DynoParams& params, Camera::Ptr camera,
                              ImageDisplayQueue* display_queue);
   ~RGBDInstanceFrontendModule();
 
@@ -55,7 +53,6 @@ class RGBDInstanceFrontendModule : public FrontendModule {
  private:
   Camera::Ptr camera_;
   EgoMotionSolver motion_solver_;
-  //   ObjectMotionSovlerF2F object_motion_solver_;
   ObjectMotionSolver::UniquePtr object_motion_solver_;
   FeatureTracker::UniquePtr tracker_;
   RGBDFrontendLogger::UniquePtr logger_;
@@ -84,12 +81,14 @@ class RGBDInstanceFrontendModule : public FrontendModule {
   bool solveCameraMotion(Frame::Ptr frame_k, const Frame::Ptr& frame_k_1,
                          std::optional<gtsam::Rot3> R_curr_ref = {});
 
-  RGBDInstanceOutputPacket::Ptr constructOutput(
-      const Frame& frame, const ObjectMotionMap& object_motions,
-      const ObjectPoseMap& object_poses, const gtsam::Pose3& T_world_camera,
-      const GroundTruthInputPacket::Optional& gt_packet = std::nullopt,
-      const DebugImagery::Optional& debug_imagery = std::nullopt,
-      const PointCloudLabelRGB::Ptr dense_labelled_cloud = nullptr);
+  void fillOutputPacketWithTracks(VisionImuPacket::Ptr vision_imu_packet,
+                                  const Frame& frame,
+                                  const gtsam::Pose3& T_k_1_k,
+                                  const ObjectMotionMap& object_motions,
+                                  const ObjectPoseMap& object_poses) const;
+
+  void sendToFrontendLogger(const Frame::Ptr& frame,
+                            const VisionImuPacket::Ptr& vision_imu_packet);
 
   cv::Mat createTrackingImage(const Frame::Ptr& frame_k,
                               const Frame::Ptr& frame_k_1,
@@ -97,7 +96,7 @@ class RGBDInstanceFrontendModule : public FrontendModule {
 
   // used when we want to seralize the output to json via the
   // FLAGS_save_frontend_json flag
-  std::map<FrameId, RGBDInstanceOutputPacket::Ptr> output_packet_record_;
+  //   std::map<FrameId, RGBDInstanceOutputPacket::Ptr> output_packet_record_;
 
   ImuFrontend imu_frontend_;
   gtsam::NavState nav_state_;

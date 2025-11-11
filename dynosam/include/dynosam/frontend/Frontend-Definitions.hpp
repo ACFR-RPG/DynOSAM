@@ -30,10 +30,11 @@
 
 #pragma once
 
+#include <nlohmann/json.hpp>
 #include <opencv4/opencv2/core.hpp>
 
-#include "dynosam/common/ImageContainer.hpp"
-#include "dynosam/common/Types.hpp"
+#include "dynosam_common/Types.hpp"
+#include "dynosam_cv/ImageContainer.hpp"
 
 namespace dyno {
 
@@ -93,7 +94,6 @@ struct DebugImagery {
   DYNO_POINTER_TYPEDEFS(DebugImagery)
 
   // TODO: make const!!
-  cv::Mat detected_bounding_boxes;
   cv::Mat tracking_image;
   // TODO: for now!
   cv::Mat rgb_viz;
@@ -101,5 +101,30 @@ struct DebugImagery {
   cv::Mat depth_viz;
   cv::Mat mask_viz;
 };
+
+using json = nlohmann::json;
+
+// map KeyPointType values to JSON as strings
+NLOHMANN_JSON_SERIALIZE_ENUM(KeyPointType, {
+                                               {STATIC, "static"},
+                                               {DYNAMIC, "dynamic"},
+                                           })
+
+// map ReferenceFrame values to JSON as strings
+NLOHMANN_JSON_SERIALIZE_ENUM(ReferenceFrame, {
+                                                 {GLOBAL, "global"},
+                                                 {LOCAL, "local"},
+                                                 {OBJECT, "object"},
+                                             })
+
+NLOHMANN_JSON_SERIALIZE_ENUM(FrontendType, {
+                                               {kRGBD, "RGB"},
+                                               {kMono, "Mono"},
+                                           })
+
+NLOHMANN_JSON_SERIALIZE_ENUM(MotionRepresentationStyle, {
+                                                            {F2F, "F2F"},
+                                                            {KF, "KF"},
+                                                        })
 
 }  // namespace dyno

@@ -28,18 +28,19 @@
  *   SOFTWARE.
  */
 
-#include <dynosam/utils/JsonUtils.hpp>
 #include <filesystem>
 #include <nlohmann/json.hpp>  //for gt packet seralize tests
 
-#include "dynosam/common/Exceptions.hpp"
-#include "dynosam/common/GroundTruthPacket.hpp"
 #include "dynosam/frontend/FrontendInputPacket.hpp"
-#include "dynosam/frontend/vision/Feature.hpp"
-#include "dynosam/logger/Logger.hpp"
-#include "dynosam/utils/Statistics.hpp"
-#include "dynosam/utils/Variant.hpp"
+#include "dynosam_common/Exceptions.hpp"
+#include "dynosam_common/GroundTruthPacket.hpp"
+#include "dynosam_common/logger/Logger.hpp"
+#include "dynosam_common/utils/JsonUtils.hpp"
+#include "dynosam_common/utils/Statistics.hpp"
+#include "dynosam_common/utils/Variant.hpp"
+#include "dynosam_cv/Feature.hpp"
 #include "internal/helpers.hpp"
+#include "internal/simulator.hpp"
 
 using namespace dyno;
 
@@ -379,148 +380,6 @@ TEST(BitwiseFlags, testAssignmentOperator) {
   EXPECT_TRUE(flags == (TestOptions::A | TestOptions::B));
 }
 
-TEST(ImageContainerSubset, testBasicSubsetContainer) {
-  cv::Mat depth(cv::Size(25, 25), CV_64F);
-  uchar* depth_ptr = depth.data;
-
-  cv::Mat optical_flow(cv::Size(25, 25), CV_32FC2);
-  uchar* optical_flow_ptr = optical_flow.data;
-  ImageContainerSubset<ImageType::Depth, ImageType::OpticalFlow> ics{
-      ImageWrapper<ImageType::Depth>(depth),
-      ImageWrapper<ImageType::OpticalFlow>(optical_flow)};
-
-  cv::Mat retrieved_depth = ics.get<ImageType::Depth>();
-  cv::Mat retrieved_of = ics.get<ImageType::OpticalFlow>();
-
-  EXPECT_EQ(retrieved_depth.data, depth_ptr);
-  EXPECT_EQ(retrieved_of.data, optical_flow_ptr);
-
-  EXPECT_EQ(depth.size(), retrieved_depth.size());
-  EXPECT_EQ(optical_flow.size(), retrieved_of.size());
-}
-
-TEST(ImageContainerSubset, testSubsetContainerExists) {
-  cv::Mat depth(cv::Size(25, 25), CV_64F);
-  cv::Mat optical_flow(cv::Size(25, 25), CV_32FC2);
-  ImageContainerSubset<ImageType::Depth, ImageType::OpticalFlow,
-                       ImageType::RGBMono>
-      ics{ImageWrapper<ImageType::Depth>(depth),
-          ImageWrapper<ImageType::OpticalFlow>(optical_flow),
-          ImageWrapper<ImageType::RGBMono>()};
-
-  EXPECT_TRUE(ics.exists<ImageType::Depth>());
-  EXPECT_TRUE(ics.exists<ImageType::OpticalFlow>());
-
-  EXPECT_FALSE(ics.exists<ImageType::RGBMono>());
-}
-
-TEST(ImageContainerSubset, testBasicMakeSubset) {
-  cv::Mat depth(cv::Size(50, 50), CV_64F);
-  cv::Mat optical_flow(cv::Size(50, 50), CV_32FC2);
-  uchar* optical_flow_ptr = optical_flow.data;
-  ImageContainerSubset<ImageType::Depth, ImageType::OpticalFlow> ics{
-      ImageWrapper<ImageType::Depth>(depth),
-      ImageWrapper<ImageType::OpticalFlow>(optical_flow)};
-
-  EXPECT_EQ(ics.index<ImageType::OpticalFlow>(), 1u);
-
-  ImageContainerSubset<ImageType::OpticalFlow> subset =
-      ics.makeSubset<ImageType::OpticalFlow>();
-  EXPECT_EQ(subset.index<ImageType::OpticalFlow>(), 0u);
-
-  cv::Mat retrieved_of = ics.get<ImageType::OpticalFlow>();
-  cv::Mat subset_retrieved_of = subset.get<ImageType::OpticalFlow>();
-
-  EXPECT_EQ(retrieved_of.data, optical_flow_ptr);
-  EXPECT_EQ(subset_retrieved_of.data, optical_flow_ptr);
-}
-
-TEST(ImageContainerSubset, testSafeGet) {
-  cv::Mat depth(cv::Size(25, 25), CV_64F);
-  cv::Mat optical_flow(cv::Size(25, 25), CV_32FC2);
-  ImageContainerSubset<ImageType::Depth, ImageType::OpticalFlow,
-                       ImageType::RGBMono>
-      ics{ImageWrapper<ImageType::Depth>(depth),
-          ImageWrapper<ImageType::OpticalFlow>(optical_flow),
-          ImageWrapper<ImageType::RGBMono>()};
-
-  cv::Mat tmp;
-  EXPECT_FALSE(ics.safeGet<ImageType::RGBMono>(tmp));
-
-  // tmp shoudl now be the same as the depth ptr
-  EXPECT_TRUE(ics.safeGet<ImageType::Depth>(tmp));
-  EXPECT_EQ(depth.data, tmp.data);
-  EXPECT_EQ(depth.size(), tmp.size());
-
-  // tmp shoudl now be the same as the optical flow ptr
-  EXPECT_TRUE(ics.safeGet<ImageType::OpticalFlow>(tmp));
-  EXPECT_EQ(optical_flow.data, tmp.data);
-  EXPECT_EQ(optical_flow.size(), tmp.size());
-}
-
-TEST(ImageContainerSubset, testSafeClone) {
-  cv::Mat depth(cv::Size(50, 50), CV_64F);
-  cv::Mat optical_flow(cv::Size(50, 50), CV_32FC2);
-  ImageContainerSubset<ImageType::Depth, ImageType::OpticalFlow,
-                       ImageType::RGBMono>
-      ics{ImageWrapper<ImageType::Depth>(depth),
-          ImageWrapper<ImageType::OpticalFlow>(optical_flow),
-          ImageWrapper<ImageType::RGBMono>()};
-
-  cv::Mat tmp;
-  EXPECT_FALSE(ics.cloneImage<ImageType::RGBMono>(tmp));
-  EXPECT_TRUE(tmp.empty());
-
-  EXPECT_TRUE(ics.cloneImage<ImageType::Depth>(tmp));
-  EXPECT_NE(depth.data, tmp.data);  // no longer the same data
-  EXPECT_EQ(depth.size(), tmp.size());
-
-  EXPECT_TRUE(ics.cloneImage<ImageType::OpticalFlow>(tmp));
-  EXPECT_NE(optical_flow.data, tmp.data);  // no longer the same data
-  EXPECT_EQ(optical_flow.size(), tmp.size());
-}
-
-TEST(ImageContainerDeprecate, testImageContainerIndexing) {
-  EXPECT_EQ(ImageContainerDeprecate::Index<ImageType::RGBMono>(), 0u);
-  EXPECT_EQ(ImageContainerDeprecate::Index<ImageType::Depth>(), 1u);
-  EXPECT_EQ(ImageContainerDeprecate::Index<ImageType::OpticalFlow>(), 2u);
-  EXPECT_EQ(ImageContainerDeprecate::Index<ImageType::SemanticMask>(), 3u);
-  EXPECT_EQ(ImageContainerDeprecate::Index<ImageType::MotionMask>(), 4u);
-}
-
-TEST(ImageContainerDeprecate, CreateRGBDSemantic) {
-  cv::Mat rgb(cv::Size(50, 50), CV_8UC1);
-  cv::Mat depth(cv::Size(50, 50), CV_64F);
-  cv::Mat optical_flow(cv::Size(50, 50), CV_32FC2);
-  cv::Mat semantic_mask(cv::Size(50, 50), CV_32SC1);
-  ImageContainerDeprecate::Ptr rgbd_semantic = ImageContainerDeprecate::Create(
-      0u, 0u, ImageWrapper<ImageType::RGBMono>(rgb),
-      ImageWrapper<ImageType::Depth>(depth),
-      ImageWrapper<ImageType::OpticalFlow>(optical_flow),
-      ImageWrapper<ImageType::SemanticMask>(semantic_mask));
-
-  EXPECT_TRUE(rgbd_semantic->hasSemanticMask());
-  EXPECT_TRUE(rgbd_semantic->hasDepth());
-  EXPECT_FALSE(rgbd_semantic->hasMotionMask());
-  EXPECT_FALSE(rgbd_semantic->isMonocular());
-}
-
-TEST(ImageContainerDeprecate, CreateRGBDSemanticWithInvalidSizes) {
-  cv::Mat rgb(cv::Size(25, 25), CV_8UC1);
-  cv::Mat depth(cv::Size(50, 50), CV_64F);
-  cv::Mat optical_flow(cv::Size(50, 50), CV_32FC2);
-  cv::Mat semantic_mask(cv::Size(50, 50), CV_32SC1);
-  EXPECT_THROW(
-      {
-        ImageContainerDeprecate::Create(
-            0u, 0u, ImageWrapper<ImageType::RGBMono>(rgb),
-            ImageWrapper<ImageType::Depth>(depth),
-            ImageWrapper<ImageType::OpticalFlow>(optical_flow),
-            ImageWrapper<ImageType::SemanticMask>(semantic_mask));
-      },
-      ImageContainerConstructionException);
-}
-
 TEST(FeatureContainer, basicAdd) {
   FeatureContainer fc;
   EXPECT_EQ(fc.size(), 0u);
@@ -528,15 +387,67 @@ TEST(FeatureContainer, basicAdd) {
 
   Feature f;
   f.trackletId(1);
+  f.objectId(0);
 
   fc.add(f);
   EXPECT_EQ(fc.size(), 1u);
   EXPECT_TRUE(fc.exists(1));
 
+  auto tracklets = fc.getByObject(0);
+  EXPECT_EQ(tracklets.size(), 1);
+  EXPECT_EQ(tracklets.at(0), 1);
+
   // this implicitly tests map access
   auto fr = fc.getByTrackletId(1);
   EXPECT_TRUE(fr != nullptr);
   EXPECT_EQ(*fr, f);
+}
+
+TEST(FeatureContainer, basicAddMultipleObjects) {
+  FeatureContainer fc;
+
+  {
+    Feature f;
+    f.trackletId(1);
+    f.objectId(1);
+    fc.add(f);
+  }
+
+  {
+    Feature f;
+    f.trackletId(2);
+    f.objectId(1);
+    fc.add(f);
+  }
+
+  {
+    Feature f;
+    f.trackletId(3);
+    f.objectId(1);
+    fc.add(f);
+  }
+
+  {
+    Feature f;
+    f.trackletId(4);
+    f.objectId(2);
+    fc.add(f);
+  }
+
+  EXPECT_EQ(fc.size(), 4u);
+  EXPECT_TRUE(fc.exists(1));
+
+  {
+    auto tracklets = fc.getByObject(1);
+    EXPECT_THAT(tracklets,
+                ::testing::UnorderedElementsAreArray(TrackletIds{1, 2, 3}));
+  }
+
+  {
+    auto tracklets = fc.getByObject(2);
+    EXPECT_THAT(tracklets,
+                ::testing::UnorderedElementsAreArray(TrackletIds{4}));
+  }
 }
 
 TEST(FeatureContainer, basicRemove) {
@@ -545,12 +456,19 @@ TEST(FeatureContainer, basicRemove) {
 
   Feature f;
   f.trackletId(1);
+  f.objectId(1);
 
   fc.add(f);
   EXPECT_EQ(fc.size(), 1u);
+  EXPECT_EQ(fc.size(1), 1);
+  EXPECT_EQ(fc.size(2), 0);
+  EXPECT_EQ(fc.getByObject(1).size(), 1);
 
   fc.remove(1);
   EXPECT_FALSE(fc.exists(1));
+  EXPECT_EQ(fc.size(1), 0);
+  EXPECT_EQ(fc.size(2), 0);
+  EXPECT_EQ(fc.getByObject(1).size(), 0);
 
   auto fr = fc.getByTrackletId(1);
   EXPECT_TRUE(fr == nullptr);
@@ -605,12 +523,28 @@ TEST(FeatureContainer, testusableIterator) {
   fc.markOutliers({3});
   fc.markOutliers({4});
 
+  fc.getByTrackletId(1)->markOutlier();
+
   {
     auto usable_iterator = fc.beginUsable();
-    EXPECT_EQ(std::distance(usable_iterator.begin(), usable_iterator.end()), 8);
+    EXPECT_EQ(std::distance(usable_iterator.begin(), usable_iterator.end()), 7);
 
-    for (const auto& i : usable_iterator) {
-      EXPECT_TRUE(i->trackletId() != 3 || i->trackletId() != 4);
+    for (const auto& f : fc) {
+      if (f->trackletId() == 3 || f->trackletId() == 4 ||
+          f->trackletId() == 1) {
+        EXPECT_FALSE(f->usable());
+        EXPECT_FALSE(f->inlier());
+      } else {
+        EXPECT_TRUE(f->inlier());
+        EXPECT_TRUE(f->usable());
+      }
+    }
+
+    for (const auto& f : usable_iterator.begin()) {
+      EXPECT_TRUE(f->trackletId() == 0 || f->trackletId() == 2 ||
+                  f->trackletId() == 5 || f->trackletId() == 6 ||
+                  f->trackletId() == 7 || f->trackletId() == 8 ||
+                  f->trackletId() == 9);
     }
   }
 }
@@ -755,7 +689,8 @@ TEST(SensorTypes, MeasurementWithCovarianceConstructionMeasurementAndSigmas) {
   Landmark lmk(10, 12.4, 0.001);
   gtsam::Vector3 sigmas;
   sigmas << 0.1, 0.2, 0.3;
-  MeasurementWithCovariance<Landmark> measurement(lmk, sigmas);
+  MeasurementWithCovariance<Landmark> measurement =
+      MeasurementWithCovariance<Landmark>::FromSigmas(lmk, sigmas);
   EXPECT_TRUE(measurement.hasModel());
   EXPECT_EQ(measurement.measurement(), lmk);
 
@@ -825,7 +760,8 @@ TEST(JsonIO, MeasurementWithCov) {
   Landmark lmk(10, 12.4, 0.001);
   gtsam::Vector3 sigmas;
   sigmas << 0.1, 0.2, 0.3;
-  MeasurementWithCovariance<Landmark> measurement(lmk, sigmas);
+  MeasurementWithCovariance<Landmark> measurement =
+      MeasurementWithCovariance<Landmark>::FromSigmas(lmk, sigmas);
 
   json j = measurement;
   auto measurements_load =
@@ -872,7 +808,7 @@ TEST(JsonIO, TrackedValueStatusKps) {
 TEST(JsonIO, RGBDInstanceOutputPacket) {
   auto scenario = dyno_testing::makeDefaultScenario();
 
-  std::map<FrameId, RGBDInstanceOutputPacket> rgbd_output;
+  std::map<FrameId, VisionImuPacket> rgbd_output;
 
   for (size_t i = 0; i < 10; i++) {
     auto output = scenario.getOutput(i);
@@ -881,8 +817,8 @@ TEST(JsonIO, RGBDInstanceOutputPacket) {
 
   using json = nlohmann::json;
   json j = rgbd_output;
-  std::map<FrameId, RGBDInstanceOutputPacket> rgbd_output_loaded =
-      j.template get<std::map<FrameId, RGBDInstanceOutputPacket>>();
+  std::map<FrameId, VisionImuPacket> rgbd_output_loaded =
+      j.template get<std::map<FrameId, VisionImuPacket>>();
   EXPECT_EQ(rgbd_output_loaded, rgbd_output);
 }
 

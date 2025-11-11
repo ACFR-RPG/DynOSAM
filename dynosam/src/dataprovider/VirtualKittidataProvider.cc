@@ -80,10 +80,10 @@ class VirtualKittiRGBDataFolder : public GenericVirtualKittiImageLoader {
     std::stringstream ss;
     ss << std::setfill('0') << std::setw(5) << idx;
     const std::string file_path = full_path_ + "/rgb_" + ss.str() + ".jpg";
-    throwExceptionIfPathInvalid(file_path);
+    utils::throwExceptionIfPathInvalid(file_path);
 
     cv::Mat rgb;
-    loadRGB(file_path, rgb);
+    utils::loadRGB(file_path, rgb);
 
     return rgb;
   }
@@ -103,7 +103,7 @@ class VirtualKittiFlowDataFolder : public GenericVirtualKittiImageLoader {
     const std::string file_path = full_path_ + "/flow_" + ss.str() + ".png";
     // const std::string file_path = full_path_  + "/backwardFlow_" + ss.str() +
     // ".png"; //specific to backwards flow
-    throwExceptionIfPathInvalid(file_path);
+    utils::throwExceptionIfPathInvalid(file_path);
     return vKittiPngToFlow(file_path);
   }
 
@@ -117,7 +117,7 @@ class VirtualKittiFlowDataFolder : public GenericVirtualKittiImageLoader {
     // cv::Mat bgr = cv::imread(path, cv::IMREAD_ANYCOLOR |
     // cv::IMREAD_ANYDEPTH);
     cv::Mat bgr;
-    loadRGB(path, bgr);
+    utils::loadRGB(path, bgr);
 
     CHECK(!bgr.empty());
 
@@ -173,12 +173,12 @@ class VirtualKittiDepthDataFolder : public GenericVirtualKittiImageLoader {
     std::stringstream ss;
     ss << std::setfill('0') << std::setw(5) << idx;
     const std::string file_path = full_path_ + "/depth_" + ss.str() + ".png";
-    throwExceptionIfPathInvalid(file_path);
+    utils::throwExceptionIfPathInvalid(file_path);
 
     // TODO: for now? When to apply preprocessing?
     cv::Mat depth;
-    loadRGB(file_path, depth);
-    // first convert to double as loadRGB provides 16UC1
+    utils::loadRGB(file_path, depth);
+    // first convert to double as utils::loadRGB provides 16UC1
     depth.convertTo(depth, CV_64F);
     // apply depth factor to get information into meters (from cm)
     depth /= 100.0;
@@ -225,12 +225,12 @@ class VirtualKittiTextGtLoader {
         info_path(file_path + "/info.txt"),
         intrinsic_path(file_path + "/intrinsic.txt"),
         pose_path(file_path + "/pose.txt") {
-    throwExceptionIfPathInvalid(bbox_path);
-    throwExceptionIfPathInvalid(colors_path);
-    throwExceptionIfPathInvalid(extrinsic_path);
-    throwExceptionIfPathInvalid(info_path);
-    throwExceptionIfPathInvalid(intrinsic_path);
-    throwExceptionIfPathInvalid(pose_path);
+    utils::throwExceptionIfPathInvalid(bbox_path);
+    utils::throwExceptionIfPathInvalid(colors_path);
+    utils::throwExceptionIfPathInvalid(extrinsic_path);
+    utils::throwExceptionIfPathInvalid(info_path);
+    utils::throwExceptionIfPathInvalid(intrinsic_path);
+    utils::throwExceptionIfPathInvalid(pose_path);
 
     loadBBoxMetaData(bbox_data_);
     loadPoseTxt(object_poses_, bbox_data_);
@@ -354,7 +354,7 @@ class VirtualKittiTextGtLoader {
     bool is_first = true;  // to access header
     while (!fstream.eof()) {
       std::vector<std::string> split_line;
-      if (!getLine(fstream, split_line)) continue;
+      if (!utils::getLine(fstream, split_line)) continue;
 
       CHECK_EQ(split_line.size(), header_map.size())
           << "Header map and the line present in the bbox.txt file do not have "
@@ -447,7 +447,7 @@ class VirtualKittiTextGtLoader {
     bool is_first = true;  // to access header
     while (!fstream.eof()) {
       std::vector<std::string> split_line;
-      if (!getLine(fstream, split_line)) continue;
+      if (!utils::getLine(fstream, split_line)) continue;
 
       CHECK_EQ(split_line.size(), header_map.size())
           << "Header map and the line present in the pose.txt file do not have "
@@ -583,7 +583,7 @@ class VirtualKittiTextGtLoader {
 
     while (!fstream.eof()) {
       std::vector<std::string> split_line;
-      if (!getLine(fstream, split_line)) continue;
+      if (!utils::getLine(fstream, split_line)) continue;
 
       // frame camera_id, 3x4 camera pose (r11, r12, r13, t1....)
       // header: frame cameraID r1,1 r1,2 r1,3 t1 r2,1 r2,2 r2,3 t2 r3,1 r3,2
@@ -730,7 +730,7 @@ class VirtualKittiGenericInstanceSegFolder
     ss << std::setfill('0') << std::setw(5) << idx;
     const std::string file_path =
         full_path_ + "/instancegt_" + ss.str() + ".png";
-    throwExceptionIfPathInvalid(file_path);
+    utils::throwExceptionIfPathInvalid(file_path);
 
     const GroundTruthInputPacket& gt_packet = gt_loader_->getGTPacket(idx);
     return loadImage(file_path, idx, gt_packet);
@@ -809,7 +809,7 @@ class VirtualKittiClassSegmentationDataFolder
     std::stringstream ss;
     ss << std::setfill('0') << std::setw(5) << idx;
     const std::string file_path = full_path_ + "/classgt_" + ss.str() + ".png";
-    throwExceptionIfPathInvalid(file_path);
+    utils::throwExceptionIfPathInvalid(file_path);
     return loadClassSegmentation(file_path);
   }
 
@@ -915,13 +915,13 @@ VirtualKittiDataLoader::VirtualKittiDataLoader(const fs::path& dataset_path,
   const std::string text_gt_folder =
       path + "/" + v_text_gt_folder + "/" + scene + "/" + scene_type;
 
-  throwExceptionIfPathInvalid(depth_folder);
-  throwExceptionIfPathInvalid(forward_flow_folder);
-  throwExceptionIfPathInvalid(forward_scene_flow_folder);
-  throwExceptionIfPathInvalid(class_semantics_folder);
-  throwExceptionIfPathInvalid(instance_segmentation_folder);
-  throwExceptionIfPathInvalid(rgb_folder);
-  throwExceptionIfPathInvalid(text_gt_folder);
+  utils::throwExceptionIfPathInvalid(depth_folder);
+  utils::throwExceptionIfPathInvalid(forward_flow_folder);
+  utils::throwExceptionIfPathInvalid(forward_scene_flow_folder);
+  utils::throwExceptionIfPathInvalid(class_semantics_folder);
+  utils::throwExceptionIfPathInvalid(instance_segmentation_folder);
+  utils::throwExceptionIfPathInvalid(rgb_folder);
+  utils::throwExceptionIfPathInvalid(text_gt_folder);
 
   auto gt_loader = std::make_shared<VirtualKittiTextGtLoader>(text_gt_folder);
 

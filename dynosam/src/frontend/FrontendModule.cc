@@ -32,13 +32,13 @@
 
 #include <glog/logging.h>
 
-#include "dynosam/logger/Logger.hpp"
+#include "dynosam_common/logger/Logger.hpp"
 
 namespace dyno {
 
-FrontendModule::FrontendModule(const FrontendParams& params,
+FrontendModule::FrontendModule(const DynoParams& params,
                                ImageDisplayQueue* display_queue)
-    : Base("frontend"), base_params_(params), display_queue_(display_queue) {
+    : Base("frontend"), params_(params), display_queue_(display_queue) {
   // create callback to update gt_packet_map_ values so the derived classes dont
   // need to manage this
   registerInputCallback([=](FrontendInputPacketBase::ConstPtr input) {
@@ -52,14 +52,7 @@ FrontendModule::FrontendModule(const FrontendParams& params,
   });
 }
 
-FrontendModule::~FrontendModule() {
-  VLOG(5) << "Destructing frontend module";
-
-  // if(!gt_packet_map_.empty()) {
-  //     //OfstreamWrapper will ensure this goes to the FLAGS_output_path
-  //     OfstreamWrapper::WriteOutJson(gt_packet_map_, "ground_truths.json");
-  // }
-}
+FrontendModule::~FrontendModule() { VLOG(5) << "Destructing frontend module"; }
 
 void FrontendModule::validateInput(
     const FrontendInputPacketBase::ConstPtr& input) const {

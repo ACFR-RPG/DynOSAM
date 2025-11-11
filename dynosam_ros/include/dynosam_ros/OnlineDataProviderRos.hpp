@@ -31,12 +31,12 @@
 #pragma once
 
 #include "dynosam_ros/DataProviderRos.hpp"
-#include "message_filters/subscriber.h"
-#include "message_filters/sync_policies/exact_time.h"
-#include "message_filters/synchronizer.h"
+#include "dynosam_ros/MultiSync.hpp"
+#include "dynosam_ros/adaptors/ImuMeasurementAdaptor.hpp"
 #include "rclcpp/node.hpp"
 #include "rclcpp/node_options.hpp"
 #include "sensor_msgs/msg/image.hpp"
+#include "sensor_msgs/msg/imu.hpp"
 
 namespace dyno {
 
@@ -97,25 +97,18 @@ class OnlineDataProviderRos : public DataProviderRos {
   void connect();
 
  private:
-  using SyncPolicy = message_filters::sync_policies::ExactTime<
-      sensor_msgs::msg::Image, sensor_msgs::msg::Image, sensor_msgs::msg::Image,
-      sensor_msgs::msg::Image>;
-
-  void imageSyncCallback(
-      const sensor_msgs::msg::Image::ConstSharedPtr &rgb_msg,
-      const sensor_msgs::msg::Image::ConstSharedPtr &depth_msg,
-      const sensor_msgs::msg::Image::ConstSharedPtr &flow_msg,
-      const sensor_msgs::msg::Image::ConstSharedPtr &mask_msg);
+  void connectImages();
+  void connectImu();
 
  private:
+  //! Driving frame id for the enture dynosam pipeline
   FrameId frame_id_;
+  MultiSyncBase::Ptr image_subscriber_;
 
-  message_filters::Subscriber<sensor_msgs::msg::Image> rgb_image_sub_;
-  message_filters::Subscriber<sensor_msgs::msg::Image> depth_image_sub_;
-  message_filters::Subscriber<sensor_msgs::msg::Image> flow_image_sub_;
-  message_filters::Subscriber<sensor_msgs::msg::Image> mask_image_sub_;
-
-  std::shared_ptr<message_filters::Synchronizer<SyncPolicy>> sync_;
+  rclcpp::CallbackGroup::SharedPtr imu_callback_group_;
+  using ImuAdaptedType =
+      rclcpp::adapt_type<dyno::ImuMeasurement>::as<sensor_msgs::msg::Imu>;
+  rclcpp::Subscription<ImuAdaptedType>::SharedPtr imu_sub_;
 };
 
 }  // namespace dyno

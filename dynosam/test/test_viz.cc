@@ -31,7 +31,7 @@
 #include <glog/logging.h>
 #include <gtest/gtest.h>
 
-#include "dynosam/visualizer/ColourMap.hpp"
+#include "dynosam_common/viz/Colour.hpp"
 
 using namespace dyno;
 

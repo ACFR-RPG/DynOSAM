@@ -36,12 +36,12 @@
 #include <opencv4/opencv2/opencv.hpp>
 #include <type_traits>
 
-#include "dynosam/common/GroundTruthPacket.hpp"
-#include "dynosam/common/ImageContainer.hpp"
-#include "dynosam/common/Types.hpp"
 #include "dynosam/frontend/imu/ImuMeasurements.hpp"
-#include "dynosam/utils/OpenCVUtils.hpp"
-#include "dynosam/utils/Tuple.hpp"
+#include "dynosam_common/GroundTruthPacket.hpp"
+#include "dynosam_common/Types.hpp"
+#include "dynosam_common/utils/OpenCVUtils.hpp"
+#include "dynosam_common/utils/Tuple.hpp"
+#include "dynosam_cv/ImageContainer.hpp"
 
 namespace dyno {
 

@@ -35,7 +35,7 @@
 #include <gflags/gflags.h>
 #include <glog/logging.h>
 
-#include "dynosam/utils/OpenCVUtils.hpp"
+#include "dynosam_common/utils/OpenCVUtils.hpp"
 
 DEFINE_int32(shrink_row, 0, "Number of rows to shrink the tracking image by");
 DEFINE_int32(shrink_col, 0, "Number of cols to shrink the tracking image by");
@@ -90,7 +90,7 @@ void declare_config(TrackerParams& config) {
   name("TrackerParams");
 
   enum_field(config.feature_detector_type, "feature_detector_type",
-             std::vector<std::string>({"GFTT", "ORB_SLAM_ORB"}));
+             std::vector<std::string>({"GFTT", "ORB_SLAM_ORB", "GFFT_CUDA"}));
 
   field(config.use_anms, "use_anms");
   field(config.use_subpixel_corner_refinement,
@@ -102,6 +102,7 @@ void declare_config(TrackerParams& config) {
   field(config.min_distance_btw_tracked_and_detected_dynamic_features,
         "min_distance_btw_tracked_and_detected_dynamic_features");
   field(config.max_features_per_frame, "max_features_per_frame");
+  field(config.min_features_per_frame, "min_features_per_frame");
   field(config.max_feature_track_age, "max_feature_track_age");
 
   field(config.shrink_row, "shrink_row");
@@ -126,6 +127,10 @@ void declare_config(TrackerParams& config) {
   field(config.min_dynamic_mask_iou, "min_dynamic_mask_iou");
 
   field(config.use_propogate_mask, "use_propogate_mask");
+
+  field(config.prefer_provided_optical_flow, "prefer_provided_optical_flow");
+  field(config.prefer_provided_object_detection,
+        "prefer_provided_object_detection");
 
   // update with FLAGS
   // config.semantic_mask_step_size = FLAGS_semantic_mask_step_size;

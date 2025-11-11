@@ -31,9 +31,8 @@
 
 #include <gtsam/geometry/Pose3.h>
 
-#include <dynosam/common/Types.hpp>
-#include <dynosam/visualizer/Colour.hpp>
-
+#include "dynosam_common/Types.hpp"
+#include "dynosam_common/viz/Colour.hpp"
 #include "geometry_msgs/msg/pose.hpp"
 #include "geometry_msgs/msg/pose_stamped.hpp"
 #include "geometry_msgs/msg/transform.hpp"
@@ -67,16 +66,25 @@ bool dyno::convert(const dyno::Timestamp& time_seconds,
 }
 
 template <>
+bool dyno::convert(const builtin_interfaces::msg::Time& time,
+                   dyno::Timestamp& time_seconds) {
+  rclcpp::Time ros_time = time;
+  convert(ros_time, time_seconds);
+  return true;
+}
+
+template <>
 bool dyno::convert(const RGBA<float>& colour, std_msgs::msg::ColorRGBA& msg) {
   msg.r = colour.r;
   msg.g = colour.g;
   msg.b = colour.b;
   msg.a = colour.a;
+  return true;
 }
 
 template <>
 bool dyno::convert(const Color& colour, std_msgs::msg::ColorRGBA& msg) {
-  convert(RGBA<float>(colour), msg);
+  return convert(RGBA<float>(colour), msg);
 }
 
 template <>
@@ -131,6 +139,7 @@ bool dyno::convert(const geometry_msgs::msg::Pose& pose,
   transform.rotation.y = pose.orientation.y;
   transform.rotation.z = pose.orientation.z;
   transform.rotation.w = pose.orientation.w;
+  return true;
 }
 
 template <>

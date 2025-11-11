@@ -34,8 +34,6 @@
 #include <Eigen/Dense>
 #include <png++/png.hpp>
 
-#include "dynosam/common/Camera.hpp"
-#include "dynosam/common/ImageContainer.hpp"
 #include "dynosam/dataprovider/ClusterSlamDataProvider.hpp"
 #include "dynosam/dataprovider/KittiDataProvider.hpp"
 #include "dynosam/dataprovider/TartanAirShibuya.hpp"
@@ -45,8 +43,11 @@
 #include "dynosam/frontend/vision/Frame.hpp"
 #include "dynosam/pipeline/PipelineManager.hpp"
 #include "dynosam/pipeline/PipelineParams.hpp"
-#include "dynosam/visualizer/ColourMap.hpp"
 #include "dynosam/visualizer/OpenCVFrontendDisplay.hpp"
+#include "dynosam_common/viz/Colour.hpp"
+#include "dynosam_cv/Camera.hpp"
+#include "dynosam_cv/ImageContainer.hpp"
+#include "dynosam_nn/PyObjectDetector.hpp"
 
 DEFINE_string(path_to_kitti, "/root/data/kitti", "Path to KITTI dataset");
 // TODO: (jesse) many better ways to do this with ros - just for now
@@ -65,10 +66,12 @@ int main(int argc, char* argv[]) {
   FLAGS_logtostderr = 1;
   FLAGS_colorlogtostderr = 1;
   FLAGS_log_prefix = 1;
+  FLAGS_v = 30;
 
   KittiDataLoader::Params params;
-  KittiDataLoader loader("/root/data/vdo_slam/kitti/kitti/0000/", params);
-  // ClusterSlamDataLoader loader("/root/data/cluster_slam/CARLA-L1");
+  KittiDataLoader loader("/root/data/vdo_slam/kitti/kitti/0004/", params);
+  // ClusterSlamDataLoader loader("/root/data/cluster_slam/CARLA-S2");
+  // loader.setStartingFrame(600);
   // OMDDataLoader loader(
   //     "/root/data/vdo_slam/omd/omd/swinging_4_unconstrained_stereo/");
 
@@ -76,33 +79,41 @@ int main(int argc, char* argv[]) {
   // loader("/root/data/TartanAir_shibuya/RoadCrossing07/");
   // ViodeLoader loader("/root/data/VIODE/city_day/mid");
 
+  // auto detector = dyno::PyObjectDetectorWrapper::CreateYoloDetector();
+  // CHECK_NOTNULL(detector);
+
   FrontendParams fp;
+  fp.tracker_params.feature_detector_type =
+      TrackerParams::FeatureDetectorType::GFFT_CUDA;
   fp.tracker_params.max_dynamic_features_per_frame = 300;
+  fp.tracker_params.prefer_provided_optical_flow = false;
+  fp.tracker_params.prefer_provided_object_detection = false;
+  // fp.tracker_params.feature_detector_type =
+  // TrackerParams::FeatureDetectorType::ORB_SLAM_ORB;
 
   auto camera = std::make_shared<Camera>(*loader.getCameraParams());
   auto tracker = std::make_shared<FeatureTracker>(fp, camera);
 
-  // loader.setCallback([&](dyno::FrameId frame_id, dyno::Timestamp timestamp,
-  //                        cv::Mat rgb, cv::Mat optical_flow, cv::Mat depth,
-  //                        cv::Mat motion, GroundTruthInputPacket,
-  //                        std::optional<ImuMeasurements> imu_measurements,
-  //                        std::optional<cv::Mat>) -> bool {
   loader.setCallback([&](dyno::FrameId frame_id, dyno::Timestamp timestamp,
                          cv::Mat rgb, cv::Mat optical_flow, cv::Mat depth,
                          cv::Mat motion, gtsam::Pose3,
                          GroundTruthInputPacket) -> bool {
+    // LOG(INFO) << utils::Statistics::Print();
+    // loader.setCallback([&](dyno::FrameId frame_id, dyno::Timestamp timestamp,
+    //                        cv::Mat rgb, cv::Mat optical_flow, cv::Mat depth,
+    //                        cv::Mat motion, GroundTruthInputPacket,
+    //                        std::optional<ImuMeasurements> imu_measurements,
+    //                        std::optional<cv::Mat>) -> bool {
+    // loader.setCallback([&](dyno::FrameId frame_id, dyno::Timestamp timestamp,
+    //                        cv::Mat rgb, cv::Mat optical_flow, cv::Mat depth,
+    //                        cv::Mat motion, GroundTruthInputPacket,
+    //                        std::optional<cv::Mat>) -> bool {
     LOG(INFO) << frame_id << " " << timestamp;
 
     cv::Mat of_viz, motion_viz, depth_viz;
     of_viz = ImageType::OpticalFlow::toRGB(optical_flow);
     motion_viz = ImageType::MotionMask::toRGB(motion);
     depth_viz = ImageType::Depth::toRGB(depth);
-
-    ImageContainer image_container(frame_id, timestamp);
-    image_container.rgb(rgb)
-        .depth(depth)
-        .opticalFlow(optical_flow)
-        .objectMotionMask(motion);
 
     // ImageContainerDeprecate::Ptr container = ImageContainerDeprecate::Create(
     //     timestamp, frame_id, ImageWrapper<ImageType::RGBMono>(rgb),
@@ -132,14 +143,26 @@ int main(int argc, char* argv[]) {
 
     // cv::imshow("RGB", rgb);
     // cv::imshow("OF", of_viz);
-    cv::imshow("Motion", motion_viz);
-    // cv::waitKey(1);
-    cv::imshow("Depth", depth_viz);
+    // cv::imshow("Motion", motion_viz);
+    // // cv::waitKey(1);
+    // cv::imshow("Depth", depth_viz);
 
-    std::set<ObjectId> object_keyframes;
-    auto frame =
-        tracker->track(frame_id, timestamp, image_container, object_keyframes);
+    // auto object_detection_result = detector->process(rgb);
+    // cv::imshow("Detection Result", object_detection_result.colouredMask());
+
+    ImageContainer image_container(frame_id, timestamp);
+    image_container.rgb(rgb)
+        .depth(depth)
+        .opticalFlow(optical_flow)
+        .objectMotionMask(motion);
+    // image_container.rgb(rgb).depth(depth).opticalFlow(optical_flow);
+    auto frame = tracker->track(frame_id, timestamp, image_container);
     Frame::Ptr previous_frame = tracker->getPreviousFrame();
+
+    // if(frame_id == 605) {
+    //   auto all_tracks = frame->static_features_.collectTracklets();
+    //   frame->static_features_.markOutliers(all_tracks);
+    // }
 
     // // motion_viz =
     // ImageType::MotionMask::toRGB(frame->image_container_.get<ImageType::MotionMask>());
@@ -147,7 +170,10 @@ int main(int argc, char* argv[]) {
 
     cv::Mat tracking;
     if (previous_frame) {
-      tracking = tracker->computeImageTracks(*previous_frame, *frame, false);
+      ImageTracksParams track_viz_params(true);
+      track_viz_params.show_intermediate_tracking = true;
+      tracking = tracker->computeImageTracks(*previous_frame, *frame,
+                                             track_viz_params);
 
       // if (imu_measurements) {
       //   const auto previous_timestamp = previous_frame->getTimestamp();
@@ -168,13 +194,16 @@ int main(int argc, char* argv[]) {
 
     LOG(INFO) << to_string(tracker->getTrackerInfo());
     const std::string path = "/root/results/misc/";
-    // if ((char)cv::waitKey(0) == 's') {
+    // if (previous_frame && (char)cv::waitKey(0) == 's') {
     //   LOG(INFO) << "Saving...";
     //   // cv::imwrite(path + "omd_su4_rgb.png", rgb);
     //   // cv::imwrite(path + "omd_su4_of.png", of_viz);
     //   // cv::imwrite(path + "omd_su4_motion.png", motion_viz);
     //   // cv::imwrite(path + "omd_su4_depth.png", depth_viz);
-    //   cv::imwrite(path + "omd_tracking.png", tracking);
+    //   // cv::imwrite(
+    //   //     path + "cluster_tracking_new" + std::to_string(frame_id) +
+    //   ".png",
+    //   //     tracking);
     // }
     cv::waitKey(1);
 

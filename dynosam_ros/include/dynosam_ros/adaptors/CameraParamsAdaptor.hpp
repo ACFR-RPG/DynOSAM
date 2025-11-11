@@ -32,8 +32,7 @@
 
 #include <glog/logging.h>
 
-#include <dynosam/common/CameraParams.hpp>
-
+#include "dynosam_cv/CameraParams.hpp"
 #include "rclcpp/type_adapter.hpp"
 #include "sensor_msgs/msg/camera_info.hpp"
 

@@ -30,12 +30,27 @@
 
 #pragma once
 
+#include <gtsam/nonlinear/ISAM2Result.h>
+#include <gtsam/nonlinear/ISAM2UpdateParams.h>
+
 #include "dynosam/backend/Accessor.hpp"
 #include "dynosam/backend/BackendDefinitions.hpp"
-#include "dynosam/common/Map.hpp"
-#include "dynosam/common/Types.hpp"
+#include "dynosam/backend/BackendParams.hpp"
+#include "dynosam_common/Types.hpp"
+#include "dynosam_opt/Map.hpp"
+
+// really this should be in a more 'core' file
+#include "dynosam_opt/IncrementalOptimization.hpp"  // only for ErrorHandlingHooks
 
 namespace dyno {
+
+template <typename FORMULATION>
+struct FormulationWrapper {
+  std::shared_ptr<FORMULATION> formulation;
+  // TODO: actually maybe the formulation should make the error hooks.... with a
+  // virtual fucntion!
+  std::optional<ErrorHandlingHooks> error_hooks;
+};
 
 template <typename MAP>
 struct MapTraits {
@@ -64,21 +79,15 @@ struct UpdateObservationResult {
       objects_affected_per_frame;  // per frame
   DebugInfo::Optional debug_info{};
 
+  // Incremental interface
+  gtsam::ISAM2UpdateParams isam_update_params;
+
   UpdateObservationResult() {}
 
   UpdateObservationResult(const UpdateObservationParams& update_params) {
     if (update_params.enable_debug_info) {
       this->debug_info = DebugInfo();
     }
-  }
-
-  // TODO: debug info
-  inline UpdateObservationResult& operator+=(
-      const UpdateObservationResult& oth) {
-    for (const auto& [key, value] : oth.objects_affected_per_frame) {
-      objects_affected_per_frame[key].insert(value.begin(), value.end());
-    }
-    return *this;
   }
 
   void updateAffectedObject(FrameId frame_id, ObjectId object_id) {
@@ -101,6 +110,11 @@ struct PointUpdateContext {
   gtsam::Pose3 X_k_measured;
   //! Camera pose from measurement (or initial)
   gtsam::Pose3 X_k_1_measured;
+
+  //! When an update starts only a subset of the factors are provided to the
+  //! update This value indicates the factor slot offset (ie the total graph
+  //! size before any update)
+  Slot starting_factor_slot = -1;
 
   //! If true then this frame is the first frame where a motion is available
   //! (i.e we have a pair of valid frames) e.g k-1 is the FIRST frame for this
@@ -140,7 +154,7 @@ struct ObjectUpdateContext {
 class BackendParams;
 
 /**
- * @brief Meta-data struct used for the Formulation::preUpdate hook.
+ * @brief Metadata struct used for the Formulation::preUpdate hook.
  *
  */
 struct PreUpdateData {
@@ -151,7 +165,7 @@ struct PreUpdateData {
 };
 
 /**
- * @brief Metdata struct used for the Formulation::poseUpdate hook.
+ * @brief Metdata struct used for the Formulation::postUpdate hook.
  *
  */
 struct PostUpdateData {
@@ -159,18 +173,56 @@ struct PostUpdateData {
   UpdateObservationResult dynamic_update_result;
   UpdateObservationResult static_update_result;
 
+  struct IncrementalResult {
+    //! Result from the incremental update
+    gtsam::ISAM2Result isam2;
+    //! Current set of factors from the (incremental) smoother
+    gtsam::NonlinearFactorGraph factors;
+  };
+
+  // TODO: batch result!!!
+
+  std::optional<IncrementalResult> incremental_result = {};
+
   PostUpdateData() {}
   PostUpdateData(FrameId _frame_id) : frame_id(_frame_id) {}
 };
 
-// TODO: copy so many of these params from backendparams, why not just use the
-// same one?
-struct FormulationParams {
-  size_t min_dynamic_observations = 3u;
-  size_t min_static_observations = 2u;
-  bool use_smoothing_factor = true;
-  std::string suffix = "";
+/**
+ * @brief Basic parameters for a Formulation.
+ * Right now is just directly the BackendParams since there is lots of
+ * cross-over, but later we may add formulation specific ones
+ *
+ */
+struct FormulationParams : public BackendParams {
+  FormulationParams() {}
+
+  FormulationParams(const BackendParams& b) { FormulationParams::operator=(b); }
+
+  FormulationParams& operator=(const BackendParams& b) {
+    static_cast<BackendParams&>(*this) = b;
+    return *this;
+  }
 };
+
+class Camera;
+
+/**
+ * @brief Encapsulation of various sensor types, giving the Formulation access
+ * to different models
+ *
+ */
+struct Sensors {
+  std::shared_ptr<Camera> camera;
+
+  Sensors() {}
+};
+
+namespace internal {
+template <typename MAP>
+class StaticFormulationUpdaterImpl;
+}
+
 /**
  * @brief Base class for a formulation that defines the structure and
  * implementation for a factor-graph based Dynamic SLAM solution. Derived
@@ -223,13 +275,13 @@ class Formulation {
 
   using PointUpdateContextType = PointUpdateContext<Map>;
   using ObjectUpdateContextType = ObjectUpdateContext<Map>;
-  using AccessorType = Accessor<MAP>;
-  using AccessorTypePointer = typename Accessor<MAP>::Ptr;
+  using AccessorType = AccessorT<MAP>;
+  using AccessorTypePointer = typename AccessorT<MAP>::Ptr;
 
   DYNO_POINTER_TYPEDEFS(This)
 
   Formulation(const FormulationParams& params, typename Map::Ptr map,
-              const NoiseModels& noise_models,
+              const NoiseModels& noise_models, const Sensors& sensors,
               const FormulationHooks& hooks = FormulationHooks());
   virtual ~Formulation() = default;
 
@@ -390,14 +442,20 @@ class Formulation {
 
   const FormulationHooks& hooks() const { return hooks_; }
   const NoiseModels& noiseModels() const { return noise_models_; }
+  const Sensors& sensors() const { return sensors_; }
+  const FormulationParams& params() const { return params_; }
 
   /**
    * @brief Custom gtsam::Key formatter for this formulation.
-   * Defaults to DynoLikeKeyFormatter.
+   * Defaults to DynosamKeyFormatter.
    *
    * @return gtsam::KeyFormatter
    */
-  virtual gtsam::KeyFormatter formatter() const { return DynoLikeKeyFormatter; }
+  virtual gtsam::KeyFormatter formatter() const { return DynosamKeyFormatter; }
+
+  inline std::string format(const gtsam::Key& key) const {
+    return this->formatter()(key);
+  }
 
   /**
    * @brief Get the fully qualified name of this formulation which is derived
@@ -420,9 +478,9 @@ class Formulation {
   template <typename Derived>
   std::shared_ptr<Derived> derivedAccessor() const {
     if (!accessor_theta_) {
-      return nullptr;
+      accessorFromTheta();
     }
-
+    CHECK(accessor_theta_);
     return std::dynamic_pointer_cast<Derived>(accessor_theta_);
   }
 
@@ -467,44 +525,6 @@ class Formulation {
   void setInitialPosePrior(const gtsam::Pose3& T_world_camera,
                            FrameId frame_id_k,
                            gtsam::NonlinearFactorGraph& new_factors);
-
-  /**
-   * @brief Update the static-point part of the factor graph between multiple
-   * frames. Internally makes several calls to
-   * updateStaticObservations(FrameId,gtsam::Values&,gtsam::NonlinearFactorGraph&,const
-   * UpdateObservationParams&) and returns the accumulated
-   * UpdateObservationResult.
-   *
-   * @param from_frame FrameId
-   * @param to_frame FrameId
-   * @param new_values gtsam::Values&
-   * @param new_factors gtsam::NonlinearFactorGraph&
-   * @param update_params const UpdateObservationParams&
-   * @return UpdateObservationResult
-   */
-  UpdateObservationResult updateStaticObservations(
-      FrameId from_frame, FrameId to_frame, gtsam::Values& new_values,
-      gtsam::NonlinearFactorGraph& new_factors,
-      const UpdateObservationParams& update_params);
-
-  /**
-   * @brief Update the dynamic-point part of the factor graph between multiple
-   * frames. Internally makes several calls to
-   * updateDynamicObservations(FrameId,gtsam::Values&,gtsam::NonlinearFactorGraph&,const
-   * UpdateObservationParams&) and returns the accumulated
-   * UpdateObservationResult.
-   *
-   * @param from_frame FrameId
-   * @param to_frame FrameId
-   * @param new_values gtsam::Values&
-   * @param new_factors gtsam::NonlinearFactorGraph&
-   * @param update_params const UpdateObservationParams&
-   * @return UpdateObservationResult
-   */
-  UpdateObservationResult updateDynamicObservations(
-      FrameId from_frame, FrameId to_frame, gtsam::Values& new_values,
-      gtsam::NonlinearFactorGraph& new_factors,
-      const UpdateObservationParams& update_params);
 
   /**
    * @brief Updates the static-point part of the factor graph for frame k.
@@ -563,9 +583,9 @@ class Formulation {
    */
   virtual void postUpdate(const PostUpdateData&){};
 
- protected:
   gtsam::Pose3 getInitialOrLinearizedSensorPose(FrameId frame_id) const;
 
+ protected:
   void clearGraph() { factors_.resize(0); }
 
  private:
@@ -575,6 +595,7 @@ class Formulation {
   const FormulationParams params_;
   typename Map::Ptr map_;
   const NoiseModels noise_models_;
+  Sensors sensors_;
   FormulationHooks hooks_;
   //! the set of (static related) values managed by this updater. Allows
   //! checking if values have already been added over successive function calls
@@ -588,6 +609,8 @@ class Formulation {
   //! Full name of the formulation and accounts for the additional configuration
   //! from the FormulationParams
   mutable std::optional<std::string> fully_qualified_name_{std::nullopt};
+
+  friend class internal::StaticFormulationUpdaterImpl<MAP>;
 };
 
 }  // namespace dyno

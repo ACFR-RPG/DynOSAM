@@ -30,11 +30,11 @@
 
 #pragma once
 
-#include "dynosam/common/Types.hpp"
 #include "dynosam/dataprovider/DatasetProvider.hpp"
 #include "dynosam/frontend/FrontendInputPacket.hpp"
-#include "dynosam/utils/GtsamUtils.hpp"
-#include "dynosam/utils/OpenCVUtils.hpp"
+#include "dynosam_common/Types.hpp"
+#include "dynosam_common/utils/GtsamUtils.hpp"
+#include "dynosam_common/utils/OpenCVUtils.hpp"
 
 namespace dyno {
 

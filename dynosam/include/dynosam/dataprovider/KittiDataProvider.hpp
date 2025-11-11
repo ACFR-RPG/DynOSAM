@@ -32,12 +32,12 @@
 
 #include <png++/png.hpp>
 
-#include "dynosam/common/Camera.hpp"
-#include "dynosam/common/Types.hpp"
 #include "dynosam/dataprovider/DatasetProvider.hpp"
 #include "dynosam/frontend/FrontendInputPacket.hpp"
-#include "dynosam/utils/GtsamUtils.hpp"
-#include "dynosam/utils/OpenCVUtils.hpp"
+#include "dynosam_common/Types.hpp"
+#include "dynosam_common/utils/GtsamUtils.hpp"
+#include "dynosam_common/utils/OpenCVUtils.hpp"
+#include "dynosam_cv/Camera.hpp"
 
 namespace dyno {
 
@@ -320,7 +320,7 @@ class KittiClassSegmentationDataFolder : public dyno::DataFolder<cv::Mat> {
     ss << std::setfill('0') << std::setw(6) << idx;
     const std::string file_path =
         (std::string)getAbsolutePath() + "/" + ss.str() + ".png";
-    throwExceptionIfPathInvalid(file_path);
+    utils::throwExceptionIfPathInvalid(file_path);
 
     png::image<png::rgb_pixel> index_image(file_path);
 
@@ -539,6 +539,9 @@ class KittiDataLoader
       cv::Size image_size(1242, 375);
       camera_params_ =
           CameraParams(intrinsics, distortion, image_size, "radial_tangential");
+      // IR projection of this dataset is 387.5744. IR = baseline * fx
+      // (fx=721.5377)
+      camera_params_->setDepthParams(0.57);
 
       params_.base_line = 387.5744;
     } else if (dataset_id >= 18 && dataset_id <= 20) {
@@ -561,6 +564,9 @@ class KittiDataLoader
       }
 
       params_.base_line = 388.1822;
+      // IR projection of this dataset is 388.1822. IR = baseline * fx
+      // (fx=718.8560)
+      camera_params_->setDepthParams(0.5399);
 
     } else {
       LOG(WARNING) << "Unknown KITTI dataset when loading camera params. "

@@ -31,15 +31,15 @@
 
 #include <functional>
 
-#include "dynosam/common/Camera.hpp"
-#include "dynosam/common/DynamicObjects.hpp"
-#include "dynosam/common/ImageContainer.hpp"
-#include "dynosam/common/PointCloudProcess.hpp"
-#include "dynosam/common/StructuredContainers.hpp"
-#include "dynosam/common/Types.hpp"
-#include "dynosam/frontend/vision/Feature.hpp"
-#include "dynosam/frontend/vision/UndistortRectifier.hpp"
 #include "dynosam/frontend/vision/Vision-Definitions.hpp"
+#include "dynosam_common/DynamicObjects.hpp"
+#include "dynosam_common/PointCloudProcess.hpp"
+#include "dynosam_common/StructuredContainers.hpp"
+#include "dynosam_common/Types.hpp"
+#include "dynosam_cv/Camera.hpp"
+#include "dynosam_cv/Feature.hpp"
+#include "dynosam_cv/ImageContainer.hpp"
+#include "dynosam_cv/UndistortRectifier.hpp"
 
 namespace dyno {
 
@@ -57,20 +57,27 @@ class Frame {
   FeatureContainer static_features_;
   FeatureContainer dynamic_features_;
 
+  //! Objects that required new detection/sampling this frame.
+  ObjectIds retracked_objects_;
+
   std::optional<FeatureTrackerInfo>
       tracking_info_;  //! information from the tracker that was used to created
                        //! this frame
 
-  //! Depricate as unused!
-  static ObjectId global_object_id;
-
   // semantic instance label to object observation (by the actual observations
   // in the image) set in constructor
-  std::map<ObjectId, DynamicObjectObservation> object_observations_;
+  std::map<ObjectId, SingleDetectionResult> object_observations_;
   MotionEstimateMap
       motion_estimates_;  // map of object ids to object motions that take the
                           // object from k-1 to k in W. Updated in the frontend
                           // and will not initially have a value
+
+  Frame(FrameId frame_id, Timestamp timestamp, Camera::Ptr camera,
+        const ImageContainer& image_container,
+        const FeatureContainer& static_features,
+        const FeatureContainer& dynamic_features,
+        const std::map<ObjectId, SingleDetectionResult>& object_observations,
+        std::optional<FeatureTrackerInfo> tracking_info = {});
 
   Frame(FrameId frame_id, Timestamp timestamp, Camera::Ptr camera,
         const ImageContainer& image_container,
@@ -91,11 +98,11 @@ class Frame {
    */
   const gtsam::Pose3& getPose() const { return T_world_camera_; }
 
-  inline const std::map<ObjectId, DynamicObjectObservation>&
+  inline const std::map<ObjectId, SingleDetectionResult>&
   getObjectObservations() const {
     return object_observations_;
   }
-  inline std::map<ObjectId, DynamicObjectObservation>& getObjectObservations() {
+  inline std::map<ObjectId, SingleDetectionResult>& getObjectObservations() {
     return object_observations_;
   }
 
@@ -244,27 +251,17 @@ class Frame {
    */
   bool updateDepths();
 
-  /**
-   * @brief From the detected list of objects (in Frame::object_observations_)
-   * draw the object masks as labelled bounding boxes.
-   *
-   * The function uses the MotionMask and RGBMono image types contained witin
-   * Frame::tracking_images_;
-   *
-   * @return cv::Mat RGB image with drawn bounding boxes and labels
-   */
-  cv::Mat drawDetectedObjectBoxes() const;
-
   Frame& setMaxBackgroundDepth(double thresh);
   Frame& setMaxObjectDepth(double thresh);
 
-  // TODO: this really needs testing
-  void moveObjectToStatic(ObjectId instance_label);
-  // TODO: testing
-  // also updates all the tracking_labels of the features associated with this
-  // object
-  void updateObjectTrackingLabel(const DynamicObjectObservation& observation,
-                                 ObjectId new_tracking_label);
+  // // TODO: this really needs testing
+  // void moveObjectToStatic(ObjectId instance_label);
+  // // TODO: testing
+  // // also updates all the tracking_labels of the features associated with
+  // this
+  // // object
+  // void updateObjectTrackingLabel(const SingleDetectionResult& observation,
+  //                                ObjectId new_tracking_label);
 
   /**
    * @brief Gets the set of tracked pairs between this frame and the previous

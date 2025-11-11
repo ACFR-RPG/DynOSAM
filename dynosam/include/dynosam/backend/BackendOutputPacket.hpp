@@ -31,15 +31,17 @@
 #pragma once
 
 #include "dynosam/backend/BackendDefinitions.hpp"  //for TemporalObjectMetaData
-#include "dynosam/common/Types.hpp"
+#include "dynosam_common/Types.hpp"
 
 namespace dyno {
 
 struct BackendOutputPacket {
   DYNO_POINTER_TYPEDEFS(BackendOutputPacket)
 
-  StatusLandmarkVector static_landmarks;   // all frames?
-  StatusLandmarkVector dynamic_landmarks;  // all objects only this frame?
+  StatusLandmarkVector static_landmarks;  // all frames? in world frame
+  StatusLandmarkVector
+      dynamic_landmarks;  // all objects only this frame? in world frame
+  // TODO: depricate and let output viz handle now it has shared module...
   FrameIdTimestampMap involved_timestamp;
   gtsam::Pose3 T_world_camera;
   FrameId frame_id;
@@ -48,6 +50,8 @@ struct BackendOutputPacket {
   ObjectPoseMap optimized_object_poses;
   gtsam::Pose3Vector optimized_camera_poses;
   std::vector<TemporalObjectMetaData> temporal_object_data;
+  gtsam::Values active_values;
+  gtsam::NonlinearFactorGraph active_graph;
   // streamline imagery with incremental visualisation tools!
   cv::Mat debug_image;
 

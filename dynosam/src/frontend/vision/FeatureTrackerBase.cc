@@ -31,9 +31,9 @@
 #include "dynosam/frontend/vision/FeatureTrackerBase.hpp"
 
 #include "dynosam/frontend/anms/NonMaximumSuppression.h"
-#include "dynosam/utils/GtsamUtils.hpp"
-#include "dynosam/utils/OpenCVUtils.hpp"
-#include "dynosam/visualizer/ColourMap.hpp"
+#include "dynosam_common/utils/GtsamUtils.hpp"
+#include "dynosam_common/utils/OpenCVUtils.hpp"
+#include "dynosam_common/viz/Colour.hpp"
 
 namespace dyno {
 
@@ -191,7 +191,8 @@ cv::Mat FeatureTrackerBase::computeImageTracks(
         const Keypoint& px_prev = prev_feature->keypoint();
         const cv::Scalar colour = Color::uniqueId(feature->objectId()).bgra();
         cv::arrowedLine(img_rgb, utils::gtsamPointToCv(px_prev),
-                        utils::gtsamPointToCv(px_cur), colour, 1);
+                        utils::gtsamPointToCv(px_cur), colour, 1, 8, 0, 0.1);
+        cv::circle(img_rgb, utils::gtsamPointToCv(px_cur), 2, colour, -1);
       } else {  // New feature tracks are blue.
         // cv::circle(img_rgb, utils::gtsamPointToCv(px_cur), 1, blue, 1);
       }
@@ -204,7 +205,7 @@ cv::Mat FeatureTrackerBase::computeImageTracks(
   for (const auto& object_observation_pair :
        current_frame.object_observations_) {
     const ObjectId object_id = object_observation_pair.first;
-    const cv::Rect& bb = object_observation_pair.second.bounding_box_;
+    const cv::Rect& bb = object_observation_pair.second.bounding_box;
 
     // TODO: if its marked as moving!!
     if (bb.empty()) {
@@ -265,6 +266,48 @@ cv::Mat FeatureTrackerBase::computeImageTracks(
   } else {
     return img_rgb;
   }
+}
+
+bool FeatureTrackerBase::drawStereoMatches(cv::Mat& output_image,
+                                           const Frame& current_frame) const {
+  // for now only static tracks
+  if (!current_frame.image_container_.hasRightRgb()) {
+    return false;
+  }
+
+  const ImageWrapper<ImageType::RGBMono>& left_img_wrapper =
+      current_frame.image_container_.rgb();
+  cv::Mat img_rgb_left = left_img_wrapper.toRGB().clone();
+
+  const ImageWrapper<ImageType::RGBMono>& right_img_wrapper =
+      current_frame.image_container_.rightRgb();
+  cv::Mat img_rgb_right = right_img_wrapper.toRGB().clone();
+
+  // Stack side by side
+  cv::Mat canvas;
+  cv::hconcat(img_rgb_left, img_rgb_right, canvas);
+
+  int w1 = img_rgb_left.cols;
+
+  auto itr = current_frame.static_features_.beginUsable();
+  for (const auto& feature : itr) {
+    if (!feature->hasRightKeypoint()) {
+      continue;
+    }
+
+    const auto kp_left = utils::gtsamPointToCv(feature->keypoint());
+    const auto kp_right = utils::gtsamPointToCv(feature->rightKeypoint()) +
+                          cv::Point2f((float)w1, 0.0f);
+
+    cv::circle(canvas, kp_left, 4, cv::Scalar(0, 0, 255), cv::FILLED,
+               cv::LINE_AA);
+    cv::circle(canvas, kp_right, 4, cv::Scalar(0, 0, 255), cv::FILLED,
+               cv::LINE_AA);
+    cv::line(canvas, kp_left, kp_right, cv::Scalar(0, 0, 255), 1, cv::LINE_AA);
+  }
+
+  output_image = canvas;
+  return true;
 }
 
 bool FeatureTrackerBase::isWithinShrunkenImage(const Keypoint& kp) const {

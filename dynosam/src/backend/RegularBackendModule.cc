@@ -33,35 +33,22 @@
 #include <gflags/gflags.h>
 #include <glog/logging.h>
 #include <gtsam/nonlinear/LevenbergMarquardtOptimizer.h>
-#include <gtsam_unstable/slam/PoseToPointFactor.h>
 
 #include "dynosam/backend/Accessor.hpp"
-#include "dynosam/backend/FactorGraphTools.hpp"
+#include "dynosam/backend/BackendFactory.hpp"
 #include "dynosam/backend/Formulation.hpp"
-#include "dynosam/backend/optimizers/ISAM2Params.hpp"
-#include "dynosam/backend/optimizers/ISAM2UpdateParams.hpp"
-#include "dynosam/backend/optimizers/IncrementalOptimization.hpp"
-#include "dynosam/backend/optimizers/SlidingWindowOptimization.hpp"
-#include "dynosam/backend/rgbd/HybridEstimator.hpp"
-#include "dynosam/backend/rgbd/impl/test_HybridFormulations.hpp"
-#include "dynosam/common/Flags.hpp"
-#include "dynosam/factors/LandmarkMotionPoseFactor.hpp"
-#include "dynosam/factors/LandmarkMotionTernaryFactor.hpp"
-#include "dynosam/factors/LandmarkPoseSmoothingFactor.hpp"
-#include "dynosam/factors/ObjectKinematicFactor.hpp"
-#include "dynosam/logger/Logger.hpp"
-#include "dynosam/utils/SafeCast.hpp"
-#include "dynosam/utils/TimingStats.hpp"
+#include "dynosam_common/Flags.hpp"
+#include "dynosam_common/logger/Logger.hpp"
+#include "dynosam_common/utils/SafeCast.hpp"
+#include "dynosam_common/utils/TimingStats.hpp"
+#include "dynosam_opt/FactorGraphTools.hpp"
+#include "dynosam_opt/ISAM2Params.hpp"
+#include "dynosam_opt/ISAM2UpdateParams.hpp"
+#include "dynosam_opt/IncrementalOptimization.hpp"
+#include "dynosam_opt/SlidingWindowOptimization.hpp"
 
 DEFINE_int32(opt_window_size, 10, "Sliding window size for optimisation");
 DEFINE_int32(opt_window_overlap, 4, "Overlap for window size optimisation");
-
-DEFINE_int32(optimization_mode, 0,
-             "0: Full-batch, 1: sliding-window, 2: incremental");
-
-DEFINE_bool(
-    use_vo_factor, true,
-    "If true, use visual odometry measurement as factor from the frontend");
 
 DEFINE_bool(
     use_identity_rot_L_for_init, false,
@@ -87,22 +74,31 @@ DEFINE_bool(
 
 namespace dyno {
 
-RegularBackendModule::RegularBackendModule(const BackendParams& backend_params,
-                                           Camera::Ptr camera,
-                                           const UpdaterType& updater_type,
-                                           ImageDisplayQueue* display_queue)
-    : Base(backend_params, display_queue),
-      camera_(CHECK_NOTNULL(camera)),
-      updater_type_(updater_type) {
+RegularBackendModule::RegularBackendModule(
+    const BackendParams& backend_params, Camera::Ptr camera,
+    std::shared_ptr<RegularFormulationFactory> factory,
+    ImageDisplayQueue* display_queue)
+    : Base(backend_params, display_queue), camera_(CHECK_NOTNULL(camera)) {
   CHECK_NOTNULL(map_);
+
+  noise_models_.print("RegularBackend noise models ");
 
   // setup smoother/optimizer variables
   setupUpdates();
 
   // set up formulation/some error handling
-  formulation_ = std::move(makeFormulation());
-  SlidingWindowOptimization::Params sw_params;
+  setFormulation(factory);
 }
+
+RegularBackendModule::RegularBackendModule(const BackendParams& backend_params,
+                                           Camera::Ptr camera,
+                                           const BackendType& backend_type,
+                                           ImageDisplayQueue* display_queue)
+    : RegularBackendModule(
+          backend_params, camera,
+          DefaultBackendFactory<RegularBackendModule::RGBDMap>::Create(
+              backend_type),
+          display_queue) {}
 
 RegularBackendModule::~RegularBackendModule() {
   LOG(INFO) << "Destructing RegularBackendModule";
@@ -116,8 +112,9 @@ RegularBackendModule::~RegularBackendModule() {
 }
 
 RegularBackendModule::SpinReturn RegularBackendModule::boostrapSpinImpl(
-    RGBDInstanceOutputPacket::ConstPtr input) {
-  const FrameId frame_k = input->getFrameId();
+    VisionImuPacket::ConstPtr input) {
+  const FrameId frame_k = input->frameId();
+  const Timestamp timestamp = input->timestamp();
   CHECK_EQ(spin_state_.frame_id, frame_k);
   LOG(INFO) << "Running backend " << frame_k;
   gtsam::Values new_values;
@@ -125,28 +122,66 @@ RegularBackendModule::SpinReturn RegularBackendModule::boostrapSpinImpl(
 
   addInitialStates(input, formulation_.get(), new_values, new_factors);
 
+  CHECK(formulation_);
+
   PreUpdateData pre_update_data(frame_k);
   formulation_->preUpdate(pre_update_data);
+
+  UpdateObservationParams update_params;
+  update_params.enable_debug_info = true;
+  update_params.do_backtrack =
+      false;  // apparently this is v important for making the results == ICRA
+
+  PostUpdateData post_update_data(frame_k);
+  // addMeasurements(update_params, frame_k, new_values, new_factors,
+  //                 post_update_data);
+  {
+    LOG(INFO) << "Starting updateStaticObservations";
+    utils::TimingStatsCollector timer("backend.update_static_obs");
+    post_update_data.static_update_result =
+        formulation_->updateStaticObservations(frame_k, new_values, new_factors,
+                                               update_params);
+  }
+  // DONT run dynamic updates on the first frame (if any...)
+  {
+    LOG(INFO) << "Starting updateDynamicObservations";
+    utils::TimingStatsCollector timer("backend.update_dynamic_obs");
+    post_update_data.dynamic_update_result =
+        formulation_->updateDynamicObservations(frame_k, new_values,
+                                                new_factors, update_params);
+  }
 
   if (post_formulation_update_cb_) {
     post_formulation_update_cb_(formulation_, frame_k, new_values, new_factors);
   }
 
-  updateAndOptimize(frame_k, new_values, new_factors);
+  LOG(INFO) << "Starting any updates";
 
-  PostUpdateData post_update_data(frame_k);
-  formulation_->postUpdate(post_update_data);
+  updateAndOptimize(frame_k, new_values, new_factors, post_update_data);
+  LOG(INFO) << "Done any udpates";
+
+  // Should be no need to update after opt as we just added the initial state!?
+  // updateNavStateFromFormulation(frame_k, formulation_.get());
 
   // TODO: sanity checks that vision states are inline with the other frame idss
   // etc
 
-  return {State::Nominal, nullptr};
+  utils::TimingStatsCollector timer(formulation_->getFullyQualifiedName() +
+                                    ".post_update");
+  formulation_->postUpdate(post_update_data);
+
+  BackendOutputPacket::Ptr backend_output =
+      constructOutputPacket(frame_k, timestamp);
+
+  debug_info_ = DebugInfo();
+
+  return {State::Nominal, backend_output};
 }
 
 RegularBackendModule::SpinReturn RegularBackendModule::nominalSpinImpl(
-    RGBDInstanceOutputPacket::ConstPtr input) {
-  const FrameId frame_k = input->getFrameId();
-  const Timestamp timestamp = input->getTimestamp();
+    VisionImuPacket::ConstPtr input) {
+  const FrameId frame_k = input->frameId();
+  const Timestamp timestamp = input->timestamp();
   LOG(INFO) << "Running backend " << frame_k;
   CHECK_EQ(spin_state_.frame_id, frame_k);
 
@@ -163,6 +198,66 @@ RegularBackendModule::SpinReturn RegularBackendModule::nominalSpinImpl(
       false;  // apparently this is v important for making the results == ICRA
 
   PostUpdateData post_update_data(frame_k);
+  addMeasurements(update_params, frame_k, new_values, new_factors,
+                  post_update_data);
+
+  LOG(INFO) << "Starting any updates";
+
+  updateAndOptimize(frame_k, new_values, new_factors, post_update_data);
+  LOG(INFO) << "Done any udpates";
+
+  auto accessor = formulation_->accessorFromTheta();
+  // update internal nav state based on the initial/optimised estimated in the
+  // formulation this is also necessary to update the internal timestamp/frameid
+  // variables within the VisionImuBackendModule
+  updateNavStateFromFormulation(frame_k, formulation_.get());
+
+  // TODO: sanity checks that vision states are inline with the other frame idss
+  // etc
+
+  utils::TimingStatsCollector timer(formulation_->getFullyQualifiedName() +
+                                    ".post_update");
+  formulation_->postUpdate(post_update_data);
+
+  BackendOutputPacket::Ptr backend_output =
+      constructOutputPacket(frame_k, timestamp);
+  // TODO: bring back!
+  //  backend_output->involved_timestamp = input->involved_timestamps_;
+
+  debug_info_ = DebugInfo();
+
+  return {State::Nominal, backend_output};
+}
+
+void RegularBackendModule::setupUpdates() {
+  // 0: Full-batch, 1: sliding-window, 2: incremental
+  const RegularOptimizationType& optimization_mode =
+      base_params_.optimization_mode;
+  if (optimization_mode == RegularOptimizationType::SLIDING_WINDOW) {
+    LOG(INFO) << "Setting up backend for Sliding Window Optimisation";
+    SlidingWindowOptimization::Params sw_params;
+    sw_params.window_size = FLAGS_opt_window_size;
+    sw_params.overlap = FLAGS_opt_window_overlap;
+    sliding_window_opt_ =
+        std::make_unique<SlidingWindowOptimization>(sw_params);
+  }
+
+  if (optimization_mode == RegularOptimizationType::INCREMENTAL) {
+    LOG(INFO) << "Setting up backend for Incremental Optimisation.";
+    dyno::ISAM2Params isam2_params;
+    isam2_params.relinearizeThreshold = 0.01;
+    isam2_params.relinearizeSkip = FLAGS_regular_backend_relinearize_skip;
+    isam2_params.keyFormatter = DynosamKeyFormatter;
+    // isam2_params.enablePartialRelinearizationCheck = true;
+    isam2_params.evaluateNonlinearError = true;
+    smoother_ = std::make_unique<dyno::ISAM2>(isam2_params);
+  }
+}
+
+void RegularBackendModule::addMeasurements(
+    const UpdateObservationParams& update_params, FrameId frame_k,
+    gtsam::Values& new_values, gtsam::NonlinearFactorGraph& new_factors,
+    PostUpdateData& post_update_data) {
   {
     LOG(INFO) << "Starting updateStaticObservations";
     utils::TimingStatsCollector timer("backend.update_static_obs");
@@ -182,69 +277,43 @@ RegularBackendModule::SpinReturn RegularBackendModule::nominalSpinImpl(
   if (post_formulation_update_cb_) {
     post_formulation_update_cb_(formulation_, frame_k, new_values, new_factors);
   }
-
-  LOG(INFO) << "Starting any updates";
-
-  updateAndOptimize(frame_k, new_values, new_factors);
-  LOG(INFO) << "Done any udpates";
-
-  auto accessor = formulation_->accessorFromTheta();
-  // update internal nav state based on the initial/optimised estimated in the
-  // formulation this is also necessary to update the internal timestamp/frameid
-  // variables within the VisionImuBackendModule
-  updateNavStateFromFormulation(frame_k, formulation_.get());
-
-  // TODO: sanity checks that vision states are inline with the other frame idss
-  // etc
-
-  utils::TimingStatsCollector timer(formulation_->getFullyQualifiedName() +
-                                    ".post_update");
-  formulation_->postUpdate(post_update_data);
-
-  BackendOutputPacket::Ptr backend_output =
-      constructOutputPacket(frame_k, timestamp);
-  backend_output->involved_timestamp = input->involved_timestamps_;
-
-  debug_info_ = DebugInfo();
-
-  return {State::Nominal, backend_output};
 }
 
-void RegularBackendModule::setupUpdates() {
-  // 0: Full-batch, 1: sliding-window, 2: incremental
-  const int optimization_mode = FLAGS_optimization_mode;
-  if (optimization_mode == 1) {
-    LOG(INFO) << "Setting up backend for Sliding Window Optimisation";
-    SlidingWindowOptimization::Params sw_params;
-    sw_params.window_size = FLAGS_opt_window_size;
-    sw_params.overlap = FLAGS_opt_window_overlap;
-    sliding_window_opt_ =
-        std::make_unique<SlidingWindowOptimization>(sw_params);
-  }
+std::pair<gtsam::Values, gtsam::NonlinearFactorGraph>
+RegularBackendModule::getActiveOptimisation() const {
+  const RegularOptimizationType& optimization_mode =
+      base_params_.optimization_mode;
+  if (optimization_mode == RegularOptimizationType::FULL_BATCH) {
+    const auto theta = formulation_->getTheta();
+    const auto graph = formulation_->getGraph();
+    return {theta, graph};
+  } else if (optimization_mode == RegularOptimizationType::SLIDING_WINDOW) {
+    LOG(FATAL) << "Not implemented!";
 
-  if (optimization_mode == 2) {
-    LOG(INFO) << "Setting up backend for Incremental Optimisation.";
-    dyno::ISAM2Params isam2_params;
-    isam2_params.relinearizeThreshold = 0.01;
-    isam2_params.relinearizeSkip = FLAGS_regular_backend_relinearize_skip;
-    isam2_params.keyFormatter = DynoLikeKeyFormatter;
-    // isam2_params.enablePartialRelinearizationCheck = true;
-    isam2_params.evaluateNonlinearError = true;
-    smoother_ = std::make_unique<dyno::ISAM2>(isam2_params);
+  } else if (optimization_mode == RegularOptimizationType::INCREMENTAL) {
+    using SmootherInterface = IncrementalInterface<dyno::ISAM2>;
+    SmootherInterface smoother_interface(smoother_.get());
+    const auto graph = smoother_interface.getFactors();
+    const auto theta = smoother_interface.getLinearizationPoint();
+    return {theta, graph};
+  } else {
+    LOG(FATAL) << "Unknown optimisation mode" << optimization_mode;
   }
 }
 
 void RegularBackendModule::updateAndOptimize(
     FrameId frame_id_k, const gtsam::Values& new_values,
-    const gtsam::NonlinearFactorGraph& new_factors) {
+    const gtsam::NonlinearFactorGraph& new_factors,
+    PostUpdateData& post_update_data) {
   // 0: Full-batch, 1: sliding-window, 2: incremental
-  const int optimization_mode = FLAGS_optimization_mode;
-  if (optimization_mode == 0) {
-    updateBatch(frame_id_k, new_values, new_factors);
-  } else if (optimization_mode == 1) {
-    updateSlidingWindow(frame_id_k, new_values, new_factors);
-  } else if (optimization_mode == 2) {
-    updateIncremental(frame_id_k, new_values, new_factors);
+  const RegularOptimizationType& optimization_mode =
+      base_params_.optimization_mode;
+  if (optimization_mode == RegularOptimizationType::FULL_BATCH) {
+    updateBatch(frame_id_k, new_values, new_factors, post_update_data);
+  } else if (optimization_mode == RegularOptimizationType::SLIDING_WINDOW) {
+    updateSlidingWindow(frame_id_k, new_values, new_factors, post_update_data);
+  } else if (optimization_mode == RegularOptimizationType::INCREMENTAL) {
+    updateIncremental(frame_id_k, new_values, new_factors, post_update_data);
   } else {
     LOG(FATAL) << "Unknown optimisation mode" << optimization_mode;
   }
@@ -252,7 +321,8 @@ void RegularBackendModule::updateAndOptimize(
 
 void RegularBackendModule::updateIncremental(
     FrameId frame_id_k, const gtsam::Values& new_values,
-    const gtsam::NonlinearFactorGraph& new_factors) {
+    const gtsam::NonlinearFactorGraph& new_factors,
+    PostUpdateData& post_update_data) {
   CHECK(smoother_) << "updateIncremental run but smoother was not setup!";
   utils::TimingStatsCollector timer(formulation_->getFullyQualifiedName() +
                                     ".update_incremental");
@@ -269,6 +339,21 @@ void RegularBackendModule::updateIncremental(
           SmootherInterface::UpdateArguments& update_arguments) {
         update_arguments.new_values = new_values;
         update_arguments.new_factors = new_factors;
+
+        // TODO: for now only dynamic isam2 update params but eventually will
+        // need to merge post_update_data should already be updated!!!!
+        convert(post_update_data.dynamic_update_result.isam_update_params,
+                update_arguments.update_params);
+
+        // if(update_arguments.update_params.newAffectedKeys) {
+        //    for(const auto& [idx, affected_keys] :
+        //    *update_arguments.update_params.newAffectedKeys) {
+        //     std::stringstream ss;
+        //     for(const auto& key : affected_keys) ss <<
+        //     DynosamKeyFormatter(key) << " "; LOG(INFO) << "Factor affected
+        //     " << idx << " keys: " << ss.str();
+        //   }
+        // }
       },
       error_hooks_);
 
@@ -278,8 +363,24 @@ void RegularBackendModule::updateIncremental(
 
   LOG(INFO) << "ISAM2 result. Error before " << result.getErrorBefore()
             << " error after " << result.getErrorAfter();
-  gtsam::Values optimised_values = smoother_->calculateEstimate();
+  gtsam::Values optimised_values = smoother_interface.calculateEstimate();
   formulation_->updateTheta(optimised_values);
+
+  // set and update post update incremental result
+  PostUpdateData::IncrementalResult incremental_result;
+  incremental_result.factors = smoother_interface.getFactors();
+
+  // LOG(INFO) << "After increemental update " <<
+  // incremental_result.factors.size(); for(size_t i = 0; i <
+  // incremental_result.factors.size(); i++) {
+  //   std::cout << "idx " << i << " ";
+  //   incremental_result.factors.at(i)->print("");
+  //   std::cout << "\n";
+  // }
+
+  convert(result, incremental_result.isam2);
+
+  post_update_data.incremental_result = incremental_result;
 
   if (FLAGS_regular_backend_log_incremental_stats) {
     VLOG(10) << "Logging incremental stats at frame " << frame_id_k;
@@ -288,7 +389,8 @@ void RegularBackendModule::updateIncremental(
 }
 
 void RegularBackendModule::updateBatch(FrameId frame_id_k, const gtsam::Values&,
-                                       const gtsam::NonlinearFactorGraph&) {
+                                       const gtsam::NonlinearFactorGraph&,
+                                       PostUpdateData& post_update_data) {
   if (base_params_.full_batch_frame - 1 == (int)frame_id_k) {
     LOG(INFO) << " Doing full batch at frame " << frame_id_k;
 
@@ -323,7 +425,8 @@ void RegularBackendModule::updateBatch(FrameId frame_id_k, const gtsam::Values&,
 
 void RegularBackendModule::updateSlidingWindow(
     FrameId frame_id_k, const gtsam::Values& new_values,
-    const gtsam::NonlinearFactorGraph& new_factors) {
+    const gtsam::NonlinearFactorGraph& new_factors,
+    PostUpdateData& post_update_data) {
   CHECK(sliding_window_opt_);
   const auto sw_result =
       sliding_window_opt_->update(new_factors, new_values, frame_id_k);
@@ -341,10 +444,10 @@ void RegularBackendModule::logIncrementalStats(
                              const std::string& file_type =
                                  ".csv") -> std::string {
     std::string file_name = formulation_->getFullyQualifiedName() + name;
-    const std::string suffix = FLAGS_updater_suffix;
-    if (!suffix.empty()) {
-      file_name += ("_" + suffix);
-    }
+    // const std::string& suffix = base_params_.updater_suffix;
+    // if (!suffix.empty()) {
+    //   file_name += ("_" + suffix);
+    // }
     file_name += file_type;
     return getOutputFilePath(file_name);
   };
@@ -415,20 +518,19 @@ void RegularBackendModule::logIncrementalStats(
 }
 
 void RegularBackendModule::addInitialStates(
-    const RGBDInstanceOutputPacket::ConstPtr& input,
-    FormulationType* formulation, gtsam::Values& new_values,
-    gtsam::NonlinearFactorGraph& new_factors) {
+    const VisionImuPacket::ConstPtr& input, FormulationType* formulation,
+    gtsam::Values& new_values, gtsam::NonlinearFactorGraph& new_factors) {
   CHECK(formulation);
 
-  const FrameId frame_k = input->getFrameId();
-  const Timestamp timestamp = input->getTimestamp();
-  const auto& X_k_initial = input->T_world_camera_;
+  const FrameId frame_k = input->frameId();
+  const Timestamp timestamp = input->timestamp();
+  const auto& X_k_initial = input->cameraPose();
 
   // update map
   updateMapWithMeasurements(frame_k, input, X_k_initial);
 
   // update formulation with initial states
-  if (input->pim_) {
+  if (input->pim()) {
     LOG(INFO) << "Initialising backend with IMU states!";
     this->addInitialVisualInertialState(
         frame_k, formulation, new_values, new_factors, noise_models_,
@@ -440,59 +542,56 @@ void RegularBackendModule::addInitialStates(
     this->addInitialVisualState(frame_k, formulation, new_values, new_factors,
                                 noise_models_, X_k_initial);
   }
+
+  LOG(INFO) << "Done!";
 }
-void RegularBackendModule::addStates(
-    const RGBDInstanceOutputPacket::ConstPtr& input,
-    FormulationType* formulation, gtsam::Values& new_values,
-    gtsam::NonlinearFactorGraph& new_factors) {
+void RegularBackendModule::addStates(const VisionImuPacket::ConstPtr& input,
+                                     FormulationType* formulation,
+                                     gtsam::Values& new_values,
+                                     gtsam::NonlinearFactorGraph& new_factors) {
   CHECK(formulation);
 
-  const FrameId frame_k = input->getFrameId();
+  const FrameId frame_k = input->frameId();
 
   const gtsam::NavState predicted_nav_state = this->addVisualInertialStates(
       frame_k, formulation, new_values, new_factors, noise_models_,
-      input->T_k_1_k_, input->pim_);
+      input->relativeCameraTransform(), input->pim());
 
   updateMapWithMeasurements(frame_k, input, predicted_nav_state.pose());
 }
 
 void RegularBackendModule::updateMapWithMeasurements(
-    FrameId frame_id_k, const RGBDInstanceOutputPacket::ConstPtr& input,
+    FrameId frame_id_k, const VisionImuPacket::ConstPtr& input,
     const gtsam::Pose3& X_k_w) {
-  CHECK_EQ(frame_id_k, input->getFrameId());
+  CHECK_EQ(frame_id_k, input->frameId());
 
-  map_->updateObservations(input->collectStaticLandmarkKeypointMeasurements());
-  map_->updateObservations(input->collectDynamicLandmarkKeypointMeasurements());
+  // update static and ego motion
+  map_->updateObservations(input->staticMeasurements());
   map_->updateSensorPoseMeasurement(frame_id_k, Pose3Measurement(X_k_w));
 
+  // update dynamic and motions
+  MotionEstimateMap object_motions;
+  for (const auto& [object_id, object_track] : input->objectTracks()) {
+    map_->updateObservations(object_track.measurements);
+    object_motions.insert2(object_id, object_track.H_W_k_1_k);
+  }
   // collected motion estimates for this current frame (ie. new motions!)
   // not handling the case where the update is incremental and other motions
   // have changed but right now the backend is not designed to handle this and
   // we currently dont run the backend with smoothing (tracking) in the
   // frontend.
-  const auto estimated_motions =
-      input->object_motions_.toEstimateMap(frame_id_k);
-  map_->updateObjectMotionMeasurements(frame_id_k, estimated_motions);
+  map_->updateObjectMotionMeasurements(frame_id_k, object_motions);
 }
 
-Formulation<RegularBackendModule::RGBDMap>::UniquePtr
-RegularBackendModule::makeFormulation() {
-  FormulationParams formulation_params;
-  // TODO: why are we copying params over???
-  formulation_params.min_static_observations = base_params_.min_static_obs_;
-  formulation_params.min_dynamic_observations = base_params_.min_dynamic_obs_;
-  // formulation_params.min_dynamic_observations = 2u;
-  formulation_params.use_smoothing_factor = base_params_.use_smoothing_factor;
-
-  FormulationHooks hooks = createFormulationHooks();
-
+void RegularBackendModule::setFormulation(
+    std::shared_ptr<RegularFormulationFactory> factory) {
   // setup error hooks
   ErrorHandlingHooks error_hooks;
   error_hooks.handle_ils_exception = [](const gtsam::Values& current_values,
                                         gtsam::Key problematic_key) {
     ErrorHandlingHooks::HandleILSResult ils_handle_result;
     // a little gross that I need to set this up in this function
-    gtsam::NonlinearFactorGraph& prior_factors = ils_handle_result.new_factors;
+    gtsam::NonlinearFactorGraph& prior_factors = ils_handle_result.pior_factors;
     auto& failed_on_object = ils_handle_result.failed_objects;
 
     ApplyFunctionalSymbol afs;
@@ -527,49 +626,29 @@ RegularBackendModule::makeFormulation() {
     return ils_handle_result;
   };
 
-  Formulation<RegularBackendModule::RGBDMap>::UniquePtr formulation;
+  FormulationParams formulation_params = base_params_;
+  Sensors sensors;
+  sensors.camera = camera_;
 
-  if (updater_type_ == RGBDFormulationType::WCME) {
-    LOG(INFO) << "Using WCME";
-    formulation = std::make_unique<WorldMotionFormulation>(
-        formulation_params, getMap(), noise_models_, hooks);
+  auto map = getMap();
+  auto formulation_hooks = createFormulationHooks();
 
-  } else if (updater_type_ == RGBDFormulationType::WCPE) {
-    LOG(INFO) << "Using WCPE";
-    formulation = std::make_unique<WorldPoseFormulation>(
-        formulation_params, getMap(), noise_models_, hooks);
-  } else if (updater_type_ == RGBDFormulationType::HYBRID) {
-    LOG(INFO) << "Using HYBRID";
-    formulation = std::make_unique<RegularHybridFormulation>(
-        formulation_params, getMap(), noise_models_, hooks);
-  } else if (updater_type_ == RGBDFormulationType::TESTING_HYBRID_SD) {
-    LOG(INFO) << "Using Hybrid Structureless Decoupled. Warning this is a "
-                 "testing only formulation!";
-    formulation =
-        std::make_unique<test_hybrid::StructurelessDecoupledFormulation>(
-            formulation_params, getMap(), noise_models_, hooks);
-  } else if (updater_type_ == RGBDFormulationType::TESTING_HYBRID_D) {
-    LOG(INFO) << "Using Hybrid Decoupled. Warning this is a testing only "
-                 "formulation!";
-    formulation = std::make_unique<test_hybrid::DecoupledFormulation>(
-        formulation_params, getMap(), noise_models_, hooks);
-  } else if (updater_type_ == RGBDFormulationType::TESTING_HYBRID_S) {
-    LOG(INFO) << "Using Hybrid Structurless. Warning this is a testing only "
-                 "formulation!";
-    formulation = std::make_unique<test_hybrid::StructurlessFormulation>(
-        formulation_params, getMap(), noise_models_, hooks);
-  } else if (updater_type_ == RGBDFormulationType::TESTING_HYBRID_SMF) {
-    LOG(INFO) << "Using Hybrid Smart Motion Factor. Warning this is a testing "
-                 "only formulation!";
-    formulation = std::make_unique<test_hybrid::SmartStructurlessFormulation>(
-        formulation_params, getMap(), noise_models_, hooks);
-  } else {
-    CHECK(false) << "Not implemented";
-  }
+  CHECK_NOTNULL(factory);
 
-  CHECK_NOTNULL(formulation);
+  // Formulation<RegularBackendModule::RGBDMap>::Ptr formulation =
+  //     BackendFactory::createFormulation(backend_type, formulation_params,
+  //                                       getMap(), noise_models_, sensors,
+  //                                       createFormulationHooks());
+  FormulationVizWrapper<RGBDMap> wrapper = factory->createFormulation(
+      formulation_params, map, noise_models_, sensors, formulation_hooks);
+
+  formulation_ = wrapper.formulation;
+  formulation_display_ = wrapper.display;
+
+  CHECK_NOTNULL(formulation_);
   // add additional error handling for incremental based on formulation
-  auto* hybrid_formulation = static_cast<HybridFormulation*>(formulation.get());
+  auto* hybrid_formulation =
+      static_cast<HybridFormulation*>(formulation_.get());
   if (hybrid_formulation) {
     LOG(INFO) << "Adding additional error hooks for Hybrid formulation";
     error_hooks.handle_failed_object =
@@ -583,14 +662,12 @@ RegularBackendModule::makeFormulation() {
         };
   }
   error_hooks_ = error_hooks;
-
-  return formulation;
 }
 
 BackendMetaData RegularBackendModule::createBackendMetadata() const {
   // TODO: cache?
   BackendMetaData backend_info;
-  backend_info.logging_suffix = FLAGS_updater_suffix;
+  // backend_info.logging_suffix = base_params_.updater_suffix;
   backend_info.backend_params = &base_params_;
   return backend_info;
 }
@@ -609,15 +686,7 @@ FormulationHooks RegularBackendModule::createFormulationHooks() const {
 
 BackendOutputPacket::Ptr RegularBackendModule::constructOutputPacket(
     FrameId frame_k, Timestamp timestamp) const {
-  CHECK_NOTNULL(formulation_);
-  return RegularBackendModule::constructOutputPacket(formulation_, frame_k,
-                                                     timestamp);
-}
-
-BackendOutputPacket::Ptr RegularBackendModule::constructOutputPacket(
-    const Formulation<RGBDMap>::UniquePtr& formulation, FrameId frame_k,
-    Timestamp timestamp) {
-  auto accessor = formulation->accessorFromTheta();
+  auto accessor = formulation_->accessorFromTheta();
 
   auto backend_output = std::make_shared<BackendOutputPacket>();
   backend_output->timestamp = timestamp;
@@ -628,7 +697,7 @@ BackendOutputPacket::Ptr RegularBackendModule::constructOutputPacket(
   //     accessor->getObjectMotions(frame_k);
   backend_output->dynamic_landmarks =
       accessor->getDynamicLandmarkEstimates(frame_k);
-  auto map = formulation->map();
+  auto map = formulation_->map();
   for (FrameId frame_id : map->getFrameIds()) {
     backend_output->optimized_camera_poses.push_back(
         accessor->getSensorPose(frame_id).get());
@@ -650,6 +719,11 @@ BackendOutputPacket::Ptr RegularBackendModule::constructOutputPacket(
 
   backend_output->optimized_object_motions = accessor->getObjectMotions();
   backend_output->optimized_object_poses = accessor->getObjectPoses();
+
+  const auto [active_values, active_graph] = this->getActiveOptimisation();
+  backend_output->active_values = active_values;
+  backend_output->active_graph = active_graph;
+
   return backend_output;
 }
 

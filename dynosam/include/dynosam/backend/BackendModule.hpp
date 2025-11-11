@@ -35,16 +35,15 @@
 #include "dynosam/backend/BackendOutputPacket.hpp"
 #include "dynosam/backend/BackendParams.hpp"
 #include "dynosam/backend/Formulation.hpp"
-#include "dynosam/common/Exceptions.hpp"
-#include "dynosam/common/Map.hpp"
-#include "dynosam/common/ModuleBase.hpp"
-#include "dynosam/common/SharedModuleInfo.hpp"
-#include "dynosam/common/Types.hpp"
-#include "dynosam/frontend/RGBDInstance-Definitions.hpp"  //for RGBDInstanceOutputPacket
-#include "dynosam/utils/SafeCast.hpp"
 #include "dynosam/visualizer/Visualizer-Definitions.hpp"  //for ImageDisplayQueueOptional,
+#include "dynosam_common/Exceptions.hpp"
+#include "dynosam_common/ModuleBase.hpp"
+#include "dynosam_common/SharedModuleInfo.hpp"
+#include "dynosam_common/Types.hpp"
+#include "dynosam_common/utils/SafeCast.hpp"
+#include "dynosam_opt/Map.hpp"
 
-DECLARE_string(updater_suffix);
+// DECLARE_string(updater_suffix);
 
 namespace dyno {
 
@@ -61,6 +60,7 @@ struct BackendModuleTraits {
   static_assert(std::is_base_of_v<BasePacketType, DerivedPacketType>);
 
   using MeasurementType = MEASUREMENT_TYPE;
+  using MapType = Map<MeasurementType>;
 };
 
 /**
@@ -83,9 +83,6 @@ class BackendModule
   const BackendParams& getParams() const { return base_params_; }
   const NoiseModels& getNoiseModels() const { return noise_models_; }
   const BackendSpinState& getSpinState() const { return spin_state_; }
-
-  // void optimize(FrameId frame_id_k, gtsam::Values& new_values,
-  // gtsam::NonlinearFactorGraph& new_factors) const;
 
  protected:
   // called in ModuleBase immediately before the spin function is called
@@ -124,7 +121,7 @@ class BackendModuleType : public BackendModule {
   using This = BackendModuleType<ModuleTraits>;
   using Base = BackendModule;
 
-  using MapType = Map<MeasurementType>;
+  using MapType = typename ModuleTraits::MapType;
   using FormulationType = Formulation<MapType>;
 
   DYNO_POINTER_TYPEDEFS(This)
@@ -145,13 +142,12 @@ class BackendModuleType : public BackendModule {
 
   inline const typename MapType::Ptr getMap() { return map_; }
 
+  virtual std::pair<gtsam::Values, gtsam::NonlinearFactorGraph>
+  getActiveOptimisation() const = 0;
+
  protected:
   virtual SpinReturn boostrapSpinImpl(InputConstPtr input) = 0;
   virtual SpinReturn nominalSpinImpl(InputConstPtr input) = 0;
-
-  void optimize(FrameId frame_id_k, FormulationType* formulation,
-                gtsam::Values& new_values,
-                gtsam::NonlinearFactorGraph& new_factors);
 
   typename MapType::Ptr map_;
 

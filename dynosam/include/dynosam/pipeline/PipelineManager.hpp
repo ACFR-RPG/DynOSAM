@@ -30,15 +30,16 @@
 
 #pragma once
 
+#include "dynosam/backend/BackendModuleFactory.hpp"
 #include "dynosam/backend/BackendPipeline.hpp"
-#include "dynosam/common/Types.hpp"
 #include "dynosam/dataprovider/DataInterfacePipeline.hpp"
 #include "dynosam/dataprovider/DataProvider.hpp"
 #include "dynosam/frontend/FrontendPipeline.hpp"
 #include "dynosam/pipeline/PipelineHooks.hpp"
 #include "dynosam/pipeline/PipelineParams.hpp"
-#include "dynosam/utils/Spinner.hpp"
 #include "dynosam/visualizer/VisualizerPipelines.hpp"
+#include "dynosam_common/Types.hpp"
+#include "dynosam_common/utils/Spinner.hpp"
 
 namespace dyno {
 
@@ -50,6 +51,7 @@ class DynoPipelineManager {
   DynoPipelineManager(const DynoParams& params, DataProvider::Ptr data_loader,
                       FrontendDisplay::Ptr frontend_display,
                       BackendDisplay::Ptr backend_display,
+                      BackendModuleFactory::Ptr factory,
                       const ExternalHooks::Ptr external_hooks = nullptr);
   ~DynoPipelineManager();
 
@@ -78,7 +80,8 @@ class DynoPipelineManager {
 
   void loadPipelines(const CameraParams& camera_params,
                      FrontendDisplay::Ptr frontend_display,
-                     BackendDisplay::Ptr backend_display);
+                     BackendDisplay::Ptr backend_display,
+                     BackendModuleFactory::Ptr factory);
 
  private:
   DynoParams params_;

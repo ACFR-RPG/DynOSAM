@@ -32,11 +32,10 @@
 
 #include <gtest/gtest.h>
 
-#include <ament_index_cpp/get_package_prefix.hpp>
-
-#include "dynosam/common/Camera.hpp"
-#include "dynosam/common/Types.hpp"
-#include "simulator.hpp"
+#include "ament_index_cpp/get_package_prefix.hpp"
+#include "dynosam_common/Types.hpp"
+#include "dynosam_cv/Camera.hpp"
+// #include "simulator.hpp"
 
 /**
  * @brief gets the full path to the installation directory of the test data
@@ -59,7 +58,8 @@ inline KeypointStatus makeStatusKeypointMeasurement(
     const Keypoint& keypoint = Keypoint(), double sigma = 2.0) {
   gtsam::Vector2 kp_sigmas;
   kp_sigmas << sigma, sigma;
-  MeasurementWithCovariance<Keypoint> kp_measurement(keypoint, kp_sigmas);
+  MeasurementWithCovariance<Keypoint> kp_measurement =
+      MeasurementWithCovariance<Keypoint>::FromSigmas(keypoint, kp_sigmas);
   return KeypointStatus(kp_measurement, frame_id, tracklet_id, object_id,
                         ReferenceFrame::LOCAL);
 }
@@ -87,10 +87,10 @@ inline void compareKeypoints(const Keypoints& lmks_1, const Keypoints& lmks_2,
 inline CameraParams makeDefaultCameraParams() {
   CameraParams::IntrinsicsCoeffs intrinsics(4);
   CameraParams::DistortionCoeffs distortion(4);
-  intrinsics.at(0) = 721.5377;  // fx
-  intrinsics.at(1) = 721.5377;  // fy
-  intrinsics.at(2) = 609.5593;  // u0
-  intrinsics.at(3) = 172.8540;  // v0
+  intrinsics.at(0) = 554.256;  // fx
+  intrinsics.at(1) = 554.256;  // fy
+  intrinsics.at(2) = 640 / 2;  // u0
+  intrinsics.at(3) = 480 / 2;  // v0
   return CameraParams(intrinsics, distortion, cv::Size(640, 480), "radtan");
 }
 
@@ -98,45 +98,6 @@ inline Camera makeDefaultCamera() { return Camera(makeDefaultCameraParams()); }
 
 inline Camera::Ptr makeDefaultCameraPtr() {
   return std::make_shared<Camera>(makeDefaultCameraParams());
-}
-
-inline dyno_testing::RGBDScenario makeDefaultScenario() {
-  dyno_testing::ScenarioBody::Ptr camera =
-      std::make_shared<dyno_testing::ScenarioBody>(
-          std::make_unique<dyno_testing::ConstantMotionBodyVisitor>(
-              gtsam::Pose3::Identity(),
-              // motion only in x
-              gtsam::Pose3(gtsam::Rot3::Identity(), gtsam::Point3(0.1, 0, 0))));
-  // needs to be at least 3 overlap so we can meet requirements in graph
-  // TODO: how can we do 1 point but with lots of overlap (even infinity
-  // overlap?)
-  dyno_testing::RGBDScenario scenario(
-      camera,
-      std::make_shared<dyno_testing::SimpleStaticPointsGenerator>(8, 3));
-
-  // add one obect
-  const size_t num_points = 3;
-  dyno_testing::ObjectBody::Ptr object1 =
-      std::make_shared<dyno_testing::ObjectBody>(
-          std::make_unique<dyno_testing::ConstantMotionBodyVisitor>(
-              gtsam::Pose3(gtsam::Rot3::Identity(), gtsam::Point3(10, 0, 0)),
-              // motion only in x
-              gtsam::Pose3(gtsam::Rot3::Identity(), gtsam::Point3(0.2, 0, 0))),
-          std::make_unique<dyno_testing::ConstantObjectPointsVisitor>(
-              num_points));
-
-  dyno_testing::ObjectBody::Ptr object2 =
-      std::make_shared<dyno_testing::ObjectBody>(
-          std::make_unique<dyno_testing::ConstantMotionBodyVisitor>(
-              gtsam::Pose3(gtsam::Rot3::Identity(), gtsam::Point3(10, 0, 0)),
-              // motion only in x
-              gtsam::Pose3(gtsam::Rot3::Identity(), gtsam::Point3(0.2, 0, 0))),
-          std::make_unique<dyno_testing::ConstantObjectPointsVisitor>(
-              num_points));
-
-  scenario.addObjectBody(1, object1);
-  scenario.addObjectBody(2, object2);
-  return scenario;
 }
 
 }  // namespace dyno_testing

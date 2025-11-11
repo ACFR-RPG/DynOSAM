@@ -30,70 +30,42 @@
 
 #pragma once
 
-#include <gtsam/inference/LabeledSymbol.h>
-#include <gtsam/inference/Symbol.h>
 #include <gtsam/slam/ProjectionFactor.h>
 #include <gtsam/slam/SmartProjectionPoseFactor.h>
+#include <gtsam/slam/StereoFactor.h>
 #include <gtsam_unstable/slam/PoseToPointFactor.h>
 
 #include <functional>
 #include <unordered_map>
 
 #include "dynosam/backend/BackendParams.hpp"
-#include "dynosam/backend/DynamicPointSymbol.hpp"
-#include "dynosam/common/Camera.hpp"  //for calibration type
-#include "dynosam/common/Exceptions.hpp"
-#include "dynosam/common/GroundTruthPacket.hpp"
-#include "dynosam/common/Types.hpp"
 #include "dynosam/frontend/Frontend-Definitions.hpp"
-#include "dynosam/logger/Logger.hpp"
+#include "dynosam_common/Exceptions.hpp"
+#include "dynosam_common/GroundTruthPacket.hpp"
+#include "dynosam_common/Types.hpp"
+#include "dynosam_common/logger/Logger.hpp"
+#include "dynosam_cv/Camera.hpp"  //for calibration type
+#include "dynosam_opt/Symbols.hpp"
 
 namespace dyno {
 
 /// @brief Alias to a gtsam::PoseToPointFactor<gtsam::Pose3, Landmark>
 using PoseToPointFactor = gtsam::PoseToPointFactor<gtsam::Pose3, Landmark>;
 
-using SymbolChar = unsigned char;
-static constexpr SymbolChar kPoseSymbolChar = 'X';
-static constexpr SymbolChar kVelocitySymbolChar = 'V';
-static constexpr SymbolChar kObjectMotionSymbolChar = 'H';
-static constexpr SymbolChar kObjectPoseSymbolChar = 'L';
-static constexpr SymbolChar kStaticLandmarkSymbolChar = 'l';
-static constexpr SymbolChar kDynamicLandmarkSymbolChar = 'm';
-static constexpr SymbolChar kImuBiasSymbolChar = 'b';
+enum BackendType : int {
 
-inline gtsam::Key H(unsigned char label, std::uint64_t j) {
-  return gtsam::LabeledSymbol(kObjectMotionSymbolChar, label, j);
-}
-inline gtsam::Key L(unsigned char label, std::uint64_t j) {
-  return gtsam::LabeledSymbol(kObjectPoseSymbolChar, label, j);
-}
-
-inline gtsam::Symbol CameraPoseSymbol(FrameId frame_id) {
-  return gtsam::Symbol(kPoseSymbolChar, frame_id);
-}
-inline gtsam::Symbol StaticLandmarkSymbol(TrackletId tracklet_id) {
-  return gtsam::Symbol(kStaticLandmarkSymbolChar, tracklet_id);
-}
-inline DynamicPointSymbol DynamicLandmarkSymbol(FrameId frame_id,
-                                                TrackletId tracklet_id) {
-  return DynamicPointSymbol(kDynamicLandmarkSymbolChar, tracklet_id, frame_id);
-}
-inline gtsam::Key ObjectMotionSymbol(ObjectId object_label, FrameId frame_id) {
-  unsigned char label = object_label + '0';
-  return H(label, static_cast<std::uint64_t>(frame_id));
-}
-
-inline gtsam::Key ObjectPoseSymbol(ObjectId object_label, FrameId frame_id) {
-  unsigned char label = object_label + '0';
-  return L(label, static_cast<std::uint64_t>(frame_id));
-}
-
-bool checkIfLabeledSymbol(gtsam::Key key);
-bool reconstructMotionInfo(gtsam::Key key, ObjectId& object_label,
-                           FrameId& frame_id);
-bool reconstructPoseInfo(gtsam::Key key, ObjectId& object_label,
-                         FrameId& frame_id);
+  WCME = 0,             // world-centric motion estimator
+  WCPE = 1,             // world-centric pose estimator
+  HYBRID = 2,           // full-hybrid
+  PARALLEL_HYBRID = 3,  // associated to its own special class
+  // the following are test formulations that were not specifcially part of a
+  // paper but were used for (internal) development/research. they may not work
+  // as intended and are included for posterity
+  TESTING_HYBRID_SD = 4,  // (SD) structureless-decoupled
+  TESTING_HYBRID_D = 5,   // (D) decoupled
+  TESTING_HYBRID_S = 6,   // (S) structureless
+  TESTING_HYBRID_SMF = 7  // (SFM) smart motion factor
+};
 
 // TODO: this information is sort of duplicated when the ROS odometry messages
 // are constructed.
@@ -167,6 +139,8 @@ struct NoiseModels {
   gtsam::SharedNoiseModel static_point_noise;
 
   static NoiseModels fromBackendParams(const BackendParams&);
+
+  void print(const std::string& name) const;
 };
 
 /**
@@ -215,17 +189,6 @@ struct BackendSpinState {
       : frame_id(frame), timestamp(t), iteration(itr) {}
 };
 
-std::string DynoLikeKeyFormatter(gtsam::Key);
-std::string DynoLikeKeyFormatterVerbose(gtsam::Key);
-
-constexpr static SymbolChar InvalidDynoSymbol = '\0';
-
-// TODO: not actually sure if this is necessary
-// in this sytem we mix Symbol and LabelledSymbol so I just check which one the
-// correct cast is and use that label, This will return InvalidDynoSymbol if a
-// key cannot be constructed
-SymbolChar DynoChrExtractor(gtsam::Key);
-
 using CalibrationType =
     Camera::CalibrationType;  // TODO: really need to check that this one
                               // matches the calibration in the camera!!
@@ -239,8 +202,12 @@ using SmartProjectionFactor = gtsam::SmartProjectionPoseFactor<CalibrationType>;
 using GenericProjectionFactor =
     gtsam::GenericProjectionFactor<gtsam::Pose3, gtsam::Point3,
                                    CalibrationType>;
+using GenericStereoFactor = gtsam::GenericStereoFactor<gtsam::Pose3, Landmark>;
 
 using SmartProjectionFactorParams = gtsam::SmartProjectionParams;
+
+template <typename T>
+using FactorMap = gtsam::FastMap<TrackletId, std::pair<T, Slot>>;
 
 class DebugInfo {
  public:

@@ -179,6 +179,8 @@ class ObjectTrajectoryPlotter(object):
         if obj_trajectories_ref is not None and len(obj_trajectories) != len(obj_trajectories_ref):
             raise evo_plot.PlotException(f"Expected trajectories and ref trajectories to have the same length {len(obj_trajectories)} != {len(obj_trajectories_ref)}")
 
+        if len(obj_trajectories) == 0:
+            return ax
 
         # get all top level params
         plot_axis_est = kwargs.pop("plot_axis_est", False)

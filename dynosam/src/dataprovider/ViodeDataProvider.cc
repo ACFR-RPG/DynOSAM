@@ -30,16 +30,16 @@
 
 #include "dynosam/dataprovider/ViodeDataProvider.hpp"
 
-#include "dynosam/common/CameraParams.hpp"
 #include "dynosam/dataprovider/DataProviderUtils.hpp"
 #include "dynosam/frontend/imu/Imu-Definitions.hpp"
 #include "dynosam/frontend/imu/ThreadSafeImuBuffer.hpp"
 #include "dynosam/frontend/vision/StereoMatcher.hpp"
 #include "dynosam/pipeline/ThreadSafeTemporalBuffer.hpp"
-#include "dynosam/utils/CsvParser.hpp"
-#include "dynosam/utils/GtsamUtils.hpp"
-#include "dynosam/utils/OpenCVUtils.hpp"
-#include "dynosam/visualizer/ColourMap.hpp"
+#include "dynosam_common/utils/CsvParser.hpp"
+#include "dynosam_common/utils/GtsamUtils.hpp"
+#include "dynosam_common/utils/OpenCVUtils.hpp"
+#include "dynosam_common/viz/Colour.hpp"
+#include "dynosam_cv/CameraParams.hpp"
 
 namespace dyno {
 
@@ -56,7 +56,7 @@ class ViodeAllLoader {
     CHECK_LT(idx, flow_0_paths_.size());
 
     cv::Mat flow;
-    loadFlow(flow_0_paths_.at(idx), flow);
+    utils::loadFlow(flow_0_paths_.at(idx), flow);
     CHECK(!flow.empty());
     return flow;
   }
@@ -64,7 +64,7 @@ class ViodeAllLoader {
   cv::Mat getRGB(size_t idx) const {
     CHECK_LT(idx, image_left_paths_.size());
     cv::Mat rgb;
-    loadRGB(image_left_paths_.at(idx), rgb);
+    utils::loadRGB(image_left_paths_.at(idx), rgb);
     CHECK(!rgb.empty());
     return rgb;
   }
@@ -72,7 +72,7 @@ class ViodeAllLoader {
   cv::Mat getRightRGB(size_t idx) const {
     CHECK_LT(idx, image_right_paths_.size());
     cv::Mat rgb;
-    loadRGB(image_right_paths_.at(idx), rgb);
+    utils::loadRGB(image_right_paths_.at(idx), rgb);
     CHECK(!rgb.empty());
     return rgb;
   }
@@ -82,7 +82,7 @@ class ViodeAllLoader {
     CHECK_LT(idx, dataset_size_);
 
     cv::Mat mask;
-    loadMask(masks_0_paths_.at(idx), mask);
+    utils::loadMask(masks_0_paths_.at(idx), mask);
     CHECK(!mask.empty());
 
     return mask;
@@ -125,12 +125,12 @@ class ViodeAllLoader {
                              size_t& dataset_size,
                              const std::string& flow_image_path) {
     std::vector<std::filesystem::path> files_in_directory =
-        getAllFilesInDir(flow_image_path);
+        utils::getAllFilesInDir(flow_image_path);
     dataset_size = files_in_directory.size();
     CHECK_GT(dataset_size, 0);
 
     for (const std::string file_path : files_in_directory) {
-      throwExceptionIfPathInvalid(file_path);
+      utils::throwExceptionIfPathInvalid(file_path);
       images_paths.push_back(file_path);
     }
   }
@@ -138,10 +138,10 @@ class ViodeAllLoader {
   void loadImages(std::vector<std::string>& images_paths,
                   const std::string& image_folder) {
     std::vector<std::filesystem::path> files_in_directory =
-        getAllFilesInDir(image_folder);
+        utils::getAllFilesInDir(image_folder);
 
     for (const std::filesystem::path& file_path : files_in_directory) {
-      throwExceptionIfPathInvalid(file_path);
+      utils::throwExceptionIfPathInvalid(file_path);
 
       // only load png files
       auto ext = file_path.extension().string();
@@ -153,18 +153,18 @@ class ViodeAllLoader {
 
   void syncFilePathsWithGroundTruth(const std::string& file_path) {
     const auto flow_image_path = file_path + "/cam0/flow_0/";
-    throwExceptionIfPathInvalid(flow_image_path);
+    utils::throwExceptionIfPathInvalid(flow_image_path);
     // load images
     const auto left_image_path = file_path + "/cam0/image_raw/";
     const auto right_image_path = file_path + "/cam1/image_raw/";
     const auto mask_image_path = file_path + "/cam0/mask_0/";
 
-    throwExceptionIfPathInvalid(left_image_path);
-    throwExceptionIfPathInvalid(right_image_path);
-    throwExceptionIfPathInvalid(mask_image_path);
+    utils::throwExceptionIfPathInvalid(left_image_path);
+    utils::throwExceptionIfPathInvalid(right_image_path);
+    utils::throwExceptionIfPathInvalid(mask_image_path);
 
     const auto gt_file_path = file_path + "/odometry_odom.csv";
-    throwExceptionIfPathInvalid(gt_file_path);
+    utils::throwExceptionIfPathInvalid(gt_file_path);
     LOG(INFO) << "GT Odometry File path checked at" << gt_file_path;
 
     std::ifstream infile(gt_file_path);
@@ -195,7 +195,7 @@ class ViodeAllLoader {
     LOG(INFO) << "Loaded gt odom";
 
     const auto imu_file_path = file_path + "/imu0_imu.csv";
-    throwExceptionIfPathInvalid(imu_file_path);
+    utils::throwExceptionIfPathInvalid(imu_file_path);
     LOG(INFO) << "IMU File path checked at" << imu_file_path;
 
     std::ifstream imu_infile(imu_file_path);
@@ -241,7 +241,7 @@ class ViodeAllLoader {
 
     // first load flow files
     std::vector<std::filesystem::path> flow_files_in_directory =
-        getAllFilesInDir(flow_image_path);
+        utils::getAllFilesInDir(flow_image_path);
     FrameId frame = 0;
     Timestamp previous_timestamp = 0;
 
@@ -279,9 +279,9 @@ class ViodeAllLoader {
         const std::string mask_image_file =
             mask_image_path + image_name + ".png";
 
-        throwExceptionIfPathInvalid(left_image_file);
-        throwExceptionIfPathInvalid(right_image_file);
-        throwExceptionIfPathInvalid(mask_image_file);
+        utils::throwExceptionIfPathInvalid(left_image_file);
+        utils::throwExceptionIfPathInvalid(right_image_file);
+        utils::throwExceptionIfPathInvalid(mask_image_file);
 
         // convert to CV coordiantes
         const auto world_R_cv = gt_pose.rotation() * VIODE_left_hand_transform;
@@ -357,6 +357,7 @@ class ViodeAllLoader {
 
     camera_params_ = CameraParams(K, D, cv::Size(752, 480),
                                   DistortionModel::RADTAN, extrinsics_left);
+    camera_params_.setDepthParams(0.05);
 
     // the original dataset actually has some rotation in it but we ignore this
     // as this is just the cv-to-robotic convention
@@ -405,8 +406,8 @@ class ViodeAllLoader {
     stereo_matcher_ = std::make_shared<StereoMatcher>(
         stereo_camera_, StereoMatchingParams{}, dense_stereo_params);
 
-    imu_params_.acc_noise_density = 0.05;
     imu_params_.acc_noise_density = 0.2;
+    imu_params_.gyro_noise_density = 0.05;
 
     imu_params_.gyro_random_walk = 4.0e-5;
     imu_params_.acc_random_walk = 0.02;

@@ -30,11 +30,10 @@
 
 #pragma once
 
-#include <dynosam/common/GroundTruthPacket.hpp>
-#include <dynosam/frontend/RGBDInstance-Definitions.hpp>
-#include <dynosam/visualizer/Display.hpp>
-
 #include "dynamic_slam_interfaces/msg/object_odometry.hpp"
+#include "dynosam/frontend/VisionImuOutputPacket.hpp"
+#include "dynosam/visualizer/Display.hpp"
+#include "dynosam_common/GroundTruthPacket.hpp"
 #include "dynosam_ros/Display-Definitions.hpp"
 #include "dynosam_ros/displays/DisplaysCommon.hpp"
 #include "dynosam_ros/displays/dynamic_slam_displays/DSDCommonRos.hpp"
@@ -48,19 +47,19 @@ class FrontendDSDRos : public FrontendDisplay, DSDRos {
   FrontendDSDRos(const DisplayParams params, rclcpp::Node::SharedPtr node);
   ~FrontendDSDRos() = default;
 
-  void spinOnce(
-      const FrontendOutputPacketBase::ConstPtr& frontend_output) override;
+  void spinOnceImpl(const VisionImuPacket::ConstPtr& frontend_output) override;
 
  private:
-  void tryPublishDebugImagery(
-      const FrontendOutputPacketBase::ConstPtr& frontend_output);
-  void tryPublishGroundTruth(
-      const FrontendOutputPacketBase::ConstPtr& frontend_output);
+  void tryPublishDebugImagery(const VisionImuPacket::ConstPtr& frontend_output);
+  void tryPublishGroundTruth(const VisionImuPacket::ConstPtr& frontend_output);
   void tryPublishVisualOdometry(
-      const FrontendOutputPacketBase::ConstPtr& frontend_output);
+      const VisionImuPacket::ConstPtr& frontend_output);
 
-  void processRGBDOutputpacket(
-      const RGBDInstanceOutputPacket::ConstPtr& rgbd_packet);
+  void tryPublishPointClouds(const VisionImuPacket::ConstPtr& frontend_output);
+  void tryPublishObjects(const VisionImuPacket::ConstPtr& frontend_output);
+
+  void updateAccumulatedDataStructured(
+      const VisionImuPacket::ConstPtr& frontend_output);
 
  private:
   //! Transport for ground truth publishing
@@ -73,6 +72,13 @@ class FrontendDSDRos : public FrontendDisplay, DSDRos {
 
   rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr
       dense_dynamic_cloud_pub_;
+
+  //! Accumulated camera poses
+  gtsam::Pose3Vector camera_poses_;
+  //! Accumulated object motions
+  ObjectMotionMap object_motions_;
+  //! Accumulated object poses
+  ObjectPoseMap object_poses_;
 };
 
 }  // namespace dyno
