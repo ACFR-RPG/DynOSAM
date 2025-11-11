@@ -65,7 +65,8 @@ class StaticFormulationUpdaterImpl {
    * Return results indicates if any factors/values were added (ie. the point
    * was added).
    *
-   * @param lmk
+   * @param lmk Landmark is passed by reference as some internal flags may be
+   * changed
    * @param frame
    * @param update_params
    * @param values
@@ -76,7 +77,7 @@ class StaticFormulationUpdaterImpl {
    * @return true
    * @return false
    */
-  virtual bool addLandmark(const LmkNode& lmk, const FrameNode& frame,
+  virtual bool addLandmark(LmkNode& lmk, const FrameNode& frame,
                            const UpdateObservationParams& update_params,
                            gtsam::Values& values,
                            gtsam::NonlinearFactorGraph& graph,
@@ -126,7 +127,7 @@ class StaticFormulationUpdater : public StaticFormulationUpdaterImpl<MAP> {
     CHECK_NOTNULL(impl_);
   }
 
-  bool addLandmark(const LmkNode& lmk, const FrameNode& frame,
+  bool addLandmark(LmkNode& lmk, const FrameNode& frame,
                    const UpdateObservationParams& update_params,
                    gtsam::Values& values, gtsam::NonlinearFactorGraph& graph,
                    gtsam::Key& point_key, UpdateObservationResult& result,
@@ -144,7 +145,7 @@ class StaticFormulationUpdater : public StaticFormulationUpdaterImpl<MAP> {
   struct PTP : public Base {
     PTP(FormulationType* formulation) : Base(formulation) {}
 
-    bool addLandmark(const LmkNode& lmk, const FrameNode& frame,
+    bool addLandmark(LmkNode& lmk, const FrameNode& frame,
                      const UpdateObservationParams& update_params,
                      gtsam::Values& values, gtsam::NonlinearFactorGraph& graph,
                      gtsam::Key& point_key, UpdateObservationResult& result,
@@ -155,6 +156,7 @@ class StaticFormulationUpdater : public StaticFormulationUpdaterImpl<MAP> {
       const auto& params = this->formulation_->params();
 
       if (this->isPointAdded(point_key)) {
+        CHECK(lmk->added_to_opt);
         const auto pose_key = frame->makePoseKey();
 
         auto [measured_point_local, measurement_covariance] =
@@ -171,6 +173,8 @@ class StaticFormulationUpdater : public StaticFormulationUpdaterImpl<MAP> {
         result.updateAffectedObject(frame_k, 0);
         return true;
       } else {
+        CHECK(!lmk->added_to_opt);
+
         if (lmk->numObservations() < params.min_static_observations) {
           return false;
         }
@@ -224,6 +228,7 @@ class StaticFormulationUpdater : public StaticFormulationUpdaterImpl<MAP> {
 
         values.insert(point_key, initial_point);
         this->markPointAsAdded(point_key);
+        lmk->added_to_opt = true;
         return true;
       }
     }
@@ -237,62 +242,14 @@ class StaticFormulationUpdater : public StaticFormulationUpdaterImpl<MAP> {
       CHECK_NOTNULL(K_);
     }
 
-    bool addLandmark(const LmkNode& lmk, const FrameNode& frame,
+    bool addLandmark(LmkNode& lmk, const FrameNode& frame,
                      const UpdateObservationParams& update_params,
                      gtsam::Values& values, gtsam::NonlinearFactorGraph& graph,
                      gtsam::Key& point_key, UpdateObservationResult& result,
                      std::optional<Landmark>& initial) override {
       LOG(FATAL) << "Not implemented";
+      return false;
     }
-
-    // requires at least two obsevrations! Not enfoced by this class but in the
-    // Formulatiln bad design! absolutely no checks for parallax etc so
-    // definitely things will break using this implementatioN!!! for not rely on
-    // PTP ot Stereo!
-    // gtsam::NonlinearFactorGraph makeFactors(const LmkNode& lmk,
-    //                                         const FrameNode& frame,
-    //                                         FrameId frame_k,
-    //                                         const gtsam::Key& point_key)
-    //                                         override {
-    //   CHECK_EQ(point_key, lmk->makeStaticKey());
-    //   const gtsam::Key pose_key = frame->makePoseKey();
-
-    //   auto [measured_keypoint_local, measurement_covariance] =
-    //       MeasurementTraits::keypointWithCovariance(
-    //           lmk->getMeasurement(frame_k));
-    //   CHECK_NOTNULL(measurement_covariance);
-
-    //   this->robustifyHuber(measurement_covariance);
-
-    //   auto factor = boost::make_shared<GenericProjectionFactor>(
-    //       measured_keypoint_local, measurement_covariance, pose_key,
-    //       point_key, K_);
-
-    //   gtsam::NonlinearFactorGraph graph;
-    //   graph.add(factor);
-    //   return graph;
-    // }
-
-    // bool initLandmark(const LmkNode& lmk,
-    //                 FrameId frame_k,
-    //                 Landmark& point,
-    //                 gtsam::Key& point_key)  override {
-    //   // FOR NOW! rely on the fact that the frontend has
-    //   initalised/triangulated
-    //   // the point!
-    //   const Landmark& measured =
-    //       MeasurementTraits::point(lmk->getMeasurement(frame_k));
-
-    //   // TODO: should use getInitialOrLinearizedSensorPose
-    //   gtsam::Pose3 T_W_X;
-    //   CHECK(this->formulation_->map()->hasInitialSensorPose(frame_k,
-    //   &T_W_X));
-
-    //   point_key = lmk->makeStaticKey();
-    //   point = T_W_X * measured;
-
-    //   return true;
-    // }
 
     std::shared_ptr<Camera> camera_;
     Camera::CalibrationType::shared_ptr K_;
@@ -311,7 +268,7 @@ class StaticFormulationUpdater : public StaticFormulationUpdaterImpl<MAP> {
       K_ = camera->getGtsamCalibration();
     }
 
-    bool addLandmark(const LmkNode& lmk, const FrameNode& frame,
+    bool addLandmark(LmkNode& lmk, const FrameNode& frame,
                      const UpdateObservationParams& update_params,
                      gtsam::Values& values, gtsam::NonlinearFactorGraph& graph,
                      gtsam::Key& point_key, UpdateObservationResult& result,
@@ -321,7 +278,11 @@ class StaticFormulationUpdater : public StaticFormulationUpdaterImpl<MAP> {
 
       const auto& params = this->formulation_->params();
 
+      // NOTE: not handling the case a lmk becomes an outlier once already added
+      // to the opt
+      //  hoping the robust cost funcion handles this!
       if (this->isPointAdded(point_key)) {
+        CHECK(lmk->added_to_opt);
         const auto pose_key = frame->makePoseKey();
 
         auto stereo_measurement =
@@ -339,6 +300,8 @@ class StaticFormulationUpdater : public StaticFormulationUpdaterImpl<MAP> {
         result.updateAffectedObject(frame_k, 0);
         return true;
       } else {
+        CHECK(!lmk->added_to_opt);
+
         using GtsamCamera = Camera::CameraImpl;
         CameraSet<GtsamCamera> camera_set;
         gtsam::Point2Vector measurements;
@@ -398,6 +361,8 @@ class StaticFormulationUpdater : public StaticFormulationUpdaterImpl<MAP> {
 
           // if error is too large, discard point
           if (reprojection_error > 3.0) {
+            // mark as outlier for the front-end
+            lmk->inlier = false;
             return false;
           }
           // collect factors
@@ -434,13 +399,12 @@ class StaticFormulationUpdater : public StaticFormulationUpdaterImpl<MAP> {
 
           values.insert(point_key, initial_point);
           this->markPointAsAdded(point_key);
+          lmk->added_to_opt = true;
 
           return true;
-
-          // TODO: should throw this out (formulation should try and initalise
-          // the result first and then if successful, add all other factors!!)
         } else {
-          // LOG(WARNING) << "Triangulation failed"
+          // mark as outlier for the front-end
+          lmk->inlier = false;
           return false;
         }
       }
@@ -602,14 +566,14 @@ UpdateObservationResult Formulation<MAP>::updateStaticObservations(
   const size_t initial_factors_size = new_factors.size();
   const size_t initial_values_size = new_values.size();
 
-  const auto frame_node_k = map->getFrame(frame_id_k);
+  auto frame_node_k = map->getFrame(frame_id_k);
   CHECK_NOTNULL(frame_node_k);
 
   internal::StaticFormulationUpdater<MAP> static_updater(this);
 
   VLOG(20) << "Looping over " << frame_node_k->static_landmarks.size()
            << " static lmks for frame " << frame_id_k;
-  for (const auto& lmk_node : frame_node_k->static_landmarks) {
+  for (auto lmk_node : frame_node_k->static_landmarks) {
     gtsam::Key point_key;
     std::optional<Landmark> initial_value;
 

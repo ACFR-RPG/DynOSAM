@@ -93,6 +93,7 @@ add_library(${PROJECT_NAME} SHARED
   src/frontend/anms/NonMaximumSupression.cc
   src/frontend/anms/anms.cc
 
+  src/backend/Accessor.cc
   src/backend/BackendDefinitions.cc
   src/backend/BackendPipeline.cc
   src/backend/BackendModule.cc

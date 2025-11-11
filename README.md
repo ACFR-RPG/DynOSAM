@@ -62,6 +62,16 @@ Example output running on the Oxford Multimotion Dataset (OMD, _swinging_4_uncon
 
 > NOTE: this visualisation was generated using playback and is does not reflect the realtime output of our system.
 
+## Feature Updates
+November 2025
+- CUDA integration for front-end acceleration
+- TensorRT for integrated object detection and tracking
+- Options to move to sparse tracking for static and dynamic objects. This moves away from the need to calculate dense optical flow.
+- Custom visualisation options per module.
+- System is broken out into more packages for a cleaner interface and faster compile time.
+- Updated docker image with new dependancies.
+- Additional support for IMU and stereo SLAM systems (although still under active development)
+
 # 1. Installtion
 
 Tested on Ubuntu 20.04

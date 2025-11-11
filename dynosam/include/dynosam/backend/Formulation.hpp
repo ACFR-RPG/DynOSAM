@@ -275,8 +275,8 @@ class Formulation {
 
   using PointUpdateContextType = PointUpdateContext<Map>;
   using ObjectUpdateContextType = ObjectUpdateContext<Map>;
-  using AccessorType = Accessor<MAP>;
-  using AccessorTypePointer = typename Accessor<MAP>::Ptr;
+  using AccessorType = AccessorT<MAP>;
+  using AccessorTypePointer = typename AccessorT<MAP>::Ptr;
 
   DYNO_POINTER_TYPEDEFS(This)
 
@@ -452,6 +452,10 @@ class Formulation {
    * @return gtsam::KeyFormatter
    */
   virtual gtsam::KeyFormatter formatter() const { return DynosamKeyFormatter; }
+
+  inline std::string format(const gtsam::Key& key) const {
+    return this->formatter()(key);
+  }
 
   /**
    * @brief Get the fully qualified name of this formulation which is derived

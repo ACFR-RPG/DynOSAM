@@ -191,8 +191,8 @@ def run_kitti():
     # run_ecmr_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0005/", "kitti_0005_static_only", kitti_dataset, "--shrink_row=25", "--shrink_col=50")
     # run_ecmr_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0006/", "kitti_0006_static_only", kitti_dataset, "--shrink_row=25", "--shrink_col=50")
     # run_ecmr_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0018/", "kitti_0018_static_only", kitti_dataset, "--shrink_row=25", "--shrink_col=50")
-    # run_ecmr_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0020/", "kitti_0020_static_only", kitti_dataset, "--shrink_row=25", "--shrink_col=50")
-    run_ecmr_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0004/", "test", kitti_dataset, "--shrink_row=25", "--shrink_col=50", "--use_backend=true")
+    run_ecmr_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0020/", "kitti_0020_static_only", kitti_dataset, "--shrink_row=25", "--shrink_col=50")
+    # run_ecmr_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0004/", "test", kitti_dataset, "--shrink_row=25", "--shrink_col=50", "--use_backend=true")
 
 
 def run_aria():
@@ -209,9 +209,9 @@ if __name__ == '__main__':
     # run_viodes()
     # run_tartan_air()
     # run_cluster()
-    # run_omd()
+    run_omd()
     # run_aria()
-    run_kitti()
+    # run_kitti()
     # run_analysis("kitti_0001_static_only")
     # run_analysis("kitti_0002_static_only")
     # run_analysis("kitti_0003_static_only")

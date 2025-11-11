@@ -46,17 +46,12 @@ namespace dyno {
  * ^wX_k,   \othmotion{\worldf}{k-1}{\mathcal{H}}{k}, ^{\worldf}\mathcal{L}_{k}
  * , {^\worldf\mathcal{M}_k}].
  *
- * @tparam MAP
  */
-template <class MAP>
 class Accessor {
  public:
-  using Map = MAP;
-  using This = Accessor<Map>;
+  DYNO_POINTER_TYPEDEFS(Accessor)
 
-  DYNO_POINTER_TYPEDEFS(This)
-
-  Accessor(const SharedFormulationData& shared_data, typename Map::Ptr map);
+  Accessor() = default;
   virtual ~Accessor() {}
 
   /**
@@ -79,20 +74,15 @@ class Accessor {
       FrameId frame_id, ObjectId object_id) const = 0;
 
   /**
-   * @brief Gets the absolute motion (_{k-1}^wH_k) from theta the requested
-   * time-step (k) and object (j) with the associated reference frame.
-   * Internally this uses getObjectMotion and constructs a Motion3ReferenceFrame
-   * using the global frame, k-1 and k. No checks are done on the underlying
-   * function call so it assumes that the virtual getObjectMotion function has
-   * been implemented correctly and returns a motion in the right
-   * representation.
+   * @brief Gets the motion _{k-1}^wH_k attime-step (k) and object (j) with the
+   * associated reference frame.
    *
    * @param frame_id FrameId
    * @param object_id ObjectId
    * @return StateQuery<Motion3ReferenceFrame>
    */
-  StateQuery<Motion3ReferenceFrame> getObjectMotionReferenceFrame(
-      FrameId frame_id, ObjectId object_id) const;
+  virtual StateQuery<Motion3ReferenceFrame> getObjectMotionReferenceFrame(
+      FrameId frame_id, ObjectId object_id) const = 0;
 
   /**
    * @brief Get the pose (^wL_k) of an object (j) at time-step (k).
@@ -122,7 +112,7 @@ class Accessor {
    * @return StateQuery<gtsam::Point3>
    */
   virtual StateQuery<gtsam::Point3> getStaticLandmark(
-      TrackletId tracklet_id) const;
+      TrackletId tracklet_id) const = 0;
 
   /**
    * @brief Collects all object poses at some time-step (k). This is equivalent
@@ -134,49 +124,24 @@ class Accessor {
    * @return EstimateMap<ObjectId, gtsam::Pose3>
    */
   virtual EstimateMap<ObjectId, gtsam::Pose3> getObjectPoses(
-      FrameId frame_id) const;
+      FrameId frame_id) const = 0;
 
   /**
-   * @brief Collects all object motions from some time-step (k-1) to k. This is
-   * equivalent to \mathcal{H}_k. Uses the pure-virtual getObjectMotion function
-   * to collect all object motions.
-   *
+   * @brief Collects all object motions (_{k-1}^wH_k) from time-step (k-1) to k.
+   * This is equivalent to \mathcal{H}_k.
    *
    * @param frame_id FrameId
    * @return MotionEstimateMap
    */
-  MotionEstimateMap getObjectMotions(FrameId frame_id) const;
-
-  /**
-   * @brief Gets an estimate map of objects with their motion and and PREVIOUS
-   * pose. This will find motions and poses (using the internal API) and return
-   * a motion from k-1 to k and the associated pose at k-1.
-   *
-   * @param frame_id FrameId
-   * @return EstimateMap<ObjectId, std::pair<Motion3, gtsam::Pose3>>
-   */
-  EstimateMap<ObjectId, std::pair<Motion3, gtsam::Pose3>> getObjectPrevPosePair(
-      FrameId frame_id) const;
-
-  /**
-   * @brief Gets an estimate map of objects with their motion and and CURRENT
-   * pose. This will find motions and poses (using the internal API) and return
-   * a motion from k-1 to k and the associated pose at k.
-   *
-   * @param frame_id
-   * @return EstimateMap<ObjectId, std::pair<Motion3, gtsam::Pose3>>
-   */
-  EstimateMap<ObjectId, std::pair<Motion3, gtsam::Pose3>> getObjectPosePair(
-      FrameId frame_id) const;
+  virtual MotionEstimateMap getObjectMotions(FrameId frame_id) const = 0;
 
   /**
    * @brief Collects all object poses for frame 0 to K.
-   * (Non-pure )Virtual function that may be overwritten - default
-   * implementation uses the pure-virtual getObjectPoses to collect all poses.
+   * (Non-pure)Virtual function that may be overwritten.
    *
    * @return ObjectPoseMap
    */
-  virtual ObjectPoseMap getObjectPoses() const;
+  virtual ObjectPoseMap getObjectPoses() const = 0;
 
   /**
    * @brief Collects all object motions from 1 to K (with the first motion being
@@ -186,7 +151,7 @@ class Accessor {
    *
    * @return ObjectMotionMap
    */
-  virtual ObjectMotionMap getObjectMotions() const;
+  virtual ObjectMotionMap getObjectMotions() const = 0;
 
   /**
    * @brief Get all dynamic landmarks for all objects (\mathcal{J}_k) at
@@ -195,7 +160,8 @@ class Accessor {
    * @param frame_id FrameId
    * @return StatusLandmarkVector
    */
-  StatusLandmarkVector getDynamicLandmarkEstimates(FrameId frame_id) const;
+  virtual StatusLandmarkVector getDynamicLandmarkEstimates(
+      FrameId frame_id) const = 0;
 
   /**
    * @brief Get all dynamic landmarks for object j at time-step k.
@@ -205,7 +171,7 @@ class Accessor {
    * @return StatusLandmarkVector
    */
   virtual StatusLandmarkVector getDynamicLandmarkEstimates(
-      FrameId frame_id, ObjectId object_id) const;
+      FrameId frame_id, ObjectId object_id) const = 0;
 
   /**
    * @brief Get all static landmarks at time-step k.
@@ -213,22 +179,15 @@ class Accessor {
    * @param frame_id FrameId
    * @return StatusLandmarkVector
    */
-  StatusLandmarkVector getStaticLandmarkEstimates(FrameId frame_id) const;
+  virtual StatusLandmarkVector getStaticLandmarkEstimates(
+      FrameId frame_id) const = 0;
 
   /**
    * @brief Get all static landmarks from time-step 0 to k.
    *
    * @return StatusLandmarkVector
    */
-  StatusLandmarkVector getFullStaticMap() const;
-
-  /**
-   * @brief Get all landmarks (static and dynamic) at time-step k.
-   *
-   * @param frame_id FrameId
-   * @return StatusLandmarkVector
-   */
-  StatusLandmarkVector getLandmarkEstimates(FrameId frame_id) const;
+  virtual StatusLandmarkVector getFullStaticMap() const = 0;
 
   /**
    * @brief Check if there exists an estimate for object motion at time-step (k)
@@ -242,22 +201,8 @@ class Accessor {
    * @return true
    * @return false
    */
-  bool hasObjectMotionEstimate(FrameId frame_id, ObjectId object_id,
-                               Motion3* motion = nullptr) const;
-
-  /**
-   * @brief Check if there exists an estimate for object motion at time-step (k)
-   * for object id (j). If result is true, motion reference value is set to the
-   * motion.
-   *
-   * @param frame_id FrameId
-   * @param object_id ObjectId
-   * @param motion Motion3&
-   * @return true
-   * @return false
-   */
-  bool hasObjectMotionEstimate(FrameId frame_id, ObjectId object_id,
-                               Motion3& motion) const;
+  virtual bool hasObjectMotionEstimate(FrameId frame_id, ObjectId object_id,
+                                       Motion3* motion) const = 0;
 
   /**
    * @brief Check if there exists an estimate for object pose at time-step (k)
@@ -271,8 +216,40 @@ class Accessor {
    * @return true
    * @return false
    */
-  bool hasObjectPoseEstimate(FrameId frame_id, ObjectId object_id,
-                             gtsam::Pose3* pose = nullptr) const;
+  virtual bool hasObjectPoseEstimate(FrameId frame_id, ObjectId object_id,
+                                     gtsam::Pose3* pose) const = 0;
+
+  /**
+   * @brief Computes a the centroid of each object at this frame using the
+   * estimated dynamic points.
+   *
+   * @param frame_id FrameId
+   * @return gtsam::FastMap<ObjectId, gtsam::Point3>
+   */
+  virtual gtsam::FastMap<ObjectId, gtsam::Point3> computeObjectCentroids(
+      FrameId frame_id) const = 0;
+
+  /**
+   * @brief Get all landmarks (static and dynamic) at time-step k.
+   *
+   * @param frame_id FrameId
+   * @return StatusLandmarkVector
+   */
+  StatusLandmarkVector getLandmarkEstimates(FrameId frame_id) const;
+
+  /**
+   * @brief Computes the centroid of the requested object using the estimated
+   * dynamic points.
+   *
+   * Returns false (as part of the pair) if object cannot be found or has zero
+   * points.
+   *
+   * @param frame_id FrameId
+   * @param object_id ObjectId
+   * @return std::tuple<gtsam::Point3, bool>
+   */
+  std::tuple<gtsam::Point3, bool> computeObjectCentroid(
+      FrameId frame_id, ObjectId object_id) const;
 
   /**
    * @brief Check if there exists an estimate for object pose at time-step (k)
@@ -289,6 +266,169 @@ class Accessor {
                              gtsam::Pose3& pose) const;
 
   /**
+   * @brief Check if there exists an estimate for object motion at time-step (k)
+   * for object id (j). If result is true, motion reference value is set to the
+   * motion.
+   *
+   * @param frame_id FrameId
+   * @param object_id ObjectId
+   * @param motion Motion3&
+   * @return true
+   * @return false
+   */
+  bool hasObjectMotionEstimate(FrameId frame_id, ObjectId object_id,
+                               Motion3& motion) const;
+};
+
+/**
+ * @brief Derived Accessor that knows about the MAP used with the formulation.
+ *
+ * @tparam MAP
+ */
+template <class MAP>
+class AccessorT : public Accessor {
+ public:
+  using Map = MAP;
+  using This = AccessorT<Map>;
+
+  DYNO_POINTER_TYPEDEFS(This)
+
+  AccessorT(const SharedFormulationData& shared_data, typename Map::Ptr map);
+  virtual ~AccessorT() {}
+
+  /**
+   * @brief Gets the absolute motion (_{k-1}^wH_k) from theta the requested
+   * time-step (k) and object (j) with the associated reference frame.
+   * Internally this uses getObjectMotion and constructs a Motion3ReferenceFrame
+   * using the global frame, k-1 and k. No checks are done on the underlying
+   * function call so it assumes that the virtual getObjectMotion function has
+   * been implemented correctly and returns a motion in the right
+   * representation.
+   *
+   * @param frame_id FrameId
+   * @param object_id ObjectId
+   * @return StateQuery<Motion3ReferenceFrame>
+   */
+  StateQuery<Motion3ReferenceFrame> getObjectMotionReferenceFrame(
+      FrameId frame_id, ObjectId object_id) const override;
+
+  /**
+   * @brief Get a static landmark (^wm) with tracklet id (i).
+   *
+   * @param tracklet_id TrackletId
+   * @return StateQuery<gtsam::Point3>
+   */
+  virtual StateQuery<gtsam::Point3> getStaticLandmark(
+      TrackletId tracklet_id) const override;
+
+  /**
+   * @brief Collects all object poses at some time-step (k).
+   * See Accessor#getObjectPoses(FrameId)
+   *
+   * @param frame_id FrameId frame_id) const;
+   * @return EstimateMap<ObjectId, gtsam::Pose3>
+   */
+  virtual EstimateMap<ObjectId, gtsam::Pose3> getObjectPoses(
+      FrameId frame_id) const override;
+
+  /**
+   * @brief Collects all object motions (_{k-1}^wH_k) from time-step (k-1) to k.
+   * This is equivalent to \mathcal{H}_k. Uses the pure-virtual getObjectMotion
+   * function to collect all object motions.
+   *
+   *
+   * @param frame_id FrameId
+   * @return MotionEstimateMap
+   */
+  MotionEstimateMap getObjectMotions(FrameId frame_id) const override;
+
+  /**
+   * @brief Collects all object poses for frame 0 to K.
+   * (Non-pure )Virtual function that may be overwritten - default
+   * implementation uses the pure-virtual getObjectPoses to collect all poses.
+   *
+   * @return ObjectPoseMap
+   */
+  virtual ObjectPoseMap getObjectPoses() const override;
+
+  /**
+   * @brief Collects all object motions from 1 to K (with the first motion being
+   * from k-1 to k).
+   *
+   * Default implementation uses the pure-virtual getObjectPoses to collect all
+   * motions.
+   *
+   * @return ObjectMotionMap
+   */
+  virtual ObjectMotionMap getObjectMotions() const override;
+
+  /**
+   * @brief Get all dynamic landmarks for all objects (\mathcal{J}_k) at
+   * time-step k.
+   *
+   * @param frame_id FrameId
+   * @return StatusLandmarkVector
+   */
+  StatusLandmarkVector getDynamicLandmarkEstimates(
+      FrameId frame_id) const override;
+
+  /**
+   * @brief Get all dynamic landmarks for object j at time-step k.
+   *
+   * @param frame_id FrameId
+   * @param object_id ObjectId
+   * @return StatusLandmarkVector
+   */
+  virtual StatusLandmarkVector getDynamicLandmarkEstimates(
+      FrameId frame_id, ObjectId object_id) const override;
+
+  /**
+   * @brief Get all static landmarks at time-step k.
+   *
+   * @param frame_id FrameId
+   * @return StatusLandmarkVector
+   */
+  StatusLandmarkVector getStaticLandmarkEstimates(
+      FrameId frame_id) const override;
+
+  /**
+   * @brief Get all static landmarks from time-step 0 to k.
+   *
+   * @return StatusLandmarkVector
+   */
+  StatusLandmarkVector getFullStaticMap() const override;
+
+  /**
+   * @brief Check if there exists an estimate for object motion at time-step (k)
+   * for object id (j). If result is true and a motion is provided, return true
+   * and set the motion.
+   *
+   * @param frame_id FrameId
+   * @param object_id ObjectId
+   * @param motion Motion3*. Default value is nullptr. If provided (ie non-null)
+   * and motion exists, value is set.
+   * @return true
+   * @return false
+   */
+  bool hasObjectMotionEstimate(FrameId frame_id, ObjectId object_id,
+                               Motion3* motion = nullptr) const override;
+
+  /**
+   * @brief Check if there exists an estimate for object pose at time-step (k)
+   * for object id (j). If result is true and a pose is provided, return true
+   * and set the pose.
+   *
+   * @param frame_id FrameId
+   * @param object_id ObjectId
+   * @param pose gtsam::Pose3* Default value is nullptr. If provided (ie
+   * non-null) and pose exists, value is set.
+   * @return true
+   * @return false
+   */
+  bool hasObjectPoseEstimate(FrameId frame_id, ObjectId object_id,
+                             gtsam::Pose3* pose = nullptr) const override;
+
+  /**
    * @brief Computes a the centroid of each object at this frame using the
    * estimated dynamic points.
    *
@@ -300,21 +440,7 @@ class Accessor {
    * @return gtsam::FastMap<ObjectId, gtsam::Point3>
    */
   gtsam::FastMap<ObjectId, gtsam::Point3> computeObjectCentroids(
-      FrameId frame_id) const;
-
-  /**
-   * @brief Computes the centroid of the requested object using the estimated
-   * dynamic points.
-   *
-   * Returns false (as part of the pair) if object cannot be found or has zero
-   * points.
-   *
-   * @param frame_id FrameId
-   * @param object_id ObjectId
-   * @return std::tuple<gtsam::Point3, bool>
-   */
-  std::tuple<gtsam::Point3, bool> computeObjectCentroid(
-      FrameId frame_id, ObjectId object_id) const;
+      FrameId frame_id) const override;
 
   /**
    * @brief Check if the key exists in the current theta.
@@ -346,23 +472,7 @@ class Accessor {
   }
 
  private:
-  /**
-   * @brief Compute all pairs of object motions and poses at the requested
-   * time-steps. As usual, motion_frame_id is treated as k, and therefore
-   * motions from motion_frame_id-1 to motion_frame_id will be retrieved.
-   *
-   * @param motion_frame_id FrameId
-   * @param pose_frame_id FrameId
-   * @return EstimateMap<ObjectId, std::pair<Motion3, gtsam::Pose3>>
-   */
-  EstimateMap<ObjectId, std::pair<Motion3, gtsam::Pose3>>
-  getRequestedObjectPosePair(FrameId motion_frame_id,
-                             FrameId pose_frame_id) const;
-
- private:
-  //   const gtsam::Values* theta_;  //! Pointer to the set of current values
-  //   stored
-  //                                 //! in the associated formulation
+ private:  //! in the associated formulation
   const SharedFormulationData shared_data_;
   typename Map::Ptr map_;  //! Pointer to internal map structure;
 };

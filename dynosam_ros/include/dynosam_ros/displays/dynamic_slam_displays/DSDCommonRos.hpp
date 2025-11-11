@@ -238,13 +238,9 @@ class DSDRos {
   CloudPerObject publishStaticPointCloud(const StatusLandmarkVector& landmarks,
                                          const gtsam::Pose3& T_world_camera);
 
-  // struct PubDynamicCloudOptions {
-  //   //TODO: unused
-  //   bool publish_object_bounding_box{true};
-
-  //   // PubDynamicCloudOptions() = default;
-  //   ~PubDynamicCloudOptions() = default;
-  // };
+  //   struct PubDynamicCloudOptions {
+  //     bool publish_object_bounding_box{true};
+  //   };
 
   CloudPerObject publishDynamicPointCloud(const StatusLandmarkVector& landmarks,
                                           const gtsam::Pose3& T_world_camera);

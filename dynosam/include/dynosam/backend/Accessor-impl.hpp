@@ -37,22 +37,22 @@
 namespace dyno {
 
 template <class MAP>
-Accessor<MAP>::Accessor(const SharedFormulationData& shared_data,
-                        typename Map::Ptr map)
+AccessorT<MAP>::AccessorT(const SharedFormulationData& shared_data,
+                          typename Map::Ptr map)
     : shared_data_(shared_data), map_(map) {
   CHECK_NOTNULL(shared_data.values);
   CHECK_NOTNULL(shared_data.hooks);
 }
 
 template <class MAP>
-StateQuery<gtsam::Point3> Accessor<MAP>::getStaticLandmark(
+StateQuery<gtsam::Point3> AccessorT<MAP>::getStaticLandmark(
     TrackletId tracklet_id) const {
   const auto lmk = CHECK_NOTNULL(map()->getLandmark(tracklet_id));
   return this->query<gtsam::Point3>(lmk->makeStaticKey());
 }
 
 template <class MAP>
-MotionEstimateMap Accessor<MAP>::getObjectMotions(FrameId frame_id) const {
+MotionEstimateMap AccessorT<MAP>::getObjectMotions(FrameId frame_id) const {
   MotionEstimateMap motion_estimates;
 
   const auto frame_node = map()->getFrame(frame_id);
@@ -73,7 +73,7 @@ MotionEstimateMap Accessor<MAP>::getObjectMotions(FrameId frame_id) const {
 }
 
 template <class MAP>
-StateQuery<Motion3ReferenceFrame> Accessor<MAP>::getObjectMotionReferenceFrame(
+StateQuery<Motion3ReferenceFrame> AccessorT<MAP>::getObjectMotionReferenceFrame(
     FrameId frame_id, ObjectId object_id) const {
   StateQuery<Motion3> motion_query = this->getObjectMotion(frame_id, object_id);
   if (motion_query) {
@@ -89,7 +89,7 @@ StateQuery<Motion3ReferenceFrame> Accessor<MAP>::getObjectMotionReferenceFrame(
 }
 
 template <class MAP>
-EstimateMap<ObjectId, gtsam::Pose3> Accessor<MAP>::getObjectPoses(
+EstimateMap<ObjectId, gtsam::Pose3> AccessorT<MAP>::getObjectPoses(
     FrameId frame_id) const {
   EstimateMap<ObjectId, gtsam::Pose3> pose_estimates;
 
@@ -113,7 +113,7 @@ EstimateMap<ObjectId, gtsam::Pose3> Accessor<MAP>::getObjectPoses(
 }
 
 template <class MAP>
-ObjectPoseMap Accessor<MAP>::getObjectPoses() const {
+ObjectPoseMap AccessorT<MAP>::getObjectPoses() const {
   ObjectPoseMap object_poses;
   for (FrameId frame_id : map()->getFrameIds()) {
     EstimateMap<ObjectId, gtsam::Pose3> per_object_pose =
@@ -133,7 +133,7 @@ ObjectPoseMap Accessor<MAP>::getObjectPoses() const {
 }
 
 template <class MAP>
-ObjectMotionMap Accessor<MAP>::getObjectMotions() const {
+ObjectMotionMap AccessorT<MAP>::getObjectMotions() const {
   ObjectMotionMap object_motions;
   for (FrameId frame_id : map()->getFrameIds()) {
     MotionEstimateMap per_object_motions = this->getObjectMotions(frame_id);
@@ -151,7 +151,7 @@ ObjectMotionMap Accessor<MAP>::getObjectMotions() const {
 }
 
 template <class MAP>
-StatusLandmarkVector Accessor<MAP>::getDynamicLandmarkEstimates(
+StatusLandmarkVector AccessorT<MAP>::getDynamicLandmarkEstimates(
     FrameId frame_id) const {
   const auto frame_node = map()->getFrame(frame_id);
   CHECK_NOTNULL(frame_node);
@@ -166,7 +166,7 @@ StatusLandmarkVector Accessor<MAP>::getDynamicLandmarkEstimates(
 }
 
 template <class MAP>
-StatusLandmarkVector Accessor<MAP>::getDynamicLandmarkEstimates(
+StatusLandmarkVector AccessorT<MAP>::getDynamicLandmarkEstimates(
     FrameId frame_id, ObjectId object_id) const {
   const auto frame_node = map()->getFrame(frame_id);
   CHECK_NOTNULL(frame_node);
@@ -199,7 +199,7 @@ StatusLandmarkVector Accessor<MAP>::getDynamicLandmarkEstimates(
 }
 
 template <class MAP>
-StatusLandmarkVector Accessor<MAP>::getStaticLandmarkEstimates(
+StatusLandmarkVector AccessorT<MAP>::getStaticLandmarkEstimates(
     FrameId frame_id) const {
   // dont go over the frames as this contains references to the landmarks
   // multiple times
@@ -227,7 +227,7 @@ StatusLandmarkVector Accessor<MAP>::getStaticLandmarkEstimates(
 }
 
 template <class MAP>
-StatusLandmarkVector Accessor<MAP>::getFullStaticMap() const {
+StatusLandmarkVector AccessorT<MAP>::getFullStaticMap() const {
   // dont go over the frames as this contains references to the landmarks
   // multiple times e.g. the ones seen in that frame
   StatusLandmarkVector estimates;
@@ -251,18 +251,9 @@ StatusLandmarkVector Accessor<MAP>::getFullStaticMap() const {
 }
 
 template <class MAP>
-StatusLandmarkVector Accessor<MAP>::getLandmarkEstimates(
-    FrameId frame_id) const {
-  StatusLandmarkVector estimates;
-  estimates += getStaticLandmarkEstimates(frame_id);
-  estimates += getDynamicLandmarkEstimates(frame_id);
-  return estimates;
-}
-
-template <class MAP>
-bool Accessor<MAP>::hasObjectMotionEstimate(FrameId frame_id,
-                                            ObjectId object_id,
-                                            Motion3* motion) const {
+bool AccessorT<MAP>::hasObjectMotionEstimate(FrameId frame_id,
+                                             ObjectId object_id,
+                                             Motion3* motion) const {
   const auto frame_node = map()->getFrame(frame_id);
   StateQuery<Motion3> motion_query = this->getObjectMotion(frame_id, object_id);
 
@@ -276,15 +267,8 @@ bool Accessor<MAP>::hasObjectMotionEstimate(FrameId frame_id,
 }
 
 template <class MAP>
-bool Accessor<MAP>::hasObjectMotionEstimate(FrameId frame_id,
-                                            ObjectId object_id,
-                                            Motion3& motion) const {
-  return hasObjectMotionEstimate(frame_id, object_id, &motion);
-}
-
-template <class MAP>
-bool Accessor<MAP>::hasObjectPoseEstimate(FrameId frame_id, ObjectId object_id,
-                                          gtsam::Pose3* pose) const {
+bool AccessorT<MAP>::hasObjectPoseEstimate(FrameId frame_id, ObjectId object_id,
+                                           gtsam::Pose3* pose) const {
   const auto frame_node = map()->getFrame(frame_id);
   StateQuery<gtsam::Pose3> pose_query =
       this->getObjectPose(frame_id, object_id);
@@ -299,13 +283,7 @@ bool Accessor<MAP>::hasObjectPoseEstimate(FrameId frame_id, ObjectId object_id,
 }
 
 template <class MAP>
-bool Accessor<MAP>::hasObjectPoseEstimate(FrameId frame_id, ObjectId object_id,
-                                          gtsam::Pose3& pose) const {
-  return hasObjectPoseEstimate(frame_id, object_id, &pose);
-}
-
-template <class MAP>
-gtsam::FastMap<ObjectId, gtsam::Point3> Accessor<MAP>::computeObjectCentroids(
+gtsam::FastMap<ObjectId, gtsam::Point3> AccessorT<MAP>::computeObjectCentroids(
     FrameId frame_id) const {
   gtsam::FastMap<ObjectId, gtsam::Point3> centroids;
 
@@ -327,62 +305,7 @@ gtsam::FastMap<ObjectId, gtsam::Point3> Accessor<MAP>::computeObjectCentroids(
 }
 
 template <class MAP>
-std::tuple<gtsam::Point3, bool> Accessor<MAP>::computeObjectCentroid(
-    FrameId frame_id, ObjectId object_id) const {
-  const StatusLandmarkVector& dynamic_lmks =
-      this->getDynamicLandmarkEstimates(frame_id, object_id);
-
-  // convert to point cloud - should be a map with only one map in it
-  CloudPerObject object_clouds =
-      groupObjectCloud(dynamic_lmks, this->getSensorPose(frame_id).get());
-  if (object_clouds.size() == 0) {
-    VLOG(20) << "Cannot collect object clouds from dynamic landmarks of "
-             << object_id << " and frame " << frame_id << "!! "
-             << " # Dynamic lmks in the map for this object at this frame was "
-             << dynamic_lmks.size();  //<< " but reocrded lmks was " <<
-                                      // dynamic_landmarks.size();
-    return {gtsam::Point3{}, false};
-  }
-  CHECK_EQ(object_clouds.size(), 1);
-  CHECK(object_clouds.exists(object_id));
-
-  const auto dynamic_point_cloud = object_clouds.at(object_id);
-  pcl::PointXYZ centroid;
-  pcl::computeCentroid(dynamic_point_cloud, centroid);
-  // TODO: outlier reject?
-  gtsam::Point3 translation = pclPointToGtsam(centroid);
-  return {translation, true};
-}
-
-template <class MAP>
-EstimateMap<ObjectId, std::pair<Motion3, gtsam::Pose3>>
-Accessor<MAP>::getRequestedObjectPosePair(FrameId motion_frame_id,
-                                          FrameId pose_frame_id) const {
-  const MotionEstimateMap motions_k = this->getObjectMotions(motion_frame_id);
-  const EstimateMap<ObjectId, gtsam::Pose3> poses_k =
-      this->getObjectPoses(pose_frame_id);
-
-  EstimateMap<ObjectId, std::pair<Motion3, gtsam::Pose3>> result;
-  // collect common objects
-  for (const auto& [object_id, _] : motions_k) {
-    if (poses_k.exists(object_id)) {
-      auto motion_reference_values = motions_k.at(object_id);
-      auto pose_reference_values = poses_k.at(object_id);
-
-      CHECK_EQ(motion_reference_values.frame_, pose_reference_values.frame_);
-
-      ReferenceFrameValue<std::pair<Motion3, gtsam::Pose3>> estimate(
-          std::make_pair(motion_reference_values.estimate_,
-                         pose_reference_values.estimate_),
-          motion_reference_values.frame_);
-      result.insert2(object_id, estimate);
-    }
-  }
-  return result;
-}
-
-template <class MAP>
-bool Accessor<MAP>::exists(gtsam::Key key) const {
+bool AccessorT<MAP>::exists(gtsam::Key key) const {
   const gtsam::Values* theta = shared_data_.values;
   CHECK_NOTNULL(theta);
   return theta->exists(key);
@@ -390,7 +313,7 @@ bool Accessor<MAP>::exists(gtsam::Key key) const {
 
 template <class MAP>
 template <typename ValueType>
-StateQuery<ValueType> Accessor<MAP>::query(gtsam::Key key) const {
+StateQuery<ValueType> AccessorT<MAP>::query(gtsam::Key key) const {
   const gtsam::Values* theta = shared_data_.values;
   CHECK_NOTNULL(theta);
   if (theta->exists(key)) {

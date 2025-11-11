@@ -36,11 +36,11 @@
 
 namespace dyno {
 
-class WorldPoseAccessor : public Accessor<MapVision> {
+class WorldPoseAccessor : public AccessorT<MapVision> {
  public:
   WorldPoseAccessor(const SharedFormulationData& shared_data,
                     MapVision::Ptr map)
-      : Accessor<MapVision>(shared_data, map) {}
+      : AccessorT<MapVision>(shared_data, map) {}
   virtual ~WorldPoseAccessor() {}
 
   StateQuery<gtsam::Pose3> getSensorPose(FrameId frame_id) const override;

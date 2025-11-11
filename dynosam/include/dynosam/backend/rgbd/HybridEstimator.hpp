@@ -1177,7 +1177,7 @@ struct SharedHybridFormulationData {
   const gtsam::FastMap<TrackletId, FrameId>* tracklet_id_to_keyframe;
 };
 
-class HybridAccessor : public Accessor<MapVision>,
+class HybridAccessor : public AccessorT<MapVision>,
                        public HybridFormulationProperties {
  public:
   DYNO_POINTER_TYPEDEFS(HybridAccessor)
@@ -1185,7 +1185,7 @@ class HybridAccessor : public Accessor<MapVision>,
   HybridAccessor(
       const SharedFormulationData& shared_data, MapVision::Ptr map,
       const SharedHybridFormulationData& shared_hybrid_formulation_data)
-      : Accessor<MapVision>(shared_data, map),
+      : AccessorT<MapVision>(shared_data, map),
         shared_hybrid_formulation_data_(shared_hybrid_formulation_data) {}
   virtual ~HybridAccessor() {}
 

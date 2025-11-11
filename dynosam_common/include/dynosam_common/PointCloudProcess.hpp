@@ -127,6 +127,10 @@ struct ObjectBBX {
   //! in the case of AABB, the orientation is identity
   //! in the case of OBB, the orientation is that of the bbx
   gtsam::Rot3 orientation_;
+
+  gtsam::Pose3 pose() const {
+    return gtsam::Pose3(orientation_, bbx_position_);
+  }
 };
 
 using BbxPerObject = gtsam::FastMap<ObjectId, ObjectBBX>;

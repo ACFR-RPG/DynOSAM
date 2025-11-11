@@ -38,8 +38,9 @@ namespace dyno {
 struct BackendOutputPacket {
   DYNO_POINTER_TYPEDEFS(BackendOutputPacket)
 
-  StatusLandmarkVector static_landmarks;   // all frames?
-  StatusLandmarkVector dynamic_landmarks;  // all objects only this frame?
+  StatusLandmarkVector static_landmarks;  // all frames? in world frame
+  StatusLandmarkVector
+      dynamic_landmarks;  // all objects only this frame? in world frame
   // TODO: depricate and let output viz handle now it has shared module...
   FrameIdTimestampMap involved_timestamp;
   gtsam::Pose3 T_world_camera;

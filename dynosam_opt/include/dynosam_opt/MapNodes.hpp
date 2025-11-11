@@ -666,6 +666,14 @@ class LandmarkNode : public MapNodeBase<MEASUREMENT> {
   /// @brief Object label (j) of the landmark.
   ObjectId object_id;
 
+  //! Indicates if the landmark has been marked an inlier at some point during
+  //! the optimisation
+  bool inlier{true};
+  //! Indicates if the landmark has been added to the optimisation
+  //! NOTE: does not indicate if it is still there (ie. it may have been removed
+  //! due to marginalisation)
+  bool added_to_opt{false};
+
   /**
    * @brief Returns the tracklet_id
    *
