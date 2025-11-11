@@ -1064,30 +1064,31 @@ template&lt;typename RefType , typename CurType &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Frame-inl_8hpp_source.html#l00032">32</a> of file <a class="el" href="Frame-inl_8hpp_source.html">Frame-inl.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   37</span>{</div>
-<div class="line"><span class="lineno">   38</span>    correspondences.clear();</div>
-<div class="line"><span class="lineno">   39</span>    <a class="code hl_typedef" href="namespacedyno.html#a7ec6a986cfe4a517505dd137d0844e7c">FeaturePairs</a> feature_correspondences;</div>
-<div class="line"><span class="lineno">   40</span>    <span class="keyword">const</span> <span class="keywordtype">bool</span> result = <a class="code hl_function" href="classdyno_1_1Frame.html#a0ee3d3a6479eada0e5443feb48613cdc">getCorrespondences</a>(feature_correspondences, previous_frame, kp_type);</div>
-<div class="line"><span class="lineno">   41</span>     <span class="keywordflow">if</span>(!result) {</div>
-<div class="line"><span class="lineno">   42</span>        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">   43</span>    }</div>
-<div class="line"><span class="lineno">   44</span> </div>
-<div class="line"><span class="lineno">   45</span>    <span class="keywordflow">for</span>(<span class="keyword">const</span> <span class="keyword">auto</span>&amp; pair : feature_correspondences) {</div>
-<div class="line"><span class="lineno">   46</span>        <span class="keyword">const</span> Feature::Ptr&amp; prev_feature = pair.first;</div>
-<div class="line"><span class="lineno">   47</span>        <span class="keyword">const</span> Feature::Ptr&amp; curr_feature = pair.second;</div>
-<div class="line"><span class="lineno">   48</span> </div>
-<div class="line"><span class="lineno">   49</span>        CHECK(prev_feature);</div>
-<div class="line"><span class="lineno">   50</span>        CHECK(curr_feature);</div>
-<div class="line"><span class="lineno">   51</span> </div>
-<div class="line"><span class="lineno">   52</span>        CHECK_EQ(prev_feature-&gt;trackletId(), curr_feature-&gt;trackletId());</div>
-<div class="line"><span class="lineno">   53</span>        CHECK_EQ(prev_feature-&gt;frameId(), previous_frame.getFrameId());</div>
-<div class="line"><span class="lineno">   54</span>        CHECK_EQ(curr_feature-&gt;frameId(), <a class="code hl_function" href="classdyno_1_1Frame.html#aa6350c198dbedee19ce2cc32b99b1400">getFrameId</a>());</div>
-<div class="line"><span class="lineno">   55</span> </div>
-<div class="line"><span class="lineno">   56</span>        correspondences.push_back(func(previous_frame, prev_feature, curr_feature));</div>
-<div class="line"><span class="lineno">   57</span>    }</div>
-<div class="line"><span class="lineno">   58</span>    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">   59</span>}</div>
+<p class="definition">Definition at line <a class="el" href="Frame-inl_8hpp_source.html#l00038">38</a> of file <a class="el" href="Frame-inl_8hpp_source.html">Frame-inl.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   41</span>                                                                     {</div>
+<div class="line"><span class="lineno">   42</span>  correspondences.clear();</div>
+<div class="line"><span class="lineno">   43</span>  <a class="code hl_typedef" href="namespacedyno.html#a7ec6a986cfe4a517505dd137d0844e7c">FeaturePairs</a> feature_correspondences;</div>
+<div class="line"><span class="lineno">   44</span>  <span class="keyword">const</span> <span class="keywordtype">bool</span> result =</div>
+<div class="line"><span class="lineno">   45</span>      <a class="code hl_function" href="classdyno_1_1Frame.html#a0ee3d3a6479eada0e5443feb48613cdc">getCorrespondences</a>(feature_correspondences, previous_frame, kp_type);</div>
+<div class="line"><span class="lineno">   46</span>  <span class="keywordflow">if</span> (!result) {</div>
+<div class="line"><span class="lineno">   47</span>    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">   48</span>  }</div>
+<div class="line"><span class="lineno">   49</span> </div>
+<div class="line"><span class="lineno">   50</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; pair : feature_correspondences) {</div>
+<div class="line"><span class="lineno">   51</span>    <span class="keyword">const</span> Feature::Ptr&amp; prev_feature = pair.first;</div>
+<div class="line"><span class="lineno">   52</span>    <span class="keyword">const</span> Feature::Ptr&amp; curr_feature = pair.second;</div>
+<div class="line"><span class="lineno">   53</span> </div>
+<div class="line"><span class="lineno">   54</span>    CHECK(prev_feature);</div>
+<div class="line"><span class="lineno">   55</span>    CHECK(curr_feature);</div>
+<div class="line"><span class="lineno">   56</span> </div>
+<div class="line"><span class="lineno">   57</span>    CHECK_EQ(prev_feature-&gt;trackletId(), curr_feature-&gt;trackletId());</div>
+<div class="line"><span class="lineno">   58</span>    CHECK_EQ(prev_feature-&gt;frameId(), previous_frame.getFrameId());</div>
+<div class="line"><span class="lineno">   59</span>    CHECK_EQ(curr_feature-&gt;frameId(), <a class="code hl_function" href="classdyno_1_1Frame.html#aa6350c198dbedee19ce2cc32b99b1400">getFrameId</a>());</div>
+<div class="line"><span class="lineno">   60</span> </div>
+<div class="line"><span class="lineno">   61</span>    correspondences.push_back(func(previous_frame, prev_feature, curr_feature));</div>
+<div class="line"><span class="lineno">   62</span>  }</div>
+<div class="line"><span class="lineno">   63</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">   64</span>}</div>
 <div class="ttc" id="aclassdyno_1_1Frame_html_a0ee3d3a6479eada0e5443feb48613cdc"><div class="ttname"><a href="classdyno_1_1Frame.html#a0ee3d3a6479eada0e5443feb48613cdc">dyno::Frame::getCorrespondences</a></div><div class="ttdeci">bool getCorrespondences(FeaturePairs &amp;correspondences, const Frame &amp;previous_frame, KeyPointType kp_type) const</div><div class="ttdoc">Gets the set of tracked pairs between this frame and the previous frame. All correspondences will be ...</div><div class="ttdef"><b>Definition:</b> <a href="Frame_8cc_source.html#l00265">Frame.cc:265</a></div></div>
 <div class="ttc" id="aclassdyno_1_1Frame_html_aa6350c198dbedee19ce2cc32b99b1400"><div class="ttname"><a href="classdyno_1_1Frame.html#aa6350c198dbedee19ce2cc32b99b1400">dyno::Frame::getFrameId</a></div><div class="ttdeci">FrameId getFrameId() const</div><div class="ttdef"><b>Definition:</b> <a href="Frame_8hpp_source.html#l00088">Frame.hpp:88</a></div></div>
 <div class="ttc" id="anamespacedyno_html_a7ec6a986cfe4a517505dd137d0844e7c"><div class="ttname"><a href="namespacedyno.html#a7ec6a986cfe4a517505dd137d0844e7c">dyno::FeaturePairs</a></div><div class="ttdeci">std::vector&lt; FeaturePair &gt; FeaturePairs</div><div class="ttdoc">Pair of feature (shared) pointers.</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00413">Feature.hpp:413</a></div></div>
@@ -1345,31 +1346,33 @@ template&lt;typename RefType , typename CurType &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Frame-inl_8hpp_source.html#l00062">62</a> of file <a class="el" href="Frame-inl_8hpp_source.html">Frame-inl.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   67</span>{</div>
-<div class="line"><span class="lineno">   68</span>    <a class="code hl_typedef" href="namespacedyno.html#a7ec6a986cfe4a517505dd137d0844e7c">FeaturePairs</a> feature_correspondences;</div>
-<div class="line"><span class="lineno">   69</span>    <span class="keyword">const</span> <span class="keywordtype">bool</span> result = <a class="code hl_function" href="classdyno_1_1Frame.html#acd53bfdd333a0577003c2c85f7d60dbd">getDynamicCorrespondences</a>(feature_correspondences, previous_frame, object_id);</div>
-<div class="line"><span class="lineno">   70</span>    <span class="keywordflow">if</span>(!result) {</div>
-<div class="line"><span class="lineno">   71</span>        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">   72</span>    }</div>
-<div class="line"><span class="lineno">   73</span> </div>
-<div class="line"><span class="lineno">   74</span>    <span class="comment">//unncessary but just for sanity check</span></div>
-<div class="line"><span class="lineno">   75</span>    <span class="keywordflow">for</span>(<span class="keyword">const</span> <span class="keyword">auto</span>&amp; feature_pairs : feature_correspondences) {</div>
-<div class="line"><span class="lineno">   76</span>        <span class="keyword">const</span> Feature::Ptr&amp; prev_feature = feature_pairs.first;</div>
-<div class="line"><span class="lineno">   77</span>        <span class="keyword">const</span> Feature::Ptr&amp; curr_feature = feature_pairs.second;</div>
-<div class="line"><span class="lineno">   78</span> </div>
-<div class="line"><span class="lineno">   79</span>        CHECK_EQ(feature_pairs.first-&gt;objectId(), object_id);</div>
-<div class="line"><span class="lineno">   80</span>        CHECK(feature_pairs.first-&gt;usable());</div>
-<div class="line"><span class="lineno">   81</span> </div>
-<div class="line"><span class="lineno">   82</span>        CHECK_EQ(feature_pairs.second-&gt;objectId(), object_id);</div>
-<div class="line"><span class="lineno">   83</span>        CHECK(feature_pairs.second-&gt;usable());</div>
-<div class="line"><span class="lineno">   84</span> </div>
-<div class="line"><span class="lineno">   85</span>        CHECK_EQ(feature_pairs.second-&gt;trackletId(), feature_pairs.first-&gt;trackletId());</div>
-<div class="line"><span class="lineno">   86</span> </div>
-<div class="line"><span class="lineno">   87</span>        correspondences.push_back(func(previous_frame, prev_feature, curr_feature));</div>
-<div class="line"><span class="lineno">   88</span>    }</div>
-<div class="line"><span class="lineno">   89</span>    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">   90</span>}</div>
+<p class="definition">Definition at line <a class="el" href="Frame-inl_8hpp_source.html#l00067">67</a> of file <a class="el" href="Frame-inl_8hpp_source.html">Frame-inl.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   70</span>                                                                     {</div>
+<div class="line"><span class="lineno">   71</span>  <a class="code hl_typedef" href="namespacedyno.html#a7ec6a986cfe4a517505dd137d0844e7c">FeaturePairs</a> feature_correspondences;</div>
+<div class="line"><span class="lineno">   72</span>  <span class="keyword">const</span> <span class="keywordtype">bool</span> result = <a class="code hl_function" href="classdyno_1_1Frame.html#acd53bfdd333a0577003c2c85f7d60dbd">getDynamicCorrespondences</a>(feature_correspondences,</div>
+<div class="line"><span class="lineno">   73</span>                                                previous_frame, object_id);</div>
+<div class="line"><span class="lineno">   74</span>  <span class="keywordflow">if</span> (!result) {</div>
+<div class="line"><span class="lineno">   75</span>    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">   76</span>  }</div>
+<div class="line"><span class="lineno">   77</span> </div>
+<div class="line"><span class="lineno">   78</span>  <span class="comment">// unncessary but just for sanity check</span></div>
+<div class="line"><span class="lineno">   79</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; feature_pairs : feature_correspondences) {</div>
+<div class="line"><span class="lineno">   80</span>    <span class="keyword">const</span> Feature::Ptr&amp; prev_feature = feature_pairs.first;</div>
+<div class="line"><span class="lineno">   81</span>    <span class="keyword">const</span> Feature::Ptr&amp; curr_feature = feature_pairs.second;</div>
+<div class="line"><span class="lineno">   82</span> </div>
+<div class="line"><span class="lineno">   83</span>    CHECK_EQ(feature_pairs.first-&gt;objectId(), object_id);</div>
+<div class="line"><span class="lineno">   84</span>    CHECK(feature_pairs.first-&gt;usable());</div>
+<div class="line"><span class="lineno">   85</span> </div>
+<div class="line"><span class="lineno">   86</span>    CHECK_EQ(feature_pairs.second-&gt;objectId(), object_id);</div>
+<div class="line"><span class="lineno">   87</span>    CHECK(feature_pairs.second-&gt;usable());</div>
+<div class="line"><span class="lineno">   88</span> </div>
+<div class="line"><span class="lineno">   89</span>    CHECK_EQ(feature_pairs.second-&gt;trackletId(),</div>
+<div class="line"><span class="lineno">   90</span>             feature_pairs.first-&gt;trackletId());</div>
+<div class="line"><span class="lineno">   91</span> </div>
+<div class="line"><span class="lineno">   92</span>    correspondences.push_back(func(previous_frame, prev_feature, curr_feature));</div>
+<div class="line"><span class="lineno">   93</span>  }</div>
+<div class="line"><span class="lineno">   94</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">   95</span>}</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1Frame.html#acd53bfdd333a0577003c2c85f7d60dbd">getDynamicCorrespondences()</a>.</p>
 <div class="dynheader">

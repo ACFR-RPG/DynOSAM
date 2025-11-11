@@ -193,7 +193,7 @@ Private Attributes</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;class point, class data&gt;<br />
 class rangetree&lt; point, data &gt;</div>
-<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00050">50</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00053">53</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a49b839b80f9ca26c7138ed93dbe64af6" name="a49b839b80f9ca26c7138ed93dbe64af6"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a49b839b80f9ca26c7138ed93dbe64af6">&#9670;&#160;</a></span>rangetree()</h2>
@@ -231,25 +231,26 @@ template&lt;class point , class data &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00053">53</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   53</span>                                                                   :</div>
-<div class="line"><span class="lineno">   54</span>        <a class="code hl_variable" href="classrangetree.html#af21299ac17ded355cb330db9082626e9">nodepool</a>(NULL), <a class="code hl_variable" href="classrangetree.html#a778b0a2e8a9ba72ae51c16692741d8e2">ptypool</a>(NULL),</div>
-<div class="line"><span class="lineno">   55</span>        <a class="code hl_variable" href="classrangetree.html#a088cf37abebf01e8dfafb5040bb725a9">mainreserve</a>(estimatedTotal), <a class="code hl_variable" href="classrangetree.html#a647c3c7abe1ba1c10a092296455a6d4d">resultreserve</a>(estimatedResult), <a class="code hl_variable" href="classrangetree.html#a4ac95ec3552e8687b13565ddcf71c56b">init</a>(<span class="keyword">false</span>) {</div>
-<div class="line"><span class="lineno">   56</span> </div>
-<div class="line"><span class="lineno">   57</span>        <a class="code hl_variable" href="classrangetree.html#a2475c78dfe781f97f6cb0a9223c36bbd">xtmparray</a>.reserve(<a class="code hl_variable" href="classrangetree.html#a088cf37abebf01e8dfafb5040bb725a9">mainreserve</a>);</div>
-<div class="line"><span class="lineno">   58</span>        <a class="code hl_variable" href="classrangetree.html#a8ed382466cc2d3fdedf762e18739acec">ytmparray</a>.reserve(<a class="code hl_variable" href="classrangetree.html#a088cf37abebf01e8dfafb5040bb725a9">mainreserve</a>);</div>
-<div class="line"><span class="lineno">   59</span> </div>
-<div class="line"><span class="lineno">   60</span><span class="preprocessor">#ifdef LESSRAM64</span></div>
-<div class="line"><span class="lineno">   61</span>        dataset = NULL;</div>
-<div class="line"><span class="lineno">   62</span><span class="preprocessor">#endif</span></div>
-<div class="line"><span class="lineno">   63</span>    }</div>
-<div class="ttc" id="aclassrangetree_html_a088cf37abebf01e8dfafb5040bb725a9"><div class="ttname"><a href="classrangetree.html#a088cf37abebf01e8dfafb5040bb725a9">rangetree::mainreserve</a></div><div class="ttdeci">u32 mainreserve</div><div class="ttdef"><b>Definition:</b> <a href="ranget_8h_source.html#l00706">ranget.h:706</a></div></div>
-<div class="ttc" id="aclassrangetree_html_a2475c78dfe781f97f6cb0a9223c36bbd"><div class="ttname"><a href="classrangetree.html#a2475c78dfe781f97f6cb0a9223c36bbd">rangetree::xtmparray</a></div><div class="ttdeci">std::vector&lt; ptx &gt; xtmparray</div><div class="ttdef"><b>Definition:</b> <a href="ranget_8h_source.html#l00690">ranget.h:690</a></div></div>
-<div class="ttc" id="aclassrangetree_html_a4ac95ec3552e8687b13565ddcf71c56b"><div class="ttname"><a href="classrangetree.html#a4ac95ec3552e8687b13565ddcf71c56b">rangetree::init</a></div><div class="ttdeci">bool init</div><div class="ttdef"><b>Definition:</b> <a href="ranget_8h_source.html#l00707">ranget.h:707</a></div></div>
-<div class="ttc" id="aclassrangetree_html_a647c3c7abe1ba1c10a092296455a6d4d"><div class="ttname"><a href="classrangetree.html#a647c3c7abe1ba1c10a092296455a6d4d">rangetree::resultreserve</a></div><div class="ttdeci">u32 resultreserve</div><div class="ttdef"><b>Definition:</b> <a href="ranget_8h_source.html#l00706">ranget.h:706</a></div></div>
-<div class="ttc" id="aclassrangetree_html_a778b0a2e8a9ba72ae51c16692741d8e2"><div class="ttname"><a href="classrangetree.html#a778b0a2e8a9ba72ae51c16692741d8e2">rangetree::ptypool</a></div><div class="ttdeci">pty * ptypool</div><div class="ttdef"><b>Definition:</b> <a href="ranget_8h_source.html#l00700">ranget.h:700</a></div></div>
-<div class="ttc" id="aclassrangetree_html_a8ed382466cc2d3fdedf762e18739acec"><div class="ttname"><a href="classrangetree.html#a8ed382466cc2d3fdedf762e18739acec">rangetree::ytmparray</a></div><div class="ttdeci">std::vector&lt; pty &gt; ytmparray</div><div class="ttdef"><b>Definition:</b> <a href="ranget_8h_source.html#l00691">ranget.h:691</a></div></div>
-<div class="ttc" id="aclassrangetree_html_af21299ac17ded355cb330db9082626e9"><div class="ttname"><a href="classrangetree.html#af21299ac17ded355cb330db9082626e9">rangetree::nodepool</a></div><div class="ttdeci">node * nodepool</div><div class="ttdef"><b>Definition:</b> <a href="ranget_8h_source.html#l00696">ranget.h:696</a></div></div>
+<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00055">55</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   56</span>      : <a class="code hl_variable" href="classrangetree.html#af21299ac17ded355cb330db9082626e9">nodepool</a>(NULL),</div>
+<div class="line"><span class="lineno">   57</span>        <a class="code hl_variable" href="classrangetree.html#a778b0a2e8a9ba72ae51c16692741d8e2">ptypool</a>(NULL),</div>
+<div class="line"><span class="lineno">   58</span>        <a class="code hl_variable" href="classrangetree.html#a088cf37abebf01e8dfafb5040bb725a9">mainreserve</a>(estimatedTotal),</div>
+<div class="line"><span class="lineno">   59</span>        <a class="code hl_variable" href="classrangetree.html#a647c3c7abe1ba1c10a092296455a6d4d">resultreserve</a>(estimatedResult),</div>
+<div class="line"><span class="lineno">   60</span>        <a class="code hl_variable" href="classrangetree.html#a4ac95ec3552e8687b13565ddcf71c56b">init</a>(<span class="keyword">false</span>) {</div>
+<div class="line"><span class="lineno">   61</span>    <a class="code hl_variable" href="classrangetree.html#a2475c78dfe781f97f6cb0a9223c36bbd">xtmparray</a>.reserve(<a class="code hl_variable" href="classrangetree.html#a088cf37abebf01e8dfafb5040bb725a9">mainreserve</a>);</div>
+<div class="line"><span class="lineno">   62</span>    <a class="code hl_variable" href="classrangetree.html#a8ed382466cc2d3fdedf762e18739acec">ytmparray</a>.reserve(<a class="code hl_variable" href="classrangetree.html#a088cf37abebf01e8dfafb5040bb725a9">mainreserve</a>);</div>
+<div class="line"><span class="lineno">   63</span> </div>
+<div class="line"><span class="lineno">   64</span><span class="preprocessor">#ifdef LESSRAM64</span></div>
+<div class="line"><span class="lineno">   65</span>    dataset = NULL;</div>
+<div class="line"><span class="lineno">   66</span><span class="preprocessor">#endif</span></div>
+<div class="line"><span class="lineno">   67</span>  }</div>
+<div class="ttc" id="aclassrangetree_html_a088cf37abebf01e8dfafb5040bb725a9"><div class="ttname"><a href="classrangetree.html#a088cf37abebf01e8dfafb5040bb725a9">rangetree::mainreserve</a></div><div class="ttdeci">u32 mainreserve</div><div class="ttdef"><b>Definition:</b> <a href="ranget_8h_source.html#l00654">ranget.h:654</a></div></div>
+<div class="ttc" id="aclassrangetree_html_a2475c78dfe781f97f6cb0a9223c36bbd"><div class="ttname"><a href="classrangetree.html#a2475c78dfe781f97f6cb0a9223c36bbd">rangetree::xtmparray</a></div><div class="ttdeci">std::vector&lt; ptx &gt; xtmparray</div><div class="ttdef"><b>Definition:</b> <a href="ranget_8h_source.html#l00638">ranget.h:638</a></div></div>
+<div class="ttc" id="aclassrangetree_html_a4ac95ec3552e8687b13565ddcf71c56b"><div class="ttname"><a href="classrangetree.html#a4ac95ec3552e8687b13565ddcf71c56b">rangetree::init</a></div><div class="ttdeci">bool init</div><div class="ttdef"><b>Definition:</b> <a href="ranget_8h_source.html#l00655">ranget.h:655</a></div></div>
+<div class="ttc" id="aclassrangetree_html_a647c3c7abe1ba1c10a092296455a6d4d"><div class="ttname"><a href="classrangetree.html#a647c3c7abe1ba1c10a092296455a6d4d">rangetree::resultreserve</a></div><div class="ttdeci">u32 resultreserve</div><div class="ttdef"><b>Definition:</b> <a href="ranget_8h_source.html#l00654">ranget.h:654</a></div></div>
+<div class="ttc" id="aclassrangetree_html_a778b0a2e8a9ba72ae51c16692741d8e2"><div class="ttname"><a href="classrangetree.html#a778b0a2e8a9ba72ae51c16692741d8e2">rangetree::ptypool</a></div><div class="ttdeci">pty * ptypool</div><div class="ttdef"><b>Definition:</b> <a href="ranget_8h_source.html#l00648">ranget.h:648</a></div></div>
+<div class="ttc" id="aclassrangetree_html_a8ed382466cc2d3fdedf762e18739acec"><div class="ttname"><a href="classrangetree.html#a8ed382466cc2d3fdedf762e18739acec">rangetree::ytmparray</a></div><div class="ttdeci">std::vector&lt; pty &gt; ytmparray</div><div class="ttdef"><b>Definition:</b> <a href="ranget_8h_source.html#l00639">ranget.h:639</a></div></div>
+<div class="ttc" id="aclassrangetree_html_af21299ac17ded355cb330db9082626e9"><div class="ttname"><a href="classrangetree.html#af21299ac17ded355cb330db9082626e9">rangetree::nodepool</a></div><div class="ttdeci">node * nodepool</div><div class="ttdef"><b>Definition:</b> <a href="ranget_8h_source.html#l00644">ranget.h:644</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classrangetree.html#a088cf37abebf01e8dfafb5040bb725a9">rangetree&lt; point, data &gt;::mainreserve</a>, <a class="el" href="classrangetree.html#a2475c78dfe781f97f6cb0a9223c36bbd">rangetree&lt; point, data &gt;::xtmparray</a>, and <a class="el" href="classrangetree.html#a8ed382466cc2d3fdedf762e18739acec">rangetree&lt; point, data &gt;::ytmparray</a>.</p>
 
@@ -280,16 +281,16 @@ template&lt;class point , class data &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00065">65</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   65</span>                 {</div>
-<div class="line"><span class="lineno">   66</span>        <a class="code hl_function" href="classrangetree.html#ac5a3f9f9fce934aa3d158a8e1213a592">nuke</a>();</div>
-<div class="line"><span class="lineno">   67</span>        <span class="keyword">delete</span> [] <a class="code hl_variable" href="classrangetree.html#af21299ac17ded355cb330db9082626e9">nodepool</a>;</div>
-<div class="line"><span class="lineno">   68</span>        free(<a class="code hl_variable" href="classrangetree.html#a778b0a2e8a9ba72ae51c16692741d8e2">ptypool</a>);</div>
-<div class="line"><span class="lineno">   69</span><span class="preprocessor">#ifdef LESSRAM64</span></div>
-<div class="line"><span class="lineno">   70</span>        free(dataset);</div>
-<div class="line"><span class="lineno">   71</span><span class="preprocessor">#endif</span></div>
-<div class="line"><span class="lineno">   72</span>    }</div>
-<div class="ttc" id="aclassrangetree_html_ac5a3f9f9fce934aa3d158a8e1213a592"><div class="ttname"><a href="classrangetree.html#ac5a3f9f9fce934aa3d158a8e1213a592">rangetree::nuke</a></div><div class="ttdeci">void nuke()</div><div class="ttdef"><b>Definition:</b> <a href="ranget_8h_source.html#l00466">ranget.h:466</a></div></div>
+<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00069">69</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   69</span>               {</div>
+<div class="line"><span class="lineno">   70</span>    <a class="code hl_function" href="classrangetree.html#ac5a3f9f9fce934aa3d158a8e1213a592">nuke</a>();</div>
+<div class="line"><span class="lineno">   71</span>    <span class="keyword">delete</span>[] <a class="code hl_variable" href="classrangetree.html#af21299ac17ded355cb330db9082626e9">nodepool</a>;</div>
+<div class="line"><span class="lineno">   72</span>    free(<a class="code hl_variable" href="classrangetree.html#a778b0a2e8a9ba72ae51c16692741d8e2">ptypool</a>);</div>
+<div class="line"><span class="lineno">   73</span><span class="preprocessor">#ifdef LESSRAM64</span></div>
+<div class="line"><span class="lineno">   74</span>    free(dataset);</div>
+<div class="line"><span class="lineno">   75</span><span class="preprocessor">#endif</span></div>
+<div class="line"><span class="lineno">   76</span>  }</div>
+<div class="ttc" id="aclassrangetree_html_ac5a3f9f9fce934aa3d158a8e1213a592"><div class="ttname"><a href="classrangetree.html#ac5a3f9f9fce934aa3d158a8e1213a592">rangetree::nuke</a></div><div class="ttdeci">void nuke()</div><div class="ttdef"><b>Definition:</b> <a href="ranget_8h_source.html#l00436">ranget.h:436</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classrangetree.html#af21299ac17ded355cb330db9082626e9">rangetree&lt; point, data &gt;::nodepool</a>, <a class="el" href="classrangetree.html#ac5a3f9f9fce934aa3d158a8e1213a592">rangetree&lt; point, data &gt;::nuke()</a>, and <a class="el" href="classrangetree.html#a778b0a2e8a9ba72ae51c16692741d8e2">rangetree&lt; point, data &gt;::ptypool</a>.</p>
 <div class="dynheader">
@@ -348,29 +349,27 @@ template&lt;class point , class data &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00074">74</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   74</span>                                                {</div>
-<div class="line"><span class="lineno">   75</span> </div>
-<div class="line"><span class="lineno">   76</span>        <span class="keywordflow">if</span> (<a class="code hl_variable" href="classrangetree.html#a4ac95ec3552e8687b13565ddcf71c56b">init</a>)</div>
-<div class="line"><span class="lineno">   77</span>            <span class="keywordflow">return</span> 1;</div>
-<div class="line"><span class="lineno">   78</span> </div>
-<div class="line"><span class="lineno">   79</span>        ptx px;</div>
-<div class="line"><span class="lineno">   80</span>        pty <a class="code hl_namespace" href="namespacepybind11.html">py</a>;</div>
-<div class="line"><span class="lineno">   81</span> </div>
-<div class="line"><span class="lineno">   82</span>        px.x = x;</div>
-<div class="line"><span class="lineno">   83</span>        px.y = <a class="code hl_namespace" href="namespacepybind11.html">py</a>.y = y;</div>
-<div class="line"><span class="lineno">   84</span>        px.ptr = ptr;</div>
-<div class="line"><span class="lineno">   85</span><span class="preprocessor">#ifndef LESSRAM64</span></div>
-<div class="line"><span class="lineno">   86</span>        <a class="code hl_namespace" href="namespacepybind11.html">py</a>.ptr = ptr;</div>
-<div class="line"><span class="lineno">   87</span><span class="preprocessor">#else</span></div>
-<div class="line"><span class="lineno">   88</span>        <a class="code hl_namespace" href="namespacepybind11.html">py</a>.offset = -1;</div>
-<div class="line"><span class="lineno">   89</span><span class="preprocessor">#endif</span></div>
-<div class="line"><span class="lineno">   90</span> </div>
-<div class="line"><span class="lineno">   91</span>        <a class="code hl_variable" href="classrangetree.html#a2475c78dfe781f97f6cb0a9223c36bbd">xtmparray</a>.push_back(px);</div>
-<div class="line"><span class="lineno">   92</span>        <a class="code hl_variable" href="classrangetree.html#a8ed382466cc2d3fdedf762e18739acec">ytmparray</a>.push_back(<a class="code hl_namespace" href="namespacepybind11.html">py</a>);</div>
-<div class="line"><span class="lineno">   93</span> </div>
-<div class="line"><span class="lineno">   94</span>        <span class="keywordflow">return</span> 0;</div>
-<div class="line"><span class="lineno">   95</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00078">78</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   78</span>                                             {</div>
+<div class="line"><span class="lineno">   79</span>    <span class="keywordflow">if</span> (<a class="code hl_variable" href="classrangetree.html#a4ac95ec3552e8687b13565ddcf71c56b">init</a>) <span class="keywordflow">return</span> 1;</div>
+<div class="line"><span class="lineno">   80</span> </div>
+<div class="line"><span class="lineno">   81</span>    ptx px;</div>
+<div class="line"><span class="lineno">   82</span>    pty <a class="code hl_namespace" href="namespacepybind11.html">py</a>;</div>
+<div class="line"><span class="lineno">   83</span> </div>
+<div class="line"><span class="lineno">   84</span>    px.x = x;</div>
+<div class="line"><span class="lineno">   85</span>    px.y = <a class="code hl_namespace" href="namespacepybind11.html">py</a>.y = y;</div>
+<div class="line"><span class="lineno">   86</span>    px.ptr = ptr;</div>
+<div class="line"><span class="lineno">   87</span><span class="preprocessor">#ifndef LESSRAM64</span></div>
+<div class="line"><span class="lineno">   88</span>    <a class="code hl_namespace" href="namespacepybind11.html">py</a>.ptr = ptr;</div>
+<div class="line"><span class="lineno">   89</span><span class="preprocessor">#else</span></div>
+<div class="line"><span class="lineno">   90</span>    <a class="code hl_namespace" href="namespacepybind11.html">py</a>.offset = -1;</div>
+<div class="line"><span class="lineno">   91</span><span class="preprocessor">#endif</span></div>
+<div class="line"><span class="lineno">   92</span> </div>
+<div class="line"><span class="lineno">   93</span>    <a class="code hl_variable" href="classrangetree.html#a2475c78dfe781f97f6cb0a9223c36bbd">xtmparray</a>.push_back(px);</div>
+<div class="line"><span class="lineno">   94</span>    <a class="code hl_variable" href="classrangetree.html#a8ed382466cc2d3fdedf762e18739acec">ytmparray</a>.push_back(<a class="code hl_namespace" href="namespacepybind11.html">py</a>);</div>
+<div class="line"><span class="lineno">   95</span> </div>
+<div class="line"><span class="lineno">   96</span>    <span class="keywordflow">return</span> 0;</div>
+<div class="line"><span class="lineno">   97</span>  }</div>
 <div class="ttc" id="anamespacepybind11_html"><div class="ttname"><a href="namespacepybind11.html">pybind11</a></div><div class="ttdef"><b>Definition:</b> <a href="cvnp_8hpp_source.html#l00071">cvnp.hpp:71</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classrangetree.html#a4ac95ec3552e8687b13565ddcf71c56b">rangetree&lt; point, data &gt;::init</a>, <a class="el" href="structrangetree_1_1ptx.html#ab701bd22252b7665cefd93a3bd97c4d3">rangetree&lt; point, data &gt;::ptx::ptr</a>, <a class="el" href="structrangetree_1_1ptx.html#a3e0bc00284c6e52b68a3cd95bad3cdcb">rangetree&lt; point, data &gt;::ptx::x</a>, <a class="el" href="classrangetree.html#a2475c78dfe781f97f6cb0a9223c36bbd">rangetree&lt; point, data &gt;::xtmparray</a>, <a class="el" href="structrangetree_1_1ptx.html#aa5b348b3dda258403e355ce30f3b3237">rangetree&lt; point, data &gt;::ptx::y</a>, and <a class="el" href="classrangetree.html#a8ed382466cc2d3fdedf762e18739acec">rangetree&lt; point, data &gt;::ytmparray</a>.</p>
@@ -419,39 +418,35 @@ template&lt;class point , class data &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00319">319</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  319</span>                                                                                    {</div>
-<div class="line"><span class="lineno">  320</span> </div>
-<div class="line"><span class="lineno">  321</span>        <span class="keywordflow">if</span> (ycount == 0)</div>
-<div class="line"><span class="lineno">  322</span>            <span class="keywordflow">return</span> 0;</div>
+<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00299">299</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  300</span>                                         {</div>
+<div class="line"><span class="lineno">  301</span>    <span class="keywordflow">if</span> (ycount == 0) <span class="keywordflow">return</span> 0;</div>
+<div class="line"><span class="lineno">  302</span> </div>
+<div class="line"><span class="lineno">  303</span>    <span class="keyword">const</span> <a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> max = ycount - 1;</div>
+<div class="line"><span class="lineno">  304</span> </div>
+<div class="line"><span class="lineno">  305</span>    <span class="comment">// These have to be signed to avoid overflow. s64 to contain u32.</span></div>
+<div class="line"><span class="lineno">  306</span>    <a class="code hl_typedef" href="lrtypes_8h.html#a350c6fc928e3bdc6c6486268ac8fb269">s64</a> t, left = 0, right = max;</div>
+<div class="line"><span class="lineno">  307</span> </div>
+<div class="line"><span class="lineno">  308</span>    <span class="keywordflow">do</span> {</div>
+<div class="line"><span class="lineno">  309</span>      t = (left + right) / 2;</div>
+<div class="line"><span class="lineno">  310</span> </div>
+<div class="line"><span class="lineno">  311</span>      <span class="keywordflow">if</span> (goal &lt; arr[t].y)</div>
+<div class="line"><span class="lineno">  312</span>        right = t - 1;</div>
+<div class="line"><span class="lineno">  313</span>      <span class="keywordflow">else</span></div>
+<div class="line"><span class="lineno">  314</span>        left = t + 1;</div>
+<div class="line"><span class="lineno">  315</span> </div>
+<div class="line"><span class="lineno">  316</span>    } <span class="keywordflow">while</span> (left &lt;= right &amp;&amp; goal != arr[t].y);</div>
+<div class="line"><span class="lineno">  317</span> </div>
+<div class="line"><span class="lineno">  318</span>    <span class="comment">// We might&#39;ve landed in the middle. Linearly get the earliest.</span></div>
+<div class="line"><span class="lineno">  319</span>    <span class="keywordflow">if</span> (arr[t].y == goal) {</div>
+<div class="line"><span class="lineno">  320</span>      <span class="keywordflow">while</span> (t &amp;&amp; arr[t - 1].y == goal) t--;</div>
+<div class="line"><span class="lineno">  321</span>      <span class="keywordflow">return</span> t;</div>
+<div class="line"><span class="lineno">  322</span>    }</div>
 <div class="line"><span class="lineno">  323</span> </div>
-<div class="line"><span class="lineno">  324</span>        <span class="keyword">const</span> <a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> max = ycount - 1;</div>
+<div class="line"><span class="lineno">  324</span>    <span class="keywordflow">if</span> (arr[t].y &lt; goal) <span class="keywordflow">return</span> t + 1;</div>
 <div class="line"><span class="lineno">  325</span> </div>
-<div class="line"><span class="lineno">  326</span>        <span class="comment">// These have to be signed to avoid overflow. s64 to contain u32.</span></div>
-<div class="line"><span class="lineno">  327</span>        <a class="code hl_typedef" href="lrtypes_8h.html#a350c6fc928e3bdc6c6486268ac8fb269">s64</a> t, left = 0, right = max;</div>
-<div class="line"><span class="lineno">  328</span> </div>
-<div class="line"><span class="lineno">  329</span>        <span class="keywordflow">do</span> {</div>
-<div class="line"><span class="lineno">  330</span>            t = (left + right) / 2;</div>
-<div class="line"><span class="lineno">  331</span> </div>
-<div class="line"><span class="lineno">  332</span>            <span class="keywordflow">if</span> (goal &lt; arr[t].y)</div>
-<div class="line"><span class="lineno">  333</span>                right = t - 1;</div>
-<div class="line"><span class="lineno">  334</span>            <span class="keywordflow">else</span></div>
-<div class="line"><span class="lineno">  335</span>                left = t + 1;</div>
-<div class="line"><span class="lineno">  336</span> </div>
-<div class="line"><span class="lineno">  337</span>        } <span class="keywordflow">while</span> (left &lt;= right &amp;&amp; goal != arr[t].y);</div>
-<div class="line"><span class="lineno">  338</span> </div>
-<div class="line"><span class="lineno">  339</span>        <span class="comment">// We might&#39;ve landed in the middle. Linearly get the earliest.</span></div>
-<div class="line"><span class="lineno">  340</span>        <span class="keywordflow">if</span> (arr[t].y == goal) {</div>
-<div class="line"><span class="lineno">  341</span>            <span class="keywordflow">while</span> (t &amp;&amp; arr[t-1].y == goal)</div>
-<div class="line"><span class="lineno">  342</span>                t--;</div>
-<div class="line"><span class="lineno">  343</span>            <span class="keywordflow">return</span> t;</div>
-<div class="line"><span class="lineno">  344</span>        }</div>
-<div class="line"><span class="lineno">  345</span> </div>
-<div class="line"><span class="lineno">  346</span>        <span class="keywordflow">if</span> (arr[t].y &lt; goal)</div>
-<div class="line"><span class="lineno">  347</span>            <span class="keywordflow">return</span> t + 1;</div>
-<div class="line"><span class="lineno">  348</span> </div>
-<div class="line"><span class="lineno">  349</span>        <span class="keywordflow">return</span> t;</div>
-<div class="line"><span class="lineno">  350</span>    }</div>
+<div class="line"><span class="lineno">  326</span>    <span class="keywordflow">return</span> t;</div>
+<div class="line"><span class="lineno">  327</span>  }</div>
 <div class="ttc" id="alrtypes_8h_html_a350c6fc928e3bdc6c6486268ac8fb269"><div class="ttname"><a href="lrtypes_8h.html#a350c6fc928e3bdc6c6486268ac8fb269">s64</a></div><div class="ttdeci">int64_t s64</div><div class="ttdef"><b>Definition:</b> <a href="lrtypes_8h_source.html#l00011">lrtypes.h:11</a></div></div>
 <div class="ttc" id="alrtypes_8h_html_afaa62991928fb9fb18ff0db62a040aba"><div class="ttname"><a href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a></div><div class="ttdeci">uint32_t u32</div><div class="ttdef"><b>Definition:</b> <a href="lrtypes_8h_source.html#l00007">lrtypes.h:7</a></div></div>
 </div><!-- fragment -->
@@ -505,39 +500,35 @@ template&lt;class point , class data &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00353">353</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  353</span>                                                                       {</div>
-<div class="line"><span class="lineno">  354</span> </div>
-<div class="line"><span class="lineno">  355</span>        <span class="keywordflow">if</span> (arr.size() == 0)</div>
-<div class="line"><span class="lineno">  356</span>            <span class="keywordflow">return</span> 0;</div>
-<div class="line"><span class="lineno">  357</span> </div>
-<div class="line"><span class="lineno">  358</span>        <span class="keyword">const</span> <a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> max = arr.size() - 1;</div>
-<div class="line"><span class="lineno">  359</span> </div>
-<div class="line"><span class="lineno">  360</span>        <span class="comment">// These have to be signed to avoid overflow. s64 to contain u32.</span></div>
-<div class="line"><span class="lineno">  361</span>        <a class="code hl_typedef" href="lrtypes_8h.html#a350c6fc928e3bdc6c6486268ac8fb269">s64</a> t, left = 0, right = max;</div>
-<div class="line"><span class="lineno">  362</span> </div>
-<div class="line"><span class="lineno">  363</span>        <span class="keywordflow">do</span> {</div>
-<div class="line"><span class="lineno">  364</span>            t = (left + right) / 2;</div>
-<div class="line"><span class="lineno">  365</span> </div>
-<div class="line"><span class="lineno">  366</span>            <span class="keywordflow">if</span> (goal &lt; arr[t].x)</div>
-<div class="line"><span class="lineno">  367</span>                right = t - 1;</div>
-<div class="line"><span class="lineno">  368</span>            <span class="keywordflow">else</span></div>
-<div class="line"><span class="lineno">  369</span>                left = t + 1;</div>
-<div class="line"><span class="lineno">  370</span> </div>
-<div class="line"><span class="lineno">  371</span>        } <span class="keywordflow">while</span> (left &lt;= right &amp;&amp; goal != arr[t].x);</div>
-<div class="line"><span class="lineno">  372</span> </div>
-<div class="line"><span class="lineno">  373</span>        <span class="comment">// We might&#39;ve landed in the middle. Linearly get the earliest.</span></div>
-<div class="line"><span class="lineno">  374</span>        <span class="keywordflow">if</span> (arr[t].x == goal) {</div>
-<div class="line"><span class="lineno">  375</span>            <span class="keywordflow">while</span> (t &amp;&amp; arr[t-1].x == goal)</div>
-<div class="line"><span class="lineno">  376</span>                t--;</div>
-<div class="line"><span class="lineno">  377</span>            <span class="keywordflow">return</span> t;</div>
-<div class="line"><span class="lineno">  378</span>        }</div>
-<div class="line"><span class="lineno">  379</span> </div>
-<div class="line"><span class="lineno">  380</span>        <span class="keywordflow">if</span> (arr[t].x &lt; goal)</div>
-<div class="line"><span class="lineno">  381</span>            <span class="keywordflow">return</span> t + 1;</div>
-<div class="line"><span class="lineno">  382</span> </div>
-<div class="line"><span class="lineno">  383</span>        <span class="keywordflow">return</span> t;</div>
-<div class="line"><span class="lineno">  384</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00330">330</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  330</span>                                                                     {</div>
+<div class="line"><span class="lineno">  331</span>    <span class="keywordflow">if</span> (arr.size() == 0) <span class="keywordflow">return</span> 0;</div>
+<div class="line"><span class="lineno">  332</span> </div>
+<div class="line"><span class="lineno">  333</span>    <span class="keyword">const</span> <a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> max = arr.size() - 1;</div>
+<div class="line"><span class="lineno">  334</span> </div>
+<div class="line"><span class="lineno">  335</span>    <span class="comment">// These have to be signed to avoid overflow. s64 to contain u32.</span></div>
+<div class="line"><span class="lineno">  336</span>    <a class="code hl_typedef" href="lrtypes_8h.html#a350c6fc928e3bdc6c6486268ac8fb269">s64</a> t, left = 0, right = max;</div>
+<div class="line"><span class="lineno">  337</span> </div>
+<div class="line"><span class="lineno">  338</span>    <span class="keywordflow">do</span> {</div>
+<div class="line"><span class="lineno">  339</span>      t = (left + right) / 2;</div>
+<div class="line"><span class="lineno">  340</span> </div>
+<div class="line"><span class="lineno">  341</span>      <span class="keywordflow">if</span> (goal &lt; arr[t].x)</div>
+<div class="line"><span class="lineno">  342</span>        right = t - 1;</div>
+<div class="line"><span class="lineno">  343</span>      <span class="keywordflow">else</span></div>
+<div class="line"><span class="lineno">  344</span>        left = t + 1;</div>
+<div class="line"><span class="lineno">  345</span> </div>
+<div class="line"><span class="lineno">  346</span>    } <span class="keywordflow">while</span> (left &lt;= right &amp;&amp; goal != arr[t].x);</div>
+<div class="line"><span class="lineno">  347</span> </div>
+<div class="line"><span class="lineno">  348</span>    <span class="comment">// We might&#39;ve landed in the middle. Linearly get the earliest.</span></div>
+<div class="line"><span class="lineno">  349</span>    <span class="keywordflow">if</span> (arr[t].x == goal) {</div>
+<div class="line"><span class="lineno">  350</span>      <span class="keywordflow">while</span> (t &amp;&amp; arr[t - 1].x == goal) t--;</div>
+<div class="line"><span class="lineno">  351</span>      <span class="keywordflow">return</span> t;</div>
+<div class="line"><span class="lineno">  352</span>    }</div>
+<div class="line"><span class="lineno">  353</span> </div>
+<div class="line"><span class="lineno">  354</span>    <span class="keywordflow">if</span> (arr[t].x &lt; goal) <span class="keywordflow">return</span> t + 1;</div>
+<div class="line"><span class="lineno">  355</span> </div>
+<div class="line"><span class="lineno">  356</span>    <span class="keywordflow">return</span> t;</div>
+<div class="line"><span class="lineno">  357</span>  }</div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="classrangetree.html#abe48595be2aea3eb5fdf653b5b472a31">rangetree&lt; point, data &gt;::build()</a>.</p>
 <div class="dynheader">
@@ -577,46 +568,45 @@ template&lt;class point , class data &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00386">386</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  386</span>                 {</div>
-<div class="line"><span class="lineno">  387</span>        <span class="keywordflow">if</span> (<a class="code hl_variable" href="classrangetree.html#ab6316416c31a50430c005feaad70cf9f">totalsize</a> &lt; 1) {</div>
-<div class="line"><span class="lineno">  388</span>            <span class="keywordflow">return</span>;</div>
-<div class="line"><span class="lineno">  389</span>        }</div>
-<div class="line"><span class="lineno">  390</span><span class="preprocessor">#ifndef LESSRAM64</span></div>
-<div class="line"><span class="lineno">  391</span>        <a class="code hl_variable" href="classrangetree.html#a6368e7b24d1b2a55f250049f9f100a3e">start</a>.<a class="code hl_variable" href="structrangetree_1_1node.html#ae018e1b9e121b5f646e2563ee86fee11">ypoints</a> = (pty *) <a class="code hl_function" href="classrangetree.html#ab6286e479b04bcbc3f58fbdeebd651a9">xcalloc</a>(<a class="code hl_variable" href="classrangetree.html#ab6316416c31a50430c005feaad70cf9f">totalsize</a>, <span class="keyword">sizeof</span>(pty));</div>
-<div class="line"><span class="lineno">  392</span>        memcpy(<a class="code hl_variable" href="classrangetree.html#a6368e7b24d1b2a55f250049f9f100a3e">start</a>.<a class="code hl_variable" href="structrangetree_1_1node.html#ae018e1b9e121b5f646e2563ee86fee11">ypoints</a>, &amp;<a class="code hl_variable" href="classrangetree.html#a8ed382466cc2d3fdedf762e18739acec">ytmparray</a>[0], <a class="code hl_variable" href="classrangetree.html#ab6316416c31a50430c005feaad70cf9f">totalsize</a> * <span class="keyword">sizeof</span>(pty));</div>
-<div class="line"><span class="lineno">  393</span>        <a class="code hl_variable" href="classrangetree.html#a6368e7b24d1b2a55f250049f9f100a3e">start</a>.<a class="code hl_variable" href="structrangetree_1_1node.html#aefa2a49cad0fa7362c39578a9f84a806">ycount</a> = <a class="code hl_variable" href="classrangetree.html#ab6316416c31a50430c005feaad70cf9f">totalsize</a>;</div>
-<div class="line"><span class="lineno">  394</span><span class="preprocessor">#endif</span></div>
-<div class="line"><span class="lineno">  395</span>        <a class="code hl_variable" href="classrangetree.html#a8ed382466cc2d3fdedf762e18739acec">ytmparray</a>.clear();</div>
-<div class="line"><span class="lineno">  396</span> </div>
-<div class="line"><span class="lineno">  397</span>        <span class="keyword">const</span> <a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> medianidx = <a class="code hl_variable" href="classrangetree.html#ab6316416c31a50430c005feaad70cf9f">totalsize</a> / 2;</div>
-<div class="line"><span class="lineno">  398</span>        <span class="keyword">const</span> point median = <a class="code hl_variable" href="classrangetree.html#a2475c78dfe781f97f6cb0a9223c36bbd">xtmparray</a>[medianidx].x;</div>
-<div class="line"><span class="lineno">  399</span> </div>
-<div class="line"><span class="lineno">  400</span>        <a class="code hl_variable" href="classrangetree.html#a6368e7b24d1b2a55f250049f9f100a3e">start</a>.<a class="code hl_variable" href="structrangetree_1_1node.html#a33ad84d9196dfb9fc90127aeebd04547">min</a> = <a class="code hl_variable" href="classrangetree.html#a2475c78dfe781f97f6cb0a9223c36bbd">xtmparray</a>[0].x;</div>
-<div class="line"><span class="lineno">  401</span>        <a class="code hl_variable" href="classrangetree.html#a6368e7b24d1b2a55f250049f9f100a3e">start</a>.<a class="code hl_variable" href="structrangetree_1_1node.html#a1d208e5629ec663b9a5df52209d066d7">max</a> = <a class="code hl_variable" href="classrangetree.html#a2475c78dfe781f97f6cb0a9223c36bbd">xtmparray</a>[<a class="code hl_variable" href="classrangetree.html#ab6316416c31a50430c005feaad70cf9f">totalsize</a> - 1].x;</div>
-<div class="line"><span class="lineno">  402</span> </div>
-<div class="line"><span class="lineno">  403</span>        <span class="comment">// Ok, divide it between everyone</span></div>
-<div class="line"><span class="lineno">  404</span>        <a class="code hl_variable" href="classrangetree.html#a6368e7b24d1b2a55f250049f9f100a3e">start</a>.<a class="code hl_variable" href="structrangetree_1_1node.html#acd232b5af6973c8209485dc77f9c49ce">left</a> = <a class="code hl_function" href="classrangetree.html#abdf76dada71c1b5ae93130836fdd201b">build</a>(<a class="code hl_variable" href="classrangetree.html#a6368e7b24d1b2a55f250049f9f100a3e">start</a>.<a class="code hl_variable" href="structrangetree_1_1node.html#a33ad84d9196dfb9fc90127aeebd04547">min</a>, median);</div>
-<div class="line"><span class="lineno">  405</span> </div>
-<div class="line"><span class="lineno">  406</span>        <span class="comment">// If it&#39;s really small, it may not have a right branch..</span></div>
-<div class="line"><span class="lineno">  407</span>        <span class="keywordflow">if</span> (median != <a class="code hl_variable" href="classrangetree.html#a6368e7b24d1b2a55f250049f9f100a3e">start</a>.<a class="code hl_variable" href="structrangetree_1_1node.html#a1d208e5629ec663b9a5df52209d066d7">max</a>)</div>
-<div class="line"><span class="lineno">  408</span>            <a class="code hl_variable" href="classrangetree.html#a6368e7b24d1b2a55f250049f9f100a3e">start</a>.<a class="code hl_variable" href="structrangetree_1_1node.html#a16aad73e87da115e55ac4590ee6a94d0">right</a> = <a class="code hl_function" href="classrangetree.html#abdf76dada71c1b5ae93130836fdd201b">build</a>(median + 1, <a class="code hl_variable" href="classrangetree.html#a6368e7b24d1b2a55f250049f9f100a3e">start</a>.<a class="code hl_variable" href="structrangetree_1_1node.html#a1d208e5629ec663b9a5df52209d066d7">max</a>);</div>
-<div class="line"><span class="lineno">  409</span> </div>
-<div class="line"><span class="lineno">  410</span><span class="preprocessor">#ifdef LESSRAM64</span></div>
-<div class="line"><span class="lineno">  411</span>        <a class="code hl_function" href="classrangetree.html#a6c50a688695036be1786ec03952f57ee">mergekids</a>(<a class="code hl_variable" href="classrangetree.html#a6368e7b24d1b2a55f250049f9f100a3e">start</a>.<a class="code hl_variable" href="structrangetree_1_1node.html#ae018e1b9e121b5f646e2563ee86fee11">ypoints</a>, <a class="code hl_variable" href="classrangetree.html#a6368e7b24d1b2a55f250049f9f100a3e">start</a>.<a class="code hl_variable" href="structrangetree_1_1node.html#aefa2a49cad0fa7362c39578a9f84a806">ycount</a>, <a class="code hl_variable" href="classrangetree.html#a6368e7b24d1b2a55f250049f9f100a3e">start</a>.<a class="code hl_variable" href="structrangetree_1_1node.html#acd232b5af6973c8209485dc77f9c49ce">left</a>, <a class="code hl_variable" href="classrangetree.html#a6368e7b24d1b2a55f250049f9f100a3e">start</a>.<a class="code hl_variable" href="structrangetree_1_1node.html#a16aad73e87da115e55ac4590ee6a94d0">right</a>);</div>
-<div class="line"><span class="lineno">  412</span><span class="preprocessor">#endif</span></div>
-<div class="line"><span class="lineno">  413</span>    }</div>
-<div class="ttc" id="aclassrangetree_html_a6368e7b24d1b2a55f250049f9f100a3e"><div class="ttname"><a href="classrangetree.html#a6368e7b24d1b2a55f250049f9f100a3e">rangetree::start</a></div><div class="ttdeci">node start</div><div class="ttdef"><b>Definition:</b> <a href="ranget_8h_source.html#l00694">ranget.h:694</a></div></div>
-<div class="ttc" id="aclassrangetree_html_a6c50a688695036be1786ec03952f57ee"><div class="ttname"><a href="classrangetree.html#a6c50a688695036be1786ec03952f57ee">rangetree::mergekids</a></div><div class="ttdeci">void mergekids(pty *&amp;arr, u32 &amp;ycount, node *const __restrict__ left, node *const __restrict__ right) const</div><div class="ttdef"><b>Definition:</b> <a href="ranget_8h_source.html#l00522">ranget.h:522</a></div></div>
-<div class="ttc" id="aclassrangetree_html_ab6286e479b04bcbc3f58fbdeebd651a9"><div class="ttname"><a href="classrangetree.html#ab6286e479b04bcbc3f58fbdeebd651a9">rangetree::xcalloc</a></div><div class="ttdeci">void * xcalloc(const size_t nmemb, const size_t size) const</div><div class="ttdef"><b>Definition:</b> <a href="ranget_8h_source.html#l00679">ranget.h:679</a></div></div>
-<div class="ttc" id="aclassrangetree_html_ab6316416c31a50430c005feaad70cf9f"><div class="ttname"><a href="classrangetree.html#ab6316416c31a50430c005feaad70cf9f">rangetree::totalsize</a></div><div class="ttdeci">u32 totalsize</div><div class="ttdef"><b>Definition:</b> <a href="ranget_8h_source.html#l00692">ranget.h:692</a></div></div>
-<div class="ttc" id="aclassrangetree_html_abdf76dada71c1b5ae93130836fdd201b"><div class="ttname"><a href="classrangetree.html#abdf76dada71c1b5ae93130836fdd201b">rangetree::build</a></div><div class="ttdeci">void build()</div><div class="ttdef"><b>Definition:</b> <a href="ranget_8h_source.html#l00386">ranget.h:386</a></div></div>
-<div class="ttc" id="astructrangetree_1_1node_html_a16aad73e87da115e55ac4590ee6a94d0"><div class="ttname"><a href="structrangetree_1_1node.html#a16aad73e87da115e55ac4590ee6a94d0">rangetree::node::right</a></div><div class="ttdeci">node * right</div><div class="ttdef"><b>Definition:</b> <a href="ranget_8h_source.html#l00308">ranget.h:308</a></div></div>
-<div class="ttc" id="astructrangetree_1_1node_html_a1d208e5629ec663b9a5df52209d066d7"><div class="ttname"><a href="structrangetree_1_1node.html#a1d208e5629ec663b9a5df52209d066d7">rangetree::node::max</a></div><div class="ttdeci">point max</div><div class="ttdef"><b>Definition:</b> <a href="ranget_8h_source.html#l00313">ranget.h:313</a></div></div>
-<div class="ttc" id="astructrangetree_1_1node_html_a33ad84d9196dfb9fc90127aeebd04547"><div class="ttname"><a href="structrangetree_1_1node.html#a33ad84d9196dfb9fc90127aeebd04547">rangetree::node::min</a></div><div class="ttdeci">point min</div><div class="ttdef"><b>Definition:</b> <a href="ranget_8h_source.html#l00313">ranget.h:313</a></div></div>
-<div class="ttc" id="astructrangetree_1_1node_html_acd232b5af6973c8209485dc77f9c49ce"><div class="ttname"><a href="structrangetree_1_1node.html#acd232b5af6973c8209485dc77f9c49ce">rangetree::node::left</a></div><div class="ttdeci">node * left</div><div class="ttdef"><b>Definition:</b> <a href="ranget_8h_source.html#l00307">ranget.h:307</a></div></div>
-<div class="ttc" id="astructrangetree_1_1node_html_ae018e1b9e121b5f646e2563ee86fee11"><div class="ttname"><a href="structrangetree_1_1node.html#ae018e1b9e121b5f646e2563ee86fee11">rangetree::node::ypoints</a></div><div class="ttdeci">pty * ypoints</div><div class="ttdef"><b>Definition:</b> <a href="ranget_8h_source.html#l00310">ranget.h:310</a></div></div>
-<div class="ttc" id="astructrangetree_1_1node_html_aefa2a49cad0fa7362c39578a9f84a806"><div class="ttname"><a href="structrangetree_1_1node.html#aefa2a49cad0fa7362c39578a9f84a806">rangetree::node::ycount</a></div><div class="ttdeci">u32 ycount</div><div class="ttdef"><b>Definition:</b> <a href="ranget_8h_source.html#l00311">ranget.h:311</a></div></div>
+<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00359">359</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  359</span>               {</div>
+<div class="line"><span class="lineno">  360</span>    <span class="keywordflow">if</span> (<a class="code hl_variable" href="classrangetree.html#ab6316416c31a50430c005feaad70cf9f">totalsize</a> &lt; 1) {</div>
+<div class="line"><span class="lineno">  361</span>      <span class="keywordflow">return</span>;</div>
+<div class="line"><span class="lineno">  362</span>    }</div>
+<div class="line"><span class="lineno">  363</span><span class="preprocessor">#ifndef LESSRAM64</span></div>
+<div class="line"><span class="lineno">  364</span>    <a class="code hl_variable" href="classrangetree.html#a6368e7b24d1b2a55f250049f9f100a3e">start</a>.<a class="code hl_variable" href="structrangetree_1_1node.html#ae018e1b9e121b5f646e2563ee86fee11">ypoints</a> = (pty *)<a class="code hl_function" href="classrangetree.html#ab6286e479b04bcbc3f58fbdeebd651a9">xcalloc</a>(<a class="code hl_variable" href="classrangetree.html#ab6316416c31a50430c005feaad70cf9f">totalsize</a>, <span class="keyword">sizeof</span>(pty));</div>
+<div class="line"><span class="lineno">  365</span>    memcpy(<a class="code hl_variable" href="classrangetree.html#a6368e7b24d1b2a55f250049f9f100a3e">start</a>.<a class="code hl_variable" href="structrangetree_1_1node.html#ae018e1b9e121b5f646e2563ee86fee11">ypoints</a>, &amp;<a class="code hl_variable" href="classrangetree.html#a8ed382466cc2d3fdedf762e18739acec">ytmparray</a>[0], <a class="code hl_variable" href="classrangetree.html#ab6316416c31a50430c005feaad70cf9f">totalsize</a> * <span class="keyword">sizeof</span>(pty));</div>
+<div class="line"><span class="lineno">  366</span>    <a class="code hl_variable" href="classrangetree.html#a6368e7b24d1b2a55f250049f9f100a3e">start</a>.<a class="code hl_variable" href="structrangetree_1_1node.html#aefa2a49cad0fa7362c39578a9f84a806">ycount</a> = <a class="code hl_variable" href="classrangetree.html#ab6316416c31a50430c005feaad70cf9f">totalsize</a>;</div>
+<div class="line"><span class="lineno">  367</span><span class="preprocessor">#endif</span></div>
+<div class="line"><span class="lineno">  368</span>    <a class="code hl_variable" href="classrangetree.html#a8ed382466cc2d3fdedf762e18739acec">ytmparray</a>.clear();</div>
+<div class="line"><span class="lineno">  369</span> </div>
+<div class="line"><span class="lineno">  370</span>    <span class="keyword">const</span> <a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> medianidx = <a class="code hl_variable" href="classrangetree.html#ab6316416c31a50430c005feaad70cf9f">totalsize</a> / 2;</div>
+<div class="line"><span class="lineno">  371</span>    <span class="keyword">const</span> point median = <a class="code hl_variable" href="classrangetree.html#a2475c78dfe781f97f6cb0a9223c36bbd">xtmparray</a>[medianidx].x;</div>
+<div class="line"><span class="lineno">  372</span> </div>
+<div class="line"><span class="lineno">  373</span>    <a class="code hl_variable" href="classrangetree.html#a6368e7b24d1b2a55f250049f9f100a3e">start</a>.<a class="code hl_variable" href="structrangetree_1_1node.html#a33ad84d9196dfb9fc90127aeebd04547">min</a> = <a class="code hl_variable" href="classrangetree.html#a2475c78dfe781f97f6cb0a9223c36bbd">xtmparray</a>[0].x;</div>
+<div class="line"><span class="lineno">  374</span>    <a class="code hl_variable" href="classrangetree.html#a6368e7b24d1b2a55f250049f9f100a3e">start</a>.<a class="code hl_variable" href="structrangetree_1_1node.html#a1d208e5629ec663b9a5df52209d066d7">max</a> = <a class="code hl_variable" href="classrangetree.html#a2475c78dfe781f97f6cb0a9223c36bbd">xtmparray</a>[<a class="code hl_variable" href="classrangetree.html#ab6316416c31a50430c005feaad70cf9f">totalsize</a> - 1].x;</div>
+<div class="line"><span class="lineno">  375</span> </div>
+<div class="line"><span class="lineno">  376</span>    <span class="comment">// Ok, divide it between everyone</span></div>
+<div class="line"><span class="lineno">  377</span>    <a class="code hl_variable" href="classrangetree.html#a6368e7b24d1b2a55f250049f9f100a3e">start</a>.<a class="code hl_variable" href="structrangetree_1_1node.html#acd232b5af6973c8209485dc77f9c49ce">left</a> = <a class="code hl_function" href="classrangetree.html#abdf76dada71c1b5ae93130836fdd201b">build</a>(<a class="code hl_variable" href="classrangetree.html#a6368e7b24d1b2a55f250049f9f100a3e">start</a>.<a class="code hl_variable" href="structrangetree_1_1node.html#a33ad84d9196dfb9fc90127aeebd04547">min</a>, median);</div>
+<div class="line"><span class="lineno">  378</span> </div>
+<div class="line"><span class="lineno">  379</span>    <span class="comment">// If it&#39;s really small, it may not have a right branch..</span></div>
+<div class="line"><span class="lineno">  380</span>    <span class="keywordflow">if</span> (median != <a class="code hl_variable" href="classrangetree.html#a6368e7b24d1b2a55f250049f9f100a3e">start</a>.<a class="code hl_variable" href="structrangetree_1_1node.html#a1d208e5629ec663b9a5df52209d066d7">max</a>) <a class="code hl_variable" href="classrangetree.html#a6368e7b24d1b2a55f250049f9f100a3e">start</a>.<a class="code hl_variable" href="structrangetree_1_1node.html#a16aad73e87da115e55ac4590ee6a94d0">right</a> = <a class="code hl_function" href="classrangetree.html#abdf76dada71c1b5ae93130836fdd201b">build</a>(median + 1, <a class="code hl_variable" href="classrangetree.html#a6368e7b24d1b2a55f250049f9f100a3e">start</a>.<a class="code hl_variable" href="structrangetree_1_1node.html#a1d208e5629ec663b9a5df52209d066d7">max</a>);</div>
+<div class="line"><span class="lineno">  381</span> </div>
+<div class="line"><span class="lineno">  382</span><span class="preprocessor">#ifdef LESSRAM64</span></div>
+<div class="line"><span class="lineno">  383</span>    <a class="code hl_function" href="classrangetree.html#a6c50a688695036be1786ec03952f57ee">mergekids</a>(<a class="code hl_variable" href="classrangetree.html#a6368e7b24d1b2a55f250049f9f100a3e">start</a>.<a class="code hl_variable" href="structrangetree_1_1node.html#ae018e1b9e121b5f646e2563ee86fee11">ypoints</a>, <a class="code hl_variable" href="classrangetree.html#a6368e7b24d1b2a55f250049f9f100a3e">start</a>.<a class="code hl_variable" href="structrangetree_1_1node.html#aefa2a49cad0fa7362c39578a9f84a806">ycount</a>, <a class="code hl_variable" href="classrangetree.html#a6368e7b24d1b2a55f250049f9f100a3e">start</a>.<a class="code hl_variable" href="structrangetree_1_1node.html#acd232b5af6973c8209485dc77f9c49ce">left</a>, <a class="code hl_variable" href="classrangetree.html#a6368e7b24d1b2a55f250049f9f100a3e">start</a>.<a class="code hl_variable" href="structrangetree_1_1node.html#a16aad73e87da115e55ac4590ee6a94d0">right</a>);</div>
+<div class="line"><span class="lineno">  384</span><span class="preprocessor">#endif</span></div>
+<div class="line"><span class="lineno">  385</span>  }</div>
+<div class="ttc" id="aclassrangetree_html_a6368e7b24d1b2a55f250049f9f100a3e"><div class="ttname"><a href="classrangetree.html#a6368e7b24d1b2a55f250049f9f100a3e">rangetree::start</a></div><div class="ttdeci">node start</div><div class="ttdef"><b>Definition:</b> <a href="ranget_8h_source.html#l00642">ranget.h:642</a></div></div>
+<div class="ttc" id="aclassrangetree_html_a6c50a688695036be1786ec03952f57ee"><div class="ttname"><a href="classrangetree.html#a6c50a688695036be1786ec03952f57ee">rangetree::mergekids</a></div><div class="ttdeci">void mergekids(pty *&amp;arr, u32 &amp;ycount, node *const __restrict__ left, node *const __restrict__ right) const</div><div class="ttdef"><b>Definition:</b> <a href="ranget_8h_source.html#l00483">ranget.h:483</a></div></div>
+<div class="ttc" id="aclassrangetree_html_ab6286e479b04bcbc3f58fbdeebd651a9"><div class="ttname"><a href="classrangetree.html#ab6286e479b04bcbc3f58fbdeebd651a9">rangetree::xcalloc</a></div><div class="ttdeci">void * xcalloc(const size_t nmemb, const size_t size) const</div><div class="ttdef"><b>Definition:</b> <a href="ranget_8h_source.html#l00628">ranget.h:628</a></div></div>
+<div class="ttc" id="aclassrangetree_html_ab6316416c31a50430c005feaad70cf9f"><div class="ttname"><a href="classrangetree.html#ab6316416c31a50430c005feaad70cf9f">rangetree::totalsize</a></div><div class="ttdeci">u32 totalsize</div><div class="ttdef"><b>Definition:</b> <a href="ranget_8h_source.html#l00640">ranget.h:640</a></div></div>
+<div class="ttc" id="aclassrangetree_html_abdf76dada71c1b5ae93130836fdd201b"><div class="ttname"><a href="classrangetree.html#abdf76dada71c1b5ae93130836fdd201b">rangetree::build</a></div><div class="ttdeci">void build()</div><div class="ttdef"><b>Definition:</b> <a href="ranget_8h_source.html#l00359">ranget.h:359</a></div></div>
+<div class="ttc" id="astructrangetree_1_1node_html_a16aad73e87da115e55ac4590ee6a94d0"><div class="ttname"><a href="structrangetree_1_1node.html#a16aad73e87da115e55ac4590ee6a94d0">rangetree::node::right</a></div><div class="ttdeci">node * right</div><div class="ttdef"><b>Definition:</b> <a href="ranget_8h_source.html#l00287">ranget.h:287</a></div></div>
+<div class="ttc" id="astructrangetree_1_1node_html_a1d208e5629ec663b9a5df52209d066d7"><div class="ttname"><a href="structrangetree_1_1node.html#a1d208e5629ec663b9a5df52209d066d7">rangetree::node::max</a></div><div class="ttdeci">point max</div><div class="ttdef"><b>Definition:</b> <a href="ranget_8h_source.html#l00292">ranget.h:292</a></div></div>
+<div class="ttc" id="astructrangetree_1_1node_html_a33ad84d9196dfb9fc90127aeebd04547"><div class="ttname"><a href="structrangetree_1_1node.html#a33ad84d9196dfb9fc90127aeebd04547">rangetree::node::min</a></div><div class="ttdeci">point min</div><div class="ttdef"><b>Definition:</b> <a href="ranget_8h_source.html#l00292">ranget.h:292</a></div></div>
+<div class="ttc" id="astructrangetree_1_1node_html_acd232b5af6973c8209485dc77f9c49ce"><div class="ttname"><a href="structrangetree_1_1node.html#acd232b5af6973c8209485dc77f9c49ce">rangetree::node::left</a></div><div class="ttdeci">node * left</div><div class="ttdef"><b>Definition:</b> <a href="ranget_8h_source.html#l00286">ranget.h:286</a></div></div>
+<div class="ttc" id="astructrangetree_1_1node_html_ae018e1b9e121b5f646e2563ee86fee11"><div class="ttname"><a href="structrangetree_1_1node.html#ae018e1b9e121b5f646e2563ee86fee11">rangetree::node::ypoints</a></div><div class="ttdeci">pty * ypoints</div><div class="ttdef"><b>Definition:</b> <a href="ranget_8h_source.html#l00289">ranget.h:289</a></div></div>
+<div class="ttc" id="astructrangetree_1_1node_html_aefa2a49cad0fa7362c39578a9f84a806"><div class="ttname"><a href="structrangetree_1_1node.html#aefa2a49cad0fa7362c39578a9f84a806">rangetree::node::ycount</a></div><div class="ttdeci">u32 ycount</div><div class="ttdef"><b>Definition:</b> <a href="ranget_8h_source.html#l00290">ranget.h:290</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classrangetree.html#abdf76dada71c1b5ae93130836fdd201b">rangetree&lt; point, data &gt;::build()</a>, <a class="el" href="structrangetree_1_1node.html#acd232b5af6973c8209485dc77f9c49ce">rangetree&lt; point, data &gt;::node::left</a>, <a class="el" href="structrangetree_1_1node.html#a1d208e5629ec663b9a5df52209d066d7">rangetree&lt; point, data &gt;::node::max</a>, <a class="el" href="classrangetree.html#a6c50a688695036be1786ec03952f57ee">rangetree&lt; point, data &gt;::mergekids()</a>, <a class="el" href="structrangetree_1_1node.html#a33ad84d9196dfb9fc90127aeebd04547">rangetree&lt; point, data &gt;::node::min</a>, <a class="el" href="structrangetree_1_1node.html#a16aad73e87da115e55ac4590ee6a94d0">rangetree&lt; point, data &gt;::node::right</a>, <a class="el" href="classrangetree.html#a6368e7b24d1b2a55f250049f9f100a3e">rangetree&lt; point, data &gt;::start</a>, <a class="el" href="classrangetree.html#ab6316416c31a50430c005feaad70cf9f">rangetree&lt; point, data &gt;::totalsize</a>, <a class="el" href="classrangetree.html#ab6286e479b04bcbc3f58fbdeebd651a9">rangetree&lt; point, data &gt;::xcalloc()</a>, <a class="el" href="classrangetree.html#a2475c78dfe781f97f6cb0a9223c36bbd">rangetree&lt; point, data &gt;::xtmparray</a>, <a class="el" href="structrangetree_1_1node.html#aefa2a49cad0fa7362c39578a9f84a806">rangetree&lt; point, data &gt;::node::ycount</a>, <a class="el" href="structrangetree_1_1node.html#ae018e1b9e121b5f646e2563ee86fee11">rangetree&lt; point, data &gt;::node::ypoints</a>, and <a class="el" href="classrangetree.html#a8ed382466cc2d3fdedf762e18739acec">rangetree&lt; point, data &gt;::ytmparray</a>.</p>
 
@@ -680,60 +670,58 @@ template&lt;class point , class data &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00415">415</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  415</span>                                                  {</div>
-<div class="line"><span class="lineno">  416</span> </div>
-<div class="line"><span class="lineno">  417</span><span class="comment">//      if (min &gt; max)</span></div>
-<div class="line"><span class="lineno">  418</span><span class="comment">//          abort();</span></div>
+<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00387">387</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  387</span>                                                {</div>
+<div class="line"><span class="lineno">  388</span>    <span class="comment">//      if (min &gt; max)</span></div>
+<div class="line"><span class="lineno">  389</span>    <span class="comment">//          abort();</span></div>
+<div class="line"><span class="lineno">  390</span> </div>
+<div class="line"><span class="lineno">  391</span>    <span class="keyword">const</span> <a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> lower = <a class="code hl_function" href="classrangetree.html#a6d37d01766887ce7ce1be42a498fff73">binarynextx</a>(<a class="code hl_variable" href="classrangetree.html#a2475c78dfe781f97f6cb0a9223c36bbd">xtmparray</a>, min);</div>
+<div class="line"><span class="lineno">  392</span>    <span class="keyword">const</span> <a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> upper = <a class="code hl_function" href="classrangetree.html#a6d37d01766887ce7ce1be42a498fff73">binarynextx</a>(<a class="code hl_variable" href="classrangetree.html#a2475c78dfe781f97f6cb0a9223c36bbd">xtmparray</a>, max + 1);</div>
+<div class="line"><span class="lineno">  393</span> </div>
+<div class="line"><span class="lineno">  394</span>    <span class="comment">// Quick check: if nothing below me, no need to create anything below</span></div>
+<div class="line"><span class="lineno">  395</span>    <span class="keywordflow">if</span> (lower == upper) {</div>
+<div class="line"><span class="lineno">  396</span>      <span class="keywordflow">return</span> NULL;</div>
+<div class="line"><span class="lineno">  397</span>    }</div>
+<div class="line"><span class="lineno">  398</span> </div>
+<div class="line"><span class="lineno">  399</span>    node *<span class="keyword">const</span> n = <a class="code hl_function" href="classrangetree.html#ac0d24f1b1390dd0eeb54b531d7b40ba8">newnode</a>();</div>
+<div class="line"><span class="lineno">  400</span> </div>
+<div class="line"><span class="lineno">  401</span>    n-&gt;min = <a class="code hl_variable" href="classrangetree.html#a2475c78dfe781f97f6cb0a9223c36bbd">xtmparray</a>[lower].x;</div>
+<div class="line"><span class="lineno">  402</span>    n-&gt;max = <a class="code hl_variable" href="classrangetree.html#a2475c78dfe781f97f6cb0a9223c36bbd">xtmparray</a>[upper - 1].x;</div>
+<div class="line"><span class="lineno">  403</span> </div>
+<div class="line"><span class="lineno">  404</span>    <span class="comment">// If no kids, create the array; otherwise, recurse</span></div>
+<div class="line"><span class="lineno">  405</span>    <span class="keywordflow">if</span> (n-&gt;min == n-&gt;max) {</div>
+<div class="line"><span class="lineno">  406</span>      <span class="keyword">const</span> <a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> size = upper - lower;</div>
+<div class="line"><span class="lineno">  407</span> </div>
+<div class="line"><span class="lineno">  408</span>      n-&gt;ypoints = <a class="code hl_function" href="classrangetree.html#a2dd60d801762a24ff79d467195495c01">newpty</a>(size);</div>
+<div class="line"><span class="lineno">  409</span> </div>
+<div class="line"><span class="lineno">  410</span>      <a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> i;</div>
+<div class="line"><span class="lineno">  411</span>      <span class="keywordflow">for</span> (i = 0; i &lt; size; i++) {</div>
+<div class="line"><span class="lineno">  412</span><span class="preprocessor">#ifdef LESSRAM64</span></div>
+<div class="line"><span class="lineno">  413</span>        n-&gt;ypoints[i].offset = lower + i;</div>
+<div class="line"><span class="lineno">  414</span><span class="preprocessor">#else</span></div>
+<div class="line"><span class="lineno">  415</span>        n-&gt;ypoints[i].ptr = <a class="code hl_variable" href="classrangetree.html#a2475c78dfe781f97f6cb0a9223c36bbd">xtmparray</a>[lower + i].ptr;</div>
+<div class="line"><span class="lineno">  416</span><span class="preprocessor">#endif</span></div>
+<div class="line"><span class="lineno">  417</span>        n-&gt;ypoints[i].y = <a class="code hl_variable" href="classrangetree.html#a2475c78dfe781f97f6cb0a9223c36bbd">xtmparray</a>[lower + i].y;</div>
+<div class="line"><span class="lineno">  418</span>      }</div>
 <div class="line"><span class="lineno">  419</span> </div>
-<div class="line"><span class="lineno">  420</span>        <span class="keyword">const</span> <a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> lower = <a class="code hl_function" href="classrangetree.html#a6d37d01766887ce7ce1be42a498fff73">binarynextx</a>(<a class="code hl_variable" href="classrangetree.html#a2475c78dfe781f97f6cb0a9223c36bbd">xtmparray</a>, min);</div>
-<div class="line"><span class="lineno">  421</span>        <span class="keyword">const</span> <a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> upper = <a class="code hl_function" href="classrangetree.html#a6d37d01766887ce7ce1be42a498fff73">binarynextx</a>(<a class="code hl_variable" href="classrangetree.html#a2475c78dfe781f97f6cb0a9223c36bbd">xtmparray</a>, max + 1);</div>
-<div class="line"><span class="lineno">  422</span> </div>
-<div class="line"><span class="lineno">  423</span>        <span class="comment">// Quick check: if nothing below me, no need to create anything below</span></div>
-<div class="line"><span class="lineno">  424</span>        <span class="keywordflow">if</span> (lower == upper) {</div>
-<div class="line"><span class="lineno">  425</span>            <span class="keywordflow">return</span> NULL;</div>
-<div class="line"><span class="lineno">  426</span>        }</div>
-<div class="line"><span class="lineno">  427</span> </div>
-<div class="line"><span class="lineno">  428</span>        node * <span class="keyword">const</span> n = <a class="code hl_function" href="classrangetree.html#ac0d24f1b1390dd0eeb54b531d7b40ba8">newnode</a>();</div>
-<div class="line"><span class="lineno">  429</span> </div>
-<div class="line"><span class="lineno">  430</span>        n-&gt;min = <a class="code hl_variable" href="classrangetree.html#a2475c78dfe781f97f6cb0a9223c36bbd">xtmparray</a>[lower].x;</div>
-<div class="line"><span class="lineno">  431</span>        n-&gt;max = <a class="code hl_variable" href="classrangetree.html#a2475c78dfe781f97f6cb0a9223c36bbd">xtmparray</a>[upper-1].x;</div>
+<div class="line"><span class="lineno">  420</span>      n-&gt;ycount = size;</div>
+<div class="line"><span class="lineno">  421</span> </div>
+<div class="line"><span class="lineno">  422</span>      std::sort(n-&gt;ypoints, n-&gt;ypoints + size);</div>
+<div class="line"><span class="lineno">  423</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  424</span>      <span class="keyword">const</span> <a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> median = (n-&gt;min + n-&gt;max) / 2;</div>
+<div class="line"><span class="lineno">  425</span> </div>
+<div class="line"><span class="lineno">  426</span>      n-&gt;left = <a class="code hl_function" href="classrangetree.html#abdf76dada71c1b5ae93130836fdd201b">build</a>(n-&gt;min, median);</div>
+<div class="line"><span class="lineno">  427</span>      n-&gt;right = <a class="code hl_function" href="classrangetree.html#abdf76dada71c1b5ae93130836fdd201b">build</a>(median + 1, n-&gt;max);</div>
+<div class="line"><span class="lineno">  428</span> </div>
+<div class="line"><span class="lineno">  429</span>      <span class="comment">// For faster builds, we merge our kids&#39; arrays into ours</span></div>
+<div class="line"><span class="lineno">  430</span>      <a class="code hl_function" href="classrangetree.html#a6c50a688695036be1786ec03952f57ee">mergekids</a>(n-&gt;ypoints, n-&gt;ycount, n-&gt;left, n-&gt;right);</div>
+<div class="line"><span class="lineno">  431</span>    }</div>
 <div class="line"><span class="lineno">  432</span> </div>
-<div class="line"><span class="lineno">  433</span>        <span class="comment">// If no kids, create the array; otherwise, recurse</span></div>
-<div class="line"><span class="lineno">  434</span>        <span class="keywordflow">if</span> (n-&gt;min == n-&gt;max) {</div>
-<div class="line"><span class="lineno">  435</span> </div>
-<div class="line"><span class="lineno">  436</span>            <span class="keyword">const</span> <a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> size = upper - lower;</div>
-<div class="line"><span class="lineno">  437</span> </div>
-<div class="line"><span class="lineno">  438</span>            n-&gt;ypoints = <a class="code hl_function" href="classrangetree.html#a2dd60d801762a24ff79d467195495c01">newpty</a>(size);</div>
-<div class="line"><span class="lineno">  439</span> </div>
-<div class="line"><span class="lineno">  440</span>            <a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> i;</div>
-<div class="line"><span class="lineno">  441</span>            <span class="keywordflow">for</span> (i = 0; i &lt; size; i++) {</div>
-<div class="line"><span class="lineno">  442</span><span class="preprocessor">#ifdef LESSRAM64</span></div>
-<div class="line"><span class="lineno">  443</span>                n-&gt;ypoints[i].offset = lower + i;</div>
-<div class="line"><span class="lineno">  444</span><span class="preprocessor">#else</span></div>
-<div class="line"><span class="lineno">  445</span>                n-&gt;ypoints[i].ptr = <a class="code hl_variable" href="classrangetree.html#a2475c78dfe781f97f6cb0a9223c36bbd">xtmparray</a>[lower + i].ptr;</div>
-<div class="line"><span class="lineno">  446</span><span class="preprocessor">#endif</span></div>
-<div class="line"><span class="lineno">  447</span>                n-&gt;ypoints[i].y = <a class="code hl_variable" href="classrangetree.html#a2475c78dfe781f97f6cb0a9223c36bbd">xtmparray</a>[lower + i].y;</div>
-<div class="line"><span class="lineno">  448</span>            }</div>
-<div class="line"><span class="lineno">  449</span> </div>
-<div class="line"><span class="lineno">  450</span>            n-&gt;ycount = size;</div>
-<div class="line"><span class="lineno">  451</span> </div>
-<div class="line"><span class="lineno">  452</span>            std::sort(n-&gt;ypoints, n-&gt;ypoints + size);</div>
-<div class="line"><span class="lineno">  453</span>        } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  454</span>            <span class="keyword">const</span> <a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> median = (n-&gt;min + n-&gt;max) / 2;</div>
-<div class="line"><span class="lineno">  455</span> </div>
-<div class="line"><span class="lineno">  456</span>            n-&gt;left = <a class="code hl_function" href="classrangetree.html#abdf76dada71c1b5ae93130836fdd201b">build</a>(n-&gt;min, median);</div>
-<div class="line"><span class="lineno">  457</span>            n-&gt;right = <a class="code hl_function" href="classrangetree.html#abdf76dada71c1b5ae93130836fdd201b">build</a>(median + 1, n-&gt;max);</div>
-<div class="line"><span class="lineno">  458</span> </div>
-<div class="line"><span class="lineno">  459</span>            <span class="comment">// For faster builds, we merge our kids&#39; arrays into ours</span></div>
-<div class="line"><span class="lineno">  460</span>            <a class="code hl_function" href="classrangetree.html#a6c50a688695036be1786ec03952f57ee">mergekids</a>(n-&gt;ypoints, n-&gt;ycount, n-&gt;left, n-&gt;right);</div>
-<div class="line"><span class="lineno">  461</span>        }</div>
-<div class="line"><span class="lineno">  462</span> </div>
-<div class="line"><span class="lineno">  463</span>        <span class="keywordflow">return</span> n;</div>
-<div class="line"><span class="lineno">  464</span>    }</div>
-<div class="ttc" id="aclassrangetree_html_a2dd60d801762a24ff79d467195495c01"><div class="ttname"><a href="classrangetree.html#a2dd60d801762a24ff79d467195495c01">rangetree::newpty</a></div><div class="ttdeci">pty * newpty(const u32 num) const</div><div class="ttdef"><b>Definition:</b> <a href="ranget_8h_source.html#l00636">ranget.h:636</a></div></div>
-<div class="ttc" id="aclassrangetree_html_a6d37d01766887ce7ce1be42a498fff73"><div class="ttname"><a href="classrangetree.html#a6d37d01766887ce7ce1be42a498fff73">rangetree::binarynextx</a></div><div class="ttdeci">u32 binarynextx(const std::vector&lt; ptx &gt; &amp;arr, const point goal) const</div><div class="ttdef"><b>Definition:</b> <a href="ranget_8h_source.html#l00353">ranget.h:353</a></div></div>
-<div class="ttc" id="aclassrangetree_html_ac0d24f1b1390dd0eeb54b531d7b40ba8"><div class="ttname"><a href="classrangetree.html#ac0d24f1b1390dd0eeb54b531d7b40ba8">rangetree::newnode</a></div><div class="ttdeci">node * newnode()</div><div class="ttdef"><b>Definition:</b> <a href="ranget_8h_source.html#l00626">ranget.h:626</a></div></div>
+<div class="line"><span class="lineno">  433</span>    <span class="keywordflow">return</span> n;</div>
+<div class="line"><span class="lineno">  434</span>  }</div>
+<div class="ttc" id="aclassrangetree_html_a2dd60d801762a24ff79d467195495c01"><div class="ttname"><a href="classrangetree.html#a2dd60d801762a24ff79d467195495c01">rangetree::newpty</a></div><div class="ttdeci">pty * newpty(const u32 num) const</div><div class="ttdef"><b>Definition:</b> <a href="ranget_8h_source.html#l00592">ranget.h:592</a></div></div>
+<div class="ttc" id="aclassrangetree_html_a6d37d01766887ce7ce1be42a498fff73"><div class="ttname"><a href="classrangetree.html#a6d37d01766887ce7ce1be42a498fff73">rangetree::binarynextx</a></div><div class="ttdeci">u32 binarynextx(const std::vector&lt; ptx &gt; &amp;arr, const point goal) const</div><div class="ttdef"><b>Definition:</b> <a href="ranget_8h_source.html#l00330">ranget.h:330</a></div></div>
+<div class="ttc" id="aclassrangetree_html_ac0d24f1b1390dd0eeb54b531d7b40ba8"><div class="ttname"><a href="classrangetree.html#ac0d24f1b1390dd0eeb54b531d7b40ba8">rangetree::newnode</a></div><div class="ttdeci">node * newnode()</div><div class="ttdef"><b>Definition:</b> <a href="ranget_8h_source.html#l00582">ranget.h:582</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classrangetree.html#a6d37d01766887ce7ce1be42a498fff73">rangetree&lt; point, data &gt;::binarynextx()</a>, <a class="el" href="classrangetree.html#abdf76dada71c1b5ae93130836fdd201b">rangetree&lt; point, data &gt;::build()</a>, <a class="el" href="structrangetree_1_1node.html#acd232b5af6973c8209485dc77f9c49ce">rangetree&lt; point, data &gt;::node::left</a>, <a class="el" href="structrangetree_1_1node.html#a1d208e5629ec663b9a5df52209d066d7">rangetree&lt; point, data &gt;::node::max</a>, <a class="el" href="classrangetree.html#a6c50a688695036be1786ec03952f57ee">rangetree&lt; point, data &gt;::mergekids()</a>, <a class="el" href="structrangetree_1_1node.html#a33ad84d9196dfb9fc90127aeebd04547">rangetree&lt; point, data &gt;::node::min</a>, <a class="el" href="classrangetree.html#ac0d24f1b1390dd0eeb54b531d7b40ba8">rangetree&lt; point, data &gt;::newnode()</a>, <a class="el" href="classrangetree.html#a2dd60d801762a24ff79d467195495c01">rangetree&lt; point, data &gt;::newpty()</a>, <a class="el" href="structrangetree_1_1pty.html#a9c552c46e1a8d0fad697104b44534f6f">rangetree&lt; point, data &gt;::pty::ptr</a>, <a class="el" href="structrangetree_1_1node.html#a16aad73e87da115e55ac4590ee6a94d0">rangetree&lt; point, data &gt;::node::right</a>, <a class="el" href="classrangetree.html#a2475c78dfe781f97f6cb0a9223c36bbd">rangetree&lt; point, data &gt;::xtmparray</a>, <a class="el" href="structrangetree_1_1pty.html#a22c868fc9e68a834b5cd468a0da35dae">rangetree&lt; point, data &gt;::pty::y</a>, <a class="el" href="structrangetree_1_1node.html#aefa2a49cad0fa7362c39578a9f84a806">rangetree&lt; point, data &gt;::node::ycount</a>, and <a class="el" href="structrangetree_1_1node.html#ae018e1b9e121b5f646e2563ee86fee11">rangetree&lt; point, data &gt;::node::ypoints</a>.</p>
 <div class="dynheader">
@@ -801,44 +789,39 @@ template&lt;class point , class data &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00123">123</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  123</span>                                                                    {</div>
-<div class="line"><span class="lineno">  124</span> </div>
-<div class="line"><span class="lineno">  125</span>        <span class="keywordflow">if</span> (!<a class="code hl_variable" href="classrangetree.html#a4ac95ec3552e8687b13565ddcf71c56b">init</a>)</div>
-<div class="line"><span class="lineno">  126</span>            <span class="keywordflow">return</span> 0;</div>
-<div class="line"><span class="lineno">  127</span> </div>
-<div class="line"><span class="lineno">  128</span>        <span class="comment">// If needed, swap arguments</span></div>
-<div class="line"><span class="lineno">  129</span>        <span class="keywordflow">if</span> (xmax &lt; xmin)</div>
-<div class="line"><span class="lineno">  130</span>            <a class="code hl_function" href="classrangetree.html#aa4ecf1b6cff0f4073a3499d2b509ba15">pswap</a>(xmax, xmin);</div>
-<div class="line"><span class="lineno">  131</span>        <span class="keywordflow">if</span> (ymax &lt; ymin)</div>
-<div class="line"><span class="lineno">  132</span>            <a class="code hl_function" href="classrangetree.html#aa4ecf1b6cff0f4073a3499d2b509ba15">pswap</a>(ymax, ymin);</div>
-<div class="line"><span class="lineno">  133</span> </div>
-<div class="line"><span class="lineno">  134</span>        <a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> sum = 0;</div>
-<div class="line"><span class="lineno">  135</span> </div>
-<div class="line"><span class="lineno">  136</span>        <span class="keyword">const</span> node * list[<a class="code hl_variable" href="classrangetree.html#af96b2a5964baf5ed350d2bfd309a7c9c">maxterminals</a>];</div>
-<div class="line"><span class="lineno">  137</span>        <a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> listcur = 0;</div>
-<div class="line"><span class="lineno">  138</span>        <a class="code hl_function" href="classrangetree.html#a646248c5ea0866972ccfb58b60d9c569">findnodes</a>(&amp;<a class="code hl_variable" href="classrangetree.html#a6368e7b24d1b2a55f250049f9f100a3e">start</a>, xmin, xmax, list, listcur);</div>
-<div class="line"><span class="lineno">  139</span> </div>
-<div class="line"><span class="lineno">  140</span>        <span class="keyword">const</span> <a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> ncount = listcur;</div>
-<div class="line"><span class="lineno">  141</span> </div>
-<div class="line"><span class="lineno">  142</span>        <span class="keywordflow">for</span> (<a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> k = 0; k &lt; ncount; k++) {</div>
-<div class="line"><span class="lineno">  143</span>            <span class="keyword">const</span> node * <span class="keyword">const</span> n = list[k];</div>
-<div class="line"><span class="lineno">  144</span>            <span class="keyword">const</span> <a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> max = n-&gt;ycount;</div>
-<div class="line"><span class="lineno">  145</span>            <span class="keywordflow">if</span> (!max)</div>
-<div class="line"><span class="lineno">  146</span>                <span class="keywordflow">continue</span>;</div>
-<div class="line"><span class="lineno">  147</span> </div>
-<div class="line"><span class="lineno">  148</span>            <span class="keyword">const</span> <a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> lower = <a class="code hl_function" href="classrangetree.html#aea9e269751d3f16ea156b7fba40510c8">binarynext</a>(n-&gt;ypoints, n-&gt;ycount, ymin);</div>
-<div class="line"><span class="lineno">  149</span>            <span class="keyword">const</span> <a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> upper = <a class="code hl_function" href="classrangetree.html#aea9e269751d3f16ea156b7fba40510c8">binarynext</a>(n-&gt;ypoints, n-&gt;ycount, ymax + 1);</div>
-<div class="line"><span class="lineno">  150</span> </div>
-<div class="line"><span class="lineno">  151</span>            sum += upper - lower;</div>
-<div class="line"><span class="lineno">  152</span>        }</div>
-<div class="line"><span class="lineno">  153</span> </div>
-<div class="line"><span class="lineno">  154</span>        <span class="keywordflow">return</span> sum;</div>
-<div class="line"><span class="lineno">  155</span>    }</div>
-<div class="ttc" id="aclassrangetree_html_a646248c5ea0866972ccfb58b60d9c569"><div class="ttname"><a href="classrangetree.html#a646248c5ea0866972ccfb58b60d9c569">rangetree::findnodes</a></div><div class="ttdeci">void findnodes(const node *const n, const point xmin, const point xmax, const node *list[], u32 &amp;listcur) const</div><div class="ttdef"><b>Definition:</b> <a href="ranget_8h_source.html#l00491">ranget.h:491</a></div></div>
-<div class="ttc" id="aclassrangetree_html_aa4ecf1b6cff0f4073a3499d2b509ba15"><div class="ttname"><a href="classrangetree.html#aa4ecf1b6cff0f4073a3499d2b509ba15">rangetree::pswap</a></div><div class="ttdeci">void pswap(point &amp;__restrict__ a, point &amp;__restrict__ b) const</div><div class="ttdef"><b>Definition:</b> <a href="ranget_8h_source.html#l00673">ranget.h:673</a></div></div>
-<div class="ttc" id="aclassrangetree_html_aea9e269751d3f16ea156b7fba40510c8"><div class="ttname"><a href="classrangetree.html#aea9e269751d3f16ea156b7fba40510c8">rangetree::binarynext</a></div><div class="ttdeci">u32 binarynext(const pty *const arr, const u32 ycount, const point goal) const</div><div class="ttdef"><b>Definition:</b> <a href="ranget_8h_source.html#l00319">ranget.h:319</a></div></div>
-<div class="ttc" id="aclassrangetree_html_af96b2a5964baf5ed350d2bfd309a7c9c"><div class="ttname"><a href="classrangetree.html#af96b2a5964baf5ed350d2bfd309a7c9c">rangetree::maxterminals</a></div><div class="ttdeci">u32 maxterminals</div><div class="ttdef"><b>Definition:</b> <a href="ranget_8h_source.html#l00704">ranget.h:704</a></div></div>
+<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00124">124</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  124</span>                                                                  {</div>
+<div class="line"><span class="lineno">  125</span>    <span class="keywordflow">if</span> (!<a class="code hl_variable" href="classrangetree.html#a4ac95ec3552e8687b13565ddcf71c56b">init</a>) <span class="keywordflow">return</span> 0;</div>
+<div class="line"><span class="lineno">  126</span> </div>
+<div class="line"><span class="lineno">  127</span>    <span class="comment">// If needed, swap arguments</span></div>
+<div class="line"><span class="lineno">  128</span>    <span class="keywordflow">if</span> (xmax &lt; xmin) <a class="code hl_function" href="classrangetree.html#aa4ecf1b6cff0f4073a3499d2b509ba15">pswap</a>(xmax, xmin);</div>
+<div class="line"><span class="lineno">  129</span>    <span class="keywordflow">if</span> (ymax &lt; ymin) <a class="code hl_function" href="classrangetree.html#aa4ecf1b6cff0f4073a3499d2b509ba15">pswap</a>(ymax, ymin);</div>
+<div class="line"><span class="lineno">  130</span> </div>
+<div class="line"><span class="lineno">  131</span>    <a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> sum = 0;</div>
+<div class="line"><span class="lineno">  132</span> </div>
+<div class="line"><span class="lineno">  133</span>    <span class="keyword">const</span> node *list[<a class="code hl_variable" href="classrangetree.html#af96b2a5964baf5ed350d2bfd309a7c9c">maxterminals</a>];</div>
+<div class="line"><span class="lineno">  134</span>    <a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> listcur = 0;</div>
+<div class="line"><span class="lineno">  135</span>    <a class="code hl_function" href="classrangetree.html#a646248c5ea0866972ccfb58b60d9c569">findnodes</a>(&amp;<a class="code hl_variable" href="classrangetree.html#a6368e7b24d1b2a55f250049f9f100a3e">start</a>, xmin, xmax, list, listcur);</div>
+<div class="line"><span class="lineno">  136</span> </div>
+<div class="line"><span class="lineno">  137</span>    <span class="keyword">const</span> <a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> ncount = listcur;</div>
+<div class="line"><span class="lineno">  138</span> </div>
+<div class="line"><span class="lineno">  139</span>    <span class="keywordflow">for</span> (<a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> k = 0; k &lt; ncount; k++) {</div>
+<div class="line"><span class="lineno">  140</span>      <span class="keyword">const</span> node *<span class="keyword">const</span> n = list[k];</div>
+<div class="line"><span class="lineno">  141</span>      <span class="keyword">const</span> <a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> max = n-&gt;ycount;</div>
+<div class="line"><span class="lineno">  142</span>      <span class="keywordflow">if</span> (!max) <span class="keywordflow">continue</span>;</div>
+<div class="line"><span class="lineno">  143</span> </div>
+<div class="line"><span class="lineno">  144</span>      <span class="keyword">const</span> <a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> lower = <a class="code hl_function" href="classrangetree.html#aea9e269751d3f16ea156b7fba40510c8">binarynext</a>(n-&gt;ypoints, n-&gt;ycount, ymin);</div>
+<div class="line"><span class="lineno">  145</span>      <span class="keyword">const</span> <a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> upper = <a class="code hl_function" href="classrangetree.html#aea9e269751d3f16ea156b7fba40510c8">binarynext</a>(n-&gt;ypoints, n-&gt;ycount, ymax + 1);</div>
+<div class="line"><span class="lineno">  146</span> </div>
+<div class="line"><span class="lineno">  147</span>      sum += upper - lower;</div>
+<div class="line"><span class="lineno">  148</span>    }</div>
+<div class="line"><span class="lineno">  149</span> </div>
+<div class="line"><span class="lineno">  150</span>    <span class="keywordflow">return</span> sum;</div>
+<div class="line"><span class="lineno">  151</span>  }</div>
+<div class="ttc" id="aclassrangetree_html_a646248c5ea0866972ccfb58b60d9c569"><div class="ttname"><a href="classrangetree.html#a646248c5ea0866972ccfb58b60d9c569">rangetree::findnodes</a></div><div class="ttdeci">void findnodes(const node *const n, const point xmin, const point xmax, const node *list[], u32 &amp;listcur) const</div><div class="ttdef"><b>Definition:</b> <a href="ranget_8h_source.html#l00456">ranget.h:456</a></div></div>
+<div class="ttc" id="aclassrangetree_html_aa4ecf1b6cff0f4073a3499d2b509ba15"><div class="ttname"><a href="classrangetree.html#aa4ecf1b6cff0f4073a3499d2b509ba15">rangetree::pswap</a></div><div class="ttdeci">void pswap(point &amp;__restrict__ a, point &amp;__restrict__ b) const</div><div class="ttdef"><b>Definition:</b> <a href="ranget_8h_source.html#l00622">ranget.h:622</a></div></div>
+<div class="ttc" id="aclassrangetree_html_aea9e269751d3f16ea156b7fba40510c8"><div class="ttname"><a href="classrangetree.html#aea9e269751d3f16ea156b7fba40510c8">rangetree::binarynext</a></div><div class="ttdeci">u32 binarynext(const pty *const arr, const u32 ycount, const point goal) const</div><div class="ttdef"><b>Definition:</b> <a href="ranget_8h_source.html#l00299">ranget.h:299</a></div></div>
+<div class="ttc" id="aclassrangetree_html_af96b2a5964baf5ed350d2bfd309a7c9c"><div class="ttname"><a href="classrangetree.html#af96b2a5964baf5ed350d2bfd309a7c9c">rangetree::maxterminals</a></div><div class="ttdeci">u32 maxterminals</div><div class="ttdef"><b>Definition:</b> <a href="ranget_8h_source.html#l00652">ranget.h:652</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classrangetree.html#aea9e269751d3f16ea156b7fba40510c8">rangetree&lt; point, data &gt;::binarynext()</a>, <a class="el" href="classrangetree.html#a646248c5ea0866972ccfb58b60d9c569">rangetree&lt; point, data &gt;::findnodes()</a>, <a class="el" href="classrangetree.html#a4ac95ec3552e8687b13565ddcf71c56b">rangetree&lt; point, data &gt;::init</a>, <a class="el" href="classrangetree.html#af96b2a5964baf5ed350d2bfd309a7c9c">rangetree&lt; point, data &gt;::maxterminals</a>, <a class="el" href="classrangetree.html#aa4ecf1b6cff0f4073a3499d2b509ba15">rangetree&lt; point, data &gt;::pswap()</a>, <a class="el" href="classrangetree.html#a6368e7b24d1b2a55f250049f9f100a3e">rangetree&lt; point, data &gt;::start</a>, <a class="el" href="structrangetree_1_1node.html#aefa2a49cad0fa7362c39578a9f84a806">rangetree&lt; point, data &gt;::node::ycount</a>, and <a class="el" href="structrangetree_1_1node.html#ae018e1b9e121b5f646e2563ee86fee11">rangetree&lt; point, data &gt;::node::ypoints</a>.</p>
 <div class="dynheader">
@@ -880,33 +863,32 @@ template&lt;class point , class data &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00097">97</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   97</span>                    {</div>
-<div class="line"><span class="lineno">   98</span> </div>
-<div class="line"><span class="lineno">   99</span>        <a class="code hl_variable" href="classrangetree.html#ab6316416c31a50430c005feaad70cf9f">totalsize</a> = <a class="code hl_variable" href="classrangetree.html#a8ed382466cc2d3fdedf762e18739acec">ytmparray</a>.size();</div>
-<div class="line"><span class="lineno">  100</span> </div>
-<div class="line"><span class="lineno">  101</span>        std::sort(<a class="code hl_variable" href="classrangetree.html#a2475c78dfe781f97f6cb0a9223c36bbd">xtmparray</a>.begin(), <a class="code hl_variable" href="classrangetree.html#a2475c78dfe781f97f6cb0a9223c36bbd">xtmparray</a>.end());</div>
-<div class="line"><span class="lineno">  102</span>        std::sort(<a class="code hl_variable" href="classrangetree.html#a8ed382466cc2d3fdedf762e18739acec">ytmparray</a>.begin(), <a class="code hl_variable" href="classrangetree.html#a8ed382466cc2d3fdedf762e18739acec">ytmparray</a>.end());</div>
-<div class="line"><span class="lineno">  103</span> </div>
-<div class="line"><span class="lineno">  104</span><span class="preprocessor">#ifdef LESSRAM64</span></div>
-<div class="line"><span class="lineno">  105</span>        dataset = (data **) <a class="code hl_function" href="classrangetree.html#ab6286e479b04bcbc3f58fbdeebd651a9">xcalloc</a>(<a class="code hl_variable" href="classrangetree.html#ab6316416c31a50430c005feaad70cf9f">totalsize</a>, <span class="keyword">sizeof</span>(data *));</div>
-<div class="line"><span class="lineno">  106</span> </div>
-<div class="line"><span class="lineno">  107</span>        <span class="keywordflow">for</span> (<a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> i = 0; i &lt; <a class="code hl_variable" href="classrangetree.html#ab6316416c31a50430c005feaad70cf9f">totalsize</a>; i++) {</div>
-<div class="line"><span class="lineno">  108</span>            dataset[i] = <a class="code hl_variable" href="classrangetree.html#a2475c78dfe781f97f6cb0a9223c36bbd">xtmparray</a>[i].ptr;</div>
-<div class="line"><span class="lineno">  109</span>        }</div>
-<div class="line"><span class="lineno">  110</span><span class="preprocessor">#endif</span></div>
-<div class="line"><span class="lineno">  111</span> </div>
-<div class="line"><span class="lineno">  112</span>        <span class="keyword">const</span> point maxrange = (<a class="code hl_variable" href="classrangetree.html#a2475c78dfe781f97f6cb0a9223c36bbd">xtmparray</a>[<a class="code hl_variable" href="classrangetree.html#ab6316416c31a50430c005feaad70cf9f">totalsize</a>-1].x - <a class="code hl_variable" href="classrangetree.html#a2475c78dfe781f97f6cb0a9223c36bbd">xtmparray</a>[0].x) + 1;</div>
-<div class="line"><span class="lineno">  113</span>        <a class="code hl_function" href="classrangetree.html#abcc9527530fef98d8809d961083456d1">initpools</a>(<a class="code hl_variable" href="classrangetree.html#ab6316416c31a50430c005feaad70cf9f">totalsize</a>, maxrange);</div>
-<div class="line"><span class="lineno">  114</span> </div>
-<div class="line"><span class="lineno">  115</span>        <a class="code hl_function" href="classrangetree.html#abdf76dada71c1b5ae93130836fdd201b">build</a>();</div>
-<div class="line"><span class="lineno">  116</span> </div>
-<div class="line"><span class="lineno">  117</span>        <a class="code hl_variable" href="classrangetree.html#a2475c78dfe781f97f6cb0a9223c36bbd">xtmparray</a>.clear();</div>
-<div class="line"><span class="lineno">  118</span> </div>
-<div class="line"><span class="lineno">  119</span>        <span class="comment">// Must be last</span></div>
-<div class="line"><span class="lineno">  120</span>        <a class="code hl_variable" href="classrangetree.html#a4ac95ec3552e8687b13565ddcf71c56b">init</a> = <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  121</span>    }</div>
-<div class="ttc" id="aclassrangetree_html_abcc9527530fef98d8809d961083456d1"><div class="ttname"><a href="classrangetree.html#abcc9527530fef98d8809d961083456d1">rangetree::initpools</a></div><div class="ttdeci">void initpools(const u32 totalcount, const point maxrange)</div><div class="ttdef"><b>Definition:</b> <a href="ranget_8h_source.html#l00603">ranget.h:603</a></div></div>
+<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00099">99</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   99</span>                  {</div>
+<div class="line"><span class="lineno">  100</span>    <a class="code hl_variable" href="classrangetree.html#ab6316416c31a50430c005feaad70cf9f">totalsize</a> = <a class="code hl_variable" href="classrangetree.html#a8ed382466cc2d3fdedf762e18739acec">ytmparray</a>.size();</div>
+<div class="line"><span class="lineno">  101</span> </div>
+<div class="line"><span class="lineno">  102</span>    std::sort(<a class="code hl_variable" href="classrangetree.html#a2475c78dfe781f97f6cb0a9223c36bbd">xtmparray</a>.begin(), <a class="code hl_variable" href="classrangetree.html#a2475c78dfe781f97f6cb0a9223c36bbd">xtmparray</a>.end());</div>
+<div class="line"><span class="lineno">  103</span>    std::sort(<a class="code hl_variable" href="classrangetree.html#a8ed382466cc2d3fdedf762e18739acec">ytmparray</a>.begin(), <a class="code hl_variable" href="classrangetree.html#a8ed382466cc2d3fdedf762e18739acec">ytmparray</a>.end());</div>
+<div class="line"><span class="lineno">  104</span> </div>
+<div class="line"><span class="lineno">  105</span><span class="preprocessor">#ifdef LESSRAM64</span></div>
+<div class="line"><span class="lineno">  106</span>    dataset = (data **)<a class="code hl_function" href="classrangetree.html#ab6286e479b04bcbc3f58fbdeebd651a9">xcalloc</a>(<a class="code hl_variable" href="classrangetree.html#ab6316416c31a50430c005feaad70cf9f">totalsize</a>, <span class="keyword">sizeof</span>(data *));</div>
+<div class="line"><span class="lineno">  107</span> </div>
+<div class="line"><span class="lineno">  108</span>    <span class="keywordflow">for</span> (<a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> i = 0; i &lt; <a class="code hl_variable" href="classrangetree.html#ab6316416c31a50430c005feaad70cf9f">totalsize</a>; i++) {</div>
+<div class="line"><span class="lineno">  109</span>      dataset[i] = <a class="code hl_variable" href="classrangetree.html#a2475c78dfe781f97f6cb0a9223c36bbd">xtmparray</a>[i].ptr;</div>
+<div class="line"><span class="lineno">  110</span>    }</div>
+<div class="line"><span class="lineno">  111</span><span class="preprocessor">#endif</span></div>
+<div class="line"><span class="lineno">  112</span> </div>
+<div class="line"><span class="lineno">  113</span>    <span class="keyword">const</span> point maxrange = (<a class="code hl_variable" href="classrangetree.html#a2475c78dfe781f97f6cb0a9223c36bbd">xtmparray</a>[<a class="code hl_variable" href="classrangetree.html#ab6316416c31a50430c005feaad70cf9f">totalsize</a> - 1].x - <a class="code hl_variable" href="classrangetree.html#a2475c78dfe781f97f6cb0a9223c36bbd">xtmparray</a>[0].x) + 1;</div>
+<div class="line"><span class="lineno">  114</span>    <a class="code hl_function" href="classrangetree.html#abcc9527530fef98d8809d961083456d1">initpools</a>(<a class="code hl_variable" href="classrangetree.html#ab6316416c31a50430c005feaad70cf9f">totalsize</a>, maxrange);</div>
+<div class="line"><span class="lineno">  115</span> </div>
+<div class="line"><span class="lineno">  116</span>    <a class="code hl_function" href="classrangetree.html#abdf76dada71c1b5ae93130836fdd201b">build</a>();</div>
+<div class="line"><span class="lineno">  117</span> </div>
+<div class="line"><span class="lineno">  118</span>    <a class="code hl_variable" href="classrangetree.html#a2475c78dfe781f97f6cb0a9223c36bbd">xtmparray</a>.clear();</div>
+<div class="line"><span class="lineno">  119</span> </div>
+<div class="line"><span class="lineno">  120</span>    <span class="comment">// Must be last</span></div>
+<div class="line"><span class="lineno">  121</span>    <a class="code hl_variable" href="classrangetree.html#a4ac95ec3552e8687b13565ddcf71c56b">init</a> = <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  122</span>  }</div>
+<div class="ttc" id="aclassrangetree_html_abcc9527530fef98d8809d961083456d1"><div class="ttname"><a href="classrangetree.html#abcc9527530fef98d8809d961083456d1">rangetree::initpools</a></div><div class="ttdeci">void initpools(const u32 totalcount, const point maxrange)</div><div class="ttdef"><b>Definition:</b> <a href="ranget_8h_source.html#l00560">ranget.h:560</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classrangetree.html#abdf76dada71c1b5ae93130836fdd201b">rangetree&lt; point, data &gt;::build()</a>, <a class="el" href="classrangetree.html#a4ac95ec3552e8687b13565ddcf71c56b">rangetree&lt; point, data &gt;::init</a>, <a class="el" href="classrangetree.html#abcc9527530fef98d8809d961083456d1">rangetree&lt; point, data &gt;::initpools()</a>, <a class="el" href="classrangetree.html#ab6316416c31a50430c005feaad70cf9f">rangetree&lt; point, data &gt;::totalsize</a>, <a class="el" href="classrangetree.html#ab6286e479b04bcbc3f58fbdeebd651a9">rangetree&lt; point, data &gt;::xcalloc()</a>, <a class="el" href="classrangetree.html#a2475c78dfe781f97f6cb0a9223c36bbd">rangetree&lt; point, data &gt;::xtmparray</a>, and <a class="el" href="classrangetree.html#a8ed382466cc2d3fdedf762e18739acec">rangetree&lt; point, data &gt;::ytmparray</a>.</p>
 <div class="dynheader">
@@ -980,37 +962,33 @@ template&lt;class point , class data &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00491">491</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  492</span>                                                     {</div>
-<div class="line"><span class="lineno">  493</span>        <span class="keywordflow">if</span> (!n)</div>
-<div class="line"><span class="lineno">  494</span>            <span class="keywordflow">return</span>;</div>
-<div class="line"><span class="lineno">  495</span> </div>
-<div class="line"><span class="lineno">  496</span>        <span class="comment">// Fast outs</span></div>
-<div class="line"><span class="lineno">  497</span>        <span class="keywordflow">if</span> (xmin &gt; n-&gt;max)</div>
-<div class="line"><span class="lineno">  498</span>            <span class="keywordflow">return</span>;</div>
-<div class="line"><span class="lineno">  499</span>        <span class="keywordflow">if</span> (xmax &lt; n-&gt;min)</div>
-<div class="line"><span class="lineno">  500</span>            <span class="keywordflow">return</span>;</div>
-<div class="line"><span class="lineno">  501</span>        <span class="keywordflow">if</span> (!n-&gt;ycount)</div>
-<div class="line"><span class="lineno">  502</span>            <span class="keywordflow">return</span>;</div>
-<div class="line"><span class="lineno">  503</span> </div>
-<div class="line"><span class="lineno">  504</span>        <span class="comment">// Prefetch nodes to cache</span></div>
-<div class="line"><span class="lineno">  505</span>        <a class="code hl_define" href="ranget_8h.html#a24d63f7ffba541c358d4425b23f043e9">fetch</a>(n-&gt;left);</div>
-<div class="line"><span class="lineno">  506</span>        <a class="code hl_define" href="ranget_8h.html#a24d63f7ffba541c358d4425b23f043e9">fetch</a>(n-&gt;right);</div>
-<div class="line"><span class="lineno">  507</span> </div>
-<div class="line"><span class="lineno">  508</span>        <span class="keywordflow">if</span> (xmin &lt;= n-&gt;min &amp;&amp; xmax &gt;= n-&gt;max) {</div>
-<div class="line"><span class="lineno">  509</span>            list[listcur] = n;</div>
-<div class="line"><span class="lineno">  510</span>            listcur++;</div>
-<div class="line"><span class="lineno">  511</span> </div>
-<div class="line"><span class="lineno">  512</span><span class="comment">//          if (listcur &gt;= maxterminals)</span></div>
-<div class="line"><span class="lineno">  513</span><span class="comment">//              abort();</span></div>
-<div class="line"><span class="lineno">  514</span> </div>
-<div class="line"><span class="lineno">  515</span>            <span class="keywordflow">return</span>;</div>
-<div class="line"><span class="lineno">  516</span>        }</div>
-<div class="line"><span class="lineno">  517</span> </div>
-<div class="line"><span class="lineno">  518</span>        <a class="code hl_function" href="classrangetree.html#a646248c5ea0866972ccfb58b60d9c569">findnodes</a>(n-&gt;left, xmin, xmax, list, listcur);</div>
-<div class="line"><span class="lineno">  519</span>        <a class="code hl_function" href="classrangetree.html#a646248c5ea0866972ccfb58b60d9c569">findnodes</a>(n-&gt;right, xmin, xmax, list, listcur);</div>
-<div class="line"><span class="lineno">  520</span>    }</div>
-<div class="ttc" id="aranget_8h_html_a24d63f7ffba541c358d4425b23f043e9"><div class="ttname"><a href="ranget_8h.html#a24d63f7ffba541c358d4425b23f043e9">fetch</a></div><div class="ttdeci">#define fetch(a)</div><div class="ttdef"><b>Definition:</b> <a href="ranget_8h_source.html#l00037">ranget.h:37</a></div></div>
+<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00456">456</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  457</span>                                                         {</div>
+<div class="line"><span class="lineno">  458</span>    <span class="keywordflow">if</span> (!n) <span class="keywordflow">return</span>;</div>
+<div class="line"><span class="lineno">  459</span> </div>
+<div class="line"><span class="lineno">  460</span>    <span class="comment">// Fast outs</span></div>
+<div class="line"><span class="lineno">  461</span>    <span class="keywordflow">if</span> (xmin &gt; n-&gt;max) <span class="keywordflow">return</span>;</div>
+<div class="line"><span class="lineno">  462</span>    <span class="keywordflow">if</span> (xmax &lt; n-&gt;min) <span class="keywordflow">return</span>;</div>
+<div class="line"><span class="lineno">  463</span>    <span class="keywordflow">if</span> (!n-&gt;ycount) <span class="keywordflow">return</span>;</div>
+<div class="line"><span class="lineno">  464</span> </div>
+<div class="line"><span class="lineno">  465</span>    <span class="comment">// Prefetch nodes to cache</span></div>
+<div class="line"><span class="lineno">  466</span>    <a class="code hl_define" href="ranget_8h.html#a24d63f7ffba541c358d4425b23f043e9">fetch</a>(n-&gt;left);</div>
+<div class="line"><span class="lineno">  467</span>    <a class="code hl_define" href="ranget_8h.html#a24d63f7ffba541c358d4425b23f043e9">fetch</a>(n-&gt;right);</div>
+<div class="line"><span class="lineno">  468</span> </div>
+<div class="line"><span class="lineno">  469</span>    <span class="keywordflow">if</span> (xmin &lt;= n-&gt;min &amp;&amp; xmax &gt;= n-&gt;max) {</div>
+<div class="line"><span class="lineno">  470</span>      list[listcur] = n;</div>
+<div class="line"><span class="lineno">  471</span>      listcur++;</div>
+<div class="line"><span class="lineno">  472</span> </div>
+<div class="line"><span class="lineno">  473</span>      <span class="comment">//            if (listcur &gt;= maxterminals)</span></div>
+<div class="line"><span class="lineno">  474</span>      <span class="comment">//                abort();</span></div>
+<div class="line"><span class="lineno">  475</span> </div>
+<div class="line"><span class="lineno">  476</span>      <span class="keywordflow">return</span>;</div>
+<div class="line"><span class="lineno">  477</span>    }</div>
+<div class="line"><span class="lineno">  478</span> </div>
+<div class="line"><span class="lineno">  479</span>    <a class="code hl_function" href="classrangetree.html#a646248c5ea0866972ccfb58b60d9c569">findnodes</a>(n-&gt;left, xmin, xmax, list, listcur);</div>
+<div class="line"><span class="lineno">  480</span>    <a class="code hl_function" href="classrangetree.html#a646248c5ea0866972ccfb58b60d9c569">findnodes</a>(n-&gt;right, xmin, xmax, list, listcur);</div>
+<div class="line"><span class="lineno">  481</span>  }</div>
+<div class="ttc" id="aranget_8h_html_a24d63f7ffba541c358d4425b23f043e9"><div class="ttname"><a href="ranget_8h.html#a24d63f7ffba541c358d4425b23f043e9">fetch</a></div><div class="ttdeci">#define fetch(a)</div><div class="ttdef"><b>Definition:</b> <a href="ranget_8h_source.html#l00038">ranget.h:38</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="ranget_8h.html#a24d63f7ffba541c358d4425b23f043e9">fetch</a>, <a class="el" href="classrangetree.html#a646248c5ea0866972ccfb58b60d9c569">rangetree&lt; point, data &gt;::findnodes()</a>, <a class="el" href="structrangetree_1_1node.html#acd232b5af6973c8209485dc77f9c49ce">rangetree&lt; point, data &gt;::node::left</a>, <a class="el" href="structrangetree_1_1node.html#a1d208e5629ec663b9a5df52209d066d7">rangetree&lt; point, data &gt;::node::max</a>, <a class="el" href="structrangetree_1_1node.html#a16aad73e87da115e55ac4590ee6a94d0">rangetree&lt; point, data &gt;::node::right</a>, and <a class="el" href="structrangetree_1_1node.html#aefa2a49cad0fa7362c39578a9f84a806">rangetree&lt; point, data &gt;::node::ycount</a>.</p>
 
@@ -1072,34 +1050,33 @@ template&lt;class point , class data &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00603">603</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  603</span>                                                               {</div>
-<div class="line"><span class="lineno">  604</span> </div>
-<div class="line"><span class="lineno">  605</span>        <span class="keyword">const</span> <a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> amount = <a class="code hl_function" href="classrangetree.html#a838dc98134e924556b683bb4e190fec5">u32min</a>(totalcount, maxrange);</div>
-<div class="line"><span class="lineno">  606</span> </div>
-<div class="line"><span class="lineno">  607</span>        <span class="comment">// If we have N points, the likely amount of nodes is 2N - 1.</span></div>
-<div class="line"><span class="lineno">  608</span>        <a class="code hl_variable" href="classrangetree.html#ab7c20c8e8bd240818c9bf33c67847968">nodepoolcount</a> = amount*2;</div>
-<div class="line"><span class="lineno">  609</span>        <a class="code hl_variable" href="classrangetree.html#a63849c8209333488557a6914aae68155">nodepoolgiven</a> = 0;</div>
-<div class="line"><span class="lineno">  610</span> </div>
-<div class="line"><span class="lineno">  611</span>        <span class="keyword">const</span> <a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> log2ed = log2f(<a class="code hl_variable" href="classrangetree.html#ab7c20c8e8bd240818c9bf33c67847968">nodepoolcount</a>) + 1;</div>
-<div class="line"><span class="lineno">  612</span> </div>
-<div class="line"><span class="lineno">  613</span>        <span class="comment">// Pre-allocate n*log(n) ptys</span></div>
-<div class="line"><span class="lineno">  614</span>        <a class="code hl_variable" href="classrangetree.html#ac0d6d140ab9745bfabb31ee3a61c1aff">ptypoolcount</a> = totalcount * log2ed;</div>
-<div class="line"><span class="lineno">  615</span>        <a class="code hl_variable" href="classrangetree.html#a331742e901e3610682949c8953e242bd">ptypoolgiven</a> = 0;</div>
-<div class="line"><span class="lineno">  616</span> </div>
-<div class="line"><span class="lineno">  617</span>        <span class="comment">// Given the estimated max, we can calculate the max number</span></div>
-<div class="line"><span class="lineno">  618</span>        <span class="comment">// of terminal nodes - it&#39;s at most 2 per level (proof in the papers).</span></div>
-<div class="line"><span class="lineno">  619</span>        <a class="code hl_variable" href="classrangetree.html#af96b2a5964baf5ed350d2bfd309a7c9c">maxterminals</a> = log2ed;</div>
-<div class="line"><span class="lineno">  620</span>        <a class="code hl_variable" href="classrangetree.html#af96b2a5964baf5ed350d2bfd309a7c9c">maxterminals</a> *= 2;</div>
-<div class="line"><span class="lineno">  621</span> </div>
-<div class="line"><span class="lineno">  622</span>        <a class="code hl_variable" href="classrangetree.html#af21299ac17ded355cb330db9082626e9">nodepool</a> = <span class="keyword">new</span> node[<a class="code hl_variable" href="classrangetree.html#ab7c20c8e8bd240818c9bf33c67847968">nodepoolcount</a>];</div>
-<div class="line"><span class="lineno">  623</span>        <a class="code hl_variable" href="classrangetree.html#a778b0a2e8a9ba72ae51c16692741d8e2">ptypool</a> = (pty *) <a class="code hl_function" href="classrangetree.html#ab6286e479b04bcbc3f58fbdeebd651a9">xcalloc</a>(<a class="code hl_variable" href="classrangetree.html#ac0d6d140ab9745bfabb31ee3a61c1aff">ptypoolcount</a>, <span class="keyword">sizeof</span>(pty));</div>
-<div class="line"><span class="lineno">  624</span>    }</div>
-<div class="ttc" id="aclassrangetree_html_a331742e901e3610682949c8953e242bd"><div class="ttname"><a href="classrangetree.html#a331742e901e3610682949c8953e242bd">rangetree::ptypoolgiven</a></div><div class="ttdeci">u32 ptypoolgiven</div><div class="ttdef"><b>Definition:</b> <a href="ranget_8h_source.html#l00702">ranget.h:702</a></div></div>
-<div class="ttc" id="aclassrangetree_html_a63849c8209333488557a6914aae68155"><div class="ttname"><a href="classrangetree.html#a63849c8209333488557a6914aae68155">rangetree::nodepoolgiven</a></div><div class="ttdeci">u32 nodepoolgiven</div><div class="ttdef"><b>Definition:</b> <a href="ranget_8h_source.html#l00698">ranget.h:698</a></div></div>
-<div class="ttc" id="aclassrangetree_html_a838dc98134e924556b683bb4e190fec5"><div class="ttname"><a href="classrangetree.html#a838dc98134e924556b683bb4e190fec5">rangetree::u32min</a></div><div class="ttdeci">u32 u32min(const u32 a, const u32 b) const</div><div class="ttdef"><b>Definition:</b> <a href="ranget_8h_source.html#l00667">ranget.h:667</a></div></div>
-<div class="ttc" id="aclassrangetree_html_ab7c20c8e8bd240818c9bf33c67847968"><div class="ttname"><a href="classrangetree.html#ab7c20c8e8bd240818c9bf33c67847968">rangetree::nodepoolcount</a></div><div class="ttdeci">u32 nodepoolcount</div><div class="ttdef"><b>Definition:</b> <a href="ranget_8h_source.html#l00697">ranget.h:697</a></div></div>
-<div class="ttc" id="aclassrangetree_html_ac0d6d140ab9745bfabb31ee3a61c1aff"><div class="ttname"><a href="classrangetree.html#ac0d6d140ab9745bfabb31ee3a61c1aff">rangetree::ptypoolcount</a></div><div class="ttdeci">u32 ptypoolcount</div><div class="ttdef"><b>Definition:</b> <a href="ranget_8h_source.html#l00701">ranget.h:701</a></div></div>
+<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00560">560</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  560</span>                                                             {</div>
+<div class="line"><span class="lineno">  561</span>    <span class="keyword">const</span> <a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> amount = <a class="code hl_function" href="classrangetree.html#a838dc98134e924556b683bb4e190fec5">u32min</a>(totalcount, maxrange);</div>
+<div class="line"><span class="lineno">  562</span> </div>
+<div class="line"><span class="lineno">  563</span>    <span class="comment">// If we have N points, the likely amount of nodes is 2N - 1.</span></div>
+<div class="line"><span class="lineno">  564</span>    <a class="code hl_variable" href="classrangetree.html#ab7c20c8e8bd240818c9bf33c67847968">nodepoolcount</a> = amount * 2;</div>
+<div class="line"><span class="lineno">  565</span>    <a class="code hl_variable" href="classrangetree.html#a63849c8209333488557a6914aae68155">nodepoolgiven</a> = 0;</div>
+<div class="line"><span class="lineno">  566</span> </div>
+<div class="line"><span class="lineno">  567</span>    <span class="keyword">const</span> <a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> log2ed = log2f(<a class="code hl_variable" href="classrangetree.html#ab7c20c8e8bd240818c9bf33c67847968">nodepoolcount</a>) + 1;</div>
+<div class="line"><span class="lineno">  568</span> </div>
+<div class="line"><span class="lineno">  569</span>    <span class="comment">// Pre-allocate n*log(n) ptys</span></div>
+<div class="line"><span class="lineno">  570</span>    <a class="code hl_variable" href="classrangetree.html#ac0d6d140ab9745bfabb31ee3a61c1aff">ptypoolcount</a> = totalcount * log2ed;</div>
+<div class="line"><span class="lineno">  571</span>    <a class="code hl_variable" href="classrangetree.html#a331742e901e3610682949c8953e242bd">ptypoolgiven</a> = 0;</div>
+<div class="line"><span class="lineno">  572</span> </div>
+<div class="line"><span class="lineno">  573</span>    <span class="comment">// Given the estimated max, we can calculate the max number</span></div>
+<div class="line"><span class="lineno">  574</span>    <span class="comment">// of terminal nodes - it&#39;s at most 2 per level (proof in the papers).</span></div>
+<div class="line"><span class="lineno">  575</span>    <a class="code hl_variable" href="classrangetree.html#af96b2a5964baf5ed350d2bfd309a7c9c">maxterminals</a> = log2ed;</div>
+<div class="line"><span class="lineno">  576</span>    <a class="code hl_variable" href="classrangetree.html#af96b2a5964baf5ed350d2bfd309a7c9c">maxterminals</a> *= 2;</div>
+<div class="line"><span class="lineno">  577</span> </div>
+<div class="line"><span class="lineno">  578</span>    <a class="code hl_variable" href="classrangetree.html#af21299ac17ded355cb330db9082626e9">nodepool</a> = <span class="keyword">new</span> node[<a class="code hl_variable" href="classrangetree.html#ab7c20c8e8bd240818c9bf33c67847968">nodepoolcount</a>];</div>
+<div class="line"><span class="lineno">  579</span>    <a class="code hl_variable" href="classrangetree.html#a778b0a2e8a9ba72ae51c16692741d8e2">ptypool</a> = (pty *)<a class="code hl_function" href="classrangetree.html#ab6286e479b04bcbc3f58fbdeebd651a9">xcalloc</a>(<a class="code hl_variable" href="classrangetree.html#ac0d6d140ab9745bfabb31ee3a61c1aff">ptypoolcount</a>, <span class="keyword">sizeof</span>(pty));</div>
+<div class="line"><span class="lineno">  580</span>  }</div>
+<div class="ttc" id="aclassrangetree_html_a331742e901e3610682949c8953e242bd"><div class="ttname"><a href="classrangetree.html#a331742e901e3610682949c8953e242bd">rangetree::ptypoolgiven</a></div><div class="ttdeci">u32 ptypoolgiven</div><div class="ttdef"><b>Definition:</b> <a href="ranget_8h_source.html#l00650">ranget.h:650</a></div></div>
+<div class="ttc" id="aclassrangetree_html_a63849c8209333488557a6914aae68155"><div class="ttname"><a href="classrangetree.html#a63849c8209333488557a6914aae68155">rangetree::nodepoolgiven</a></div><div class="ttdeci">u32 nodepoolgiven</div><div class="ttdef"><b>Definition:</b> <a href="ranget_8h_source.html#l00646">ranget.h:646</a></div></div>
+<div class="ttc" id="aclassrangetree_html_a838dc98134e924556b683bb4e190fec5"><div class="ttname"><a href="classrangetree.html#a838dc98134e924556b683bb4e190fec5">rangetree::u32min</a></div><div class="ttdeci">u32 u32min(const u32 a, const u32 b) const</div><div class="ttdef"><b>Definition:</b> <a href="ranget_8h_source.html#l00617">ranget.h:617</a></div></div>
+<div class="ttc" id="aclassrangetree_html_ab7c20c8e8bd240818c9bf33c67847968"><div class="ttname"><a href="classrangetree.html#ab7c20c8e8bd240818c9bf33c67847968">rangetree::nodepoolcount</a></div><div class="ttdeci">u32 nodepoolcount</div><div class="ttdef"><b>Definition:</b> <a href="ranget_8h_source.html#l00645">ranget.h:645</a></div></div>
+<div class="ttc" id="aclassrangetree_html_ac0d6d140ab9745bfabb31ee3a61c1aff"><div class="ttname"><a href="classrangetree.html#ac0d6d140ab9745bfabb31ee3a61c1aff">rangetree::ptypoolcount</a></div><div class="ttdeci">u32 ptypoolcount</div><div class="ttdef"><b>Definition:</b> <a href="ranget_8h_source.html#l00649">ranget.h:649</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classrangetree.html#af96b2a5964baf5ed350d2bfd309a7c9c">rangetree&lt; point, data &gt;::maxterminals</a>, <a class="el" href="classrangetree.html#af21299ac17ded355cb330db9082626e9">rangetree&lt; point, data &gt;::nodepool</a>, <a class="el" href="classrangetree.html#ab7c20c8e8bd240818c9bf33c67847968">rangetree&lt; point, data &gt;::nodepoolcount</a>, <a class="el" href="classrangetree.html#a63849c8209333488557a6914aae68155">rangetree&lt; point, data &gt;::nodepoolgiven</a>, <a class="el" href="classrangetree.html#a778b0a2e8a9ba72ae51c16692741d8e2">rangetree&lt; point, data &gt;::ptypool</a>, <a class="el" href="classrangetree.html#ac0d6d140ab9745bfabb31ee3a61c1aff">rangetree&lt; point, data &gt;::ptypoolcount</a>, <a class="el" href="classrangetree.html#a331742e901e3610682949c8953e242bd">rangetree&lt; point, data &gt;::ptypoolgiven</a>, <a class="el" href="classrangetree.html#a838dc98134e924556b683bb4e190fec5">rangetree&lt; point, data &gt;::u32min()</a>, and <a class="el" href="classrangetree.html#ab6286e479b04bcbc3f58fbdeebd651a9">rangetree&lt; point, data &gt;::xcalloc()</a>.</p>
 
@@ -1152,16 +1129,13 @@ template&lt;class point , class data &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00646">646</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  646</span>                                                  {</div>
-<div class="line"><span class="lineno">  647</span> </div>
-<div class="line"><span class="lineno">  648</span>        <span class="keywordflow">if</span> (!<a class="code hl_variable" href="classrangetree.html#af21299ac17ded355cb330db9082626e9">nodepool</a>)</div>
-<div class="line"><span class="lineno">  649</span>            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">  650</span> </div>
-<div class="line"><span class="lineno">  651</span>        <span class="keywordflow">if</span> (n &gt;= &amp;<a class="code hl_variable" href="classrangetree.html#af21299ac17ded355cb330db9082626e9">nodepool</a>[0] &amp;&amp; n &lt;= &amp;<a class="code hl_variable" href="classrangetree.html#af21299ac17ded355cb330db9082626e9">nodepool</a>[<a class="code hl_variable" href="classrangetree.html#ab7c20c8e8bd240818c9bf33c67847968">nodepoolcount</a> - 1])</div>
-<div class="line"><span class="lineno">  652</span>            <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  653</span>        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">  654</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00602">602</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  602</span>                                               {</div>
+<div class="line"><span class="lineno">  603</span>    <span class="keywordflow">if</span> (!<a class="code hl_variable" href="classrangetree.html#af21299ac17ded355cb330db9082626e9">nodepool</a>) <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">  604</span> </div>
+<div class="line"><span class="lineno">  605</span>    <span class="keywordflow">if</span> (n &gt;= &amp;<a class="code hl_variable" href="classrangetree.html#af21299ac17ded355cb330db9082626e9">nodepool</a>[0] &amp;&amp; n &lt;= &amp;<a class="code hl_variable" href="classrangetree.html#af21299ac17ded355cb330db9082626e9">nodepool</a>[<a class="code hl_variable" href="classrangetree.html#ab7c20c8e8bd240818c9bf33c67847968">nodepoolcount</a> - 1]) <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  606</span>    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">  607</span>  }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classrangetree.html#af21299ac17ded355cb330db9082626e9">rangetree&lt; point, data &gt;::nodepool</a>, and <a class="el" href="classrangetree.html#ab7c20c8e8bd240818c9bf33c67847968">rangetree&lt; point, data &gt;::nodepoolcount</a>.</p>
 
@@ -1204,16 +1178,13 @@ template&lt;class point , class data &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00656">656</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  656</span>                                                {</div>
-<div class="line"><span class="lineno">  657</span> </div>
-<div class="line"><span class="lineno">  658</span>        <span class="keywordflow">if</span> (!<a class="code hl_variable" href="classrangetree.html#a778b0a2e8a9ba72ae51c16692741d8e2">ptypool</a>)</div>
-<div class="line"><span class="lineno">  659</span>            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">  660</span> </div>
-<div class="line"><span class="lineno">  661</span>        <span class="keywordflow">if</span> (p &gt;= &amp;<a class="code hl_variable" href="classrangetree.html#a778b0a2e8a9ba72ae51c16692741d8e2">ptypool</a>[0] &amp;&amp; p &lt;= &amp;<a class="code hl_variable" href="classrangetree.html#a778b0a2e8a9ba72ae51c16692741d8e2">ptypool</a>[<a class="code hl_variable" href="classrangetree.html#ac0d6d140ab9745bfabb31ee3a61c1aff">ptypoolcount</a> - 1])</div>
-<div class="line"><span class="lineno">  662</span>            <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  663</span>        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">  664</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00609">609</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  609</span>                                             {</div>
+<div class="line"><span class="lineno">  610</span>    <span class="keywordflow">if</span> (!<a class="code hl_variable" href="classrangetree.html#a778b0a2e8a9ba72ae51c16692741d8e2">ptypool</a>) <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">  611</span> </div>
+<div class="line"><span class="lineno">  612</span>    <span class="keywordflow">if</span> (p &gt;= &amp;<a class="code hl_variable" href="classrangetree.html#a778b0a2e8a9ba72ae51c16692741d8e2">ptypool</a>[0] &amp;&amp; p &lt;= &amp;<a class="code hl_variable" href="classrangetree.html#a778b0a2e8a9ba72ae51c16692741d8e2">ptypool</a>[<a class="code hl_variable" href="classrangetree.html#ac0d6d140ab9745bfabb31ee3a61c1aff">ptypoolcount</a> - 1]) <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  613</span>    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">  614</span>  }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classrangetree.html#a778b0a2e8a9ba72ae51c16692741d8e2">rangetree&lt; point, data &gt;::ptypool</a>, and <a class="el" href="classrangetree.html#ac0d6d140ab9745bfabb31ee3a61c1aff">rangetree&lt; point, data &gt;::ptypoolcount</a>.</p>
 
@@ -1279,41 +1250,38 @@ template&lt;class point , class data &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00522">522</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  523</span>                                                   {</div>
-<div class="line"><span class="lineno">  524</span> </div>
-<div class="line"><span class="lineno">  525</span>        <a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> l, r;</div>
-<div class="line"><span class="lineno">  526</span>        <span class="keyword">const</span> <a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> lmax = left ? left-&gt;ycount : 0;</div>
-<div class="line"><span class="lineno">  527</span>        <span class="keyword">const</span> <a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> rmax = right ? right-&gt;ycount : 0;</div>
-<div class="line"><span class="lineno">  528</span> </div>
-<div class="line"><span class="lineno">  529</span>        arr = <a class="code hl_function" href="classrangetree.html#a2dd60d801762a24ff79d467195495c01">newpty</a>(lmax + rmax);</div>
-<div class="line"><span class="lineno">  530</span>        ycount = lmax + rmax;</div>
-<div class="line"><span class="lineno">  531</span> </div>
-<div class="line"><span class="lineno">  532</span>        <a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> cur = 0;</div>
-<div class="line"><span class="lineno">  533</span> </div>
-<div class="line"><span class="lineno">  534</span>        <span class="keywordflow">for</span> (l = 0, r = 0; l &lt; lmax || r &lt; rmax;) {</div>
-<div class="line"><span class="lineno">  535</span>            <span class="comment">// Special cases first: if one array is out</span></div>
-<div class="line"><span class="lineno">  536</span>            <span class="keywordflow">if</span> (l == lmax) {</div>
-<div class="line"><span class="lineno">  537</span>                memcpy(&amp;arr[cur], &amp;right-&gt;ypoints[r],</div>
-<div class="line"><span class="lineno">  538</span>                    (rmax - r) * <span class="keyword">sizeof</span>(pty));</div>
-<div class="line"><span class="lineno">  539</span>                <span class="keywordflow">break</span>;</div>
-<div class="line"><span class="lineno">  540</span>            } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (r == rmax) {</div>
-<div class="line"><span class="lineno">  541</span>                memcpy(&amp;arr[cur], &amp;left-&gt;ypoints[l],</div>
-<div class="line"><span class="lineno">  542</span>                    (lmax - l) * <span class="keyword">sizeof</span>(pty));</div>
-<div class="line"><span class="lineno">  543</span>                <span class="keywordflow">break</span>;</div>
-<div class="line"><span class="lineno">  544</span>            } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  545</span>                <span class="keywordflow">if</span> (left-&gt;ypoints[l].y &lt;= right-&gt;ypoints[r].y) {</div>
-<div class="line"><span class="lineno">  546</span>                    arr[cur] = left-&gt;ypoints[l];</div>
-<div class="line"><span class="lineno">  547</span>                    cur++;</div>
-<div class="line"><span class="lineno">  548</span>                    l++;</div>
-<div class="line"><span class="lineno">  549</span>                } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  550</span>                    arr[cur] = right-&gt;ypoints[r];</div>
-<div class="line"><span class="lineno">  551</span>                    cur++;</div>
-<div class="line"><span class="lineno">  552</span>                    r++;</div>
-<div class="line"><span class="lineno">  553</span>                }</div>
-<div class="line"><span class="lineno">  554</span>            }</div>
-<div class="line"><span class="lineno">  555</span>        }</div>
-<div class="line"><span class="lineno">  556</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00483">483</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  484</span>                                                       {</div>
+<div class="line"><span class="lineno">  485</span>    <a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> l, r;</div>
+<div class="line"><span class="lineno">  486</span>    <span class="keyword">const</span> <a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> lmax = left ? left-&gt;ycount : 0;</div>
+<div class="line"><span class="lineno">  487</span>    <span class="keyword">const</span> <a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> rmax = right ? right-&gt;ycount : 0;</div>
+<div class="line"><span class="lineno">  488</span> </div>
+<div class="line"><span class="lineno">  489</span>    arr = <a class="code hl_function" href="classrangetree.html#a2dd60d801762a24ff79d467195495c01">newpty</a>(lmax + rmax);</div>
+<div class="line"><span class="lineno">  490</span>    ycount = lmax + rmax;</div>
+<div class="line"><span class="lineno">  491</span> </div>
+<div class="line"><span class="lineno">  492</span>    <a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> cur = 0;</div>
+<div class="line"><span class="lineno">  493</span> </div>
+<div class="line"><span class="lineno">  494</span>    <span class="keywordflow">for</span> (l = 0, r = 0; l &lt; lmax || r &lt; rmax;) {</div>
+<div class="line"><span class="lineno">  495</span>      <span class="comment">// Special cases first: if one array is out</span></div>
+<div class="line"><span class="lineno">  496</span>      <span class="keywordflow">if</span> (l == lmax) {</div>
+<div class="line"><span class="lineno">  497</span>        memcpy(&amp;arr[cur], &amp;right-&gt;ypoints[r], (rmax - r) * <span class="keyword">sizeof</span>(pty));</div>
+<div class="line"><span class="lineno">  498</span>        <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">  499</span>      } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (r == rmax) {</div>
+<div class="line"><span class="lineno">  500</span>        memcpy(&amp;arr[cur], &amp;left-&gt;ypoints[l], (lmax - l) * <span class="keyword">sizeof</span>(pty));</div>
+<div class="line"><span class="lineno">  501</span>        <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">  502</span>      } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  503</span>        <span class="keywordflow">if</span> (left-&gt;ypoints[l].y &lt;= right-&gt;ypoints[r].y) {</div>
+<div class="line"><span class="lineno">  504</span>          arr[cur] = left-&gt;ypoints[l];</div>
+<div class="line"><span class="lineno">  505</span>          cur++;</div>
+<div class="line"><span class="lineno">  506</span>          l++;</div>
+<div class="line"><span class="lineno">  507</span>        } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  508</span>          arr[cur] = right-&gt;ypoints[r];</div>
+<div class="line"><span class="lineno">  509</span>          cur++;</div>
+<div class="line"><span class="lineno">  510</span>          r++;</div>
+<div class="line"><span class="lineno">  511</span>        }</div>
+<div class="line"><span class="lineno">  512</span>      }</div>
+<div class="line"><span class="lineno">  513</span>    }</div>
+<div class="line"><span class="lineno">  514</span>  }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classrangetree.html#a2dd60d801762a24ff79d467195495c01">rangetree&lt; point, data &gt;::newpty()</a>.</p>
 
@@ -1366,16 +1334,16 @@ template&lt;class point , class data &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00626">626</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  626</span>                     {</div>
-<div class="line"><span class="lineno">  627</span>        <span class="keywordflow">if</span> (<a class="code hl_variable" href="classrangetree.html#a63849c8209333488557a6914aae68155">nodepoolgiven</a> &lt; <a class="code hl_variable" href="classrangetree.html#ab7c20c8e8bd240818c9bf33c67847968">nodepoolcount</a>) {</div>
-<div class="line"><span class="lineno">  628</span>            node * <span class="keyword">const</span> out = &amp;<a class="code hl_variable" href="classrangetree.html#af21299ac17ded355cb330db9082626e9">nodepool</a>[<a class="code hl_variable" href="classrangetree.html#a63849c8209333488557a6914aae68155">nodepoolgiven</a>];</div>
-<div class="line"><span class="lineno">  629</span>            <a class="code hl_variable" href="classrangetree.html#a63849c8209333488557a6914aae68155">nodepoolgiven</a>++;</div>
-<div class="line"><span class="lineno">  630</span>            <span class="keywordflow">return</span> out;</div>
-<div class="line"><span class="lineno">  631</span>        } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  632</span>            <span class="keywordflow">return</span> <span class="keyword">new</span> node;</div>
-<div class="line"><span class="lineno">  633</span>        }</div>
-<div class="line"><span class="lineno">  634</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00582">582</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  582</span>                  {</div>
+<div class="line"><span class="lineno">  583</span>    <span class="keywordflow">if</span> (<a class="code hl_variable" href="classrangetree.html#a63849c8209333488557a6914aae68155">nodepoolgiven</a> &lt; <a class="code hl_variable" href="classrangetree.html#ab7c20c8e8bd240818c9bf33c67847968">nodepoolcount</a>) {</div>
+<div class="line"><span class="lineno">  584</span>      node *<span class="keyword">const</span> out = &amp;<a class="code hl_variable" href="classrangetree.html#af21299ac17ded355cb330db9082626e9">nodepool</a>[<a class="code hl_variable" href="classrangetree.html#a63849c8209333488557a6914aae68155">nodepoolgiven</a>];</div>
+<div class="line"><span class="lineno">  585</span>      <a class="code hl_variable" href="classrangetree.html#a63849c8209333488557a6914aae68155">nodepoolgiven</a>++;</div>
+<div class="line"><span class="lineno">  586</span>      <span class="keywordflow">return</span> out;</div>
+<div class="line"><span class="lineno">  587</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  588</span>      <span class="keywordflow">return</span> <span class="keyword">new</span> node;</div>
+<div class="line"><span class="lineno">  589</span>    }</div>
+<div class="line"><span class="lineno">  590</span>  }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classrangetree.html#af21299ac17ded355cb330db9082626e9">rangetree&lt; point, data &gt;::nodepool</a>, <a class="el" href="classrangetree.html#ab7c20c8e8bd240818c9bf33c67847968">rangetree&lt; point, data &gt;::nodepoolcount</a>, and <a class="el" href="classrangetree.html#a63849c8209333488557a6914aae68155">rangetree&lt; point, data &gt;::nodepoolgiven</a>.</p>
 
@@ -1418,16 +1386,16 @@ template&lt;class point , class data &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00636">636</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  636</span>                                      {</div>
-<div class="line"><span class="lineno">  637</span>        <span class="keywordflow">if</span> (<a class="code hl_variable" href="classrangetree.html#a331742e901e3610682949c8953e242bd">ptypoolgiven</a> + num &lt;= <a class="code hl_variable" href="classrangetree.html#ac0d6d140ab9745bfabb31ee3a61c1aff">ptypoolcount</a>) {</div>
-<div class="line"><span class="lineno">  638</span>            pty * <span class="keyword">const</span> out = &amp;<a class="code hl_variable" href="classrangetree.html#a778b0a2e8a9ba72ae51c16692741d8e2">ptypool</a>[<a class="code hl_variable" href="classrangetree.html#a331742e901e3610682949c8953e242bd">ptypoolgiven</a>];</div>
-<div class="line"><span class="lineno">  639</span>            <a class="code hl_variable" href="classrangetree.html#a331742e901e3610682949c8953e242bd">ptypoolgiven</a> += num;</div>
-<div class="line"><span class="lineno">  640</span>            <span class="keywordflow">return</span> out;</div>
-<div class="line"><span class="lineno">  641</span>        } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  642</span>            <span class="keywordflow">return</span> (pty *) <a class="code hl_function" href="classrangetree.html#ab6286e479b04bcbc3f58fbdeebd651a9">xcalloc</a>(num, <span class="keyword">sizeof</span>(pty));</div>
-<div class="line"><span class="lineno">  643</span>        }</div>
-<div class="line"><span class="lineno">  644</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00592">592</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  592</span>                                   {</div>
+<div class="line"><span class="lineno">  593</span>    <span class="keywordflow">if</span> (<a class="code hl_variable" href="classrangetree.html#a331742e901e3610682949c8953e242bd">ptypoolgiven</a> + num &lt;= <a class="code hl_variable" href="classrangetree.html#ac0d6d140ab9745bfabb31ee3a61c1aff">ptypoolcount</a>) {</div>
+<div class="line"><span class="lineno">  594</span>      pty *<span class="keyword">const</span> out = &amp;<a class="code hl_variable" href="classrangetree.html#a778b0a2e8a9ba72ae51c16692741d8e2">ptypool</a>[<a class="code hl_variable" href="classrangetree.html#a331742e901e3610682949c8953e242bd">ptypoolgiven</a>];</div>
+<div class="line"><span class="lineno">  595</span>      <a class="code hl_variable" href="classrangetree.html#a331742e901e3610682949c8953e242bd">ptypoolgiven</a> += num;</div>
+<div class="line"><span class="lineno">  596</span>      <span class="keywordflow">return</span> out;</div>
+<div class="line"><span class="lineno">  597</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  598</span>      <span class="keywordflow">return</span> (pty *)<a class="code hl_function" href="classrangetree.html#ab6286e479b04bcbc3f58fbdeebd651a9">xcalloc</a>(num, <span class="keyword">sizeof</span>(pty));</div>
+<div class="line"><span class="lineno">  599</span>    }</div>
+<div class="line"><span class="lineno">  600</span>  }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classrangetree.html#a778b0a2e8a9ba72ae51c16692741d8e2">rangetree&lt; point, data &gt;::ptypool</a>, <a class="el" href="classrangetree.html#ac0d6d140ab9745bfabb31ee3a61c1aff">rangetree&lt; point, data &gt;::ptypoolcount</a>, <a class="el" href="classrangetree.html#a331742e901e3610682949c8953e242bd">rangetree&lt; point, data &gt;::ptypoolgiven</a>, and <a class="el" href="classrangetree.html#ab6286e479b04bcbc3f58fbdeebd651a9">rangetree&lt; point, data &gt;::xcalloc()</a>.</p>
 
@@ -1481,16 +1449,15 @@ template&lt;class point , class data &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00466">466</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  466</span>                {</div>
-<div class="line"><span class="lineno">  467</span>        <a class="code hl_function" href="classrangetree.html#ac5a3f9f9fce934aa3d158a8e1213a592">nuke</a>(<a class="code hl_variable" href="classrangetree.html#a6368e7b24d1b2a55f250049f9f100a3e">start</a>.<a class="code hl_variable" href="structrangetree_1_1node.html#acd232b5af6973c8209485dc77f9c49ce">left</a>);</div>
-<div class="line"><span class="lineno">  468</span>        <a class="code hl_function" href="classrangetree.html#ac5a3f9f9fce934aa3d158a8e1213a592">nuke</a>(<a class="code hl_variable" href="classrangetree.html#a6368e7b24d1b2a55f250049f9f100a3e">start</a>.<a class="code hl_variable" href="structrangetree_1_1node.html#a16aad73e87da115e55ac4590ee6a94d0">right</a>);</div>
-<div class="line"><span class="lineno">  469</span> </div>
-<div class="line"><span class="lineno">  470</span>        <span class="keywordflow">if</span> (!<a class="code hl_function" href="classrangetree.html#afc3c9326f8363fe63f1e8fbd7f2ff267">isptypooled</a>(<a class="code hl_variable" href="classrangetree.html#a6368e7b24d1b2a55f250049f9f100a3e">start</a>.<a class="code hl_variable" href="structrangetree_1_1node.html#ae018e1b9e121b5f646e2563ee86fee11">ypoints</a>))</div>
-<div class="line"><span class="lineno">  471</span>            <span class="keyword">delete</span> <a class="code hl_variable" href="classrangetree.html#a6368e7b24d1b2a55f250049f9f100a3e">start</a>.<a class="code hl_variable" href="structrangetree_1_1node.html#ae018e1b9e121b5f646e2563ee86fee11">ypoints</a>;</div>
-<div class="line"><span class="lineno">  472</span>            <span class="comment">//free(start.ypoints);</span></div>
-<div class="line"><span class="lineno">  473</span>    }</div>
-<div class="ttc" id="aclassrangetree_html_afc3c9326f8363fe63f1e8fbd7f2ff267"><div class="ttname"><a href="classrangetree.html#afc3c9326f8363fe63f1e8fbd7f2ff267">rangetree::isptypooled</a></div><div class="ttdeci">bool isptypooled(const pty *const p) const</div><div class="ttdef"><b>Definition:</b> <a href="ranget_8h_source.html#l00656">ranget.h:656</a></div></div>
+<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00436">436</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  436</span>              {</div>
+<div class="line"><span class="lineno">  437</span>    <a class="code hl_function" href="classrangetree.html#ac5a3f9f9fce934aa3d158a8e1213a592">nuke</a>(<a class="code hl_variable" href="classrangetree.html#a6368e7b24d1b2a55f250049f9f100a3e">start</a>.<a class="code hl_variable" href="structrangetree_1_1node.html#acd232b5af6973c8209485dc77f9c49ce">left</a>);</div>
+<div class="line"><span class="lineno">  438</span>    <a class="code hl_function" href="classrangetree.html#ac5a3f9f9fce934aa3d158a8e1213a592">nuke</a>(<a class="code hl_variable" href="classrangetree.html#a6368e7b24d1b2a55f250049f9f100a3e">start</a>.<a class="code hl_variable" href="structrangetree_1_1node.html#a16aad73e87da115e55ac4590ee6a94d0">right</a>);</div>
+<div class="line"><span class="lineno">  439</span> </div>
+<div class="line"><span class="lineno">  440</span>    <span class="keywordflow">if</span> (!<a class="code hl_function" href="classrangetree.html#afc3c9326f8363fe63f1e8fbd7f2ff267">isptypooled</a>(<a class="code hl_variable" href="classrangetree.html#a6368e7b24d1b2a55f250049f9f100a3e">start</a>.<a class="code hl_variable" href="structrangetree_1_1node.html#ae018e1b9e121b5f646e2563ee86fee11">ypoints</a>)) <span class="keyword">delete</span> <a class="code hl_variable" href="classrangetree.html#a6368e7b24d1b2a55f250049f9f100a3e">start</a>.<a class="code hl_variable" href="structrangetree_1_1node.html#ae018e1b9e121b5f646e2563ee86fee11">ypoints</a>;</div>
+<div class="line"><span class="lineno">  441</span>    <span class="comment">// free(start.ypoints);</span></div>
+<div class="line"><span class="lineno">  442</span>  }</div>
+<div class="ttc" id="aclassrangetree_html_afc3c9326f8363fe63f1e8fbd7f2ff267"><div class="ttname"><a href="classrangetree.html#afc3c9326f8363fe63f1e8fbd7f2ff267">rangetree::isptypooled</a></div><div class="ttdeci">bool isptypooled(const pty *const p) const</div><div class="ttdef"><b>Definition:</b> <a href="ranget_8h_source.html#l00609">ranget.h:609</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classrangetree.html#afc3c9326f8363fe63f1e8fbd7f2ff267">rangetree&lt; point, data &gt;::isptypooled()</a>, <a class="el" href="structrangetree_1_1node.html#acd232b5af6973c8209485dc77f9c49ce">rangetree&lt; point, data &gt;::node::left</a>, <a class="el" href="classrangetree.html#ac5a3f9f9fce934aa3d158a8e1213a592">rangetree&lt; point, data &gt;::nuke()</a>, <a class="el" href="structrangetree_1_1node.html#a16aad73e87da115e55ac4590ee6a94d0">rangetree&lt; point, data &gt;::node::right</a>, <a class="el" href="classrangetree.html#a6368e7b24d1b2a55f250049f9f100a3e">rangetree&lt; point, data &gt;::start</a>, and <a class="el" href="structrangetree_1_1node.html#ae018e1b9e121b5f646e2563ee86fee11">rangetree&lt; point, data &gt;::node::ypoints</a>.</p>
 
@@ -1542,23 +1509,19 @@ template&lt;class point , class data &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00475">475</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  475</span>                              {</div>
-<div class="line"><span class="lineno">  476</span>        <span class="keywordflow">if</span> (!n)</div>
-<div class="line"><span class="lineno">  477</span>            <span class="keywordflow">return</span>;</div>
-<div class="line"><span class="lineno">  478</span> </div>
-<div class="line"><span class="lineno">  479</span>        <a class="code hl_function" href="classrangetree.html#ac5a3f9f9fce934aa3d158a8e1213a592">nuke</a>(n-&gt;left);</div>
-<div class="line"><span class="lineno">  480</span>        <a class="code hl_function" href="classrangetree.html#ac5a3f9f9fce934aa3d158a8e1213a592">nuke</a>(n-&gt;right);</div>
-<div class="line"><span class="lineno">  481</span> </div>
-<div class="line"><span class="lineno">  482</span>        <span class="keywordflow">if</span> (!<a class="code hl_function" href="classrangetree.html#afc3c9326f8363fe63f1e8fbd7f2ff267">isptypooled</a>(n-&gt;ypoints))</div>
-<div class="line"><span class="lineno">  483</span>            <span class="keyword">delete</span> n-&gt;ypoints;</div>
-<div class="line"><span class="lineno">  484</span>            <span class="comment">//free(n-&gt;ypoints);</span></div>
-<div class="line"><span class="lineno">  485</span> </div>
-<div class="line"><span class="lineno">  486</span> </div>
-<div class="line"><span class="lineno">  487</span>        <span class="keywordflow">if</span> (!<a class="code hl_function" href="classrangetree.html#a30c73858fbb79f5143e7c37d4126e055">isnodepooled</a>(n))</div>
-<div class="line"><span class="lineno">  488</span>            <span class="keyword">delete</span> n;</div>
-<div class="line"><span class="lineno">  489</span>    }</div>
-<div class="ttc" id="aclassrangetree_html_a30c73858fbb79f5143e7c37d4126e055"><div class="ttname"><a href="classrangetree.html#a30c73858fbb79f5143e7c37d4126e055">rangetree::isnodepooled</a></div><div class="ttdeci">bool isnodepooled(const node *const n) const</div><div class="ttdef"><b>Definition:</b> <a href="ranget_8h_source.html#l00646">ranget.h:646</a></div></div>
+<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00444">444</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  444</span>                           {</div>
+<div class="line"><span class="lineno">  445</span>    <span class="keywordflow">if</span> (!n) <span class="keywordflow">return</span>;</div>
+<div class="line"><span class="lineno">  446</span> </div>
+<div class="line"><span class="lineno">  447</span>    <a class="code hl_function" href="classrangetree.html#ac5a3f9f9fce934aa3d158a8e1213a592">nuke</a>(n-&gt;left);</div>
+<div class="line"><span class="lineno">  448</span>    <a class="code hl_function" href="classrangetree.html#ac5a3f9f9fce934aa3d158a8e1213a592">nuke</a>(n-&gt;right);</div>
+<div class="line"><span class="lineno">  449</span> </div>
+<div class="line"><span class="lineno">  450</span>    <span class="keywordflow">if</span> (!<a class="code hl_function" href="classrangetree.html#afc3c9326f8363fe63f1e8fbd7f2ff267">isptypooled</a>(n-&gt;ypoints)) <span class="keyword">delete</span> n-&gt;ypoints;</div>
+<div class="line"><span class="lineno">  451</span>    <span class="comment">// free(n-&gt;ypoints);</span></div>
+<div class="line"><span class="lineno">  452</span> </div>
+<div class="line"><span class="lineno">  453</span>    <span class="keywordflow">if</span> (!<a class="code hl_function" href="classrangetree.html#a30c73858fbb79f5143e7c37d4126e055">isnodepooled</a>(n)) <span class="keyword">delete</span> n;</div>
+<div class="line"><span class="lineno">  454</span>  }</div>
+<div class="ttc" id="aclassrangetree_html_a30c73858fbb79f5143e7c37d4126e055"><div class="ttname"><a href="classrangetree.html#a30c73858fbb79f5143e7c37d4126e055">rangetree::isnodepooled</a></div><div class="ttdeci">bool isnodepooled(const node *const n) const</div><div class="ttdef"><b>Definition:</b> <a href="ranget_8h_source.html#l00602">ranget.h:602</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classrangetree.html#a30c73858fbb79f5143e7c37d4126e055">rangetree&lt; point, data &gt;::isnodepooled()</a>, <a class="el" href="classrangetree.html#afc3c9326f8363fe63f1e8fbd7f2ff267">rangetree&lt; point, data &gt;::isptypooled()</a>, <a class="el" href="structrangetree_1_1node.html#acd232b5af6973c8209485dc77f9c49ce">rangetree&lt; point, data &gt;::node::left</a>, <a class="el" href="classrangetree.html#ac5a3f9f9fce934aa3d158a8e1213a592">rangetree&lt; point, data &gt;::nuke()</a>, <a class="el" href="structrangetree_1_1node.html#a16aad73e87da115e55ac4590ee6a94d0">rangetree&lt; point, data &gt;::node::right</a>, and <a class="el" href="structrangetree_1_1node.html#ae018e1b9e121b5f646e2563ee86fee11">rangetree&lt; point, data &gt;::node::ypoints</a>.</p>
 <div class="dynheader">
@@ -1611,12 +1574,12 @@ template&lt;class point , class data &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00673">673</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  673</span>                                                                     {</div>
-<div class="line"><span class="lineno">  674</span>        point tmp = a;</div>
-<div class="line"><span class="lineno">  675</span>        a = b;</div>
-<div class="line"><span class="lineno">  676</span>        b = tmp;</div>
-<div class="line"><span class="lineno">  677</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00622">622</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  622</span>                                                                 {</div>
+<div class="line"><span class="lineno">  623</span>    point tmp = a;</div>
+<div class="line"><span class="lineno">  624</span>    a = b;</div>
+<div class="line"><span class="lineno">  625</span>    b = tmp;</div>
+<div class="line"><span class="lineno">  626</span>  }</div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="classrangetree.html#ac2e09048341350397400efd2e1a185d7">rangetree&lt; point, data &gt;::count()</a>, and <a class="el" href="classrangetree.html#a4bb16420855f3b4e67b53e5796a0fec5">rangetree&lt; point, data &gt;::search()</a>.</p>
 <div class="dynheader">
@@ -1692,51 +1655,46 @@ template&lt;class point , class data &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00198">198</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  199</span>                                                                  {</div>
-<div class="line"><span class="lineno">  200</span> </div>
-<div class="line"><span class="lineno">  201</span>        <span class="keywordflow">if</span> (!<a class="code hl_variable" href="classrangetree.html#a4ac95ec3552e8687b13565ddcf71c56b">init</a>)</div>
-<div class="line"><span class="lineno">  202</span>            <span class="keywordflow">return</span>;</div>
+<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00190">190</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  191</span>                                            {</div>
+<div class="line"><span class="lineno">  192</span>    <span class="keywordflow">if</span> (!<a class="code hl_variable" href="classrangetree.html#a4ac95ec3552e8687b13565ddcf71c56b">init</a>) <span class="keywordflow">return</span>;</div>
+<div class="line"><span class="lineno">  193</span> </div>
+<div class="line"><span class="lineno">  194</span>    <span class="comment">// If needed, swap arguments</span></div>
+<div class="line"><span class="lineno">  195</span>    <span class="keywordflow">if</span> (xmax &lt; xmin) <a class="code hl_function" href="classrangetree.html#aa4ecf1b6cff0f4073a3499d2b509ba15">pswap</a>(xmax, xmin);</div>
+<div class="line"><span class="lineno">  196</span>    <span class="keywordflow">if</span> (ymax &lt; ymin) <a class="code hl_function" href="classrangetree.html#aa4ecf1b6cff0f4073a3499d2b509ba15">pswap</a>(ymax, ymin);</div>
+<div class="line"><span class="lineno">  197</span> </div>
+<div class="line"><span class="lineno">  198</span>    <span class="keyword">const</span> node *list[<a class="code hl_variable" href="classrangetree.html#af96b2a5964baf5ed350d2bfd309a7c9c">maxterminals</a>];</div>
+<div class="line"><span class="lineno">  199</span>    <a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> listcur = 0;</div>
+<div class="line"><span class="lineno">  200</span>    <a class="code hl_function" href="classrangetree.html#a646248c5ea0866972ccfb58b60d9c569">findnodes</a>(&amp;<a class="code hl_variable" href="classrangetree.html#a6368e7b24d1b2a55f250049f9f100a3e">start</a>, xmin, xmax, list, listcur);</div>
+<div class="line"><span class="lineno">  201</span> </div>
+<div class="line"><span class="lineno">  202</span>    <span class="keyword">const</span> <a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> ncount = listcur;</div>
 <div class="line"><span class="lineno">  203</span> </div>
-<div class="line"><span class="lineno">  204</span>        <span class="comment">// If needed, swap arguments</span></div>
-<div class="line"><span class="lineno">  205</span>        <span class="keywordflow">if</span> (xmax &lt; xmin)</div>
-<div class="line"><span class="lineno">  206</span>            <a class="code hl_function" href="classrangetree.html#aa4ecf1b6cff0f4073a3499d2b509ba15">pswap</a>(xmax, xmin);</div>
-<div class="line"><span class="lineno">  207</span>        <span class="keywordflow">if</span> (ymax &lt; ymin)</div>
-<div class="line"><span class="lineno">  208</span>            <a class="code hl_function" href="classrangetree.html#aa4ecf1b6cff0f4073a3499d2b509ba15">pswap</a>(ymax, ymin);</div>
-<div class="line"><span class="lineno">  209</span> </div>
-<div class="line"><span class="lineno">  210</span>        <span class="keyword">const</span> node * list[<a class="code hl_variable" href="classrangetree.html#af96b2a5964baf5ed350d2bfd309a7c9c">maxterminals</a>];</div>
-<div class="line"><span class="lineno">  211</span>        <a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> listcur = 0;</div>
-<div class="line"><span class="lineno">  212</span>        <a class="code hl_function" href="classrangetree.html#a646248c5ea0866972ccfb58b60d9c569">findnodes</a>(&amp;<a class="code hl_variable" href="classrangetree.html#a6368e7b24d1b2a55f250049f9f100a3e">start</a>, xmin, xmax, list, listcur);</div>
-<div class="line"><span class="lineno">  213</span> </div>
-<div class="line"><span class="lineno">  214</span>        <span class="keyword">const</span> <a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> ncount = listcur;</div>
-<div class="line"><span class="lineno">  215</span> </div>
-<div class="line"><span class="lineno">  216</span>        <a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> cur = 0;</div>
-<div class="line"><span class="lineno">  217</span>        <span class="keyword">const</span> <a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> arrmax = arrsize;</div>
-<div class="line"><span class="lineno">  218</span> </div>
-<div class="line"><span class="lineno">  219</span>        <span class="keywordflow">for</span> (<a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> k = 0; k &lt; ncount; k++) {</div>
-<div class="line"><span class="lineno">  220</span>            <span class="keyword">const</span> node * <span class="keyword">const</span> n = list[k];</div>
-<div class="line"><span class="lineno">  221</span>            <span class="keyword">const</span> <a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> max = n-&gt;ycount;</div>
-<div class="line"><span class="lineno">  222</span>            <span class="keywordflow">if</span> (!max)</div>
-<div class="line"><span class="lineno">  223</span>                <span class="keywordflow">continue</span>;</div>
-<div class="line"><span class="lineno">  224</span> </div>
-<div class="line"><span class="lineno">  225</span>            <span class="keyword">const</span> <a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> lower = <a class="code hl_function" href="classrangetree.html#aea9e269751d3f16ea156b7fba40510c8">binarynext</a>(n-&gt;ypoints, n-&gt;ycount, ymin);</div>
-<div class="line"><span class="lineno">  226</span>            <span class="keyword">const</span> <a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> upper = <a class="code hl_function" href="classrangetree.html#aea9e269751d3f16ea156b7fba40510c8">binarynext</a>(n-&gt;ypoints, n-&gt;ycount, ymax + 1);</div>
+<div class="line"><span class="lineno">  204</span>    <a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> cur = 0;</div>
+<div class="line"><span class="lineno">  205</span>    <span class="keyword">const</span> <a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> arrmax = arrsize;</div>
+<div class="line"><span class="lineno">  206</span> </div>
+<div class="line"><span class="lineno">  207</span>    <span class="keywordflow">for</span> (<a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> k = 0; k &lt; ncount; k++) {</div>
+<div class="line"><span class="lineno">  208</span>      <span class="keyword">const</span> node *<span class="keyword">const</span> n = list[k];</div>
+<div class="line"><span class="lineno">  209</span>      <span class="keyword">const</span> <a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> max = n-&gt;ycount;</div>
+<div class="line"><span class="lineno">  210</span>      <span class="keywordflow">if</span> (!max) <span class="keywordflow">continue</span>;</div>
+<div class="line"><span class="lineno">  211</span> </div>
+<div class="line"><span class="lineno">  212</span>      <span class="keyword">const</span> <a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> lower = <a class="code hl_function" href="classrangetree.html#aea9e269751d3f16ea156b7fba40510c8">binarynext</a>(n-&gt;ypoints, n-&gt;ycount, ymin);</div>
+<div class="line"><span class="lineno">  213</span>      <span class="keyword">const</span> <a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> upper = <a class="code hl_function" href="classrangetree.html#aea9e269751d3f16ea156b7fba40510c8">binarynext</a>(n-&gt;ypoints, n-&gt;ycount, ymax + 1);</div>
+<div class="line"><span class="lineno">  214</span> </div>
+<div class="line"><span class="lineno">  215</span>      <span class="keywordflow">for</span> (<a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> i = lower; i &lt; upper; i++) {</div>
+<div class="line"><span class="lineno">  216</span>        <span class="keywordflow">if</span> (cur &lt; arrmax) {</div>
+<div class="line"><span class="lineno">  217</span><span class="preprocessor">#ifdef LESSRAM64</span></div>
+<div class="line"><span class="lineno">  218</span>          arr[cur] = dataset[n-&gt;ypoints[i].offset];</div>
+<div class="line"><span class="lineno">  219</span><span class="preprocessor">#else</span></div>
+<div class="line"><span class="lineno">  220</span>          arr[cur] = n-&gt;ypoints[i].ptr;</div>
+<div class="line"><span class="lineno">  221</span><span class="preprocessor">#endif</span></div>
+<div class="line"><span class="lineno">  222</span>        }</div>
+<div class="line"><span class="lineno">  223</span> </div>
+<div class="line"><span class="lineno">  224</span>        cur++;</div>
+<div class="line"><span class="lineno">  225</span>      }</div>
+<div class="line"><span class="lineno">  226</span>    }</div>
 <div class="line"><span class="lineno">  227</span> </div>
-<div class="line"><span class="lineno">  228</span>            <span class="keywordflow">for</span> (<a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> i = lower; i &lt; upper; i++) {</div>
-<div class="line"><span class="lineno">  229</span>                    <span class="keywordflow">if</span> (cur &lt; arrmax) {</div>
-<div class="line"><span class="lineno">  230</span><span class="preprocessor">#ifdef LESSRAM64</span></div>
-<div class="line"><span class="lineno">  231</span>                        arr[cur] = dataset[n-&gt;ypoints[i].offset];</div>
-<div class="line"><span class="lineno">  232</span><span class="preprocessor">#else</span></div>
-<div class="line"><span class="lineno">  233</span>                        arr[cur] = n-&gt;ypoints[i].ptr;</div>
-<div class="line"><span class="lineno">  234</span><span class="preprocessor">#endif</span></div>
-<div class="line"><span class="lineno">  235</span>                    }</div>
-<div class="line"><span class="lineno">  236</span> </div>
-<div class="line"><span class="lineno">  237</span>                    cur++;</div>
-<div class="line"><span class="lineno">  238</span>            }</div>
-<div class="line"><span class="lineno">  239</span>        }</div>
-<div class="line"><span class="lineno">  240</span> </div>
-<div class="line"><span class="lineno">  241</span>        arrsize = cur;</div>
-<div class="line"><span class="lineno">  242</span>    }</div>
+<div class="line"><span class="lineno">  228</span>    arrsize = cur;</div>
+<div class="line"><span class="lineno">  229</span>  }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classrangetree.html#aea9e269751d3f16ea156b7fba40510c8">rangetree&lt; point, data &gt;::binarynext()</a>, <a class="el" href="classrangetree.html#a646248c5ea0866972ccfb58b60d9c569">rangetree&lt; point, data &gt;::findnodes()</a>, <a class="el" href="classrangetree.html#a4ac95ec3552e8687b13565ddcf71c56b">rangetree&lt; point, data &gt;::init</a>, <a class="el" href="classrangetree.html#af96b2a5964baf5ed350d2bfd309a7c9c">rangetree&lt; point, data &gt;::maxterminals</a>, <a class="el" href="classrangetree.html#aa4ecf1b6cff0f4073a3499d2b509ba15">rangetree&lt; point, data &gt;::pswap()</a>, <a class="el" href="structrangetree_1_1pty.html#a9c552c46e1a8d0fad697104b44534f6f">rangetree&lt; point, data &gt;::pty::ptr</a>, <a class="el" href="classrangetree.html#a6368e7b24d1b2a55f250049f9f100a3e">rangetree&lt; point, data &gt;::start</a>, <a class="el" href="structrangetree_1_1node.html#aefa2a49cad0fa7362c39578a9f84a806">rangetree&lt; point, data &gt;::node::ycount</a>, and <a class="el" href="structrangetree_1_1node.html#ae018e1b9e121b5f646e2563ee86fee11">rangetree&lt; point, data &gt;::node::ypoints</a>.</p>
 <div class="dynheader">
@@ -1801,46 +1759,41 @@ template&lt;class point , class data &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00157">157</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  157</span>                                                                                    {</div>
-<div class="line"><span class="lineno">  158</span> </div>
-<div class="line"><span class="lineno">  159</span>        <span class="keywordflow">if</span> (!<a class="code hl_variable" href="classrangetree.html#a4ac95ec3552e8687b13565ddcf71c56b">init</a>)</div>
-<div class="line"><span class="lineno">  160</span>            <span class="keywordflow">return</span> NULL;</div>
-<div class="line"><span class="lineno">  161</span> </div>
-<div class="line"><span class="lineno">  162</span>        <span class="comment">// If needed, swap arguments</span></div>
-<div class="line"><span class="lineno">  163</span>        <span class="keywordflow">if</span> (xmax &lt; xmin)</div>
-<div class="line"><span class="lineno">  164</span>            <a class="code hl_function" href="classrangetree.html#aa4ecf1b6cff0f4073a3499d2b509ba15">pswap</a>(xmax, xmin);</div>
-<div class="line"><span class="lineno">  165</span>        <span class="keywordflow">if</span> (ymax &lt; ymin)</div>
-<div class="line"><span class="lineno">  166</span>            <a class="code hl_function" href="classrangetree.html#aa4ecf1b6cff0f4073a3499d2b509ba15">pswap</a>(ymax, ymin);</div>
+<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00153">153</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  154</span>                                                {</div>
+<div class="line"><span class="lineno">  155</span>    <span class="keywordflow">if</span> (!<a class="code hl_variable" href="classrangetree.html#a4ac95ec3552e8687b13565ddcf71c56b">init</a>) <span class="keywordflow">return</span> NULL;</div>
+<div class="line"><span class="lineno">  156</span> </div>
+<div class="line"><span class="lineno">  157</span>    <span class="comment">// If needed, swap arguments</span></div>
+<div class="line"><span class="lineno">  158</span>    <span class="keywordflow">if</span> (xmax &lt; xmin) <a class="code hl_function" href="classrangetree.html#aa4ecf1b6cff0f4073a3499d2b509ba15">pswap</a>(xmax, xmin);</div>
+<div class="line"><span class="lineno">  159</span>    <span class="keywordflow">if</span> (ymax &lt; ymin) <a class="code hl_function" href="classrangetree.html#aa4ecf1b6cff0f4073a3499d2b509ba15">pswap</a>(ymax, ymin);</div>
+<div class="line"><span class="lineno">  160</span> </div>
+<div class="line"><span class="lineno">  161</span>    std::vector&lt;data *&gt; *<span class="keyword">const</span> res = <span class="keyword">new</span> std::vector&lt;data *&gt;;</div>
+<div class="line"><span class="lineno">  162</span>    res-&gt;reserve(<a class="code hl_variable" href="classrangetree.html#a647c3c7abe1ba1c10a092296455a6d4d">resultreserve</a>);</div>
+<div class="line"><span class="lineno">  163</span> </div>
+<div class="line"><span class="lineno">  164</span>    <span class="keyword">const</span> node *list[<a class="code hl_variable" href="classrangetree.html#af96b2a5964baf5ed350d2bfd309a7c9c">maxterminals</a>];</div>
+<div class="line"><span class="lineno">  165</span>    <a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> listcur = 0;</div>
+<div class="line"><span class="lineno">  166</span>    <a class="code hl_function" href="classrangetree.html#a646248c5ea0866972ccfb58b60d9c569">findnodes</a>(&amp;<a class="code hl_variable" href="classrangetree.html#a6368e7b24d1b2a55f250049f9f100a3e">start</a>, xmin, xmax, list, listcur);</div>
 <div class="line"><span class="lineno">  167</span> </div>
-<div class="line"><span class="lineno">  168</span>        std::vector&lt;data *&gt; * <span class="keyword">const</span> res = <span class="keyword">new</span> std::vector&lt;data *&gt;;</div>
-<div class="line"><span class="lineno">  169</span>        res-&gt;reserve(<a class="code hl_variable" href="classrangetree.html#a647c3c7abe1ba1c10a092296455a6d4d">resultreserve</a>);</div>
-<div class="line"><span class="lineno">  170</span> </div>
-<div class="line"><span class="lineno">  171</span>        <span class="keyword">const</span> node * list[<a class="code hl_variable" href="classrangetree.html#af96b2a5964baf5ed350d2bfd309a7c9c">maxterminals</a>];</div>
-<div class="line"><span class="lineno">  172</span>        <a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> listcur = 0;</div>
-<div class="line"><span class="lineno">  173</span>        <a class="code hl_function" href="classrangetree.html#a646248c5ea0866972ccfb58b60d9c569">findnodes</a>(&amp;<a class="code hl_variable" href="classrangetree.html#a6368e7b24d1b2a55f250049f9f100a3e">start</a>, xmin, xmax, list, listcur);</div>
+<div class="line"><span class="lineno">  168</span>    <span class="keyword">const</span> <a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> ncount = listcur;</div>
+<div class="line"><span class="lineno">  169</span> </div>
+<div class="line"><span class="lineno">  170</span>    <span class="keywordflow">for</span> (<a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> k = 0; k &lt; ncount; k++) {</div>
+<div class="line"><span class="lineno">  171</span>      <span class="keyword">const</span> node *<span class="keyword">const</span> n = list[k];</div>
+<div class="line"><span class="lineno">  172</span>      <span class="keyword">const</span> <a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> max = n-&gt;ycount;</div>
+<div class="line"><span class="lineno">  173</span>      <span class="keywordflow">if</span> (!max) <span class="keywordflow">continue</span>;</div>
 <div class="line"><span class="lineno">  174</span> </div>
-<div class="line"><span class="lineno">  175</span>        <span class="keyword">const</span> <a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> ncount = listcur;</div>
-<div class="line"><span class="lineno">  176</span> </div>
-<div class="line"><span class="lineno">  177</span>        <span class="keywordflow">for</span> (<a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> k = 0; k &lt; ncount; k++) {</div>
-<div class="line"><span class="lineno">  178</span>            <span class="keyword">const</span> node * <span class="keyword">const</span> n = list[k];</div>
-<div class="line"><span class="lineno">  179</span>            <span class="keyword">const</span> <a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> max = n-&gt;ycount;</div>
-<div class="line"><span class="lineno">  180</span>            <span class="keywordflow">if</span> (!max)</div>
-<div class="line"><span class="lineno">  181</span>                <span class="keywordflow">continue</span>;</div>
-<div class="line"><span class="lineno">  182</span> </div>
-<div class="line"><span class="lineno">  183</span>            <span class="keyword">const</span> <a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> lower = <a class="code hl_function" href="classrangetree.html#aea9e269751d3f16ea156b7fba40510c8">binarynext</a>(n-&gt;ypoints, n-&gt;ycount, ymin);</div>
-<div class="line"><span class="lineno">  184</span>            <span class="keyword">const</span> <a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> upper = <a class="code hl_function" href="classrangetree.html#aea9e269751d3f16ea156b7fba40510c8">binarynext</a>(n-&gt;ypoints, n-&gt;ycount, ymax + 1);</div>
-<div class="line"><span class="lineno">  185</span> </div>
-<div class="line"><span class="lineno">  186</span>            <span class="keywordflow">for</span> (<a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> i = lower; i &lt; upper; i++) {</div>
-<div class="line"><span class="lineno">  187</span><span class="preprocessor">#ifdef LESSRAM64</span></div>
-<div class="line"><span class="lineno">  188</span>                    res-&gt;push_back(dataset[n-&gt;ypoints[i].offset]);</div>
-<div class="line"><span class="lineno">  189</span><span class="preprocessor">#else</span></div>
-<div class="line"><span class="lineno">  190</span>                    res-&gt;push_back(n-&gt;ypoints[i].ptr);</div>
-<div class="line"><span class="lineno">  191</span><span class="preprocessor">#endif</span></div>
-<div class="line"><span class="lineno">  192</span>            }</div>
-<div class="line"><span class="lineno">  193</span>        }</div>
-<div class="line"><span class="lineno">  194</span>        <span class="keywordflow">return</span> res;</div>
-<div class="line"><span class="lineno">  195</span>    }</div>
+<div class="line"><span class="lineno">  175</span>      <span class="keyword">const</span> <a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> lower = <a class="code hl_function" href="classrangetree.html#aea9e269751d3f16ea156b7fba40510c8">binarynext</a>(n-&gt;ypoints, n-&gt;ycount, ymin);</div>
+<div class="line"><span class="lineno">  176</span>      <span class="keyword">const</span> <a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> upper = <a class="code hl_function" href="classrangetree.html#aea9e269751d3f16ea156b7fba40510c8">binarynext</a>(n-&gt;ypoints, n-&gt;ycount, ymax + 1);</div>
+<div class="line"><span class="lineno">  177</span> </div>
+<div class="line"><span class="lineno">  178</span>      <span class="keywordflow">for</span> (<a class="code hl_typedef" href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a> i = lower; i &lt; upper; i++) {</div>
+<div class="line"><span class="lineno">  179</span><span class="preprocessor">#ifdef LESSRAM64</span></div>
+<div class="line"><span class="lineno">  180</span>        res-&gt;push_back(dataset[n-&gt;ypoints[i].offset]);</div>
+<div class="line"><span class="lineno">  181</span><span class="preprocessor">#else</span></div>
+<div class="line"><span class="lineno">  182</span>        res-&gt;push_back(n-&gt;ypoints[i].ptr);</div>
+<div class="line"><span class="lineno">  183</span><span class="preprocessor">#endif</span></div>
+<div class="line"><span class="lineno">  184</span>      }</div>
+<div class="line"><span class="lineno">  185</span>    }</div>
+<div class="line"><span class="lineno">  186</span>    <span class="keywordflow">return</span> res;</div>
+<div class="line"><span class="lineno">  187</span>  }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classrangetree.html#aea9e269751d3f16ea156b7fba40510c8">rangetree&lt; point, data &gt;::binarynext()</a>, <a class="el" href="classrangetree.html#a646248c5ea0866972ccfb58b60d9c569">rangetree&lt; point, data &gt;::findnodes()</a>, <a class="el" href="classrangetree.html#a4ac95ec3552e8687b13565ddcf71c56b">rangetree&lt; point, data &gt;::init</a>, <a class="el" href="classrangetree.html#af96b2a5964baf5ed350d2bfd309a7c9c">rangetree&lt; point, data &gt;::maxterminals</a>, <a class="el" href="classrangetree.html#aa4ecf1b6cff0f4073a3499d2b509ba15">rangetree&lt; point, data &gt;::pswap()</a>, <a class="el" href="structrangetree_1_1pty.html#a9c552c46e1a8d0fad697104b44534f6f">rangetree&lt; point, data &gt;::pty::ptr</a>, <a class="el" href="classrangetree.html#a647c3c7abe1ba1c10a092296455a6d4d">rangetree&lt; point, data &gt;::resultreserve</a>, <a class="el" href="classrangetree.html#a6368e7b24d1b2a55f250049f9f100a3e">rangetree&lt; point, data &gt;::start</a>, <a class="el" href="structrangetree_1_1node.html#aefa2a49cad0fa7362c39578a9f84a806">rangetree&lt; point, data &gt;::node::ycount</a>, and <a class="el" href="structrangetree_1_1node.html#ae018e1b9e121b5f646e2563ee86fee11">rangetree&lt; point, data &gt;::node::ypoints</a>.</p>
 <div class="dynheader">
@@ -1893,12 +1846,11 @@ template&lt;class point , class data &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00667">667</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  667</span>                                               {</div>
-<div class="line"><span class="lineno">  668</span>        <span class="keywordflow">if</span> (a &lt; b)</div>
-<div class="line"><span class="lineno">  669</span>            <span class="keywordflow">return</span> a;</div>
-<div class="line"><span class="lineno">  670</span>        <span class="keywordflow">return</span> b;</div>
-<div class="line"><span class="lineno">  671</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00617">617</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  617</span>                                             {</div>
+<div class="line"><span class="lineno">  618</span>    <span class="keywordflow">if</span> (a &lt; b) <span class="keywordflow">return</span> a;</div>
+<div class="line"><span class="lineno">  619</span>    <span class="keywordflow">return</span> b;</div>
+<div class="line"><span class="lineno">  620</span>  }</div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="classrangetree.html#abcc9527530fef98d8809d961083456d1">rangetree&lt; point, data &gt;::initpools()</a>.</p>
 <div class="dynheader">
@@ -1939,10 +1891,8 @@ template&lt;class point , class data &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00244">244</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  244</span>                                 {</div>
-<div class="line"><span class="lineno">  245</span>        <span class="keywordflow">return</span> <span class="stringliteral">&quot;librangetree 1.3.1&quot;</span>;</div>
-<div class="line"><span class="lineno">  246</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00231">231</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  231</span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;librangetree 1.3.1&quot;</span>; }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1982,13 +1932,12 @@ template&lt;class point , class data &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00679">679</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  679</span>                                                               {</div>
-<div class="line"><span class="lineno">  680</span>        <span class="keywordtype">void</span> * <span class="keyword">const</span> ptr = calloc(nmemb, size);</div>
-<div class="line"><span class="lineno">  681</span>        <span class="keywordflow">if</span> (!ptr)</div>
-<div class="line"><span class="lineno">  682</span>            abort();</div>
-<div class="line"><span class="lineno">  683</span>        <span class="keywordflow">return</span> ptr;</div>
-<div class="line"><span class="lineno">  684</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00628">628</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  628</span>                                                             {</div>
+<div class="line"><span class="lineno">  629</span>    <span class="keywordtype">void</span> *<span class="keyword">const</span> ptr = calloc(nmemb, size);</div>
+<div class="line"><span class="lineno">  630</span>    <span class="keywordflow">if</span> (!ptr) abort();</div>
+<div class="line"><span class="lineno">  631</span>    <span class="keywordflow">return</span> ptr;</div>
+<div class="line"><span class="lineno">  632</span>  }</div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="classrangetree.html#abdf76dada71c1b5ae93130836fdd201b">rangetree&lt; point, data &gt;::build()</a>, <a class="el" href="classrangetree.html#a7de4fae7874bfceb1f68410d017d0445">rangetree&lt; point, data &gt;::finalize()</a>, <a class="el" href="classrangetree.html#abcc9527530fef98d8809d961083456d1">rangetree&lt; point, data &gt;::initpools()</a>, and <a class="el" href="classrangetree.html#a2dd60d801762a24ff79d467195495c01">rangetree&lt; point, data &gt;::newpty()</a>.</p>
 <div class="dynheader">
@@ -2031,7 +1980,7 @@ template&lt;class point , class data &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00707">707</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00655">655</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classrangetree.html#ade81ede5d8f36bc0e876dfc79fa7f9f9">rangetree&lt; point, data &gt;::add()</a>, <a class="el" href="classrangetree.html#ac2e09048341350397400efd2e1a185d7">rangetree&lt; point, data &gt;::count()</a>, <a class="el" href="classrangetree.html#a7de4fae7874bfceb1f68410d017d0445">rangetree&lt; point, data &gt;::finalize()</a>, and <a class="el" href="classrangetree.html#a4bb16420855f3b4e67b53e5796a0fec5">rangetree&lt; point, data &gt;::search()</a>.</p>
 
@@ -2059,7 +2008,7 @@ template&lt;class point , class data &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00706">706</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00654">654</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classrangetree.html#a49b839b80f9ca26c7138ed93dbe64af6">rangetree&lt; point, data &gt;::rangetree()</a>.</p>
 
@@ -2087,7 +2036,7 @@ template&lt;class point , class data &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00704">704</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00652">652</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classrangetree.html#ac2e09048341350397400efd2e1a185d7">rangetree&lt; point, data &gt;::count()</a>, <a class="el" href="classrangetree.html#abcc9527530fef98d8809d961083456d1">rangetree&lt; point, data &gt;::initpools()</a>, and <a class="el" href="classrangetree.html#a4bb16420855f3b4e67b53e5796a0fec5">rangetree&lt; point, data &gt;::search()</a>.</p>
 
@@ -2115,7 +2064,7 @@ template&lt;class point , class data &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00696">696</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00644">644</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classrangetree.html#abcc9527530fef98d8809d961083456d1">rangetree&lt; point, data &gt;::initpools()</a>, <a class="el" href="classrangetree.html#a30c73858fbb79f5143e7c37d4126e055">rangetree&lt; point, data &gt;::isnodepooled()</a>, <a class="el" href="classrangetree.html#ac0d24f1b1390dd0eeb54b531d7b40ba8">rangetree&lt; point, data &gt;::newnode()</a>, and <a class="el" href="classrangetree.html#a8999baa4fa1771add87b7a6137d628ba">rangetree&lt; point, data &gt;::~rangetree()</a>.</p>
 
@@ -2143,7 +2092,7 @@ template&lt;class point , class data &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00697">697</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00645">645</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classrangetree.html#abcc9527530fef98d8809d961083456d1">rangetree&lt; point, data &gt;::initpools()</a>, <a class="el" href="classrangetree.html#a30c73858fbb79f5143e7c37d4126e055">rangetree&lt; point, data &gt;::isnodepooled()</a>, and <a class="el" href="classrangetree.html#ac0d24f1b1390dd0eeb54b531d7b40ba8">rangetree&lt; point, data &gt;::newnode()</a>.</p>
 
@@ -2171,7 +2120,7 @@ template&lt;class point , class data &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00698">698</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00646">646</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classrangetree.html#abcc9527530fef98d8809d961083456d1">rangetree&lt; point, data &gt;::initpools()</a>, and <a class="el" href="classrangetree.html#ac0d24f1b1390dd0eeb54b531d7b40ba8">rangetree&lt; point, data &gt;::newnode()</a>.</p>
 
@@ -2199,7 +2148,7 @@ template&lt;class point , class data &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00700">700</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00648">648</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classrangetree.html#abcc9527530fef98d8809d961083456d1">rangetree&lt; point, data &gt;::initpools()</a>, <a class="el" href="classrangetree.html#afc3c9326f8363fe63f1e8fbd7f2ff267">rangetree&lt; point, data &gt;::isptypooled()</a>, <a class="el" href="classrangetree.html#a2dd60d801762a24ff79d467195495c01">rangetree&lt; point, data &gt;::newpty()</a>, and <a class="el" href="classrangetree.html#a8999baa4fa1771add87b7a6137d628ba">rangetree&lt; point, data &gt;::~rangetree()</a>.</p>
 
@@ -2227,7 +2176,7 @@ template&lt;class point , class data &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00701">701</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00649">649</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classrangetree.html#abcc9527530fef98d8809d961083456d1">rangetree&lt; point, data &gt;::initpools()</a>, <a class="el" href="classrangetree.html#afc3c9326f8363fe63f1e8fbd7f2ff267">rangetree&lt; point, data &gt;::isptypooled()</a>, and <a class="el" href="classrangetree.html#a2dd60d801762a24ff79d467195495c01">rangetree&lt; point, data &gt;::newpty()</a>.</p>
 
@@ -2255,7 +2204,7 @@ template&lt;class point , class data &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00702">702</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00650">650</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classrangetree.html#abcc9527530fef98d8809d961083456d1">rangetree&lt; point, data &gt;::initpools()</a>, and <a class="el" href="classrangetree.html#a2dd60d801762a24ff79d467195495c01">rangetree&lt; point, data &gt;::newpty()</a>.</p>
 
@@ -2283,7 +2232,7 @@ template&lt;class point , class data &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00706">706</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00654">654</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classrangetree.html#a4bb16420855f3b4e67b53e5796a0fec5">rangetree&lt; point, data &gt;::search()</a>.</p>
 
@@ -2311,7 +2260,7 @@ template&lt;class point , class data &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00694">694</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00642">642</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classrangetree.html#abdf76dada71c1b5ae93130836fdd201b">rangetree&lt; point, data &gt;::build()</a>, <a class="el" href="classrangetree.html#ac2e09048341350397400efd2e1a185d7">rangetree&lt; point, data &gt;::count()</a>, <a class="el" href="classrangetree.html#ac5a3f9f9fce934aa3d158a8e1213a592">rangetree&lt; point, data &gt;::nuke()</a>, and <a class="el" href="classrangetree.html#a4bb16420855f3b4e67b53e5796a0fec5">rangetree&lt; point, data &gt;::search()</a>.</p>
 
@@ -2339,7 +2288,7 @@ template&lt;class point , class data &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00692">692</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00640">640</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classrangetree.html#abdf76dada71c1b5ae93130836fdd201b">rangetree&lt; point, data &gt;::build()</a>, and <a class="el" href="classrangetree.html#a7de4fae7874bfceb1f68410d017d0445">rangetree&lt; point, data &gt;::finalize()</a>.</p>
 
@@ -2367,7 +2316,7 @@ template&lt;class point , class data &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00690">690</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00638">638</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classrangetree.html#ade81ede5d8f36bc0e876dfc79fa7f9f9">rangetree&lt; point, data &gt;::add()</a>, <a class="el" href="classrangetree.html#abdf76dada71c1b5ae93130836fdd201b">rangetree&lt; point, data &gt;::build()</a>, <a class="el" href="classrangetree.html#a7de4fae7874bfceb1f68410d017d0445">rangetree&lt; point, data &gt;::finalize()</a>, and <a class="el" href="classrangetree.html#a49b839b80f9ca26c7138ed93dbe64af6">rangetree&lt; point, data &gt;::rangetree()</a>.</p>
 
@@ -2395,7 +2344,7 @@ template&lt;class point , class data &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00691">691</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ranget_8h_source.html#l00639">639</a> of file <a class="el" href="ranget_8h_source.html">ranget.h</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classrangetree.html#ade81ede5d8f36bc0e876dfc79fa7f9f9">rangetree&lt; point, data &gt;::add()</a>, <a class="el" href="classrangetree.html#abdf76dada71c1b5ae93130836fdd201b">rangetree&lt; point, data &gt;::build()</a>, <a class="el" href="classrangetree.html#a7de4fae7874bfceb1f68410d017d0445">rangetree&lt; point, data &gt;::finalize()</a>, and <a class="el" href="classrangetree.html#a49b839b80f9ca26c7138ed93dbe64af6">rangetree&lt; point, data &gt;::rangetree()</a>.</p>
 

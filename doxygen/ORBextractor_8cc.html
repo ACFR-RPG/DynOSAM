@@ -82,33 +82,33 @@ $(function() {
   <div class="headertitle"><div class="title">ORBextractor.cc File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;opencv4/opencv2/core/core.hpp&gt;</code><br />
-<code>#include &lt;opencv4/opencv2/highgui/highgui.hpp&gt;</code><br />
-<code>#include &lt;opencv4/opencv2/features2d/features2d.hpp&gt;</code><br />
-<code>#include &lt;opencv4/opencv2/imgproc/imgproc.hpp&gt;</code><br />
-<code>#include &lt;vector&gt;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="ORBextractor_8hpp_source.html">dynosam/frontend/vision/ORBextractor.hpp</a>&quot;</code><br />
 <code>#include &lt;time.h&gt;</code><br />
 <code>#include &lt;iostream&gt;</code><br />
-<code>#include &quot;<a class="el" href="ORBextractor_8hpp_source.html">dynosam/frontend/vision/ORBextractor.hpp</a>&quot;</code><br />
+<code>#include &lt;opencv4/opencv2/core/core.hpp&gt;</code><br />
+<code>#include &lt;opencv4/opencv2/features2d/features2d.hpp&gt;</code><br />
+<code>#include &lt;opencv4/opencv2/highgui/highgui.hpp&gt;</code><br />
+<code>#include &lt;opencv4/opencv2/imgproc/imgproc.hpp&gt;</code><br />
+<code>#include &lt;vector&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for ORBextractor.cc:</div>
 <div class="dyncontent">
 <div class="center"><img src="ORBextractor_8cc__incl.png" border="0" usemap="#adynosam_2src_2frontend_2vision_2ORBextractor_8cc" alt=""/></div>
 <map name="adynosam_2src_2frontend_2vision_2ORBextractor_8cc" id="adynosam_2src_2frontend_2vision_2ORBextractor_8cc">
-<area shape="rect" title=" " alt="" coords="723,5,896,45"/>
-<area shape="rect" title=" " alt="" coords="5,93,173,133"/>
-<area shape="rect" title=" " alt="" coords="198,93,386,133"/>
-<area shape="rect" title=" " alt="" coords="411,93,621,133"/>
-<area shape="rect" title=" " alt="" coords="646,93,839,133"/>
-<area shape="rect" title=" " alt="" coords="891,189,954,214"/>
-<area shape="rect" title=" " alt="" coords="915,101,979,126"/>
-<area shape="rect" title=" " alt="" coords="1003,101,1083,126"/>
-<area shape="rect" href="ORBextractor_8hpp.html" title=" " alt="" coords="1107,93,1291,133"/>
-<area shape="rect" title=" " alt="" coords="1024,189,1067,214"/>
-<area shape="rect" title=" " alt="" coords="1091,189,1306,214"/>
-<area shape="rect" href="Macros_8hpp.html" title=" " alt="" coords="1331,181,1509,221"/>
-<area shape="rect" title=" " alt="" coords="1331,269,1408,295"/>
-<area shape="rect" title=" " alt="" coords="1432,269,1507,295"/>
+<area shape="rect" title=" " alt="" coords="691,5,864,45"/>
+<area shape="rect" href="ORBextractor_8hpp.html" title=" " alt="" coords="309,93,493,133"/>
+<area shape="rect" title=" " alt="" coords="515,189,578,214"/>
+<area shape="rect" title=" " alt="" coords="576,101,640,126"/>
+<area shape="rect" title=" " alt="" coords="664,101,744,126"/>
+<area shape="rect" title=" " alt="" coords="768,93,936,133"/>
+<area shape="rect" title=" " alt="" coords="960,93,1171,133"/>
+<area shape="rect" title=" " alt="" coords="1195,93,1383,133"/>
+<area shape="rect" title=" " alt="" coords="1407,93,1601,133"/>
+<area shape="rect" title=" " alt="" coords="5,189,48,214"/>
+<area shape="rect" title=" " alt="" coords="73,189,287,214"/>
+<area shape="rect" href="Macros_8hpp.html" title=" " alt="" coords="312,181,491,221"/>
+<area shape="rect" title=" " alt="" coords="312,269,389,295"/>
+<area shape="rect" title=" " alt="" coords="413,269,488,295"/>
 </map>
 </div>
 </div>
@@ -121,7 +121,7 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:a35931865021519a9d7a2a4d2f196e684"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ORBextractor_8cc.html#a35931865021519a9d7a2a4d2f196e684">GET_VALUE</a>(idx)&#160;&#160;&#160;  center[cvRound(pattern[idx].x * b + pattern[idx].y * a) * step + cvRound(pattern[idx].x * a - pattern[idx].y * b)]</td></tr>
+<tr class="memitem:a35931865021519a9d7a2a4d2f196e684"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ORBextractor_8cc.html#a35931865021519a9d7a2a4d2f196e684">GET_VALUE</a>(idx)</td></tr>
 <tr class="separator:a35931865021519a9d7a2a4d2f196e684"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
@@ -160,11 +160,13 @@ Variables</h2></td></tr>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname">idx</td><td>)</td>
-          <td>&#160;&#160;&#160;  center[cvRound(pattern[idx].x * b + pattern[idx].y * a) * step + cvRound(pattern[idx].x * a - pattern[idx].y * b)]</td>
+          <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-
+<b>Value:</b><div class="fragment"><div class="line">  center[cvRound(pattern[idx].x * b + pattern[idx].y * a) * step + \</div>
+<div class="line">         cvRound(pattern[idx].x * a - pattern[idx].y * b)]</div>
+</div><!-- fragment -->
 </div>
 </div>
 </div><!-- contents -->

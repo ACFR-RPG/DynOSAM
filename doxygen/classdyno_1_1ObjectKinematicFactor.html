@@ -181,11 +181,9 @@ Static Private Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ObjectKinematicFactor_8cc_source.html#l00029">29</a> of file <a class="el" href="ObjectKinematicFactor_8cc_source.html">ObjectKinematicFactor.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   31</span>  : gtsam::NoiseModelFactor3&lt;gtsam::Pose3, gtsam::Pose3, gtsam::Pose3&gt;(model, motionKey, previousObjectPoseKey,</div>
-<div class="line"><span class="lineno">   32</span>                                                                       currentObjectPoseKey)</div>
-<div class="line"><span class="lineno">   33</span>{</div>
-<div class="line"><span class="lineno">   34</span>}</div>
+<p class="definition">Definition at line <a class="el" href="ObjectKinematicFactor_8cc_source.html#l00037">37</a> of file <a class="el" href="ObjectKinematicFactor_8cc_source.html">ObjectKinematicFactor.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   41</span>    : gtsam::NoiseModelFactor3&lt;gtsam::Pose3, gtsam::Pose3, gtsam::Pose3&gt;(</div>
+<div class="line"><span class="lineno">   42</span>          model, motionKey, previousObjectPoseKey, currentObjectPoseKey) {}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -230,12 +228,12 @@ Static Private Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ObjectKinematicFactor_8cc_source.html#l00036">36</a> of file <a class="el" href="ObjectKinematicFactor_8cc_source.html">ObjectKinematicFactor.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   38</span>{</div>
-<div class="line"><span class="lineno">   39</span>  gtsam::Pose3 propogated = H_w * L_previous_world;</div>
-<div class="line"><span class="lineno">   40</span>  gtsam::Pose3 Hx = L_current_world.between(propogated);</div>
-<div class="line"><span class="lineno">   41</span>  <span class="keywordflow">return</span> gtsam::Pose3::Identity().localCoordinates(Hx);</div>
-<div class="line"><span class="lineno">   42</span>}</div>
+<p class="definition">Definition at line <a class="el" href="ObjectKinematicFactor_8cc_source.html#l00044">44</a> of file <a class="el" href="ObjectKinematicFactor_8cc_source.html">ObjectKinematicFactor.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   46</span>                                       {</div>
+<div class="line"><span class="lineno">   47</span>  gtsam::Pose3 propogated = H_w * L_previous_world;</div>
+<div class="line"><span class="lineno">   48</span>  gtsam::Pose3 Hx = L_current_world.between(propogated);</div>
+<div class="line"><span class="lineno">   49</span>  <span class="keywordflow">return</span> gtsam::Pose3::Identity().localCoordinates(Hx);</div>
+<div class="line"><span class="lineno">   50</span>}</div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1ObjectKinematicFactor.html#ab5c15f5bff29612b3c0922db74041a95">evaluateError()</a>.</p>
 <div class="dynheader">
@@ -278,7 +276,7 @@ Here is the caller graph for this function:</div>
 <div class="line"><span class="lineno">   59</span>    <span class="keywordflow">return</span> boost::static_pointer_cast&lt;gtsam::NonlinearFactor&gt;(</div>
 <div class="line"><span class="lineno">   60</span>        gtsam::NonlinearFactor::shared_ptr(<span class="keyword">new</span> <a class="code hl_function" href="classdyno_1_1ObjectKinematicFactor.html#ab8e54571eebb50bbcf52d52ee9ed0823">ObjectKinematicFactor</a>(*<span class="keyword">this</span>)));</div>
 <div class="line"><span class="lineno">   61</span>  }</div>
-<div class="ttc" id="aclassdyno_1_1ObjectKinematicFactor_html_ab8e54571eebb50bbcf52d52ee9ed0823"><div class="ttname"><a href="classdyno_1_1ObjectKinematicFactor.html#ab8e54571eebb50bbcf52d52ee9ed0823">dyno::ObjectKinematicFactor::ObjectKinematicFactor</a></div><div class="ttdeci">ObjectKinematicFactor(gtsam::Key motionKey, gtsam::Key previousObjectPoseKey, gtsam::Key currentObjectPoseKey, gtsam::SharedNoiseModel model)</div><div class="ttdef"><b>Definition:</b> <a href="ObjectKinematicFactor_8cc_source.html#l00029">ObjectKinematicFactor.cc:29</a></div></div>
+<div class="ttc" id="aclassdyno_1_1ObjectKinematicFactor_html_ab8e54571eebb50bbcf52d52ee9ed0823"><div class="ttname"><a href="classdyno_1_1ObjectKinematicFactor.html#ab8e54571eebb50bbcf52d52ee9ed0823">dyno::ObjectKinematicFactor::ObjectKinematicFactor</a></div><div class="ttdeci">ObjectKinematicFactor(gtsam::Key motionKey, gtsam::Key previousObjectPoseKey, gtsam::Key currentObjectPoseKey, gtsam::SharedNoiseModel model)</div><div class="ttdef"><b>Definition:</b> <a href="ObjectKinematicFactor_8cc_source.html#l00037">ObjectKinematicFactor.cc:37</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -340,35 +338,38 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ObjectKinematicFactor_8cc_source.html#l00044">44</a> of file <a class="el" href="ObjectKinematicFactor_8cc_source.html">ObjectKinematicFactor.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   49</span>{</div>
-<div class="line"><span class="lineno">   50</span>  <span class="keywordflow">if</span> (J1)</div>
-<div class="line"><span class="lineno">   51</span>  {</div>
-<div class="line"><span class="lineno">   52</span>    *J1 = gtsam::numericalDerivative31&lt;gtsam::Vector6, gtsam::Pose3, gtsam::Pose3, gtsam::Pose3&gt;(</div>
-<div class="line"><span class="lineno">   53</span>        std::bind(&amp;<a class="code hl_function" href="classdyno_1_1ObjectKinematicFactor.html#a5fc59e70f3e0a6805ecfed1e60f0ae65">ObjectKinematicFactor::calculateResidual</a>, std::placeholders::_1, std::placeholders::_2,</div>
-<div class="line"><span class="lineno">   54</span>                  std::placeholders::_3),</div>
-<div class="line"><span class="lineno">   55</span>        H_w, L_previous_world, L_current_world);</div>
-<div class="line"><span class="lineno">   56</span>  }</div>
-<div class="line"><span class="lineno">   57</span> </div>
-<div class="line"><span class="lineno">   58</span>  <span class="keywordflow">if</span> (J2)</div>
-<div class="line"><span class="lineno">   59</span>  {</div>
-<div class="line"><span class="lineno">   60</span>    *J2 = gtsam::numericalDerivative32&lt;gtsam::Vector6, gtsam::Pose3, gtsam::Pose3, gtsam::Pose3&gt;(</div>
-<div class="line"><span class="lineno">   61</span>        std::bind(&amp;<a class="code hl_function" href="classdyno_1_1ObjectKinematicFactor.html#a5fc59e70f3e0a6805ecfed1e60f0ae65">ObjectKinematicFactor::calculateResidual</a>, std::placeholders::_1, std::placeholders::_2,</div>
+<p class="definition">Definition at line <a class="el" href="ObjectKinematicFactor_8cc_source.html#l00052">52</a> of file <a class="el" href="ObjectKinematicFactor_8cc_source.html">ObjectKinematicFactor.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   56</span>                                          {</div>
+<div class="line"><span class="lineno">   57</span>  <span class="keywordflow">if</span> (J1) {</div>
+<div class="line"><span class="lineno">   58</span>    *J1 = gtsam::numericalDerivative31&lt;gtsam::Vector6, gtsam::Pose3,</div>
+<div class="line"><span class="lineno">   59</span>                                       gtsam::Pose3, gtsam::Pose3&gt;(</div>
+<div class="line"><span class="lineno">   60</span>        std::bind(&amp;<a class="code hl_function" href="classdyno_1_1ObjectKinematicFactor.html#a5fc59e70f3e0a6805ecfed1e60f0ae65">ObjectKinematicFactor::calculateResidual</a>,</div>
+<div class="line"><span class="lineno">   61</span>                  std::placeholders::_1, std::placeholders::_2,</div>
 <div class="line"><span class="lineno">   62</span>                  std::placeholders::_3),</div>
 <div class="line"><span class="lineno">   63</span>        H_w, L_previous_world, L_current_world);</div>
 <div class="line"><span class="lineno">   64</span>  }</div>
 <div class="line"><span class="lineno">   65</span> </div>
-<div class="line"><span class="lineno">   66</span>  <span class="keywordflow">if</span> (J3)</div>
-<div class="line"><span class="lineno">   67</span>  {</div>
-<div class="line"><span class="lineno">   68</span>    *J3 = gtsam::numericalDerivative33&lt;gtsam::Vector6, gtsam::Pose3, gtsam::Pose3, gtsam::Pose3&gt;(</div>
-<div class="line"><span class="lineno">   69</span>        std::bind(&amp;<a class="code hl_function" href="classdyno_1_1ObjectKinematicFactor.html#a5fc59e70f3e0a6805ecfed1e60f0ae65">ObjectKinematicFactor::calculateResidual</a>, std::placeholders::_1, std::placeholders::_2,</div>
-<div class="line"><span class="lineno">   70</span>                  std::placeholders::_3),</div>
-<div class="line"><span class="lineno">   71</span>        H_w, L_previous_world, L_current_world);</div>
-<div class="line"><span class="lineno">   72</span>  }</div>
-<div class="line"><span class="lineno">   73</span> </div>
-<div class="line"><span class="lineno">   74</span>  <span class="keywordflow">return</span> <a class="code hl_function" href="classdyno_1_1ObjectKinematicFactor.html#a5fc59e70f3e0a6805ecfed1e60f0ae65">calculateResidual</a>(H_w, L_previous_world, L_current_world);</div>
-<div class="line"><span class="lineno">   75</span>}</div>
-<div class="ttc" id="aclassdyno_1_1ObjectKinematicFactor_html_a5fc59e70f3e0a6805ecfed1e60f0ae65"><div class="ttname"><a href="classdyno_1_1ObjectKinematicFactor.html#a5fc59e70f3e0a6805ecfed1e60f0ae65">dyno::ObjectKinematicFactor::calculateResidual</a></div><div class="ttdeci">static gtsam::Vector6 calculateResidual(const gtsam::Pose3 &amp;H_w, const gtsam::Pose3 &amp;L_previous_world, const gtsam::Pose3 &amp;L_current_world)</div><div class="ttdef"><b>Definition:</b> <a href="ObjectKinematicFactor_8cc_source.html#l00036">ObjectKinematicFactor.cc:36</a></div></div>
+<div class="line"><span class="lineno">   66</span>  <span class="keywordflow">if</span> (J2) {</div>
+<div class="line"><span class="lineno">   67</span>    *J2 = gtsam::numericalDerivative32&lt;gtsam::Vector6, gtsam::Pose3,</div>
+<div class="line"><span class="lineno">   68</span>                                       gtsam::Pose3, gtsam::Pose3&gt;(</div>
+<div class="line"><span class="lineno">   69</span>        std::bind(&amp;<a class="code hl_function" href="classdyno_1_1ObjectKinematicFactor.html#a5fc59e70f3e0a6805ecfed1e60f0ae65">ObjectKinematicFactor::calculateResidual</a>,</div>
+<div class="line"><span class="lineno">   70</span>                  std::placeholders::_1, std::placeholders::_2,</div>
+<div class="line"><span class="lineno">   71</span>                  std::placeholders::_3),</div>
+<div class="line"><span class="lineno">   72</span>        H_w, L_previous_world, L_current_world);</div>
+<div class="line"><span class="lineno">   73</span>  }</div>
+<div class="line"><span class="lineno">   74</span> </div>
+<div class="line"><span class="lineno">   75</span>  <span class="keywordflow">if</span> (J3) {</div>
+<div class="line"><span class="lineno">   76</span>    *J3 = gtsam::numericalDerivative33&lt;gtsam::Vector6, gtsam::Pose3,</div>
+<div class="line"><span class="lineno">   77</span>                                       gtsam::Pose3, gtsam::Pose3&gt;(</div>
+<div class="line"><span class="lineno">   78</span>        std::bind(&amp;<a class="code hl_function" href="classdyno_1_1ObjectKinematicFactor.html#a5fc59e70f3e0a6805ecfed1e60f0ae65">ObjectKinematicFactor::calculateResidual</a>,</div>
+<div class="line"><span class="lineno">   79</span>                  std::placeholders::_1, std::placeholders::_2,</div>
+<div class="line"><span class="lineno">   80</span>                  std::placeholders::_3),</div>
+<div class="line"><span class="lineno">   81</span>        H_w, L_previous_world, L_current_world);</div>
+<div class="line"><span class="lineno">   82</span>  }</div>
+<div class="line"><span class="lineno">   83</span> </div>
+<div class="line"><span class="lineno">   84</span>  <span class="keywordflow">return</span> <a class="code hl_function" href="classdyno_1_1ObjectKinematicFactor.html#a5fc59e70f3e0a6805ecfed1e60f0ae65">calculateResidual</a>(H_w, L_previous_world, L_current_world);</div>
+<div class="line"><span class="lineno">   85</span>}</div>
+<div class="ttc" id="aclassdyno_1_1ObjectKinematicFactor_html_a5fc59e70f3e0a6805ecfed1e60f0ae65"><div class="ttname"><a href="classdyno_1_1ObjectKinematicFactor.html#a5fc59e70f3e0a6805ecfed1e60f0ae65">dyno::ObjectKinematicFactor::calculateResidual</a></div><div class="ttdeci">static gtsam::Vector6 calculateResidual(const gtsam::Pose3 &amp;H_w, const gtsam::Pose3 &amp;L_previous_world, const gtsam::Pose3 &amp;L_current_world)</div><div class="ttdef"><b>Definition:</b> <a href="ObjectKinematicFactor_8cc_source.html#l00044">ObjectKinematicFactor.cc:44</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1ObjectKinematicFactor.html#a5fc59e70f3e0a6805ecfed1e60f0ae65">calculateResidual()</a>.</p>
 <div class="dynheader">

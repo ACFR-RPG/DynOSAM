@@ -132,7 +132,7 @@ Public Member Functions</h2></td></tr>
 <div class="textblock"><p>Implements the landmark motion factor that models the displacement of a tracked point, i, on a rigid body, j with the absolute motion H. </p>
 <p>Cost resdidual is defined as: ^wm_k - ^w_{k-1}H_k * ^wm_{k-1} </p>
 
-<p class="definition">Definition at line <a class="el" href="LandmarkMotionTernaryFactor_8hpp_source.html#l00042">42</a> of file <a class="el" href="LandmarkMotionTernaryFactor_8hpp_source.html">LandmarkMotionTernaryFactor.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LandmarkMotionTernaryFactor_8hpp_source.html#l00048">48</a> of file <a class="el" href="LandmarkMotionTernaryFactor_8hpp_source.html">LandmarkMotionTernaryFactor.hpp</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="ad61134899a256b76ff3e23fd26fb191b" name="ad61134899a256b76ff3e23fd26fb191b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad61134899a256b76ff3e23fd26fb191b">&#9670;&#160;</a></span>shared_ptr</h2>
@@ -146,7 +146,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LandmarkMotionTernaryFactor_8hpp_source.html#l00045">45</a> of file <a class="el" href="LandmarkMotionTernaryFactor_8hpp_source.html">LandmarkMotionTernaryFactor.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LandmarkMotionTernaryFactor_8hpp_source.html#l00052">52</a> of file <a class="el" href="LandmarkMotionTernaryFactor_8hpp_source.html">LandmarkMotionTernaryFactor.hpp</a>.</p>
 
 </div>
 </div>
@@ -162,7 +162,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LandmarkMotionTernaryFactor_8hpp_source.html#l00046">46</a> of file <a class="el" href="LandmarkMotionTernaryFactor_8hpp_source.html">LandmarkMotionTernaryFactor.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LandmarkMotionTernaryFactor_8hpp_source.html#l00053">53</a> of file <a class="el" href="LandmarkMotionTernaryFactor_8hpp_source.html">LandmarkMotionTernaryFactor.hpp</a>.</p>
 
 </div>
 </div>
@@ -216,11 +216,9 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="LandmarkMotionTernaryFactor_8cc_source.html#l00029">29</a> of file <a class="el" href="LandmarkMotionTernaryFactor_8cc_source.html">LandmarkMotionTernaryFactor.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   32</span>  : gtsam::NoiseModelFactor3&lt;gtsam::Point3, gtsam::Point3, gtsam::Pose3&gt;(model, previousPointKey, currentPointKey,</div>
-<div class="line"><span class="lineno">   33</span>                                                                         motionKey)</div>
-<div class="line"><span class="lineno">   34</span>{</div>
-<div class="line"><span class="lineno">   35</span>}</div>
+<p class="definition">Definition at line <a class="el" href="LandmarkMotionTernaryFactor_8cc_source.html#l00035">35</a> of file <a class="el" href="LandmarkMotionTernaryFactor_8cc_source.html">LandmarkMotionTernaryFactor.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   38</span>    : gtsam::NoiseModelFactor3&lt;gtsam::Point3, gtsam::Point3, gtsam::Pose3&gt;(</div>
+<div class="line"><span class="lineno">   39</span>          model, previousPointKey, currentPointKey, motionKey) {}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -248,11 +246,12 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LandmarkMotionTernaryFactor_8hpp_source.html#l00059">59</a> of file <a class="el" href="LandmarkMotionTernaryFactor_8hpp_source.html">LandmarkMotionTernaryFactor.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   60</span>  {</div>
-<div class="line"><span class="lineno">   61</span>    <span class="keywordflow">return</span> boost::static_pointer_cast&lt;gtsam::NonlinearFactor&gt;(gtsam::NonlinearFactor::shared_ptr(<span class="keyword">new</span> <a class="code hl_typedef" href="classdyno_1_1LandmarkMotionTernaryFactor.html#aab32b6a754505511d5ae899408d062a1">This</a>(*<span class="keyword">this</span>)));</div>
-<div class="line"><span class="lineno">   62</span>  }</div>
-<div class="ttc" id="aclassdyno_1_1LandmarkMotionTernaryFactor_html_aab32b6a754505511d5ae899408d062a1"><div class="ttname"><a href="classdyno_1_1LandmarkMotionTernaryFactor.html#aab32b6a754505511d5ae899408d062a1">dyno::LandmarkMotionTernaryFactor::This</a></div><div class="ttdeci">LandmarkMotionTernaryFactor This</div><div class="ttdef"><b>Definition:</b> <a href="LandmarkMotionTernaryFactor_8hpp_source.html#l00046">LandmarkMotionTernaryFactor.hpp:46</a></div></div>
+<p class="definition">Definition at line <a class="el" href="LandmarkMotionTernaryFactor_8hpp_source.html#l00067">67</a> of file <a class="el" href="LandmarkMotionTernaryFactor_8hpp_source.html">LandmarkMotionTernaryFactor.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   67</span>                                                        {</div>
+<div class="line"><span class="lineno">   68</span>    <span class="keywordflow">return</span> boost::static_pointer_cast&lt;gtsam::NonlinearFactor&gt;(</div>
+<div class="line"><span class="lineno">   69</span>        gtsam::NonlinearFactor::shared_ptr(<span class="keyword">new</span> <a class="code hl_typedef" href="classdyno_1_1LandmarkMotionTernaryFactor.html#aab32b6a754505511d5ae899408d062a1">This</a>(*<span class="keyword">this</span>)));</div>
+<div class="line"><span class="lineno">   70</span>  }</div>
+<div class="ttc" id="aclassdyno_1_1LandmarkMotionTernaryFactor_html_aab32b6a754505511d5ae899408d062a1"><div class="ttname"><a href="classdyno_1_1LandmarkMotionTernaryFactor.html#aab32b6a754505511d5ae899408d062a1">dyno::LandmarkMotionTernaryFactor::This</a></div><div class="ttdeci">LandmarkMotionTernaryFactor This</div><div class="ttdef"><b>Definition:</b> <a href="LandmarkMotionTernaryFactor_8hpp_source.html#l00053">LandmarkMotionTernaryFactor.hpp:53</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -279,10 +278,8 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LandmarkMotionTernaryFactor_8hpp_source.html#l00074">74</a> of file <a class="el" href="LandmarkMotionTernaryFactor_8hpp_source.html">LandmarkMotionTernaryFactor.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   75</span>  {</div>
-<div class="line"><span class="lineno">   76</span>    <span class="keywordflow">return</span> key2();</div>
-<div class="line"><span class="lineno">   77</span>  }</div>
+<p class="definition">Definition at line <a class="el" href="LandmarkMotionTernaryFactor_8hpp_source.html#l00079">79</a> of file <a class="el" href="LandmarkMotionTernaryFactor_8hpp_source.html">LandmarkMotionTernaryFactor.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   79</span>{ <span class="keywordflow">return</span> key2(); }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -344,39 +341,37 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LandmarkMotionTernaryFactor_8cc_source.html#l00037">37</a> of file <a class="el" href="LandmarkMotionTernaryFactor_8cc_source.html">LandmarkMotionTernaryFactor.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   42</span>{</div>
-<div class="line"><span class="lineno">   43</span>  gtsam::Vector3 l2H = <a class="code hl_function" href="namespacedyno.html#a362927fda6438780973f55111b77455c">H</a>.inverse() * currentPoint;</div>
-<div class="line"><span class="lineno">   44</span>  gtsam::Vector3 expected = previousPoint - l2H;</div>
-<div class="line"><span class="lineno">   45</span> </div>
-<div class="line"><span class="lineno">   46</span>  <span class="keywordflow">if</span> (J1)</div>
-<div class="line"><span class="lineno">   47</span>  {</div>
-<div class="line"><span class="lineno">   48</span>    *J1 = (gtsam::Matrix33() &lt;&lt; 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0).finished();</div>
-<div class="line"><span class="lineno">   49</span>  }</div>
-<div class="line"><span class="lineno">   50</span> </div>
-<div class="line"><span class="lineno">   51</span>  <span class="keywordflow">if</span> (J2)</div>
-<div class="line"><span class="lineno">   52</span>  {</div>
-<div class="line"><span class="lineno">   53</span>    *J2 = -<a class="code hl_function" href="namespacedyno.html#a362927fda6438780973f55111b77455c">H</a>.inverse().rotation().matrix();</div>
-<div class="line"><span class="lineno">   54</span>  }</div>
-<div class="line"><span class="lineno">   55</span> </div>
-<div class="line"><span class="lineno">   56</span>  <span class="keywordflow">if</span> (J3)</div>
-<div class="line"><span class="lineno">   57</span>  {</div>
-<div class="line"><span class="lineno">   58</span>    Eigen::Matrix&lt;double, 3, 6, Eigen::ColMajor&gt; J;</div>
-<div class="line"><span class="lineno">   59</span>    J.fill(0);</div>
-<div class="line"><span class="lineno">   60</span>    J.block&lt;3, 3&gt;(0, 3) = gtsam::Matrix33::Identity();</div>
-<div class="line"><span class="lineno">   61</span>    gtsam::Vector3 invHl2 = <a class="code hl_function" href="namespacedyno.html#a362927fda6438780973f55111b77455c">H</a>.inverse() * currentPoint;</div>
-<div class="line"><span class="lineno">   62</span>    J(0, 1) = invHl2(2);</div>
-<div class="line"><span class="lineno">   63</span>    J(0, 2) = -invHl2(1);</div>
-<div class="line"><span class="lineno">   64</span>    J(1, 0) = -invHl2(2);</div>
-<div class="line"><span class="lineno">   65</span>    J(1, 2) = invHl2(0);</div>
-<div class="line"><span class="lineno">   66</span>    J(2, 0) = invHl2(1);</div>
-<div class="line"><span class="lineno">   67</span>    J(2, 1) = -invHl2(0);</div>
-<div class="line"><span class="lineno">   68</span>    *J3 = J;</div>
-<div class="line"><span class="lineno">   69</span>  }</div>
-<div class="line"><span class="lineno">   70</span> </div>
-<div class="line"><span class="lineno">   71</span>  <span class="comment">// return error vector</span></div>
-<div class="line"><span class="lineno">   72</span>  <span class="keywordflow">return</span> expected;</div>
-<div class="line"><span class="lineno">   73</span>}</div>
+<p class="definition">Definition at line <a class="el" href="LandmarkMotionTernaryFactor_8cc_source.html#l00041">41</a> of file <a class="el" href="LandmarkMotionTernaryFactor_8cc_source.html">LandmarkMotionTernaryFactor.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   45</span>                                          {</div>
+<div class="line"><span class="lineno">   46</span>  gtsam::Vector3 l2H = <a class="code hl_function" href="namespacedyno.html#a362927fda6438780973f55111b77455c">H</a>.inverse() * currentPoint;</div>
+<div class="line"><span class="lineno">   47</span>  gtsam::Vector3 expected = previousPoint - l2H;</div>
+<div class="line"><span class="lineno">   48</span> </div>
+<div class="line"><span class="lineno">   49</span>  <span class="keywordflow">if</span> (J1) {</div>
+<div class="line"><span class="lineno">   50</span>    *J1 = (gtsam::Matrix33() &lt;&lt; 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0)</div>
+<div class="line"><span class="lineno">   51</span>              .finished();</div>
+<div class="line"><span class="lineno">   52</span>  }</div>
+<div class="line"><span class="lineno">   53</span> </div>
+<div class="line"><span class="lineno">   54</span>  <span class="keywordflow">if</span> (J2) {</div>
+<div class="line"><span class="lineno">   55</span>    *J2 = -<a class="code hl_function" href="namespacedyno.html#a362927fda6438780973f55111b77455c">H</a>.inverse().rotation().matrix();</div>
+<div class="line"><span class="lineno">   56</span>  }</div>
+<div class="line"><span class="lineno">   57</span> </div>
+<div class="line"><span class="lineno">   58</span>  <span class="keywordflow">if</span> (J3) {</div>
+<div class="line"><span class="lineno">   59</span>    Eigen::Matrix&lt;double, 3, 6, Eigen::ColMajor&gt; J;</div>
+<div class="line"><span class="lineno">   60</span>    J.fill(0);</div>
+<div class="line"><span class="lineno">   61</span>    J.block&lt;3, 3&gt;(0, 3) = gtsam::Matrix33::Identity();</div>
+<div class="line"><span class="lineno">   62</span>    gtsam::Vector3 invHl2 = <a class="code hl_function" href="namespacedyno.html#a362927fda6438780973f55111b77455c">H</a>.inverse() * currentPoint;</div>
+<div class="line"><span class="lineno">   63</span>    J(0, 1) = invHl2(2);</div>
+<div class="line"><span class="lineno">   64</span>    J(0, 2) = -invHl2(1);</div>
+<div class="line"><span class="lineno">   65</span>    J(1, 0) = -invHl2(2);</div>
+<div class="line"><span class="lineno">   66</span>    J(1, 2) = invHl2(0);</div>
+<div class="line"><span class="lineno">   67</span>    J(2, 0) = invHl2(1);</div>
+<div class="line"><span class="lineno">   68</span>    J(2, 1) = -invHl2(0);</div>
+<div class="line"><span class="lineno">   69</span>    *J3 = J;</div>
+<div class="line"><span class="lineno">   70</span>  }</div>
+<div class="line"><span class="lineno">   71</span> </div>
+<div class="line"><span class="lineno">   72</span>  <span class="comment">// return error vector</span></div>
+<div class="line"><span class="lineno">   73</span>  <span class="keywordflow">return</span> expected;</div>
+<div class="line"><span class="lineno">   74</span>}</div>
 <div class="ttc" id="anamespacedyno_html_a362927fda6438780973f55111b77455c"><div class="ttname"><a href="namespacedyno.html#a362927fda6438780973f55111b77455c">dyno::H</a></div><div class="ttdeci">gtsam::Key H(unsigned char label, std::uint64_t j)</div><div class="ttdef"><b>Definition:</b> <a href="Symbols_8hpp_source.html#l00126">Symbols.hpp:126</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="namespacedyno.html#a362927fda6438780973f55111b77455c">dyno::H()</a>.</p>
@@ -415,10 +410,8 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LandmarkMotionTernaryFactor_8hpp_source.html#l00078">78</a> of file <a class="el" href="LandmarkMotionTernaryFactor_8hpp_source.html">LandmarkMotionTernaryFactor.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   79</span>  {</div>
-<div class="line"><span class="lineno">   80</span>    <span class="keywordflow">return</span> key3();</div>
-<div class="line"><span class="lineno">   81</span>  }</div>
+<p class="definition">Definition at line <a class="el" href="LandmarkMotionTernaryFactor_8hpp_source.html#l00080">80</a> of file <a class="el" href="LandmarkMotionTernaryFactor_8hpp_source.html">LandmarkMotionTernaryFactor.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   80</span>{ <span class="keywordflow">return</span> key3(); }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -445,10 +438,8 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LandmarkMotionTernaryFactor_8hpp_source.html#l00070">70</a> of file <a class="el" href="LandmarkMotionTernaryFactor_8hpp_source.html">LandmarkMotionTernaryFactor.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   71</span>  {</div>
-<div class="line"><span class="lineno">   72</span>    <span class="keywordflow">return</span> key1();</div>
-<div class="line"><span class="lineno">   73</span>  }</div>
+<p class="definition">Definition at line <a class="el" href="LandmarkMotionTernaryFactor_8hpp_source.html#l00078">78</a> of file <a class="el" href="LandmarkMotionTernaryFactor_8hpp_source.html">LandmarkMotionTernaryFactor.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   78</span>{ <span class="keywordflow">return</span> key1(); }</div>
 </div><!-- fragment -->
 </div>
 </div>

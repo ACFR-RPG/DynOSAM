@@ -2695,7 +2695,7 @@ template&lt;typename RefType , typename CurType &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Visualizer-Definitions_8hpp_source.html#l00044">44</a> of file <a class="el" href="Visualizer-Definitions_8hpp_source.html">Visualizer-Definitions.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Visualizer-Definitions_8hpp_source.html#l00050">50</a> of file <a class="el" href="Visualizer-Definitions_8hpp_source.html">Visualizer-Definitions.hpp</a>.</p>
 
 </div>
 </div>
@@ -5794,14 +5794,15 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ORBextractor_8cc_source.html#l01028">1028</a> of file <a class="el" href="ORBextractor_8cc_source.html">ORBextractor.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno"> 1030</span>{</div>
-<div class="line"><span class="lineno"> 1031</span>  descriptors = Mat::zeros((<span class="keywordtype">int</span>)keypoints.size(), 32, CV_8UC1);</div>
-<div class="line"><span class="lineno"> 1032</span> </div>
-<div class="line"><span class="lineno"> 1033</span>  <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; keypoints.size(); i++)</div>
-<div class="line"><span class="lineno"> 1034</span>    <a class="code hl_function" href="namespacedyno.html#a8d58bba01ea8e41c041db049bade7145">computeOrbDescriptor</a>(keypoints[i], image, &amp;pattern[0], descriptors.ptr((<span class="keywordtype">int</span>)i));</div>
-<div class="line"><span class="lineno"> 1035</span>}</div>
-<div class="ttc" id="anamespacedyno_html_a8d58bba01ea8e41c041db049bade7145"><div class="ttname"><a href="namespacedyno.html#a8d58bba01ea8e41c041db049bade7145">dyno::computeOrbDescriptor</a></div><div class="ttdeci">static void computeOrbDescriptor(const KeyPoint &amp;kpt, const Mat &amp;img, const Point *pattern, uchar *desc)</div><div class="ttdef"><b>Definition:</b> <a href="ORBextractor_8cc_source.html#l00115">ORBextractor.cc:115</a></div></div>
+<p class="definition">Definition at line <a class="el" href="ORBextractor_8cc_source.html#l00974">974</a> of file <a class="el" href="ORBextractor_8cc_source.html">ORBextractor.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  975</span>                                                                               {</div>
+<div class="line"><span class="lineno">  976</span>  descriptors = Mat::zeros((<span class="keywordtype">int</span>)keypoints.size(), 32, CV_8UC1);</div>
+<div class="line"><span class="lineno">  977</span> </div>
+<div class="line"><span class="lineno">  978</span>  <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; keypoints.size(); i++)</div>
+<div class="line"><span class="lineno">  979</span>    <a class="code hl_function" href="namespacedyno.html#a8d58bba01ea8e41c041db049bade7145">computeOrbDescriptor</a>(keypoints[i], image, &amp;pattern[0],</div>
+<div class="line"><span class="lineno">  980</span>                         descriptors.ptr((<span class="keywordtype">int</span>)i));</div>
+<div class="line"><span class="lineno">  981</span>}</div>
+<div class="ttc" id="anamespacedyno_html_a8d58bba01ea8e41c041db049bade7145"><div class="ttname"><a href="namespacedyno.html#a8d58bba01ea8e41c041db049bade7145">dyno::computeOrbDescriptor</a></div><div class="ttdeci">static void computeOrbDescriptor(const KeyPoint &amp;kpt, const Mat &amp;img, const Point *pattern, uchar *desc)</div><div class="ttdef"><b>Definition:</b> <a href="ORBextractor_8cc_source.html#l00120">ORBextractor.cc:120</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="namespacedyno.html#a8d58bba01ea8e41c041db049bade7145">computeOrbDescriptor()</a>.</p>
 <div class="dynheader">
@@ -5950,50 +5951,50 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ORBextractor_8cc_source.html#l00115">115</a> of file <a class="el" href="ORBextractor_8cc_source.html">ORBextractor.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  116</span>{</div>
-<div class="line"><span class="lineno">  117</span>  <span class="keywordtype">float</span> angle = (float)kpt.angle * factorPI;</div>
-<div class="line"><span class="lineno">  118</span>  <span class="keywordtype">float</span> a = (<span class="keywordtype">float</span>)cos(angle), b = (float)sin(angle);</div>
-<div class="line"><span class="lineno">  119</span> </div>
-<div class="line"><span class="lineno">  120</span>  <span class="keyword">const</span> uchar* center = &amp;img.at&lt;uchar&gt;(cvRound(kpt.pt.y), cvRound(kpt.pt.x));</div>
-<div class="line"><span class="lineno">  121</span>  <span class="keyword">const</span> <span class="keywordtype">int</span> step = (int)img.step;</div>
-<div class="line"><span class="lineno">  122</span> </div>
-<div class="line"><span class="lineno">  123</span>#define <a class="code hl_define" href="ORBextractor_8cc.html#a35931865021519a9d7a2a4d2f196e684">GET_VALUE</a>(idx)                                                                                                 \</div>
-<div class="line"><span class="lineno">  124</span>  center[cvRound(pattern[idx].x * b + pattern[idx].y * a) * step + cvRound(pattern[idx].x * a - pattern[idx].y * b)]</div>
-<div class="line"><span class="lineno">  125</span> </div>
-<div class="line"><span class="lineno">  126</span>  <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; 32; ++i, pattern += 16)</div>
-<div class="line"><span class="lineno">  127</span>  {</div>
-<div class="line"><span class="lineno">  128</span>    <span class="keywordtype">int</span> t0, t1, val;</div>
-<div class="line"><span class="lineno">  129</span>    t0 = <a class="code hl_define" href="ORBextractor_8cc.html#a35931865021519a9d7a2a4d2f196e684">GET_VALUE</a>(0);</div>
-<div class="line"><span class="lineno">  130</span>    t1 = <a class="code hl_define" href="ORBextractor_8cc.html#a35931865021519a9d7a2a4d2f196e684">GET_VALUE</a>(1);</div>
-<div class="line"><span class="lineno">  131</span>    val = t0 &lt; t1;</div>
-<div class="line"><span class="lineno">  132</span>    t0 = <a class="code hl_define" href="ORBextractor_8cc.html#a35931865021519a9d7a2a4d2f196e684">GET_VALUE</a>(2);</div>
-<div class="line"><span class="lineno">  133</span>    t1 = <a class="code hl_define" href="ORBextractor_8cc.html#a35931865021519a9d7a2a4d2f196e684">GET_VALUE</a>(3);</div>
-<div class="line"><span class="lineno">  134</span>    val |= (t0 &lt; t1) &lt;&lt; 1;</div>
-<div class="line"><span class="lineno">  135</span>    t0 = <a class="code hl_define" href="ORBextractor_8cc.html#a35931865021519a9d7a2a4d2f196e684">GET_VALUE</a>(4);</div>
-<div class="line"><span class="lineno">  136</span>    t1 = <a class="code hl_define" href="ORBextractor_8cc.html#a35931865021519a9d7a2a4d2f196e684">GET_VALUE</a>(5);</div>
-<div class="line"><span class="lineno">  137</span>    val |= (t0 &lt; t1) &lt;&lt; 2;</div>
-<div class="line"><span class="lineno">  138</span>    t0 = <a class="code hl_define" href="ORBextractor_8cc.html#a35931865021519a9d7a2a4d2f196e684">GET_VALUE</a>(6);</div>
-<div class="line"><span class="lineno">  139</span>    t1 = <a class="code hl_define" href="ORBextractor_8cc.html#a35931865021519a9d7a2a4d2f196e684">GET_VALUE</a>(7);</div>
-<div class="line"><span class="lineno">  140</span>    val |= (t0 &lt; t1) &lt;&lt; 3;</div>
-<div class="line"><span class="lineno">  141</span>    t0 = <a class="code hl_define" href="ORBextractor_8cc.html#a35931865021519a9d7a2a4d2f196e684">GET_VALUE</a>(8);</div>
-<div class="line"><span class="lineno">  142</span>    t1 = <a class="code hl_define" href="ORBextractor_8cc.html#a35931865021519a9d7a2a4d2f196e684">GET_VALUE</a>(9);</div>
-<div class="line"><span class="lineno">  143</span>    val |= (t0 &lt; t1) &lt;&lt; 4;</div>
-<div class="line"><span class="lineno">  144</span>    t0 = <a class="code hl_define" href="ORBextractor_8cc.html#a35931865021519a9d7a2a4d2f196e684">GET_VALUE</a>(10);</div>
-<div class="line"><span class="lineno">  145</span>    t1 = <a class="code hl_define" href="ORBextractor_8cc.html#a35931865021519a9d7a2a4d2f196e684">GET_VALUE</a>(11);</div>
-<div class="line"><span class="lineno">  146</span>    val |= (t0 &lt; t1) &lt;&lt; 5;</div>
-<div class="line"><span class="lineno">  147</span>    t0 = <a class="code hl_define" href="ORBextractor_8cc.html#a35931865021519a9d7a2a4d2f196e684">GET_VALUE</a>(12);</div>
-<div class="line"><span class="lineno">  148</span>    t1 = <a class="code hl_define" href="ORBextractor_8cc.html#a35931865021519a9d7a2a4d2f196e684">GET_VALUE</a>(13);</div>
-<div class="line"><span class="lineno">  149</span>    val |= (t0 &lt; t1) &lt;&lt; 6;</div>
-<div class="line"><span class="lineno">  150</span>    t0 = <a class="code hl_define" href="ORBextractor_8cc.html#a35931865021519a9d7a2a4d2f196e684">GET_VALUE</a>(14);</div>
-<div class="line"><span class="lineno">  151</span>    t1 = <a class="code hl_define" href="ORBextractor_8cc.html#a35931865021519a9d7a2a4d2f196e684">GET_VALUE</a>(15);</div>
-<div class="line"><span class="lineno">  152</span>    val |= (t0 &lt; t1) &lt;&lt; 7;</div>
-<div class="line"><span class="lineno">  153</span> </div>
-<div class="line"><span class="lineno">  154</span>    desc[i] = (uchar)val;</div>
-<div class="line"><span class="lineno">  155</span>  }</div>
-<div class="line"><span class="lineno">  156</span> </div>
-<div class="line"><span class="lineno">  157</span><span class="preprocessor">#undef GET_VALUE</span></div>
-<div class="line"><span class="lineno">  158</span>}</div>
+<p class="definition">Definition at line <a class="el" href="ORBextractor_8cc_source.html#l00120">120</a> of file <a class="el" href="ORBextractor_8cc_source.html">ORBextractor.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  121</span>                                                                    {</div>
+<div class="line"><span class="lineno">  122</span>  <span class="keywordtype">float</span> angle = (float)kpt.angle * factorPI;</div>
+<div class="line"><span class="lineno">  123</span>  <span class="keywordtype">float</span> a = (<span class="keywordtype">float</span>)cos(angle), b = (float)sin(angle);</div>
+<div class="line"><span class="lineno">  124</span> </div>
+<div class="line"><span class="lineno">  125</span>  <span class="keyword">const</span> uchar* center = &amp;img.at&lt;uchar&gt;(cvRound(kpt.pt.y), cvRound(kpt.pt.x));</div>
+<div class="line"><span class="lineno">  126</span>  <span class="keyword">const</span> <span class="keywordtype">int</span> step = (int)img.step;</div>
+<div class="line"><span class="lineno">  127</span> </div>
+<div class="line"><span class="lineno">  128</span>#define <a class="code hl_define" href="ORBextractor_8cc.html#a35931865021519a9d7a2a4d2f196e684">GET_VALUE</a>(idx)                                             \</div>
+<div class="line"><span class="lineno">  129</span>  center[cvRound(pattern[idx].x * b + pattern[idx].y * a) * step + \</div>
+<div class="line"><span class="lineno">  130</span>         cvRound(pattern[idx].x * a - pattern[idx].y * b)]</div>
+<div class="line"><span class="lineno">  131</span> </div>
+<div class="line"><span class="lineno">  132</span>  <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; 32; ++i, pattern += 16) {</div>
+<div class="line"><span class="lineno">  133</span>    <span class="keywordtype">int</span> t0, t1, val;</div>
+<div class="line"><span class="lineno">  134</span>    t0 = <a class="code hl_define" href="ORBextractor_8cc.html#a35931865021519a9d7a2a4d2f196e684">GET_VALUE</a>(0);</div>
+<div class="line"><span class="lineno">  135</span>    t1 = <a class="code hl_define" href="ORBextractor_8cc.html#a35931865021519a9d7a2a4d2f196e684">GET_VALUE</a>(1);</div>
+<div class="line"><span class="lineno">  136</span>    val = t0 &lt; t1;</div>
+<div class="line"><span class="lineno">  137</span>    t0 = <a class="code hl_define" href="ORBextractor_8cc.html#a35931865021519a9d7a2a4d2f196e684">GET_VALUE</a>(2);</div>
+<div class="line"><span class="lineno">  138</span>    t1 = <a class="code hl_define" href="ORBextractor_8cc.html#a35931865021519a9d7a2a4d2f196e684">GET_VALUE</a>(3);</div>
+<div class="line"><span class="lineno">  139</span>    val |= (t0 &lt; t1) &lt;&lt; 1;</div>
+<div class="line"><span class="lineno">  140</span>    t0 = <a class="code hl_define" href="ORBextractor_8cc.html#a35931865021519a9d7a2a4d2f196e684">GET_VALUE</a>(4);</div>
+<div class="line"><span class="lineno">  141</span>    t1 = <a class="code hl_define" href="ORBextractor_8cc.html#a35931865021519a9d7a2a4d2f196e684">GET_VALUE</a>(5);</div>
+<div class="line"><span class="lineno">  142</span>    val |= (t0 &lt; t1) &lt;&lt; 2;</div>
+<div class="line"><span class="lineno">  143</span>    t0 = <a class="code hl_define" href="ORBextractor_8cc.html#a35931865021519a9d7a2a4d2f196e684">GET_VALUE</a>(6);</div>
+<div class="line"><span class="lineno">  144</span>    t1 = <a class="code hl_define" href="ORBextractor_8cc.html#a35931865021519a9d7a2a4d2f196e684">GET_VALUE</a>(7);</div>
+<div class="line"><span class="lineno">  145</span>    val |= (t0 &lt; t1) &lt;&lt; 3;</div>
+<div class="line"><span class="lineno">  146</span>    t0 = <a class="code hl_define" href="ORBextractor_8cc.html#a35931865021519a9d7a2a4d2f196e684">GET_VALUE</a>(8);</div>
+<div class="line"><span class="lineno">  147</span>    t1 = <a class="code hl_define" href="ORBextractor_8cc.html#a35931865021519a9d7a2a4d2f196e684">GET_VALUE</a>(9);</div>
+<div class="line"><span class="lineno">  148</span>    val |= (t0 &lt; t1) &lt;&lt; 4;</div>
+<div class="line"><span class="lineno">  149</span>    t0 = <a class="code hl_define" href="ORBextractor_8cc.html#a35931865021519a9d7a2a4d2f196e684">GET_VALUE</a>(10);</div>
+<div class="line"><span class="lineno">  150</span>    t1 = <a class="code hl_define" href="ORBextractor_8cc.html#a35931865021519a9d7a2a4d2f196e684">GET_VALUE</a>(11);</div>
+<div class="line"><span class="lineno">  151</span>    val |= (t0 &lt; t1) &lt;&lt; 5;</div>
+<div class="line"><span class="lineno">  152</span>    t0 = <a class="code hl_define" href="ORBextractor_8cc.html#a35931865021519a9d7a2a4d2f196e684">GET_VALUE</a>(12);</div>
+<div class="line"><span class="lineno">  153</span>    t1 = <a class="code hl_define" href="ORBextractor_8cc.html#a35931865021519a9d7a2a4d2f196e684">GET_VALUE</a>(13);</div>
+<div class="line"><span class="lineno">  154</span>    val |= (t0 &lt; t1) &lt;&lt; 6;</div>
+<div class="line"><span class="lineno">  155</span>    t0 = <a class="code hl_define" href="ORBextractor_8cc.html#a35931865021519a9d7a2a4d2f196e684">GET_VALUE</a>(14);</div>
+<div class="line"><span class="lineno">  156</span>    t1 = <a class="code hl_define" href="ORBextractor_8cc.html#a35931865021519a9d7a2a4d2f196e684">GET_VALUE</a>(15);</div>
+<div class="line"><span class="lineno">  157</span>    val |= (t0 &lt; t1) &lt;&lt; 7;</div>
+<div class="line"><span class="lineno">  158</span> </div>
+<div class="line"><span class="lineno">  159</span>    desc[i] = (uchar)val;</div>
+<div class="line"><span class="lineno">  160</span>  }</div>
+<div class="line"><span class="lineno">  161</span> </div>
+<div class="line"><span class="lineno">  162</span><span class="preprocessor">#undef GET_VALUE</span></div>
+<div class="line"><span class="lineno">  163</span>}</div>
 <div class="ttc" id="aORBextractor_8cc_html_a35931865021519a9d7a2a4d2f196e684"><div class="ttname"><a href="ORBextractor_8cc.html#a35931865021519a9d7a2a4d2f196e684">GET_VALUE</a></div><div class="ttdeci">#define GET_VALUE(idx)</div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="namespacedyno.html#afaf50263a3a7f3292691af1d932ab3e0">factorPI</a>, and <a class="el" href="ORBextractor_8cc.html#a35931865021519a9d7a2a4d2f196e684">GET_VALUE</a>.</p>
@@ -6051,15 +6052,15 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ORBextractor_8cc_source.html#l00479">479</a> of file <a class="el" href="ORBextractor_8cc_source.html">ORBextractor.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  480</span>{</div>
-<div class="line"><span class="lineno">  481</span>  <span class="keywordflow">for</span> (vector&lt;KeyPoint&gt;::iterator keypoint = keypoints.begin(), keypointEnd = keypoints.end(); keypoint != keypointEnd;</div>
-<div class="line"><span class="lineno">  482</span>       ++keypoint)</div>
-<div class="line"><span class="lineno">  483</span>  {</div>
-<div class="line"><span class="lineno">  484</span>    keypoint-&gt;angle = <a class="code hl_function" href="namespacedyno.html#ad4f45e14b5491d8b61011513636afbac">IC_Angle</a>(image, keypoint-&gt;pt, umax);</div>
-<div class="line"><span class="lineno">  485</span>  }</div>
-<div class="line"><span class="lineno">  486</span>}</div>
-<div class="ttc" id="anamespacedyno_html_ad4f45e14b5491d8b61011513636afbac"><div class="ttname"><a href="namespacedyno.html#ad4f45e14b5491d8b61011513636afbac">dyno::IC_Angle</a></div><div class="ttdeci">static float IC_Angle(const Mat &amp;image, Point2f pt, const vector&lt; int &gt; &amp;u_max)</div><div class="ttdef"><b>Definition:</b> <a href="ORBextractor_8cc_source.html#l00085">ORBextractor.cc:85</a></div></div>
+<p class="definition">Definition at line <a class="el" href="ORBextractor_8cc_source.html#l00484">484</a> of file <a class="el" href="ORBextractor_8cc_source.html">ORBextractor.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  485</span>                                                        {</div>
+<div class="line"><span class="lineno">  486</span>  <span class="keywordflow">for</span> (vector&lt;KeyPoint&gt;::iterator keypoint = keypoints.begin(),</div>
+<div class="line"><span class="lineno">  487</span>                                  keypointEnd = keypoints.end();</div>
+<div class="line"><span class="lineno">  488</span>       keypoint != keypointEnd; ++keypoint) {</div>
+<div class="line"><span class="lineno">  489</span>    keypoint-&gt;angle = <a class="code hl_function" href="namespacedyno.html#ad4f45e14b5491d8b61011513636afbac">IC_Angle</a>(image, keypoint-&gt;pt, umax);</div>
+<div class="line"><span class="lineno">  490</span>  }</div>
+<div class="line"><span class="lineno">  491</span>}</div>
+<div class="ttc" id="anamespacedyno_html_ad4f45e14b5491d8b61011513636afbac"><div class="ttname"><a href="namespacedyno.html#ad4f45e14b5491d8b61011513636afbac">dyno::IC_Angle</a></div><div class="ttdeci">static float IC_Angle(const Mat &amp;image, Point2f pt, const vector&lt; int &gt; &amp;u_max)</div><div class="ttdef"><b>Definition:</b> <a href="ORBextractor_8cc_source.html#l00093">ORBextractor.cc:93</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="namespacedyno.html#ad4f45e14b5491d8b61011513636afbac">IC_Angle()</a>.</p>
 
@@ -6113,18 +6114,18 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>char** </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Utils_8cc_source.html#l00042">42</a> of file <a class="el" href="Utils_8cc_source.html">Utils.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   42</span>                                                        {</div>
-<div class="line"><span class="lineno">   43</span>    <span class="keywordtype">char</span>** argv = <span class="keyword">new</span> <span class="keywordtype">char</span>*[args.size()];</div>
-<div class="line"><span class="lineno">   44</span> </div>
-<div class="line"><span class="lineno">   45</span>    <span class="keywordflow">for</span>(<span class="keywordtype">size_t</span> i = 0; i &lt; args.size(); i++) {</div>
-<div class="line"><span class="lineno">   46</span>        <span class="keyword">const</span> std::string&amp; arg = args.at(i);</div>
-<div class="line"><span class="lineno">   47</span>        argv[i] = <span class="keyword">new</span> <span class="keywordtype">char</span>[arg.size()+1];</div>
-<div class="line"><span class="lineno">   48</span>        strcpy(argv[i], arg.c_str());</div>
-<div class="line"><span class="lineno">   49</span>    }</div>
-<div class="line"><span class="lineno">   50</span> </div>
-<div class="line"><span class="lineno">   51</span>    <span class="keywordflow">return</span> argv;</div>
-<div class="line"><span class="lineno">   52</span>}</div>
+<p class="definition">Definition at line <a class="el" href="Utils_8cc_source.html#l00049">49</a> of file <a class="el" href="Utils_8cc_source.html">Utils.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   49</span>                                                        {</div>
+<div class="line"><span class="lineno">   50</span>  <span class="keywordtype">char</span>** argv = <span class="keyword">new</span> <span class="keywordtype">char</span>*[args.size()];</div>
+<div class="line"><span class="lineno">   51</span> </div>
+<div class="line"><span class="lineno">   52</span>  <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; args.size(); i++) {</div>
+<div class="line"><span class="lineno">   53</span>    <span class="keyword">const</span> std::string&amp; arg = args.at(i);</div>
+<div class="line"><span class="lineno">   54</span>    argv[i] = <span class="keyword">new</span> <span class="keywordtype">char</span>[arg.size() + 1];</div>
+<div class="line"><span class="lineno">   55</span>    strcpy(argv[i], arg.c_str());</div>
+<div class="line"><span class="lineno">   56</span>  }</div>
+<div class="line"><span class="lineno">   57</span> </div>
+<div class="line"><span class="lineno">   58</span>  <span class="keywordflow">return</span> argv;</div>
+<div class="line"><span class="lineno">   59</span>}</div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="namespacedyno.html#a3ef7850da25317aac51501ed37567b94">initRosAndLogging()</a>.</p>
 <div class="dynheader">
@@ -9883,35 +9884,33 @@ template&lt;class T1 , class T2 , class T3 &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ORBextractor_8cc_source.html#l00085">85</a> of file <a class="el" href="ORBextractor_8cc_source.html">ORBextractor.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   86</span>{</div>
-<div class="line"><span class="lineno">   87</span>  <span class="keywordtype">int</span> m_01 = 0, m_10 = 0;</div>
-<div class="line"><span class="lineno">   88</span> </div>
-<div class="line"><span class="lineno">   89</span>  <span class="keyword">const</span> uchar* center = &amp;image.at&lt;uchar&gt;(cvRound(pt.y), cvRound(pt.x));</div>
-<div class="line"><span class="lineno">   90</span> </div>
-<div class="line"><span class="lineno">   91</span>  <span class="comment">// Treat the center line differently, v=0</span></div>
-<div class="line"><span class="lineno">   92</span>  <span class="keywordflow">for</span> (<span class="keywordtype">int</span> u = -HALF_PATCH_SIZE; u &lt;= <a class="code hl_variable" href="namespacedyno.html#ae6d9fcad2c74b7c8ceee138ce63e6060">HALF_PATCH_SIZE</a>; ++u)</div>
-<div class="line"><span class="lineno">   93</span>    m_10 += u * center[u];</div>
-<div class="line"><span class="lineno">   94</span> </div>
-<div class="line"><span class="lineno">   95</span>  <span class="comment">// Go line by line in the circuI853lar patch</span></div>
-<div class="line"><span class="lineno">   96</span>  <span class="keywordtype">int</span> step = (int)image.step1();</div>
-<div class="line"><span class="lineno">   97</span>  <span class="keywordflow">for</span> (<span class="keywordtype">int</span> v = 1; v &lt;= <a class="code hl_variable" href="namespacedyno.html#ae6d9fcad2c74b7c8ceee138ce63e6060">HALF_PATCH_SIZE</a>; ++v)</div>
-<div class="line"><span class="lineno">   98</span>  {</div>
-<div class="line"><span class="lineno">   99</span>    <span class="comment">// Proceed over the two lines</span></div>
-<div class="line"><span class="lineno">  100</span>    <span class="keywordtype">int</span> v_sum = 0;</div>
-<div class="line"><span class="lineno">  101</span>    <span class="keywordtype">int</span> d = u_max[v];</div>
-<div class="line"><span class="lineno">  102</span>    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> u = -d; u &lt;= d; ++u)</div>
-<div class="line"><span class="lineno">  103</span>    {</div>
-<div class="line"><span class="lineno">  104</span>      <span class="keywordtype">int</span> val_plus = center[u + v * step], val_minus = center[u - v * step];</div>
-<div class="line"><span class="lineno">  105</span>      v_sum += (val_plus - val_minus);</div>
-<div class="line"><span class="lineno">  106</span>      m_10 += u * (val_plus + val_minus);</div>
-<div class="line"><span class="lineno">  107</span>    }</div>
-<div class="line"><span class="lineno">  108</span>    m_01 += v * v_sum;</div>
-<div class="line"><span class="lineno">  109</span>  }</div>
-<div class="line"><span class="lineno">  110</span> </div>
-<div class="line"><span class="lineno">  111</span>  <span class="keywordflow">return</span> fastAtan2((<span class="keywordtype">float</span>)m_01, (<span class="keywordtype">float</span>)m_10);</div>
-<div class="line"><span class="lineno">  112</span>}</div>
-<div class="ttc" id="anamespacedyno_html_ae6d9fcad2c74b7c8ceee138ce63e6060"><div class="ttname"><a href="namespacedyno.html#ae6d9fcad2c74b7c8ceee138ce63e6060">dyno::HALF_PATCH_SIZE</a></div><div class="ttdeci">const int HALF_PATCH_SIZE</div><div class="ttdef"><b>Definition:</b> <a href="ORBextractor_8cc_source.html#l00082">ORBextractor.cc:82</a></div></div>
+<p class="definition">Definition at line <a class="el" href="ORBextractor_8cc_source.html#l00093">93</a> of file <a class="el" href="ORBextractor_8cc_source.html">ORBextractor.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   93</span>                                                                              {</div>
+<div class="line"><span class="lineno">   94</span>  <span class="keywordtype">int</span> m_01 = 0, m_10 = 0;</div>
+<div class="line"><span class="lineno">   95</span> </div>
+<div class="line"><span class="lineno">   96</span>  <span class="keyword">const</span> uchar* center = &amp;image.at&lt;uchar&gt;(cvRound(pt.y), cvRound(pt.x));</div>
+<div class="line"><span class="lineno">   97</span> </div>
+<div class="line"><span class="lineno">   98</span>  <span class="comment">// Treat the center line differently, v=0</span></div>
+<div class="line"><span class="lineno">   99</span>  <span class="keywordflow">for</span> (<span class="keywordtype">int</span> u = -HALF_PATCH_SIZE; u &lt;= <a class="code hl_variable" href="namespacedyno.html#ae6d9fcad2c74b7c8ceee138ce63e6060">HALF_PATCH_SIZE</a>; ++u)</div>
+<div class="line"><span class="lineno">  100</span>    m_10 += u * center[u];</div>
+<div class="line"><span class="lineno">  101</span> </div>
+<div class="line"><span class="lineno">  102</span>  <span class="comment">// Go line by line in the circuI853lar patch</span></div>
+<div class="line"><span class="lineno">  103</span>  <span class="keywordtype">int</span> step = (int)image.step1();</div>
+<div class="line"><span class="lineno">  104</span>  <span class="keywordflow">for</span> (<span class="keywordtype">int</span> v = 1; v &lt;= <a class="code hl_variable" href="namespacedyno.html#ae6d9fcad2c74b7c8ceee138ce63e6060">HALF_PATCH_SIZE</a>; ++v) {</div>
+<div class="line"><span class="lineno">  105</span>    <span class="comment">// Proceed over the two lines</span></div>
+<div class="line"><span class="lineno">  106</span>    <span class="keywordtype">int</span> v_sum = 0;</div>
+<div class="line"><span class="lineno">  107</span>    <span class="keywordtype">int</span> d = u_max[v];</div>
+<div class="line"><span class="lineno">  108</span>    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> u = -d; u &lt;= d; ++u) {</div>
+<div class="line"><span class="lineno">  109</span>      <span class="keywordtype">int</span> val_plus = center[u + v * step], val_minus = center[u - v * step];</div>
+<div class="line"><span class="lineno">  110</span>      v_sum += (val_plus - val_minus);</div>
+<div class="line"><span class="lineno">  111</span>      m_10 += u * (val_plus + val_minus);</div>
+<div class="line"><span class="lineno">  112</span>    }</div>
+<div class="line"><span class="lineno">  113</span>    m_01 += v * v_sum;</div>
+<div class="line"><span class="lineno">  114</span>  }</div>
+<div class="line"><span class="lineno">  115</span> </div>
+<div class="line"><span class="lineno">  116</span>  <span class="keywordflow">return</span> fastAtan2((<span class="keywordtype">float</span>)m_01, (<span class="keywordtype">float</span>)m_10);</div>
+<div class="line"><span class="lineno">  117</span>}</div>
+<div class="ttc" id="anamespacedyno_html_ae6d9fcad2c74b7c8ceee138ce63e6060"><div class="ttname"><a href="namespacedyno.html#ae6d9fcad2c74b7c8ceee138ce63e6060">dyno::HALF_PATCH_SIZE</a></div><div class="ttdeci">const int HALF_PATCH_SIZE</div><div class="ttdef"><b>Definition:</b> <a href="ORBextractor_8cc_source.html#l00090">ORBextractor.cc:90</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="namespacedyno.html#ae6d9fcad2c74b7c8ceee138ce63e6060">HALF_PATCH_SIZE</a>.</p>
 
@@ -10030,27 +10029,28 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>std::vector&lt;std::string&gt; </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Utils_8cc_source.html#l00055">55</a> of file <a class="el" href="Utils_8cc_source.html">Utils.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   55</span>                                                               {</div>
-<div class="line"><span class="lineno">   56</span>    <span class="comment">// google::ParseCommandLineFlags(&amp;argc, &amp;argv, true);</span></div>
-<div class="line"><span class="lineno">   57</span>    <span class="keyword">auto</span> non_ros_args = rclcpp::init_and_remove_ros_arguments(argc, argv);</div>
-<div class="line"><span class="lineno">   58</span> </div>
-<div class="line"><span class="lineno">   59</span>    google::InitGoogleLogging(argv[0]);</div>
-<div class="line"><span class="lineno">   60</span>    FLAGS_logtostderr = 1;</div>
-<div class="line"><span class="lineno">   61</span>    FLAGS_colorlogtostderr = 1;</div>
-<div class="line"><span class="lineno">   62</span>    FLAGS_log_prefix = 1;</div>
-<div class="line"><span class="lineno">   63</span> </div>
-<div class="line"><span class="lineno">   64</span>    <span class="keywordtype">int</span> non_ros_argc = non_ros_args.size();</div>
-<div class="line"><span class="lineno">   65</span>    <span class="keywordtype">char</span>** non_ros_argv_c = <a class="code hl_function" href="namespacedyno.html#aab02e48cf016193b951a95e736b889b3">constructArgvC</a>(non_ros_args);</div>
-<div class="line"><span class="lineno">   66</span>    <span class="comment">//non_ros_argv_c is heap allocated but attempting to free it after usage in the</span></div>
-<div class="line"><span class="lineno">   67</span>    <span class="comment">//ParseCommandLineFlags function results in a &quot;double free or corruption&quot; error.</span></div>
-<div class="line"><span class="lineno">   68</span>    <span class="comment">//I think this is because ParseCommandLineFlags modifies it in place and then free it itself somehow</span></div>
-<div class="line"><span class="lineno">   69</span>    <span class="comment">//unsure, and may result in a minor memory leak</span></div>
-<div class="line"><span class="lineno">   70</span>    google::ParseCommandLineFlags(&amp;non_ros_argc, &amp;non_ros_argv_c, <span class="keyword">true</span>);</div>
-<div class="line"><span class="lineno">   71</span> </div>
-<div class="line"><span class="lineno">   72</span>    <span class="keywordflow">return</span> non_ros_args;</div>
-<div class="line"><span class="lineno">   73</span>}</div>
-<div class="ttc" id="anamespacedyno_html_aab02e48cf016193b951a95e736b889b3"><div class="ttname"><a href="namespacedyno.html#aab02e48cf016193b951a95e736b889b3">dyno::constructArgvC</a></div><div class="ttdeci">char ** constructArgvC(const std::vector&lt; std::string &gt; &amp;args)</div><div class="ttdoc">Constructs a c-style pointer array from a vector of strings.</div><div class="ttdef"><b>Definition:</b> <a href="Utils_8cc_source.html#l00042">Utils.cc:42</a></div></div>
+<p class="definition">Definition at line <a class="el" href="Utils_8cc_source.html#l00061">61</a> of file <a class="el" href="Utils_8cc_source.html">Utils.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   61</span>                                                               {</div>
+<div class="line"><span class="lineno">   62</span>  <span class="comment">// google::ParseCommandLineFlags(&amp;argc, &amp;argv, true);</span></div>
+<div class="line"><span class="lineno">   63</span>  <span class="keyword">auto</span> non_ros_args = rclcpp::init_and_remove_ros_arguments(argc, argv);</div>
+<div class="line"><span class="lineno">   64</span> </div>
+<div class="line"><span class="lineno">   65</span>  google::InitGoogleLogging(argv[0]);</div>
+<div class="line"><span class="lineno">   66</span>  FLAGS_logtostderr = 1;</div>
+<div class="line"><span class="lineno">   67</span>  FLAGS_colorlogtostderr = 1;</div>
+<div class="line"><span class="lineno">   68</span>  FLAGS_log_prefix = 1;</div>
+<div class="line"><span class="lineno">   69</span> </div>
+<div class="line"><span class="lineno">   70</span>  <span class="keywordtype">int</span> non_ros_argc = non_ros_args.size();</div>
+<div class="line"><span class="lineno">   71</span>  <span class="keywordtype">char</span>** non_ros_argv_c = <a class="code hl_function" href="namespacedyno.html#aab02e48cf016193b951a95e736b889b3">constructArgvC</a>(non_ros_args);</div>
+<div class="line"><span class="lineno">   72</span>  <span class="comment">// non_ros_argv_c is heap allocated but attempting to free it after usage in</span></div>
+<div class="line"><span class="lineno">   73</span>  <span class="comment">// the ParseCommandLineFlags function results in a &quot;double free or corruption&quot;</span></div>
+<div class="line"><span class="lineno">   74</span>  <span class="comment">// error. I think this is because ParseCommandLineFlags modifies it in place</span></div>
+<div class="line"><span class="lineno">   75</span>  <span class="comment">// and then free it itself somehow unsure, and may result in a minor memory</span></div>
+<div class="line"><span class="lineno">   76</span>  <span class="comment">// leak</span></div>
+<div class="line"><span class="lineno">   77</span>  google::ParseCommandLineFlags(&amp;non_ros_argc, &amp;non_ros_argv_c, <span class="keyword">true</span>);</div>
+<div class="line"><span class="lineno">   78</span> </div>
+<div class="line"><span class="lineno">   79</span>  <span class="keywordflow">return</span> non_ros_args;</div>
+<div class="line"><span class="lineno">   80</span>}</div>
+<div class="ttc" id="anamespacedyno_html_aab02e48cf016193b951a95e736b889b3"><div class="ttname"><a href="namespacedyno.html#aab02e48cf016193b951a95e736b889b3">dyno::constructArgvC</a></div><div class="ttdeci">char ** constructArgvC(const std::vector&lt; std::string &gt; &amp;args)</div><div class="ttdoc">Constructs a c-style pointer array from a vector of strings.</div><div class="ttdef"><b>Definition:</b> <a href="Utils_8cc_source.html#l00049">Utils.cc:49</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="namespacedyno.html#aab02e48cf016193b951a95e736b889b3">constructArgvC()</a>.</p>
 
@@ -14604,7 +14604,7 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ORBextractor_8cc_source.html#l00160">160</a> of file <a class="el" href="ORBextractor_8cc_source.html">ORBextractor.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ORBextractor_8cc_source.html#l00165">165</a> of file <a class="el" href="ORBextractor_8cc_source.html">ORBextractor.cc</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1ORBextractor.html#a7b89502e1a0efc1ebc11d0206b70954f">dyno::ORBextractor::ORBextractor()</a>.</p>
 
@@ -14649,7 +14649,7 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ORBextractor_8cc_source.html#l00083">83</a> of file <a class="el" href="ORBextractor_8cc_source.html">ORBextractor.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ORBextractor_8cc_source.html#l00091">91</a> of file <a class="el" href="ORBextractor_8cc_source.html">ORBextractor.cc</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1ORBextractor.html#aa9634873a7c6d2005441d7cc653c5103">dyno::ORBextractor::ComputeKeyPointsOctTree()</a>, <a class="el" href="classdyno_1_1ORBextractor.html#a562881ff59ebda31b98b1c5f27125135">dyno::ORBextractor::ComputeKeyPointsOld()</a>, and <a class="el" href="classdyno_1_1ORBextractor.html#a5872619a98ce8223d1d42e3944f72d12">dyno::ORBextractor::ComputePyramid()</a>.</p>
 
@@ -14667,7 +14667,7 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ORBextractor_8cc_source.html#l00114">114</a> of file <a class="el" href="ORBextractor_8cc_source.html">ORBextractor.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ORBextractor_8cc_source.html#l00119">119</a> of file <a class="el" href="ORBextractor_8cc_source.html">ORBextractor.cc</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="namespacedyno.html#a8d58bba01ea8e41c041db049bade7145">computeOrbDescriptor()</a>.</p>
 
@@ -14685,7 +14685,7 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ORBextractor_8cc_source.html#l00082">82</a> of file <a class="el" href="ORBextractor_8cc_source.html">ORBextractor.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ORBextractor_8cc_source.html#l00090">90</a> of file <a class="el" href="ORBextractor_8cc_source.html">ORBextractor.cc</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="namespacedyno.html#ad4f45e14b5491d8b61011513636afbac">IC_Angle()</a>, and <a class="el" href="classdyno_1_1ORBextractor.html#a7b89502e1a0efc1ebc11d0206b70954f">dyno::ORBextractor::ORBextractor()</a>.</p>
 
@@ -15108,7 +15108,7 @@ template&lt;typename DERIVEDSTATUS , typename VALUE &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ORBextractor_8cc_source.html#l00081">81</a> of file <a class="el" href="ORBextractor_8cc_source.html">ORBextractor.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ORBextractor_8cc_source.html#l00089">89</a> of file <a class="el" href="ORBextractor_8cc_source.html">ORBextractor.cc</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1ORBextractor.html#aa9634873a7c6d2005441d7cc653c5103">dyno::ORBextractor::ComputeKeyPointsOctTree()</a>, and <a class="el" href="classdyno_1_1ORBextractor.html#a562881ff59ebda31b98b1c5f27125135">dyno::ORBextractor::ComputeKeyPointsOld()</a>.</p>
 

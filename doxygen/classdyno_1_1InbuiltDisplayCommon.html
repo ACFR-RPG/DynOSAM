@@ -274,102 +274,102 @@ Protected Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="InbuiltDisplayCommon_8cc_source.html#l00283">283</a> of file <a class="el" href="InbuiltDisplayCommon_8cc_source.html">InbuiltDisplayCommon.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  286</span>                                              {</div>
-<div class="line"><span class="lineno">  287</span>  <span class="keyword">auto</span> ros_time = <a class="code hl_function" href="namespacedyno_1_1utils.html#a81025ee06847cec0fd854eff05362d19">utils::toRosTime</a>(timestamp);</div>
-<div class="line"><span class="lineno">  288</span> </div>
-<div class="line"><span class="lineno">  289</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [object_id, obj_cloud] : cloud_per_object) {</div>
-<div class="line"><span class="lineno">  290</span>    pcl::PointXYZ centroid;</div>
-<div class="line"><span class="lineno">  291</span>    pcl::computeCentroid(obj_cloud, centroid);</div>
-<div class="line"><span class="lineno">  292</span> </div>
-<div class="line"><span class="lineno">  293</span>    <span class="keyword">const</span> cv::Scalar colour = <a class="code hl_function" href="structdyno_1_1Color.html#a6689af3d0ac5ceaa66000b5ca70becbd">Color::uniqueId</a>(object_id);</div>
-<div class="line"><span class="lineno">  294</span> </div>
-<div class="line"><span class="lineno">  295</span>    visualization_msgs::msg::Marker txt_marker;</div>
-<div class="line"><span class="lineno">  296</span>    txt_marker.header.frame_id = <span class="stringliteral">&quot;world&quot;</span>;</div>
-<div class="line"><span class="lineno">  297</span>    txt_marker.ns = prefix_marker_namespace + <span class="stringliteral">&quot;_object_id_txt&quot;</span>;</div>
-<div class="line"><span class="lineno">  298</span>    txt_marker.id = object_id;</div>
-<div class="line"><span class="lineno">  299</span>    txt_marker.type = visualization_msgs::msg::Marker::TEXT_VIEW_FACING;</div>
-<div class="line"><span class="lineno">  300</span>    txt_marker.action = visualization_msgs::msg::Marker::ADD;</div>
-<div class="line"><span class="lineno">  301</span>    txt_marker.header.stamp = ros_time;</div>
-<div class="line"><span class="lineno">  302</span> </div>
-<div class="line"><span class="lineno">  303</span>    txt_marker.scale.z = 0.5;</div>
-<div class="line"><span class="lineno">  304</span>    <span class="comment">// txt_marker.scale.z = 2.0;</span></div>
-<div class="line"><span class="lineno">  305</span>    txt_marker.color.r = colour(0) / 255.0;</div>
-<div class="line"><span class="lineno">  306</span>    txt_marker.color.g = colour(1) / 255.0;</div>
-<div class="line"><span class="lineno">  307</span>    txt_marker.color.b = colour(2) / 255.0;</div>
-<div class="line"><span class="lineno">  308</span>    txt_marker.color.a = 1;</div>
-<div class="line"><span class="lineno">  309</span>    txt_marker.text = <span class="stringliteral">&quot;Obj &quot;</span> + std::to_string(object_id);</div>
-<div class="line"><span class="lineno">  310</span>    txt_marker.pose.position.x = centroid.x;</div>
-<div class="line"><span class="lineno">  311</span>    <span class="comment">// txt_marker.pose.position.y = centroid.y - 2.0;</span></div>
-<div class="line"><span class="lineno">  312</span>    <span class="comment">// txt_marker.pose.position.z = centroid.z - 1.0;</span></div>
-<div class="line"><span class="lineno">  313</span>    txt_marker.pose.position.y = centroid.y - 0.6;</div>
-<div class="line"><span class="lineno">  314</span>    txt_marker.pose.position.z = centroid.z - 0.5;</div>
-<div class="line"><span class="lineno">  315</span>    aabb_markers.markers.push_back(txt_marker);</div>
-<div class="line"><span class="lineno">  316</span> </div>
-<div class="line"><span class="lineno">  317</span>    pcl::PointCloud&lt;pcl::PointXYZRGB&gt;::Ptr obj_cloud_ptr =</div>
-<div class="line"><span class="lineno">  318</span>        pcl::make_shared&lt;pcl::PointCloud&lt;pcl::PointXYZRGB&gt; &gt;(obj_cloud);</div>
-<div class="line"><span class="lineno">  319</span>    ObjectBBX aabb = findAABBFromCloud&lt;pcl::PointXYZRGB&gt;(obj_cloud_ptr);</div>
-<div class="line"><span class="lineno">  320</span>    ObjectBBX obb = findOBBFromCloud&lt;pcl::PointXYZRGB&gt;(obj_cloud_ptr);</div>
-<div class="line"><span class="lineno">  321</span> </div>
-<div class="line"><span class="lineno">  322</span>    visualization_msgs::msg::Marker aabb_marker;</div>
-<div class="line"><span class="lineno">  323</span>    aabb_marker.header.frame_id = <span class="stringliteral">&quot;world&quot;</span>;</div>
-<div class="line"><span class="lineno">  324</span>    aabb_marker.ns = prefix_marker_namespace + <span class="stringliteral">&quot;object_aabb&quot;</span>;</div>
-<div class="line"><span class="lineno">  325</span>    aabb_marker.id = object_id;</div>
-<div class="line"><span class="lineno">  326</span>    aabb_marker.type = visualization_msgs::msg::Marker::LINE_LIST;</div>
-<div class="line"><span class="lineno">  327</span>    aabb_marker.action = visualization_msgs::msg::Marker::ADD;</div>
-<div class="line"><span class="lineno">  328</span>    aabb_marker.header.stamp = ros_time;</div>
-<div class="line"><span class="lineno">  329</span>    aabb_marker.scale.x = 0.03;</div>
-<div class="line"><span class="lineno">  330</span> </div>
-<div class="line"><span class="lineno">  331</span>    aabb_marker.pose.orientation.x = 0;</div>
-<div class="line"><span class="lineno">  332</span>    aabb_marker.pose.orientation.y = 0;</div>
-<div class="line"><span class="lineno">  333</span>    aabb_marker.pose.orientation.z = 0;</div>
-<div class="line"><span class="lineno">  334</span>    aabb_marker.pose.orientation.w = 1;</div>
-<div class="line"><span class="lineno">  335</span> </div>
-<div class="line"><span class="lineno">  336</span>    aabb_marker.color.r = colour(0) / 255.0;</div>
-<div class="line"><span class="lineno">  337</span>    aabb_marker.color.g = colour(1) / 255.0;</div>
-<div class="line"><span class="lineno">  338</span>    aabb_marker.color.b = colour(2) / 255.0;</div>
-<div class="line"><span class="lineno">  339</span>    aabb_marker.color.a = 1;</div>
-<div class="line"><span class="lineno">  340</span> </div>
-<div class="line"><span class="lineno">  341</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> pcl::PointXYZ&amp; this_line_list_point :</div>
-<div class="line"><span class="lineno">  342</span>         <a class="code hl_function" href="namespacedyno.html#aea2086519f9b7d60b882c6f81d11494a">findLineListPointsFromAABBMinMax</a>(aabb.min_bbx_point_,</div>
-<div class="line"><span class="lineno">  343</span>                                          aabb.max_bbx_point_)) {</div>
-<div class="line"><span class="lineno">  344</span>      geometry_msgs::msg::Point p;</div>
-<div class="line"><span class="lineno">  345</span>      p.x = this_line_list_point.x;</div>
-<div class="line"><span class="lineno">  346</span>      p.y = this_line_list_point.y;</div>
-<div class="line"><span class="lineno">  347</span>      p.z = this_line_list_point.z;</div>
-<div class="line"><span class="lineno">  348</span>      aabb_marker.points.push_back(p);</div>
-<div class="line"><span class="lineno">  349</span>    }</div>
-<div class="line"><span class="lineno">  350</span>    aabb_markers.markers.push_back(aabb_marker);</div>
-<div class="line"><span class="lineno">  351</span> </div>
-<div class="line"><span class="lineno">  352</span>    visualization_msgs::msg::Marker obbx_marker;</div>
-<div class="line"><span class="lineno">  353</span>    obbx_marker.header.frame_id = <span class="stringliteral">&quot;world&quot;</span>;</div>
-<div class="line"><span class="lineno">  354</span>    obbx_marker.ns = prefix_marker_namespace + <span class="stringliteral">&quot;object_obb&quot;</span>;</div>
-<div class="line"><span class="lineno">  355</span>    obbx_marker.id = object_id;</div>
-<div class="line"><span class="lineno">  356</span>    obbx_marker.type = visualization_msgs::msg::Marker::CUBE;</div>
-<div class="line"><span class="lineno">  357</span>    obbx_marker.action = visualization_msgs::msg::Marker::ADD;</div>
-<div class="line"><span class="lineno">  358</span>    obbx_marker.header.stamp = ros_time;</div>
-<div class="line"><span class="lineno">  359</span>    obbx_marker.scale.x = obb.max_bbx_point_.x() - obb.min_bbx_point_.x();</div>
-<div class="line"><span class="lineno">  360</span>    obbx_marker.scale.y = obb.max_bbx_point_.y() - obb.min_bbx_point_.y();</div>
-<div class="line"><span class="lineno">  361</span>    obbx_marker.scale.z = obb.max_bbx_point_.z() - obb.min_bbx_point_.z();</div>
-<div class="line"><span class="lineno">  362</span> </div>
-<div class="line"><span class="lineno">  363</span>    obbx_marker.pose.position.x = obb.bbx_position_.x();</div>
-<div class="line"><span class="lineno">  364</span>    obbx_marker.pose.position.y = obb.bbx_position_.y();</div>
-<div class="line"><span class="lineno">  365</span>    obbx_marker.pose.position.z = obb.bbx_position_.z();</div>
-<div class="line"><span class="lineno">  366</span> </div>
-<div class="line"><span class="lineno">  367</span>    <span class="keyword">const</span> gtsam::Quaternion&amp; q = obb.orientation_.toQuaternion();</div>
-<div class="line"><span class="lineno">  368</span>    obbx_marker.pose.orientation.x = q.x();</div>
-<div class="line"><span class="lineno">  369</span>    obbx_marker.pose.orientation.y = q.y();</div>
-<div class="line"><span class="lineno">  370</span>    obbx_marker.pose.orientation.z = q.z();</div>
-<div class="line"><span class="lineno">  371</span>    obbx_marker.pose.orientation.w = q.w();</div>
-<div class="line"><span class="lineno">  372</span> </div>
-<div class="line"><span class="lineno">  373</span>    obbx_marker.color.r = colour(0) / 255.0;</div>
-<div class="line"><span class="lineno">  374</span>    obbx_marker.color.g = colour(1) / 255.0;</div>
-<div class="line"><span class="lineno">  375</span>    obbx_marker.color.b = colour(2) / 255.0;</div>
-<div class="line"><span class="lineno">  376</span>    obbx_marker.color.a = 0.2;</div>
-<div class="line"><span class="lineno">  377</span> </div>
-<div class="line"><span class="lineno">  378</span>    obb_markers.markers.push_back(obbx_marker);</div>
-<div class="line"><span class="lineno">  379</span>  }</div>
-<div class="line"><span class="lineno">  380</span>}</div>
+<p class="definition">Definition at line <a class="el" href="InbuiltDisplayCommon_8cc_source.html#l00286">286</a> of file <a class="el" href="InbuiltDisplayCommon_8cc_source.html">InbuiltDisplayCommon.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  289</span>                                              {</div>
+<div class="line"><span class="lineno">  290</span>  <span class="keyword">auto</span> ros_time = <a class="code hl_function" href="namespacedyno_1_1utils.html#a81025ee06847cec0fd854eff05362d19">utils::toRosTime</a>(timestamp);</div>
+<div class="line"><span class="lineno">  291</span> </div>
+<div class="line"><span class="lineno">  292</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [object_id, obj_cloud] : cloud_per_object) {</div>
+<div class="line"><span class="lineno">  293</span>    pcl::PointXYZ centroid;</div>
+<div class="line"><span class="lineno">  294</span>    pcl::computeCentroid(obj_cloud, centroid);</div>
+<div class="line"><span class="lineno">  295</span> </div>
+<div class="line"><span class="lineno">  296</span>    <span class="keyword">const</span> cv::Scalar colour = <a class="code hl_function" href="structdyno_1_1Color.html#a6689af3d0ac5ceaa66000b5ca70becbd">Color::uniqueId</a>(object_id);</div>
+<div class="line"><span class="lineno">  297</span> </div>
+<div class="line"><span class="lineno">  298</span>    visualization_msgs::msg::Marker txt_marker;</div>
+<div class="line"><span class="lineno">  299</span>    txt_marker.header.frame_id = <span class="stringliteral">&quot;world&quot;</span>;</div>
+<div class="line"><span class="lineno">  300</span>    txt_marker.ns = prefix_marker_namespace + <span class="stringliteral">&quot;_object_id_txt&quot;</span>;</div>
+<div class="line"><span class="lineno">  301</span>    txt_marker.id = object_id;</div>
+<div class="line"><span class="lineno">  302</span>    txt_marker.type = visualization_msgs::msg::Marker::TEXT_VIEW_FACING;</div>
+<div class="line"><span class="lineno">  303</span>    txt_marker.action = visualization_msgs::msg::Marker::ADD;</div>
+<div class="line"><span class="lineno">  304</span>    txt_marker.header.stamp = ros_time;</div>
+<div class="line"><span class="lineno">  305</span> </div>
+<div class="line"><span class="lineno">  306</span>    txt_marker.scale.z = 0.5;</div>
+<div class="line"><span class="lineno">  307</span>    <span class="comment">// txt_marker.scale.z = 2.0;</span></div>
+<div class="line"><span class="lineno">  308</span>    txt_marker.color.r = colour(0) / 255.0;</div>
+<div class="line"><span class="lineno">  309</span>    txt_marker.color.g = colour(1) / 255.0;</div>
+<div class="line"><span class="lineno">  310</span>    txt_marker.color.b = colour(2) / 255.0;</div>
+<div class="line"><span class="lineno">  311</span>    txt_marker.color.a = 1;</div>
+<div class="line"><span class="lineno">  312</span>    txt_marker.text = <span class="stringliteral">&quot;Obj &quot;</span> + std::to_string(object_id);</div>
+<div class="line"><span class="lineno">  313</span>    txt_marker.pose.position.x = centroid.x;</div>
+<div class="line"><span class="lineno">  314</span>    <span class="comment">// txt_marker.pose.position.y = centroid.y - 2.0;</span></div>
+<div class="line"><span class="lineno">  315</span>    <span class="comment">// txt_marker.pose.position.z = centroid.z - 1.0;</span></div>
+<div class="line"><span class="lineno">  316</span>    txt_marker.pose.position.y = centroid.y - 0.6;</div>
+<div class="line"><span class="lineno">  317</span>    txt_marker.pose.position.z = centroid.z - 0.5;</div>
+<div class="line"><span class="lineno">  318</span>    aabb_markers.markers.push_back(txt_marker);</div>
+<div class="line"><span class="lineno">  319</span> </div>
+<div class="line"><span class="lineno">  320</span>    pcl::PointCloud&lt;pcl::PointXYZRGB&gt;::Ptr obj_cloud_ptr =</div>
+<div class="line"><span class="lineno">  321</span>        pcl::make_shared&lt;pcl::PointCloud&lt;pcl::PointXYZRGB&gt; &gt;(obj_cloud);</div>
+<div class="line"><span class="lineno">  322</span>    ObjectBBX aabb = findAABBFromCloud&lt;pcl::PointXYZRGB&gt;(obj_cloud_ptr);</div>
+<div class="line"><span class="lineno">  323</span>    ObjectBBX obb = findOBBFromCloud&lt;pcl::PointXYZRGB&gt;(obj_cloud_ptr);</div>
+<div class="line"><span class="lineno">  324</span> </div>
+<div class="line"><span class="lineno">  325</span>    visualization_msgs::msg::Marker aabb_marker;</div>
+<div class="line"><span class="lineno">  326</span>    aabb_marker.header.frame_id = <span class="stringliteral">&quot;world&quot;</span>;</div>
+<div class="line"><span class="lineno">  327</span>    aabb_marker.ns = prefix_marker_namespace + <span class="stringliteral">&quot;object_aabb&quot;</span>;</div>
+<div class="line"><span class="lineno">  328</span>    aabb_marker.id = object_id;</div>
+<div class="line"><span class="lineno">  329</span>    aabb_marker.type = visualization_msgs::msg::Marker::LINE_LIST;</div>
+<div class="line"><span class="lineno">  330</span>    aabb_marker.action = visualization_msgs::msg::Marker::ADD;</div>
+<div class="line"><span class="lineno">  331</span>    aabb_marker.header.stamp = ros_time;</div>
+<div class="line"><span class="lineno">  332</span>    aabb_marker.scale.x = 0.03;</div>
+<div class="line"><span class="lineno">  333</span> </div>
+<div class="line"><span class="lineno">  334</span>    aabb_marker.pose.orientation.x = 0;</div>
+<div class="line"><span class="lineno">  335</span>    aabb_marker.pose.orientation.y = 0;</div>
+<div class="line"><span class="lineno">  336</span>    aabb_marker.pose.orientation.z = 0;</div>
+<div class="line"><span class="lineno">  337</span>    aabb_marker.pose.orientation.w = 1;</div>
+<div class="line"><span class="lineno">  338</span> </div>
+<div class="line"><span class="lineno">  339</span>    aabb_marker.color.r = colour(0) / 255.0;</div>
+<div class="line"><span class="lineno">  340</span>    aabb_marker.color.g = colour(1) / 255.0;</div>
+<div class="line"><span class="lineno">  341</span>    aabb_marker.color.b = colour(2) / 255.0;</div>
+<div class="line"><span class="lineno">  342</span>    aabb_marker.color.a = 1;</div>
+<div class="line"><span class="lineno">  343</span> </div>
+<div class="line"><span class="lineno">  344</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> pcl::PointXYZ&amp; this_line_list_point :</div>
+<div class="line"><span class="lineno">  345</span>         <a class="code hl_function" href="namespacedyno.html#aea2086519f9b7d60b882c6f81d11494a">findLineListPointsFromAABBMinMax</a>(aabb.min_bbx_point_,</div>
+<div class="line"><span class="lineno">  346</span>                                          aabb.max_bbx_point_)) {</div>
+<div class="line"><span class="lineno">  347</span>      geometry_msgs::msg::Point p;</div>
+<div class="line"><span class="lineno">  348</span>      p.x = this_line_list_point.x;</div>
+<div class="line"><span class="lineno">  349</span>      p.y = this_line_list_point.y;</div>
+<div class="line"><span class="lineno">  350</span>      p.z = this_line_list_point.z;</div>
+<div class="line"><span class="lineno">  351</span>      aabb_marker.points.push_back(p);</div>
+<div class="line"><span class="lineno">  352</span>    }</div>
+<div class="line"><span class="lineno">  353</span>    aabb_markers.markers.push_back(aabb_marker);</div>
+<div class="line"><span class="lineno">  354</span> </div>
+<div class="line"><span class="lineno">  355</span>    visualization_msgs::msg::Marker obbx_marker;</div>
+<div class="line"><span class="lineno">  356</span>    obbx_marker.header.frame_id = <span class="stringliteral">&quot;world&quot;</span>;</div>
+<div class="line"><span class="lineno">  357</span>    obbx_marker.ns = prefix_marker_namespace + <span class="stringliteral">&quot;object_obb&quot;</span>;</div>
+<div class="line"><span class="lineno">  358</span>    obbx_marker.id = object_id;</div>
+<div class="line"><span class="lineno">  359</span>    obbx_marker.type = visualization_msgs::msg::Marker::CUBE;</div>
+<div class="line"><span class="lineno">  360</span>    obbx_marker.action = visualization_msgs::msg::Marker::ADD;</div>
+<div class="line"><span class="lineno">  361</span>    obbx_marker.header.stamp = ros_time;</div>
+<div class="line"><span class="lineno">  362</span>    obbx_marker.scale.x = obb.max_bbx_point_.x() - obb.min_bbx_point_.x();</div>
+<div class="line"><span class="lineno">  363</span>    obbx_marker.scale.y = obb.max_bbx_point_.y() - obb.min_bbx_point_.y();</div>
+<div class="line"><span class="lineno">  364</span>    obbx_marker.scale.z = obb.max_bbx_point_.z() - obb.min_bbx_point_.z();</div>
+<div class="line"><span class="lineno">  365</span> </div>
+<div class="line"><span class="lineno">  366</span>    obbx_marker.pose.position.x = obb.bbx_position_.x();</div>
+<div class="line"><span class="lineno">  367</span>    obbx_marker.pose.position.y = obb.bbx_position_.y();</div>
+<div class="line"><span class="lineno">  368</span>    obbx_marker.pose.position.z = obb.bbx_position_.z();</div>
+<div class="line"><span class="lineno">  369</span> </div>
+<div class="line"><span class="lineno">  370</span>    <span class="keyword">const</span> gtsam::Quaternion&amp; q = obb.orientation_.toQuaternion();</div>
+<div class="line"><span class="lineno">  371</span>    obbx_marker.pose.orientation.x = q.x();</div>
+<div class="line"><span class="lineno">  372</span>    obbx_marker.pose.orientation.y = q.y();</div>
+<div class="line"><span class="lineno">  373</span>    obbx_marker.pose.orientation.z = q.z();</div>
+<div class="line"><span class="lineno">  374</span>    obbx_marker.pose.orientation.w = q.w();</div>
+<div class="line"><span class="lineno">  375</span> </div>
+<div class="line"><span class="lineno">  376</span>    obbx_marker.color.r = colour(0) / 255.0;</div>
+<div class="line"><span class="lineno">  377</span>    obbx_marker.color.g = colour(1) / 255.0;</div>
+<div class="line"><span class="lineno">  378</span>    obbx_marker.color.b = colour(2) / 255.0;</div>
+<div class="line"><span class="lineno">  379</span>    obbx_marker.color.a = 0.2;</div>
+<div class="line"><span class="lineno">  380</span> </div>
+<div class="line"><span class="lineno">  381</span>    obb_markers.markers.push_back(obbx_marker);</div>
+<div class="line"><span class="lineno">  382</span>  }</div>
+<div class="line"><span class="lineno">  383</span>}</div>
 <div class="ttc" id="anamespacedyno_1_1utils_html_a81025ee06847cec0fd854eff05362d19"><div class="ttname"><a href="namespacedyno_1_1utils.html#a81025ee06847cec0fd854eff05362d19">dyno::utils::toRosTime</a></div><div class="ttdeci">rclcpp::Time toRosTime(Timestamp timestamp)</div><div class="ttdoc">Converts Timestamp (in seconds) to ROS time.</div><div class="ttdef"><b>Definition:</b> <a href="RosUtils_8cc_source.html#l00302">RosUtils.cc:302</a></div></div>
 <div class="ttc" id="anamespacedyno_html_aea2086519f9b7d60b882c6f81d11494a"><div class="ttname"><a href="namespacedyno.html#aea2086519f9b7d60b882c6f81d11494a">dyno::findLineListPointsFromAABBMinMax</a></div><div class="ttdeci">pcl::PointCloud&lt; pcl::PointXYZ &gt; findLineListPointsFromAABBMinMax(const PointT &amp;min_point_AABB, const PointT &amp;max_point_AABB)</div><div class="ttdef"><b>Definition:</b> <a href="PointCloudProcess_8hpp_source.html#l00279">PointCloudProcess.hpp:279</a></div></div>
 <div class="ttc" id="astructdyno_1_1Color_html_a6689af3d0ac5ceaa66000b5ca70becbd"><div class="ttname"><a href="structdyno_1_1Color.html#a6689af3d0ac5ceaa66000b5ca70becbd">dyno::Color::uniqueId</a></div><div class="ttdeci">static Color uniqueId(size_t id, float saturation=unique_id_default_saturation, float value=unique_id_default_value)</div><div class="ttdoc">Generates a sequence of never repeating colors using the golden ratio to seperate the colours along t...</div><div class="ttdef"><b>Definition:</b> <a href="Colour_8cc_source.html#l00178">Colour.cc:178</a></div></div>
@@ -477,51 +477,51 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="InbuiltDisplayCommon_8cc_source.html#l00235">235</a> of file <a class="el" href="InbuiltDisplayCommon_8cc_source.html">InbuiltDisplayCommon.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  238</span>                                  {</div>
-<div class="line"><span class="lineno">  239</span>  <span class="keyword">const</span> <span class="keyword">auto</span> pose_matrix = pose.matrix();</div>
-<div class="line"><span class="lineno">  240</span>  Eigen::Isometry3d x = Eigen::Translation3d(length / 2.0, 0, 0) *</div>
-<div class="line"><span class="lineno">  241</span>                        Eigen::AngleAxisd(M_PI / 2.0, Eigen::Vector3d::UnitY());</div>
-<div class="line"><span class="lineno">  242</span>  gtsam::Pose3 x_pose(pose_matrix * x.matrix());</div>
-<div class="line"><span class="lineno">  243</span> </div>
-<div class="line"><span class="lineno">  244</span>  <span class="comment">// Publish y axis</span></div>
-<div class="line"><span class="lineno">  245</span>  Eigen::Isometry3d y = Eigen::Translation3d(0, length / 2.0, 0) *</div>
-<div class="line"><span class="lineno">  246</span>                        Eigen::AngleAxisd(M_PI / 2.0, Eigen::Vector3d::UnitX());</div>
-<div class="line"><span class="lineno">  247</span>  gtsam::Pose3 y_pose(pose_matrix * y.matrix());</div>
-<div class="line"><span class="lineno">  248</span> </div>
-<div class="line"><span class="lineno">  249</span>  Eigen::Isometry3d z = Eigen::Translation3d(0, 0, length / 2.0) *</div>
-<div class="line"><span class="lineno">  250</span>                        Eigen::AngleAxisd(0, Eigen::Vector3d::UnitZ());</div>
-<div class="line"><span class="lineno">  251</span>  gtsam::Pose3 z_pose(pose_matrix * z.matrix());</div>
-<div class="line"><span class="lineno">  252</span> </div>
-<div class="line"><span class="lineno">  253</span>  <span class="keyword">const</span> <span class="keyword">auto</span> ros_time = <a class="code hl_function" href="namespacedyno_1_1utils.html#a81025ee06847cec0fd854eff05362d19">utils::toRosTime</a>(timestamp);</div>
-<div class="line"><span class="lineno">  254</span> </div>
-<div class="line"><span class="lineno">  255</span>  <span class="keyword">auto</span> make_cylinder =</div>
-<div class="line"><span class="lineno">  256</span>      [&amp;length, &amp;radius, &amp;ros_time, &amp;ns, &amp;frame,</div>
-<div class="line"><span class="lineno">  257</span>       &amp;colour](<span class="keyword">const</span> gtsam::Pose3&amp; pose) -&gt; visualization_msgs::msg::Marker {</div>
-<div class="line"><span class="lineno">  258</span>    visualization_msgs::msg::Marker marker;</div>
-<div class="line"><span class="lineno">  259</span>    marker.header.stamp = ros_time;</div>
-<div class="line"><span class="lineno">  260</span>    marker.ns = ns;</div>
-<div class="line"><span class="lineno">  261</span>    marker.header.frame_id = frame;</div>
-<div class="line"><span class="lineno">  262</span> </div>
-<div class="line"><span class="lineno">  263</span>    geometry_msgs::msg::Pose pose_msg;</div>
-<div class="line"><span class="lineno">  264</span>    <a class="code hl_function" href="namespacedyno.html#a8357d6a8de284f4d1fc3d074646b43bb">dyno::convert</a>(pose, pose_msg);</div>
+<p class="definition">Definition at line <a class="el" href="InbuiltDisplayCommon_8cc_source.html#l00238">238</a> of file <a class="el" href="InbuiltDisplayCommon_8cc_source.html">InbuiltDisplayCommon.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  241</span>                                  {</div>
+<div class="line"><span class="lineno">  242</span>  <span class="keyword">const</span> <span class="keyword">auto</span> pose_matrix = pose.matrix();</div>
+<div class="line"><span class="lineno">  243</span>  Eigen::Isometry3d x = Eigen::Translation3d(length / 2.0, 0, 0) *</div>
+<div class="line"><span class="lineno">  244</span>                        Eigen::AngleAxisd(M_PI / 2.0, Eigen::Vector3d::UnitY());</div>
+<div class="line"><span class="lineno">  245</span>  gtsam::Pose3 x_pose(pose_matrix * x.matrix());</div>
+<div class="line"><span class="lineno">  246</span> </div>
+<div class="line"><span class="lineno">  247</span>  <span class="comment">// Publish y axis</span></div>
+<div class="line"><span class="lineno">  248</span>  Eigen::Isometry3d y = Eigen::Translation3d(0, length / 2.0, 0) *</div>
+<div class="line"><span class="lineno">  249</span>                        Eigen::AngleAxisd(M_PI / 2.0, Eigen::Vector3d::UnitX());</div>
+<div class="line"><span class="lineno">  250</span>  gtsam::Pose3 y_pose(pose_matrix * y.matrix());</div>
+<div class="line"><span class="lineno">  251</span> </div>
+<div class="line"><span class="lineno">  252</span>  Eigen::Isometry3d z = Eigen::Translation3d(0, 0, length / 2.0) *</div>
+<div class="line"><span class="lineno">  253</span>                        Eigen::AngleAxisd(0, Eigen::Vector3d::UnitZ());</div>
+<div class="line"><span class="lineno">  254</span>  gtsam::Pose3 z_pose(pose_matrix * z.matrix());</div>
+<div class="line"><span class="lineno">  255</span> </div>
+<div class="line"><span class="lineno">  256</span>  <span class="keyword">const</span> <span class="keyword">auto</span> ros_time = <a class="code hl_function" href="namespacedyno_1_1utils.html#a81025ee06847cec0fd854eff05362d19">utils::toRosTime</a>(timestamp);</div>
+<div class="line"><span class="lineno">  257</span> </div>
+<div class="line"><span class="lineno">  258</span>  <span class="keyword">auto</span> make_cylinder =</div>
+<div class="line"><span class="lineno">  259</span>      [&amp;length, &amp;radius, &amp;ros_time, &amp;ns, &amp;frame,</div>
+<div class="line"><span class="lineno">  260</span>       &amp;colour](<span class="keyword">const</span> gtsam::Pose3&amp; pose) -&gt; visualization_msgs::msg::Marker {</div>
+<div class="line"><span class="lineno">  261</span>    visualization_msgs::msg::Marker marker;</div>
+<div class="line"><span class="lineno">  262</span>    marker.header.stamp = ros_time;</div>
+<div class="line"><span class="lineno">  263</span>    marker.ns = ns;</div>
+<div class="line"><span class="lineno">  264</span>    marker.header.frame_id = frame;</div>
 <div class="line"><span class="lineno">  265</span> </div>
-<div class="line"><span class="lineno">  266</span>    marker.pose = pose_msg;</div>
-<div class="line"><span class="lineno">  267</span>    marker.scale.x = radius;</div>
-<div class="line"><span class="lineno">  268</span>    marker.scale.y = radius;</div>
-<div class="line"><span class="lineno">  269</span>    marker.scale.z = length;</div>
-<div class="line"><span class="lineno">  270</span> </div>
-<div class="line"><span class="lineno">  271</span>    marker.color.r = colour(0) / 255.0;</div>
-<div class="line"><span class="lineno">  272</span>    marker.color.g = colour(1) / 255.0;</div>
-<div class="line"><span class="lineno">  273</span>    marker.color.b = colour(2) / 255.0;</div>
-<div class="line"><span class="lineno">  274</span> </div>
-<div class="line"><span class="lineno">  275</span>    <span class="keywordflow">return</span> marker;</div>
-<div class="line"><span class="lineno">  276</span>  };</div>
+<div class="line"><span class="lineno">  266</span>    geometry_msgs::msg::Pose pose_msg;</div>
+<div class="line"><span class="lineno">  267</span>    <a class="code hl_function" href="namespacedyno.html#a8357d6a8de284f4d1fc3d074646b43bb">dyno::convert</a>(pose, pose_msg);</div>
+<div class="line"><span class="lineno">  268</span> </div>
+<div class="line"><span class="lineno">  269</span>    marker.pose = pose_msg;</div>
+<div class="line"><span class="lineno">  270</span>    marker.scale.x = radius;</div>
+<div class="line"><span class="lineno">  271</span>    marker.scale.y = radius;</div>
+<div class="line"><span class="lineno">  272</span>    marker.scale.z = length;</div>
+<div class="line"><span class="lineno">  273</span> </div>
+<div class="line"><span class="lineno">  274</span>    marker.color.r = colour(0) / 255.0;</div>
+<div class="line"><span class="lineno">  275</span>    marker.color.g = colour(1) / 255.0;</div>
+<div class="line"><span class="lineno">  276</span>    marker.color.b = colour(2) / 255.0;</div>
 <div class="line"><span class="lineno">  277</span> </div>
-<div class="line"><span class="lineno">  278</span>  axis_markers.markers.push_back(make_cylinder(x_pose));</div>
-<div class="line"><span class="lineno">  279</span>  axis_markers.markers.push_back(make_cylinder(y_pose));</div>
-<div class="line"><span class="lineno">  280</span>  axis_markers.markers.push_back(make_cylinder(z_pose));</div>
-<div class="line"><span class="lineno">  281</span>}</div>
+<div class="line"><span class="lineno">  278</span>    <span class="keywordflow">return</span> marker;</div>
+<div class="line"><span class="lineno">  279</span>  };</div>
+<div class="line"><span class="lineno">  280</span> </div>
+<div class="line"><span class="lineno">  281</span>  axis_markers.markers.push_back(make_cylinder(x_pose));</div>
+<div class="line"><span class="lineno">  282</span>  axis_markers.markers.push_back(make_cylinder(y_pose));</div>
+<div class="line"><span class="lineno">  283</span>  axis_markers.markers.push_back(make_cylinder(z_pose));</div>
+<div class="line"><span class="lineno">  284</span>}</div>
 <div class="ttc" id="anamespacedyno_html_a8357d6a8de284f4d1fc3d074646b43bb"><div class="ttname"><a href="namespacedyno.html#a8357d6a8de284f4d1fc3d074646b43bb">dyno::convert</a></div><div class="ttdeci">bool convert(const LandmarkStatus &amp;status, pcl::PointXYZRGB &amp;point)</div><div class="ttdef"><b>Definition:</b> <a href="PointCloudProcess_8hpp_source.html#l00055">PointCloudProcess.hpp:55</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="namespacedyno.html#a8357d6a8de284f4d1fc3d074646b43bb">dyno::convert()</a>, and <a class="el" href="namespacedyno_1_1utils.html#a81025ee06847cec0fd854eff05362d19">dyno::utils::toRosTime()</a>.</p>
@@ -589,120 +589,120 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="InbuiltDisplayCommon_8cc_source.html#l00382">382</a> of file <a class="el" href="InbuiltDisplayCommon_8cc_source.html">InbuiltDisplayCommon.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  384</span>                                                 {</div>
-<div class="line"><span class="lineno">  385</span>  <span class="keyword">auto</span> transform_odom_to =</div>
-<div class="line"><span class="lineno">  386</span>      [&amp;T_world_x](</div>
-<div class="line"><span class="lineno">  387</span>          <span class="keyword">const</span> geometry_msgs::msg::Pose&amp; msg) -&gt; geometry_msgs::msg::Pose {</div>
-<div class="line"><span class="lineno">  388</span>    <span class="comment">// convert msg to pose</span></div>
-<div class="line"><span class="lineno">  389</span>    gtsam::Pose3 msg_as_pose;</div>
-<div class="line"><span class="lineno">  390</span>    <a class="code hl_function" href="namespacedyno.html#a8357d6a8de284f4d1fc3d074646b43bb">dyno::convert</a>(msg, msg_as_pose);</div>
-<div class="line"><span class="lineno">  391</span>    <span class="comment">// transform pose into world frame</span></div>
-<div class="line"><span class="lineno">  392</span>    gtsam::Pose3 transformed_pose = T_world_x * msg_as_pose;</div>
-<div class="line"><span class="lineno">  393</span>    <span class="comment">// transform pose back to ROS msg and return</span></div>
-<div class="line"><span class="lineno">  394</span>    geometry_msgs::msg::Pose transformed_msg;</div>
-<div class="line"><span class="lineno">  395</span>    <a class="code hl_function" href="namespacedyno.html#a8357d6a8de284f4d1fc3d074646b43bb">dyno::convert</a>(transformed_pose, transformed_msg);</div>
-<div class="line"><span class="lineno">  396</span>    <span class="keywordflow">return</span> transformed_msg;</div>
-<div class="line"><span class="lineno">  397</span>  };</div>
-<div class="line"><span class="lineno">  398</span> </div>
-<div class="line"><span class="lineno">  399</span>  <span class="keyword">auto</span> ros_time = <a class="code hl_function" href="namespacedyno_1_1utils.html#a81025ee06847cec0fd854eff05362d19">utils::toRosTime</a>(timestamp);</div>
-<div class="line"><span class="lineno">  400</span> </div>
-<div class="line"><span class="lineno">  401</span>  <span class="comment">// make rectangles as frame</span></div>
-<div class="line"><span class="lineno">  402</span>  <span class="keyword">const</span> <span class="keywordtype">double</span> r_w = 1.0;</div>
-<div class="line"><span class="lineno">  403</span>  <span class="keyword">const</span> <span class="keywordtype">double</span> z_plane = (r_w / 2.0) * marker_scale;</div>
-<div class="line"><span class="lineno">  404</span> </div>
-<div class="line"><span class="lineno">  405</span>  <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">double</span> sqrt2_2 = sqrt(2) / 2;</div>
-<div class="line"><span class="lineno">  406</span> </div>
-<div class="line"><span class="lineno">  407</span>  <a class="code hl_typedef" href="namespacedyno.html#a17b3426d4ee794ba8ca908e263631d2c">MarkerArray</a> marker_array;</div>
-<div class="line"><span class="lineno">  408</span>  visualization_msgs::msg::Marker marker;</div>
+<p class="definition">Definition at line <a class="el" href="InbuiltDisplayCommon_8cc_source.html#l00385">385</a> of file <a class="el" href="InbuiltDisplayCommon_8cc_source.html">InbuiltDisplayCommon.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  387</span>                                                 {</div>
+<div class="line"><span class="lineno">  388</span>  <span class="keyword">auto</span> transform_odom_to =</div>
+<div class="line"><span class="lineno">  389</span>      [&amp;T_world_x](</div>
+<div class="line"><span class="lineno">  390</span>          <span class="keyword">const</span> geometry_msgs::msg::Pose&amp; msg) -&gt; geometry_msgs::msg::Pose {</div>
+<div class="line"><span class="lineno">  391</span>    <span class="comment">// convert msg to pose</span></div>
+<div class="line"><span class="lineno">  392</span>    gtsam::Pose3 msg_as_pose;</div>
+<div class="line"><span class="lineno">  393</span>    <a class="code hl_function" href="namespacedyno.html#a8357d6a8de284f4d1fc3d074646b43bb">dyno::convert</a>(msg, msg_as_pose);</div>
+<div class="line"><span class="lineno">  394</span>    <span class="comment">// transform pose into world frame</span></div>
+<div class="line"><span class="lineno">  395</span>    gtsam::Pose3 transformed_pose = T_world_x * msg_as_pose;</div>
+<div class="line"><span class="lineno">  396</span>    <span class="comment">// transform pose back to ROS msg and return</span></div>
+<div class="line"><span class="lineno">  397</span>    geometry_msgs::msg::Pose transformed_msg;</div>
+<div class="line"><span class="lineno">  398</span>    <a class="code hl_function" href="namespacedyno.html#a8357d6a8de284f4d1fc3d074646b43bb">dyno::convert</a>(transformed_pose, transformed_msg);</div>
+<div class="line"><span class="lineno">  399</span>    <span class="keywordflow">return</span> transformed_msg;</div>
+<div class="line"><span class="lineno">  400</span>  };</div>
+<div class="line"><span class="lineno">  401</span> </div>
+<div class="line"><span class="lineno">  402</span>  <span class="keyword">auto</span> ros_time = <a class="code hl_function" href="namespacedyno_1_1utils.html#a81025ee06847cec0fd854eff05362d19">utils::toRosTime</a>(timestamp);</div>
+<div class="line"><span class="lineno">  403</span> </div>
+<div class="line"><span class="lineno">  404</span>  <span class="comment">// make rectangles as frame</span></div>
+<div class="line"><span class="lineno">  405</span>  <span class="keyword">const</span> <span class="keywordtype">double</span> r_w = 1.0;</div>
+<div class="line"><span class="lineno">  406</span>  <span class="keyword">const</span> <span class="keywordtype">double</span> z_plane = (r_w / 2.0) * marker_scale;</div>
+<div class="line"><span class="lineno">  407</span> </div>
+<div class="line"><span class="lineno">  408</span>  <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">double</span> sqrt2_2 = sqrt(2) / 2;</div>
 <div class="line"><span class="lineno">  409</span> </div>
-<div class="line"><span class="lineno">  410</span>  <span class="comment">// the marker will be displayed in frame_id</span></div>
-<div class="line"><span class="lineno">  411</span>  marker.header.frame_id = <a class="code hl_variable" href="classdyno_1_1InbuiltDisplayCommon.html#ac97f0604560a86d02da38ddd376237e1">params_</a>.<a class="code hl_variable" href="structdyno_1_1DisplayParams.html#a2847fed65922f575311e2181add1933e">world_frame_id</a>;</div>
-<div class="line"><span class="lineno">  412</span>  marker.header.stamp = ros_time;</div>
-<div class="line"><span class="lineno">  413</span>  marker.ns = ns;</div>
-<div class="line"><span class="lineno">  414</span>  marker.action = 0;</div>
-<div class="line"><span class="lineno">  415</span>  marker.id = 8;  <span class="comment">// 8 of 8 markers</span></div>
-<div class="line"><span class="lineno">  416</span> </div>
-<div class="line"><span class="lineno">  417</span>  marker.type = visualization_msgs::msg::Marker::CUBE;</div>
-<div class="line"><span class="lineno">  418</span>  marker.scale.x = r_w * marker_scale;</div>
-<div class="line"><span class="lineno">  419</span>  marker.scale.y = 0.04 * marker_scale;</div>
-<div class="line"><span class="lineno">  420</span>  marker.scale.z = 0.04 * marker_scale;</div>
-<div class="line"><span class="lineno">  421</span>  marker.color.r = colour(0) / 255.0;</div>
-<div class="line"><span class="lineno">  422</span>  marker.color.g = colour(1) / 255.0;</div>
-<div class="line"><span class="lineno">  423</span>  marker.color.b = colour(2) / 255.0;</div>
-<div class="line"><span class="lineno">  424</span>  marker.color.a = 1.0;</div>
-<div class="line"><span class="lineno">  425</span> </div>
-<div class="line"><span class="lineno">  426</span>  marker.pose.orientation.x = 0;</div>
-<div class="line"><span class="lineno">  427</span>  marker.pose.orientation.y = 0;</div>
-<div class="line"><span class="lineno">  428</span>  marker.pose.orientation.z = 0;</div>
-<div class="line"><span class="lineno">  429</span>  marker.pose.orientation.w = 1;</div>
-<div class="line"><span class="lineno">  430</span>  marker.id--;</div>
-<div class="line"><span class="lineno">  431</span>  marker_array.markers.push_back(marker);</div>
-<div class="line"><span class="lineno">  432</span>  marker.pose.position.y = -(r_w / 4.0) * marker_scale;</div>
+<div class="line"><span class="lineno">  410</span>  <a class="code hl_typedef" href="namespacedyno.html#a17b3426d4ee794ba8ca908e263631d2c">MarkerArray</a> marker_array;</div>
+<div class="line"><span class="lineno">  411</span>  visualization_msgs::msg::Marker marker;</div>
+<div class="line"><span class="lineno">  412</span> </div>
+<div class="line"><span class="lineno">  413</span>  <span class="comment">// the marker will be displayed in frame_id</span></div>
+<div class="line"><span class="lineno">  414</span>  marker.header.frame_id = <a class="code hl_variable" href="classdyno_1_1InbuiltDisplayCommon.html#ac97f0604560a86d02da38ddd376237e1">params_</a>.<a class="code hl_variable" href="structdyno_1_1DisplayParams.html#a2847fed65922f575311e2181add1933e">world_frame_id</a>;</div>
+<div class="line"><span class="lineno">  415</span>  marker.header.stamp = ros_time;</div>
+<div class="line"><span class="lineno">  416</span>  marker.ns = ns;</div>
+<div class="line"><span class="lineno">  417</span>  marker.action = 0;</div>
+<div class="line"><span class="lineno">  418</span>  marker.id = 8;  <span class="comment">// 8 of 8 markers</span></div>
+<div class="line"><span class="lineno">  419</span> </div>
+<div class="line"><span class="lineno">  420</span>  marker.type = visualization_msgs::msg::Marker::CUBE;</div>
+<div class="line"><span class="lineno">  421</span>  marker.scale.x = r_w * marker_scale;</div>
+<div class="line"><span class="lineno">  422</span>  marker.scale.y = 0.04 * marker_scale;</div>
+<div class="line"><span class="lineno">  423</span>  marker.scale.z = 0.04 * marker_scale;</div>
+<div class="line"><span class="lineno">  424</span>  marker.color.r = colour(0) / 255.0;</div>
+<div class="line"><span class="lineno">  425</span>  marker.color.g = colour(1) / 255.0;</div>
+<div class="line"><span class="lineno">  426</span>  marker.color.b = colour(2) / 255.0;</div>
+<div class="line"><span class="lineno">  427</span>  marker.color.a = 1.0;</div>
+<div class="line"><span class="lineno">  428</span> </div>
+<div class="line"><span class="lineno">  429</span>  marker.pose.orientation.x = 0;</div>
+<div class="line"><span class="lineno">  430</span>  marker.pose.orientation.y = 0;</div>
+<div class="line"><span class="lineno">  431</span>  marker.pose.orientation.z = 0;</div>
+<div class="line"><span class="lineno">  432</span>  marker.pose.orientation.w = 1;</div>
 <div class="line"><span class="lineno">  433</span>  marker.id--;</div>
 <div class="line"><span class="lineno">  434</span>  marker_array.markers.push_back(marker);</div>
-<div class="line"><span class="lineno">  435</span> </div>
-<div class="line"><span class="lineno">  436</span>  marker.scale.x = (r_w / 2.0) * marker_scale;</div>
-<div class="line"><span class="lineno">  437</span>  marker.pose.position.x = (r_w / 2.0) * marker_scale;</div>
-<div class="line"><span class="lineno">  438</span>  marker.pose.position.y = 0;</div>
-<div class="line"><span class="lineno">  439</span>  marker.pose.orientation.w = sqrt2_2;</div>
-<div class="line"><span class="lineno">  440</span>  marker.pose.orientation.z = sqrt2_2;</div>
-<div class="line"><span class="lineno">  441</span>  marker.id--;</div>
-<div class="line"><span class="lineno">  442</span>  marker_array.markers.push_back(marker);</div>
-<div class="line"><span class="lineno">  443</span>  marker.pose.position.x = -(r_w / 2.0) * marker_scale;</div>
+<div class="line"><span class="lineno">  435</span>  marker.pose.position.y = -(r_w / 4.0) * marker_scale;</div>
+<div class="line"><span class="lineno">  436</span>  marker.id--;</div>
+<div class="line"><span class="lineno">  437</span>  marker_array.markers.push_back(marker);</div>
+<div class="line"><span class="lineno">  438</span> </div>
+<div class="line"><span class="lineno">  439</span>  marker.scale.x = (r_w / 2.0) * marker_scale;</div>
+<div class="line"><span class="lineno">  440</span>  marker.pose.position.x = (r_w / 2.0) * marker_scale;</div>
+<div class="line"><span class="lineno">  441</span>  marker.pose.position.y = 0;</div>
+<div class="line"><span class="lineno">  442</span>  marker.pose.orientation.w = sqrt2_2;</div>
+<div class="line"><span class="lineno">  443</span>  marker.pose.orientation.z = sqrt2_2;</div>
 <div class="line"><span class="lineno">  444</span>  marker.id--;</div>
 <div class="line"><span class="lineno">  445</span>  marker_array.markers.push_back(marker);</div>
-<div class="line"><span class="lineno">  446</span> </div>
-<div class="line"><span class="lineno">  447</span>  <span class="comment">// make pyramid edges</span></div>
-<div class="line"><span class="lineno">  448</span>  marker.scale.x = (3.0 * r_w / 4.0) * marker_scale;</div>
-<div class="line"><span class="lineno">  449</span>  marker.pose.position.z = 0.5 * z_plane;</div>
-<div class="line"><span class="lineno">  450</span> </div>
-<div class="line"><span class="lineno">  451</span>  marker.pose.position.x = (r_w / 4.0) * marker_scale;</div>
-<div class="line"><span class="lineno">  452</span>  marker.pose.position.y = (r_w / 8.0) * marker_scale;</div>
-<div class="line"><span class="lineno">  453</span>  <span class="comment">//  0.08198092, -0.34727674,  0.21462883,  0.9091823</span></div>
-<div class="line"><span class="lineno">  454</span>  marker.pose.orientation.x = 0.08198092;</div>
-<div class="line"><span class="lineno">  455</span>  marker.pose.orientation.y = -0.34727674;</div>
-<div class="line"><span class="lineno">  456</span>  marker.pose.orientation.z = 0.21462883;</div>
-<div class="line"><span class="lineno">  457</span>  marker.pose.orientation.w = 0.9091823;</div>
-<div class="line"><span class="lineno">  458</span>  marker.id--;</div>
-<div class="line"><span class="lineno">  459</span>  marker_array.markers.push_back(marker);</div>
-<div class="line"><span class="lineno">  460</span> </div>
-<div class="line"><span class="lineno">  461</span>  marker.pose.position.x = -(r_w / 4.0) * marker_scale;</div>
-<div class="line"><span class="lineno">  462</span>  marker.pose.position.y = (r_w / 8.0) * marker_scale;</div>
-<div class="line"><span class="lineno">  463</span>  <span class="comment">// -0.27395078, -0.22863284,  0.9091823 ,  0.21462883</span></div>
-<div class="line"><span class="lineno">  464</span>  marker.pose.orientation.x = 0.08198092;</div>
-<div class="line"><span class="lineno">  465</span>  marker.pose.orientation.y = 0.34727674;</div>
-<div class="line"><span class="lineno">  466</span>  marker.pose.orientation.z = -0.21462883;</div>
-<div class="line"><span class="lineno">  467</span>  marker.pose.orientation.w = 0.9091823;</div>
-<div class="line"><span class="lineno">  468</span>  marker.id--;</div>
-<div class="line"><span class="lineno">  469</span>  marker_array.markers.push_back(marker);</div>
-<div class="line"><span class="lineno">  470</span> </div>
-<div class="line"><span class="lineno">  471</span>  marker.pose.position.x = -(r_w / 4.0) * marker_scale;</div>
-<div class="line"><span class="lineno">  472</span>  marker.pose.position.y = -(r_w / 8.0) * marker_scale;</div>
-<div class="line"><span class="lineno">  473</span>  <span class="comment">//  -0.08198092,  0.34727674,  0.21462883,  0.9091823</span></div>
-<div class="line"><span class="lineno">  474</span>  marker.pose.orientation.x = -0.08198092;</div>
-<div class="line"><span class="lineno">  475</span>  marker.pose.orientation.y = 0.34727674;</div>
-<div class="line"><span class="lineno">  476</span>  marker.pose.orientation.z = 0.21462883;</div>
-<div class="line"><span class="lineno">  477</span>  marker.pose.orientation.w = 0.9091823;</div>
-<div class="line"><span class="lineno">  478</span>  marker.id--;</div>
-<div class="line"><span class="lineno">  479</span>  marker_array.markers.push_back(marker);</div>
-<div class="line"><span class="lineno">  480</span> </div>
-<div class="line"><span class="lineno">  481</span>  marker.pose.position.x = (r_w / 4.0) * marker_scale;</div>
-<div class="line"><span class="lineno">  482</span>  marker.pose.position.y = -(r_w / 8.0) * marker_scale;</div>
-<div class="line"><span class="lineno">  483</span>  <span class="comment">// -0.08198092, -0.34727674, -0.21462883,  0.9091823</span></div>
-<div class="line"><span class="lineno">  484</span>  marker.pose.orientation.x = -0.08198092;</div>
-<div class="line"><span class="lineno">  485</span>  marker.pose.orientation.y = -0.34727674;</div>
-<div class="line"><span class="lineno">  486</span>  marker.pose.orientation.z = -0.21462883;</div>
-<div class="line"><span class="lineno">  487</span>  marker.pose.orientation.w = 0.9091823;</div>
-<div class="line"><span class="lineno">  488</span>  marker.id--;</div>
-<div class="line"><span class="lineno">  489</span>  marker_array.markers.push_back(marker);</div>
-<div class="line"><span class="lineno">  490</span> </div>
-<div class="line"><span class="lineno">  491</span>  <span class="keywordflow">for</span> (<span class="keyword">auto</span>&amp; marker : marker_array.markers) {</div>
-<div class="line"><span class="lineno">  492</span>    <span class="comment">// put in world frame</span></div>
-<div class="line"><span class="lineno">  493</span>    marker.pose = transform_odom_to(marker.pose);</div>
-<div class="line"><span class="lineno">  494</span>  }</div>
-<div class="line"><span class="lineno">  495</span>  <span class="keywordflow">return</span> marker_array;</div>
-<div class="line"><span class="lineno">  496</span>}</div>
+<div class="line"><span class="lineno">  446</span>  marker.pose.position.x = -(r_w / 2.0) * marker_scale;</div>
+<div class="line"><span class="lineno">  447</span>  marker.id--;</div>
+<div class="line"><span class="lineno">  448</span>  marker_array.markers.push_back(marker);</div>
+<div class="line"><span class="lineno">  449</span> </div>
+<div class="line"><span class="lineno">  450</span>  <span class="comment">// make pyramid edges</span></div>
+<div class="line"><span class="lineno">  451</span>  marker.scale.x = (3.0 * r_w / 4.0) * marker_scale;</div>
+<div class="line"><span class="lineno">  452</span>  marker.pose.position.z = 0.5 * z_plane;</div>
+<div class="line"><span class="lineno">  453</span> </div>
+<div class="line"><span class="lineno">  454</span>  marker.pose.position.x = (r_w / 4.0) * marker_scale;</div>
+<div class="line"><span class="lineno">  455</span>  marker.pose.position.y = (r_w / 8.0) * marker_scale;</div>
+<div class="line"><span class="lineno">  456</span>  <span class="comment">//  0.08198092, -0.34727674,  0.21462883,  0.9091823</span></div>
+<div class="line"><span class="lineno">  457</span>  marker.pose.orientation.x = 0.08198092;</div>
+<div class="line"><span class="lineno">  458</span>  marker.pose.orientation.y = -0.34727674;</div>
+<div class="line"><span class="lineno">  459</span>  marker.pose.orientation.z = 0.21462883;</div>
+<div class="line"><span class="lineno">  460</span>  marker.pose.orientation.w = 0.9091823;</div>
+<div class="line"><span class="lineno">  461</span>  marker.id--;</div>
+<div class="line"><span class="lineno">  462</span>  marker_array.markers.push_back(marker);</div>
+<div class="line"><span class="lineno">  463</span> </div>
+<div class="line"><span class="lineno">  464</span>  marker.pose.position.x = -(r_w / 4.0) * marker_scale;</div>
+<div class="line"><span class="lineno">  465</span>  marker.pose.position.y = (r_w / 8.0) * marker_scale;</div>
+<div class="line"><span class="lineno">  466</span>  <span class="comment">// -0.27395078, -0.22863284,  0.9091823 ,  0.21462883</span></div>
+<div class="line"><span class="lineno">  467</span>  marker.pose.orientation.x = 0.08198092;</div>
+<div class="line"><span class="lineno">  468</span>  marker.pose.orientation.y = 0.34727674;</div>
+<div class="line"><span class="lineno">  469</span>  marker.pose.orientation.z = -0.21462883;</div>
+<div class="line"><span class="lineno">  470</span>  marker.pose.orientation.w = 0.9091823;</div>
+<div class="line"><span class="lineno">  471</span>  marker.id--;</div>
+<div class="line"><span class="lineno">  472</span>  marker_array.markers.push_back(marker);</div>
+<div class="line"><span class="lineno">  473</span> </div>
+<div class="line"><span class="lineno">  474</span>  marker.pose.position.x = -(r_w / 4.0) * marker_scale;</div>
+<div class="line"><span class="lineno">  475</span>  marker.pose.position.y = -(r_w / 8.0) * marker_scale;</div>
+<div class="line"><span class="lineno">  476</span>  <span class="comment">//  -0.08198092,  0.34727674,  0.21462883,  0.9091823</span></div>
+<div class="line"><span class="lineno">  477</span>  marker.pose.orientation.x = -0.08198092;</div>
+<div class="line"><span class="lineno">  478</span>  marker.pose.orientation.y = 0.34727674;</div>
+<div class="line"><span class="lineno">  479</span>  marker.pose.orientation.z = 0.21462883;</div>
+<div class="line"><span class="lineno">  480</span>  marker.pose.orientation.w = 0.9091823;</div>
+<div class="line"><span class="lineno">  481</span>  marker.id--;</div>
+<div class="line"><span class="lineno">  482</span>  marker_array.markers.push_back(marker);</div>
+<div class="line"><span class="lineno">  483</span> </div>
+<div class="line"><span class="lineno">  484</span>  marker.pose.position.x = (r_w / 4.0) * marker_scale;</div>
+<div class="line"><span class="lineno">  485</span>  marker.pose.position.y = -(r_w / 8.0) * marker_scale;</div>
+<div class="line"><span class="lineno">  486</span>  <span class="comment">// -0.08198092, -0.34727674, -0.21462883,  0.9091823</span></div>
+<div class="line"><span class="lineno">  487</span>  marker.pose.orientation.x = -0.08198092;</div>
+<div class="line"><span class="lineno">  488</span>  marker.pose.orientation.y = -0.34727674;</div>
+<div class="line"><span class="lineno">  489</span>  marker.pose.orientation.z = -0.21462883;</div>
+<div class="line"><span class="lineno">  490</span>  marker.pose.orientation.w = 0.9091823;</div>
+<div class="line"><span class="lineno">  491</span>  marker.id--;</div>
+<div class="line"><span class="lineno">  492</span>  marker_array.markers.push_back(marker);</div>
+<div class="line"><span class="lineno">  493</span> </div>
+<div class="line"><span class="lineno">  494</span>  <span class="keywordflow">for</span> (<span class="keyword">auto</span>&amp; marker : marker_array.markers) {</div>
+<div class="line"><span class="lineno">  495</span>    <span class="comment">// put in world frame</span></div>
+<div class="line"><span class="lineno">  496</span>    marker.pose = transform_odom_to(marker.pose);</div>
+<div class="line"><span class="lineno">  497</span>  }</div>
+<div class="line"><span class="lineno">  498</span>  <span class="keywordflow">return</span> marker_array;</div>
+<div class="line"><span class="lineno">  499</span>}</div>
 <div class="ttc" id="anamespacedyno_html_a17b3426d4ee794ba8ca908e263631d2c"><div class="ttname"><a href="namespacedyno.html#a17b3426d4ee794ba8ca908e263631d2c">dyno::MarkerArray</a></div><div class="ttdeci">visualization_msgs::msg::MarkerArray MarkerArray</div><div class="ttdef"><b>Definition:</b> <a href="DisplaysCommon_8hpp_source.html#l00050">DisplaysCommon.hpp:51</a></div></div>
 <div class="ttc" id="astructdyno_1_1DisplayParams_html_a2847fed65922f575311e2181add1933e"><div class="ttname"><a href="structdyno_1_1DisplayParams.html#a2847fed65922f575311e2181add1933e">dyno::DisplayParams::world_frame_id</a></div><div class="ttdeci">std::string world_frame_id</div><div class="ttdef"><b>Definition:</b> <a href="Display-Definitions_8hpp_source.html#l00038">Display-Definitions.hpp:38</a></div></div>
 </div><!-- fragment -->
@@ -839,7 +839,7 @@ Here is the caller graph for this function:</div>
 <div class="line"><span class="lineno">  121</span>        <a class="code hl_function" href="classdyno_1_1InbuiltDisplayCommon.html#a925cae0fcfe0b0f79074c1abd1bcc96b">createCameraMarker</a>(T_world_x, timestamp, ns, colour, marker_scale));</div>
 <div class="line"><span class="lineno">  122</span>  }</div>
 <div class="ttc" id="aclassdyno_1_1InbuiltDisplayCommon_html_a6f2921069a9f089cfebb041e69f22c6a"><div class="ttname"><a href="classdyno_1_1InbuiltDisplayCommon.html#a6f2921069a9f089cfebb041e69f22c6a">dyno::InbuiltDisplayCommon::camera_frustrum_pub_</a></div><div class="ttdeci">MarkerArrayPub::SharedPtr camera_frustrum_pub_</div><div class="ttdef"><b>Definition:</b> <a href="InbuiltDisplayCommon_8hpp_source.html#l00135">InbuiltDisplayCommon.hpp:135</a></div></div>
-<div class="ttc" id="aclassdyno_1_1InbuiltDisplayCommon_html_a925cae0fcfe0b0f79074c1abd1bcc96b"><div class="ttname"><a href="classdyno_1_1InbuiltDisplayCommon.html#a925cae0fcfe0b0f79074c1abd1bcc96b">dyno::InbuiltDisplayCommon::createCameraMarker</a></div><div class="ttdeci">MarkerArray createCameraMarker(const gtsam::Pose3 &amp;T_world_x, Timestamp timestamp, const std::string &amp;ns, const cv::Scalar &amp;colour, double marker_scale=1.0)</div><div class="ttdef"><b>Definition:</b> <a href="InbuiltDisplayCommon_8cc_source.html#l00382">InbuiltDisplayCommon.cc:382</a></div></div>
+<div class="ttc" id="aclassdyno_1_1InbuiltDisplayCommon_html_a925cae0fcfe0b0f79074c1abd1bcc96b"><div class="ttname"><a href="classdyno_1_1InbuiltDisplayCommon.html#a925cae0fcfe0b0f79074c1abd1bcc96b">dyno::InbuiltDisplayCommon::createCameraMarker</a></div><div class="ttdeci">MarkerArray createCameraMarker(const gtsam::Pose3 &amp;T_world_x, Timestamp timestamp, const std::string &amp;ns, const cv::Scalar &amp;colour, double marker_scale=1.0)</div><div class="ttdef"><b>Definition:</b> <a href="InbuiltDisplayCommon_8cc_source.html#l00385">InbuiltDisplayCommon.cc:385</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1InbuiltDisplayCommon.html#a6f2921069a9f089cfebb041e69f22c6a">camera_frustrum_pub_</a>, and <a class="el" href="classdyno_1_1InbuiltDisplayCommon.html#a925cae0fcfe0b0f79074c1abd1bcc96b">createCameraMarker()</a>.</p>
 <div class="dynheader">
@@ -915,25 +915,25 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="InbuiltDisplayCommon_8cc_source.html#l00215">215</a> of file <a class="el" href="InbuiltDisplayCommon_8cc_source.html">InbuiltDisplayCommon.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  218</span>                                              {</div>
-<div class="line"><span class="lineno">  219</span>  <span class="keywordflow">if</span> (!aabb_pub &amp;&amp; !obb_pub) {</div>
-<div class="line"><span class="lineno">  220</span>    <span class="keywordflow">return</span>;</div>
-<div class="line"><span class="lineno">  221</span>  }</div>
-<div class="line"><span class="lineno">  222</span> </div>
-<div class="line"><span class="lineno">  223</span>  visualization_msgs::msg::MarkerArray aabb_markers;  <span class="comment">// using linelist</span></div>
-<div class="line"><span class="lineno">  224</span>  visualization_msgs::msg::MarkerArray obb_markers;   <span class="comment">// using cube</span></div>
-<div class="line"><span class="lineno">  225</span>  aabb_markers.markers.push_back(<a class="code hl_function" href="classdyno_1_1InbuiltDisplayCommon.html#a5992ad04fa12e769f0fe7ebcc5f18053">getDeletionMarker</a>());</div>
-<div class="line"><span class="lineno">  226</span>  obb_markers.markers.push_back(<a class="code hl_function" href="classdyno_1_1InbuiltDisplayCommon.html#a5992ad04fa12e769f0fe7ebcc5f18053">getDeletionMarker</a>());</div>
-<div class="line"><span class="lineno">  227</span> </div>
-<div class="line"><span class="lineno">  228</span>  <a class="code hl_function" href="classdyno_1_1InbuiltDisplayCommon.html#ac1b0d24582458add8b4f64738872ff33">constructBoundingBoxeMarkers</a>(cloud_per_object, aabb_markers, obb_markers,</div>
-<div class="line"><span class="lineno">  229</span>                               timestamp, prefix_marker_namespace);</div>
+<p class="definition">Definition at line <a class="el" href="InbuiltDisplayCommon_8cc_source.html#l00218">218</a> of file <a class="el" href="InbuiltDisplayCommon_8cc_source.html">InbuiltDisplayCommon.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  221</span>                                              {</div>
+<div class="line"><span class="lineno">  222</span>  <span class="keywordflow">if</span> (!aabb_pub &amp;&amp; !obb_pub) {</div>
+<div class="line"><span class="lineno">  223</span>    <span class="keywordflow">return</span>;</div>
+<div class="line"><span class="lineno">  224</span>  }</div>
+<div class="line"><span class="lineno">  225</span> </div>
+<div class="line"><span class="lineno">  226</span>  visualization_msgs::msg::MarkerArray aabb_markers;  <span class="comment">// using linelist</span></div>
+<div class="line"><span class="lineno">  227</span>  visualization_msgs::msg::MarkerArray obb_markers;   <span class="comment">// using cube</span></div>
+<div class="line"><span class="lineno">  228</span>  aabb_markers.markers.push_back(<a class="code hl_function" href="classdyno_1_1InbuiltDisplayCommon.html#a5992ad04fa12e769f0fe7ebcc5f18053">getDeletionMarker</a>());</div>
+<div class="line"><span class="lineno">  229</span>  obb_markers.markers.push_back(<a class="code hl_function" href="classdyno_1_1InbuiltDisplayCommon.html#a5992ad04fa12e769f0fe7ebcc5f18053">getDeletionMarker</a>());</div>
 <div class="line"><span class="lineno">  230</span> </div>
-<div class="line"><span class="lineno">  231</span>  <span class="keywordflow">if</span> (aabb_pub) aabb_pub-&gt;publish(aabb_markers);</div>
-<div class="line"><span class="lineno">  232</span>  <span class="keywordflow">if</span> (obb_pub) aabb_pub-&gt;publish(obb_markers);</div>
-<div class="line"><span class="lineno">  233</span>}</div>
+<div class="line"><span class="lineno">  231</span>  <a class="code hl_function" href="classdyno_1_1InbuiltDisplayCommon.html#ac1b0d24582458add8b4f64738872ff33">constructBoundingBoxeMarkers</a>(cloud_per_object, aabb_markers, obb_markers,</div>
+<div class="line"><span class="lineno">  232</span>                               timestamp, prefix_marker_namespace);</div>
+<div class="line"><span class="lineno">  233</span> </div>
+<div class="line"><span class="lineno">  234</span>  <span class="keywordflow">if</span> (aabb_pub) aabb_pub-&gt;publish(aabb_markers);</div>
+<div class="line"><span class="lineno">  235</span>  <span class="keywordflow">if</span> (obb_pub) aabb_pub-&gt;publish(obb_markers);</div>
+<div class="line"><span class="lineno">  236</span>}</div>
 <div class="ttc" id="aclassdyno_1_1InbuiltDisplayCommon_html_a5992ad04fa12e769f0fe7ebcc5f18053"><div class="ttname"><a href="classdyno_1_1InbuiltDisplayCommon.html#a5992ad04fa12e769f0fe7ebcc5f18053">dyno::InbuiltDisplayCommon::getDeletionMarker</a></div><div class="ttdeci">visualization_msgs::msg::Marker getDeletionMarker() const</div><div class="ttdef"><b>Definition:</b> <a href="InbuiltDisplayCommon_8hpp_source.html#l00124">InbuiltDisplayCommon.hpp:124</a></div></div>
-<div class="ttc" id="aclassdyno_1_1InbuiltDisplayCommon_html_ac1b0d24582458add8b4f64738872ff33"><div class="ttname"><a href="classdyno_1_1InbuiltDisplayCommon.html#ac1b0d24582458add8b4f64738872ff33">dyno::InbuiltDisplayCommon::constructBoundingBoxeMarkers</a></div><div class="ttdeci">static void constructBoundingBoxeMarkers(const CloudPerObject &amp;cloud_per_object, MarkerArray &amp;aabb_markers, MarkerArray &amp;obb_markers, Timestamp timestamp, const std::string &amp;prefix_marker_namespace)</div><div class="ttdoc">Constructs axis-aligned BB (AABB) and oriented BB (OBB) marker arrays from a set of point clouds whic...</div><div class="ttdef"><b>Definition:</b> <a href="InbuiltDisplayCommon_8cc_source.html#l00283">InbuiltDisplayCommon.cc:283</a></div></div>
+<div class="ttc" id="aclassdyno_1_1InbuiltDisplayCommon_html_ac1b0d24582458add8b4f64738872ff33"><div class="ttname"><a href="classdyno_1_1InbuiltDisplayCommon.html#ac1b0d24582458add8b4f64738872ff33">dyno::InbuiltDisplayCommon::constructBoundingBoxeMarkers</a></div><div class="ttdeci">static void constructBoundingBoxeMarkers(const CloudPerObject &amp;cloud_per_object, MarkerArray &amp;aabb_markers, MarkerArray &amp;obb_markers, Timestamp timestamp, const std::string &amp;prefix_marker_namespace)</div><div class="ttdoc">Constructs axis-aligned BB (AABB) and oriented BB (OBB) marker arrays from a set of point clouds whic...</div><div class="ttdef"><b>Definition:</b> <a href="InbuiltDisplayCommon_8cc_source.html#l00286">InbuiltDisplayCommon.cc:286</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1InbuiltDisplayCommon.html#ac1b0d24582458add8b4f64738872ff33">constructBoundingBoxeMarkers()</a>, and <a class="el" href="classdyno_1_1InbuiltDisplayCommon.html#a5992ad04fa12e769f0fe7ebcc5f18053">getDeletionMarker()</a>.</p>
 <div class="dynheader">
@@ -1017,90 +1017,90 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="InbuiltDisplayCommon_8cc_source.html#l00128">128</a> of file <a class="el" href="InbuiltDisplayCommon_8cc_source.html">InbuiltDisplayCommon.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  131</span>                                                                   {</div>
-<div class="line"><span class="lineno">  132</span>  visualization_msgs::msg::MarkerArray object_path_marker_array;</div>
-<div class="line"><span class="lineno">  133</span>  <span class="keyword">static</span> visualization_msgs::msg::Marker delete_marker;</div>
-<div class="line"><span class="lineno">  134</span>  delete_marker.action = visualization_msgs::msg::Marker::DELETEALL;</div>
-<div class="line"><span class="lineno">  135</span> </div>
-<div class="line"><span class="lineno">  136</span>  <span class="keyword">auto</span> ros_time = <a class="code hl_function" href="namespacedyno_1_1utils.html#a81025ee06847cec0fd854eff05362d19">utils::toRosTime</a>(latest_timestamp);</div>
-<div class="line"><span class="lineno">  137</span>  object_path_marker_array.markers.push_back(delete_marker);</div>
+<p class="definition">Definition at line <a class="el" href="InbuiltDisplayCommon_8cc_source.html#l00131">131</a> of file <a class="el" href="InbuiltDisplayCommon_8cc_source.html">InbuiltDisplayCommon.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  134</span>                                                                   {</div>
+<div class="line"><span class="lineno">  135</span>  visualization_msgs::msg::MarkerArray object_path_marker_array;</div>
+<div class="line"><span class="lineno">  136</span>  <span class="keyword">static</span> visualization_msgs::msg::Marker delete_marker;</div>
+<div class="line"><span class="lineno">  137</span>  delete_marker.action = visualization_msgs::msg::Marker::DELETEALL;</div>
 <div class="line"><span class="lineno">  138</span> </div>
-<div class="line"><span class="lineno">  139</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [object_id, poses_map] : object_positions) {</div>
-<div class="line"><span class="lineno">  140</span>    <span class="keywordflow">if</span> (poses_map.size() &lt; 2u) {</div>
-<div class="line"><span class="lineno">  141</span>      <span class="keywordflow">continue</span>;</div>
-<div class="line"><span class="lineno">  142</span>    }</div>
-<div class="line"><span class="lineno">  143</span> </div>
-<div class="line"><span class="lineno">  144</span>    <span class="comment">// draw a line list for viz</span></div>
-<div class="line"><span class="lineno">  145</span>    visualization_msgs::msg::Marker line_list_marker;</div>
-<div class="line"><span class="lineno">  146</span>    line_list_marker.type = visualization_msgs::msg::Marker::LINE_STRIP;</div>
-<div class="line"><span class="lineno">  147</span>    line_list_marker.header.frame_id = <span class="stringliteral">&quot;world&quot;</span>;</div>
-<div class="line"><span class="lineno">  148</span>    line_list_marker.ns = prefix_marker_namespace + <span class="stringliteral">&quot;_object_path&quot;</span>;</div>
-<div class="line"><span class="lineno">  149</span>    line_list_marker.id = object_id;</div>
-<div class="line"><span class="lineno">  150</span>    line_list_marker.header.stamp = ros_time;</div>
-<div class="line"><span class="lineno">  151</span>    line_list_marker.scale.x = 0.05;</div>
-<div class="line"><span class="lineno">  152</span> </div>
-<div class="line"><span class="lineno">  153</span>    line_list_marker.pose.orientation.x = 0;</div>
-<div class="line"><span class="lineno">  154</span>    line_list_marker.pose.orientation.y = 0;</div>
-<div class="line"><span class="lineno">  155</span>    line_list_marker.pose.orientation.z = 0;</div>
-<div class="line"><span class="lineno">  156</span>    line_list_marker.pose.orientation.w = 1;</div>
-<div class="line"><span class="lineno">  157</span> </div>
-<div class="line"><span class="lineno">  158</span>    <span class="keyword">const</span> cv::Scalar colour = <a class="code hl_function" href="structdyno_1_1Color.html#a6689af3d0ac5ceaa66000b5ca70becbd">Color::uniqueId</a>(object_id);</div>
-<div class="line"><span class="lineno">  159</span>    line_list_marker.color.r = colour(0) / 255.0;</div>
-<div class="line"><span class="lineno">  160</span>    line_list_marker.color.g = colour(1) / 255.0;</div>
-<div class="line"><span class="lineno">  161</span>    line_list_marker.color.b = colour(2) / 255.0;</div>
-<div class="line"><span class="lineno">  162</span>    line_list_marker.color.a = 1;</div>
-<div class="line"><span class="lineno">  163</span> </div>
-<div class="line"><span class="lineno">  164</span>    <span class="keywordtype">size_t</span> traj_size;</div>
-<div class="line"><span class="lineno">  165</span>    <span class="comment">// draw all the poses</span></div>
-<div class="line"><span class="lineno">  166</span>    <span class="keywordflow">if</span> (min_poses == -1) {</div>
-<div class="line"><span class="lineno">  167</span>      traj_size = poses_map.size();</div>
-<div class="line"><span class="lineno">  168</span>    } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  169</span>      traj_size = std::min(min_poses, <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(poses_map.size()));</div>
-<div class="line"><span class="lineno">  170</span>    }</div>
-<div class="line"><span class="lineno">  171</span> </div>
-<div class="line"><span class="lineno">  172</span>    <span class="comment">// totally assume in order</span></div>
-<div class="line"><span class="lineno">  173</span>    <span class="keyword">auto</span> map_iter = poses_map.end();</div>
-<div class="line"><span class="lineno">  174</span>    <span class="comment">// equivalant to map_iter-traj_size + 1</span></div>
-<div class="line"><span class="lineno">  175</span>    <span class="comment">// we want to go backwards to the starting point specified by trajectory</span></div>
-<div class="line"><span class="lineno">  176</span>    <span class="comment">// size</span></div>
-<div class="line"><span class="lineno">  177</span>    std::advance(map_iter, (-traj_size + 1));</div>
-<div class="line"><span class="lineno">  178</span>    <span class="keywordflow">for</span> (; map_iter != poses_map.end(); map_iter++) {</div>
-<div class="line"><span class="lineno">  179</span>      <span class="keyword">auto</span> prev_iter = std::prev(map_iter, 1);</div>
-<div class="line"><span class="lineno">  180</span>      <span class="keyword">const</span> gtsam::Pose3&amp; prev_pose = prev_iter-&gt;second;</div>
-<div class="line"><span class="lineno">  181</span>      ;</div>
-<div class="line"><span class="lineno">  182</span>      <span class="keyword">const</span> gtsam::Pose3&amp; curr_pose = map_iter-&gt;second;</div>
-<div class="line"><span class="lineno">  183</span> </div>
-<div class="line"><span class="lineno">  184</span>      <span class="comment">// check frames are consequative</span></div>
-<div class="line"><span class="lineno">  185</span>      <span class="comment">//  CHECK_EQ(prev_iter-&gt;first + 1, map_iter-&gt;first) &lt;&lt; &quot; For object &quot; &lt;&lt;</span></div>
-<div class="line"><span class="lineno">  186</span>      <span class="comment">//  object_id;</span></div>
-<div class="line"><span class="lineno">  187</span>      LOG_IF(INFO, prev_iter-&gt;first + 1 != map_iter-&gt;first)</div>
-<div class="line"><span class="lineno">  188</span>          &lt;&lt; <span class="stringliteral">&quot; Frames not consequative for object &quot;</span> &lt;&lt; object_id;</div>
-<div class="line"><span class="lineno">  189</span> </div>
-<div class="line"><span class="lineno">  190</span>      {</div>
-<div class="line"><span class="lineno">  191</span>        geometry_msgs::msg::Point p;</div>
-<div class="line"><span class="lineno">  192</span>        p.x = prev_pose.x();</div>
-<div class="line"><span class="lineno">  193</span>        p.y = prev_pose.y();</div>
-<div class="line"><span class="lineno">  194</span>        p.z = prev_pose.z();</div>
-<div class="line"><span class="lineno">  195</span> </div>
-<div class="line"><span class="lineno">  196</span>        line_list_marker.points.push_back(p);</div>
-<div class="line"><span class="lineno">  197</span>      }</div>
+<div class="line"><span class="lineno">  139</span>  <span class="keyword">auto</span> ros_time = <a class="code hl_function" href="namespacedyno_1_1utils.html#a81025ee06847cec0fd854eff05362d19">utils::toRosTime</a>(latest_timestamp);</div>
+<div class="line"><span class="lineno">  140</span>  object_path_marker_array.markers.push_back(delete_marker);</div>
+<div class="line"><span class="lineno">  141</span> </div>
+<div class="line"><span class="lineno">  142</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [object_id, poses_map] : object_positions) {</div>
+<div class="line"><span class="lineno">  143</span>    <span class="keywordflow">if</span> (poses_map.size() &lt; 2u) {</div>
+<div class="line"><span class="lineno">  144</span>      <span class="keywordflow">continue</span>;</div>
+<div class="line"><span class="lineno">  145</span>    }</div>
+<div class="line"><span class="lineno">  146</span> </div>
+<div class="line"><span class="lineno">  147</span>    <span class="comment">// draw a line list for viz</span></div>
+<div class="line"><span class="lineno">  148</span>    visualization_msgs::msg::Marker line_list_marker;</div>
+<div class="line"><span class="lineno">  149</span>    line_list_marker.type = visualization_msgs::msg::Marker::LINE_STRIP;</div>
+<div class="line"><span class="lineno">  150</span>    line_list_marker.header.frame_id = <span class="stringliteral">&quot;world&quot;</span>;</div>
+<div class="line"><span class="lineno">  151</span>    line_list_marker.ns = prefix_marker_namespace + <span class="stringliteral">&quot;_object_path&quot;</span>;</div>
+<div class="line"><span class="lineno">  152</span>    line_list_marker.id = object_id;</div>
+<div class="line"><span class="lineno">  153</span>    line_list_marker.header.stamp = ros_time;</div>
+<div class="line"><span class="lineno">  154</span>    line_list_marker.scale.x = 0.05;</div>
+<div class="line"><span class="lineno">  155</span> </div>
+<div class="line"><span class="lineno">  156</span>    line_list_marker.pose.orientation.x = 0;</div>
+<div class="line"><span class="lineno">  157</span>    line_list_marker.pose.orientation.y = 0;</div>
+<div class="line"><span class="lineno">  158</span>    line_list_marker.pose.orientation.z = 0;</div>
+<div class="line"><span class="lineno">  159</span>    line_list_marker.pose.orientation.w = 1;</div>
+<div class="line"><span class="lineno">  160</span> </div>
+<div class="line"><span class="lineno">  161</span>    <span class="keyword">const</span> cv::Scalar colour = <a class="code hl_function" href="structdyno_1_1Color.html#a6689af3d0ac5ceaa66000b5ca70becbd">Color::uniqueId</a>(object_id);</div>
+<div class="line"><span class="lineno">  162</span>    line_list_marker.color.r = colour(0) / 255.0;</div>
+<div class="line"><span class="lineno">  163</span>    line_list_marker.color.g = colour(1) / 255.0;</div>
+<div class="line"><span class="lineno">  164</span>    line_list_marker.color.b = colour(2) / 255.0;</div>
+<div class="line"><span class="lineno">  165</span>    line_list_marker.color.a = 1;</div>
+<div class="line"><span class="lineno">  166</span> </div>
+<div class="line"><span class="lineno">  167</span>    <span class="keywordtype">size_t</span> traj_size;</div>
+<div class="line"><span class="lineno">  168</span>    <span class="comment">// draw all the poses</span></div>
+<div class="line"><span class="lineno">  169</span>    <span class="keywordflow">if</span> (min_poses == -1) {</div>
+<div class="line"><span class="lineno">  170</span>      traj_size = poses_map.size();</div>
+<div class="line"><span class="lineno">  171</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  172</span>      traj_size = std::min(min_poses, <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(poses_map.size()));</div>
+<div class="line"><span class="lineno">  173</span>    }</div>
+<div class="line"><span class="lineno">  174</span> </div>
+<div class="line"><span class="lineno">  175</span>    <span class="comment">// totally assume in order</span></div>
+<div class="line"><span class="lineno">  176</span>    <span class="keyword">auto</span> map_iter = poses_map.end();</div>
+<div class="line"><span class="lineno">  177</span>    <span class="comment">// equivalant to map_iter-traj_size + 1</span></div>
+<div class="line"><span class="lineno">  178</span>    <span class="comment">// we want to go backwards to the starting point specified by trajectory</span></div>
+<div class="line"><span class="lineno">  179</span>    <span class="comment">// size</span></div>
+<div class="line"><span class="lineno">  180</span>    std::advance(map_iter, (-traj_size + 1));</div>
+<div class="line"><span class="lineno">  181</span>    <span class="keywordflow">for</span> (; map_iter != poses_map.end(); map_iter++) {</div>
+<div class="line"><span class="lineno">  182</span>      <span class="keyword">auto</span> prev_iter = std::prev(map_iter, 1);</div>
+<div class="line"><span class="lineno">  183</span>      <span class="keyword">const</span> gtsam::Pose3&amp; prev_pose = prev_iter-&gt;second;</div>
+<div class="line"><span class="lineno">  184</span>      ;</div>
+<div class="line"><span class="lineno">  185</span>      <span class="keyword">const</span> gtsam::Pose3&amp; curr_pose = map_iter-&gt;second;</div>
+<div class="line"><span class="lineno">  186</span> </div>
+<div class="line"><span class="lineno">  187</span>      <span class="comment">// check frames are consequative</span></div>
+<div class="line"><span class="lineno">  188</span>      <span class="comment">//  CHECK_EQ(prev_iter-&gt;first + 1, map_iter-&gt;first) &lt;&lt; &quot; For object &quot; &lt;&lt;</span></div>
+<div class="line"><span class="lineno">  189</span>      <span class="comment">//  object_id;</span></div>
+<div class="line"><span class="lineno">  190</span>      LOG_IF(INFO, prev_iter-&gt;first + 1 != map_iter-&gt;first)</div>
+<div class="line"><span class="lineno">  191</span>          &lt;&lt; <span class="stringliteral">&quot; Frames not consequative for object &quot;</span> &lt;&lt; object_id;</div>
+<div class="line"><span class="lineno">  192</span> </div>
+<div class="line"><span class="lineno">  193</span>      {</div>
+<div class="line"><span class="lineno">  194</span>        geometry_msgs::msg::Point p;</div>
+<div class="line"><span class="lineno">  195</span>        p.x = prev_pose.x();</div>
+<div class="line"><span class="lineno">  196</span>        p.y = prev_pose.y();</div>
+<div class="line"><span class="lineno">  197</span>        p.z = prev_pose.z();</div>
 <div class="line"><span class="lineno">  198</span> </div>
-<div class="line"><span class="lineno">  199</span>      {</div>
-<div class="line"><span class="lineno">  200</span>        geometry_msgs::msg::Point p;</div>
-<div class="line"><span class="lineno">  201</span>        p.x = curr_pose.x();</div>
-<div class="line"><span class="lineno">  202</span>        p.y = curr_pose.y();</div>
-<div class="line"><span class="lineno">  203</span>        p.z = curr_pose.z();</div>
-<div class="line"><span class="lineno">  204</span> </div>
-<div class="line"><span class="lineno">  205</span>        line_list_marker.points.push_back(p);</div>
-<div class="line"><span class="lineno">  206</span>      }</div>
-<div class="line"><span class="lineno">  207</span>    }</div>
-<div class="line"><span class="lineno">  208</span> </div>
-<div class="line"><span class="lineno">  209</span>    object_path_marker_array.markers.push_back(line_list_marker);</div>
-<div class="line"><span class="lineno">  210</span>  }</div>
+<div class="line"><span class="lineno">  199</span>        line_list_marker.points.push_back(p);</div>
+<div class="line"><span class="lineno">  200</span>      }</div>
+<div class="line"><span class="lineno">  201</span> </div>
+<div class="line"><span class="lineno">  202</span>      {</div>
+<div class="line"><span class="lineno">  203</span>        geometry_msgs::msg::Point p;</div>
+<div class="line"><span class="lineno">  204</span>        p.x = curr_pose.x();</div>
+<div class="line"><span class="lineno">  205</span>        p.y = curr_pose.y();</div>
+<div class="line"><span class="lineno">  206</span>        p.z = curr_pose.z();</div>
+<div class="line"><span class="lineno">  207</span> </div>
+<div class="line"><span class="lineno">  208</span>        line_list_marker.points.push_back(p);</div>
+<div class="line"><span class="lineno">  209</span>      }</div>
+<div class="line"><span class="lineno">  210</span>    }</div>
 <div class="line"><span class="lineno">  211</span> </div>
-<div class="line"><span class="lineno">  212</span>  pub-&gt;publish(object_path_marker_array);</div>
-<div class="line"><span class="lineno">  213</span>}</div>
+<div class="line"><span class="lineno">  212</span>    object_path_marker_array.markers.push_back(line_list_marker);</div>
+<div class="line"><span class="lineno">  213</span>  }</div>
+<div class="line"><span class="lineno">  214</span> </div>
+<div class="line"><span class="lineno">  215</span>  pub-&gt;publish(object_path_marker_array);</div>
+<div class="line"><span class="lineno">  216</span>}</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="namespacedyno_1_1utils.html#a81025ee06847cec0fd854eff05362d19">dyno::utils::toRosTime()</a>, and <a class="el" href="structdyno_1_1Color.html#a6689af3d0ac5ceaa66000b5ca70becbd">dyno::Color::uniqueId()</a>.</p>
 
@@ -1199,62 +1199,62 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="InbuiltDisplayCommon_8cc_source.html#l00068">68</a> of file <a class="el" href="InbuiltDisplayCommon_8cc_source.html">InbuiltDisplayCommon.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   72</span>                  {</div>
-<div class="line"><span class="lineno">   73</span>  visualization_msgs::msg::MarkerArray object_pose_marker_array;</div>
-<div class="line"><span class="lineno">   74</span>  <span class="keyword">static</span> visualization_msgs::msg::Marker delete_marker;</div>
-<div class="line"><span class="lineno">   75</span>  delete_marker.action = visualization_msgs::msg::Marker::DELETEALL;</div>
-<div class="line"><span class="lineno">   76</span> </div>
-<div class="line"><span class="lineno">   77</span>  <span class="keyword">auto</span> ros_time = <a class="code hl_function" href="namespacedyno_1_1utils.html#a81025ee06847cec0fd854eff05362d19">utils::toRosTime</a>(latest_timestamp);</div>
-<div class="line"><span class="lineno">   78</span> </div>
-<div class="line"><span class="lineno">   79</span>  object_pose_marker_array.markers.push_back(delete_marker);</div>
-<div class="line"><span class="lineno">   80</span> </div>
-<div class="line"><span class="lineno">   81</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [object_id, poses_map] : object_positions) {</div>
-<div class="line"><span class="lineno">   82</span>    <span class="comment">// do not draw if in current frame</span></div>
-<div class="line"><span class="lineno">   83</span>    <span class="keywordflow">if</span> (!poses_map.exists(frame_id)) {</div>
-<div class="line"><span class="lineno">   84</span>      <span class="keywordflow">continue</span>;</div>
-<div class="line"><span class="lineno">   85</span>    }</div>
-<div class="line"><span class="lineno">   86</span> </div>
-<div class="line"><span class="lineno">   87</span>    <span class="keyword">const</span> gtsam::Pose3&amp; pose = poses_map.at(frame_id);</div>
-<div class="line"><span class="lineno">   88</span> </div>
-<div class="line"><span class="lineno">   89</span>    <span class="comment">// assume</span></div>
-<div class="line"><span class="lineno">   90</span>    <span class="comment">// object centroid per frame</span></div>
-<div class="line"><span class="lineno">   91</span>    visualization_msgs::msg::Marker marker;</div>
-<div class="line"><span class="lineno">   92</span>    marker.header.frame_id = <a class="code hl_variable" href="classdyno_1_1InbuiltDisplayCommon.html#ac97f0604560a86d02da38ddd376237e1">params_</a>.<a class="code hl_variable" href="structdyno_1_1DisplayParams.html#a2847fed65922f575311e2181add1933e">world_frame_id</a>;</div>
-<div class="line"><span class="lineno">   93</span>    marker.ns = prefix_marker_namespace + <span class="stringliteral">&quot;_object_positions&quot;</span>;</div>
-<div class="line"><span class="lineno">   94</span>    marker.id = object_id;</div>
-<div class="line"><span class="lineno">   95</span>    marker.type = visualization_msgs::msg::Marker::SPHERE;</div>
-<div class="line"><span class="lineno">   96</span>    marker.action = visualization_msgs::msg::Marker::ADD;</div>
-<div class="line"><span class="lineno">   97</span>    marker.header.stamp = ros_time;</div>
-<div class="line"><span class="lineno">   98</span>    marker.pose.position.x = pose.x();</div>
-<div class="line"><span class="lineno">   99</span>    marker.pose.position.y = pose.y();</div>
-<div class="line"><span class="lineno">  100</span>    marker.pose.position.z = pose.z();</div>
-<div class="line"><span class="lineno">  101</span>    marker.scale.x = scale;</div>
-<div class="line"><span class="lineno">  102</span>    marker.scale.y = scale;</div>
-<div class="line"><span class="lineno">  103</span>    marker.scale.z = scale;</div>
-<div class="line"><span class="lineno">  104</span>    marker.color.a = 1.0;  <span class="comment">// Don&#39;t forget to set the alpha!</span></div>
-<div class="line"><span class="lineno">  105</span> </div>
-<div class="line"><span class="lineno">  106</span>    <span class="keyword">const</span> cv::Scalar colour = <a class="code hl_function" href="structdyno_1_1Color.html#a6689af3d0ac5ceaa66000b5ca70becbd">Color::uniqueId</a>(object_id);</div>
-<div class="line"><span class="lineno">  107</span>    marker.color.r = colour(0) / 255.0;</div>
-<div class="line"><span class="lineno">  108</span>    marker.color.g = colour(1) / 255.0;</div>
-<div class="line"><span class="lineno">  109</span>    marker.color.b = colour(2) / 255.0;</div>
-<div class="line"><span class="lineno">  110</span> </div>
-<div class="line"><span class="lineno">  111</span>    object_pose_marker_array.markers.push_back(marker);</div>
-<div class="line"><span class="lineno">  112</span> </div>
-<div class="line"><span class="lineno">  113</span>    <span class="keywordflow">if</span> (draw_labels) {</div>
-<div class="line"><span class="lineno">  114</span>      visualization_msgs::msg::Marker text_marker = marker;</div>
-<div class="line"><span class="lineno">  115</span>      text_marker.ns = prefix_marker_namespace + <span class="stringliteral">&quot;_object_labels&quot;</span>;</div>
-<div class="line"><span class="lineno">  116</span>      text_marker.type = visualization_msgs::msg::Marker::TEXT_VIEW_FACING;</div>
-<div class="line"><span class="lineno">  117</span>      text_marker.text = std::to_string(object_id);</div>
-<div class="line"><span class="lineno">  118</span>      text_marker.pose.position.z += 1.0;  <span class="comment">// make it higher than the pose</span></div>
-<div class="line"><span class="lineno">  119</span>                                           <span class="comment">// marker</span></div>
-<div class="line"><span class="lineno">  120</span>      text_marker.scale.z = 0.7;</div>
-<div class="line"><span class="lineno">  121</span>      object_pose_marker_array.markers.push_back(text_marker);</div>
-<div class="line"><span class="lineno">  122</span>    }</div>
-<div class="line"><span class="lineno">  123</span>  }</div>
-<div class="line"><span class="lineno">  124</span> </div>
-<div class="line"><span class="lineno">  125</span>  pub-&gt;publish(object_pose_marker_array);</div>
-<div class="line"><span class="lineno">  126</span>}</div>
+<p class="definition">Definition at line <a class="el" href="InbuiltDisplayCommon_8cc_source.html#l00071">71</a> of file <a class="el" href="InbuiltDisplayCommon_8cc_source.html">InbuiltDisplayCommon.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   75</span>                  {</div>
+<div class="line"><span class="lineno">   76</span>  visualization_msgs::msg::MarkerArray object_pose_marker_array;</div>
+<div class="line"><span class="lineno">   77</span>  <span class="keyword">static</span> visualization_msgs::msg::Marker delete_marker;</div>
+<div class="line"><span class="lineno">   78</span>  delete_marker.action = visualization_msgs::msg::Marker::DELETEALL;</div>
+<div class="line"><span class="lineno">   79</span> </div>
+<div class="line"><span class="lineno">   80</span>  <span class="keyword">auto</span> ros_time = <a class="code hl_function" href="namespacedyno_1_1utils.html#a81025ee06847cec0fd854eff05362d19">utils::toRosTime</a>(latest_timestamp);</div>
+<div class="line"><span class="lineno">   81</span> </div>
+<div class="line"><span class="lineno">   82</span>  object_pose_marker_array.markers.push_back(delete_marker);</div>
+<div class="line"><span class="lineno">   83</span> </div>
+<div class="line"><span class="lineno">   84</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [object_id, poses_map] : object_positions) {</div>
+<div class="line"><span class="lineno">   85</span>    <span class="comment">// do not draw if in current frame</span></div>
+<div class="line"><span class="lineno">   86</span>    <span class="keywordflow">if</span> (!poses_map.exists(frame_id)) {</div>
+<div class="line"><span class="lineno">   87</span>      <span class="keywordflow">continue</span>;</div>
+<div class="line"><span class="lineno">   88</span>    }</div>
+<div class="line"><span class="lineno">   89</span> </div>
+<div class="line"><span class="lineno">   90</span>    <span class="keyword">const</span> gtsam::Pose3&amp; pose = poses_map.at(frame_id);</div>
+<div class="line"><span class="lineno">   91</span> </div>
+<div class="line"><span class="lineno">   92</span>    <span class="comment">// assume</span></div>
+<div class="line"><span class="lineno">   93</span>    <span class="comment">// object centroid per frame</span></div>
+<div class="line"><span class="lineno">   94</span>    visualization_msgs::msg::Marker marker;</div>
+<div class="line"><span class="lineno">   95</span>    marker.header.frame_id = <a class="code hl_variable" href="classdyno_1_1InbuiltDisplayCommon.html#ac97f0604560a86d02da38ddd376237e1">params_</a>.<a class="code hl_variable" href="structdyno_1_1DisplayParams.html#a2847fed65922f575311e2181add1933e">world_frame_id</a>;</div>
+<div class="line"><span class="lineno">   96</span>    marker.ns = prefix_marker_namespace + <span class="stringliteral">&quot;_object_positions&quot;</span>;</div>
+<div class="line"><span class="lineno">   97</span>    marker.id = object_id;</div>
+<div class="line"><span class="lineno">   98</span>    marker.type = visualization_msgs::msg::Marker::SPHERE;</div>
+<div class="line"><span class="lineno">   99</span>    marker.action = visualization_msgs::msg::Marker::ADD;</div>
+<div class="line"><span class="lineno">  100</span>    marker.header.stamp = ros_time;</div>
+<div class="line"><span class="lineno">  101</span>    marker.pose.position.x = pose.x();</div>
+<div class="line"><span class="lineno">  102</span>    marker.pose.position.y = pose.y();</div>
+<div class="line"><span class="lineno">  103</span>    marker.pose.position.z = pose.z();</div>
+<div class="line"><span class="lineno">  104</span>    marker.scale.x = scale;</div>
+<div class="line"><span class="lineno">  105</span>    marker.scale.y = scale;</div>
+<div class="line"><span class="lineno">  106</span>    marker.scale.z = scale;</div>
+<div class="line"><span class="lineno">  107</span>    marker.color.a = 1.0;  <span class="comment">// Don&#39;t forget to set the alpha!</span></div>
+<div class="line"><span class="lineno">  108</span> </div>
+<div class="line"><span class="lineno">  109</span>    <span class="keyword">const</span> cv::Scalar colour = <a class="code hl_function" href="structdyno_1_1Color.html#a6689af3d0ac5ceaa66000b5ca70becbd">Color::uniqueId</a>(object_id);</div>
+<div class="line"><span class="lineno">  110</span>    marker.color.r = colour(0) / 255.0;</div>
+<div class="line"><span class="lineno">  111</span>    marker.color.g = colour(1) / 255.0;</div>
+<div class="line"><span class="lineno">  112</span>    marker.color.b = colour(2) / 255.0;</div>
+<div class="line"><span class="lineno">  113</span> </div>
+<div class="line"><span class="lineno">  114</span>    object_pose_marker_array.markers.push_back(marker);</div>
+<div class="line"><span class="lineno">  115</span> </div>
+<div class="line"><span class="lineno">  116</span>    <span class="keywordflow">if</span> (draw_labels) {</div>
+<div class="line"><span class="lineno">  117</span>      visualization_msgs::msg::Marker text_marker = marker;</div>
+<div class="line"><span class="lineno">  118</span>      text_marker.ns = prefix_marker_namespace + <span class="stringliteral">&quot;_object_labels&quot;</span>;</div>
+<div class="line"><span class="lineno">  119</span>      text_marker.type = visualization_msgs::msg::Marker::TEXT_VIEW_FACING;</div>
+<div class="line"><span class="lineno">  120</span>      text_marker.text = std::to_string(object_id);</div>
+<div class="line"><span class="lineno">  121</span>      text_marker.pose.position.z += 1.0;  <span class="comment">// make it higher than the pose</span></div>
+<div class="line"><span class="lineno">  122</span>                                           <span class="comment">// marker</span></div>
+<div class="line"><span class="lineno">  123</span>      text_marker.scale.z = 0.7;</div>
+<div class="line"><span class="lineno">  124</span>      object_pose_marker_array.markers.push_back(text_marker);</div>
+<div class="line"><span class="lineno">  125</span>    }</div>
+<div class="line"><span class="lineno">  126</span>  }</div>
+<div class="line"><span class="lineno">  127</span> </div>
+<div class="line"><span class="lineno">  128</span>  pub-&gt;publish(object_pose_marker_array);</div>
+<div class="line"><span class="lineno">  129</span>}</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1InbuiltDisplayCommon.html#ac97f0604560a86d02da38ddd376237e1">params_</a>, <a class="el" href="namespacedyno_1_1utils.html#a81025ee06847cec0fd854eff05362d19">dyno::utils::toRosTime()</a>, <a class="el" href="structdyno_1_1Color.html#a6689af3d0ac5ceaa66000b5ca70becbd">dyno::Color::uniqueId()</a>, and <a class="el" href="structdyno_1_1DisplayParams.html#a2847fed65922f575311e2181add1933e">dyno::DisplayParams::world_frame_id</a>.</p>
 
@@ -1329,11 +1329,12 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="InbuiltDisplayCommon_8cc_source.html#l00055">55</a> of file <a class="el" href="InbuiltDisplayCommon_8cc_source.html">InbuiltDisplayCommon.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   57</span>                                                                {</div>
-<div class="line"><span class="lineno">   58</span>  <a class="code hl_function" href="structdyno_1_1DisplayCommon.html#a865dbb6ad128fb59970d187897cdd4b5">DisplayCommon::publishOdometry</a>(pub, T_world_camera, timestamp,</div>
-<div class="line"><span class="lineno">   59</span>                           <a class="code hl_variable" href="classdyno_1_1InbuiltDisplayCommon.html#ac97f0604560a86d02da38ddd376237e1">params_</a>.<a class="code hl_variable" href="structdyno_1_1DisplayParams.html#a2847fed65922f575311e2181add1933e">world_frame_id</a>, <a class="code hl_variable" href="classdyno_1_1InbuiltDisplayCommon.html#ac97f0604560a86d02da38ddd376237e1">params_</a>.<a class="code hl_variable" href="structdyno_1_1DisplayParams.html#abb3118ecfcfde5b12fab686f48eca829">camera_frame_id</a>);</div>
-<div class="line"><span class="lineno">   60</span>}</div>
+<p class="definition">Definition at line <a class="el" href="InbuiltDisplayCommon_8cc_source.html#l00056">56</a> of file <a class="el" href="InbuiltDisplayCommon_8cc_source.html">InbuiltDisplayCommon.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   58</span>                                                                {</div>
+<div class="line"><span class="lineno">   59</span>  <a class="code hl_function" href="structdyno_1_1DisplayCommon.html#a865dbb6ad128fb59970d187897cdd4b5">DisplayCommon::publishOdometry</a>(pub, T_world_camera, timestamp,</div>
+<div class="line"><span class="lineno">   60</span>                                 <a class="code hl_variable" href="classdyno_1_1InbuiltDisplayCommon.html#ac97f0604560a86d02da38ddd376237e1">params_</a>.<a class="code hl_variable" href="structdyno_1_1DisplayParams.html#a2847fed65922f575311e2181add1933e">world_frame_id</a>,</div>
+<div class="line"><span class="lineno">   61</span>                                 <a class="code hl_variable" href="classdyno_1_1InbuiltDisplayCommon.html#ac97f0604560a86d02da38ddd376237e1">params_</a>.<a class="code hl_variable" href="structdyno_1_1DisplayParams.html#abb3118ecfcfde5b12fab686f48eca829">camera_frame_id</a>);</div>
+<div class="line"><span class="lineno">   62</span>}</div>
 <div class="ttc" id="astructdyno_1_1DisplayCommon_html_a865dbb6ad128fb59970d187897cdd4b5"><div class="ttname"><a href="structdyno_1_1DisplayCommon.html#a865dbb6ad128fb59970d187897cdd4b5">dyno::DisplayCommon::publishOdometry</a></div><div class="ttdeci">static void publishOdometry(OdometryPub::SharedPtr pub, const gtsam::Pose3 &amp;T_world_camera, Timestamp timestamp, const std::string &amp;frame_id, const std::string &amp;child_frame_id)</div><div class="ttdef"><b>Definition:</b> <a href="DisplaysCommon_8cc_source.html#l00047">DisplaysCommon.cc:47</a></div></div>
 <div class="ttc" id="astructdyno_1_1DisplayParams_html_abb3118ecfcfde5b12fab686f48eca829"><div class="ttname"><a href="structdyno_1_1DisplayParams.html#abb3118ecfcfde5b12fab686f48eca829">dyno::DisplayParams::camera_frame_id</a></div><div class="ttdeci">std::string camera_frame_id</div><div class="ttdef"><b>Definition:</b> <a href="Display-Definitions_8hpp_source.html#l00039">Display-Definitions.hpp:39</a></div></div>
 </div><!-- fragment -->
@@ -1411,10 +1412,11 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="InbuiltDisplayCommon_8cc_source.html#l00062">62</a> of file <a class="el" href="InbuiltDisplayCommon_8cc_source.html">InbuiltDisplayCommon.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   64</span>                                                                           {</div>
-<div class="line"><span class="lineno">   65</span>  <a class="code hl_function" href="structdyno_1_1DisplayCommon.html#aa626522a5e93ee7d72975e94260069a5">DisplayCommon::publishOdometryPath</a>(pub, poses, latest_timestamp, <a class="code hl_variable" href="classdyno_1_1InbuiltDisplayCommon.html#ac97f0604560a86d02da38ddd376237e1">params_</a>.<a class="code hl_variable" href="structdyno_1_1DisplayParams.html#a2847fed65922f575311e2181add1933e">world_frame_id</a>);</div>
-<div class="line"><span class="lineno">   66</span>}</div>
+<p class="definition">Definition at line <a class="el" href="InbuiltDisplayCommon_8cc_source.html#l00064">64</a> of file <a class="el" href="InbuiltDisplayCommon_8cc_source.html">InbuiltDisplayCommon.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   66</span>                                                                           {</div>
+<div class="line"><span class="lineno">   67</span>  <a class="code hl_function" href="structdyno_1_1DisplayCommon.html#aa626522a5e93ee7d72975e94260069a5">DisplayCommon::publishOdometryPath</a>(pub, poses, latest_timestamp,</div>
+<div class="line"><span class="lineno">   68</span>                                     <a class="code hl_variable" href="classdyno_1_1InbuiltDisplayCommon.html#ac97f0604560a86d02da38ddd376237e1">params_</a>.<a class="code hl_variable" href="structdyno_1_1DisplayParams.html#a2847fed65922f575311e2181add1933e">world_frame_id</a>);</div>
+<div class="line"><span class="lineno">   69</span>}</div>
 <div class="ttc" id="astructdyno_1_1DisplayCommon_html_aa626522a5e93ee7d72975e94260069a5"><div class="ttname"><a href="structdyno_1_1DisplayCommon.html#aa626522a5e93ee7d72975e94260069a5">dyno::DisplayCommon::publishOdometryPath</a></div><div class="ttdeci">static void publishOdometryPath(PathPub::SharedPtr pub, const gtsam::Pose3Vector &amp;poses, Timestamp latest_timestamp, const std::string &amp;frame_id)</div><div class="ttdef"><b>Definition:</b> <a href="DisplaysCommon_8cc_source.html#l00058">DisplaysCommon.cc:58</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1InbuiltDisplayCommon.html#ac97f0604560a86d02da38ddd376237e1">params_</a>, <a class="el" href="structdyno_1_1DisplayCommon.html#aa626522a5e93ee7d72975e94260069a5">dyno::DisplayCommon::publishOdometryPath()</a>, and <a class="el" href="structdyno_1_1DisplayParams.html#a2847fed65922f575311e2181add1933e">dyno::DisplayParams::world_frame_id</a>.</p>
@@ -1482,8 +1484,9 @@ Here is the call graph for this function:</div>
 
 <p class="definition">Definition at line <a class="el" href="InbuiltDisplayCommon_8cc_source.html#l00049">49</a> of file <a class="el" href="InbuiltDisplayCommon_8cc_source.html">InbuiltDisplayCommon.cc</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">   51</span>                                      {</div>
-<div class="line"><span class="lineno">   52</span>  <span class="keywordflow">return</span> <a class="code hl_function" href="structdyno_1_1DisplayCommon.html#ad9251fcb86a8c872c6b3736d0c2cd8f8">DisplayCommon::publishPointCloud</a>(pub, landmarks, T_world_camera, <a class="code hl_variable" href="classdyno_1_1InbuiltDisplayCommon.html#ac97f0604560a86d02da38ddd376237e1">params_</a>.<a class="code hl_variable" href="structdyno_1_1DisplayParams.html#a2847fed65922f575311e2181add1933e">world_frame_id</a>);</div>
-<div class="line"><span class="lineno">   53</span>}</div>
+<div class="line"><span class="lineno">   52</span>  <span class="keywordflow">return</span> <a class="code hl_function" href="structdyno_1_1DisplayCommon.html#ad9251fcb86a8c872c6b3736d0c2cd8f8">DisplayCommon::publishPointCloud</a>(pub, landmarks, T_world_camera,</div>
+<div class="line"><span class="lineno">   53</span>                                          <a class="code hl_variable" href="classdyno_1_1InbuiltDisplayCommon.html#ac97f0604560a86d02da38ddd376237e1">params_</a>.<a class="code hl_variable" href="structdyno_1_1DisplayParams.html#a2847fed65922f575311e2181add1933e">world_frame_id</a>);</div>
+<div class="line"><span class="lineno">   54</span>}</div>
 <div class="ttc" id="astructdyno_1_1DisplayCommon_html_ad9251fcb86a8c872c6b3736d0c2cd8f8"><div class="ttname"><a href="structdyno_1_1DisplayCommon.html#ad9251fcb86a8c872c6b3736d0c2cd8f8">dyno::DisplayCommon::publishPointCloud</a></div><div class="ttdeci">static CloudPerObject publishPointCloud(PointCloud2Pub::SharedPtr pub, const StatusLandmarkVector &amp;landmarks, const gtsam::Pose3 &amp;T_world_camera, const std::string &amp;frame_id)</div><div class="ttdef"><b>Definition:</b> <a href="DisplaysCommon_8cc_source.html#l00013">DisplaysCommon.cc:13</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1InbuiltDisplayCommon.html#ac97f0604560a86d02da38ddd376237e1">params_</a>, <a class="el" href="structdyno_1_1DisplayCommon.html#ad9251fcb86a8c872c6b3736d0c2cd8f8">dyno::DisplayCommon::publishPointCloud()</a>, and <a class="el" href="structdyno_1_1DisplayParams.html#a2847fed65922f575311e2181add1933e">dyno::DisplayParams::world_frame_id</a>.</p>

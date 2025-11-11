@@ -180,62 +180,55 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ORBextractor_8cc_source.html#l00488">488</a> of file <a class="el" href="ORBextractor_8cc_source.html">ORBextractor.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  489</span>{</div>
-<div class="line"><span class="lineno">  490</span>  <span class="keyword">const</span> <span class="keywordtype">int</span> halfX = ceil(<span class="keyword">static_cast&lt;</span><span class="keywordtype">float</span><span class="keyword">&gt;</span>(<a class="code hl_variable" href="classdyno_1_1ExtractorNode.html#aea040226d2dccf12d7d6a83914c9b006">UR</a>.x - <a class="code hl_variable" href="classdyno_1_1ExtractorNode.html#a0e13525fdae2d3e73a6734b1ba5d3665">UL</a>.x) / 2);</div>
-<div class="line"><span class="lineno">  491</span>  <span class="keyword">const</span> <span class="keywordtype">int</span> halfY = ceil(<span class="keyword">static_cast&lt;</span><span class="keywordtype">float</span><span class="keyword">&gt;</span>(<a class="code hl_variable" href="classdyno_1_1ExtractorNode.html#a5c61c8f715a89d1d801071ad92ba540c">BR</a>.y - <a class="code hl_variable" href="classdyno_1_1ExtractorNode.html#a0e13525fdae2d3e73a6734b1ba5d3665">UL</a>.y) / 2);</div>
-<div class="line"><span class="lineno">  492</span> </div>
-<div class="line"><span class="lineno">  493</span>  <span class="comment">// Define boundaries of childs</span></div>
-<div class="line"><span class="lineno">  494</span>  n1.UL = <a class="code hl_variable" href="classdyno_1_1ExtractorNode.html#a0e13525fdae2d3e73a6734b1ba5d3665">UL</a>;</div>
-<div class="line"><span class="lineno">  495</span>  n1.UR = cv::Point2i(<a class="code hl_variable" href="classdyno_1_1ExtractorNode.html#a0e13525fdae2d3e73a6734b1ba5d3665">UL</a>.x + halfX, <a class="code hl_variable" href="classdyno_1_1ExtractorNode.html#a0e13525fdae2d3e73a6734b1ba5d3665">UL</a>.y);</div>
-<div class="line"><span class="lineno">  496</span>  n1.BL = cv::Point2i(<a class="code hl_variable" href="classdyno_1_1ExtractorNode.html#a0e13525fdae2d3e73a6734b1ba5d3665">UL</a>.x, <a class="code hl_variable" href="classdyno_1_1ExtractorNode.html#a0e13525fdae2d3e73a6734b1ba5d3665">UL</a>.y + halfY);</div>
-<div class="line"><span class="lineno">  497</span>  n1.BR = cv::Point2i(<a class="code hl_variable" href="classdyno_1_1ExtractorNode.html#a0e13525fdae2d3e73a6734b1ba5d3665">UL</a>.x + halfX, <a class="code hl_variable" href="classdyno_1_1ExtractorNode.html#a0e13525fdae2d3e73a6734b1ba5d3665">UL</a>.y + halfY);</div>
-<div class="line"><span class="lineno">  498</span>  n1.vKeys.reserve(<a class="code hl_variable" href="classdyno_1_1ExtractorNode.html#a3ed9ec7ebe8d31b0d5d1fb21d06707c2">vKeys</a>.size());</div>
-<div class="line"><span class="lineno">  499</span> </div>
-<div class="line"><span class="lineno">  500</span>  n2.UL = n1.UR;</div>
-<div class="line"><span class="lineno">  501</span>  n2.UR = <a class="code hl_variable" href="classdyno_1_1ExtractorNode.html#aea040226d2dccf12d7d6a83914c9b006">UR</a>;</div>
-<div class="line"><span class="lineno">  502</span>  n2.BL = n1.BR;</div>
-<div class="line"><span class="lineno">  503</span>  n2.BR = cv::Point2i(<a class="code hl_variable" href="classdyno_1_1ExtractorNode.html#aea040226d2dccf12d7d6a83914c9b006">UR</a>.x, <a class="code hl_variable" href="classdyno_1_1ExtractorNode.html#a0e13525fdae2d3e73a6734b1ba5d3665">UL</a>.y + halfY);</div>
-<div class="line"><span class="lineno">  504</span>  n2.vKeys.reserve(<a class="code hl_variable" href="classdyno_1_1ExtractorNode.html#a3ed9ec7ebe8d31b0d5d1fb21d06707c2">vKeys</a>.size());</div>
-<div class="line"><span class="lineno">  505</span> </div>
-<div class="line"><span class="lineno">  506</span>  n3.UL = n1.BL;</div>
-<div class="line"><span class="lineno">  507</span>  n3.UR = n1.BR;</div>
-<div class="line"><span class="lineno">  508</span>  n3.BL = <a class="code hl_variable" href="classdyno_1_1ExtractorNode.html#a408905d50916d2d5c0682f0cdf85e1a0">BL</a>;</div>
-<div class="line"><span class="lineno">  509</span>  n3.BR = cv::Point2i(n1.BR.x, <a class="code hl_variable" href="classdyno_1_1ExtractorNode.html#a408905d50916d2d5c0682f0cdf85e1a0">BL</a>.y);</div>
-<div class="line"><span class="lineno">  510</span>  n3.vKeys.reserve(<a class="code hl_variable" href="classdyno_1_1ExtractorNode.html#a3ed9ec7ebe8d31b0d5d1fb21d06707c2">vKeys</a>.size());</div>
-<div class="line"><span class="lineno">  511</span> </div>
-<div class="line"><span class="lineno">  512</span>  n4.UL = n3.UR;</div>
-<div class="line"><span class="lineno">  513</span>  n4.UR = n2.BR;</div>
-<div class="line"><span class="lineno">  514</span>  n4.BL = n3.BR;</div>
-<div class="line"><span class="lineno">  515</span>  n4.BR = <a class="code hl_variable" href="classdyno_1_1ExtractorNode.html#a5c61c8f715a89d1d801071ad92ba540c">BR</a>;</div>
-<div class="line"><span class="lineno">  516</span>  n4.vKeys.reserve(<a class="code hl_variable" href="classdyno_1_1ExtractorNode.html#a3ed9ec7ebe8d31b0d5d1fb21d06707c2">vKeys</a>.size());</div>
-<div class="line"><span class="lineno">  517</span> </div>
-<div class="line"><span class="lineno">  518</span>  <span class="comment">// Associate points to childs</span></div>
-<div class="line"><span class="lineno">  519</span>  <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; <a class="code hl_variable" href="classdyno_1_1ExtractorNode.html#a3ed9ec7ebe8d31b0d5d1fb21d06707c2">vKeys</a>.size(); i++)</div>
-<div class="line"><span class="lineno">  520</span>  {</div>
-<div class="line"><span class="lineno">  521</span>    <span class="keyword">const</span> cv::KeyPoint&amp; kp = <a class="code hl_variable" href="classdyno_1_1ExtractorNode.html#a3ed9ec7ebe8d31b0d5d1fb21d06707c2">vKeys</a>[i];</div>
-<div class="line"><span class="lineno">  522</span>    <span class="keywordflow">if</span> (kp.pt.x &lt; n1.UR.x)</div>
-<div class="line"><span class="lineno">  523</span>    {</div>
-<div class="line"><span class="lineno">  524</span>      <span class="keywordflow">if</span> (kp.pt.y &lt; n1.BR.y)</div>
-<div class="line"><span class="lineno">  525</span>        n1.vKeys.push_back(kp);</div>
-<div class="line"><span class="lineno">  526</span>      <span class="keywordflow">else</span></div>
-<div class="line"><span class="lineno">  527</span>        n3.vKeys.push_back(kp);</div>
-<div class="line"><span class="lineno">  528</span>    }</div>
-<div class="line"><span class="lineno">  529</span>    <span class="keywordflow">else</span> <span class="keywordflow">if</span> (kp.pt.y &lt; n1.BR.y)</div>
-<div class="line"><span class="lineno">  530</span>      n2.vKeys.push_back(kp);</div>
-<div class="line"><span class="lineno">  531</span>    <span class="keywordflow">else</span></div>
-<div class="line"><span class="lineno">  532</span>      n4.vKeys.push_back(kp);</div>
-<div class="line"><span class="lineno">  533</span>  }</div>
-<div class="line"><span class="lineno">  534</span> </div>
-<div class="line"><span class="lineno">  535</span>  <span class="keywordflow">if</span> (n1.vKeys.size() == 1)</div>
-<div class="line"><span class="lineno">  536</span>    n1.bNoMore = <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  537</span>  <span class="keywordflow">if</span> (n2.vKeys.size() == 1)</div>
-<div class="line"><span class="lineno">  538</span>    n2.bNoMore = <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  539</span>  <span class="keywordflow">if</span> (n3.vKeys.size() == 1)</div>
-<div class="line"><span class="lineno">  540</span>    n3.bNoMore = <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  541</span>  <span class="keywordflow">if</span> (n4.vKeys.size() == 1)</div>
-<div class="line"><span class="lineno">  542</span>    n4.bNoMore = <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  543</span>}</div>
+<p class="definition">Definition at line <a class="el" href="ORBextractor_8cc_source.html#l00493">493</a> of file <a class="el" href="ORBextractor_8cc_source.html">ORBextractor.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  494</span>                                                                     {</div>
+<div class="line"><span class="lineno">  495</span>  <span class="keyword">const</span> <span class="keywordtype">int</span> halfX = ceil(<span class="keyword">static_cast&lt;</span><span class="keywordtype">float</span><span class="keyword">&gt;</span>(<a class="code hl_variable" href="classdyno_1_1ExtractorNode.html#aea040226d2dccf12d7d6a83914c9b006">UR</a>.x - <a class="code hl_variable" href="classdyno_1_1ExtractorNode.html#a0e13525fdae2d3e73a6734b1ba5d3665">UL</a>.x) / 2);</div>
+<div class="line"><span class="lineno">  496</span>  <span class="keyword">const</span> <span class="keywordtype">int</span> halfY = ceil(<span class="keyword">static_cast&lt;</span><span class="keywordtype">float</span><span class="keyword">&gt;</span>(<a class="code hl_variable" href="classdyno_1_1ExtractorNode.html#a5c61c8f715a89d1d801071ad92ba540c">BR</a>.y - <a class="code hl_variable" href="classdyno_1_1ExtractorNode.html#a0e13525fdae2d3e73a6734b1ba5d3665">UL</a>.y) / 2);</div>
+<div class="line"><span class="lineno">  497</span> </div>
+<div class="line"><span class="lineno">  498</span>  <span class="comment">// Define boundaries of childs</span></div>
+<div class="line"><span class="lineno">  499</span>  n1.UL = <a class="code hl_variable" href="classdyno_1_1ExtractorNode.html#a0e13525fdae2d3e73a6734b1ba5d3665">UL</a>;</div>
+<div class="line"><span class="lineno">  500</span>  n1.UR = cv::Point2i(<a class="code hl_variable" href="classdyno_1_1ExtractorNode.html#a0e13525fdae2d3e73a6734b1ba5d3665">UL</a>.x + halfX, <a class="code hl_variable" href="classdyno_1_1ExtractorNode.html#a0e13525fdae2d3e73a6734b1ba5d3665">UL</a>.y);</div>
+<div class="line"><span class="lineno">  501</span>  n1.BL = cv::Point2i(<a class="code hl_variable" href="classdyno_1_1ExtractorNode.html#a0e13525fdae2d3e73a6734b1ba5d3665">UL</a>.x, <a class="code hl_variable" href="classdyno_1_1ExtractorNode.html#a0e13525fdae2d3e73a6734b1ba5d3665">UL</a>.y + halfY);</div>
+<div class="line"><span class="lineno">  502</span>  n1.BR = cv::Point2i(<a class="code hl_variable" href="classdyno_1_1ExtractorNode.html#a0e13525fdae2d3e73a6734b1ba5d3665">UL</a>.x + halfX, <a class="code hl_variable" href="classdyno_1_1ExtractorNode.html#a0e13525fdae2d3e73a6734b1ba5d3665">UL</a>.y + halfY);</div>
+<div class="line"><span class="lineno">  503</span>  n1.vKeys.reserve(<a class="code hl_variable" href="classdyno_1_1ExtractorNode.html#a3ed9ec7ebe8d31b0d5d1fb21d06707c2">vKeys</a>.size());</div>
+<div class="line"><span class="lineno">  504</span> </div>
+<div class="line"><span class="lineno">  505</span>  n2.UL = n1.UR;</div>
+<div class="line"><span class="lineno">  506</span>  n2.UR = <a class="code hl_variable" href="classdyno_1_1ExtractorNode.html#aea040226d2dccf12d7d6a83914c9b006">UR</a>;</div>
+<div class="line"><span class="lineno">  507</span>  n2.BL = n1.BR;</div>
+<div class="line"><span class="lineno">  508</span>  n2.BR = cv::Point2i(<a class="code hl_variable" href="classdyno_1_1ExtractorNode.html#aea040226d2dccf12d7d6a83914c9b006">UR</a>.x, <a class="code hl_variable" href="classdyno_1_1ExtractorNode.html#a0e13525fdae2d3e73a6734b1ba5d3665">UL</a>.y + halfY);</div>
+<div class="line"><span class="lineno">  509</span>  n2.vKeys.reserve(<a class="code hl_variable" href="classdyno_1_1ExtractorNode.html#a3ed9ec7ebe8d31b0d5d1fb21d06707c2">vKeys</a>.size());</div>
+<div class="line"><span class="lineno">  510</span> </div>
+<div class="line"><span class="lineno">  511</span>  n3.UL = n1.BL;</div>
+<div class="line"><span class="lineno">  512</span>  n3.UR = n1.BR;</div>
+<div class="line"><span class="lineno">  513</span>  n3.BL = <a class="code hl_variable" href="classdyno_1_1ExtractorNode.html#a408905d50916d2d5c0682f0cdf85e1a0">BL</a>;</div>
+<div class="line"><span class="lineno">  514</span>  n3.BR = cv::Point2i(n1.BR.x, <a class="code hl_variable" href="classdyno_1_1ExtractorNode.html#a408905d50916d2d5c0682f0cdf85e1a0">BL</a>.y);</div>
+<div class="line"><span class="lineno">  515</span>  n3.vKeys.reserve(<a class="code hl_variable" href="classdyno_1_1ExtractorNode.html#a3ed9ec7ebe8d31b0d5d1fb21d06707c2">vKeys</a>.size());</div>
+<div class="line"><span class="lineno">  516</span> </div>
+<div class="line"><span class="lineno">  517</span>  n4.UL = n3.UR;</div>
+<div class="line"><span class="lineno">  518</span>  n4.UR = n2.BR;</div>
+<div class="line"><span class="lineno">  519</span>  n4.BL = n3.BR;</div>
+<div class="line"><span class="lineno">  520</span>  n4.BR = <a class="code hl_variable" href="classdyno_1_1ExtractorNode.html#a5c61c8f715a89d1d801071ad92ba540c">BR</a>;</div>
+<div class="line"><span class="lineno">  521</span>  n4.vKeys.reserve(<a class="code hl_variable" href="classdyno_1_1ExtractorNode.html#a3ed9ec7ebe8d31b0d5d1fb21d06707c2">vKeys</a>.size());</div>
+<div class="line"><span class="lineno">  522</span> </div>
+<div class="line"><span class="lineno">  523</span>  <span class="comment">// Associate points to childs</span></div>
+<div class="line"><span class="lineno">  524</span>  <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; <a class="code hl_variable" href="classdyno_1_1ExtractorNode.html#a3ed9ec7ebe8d31b0d5d1fb21d06707c2">vKeys</a>.size(); i++) {</div>
+<div class="line"><span class="lineno">  525</span>    <span class="keyword">const</span> cv::KeyPoint&amp; kp = <a class="code hl_variable" href="classdyno_1_1ExtractorNode.html#a3ed9ec7ebe8d31b0d5d1fb21d06707c2">vKeys</a>[i];</div>
+<div class="line"><span class="lineno">  526</span>    <span class="keywordflow">if</span> (kp.pt.x &lt; n1.UR.x) {</div>
+<div class="line"><span class="lineno">  527</span>      <span class="keywordflow">if</span> (kp.pt.y &lt; n1.BR.y)</div>
+<div class="line"><span class="lineno">  528</span>        n1.vKeys.push_back(kp);</div>
+<div class="line"><span class="lineno">  529</span>      <span class="keywordflow">else</span></div>
+<div class="line"><span class="lineno">  530</span>        n3.vKeys.push_back(kp);</div>
+<div class="line"><span class="lineno">  531</span>    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (kp.pt.y &lt; n1.BR.y)</div>
+<div class="line"><span class="lineno">  532</span>      n2.vKeys.push_back(kp);</div>
+<div class="line"><span class="lineno">  533</span>    <span class="keywordflow">else</span></div>
+<div class="line"><span class="lineno">  534</span>      n4.vKeys.push_back(kp);</div>
+<div class="line"><span class="lineno">  535</span>  }</div>
+<div class="line"><span class="lineno">  536</span> </div>
+<div class="line"><span class="lineno">  537</span>  <span class="keywordflow">if</span> (n1.vKeys.size() == 1) n1.bNoMore = <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  538</span>  <span class="keywordflow">if</span> (n2.vKeys.size() == 1) n2.bNoMore = <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  539</span>  <span class="keywordflow">if</span> (n3.vKeys.size() == 1) n3.bNoMore = <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  540</span>  <span class="keywordflow">if</span> (n4.vKeys.size() == 1) n4.bNoMore = <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  541</span>}</div>
 <div class="ttc" id="aclassdyno_1_1ExtractorNode_html_a0e13525fdae2d3e73a6734b1ba5d3665"><div class="ttname"><a href="classdyno_1_1ExtractorNode.html#a0e13525fdae2d3e73a6734b1ba5d3665">dyno::ExtractorNode::UL</a></div><div class="ttdeci">cv::Point2i UL</div><div class="ttdef"><b>Definition:</b> <a href="ORBextractor_8hpp_source.html#l00057">ORBextractor.hpp:57</a></div></div>
 <div class="ttc" id="aclassdyno_1_1ExtractorNode_html_a3ed9ec7ebe8d31b0d5d1fb21d06707c2"><div class="ttname"><a href="classdyno_1_1ExtractorNode.html#a3ed9ec7ebe8d31b0d5d1fb21d06707c2">dyno::ExtractorNode::vKeys</a></div><div class="ttdeci">std::vector&lt; cv::KeyPoint &gt; vKeys</div><div class="ttdef"><b>Definition:</b> <a href="ORBextractor_8hpp_source.html#l00056">ORBextractor.hpp:56</a></div></div>
 <div class="ttc" id="aclassdyno_1_1ExtractorNode_html_a408905d50916d2d5c0682f0cdf85e1a0"><div class="ttname"><a href="classdyno_1_1ExtractorNode.html#a408905d50916d2d5c0682f0cdf85e1a0">dyno::ExtractorNode::BL</a></div><div class="ttdeci">cv::Point2i BL</div><div class="ttdef"><b>Definition:</b> <a href="ORBextractor_8hpp_source.html#l00057">ORBextractor.hpp:57</a></div></div>

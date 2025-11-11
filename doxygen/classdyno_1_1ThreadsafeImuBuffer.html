@@ -355,7 +355,7 @@ Private Attributes</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="ThreadSafeImuBuffer_8hpp_source.html#l00107">107</a> of file <a class="el" href="ThreadSafeImuBuffer_8hpp_source.html">ThreadSafeImuBuffer.hpp</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">  107</span>{ <a class="code hl_function" href="classdyno_1_1ThreadsafeImuBuffer.html#af5baa98a4743686c5f13f40499e890ff">shutdown</a>(); }</div>
-<div class="ttc" id="aclassdyno_1_1ThreadsafeImuBuffer_html_af5baa98a4743686c5f13f40499e890ff"><div class="ttname"><a href="classdyno_1_1ThreadsafeImuBuffer.html#af5baa98a4743686c5f13f40499e890ff">dyno::ThreadsafeImuBuffer::shutdown</a></div><div class="ttdeci">void shutdown()</div><div class="ttdoc">Shutdown the queue and release all blocked waiters.</div><div class="ttdef"><b>Definition:</b> <a href="ThreadSafeImuBuffer-inl_8hpp_source.html#l00114">ThreadSafeImuBuffer-inl.hpp:114</a></div></div>
+<div class="ttc" id="aclassdyno_1_1ThreadsafeImuBuffer_html_af5baa98a4743686c5f13f40499e890ff"><div class="ttname"><a href="classdyno_1_1ThreadsafeImuBuffer.html#af5baa98a4743686c5f13f40499e890ff">dyno::ThreadsafeImuBuffer::shutdown</a></div><div class="ttdeci">void shutdown()</div><div class="ttdoc">Shutdown the queue and release all blocked waiters.</div><div class="ttdef"><b>Definition:</b> <a href="ThreadSafeImuBuffer-inl_8hpp_source.html#l00111">ThreadSafeImuBuffer-inl.hpp:111</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1ThreadsafeImuBuffer.html#af5baa98a4743686c5f13f40499e890ff">shutdown()</a>.</p>
 <div class="dynheader">
@@ -406,21 +406,20 @@ Here is the call graph for this function:</div>
 </div><div class="memdoc">
 <p>Add IMU measurement in IMU frame. (Ordering: accelerations [m/s^2], angular velocities [rad/s]) </p>
 
-<p class="definition">Definition at line <a class="el" href="ThreadSafeImuBuffer-inl_8hpp_source.html#l00077">77</a> of file <a class="el" href="ThreadSafeImuBuffer-inl_8hpp_source.html">ThreadSafeImuBuffer-inl.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   79</span>                                      {</div>
-<div class="line"><span class="lineno">   80</span>  <span class="comment">// Enforce strict time-wise ordering.</span></div>
-<div class="line"><span class="lineno">   81</span>  ImuMeasurement last_value;</div>
-<div class="line"><span class="lineno">   82</span>  <span class="keywordflow">if</span> (<a class="code hl_variable" href="classdyno_1_1ThreadsafeImuBuffer.html#a5575442e9b1023e50060c58cea10e8c6">buffer_</a>.<a class="code hl_function" href="classdyno_1_1ThreadsafeTemporalBuffer.html#a3679b5d8321550cd5ce21fade6ba4352">getNewestValue</a>(&amp;last_value)) {</div>
-<div class="line"><span class="lineno">   83</span>    CHECK_GT(timestamp_nanoseconds, last_value.timestamp_)</div>
-<div class="line"><span class="lineno">   84</span>        &lt;&lt; <span class="stringliteral">&quot;Timestamps not strictly increasing.&quot;</span>;</div>
-<div class="line"><span class="lineno">   85</span>  }</div>
-<div class="line"><span class="lineno">   86</span>  <a class="code hl_variable" href="classdyno_1_1ThreadsafeImuBuffer.html#a5575442e9b1023e50060c58cea10e8c6">buffer_</a>.<a class="code hl_function" href="classdyno_1_1ThreadsafeTemporalBuffer.html#a30fcdd7ef2886e0b0fd10d3d220bf3ca">addValue</a>(</div>
-<div class="line"><span class="lineno">   87</span>      timestamp_nanoseconds,</div>
-<div class="line"><span class="lineno">   88</span>      ImuMeasurement(timestamp_nanoseconds, imu_measurement));</div>
-<div class="line"><span class="lineno">   89</span> </div>
-<div class="line"><span class="lineno">   90</span>  <span class="comment">// Notify possibly waiting consumers.</span></div>
-<div class="line"><span class="lineno">   91</span>  <a class="code hl_variable" href="classdyno_1_1ThreadsafeImuBuffer.html#ad680373db8147f70bd2122ee8cb77c38">cv_new_measurement_</a>.notify_all();</div>
-<div class="line"><span class="lineno">   92</span>}</div>
+<p class="definition">Definition at line <a class="el" href="ThreadSafeImuBuffer-inl_8hpp_source.html#l00080">80</a> of file <a class="el" href="ThreadSafeImuBuffer-inl_8hpp_source.html">ThreadSafeImuBuffer-inl.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   81</span>                                                                              {</div>
+<div class="line"><span class="lineno">   82</span>  <span class="comment">// Enforce strict time-wise ordering.</span></div>
+<div class="line"><span class="lineno">   83</span>  ImuMeasurement last_value;</div>
+<div class="line"><span class="lineno">   84</span>  <span class="keywordflow">if</span> (<a class="code hl_variable" href="classdyno_1_1ThreadsafeImuBuffer.html#a5575442e9b1023e50060c58cea10e8c6">buffer_</a>.<a class="code hl_function" href="classdyno_1_1ThreadsafeTemporalBuffer.html#a3679b5d8321550cd5ce21fade6ba4352">getNewestValue</a>(&amp;last_value)) {</div>
+<div class="line"><span class="lineno">   85</span>    CHECK_GT(timestamp_nanoseconds, last_value.timestamp_)</div>
+<div class="line"><span class="lineno">   86</span>        &lt;&lt; <span class="stringliteral">&quot;Timestamps not strictly increasing.&quot;</span>;</div>
+<div class="line"><span class="lineno">   87</span>  }</div>
+<div class="line"><span class="lineno">   88</span>  <a class="code hl_variable" href="classdyno_1_1ThreadsafeImuBuffer.html#a5575442e9b1023e50060c58cea10e8c6">buffer_</a>.<a class="code hl_function" href="classdyno_1_1ThreadsafeTemporalBuffer.html#a30fcdd7ef2886e0b0fd10d3d220bf3ca">addValue</a>(timestamp_nanoseconds,</div>
+<div class="line"><span class="lineno">   89</span>                   ImuMeasurement(timestamp_nanoseconds, imu_measurement));</div>
+<div class="line"><span class="lineno">   90</span> </div>
+<div class="line"><span class="lineno">   91</span>  <span class="comment">// Notify possibly waiting consumers.</span></div>
+<div class="line"><span class="lineno">   92</span>  <a class="code hl_variable" href="classdyno_1_1ThreadsafeImuBuffer.html#ad680373db8147f70bd2122ee8cb77c38">cv_new_measurement_</a>.notify_all();</div>
+<div class="line"><span class="lineno">   93</span>}</div>
 <div class="ttc" id="aclassdyno_1_1ThreadsafeImuBuffer_html_ad680373db8147f70bd2122ee8cb77c38"><div class="ttname"><a href="classdyno_1_1ThreadsafeImuBuffer.html#ad680373db8147f70bd2122ee8cb77c38">dyno::ThreadsafeImuBuffer::cv_new_measurement_</a></div><div class="ttdeci">std::condition_variable cv_new_measurement_</div><div class="ttdef"><b>Definition:</b> <a href="ThreadSafeImuBuffer_8hpp_source.html#l00217">ThreadSafeImuBuffer.hpp:217</a></div></div>
 <div class="ttc" id="aclassdyno_1_1ThreadsafeTemporalBuffer_html_a30fcdd7ef2886e0b0fd10d3d220bf3ca"><div class="ttname"><a href="classdyno_1_1ThreadsafeTemporalBuffer.html#a30fcdd7ef2886e0b0fd10d3d220bf3ca">dyno::ThreadsafeTemporalBuffer::addValue</a></div><div class="ttdeci">void addValue(Timestamp timestamp, const ValueType &amp;value)</div><div class="ttdef"><b>Definition:</b> <a href="ThreadSafeTemporalBuffer-inl_8hpp_source.html#l00065">ThreadSafeTemporalBuffer-inl.hpp:65</a></div></div>
 <div class="ttc" id="aclassdyno_1_1ThreadsafeTemporalBuffer_html_a3679b5d8321550cd5ce21fade6ba4352"><div class="ttname"><a href="classdyno_1_1ThreadsafeTemporalBuffer.html#a3679b5d8321550cd5ce21fade6ba4352">dyno::ThreadsafeTemporalBuffer::getNewestValue</a></div><div class="ttdeci">bool getNewestValue(ValueType *value, Timestamp *timestamp_of_value) const</div><div class="ttdef"><b>Definition:</b> <a href="ThreadSafeTemporalBuffer-inl_8hpp_source.html#l00106">ThreadSafeTemporalBuffer-inl.hpp:106</a></div></div>
@@ -487,17 +486,17 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ThreadSafeImuBuffer-inl_8hpp_source.html#l00094">94</a> of file <a class="el" href="ThreadSafeImuBuffer-inl_8hpp_source.html">ThreadSafeImuBuffer-inl.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   96</span>                                        {</div>
-<div class="line"><span class="lineno">   97</span>  CHECK_EQ(timestamps_nanoseconds.cols(), imu_measurements.cols());</div>
-<div class="line"><span class="lineno">   98</span>  <span class="keywordtype">size_t</span> num_samples = timestamps_nanoseconds.cols();</div>
-<div class="line"><span class="lineno">   99</span>  CHECK_GT(num_samples, 0u);</div>
-<div class="line"><span class="lineno">  100</span> </div>
-<div class="line"><span class="lineno">  101</span>  <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> idx = 0u; idx &lt; num_samples; ++idx) {</div>
-<div class="line"><span class="lineno">  102</span>    <a class="code hl_function" href="classdyno_1_1ThreadsafeImuBuffer.html#a50cd006e61ecb908cec8ede163e05cb5">addMeasurement</a>(timestamps_nanoseconds(idx), imu_measurements.col(idx));</div>
-<div class="line"><span class="lineno">  103</span>  }</div>
-<div class="line"><span class="lineno">  104</span>}</div>
-<div class="ttc" id="aclassdyno_1_1ThreadsafeImuBuffer_html_a50cd006e61ecb908cec8ede163e05cb5"><div class="ttname"><a href="classdyno_1_1ThreadsafeImuBuffer.html#a50cd006e61ecb908cec8ede163e05cb5">dyno::ThreadsafeImuBuffer::addMeasurement</a></div><div class="ttdeci">void addMeasurement(const Timestamp &amp;timestamp_nanoseconds, const ImuAccGyr &amp;imu_measurement)</div><div class="ttdef"><b>Definition:</b> <a href="ThreadSafeImuBuffer-inl_8hpp_source.html#l00077">ThreadSafeImuBuffer-inl.hpp:77</a></div></div>
+<p class="definition">Definition at line <a class="el" href="ThreadSafeImuBuffer-inl_8hpp_source.html#l00095">95</a> of file <a class="el" href="ThreadSafeImuBuffer-inl_8hpp_source.html">ThreadSafeImuBuffer-inl.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   97</span>                                        {</div>
+<div class="line"><span class="lineno">   98</span>  CHECK_EQ(timestamps_nanoseconds.cols(), imu_measurements.cols());</div>
+<div class="line"><span class="lineno">   99</span>  <span class="keywordtype">size_t</span> num_samples = timestamps_nanoseconds.cols();</div>
+<div class="line"><span class="lineno">  100</span>  CHECK_GT(num_samples, 0u);</div>
+<div class="line"><span class="lineno">  101</span> </div>
+<div class="line"><span class="lineno">  102</span>  <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> idx = 0u; idx &lt; num_samples; ++idx) {</div>
+<div class="line"><span class="lineno">  103</span>    <a class="code hl_function" href="classdyno_1_1ThreadsafeImuBuffer.html#a50cd006e61ecb908cec8ede163e05cb5">addMeasurement</a>(timestamps_nanoseconds(idx), imu_measurements.col(idx));</div>
+<div class="line"><span class="lineno">  104</span>  }</div>
+<div class="line"><span class="lineno">  105</span>}</div>
+<div class="ttc" id="aclassdyno_1_1ThreadsafeImuBuffer_html_a50cd006e61ecb908cec8ede163e05cb5"><div class="ttname"><a href="classdyno_1_1ThreadsafeImuBuffer.html#a50cd006e61ecb908cec8ede163e05cb5">dyno::ThreadsafeImuBuffer::addMeasurement</a></div><div class="ttdeci">void addMeasurement(const Timestamp &amp;timestamp_nanoseconds, const ImuAccGyr &amp;imu_measurement)</div><div class="ttdef"><b>Definition:</b> <a href="ThreadSafeImuBuffer-inl_8hpp_source.html#l00080">ThreadSafeImuBuffer-inl.hpp:80</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1ThreadsafeImuBuffer.html#a50cd006e61ecb908cec8ede163e05cb5">addMeasurement()</a>.</p>
 
@@ -549,10 +548,8 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ThreadSafeImuBuffer-inl_8hpp_source.html#l00106">106</a> of file <a class="el" href="ThreadSafeImuBuffer-inl_8hpp_source.html">ThreadSafeImuBuffer-inl.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  106</span>                                       {</div>
-<div class="line"><span class="lineno">  107</span>  <a class="code hl_variable" href="classdyno_1_1ThreadsafeImuBuffer.html#a5575442e9b1023e50060c58cea10e8c6">buffer_</a>.<a class="code hl_function" href="classdyno_1_1ThreadsafeTemporalBuffer.html#a8ae89b1aee86a9b8d256a9bb419a6b39">clear</a>();</div>
-<div class="line"><span class="lineno">  108</span>}</div>
+<p class="definition">Definition at line <a class="el" href="ThreadSafeImuBuffer-inl_8hpp_source.html#l00107">107</a> of file <a class="el" href="ThreadSafeImuBuffer-inl_8hpp_source.html">ThreadSafeImuBuffer-inl.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  107</span>{ <a class="code hl_variable" href="classdyno_1_1ThreadsafeImuBuffer.html#a5575442e9b1023e50060c58cea10e8c6">buffer_</a>.<a class="code hl_function" href="classdyno_1_1ThreadsafeTemporalBuffer.html#a8ae89b1aee86a9b8d256a9bb419a6b39">clear</a>(); }</div>
 <div class="ttc" id="aclassdyno_1_1ThreadsafeTemporalBuffer_html_a8ae89b1aee86a9b8d256a9bb419a6b39"><div class="ttname"><a href="classdyno_1_1ThreadsafeTemporalBuffer.html#a8ae89b1aee86a9b8d256a9bb419a6b39">dyno::ThreadsafeTemporalBuffer::clear</a></div><div class="ttdeci">void clear()</div><div class="ttdef"><b>Definition:</b> <a href="ThreadSafeTemporalBuffer_8hpp_source.html#l00089">ThreadSafeTemporalBuffer.hpp:89</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1ThreadsafeImuBuffer.html#a5575442e9b1023e50060c58cea10e8c6">buffer_</a>, and <a class="el" href="classdyno_1_1ThreadsafeTemporalBuffer.html#a8ae89b1aee86a9b8d256a9bb419a6b39">dyno::ThreadsafeTemporalBuffer&lt; ValueType, AllocatorType &gt;::clear()</a>.</p>
@@ -782,8 +779,8 @@ Here is the caller graph for this function:</div>
 <div class="line"><span class="lineno">  242</span> </div>
 <div class="line"><span class="lineno">  243</span>  <span class="keywordflow">return</span> query_result;</div>
 <div class="line"><span class="lineno">  244</span>}</div>
-<div class="ttc" id="aImu-Definitions_8hpp_html_a2c895339e5b2d58ddec838ede1b45e04"><div class="ttname"><a href="Imu-Definitions_8hpp.html#a2c895339e5b2d58ddec838ede1b45e04">ImuAccGyrs</a></div><div class="ttdeci">Eigen::Matrix&lt; double, 6, Eigen::Dynamic &gt; ImuAccGyrs</div><div class="ttdef"><b>Definition:</b> <a href="Imu-Definitions_8hpp_source.html#l00036">Imu-Definitions.hpp:36</a></div></div>
-<div class="ttc" id="aImu-Definitions_8hpp_html_a91dbbcb14065cb2bdb18fe35246a4333"><div class="ttname"><a href="Imu-Definitions_8hpp.html#a91dbbcb14065cb2bdb18fe35246a4333">ImuAccGyr</a></div><div class="ttdeci">Eigen::Matrix&lt; double, 6, 1 &gt; ImuAccGyr</div><div class="ttdef"><b>Definition:</b> <a href="Imu-Definitions_8hpp_source.html#l00032">Imu-Definitions.hpp:32</a></div></div>
+<div class="ttc" id="aImu-Definitions_8hpp_html_a2c895339e5b2d58ddec838ede1b45e04"><div class="ttname"><a href="Imu-Definitions_8hpp.html#a2c895339e5b2d58ddec838ede1b45e04">ImuAccGyrs</a></div><div class="ttdeci">Eigen::Matrix&lt; double, 6, Eigen::Dynamic &gt; ImuAccGyrs</div><div class="ttdef"><b>Definition:</b> <a href="Imu-Definitions_8hpp_source.html#l00044">Imu-Definitions.hpp:44</a></div></div>
+<div class="ttc" id="aImu-Definitions_8hpp_html_a91dbbcb14065cb2bdb18fe35246a4333"><div class="ttname"><a href="Imu-Definitions_8hpp.html#a91dbbcb14065cb2bdb18fe35246a4333">ImuAccGyr</a></div><div class="ttdeci">Eigen::Matrix&lt; double, 6, 1 &gt; ImuAccGyr</div><div class="ttdef"><b>Definition:</b> <a href="Imu-Definitions_8hpp_source.html#l00040">Imu-Definitions.hpp:40</a></div></div>
 <div class="ttc" id="aclassdyno_1_1ThreadsafeImuBuffer_html_a679fdccbbbf800a87ce92987fc8c8b9f"><div class="ttname"><a href="classdyno_1_1ThreadsafeImuBuffer.html#a679fdccbbbf800a87ce92987fc8c8b9f">dyno::ThreadsafeImuBuffer::interpolateValueAtTimestamp</a></div><div class="ttdeci">void interpolateValueAtTimestamp(const Timestamp &amp;timestamp_ns, ImuAccGyr *interpolated_imu_measurement)</div><div class="ttdef"><b>Definition:</b> <a href="ThreadSafeImuBuffer_8cc_source.html#l00246">ThreadSafeImuBuffer.cc:246</a></div></div>
 <div class="ttc" id="aclassdyno_1_1ThreadsafeImuBuffer_html_a79a8a16aa1d6e0ba523456a4971493f0"><div class="ttname"><a href="classdyno_1_1ThreadsafeImuBuffer.html#a79a8a16aa1d6e0ba523456a4971493f0">dyno::ThreadsafeImuBuffer::getImuDataBtwTimestamps</a></div><div class="ttdeci">QueryResult getImuDataBtwTimestamps(const Timestamp &amp;timestamp_ns_from, const Timestamp &amp;timestamp_ns_to, Timestamps *imu_timestamps, ImuAccGyrs *imu_measurements, bool get_lower_bound=false)</div><div class="ttdef"><b>Definition:</b> <a href="ThreadSafeImuBuffer_8cc_source.html#l00121">ThreadSafeImuBuffer.cc:121</a></div></div>
 <div class="ttc" id="anamespacedyno_html_a1508a9b17dbea7639e5617ce9c7b9bfe"><div class="ttname"><a href="namespacedyno.html#a1508a9b17dbea7639e5617ce9c7b9bfe">dyno::Timestamps</a></div><div class="ttdeci">Eigen::Matrix&lt; Timestamp, 1, Eigen::Dynamic &gt; Timestamps</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00066">Types.hpp:66</a></div></div>
@@ -1380,11 +1377,11 @@ Here is the caller graph for this function:</div>
 
 <p>Shutdown the queue and release all blocked waiters. </p>
 
-<p class="definition">Definition at line <a class="el" href="ThreadSafeImuBuffer-inl_8hpp_source.html#l00114">114</a> of file <a class="el" href="ThreadSafeImuBuffer-inl_8hpp_source.html">ThreadSafeImuBuffer-inl.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  114</span>                                          {</div>
-<div class="line"><span class="lineno">  115</span>  <a class="code hl_variable" href="classdyno_1_1ThreadsafeImuBuffer.html#a1474b3b94f9da4fbf4e61b5ffc0f07f1">shutdown_</a> = <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  116</span>  <a class="code hl_variable" href="classdyno_1_1ThreadsafeImuBuffer.html#ad680373db8147f70bd2122ee8cb77c38">cv_new_measurement_</a>.notify_all();</div>
-<div class="line"><span class="lineno">  117</span>}</div>
+<p class="definition">Definition at line <a class="el" href="ThreadSafeImuBuffer-inl_8hpp_source.html#l00111">111</a> of file <a class="el" href="ThreadSafeImuBuffer-inl_8hpp_source.html">ThreadSafeImuBuffer-inl.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  111</span>                                          {</div>
+<div class="line"><span class="lineno">  112</span>  <a class="code hl_variable" href="classdyno_1_1ThreadsafeImuBuffer.html#a1474b3b94f9da4fbf4e61b5ffc0f07f1">shutdown_</a> = <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  113</span>  <a class="code hl_variable" href="classdyno_1_1ThreadsafeImuBuffer.html#ad680373db8147f70bd2122ee8cb77c38">cv_new_measurement_</a>.notify_all();</div>
+<div class="line"><span class="lineno">  114</span>}</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1ThreadsafeImuBuffer.html#ad680373db8147f70bd2122ee8cb77c38">cv_new_measurement_</a>, and <a class="el" href="classdyno_1_1ThreadsafeImuBuffer.html#a1474b3b94f9da4fbf4e61b5ffc0f07f1">shutdown_</a>.</p>
 
@@ -1424,10 +1421,8 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ThreadSafeImuBuffer-inl_8hpp_source.html#l00110">110</a> of file <a class="el" href="ThreadSafeImuBuffer-inl_8hpp_source.html">ThreadSafeImuBuffer-inl.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  110</span>                                              {</div>
-<div class="line"><span class="lineno">  111</span>  <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1ThreadsafeImuBuffer.html#a5575442e9b1023e50060c58cea10e8c6">buffer_</a>.<a class="code hl_function" href="classdyno_1_1ThreadsafeTemporalBuffer.html#abc4c3428f4e1af78c8d5ed16dd22a7b5">size</a>();</div>
-<div class="line"><span class="lineno">  112</span>}</div>
+<p class="definition">Definition at line <a class="el" href="ThreadSafeImuBuffer-inl_8hpp_source.html#l00109">109</a> of file <a class="el" href="ThreadSafeImuBuffer-inl_8hpp_source.html">ThreadSafeImuBuffer-inl.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  109</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1ThreadsafeImuBuffer.html#a5575442e9b1023e50060c58cea10e8c6">buffer_</a>.<a class="code hl_function" href="classdyno_1_1ThreadsafeTemporalBuffer.html#abc4c3428f4e1af78c8d5ed16dd22a7b5">size</a>(); }</div>
 <div class="ttc" id="aclassdyno_1_1ThreadsafeTemporalBuffer_html_abc4c3428f4e1af78c8d5ed16dd22a7b5"><div class="ttname"><a href="classdyno_1_1ThreadsafeTemporalBuffer.html#abc4c3428f4e1af78c8d5ed16dd22a7b5">dyno::ThreadsafeTemporalBuffer::size</a></div><div class="ttdeci">size_t size() const</div><div class="ttdef"><b>Definition:</b> <a href="ThreadSafeTemporalBuffer_8hpp_source.html#l00075">ThreadSafeTemporalBuffer.hpp:75</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1ThreadsafeImuBuffer.html#a5575442e9b1023e50060c58cea10e8c6">buffer_</a>, and <a class="el" href="classdyno_1_1ThreadsafeTemporalBuffer.html#abc4c3428f4e1af78c8d5ed16dd22a7b5">dyno::ThreadsafeTemporalBuffer&lt; ValueType, AllocatorType &gt;::size()</a>.</p>
