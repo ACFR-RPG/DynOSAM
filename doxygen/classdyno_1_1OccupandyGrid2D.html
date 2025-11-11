@@ -142,7 +142,7 @@ Public Attributes</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>We divide the image into a grid of cells and try to find maximally one feature per cell. This is to ensure good distribution of features in the image. <a href="https://github.com/uzh-rpg/rpg_svo_pro_open/blob/master/svo_common/include/svo/common/occupancy_grid_2d.h">https://github.com/uzh-rpg/rpg_svo_pro_open/blob/master/svo_common/include/svo/common/occupancy_grid_2d.h</a> </p>
 
-<p class="definition">Definition at line <a class="el" href="OccupancyGrid2D_8hpp_source.html#l00035">35</a> of file <a class="el" href="OccupancyGrid2D_8hpp_source.html">OccupancyGrid2D.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="OccupancyGrid2D_8hpp_source.html#l00042">42</a> of file <a class="el" href="OccupancyGrid2D_8hpp_source.html">OccupancyGrid2D.hpp</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="af63994c48120aef1bf254daaf272da0f" name="af63994c48120aef1bf254daaf272da0f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af63994c48120aef1bf254daaf272da0f">&#9670;&#160;</a></span>FeatureGrid</h2>
@@ -156,7 +156,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="OccupancyGrid2D_8hpp_source.html#l00039">39</a> of file <a class="el" href="OccupancyGrid2D_8hpp_source.html">OccupancyGrid2D.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="OccupancyGrid2D_8hpp_source.html#l00045">45</a> of file <a class="el" href="OccupancyGrid2D_8hpp_source.html">OccupancyGrid2D.hpp</a>.</p>
 
 </div>
 </div>
@@ -172,7 +172,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="OccupancyGrid2D_8hpp_source.html#l00038">38</a> of file <a class="el" href="OccupancyGrid2D_8hpp_source.html">OccupancyGrid2D.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="OccupancyGrid2D_8hpp_source.html#l00044">44</a> of file <a class="el" href="OccupancyGrid2D_8hpp_source.html">OccupancyGrid2D.hpp</a>.</p>
 
 </div>
 </div>
@@ -217,20 +217,18 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="OccupancyGrid2D_8hpp_source.html#l00041">41</a> of file <a class="el" href="OccupancyGrid2D_8hpp_source.html">OccupancyGrid2D.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   42</span>    : <a class="code hl_variable" href="classdyno_1_1OccupandyGrid2D.html#a3616fde7e069f03425a6c47223c319d2">cell_size</a>(<a class="code hl_variable" href="classdyno_1_1OccupandyGrid2D.html#a3616fde7e069f03425a6c47223c319d2">cell_size</a>)</div>
-<div class="line"><span class="lineno">   43</span>    , <a class="code hl_variable" href="classdyno_1_1OccupandyGrid2D.html#af36511776c5994653e80b37ed98ed639">n_cols</a>(<a class="code hl_variable" href="classdyno_1_1OccupandyGrid2D.html#af36511776c5994653e80b37ed98ed639">n_cols</a>)</div>
-<div class="line"><span class="lineno">   44</span>    , <a class="code hl_variable" href="classdyno_1_1OccupandyGrid2D.html#ac5fbcfcb199b7f4c3a74a59c77cc6d2e">n_rows</a>(<a class="code hl_variable" href="classdyno_1_1OccupandyGrid2D.html#ac5fbcfcb199b7f4c3a74a59c77cc6d2e">n_rows</a>)</div>
-<div class="line"><span class="lineno">   45</span>    , <a class="code hl_variable" href="classdyno_1_1OccupandyGrid2D.html#aee54969c36a674a9f7fe6f28aa412e29">occupancy_</a>(<a class="code hl_variable" href="classdyno_1_1OccupandyGrid2D.html#af36511776c5994653e80b37ed98ed639">n_cols</a> * <a class="code hl_variable" href="classdyno_1_1OccupandyGrid2D.html#ac5fbcfcb199b7f4c3a74a59c77cc6d2e">n_rows</a>, <span class="keyword">false</span>)</div>
-<div class="line"><span class="lineno">   46</span>    , <a class="code hl_variable" href="classdyno_1_1OccupandyGrid2D.html#ac3a16460a8cbe8dd33770f9e6363ed70">feature_occupancy_</a>(<a class="code hl_variable" href="classdyno_1_1OccupandyGrid2D.html#af36511776c5994653e80b37ed98ed639">n_cols</a> * <a class="code hl_variable" href="classdyno_1_1OccupandyGrid2D.html#ac5fbcfcb199b7f4c3a74a59c77cc6d2e">n_rows</a>, <a class="code hl_typedef" href="namespacedyno.html#aaa260a8022691078c59e1ac6a4fa05b5">Keypoint</a>(0, 0))</div>
-<div class="line"><span class="lineno">   47</span>  {</div>
-<div class="line"><span class="lineno">   48</span>  }</div>
-<div class="ttc" id="aclassdyno_1_1OccupandyGrid2D_html_a3616fde7e069f03425a6c47223c319d2"><div class="ttname"><a href="classdyno_1_1OccupandyGrid2D.html#a3616fde7e069f03425a6c47223c319d2">dyno::OccupandyGrid2D::cell_size</a></div><div class="ttdeci">const int cell_size</div><div class="ttdef"><b>Definition:</b> <a href="OccupancyGrid2D_8hpp_source.html#l00068">OccupancyGrid2D.hpp:68</a></div></div>
-<div class="ttc" id="aclassdyno_1_1OccupandyGrid2D_html_ac3a16460a8cbe8dd33770f9e6363ed70"><div class="ttname"><a href="classdyno_1_1OccupandyGrid2D.html#ac3a16460a8cbe8dd33770f9e6363ed70">dyno::OccupandyGrid2D::feature_occupancy_</a></div><div class="ttdeci">FeatureGrid feature_occupancy_</div><div class="ttdef"><b>Definition:</b> <a href="OccupancyGrid2D_8hpp_source.html#l00072">OccupancyGrid2D.hpp:72</a></div></div>
-<div class="ttc" id="aclassdyno_1_1OccupandyGrid2D_html_ac5fbcfcb199b7f4c3a74a59c77cc6d2e"><div class="ttname"><a href="classdyno_1_1OccupandyGrid2D.html#ac5fbcfcb199b7f4c3a74a59c77cc6d2e">dyno::OccupandyGrid2D::n_rows</a></div><div class="ttdeci">const int n_rows</div><div class="ttdef"><b>Definition:</b> <a href="OccupancyGrid2D_8hpp_source.html#l00070">OccupancyGrid2D.hpp:70</a></div></div>
-<div class="ttc" id="aclassdyno_1_1OccupandyGrid2D_html_aee54969c36a674a9f7fe6f28aa412e29"><div class="ttname"><a href="classdyno_1_1OccupandyGrid2D.html#aee54969c36a674a9f7fe6f28aa412e29">dyno::OccupandyGrid2D::occupancy_</a></div><div class="ttdeci">Grid occupancy_</div><div class="ttdef"><b>Definition:</b> <a href="OccupancyGrid2D_8hpp_source.html#l00071">OccupancyGrid2D.hpp:71</a></div></div>
-<div class="ttc" id="aclassdyno_1_1OccupandyGrid2D_html_af36511776c5994653e80b37ed98ed639"><div class="ttname"><a href="classdyno_1_1OccupandyGrid2D.html#af36511776c5994653e80b37ed98ed639">dyno::OccupandyGrid2D::n_cols</a></div><div class="ttdeci">const int n_cols</div><div class="ttdef"><b>Definition:</b> <a href="OccupancyGrid2D_8hpp_source.html#l00069">OccupancyGrid2D.hpp:69</a></div></div>
-<div class="ttc" id="anamespacedyno_html_aaa260a8022691078c59e1ac6a4fa05b5"><div class="ttname"><a href="namespacedyno.html#aaa260a8022691078c59e1ac6a4fa05b5">dyno::Keypoint</a></div><div class="ttdeci">gtsam::Point2 Keypoint</div><div class="ttdoc">Observed optical flow vector (ordered x, y)</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00095">Types.hpp:95</a></div></div>
+<p class="definition">Definition at line <a class="el" href="OccupancyGrid2D_8hpp_source.html#l00047">47</a> of file <a class="el" href="OccupancyGrid2D_8hpp_source.html">OccupancyGrid2D.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   48</span>      : <a class="code hl_variable" href="classdyno_1_1OccupandyGrid2D.html#a3616fde7e069f03425a6c47223c319d2">cell_size</a>(<a class="code hl_variable" href="classdyno_1_1OccupandyGrid2D.html#a3616fde7e069f03425a6c47223c319d2">cell_size</a>),</div>
+<div class="line"><span class="lineno">   49</span>        <a class="code hl_variable" href="classdyno_1_1OccupandyGrid2D.html#af36511776c5994653e80b37ed98ed639">n_cols</a>(<a class="code hl_variable" href="classdyno_1_1OccupandyGrid2D.html#af36511776c5994653e80b37ed98ed639">n_cols</a>),</div>
+<div class="line"><span class="lineno">   50</span>        <a class="code hl_variable" href="classdyno_1_1OccupandyGrid2D.html#ac5fbcfcb199b7f4c3a74a59c77cc6d2e">n_rows</a>(<a class="code hl_variable" href="classdyno_1_1OccupandyGrid2D.html#ac5fbcfcb199b7f4c3a74a59c77cc6d2e">n_rows</a>),</div>
+<div class="line"><span class="lineno">   51</span>        <a class="code hl_variable" href="classdyno_1_1OccupandyGrid2D.html#aee54969c36a674a9f7fe6f28aa412e29">occupancy_</a>(<a class="code hl_variable" href="classdyno_1_1OccupandyGrid2D.html#af36511776c5994653e80b37ed98ed639">n_cols</a> * <a class="code hl_variable" href="classdyno_1_1OccupandyGrid2D.html#ac5fbcfcb199b7f4c3a74a59c77cc6d2e">n_rows</a>, <span class="keyword">false</span>),</div>
+<div class="line"><span class="lineno">   52</span>        <a class="code hl_variable" href="classdyno_1_1OccupandyGrid2D.html#ac3a16460a8cbe8dd33770f9e6363ed70">feature_occupancy_</a>(<a class="code hl_variable" href="classdyno_1_1OccupandyGrid2D.html#af36511776c5994653e80b37ed98ed639">n_cols</a> * <a class="code hl_variable" href="classdyno_1_1OccupandyGrid2D.html#ac5fbcfcb199b7f4c3a74a59c77cc6d2e">n_rows</a>, <a class="code hl_typedef" href="namespacedyno.html#aaa260a8022691078c59e1ac6a4fa05b5">Keypoint</a>(0, 0)) {}</div>
+<div class="ttc" id="aclassdyno_1_1OccupandyGrid2D_html_a3616fde7e069f03425a6c47223c319d2"><div class="ttname"><a href="classdyno_1_1OccupandyGrid2D.html#a3616fde7e069f03425a6c47223c319d2">dyno::OccupandyGrid2D::cell_size</a></div><div class="ttdeci">const int cell_size</div><div class="ttdef"><b>Definition:</b> <a href="OccupancyGrid2D_8hpp_source.html#l00067">OccupancyGrid2D.hpp:67</a></div></div>
+<div class="ttc" id="aclassdyno_1_1OccupandyGrid2D_html_ac3a16460a8cbe8dd33770f9e6363ed70"><div class="ttname"><a href="classdyno_1_1OccupandyGrid2D.html#ac3a16460a8cbe8dd33770f9e6363ed70">dyno::OccupandyGrid2D::feature_occupancy_</a></div><div class="ttdeci">FeatureGrid feature_occupancy_</div><div class="ttdef"><b>Definition:</b> <a href="OccupancyGrid2D_8hpp_source.html#l00071">OccupancyGrid2D.hpp:71</a></div></div>
+<div class="ttc" id="aclassdyno_1_1OccupandyGrid2D_html_ac5fbcfcb199b7f4c3a74a59c77cc6d2e"><div class="ttname"><a href="classdyno_1_1OccupandyGrid2D.html#ac5fbcfcb199b7f4c3a74a59c77cc6d2e">dyno::OccupandyGrid2D::n_rows</a></div><div class="ttdeci">const int n_rows</div><div class="ttdef"><b>Definition:</b> <a href="OccupancyGrid2D_8hpp_source.html#l00069">OccupancyGrid2D.hpp:69</a></div></div>
+<div class="ttc" id="aclassdyno_1_1OccupandyGrid2D_html_aee54969c36a674a9f7fe6f28aa412e29"><div class="ttname"><a href="classdyno_1_1OccupandyGrid2D.html#aee54969c36a674a9f7fe6f28aa412e29">dyno::OccupandyGrid2D::occupancy_</a></div><div class="ttdeci">Grid occupancy_</div><div class="ttdef"><b>Definition:</b> <a href="OccupancyGrid2D_8hpp_source.html#l00070">OccupancyGrid2D.hpp:70</a></div></div>
+<div class="ttc" id="aclassdyno_1_1OccupandyGrid2D_html_af36511776c5994653e80b37ed98ed639"><div class="ttname"><a href="classdyno_1_1OccupandyGrid2D.html#af36511776c5994653e80b37ed98ed639">dyno::OccupandyGrid2D::n_cols</a></div><div class="ttdeci">const int n_cols</div><div class="ttdef"><b>Definition:</b> <a href="OccupancyGrid2D_8hpp_source.html#l00068">OccupancyGrid2D.hpp:68</a></div></div>
+<div class="ttc" id="anamespacedyno_html_aaa260a8022691078c59e1ac6a4fa05b5"><div class="ttname"><a href="namespacedyno.html#aaa260a8022691078c59e1ac6a4fa05b5">dyno::Keypoint</a></div><div class="ttdeci">gtsam::Point2 Keypoint</div><div class="ttdoc">Observed optical flow vector (ordered x, y)</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00096">Types.hpp:96</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -258,14 +256,12 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="OccupancyGrid2D_8hpp_source.html#l00050">50</a> of file <a class="el" href="OccupancyGrid2D_8hpp_source.html">OccupancyGrid2D.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   51</span>    : <a class="code hl_variable" href="classdyno_1_1OccupandyGrid2D.html#a3616fde7e069f03425a6c47223c319d2">cell_size</a>(rhs.cell_size)</div>
-<div class="line"><span class="lineno">   52</span>    , <a class="code hl_variable" href="classdyno_1_1OccupandyGrid2D.html#af36511776c5994653e80b37ed98ed639">n_cols</a>(rhs.n_cols)</div>
-<div class="line"><span class="lineno">   53</span>    , <a class="code hl_variable" href="classdyno_1_1OccupandyGrid2D.html#ac5fbcfcb199b7f4c3a74a59c77cc6d2e">n_rows</a>(rhs.n_rows)</div>
-<div class="line"><span class="lineno">   54</span>    , <a class="code hl_variable" href="classdyno_1_1OccupandyGrid2D.html#aee54969c36a674a9f7fe6f28aa412e29">occupancy_</a>(rhs.occupancy_)</div>
-<div class="line"><span class="lineno">   55</span>    , <a class="code hl_variable" href="classdyno_1_1OccupandyGrid2D.html#ac3a16460a8cbe8dd33770f9e6363ed70">feature_occupancy_</a>(rhs.feature_occupancy_)</div>
-<div class="line"><span class="lineno">   56</span>  {</div>
-<div class="line"><span class="lineno">   57</span>  }</div>
+<p class="definition">Definition at line <a class="el" href="OccupancyGrid2D_8hpp_source.html#l00054">54</a> of file <a class="el" href="OccupancyGrid2D_8hpp_source.html">OccupancyGrid2D.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   55</span>      : <a class="code hl_variable" href="classdyno_1_1OccupandyGrid2D.html#a3616fde7e069f03425a6c47223c319d2">cell_size</a>(rhs.cell_size),</div>
+<div class="line"><span class="lineno">   56</span>        <a class="code hl_variable" href="classdyno_1_1OccupandyGrid2D.html#af36511776c5994653e80b37ed98ed639">n_cols</a>(rhs.n_cols),</div>
+<div class="line"><span class="lineno">   57</span>        <a class="code hl_variable" href="classdyno_1_1OccupandyGrid2D.html#ac5fbcfcb199b7f4c3a74a59c77cc6d2e">n_rows</a>(rhs.n_rows),</div>
+<div class="line"><span class="lineno">   58</span>        <a class="code hl_variable" href="classdyno_1_1OccupandyGrid2D.html#aee54969c36a674a9f7fe6f28aa412e29">occupancy_</a>(rhs.occupancy_),</div>
+<div class="line"><span class="lineno">   59</span>        <a class="code hl_variable" href="classdyno_1_1OccupandyGrid2D.html#ac3a16460a8cbe8dd33770f9e6363ed70">feature_occupancy_</a>(rhs.feature_occupancy_) {}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -318,10 +314,8 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="OccupancyGrid2D_8hpp_source.html#l00084">84</a> of file <a class="el" href="OccupancyGrid2D_8hpp_source.html">OccupancyGrid2D.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   85</span>  {</div>
-<div class="line"><span class="lineno">   86</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1OccupandyGrid2D.html#aee54969c36a674a9f7fe6f28aa412e29">occupancy_</a>.empty();</div>
-<div class="line"><span class="lineno">   87</span>  }</div>
+<p class="definition">Definition at line <a class="el" href="OccupancyGrid2D_8hpp_source.html#l00079">79</a> of file <a class="el" href="OccupancyGrid2D_8hpp_source.html">OccupancyGrid2D.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   79</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1OccupandyGrid2D.html#aee54969c36a674a9f7fe6f28aa412e29">occupancy_</a>.empty(); }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1OccupandyGrid2D.html#aee54969c36a674a9f7fe6f28aa412e29">occupancy_</a>.</p>
 
@@ -351,20 +345,19 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="OccupancyGrid2D_8hpp_source.html#l00122">122</a> of file <a class="el" href="OccupancyGrid2D_8hpp_source.html">OccupancyGrid2D.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  123</span>  {</div>
-<div class="line"><span class="lineno">  124</span>    <span class="comment">// TODO(cfo): could be implemented using block operations.</span></div>
-<div class="line"><span class="lineno">  125</span>    <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; keypoints.size(); ++i)</div>
-<div class="line"><span class="lineno">  126</span>    {</div>
-<div class="line"><span class="lineno">  127</span>      <span class="keyword">const</span> <a class="code hl_typedef" href="namespacedyno.html#aaa260a8022691078c59e1ac6a4fa05b5">Keypoint</a>&amp; keypoint = keypoints.at(i);</div>
-<div class="line"><span class="lineno">  128</span>      <span class="keyword">const</span> <span class="keywordtype">int</span> int_x = <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(keypoint(0));</div>
-<div class="line"><span class="lineno">  129</span>      <span class="keyword">const</span> <span class="keywordtype">int</span> int_y = <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(keypoint(1));</div>
-<div class="line"><span class="lineno">  130</span>      <span class="keyword">const</span> <span class="keywordtype">size_t</span> idx = <a class="code hl_function" href="classdyno_1_1OccupandyGrid2D.html#a47842553cb516c8c8d2490538973cd81">getCellIndex</a>(int_x, int_y, 1);</div>
-<div class="line"><span class="lineno">  131</span>      <a class="code hl_variable" href="classdyno_1_1OccupandyGrid2D.html#aee54969c36a674a9f7fe6f28aa412e29">occupancy_</a>.at(idx) = <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  132</span>      <a class="code hl_variable" href="classdyno_1_1OccupandyGrid2D.html#ac3a16460a8cbe8dd33770f9e6363ed70">feature_occupancy_</a>.at(idx) = <a class="code hl_typedef" href="namespacedyno.html#aaa260a8022691078c59e1ac6a4fa05b5">Keypoint</a>(keypoint(0), keypoint(1));</div>
-<div class="line"><span class="lineno">  133</span>    }</div>
-<div class="line"><span class="lineno">  134</span>  }</div>
-<div class="ttc" id="aclassdyno_1_1OccupandyGrid2D_html_a47842553cb516c8c8d2490538973cd81"><div class="ttname"><a href="classdyno_1_1OccupandyGrid2D.html#a47842553cb516c8c8d2490538973cd81">dyno::OccupandyGrid2D::getCellIndex</a></div><div class="ttdeci">size_t getCellIndex(const Eigen::MatrixBase&lt; Derived &gt; &amp;px) const</div><div class="ttdef"><b>Definition:</b> <a href="OccupancyGrid2D_8hpp_source.html#l00107">OccupancyGrid2D.hpp:107</a></div></div>
+<p class="definition">Definition at line <a class="el" href="OccupancyGrid2D_8hpp_source.html#l00110">110</a> of file <a class="el" href="OccupancyGrid2D_8hpp_source.html">OccupancyGrid2D.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  110</span>                                                            {</div>
+<div class="line"><span class="lineno">  111</span>    <span class="comment">// TODO(cfo): could be implemented using block operations.</span></div>
+<div class="line"><span class="lineno">  112</span>    <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; keypoints.size(); ++i) {</div>
+<div class="line"><span class="lineno">  113</span>      <span class="keyword">const</span> <a class="code hl_typedef" href="namespacedyno.html#aaa260a8022691078c59e1ac6a4fa05b5">Keypoint</a>&amp; keypoint = keypoints.at(i);</div>
+<div class="line"><span class="lineno">  114</span>      <span class="keyword">const</span> <span class="keywordtype">int</span> int_x = <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(keypoint(0));</div>
+<div class="line"><span class="lineno">  115</span>      <span class="keyword">const</span> <span class="keywordtype">int</span> int_y = <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(keypoint(1));</div>
+<div class="line"><span class="lineno">  116</span>      <span class="keyword">const</span> <span class="keywordtype">size_t</span> idx = <a class="code hl_function" href="classdyno_1_1OccupandyGrid2D.html#a47842553cb516c8c8d2490538973cd81">getCellIndex</a>(int_x, int_y, 1);</div>
+<div class="line"><span class="lineno">  117</span>      <a class="code hl_variable" href="classdyno_1_1OccupandyGrid2D.html#aee54969c36a674a9f7fe6f28aa412e29">occupancy_</a>.at(idx) = <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  118</span>      <a class="code hl_variable" href="classdyno_1_1OccupandyGrid2D.html#ac3a16460a8cbe8dd33770f9e6363ed70">feature_occupancy_</a>.at(idx) = <a class="code hl_typedef" href="namespacedyno.html#aaa260a8022691078c59e1ac6a4fa05b5">Keypoint</a>(keypoint(0), keypoint(1));</div>
+<div class="line"><span class="lineno">  119</span>    }</div>
+<div class="line"><span class="lineno">  120</span>  }</div>
+<div class="ttc" id="aclassdyno_1_1OccupandyGrid2D_html_a47842553cb516c8c8d2490538973cd81"><div class="ttname"><a href="classdyno_1_1OccupandyGrid2D.html#a47842553cb516c8c8d2490538973cd81">dyno::OccupandyGrid2D::getCellIndex</a></div><div class="ttdeci">size_t getCellIndex(const Eigen::MatrixBase&lt; Derived &gt; &amp;px) const</div><div class="ttdef"><b>Definition:</b> <a href="OccupancyGrid2D_8hpp_source.html#l00096">OccupancyGrid2D.hpp:96</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1OccupandyGrid2D.html#ac3a16460a8cbe8dd33770f9e6363ed70">feature_occupancy_</a>, <a class="el" href="classdyno_1_1OccupandyGrid2D.html#a47842553cb516c8c8d2490538973cd81">getCellIndex()</a>, and <a class="el" href="classdyno_1_1OccupandyGrid2D.html#aee54969c36a674a9f7fe6f28aa412e29">occupancy_</a>.</p>
 <div class="dynheader">
@@ -405,13 +398,14 @@ template&lt;typename Derived &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="OccupancyGrid2D_8hpp_source.html#l00107">107</a> of file <a class="el" href="OccupancyGrid2D_8hpp_source.html">OccupancyGrid2D.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  108</span>  {</div>
-<div class="line"><span class="lineno">  109</span>    EIGEN_STATIC_ASSERT_MATRIX_SPECIFIC_SIZE(Derived, 2, 1);</div>
-<div class="line"><span class="lineno">  110</span>    <span class="keywordflow">return</span> std::floor(px(1) / <a class="code hl_variable" href="classdyno_1_1OccupandyGrid2D.html#a3616fde7e069f03425a6c47223c319d2">cell_size</a>) * <a class="code hl_variable" href="classdyno_1_1OccupandyGrid2D.html#af36511776c5994653e80b37ed98ed639">n_cols</a> + std::floor(px(0) / <a class="code hl_variable" href="classdyno_1_1OccupandyGrid2D.html#a3616fde7e069f03425a6c47223c319d2">cell_size</a>);</div>
-<div class="line"><span class="lineno">  111</span><span class="comment">//    return static_cast&lt;size_t&gt;((px(1)) / cell_size * n_cols +</span></div>
-<div class="line"><span class="lineno">  112</span><span class="comment">//                               (px(0)) / cell_size);</span></div>
-<div class="line"><span class="lineno">  113</span>  }</div>
+<p class="definition">Definition at line <a class="el" href="OccupancyGrid2D_8hpp_source.html#l00096">96</a> of file <a class="el" href="OccupancyGrid2D_8hpp_source.html">OccupancyGrid2D.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   96</span>                                                                {</div>
+<div class="line"><span class="lineno">   97</span>    EIGEN_STATIC_ASSERT_MATRIX_SPECIFIC_SIZE(Derived, 2, 1);</div>
+<div class="line"><span class="lineno">   98</span>    <span class="keywordflow">return</span> std::floor(px(1) / <a class="code hl_variable" href="classdyno_1_1OccupandyGrid2D.html#a3616fde7e069f03425a6c47223c319d2">cell_size</a>) * <a class="code hl_variable" href="classdyno_1_1OccupandyGrid2D.html#af36511776c5994653e80b37ed98ed639">n_cols</a> +</div>
+<div class="line"><span class="lineno">   99</span>           std::floor(px(0) / <a class="code hl_variable" href="classdyno_1_1OccupandyGrid2D.html#a3616fde7e069f03425a6c47223c319d2">cell_size</a>);</div>
+<div class="line"><span class="lineno">  100</span>    <span class="comment">//    return static_cast&lt;size_t&gt;((px(1)) / cell_size * n_cols +</span></div>
+<div class="line"><span class="lineno">  101</span>    <span class="comment">//                               (px(0)) / cell_size);</span></div>
+<div class="line"><span class="lineno">  102</span>  }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1OccupandyGrid2D.html#a3616fde7e069f03425a6c47223c319d2">cell_size</a>, and <a class="el" href="classdyno_1_1OccupandyGrid2D.html#af36511776c5994653e80b37ed98ed639">n_cols</a>.</p>
 
@@ -470,12 +464,12 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="OccupancyGrid2D_8hpp_source.html#l00115">115</a> of file <a class="el" href="OccupancyGrid2D_8hpp_source.html">OccupancyGrid2D.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  116</span>  {</div>
-<div class="line"><span class="lineno">  117</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="classdyno_1_1OccupandyGrid2D.html#a47842553cb516c8c8d2490538973cd81">getCellIndex</a>(Eigen::Vector2d(scale * x, scale * y));</div>
-<div class="line"><span class="lineno">  118</span><span class="comment">//    return static_cast&lt;size_t&gt;((scale * y) / cell_size * n_cols +</span></div>
-<div class="line"><span class="lineno">  119</span><span class="comment">//                               (scale * x) / cell_size);</span></div>
-<div class="line"><span class="lineno">  120</span>  }</div>
+<p class="definition">Definition at line <a class="el" href="OccupancyGrid2D_8hpp_source.html#l00104">104</a> of file <a class="el" href="OccupancyGrid2D_8hpp_source.html">OccupancyGrid2D.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  104</span>                                                                {</div>
+<div class="line"><span class="lineno">  105</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="classdyno_1_1OccupandyGrid2D.html#a47842553cb516c8c8d2490538973cd81">getCellIndex</a>(Eigen::Vector2d(scale * x, scale * y));</div>
+<div class="line"><span class="lineno">  106</span>    <span class="comment">//    return static_cast&lt;size_t&gt;((scale * y) / cell_size * n_cols +</span></div>
+<div class="line"><span class="lineno">  107</span>    <span class="comment">//                               (scale * x) / cell_size);</span></div>
+<div class="line"><span class="lineno">  108</span>  }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1OccupandyGrid2D.html#a47842553cb516c8c8d2490538973cd81">getCellIndex()</a>.</p>
 <div class="dynheader">
@@ -524,12 +518,11 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="OccupancyGrid2D_8hpp_source.html#l00061">61</a> of file <a class="el" href="OccupancyGrid2D_8hpp_source.html">OccupancyGrid2D.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   63</span>  {</div>
-<div class="line"><span class="lineno">   64</span>    <span class="keywordflow">return</span> std::ceil(<span class="keyword">static_cast&lt;</span><span class="keywordtype">double</span><span class="keyword">&gt;</span>(n_pixels)</div>
-<div class="line"><span class="lineno">   65</span>                      / <span class="keyword">static_cast&lt;</span><span class="keywordtype">double</span><span class="keyword">&gt;</span>(<a class="code hl_function" href="classdyno_1_1OccupandyGrid2D.html#ab7a649937ca86f0ab16dd0e1d313f7c9">size</a>));</div>
-<div class="line"><span class="lineno">   66</span>  }</div>
-<div class="ttc" id="aclassdyno_1_1OccupandyGrid2D_html_ab7a649937ca86f0ab16dd0e1d313f7c9"><div class="ttname"><a href="classdyno_1_1OccupandyGrid2D.html#ab7a649937ca86f0ab16dd0e1d313f7c9">dyno::OccupandyGrid2D::size</a></div><div class="ttdeci">size_t size()</div><div class="ttdef"><b>Definition:</b> <a href="OccupancyGrid2D_8hpp_source.html#l00079">OccupancyGrid2D.hpp:79</a></div></div>
+<p class="definition">Definition at line <a class="el" href="OccupancyGrid2D_8hpp_source.html#l00063">63</a> of file <a class="el" href="OccupancyGrid2D_8hpp_source.html">OccupancyGrid2D.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   63</span>                                                                 {</div>
+<div class="line"><span class="lineno">   64</span>    <span class="keywordflow">return</span> std::ceil(<span class="keyword">static_cast&lt;</span><span class="keywordtype">double</span><span class="keyword">&gt;</span>(n_pixels) / <span class="keyword">static_cast&lt;</span><span class="keywordtype">double</span><span class="keyword">&gt;</span>(<a class="code hl_function" href="classdyno_1_1OccupandyGrid2D.html#ab7a649937ca86f0ab16dd0e1d313f7c9">size</a>));</div>
+<div class="line"><span class="lineno">   65</span>  }</div>
+<div class="ttc" id="aclassdyno_1_1OccupandyGrid2D_html_ab7a649937ca86f0ab16dd0e1d313f7c9"><div class="ttname"><a href="classdyno_1_1OccupandyGrid2D.html#ab7a649937ca86f0ab16dd0e1d313f7c9">dyno::OccupandyGrid2D::size</a></div><div class="ttdeci">size_t size()</div><div class="ttdef"><b>Definition:</b> <a href="OccupancyGrid2D_8hpp_source.html#l00077">OccupancyGrid2D.hpp:77</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1OccupandyGrid2D.html#ab7a649937ca86f0ab16dd0e1d313f7c9">size()</a>.</p>
 <div class="dynheader">
@@ -568,11 +561,11 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="OccupancyGrid2D_8hpp_source.html#l00089">89</a> of file <a class="el" href="OccupancyGrid2D_8hpp_source.html">OccupancyGrid2D.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   90</span>  {</div>
-<div class="line"><span class="lineno">   91</span>    CHECK_LT(cell_index, <a class="code hl_variable" href="classdyno_1_1OccupandyGrid2D.html#aee54969c36a674a9f7fe6f28aa412e29">occupancy_</a>.size());</div>
-<div class="line"><span class="lineno">   92</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1OccupandyGrid2D.html#aee54969c36a674a9f7fe6f28aa412e29">occupancy_</a>[cell_index];</div>
-<div class="line"><span class="lineno">   93</span>  }</div>
+<p class="definition">Definition at line <a class="el" href="OccupancyGrid2D_8hpp_source.html#l00081">81</a> of file <a class="el" href="OccupancyGrid2D_8hpp_source.html">OccupancyGrid2D.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   81</span>                                                  {</div>
+<div class="line"><span class="lineno">   82</span>    CHECK_LT(cell_index, <a class="code hl_variable" href="classdyno_1_1OccupandyGrid2D.html#aee54969c36a674a9f7fe6f28aa412e29">occupancy_</a>.size());</div>
+<div class="line"><span class="lineno">   83</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1OccupandyGrid2D.html#aee54969c36a674a9f7fe6f28aa412e29">occupancy_</a>[cell_index];</div>
+<div class="line"><span class="lineno">   84</span>  }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1OccupandyGrid2D.html#aee54969c36a674a9f7fe6f28aa412e29">occupancy_</a>.</p>
 
@@ -612,10 +605,10 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="OccupancyGrid2D_8hpp_source.html#l00101">101</a> of file <a class="el" href="OccupancyGrid2D_8hpp_source.html">OccupancyGrid2D.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  102</span>  {</div>
-<div class="line"><span class="lineno">  103</span>    <span class="keywordflow">return</span> std::count(<a class="code hl_variable" href="classdyno_1_1OccupandyGrid2D.html#aee54969c36a674a9f7fe6f28aa412e29">occupancy_</a>.begin(), <a class="code hl_variable" href="classdyno_1_1OccupandyGrid2D.html#aee54969c36a674a9f7fe6f28aa412e29">occupancy_</a>.end(), <span class="keyword">true</span>);</div>
-<div class="line"><span class="lineno">  104</span>  }</div>
+<p class="definition">Definition at line <a class="el" href="OccupancyGrid2D_8hpp_source.html#l00091">91</a> of file <a class="el" href="OccupancyGrid2D_8hpp_source.html">OccupancyGrid2D.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   91</span>                                 {</div>
+<div class="line"><span class="lineno">   92</span>    <span class="keywordflow">return</span> std::count(<a class="code hl_variable" href="classdyno_1_1OccupandyGrid2D.html#aee54969c36a674a9f7fe6f28aa412e29">occupancy_</a>.begin(), <a class="code hl_variable" href="classdyno_1_1OccupandyGrid2D.html#aee54969c36a674a9f7fe6f28aa412e29">occupancy_</a>.end(), <span class="keyword">true</span>);</div>
+<div class="line"><span class="lineno">   93</span>  }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1OccupandyGrid2D.html#aee54969c36a674a9f7fe6f28aa412e29">occupancy_</a>.</p>
 
@@ -644,10 +637,10 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="OccupancyGrid2D_8hpp_source.html#l00074">74</a> of file <a class="el" href="OccupancyGrid2D_8hpp_source.html">OccupancyGrid2D.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   75</span>  {</div>
-<div class="line"><span class="lineno">   76</span>    std::fill(<a class="code hl_variable" href="classdyno_1_1OccupandyGrid2D.html#aee54969c36a674a9f7fe6f28aa412e29">occupancy_</a>.begin(), <a class="code hl_variable" href="classdyno_1_1OccupandyGrid2D.html#aee54969c36a674a9f7fe6f28aa412e29">occupancy_</a>.end(), <span class="keyword">false</span>);</div>
-<div class="line"><span class="lineno">   77</span>  }</div>
+<p class="definition">Definition at line <a class="el" href="OccupancyGrid2D_8hpp_source.html#l00073">73</a> of file <a class="el" href="OccupancyGrid2D_8hpp_source.html">OccupancyGrid2D.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   73</span>                      {</div>
+<div class="line"><span class="lineno">   74</span>    std::fill(<a class="code hl_variable" href="classdyno_1_1OccupandyGrid2D.html#aee54969c36a674a9f7fe6f28aa412e29">occupancy_</a>.begin(), <a class="code hl_variable" href="classdyno_1_1OccupandyGrid2D.html#aee54969c36a674a9f7fe6f28aa412e29">occupancy_</a>.end(), <span class="keyword">false</span>);</div>
+<div class="line"><span class="lineno">   75</span>  }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1OccupandyGrid2D.html#aee54969c36a674a9f7fe6f28aa412e29">occupancy_</a>.</p>
 
@@ -688,11 +681,11 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="OccupancyGrid2D_8hpp_source.html#l00095">95</a> of file <a class="el" href="OccupancyGrid2D_8hpp_source.html">OccupancyGrid2D.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   96</span>  {</div>
-<div class="line"><span class="lineno">   97</span>    CHECK_LT(cell_index, <a class="code hl_variable" href="classdyno_1_1OccupandyGrid2D.html#aee54969c36a674a9f7fe6f28aa412e29">occupancy_</a>.size());</div>
-<div class="line"><span class="lineno">   98</span>    <a class="code hl_variable" href="classdyno_1_1OccupandyGrid2D.html#aee54969c36a674a9f7fe6f28aa412e29">occupancy_</a>[cell_index] = <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">   99</span>  }</div>
+<p class="definition">Definition at line <a class="el" href="OccupancyGrid2D_8hpp_source.html#l00086">86</a> of file <a class="el" href="OccupancyGrid2D_8hpp_source.html">OccupancyGrid2D.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   86</span>                                                   {</div>
+<div class="line"><span class="lineno">   87</span>    CHECK_LT(cell_index, <a class="code hl_variable" href="classdyno_1_1OccupandyGrid2D.html#aee54969c36a674a9f7fe6f28aa412e29">occupancy_</a>.size());</div>
+<div class="line"><span class="lineno">   88</span>    <a class="code hl_variable" href="classdyno_1_1OccupandyGrid2D.html#aee54969c36a674a9f7fe6f28aa412e29">occupancy_</a>[cell_index] = <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">   89</span>  }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1OccupandyGrid2D.html#aee54969c36a674a9f7fe6f28aa412e29">occupancy_</a>.</p>
 
@@ -721,10 +714,8 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="OccupancyGrid2D_8hpp_source.html#l00079">79</a> of file <a class="el" href="OccupancyGrid2D_8hpp_source.html">OccupancyGrid2D.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   80</span>  {</div>
-<div class="line"><span class="lineno">   81</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1OccupandyGrid2D.html#aee54969c36a674a9f7fe6f28aa412e29">occupancy_</a>.size();</div>
-<div class="line"><span class="lineno">   82</span>  }</div>
+<p class="definition">Definition at line <a class="el" href="OccupancyGrid2D_8hpp_source.html#l00077">77</a> of file <a class="el" href="OccupancyGrid2D_8hpp_source.html">OccupancyGrid2D.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   77</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1OccupandyGrid2D.html#aee54969c36a674a9f7fe6f28aa412e29">occupancy_</a>.size(); }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1OccupandyGrid2D.html#aee54969c36a674a9f7fe6f28aa412e29">occupancy_</a>.</p>
 
@@ -754,7 +745,7 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="OccupancyGrid2D_8hpp_source.html#l00068">68</a> of file <a class="el" href="OccupancyGrid2D_8hpp_source.html">OccupancyGrid2D.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="OccupancyGrid2D_8hpp_source.html#l00067">67</a> of file <a class="el" href="OccupancyGrid2D_8hpp_source.html">OccupancyGrid2D.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1OccupandyGrid2D.html#a47842553cb516c8c8d2490538973cd81">getCellIndex()</a>.</p>
 
@@ -772,7 +763,7 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="OccupancyGrid2D_8hpp_source.html#l00072">72</a> of file <a class="el" href="OccupancyGrid2D_8hpp_source.html">OccupancyGrid2D.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="OccupancyGrid2D_8hpp_source.html#l00071">71</a> of file <a class="el" href="OccupancyGrid2D_8hpp_source.html">OccupancyGrid2D.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1OccupandyGrid2D.html#ae60f54ed3819de59a407c75b3851a977">fillWithKeypoints()</a>.</p>
 
@@ -790,7 +781,7 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="OccupancyGrid2D_8hpp_source.html#l00069">69</a> of file <a class="el" href="OccupancyGrid2D_8hpp_source.html">OccupancyGrid2D.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="OccupancyGrid2D_8hpp_source.html#l00068">68</a> of file <a class="el" href="OccupancyGrid2D_8hpp_source.html">OccupancyGrid2D.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1OccupandyGrid2D.html#a47842553cb516c8c8d2490538973cd81">getCellIndex()</a>.</p>
 
@@ -808,7 +799,7 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="OccupancyGrid2D_8hpp_source.html#l00070">70</a> of file <a class="el" href="OccupancyGrid2D_8hpp_source.html">OccupancyGrid2D.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="OccupancyGrid2D_8hpp_source.html#l00069">69</a> of file <a class="el" href="OccupancyGrid2D_8hpp_source.html">OccupancyGrid2D.hpp</a>.</p>
 
 </div>
 </div>
@@ -824,7 +815,7 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="OccupancyGrid2D_8hpp_source.html#l00071">71</a> of file <a class="el" href="OccupancyGrid2D_8hpp_source.html">OccupancyGrid2D.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="OccupancyGrid2D_8hpp_source.html#l00070">70</a> of file <a class="el" href="OccupancyGrid2D_8hpp_source.html">OccupancyGrid2D.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1OccupandyGrid2D.html#a105428060423ddab60a738515507786c">empty()</a>, <a class="el" href="classdyno_1_1OccupandyGrid2D.html#ae60f54ed3819de59a407c75b3851a977">fillWithKeypoints()</a>, <a class="el" href="classdyno_1_1OccupandyGrid2D.html#aa5431f09664865ba805c56fd3e9772a5">isOccupied()</a>, <a class="el" href="classdyno_1_1OccupandyGrid2D.html#ad0d6f7e4d4f04a780272b74a4b154ca8">numOccupied()</a>, <a class="el" href="classdyno_1_1OccupandyGrid2D.html#a6cc314a92fe52341f3bb3577c39ec439">reset()</a>, <a class="el" href="classdyno_1_1OccupandyGrid2D.html#aefbd665eab795bb96a58eb830bb32619">setOccupied()</a>, <a class="el" href="classdyno_1_1OccupandyGrid2D.html#ab7a649937ca86f0ab16dd0e1d313f7c9">size()</a>, and <a class="el" href="classdyno_1_1ExternalFlowFeatureTracker.html#aedf0b07caf85d853756cb878f22d2ad7">dyno::ExternalFlowFeatureTracker::trackStatic()</a>.</p>
 

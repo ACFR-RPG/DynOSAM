@@ -84,22 +84,22 @@ $(function() {
 
 <p>Base class for non maximum suppression interface.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &lt;opencv2/opencv.hpp&gt;</code><br />
+<div class="textblock"><code>#include &lt;Eigen/Dense&gt;</code><br />
+<code>#include &lt;opencv2/opencv.hpp&gt;</code><br />
 <code>#include &lt;vector&gt;</code><br />
-<code>#include &lt;Eigen/Dense&gt;</code><br />
-<code>#include &quot;<a class="el" href="Macros_8hpp_source.html">dynosam/utils/Macros.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="Macros_8hpp_source.html">dynosam_common/utils/Macros.hpp</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for NonMaximumSuppression.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="NonMaximumSuppression_8h__incl.png" border="0" usemap="#adynosam_2include_2dynosam_2frontend_2anms_2NonMaximumSuppression_8h" alt=""/></div>
 <map name="adynosam_2include_2dynosam_2frontend_2anms_2NonMaximumSuppression_8h" id="adynosam_2include_2dynosam_2frontend_2anms_2NonMaximumSuppression_8h">
-<area shape="rect" title="Base class for non maximum suppression interface." alt="" coords="115,5,423,45"/>
-<area shape="rect" title=" " alt="" coords="5,93,160,119"/>
-<area shape="rect" title=" " alt="" coords="185,93,247,119"/>
-<area shape="rect" title=" " alt="" coords="271,93,374,119"/>
-<area shape="rect" href="Macros_8hpp.html" title=" " alt="" coords="398,93,591,119"/>
-<area shape="rect" title=" " alt="" coords="405,167,483,192"/>
-<area shape="rect" title=" " alt="" coords="507,167,581,192"/>
+<area shape="rect" title="Base class for non maximum suppression interface." alt="" coords="123,5,431,45"/>
+<area shape="rect" title=" " alt="" coords="5,101,108,126"/>
+<area shape="rect" title=" " alt="" coords="133,101,287,126"/>
+<area shape="rect" title=" " alt="" coords="312,101,375,126"/>
+<area shape="rect" href="Macros_8hpp.html" title=" " alt="" coords="399,93,578,133"/>
+<area shape="rect" title=" " alt="" coords="399,181,477,207"/>
+<area shape="rect" title=" " alt="" coords="501,181,575,207"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -109,7 +109,7 @@ This graph shows which files directly or indirectly include this file:</div>
 <map name="adynosam_2include_2dynosam_2frontend_2anms_2NonMaximumSuppression_8hdep" id="adynosam_2include_2dynosam_2frontend_2anms_2NonMaximumSuppression_8hdep">
 <area shape="rect" title="Base class for non maximum suppression interface." alt="" coords="429,5,737,45"/>
 <area shape="rect" href="FeatureDetector_8hpp.html" title=" " alt="" coords="114,189,374,229"/>
-<area shape="rect" href="FeatureTracker_8cc.html" title=" " alt="" coords="9,482,191,522"/>
+<area shape="rect" href="FeatureTracker_8cc.html" title=" " alt="" coords="5,475,187,515"/>
 <area shape="rect" href="TrackerParams_8hpp.html" title=" " alt="" coords="457,93,708,133"/>
 <area shape="rect" href="FeatureTrackerBase_8cc.html" title=" " alt="" coords="799,291,1014,331"/>
 <area shape="rect" href="NonMaximumSupression_8cc.html" title=" " alt="" coords="950,93,1197,133"/>
@@ -117,26 +117,25 @@ This graph shows which files directly or indirectly include this file:</div>
 <area shape="rect" href="FeatureDetector_8cc.html" title=" " alt="" coords="43,291,234,331"/>
 <area shape="rect" href="FeatureTracker_8hpp.html" title=" " alt="" coords="285,387,536,427"/>
 <area shape="rect" href="StaticFeatureTracker_8cc.html" title=" " alt="" coords="43,387,261,427"/>
-<area shape="rect" href="dyno__sam_8cc.html" title=" " alt="" coords="1129,577,1308,617"/>
-<area shape="rect" href="RGBDInstanceFrontendModule_8hpp.html" title=" " alt="" coords="556,475,791,529"/>
-<area shape="rect" href="dataset__node_8cc.html" title=" " alt="" coords="308,482,513,522"/>
-<area shape="rect" href="ModuleFactory_8hpp.html" title=" " alt="" coords="711,577,919,617"/>
-<area shape="rect" href="RGBDInstanceFrontendModule_8cc.html" title=" " alt="" coords="393,577,636,617"/>
-<area shape="rect" href="PipelineManager_8cc.html" title=" " alt="" coords="943,577,1105,617"/>
-<area shape="rect" href="backend__experiments__node_8cc.html" title=" " alt="" coords="824,665,1035,705"/>
+<area shape="rect" href="dyno__sam_8cc.html" title=" " alt="" coords="808,570,987,610"/>
+<area shape="rect" href="RGBDInstanceFrontendModule_8hpp.html" title=" " alt="" coords="360,563,595,617"/>
+<area shape="rect" href="dataset__node_8cc.html" title=" " alt="" coords="235,475,440,515"/>
+<area shape="rect" href="RGBDInstanceFrontendModule_8cc.html" title=" " alt="" coords="327,665,569,705"/>
+<area shape="rect" href="PipelineManager_8cc.html" title=" " alt="" coords="594,665,755,705"/>
+<area shape="rect" href="backend__experiments__node_8cc.html" title=" " alt="" coords="780,665,991,705"/>
 <area shape="rect" href="FrontendParams_8hpp.html" title=" " alt="" coords="548,291,767,331"/>
 <area shape="rect" href="FeatureTrackerBase_8hpp.html" title=" " alt="" coords="398,181,621,236"/>
 <area shape="rect" href="TrackerParams_8cc.html" title=" " alt="" coords="695,189,876,229"/>
-<area shape="rect" href="FrontendModule_8hpp.html" title=" " alt="" coords="937,387,1156,427"/>
-<area shape="rect" href="PipelineParams_8hpp.html" title=" " alt="" coords="1180,387,1391,427"/>
+<area shape="rect" href="FrontendModule_8hpp.html" title=" " alt="" coords="617,475,836,515"/>
+<area shape="rect" href="PipelineParams_8hpp.html" title=" " alt="" coords="988,387,1199,427"/>
 <area shape="rect" href="FrontendParams_8cc.html" title=" " alt="" coords="561,387,725,427"/>
 <area shape="rect" href="VisionTools_8cc.html" title=" " alt="" coords="749,387,913,427"/>
-<area shape="rect" href="FrontendModule_8cc.html" title=" " alt="" coords="866,482,1030,522"/>
-<area shape="rect" href="PipelineManager_8hpp.html" title=" " alt="" coords="1156,482,1375,522"/>
-<area shape="rect" href="PipelineRos_8hpp.html" title=" " alt="" coords="1332,577,1553,617"/>
-<area shape="rect" href="PipelineRos_8cc.html" title=" " alt="" coords="1555,665,1743,705"/>
-<area shape="rect" href="PipelineParams_8cc.html" title=" " alt="" coords="1399,482,1561,522"/>
-<area shape="rect" href="dynosam__node_8cc.html" title=" " alt="" coords="1315,665,1531,705"/>
+<area shape="rect" href="FrontendModule_8cc.html" title=" " alt="" coords="619,570,783,610"/>
+<area shape="rect" href="PipelineManager_8hpp.html" title=" " alt="" coords="925,475,1144,515"/>
+<area shape="rect" href="PipelineRos_8hpp.html" title=" " alt="" coords="1061,570,1283,610"/>
+<area shape="rect" href="PipelineRos_8cc.html" title=" " alt="" coords="1255,665,1443,705"/>
+<area shape="rect" href="PipelineParams_8cc.html" title=" " alt="" coords="1358,475,1519,515"/>
+<area shape="rect" href="dynosam__node_8cc.html" title=" " alt="" coords="1015,665,1231,705"/>
 </map>
 </div>
 </div>

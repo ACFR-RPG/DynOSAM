@@ -1,3 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$structdyno_1_1ISAM2UpdateParams.html" title=" " alt="" coords="5,5,204,31"/>
+<area shape="rect" id="node1" href="$structdyno_1_1internal_1_1fixed__lag__smoother__traits.html" title=" " alt="" coords="5,5,264,60"/>
+<area shape="rect" id="node2" href="$structdyno_1_1batch__fixed__lag__traits.html" title="Struct that implements the update function (as required by iOptimizationTraits) for the gtsam::BatchF..." alt="" coords="312,13,475,53"/>
+<area shape="rect" id="node3" href="$structdyno_1_1iOptimizationTraits_3_01gtsam_1_1BatchFixedLagSmoother_01_4.html" title=" " alt="" coords="523,13,781,53"/>
 </map>

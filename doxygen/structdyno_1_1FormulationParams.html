@@ -75,98 +75,228 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="structdyno_1_1FormulationParams-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">dyno::FormulationParams Struct Reference</div></div>
 </div><!--header-->
 <div class="contents">
 
+<p>Basic parameters for a <a class="el" href="classdyno_1_1Formulation.html" title="Base class for a formulation that defines the structure and implementation for a factor-graph based D...">Formulation</a>. Right now is just directly the <a class="el" href="structdyno_1_1BackendParams.html">BackendParams</a> since there is lots of cross-over, but later we may add formulation specific ones.  
+ <a href="structdyno_1_1FormulationParams.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="Formulation_8hpp_source.html">Formulation.hpp</a>&gt;</code></p>
+<div class="dynheader">
+Inheritance diagram for dyno::FormulationParams:</div>
+<div class="dyncontent">
+<div class="center"><img src="structdyno_1_1FormulationParams__inherit__graph.png" border="0" usemap="#adyno_1_1FormulationParams_inherit__map" alt="Inheritance graph"/></div>
+<map name="adyno_1_1FormulationParams_inherit__map" id="adyno_1_1FormulationParams_inherit__map">
+<area shape="rect" title="Basic parameters for a Formulation. Right now is just directly the BackendParams since there is lots ..." alt="" coords="5,79,193,104"/>
+<area shape="rect" href="structdyno_1_1BackendParams.html" title=" " alt="" coords="17,5,182,31"/>
+</map>
+<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
+<div class="dynheader">
+Collaboration diagram for dyno::FormulationParams:</div>
+<div class="dyncontent">
+<div class="center"><img src="structdyno_1_1FormulationParams__coll__graph.png" border="0" usemap="#adyno_1_1FormulationParams_coll__map" alt="Collaboration graph"/></div>
+<map name="adyno_1_1FormulationParams_coll__map" id="adyno_1_1FormulationParams_coll__map">
+<area shape="rect" title="Basic parameters for a Formulation. Right now is just directly the BackendParams since there is lots ..." alt="" coords="5,79,193,104"/>
+<area shape="rect" href="structdyno_1_1BackendParams.html" title=" " alt="" coords="17,5,182,31"/>
+</map>
+<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
-Public Attributes</h2></td></tr>
-<tr class="memitem:a49d144a77a2a729d6bde2831e13dd6ba"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1FormulationParams.html#a49d144a77a2a729d6bde2831e13dd6ba">min_dynamic_observations</a> = 3u</td></tr>
-<tr class="separator:a49d144a77a2a729d6bde2831e13dd6ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a032be0453492c51720c8a7bc207a3099"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1FormulationParams.html#a032be0453492c51720c8a7bc207a3099">min_static_observations</a> = 2u</td></tr>
-<tr class="separator:a032be0453492c51720c8a7bc207a3099"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0edc258f64653c039473ba5df1391465"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1FormulationParams.html#a0edc258f64653c039473ba5df1391465">use_smoothing_factor</a> = true</td></tr>
-<tr class="separator:a0edc258f64653c039473ba5df1391465"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac3367e0c0d80aec0900a00132becd768"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1FormulationParams.html#ac3367e0c0d80aec0900a00132becd768">suffix</a> = &quot;&quot;</td></tr>
-<tr class="separator:ac3367e0c0d80aec0900a00132becd768"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a259fe786bd38c03d4ade857b14c749ae"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1FormulationParams.html#a259fe786bd38c03d4ade857b14c749ae">FormulationParams</a> ()</td></tr>
+<tr class="separator:a259fe786bd38c03d4ade857b14c749ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae03c0aaff950baf8d491a84329869f58"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1FormulationParams.html#ae03c0aaff950baf8d491a84329869f58">FormulationParams</a> (const <a class="el" href="structdyno_1_1BackendParams.html">BackendParams</a> &amp;b)</td></tr>
+<tr class="separator:ae03c0aaff950baf8d491a84329869f58"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac55a5393128fb72943e5f9b70e0c31f1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structdyno_1_1FormulationParams.html">FormulationParams</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1FormulationParams.html#ac55a5393128fb72943e5f9b70e0c31f1">operator=</a> (const <a class="el" href="structdyno_1_1BackendParams.html">BackendParams</a> &amp;b)</td></tr>
+<tr class="separator:ac55a5393128fb72943e5f9b70e0c31f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_structdyno_1_1BackendParams"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_structdyno_1_1BackendParams')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="structdyno_1_1BackendParams.html">dyno::BackendParams</a></td></tr>
+<tr class="memitem:a7dc6374307e5aa089f2e52246e0339c1 inherit pub_methods_structdyno_1_1BackendParams"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1BackendParams.html#a7dc6374307e5aa089f2e52246e0339c1">makeStaticMeasurementsRobust</a> () const</td></tr>
+<tr class="memdesc:a7dc6374307e5aa089f2e52246e0339c1 inherit pub_methods_structdyno_1_1BackendParams"><td class="mdescLeft">&#160;</td><td class="mdescRight">True if robust kernals are on and the static point noise should also be robust.  <br /></td></tr>
+<tr class="separator:a7dc6374307e5aa089f2e52246e0339c1 inherit pub_methods_structdyno_1_1BackendParams"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a52c8dbf1d0bc61102e410ca896ce8db8 inherit pub_methods_structdyno_1_1BackendParams"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1BackendParams.html#a52c8dbf1d0bc61102e410ca896ce8db8">makeDynamicMeasurementsRobust</a> () const</td></tr>
+<tr class="memdesc:a52c8dbf1d0bc61102e410ca896ce8db8 inherit pub_methods_structdyno_1_1BackendParams"><td class="mdescLeft">&#160;</td><td class="mdescRight">True if robust kernals are on and the dynamic point noise should also be robust.  <br /></td></tr>
+<tr class="separator:a52c8dbf1d0bc61102e410ca896ce8db8 inherit pub_methods_structdyno_1_1BackendParams"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a56d568c7c8d64f35d8037eb46569ef75 inherit pub_methods_structdyno_1_1BackendParams"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structdyno_1_1BackendParams.html">BackendParams</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1BackendParams.html#a56d568c7c8d64f35d8037eb46569ef75">useLogger</a> (bool value)</td></tr>
+<tr class="separator:a56d568c7c8d64f35d8037eb46569ef75 inherit pub_methods_structdyno_1_1BackendParams"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="inherited" name="inherited"></a>
+Additional Inherited Members</h2></td></tr>
+<tr class="inherit_header pub_types_structdyno_1_1BackendParams"><td colspan="2" onclick="javascript:toggleInherit('pub_types_structdyno_1_1BackendParams')"><img src="closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="structdyno_1_1BackendParams.html">dyno::BackendParams</a></td></tr>
+<tr class="memitem:ad3b0c03565d85aa8e544ebbe1c0f9f18 inherit pub_types_structdyno_1_1BackendParams"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1BackendParams.html#ad3b0c03565d85aa8e544ebbe1c0f9f18">StaticFormulationType</a> { <a class="el" href="structdyno_1_1BackendParams.html#ad3b0c03565d85aa8e544ebbe1c0f9f18afde793d746ddf2a8fc02fbc710083051">PTP</a> = 0
+, <a class="el" href="structdyno_1_1BackendParams.html#ad3b0c03565d85aa8e544ebbe1c0f9f18a8aade0efbfa0aacf0de31e3742b37395">GENERIC_PROJECTION</a> = 1
+, <a class="el" href="structdyno_1_1BackendParams.html#ad3b0c03565d85aa8e544ebbe1c0f9f18ac13f77c1bc159118a6cb22d251fcd004">STEREO_PROJECTION</a> = 2
+, <a class="el" href="structdyno_1_1BackendParams.html#ad3b0c03565d85aa8e544ebbe1c0f9f18a6726bdf27a25ebf49d4a86916d292017">SMART_PROJECTION</a> = 3
+ }</td></tr>
+<tr class="separator:ad3b0c03565d85aa8e544ebbe1c0f9f18 inherit pub_types_structdyno_1_1BackendParams"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_static_methods_structdyno_1_1BackendParams"><td colspan="2" onclick="javascript:toggleInherit('pub_static_methods_structdyno_1_1BackendParams')"><img src="closed.png" alt="-"/>&#160;Static Public Member Functions inherited from <a class="el" href="structdyno_1_1BackendParams.html">dyno::BackendParams</a></td></tr>
+<tr class="memitem:ab7f2f36a3022b3d8cce6eafcfa0d5402 inherit pub_static_methods_structdyno_1_1BackendParams"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="structdyno_1_1BackendParams.html">BackendParams</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1BackendParams.html#ab7f2f36a3022b3d8cce6eafcfa0d5402">fromYaml</a> (const std::string &amp;file_path)</td></tr>
+<tr class="separator:ab7f2f36a3022b3d8cce6eafcfa0d5402 inherit pub_static_methods_structdyno_1_1BackendParams"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_attribs_structdyno_1_1BackendParams"><td colspan="2" onclick="javascript:toggleInherit('pub_attribs_structdyno_1_1BackendParams')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="structdyno_1_1BackendParams.html">dyno::BackendParams</a></td></tr>
+<tr class="memitem:aaaa3fc2ee1222dbba03e2dca7af3e18d inherit pub_attribs_structdyno_1_1BackendParams"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1BackendParams.html#aaaa3fc2ee1222dbba03e2dca7af3e18d">use_robust_kernals_</a> = FLAGS_use_robust_kernals</td></tr>
+<tr class="memdesc:aaaa3fc2ee1222dbba03e2dca7af3e18d inherit pub_attribs_structdyno_1_1BackendParams"><td class="mdescLeft">&#160;</td><td class="mdescRight">RGBD/Stereo.  <br /></td></tr>
+<tr class="separator:aaaa3fc2ee1222dbba03e2dca7af3e18d inherit pub_attribs_structdyno_1_1BackendParams"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3ac174a22fd462ba154346e255dc7f9c inherit pub_attribs_structdyno_1_1BackendParams"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1BackendParams.html#a3ac174a22fd462ba154346e255dc7f9c">static_point_noise_as_robust</a> = true</td></tr>
+<tr class="separator:a3ac174a22fd462ba154346e255dc7f9c inherit pub_attribs_structdyno_1_1BackendParams"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1496ba184a228bb717166c02202a090a inherit pub_attribs_structdyno_1_1BackendParams"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1BackendParams.html#a1496ba184a228bb717166c02202a090a">dynamic_point_noise_as_robust</a> = FLAGS_dynamic_point_noise_as_robust</td></tr>
+<tr class="separator:a1496ba184a228bb717166c02202a090a inherit pub_attribs_structdyno_1_1BackendParams"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af863bf2642a031c6bfcfcf54479d56d4 inherit pub_attribs_structdyno_1_1BackendParams"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1BackendParams.html#af863bf2642a031c6bfcfcf54479d56d4">k_huber_3d_points_</a></td></tr>
+<tr class="separator:af863bf2642a031c6bfcfcf54479d56d4 inherit pub_attribs_structdyno_1_1BackendParams"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a85e7211fae23f045fae08770932702ba inherit pub_attribs_structdyno_1_1BackendParams"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1BackendParams.html#a85e7211fae23f045fae08770932702ba">static_point_noise_sigma</a></td></tr>
+<tr class="memdesc:a85e7211fae23f045fae08770932702ba inherit pub_attribs_structdyno_1_1BackendParams"><td class="mdescLeft">&#160;</td><td class="mdescRight">Huber constant used for robust kernal on dynamic points.  <br /></td></tr>
+<tr class="separator:a85e7211fae23f045fae08770932702ba inherit pub_attribs_structdyno_1_1BackendParams"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af658cc40730d872aad1e01b2fe7ebd78 inherit pub_attribs_structdyno_1_1BackendParams"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1BackendParams.html#af658cc40730d872aad1e01b2fe7ebd78">dynamic_point_noise_sigma</a></td></tr>
+<tr class="separator:af658cc40730d872aad1e01b2fe7ebd78 inherit pub_attribs_structdyno_1_1BackendParams"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3e1391c98fd8135d38299d1641652841 inherit pub_attribs_structdyno_1_1BackendParams"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1BackendParams.html#a3e1391c98fd8135d38299d1641652841">static_pixel_noise_sigma</a> = FLAGS_static_pixel_noise_sigma</td></tr>
+<tr class="separator:a3e1391c98fd8135d38299d1641652841 inherit pub_attribs_structdyno_1_1BackendParams"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a35392bd6a57cf68e7e5095b74b5c2895 inherit pub_attribs_structdyno_1_1BackendParams"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1BackendParams.html#a35392bd6a57cf68e7e5095b74b5c2895">dynamic_pixel_noise_sigma</a> = FLAGS_dynamic_pixel_noise_sigma</td></tr>
+<tr class="separator:a35392bd6a57cf68e7e5095b74b5c2895 inherit pub_attribs_structdyno_1_1BackendParams"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a19effdd93e47448a8befb6e7f44321fd inherit pub_attribs_structdyno_1_1BackendParams"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1BackendParams.html#a19effdd93e47448a8befb6e7f44321fd">odometry_rotation_sigma_</a></td></tr>
+<tr class="separator:a19effdd93e47448a8befb6e7f44321fd inherit pub_attribs_structdyno_1_1BackendParams"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2388f57e5904ef5a6f862be7afb96805 inherit pub_attribs_structdyno_1_1BackendParams"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1BackendParams.html#a2388f57e5904ef5a6f862be7afb96805">odometry_translation_sigma_</a></td></tr>
+<tr class="separator:a2388f57e5904ef5a6f862be7afb96805 inherit pub_attribs_structdyno_1_1BackendParams"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acfbba206fd30c213abf6da97d2f2e3b5 inherit pub_attribs_structdyno_1_1BackendParams"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1BackendParams.html#acfbba206fd30c213abf6da97d2f2e3b5">constant_object_motion_rotation_sigma_</a></td></tr>
+<tr class="separator:acfbba206fd30c213abf6da97d2f2e3b5 inherit pub_attribs_structdyno_1_1BackendParams"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab2b9ed3551df5f9c66637454ce2c94be inherit pub_attribs_structdyno_1_1BackendParams"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1BackendParams.html#ab2b9ed3551df5f9c66637454ce2c94be">constant_object_motion_translation_sigma_</a></td></tr>
+<tr class="separator:ab2b9ed3551df5f9c66637454ce2c94be inherit pub_attribs_structdyno_1_1BackendParams"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0f956a9cb197f1b8013772b81f9c2fed inherit pub_attribs_structdyno_1_1BackendParams"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1BackendParams.html#a0f956a9cb197f1b8013772b81f9c2fed">motion_ternary_factor_noise_sigma_</a></td></tr>
+<tr class="separator:a0f956a9cb197f1b8013772b81f9c2fed inherit pub_attribs_structdyno_1_1BackendParams"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aacb01950984427eafd7764ac0959ee70 inherit pub_attribs_structdyno_1_1BackendParams"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1BackendParams.html#aacb01950984427eafd7764ac0959ee70">use_logger_</a> = true</td></tr>
+<tr class="separator:aacb01950984427eafd7764ac0959ee70 inherit pub_attribs_structdyno_1_1BackendParams"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae439bb08d8a9f59c1e48ee994ce6744d inherit pub_attribs_structdyno_1_1BackendParams"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1BackendParams.html#ae439bb08d8a9f59c1e48ee994ce6744d">use_vo</a> = FLAGS_use_vo_factor</td></tr>
+<tr class="separator:ae439bb08d8a9f59c1e48ee994ce6744d inherit pub_attribs_structdyno_1_1BackendParams"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7e40628fdcdc344bf57dea5cc58aa3af inherit pub_attribs_structdyno_1_1BackendParams"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacedyno.html#ad38da29a9b3ebc6451cb84941f9132b9">RegularOptimizationType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1BackendParams.html#a7e40628fdcdc344bf57dea5cc58aa3af">optimization_mode</a></td></tr>
+<tr class="separator:a7e40628fdcdc344bf57dea5cc58aa3af inherit pub_attribs_structdyno_1_1BackendParams"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adc1201c3656713dc693b89387da89b6a inherit pub_attribs_structdyno_1_1BackendParams"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1BackendParams.html#adc1201c3656713dc693b89387da89b6a">use_smoothing_factor</a> = FLAGS_use_smoothing_factor</td></tr>
+<tr class="separator:adc1201c3656713dc693b89387da89b6a inherit pub_attribs_structdyno_1_1BackendParams"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a71d5d1921609c6023084a84c157cfa0d inherit pub_attribs_structdyno_1_1BackendParams"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1BackendParams.html#a71d5d1921609c6023084a84c157cfa0d">updater_suffix</a> = FLAGS_updater_suffix</td></tr>
+<tr class="separator:a71d5d1921609c6023084a84c157cfa0d inherit pub_attribs_structdyno_1_1BackendParams"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a64b29e621cf9cfbb5e143de4bec6113c inherit pub_attribs_structdyno_1_1BackendParams"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1BackendParams.html#a64b29e621cf9cfbb5e143de4bec6113c">min_static_observations</a> = FLAGS_min_static_observations</td></tr>
+<tr class="separator:a64b29e621cf9cfbb5e143de4bec6113c inherit pub_attribs_structdyno_1_1BackendParams"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aad2084c0fde4e20ab9a7d149f22edb4b inherit pub_attribs_structdyno_1_1BackendParams"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1BackendParams.html#aad2084c0fde4e20ab9a7d149f22edb4b">min_dynamic_observations</a> = FLAGS_min_dynamic_observations</td></tr>
+<tr class="separator:aad2084c0fde4e20ab9a7d149f22edb4b inherit pub_attribs_structdyno_1_1BackendParams"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9679b7faef4689d6b809f4fec28ab937 inherit pub_attribs_structdyno_1_1BackendParams"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structdyno_1_1BackendParams.html#ad3b0c03565d85aa8e544ebbe1c0f9f18">StaticFormulationType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1BackendParams.html#a9679b7faef4689d6b809f4fec28ab937">static_formulation</a></td></tr>
+<tr class="separator:a9679b7faef4689d6b809f4fec28ab937 inherit pub_attribs_structdyno_1_1BackendParams"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a22d94a957fa882e446f730ca614eda84 inherit pub_attribs_structdyno_1_1BackendParams"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1BackendParams.html#a22d94a957fa882e446f730ca614eda84">full_batch_frame</a> = -1</td></tr>
+<tr class="separator:a22d94a957fa882e446f730ca614eda84 inherit pub_attribs_structdyno_1_1BackendParams"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock">
-<p class="definition">Definition at line <a class="el" href="Formulation_8hpp_source.html#l00168">168</a> of file <a class="el" href="Formulation_8hpp_source.html">Formulation.hpp</a>.</p>
-</div><h2 class="groupheader">Member Data Documentation</h2>
-<a id="a49d144a77a2a729d6bde2831e13dd6ba" name="a49d144a77a2a729d6bde2831e13dd6ba"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a49d144a77a2a729d6bde2831e13dd6ba">&#9670;&#160;</a></span>min_dynamic_observations</h2>
+<div class="textblock"><p>Basic parameters for a <a class="el" href="classdyno_1_1Formulation.html" title="Base class for a formulation that defines the structure and implementation for a factor-graph based D...">Formulation</a>. Right now is just directly the <a class="el" href="structdyno_1_1BackendParams.html">BackendParams</a> since there is lots of cross-over, but later we may add formulation specific ones. </p>
+
+<p class="definition">Definition at line <a class="el" href="Formulation_8hpp_source.html#l00197">197</a> of file <a class="el" href="Formulation_8hpp_source.html">Formulation.hpp</a>.</p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a259fe786bd38c03d4ade857b14c749ae" name="a259fe786bd38c03d4ade857b14c749ae"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a259fe786bd38c03d4ade857b14c749ae">&#9670;&#160;</a></span>FormulationParams() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">size_t dyno::FormulationParams::min_dynamic_observations = 3u</td>
+          <td class="memname">dyno::FormulationParams::FormulationParams </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Formulation_8hpp_source.html#l00169">169</a> of file <a class="el" href="Formulation_8hpp_source.html">Formulation.hpp</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1RegularBackendModule.html#a981f45e602804746db51e10350a060b6">dyno::RegularBackendModule::makeFormulation()</a>, <a class="el" href="classdyno_1_1ParallelHybridBackendModule.html#a06ab247456bf85a1f6d67350f32eeb95">dyno::ParallelHybridBackendModule::ParallelHybridBackendModule()</a>, and <a class="el" href="classdyno_1_1ParallelObjectISAM.html#a75201da40040ae04fc9042a2f77696d8">dyno::ParallelObjectISAM::ParallelObjectISAM()</a>.</p>
-
+<p class="definition">Definition at line <a class="el" href="Formulation_8hpp_source.html#l00198">198</a> of file <a class="el" href="Formulation_8hpp_source.html">Formulation.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  198</span>{}</div>
+</div><!-- fragment -->
 </div>
 </div>
-<a id="a032be0453492c51720c8a7bc207a3099" name="a032be0453492c51720c8a7bc207a3099"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a032be0453492c51720c8a7bc207a3099">&#9670;&#160;</a></span>min_static_observations</h2>
+<a id="ae03c0aaff950baf8d491a84329869f58" name="ae03c0aaff950baf8d491a84329869f58"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae03c0aaff950baf8d491a84329869f58">&#9670;&#160;</a></span>FormulationParams() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">size_t dyno::FormulationParams::min_static_observations = 2u</td>
+          <td class="memname">dyno::FormulationParams::FormulationParams </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structdyno_1_1BackendParams.html">BackendParams</a> &amp;&#160;</td>
+          <td class="paramname"><em>b</em></td><td>)</td>
+          <td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Formulation_8hpp_source.html#l00170">170</a> of file <a class="el" href="Formulation_8hpp_source.html">Formulation.hpp</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1RegularBackendModule.html#a981f45e602804746db51e10350a060b6">dyno::RegularBackendModule::makeFormulation()</a>, and <a class="el" href="classdyno_1_1ParallelHybridBackendModule.html#a06ab247456bf85a1f6d67350f32eeb95">dyno::ParallelHybridBackendModule::ParallelHybridBackendModule()</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Formulation_8hpp_source.html#l00200">200</a> of file <a class="el" href="Formulation_8hpp_source.html">Formulation.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  200</span>{ <a class="code hl_function" href="structdyno_1_1FormulationParams.html#ac55a5393128fb72943e5f9b70e0c31f1">FormulationParams::operator=</a>(b); }</div>
+<div class="ttc" id="astructdyno_1_1FormulationParams_html_ac55a5393128fb72943e5f9b70e0c31f1"><div class="ttname"><a href="structdyno_1_1FormulationParams.html#ac55a5393128fb72943e5f9b70e0c31f1">dyno::FormulationParams::operator=</a></div><div class="ttdeci">FormulationParams &amp; operator=(const BackendParams &amp;b)</div><div class="ttdef"><b>Definition:</b> <a href="Formulation_8hpp_source.html#l00202">Formulation.hpp:202</a></div></div>
+</div><!-- fragment -->
+<p class="reference">References <a class="el" href="structdyno_1_1FormulationParams.html#ac55a5393128fb72943e5f9b70e0c31f1">operator=()</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="structdyno_1_1FormulationParams_ae03c0aaff950baf8d491a84329869f58_cgraph.png" border="0" usemap="#astructdyno_1_1FormulationParams_ae03c0aaff950baf8d491a84329869f58_cgraph" alt=""/></div>
+<map name="astructdyno_1_1FormulationParams_ae03c0aaff950baf8d491a84329869f58_cgraph" id="astructdyno_1_1FormulationParams_ae03c0aaff950baf8d491a84329869f58_cgraph">
+<area shape="rect" title=" " alt="" coords="5,5,193,45"/>
+<area shape="rect" href="structdyno_1_1FormulationParams.html#ac55a5393128fb72943e5f9b70e0c31f1" title=" " alt="" coords="241,5,429,45"/>
+</map>
+</div>
 
 </div>
 </div>
-<a id="ac3367e0c0d80aec0900a00132becd768" name="ac3367e0c0d80aec0900a00132becd768"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac3367e0c0d80aec0900a00132becd768">&#9670;&#160;</a></span>suffix</h2>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="ac55a5393128fb72943e5f9b70e0c31f1" name="ac55a5393128fb72943e5f9b70e0c31f1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac55a5393128fb72943e5f9b70e0c31f1">&#9670;&#160;</a></span>operator=()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::string dyno::FormulationParams::suffix = &quot;&quot;</td>
+          <td class="memname"><a class="el" href="structdyno_1_1FormulationParams.html">FormulationParams</a> &amp; dyno::FormulationParams::operator= </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structdyno_1_1BackendParams.html">BackendParams</a> &amp;&#160;</td>
+          <td class="paramname"><em>b</em></td><td>)</td>
+          <td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Formulation_8hpp_source.html#l00172">172</a> of file <a class="el" href="Formulation_8hpp_source.html">Formulation.hpp</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1ParallelHybridBackendModule.html#a06ab247456bf85a1f6d67350f32eeb95">dyno::ParallelHybridBackendModule::ParallelHybridBackendModule()</a>, and <a class="el" href="classdyno_1_1ParallelObjectISAM.html#a75201da40040ae04fc9042a2f77696d8">dyno::ParallelObjectISAM::ParallelObjectISAM()</a>.</p>
-
+<p class="definition">Definition at line <a class="el" href="Formulation_8hpp_source.html#l00202">202</a> of file <a class="el" href="Formulation_8hpp_source.html">Formulation.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  202</span>                                                       {</div>
+<div class="line"><span class="lineno">  203</span>    <span class="keyword">static_cast&lt;</span>BackendParams&amp;<span class="keyword">&gt;</span>(*this) = b;</div>
+<div class="line"><span class="lineno">  204</span>    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><span class="lineno">  205</span>  }</div>
+</div><!-- fragment -->
+<p class="reference">Referenced by <a class="el" href="structdyno_1_1FormulationParams.html#ae03c0aaff950baf8d491a84329869f58">FormulationParams()</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="structdyno_1_1FormulationParams_ac55a5393128fb72943e5f9b70e0c31f1_icgraph.png" border="0" usemap="#astructdyno_1_1FormulationParams_ac55a5393128fb72943e5f9b70e0c31f1_icgraph" alt=""/></div>
+<map name="astructdyno_1_1FormulationParams_ac55a5393128fb72943e5f9b70e0c31f1_icgraph" id="astructdyno_1_1FormulationParams_ac55a5393128fb72943e5f9b70e0c31f1_icgraph">
+<area shape="rect" title=" " alt="" coords="241,5,429,45"/>
+<area shape="rect" href="structdyno_1_1FormulationParams.html#ae03c0aaff950baf8d491a84329869f58" title=" " alt="" coords="5,5,193,45"/>
+</map>
 </div>
-</div>
-<a id="a0edc258f64653c039473ba5df1391465" name="a0edc258f64653c039473ba5df1391465"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0edc258f64653c039473ba5df1391465">&#9670;&#160;</a></span>use_smoothing_factor</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool dyno::FormulationParams::use_smoothing_factor = true</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="Formulation_8hpp_source.html#l00171">171</a> of file <a class="el" href="Formulation_8hpp_source.html">Formulation.hpp</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1RegularBackendModule.html#a981f45e602804746db51e10350a060b6">dyno::RegularBackendModule::makeFormulation()</a>, <a class="el" href="classdyno_1_1HybridFormulation.html#ad05af62c9b437ad6613a191defeecb07">dyno::HybridFormulation::objectUpdateContext()</a>, <a class="el" href="classdyno_1_1ParallelHybridBackendModule.html#a06ab247456bf85a1f6d67350f32eeb95">dyno::ParallelHybridBackendModule::ParallelHybridBackendModule()</a>, and <a class="el" href="classdyno_1_1ParallelObjectISAM.html#a75201da40040ae04fc9042a2f77696d8">dyno::ParallelObjectISAM::ParallelObjectISAM()</a>.</p>
 
 </div>
 </div>

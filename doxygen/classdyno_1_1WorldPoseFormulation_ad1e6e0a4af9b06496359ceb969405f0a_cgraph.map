@@ -1,8 +1,10 @@
 <map id="dyno::WorldPoseFormulation::dynamicPointUpdateCallback" name="dyno::WorldPoseFormulation::dynamicPointUpdateCallback">
-<area shape="rect" id="node1" title=" " alt="" coords="5,63,228,103"/>
-<area shape="rect" id="node2" href="$classdyno_1_1Formulation.html#a536dbcbdd6fcd6598fcedb7866cec1de" title="Public fucntion to access the Accessor for the derived formulation." alt="" coords="276,5,512,45"/>
-<area shape="rect" id="node3" href="$namespacedyno.html#ad5ce0869676f7888164ba26aceda60a9" title="Safe getter to a StateQuery object. If the StateQuery is successful, result is set to the value of th..." alt="" coords="319,70,469,95"/>
-<area shape="rect" id="node6" href="$structdyno_1_1UpdateObservationResult.html#a002ddcad2bc2b520dd274acc8370d0a9" title=" " alt="" coords="279,120,509,160"/>
-<area shape="rect" id="node4" href="$classdyno_1_1StateQuery.html#af7ca5fb04717f5719c62a54b3b67fd17" title=" " alt="" coords="560,70,723,95"/>
-<area shape="rect" id="node5" href="$namespacedyno.html#a2d6f925680f57dbc72ada75daefdb2f9" title=" " alt="" coords="771,70,981,95"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,134,228,174"/>
+<area shape="rect" id="node2" href="$classdyno_1_1Formulation.html#a536dbcbdd6fcd6598fcedb7866cec1de" title="Public fucntion to access the Accessor for the derived formulation." alt="" coords="306,5,513,60"/>
+<area shape="rect" id="node3" href="$namespacedyno.html#ad5ce0869676f7888164ba26aceda60a9" title="Safe getter to a StateQuery object. If the StateQuery is successful, result is set to the value of th..." alt="" coords="334,84,485,109"/>
+<area shape="rect" id="node6" href="$structdyno_1_1BackendParams.html#a52c8dbf1d0bc61102e410ca896ce8db8" title="True if robust kernals are on and the dynamic point noise should also be robust." alt="" coords="276,134,543,174"/>
+<area shape="rect" id="node7" href="$namespacedyno_1_1factor__graph__tools.html#a77c3666aaffdca23d67d64240ed53914" title="Wrapper on the creation of a robust Huber noise model from a Shared noise model." alt="" coords="327,198,492,238"/>
+<area shape="rect" id="node8" href="$structdyno_1_1UpdateObservationResult.html#a002ddcad2bc2b520dd274acc8370d0a9" title=" " alt="" coords="295,262,524,302"/>
+<area shape="rect" id="node4" href="$classdyno_1_1StateQuery.html#af7ca5fb04717f5719c62a54b3b67fd17" title=" " alt="" coords="591,84,753,109"/>
+<area shape="rect" id="node5" href="$namespacedyno.html#af86d00d51197894e11bd78ec0f84024a" title=" " alt="" coords="801,84,1013,109"/>
 </map>

@@ -5,7 +5,7 @@
 <area shape="rect" id="node3" href="$classdyno_1_1ThreadsafeImuBuffer.html#a4620846c124831ecaa7c871fd8616583" title=" " alt="" coords="881,5,1079,45"/>
 <area shape="rect" id="node6" href="$classdyno_1_1ImuInterfaceHandler.html#ac9790e91bcf3c6b28ae731c9834a9a0c" title=" " alt="" coords="882,69,1078,109"/>
 <area shape="rect" id="node4" href="$classdyno_1_1ImuInterfaceHandler.html#a29a70c20fb0f39ddaeadc08fe0d1e11b" title=" " alt="" coords="593,5,789,45"/>
-<area shape="rect" id="node5" href="$classdyno_1_1DynoPipelineManager.html#a283e891aa3d4ca8d2d671eb1e3d5d514" title=" " alt="" coords="280,5,485,45"/>
+<area shape="rect" id="node5" href="$classdyno_1_1DynoPipelineManager.html#a1e980339b4d308ab83d46ede524c3a46" title=" " alt="" coords="280,5,485,45"/>
 <area shape="rect" id="node8" href="$classdyno_1_1ThreadsafeImuBuffer.html#a79a8a16aa1d6e0ba523456a4971493f0" title=" " alt="" coords="873,133,1087,173"/>
 <area shape="rect" id="node10" href="$classdyno_1_1ThreadsafeImuBuffer.html#a801e12f38e80e2f87ba7293bfa2bfa58" title=" " alt="" coords="265,158,501,213"/>
 <area shape="rect" id="node9" href="$classdyno_1_1ThreadsafeImuBuffer.html#a0844b1d7a4129383d8d0e08165df1de5" title="Return a list of the IMU measurements between the specified timestamps. The IMU values get interpolat..." alt="" coords="573,69,809,109"/>

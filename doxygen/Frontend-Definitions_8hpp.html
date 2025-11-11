@@ -83,64 +83,65 @@ $(function() {
   <div class="headertitle"><div class="title">Frontend-Definitions.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;opencv4/opencv2/core.hpp&gt;</code><br />
-<code>#include &quot;<a class="el" href="ImageContainer_8hpp_source.html">dynosam/common/ImageContainer.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="Types_8hpp_source.html">dynosam/common/Types.hpp</a>&quot;</code><br />
+<div class="textblock"><code>#include &lt;nlohmann/json.hpp&gt;</code><br />
+<code>#include &lt;opencv4/opencv2/core.hpp&gt;</code><br />
+<code>#include &quot;<a class="el" href="Types_8hpp_source.html">dynosam_common/Types.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="ImageContainer_8hpp_source.html">dynosam_cv/ImageContainer.hpp</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for Frontend-Definitions.hpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="Frontend-Definitions_8hpp__incl.png" border="0" usemap="#adynosam_2include_2dynosam_2frontend_2Frontend-Definitions_8hpp" alt=""/></div>
 <map name="adynosam_2include_2dynosam_2frontend_2Frontend-Definitions_8hpp" id="adynosam_2include_2dynosam_2frontend_2Frontend-Definitions_8hpp">
-<area shape="rect" title=" " alt="" coords="751,5,997,45"/>
-<area shape="rect" title=" " alt="" coords="640,93,836,119"/>
-<area shape="rect" href="ImageContainer_8hpp.html" title=" " alt="" coords="1965,93,2244,119"/>
-<area shape="rect" href="Types_8hpp.html" title=" " alt="" coords="1289,350,1501,375"/>
-<area shape="rect" title=" " alt="" coords="2349,599,2463,625"/>
-<area shape="rect" title=" " alt="" coords="1433,262,1520,287"/>
+<area shape="rect" title=" " alt="" coords="1266,5,1511,45"/>
+<area shape="rect" title=" " alt="" coords="1051,93,1198,119"/>
+<area shape="rect" title=" " alt="" coords="1223,93,1419,119"/>
+<area shape="rect" href="Types_8hpp.html" title=" " alt="" coords="1317,335,1532,361"/>
+<area shape="rect" href="ImageContainer_8hpp.html" title=" " alt="" coords="1653,93,1892,119"/>
+<area shape="rect" title=" " alt="" coords="251,599,366,625"/>
+<area shape="rect" title=" " alt="" coords="353,423,521,449"/>
+<area shape="rect" title=" " alt="" coords="1072,687,1228,713"/>
+<area shape="rect" title=" " alt="" coords="1781,599,1967,625"/>
+<area shape="rect" title=" " alt="" coords="545,423,688,449"/>
 <area shape="rect" title=" " alt="" coords="5,599,220,625"/>
-<area shape="rect" title=" " alt="" coords="2220,599,2312,625"/>
-<area shape="rect" href="Exceptions_8hpp.html" title=" " alt="" coords="2804,519,3051,544"/>
-<area shape="rect" href="ImageTypes_8hpp.html" title=" " alt="" coords="1897,174,2150,199"/>
-<area shape="rect" href="OpenCVUtils_8hpp.html" title=" " alt="" coords="608,262,836,287"/>
-<area shape="rect" href="Tuple_8hpp.html" title=" " alt="" coords="2551,262,2731,287"/>
-<area shape="rect" href="ImageContainer-inl_8hpp.html" title=" " alt="" coords="2225,167,2475,207"/>
-<area shape="rect" title=" " alt="" coords="2779,599,2865,625"/>
-<area shape="rect" title=" " alt="" coords="2889,599,2965,625"/>
-<area shape="rect" title=" " alt="" coords="2990,599,3065,625"/>
-<area shape="rect" title=" " alt="" coords="3089,599,3176,625"/>
-<area shape="rect" title=" " alt="" coords="2695,599,2754,625"/>
-<area shape="rect" href="ImageTypes-inl_8hpp.html" title=" " alt="" coords="2048,255,2273,295"/>
-<area shape="rect" title=" " alt="" coords="523,438,691,463"/>
-<area shape="rect" title=" " alt="" coords="1408,519,1564,544"/>
-<area shape="rect" title=" " alt="" coords="1911,599,2096,625"/>
-<area shape="rect" title=" " alt="" coords="716,438,859,463"/>
-<area shape="rect" title=" " alt="" coords="2121,599,2195,625"/>
-<area shape="rect" title=" " alt="" coords="883,438,980,463"/>
-<area shape="rect" title=" " alt="" coords="1004,438,1067,463"/>
-<area shape="rect" href="Flags_8hpp.html" title=" " alt="" coords="1433,438,1643,463"/>
-<area shape="rect" href="Macros_8hpp.html" title=" " alt="" coords="1769,438,1963,463"/>
-<area shape="rect" href="SensorModels_8hpp.html" title=" " alt="" coords="1091,438,1358,463"/>
-<area shape="rect" href="Types-inl_8hpp.html" title=" " alt="" coords="2038,431,2222,471"/>
-<area shape="rect" title=" " alt="" coords="1588,519,1704,544"/>
-<area shape="rect" title=" " alt="" coords="1830,519,1907,544"/>
-<area shape="rect" title=" " alt="" coords="733,519,887,544"/>
-<area shape="rect" title=" " alt="" coords="911,519,1141,544"/>
-<area shape="rect" title=" " alt="" coords="511,519,709,544"/>
-<area shape="rect" href="GtsamUtils_8hpp.html" title=" " alt="" coords="1165,519,1383,544"/>
-<area shape="rect" title=" " alt="" coords="464,599,663,625"/>
-<area shape="rect" title=" " alt="" coords="687,599,874,625"/>
-<area shape="rect" title=" " alt="" coords="898,599,1074,625"/>
-<area shape="rect" title=" " alt="" coords="1098,599,1279,625"/>
-<area shape="rect" title=" " alt="" coords="1304,599,1471,625"/>
-<area shape="rect" title=" " alt="" coords="1495,599,1688,625"/>
-<area shape="rect" title=" " alt="" coords="1713,599,1886,625"/>
-<area shape="rect" title=" " alt="" coords="245,592,439,632"/>
-<area shape="rect" title=" " alt="" coords="517,343,685,383"/>
-<area shape="rect" title=" " alt="" coords="360,350,492,375"/>
-<area shape="rect" title=" " alt="" coords="2835,350,2889,375"/>
-<area shape="rect" title=" " alt="" coords="2551,350,2621,375"/>
-<area shape="rect" title=" " alt="" coords="2645,350,2705,375"/>
-<area shape="rect" title=" " alt="" coords="2730,350,2810,375"/>
+<area shape="rect" title=" " alt="" coords="987,599,1062,625"/>
+<area shape="rect" title=" " alt="" coords="712,423,809,449"/>
+<area shape="rect" title=" " alt="" coords="2195,599,2287,625"/>
+<area shape="rect" title=" " alt="" coords="833,423,896,449"/>
+<area shape="rect" href="Cuda_8hpp.html" title=" " alt="" coords="2219,423,2430,449"/>
+<area shape="rect" href="Flags_8hpp.html" title=" " alt="" coords="921,423,1134,449"/>
+<area shape="rect" href="Macros_8hpp.html" title=" " alt="" coords="1158,416,1337,456"/>
+<area shape="rect" href="SensorModels_8hpp.html" title=" " alt="" coords="1462,423,1731,449"/>
+<area shape="rect" href="Types-inl_8hpp.html" title=" " alt="" coords="1857,416,2043,456"/>
+<area shape="rect" title=" " alt="" coords="2219,511,2379,537"/>
+<area shape="rect" title=" " alt="" coords="2403,511,2550,537"/>
+<area shape="rect" title=" " alt="" coords="743,511,859,537"/>
+<area shape="rect" title=" " alt="" coords="883,511,961,537"/>
+<area shape="rect" title=" " alt="" coords="1689,687,1843,713"/>
+<area shape="rect" title=" " alt="" coords="1187,511,1417,537"/>
+<area shape="rect" title=" " alt="" coords="1441,511,1638,537"/>
+<area shape="rect" href="Exceptions_8hpp.html" title=" " alt="" coords="2624,511,2873,537"/>
+<area shape="rect" href="GtsamUtils_8hpp.html" title=" " alt="" coords="1662,504,1841,544"/>
+<area shape="rect" title=" " alt="" coords="2395,599,2481,625"/>
+<area shape="rect" title=" " alt="" coords="2505,599,2581,625"/>
+<area shape="rect" title=" " alt="" coords="2606,599,2681,625"/>
+<area shape="rect" title=" " alt="" coords="2705,599,2792,625"/>
+<area shape="rect" title=" " alt="" coords="2817,599,2875,625"/>
+<area shape="rect" title=" " alt="" coords="1508,599,1707,625"/>
+<area shape="rect" href="Numerical_8hpp.html" title=" " alt="" coords="1991,592,2170,632"/>
+<area shape="rect" title=" " alt="" coords="1990,680,2171,720"/>
+<area shape="rect" title=" " alt="" coords="2195,680,2377,720"/>
+<area shape="rect" title=" " alt="" coords="1892,687,1965,713"/>
+<area shape="rect" title=" " alt="" coords="2637,687,2717,713"/>
+<area shape="rect" title=" " alt="" coords="2057,247,2144,273"/>
+<area shape="rect" href="OpenCVUtils_8hpp.html" title=" " alt="" coords="297,240,475,280"/>
+<area shape="rect" href="Tuple_8hpp.html" title=" " alt="" coords="2418,240,2597,280"/>
+<area shape="rect" href="ImageTypes_8hpp.html" title=" " alt="" coords="1781,167,1996,192"/>
+<area shape="rect" title=" " alt="" coords="150,328,318,368"/>
+<area shape="rect" title=" " alt="" coords="343,335,475,361"/>
+<area shape="rect" title=" " alt="" coords="2561,335,2632,361"/>
+<area shape="rect" title=" " alt="" coords="2656,335,2711,361"/>
+<area shape="rect" title=" " alt="" coords="2477,335,2537,361"/>
+<area shape="rect" href="ImageTypes-inl_8hpp.html" title=" " alt="" coords="1795,240,1982,280"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -148,56 +149,56 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="Frontend-Definitions_8hpp__dep__incl.png" border="0" usemap="#adynosam_2include_2dynosam_2frontend_2Frontend-Definitions_8hppdep" alt=""/></div>
 <map name="adynosam_2include_2dynosam_2frontend_2Frontend-Definitions_8hppdep" id="adynosam_2include_2dynosam_2frontend_2Frontend-Definitions_8hppdep">
-<area shape="rect" title=" " alt="" coords="3816,5,4061,45"/>
-<area shape="rect" href="BackendDefinitions_8hpp.html" title=" " alt="" coords="1599,101,1836,141"/>
-<area shape="rect" href="MotionSolver_8hpp.html" title=" " alt="" coords="3778,394,4019,434"/>
-<area shape="rect" href="PipelineParams_8hpp.html" title=" " alt="" coords="2869,592,3080,632"/>
-<area shape="rect" href="FrontendOutputPacket_8hpp.html" title=" " alt="" coords="3321,291,3577,331"/>
-<area shape="rect" href="Vision-Definitions_8hpp.html" title=" " alt="" coords="4197,93,4395,148"/>
-<area shape="rect" href="JsonUtils_8hpp.html" title=" " alt="" coords="3976,101,4173,141"/>
-<area shape="rect" href="Frontend-Definitions_8cc.html" title=" " alt="" coords="4419,101,4595,141"/>
-<area shape="rect" href="Accessor_8hpp.html" title=" " alt="" coords="645,291,843,331"/>
-<area shape="rect" href="Formulation_8hpp.html" title=" " alt="" coords="797,394,995,434"/>
-<area shape="rect" href="BackendModule_8hpp.html" title=" " alt="" coords="1506,497,1721,537"/>
-<area shape="rect" href="ParallelHybridBackendModule_8hpp.html" title=" " alt="" coords="1418,680,1649,735"/>
-<area shape="rect" href="RGBDBackendDefinitions_8hpp.html" title=" " alt="" coords="1396,592,1671,632"/>
-<area shape="rect" href="RegularBackendModule_8hpp.html" title=" " alt="" coords="765,687,1030,727"/>
-<area shape="rect" href="BackendModule_8cc.html" title=" " alt="" coords="1847,592,2009,632"/>
-<area shape="rect" href="HybridEstimator_8hpp.html" title=" " alt="" coords="609,497,860,537"/>
-<area shape="rect" href="ParallelObjectISAM_8hpp.html" title=" " alt="" coords="1035,592,1271,632"/>
-<area shape="rect" href="HybridEstimator_8cc.html" title=" " alt="" coords="293,592,475,632"/>
-<area shape="rect" href="BackendOutputPacket_8hpp.html" title=" " alt="" coords="2943,291,3196,331"/>
-<area shape="rect" href="FactorGraphTools_8hpp.html" title=" " alt="" coords="1855,196,2078,236"/>
-<area shape="rect" href="MotionSolver-inl_8hpp.html" title=" " alt="" coords="3653,284,3867,339"/>
-<area shape="rect" href="MotionSolver_8cc.html" title=" " alt="" coords="3535,497,3707,537"/>
-<area shape="rect" href="FactorGraphTools_8cc.html" title=" " alt="" coords="1880,291,2043,331"/>
-<area shape="rect" href="ISAM2Clique_8hpp.html" title=" " alt="" coords="2102,196,2370,236"/>
-<area shape="rect" href="ISAM2Params_8hpp.html" title=" " alt="" coords="2395,196,2669,236"/>
-<area shape="rect" href="IncrementalOptimization_8hpp.html" title=" " alt="" coords="43,489,277,544"/>
-<area shape="rect" href="Map_8hpp.html" title=" " alt="" coords="917,196,1115,236"/>
-<area shape="rect" href="MapNodes-inl_8hpp.html" title=" " alt="" coords="1221,291,1427,331"/>
-<area shape="rect" href="MapNodes_8hpp.html" title=" " alt="" coords="1225,394,1423,434"/>
-<area shape="rect" href="HybridFormulationFactors_8hpp.html" title=" " alt="" coords="249,394,519,434"/>
-<area shape="rect" href="ObjectKinematicFactor_8hpp.html" title=" " alt="" coords="2694,196,2943,236"/>
-<area shape="rect" href="BackendDefinitions_8cc.html" title=" " alt="" coords="2967,196,3137,236"/>
-<area shape="rect" href="WorldMotionEstimator_8cc.html" title=" " alt="" coords="3161,196,3383,236"/>
-<area shape="rect" href="WorldPoseEstimator_8cc.html" title=" " alt="" coords="3407,196,3614,236"/>
-<area shape="rect" href="ModuleFactory_8hpp.html" title=" " alt="" coords="2735,783,2943,823"/>
-<area shape="rect" href="Display_8hpp.html" title=" " alt="" coords="3164,394,3361,434"/>
-<area shape="rect" href="VisualizerPipelines_8hpp.html" title=" " alt="" coords="3165,497,3409,537"/>
-<area shape="rect" href="PipelineManager_8hpp.html" title=" " alt="" coords="3171,687,3389,727"/>
-<area shape="rect" href="dyno__sam_8cc.html" title=" " alt="" coords="3115,783,3293,823"/>
-<area shape="rect" href="FrontendParams_8hpp.html" title=" " alt="" coords="3732,497,3951,537"/>
-<area shape="rect" href="RGBDInstanceFrontendModule_8hpp.html" title=" " alt="" coords="3989,680,4224,735"/>
-<area shape="rect" href="RGBDInstanceFrontendModule_8cc.html" title=" " alt="" coords="4284,783,4527,823"/>
-<area shape="rect" href="FrontendModule_8hpp.html" title=" " alt="" coords="3732,592,3951,632"/>
-<area shape="rect" href="PipelineParams_8cc.html" title=" " alt="" coords="2927,687,3089,727"/>
-<area shape="rect" href="BackendInputPacket_8hpp.html" title=" " alt="" coords="1653,394,1896,434"/>
-<area shape="rect" href="FrontendPipeline_8hpp.html" title=" " alt="" coords="3326,592,3549,632"/>
-<area shape="rect" href="RGBDInstance-Definitions_8hpp.html" title=" " alt="" coords="4145,387,4343,441"/>
-<area shape="rect" href="JsonUtils_8cc.html" title=" " alt="" coords="4076,504,4292,529"/>
-<area shape="rect" href="Frame_8hpp.html" title=" " alt="" coords="4145,196,4343,236"/>
-<area shape="rect" href="VisionTools_8hpp.html" title=" " alt="" coords="4265,291,4495,331"/>
+<area shape="rect" title=" " alt="" coords="3324,5,3569,45"/>
+<area shape="rect" href="BackendDefinitions_8hpp.html" title=" " alt="" coords="1596,101,1833,141"/>
+<area shape="rect" href="MotionSolver_8hpp.html" title=" " alt="" coords="3773,401,4014,441"/>
+<area shape="rect" href="PipelineParams_8hpp.html" title=" " alt="" coords="2917,592,3128,632"/>
+<area shape="rect" href="VisionImuOutputPacket_8hpp.html" title=" " alt="" coords="2367,196,2631,236"/>
+<area shape="rect" href="Vision-Definitions_8hpp.html" title=" " alt="" coords="3543,93,3740,148"/>
+<area shape="rect" href="Frontend-Definitions_8cc.html" title=" " alt="" coords="4087,101,4263,141"/>
+<area shape="rect" href="Accessor_8hpp.html" title=" " alt="" coords="783,291,980,331"/>
+<area shape="rect" href="Formulation_8hpp.html" title=" " alt="" coords="1109,401,1307,441"/>
+<area shape="rect" href="BackendFormulationFactory_8hpp.html" title=" " alt="" coords="2271,504,2561,544"/>
+<area shape="rect" href="ParallelHybridBackendModule_8hpp.html" title=" " alt="" coords="1634,680,1865,735"/>
+<area shape="rect" href="RegularBackendModule_8hpp.html" title=" " alt="" coords="1345,687,1610,727"/>
+<area shape="rect" href="BackendModule_8hpp.html" title=" " alt="" coords="1826,504,2041,544"/>
+<area shape="rect" href="BackendModule_8cc.html" title=" " alt="" coords="1701,592,1864,632"/>
+<area shape="rect" href="HybridEstimator_8hpp.html" title=" " alt="" coords="216,504,467,544"/>
+<area shape="rect" href="ParallelObjectISAM_8hpp.html" title=" " alt="" coords="1058,592,1294,632"/>
+<area shape="rect" href="HybridEstimator_8cc.html" title=" " alt="" coords="94,592,277,632"/>
+<area shape="rect" href="WorldMotionEstimator_8cc.html" title=" " alt="" coords="592,687,813,727"/>
+<area shape="rect" href="WorldPoseEstimator_8cc.html" title=" " alt="" coords="1318,592,1525,632"/>
+<area shape="rect" href="BackendOutputPacket_8hpp.html" title=" " alt="" coords="1963,196,2216,236"/>
+<area shape="rect" href="HybridFormulationFactors_8hpp.html" title=" " alt="" coords="145,401,415,441"/>
+<area shape="rect" href="ObjectKinematicFactor_8hpp.html" title=" " alt="" coords="2721,196,2970,236"/>
+<area shape="rect" href="MotionSolver-inl_8hpp.html" title=" " alt="" coords="3645,284,3859,339"/>
+<area shape="rect" href="MotionSolver_8cc.html" title=" " alt="" coords="3391,504,3563,544"/>
+<area shape="rect" href="BackendDefinitions_8cc.html" title=" " alt="" coords="2994,196,3163,236"/>
+<area shape="rect" href="Accessor-impl_8hpp.html" title=" " alt="" coords="779,401,983,441"/>
+<area shape="rect" href="RegularBackendModule_8cc.html" title=" " alt="" coords="864,885,1061,925"/>
+<area shape="rect" href="WorldMotionEstimator_8hpp.html" title=" " alt="" coords="643,592,933,632"/>
+<area shape="rect" href="WorldPoseEstimator_8hpp.html" title=" " alt="" coords="865,504,1140,544"/>
+<area shape="rect" href="Accessor_8cc.html" title=" " alt="" coords="592,401,755,441"/>
+<area shape="rect" href="BackendFactory_8hpp.html" title=" " alt="" coords="1507,790,1719,830"/>
+<area shape="rect" href="PipelineRos_8cc.html" title=" " alt="" coords="2367,885,2555,925"/>
+<area shape="rect" href="RegularBackendDefinitions_8hpp.html" title=" " alt="" coords="2041,592,2327,632"/>
+<area shape="rect" href="BackendModuleFactory_8hpp.html" title=" " alt="" coords="2453,592,2713,632"/>
+<area shape="rect" href="PipelineManager_8hpp.html" title=" " alt="" coords="2553,687,2772,727"/>
+<area shape="rect" href="dyno__sam_8cc.html" title=" " alt="" coords="3155,790,3333,830"/>
+<area shape="rect" href="PipelineRos_8hpp.html" title=" " alt="" coords="2552,790,2773,830"/>
+<area shape="rect" href="Display_8hpp.html" title=" " alt="" coords="2263,291,2460,331"/>
+<area shape="rect" href="VisualizerPipelines_8hpp.html" title=" " alt="" coords="2477,401,2721,441"/>
+<area shape="rect" href="FrontendDSDRos_8hpp.html" title=" " alt="" coords="2270,387,2453,456"/>
+<area shape="rect" href="FrontendParams_8hpp.html" title=" " alt="" coords="3588,504,3807,544"/>
+<area shape="rect" href="RGBDInstanceFrontendModule_8hpp.html" title=" " alt="" coords="3727,783,3961,837"/>
+<area shape="rect" href="RGBDInstanceFrontendModule_8cc.html" title=" " alt="" coords="3877,885,4120,925"/>
+<area shape="rect" href="FrontendModule_8hpp.html" title=" " alt="" coords="3135,687,3353,727"/>
+<area shape="rect" href="PipelineParams_8cc.html" title=" " alt="" coords="2898,687,3059,727"/>
+<area shape="rect" href="BackendInputPacket_8hpp.html" title=" " alt="" coords="1952,401,2195,441"/>
+<area shape="rect" href="FrontendPipeline_8hpp.html" title=" " alt="" coords="2534,291,2757,331"/>
+<area shape="rect" href="VisionImuOutputPacket_8cc.html" title=" " alt="" coords="2781,291,2976,331"/>
+<area shape="rect" href="Frame_8hpp.html" title=" " alt="" coords="3356,196,3553,236"/>
+<area shape="rect" href="VisionTools_8hpp.html" title=" " alt="" coords="3340,291,3569,331"/>
 </map>
 </div>
 </div>
@@ -237,6 +238,8 @@ Functions</h2></td></tr>
 <tr class="memitem:a8d1f85752688bf072f23fa6e8a1bde34"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
 <tr class="memitem:a8d1f85752688bf072f23fa6e8a1bde34"><td class="memTemplItemLeft" align="right" valign="top">std::string&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacedyno.html#a8d1f85752688bf072f23fa6e8a1bde34">dyno::to_string</a> (const TrackingStatus &amp;status)</td></tr>
 <tr class="separator:a8d1f85752688bf072f23fa6e8a1bde34"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aab7a05d40b0051f16ccc711afa24d049"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno.html#aab7a05d40b0051f16ccc711afa24d049">dyno::NLOHMANN_JSON_SERIALIZE_ENUM</a> (KeyPointType, { {STATIC, &quot;static&quot;}, {DYNAMIC, &quot;dynamic&quot;}, }) NLOHMANN_JSON_SERIALIZE_ENUM(ReferenceFrame</td></tr>
+<tr class="separator:aab7a05d40b0051f16ccc711afa24d049"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>

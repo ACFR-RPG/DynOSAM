@@ -133,6 +133,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a4e2f1808b0a97e128df8f7a6695161d5 inherit pub_methods_classdyno_1_1FeatureTrackerBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa902950650699301214f776a905e3b77 inherit pub_methods_classdyno_1_1FeatureTrackerBase"><td class="memItemLeft" align="right" valign="top">cv::Mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1FeatureTrackerBase.html#aa902950650699301214f776a905e3b77">computeImageTracks</a> (const <a class="el" href="classdyno_1_1Frame.html">Frame</a> &amp;previous_frame, const <a class="el" href="classdyno_1_1Frame.html">Frame</a> &amp;current_frame, const <a class="el" href="classdyno_1_1ImageTracksParams.html">ImageTracksParams</a> &amp;config=false) const</td></tr>
 <tr class="separator:aa902950650699301214f776a905e3b77 inherit pub_methods_classdyno_1_1FeatureTrackerBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4e9b9b77752d80d8bb8c2236776ca5a8 inherit pub_methods_classdyno_1_1FeatureTrackerBase"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1FeatureTrackerBase.html#a4e9b9b77752d80d8bb8c2236776ca5a8">drawStereoMatches</a> (cv::Mat &amp;output_image, const <a class="el" href="classdyno_1_1Frame.html">Frame</a> &amp;current_frame) const</td></tr>
+<tr class="separator:a4e9b9b77752d80d8bb8c2236776ca5a8 inherit pub_methods_classdyno_1_1FeatureTrackerBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aac4fd637116f1a55b857968d6f84d33d inherit pub_methods_classdyno_1_1FeatureTrackerBase"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1FeatureTrackerBase.html#aac4fd637116f1a55b857968d6f84d33d">predictKeypointsGivenRotation</a> (std::vector&lt; cv::Point2f &gt; &amp;predicted_pts_k, const std::vector&lt; cv::Point2f &gt; &amp;pts_km1, const gtsam::Rot3 &amp;R_km1_k) const</td></tr>
 <tr class="separator:aac4fd637116f1a55b857968d6f84d33d inherit pub_methods_classdyno_1_1FeatureTrackerBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -172,7 +174,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="StaticFeatureTracker_8hpp_source.html#l00080">80</a> of file <a class="el" href="StaticFeatureTracker_8hpp_source.html">StaticFeatureTracker.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="StaticFeatureTracker_8hpp_source.html#l00081">81</a> of file <a class="el" href="StaticFeatureTracker_8hpp_source.html">StaticFeatureTracker.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a0181662d79f3c451929ceb09e71bca89" name="a0181662d79f3c451929ceb09e71bca89"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a0181662d79f3c451929ceb09e71bca89">&#9670;&#160;</a></span>ExternalFlowFeatureTracker()</h2>
@@ -206,27 +208,27 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="StaticFeatureTracker_8cc_source.html#l00048">48</a> of file <a class="el" href="StaticFeatureTracker_8cc_source.html">StaticFeatureTracker.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   51</span>    : <a class="code hl_function" href="classdyno_1_1StaticFeatureTracker.html#ab192c0fe22aa7a3b7751cb47db62cf00">StaticFeatureTracker</a>(params, camera, display_queue),</div>
-<div class="line"><span class="lineno">   52</span>      <a class="code hl_variable" href="classdyno_1_1ExternalFlowFeatureTracker.html#ac905f9e4d68d212d52c3f27f95e707c0">static_grid_</a>(</div>
-<div class="line"><span class="lineno">   53</span>          <a class="code hl_variable" href="classdyno_1_1ExternalFlowFeatureTracker.html#acae3c8afde67e717a962ae73f2f3ac30">static_cell_size</a>,</div>
-<div class="line"><span class="lineno">   54</span>          std::ceil(<span class="keyword">static_cast&lt;</span><span class="keywordtype">double</span><span class="keyword">&gt;</span>(camera-&gt;getParams().ImageWidth()) /</div>
-<div class="line"><span class="lineno">   55</span>                    <a class="code hl_variable" href="classdyno_1_1ExternalFlowFeatureTracker.html#acae3c8afde67e717a962ae73f2f3ac30">static_cell_size</a>),</div>
-<div class="line"><span class="lineno">   56</span>          std::ceil(<span class="keyword">static_cast&lt;</span><span class="keywordtype">double</span><span class="keyword">&gt;</span>(camera-&gt;getParams().ImageHeight()) /</div>
-<div class="line"><span class="lineno">   57</span>                    <a class="code hl_variable" href="classdyno_1_1ExternalFlowFeatureTracker.html#acae3c8afde67e717a962ae73f2f3ac30">static_cell_size</a>)) {</div>
-<div class="line"><span class="lineno">   58</span>  <span class="keyword">const</span> <span class="keyword">auto</span> orb_params = params.orb_params;</div>
-<div class="line"><span class="lineno">   59</span>  <a class="code hl_variable" href="classdyno_1_1ExternalFlowFeatureTracker.html#af6aed30cfff5a51f32dbfd5b84eebf09">orb_detector_</a> = std::make_unique&lt;ORBextractor&gt;(</div>
-<div class="line"><span class="lineno">   60</span>      params.max_nr_keypoints_before_anms,</div>
-<div class="line"><span class="lineno">   61</span>      <span class="keyword">static_cast&lt;</span><span class="keywordtype">float</span><span class="keyword">&gt;</span>(orb_params.scale_factor), orb_params.n_levels,</div>
-<div class="line"><span class="lineno">   62</span>      orb_params.init_threshold_fast, orb_params.min_threshold_fast);</div>
-<div class="line"><span class="lineno">   63</span> </div>
-<div class="line"><span class="lineno">   64</span>  CHECK(!<a class="code hl_variable" href="classdyno_1_1FeatureTrackerBase.html#a23d0ec748366b789be491e61e536839c">img_size_</a>.empty());</div>
-<div class="line"><span class="lineno">   65</span>}</div>
-<div class="ttc" id="aclassdyno_1_1ExternalFlowFeatureTracker_html_ac905f9e4d68d212d52c3f27f95e707c0"><div class="ttname"><a href="classdyno_1_1ExternalFlowFeatureTracker.html#ac905f9e4d68d212d52c3f27f95e707c0">dyno::ExternalFlowFeatureTracker::static_grid_</a></div><div class="ttdeci">OccupandyGrid2D static_grid_</div><div class="ttdef"><b>Definition:</b> <a href="StaticFeatureTracker_8hpp_source.html#l00096">StaticFeatureTracker.hpp:96</a></div></div>
-<div class="ttc" id="aclassdyno_1_1ExternalFlowFeatureTracker_html_acae3c8afde67e717a962ae73f2f3ac30"><div class="ttname"><a href="classdyno_1_1ExternalFlowFeatureTracker.html#acae3c8afde67e717a962ae73f2f3ac30">dyno::ExternalFlowFeatureTracker::static_cell_size</a></div><div class="ttdeci">const size_t static_cell_size</div><div class="ttdef"><b>Definition:</b> <a href="StaticFeatureTracker_8hpp_source.html#l00099">StaticFeatureTracker.hpp:99</a></div></div>
-<div class="ttc" id="aclassdyno_1_1ExternalFlowFeatureTracker_html_af6aed30cfff5a51f32dbfd5b84eebf09"><div class="ttname"><a href="classdyno_1_1ExternalFlowFeatureTracker.html#af6aed30cfff5a51f32dbfd5b84eebf09">dyno::ExternalFlowFeatureTracker::orb_detector_</a></div><div class="ttdeci">ORBextractor::UniquePtr orb_detector_</div><div class="ttdoc">Grid used to feature bin static features.</div><div class="ttdef"><b>Definition:</b> <a href="StaticFeatureTracker_8hpp_source.html#l00097">StaticFeatureTracker.hpp:97</a></div></div>
-<div class="ttc" id="aclassdyno_1_1FeatureTrackerBase_html_a23d0ec748366b789be491e61e536839c"><div class="ttname"><a href="classdyno_1_1FeatureTrackerBase.html#a23d0ec748366b789be491e61e536839c">dyno::FeatureTrackerBase::img_size_</a></div><div class="ttdeci">const cv::Size img_size_</div><div class="ttdef"><b>Definition:</b> <a href="FeatureTrackerBase_8hpp_source.html#l00167">FeatureTrackerBase.hpp:167</a></div></div>
-<div class="ttc" id="aclassdyno_1_1StaticFeatureTracker_html_ab192c0fe22aa7a3b7751cb47db62cf00"><div class="ttname"><a href="classdyno_1_1StaticFeatureTracker.html#ab192c0fe22aa7a3b7751cb47db62cf00">dyno::StaticFeatureTracker::StaticFeatureTracker</a></div><div class="ttdeci">StaticFeatureTracker(const TrackerParams &amp;params, Camera::Ptr camera, ImageDisplayQueue *display_queue)</div><div class="ttdef"><b>Definition:</b> <a href="StaticFeatureTracker_8cc_source.html#l00043">StaticFeatureTracker.cc:43</a></div></div>
+<p class="definition">Definition at line <a class="el" href="StaticFeatureTracker_8cc_source.html#l00049">49</a> of file <a class="el" href="StaticFeatureTracker_8cc_source.html">StaticFeatureTracker.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   52</span>    : <a class="code hl_function" href="classdyno_1_1StaticFeatureTracker.html#ab192c0fe22aa7a3b7751cb47db62cf00">StaticFeatureTracker</a>(params, camera, display_queue),</div>
+<div class="line"><span class="lineno">   53</span>      <a class="code hl_variable" href="classdyno_1_1ExternalFlowFeatureTracker.html#ac905f9e4d68d212d52c3f27f95e707c0">static_grid_</a>(</div>
+<div class="line"><span class="lineno">   54</span>          <a class="code hl_variable" href="classdyno_1_1ExternalFlowFeatureTracker.html#acae3c8afde67e717a962ae73f2f3ac30">static_cell_size</a>,</div>
+<div class="line"><span class="lineno">   55</span>          std::ceil(<span class="keyword">static_cast&lt;</span><span class="keywordtype">double</span><span class="keyword">&gt;</span>(camera-&gt;getParams().ImageWidth()) /</div>
+<div class="line"><span class="lineno">   56</span>                    <a class="code hl_variable" href="classdyno_1_1ExternalFlowFeatureTracker.html#acae3c8afde67e717a962ae73f2f3ac30">static_cell_size</a>),</div>
+<div class="line"><span class="lineno">   57</span>          std::ceil(<span class="keyword">static_cast&lt;</span><span class="keywordtype">double</span><span class="keyword">&gt;</span>(camera-&gt;getParams().ImageHeight()) /</div>
+<div class="line"><span class="lineno">   58</span>                    <a class="code hl_variable" href="classdyno_1_1ExternalFlowFeatureTracker.html#acae3c8afde67e717a962ae73f2f3ac30">static_cell_size</a>)) {</div>
+<div class="line"><span class="lineno">   59</span>  <span class="keyword">const</span> <span class="keyword">auto</span> orb_params = params.orb_params;</div>
+<div class="line"><span class="lineno">   60</span>  <a class="code hl_variable" href="classdyno_1_1ExternalFlowFeatureTracker.html#af6aed30cfff5a51f32dbfd5b84eebf09">orb_detector_</a> = std::make_unique&lt;ORBextractor&gt;(</div>
+<div class="line"><span class="lineno">   61</span>      params.max_nr_keypoints_before_anms,</div>
+<div class="line"><span class="lineno">   62</span>      <span class="keyword">static_cast&lt;</span><span class="keywordtype">float</span><span class="keyword">&gt;</span>(orb_params.scale_factor), orb_params.n_levels,</div>
+<div class="line"><span class="lineno">   63</span>      orb_params.init_threshold_fast, orb_params.min_threshold_fast);</div>
+<div class="line"><span class="lineno">   64</span> </div>
+<div class="line"><span class="lineno">   65</span>  CHECK(!<a class="code hl_variable" href="classdyno_1_1FeatureTrackerBase.html#a23d0ec748366b789be491e61e536839c">img_size_</a>.empty());</div>
+<div class="line"><span class="lineno">   66</span>}</div>
+<div class="ttc" id="aclassdyno_1_1ExternalFlowFeatureTracker_html_ac905f9e4d68d212d52c3f27f95e707c0"><div class="ttname"><a href="classdyno_1_1ExternalFlowFeatureTracker.html#ac905f9e4d68d212d52c3f27f95e707c0">dyno::ExternalFlowFeatureTracker::static_grid_</a></div><div class="ttdeci">OccupandyGrid2D static_grid_</div><div class="ttdef"><b>Definition:</b> <a href="StaticFeatureTracker_8hpp_source.html#l00097">StaticFeatureTracker.hpp:97</a></div></div>
+<div class="ttc" id="aclassdyno_1_1ExternalFlowFeatureTracker_html_acae3c8afde67e717a962ae73f2f3ac30"><div class="ttname"><a href="classdyno_1_1ExternalFlowFeatureTracker.html#acae3c8afde67e717a962ae73f2f3ac30">dyno::ExternalFlowFeatureTracker::static_cell_size</a></div><div class="ttdeci">const size_t static_cell_size</div><div class="ttdef"><b>Definition:</b> <a href="StaticFeatureTracker_8hpp_source.html#l00100">StaticFeatureTracker.hpp:100</a></div></div>
+<div class="ttc" id="aclassdyno_1_1ExternalFlowFeatureTracker_html_af6aed30cfff5a51f32dbfd5b84eebf09"><div class="ttname"><a href="classdyno_1_1ExternalFlowFeatureTracker.html#af6aed30cfff5a51f32dbfd5b84eebf09">dyno::ExternalFlowFeatureTracker::orb_detector_</a></div><div class="ttdeci">ORBextractor::UniquePtr orb_detector_</div><div class="ttdoc">Grid used to feature bin static features.</div><div class="ttdef"><b>Definition:</b> <a href="StaticFeatureTracker_8hpp_source.html#l00098">StaticFeatureTracker.hpp:98</a></div></div>
+<div class="ttc" id="aclassdyno_1_1FeatureTrackerBase_html_a23d0ec748366b789be491e61e536839c"><div class="ttname"><a href="classdyno_1_1FeatureTrackerBase.html#a23d0ec748366b789be491e61e536839c">dyno::FeatureTrackerBase::img_size_</a></div><div class="ttdeci">const cv::Size img_size_</div><div class="ttdef"><b>Definition:</b> <a href="FeatureTrackerBase_8hpp_source.html#l00174">FeatureTrackerBase.hpp:174</a></div></div>
+<div class="ttc" id="aclassdyno_1_1StaticFeatureTracker_html_ab192c0fe22aa7a3b7751cb47db62cf00"><div class="ttname"><a href="classdyno_1_1StaticFeatureTracker.html#ab192c0fe22aa7a3b7751cb47db62cf00">dyno::StaticFeatureTracker::StaticFeatureTracker</a></div><div class="ttdeci">StaticFeatureTracker(const TrackerParams &amp;params, Camera::Ptr camera, ImageDisplayQueue *display_queue)</div><div class="ttdef"><b>Definition:</b> <a href="StaticFeatureTracker_8cc_source.html#l00044">StaticFeatureTracker.cc:44</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1FeatureTrackerBase.html#a23d0ec748366b789be491e61e536839c">dyno::FeatureTrackerBase::img_size_</a>, <a class="el" href="structdyno_1_1TrackerParams.html#afcd63917887a64e0e7fe8a8c43b0da3c">dyno::TrackerParams::max_nr_keypoints_before_anms</a>, <a class="el" href="classdyno_1_1ExternalFlowFeatureTracker.html#af6aed30cfff5a51f32dbfd5b84eebf09">orb_detector_</a>, and <a class="el" href="structdyno_1_1TrackerParams.html#aad55fbdf1719bac9dab5280f08dc714d">dyno::TrackerParams::orb_params</a>.</p>
 
@@ -285,59 +287,59 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="StaticFeatureTracker_8cc_source.html#l00174">174</a> of file <a class="el" href="StaticFeatureTracker_8cc_source.html">StaticFeatureTracker.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  176</span>                                                    {</div>
-<div class="line"><span class="lineno">  177</span>  <span class="comment">// implicit double -&gt; int cast for pixel location</span></div>
-<div class="line"><span class="lineno">  178</span>  <span class="keyword">const</span> <span class="keywordtype">int</span> x = <a class="code hl_function" href="structdyno_1_1functional__keypoint.html#a3896d96a6f95b5311ae768cdd0ad97e8">functional_keypoint::u</a>(kp);</div>
-<div class="line"><span class="lineno">  179</span>  <span class="keyword">const</span> <span class="keywordtype">int</span> y = <a class="code hl_function" href="structdyno_1_1functional__keypoint.html#a24933450cad8bc70b7b76b339756cd94">functional_keypoint::v</a>(kp);</div>
-<div class="line"><span class="lineno">  180</span> </div>
-<div class="line"><span class="lineno">  181</span>  <span class="keyword">const</span> cv::Mat&amp; rgb = image_container.rgb();</div>
-<div class="line"><span class="lineno">  182</span>  <span class="keyword">const</span> cv::Mat&amp; motion_mask = image_container.objectMotionMask();</div>
-<div class="line"><span class="lineno">  183</span>  <span class="keyword">const</span> cv::Mat&amp; optical_flow = image_container.opticalFlow();</div>
-<div class="line"><span class="lineno">  184</span> </div>
-<div class="line"><span class="lineno">  185</span>  CHECK(!optical_flow.empty());</div>
-<div class="line"><span class="lineno">  186</span>  CHECK(!motion_mask.empty());</div>
-<div class="line"><span class="lineno">  187</span> </div>
-<div class="line"><span class="lineno">  188</span>  <span class="keywordflow">if</span> (motion_mask.at&lt;<span class="keywordtype">int</span>&gt;(y, x) != <a class="code hl_variable" href="namespacedyno.html#ae78915ea0afc5025dafb398829f15ba3">background_label</a>) {</div>
-<div class="line"><span class="lineno">  189</span>    <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
-<div class="line"><span class="lineno">  190</span>  }</div>
-<div class="line"><span class="lineno">  191</span> </div>
-<div class="line"><span class="lineno">  192</span>  <span class="comment">// check flow</span></div>
-<div class="line"><span class="lineno">  193</span>  <span class="keywordtype">double</span> flow_xe = <span class="keyword">static_cast&lt;</span><span class="keywordtype">double</span><span class="keyword">&gt;</span>(optical_flow.at&lt;cv::Vec2f&gt;(y, x)[0]);</div>
-<div class="line"><span class="lineno">  194</span>  <span class="keywordtype">double</span> flow_ye = <span class="keyword">static_cast&lt;</span><span class="keywordtype">double</span><span class="keyword">&gt;</span>(optical_flow.at&lt;cv::Vec2f&gt;(y, x)[1]);</div>
-<div class="line"><span class="lineno">  195</span> </div>
-<div class="line"><span class="lineno">  196</span>  <span class="keywordflow">if</span> (!(flow_xe != 0 &amp;&amp; flow_ye != 0)) {</div>
-<div class="line"><span class="lineno">  197</span>    <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
-<div class="line"><span class="lineno">  198</span>  }</div>
-<div class="line"><span class="lineno">  199</span> </div>
-<div class="line"><span class="lineno">  200</span>  <a class="code hl_typedef" href="namespacedyno.html#aba8bf92162160923c6e5c7249892d5f8">OpticalFlow</a> flow(flow_xe, flow_ye);</div>
-<div class="line"><span class="lineno">  201</span> </div>
-<div class="line"><span class="lineno">  202</span>  <span class="comment">// check predicted flow is within image</span></div>
-<div class="line"><span class="lineno">  203</span>  <a class="code hl_typedef" href="namespacedyno.html#aaa260a8022691078c59e1ac6a4fa05b5">Keypoint</a> predicted_kp = <a class="code hl_function" href="classdyno_1_1Feature.html#a37dbbe8da704c2f51e237d38760534fb">Feature::CalculatePredictedKeypoint</a>(kp, flow);</div>
-<div class="line"><span class="lineno">  204</span>  <span class="keywordflow">if</span> (!<a class="code hl_variable" href="classdyno_1_1FeatureTrackerBase.html#abf6eba19baf18b1c3648347401c15a56">camera_</a>-&gt;isKeypointContained(predicted_kp)) {</div>
-<div class="line"><span class="lineno">  205</span>    <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
-<div class="line"><span class="lineno">  206</span>  }</div>
-<div class="line"><span class="lineno">  207</span> </div>
-<div class="line"><span class="lineno">  208</span>  Feature::Ptr feature = std::make_shared&lt;Feature&gt;();</div>
-<div class="line"><span class="lineno">  209</span>  (*feature)</div>
-<div class="line"><span class="lineno">  210</span>      .objectId(<a class="code hl_variable" href="namespacedyno.html#ae78915ea0afc5025dafb398829f15ba3">background_label</a>)</div>
-<div class="line"><span class="lineno">  211</span>      .frameId(frame_id)</div>
-<div class="line"><span class="lineno">  212</span>      .keypointType(<a class="code hl_enumvalue" href="namespacedyno.html#ad6aa767541eb74e30fc5a7b018322952aa7ffd97a62d9e9295b5f90cea20c2833">KeyPointType::STATIC</a>)</div>
-<div class="line"><span class="lineno">  213</span>      .age(age)</div>
-<div class="line"><span class="lineno">  214</span>      .trackletId(tracklet_id)</div>
-<div class="line"><span class="lineno">  215</span>      .keypoint(kp)</div>
-<div class="line"><span class="lineno">  216</span>      .measuredFlow(flow)</div>
-<div class="line"><span class="lineno">  217</span>      .predictedKeypoint(predicted_kp);</div>
-<div class="line"><span class="lineno">  218</span>  <span class="keywordflow">return</span> feature;</div>
-<div class="line"><span class="lineno">  219</span>}</div>
-<div class="ttc" id="aclassdyno_1_1FeatureTrackerBase_html_abf6eba19baf18b1c3648347401c15a56"><div class="ttname"><a href="classdyno_1_1FeatureTrackerBase.html#abf6eba19baf18b1c3648347401c15a56">dyno::FeatureTrackerBase::camera_</a></div><div class="ttdeci">Camera::Ptr camera_</div><div class="ttdoc">Expected image size from the camera.</div><div class="ttdef"><b>Definition:</b> <a href="FeatureTrackerBase_8hpp_source.html#l00169">FeatureTrackerBase.hpp:169</a></div></div>
-<div class="ttc" id="aclassdyno_1_1Feature_html_a37dbbe8da704c2f51e237d38760534fb"><div class="ttname"><a href="classdyno_1_1Feature.html#a37dbbe8da704c2f51e237d38760534fb">dyno::Feature::CalculatePredictedKeypoint</a></div><div class="ttdeci">static Keypoint CalculatePredictedKeypoint(const Keypoint &amp;keypoint, const OpticalFlow &amp;measured_flow)</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00225">Feature.hpp:225</a></div></div>
-<div class="ttc" id="anamespacedyno_html_aaa260a8022691078c59e1ac6a4fa05b5"><div class="ttname"><a href="namespacedyno.html#aaa260a8022691078c59e1ac6a4fa05b5">dyno::Keypoint</a></div><div class="ttdeci">gtsam::Point2 Keypoint</div><div class="ttdoc">Observed optical flow vector (ordered x, y)</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00095">Types.hpp:95</a></div></div>
-<div class="ttc" id="anamespacedyno_html_aba8bf92162160923c6e5c7249892d5f8"><div class="ttname"><a href="namespacedyno.html#aba8bf92162160923c6e5c7249892d5f8">dyno::OpticalFlow</a></div><div class="ttdeci">gtsam::Point2 OpticalFlow</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00092">Types.hpp:93</a></div></div>
-<div class="ttc" id="anamespacedyno_html_ad6aa767541eb74e30fc5a7b018322952aa7ffd97a62d9e9295b5f90cea20c2833"><div class="ttname"><a href="namespacedyno.html#ad6aa767541eb74e30fc5a7b018322952aa7ffd97a62d9e9295b5f90cea20c2833">dyno::STATIC</a></div><div class="ttdeci">@ STATIC</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00189">Types.hpp:189</a></div></div>
-<div class="ttc" id="anamespacedyno_html_ae78915ea0afc5025dafb398829f15ba3"><div class="ttname"><a href="namespacedyno.html#ae78915ea0afc5025dafb398829f15ba3">dyno::background_label</a></div><div class="ttdeci">static constexpr ObjectId background_label</div><div class="ttdoc">Expected label for the background in a semantic or motion mask.</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00187">Types.hpp:187</a></div></div>
-<div class="ttc" id="astructdyno_1_1functional__keypoint_html_a24933450cad8bc70b7b76b339756cd94"><div class="ttname"><a href="structdyno_1_1functional__keypoint.html#a24933450cad8bc70b7b76b339756cd94">dyno::functional_keypoint::v</a></div><div class="ttdeci">static int v(const Keypoint &amp;kp)</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00051">Feature.hpp:51</a></div></div>
-<div class="ttc" id="astructdyno_1_1functional__keypoint_html_a3896d96a6f95b5311ae768cdd0ad97e8"><div class="ttname"><a href="structdyno_1_1functional__keypoint.html#a3896d96a6f95b5311ae768cdd0ad97e8">dyno::functional_keypoint::u</a></div><div class="ttdeci">static T u(const Keypoint &amp;kp)</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00046">Feature.hpp:46</a></div></div>
+<p class="definition">Definition at line <a class="el" href="StaticFeatureTracker_8cc_source.html#l00175">175</a> of file <a class="el" href="StaticFeatureTracker_8cc_source.html">StaticFeatureTracker.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  177</span>                                                    {</div>
+<div class="line"><span class="lineno">  178</span>  <span class="comment">// implicit double -&gt; int cast for pixel location</span></div>
+<div class="line"><span class="lineno">  179</span>  <span class="keyword">const</span> <span class="keywordtype">int</span> x = <a class="code hl_function" href="structdyno_1_1functional__keypoint.html#a3896d96a6f95b5311ae768cdd0ad97e8">functional_keypoint::u</a>(kp);</div>
+<div class="line"><span class="lineno">  180</span>  <span class="keyword">const</span> <span class="keywordtype">int</span> y = <a class="code hl_function" href="structdyno_1_1functional__keypoint.html#a24933450cad8bc70b7b76b339756cd94">functional_keypoint::v</a>(kp);</div>
+<div class="line"><span class="lineno">  181</span> </div>
+<div class="line"><span class="lineno">  182</span>  <span class="keyword">const</span> cv::Mat&amp; rgb = image_container.rgb();</div>
+<div class="line"><span class="lineno">  183</span>  <span class="keyword">const</span> cv::Mat&amp; motion_mask = image_container.objectMotionMask();</div>
+<div class="line"><span class="lineno">  184</span>  <span class="keyword">const</span> cv::Mat&amp; optical_flow = image_container.opticalFlow();</div>
+<div class="line"><span class="lineno">  185</span> </div>
+<div class="line"><span class="lineno">  186</span>  CHECK(!optical_flow.empty());</div>
+<div class="line"><span class="lineno">  187</span>  CHECK(!motion_mask.empty());</div>
+<div class="line"><span class="lineno">  188</span> </div>
+<div class="line"><span class="lineno">  189</span>  <span class="keywordflow">if</span> (motion_mask.at&lt;<span class="keywordtype">int</span>&gt;(y, x) != <a class="code hl_variable" href="namespacedyno.html#ae78915ea0afc5025dafb398829f15ba3">background_label</a>) {</div>
+<div class="line"><span class="lineno">  190</span>    <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
+<div class="line"><span class="lineno">  191</span>  }</div>
+<div class="line"><span class="lineno">  192</span> </div>
+<div class="line"><span class="lineno">  193</span>  <span class="comment">// check flow</span></div>
+<div class="line"><span class="lineno">  194</span>  <span class="keywordtype">double</span> flow_xe = <span class="keyword">static_cast&lt;</span><span class="keywordtype">double</span><span class="keyword">&gt;</span>(optical_flow.at&lt;cv::Vec2f&gt;(y, x)[0]);</div>
+<div class="line"><span class="lineno">  195</span>  <span class="keywordtype">double</span> flow_ye = <span class="keyword">static_cast&lt;</span><span class="keywordtype">double</span><span class="keyword">&gt;</span>(optical_flow.at&lt;cv::Vec2f&gt;(y, x)[1]);</div>
+<div class="line"><span class="lineno">  196</span> </div>
+<div class="line"><span class="lineno">  197</span>  <span class="keywordflow">if</span> (!(flow_xe != 0 &amp;&amp; flow_ye != 0)) {</div>
+<div class="line"><span class="lineno">  198</span>    <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
+<div class="line"><span class="lineno">  199</span>  }</div>
+<div class="line"><span class="lineno">  200</span> </div>
+<div class="line"><span class="lineno">  201</span>  <a class="code hl_typedef" href="namespacedyno.html#aba8bf92162160923c6e5c7249892d5f8">OpticalFlow</a> flow(flow_xe, flow_ye);</div>
+<div class="line"><span class="lineno">  202</span> </div>
+<div class="line"><span class="lineno">  203</span>  <span class="comment">// check predicted flow is within image</span></div>
+<div class="line"><span class="lineno">  204</span>  <a class="code hl_typedef" href="namespacedyno.html#aaa260a8022691078c59e1ac6a4fa05b5">Keypoint</a> predicted_kp = <a class="code hl_function" href="classdyno_1_1Feature.html#a37dbbe8da704c2f51e237d38760534fb">Feature::CalculatePredictedKeypoint</a>(kp, flow);</div>
+<div class="line"><span class="lineno">  205</span>  <span class="keywordflow">if</span> (!<a class="code hl_variable" href="classdyno_1_1FeatureTrackerBase.html#abf6eba19baf18b1c3648347401c15a56">camera_</a>-&gt;isKeypointContained(predicted_kp)) {</div>
+<div class="line"><span class="lineno">  206</span>    <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
+<div class="line"><span class="lineno">  207</span>  }</div>
+<div class="line"><span class="lineno">  208</span> </div>
+<div class="line"><span class="lineno">  209</span>  Feature::Ptr feature = std::make_shared&lt;Feature&gt;();</div>
+<div class="line"><span class="lineno">  210</span>  (*feature)</div>
+<div class="line"><span class="lineno">  211</span>      .objectId(<a class="code hl_variable" href="namespacedyno.html#ae78915ea0afc5025dafb398829f15ba3">background_label</a>)</div>
+<div class="line"><span class="lineno">  212</span>      .frameId(frame_id)</div>
+<div class="line"><span class="lineno">  213</span>      .keypointType(<a class="code hl_enumvalue" href="namespacedyno.html#ad6aa767541eb74e30fc5a7b018322952aa7ffd97a62d9e9295b5f90cea20c2833">KeyPointType::STATIC</a>)</div>
+<div class="line"><span class="lineno">  214</span>      .age(age)</div>
+<div class="line"><span class="lineno">  215</span>      .trackletId(tracklet_id)</div>
+<div class="line"><span class="lineno">  216</span>      .keypoint(kp)</div>
+<div class="line"><span class="lineno">  217</span>      .measuredFlow(flow)</div>
+<div class="line"><span class="lineno">  218</span>      .predictedKeypoint(predicted_kp);</div>
+<div class="line"><span class="lineno">  219</span>  <span class="keywordflow">return</span> feature;</div>
+<div class="line"><span class="lineno">  220</span>}</div>
+<div class="ttc" id="aclassdyno_1_1FeatureTrackerBase_html_abf6eba19baf18b1c3648347401c15a56"><div class="ttname"><a href="classdyno_1_1FeatureTrackerBase.html#abf6eba19baf18b1c3648347401c15a56">dyno::FeatureTrackerBase::camera_</a></div><div class="ttdeci">Camera::Ptr camera_</div><div class="ttdoc">Expected image size from the camera.</div><div class="ttdef"><b>Definition:</b> <a href="FeatureTrackerBase_8hpp_source.html#l00176">FeatureTrackerBase.hpp:176</a></div></div>
+<div class="ttc" id="aclassdyno_1_1Feature_html_a37dbbe8da704c2f51e237d38760534fb"><div class="ttname"><a href="classdyno_1_1Feature.html#a37dbbe8da704c2f51e237d38760534fb">dyno::Feature::CalculatePredictedKeypoint</a></div><div class="ttdeci">static Keypoint CalculatePredictedKeypoint(const Keypoint &amp;keypoint, const OpticalFlow &amp;measured_flow)</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00229">Feature.hpp:229</a></div></div>
+<div class="ttc" id="anamespacedyno_html_aaa260a8022691078c59e1ac6a4fa05b5"><div class="ttname"><a href="namespacedyno.html#aaa260a8022691078c59e1ac6a4fa05b5">dyno::Keypoint</a></div><div class="ttdeci">gtsam::Point2 Keypoint</div><div class="ttdoc">Observed optical flow vector (ordered x, y)</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00096">Types.hpp:96</a></div></div>
+<div class="ttc" id="anamespacedyno_html_aba8bf92162160923c6e5c7249892d5f8"><div class="ttname"><a href="namespacedyno.html#aba8bf92162160923c6e5c7249892d5f8">dyno::OpticalFlow</a></div><div class="ttdeci">gtsam::Point2 OpticalFlow</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00093">Types.hpp:94</a></div></div>
+<div class="ttc" id="anamespacedyno_html_ad6aa767541eb74e30fc5a7b018322952aa7ffd97a62d9e9295b5f90cea20c2833"><div class="ttname"><a href="namespacedyno.html#ad6aa767541eb74e30fc5a7b018322952aa7ffd97a62d9e9295b5f90cea20c2833">dyno::STATIC</a></div><div class="ttdeci">@ STATIC</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00190">Types.hpp:190</a></div></div>
+<div class="ttc" id="anamespacedyno_html_ae78915ea0afc5025dafb398829f15ba3"><div class="ttname"><a href="namespacedyno.html#ae78915ea0afc5025dafb398829f15ba3">dyno::background_label</a></div><div class="ttdeci">static constexpr ObjectId background_label</div><div class="ttdoc">Expected label for the background in a semantic or motion mask.</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00188">Types.hpp:188</a></div></div>
+<div class="ttc" id="astructdyno_1_1functional__keypoint_html_a24933450cad8bc70b7b76b339756cd94"><div class="ttname"><a href="structdyno_1_1functional__keypoint.html#a24933450cad8bc70b7b76b339756cd94">dyno::functional_keypoint::v</a></div><div class="ttdeci">static int v(const Keypoint &amp;kp)</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00053">Feature.hpp:53</a></div></div>
+<div class="ttc" id="astructdyno_1_1functional__keypoint_html_a3896d96a6f95b5311ae768cdd0ad97e8"><div class="ttname"><a href="structdyno_1_1functional__keypoint.html#a3896d96a6f95b5311ae768cdd0ad97e8">dyno::functional_keypoint::u</a></div><div class="ttdeci">static T u(const Keypoint &amp;kp)</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00048">Feature.hpp:48</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="namespacedyno.html#ae78915ea0afc5025dafb398829f15ba3">dyno::background_label</a>, <a class="el" href="classdyno_1_1Feature.html#a37dbbe8da704c2f51e237d38760534fb">dyno::Feature::CalculatePredictedKeypoint()</a>, <a class="el" href="classdyno_1_1FeatureTrackerBase.html#abf6eba19baf18b1c3648347401c15a56">dyno::FeatureTrackerBase::camera_</a>, <a class="el" href="classdyno_1_1ImageContainer.html#ae5eead678f02be0ab9de7464e1833c55">dyno::ImageContainer::objectMotionMask()</a>, <a class="el" href="classdyno_1_1ImageContainer.html#a460749ede77f3694f4f2dfaab76531f7">dyno::ImageContainer::opticalFlow()</a>, <a class="el" href="classdyno_1_1ImageContainer.html#a6f35259f95c31b861ff6515c159e1ee3">dyno::ImageContainer::rgb()</a>, <a class="el" href="namespacedyno.html#ad6aa767541eb74e30fc5a7b018322952aa7ffd97a62d9e9295b5f90cea20c2833">dyno::STATIC</a>, <a class="el" href="structdyno_1_1functional__keypoint.html#a3896d96a6f95b5311ae768cdd0ad97e8">dyno::functional_keypoint::u()</a>, and <a class="el" href="structdyno_1_1functional__keypoint.html#a24933450cad8bc70b7b76b339756cd94">dyno::functional_keypoint::v()</a>.</p>
 
@@ -427,7 +429,7 @@ Here is the caller graph for this function:</div>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">previous_frame</td><td>Frame::Ptr. Previous frame (k-1) with filled-out features to be tracked. </td></tr>
-    <tr><td class="paramname">image_container</td><td>const <a class="el" href="classdyno_1_1ImageContainer.html">ImageContainer</a>&amp;. Contains current (k) images which will be tracked from the previous frame. </td></tr>
+    <tr><td class="paramname">image_container</td><td>const <a class="el" href="classdyno_1_1ImageContainer.html" title="Basic class to contain Images which are the input for the DynoSAM system. Instead of just containing ...">ImageContainer</a>&amp;. Contains current (k) images which will be tracked from the previous frame. </td></tr>
     <tr><td class="paramname">tracker_info</td><td><a class="el" href="structdyno_1_1FeatureTrackerInfo.html">FeatureTrackerInfo</a>&amp;. Tracking metadata to be filled out. </td></tr>
     <tr><td class="paramname">detection_mask</td><td>const cv::Mat&amp; A detection mask in the opencv feature tracking form: CV_8UC1 where white pixels (255) are valid and black pixels (0) should not be detected on </td></tr>
   </table>
@@ -437,121 +439,121 @@ Here is the caller graph for this function:</div>
 
 <p>Implements <a class="el" href="classdyno_1_1StaticFeatureTracker.html#ab5545735043d644641b65dbed725b447">dyno::StaticFeatureTracker</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="StaticFeatureTracker_8cc_source.html#l00069">69</a> of file <a class="el" href="StaticFeatureTracker_8cc_source.html">StaticFeatureTracker.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   72</span>                                   {</div>
-<div class="line"><span class="lineno">   73</span>  <span class="keyword">const</span> ImageWrapper&lt;ImageType::RGBMono&gt;&amp; rgb_wrapper = image_container.rgb();</div>
-<div class="line"><span class="lineno">   74</span>  <span class="keyword">const</span> cv::Mat&amp; rgb = rgb_wrapper.toRGB();</div>
-<div class="line"><span class="lineno">   75</span>  cv::Mat mono = <a class="code hl_function" href="structdyno_1_1ImageType_1_1RGBMono.html#ac6c656492aaeff4bb8b60f42b0cfa7a3">ImageType::RGBMono::toMono</a>(rgb_wrapper);</div>
-<div class="line"><span class="lineno">   76</span>  CHECK(!mono.empty());</div>
-<div class="line"><span class="lineno">   77</span> </div>
-<div class="line"><span class="lineno">   78</span>  <span class="keyword">const</span> cv::Mat&amp; motion_mask = image_container.objectMotionMask();</div>
-<div class="line"><span class="lineno">   79</span>  CHECK(!motion_mask.empty());</div>
-<div class="line"><span class="lineno">   80</span> </div>
-<div class="line"><span class="lineno">   81</span>  cv::Mat descriptors;</div>
-<div class="line"><span class="lineno">   82</span>  <a class="code hl_typedef" href="namespacedyno.html#ae45b8b62a0efd7dbcf047db8751f6739">KeypointsCV</a> detected_keypoints;</div>
-<div class="line"><span class="lineno">   83</span>  (*orb_detector_)(mono, cv::Mat(), detected_keypoints, descriptors);</div>
-<div class="line"><span class="lineno">   84</span> </div>
-<div class="line"><span class="lineno">   85</span>  <span class="comment">// assign tracked features to grid and add to static features</span></div>
-<div class="line"><span class="lineno">   86</span>  FeatureContainer static_features;</div>
-<div class="line"><span class="lineno">   87</span> </div>
-<div class="line"><span class="lineno">   88</span>  <span class="keyword">const</span> <span class="keywordtype">size_t</span>&amp; min_tracks =</div>
-<div class="line"><span class="lineno">   89</span>      <span class="keyword">static_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(<a class="code hl_variable" href="classdyno_1_1FeatureTrackerBase.html#a04f0948954381269fedd5a6856662cb7">params_</a>.<a class="code hl_variable" href="structdyno_1_1TrackerParams.html#ad9ce927e92f2dfa82dd376094c6ab596">max_features_per_frame</a>);</div>
-<div class="line"><span class="lineno">   90</span>  <span class="keyword">const</span> <a class="code hl_typedef" href="namespacedyno.html#ac4303d6fafb755f794b072d76f9cfb41">FrameId</a> frame_k = image_container.frameId();</div>
-<div class="line"><span class="lineno">   91</span> </div>
-<div class="line"><span class="lineno">   92</span>  <span class="comment">// appy tracking (ie get correspondences)</span></div>
-<div class="line"><span class="lineno">   93</span>  <span class="comment">// TODO: only track frames that have been tracked for some time?</span></div>
-<div class="line"><span class="lineno">   94</span>  <span class="keywordflow">if</span> (previous_frame) {</div>
-<div class="line"><span class="lineno">   95</span>    <span class="comment">// TODO: for now assume consequative frames</span></div>
-<div class="line"><span class="lineno">   96</span>    <span class="keyword">const</span> <a class="code hl_typedef" href="namespacedyno.html#ac4303d6fafb755f794b072d76f9cfb41">FrameId</a> frame_k_1 = previous_frame-&gt;getFrameId();</div>
-<div class="line"><span class="lineno">   97</span>    CHECK_EQ(frame_k_1 + 1u, frame_k);</div>
-<div class="line"><span class="lineno">   98</span> </div>
-<div class="line"><span class="lineno">   99</span>    <span class="keywordflow">for</span> (Feature::Ptr previous_feature : previous_frame-&gt;static_features_) {</div>
-<div class="line"><span class="lineno">  100</span>      <span class="keyword">const</span> <span class="keywordtype">size_t</span> tracklet_id = previous_feature-&gt;trackletId();</div>
-<div class="line"><span class="lineno">  101</span>      <span class="keyword">const</span> <span class="keywordtype">size_t</span> age = previous_feature-&gt;age();</div>
-<div class="line"><span class="lineno">  102</span>      <span class="keyword">const</span> <a class="code hl_typedef" href="namespacedyno.html#aaa260a8022691078c59e1ac6a4fa05b5">Keypoint</a> kp = previous_feature-&gt;predictedKeypoint();</div>
-<div class="line"><span class="lineno">  103</span> </div>
-<div class="line"><span class="lineno">  104</span>      <span class="comment">// check kp contained before we do a static grid look up to ensure we</span></div>
-<div class="line"><span class="lineno">  105</span>      <span class="comment">// don&#39;t go out of bounds</span></div>
-<div class="line"><span class="lineno">  106</span>      <span class="keywordflow">if</span> (!<a class="code hl_variable" href="classdyno_1_1FeatureTrackerBase.html#abf6eba19baf18b1c3648347401c15a56">camera_</a>-&gt;isKeypointContained(kp)) {</div>
-<div class="line"><span class="lineno">  107</span>        <span class="keywordflow">continue</span>;</div>
-<div class="line"><span class="lineno">  108</span>      }</div>
-<div class="line"><span class="lineno">  109</span> </div>
-<div class="line"><span class="lineno">  110</span>      <span class="keyword">const</span> <span class="keywordtype">int</span> x = <a class="code hl_function" href="structdyno_1_1functional__keypoint.html#a3896d96a6f95b5311ae768cdd0ad97e8">functional_keypoint::u</a>(kp);</div>
-<div class="line"><span class="lineno">  111</span>      <span class="keyword">const</span> <span class="keywordtype">int</span> y = <a class="code hl_function" href="structdyno_1_1functional__keypoint.html#a24933450cad8bc70b7b76b339756cd94">functional_keypoint::v</a>(kp);</div>
-<div class="line"><span class="lineno">  112</span>      <span class="keyword">const</span> <span class="keywordtype">size_t</span> cell_idx = <a class="code hl_variable" href="classdyno_1_1ExternalFlowFeatureTracker.html#ac905f9e4d68d212d52c3f27f95e707c0">static_grid_</a>.<a class="code hl_function" href="classdyno_1_1OccupandyGrid2D.html#a47842553cb516c8c8d2490538973cd81">getCellIndex</a>(kp);</div>
-<div class="line"><span class="lineno">  113</span>      <span class="keyword">const</span> <a class="code hl_typedef" href="namespacedyno.html#a38bb86e4154b86428b8d133be03fb2b5">ObjectId</a> instance_label = motion_mask.at&lt;<a class="code hl_typedef" href="namespacedyno.html#a38bb86e4154b86428b8d133be03fb2b5">ObjectId</a>&gt;(y, x);</div>
-<div class="line"><span class="lineno">  114</span> </div>
-<div class="line"><span class="lineno">  115</span>      <span class="keywordflow">if</span> (<a class="code hl_variable" href="classdyno_1_1ExternalFlowFeatureTracker.html#ac905f9e4d68d212d52c3f27f95e707c0">static_grid_</a>.<a class="code hl_function" href="classdyno_1_1OccupandyGrid2D.html#aa5431f09664865ba805c56fd3e9772a5">isOccupied</a>(cell_idx)) <span class="keywordflow">continue</span>;</div>
-<div class="line"><span class="lineno">  116</span> </div>
-<div class="line"><span class="lineno">  117</span>      <span class="keywordflow">if</span> (previous_feature-&gt;usable() &amp;&amp; instance_label == <a class="code hl_variable" href="namespacedyno.html#ae78915ea0afc5025dafb398829f15ba3">background_label</a>) {</div>
-<div class="line"><span class="lineno">  118</span>        <span class="keywordtype">size_t</span> new_age = age + 1;</div>
-<div class="line"><span class="lineno">  119</span>        Feature::Ptr feature = <a class="code hl_function" href="classdyno_1_1ExternalFlowFeatureTracker.html#a9bc1bd98819dcd484c6cf62b3e1e5145">constructStaticFeature</a>(</div>
-<div class="line"><span class="lineno">  120</span>            image_container, kp, new_age, tracklet_id, frame_k);</div>
-<div class="line"><span class="lineno">  121</span>        <span class="keywordflow">if</span> (feature) {</div>
-<div class="line"><span class="lineno">  122</span>          static_features.add(feature);</div>
-<div class="line"><span class="lineno">  123</span>          <a class="code hl_variable" href="classdyno_1_1ExternalFlowFeatureTracker.html#ac905f9e4d68d212d52c3f27f95e707c0">static_grid_</a>.<a class="code hl_variable" href="classdyno_1_1OccupandyGrid2D.html#aee54969c36a674a9f7fe6f28aa412e29">occupancy_</a>[cell_idx] = <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  124</span>        }</div>
-<div class="line"><span class="lineno">  125</span>      }</div>
-<div class="line"><span class="lineno">  126</span>    }</div>
-<div class="line"><span class="lineno">  127</span>  }</div>
-<div class="line"><span class="lineno">  128</span> </div>
-<div class="line"><span class="lineno">  129</span>  <span class="comment">// number features tracked with optical flow</span></div>
-<div class="line"><span class="lineno">  130</span>  <span class="keyword">const</span> <span class="keyword">auto</span> n_optical_flow = static_features.size();</div>
-<div class="line"><span class="lineno">  131</span>  tracker_info.static_track_optical_flow = n_optical_flow;</div>
-<div class="line"><span class="lineno">  132</span> </div>
-<div class="line"><span class="lineno">  133</span>  TrackletIdManager&amp; tracked_id_manager = <a class="code hl_function" href="classdyno_1_1TrackletIdManager.html#a53cb3472fa0367b8dd2a9127111277b2">TrackletIdManager::instance</a>();</div>
-<div class="line"><span class="lineno">  134</span> </div>
-<div class="line"><span class="lineno">  135</span>  <span class="keywordflow">if</span> (static_features.size() &lt; min_tracks) {</div>
-<div class="line"><span class="lineno">  136</span>    <span class="comment">// iterate over new observations</span></div>
-<div class="line"><span class="lineno">  137</span>    <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; detected_keypoints.size(); i++) {</div>
-<div class="line"><span class="lineno">  138</span>      <span class="keywordflow">if</span> (static_features.size() &gt;= min_tracks) {</div>
-<div class="line"><span class="lineno">  139</span>        <span class="keywordflow">break</span>;</div>
-<div class="line"><span class="lineno">  140</span>      }</div>
-<div class="line"><span class="lineno">  141</span> </div>
-<div class="line"><span class="lineno">  142</span>      <span class="keyword">const</span> <a class="code hl_typedef" href="namespacedyno.html#ae0b7b312ca1880ca7030acdbe981966a">KeypointCV</a>&amp; kp_cv = detected_keypoints[i];</div>
-<div class="line"><span class="lineno">  143</span>      <span class="keyword">const</span> <span class="keywordtype">int</span>&amp; x = kp_cv.pt.x;</div>
-<div class="line"><span class="lineno">  144</span>      <span class="keyword">const</span> <span class="keywordtype">int</span>&amp; y = kp_cv.pt.y;</div>
-<div class="line"><span class="lineno">  145</span> </div>
-<div class="line"><span class="lineno">  146</span>      <span class="comment">// if not already tracked with optical flow</span></div>
-<div class="line"><span class="lineno">  147</span>      <span class="keywordflow">if</span> (motion_mask.at&lt;<span class="keywordtype">int</span>&gt;(y, x) != <a class="code hl_variable" href="namespacedyno.html#ae78915ea0afc5025dafb398829f15ba3">background_label</a>) {</div>
-<div class="line"><span class="lineno">  148</span>        <span class="keywordflow">continue</span>;</div>
-<div class="line"><span class="lineno">  149</span>      }</div>
-<div class="line"><span class="lineno">  150</span> </div>
-<div class="line"><span class="lineno">  151</span>      <a class="code hl_typedef" href="namespacedyno.html#aaa260a8022691078c59e1ac6a4fa05b5">Keypoint</a> kp(x, y);</div>
-<div class="line"><span class="lineno">  152</span>      <span class="keyword">const</span> <span class="keywordtype">size_t</span> cell_idx = <a class="code hl_variable" href="classdyno_1_1ExternalFlowFeatureTracker.html#ac905f9e4d68d212d52c3f27f95e707c0">static_grid_</a>.<a class="code hl_function" href="classdyno_1_1OccupandyGrid2D.html#a47842553cb516c8c8d2490538973cd81">getCellIndex</a>(kp);</div>
-<div class="line"><span class="lineno">  153</span>      <span class="keywordflow">if</span> (!<a class="code hl_variable" href="classdyno_1_1ExternalFlowFeatureTracker.html#ac905f9e4d68d212d52c3f27f95e707c0">static_grid_</a>.<a class="code hl_function" href="classdyno_1_1OccupandyGrid2D.html#aa5431f09664865ba805c56fd3e9772a5">isOccupied</a>(cell_idx)) {</div>
-<div class="line"><span class="lineno">  154</span>        <span class="keyword">const</span> <span class="keywordtype">size_t</span> age = 0;</div>
-<div class="line"><span class="lineno">  155</span>        <span class="keywordtype">size_t</span> tracklet_id = tracked_id_manager.getTrackletIdCount();</div>
-<div class="line"><span class="lineno">  156</span>        Feature::Ptr feature = <a class="code hl_function" href="classdyno_1_1ExternalFlowFeatureTracker.html#a9bc1bd98819dcd484c6cf62b3e1e5145">constructStaticFeature</a>(image_container, kp, age,</div>
-<div class="line"><span class="lineno">  157</span>                                                      tracklet_id, frame_k);</div>
-<div class="line"><span class="lineno">  158</span>        <span class="keywordflow">if</span> (feature) {</div>
-<div class="line"><span class="lineno">  159</span>          tracked_id_manager.incrementTrackletIdCount();</div>
-<div class="line"><span class="lineno">  160</span>          <a class="code hl_variable" href="classdyno_1_1ExternalFlowFeatureTracker.html#ac905f9e4d68d212d52c3f27f95e707c0">static_grid_</a>.<a class="code hl_variable" href="classdyno_1_1OccupandyGrid2D.html#aee54969c36a674a9f7fe6f28aa412e29">occupancy_</a>[cell_idx] = <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  161</span>          static_features.add(feature);</div>
-<div class="line"><span class="lineno">  162</span>        }</div>
-<div class="line"><span class="lineno">  163</span>      }</div>
-<div class="line"><span class="lineno">  164</span>    }</div>
-<div class="line"><span class="lineno">  165</span>  }</div>
-<div class="line"><span class="lineno">  166</span> </div>
-<div class="line"><span class="lineno">  167</span>  <a class="code hl_variable" href="classdyno_1_1ExternalFlowFeatureTracker.html#ac905f9e4d68d212d52c3f27f95e707c0">static_grid_</a>.<a class="code hl_function" href="classdyno_1_1OccupandyGrid2D.html#a6cc314a92fe52341f3bb3577c39ec439">reset</a>();</div>
-<div class="line"><span class="lineno">  168</span> </div>
-<div class="line"><span class="lineno">  169</span>  <span class="keywordtype">size_t</span> total_tracks = static_features.size();</div>
-<div class="line"><span class="lineno">  170</span>  tracker_info.static_track_detections = total_tracks - n_optical_flow;</div>
-<div class="line"><span class="lineno">  171</span>  <span class="keywordflow">return</span> static_features;</div>
-<div class="line"><span class="lineno">  172</span>}</div>
-<div class="ttc" id="aclassdyno_1_1ExternalFlowFeatureTracker_html_a9bc1bd98819dcd484c6cf62b3e1e5145"><div class="ttname"><a href="classdyno_1_1ExternalFlowFeatureTracker.html#a9bc1bd98819dcd484c6cf62b3e1e5145">dyno::ExternalFlowFeatureTracker::constructStaticFeature</a></div><div class="ttdeci">Feature::Ptr constructStaticFeature(const ImageContainer &amp;image_container, const Keypoint &amp;kp, size_t age, TrackletId tracklet_id, FrameId frame_id) const</div><div class="ttdef"><b>Definition:</b> <a href="StaticFeatureTracker_8cc_source.html#l00174">StaticFeatureTracker.cc:174</a></div></div>
-<div class="ttc" id="aclassdyno_1_1FeatureTrackerBase_html_a04f0948954381269fedd5a6856662cb7"><div class="ttname"><a href="classdyno_1_1FeatureTrackerBase.html#a04f0948954381269fedd5a6856662cb7">dyno::FeatureTrackerBase::params_</a></div><div class="ttdeci">const TrackerParams params_</div><div class="ttdef"><b>Definition:</b> <a href="FeatureTrackerBase_8hpp_source.html#l00166">FeatureTrackerBase.hpp:166</a></div></div>
-<div class="ttc" id="aclassdyno_1_1OccupandyGrid2D_html_a47842553cb516c8c8d2490538973cd81"><div class="ttname"><a href="classdyno_1_1OccupandyGrid2D.html#a47842553cb516c8c8d2490538973cd81">dyno::OccupandyGrid2D::getCellIndex</a></div><div class="ttdeci">size_t getCellIndex(const Eigen::MatrixBase&lt; Derived &gt; &amp;px) const</div><div class="ttdef"><b>Definition:</b> <a href="OccupancyGrid2D_8hpp_source.html#l00107">OccupancyGrid2D.hpp:107</a></div></div>
-<div class="ttc" id="aclassdyno_1_1OccupandyGrid2D_html_a6cc314a92fe52341f3bb3577c39ec439"><div class="ttname"><a href="classdyno_1_1OccupandyGrid2D.html#a6cc314a92fe52341f3bb3577c39ec439">dyno::OccupandyGrid2D::reset</a></div><div class="ttdeci">void reset()</div><div class="ttdef"><b>Definition:</b> <a href="OccupancyGrid2D_8hpp_source.html#l00074">OccupancyGrid2D.hpp:74</a></div></div>
-<div class="ttc" id="aclassdyno_1_1OccupandyGrid2D_html_aa5431f09664865ba805c56fd3e9772a5"><div class="ttname"><a href="classdyno_1_1OccupandyGrid2D.html#aa5431f09664865ba805c56fd3e9772a5">dyno::OccupandyGrid2D::isOccupied</a></div><div class="ttdeci">bool isOccupied(const size_t cell_index)</div><div class="ttdef"><b>Definition:</b> <a href="OccupancyGrid2D_8hpp_source.html#l00089">OccupancyGrid2D.hpp:89</a></div></div>
-<div class="ttc" id="aclassdyno_1_1OccupandyGrid2D_html_aee54969c36a674a9f7fe6f28aa412e29"><div class="ttname"><a href="classdyno_1_1OccupandyGrid2D.html#aee54969c36a674a9f7fe6f28aa412e29">dyno::OccupandyGrid2D::occupancy_</a></div><div class="ttdeci">Grid occupancy_</div><div class="ttdef"><b>Definition:</b> <a href="OccupancyGrid2D_8hpp_source.html#l00071">OccupancyGrid2D.hpp:71</a></div></div>
-<div class="ttc" id="aclassdyno_1_1TrackletIdManager_html_a53cb3472fa0367b8dd2a9127111277b2"><div class="ttname"><a href="classdyno_1_1TrackletIdManager.html#a53cb3472fa0367b8dd2a9127111277b2">dyno::TrackletIdManager::instance</a></div><div class="ttdeci">static TrackletIdManager &amp; instance()</div><div class="ttdef"><b>Definition:</b> <a href="FeatureTrackerBase_8hpp_source.html#l00052">FeatureTrackerBase.hpp:52</a></div></div>
-<div class="ttc" id="anamespacedyno_html_a38bb86e4154b86428b8d133be03fb2b5"><div class="ttname"><a href="namespacedyno.html#a38bb86e4154b86428b8d133be03fb2b5">dyno::ObjectId</a></div><div class="ttdeci">int ObjectId</div><div class="ttdoc">Discrete object id, j.</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00069">Types.hpp:69</a></div></div>
-<div class="ttc" id="anamespacedyno_html_ac4303d6fafb755f794b072d76f9cfb41"><div class="ttname"><a href="namespacedyno.html#ac4303d6fafb755f794b072d76f9cfb41">dyno::FrameId</a></div><div class="ttdeci">size_t FrameId</div><div class="ttdoc">Discrete time-step k.</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00073">Types.hpp:73</a></div></div>
-<div class="ttc" id="anamespacedyno_html_ae0b7b312ca1880ca7030acdbe981966a"><div class="ttname"><a href="namespacedyno.html#ae0b7b312ca1880ca7030acdbe981966a">dyno::KeypointCV</a></div><div class="ttdeci">cv::KeyPoint KeypointCV</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00102">Types.hpp:102</a></div></div>
-<div class="ttc" id="anamespacedyno_html_ae45b8b62a0efd7dbcf047db8751f6739"><div class="ttname"><a href="namespacedyno.html#ae45b8b62a0efd7dbcf047db8751f6739">dyno::KeypointsCV</a></div><div class="ttdeci">std::vector&lt; KeypointCV &gt; KeypointsCV</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00103">Types.hpp:103</a></div></div>
+<p class="definition">Definition at line <a class="el" href="StaticFeatureTracker_8cc_source.html#l00070">70</a> of file <a class="el" href="StaticFeatureTracker_8cc_source.html">StaticFeatureTracker.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   73</span>                                   {</div>
+<div class="line"><span class="lineno">   74</span>  <span class="keyword">const</span> ImageWrapper&lt;ImageType::RGBMono&gt;&amp; rgb_wrapper = image_container.rgb();</div>
+<div class="line"><span class="lineno">   75</span>  <span class="keyword">const</span> cv::Mat&amp; rgb = rgb_wrapper.toRGB();</div>
+<div class="line"><span class="lineno">   76</span>  cv::Mat mono = <a class="code hl_function" href="structdyno_1_1ImageType_1_1RGBMono.html#ac6c656492aaeff4bb8b60f42b0cfa7a3">ImageType::RGBMono::toMono</a>(rgb_wrapper);</div>
+<div class="line"><span class="lineno">   77</span>  CHECK(!mono.empty());</div>
+<div class="line"><span class="lineno">   78</span> </div>
+<div class="line"><span class="lineno">   79</span>  <span class="keyword">const</span> cv::Mat&amp; motion_mask = image_container.objectMotionMask();</div>
+<div class="line"><span class="lineno">   80</span>  CHECK(!motion_mask.empty());</div>
+<div class="line"><span class="lineno">   81</span> </div>
+<div class="line"><span class="lineno">   82</span>  cv::Mat descriptors;</div>
+<div class="line"><span class="lineno">   83</span>  <a class="code hl_typedef" href="namespacedyno.html#ae45b8b62a0efd7dbcf047db8751f6739">KeypointsCV</a> detected_keypoints;</div>
+<div class="line"><span class="lineno">   84</span>  (*orb_detector_)(mono, cv::Mat(), detected_keypoints, descriptors);</div>
+<div class="line"><span class="lineno">   85</span> </div>
+<div class="line"><span class="lineno">   86</span>  <span class="comment">// assign tracked features to grid and add to static features</span></div>
+<div class="line"><span class="lineno">   87</span>  FeatureContainer static_features;</div>
+<div class="line"><span class="lineno">   88</span> </div>
+<div class="line"><span class="lineno">   89</span>  <span class="keyword">const</span> <span class="keywordtype">size_t</span>&amp; min_tracks =</div>
+<div class="line"><span class="lineno">   90</span>      <span class="keyword">static_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(<a class="code hl_variable" href="classdyno_1_1FeatureTrackerBase.html#a04f0948954381269fedd5a6856662cb7">params_</a>.<a class="code hl_variable" href="structdyno_1_1TrackerParams.html#ad9ce927e92f2dfa82dd376094c6ab596">max_features_per_frame</a>);</div>
+<div class="line"><span class="lineno">   91</span>  <span class="keyword">const</span> <a class="code hl_typedef" href="namespacedyno.html#ac4303d6fafb755f794b072d76f9cfb41">FrameId</a> frame_k = image_container.frameId();</div>
+<div class="line"><span class="lineno">   92</span> </div>
+<div class="line"><span class="lineno">   93</span>  <span class="comment">// appy tracking (ie get correspondences)</span></div>
+<div class="line"><span class="lineno">   94</span>  <span class="comment">// TODO: only track frames that have been tracked for some time?</span></div>
+<div class="line"><span class="lineno">   95</span>  <span class="keywordflow">if</span> (previous_frame) {</div>
+<div class="line"><span class="lineno">   96</span>    <span class="comment">// TODO: for now assume consequative frames</span></div>
+<div class="line"><span class="lineno">   97</span>    <span class="keyword">const</span> <a class="code hl_typedef" href="namespacedyno.html#ac4303d6fafb755f794b072d76f9cfb41">FrameId</a> frame_k_1 = previous_frame-&gt;getFrameId();</div>
+<div class="line"><span class="lineno">   98</span>    CHECK_EQ(frame_k_1 + 1u, frame_k);</div>
+<div class="line"><span class="lineno">   99</span> </div>
+<div class="line"><span class="lineno">  100</span>    <span class="keywordflow">for</span> (Feature::Ptr previous_feature : previous_frame-&gt;static_features_) {</div>
+<div class="line"><span class="lineno">  101</span>      <span class="keyword">const</span> <span class="keywordtype">size_t</span> tracklet_id = previous_feature-&gt;trackletId();</div>
+<div class="line"><span class="lineno">  102</span>      <span class="keyword">const</span> <span class="keywordtype">size_t</span> age = previous_feature-&gt;age();</div>
+<div class="line"><span class="lineno">  103</span>      <span class="keyword">const</span> <a class="code hl_typedef" href="namespacedyno.html#aaa260a8022691078c59e1ac6a4fa05b5">Keypoint</a> kp = previous_feature-&gt;predictedKeypoint();</div>
+<div class="line"><span class="lineno">  104</span> </div>
+<div class="line"><span class="lineno">  105</span>      <span class="comment">// check kp contained before we do a static grid look up to ensure we</span></div>
+<div class="line"><span class="lineno">  106</span>      <span class="comment">// don&#39;t go out of bounds</span></div>
+<div class="line"><span class="lineno">  107</span>      <span class="keywordflow">if</span> (!<a class="code hl_variable" href="classdyno_1_1FeatureTrackerBase.html#abf6eba19baf18b1c3648347401c15a56">camera_</a>-&gt;isKeypointContained(kp)) {</div>
+<div class="line"><span class="lineno">  108</span>        <span class="keywordflow">continue</span>;</div>
+<div class="line"><span class="lineno">  109</span>      }</div>
+<div class="line"><span class="lineno">  110</span> </div>
+<div class="line"><span class="lineno">  111</span>      <span class="keyword">const</span> <span class="keywordtype">int</span> x = <a class="code hl_function" href="structdyno_1_1functional__keypoint.html#a3896d96a6f95b5311ae768cdd0ad97e8">functional_keypoint::u</a>(kp);</div>
+<div class="line"><span class="lineno">  112</span>      <span class="keyword">const</span> <span class="keywordtype">int</span> y = <a class="code hl_function" href="structdyno_1_1functional__keypoint.html#a24933450cad8bc70b7b76b339756cd94">functional_keypoint::v</a>(kp);</div>
+<div class="line"><span class="lineno">  113</span>      <span class="keyword">const</span> <span class="keywordtype">size_t</span> cell_idx = <a class="code hl_variable" href="classdyno_1_1ExternalFlowFeatureTracker.html#ac905f9e4d68d212d52c3f27f95e707c0">static_grid_</a>.<a class="code hl_function" href="classdyno_1_1OccupandyGrid2D.html#a47842553cb516c8c8d2490538973cd81">getCellIndex</a>(kp);</div>
+<div class="line"><span class="lineno">  114</span>      <span class="keyword">const</span> <a class="code hl_typedef" href="namespacedyno.html#a38bb86e4154b86428b8d133be03fb2b5">ObjectId</a> instance_label = motion_mask.at&lt;<a class="code hl_typedef" href="namespacedyno.html#a38bb86e4154b86428b8d133be03fb2b5">ObjectId</a>&gt;(y, x);</div>
+<div class="line"><span class="lineno">  115</span> </div>
+<div class="line"><span class="lineno">  116</span>      <span class="keywordflow">if</span> (<a class="code hl_variable" href="classdyno_1_1ExternalFlowFeatureTracker.html#ac905f9e4d68d212d52c3f27f95e707c0">static_grid_</a>.<a class="code hl_function" href="classdyno_1_1OccupandyGrid2D.html#aa5431f09664865ba805c56fd3e9772a5">isOccupied</a>(cell_idx)) <span class="keywordflow">continue</span>;</div>
+<div class="line"><span class="lineno">  117</span> </div>
+<div class="line"><span class="lineno">  118</span>      <span class="keywordflow">if</span> (previous_feature-&gt;usable() &amp;&amp; instance_label == <a class="code hl_variable" href="namespacedyno.html#ae78915ea0afc5025dafb398829f15ba3">background_label</a>) {</div>
+<div class="line"><span class="lineno">  119</span>        <span class="keywordtype">size_t</span> new_age = age + 1;</div>
+<div class="line"><span class="lineno">  120</span>        Feature::Ptr feature = <a class="code hl_function" href="classdyno_1_1ExternalFlowFeatureTracker.html#a9bc1bd98819dcd484c6cf62b3e1e5145">constructStaticFeature</a>(</div>
+<div class="line"><span class="lineno">  121</span>            image_container, kp, new_age, tracklet_id, frame_k);</div>
+<div class="line"><span class="lineno">  122</span>        <span class="keywordflow">if</span> (feature) {</div>
+<div class="line"><span class="lineno">  123</span>          static_features.add(feature);</div>
+<div class="line"><span class="lineno">  124</span>          <a class="code hl_variable" href="classdyno_1_1ExternalFlowFeatureTracker.html#ac905f9e4d68d212d52c3f27f95e707c0">static_grid_</a>.<a class="code hl_variable" href="classdyno_1_1OccupandyGrid2D.html#aee54969c36a674a9f7fe6f28aa412e29">occupancy_</a>[cell_idx] = <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  125</span>        }</div>
+<div class="line"><span class="lineno">  126</span>      }</div>
+<div class="line"><span class="lineno">  127</span>    }</div>
+<div class="line"><span class="lineno">  128</span>  }</div>
+<div class="line"><span class="lineno">  129</span> </div>
+<div class="line"><span class="lineno">  130</span>  <span class="comment">// number features tracked with optical flow</span></div>
+<div class="line"><span class="lineno">  131</span>  <span class="keyword">const</span> <span class="keyword">auto</span> n_optical_flow = static_features.size();</div>
+<div class="line"><span class="lineno">  132</span>  tracker_info.static_track_optical_flow = n_optical_flow;</div>
+<div class="line"><span class="lineno">  133</span> </div>
+<div class="line"><span class="lineno">  134</span>  TrackletIdManager&amp; tracked_id_manager = <a class="code hl_function" href="classdyno_1_1TrackletIdManager.html#a53cb3472fa0367b8dd2a9127111277b2">TrackletIdManager::instance</a>();</div>
+<div class="line"><span class="lineno">  135</span> </div>
+<div class="line"><span class="lineno">  136</span>  <span class="keywordflow">if</span> (static_features.size() &lt; min_tracks) {</div>
+<div class="line"><span class="lineno">  137</span>    <span class="comment">// iterate over new observations</span></div>
+<div class="line"><span class="lineno">  138</span>    <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; detected_keypoints.size(); i++) {</div>
+<div class="line"><span class="lineno">  139</span>      <span class="keywordflow">if</span> (static_features.size() &gt;= min_tracks) {</div>
+<div class="line"><span class="lineno">  140</span>        <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">  141</span>      }</div>
+<div class="line"><span class="lineno">  142</span> </div>
+<div class="line"><span class="lineno">  143</span>      <span class="keyword">const</span> <a class="code hl_typedef" href="namespacedyno.html#ae0b7b312ca1880ca7030acdbe981966a">KeypointCV</a>&amp; kp_cv = detected_keypoints[i];</div>
+<div class="line"><span class="lineno">  144</span>      <span class="keyword">const</span> <span class="keywordtype">int</span>&amp; x = kp_cv.pt.x;</div>
+<div class="line"><span class="lineno">  145</span>      <span class="keyword">const</span> <span class="keywordtype">int</span>&amp; y = kp_cv.pt.y;</div>
+<div class="line"><span class="lineno">  146</span> </div>
+<div class="line"><span class="lineno">  147</span>      <span class="comment">// if not already tracked with optical flow</span></div>
+<div class="line"><span class="lineno">  148</span>      <span class="keywordflow">if</span> (motion_mask.at&lt;<span class="keywordtype">int</span>&gt;(y, x) != <a class="code hl_variable" href="namespacedyno.html#ae78915ea0afc5025dafb398829f15ba3">background_label</a>) {</div>
+<div class="line"><span class="lineno">  149</span>        <span class="keywordflow">continue</span>;</div>
+<div class="line"><span class="lineno">  150</span>      }</div>
+<div class="line"><span class="lineno">  151</span> </div>
+<div class="line"><span class="lineno">  152</span>      <a class="code hl_typedef" href="namespacedyno.html#aaa260a8022691078c59e1ac6a4fa05b5">Keypoint</a> kp(x, y);</div>
+<div class="line"><span class="lineno">  153</span>      <span class="keyword">const</span> <span class="keywordtype">size_t</span> cell_idx = <a class="code hl_variable" href="classdyno_1_1ExternalFlowFeatureTracker.html#ac905f9e4d68d212d52c3f27f95e707c0">static_grid_</a>.<a class="code hl_function" href="classdyno_1_1OccupandyGrid2D.html#a47842553cb516c8c8d2490538973cd81">getCellIndex</a>(kp);</div>
+<div class="line"><span class="lineno">  154</span>      <span class="keywordflow">if</span> (!<a class="code hl_variable" href="classdyno_1_1ExternalFlowFeatureTracker.html#ac905f9e4d68d212d52c3f27f95e707c0">static_grid_</a>.<a class="code hl_function" href="classdyno_1_1OccupandyGrid2D.html#aa5431f09664865ba805c56fd3e9772a5">isOccupied</a>(cell_idx)) {</div>
+<div class="line"><span class="lineno">  155</span>        <span class="keyword">const</span> <span class="keywordtype">size_t</span> age = 0;</div>
+<div class="line"><span class="lineno">  156</span>        <span class="keywordtype">size_t</span> tracklet_id = tracked_id_manager.getTrackletIdCount();</div>
+<div class="line"><span class="lineno">  157</span>        Feature::Ptr feature = <a class="code hl_function" href="classdyno_1_1ExternalFlowFeatureTracker.html#a9bc1bd98819dcd484c6cf62b3e1e5145">constructStaticFeature</a>(image_container, kp, age,</div>
+<div class="line"><span class="lineno">  158</span>                                                      tracklet_id, frame_k);</div>
+<div class="line"><span class="lineno">  159</span>        <span class="keywordflow">if</span> (feature) {</div>
+<div class="line"><span class="lineno">  160</span>          tracked_id_manager.incrementTrackletIdCount();</div>
+<div class="line"><span class="lineno">  161</span>          <a class="code hl_variable" href="classdyno_1_1ExternalFlowFeatureTracker.html#ac905f9e4d68d212d52c3f27f95e707c0">static_grid_</a>.<a class="code hl_variable" href="classdyno_1_1OccupandyGrid2D.html#aee54969c36a674a9f7fe6f28aa412e29">occupancy_</a>[cell_idx] = <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  162</span>          static_features.add(feature);</div>
+<div class="line"><span class="lineno">  163</span>        }</div>
+<div class="line"><span class="lineno">  164</span>      }</div>
+<div class="line"><span class="lineno">  165</span>    }</div>
+<div class="line"><span class="lineno">  166</span>  }</div>
+<div class="line"><span class="lineno">  167</span> </div>
+<div class="line"><span class="lineno">  168</span>  <a class="code hl_variable" href="classdyno_1_1ExternalFlowFeatureTracker.html#ac905f9e4d68d212d52c3f27f95e707c0">static_grid_</a>.<a class="code hl_function" href="classdyno_1_1OccupandyGrid2D.html#a6cc314a92fe52341f3bb3577c39ec439">reset</a>();</div>
+<div class="line"><span class="lineno">  169</span> </div>
+<div class="line"><span class="lineno">  170</span>  <span class="keywordtype">size_t</span> total_tracks = static_features.size();</div>
+<div class="line"><span class="lineno">  171</span>  tracker_info.static_track_detections = total_tracks - n_optical_flow;</div>
+<div class="line"><span class="lineno">  172</span>  <span class="keywordflow">return</span> static_features;</div>
+<div class="line"><span class="lineno">  173</span>}</div>
+<div class="ttc" id="aclassdyno_1_1ExternalFlowFeatureTracker_html_a9bc1bd98819dcd484c6cf62b3e1e5145"><div class="ttname"><a href="classdyno_1_1ExternalFlowFeatureTracker.html#a9bc1bd98819dcd484c6cf62b3e1e5145">dyno::ExternalFlowFeatureTracker::constructStaticFeature</a></div><div class="ttdeci">Feature::Ptr constructStaticFeature(const ImageContainer &amp;image_container, const Keypoint &amp;kp, size_t age, TrackletId tracklet_id, FrameId frame_id) const</div><div class="ttdef"><b>Definition:</b> <a href="StaticFeatureTracker_8cc_source.html#l00175">StaticFeatureTracker.cc:175</a></div></div>
+<div class="ttc" id="aclassdyno_1_1FeatureTrackerBase_html_a04f0948954381269fedd5a6856662cb7"><div class="ttname"><a href="classdyno_1_1FeatureTrackerBase.html#a04f0948954381269fedd5a6856662cb7">dyno::FeatureTrackerBase::params_</a></div><div class="ttdeci">const TrackerParams params_</div><div class="ttdef"><b>Definition:</b> <a href="FeatureTrackerBase_8hpp_source.html#l00173">FeatureTrackerBase.hpp:173</a></div></div>
+<div class="ttc" id="aclassdyno_1_1OccupandyGrid2D_html_a47842553cb516c8c8d2490538973cd81"><div class="ttname"><a href="classdyno_1_1OccupandyGrid2D.html#a47842553cb516c8c8d2490538973cd81">dyno::OccupandyGrid2D::getCellIndex</a></div><div class="ttdeci">size_t getCellIndex(const Eigen::MatrixBase&lt; Derived &gt; &amp;px) const</div><div class="ttdef"><b>Definition:</b> <a href="OccupancyGrid2D_8hpp_source.html#l00096">OccupancyGrid2D.hpp:96</a></div></div>
+<div class="ttc" id="aclassdyno_1_1OccupandyGrid2D_html_a6cc314a92fe52341f3bb3577c39ec439"><div class="ttname"><a href="classdyno_1_1OccupandyGrid2D.html#a6cc314a92fe52341f3bb3577c39ec439">dyno::OccupandyGrid2D::reset</a></div><div class="ttdeci">void reset()</div><div class="ttdef"><b>Definition:</b> <a href="OccupancyGrid2D_8hpp_source.html#l00073">OccupancyGrid2D.hpp:73</a></div></div>
+<div class="ttc" id="aclassdyno_1_1OccupandyGrid2D_html_aa5431f09664865ba805c56fd3e9772a5"><div class="ttname"><a href="classdyno_1_1OccupandyGrid2D.html#aa5431f09664865ba805c56fd3e9772a5">dyno::OccupandyGrid2D::isOccupied</a></div><div class="ttdeci">bool isOccupied(const size_t cell_index)</div><div class="ttdef"><b>Definition:</b> <a href="OccupancyGrid2D_8hpp_source.html#l00081">OccupancyGrid2D.hpp:81</a></div></div>
+<div class="ttc" id="aclassdyno_1_1OccupandyGrid2D_html_aee54969c36a674a9f7fe6f28aa412e29"><div class="ttname"><a href="classdyno_1_1OccupandyGrid2D.html#aee54969c36a674a9f7fe6f28aa412e29">dyno::OccupandyGrid2D::occupancy_</a></div><div class="ttdeci">Grid occupancy_</div><div class="ttdef"><b>Definition:</b> <a href="OccupancyGrid2D_8hpp_source.html#l00070">OccupancyGrid2D.hpp:70</a></div></div>
+<div class="ttc" id="aclassdyno_1_1TrackletIdManager_html_a53cb3472fa0367b8dd2a9127111277b2"><div class="ttname"><a href="classdyno_1_1TrackletIdManager.html#a53cb3472fa0367b8dd2a9127111277b2">dyno::TrackletIdManager::instance</a></div><div class="ttdeci">static TrackletIdManager &amp; instance()</div><div class="ttdef"><b>Definition:</b> <a href="FeatureTrackerBase_8hpp_source.html#l00054">FeatureTrackerBase.hpp:54</a></div></div>
+<div class="ttc" id="anamespacedyno_html_a38bb86e4154b86428b8d133be03fb2b5"><div class="ttname"><a href="namespacedyno.html#a38bb86e4154b86428b8d133be03fb2b5">dyno::ObjectId</a></div><div class="ttdeci">int ObjectId</div><div class="ttdoc">Discrete object id, j.</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00070">Types.hpp:70</a></div></div>
+<div class="ttc" id="anamespacedyno_html_ac4303d6fafb755f794b072d76f9cfb41"><div class="ttname"><a href="namespacedyno.html#ac4303d6fafb755f794b072d76f9cfb41">dyno::FrameId</a></div><div class="ttdeci">size_t FrameId</div><div class="ttdoc">Discrete time-step k.</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00074">Types.hpp:74</a></div></div>
+<div class="ttc" id="anamespacedyno_html_ae0b7b312ca1880ca7030acdbe981966a"><div class="ttname"><a href="namespacedyno.html#ae0b7b312ca1880ca7030acdbe981966a">dyno::KeypointCV</a></div><div class="ttdeci">cv::KeyPoint KeypointCV</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00103">Types.hpp:103</a></div></div>
+<div class="ttc" id="anamespacedyno_html_ae45b8b62a0efd7dbcf047db8751f6739"><div class="ttname"><a href="namespacedyno.html#ae45b8b62a0efd7dbcf047db8751f6739">dyno::KeypointsCV</a></div><div class="ttdeci">std::vector&lt; KeypointCV &gt; KeypointsCV</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00104">Types.hpp:104</a></div></div>
 <div class="ttc" id="astructdyno_1_1ImageType_1_1RGBMono_html_ac6c656492aaeff4bb8b60f42b0cfa7a3"><div class="ttname"><a href="structdyno_1_1ImageType_1_1RGBMono.html#ac6c656492aaeff4bb8b60f42b0cfa7a3">dyno::ImageType::RGBMono::toMono</a></div><div class="ttdeci">static cv::Mat toMono(const ImageWrapper&lt; RGBMono &gt; &amp;image)</div><div class="ttdef"><b>Definition:</b> <a href="ImageTypes_8cc_source.html#l00119">ImageTypes.cc:119</a></div></div>
-<div class="ttc" id="astructdyno_1_1TrackerParams_html_ad9ce927e92f2dfa82dd376094c6ab596"><div class="ttname"><a href="structdyno_1_1TrackerParams.html#ad9ce927e92f2dfa82dd376094c6ab596">dyno::TrackerParams::max_features_per_frame</a></div><div class="ttdeci">int max_features_per_frame</div><div class="ttdef"><b>Definition:</b> <a href="TrackerParams_8hpp_source.html#l00111">TrackerParams.hpp:111</a></div></div>
+<div class="ttc" id="astructdyno_1_1TrackerParams_html_ad9ce927e92f2dfa82dd376094c6ab596"><div class="ttname"><a href="structdyno_1_1TrackerParams.html#ad9ce927e92f2dfa82dd376094c6ab596">dyno::TrackerParams::max_features_per_frame</a></div><div class="ttdeci">int max_features_per_frame</div><div class="ttdoc">Maximum number of features to be detected after ANMS.</div><div class="ttdef"><b>Definition:</b> <a href="TrackerParams_8hpp_source.html#l00114">TrackerParams.hpp:114</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="namespacedyno.html#ae78915ea0afc5025dafb398829f15ba3">dyno::background_label</a>, <a class="el" href="classdyno_1_1FeatureTrackerBase.html#abf6eba19baf18b1c3648347401c15a56">dyno::FeatureTrackerBase::camera_</a>, <a class="el" href="classdyno_1_1ExternalFlowFeatureTracker.html#a9bc1bd98819dcd484c6cf62b3e1e5145">constructStaticFeature()</a>, <a class="el" href="classdyno_1_1ImageContainer.html#ae5023f3df359ad7a5196ce15cd632ca3">dyno::ImageContainer::frameId()</a>, <a class="el" href="classdyno_1_1OccupandyGrid2D.html#a47842553cb516c8c8d2490538973cd81">dyno::OccupandyGrid2D::getCellIndex()</a>, <a class="el" href="classdyno_1_1TrackletIdManager.html#ab7ec1738de58e54adbdad49f1f44f7ae">dyno::TrackletIdManager::getTrackletIdCount()</a>, <a class="el" href="classdyno_1_1TrackletIdManager.html#a5b83806eebd74cfafc4d706cd4182c6b">dyno::TrackletIdManager::incrementTrackletIdCount()</a>, <a class="el" href="classdyno_1_1TrackletIdManager.html#a53cb3472fa0367b8dd2a9127111277b2">dyno::TrackletIdManager::instance()</a>, <a class="el" href="classdyno_1_1OccupandyGrid2D.html#aa5431f09664865ba805c56fd3e9772a5">dyno::OccupandyGrid2D::isOccupied()</a>, <a class="el" href="structdyno_1_1TrackerParams.html#ad9ce927e92f2dfa82dd376094c6ab596">dyno::TrackerParams::max_features_per_frame</a>, <a class="el" href="classdyno_1_1ImageContainer.html#ae5eead678f02be0ab9de7464e1833c55">dyno::ImageContainer::objectMotionMask()</a>, <a class="el" href="classdyno_1_1OccupandyGrid2D.html#aee54969c36a674a9f7fe6f28aa412e29">dyno::OccupandyGrid2D::occupancy_</a>, <a class="el" href="classdyno_1_1FeatureTrackerBase.html#a04f0948954381269fedd5a6856662cb7">dyno::FeatureTrackerBase::params_</a>, <a class="el" href="classdyno_1_1OccupandyGrid2D.html#a6cc314a92fe52341f3bb3577c39ec439">dyno::OccupandyGrid2D::reset()</a>, <a class="el" href="classdyno_1_1ImageContainer.html#a6f35259f95c31b861ff6515c159e1ee3">dyno::ImageContainer::rgb()</a>, <a class="el" href="classdyno_1_1ExternalFlowFeatureTracker.html#ac905f9e4d68d212d52c3f27f95e707c0">static_grid_</a>, <a class="el" href="structdyno_1_1FeatureTrackerInfo.html#a28c134cb8fd5e56abc9b0fe8d92955c5">dyno::FeatureTrackerInfo::static_track_detections</a>, <a class="el" href="structdyno_1_1FeatureTrackerInfo.html#a11ddaea878d4040f670152dc27ed43dd">dyno::FeatureTrackerInfo::static_track_optical_flow</a>, <a class="el" href="structdyno_1_1ImageType_1_1RGBMono.html#ac6c656492aaeff4bb8b60f42b0cfa7a3">dyno::ImageType::RGBMono::toMono()</a>, <a class="el" href="structdyno_1_1ImageWrapper.html#a6b631c61d9d29c4317e7660f75d85a45">dyno::ImageWrapper&lt; IMAGETYPE &gt;::toRGB()</a>, <a class="el" href="structdyno_1_1functional__keypoint.html#a3896d96a6f95b5311ae768cdd0ad97e8">dyno::functional_keypoint::u()</a>, and <a class="el" href="structdyno_1_1functional__keypoint.html#a24933450cad8bc70b7b76b339756cd94">dyno::functional_keypoint::v()</a>.</p>
 <div class="dynheader">
@@ -607,7 +609,7 @@ Here is the call graph for this function:</div>
 
 <p>Grid used to feature bin static features. </p>
 
-<p class="definition">Definition at line <a class="el" href="StaticFeatureTracker_8hpp_source.html#l00097">97</a> of file <a class="el" href="StaticFeatureTracker_8hpp_source.html">StaticFeatureTracker.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="StaticFeatureTracker_8hpp_source.html#l00098">98</a> of file <a class="el" href="StaticFeatureTracker_8hpp_source.html">StaticFeatureTracker.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1ExternalFlowFeatureTracker.html#a0181662d79f3c451929ceb09e71bca89">ExternalFlowFeatureTracker()</a>.</p>
 
@@ -635,7 +637,7 @@ Here is the call graph for this function:</div>
 <b>Initial value:</b><div class="fragment"><div class="line">=</div>
 <div class="line">      15</div>
 </div><!-- fragment -->
-<p class="definition">Definition at line <a class="el" href="StaticFeatureTracker_8hpp_source.html#l00099">99</a> of file <a class="el" href="StaticFeatureTracker_8hpp_source.html">StaticFeatureTracker.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="StaticFeatureTracker_8hpp_source.html#l00100">100</a> of file <a class="el" href="StaticFeatureTracker_8hpp_source.html">StaticFeatureTracker.hpp</a>.</p>
 
 </div>
 </div>
@@ -659,7 +661,7 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="StaticFeatureTracker_8hpp_source.html#l00096">96</a> of file <a class="el" href="StaticFeatureTracker_8hpp_source.html">StaticFeatureTracker.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="StaticFeatureTracker_8hpp_source.html#l00097">97</a> of file <a class="el" href="StaticFeatureTracker_8hpp_source.html">StaticFeatureTracker.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1ExternalFlowFeatureTracker.html#aedf0b07caf85d853756cb878f22d2ad7">trackStatic()</a>.</p>
 

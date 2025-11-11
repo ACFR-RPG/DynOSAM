@@ -9,7 +9,7 @@
 <area shape="rect" id="node7" href="$classdyno_1_1CameraParams.html#ac5f6ec080db908038d9928c3a493327b" title="Get the camera extrinsics &#45; the transform of the camera in the body frame (e.g T_robot_camera or ^RT_..." alt="" coords="511,197,672,237"/>
 <area shape="rect" id="node8" href="$classdyno_1_1CameraParams.html#abee4c6077c08a626e78d8bdab667b935" title=" " alt="" coords="511,261,672,301"/>
 <area shape="rect" id="node9" href="$namespacedyno_1_1utils.html#ae07df9c266ca251a8892fd9ad371dab5" title="Converts a gtsam pose3 to a 3x3 rotation matrix and translation vector in opencv format (note: the fu..." alt="" coords="499,326,684,351"/>
-<area shape="rect" id="node12" href="$namespacedyno.html#a809604e427db44cbf532a545c71a3b5d" title=" " alt="" coords="532,375,651,401"/>
+<area shape="rect" id="node12" href="$namespacedyno.html#a8d1f85752688bf072f23fa6e8a1bde34" title=" " alt="" coords="532,375,651,401"/>
 <area shape="rect" id="node10" href="$namespacedyno_1_1utils.html#a1acd48b0777dc5cc242c9a1fa2cac2d4" title=" " alt="" coords="732,287,921,327"/>
 <area shape="rect" id="node11" href="$namespacedyno_1_1utils.html#abe9a814a0ae44a165baa1812835c833b" title=" " alt="" coords="733,351,921,391"/>
 </map>

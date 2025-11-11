@@ -86,6 +86,9 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
+<p>Basic class to contain Images which are the input for the DynoSAM system. Instead of just containing a map of cv::Mat's we wrap each image using a <a class="el" href="structdyno_1_1ImageType.html">ImageType</a> which provides a way of abstracting the 'meaning' of each image given its purpose (ie. an rgb image is different in both data-type and value meaning than the motion-mask).  
+ <a href="classdyno_1_1ImageContainer.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="ImageContainer_8hpp_source.html">ImageContainer.hpp</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
@@ -111,6 +114,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a4f681829e1f66ef2a4d4cd847510c468"><td class="memTemplParams" colspan="2">template&lt;typename IMAGETYPE &gt; </td></tr>
 <tr class="memitem:a4f681829e1f66ef2a4d4cd847510c468"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classdyno_1_1ImageContainer.html">ImageContainer</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classdyno_1_1ImageContainer.html#a4f681829e1f66ef2a4d4cd847510c468">add</a> (const std::string &amp;key, const cv::Mat &amp;image)</td></tr>
 <tr class="separator:a4f681829e1f66ef2a4d4cd847510c468"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0f5c67b77443b776a57d5ec38ddad291"><td class="memTemplParams" colspan="2">template&lt;typename IMAGETYPE &gt; </td></tr>
+<tr class="memitem:a0f5c67b77443b776a57d5ec38ddad291"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classdyno_1_1ImageContainer.html">ImageContainer</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classdyno_1_1ImageContainer.html#a0f5c67b77443b776a57d5ec38ddad291">replace</a> (const std::string &amp;key, const cv::Mat &amp;image)</td></tr>
+<tr class="separator:a0f5c67b77443b776a57d5ec38ddad291"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac2e7c0a6c4a9eeac98b4ef04a48bd59d"><td class="memTemplParams" colspan="2">template&lt;typename IMAGETYPE &gt; </td></tr>
 <tr class="memitem:ac2e7c0a6c4a9eeac98b4ef04a48bd59d"><td class="memTemplItemLeft" align="right" valign="top">const <a class="el" href="structdyno_1_1ImageWrapper.html">ImageWrapper</a>&lt; IMAGETYPE &gt; &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classdyno_1_1ImageContainer.html#ac2e7c0a6c4a9eeac98b4ef04a48bd59d">at</a> (const std::string &amp;key) const</td></tr>
 <tr class="separator:ac2e7c0a6c4a9eeac98b4ef04a48bd59d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -204,8 +210,12 @@ Friends</h2></td></tr>
 <tr class="separator:a269a8c0423dd6bde25cbb0878c953e35"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock">
-<p class="definition">Definition at line <a class="el" href="ImageContainer_8hpp_source.html#l00474">474</a> of file <a class="el" href="ImageContainer_8hpp_source.html">ImageContainer.hpp</a>.</p>
+<div class="textblock"><p>Basic class to contain Images which are the input for the DynoSAM system. Instead of just containing a map of cv::Mat's we wrap each image using a <a class="el" href="structdyno_1_1ImageType.html">ImageType</a> which provides a way of abstracting the 'meaning' of each image given its purpose (ie. an rgb image is different in both data-type and value meaning than the motion-mask). </p>
+<p>This allows for checking that each image has the correct properties and allows for easier handling of common functionn that differ in implementation for each image type.</p>
+<p>Each image is associated with a key, allowing dynamic allocation of images and input depending on what is abvailable ie. this class can represent a stereo-pair/RGB-D pair and monocular camera, plus the pre-processed optical flow and semantic/motion mask for a single timestamp.</p>
+<p>This class also atttempt to mimic the copy/assignment behaviour of the cv::Mat class everything is a shallow copy until specified with clone </p>
+
+<p class="definition">Definition at line <a class="el" href="ImageContainer_8hpp_source.html#l00109">109</a> of file <a class="el" href="ImageContainer_8hpp_source.html">ImageContainer.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a1efc7581d6f6b6416b10fbc528d59ae5" name="a1efc7581d6f6b6416b10fbc528d59ae5"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1efc7581d6f6b6416b10fbc528d59ae5">&#9670;&#160;</a></span>ImageContainer() <span class="overload">[1/4]</span></h2>
@@ -241,12 +251,12 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ImageContainer_8hpp_source.html#l00601">601</a> of file <a class="el" href="ImageContainer_8hpp_source.html">ImageContainer.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  602</span>      : <a class="code hl_variable" href="classdyno_1_1ImageContainer.html#abb77bc22c51d38c0d1f2d8a986fee9c4">frame_id_</a>(frame_id), <a class="code hl_variable" href="classdyno_1_1ImageContainer.html#ad76d5a8374e5b4d2c7b09970c1f92c05">timestamp_</a>(<a class="code hl_function" href="classdyno_1_1ImageContainer.html#a3f689f6b6b79c8ba776e5ebe483dc3e4">timestamp</a>), <a class="code hl_variable" href="classdyno_1_1ImageContainer.html#aa4dbde4b9c3ea19893f9ea458f4805d1">images_</a>() {}</div>
-<div class="ttc" id="aclassdyno_1_1ImageContainer_html_a3f689f6b6b79c8ba776e5ebe483dc3e4"><div class="ttname"><a href="classdyno_1_1ImageContainer.html#a3f689f6b6b79c8ba776e5ebe483dc3e4">dyno::ImageContainer::timestamp</a></div><div class="ttdeci">Timestamp timestamp() const</div><div class="ttdef"><b>Definition:</b> <a href="ImageContainer_8hpp_source.html#l00683">ImageContainer.hpp:683</a></div></div>
-<div class="ttc" id="aclassdyno_1_1ImageContainer_html_aa4dbde4b9c3ea19893f9ea458f4805d1"><div class="ttname"><a href="classdyno_1_1ImageContainer.html#aa4dbde4b9c3ea19893f9ea458f4805d1">dyno::ImageContainer::images_</a></div><div class="ttdeci">gtsam::FastMap&lt; std::string, KeyImagePair &gt; images_</div><div class="ttdef"><b>Definition:</b> <a href="ImageContainer_8hpp_source.html#l00589">ImageContainer.hpp:589</a></div></div>
-<div class="ttc" id="aclassdyno_1_1ImageContainer_html_abb77bc22c51d38c0d1f2d8a986fee9c4"><div class="ttname"><a href="classdyno_1_1ImageContainer.html#abb77bc22c51d38c0d1f2d8a986fee9c4">dyno::ImageContainer::frame_id_</a></div><div class="ttdeci">FrameId frame_id_</div><div class="ttdef"><b>Definition:</b> <a href="ImageContainer_8hpp_source.html#l00587">ImageContainer.hpp:587</a></div></div>
-<div class="ttc" id="aclassdyno_1_1ImageContainer_html_ad76d5a8374e5b4d2c7b09970c1f92c05"><div class="ttname"><a href="classdyno_1_1ImageContainer.html#ad76d5a8374e5b4d2c7b09970c1f92c05">dyno::ImageContainer::timestamp_</a></div><div class="ttdeci">Timestamp timestamp_</div><div class="ttdef"><b>Definition:</b> <a href="ImageContainer_8hpp_source.html#l00588">ImageContainer.hpp:588</a></div></div>
+<p class="definition">Definition at line <a class="el" href="ImageContainer_8hpp_source.html#l00236">236</a> of file <a class="el" href="ImageContainer_8hpp_source.html">ImageContainer.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  237</span>      : <a class="code hl_variable" href="classdyno_1_1ImageContainer.html#abb77bc22c51d38c0d1f2d8a986fee9c4">frame_id_</a>(frame_id), <a class="code hl_variable" href="classdyno_1_1ImageContainer.html#ad76d5a8374e5b4d2c7b09970c1f92c05">timestamp_</a>(<a class="code hl_function" href="classdyno_1_1ImageContainer.html#a3f689f6b6b79c8ba776e5ebe483dc3e4">timestamp</a>), <a class="code hl_variable" href="classdyno_1_1ImageContainer.html#aa4dbde4b9c3ea19893f9ea458f4805d1">images_</a>() {}</div>
+<div class="ttc" id="aclassdyno_1_1ImageContainer_html_a3f689f6b6b79c8ba776e5ebe483dc3e4"><div class="ttname"><a href="classdyno_1_1ImageContainer.html#a3f689f6b6b79c8ba776e5ebe483dc3e4">dyno::ImageContainer::timestamp</a></div><div class="ttdeci">Timestamp timestamp() const</div><div class="ttdef"><b>Definition:</b> <a href="ImageContainer_8hpp_source.html#l00329">ImageContainer.hpp:329</a></div></div>
+<div class="ttc" id="aclassdyno_1_1ImageContainer_html_aa4dbde4b9c3ea19893f9ea458f4805d1"><div class="ttname"><a href="classdyno_1_1ImageContainer.html#aa4dbde4b9c3ea19893f9ea458f4805d1">dyno::ImageContainer::images_</a></div><div class="ttdeci">gtsam::FastMap&lt; std::string, KeyImagePair &gt; images_</div><div class="ttdef"><b>Definition:</b> <a href="ImageContainer_8hpp_source.html#l00224">ImageContainer.hpp:224</a></div></div>
+<div class="ttc" id="aclassdyno_1_1ImageContainer_html_abb77bc22c51d38c0d1f2d8a986fee9c4"><div class="ttname"><a href="classdyno_1_1ImageContainer.html#abb77bc22c51d38c0d1f2d8a986fee9c4">dyno::ImageContainer::frame_id_</a></div><div class="ttdeci">FrameId frame_id_</div><div class="ttdef"><b>Definition:</b> <a href="ImageContainer_8hpp_source.html#l00222">ImageContainer.hpp:222</a></div></div>
+<div class="ttc" id="aclassdyno_1_1ImageContainer_html_ad76d5a8374e5b4d2c7b09970c1f92c05"><div class="ttname"><a href="classdyno_1_1ImageContainer.html#ad76d5a8374e5b4d2c7b09970c1f92c05">dyno::ImageContainer::timestamp_</a></div><div class="ttdeci">Timestamp timestamp_</div><div class="ttdef"><b>Definition:</b> <a href="ImageContainer_8hpp_source.html#l00223">ImageContainer.hpp:223</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -273,9 +283,9 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ImageContainer_8hpp_source.html#l00603">603</a> of file <a class="el" href="ImageContainer_8hpp_source.html">ImageContainer.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  603</span>: <a class="code hl_variable" href="classdyno_1_1ImageContainer.html#abb77bc22c51d38c0d1f2d8a986fee9c4">frame_id_</a>(0), <a class="code hl_variable" href="classdyno_1_1ImageContainer.html#ad76d5a8374e5b4d2c7b09970c1f92c05">timestamp_</a>(<a class="code hl_variable" href="namespacedyno.html#a2e99b101c8ce8e7c133daeb89d93adf1">InvalidTimestamp</a>), <a class="code hl_variable" href="classdyno_1_1ImageContainer.html#aa4dbde4b9c3ea19893f9ea458f4805d1">images_</a>() {}</div>
-<div class="ttc" id="anamespacedyno_html_a2e99b101c8ce8e7c133daeb89d93adf1"><div class="ttname"><a href="namespacedyno.html#a2e99b101c8ce8e7c133daeb89d93adf1">dyno::InvalidTimestamp</a></div><div class="ttdeci">static constexpr Timestamp InvalidTimestamp</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00066">Types.hpp:66</a></div></div>
+<p class="definition">Definition at line <a class="el" href="ImageContainer_8hpp_source.html#l00238">238</a> of file <a class="el" href="ImageContainer_8hpp_source.html">ImageContainer.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  238</span>: <a class="code hl_variable" href="classdyno_1_1ImageContainer.html#abb77bc22c51d38c0d1f2d8a986fee9c4">frame_id_</a>(0), <a class="code hl_variable" href="classdyno_1_1ImageContainer.html#ad76d5a8374e5b4d2c7b09970c1f92c05">timestamp_</a>(<a class="code hl_variable" href="namespacedyno.html#a2e99b101c8ce8e7c133daeb89d93adf1">InvalidTimestamp</a>), <a class="code hl_variable" href="classdyno_1_1ImageContainer.html#aa4dbde4b9c3ea19893f9ea458f4805d1">images_</a>() {}</div>
+<div class="ttc" id="anamespacedyno_html_a2e99b101c8ce8e7c133daeb89d93adf1"><div class="ttname"><a href="namespacedyno.html#a2e99b101c8ce8e7c133daeb89d93adf1">dyno::InvalidTimestamp</a></div><div class="ttdeci">static constexpr Timestamp InvalidTimestamp</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00067">Types.hpp:67</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -303,13 +313,13 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ImageContainer_8hpp_source.html#l00605">605</a> of file <a class="el" href="ImageContainer_8hpp_source.html">ImageContainer.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  606</span>      : <a class="code hl_variable" href="classdyno_1_1ImageContainer.html#abb77bc22c51d38c0d1f2d8a986fee9c4">frame_id_</a>(other.frame_id_), <a class="code hl_variable" href="classdyno_1_1ImageContainer.html#ad76d5a8374e5b4d2c7b09970c1f92c05">timestamp_</a>(other.timestamp_) {</div>
-<div class="line"><span class="lineno">  607</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [k, v] : other.images_) {</div>
-<div class="line"><span class="lineno">  608</span>      <a class="code hl_variable" href="classdyno_1_1ImageContainer.html#aa4dbde4b9c3ea19893f9ea458f4805d1">images_</a>.emplace(</div>
-<div class="line"><span class="lineno">  609</span>          k, v);  <span class="comment">// Uses KeyImagePair copy ctor above (ie. shallow image copy)</span></div>
-<div class="line"><span class="lineno">  610</span>    }</div>
-<div class="line"><span class="lineno">  611</span>  }</div>
+<p class="definition">Definition at line <a class="el" href="ImageContainer_8hpp_source.html#l00240">240</a> of file <a class="el" href="ImageContainer_8hpp_source.html">ImageContainer.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  241</span>      : <a class="code hl_variable" href="classdyno_1_1ImageContainer.html#abb77bc22c51d38c0d1f2d8a986fee9c4">frame_id_</a>(other.frame_id_), <a class="code hl_variable" href="classdyno_1_1ImageContainer.html#ad76d5a8374e5b4d2c7b09970c1f92c05">timestamp_</a>(other.timestamp_) {</div>
+<div class="line"><span class="lineno">  242</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [k, v] : other.images_) {</div>
+<div class="line"><span class="lineno">  243</span>      <a class="code hl_variable" href="classdyno_1_1ImageContainer.html#aa4dbde4b9c3ea19893f9ea458f4805d1">images_</a>.emplace(</div>
+<div class="line"><span class="lineno">  244</span>          k, v);  <span class="comment">// Uses KeyImagePair copy ctor above (ie. shallow image copy)</span></div>
+<div class="line"><span class="lineno">  245</span>    }</div>
+<div class="line"><span class="lineno">  246</span>  }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1ImageContainer.html#aa4dbde4b9c3ea19893f9ea458f4805d1">images_</a>.</p>
 
@@ -378,18 +388,18 @@ template&lt;typename IMAGETYPE &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ImageContainer_8hpp_source.html#l00629">629</a> of file <a class="el" href="ImageContainer_8hpp_source.html">ImageContainer.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  629</span>                                                                {</div>
-<div class="line"><span class="lineno">  630</span>    <span class="keywordflow">if</span> (<a class="code hl_function" href="classdyno_1_1ImageContainer.html#a2cd4807310bce124878792073e9122e9">exists</a>(key)) {</div>
-<div class="line"><span class="lineno">  631</span>      <span class="keywordflow">throw</span> ImageKeyAlreadyExists(key);</div>
-<div class="line"><span class="lineno">  632</span>    }</div>
-<div class="line"><span class="lineno">  633</span> </div>
-<div class="line"><span class="lineno">  634</span>    KeyImagePair key_image = KeyImagePair::Create&lt;IMAGETYPE&gt;(key, image);</div>
-<div class="line"><span class="lineno">  635</span>    <a class="code hl_variable" href="classdyno_1_1ImageContainer.html#aa4dbde4b9c3ea19893f9ea458f4805d1">images_</a>.insert({key, std::move(key_image)});</div>
-<div class="line"><span class="lineno">  636</span> </div>
-<div class="line"><span class="lineno">  637</span>    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
-<div class="line"><span class="lineno">  638</span>  }</div>
-<div class="ttc" id="aclassdyno_1_1ImageContainer_html_a2cd4807310bce124878792073e9122e9"><div class="ttname"><a href="classdyno_1_1ImageContainer.html#a2cd4807310bce124878792073e9122e9">dyno::ImageContainer::exists</a></div><div class="ttdeci">bool exists(const std::string &amp;key) const</div><div class="ttdef"><b>Definition:</b> <a href="ImageContainer_8hpp_source.html#l00653">ImageContainer.hpp:653</a></div></div>
+<p class="definition">Definition at line <a class="el" href="ImageContainer_8hpp_source.html#l00264">264</a> of file <a class="el" href="ImageContainer_8hpp_source.html">ImageContainer.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  264</span>                                                                {</div>
+<div class="line"><span class="lineno">  265</span>    <span class="keywordflow">if</span> (<a class="code hl_function" href="classdyno_1_1ImageContainer.html#a2cd4807310bce124878792073e9122e9">exists</a>(key)) {</div>
+<div class="line"><span class="lineno">  266</span>      <span class="keywordflow">throw</span> ImageKeyAlreadyExists(key);</div>
+<div class="line"><span class="lineno">  267</span>    }</div>
+<div class="line"><span class="lineno">  268</span> </div>
+<div class="line"><span class="lineno">  269</span>    KeyImagePair key_image = KeyImagePair::Create&lt;IMAGETYPE&gt;(key, image);</div>
+<div class="line"><span class="lineno">  270</span>    <a class="code hl_variable" href="classdyno_1_1ImageContainer.html#aa4dbde4b9c3ea19893f9ea458f4805d1">images_</a>.insert({key, std::move(key_image)});</div>
+<div class="line"><span class="lineno">  271</span> </div>
+<div class="line"><span class="lineno">  272</span>    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><span class="lineno">  273</span>  }</div>
+<div class="ttc" id="aclassdyno_1_1ImageContainer_html_a2cd4807310bce124878792073e9122e9"><div class="ttname"><a href="classdyno_1_1ImageContainer.html#a2cd4807310bce124878792073e9122e9">dyno::ImageContainer::exists</a></div><div class="ttdeci">bool exists(const std::string &amp;key) const</div><div class="ttdef"><b>Definition:</b> <a href="ImageContainer_8hpp_source.html#l00299">ImageContainer.hpp:299</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1ImageContainer.html#a2cd4807310bce124878792073e9122e9">exists()</a>, and <a class="el" href="classdyno_1_1ImageContainer.html#aa4dbde4b9c3ea19893f9ea458f4805d1">images_</a>.</p>
 <div class="dynheader">
@@ -430,12 +440,12 @@ template&lt;typename IMAGETYPE &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ImageContainer_8hpp_source.html#l00646">646</a> of file <a class="el" href="ImageContainer_8hpp_source.html">ImageContainer.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  646</span>                                                    {</div>
-<div class="line"><span class="lineno">  647</span>    <span class="keywordflow">return</span> atImpl&lt;ImageContainer, IMAGETYPE&gt;(<span class="keyword">const_cast&lt;</span><a class="code hl_function" href="classdyno_1_1ImageContainer.html#a8cad42195f37dd9c15273af245334139">ImageContainer</a>*<span class="keyword">&gt;</span>(<span class="keyword">this</span>),</div>
-<div class="line"><span class="lineno">  648</span>                                             key);</div>
-<div class="line"><span class="lineno">  649</span>  }</div>
-<div class="ttc" id="aclassdyno_1_1ImageContainer_html_a8cad42195f37dd9c15273af245334139"><div class="ttname"><a href="classdyno_1_1ImageContainer.html#a8cad42195f37dd9c15273af245334139">dyno::ImageContainer::ImageContainer</a></div><div class="ttdeci">ImageContainer()</div><div class="ttdef"><b>Definition:</b> <a href="ImageContainer_8hpp_source.html#l00603">ImageContainer.hpp:603</a></div></div>
+<p class="definition">Definition at line <a class="el" href="ImageContainer_8hpp_source.html#l00292">292</a> of file <a class="el" href="ImageContainer_8hpp_source.html">ImageContainer.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  292</span>                                                    {</div>
+<div class="line"><span class="lineno">  293</span>    <span class="keywordflow">return</span> atImpl&lt;ImageContainer, IMAGETYPE&gt;(<span class="keyword">const_cast&lt;</span><a class="code hl_function" href="classdyno_1_1ImageContainer.html#a8cad42195f37dd9c15273af245334139">ImageContainer</a>*<span class="keyword">&gt;</span>(<span class="keyword">this</span>),</div>
+<div class="line"><span class="lineno">  294</span>                                             key);</div>
+<div class="line"><span class="lineno">  295</span>  }</div>
+<div class="ttc" id="aclassdyno_1_1ImageContainer_html_a8cad42195f37dd9c15273af245334139"><div class="ttname"><a href="classdyno_1_1ImageContainer.html#a8cad42195f37dd9c15273af245334139">dyno::ImageContainer::ImageContainer</a></div><div class="ttdeci">ImageContainer()</div><div class="ttdef"><b>Definition:</b> <a href="ImageContainer_8hpp_source.html#l00238">ImageContainer.hpp:238</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -465,10 +475,10 @@ template&lt;typename IMAGETYPE &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ImageContainer_8hpp_source.html#l00641">641</a> of file <a class="el" href="ImageContainer_8hpp_source.html">ImageContainer.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  641</span>                                                                {</div>
-<div class="line"><span class="lineno">  642</span>    <span class="keywordflow">return</span> atImpl&lt;const ImageContainer, IMAGETYPE&gt;(<span class="keyword">this</span>, key);</div>
-<div class="line"><span class="lineno">  643</span>  }</div>
+<p class="definition">Definition at line <a class="el" href="ImageContainer_8hpp_source.html#l00287">287</a> of file <a class="el" href="ImageContainer_8hpp_source.html">ImageContainer.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  287</span>                                                                {</div>
+<div class="line"><span class="lineno">  288</span>    <span class="keywordflow">return</span> atImpl&lt;const ImageContainer, IMAGETYPE&gt;(<span class="keyword">this</span>, key);</div>
+<div class="line"><span class="lineno">  289</span>  }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -508,15 +518,15 @@ template&lt;typename Container , typename IMAGETYPE &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ImageContainer_8hpp_source.html#l00577">577</a> of file <a class="el" href="ImageContainer_8hpp_source.html">ImageContainer.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  578</span>                                                     {</div>
-<div class="line"><span class="lineno">  579</span>    <span class="keywordflow">if</span> (!image_container-&gt;exists(key)) {</div>
-<div class="line"><span class="lineno">  580</span>      <span class="keywordflow">throw</span> ImageKeyDoesNotExist(key);</div>
-<div class="line"><span class="lineno">  581</span>    }</div>
-<div class="line"><span class="lineno">  582</span> </div>
-<div class="line"><span class="lineno">  583</span>    <span class="keyword">decltype</span>(<span class="keyword">auto</span>) key_image = image_container-&gt;images_.at(key);</div>
-<div class="line"><span class="lineno">  584</span>    <span class="keywordflow">return</span> key_image.template cast&lt;IMAGETYPE&gt;();</div>
-<div class="line"><span class="lineno">  585</span>  }</div>
+<p class="definition">Definition at line <a class="el" href="ImageContainer_8hpp_source.html#l00212">212</a> of file <a class="el" href="ImageContainer_8hpp_source.html">ImageContainer.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  213</span>                                                     {</div>
+<div class="line"><span class="lineno">  214</span>    <span class="keywordflow">if</span> (!image_container-&gt;exists(key)) {</div>
+<div class="line"><span class="lineno">  215</span>      <span class="keywordflow">throw</span> ImageKeyDoesNotExist(key);</div>
+<div class="line"><span class="lineno">  216</span>    }</div>
+<div class="line"><span class="lineno">  217</span> </div>
+<div class="line"><span class="lineno">  218</span>    <span class="keyword">decltype</span>(<span class="keyword">auto</span>) key_image = image_container-&gt;images_.at(key);</div>
+<div class="line"><span class="lineno">  219</span>    <span class="keywordflow">return</span> key_image.template cast&lt;IMAGETYPE&gt;();</div>
+<div class="line"><span class="lineno">  220</span>  }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -535,18 +545,18 @@ template&lt;typename Container , typename IMAGETYPE &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ImageContainer_8cc_source.html#l00041">41</a> of file <a class="el" href="ImageContainer_8cc_source.html">ImageContainer.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   41</span>                                           {</div>
-<div class="line"><span class="lineno">   42</span>  <a class="code hl_function" href="classdyno_1_1ImageContainer.html#a8cad42195f37dd9c15273af245334139">ImageContainer</a> container(this-&gt;<a class="code hl_function" href="classdyno_1_1ImageContainer.html#ae5023f3df359ad7a5196ce15cd632ca3">frameId</a>(), this-&gt;<a class="code hl_function" href="classdyno_1_1ImageContainer.html#a3f689f6b6b79c8ba776e5ebe483dc3e4">timestamp</a>());</div>
-<div class="line"><span class="lineno">   43</span> </div>
-<div class="line"><span class="lineno">   44</span>  <span class="comment">// explicit deep copies for all key image pairs</span></div>
-<div class="line"><span class="lineno">   45</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [k, v] : <a class="code hl_variable" href="classdyno_1_1ImageContainer.html#aa4dbde4b9c3ea19893f9ea458f4805d1">images_</a>) {</div>
-<div class="line"><span class="lineno">   46</span>    container.images_.emplace(k, v.clone());</div>
-<div class="line"><span class="lineno">   47</span>  }</div>
-<div class="line"><span class="lineno">   48</span> </div>
-<div class="line"><span class="lineno">   49</span>  <span class="keywordflow">return</span> container;</div>
-<div class="line"><span class="lineno">   50</span>}</div>
-<div class="ttc" id="aclassdyno_1_1ImageContainer_html_ae5023f3df359ad7a5196ce15cd632ca3"><div class="ttname"><a href="classdyno_1_1ImageContainer.html#ae5023f3df359ad7a5196ce15cd632ca3">dyno::ImageContainer::frameId</a></div><div class="ttdeci">FrameId frameId() const</div><div class="ttdef"><b>Definition:</b> <a href="ImageContainer_8hpp_source.html#l00684">ImageContainer.hpp:684</a></div></div>
+<p class="definition">Definition at line <a class="el" href="ImageContainer_8cc_source.html#l00040">40</a> of file <a class="el" href="ImageContainer_8cc_source.html">ImageContainer.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   40</span>                                           {</div>
+<div class="line"><span class="lineno">   41</span>  <a class="code hl_function" href="classdyno_1_1ImageContainer.html#a8cad42195f37dd9c15273af245334139">ImageContainer</a> container(this-&gt;<a class="code hl_function" href="classdyno_1_1ImageContainer.html#ae5023f3df359ad7a5196ce15cd632ca3">frameId</a>(), this-&gt;<a class="code hl_function" href="classdyno_1_1ImageContainer.html#a3f689f6b6b79c8ba776e5ebe483dc3e4">timestamp</a>());</div>
+<div class="line"><span class="lineno">   42</span> </div>
+<div class="line"><span class="lineno">   43</span>  <span class="comment">// explicit deep copies for all key image pairs</span></div>
+<div class="line"><span class="lineno">   44</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [k, v] : <a class="code hl_variable" href="classdyno_1_1ImageContainer.html#aa4dbde4b9c3ea19893f9ea458f4805d1">images_</a>) {</div>
+<div class="line"><span class="lineno">   45</span>    container.images_.emplace(k, v.clone());</div>
+<div class="line"><span class="lineno">   46</span>  }</div>
+<div class="line"><span class="lineno">   47</span> </div>
+<div class="line"><span class="lineno">   48</span>  <span class="keywordflow">return</span> container;</div>
+<div class="line"><span class="lineno">   49</span>}</div>
+<div class="ttc" id="aclassdyno_1_1ImageContainer_html_ae5023f3df359ad7a5196ce15cd632ca3"><div class="ttname"><a href="classdyno_1_1ImageContainer.html#ae5023f3df359ad7a5196ce15cd632ca3">dyno::ImageContainer::frameId</a></div><div class="ttdeci">FrameId frameId() const</div><div class="ttdef"><b>Definition:</b> <a href="ImageContainer_8hpp_source.html#l00330">ImageContainer.hpp:330</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1ImageContainer.html#ae5023f3df359ad7a5196ce15cd632ca3">frameId()</a>, <a class="el" href="classdyno_1_1ImageContainer.html#aa4dbde4b9c3ea19893f9ea458f4805d1">images_</a>, and <a class="el" href="classdyno_1_1ImageContainer.html#a3f689f6b6b79c8ba776e5ebe483dc3e4">timestamp()</a>.</p>
 <div class="dynheader">
@@ -577,11 +587,11 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ImageContainer_8cc_source.html#l00073">73</a> of file <a class="el" href="ImageContainer_8cc_source.html">ImageContainer.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   73</span>                                                    {</div>
-<div class="line"><span class="lineno">   74</span>  <span class="keywordflow">return</span> this-&gt;at&lt;ImageType::Depth&gt;(<a class="code hl_variable" href="classdyno_1_1ImageContainer.html#ab4933c7916cf40673b5608b11818b67b">kDepth</a>);</div>
-<div class="line"><span class="lineno">   75</span>}</div>
-<div class="ttc" id="aclassdyno_1_1ImageContainer_html_ab4933c7916cf40673b5608b11818b67b"><div class="ttname"><a href="classdyno_1_1ImageContainer.html#ab4933c7916cf40673b5608b11818b67b">dyno::ImageContainer::kDepth</a></div><div class="ttdeci">static constexpr char kDepth[]</div><div class="ttdef"><b>Definition:</b> <a href="ImageContainer_8hpp_source.html#l00596">ImageContainer.hpp:596</a></div></div>
+<p class="definition">Definition at line <a class="el" href="ImageContainer_8cc_source.html#l00072">72</a> of file <a class="el" href="ImageContainer_8cc_source.html">ImageContainer.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   72</span>                                                    {</div>
+<div class="line"><span class="lineno">   73</span>  <span class="keywordflow">return</span> this-&gt;at&lt;ImageType::Depth&gt;(<a class="code hl_variable" href="classdyno_1_1ImageContainer.html#ab4933c7916cf40673b5608b11818b67b">kDepth</a>);</div>
+<div class="line"><span class="lineno">   74</span>}</div>
+<div class="ttc" id="aclassdyno_1_1ImageContainer_html_ab4933c7916cf40673b5608b11818b67b"><div class="ttname"><a href="classdyno_1_1ImageContainer.html#ab4933c7916cf40673b5608b11818b67b">dyno::ImageContainer::kDepth</a></div><div class="ttdeci">static constexpr char kDepth[]</div><div class="ttdef"><b>Definition:</b> <a href="ImageContainer_8hpp_source.html#l00231">ImageContainer.hpp:231</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1ImageContainer.html#ab4933c7916cf40673b5608b11818b67b">kDepth</a>.</p>
 
@@ -602,10 +612,10 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ImageContainer_8cc_source.html#l00055">55</a> of file <a class="el" href="ImageContainer_8cc_source.html">ImageContainer.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   55</span>                                                                {</div>
-<div class="line"><span class="lineno">   56</span>  <span class="keywordflow">return</span> this-&gt;at&lt;ImageType::Depth&gt;(<a class="code hl_variable" href="classdyno_1_1ImageContainer.html#ab4933c7916cf40673b5608b11818b67b">kDepth</a>);</div>
-<div class="line"><span class="lineno">   57</span>}</div>
+<p class="definition">Definition at line <a class="el" href="ImageContainer_8cc_source.html#l00054">54</a> of file <a class="el" href="ImageContainer_8cc_source.html">ImageContainer.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   54</span>                                                                {</div>
+<div class="line"><span class="lineno">   55</span>  <span class="keywordflow">return</span> this-&gt;at&lt;ImageType::Depth&gt;(<a class="code hl_variable" href="classdyno_1_1ImageContainer.html#ab4933c7916cf40673b5608b11818b67b">kDepth</a>);</div>
+<div class="line"><span class="lineno">   56</span>}</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1ImageContainer.html#ab4933c7916cf40673b5608b11818b67b">kDepth</a>.</p>
 
@@ -640,10 +650,10 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ImageContainer_8cc_source.html#l00090">90</a> of file <a class="el" href="ImageContainer_8cc_source.html">ImageContainer.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   90</span>                                                        {</div>
-<div class="line"><span class="lineno">   91</span>  <span class="keywordflow">return</span> this-&gt;add&lt;ImageType::Depth&gt;(<a class="code hl_variable" href="classdyno_1_1ImageContainer.html#ab4933c7916cf40673b5608b11818b67b">kDepth</a>, image);</div>
-<div class="line"><span class="lineno">   92</span>}</div>
+<p class="definition">Definition at line <a class="el" href="ImageContainer_8cc_source.html#l00089">89</a> of file <a class="el" href="ImageContainer_8cc_source.html">ImageContainer.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   89</span>                                                        {</div>
+<div class="line"><span class="lineno">   90</span>  <span class="keywordflow">return</span> this-&gt;add&lt;ImageType::Depth&gt;(<a class="code hl_variable" href="classdyno_1_1ImageContainer.html#ab4933c7916cf40673b5608b11818b67b">kDepth</a>, image);</div>
+<div class="line"><span class="lineno">   91</span>}</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1ImageContainer.html#ab4933c7916cf40673b5608b11818b67b">kDepth</a>.</p>
 
@@ -673,28 +683,32 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ImageContainer_8hpp_source.html#l00653">653</a> of file <a class="el" href="ImageContainer_8hpp_source.html">ImageContainer.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  653</span>                                                 {</div>
-<div class="line"><span class="lineno">  654</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1ImageContainer.html#aa4dbde4b9c3ea19893f9ea458f4805d1">images_</a>.exists(key);</div>
-<div class="line"><span class="lineno">  655</span>  }</div>
+<p class="definition">Definition at line <a class="el" href="ImageContainer_8hpp_source.html#l00299">299</a> of file <a class="el" href="ImageContainer_8hpp_source.html">ImageContainer.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  299</span>                                                 {</div>
+<div class="line"><span class="lineno">  300</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1ImageContainer.html#aa4dbde4b9c3ea19893f9ea458f4805d1">images_</a>.exists(key);</div>
+<div class="line"><span class="lineno">  301</span>  }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1ImageContainer.html#aa4dbde4b9c3ea19893f9ea458f4805d1">images_</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1ImageContainer.html#a4f681829e1f66ef2a4d4cd847510c468">add()</a>, <a class="el" href="classdyno_1_1ImageContainer.html#ae6d8d0845eb77179dc00b4b865393ad7">hasDepth()</a>, <a class="el" href="classdyno_1_1ImageContainer.html#a58380247600b24f657657316b195faaf">hasObjectMask()</a>, <a class="el" href="classdyno_1_1ImageContainer.html#a4cd8237239f8756cb43980553c6612a7">hasOpticalFlow()</a>, <a class="el" href="classdyno_1_1ImageContainer.html#acbbbe97229cabd544ef1c837467f35d8">hasRgb()</a>, and <a class="el" href="classdyno_1_1ImageContainer.html#a33bddc85ca59b9043de6eb52cf252177">hasRightRgb()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1ImageContainer.html#a4f681829e1f66ef2a4d4cd847510c468">add()</a>, <a class="el" href="classdyno_1_1ImageContainer.html#ae6d8d0845eb77179dc00b4b865393ad7">hasDepth()</a>, <a class="el" href="classdyno_1_1ImageContainer.html#a58380247600b24f657657316b195faaf">hasObjectMask()</a>, <a class="el" href="classdyno_1_1ImageContainer.html#a4cd8237239f8756cb43980553c6612a7">hasOpticalFlow()</a>, <a class="el" href="classdyno_1_1ImageContainer.html#acbbbe97229cabd544ef1c837467f35d8">hasRgb()</a>, <a class="el" href="classdyno_1_1ImageContainer.html#a33bddc85ca59b9043de6eb52cf252177">hasRightRgb()</a>, and <a class="el" href="classdyno_1_1ImageContainer.html#a0f5c67b77443b776a57d5ec38ddad291">replace()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1ImageContainer_a2cd4807310bce124878792073e9122e9_icgraph.png" border="0" usemap="#aclassdyno_1_1ImageContainer_a2cd4807310bce124878792073e9122e9_icgraph" alt=""/></div>
 <map name="aclassdyno_1_1ImageContainer_a2cd4807310bce124878792073e9122e9_icgraph" id="aclassdyno_1_1ImageContainer_a2cd4807310bce124878792073e9122e9_icgraph">
-<area shape="rect" title=" " alt="" coords="511,151,677,191"/>
-<area shape="rect" href="classdyno_1_1ImageContainer.html#a4f681829e1f66ef2a4d4cd847510c468" title=" " alt="" coords="264,5,463,31"/>
-<area shape="rect" href="classdyno_1_1ImageContainer.html#ae6d8d0845eb77179dc00b4b865393ad7" title=" " alt="" coords="280,55,447,95"/>
-<area shape="rect" href="classdyno_1_1ImageContainer.html#a58380247600b24f657657316b195faaf" title=" " alt="" coords="280,119,447,159"/>
-<area shape="rect" href="classdyno_1_1ImageContainer.html#a4cd8237239f8756cb43980553c6612a7" title=" " alt="" coords="280,183,447,223"/>
-<area shape="rect" href="classdyno_1_1ImageContainer.html#acbbbe97229cabd544ef1c837467f35d8" title=" " alt="" coords="280,247,447,287"/>
-<area shape="rect" href="classdyno_1_1ImageContainer.html#a33bddc85ca59b9043de6eb52cf252177" title=" " alt="" coords="280,311,447,351"/>
-<area shape="rect" href="classdyno_1_1Frame.html#af5e5ed1065480684da54421c6fcf395e" title=" " alt="" coords="5,27,216,67"/>
-<area shape="rect" href="classdyno_1_1Frame.html#a1d378252c37b147d489923e1d30235f0" title="Update the depth values on all contained features. Clips the static and dynamic features (marking the..." alt="" coords="9,92,212,117"/>
+<area shape="rect" title=" " alt="" coords="716,170,883,210"/>
+<area shape="rect" href="classdyno_1_1ImageContainer.html#a4f681829e1f66ef2a4d4cd847510c468" title=" " alt="" coords="469,5,668,31"/>
+<area shape="rect" href="classdyno_1_1ImageContainer.html#ae6d8d0845eb77179dc00b4b865393ad7" title=" " alt="" coords="485,55,652,95"/>
+<area shape="rect" href="classdyno_1_1ImageContainer.html#a58380247600b24f657657316b195faaf" title=" " alt="" coords="485,170,652,210"/>
+<area shape="rect" href="classdyno_1_1ImageContainer.html#a4cd8237239f8756cb43980553c6612a7" title=" " alt="" coords="233,119,399,159"/>
+<area shape="rect" href="classdyno_1_1ImageContainer.html#acbbbe97229cabd544ef1c837467f35d8" title=" " alt="" coords="485,234,652,274"/>
+<area shape="rect" href="classdyno_1_1ImageContainer.html#a33bddc85ca59b9043de6eb52cf252177" title=" " alt="" coords="485,362,652,402"/>
+<area shape="rect" href="classdyno_1_1ImageContainer.html#a0f5c67b77443b776a57d5ec38ddad291" title=" " alt="" coords="485,298,652,338"/>
+<area shape="rect" href="classdyno_1_1Frame.html#af5e5ed1065480684da54421c6fcf395e" title=" " alt="" coords="211,55,421,95"/>
+<area shape="rect" href="classdyno_1_1Frame.html#a1d378252c37b147d489923e1d30235f0" title="Update the depth values on all contained features. Clips the static and dynamic features (marking the..." alt="" coords="215,5,417,31"/>
+<area shape="rect" href="classdyno_1_1FeatureTracker.html#aa6e3d79ddd4fc72062ea58d8211a50b2" title=" " alt="" coords="237,183,395,223"/>
+<area shape="rect" href="classdyno_1_1FeatureTracker.html#a40ee79c94fe2de7f16d2a4508cc2ba11" title=" " alt="" coords="5,151,163,191"/>
+<area shape="rect" href="classdyno_1_1FeatureTrackerBase.html#a4e9b9b77752d80d8bb8c2236776ca5a8" title=" " alt="" coords="221,362,411,402"/>
 </map>
 </div>
 
@@ -723,23 +737,25 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ImageContainer_8hpp_source.html#l00684">684</a> of file <a class="el" href="ImageContainer_8hpp_source.html">ImageContainer.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  684</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1ImageContainer.html#abb77bc22c51d38c0d1f2d8a986fee9c4">frame_id_</a>; }</div>
+<p class="definition">Definition at line <a class="el" href="ImageContainer_8hpp_source.html#l00330">330</a> of file <a class="el" href="ImageContainer_8hpp_source.html">ImageContainer.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  330</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1ImageContainer.html#abb77bc22c51d38c0d1f2d8a986fee9c4">frame_id_</a>; }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1ImageContainer.html#abb77bc22c51d38c0d1f2d8a986fee9c4">frame_id_</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1ImageContainer.html#ad740c4b7c66931f1e78edbc31902e343">clone()</a>, <a class="el" href="classdyno_1_1KltFeatureTracker.html#a4870d167d7dbd1a04a8d7d15a376a573">dyno::KltFeatureTracker::detectFeatures()</a>, <a class="el" href="classdyno_1_1KltFeatureTracker.html#a8f26d8fe56edd3e579a879e82a40457f">dyno::KltFeatureTracker::trackPoints()</a>, and <a class="el" href="classdyno_1_1ExternalFlowFeatureTracker.html#aedf0b07caf85d853756cb878f22d2ad7">dyno::ExternalFlowFeatureTracker::trackStatic()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1ImageContainer.html#ad740c4b7c66931f1e78edbc31902e343">clone()</a>, <a class="el" href="classdyno_1_1KltFeatureTracker.html#a4870d167d7dbd1a04a8d7d15a376a573">dyno::KltFeatureTracker::detectFeatures()</a>, <a class="el" href="classdyno_1_1FeatureTracker.html#aa6e3d79ddd4fc72062ea58d8211a50b2">dyno::FeatureTracker::objectDetection()</a>, <a class="el" href="classdyno_1_1KltFeatureTracker.html#a8f26d8fe56edd3e579a879e82a40457f">dyno::KltFeatureTracker::trackPoints()</a>, and <a class="el" href="classdyno_1_1ExternalFlowFeatureTracker.html#aedf0b07caf85d853756cb878f22d2ad7">dyno::ExternalFlowFeatureTracker::trackStatic()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1ImageContainer_ae5023f3df359ad7a5196ce15cd632ca3_icgraph.png" border="0" usemap="#aclassdyno_1_1ImageContainer_ae5023f3df359ad7a5196ce15cd632ca3_icgraph" alt=""/></div>
 <map name="aclassdyno_1_1ImageContainer_ae5023f3df359ad7a5196ce15cd632ca3_icgraph" id="aclassdyno_1_1ImageContainer_ae5023f3df359ad7a5196ce15cd632ca3_icgraph">
-<area shape="rect" title=" " alt="" coords="695,92,861,132"/>
+<area shape="rect" title=" " alt="" coords="695,120,861,160"/>
 <area shape="rect" href="classdyno_1_1ImageContainer.html#ad740c4b7c66931f1e78edbc31902e343" title=" " alt="" coords="465,5,632,45"/>
 <area shape="rect" href="classdyno_1_1KltFeatureTracker.html#a4870d167d7dbd1a04a8d7d15a376a573" title=" " alt="" coords="461,120,636,160"/>
 <area shape="rect" href="classdyno_1_1KltFeatureTracker.html#a8f26d8fe56edd3e579a879e82a40457f" title="Tracks features using KLT tracker between the previous image and the current one." alt="" coords="228,63,403,103"/>
-<area shape="rect" href="classdyno_1_1ExternalFlowFeatureTracker.html#aedf0b07caf85d853756cb878f22d2ad7" title="Base function to perform feature tracking on static points." alt="" coords="451,184,647,224"/>
+<area shape="rect" href="classdyno_1_1FeatureTracker.html#aa6e3d79ddd4fc72062ea58d8211a50b2" title=" " alt="" coords="470,184,627,224"/>
+<area shape="rect" href="classdyno_1_1ExternalFlowFeatureTracker.html#aedf0b07caf85d853756cb878f22d2ad7" title="Base function to perform feature tracking on static points." alt="" coords="451,248,647,288"/>
 <area shape="rect" href="classdyno_1_1KltFeatureTracker.html#ab15aaa39f0c3adc62037d718b98039c0" title="Track features between frames k&#45;1 and the current set of images (at k)." alt="" coords="5,92,180,132"/>
+<area shape="rect" href="classdyno_1_1FeatureTracker.html#a40ee79c94fe2de7f16d2a4508cc2ba11" title=" " alt="" coords="237,184,394,224"/>
 </map>
 </div>
 
@@ -768,8 +784,8 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ImageContainer_8hpp_source.html#l00660">660</a> of file <a class="el" href="ImageContainer_8hpp_source.html">ImageContainer.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  660</span>{ <span class="keywordflow">return</span> <a class="code hl_function" href="classdyno_1_1ImageContainer.html#a2cd4807310bce124878792073e9122e9">exists</a>(<a class="code hl_variable" href="classdyno_1_1ImageContainer.html#ab4933c7916cf40673b5608b11818b67b">kDepth</a>); }</div>
+<p class="definition">Definition at line <a class="el" href="ImageContainer_8hpp_source.html#l00306">306</a> of file <a class="el" href="ImageContainer_8hpp_source.html">ImageContainer.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  306</span>{ <span class="keywordflow">return</span> <a class="code hl_function" href="classdyno_1_1ImageContainer.html#a2cd4807310bce124878792073e9122e9">exists</a>(<a class="code hl_variable" href="classdyno_1_1ImageContainer.html#ab4933c7916cf40673b5608b11818b67b">kDepth</a>); }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1ImageContainer.html#a2cd4807310bce124878792073e9122e9">exists()</a>, and <a class="el" href="classdyno_1_1ImageContainer.html#ab4933c7916cf40673b5608b11818b67b">kDepth</a>.</p>
 
@@ -819,11 +835,13 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ImageContainer_8hpp_source.html#l00662">662</a> of file <a class="el" href="ImageContainer_8hpp_source.html">ImageContainer.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  662</span>{ <span class="keywordflow">return</span> <a class="code hl_function" href="classdyno_1_1ImageContainer.html#a2cd4807310bce124878792073e9122e9">exists</a>(<a class="code hl_variable" href="classdyno_1_1ImageContainer.html#aca97f94103c325a4aefa2d824f50f7f3">kObjectMask</a>); }</div>
-<div class="ttc" id="aclassdyno_1_1ImageContainer_html_aca97f94103c325a4aefa2d824f50f7f3"><div class="ttname"><a href="classdyno_1_1ImageContainer.html#aca97f94103c325a4aefa2d824f50f7f3">dyno::ImageContainer::kObjectMask</a></div><div class="ttdeci">static constexpr char kObjectMask[]</div><div class="ttdef"><b>Definition:</b> <a href="ImageContainer_8hpp_source.html#l00597">ImageContainer.hpp:597</a></div></div>
+<p class="definition">Definition at line <a class="el" href="ImageContainer_8hpp_source.html#l00308">308</a> of file <a class="el" href="ImageContainer_8hpp_source.html">ImageContainer.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  308</span>{ <span class="keywordflow">return</span> <a class="code hl_function" href="classdyno_1_1ImageContainer.html#a2cd4807310bce124878792073e9122e9">exists</a>(<a class="code hl_variable" href="classdyno_1_1ImageContainer.html#aca97f94103c325a4aefa2d824f50f7f3">kObjectMask</a>); }</div>
+<div class="ttc" id="aclassdyno_1_1ImageContainer_html_aca97f94103c325a4aefa2d824f50f7f3"><div class="ttname"><a href="classdyno_1_1ImageContainer.html#aca97f94103c325a4aefa2d824f50f7f3">dyno::ImageContainer::kObjectMask</a></div><div class="ttdeci">static constexpr char kObjectMask[]</div><div class="ttdef"><b>Definition:</b> <a href="ImageContainer_8hpp_source.html#l00232">ImageContainer.hpp:232</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1ImageContainer.html#a2cd4807310bce124878792073e9122e9">exists()</a>, and <a class="el" href="classdyno_1_1ImageContainer.html#aca97f94103c325a4aefa2d824f50f7f3">kObjectMask</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1FeatureTracker.html#aa6e3d79ddd4fc72062ea58d8211a50b2">dyno::FeatureTracker::objectDetection()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -831,6 +849,16 @@ Here is the call graph for this function:</div>
 <map name="aclassdyno_1_1ImageContainer_a58380247600b24f657657316b195faaf_cgraph" id="aclassdyno_1_1ImageContainer_a58380247600b24f657657316b195faaf_cgraph">
 <area shape="rect" title=" " alt="" coords="5,5,172,45"/>
 <area shape="rect" href="classdyno_1_1ImageContainer.html#a2cd4807310bce124878792073e9122e9" title=" " alt="" coords="220,5,387,45"/>
+</map>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classdyno_1_1ImageContainer_a58380247600b24f657657316b195faaf_icgraph.png" border="0" usemap="#aclassdyno_1_1ImageContainer_a58380247600b24f657657316b195faaf_icgraph" alt=""/></div>
+<map name="aclassdyno_1_1ImageContainer_a58380247600b24f657657316b195faaf_icgraph" id="aclassdyno_1_1ImageContainer_a58380247600b24f657657316b195faaf_icgraph">
+<area shape="rect" title=" " alt="" coords="416,5,583,45"/>
+<area shape="rect" href="classdyno_1_1FeatureTracker.html#aa6e3d79ddd4fc72062ea58d8211a50b2" title=" " alt="" coords="211,5,368,45"/>
+<area shape="rect" href="classdyno_1_1FeatureTracker.html#a40ee79c94fe2de7f16d2a4508cc2ba11" title=" " alt="" coords="5,5,163,45"/>
 </map>
 </div>
 
@@ -859,11 +887,13 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ImageContainer_8hpp_source.html#l00661">661</a> of file <a class="el" href="ImageContainer_8hpp_source.html">ImageContainer.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  661</span>{ <span class="keywordflow">return</span> <a class="code hl_function" href="classdyno_1_1ImageContainer.html#a2cd4807310bce124878792073e9122e9">exists</a>(<a class="code hl_variable" href="classdyno_1_1ImageContainer.html#a1000fd5439877f2376d2282383a41535">kOPticalFlow</a>); }</div>
-<div class="ttc" id="aclassdyno_1_1ImageContainer_html_a1000fd5439877f2376d2282383a41535"><div class="ttname"><a href="classdyno_1_1ImageContainer.html#a1000fd5439877f2376d2282383a41535">dyno::ImageContainer::kOPticalFlow</a></div><div class="ttdeci">static constexpr char kOPticalFlow[]</div><div class="ttdef"><b>Definition:</b> <a href="ImageContainer_8hpp_source.html#l00595">ImageContainer.hpp:595</a></div></div>
+<p class="definition">Definition at line <a class="el" href="ImageContainer_8hpp_source.html#l00307">307</a> of file <a class="el" href="ImageContainer_8hpp_source.html">ImageContainer.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  307</span>{ <span class="keywordflow">return</span> <a class="code hl_function" href="classdyno_1_1ImageContainer.html#a2cd4807310bce124878792073e9122e9">exists</a>(<a class="code hl_variable" href="classdyno_1_1ImageContainer.html#a1000fd5439877f2376d2282383a41535">kOPticalFlow</a>); }</div>
+<div class="ttc" id="aclassdyno_1_1ImageContainer_html_a1000fd5439877f2376d2282383a41535"><div class="ttname"><a href="classdyno_1_1ImageContainer.html#a1000fd5439877f2376d2282383a41535">dyno::ImageContainer::kOPticalFlow</a></div><div class="ttdeci">static constexpr char kOPticalFlow[]</div><div class="ttdef"><b>Definition:</b> <a href="ImageContainer_8hpp_source.html#l00230">ImageContainer.hpp:230</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1ImageContainer.html#a2cd4807310bce124878792073e9122e9">exists()</a>, and <a class="el" href="classdyno_1_1ImageContainer.html#a1000fd5439877f2376d2282383a41535">kOPticalFlow</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1FeatureTracker.html#a40ee79c94fe2de7f16d2a4508cc2ba11">dyno::FeatureTracker::track()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -871,6 +901,15 @@ Here is the call graph for this function:</div>
 <map name="aclassdyno_1_1ImageContainer_a4cd8237239f8756cb43980553c6612a7_cgraph" id="aclassdyno_1_1ImageContainer_a4cd8237239f8756cb43980553c6612a7_cgraph">
 <area shape="rect" title=" " alt="" coords="5,5,172,45"/>
 <area shape="rect" href="classdyno_1_1ImageContainer.html#a2cd4807310bce124878792073e9122e9" title=" " alt="" coords="220,5,387,45"/>
+</map>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classdyno_1_1ImageContainer_a4cd8237239f8756cb43980553c6612a7_icgraph.png" border="0" usemap="#aclassdyno_1_1ImageContainer_a4cd8237239f8756cb43980553c6612a7_icgraph" alt=""/></div>
+<map name="aclassdyno_1_1ImageContainer_a4cd8237239f8756cb43980553c6612a7_icgraph" id="aclassdyno_1_1ImageContainer_a4cd8237239f8756cb43980553c6612a7_icgraph">
+<area shape="rect" title=" " alt="" coords="211,5,377,45"/>
+<area shape="rect" href="classdyno_1_1FeatureTracker.html#a40ee79c94fe2de7f16d2a4508cc2ba11" title=" " alt="" coords="5,5,163,45"/>
 </map>
 </div>
 
@@ -899,9 +938,9 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ImageContainer_8hpp_source.html#l00659">659</a> of file <a class="el" href="ImageContainer_8hpp_source.html">ImageContainer.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  659</span>{ <span class="keywordflow">return</span> <a class="code hl_function" href="classdyno_1_1ImageContainer.html#a2cd4807310bce124878792073e9122e9">exists</a>(<a class="code hl_variable" href="classdyno_1_1ImageContainer.html#ab682ab66d445b4c4a9959e189ffb609f">kRGB</a>); }</div>
-<div class="ttc" id="aclassdyno_1_1ImageContainer_html_ab682ab66d445b4c4a9959e189ffb609f"><div class="ttname"><a href="classdyno_1_1ImageContainer.html#ab682ab66d445b4c4a9959e189ffb609f">dyno::ImageContainer::kRGB</a></div><div class="ttdeci">static constexpr char kRGB[]</div><div class="ttdef"><b>Definition:</b> <a href="ImageContainer_8hpp_source.html#l00594">ImageContainer.hpp:594</a></div></div>
+<p class="definition">Definition at line <a class="el" href="ImageContainer_8hpp_source.html#l00305">305</a> of file <a class="el" href="ImageContainer_8hpp_source.html">ImageContainer.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  305</span>{ <span class="keywordflow">return</span> <a class="code hl_function" href="classdyno_1_1ImageContainer.html#a2cd4807310bce124878792073e9122e9">exists</a>(<a class="code hl_variable" href="classdyno_1_1ImageContainer.html#ab682ab66d445b4c4a9959e189ffb609f">kRGB</a>); }</div>
+<div class="ttc" id="aclassdyno_1_1ImageContainer_html_ab682ab66d445b4c4a9959e189ffb609f"><div class="ttname"><a href="classdyno_1_1ImageContainer.html#ab682ab66d445b4c4a9959e189ffb609f">dyno::ImageContainer::kRGB</a></div><div class="ttdeci">static constexpr char kRGB[]</div><div class="ttdef"><b>Definition:</b> <a href="ImageContainer_8hpp_source.html#l00229">ImageContainer.hpp:229</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1ImageContainer.html#a2cd4807310bce124878792073e9122e9">exists()</a>, and <a class="el" href="classdyno_1_1ImageContainer.html#ab682ab66d445b4c4a9959e189ffb609f">kRGB</a>.</p>
 <div class="dynheader">
@@ -939,11 +978,13 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ImageContainer_8hpp_source.html#l00663">663</a> of file <a class="el" href="ImageContainer_8hpp_source.html">ImageContainer.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  663</span>{ <span class="keywordflow">return</span> <a class="code hl_function" href="classdyno_1_1ImageContainer.html#a2cd4807310bce124878792073e9122e9">exists</a>(<a class="code hl_variable" href="classdyno_1_1ImageContainer.html#aa0b7a8fa84b4e981627435418f481aa8">kRightRgb</a>); }</div>
-<div class="ttc" id="aclassdyno_1_1ImageContainer_html_aa0b7a8fa84b4e981627435418f481aa8"><div class="ttname"><a href="classdyno_1_1ImageContainer.html#aa0b7a8fa84b4e981627435418f481aa8">dyno::ImageContainer::kRightRgb</a></div><div class="ttdeci">static constexpr char kRightRgb[]</div><div class="ttdef"><b>Definition:</b> <a href="ImageContainer_8hpp_source.html#l00598">ImageContainer.hpp:598</a></div></div>
+<p class="definition">Definition at line <a class="el" href="ImageContainer_8hpp_source.html#l00309">309</a> of file <a class="el" href="ImageContainer_8hpp_source.html">ImageContainer.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  309</span>{ <span class="keywordflow">return</span> <a class="code hl_function" href="classdyno_1_1ImageContainer.html#a2cd4807310bce124878792073e9122e9">exists</a>(<a class="code hl_variable" href="classdyno_1_1ImageContainer.html#aa0b7a8fa84b4e981627435418f481aa8">kRightRgb</a>); }</div>
+<div class="ttc" id="aclassdyno_1_1ImageContainer_html_aa0b7a8fa84b4e981627435418f481aa8"><div class="ttname"><a href="classdyno_1_1ImageContainer.html#aa0b7a8fa84b4e981627435418f481aa8">dyno::ImageContainer::kRightRgb</a></div><div class="ttdeci">static constexpr char kRightRgb[]</div><div class="ttdef"><b>Definition:</b> <a href="ImageContainer_8hpp_source.html#l00233">ImageContainer.hpp:233</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1ImageContainer.html#a2cd4807310bce124878792073e9122e9">exists()</a>, and <a class="el" href="classdyno_1_1ImageContainer.html#aa0b7a8fa84b4e981627435418f481aa8">kRightRgb</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1FeatureTrackerBase.html#a4e9b9b77752d80d8bb8c2236776ca5a8">dyno::FeatureTrackerBase::drawStereoMatches()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -951,6 +992,15 @@ Here is the call graph for this function:</div>
 <map name="aclassdyno_1_1ImageContainer_a33bddc85ca59b9043de6eb52cf252177_cgraph" id="aclassdyno_1_1ImageContainer_a33bddc85ca59b9043de6eb52cf252177_cgraph">
 <area shape="rect" title=" " alt="" coords="5,5,172,45"/>
 <area shape="rect" href="classdyno_1_1ImageContainer.html#a2cd4807310bce124878792073e9122e9" title=" " alt="" coords="220,5,387,45"/>
+</map>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classdyno_1_1ImageContainer_a33bddc85ca59b9043de6eb52cf252177_icgraph.png" border="0" usemap="#aclassdyno_1_1ImageContainer_a33bddc85ca59b9043de6eb52cf252177_icgraph" alt=""/></div>
+<map name="aclassdyno_1_1ImageContainer_a33bddc85ca59b9043de6eb52cf252177_icgraph" id="aclassdyno_1_1ImageContainer_a33bddc85ca59b9043de6eb52cf252177_icgraph">
+<area shape="rect" title=" " alt="" coords="243,5,409,45"/>
+<area shape="rect" href="classdyno_1_1FeatureTrackerBase.html#a4e9b9b77752d80d8bb8c2236776ca5a8" title=" " alt="" coords="5,5,195,45"/>
 </map>
 </div>
 
@@ -971,10 +1021,10 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ImageContainer_8cc_source.html#l00079">79</a> of file <a class="el" href="ImageContainer_8cc_source.html">ImageContainer.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   79</span>                                                                    {</div>
-<div class="line"><span class="lineno">   80</span>  <span class="keywordflow">return</span> this-&gt;at&lt;ImageType::MotionMask&gt;(<a class="code hl_variable" href="classdyno_1_1ImageContainer.html#aca97f94103c325a4aefa2d824f50f7f3">kObjectMask</a>);</div>
-<div class="line"><span class="lineno">   81</span>}</div>
+<p class="definition">Definition at line <a class="el" href="ImageContainer_8cc_source.html#l00078">78</a> of file <a class="el" href="ImageContainer_8cc_source.html">ImageContainer.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   78</span>                                                                    {</div>
+<div class="line"><span class="lineno">   79</span>  <span class="keywordflow">return</span> this-&gt;at&lt;ImageType::MotionMask&gt;(<a class="code hl_variable" href="classdyno_1_1ImageContainer.html#aca97f94103c325a4aefa2d824f50f7f3">kObjectMask</a>);</div>
+<div class="line"><span class="lineno">   80</span>}</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1ImageContainer.html#aca97f94103c325a4aefa2d824f50f7f3">kObjectMask</a>.</p>
 
@@ -995,14 +1045,14 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ImageContainer_8cc_source.html#l00062">62</a> of file <a class="el" href="ImageContainer_8cc_source.html">ImageContainer.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   63</span>          {</div>
-<div class="line"><span class="lineno">   64</span>  <span class="keywordflow">return</span> this-&gt;at&lt;ImageType::MotionMask&gt;(<a class="code hl_variable" href="classdyno_1_1ImageContainer.html#aca97f94103c325a4aefa2d824f50f7f3">kObjectMask</a>);</div>
-<div class="line"><span class="lineno">   65</span>}</div>
+<p class="definition">Definition at line <a class="el" href="ImageContainer_8cc_source.html#l00061">61</a> of file <a class="el" href="ImageContainer_8cc_source.html">ImageContainer.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   62</span>          {</div>
+<div class="line"><span class="lineno">   63</span>  <span class="keywordflow">return</span> this-&gt;at&lt;ImageType::MotionMask&gt;(<a class="code hl_variable" href="classdyno_1_1ImageContainer.html#aca97f94103c325a4aefa2d824f50f7f3">kObjectMask</a>);</div>
+<div class="line"><span class="lineno">   64</span>}</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1ImageContainer.html#aca97f94103c325a4aefa2d824f50f7f3">kObjectMask</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1FeatureTrackerBase.html#aa902950650699301214f776a905e3b77">dyno::FeatureTrackerBase::computeImageTracks()</a>, <a class="el" href="classdyno_1_1Frame.html#ab038b536516e42beb788f1b794801270">dyno::Frame::constructDynamicObservations()</a>, <a class="el" href="classdyno_1_1ExternalFlowFeatureTracker.html#a9bc1bd98819dcd484c6cf62b3e1e5145">dyno::ExternalFlowFeatureTracker::constructStaticFeature()</a>, <a class="el" href="classdyno_1_1KltFeatureTracker.html#a4870d167d7dbd1a04a8d7d15a376a573">dyno::KltFeatureTracker::detectFeatures()</a>, <a class="el" href="classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2">dyno::RGBDInstanceFrontendModule::nominalSpin()</a>, <a class="el" href="classdyno_1_1Frame.html#af5e5ed1065480684da54421c6fcf395e">dyno::Frame::projectToDenseCloud()</a>, <a class="el" href="classdyno_1_1FeatureTracker.html#a7877773d1c6d5b9cef0c379cd701c1e4">dyno::FeatureTracker::propogateMask()</a>, <a class="el" href="classdyno_1_1FeatureTracker.html#ab50422938e62bccc34295c155357213a">dyno::FeatureTracker::requiresSampling()</a>, <a class="el" href="classdyno_1_1FeatureTracker.html#af6093d870bad67d12dee0c9cb913f87c">dyno::FeatureTracker::sampleDynamic()</a>, <a class="el" href="classdyno_1_1FeatureTracker.html#a9890ba0c11b5932b5b4954a86bd03948">dyno::FeatureTracker::track()</a>, <a class="el" href="classdyno_1_1FeatureTracker.html#a145614fe29bef7728075492870ac9c41">dyno::FeatureTracker::trackDynamic()</a>, <a class="el" href="classdyno_1_1KltFeatureTracker.html#a8f26d8fe56edd3e579a879e82a40457f">dyno::KltFeatureTracker::trackPoints()</a>, and <a class="el" href="classdyno_1_1ExternalFlowFeatureTracker.html#aedf0b07caf85d853756cb878f22d2ad7">dyno::ExternalFlowFeatureTracker::trackStatic()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1FeatureTrackerBase.html#aa902950650699301214f776a905e3b77">dyno::FeatureTrackerBase::computeImageTracks()</a>, <a class="el" href="classdyno_1_1Frame.html#ab038b536516e42beb788f1b794801270">dyno::Frame::constructDynamicObservations()</a>, <a class="el" href="classdyno_1_1ExternalFlowFeatureTracker.html#a9bc1bd98819dcd484c6cf62b3e1e5145">dyno::ExternalFlowFeatureTracker::constructStaticFeature()</a>, <a class="el" href="classdyno_1_1KltFeatureTracker.html#a4870d167d7dbd1a04a8d7d15a376a573">dyno::KltFeatureTracker::detectFeatures()</a>, <a class="el" href="classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2">dyno::RGBDInstanceFrontendModule::nominalSpin()</a>, <a class="el" href="classdyno_1_1FeatureTracker.html#aa6e3d79ddd4fc72062ea58d8211a50b2">dyno::FeatureTracker::objectDetection()</a>, <a class="el" href="classdyno_1_1Frame.html#af5e5ed1065480684da54421c6fcf395e">dyno::Frame::projectToDenseCloud()</a>, <a class="el" href="classdyno_1_1FeatureTracker.html#a7877773d1c6d5b9cef0c379cd701c1e4">dyno::FeatureTracker::propogateMask()</a>, <a class="el" href="classdyno_1_1FeatureTracker.html#af6093d870bad67d12dee0c9cb913f87c">dyno::FeatureTracker::sampleDynamic()</a>, <a class="el" href="classdyno_1_1FeatureTracker.html#a145614fe29bef7728075492870ac9c41">dyno::FeatureTracker::trackDynamic()</a>, <a class="el" href="classdyno_1_1FeatureTracker.html#a4796a29c1f89cde0ace1668fc8fcd9a3">dyno::FeatureTracker::trackDynamicKLT()</a>, <a class="el" href="classdyno_1_1KltFeatureTracker.html#a8f26d8fe56edd3e579a879e82a40457f">dyno::KltFeatureTracker::trackPoints()</a>, and <a class="el" href="classdyno_1_1ExternalFlowFeatureTracker.html#aedf0b07caf85d853756cb878f22d2ad7">dyno::ExternalFlowFeatureTracker::trackStatic()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -1016,14 +1066,14 @@ Here is the caller graph for this function:</div>
 <area shape="rect" href="classdyno_1_1KltFeatureTracker.html#a4870d167d7dbd1a04a8d7d15a376a573" title=" " alt="" coords="499,299,674,339"/>
 <area shape="rect" href="classdyno_1_1KltFeatureTracker.html#a8f26d8fe56edd3e579a879e82a40457f" title="Tracks features using KLT tracker between the previous image and the current one." alt="" coords="239,241,413,281"/>
 <area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2" title=" " alt="" coords="481,363,693,403"/>
-<area shape="rect" href="classdyno_1_1Frame.html#af5e5ed1065480684da54421c6fcf395e" title=" " alt="" coords="481,427,692,467"/>
-<area shape="rect" href="classdyno_1_1FeatureTracker.html#a7877773d1c6d5b9cef0c379cd701c1e4" title=" " alt="" coords="247,477,405,517"/>
-<area shape="rect" href="classdyno_1_1FeatureTracker.html#a9890ba0c11b5932b5b4954a86bd03948" title=" " alt="" coords="14,535,171,575"/>
-<area shape="rect" href="classdyno_1_1FeatureTracker.html#ab50422938e62bccc34295c155357213a" title="Check which objects require new features to be detected on them based on a set of &#39;keyframing&#39; criter..." alt="" coords="508,592,665,632"/>
-<area shape="rect" href="classdyno_1_1FeatureTracker.html#a145614fe29bef7728075492870ac9c41" title=" " alt="" coords="247,620,405,660"/>
-<area shape="rect" href="classdyno_1_1FeatureTracker.html#af6093d870bad67d12dee0c9cb913f87c" title=" " alt="" coords="508,707,665,747"/>
-<area shape="rect" href="classdyno_1_1Frame.html#a5553af4c0c310c23d0f39e0c1daf0478" title=" " alt="" coords="250,77,402,102"/>
+<area shape="rect" href="classdyno_1_1FeatureTracker.html#aa6e3d79ddd4fc72062ea58d8211a50b2" title=" " alt="" coords="247,445,405,485"/>
+<area shape="rect" href="classdyno_1_1Frame.html#af5e5ed1065480684da54421c6fcf395e" title=" " alt="" coords="481,477,692,517"/>
+<area shape="rect" href="classdyno_1_1FeatureTracker.html#a7877773d1c6d5b9cef0c379cd701c1e4" title=" " alt="" coords="247,535,405,575"/>
+<area shape="rect" href="classdyno_1_1FeatureTracker.html#af6093d870bad67d12dee0c9cb913f87c" title=" " alt="" coords="508,592,665,632"/>
+<area shape="rect" href="classdyno_1_1FeatureTracker.html#a145614fe29bef7728075492870ac9c41" title=" " alt="" coords="247,599,405,639"/>
+<area shape="rect" href="classdyno_1_1FeatureTracker.html#a4796a29c1f89cde0ace1668fc8fcd9a3" title=" " alt="" coords="247,681,405,721"/>
 <area shape="rect" href="classdyno_1_1KltFeatureTracker.html#ab15aaa39f0c3adc62037d718b98039c0" title="Track features between frames k&#45;1 and the current set of images (at k)." alt="" coords="5,271,180,311"/>
+<area shape="rect" href="classdyno_1_1FeatureTracker.html#a40ee79c94fe2de7f16d2a4508cc2ba11" title=" " alt="" coords="14,567,171,607"/>
 </map>
 </div>
 
@@ -1045,10 +1095,10 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ImageContainer_8cc_source.html#l00098">98</a> of file <a class="el" href="ImageContainer_8cc_source.html">ImageContainer.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   98</span>                                                                   {</div>
-<div class="line"><span class="lineno">   99</span>  <span class="keywordflow">return</span> this-&gt;add&lt;ImageType::MotionMask&gt;(<a class="code hl_variable" href="classdyno_1_1ImageContainer.html#aca97f94103c325a4aefa2d824f50f7f3">kObjectMask</a>, image);</div>
-<div class="line"><span class="lineno">  100</span>}</div>
+<p class="definition">Definition at line <a class="el" href="ImageContainer_8cc_source.html#l00097">97</a> of file <a class="el" href="ImageContainer_8cc_source.html">ImageContainer.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   97</span>                                                                   {</div>
+<div class="line"><span class="lineno">   98</span>  <span class="keywordflow">return</span> this-&gt;add&lt;ImageType::MotionMask&gt;(<a class="code hl_variable" href="classdyno_1_1ImageContainer.html#aca97f94103c325a4aefa2d824f50f7f3">kObjectMask</a>, image);</div>
+<div class="line"><span class="lineno">   99</span>}</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1ImageContainer.html#aca97f94103c325a4aefa2d824f50f7f3">kObjectMask</a>.</p>
 
@@ -1078,18 +1128,18 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ImageContainer_8hpp_source.html#l00613">613</a> of file <a class="el" href="ImageContainer_8hpp_source.html">ImageContainer.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  613</span>                                                         {</div>
-<div class="line"><span class="lineno">  614</span>    <span class="keywordflow">if</span> (<span class="keyword">this</span> != &amp;other) {</div>
-<div class="line"><span class="lineno">  615</span>      <a class="code hl_variable" href="classdyno_1_1ImageContainer.html#abb77bc22c51d38c0d1f2d8a986fee9c4">frame_id_</a> = other.frame_id_;</div>
-<div class="line"><span class="lineno">  616</span>      <a class="code hl_variable" href="classdyno_1_1ImageContainer.html#ad76d5a8374e5b4d2c7b09970c1f92c05">timestamp_</a> = other.timestamp_;</div>
-<div class="line"><span class="lineno">  617</span>      <a class="code hl_variable" href="classdyno_1_1ImageContainer.html#aa4dbde4b9c3ea19893f9ea458f4805d1">images_</a>.clear();</div>
-<div class="line"><span class="lineno">  618</span>      <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [k, v] : other.images_) {</div>
-<div class="line"><span class="lineno">  619</span>        <a class="code hl_variable" href="classdyno_1_1ImageContainer.html#aa4dbde4b9c3ea19893f9ea458f4805d1">images_</a>.emplace(k, v);</div>
-<div class="line"><span class="lineno">  620</span>      }</div>
-<div class="line"><span class="lineno">  621</span>    }</div>
-<div class="line"><span class="lineno">  622</span>    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
-<div class="line"><span class="lineno">  623</span>  }</div>
+<p class="definition">Definition at line <a class="el" href="ImageContainer_8hpp_source.html#l00248">248</a> of file <a class="el" href="ImageContainer_8hpp_source.html">ImageContainer.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  248</span>                                                         {</div>
+<div class="line"><span class="lineno">  249</span>    <span class="keywordflow">if</span> (<span class="keyword">this</span> != &amp;other) {</div>
+<div class="line"><span class="lineno">  250</span>      <a class="code hl_variable" href="classdyno_1_1ImageContainer.html#abb77bc22c51d38c0d1f2d8a986fee9c4">frame_id_</a> = other.frame_id_;</div>
+<div class="line"><span class="lineno">  251</span>      <a class="code hl_variable" href="classdyno_1_1ImageContainer.html#ad76d5a8374e5b4d2c7b09970c1f92c05">timestamp_</a> = other.timestamp_;</div>
+<div class="line"><span class="lineno">  252</span>      <a class="code hl_variable" href="classdyno_1_1ImageContainer.html#aa4dbde4b9c3ea19893f9ea458f4805d1">images_</a>.clear();</div>
+<div class="line"><span class="lineno">  253</span>      <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [k, v] : other.images_) {</div>
+<div class="line"><span class="lineno">  254</span>        <a class="code hl_variable" href="classdyno_1_1ImageContainer.html#aa4dbde4b9c3ea19893f9ea458f4805d1">images_</a>.emplace(k, v);</div>
+<div class="line"><span class="lineno">  255</span>      }</div>
+<div class="line"><span class="lineno">  256</span>    }</div>
+<div class="line"><span class="lineno">  257</span>    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><span class="lineno">  258</span>  }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1ImageContainer.html#abb77bc22c51d38c0d1f2d8a986fee9c4">frame_id_</a>, <a class="el" href="classdyno_1_1ImageContainer.html#aa4dbde4b9c3ea19893f9ea458f4805d1">images_</a>, and <a class="el" href="classdyno_1_1ImageContainer.html#ad76d5a8374e5b4d2c7b09970c1f92c05">timestamp_</a>.</p>
 
@@ -1136,10 +1186,10 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ImageContainer_8cc_source.html#l00076">76</a> of file <a class="el" href="ImageContainer_8cc_source.html">ImageContainer.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   76</span>                                                                {</div>
-<div class="line"><span class="lineno">   77</span>  <span class="keywordflow">return</span> this-&gt;at&lt;ImageType::OpticalFlow&gt;(<a class="code hl_variable" href="classdyno_1_1ImageContainer.html#a1000fd5439877f2376d2282383a41535">kOPticalFlow</a>);</div>
-<div class="line"><span class="lineno">   78</span>}</div>
+<p class="definition">Definition at line <a class="el" href="ImageContainer_8cc_source.html#l00075">75</a> of file <a class="el" href="ImageContainer_8cc_source.html">ImageContainer.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   75</span>                                                                {</div>
+<div class="line"><span class="lineno">   76</span>  <span class="keywordflow">return</span> this-&gt;at&lt;ImageType::OpticalFlow&gt;(<a class="code hl_variable" href="classdyno_1_1ImageContainer.html#a1000fd5439877f2376d2282383a41535">kOPticalFlow</a>);</div>
+<div class="line"><span class="lineno">   77</span>}</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1ImageContainer.html#a1000fd5439877f2376d2282383a41535">kOPticalFlow</a>.</p>
 
@@ -1160,10 +1210,10 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ImageContainer_8cc_source.html#l00058">58</a> of file <a class="el" href="ImageContainer_8cc_source.html">ImageContainer.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   59</span>          {</div>
-<div class="line"><span class="lineno">   60</span>  <span class="keywordflow">return</span> this-&gt;at&lt;ImageType::OpticalFlow&gt;(<a class="code hl_variable" href="classdyno_1_1ImageContainer.html#a1000fd5439877f2376d2282383a41535">kOPticalFlow</a>);</div>
-<div class="line"><span class="lineno">   61</span>}</div>
+<p class="definition">Definition at line <a class="el" href="ImageContainer_8cc_source.html#l00057">57</a> of file <a class="el" href="ImageContainer_8cc_source.html">ImageContainer.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   58</span>          {</div>
+<div class="line"><span class="lineno">   59</span>  <span class="keywordflow">return</span> this-&gt;at&lt;ImageType::OpticalFlow&gt;(<a class="code hl_variable" href="classdyno_1_1ImageContainer.html#a1000fd5439877f2376d2282383a41535">kOPticalFlow</a>);</div>
+<div class="line"><span class="lineno">   60</span>}</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1ImageContainer.html#a1000fd5439877f2376d2282383a41535">kOPticalFlow</a>.</p>
 
@@ -1179,7 +1229,7 @@ Here is the caller graph for this function:</div>
 <area shape="rect" href="classdyno_1_1FeatureTracker.html#af6093d870bad67d12dee0c9cb913f87c" title=" " alt="" coords="487,133,645,173"/>
 <area shape="rect" href="classdyno_1_1FeatureTracker.html#a145614fe29bef7728075492870ac9c41" title=" " alt="" coords="230,161,387,201"/>
 <area shape="rect" href="classdyno_1_1ExternalFlowFeatureTracker.html#aedf0b07caf85d853756cb878f22d2ad7" title="Base function to perform feature tracking on static points." alt="" coords="211,5,407,45"/>
-<area shape="rect" href="classdyno_1_1FeatureTracker.html#a9890ba0c11b5932b5b4954a86bd03948" title=" " alt="" coords="5,161,163,201"/>
+<area shape="rect" href="classdyno_1_1FeatureTracker.html#a40ee79c94fe2de7f16d2a4508cc2ba11" title=" " alt="" coords="5,161,163,201"/>
 </map>
 </div>
 
@@ -1201,12 +1251,84 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ImageContainer_8cc_source.html#l00094">94</a> of file <a class="el" href="ImageContainer_8cc_source.html">ImageContainer.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   94</span>                                                              {</div>
-<div class="line"><span class="lineno">   95</span>  <span class="keywordflow">return</span> this-&gt;add&lt;ImageType::OpticalFlow&gt;(<a class="code hl_variable" href="classdyno_1_1ImageContainer.html#a1000fd5439877f2376d2282383a41535">kOPticalFlow</a>, image);</div>
-<div class="line"><span class="lineno">   96</span>}</div>
+<p class="definition">Definition at line <a class="el" href="ImageContainer_8cc_source.html#l00093">93</a> of file <a class="el" href="ImageContainer_8cc_source.html">ImageContainer.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   93</span>                                                              {</div>
+<div class="line"><span class="lineno">   94</span>  <span class="keywordflow">return</span> this-&gt;add&lt;ImageType::OpticalFlow&gt;(<a class="code hl_variable" href="classdyno_1_1ImageContainer.html#a1000fd5439877f2376d2282383a41535">kOPticalFlow</a>, image);</div>
+<div class="line"><span class="lineno">   95</span>}</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1ImageContainer.html#a1000fd5439877f2376d2282383a41535">kOPticalFlow</a>.</p>
+
+</div>
+</div>
+<a id="a0f5c67b77443b776a57d5ec38ddad291" name="a0f5c67b77443b776a57d5ec38ddad291"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0f5c67b77443b776a57d5ec38ddad291">&#9670;&#160;</a></span>replace()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename IMAGETYPE &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classdyno_1_1ImageContainer.html">ImageContainer</a> &amp; dyno::ImageContainer::replace </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>key</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const cv::Mat &amp;&#160;</td>
+          <td class="paramname"><em>image</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="ImageContainer_8hpp_source.html#l00276">276</a> of file <a class="el" href="ImageContainer_8hpp_source.html">ImageContainer.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  276</span>                                                                    {</div>
+<div class="line"><span class="lineno">  277</span>    <span class="keywordflow">if</span> (!<a class="code hl_function" href="classdyno_1_1ImageContainer.html#a2cd4807310bce124878792073e9122e9">exists</a>(key)) {</div>
+<div class="line"><span class="lineno">  278</span>      <span class="keywordflow">return</span> this-&gt;add&lt;IMAGETYPE&gt;(key, image);</div>
+<div class="line"><span class="lineno">  279</span>    }</div>
+<div class="line"><span class="lineno">  280</span> </div>
+<div class="line"><span class="lineno">  281</span>    KeyImagePair key_image = KeyImagePair::Create&lt;IMAGETYPE&gt;(key, image);</div>
+<div class="line"><span class="lineno">  282</span>    <a class="code hl_variable" href="classdyno_1_1ImageContainer.html#aa4dbde4b9c3ea19893f9ea458f4805d1">images_</a>.insert_or_assign(key, std::move(key_image));</div>
+<div class="line"><span class="lineno">  283</span>    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><span class="lineno">  284</span>  }</div>
+</div><!-- fragment -->
+<p class="reference">References <a class="el" href="classdyno_1_1ImageContainer.html#a2cd4807310bce124878792073e9122e9">exists()</a>, and <a class="el" href="classdyno_1_1ImageContainer.html#aa4dbde4b9c3ea19893f9ea458f4805d1">images_</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1FeatureTracker.html#aa6e3d79ddd4fc72062ea58d8211a50b2">dyno::FeatureTracker::objectDetection()</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classdyno_1_1ImageContainer_a0f5c67b77443b776a57d5ec38ddad291_cgraph.png" border="0" usemap="#aclassdyno_1_1ImageContainer_a0f5c67b77443b776a57d5ec38ddad291_cgraph" alt=""/></div>
+<map name="aclassdyno_1_1ImageContainer_a0f5c67b77443b776a57d5ec38ddad291_cgraph" id="aclassdyno_1_1ImageContainer_a0f5c67b77443b776a57d5ec38ddad291_cgraph">
+<area shape="rect" title=" " alt="" coords="5,5,172,45"/>
+<area shape="rect" href="classdyno_1_1ImageContainer.html#a2cd4807310bce124878792073e9122e9" title=" " alt="" coords="220,5,387,45"/>
+</map>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classdyno_1_1ImageContainer_a0f5c67b77443b776a57d5ec38ddad291_icgraph.png" border="0" usemap="#aclassdyno_1_1ImageContainer_a0f5c67b77443b776a57d5ec38ddad291_icgraph" alt=""/></div>
+<map name="aclassdyno_1_1ImageContainer_a0f5c67b77443b776a57d5ec38ddad291_icgraph" id="aclassdyno_1_1ImageContainer_a0f5c67b77443b776a57d5ec38ddad291_icgraph">
+<area shape="rect" title=" " alt="" coords="416,5,583,45"/>
+<area shape="rect" href="classdyno_1_1FeatureTracker.html#aa6e3d79ddd4fc72062ea58d8211a50b2" title=" " alt="" coords="211,5,368,45"/>
+<area shape="rect" href="classdyno_1_1FeatureTracker.html#a40ee79c94fe2de7f16d2a4508cc2ba11" title=" " alt="" coords="5,5,163,45"/>
+</map>
+</div>
 
 </div>
 </div>
@@ -1225,10 +1347,10 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ImageContainer_8cc_source.html#l00070">70</a> of file <a class="el" href="ImageContainer_8cc_source.html">ImageContainer.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   70</span>                                                    {</div>
-<div class="line"><span class="lineno">   71</span>  <span class="keywordflow">return</span> this-&gt;at&lt;ImageType::RGBMono&gt;(<a class="code hl_variable" href="classdyno_1_1ImageContainer.html#ab682ab66d445b4c4a9959e189ffb609f">kRGB</a>);</div>
-<div class="line"><span class="lineno">   72</span>}</div>
+<p class="definition">Definition at line <a class="el" href="ImageContainer_8cc_source.html#l00069">69</a> of file <a class="el" href="ImageContainer_8cc_source.html">ImageContainer.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   69</span>                                                    {</div>
+<div class="line"><span class="lineno">   70</span>  <span class="keywordflow">return</span> this-&gt;at&lt;ImageType::RGBMono&gt;(<a class="code hl_variable" href="classdyno_1_1ImageContainer.html#ab682ab66d445b4c4a9959e189ffb609f">kRGB</a>);</div>
+<div class="line"><span class="lineno">   71</span>}</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1ImageContainer.html#ab682ab66d445b4c4a9959e189ffb609f">kRGB</a>.</p>
 
@@ -1249,41 +1371,43 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ImageContainer_8cc_source.html#l00052">52</a> of file <a class="el" href="ImageContainer_8cc_source.html">ImageContainer.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   52</span>                                                                {</div>
-<div class="line"><span class="lineno">   53</span>  <span class="keywordflow">return</span> this-&gt;at&lt;ImageType::RGBMono&gt;(<a class="code hl_variable" href="classdyno_1_1ImageContainer.html#ab682ab66d445b4c4a9959e189ffb609f">kRGB</a>);</div>
-<div class="line"><span class="lineno">   54</span>}</div>
+<p class="definition">Definition at line <a class="el" href="ImageContainer_8cc_source.html#l00051">51</a> of file <a class="el" href="ImageContainer_8cc_source.html">ImageContainer.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   51</span>                                                                {</div>
+<div class="line"><span class="lineno">   52</span>  <span class="keywordflow">return</span> this-&gt;at&lt;ImageType::RGBMono&gt;(<a class="code hl_variable" href="classdyno_1_1ImageContainer.html#ab682ab66d445b4c4a9959e189ffb609f">kRGB</a>);</div>
+<div class="line"><span class="lineno">   53</span>}</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1ImageContainer.html#ab682ab66d445b4c4a9959e189ffb609f">kRGB</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1ClusterSlamDataLoader.html#a08661c0ee53d2504e5b6d2c931df1f97">dyno::ClusterSlamDataLoader::ClusterSlamDataLoader()</a>, <a class="el" href="classdyno_1_1FeatureTrackerBase.html#aa902950650699301214f776a905e3b77">dyno::FeatureTrackerBase::computeImageTracks()</a>, <a class="el" href="classdyno_1_1ExternalFlowFeatureTracker.html#a9bc1bd98819dcd484c6cf62b3e1e5145">dyno::ExternalFlowFeatureTracker::constructStaticFeature()</a>, <a class="el" href="classdyno_1_1Frame.html#a5e2adcdcb96143552fa891351b94dd22">dyno::Frame::drawDetectedObjectBoxes()</a>, <a class="el" href="classdyno_1_1KltFeatureTracker.html#a32faba587882416d8090ff709cb93cfe">dyno::KltFeatureTracker::equalizeImage()</a>, <a class="el" href="classdyno_1_1OnlineDataProviderRos.html#a02b6aa8b0f6c6c732310c0852f54ef42">dyno::OnlineDataProviderRos::imageSyncCallback()</a>, <a class="el" href="classdyno_1_1KittiDataLoader.html#ac3950a2ffba6caf37cefb51459336862">dyno::KittiDataLoader::KittiDataLoader()</a>, <a class="el" href="dyno__sam_8cc.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>, <a class="el" href="classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2">dyno::RGBDInstanceFrontendModule::nominalSpin()</a>, <a class="el" href="classdyno_1_1OMDDataLoader.html#ac5ff322c63be13db32c7ad810c85ea08">dyno::OMDDataLoader::OMDDataLoader()</a>, <a class="el" href="classdyno_1_1ProjectARIADataLoader.html#ac54b115f31c1e8c76395fc595f0c7637">dyno::ProjectARIADataLoader::ProjectARIADataLoader()</a>, <a class="el" href="classdyno_1_1FeatureTracker.html#af6093d870bad67d12dee0c9cb913f87c">dyno::FeatureTracker::sampleDynamic()</a>, <a class="el" href="classdyno_1_1TartanAirShibuyaLoader.html#a174041e4559db39e9865a0260b691e38">dyno::TartanAirShibuyaLoader::TartanAirShibuyaLoader()</a>, <a class="el" href="classdyno_1_1FeatureTracker.html#a9890ba0c11b5932b5b4954a86bd03948">dyno::FeatureTracker::track()</a>, <a class="el" href="classdyno_1_1FeatureTracker.html#a145614fe29bef7728075492870ac9c41">dyno::FeatureTracker::trackDynamic()</a>, <a class="el" href="classdyno_1_1ExternalFlowFeatureTracker.html#aedf0b07caf85d853756cb878f22d2ad7">dyno::ExternalFlowFeatureTracker::trackStatic()</a>, <a class="el" href="classdyno_1_1ViodeLoader.html#af043296a2e18c763356eaf2d51cb728f">dyno::ViodeLoader::ViodeLoader()</a>, and <a class="el" href="classdyno_1_1VirtualKittiDataLoader.html#aac90985e4a9dee128c448148e218aed5">dyno::VirtualKittiDataLoader::VirtualKittiDataLoader()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1ClusterSlamDataLoader.html#a08661c0ee53d2504e5b6d2c931df1f97">dyno::ClusterSlamDataLoader::ClusterSlamDataLoader()</a>, <a class="el" href="classdyno_1_1FeatureTrackerBase.html#aa902950650699301214f776a905e3b77">dyno::FeatureTrackerBase::computeImageTracks()</a>, <a class="el" href="classdyno_1_1OnlineDataProviderRos.html#a7c809e378b5d4b807e80abb43c0da23a">dyno::OnlineDataProviderRos::connectImages()</a>, <a class="el" href="classdyno_1_1ExternalFlowFeatureTracker.html#a9bc1bd98819dcd484c6cf62b3e1e5145">dyno::ExternalFlowFeatureTracker::constructStaticFeature()</a>, <a class="el" href="classdyno_1_1FeatureTrackerBase.html#a4e9b9b77752d80d8bb8c2236776ca5a8">dyno::FeatureTrackerBase::drawStereoMatches()</a>, <a class="el" href="classdyno_1_1KltFeatureTracker.html#a32faba587882416d8090ff709cb93cfe">dyno::KltFeatureTracker::equalizeImage()</a>, <a class="el" href="classdyno_1_1KittiDataLoader.html#ac3950a2ffba6caf37cefb51459336862">dyno::KittiDataLoader::KittiDataLoader()</a>, <a class="el" href="dyno__sam_8cc.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>, <a class="el" href="classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2">dyno::RGBDInstanceFrontendModule::nominalSpin()</a>, <a class="el" href="classdyno_1_1FeatureTracker.html#aa6e3d79ddd4fc72062ea58d8211a50b2">dyno::FeatureTracker::objectDetection()</a>, <a class="el" href="classdyno_1_1OMDDataLoader.html#ac5ff322c63be13db32c7ad810c85ea08">dyno::OMDDataLoader::OMDDataLoader()</a>, <a class="el" href="classdyno_1_1ProjectARIADataLoader.html#ac54b115f31c1e8c76395fc595f0c7637">dyno::ProjectARIADataLoader::ProjectARIADataLoader()</a>, <a class="el" href="classdyno_1_1FeatureTracker.html#af6093d870bad67d12dee0c9cb913f87c">dyno::FeatureTracker::sampleDynamic()</a>, <a class="el" href="classdyno_1_1TartanAirShibuyaLoader.html#a174041e4559db39e9865a0260b691e38">dyno::TartanAirShibuyaLoader::TartanAirShibuyaLoader()</a>, <a class="el" href="classdyno_1_1FeatureTracker.html#a40ee79c94fe2de7f16d2a4508cc2ba11">dyno::FeatureTracker::track()</a>, <a class="el" href="classdyno_1_1FeatureTracker.html#a145614fe29bef7728075492870ac9c41">dyno::FeatureTracker::trackDynamic()</a>, <a class="el" href="classdyno_1_1FeatureTracker.html#a4796a29c1f89cde0ace1668fc8fcd9a3">dyno::FeatureTracker::trackDynamicKLT()</a>, <a class="el" href="classdyno_1_1ExternalFlowFeatureTracker.html#aedf0b07caf85d853756cb878f22d2ad7">dyno::ExternalFlowFeatureTracker::trackStatic()</a>, <a class="el" href="classdyno_1_1ViodeLoader.html#af043296a2e18c763356eaf2d51cb728f">dyno::ViodeLoader::ViodeLoader()</a>, and <a class="el" href="classdyno_1_1VirtualKittiDataLoader.html#aac90985e4a9dee128c448148e218aed5">dyno::VirtualKittiDataLoader::VirtualKittiDataLoader()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1ImageContainer_a6f35259f95c31b861ff6515c159e1ee3_icgraph.png" border="0" usemap="#aclassdyno_1_1ImageContainer_a6f35259f95c31b861ff6515c159e1ee3_icgraph" alt=""/></div>
 <map name="aclassdyno_1_1ImageContainer_a6f35259f95c31b861ff6515c159e1ee3_icgraph" id="aclassdyno_1_1ImageContainer_a6f35259f95c31b861ff6515c159e1ee3_icgraph">
-<area shape="rect" title=" " alt="" coords="773,534,968,559"/>
+<area shape="rect" title=" " alt="" coords="773,591,968,617"/>
 <area shape="rect" href="classdyno_1_1ClusterSlamDataLoader.html#a08661c0ee53d2504e5b6d2c931df1f97" title="Construct a new Cluster Slam Data Loader object." alt="" coords="506,5,722,45"/>
 <area shape="rect" href="classdyno_1_1FeatureTrackerBase.html#aa902950650699301214f776a905e3b77" title=" " alt="" coords="519,69,709,109"/>
-<area shape="rect" href="classdyno_1_1ExternalFlowFeatureTracker.html#a9bc1bd98819dcd484c6cf62b3e1e5145" title=" " alt="" coords="503,133,725,173"/>
-<area shape="rect" href="classdyno_1_1ExternalFlowFeatureTracker.html#aedf0b07caf85d853756cb878f22d2ad7" title="Base function to perform feature tracking on static points." alt="" coords="259,163,455,203"/>
-<area shape="rect" href="classdyno_1_1Frame.html#a5e2adcdcb96143552fa891351b94dd22" title="From the detected list of objects (in Frame::object_observations_) draw the object masks as labelled ..." alt="" coords="513,248,715,288"/>
-<area shape="rect" href="classdyno_1_1KltFeatureTracker.html#a32faba587882416d8090ff709cb93cfe" title="Outputs a CLAHE equalized greyscale image from the input RGB, which will be used to detect and track ..." alt="" coords="527,312,701,352"/>
-<area shape="rect" href="classdyno_1_1OnlineDataProviderRos.html#a02b6aa8b0f6c6c732310c0852f54ef42" title=" " alt="" coords="519,376,709,416"/>
+<area shape="rect" href="classdyno_1_1OnlineDataProviderRos.html#a7c809e378b5d4b807e80abb43c0da23a" title=" " alt="" coords="519,133,709,173"/>
+<area shape="rect" href="classdyno_1_1ExternalFlowFeatureTracker.html#a9bc1bd98819dcd484c6cf62b3e1e5145" title=" " alt="" coords="503,197,725,237"/>
+<area shape="rect" href="classdyno_1_1ExternalFlowFeatureTracker.html#aedf0b07caf85d853756cb878f22d2ad7" title="Base function to perform feature tracking on static points." alt="" coords="259,227,455,267"/>
+<area shape="rect" href="classdyno_1_1FeatureTrackerBase.html#a4e9b9b77752d80d8bb8c2236776ca5a8" title=" " alt="" coords="519,312,709,352"/>
+<area shape="rect" href="classdyno_1_1KltFeatureTracker.html#a32faba587882416d8090ff709cb93cfe" title="Outputs a CLAHE equalized greyscale image from the input RGB, which will be used to detect and track ..." alt="" coords="527,376,701,416"/>
 <area shape="rect" href="classdyno_1_1KittiDataLoader.html#ac3950a2ffba6caf37cefb51459336862" title="Construct a new Kitti Data Loader object." alt="" coords="532,440,696,480"/>
 <area shape="rect" href="dyno__sam_8cc.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="587,505,641,530"/>
 <area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2" title=" " alt="" coords="508,555,720,595"/>
-<area shape="rect" href="classdyno_1_1OMDDataLoader.html#ac5ff322c63be13db32c7ad810c85ea08" title="Construct a new Cluster Slam Data Loader object." alt="" coords="529,619,699,659"/>
-<area shape="rect" href="classdyno_1_1ProjectARIADataLoader.html#ac54b115f31c1e8c76395fc595f0c7637" title="The dataset path is /path/to/dataset/ /rgb /depth /calibration.json .... /optical_flow /instance_mask..." alt="" coords="507,683,721,723"/>
-<area shape="rect" href="classdyno_1_1FeatureTracker.html#af6093d870bad67d12dee0c9cb913f87c" title=" " alt="" coords="535,747,693,787"/>
-<area shape="rect" href="classdyno_1_1FeatureTracker.html#a145614fe29bef7728075492870ac9c41" title=" " alt="" coords="278,797,435,837"/>
-<area shape="rect" href="classdyno_1_1FeatureTracker.html#a9890ba0c11b5932b5b4954a86bd03948" title=" " alt="" coords="29,825,187,865"/>
-<area shape="rect" href="classdyno_1_1TartanAirShibuyaLoader.html#a174041e4559db39e9865a0260b691e38" title=" " alt="" coords="506,912,722,952"/>
-<area shape="rect" href="classdyno_1_1ViodeLoader.html#af043296a2e18c763356eaf2d51cb728f" title=" " alt="" coords="539,976,689,1016"/>
-<area shape="rect" href="classdyno_1_1VirtualKittiDataLoader.html#aac90985e4a9dee128c448148e218aed5" title=" " alt="" coords="511,1040,717,1080"/>
-<area shape="rect" href="classdyno_1_1KltFeatureTracker.html#ab15aaa39f0c3adc62037d718b98039c0" title="Track features between frames k&#45;1 and the current set of images (at k)." alt="" coords="269,312,444,352"/>
-<area shape="rect" href="classdyno_1_1OnlineDataProviderRos.html#a3b7725856bc86407813c51804a26bea4" title="Connects all subscribers." alt="" coords="262,376,451,416"/>
-<area shape="rect" href="classdyno_1_1OnlineDataProviderRos.html#abea751b62c91dbf7bfac759680a434f7" title="Construct a new OnlineDataProviderRos." alt="" coords="5,376,211,416"/>
+<area shape="rect" href="classdyno_1_1FeatureTracker.html#aa6e3d79ddd4fc72062ea58d8211a50b2" title=" " alt="" coords="278,605,435,645"/>
+<area shape="rect" href="classdyno_1_1FeatureTracker.html#a40ee79c94fe2de7f16d2a4508cc2ba11" title=" " alt="" coords="29,755,187,795"/>
+<area shape="rect" href="classdyno_1_1OMDDataLoader.html#ac5ff322c63be13db32c7ad810c85ea08" title="Construct a new Cluster Slam Data Loader object." alt="" coords="529,720,699,760"/>
+<area shape="rect" href="classdyno_1_1ProjectARIADataLoader.html#ac54b115f31c1e8c76395fc595f0c7637" title="The dataset path is /path/to/dataset/ /rgb /depth /calibration.json .... /optical_flow /instance_mask..." alt="" coords="507,784,721,824"/>
+<area shape="rect" href="classdyno_1_1FeatureTracker.html#af6093d870bad67d12dee0c9cb913f87c" title=" " alt="" coords="535,848,693,888"/>
+<area shape="rect" href="classdyno_1_1FeatureTracker.html#a145614fe29bef7728075492870ac9c41" title=" " alt="" coords="278,848,435,888"/>
+<area shape="rect" href="classdyno_1_1TartanAirShibuyaLoader.html#a174041e4559db39e9865a0260b691e38" title=" " alt="" coords="506,963,722,1003"/>
+<area shape="rect" href="classdyno_1_1FeatureTracker.html#a4796a29c1f89cde0ace1668fc8fcd9a3" title=" " alt="" coords="278,965,435,1005"/>
+<area shape="rect" href="classdyno_1_1ViodeLoader.html#af043296a2e18c763356eaf2d51cb728f" title=" " alt="" coords="539,1077,689,1117"/>
+<area shape="rect" href="classdyno_1_1VirtualKittiDataLoader.html#aac90985e4a9dee128c448148e218aed5" title=" " alt="" coords="511,1141,717,1181"/>
+<area shape="rect" href="classdyno_1_1OnlineDataProviderRos.html#a3b7725856bc86407813c51804a26bea4" title="Connects all subscribers." alt="" coords="262,133,451,173"/>
+<area shape="rect" href="classdyno_1_1OnlineDataProviderRos.html#abea751b62c91dbf7bfac759680a434f7" title="Construct a new OnlineDataProviderRos." alt="" coords="5,133,211,173"/>
+<area shape="rect" href="classdyno_1_1KltFeatureTracker.html#ab15aaa39f0c3adc62037d718b98039c0" title="Track features between frames k&#45;1 and the current set of images (at k)." alt="" coords="269,376,444,416"/>
 </map>
 </div>
 
@@ -1305,10 +1429,10 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ImageContainer_8cc_source.html#l00086">86</a> of file <a class="el" href="ImageContainer_8cc_source.html">ImageContainer.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   86</span>                                                      {</div>
-<div class="line"><span class="lineno">   87</span>  <span class="keywordflow">return</span> this-&gt;add&lt;ImageType::RGBMono&gt;(<a class="code hl_variable" href="classdyno_1_1ImageContainer.html#ab682ab66d445b4c4a9959e189ffb609f">kRGB</a>, image);</div>
-<div class="line"><span class="lineno">   88</span>}</div>
+<p class="definition">Definition at line <a class="el" href="ImageContainer_8cc_source.html#l00085">85</a> of file <a class="el" href="ImageContainer_8cc_source.html">ImageContainer.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   85</span>                                                      {</div>
+<div class="line"><span class="lineno">   86</span>  <span class="keywordflow">return</span> this-&gt;add&lt;ImageType::RGBMono&gt;(<a class="code hl_variable" href="classdyno_1_1ImageContainer.html#ab682ab66d445b4c4a9959e189ffb609f">kRGB</a>, image);</div>
+<div class="line"><span class="lineno">   87</span>}</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1ImageContainer.html#ab682ab66d445b4c4a9959e189ffb609f">kRGB</a>.</p>
 
@@ -1329,10 +1453,10 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ImageContainer_8cc_source.html#l00082">82</a> of file <a class="el" href="ImageContainer_8cc_source.html">ImageContainer.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   82</span>                                                         {</div>
-<div class="line"><span class="lineno">   83</span>  <span class="keywordflow">return</span> this-&gt;at&lt;ImageType::RGBMono&gt;(<a class="code hl_variable" href="classdyno_1_1ImageContainer.html#aa0b7a8fa84b4e981627435418f481aa8">kRightRgb</a>);</div>
-<div class="line"><span class="lineno">   84</span>}</div>
+<p class="definition">Definition at line <a class="el" href="ImageContainer_8cc_source.html#l00081">81</a> of file <a class="el" href="ImageContainer_8cc_source.html">ImageContainer.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   81</span>                                                         {</div>
+<div class="line"><span class="lineno">   82</span>  <span class="keywordflow">return</span> this-&gt;at&lt;ImageType::RGBMono&gt;(<a class="code hl_variable" href="classdyno_1_1ImageContainer.html#aa0b7a8fa84b4e981627435418f481aa8">kRightRgb</a>);</div>
+<div class="line"><span class="lineno">   83</span>}</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1ImageContainer.html#aa0b7a8fa84b4e981627435418f481aa8">kRightRgb</a>.</p>
 
@@ -1353,21 +1477,22 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ImageContainer_8cc_source.html#l00066">66</a> of file <a class="el" href="ImageContainer_8cc_source.html">ImageContainer.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   66</span>                                                                     {</div>
-<div class="line"><span class="lineno">   67</span>  <span class="keywordflow">return</span> this-&gt;at&lt;ImageType::RGBMono&gt;(<a class="code hl_variable" href="classdyno_1_1ImageContainer.html#aa0b7a8fa84b4e981627435418f481aa8">kRightRgb</a>);</div>
-<div class="line"><span class="lineno">   68</span>}</div>
+<p class="definition">Definition at line <a class="el" href="ImageContainer_8cc_source.html#l00065">65</a> of file <a class="el" href="ImageContainer_8cc_source.html">ImageContainer.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   65</span>                                                                     {</div>
+<div class="line"><span class="lineno">   66</span>  <span class="keywordflow">return</span> this-&gt;at&lt;ImageType::RGBMono&gt;(<a class="code hl_variable" href="classdyno_1_1ImageContainer.html#aa0b7a8fa84b4e981627435418f481aa8">kRightRgb</a>);</div>
+<div class="line"><span class="lineno">   67</span>}</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1ImageContainer.html#aa0b7a8fa84b4e981627435418f481aa8">kRightRgb</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1ViodeLoader.html#af043296a2e18c763356eaf2d51cb728f">dyno::ViodeLoader::ViodeLoader()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1FeatureTrackerBase.html#a4e9b9b77752d80d8bb8c2236776ca5a8">dyno::FeatureTrackerBase::drawStereoMatches()</a>, and <a class="el" href="classdyno_1_1ViodeLoader.html#af043296a2e18c763356eaf2d51cb728f">dyno::ViodeLoader::ViodeLoader()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1ImageContainer_a638ee1a86cecdb5d4b8123b950c8bb02_icgraph.png" border="0" usemap="#aclassdyno_1_1ImageContainer_a638ee1a86cecdb5d4b8123b950c8bb02_icgraph" alt=""/></div>
 <map name="aclassdyno_1_1ImageContainer_a638ee1a86cecdb5d4b8123b950c8bb02_icgraph" id="aclassdyno_1_1ImageContainer_a638ee1a86cecdb5d4b8123b950c8bb02_icgraph">
-<area shape="rect" title=" " alt="" coords="204,5,371,45"/>
-<area shape="rect" href="classdyno_1_1ViodeLoader.html#af043296a2e18c763356eaf2d51cb728f" title=" " alt="" coords="5,5,156,45"/>
+<area shape="rect" title=" " alt="" coords="243,37,409,77"/>
+<area shape="rect" href="classdyno_1_1FeatureTrackerBase.html#a4e9b9b77752d80d8bb8c2236776ca5a8" title=" " alt="" coords="5,5,195,45"/>
+<area shape="rect" href="classdyno_1_1ViodeLoader.html#af043296a2e18c763356eaf2d51cb728f" title=" " alt="" coords="25,69,175,109"/>
 </map>
 </div>
 
@@ -1389,10 +1514,10 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ImageContainer_8cc_source.html#l00102">102</a> of file <a class="el" href="ImageContainer_8cc_source.html">ImageContainer.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  102</span>                                                           {</div>
-<div class="line"><span class="lineno">  103</span>  <span class="keywordflow">return</span> this-&gt;add&lt;ImageType::RGBMono&gt;(<a class="code hl_variable" href="classdyno_1_1ImageContainer.html#aa0b7a8fa84b4e981627435418f481aa8">kRightRgb</a>, image);</div>
-<div class="line"><span class="lineno">  104</span>}</div>
+<p class="definition">Definition at line <a class="el" href="ImageContainer_8cc_source.html#l00101">101</a> of file <a class="el" href="ImageContainer_8cc_source.html">ImageContainer.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  101</span>                                                           {</div>
+<div class="line"><span class="lineno">  102</span>  <span class="keywordflow">return</span> this-&gt;add&lt;ImageType::RGBMono&gt;(<a class="code hl_variable" href="classdyno_1_1ImageContainer.html#aa0b7a8fa84b4e981627435418f481aa8">kRightRgb</a>, image);</div>
+<div class="line"><span class="lineno">  103</span>}</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1ImageContainer.html#aa0b7a8fa84b4e981627435418f481aa8">kRightRgb</a>.</p>
 
@@ -1421,8 +1546,8 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ImageContainer_8hpp_source.html#l00656">656</a> of file <a class="el" href="ImageContainer_8hpp_source.html">ImageContainer.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  656</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1ImageContainer.html#aa4dbde4b9c3ea19893f9ea458f4805d1">images_</a>.size(); }</div>
+<p class="definition">Definition at line <a class="el" href="ImageContainer_8hpp_source.html#l00302">302</a> of file <a class="el" href="ImageContainer_8hpp_source.html">ImageContainer.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  302</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1ImageContainer.html#aa4dbde4b9c3ea19893f9ea458f4805d1">images_</a>.size(); }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1ImageContainer.html#aa4dbde4b9c3ea19893f9ea458f4805d1">images_</a>.</p>
 
@@ -1451,8 +1576,8 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ImageContainer_8hpp_source.html#l00683">683</a> of file <a class="el" href="ImageContainer_8hpp_source.html">ImageContainer.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  683</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1ImageContainer.html#ad76d5a8374e5b4d2c7b09970c1f92c05">timestamp_</a>; }</div>
+<p class="definition">Definition at line <a class="el" href="ImageContainer_8hpp_source.html#l00329">329</a> of file <a class="el" href="ImageContainer_8hpp_source.html">ImageContainer.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  329</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1ImageContainer.html#ad76d5a8374e5b4d2c7b09970c1f92c05">timestamp_</a>; }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1ImageContainer.html#ad76d5a8374e5b4d2c7b09970c1f92c05">timestamp_</a>.</p>
 
@@ -1484,17 +1609,17 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ImageContainer_8cc_source.html#l00106">106</a> of file <a class="el" href="ImageContainer_8cc_source.html">ImageContainer.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  106</span>                                         {</div>
-<div class="line"><span class="lineno">  107</span>  std::stringstream ss;</div>
-<div class="line"><span class="lineno">  108</span>  ss &lt;&lt; <span class="stringliteral">&quot;[ &quot;</span>;</div>
-<div class="line"><span class="lineno">  109</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [key, key_image_pair] : <a class="code hl_variable" href="classdyno_1_1ImageContainer.html#aa4dbde4b9c3ea19893f9ea458f4805d1">images_</a>) {</div>
-<div class="line"><span class="lineno">  110</span>    CHECK_NOTNULL(key_image_pair.ptr);</div>
-<div class="line"><span class="lineno">  111</span>    ss &lt;&lt; <span class="stringliteral">&quot;{&quot;</span> &lt;&lt; key &lt;&lt; <span class="stringliteral">&quot;: &quot;</span> &lt;&lt; key_image_pair.ptr-&gt;toString() &lt;&lt; <span class="stringliteral">&quot;} &quot;</span>;</div>
-<div class="line"><span class="lineno">  112</span>  }</div>
-<div class="line"><span class="lineno">  113</span>  ss &lt;&lt; <span class="stringliteral">&quot;]&quot;</span>;</div>
-<div class="line"><span class="lineno">  114</span>  <span class="keywordflow">return</span> ss.str();</div>
-<div class="line"><span class="lineno">  115</span>}</div>
+<p class="definition">Definition at line <a class="el" href="ImageContainer_8cc_source.html#l00105">105</a> of file <a class="el" href="ImageContainer_8cc_source.html">ImageContainer.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  105</span>                                         {</div>
+<div class="line"><span class="lineno">  106</span>  std::stringstream ss;</div>
+<div class="line"><span class="lineno">  107</span>  ss &lt;&lt; <span class="stringliteral">&quot;[ &quot;</span>;</div>
+<div class="line"><span class="lineno">  108</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [key, key_image_pair] : <a class="code hl_variable" href="classdyno_1_1ImageContainer.html#aa4dbde4b9c3ea19893f9ea458f4805d1">images_</a>) {</div>
+<div class="line"><span class="lineno">  109</span>    CHECK_NOTNULL(key_image_pair.ptr);</div>
+<div class="line"><span class="lineno">  110</span>    ss &lt;&lt; <span class="stringliteral">&quot;{&quot;</span> &lt;&lt; key &lt;&lt; <span class="stringliteral">&quot;: &quot;</span> &lt;&lt; key_image_pair.ptr-&gt;toString() &lt;&lt; <span class="stringliteral">&quot;} &quot;</span>;</div>
+<div class="line"><span class="lineno">  111</span>  }</div>
+<div class="line"><span class="lineno">  112</span>  ss &lt;&lt; <span class="stringliteral">&quot;]&quot;</span>;</div>
+<div class="line"><span class="lineno">  113</span>  <span class="keywordflow">return</span> ss.str();</div>
+<div class="line"><span class="lineno">  114</span>}</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1ImageContainer.html#aa4dbde4b9c3ea19893f9ea458f4805d1">images_</a>.</p>
 
@@ -1535,11 +1660,11 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ImageContainer_8cc_source.html#l00117">117</a> of file <a class="el" href="ImageContainer_8cc_source.html">ImageContainer.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  118</span>                                                                {</div>
-<div class="line"><span class="lineno">  119</span>  os &lt;&lt; image_container.toString();</div>
-<div class="line"><span class="lineno">  120</span>  <span class="keywordflow">return</span> os;</div>
-<div class="line"><span class="lineno">  121</span>}</div>
+<p class="definition">Definition at line <a class="el" href="ImageContainer_8cc_source.html#l00116">116</a> of file <a class="el" href="ImageContainer_8cc_source.html">ImageContainer.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  117</span>                                                                {</div>
+<div class="line"><span class="lineno">  118</span>  os &lt;&lt; image_container.toString();</div>
+<div class="line"><span class="lineno">  119</span>  <span class="keywordflow">return</span> os;</div>
+<div class="line"><span class="lineno">  120</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1564,7 +1689,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ImageContainer_8hpp_source.html#l00587">587</a> of file <a class="el" href="ImageContainer_8hpp_source.html">ImageContainer.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ImageContainer_8hpp_source.html#l00222">222</a> of file <a class="el" href="ImageContainer_8hpp_source.html">ImageContainer.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1ImageContainer.html#ae5023f3df359ad7a5196ce15cd632ca3">frameId()</a>, and <a class="el" href="classdyno_1_1ImageContainer.html#a9454ff7eb56d2d565090960578c85e12">operator=()</a>.</p>
 
@@ -1590,9 +1715,9 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ImageContainer_8hpp_source.html#l00589">589</a> of file <a class="el" href="ImageContainer_8hpp_source.html">ImageContainer.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ImageContainer_8hpp_source.html#l00224">224</a> of file <a class="el" href="ImageContainer_8hpp_source.html">ImageContainer.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1ImageContainer.html#a4f681829e1f66ef2a4d4cd847510c468">add()</a>, <a class="el" href="classdyno_1_1ImageContainer.html#ad740c4b7c66931f1e78edbc31902e343">clone()</a>, <a class="el" href="classdyno_1_1ImageContainer.html#a2cd4807310bce124878792073e9122e9">exists()</a>, <a class="el" href="classdyno_1_1ImageContainer.html#aac9e3d0181a7376cb21729683b08ffa2">ImageContainer()</a>, <a class="el" href="classdyno_1_1ImageContainer.html#a9454ff7eb56d2d565090960578c85e12">operator=()</a>, <a class="el" href="classdyno_1_1ImageContainer.html#ac5ba6742ea4ebbf167016b53262d05b2">size()</a>, and <a class="el" href="classdyno_1_1ImageContainer.html#ad8ae103311a01b0f0ff842501d692249">toString()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1ImageContainer.html#a4f681829e1f66ef2a4d4cd847510c468">add()</a>, <a class="el" href="classdyno_1_1ImageContainer.html#ad740c4b7c66931f1e78edbc31902e343">clone()</a>, <a class="el" href="classdyno_1_1ImageContainer.html#a2cd4807310bce124878792073e9122e9">exists()</a>, <a class="el" href="classdyno_1_1ImageContainer.html#aac9e3d0181a7376cb21729683b08ffa2">ImageContainer()</a>, <a class="el" href="classdyno_1_1ImageContainer.html#a9454ff7eb56d2d565090960578c85e12">operator=()</a>, <a class="el" href="classdyno_1_1ImageContainer.html#a0f5c67b77443b776a57d5ec38ddad291">replace()</a>, <a class="el" href="classdyno_1_1ImageContainer.html#ac5ba6742ea4ebbf167016b53262d05b2">size()</a>, and <a class="el" href="classdyno_1_1ImageContainer.html#ad8ae103311a01b0f0ff842501d692249">toString()</a>.</p>
 
 </div>
 </div>
@@ -1616,7 +1741,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ImageContainer_8hpp_source.html#l00596">596</a> of file <a class="el" href="ImageContainer_8hpp_source.html">ImageContainer.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ImageContainer_8hpp_source.html#l00231">231</a> of file <a class="el" href="ImageContainer_8hpp_source.html">ImageContainer.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1ImageContainer.html#af480442332a789297b20f8ac60ecd5f3">depth()</a>, and <a class="el" href="classdyno_1_1ImageContainer.html#ae6d8d0845eb77179dc00b4b865393ad7">hasDepth()</a>.</p>
 
@@ -1642,7 +1767,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ImageContainer_8hpp_source.html#l00597">597</a> of file <a class="el" href="ImageContainer_8hpp_source.html">ImageContainer.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ImageContainer_8hpp_source.html#l00232">232</a> of file <a class="el" href="ImageContainer_8hpp_source.html">ImageContainer.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1ImageContainer.html#a58380247600b24f657657316b195faaf">hasObjectMask()</a>, and <a class="el" href="classdyno_1_1ImageContainer.html#ae5eead678f02be0ab9de7464e1833c55">objectMotionMask()</a>.</p>
 
@@ -1668,7 +1793,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ImageContainer_8hpp_source.html#l00595">595</a> of file <a class="el" href="ImageContainer_8hpp_source.html">ImageContainer.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ImageContainer_8hpp_source.html#l00230">230</a> of file <a class="el" href="ImageContainer_8hpp_source.html">ImageContainer.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1ImageContainer.html#a4cd8237239f8756cb43980553c6612a7">hasOpticalFlow()</a>, and <a class="el" href="classdyno_1_1ImageContainer.html#a460749ede77f3694f4f2dfaab76531f7">opticalFlow()</a>.</p>
 
@@ -1694,7 +1819,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ImageContainer_8hpp_source.html#l00594">594</a> of file <a class="el" href="ImageContainer_8hpp_source.html">ImageContainer.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ImageContainer_8hpp_source.html#l00229">229</a> of file <a class="el" href="ImageContainer_8hpp_source.html">ImageContainer.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1ImageContainer.html#acbbbe97229cabd544ef1c837467f35d8">hasRgb()</a>, and <a class="el" href="classdyno_1_1ImageContainer.html#a6f35259f95c31b861ff6515c159e1ee3">rgb()</a>.</p>
 
@@ -1720,7 +1845,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ImageContainer_8hpp_source.html#l00598">598</a> of file <a class="el" href="ImageContainer_8hpp_source.html">ImageContainer.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ImageContainer_8hpp_source.html#l00233">233</a> of file <a class="el" href="ImageContainer_8hpp_source.html">ImageContainer.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1ImageContainer.html#a33bddc85ca59b9043de6eb52cf252177">hasRightRgb()</a>, and <a class="el" href="classdyno_1_1ImageContainer.html#a638ee1a86cecdb5d4b8123b950c8bb02">rightRgb()</a>.</p>
 
@@ -1746,15 +1871,15 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ImageContainer_8hpp_source.html#l00588">588</a> of file <a class="el" href="ImageContainer_8hpp_source.html">ImageContainer.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ImageContainer_8hpp_source.html#l00223">223</a> of file <a class="el" href="ImageContainer_8hpp_source.html">ImageContainer.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1ImageContainer.html#a9454ff7eb56d2d565090960578c85e12">operator=()</a>, and <a class="el" href="classdyno_1_1ImageContainer.html#a3f689f6b6b79c8ba776e5ebe483dc3e4">timestamp()</a>.</p>
 
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>dynosam/include/dynosam/common/<a class="el" href="ImageContainer_8hpp_source.html">ImageContainer.hpp</a></li>
-<li>dynosam/src/common/<a class="el" href="ImageContainer_8cc_source.html">ImageContainer.cc</a></li>
+<li>dynosam_cv/include/dynosam_cv/<a class="el" href="ImageContainer_8hpp_source.html">ImageContainer.hpp</a></li>
+<li>dynosam_cv/src/<a class="el" href="ImageContainer_8cc_source.html">ImageContainer.cc</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

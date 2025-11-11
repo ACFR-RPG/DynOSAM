@@ -1,4 +1,0 @@
-<map id="dyno::RGBDInstanceOutputPacket::getDynamicObjectPointCloud" name="dyno::RGBDInstanceOutputPacket::getDynamicObjectPointCloud">
-<area shape="rect" id="node1" title=" " alt="" coords="5,5,268,45"/>
-<area shape="rect" id="node2" href="$structdyno_1_1RGBDInstanceOutputPacket.html#a9c1b8070dc94eb3f0ff8e95ca9b351d5" title="Checks if an object id exists within the frontend output." alt="" coords="316,5,515,45"/>
-</map>

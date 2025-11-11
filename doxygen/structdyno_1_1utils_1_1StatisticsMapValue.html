@@ -155,7 +155,7 @@ Private Attributes</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="Statistics_8hpp_source.html#l00083">83</a> of file <a class="el" href="Statistics_8hpp_source.html">Statistics.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Statistics_8hpp_source.html#l00090">90</a> of file <a class="el" href="Statistics_8hpp_source.html">Statistics.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a7e5b0fbc7caaac417d0337a870562a92" name="a7e5b0fbc7caaac417d0337a870562a92"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7e5b0fbc7caaac417d0337a870562a92">&#9670;&#160;</a></span>StatisticsMapValue()</h2>
@@ -180,11 +180,11 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Statistics_8hpp_source.html#l00087">87</a> of file <a class="el" href="Statistics_8hpp_source.html">Statistics.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   87</span>                              {</div>
-<div class="line"><span class="lineno">   88</span>    <a class="code hl_variable" href="structdyno_1_1utils_1_1StatisticsMapValue.html#a0b2725e5e04903e1902641249306d42b">time_last_called_</a> = std::chrono::system_clock::now();</div>
-<div class="line"><span class="lineno">   89</span>  }</div>
-<div class="ttc" id="astructdyno_1_1utils_1_1StatisticsMapValue_html_a0b2725e5e04903e1902641249306d42b"><div class="ttname"><a href="structdyno_1_1utils_1_1StatisticsMapValue.html#a0b2725e5e04903e1902641249306d42b">dyno::utils::StatisticsMapValue::time_last_called_</a></div><div class="ttdeci">std::chrono::time_point&lt; std::chrono::system_clock &gt; time_last_called_</div><div class="ttdef"><b>Definition:</b> <a href="Statistics_8hpp_source.html#l00148">Statistics.hpp:148</a></div></div>
+<p class="definition">Definition at line <a class="el" href="Statistics_8hpp_source.html#l00094">94</a> of file <a class="el" href="Statistics_8hpp_source.html">Statistics.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   94</span>                              {</div>
+<div class="line"><span class="lineno">   95</span>    <a class="code hl_variable" href="structdyno_1_1utils_1_1StatisticsMapValue.html#a0b2725e5e04903e1902641249306d42b">time_last_called_</a> = std::chrono::system_clock::now();</div>
+<div class="line"><span class="lineno">   96</span>  }</div>
+<div class="ttc" id="astructdyno_1_1utils_1_1StatisticsMapValue_html_a0b2725e5e04903e1902641249306d42b"><div class="ttname"><a href="structdyno_1_1utils_1_1StatisticsMapValue.html#a0b2725e5e04903e1902641249306d42b">dyno::utils::StatisticsMapValue::time_last_called_</a></div><div class="ttdeci">std::chrono::time_point&lt; std::chrono::system_clock &gt; time_last_called_</div><div class="ttdef"><b>Definition:</b> <a href="Statistics_8hpp_source.html#l00157">Statistics.hpp:157</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="structdyno_1_1utils_1_1StatisticsMapValue.html#a0b2725e5e04903e1902641249306d42b">time_last_called_</a>.</p>
 
@@ -215,24 +215,24 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Statistics_8hpp_source.html#l00091">91</a> of file <a class="el" href="Statistics_8hpp_source.html">Statistics.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   91</span>                                      {</div>
-<div class="line"><span class="lineno">   92</span>    std::chrono::time_point&lt;std::chrono::system_clock&gt; now =</div>
-<div class="line"><span class="lineno">   93</span>        std::chrono::system_clock::now();</div>
-<div class="line"><span class="lineno">   94</span>    <span class="keywordtype">double</span> dt = <span class="keyword">static_cast&lt;</span><span class="keywordtype">double</span><span class="keyword">&gt;</span>(</div>
-<div class="line"><span class="lineno">   95</span>                    std::chrono::duration_cast&lt;std::chrono::nanoseconds&gt;(</div>
-<div class="line"><span class="lineno">   96</span>                        now - <a class="code hl_variable" href="structdyno_1_1utils_1_1StatisticsMapValue.html#a0b2725e5e04903e1902641249306d42b">time_last_called_</a>)</div>
-<div class="line"><span class="lineno">   97</span>                        .count()) *</div>
-<div class="line"><span class="lineno">   98</span>                <a class="code hl_variable" href="namespacedyno_1_1utils.html#ad13d047eaa381d8c0a4dd996000953c5">kNumSecondsPerNanosecond</a>;</div>
-<div class="line"><span class="lineno">   99</span>    <a class="code hl_variable" href="structdyno_1_1utils_1_1StatisticsMapValue.html#a0b2725e5e04903e1902641249306d42b">time_last_called_</a> = now;</div>
-<div class="line"><span class="lineno">  100</span> </div>
-<div class="line"><span class="lineno">  101</span>    <a class="code hl_variable" href="structdyno_1_1utils_1_1StatisticsMapValue.html#ac4dcee0083a0e44082673858367a9322">values_</a>.<a class="code hl_function" href="classdyno_1_1utils_1_1Accumulator.html#a901a2142a502b3e6c6296ee3d428ef3a">Add</a>(sample);</div>
-<div class="line"><span class="lineno">  102</span>    <a class="code hl_variable" href="structdyno_1_1utils_1_1StatisticsMapValue.html#ae4b904ce1feab319339638e5f08dbe2d">time_deltas_</a>.<a class="code hl_function" href="classdyno_1_1utils_1_1Accumulator.html#a901a2142a502b3e6c6296ee3d428ef3a">Add</a>(dt);</div>
-<div class="line"><span class="lineno">  103</span>  }</div>
-<div class="ttc" id="aclassdyno_1_1utils_1_1Accumulator_html_a901a2142a502b3e6c6296ee3d428ef3a"><div class="ttname"><a href="classdyno_1_1utils_1_1Accumulator.html#a901a2142a502b3e6c6296ee3d428ef3a">dyno::utils::Accumulator::Add</a></div><div class="ttdeci">void Add(SampleType sample)</div><div class="ttdef"><b>Definition:</b> <a href="Accumulator_8hpp_source.html#l00090">Accumulator.hpp:90</a></div></div>
-<div class="ttc" id="anamespacedyno_1_1utils_html_ad13d047eaa381d8c0a4dd996000953c5"><div class="ttname"><a href="namespacedyno_1_1utils.html#ad13d047eaa381d8c0a4dd996000953c5">dyno::utils::kNumSecondsPerNanosecond</a></div><div class="ttdeci">const double kNumSecondsPerNanosecond</div><div class="ttdef"><b>Definition:</b> <a href="Statistics_8hpp_source.html#l00081">Statistics.hpp:81</a></div></div>
-<div class="ttc" id="astructdyno_1_1utils_1_1StatisticsMapValue_html_ac4dcee0083a0e44082673858367a9322"><div class="ttname"><a href="structdyno_1_1utils_1_1StatisticsMapValue.html#ac4dcee0083a0e44082673858367a9322">dyno::utils::StatisticsMapValue::values_</a></div><div class="ttdeci">Accumulator&lt; double, double, kWindowSize &gt; values_</div><div class="ttdef"><b>Definition:</b> <a href="Statistics_8hpp_source.html#l00146">Statistics.hpp:146</a></div></div>
-<div class="ttc" id="astructdyno_1_1utils_1_1StatisticsMapValue_html_ae4b904ce1feab319339638e5f08dbe2d"><div class="ttname"><a href="structdyno_1_1utils_1_1StatisticsMapValue.html#ae4b904ce1feab319339638e5f08dbe2d">dyno::utils::StatisticsMapValue::time_deltas_</a></div><div class="ttdeci">Accumulator&lt; double, double, kWindowSize &gt; time_deltas_</div><div class="ttdef"><b>Definition:</b> <a href="Statistics_8hpp_source.html#l00147">Statistics.hpp:147</a></div></div>
+<p class="definition">Definition at line <a class="el" href="Statistics_8hpp_source.html#l00098">98</a> of file <a class="el" href="Statistics_8hpp_source.html">Statistics.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   98</span>                                      {</div>
+<div class="line"><span class="lineno">   99</span>    std::chrono::time_point&lt;std::chrono::system_clock&gt; now =</div>
+<div class="line"><span class="lineno">  100</span>        std::chrono::system_clock::now();</div>
+<div class="line"><span class="lineno">  101</span>    <span class="keywordtype">double</span> dt = <span class="keyword">static_cast&lt;</span><span class="keywordtype">double</span><span class="keyword">&gt;</span>(</div>
+<div class="line"><span class="lineno">  102</span>                    std::chrono::duration_cast&lt;std::chrono::nanoseconds&gt;(</div>
+<div class="line"><span class="lineno">  103</span>                        now - <a class="code hl_variable" href="structdyno_1_1utils_1_1StatisticsMapValue.html#a0b2725e5e04903e1902641249306d42b">time_last_called_</a>)</div>
+<div class="line"><span class="lineno">  104</span>                        .count()) *</div>
+<div class="line"><span class="lineno">  105</span>                <a class="code hl_variable" href="namespacedyno_1_1utils.html#ad13d047eaa381d8c0a4dd996000953c5">kNumSecondsPerNanosecond</a>;</div>
+<div class="line"><span class="lineno">  106</span>    <a class="code hl_variable" href="structdyno_1_1utils_1_1StatisticsMapValue.html#a0b2725e5e04903e1902641249306d42b">time_last_called_</a> = now;</div>
+<div class="line"><span class="lineno">  107</span> </div>
+<div class="line"><span class="lineno">  108</span>    <a class="code hl_variable" href="structdyno_1_1utils_1_1StatisticsMapValue.html#ac4dcee0083a0e44082673858367a9322">values_</a>.<a class="code hl_function" href="classdyno_1_1utils_1_1Accumulator.html#a901a2142a502b3e6c6296ee3d428ef3a">Add</a>(sample);</div>
+<div class="line"><span class="lineno">  109</span>    <a class="code hl_variable" href="structdyno_1_1utils_1_1StatisticsMapValue.html#ae4b904ce1feab319339638e5f08dbe2d">time_deltas_</a>.<a class="code hl_function" href="classdyno_1_1utils_1_1Accumulator.html#a901a2142a502b3e6c6296ee3d428ef3a">Add</a>(dt);</div>
+<div class="line"><span class="lineno">  110</span>  }</div>
+<div class="ttc" id="aclassdyno_1_1utils_1_1Accumulator_html_a901a2142a502b3e6c6296ee3d428ef3a"><div class="ttname"><a href="classdyno_1_1utils_1_1Accumulator.html#a901a2142a502b3e6c6296ee3d428ef3a">dyno::utils::Accumulator::Add</a></div><div class="ttdeci">void Add(SampleType sample)</div><div class="ttdef"><b>Definition:</b> <a href="Accumulator_8hpp_source.html#l00097">Accumulator.hpp:97</a></div></div>
+<div class="ttc" id="anamespacedyno_1_1utils_html_ad13d047eaa381d8c0a4dd996000953c5"><div class="ttname"><a href="namespacedyno_1_1utils.html#ad13d047eaa381d8c0a4dd996000953c5">dyno::utils::kNumSecondsPerNanosecond</a></div><div class="ttdeci">const double kNumSecondsPerNanosecond</div><div class="ttdef"><b>Definition:</b> <a href="Statistics_8hpp_source.html#l00088">Statistics.hpp:88</a></div></div>
+<div class="ttc" id="astructdyno_1_1utils_1_1StatisticsMapValue_html_ac4dcee0083a0e44082673858367a9322"><div class="ttname"><a href="structdyno_1_1utils_1_1StatisticsMapValue.html#ac4dcee0083a0e44082673858367a9322">dyno::utils::StatisticsMapValue::values_</a></div><div class="ttdeci">Accumulator&lt; double, double, kWindowSize &gt; values_</div><div class="ttdef"><b>Definition:</b> <a href="Statistics_8hpp_source.html#l00155">Statistics.hpp:155</a></div></div>
+<div class="ttc" id="astructdyno_1_1utils_1_1StatisticsMapValue_html_ae4b904ce1feab319339638e5f08dbe2d"><div class="ttname"><a href="structdyno_1_1utils_1_1StatisticsMapValue.html#ae4b904ce1feab319339638e5f08dbe2d">dyno::utils::StatisticsMapValue::time_deltas_</a></div><div class="ttdeci">Accumulator&lt; double, double, kWindowSize &gt; time_deltas_</div><div class="ttdef"><b>Definition:</b> <a href="Statistics_8hpp_source.html#l00156">Statistics.hpp:156</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1utils_1_1Accumulator.html#a901a2142a502b3e6c6296ee3d428ef3a">dyno::utils::Accumulator&lt; SampleType, SumType, WindowSize &gt;::Add()</a>, <a class="el" href="namespacedyno_1_1utils.html#ad13d047eaa381d8c0a4dd996000953c5">dyno::utils::kNumSecondsPerNanosecond</a>, <a class="el" href="structdyno_1_1utils_1_1StatisticsMapValue.html#ae4b904ce1feab319339638e5f08dbe2d">time_deltas_</a>, <a class="el" href="structdyno_1_1utils_1_1StatisticsMapValue.html#a0b2725e5e04903e1902641249306d42b">time_last_called_</a>, and <a class="el" href="structdyno_1_1utils_1_1StatisticsMapValue.html#ac4dcee0083a0e44082673858367a9322">values_</a>.</p>
 <div class="dynheader">
@@ -270,9 +270,11 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Statistics_8hpp_source.html#l00142">142</a> of file <a class="el" href="Statistics_8hpp_source.html">Statistics.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  142</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="structdyno_1_1utils_1_1StatisticsMapValue.html#ac4dcee0083a0e44082673858367a9322">values_</a>.<a class="code hl_function" href="classdyno_1_1utils_1_1Accumulator.html#a0f5d66e71675c8e546499d4a761d4fe6">GetAllSamples</a>(); }</div>
-<div class="ttc" id="aclassdyno_1_1utils_1_1Accumulator_html_a0f5d66e71675c8e546499d4a761d4fe6"><div class="ttname"><a href="classdyno_1_1utils_1_1Accumulator.html#a0f5d66e71675c8e546499d4a761d4fe6">dyno::utils::Accumulator::GetAllSamples</a></div><div class="ttdeci">const std::vector&lt; SampleType &gt; &amp; GetAllSamples() const</div><div class="ttdef"><b>Definition:</b> <a href="Accumulator_8hpp_source.html#l00203">Accumulator.hpp:203</a></div></div>
+<p class="definition">Definition at line <a class="el" href="Statistics_8hpp_source.html#l00149">149</a> of file <a class="el" href="Statistics_8hpp_source.html">Statistics.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  149</span>                                                {</div>
+<div class="line"><span class="lineno">  150</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="structdyno_1_1utils_1_1StatisticsMapValue.html#ac4dcee0083a0e44082673858367a9322">values_</a>.<a class="code hl_function" href="classdyno_1_1utils_1_1Accumulator.html#a0f5d66e71675c8e546499d4a761d4fe6">GetAllSamples</a>();</div>
+<div class="line"><span class="lineno">  151</span>  }</div>
+<div class="ttc" id="aclassdyno_1_1utils_1_1Accumulator_html_a0f5d66e71675c8e546499d4a761d4fe6"><div class="ttname"><a href="classdyno_1_1utils_1_1Accumulator.html#a0f5d66e71675c8e546499d4a761d4fe6">dyno::utils::Accumulator::GetAllSamples</a></div><div class="ttdeci">const std::vector&lt; SampleType &gt; &amp; GetAllSamples() const</div><div class="ttdef"><b>Definition:</b> <a href="Accumulator_8hpp_source.html#l00211">Accumulator.hpp:211</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1utils_1_1Accumulator.html#a0f5d66e71675c8e546499d4a761d4fe6">dyno::utils::Accumulator&lt; SampleType, SumType, WindowSize &gt;::GetAllSamples()</a>, and <a class="el" href="structdyno_1_1utils_1_1StatisticsMapValue.html#ac4dcee0083a0e44082673858367a9322">values_</a>.</p>
 <div class="dynheader">
@@ -310,16 +312,16 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Statistics_8hpp_source.html#l00104">104</a> of file <a class="el" href="Statistics_8hpp_source.html">Statistics.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  104</span>                                         {</div>
-<div class="line"><span class="lineno">  105</span>    <span class="keywordflow">if</span> (<a class="code hl_variable" href="structdyno_1_1utils_1_1StatisticsMapValue.html#ae4b904ce1feab319339638e5f08dbe2d">time_deltas_</a>.<a class="code hl_function" href="classdyno_1_1utils_1_1Accumulator.html#a2c9a79a5747e97ee7722c129ed4fd0e2">total_samples</a>()) {</div>
-<div class="line"><span class="lineno">  106</span>      <span class="keywordflow">return</span> <a class="code hl_variable" href="structdyno_1_1utils_1_1StatisticsMapValue.html#ae4b904ce1feab319339638e5f08dbe2d">time_deltas_</a>.<a class="code hl_function" href="classdyno_1_1utils_1_1Accumulator.html#ab9b767c5239871b5076782a5d18ce262">GetMostRecent</a>();</div>
-<div class="line"><span class="lineno">  107</span>    } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  108</span>      <span class="keywordflow">return</span> 0;</div>
-<div class="line"><span class="lineno">  109</span>    }</div>
-<div class="line"><span class="lineno">  110</span>  }</div>
-<div class="ttc" id="aclassdyno_1_1utils_1_1Accumulator_html_a2c9a79a5747e97ee7722c129ed4fd0e2"><div class="ttname"><a href="classdyno_1_1utils_1_1Accumulator.html#a2c9a79a5747e97ee7722c129ed4fd0e2">dyno::utils::Accumulator::total_samples</a></div><div class="ttdeci">int total_samples() const</div><div class="ttdef"><b>Definition:</b> <a href="Accumulator_8hpp_source.html#l00112">Accumulator.hpp:112</a></div></div>
-<div class="ttc" id="aclassdyno_1_1utils_1_1Accumulator_html_ab9b767c5239871b5076782a5d18ce262"><div class="ttname"><a href="classdyno_1_1utils_1_1Accumulator.html#ab9b767c5239871b5076782a5d18ce262">dyno::utils::Accumulator::GetMostRecent</a></div><div class="ttdeci">SampleType GetMostRecent() const</div><div class="ttdef"><b>Definition:</b> <a href="Accumulator_8hpp_source.html#l00134">Accumulator.hpp:134</a></div></div>
+<p class="definition">Definition at line <a class="el" href="Statistics_8hpp_source.html#l00111">111</a> of file <a class="el" href="Statistics_8hpp_source.html">Statistics.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  111</span>                                         {</div>
+<div class="line"><span class="lineno">  112</span>    <span class="keywordflow">if</span> (<a class="code hl_variable" href="structdyno_1_1utils_1_1StatisticsMapValue.html#ae4b904ce1feab319339638e5f08dbe2d">time_deltas_</a>.<a class="code hl_function" href="classdyno_1_1utils_1_1Accumulator.html#a2c9a79a5747e97ee7722c129ed4fd0e2">total_samples</a>()) {</div>
+<div class="line"><span class="lineno">  113</span>      <span class="keywordflow">return</span> <a class="code hl_variable" href="structdyno_1_1utils_1_1StatisticsMapValue.html#ae4b904ce1feab319339638e5f08dbe2d">time_deltas_</a>.<a class="code hl_function" href="classdyno_1_1utils_1_1Accumulator.html#ab9b767c5239871b5076782a5d18ce262">GetMostRecent</a>();</div>
+<div class="line"><span class="lineno">  114</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  115</span>      <span class="keywordflow">return</span> 0;</div>
+<div class="line"><span class="lineno">  116</span>    }</div>
+<div class="line"><span class="lineno">  117</span>  }</div>
+<div class="ttc" id="aclassdyno_1_1utils_1_1Accumulator_html_a2c9a79a5747e97ee7722c129ed4fd0e2"><div class="ttname"><a href="classdyno_1_1utils_1_1Accumulator.html#a2c9a79a5747e97ee7722c129ed4fd0e2">dyno::utils::Accumulator::total_samples</a></div><div class="ttdeci">int total_samples() const</div><div class="ttdef"><b>Definition:</b> <a href="Accumulator_8hpp_source.html#l00119">Accumulator.hpp:119</a></div></div>
+<div class="ttc" id="aclassdyno_1_1utils_1_1Accumulator_html_ab9b767c5239871b5076782a5d18ce262"><div class="ttname"><a href="classdyno_1_1utils_1_1Accumulator.html#ab9b767c5239871b5076782a5d18ce262">dyno::utils::Accumulator::GetMostRecent</a></div><div class="ttdeci">SampleType GetMostRecent() const</div><div class="ttdef"><b>Definition:</b> <a href="Accumulator_8hpp_source.html#l00142">Accumulator.hpp:142</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1utils_1_1Accumulator.html#ab9b767c5239871b5076782a5d18ce262">dyno::utils::Accumulator&lt; SampleType, SumType, WindowSize &gt;::GetMostRecent()</a>, <a class="el" href="structdyno_1_1utils_1_1StatisticsMapValue.html#ae4b904ce1feab319339638e5f08dbe2d">time_deltas_</a>, and <a class="el" href="classdyno_1_1utils_1_1Accumulator.html#a2c9a79a5747e97ee7722c129ed4fd0e2">dyno::utils::Accumulator&lt; SampleType, SumType, WindowSize &gt;::total_samples()</a>.</p>
 <div class="dynheader">
@@ -358,14 +360,14 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Statistics_8hpp_source.html#l00111">111</a> of file <a class="el" href="Statistics_8hpp_source.html">Statistics.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  111</span>                                     {</div>
-<div class="line"><span class="lineno">  112</span>    <span class="keywordflow">if</span> (<a class="code hl_variable" href="structdyno_1_1utils_1_1StatisticsMapValue.html#ac4dcee0083a0e44082673858367a9322">values_</a>.<a class="code hl_function" href="classdyno_1_1utils_1_1Accumulator.html#a2c9a79a5747e97ee7722c129ed4fd0e2">total_samples</a>()) {</div>
-<div class="line"><span class="lineno">  113</span>      <span class="keywordflow">return</span> <a class="code hl_variable" href="structdyno_1_1utils_1_1StatisticsMapValue.html#ac4dcee0083a0e44082673858367a9322">values_</a>.<a class="code hl_function" href="classdyno_1_1utils_1_1Accumulator.html#ab9b767c5239871b5076782a5d18ce262">GetMostRecent</a>();</div>
-<div class="line"><span class="lineno">  114</span>    } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  115</span>      <span class="keywordflow">return</span> 0;</div>
-<div class="line"><span class="lineno">  116</span>    }</div>
-<div class="line"><span class="lineno">  117</span>  }</div>
+<p class="definition">Definition at line <a class="el" href="Statistics_8hpp_source.html#l00118">118</a> of file <a class="el" href="Statistics_8hpp_source.html">Statistics.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  118</span>                                     {</div>
+<div class="line"><span class="lineno">  119</span>    <span class="keywordflow">if</span> (<a class="code hl_variable" href="structdyno_1_1utils_1_1StatisticsMapValue.html#ac4dcee0083a0e44082673858367a9322">values_</a>.<a class="code hl_function" href="classdyno_1_1utils_1_1Accumulator.html#a2c9a79a5747e97ee7722c129ed4fd0e2">total_samples</a>()) {</div>
+<div class="line"><span class="lineno">  120</span>      <span class="keywordflow">return</span> <a class="code hl_variable" href="structdyno_1_1utils_1_1StatisticsMapValue.html#ac4dcee0083a0e44082673858367a9322">values_</a>.<a class="code hl_function" href="classdyno_1_1utils_1_1Accumulator.html#ab9b767c5239871b5076782a5d18ce262">GetMostRecent</a>();</div>
+<div class="line"><span class="lineno">  121</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  122</span>      <span class="keywordflow">return</span> 0;</div>
+<div class="line"><span class="lineno">  123</span>    }</div>
+<div class="line"><span class="lineno">  124</span>  }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1utils_1_1Accumulator.html#ab9b767c5239871b5076782a5d18ce262">dyno::utils::Accumulator&lt; SampleType, SumType, WindowSize &gt;::GetMostRecent()</a>, <a class="el" href="classdyno_1_1utils_1_1Accumulator.html#a2c9a79a5747e97ee7722c129ed4fd0e2">dyno::utils::Accumulator&lt; SampleType, SumType, WindowSize &gt;::total_samples()</a>, and <a class="el" href="structdyno_1_1utils_1_1StatisticsMapValue.html#ac4dcee0083a0e44082673858367a9322">values_</a>.</p>
 <div class="dynheader">
@@ -404,9 +406,9 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Statistics_8hpp_source.html#l00127">127</a> of file <a class="el" href="Statistics_8hpp_source.html">Statistics.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  127</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="structdyno_1_1utils_1_1StatisticsMapValue.html#ac4dcee0083a0e44082673858367a9322">values_</a>.<a class="code hl_function" href="classdyno_1_1utils_1_1Accumulator.html#a7a03f1b62427b80d373a3c5107de069d">LazyVariance</a>(); }</div>
-<div class="ttc" id="aclassdyno_1_1utils_1_1Accumulator_html_a7a03f1b62427b80d373a3c5107de069d"><div class="ttname"><a href="classdyno_1_1utils_1_1Accumulator.html#a7a03f1b62427b80d373a3c5107de069d">dyno::utils::Accumulator::LazyVariance</a></div><div class="ttdeci">SumType LazyVariance() const</div><div class="ttdef"><b>Definition:</b> <a href="Accumulator_8hpp_source.html#l00164">Accumulator.hpp:164</a></div></div>
+<p class="definition">Definition at line <a class="el" href="Statistics_8hpp_source.html#l00134">134</a> of file <a class="el" href="Statistics_8hpp_source.html">Statistics.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  134</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="structdyno_1_1utils_1_1StatisticsMapValue.html#ac4dcee0083a0e44082673858367a9322">values_</a>.<a class="code hl_function" href="classdyno_1_1utils_1_1Accumulator.html#a7a03f1b62427b80d373a3c5107de069d">LazyVariance</a>(); }</div>
+<div class="ttc" id="aclassdyno_1_1utils_1_1Accumulator_html_a7a03f1b62427b80d373a3c5107de069d"><div class="ttname"><a href="classdyno_1_1utils_1_1Accumulator.html#a7a03f1b62427b80d373a3c5107de069d">dyno::utils::Accumulator::LazyVariance</a></div><div class="ttdeci">SumType LazyVariance() const</div><div class="ttdef"><b>Definition:</b> <a href="Accumulator_8hpp_source.html#l00172">Accumulator.hpp:172</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1utils_1_1Accumulator.html#a7a03f1b62427b80d373a3c5107de069d">dyno::utils::Accumulator&lt; SampleType, SumType, WindowSize &gt;::LazyVariance()</a>, and <a class="el" href="structdyno_1_1utils_1_1StatisticsMapValue.html#ac4dcee0083a0e44082673858367a9322">values_</a>.</p>
 <div class="dynheader">
@@ -446,8 +448,8 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Statistics_8hpp_source.html#l00141">141</a> of file <a class="el" href="Statistics_8hpp_source.html">Statistics.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  141</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="structdyno_1_1utils_1_1StatisticsMapValue.html#ae4b904ce1feab319339638e5f08dbe2d">time_deltas_</a>.<a class="code hl_function" href="classdyno_1_1utils_1_1Accumulator.html#a7a03f1b62427b80d373a3c5107de069d">LazyVariance</a>(); }</div>
+<p class="definition">Definition at line <a class="el" href="Statistics_8hpp_source.html#l00148">148</a> of file <a class="el" href="Statistics_8hpp_source.html">Statistics.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  148</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="structdyno_1_1utils_1_1StatisticsMapValue.html#ae4b904ce1feab319339638e5f08dbe2d">time_deltas_</a>.<a class="code hl_function" href="classdyno_1_1utils_1_1Accumulator.html#a7a03f1b62427b80d373a3c5107de069d">LazyVariance</a>(); }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1utils_1_1Accumulator.html#a7a03f1b62427b80d373a3c5107de069d">dyno::utils::Accumulator&lt; SampleType, SumType, WindowSize &gt;::LazyVariance()</a>, and <a class="el" href="structdyno_1_1utils_1_1StatisticsMapValue.html#ae4b904ce1feab319339638e5f08dbe2d">time_deltas_</a>.</p>
 <div class="dynheader">
@@ -487,9 +489,9 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Statistics_8hpp_source.html#l00122">122</a> of file <a class="el" href="Statistics_8hpp_source.html">Statistics.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  122</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="structdyno_1_1utils_1_1StatisticsMapValue.html#ac4dcee0083a0e44082673858367a9322">values_</a>.<a class="code hl_function" href="classdyno_1_1utils_1_1Accumulator.html#a7c554344c9f247d283aaaaf9221daf9a">max</a>(); }</div>
-<div class="ttc" id="aclassdyno_1_1utils_1_1Accumulator_html_a7c554344c9f247d283aaaaf9221daf9a"><div class="ttname"><a href="classdyno_1_1utils_1_1Accumulator.html#a7c554344c9f247d283aaaaf9221daf9a">dyno::utils::Accumulator::max</a></div><div class="ttdeci">SumType max() const</div><div class="ttdef"><b>Definition:</b> <a href="Accumulator_8hpp_source.html#l00137">Accumulator.hpp:137</a></div></div>
+<p class="definition">Definition at line <a class="el" href="Statistics_8hpp_source.html#l00129">129</a> of file <a class="el" href="Statistics_8hpp_source.html">Statistics.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  129</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="structdyno_1_1utils_1_1StatisticsMapValue.html#ac4dcee0083a0e44082673858367a9322">values_</a>.<a class="code hl_function" href="classdyno_1_1utils_1_1Accumulator.html#a7c554344c9f247d283aaaaf9221daf9a">max</a>(); }</div>
+<div class="ttc" id="aclassdyno_1_1utils_1_1Accumulator_html_a7c554344c9f247d283aaaaf9221daf9a"><div class="ttname"><a href="classdyno_1_1utils_1_1Accumulator.html#a7c554344c9f247d283aaaaf9221daf9a">dyno::utils::Accumulator::max</a></div><div class="ttdeci">SumType max() const</div><div class="ttdef"><b>Definition:</b> <a href="Accumulator_8hpp_source.html#l00145">Accumulator.hpp:145</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1utils_1_1Accumulator.html#a7c554344c9f247d283aaaaf9221daf9a">dyno::utils::Accumulator&lt; SampleType, SumType, WindowSize &gt;::max()</a>, and <a class="el" href="structdyno_1_1utils_1_1StatisticsMapValue.html#ac4dcee0083a0e44082673858367a9322">values_</a>.</p>
 <div class="dynheader">
@@ -527,8 +529,8 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Statistics_8hpp_source.html#l00139">139</a> of file <a class="el" href="Statistics_8hpp_source.html">Statistics.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  139</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="structdyno_1_1utils_1_1StatisticsMapValue.html#ae4b904ce1feab319339638e5f08dbe2d">time_deltas_</a>.<a class="code hl_function" href="classdyno_1_1utils_1_1Accumulator.html#a7c554344c9f247d283aaaaf9221daf9a">max</a>(); }</div>
+<p class="definition">Definition at line <a class="el" href="Statistics_8hpp_source.html#l00146">146</a> of file <a class="el" href="Statistics_8hpp_source.html">Statistics.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  146</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="structdyno_1_1utils_1_1StatisticsMapValue.html#ae4b904ce1feab319339638e5f08dbe2d">time_deltas_</a>.<a class="code hl_function" href="classdyno_1_1utils_1_1Accumulator.html#a7c554344c9f247d283aaaaf9221daf9a">max</a>(); }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1utils_1_1Accumulator.html#a7c554344c9f247d283aaaaf9221daf9a">dyno::utils::Accumulator&lt; SampleType, SumType, WindowSize &gt;::max()</a>, and <a class="el" href="structdyno_1_1utils_1_1StatisticsMapValue.html#ae4b904ce1feab319339638e5f08dbe2d">time_deltas_</a>.</p>
 <div class="dynheader">
@@ -566,9 +568,9 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Statistics_8hpp_source.html#l00120">120</a> of file <a class="el" href="Statistics_8hpp_source.html">Statistics.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  120</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="structdyno_1_1utils_1_1StatisticsMapValue.html#ac4dcee0083a0e44082673858367a9322">values_</a>.<a class="code hl_function" href="classdyno_1_1utils_1_1Accumulator.html#a0003879178e22617b53f39e5e9aa2612">Mean</a>(); }</div>
-<div class="ttc" id="aclassdyno_1_1utils_1_1Accumulator_html_a0003879178e22617b53f39e5e9aa2612"><div class="ttname"><a href="classdyno_1_1utils_1_1Accumulator.html#a0003879178e22617b53f39e5e9aa2612">dyno::utils::Accumulator::Mean</a></div><div class="ttdeci">SumType Mean() const</div><div class="ttdef"><b>Definition:</b> <a href="Accumulator_8hpp_source.html#l00118">Accumulator.hpp:118</a></div></div>
+<p class="definition">Definition at line <a class="el" href="Statistics_8hpp_source.html#l00127">127</a> of file <a class="el" href="Statistics_8hpp_source.html">Statistics.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  127</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="structdyno_1_1utils_1_1StatisticsMapValue.html#ac4dcee0083a0e44082673858367a9322">values_</a>.<a class="code hl_function" href="classdyno_1_1utils_1_1Accumulator.html#a0003879178e22617b53f39e5e9aa2612">Mean</a>(); }</div>
+<div class="ttc" id="aclassdyno_1_1utils_1_1Accumulator_html_a0003879178e22617b53f39e5e9aa2612"><div class="ttname"><a href="classdyno_1_1utils_1_1Accumulator.html#a0003879178e22617b53f39e5e9aa2612">dyno::utils::Accumulator::Mean</a></div><div class="ttdeci">SumType Mean() const</div><div class="ttdef"><b>Definition:</b> <a href="Accumulator_8hpp_source.html#l00125">Accumulator.hpp:125</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1utils_1_1Accumulator.html#a0003879178e22617b53f39e5e9aa2612">dyno::utils::Accumulator&lt; SampleType, SumType, WindowSize &gt;::Mean()</a>, and <a class="el" href="structdyno_1_1utils_1_1StatisticsMapValue.html#ac4dcee0083a0e44082673858367a9322">values_</a>.</p>
 <div class="dynheader">
@@ -606,15 +608,15 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Statistics_8hpp_source.html#l00128">128</a> of file <a class="el" href="Statistics_8hpp_source.html">Statistics.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  128</span>                                 {</div>
-<div class="line"><span class="lineno">  129</span>    <span class="keywordtype">double</span> mean_dt = <a class="code hl_variable" href="structdyno_1_1utils_1_1StatisticsMapValue.html#ae4b904ce1feab319339638e5f08dbe2d">time_deltas_</a>.<a class="code hl_function" href="classdyno_1_1utils_1_1Accumulator.html#a0003879178e22617b53f39e5e9aa2612">Mean</a>();</div>
-<div class="line"><span class="lineno">  130</span>    <span class="keywordflow">if</span> (mean_dt != 0) {</div>
-<div class="line"><span class="lineno">  131</span>      <span class="keywordflow">return</span> 1.0 / mean_dt;</div>
-<div class="line"><span class="lineno">  132</span>    } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  133</span>      <span class="keywordflow">return</span> -1.0;</div>
-<div class="line"><span class="lineno">  134</span>    }</div>
-<div class="line"><span class="lineno">  135</span>  }</div>
+<p class="definition">Definition at line <a class="el" href="Statistics_8hpp_source.html#l00135">135</a> of file <a class="el" href="Statistics_8hpp_source.html">Statistics.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  135</span>                                 {</div>
+<div class="line"><span class="lineno">  136</span>    <span class="keywordtype">double</span> mean_dt = <a class="code hl_variable" href="structdyno_1_1utils_1_1StatisticsMapValue.html#ae4b904ce1feab319339638e5f08dbe2d">time_deltas_</a>.<a class="code hl_function" href="classdyno_1_1utils_1_1Accumulator.html#a0003879178e22617b53f39e5e9aa2612">Mean</a>();</div>
+<div class="line"><span class="lineno">  137</span>    <span class="keywordflow">if</span> (mean_dt != 0) {</div>
+<div class="line"><span class="lineno">  138</span>      <span class="keywordflow">return</span> 1.0 / mean_dt;</div>
+<div class="line"><span class="lineno">  139</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  140</span>      <span class="keywordflow">return</span> -1.0;</div>
+<div class="line"><span class="lineno">  141</span>    }</div>
+<div class="line"><span class="lineno">  142</span>  }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1utils_1_1Accumulator.html#a0003879178e22617b53f39e5e9aa2612">dyno::utils::Accumulator&lt; SampleType, SumType, WindowSize &gt;::Mean()</a>, and <a class="el" href="structdyno_1_1utils_1_1StatisticsMapValue.html#ae4b904ce1feab319339638e5f08dbe2d">time_deltas_</a>.</p>
 <div class="dynheader">
@@ -652,8 +654,8 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Statistics_8hpp_source.html#l00137">137</a> of file <a class="el" href="Statistics_8hpp_source.html">Statistics.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  137</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="structdyno_1_1utils_1_1StatisticsMapValue.html#ae4b904ce1feab319339638e5f08dbe2d">time_deltas_</a>.<a class="code hl_function" href="classdyno_1_1utils_1_1Accumulator.html#a0003879178e22617b53f39e5e9aa2612">Mean</a>(); }</div>
+<p class="definition">Definition at line <a class="el" href="Statistics_8hpp_source.html#l00144">144</a> of file <a class="el" href="Statistics_8hpp_source.html">Statistics.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  144</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="structdyno_1_1utils_1_1StatisticsMapValue.html#ae4b904ce1feab319339638e5f08dbe2d">time_deltas_</a>.<a class="code hl_function" href="classdyno_1_1utils_1_1Accumulator.html#a0003879178e22617b53f39e5e9aa2612">Mean</a>(); }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1utils_1_1Accumulator.html#a0003879178e22617b53f39e5e9aa2612">dyno::utils::Accumulator&lt; SampleType, SumType, WindowSize &gt;::Mean()</a>, and <a class="el" href="structdyno_1_1utils_1_1StatisticsMapValue.html#ae4b904ce1feab319339638e5f08dbe2d">time_deltas_</a>.</p>
 <div class="dynheader">
@@ -691,9 +693,9 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Statistics_8hpp_source.html#l00124">124</a> of file <a class="el" href="Statistics_8hpp_source.html">Statistics.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  124</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="structdyno_1_1utils_1_1StatisticsMapValue.html#ac4dcee0083a0e44082673858367a9322">values_</a>.<a class="code hl_function" href="classdyno_1_1utils_1_1Accumulator.html#af46429a0640b69b949e1aaaf02a1496d">median</a>(); }</div>
-<div class="ttc" id="aclassdyno_1_1utils_1_1Accumulator_html_af46429a0640b69b949e1aaaf02a1496d"><div class="ttname"><a href="classdyno_1_1utils_1_1Accumulator.html#af46429a0640b69b949e1aaaf02a1496d">dyno::utils::Accumulator::median</a></div><div class="ttdeci">SumType median() const</div><div class="ttdef"><b>Definition:</b> <a href="Accumulator_8hpp_source.html#l00143">Accumulator.hpp:143</a></div></div>
+<p class="definition">Definition at line <a class="el" href="Statistics_8hpp_source.html#l00131">131</a> of file <a class="el" href="Statistics_8hpp_source.html">Statistics.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  131</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="structdyno_1_1utils_1_1StatisticsMapValue.html#ac4dcee0083a0e44082673858367a9322">values_</a>.<a class="code hl_function" href="classdyno_1_1utils_1_1Accumulator.html#af46429a0640b69b949e1aaaf02a1496d">median</a>(); }</div>
+<div class="ttc" id="aclassdyno_1_1utils_1_1Accumulator_html_af46429a0640b69b949e1aaaf02a1496d"><div class="ttname"><a href="classdyno_1_1utils_1_1Accumulator.html#af46429a0640b69b949e1aaaf02a1496d">dyno::utils::Accumulator::median</a></div><div class="ttdeci">SumType median() const</div><div class="ttdef"><b>Definition:</b> <a href="Accumulator_8hpp_source.html#l00151">Accumulator.hpp:151</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1utils_1_1Accumulator.html#af46429a0640b69b949e1aaaf02a1496d">dyno::utils::Accumulator&lt; SampleType, SumType, WindowSize &gt;::median()</a>, and <a class="el" href="structdyno_1_1utils_1_1StatisticsMapValue.html#ac4dcee0083a0e44082673858367a9322">values_</a>.</p>
 <div class="dynheader">
@@ -731,9 +733,9 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Statistics_8hpp_source.html#l00123">123</a> of file <a class="el" href="Statistics_8hpp_source.html">Statistics.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  123</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="structdyno_1_1utils_1_1StatisticsMapValue.html#ac4dcee0083a0e44082673858367a9322">values_</a>.<a class="code hl_function" href="classdyno_1_1utils_1_1Accumulator.html#afe4ef381e352b48d7fabdbc3af2ae3ff">min</a>(); }</div>
-<div class="ttc" id="aclassdyno_1_1utils_1_1Accumulator_html_afe4ef381e352b48d7fabdbc3af2ae3ff"><div class="ttname"><a href="classdyno_1_1utils_1_1Accumulator.html#afe4ef381e352b48d7fabdbc3af2ae3ff">dyno::utils::Accumulator::min</a></div><div class="ttdeci">SumType min() const</div><div class="ttdef"><b>Definition:</b> <a href="Accumulator_8hpp_source.html#l00140">Accumulator.hpp:140</a></div></div>
+<p class="definition">Definition at line <a class="el" href="Statistics_8hpp_source.html#l00130">130</a> of file <a class="el" href="Statistics_8hpp_source.html">Statistics.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  130</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="structdyno_1_1utils_1_1StatisticsMapValue.html#ac4dcee0083a0e44082673858367a9322">values_</a>.<a class="code hl_function" href="classdyno_1_1utils_1_1Accumulator.html#afe4ef381e352b48d7fabdbc3af2ae3ff">min</a>(); }</div>
+<div class="ttc" id="aclassdyno_1_1utils_1_1Accumulator_html_afe4ef381e352b48d7fabdbc3af2ae3ff"><div class="ttname"><a href="classdyno_1_1utils_1_1Accumulator.html#afe4ef381e352b48d7fabdbc3af2ae3ff">dyno::utils::Accumulator::min</a></div><div class="ttdeci">SumType min() const</div><div class="ttdef"><b>Definition:</b> <a href="Accumulator_8hpp_source.html#l00148">Accumulator.hpp:148</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1utils_1_1Accumulator.html#afe4ef381e352b48d7fabdbc3af2ae3ff">dyno::utils::Accumulator&lt; SampleType, SumType, WindowSize &gt;::min()</a>, and <a class="el" href="structdyno_1_1utils_1_1StatisticsMapValue.html#ac4dcee0083a0e44082673858367a9322">values_</a>.</p>
 <div class="dynheader">
@@ -771,8 +773,8 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Statistics_8hpp_source.html#l00140">140</a> of file <a class="el" href="Statistics_8hpp_source.html">Statistics.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  140</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="structdyno_1_1utils_1_1StatisticsMapValue.html#ae4b904ce1feab319339638e5f08dbe2d">time_deltas_</a>.<a class="code hl_function" href="classdyno_1_1utils_1_1Accumulator.html#afe4ef381e352b48d7fabdbc3af2ae3ff">min</a>(); }</div>
+<p class="definition">Definition at line <a class="el" href="Statistics_8hpp_source.html#l00147">147</a> of file <a class="el" href="Statistics_8hpp_source.html">Statistics.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  147</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="structdyno_1_1utils_1_1StatisticsMapValue.html#ae4b904ce1feab319339638e5f08dbe2d">time_deltas_</a>.<a class="code hl_function" href="classdyno_1_1utils_1_1Accumulator.html#afe4ef381e352b48d7fabdbc3af2ae3ff">min</a>(); }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1utils_1_1Accumulator.html#afe4ef381e352b48d7fabdbc3af2ae3ff">dyno::utils::Accumulator&lt; SampleType, SumType, WindowSize &gt;::min()</a>, and <a class="el" href="structdyno_1_1utils_1_1StatisticsMapValue.html#ae4b904ce1feab319339638e5f08dbe2d">time_deltas_</a>.</p>
 <div class="dynheader">
@@ -810,9 +812,9 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Statistics_8hpp_source.html#l00125">125</a> of file <a class="el" href="Statistics_8hpp_source.html">Statistics.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  125</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="structdyno_1_1utils_1_1StatisticsMapValue.html#ac4dcee0083a0e44082673858367a9322">values_</a>.<a class="code hl_function" href="classdyno_1_1utils_1_1Accumulator.html#aa809516e1c91ce58e35feef268713b5f">q1</a>(); }</div>
-<div class="ttc" id="aclassdyno_1_1utils_1_1Accumulator_html_aa809516e1c91ce58e35feef268713b5f"><div class="ttname"><a href="classdyno_1_1utils_1_1Accumulator.html#aa809516e1c91ce58e35feef268713b5f">dyno::utils::Accumulator::q1</a></div><div class="ttdeci">SumType q1() const</div><div class="ttdef"><b>Definition:</b> <a href="Accumulator_8hpp_source.html#l00151">Accumulator.hpp:151</a></div></div>
+<p class="definition">Definition at line <a class="el" href="Statistics_8hpp_source.html#l00132">132</a> of file <a class="el" href="Statistics_8hpp_source.html">Statistics.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  132</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="structdyno_1_1utils_1_1StatisticsMapValue.html#ac4dcee0083a0e44082673858367a9322">values_</a>.<a class="code hl_function" href="classdyno_1_1utils_1_1Accumulator.html#aa809516e1c91ce58e35feef268713b5f">q1</a>(); }</div>
+<div class="ttc" id="aclassdyno_1_1utils_1_1Accumulator_html_aa809516e1c91ce58e35feef268713b5f"><div class="ttname"><a href="classdyno_1_1utils_1_1Accumulator.html#aa809516e1c91ce58e35feef268713b5f">dyno::utils::Accumulator::q1</a></div><div class="ttdeci">SumType q1() const</div><div class="ttdef"><b>Definition:</b> <a href="Accumulator_8hpp_source.html#l00159">Accumulator.hpp:159</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1utils_1_1Accumulator.html#aa809516e1c91ce58e35feef268713b5f">dyno::utils::Accumulator&lt; SampleType, SumType, WindowSize &gt;::q1()</a>, and <a class="el" href="structdyno_1_1utils_1_1StatisticsMapValue.html#ac4dcee0083a0e44082673858367a9322">values_</a>.</p>
 <div class="dynheader">
@@ -850,9 +852,9 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Statistics_8hpp_source.html#l00126">126</a> of file <a class="el" href="Statistics_8hpp_source.html">Statistics.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  126</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="structdyno_1_1utils_1_1StatisticsMapValue.html#ac4dcee0083a0e44082673858367a9322">values_</a>.<a class="code hl_function" href="classdyno_1_1utils_1_1Accumulator.html#a727a4e8df93e0f258317a96682df8463">q3</a>(); }</div>
-<div class="ttc" id="aclassdyno_1_1utils_1_1Accumulator_html_a727a4e8df93e0f258317a96682df8463"><div class="ttname"><a href="classdyno_1_1utils_1_1Accumulator.html#a727a4e8df93e0f258317a96682df8463">dyno::utils::Accumulator::q3</a></div><div class="ttdeci">SumType q3() const</div><div class="ttdef"><b>Definition:</b> <a href="Accumulator_8hpp_source.html#l00158">Accumulator.hpp:158</a></div></div>
+<p class="definition">Definition at line <a class="el" href="Statistics_8hpp_source.html#l00133">133</a> of file <a class="el" href="Statistics_8hpp_source.html">Statistics.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  133</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="structdyno_1_1utils_1_1StatisticsMapValue.html#ac4dcee0083a0e44082673858367a9322">values_</a>.<a class="code hl_function" href="classdyno_1_1utils_1_1Accumulator.html#a727a4e8df93e0f258317a96682df8463">q3</a>(); }</div>
+<div class="ttc" id="aclassdyno_1_1utils_1_1Accumulator_html_a727a4e8df93e0f258317a96682df8463"><div class="ttname"><a href="classdyno_1_1utils_1_1Accumulator.html#a727a4e8df93e0f258317a96682df8463">dyno::utils::Accumulator::q3</a></div><div class="ttdeci">SumType q3() const</div><div class="ttdef"><b>Definition:</b> <a href="Accumulator_8hpp_source.html#l00166">Accumulator.hpp:166</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1utils_1_1Accumulator.html#a727a4e8df93e0f258317a96682df8463">dyno::utils::Accumulator&lt; SampleType, SumType, WindowSize &gt;::q3()</a>, and <a class="el" href="structdyno_1_1utils_1_1StatisticsMapValue.html#ac4dcee0083a0e44082673858367a9322">values_</a>.</p>
 <div class="dynheader">
@@ -890,9 +892,9 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Statistics_8hpp_source.html#l00121">121</a> of file <a class="el" href="Statistics_8hpp_source.html">Statistics.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  121</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="structdyno_1_1utils_1_1StatisticsMapValue.html#ac4dcee0083a0e44082673858367a9322">values_</a>.<a class="code hl_function" href="classdyno_1_1utils_1_1Accumulator.html#a4a6a69e744872d11c3b60f703f6e703a">RollingMean</a>(); }</div>
-<div class="ttc" id="aclassdyno_1_1utils_1_1Accumulator_html_a4a6a69e744872d11c3b60f703f6e703a"><div class="ttname"><a href="classdyno_1_1utils_1_1Accumulator.html#a4a6a69e744872d11c3b60f703f6e703a">dyno::utils::Accumulator::RollingMean</a></div><div class="ttdeci">SumType RollingMean() const</div><div class="ttdef"><b>Definition:</b> <a href="Accumulator_8hpp_source.html#l00125">Accumulator.hpp:125</a></div></div>
+<p class="definition">Definition at line <a class="el" href="Statistics_8hpp_source.html#l00128">128</a> of file <a class="el" href="Statistics_8hpp_source.html">Statistics.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  128</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="structdyno_1_1utils_1_1StatisticsMapValue.html#ac4dcee0083a0e44082673858367a9322">values_</a>.<a class="code hl_function" href="classdyno_1_1utils_1_1Accumulator.html#a4a6a69e744872d11c3b60f703f6e703a">RollingMean</a>(); }</div>
+<div class="ttc" id="aclassdyno_1_1utils_1_1Accumulator_html_a4a6a69e744872d11c3b60f703f6e703a"><div class="ttname"><a href="classdyno_1_1utils_1_1Accumulator.html#a4a6a69e744872d11c3b60f703f6e703a">dyno::utils::Accumulator::RollingMean</a></div><div class="ttdeci">SumType RollingMean() const</div><div class="ttdef"><b>Definition:</b> <a href="Accumulator_8hpp_source.html#l00133">Accumulator.hpp:133</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1utils_1_1Accumulator.html#a4a6a69e744872d11c3b60f703f6e703a">dyno::utils::Accumulator&lt; SampleType, SumType, WindowSize &gt;::RollingMean()</a>, and <a class="el" href="structdyno_1_1utils_1_1StatisticsMapValue.html#ac4dcee0083a0e44082673858367a9322">values_</a>.</p>
 <div class="dynheader">
@@ -931,8 +933,8 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Statistics_8hpp_source.html#l00138">138</a> of file <a class="el" href="Statistics_8hpp_source.html">Statistics.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  138</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="structdyno_1_1utils_1_1StatisticsMapValue.html#ae4b904ce1feab319339638e5f08dbe2d">time_deltas_</a>.<a class="code hl_function" href="classdyno_1_1utils_1_1Accumulator.html#a4a6a69e744872d11c3b60f703f6e703a">RollingMean</a>(); }</div>
+<p class="definition">Definition at line <a class="el" href="Statistics_8hpp_source.html#l00145">145</a> of file <a class="el" href="Statistics_8hpp_source.html">Statistics.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  145</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="structdyno_1_1utils_1_1StatisticsMapValue.html#ae4b904ce1feab319339638e5f08dbe2d">time_deltas_</a>.<a class="code hl_function" href="classdyno_1_1utils_1_1Accumulator.html#a4a6a69e744872d11c3b60f703f6e703a">RollingMean</a>(); }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1utils_1_1Accumulator.html#a4a6a69e744872d11c3b60f703f6e703a">dyno::utils::Accumulator&lt; SampleType, SumType, WindowSize &gt;::RollingMean()</a>, and <a class="el" href="structdyno_1_1utils_1_1StatisticsMapValue.html#ae4b904ce1feab319339638e5f08dbe2d">time_deltas_</a>.</p>
 <div class="dynheader">
@@ -971,9 +973,9 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Statistics_8hpp_source.html#l00118">118</a> of file <a class="el" href="Statistics_8hpp_source.html">Statistics.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  118</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="structdyno_1_1utils_1_1StatisticsMapValue.html#ac4dcee0083a0e44082673858367a9322">values_</a>.<a class="code hl_function" href="classdyno_1_1utils_1_1Accumulator.html#af6f79f0e19369772a4d44b96fdd8abc4">sum</a>(); }</div>
-<div class="ttc" id="aclassdyno_1_1utils_1_1Accumulator_html_af6f79f0e19369772a4d44b96fdd8abc4"><div class="ttname"><a href="classdyno_1_1utils_1_1Accumulator.html#af6f79f0e19369772a4d44b96fdd8abc4">dyno::utils::Accumulator::sum</a></div><div class="ttdeci">SumType sum() const</div><div class="ttdef"><b>Definition:</b> <a href="Accumulator_8hpp_source.html#l00115">Accumulator.hpp:115</a></div></div>
+<p class="definition">Definition at line <a class="el" href="Statistics_8hpp_source.html#l00125">125</a> of file <a class="el" href="Statistics_8hpp_source.html">Statistics.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  125</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="structdyno_1_1utils_1_1StatisticsMapValue.html#ac4dcee0083a0e44082673858367a9322">values_</a>.<a class="code hl_function" href="classdyno_1_1utils_1_1Accumulator.html#af6f79f0e19369772a4d44b96fdd8abc4">sum</a>(); }</div>
+<div class="ttc" id="aclassdyno_1_1utils_1_1Accumulator_html_af6f79f0e19369772a4d44b96fdd8abc4"><div class="ttname"><a href="classdyno_1_1utils_1_1Accumulator.html#af6f79f0e19369772a4d44b96fdd8abc4">dyno::utils::Accumulator::sum</a></div><div class="ttdeci">SumType sum() const</div><div class="ttdef"><b>Definition:</b> <a href="Accumulator_8hpp_source.html#l00122">Accumulator.hpp:122</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1utils_1_1Accumulator.html#af6f79f0e19369772a4d44b96fdd8abc4">dyno::utils::Accumulator&lt; SampleType, SumType, WindowSize &gt;::sum()</a>, and <a class="el" href="structdyno_1_1utils_1_1StatisticsMapValue.html#ac4dcee0083a0e44082673858367a9322">values_</a>.</p>
 <div class="dynheader">
@@ -1011,8 +1013,8 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Statistics_8hpp_source.html#l00119">119</a> of file <a class="el" href="Statistics_8hpp_source.html">Statistics.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  119</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="structdyno_1_1utils_1_1StatisticsMapValue.html#ac4dcee0083a0e44082673858367a9322">values_</a>.<a class="code hl_function" href="classdyno_1_1utils_1_1Accumulator.html#a2c9a79a5747e97ee7722c129ed4fd0e2">total_samples</a>(); }</div>
+<p class="definition">Definition at line <a class="el" href="Statistics_8hpp_source.html#l00126">126</a> of file <a class="el" href="Statistics_8hpp_source.html">Statistics.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  126</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="structdyno_1_1utils_1_1StatisticsMapValue.html#ac4dcee0083a0e44082673858367a9322">values_</a>.<a class="code hl_function" href="classdyno_1_1utils_1_1Accumulator.html#a2c9a79a5747e97ee7722c129ed4fd0e2">total_samples</a>(); }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1utils_1_1Accumulator.html#a2c9a79a5747e97ee7722c129ed4fd0e2">dyno::utils::Accumulator&lt; SampleType, SumType, WindowSize &gt;::total_samples()</a>, and <a class="el" href="structdyno_1_1utils_1_1StatisticsMapValue.html#ac4dcee0083a0e44082673858367a9322">values_</a>.</p>
 <div class="dynheader">
@@ -1048,7 +1050,7 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Statistics_8hpp_source.html#l00085">85</a> of file <a class="el" href="Statistics_8hpp_source.html">Statistics.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Statistics_8hpp_source.html#l00092">92</a> of file <a class="el" href="Statistics_8hpp_source.html">Statistics.hpp</a>.</p>
 
 </div>
 </div>
@@ -1072,7 +1074,7 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Statistics_8hpp_source.html#l00147">147</a> of file <a class="el" href="Statistics_8hpp_source.html">Statistics.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Statistics_8hpp_source.html#l00156">156</a> of file <a class="el" href="Statistics_8hpp_source.html">Statistics.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="structdyno_1_1utils_1_1StatisticsMapValue.html#a2d95e90007c74c96afea3cf031ec8b6b">AddValue()</a>, <a class="el" href="structdyno_1_1utils_1_1StatisticsMapValue.html#a2bce5d12296a27766095b8273aa9ea7c">GetLastDeltaTime()</a>, <a class="el" href="structdyno_1_1utils_1_1StatisticsMapValue.html#a2b42f3b4114b642fb3157c79b3230caf">LazyVarianceDeltaTime()</a>, <a class="el" href="structdyno_1_1utils_1_1StatisticsMapValue.html#a15b3473137e76e6af94f67cb4f33519b">MaxDeltaTime()</a>, <a class="el" href="structdyno_1_1utils_1_1StatisticsMapValue.html#ae3f0197068fbe56024840e9c60fe8ff3">MeanCallsPerSec()</a>, <a class="el" href="structdyno_1_1utils_1_1StatisticsMapValue.html#a538c9f1a43dfbefd160977943b121a49">MeanDeltaTime()</a>, <a class="el" href="structdyno_1_1utils_1_1StatisticsMapValue.html#aa1b93e594fcb40b867d2df8338dd1b3b">MinDeltaTime()</a>, and <a class="el" href="structdyno_1_1utils_1_1StatisticsMapValue.html#a222cbc0de73512b9c43aada5023a3525">RollingMeanDeltaTime()</a>.</p>
 
@@ -1098,7 +1100,7 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Statistics_8hpp_source.html#l00148">148</a> of file <a class="el" href="Statistics_8hpp_source.html">Statistics.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Statistics_8hpp_source.html#l00157">157</a> of file <a class="el" href="Statistics_8hpp_source.html">Statistics.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="structdyno_1_1utils_1_1StatisticsMapValue.html#a2d95e90007c74c96afea3cf031ec8b6b">AddValue()</a>, and <a class="el" href="structdyno_1_1utils_1_1StatisticsMapValue.html#a7e5b0fbc7caaac417d0337a870562a92">StatisticsMapValue()</a>.</p>
 
@@ -1124,14 +1126,14 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Statistics_8hpp_source.html#l00146">146</a> of file <a class="el" href="Statistics_8hpp_source.html">Statistics.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Statistics_8hpp_source.html#l00155">155</a> of file <a class="el" href="Statistics_8hpp_source.html">Statistics.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="structdyno_1_1utils_1_1StatisticsMapValue.html#a2d95e90007c74c96afea3cf031ec8b6b">AddValue()</a>, <a class="el" href="structdyno_1_1utils_1_1StatisticsMapValue.html#a64baf472cac518c080fafc59d89eb319">GetAllValues()</a>, <a class="el" href="structdyno_1_1utils_1_1StatisticsMapValue.html#ab0172b6a5855365f5c2e5b23776963a2">GetLastValue()</a>, <a class="el" href="structdyno_1_1utils_1_1StatisticsMapValue.html#a6930f23d2385be1739c668924ddf091c">LazyVariance()</a>, <a class="el" href="structdyno_1_1utils_1_1StatisticsMapValue.html#a72d369a3085bc9d35310b6f4be6b421c">Max()</a>, <a class="el" href="structdyno_1_1utils_1_1StatisticsMapValue.html#adc4a45177a157d2fe1b53abfb3791755">Mean()</a>, <a class="el" href="structdyno_1_1utils_1_1StatisticsMapValue.html#a11fced981ff6b1303c8568757e410df1">Median()</a>, <a class="el" href="structdyno_1_1utils_1_1StatisticsMapValue.html#a66f52c5f2ed05dc0a34dd4bd75bf68e4">Min()</a>, <a class="el" href="structdyno_1_1utils_1_1StatisticsMapValue.html#af41796fb175234d654d0f513441b5d11">Q1()</a>, <a class="el" href="structdyno_1_1utils_1_1StatisticsMapValue.html#ac582e25ece667c07f94f905e798cab2b">Q3()</a>, <a class="el" href="structdyno_1_1utils_1_1StatisticsMapValue.html#a413f05a547cab122e3bc88f59a2d3898">RollingMean()</a>, <a class="el" href="structdyno_1_1utils_1_1StatisticsMapValue.html#adfe59472d97df290735258f6478717a3">Sum()</a>, and <a class="el" href="structdyno_1_1utils_1_1StatisticsMapValue.html#abb742e2d4b97189bbc2724cd551f5a60">TotalSamples()</a>.</p>
 
 </div>
 </div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
-<li>dynosam/include/dynosam/utils/<a class="el" href="Statistics_8hpp_source.html">Statistics.hpp</a></li>
+<li>dynosam_common/include/dynosam_common/utils/<a class="el" href="Statistics_8hpp_source.html">Statistics.hpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

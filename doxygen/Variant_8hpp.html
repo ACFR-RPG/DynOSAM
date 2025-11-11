@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.6"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>DynoSAM: dynosam/include/dynosam/utils/Variant.hpp File Reference</title>
+<title>DynoSAM: dynosam_common/include/dynosam_common/utils/Variant.hpp File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -70,27 +70,28 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_5dee249e885e61d789509b2ad73060f7.html">dynosam</a></li><li class="navelem"><a class="el" href="dir_ae19c998a0d63c4a89d568f2bdaee525.html">include</a></li><li class="navelem"><a class="el" href="dir_0c508da48c40328131e0e187ecaa7ee4.html">dynosam</a></li><li class="navelem"><a class="el" href="dir_ecb64fd74fc702701a4d48ffddfe049d.html">utils</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_59022c2de10cb81abe7061856121e435.html">dynosam_common</a></li><li class="navelem"><a class="el" href="dir_1e5dca763677fcf884d3edfa4dbc3b7d.html">include</a></li><li class="navelem"><a class="el" href="dir_b2413b21460ca38253492cd2cfe1693f.html">dynosam_common</a></li><li class="navelem"><a class="el" href="dir_93e40a38ca0b24d85d942c52df9dca73.html">utils</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#namespaces">Namespaces</a> &#124;
+<a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle"><div class="title">Variant.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;variant&gt;</code><br />
-<code>#include &lt;type_traits&gt;</code><br />
+<div class="textblock"><code>#include &lt;type_traits&gt;</code><br />
+<code>#include &lt;variant&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for Variant.hpp:</div>
 <div class="dyncontent">
-<div class="center"><img src="Variant_8hpp__incl.png" border="0" usemap="#adynosam_2include_2dynosam_2utils_2Variant_8hpp" alt=""/></div>
-<map name="adynosam_2include_2dynosam_2utils_2Variant_8hpp" id="adynosam_2include_2dynosam_2utils_2Variant_8hpp">
-<area shape="rect" title=" " alt="" coords="5,5,203,45"/>
-<area shape="rect" title=" " alt="" coords="18,93,86,119"/>
-<area shape="rect" title=" " alt="" coords="110,93,202,119"/>
+<div class="center"><img src="Variant_8hpp__incl.png" border="0" usemap="#adynosam__common_2include_2dynosam__common_2utils_2Variant_8hpp" alt=""/></div>
+<map name="adynosam__common_2include_2dynosam__common_2utils_2Variant_8hpp" id="adynosam__common_2include_2dynosam__common_2utils_2Variant_8hpp">
+<area shape="rect" title=" " alt="" coords="5,5,203,60"/>
+<area shape="rect" title=" " alt="" coords="6,108,98,133"/>
+<area shape="rect" title=" " alt="" coords="122,108,190,133"/>
 </map>
 </div>
 </div>
@@ -98,6 +99,8 @@ Include dependency graph for Variant.hpp:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structoverload.html">overload&lt; Ts &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1internal_1_1is__variant.html">dyno::internal::is_variant&lt; T &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1internal_1_1is__one__of.html">dyno::internal::is_one_of&lt; T, Variants &gt;</a></td></tr>
@@ -115,15 +118,42 @@ Namespaces</h2></td></tr>
 <tr class="memdesc:namespacedyno_1_1internal"><td class="mdescLeft">&#160;</td><td class="mdescRight">Vector of feature pairs. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:aadde5a2318180f259ff4fe3d7c7ab241"><td class="memTemplParams" colspan="2">template&lt;class... Ts&gt; </td></tr>
+<tr class="memitem:aadde5a2318180f259ff4fe3d7c7ab241"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="Variant_8hpp.html#aadde5a2318180f259ff4fe3d7c7ab241">overload</a> (Ts...) -&gt; <a class="el" href="structoverload.html">overload</a>&lt; Ts... &gt;</td></tr>
+<tr class="separator:aadde5a2318180f259ff4fe3d7c7ab241"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
 <tr class="memitem:a705b800a7f6bc64002d673722f55cb4c"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:a705b800a7f6bc64002d673722f55cb4c"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacedyno.html#a705b800a7f6bc64002d673722f55cb4c">dyno::is_variant_v</a> = internal::is_variant&lt;T&gt;::value</td></tr>
 <tr class="separator:a705b800a7f6bc64002d673722f55cb4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae78dd1fd0a538d1aa380867743d709ec"><td class="memTemplParams" colspan="2">template&lt;typename T , typename... Variants&gt; </td></tr>
-<tr class="memitem:ae78dd1fd0a538d1aa380867743d709ec"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacedyno.html#ae78dd1fd0a538d1aa380867743d709ec">dyno::is_variant_member_v</a> = internal::is_variant_member&lt;T, Variants...&gt;::value</td></tr>
+<tr class="memitem:ae78dd1fd0a538d1aa380867743d709ec"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacedyno.html#ae78dd1fd0a538d1aa380867743d709ec">dyno::is_variant_member_v</a></td></tr>
 <tr class="separator:ae78dd1fd0a538d1aa380867743d709ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="aadde5a2318180f259ff4fe3d7c7ab241" name="aadde5a2318180f259ff4fe3d7c7ab241"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aadde5a2318180f259ff4fe3d7c7ab241">&#9670;&#160;</a></span>overload()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class... Ts&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structoverload.html">overload</a> </td>
+          <td>(</td>
+          <td class="paramtype">Ts...&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td> -&gt;  <a class="el" href="structoverload.html">overload</a>&lt; Ts... &gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

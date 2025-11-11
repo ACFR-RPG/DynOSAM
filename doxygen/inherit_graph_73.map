@@ -1,3 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classdyno_1_1Feature.html" title="2D tracking and id information for a feature observation at a single frame." alt="" coords="5,5,116,31"/>
+<area shape="rect" id="node1" href="$classdyno_1_1EgoMotionSolver.html" title=" " alt="" coords="15,5,187,31"/>
+<area shape="rect" id="node2" href="$classdyno_1_1ObjectMotionSovlerF2F.html" title=" " alt="" coords="244,31,459,56"/>
+<area shape="rect" id="node3" href="$classdyno_1_1ObjectMotionSolver.html" title=" " alt="" coords="5,55,196,80"/>
 </map>

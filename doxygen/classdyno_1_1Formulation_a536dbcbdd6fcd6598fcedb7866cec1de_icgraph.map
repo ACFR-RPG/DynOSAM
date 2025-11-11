@@ -1,5 +1,7 @@
 <map id="dyno::Formulation::accessorFromTheta" name="dyno::Formulation::accessorFromTheta">
-<area shape="rect" id="node1" title="Public fucntion to access the Accessor for the derived formulation." alt="" coords="268,37,417,77"/>
-<area shape="rect" id="node2" href="$classdyno_1_1RegularBackendModule.html#a936edc9b773acb719ef46fda9d6bb2fd" title=" " alt="" coords="5,5,220,45"/>
-<area shape="rect" id="node3" href="$classdyno_1_1RegularBackendModule.html#aa79b2f6d63914e52a7adbfbaa65c32b1" title=" " alt="" coords="5,69,220,109"/>
+<area shape="rect" id="node1" title="Public fucntion to access the Accessor for the derived formulation." alt="" coords="531,69,680,109"/>
+<area shape="rect" id="node2" href="$classdyno_1_1RegularBackendModule.html#adc99585a2a17b45657ad063a59aefe70" title=" " alt="" coords="268,12,483,52"/>
+<area shape="rect" id="node4" href="$classdyno_1_1RegularBackendModule.html#a2ffdf0389a19bc9898825b8e3a86eccb" title=" " alt="" coords="5,69,220,109"/>
+<area shape="rect" id="node5" href="$classdyno_1_1Formulation.html#aca7120e1acbc23eccf63f31b3861473e" title=" " alt="" coords="301,127,449,167"/>
+<area shape="rect" id="node3" href="$classdyno_1_1RegularBackendModule.html#ab253e9d8df2177ea7a5bdb044239af46" title=" " alt="" coords="5,5,220,45"/>
 </map>

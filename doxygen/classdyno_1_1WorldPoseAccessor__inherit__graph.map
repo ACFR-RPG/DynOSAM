@@ -1,5 +1,6 @@
 <map id="dyno::WorldPoseAccessor" name="dyno::WorldPoseAccessor">
-<area shape="rect" id="node1" title=" " alt="" coords="17,79,205,104"/>
-<area shape="rect" id="node3" href="$classdyno_1_1WorldMotionAccessor.html" title=" " alt="" coords="9,152,212,177"/>
-<area shape="rect" id="node2" href="$classdyno_1_1Accessor.html" title=" " alt="" coords="5,5,216,31"/>
+<area shape="rect" id="node1" title=" " alt="" coords="25,152,213,177"/>
+<area shape="rect" id="node4" href="$classdyno_1_1WorldMotionAccessor.html" title=" " alt="" coords="17,225,220,251"/>
+<area shape="rect" id="node2" href="$classdyno_1_1AccessorT.html" title=" " alt="" coords="5,79,232,104"/>
+<area shape="rect" id="node3" href="$classdyno_1_1Accessor.html" title="Accessor defines the interface between the structured output of a BackendModule and any formulation u..." alt="" coords="59,5,179,31"/>
 </map>

@@ -1,7 +1,7 @@
 <map id="dyno::Frame::collectFeatures" name="dyno::Frame::collectFeatures">
-<area shape="rect" id="node1" title="Collects a vector of feature pointers given a vector of tracklet ids. Features returned could be inli..." alt="" coords="5,24,216,50"/>
-<area shape="rect" id="node2" href="$classdyno_1_1Frame.html#ab1af68fa722b3a69160ae0436318ad19" title="Gets a feature from its tracklet ID. Could be static or dynamic. Nullptr is returned if the feature d..." alt="" coords="264,24,388,50"/>
-<area shape="rect" id="node3" href="$classdyno_1_1FeatureContainer.html#abf2f2d568f5dc17944cc122c537a65f5" title="Returns true if a feature with the given tracklet id exists." alt="" coords="659,17,833,57"/>
-<area shape="rect" id="node4" href="$classdyno_1_1Frame.html#ab9f7b3f513aeff82d47de7a72d66a69a" title="Checks if a feature exists within this frame. Could be static or dynamic." alt="" coords="448,24,599,50"/>
-<area shape="rect" id="node5" href="$classdyno_1_1FeatureContainer.html#a5b73e75d2f4063ac9c16dd0fd565f8da" title="Gets a feature given its tracklet id. If the feature does not exist, nullptr is returned." alt="" coords="436,74,611,114"/>
+<area shape="rect" id="node1" title="Collects a vector of feature pointers given a vector of tracklet ids. Features returned could be inli..." alt="" coords="5,56,216,81"/>
+<area shape="rect" id="node2" href="$classdyno_1_1Frame.html#ab1af68fa722b3a69160ae0436318ad19" title="Gets a feature from its tracklet ID. Could be static or dynamic. Nullptr is returned if the feature d..." alt="" coords="264,56,388,81"/>
+<area shape="rect" id="node3" href="$classdyno_1_1Frame.html#ab9f7b3f513aeff82d47de7a72d66a69a" title="Checks if a feature exists within this frame. Could be static or dynamic." alt="" coords="448,5,599,31"/>
+<area shape="rect" id="node4" href="$classdyno_1_1FeatureContainer.html#abf2f2d568f5dc17944cc122c537a65f5" title="Returns true if a feature with the given tracklet id exists." alt="" coords="659,49,833,89"/>
+<area shape="rect" id="node5" href="$classdyno_1_1FeatureContainer.html#a5b73e75d2f4063ac9c16dd0fd565f8da" title="Gets a feature given its tracklet id. If the feature does not exist, nullptr is returned." alt="" coords="436,106,611,146"/>
 </map>

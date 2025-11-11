@@ -1,5 +1,4 @@
 <map id="dyno::vision_tools::depthTo3D" name="dyno::vision_tools::depthTo3D">
-<area shape="rect" id="node1" title="Projects a dense depth map to 3D coordinates in the local frame." alt="" coords="572,5,712,45"/>
-<area shape="rect" id="node2" href="$namespacedyno_1_1vision__tools.html#a5d8b89d2b560b498934853c77a7d9f28" title="Saves a re&#45;projected 3D point cloud with labelled points to file as a cv::Mat." alt="" coords="265,5,524,45"/>
-<area shape="rect" id="node3" href="$classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2" title=" " alt="" coords="5,5,217,45"/>
+<area shape="rect" id="node1" title="Projects a dense depth map to 3D coordinates in the local frame." alt="" coords="312,5,452,45"/>
+<area shape="rect" id="node2" href="$namespacedyno_1_1vision__tools.html#a5d8b89d2b560b498934853c77a7d9f28" title="Saves a re&#45;projected 3D point cloud with labelled points to file as a cv::Mat." alt="" coords="5,5,264,45"/>
 </map>

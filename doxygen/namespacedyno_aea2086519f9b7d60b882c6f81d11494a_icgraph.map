@@ -1,8 +1,6 @@
 <map id="dyno::findLineListPointsFromAABBMinMax" name="dyno::findLineListPointsFromAABBMinMax">
-<area shape="rect" id="node1" title=" " alt="" coords="801,37,977,77"/>
-<area shape="rect" id="node2" href="$classdyno_1_1InbuiltDisplayCommon.html#ac1b0d24582458add8b4f64738872ff33" title="Constructs axis&#45;aligned BB (AABB) and oriented BB (OBB) marker arrays from a set of point clouds whic..." alt="" coords="519,5,753,45"/>
-<area shape="rect" id="node5" href="$classdyno_1_1FrontendInbuiltDisplayRos.html#a4b6fefaf04a868c58cd85d8a741b4726" title=" " alt="" coords="521,69,751,109"/>
-<area shape="rect" id="node3" href="$classdyno_1_1InbuiltDisplayCommon.html#a1b2fa923dc466d1357936bf793d65ce2" title=" " alt="" coords="260,5,471,45"/>
-<area shape="rect" id="node4" href="$classdyno_1_1BackendInbuiltDisplayRos.html#ae435d50beb86a1beecb8bf249e723bf4" title=" " alt="" coords="5,5,212,45"/>
-<area shape="rect" id="node6" href="$classdyno_1_1FrontendInbuiltDisplayRos.html#a8e47d6ce98cd285d8b6d9674cbacf334" title=" " alt="" coords="261,69,470,109"/>
+<area shape="rect" id="node1" title=" " alt="" coords="547,37,723,77"/>
+<area shape="rect" id="node2" href="$classdyno_1_1InbuiltDisplayCommon.html#ac1b0d24582458add8b4f64738872ff33" title="Constructs axis&#45;aligned BB (AABB) and oriented BB (OBB) marker arrays from a set of point clouds whic..." alt="" coords="264,5,499,45"/>
+<area shape="rect" id="node4" href="$classdyno_1_1FrontendInbuiltDisplayRos.html#a4b6fefaf04a868c58cd85d8a741b4726" title=" " alt="" coords="267,69,496,109"/>
+<area shape="rect" id="node3" href="$classdyno_1_1InbuiltDisplayCommon.html#a1b2fa923dc466d1357936bf793d65ce2" title=" " alt="" coords="5,5,216,45"/>
 </map>

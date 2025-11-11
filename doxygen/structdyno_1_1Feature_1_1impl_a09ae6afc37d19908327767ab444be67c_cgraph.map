@@ -1,4 +1,5 @@
 <map id="dyno::Feature::impl::operator==" name="dyno::Feature::impl::operator==">
-<area shape="rect" id="node1" title="Possible stereo keypoint in the right image." alt="" coords="5,5,153,45"/>
-<area shape="rect" id="node2" href="$namespacedyno.html#adf545b8b790321f0f83e16e7b4927192" title="Float point comparison up to a tolerance." alt="" coords="201,13,312,38"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,35,153,75"/>
+<area shape="rect" id="node2" href="$namespacedyno_1_1utils.html#a25e3c9c2f7d3786e3b70d3373592a325" title="Check if two objects wrapped in std::optional are equal. If both are std::nullopt,..." alt="" coords="201,5,388,45"/>
+<area shape="rect" id="node3" href="$namespacedyno.html#adf545b8b790321f0f83e16e7b4927192" title="Float point comparison up to a tolerance." alt="" coords="239,70,350,95"/>
 </map>

@@ -1,6 +1,0 @@
-<map id="dyno::Frame::moveObjectToStatic" name="dyno::Frame::moveObjectToStatic">
-<area shape="rect" id="node1" title=" " alt="" coords="5,24,209,64"/>
-<area shape="rect" id="node2" href="$classdyno_1_1FeatureContainer.html#abf2f2d568f5dc17944cc122c537a65f5" title="Returns true if a feature with the given tracklet id exists." alt="" coords="480,24,655,64"/>
-<area shape="rect" id="node3" href="$classdyno_1_1FeatureContainer.html#a5b73e75d2f4063ac9c16dd0fd565f8da" title="Gets a feature given its tracklet id. If the feature does not exist, nullptr is returned." alt="" coords="257,24,432,64"/>
-<area shape="rect" id="node4" href="$classdyno_1_1FeatureContainer.html#ad4d6a858c333b4c35d3e6b8fb519ccc0" title="Removes a feature by tracklet id by using std::map::erase." alt="" coords="257,88,432,128"/>
-</map>

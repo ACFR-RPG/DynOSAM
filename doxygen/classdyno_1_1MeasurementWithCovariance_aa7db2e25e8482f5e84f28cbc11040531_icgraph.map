@@ -1,7 +1,17 @@
 <map id="dyno::MeasurementWithCovariance::measurement" name="dyno::MeasurementWithCovariance::measurement">
-<area shape="rect" id="node1" title=" " alt="" coords="777,37,1032,77"/>
-<area shape="rect" id="node2" href="$classdyno_1_1MeasurementWithCovariance.html#abcb9f871ce338e8f5cbc3e89040f12e4" title="Very important to have these cast operators so we can use Base::asType to cast to the internal data." alt="" coords="475,5,729,45"/>
-<area shape="rect" id="node3" href="$classdyno_1_1ParallelObjectISAM.html#ad0ec7b6e8d9712fb5b16376f567b5126" title=" " alt="" coords="509,69,695,109"/>
-<area shape="rect" id="node4" href="$classdyno_1_1ParallelObjectISAM.html#a71b737a3ffd6f37722393df4f46d37f4" title=" " alt="" coords="240,69,427,109"/>
-<area shape="rect" id="node5" href="$classdyno_1_1ParallelObjectISAM.html#aebe02d7a654d9829c361eece7374dd1f" title=" " alt="" coords="5,69,192,109"/>
+<area shape="rect" id="node1" title=" " alt="" coords="1188,137,1443,177"/>
+<area shape="rect" id="node2" href="$classdyno_1_1MeasurementWithCovariance.html#af6fe88e61cb95df99733d42a686cab07" title="Construct object using a measurement type and associated sigma vector. The sigma&#39;s represent the on&#45;d..." alt="" coords="885,29,1140,69"/>
+<area shape="rect" id="node5" href="$classdyno_1_1CameraMeasurement.html#ad1b4139206f0a6a9e070c6d50d95e211" title=" " alt="" coords="611,69,813,109"/>
+<area shape="rect" id="node7" href="$namespacedyno.html#a6a15f797b52fb22dcb150dd8e2e45b4c" title=" " alt="" coords="971,145,1054,170"/>
+<area shape="rect" id="node12" href="$classdyno_1_1MeasurementWithCovariance.html#abcb9f871ce338e8f5cbc3e89040f12e4" title="Very important to have these cast operators so we can use Base::asType to cast to the internal data." alt="" coords="885,195,1140,235"/>
+<area shape="rect" id="node13" href="$classdyno_1_1ParallelObjectISAM.html#ad0ec7b6e8d9712fb5b16376f567b5126" title=" " alt="" coords="919,260,1106,300"/>
+<area shape="rect" id="node3" href="$classdyno_1_1RGBDInstanceFrontendModule.html#ab40113f18671c1f496269e8c7a18267a" title=" " alt="" coords="587,5,837,45"/>
+<area shape="rect" id="node4" href="$classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2" title=" " alt="" coords="311,5,523,45"/>
+<area shape="rect" id="node6" href="$structdyno_1_1measurement__traits_3_01CameraMeasurement_01_4.html#acc753a7917d47061a7f67cda4c49a546" title=" " alt="" coords="296,69,539,109"/>
+<area shape="rect" id="node8" href="$classdyno_1_1Accessor.html#a89469b02290573c4f61a62fd93a04f69" title="Computes the centroid of the requested object using the estimated dynamic points." alt="" coords="599,133,825,173"/>
+<area shape="rect" id="node9" href="$classdyno_1_1BayesTreeMarginalizationHelper.html#a7a253bd69f9f335bfa49b61cffb76eae" title=" " alt="" coords="591,197,833,237"/>
+<area shape="rect" id="node10" href="$classdyno_1_1BayesTreeMarginalizationHelper.html#a09139ea160e4eece1cd0853bfd31843d" title=" " alt="" coords="296,187,539,242"/>
+<area shape="rect" id="node11" href="$classdyno_1_1BayesTreeMarginalizationHelper.html#a8cd325df1f9576d65de146a52da21cbb" title=" " alt="" coords="5,187,248,242"/>
+<area shape="rect" id="node14" href="$classdyno_1_1ParallelObjectISAM.html#a71b737a3ffd6f37722393df4f46d37f4" title=" " alt="" coords="619,263,805,303"/>
+<area shape="rect" id="node15" href="$classdyno_1_1ParallelObjectISAM.html#aebe02d7a654d9829c361eece7374dd1f" title=" " alt="" coords="324,267,511,307"/>
 </map>

@@ -1,7 +1,0 @@
-<map id="dyno::vision_tools::backProjectAndCovariance" name="dyno::vision_tools::backProjectAndCovariance">
-<area shape="rect" id="node1" title="From a feature with valid depth, backproject to a 3D point in the camera frame with the associated co..." alt="" coords="5,73,209,113"/>
-<area shape="rect" id="node2" href="$classdyno_1_1Feature.html#aa1dad2ea2a931bbccb56ae5b53822943" title="Depth of this keypoint (will be Feature::invalid_depth is depth is not set)." alt="" coords="291,5,447,31"/>
-<area shape="rect" id="node3" href="$classdyno_1_1Camera.html#afa242b874c0c1a185adb8d83a35171c8" title=" " alt="" coords="257,55,480,80"/>
-<area shape="rect" id="node4" href="$classdyno_1_1Feature.html#ae7d554f489558630f69b617f82c24173" title=" " alt="" coords="278,104,459,129"/>
-<area shape="rect" id="node5" href="$classdyno_1_1Feature.html#ada9f9980d950874a7a157a82b9921f8a" title="Gets keypoint observation." alt="" coords="281,153,456,179"/>
-</map>

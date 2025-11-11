@@ -17,7 +17,7 @@ var searchData=
   ['virtualkittitextgtloader_14',['VirtualKittiTextGtLoader',['../classdyno_1_1VirtualKittiTextGtLoader.html',1,'dyno']]],
   ['virtualkittitimestamploader_15',['VirtualKittiTimestampLoader',['../structdyno_1_1VirtualKittiTimestampLoader.html',1,'dyno']]],
   ['visionimubackendmodule_16',['VisionImuBackendModule',['../classdyno_1_1VisionImuBackendModule.html',1,'dyno']]],
-  ['visionimubackendmodule_3c_20rgbdbackendmoduletraits_20_3e_17',['VisionImuBackendModule&lt; RGBDBackendModuleTraits &gt;',['../classdyno_1_1VisionImuBackendModule.html',1,'dyno']]],
-  ['visualmeasurementstatus_18',['VisualMeasurementStatus',['../structdyno_1_1VisualMeasurementStatus.html',1,'dyno']]],
-  ['visualnoiseparams_19',['VisualNoiseParams',['../structdyno_1_1VisualNoiseParams.html',1,'dyno']]]
+  ['visionimubackendmodule_3c_20regularbackendmoduletraits_20_3e_17',['VisionImuBackendModule&lt; RegularBackendModuleTraits &gt;',['../classdyno_1_1VisionImuBackendModule.html',1,'dyno']]],
+  ['visionimupacket_18',['VisionImuPacket',['../classdyno_1_1VisionImuPacket.html',1,'dyno']]],
+  ['visualmeasurementstatus_19',['VisualMeasurementStatus',['../structdyno_1_1VisualMeasurementStatus.html',1,'dyno']]]
 ];

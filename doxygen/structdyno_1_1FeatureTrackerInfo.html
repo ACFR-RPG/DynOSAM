@@ -95,16 +95,16 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a3e451313696cef2553e256c4136f6096"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad5ffbf938aa7ae6c100a92e1bca09c6a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacedyno.html#a7fda67c0575c4b7a8210dcc8ae227370">Timestamp</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1FeatureTrackerInfo.html#ad5ffbf938aa7ae6c100a92e1bca09c6a">timestamp</a></td></tr>
 <tr class="separator:ad5ffbf938aa7ae6c100a92e1bca09c6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a11ddaea878d4040f670152dc27ed43dd"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1FeatureTrackerInfo.html#a11ddaea878d4040f670152dc27ed43dd">static_track_optical_flow</a></td></tr>
+<tr class="memitem:a11ddaea878d4040f670152dc27ed43dd"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1FeatureTrackerInfo.html#a11ddaea878d4040f670152dc27ed43dd">static_track_optical_flow</a> {0}</td></tr>
 <tr class="separator:a11ddaea878d4040f670152dc27ed43dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a28c134cb8fd5e56abc9b0fe8d92955c5"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1FeatureTrackerInfo.html#a28c134cb8fd5e56abc9b0fe8d92955c5">static_track_detections</a></td></tr>
+<tr class="memitem:a28c134cb8fd5e56abc9b0fe8d92955c5"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1FeatureTrackerInfo.html#a28c134cb8fd5e56abc9b0fe8d92955c5">static_track_detections</a> {0}</td></tr>
 <tr class="separator:a28c134cb8fd5e56abc9b0fe8d92955c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0bcb89c858b27efb711f174b860cafe0"><td class="memItemLeft" align="right" valign="top">gtsam::FastMap&lt; <a class="el" href="namespacedyno.html#a38bb86e4154b86428b8d133be03fb2b5">ObjectId</a>, <a class="el" href="structdyno_1_1PerObjectStatus.html">PerObjectStatus</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1FeatureTrackerInfo.html#a0bcb89c858b27efb711f174b860cafe0">dynamic_track</a></td></tr>
 <tr class="separator:a0bcb89c858b27efb711f174b860cafe0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="Vision-Definitions_8hpp_source.html#l00092">92</a> of file <a class="el" href="Vision-Definitions_8hpp_source.html">Vision-Definitions.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Vision-Definitions_8hpp_source.html#l00094">94</a> of file <a class="el" href="Vision-Definitions_8hpp_source.html">Vision-Definitions.hpp</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="a8d5e1a05167ecd041783f39243dd508e" name="a8d5e1a05167ecd041783f39243dd508e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8d5e1a05167ecd041783f39243dd508e">&#9670;&#160;</a></span>getObjectStatus()</h2>
@@ -130,34 +130,28 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Vision-Definitions_8hpp_source.html#l00100">100</a> of file <a class="el" href="Vision-Definitions_8hpp_source.html">Vision-Definitions.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  100</span>                                                              {</div>
-<div class="line"><span class="lineno">  101</span>    <span class="comment">// tbb::concurrent_hash_map&lt;ObjectId, PerObjectStatus&gt;::accessor acc;</span></div>
-<div class="line"><span class="lineno">  102</span>    <span class="keywordflow">if</span> (!<a class="code hl_variable" href="structdyno_1_1FeatureTrackerInfo.html#a0bcb89c858b27efb711f174b860cafe0">dynamic_track</a>.exists(object_id)) {</div>
-<div class="line"><span class="lineno">  103</span>      <a class="code hl_variable" href="structdyno_1_1FeatureTrackerInfo.html#a0bcb89c858b27efb711f174b860cafe0">dynamic_track</a>.insert2(object_id, PerObjectStatus(object_id));</div>
-<div class="line"><span class="lineno">  104</span>    }</div>
-<div class="line"><span class="lineno">  105</span>    <span class="comment">// if (dynamic_track.insert(acc, object_id)) {</span></div>
-<div class="line"><span class="lineno">  106</span>    <span class="comment">//     acc-&gt;second = PerObjectStatus(object_id);  // Initialize with an</span></div>
-<div class="line"><span class="lineno">  107</span>    <span class="comment">//     empty vector</span></div>
-<div class="line"><span class="lineno">  108</span>    <span class="comment">// }</span></div>
-<div class="line"><span class="lineno">  109</span> </div>
-<div class="line"><span class="lineno">  110</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="structdyno_1_1FeatureTrackerInfo.html#a0bcb89c858b27efb711f174b860cafe0">dynamic_track</a>.at(object_id);</div>
-<div class="line"><span class="lineno">  111</span>    <span class="comment">// return acc-&gt;second;</span></div>
-<div class="line"><span class="lineno">  112</span>  }</div>
-<div class="ttc" id="astructdyno_1_1FeatureTrackerInfo_html_a0bcb89c858b27efb711f174b860cafe0"><div class="ttname"><a href="structdyno_1_1FeatureTrackerInfo.html#a0bcb89c858b27efb711f174b860cafe0">dyno::FeatureTrackerInfo::dynamic_track</a></div><div class="ttdeci">gtsam::FastMap&lt; ObjectId, PerObjectStatus &gt; dynamic_track</div><div class="ttdef"><b>Definition:</b> <a href="Vision-Definitions_8hpp_source.html#l00114">Vision-Definitions.hpp:114</a></div></div>
+<p class="definition">Definition at line <a class="el" href="Vision-Definitions_8hpp_source.html#l00102">102</a> of file <a class="el" href="Vision-Definitions_8hpp_source.html">Vision-Definitions.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  102</span>                                                              {</div>
+<div class="line"><span class="lineno">  103</span>    <span class="keywordflow">if</span> (!<a class="code hl_variable" href="structdyno_1_1FeatureTrackerInfo.html#a0bcb89c858b27efb711f174b860cafe0">dynamic_track</a>.exists(object_id)) {</div>
+<div class="line"><span class="lineno">  104</span>      <a class="code hl_variable" href="structdyno_1_1FeatureTrackerInfo.html#a0bcb89c858b27efb711f174b860cafe0">dynamic_track</a>.insert2(object_id, PerObjectStatus(object_id));</div>
+<div class="line"><span class="lineno">  105</span>    }</div>
+<div class="line"><span class="lineno">  106</span>    <span class="comment">// CHECK(dynamic_track.exists(object_id));</span></div>
+<div class="line"><span class="lineno">  107</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="structdyno_1_1FeatureTrackerInfo.html#a0bcb89c858b27efb711f174b860cafe0">dynamic_track</a>.at(object_id);</div>
+<div class="line"><span class="lineno">  108</span>  }</div>
+<div class="ttc" id="astructdyno_1_1FeatureTrackerInfo_html_a0bcb89c858b27efb711f174b860cafe0"><div class="ttname"><a href="structdyno_1_1FeatureTrackerInfo.html#a0bcb89c858b27efb711f174b860cafe0">dyno::FeatureTrackerInfo::dynamic_track</a></div><div class="ttdeci">gtsam::FastMap&lt; ObjectId, PerObjectStatus &gt; dynamic_track</div><div class="ttdef"><b>Definition:</b> <a href="Vision-Definitions_8hpp_source.html#l00110">Vision-Definitions.hpp:110</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="structdyno_1_1FeatureTrackerInfo.html#a0bcb89c858b27efb711f174b860cafe0">dynamic_track</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1FeatureTracker.html#af6093d870bad67d12dee0c9cb913f87c">dyno::FeatureTracker::sampleDynamic()</a>, and <a class="el" href="classdyno_1_1FeatureTracker.html#a145614fe29bef7728075492870ac9c41">dyno::FeatureTracker::trackDynamic()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1FeatureTracker.html#a145614fe29bef7728075492870ac9c41">dyno::FeatureTracker::trackDynamic()</a>, and <a class="el" href="classdyno_1_1FeatureTracker.html#a4796a29c1f89cde0ace1668fc8fcd9a3">dyno::FeatureTracker::trackDynamicKLT()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="structdyno_1_1FeatureTrackerInfo_a8d5e1a05167ecd041783f39243dd508e_icgraph.png" border="0" usemap="#astructdyno_1_1FeatureTrackerInfo_a8d5e1a05167ecd041783f39243dd508e_icgraph" alt=""/></div>
 <map name="astructdyno_1_1FeatureTrackerInfo_a8d5e1a05167ecd041783f39243dd508e_icgraph" id="astructdyno_1_1FeatureTrackerInfo_a8d5e1a05167ecd041783f39243dd508e_icgraph">
-<area shape="rect" title=" " alt="" coords="621,35,804,75"/>
-<area shape="rect" href="classdyno_1_1FeatureTracker.html#af6093d870bad67d12dee0c9cb913f87c" title=" " alt="" coords="416,5,573,45"/>
-<area shape="rect" href="classdyno_1_1FeatureTracker.html#a145614fe29bef7728075492870ac9c41" title=" " alt="" coords="211,35,368,75"/>
-<area shape="rect" href="classdyno_1_1FeatureTracker.html#a9890ba0c11b5932b5b4954a86bd03948" title=" " alt="" coords="5,35,163,75"/>
+<area shape="rect" title=" " alt="" coords="416,37,599,77"/>
+<area shape="rect" href="classdyno_1_1FeatureTracker.html#a145614fe29bef7728075492870ac9c41" title=" " alt="" coords="211,5,368,45"/>
+<area shape="rect" href="classdyno_1_1FeatureTracker.html#a4796a29c1f89cde0ace1668fc8fcd9a3" title=" " alt="" coords="211,69,368,109"/>
+<area shape="rect" href="classdyno_1_1FeatureTracker.html#a40ee79c94fe2de7f16d2a4508cc2ba11" title=" " alt="" coords="5,37,163,77"/>
 </map>
 </div>
 
@@ -176,7 +170,7 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Vision-Definitions_8hpp_source.html#l00114">114</a> of file <a class="el" href="Vision-Definitions_8hpp_source.html">Vision-Definitions.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Vision-Definitions_8hpp_source.html#l00110">110</a> of file <a class="el" href="Vision-Definitions_8hpp_source.html">Vision-Definitions.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="structdyno_1_1FeatureTrackerInfo.html#a8d5e1a05167ecd041783f39243dd508e">getObjectStatus()</a>, <a class="el" href="classdyno_1_1FeatureTracker.html#ab50422938e62bccc34295c155357213a">dyno::FeatureTracker::requiresSampling()</a>, and <a class="el" href="namespacedyno.html#a798a19d7cdddf3a6a6f9cc65ac452753">dyno::to_string()</a>.</p>
 
@@ -194,9 +188,9 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Vision-Definitions_8hpp_source.html#l00093">93</a> of file <a class="el" href="Vision-Definitions_8hpp_source.html">Vision-Definitions.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Vision-Definitions_8hpp_source.html#l00095">95</a> of file <a class="el" href="Vision-Definitions_8hpp_source.html">Vision-Definitions.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1FeatureTracker.html#ab50422938e62bccc34295c155357213a">dyno::FeatureTracker::requiresSampling()</a>, <a class="el" href="namespacedyno.html#a798a19d7cdddf3a6a6f9cc65ac452753">dyno::to_string()</a>, and <a class="el" href="classdyno_1_1FeatureTracker.html#a9890ba0c11b5932b5b4954a86bd03948">dyno::FeatureTracker::track()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1FeatureTracker.html#ab50422938e62bccc34295c155357213a">dyno::FeatureTracker::requiresSampling()</a>, <a class="el" href="namespacedyno.html#a798a19d7cdddf3a6a6f9cc65ac452753">dyno::to_string()</a>, and <a class="el" href="classdyno_1_1FeatureTracker.html#a40ee79c94fe2de7f16d2a4508cc2ba11">dyno::FeatureTracker::track()</a>.</p>
 
 </div>
 </div>
@@ -207,12 +201,12 @@ Here is the caller graph for this function:</div>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">size_t dyno::FeatureTrackerInfo::static_track_detections</td>
+          <td class="memname">size_t dyno::FeatureTrackerInfo::static_track_detections {0}</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Vision-Definitions_8hpp_source.html#l00098">98</a> of file <a class="el" href="Vision-Definitions_8hpp_source.html">Vision-Definitions.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Vision-Definitions_8hpp_source.html#l00100">100</a> of file <a class="el" href="Vision-Definitions_8hpp_source.html">Vision-Definitions.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="namespacedyno.html#a798a19d7cdddf3a6a6f9cc65ac452753">dyno::to_string()</a>, <a class="el" href="classdyno_1_1KltFeatureTracker.html#a8f26d8fe56edd3e579a879e82a40457f">dyno::KltFeatureTracker::trackPoints()</a>, <a class="el" href="classdyno_1_1ExternalFlowFeatureTracker.html#aedf0b07caf85d853756cb878f22d2ad7">dyno::ExternalFlowFeatureTracker::trackStatic()</a>, and <a class="el" href="classdyno_1_1KltFeatureTracker.html#ab15aaa39f0c3adc62037d718b98039c0">dyno::KltFeatureTracker::trackStatic()</a>.</p>
 
@@ -225,12 +219,12 @@ Here is the caller graph for this function:</div>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">size_t dyno::FeatureTrackerInfo::static_track_optical_flow</td>
+          <td class="memname">size_t dyno::FeatureTrackerInfo::static_track_optical_flow {0}</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Vision-Definitions_8hpp_source.html#l00097">97</a> of file <a class="el" href="Vision-Definitions_8hpp_source.html">Vision-Definitions.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Vision-Definitions_8hpp_source.html#l00099">99</a> of file <a class="el" href="Vision-Definitions_8hpp_source.html">Vision-Definitions.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="namespacedyno.html#a798a19d7cdddf3a6a6f9cc65ac452753">dyno::to_string()</a>, <a class="el" href="classdyno_1_1KltFeatureTracker.html#a8f26d8fe56edd3e579a879e82a40457f">dyno::KltFeatureTracker::trackPoints()</a>, and <a class="el" href="classdyno_1_1ExternalFlowFeatureTracker.html#aedf0b07caf85d853756cb878f22d2ad7">dyno::ExternalFlowFeatureTracker::trackStatic()</a>.</p>
 
@@ -248,9 +242,9 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Vision-Definitions_8hpp_source.html#l00094">94</a> of file <a class="el" href="Vision-Definitions_8hpp_source.html">Vision-Definitions.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Vision-Definitions_8hpp_source.html#l00096">96</a> of file <a class="el" href="Vision-Definitions_8hpp_source.html">Vision-Definitions.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="namespacedyno.html#a798a19d7cdddf3a6a6f9cc65ac452753">dyno::to_string()</a>, and <a class="el" href="classdyno_1_1FeatureTracker.html#a9890ba0c11b5932b5b4954a86bd03948">dyno::FeatureTracker::track()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="namespacedyno.html#a798a19d7cdddf3a6a6f9cc65ac452753">dyno::to_string()</a>, and <a class="el" href="classdyno_1_1FeatureTracker.html#a40ee79c94fe2de7f16d2a4508cc2ba11">dyno::FeatureTracker::track()</a>.</p>
 
 </div>
 </div>

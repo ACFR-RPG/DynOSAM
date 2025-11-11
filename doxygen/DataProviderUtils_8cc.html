@@ -82,70 +82,68 @@ $(function() {
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="DataProviderUtils_8hpp_source.html">dynosam/dataprovider/DataProviderUtils.hpp</a>&quot;</code><br />
 <code>#include &lt;glog/logging.h&gt;</code><br />
-<code>#include &lt;boost/algorithm/string.hpp&gt;</code><br />
-<code>#include &lt;boost/algorithm/string/split.hpp&gt;</code><br />
 <code>#include &lt;exception&gt;</code><br />
 <code>#include &lt;filesystem&gt;</code><br />
 <code>#include &lt;fstream&gt;</code><br />
 <code>#include &lt;opencv4/opencv2/opencv.hpp&gt;</code><br />
-<code>#include &quot;<a class="el" href="ImageTypes_8hpp_source.html">dynosam/common/ImageTypes.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="VisionTools_8hpp_source.html">dynosam/frontend/vision/VisionTools.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="OpenCVUtils_8hpp_source.html">dynosam/utils/OpenCVUtils.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="OpenCVUtils_8hpp_source.html">dynosam_common/utils/OpenCVUtils.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="ImageTypes_8hpp_source.html">dynosam_cv/ImageTypes.hpp</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for DataProviderUtils.cc:</div>
 <div class="dyncontent">
 <div class="center"><img src="DataProviderUtils_8cc__incl.png" border="0" usemap="#adynosam_2src_2dataprovider_2DataProviderUtils_8cc" alt=""/></div>
 <map name="adynosam_2src_2dataprovider_2DataProviderUtils_8cc" id="adynosam_2src_2dataprovider_2DataProviderUtils_8cc">
-<area shape="rect" title=" " alt="" coords="1547,5,1739,45"/>
-<area shape="rect" href="DataProviderUtils_8hpp.html" title=" " alt="" coords="185,357,354,397"/>
-<area shape="rect" title=" " alt="" coords="920,453,1115,478"/>
-<area shape="rect" title=" " alt="" coords="1139,445,1306,485"/>
-<area shape="rect" title=" " alt="" coords="514,885,729,911"/>
-<area shape="rect" title=" " alt="" coords="2981,885,3096,911"/>
-<area shape="rect" title=" " alt="" coords="2995,541,3082,566"/>
-<area shape="rect" title=" " alt="" coords="3259,101,3349,126"/>
-<area shape="rect" title=" " alt="" coords="3374,101,3447,126"/>
-<area shape="rect" href="ImageTypes_8hpp.html" title=" " alt="" coords="2544,453,2797,478"/>
-<area shape="rect" href="OpenCVUtils_8hpp.html" title=" " alt="" coords="1179,541,1407,566"/>
-<area shape="rect" href="VisionTools_8hpp.html" title=" " alt="" coords="1551,93,1735,133"/>
-<area shape="rect" title=" " alt="" coords="404,805,559,830"/>
-<area shape="rect" title=" " alt="" coords="46,885,231,911"/>
-<area shape="rect" title=" " alt="" coords="195,453,354,478"/>
-<area shape="rect" href="GroundTruthPacket_8hpp.html" title=" " alt="" coords="669,445,896,485"/>
-<area shape="rect" title=" " alt="" coords="464,541,611,566"/>
-<area shape="rect" href="Types_8hpp.html" title=" " alt="" coords="1575,629,1787,654"/>
-<area shape="rect" href="PipelinePayload_8hpp.html" title=" " alt="" coords="944,533,1139,573"/>
-<area shape="rect" title=" " alt="" coords="1417,717,1585,742"/>
-<area shape="rect" title=" " alt="" coords="1251,805,1407,830"/>
-<area shape="rect" title=" " alt="" coords="1610,717,1753,742"/>
-<area shape="rect" title=" " alt="" coords="1244,885,1319,911"/>
-<area shape="rect" title=" " alt="" coords="1777,717,1874,742"/>
-<area shape="rect" title=" " alt="" coords="2359,885,2451,911"/>
-<area shape="rect" title=" " alt="" coords="735,717,798,742"/>
-<area shape="rect" href="Flags_8hpp.html" title=" " alt="" coords="1899,717,2109,742"/>
-<area shape="rect" href="Macros_8hpp.html" title=" " alt="" coords="1803,805,1997,830"/>
-<area shape="rect" href="SensorModels_8hpp.html" title=" " alt="" coords="1025,717,1292,742"/>
-<area shape="rect" href="Types-inl_8hpp.html" title=" " alt="" coords="2184,709,2368,749"/>
-<area shape="rect" href="Exceptions_8hpp.html" title=" " alt="" coords="2594,805,2841,830"/>
-<area shape="rect" href="GtsamUtils_8hpp.html" title=" " alt="" coords="1008,805,1227,830"/>
-<area shape="rect" title=" " alt="" coords="2870,885,2957,911"/>
-<area shape="rect" title=" " alt="" coords="2770,885,2846,911"/>
-<area shape="rect" title=" " alt="" coords="2476,885,2551,911"/>
-<area shape="rect" title=" " alt="" coords="2575,885,2662,911"/>
-<area shape="rect" title=" " alt="" coords="2687,885,2745,911"/>
-<area shape="rect" href="Tuple_8hpp.html" title=" " alt="" coords="2289,541,2469,566"/>
-<area shape="rect" href="ImageTypes-inl_8hpp.html" title=" " alt="" coords="2645,533,2870,573"/>
-<area shape="rect" title=" " alt="" coords="1040,621,1208,661"/>
-<area shape="rect" title=" " alt="" coords="1233,629,1365,654"/>
-<area shape="rect" title=" " alt="" coords="2465,629,2519,654"/>
-<area shape="rect" title=" " alt="" coords="2318,629,2389,654"/>
-<area shape="rect" href="Camera_8hpp.html" title=" " alt="" coords="1635,277,1861,302"/>
-<area shape="rect" href="ImageContainer_8hpp.html" title=" " alt="" coords="2137,365,2415,390"/>
-<area shape="rect" href="Frame_8hpp.html" title=" " alt="" coords="1964,181,2148,221"/>
-<area shape="rect" href="Vision-Definitions_8hpp.html" title=" " alt="" coords="1885,269,2069,309"/>
-<area shape="rect" href="Histogram_8hpp.html" title=" " alt="" coords="430,453,645,478"/>
-<area shape="rect" href="Visualizer-Definitions_8hpp.html" title=" " alt="" coords="739,797,933,837"/>
-<area shape="rect" href="VisionTools-inl_8hpp.html" title=" " alt="" coords="1371,181,1555,221"/>
+<area shape="rect" title=" " alt="" coords="3740,5,3932,45"/>
+<area shape="rect" href="DataProviderUtils_8hpp.html" title=" " alt="" coords="391,357,561,397"/>
+<area shape="rect" title=" " alt="" coords="3185,797,3399,823"/>
+<area shape="rect" title=" " alt="" coords="3424,797,3539,823"/>
+<area shape="rect" title=" " alt="" coords="3345,629,3431,654"/>
+<area shape="rect" title=" " alt="" coords="4107,101,4197,126"/>
+<area shape="rect" title=" " alt="" coords="4222,101,4295,126"/>
+<area shape="rect" href="VisionTools_8hpp.html" title=" " alt="" coords="2460,93,2644,133"/>
+<area shape="rect" href="OpenCVUtils_8hpp.html" title=" " alt="" coords="3608,621,3787,661"/>
+<area shape="rect" href="ImageTypes_8hpp.html" title=" " alt="" coords="3069,541,3283,566"/>
+<area shape="rect" title=" " alt="" coords="5,453,160,478"/>
+<area shape="rect" title=" " alt="" coords="990,797,1175,823"/>
+<area shape="rect" title=" " alt="" coords="184,453,379,478"/>
+<area shape="rect" title=" " alt="" coords="454,445,621,485"/>
+<area shape="rect" href="GroundTruthPacket_8hpp.html" title=" " alt="" coords="747,445,976,485"/>
+<area shape="rect" title=" " alt="" coords="853,541,1000,566"/>
+<area shape="rect" href="Types_8hpp.html" title=" " alt="" coords="1514,717,1729,742"/>
+<area shape="rect" title=" " alt="" coords="1409,797,1577,823"/>
+<area shape="rect" title=" " alt="" coords="1602,797,1758,823"/>
+<area shape="rect" title=" " alt="" coords="1782,797,1925,823"/>
+<area shape="rect" title=" " alt="" coords="2067,797,2141,823"/>
+<area shape="rect" title=" " alt="" coords="1287,797,1385,823"/>
+<area shape="rect" title=" " alt="" coords="2354,797,2446,823"/>
+<area shape="rect" href="Cuda_8hpp.html" title=" " alt="" coords="604,797,815,823"/>
+<area shape="rect" title=" " alt="" coords="541,871,701,896"/>
+<area shape="rect" title=" " alt="" coords="725,871,872,896"/>
+<area shape="rect" href="Frame_8hpp.html" title=" " alt="" coords="2103,181,2287,221"/>
+<area shape="rect" href="Vision-Definitions_8hpp.html" title=" " alt="" coords="1844,269,2028,309"/>
+<area shape="rect" href="ImageContainer_8hpp.html" title=" " alt="" coords="2514,453,2753,478"/>
+<area shape="rect" href="GtsamUtils_8hpp.html" title=" " alt="" coords="2124,709,2303,749"/>
+<area shape="rect" href="DynamicObjects_8hpp.html" title=" " alt="" coords="848,365,1133,390"/>
+<area shape="rect" href="Camera_8hpp.html" title=" " alt="" coords="1295,277,1481,302"/>
+<area shape="rect" href="Visualizer-Definitions_8hpp.html" title=" " alt="" coords="2657,269,2850,309"/>
+<area shape="rect" href="Histogram_8hpp.html" title=" " alt="" coords="960,181,1139,221"/>
+<area shape="rect" href="VisionTools-inl_8hpp.html" title=" " alt="" coords="2665,181,2849,221"/>
+<area shape="rect" title=" " alt="" coords="2327,717,2414,742"/>
+<area shape="rect" href="Feature_8hpp.html" title=" " alt="" coords="2050,365,2235,390"/>
+<area shape="rect" href="StructuredContainers_8hpp.html" title=" " alt="" coords="2011,621,2229,661"/>
+<area shape="rect" href="PointCloudProcess_8hpp.html" title=" " alt="" coords="2117,533,2337,573"/>
+<area shape="rect" href="UndistortRectifier_8hpp.html" title=" " alt="" coords="1157,365,1406,390"/>
+<area shape="rect" href="Frame-inl_8hpp.html" title=" " alt="" coords="2103,269,2287,309"/>
+<area shape="rect" title=" " alt="" coords="1771,453,1835,478"/>
+<area shape="rect" href="Frontend-Definitions_8hpp.html" title=" " alt="" coords="1431,357,1633,397"/>
+<area shape="rect" title=" " alt="" coords="1182,453,1378,478"/>
+<area shape="rect" href="Exceptions_8hpp.html" title=" " alt="" coords="2354,629,2603,654"/>
+<area shape="rect" href="Tuple_8hpp.html" title=" " alt="" coords="2728,621,2907,661"/>
+<area shape="rect" title=" " alt="" coords="3555,709,3723,749"/>
+<area shape="rect" title=" " alt="" coords="3747,717,3879,742"/>
+<area shape="rect" href="ImageTypes-inl_8hpp.html" title=" " alt="" coords="3083,621,3269,661"/>
+<area shape="rect" href="ThreadSafeQueue_8hpp.html" title=" " alt="" coords="1809,357,2025,397"/>
 </map>
 </div>
 </div>
@@ -158,18 +156,6 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a163cb16ef980acda5b09d45c3a156e6f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno.html#a163cb16ef980acda5b09d45c3a156e6f">dyno::throwExceptionIfPathInvalid</a> (const std::string &amp;image_path)</td></tr>
-<tr class="separator:a163cb16ef980acda5b09d45c3a156e6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7fd811cad6c8cd6edb2fb0c2902952cd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno.html#a7fd811cad6c8cd6edb2fb0c2902952cd">dyno::loadRGB</a> (const std::string &amp;image_path, cv::Mat &amp;img)</td></tr>
-<tr class="separator:a7fd811cad6c8cd6edb2fb0c2902952cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0a98457fbcefc2db4a562f0e31892371"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno.html#a0a98457fbcefc2db4a562f0e31892371">dyno::loadFlow</a> (const std::string &amp;image_path, cv::Mat &amp;img)</td></tr>
-<tr class="separator:a0a98457fbcefc2db4a562f0e31892371"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af00d962e8fcb73cb2d07a0fbc83d7d0a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno.html#af00d962e8fcb73cb2d07a0fbc83d7d0a">dyno::loadDepth</a> (const std::string &amp;image_path, cv::Mat &amp;img)</td></tr>
-<tr class="separator:af00d962e8fcb73cb2d07a0fbc83d7d0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad4edaa3f83a8503d122f56b0bafc8fa3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno.html#ad4edaa3f83a8503d122f56b0bafc8fa3">dyno::loadSemanticMask</a> (const std::string &amp;image_path, const cv::Size &amp;size, cv::Mat &amp;mask)</td></tr>
-<tr class="separator:ad4edaa3f83a8503d122f56b0bafc8fa3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a38a7315ac269741048e61a97bd545321"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno.html#a38a7315ac269741048e61a97bd545321">dyno::loadMask</a> (const std::string &amp;image_path, cv::Mat &amp;mask)</td></tr>
-<tr class="separator:a38a7315ac269741048e61a97bd545321"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac6a704152e28bbdd39e746ffd1835575"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno.html#ac6a704152e28bbdd39e746ffd1835575">dyno::toRightHandedTwist</a> (gtsam::Vector3 &amp;right_handed_linear_velocity, gtsam::Vector3 &amp;right_handed_angular_velocity, const gtsam::Vector3 &amp;left_handed_linear_velocity, const gtsam::Vector3 &amp;left_handed_angular_velocity, std::optional&lt; gtsam::Rot3 &gt; left_handed_rotation={})</td></tr>
 <tr class="memdesc:ac6a704152e28bbdd39e746ffd1835575"><td class="mdescLeft">&#160;</td><td class="mdescRight">Considers the conversion from the left-handed coordiante system (e.g. unreal, VIODE, carla...) to the right-handed coordinate system (robotic).  <br /></td></tr>
 <tr class="separator:ac6a704152e28bbdd39e746ffd1835575"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -180,19 +166,12 @@ Functions</h2></td></tr>
 <tr class="memdesc:a55e5445cc29506c7f5cb0aeba3e637d1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Considers the conversion from a left-handed system (e.g. unreal, VIODE, carla...) vector to right-handed system with optional rotation provided in the left-handed system.  <br /></td></tr>
 <tr class="separator:a55e5445cc29506c7f5cb0aeba3e637d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae0c60629333938e89f2370502e9be3b3"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::filesystem::path &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno.html#ae0c60629333938e89f2370502e9be3b3">dyno::getAllFilesInDir</a> (const std::string &amp;folder_path)</td></tr>
-<tr class="memdesc:ae0c60629333938e89f2370502e9be3b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a ORDERED vector of all files in the given directory. (jesse) is this the file name or the absolute file path?  <br /></td></tr>
 <tr class="separator:ae0c60629333938e89f2370502e9be3b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a918ea547295befa3915845ecd7ac61ac"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno.html#a918ea547295befa3915845ecd7ac61ac">dyno::loadPathsInDirectory</a> (std::vector&lt; std::string &gt; &amp;file_paths, const std::string &amp;folder_path, const std::function&lt; bool(const std::string &amp;)&gt; &amp;condition=std::function&lt; bool(const std::string &amp;)&gt;())</td></tr>
-<tr class="separator:a918ea547295befa3915845ecd7ac61ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3108e2c89fd6db992bd8a023661e2709"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno.html#a3108e2c89fd6db992bd8a023661e2709">dyno::loadPathsInDirectory</a> (std::vector&lt; std::string &gt; &amp;file_paths, const std::string &amp;folder_path, const std::function&lt; bool(const std::string &amp;)&gt; &amp;condition)</td></tr>
+<tr class="separator:a3108e2c89fd6db992bd8a023661e2709"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4222260b2e297cbd6e2df476b0f58aaf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno.html#a4222260b2e297cbd6e2df476b0f58aaf">dyno::removeStaticObjectFromMask</a> (const cv::Mat &amp;instance_mask, cv::Mat &amp;motion_mask, const GroundTruthInputPacket &amp;gt_packet)</td></tr>
 <tr class="memdesc:a4222260b2e297cbd6e2df476b0f58aaf"><td class="mdescLeft">&#160;</td><td class="mdescRight">From an instance semantic mask (one that satisfies the requirements for a SemanticMask), ie. all detected obejcts in the scene, with unique instance labels as pixel values starting from 1 (background is 0). Using the information in the ground truth, masks of detected objects that are not moving are removed. Masks are removed by setting the pixle values to 0 (background).  <br /></td></tr>
 <tr class="separator:a4222260b2e297cbd6e2df476b0f58aaf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0dfb0dda33d838e13818fcc0d2bdb7f3"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno.html#a0dfb0dda33d838e13818fcc0d2bdb7f3">dyno::trimAndSplit</a> (const std::string &amp;input, const std::string &amp;delimiter=&quot; &quot;)</td></tr>
-<tr class="memdesc:a0dfb0dda33d838e13818fcc0d2bdb7f3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Takes an input string and splits it using white space (" ") as the delimiter. Trims any newline/carriage return/trailing white space values.  <br /></td></tr>
-<tr class="separator:a0dfb0dda33d838e13818fcc0d2bdb7f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af0c04394e5c9c1885cb6d3410c32c120"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno.html#af0c04394e5c9c1885cb6d3410c32c120">dyno::getLine</a> (std::ifstream &amp;fstream, std::vector&lt; std::string &gt; &amp;split_lines)</td></tr>
-<tr class="memdesc:af0c04394e5c9c1885cb6d3410c32c120"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the next line from the input ifstream and returns it as split string (using white space as the delimieter). Any newline/carriage return/trailing white space values are trimmed.  <br /></td></tr>
-<tr class="separator:af0c04394e5c9c1885cb6d3410c32c120"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- start footer part -->

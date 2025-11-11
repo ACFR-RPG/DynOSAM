@@ -1,52 +1,52 @@
 <map id="dynosam/include/dynosam/frontend/Frontend&#45;Definitions.hpp" name="dynosam/include/dynosam/frontend/Frontend&#45;Definitions.hpp">
-<area shape="rect" id="node1" title=" " alt="" coords="751,5,997,45"/>
-<area shape="rect" id="node2" title=" " alt="" coords="640,93,836,119"/>
-<area shape="rect" id="node3" href="$ImageContainer_8hpp.html" title=" " alt="" coords="1965,93,2244,119"/>
-<area shape="rect" id="node15" href="$Types_8hpp.html" title=" " alt="" coords="1289,350,1501,375"/>
-<area shape="rect" id="node4" title=" " alt="" coords="2349,599,2463,625"/>
-<area shape="rect" id="node5" title=" " alt="" coords="1433,262,1520,287"/>
-<area shape="rect" id="node6" title=" " alt="" coords="5,599,220,625"/>
-<area shape="rect" id="node7" title=" " alt="" coords="2220,599,2312,625"/>
-<area shape="rect" id="node8" href="$Exceptions_8hpp.html" title=" " alt="" coords="2804,519,3051,544"/>
-<area shape="rect" id="node14" href="$ImageTypes_8hpp.html" title=" " alt="" coords="1897,174,2150,199"/>
-<area shape="rect" id="node41" href="$OpenCVUtils_8hpp.html" title=" " alt="" coords="608,262,836,287"/>
-<area shape="rect" id="node44" href="$Tuple_8hpp.html" title=" " alt="" coords="2551,262,2731,287"/>
-<area shape="rect" id="node50" href="$ImageContainer-inl_8hpp.html" title=" " alt="" coords="2225,167,2475,207"/>
-<area shape="rect" id="node9" title=" " alt="" coords="2779,599,2865,625"/>
-<area shape="rect" id="node10" title=" " alt="" coords="2889,599,2965,625"/>
-<area shape="rect" id="node11" title=" " alt="" coords="2990,599,3065,625"/>
-<area shape="rect" id="node12" title=" " alt="" coords="3089,599,3176,625"/>
-<area shape="rect" id="node13" title=" " alt="" coords="2695,599,2754,625"/>
-<area shape="rect" id="node49" href="$ImageTypes-inl_8hpp.html" title=" " alt="" coords="2048,255,2273,295"/>
-<area shape="rect" id="node16" title=" " alt="" coords="523,438,691,463"/>
-<area shape="rect" id="node17" title=" " alt="" coords="1408,519,1564,544"/>
-<area shape="rect" id="node18" title=" " alt="" coords="1911,599,2096,625"/>
-<area shape="rect" id="node19" title=" " alt="" coords="716,438,859,463"/>
-<area shape="rect" id="node20" title=" " alt="" coords="2121,599,2195,625"/>
-<area shape="rect" id="node21" title=" " alt="" coords="883,438,980,463"/>
-<area shape="rect" id="node22" title=" " alt="" coords="1004,438,1067,463"/>
-<area shape="rect" id="node23" href="$Flags_8hpp.html" title=" " alt="" coords="1433,438,1643,463"/>
-<area shape="rect" id="node25" href="$Macros_8hpp.html" title=" " alt="" coords="1769,438,1963,463"/>
-<area shape="rect" id="node27" href="$SensorModels_8hpp.html" title=" " alt="" coords="1091,438,1358,463"/>
-<area shape="rect" id="node40" href="$Types-inl_8hpp.html" title=" " alt="" coords="2038,431,2222,471"/>
-<area shape="rect" id="node24" title=" " alt="" coords="1588,519,1704,544"/>
-<area shape="rect" id="node26" title=" " alt="" coords="1830,519,1907,544"/>
-<area shape="rect" id="node28" title=" " alt="" coords="733,519,887,544"/>
-<area shape="rect" id="node29" title=" " alt="" coords="911,519,1141,544"/>
-<area shape="rect" id="node30" title=" " alt="" coords="511,519,709,544"/>
-<area shape="rect" id="node31" href="$GtsamUtils_8hpp.html" title=" " alt="" coords="1165,519,1383,544"/>
-<area shape="rect" id="node32" title=" " alt="" coords="464,599,663,625"/>
-<area shape="rect" id="node33" title=" " alt="" coords="687,599,874,625"/>
-<area shape="rect" id="node34" title=" " alt="" coords="898,599,1074,625"/>
-<area shape="rect" id="node35" title=" " alt="" coords="1098,599,1279,625"/>
-<area shape="rect" id="node36" title=" " alt="" coords="1304,599,1471,625"/>
-<area shape="rect" id="node37" title=" " alt="" coords="1495,599,1688,625"/>
-<area shape="rect" id="node38" title=" " alt="" coords="1713,599,1886,625"/>
-<area shape="rect" id="node39" title=" " alt="" coords="245,592,439,632"/>
-<area shape="rect" id="node42" title=" " alt="" coords="517,343,685,383"/>
-<area shape="rect" id="node43" title=" " alt="" coords="360,350,492,375"/>
-<area shape="rect" id="node45" title=" " alt="" coords="2835,350,2889,375"/>
-<area shape="rect" id="node46" title=" " alt="" coords="2551,350,2621,375"/>
-<area shape="rect" id="node47" title=" " alt="" coords="2645,350,2705,375"/>
-<area shape="rect" id="node48" title=" " alt="" coords="2730,350,2810,375"/>
+<area shape="rect" id="node1" title=" " alt="" coords="1266,5,1511,45"/>
+<area shape="rect" id="node2" title=" " alt="" coords="1051,93,1198,119"/>
+<area shape="rect" id="node3" title=" " alt="" coords="1223,93,1419,119"/>
+<area shape="rect" id="node4" href="$Types_8hpp.html" title=" " alt="" coords="1317,335,1532,361"/>
+<area shape="rect" id="node40" href="$ImageContainer_8hpp.html" title=" " alt="" coords="1653,93,1892,119"/>
+<area shape="rect" id="node5" title=" " alt="" coords="251,599,366,625"/>
+<area shape="rect" id="node6" title=" " alt="" coords="353,423,521,449"/>
+<area shape="rect" id="node7" title=" " alt="" coords="1072,687,1228,713"/>
+<area shape="rect" id="node8" title=" " alt="" coords="1781,599,1967,625"/>
+<area shape="rect" id="node9" title=" " alt="" coords="545,423,688,449"/>
+<area shape="rect" id="node10" title=" " alt="" coords="5,599,220,625"/>
+<area shape="rect" id="node11" title=" " alt="" coords="987,599,1062,625"/>
+<area shape="rect" id="node12" title=" " alt="" coords="712,423,809,449"/>
+<area shape="rect" id="node13" title=" " alt="" coords="2195,599,2287,625"/>
+<area shape="rect" id="node14" title=" " alt="" coords="833,423,896,449"/>
+<area shape="rect" id="node15" href="$Cuda_8hpp.html" title=" " alt="" coords="2219,423,2430,449"/>
+<area shape="rect" id="node18" href="$Flags_8hpp.html" title=" " alt="" coords="921,423,1134,449"/>
+<area shape="rect" id="node20" href="$Macros_8hpp.html" title=" " alt="" coords="1158,416,1337,456"/>
+<area shape="rect" id="node22" href="$SensorModels_8hpp.html" title=" " alt="" coords="1462,423,1731,449"/>
+<area shape="rect" id="node39" href="$Types-inl_8hpp.html" title=" " alt="" coords="1857,416,2043,456"/>
+<area shape="rect" id="node16" title=" " alt="" coords="2219,511,2379,537"/>
+<area shape="rect" id="node17" title=" " alt="" coords="2403,511,2550,537"/>
+<area shape="rect" id="node19" title=" " alt="" coords="743,511,859,537"/>
+<area shape="rect" id="node21" title=" " alt="" coords="883,511,961,537"/>
+<area shape="rect" id="node23" title=" " alt="" coords="1689,687,1843,713"/>
+<area shape="rect" id="node24" title=" " alt="" coords="1187,511,1417,537"/>
+<area shape="rect" id="node25" title=" " alt="" coords="1441,511,1638,537"/>
+<area shape="rect" id="node26" href="$Exceptions_8hpp.html" title=" " alt="" coords="2624,511,2873,537"/>
+<area shape="rect" id="node32" href="$GtsamUtils_8hpp.html" title=" " alt="" coords="1662,504,1841,544"/>
+<area shape="rect" id="node27" title=" " alt="" coords="2395,599,2481,625"/>
+<area shape="rect" id="node28" title=" " alt="" coords="2505,599,2581,625"/>
+<area shape="rect" id="node29" title=" " alt="" coords="2606,599,2681,625"/>
+<area shape="rect" id="node30" title=" " alt="" coords="2705,599,2792,625"/>
+<area shape="rect" id="node31" title=" " alt="" coords="2817,599,2875,625"/>
+<area shape="rect" id="node33" title=" " alt="" coords="1508,599,1707,625"/>
+<area shape="rect" id="node34" href="$Numerical_8hpp.html" title=" " alt="" coords="1991,592,2170,632"/>
+<area shape="rect" id="node35" title=" " alt="" coords="1990,680,2171,720"/>
+<area shape="rect" id="node36" title=" " alt="" coords="2195,680,2377,720"/>
+<area shape="rect" id="node37" title=" " alt="" coords="1892,687,1965,713"/>
+<area shape="rect" id="node38" title=" " alt="" coords="2637,687,2717,713"/>
+<area shape="rect" id="node41" title=" " alt="" coords="2057,247,2144,273"/>
+<area shape="rect" id="node42" href="$OpenCVUtils_8hpp.html" title=" " alt="" coords="297,240,475,280"/>
+<area shape="rect" id="node45" href="$Tuple_8hpp.html" title=" " alt="" coords="2418,240,2597,280"/>
+<area shape="rect" id="node49" href="$ImageTypes_8hpp.html" title=" " alt="" coords="1781,167,1996,192"/>
+<area shape="rect" id="node43" title=" " alt="" coords="150,328,318,368"/>
+<area shape="rect" id="node44" title=" " alt="" coords="343,335,475,361"/>
+<area shape="rect" id="node46" title=" " alt="" coords="2561,335,2632,361"/>
+<area shape="rect" id="node47" title=" " alt="" coords="2656,335,2711,361"/>
+<area shape="rect" id="node48" title=" " alt="" coords="2477,335,2537,361"/>
+<area shape="rect" id="node50" href="$ImageTypes-inl_8hpp.html" title=" " alt="" coords="1795,240,1982,280"/>
 </map>

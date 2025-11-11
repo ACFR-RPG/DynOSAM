@@ -1,52 +1,52 @@
 <map id="dynosam/include/dynosam/dataprovider/DataInterfacePipeline.hpp" name="dynosam/include/dynosam/dataprovider/DataInterfacePipeline.hpp">
-<area shape="rect" id="node1" title=" " alt="" coords="2619,5,2901,45"/>
-<area shape="rect" id="node2" href="$Types_8hpp.html" title=" " alt="" coords="1470,379,1682,405"/>
-<area shape="rect" id="node26" href="$FrontendInputPacket_8hpp.html" title=" " alt="" coords="1317,93,1520,133"/>
-<area shape="rect" id="node37" href="$ThreadSafeImuBuffer_8hpp.html" title=" " alt="" coords="2665,93,2855,133"/>
-<area shape="rect" id="node46" href="$PipelineBase_8hpp.html" title=" " alt="" coords="3649,189,3844,229"/>
-<area shape="rect" id="node47" href="$ThreadSafeQueue_8hpp.html" title=" " alt="" coords="3291,284,3507,324"/>
-<area shape="rect" id="node3" title=" " alt="" coords="2424,621,2539,647"/>
-<area shape="rect" id="node4" title=" " alt="" coords="1763,467,1931,493"/>
-<area shape="rect" id="node5" title=" " alt="" coords="2021,548,2177,573"/>
-<area shape="rect" id="node6" title=" " alt="" coords="470,621,655,647"/>
-<area shape="rect" id="node7" title=" " alt="" coords="1474,467,1617,493"/>
-<area shape="rect" id="node8" title=" " alt="" coords="231,621,446,647"/>
-<area shape="rect" id="node9" title=" " alt="" coords="2325,621,2400,647"/>
-<area shape="rect" id="node10" title=" " alt="" coords="1641,467,1738,493"/>
-<area shape="rect" id="node11" title=" " alt="" coords="679,621,771,647"/>
-<area shape="rect" id="node12" title=" " alt="" coords="2991,467,3054,493"/>
-<area shape="rect" id="node13" href="$Flags_8hpp.html" title=" " alt="" coords="2056,467,2267,493"/>
-<area shape="rect" id="node15" href="$Macros_8hpp.html" title=" " alt="" coords="2774,467,2967,493"/>
-<area shape="rect" id="node17" href="$SensorModels_8hpp.html" title=" " alt="" coords="1183,467,1449,493"/>
-<area shape="rect" id="node25" href="$Types-inl_8hpp.html" title=" " alt="" coords="915,460,1099,500"/>
-<area shape="rect" id="node14" title=" " alt="" coords="2201,548,2317,573"/>
-<area shape="rect" id="node16" title=" " alt="" coords="3364,548,3441,573"/>
-<area shape="rect" id="node18" title=" " alt="" coords="1537,548,1692,573"/>
-<area shape="rect" id="node19" title=" " alt="" coords="1716,548,1945,573"/>
-<area shape="rect" id="node20" title=" " alt="" coords="1316,548,1513,573"/>
-<area shape="rect" id="node21" href="$Exceptions_8hpp.html" title=" " alt="" coords="1045,548,1291,573"/>
-<area shape="rect" id="node24" href="$GtsamUtils_8hpp.html" title=" " alt="" coords="752,548,971,573"/>
-<area shape="rect" id="node22" title=" " alt="" coords="2870,621,2957,647"/>
-<area shape="rect" id="node23" title=" " alt="" coords="3909,621,3968,647"/>
-<area shape="rect" id="node27" title=" " alt="" coords="1661,291,1747,317"/>
-<area shape="rect" id="node28" href="$GroundTruthPacket_8hpp.html" title=" " alt="" coords="5,284,232,324"/>
-<area shape="rect" id="node30" href="$ImageContainer_8hpp.html" title=" " alt="" coords="738,196,1017,221"/>
-<area shape="rect" id="node31" href="$OpenCVUtils_8hpp.html" title=" " alt="" coords="358,291,586,317"/>
-<area shape="rect" id="node32" href="$Tuple_8hpp.html" title=" " alt="" coords="1457,291,1637,317"/>
-<area shape="rect" id="node34" href="$ImuMeasurements_8hpp.html" title=" " alt="" coords="2293,284,2469,324"/>
-<area shape="rect" id="node29" title=" " alt="" coords="85,379,232,405"/>
-<area shape="rect" id="node33" title=" " alt="" coords="2963,379,3023,405"/>
-<area shape="rect" id="node35" href="$Imu-Definitions_8hpp.html" title=" " alt="" coords="2421,372,2592,412"/>
-<area shape="rect" id="node36" title=" " alt="" coords="2545,467,2647,493"/>
-<area shape="rect" id="node38" title=" " alt="" coords="3207,196,3292,221"/>
-<area shape="rect" id="node39" title=" " alt="" coords="3541,379,3608,405"/>
-<area shape="rect" id="node40" title=" " alt="" coords="3134,379,3277,405"/>
-<area shape="rect" id="node41" title=" " alt="" coords="2780,379,2831,405"/>
-<area shape="rect" id="node42" title=" " alt="" coords="3301,379,3365,405"/>
-<area shape="rect" id="node43" href="$ThreadSafeTemporalBuffer_8hpp.html" title=" " alt="" coords="2797,284,3013,324"/>
-<area shape="rect" id="node45" href="$ThreadSafeImuBuffer-inl_8hpp.html" title=" " alt="" coords="2400,181,2571,236"/>
-<area shape="rect" id="node44" title=" " alt="" coords="3047,379,3110,405"/>
-<area shape="rect" id="node48" title=" " alt="" coords="3733,379,3800,405"/>
-<area shape="rect" id="node49" title=" " alt="" coords="3784,291,3848,317"/>
-<area shape="rect" id="node50" href="$PipelineBase-inl_8hpp.html" title=" " alt="" coords="4075,284,4269,324"/>
+<area shape="rect" id="node1" title=" " alt="" coords="2237,5,2520,45"/>
+<area shape="rect" id="node2" href="$FrontendInputPacket_8hpp.html" title=" " alt="" coords="1041,93,1244,133"/>
+<area shape="rect" id="node11" href="$Types_8hpp.html" title=" " alt="" coords="1271,379,1486,405"/>
+<area shape="rect" id="node35" href="$ThreadSafeImuBuffer_8hpp.html" title=" " alt="" coords="2283,93,2474,133"/>
+<area shape="rect" id="node45" href="$PipelineBase_8hpp.html" title=" " alt="" coords="3047,189,3241,229"/>
+<area shape="rect" id="node49" href="$ThreadSafeQueue_8hpp.html" title=" " alt="" coords="2764,284,2980,324"/>
+<area shape="rect" id="node3" title=" " alt="" coords="2235,467,2349,493"/>
+<area shape="rect" id="node4" title=" " alt="" coords="1431,291,1518,317"/>
+<area shape="rect" id="node5" title=" " alt="" coords="123,467,338,493"/>
+<area shape="rect" id="node6" title=" " alt="" coords="330,548,422,573"/>
+<area shape="rect" id="node7" href="$ImuMeasurements_8hpp.html" title=" " alt="" coords="1695,284,1871,324"/>
+<area shape="rect" id="node24" href="$GroundTruthPacket_8hpp.html" title=" " alt="" coords="1025,284,1255,324"/>
+<area shape="rect" id="node26" href="$OpenCVUtils_8hpp.html" title=" " alt="" coords="620,284,799,324"/>
+<area shape="rect" id="node29" href="$Tuple_8hpp.html" title=" " alt="" coords="169,284,348,324"/>
+<area shape="rect" id="node34" href="$ImageContainer_8hpp.html" title=" " alt="" coords="866,196,1105,221"/>
+<area shape="rect" id="node8" href="$Imu-Definitions_8hpp.html" title=" " alt="" coords="1928,372,2099,412"/>
+<area shape="rect" id="node9" title=" " alt="" coords="2678,467,2781,493"/>
+<area shape="rect" id="node10" title=" " alt="" coords="1947,548,2103,573"/>
+<area shape="rect" id="node12" title=" " alt="" coords="1531,467,1699,493"/>
+<area shape="rect" id="node13" title=" " alt="" coords="649,467,834,493"/>
+<area shape="rect" id="node14" title=" " alt="" coords="1723,467,1866,493"/>
+<area shape="rect" id="node15" title=" " alt="" coords="2317,548,2392,573"/>
+<area shape="rect" id="node16" title=" " alt="" coords="910,467,1007,493"/>
+<area shape="rect" id="node17" title=" " alt="" coords="2805,467,2867,493"/>
+<area shape="rect" id="node18" href="$Cuda_8hpp.html" title=" " alt="" coords="413,467,624,493"/>
+<area shape="rect" id="node19" href="$Flags_8hpp.html" title=" " alt="" coords="1032,467,1245,493"/>
+<area shape="rect" id="node20" href="$Macros_8hpp.html" title=" " alt="" coords="2424,460,2603,500"/>
+<area shape="rect" id="node22" href="$SensorModels_8hpp.html" title=" " alt="" coords="1891,467,2160,493"/>
+<area shape="rect" id="node23" href="$Types-inl_8hpp.html" title=" " alt="" coords="1269,460,1456,500"/>
+<area shape="rect" id="node21" title=" " alt="" coords="2867,548,2944,573"/>
+<area shape="rect" id="node25" title=" " alt="" coords="1076,379,1223,405"/>
+<area shape="rect" id="node27" title=" " alt="" coords="631,372,799,412"/>
+<area shape="rect" id="node28" title=" " alt="" coords="474,379,606,405"/>
+<area shape="rect" id="node30" title=" " alt="" coords="173,379,243,405"/>
+<area shape="rect" id="node31" title=" " alt="" coords="268,379,348,405"/>
+<area shape="rect" id="node32" title=" " alt="" coords="94,379,149,405"/>
+<area shape="rect" id="node33" title=" " alt="" coords="2198,379,2258,405"/>
+<area shape="rect" id="node36" title=" " alt="" coords="2663,196,2748,221"/>
+<area shape="rect" id="node37" title=" " alt="" coords="2943,379,3009,405"/>
+<area shape="rect" id="node38" title=" " alt="" coords="2582,379,2725,405"/>
+<area shape="rect" id="node39" title=" " alt="" coords="2385,379,2471,405"/>
+<area shape="rect" id="node40" title=" " alt="" coords="2123,379,2173,405"/>
+<area shape="rect" id="node41" title=" " alt="" coords="2749,379,2813,405"/>
+<area shape="rect" id="node42" href="$ThreadSafeTemporalBuffer_8hpp.html" title=" " alt="" coords="2271,284,2487,324"/>
+<area shape="rect" id="node44" href="$ThreadSafeImuBuffer-inl_8hpp.html" title=" " alt="" coords="1823,181,1993,236"/>
+<area shape="rect" id="node43" title=" " alt="" coords="2495,379,2558,405"/>
+<area shape="rect" id="node46" title=" " alt="" coords="3033,379,3100,405"/>
+<area shape="rect" id="node47" title=" " alt="" coords="3124,379,3183,405"/>
+<area shape="rect" id="node48" title=" " alt="" coords="3308,291,3372,317"/>
+<area shape="rect" id="node50" href="$PipelineBase-inl_8hpp.html" title=" " alt="" coords="3396,284,3591,324"/>
 </map>

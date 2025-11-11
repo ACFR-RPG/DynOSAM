@@ -1,14 +1,11 @@
 <map id="dyno::vision_tools::getObjectLabels" name="dyno::vision_tools::getObjectLabels">
-<area shape="rect" id="node1" title="Finds the unique object labels (j) as present in the instance segmentation image. Does not include th..." alt="" coords="565,197,705,237"/>
+<area shape="rect" id="node1" title="Finds the unique object labels (j) as present in the instance segmentation image. Does not include th..." alt="" coords="565,165,705,205"/>
 <area shape="rect" id="node2" href="$classdyno_1_1ClusterSlamAllLoader.html#a074af7358c98d715599460ca2671ecc4" title=" " alt="" coords="266,5,507,45"/>
 <area shape="rect" id="node4" href="$namespacedyno_1_1vision__tools.html#ad7347d14d7f68183415227f23bbd6f7d" title="From an input instance/semantic mask type img construct a image mask (binary) that has True values ar..." alt="" coords="256,69,517,109"/>
-<area shape="rect" id="node6" href="$classdyno_1_1Frame.html#ab038b536516e42beb788f1b794801270" title=" " alt="" coords="272,133,501,173"/>
-<area shape="rect" id="node8" href="$classdyno_1_1ProjectAriaAllLoader.html#aadc1a14a0b67880dc979bc9ee8e85593" title=" " alt="" coords="289,197,484,237"/>
-<area shape="rect" id="node9" href="$namespacedyno.html#a4222260b2e297cbd6e2df476b0f58aaf" title="From an instance semantic mask (one that satisfies the requirements for a SemanticMask),..." alt="" coords="291,261,482,301"/>
-<area shape="rect" id="node11" href="$namespacedyno_1_1vision__tools.html#a518b3162f275ce3e2301d249a7e1a6ff" title="Shrinks all found object masks by a given ammount." alt="" coords="317,325,457,365"/>
-<area shape="rect" id="node12" href="$classdyno_1_1ByteObjectTracker.html#aeb79dc19fb881160be780b9f4a2b2240" title=" " alt="" coords="297,413,477,453"/>
+<area shape="rect" id="node5" href="$classdyno_1_1Frame.html#ab038b536516e42beb788f1b794801270" title=" " alt="" coords="272,133,501,173"/>
+<area shape="rect" id="node6" href="$classdyno_1_1ProjectAriaAllLoader.html#aadc1a14a0b67880dc979bc9ee8e85593" title=" " alt="" coords="289,197,484,237"/>
+<area shape="rect" id="node7" href="$namespacedyno.html#a4222260b2e297cbd6e2df476b0f58aaf" title="From an instance semantic mask (one that satisfies the requirements for a SemanticMask),..." alt="" coords="291,261,482,301"/>
+<area shape="rect" id="node9" href="$namespacedyno_1_1vision__tools.html#a518b3162f275ce3e2301d249a7e1a6ff" title="Shrinks all found object masks by a given ammount." alt="" coords="317,325,457,365"/>
 <area shape="rect" id="node3" href="$classdyno_1_1ClusterSlamAllLoader.html#a6dbf46c48ea9477aa915bff62ee98ea8" title=" " alt="" coords="5,5,208,45"/>
-<area shape="rect" id="node5" href="$classdyno_1_1FeatureTracker.html#a9890ba0c11b5932b5b4954a86bd03948" title=" " alt="" coords="28,69,185,109"/>
-<area shape="rect" id="node7" href="$classdyno_1_1Frame.html#a5553af4c0c310c23d0f39e0c1daf0478" title=" " alt="" coords="31,141,183,166"/>
-<area shape="rect" id="node10" href="$classdyno_1_1VirtualKittiMotionSegFolder.html#a5fbe696de81a23607cfb6333a6ff1f94" title=" " alt="" coords="18,261,195,301"/>
+<area shape="rect" id="node8" href="$classdyno_1_1VirtualKittiMotionSegFolder.html#a5fbe696de81a23607cfb6333a6ff1f94" title=" " alt="" coords="18,261,195,301"/>
 </map>

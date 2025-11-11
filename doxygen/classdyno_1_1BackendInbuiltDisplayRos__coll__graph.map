@@ -1,6 +1,10 @@
 <map id="dyno::BackendInbuiltDisplayRos" name="dyno::BackendInbuiltDisplayRos">
-<area shape="rect" id="node1" title=" " alt="" coords="5,168,236,193"/>
-<area shape="rect" id="node2" href="$classdyno_1_1DisplayBase.html" title=" " alt="" coords="41,93,168,119"/>
-<area shape="rect" id="node3" href="$classdyno_1_1InbuiltDisplayCommon.html" title=" " alt="" coords="193,93,403,119"/>
-<area shape="rect" id="node4" href="$structdyno_1_1DisplayParams.html" title=" " alt="" coords="219,5,377,31"/>
+<area shape="rect" id="node1" title=" " alt="" coords="103,433,334,459"/>
+<area shape="rect" id="node2" href="$classdyno_1_1DisplayBase.html" title=" " alt="" coords="59,359,186,384"/>
+<area shape="rect" id="node3" href="$structdyno_1_1SharedModuleInterface.html" title=" " alt="" coords="5,271,219,296"/>
+<area shape="rect" id="node4" href="$classdyno_1_1SharedModuleInfo.html" title=" " alt="" coords="22,183,202,208"/>
+<area shape="rect" id="node5" href="$classdyno_1_1GroundTruthPacketMap.html" title="FastMap from frame id to GroundTruthInputPacket." alt="" coords="7,95,217,120"/>
+<area shape="rect" id="node6" title=" " alt="" coords="13,5,211,45"/>
+<area shape="rect" id="node7" href="$classdyno_1_1InbuiltDisplayCommon.html" title=" " alt="" coords="215,359,425,384"/>
+<area shape="rect" id="node8" href="$structdyno_1_1DisplayParams.html" title=" " alt="" coords="243,271,402,296"/>
 </map>

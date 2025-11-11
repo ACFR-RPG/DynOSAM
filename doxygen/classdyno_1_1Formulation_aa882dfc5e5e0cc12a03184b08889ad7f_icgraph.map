@@ -1,4 +1,7 @@
 <map id="dyno::Formulation::map" name="dyno::Formulation::map">
-<area shape="rect" id="node1" title="Get the map used by the formulation." alt="" coords="268,13,445,38"/>
-<area shape="rect" id="node2" href="$classdyno_1_1RegularBackendModule.html#a936edc9b773acb719ef46fda9d6bb2fd" title=" " alt="" coords="5,5,220,45"/>
+<area shape="rect" id="node1" title="Get the map used by the formulation." alt="" coords="551,45,728,70"/>
+<area shape="rect" id="node2" href="$structdyno_1_1internal_1_1StaticFormulationUpdater_1_1PTP.html#a89224a137fcdba2a535e63ffcea49fbe" title="Return results indicates if any factors/values were added (ie. the point was added)." alt="" coords="268,5,503,45"/>
+<area shape="rect" id="node3" href="$classdyno_1_1RegularBackendModule.html#adc99585a2a17b45657ad063a59aefe70" title=" " alt="" coords="278,69,493,109"/>
+<area shape="rect" id="node4" href="$classdyno_1_1RegularBackendModule.html#ab253e9d8df2177ea7a5bdb044239af46" title=" " alt="" coords="5,37,220,77"/>
+<area shape="rect" id="node5" href="$classdyno_1_1RegularBackendModule.html#a2ffdf0389a19bc9898825b8e3a86eccb" title=" " alt="" coords="5,101,220,141"/>
 </map>

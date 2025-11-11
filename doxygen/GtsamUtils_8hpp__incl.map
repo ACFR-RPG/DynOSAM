@@ -1,25 +1,25 @@
-<map id="dynosam/include/dynosam/utils/GtsamUtils.hpp" name="dynosam/include/dynosam/utils/GtsamUtils.hpp">
-<area shape="rect" id="node1" title=" " alt="" coords="1488,5,1685,45"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,101,120,126"/>
-<area shape="rect" id="node3" title=" " alt="" coords="145,101,343,126"/>
-<area shape="rect" id="node4" title=" " alt="" coords="368,101,555,126"/>
-<area shape="rect" id="node5" title=" " alt="" coords="579,101,765,126"/>
-<area shape="rect" id="node6" title=" " alt="" coords="789,101,965,126"/>
-<area shape="rect" id="node7" title=" " alt="" coords="989,101,1171,126"/>
-<area shape="rect" id="node8" title=" " alt="" coords="1195,101,1362,126"/>
-<area shape="rect" id="node9" title=" " alt="" coords="1386,101,1579,126"/>
-<area shape="rect" id="node10" title=" " alt="" coords="1604,101,1777,126"/>
-<area shape="rect" id="node11" title=" " alt="" coords="1801,93,1996,133"/>
-<area shape="rect" id="node12" title=" " alt="" coords="2020,101,2207,126"/>
-<area shape="rect" id="node13" title=" " alt="" coords="2231,101,2371,126"/>
-<area shape="rect" id="node14" title=" " alt="" coords="2395,101,2610,126"/>
-<area shape="rect" id="node15" title=" " alt="" coords="2635,101,2709,126"/>
-<area shape="rect" id="node16" title=" " alt="" coords="2734,101,2826,126"/>
-<area shape="rect" id="node17" href="$Numerical_8hpp.html" title=" " alt="" coords="2851,101,3064,126"/>
-<area shape="rect" id="node18" title=" " alt="" coords="2404,189,2559,214"/>
-<area shape="rect" id="node19" title=" " alt="" coords="2583,189,2739,214"/>
-<area shape="rect" id="node20" title=" " alt="" coords="2764,181,2945,221"/>
-<area shape="rect" id="node21" title=" " alt="" coords="2969,181,3151,221"/>
-<area shape="rect" id="node22" title=" " alt="" coords="3175,189,3255,214"/>
-<area shape="rect" id="node23" title=" " alt="" coords="3279,189,3353,214"/>
+<map id="dynosam_common/include/dynosam_common/utils/GtsamUtils.hpp" name="dynosam_common/include/dynosam_common/utils/GtsamUtils.hpp">
+<area shape="rect" id="node1" title=" " alt="" coords="1488,5,1685,60"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,115,120,141"/>
+<area shape="rect" id="node3" title=" " alt="" coords="145,115,343,141"/>
+<area shape="rect" id="node4" title=" " alt="" coords="368,115,555,141"/>
+<area shape="rect" id="node5" title=" " alt="" coords="579,115,765,141"/>
+<area shape="rect" id="node6" title=" " alt="" coords="789,115,965,141"/>
+<area shape="rect" id="node7" title=" " alt="" coords="989,115,1171,141"/>
+<area shape="rect" id="node8" title=" " alt="" coords="1195,115,1362,141"/>
+<area shape="rect" id="node9" title=" " alt="" coords="1386,115,1579,141"/>
+<area shape="rect" id="node10" title=" " alt="" coords="1604,115,1777,141"/>
+<area shape="rect" id="node11" title=" " alt="" coords="1801,108,1996,148"/>
+<area shape="rect" id="node12" title=" " alt="" coords="2020,115,2207,141"/>
+<area shape="rect" id="node13" title=" " alt="" coords="2231,115,2371,141"/>
+<area shape="rect" id="node14" title=" " alt="" coords="2395,115,2610,141"/>
+<area shape="rect" id="node15" title=" " alt="" coords="2635,115,2709,141"/>
+<area shape="rect" id="node16" title=" " alt="" coords="2734,115,2826,141"/>
+<area shape="rect" id="node17" href="$Numerical_8hpp.html" title=" " alt="" coords="2851,108,3029,148"/>
+<area shape="rect" id="node18" title=" " alt="" coords="2387,203,2543,229"/>
+<area shape="rect" id="node19" title=" " alt="" coords="2568,203,2723,229"/>
+<area shape="rect" id="node20" title=" " alt="" coords="2747,196,2928,236"/>
+<area shape="rect" id="node21" title=" " alt="" coords="2952,196,3133,236"/>
+<area shape="rect" id="node22" title=" " alt="" coords="3158,203,3231,229"/>
+<area shape="rect" id="node23" title=" " alt="" coords="3256,203,3336,229"/>
 </map>

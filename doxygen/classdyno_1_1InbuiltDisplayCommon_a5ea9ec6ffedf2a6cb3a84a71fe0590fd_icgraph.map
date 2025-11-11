@@ -1,6 +1,4 @@
 <map id="dyno::InbuiltDisplayCommon::publishPointCloud" name="dyno::InbuiltDisplayCommon::publishPointCloud">
-<area shape="rect" id="node1" title=" " alt="" coords="540,37,751,77"/>
-<area shape="rect" id="node2" href="$classdyno_1_1FrontendInbuiltDisplayRos.html#a4b6fefaf04a868c58cd85d8a741b4726" title=" " alt="" coords="263,5,492,45"/>
-<area shape="rect" id="node4" href="$classdyno_1_1BackendInbuiltDisplayRos.html#ae435d50beb86a1beecb8bf249e723bf4" title=" " alt="" coords="274,69,481,109"/>
-<area shape="rect" id="node3" href="$classdyno_1_1FrontendInbuiltDisplayRos.html#a8e47d6ce98cd285d8b6d9674cbacf334" title=" " alt="" coords="5,5,215,45"/>
+<area shape="rect" id="node1" title=" " alt="" coords="283,5,493,45"/>
+<area shape="rect" id="node2" href="$classdyno_1_1FrontendInbuiltDisplayRos.html#a4b6fefaf04a868c58cd85d8a741b4726" title=" " alt="" coords="5,5,235,45"/>
 </map>

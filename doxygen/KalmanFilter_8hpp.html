@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.6"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>DynoSAM: dynosam/include/dynosam/common/byte_tracker/KalmanFilter.hpp File Reference</title>
+<title>DynoSAM: dynosam_nn/include/dynosam_nn/trackers/byte_tracker/KalmanFilter.hpp File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -70,7 +70,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_5dee249e885e61d789509b2ad73060f7.html">dynosam</a></li><li class="navelem"><a class="el" href="dir_ae19c998a0d63c4a89d568f2bdaee525.html">include</a></li><li class="navelem"><a class="el" href="dir_0c508da48c40328131e0e187ecaa7ee4.html">dynosam</a></li><li class="navelem"><a class="el" href="dir_e90706111b527bd7d771e5120c1fb51f.html">common</a></li><li class="navelem"><a class="el" href="dir_e531df50429c9810c8f5cb3d34ac91d7.html">byte_tracker</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_b0fdff66307b5214a6d62aa7cdc513ea.html">dynosam_nn</a></li><li class="navelem"><a class="el" href="dir_b490b179c8728c48e5fd2b4126446eb6.html">include</a></li><li class="navelem"><a class="el" href="dir_0f6a41313507631cf10d6aba77ec17e4.html">dynosam_nn</a></li><li class="navelem"><a class="el" href="dir_e3cdb37f391ec27305a6ddcdd92569ee.html">trackers</a></li><li class="navelem"><a class="el" href="dir_82b820c9f180e676ee33c6dfac14a584.html">byte_tracker</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -80,37 +80,32 @@ $(function() {
   <div class="headertitle"><div class="title">KalmanFilter.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;<a class="el" href="Rect_8hpp_source.html">dynosam/common/byte_tracker/Rect.hpp</a>&quot;</code><br />
-<code>#include &lt;eigen3/Eigen/Dense&gt;</code><br />
+<div class="textblock"><code>#include &quot;Eigen/Dense&quot;</code><br />
+<code>#include &quot;<a class="el" href="Rect_8hpp_source.html">dynosam_nn/trackers/byte_tracker/Rect.hpp</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for KalmanFilter.hpp:</div>
 <div class="dyncontent">
-<div class="center"><img src="KalmanFilter_8hpp__incl.png" border="0" usemap="#adynosam_2include_2dynosam_2common_2byte__tracker_2KalmanFilter_8hpp" alt=""/></div>
-<map name="adynosam_2include_2dynosam_2common_2byte__tracker_2KalmanFilter_8hpp" id="adynosam_2include_2dynosam_2common_2byte__tracker_2KalmanFilter_8hpp">
-<area shape="rect" title=" " alt="" coords="45,5,328,45"/>
-<area shape="rect" href="Rect_8hpp.html" title=" " alt="" coords="5,93,181,133"/>
-<area shape="rect" title=" " alt="" coords="206,101,357,126"/>
-<area shape="rect" title=" " alt="" coords="9,181,177,221"/>
+<div class="center"><img src="KalmanFilter_8hpp__incl.png" border="0" usemap="#adynosam__nn_2include_2dynosam__nn_2trackers_2byte__tracker_2KalmanFilter_8hpp" alt=""/></div>
+<map name="adynosam__nn_2include_2dynosam__nn_2trackers_2byte__tracker_2KalmanFilter_8hpp" id="adynosam__nn_2include_2dynosam__nn_2trackers_2byte__tracker_2KalmanFilter_8hpp">
+<area shape="rect" title=" " alt="" coords="5,5,227,60"/>
+<area shape="rect" title=" " alt="" coords="65,196,167,221"/>
+<area shape="rect" href="Rect_8hpp.html" title=" " alt="" coords="93,108,261,148"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
-<div class="center"><img src="KalmanFilter_8hpp__dep__incl.png" border="0" usemap="#adynosam_2include_2dynosam_2common_2byte__tracker_2KalmanFilter_8hppdep" alt=""/></div>
-<map name="adynosam_2include_2dynosam_2common_2byte__tracker_2KalmanFilter_8hppdep" id="adynosam_2include_2dynosam_2common_2byte__tracker_2KalmanFilter_8hppdep">
-<area shape="rect" title=" " alt="" coords="816,5,1099,45"/>
-<area shape="rect" href="Track_8hpp.html" title=" " alt="" coords="717,93,952,133"/>
-<area shape="rect" href="KalmanFilter_8cc.html" title=" " alt="" coords="976,93,1187,133"/>
-<area shape="rect" href="ByteTracker_8hpp.html" title=" " alt="" coords="523,181,797,221"/>
-<area shape="rect" href="ByteTracker_8cc.html" title=" " alt="" coords="733,269,937,309"/>
-<area shape="rect" href="Track_8cc.html" title=" " alt="" coords="873,181,1039,221"/>
-<area shape="rect" href="ObjectTracker_8hpp.html" title=" " alt="" coords="465,269,708,309"/>
-<area shape="rect" href="RGBDInstanceFrontendModule_8hpp.html" title=" " alt="" coords="355,357,589,412"/>
-<area shape="rect" href="ObjectTracker_8cc.html" title=" " alt="" coords="614,365,789,405"/>
-<area shape="rect" href="ModuleFactory_8hpp.html" title=" " alt="" coords="5,460,213,500"/>
-<area shape="rect" href="RGBDInstanceFrontendModule_8cc.html" title=" " alt="" coords="237,460,480,500"/>
-<area shape="rect" href="PipelineManager_8cc.html" title=" " alt="" coords="505,460,666,500"/>
-<area shape="rect" href="backend__experiments__node_8cc.html" title=" " alt="" coords="691,460,901,500"/>
+<div class="center"><img src="KalmanFilter_8hpp__dep__incl.png" border="0" usemap="#adynosam__nn_2include_2dynosam__nn_2trackers_2byte__tracker_2KalmanFilter_8hppdep" alt=""/></div>
+<map name="adynosam__nn_2include_2dynosam__nn_2trackers_2byte__tracker_2KalmanFilter_8hppdep" id="adynosam__nn_2include_2dynosam__nn_2trackers_2byte__tracker_2KalmanFilter_8hppdep">
+<area shape="rect" title=" " alt="" coords="428,5,649,60"/>
+<area shape="rect" href="STrack_8hpp.html" title=" " alt="" coords="339,108,520,163"/>
+<area shape="rect" href="KalmanFilter_8cc.html" title=" " alt="" coords="544,115,755,155"/>
+<area shape="rect" href="ByteTracker_8hpp.html" title=" " alt="" coords="210,211,425,265"/>
+<area shape="rect" href="STrack_8cc.html" title=" " alt="" coords="449,218,633,258"/>
+<area shape="rect" href="ObjectTracker_8hpp.html" title=" " alt="" coords="131,313,296,368"/>
+<area shape="rect" href="ByteTracker_8cc.html" title=" " alt="" coords="321,321,525,361"/>
+<area shape="rect" href="YoloObjectDetector_8cc.html" title=" " alt="" coords="5,416,205,456"/>
+<area shape="rect" href="ObjectTracker_8cc.html" title=" " alt="" coords="229,416,413,456"/>
 </map>
 </div>
 </div>
@@ -118,14 +113,12 @@ This graph shows which files directly or indirectly include this file:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1byte__track_1_1KalmanFilter.html">dyno::byte_track::KalmanFilter</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbyte__track_1_1KalmanFilter.html">byte_track::KalmanFilter</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
 Namespaces</h2></td></tr>
-<tr class="memitem:namespacedyno"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno.html">dyno</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:namespacedyno_1_1byte__track"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno_1_1byte__track.html">dyno::byte_track</a></td></tr>
+<tr class="memitem:namespacebyte__track"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebyte__track.html">byte_track</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->

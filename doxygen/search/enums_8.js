@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['queryresult_0',['QueryResult',['../classdyno_1_1ThreadsafeImuBuffer.html#ac71268252763622c4644f283eb17047e',1,'dyno::ThreadsafeImuBuffer']]]
+  ['propogatetype_0',['PropogateType',['../namespacedyno.html#a53fef7d596a6ac062de528d25e47a7f6',1,'dyno']]]
 ];

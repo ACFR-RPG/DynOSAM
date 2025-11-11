@@ -80,53 +80,53 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="PipelineBase_8hpp_source.html">dynosam/pipeline/PipelineBase.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="Timing_8hpp_source.html">dynosam/utils/Timing.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="TimingStats_8hpp_source.html">dynosam/utils/TimingStats.hpp</a>&quot;</code><br />
 <code>#include &lt;glog/logging.h&gt;</code><br />
+<code>#include &lt;chrono&gt;</code><br />
 <code>#include &lt;memory&gt;</code><br />
 <code>#include &lt;thread&gt;</code><br />
-<code>#include &lt;chrono&gt;</code><br />
+<code>#include &quot;<a class="el" href="Timing_8hpp_source.html">dynosam_common/utils/Timing.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="TimingStats_8hpp_source.html">dynosam_common/utils/TimingStats.hpp</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for PipelineBase.cc:</div>
 <div class="dyncontent">
 <div class="center"><img src="PipelineBase_8cc__incl.png" border="0" usemap="#adynosam_2src_2pipeline_2PipelineBase_8cc" alt=""/></div>
 <map name="adynosam_2src_2pipeline_2PipelineBase_8cc" id="adynosam_2src_2pipeline_2PipelineBase_8cc">
-<area shape="rect" title=" " alt="" coords="1055,5,1217,45"/>
-<area shape="rect" href="PipelineBase_8hpp.html" title=" " alt="" coords="1039,93,1233,133"/>
-<area shape="rect" title=" " alt="" coords="68,577,145,603"/>
-<area shape="rect" title=" " alt="" coords="1600,431,1667,456"/>
-<area shape="rect" title=" " alt="" coords="1860,189,1924,214"/>
-<area shape="rect" title=" " alt="" coords="1659,504,1773,529"/>
-<area shape="rect" href="Timing_8hpp.html" title=" " alt="" coords="615,357,806,383"/>
-<area shape="rect" href="TimingStats_8hpp.html" title=" " alt="" coords="752,277,976,302"/>
-<area shape="rect" href="Macros_8hpp.html" title=" " alt="" coords="562,504,755,529"/>
-<area shape="rect" href="ThreadSafeQueue_8hpp.html" title=" " alt="" coords="1199,269,1415,309"/>
-<area shape="rect" title=" " alt="" coords="831,357,897,383"/>
-<area shape="rect" title=" " alt="" coords="1617,577,1676,603"/>
-<area shape="rect" title=" " alt="" coords="922,357,982,383"/>
-<area shape="rect" title=" " alt="" coords="1797,577,1883,603"/>
-<area shape="rect" title=" " alt="" coords="767,189,854,214"/>
-<area shape="rect" title=" " alt="" coords="475,504,538,529"/>
-<area shape="rect" href="PipelineBase-inl_8hpp.html" title=" " alt="" coords="879,181,1073,221"/>
-<area shape="rect" title=" " alt="" coords="893,577,968,603"/>
-<area shape="rect" title=" " alt="" coords="1341,357,1483,383"/>
-<area shape="rect" title=" " alt="" coords="1512,431,1576,456"/>
-<area shape="rect" title=" " alt="" coords="1507,357,1570,383"/>
-<area shape="rect" href="Statistics_8hpp.html" title=" " alt="" coords="1058,357,1265,383"/>
-<area shape="rect" title=" " alt="" coords="780,504,831,529"/>
-<area shape="rect" href="Accumulator_8hpp.html" title=" " alt="" coords="301,431,528,456"/>
-<area shape="rect" href="CsvParser_8hpp.html" title=" " alt="" coords="989,431,1198,456"/>
-<area shape="rect" title=" " alt="" coords="195,504,280,529"/>
-<area shape="rect" title=" " alt="" coords="305,504,367,529"/>
-<area shape="rect" title=" " alt="" coords="392,504,451,529"/>
-<area shape="rect" title=" " alt="" coords="955,504,1029,529"/>
-<area shape="rect" title=" " alt="" coords="1053,504,1133,529"/>
-<area shape="rect" title=" " alt="" coords="1281,577,1356,603"/>
-<area shape="rect" title=" " alt="" coords="1158,504,1213,529"/>
-<area shape="rect" title=" " alt="" coords="855,504,931,529"/>
-<area shape="rect" href="Exceptions_8hpp.html" title=" " alt="" coords="1338,504,1585,529"/>
-<area shape="rect" title=" " alt="" coords="1398,577,1474,603"/>
-<area shape="rect" title=" " alt="" coords="1498,577,1585,603"/>
+<area shape="rect" title=" " alt="" coords="1327,5,1489,45"/>
+<area shape="rect" href="PipelineBase_8hpp.html" title=" " alt="" coords="1311,93,1505,133"/>
+<area shape="rect" title=" " alt="" coords="1699,541,1813,566"/>
+<area shape="rect" title=" " alt="" coords="1472,453,1539,478"/>
+<area shape="rect" title=" " alt="" coords="68,621,145,647"/>
+<area shape="rect" title=" " alt="" coords="1785,189,1849,214"/>
+<area shape="rect" href="Timing_8hpp.html" title=" " alt="" coords="544,357,723,397"/>
+<area shape="rect" href="TimingStats_8hpp.html" title=" " alt="" coords="691,269,869,309"/>
+<area shape="rect" title=" " alt="" coords="747,365,813,390"/>
+<area shape="rect" title=" " alt="" coords="1471,189,1558,214"/>
+<area shape="rect" title=" " alt="" coords="1786,621,1873,647"/>
+<area shape="rect" title=" " alt="" coords="1607,621,1665,647"/>
+<area shape="rect" title=" " alt="" coords="1498,365,1558,390"/>
+<area shape="rect" title=" " alt="" coords="475,541,538,566"/>
+<area shape="rect" href="ThreadSafeQueue_8hpp.html" title=" " alt="" coords="1136,269,1352,309"/>
+<area shape="rect" href="Macros_8hpp.html" title=" " alt="" coords="1072,533,1251,573"/>
+<area shape="rect" href="PipelineBase-inl_8hpp.html" title=" " alt="" coords="729,181,924,221"/>
+<area shape="rect" title=" " alt="" coords="1178,365,1321,390"/>
+<area shape="rect" title=" " alt="" coords="1384,453,1448,478"/>
+<area shape="rect" title=" " alt="" coords="1091,365,1154,390"/>
+<area shape="rect" title=" " alt="" coords="1129,621,1204,647"/>
+<area shape="rect" href="Statistics_8hpp.html" title=" " alt="" coords="888,357,1067,397"/>
+<area shape="rect" title=" " alt="" coords="563,541,613,566"/>
+<area shape="rect" href="Accumulator_8hpp.html" title=" " alt="" coords="291,445,469,485"/>
+<area shape="rect" href="CsvParser_8hpp.html" title=" " alt="" coords="844,445,1023,485"/>
+<area shape="rect" title=" " alt="" coords="195,541,280,566"/>
+<area shape="rect" title=" " alt="" coords="305,541,367,566"/>
+<area shape="rect" title=" " alt="" coords="392,541,451,566"/>
+<area shape="rect" title=" " alt="" coords="638,541,711,566"/>
+<area shape="rect" title=" " alt="" coords="736,541,816,566"/>
+<area shape="rect" title=" " alt="" coords="1260,621,1335,647"/>
+<area shape="rect" title=" " alt="" coords="841,541,895,566"/>
+<area shape="rect" title=" " alt="" coords="971,541,1047,566"/>
+<area shape="rect" href="Exceptions_8hpp.html" title=" " alt="" coords="1325,541,1574,566"/>
+<area shape="rect" title=" " alt="" coords="1383,621,1459,647"/>
+<area shape="rect" title=" " alt="" coords="1483,621,1570,647"/>
 </map>
 </div>
 </div>

@@ -96,10 +96,6 @@ Include dependency graph for BackendParams.cc:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:aa7009f580b51bdaf36a63f47cd529e0a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="BackendParams_8cc.html#aa7009f580b51bdaf36a63f47cd529e0a">DEFINE_double</a> (static_point_sigma, 2.0, &quot;Isotropic pixel noise used <a class="el" href="plot__triangulation_8m.html#ac88aa5a5c67076097e4a0e87a0709ea0">on</a> static points&quot;)</td></tr>
-<tr class="separator:aa7009f580b51bdaf36a63f47cd529e0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaccbb1c8d7248f6b7ddbc2793e06c421"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="BackendParams_8cc.html#aaccbb1c8d7248f6b7ddbc2793e06c421">DEFINE_double</a> (dynamic_point_sigma, 2, &quot;Isotropic pixel noise used <a class="el" href="plot__triangulation_8m.html#ac88aa5a5c67076097e4a0e87a0709ea0">on</a> dynamic points&quot;)</td></tr>
-<tr class="separator:aaccbb1c8d7248f6b7ddbc2793e06c421"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a18182c44d34584df26d6c24f481ad09a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="BackendParams_8cc.html#a18182c44d34584df26d6c24f481ad09a">DEFINE_double</a> (constant_object_motion_rotation_sigma, 0.01, &quot;Noise used <a class="el" href="plot__triangulation_8m.html#ac88aa5a5c67076097e4a0e87a0709ea0">on</a> rotation componenent of smoothing factor&quot;)</td></tr>
 <tr class="separator:a18182c44d34584df26d6c24f481ad09a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6a3a1f97b4ccbbb915f1c4232dabaaa2"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="BackendParams_8cc.html#a6a3a1f97b4ccbbb915f1c4232dabaaa2">DEFINE_double</a> (constant_object_motion_translation_sigma, 0.1, &quot;Noise used <a class="el" href="plot__triangulation_8m.html#ac88aa5a5c67076097e4a0e87a0709ea0">on</a> translation componenent of smoothing factor&quot;)</td></tr>
@@ -110,16 +106,102 @@ Functions</h2></td></tr>
 <tr class="separator:a65215292e9ba42df508cb4f6e8857b9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6a0b947a0e5a893814c5372988f723b9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="BackendParams_8cc.html#a6a0b947a0e5a893814c5372988f723b9">DEFINE_double</a> (odometry_translation_sigma, 0.01, &quot;Noise used <a class="el" href="plot__triangulation_8m.html#ac88aa5a5c67076097e4a0e87a0709ea0">on</a> translation component of odometry&quot;)</td></tr>
 <tr class="separator:a6a0b947a0e5a893814c5372988f723b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5c5339525201122f5d323a959fff646c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="BackendParams_8cc.html#a5c5339525201122f5d323a959fff646c">DEFINE_double</a> (static_point_noise_sigma, 0.06, &quot;Isotropic noise used <a class="el" href="plot__triangulation_8m.html#ac88aa5a5c67076097e4a0e87a0709ea0">on</a> PoseToPointFactor for static points&quot;)</td></tr>
-<tr class="separator:a5c5339525201122f5d323a959fff646c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad320f2f0b21f753b2e104365ee9b08ab"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="BackendParams_8cc.html#ad320f2f0b21f753b2e104365ee9b08ab">DEFINE_double</a> (dynamic_point_noise_sigma, 0.0625, &quot;Isotropic noise used <a class="el" href="plot__triangulation_8m.html#ac88aa5a5c67076097e4a0e87a0709ea0">on</a> PoseToPointFactor for dynamic points&quot;)</td></tr>
-<tr class="separator:ad320f2f0b21f753b2e104365ee9b08ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a166ddcadb180fa6ad080bc5613742307"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="BackendParams_8cc.html#a166ddcadb180fa6ad080bc5613742307">DEFINE_int32</a> (optimization_mode, 0, &quot;0: Full-batch, 1: sliding-window, 2: incremental&quot;)</td></tr>
+<tr class="separator:a166ddcadb180fa6ad080bc5613742307"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aab83105274584182001234654337c496"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="BackendParams_8cc.html#aab83105274584182001234654337c496">DEFINE_int32</a> (static_formulation_type, 0, &quot;0: PTP, 1: Generic Projection, 2: Stereo Projection&quot;)</td></tr>
+<tr class="separator:aab83105274584182001234654337c496"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a58cb69f970be8c03e630a3a21d272e80"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="BackendParams_8cc.html#a58cb69f970be8c03e630a3a21d272e80">DEFINE_double</a> (static_point_noise_sigma, 0.2, &quot;Point (depth) noise for static points&quot;)</td></tr>
+<tr class="separator:a58cb69f970be8c03e630a3a21d272e80"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a455496db971ada3e19ded93da150de7b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="BackendParams_8cc.html#a455496db971ada3e19ded93da150de7b">DEFINE_double</a> (dynamic_point_noise_sigma, 0.2, &quot;Point (depth) noise for dynamic points&quot;)</td></tr>
+<tr class="separator:a455496db971ada3e19ded93da150de7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abd7fd5eaa5ffbdc5daf231568c5b9460"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="BackendParams_8cc.html#abd7fd5eaa5ffbdc5daf231568c5b9460">DEFINE_double</a> (static_pixel_noise_sigma, 2.0, &quot;Pixel noise used <a class="el" href="plot__triangulation_8m.html#ac88aa5a5c67076097e4a0e87a0709ea0">on</a> static points&quot;)</td></tr>
+<tr class="separator:abd7fd5eaa5ffbdc5daf231568c5b9460"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad8e33cdcfe6a5664e6858476ddfaffe1"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="BackendParams_8cc.html#ad8e33cdcfe6a5664e6858476ddfaffe1">DEFINE_double</a> (dynamic_pixel_noise_sigma, 2.0, &quot;Pixel noise used <a class="el" href="plot__triangulation_8m.html#ac88aa5a5c67076097e4a0e87a0709ea0">on</a> dynamic points&quot;)</td></tr>
+<tr class="separator:ad8e33cdcfe6a5664e6858476ddfaffe1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae73b7f7694ffed06260fb2da91845901"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="BackendParams_8cc.html#ae73b7f7694ffed06260fb2da91845901">DEFINE_bool</a> (use_smoothing_factor, true, &quot;If the backend should use the smoothing factor between motions&quot;)</td></tr>
 <tr class="separator:ae73b7f7694ffed06260fb2da91845901"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1110e2e63183295e0477c10c2fd1c525"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="BackendParams_8cc.html#a1110e2e63183295e0477c10c2fd1c525">DEFINE_bool</a> (use_vo_factor, true, &quot;If true, use visual odometry measurement as factor from the frontend&quot;)</td></tr>
+<tr class="separator:a1110e2e63183295e0477c10c2fd1c525"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a98b76d13ebc4feafa6da793bc8d4f753"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="BackendParams_8cc.html#a98b76d13ebc4feafa6da793bc8d4f753">DEFINE_bool</a> (use_robust_kernals, true, &quot;If the backend should use the robust noise kernals&quot;)</td></tr>
+<tr class="separator:a98b76d13ebc4feafa6da793bc8d4f753"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a531f373d6a43ca8b0d4e983aba2ab68a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="BackendParams_8cc.html#a531f373d6a43ca8b0d4e983aba2ab68a">DEFINE_bool</a> (dynamic_point_noise_as_robust, true, &quot;If the backend should use the robust noise kernals <a class="el" href="plot__triangulation_8m.html#ac88aa5a5c67076097e4a0e87a0709ea0">on</a> the Dynamic Points&quot;)</td></tr>
+<tr class="separator:a531f373d6a43ca8b0d4e983aba2ab68a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a685b09c896f80c7d97619f3baad2fc0c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="BackendParams_8cc.html#a685b09c896f80c7d97619f3baad2fc0c">DEFINE_int32</a> (min_static_observations, 2u, &quot;Min number of observations of a point before it is added to the &quot; &quot;optimisation&quot;)</td></tr>
+<tr class="separator:a685b09c896f80c7d97619f3baad2fc0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a066e3edba0dd3884daf41c64aa6375e3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="BackendParams_8cc.html#a066e3edba0dd3884daf41c64aa6375e3">DEFINE_int32</a> (min_dynamic_observations, 3u, &quot;Min number of observations of a point before it is added to the &quot; &quot;optimisation&quot;)</td></tr>
+<tr class="separator:a066e3edba0dd3884daf41c64aa6375e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
+<a id="a531f373d6a43ca8b0d4e983aba2ab68a" name="a531f373d6a43ca8b0d4e983aba2ab68a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a531f373d6a43ca8b0d4e983aba2ab68a">&#9670;&#160;</a></span>DEFINE_bool() <span class="overload">[1/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">DEFINE_bool </td>
+          <td>(</td>
+          <td class="paramtype">dynamic_point_noise_as_robust&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">true&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&quot;If the backend should use the robust noise kernals <a class="el" href="plot__triangulation_8m.html#ac88aa5a5c67076097e4a0e87a0709ea0">on</a> the Dynamic Points&quot;&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a98b76d13ebc4feafa6da793bc8d4f753" name="a98b76d13ebc4feafa6da793bc8d4f753"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a98b76d13ebc4feafa6da793bc8d4f753">&#9670;&#160;</a></span>DEFINE_bool() <span class="overload">[2/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">DEFINE_bool </td>
+          <td>(</td>
+          <td class="paramtype">use_robust_kernals&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">true&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&quot;If the backend should use the robust noise kernals&quot;&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="ae73b7f7694ffed06260fb2da91845901" name="ae73b7f7694ffed06260fb2da91845901"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae73b7f7694ffed06260fb2da91845901">&#9670;&#160;</a></span>DEFINE_bool()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ae73b7f7694ffed06260fb2da91845901">&#9670;&#160;</a></span>DEFINE_bool() <span class="overload">[3/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -140,6 +222,46 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&quot;If the backend should use the smoothing factor between motions&quot;&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1110e2e63183295e0477c10c2fd1c525" name="a1110e2e63183295e0477c10c2fd1c525"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1110e2e63183295e0477c10c2fd1c525">&#9670;&#160;</a></span>DEFINE_bool() <span class="overload">[4/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">DEFINE_bool </td>
+          <td>(</td>
+          <td class="paramtype">use_vo_factor&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">true&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&quot;If&#160;</td>
+          <td class="paramname"><em>true</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">use visual odometry measurement as factor from the frontend&quot;&#160;</td>
           <td class="paramname">&#160;</td>
         </tr>
         <tr>
@@ -220,8 +342,42 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ad320f2f0b21f753b2e104365ee9b08ab" name="ad320f2f0b21f753b2e104365ee9b08ab"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad320f2f0b21f753b2e104365ee9b08ab">&#9670;&#160;</a></span>DEFINE_double() <span class="overload">[3/9]</span></h2>
+<a id="ad8e33cdcfe6a5664e6858476ddfaffe1" name="ad8e33cdcfe6a5664e6858476ddfaffe1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad8e33cdcfe6a5664e6858476ddfaffe1">&#9670;&#160;</a></span>DEFINE_double() <span class="overload">[3/9]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">DEFINE_double </td>
+          <td>(</td>
+          <td class="paramtype">dynamic_pixel_noise_sigma&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">2.&#160;</td>
+          <td class="paramname"><em>0</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&quot;Pixel noise used <a class="el" href="plot__triangulation_8m.html#ac88aa5a5c67076097e4a0e87a0709ea0">on</a> dynamic points&quot;&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a455496db971ada3e19ded93da150de7b" name="a455496db971ada3e19ded93da150de7b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a455496db971ada3e19ded93da150de7b">&#9670;&#160;</a></span>DEFINE_double() <span class="overload">[4/9]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -236,46 +392,12 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">0.&#160;</td>
-          <td class="paramname"><em>0625</em>, </td>
+          <td class="paramname"><em>2</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&quot;Isotropic noise used <a class="el" href="plot__triangulation_8m.html#ac88aa5a5c67076097e4a0e87a0709ea0">on</a> PoseToPointFactor for dynamic points&quot;&#160;</td>
-          <td class="paramname">&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="aaccbb1c8d7248f6b7ddbc2793e06c421" name="aaccbb1c8d7248f6b7ddbc2793e06c421"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aaccbb1c8d7248f6b7ddbc2793e06c421">&#9670;&#160;</a></span>DEFINE_double() <span class="overload">[4/9]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">DEFINE_double </td>
-          <td>(</td>
-          <td class="paramtype">dynamic_point_sigma&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">2&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&quot;Isotropic pixel noise used <a class="el" href="plot__triangulation_8m.html#ac88aa5a5c67076097e4a0e87a0709ea0">on</a> dynamic points&quot;&#160;</td>
+          <td class="paramtype">&quot;Point (depth) noise for dynamic points&quot;&#160;</td>
           <td class="paramname">&#160;</td>
         </tr>
         <tr>
@@ -390,8 +512,42 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a5c5339525201122f5d323a959fff646c" name="a5c5339525201122f5d323a959fff646c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5c5339525201122f5d323a959fff646c">&#9670;&#160;</a></span>DEFINE_double() <span class="overload">[8/9]</span></h2>
+<a id="abd7fd5eaa5ffbdc5daf231568c5b9460" name="abd7fd5eaa5ffbdc5daf231568c5b9460"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abd7fd5eaa5ffbdc5daf231568c5b9460">&#9670;&#160;</a></span>DEFINE_double() <span class="overload">[8/9]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">DEFINE_double </td>
+          <td>(</td>
+          <td class="paramtype">static_pixel_noise_sigma&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">2.&#160;</td>
+          <td class="paramname"><em>0</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&quot;Pixel noise used <a class="el" href="plot__triangulation_8m.html#ac88aa5a5c67076097e4a0e87a0709ea0">on</a> static points&quot;&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a58cb69f970be8c03e630a3a21d272e80" name="a58cb69f970be8c03e630a3a21d272e80"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a58cb69f970be8c03e630a3a21d272e80">&#9670;&#160;</a></span>DEFINE_double() <span class="overload">[9/9]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -406,12 +562,12 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">0.&#160;</td>
-          <td class="paramname"><em>06</em>, </td>
+          <td class="paramname"><em>2</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&quot;Isotropic noise used <a class="el" href="plot__triangulation_8m.html#ac88aa5a5c67076097e4a0e87a0709ea0">on</a> PoseToPointFactor for static points&quot;&#160;</td>
+          <td class="paramtype">&quot;Point (depth) noise for static points&quot;&#160;</td>
           <td class="paramname">&#160;</td>
         </tr>
         <tr>
@@ -424,28 +580,154 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="aa7009f580b51bdaf36a63f47cd529e0a" name="aa7009f580b51bdaf36a63f47cd529e0a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa7009f580b51bdaf36a63f47cd529e0a">&#9670;&#160;</a></span>DEFINE_double() <span class="overload">[9/9]</span></h2>
+<a id="a066e3edba0dd3884daf41c64aa6375e3" name="a066e3edba0dd3884daf41c64aa6375e3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a066e3edba0dd3884daf41c64aa6375e3">&#9670;&#160;</a></span>DEFINE_int32() <span class="overload">[1/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">DEFINE_double </td>
+          <td class="memname">DEFINE_int32 </td>
           <td>(</td>
-          <td class="paramtype">static_point_sigma&#160;</td>
+          <td class="paramtype">min_dynamic_observations&#160;</td>
           <td class="paramname">, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">2.&#160;</td>
-          <td class="paramname"><em>0</em>, </td>
+          <td class="paramtype">3u&#160;</td>
+          <td class="paramname">, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&quot;Isotropic pixel noise used <a class="el" href="plot__triangulation_8m.html#ac88aa5a5c67076097e4a0e87a0709ea0">on</a> static points&quot;&#160;</td>
+          <td class="paramtype">&quot;Min number of observations of a point before it is added to the &quot; &quot;optimisation&quot;&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a685b09c896f80c7d97619f3baad2fc0c" name="a685b09c896f80c7d97619f3baad2fc0c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a685b09c896f80c7d97619f3baad2fc0c">&#9670;&#160;</a></span>DEFINE_int32() <span class="overload">[2/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">DEFINE_int32 </td>
+          <td>(</td>
+          <td class="paramtype">min_static_observations&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">2u&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&quot;Min number of observations of a point before it is added to the &quot; &quot;optimisation&quot;&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a166ddcadb180fa6ad080bc5613742307" name="a166ddcadb180fa6ad080bc5613742307"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a166ddcadb180fa6ad080bc5613742307">&#9670;&#160;</a></span>DEFINE_int32() <span class="overload">[3/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">DEFINE_int32 </td>
+          <td>(</td>
+          <td class="paramtype">optimization_mode&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">0&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&quot;0: Full-&#160;</td>
+          <td class="paramname"><em>batch</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">1:sliding-&#160;</td>
+          <td class="paramname"><em>window</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">2:incremental&quot;&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aab83105274584182001234654337c496" name="aab83105274584182001234654337c496"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aab83105274584182001234654337c496">&#9670;&#160;</a></span>DEFINE_int32() <span class="overload">[4/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">DEFINE_int32 </td>
+          <td>(</td>
+          <td class="paramtype">static_formulation_type&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">0&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&quot;0:&#160;</td>
+          <td class="paramname"><em>PTP</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">1:Generic&#160;</td>
+          <td class="paramname"><em>Projection</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">2:Stereo Projection&quot;&#160;</td>
           <td class="paramname">&#160;</td>
         </tr>
         <tr>

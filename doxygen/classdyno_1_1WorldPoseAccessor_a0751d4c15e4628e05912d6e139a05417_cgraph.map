@@ -1,6 +1,6 @@
 <map id="dyno::WorldPoseAccessor::getObjectPose" name="dyno::WorldPoseAccessor::getObjectPose">
 <area shape="rect" id="node1" title="Get the pose (^wL_k) of an object (j) at time&#45;step (k)." alt="" coords="5,27,193,67"/>
 <area shape="rect" id="node2" href="$classdyno_1_1StateQuery.html#a11630f8b7aa055e0418c3008de72be4c" title=" " alt="" coords="241,5,456,31"/>
-<area shape="rect" id="node4" href="$classdyno_1_1Accessor.html#a7204bf6ab3ea8d16809049aa1553bccc" title=" " alt="" coords="251,55,446,95"/>
+<area shape="rect" id="node4" href="$classdyno_1_1AccessorT.html#aed6f20448b79c933f4bde4e3a518f846" title=" " alt="" coords="243,55,454,95"/>
 <area shape="rect" id="node3" href="$classdyno_1_1StateQuery.html#a0fcc50e2a6b7bf7125d86af0a9bbc9ae" title=" " alt="" coords="504,5,719,31"/>
 </map>

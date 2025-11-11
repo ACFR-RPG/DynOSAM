@@ -1,10 +1,12 @@
 <map id="dynosam/src/backend" name="dynosam/src/backend">
-<area shape="rect" id="node4" href="dir_ae19c998a0d63c4a89d568f2bdaee525.html" title="include" alt="" coords="123,136,192,161"/>
-<area shape="rect" id="edge1-headlabel" href="dir_000005_000034.html" title="56" alt="" coords="186,126,203,140"/>
-<area shape="rect" id="node2" href="dir_d9c74ba9ac0b8da23a9cfb88784fc5eb.html" title="optimizers" alt="" coords="112,63,203,88"/>
-<area shape="rect" id="edge2-headlabel" href="dir_000042_000034.html" title="8" alt="" coords="161,110,170,125"/>
-<area shape="rect" id="node3" href="dir_4108424d29da776303f64c96d635d341.html" title="rgbd" alt="" coords="37,63,88,88"/>
-<area shape="rect" id="edge3-headlabel" href="dir_000047_000034.html" title="12" alt="" coords="120,112,137,126"/>
-<area shape="rect" id="clust2" href="dir_74e6931a21b16e4d4746f56c84828cc8.html" alt="" coords="27,52,315,99"/>
-<area shape="rect" id="clust1" href="dir_967826b48aab5e644207159adfa580e7.html" title="src" alt="" coords="16,16,325,109"/>
+<area shape="rect" id="node3" href="dir_4ee03daef912e012744e3cdf3146a7f7.html" title="dynosam_opt" alt="" coords="5,136,116,161"/>
+<area shape="rect" id="edge1-headlabel" href="dir_000005_000027.html" title="7" alt="" coords="105,129,114,144"/>
+<area shape="rect" id="node4" href="dir_59022c2de10cb81abe7061856121e435.html" title="dynosam_common" alt="" coords="141,136,287,161"/>
+<area shape="rect" id="edge2-headlabel" href="dir_000005_000021.html" title="7" alt="" coords="226,114,235,128"/>
+<area shape="rect" id="node5" href="dir_ae19c998a0d63c4a89d568f2bdaee525.html" title="include" alt="" coords="311,136,381,161"/>
+<area shape="rect" id="edge3-headlabel" href="dir_000005_000044.html" title="24" alt="" coords="308,112,325,126"/>
+<area shape="rect" id="node2" href="dir_4108424d29da776303f64c96d635d341.html" title="rgbd" alt="" coords="298,63,349,88"/>
+<area shape="rect" id="edge4-headlabel" href="dir_000060_000044.html" title="12" alt="" coords="336,109,354,123"/>
+<area shape="rect" id="clust2" href="dir_74e6931a21b16e4d4746f56c84828cc8.html" alt="" coords="186,52,359,99"/>
+<area shape="rect" id="clust1" href="dir_967826b48aab5e644207159adfa580e7.html" title="src" alt="" coords="175,16,370,109"/>
 </map>

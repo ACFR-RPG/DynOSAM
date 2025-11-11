@@ -125,16 +125,16 @@ Private Attributes</h2></td></tr>
 <tr class="separator:aba7217db893675ce3a298d1c2095fdc5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a66f9bbbd1eeb8fc297627eba953119b1"><td class="memItemLeft" align="right" valign="top">const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1Spinner.html#a66f9bbbd1eeb8fc297627eba953119b1">name_</a></td></tr>
 <tr class="separator:a66f9bbbd1eeb8fc297627eba953119b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a713ff5ed31707ec345d75c0050bd4ec5"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; std::thread &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1Spinner.html#a713ff5ed31707ec345d75c0050bd4ec5">spin_thread_</a> { nullptr }</td></tr>
+<tr class="memitem:a713ff5ed31707ec345d75c0050bd4ec5"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; std::thread &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1Spinner.html#a713ff5ed31707ec345d75c0050bd4ec5">spin_thread_</a> {nullptr}</td></tr>
 <tr class="separator:a713ff5ed31707ec345d75c0050bd4ec5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a793a0ddcf7adbe057b55b818c98b89f7"><td class="memItemLeft" align="right" valign="top">std::atomic&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1Spinner.html#a793a0ddcf7adbe057b55b818c98b89f7">is_running_</a> { false }</td></tr>
+<tr class="memitem:a793a0ddcf7adbe057b55b818c98b89f7"><td class="memItemLeft" align="right" valign="top">std::atomic&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1Spinner.html#a793a0ddcf7adbe057b55b818c98b89f7">is_running_</a> {false}</td></tr>
 <tr class="separator:a793a0ddcf7adbe057b55b818c98b89f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Class to handle the calling of a function within a thread. The spinner launches its own thread for each instance and is non-blocking. </p>
 <p>This version of the class expects the Evoke function to be within a while loop itself as the class will simply bind this to a thread and execute it. See <a class="el" href="classdyno_1_1LoopingSpinner.html" title="A spinner that will take a non-blocking function (spinOnce) and puts it in a loop with a given delay....">LoopingSpinner</a> to for a spinOnce style evoke function call. </p>
 
-<p class="definition">Definition at line <a class="el" href="Spinner_8hpp_source.html#l00049">49</a> of file <a class="el" href="Spinner_8hpp_source.html">Spinner.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Spinner_8hpp_source.html#l00054">54</a> of file <a class="el" href="Spinner_8hpp_source.html">Spinner.hpp</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="a6ea8f13308414e84742ddfef6b9d98e4" name="a6ea8f13308414e84742ddfef6b9d98e4"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6ea8f13308414e84742ddfef6b9d98e4">&#9670;&#160;</a></span>Evoke</h2>
@@ -148,7 +148,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Spinner_8hpp_source.html#l00053">53</a> of file <a class="el" href="Spinner_8hpp_source.html">Spinner.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Spinner_8hpp_source.html#l00057">57</a> of file <a class="el" href="Spinner_8hpp_source.html">Spinner.hpp</a>.</p>
 
 </div>
 </div>
@@ -204,20 +204,18 @@ Private Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="Spinner_8cc_source.html#l00035">35</a> of file <a class="el" href="Spinner_8cc_source.html">Spinner.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   35</span>                                                                   : <a class="code hl_variable" href="classdyno_1_1Spinner.html#aba7217db893675ce3a298d1c2095fdc5">func_</a>(func), <a class="code hl_variable" href="classdyno_1_1Spinner.html#a66f9bbbd1eeb8fc297627eba953119b1">name_</a>(name)</div>
-<div class="line"><span class="lineno">   36</span>{</div>
-<div class="line"><span class="lineno">   37</span>  VLOG(10) &lt;&lt; <span class="stringliteral">&quot;Creating spinner - &quot;</span> &lt;&lt; name;</div>
-<div class="line"><span class="lineno">   38</span> </div>
-<div class="line"><span class="lineno">   39</span>  <span class="keywordflow">if</span> (auto_start)</div>
-<div class="line"><span class="lineno">   40</span>  {</div>
-<div class="line"><span class="lineno">   41</span>    VLOG(10) &lt;&lt; <span class="stringliteral">&quot;Auto starting spinner - &quot;</span> &lt;&lt; name;</div>
-<div class="line"><span class="lineno">   42</span>    <a class="code hl_function" href="classdyno_1_1Spinner.html#a687ff6b61b822035bf5adeabda5d1ca3">start</a>();</div>
-<div class="line"><span class="lineno">   43</span>  }</div>
-<div class="line"><span class="lineno">   44</span>}</div>
-<div class="ttc" id="aclassdyno_1_1Spinner_html_a66f9bbbd1eeb8fc297627eba953119b1"><div class="ttname"><a href="classdyno_1_1Spinner.html#a66f9bbbd1eeb8fc297627eba953119b1">dyno::Spinner::name_</a></div><div class="ttdeci">const std::string name_</div><div class="ttdef"><b>Definition:</b> <a href="Spinner_8hpp_source.html#l00095">Spinner.hpp:95</a></div></div>
-<div class="ttc" id="aclassdyno_1_1Spinner_html_a687ff6b61b822035bf5adeabda5d1ca3"><div class="ttname"><a href="classdyno_1_1Spinner.html#a687ff6b61b822035bf5adeabda5d1ca3">dyno::Spinner::start</a></div><div class="ttdeci">void start()</div><div class="ttdoc">Starts the function in a thread. If the spinner has already been started (i.e from auto_start),...</div><div class="ttdef"><b>Definition:</b> <a href="Spinner_8cc_source.html#l00051">Spinner.cc:51</a></div></div>
-<div class="ttc" id="aclassdyno_1_1Spinner_html_aba7217db893675ce3a298d1c2095fdc5"><div class="ttname"><a href="classdyno_1_1Spinner.html#aba7217db893675ce3a298d1c2095fdc5">dyno::Spinner::func_</a></div><div class="ttdeci">Evoke func_</div><div class="ttdef"><b>Definition:</b> <a href="Spinner_8hpp_source.html#l00094">Spinner.hpp:94</a></div></div>
+<p class="definition">Definition at line <a class="el" href="Spinner_8cc_source.html#l00041">41</a> of file <a class="el" href="Spinner_8cc_source.html">Spinner.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   42</span>    : <a class="code hl_variable" href="classdyno_1_1Spinner.html#aba7217db893675ce3a298d1c2095fdc5">func_</a>(func), <a class="code hl_variable" href="classdyno_1_1Spinner.html#a66f9bbbd1eeb8fc297627eba953119b1">name_</a>(name) {</div>
+<div class="line"><span class="lineno">   43</span>  VLOG(10) &lt;&lt; <span class="stringliteral">&quot;Creating spinner - &quot;</span> &lt;&lt; name;</div>
+<div class="line"><span class="lineno">   44</span> </div>
+<div class="line"><span class="lineno">   45</span>  <span class="keywordflow">if</span> (auto_start) {</div>
+<div class="line"><span class="lineno">   46</span>    VLOG(10) &lt;&lt; <span class="stringliteral">&quot;Auto starting spinner - &quot;</span> &lt;&lt; name;</div>
+<div class="line"><span class="lineno">   47</span>    <a class="code hl_function" href="classdyno_1_1Spinner.html#a687ff6b61b822035bf5adeabda5d1ca3">start</a>();</div>
+<div class="line"><span class="lineno">   48</span>  }</div>
+<div class="line"><span class="lineno">   49</span>}</div>
+<div class="ttc" id="aclassdyno_1_1Spinner_html_a66f9bbbd1eeb8fc297627eba953119b1"><div class="ttname"><a href="classdyno_1_1Spinner.html#a66f9bbbd1eeb8fc297627eba953119b1">dyno::Spinner::name_</a></div><div class="ttdeci">const std::string name_</div><div class="ttdef"><b>Definition:</b> <a href="Spinner_8hpp_source.html#l00102">Spinner.hpp:102</a></div></div>
+<div class="ttc" id="aclassdyno_1_1Spinner_html_a687ff6b61b822035bf5adeabda5d1ca3"><div class="ttname"><a href="classdyno_1_1Spinner.html#a687ff6b61b822035bf5adeabda5d1ca3">dyno::Spinner::start</a></div><div class="ttdeci">void start()</div><div class="ttdoc">Starts the function in a thread. If the spinner has already been started (i.e from auto_start),...</div><div class="ttdef"><b>Definition:</b> <a href="Spinner_8cc_source.html#l00053">Spinner.cc:53</a></div></div>
+<div class="ttc" id="aclassdyno_1_1Spinner_html_aba7217db893675ce3a298d1c2095fdc5"><div class="ttname"><a href="classdyno_1_1Spinner.html#aba7217db893675ce3a298d1c2095fdc5">dyno::Spinner::func_</a></div><div class="ttdeci">Evoke func_</div><div class="ttdef"><b>Definition:</b> <a href="Spinner_8hpp_source.html#l00101">Spinner.hpp:101</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1Spinner.html#a687ff6b61b822035bf5adeabda5d1ca3">start()</a>.</p>
 <div class="dynheader">
@@ -255,10 +253,8 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Spinner_8cc_source.html#l00046">46</a> of file <a class="el" href="Spinner_8cc_source.html">Spinner.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   47</span>{</div>
-<div class="line"><span class="lineno">   48</span>  <a class="code hl_function" href="classdyno_1_1Spinner.html#af55891df661602adcaad443f0f48543b">shutdown</a>();</div>
-<div class="line"><span class="lineno">   49</span>}</div>
+<p class="definition">Definition at line <a class="el" href="Spinner_8cc_source.html#l00051">51</a> of file <a class="el" href="Spinner_8cc_source.html">Spinner.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   51</span>{ <a class="code hl_function" href="classdyno_1_1Spinner.html#af55891df661602adcaad443f0f48543b">shutdown</a>(); }</div>
 <div class="ttc" id="aclassdyno_1_1Spinner_html_af55891df661602adcaad443f0f48543b"><div class="ttname"><a href="classdyno_1_1Spinner.html#af55891df661602adcaad443f0f48543b">dyno::Spinner::shutdown</a></div><div class="ttdeci">virtual void shutdown()</div><div class="ttdoc">Shutdown the spinner - once stopped cannot be restarted. Used to ensure the thread closes safely....</div><div class="ttdef"><b>Definition:</b> <a href="Spinner_8cc_source.html#l00060">Spinner.cc:60</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1Spinner.html#af55891df661602adcaad443f0f48543b">shutdown()</a>.</p>
@@ -303,11 +299,9 @@ Here is the call graph for this function:</div>
 <dd>
 false </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Spinner_8hpp_source.html#l00089">89</a> of file <a class="el" href="Spinner_8hpp_source.html">Spinner.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   89</span>                                {</div>
-<div class="line"><span class="lineno">   90</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1Spinner.html#a793a0ddcf7adbe057b55b818c98b89f7">is_running_</a>;</div>
-<div class="line"><span class="lineno">   91</span>  }</div>
-<div class="ttc" id="aclassdyno_1_1Spinner_html_a793a0ddcf7adbe057b55b818c98b89f7"><div class="ttname"><a href="classdyno_1_1Spinner.html#a793a0ddcf7adbe057b55b818c98b89f7">dyno::Spinner::is_running_</a></div><div class="ttdeci">std::atomic&lt; bool &gt; is_running_</div><div class="ttdef"><b>Definition:</b> <a href="Spinner_8hpp_source.html#l00098">Spinner.hpp:98</a></div></div>
+<p class="definition">Definition at line <a class="el" href="Spinner_8hpp_source.html#l00098">98</a> of file <a class="el" href="Spinner_8hpp_source.html">Spinner.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   98</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1Spinner.html#a793a0ddcf7adbe057b55b818c98b89f7">is_running_</a>; }</div>
+<div class="ttc" id="aclassdyno_1_1Spinner_html_a793a0ddcf7adbe057b55b818c98b89f7"><div class="ttname"><a href="classdyno_1_1Spinner.html#a793a0ddcf7adbe057b55b818c98b89f7">dyno::Spinner::is_running_</a></div><div class="ttdeci">std::atomic&lt; bool &gt; is_running_</div><div class="ttdef"><b>Definition:</b> <a href="Spinner_8hpp_source.html#l00105">Spinner.hpp:105</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1Spinner.html#a793a0ddcf7adbe057b55b818c98b89f7">is_running_</a>.</p>
 
@@ -341,19 +335,16 @@ false </dd></dl>
 <p>Reimplemented in <a class="el" href="classdyno_1_1LoopingSpinner.html#a294a869ebb18a445208319b6127cb209">dyno::LoopingSpinner</a>.</p>
 
 <p class="definition">Definition at line <a class="el" href="Spinner_8cc_source.html#l00060">60</a> of file <a class="el" href="Spinner_8cc_source.html">Spinner.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   61</span>{</div>
-<div class="line"><span class="lineno">   62</span>  <span class="keywordflow">if</span> (<a class="code hl_variable" href="classdyno_1_1Spinner.html#a713ff5ed31707ec345d75c0050bd4ec5">spin_thread_</a> &amp;&amp; <a class="code hl_variable" href="classdyno_1_1Spinner.html#a713ff5ed31707ec345d75c0050bd4ec5">spin_thread_</a>-&gt;joinable())</div>
-<div class="line"><span class="lineno">   63</span>  {</div>
-<div class="line"><span class="lineno">   64</span>    VLOG(10) &lt;&lt; <span class="stringliteral">&quot;Spinner &quot;</span> &lt;&lt; <a class="code hl_variable" href="classdyno_1_1Spinner.html#a66f9bbbd1eeb8fc297627eba953119b1">name_</a> &lt;&lt; <span class="stringliteral">&quot; shutting down&quot;</span>;</div>
-<div class="line"><span class="lineno">   65</span>    <a class="code hl_variable" href="classdyno_1_1Spinner.html#a713ff5ed31707ec345d75c0050bd4ec5">spin_thread_</a>-&gt;join();</div>
-<div class="line"><span class="lineno">   66</span>    <a class="code hl_variable" href="classdyno_1_1Spinner.html#a793a0ddcf7adbe057b55b818c98b89f7">is_running_</a> = <span class="keyword">false</span>;</div>
+<div class="fragment"><div class="line"><span class="lineno">   60</span>                       {</div>
+<div class="line"><span class="lineno">   61</span>  <span class="keywordflow">if</span> (<a class="code hl_variable" href="classdyno_1_1Spinner.html#a713ff5ed31707ec345d75c0050bd4ec5">spin_thread_</a> &amp;&amp; <a class="code hl_variable" href="classdyno_1_1Spinner.html#a713ff5ed31707ec345d75c0050bd4ec5">spin_thread_</a>-&gt;joinable()) {</div>
+<div class="line"><span class="lineno">   62</span>    VLOG(10) &lt;&lt; <span class="stringliteral">&quot;Spinner &quot;</span> &lt;&lt; <a class="code hl_variable" href="classdyno_1_1Spinner.html#a66f9bbbd1eeb8fc297627eba953119b1">name_</a> &lt;&lt; <span class="stringliteral">&quot; shutting down&quot;</span>;</div>
+<div class="line"><span class="lineno">   63</span>    <a class="code hl_variable" href="classdyno_1_1Spinner.html#a713ff5ed31707ec345d75c0050bd4ec5">spin_thread_</a>-&gt;join();</div>
+<div class="line"><span class="lineno">   64</span>    <a class="code hl_variable" href="classdyno_1_1Spinner.html#a793a0ddcf7adbe057b55b818c98b89f7">is_running_</a> = <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">   65</span>  } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">   66</span>    <span class="comment">// VLOG(10) &lt;&lt; &quot;Spinner &quot; &lt;&lt; name_ &lt;&lt; &quot;already shutdown&quot;;</span></div>
 <div class="line"><span class="lineno">   67</span>  }</div>
-<div class="line"><span class="lineno">   68</span>  <span class="keywordflow">else</span></div>
-<div class="line"><span class="lineno">   69</span>  {</div>
-<div class="line"><span class="lineno">   70</span>    <span class="comment">// VLOG(10) &lt;&lt; &quot;Spinner &quot; &lt;&lt; name_ &lt;&lt; &quot;already shutdown&quot;;</span></div>
-<div class="line"><span class="lineno">   71</span>  }</div>
-<div class="line"><span class="lineno">   72</span>}</div>
-<div class="ttc" id="aclassdyno_1_1Spinner_html_a713ff5ed31707ec345d75c0050bd4ec5"><div class="ttname"><a href="classdyno_1_1Spinner.html#a713ff5ed31707ec345d75c0050bd4ec5">dyno::Spinner::spin_thread_</a></div><div class="ttdeci">std::unique_ptr&lt; std::thread &gt; spin_thread_</div><div class="ttdef"><b>Definition:</b> <a href="Spinner_8hpp_source.html#l00097">Spinner.hpp:97</a></div></div>
+<div class="line"><span class="lineno">   68</span>}</div>
+<div class="ttc" id="aclassdyno_1_1Spinner_html_a713ff5ed31707ec345d75c0050bd4ec5"><div class="ttname"><a href="classdyno_1_1Spinner.html#a713ff5ed31707ec345d75c0050bd4ec5">dyno::Spinner::spin_thread_</a></div><div class="ttdeci">std::unique_ptr&lt; std::thread &gt; spin_thread_</div><div class="ttdef"><b>Definition:</b> <a href="Spinner_8hpp_source.html#l00104">Spinner.hpp:104</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1Spinner.html#a793a0ddcf7adbe057b55b818c98b89f7">is_running_</a>, <a class="el" href="classdyno_1_1Spinner.html#a66f9bbbd1eeb8fc297627eba953119b1">name_</a>, and <a class="el" href="classdyno_1_1Spinner.html#a713ff5ed31707ec345d75c0050bd4ec5">spin_thread_</a>.</p>
 
@@ -388,10 +379,9 @@ Here is the caller graph for this function:</div>
 
 <p>Starts the function in a thread. If the spinner has already been started (i.e from auto_start), this function will do nothing. Non-blocking call. </p>
 
-<p class="definition">Definition at line <a class="el" href="Spinner_8cc_source.html#l00051">51</a> of file <a class="el" href="Spinner_8cc_source.html">Spinner.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   52</span>{</div>
-<div class="line"><span class="lineno">   53</span> </div>
-<div class="line"><span class="lineno">   54</span>  <span class="keywordflow">if</span>(!<a class="code hl_variable" href="classdyno_1_1Spinner.html#a793a0ddcf7adbe057b55b818c98b89f7">is_running_</a>) {</div>
+<p class="definition">Definition at line <a class="el" href="Spinner_8cc_source.html#l00053">53</a> of file <a class="el" href="Spinner_8cc_source.html">Spinner.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   53</span>                    {</div>
+<div class="line"><span class="lineno">   54</span>  <span class="keywordflow">if</span> (!<a class="code hl_variable" href="classdyno_1_1Spinner.html#a793a0ddcf7adbe057b55b818c98b89f7">is_running_</a>) {</div>
 <div class="line"><span class="lineno">   55</span>    <a class="code hl_variable" href="classdyno_1_1Spinner.html#a713ff5ed31707ec345d75c0050bd4ec5">spin_thread_</a> = std::make_unique&lt;std::thread&gt;(<a class="code hl_variable" href="classdyno_1_1Spinner.html#aba7217db893675ce3a298d1c2095fdc5">func_</a>);</div>
 <div class="line"><span class="lineno">   56</span>    <a class="code hl_variable" href="classdyno_1_1Spinner.html#a793a0ddcf7adbe057b55b818c98b89f7">is_running_</a> = <span class="keyword">true</span>;</div>
 <div class="line"><span class="lineno">   57</span>  }</div>
@@ -434,7 +424,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Spinner_8hpp_source.html#l00094">94</a> of file <a class="el" href="Spinner_8hpp_source.html">Spinner.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Spinner_8hpp_source.html#l00101">101</a> of file <a class="el" href="Spinner_8hpp_source.html">Spinner.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1Spinner.html#a687ff6b61b822035bf5adeabda5d1ca3">start()</a>.</p>
 
@@ -450,7 +440,7 @@ Here is the caller graph for this function:</div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::atomic&lt;bool&gt; dyno::Spinner::is_running_ { false }</td>
+          <td class="memname">std::atomic&lt;bool&gt; dyno::Spinner::is_running_ {false}</td>
         </tr>
       </table>
   </td>
@@ -460,7 +450,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Spinner_8hpp_source.html#l00098">98</a> of file <a class="el" href="Spinner_8hpp_source.html">Spinner.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Spinner_8hpp_source.html#l00105">105</a> of file <a class="el" href="Spinner_8hpp_source.html">Spinner.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1Spinner.html#adecbff7650f464027a4e9aae9a69afea">isRunning()</a>, <a class="el" href="classdyno_1_1Spinner.html#af55891df661602adcaad443f0f48543b">shutdown()</a>, and <a class="el" href="classdyno_1_1Spinner.html#a687ff6b61b822035bf5adeabda5d1ca3">start()</a>.</p>
 
@@ -486,7 +476,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Spinner_8hpp_source.html#l00095">95</a> of file <a class="el" href="Spinner_8hpp_source.html">Spinner.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Spinner_8hpp_source.html#l00102">102</a> of file <a class="el" href="Spinner_8hpp_source.html">Spinner.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1Spinner.html#af55891df661602adcaad443f0f48543b">shutdown()</a>.</p>
 
@@ -502,7 +492,7 @@ Here is the caller graph for this function:</div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::unique_ptr&lt;std::thread&gt; dyno::Spinner::spin_thread_ { nullptr }</td>
+          <td class="memname">std::unique_ptr&lt;std::thread&gt; dyno::Spinner::spin_thread_ {nullptr}</td>
         </tr>
       </table>
   </td>
@@ -512,15 +502,15 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Spinner_8hpp_source.html#l00097">97</a> of file <a class="el" href="Spinner_8hpp_source.html">Spinner.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Spinner_8hpp_source.html#l00104">104</a> of file <a class="el" href="Spinner_8hpp_source.html">Spinner.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1Spinner.html#af55891df661602adcaad443f0f48543b">shutdown()</a>, and <a class="el" href="classdyno_1_1Spinner.html#a687ff6b61b822035bf5adeabda5d1ca3">start()</a>.</p>
 
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>dynosam/include/dynosam/utils/<a class="el" href="Spinner_8hpp_source.html">Spinner.hpp</a></li>
-<li>dynosam/src/utils/<a class="el" href="Spinner_8cc_source.html">Spinner.cc</a></li>
+<li>dynosam_common/include/dynosam_common/utils/<a class="el" href="Spinner_8hpp_source.html">Spinner.hpp</a></li>
+<li>dynosam_common/src/utils/<a class="el" href="Spinner_8cc_source.html">Spinner.cc</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

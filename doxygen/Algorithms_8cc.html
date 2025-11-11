@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.6"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>DynoSAM: dynosam/src/common/Algorithms.cc File Reference</title>
+<title>DynoSAM: dynosam_common/src/Algorithms.cc File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -70,7 +70,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_5dee249e885e61d789509b2ad73060f7.html">dynosam</a></li><li class="navelem"><a class="el" href="dir_967826b48aab5e644207159adfa580e7.html">src</a></li><li class="navelem"><a class="el" href="dir_b7f1fe6bdf2c751e876c6e51542fc3c7.html">common</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_59022c2de10cb81abe7061856121e435.html">dynosam_common</a></li><li class="navelem"><a class="el" href="dir_8dda260cc3fa4078daa006fdb5813365.html">src</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -79,61 +79,64 @@ $(function() {
   <div class="headertitle"><div class="title">Algorithms.cc File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;<a class="el" href="Algorithms_8hpp_source.html">dynosam/common/Algorithms.hpp</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="Algorithms_8hpp_source.html">dynosam_common/Algorithms.hpp</a>&quot;</code><br />
+<code>#include &lt;glog/logging.h&gt;</code><br />
 <code>#include &lt;cfloat&gt;</code><br />
 <code>#include &lt;cmath&gt;</code><br />
-<code>#include &lt;glog/logging.h&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for Algorithms.cc:</div>
 <div class="dyncontent">
-<div class="center"><img src="Algorithms_8cc__incl.png" border="0" usemap="#adynosam_2src_2common_2Algorithms_8cc" alt=""/></div>
-<map name="adynosam_2src_2common_2Algorithms_8cc" id="adynosam_2src_2common_2Algorithms_8cc">
-<area shape="rect" title=" " alt="" coords="3943,5,4110,45"/>
-<area shape="rect" href="Algorithms_8hpp.html" title=" " alt="" coords="3323,93,3570,119"/>
-<area shape="rect" title=" " alt="" coords="3860,409,3975,434"/>
-<area shape="rect" title=" " alt="" coords="4031,93,4089,119"/>
-<area shape="rect" title=" " alt="" coords="4114,93,4177,119"/>
-<area shape="rect" href="Types_8hpp.html" title=" " alt="" coords="2954,167,3166,192"/>
-<area shape="rect" title=" " alt="" coords="1235,497,1391,522"/>
-<area shape="rect" title=" " alt="" coords="2548,247,2716,273"/>
-<area shape="rect" title=" " alt="" coords="3167,409,3353,434"/>
-<area shape="rect" title=" " alt="" coords="2741,247,2883,273"/>
-<area shape="rect" title=" " alt="" coords="599,409,814,434"/>
-<area shape="rect" title=" " alt="" coords="3428,409,3503,434"/>
-<area shape="rect" title=" " alt="" coords="2907,247,3005,273"/>
-<area shape="rect" title=" " alt="" coords="3527,409,3619,434"/>
-<area shape="rect" title=" " alt="" coords="3029,247,3091,273"/>
-<area shape="rect" href="Flags_8hpp.html" title=" " alt="" coords="3167,247,3377,273"/>
-<area shape="rect" href="Macros_8hpp.html" title=" " alt="" coords="3453,247,3646,273"/>
-<area shape="rect" href="SensorModels_8hpp.html" title=" " alt="" coords="2207,247,2473,273"/>
-<area shape="rect" href="Types-inl_8hpp.html" title=" " alt="" coords="3671,240,3855,280"/>
-<area shape="rect" title=" " alt="" coords="3214,328,3330,353"/>
-<area shape="rect" title=" " alt="" coords="3511,328,3588,353"/>
-<area shape="rect" title=" " alt="" coords="3299,497,3453,522"/>
-<area shape="rect" title=" " alt="" coords="1760,328,1989,353"/>
-<area shape="rect" title=" " alt="" coords="2013,328,2211,353"/>
-<area shape="rect" href="Exceptions_8hpp.html" title=" " alt="" coords="263,328,510,353"/>
-<area shape="rect" href="GtsamUtils_8hpp.html" title=" " alt="" coords="2235,328,2453,353"/>
-<area shape="rect" title=" " alt="" coords="489,409,575,434"/>
-<area shape="rect" title=" " alt="" coords="94,409,170,434"/>
-<area shape="rect" title=" " alt="" coords="195,409,269,434"/>
-<area shape="rect" title=" " alt="" coords="294,409,381,434"/>
-<area shape="rect" title=" " alt="" coords="405,409,464,434"/>
-<area shape="rect" title=" " alt="" coords="2245,409,2443,434"/>
-<area shape="rect" title=" " alt="" coords="2468,409,2655,434"/>
-<area shape="rect" title=" " alt="" coords="2679,409,2855,434"/>
-<area shape="rect" title=" " alt="" coords="839,409,1020,434"/>
-<area shape="rect" title=" " alt="" coords="1045,409,1211,434"/>
-<area shape="rect" title=" " alt="" coords="1235,409,1429,434"/>
-<area shape="rect" title=" " alt="" coords="1453,409,1627,434"/>
-<area shape="rect" title=" " alt="" coords="1651,401,1845,441"/>
-<area shape="rect" title=" " alt="" coords="1869,409,2056,434"/>
-<area shape="rect" title=" " alt="" coords="2081,409,2221,434"/>
-<area shape="rect" href="Numerical_8hpp.html" title=" " alt="" coords="2929,409,3143,434"/>
-<area shape="rect" title=" " alt="" coords="2755,489,2936,529"/>
-<area shape="rect" title=" " alt="" coords="2960,489,3141,529"/>
-<area shape="rect" title=" " alt="" coords="3165,497,3245,522"/>
-<area shape="rect" title=" " alt="" coords="2657,497,2730,522"/>
+<div class="center"><img src="Algorithms_8cc__incl.png" border="0" usemap="#adynosam__common_2src_2Algorithms_8cc" alt=""/></div>
+<map name="adynosam__common_2src_2Algorithms_8cc" id="adynosam__common_2src_2Algorithms_8cc">
+<area shape="rect" title=" " alt="" coords="3704,5,3873,45"/>
+<area shape="rect" href="Algorithms_8hpp.html" title=" " alt="" coords="3469,93,3719,119"/>
+<area shape="rect" title=" " alt="" coords="3571,423,3686,449"/>
+<area shape="rect" title=" " alt="" coords="3793,93,3851,119"/>
+<area shape="rect" title=" " alt="" coords="3876,93,3939,119"/>
+<area shape="rect" title=" " alt="" coords="3177,511,3333,537"/>
+<area shape="rect" href="Types_8hpp.html" title=" " alt="" coords="1163,167,1377,192"/>
+<area shape="rect" title=" " alt="" coords="135,247,303,273"/>
+<area shape="rect" title=" " alt="" coords="5,423,191,449"/>
+<area shape="rect" title=" " alt="" coords="379,247,521,273"/>
+<area shape="rect" title=" " alt="" coords="365,423,580,449"/>
+<area shape="rect" title=" " alt="" coords="215,423,290,449"/>
+<area shape="rect" title=" " alt="" coords="984,247,1081,273"/>
+<area shape="rect" title=" " alt="" coords="2848,423,2940,449"/>
+<area shape="rect" title=" " alt="" coords="1157,247,1220,273"/>
+<area shape="rect" href="Cuda_8hpp.html" title=" " alt="" coords="546,247,757,273"/>
+<area shape="rect" href="Flags_8hpp.html" title=" " alt="" coords="1245,247,1458,273"/>
+<area shape="rect" href="Macros_8hpp.html" title=" " alt="" coords="781,240,959,280"/>
+<area shape="rect" href="SensorModels_8hpp.html" title=" " alt="" coords="1743,247,2013,273"/>
+<area shape="rect" href="Types-inl_8hpp.html" title=" " alt="" coords="1482,240,1669,280"/>
+<area shape="rect" title=" " alt="" coords="402,335,562,361"/>
+<area shape="rect" title=" " alt="" coords="586,335,733,361"/>
+<area shape="rect" title=" " alt="" coords="1157,335,1273,361"/>
+<area shape="rect" title=" " alt="" coords="831,335,909,361"/>
+<area shape="rect" title=" " alt="" coords="261,511,415,537"/>
+<area shape="rect" title=" " alt="" coords="1753,335,1982,361"/>
+<area shape="rect" title=" " alt="" coords="2006,335,2203,361"/>
+<area shape="rect" href="Exceptions_8hpp.html" title=" " alt="" coords="3083,335,3332,361"/>
+<area shape="rect" href="GtsamUtils_8hpp.html" title=" " alt="" coords="1439,328,1618,368"/>
+<area shape="rect" title=" " alt="" coords="3309,423,3396,449"/>
+<area shape="rect" title=" " alt="" coords="3420,423,3496,449"/>
+<area shape="rect" title=" " alt="" coords="3015,423,3090,449"/>
+<area shape="rect" title=" " alt="" coords="3115,423,3201,449"/>
+<area shape="rect" title=" " alt="" coords="3226,423,3285,449"/>
+<area shape="rect" title=" " alt="" coords="2008,423,2207,449"/>
+<area shape="rect" title=" " alt="" coords="2231,423,2418,449"/>
+<area shape="rect" title=" " alt="" coords="2442,423,2618,449"/>
+<area shape="rect" title=" " alt="" coords="2642,423,2823,449"/>
+<area shape="rect" title=" " alt="" coords="808,423,975,449"/>
+<area shape="rect" title=" " alt="" coords="999,423,1192,449"/>
+<area shape="rect" title=" " alt="" coords="1217,423,1390,449"/>
+<area shape="rect" title=" " alt="" coords="1414,416,1609,456"/>
+<area shape="rect" title=" " alt="" coords="1633,423,1819,449"/>
+<area shape="rect" title=" " alt="" coords="1844,423,1984,449"/>
+<area shape="rect" href="Numerical_8hpp.html" title=" " alt="" coords="605,416,783,456"/>
+<area shape="rect" title=" " alt="" coords="853,504,1034,544"/>
+<area shape="rect" title=" " alt="" coords="445,504,626,544"/>
+<area shape="rect" title=" " alt="" coords="651,511,724,537"/>
+<area shape="rect" title=" " alt="" coords="749,511,829,537"/>
 </map>
 </div>
 </div>

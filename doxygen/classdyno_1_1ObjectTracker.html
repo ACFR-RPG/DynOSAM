@@ -96,12 +96,12 @@ Inheritance diagram for dyno::ObjectTracker:</div>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:aab3fadbd4ea8c59419ab862971d17a0d"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1ObjectTracker.html#aab3fadbd4ea8c59419ab862971d17a0d">~ObjectTracker</a> ()=default</td></tr>
 <tr class="separator:aab3fadbd4ea8c59419ab862971d17a0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa60a3e1b588e185c30154c0d0cc24316"><td class="memItemLeft" align="right" valign="top">virtual cv::Mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1ObjectTracker.html#aa60a3e1b588e185c30154c0d0cc24316">track</a> (const cv::Mat &amp;mask, <a class="el" href="namespacedyno.html#ac4303d6fafb755f794b072d76f9cfb41">FrameId</a> frame_id)=0</td></tr>
-<tr class="separator:aa60a3e1b588e185c30154c0d0cc24316"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a81142e04f753b93b736e59c54e266d89"><td class="memItemLeft" align="right" valign="top">virtual std::vector&lt; <a class="el" href="structdyno_1_1SingleDetectionResult.html">SingleDetectionResult</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1ObjectTracker.html#a81142e04f753b93b736e59c54e266d89">track</a> (const std::vector&lt; <a class="el" href="structdyno_1_1ObjectDetection.html">ObjectDetection</a> &gt; &amp;detections)=0</td></tr>
+<tr class="separator:a81142e04f753b93b736e59c54e266d89"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="ObjectTracker_8hpp_source.html#l00038">38</a> of file <a class="el" href="ObjectTracker_8hpp_source.html">ObjectTracker.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ObjectTracker_8hpp_source.html#l00039">39</a> of file <a class="el" href="ObjectTracker_8hpp_source.html">ObjectTracker.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="aab3fadbd4ea8c59419ab862971d17a0d" name="aab3fadbd4ea8c59419ab862971d17a0d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aab3fadbd4ea8c59419ab862971d17a0d">&#9670;&#160;</a></span>~ObjectTracker()</h2>
@@ -129,8 +129,8 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="aa60a3e1b588e185c30154c0d0cc24316" name="aa60a3e1b588e185c30154c0d0cc24316"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa60a3e1b588e185c30154c0d0cc24316">&#9670;&#160;</a></span>track()</h2>
+<a id="a81142e04f753b93b736e59c54e266d89" name="a81142e04f753b93b736e59c54e266d89"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a81142e04f753b93b736e59c54e266d89">&#9670;&#160;</a></span>track()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -139,21 +139,11 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual cv::Mat dyno::ObjectTracker::track </td>
+          <td class="memname">virtual std::vector&lt; <a class="el" href="structdyno_1_1SingleDetectionResult.html">SingleDetectionResult</a> &gt; dyno::ObjectTracker::track </td>
           <td>(</td>
-          <td class="paramtype">const cv::Mat &amp;&#160;</td>
-          <td class="paramname"><em>mask</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramtype">const std::vector&lt; <a class="el" href="structdyno_1_1ObjectDetection.html">ObjectDetection</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>detections</em></td><td>)</td>
           <td></td>
-          <td class="paramtype"><a class="el" href="namespacedyno.html#ac4303d6fafb755f794b072d76f9cfb41">FrameId</a>&#160;</td>
-          <td class="paramname"><em>frame_id</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -163,12 +153,12 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classdyno_1_1ByteObjectTracker.html#aeb79dc19fb881160be780b9f4a2b2240">dyno::ByteObjectTracker</a>.</p>
+<p>Implemented in <a class="el" href="classdyno_1_1ByteObjectTracker.html#a3632268263950135780c262cdc8c8d57">dyno::ByteObjectTracker</a>.</p>
 
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>dynosam/include/dynosam/frontend/vision/<a class="el" href="ObjectTracker_8hpp_source.html">ObjectTracker.hpp</a></li>
+<li>dynosam_nn/include/dynosam_nn/trackers/<a class="el" href="ObjectTracker_8hpp_source.html">ObjectTracker.hpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

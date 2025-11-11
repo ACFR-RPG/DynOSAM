@@ -1,13 +1,10 @@
 <map id="dyno::Frame::at" name="dyno::Frame::at">
-<area shape="rect" id="node1" title="Gets a feature from its tracklet ID. Could be static or dynamic. Nullptr is returned if the feature d..." alt="" coords="816,182,940,207"/>
-<area shape="rect" id="node2" href="$classdyno_1_1Frame.html#a2ae8cf50090de2db5d1c4bba03bf4c3c" title="Project the feature into the camera frame and returns the 3D landmark. Currently requires the feature..." alt="" coords="567,53,753,93"/>
-<area shape="rect" id="node3" href="$classdyno_1_1Frame.html#ae588299966f1a710e11db6d64cc5b707" title="Project the feature into the world frame using the frames pose (T_world_camera_) and returns the 3D l..." alt="" coords="567,117,753,157"/>
-<area shape="rect" id="node9" href="$classdyno_1_1Frame.html#aa824566e1ca6fe3ec31cc0ae0c1e4b3e" title="Collects a vector of feature pointers given a vector of tracklet ids. Features returned could be inli..." alt="" coords="555,182,765,207"/>
-<area shape="rect" id="node10" href="$classdyno_1_1RGBDInstanceFrontendModule.html#a246f701e4605c98dc7cb6bbd6f657998" title=" " alt="" coords="279,261,491,301"/>
-<area shape="rect" id="node11" href="$classdyno_1_1Frame.html#aa422da72388d9f58a41ba3fbf853470b" title="Returns true if the feature is usable (inlier). Throws std::runtime_error if the feature does not exi..." alt="" coords="552,283,768,309"/>
-<area shape="rect" id="node4" href="$classdyno_1_1Frame.html#a3f31ac034ecc4e9c015f77efc30bb7c2" title="Helper function that creates a ConstructCorrespondanceFunc which operates to return a TrackletCorresp..." alt="" coords="279,5,490,45"/>
-<area shape="rect" id="node5" href="$classdyno_1_1Frame.html#a6827afe8532fbf39ae7e033d4d4c7371" title="Helper function ConstructCorrespondanceFunc which operates to return a TrackletCorrespondance where b..." alt="" coords="279,69,490,109"/>
-<area shape="rect" id="node6" href="$classdyno_1_1Frame.html#a692c305764890db8dbae7781a1a11544" title="Helper function that creates a ConstructCorrespondanceFunc which operates to return a TrackletCorresp..." alt="" coords="265,133,504,173"/>
-<area shape="rect" id="node7" href="$namespacedyno_1_1vision__tools.html#a70f3daa5a2a0fb3a715ffb1fb65992cb" title="Depricate ;)" alt="" coords="315,197,455,237"/>
-<area shape="rect" id="node8" href="$classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2" title=" " alt="" coords="5,229,217,269"/>
+<area shape="rect" id="node1" title="Gets a feature from its tracklet ID. Could be static or dynamic. Nullptr is returned if the feature d..." alt="" coords="556,106,680,131"/>
+<area shape="rect" id="node2" href="$classdyno_1_1Frame.html#a2ae8cf50090de2db5d1c4bba03bf4c3c" title="Project the feature into the camera frame and returns the 3D landmark. Currently requires the feature..." alt="" coords="307,5,493,45"/>
+<area shape="rect" id="node3" href="$classdyno_1_1Frame.html#ae588299966f1a710e11db6d64cc5b707" title="Project the feature into the world frame using the frames pose (T_world_camera_) and returns the 3D l..." alt="" coords="307,69,493,109"/>
+<area shape="rect" id="node7" href="$classdyno_1_1Frame.html#aa824566e1ca6fe3ec31cc0ae0c1e4b3e" title="Collects a vector of feature pointers given a vector of tracklet ids. Features returned could be inli..." alt="" coords="295,134,505,159"/>
+<area shape="rect" id="node8" href="$classdyno_1_1Frame.html#aa422da72388d9f58a41ba3fbf853470b" title="Returns true if the feature is usable (inlier). Throws std::runtime_error if the feature does not exi..." alt="" coords="292,183,508,209"/>
+<area shape="rect" id="node4" href="$classdyno_1_1Frame.html#a3f31ac034ecc4e9c015f77efc30bb7c2" title="Helper function that creates a ConstructCorrespondanceFunc which operates to return a TrackletCorresp..." alt="" coords="19,5,230,45"/>
+<area shape="rect" id="node5" href="$classdyno_1_1Frame.html#a6827afe8532fbf39ae7e033d4d4c7371" title="Helper function ConstructCorrespondanceFunc which operates to return a TrackletCorrespondance where b..." alt="" coords="19,69,230,109"/>
+<area shape="rect" id="node6" href="$classdyno_1_1Frame.html#a692c305764890db8dbae7781a1a11544" title="Helper function that creates a ConstructCorrespondanceFunc which operates to return a TrackletCorresp..." alt="" coords="5,133,244,173"/>
 </map>

@@ -1,6 +1,0 @@
-<map id="dyno::byte_track::Track" name="dyno::byte_track::Track">
-<area shape="rect" id="node1" title=" " alt="" coords="128,183,301,208"/>
-<area shape="rect" id="node2" href="$classdyno_1_1byte__track_1_1TlwhRect.html" title=" " alt="" coords="6,87,205,113"/>
-<area shape="rect" id="node3" href="$classdyno_1_1byte__track_1_1RectBase.html" title=" " alt="" coords="5,5,205,31"/>
-<area shape="rect" id="node4" href="$classdyno_1_1byte__track_1_1KalmanFilter.html" title=" " alt="" coords="229,80,419,120"/>
-</map>

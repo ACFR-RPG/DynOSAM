@@ -192,12 +192,12 @@ Private Attributes</h2></td></tr>
 <div class="line"><span class="lineno">   53</span>        <a class="code hl_variable" href="classdyno_1_1ProjectAriaAllLoader.html#a292181b9e8870dfd30cef466f9985a0c">intrinsics_file_path_</a>(file_path + <span class="stringliteral">&quot;/calibration_undistort.json&quot;</span>),</div>
 <div class="line"><span class="lineno">   54</span>        <a class="code hl_variable" href="classdyno_1_1ProjectAriaAllLoader.html#a4753b2dc11609102bc7aab80071783f9">rgb_timestamps_file_path_</a>(file_path + <span class="stringliteral">&quot;/sync_timestamp.csv&quot;</span>) {</div>
 <div class="line"><span class="lineno">   55</span>    <span class="comment">// Initialize folders and file paths</span></div>
-<div class="line"><span class="lineno">   56</span>    <a class="code hl_function" href="namespacedyno.html#a163cb16ef980acda5b09d45c3a156e6f">throwExceptionIfPathInvalid</a>(<a class="code hl_variable" href="classdyno_1_1ProjectAriaAllLoader.html#a896bf559b206b4595512f2e1e77f1a22">rgb_images_folder_path_</a>);</div>
-<div class="line"><span class="lineno">   57</span>    <a class="code hl_function" href="namespacedyno.html#a163cb16ef980acda5b09d45c3a156e6f">throwExceptionIfPathInvalid</a>(<a class="code hl_variable" href="classdyno_1_1ProjectAriaAllLoader.html#a8657bb53bcb0a5d71ae41229e06999da">depth_images_folder_path_</a>);</div>
-<div class="line"><span class="lineno">   58</span>    <a class="code hl_function" href="namespacedyno.html#a163cb16ef980acda5b09d45c3a156e6f">throwExceptionIfPathInvalid</a>(<a class="code hl_variable" href="classdyno_1_1ProjectAriaAllLoader.html#a13fe2f148115515b5bab97cf31577231">optical_flow_folder_path_</a>);</div>
-<div class="line"><span class="lineno">   59</span>    <a class="code hl_function" href="namespacedyno.html#a163cb16ef980acda5b09d45c3a156e6f">throwExceptionIfPathInvalid</a>(<a class="code hl_variable" href="classdyno_1_1ProjectAriaAllLoader.html#ad6ea479e55bfd34c4c1bbc68548be19f">instance_masks_folder_</a>);</div>
-<div class="line"><span class="lineno">   60</span>    <span class="comment">// throwExceptionIfPathInvalid(intrinsics_file_path_);</span></div>
-<div class="line"><span class="lineno">   61</span>    <span class="comment">// throwExceptionIfPathInvalid(rgb_timestamps_file_path_);</span></div>
+<div class="line"><span class="lineno">   56</span>    <a class="code hl_function" href="namespacedyno_1_1utils.html#a71785ed8de386df1fce95751bf5bec15">utils::throwExceptionIfPathInvalid</a>(<a class="code hl_variable" href="classdyno_1_1ProjectAriaAllLoader.html#a896bf559b206b4595512f2e1e77f1a22">rgb_images_folder_path_</a>);</div>
+<div class="line"><span class="lineno">   57</span>    <a class="code hl_function" href="namespacedyno_1_1utils.html#a71785ed8de386df1fce95751bf5bec15">utils::throwExceptionIfPathInvalid</a>(<a class="code hl_variable" href="classdyno_1_1ProjectAriaAllLoader.html#a8657bb53bcb0a5d71ae41229e06999da">depth_images_folder_path_</a>);</div>
+<div class="line"><span class="lineno">   58</span>    <a class="code hl_function" href="namespacedyno_1_1utils.html#a71785ed8de386df1fce95751bf5bec15">utils::throwExceptionIfPathInvalid</a>(<a class="code hl_variable" href="classdyno_1_1ProjectAriaAllLoader.html#a13fe2f148115515b5bab97cf31577231">optical_flow_folder_path_</a>);</div>
+<div class="line"><span class="lineno">   59</span>    <a class="code hl_function" href="namespacedyno_1_1utils.html#a71785ed8de386df1fce95751bf5bec15">utils::throwExceptionIfPathInvalid</a>(<a class="code hl_variable" href="classdyno_1_1ProjectAriaAllLoader.html#ad6ea479e55bfd34c4c1bbc68548be19f">instance_masks_folder_</a>);</div>
+<div class="line"><span class="lineno">   60</span>    <span class="comment">// utils::throwExceptionIfPathInvalid(intrinsics_file_path_);</span></div>
+<div class="line"><span class="lineno">   61</span>    <span class="comment">// utils::throwExceptionIfPathInvalid(rgb_timestamps_file_path_);</span></div>
 <div class="line"><span class="lineno">   62</span> </div>
 <div class="line"><span class="lineno">   63</span>    <span class="comment">// first load images and size</span></div>
 <div class="line"><span class="lineno">   64</span>    <span class="comment">// the size will be used as a refernce for all other loaders</span></div>
@@ -213,21 +213,21 @@ Private Attributes</h2></td></tr>
 <div class="line"><span class="lineno">   74</span>    <span class="comment">// loadTimestamps();</span></div>
 <div class="line"><span class="lineno">   75</span>    <a class="code hl_function" href="classdyno_1_1ProjectAriaAllLoader.html#aafa595cc373c6967481e8bbc7e1e8bb0">loadCalibration</a>();</div>
 <div class="line"><span class="lineno">   76</span>  }</div>
-<div class="ttc" id="aclassdyno_1_1ProjectAriaAllLoader_html_a13fe2f148115515b5bab97cf31577231"><div class="ttname"><a href="classdyno_1_1ProjectAriaAllLoader.html#a13fe2f148115515b5bab97cf31577231">dyno::ProjectAriaAllLoader::optical_flow_folder_path_</a></div><div class="ttdeci">std::string optical_flow_folder_path_</div><div class="ttdef"><b>Definition:</b> <a href="ProjectAriaDataProvider_8cc_source.html#l00289">ProjectAriaDataProvider.cc:289</a></div></div>
-<div class="ttc" id="aclassdyno_1_1ProjectAriaAllLoader_html_a292181b9e8870dfd30cef466f9985a0c"><div class="ttname"><a href="classdyno_1_1ProjectAriaAllLoader.html#a292181b9e8870dfd30cef466f9985a0c">dyno::ProjectAriaAllLoader::intrinsics_file_path_</a></div><div class="ttdeci">std::string intrinsics_file_path_</div><div class="ttdef"><b>Definition:</b> <a href="ProjectAriaDataProvider_8cc_source.html#l00291">ProjectAriaDataProvider.cc:291</a></div></div>
-<div class="ttc" id="aclassdyno_1_1ProjectAriaAllLoader_html_a2db45a73b5aabdeb6f772db504d11fbe"><div class="ttname"><a href="classdyno_1_1ProjectAriaAllLoader.html#a2db45a73b5aabdeb6f772db504d11fbe">dyno::ProjectAriaAllLoader::optical_flow_image_paths_</a></div><div class="ttdeci">std::vector&lt; std::string &gt; optical_flow_image_paths_</div><div class="ttdef"><b>Definition:</b> <a href="ProjectAriaDataProvider_8cc_source.html#l00297">ProjectAriaDataProvider.cc:297</a></div></div>
+<div class="ttc" id="aclassdyno_1_1ProjectAriaAllLoader_html_a13fe2f148115515b5bab97cf31577231"><div class="ttname"><a href="classdyno_1_1ProjectAriaAllLoader.html#a13fe2f148115515b5bab97cf31577231">dyno::ProjectAriaAllLoader::optical_flow_folder_path_</a></div><div class="ttdeci">std::string optical_flow_folder_path_</div><div class="ttdef"><b>Definition:</b> <a href="ProjectAriaDataProvider_8cc_source.html#l00290">ProjectAriaDataProvider.cc:290</a></div></div>
+<div class="ttc" id="aclassdyno_1_1ProjectAriaAllLoader_html_a292181b9e8870dfd30cef466f9985a0c"><div class="ttname"><a href="classdyno_1_1ProjectAriaAllLoader.html#a292181b9e8870dfd30cef466f9985a0c">dyno::ProjectAriaAllLoader::intrinsics_file_path_</a></div><div class="ttdeci">std::string intrinsics_file_path_</div><div class="ttdef"><b>Definition:</b> <a href="ProjectAriaDataProvider_8cc_source.html#l00292">ProjectAriaDataProvider.cc:292</a></div></div>
+<div class="ttc" id="aclassdyno_1_1ProjectAriaAllLoader_html_a2db45a73b5aabdeb6f772db504d11fbe"><div class="ttname"><a href="classdyno_1_1ProjectAriaAllLoader.html#a2db45a73b5aabdeb6f772db504d11fbe">dyno::ProjectAriaAllLoader::optical_flow_image_paths_</a></div><div class="ttdeci">std::vector&lt; std::string &gt; optical_flow_image_paths_</div><div class="ttdef"><b>Definition:</b> <a href="ProjectAriaDataProvider_8cc_source.html#l00298">ProjectAriaDataProvider.cc:298</a></div></div>
 <div class="ttc" id="aclassdyno_1_1ProjectAriaAllLoader_html_a3b467d8b21e57f428b50d03024ea0f40"><div class="ttname"><a href="classdyno_1_1ProjectAriaAllLoader.html#a3b467d8b21e57f428b50d03024ea0f40">dyno::ProjectAriaAllLoader::loadOtherImages</a></div><div class="ttdeci">void loadOtherImages()</div><div class="ttdef"><b>Definition:</b> <a href="ProjectAriaDataProvider_8cc_source.html#l00176">ProjectAriaDataProvider.cc:176</a></div></div>
-<div class="ttc" id="aclassdyno_1_1ProjectAriaAllLoader_html_a4753b2dc11609102bc7aab80071783f9"><div class="ttname"><a href="classdyno_1_1ProjectAriaAllLoader.html#a4753b2dc11609102bc7aab80071783f9">dyno::ProjectAriaAllLoader::rgb_timestamps_file_path_</a></div><div class="ttdeci">std::string rgb_timestamps_file_path_</div><div class="ttdef"><b>Definition:</b> <a href="ProjectAriaDataProvider_8cc_source.html#l00292">ProjectAriaDataProvider.cc:292</a></div></div>
-<div class="ttc" id="aclassdyno_1_1ProjectAriaAllLoader_html_a4ec80bfbe7eaf949c377a5db8153366d"><div class="ttname"><a href="classdyno_1_1ProjectAriaAllLoader.html#a4ec80bfbe7eaf949c377a5db8153366d">dyno::ProjectAriaAllLoader::right_rgb_images_folder_path_</a></div><div class="ttdeci">std::string right_rgb_images_folder_path_</div><div class="ttdef"><b>Definition:</b> <a href="ProjectAriaDataProvider_8cc_source.html#l00287">ProjectAriaDataProvider.cc:287</a></div></div>
+<div class="ttc" id="aclassdyno_1_1ProjectAriaAllLoader_html_a4753b2dc11609102bc7aab80071783f9"><div class="ttname"><a href="classdyno_1_1ProjectAriaAllLoader.html#a4753b2dc11609102bc7aab80071783f9">dyno::ProjectAriaAllLoader::rgb_timestamps_file_path_</a></div><div class="ttdeci">std::string rgb_timestamps_file_path_</div><div class="ttdef"><b>Definition:</b> <a href="ProjectAriaDataProvider_8cc_source.html#l00293">ProjectAriaDataProvider.cc:293</a></div></div>
+<div class="ttc" id="aclassdyno_1_1ProjectAriaAllLoader_html_a4ec80bfbe7eaf949c377a5db8153366d"><div class="ttname"><a href="classdyno_1_1ProjectAriaAllLoader.html#a4ec80bfbe7eaf949c377a5db8153366d">dyno::ProjectAriaAllLoader::right_rgb_images_folder_path_</a></div><div class="ttdeci">std::string right_rgb_images_folder_path_</div><div class="ttdef"><b>Definition:</b> <a href="ProjectAriaDataProvider_8cc_source.html#l00288">ProjectAriaDataProvider.cc:288</a></div></div>
 <div class="ttc" id="aclassdyno_1_1ProjectAriaAllLoader_html_a664781c8a3f89499f188b3a436363ee5"><div class="ttname"><a href="classdyno_1_1ProjectAriaAllLoader.html#a664781c8a3f89499f188b3a436363ee5">dyno::ProjectAriaAllLoader::loadFlowImagesAndSize</a></div><div class="ttdeci">void loadFlowImagesAndSize(std::vector&lt; std::string &gt; &amp;images_paths, size_t &amp;dataset_size)</div><div class="ttdef"><b>Definition:</b> <a href="ProjectAriaDataProvider_8cc_source.html#l00157">ProjectAriaDataProvider.cc:157</a></div></div>
-<div class="ttc" id="aclassdyno_1_1ProjectAriaAllLoader_html_a8657bb53bcb0a5d71ae41229e06999da"><div class="ttname"><a href="classdyno_1_1ProjectAriaAllLoader.html#a8657bb53bcb0a5d71ae41229e06999da">dyno::ProjectAriaAllLoader::depth_images_folder_path_</a></div><div class="ttdeci">std::string depth_images_folder_path_</div><div class="ttdef"><b>Definition:</b> <a href="ProjectAriaDataProvider_8cc_source.html#l00288">ProjectAriaDataProvider.cc:288</a></div></div>
-<div class="ttc" id="aclassdyno_1_1ProjectAriaAllLoader_html_a896bf559b206b4595512f2e1e77f1a22"><div class="ttname"><a href="classdyno_1_1ProjectAriaAllLoader.html#a896bf559b206b4595512f2e1e77f1a22">dyno::ProjectAriaAllLoader::rgb_images_folder_path_</a></div><div class="ttdeci">std::string rgb_images_folder_path_</div><div class="ttdef"><b>Definition:</b> <a href="ProjectAriaDataProvider_8cc_source.html#l00286">ProjectAriaDataProvider.cc:286</a></div></div>
-<div class="ttc" id="aclassdyno_1_1ProjectAriaAllLoader_html_aafa595cc373c6967481e8bbc7e1e8bb0"><div class="ttname"><a href="classdyno_1_1ProjectAriaAllLoader.html#aafa595cc373c6967481e8bbc7e1e8bb0">dyno::ProjectAriaAllLoader::loadCalibration</a></div><div class="ttdeci">void loadCalibration()</div><div class="ttdef"><b>Definition:</b> <a href="ProjectAriaDataProvider_8cc_source.html#l00238">ProjectAriaDataProvider.cc:238</a></div></div>
-<div class="ttc" id="aclassdyno_1_1ProjectAriaAllLoader_html_ad6ea479e55bfd34c4c1bbc68548be19f"><div class="ttname"><a href="classdyno_1_1ProjectAriaAllLoader.html#ad6ea479e55bfd34c4c1bbc68548be19f">dyno::ProjectAriaAllLoader::instance_masks_folder_</a></div><div class="ttdeci">std::string instance_masks_folder_</div><div class="ttdef"><b>Definition:</b> <a href="ProjectAriaDataProvider_8cc_source.html#l00290">ProjectAriaDataProvider.cc:290</a></div></div>
-<div class="ttc" id="aclassdyno_1_1ProjectAriaAllLoader_html_aed6198bd5cccbd24519d6cd3cb0213ce"><div class="ttname"><a href="classdyno_1_1ProjectAriaAllLoader.html#aed6198bd5cccbd24519d6cd3cb0213ce">dyno::ProjectAriaAllLoader::dataset_size_</a></div><div class="ttdeci">size_t dataset_size_</div><div class="ttdef"><b>Definition:</b> <a href="ProjectAriaDataProvider_8cc_source.html#l00302">ProjectAriaDataProvider.cc:302</a></div></div>
-<div class="ttc" id="anamespacedyno_html_a163cb16ef980acda5b09d45c3a156e6f"><div class="ttname"><a href="namespacedyno.html#a163cb16ef980acda5b09d45c3a156e6f">dyno::throwExceptionIfPathInvalid</a></div><div class="ttdeci">void throwExceptionIfPathInvalid(const std::string &amp;image_path)</div><div class="ttdef"><b>Definition:</b> <a href="DataProviderUtils_8cc_source.html#l00048">DataProviderUtils.cc:48</a></div></div>
+<div class="ttc" id="aclassdyno_1_1ProjectAriaAllLoader_html_a8657bb53bcb0a5d71ae41229e06999da"><div class="ttname"><a href="classdyno_1_1ProjectAriaAllLoader.html#a8657bb53bcb0a5d71ae41229e06999da">dyno::ProjectAriaAllLoader::depth_images_folder_path_</a></div><div class="ttdeci">std::string depth_images_folder_path_</div><div class="ttdef"><b>Definition:</b> <a href="ProjectAriaDataProvider_8cc_source.html#l00289">ProjectAriaDataProvider.cc:289</a></div></div>
+<div class="ttc" id="aclassdyno_1_1ProjectAriaAllLoader_html_a896bf559b206b4595512f2e1e77f1a22"><div class="ttname"><a href="classdyno_1_1ProjectAriaAllLoader.html#a896bf559b206b4595512f2e1e77f1a22">dyno::ProjectAriaAllLoader::rgb_images_folder_path_</a></div><div class="ttdeci">std::string rgb_images_folder_path_</div><div class="ttdef"><b>Definition:</b> <a href="ProjectAriaDataProvider_8cc_source.html#l00287">ProjectAriaDataProvider.cc:287</a></div></div>
+<div class="ttc" id="aclassdyno_1_1ProjectAriaAllLoader_html_aafa595cc373c6967481e8bbc7e1e8bb0"><div class="ttname"><a href="classdyno_1_1ProjectAriaAllLoader.html#aafa595cc373c6967481e8bbc7e1e8bb0">dyno::ProjectAriaAllLoader::loadCalibration</a></div><div class="ttdeci">void loadCalibration()</div><div class="ttdef"><b>Definition:</b> <a href="ProjectAriaDataProvider_8cc_source.html#l00239">ProjectAriaDataProvider.cc:239</a></div></div>
+<div class="ttc" id="aclassdyno_1_1ProjectAriaAllLoader_html_ad6ea479e55bfd34c4c1bbc68548be19f"><div class="ttname"><a href="classdyno_1_1ProjectAriaAllLoader.html#ad6ea479e55bfd34c4c1bbc68548be19f">dyno::ProjectAriaAllLoader::instance_masks_folder_</a></div><div class="ttdeci">std::string instance_masks_folder_</div><div class="ttdef"><b>Definition:</b> <a href="ProjectAriaDataProvider_8cc_source.html#l00291">ProjectAriaDataProvider.cc:291</a></div></div>
+<div class="ttc" id="aclassdyno_1_1ProjectAriaAllLoader_html_aed6198bd5cccbd24519d6cd3cb0213ce"><div class="ttname"><a href="classdyno_1_1ProjectAriaAllLoader.html#aed6198bd5cccbd24519d6cd3cb0213ce">dyno::ProjectAriaAllLoader::dataset_size_</a></div><div class="ttdeci">size_t dataset_size_</div><div class="ttdef"><b>Definition:</b> <a href="ProjectAriaDataProvider_8cc_source.html#l00303">ProjectAriaDataProvider.cc:303</a></div></div>
+<div class="ttc" id="anamespacedyno_1_1utils_html_a71785ed8de386df1fce95751bf5bec15"><div class="ttname"><a href="namespacedyno_1_1utils.html#a71785ed8de386df1fce95751bf5bec15">dyno::utils::throwExceptionIfPathInvalid</a></div><div class="ttdeci">void throwExceptionIfPathInvalid(const std::string &amp;image_path)</div><div class="ttdef"><b>Definition:</b> <a href="FileSystem_8cc_source.html#l00012">FileSystem.cc:12</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#aed6198bd5cccbd24519d6cd3cb0213ce">dataset_size_</a>, <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#a8657bb53bcb0a5d71ae41229e06999da">depth_images_folder_path_</a>, <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#ad6ea479e55bfd34c4c1bbc68548be19f">instance_masks_folder_</a>, <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#aafa595cc373c6967481e8bbc7e1e8bb0">loadCalibration()</a>, <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#a664781c8a3f89499f188b3a436363ee5">loadFlowImagesAndSize()</a>, <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#a3b467d8b21e57f428b50d03024ea0f40">loadOtherImages()</a>, <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#a13fe2f148115515b5bab97cf31577231">optical_flow_folder_path_</a>, <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#a2db45a73b5aabdeb6f772db504d11fbe">optical_flow_image_paths_</a>, <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#a896bf559b206b4595512f2e1e77f1a22">rgb_images_folder_path_</a>, and <a class="el" href="namespacedyno.html#a163cb16ef980acda5b09d45c3a156e6f">dyno::throwExceptionIfPathInvalid()</a>.</p>
+<p class="reference">References <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#aed6198bd5cccbd24519d6cd3cb0213ce">dataset_size_</a>, <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#a8657bb53bcb0a5d71ae41229e06999da">depth_images_folder_path_</a>, <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#ad6ea479e55bfd34c4c1bbc68548be19f">instance_masks_folder_</a>, <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#aafa595cc373c6967481e8bbc7e1e8bb0">loadCalibration()</a>, <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#a664781c8a3f89499f188b3a436363ee5">loadFlowImagesAndSize()</a>, <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#a3b467d8b21e57f428b50d03024ea0f40">loadOtherImages()</a>, <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#a13fe2f148115515b5bab97cf31577231">optical_flow_folder_path_</a>, <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#a2db45a73b5aabdeb6f772db504d11fbe">optical_flow_image_paths_</a>, <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#a896bf559b206b4595512f2e1e77f1a22">rgb_images_folder_path_</a>, and <a class="el" href="namespacedyno_1_1utils.html#a71785ed8de386df1fce95751bf5bec15">dyno::utils::throwExceptionIfPathInvalid()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -236,10 +236,10 @@ Here is the call graph for this function:</div>
 <area shape="rect" title=" " alt="" coords="5,101,200,141"/>
 <area shape="rect" href="classdyno_1_1ProjectAriaAllLoader.html#aafa595cc373c6967481e8bbc7e1e8bb0" title=" " alt="" coords="248,5,443,45"/>
 <area shape="rect" href="classdyno_1_1ProjectAriaAllLoader.html#a664781c8a3f89499f188b3a436363ee5" title=" " alt="" coords="248,133,443,173"/>
-<area shape="rect" href="namespacedyno.html#a163cb16ef980acda5b09d45c3a156e6f" title=" " alt="" coords="491,161,691,201"/>
+<area shape="rect" href="namespacedyno_1_1utils.html#a71785ed8de386df1fce95751bf5bec15" title=" " alt="" coords="491,176,689,216"/>
 <area shape="rect" href="classdyno_1_1ProjectAriaAllLoader.html#a3b467d8b21e57f428b50d03024ea0f40" title=" " alt="" coords="248,69,443,109"/>
-<area shape="rect" href="classdyno_1_1CameraParams.html#add58aad8e64c327cdf55e0d2c19e1b87" title="stringToDistortion" alt="" coords="510,5,671,45"/>
-<area shape="rect" href="namespacedyno.html#ae0c60629333938e89f2370502e9be3b3" title="Returns a ORDERED vector of all files in the given directory. (jesse) is this the file name or the ab..." alt="" coords="510,94,671,119"/>
+<area shape="rect" href="classdyno_1_1CameraParams.html#add58aad8e64c327cdf55e0d2c19e1b87" title="stringToDistortion" alt="" coords="509,5,671,45"/>
+<area shape="rect" href="namespacedyno_1_1utils.html#a00bb451d0665ae0e0831e55edf53cb05" title="Returns a ORDERED vector of all files in the given directory. (jesse) is this the file name or the ab..." alt="" coords="507,84,673,124"/>
 </map>
 </div>
 
@@ -275,23 +275,23 @@ Here is the call graph for this function:</div>
 <div class="line"><span class="lineno">  140</span>    CHECK_LT(idx, <a class="code hl_variable" href="classdyno_1_1ProjectAriaAllLoader.html#ab202bd5e718fdb9fc14cebaf17c64352">depth_image_paths_</a>.size());</div>
 <div class="line"><span class="lineno">  141</span> </div>
 <div class="line"><span class="lineno">  142</span>    cv::Mat depth;</div>
-<div class="line"><span class="lineno">  143</span>    <a class="code hl_function" href="namespacedyno.html#af00d962e8fcb73cb2d07a0fbc83d7d0a">loadDepth</a>(<a class="code hl_variable" href="classdyno_1_1ProjectAriaAllLoader.html#ab202bd5e718fdb9fc14cebaf17c64352">depth_image_paths_</a>.at(idx), depth);</div>
+<div class="line"><span class="lineno">  143</span>    <a class="code hl_function" href="namespacedyno_1_1utils.html#a4eba1b62cbc9a6d0f1c9a57c34c6f0cb">utils::loadDepth</a>(<a class="code hl_variable" href="classdyno_1_1ProjectAriaAllLoader.html#ab202bd5e718fdb9fc14cebaf17c64352">depth_image_paths_</a>.at(idx), depth);</div>
 <div class="line"><span class="lineno">  144</span>    CHECK(!depth.empty());</div>
 <div class="line"><span class="lineno">  145</span> </div>
 <div class="line"><span class="lineno">  146</span>    <span class="keywordflow">return</span> depth;</div>
 <div class="line"><span class="lineno">  147</span>  }</div>
-<div class="ttc" id="aclassdyno_1_1ProjectAriaAllLoader_html_ab202bd5e718fdb9fc14cebaf17c64352"><div class="ttname"><a href="classdyno_1_1ProjectAriaAllLoader.html#ab202bd5e718fdb9fc14cebaf17c64352">dyno::ProjectAriaAllLoader::depth_image_paths_</a></div><div class="ttdeci">std::vector&lt; std::string &gt; depth_image_paths_</div><div class="ttdef"><b>Definition:</b> <a href="ProjectAriaDataProvider_8cc_source.html#l00296">ProjectAriaDataProvider.cc:296</a></div></div>
-<div class="ttc" id="anamespacedyno_html_af00d962e8fcb73cb2d07a0fbc83d7d0a"><div class="ttname"><a href="namespacedyno.html#af00d962e8fcb73cb2d07a0fbc83d7d0a">dyno::loadDepth</a></div><div class="ttdeci">void loadDepth(const std::string &amp;image_path, cv::Mat &amp;img)</div><div class="ttdef"><b>Definition:</b> <a href="DataProviderUtils_8cc_source.html#l00065">DataProviderUtils.cc:65</a></div></div>
+<div class="ttc" id="aclassdyno_1_1ProjectAriaAllLoader_html_ab202bd5e718fdb9fc14cebaf17c64352"><div class="ttname"><a href="classdyno_1_1ProjectAriaAllLoader.html#ab202bd5e718fdb9fc14cebaf17c64352">dyno::ProjectAriaAllLoader::depth_image_paths_</a></div><div class="ttdeci">std::vector&lt; std::string &gt; depth_image_paths_</div><div class="ttdef"><b>Definition:</b> <a href="ProjectAriaDataProvider_8cc_source.html#l00297">ProjectAriaDataProvider.cc:297</a></div></div>
+<div class="ttc" id="anamespacedyno_1_1utils_html_a4eba1b62cbc9a6d0f1c9a57c34c6f0cb"><div class="ttname"><a href="namespacedyno_1_1utils.html#a4eba1b62cbc9a6d0f1c9a57c34c6f0cb">dyno::utils::loadDepth</a></div><div class="ttdeci">void loadDepth(const std::string &amp;image_path, cv::Mat &amp;img)</div><div class="ttdef"><b>Definition:</b> <a href="FileSystem_8cc_source.html#l00029">FileSystem.cc:29</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#ab202bd5e718fdb9fc14cebaf17c64352">depth_image_paths_</a>, and <a class="el" href="namespacedyno.html#af00d962e8fcb73cb2d07a0fbc83d7d0a">dyno::loadDepth()</a>.</p>
+<p class="reference">References <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#ab202bd5e718fdb9fc14cebaf17c64352">depth_image_paths_</a>, and <a class="el" href="namespacedyno_1_1utils.html#a4eba1b62cbc9a6d0f1c9a57c34c6f0cb">dyno::utils::loadDepth()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1ProjectAriaAllLoader_afe84fc7b18819828552597b102992828_cgraph.png" border="0" usemap="#aclassdyno_1_1ProjectAriaAllLoader_afe84fc7b18819828552597b102992828_cgraph" alt=""/></div>
 <map name="aclassdyno_1_1ProjectAriaAllLoader_afe84fc7b18819828552597b102992828_cgraph" id="aclassdyno_1_1ProjectAriaAllLoader_afe84fc7b18819828552597b102992828_cgraph">
 <area shape="rect" title=" " alt="" coords="5,5,200,45"/>
-<area shape="rect" href="namespacedyno.html#af00d962e8fcb73cb2d07a0fbc83d7d0a" title=" " alt="" coords="248,13,377,38"/>
-<area shape="rect" href="namespacedyno.html#a163cb16ef980acda5b09d45c3a156e6f" title=" " alt="" coords="425,5,625,45"/>
+<area shape="rect" href="namespacedyno_1_1utils.html#a4eba1b62cbc9a6d0f1c9a57c34c6f0cb" title=" " alt="" coords="248,13,413,38"/>
+<area shape="rect" href="namespacedyno_1_1utils.html#a71785ed8de386df1fce95751bf5bec15" title=" " alt="" coords="461,5,660,45"/>
 </map>
 </div>
 
@@ -331,7 +331,7 @@ Here is the call graph for this function:</div>
 <div class="line"><span class="lineno">  115</span>    <span class="keyword">static</span> <a class="code hl_typedef" href="namespacedyno.html#a38bb86e4154b86428b8d133be03fb2b5">ObjectId</a> current_max_label = 1u;</div>
 <div class="line"><span class="lineno">  116</span> </div>
 <div class="line"><span class="lineno">  117</span>    cv::Mat mask;</div>
-<div class="line"><span class="lineno">  118</span>    <a class="code hl_function" href="namespacedyno.html#a38a7315ac269741048e61a97bd545321">loadMask</a>(<a class="code hl_variable" href="classdyno_1_1ProjectAriaAllLoader.html#a2a664e63c9b5b9ea357ff8f7cc98d85a">instance_masks_image_paths_</a>.at(idx), mask);</div>
+<div class="line"><span class="lineno">  118</span>    <a class="code hl_function" href="namespacedyno_1_1utils.html#a536b19fedccc814e13b68cbbc6d629bc">utils::loadMask</a>(<a class="code hl_variable" href="classdyno_1_1ProjectAriaAllLoader.html#a2a664e63c9b5b9ea357ff8f7cc98d85a">instance_masks_image_paths_</a>.at(idx), mask);</div>
 <div class="line"><span class="lineno">  119</span>    CHECK(!mask.empty());</div>
 <div class="line"><span class="lineno">  120</span> </div>
 <div class="line"><span class="lineno">  121</span>    <a class="code hl_typedef" href="namespacedyno.html#ae777b079c377ffa066d89051ee0cc623">ObjectIds</a> labels = <a class="code hl_function" href="namespacedyno_1_1vision__tools.html#a3a09fe6c15aeb5e18979dc27d68c4616">vision_tools::getObjectLabels</a>(mask);</div>
@@ -351,25 +351,25 @@ Here is the call graph for this function:</div>
 <div class="line"><span class="lineno">  135</span> </div>
 <div class="line"><span class="lineno">  136</span>    <span class="keywordflow">return</span> relabelled_mask;</div>
 <div class="line"><span class="lineno">  137</span>  }</div>
-<div class="ttc" id="aclassdyno_1_1ProjectAriaAllLoader_html_a2a664e63c9b5b9ea357ff8f7cc98d85a"><div class="ttname"><a href="classdyno_1_1ProjectAriaAllLoader.html#a2a664e63c9b5b9ea357ff8f7cc98d85a">dyno::ProjectAriaAllLoader::instance_masks_image_paths_</a></div><div class="ttdeci">std::vector&lt; std::string &gt; instance_masks_image_paths_</div><div class="ttdef"><b>Definition:</b> <a href="ProjectAriaDataProvider_8cc_source.html#l00298">ProjectAriaDataProvider.cc:298</a></div></div>
-<div class="ttc" id="aclassdyno_1_1ProjectAriaAllLoader_html_a2cac51ba7b3e14834b4ae93708ad40b6"><div class="ttname"><a href="classdyno_1_1ProjectAriaAllLoader.html#a2cac51ba7b3e14834b4ae93708ad40b6">dyno::ProjectAriaAllLoader::rgb_image_paths_</a></div><div class="ttdeci">std::vector&lt; std::string &gt; rgb_image_paths_</div><div class="ttdef"><b>Definition:</b> <a href="ProjectAriaDataProvider_8cc_source.html#l00294">ProjectAriaDataProvider.cc:294</a></div></div>
-<div class="ttc" id="anamespacedyno_1_1vision__tools_html_a3a09fe6c15aeb5e18979dc27d68c4616"><div class="ttname"><a href="namespacedyno_1_1vision__tools.html#a3a09fe6c15aeb5e18979dc27d68c4616">dyno::vision_tools::getObjectLabels</a></div><div class="ttdeci">ObjectIds getObjectLabels(const cv::Mat &amp;image)</div><div class="ttdoc">Finds the unique object labels (j) as present in the instance segmentation image. Does not include th...</div><div class="ttdef"><b>Definition:</b> <a href="VisionTools_8cc_source.html#l00069">VisionTools.cc:69</a></div></div>
-<div class="ttc" id="anamespacedyno_1_1vision__tools_html_ae077e5d2722435f6731a8f58e3aab848"><div class="ttname"><a href="namespacedyno_1_1vision__tools.html#ae077e5d2722435f6731a8f58e3aab848">dyno::vision_tools::relabelMasks</a></div><div class="ttdeci">void relabelMasks(const cv::Mat &amp;mask, cv::Mat &amp;relabelled_mask, const ObjectIds &amp;old_labels, const ObjectIds &amp;new_labels)</div><div class="ttdef"><b>Definition:</b> <a href="VisionTools_8cc_source.html#l00359">VisionTools.cc:359</a></div></div>
-<div class="ttc" id="anamespacedyno_html_a38a7315ac269741048e61a97bd545321"><div class="ttname"><a href="namespacedyno.html#a38a7315ac269741048e61a97bd545321">dyno::loadMask</a></div><div class="ttdeci">void loadMask(const std::string &amp;image_path, cv::Mat &amp;mask)</div><div class="ttdef"><b>Definition:</b> <a href="DataProviderUtils_8cc_source.html#l00104">DataProviderUtils.cc:104</a></div></div>
-<div class="ttc" id="anamespacedyno_html_a38bb86e4154b86428b8d133be03fb2b5"><div class="ttname"><a href="namespacedyno.html#a38bb86e4154b86428b8d133be03fb2b5">dyno::ObjectId</a></div><div class="ttdeci">int ObjectId</div><div class="ttdoc">Discrete object id, j.</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00069">Types.hpp:69</a></div></div>
-<div class="ttc" id="anamespacedyno_html_ae777b079c377ffa066d89051ee0cc623"><div class="ttname"><a href="namespacedyno.html#ae777b079c377ffa066d89051ee0cc623">dyno::ObjectIds</a></div><div class="ttdeci">std::vector&lt; ObjectId &gt; ObjectIds</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00070">Types.hpp:70</a></div></div>
+<div class="ttc" id="aclassdyno_1_1ProjectAriaAllLoader_html_a2a664e63c9b5b9ea357ff8f7cc98d85a"><div class="ttname"><a href="classdyno_1_1ProjectAriaAllLoader.html#a2a664e63c9b5b9ea357ff8f7cc98d85a">dyno::ProjectAriaAllLoader::instance_masks_image_paths_</a></div><div class="ttdeci">std::vector&lt; std::string &gt; instance_masks_image_paths_</div><div class="ttdef"><b>Definition:</b> <a href="ProjectAriaDataProvider_8cc_source.html#l00299">ProjectAriaDataProvider.cc:299</a></div></div>
+<div class="ttc" id="aclassdyno_1_1ProjectAriaAllLoader_html_a2cac51ba7b3e14834b4ae93708ad40b6"><div class="ttname"><a href="classdyno_1_1ProjectAriaAllLoader.html#a2cac51ba7b3e14834b4ae93708ad40b6">dyno::ProjectAriaAllLoader::rgb_image_paths_</a></div><div class="ttdeci">std::vector&lt; std::string &gt; rgb_image_paths_</div><div class="ttdef"><b>Definition:</b> <a href="ProjectAriaDataProvider_8cc_source.html#l00295">ProjectAriaDataProvider.cc:295</a></div></div>
+<div class="ttc" id="anamespacedyno_1_1utils_html_a536b19fedccc814e13b68cbbc6d629bc"><div class="ttname"><a href="namespacedyno_1_1utils.html#a536b19fedccc814e13b68cbbc6d629bc">dyno::utils::loadMask</a></div><div class="ttdeci">void loadMask(const std::string &amp;image_path, cv::Mat &amp;mask)</div><div class="ttdef"><b>Definition:</b> <a href="FileSystem_8cc_source.html#l00068">FileSystem.cc:68</a></div></div>
+<div class="ttc" id="anamespacedyno_1_1vision__tools_html_a3a09fe6c15aeb5e18979dc27d68c4616"><div class="ttname"><a href="namespacedyno_1_1vision__tools.html#a3a09fe6c15aeb5e18979dc27d68c4616">dyno::vision_tools::getObjectLabels</a></div><div class="ttdeci">ObjectIds getObjectLabels(const cv::Mat &amp;image)</div><div class="ttdoc">Finds the unique object labels (j) as present in the instance segmentation image. Does not include th...</div><div class="ttdef"><b>Definition:</b> <a href="VisionTools_8cc_source.html#l00100">VisionTools.cc:100</a></div></div>
+<div class="ttc" id="anamespacedyno_1_1vision__tools_html_ae077e5d2722435f6731a8f58e3aab848"><div class="ttname"><a href="namespacedyno_1_1vision__tools.html#ae077e5d2722435f6731a8f58e3aab848">dyno::vision_tools::relabelMasks</a></div><div class="ttdeci">void relabelMasks(const cv::Mat &amp;mask, cv::Mat &amp;relabelled_mask, const ObjectIds &amp;old_labels, const ObjectIds &amp;new_labels)</div><div class="ttdef"><b>Definition:</b> <a href="VisionTools_8cc_source.html#l00466">VisionTools.cc:466</a></div></div>
+<div class="ttc" id="anamespacedyno_html_a38bb86e4154b86428b8d133be03fb2b5"><div class="ttname"><a href="namespacedyno.html#a38bb86e4154b86428b8d133be03fb2b5">dyno::ObjectId</a></div><div class="ttdeci">int ObjectId</div><div class="ttdoc">Discrete object id, j.</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00070">Types.hpp:70</a></div></div>
+<div class="ttc" id="anamespacedyno_html_ae777b079c377ffa066d89051ee0cc623"><div class="ttname"><a href="namespacedyno.html#ae777b079c377ffa066d89051ee0cc623">dyno::ObjectIds</a></div><div class="ttdeci">std::vector&lt; ObjectId &gt; ObjectIds</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00071">Types.hpp:71</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#aed6198bd5cccbd24519d6cd3cb0213ce">dataset_size_</a>, <a class="el" href="namespacedyno_1_1vision__tools.html#a3a09fe6c15aeb5e18979dc27d68c4616">dyno::vision_tools::getObjectLabels()</a>, <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#a2a664e63c9b5b9ea357ff8f7cc98d85a">instance_masks_image_paths_</a>, <a class="el" href="namespacedyno.html#a38a7315ac269741048e61a97bd545321">dyno::loadMask()</a>, <a class="el" href="namespacedyno_1_1vision__tools.html#ae077e5d2722435f6731a8f58e3aab848">dyno::vision_tools::relabelMasks()</a>, and <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#a2cac51ba7b3e14834b4ae93708ad40b6">rgb_image_paths_</a>.</p>
+<p class="reference">References <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#aed6198bd5cccbd24519d6cd3cb0213ce">dataset_size_</a>, <a class="el" href="namespacedyno_1_1vision__tools.html#a3a09fe6c15aeb5e18979dc27d68c4616">dyno::vision_tools::getObjectLabels()</a>, <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#a2a664e63c9b5b9ea357ff8f7cc98d85a">instance_masks_image_paths_</a>, <a class="el" href="namespacedyno_1_1utils.html#a536b19fedccc814e13b68cbbc6d629bc">dyno::utils::loadMask()</a>, <a class="el" href="namespacedyno_1_1vision__tools.html#ae077e5d2722435f6731a8f58e3aab848">dyno::vision_tools::relabelMasks()</a>, and <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#a2cac51ba7b3e14834b4ae93708ad40b6">rgb_image_paths_</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1ProjectAriaAllLoader_aadc1a14a0b67880dc979bc9ee8e85593_cgraph.png" border="0" usemap="#aclassdyno_1_1ProjectAriaAllLoader_aadc1a14a0b67880dc979bc9ee8e85593_cgraph" alt=""/></div>
 <map name="aclassdyno_1_1ProjectAriaAllLoader_aadc1a14a0b67880dc979bc9ee8e85593_cgraph" id="aclassdyno_1_1ProjectAriaAllLoader_aadc1a14a0b67880dc979bc9ee8e85593_cgraph">
 <area shape="rect" title=" " alt="" coords="5,63,200,103"/>
-<area shape="rect" href="namespacedyno_1_1vision__tools.html#a3a09fe6c15aeb5e18979dc27d68c4616" title="Finds the unique object labels (j) as present in the instance segmentation image. Does not include th..." alt="" coords="248,5,388,45"/>
-<area shape="rect" href="namespacedyno.html#a38a7315ac269741048e61a97bd545321" title=" " alt="" coords="255,70,381,95"/>
-<area shape="rect" href="namespacedyno_1_1vision__tools.html#ae077e5d2722435f6731a8f58e3aab848" title=" " alt="" coords="248,120,388,160"/>
-<area shape="rect" href="namespacedyno.html#a163cb16ef980acda5b09d45c3a156e6f" title=" " alt="" coords="436,63,636,103"/>
+<area shape="rect" href="namespacedyno_1_1vision__tools.html#a3a09fe6c15aeb5e18979dc27d68c4616" title="Finds the unique object labels (j) as present in the instance segmentation image. Does not include th..." alt="" coords="259,5,399,45"/>
+<area shape="rect" href="namespacedyno_1_1utils.html#a536b19fedccc814e13b68cbbc6d629bc" title=" " alt="" coords="248,70,409,95"/>
+<area shape="rect" href="namespacedyno_1_1vision__tools.html#ae077e5d2722435f6731a8f58e3aab848" title=" " alt="" coords="259,120,399,160"/>
+<area shape="rect" href="namespacedyno_1_1utils.html#a71785ed8de386df1fce95751bf5bec15" title=" " alt="" coords="457,63,656,103"/>
 </map>
 </div>
 
@@ -400,7 +400,7 @@ Here is the call graph for this function:</div>
 
 <p class="definition">Definition at line <a class="el" href="ProjectAriaDataProvider_8cc_source.html#l00149">149</a> of file <a class="el" href="ProjectAriaDataProvider_8cc_source.html">ProjectAriaDataProvider.cc</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">  149</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1ProjectAriaAllLoader.html#a514edfc2f80a150caa6b758732f1ef46">rgb_camera_params_</a>; }</div>
-<div class="ttc" id="aclassdyno_1_1ProjectAriaAllLoader_html_a514edfc2f80a150caa6b758732f1ef46"><div class="ttname"><a href="classdyno_1_1ProjectAriaAllLoader.html#a514edfc2f80a150caa6b758732f1ef46">dyno::ProjectAriaAllLoader::rgb_camera_params_</a></div><div class="ttdeci">CameraParams rgb_camera_params_</div><div class="ttdef"><b>Definition:</b> <a href="ProjectAriaDataProvider_8cc_source.html#l00303">ProjectAriaDataProvider.cc:303</a></div></div>
+<div class="ttc" id="aclassdyno_1_1ProjectAriaAllLoader_html_a514edfc2f80a150caa6b758732f1ef46"><div class="ttname"><a href="classdyno_1_1ProjectAriaAllLoader.html#a514edfc2f80a150caa6b758732f1ef46">dyno::ProjectAriaAllLoader::rgb_camera_params_</a></div><div class="ttdeci">CameraParams rgb_camera_params_</div><div class="ttdef"><b>Definition:</b> <a href="ProjectAriaDataProvider_8cc_source.html#l00304">ProjectAriaDataProvider.cc:304</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#a514edfc2f80a150caa6b758732f1ef46">rgb_camera_params_</a>.</p>
 
@@ -435,22 +435,22 @@ Here is the call graph for this function:</div>
 <div class="line"><span class="lineno">   81</span>    CHECK_LT(idx, <a class="code hl_variable" href="classdyno_1_1ProjectAriaAllLoader.html#a2db45a73b5aabdeb6f772db504d11fbe">optical_flow_image_paths_</a>.size());</div>
 <div class="line"><span class="lineno">   82</span> </div>
 <div class="line"><span class="lineno">   83</span>    cv::Mat flow;</div>
-<div class="line"><span class="lineno">   84</span>    <a class="code hl_function" href="namespacedyno.html#a0a98457fbcefc2db4a562f0e31892371">loadFlow</a>(<a class="code hl_variable" href="classdyno_1_1ProjectAriaAllLoader.html#a2db45a73b5aabdeb6f772db504d11fbe">optical_flow_image_paths_</a>.at(idx), flow);</div>
+<div class="line"><span class="lineno">   84</span>    <a class="code hl_function" href="namespacedyno_1_1utils.html#ad727527fce1f384cf3a7964b1ec1f366">utils::loadFlow</a>(<a class="code hl_variable" href="classdyno_1_1ProjectAriaAllLoader.html#a2db45a73b5aabdeb6f772db504d11fbe">optical_flow_image_paths_</a>.at(idx), flow);</div>
 <div class="line"><span class="lineno">   85</span>    CHECK(!flow.empty());</div>
 <div class="line"><span class="lineno">   86</span>    <span class="keywordflow">return</span> flow;</div>
 <div class="line"><span class="lineno">   87</span>  }</div>
-<div class="ttc" id="anamespacedyno_html_a0a98457fbcefc2db4a562f0e31892371"><div class="ttname"><a href="namespacedyno.html#a0a98457fbcefc2db4a562f0e31892371">dyno::loadFlow</a></div><div class="ttdeci">void loadFlow(const std::string &amp;image_path, cv::Mat &amp;img)</div><div class="ttdef"><b>Definition:</b> <a href="DataProviderUtils_8cc_source.html#l00060">DataProviderUtils.cc:60</a></div></div>
+<div class="ttc" id="anamespacedyno_1_1utils_html_ad727527fce1f384cf3a7964b1ec1f366"><div class="ttname"><a href="namespacedyno_1_1utils.html#ad727527fce1f384cf3a7964b1ec1f366">dyno::utils::loadFlow</a></div><div class="ttdeci">void loadFlow(const std::string &amp;image_path, cv::Mat &amp;img)</div><div class="ttdef"><b>Definition:</b> <a href="FileSystem_8cc_source.html#l00024">FileSystem.cc:24</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="namespacedyno.html#a0a98457fbcefc2db4a562f0e31892371">dyno::loadFlow()</a>, and <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#a2db45a73b5aabdeb6f772db504d11fbe">optical_flow_image_paths_</a>.</p>
+<p class="reference">References <a class="el" href="namespacedyno_1_1utils.html#ad727527fce1f384cf3a7964b1ec1f366">dyno::utils::loadFlow()</a>, and <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#a2db45a73b5aabdeb6f772db504d11fbe">optical_flow_image_paths_</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1ProjectAriaAllLoader_ac28c716c4ff8f1d9dd542a0ee0f5732f_cgraph.png" border="0" usemap="#aclassdyno_1_1ProjectAriaAllLoader_ac28c716c4ff8f1d9dd542a0ee0f5732f_cgraph" alt=""/></div>
 <map name="aclassdyno_1_1ProjectAriaAllLoader_ac28c716c4ff8f1d9dd542a0ee0f5732f_cgraph" id="aclassdyno_1_1ProjectAriaAllLoader_ac28c716c4ff8f1d9dd542a0ee0f5732f_cgraph">
 <area shape="rect" title=" " alt="" coords="5,27,200,67"/>
-<area shape="rect" href="namespacedyno.html#a0a98457fbcefc2db4a562f0e31892371" title=" " alt="" coords="248,35,369,60"/>
-<area shape="rect" href="namespacedyno_1_1utils.html#a46d2c367b18c5313273bd9225ff1af1f" title="The function readOpticalFlow loads a flow field from a file and returns it as a single matrix...." alt="" coords="417,5,621,31"/>
-<area shape="rect" href="namespacedyno.html#a163cb16ef980acda5b09d45c3a156e6f" title=" " alt="" coords="419,55,619,95"/>
+<area shape="rect" href="namespacedyno_1_1utils.html#ad727527fce1f384cf3a7964b1ec1f366" title=" " alt="" coords="248,35,405,60"/>
+<area shape="rect" href="namespacedyno_1_1utils.html#a46d2c367b18c5313273bd9225ff1af1f" title="The function readOpticalFlow loads a flow field from a file and returns it as a single matrix...." alt="" coords="453,5,657,31"/>
+<area shape="rect" href="namespacedyno_1_1utils.html#a71785ed8de386df1fce95751bf5bec15" title=" " alt="" coords="456,55,655,95"/>
 </map>
 </div>
 
@@ -485,22 +485,22 @@ Here is the call graph for this function:</div>
 <div class="line"><span class="lineno">   90</span>    CHECK_LT(idx, <a class="code hl_variable" href="classdyno_1_1ProjectAriaAllLoader.html#a2cac51ba7b3e14834b4ae93708ad40b6">rgb_image_paths_</a>.size());</div>
 <div class="line"><span class="lineno">   91</span> </div>
 <div class="line"><span class="lineno">   92</span>    cv::Mat rgb;</div>
-<div class="line"><span class="lineno">   93</span>    <a class="code hl_function" href="namespacedyno.html#a7fd811cad6c8cd6edb2fb0c2902952cd">loadRGB</a>(<a class="code hl_variable" href="classdyno_1_1ProjectAriaAllLoader.html#a2cac51ba7b3e14834b4ae93708ad40b6">rgb_image_paths_</a>.at(idx), rgb);</div>
+<div class="line"><span class="lineno">   93</span>    <a class="code hl_function" href="namespacedyno_1_1utils.html#a5a99bccec94ae25e68cdfef2c093b7da">utils::loadRGB</a>(<a class="code hl_variable" href="classdyno_1_1ProjectAriaAllLoader.html#a2cac51ba7b3e14834b4ae93708ad40b6">rgb_image_paths_</a>.at(idx), rgb);</div>
 <div class="line"><span class="lineno">   94</span>    CHECK(!rgb.empty());</div>
 <div class="line"><span class="lineno">   95</span> </div>
 <div class="line"><span class="lineno">   96</span>    <span class="keywordflow">return</span> rgb;</div>
 <div class="line"><span class="lineno">   97</span>  }</div>
-<div class="ttc" id="anamespacedyno_html_a7fd811cad6c8cd6edb2fb0c2902952cd"><div class="ttname"><a href="namespacedyno.html#a7fd811cad6c8cd6edb2fb0c2902952cd">dyno::loadRGB</a></div><div class="ttdeci">void loadRGB(const std::string &amp;image_path, cv::Mat &amp;img)</div><div class="ttdef"><b>Definition:</b> <a href="DataProviderUtils_8cc_source.html#l00055">DataProviderUtils.cc:55</a></div></div>
+<div class="ttc" id="anamespacedyno_1_1utils_html_a5a99bccec94ae25e68cdfef2c093b7da"><div class="ttname"><a href="namespacedyno_1_1utils.html#a5a99bccec94ae25e68cdfef2c093b7da">dyno::utils::loadRGB</a></div><div class="ttdeci">void loadRGB(const std::string &amp;image_path, cv::Mat &amp;img)</div><div class="ttdef"><b>Definition:</b> <a href="FileSystem_8cc_source.html#l00019">FileSystem.cc:19</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="namespacedyno.html#a7fd811cad6c8cd6edb2fb0c2902952cd">dyno::loadRGB()</a>, and <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#a2cac51ba7b3e14834b4ae93708ad40b6">rgb_image_paths_</a>.</p>
+<p class="reference">References <a class="el" href="namespacedyno_1_1utils.html#a5a99bccec94ae25e68cdfef2c093b7da">dyno::utils::loadRGB()</a>, and <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#a2cac51ba7b3e14834b4ae93708ad40b6">rgb_image_paths_</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1ProjectAriaAllLoader_a5dea349fac48f8399054ddb36cba26b9_cgraph.png" border="0" usemap="#aclassdyno_1_1ProjectAriaAllLoader_a5dea349fac48f8399054ddb36cba26b9_cgraph" alt=""/></div>
 <map name="aclassdyno_1_1ProjectAriaAllLoader_a5dea349fac48f8399054ddb36cba26b9_cgraph" id="aclassdyno_1_1ProjectAriaAllLoader_a5dea349fac48f8399054ddb36cba26b9_cgraph">
 <area shape="rect" title=" " alt="" coords="5,5,200,45"/>
-<area shape="rect" href="namespacedyno.html#a7fd811cad6c8cd6edb2fb0c2902952cd" title=" " alt="" coords="248,13,367,38"/>
-<area shape="rect" href="namespacedyno.html#a163cb16ef980acda5b09d45c3a156e6f" title=" " alt="" coords="415,5,615,45"/>
+<area shape="rect" href="namespacedyno_1_1utils.html#a5a99bccec94ae25e68cdfef2c093b7da" title=" " alt="" coords="248,13,403,38"/>
+<area shape="rect" href="namespacedyno_1_1utils.html#a71785ed8de386df1fce95751bf5bec15" title=" " alt="" coords="451,5,649,45"/>
 </map>
 </div>
 
@@ -535,22 +535,22 @@ Here is the call graph for this function:</div>
 <div class="line"><span class="lineno">  100</span>    CHECK_LT(idx, <a class="code hl_variable" href="classdyno_1_1ProjectAriaAllLoader.html#a8bb57d118916f5166dd638d1a985b76f">right_rgb_image_paths_</a>.size());</div>
 <div class="line"><span class="lineno">  101</span> </div>
 <div class="line"><span class="lineno">  102</span>    cv::Mat rgb;</div>
-<div class="line"><span class="lineno">  103</span>    <a class="code hl_function" href="namespacedyno.html#a7fd811cad6c8cd6edb2fb0c2902952cd">loadRGB</a>(<a class="code hl_variable" href="classdyno_1_1ProjectAriaAllLoader.html#a8bb57d118916f5166dd638d1a985b76f">right_rgb_image_paths_</a>.at(idx), rgb);</div>
+<div class="line"><span class="lineno">  103</span>    <a class="code hl_function" href="namespacedyno_1_1utils.html#a5a99bccec94ae25e68cdfef2c093b7da">utils::loadRGB</a>(<a class="code hl_variable" href="classdyno_1_1ProjectAriaAllLoader.html#a8bb57d118916f5166dd638d1a985b76f">right_rgb_image_paths_</a>.at(idx), rgb);</div>
 <div class="line"><span class="lineno">  104</span>    CHECK(!rgb.empty());</div>
 <div class="line"><span class="lineno">  105</span> </div>
 <div class="line"><span class="lineno">  106</span>    <span class="keywordflow">return</span> rgb;</div>
 <div class="line"><span class="lineno">  107</span>  }</div>
-<div class="ttc" id="aclassdyno_1_1ProjectAriaAllLoader_html_a8bb57d118916f5166dd638d1a985b76f"><div class="ttname"><a href="classdyno_1_1ProjectAriaAllLoader.html#a8bb57d118916f5166dd638d1a985b76f">dyno::ProjectAriaAllLoader::right_rgb_image_paths_</a></div><div class="ttdeci">std::vector&lt; std::string &gt; right_rgb_image_paths_</div><div class="ttdef"><b>Definition:</b> <a href="ProjectAriaDataProvider_8cc_source.html#l00295">ProjectAriaDataProvider.cc:295</a></div></div>
+<div class="ttc" id="aclassdyno_1_1ProjectAriaAllLoader_html_a8bb57d118916f5166dd638d1a985b76f"><div class="ttname"><a href="classdyno_1_1ProjectAriaAllLoader.html#a8bb57d118916f5166dd638d1a985b76f">dyno::ProjectAriaAllLoader::right_rgb_image_paths_</a></div><div class="ttdeci">std::vector&lt; std::string &gt; right_rgb_image_paths_</div><div class="ttdef"><b>Definition:</b> <a href="ProjectAriaDataProvider_8cc_source.html#l00296">ProjectAriaDataProvider.cc:296</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="namespacedyno.html#a7fd811cad6c8cd6edb2fb0c2902952cd">dyno::loadRGB()</a>, and <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#a8bb57d118916f5166dd638d1a985b76f">right_rgb_image_paths_</a>.</p>
+<p class="reference">References <a class="el" href="namespacedyno_1_1utils.html#a5a99bccec94ae25e68cdfef2c093b7da">dyno::utils::loadRGB()</a>, and <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#a8bb57d118916f5166dd638d1a985b76f">right_rgb_image_paths_</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1ProjectAriaAllLoader_a84b2a09674d501fda8dc30ed5d6b5c65_cgraph.png" border="0" usemap="#aclassdyno_1_1ProjectAriaAllLoader_a84b2a09674d501fda8dc30ed5d6b5c65_cgraph" alt=""/></div>
 <map name="aclassdyno_1_1ProjectAriaAllLoader_a84b2a09674d501fda8dc30ed5d6b5c65_cgraph" id="aclassdyno_1_1ProjectAriaAllLoader_a84b2a09674d501fda8dc30ed5d6b5c65_cgraph">
 <area shape="rect" title=" " alt="" coords="5,5,200,45"/>
-<area shape="rect" href="namespacedyno.html#a7fd811cad6c8cd6edb2fb0c2902952cd" title=" " alt="" coords="248,13,367,38"/>
-<area shape="rect" href="namespacedyno.html#a163cb16ef980acda5b09d45c3a156e6f" title=" " alt="" coords="415,5,615,45"/>
+<area shape="rect" href="namespacedyno_1_1utils.html#a5a99bccec94ae25e68cdfef2c093b7da" title=" " alt="" coords="248,13,403,38"/>
+<area shape="rect" href="namespacedyno_1_1utils.html#a71785ed8de386df1fce95751bf5bec15" title=" " alt="" coords="451,5,649,45"/>
 </map>
 </div>
 
@@ -585,7 +585,7 @@ Here is the call graph for this function:</div>
 <div class="line"><span class="lineno">  152</span>    CHECK_LT(idx, <a class="code hl_variable" href="classdyno_1_1ProjectAriaAllLoader.html#a9dda1bb31c0d84022c31b0f90bc8c05c">times_</a>.size());</div>
 <div class="line"><span class="lineno">  153</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1ProjectAriaAllLoader.html#a9dda1bb31c0d84022c31b0f90bc8c05c">times_</a>.at(idx);</div>
 <div class="line"><span class="lineno">  154</span>  }</div>
-<div class="ttc" id="aclassdyno_1_1ProjectAriaAllLoader_html_a9dda1bb31c0d84022c31b0f90bc8c05c"><div class="ttname"><a href="classdyno_1_1ProjectAriaAllLoader.html#a9dda1bb31c0d84022c31b0f90bc8c05c">dyno::ProjectAriaAllLoader::times_</a></div><div class="ttdeci">std::vector&lt; Timestamp &gt; times_</div><div class="ttdef"><b>Definition:</b> <a href="ProjectAriaDataProvider_8cc_source.html#l00300">ProjectAriaDataProvider.cc:300</a></div></div>
+<div class="ttc" id="aclassdyno_1_1ProjectAriaAllLoader_html_a9dda1bb31c0d84022c31b0f90bc8c05c"><div class="ttname"><a href="classdyno_1_1ProjectAriaAllLoader.html#a9dda1bb31c0d84022c31b0f90bc8c05c">dyno::ProjectAriaAllLoader::times_</a></div><div class="ttdeci">std::vector&lt; Timestamp &gt; times_</div><div class="ttdef"><b>Definition:</b> <a href="ProjectAriaDataProvider_8cc_source.html#l00301">ProjectAriaDataProvider.cc:301</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#a9dda1bb31c0d84022c31b0f90bc8c05c">times_</a>.</p>
 
@@ -614,56 +614,56 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ProjectAriaDataProvider_8cc_source.html#l00238">238</a> of file <a class="el" href="ProjectAriaDataProvider_8cc_source.html">ProjectAriaDataProvider.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  238</span>                         {</div>
-<div class="line"><span class="lineno">  239</span>    <span class="comment">// using json = nlohmann::json;</span></div>
-<div class="line"><span class="lineno">  240</span> </div>
-<div class="line"><span class="lineno">  241</span>    <span class="comment">// std::ifstream file(intrinsics_file_path_);</span></div>
-<div class="line"><span class="lineno">  242</span>    <span class="comment">// json calibration_json;</span></div>
-<div class="line"><span class="lineno">  243</span>    <span class="comment">// file &gt;&gt; calibration_json;</span></div>
-<div class="line"><span class="lineno">  244</span> </div>
-<div class="line"><span class="lineno">  245</span>    <span class="comment">// int rgb_width = calibration_json[&quot;rgb_width&quot;].template get&lt;int&gt;();</span></div>
-<div class="line"><span class="lineno">  246</span>    <span class="comment">// int rgb_height = calibration_json[&quot;rgb_height&quot;].template get&lt;int&gt;();</span></div>
-<div class="line"><span class="lineno">  247</span> </div>
-<div class="line"><span class="lineno">  248</span>    <span class="comment">// std::vector&lt;double&gt; K = calibration_json[&quot;rgb_intrinsics&quot;].template</span></div>
-<div class="line"><span class="lineno">  249</span>    <span class="comment">// get&lt;std::vector&lt;double&gt;&gt;(); CameraParams::IntrinsicsCoeffs intrinsics({</span></div>
-<div class="line"><span class="lineno">  250</span>    <span class="comment">//     K.at(0), //fu</span></div>
-<div class="line"><span class="lineno">  251</span>    <span class="comment">//     K.at(4), //fv</span></div>
-<div class="line"><span class="lineno">  252</span>    <span class="comment">//     K.at(2), //cu</span></div>
-<div class="line"><span class="lineno">  253</span>    <span class="comment">//     K.at(5)  // cv</span></div>
-<div class="line"><span class="lineno">  254</span>    <span class="comment">//     });</span></div>
-<div class="line"><span class="lineno">  255</span> </div>
-<div class="line"><span class="lineno">  256</span>    <span class="comment">// CameraParams::IntrinsicsCoeffs intrinsics({</span></div>
-<div class="line"><span class="lineno">  257</span>    <span class="comment">//     535.288025, //fu</span></div>
-<div class="line"><span class="lineno">  258</span>    <span class="comment">//     535.288025, //fv</span></div>
-<div class="line"><span class="lineno">  259</span>    <span class="comment">//     623.312256, //cu</span></div>
-<div class="line"><span class="lineno">  260</span>    <span class="comment">//     348.522400  // cv</span></div>
-<div class="line"><span class="lineno">  261</span>    <span class="comment">//     });</span></div>
-<div class="line"><span class="lineno">  262</span> </div>
-<div class="line"><span class="lineno">  263</span>    <span class="comment">// acfr_1_moving_small</span></div>
-<div class="line"><span class="lineno">  264</span>    <a class="code hl_typedef" href="classdyno_1_1CameraParams.html#a2b2c8e9993ec05e2be9bbee6c3b73760">CameraParams::IntrinsicsCoeffs</a> intrinsics({</div>
-<div class="line"><span class="lineno">  265</span>        267.644012,  <span class="comment">// fu</span></div>
-<div class="line"><span class="lineno">  266</span>        311.656128,  <span class="comment">// fv</span></div>
-<div class="line"><span class="lineno">  267</span>        267.644012,  <span class="comment">// cu</span></div>
-<div class="line"><span class="lineno">  268</span>        174.261200   <span class="comment">// cv</span></div>
-<div class="line"><span class="lineno">  269</span>    });</div>
-<div class="line"><span class="lineno">  270</span> </div>
-<div class="line"><span class="lineno">  271</span>    <span class="comment">// TODO: Assume Image is undistorted!!!!!!</span></div>
-<div class="line"><span class="lineno">  272</span>    <a class="code hl_typedef" href="classdyno_1_1CameraParams.html#a8349ad5f0c727d6ef16a1b127e620eae">CameraParams::DistortionCoeffs</a> distortion({0, 0, 0, 0});</div>
-<div class="line"><span class="lineno">  273</span> </div>
-<div class="line"><span class="lineno">  274</span>    <span class="comment">// distortion_model not given</span></div>
-<div class="line"><span class="lineno">  275</span>    <span class="keyword">const</span> <span class="keyword">auto</span> distortion_model = <span class="stringliteral">&quot;plumb_bob&quot;</span>;</div>
-<div class="line"><span class="lineno">  276</span>    <span class="keyword">const</span> <span class="keyword">auto</span> camera_model = <span class="stringliteral">&quot;pinhole&quot;</span>;</div>
-<div class="line"><span class="lineno">  277</span>    <span class="keyword">auto</span> model =</div>
-<div class="line"><span class="lineno">  278</span>        <a class="code hl_function" href="classdyno_1_1CameraParams.html#add58aad8e64c327cdf55e0d2c19e1b87">CameraParams::stringToDistortion</a>(distortion_model, camera_model);</div>
-<div class="line"><span class="lineno">  279</span> </div>
-<div class="line"><span class="lineno">  280</span>    <a class="code hl_variable" href="classdyno_1_1ProjectAriaAllLoader.html#a514edfc2f80a150caa6b758732f1ef46">rgb_camera_params_</a> = CameraParams(intrinsics, distortion,</div>
-<div class="line"><span class="lineno">  281</span>                                      <span class="comment">// cv::Size(1280, 720),</span></div>
-<div class="line"><span class="lineno">  282</span>                                      cv::Size(640, 360), model);</div>
-<div class="line"><span class="lineno">  283</span>  }</div>
+<p class="definition">Definition at line <a class="el" href="ProjectAriaDataProvider_8cc_source.html#l00239">239</a> of file <a class="el" href="ProjectAriaDataProvider_8cc_source.html">ProjectAriaDataProvider.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  239</span>                         {</div>
+<div class="line"><span class="lineno">  240</span>    <span class="comment">// using json = nlohmann::json;</span></div>
+<div class="line"><span class="lineno">  241</span> </div>
+<div class="line"><span class="lineno">  242</span>    <span class="comment">// std::ifstream file(intrinsics_file_path_);</span></div>
+<div class="line"><span class="lineno">  243</span>    <span class="comment">// json calibration_json;</span></div>
+<div class="line"><span class="lineno">  244</span>    <span class="comment">// file &gt;&gt; calibration_json;</span></div>
+<div class="line"><span class="lineno">  245</span> </div>
+<div class="line"><span class="lineno">  246</span>    <span class="comment">// int rgb_width = calibration_json[&quot;rgb_width&quot;].template get&lt;int&gt;();</span></div>
+<div class="line"><span class="lineno">  247</span>    <span class="comment">// int rgb_height = calibration_json[&quot;rgb_height&quot;].template get&lt;int&gt;();</span></div>
+<div class="line"><span class="lineno">  248</span> </div>
+<div class="line"><span class="lineno">  249</span>    <span class="comment">// std::vector&lt;double&gt; K = calibration_json[&quot;rgb_intrinsics&quot;].template</span></div>
+<div class="line"><span class="lineno">  250</span>    <span class="comment">// get&lt;std::vector&lt;double&gt;&gt;(); CameraParams::IntrinsicsCoeffs intrinsics({</span></div>
+<div class="line"><span class="lineno">  251</span>    <span class="comment">//     K.at(0), //fu</span></div>
+<div class="line"><span class="lineno">  252</span>    <span class="comment">//     K.at(4), //fv</span></div>
+<div class="line"><span class="lineno">  253</span>    <span class="comment">//     K.at(2), //cu</span></div>
+<div class="line"><span class="lineno">  254</span>    <span class="comment">//     K.at(5)  // cv</span></div>
+<div class="line"><span class="lineno">  255</span>    <span class="comment">//     });</span></div>
+<div class="line"><span class="lineno">  256</span> </div>
+<div class="line"><span class="lineno">  257</span>    <span class="comment">// CameraParams::IntrinsicsCoeffs intrinsics({</span></div>
+<div class="line"><span class="lineno">  258</span>    <span class="comment">//     535.288025, //fu</span></div>
+<div class="line"><span class="lineno">  259</span>    <span class="comment">//     535.288025, //fv</span></div>
+<div class="line"><span class="lineno">  260</span>    <span class="comment">//     623.312256, //cu</span></div>
+<div class="line"><span class="lineno">  261</span>    <span class="comment">//     348.522400  // cv</span></div>
+<div class="line"><span class="lineno">  262</span>    <span class="comment">//     });</span></div>
+<div class="line"><span class="lineno">  263</span> </div>
+<div class="line"><span class="lineno">  264</span>    <span class="comment">// acfr_1_moving_small</span></div>
+<div class="line"><span class="lineno">  265</span>    <a class="code hl_typedef" href="classdyno_1_1CameraParams.html#a2b2c8e9993ec05e2be9bbee6c3b73760">CameraParams::IntrinsicsCoeffs</a> intrinsics({</div>
+<div class="line"><span class="lineno">  266</span>        267.644012,  <span class="comment">// fu</span></div>
+<div class="line"><span class="lineno">  267</span>        311.656128,  <span class="comment">// fv</span></div>
+<div class="line"><span class="lineno">  268</span>        267.644012,  <span class="comment">// cu</span></div>
+<div class="line"><span class="lineno">  269</span>        174.261200   <span class="comment">// cv</span></div>
+<div class="line"><span class="lineno">  270</span>    });</div>
+<div class="line"><span class="lineno">  271</span> </div>
+<div class="line"><span class="lineno">  272</span>    <span class="comment">// TODO: Assume Image is undistorted!!!!!!</span></div>
+<div class="line"><span class="lineno">  273</span>    <a class="code hl_typedef" href="classdyno_1_1CameraParams.html#a8349ad5f0c727d6ef16a1b127e620eae">CameraParams::DistortionCoeffs</a> distortion({0, 0, 0, 0});</div>
+<div class="line"><span class="lineno">  274</span> </div>
+<div class="line"><span class="lineno">  275</span>    <span class="comment">// distortion_model not given</span></div>
+<div class="line"><span class="lineno">  276</span>    <span class="keyword">const</span> <span class="keyword">auto</span> distortion_model = <span class="stringliteral">&quot;plumb_bob&quot;</span>;</div>
+<div class="line"><span class="lineno">  277</span>    <span class="keyword">const</span> <span class="keyword">auto</span> camera_model = <span class="stringliteral">&quot;pinhole&quot;</span>;</div>
+<div class="line"><span class="lineno">  278</span>    <span class="keyword">auto</span> model =</div>
+<div class="line"><span class="lineno">  279</span>        <a class="code hl_function" href="classdyno_1_1CameraParams.html#add58aad8e64c327cdf55e0d2c19e1b87">CameraParams::stringToDistortion</a>(distortion_model, camera_model);</div>
+<div class="line"><span class="lineno">  280</span> </div>
+<div class="line"><span class="lineno">  281</span>    <a class="code hl_variable" href="classdyno_1_1ProjectAriaAllLoader.html#a514edfc2f80a150caa6b758732f1ef46">rgb_camera_params_</a> = CameraParams(intrinsics, distortion,</div>
+<div class="line"><span class="lineno">  282</span>                                      <span class="comment">// cv::Size(1280, 720),</span></div>
+<div class="line"><span class="lineno">  283</span>                                      cv::Size(640, 360), model);</div>
+<div class="line"><span class="lineno">  284</span>  }</div>
 <div class="ttc" id="aclassdyno_1_1CameraParams_html_a2b2c8e9993ec05e2be9bbee6c3b73760"><div class="ttname"><a href="classdyno_1_1CameraParams.html#a2b2c8e9993ec05e2be9bbee6c3b73760">dyno::CameraParams::IntrinsicsCoeffs</a></div><div class="ttdeci">std::vector&lt; double &gt; IntrinsicsCoeffs</div><div class="ttdef"><b>Definition:</b> <a href="CameraParams_8hpp_source.html#l00062">CameraParams.hpp:62</a></div></div>
 <div class="ttc" id="aclassdyno_1_1CameraParams_html_a8349ad5f0c727d6ef16a1b127e620eae"><div class="ttname"><a href="classdyno_1_1CameraParams.html#a8349ad5f0c727d6ef16a1b127e620eae">dyno::CameraParams::DistortionCoeffs</a></div><div class="ttdeci">std::vector&lt; double &gt; DistortionCoeffs</div><div class="ttdef"><b>Definition:</b> <a href="CameraParams_8hpp_source.html#l00060">CameraParams.hpp:60</a></div></div>
-<div class="ttc" id="aclassdyno_1_1CameraParams_html_add58aad8e64c327cdf55e0d2c19e1b87"><div class="ttname"><a href="classdyno_1_1CameraParams.html#add58aad8e64c327cdf55e0d2c19e1b87">dyno::CameraParams::stringToDistortion</a></div><div class="ttdeci">static DistortionModel stringToDistortion(const std::string &amp;distortion_model, const std::string &amp;camera_model)</div><div class="ttdoc">stringToDistortion</div><div class="ttdef"><b>Definition:</b> <a href="CameraParams_8cc_source.html#l00181">CameraParams.cc:181</a></div></div>
+<div class="ttc" id="aclassdyno_1_1CameraParams_html_add58aad8e64c327cdf55e0d2c19e1b87"><div class="ttname"><a href="classdyno_1_1CameraParams.html#add58aad8e64c327cdf55e0d2c19e1b87">dyno::CameraParams::stringToDistortion</a></div><div class="ttdeci">static DistortionModel stringToDistortion(const std::string &amp;distortion_model, const std::string &amp;camera_model)</div><div class="ttdoc">stringToDistortion</div><div class="ttdef"><b>Definition:</b> <a href="CameraParams_8cc_source.html#l00197">CameraParams.cc:197</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#a514edfc2f80a150caa6b758732f1ef46">rgb_camera_params_</a>, and <a class="el" href="classdyno_1_1CameraParams.html#add58aad8e64c327cdf55e0d2c19e1b87">dyno::CameraParams::stringToDistortion()</a>.</p>
 
@@ -726,13 +726,13 @@ Here is the caller graph for this function:</div>
 <p class="definition">Definition at line <a class="el" href="ProjectAriaDataProvider_8cc_source.html#l00157">157</a> of file <a class="el" href="ProjectAriaDataProvider_8cc_source.html">ProjectAriaDataProvider.cc</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">  158</span>                                                   {</div>
 <div class="line"><span class="lineno">  159</span>    std::vector&lt;std::filesystem::path&gt; files_in_directory =</div>
-<div class="line"><span class="lineno">  160</span>        <a class="code hl_function" href="namespacedyno.html#ae0c60629333938e89f2370502e9be3b3">getAllFilesInDir</a>(<a class="code hl_variable" href="classdyno_1_1ProjectAriaAllLoader.html#a13fe2f148115515b5bab97cf31577231">optical_flow_folder_path_</a>);</div>
+<div class="line"><span class="lineno">  160</span>        <a class="code hl_function" href="namespacedyno_1_1utils.html#a00bb451d0665ae0e0831e55edf53cb05">utils::getAllFilesInDir</a>(<a class="code hl_variable" href="classdyno_1_1ProjectAriaAllLoader.html#a13fe2f148115515b5bab97cf31577231">optical_flow_folder_path_</a>);</div>
 <div class="line"><span class="lineno">  161</span>    dataset_size = files_in_directory.size();</div>
 <div class="line"><span class="lineno">  162</span>    CHECK_GT(dataset_size, 0);</div>
 <div class="line"><span class="lineno">  163</span> </div>
 <div class="line"><span class="lineno">  164</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> std::filesystem::path&amp; path : files_in_directory) {</div>
 <div class="line"><span class="lineno">  165</span>      <span class="keyword">const</span> std::string file_path = path;</div>
-<div class="line"><span class="lineno">  166</span>      <a class="code hl_function" href="namespacedyno.html#a163cb16ef980acda5b09d45c3a156e6f">throwExceptionIfPathInvalid</a>(file_path);</div>
+<div class="line"><span class="lineno">  166</span>      <a class="code hl_function" href="namespacedyno_1_1utils.html#a71785ed8de386df1fce95751bf5bec15">utils::throwExceptionIfPathInvalid</a>(file_path);</div>
 <div class="line"><span class="lineno">  167</span>      images_paths.push_back(file_path);</div>
 <div class="line"><span class="lineno">  168</span> </div>
 <div class="line"><span class="lineno">  169</span>      std::string timestamp_str = path.stem();</div>
@@ -741,9 +741,9 @@ Here is the caller graph for this function:</div>
 <div class="line"><span class="lineno">  172</span>      <a class="code hl_variable" href="classdyno_1_1ProjectAriaAllLoader.html#a9dda1bb31c0d84022c31b0f90bc8c05c">times_</a>.push_back(timestamp_seconds);</div>
 <div class="line"><span class="lineno">  173</span>    }</div>
 <div class="line"><span class="lineno">  174</span>  }</div>
-<div class="ttc" id="anamespacedyno_html_ae0c60629333938e89f2370502e9be3b3"><div class="ttname"><a href="namespacedyno.html#ae0c60629333938e89f2370502e9be3b3">dyno::getAllFilesInDir</a></div><div class="ttdeci">std::vector&lt; std::filesystem::path &gt; getAllFilesInDir(const std::string &amp;folder_path)</div><div class="ttdoc">Returns a ORDERED vector of all files in the given directory. (jesse) is this the file name or the ab...</div><div class="ttdef"><b>Definition:</b> <a href="DataProviderUtils_8cc_source.html#l00153">DataProviderUtils.cc:153</a></div></div>
+<div class="ttc" id="anamespacedyno_1_1utils_html_a00bb451d0665ae0e0831e55edf53cb05"><div class="ttname"><a href="namespacedyno_1_1utils.html#a00bb451d0665ae0e0831e55edf53cb05">dyno::utils::getAllFilesInDir</a></div><div class="ttdeci">std::vector&lt; std::filesystem::path &gt; getAllFilesInDir(const std::string &amp;folder_path)</div><div class="ttdoc">Returns a ORDERED vector of all files in the given directory. (jesse) is this the file name or the ab...</div><div class="ttdef"><b>Definition:</b> <a href="FileSystem_8cc_source.html#l00074">FileSystem.cc:74</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="namespacedyno.html#ae0c60629333938e89f2370502e9be3b3">dyno::getAllFilesInDir()</a>, <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#a13fe2f148115515b5bab97cf31577231">optical_flow_folder_path_</a>, <a class="el" href="namespacedyno.html#a163cb16ef980acda5b09d45c3a156e6f">dyno::throwExceptionIfPathInvalid()</a>, and <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#a9dda1bb31c0d84022c31b0f90bc8c05c">times_</a>.</p>
+<p class="reference">References <a class="el" href="namespacedyno_1_1utils.html#a00bb451d0665ae0e0831e55edf53cb05">dyno::utils::getAllFilesInDir()</a>, <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#a13fe2f148115515b5bab97cf31577231">optical_flow_folder_path_</a>, <a class="el" href="namespacedyno_1_1utils.html#a71785ed8de386df1fce95751bf5bec15">dyno::utils::throwExceptionIfPathInvalid()</a>, and <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#a9dda1bb31c0d84022c31b0f90bc8c05c">times_</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#aa71e71c72d3e058293141d0c4955f5a9">ProjectAriaAllLoader()</a>.</p>
 <div class="dynheader">
@@ -751,9 +751,9 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1ProjectAriaAllLoader_a664781c8a3f89499f188b3a436363ee5_cgraph.png" border="0" usemap="#aclassdyno_1_1ProjectAriaAllLoader_a664781c8a3f89499f188b3a436363ee5_cgraph" alt=""/></div>
 <map name="aclassdyno_1_1ProjectAriaAllLoader_a664781c8a3f89499f188b3a436363ee5_cgraph" id="aclassdyno_1_1ProjectAriaAllLoader_a664781c8a3f89499f188b3a436363ee5_cgraph">
-<area shape="rect" title=" " alt="" coords="5,27,200,67"/>
-<area shape="rect" href="namespacedyno.html#ae0c60629333938e89f2370502e9be3b3" title="Returns a ORDERED vector of all files in the given directory. (jesse) is this the file name or the ab..." alt="" coords="267,5,429,31"/>
-<area shape="rect" href="namespacedyno.html#a163cb16ef980acda5b09d45c3a156e6f" title=" " alt="" coords="248,55,448,95"/>
+<area shape="rect" title=" " alt="" coords="5,37,200,77"/>
+<area shape="rect" href="namespacedyno_1_1utils.html#a00bb451d0665ae0e0831e55edf53cb05" title="Returns a ORDERED vector of all files in the given directory. (jesse) is this the file name or the ab..." alt="" coords="264,5,431,45"/>
+<area shape="rect" href="namespacedyno_1_1utils.html#a71785ed8de386df1fce95751bf5bec15" title=" " alt="" coords="248,69,447,109"/>
 </map>
 </div>
 <div class="dynheader">
@@ -793,39 +793,40 @@ Here is the caller graph for this function:</div>
 
 <p class="definition">Definition at line <a class="el" href="ProjectAriaDataProvider_8cc_source.html#l00176">176</a> of file <a class="el" href="ProjectAriaDataProvider_8cc_source.html">ProjectAriaDataProvider.cc</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">  176</span>                         {</div>
-<div class="line"><span class="lineno">  177</span>    <span class="keyword">auto</span> rgb_image_files = <a class="code hl_function" href="namespacedyno.html#ae0c60629333938e89f2370502e9be3b3">getAllFilesInDir</a>(<a class="code hl_variable" href="classdyno_1_1ProjectAriaAllLoader.html#a896bf559b206b4595512f2e1e77f1a22">rgb_images_folder_path_</a>);</div>
+<div class="line"><span class="lineno">  177</span>    <span class="keyword">auto</span> rgb_image_files = <a class="code hl_function" href="namespacedyno_1_1utils.html#a00bb451d0665ae0e0831e55edf53cb05">utils::getAllFilesInDir</a>(<a class="code hl_variable" href="classdyno_1_1ProjectAriaAllLoader.html#a896bf559b206b4595512f2e1e77f1a22">rgb_images_folder_path_</a>);</div>
 <div class="line"><span class="lineno">  178</span>    <span class="keyword">auto</span> right_rgb_images_files =</div>
-<div class="line"><span class="lineno">  179</span>        <a class="code hl_function" href="namespacedyno.html#ae0c60629333938e89f2370502e9be3b3">getAllFilesInDir</a>(<a class="code hl_variable" href="classdyno_1_1ProjectAriaAllLoader.html#a4ec80bfbe7eaf949c377a5db8153366d">right_rgb_images_folder_path_</a>);</div>
-<div class="line"><span class="lineno">  180</span>    <span class="keyword">auto</span> depth_image_files = <a class="code hl_function" href="namespacedyno.html#ae0c60629333938e89f2370502e9be3b3">getAllFilesInDir</a>(<a class="code hl_variable" href="classdyno_1_1ProjectAriaAllLoader.html#a8657bb53bcb0a5d71ae41229e06999da">depth_images_folder_path_</a>);</div>
-<div class="line"><span class="lineno">  181</span>    <span class="keyword">auto</span> instance_masks_image_files = <a class="code hl_function" href="namespacedyno.html#ae0c60629333938e89f2370502e9be3b3">getAllFilesInDir</a>(<a class="code hl_variable" href="classdyno_1_1ProjectAriaAllLoader.html#ad6ea479e55bfd34c4c1bbc68548be19f">instance_masks_folder_</a>);</div>
-<div class="line"><span class="lineno">  182</span> </div>
-<div class="line"><span class="lineno">  183</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> f : rgb_image_files) {</div>
-<div class="line"><span class="lineno">  184</span>      <a class="code hl_variable" href="classdyno_1_1ProjectAriaAllLoader.html#a2cac51ba7b3e14834b4ae93708ad40b6">rgb_image_paths_</a>.push_back(f);</div>
-<div class="line"><span class="lineno">  185</span>    }</div>
-<div class="line"><span class="lineno">  186</span> </div>
-<div class="line"><span class="lineno">  187</span>    <span class="comment">// left images are sync and right images are raw so we need one less</span></div>
-<div class="line"><span class="lineno">  188</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> f : right_rgb_images_files) {</div>
-<div class="line"><span class="lineno">  189</span>      <a class="code hl_variable" href="classdyno_1_1ProjectAriaAllLoader.html#a8bb57d118916f5166dd638d1a985b76f">right_rgb_image_paths_</a>.push_back(f);</div>
-<div class="line"><span class="lineno">  190</span>    }</div>
-<div class="line"><span class="lineno">  191</span>    <a class="code hl_variable" href="classdyno_1_1ProjectAriaAllLoader.html#a8bb57d118916f5166dd638d1a985b76f">right_rgb_image_paths_</a>.pop_back();</div>
-<div class="line"><span class="lineno">  192</span> </div>
-<div class="line"><span class="lineno">  193</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> f : depth_image_files) {</div>
-<div class="line"><span class="lineno">  194</span>      <a class="code hl_variable" href="classdyno_1_1ProjectAriaAllLoader.html#ab202bd5e718fdb9fc14cebaf17c64352">depth_image_paths_</a>.push_back(f);</div>
-<div class="line"><span class="lineno">  195</span>    }</div>
-<div class="line"><span class="lineno">  196</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> f : instance_masks_image_files) {</div>
-<div class="line"><span class="lineno">  197</span>      <a class="code hl_variable" href="classdyno_1_1ProjectAriaAllLoader.html#a2a664e63c9b5b9ea357ff8f7cc98d85a">instance_masks_image_paths_</a>.push_back(f);</div>
-<div class="line"><span class="lineno">  198</span>    }</div>
-<div class="line"><span class="lineno">  199</span> </div>
-<div class="line"><span class="lineno">  200</span>    CHECK_EQ(<a class="code hl_variable" href="classdyno_1_1ProjectAriaAllLoader.html#a2cac51ba7b3e14834b4ae93708ad40b6">rgb_image_paths_</a>.size(), <a class="code hl_variable" href="classdyno_1_1ProjectAriaAllLoader.html#ab202bd5e718fdb9fc14cebaf17c64352">depth_image_paths_</a>.size());</div>
-<div class="line"><span class="lineno">  201</span>    CHECK_EQ(<a class="code hl_variable" href="classdyno_1_1ProjectAriaAllLoader.html#a8bb57d118916f5166dd638d1a985b76f">right_rgb_image_paths_</a>.size(), <a class="code hl_variable" href="classdyno_1_1ProjectAriaAllLoader.html#ab202bd5e718fdb9fc14cebaf17c64352">depth_image_paths_</a>.size());</div>
-<div class="line"><span class="lineno">  202</span>    CHECK_EQ(<a class="code hl_variable" href="classdyno_1_1ProjectAriaAllLoader.html#ab202bd5e718fdb9fc14cebaf17c64352">depth_image_paths_</a>.size(), <a class="code hl_variable" href="classdyno_1_1ProjectAriaAllLoader.html#a2a664e63c9b5b9ea357ff8f7cc98d85a">instance_masks_image_paths_</a>.size());</div>
-<div class="line"><span class="lineno">  203</span> </div>
-<div class="line"><span class="lineno">  204</span>    <span class="comment">// dataset size is number optical flow which should be one less!!</span></div>
-<div class="line"><span class="lineno">  205</span>    <span class="comment">// or equal too!!</span></div>
-<div class="line"><span class="lineno">  206</span>    <span class="comment">//  CHECK_EQ(instance_masks_image_paths_.size() -1u, dataset_size_);</span></div>
-<div class="line"><span class="lineno">  207</span>  }</div>
+<div class="line"><span class="lineno">  179</span>        <a class="code hl_function" href="namespacedyno_1_1utils.html#a00bb451d0665ae0e0831e55edf53cb05">utils::getAllFilesInDir</a>(<a class="code hl_variable" href="classdyno_1_1ProjectAriaAllLoader.html#a4ec80bfbe7eaf949c377a5db8153366d">right_rgb_images_folder_path_</a>);</div>
+<div class="line"><span class="lineno">  180</span>    <span class="keyword">auto</span> depth_image_files = <a class="code hl_function" href="namespacedyno_1_1utils.html#a00bb451d0665ae0e0831e55edf53cb05">utils::getAllFilesInDir</a>(<a class="code hl_variable" href="classdyno_1_1ProjectAriaAllLoader.html#a8657bb53bcb0a5d71ae41229e06999da">depth_images_folder_path_</a>);</div>
+<div class="line"><span class="lineno">  181</span>    <span class="keyword">auto</span> instance_masks_image_files =</div>
+<div class="line"><span class="lineno">  182</span>        <a class="code hl_function" href="namespacedyno_1_1utils.html#a00bb451d0665ae0e0831e55edf53cb05">utils::getAllFilesInDir</a>(<a class="code hl_variable" href="classdyno_1_1ProjectAriaAllLoader.html#ad6ea479e55bfd34c4c1bbc68548be19f">instance_masks_folder_</a>);</div>
+<div class="line"><span class="lineno">  183</span> </div>
+<div class="line"><span class="lineno">  184</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> f : rgb_image_files) {</div>
+<div class="line"><span class="lineno">  185</span>      <a class="code hl_variable" href="classdyno_1_1ProjectAriaAllLoader.html#a2cac51ba7b3e14834b4ae93708ad40b6">rgb_image_paths_</a>.push_back(f);</div>
+<div class="line"><span class="lineno">  186</span>    }</div>
+<div class="line"><span class="lineno">  187</span> </div>
+<div class="line"><span class="lineno">  188</span>    <span class="comment">// left images are sync and right images are raw so we need one less</span></div>
+<div class="line"><span class="lineno">  189</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> f : right_rgb_images_files) {</div>
+<div class="line"><span class="lineno">  190</span>      <a class="code hl_variable" href="classdyno_1_1ProjectAriaAllLoader.html#a8bb57d118916f5166dd638d1a985b76f">right_rgb_image_paths_</a>.push_back(f);</div>
+<div class="line"><span class="lineno">  191</span>    }</div>
+<div class="line"><span class="lineno">  192</span>    <a class="code hl_variable" href="classdyno_1_1ProjectAriaAllLoader.html#a8bb57d118916f5166dd638d1a985b76f">right_rgb_image_paths_</a>.pop_back();</div>
+<div class="line"><span class="lineno">  193</span> </div>
+<div class="line"><span class="lineno">  194</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> f : depth_image_files) {</div>
+<div class="line"><span class="lineno">  195</span>      <a class="code hl_variable" href="classdyno_1_1ProjectAriaAllLoader.html#ab202bd5e718fdb9fc14cebaf17c64352">depth_image_paths_</a>.push_back(f);</div>
+<div class="line"><span class="lineno">  196</span>    }</div>
+<div class="line"><span class="lineno">  197</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> f : instance_masks_image_files) {</div>
+<div class="line"><span class="lineno">  198</span>      <a class="code hl_variable" href="classdyno_1_1ProjectAriaAllLoader.html#a2a664e63c9b5b9ea357ff8f7cc98d85a">instance_masks_image_paths_</a>.push_back(f);</div>
+<div class="line"><span class="lineno">  199</span>    }</div>
+<div class="line"><span class="lineno">  200</span> </div>
+<div class="line"><span class="lineno">  201</span>    CHECK_EQ(<a class="code hl_variable" href="classdyno_1_1ProjectAriaAllLoader.html#a2cac51ba7b3e14834b4ae93708ad40b6">rgb_image_paths_</a>.size(), <a class="code hl_variable" href="classdyno_1_1ProjectAriaAllLoader.html#ab202bd5e718fdb9fc14cebaf17c64352">depth_image_paths_</a>.size());</div>
+<div class="line"><span class="lineno">  202</span>    CHECK_EQ(<a class="code hl_variable" href="classdyno_1_1ProjectAriaAllLoader.html#a8bb57d118916f5166dd638d1a985b76f">right_rgb_image_paths_</a>.size(), <a class="code hl_variable" href="classdyno_1_1ProjectAriaAllLoader.html#ab202bd5e718fdb9fc14cebaf17c64352">depth_image_paths_</a>.size());</div>
+<div class="line"><span class="lineno">  203</span>    CHECK_EQ(<a class="code hl_variable" href="classdyno_1_1ProjectAriaAllLoader.html#ab202bd5e718fdb9fc14cebaf17c64352">depth_image_paths_</a>.size(), <a class="code hl_variable" href="classdyno_1_1ProjectAriaAllLoader.html#a2a664e63c9b5b9ea357ff8f7cc98d85a">instance_masks_image_paths_</a>.size());</div>
+<div class="line"><span class="lineno">  204</span> </div>
+<div class="line"><span class="lineno">  205</span>    <span class="comment">// dataset size is number optical flow which should be one less!!</span></div>
+<div class="line"><span class="lineno">  206</span>    <span class="comment">// or equal too!!</span></div>
+<div class="line"><span class="lineno">  207</span>    <span class="comment">//  CHECK_EQ(instance_masks_image_paths_.size() -1u, dataset_size_);</span></div>
+<div class="line"><span class="lineno">  208</span>  }</div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#ab202bd5e718fdb9fc14cebaf17c64352">depth_image_paths_</a>, <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#a8657bb53bcb0a5d71ae41229e06999da">depth_images_folder_path_</a>, <a class="el" href="namespacedyno.html#ae0c60629333938e89f2370502e9be3b3">dyno::getAllFilesInDir()</a>, <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#ad6ea479e55bfd34c4c1bbc68548be19f">instance_masks_folder_</a>, <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#a2a664e63c9b5b9ea357ff8f7cc98d85a">instance_masks_image_paths_</a>, <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#a2cac51ba7b3e14834b4ae93708ad40b6">rgb_image_paths_</a>, <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#a896bf559b206b4595512f2e1e77f1a22">rgb_images_folder_path_</a>, <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#a8bb57d118916f5166dd638d1a985b76f">right_rgb_image_paths_</a>, and <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#a4ec80bfbe7eaf949c377a5db8153366d">right_rgb_images_folder_path_</a>.</p>
+<p class="reference">References <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#ab202bd5e718fdb9fc14cebaf17c64352">depth_image_paths_</a>, <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#a8657bb53bcb0a5d71ae41229e06999da">depth_images_folder_path_</a>, <a class="el" href="namespacedyno_1_1utils.html#a00bb451d0665ae0e0831e55edf53cb05">dyno::utils::getAllFilesInDir()</a>, <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#ad6ea479e55bfd34c4c1bbc68548be19f">instance_masks_folder_</a>, <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#a2a664e63c9b5b9ea357ff8f7cc98d85a">instance_masks_image_paths_</a>, <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#a2cac51ba7b3e14834b4ae93708ad40b6">rgb_image_paths_</a>, <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#a896bf559b206b4595512f2e1e77f1a22">rgb_images_folder_path_</a>, <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#a8bb57d118916f5166dd638d1a985b76f">right_rgb_image_paths_</a>, and <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#a4ec80bfbe7eaf949c377a5db8153366d">right_rgb_images_folder_path_</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#aa71e71c72d3e058293141d0c4955f5a9">ProjectAriaAllLoader()</a>.</p>
 <div class="dynheader">
@@ -834,7 +835,7 @@ Here is the call graph for this function:</div>
 <div class="center"><img src="classdyno_1_1ProjectAriaAllLoader_a3b467d8b21e57f428b50d03024ea0f40_cgraph.png" border="0" usemap="#aclassdyno_1_1ProjectAriaAllLoader_a3b467d8b21e57f428b50d03024ea0f40_cgraph" alt=""/></div>
 <map name="aclassdyno_1_1ProjectAriaAllLoader_a3b467d8b21e57f428b50d03024ea0f40_cgraph" id="aclassdyno_1_1ProjectAriaAllLoader_a3b467d8b21e57f428b50d03024ea0f40_cgraph">
 <area shape="rect" title=" " alt="" coords="5,5,200,45"/>
-<area shape="rect" href="namespacedyno.html#ae0c60629333938e89f2370502e9be3b3" title="Returns a ORDERED vector of all files in the given directory. (jesse) is this the file name or the ab..." alt="" coords="248,13,409,38"/>
+<area shape="rect" href="namespacedyno_1_1utils.html#a00bb451d0665ae0e0831e55edf53cb05" title="Returns a ORDERED vector of all files in the given directory. (jesse) is this the file name or the ab..." alt="" coords="248,5,415,45"/>
 </map>
 </div>
 <div class="dynheader">
@@ -900,7 +901,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ProjectAriaDataProvider_8cc_source.html#l00302">302</a> of file <a class="el" href="ProjectAriaDataProvider_8cc_source.html">ProjectAriaDataProvider.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ProjectAriaDataProvider_8cc_source.html#l00303">303</a> of file <a class="el" href="ProjectAriaDataProvider_8cc_source.html">ProjectAriaDataProvider.cc</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#aadc1a14a0b67880dc979bc9ee8e85593">getInstanceMask()</a>, <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#aa71e71c72d3e058293141d0c4955f5a9">ProjectAriaAllLoader()</a>, and <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#a9f78e5fb4e292dbe2ef45a899577c192">size()</a>.</p>
 
@@ -926,7 +927,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ProjectAriaDataProvider_8cc_source.html#l00296">296</a> of file <a class="el" href="ProjectAriaDataProvider_8cc_source.html">ProjectAriaDataProvider.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ProjectAriaDataProvider_8cc_source.html#l00297">297</a> of file <a class="el" href="ProjectAriaDataProvider_8cc_source.html">ProjectAriaDataProvider.cc</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#afe84fc7b18819828552597b102992828">getDepthImage()</a>, and <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#a3b467d8b21e57f428b50d03024ea0f40">loadOtherImages()</a>.</p>
 
@@ -952,7 +953,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ProjectAriaDataProvider_8cc_source.html#l00288">288</a> of file <a class="el" href="ProjectAriaDataProvider_8cc_source.html">ProjectAriaDataProvider.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ProjectAriaDataProvider_8cc_source.html#l00289">289</a> of file <a class="el" href="ProjectAriaDataProvider_8cc_source.html">ProjectAriaDataProvider.cc</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#a3b467d8b21e57f428b50d03024ea0f40">loadOtherImages()</a>, and <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#aa71e71c72d3e058293141d0c4955f5a9">ProjectAriaAllLoader()</a>.</p>
 
@@ -978,7 +979,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ProjectAriaDataProvider_8cc_source.html#l00290">290</a> of file <a class="el" href="ProjectAriaDataProvider_8cc_source.html">ProjectAriaDataProvider.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ProjectAriaDataProvider_8cc_source.html#l00291">291</a> of file <a class="el" href="ProjectAriaDataProvider_8cc_source.html">ProjectAriaDataProvider.cc</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#a3b467d8b21e57f428b50d03024ea0f40">loadOtherImages()</a>, and <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#aa71e71c72d3e058293141d0c4955f5a9">ProjectAriaAllLoader()</a>.</p>
 
@@ -1004,7 +1005,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ProjectAriaDataProvider_8cc_source.html#l00298">298</a> of file <a class="el" href="ProjectAriaDataProvider_8cc_source.html">ProjectAriaDataProvider.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ProjectAriaDataProvider_8cc_source.html#l00299">299</a> of file <a class="el" href="ProjectAriaDataProvider_8cc_source.html">ProjectAriaDataProvider.cc</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#aadc1a14a0b67880dc979bc9ee8e85593">getInstanceMask()</a>, and <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#a3b467d8b21e57f428b50d03024ea0f40">loadOtherImages()</a>.</p>
 
@@ -1030,7 +1031,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ProjectAriaDataProvider_8cc_source.html#l00291">291</a> of file <a class="el" href="ProjectAriaDataProvider_8cc_source.html">ProjectAriaDataProvider.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ProjectAriaDataProvider_8cc_source.html#l00292">292</a> of file <a class="el" href="ProjectAriaDataProvider_8cc_source.html">ProjectAriaDataProvider.cc</a>.</p>
 
 </div>
 </div>
@@ -1054,7 +1055,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ProjectAriaDataProvider_8cc_source.html#l00289">289</a> of file <a class="el" href="ProjectAriaDataProvider_8cc_source.html">ProjectAriaDataProvider.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ProjectAriaDataProvider_8cc_source.html#l00290">290</a> of file <a class="el" href="ProjectAriaDataProvider_8cc_source.html">ProjectAriaDataProvider.cc</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#a664781c8a3f89499f188b3a436363ee5">loadFlowImagesAndSize()</a>, and <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#aa71e71c72d3e058293141d0c4955f5a9">ProjectAriaAllLoader()</a>.</p>
 
@@ -1080,7 +1081,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ProjectAriaDataProvider_8cc_source.html#l00297">297</a> of file <a class="el" href="ProjectAriaDataProvider_8cc_source.html">ProjectAriaDataProvider.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ProjectAriaDataProvider_8cc_source.html#l00298">298</a> of file <a class="el" href="ProjectAriaDataProvider_8cc_source.html">ProjectAriaDataProvider.cc</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#ac28c716c4ff8f1d9dd542a0ee0f5732f">getOpticalFlow()</a>, and <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#aa71e71c72d3e058293141d0c4955f5a9">ProjectAriaAllLoader()</a>.</p>
 
@@ -1106,7 +1107,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ProjectAriaDataProvider_8cc_source.html#l00303">303</a> of file <a class="el" href="ProjectAriaDataProvider_8cc_source.html">ProjectAriaDataProvider.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ProjectAriaDataProvider_8cc_source.html#l00304">304</a> of file <a class="el" href="ProjectAriaDataProvider_8cc_source.html">ProjectAriaDataProvider.cc</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#ac43fe766caf1811dd1059585046e6e61">getLeftCameraParams()</a>, and <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#aafa595cc373c6967481e8bbc7e1e8bb0">loadCalibration()</a>.</p>
 
@@ -1132,7 +1133,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ProjectAriaDataProvider_8cc_source.html#l00294">294</a> of file <a class="el" href="ProjectAriaDataProvider_8cc_source.html">ProjectAriaDataProvider.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ProjectAriaDataProvider_8cc_source.html#l00295">295</a> of file <a class="el" href="ProjectAriaDataProvider_8cc_source.html">ProjectAriaDataProvider.cc</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#aadc1a14a0b67880dc979bc9ee8e85593">getInstanceMask()</a>, <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#a5dea349fac48f8399054ddb36cba26b9">getRGB()</a>, and <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#a3b467d8b21e57f428b50d03024ea0f40">loadOtherImages()</a>.</p>
 
@@ -1158,7 +1159,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ProjectAriaDataProvider_8cc_source.html#l00286">286</a> of file <a class="el" href="ProjectAriaDataProvider_8cc_source.html">ProjectAriaDataProvider.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ProjectAriaDataProvider_8cc_source.html#l00287">287</a> of file <a class="el" href="ProjectAriaDataProvider_8cc_source.html">ProjectAriaDataProvider.cc</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#a3b467d8b21e57f428b50d03024ea0f40">loadOtherImages()</a>, and <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#aa71e71c72d3e058293141d0c4955f5a9">ProjectAriaAllLoader()</a>.</p>
 
@@ -1184,7 +1185,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ProjectAriaDataProvider_8cc_source.html#l00292">292</a> of file <a class="el" href="ProjectAriaDataProvider_8cc_source.html">ProjectAriaDataProvider.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ProjectAriaDataProvider_8cc_source.html#l00293">293</a> of file <a class="el" href="ProjectAriaDataProvider_8cc_source.html">ProjectAriaDataProvider.cc</a>.</p>
 
 </div>
 </div>
@@ -1208,7 +1209,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ProjectAriaDataProvider_8cc_source.html#l00295">295</a> of file <a class="el" href="ProjectAriaDataProvider_8cc_source.html">ProjectAriaDataProvider.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ProjectAriaDataProvider_8cc_source.html#l00296">296</a> of file <a class="el" href="ProjectAriaDataProvider_8cc_source.html">ProjectAriaDataProvider.cc</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#a84b2a09674d501fda8dc30ed5d6b5c65">getRightRGB()</a>, and <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#a3b467d8b21e57f428b50d03024ea0f40">loadOtherImages()</a>.</p>
 
@@ -1234,7 +1235,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ProjectAriaDataProvider_8cc_source.html#l00287">287</a> of file <a class="el" href="ProjectAriaDataProvider_8cc_source.html">ProjectAriaDataProvider.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ProjectAriaDataProvider_8cc_source.html#l00288">288</a> of file <a class="el" href="ProjectAriaDataProvider_8cc_source.html">ProjectAriaDataProvider.cc</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#a3b467d8b21e57f428b50d03024ea0f40">loadOtherImages()</a>.</p>
 
@@ -1260,7 +1261,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ProjectAriaDataProvider_8cc_source.html#l00300">300</a> of file <a class="el" href="ProjectAriaDataProvider_8cc_source.html">ProjectAriaDataProvider.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ProjectAriaDataProvider_8cc_source.html#l00301">301</a> of file <a class="el" href="ProjectAriaDataProvider_8cc_source.html">ProjectAriaDataProvider.cc</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#a7bf2d51a4181ce90a5a2bdd869bd944c">getTimestamp()</a>, and <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#a664781c8a3f89499f188b3a436363ee5">loadFlowImagesAndSize()</a>.</p>
 

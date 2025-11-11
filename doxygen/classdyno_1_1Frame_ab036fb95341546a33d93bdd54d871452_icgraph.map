@@ -1,6 +1,6 @@
 <map id="dyno::Frame::usableStaticFeaturesBegin" name="dyno::Frame::usableStaticFeaturesBegin">
-<area shape="rect" id="node1" title=" " alt="" coords="536,37,727,77"/>
-<area shape="rect" id="node2" href="$classdyno_1_1RGBDInstanceFrontendModule.html#a246f701e4605c98dc7cb6bbd6f657998" title=" " alt="" coords="271,5,483,45"/>
-<area shape="rect" id="node4" href="$classdyno_1_1Frame.html#a6b8a9f20ec398a8046dc25f77277fc15" title="Gets the total number of static inlier features." alt="" coords="265,69,488,109"/>
+<area shape="rect" id="node1" title=" " alt="" coords="564,37,755,77"/>
+<area shape="rect" id="node2" href="$classdyno_1_1RGBDInstanceFrontendModule.html#ab40113f18671c1f496269e8c7a18267a" title=" " alt="" coords="265,5,516,45"/>
+<area shape="rect" id="node4" href="$classdyno_1_1Frame.html#a6b8a9f20ec398a8046dc25f77277fc15" title="Gets the total number of static inlier features." alt="" coords="279,69,502,109"/>
 <area shape="rect" id="node3" href="$classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2" title=" " alt="" coords="5,5,217,45"/>
 </map>

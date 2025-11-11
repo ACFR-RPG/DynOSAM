@@ -120,7 +120,7 @@ Private Attributes</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="YamlParser_8hpp_source.html#l00042">42</a> of file <a class="el" href="YamlParser_8hpp_source.html">YamlParser.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="YamlParser_8hpp_source.html#l00048">48</a> of file <a class="el" href="YamlParser_8hpp_source.html">YamlParser.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a81635e6a1bed5ee2452bd5b8a560c5af" name="a81635e6a1bed5ee2452bd5b8a560c5af"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a81635e6a1bed5ee2452bd5b8a560c5af">&#9670;&#160;</a></span>YamlParser()</h2>
@@ -146,17 +146,17 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="YamlParser_8hpp_source.html#l00046">46</a> of file <a class="el" href="YamlParser_8hpp_source.html">YamlParser.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   46</span>                                        : <a class="code hl_variable" href="classdyno_1_1YamlParser.html#a786992e0559b718537a860d2bd81d911">fs_</a>(), <a class="code hl_variable" href="classdyno_1_1YamlParser.html#ae0617fef05d481fe34dcf680bce146a4">filepath_</a>(filepath) {</div>
-<div class="line"><span class="lineno">   47</span>    <a class="code hl_function" href="namespacedyno.html#a163cb16ef980acda5b09d45c3a156e6f">throwExceptionIfPathInvalid</a>(<a class="code hl_variable" href="classdyno_1_1YamlParser.html#ae0617fef05d481fe34dcf680bce146a4">filepath_</a>);</div>
-<div class="line"><span class="lineno">   48</span>    <a class="code hl_function" href="classdyno_1_1YamlParser.html#a80f293fa6c0f67924015b5dc5b6f08b8">openFile</a>(filepath, &amp;<a class="code hl_variable" href="classdyno_1_1YamlParser.html#a786992e0559b718537a860d2bd81d911">fs_</a>);</div>
-<div class="line"><span class="lineno">   49</span>  }</div>
-<div class="ttc" id="aclassdyno_1_1YamlParser_html_a786992e0559b718537a860d2bd81d911"><div class="ttname"><a href="classdyno_1_1YamlParser.html#a786992e0559b718537a860d2bd81d911">dyno::YamlParser::fs_</a></div><div class="ttdeci">cv::FileStorage fs_</div><div class="ttdef"><b>Definition:</b> <a href="YamlParser_8hpp_source.html#l00144">YamlParser.hpp:144</a></div></div>
-<div class="ttc" id="aclassdyno_1_1YamlParser_html_a80f293fa6c0f67924015b5dc5b6f08b8"><div class="ttname"><a href="classdyno_1_1YamlParser.html#a80f293fa6c0f67924015b5dc5b6f08b8">dyno::YamlParser::openFile</a></div><div class="ttdeci">void openFile(const std::string &amp;filepath, cv::FileStorage *fs) const</div><div class="ttdef"><b>Definition:</b> <a href="YamlParser_8hpp_source.html#l00124">YamlParser.hpp:124</a></div></div>
-<div class="ttc" id="aclassdyno_1_1YamlParser_html_ae0617fef05d481fe34dcf680bce146a4"><div class="ttname"><a href="classdyno_1_1YamlParser.html#ae0617fef05d481fe34dcf680bce146a4">dyno::YamlParser::filepath_</a></div><div class="ttdeci">std::string filepath_</div><div class="ttdef"><b>Definition:</b> <a href="YamlParser_8hpp_source.html#l00145">YamlParser.hpp:145</a></div></div>
-<div class="ttc" id="anamespacedyno_html_a163cb16ef980acda5b09d45c3a156e6f"><div class="ttname"><a href="namespacedyno.html#a163cb16ef980acda5b09d45c3a156e6f">dyno::throwExceptionIfPathInvalid</a></div><div class="ttdeci">void throwExceptionIfPathInvalid(const std::string &amp;image_path)</div><div class="ttdef"><b>Definition:</b> <a href="DataProviderUtils_8cc_source.html#l00048">DataProviderUtils.cc:48</a></div></div>
+<p class="definition">Definition at line <a class="el" href="YamlParser_8hpp_source.html#l00052">52</a> of file <a class="el" href="YamlParser_8hpp_source.html">YamlParser.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   52</span>                                        : <a class="code hl_variable" href="classdyno_1_1YamlParser.html#a786992e0559b718537a860d2bd81d911">fs_</a>(), <a class="code hl_variable" href="classdyno_1_1YamlParser.html#ae0617fef05d481fe34dcf680bce146a4">filepath_</a>(filepath) {</div>
+<div class="line"><span class="lineno">   53</span>    <a class="code hl_function" href="namespacedyno_1_1utils.html#a71785ed8de386df1fce95751bf5bec15">utils::throwExceptionIfPathInvalid</a>(<a class="code hl_variable" href="classdyno_1_1YamlParser.html#ae0617fef05d481fe34dcf680bce146a4">filepath_</a>);</div>
+<div class="line"><span class="lineno">   54</span>    <a class="code hl_function" href="classdyno_1_1YamlParser.html#a80f293fa6c0f67924015b5dc5b6f08b8">openFile</a>(filepath, &amp;<a class="code hl_variable" href="classdyno_1_1YamlParser.html#a786992e0559b718537a860d2bd81d911">fs_</a>);</div>
+<div class="line"><span class="lineno">   55</span>  }</div>
+<div class="ttc" id="aclassdyno_1_1YamlParser_html_a786992e0559b718537a860d2bd81d911"><div class="ttname"><a href="classdyno_1_1YamlParser.html#a786992e0559b718537a860d2bd81d911">dyno::YamlParser::fs_</a></div><div class="ttdeci">cv::FileStorage fs_</div><div class="ttdef"><b>Definition:</b> <a href="YamlParser_8hpp_source.html#l00143">YamlParser.hpp:143</a></div></div>
+<div class="ttc" id="aclassdyno_1_1YamlParser_html_a80f293fa6c0f67924015b5dc5b6f08b8"><div class="ttname"><a href="classdyno_1_1YamlParser.html#a80f293fa6c0f67924015b5dc5b6f08b8">dyno::YamlParser::openFile</a></div><div class="ttdeci">void openFile(const std::string &amp;filepath, cv::FileStorage *fs) const</div><div class="ttdef"><b>Definition:</b> <a href="YamlParser_8hpp_source.html#l00123">YamlParser.hpp:123</a></div></div>
+<div class="ttc" id="aclassdyno_1_1YamlParser_html_ae0617fef05d481fe34dcf680bce146a4"><div class="ttname"><a href="classdyno_1_1YamlParser.html#ae0617fef05d481fe34dcf680bce146a4">dyno::YamlParser::filepath_</a></div><div class="ttdeci">std::string filepath_</div><div class="ttdef"><b>Definition:</b> <a href="YamlParser_8hpp_source.html#l00144">YamlParser.hpp:144</a></div></div>
+<div class="ttc" id="anamespacedyno_1_1utils_html_a71785ed8de386df1fce95751bf5bec15"><div class="ttname"><a href="namespacedyno_1_1utils.html#a71785ed8de386df1fce95751bf5bec15">dyno::utils::throwExceptionIfPathInvalid</a></div><div class="ttdeci">void throwExceptionIfPathInvalid(const std::string &amp;image_path)</div><div class="ttdef"><b>Definition:</b> <a href="FileSystem_8cc_source.html#l00012">FileSystem.cc:12</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="classdyno_1_1YamlParser.html#ae0617fef05d481fe34dcf680bce146a4">filepath_</a>, <a class="el" href="classdyno_1_1YamlParser.html#a786992e0559b718537a860d2bd81d911">fs_</a>, <a class="el" href="classdyno_1_1YamlParser.html#a80f293fa6c0f67924015b5dc5b6f08b8">openFile()</a>, and <a class="el" href="namespacedyno.html#a163cb16ef980acda5b09d45c3a156e6f">dyno::throwExceptionIfPathInvalid()</a>.</p>
+<p class="reference">References <a class="el" href="classdyno_1_1YamlParser.html#ae0617fef05d481fe34dcf680bce146a4">filepath_</a>, <a class="el" href="classdyno_1_1YamlParser.html#a786992e0559b718537a860d2bd81d911">fs_</a>, <a class="el" href="classdyno_1_1YamlParser.html#a80f293fa6c0f67924015b5dc5b6f08b8">openFile()</a>, and <a class="el" href="namespacedyno_1_1utils.html#a71785ed8de386df1fce95751bf5bec15">dyno::utils::throwExceptionIfPathInvalid()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -164,7 +164,7 @@ Here is the call graph for this function:</div>
 <map name="aclassdyno_1_1YamlParser_a81635e6a1bed5ee2452bd5b8a560c5af_cgraph" id="aclassdyno_1_1YamlParser_a81635e6a1bed5ee2452bd5b8a560c5af_cgraph">
 <area shape="rect" title=" " alt="" coords="5,35,217,60"/>
 <area shape="rect" href="classdyno_1_1YamlParser.html#a80f293fa6c0f67924015b5dc5b6f08b8" title=" " alt="" coords="267,5,463,31"/>
-<area shape="rect" href="namespacedyno.html#a163cb16ef980acda5b09d45c3a156e6f" title=" " alt="" coords="265,55,465,95"/>
+<area shape="rect" href="namespacedyno_1_1utils.html#a71785ed8de386df1fce95751bf5bec15" title=" " alt="" coords="265,55,464,95"/>
 </map>
 </div>
 
@@ -193,9 +193,9 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="YamlParser_8hpp_source.html#l00050">50</a> of file <a class="el" href="YamlParser_8hpp_source.html">YamlParser.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   50</span>{ <a class="code hl_function" href="classdyno_1_1YamlParser.html#afceff724a897e5f2ad5f52c093f51d79">closeFile</a>(&amp;<a class="code hl_variable" href="classdyno_1_1YamlParser.html#a786992e0559b718537a860d2bd81d911">fs_</a>); }</div>
-<div class="ttc" id="aclassdyno_1_1YamlParser_html_afceff724a897e5f2ad5f52c093f51d79"><div class="ttname"><a href="classdyno_1_1YamlParser.html#afceff724a897e5f2ad5f52c093f51d79">dyno::YamlParser::closeFile</a></div><div class="ttdeci">void closeFile(cv::FileStorage *fs) const</div><div class="ttdef"><b>Definition:</b> <a href="YamlParser_8hpp_source.html#l00139">YamlParser.hpp:139</a></div></div>
+<p class="definition">Definition at line <a class="el" href="YamlParser_8hpp_source.html#l00056">56</a> of file <a class="el" href="YamlParser_8hpp_source.html">YamlParser.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   56</span>{ <a class="code hl_function" href="classdyno_1_1YamlParser.html#afceff724a897e5f2ad5f52c093f51d79">closeFile</a>(&amp;<a class="code hl_variable" href="classdyno_1_1YamlParser.html#a786992e0559b718537a860d2bd81d911">fs_</a>); }</div>
+<div class="ttc" id="aclassdyno_1_1YamlParser_html_afceff724a897e5f2ad5f52c093f51d79"><div class="ttname"><a href="classdyno_1_1YamlParser.html#afceff724a897e5f2ad5f52c093f51d79">dyno::YamlParser::closeFile</a></div><div class="ttdeci">void closeFile(cv::FileStorage *fs) const</div><div class="ttdef"><b>Definition:</b> <a href="YamlParser_8hpp_source.html#l00138">YamlParser.hpp:138</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1YamlParser.html#afceff724a897e5f2ad5f52c093f51d79">closeFile()</a>, and <a class="el" href="classdyno_1_1YamlParser.html#a786992e0559b718537a860d2bd81d911">fs_</a>.</p>
 <div class="dynheader">
@@ -235,10 +235,10 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="YamlParser_8hpp_source.html#l00139">139</a> of file <a class="el" href="YamlParser_8hpp_source.html">YamlParser.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  139</span>                                                 {</div>
-<div class="line"><span class="lineno">  140</span>    CHECK_NOTNULL(fs)-&gt;release();</div>
-<div class="line"><span class="lineno">  141</span>  }</div>
+<p class="definition">Definition at line <a class="el" href="YamlParser_8hpp_source.html#l00138">138</a> of file <a class="el" href="YamlParser_8hpp_source.html">YamlParser.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  138</span>                                                 {</div>
+<div class="line"><span class="lineno">  139</span>    CHECK_NOTNULL(fs)-&gt;release();</div>
+<div class="line"><span class="lineno">  140</span>  }</div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1YamlParser.html#a242e108f23f887a6fa6582cf7d190963">~YamlParser()</a>.</p>
 <div class="dynheader">
@@ -295,23 +295,23 @@ template&lt;class T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="YamlParser_8hpp_source.html#l00081">81</a> of file <a class="el" href="YamlParser_8hpp_source.html">YamlParser.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   83</span>                                           {</div>
-<div class="line"><span class="lineno">   84</span>    CHECK(!<span class="keywordtype">id</span>.empty());</div>
-<div class="line"><span class="lineno">   85</span>    CHECK(!id_2.empty());</div>
-<div class="line"><span class="lineno">   86</span>    <span class="keyword">const</span> cv::FileNode&amp; file_handle = <a class="code hl_variable" href="classdyno_1_1YamlParser.html#a786992e0559b718537a860d2bd81d911">fs_</a>[id];</div>
-<div class="line"><span class="lineno">   87</span>    CHECK_NE(file_handle.type(), cv::FileNode::NONE)</div>
-<div class="line"><span class="lineno">   88</span>        &lt;&lt; <span class="stringliteral">&quot;Missing parameter: &quot;</span> &lt;&lt; <span class="keywordtype">id</span>.c_str()</div>
-<div class="line"><span class="lineno">   89</span>        &lt;&lt; <span class="stringliteral">&quot; in file: &quot;</span> &lt;&lt; <a class="code hl_variable" href="classdyno_1_1YamlParser.html#ae0617fef05d481fe34dcf680bce146a4">filepath_</a>.c_str();</div>
-<div class="line"><span class="lineno">   90</span>    <span class="keyword">const</span> cv::FileNode&amp; file_handle_2 = file_handle[id_2];</div>
-<div class="line"><span class="lineno">   91</span>    CHECK_NE(file_handle_2.type(), cv::FileNode::NONE)</div>
-<div class="line"><span class="lineno">   92</span>        &lt;&lt; <span class="stringliteral">&quot;Missing nested parameter: &quot;</span> &lt;&lt; id_2.c_str() &lt;&lt; <span class="stringliteral">&quot; inside &quot;</span></div>
-<div class="line"><span class="lineno">   93</span>        &lt;&lt; <span class="keywordtype">id</span>.c_str() &lt;&lt; <span class="charliteral">&#39;\n&#39;</span></div>
-<div class="line"><span class="lineno">   94</span>        &lt;&lt; <span class="stringliteral">&quot; in file: &quot;</span> &lt;&lt; <a class="code hl_variable" href="classdyno_1_1YamlParser.html#ae0617fef05d481fe34dcf680bce146a4">filepath_</a>.c_str();</div>
-<div class="line"><span class="lineno">   95</span>    CHECK(file_handle.isMap())</div>
-<div class="line"><span class="lineno">   96</span>        &lt;&lt; <span class="stringliteral">&quot;I think that if this is not a map, we can&#39;t use &gt;&gt;&quot;</span>;</div>
-<div class="line"><span class="lineno">   97</span>    file_handle_2 &gt;&gt; *CHECK_NOTNULL(output);</div>
-<div class="line"><span class="lineno">   98</span>  }</div>
+<p class="definition">Definition at line <a class="el" href="YamlParser_8hpp_source.html#l00085">85</a> of file <a class="el" href="YamlParser_8hpp_source.html">YamlParser.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   86</span>                                           {</div>
+<div class="line"><span class="lineno">   87</span>    CHECK(!<span class="keywordtype">id</span>.empty());</div>
+<div class="line"><span class="lineno">   88</span>    CHECK(!id_2.empty());</div>
+<div class="line"><span class="lineno">   89</span>    <span class="keyword">const</span> cv::FileNode&amp; file_handle = <a class="code hl_variable" href="classdyno_1_1YamlParser.html#a786992e0559b718537a860d2bd81d911">fs_</a>[id];</div>
+<div class="line"><span class="lineno">   90</span>    CHECK_NE(file_handle.type(), cv::FileNode::NONE)</div>
+<div class="line"><span class="lineno">   91</span>        &lt;&lt; <span class="stringliteral">&quot;Missing parameter: &quot;</span> &lt;&lt; <span class="keywordtype">id</span>.c_str()</div>
+<div class="line"><span class="lineno">   92</span>        &lt;&lt; <span class="stringliteral">&quot; in file: &quot;</span> &lt;&lt; <a class="code hl_variable" href="classdyno_1_1YamlParser.html#ae0617fef05d481fe34dcf680bce146a4">filepath_</a>.c_str();</div>
+<div class="line"><span class="lineno">   93</span>    <span class="keyword">const</span> cv::FileNode&amp; file_handle_2 = file_handle[id_2];</div>
+<div class="line"><span class="lineno">   94</span>    CHECK_NE(file_handle_2.type(), cv::FileNode::NONE)</div>
+<div class="line"><span class="lineno">   95</span>        &lt;&lt; <span class="stringliteral">&quot;Missing nested parameter: &quot;</span> &lt;&lt; id_2.c_str() &lt;&lt; <span class="stringliteral">&quot; inside &quot;</span></div>
+<div class="line"><span class="lineno">   96</span>        &lt;&lt; <span class="keywordtype">id</span>.c_str() &lt;&lt; <span class="charliteral">&#39;\n&#39;</span></div>
+<div class="line"><span class="lineno">   97</span>        &lt;&lt; <span class="stringliteral">&quot; in file: &quot;</span> &lt;&lt; <a class="code hl_variable" href="classdyno_1_1YamlParser.html#ae0617fef05d481fe34dcf680bce146a4">filepath_</a>.c_str();</div>
+<div class="line"><span class="lineno">   98</span>    CHECK(file_handle.isMap())</div>
+<div class="line"><span class="lineno">   99</span>        &lt;&lt; <span class="stringliteral">&quot;I think that if this is not a map, we can&#39;t use &gt;&gt;&quot;</span>;</div>
+<div class="line"><span class="lineno">  100</span>    file_handle_2 &gt;&gt; *CHECK_NOTNULL(output);</div>
+<div class="line"><span class="lineno">  101</span>  }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1YamlParser.html#ae0617fef05d481fe34dcf680bce146a4">filepath_</a>, and <a class="el" href="classdyno_1_1YamlParser.html#a786992e0559b718537a860d2bd81d911">fs_</a>.</p>
 
@@ -365,25 +365,23 @@ template&lt;class T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="YamlParser_8hpp_source.html#l00101">101</a> of file <a class="el" href="YamlParser_8hpp_source.html">YamlParser.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  104</span>                                                 {</div>
-<div class="line"><span class="lineno">  105</span>    CHECK(!<span class="keywordtype">id</span>.empty());</div>
-<div class="line"><span class="lineno">  106</span>    CHECK(!id_2.empty());</div>
-<div class="line"><span class="lineno">  107</span>    <span class="keyword">const</span> cv::FileNode&amp; file_handle = <a class="code hl_variable" href="classdyno_1_1YamlParser.html#a786992e0559b718537a860d2bd81d911">fs_</a>[id];</div>
-<div class="line"><span class="lineno">  108</span>    CHECK_NE(file_handle.type(), cv::FileNode::NONE)</div>
-<div class="line"><span class="lineno">  109</span>        &lt;&lt; <span class="stringliteral">&quot;Missing parameter: &quot;</span> &lt;&lt; <span class="keywordtype">id</span>.c_str()</div>
-<div class="line"><span class="lineno">  110</span>        &lt;&lt; <span class="stringliteral">&quot; in file: &quot;</span> &lt;&lt; <a class="code hl_variable" href="classdyno_1_1YamlParser.html#ae0617fef05d481fe34dcf680bce146a4">filepath_</a>.c_str();</div>
-<div class="line"><span class="lineno">  111</span>    <span class="keyword">const</span> cv::FileNode&amp; file_handle_2 = file_handle[id_2];</div>
-<div class="line"><span class="lineno">  112</span>    <span class="keywordflow">if</span>(file_handle_2.type() == cv::FileNode::NONE) {</div>
-<div class="line"><span class="lineno">  113</span>      *output = default_value;</div>
-<div class="line"><span class="lineno">  114</span>    }</div>
-<div class="line"><span class="lineno">  115</span>    <span class="keywordflow">else</span> {</div>
+<p class="definition">Definition at line <a class="el" href="YamlParser_8hpp_source.html#l00104">104</a> of file <a class="el" href="YamlParser_8hpp_source.html">YamlParser.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  105</span>                                                            {</div>
+<div class="line"><span class="lineno">  106</span>    CHECK(!<span class="keywordtype">id</span>.empty());</div>
+<div class="line"><span class="lineno">  107</span>    CHECK(!id_2.empty());</div>
+<div class="line"><span class="lineno">  108</span>    <span class="keyword">const</span> cv::FileNode&amp; file_handle = <a class="code hl_variable" href="classdyno_1_1YamlParser.html#a786992e0559b718537a860d2bd81d911">fs_</a>[id];</div>
+<div class="line"><span class="lineno">  109</span>    CHECK_NE(file_handle.type(), cv::FileNode::NONE)</div>
+<div class="line"><span class="lineno">  110</span>        &lt;&lt; <span class="stringliteral">&quot;Missing parameter: &quot;</span> &lt;&lt; <span class="keywordtype">id</span>.c_str()</div>
+<div class="line"><span class="lineno">  111</span>        &lt;&lt; <span class="stringliteral">&quot; in file: &quot;</span> &lt;&lt; <a class="code hl_variable" href="classdyno_1_1YamlParser.html#ae0617fef05d481fe34dcf680bce146a4">filepath_</a>.c_str();</div>
+<div class="line"><span class="lineno">  112</span>    <span class="keyword">const</span> cv::FileNode&amp; file_handle_2 = file_handle[id_2];</div>
+<div class="line"><span class="lineno">  113</span>    <span class="keywordflow">if</span> (file_handle_2.type() == cv::FileNode::NONE) {</div>
+<div class="line"><span class="lineno">  114</span>      *output = default_value;</div>
+<div class="line"><span class="lineno">  115</span>    } <span class="keywordflow">else</span> {</div>
 <div class="line"><span class="lineno">  116</span>      T v;</div>
 <div class="line"><span class="lineno">  117</span>      file_handle_2 &gt;&gt; v;</div>
 <div class="line"><span class="lineno">  118</span>      file_handle_2 &gt;&gt; *output;</div>
 <div class="line"><span class="lineno">  119</span>    }</div>
-<div class="line"><span class="lineno">  120</span> </div>
-<div class="line"><span class="lineno">  121</span>  }</div>
+<div class="line"><span class="lineno">  120</span>  }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1YamlParser.html#ae0617fef05d481fe34dcf680bce146a4">filepath_</a>, and <a class="el" href="classdyno_1_1YamlParser.html#a786992e0559b718537a860d2bd81d911">fs_</a>.</p>
 
@@ -425,17 +423,17 @@ template&lt;class T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="YamlParser_8hpp_source.html#l00053">53</a> of file <a class="el" href="YamlParser_8hpp_source.html">YamlParser.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   53</span>                                                          {</div>
-<div class="line"><span class="lineno">   54</span>    CHECK(!<span class="keywordtype">id</span>.empty());</div>
-<div class="line"><span class="lineno">   55</span>    CHECK_NOTNULL(output);</div>
-<div class="line"><span class="lineno">   56</span>    <span class="keyword">const</span> cv::FileNode&amp; file_handle = <a class="code hl_variable" href="classdyno_1_1YamlParser.html#a786992e0559b718537a860d2bd81d911">fs_</a>[id];</div>
-<div class="line"><span class="lineno">   57</span>    CHECK_NE(file_handle.type(), cv::FileNode::NONE)</div>
-<div class="line"><span class="lineno">   58</span>        &lt;&lt; <span class="stringliteral">&quot;Missing parameter: &quot;</span> &lt;&lt; <span class="keywordtype">id</span>.c_str()</div>
-<div class="line"><span class="lineno">   59</span>        &lt;&lt; <span class="stringliteral">&quot; in file: &quot;</span> &lt;&lt; <a class="code hl_variable" href="classdyno_1_1YamlParser.html#ae0617fef05d481fe34dcf680bce146a4">filepath_</a>.c_str();</div>
-<div class="line"><span class="lineno">   60</span>    file_handle &gt;&gt; *output;</div>
-<div class="line"><span class="lineno">   61</span>    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">   62</span>  }</div>
+<p class="definition">Definition at line <a class="el" href="YamlParser_8hpp_source.html#l00059">59</a> of file <a class="el" href="YamlParser_8hpp_source.html">YamlParser.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   59</span>                                                          {</div>
+<div class="line"><span class="lineno">   60</span>    CHECK(!<span class="keywordtype">id</span>.empty());</div>
+<div class="line"><span class="lineno">   61</span>    CHECK_NOTNULL(output);</div>
+<div class="line"><span class="lineno">   62</span>    <span class="keyword">const</span> cv::FileNode&amp; file_handle = <a class="code hl_variable" href="classdyno_1_1YamlParser.html#a786992e0559b718537a860d2bd81d911">fs_</a>[id];</div>
+<div class="line"><span class="lineno">   63</span>    CHECK_NE(file_handle.type(), cv::FileNode::NONE)</div>
+<div class="line"><span class="lineno">   64</span>        &lt;&lt; <span class="stringliteral">&quot;Missing parameter: &quot;</span> &lt;&lt; <span class="keywordtype">id</span>.c_str()</div>
+<div class="line"><span class="lineno">   65</span>        &lt;&lt; <span class="stringliteral">&quot; in file: &quot;</span> &lt;&lt; <a class="code hl_variable" href="classdyno_1_1YamlParser.html#ae0617fef05d481fe34dcf680bce146a4">filepath_</a>.c_str();</div>
+<div class="line"><span class="lineno">   66</span>    file_handle &gt;&gt; *output;</div>
+<div class="line"><span class="lineno">   67</span>    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">   68</span>  }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1YamlParser.html#ae0617fef05d481fe34dcf680bce146a4">filepath_</a>, and <a class="el" href="classdyno_1_1YamlParser.html#a786992e0559b718537a860d2bd81d911">fs_</a>.</p>
 
@@ -501,21 +499,19 @@ template&lt;class T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="YamlParser_8hpp_source.html#l00065">65</a> of file <a class="el" href="YamlParser_8hpp_source.html">YamlParser.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   65</span>                                                                           {</div>
-<div class="line"><span class="lineno">   66</span>    CHECK(!<span class="keywordtype">id</span>.empty());</div>
-<div class="line"><span class="lineno">   67</span>    CHECK_NOTNULL(output);</div>
-<div class="line"><span class="lineno">   68</span>    <span class="keyword">const</span> cv::FileNode&amp; file_handle = <a class="code hl_variable" href="classdyno_1_1YamlParser.html#a786992e0559b718537a860d2bd81d911">fs_</a>[id];</div>
-<div class="line"><span class="lineno">   69</span>    <span class="keywordflow">if</span>(file_handle.type() == cv::FileNode::NONE) {</div>
-<div class="line"><span class="lineno">   70</span>      *output = default_value;</div>
-<div class="line"><span class="lineno">   71</span>      <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">   72</span>    }</div>
-<div class="line"><span class="lineno">   73</span>    <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">   74</span>      file_handle &gt;&gt; *output;</div>
-<div class="line"><span class="lineno">   75</span>      <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">   76</span>    }</div>
-<div class="line"><span class="lineno">   77</span> </div>
-<div class="line"><span class="lineno">   78</span>  }</div>
+<p class="definition">Definition at line <a class="el" href="YamlParser_8hpp_source.html#l00071">71</a> of file <a class="el" href="YamlParser_8hpp_source.html">YamlParser.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   71</span>                                                                           {</div>
+<div class="line"><span class="lineno">   72</span>    CHECK(!<span class="keywordtype">id</span>.empty());</div>
+<div class="line"><span class="lineno">   73</span>    CHECK_NOTNULL(output);</div>
+<div class="line"><span class="lineno">   74</span>    <span class="keyword">const</span> cv::FileNode&amp; file_handle = <a class="code hl_variable" href="classdyno_1_1YamlParser.html#a786992e0559b718537a860d2bd81d911">fs_</a>[id];</div>
+<div class="line"><span class="lineno">   75</span>    <span class="keywordflow">if</span> (file_handle.type() == cv::FileNode::NONE) {</div>
+<div class="line"><span class="lineno">   76</span>      *output = default_value;</div>
+<div class="line"><span class="lineno">   77</span>      <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">   78</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">   79</span>      file_handle &gt;&gt; *output;</div>
+<div class="line"><span class="lineno">   80</span>      <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">   81</span>    }</div>
+<div class="line"><span class="lineno">   82</span>  }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1YamlParser.html#a786992e0559b718537a860d2bd81d911">fs_</a>.</p>
 
@@ -555,22 +551,25 @@ template&lt;class T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="YamlParser_8hpp_source.html#l00124">124</a> of file <a class="el" href="YamlParser_8hpp_source.html">YamlParser.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  124</span>                                                                    {</div>
-<div class="line"><span class="lineno">  125</span>    CHECK(!filepath.empty()) &lt;&lt; <span class="stringliteral">&quot;Empty filepath!&quot;</span>;</div>
-<div class="line"><span class="lineno">  126</span>    <span class="keywordflow">try</span> {</div>
-<div class="line"><span class="lineno">  127</span>      CHECK_NOTNULL(fs)-&gt;open(filepath, cv::FileStorage::READ);</div>
-<div class="line"><span class="lineno">  128</span>    } <span class="keywordflow">catch</span> (cv::Exception&amp; e) {</div>
-<div class="line"><span class="lineno">  129</span>      <span class="keywordflow">throw</span> DynosamException(</div>
-<div class="line"><span class="lineno">  130</span>        <span class="stringliteral">&quot;Cannot open file: &quot;</span> + filepath + <span class="charliteral">&#39;\n&#39;</span> + <span class="stringliteral">&quot;OpenCV error code: &quot;</span> + e.msg</div>
-<div class="line"><span class="lineno">  131</span>        + <span class="stringliteral">&quot; (remember that the first line should be: %YAML:1.0)!&quot;</span></div>
-<div class="line"><span class="lineno">  132</span>      );</div>
-<div class="line"><span class="lineno">  133</span>    }</div>
-<div class="line"><span class="lineno">  134</span>    LOG_IF(FATAL, !fs-&gt;isOpened())</div>
-<div class="line"><span class="lineno">  135</span>        &lt;&lt; <span class="stringliteral">&quot;Cannot open file in parseYAML: &quot;</span> &lt;&lt; filepath</div>
-<div class="line"><span class="lineno">  136</span>        &lt;&lt; <span class="stringliteral">&quot; (remember that the first line should be: %YAML:1.0)&quot;</span>;</div>
-<div class="line"><span class="lineno">  137</span>  }</div>
+<p class="definition">Definition at line <a class="el" href="YamlParser_8hpp_source.html#l00123">123</a> of file <a class="el" href="YamlParser_8hpp_source.html">YamlParser.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  123</span>                                                                    {</div>
+<div class="line"><span class="lineno">  124</span>    CHECK(!filepath.empty()) &lt;&lt; <span class="stringliteral">&quot;Empty filepath!&quot;</span>;</div>
+<div class="line"><span class="lineno">  125</span>    <span class="keywordflow">try</span> {</div>
+<div class="line"><span class="lineno">  126</span>      CHECK_NOTNULL(fs)-&gt;open(filepath, cv::FileStorage::READ);</div>
+<div class="line"><span class="lineno">  127</span>    } <span class="keywordflow">catch</span> (cv::Exception&amp; e) {</div>
+<div class="line"><span class="lineno">  128</span>      <a class="code hl_define" href="Exceptions_8hpp.html#a9d686df8440f53a768cc6febc1fccff1">DYNO_THROW_MSG</a>(DynosamException)</div>
+<div class="line"><span class="lineno">  129</span>          &lt;&lt; <span class="stringliteral">&quot;Cannot open file: &quot;</span> &lt;&lt; filepath &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span></div>
+<div class="line"><span class="lineno">  130</span>          &lt;&lt; <span class="stringliteral">&quot;OpenCV error code: &quot;</span> + e.msg</div>
+<div class="line"><span class="lineno">  131</span>          &lt;&lt; <span class="stringliteral">&quot; (remember that the first line should be: %YAML:1.0)!&quot;</span>;</div>
+<div class="line"><span class="lineno">  132</span>    }</div>
+<div class="line"><span class="lineno">  133</span>    LOG_IF(FATAL, !fs-&gt;isOpened())</div>
+<div class="line"><span class="lineno">  134</span>        &lt;&lt; <span class="stringliteral">&quot;Cannot open file in parseYAML: &quot;</span> &lt;&lt; filepath</div>
+<div class="line"><span class="lineno">  135</span>        &lt;&lt; <span class="stringliteral">&quot; (remember that the first line should be: %YAML:1.0)&quot;</span>;</div>
+<div class="line"><span class="lineno">  136</span>  }</div>
+<div class="ttc" id="aExceptions_8hpp_html_a9d686df8440f53a768cc6febc1fccff1"><div class="ttname"><a href="Exceptions_8hpp.html#a9d686df8440f53a768cc6febc1fccff1">DYNO_THROW_MSG</a></div><div class="ttdeci">#define DYNO_THROW_MSG(exception_type)</div><div class="ttdef"><b>Definition:</b> <a href="Exceptions_8hpp_source.html#l00096">Exceptions.hpp:96</a></div></div>
 </div><!-- fragment -->
+<p class="reference">References <a class="el" href="Exceptions_8hpp.html#a9d686df8440f53a768cc6febc1fccff1">DYNO_THROW_MSG</a>.</p>
+
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1YamlParser.html#a81635e6a1bed5ee2452bd5b8a560c5af">YamlParser()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
@@ -605,7 +604,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="YamlParser_8hpp_source.html#l00145">145</a> of file <a class="el" href="YamlParser_8hpp_source.html">YamlParser.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="YamlParser_8hpp_source.html#l00144">144</a> of file <a class="el" href="YamlParser_8hpp_source.html">YamlParser.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1YamlParser.html#a9f61064e75fb7464c928bf5c54942d4d">getNestedYamlParam()</a>, <a class="el" href="classdyno_1_1YamlParser.html#ae6e43581af01a789581041e5b3726019">getYamlParam()</a>, and <a class="el" href="classdyno_1_1YamlParser.html#a81635e6a1bed5ee2452bd5b8a560c5af">YamlParser()</a>.</p>
 
@@ -631,14 +630,14 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="YamlParser_8hpp_source.html#l00144">144</a> of file <a class="el" href="YamlParser_8hpp_source.html">YamlParser.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="YamlParser_8hpp_source.html#l00143">143</a> of file <a class="el" href="YamlParser_8hpp_source.html">YamlParser.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1YamlParser.html#a9f61064e75fb7464c928bf5c54942d4d">getNestedYamlParam()</a>, <a class="el" href="classdyno_1_1YamlParser.html#ae6e43581af01a789581041e5b3726019">getYamlParam()</a>, <a class="el" href="classdyno_1_1YamlParser.html#a81635e6a1bed5ee2452bd5b8a560c5af">YamlParser()</a>, and <a class="el" href="classdyno_1_1YamlParser.html#a242e108f23f887a6fa6582cf7d190963">~YamlParser()</a>.</p>
 
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>dynosam/include/dynosam/utils/<a class="el" href="YamlParser_8hpp_source.html">YamlParser.hpp</a></li>
+<li>dynosam_common/include/dynosam_common/utils/<a class="el" href="YamlParser_8hpp_source.html">YamlParser.hpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

@@ -92,6 +92,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a04e7a390a9b195578712b3c7dced2081"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1ObjectBBX.html#a04e7a390a9b195578712b3c7dced2081">ObjectBBX</a> ()</td></tr>
 <tr class="memdesc:a04e7a390a9b195578712b3c7dced2081"><td class="mdescLeft">&#160;</td><td class="mdescRight">Orientation is included, but identity for AABB.  <br /></td></tr>
 <tr class="separator:a04e7a390a9b195578712b3c7dced2081"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a66334bc65622a473fa7489268c9bb275"><td class="memItemLeft" align="right" valign="top">gtsam::Pose3&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1ObjectBBX.html#a66334bc65622a473fa7489268c9bb275">pose</a> () const</td></tr>
+<tr class="separator:a66334bc65622a473fa7489268c9bb275"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -140,6 +142,40 @@ Public Attributes</h2></td></tr>
 </div><!-- fragment -->
 </div>
 </div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a66334bc65622a473fa7489268c9bb275" name="a66334bc65622a473fa7489268c9bb275"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a66334bc65622a473fa7489268c9bb275">&#9670;&#160;</a></span>pose()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">gtsam::Pose3 dyno::ObjectBBX::pose </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="PointCloudProcess_8hpp_source.html#l00131">131</a> of file <a class="el" href="PointCloudProcess_8hpp_source.html">PointCloudProcess.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  131</span>                          {</div>
+<div class="line"><span class="lineno">  132</span>    <span class="keywordflow">return</span> gtsam::Pose3(<a class="code hl_variable" href="structdyno_1_1ObjectBBX.html#a7f0c10241b0f779846a21a7ea7bc4cf0">orientation_</a>, <a class="code hl_variable" href="structdyno_1_1ObjectBBX.html#a0c30a2d25ea91bf84ed3495615b0f73d">bbx_position_</a>);</div>
+<div class="line"><span class="lineno">  133</span>  }</div>
+<div class="ttc" id="astructdyno_1_1ObjectBBX_html_a0c30a2d25ea91bf84ed3495615b0f73d"><div class="ttname"><a href="structdyno_1_1ObjectBBX.html#a0c30a2d25ea91bf84ed3495615b0f73d">dyno::ObjectBBX::bbx_position_</a></div><div class="ttdeci">gtsam::Point3 bbx_position_</div><div class="ttdef"><b>Definition:</b> <a href="PointCloudProcess_8hpp_source.html#l00126">PointCloudProcess.hpp:126</a></div></div>
+</div><!-- fragment -->
+<p class="reference">References <a class="el" href="structdyno_1_1ObjectBBX.html#a0c30a2d25ea91bf84ed3495615b0f73d">bbx_position_</a>, and <a class="el" href="structdyno_1_1ObjectBBX.html#a7f0c10241b0f779846a21a7ea7bc4cf0">orientation_</a>.</p>
+
+</div>
+</div>
 <h2 class="groupheader">Member Data Documentation</h2>
 <a id="a0c30a2d25ea91bf84ed3495615b0f73d" name="a0c30a2d25ea91bf84ed3495615b0f73d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a0c30a2d25ea91bf84ed3495615b0f73d">&#9670;&#160;</a></span>bbx_position_</h2>
@@ -156,7 +192,7 @@ Public Attributes</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="PointCloudProcess_8hpp_source.html#l00126">126</a> of file <a class="el" href="PointCloudProcess_8hpp_source.html">PointCloudProcess.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1InbuiltDisplayCommon.html#ac1b0d24582458add8b4f64738872ff33">dyno::InbuiltDisplayCommon::constructBoundingBoxeMarkers()</a>, <a class="el" href="namespacedyno.html#a103409029e529d9d7766e49a3b009d8e">dyno::findOBBFromCloud()</a>, and <a class="el" href="classdyno_1_1FrontendInbuiltDisplayRos.html#a4b6fefaf04a868c58cd85d8a741b4726">dyno::FrontendInbuiltDisplayRos::processRGBDOutputpacket()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1InbuiltDisplayCommon.html#ac1b0d24582458add8b4f64738872ff33">dyno::InbuiltDisplayCommon::constructBoundingBoxeMarkers()</a>, <a class="el" href="namespacedyno.html#a103409029e529d9d7766e49a3b009d8e">dyno::findOBBFromCloud()</a>, <a class="el" href="structdyno_1_1DisplayCommon.html#a31bb793c46e3ef9fc183b2b5d4b292a6">dyno::DisplayCommon::objectBBXToRvizMarker()</a>, <a class="el" href="structdyno_1_1ObjectBBX.html#a66334bc65622a473fa7489268c9bb275">pose()</a>, and <a class="el" href="classdyno_1_1FrontendInbuiltDisplayRos.html#a4b6fefaf04a868c58cd85d8a741b4726">dyno::FrontendInbuiltDisplayRos::processRGBDOutputpacket()</a>.</p>
 
 </div>
 </div>
@@ -174,7 +210,7 @@ Public Attributes</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="PointCloudProcess_8hpp_source.html#l00123">123</a> of file <a class="el" href="PointCloudProcess_8hpp_source.html">PointCloudProcess.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1InbuiltDisplayCommon.html#ac1b0d24582458add8b4f64738872ff33">dyno::InbuiltDisplayCommon::constructBoundingBoxeMarkers()</a>, <a class="el" href="namespacedyno.html#aa1c52213fd3b7213ab57233c899b774f">dyno::findAABBFromCloud()</a>, <a class="el" href="namespacedyno.html#a103409029e529d9d7766e49a3b009d8e">dyno::findOBBFromCloud()</a>, and <a class="el" href="classdyno_1_1FrontendInbuiltDisplayRos.html#a4b6fefaf04a868c58cd85d8a741b4726">dyno::FrontendInbuiltDisplayRos::processRGBDOutputpacket()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1InbuiltDisplayCommon.html#ac1b0d24582458add8b4f64738872ff33">dyno::InbuiltDisplayCommon::constructBoundingBoxeMarkers()</a>, <a class="el" href="namespacedyno.html#aa1c52213fd3b7213ab57233c899b774f">dyno::findAABBFromCloud()</a>, <a class="el" href="namespacedyno.html#a103409029e529d9d7766e49a3b009d8e">dyno::findOBBFromCloud()</a>, <a class="el" href="structdyno_1_1DisplayCommon.html#a31bb793c46e3ef9fc183b2b5d4b292a6">dyno::DisplayCommon::objectBBXToRvizMarker()</a>, and <a class="el" href="classdyno_1_1FrontendInbuiltDisplayRos.html#a4b6fefaf04a868c58cd85d8a741b4726">dyno::FrontendInbuiltDisplayRos::processRGBDOutputpacket()</a>.</p>
 
 </div>
 </div>
@@ -193,7 +229,7 @@ Public Attributes</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="PointCloudProcess_8hpp_source.html#l00122">122</a> of file <a class="el" href="PointCloudProcess_8hpp_source.html">PointCloudProcess.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1InbuiltDisplayCommon.html#ac1b0d24582458add8b4f64738872ff33">dyno::InbuiltDisplayCommon::constructBoundingBoxeMarkers()</a>, <a class="el" href="namespacedyno.html#aa1c52213fd3b7213ab57233c899b774f">dyno::findAABBFromCloud()</a>, <a class="el" href="namespacedyno.html#a103409029e529d9d7766e49a3b009d8e">dyno::findOBBFromCloud()</a>, and <a class="el" href="classdyno_1_1FrontendInbuiltDisplayRos.html#a4b6fefaf04a868c58cd85d8a741b4726">dyno::FrontendInbuiltDisplayRos::processRGBDOutputpacket()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1InbuiltDisplayCommon.html#ac1b0d24582458add8b4f64738872ff33">dyno::InbuiltDisplayCommon::constructBoundingBoxeMarkers()</a>, <a class="el" href="namespacedyno.html#aa1c52213fd3b7213ab57233c899b774f">dyno::findAABBFromCloud()</a>, <a class="el" href="namespacedyno.html#a103409029e529d9d7766e49a3b009d8e">dyno::findOBBFromCloud()</a>, <a class="el" href="structdyno_1_1DisplayCommon.html#a31bb793c46e3ef9fc183b2b5d4b292a6">dyno::DisplayCommon::objectBBXToRvizMarker()</a>, and <a class="el" href="classdyno_1_1FrontendInbuiltDisplayRos.html#a4b6fefaf04a868c58cd85d8a741b4726">dyno::FrontendInbuiltDisplayRos::processRGBDOutputpacket()</a>.</p>
 
 </div>
 </div>
@@ -212,12 +248,12 @@ Public Attributes</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="PointCloudProcess_8hpp_source.html#l00129">129</a> of file <a class="el" href="PointCloudProcess_8hpp_source.html">PointCloudProcess.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1InbuiltDisplayCommon.html#ac1b0d24582458add8b4f64738872ff33">dyno::InbuiltDisplayCommon::constructBoundingBoxeMarkers()</a>, <a class="el" href="namespacedyno.html#a103409029e529d9d7766e49a3b009d8e">dyno::findOBBFromCloud()</a>, and <a class="el" href="classdyno_1_1FrontendInbuiltDisplayRos.html#a4b6fefaf04a868c58cd85d8a741b4726">dyno::FrontendInbuiltDisplayRos::processRGBDOutputpacket()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1InbuiltDisplayCommon.html#ac1b0d24582458add8b4f64738872ff33">dyno::InbuiltDisplayCommon::constructBoundingBoxeMarkers()</a>, <a class="el" href="namespacedyno.html#a103409029e529d9d7766e49a3b009d8e">dyno::findOBBFromCloud()</a>, <a class="el" href="structdyno_1_1ObjectBBX.html#a66334bc65622a473fa7489268c9bb275">pose()</a>, and <a class="el" href="classdyno_1_1FrontendInbuiltDisplayRos.html#a4b6fefaf04a868c58cd85d8a741b4726">dyno::FrontendInbuiltDisplayRos::processRGBDOutputpacket()</a>.</p>
 
 </div>
 </div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
-<li>dynosam/include/dynosam/common/<a class="el" href="PointCloudProcess_8hpp_source.html">PointCloudProcess.hpp</a></li>
+<li>dynosam_common/include/dynosam_common/<a class="el" href="PointCloudProcess_8hpp_source.html">PointCloudProcess.hpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

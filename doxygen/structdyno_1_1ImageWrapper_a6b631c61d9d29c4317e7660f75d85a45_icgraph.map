@@ -1,7 +1,8 @@
 <map id="dyno::ImageWrapper::toRGB" name="dyno::ImageWrapper::toRGB">
-<area shape="rect" id="node1" title=" " alt="" coords="472,69,631,109"/>
+<area shape="rect" id="node1" title=" " alt="" coords="472,101,631,141"/>
 <area shape="rect" id="node2" href="$classdyno_1_1FeatureTrackerBase.html#aa902950650699301214f776a905e3b77" title=" " alt="" coords="231,5,421,45"/>
-<area shape="rect" id="node3" href="$classdyno_1_1KltFeatureTracker.html#a32faba587882416d8090ff709cb93cfe" title="Outputs a CLAHE equalized greyscale image from the input RGB, which will be used to detect and track ..." alt="" coords="239,69,413,109"/>
-<area shape="rect" id="node5" href="$classdyno_1_1ExternalFlowFeatureTracker.html#aedf0b07caf85d853756cb878f22d2ad7" title="Base function to perform feature tracking on static points." alt="" coords="228,133,424,173"/>
-<area shape="rect" id="node4" href="$classdyno_1_1KltFeatureTracker.html#ab15aaa39f0c3adc62037d718b98039c0" title="Track features between frames k&#45;1 and the current set of images (at k)." alt="" coords="5,69,180,109"/>
+<area shape="rect" id="node3" href="$classdyno_1_1FeatureTrackerBase.html#a4e9b9b77752d80d8bb8c2236776ca5a8" title=" " alt="" coords="231,69,421,109"/>
+<area shape="rect" id="node4" href="$classdyno_1_1KltFeatureTracker.html#a32faba587882416d8090ff709cb93cfe" title="Outputs a CLAHE equalized greyscale image from the input RGB, which will be used to detect and track ..." alt="" coords="239,133,413,173"/>
+<area shape="rect" id="node6" href="$classdyno_1_1ExternalFlowFeatureTracker.html#aedf0b07caf85d853756cb878f22d2ad7" title="Base function to perform feature tracking on static points." alt="" coords="228,197,424,237"/>
+<area shape="rect" id="node5" href="$classdyno_1_1KltFeatureTracker.html#ab15aaa39f0c3adc62037d718b98039c0" title="Track features between frames k&#45;1 and the current set of images (at k)." alt="" coords="5,133,180,173"/>
 </map>

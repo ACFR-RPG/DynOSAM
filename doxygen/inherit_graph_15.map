@@ -1,4 +1,8 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classdyno_1_1BayesTreeMarginalizationHelper.html" title=" " alt="" coords="5,5,236,45"/>
-<area shape="rect" id="node2" href="$classdyno_1_1ISAM2Helper.html" title=" " alt="" coords="284,13,431,38"/>
+<area shape="rect" id="node1" href="$classdyno_1_1BackendFormulationFactory.html" title=" " alt="" coords="14,5,209,45"/>
+<area shape="rect" id="node2" href="$classdyno_1_1BackendFactory.html" title="Factory to create the backend module and associated formulations. This class is quite complex due to ..." alt="" coords="295,88,459,128"/>
+<area shape="rect" id="node3" href="$classdyno_1_1BackendModuleFactory.html" title=" " alt="" coords="5,70,217,95"/>
+<area shape="rect" id="node4" title=" " alt="" coords="39,169,184,209"/>
+<area shape="rect" id="node5" href="$classdyno_1_1Map.html" title="A container that holds all connected information about static and dynamic entities that is build from..." alt="" coords="265,177,488,202"/>
+<area shape="rect" id="node6" title=" " alt="" coords="81,119,142,145"/>
 </map>

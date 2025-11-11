@@ -1,9 +1,5 @@
-<map id="dynosam/include/dynosam/frontend/vision/ObjectTracker.hpp" name="dynosam/include/dynosam/frontend/vision/ObjectTracker.hpp">
-<area shape="rect" id="node1" title=" " alt="" coords="465,5,708,45"/>
-<area shape="rect" id="node2" href="$RGBDInstanceFrontendModule_8hpp.html" title=" " alt="" coords="355,93,589,148"/>
-<area shape="rect" id="node7" href="$ObjectTracker_8cc.html" title=" " alt="" coords="614,101,789,141"/>
-<area shape="rect" id="node3" href="$ModuleFactory_8hpp.html" title=" " alt="" coords="5,196,213,236"/>
-<area shape="rect" id="node4" href="$RGBDInstanceFrontendModule_8cc.html" title=" " alt="" coords="237,196,480,236"/>
-<area shape="rect" id="node5" href="$PipelineManager_8cc.html" title=" " alt="" coords="505,196,666,236"/>
-<area shape="rect" id="node6" href="$backend__experiments__node_8cc.html" title=" " alt="" coords="691,196,901,236"/>
+<map id="dynosam_nn/include/dynosam_nn/trackers/ObjectTracker.hpp" name="dynosam_nn/include/dynosam_nn/trackers/ObjectTracker.hpp">
+<area shape="rect" id="node1" title=" " alt="" coords="131,5,296,60"/>
+<area shape="rect" id="node2" href="$YoloObjectDetector_8cc.html" title=" " alt="" coords="5,108,205,148"/>
+<area shape="rect" id="node3" href="$ObjectTracker_8cc.html" title=" " alt="" coords="229,108,413,148"/>
 </map>

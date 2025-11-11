@@ -1,8 +1,11 @@
 <map id="dyno::Camera::getParams" name="dyno::Camera::getParams">
-<area shape="rect" id="node1" title=" " alt="" coords="572,77,763,102"/>
-<area shape="rect" id="node2" href="$classdyno_1_1RGBDCamera.html#ae1e3ae993c328df6c0e4fe5687483f16" title="Get gtsam::Cal3_S2Stereo from rgbd camera and virtual baseline." alt="" coords="290,5,499,45"/>
-<area shape="rect" id="node4" href="$classdyno_1_1RGBDCamera.html#a46946b835a2e627714f16a9195eb6d29" title="Projects a feature with valid depth and a left keypoint (uL) into the right keypoint (uR) of the feat..." alt="" coords="293,69,497,109"/>
-<area shape="rect" id="node5" href="$namespacedyno_1_1vision__tools.html#a5d8b89d2b560b498934853c77a7d9f28" title="Saves a re&#45;projected 3D point cloud with labelled points to file as a cv::Mat." alt="" coords="265,133,524,173"/>
-<area shape="rect" id="node3" href="$classdyno_1_1RGBDCamera.html#a76250e0244602304395e8963772c7bae" title=" " alt="" coords="7,5,216,45"/>
-<area shape="rect" id="node6" href="$classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2" title=" " alt="" coords="5,133,217,173"/>
+<area shape="rect" id="node1" title=" " alt="" coords="829,171,1020,197"/>
+<area shape="rect" id="node2" href="$namespacedyno_1_1vision__tools.html#a5c6d086771d8b0ea5b2576d911eeea09" title="From a feature with valid depth, backproject to a 3D point in the camera frame with the associated co..." alt="" coords="549,5,753,45"/>
+<area shape="rect" id="node3" href="$classdyno_1_1RGBDCamera.html#aa439cd20cc600b867117d80e6e41e57c" title=" " alt="" coords="543,70,758,95"/>
+<area shape="rect" id="node4" href="$classdyno_1_1RGBDCamera.html#ae1e3ae993c328df6c0e4fe5687483f16" title="Get gtsam::Cal3_S2Stereo from rgbd camera and virtual baseline." alt="" coords="263,88,472,128"/>
+<area shape="rect" id="node6" href="$classdyno_1_1Camera.html#a719e3e3279371f2d6ee97d846b8b3eb9" title=" " alt="" coords="535,171,766,197"/>
+<area shape="rect" id="node7" href="$classdyno_1_1RGBDCamera.html#a46946b835a2e627714f16a9195eb6d29" title="Projects a feature with valid depth and a left keypoint (uL) into the right keypoint (uR) of the feat..." alt="" coords="549,221,753,261"/>
+<area shape="rect" id="node8" href="$classdyno_1_1Camera.html#aeed52b4791ce567afd89277cc0cb8e26" title=" " alt="" coords="520,286,781,311"/>
+<area shape="rect" id="node9" href="$namespacedyno_1_1vision__tools.html#a5d8b89d2b560b498934853c77a7d9f28" title="Saves a re&#45;projected 3D point cloud with labelled points to file as a cv::Mat." alt="" coords="521,336,780,376"/>
+<area shape="rect" id="node5" href="$classdyno_1_1RGBDCamera.html#a76250e0244602304395e8963772c7bae" title=" " alt="" coords="5,88,215,128"/>
 </map>

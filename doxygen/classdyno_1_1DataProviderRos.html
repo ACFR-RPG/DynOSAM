@@ -228,8 +228,8 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="DataProviderRos_8cc_source.html#l00041">41</a> of file <a class="el" href="DataProviderRos_8cc_source.html">DataProviderRos.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   42</span>    : <a class="code hl_function" href="classdyno_1_1DataProvider.html#aad6d856034b3333ff6c9df69be2a271a">DataProvider</a>(), <a class="code hl_variable" href="classdyno_1_1DataProviderRos.html#a8114936181e3a44e6941fee36d0518cb">node_</a>(node) {}</div>
+<p class="definition">Definition at line <a class="el" href="DataProviderRos_8cc_source.html#l00040">40</a> of file <a class="el" href="DataProviderRos_8cc_source.html">DataProviderRos.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   41</span>    : <a class="code hl_function" href="classdyno_1_1DataProvider.html#aad6d856034b3333ff6c9df69be2a271a">DataProvider</a>(), <a class="code hl_variable" href="classdyno_1_1DataProviderRos.html#a8114936181e3a44e6941fee36d0518cb">node_</a>(node) {}</div>
 <div class="ttc" id="aclassdyno_1_1DataProviderRos_html_a8114936181e3a44e6941fee36d0518cb"><div class="ttname"><a href="classdyno_1_1DataProviderRos.html#a8114936181e3a44e6941fee36d0518cb">dyno::DataProviderRos::node_</a></div><div class="ttdeci">rclcpp::Node::SharedPtr node_</div><div class="ttdef"><b>Definition:</b> <a href="DataProviderRos_8hpp_source.html#l00200">DataProviderRos.hpp:200</a></div></div>
 <div class="ttc" id="aclassdyno_1_1DataProvider_html_aad6d856034b3333ff6c9df69be2a271a"><div class="ttname"><a href="classdyno_1_1DataProvider.html#aad6d856034b3333ff6c9df69be2a271a">dyno::DataProvider::DataProvider</a></div><div class="ttdeci">DataProvider()=default</div></div>
 </div><!-- fragment -->
@@ -325,7 +325,7 @@ template&lt;typename IMAGETYPE &gt; </div>
 <div class="line"><span class="lineno">  195</span>      <span class="keywordflow">return</span> cv::Mat();</div>
 <div class="line"><span class="lineno">  196</span>    }</div>
 <div class="line"><span class="lineno">  197</span>  }</div>
-<div class="ttc" id="aclassdyno_1_1DataProviderRos_html_a357560017941cf0553aa36f20887c027"><div class="ttname"><a href="classdyno_1_1DataProviderRos.html#a357560017941cf0553aa36f20887c027">dyno::DataProviderRos::readRosImage</a></div><div class="ttdeci">const cv_bridge::CvImageConstPtr readRosImage(const sensor_msgs::msg::Image::ConstSharedPtr &amp;img_msg) const</div><div class="ttdoc">Helper function to convert a ROS Image message to a CvImageConstPtr via the cv bridge.</div><div class="ttdef"><b>Definition:</b> <a href="DataProviderRos_8cc_source.html#l00064">DataProviderRos.cc:64</a></div></div>
+<div class="ttc" id="aclassdyno_1_1DataProviderRos_html_a357560017941cf0553aa36f20887c027"><div class="ttname"><a href="classdyno_1_1DataProviderRos.html#a357560017941cf0553aa36f20887c027">dyno::DataProviderRos::readRosImage</a></div><div class="ttdeci">const cv_bridge::CvImageConstPtr readRosImage(const sensor_msgs::msg::Image::ConstSharedPtr &amp;img_msg) const</div><div class="ttdoc">Helper function to convert a ROS Image message to a CvImageConstPtr via the cv bridge.</div><div class="ttdef"><b>Definition:</b> <a href="DataProviderRos_8cc_source.html#l00063">DataProviderRos.cc:63</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1DataProviderRos.html#a8114936181e3a44e6941fee36d0518cb">node_</a>, and <a class="el" href="classdyno_1_1DataProviderRos.html#a357560017941cf0553aa36f20887c027">readRosImage()</a>.</p>
 <div class="dynheader">
@@ -404,19 +404,19 @@ Here is the call graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>const cv::Mat </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="DataProviderRos_8cc_source.html#l00049">49</a> of file <a class="el" href="DataProviderRos_8cc_source.html">DataProviderRos.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   50</span>                                                            {</div>
-<div class="line"><span class="lineno">   51</span>  <span class="keywordflow">return</span> convertRosImage&lt;ImageType::Depth&gt;(img_msg);</div>
-<div class="line"><span class="lineno">   52</span>}</div>
+<p class="definition">Definition at line <a class="el" href="DataProviderRos_8cc_source.html#l00048">48</a> of file <a class="el" href="DataProviderRos_8cc_source.html">DataProviderRos.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   49</span>                                                            {</div>
+<div class="line"><span class="lineno">   50</span>  <span class="keywordflow">return</span> convertRosImage&lt;ImageType::Depth&gt;(img_msg);</div>
+<div class="line"><span class="lineno">   51</span>}</div>
 </div><!-- fragment -->
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1OnlineDataProviderRos.html#a02b6aa8b0f6c6c732310c0852f54ef42">dyno::OnlineDataProviderRos::imageSyncCallback()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1OnlineDataProviderRos.html#a7c809e378b5d4b807e80abb43c0da23a">dyno::OnlineDataProviderRos::connectImages()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1DataProviderRos_ad01ad2683eb35b1d6f76981c55ad7ee4_icgraph.png" border="0" usemap="#aclassdyno_1_1DataProviderRos_ad01ad2683eb35b1d6f76981c55ad7ee4_icgraph" alt=""/></div>
 <map name="aclassdyno_1_1DataProviderRos_ad01ad2683eb35b1d6f76981c55ad7ee4_icgraph" id="aclassdyno_1_1DataProviderRos_ad01ad2683eb35b1d6f76981c55ad7ee4_icgraph">
 <area shape="rect" title="Convers a sensor_msgs::msg::Image to a cv::Mat while testing that the input has the correct datatype ..." alt="" coords="733,5,904,45"/>
-<area shape="rect" href="classdyno_1_1OnlineDataProviderRos.html#a02b6aa8b0f6c6c732310c0852f54ef42" title=" " alt="" coords="496,5,685,45"/>
+<area shape="rect" href="classdyno_1_1OnlineDataProviderRos.html#a7c809e378b5d4b807e80abb43c0da23a" title=" " alt="" coords="496,5,685,45"/>
 <area shape="rect" href="classdyno_1_1OnlineDataProviderRos.html#a3b7725856bc86407813c51804a26bea4" title="Connects all subscribers." alt="" coords="259,5,448,45"/>
 <area shape="rect" href="classdyno_1_1OnlineDataProviderRos.html#abea751b62c91dbf7bfac759680a434f7" title="Construct a new OnlineDataProviderRos." alt="" coords="5,5,211,45"/>
 </map>
@@ -449,19 +449,19 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>const cv::Mat </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="DataProviderRos_8cc_source.html#l00054">54</a> of file <a class="el" href="DataProviderRos_8cc_source.html">DataProviderRos.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   55</span>                                                            {</div>
-<div class="line"><span class="lineno">   56</span>  <span class="keywordflow">return</span> convertRosImage&lt;ImageType::OpticalFlow&gt;(img_msg);</div>
-<div class="line"><span class="lineno">   57</span>}</div>
+<p class="definition">Definition at line <a class="el" href="DataProviderRos_8cc_source.html#l00053">53</a> of file <a class="el" href="DataProviderRos_8cc_source.html">DataProviderRos.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   54</span>                                                            {</div>
+<div class="line"><span class="lineno">   55</span>  <span class="keywordflow">return</span> convertRosImage&lt;ImageType::OpticalFlow&gt;(img_msg);</div>
+<div class="line"><span class="lineno">   56</span>}</div>
 </div><!-- fragment -->
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1OnlineDataProviderRos.html#a02b6aa8b0f6c6c732310c0852f54ef42">dyno::OnlineDataProviderRos::imageSyncCallback()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1OnlineDataProviderRos.html#a7c809e378b5d4b807e80abb43c0da23a">dyno::OnlineDataProviderRos::connectImages()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1DataProviderRos_a1c795369f59e7383817adce94f164eaf_icgraph.png" border="0" usemap="#aclassdyno_1_1DataProviderRos_a1c795369f59e7383817adce94f164eaf_icgraph" alt=""/></div>
 <map name="aclassdyno_1_1DataProviderRos_a1c795369f59e7383817adce94f164eaf_icgraph" id="aclassdyno_1_1DataProviderRos_a1c795369f59e7383817adce94f164eaf_icgraph">
 <area shape="rect" title="Convers a sensor_msgs::msg::Image to a cv::Mat while testing that the input has the correct datatype ..." alt="" coords="733,5,904,45"/>
-<area shape="rect" href="classdyno_1_1OnlineDataProviderRos.html#a02b6aa8b0f6c6c732310c0852f54ef42" title=" " alt="" coords="496,5,685,45"/>
+<area shape="rect" href="classdyno_1_1OnlineDataProviderRos.html#a7c809e378b5d4b807e80abb43c0da23a" title=" " alt="" coords="496,5,685,45"/>
 <area shape="rect" href="classdyno_1_1OnlineDataProviderRos.html#a3b7725856bc86407813c51804a26bea4" title="Connects all subscribers." alt="" coords="259,5,448,45"/>
 <area shape="rect" href="classdyno_1_1OnlineDataProviderRos.html#abea751b62c91dbf7bfac759680a434f7" title="Construct a new OnlineDataProviderRos." alt="" coords="5,5,211,45"/>
 </map>
@@ -494,19 +494,19 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>const cv::Mat </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="DataProviderRos_8cc_source.html#l00059">59</a> of file <a class="el" href="DataProviderRos_8cc_source.html">DataProviderRos.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   60</span>                                                            {</div>
-<div class="line"><span class="lineno">   61</span>  <span class="keywordflow">return</span> convertRosImage&lt;ImageType::MotionMask&gt;(img_msg);</div>
-<div class="line"><span class="lineno">   62</span>}</div>
+<p class="definition">Definition at line <a class="el" href="DataProviderRos_8cc_source.html#l00058">58</a> of file <a class="el" href="DataProviderRos_8cc_source.html">DataProviderRos.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   59</span>                                                            {</div>
+<div class="line"><span class="lineno">   60</span>  <span class="keywordflow">return</span> convertRosImage&lt;ImageType::MotionMask&gt;(img_msg);</div>
+<div class="line"><span class="lineno">   61</span>}</div>
 </div><!-- fragment -->
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1OnlineDataProviderRos.html#a02b6aa8b0f6c6c732310c0852f54ef42">dyno::OnlineDataProviderRos::imageSyncCallback()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1OnlineDataProviderRos.html#a7c809e378b5d4b807e80abb43c0da23a">dyno::OnlineDataProviderRos::connectImages()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1DataProviderRos_ae12caad2bd612a1a1d4fa0f93c17279d_icgraph.png" border="0" usemap="#aclassdyno_1_1DataProviderRos_ae12caad2bd612a1a1d4fa0f93c17279d_icgraph" alt=""/></div>
 <map name="aclassdyno_1_1DataProviderRos_ae12caad2bd612a1a1d4fa0f93c17279d_icgraph" id="aclassdyno_1_1DataProviderRos_ae12caad2bd612a1a1d4fa0f93c17279d_icgraph">
 <area shape="rect" title="Convers a sensor_msgs::msg::Image to a cv::Mat while testing that the input has the correct datatype ..." alt="" coords="733,5,904,45"/>
-<area shape="rect" href="classdyno_1_1OnlineDataProviderRos.html#a02b6aa8b0f6c6c732310c0852f54ef42" title=" " alt="" coords="496,5,685,45"/>
+<area shape="rect" href="classdyno_1_1OnlineDataProviderRos.html#a7c809e378b5d4b807e80abb43c0da23a" title=" " alt="" coords="496,5,685,45"/>
 <area shape="rect" href="classdyno_1_1OnlineDataProviderRos.html#a3b7725856bc86407813c51804a26bea4" title="Connects all subscribers." alt="" coords="259,5,448,45"/>
 <area shape="rect" href="classdyno_1_1OnlineDataProviderRos.html#abea751b62c91dbf7bfac759680a434f7" title="Construct a new OnlineDataProviderRos." alt="" coords="5,5,211,45"/>
 </map>
@@ -539,19 +539,19 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>const cv::Mat </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="DataProviderRos_8cc_source.html#l00044">44</a> of file <a class="el" href="DataProviderRos_8cc_source.html">DataProviderRos.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   45</span>                                                            {</div>
-<div class="line"><span class="lineno">   46</span>  <span class="keywordflow">return</span> convertRosImage&lt;ImageType::RGBMono&gt;(img_msg);</div>
-<div class="line"><span class="lineno">   47</span>}</div>
+<p class="definition">Definition at line <a class="el" href="DataProviderRos_8cc_source.html#l00043">43</a> of file <a class="el" href="DataProviderRos_8cc_source.html">DataProviderRos.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   44</span>                                                            {</div>
+<div class="line"><span class="lineno">   45</span>  <span class="keywordflow">return</span> convertRosImage&lt;ImageType::RGBMono&gt;(img_msg);</div>
+<div class="line"><span class="lineno">   46</span>}</div>
 </div><!-- fragment -->
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1OnlineDataProviderRos.html#a02b6aa8b0f6c6c732310c0852f54ef42">dyno::OnlineDataProviderRos::imageSyncCallback()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1OnlineDataProviderRos.html#a7c809e378b5d4b807e80abb43c0da23a">dyno::OnlineDataProviderRos::connectImages()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1DataProviderRos_a9432150f495ce791c2789badbcc88652_icgraph.png" border="0" usemap="#aclassdyno_1_1DataProviderRos_a9432150f495ce791c2789badbcc88652_icgraph" alt=""/></div>
 <map name="aclassdyno_1_1DataProviderRos_a9432150f495ce791c2789badbcc88652_icgraph" id="aclassdyno_1_1DataProviderRos_a9432150f495ce791c2789badbcc88652_icgraph">
 <area shape="rect" title="Convers a sensor_msgs::msg::Image to a cv::Mat while testing that the input has the correct datatype ..." alt="" coords="733,5,904,45"/>
-<area shape="rect" href="classdyno_1_1OnlineDataProviderRos.html#a02b6aa8b0f6c6c732310c0852f54ef42" title=" " alt="" coords="496,5,685,45"/>
+<area shape="rect" href="classdyno_1_1OnlineDataProviderRos.html#a7c809e378b5d4b807e80abb43c0da23a" title=" " alt="" coords="496,5,685,45"/>
 <area shape="rect" href="classdyno_1_1OnlineDataProviderRos.html#a3b7725856bc86407813c51804a26bea4" title="Connects all subscribers." alt="" coords="259,5,448,45"/>
 <area shape="rect" href="classdyno_1_1OnlineDataProviderRos.html#abea751b62c91dbf7bfac759680a434f7" title="Construct a new OnlineDataProviderRos." alt="" coords="5,5,211,45"/>
 </map>
@@ -592,21 +592,21 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>const cv_bridge::CvImageConstPtr </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="DataProviderRos_8cc_source.html#l00064">64</a> of file <a class="el" href="DataProviderRos_8cc_source.html">DataProviderRos.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   65</span>                                                            {</div>
-<div class="line"><span class="lineno">   66</span>  CHECK(img_msg);</div>
-<div class="line"><span class="lineno">   67</span>  cv_bridge::CvImageConstPtr cv_ptr;</div>
-<div class="line"><span class="lineno">   68</span>  <span class="keywordflow">try</span> {</div>
-<div class="line"><span class="lineno">   69</span>    <span class="comment">// important to copy to ensure that memory does not go out of scope (which</span></div>
-<div class="line"><span class="lineno">   70</span>    <span class="comment">// it seems to !!!)</span></div>
-<div class="line"><span class="lineno">   71</span>    cv_ptr = cv_bridge::toCvCopy(img_msg);</div>
-<div class="line"><span class="lineno">   72</span>  } <span class="keywordflow">catch</span> (cv_bridge::Exception&amp; exception) {</div>
-<div class="line"><span class="lineno">   73</span>    RCLCPP_FATAL(<a class="code hl_variable" href="classdyno_1_1DataProviderRos.html#a8114936181e3a44e6941fee36d0518cb">node_</a>-&gt;get_logger(), <span class="stringliteral">&quot;cv_bridge exception: %s&quot;</span>,</div>
-<div class="line"><span class="lineno">   74</span>                 exception.what());</div>
-<div class="line"><span class="lineno">   75</span>    rclcpp::shutdown();</div>
-<div class="line"><span class="lineno">   76</span>  }</div>
-<div class="line"><span class="lineno">   77</span>  <span class="keywordflow">return</span> cv_ptr;</div>
-<div class="line"><span class="lineno">   78</span>}</div>
+<p class="definition">Definition at line <a class="el" href="DataProviderRos_8cc_source.html#l00063">63</a> of file <a class="el" href="DataProviderRos_8cc_source.html">DataProviderRos.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   64</span>                                                            {</div>
+<div class="line"><span class="lineno">   65</span>  CHECK(img_msg);</div>
+<div class="line"><span class="lineno">   66</span>  cv_bridge::CvImageConstPtr cv_ptr;</div>
+<div class="line"><span class="lineno">   67</span>  <span class="keywordflow">try</span> {</div>
+<div class="line"><span class="lineno">   68</span>    <span class="comment">// important to copy to ensure that memory does not go out of scope (which</span></div>
+<div class="line"><span class="lineno">   69</span>    <span class="comment">// it seems to !!!)</span></div>
+<div class="line"><span class="lineno">   70</span>    cv_ptr = cv_bridge::toCvCopy(img_msg);</div>
+<div class="line"><span class="lineno">   71</span>  } <span class="keywordflow">catch</span> (cv_bridge::Exception&amp; exception) {</div>
+<div class="line"><span class="lineno">   72</span>    RCLCPP_FATAL(<a class="code hl_variable" href="classdyno_1_1DataProviderRos.html#a8114936181e3a44e6941fee36d0518cb">node_</a>-&gt;get_logger(), <span class="stringliteral">&quot;cv_bridge exception: %s&quot;</span>,</div>
+<div class="line"><span class="lineno">   73</span>                 exception.what());</div>
+<div class="line"><span class="lineno">   74</span>    rclcpp::shutdown();</div>
+<div class="line"><span class="lineno">   75</span>  }</div>
+<div class="line"><span class="lineno">   76</span>  <span class="keywordflow">return</span> cv_ptr;</div>
+<div class="line"><span class="lineno">   77</span>}</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1DataProviderRos.html#a8114936181e3a44e6941fee36d0518cb">node_</a>.</p>
 
@@ -718,7 +718,7 @@ Here is the call graph for this function:</div>
 <area shape="rect" href="classdyno_1_1CameraParams.html#af593866ca855cd9cf008275735596450" title=" " alt="" coords="467,153,648,179"/>
 <area shape="rect" href="classdyno_1_1CameraParams.html#a75e96fd0df57691134425ac9b9d55f09" title=" " alt="" coords="477,203,638,243"/>
 <area shape="rect" href="classdyno_1_1CameraParams.html#ae09360028f240f884ad9fcb72e4f4cf1" title=" " alt="" coords="477,267,638,307"/>
-<area shape="rect" href="namespacedyno.html#a809604e427db44cbf532a545c71a3b5d" title=" " alt="" coords="498,332,617,357"/>
+<area shape="rect" href="namespacedyno.html#a8d1f85752688bf072f23fa6e8a1bde34" title=" " alt="" coords="498,332,617,357"/>
 </map>
 </div>
 <div class="dynheader">
@@ -782,7 +782,7 @@ Here is the caller graph for this function:</div>
 
 <p class="definition">Definition at line <a class="el" href="DataProviderRos_8hpp_source.html#l00200">200</a> of file <a class="el" href="DataProviderRos_8hpp_source.html">DataProviderRos.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1OnlineDataProviderRos.html#a3b7725856bc86407813c51804a26bea4">dyno::OnlineDataProviderRos::connect()</a>, <a class="el" href="classdyno_1_1DataProviderRos.html#a1b074062e0b3a1fd62fbb32d1cdad91b">convertRosImage()</a>, <a class="el" href="classdyno_1_1OnlineDataProviderRos.html#a02b6aa8b0f6c6c732310c0852f54ef42">dyno::OnlineDataProviderRos::imageSyncCallback()</a>, <a class="el" href="classdyno_1_1DataProviderRos.html#a357560017941cf0553aa36f20887c027">readRosImage()</a>, <a class="el" href="classdyno_1_1OnlineDataProviderRos.html#a7a29e46f09c1a033d158e4c43585e508">dyno::OnlineDataProviderRos::shutdown()</a>, and <a class="el" href="classdyno_1_1DataProviderRos.html#a1cb49fe70873ef4b7ed49afb75c013bc">waitAndSetCameraParams()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1OnlineDataProviderRos.html#a7c809e378b5d4b807e80abb43c0da23a">dyno::OnlineDataProviderRos::connectImages()</a>, <a class="el" href="classdyno_1_1OnlineDataProviderRos.html#ab4a159eb8a44bd46697f86256783dfd7">dyno::OnlineDataProviderRos::connectImu()</a>, <a class="el" href="classdyno_1_1DataProviderRos.html#a1b074062e0b3a1fd62fbb32d1cdad91b">convertRosImage()</a>, <a class="el" href="classdyno_1_1DataProviderRos.html#a357560017941cf0553aa36f20887c027">readRosImage()</a>, <a class="el" href="classdyno_1_1OnlineDataProviderRos.html#a7a29e46f09c1a033d158e4c43585e508">dyno::OnlineDataProviderRos::shutdown()</a>, and <a class="el" href="classdyno_1_1DataProviderRos.html#a1cb49fe70873ef4b7ed49afb75c013bc">waitAndSetCameraParams()</a>.</p>
 
 </div>
 </div>

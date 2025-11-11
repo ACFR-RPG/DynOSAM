@@ -1,16 +1,14 @@
 <map id="dyno::pclPointToGtsam" name="dyno::pclPointToGtsam">
-<area shape="rect" id="node1" title="Constructs a gtsam::Point3 from the x,y,z components of the PointT." alt="" coords="1331,237,1501,262"/>
-<area shape="rect" id="node2" href="$classdyno_1_1HybridFormulation.html#a41a208f1552daac149906b0b98296bcd" title=" " alt="" coords="1093,172,1280,212"/>
-<area shape="rect" id="node13" href="$namespacedyno.html#aa1c52213fd3b7213ab57233c899b774f" title="Compute the Axis Aligned Bounding Box (AABB) from an input cloud." alt="" coords="1091,237,1283,262"/>
-<area shape="rect" id="node14" href="$namespacedyno.html#a103409029e529d9d7766e49a3b009d8e" title="Compute Oriented bounding box (OBB) from an input point cloud." alt="" coords="1095,286,1279,311"/>
-<area shape="rect" id="node3" href="$classdyno_1_1HybridFormulation.html#aa9c51eb4e4aaf1c5560b9cb75bf63699" title=" " alt="" coords="860,172,1043,212"/>
-<area shape="rect" id="node4" href="$classdyno_1_1HybridFormulation.html#ab6c9ea5d69eacec56ccfd11f9f46191c" title=" " alt="" coords="312,104,495,144"/>
-<area shape="rect" id="node9" href="$classdyno_1_1HybridFormulation.html#a44e4f2af2151ac490c6e4b3ff17f2204" title=" " alt="" coords="604,172,787,212"/>
-<area shape="rect" id="node12" href="$classdyno_1_1RegularHybridFormulation.html#ae0d9f964cef04c9fb89b402e261e9f63" title="Pre update hook called in the RegularBackend after the map is updated with new measurements but befor..." alt="" coords="579,236,812,276"/>
+<area shape="rect" id="node1" title="Constructs a gtsam::Point3 from the x,y,z components of the PointT." alt="" coords="1293,217,1464,242"/>
+<area shape="rect" id="node2" href="$classdyno_1_1HybridFormulation.html#a41a208f1552daac149906b0b98296bcd" title=" " alt="" coords="1039,116,1225,156"/>
+<area shape="rect" id="node10" href="$classdyno_1_1Accessor.html#a89469b02290573c4f61a62fd93a04f69" title="Computes the centroid of the requested object using the estimated dynamic points." alt="" coords="1019,180,1245,220"/>
+<area shape="rect" id="node11" href="$namespacedyno.html#aa1c52213fd3b7213ab57233c899b774f" title="Compute the Axis Aligned Bounding Box (AABB) from an input cloud." alt="" coords="1036,245,1228,270"/>
+<area shape="rect" id="node12" href="$namespacedyno.html#a103409029e529d9d7766e49a3b009d8e" title="Compute Oriented bounding box (OBB) from an input point cloud." alt="" coords="1040,294,1224,319"/>
+<area shape="rect" id="node3" href="$classdyno_1_1HybridFormulation.html#aa9c51eb4e4aaf1c5560b9cb75bf63699" title=" " alt="" coords="788,116,971,156"/>
+<area shape="rect" id="node4" href="$classdyno_1_1HybridFormulation.html#ab6c9ea5d69eacec56ccfd11f9f46191c" title=" " alt="" coords="276,59,459,99"/>
+<area shape="rect" id="node8" href="$classdyno_1_1HybridFormulation.html#a44e4f2af2151ac490c6e4b3ff17f2204" title=" " alt="" coords="532,116,715,156"/>
+<area shape="rect" id="node9" href="$classdyno_1_1RegularHybridFormulation.html#ae0d9f964cef04c9fb89b402e261e9f63" title="Pre update hook called in the RegularBackend after the map is updated with new measurements but befor..." alt="" coords="507,180,740,220"/>
 <area shape="rect" id="node5" href="$classdyno_1_1HybridFormulation.html#ae65a9c76b0363dde62eb86e6c0b2b832" title=" " alt="" coords="5,5,228,45"/>
-<area shape="rect" id="node6" href="$classdyno_1_1test__hybrid_1_1DecoupledFormulation.html#a8d4582a8d60a4c61c167577f519ca861" title=" " alt="" coords="5,87,228,142"/>
-<area shape="rect" id="node7" href="$classdyno_1_1test__hybrid_1_1SmartStructurlessFormulation.html#a40673e16631d1d3e8775e33116f85f6a" title=" " alt="" coords="5,323,228,378"/>
-<area shape="rect" id="node8" href="$classdyno_1_1HybridFormulation.html#ad05af62c9b437ad6613a191defeecb07" title=" " alt="" coords="25,197,208,237"/>
-<area shape="rect" id="node10" href="$classdyno_1_1test__hybrid_1_1StructurelessDecoupledFormulation.html#aa836f90c5eaffd28eafa4d896cbc162f" title=" " alt="" coords="276,169,531,223"/>
-<area shape="rect" id="node11" href="$classdyno_1_1test__hybrid_1_1StructurlessFormulation.html#a625de6bd79eb629ac2bd60fb2cd8c4df" title=" " alt="" coords="292,247,515,302"/>
+<area shape="rect" id="node6" href="$classdyno_1_1test__hybrid_1_1SmartStructurlessFormulation.html#a40673e16631d1d3e8775e33116f85f6a" title=" " alt="" coords="5,145,228,199"/>
+<area shape="rect" id="node7" href="$classdyno_1_1HybridFormulation.html#ad05af62c9b437ad6613a191defeecb07" title=" " alt="" coords="25,73,208,113"/>
 </map>

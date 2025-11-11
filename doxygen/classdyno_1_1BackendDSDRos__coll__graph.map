@@ -1,7 +1,11 @@
 <map id="dyno::BackendDSDRos" name="dyno::BackendDSDRos">
-<area shape="rect" id="node1" title=" " alt="" coords="5,168,175,193"/>
-<area shape="rect" id="node2" href="$classdyno_1_1DisplayBase.html" title=" " alt="" coords="11,93,137,119"/>
-<area shape="rect" id="node3" href="$classdyno_1_1DSDRos.html" title="Shorthand for Dynamic Slam Display ROS." alt="" coords="162,93,277,119"/>
-<area shape="rect" id="node4" href="$structdyno_1_1DisplayParams.html" title=" " alt="" coords="51,5,209,31"/>
-<area shape="rect" id="node5" href="$classdyno_1_1DSDTransport.html" title="Class for managing the publishing and conversion of ObjectOdometry messages. DSD is shorthand for Dyn..." alt="" coords="233,5,384,31"/>
+<area shape="rect" id="node1" title=" " alt="" coords="149,433,318,459"/>
+<area shape="rect" id="node2" href="$classdyno_1_1DisplayBase.html" title=" " alt="" coords="98,359,225,384"/>
+<area shape="rect" id="node3" href="$structdyno_1_1SharedModuleInterface.html" title=" " alt="" coords="5,271,219,296"/>
+<area shape="rect" id="node4" href="$classdyno_1_1SharedModuleInfo.html" title=" " alt="" coords="22,183,202,208"/>
+<area shape="rect" id="node5" href="$classdyno_1_1GroundTruthPacketMap.html" title="FastMap from frame id to GroundTruthInputPacket." alt="" coords="7,95,217,120"/>
+<area shape="rect" id="node6" title=" " alt="" coords="13,5,211,45"/>
+<area shape="rect" id="node7" href="$classdyno_1_1DSDRos.html" title="Shorthand for Dynamic Slam Display ROS." alt="" coords="265,359,380,384"/>
+<area shape="rect" id="node8" href="$structdyno_1_1DisplayParams.html" title=" " alt="" coords="243,271,402,296"/>
+<area shape="rect" id="node9" href="$classdyno_1_1DSDTransport.html" title="Class for managing the publishing and conversion of ObjectOdometry messages. DSD is shorthand for Dyn..." alt="" coords="426,271,577,296"/>
 </map>

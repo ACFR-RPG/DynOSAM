@@ -1,3 +1,7 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$structdyno_1_1byte__track_1_1ByteTrackerParams.html" title=" " alt="" coords="5,5,220,45"/>
+<area shape="rect" id="node1" href="$classdyno_1_1BackendModuleDisplay.html" title="Vizualisation class that can be associated with a BackendModule/formulation to allow custom vizualist..." alt="" coords="5,45,220,70"/>
+<area shape="rect" id="node2" href="$classdyno_1_1BackendModuleDisplayRos.html" title=" " alt="" coords="268,45,507,70"/>
+<area shape="rect" id="node3" href="$classdyno_1_1HybridModuleDisplayCommon.html" title=" " alt="" coords="555,37,757,77"/>
+<area shape="rect" id="node4" href="$classdyno_1_1ParalleHybridModuleDisplay.html" title=" " alt="" coords="823,5,1021,45"/>
+<area shape="rect" id="node5" href="$classdyno_1_1RegularHybridFormulationDisplay.html" title=" " alt="" coords="805,69,1039,109"/>
 </map>

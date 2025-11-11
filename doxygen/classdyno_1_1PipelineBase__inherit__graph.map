@@ -2,11 +2,11 @@
 <area shape="rect" id="node1" title=" " alt="" coords="5,128,152,153"/>
 <area shape="rect" id="node2" href="$classdyno_1_1PipelineModule.html" title=" " alt="" coords="212,5,417,60"/>
 <area shape="rect" id="node3" href="$classdyno_1_1PipelineModule.html" title=" " alt="" coords="200,85,429,125"/>
-<area shape="rect" id="node4" href="$classdyno_1_1PipelineModule.html" title=" " alt="" coords="207,149,423,204"/>
+<area shape="rect" id="node4" href="$classdyno_1_1PipelineModule.html" title=" " alt="" coords="229,149,400,204"/>
 <area shape="rect" id="node5" href="$classdyno_1_1PipelineModule.html" title="A PipelineModule is responsible for taking data from an input (or input queues) processing it,..." alt="" coords="233,229,396,269"/>
 <area shape="rect" id="node6" href="$classdyno_1_1MIMOPipelineModule.html" title=" " alt="" coords="489,113,695,168"/>
 <area shape="rect" id="node8" href="$classdyno_1_1MIMOPipelineModule.html" title=" " alt="" coords="477,193,707,233"/>
-<area shape="rect" id="node9" href="$classdyno_1_1MIMOPipelineModule.html" title=" " alt="" coords="484,257,700,312"/>
+<area shape="rect" id="node9" href="$classdyno_1_1MIMOPipelineModule.html" title=" " alt="" coords="492,257,692,312"/>
 <area shape="rect" id="node11" href="$classdyno_1_1MIMOPipelineModule.html" title=" " alt="" coords="492,337,692,377"/>
 <area shape="rect" id="node7" href="$classdyno_1_1DataInterfacePipeline.html" title="Takes data, synchronizes it and sends it to the output queue which should be connected to the fronten..." alt="" coords="768,128,971,153"/>
 <area shape="rect" id="node10" href="$classdyno_1_1FrontendOfflinePipeline.html" title="module traits of the associated backend..." alt="" coords="762,265,977,305"/>

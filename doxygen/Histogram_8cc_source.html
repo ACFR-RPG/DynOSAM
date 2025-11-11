@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.6"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>DynoSAM: dynosam/src/utils/Histogram.cc Source File</title>
+<title>DynoSAM: dynosam_common/src/utils/Histogram.cc Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -70,7 +70,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_5dee249e885e61d789509b2ad73060f7.html">dynosam</a></li><li class="navelem"><a class="el" href="dir_967826b48aab5e644207159adfa580e7.html">src</a></li><li class="navelem"><a class="el" href="dir_7835b81b8c9f02fd4083396510c42ef4.html">utils</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_59022c2de10cb81abe7061856121e435.html">dynosam_common</a></li><li class="navelem"><a class="el" href="dir_8dda260cc3fa4078daa006fdb5813365.html">src</a></li><li class="navelem"><a class="el" href="dir_b7361abece362f9965ff2b0bde409479.html">utils</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -78,79 +78,80 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 <a href="Histogram_8cc.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/*</span></div>
-<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment"> *   Copyright (c) 2024 ACFR-RPG, University of Sydney, Jesse Morris (jesse.morris@sydney.edu.au)</span></div>
-<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment"> *   All rights reserved.</span></div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment"></span> </div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="comment"> *   Permission is hereby granted, free of charge, to any person obtaining a copy</span></div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="comment"> *   of this software and associated documentation files (the &quot;Software&quot;), to deal</span></div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="comment"> *   in the Software without restriction, including without limitation the rights</span></div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="comment"> *   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell</span></div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="comment"> *   copies of the Software, and to permit persons to whom the Software is</span></div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="comment"> *   furnished to do so, subject to the following conditions:</span></div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="comment"></span> </div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="comment"> *   The above copyright notice and this permission notice shall be included in all</span></div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="comment"> *   copies or substantial portions of the Software.</span></div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="comment"></span> </div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="comment"> *   THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR</span></div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="comment"> *   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,</span></div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="comment"> *   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE</span></div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="comment"> *   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER</span></div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="comment"> *   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,</span></div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="comment"> *   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE</span></div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="comment"> *   SOFTWARE.</span></div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="comment"> */</span></div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &quot;<a class="code" href="Histogram_8hpp.html">dynosam/utils/Histogram.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacedyno.html">dyno</a> {</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="keyword">using </span><a class="code hl_typedef" href="GroundTruthPacket_8hpp.html#ab701e3ac61a85b337ec5c1abaad6742d">json</a> = nlohmann::json;</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno"><a class="line" href="namespacedyno.html#aa204e03fa9250496fc61d6cd4409b9c2">   30</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="namespacedyno.html#a5b5b1dc8f0d48e18c7751bf5d002cfcc">to_json</a>(<a class="code hl_typedef" href="namespacedyno.html#aabe3dedb8f022268595b109ce6b2c6d5">json</a>&amp; j, <span class="keyword">const</span> <a class="code hl_class" href="classdyno_1_1Histogram.html">Histogram</a>&amp; histogram) {</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    <span class="comment">// json bin;</span></div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    <span class="comment">// bin[&quot;upper&quot;]</span></div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    <span class="comment">// j[histogram.name_]</span></div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment"> *   Copyright (c) 2024 ACFR-RPG, University of Sydney, Jesse Morris</span></div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment"> (jesse.morris@sydney.edu.au)</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment"> *   All rights reserved.</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="comment"></span> </div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="comment"> *   Permission is hereby granted, free of charge, to any person obtaining a</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="comment"> copy</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="comment"> *   of this software and associated documentation files (the &quot;Software&quot;), to</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="comment"> deal</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="comment"> *   in the Software without restriction, including without limitation the</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="comment"> rights</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="comment"> *   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="comment"> *   copies of the Software, and to permit persons to whom the Software is</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="comment"> *   furnished to do so, subject to the following conditions:</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="comment"></span> </div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="comment"> *   The above copyright notice and this permission notice shall be included in</span></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="comment"> all</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="comment"> *   copies or substantial portions of the Software.</span></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="comment"></span> </div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="comment"> *   THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="comment"> *   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="comment"> *   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="comment"> *   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER</span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="comment"> *   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="comment"> FROM,</span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="comment"> *   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="comment"> THE</span></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="comment"> *   SOFTWARE.</span></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="comment"> */</span></div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="preprocessor">#include &quot;<a class="code" href="Histogram_8hpp.html">dynosam_common/utils/Histogram.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacedyno.html">dyno</a> {</div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    <span class="keyword">auto</span> impl_hist = histogram.<a class="code hl_variable" href="classdyno_1_1Histogram.html#a88536a6a75b12af6e2a480d856d56560">histogram_</a>;</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="keyword">using </span><a class="code hl_typedef" href="VisionImuOutputPacket_8hpp.html#ab701e3ac61a85b337ec5c1abaad6742d">json</a> = nlohmann::json;</div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    std::vector&lt;std::vector&lt;json&gt;&gt; bins(impl_hist.rank());</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span> </div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span>&amp;&amp; x : bh::indexed(impl_hist)) {</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>        <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; impl_hist.rank(); ++i) {</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno"><a class="line" href="namespacedyno.html#aa204e03fa9250496fc61d6cd4409b9c2">   37</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="namespacedyno.html#a5b5b1dc8f0d48e18c7751bf5d002cfcc">to_json</a>(<a class="code hl_typedef" href="namespacedyno.html#aabe3dedb8f022268595b109ce6b2c6d5">json</a>&amp; j, <span class="keyword">const</span> <a class="code hl_class" href="classdyno_1_1Histogram.html">Histogram</a>&amp; histogram) {</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>  <span class="comment">// json bin;</span></div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>  <span class="comment">// bin[&quot;upper&quot;]</span></div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>  <span class="comment">// j[histogram.name_]</span></div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>            <a class="code hl_typedef" href="namespacedyno.html#aabe3dedb8f022268595b109ce6b2c6d5">json</a> bin;</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>            bin[<span class="stringliteral">&quot;lower&quot;</span>] = x.bin(i).lower();</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>            bin[<span class="stringliteral">&quot;upper&quot;</span>] = x.bin(i).upper();</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>  <span class="keyword">auto</span> impl_hist = histogram.<a class="code hl_variable" href="classdyno_1_1Histogram.html#a88536a6a75b12af6e2a480d856d56560">histogram_</a>;</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>  std::vector&lt;std::vector&lt;json&gt;&gt; bins(impl_hist.rank());</div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>            std::stringstream ss;</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>            ss &lt;&lt; *x;</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>            <span class="keywordtype">double</span> value;</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>            ss &gt;&gt; value;</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>            bin[<span class="stringliteral">&quot;count&quot;</span>] = value;</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>            bins.at(i).push_back(bin);</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>  <span class="keywordflow">for</span> (<span class="keyword">auto</span>&amp;&amp; x : bh::indexed(impl_hist)) {</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; impl_hist.rank(); ++i) {</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>      <a class="code hl_typedef" href="namespacedyno.html#aabe3dedb8f022268595b109ce6b2c6d5">json</a> bin;</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>      bin[<span class="stringliteral">&quot;lower&quot;</span>] = x.bin(i).lower();</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>      bin[<span class="stringliteral">&quot;upper&quot;</span>] = x.bin(i).upper();</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span> </div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>      std::stringstream ss;</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>      ss &lt;&lt; *x;</div>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>        }</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    }</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    j[histogram.<a class="code hl_variable" href="classdyno_1_1Histogram.html#a411c9781e100046a9ade240c287ba6d0">name_</a>] = bins;</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>}</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span> </div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno"><a class="line" href="namespacedyno.html#ac817e4367dfa117dc3cd65bdee764f3e">   62</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="namespacedyno.html#abfce003ea874ecc64ab3f105c1f5fac8">from_json</a>(<span class="keyword">const</span> <a class="code hl_typedef" href="namespacedyno.html#aabe3dedb8f022268595b109ce6b2c6d5">json</a>&amp; j, <a class="code hl_class" href="classdyno_1_1Histogram.html">Histogram</a>&amp; histogram) {</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>      <span class="keywordtype">double</span> value;</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>      ss &gt;&gt; value;</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>      bin[<span class="stringliteral">&quot;count&quot;</span>] = value;</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span> </div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>      bins.at(i).push_back(bin);</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    }</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>  }</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>  j[histogram.<a class="code hl_variable" href="classdyno_1_1Histogram.html#a411c9781e100046a9ade240c287ba6d0">name_</a>] = bins;</div>
 <div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>}</div>
 <div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>} <span class="comment">//dyno</span></div>
-<div class="ttc" id="aGroundTruthPacket_8hpp_html_ab701e3ac61a85b337ec5c1abaad6742d"><div class="ttname"><a href="GroundTruthPacket_8hpp.html#ab701e3ac61a85b337ec5c1abaad6742d">json</a></div><div class="ttdeci">nlohmann::json json</div><div class="ttdef"><b>Definition:</b> <a href="GroundTruthPacket_8hpp_source.html#l00041">GroundTruthPacket.hpp:41</a></div></div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno"><a class="line" href="namespacedyno.html#ac817e4367dfa117dc3cd65bdee764f3e">   66</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="namespacedyno.html#abfce003ea874ecc64ab3f105c1f5fac8">from_json</a>(<span class="keyword">const</span> <a class="code hl_typedef" href="namespacedyno.html#aabe3dedb8f022268595b109ce6b2c6d5">json</a>&amp; j, <a class="code hl_class" href="classdyno_1_1Histogram.html">Histogram</a>&amp; histogram) {}</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span> </div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>}  <span class="comment">// namespace dyno</span></div>
 <div class="ttc" id="aHistogram_8hpp_html"><div class="ttname"><a href="Histogram_8hpp.html">Histogram.hpp</a></div></div>
-<div class="ttc" id="aclassdyno_1_1Histogram_html"><div class="ttname"><a href="classdyno_1_1Histogram.html">dyno::Histogram</a></div><div class="ttdef"><b>Definition:</b> <a href="Histogram_8hpp_source.html#l00038">Histogram.hpp:38</a></div></div>
-<div class="ttc" id="aclassdyno_1_1Histogram_html_a411c9781e100046a9ade240c287ba6d0"><div class="ttname"><a href="classdyno_1_1Histogram.html#a411c9781e100046a9ade240c287ba6d0">dyno::Histogram::name_</a></div><div class="ttdeci">std::string name_</div><div class="ttdef"><b>Definition:</b> <a href="Histogram_8hpp_source.html#l00068">Histogram.hpp:68</a></div></div>
-<div class="ttc" id="aclassdyno_1_1Histogram_html_a88536a6a75b12af6e2a480d856d56560"><div class="ttname"><a href="classdyno_1_1Histogram.html#a88536a6a75b12af6e2a480d856d56560">dyno::Histogram::histogram_</a></div><div class="ttdeci">ImplHistogram histogram_</div><div class="ttdef"><b>Definition:</b> <a href="Histogram_8hpp_source.html#l00067">Histogram.hpp:67</a></div></div>
+<div class="ttc" id="aVisionImuOutputPacket_8hpp_html_ab701e3ac61a85b337ec5c1abaad6742d"><div class="ttname"><a href="VisionImuOutputPacket_8hpp.html#ab701e3ac61a85b337ec5c1abaad6742d">json</a></div><div class="ttdeci">nlohmann::json json</div><div class="ttdef"><b>Definition:</b> <a href="VisionImuOutputPacket_8hpp_source.html#l00196">VisionImuOutputPacket.hpp:196</a></div></div>
+<div class="ttc" id="aclassdyno_1_1Histogram_html"><div class="ttname"><a href="classdyno_1_1Histogram.html">dyno::Histogram</a></div><div class="ttdef"><b>Definition:</b> <a href="Histogram_8hpp_source.html#l00044">Histogram.hpp:44</a></div></div>
+<div class="ttc" id="aclassdyno_1_1Histogram_html_a411c9781e100046a9ade240c287ba6d0"><div class="ttname"><a href="classdyno_1_1Histogram.html#a411c9781e100046a9ade240c287ba6d0">dyno::Histogram::name_</a></div><div class="ttdeci">std::string name_</div><div class="ttdef"><b>Definition:</b> <a href="Histogram_8hpp_source.html#l00074">Histogram.hpp:74</a></div></div>
+<div class="ttc" id="aclassdyno_1_1Histogram_html_a88536a6a75b12af6e2a480d856d56560"><div class="ttname"><a href="classdyno_1_1Histogram.html#a88536a6a75b12af6e2a480d856d56560">dyno::Histogram::histogram_</a></div><div class="ttdeci">ImplHistogram histogram_</div><div class="ttdef"><b>Definition:</b> <a href="Histogram_8hpp_source.html#l00073">Histogram.hpp:73</a></div></div>
 <div class="ttc" id="anamespacedyno_html"><div class="ttname"><a href="namespacedyno.html">dyno</a></div><div class="ttdef"><b>Definition:</b> <a href="Accessor-impl_8hpp_source.html#l00037">Accessor-impl.hpp:37</a></div></div>
-<div class="ttc" id="anamespacedyno_html_a5b5b1dc8f0d48e18c7751bf5d002cfcc"><div class="ttname"><a href="namespacedyno.html#a5b5b1dc8f0d48e18c7751bf5d002cfcc">dyno::to_json</a></div><div class="ttdeci">void to_json(json &amp;j, const ParallelObjectISAM::Result &amp;result)</div><div class="ttdef"><b>Definition:</b> <a href="ParallelObjectISAM_8cc_source.html#l00482">ParallelObjectISAM.cc:482</a></div></div>
+<div class="ttc" id="anamespacedyno_html_a5b5b1dc8f0d48e18c7751bf5d002cfcc"><div class="ttname"><a href="namespacedyno.html#a5b5b1dc8f0d48e18c7751bf5d002cfcc">dyno::to_json</a></div><div class="ttdeci">void to_json(json &amp;j, const ParallelObjectISAM::Result &amp;result)</div><div class="ttdef"><b>Definition:</b> <a href="ParallelObjectISAM_8cc_source.html#l00366">ParallelObjectISAM.cc:366</a></div></div>
 <div class="ttc" id="anamespacedyno_html_aabe3dedb8f022268595b109ce6b2c6d5"><div class="ttname"><a href="namespacedyno.html#aabe3dedb8f022268595b109ce6b2c6d5">dyno::json</a></div><div class="ttdeci">nlohmann::json json</div><div class="ttdef"><b>Definition:</b> <a href="ParallelObjectISAM_8hpp_source.html#l00209">ParallelObjectISAM.hpp:209</a></div></div>
 <div class="ttc" id="anamespacedyno_html_abfce003ea874ecc64ab3f105c1f5fac8"><div class="ttname"><a href="namespacedyno.html#abfce003ea874ecc64ab3f105c1f5fac8">dyno::from_json</a></div><div class="ttdeci">void from_json(const json &amp;j, ObjectPoseGT::MotionInfo &amp;motion_info)</div><div class="ttdoc">Implements the required from_json (deseralizes) function for the nlohmann::json to automatically load...</div><div class="ttdef"><b>Definition:</b> <a href="GroundTruthPacket_8cc_source.html#l00338">GroundTruthPacket.cc:338</a></div></div>
 </div><!-- fragment --></div><!-- contents -->

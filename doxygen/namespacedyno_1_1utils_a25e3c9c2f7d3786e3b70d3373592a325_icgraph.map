@@ -1,4 +1,5 @@
 <map id="dyno::utils::equateGtsamOptionalValues" name="dyno::utils::equateGtsamOptionalValues">
-<area shape="rect" id="node1" title="Check if two objects wrapped in std::optional are equal. If both are std::nullopt,..." alt="" coords="207,5,393,45"/>
-<area shape="rect" id="node2" href="$structdyno_1_1ObjectPoseGT.html#a1313980d318a59ba14c8108082550ea0" title=" " alt="" coords="5,5,159,45"/>
+<area shape="rect" id="node1" title="Check if two objects wrapped in std::optional are equal. If both are std::nullopt,..." alt="" coords="207,37,393,77"/>
+<area shape="rect" id="node2" href="$structdyno_1_1Feature_1_1impl.html#a09ae6afc37d19908327767ab444be67c" title=" " alt="" coords="8,5,156,45"/>
+<area shape="rect" id="node3" href="$structdyno_1_1ObjectPoseGT.html#a1313980d318a59ba14c8108082550ea0" title=" " alt="" coords="5,69,159,109"/>
 </map>

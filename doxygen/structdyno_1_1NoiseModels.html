@@ -75,6 +75,7 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="structdyno_1_1NoiseModels-members.html">List of all members</a>  </div>
@@ -84,6 +85,11 @@ $(function() {
 
 <p><code>#include &lt;<a class="el" href="BackendDefinitions_8hpp_source.html">BackendDefinitions.hpp</a>&gt;</code></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:ad2ee8024e5e3e4942ba73018c4a6e505"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1NoiseModels.html#ad2ee8024e5e3e4942ba73018c4a6e505">print</a> (const std::string &amp;name) const</td></tr>
+<tr class="separator:ad2ee8024e5e3e4942ba73018c4a6e505"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a8bef4bd578329e14ca739315ad597879"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="structdyno_1_1NoiseModels.html">NoiseModels</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1NoiseModels.html#a8bef4bd578329e14ca739315ad597879">fromBackendParams</a> (const <a class="el" href="structdyno_1_1BackendParams.html">BackendParams</a> &amp;)</td></tr>
@@ -111,7 +117,7 @@ Public Attributes</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="BackendDefinitions_8hpp_source.html#l00156">156</a> of file <a class="el" href="BackendDefinitions_8hpp_source.html">BackendDefinitions.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="BackendDefinitions_8hpp_source.html#l00128">128</a> of file <a class="el" href="BackendDefinitions_8hpp_source.html">BackendDefinitions.hpp</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="a8bef4bd578329e14ca739315ad597879" name="a8bef4bd578329e14ca739315ad597879"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8bef4bd578329e14ca739315ad597879">&#9670;&#160;</a></span>fromBackendParams()</h2>
@@ -137,75 +143,79 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="BackendDefinitions_8cc_source.html#l00161">161</a> of file <a class="el" href="BackendDefinitions_8cc_source.html">BackendDefinitions.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  162</span>                                         {</div>
-<div class="line"><span class="lineno">  163</span>  NoiseModels noise_models;</div>
+<p class="definition">Definition at line <a class="el" href="BackendDefinitions_8cc_source.html#l00124">124</a> of file <a class="el" href="BackendDefinitions_8cc_source.html">BackendDefinitions.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  125</span>                                         {</div>
+<div class="line"><span class="lineno">  126</span>  NoiseModels noise_models;</div>
+<div class="line"><span class="lineno">  127</span> </div>
+<div class="line"><span class="lineno">  128</span>  <span class="comment">// odometry</span></div>
+<div class="line"><span class="lineno">  129</span>  gtsam::Vector6 odom_sigmas;</div>
+<div class="line"><span class="lineno">  130</span>  odom_sigmas.head&lt;3&gt;().setConstant(backend_params.odometry_rotation_sigma_);</div>
+<div class="line"><span class="lineno">  131</span>  odom_sigmas.tail&lt;3&gt;().setConstant(backend_params.odometry_translation_sigma_);</div>
+<div class="line"><span class="lineno">  132</span>  noise_models.odometry_noise =</div>
+<div class="line"><span class="lineno">  133</span>      gtsam::noiseModel::Diagonal::Sigmas(odom_sigmas);</div>
+<div class="line"><span class="lineno">  134</span>  CHECK(noise_models.odometry_noise);</div>
+<div class="line"><span class="lineno">  135</span> </div>
+<div class="line"><span class="lineno">  136</span>  <span class="comment">// first pose prior (world frame)</span></div>
+<div class="line"><span class="lineno">  137</span>  noise_models.initial_pose_prior =</div>
+<div class="line"><span class="lineno">  138</span>      gtsam::noiseModel::Isotropic::Sigma(6u, 0.000001);</div>
+<div class="line"><span class="lineno">  139</span>  CHECK(noise_models.initial_pose_prior);</div>
+<div class="line"><span class="lineno">  140</span> </div>
+<div class="line"><span class="lineno">  141</span>  <span class="comment">// landmark motion noise (needed for some formulations ie world-centric)</span></div>
+<div class="line"><span class="lineno">  142</span>  noise_models.landmark_motion_noise = gtsam::noiseModel::Isotropic::Sigma(</div>
+<div class="line"><span class="lineno">  143</span>      3u, backend_params.motion_ternary_factor_noise_sigma_);</div>
+<div class="line"><span class="lineno">  144</span>  CHECK(noise_models.landmark_motion_noise);</div>
+<div class="line"><span class="lineno">  145</span> </div>
+<div class="line"><span class="lineno">  146</span>  <span class="comment">// smoothing factor noise model (can be any variant of the smoothing factor as</span></div>
+<div class="line"><span class="lineno">  147</span>  <span class="comment">// long as the dimensions are 6, ie. pose)</span></div>
+<div class="line"><span class="lineno">  148</span>  gtsam::Vector6 object_constant_vel_sigmas;</div>
+<div class="line"><span class="lineno">  149</span>  object_constant_vel_sigmas.head&lt;3&gt;().setConstant(</div>
+<div class="line"><span class="lineno">  150</span>      backend_params.constant_object_motion_rotation_sigma_);</div>
+<div class="line"><span class="lineno">  151</span>  object_constant_vel_sigmas.tail&lt;3&gt;().setConstant(</div>
+<div class="line"><span class="lineno">  152</span>      backend_params.constant_object_motion_translation_sigma_);</div>
+<div class="line"><span class="lineno">  153</span>  noise_models.object_smoothing_noise =</div>
+<div class="line"><span class="lineno">  154</span>      gtsam::noiseModel::Diagonal::Sigmas(object_constant_vel_sigmas);</div>
+<div class="line"><span class="lineno">  155</span>  CHECK(noise_models.object_smoothing_noise);</div>
+<div class="line"><span class="lineno">  156</span> </div>
+<div class="line"><span class="lineno">  157</span>  <span class="comment">// TODO: CHECKS that values are not zero!!!</span></div>
+<div class="line"><span class="lineno">  158</span> </div>
+<div class="line"><span class="lineno">  159</span>  <span class="comment">// TODO: should now depricate if we&#39;re using covariance from frontend??</span></div>
+<div class="line"><span class="lineno">  160</span>  noise_models.static_point_noise = gtsam::noiseModel::Isotropic::Sigma(</div>
+<div class="line"><span class="lineno">  161</span>      3u, backend_params.static_point_noise_sigma);</div>
+<div class="line"><span class="lineno">  162</span>  noise_models.dynamic_point_noise = gtsam::noiseModel::Isotropic::Sigma(</div>
+<div class="line"><span class="lineno">  163</span>      3u, backend_params.dynamic_point_noise_sigma);</div>
 <div class="line"><span class="lineno">  164</span> </div>
-<div class="line"><span class="lineno">  165</span>  <span class="comment">// odometry</span></div>
-<div class="line"><span class="lineno">  166</span>  gtsam::Vector6 odom_sigmas;</div>
-<div class="line"><span class="lineno">  167</span>  odom_sigmas.head&lt;3&gt;().setConstant(backend_params.odometry_rotation_sigma_);</div>
-<div class="line"><span class="lineno">  168</span>  odom_sigmas.tail&lt;3&gt;().setConstant(backend_params.odometry_translation_sigma_);</div>
-<div class="line"><span class="lineno">  169</span>  LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;backend_params.odometry_rotation_sigma_ &quot;</span></div>
-<div class="line"><span class="lineno">  170</span>            &lt;&lt; backend_params.odometry_rotation_sigma_;</div>
-<div class="line"><span class="lineno">  171</span>  LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;backend_params.odometry_translation_sigma_&quot;</span></div>
-<div class="line"><span class="lineno">  172</span>            &lt;&lt; backend_params.odometry_translation_sigma_;</div>
-<div class="line"><span class="lineno">  173</span>  LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Odom sigma: &quot;</span> &lt;&lt; odom_sigmas;</div>
-<div class="line"><span class="lineno">  174</span>  noise_models.odometry_noise =</div>
-<div class="line"><span class="lineno">  175</span>      gtsam::noiseModel::Diagonal::Sigmas(odom_sigmas);</div>
-<div class="line"><span class="lineno">  176</span>  CHECK(noise_models.odometry_noise);</div>
-<div class="line"><span class="lineno">  177</span> </div>
-<div class="line"><span class="lineno">  178</span>  <span class="comment">// first pose prior (world frame)</span></div>
-<div class="line"><span class="lineno">  179</span>  noise_models.initial_pose_prior =</div>
-<div class="line"><span class="lineno">  180</span>      gtsam::noiseModel::Isotropic::Sigma(6u, 0.000001);</div>
-<div class="line"><span class="lineno">  181</span>  CHECK(noise_models.initial_pose_prior);</div>
-<div class="line"><span class="lineno">  182</span> </div>
-<div class="line"><span class="lineno">  183</span>  <span class="comment">// landmark motion noise (needed for some formulations ie world-centric)</span></div>
-<div class="line"><span class="lineno">  184</span>  noise_models.landmark_motion_noise = gtsam::noiseModel::Isotropic::Sigma(</div>
-<div class="line"><span class="lineno">  185</span>      3u, backend_params.motion_ternary_factor_noise_sigma_);</div>
-<div class="line"><span class="lineno">  186</span>  CHECK(noise_models.landmark_motion_noise);</div>
-<div class="line"><span class="lineno">  187</span> </div>
-<div class="line"><span class="lineno">  188</span>  <span class="comment">// smoothing factor noise model (can be any variant of the smoothing factor as</span></div>
-<div class="line"><span class="lineno">  189</span>  <span class="comment">// long as the dimensions are 6, ie. pose)</span></div>
-<div class="line"><span class="lineno">  190</span>  gtsam::Vector6 object_constant_vel_sigmas;</div>
-<div class="line"><span class="lineno">  191</span>  object_constant_vel_sigmas.head&lt;3&gt;().setConstant(</div>
-<div class="line"><span class="lineno">  192</span>      backend_params.constant_object_motion_rotation_sigma_);</div>
-<div class="line"><span class="lineno">  193</span>  object_constant_vel_sigmas.tail&lt;3&gt;().setConstant(</div>
-<div class="line"><span class="lineno">  194</span>      backend_params.constant_object_motion_translation_sigma_);</div>
-<div class="line"><span class="lineno">  195</span>  noise_models.object_smoothing_noise =</div>
-<div class="line"><span class="lineno">  196</span>      gtsam::noiseModel::Diagonal::Sigmas(object_constant_vel_sigmas);</div>
-<div class="line"><span class="lineno">  197</span>  CHECK(noise_models.object_smoothing_noise);</div>
-<div class="line"><span class="lineno">  198</span> </div>
-<div class="line"><span class="lineno">  199</span>  <span class="comment">// TODO: CHECKS that values are not zero!!!</span></div>
-<div class="line"><span class="lineno">  200</span> </div>
-<div class="line"><span class="lineno">  201</span>  noise_models.static_point_noise = gtsam::noiseModel::Isotropic::Sigma(</div>
-<div class="line"><span class="lineno">  202</span>      3u, backend_params.static_point_noise_sigma_);</div>
-<div class="line"><span class="lineno">  203</span>  noise_models.dynamic_point_noise = gtsam::noiseModel::Isotropic::Sigma(</div>
-<div class="line"><span class="lineno">  204</span>      3u, backend_params.dynamic_point_noise_sigma_);</div>
-<div class="line"><span class="lineno">  205</span> </div>
-<div class="line"><span class="lineno">  206</span>  <span class="keywordflow">if</span> (backend_params.use_robust_kernals_) {</div>
-<div class="line"><span class="lineno">  207</span>    LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Using robust huber loss function: &quot;</span></div>
-<div class="line"><span class="lineno">  208</span>              &lt;&lt; backend_params.k_huber_3d_points_;</div>
-<div class="line"><span class="lineno">  209</span>    noise_models.static_point_noise = gtsam::noiseModel::Robust::Create(</div>
-<div class="line"><span class="lineno">  210</span>        gtsam::noiseModel::mEstimator::Huber::Create(</div>
-<div class="line"><span class="lineno">  211</span>            backend_params.k_huber_3d_points_),</div>
-<div class="line"><span class="lineno">  212</span>        noise_models.static_point_noise);</div>
-<div class="line"><span class="lineno">  213</span> </div>
-<div class="line"><span class="lineno">  214</span>    noise_models.dynamic_point_noise = gtsam::noiseModel::Robust::Create(</div>
-<div class="line"><span class="lineno">  215</span>        gtsam::noiseModel::mEstimator::Huber::Create(</div>
-<div class="line"><span class="lineno">  216</span>            backend_params.k_huber_3d_points_),</div>
-<div class="line"><span class="lineno">  217</span>        noise_models.dynamic_point_noise);</div>
-<div class="line"><span class="lineno">  218</span> </div>
-<div class="line"><span class="lineno">  219</span>    <span class="comment">// TODO: not k_huber_3d_points_ not just used for 3d points</span></div>
-<div class="line"><span class="lineno">  220</span>    noise_models.landmark_motion_noise = gtsam::noiseModel::Robust::Create(</div>
-<div class="line"><span class="lineno">  221</span>        gtsam::noiseModel::mEstimator::Huber::Create(</div>
-<div class="line"><span class="lineno">  222</span>            backend_params.k_huber_3d_points_),</div>
-<div class="line"><span class="lineno">  223</span>        noise_models.landmark_motion_noise);</div>
-<div class="line"><span class="lineno">  224</span>  }</div>
-<div class="line"><span class="lineno">  225</span> </div>
-<div class="line"><span class="lineno">  226</span>  <span class="keywordflow">return</span> noise_models;</div>
-<div class="line"><span class="lineno">  227</span>}</div>
+<div class="line"><span class="lineno">  165</span>  <span class="keywordflow">if</span> (backend_params.use_robust_kernals_) {</div>
+<div class="line"><span class="lineno">  166</span>    LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Using robust huber loss function: &quot;</span></div>
+<div class="line"><span class="lineno">  167</span>              &lt;&lt; backend_params.k_huber_3d_points_;</div>
+<div class="line"><span class="lineno">  168</span> </div>
+<div class="line"><span class="lineno">  169</span>    <span class="keywordflow">if</span> (backend_params.static_point_noise_as_robust) {</div>
+<div class="line"><span class="lineno">  170</span>      LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Making static point noise model robust!&quot;</span>;</div>
+<div class="line"><span class="lineno">  171</span>      noise_models.static_point_noise = gtsam::noiseModel::Robust::Create(</div>
+<div class="line"><span class="lineno">  172</span>          gtsam::noiseModel::mEstimator::Huber::Create(</div>
+<div class="line"><span class="lineno">  173</span>              backend_params.k_huber_3d_points_),</div>
+<div class="line"><span class="lineno">  174</span>          noise_models.static_point_noise);</div>
+<div class="line"><span class="lineno">  175</span>    }</div>
+<div class="line"><span class="lineno">  176</span> </div>
+<div class="line"><span class="lineno">  177</span>    <span class="comment">// TODO: JUST FOR TESTING!!!</span></div>
+<div class="line"><span class="lineno">  178</span>    <span class="keywordflow">if</span> (backend_params.dynamic_point_noise_as_robust) {</div>
+<div class="line"><span class="lineno">  179</span>      LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Making dynamic point noise model robust!&quot;</span>;</div>
+<div class="line"><span class="lineno">  180</span>      noise_models.dynamic_point_noise = gtsam::noiseModel::Robust::Create(</div>
+<div class="line"><span class="lineno">  181</span>          gtsam::noiseModel::mEstimator::Huber::Create(</div>
+<div class="line"><span class="lineno">  182</span>              backend_params.k_huber_3d_points_),</div>
+<div class="line"><span class="lineno">  183</span>          noise_models.dynamic_point_noise);</div>
+<div class="line"><span class="lineno">  184</span>    }</div>
+<div class="line"><span class="lineno">  185</span> </div>
+<div class="line"><span class="lineno">  186</span>    <span class="comment">// TODO: not k_huber_3d_points_ not just used for 3d points</span></div>
+<div class="line"><span class="lineno">  187</span>    noise_models.landmark_motion_noise = gtsam::noiseModel::Robust::Create(</div>
+<div class="line"><span class="lineno">  188</span>        gtsam::noiseModel::mEstimator::Huber::Create(</div>
+<div class="line"><span class="lineno">  189</span>            backend_params.k_huber_3d_points_),</div>
+<div class="line"><span class="lineno">  190</span>        noise_models.landmark_motion_noise);</div>
+<div class="line"><span class="lineno">  191</span>  }</div>
+<div class="line"><span class="lineno">  192</span> </div>
+<div class="line"><span class="lineno">  193</span>  <span class="keywordflow">return</span> noise_models;</div>
+<div class="line"><span class="lineno">  194</span>}</div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="structdyno_1_1BackendParams.html#acfbba206fd30c213abf6da97d2f2e3b5">dyno::BackendParams::constant_object_motion_rotation_sigma_</a>, <a class="el" href="structdyno_1_1BackendParams.html#ab2b9ed3551df5f9c66637454ce2c94be">dyno::BackendParams::constant_object_motion_translation_sigma_</a>, <a class="el" href="structdyno_1_1NoiseModels.html#aa0ba01119cae77c87c562c119497c8d0">dynamic_point_noise</a>, <a class="el" href="structdyno_1_1BackendParams.html#aaaabcb1f6cdbf0ef08210526a340a825">dyno::BackendParams::dynamic_point_noise_sigma_</a>, <a class="el" href="structdyno_1_1NoiseModels.html#a8c1059db7ca3353919cd1789b1891c54">initial_pose_prior</a>, <a class="el" href="structdyno_1_1BackendParams.html#af863bf2642a031c6bfcfcf54479d56d4">dyno::BackendParams::k_huber_3d_points_</a>, <a class="el" href="structdyno_1_1NoiseModels.html#a83368aae44c18d90239c00dcf557729a">landmark_motion_noise</a>, <a class="el" href="structdyno_1_1BackendParams.html#a0f956a9cb197f1b8013772b81f9c2fed">dyno::BackendParams::motion_ternary_factor_noise_sigma_</a>, <a class="el" href="structdyno_1_1NoiseModels.html#acf038fec49e230c17c8481d74b4e1f26">object_smoothing_noise</a>, <a class="el" href="structdyno_1_1NoiseModels.html#a8c89c4f869e6ec9ea6ebe16c5de8e73c">odometry_noise</a>, <a class="el" href="structdyno_1_1BackendParams.html#a19effdd93e47448a8befb6e7f44321fd">dyno::BackendParams::odometry_rotation_sigma_</a>, <a class="el" href="structdyno_1_1BackendParams.html#a2388f57e5904ef5a6f862be7afb96805">dyno::BackendParams::odometry_translation_sigma_</a>, <a class="el" href="structdyno_1_1NoiseModels.html#a8a6fbd96ef271a3670ab1b1a2fcc999c">static_point_noise</a>, <a class="el" href="structdyno_1_1BackendParams.html#ad34b4878d778cd6f5ea7d7c43f9b7748">dyno::BackendParams::static_point_noise_sigma_</a>, and <a class="el" href="structdyno_1_1BackendParams.html#aaaa3fc2ee1222dbba03e2dca7af3e18d">dyno::BackendParams::use_robust_kernals_</a>.</p>
+<p class="reference">References <a class="el" href="structdyno_1_1BackendParams.html#acfbba206fd30c213abf6da97d2f2e3b5">dyno::BackendParams::constant_object_motion_rotation_sigma_</a>, <a class="el" href="structdyno_1_1BackendParams.html#ab2b9ed3551df5f9c66637454ce2c94be">dyno::BackendParams::constant_object_motion_translation_sigma_</a>, <a class="el" href="structdyno_1_1NoiseModels.html#aa0ba01119cae77c87c562c119497c8d0">dynamic_point_noise</a>, <a class="el" href="structdyno_1_1BackendParams.html#a1496ba184a228bb717166c02202a090a">dyno::BackendParams::dynamic_point_noise_as_robust</a>, <a class="el" href="structdyno_1_1BackendParams.html#af658cc40730d872aad1e01b2fe7ebd78">dyno::BackendParams::dynamic_point_noise_sigma</a>, <a class="el" href="structdyno_1_1NoiseModels.html#a8c1059db7ca3353919cd1789b1891c54">initial_pose_prior</a>, <a class="el" href="structdyno_1_1BackendParams.html#af863bf2642a031c6bfcfcf54479d56d4">dyno::BackendParams::k_huber_3d_points_</a>, <a class="el" href="structdyno_1_1NoiseModels.html#a83368aae44c18d90239c00dcf557729a">landmark_motion_noise</a>, <a class="el" href="structdyno_1_1BackendParams.html#a0f956a9cb197f1b8013772b81f9c2fed">dyno::BackendParams::motion_ternary_factor_noise_sigma_</a>, <a class="el" href="structdyno_1_1NoiseModels.html#acf038fec49e230c17c8481d74b4e1f26">object_smoothing_noise</a>, <a class="el" href="structdyno_1_1NoiseModels.html#a8c89c4f869e6ec9ea6ebe16c5de8e73c">odometry_noise</a>, <a class="el" href="structdyno_1_1BackendParams.html#a19effdd93e47448a8befb6e7f44321fd">dyno::BackendParams::odometry_rotation_sigma_</a>, <a class="el" href="structdyno_1_1BackendParams.html#a2388f57e5904ef5a6f862be7afb96805">dyno::BackendParams::odometry_translation_sigma_</a>, <a class="el" href="structdyno_1_1NoiseModels.html#a8a6fbd96ef271a3670ab1b1a2fcc999c">static_point_noise</a>, <a class="el" href="structdyno_1_1BackendParams.html#a3ac174a22fd462ba154346e255dc7f9c">dyno::BackendParams::static_point_noise_as_robust</a>, <a class="el" href="structdyno_1_1BackendParams.html#a85e7211fae23f045fae08770932702ba">dyno::BackendParams::static_point_noise_sigma</a>, and <a class="el" href="structdyno_1_1BackendParams.html#aaaa3fc2ee1222dbba03e2dca7af3e18d">dyno::BackendParams::use_robust_kernals_</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1ParallelHybridBackendModule.html#afcfb8db249efb4497490497c4c19366f">dyno::ParallelHybridBackendModule::getEstimator()</a>, and <a class="el" href="classdyno_1_1BackendModule.html#a1803b6a19bd4c08d24cb46d5e066e56f">dyno::BackendModule::setFactorParams()</a>.</p>
 <div class="dynheader">
@@ -216,10 +226,66 @@ Here is the caller graph for this function:</div>
 <area shape="rect" title=" " alt="" coords="517,133,673,173"/>
 <area shape="rect" href="classdyno_1_1ParallelHybridBackendModule.html#afcfb8db249efb4497490497c4c19366f" title=" " alt="" coords="261,85,469,125"/>
 <area shape="rect" href="classdyno_1_1BackendModule.html#a1803b6a19bd4c08d24cb46d5e066e56f" title=" " alt="" coords="283,165,448,205"/>
-<area shape="rect" href="classdyno_1_1ParallelHybridBackendModule.html#a62534120aefaa4a472fd0eb3f4f0b892" title=" " alt="" coords="5,5,213,45"/>
-<area shape="rect" href="classdyno_1_1ParallelHybridBackendModule.html#a5813c5d695b6ef3394cd110b402363e4" title=" " alt="" coords="5,69,213,109"/>
-<area shape="rect" href="classdyno_1_1ParallelHybridBackendModule.html#a07ee75bebfcdf9cab20b6d2cc214b8e0" title=" " alt="" coords="5,133,213,173"/>
+<area shape="rect" href="classdyno_1_1ParallelHybridBackendModule.html#ab7918cad3587f1b2c61587eb4caafea3" title=" " alt="" coords="5,5,213,45"/>
+<area shape="rect" href="classdyno_1_1ParallelHybridBackendModule.html#a90f795ec23287e113aaeb74212a3e350" title=" " alt="" coords="5,69,213,109"/>
+<area shape="rect" href="classdyno_1_1ParallelHybridBackendModule.html#ae77dace65f727f878afcb7d6bf82a059" title=" " alt="" coords="5,133,213,173"/>
 <area shape="rect" href="classdyno_1_1BackendModule.html#a719631280fcd29fedc11ba2a54f15caa" title=" " alt="" coords="27,197,192,237"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="ad2ee8024e5e3e4942ba73018c4a6e505" name="ad2ee8024e5e3e4942ba73018c4a6e505"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad2ee8024e5e3e4942ba73018c4a6e505">&#9670;&#160;</a></span>print()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void dyno::NoiseModels::print </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>name</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="BackendDefinitions_8cc_source.html#l00196">196</a> of file <a class="el" href="BackendDefinitions_8cc_source.html">BackendDefinitions.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  196</span>                                                   {</div>
+<div class="line"><span class="lineno">  197</span>  <span class="keyword">auto</span> print_impl = [](gtsam::SharedNoiseModel model,</div>
+<div class="line"><span class="lineno">  198</span>                       <span class="keyword">const</span> std::string&amp; name) -&gt; <span class="keywordtype">void</span> {</div>
+<div class="line"><span class="lineno">  199</span>    <span class="keywordflow">if</span> (model) {</div>
+<div class="line"><span class="lineno">  200</span>      model-&gt;print(name);</div>
+<div class="line"><span class="lineno">  201</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  202</span>      std::cout &lt;&lt; <span class="stringliteral">&quot;Noise model &quot;</span> &lt;&lt; name &lt;&lt; <span class="stringliteral">&quot; is null!&quot;</span>;</div>
+<div class="line"><span class="lineno">  203</span>    }</div>
+<div class="line"><span class="lineno">  204</span>  };</div>
+<div class="line"><span class="lineno">  205</span> </div>
+<div class="line"><span class="lineno">  206</span>  print_impl(<a class="code hl_variable" href="structdyno_1_1NoiseModels.html#a8c1059db7ca3353919cd1789b1891c54">initial_pose_prior</a>, <span class="stringliteral">&quot;Pose Prior &quot;</span>);</div>
+<div class="line"><span class="lineno">  207</span>  print_impl(<a class="code hl_variable" href="structdyno_1_1NoiseModels.html#a8c89c4f869e6ec9ea6ebe16c5de8e73c">odometry_noise</a>, <span class="stringliteral">&quot;VO &quot;</span>);</div>
+<div class="line"><span class="lineno">  208</span>  print_impl(<a class="code hl_variable" href="structdyno_1_1NoiseModels.html#a83368aae44c18d90239c00dcf557729a">landmark_motion_noise</a>, <span class="stringliteral">&quot;Landmark Motion &quot;</span>);</div>
+<div class="line"><span class="lineno">  209</span>  print_impl(<a class="code hl_variable" href="structdyno_1_1NoiseModels.html#acf038fec49e230c17c8481d74b4e1f26">object_smoothing_noise</a>, <span class="stringliteral">&quot;Object Smoothing &quot;</span>);</div>
+<div class="line"><span class="lineno">  210</span>  print_impl(<a class="code hl_variable" href="structdyno_1_1NoiseModels.html#aa0ba01119cae77c87c562c119497c8d0">dynamic_point_noise</a>, <span class="stringliteral">&quot;Dynamic Point &quot;</span>);</div>
+<div class="line"><span class="lineno">  211</span>  print_impl(<a class="code hl_variable" href="structdyno_1_1NoiseModels.html#a8a6fbd96ef271a3670ab1b1a2fcc999c">static_point_noise</a>, <span class="stringliteral">&quot;Static Point &quot;</span>);</div>
+<div class="line"><span class="lineno">  212</span>}</div>
+<div class="ttc" id="astructdyno_1_1NoiseModels_html_a83368aae44c18d90239c00dcf557729a"><div class="ttname"><a href="structdyno_1_1NoiseModels.html#a83368aae44c18d90239c00dcf557729a">dyno::NoiseModels::landmark_motion_noise</a></div><div class="ttdeci">gtsam::SharedNoiseModel landmark_motion_noise</div><div class="ttdoc">Noise on the landmark tenrary factor.</div><div class="ttdef"><b>Definition:</b> <a href="BackendDefinitions_8hpp_source.html#l00133">BackendDefinitions.hpp:133</a></div></div>
+<div class="ttc" id="astructdyno_1_1NoiseModels_html_a8a6fbd96ef271a3670ab1b1a2fcc999c"><div class="ttname"><a href="structdyno_1_1NoiseModels.html#a8a6fbd96ef271a3670ab1b1a2fcc999c">dyno::NoiseModels::static_point_noise</a></div><div class="ttdeci">gtsam::SharedNoiseModel static_point_noise</div><div class="ttdoc">Isometric [3x3] noise model on static points;.</div><div class="ttdef"><b>Definition:</b> <a href="BackendDefinitions_8hpp_source.html#l00139">BackendDefinitions.hpp:139</a></div></div>
+<div class="ttc" id="astructdyno_1_1NoiseModels_html_a8c1059db7ca3353919cd1789b1891c54"><div class="ttname"><a href="structdyno_1_1NoiseModels.html#a8c1059db7ca3353919cd1789b1891c54">dyno::NoiseModels::initial_pose_prior</a></div><div class="ttdeci">gtsam::SharedNoiseModel initial_pose_prior</div><div class="ttdef"><b>Definition:</b> <a href="BackendDefinitions_8hpp_source.html#l00129">BackendDefinitions.hpp:129</a></div></div>
+<div class="ttc" id="astructdyno_1_1NoiseModels_html_a8c89c4f869e6ec9ea6ebe16c5de8e73c"><div class="ttname"><a href="structdyno_1_1NoiseModels.html#a8c89c4f869e6ec9ea6ebe16c5de8e73c">dyno::NoiseModels::odometry_noise</a></div><div class="ttdeci">gtsam::SharedNoiseModel odometry_noise</div><div class="ttdoc">Between factor noise for between two consequative poses.</div><div class="ttdef"><b>Definition:</b> <a href="BackendDefinitions_8hpp_source.html#l00131">BackendDefinitions.hpp:131</a></div></div>
+<div class="ttc" id="astructdyno_1_1NoiseModels_html_aa0ba01119cae77c87c562c119497c8d0"><div class="ttname"><a href="structdyno_1_1NoiseModels.html#aa0ba01119cae77c87c562c119497c8d0">dyno::NoiseModels::dynamic_point_noise</a></div><div class="ttdeci">gtsam::SharedNoiseModel dynamic_point_noise</div><div class="ttdoc">Isometric [3x3] noise model on dynamic points;.</div><div class="ttdef"><b>Definition:</b> <a href="BackendDefinitions_8hpp_source.html#l00137">BackendDefinitions.hpp:137</a></div></div>
+<div class="ttc" id="astructdyno_1_1NoiseModels_html_acf038fec49e230c17c8481d74b4e1f26"><div class="ttname"><a href="structdyno_1_1NoiseModels.html#acf038fec49e230c17c8481d74b4e1f26">dyno::NoiseModels::object_smoothing_noise</a></div><div class="ttdeci">gtsam::SharedNoiseModel object_smoothing_noise</div><div class="ttdoc">Contant velocity noise model between motions.</div><div class="ttdef"><b>Definition:</b> <a href="BackendDefinitions_8hpp_source.html#l00135">BackendDefinitions.hpp:135</a></div></div>
+</div><!-- fragment -->
+<p class="reference">References <a class="el" href="structdyno_1_1NoiseModels.html#aa0ba01119cae77c87c562c119497c8d0">dynamic_point_noise</a>, <a class="el" href="structdyno_1_1NoiseModels.html#a8c1059db7ca3353919cd1789b1891c54">initial_pose_prior</a>, <a class="el" href="structdyno_1_1NoiseModels.html#a83368aae44c18d90239c00dcf557729a">landmark_motion_noise</a>, <a class="el" href="structdyno_1_1NoiseModels.html#acf038fec49e230c17c8481d74b4e1f26">object_smoothing_noise</a>, <a class="el" href="structdyno_1_1NoiseModels.html#a8c89c4f869e6ec9ea6ebe16c5de8e73c">odometry_noise</a>, and <a class="el" href="structdyno_1_1NoiseModels.html#a8a6fbd96ef271a3670ab1b1a2fcc999c">static_point_noise</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1RegularBackendModule.html#a94392cca6473c1cbad0b9e37da4edde3">dyno::RegularBackendModule::RegularBackendModule()</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="structdyno_1_1NoiseModels_ad2ee8024e5e3e4942ba73018c4a6e505_icgraph.png" border="0" usemap="#astructdyno_1_1NoiseModels_ad2ee8024e5e3e4942ba73018c4a6e505_icgraph" alt=""/></div>
+<map name="astructdyno_1_1NoiseModels_ad2ee8024e5e3e4942ba73018c4a6e505_icgraph" id="astructdyno_1_1NoiseModels_ad2ee8024e5e3e4942ba73018c4a6e505_icgraph">
+<area shape="rect" title=" " alt="" coords="268,5,423,45"/>
+<area shape="rect" href="classdyno_1_1RegularBackendModule.html#a94392cca6473c1cbad0b9e37da4edde3" title=" " alt="" coords="5,5,220,45"/>
 </map>
 </div>
 
@@ -240,9 +306,9 @@ Here is the caller graph for this function:</div>
 
 <p>Isometric [3x3] noise model on dynamic points;. </p>
 
-<p class="definition">Definition at line <a class="el" href="BackendDefinitions_8hpp_source.html#l00165">165</a> of file <a class="el" href="BackendDefinitions_8hpp_source.html">BackendDefinitions.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="BackendDefinitions_8hpp_source.html#l00137">137</a> of file <a class="el" href="BackendDefinitions_8hpp_source.html">BackendDefinitions.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1HybridFormulation.html#ae65a9c76b0363dde62eb86e6c0b2b832">dyno::HybridFormulation::dynamicPointUpdateCallback()</a>, <a class="el" href="classdyno_1_1test__hybrid_1_1StructurelessDecoupledFormulation.html#aa836f90c5eaffd28eafa4d896cbc162f">dyno::test_hybrid::StructurelessDecoupledFormulation::dynamicPointUpdateCallback()</a>, <a class="el" href="classdyno_1_1test__hybrid_1_1DecoupledFormulation.html#a8d4582a8d60a4c61c167577f519ca861">dyno::test_hybrid::DecoupledFormulation::dynamicPointUpdateCallback()</a>, <a class="el" href="classdyno_1_1test__hybrid_1_1StructurlessFormulation.html#a625de6bd79eb629ac2bd60fb2cd8c4df">dyno::test_hybrid::StructurlessFormulation::dynamicPointUpdateCallback()</a>, <a class="el" href="classdyno_1_1test__hybrid_1_1SmartStructurlessFormulation.html#a40673e16631d1d3e8775e33116f85f6a">dyno::test_hybrid::SmartStructurlessFormulation::dynamicPointUpdateCallback()</a>, <a class="el" href="classdyno_1_1WorldMotionFormulation.html#ad60f9621d41608943694144aad4d2e22">dyno::WorldMotionFormulation::dynamicPointUpdateCallback()</a>, <a class="el" href="classdyno_1_1WorldPoseFormulation.html#ad1e6e0a4af9b06496359ceb969405f0a">dyno::WorldPoseFormulation::dynamicPointUpdateCallback()</a>, and <a class="el" href="structdyno_1_1NoiseModels.html#a8bef4bd578329e14ca739315ad597879">fromBackendParams()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1test__hybrid_1_1SmartStructurlessFormulation.html#a40673e16631d1d3e8775e33116f85f6a">dyno::test_hybrid::SmartStructurlessFormulation::dynamicPointUpdateCallback()</a>, <a class="el" href="classdyno_1_1WorldMotionFormulation.html#ad60f9621d41608943694144aad4d2e22">dyno::WorldMotionFormulation::dynamicPointUpdateCallback()</a>, <a class="el" href="classdyno_1_1WorldPoseFormulation.html#ad1e6e0a4af9b06496359ceb969405f0a">dyno::WorldPoseFormulation::dynamicPointUpdateCallback()</a>, <a class="el" href="structdyno_1_1NoiseModels.html#a8bef4bd578329e14ca739315ad597879">fromBackendParams()</a>, and <a class="el" href="structdyno_1_1NoiseModels.html#ad2ee8024e5e3e4942ba73018c4a6e505">print()</a>.</p>
 
 </div>
 </div>
@@ -258,9 +324,9 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="BackendDefinitions_8hpp_source.html#l00157">157</a> of file <a class="el" href="BackendDefinitions_8hpp_source.html">BackendDefinitions.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="BackendDefinitions_8hpp_source.html#l00129">129</a> of file <a class="el" href="BackendDefinitions_8hpp_source.html">BackendDefinitions.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1VisionImuBackendModule.html#a08edc9755448c01ca6393604157dd817">dyno::VisionImuBackendModule&lt; MODULE_TRAITS &gt;::addInitialVisualState()</a>, <a class="el" href="structdyno_1_1NoiseModels.html#a8bef4bd578329e14ca739315ad597879">fromBackendParams()</a>, and <a class="el" href="classdyno_1_1HybridFormulation.html#ad05af62c9b437ad6613a191defeecb07">dyno::HybridFormulation::objectUpdateContext()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1VisionImuBackendModule.html#a08edc9755448c01ca6393604157dd817">dyno::VisionImuBackendModule&lt; MODULE_TRAITS &gt;::addInitialVisualState()</a>, <a class="el" href="structdyno_1_1NoiseModels.html#a8bef4bd578329e14ca739315ad597879">fromBackendParams()</a>, <a class="el" href="classdyno_1_1HybridFormulation.html#ad05af62c9b437ad6613a191defeecb07">dyno::HybridFormulation::objectUpdateContext()</a>, and <a class="el" href="structdyno_1_1NoiseModels.html#ad2ee8024e5e3e4942ba73018c4a6e505">print()</a>.</p>
 
 </div>
 </div>
@@ -278,9 +344,9 @@ Here is the caller graph for this function:</div>
 
 <p>Noise on the landmark tenrary factor. </p>
 
-<p class="definition">Definition at line <a class="el" href="BackendDefinitions_8hpp_source.html#l00161">161</a> of file <a class="el" href="BackendDefinitions_8hpp_source.html">BackendDefinitions.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="BackendDefinitions_8hpp_source.html#l00133">133</a> of file <a class="el" href="BackendDefinitions_8hpp_source.html">BackendDefinitions.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1HybridFormulation.html#ae65a9c76b0363dde62eb86e6c0b2b832">dyno::HybridFormulation::dynamicPointUpdateCallback()</a>, <a class="el" href="classdyno_1_1test__hybrid_1_1StructurelessDecoupledFormulation.html#aa836f90c5eaffd28eafa4d896cbc162f">dyno::test_hybrid::StructurelessDecoupledFormulation::dynamicPointUpdateCallback()</a>, <a class="el" href="classdyno_1_1test__hybrid_1_1DecoupledFormulation.html#a8d4582a8d60a4c61c167577f519ca861">dyno::test_hybrid::DecoupledFormulation::dynamicPointUpdateCallback()</a>, <a class="el" href="classdyno_1_1test__hybrid_1_1StructurlessFormulation.html#a625de6bd79eb629ac2bd60fb2cd8c4df">dyno::test_hybrid::StructurlessFormulation::dynamicPointUpdateCallback()</a>, <a class="el" href="classdyno_1_1test__hybrid_1_1SmartStructurlessFormulation.html#a40673e16631d1d3e8775e33116f85f6a">dyno::test_hybrid::SmartStructurlessFormulation::dynamicPointUpdateCallback()</a>, <a class="el" href="classdyno_1_1WorldMotionFormulation.html#ad60f9621d41608943694144aad4d2e22">dyno::WorldMotionFormulation::dynamicPointUpdateCallback()</a>, <a class="el" href="classdyno_1_1WorldPoseFormulation.html#ad1e6e0a4af9b06496359ceb969405f0a">dyno::WorldPoseFormulation::dynamicPointUpdateCallback()</a>, and <a class="el" href="structdyno_1_1NoiseModels.html#a8bef4bd578329e14ca739315ad597879">fromBackendParams()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1HybridFormulation.html#ae65a9c76b0363dde62eb86e6c0b2b832">dyno::HybridFormulation::dynamicPointUpdateCallback()</a>, <a class="el" href="classdyno_1_1test__hybrid_1_1SmartStructurlessFormulation.html#a40673e16631d1d3e8775e33116f85f6a">dyno::test_hybrid::SmartStructurlessFormulation::dynamicPointUpdateCallback()</a>, <a class="el" href="classdyno_1_1WorldMotionFormulation.html#ad60f9621d41608943694144aad4d2e22">dyno::WorldMotionFormulation::dynamicPointUpdateCallback()</a>, <a class="el" href="classdyno_1_1WorldPoseFormulation.html#ad1e6e0a4af9b06496359ceb969405f0a">dyno::WorldPoseFormulation::dynamicPointUpdateCallback()</a>, <a class="el" href="structdyno_1_1NoiseModels.html#a8bef4bd578329e14ca739315ad597879">fromBackendParams()</a>, and <a class="el" href="structdyno_1_1NoiseModels.html#ad2ee8024e5e3e4942ba73018c4a6e505">print()</a>.</p>
 
 </div>
 </div>
@@ -298,9 +364,9 @@ Here is the caller graph for this function:</div>
 
 <p>Contant velocity noise model between motions. </p>
 
-<p class="definition">Definition at line <a class="el" href="BackendDefinitions_8hpp_source.html#l00163">163</a> of file <a class="el" href="BackendDefinitions_8hpp_source.html">BackendDefinitions.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="BackendDefinitions_8hpp_source.html#l00135">135</a> of file <a class="el" href="BackendDefinitions_8hpp_source.html">BackendDefinitions.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="structdyno_1_1NoiseModels.html#a8bef4bd578329e14ca739315ad597879">fromBackendParams()</a>, <a class="el" href="classdyno_1_1HybridFormulation.html#ad05af62c9b437ad6613a191defeecb07">dyno::HybridFormulation::objectUpdateContext()</a>, <a class="el" href="classdyno_1_1WorldMotionFormulation.html#a3889c53e3fdf718a4cbab8d615f757f0">dyno::WorldMotionFormulation::objectUpdateContext()</a>, and <a class="el" href="classdyno_1_1WorldPoseFormulation.html#a2fe402643436b3cdf4b38748317c284c">dyno::WorldPoseFormulation::objectUpdateContext()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="structdyno_1_1NoiseModels.html#a8bef4bd578329e14ca739315ad597879">fromBackendParams()</a>, <a class="el" href="classdyno_1_1HybridFormulation.html#ad05af62c9b437ad6613a191defeecb07">dyno::HybridFormulation::objectUpdateContext()</a>, <a class="el" href="classdyno_1_1WorldMotionFormulation.html#a3889c53e3fdf718a4cbab8d615f757f0">dyno::WorldMotionFormulation::objectUpdateContext()</a>, <a class="el" href="classdyno_1_1WorldPoseFormulation.html#a2fe402643436b3cdf4b38748317c284c">dyno::WorldPoseFormulation::objectUpdateContext()</a>, and <a class="el" href="structdyno_1_1NoiseModels.html#ad2ee8024e5e3e4942ba73018c4a6e505">print()</a>.</p>
 
 </div>
 </div>
@@ -318,9 +384,9 @@ Here is the caller graph for this function:</div>
 
 <p>Between factor noise for between two consequative poses. </p>
 
-<p class="definition">Definition at line <a class="el" href="BackendDefinitions_8hpp_source.html#l00159">159</a> of file <a class="el" href="BackendDefinitions_8hpp_source.html">BackendDefinitions.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="BackendDefinitions_8hpp_source.html#l00131">131</a> of file <a class="el" href="BackendDefinitions_8hpp_source.html">BackendDefinitions.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1VisionImuBackendModule.html#a67e4e733cd5724ba22900e531605d901">dyno::VisionImuBackendModule&lt; MODULE_TRAITS &gt;::addVisualInertialStates()</a>, and <a class="el" href="structdyno_1_1NoiseModels.html#a8bef4bd578329e14ca739315ad597879">fromBackendParams()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1VisionImuBackendModule.html#a67e4e733cd5724ba22900e531605d901">dyno::VisionImuBackendModule&lt; MODULE_TRAITS &gt;::addVisualInertialStates()</a>, <a class="el" href="structdyno_1_1NoiseModels.html#a8bef4bd578329e14ca739315ad597879">fromBackendParams()</a>, and <a class="el" href="structdyno_1_1NoiseModels.html#ad2ee8024e5e3e4942ba73018c4a6e505">print()</a>.</p>
 
 </div>
 </div>
@@ -338,9 +404,9 @@ Here is the caller graph for this function:</div>
 
 <p>Isometric [3x3] noise model on static points;. </p>
 
-<p class="definition">Definition at line <a class="el" href="BackendDefinitions_8hpp_source.html#l00167">167</a> of file <a class="el" href="BackendDefinitions_8hpp_source.html">BackendDefinitions.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="BackendDefinitions_8hpp_source.html#l00139">139</a> of file <a class="el" href="BackendDefinitions_8hpp_source.html">BackendDefinitions.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="structdyno_1_1NoiseModels.html#a8bef4bd578329e14ca739315ad597879">fromBackendParams()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="structdyno_1_1NoiseModels.html#a8bef4bd578329e14ca739315ad597879">fromBackendParams()</a>, and <a class="el" href="structdyno_1_1NoiseModels.html#ad2ee8024e5e3e4942ba73018c4a6e505">print()</a>.</p>
 
 </div>
 </div>

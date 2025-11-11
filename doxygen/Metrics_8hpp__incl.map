@@ -1,12 +1,12 @@
-<map id="dynosam/include/dynosam/utils/Metrics.hpp" name="dynosam/include/dynosam/utils/Metrics.hpp">
-<area shape="rect" id="node1" title=" " alt="" coords="684,5,881,45"/>
-<area shape="rect" id="node2" href="$Numerical_8hpp.html" title=" " alt="" coords="452,93,665,119"/>
-<area shape="rect" id="node9" title=" " alt="" coords="690,93,875,119"/>
-<area shape="rect" id="node10" title=" " alt="" coords="899,93,962,119"/>
-<area shape="rect" id="node3" title=" " alt="" coords="5,174,160,199"/>
-<area shape="rect" id="node4" title=" " alt="" coords="185,174,341,199"/>
-<area shape="rect" id="node5" title=" " alt="" coords="365,167,547,207"/>
-<area shape="rect" id="node6" title=" " alt="" coords="571,167,752,207"/>
-<area shape="rect" id="node7" title=" " alt="" coords="776,174,856,199"/>
-<area shape="rect" id="node8" title=" " alt="" coords="881,174,954,199"/>
+<map id="dynosam_common/include/dynosam_common/utils/Metrics.hpp" name="dynosam_common/include/dynosam_common/utils/Metrics.hpp">
+<area shape="rect" id="node1" title=" " alt="" coords="314,5,511,60"/>
+<area shape="rect" id="node2" title=" " alt="" coords="172,115,357,141"/>
+<area shape="rect" id="node3" title=" " alt="" coords="381,115,444,141"/>
+<area shape="rect" id="node4" href="$Numerical_8hpp.html" title=" " alt="" coords="469,108,647,148"/>
+<area shape="rect" id="node5" title=" " alt="" coords="5,203,161,229"/>
+<area shape="rect" id="node6" title=" " alt="" coords="186,203,341,229"/>
+<area shape="rect" id="node7" title=" " alt="" coords="365,196,546,236"/>
+<area shape="rect" id="node8" title=" " alt="" coords="570,196,751,236"/>
+<area shape="rect" id="node9" title=" " alt="" coords="776,203,849,229"/>
+<area shape="rect" id="node10" title=" " alt="" coords="874,203,954,229"/>
 </map>

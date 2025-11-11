@@ -1,3 +1,4 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$structdyno_1_1CantorPairingFunction.html" title=" " alt="" coords="5,5,209,31"/>
+<area shape="rect" id="node1" href="$structdyno_1_1BackendParams.html" title=" " alt="" coords="5,5,171,31"/>
+<area shape="rect" id="node2" href="$structdyno_1_1FormulationParams.html" title="Basic parameters for a Formulation. Right now is just directly the BackendParams since there is lots ..." alt="" coords="219,5,407,31"/>
 </map>

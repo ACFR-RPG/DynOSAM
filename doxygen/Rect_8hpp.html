@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.6"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>DynoSAM: dynosam/include/dynosam/common/byte_tracker/Rect.hpp File Reference</title>
+<title>DynoSAM: dynosam_nn/include/dynosam_nn/trackers/byte_tracker/Rect.hpp File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -70,49 +70,44 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_5dee249e885e61d789509b2ad73060f7.html">dynosam</a></li><li class="navelem"><a class="el" href="dir_ae19c998a0d63c4a89d568f2bdaee525.html">include</a></li><li class="navelem"><a class="el" href="dir_0c508da48c40328131e0e187ecaa7ee4.html">dynosam</a></li><li class="navelem"><a class="el" href="dir_e90706111b527bd7d771e5120c1fb51f.html">common</a></li><li class="navelem"><a class="el" href="dir_e531df50429c9810c8f5cb3d34ac91d7.html">byte_tracker</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_b0fdff66307b5214a6d62aa7cdc513ea.html">dynosam_nn</a></li><li class="navelem"><a class="el" href="dir_b490b179c8728c48e5fd2b4126446eb6.html">include</a></li><li class="navelem"><a class="el" href="dir_0f6a41313507631cf10d6aba77ec17e4.html">dynosam_nn</a></li><li class="navelem"><a class="el" href="dir_e3cdb37f391ec27305a6ddcdd92569ee.html">trackers</a></li><li class="navelem"><a class="el" href="dir_82b820c9f180e676ee33c6dfac14a584.html">byte_tracker</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#namespaces">Namespaces</a> &#124;
+<a href="#typedef-members">Typedefs</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">Rect.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;opencv4/opencv2/core/types.hpp&gt;</code><br />
+<div class="textblock"><code>#include &quot;Eigen/Dense&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for Rect.hpp:</div>
 <div class="dyncontent">
-<div class="center"><img src="Rect_8hpp__incl.png" border="0" usemap="#adynosam_2include_2dynosam_2common_2byte__tracker_2Rect_8hpp" alt=""/></div>
-<map name="adynosam_2include_2dynosam_2common_2byte__tracker_2Rect_8hpp" id="adynosam_2include_2dynosam_2common_2byte__tracker_2Rect_8hpp">
-<area shape="rect" title=" " alt="" coords="5,5,235,45"/>
-<area shape="rect" title=" " alt="" coords="36,93,204,133"/>
+<div class="center"><img src="Rect_8hpp__incl.png" border="0" usemap="#adynosam__nn_2include_2dynosam__nn_2trackers_2byte__tracker_2Rect_8hpp" alt=""/></div>
+<map name="adynosam__nn_2include_2dynosam__nn_2trackers_2byte__tracker_2Rect_8hpp" id="adynosam__nn_2include_2dynosam__nn_2trackers_2byte__tracker_2Rect_8hpp">
+<area shape="rect" title=" " alt="" coords="5,5,173,60"/>
+<area shape="rect" title=" " alt="" coords="38,108,141,133"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
-<div class="center"><img src="Rect_8hpp__dep__incl.png" border="0" usemap="#adynosam_2include_2dynosam_2common_2byte__tracker_2Rect_8hppdep" alt=""/></div>
-<map name="adynosam_2include_2dynosam_2common_2byte__tracker_2Rect_8hppdep" id="adynosam_2include_2dynosam_2common_2byte__tracker_2Rect_8hppdep">
-<area shape="rect" title=" " alt="" coords="711,5,940,45"/>
-<area shape="rect" href="Detection_8hpp.html" title=" " alt="" coords="346,93,609,133"/>
-<area shape="rect" href="ByteTracker_8cc.html" title=" " alt="" coords="791,357,995,397"/>
-<area shape="rect" href="Track_8hpp.html" title=" " alt="" coords="692,181,927,221"/>
-<area shape="rect" href="Detection_8cc.html" title=" " alt="" coords="183,181,375,221"/>
-<area shape="rect" href="KalmanFilter_8hpp.html" title=" " alt="" coords="684,93,967,133"/>
-<area shape="rect" href="KalmanFilter_8cc.html" title=" " alt="" coords="1041,181,1252,221"/>
-<area shape="rect" href="Rect_8cc.html" title=" " alt="" coords="1093,93,1259,133"/>
-<area shape="rect" href="ByteTracker_8hpp.html" title=" " alt="" coords="449,269,724,309"/>
-<area shape="rect" href="Track_8cc.html" title=" " alt="" coords="749,269,915,309"/>
-<area shape="rect" href="ObjectTracker_8hpp.html" title=" " alt="" coords="465,357,708,397"/>
-<area shape="rect" href="RGBDInstanceFrontendModule_8hpp.html" title=" " alt="" coords="355,445,589,500"/>
-<area shape="rect" href="ObjectTracker_8cc.html" title=" " alt="" coords="614,453,789,493"/>
-<area shape="rect" href="ModuleFactory_8hpp.html" title=" " alt="" coords="5,548,213,588"/>
-<area shape="rect" href="RGBDInstanceFrontendModule_8cc.html" title=" " alt="" coords="237,548,480,588"/>
-<area shape="rect" href="PipelineManager_8cc.html" title=" " alt="" coords="505,548,666,588"/>
-<area shape="rect" href="backend__experiments__node_8cc.html" title=" " alt="" coords="691,548,901,588"/>
+<div class="center"><img src="Rect_8hpp__dep__incl.png" border="0" usemap="#adynosam__nn_2include_2dynosam__nn_2trackers_2byte__tracker_2Rect_8hppdep" alt=""/></div>
+<map name="adynosam__nn_2include_2dynosam__nn_2trackers_2byte__tracker_2Rect_8hppdep" id="adynosam__nn_2include_2dynosam__nn_2trackers_2byte__tracker_2Rect_8hppdep">
+<area shape="rect" title=" " alt="" coords="493,5,661,60"/>
+<area shape="rect" href="KalmanFilter_8hpp.html" title=" " alt="" coords="467,108,688,163"/>
+<area shape="rect" href="STrack_8hpp.html" title=" " alt="" coords="339,211,520,265"/>
+<area shape="rect" href="Rect_8cc.html" title=" " alt="" coords="712,115,896,155"/>
+<area shape="rect" href="KalmanFilter_8cc.html" title=" " alt="" coords="544,218,755,258"/>
+<area shape="rect" href="ByteTracker_8hpp.html" title=" " alt="" coords="210,313,425,368"/>
+<area shape="rect" href="STrack_8cc.html" title=" " alt="" coords="449,321,633,361"/>
+<area shape="rect" href="ObjectTracker_8hpp.html" title=" " alt="" coords="131,416,296,471"/>
+<area shape="rect" href="ByteTracker_8cc.html" title=" " alt="" coords="321,423,525,463"/>
+<area shape="rect" href="YoloObjectDetector_8cc.html" title=" " alt="" coords="5,519,205,559"/>
+<area shape="rect" href="ObjectTracker_8cc.html" title=" " alt="" coords="229,519,413,559"/>
 </map>
 </div>
 </div>
@@ -120,22 +115,34 @@ This graph shows which files directly or indirectly include this file:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1byte__track_1_1RectBase.html">dyno::byte_track::RectBase</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1byte__track_1_1TlwhRect.html">dyno::byte_track::TlwhRect</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbyte__track_1_1Rect.html">byte_track::Rect&lt; T &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
 Namespaces</h2></td></tr>
-<tr class="memitem:namespacedyno"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno.html">dyno</a></td></tr>
+<tr class="memitem:namespacebyte__track"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacebyte__track.html">byte_track</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:namespacedyno_1_1byte__track"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno_1_1byte__track.html">dyno::byte_track</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:a58c8e0a736084ea930d4aad3a934fdc7"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a58c8e0a736084ea930d4aad3a934fdc7"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacebyte__track.html#a58c8e0a736084ea930d4aad3a934fdc7">byte_track::Tlwh</a> = Eigen::Matrix&lt; T, 1, 4, Eigen::RowMajor &gt;</td></tr>
+<tr class="separator:a58c8e0a736084ea930d4aad3a934fdc7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a54d35bd0e76251448b28a444424a57c9"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a54d35bd0e76251448b28a444424a57c9"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacebyte__track.html#a54d35bd0e76251448b28a444424a57c9">byte_track::Tlbr</a> = Eigen::Matrix&lt; T, 1, 4, Eigen::RowMajor &gt;</td></tr>
+<tr class="separator:a54d35bd0e76251448b28a444424a57c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adf91cb56db805a9031a248e9b5022e5a"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:adf91cb56db805a9031a248e9b5022e5a"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacebyte__track.html#adf91cb56db805a9031a248e9b5022e5a">byte_track::Xyah</a> = Eigen::Matrix&lt; T, 1, 4, Eigen::RowMajor &gt;</td></tr>
+<tr class="separator:adf91cb56db805a9031a248e9b5022e5a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:aaa4d3bb196efe7196e965da20431d1a9"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno_1_1byte__track.html#aaa4d3bb196efe7196e965da20431d1a9">dyno::byte_track::calc_iou</a> (const RectBase &amp;A, const RectBase &amp;B)</td></tr>
-<tr class="separator:aaa4d3bb196efe7196e965da20431d1a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a26787fd62e8f82b59dde8964bfba3a2b"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a26787fd62e8f82b59dde8964bfba3a2b"><td class="memTemplItemLeft" align="right" valign="top">Rect&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacebyte__track.html#a26787fd62e8f82b59dde8964bfba3a2b">byte_track::generate_rect_by_tlbr</a> (const Tlbr&lt; T &gt; &amp;tlbr)</td></tr>
+<tr class="separator:a26787fd62e8f82b59dde8964bfba3a2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acbb2ace2552c5997a24317a60d2246f8"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:acbb2ace2552c5997a24317a60d2246f8"><td class="memTemplItemLeft" align="right" valign="top">Rect&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacebyte__track.html#acbb2ace2552c5997a24317a60d2246f8">byte_track::generate_rect_by_xyah</a> (const Xyah&lt; T &gt; &amp;xyah)</td></tr>
+<tr class="separator:acbb2ace2552c5997a24317a60d2246f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- start footer part -->

@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.6"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>DynoSAM: dynosam/include/dynosam/utils/TimingStats.hpp Source File</title>
+<title>DynoSAM: dynosam_common/include/dynosam_common/utils/TimingStats.hpp Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -70,7 +70,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_5dee249e885e61d789509b2ad73060f7.html">dynosam</a></li><li class="navelem"><a class="el" href="dir_ae19c998a0d63c4a89d568f2bdaee525.html">include</a></li><li class="navelem"><a class="el" href="dir_0c508da48c40328131e0e187ecaa7ee4.html">dynosam</a></li><li class="navelem"><a class="el" href="dir_ecb64fd74fc702701a4d48ffddfe049d.html">utils</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_59022c2de10cb81abe7061856121e435.html">dynosam_common</a></li><li class="navelem"><a class="el" href="dir_1e5dca763677fcf884d3edfa4dbc3b7d.html">include</a></li><li class="navelem"><a class="el" href="dir_b2413b21460ca38253492cd2cfe1693f.html">dynosam_common</a></li><li class="navelem"><a class="el" href="dir_93e40a38ca0b24d85d942c52df9dca73.html">utils</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -111,8 +111,8 @@ $(function() {
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="preprocessor">#include &lt;atomic&gt;</span></div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="preprocessor">#include &quot;<a class="code" href="Statistics_8hpp.html">dynosam/utils/Statistics.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="preprocessor">#include &quot;<a class="code" href="Timing_8hpp.html">dynosam/utils/Timing.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="preprocessor">#include &quot;<a class="code" href="Statistics_8hpp.html">dynosam_common/utils/Statistics.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="preprocessor">#include &quot;<a class="code" href="Timing_8hpp.html">dynosam_common/utils/Timing.hpp</a>&quot;</span></div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacedyno.html">dyno</a> {</div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="keyword">namespace </span>utils {</div>
@@ -208,11 +208,11 @@ $(function() {
 <div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span> </div>
 <div class="line"><a id="l00146" name="l00146"></a><span class="lineno"><a class="line" href="TimingStats_8hpp.html#afb0cc809fb11a210771c8d4d77f0f299">  146</a></span><span class="preprocessor">#define TIMING_STATS(tag) \</span></div>
 <div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span><span class="preprocessor">  dyno::utils::TimingStatsCollector timing_stats_##tag(tag);</span></div>
-<div class="ttc" id="aMacros_8hpp_html_a69eb5d764311b6affdc4e125b28a7db9"><div class="ttname"><a href="Macros_8hpp.html#a69eb5d764311b6affdc4e125b28a7db9">DYNO_POINTER_TYPEDEFS</a></div><div class="ttdeci">#define DYNO_POINTER_TYPEDEFS(TypeName)</div><div class="ttdef"><b>Definition:</b> <a href="Macros_8hpp_source.html#l00032">Macros.hpp:32</a></div></div>
+<div class="ttc" id="aMacros_8hpp_html_a69eb5d764311b6affdc4e125b28a7db9"><div class="ttname"><a href="Macros_8hpp.html#a69eb5d764311b6affdc4e125b28a7db9">DYNO_POINTER_TYPEDEFS</a></div><div class="ttdeci">#define DYNO_POINTER_TYPEDEFS(TypeName)</div><div class="ttdef"><b>Definition:</b> <a href="Macros_8hpp_source.html#l00038">Macros.hpp:38</a></div></div>
 <div class="ttc" id="aStatistics_8hpp_html"><div class="ttname"><a href="Statistics_8hpp.html">Statistics.hpp</a></div></div>
 <div class="ttc" id="aTiming_8hpp_html"><div class="ttname"><a href="Timing_8hpp.html">Timing.hpp</a></div></div>
-<div class="ttc" id="aclassdyno_1_1utils_1_1StatsCollectorImpl_html"><div class="ttname"><a href="classdyno_1_1utils_1_1StatsCollectorImpl.html">dyno::utils::StatsCollectorImpl</a></div><div class="ttdef"><b>Definition:</b> <a href="Statistics_8hpp_source.html#l00163">Statistics.hpp:163</a></div></div>
-<div class="ttc" id="aclassdyno_1_1utils_1_1Timer_html_ad4e173b7cf70d14b75b4f90cfaddeac7"><div class="ttname"><a href="classdyno_1_1utils_1_1Timer.html#ad4e173b7cf70d14b75b4f90cfaddeac7">dyno::utils::Timer::TimePoint</a></div><div class="ttdeci">Clock::time_point TimePoint</div><div class="ttdoc">Alias for time point as defined by Timer::Clock.</div><div class="ttdef"><b>Definition:</b> <a href="Timing_8hpp_source.html#l00039">Timing.hpp:39</a></div></div>
+<div class="ttc" id="aclassdyno_1_1utils_1_1StatsCollectorImpl_html"><div class="ttname"><a href="classdyno_1_1utils_1_1StatsCollectorImpl.html">dyno::utils::StatsCollectorImpl</a></div><div class="ttdef"><b>Definition:</b> <a href="Statistics_8hpp_source.html#l00172">Statistics.hpp:172</a></div></div>
+<div class="ttc" id="aclassdyno_1_1utils_1_1Timer_html_ad4e173b7cf70d14b75b4f90cfaddeac7"><div class="ttname"><a href="classdyno_1_1utils_1_1Timer.html#ad4e173b7cf70d14b75b4f90cfaddeac7">dyno::utils::Timer::TimePoint</a></div><div class="ttdeci">Clock::time_point TimePoint</div><div class="ttdoc">Alias for time point as defined by Timer::Clock.</div><div class="ttdef"><b>Definition:</b> <a href="Timing_8hpp_source.html#l00042">Timing.hpp:42</a></div></div>
 <div class="ttc" id="aclassdyno_1_1utils_1_1TimingStatsCollector_html"><div class="ttname"><a href="classdyno_1_1utils_1_1TimingStatsCollector.html">dyno::utils::TimingStatsCollector</a></div><div class="ttdef"><b>Definition:</b> <a href="TimingStats_8hpp_source.html#l00104">TimingStats.hpp:104</a></div></div>
 <div class="ttc" id="aclassdyno_1_1utils_1_1TimingStatsCollector_html_a291f6d7c3ce6d51f43d060c7a5dfa9b6"><div class="ttname"><a href="classdyno_1_1utils_1_1TimingStatsCollector.html#a291f6d7c3ce6d51f43d060c7a5dfa9b6">dyno::utils::TimingStatsCollector::tic_time_</a></div><div class="ttdeci">Timer::TimePoint tic_time_</div><div class="ttdef"><b>Definition:</b> <a href="TimingStats_8hpp_source.html#l00135">TimingStats.hpp:135</a></div></div>
 <div class="ttc" id="aclassdyno_1_1utils_1_1TimingStatsCollector_html_a2fb15570927fa9faf9bf7d97702ff15b"><div class="ttname"><a href="classdyno_1_1utils_1_1TimingStatsCollector.html#a2fb15570927fa9faf9bf7d97702ff15b">dyno::utils::TimingStatsCollector::reset</a></div><div class="ttdeci">void reset()</div><div class="ttdoc">Resets the current tic_time and sets is_valid = true, such that when the collector tries to toc,...</div><div class="ttdef"><b>Definition:</b> <a href="TimingStats_8cc_source.html#l00047">TimingStats.cc:47</a></div></div>

@@ -81,64 +81,64 @@ $(function() {
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="DataInterfacePipeline_8hpp_source.html">dynosam/dataprovider/DataInterfacePipeline.hpp</a>&quot;</code><br />
 <code>#include &lt;glog/logging.h&gt;</code><br />
-<code>#include &quot;<a class="el" href="Numerical_8hpp_source.html">dynosam/utils/Numerical.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="SafeCast_8hpp_source.html">dynosam/utils/SafeCast.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="Statistics_8hpp_source.html">dynosam/utils/Statistics.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="Numerical_8hpp_source.html">dynosam_common/utils/Numerical.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="SafeCast_8hpp_source.html">dynosam_common/utils/SafeCast.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="Statistics_8hpp_source.html">dynosam_common/utils/Statistics.hpp</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for DataInterfacePipeline.cc:</div>
 <div class="dyncontent">
 <div class="center"><img src="DataInterfacePipeline_8cc__incl.png" border="0" usemap="#adynosam_2src_2dataprovider_2DataInterfacePipeline_8cc" alt=""/></div>
 <map name="adynosam_2src_2dataprovider_2DataInterfacePipeline_8cc" id="adynosam_2src_2dataprovider_2DataInterfacePipeline_8cc">
-<area shape="rect" title=" " alt="" coords="3427,5,3619,45"/>
-<area shape="rect" href="DataInterfacePipeline_8hpp.html" title=" " alt="" coords="2518,93,2712,133"/>
-<area shape="rect" title=" " alt="" coords="2046,541,2160,566"/>
-<area shape="rect" href="Numerical_8hpp.html" title=" " alt="" coords="4078,453,4291,478"/>
-<area shape="rect" href="SafeCast_8hpp.html" title=" " alt="" coords="26,453,230,478"/>
-<area shape="rect" href="Statistics_8hpp.html" title=" " alt="" coords="3561,365,3768,390"/>
-<area shape="rect" href="Types_8hpp.html" title=" " alt="" coords="1205,453,1417,478"/>
-<area shape="rect" href="FrontendInputPacket_8hpp.html" title=" " alt="" coords="1260,181,1463,221"/>
-<area shape="rect" href="ThreadSafeImuBuffer_8hpp.html" title=" " alt="" coords="2356,269,2546,309"/>
-<area shape="rect" href="PipelineBase_8hpp.html" title=" " alt="" coords="3096,269,3291,309"/>
-<area shape="rect" href="ThreadSafeQueue_8hpp.html" title=" " alt="" coords="2864,357,3080,397"/>
-<area shape="rect" title=" " alt="" coords="1192,541,1360,566"/>
-<area shape="rect" title=" " alt="" coords="1769,621,1925,647"/>
-<area shape="rect" title=" " alt="" coords="77,541,262,566"/>
-<area shape="rect" title=" " alt="" coords="1385,541,1528,566"/>
-<area shape="rect" title=" " alt="" coords="286,541,501,566"/>
-<area shape="rect" title=" " alt="" coords="3226,621,3300,647"/>
-<area shape="rect" title=" " alt="" coords="785,541,882,566"/>
-<area shape="rect" title=" " alt="" coords="622,621,714,647"/>
-<area shape="rect" title=" " alt="" coords="3610,541,3673,566"/>
-<area shape="rect" href="Flags_8hpp.html" title=" " alt="" coords="907,541,1118,566"/>
-<area shape="rect" href="Macros_8hpp.html" title=" " alt="" coords="3166,541,3360,566"/>
-<area shape="rect" href="SensorModels_8hpp.html" title=" " alt="" coords="1552,541,1819,566"/>
-<area shape="rect" href="Types-inl_8hpp.html" title=" " alt="" coords="576,533,760,573"/>
-<area shape="rect" title=" " alt="" coords="2618,621,2695,647"/>
-<area shape="rect" title=" " alt="" coords="3023,621,3178,647"/>
-<area shape="rect" title=" " alt="" coords="1654,365,1741,390"/>
-<area shape="rect" href="GroundTruthPacket_8hpp.html" title=" " alt="" coords="411,357,638,397"/>
-<area shape="rect" href="ImageContainer_8hpp.html" title=" " alt="" coords="1222,277,1501,302"/>
-<area shape="rect" href="OpenCVUtils_8hpp.html" title=" " alt="" coords="994,365,1222,390"/>
-<area shape="rect" href="Tuple_8hpp.html" title=" " alt="" coords="1450,365,1630,390"/>
-<area shape="rect" href="ImuMeasurements_8hpp.html" title=" " alt="" coords="1867,357,2043,397"/>
-<area shape="rect" title=" " alt="" coords="2422,453,2482,478"/>
-<area shape="rect" title=" " alt="" coords="3772,541,3852,566"/>
-<area shape="rect" href="Imu-Definitions_8hpp.html" title=" " alt="" coords="1923,445,2094,485"/>
-<area shape="rect" title=" " alt="" coords="2185,541,2288,566"/>
-<area shape="rect" title=" " alt="" coords="2990,541,3075,566"/>
-<area shape="rect" title=" " alt="" coords="2974,453,3040,478"/>
-<area shape="rect" title=" " alt="" coords="2617,453,2760,478"/>
-<area shape="rect" title=" " alt="" coords="2506,453,2593,478"/>
-<area shape="rect" title=" " alt="" coords="3698,541,3748,566"/>
-<area shape="rect" title=" " alt="" coords="2835,453,2899,478"/>
-<area shape="rect" href="ThreadSafeTemporalBuffer_8hpp.html" title=" " alt="" coords="2270,357,2486,397"/>
-<area shape="rect" title=" " alt="" coords="3216,453,3283,478"/>
-<area shape="rect" title=" " alt="" coords="3307,453,3366,478"/>
-<area shape="rect" title=" " alt="" coords="4076,533,4258,573"/>
-<area shape="rect" title=" " alt="" coords="4282,533,4463,573"/>
-<area shape="rect" title=" " alt="" coords="3877,541,3950,566"/>
-<area shape="rect" href="Accumulator_8hpp.html" title=" " alt="" coords="3440,453,3667,478"/>
-<area shape="rect" href="CsvParser_8hpp.html" title=" " alt="" coords="3793,453,4002,478"/>
+<area shape="rect" title=" " alt="" coords="1741,5,1933,45"/>
+<area shape="rect" href="DataInterfacePipeline_8hpp.html" title=" " alt="" coords="1740,93,1935,133"/>
+<area shape="rect" title=" " alt="" coords="1215,555,1329,581"/>
+<area shape="rect" href="Numerical_8hpp.html" title=" " alt="" coords="1925,460,2104,500"/>
+<area shape="rect" href="SafeCast_8hpp.html" title=" " alt="" coords="472,460,651,500"/>
+<area shape="rect" href="Statistics_8hpp.html" title=" " alt="" coords="3323,372,3501,412"/>
+<area shape="rect" href="FrontendInputPacket_8hpp.html" title=" " alt="" coords="619,181,821,221"/>
+<area shape="rect" href="Types_8hpp.html" title=" " alt="" coords="726,467,941,493"/>
+<area shape="rect" href="ThreadSafeImuBuffer_8hpp.html" title=" " alt="" coords="1742,181,1933,221"/>
+<area shape="rect" href="PipelineBase_8hpp.html" title=" " alt="" coords="2625,277,2820,317"/>
+<area shape="rect" href="ThreadSafeQueue_8hpp.html" title=" " alt="" coords="2419,372,2635,412"/>
+<area shape="rect" title=" " alt="" coords="803,379,890,405"/>
+<area shape="rect" title=" " alt="" coords="75,555,290,581"/>
+<area shape="rect" title=" " alt="" coords="363,555,455,581"/>
+<area shape="rect" href="ImuMeasurements_8hpp.html" title=" " alt="" coords="1117,372,1293,412"/>
+<area shape="rect" href="GroundTruthPacket_8hpp.html" title=" " alt="" coords="296,372,525,412"/>
+<area shape="rect" href="OpenCVUtils_8hpp.html" title=" " alt="" coords="93,372,272,412"/>
+<area shape="rect" href="Tuple_8hpp.html" title=" " alt="" coords="1419,372,1597,412"/>
+<area shape="rect" href="ImageContainer_8hpp.html" title=" " alt="" coords="601,284,839,309"/>
+<area shape="rect" href="Imu-Definitions_8hpp.html" title=" " alt="" coords="1368,460,1539,500"/>
+<area shape="rect" title=" " alt="" coords="1534,555,1637,581"/>
+<area shape="rect" title=" " alt="" coords="1354,555,1510,581"/>
+<area shape="rect" title=" " alt="" coords="972,555,1140,581"/>
+<area shape="rect" title=" " alt="" coords="595,555,781,581"/>
+<area shape="rect" title=" " alt="" coords="805,555,947,581"/>
+<area shape="rect" title=" " alt="" coords="2759,636,2833,661"/>
+<area shape="rect" title=" " alt="" coords="3358,555,3421,581"/>
+<area shape="rect" href="Macros_8hpp.html" title=" " alt="" coords="2707,548,2885,588"/>
+<area shape="rect" title=" " alt="" coords="2208,636,2285,661"/>
+<area shape="rect" title=" " alt="" coords="2501,555,2581,581"/>
+<area shape="rect" title=" " alt="" coords="2179,467,2239,493"/>
+<area shape="rect" title=" " alt="" coords="1912,555,2067,581"/>
+<area shape="rect" title=" " alt="" coords="2091,548,2272,588"/>
+<area shape="rect" title=" " alt="" coords="2296,548,2477,588"/>
+<area shape="rect" title=" " alt="" coords="2910,555,2983,581"/>
+<area shape="rect" title=" " alt="" coords="3731,555,3816,581"/>
+<area shape="rect" title=" " alt="" coords="2757,467,2824,493"/>
+<area shape="rect" title=" " alt="" coords="2263,467,2406,493"/>
+<area shape="rect" title=" " alt="" coords="1763,467,1850,493"/>
+<area shape="rect" title=" " alt="" coords="3151,555,3201,581"/>
+<area shape="rect" title=" " alt="" coords="2517,467,2581,493"/>
+<area shape="rect" href="ThreadSafeTemporalBuffer_8hpp.html" title=" " alt="" coords="2027,372,2243,412"/>
+<area shape="rect" href="ThreadSafeImuBuffer-inl_8hpp.html" title=" " alt="" coords="1296,269,1467,324"/>
+<area shape="rect" title=" " alt="" coords="2430,467,2493,493"/>
+<area shape="rect" title=" " alt="" coords="3101,467,3168,493"/>
+<area shape="rect" title=" " alt="" coords="3192,467,3251,493"/>
+<area shape="rect" title=" " alt="" coords="2760,379,2824,405"/>
+<area shape="rect" href="PipelineBase-inl_8hpp.html" title=" " alt="" coords="2848,372,3043,412"/>
+<area shape="rect" href="Accumulator_8hpp.html" title=" " alt="" coords="3427,460,3605,500"/>
+<area shape="rect" href="CsvParser_8hpp.html" title=" " alt="" coords="2848,460,3027,500"/>
 </map>
 </div>
 </div>

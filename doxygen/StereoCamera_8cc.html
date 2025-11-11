@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.6"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>DynoSAM: dynosam/src/common/StereoCamera.cc File Reference</title>
+<title>DynoSAM: dynosam_cv/src/StereoCamera.cc File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -70,7 +70,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_5dee249e885e61d789509b2ad73060f7.html">dynosam</a></li><li class="navelem"><a class="el" href="dir_967826b48aab5e644207159adfa580e7.html">src</a></li><li class="navelem"><a class="el" href="dir_b7f1fe6bdf2c751e876c6e51542fc3c7.html">common</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_c75bdbf9bf3d08a0587fb93cc35a1ce5.html">dynosam_cv</a></li><li class="navelem"><a class="el" href="dir_2fea04c95a44a12f84671c870e20a00f.html">src</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -79,68 +79,68 @@ $(function() {
   <div class="headertitle"><div class="title">StereoCamera.cc File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;<a class="el" href="StereoCamera_8hpp_source.html">dynosam/common/StereoCamera.hpp</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="StereoCamera_8hpp_source.html">dynosam_cv/StereoCamera.hpp</a>&quot;</code><br />
 <code>#include &lt;glog/logging.h&gt;</code><br />
 <code>#include &lt;Eigen/Core&gt;</code><br />
 <code>#include &lt;opencv2/calib3d.hpp&gt;</code><br />
 <code>#include &lt;opencv2/core.hpp&gt;</code><br />
-<code>#include &quot;<a class="el" href="GtsamUtils_8hpp_source.html">dynosam/utils/GtsamUtils.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="OpenCVUtils_8hpp_source.html">dynosam/utils/OpenCVUtils.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="GtsamUtils_8hpp_source.html">dynosam_common/utils/GtsamUtils.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="OpenCVUtils_8hpp_source.html">dynosam_common/utils/OpenCVUtils.hpp</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for StereoCamera.cc:</div>
 <div class="dyncontent">
-<div class="center"><img src="StereoCamera_8cc__incl.png" border="0" usemap="#adynosam_2src_2common_2StereoCamera_8cc" alt=""/></div>
-<map name="adynosam_2src_2common_2StereoCamera_8cc" id="adynosam_2src_2common_2StereoCamera_8cc">
-<area shape="rect" title=" " alt="" coords="4209,5,4376,45"/>
-<area shape="rect" href="StereoCamera_8hpp.html" title=" " alt="" coords="1004,93,1272,119"/>
-<area shape="rect" title=" " alt="" coords="2958,423,3073,449"/>
-<area shape="rect" title=" " alt="" coords="4331,93,4423,119"/>
-<area shape="rect" title=" " alt="" coords="4447,93,4603,119"/>
-<area shape="rect" title=" " alt="" coords="4627,93,4764,119"/>
-<area shape="rect" href="GtsamUtils_8hpp.html" title=" " alt="" coords="3117,255,3335,280"/>
-<area shape="rect" href="OpenCVUtils_8hpp.html" title=" " alt="" coords="1835,255,2063,280"/>
-<area shape="rect" title=" " alt="" coords="658,167,821,207"/>
-<area shape="rect" title=" " alt="" coords="399,423,584,449"/>
-<area shape="rect" title=" " alt="" coords="1147,174,1385,199"/>
-<area shape="rect" title=" " alt="" coords="1847,423,2061,449"/>
-<area shape="rect" href="Camera_8hpp.html" title=" " alt="" coords="895,174,1122,199"/>
-<area shape="rect" href="CameraParams_8hpp.html" title=" " alt="" coords="605,255,879,280"/>
-<area shape="rect" href="UndistortRectifier_8hpp.html" title=" " alt="" coords="1410,167,1594,207"/>
-<area shape="rect" title=" " alt="" coords="1011,335,1209,361"/>
-<area shape="rect" title=" " alt="" coords="903,255,1149,280"/>
-<area shape="rect" href="Types_8hpp.html" title=" " alt="" coords="1283,335,1495,361"/>
-<area shape="rect" title=" " alt="" coords="39,328,199,368"/>
-<area shape="rect" title=" " alt="" coords="224,335,425,361"/>
-<area shape="rect" title=" " alt="" coords="449,335,675,361"/>
-<area shape="rect" title=" " alt="" coords="2311,335,2451,361"/>
-<area shape="rect" title=" " alt="" coords="699,335,785,361"/>
-<area shape="rect" title=" " alt="" coords="809,335,987,361"/>
-<area shape="rect" href="YamlParser_8hpp.html" title=" " alt="" coords="2070,335,2286,361"/>
-<area shape="rect" title=" " alt="" coords="1305,423,1473,449"/>
-<area shape="rect" title=" " alt="" coords="3464,423,3620,449"/>
-<area shape="rect" title=" " alt="" coords="1497,423,1640,449"/>
-<area shape="rect" title=" " alt="" coords="1665,423,1739,449"/>
-<area shape="rect" title=" " alt="" coords="1096,423,1193,449"/>
-<area shape="rect" title=" " alt="" coords="2109,423,2201,449"/>
-<area shape="rect" title=" " alt="" coords="1217,423,1280,449"/>
-<area shape="rect" title=" " alt="" coords="4024,423,4097,449"/>
-<area shape="rect" title=" " alt="" coords="3827,423,3907,449"/>
-<area shape="rect" title=" " alt="" coords="2475,335,2662,361"/>
-<area shape="rect" title=" " alt="" coords="1376,255,1591,280"/>
-<area shape="rect" title=" " alt="" coords="1615,255,1811,280"/>
-<area shape="rect" title=" " alt="" coords="2737,335,2913,361"/>
-<area shape="rect" title=" " alt="" coords="2937,335,3118,361"/>
-<area shape="rect" title=" " alt="" coords="3143,335,3309,361"/>
-<area shape="rect" title=" " alt="" coords="3333,335,3527,361"/>
-<area shape="rect" title=" " alt="" coords="3551,335,3725,361"/>
-<area shape="rect" title=" " alt="" coords="3749,328,3943,368"/>
-<area shape="rect" title=" " alt="" coords="3967,335,4154,361"/>
-<area shape="rect" href="Numerical_8hpp.html" title=" " alt="" coords="4330,335,4543,361"/>
-<area shape="rect" title=" " alt="" coords="4167,423,4322,449"/>
-<area shape="rect" title=" " alt="" coords="4346,416,4527,456"/>
-<area shape="rect" title=" " alt="" coords="4551,416,4733,456"/>
-<area shape="rect" title=" " alt="" coords="1726,328,1894,368"/>
-<area shape="rect" title=" " alt="" coords="1569,335,1701,361"/>
+<div class="center"><img src="StereoCamera_8cc__incl.png" border="0" usemap="#adynosam__cv_2src_2StereoCamera_8cc" alt=""/></div>
+<map name="adynosam__cv_2src_2StereoCamera_8cc" id="adynosam__cv_2src_2StereoCamera_8cc">
+<area shape="rect" title=" " alt="" coords="2183,5,2426,31"/>
+<area shape="rect" href="StereoCamera_8hpp.html" title=" " alt="" coords="1410,79,1639,104"/>
+<area shape="rect" title=" " alt="" coords="2091,423,2206,449"/>
+<area shape="rect" title=" " alt="" coords="2111,79,2203,104"/>
+<area shape="rect" title=" " alt="" coords="2227,79,2383,104"/>
+<area shape="rect" title=" " alt="" coords="2407,79,2544,104"/>
+<area shape="rect" href="GtsamUtils_8hpp.html" title=" " alt="" coords="2493,240,2671,280"/>
+<area shape="rect" href="OpenCVUtils_8hpp.html" title=" " alt="" coords="3859,240,4038,280"/>
+<area shape="rect" title=" " alt="" coords="1558,152,1721,192"/>
+<area shape="rect" title=" " alt="" coords="676,423,861,449"/>
+<area shape="rect" title=" " alt="" coords="1745,159,1984,185"/>
+<area shape="rect" title=" " alt="" coords="3376,423,3591,449"/>
+<area shape="rect" href="Camera_8hpp.html" title=" " alt="" coords="1070,159,1257,185"/>
+<area shape="rect" href="CameraParams_8hpp.html" title=" " alt="" coords="622,247,857,273"/>
+<area shape="rect" href="UndistortRectifier_8hpp.html" title=" " alt="" coords="1284,159,1533,185"/>
+<area shape="rect" title=" " alt="" coords="1213,335,1412,361"/>
+<area shape="rect" title=" " alt="" coords="881,247,1126,273"/>
+<area shape="rect" href="Types_8hpp.html" title=" " alt="" coords="1487,335,1701,361"/>
+<area shape="rect" title=" " alt="" coords="1510,423,1678,449"/>
+<area shape="rect" title=" " alt="" coords="3615,423,3771,449"/>
+<area shape="rect" title=" " alt="" coords="1703,423,1845,449"/>
+<area shape="rect" title=" " alt="" coords="1870,423,1945,449"/>
+<area shape="rect" title=" " alt="" coords="1301,423,1399,449"/>
+<area shape="rect" title=" " alt="" coords="1972,423,2064,449"/>
+<area shape="rect" title=" " alt="" coords="1423,423,1485,449"/>
+<area shape="rect" title=" " alt="" coords="390,328,550,368"/>
+<area shape="rect" title=" " alt="" coords="575,335,776,361"/>
+<area shape="rect" title=" " alt="" coords="800,335,1025,361"/>
+<area shape="rect" title=" " alt="" coords="1049,335,1189,361"/>
+<area shape="rect" title=" " alt="" coords="27,335,113,361"/>
+<area shape="rect" title=" " alt="" coords="137,335,315,361"/>
+<area shape="rect" href="YamlParser_8hpp.html" title=" " alt="" coords="2190,328,2369,368"/>
+<area shape="rect" title=" " alt="" coords="3900,423,3973,449"/>
+<area shape="rect" title=" " alt="" coords="3795,423,3875,449"/>
+<area shape="rect" title=" " alt="" coords="1777,335,1963,361"/>
+<area shape="rect" title=" " alt="" coords="1303,247,1517,273"/>
+<area shape="rect" title=" " alt="" coords="1541,247,1737,273"/>
+<area shape="rect" title=" " alt="" coords="2393,335,2569,361"/>
+<area shape="rect" title=" " alt="" coords="2593,335,2774,361"/>
+<area shape="rect" title=" " alt="" coords="2799,335,2965,361"/>
+<area shape="rect" title=" " alt="" coords="2989,335,3183,361"/>
+<area shape="rect" title=" " alt="" coords="3207,335,3381,361"/>
+<area shape="rect" title=" " alt="" coords="3405,328,3599,368"/>
+<area shape="rect" title=" " alt="" coords="3623,335,3810,361"/>
+<area shape="rect" href="Numerical_8hpp.html" title=" " alt="" coords="3986,328,4165,368"/>
+<area shape="rect" title=" " alt="" coords="3998,423,4153,449"/>
+<area shape="rect" title=" " alt="" coords="4177,416,4358,456"/>
+<area shape="rect" title=" " alt="" coords="4382,416,4563,456"/>
+<area shape="rect" title=" " alt="" coords="4189,328,4357,368"/>
+<area shape="rect" title=" " alt="" coords="4381,335,4513,361"/>
 </map>
 </div>
 </div>

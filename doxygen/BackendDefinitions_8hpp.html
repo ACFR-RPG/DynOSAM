@@ -78,81 +78,80 @@ $(function() {
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#namespaces">Namespaces</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
-<a href="#func-members">Functions</a> &#124;
+<a href="#enum-members">Enumerations</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle"><div class="title">BackendDefinitions.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;gtsam/inference/LabeledSymbol.h&gt;</code><br />
-<code>#include &lt;gtsam/inference/Symbol.h&gt;</code><br />
-<code>#include &lt;gtsam/slam/ProjectionFactor.h&gt;</code><br />
+<div class="textblock"><code>#include &lt;gtsam/slam/ProjectionFactor.h&gt;</code><br />
 <code>#include &lt;gtsam/slam/SmartProjectionPoseFactor.h&gt;</code><br />
+<code>#include &lt;gtsam/slam/StereoFactor.h&gt;</code><br />
 <code>#include &lt;gtsam_unstable/slam/PoseToPointFactor.h&gt;</code><br />
 <code>#include &lt;functional&gt;</code><br />
 <code>#include &lt;unordered_map&gt;</code><br />
 <code>#include &quot;<a class="el" href="BackendParams_8hpp_source.html">dynosam/backend/BackendParams.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="DynamicPointSymbol_8hpp_source.html">dynosam/backend/DynamicPointSymbol.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="Camera_8hpp_source.html">dynosam/common/Camera.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="Exceptions_8hpp_source.html">dynosam/common/Exceptions.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="GroundTruthPacket_8hpp_source.html">dynosam/common/GroundTruthPacket.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="Types_8hpp_source.html">dynosam/common/Types.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="Frontend-Definitions_8hpp_source.html">dynosam/frontend/Frontend-Definitions.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="Logger_8hpp_source.html">dynosam/logger/Logger.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="Exceptions_8hpp_source.html">dynosam_common/Exceptions.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="GroundTruthPacket_8hpp_source.html">dynosam_common/GroundTruthPacket.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="Types_8hpp_source.html">dynosam_common/Types.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="Logger_8hpp_source.html">dynosam_common/logger/Logger.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="Camera_8hpp_source.html">dynosam_cv/Camera.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="Symbols_8hpp_source.html">dynosam_opt/Symbols.hpp</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for BackendDefinitions.hpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="BackendDefinitions_8hpp__incl.png" border="0" usemap="#adynosam_2include_2dynosam_2backend_2BackendDefinitions_8hpp" alt=""/></div>
 <map name="adynosam_2include_2dynosam_2backend_2BackendDefinitions_8hpp" id="adynosam_2include_2dynosam_2backend_2BackendDefinitions_8hpp">
-<area shape="rect" title=" " alt="" coords="1066,5,1303,45"/>
-<area shape="rect" title=" " alt="" coords="5,101,249,126"/>
-<area shape="rect" title=" " alt="" coords="1273,181,1467,207"/>
-<area shape="rect" title=" " alt="" coords="346,101,565,126"/>
-<area shape="rect" title=" " alt="" coords="589,93,796,133"/>
-<area shape="rect" title=" " alt="" coords="821,93,983,133"/>
-<area shape="rect" title=" " alt="" coords="1304,665,1391,691"/>
-<area shape="rect" title=" " alt="" coords="1596,181,1720,207"/>
-<area shape="rect" href="BackendParams_8hpp.html" title=" " alt="" coords="325,511,599,537"/>
-<area shape="rect" href="DynamicPointSymbol_8hpp.html" title=" " alt="" coords="1386,93,1621,133"/>
-<area shape="rect" href="Types_8hpp.html" title=" " alt="" coords="1455,431,1667,456"/>
-<area shape="rect" href="Exceptions_8hpp.html" title=" " alt="" coords="2861,592,3108,617"/>
-<area shape="rect" href="Camera_8hpp.html" title=" " alt="" coords="745,262,971,287"/>
-<area shape="rect" href="GroundTruthPacket_8hpp.html" title=" " alt="" coords="1241,255,1467,295"/>
-<area shape="rect" href="Frontend-Definitions_8hpp.html" title=" " alt="" coords="1809,255,2011,295"/>
-<area shape="rect" href="Logger_8hpp.html" title=" " alt="" coords="2495,101,2698,126"/>
-<area shape="rect" title=" " alt="" coords="877,592,993,617"/>
-<area shape="rect" title=" " alt="" coords="2475,665,2534,691"/>
-<area shape="rect" title=" " alt="" coords="2609,262,2659,287"/>
-<area shape="rect" title=" " alt="" coords="3051,511,3166,537"/>
-<area shape="rect" title=" " alt="" coords="1190,511,1358,537"/>
-<area shape="rect" title=" " alt="" coords="1428,592,1584,617"/>
-<area shape="rect" title=" " alt="" coords="624,511,809,537"/>
-<area shape="rect" title=" " alt="" coords="2324,511,2467,537"/>
-<area shape="rect" title=" " alt="" coords="2033,511,2248,537"/>
-<area shape="rect" title=" " alt="" coords="2602,592,2677,617"/>
-<area shape="rect" title=" " alt="" coords="833,511,931,537"/>
-<area shape="rect" title=" " alt="" coords="1820,592,1912,617"/>
-<area shape="rect" title=" " alt="" coords="2863,511,2925,537"/>
-<area shape="rect" href="Flags_8hpp.html" title=" " alt="" coords="955,511,1166,537"/>
-<area shape="rect" href="Macros_8hpp.html" title=" " alt="" coords="2543,511,2736,537"/>
-<area shape="rect" href="SensorModels_8hpp.html" title=" " alt="" coords="1483,511,1750,537"/>
-<area shape="rect" href="Types-inl_8hpp.html" title=" " alt="" coords="1774,504,1958,544"/>
-<area shape="rect" title=" " alt="" coords="2813,665,2889,691"/>
-<area shape="rect" title=" " alt="" coords="3267,665,3342,691"/>
-<area shape="rect" title=" " alt="" coords="2941,665,3028,691"/>
-<area shape="rect" title=" " alt="" coords="593,431,792,456"/>
-<area shape="rect" title=" " alt="" coords="401,350,646,375"/>
-<area shape="rect" href="CameraParams_8hpp.html" title=" " alt="" coords="721,350,995,375"/>
-<area shape="rect" title=" " alt="" coords="1593,350,1739,375"/>
-<area shape="rect" href="PipelinePayload_8hpp.html" title=" " alt="" coords="1222,343,1417,383"/>
-<area shape="rect" title=" " alt="" coords="1815,350,2011,375"/>
-<area shape="rect" href="ImageContainer_8hpp.html" title=" " alt="" coords="2188,350,2467,375"/>
-<area shape="rect" title=" " alt="" coords="2635,181,2705,207"/>
-<area shape="rect" title=" " alt="" coords="2730,181,2821,207"/>
-<area shape="rect" title=" " alt="" coords="2785,262,2859,287"/>
-<area shape="rect" title=" " alt="" coords="2883,262,2963,287"/>
-<area shape="rect" href="PointCloudProcess_8hpp.html" title=" " alt="" coords="2695,343,2912,383"/>
-<area shape="rect" href="CsvParser_8hpp.html" title=" " alt="" coords="2947,181,3156,207"/>
-<area shape="rect" href="JsonUtils_8hpp.html" title=" " alt="" coords="2357,181,2559,207"/>
+<area shape="rect" title=" " alt="" coords="1583,5,1820,45"/>
+<area shape="rect" title=" " alt="" coords="5,101,224,126"/>
+<area shape="rect" title=" " alt="" coords="249,93,455,133"/>
+<area shape="rect" title=" " alt="" coords="480,101,675,126"/>
+<area shape="rect" title=" " alt="" coords="699,93,861,133"/>
+<area shape="rect" title=" " alt="" coords="1609,504,1695,529"/>
+<area shape="rect" title=" " alt="" coords="3710,189,3834,214"/>
+<area shape="rect" href="BackendParams_8hpp.html" title=" " alt="" coords="3932,350,4207,375"/>
+<area shape="rect" href="Frontend-Definitions_8hpp.html" title=" " alt="" coords="1877,93,2080,133"/>
+<area shape="rect" href="Types_8hpp.html" title=" " alt="" coords="2062,269,2277,295"/>
+<area shape="rect" href="Exceptions_8hpp.html" title=" " alt="" coords="2393,431,2642,456"/>
+<area shape="rect" href="GroundTruthPacket_8hpp.html" title=" " alt="" coords="2549,181,2779,221"/>
+<area shape="rect" href="Logger_8hpp.html" title=" " alt="" coords="3058,93,3249,133"/>
+<area shape="rect" href="Camera_8hpp.html" title=" " alt="" coords="1331,101,1517,126"/>
+<area shape="rect" href="Symbols_8hpp.html" title=" " alt="" coords="3673,101,3871,126"/>
+<area shape="rect" title=" " alt="" coords="3743,431,3859,456"/>
+<area shape="rect" title=" " alt="" coords="3868,504,3927,529"/>
+<area shape="rect" title=" " alt="" coords="2681,269,2828,295"/>
+<area shape="rect" title=" " alt="" coords="1881,189,2077,214"/>
+<area shape="rect" href="ImageContainer_8hpp.html" title=" " alt="" coords="1566,189,1805,214"/>
+<area shape="rect" title=" " alt="" coords="3692,350,3807,375"/>
+<area shape="rect" title=" " alt="" coords="1928,350,2096,375"/>
+<area shape="rect" title=" " alt="" coords="1605,431,1761,456"/>
+<area shape="rect" title=" " alt="" coords="2294,350,2479,375"/>
+<area shape="rect" title=" " alt="" coords="2794,350,2937,375"/>
+<area shape="rect" title=" " alt="" coords="2555,350,2770,375"/>
+<area shape="rect" title=" " alt="" coords="3225,431,3300,456"/>
+<area shape="rect" title=" " alt="" coords="2121,350,2218,375"/>
+<area shape="rect" title=" " alt="" coords="1290,431,1382,456"/>
+<area shape="rect" title=" " alt="" coords="3554,350,3617,375"/>
+<area shape="rect" href="Cuda_8hpp.html" title=" " alt="" coords="1088,350,1299,375"/>
+<area shape="rect" href="Flags_8hpp.html" title=" " alt="" coords="3012,350,3225,375"/>
+<area shape="rect" href="Macros_8hpp.html" title=" " alt="" coords="3351,343,3529,383"/>
+<area shape="rect" href="SensorModels_8hpp.html" title=" " alt="" coords="1635,350,1904,375"/>
+<area shape="rect" href="Types-inl_8hpp.html" title=" " alt="" coords="1373,343,1560,383"/>
+<area shape="rect" title=" " alt="" coords="2761,504,2837,529"/>
+<area shape="rect" title=" " alt="" coords="3617,504,3692,529"/>
+<area shape="rect" title=" " alt="" coords="2474,504,2561,529"/>
+<area shape="rect" title=" " alt="" coords="2854,189,2925,214"/>
+<area shape="rect" title=" " alt="" coords="2949,189,3040,214"/>
+<area shape="rect" title=" " alt="" coords="3229,269,3302,295"/>
+<area shape="rect" title=" " alt="" coords="3327,269,3407,295"/>
+<area shape="rect" href="PointCloudProcess_8hpp.html" title=" " alt="" coords="2305,181,2525,221"/>
+<area shape="rect" href="CsvParser_8hpp.html" title=" " alt="" coords="3392,181,3571,221"/>
+<area shape="rect" href="JsonUtils_8hpp.html" title=" " alt="" coords="3064,181,3243,221"/>
+<area shape="rect" title=" " alt="" coords="986,269,1185,295"/>
+<area shape="rect" title=" " alt="" coords="1037,189,1283,214"/>
+<area shape="rect" href="CameraParams_8hpp.html" title=" " alt="" coords="1307,189,1541,214"/>
+<area shape="rect" title=" " alt="" coords="3858,189,4102,214"/>
+<area shape="rect" title=" " alt="" coords="4126,189,4319,214"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -160,56 +159,56 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="BackendDefinitions_8hpp__dep__incl.png" border="0" usemap="#adynosam_2include_2dynosam_2backend_2BackendDefinitions_8hppdep" alt=""/></div>
 <map name="adynosam_2include_2dynosam_2backend_2BackendDefinitions_8hppdep" id="adynosam_2include_2dynosam_2backend_2BackendDefinitions_8hppdep">
-<area shape="rect" title=" " alt="" coords="2939,5,3176,45"/>
-<area shape="rect" href="Accessor_8hpp.html" title=" " alt="" coords="2268,189,2465,229"/>
-<area shape="rect" href="Formulation_8hpp.html" title=" " alt="" coords="1891,299,2088,339"/>
-<area shape="rect" href="BackendModule_8hpp.html" title=" " alt="" coords="951,409,1166,449"/>
-<area shape="rect" href="ParallelHybridBackendModule_8hpp.html" title=" " alt="" coords="847,607,1078,661"/>
-<area shape="rect" href="RGBDBackendDefinitions_8hpp.html" title=" " alt="" coords="563,511,837,551"/>
-<area shape="rect" href="RegularBackendModule_8hpp.html" title=" " alt="" coords="1643,614,1909,654"/>
-<area shape="rect" href="BackendModule_8cc.html" title=" " alt="" coords="376,511,539,551"/>
-<area shape="rect" href="HybridEstimator_8hpp.html" title=" " alt="" coords="2995,409,3245,449"/>
-<area shape="rect" href="ParallelObjectISAM_8hpp.html" title=" " alt="" coords="2442,511,2678,551"/>
-<area shape="rect" href="HybridEstimator_8cc.html" title=" " alt="" coords="4014,511,4197,551"/>
-<area shape="rect" href="WorldMotionEstimator_8cc.html" title=" " alt="" coords="2691,614,2912,654"/>
-<area shape="rect" href="WorldPoseEstimator_8cc.html" title=" " alt="" coords="1694,511,1901,551"/>
-<area shape="rect" href="BackendOutputPacket_8hpp.html" title=" " alt="" coords="4660,93,4913,133"/>
-<area shape="rect" href="FactorGraphTools_8hpp.html" title=" " alt="" coords="3870,93,4093,133"/>
-<area shape="rect" href="MotionSolver-inl_8hpp.html" title=" " alt="" coords="4319,181,4534,236"/>
-<area shape="rect" href="MotionSolver_8hpp.html" title=" " alt="" coords="4319,299,4561,339"/>
-<area shape="rect" href="MotionSolver_8cc.html" title=" " alt="" coords="4354,409,4526,449"/>
-<area shape="rect" href="FactorGraphTools_8cc.html" title=" " alt="" coords="3760,189,3923,229"/>
-<area shape="rect" href="ISAM2Clique_8hpp.html" title=" " alt="" coords="1198,409,1466,449"/>
-<area shape="rect" href="ISAM2Params_8hpp.html" title=" " alt="" coords="2696,409,2971,449"/>
-<area shape="rect" href="IncrementalOptimization_8hpp.html" title=" " alt="" coords="3603,401,3837,456"/>
-<area shape="rect" href="Map_8hpp.html" title=" " alt="" coords="1976,93,2173,133"/>
-<area shape="rect" href="MapNodes-inl_8hpp.html" title=" " alt="" coords="2688,189,2893,229"/>
-<area shape="rect" href="MapNodes_8hpp.html" title=" " alt="" coords="2696,299,2893,339"/>
-<area shape="rect" href="HybridFormulationFactors_8hpp.html" title=" " alt="" coords="3321,299,3591,339"/>
-<area shape="rect" href="ObjectKinematicFactor_8hpp.html" title=" " alt="" coords="4322,614,4571,654"/>
-<area shape="rect" href="PipelineParams_8hpp.html" title=" " alt="" coords="375,93,585,133"/>
-<area shape="rect" href="BackendDefinitions_8cc.html" title=" " alt="" coords="4938,93,5107,133"/>
-<area shape="rect" href="Accessor-impl_8hpp.html" title=" " alt="" coords="2265,299,2469,339"/>
-<area shape="rect" href="RegularBackendModule_8cc.html" title=" " alt="" coords="3200,709,3397,749"/>
-<area shape="rect" href="WorldMotionEstimator_8hpp.html" title=" " alt="" coords="2078,511,2367,551"/>
-<area shape="rect" href="WorldPoseEstimator_8hpp.html" title=" " alt="" coords="1795,409,2069,449"/>
-<area shape="rect" href="Formulation-impl_8hpp.html" title=" " alt="" coords="2195,409,2419,449"/>
-<area shape="rect" href="VisionImuBackendModule_8hpp.html" title=" " alt="" coords="912,511,1192,551"/>
-<area shape="rect" href="ModuleFactory_8hpp.html" title=" " alt="" coords="144,511,352,551"/>
-<area shape="rect" href="ParallelHybridBackendModule_8cc.html" title=" " alt="" coords="719,709,958,749"/>
-<area shape="rect" href="PipelineManager_8cc.html" title=" " alt="" coords="1525,709,1686,749"/>
-<area shape="rect" href="backend__experiments__node_8cc.html" title=" " alt="" coords="983,709,1193,749"/>
-<area shape="rect" href="test__HybridFormulations_8hpp.html" title=" " alt="" coords="3336,504,3533,559"/>
-<area shape="rect" href="ParallelObjectISAM_8cc.html" title=" " alt="" coords="3771,614,3939,654"/>
-<area shape="rect" href="BackendPipeline_8hpp.html" title=" " alt="" coords="4660,189,4879,229"/>
-<area shape="rect" href="Display_8hpp.html" title=" " alt="" coords="4953,189,5151,229"/>
-<area shape="rect" href="VisualizerPipelines_8hpp.html" title=" " alt="" coords="4802,299,5046,339"/>
-<area shape="rect" href="BackendDSDRos_8hpp.html" title=" " alt="" coords="5087,284,5270,353"/>
-<area shape="rect" href="ISAM2_8hpp.html" title=" " alt="" coords="2933,511,3160,551"/>
-<area shape="rect" href="ISAM2Clique_8cc.html" title=" " alt="" coords="1267,511,1467,551"/>
-<area shape="rect" href="ISAM2Params_8cc.html" title=" " alt="" coords="2702,511,2909,551"/>
-<area shape="rect" href="IncrementalOptimization_8cc.html" title=" " alt="" coords="3609,511,3887,551"/>
-<area shape="rect" href="Map_8cc.html" title=" " alt="" coords="1870,189,2037,229"/>
+<area shape="rect" title=" " alt="" coords="2437,5,2675,45"/>
+<area shape="rect" href="Accessor_8hpp.html" title=" " alt="" coords="507,196,704,236"/>
+<area shape="rect" href="Formulation_8hpp.html" title=" " alt="" coords="879,299,1076,339"/>
+<area shape="rect" href="BackendFormulationFactory_8hpp.html" title=" " alt="" coords="1212,401,1503,441"/>
+<area shape="rect" href="ParallelHybridBackendModule_8hpp.html" title=" " alt="" coords="1509,592,1739,647"/>
+<area shape="rect" href="RegularBackendModule_8hpp.html" title=" " alt="" coords="743,599,1009,639"/>
+<area shape="rect" href="BackendModule_8hpp.html" title=" " alt="" coords="1527,401,1742,441"/>
+<area shape="rect" href="BackendModule_8cc.html" title=" " alt="" coords="2099,497,2261,537"/>
+<area shape="rect" href="HybridEstimator_8hpp.html" title=" " alt="" coords="2431,401,2681,441"/>
+<area shape="rect" href="ParallelObjectISAM_8hpp.html" title=" " alt="" coords="2487,497,2723,537"/>
+<area shape="rect" href="HybridEstimator_8cc.html" title=" " alt="" coords="3019,497,3202,537"/>
+<area shape="rect" href="WorldMotionEstimator_8cc.html" title=" " alt="" coords="144,599,365,639"/>
+<area shape="rect" href="WorldPoseEstimator_8cc.html" title=" " alt="" coords="46,497,253,537"/>
+<area shape="rect" href="BackendOutputPacket_8hpp.html" title=" " alt="" coords="1951,101,2204,141"/>
+<area shape="rect" href="HybridFormulationFactors_8hpp.html" title=" " alt="" coords="2869,299,3139,339"/>
+<area shape="rect" href="ObjectKinematicFactor_8hpp.html" title=" " alt="" coords="2907,101,3157,141"/>
+<area shape="rect" href="MotionSolver-inl_8hpp.html" title=" " alt="" coords="3378,93,3593,148"/>
+<area shape="rect" href="MotionSolver_8hpp.html" title=" " alt="" coords="3510,196,3751,236"/>
+<area shape="rect" href="PipelineParams_8hpp.html" title=" " alt="" coords="3424,401,3635,441"/>
+<area shape="rect" href="MotionSolver_8cc.html" title=" " alt="" coords="3910,299,4082,339"/>
+<area shape="rect" href="BackendDefinitions_8cc.html" title=" " alt="" coords="3827,101,3997,141"/>
+<area shape="rect" href="Accessor-impl_8hpp.html" title=" " alt="" coords="503,299,707,339"/>
+<area shape="rect" href="RegularBackendModule_8cc.html" title=" " alt="" coords="624,819,821,859"/>
+<area shape="rect" href="WorldMotionEstimator_8hpp.html" title=" " alt="" coords="277,497,566,537"/>
+<area shape="rect" href="WorldPoseEstimator_8hpp.html" title=" " alt="" coords="265,401,540,441"/>
+<area shape="rect" href="Accessor_8cc.html" title=" " alt="" coords="316,299,479,339"/>
+<area shape="rect" href="BackendFactory_8hpp.html" title=" " alt="" coords="1291,709,1503,749"/>
+<area shape="rect" href="Formulation-impl_8hpp.html" title=" " alt="" coords="716,401,940,441"/>
+<area shape="rect" href="BackendDisplayPolicyRos_8hpp.html" title=" " alt="" coords="1717,812,1939,867"/>
+<area shape="rect" href="RegularBackendDefinitions_8hpp.html" title=" " alt="" coords="946,497,1233,537"/>
+<area shape="rect" href="ParallelHybridBackendModule_8cc.html" title=" " alt="" coords="1527,709,1766,749"/>
+<area shape="rect" href="HybridBackendDisplay_8hpp.html" title=" " alt="" coords="1865,695,2108,764"/>
+<area shape="rect" href="BackendModuleFactory_8hpp.html" title=" " alt="" coords="1814,497,2074,537"/>
+<area shape="rect" href="VisionImuBackendModule_8hpp.html" title=" " alt="" coords="1257,497,1537,537"/>
+<area shape="rect" href="PipelineManager_8hpp.html" title=" " alt="" coords="2443,599,2661,639"/>
+<area shape="rect" href="dyno__sam_8cc.html" title=" " alt="" coords="2928,709,3107,749"/>
+<area shape="rect" href="test__HybridFormulations_8hpp.html" title=" " alt="" coords="2797,489,2995,544"/>
+<area shape="rect" href="ParallelObjectISAM_8cc.html" title=" " alt="" coords="2685,599,2853,639"/>
+<area shape="rect" href="test__HybridFormulations_8cc.html" title=" " alt="" coords="3018,599,3289,639"/>
+<area shape="rect" href="BackendPipeline_8hpp.html" title=" " alt="" coords="2447,196,2665,236"/>
+<area shape="rect" href="Display_8hpp.html" title=" " alt="" coords="1928,196,2125,236"/>
+<area shape="rect" href="VisualizerPipelines_8hpp.html" title=" " alt="" coords="1751,299,1995,339"/>
+<area shape="rect" href="BackendDSDRos_8hpp.html" title=" " alt="" coords="2071,284,2254,353"/>
+<area shape="rect" href="HybridFormulationFactors_8cc.html" title=" " alt="" coords="3189,401,3400,441"/>
+<area shape="rect" href="ObjectKinematicFactor_8cc.html" title=" " alt="" coords="2937,196,3127,236"/>
+<area shape="rect" href="FrontendParams_8hpp.html" title=" " alt="" coords="3521,299,3740,339"/>
+<area shape="rect" href="RGBDInstanceFrontendModule_8hpp.html" title=" " alt="" coords="3600,592,3835,647"/>
+<area shape="rect" href="RGBDInstanceFrontendModule_8cc.html" title=" " alt="" coords="3673,709,3916,749"/>
+<area shape="rect" href="FrontendModule_8hpp.html" title=" " alt="" coords="3565,497,3784,537"/>
+<area shape="rect" href="PipelineParams_8cc.html" title=" " alt="" coords="3329,497,3490,537"/>
 </map>
 </div>
 </div>
@@ -251,8 +250,6 @@ Typedefs</h2></td></tr>
 <tr class="memitem:ad2695c66ea8d7bd38aaa57ef1bca4365"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno.html#ad2695c66ea8d7bd38aaa57ef1bca4365">dyno::PoseToPointFactor</a> = gtsam::PoseToPointFactor&lt; gtsam::Pose3, Landmark &gt;</td></tr>
 <tr class="memdesc:ad2695c66ea8d7bd38aaa57ef1bca4365"><td class="mdescLeft">&#160;</td><td class="mdescRight">Alias to a gtsam::PoseToPointFactor&lt;gtsam::Pose3, Landmark&gt;  <br /></td></tr>
 <tr class="separator:ad2695c66ea8d7bd38aaa57ef1bca4365"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7ffce191936284983ac549a2a407e520"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno.html#a7ffce191936284983ac549a2a407e520">dyno::SymbolChar</a> = unsigned char</td></tr>
-<tr class="separator:a7ffce191936284983ac549a2a407e520"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a23fb2e58952a071624b23552e74cfb01"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno.html#a23fb2e58952a071624b23552e74cfb01">dyno::CalibrationType</a> = Camera::CalibrationType</td></tr>
 <tr class="separator:a23fb2e58952a071624b23552e74cfb01"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad0a86323bbb89fa492dd5fe7bf5b164a"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno.html#ad0a86323bbb89fa492dd5fe7bf5b164a">dyno::Slot</a> = long int</td></tr>
@@ -262,56 +259,32 @@ Typedefs</h2></td></tr>
 <tr class="separator:aaaad5b8e3458fc5a18f8999d960b3eee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0b2080ebc6273ea80d2716e39ead6525"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno.html#a0b2080ebc6273ea80d2716e39ead6525">dyno::GenericProjectionFactor</a> = gtsam::GenericProjectionFactor&lt; gtsam::Pose3, gtsam::Point3, CalibrationType &gt;</td></tr>
 <tr class="separator:a0b2080ebc6273ea80d2716e39ead6525"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aca951c6b984a988dfdd8a824db965bfd"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno.html#aca951c6b984a988dfdd8a824db965bfd">dyno::GenericStereoFactor</a> = gtsam::GenericStereoFactor&lt; gtsam::Pose3, Landmark &gt;</td></tr>
+<tr class="separator:aca951c6b984a988dfdd8a824db965bfd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adbc49a75d6e9881022f761c2943891e4"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno.html#adbc49a75d6e9881022f761c2943891e4">dyno::SmartProjectionFactorParams</a> = gtsam::SmartProjectionParams</td></tr>
 <tr class="separator:adbc49a75d6e9881022f761c2943891e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a574acd5374a4df4b4267981ca2729ff2"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a574acd5374a4df4b4267981ca2729ff2"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacedyno.html#a574acd5374a4df4b4267981ca2729ff2">dyno::FactorMap</a> = gtsam::FastMap&lt; TrackletId, std::pair&lt; T, Slot &gt; &gt;</td></tr>
+<tr class="separator:a574acd5374a4df4b4267981ca2729ff2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
-Functions</h2></td></tr>
-<tr class="memitem:a362927fda6438780973f55111b77455c"><td class="memItemLeft" align="right" valign="top">gtsam::Key&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno.html#a362927fda6438780973f55111b77455c">dyno::H</a> (unsigned char label, std::uint64_t j)</td></tr>
-<tr class="separator:a362927fda6438780973f55111b77455c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7d538ed6dca2ab2c8b1a61519eed9769"><td class="memItemLeft" align="right" valign="top">gtsam::Key&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno.html#a7d538ed6dca2ab2c8b1a61519eed9769">dyno::L</a> (unsigned char label, std::uint64_t j)</td></tr>
-<tr class="separator:a7d538ed6dca2ab2c8b1a61519eed9769"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a314d7f58c130d0aa28270309ff7500c5"><td class="memItemLeft" align="right" valign="top">gtsam::Symbol&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno.html#a314d7f58c130d0aa28270309ff7500c5">dyno::CameraPoseSymbol</a> (FrameId frame_id)</td></tr>
-<tr class="separator:a314d7f58c130d0aa28270309ff7500c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3809c2afbe3aa5963cf49dc945fb8dc6"><td class="memItemLeft" align="right" valign="top">gtsam::Symbol&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno.html#a3809c2afbe3aa5963cf49dc945fb8dc6">dyno::StaticLandmarkSymbol</a> (TrackletId tracklet_id)</td></tr>
-<tr class="separator:a3809c2afbe3aa5963cf49dc945fb8dc6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abd0ce4d0c7ed8fc398cc515654019802"><td class="memItemLeft" align="right" valign="top">DynamicPointSymbol&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno.html#abd0ce4d0c7ed8fc398cc515654019802">dyno::DynamicLandmarkSymbol</a> (FrameId frame_id, TrackletId tracklet_id)</td></tr>
-<tr class="separator:abd0ce4d0c7ed8fc398cc515654019802"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a23977a9581e8b4d2b684f749ec21cba2"><td class="memItemLeft" align="right" valign="top">gtsam::Key&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno.html#a23977a9581e8b4d2b684f749ec21cba2">dyno::ObjectMotionSymbol</a> (ObjectId object_label, FrameId frame_id)</td></tr>
-<tr class="separator:a23977a9581e8b4d2b684f749ec21cba2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3ddefad6204b5a599687d5a17b09f2bf"><td class="memItemLeft" align="right" valign="top">gtsam::Key&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno.html#a3ddefad6204b5a599687d5a17b09f2bf">dyno::ObjectPoseSymbol</a> (ObjectId object_label, FrameId frame_id)</td></tr>
-<tr class="separator:a3ddefad6204b5a599687d5a17b09f2bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad6fa332f8e592219dee9f3f3acec4d3e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno.html#ad6fa332f8e592219dee9f3f3acec4d3e">dyno::checkIfLabeledSymbol</a> (gtsam::Key key)</td></tr>
-<tr class="separator:ad6fa332f8e592219dee9f3f3acec4d3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad34e646d0720164e3f4430ec5b1716e7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno.html#ad34e646d0720164e3f4430ec5b1716e7">dyno::reconstructMotionInfo</a> (gtsam::Key key, ObjectId &amp;object_label, FrameId &amp;frame_id)</td></tr>
-<tr class="separator:ad34e646d0720164e3f4430ec5b1716e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a04d081eda6da8546260221d75c5265c6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno.html#a04d081eda6da8546260221d75c5265c6">dyno::reconstructPoseInfo</a> (gtsam::Key key, ObjectId &amp;object_label, FrameId &amp;frame_id)</td></tr>
-<tr class="separator:a04d081eda6da8546260221d75c5265c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2d6f925680f57dbc72ada75daefdb2f9"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno.html#a2d6f925680f57dbc72ada75daefdb2f9">dyno::DynoLikeKeyFormatter</a> (gtsam::Key)</td></tr>
-<tr class="separator:a2d6f925680f57dbc72ada75daefdb2f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5a415924fe6e80658c13695b0de6acfb"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno.html#a5a415924fe6e80658c13695b0de6acfb">dyno::DynoLikeKeyFormatterVerbose</a> (gtsam::Key)</td></tr>
-<tr class="separator:a5a415924fe6e80658c13695b0de6acfb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a046549e3c97e6e7333d6321639af9f7e"><td class="memItemLeft" align="right" valign="top">SymbolChar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno.html#a046549e3c97e6e7333d6321639af9f7e">dyno::DynoChrExtractor</a> (gtsam::Key)</td></tr>
-<tr class="separator:a046549e3c97e6e7333d6321639af9f7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
+Enumerations</h2></td></tr>
+<tr class="memitem:ab2bea061e9a47afecd7db1c56c1f1f17"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno.html#ab2bea061e9a47afecd7db1c56c1f1f17">dyno::BackendType</a> : int { <br />
+&#160;&#160;<a class="el" href="namespacedyno.html#ab2bea061e9a47afecd7db1c56c1f1f17ab5fb6f60910ba62c314a12fd30617038">dyno::WCME</a> = 0
+, <a class="el" href="namespacedyno.html#ab2bea061e9a47afecd7db1c56c1f1f17afcf8eab19c6c6080f3d25b97e9cb8f3b">dyno::WCPE</a> = 1
+, <a class="el" href="namespacedyno.html#ab2bea061e9a47afecd7db1c56c1f1f17ac0b9a748fa06f71ed3cff9e2c2105b17">dyno::HYBRID</a> = 2
+, <a class="el" href="namespacedyno.html#ab2bea061e9a47afecd7db1c56c1f1f17a96f5d9afed7f51cffe8673b2beb58e5f">dyno::PARALLEL_HYBRID</a> = 3
+, <br />
+&#160;&#160;<a class="el" href="namespacedyno.html#ab2bea061e9a47afecd7db1c56c1f1f17ada49257bd557373c9c1b71de7fe47cc3">dyno::TESTING_HYBRID_SD</a> = 4
+, <a class="el" href="namespacedyno.html#ab2bea061e9a47afecd7db1c56c1f1f17a5cde46dc000a3f047c10d0ecc99feb46">dyno::TESTING_HYBRID_D</a> = 5
+, <a class="el" href="namespacedyno.html#ab2bea061e9a47afecd7db1c56c1f1f17a7e3f91235896af840a3d4f4562965467">dyno::TESTING_HYBRID_S</a> = 6
+, <a class="el" href="namespacedyno.html#ab2bea061e9a47afecd7db1c56c1f1f17a59645c52a3f87220a32f86eb05d66e4c">dyno::TESTING_HYBRID_SMF</a> = 7
+<br />
+ }</td></tr>
+<tr class="separator:ab2bea061e9a47afecd7db1c56c1f1f17"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:a0cdcb9e6ff47d4ddd07acb826f1ac613"><td class="memItemLeft" align="right" valign="top">static constexpr SymbolChar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno.html#a0cdcb9e6ff47d4ddd07acb826f1ac613">dyno::kPoseSymbolChar</a> = 'X'</td></tr>
-<tr class="separator:a0cdcb9e6ff47d4ddd07acb826f1ac613"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a49a2494a2179d1eadb333f3aa0bf555f"><td class="memItemLeft" align="right" valign="top">static constexpr SymbolChar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno.html#a49a2494a2179d1eadb333f3aa0bf555f">dyno::kVelocitySymbolChar</a> = 'V'</td></tr>
-<tr class="separator:a49a2494a2179d1eadb333f3aa0bf555f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a59fe8f7a9e862ddc8e917e2f966af105"><td class="memItemLeft" align="right" valign="top">static constexpr SymbolChar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno.html#a59fe8f7a9e862ddc8e917e2f966af105">dyno::kObjectMotionSymbolChar</a> = 'H'</td></tr>
-<tr class="separator:a59fe8f7a9e862ddc8e917e2f966af105"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a868252d5fa202a35c9439d0c364f35e7"><td class="memItemLeft" align="right" valign="top">static constexpr SymbolChar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno.html#a868252d5fa202a35c9439d0c364f35e7">dyno::kObjectPoseSymbolChar</a> = 'L'</td></tr>
-<tr class="separator:a868252d5fa202a35c9439d0c364f35e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adb188d99cd6bacbe957ed9a92fccdfa3"><td class="memItemLeft" align="right" valign="top">static constexpr SymbolChar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno.html#adb188d99cd6bacbe957ed9a92fccdfa3">dyno::kStaticLandmarkSymbolChar</a> = 'l'</td></tr>
-<tr class="separator:adb188d99cd6bacbe957ed9a92fccdfa3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a96c57f7a78fbfba5ab2bae9c1650796a"><td class="memItemLeft" align="right" valign="top">static constexpr SymbolChar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno.html#a96c57f7a78fbfba5ab2bae9c1650796a">dyno::kDynamicLandmarkSymbolChar</a> = 'm'</td></tr>
-<tr class="separator:a96c57f7a78fbfba5ab2bae9c1650796a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acc10b486846c4bbac224f691f61634fd"><td class="memItemLeft" align="right" valign="top">static constexpr SymbolChar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno.html#acc10b486846c4bbac224f691f61634fd">dyno::kImuBiasSymbolChar</a> = 'b'</td></tr>
-<tr class="separator:acc10b486846c4bbac224f691f61634fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aab49791c6804cc6570d43c9e6a4627b3"><td class="memItemLeft" align="right" valign="top">static constexpr SymbolChar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno.html#aab49791c6804cc6570d43c9e6a4627b3">dyno::InvalidDynoSymbol</a> = '\0'</td></tr>
-<tr class="separator:aab49791c6804cc6570d43c9e6a4627b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad49b6c718d26485c805b2d2cdd328199"><td class="memItemLeft" align="right" valign="top">static constexpr Slot&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno.html#ad49b6c718d26485c805b2d2cdd328199">dyno::UninitialisedSlot</a></td></tr>
 <tr class="separator:ad49b6c718d26485c805b2d2cdd328199"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>

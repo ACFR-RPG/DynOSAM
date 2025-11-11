@@ -2,15 +2,14 @@
 <area shape="rect" id="node1" title=" " alt="" coords="5,265,180,305"/>
 <area shape="rect" id="node2" href="$classdyno_1_1FeatureContainer.html#a3af7c9e40df21b96a8c7067348aed5f5" title="Adds a new feature to the container. Uses feature.trackletId() to set the tracklet key." alt="" coords="228,29,435,55"/>
 <area shape="rect" id="node3" href="$classdyno_1_1KltFeatureTracker.html#af29a1c043d097f368a86b346bcfe33e0" title="Construct a new static feature with a unique tracklet id." alt="" coords="229,79,434,119"/>
-<area shape="rect" id="node8" href="$classdyno_1_1KltFeatureTracker.html#a8d1fe23ea28bc785dc41afa798a952a4" title="Detects features on the input image using the feature detector." alt="" coords="244,143,419,183"/>
-<area shape="rect" id="node9" href="$classdyno_1_1ImageContainer.html#ae5023f3df359ad7a5196ce15cd632ca3" title=" " alt="" coords="248,207,415,247"/>
-<area shape="rect" id="node10" href="$classdyno_1_1FeatureTrackerBase.html#a32d80be7e74a096c2b816529b7fd2c69" title="Checks if a keypoint is within an image, taking into account the shrink row/col values in the params...." alt="" coords="237,322,426,362"/>
-<area shape="rect" id="node11" href="$structdyno_1_1functional__keypoint.html#a3896d96a6f95b5311ae768cdd0ad97e8" title=" " alt="" coords="483,303,689,328"/>
-<area shape="rect" id="node12" href="$structdyno_1_1functional__keypoint.html#a24933450cad8bc70b7b76b339756cd94" title=" " alt="" coords="483,356,689,381"/>
-<area shape="rect" id="node13" href="$classdyno_1_1ImageContainer.html#ae5eead678f02be0ab9de7464e1833c55" title=" " alt="" coords="248,437,415,477"/>
-<area shape="rect" id="node14" href="$classdyno_1_1FeatureContainer.html#afd095f6a9e0f25539e7febe6eeeaf003" title="Returns the number of features in the container." alt="" coords="244,501,419,541"/>
-<area shape="rect" id="node4" href="$classdyno_1_1TrackletIdManager.html#ab7ec1738de58e54adbdad49f1f44f7ae" title=" " alt="" coords="495,15,677,55"/>
-<area shape="rect" id="node5" href="$classdyno_1_1TrackletIdManager.html#a5b83806eebd74cfafc4d706cd4182c6b" title=" " alt="" coords="487,79,685,119"/>
-<area shape="rect" id="node6" href="$classdyno_1_1TrackletIdManager.html#a53cb3472fa0367b8dd2a9127111277b2" title=" " alt="" coords="495,143,677,183"/>
-<area shape="rect" id="node7" href="$classdyno_1_1TrackletIdManager.html#a2a115366087e907d04e6c0d62643ef20" title=" " alt="" coords="737,143,920,183"/>
+<area shape="rect" id="node7" href="$classdyno_1_1KltFeatureTracker.html#a8d1fe23ea28bc785dc41afa798a952a4" title="Detects features on the input image using the feature detector." alt="" coords="244,143,419,183"/>
+<area shape="rect" id="node8" href="$classdyno_1_1ImageContainer.html#ae5023f3df359ad7a5196ce15cd632ca3" title=" " alt="" coords="248,207,415,247"/>
+<area shape="rect" id="node9" href="$classdyno_1_1FeatureTrackerBase.html#a32d80be7e74a096c2b816529b7fd2c69" title="Checks if a keypoint is within an image, taking into account the shrink row/col values in the params...." alt="" coords="237,322,426,362"/>
+<area shape="rect" id="node10" href="$structdyno_1_1functional__keypoint.html#a3896d96a6f95b5311ae768cdd0ad97e8" title=" " alt="" coords="483,303,689,328"/>
+<area shape="rect" id="node11" href="$structdyno_1_1functional__keypoint.html#a24933450cad8bc70b7b76b339756cd94" title=" " alt="" coords="483,356,689,381"/>
+<area shape="rect" id="node12" href="$classdyno_1_1ImageContainer.html#ae5eead678f02be0ab9de7464e1833c55" title=" " alt="" coords="248,437,415,477"/>
+<area shape="rect" id="node13" href="$classdyno_1_1FeatureContainer.html#afd095f6a9e0f25539e7febe6eeeaf003" title="Returns the number of features in the container." alt="" coords="244,501,419,541"/>
+<area shape="rect" id="node4" href="$classdyno_1_1TrackletIdManager.html#acf6eded9b5e98917d2510d96074ef138" title=" " alt="" coords="483,47,689,87"/>
+<area shape="rect" id="node5" href="$classdyno_1_1TrackletIdManager.html#a53cb3472fa0367b8dd2a9127111277b2" title=" " alt="" coords="495,111,677,151"/>
+<area shape="rect" id="node6" href="$classdyno_1_1TrackletIdManager.html#a2a115366087e907d04e6c0d62643ef20" title=" " alt="" coords="737,111,920,151"/>
 </map>

@@ -1,8 +1,6 @@
 <map id="dyno::Frame::backProjectToWorld" name="dyno::Frame::backProjectToWorld">
-<area shape="rect" id="node1" title="Project the feature into the world frame using the frames pose (T_world_camera_) and returns the 3D l..." alt="" coords="552,101,739,141"/>
-<area shape="rect" id="node2" href="$classdyno_1_1Frame.html#a3f31ac034ecc4e9c015f77efc30bb7c2" title="Helper function that creates a ConstructCorrespondanceFunc which operates to return a TrackletCorresp..." alt="" coords="279,5,490,45"/>
-<area shape="rect" id="node3" href="$classdyno_1_1Frame.html#a6827afe8532fbf39ae7e033d4d4c7371" title="Helper function ConstructCorrespondanceFunc which operates to return a TrackletCorrespondance where b..." alt="" coords="279,69,490,109"/>
-<area shape="rect" id="node4" href="$classdyno_1_1Frame.html#a692c305764890db8dbae7781a1a11544" title="Helper function that creates a ConstructCorrespondanceFunc which operates to return a TrackletCorresp..." alt="" coords="265,133,504,173"/>
-<area shape="rect" id="node5" href="$namespacedyno_1_1vision__tools.html#a70f3daa5a2a0fb3a715ffb1fb65992cb" title="Depricate ;)" alt="" coords="315,197,455,237"/>
-<area shape="rect" id="node6" href="$classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2" title=" " alt="" coords="5,197,217,237"/>
+<area shape="rect" id="node1" title="Project the feature into the world frame using the frames pose (T_world_camera_) and returns the 3D l..." alt="" coords="292,69,479,109"/>
+<area shape="rect" id="node2" href="$classdyno_1_1Frame.html#a3f31ac034ecc4e9c015f77efc30bb7c2" title="Helper function that creates a ConstructCorrespondanceFunc which operates to return a TrackletCorresp..." alt="" coords="19,5,230,45"/>
+<area shape="rect" id="node3" href="$classdyno_1_1Frame.html#a6827afe8532fbf39ae7e033d4d4c7371" title="Helper function ConstructCorrespondanceFunc which operates to return a TrackletCorrespondance where b..." alt="" coords="19,69,230,109"/>
+<area shape="rect" id="node4" href="$classdyno_1_1Frame.html#a692c305764890db8dbae7781a1a11544" title="Helper function that creates a ConstructCorrespondanceFunc which operates to return a TrackletCorresp..." alt="" coords="5,133,244,173"/>
 </map>

@@ -115,6 +115,7 @@ Classes</h2></td></tr>
 Public Types</h2></td></tr>
 <tr class="memitem:ac3969dc4d041e14e4bafc0bd9013d49a"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1TrackerParams.html#ac3969dc4d041e14e4bafc0bd9013d49a">FeatureDetectorType</a> : unsigned int { <a class="el" href="structdyno_1_1TrackerParams.html#ac3969dc4d041e14e4bafc0bd9013d49aabdb3f3c6dd2b56c7b917176493be30e8">GFTT</a> = 0
 , <a class="el" href="structdyno_1_1TrackerParams.html#ac3969dc4d041e14e4bafc0bd9013d49aa51fff33dedb5e12a0ba4b21abc6b14b2">ORB_SLAM_ORB</a> = 1
+, <a class="el" href="structdyno_1_1TrackerParams.html#ac3969dc4d041e14e4bafc0bd9013d49aa77bc9e03b95376c07d370f7eda63ccee">GFFT_CUDA</a> = 2
  }</td></tr>
 <tr class="separator:ac3969dc4d041e14e4bafc0bd9013d49a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -143,7 +144,10 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:af7f44eed9da99d0abf332eb9e40d072b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1TrackerParams.html#af7f44eed9da99d0abf332eb9e40d072b">min_distance_btw_tracked_and_detected_dynamic_features</a> = 2</td></tr>
 <tr class="separator:af7f44eed9da99d0abf332eb9e40d072b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad9ce927e92f2dfa82dd376094c6ab596"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1TrackerParams.html#ad9ce927e92f2dfa82dd376094c6ab596">max_features_per_frame</a> = 400</td></tr>
+<tr class="memdesc:ad9ce927e92f2dfa82dd376094c6ab596"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maximum number of features to be detected after ANMS.  <br /></td></tr>
 <tr class="separator:ad9ce927e92f2dfa82dd376094c6ab596"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a530c573728820b7131d6e4a2fd37be1c"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1TrackerParams.html#a530c573728820b7131d6e4a2fd37be1c">min_features_per_frame</a> = 200</td></tr>
+<tr class="separator:a530c573728820b7131d6e4a2fd37be1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a98efd475a7e932081f948b84518d6dea"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1TrackerParams.html#a98efd475a7e932081f948b84518d6dea">max_feature_track_age</a> = 25</td></tr>
 <tr class="memdesc:a98efd475a7e932081f948b84518d6dea"><td class="mdescLeft">&#160;</td><td class="mdescRight">We relabel the track as a new track for any features longer that this.  <br /></td></tr>
 <tr class="separator:a98efd475a7e932081f948b84518d6dea"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -153,6 +157,10 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:ab29d208e92e86410093fbfa6e1d0e72a"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1TrackerParams.html#ab29d208e92e86410093fbfa6e1d0e72a">shrink_col</a> = 0</td></tr>
 <tr class="memdesc:ab29d208e92e86410093fbfa6e1d0e72a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of cols to shrink the input image by.  <br /></td></tr>
 <tr class="separator:ab29d208e92e86410093fbfa6e1d0e72a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7904cacb28831b9c8b1ddbb4affc5dda"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1TrackerParams.html#a7904cacb28831b9c8b1ddbb4affc5dda">prefer_provided_optical_flow</a> = true</td></tr>
+<tr class="separator:a7904cacb28831b9c8b1ddbb4affc5dda"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa1ca252f62bd7adeaedc35e76a03be62"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1TrackerParams.html#aa1ca252f62bd7adeaedc35e76a03be62">prefer_provided_object_detection</a> = true</td></tr>
+<tr class="separator:aa1ca252f62bd7adeaedc35e76a03be62"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a638beaddea9c9aa2460337711ff19f7f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structdyno_1_1TrackerParams_1_1GFFTParams.html">GFFTParams</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1TrackerParams.html#a638beaddea9c9aa2460337711ff19f7f">gfft_params</a> = <a class="el" href="structdyno_1_1TrackerParams_1_1GFFTParams.html">GFFTParams</a>()</td></tr>
 <tr class="memdesc:a638beaddea9c9aa2460337711ff19f7f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Good features to track params.  <br /></td></tr>
 <tr class="separator:a638beaddea9c9aa2460337711ff19f7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -200,11 +208,17 @@ Public Attributes</h2></td></tr>
 <table class="fieldtable">
 <tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ac3969dc4d041e14e4bafc0bd9013d49aabdb3f3c6dd2b56c7b917176493be30e8" name="ac3969dc4d041e14e4bafc0bd9013d49aabdb3f3c6dd2b56c7b917176493be30e8"></a>GFTT&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="ac3969dc4d041e14e4bafc0bd9013d49aa51fff33dedb5e12a0ba4b21abc6b14b2" name="ac3969dc4d041e14e4bafc0bd9013d49aa51fff33dedb5e12a0ba4b21abc6b14b2"></a>ORB_SLAM_ORB&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="ac3969dc4d041e14e4bafc0bd9013d49aa77bc9e03b95376c07d370f7eda63ccee" name="ac3969dc4d041e14e4bafc0bd9013d49aa77bc9e03b95376c07d370f7eda63ccee"></a>GFFT_CUDA&#160;</td><td class="fielddoc"></td></tr>
 </table>
 
 <p class="definition">Definition at line <a class="el" href="TrackerParams_8hpp_source.html#l00049">49</a> of file <a class="el" href="TrackerParams_8hpp_source.html">TrackerParams.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   49</span>: <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> { <a class="code hl_enumvalue" href="structdyno_1_1TrackerParams.html#ac3969dc4d041e14e4bafc0bd9013d49aabdb3f3c6dd2b56c7b917176493be30e8">GFTT</a> = 0, <a class="code hl_enumvalue" href="structdyno_1_1TrackerParams.html#ac3969dc4d041e14e4bafc0bd9013d49aa51fff33dedb5e12a0ba4b21abc6b14b2">ORB_SLAM_ORB</a> = 1 };</div>
+<div class="fragment"><div class="line"><span class="lineno">   49</span>                                 : <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> {</div>
+<div class="line"><span class="lineno">   50</span>    <a class="code hl_enumvalue" href="structdyno_1_1TrackerParams.html#ac3969dc4d041e14e4bafc0bd9013d49aabdb3f3c6dd2b56c7b917176493be30e8">GFTT</a> = 0,</div>
+<div class="line"><span class="lineno">   51</span>    <a class="code hl_enumvalue" href="structdyno_1_1TrackerParams.html#ac3969dc4d041e14e4bafc0bd9013d49aa51fff33dedb5e12a0ba4b21abc6b14b2">ORB_SLAM_ORB</a> = 1,</div>
+<div class="line"><span class="lineno">   52</span>    <a class="code hl_enumvalue" href="structdyno_1_1TrackerParams.html#ac3969dc4d041e14e4bafc0bd9013d49aa77bc9e03b95376c07d370f7eda63ccee">GFFT_CUDA</a> = 2</div>
+<div class="line"><span class="lineno">   53</span>  };</div>
 <div class="ttc" id="astructdyno_1_1TrackerParams_html_ac3969dc4d041e14e4bafc0bd9013d49aa51fff33dedb5e12a0ba4b21abc6b14b2"><div class="ttname"><a href="structdyno_1_1TrackerParams.html#ac3969dc4d041e14e4bafc0bd9013d49aa51fff33dedb5e12a0ba4b21abc6b14b2">dyno::TrackerParams::FeatureDetectorType::ORB_SLAM_ORB</a></div><div class="ttdeci">@ ORB_SLAM_ORB</div></div>
+<div class="ttc" id="astructdyno_1_1TrackerParams_html_ac3969dc4d041e14e4bafc0bd9013d49aa77bc9e03b95376c07d370f7eda63ccee"><div class="ttname"><a href="structdyno_1_1TrackerParams.html#ac3969dc4d041e14e4bafc0bd9013d49aa77bc9e03b95376c07d370f7eda63ccee">dyno::TrackerParams::FeatureDetectorType::GFFT_CUDA</a></div><div class="ttdeci">@ GFFT_CUDA</div></div>
 <div class="ttc" id="astructdyno_1_1TrackerParams_html_ac3969dc4d041e14e4bafc0bd9013d49aabdb3f3c6dd2b56c7b917176493be30e8"><div class="ttname"><a href="structdyno_1_1TrackerParams.html#ac3969dc4d041e14e4bafc0bd9013d49aabdb3f3c6dd2b56c7b917176493be30e8">dyno::TrackerParams::FeatureDetectorType::GFTT</a></div><div class="ttdeci">@ GFTT</div></div>
 </div><!-- fragment -->
 </div>
@@ -222,7 +236,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TrackerParams_8hpp_source.html#l00099">99</a> of file <a class="el" href="TrackerParams_8hpp_source.html">TrackerParams.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TrackerParams_8hpp_source.html#l00103">103</a> of file <a class="el" href="TrackerParams_8hpp_source.html">TrackerParams.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1SparseFeatureDetector.html#aa2649cf3f842ee5533e887cca6116db3">dyno::SparseFeatureDetector::detect()</a>, and <a class="el" href="classdyno_1_1SparseFeatureDetector.html#addb6b601cd3bad6496efaddc81b58126">dyno::SparseFeatureDetector::SparseFeatureDetector()</a>.</p>
 
@@ -242,7 +256,7 @@ Public Attributes</h2></td></tr>
 
 <p>How early we want to retrack points based on their expiry age. </p>
 
-<p class="definition">Definition at line <a class="el" href="TrackerParams_8hpp_source.html#l00129">129</a> of file <a class="el" href="TrackerParams_8hpp_source.html">TrackerParams.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TrackerParams_8hpp_source.html#l00138">138</a> of file <a class="el" href="TrackerParams_8hpp_source.html">TrackerParams.hpp</a>.</p>
 
 </div>
 </div>
@@ -258,9 +272,9 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TrackerParams_8hpp_source.html#l00090">90</a> of file <a class="el" href="TrackerParams_8hpp_source.html">TrackerParams.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TrackerParams_8hpp_source.html#l00094">94</a> of file <a class="el" href="TrackerParams_8hpp_source.html">TrackerParams.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1FunctionalDetector.html#a33c5f19a57da4a129c4cde81ce4d183d">dyno::FunctionalDetector::FactoryCreate()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1FunctionalDetector.html#a33c5f19a57da4a129c4cde81ce4d183d">dyno::FunctionalDetector::FactoryCreate()</a>, and <a class="el" href="dyno__sam_8cc.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>.</p>
 
 </div>
 </div>
@@ -278,7 +292,7 @@ Public Attributes</h2></td></tr>
 
 <p>Good features to track params. </p>
 
-<p class="definition">Definition at line <a class="el" href="TrackerParams_8hpp_source.html#l00120">120</a> of file <a class="el" href="TrackerParams_8hpp_source.html">TrackerParams.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TrackerParams_8hpp_source.html#l00129">129</a> of file <a class="el" href="TrackerParams_8hpp_source.html">TrackerParams.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="namespacedyno.html#af6572c3253089213684a2cbe0c064b71">dyno::FunctionalDetector::Create&lt; cv::GFTTDetector &gt;()</a>.</p>
 
@@ -296,9 +310,9 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TrackerParams_8hpp_source.html#l00125">125</a> of file <a class="el" href="TrackerParams_8hpp_source.html">TrackerParams.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TrackerParams_8hpp_source.html#l00134">134</a> of file <a class="el" href="TrackerParams_8hpp_source.html">TrackerParams.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1FeatureTracker.html#a145614fe29bef7728075492870ac9c41">dyno::FeatureTracker::trackDynamic()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1FeatureTracker.html#a145614fe29bef7728075492870ac9c41">dyno::FeatureTracker::trackDynamic()</a>, and <a class="el" href="classdyno_1_1FeatureTracker.html#a4796a29c1f89cde0ace1668fc8fcd9a3">dyno::FeatureTracker::trackDynamicKLT()</a>.</p>
 
 </div>
 </div>
@@ -314,9 +328,9 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TrackerParams_8hpp_source.html#l00124">124</a> of file <a class="el" href="TrackerParams_8hpp_source.html">TrackerParams.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TrackerParams_8hpp_source.html#l00133">133</a> of file <a class="el" href="TrackerParams_8hpp_source.html">TrackerParams.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="dyno__sam_8cc.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>, and <a class="el" href="classdyno_1_1FeatureTracker.html#af6093d870bad67d12dee0c9cb913f87c">dyno::FeatureTracker::sampleDynamic()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="dyno__sam_8cc.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>, and <a class="el" href="classdyno_1_1FeatureTracker.html#a4796a29c1f89cde0ace1668fc8fcd9a3">dyno::FeatureTracker::trackDynamicKLT()</a>.</p>
 
 </div>
 </div>
@@ -334,7 +348,7 @@ Public Attributes</h2></td></tr>
 
 <p>We relabel the track as a new track for any features longer that this. </p>
 
-<p class="definition">Definition at line <a class="el" href="TrackerParams_8hpp_source.html#l00113">113</a> of file <a class="el" href="TrackerParams_8hpp_source.html">TrackerParams.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TrackerParams_8hpp_source.html#l00119">119</a> of file <a class="el" href="TrackerParams_8hpp_source.html">TrackerParams.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1KltFeatureTracker.html#a009ab3664d0280cb1fc6cb8b37a7a570">dyno::KltFeatureTracker::constructStaticFeatureFromPrevious()</a>.</p>
 
@@ -351,11 +365,12 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Threshold for the number of features to keep tracking - if num tracks drop below this number, new features are detected </p>
 
-<p class="definition">Definition at line <a class="el" href="TrackerParams_8hpp_source.html#l00111">111</a> of file <a class="el" href="TrackerParams_8hpp_source.html">TrackerParams.hpp</a>.</p>
+<p>Maximum number of features to be detected after ANMS. </p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1SparseFeatureDetector.html#aa2649cf3f842ee5533e887cca6116db3">dyno::SparseFeatureDetector::detect()</a>, <a class="el" href="classdyno_1_1KltFeatureTracker.html#a8f26d8fe56edd3e579a879e82a40457f">dyno::KltFeatureTracker::trackPoints()</a>, and <a class="el" href="classdyno_1_1ExternalFlowFeatureTracker.html#aedf0b07caf85d853756cb878f22d2ad7">dyno::ExternalFlowFeatureTracker::trackStatic()</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TrackerParams_8hpp_source.html#l00114">114</a> of file <a class="el" href="TrackerParams_8hpp_source.html">TrackerParams.hpp</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1SparseFeatureDetector.html#aa2649cf3f842ee5533e887cca6116db3">dyno::SparseFeatureDetector::detect()</a>, and <a class="el" href="classdyno_1_1ExternalFlowFeatureTracker.html#aedf0b07caf85d853756cb878f22d2ad7">dyno::ExternalFlowFeatureTracker::trackStatic()</a>.</p>
 
 </div>
 </div>
@@ -373,7 +388,7 @@ Public Attributes</h2></td></tr>
 
 <p>Number features to detect - may be used across many detectors. </p>
 
-<p class="definition">Definition at line <a class="el" href="TrackerParams_8hpp_source.html#l00104">104</a> of file <a class="el" href="TrackerParams_8hpp_source.html">TrackerParams.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TrackerParams_8hpp_source.html#l00108">108</a> of file <a class="el" href="TrackerParams_8hpp_source.html">TrackerParams.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1FunctionalDetector.html#a23b5dc443f2c72c6ed870e5d4e68530a">dyno::FunctionalDetector::Create()</a>, <a class="el" href="classdyno_1_1ExternalFlowFeatureTracker.html#a0181662d79f3c451929ceb09e71bca89">dyno::ExternalFlowFeatureTracker::ExternalFlowFeatureTracker()</a>, and <a class="el" href="namespacedyno.html#af6572c3253089213684a2cbe0c064b71">dyno::FunctionalDetector::Create&lt; cv::GFTTDetector &gt;()</a>.</p>
 
@@ -391,9 +406,9 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TrackerParams_8hpp_source.html#l00108">108</a> of file <a class="el" href="TrackerParams_8hpp_source.html">TrackerParams.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TrackerParams_8hpp_source.html#l00112">112</a> of file <a class="el" href="TrackerParams_8hpp_source.html">TrackerParams.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1FeatureTracker.html#a145614fe29bef7728075492870ac9c41">dyno::FeatureTracker::trackDynamic()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1FeatureTracker.html#a145614fe29bef7728075492870ac9c41">dyno::FeatureTracker::trackDynamic()</a>, and <a class="el" href="classdyno_1_1FeatureTracker.html#a4796a29c1f89cde0ace1668fc8fcd9a3">dyno::FeatureTracker::trackDynamicKLT()</a>.</p>
 
 </div>
 </div>
@@ -410,7 +425,7 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p>Used to grid the newly detected features and also used for the detection mask </p>
 
-<p class="definition">Definition at line <a class="el" href="TrackerParams_8hpp_source.html#l00107">107</a> of file <a class="el" href="TrackerParams_8hpp_source.html">TrackerParams.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TrackerParams_8hpp_source.html#l00111">111</a> of file <a class="el" href="TrackerParams_8hpp_source.html">TrackerParams.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1KltFeatureTracker.html#a4870d167d7dbd1a04a8d7d15a376a573">dyno::KltFeatureTracker::detectFeatures()</a>, and <a class="el" href="namespacedyno.html#af6572c3253089213684a2cbe0c064b71">dyno::FunctionalDetector::Create&lt; cv::GFTTDetector &gt;()</a>.</p>
 
@@ -429,7 +444,7 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p>Minimum IOU percetage between currently tracked area and actual mask before re-sampling </p>
 
-<p class="definition">Definition at line <a class="el" href="TrackerParams_8hpp_source.html#l00134">134</a> of file <a class="el" href="TrackerParams_8hpp_source.html">TrackerParams.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TrackerParams_8hpp_source.html#l00143">143</a> of file <a class="el" href="TrackerParams_8hpp_source.html">TrackerParams.hpp</a>.</p>
 
 </div>
 </div>
@@ -447,7 +462,26 @@ Public Attributes</h2></td></tr>
 
 <p>Smallest number of good tracks on an object before re-sampling. </p>
 
-<p class="definition">Definition at line <a class="el" href="TrackerParams_8hpp_source.html#l00131">131</a> of file <a class="el" href="TrackerParams_8hpp_source.html">TrackerParams.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TrackerParams_8hpp_source.html#l00140">140</a> of file <a class="el" href="TrackerParams_8hpp_source.html">TrackerParams.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a530c573728820b7131d6e4a2fd37be1c" name="a530c573728820b7131d6e4a2fd37be1c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a530c573728820b7131d6e4a2fd37be1c">&#9670;&#160;</a></span>min_features_per_frame</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int dyno::TrackerParams::min_features_per_frame = 200</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Threshold for the number of features to keep tracking - if num tracks drop below this number, new features are detected </p>
+
+<p class="definition">Definition at line <a class="el" href="TrackerParams_8hpp_source.html#l00117">117</a> of file <a class="el" href="TrackerParams_8hpp_source.html">TrackerParams.hpp</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1KltFeatureTracker.html#a8f26d8fe56edd3e579a879e82a40457f">dyno::KltFeatureTracker::trackPoints()</a>.</p>
 
 </div>
 </div>
@@ -463,9 +497,45 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TrackerParams_8hpp_source.html#l00121">121</a> of file <a class="el" href="TrackerParams_8hpp_source.html">TrackerParams.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TrackerParams_8hpp_source.html#l00130">130</a> of file <a class="el" href="TrackerParams_8hpp_source.html">TrackerParams.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1FunctionalDetector.html#a23b5dc443f2c72c6ed870e5d4e68530a">dyno::FunctionalDetector::Create()</a>, and <a class="el" href="classdyno_1_1ExternalFlowFeatureTracker.html#a0181662d79f3c451929ceb09e71bca89">dyno::ExternalFlowFeatureTracker::ExternalFlowFeatureTracker()</a>.</p>
+
+</div>
+</div>
+<a id="aa1ca252f62bd7adeaedc35e76a03be62" name="aa1ca252f62bd7adeaedc35e76a03be62"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa1ca252f62bd7adeaedc35e76a03be62">&#9670;&#160;</a></span>prefer_provided_object_detection</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool dyno::TrackerParams::prefer_provided_object_detection = true</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="TrackerParams_8hpp_source.html#l00126">126</a> of file <a class="el" href="TrackerParams_8hpp_source.html">TrackerParams.hpp</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1FeatureTracker.html#aa1858ceb580cb42aff98e3b57bfe9303">dyno::FeatureTracker::FeatureTracker()</a>, and <a class="el" href="dyno__sam_8cc.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>.</p>
+
+</div>
+</div>
+<a id="a7904cacb28831b9c8b1ddbb4affc5dda" name="a7904cacb28831b9c8b1ddbb4affc5dda"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7904cacb28831b9c8b1ddbb4affc5dda">&#9670;&#160;</a></span>prefer_provided_optical_flow</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool dyno::TrackerParams::prefer_provided_optical_flow = true</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="TrackerParams_8hpp_source.html#l00125">125</a> of file <a class="el" href="TrackerParams_8hpp_source.html">TrackerParams.hpp</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="dyno__sam_8cc.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>, and <a class="el" href="classdyno_1_1FeatureTracker.html#a40ee79c94fe2de7f16d2a4508cc2ba11">dyno::FeatureTracker::track()</a>.</p>
 
 </div>
 </div>
@@ -483,7 +553,7 @@ Public Attributes</h2></td></tr>
 
 <p>Number of cols to shrink the input image by. </p>
 
-<p class="definition">Definition at line <a class="el" href="TrackerParams_8hpp_source.html#l00117">117</a> of file <a class="el" href="TrackerParams_8hpp_source.html">TrackerParams.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TrackerParams_8hpp_source.html#l00123">123</a> of file <a class="el" href="TrackerParams_8hpp_source.html">TrackerParams.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1FeatureTrackerBase.html#a32d80be7e74a096c2b816529b7fd2c69">dyno::FeatureTrackerBase::isWithinShrunkenImage()</a>.</p>
 
@@ -503,7 +573,7 @@ Public Attributes</h2></td></tr>
 
 <p>Number of rows to shrink the input image by. </p>
 
-<p class="definition">Definition at line <a class="el" href="TrackerParams_8hpp_source.html#l00115">115</a> of file <a class="el" href="TrackerParams_8hpp_source.html">TrackerParams.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TrackerParams_8hpp_source.html#l00121">121</a> of file <a class="el" href="TrackerParams_8hpp_source.html">TrackerParams.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1FeatureTrackerBase.html#a32d80be7e74a096c2b816529b7fd2c69">dyno::FeatureTrackerBase::isWithinShrunkenImage()</a>.</p>
 
@@ -523,7 +593,7 @@ Public Attributes</h2></td></tr>
 <b>Initial value:</b><div class="fragment"><div class="line">=</div>
 <div class="line">      SubPixelCornerRefinementParams()</div>
 </div><!-- fragment -->
-<p class="definition">Definition at line <a class="el" href="TrackerParams_8hpp_source.html#l00100">100</a> of file <a class="el" href="TrackerParams_8hpp_source.html">TrackerParams.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TrackerParams_8hpp_source.html#l00104">104</a> of file <a class="el" href="TrackerParams_8hpp_source.html">TrackerParams.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1SparseFeatureDetector.html#aa2649cf3f842ee5533e887cca6116db3">dyno::SparseFeatureDetector::detect()</a>.</p>
 
@@ -543,7 +613,7 @@ Public Attributes</h2></td></tr>
 
 <p>To use adaptvie non-maximum supression in the feature detector. </p>
 
-<p class="definition">Definition at line <a class="el" href="TrackerParams_8hpp_source.html#l00093">93</a> of file <a class="el" href="TrackerParams_8hpp_source.html">TrackerParams.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TrackerParams_8hpp_source.html#l00097">97</a> of file <a class="el" href="TrackerParams_8hpp_source.html">TrackerParams.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1SparseFeatureDetector.html#aa2649cf3f842ee5533e887cca6116db3">dyno::SparseFeatureDetector::detect()</a>, and <a class="el" href="classdyno_1_1SparseFeatureDetector.html#addb6b601cd3bad6496efaddc81b58126">dyno::SparseFeatureDetector::SparseFeatureDetector()</a>.</p>
 
@@ -563,7 +633,7 @@ Public Attributes</h2></td></tr>
 
 <p>To use CLAHE filter on the imput image before processing. </p>
 
-<p class="definition">Definition at line <a class="el" href="TrackerParams_8hpp_source.html#l00097">97</a> of file <a class="el" href="TrackerParams_8hpp_source.html">TrackerParams.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TrackerParams_8hpp_source.html#l00101">101</a> of file <a class="el" href="TrackerParams_8hpp_source.html">TrackerParams.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1SparseFeatureDetector.html#addb6b601cd3bad6496efaddc81b58126">dyno::SparseFeatureDetector::SparseFeatureDetector()</a>.</p>
 
@@ -581,9 +651,9 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TrackerParams_8hpp_source.html#l00136">136</a> of file <a class="el" href="TrackerParams_8hpp_source.html">TrackerParams.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TrackerParams_8hpp_source.html#l00145">145</a> of file <a class="el" href="TrackerParams_8hpp_source.html">TrackerParams.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1FeatureTracker.html#a9890ba0c11b5932b5b4954a86bd03948">dyno::FeatureTracker::track()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1FeatureTracker.html#a40ee79c94fe2de7f16d2a4508cc2ba11">dyno::FeatureTracker::track()</a>.</p>
 
 </div>
 </div>
@@ -601,7 +671,7 @@ Public Attributes</h2></td></tr>
 
 <p>To use subpixel refinement on the static pixels. </p>
 
-<p class="definition">Definition at line <a class="el" href="TrackerParams_8hpp_source.html#l00095">95</a> of file <a class="el" href="TrackerParams_8hpp_source.html">TrackerParams.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TrackerParams_8hpp_source.html#l00099">99</a> of file <a class="el" href="TrackerParams_8hpp_source.html">TrackerParams.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1SparseFeatureDetector.html#aa2649cf3f842ee5533e887cca6116db3">dyno::SparseFeatureDetector::detect()</a>.</p>
 

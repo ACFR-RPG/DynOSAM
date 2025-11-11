@@ -193,135 +193,121 @@ Private Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Algorithms_8cc_source.html#l00066">66</a> of file <a class="el" href="Algorithms_8cc_source.html">Algorithms.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   66</span>                                                                                                                                 {</div>
-<div class="line"><span class="lineno">   67</span>    <span class="keywordtype">double</span> *distMatrix, *distMatrixTemp, *distMatrixEnd, *columnEnd, value, minValue;</div>
-<div class="line"><span class="lineno">   68</span>    <span class="keywordtype">bool</span> *coveredColumns, *coveredRows, *starMatrix, *newStarMatrix, *primeMatrix;</div>
-<div class="line"><span class="lineno">   69</span>    <span class="keywordtype">int</span> nOfElements, minDim, row, col;</div>
-<div class="line"><span class="lineno">   70</span> </div>
-<div class="line"><span class="lineno">   71</span>    <span class="comment">/* initialization */</span></div>
-<div class="line"><span class="lineno">   72</span>    *cost = 0;</div>
-<div class="line"><span class="lineno">   73</span>    <span class="keywordflow">for</span> (row = 0; row&lt;nOfRows; row++)</div>
-<div class="line"><span class="lineno">   74</span>        assignment[row] = -1;</div>
-<div class="line"><span class="lineno">   75</span> </div>
-<div class="line"><span class="lineno">   76</span>    <span class="comment">/* generate working copy of distance Matrix */</span></div>
-<div class="line"><span class="lineno">   77</span>    <span class="comment">/* check if all matrix elements are positive */</span></div>
-<div class="line"><span class="lineno">   78</span>    nOfElements = nOfRows * nOfColumns;</div>
-<div class="line"><span class="lineno">   79</span>    distMatrix = (<span class="keywordtype">double</span> *)malloc(nOfElements * <span class="keyword">sizeof</span>(<span class="keywordtype">double</span>));</div>
-<div class="line"><span class="lineno">   80</span>    distMatrixEnd = distMatrix + nOfElements;</div>
-<div class="line"><span class="lineno">   81</span> </div>
-<div class="line"><span class="lineno">   82</span>    <span class="keywordflow">for</span> (row = 0; row&lt;nOfElements; row++)</div>
-<div class="line"><span class="lineno">   83</span>    {</div>
-<div class="line"><span class="lineno">   84</span>        value = distMatrixIn[row];</div>
-<div class="line"><span class="lineno">   85</span>        <span class="keywordflow">if</span> (value &lt; 0)</div>
-<div class="line"><span class="lineno">   86</span>            <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;HungarianAlgorithm failed: All matrix elements have to be non-negative.&quot;</span>);</div>
-<div class="line"><span class="lineno">   87</span>        distMatrix[row] = value;</div>
-<div class="line"><span class="lineno">   88</span>    }</div>
-<div class="line"><span class="lineno">   89</span> </div>
-<div class="line"><span class="lineno">   90</span> </div>
-<div class="line"><span class="lineno">   91</span>    <span class="comment">/* memory allocation */</span></div>
-<div class="line"><span class="lineno">   92</span>    coveredColumns = (<span class="keywordtype">bool</span> *)calloc(nOfColumns, <span class="keyword">sizeof</span>(<span class="keywordtype">bool</span>));</div>
-<div class="line"><span class="lineno">   93</span>    coveredRows = (<span class="keywordtype">bool</span> *)calloc(nOfRows, <span class="keyword">sizeof</span>(<span class="keywordtype">bool</span>));</div>
-<div class="line"><span class="lineno">   94</span>    starMatrix = (<span class="keywordtype">bool</span> *)calloc(nOfElements, <span class="keyword">sizeof</span>(<span class="keywordtype">bool</span>));</div>
-<div class="line"><span class="lineno">   95</span>    primeMatrix = (<span class="keywordtype">bool</span> *)calloc(nOfElements, <span class="keyword">sizeof</span>(<span class="keywordtype">bool</span>));</div>
-<div class="line"><span class="lineno">   96</span>    newStarMatrix = (<span class="keywordtype">bool</span> *)calloc(nOfElements, <span class="keyword">sizeof</span>(<span class="keywordtype">bool</span>)); <span class="comment">/* used in step4 */</span></div>
+<p class="definition">Definition at line <a class="el" href="Algorithms_8cc_source.html#l00071">71</a> of file <a class="el" href="Algorithms_8cc_source.html">Algorithms.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   73</span>                                                                 {</div>
+<div class="line"><span class="lineno">   74</span>  <span class="keywordtype">double</span> *distMatrix, *distMatrixTemp, *distMatrixEnd, *columnEnd, value,</div>
+<div class="line"><span class="lineno">   75</span>      minValue;</div>
+<div class="line"><span class="lineno">   76</span>  <span class="keywordtype">bool</span> *coveredColumns, *coveredRows, *starMatrix, *newStarMatrix, *primeMatrix;</div>
+<div class="line"><span class="lineno">   77</span>  <span class="keywordtype">int</span> nOfElements, minDim, row, col;</div>
+<div class="line"><span class="lineno">   78</span> </div>
+<div class="line"><span class="lineno">   79</span>  <span class="comment">/* initialization */</span></div>
+<div class="line"><span class="lineno">   80</span>  *cost = 0;</div>
+<div class="line"><span class="lineno">   81</span>  <span class="keywordflow">for</span> (row = 0; row &lt; nOfRows; row++) assignment[row] = -1;</div>
+<div class="line"><span class="lineno">   82</span> </div>
+<div class="line"><span class="lineno">   83</span>  <span class="comment">/* generate working copy of distance Matrix */</span></div>
+<div class="line"><span class="lineno">   84</span>  <span class="comment">/* check if all matrix elements are positive */</span></div>
+<div class="line"><span class="lineno">   85</span>  nOfElements = nOfRows * nOfColumns;</div>
+<div class="line"><span class="lineno">   86</span>  distMatrix = (<span class="keywordtype">double</span> *)malloc(nOfElements * <span class="keyword">sizeof</span>(<span class="keywordtype">double</span>));</div>
+<div class="line"><span class="lineno">   87</span>  distMatrixEnd = distMatrix + nOfElements;</div>
+<div class="line"><span class="lineno">   88</span> </div>
+<div class="line"><span class="lineno">   89</span>  <span class="keywordflow">for</span> (row = 0; row &lt; nOfElements; row++) {</div>
+<div class="line"><span class="lineno">   90</span>    value = distMatrixIn[row];</div>
+<div class="line"><span class="lineno">   91</span>    <span class="keywordflow">if</span> (value &lt; 0)</div>
+<div class="line"><span class="lineno">   92</span>      <span class="keywordflow">throw</span> std::runtime_error(</div>
+<div class="line"><span class="lineno">   93</span>          <span class="stringliteral">&quot;HungarianAlgorithm failed: All matrix elements have to be &quot;</span></div>
+<div class="line"><span class="lineno">   94</span>          <span class="stringliteral">&quot;non-negative.&quot;</span>);</div>
+<div class="line"><span class="lineno">   95</span>    distMatrix[row] = value;</div>
+<div class="line"><span class="lineno">   96</span>  }</div>
 <div class="line"><span class="lineno">   97</span> </div>
-<div class="line"><span class="lineno">   98</span>    <span class="comment">/* preliminary steps */</span></div>
-<div class="line"><span class="lineno">   99</span>    <span class="keywordflow">if</span> (nOfRows &lt;= nOfColumns)</div>
-<div class="line"><span class="lineno">  100</span>    {</div>
-<div class="line"><span class="lineno">  101</span>        minDim = nOfRows;</div>
-<div class="line"><span class="lineno">  102</span> </div>
-<div class="line"><span class="lineno">  103</span>        <span class="keywordflow">for</span> (row = 0; row&lt;nOfRows; row++)</div>
-<div class="line"><span class="lineno">  104</span>        {</div>
-<div class="line"><span class="lineno">  105</span>            <span class="comment">/* find the smallest element in the row */</span></div>
-<div class="line"><span class="lineno">  106</span>            distMatrixTemp = distMatrix + row;</div>
-<div class="line"><span class="lineno">  107</span>            minValue = *distMatrixTemp;</div>
-<div class="line"><span class="lineno">  108</span>            distMatrixTemp += nOfRows;</div>
-<div class="line"><span class="lineno">  109</span>            <span class="keywordflow">while</span> (distMatrixTemp &lt; distMatrixEnd)</div>
-<div class="line"><span class="lineno">  110</span>            {</div>
-<div class="line"><span class="lineno">  111</span>                value = *distMatrixTemp;</div>
-<div class="line"><span class="lineno">  112</span>                <span class="keywordflow">if</span> (value &lt; minValue)</div>
-<div class="line"><span class="lineno">  113</span>                    minValue = value;</div>
-<div class="line"><span class="lineno">  114</span>                distMatrixTemp += nOfRows;</div>
-<div class="line"><span class="lineno">  115</span>            }</div>
-<div class="line"><span class="lineno">  116</span> </div>
-<div class="line"><span class="lineno">  117</span>            <span class="comment">/* subtract the smallest element from each element of the row */</span></div>
-<div class="line"><span class="lineno">  118</span>            distMatrixTemp = distMatrix + row;</div>
-<div class="line"><span class="lineno">  119</span>            <span class="keywordflow">while</span> (distMatrixTemp &lt; distMatrixEnd)</div>
-<div class="line"><span class="lineno">  120</span>            {</div>
-<div class="line"><span class="lineno">  121</span>                *distMatrixTemp -= minValue;</div>
-<div class="line"><span class="lineno">  122</span>                distMatrixTemp += nOfRows;</div>
-<div class="line"><span class="lineno">  123</span>            }</div>
-<div class="line"><span class="lineno">  124</span>        }</div>
-<div class="line"><span class="lineno">  125</span> </div>
-<div class="line"><span class="lineno">  126</span>        <span class="comment">/* Steps 1 and 2a */</span></div>
-<div class="line"><span class="lineno">  127</span>        <span class="keywordflow">for</span> (row = 0; row&lt;nOfRows; row++)</div>
-<div class="line"><span class="lineno">  128</span>            <span class="keywordflow">for</span> (col = 0; col&lt;nOfColumns; col++)</div>
-<div class="line"><span class="lineno">  129</span>                <span class="keywordflow">if</span> (fabs(distMatrix[row + nOfRows*col]) &lt; DBL_EPSILON)</div>
-<div class="line"><span class="lineno">  130</span>                    <span class="keywordflow">if</span> (!coveredColumns[col])</div>
-<div class="line"><span class="lineno">  131</span>                    {</div>
-<div class="line"><span class="lineno">  132</span>                        starMatrix[row + nOfRows*col] = <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  133</span>                        coveredColumns[col] = <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  134</span>                        <span class="keywordflow">break</span>;</div>
-<div class="line"><span class="lineno">  135</span>                    }</div>
-<div class="line"><span class="lineno">  136</span>    }</div>
-<div class="line"><span class="lineno">  137</span>    <span class="keywordflow">else</span> <span class="comment">/* if(nOfRows &gt; nOfColumns) */</span></div>
-<div class="line"><span class="lineno">  138</span>    {</div>
-<div class="line"><span class="lineno">  139</span>        minDim = nOfColumns;</div>
+<div class="line"><span class="lineno">   98</span>  <span class="comment">/* memory allocation */</span></div>
+<div class="line"><span class="lineno">   99</span>  coveredColumns = (<span class="keywordtype">bool</span> *)calloc(nOfColumns, <span class="keyword">sizeof</span>(<span class="keywordtype">bool</span>));</div>
+<div class="line"><span class="lineno">  100</span>  coveredRows = (<span class="keywordtype">bool</span> *)calloc(nOfRows, <span class="keyword">sizeof</span>(<span class="keywordtype">bool</span>));</div>
+<div class="line"><span class="lineno">  101</span>  starMatrix = (<span class="keywordtype">bool</span> *)calloc(nOfElements, <span class="keyword">sizeof</span>(<span class="keywordtype">bool</span>));</div>
+<div class="line"><span class="lineno">  102</span>  primeMatrix = (<span class="keywordtype">bool</span> *)calloc(nOfElements, <span class="keyword">sizeof</span>(<span class="keywordtype">bool</span>));</div>
+<div class="line"><span class="lineno">  103</span>  newStarMatrix = (<span class="keywordtype">bool</span> *)calloc(nOfElements, <span class="keyword">sizeof</span>(<span class="keywordtype">bool</span>)); <span class="comment">/* used in step4 */</span></div>
+<div class="line"><span class="lineno">  104</span> </div>
+<div class="line"><span class="lineno">  105</span>  <span class="comment">/* preliminary steps */</span></div>
+<div class="line"><span class="lineno">  106</span>  <span class="keywordflow">if</span> (nOfRows &lt;= nOfColumns) {</div>
+<div class="line"><span class="lineno">  107</span>    minDim = nOfRows;</div>
+<div class="line"><span class="lineno">  108</span> </div>
+<div class="line"><span class="lineno">  109</span>    <span class="keywordflow">for</span> (row = 0; row &lt; nOfRows; row++) {</div>
+<div class="line"><span class="lineno">  110</span>      <span class="comment">/* find the smallest element in the row */</span></div>
+<div class="line"><span class="lineno">  111</span>      distMatrixTemp = distMatrix + row;</div>
+<div class="line"><span class="lineno">  112</span>      minValue = *distMatrixTemp;</div>
+<div class="line"><span class="lineno">  113</span>      distMatrixTemp += nOfRows;</div>
+<div class="line"><span class="lineno">  114</span>      <span class="keywordflow">while</span> (distMatrixTemp &lt; distMatrixEnd) {</div>
+<div class="line"><span class="lineno">  115</span>        value = *distMatrixTemp;</div>
+<div class="line"><span class="lineno">  116</span>        <span class="keywordflow">if</span> (value &lt; minValue) minValue = value;</div>
+<div class="line"><span class="lineno">  117</span>        distMatrixTemp += nOfRows;</div>
+<div class="line"><span class="lineno">  118</span>      }</div>
+<div class="line"><span class="lineno">  119</span> </div>
+<div class="line"><span class="lineno">  120</span>      <span class="comment">/* subtract the smallest element from each element of the row */</span></div>
+<div class="line"><span class="lineno">  121</span>      distMatrixTemp = distMatrix + row;</div>
+<div class="line"><span class="lineno">  122</span>      <span class="keywordflow">while</span> (distMatrixTemp &lt; distMatrixEnd) {</div>
+<div class="line"><span class="lineno">  123</span>        *distMatrixTemp -= minValue;</div>
+<div class="line"><span class="lineno">  124</span>        distMatrixTemp += nOfRows;</div>
+<div class="line"><span class="lineno">  125</span>      }</div>
+<div class="line"><span class="lineno">  126</span>    }</div>
+<div class="line"><span class="lineno">  127</span> </div>
+<div class="line"><span class="lineno">  128</span>    <span class="comment">/* Steps 1 and 2a */</span></div>
+<div class="line"><span class="lineno">  129</span>    <span class="keywordflow">for</span> (row = 0; row &lt; nOfRows; row++)</div>
+<div class="line"><span class="lineno">  130</span>      <span class="keywordflow">for</span> (col = 0; col &lt; nOfColumns; col++)</div>
+<div class="line"><span class="lineno">  131</span>        <span class="keywordflow">if</span> (fabs(distMatrix[row + nOfRows * col]) &lt; DBL_EPSILON)</div>
+<div class="line"><span class="lineno">  132</span>          <span class="keywordflow">if</span> (!coveredColumns[col]) {</div>
+<div class="line"><span class="lineno">  133</span>            starMatrix[row + nOfRows * col] = <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  134</span>            coveredColumns[col] = <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  135</span>            <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">  136</span>          }</div>
+<div class="line"><span class="lineno">  137</span>  } <span class="keywordflow">else</span> <span class="comment">/* if(nOfRows &gt; nOfColumns) */</span></div>
+<div class="line"><span class="lineno">  138</span>  {</div>
+<div class="line"><span class="lineno">  139</span>    minDim = nOfColumns;</div>
 <div class="line"><span class="lineno">  140</span> </div>
-<div class="line"><span class="lineno">  141</span>        <span class="keywordflow">for</span> (col = 0; col&lt;nOfColumns; col++)</div>
-<div class="line"><span class="lineno">  142</span>        {</div>
-<div class="line"><span class="lineno">  143</span>            <span class="comment">/* find the smallest element in the column */</span></div>
-<div class="line"><span class="lineno">  144</span>            distMatrixTemp = distMatrix + nOfRows*col;</div>
-<div class="line"><span class="lineno">  145</span>            columnEnd = distMatrixTemp + nOfRows;</div>
-<div class="line"><span class="lineno">  146</span> </div>
-<div class="line"><span class="lineno">  147</span>            minValue = *distMatrixTemp++;</div>
-<div class="line"><span class="lineno">  148</span>            <span class="keywordflow">while</span> (distMatrixTemp &lt; columnEnd)</div>
-<div class="line"><span class="lineno">  149</span>            {</div>
-<div class="line"><span class="lineno">  150</span>                value = *distMatrixTemp++;</div>
-<div class="line"><span class="lineno">  151</span>                <span class="keywordflow">if</span> (value &lt; minValue)</div>
-<div class="line"><span class="lineno">  152</span>                    minValue = value;</div>
-<div class="line"><span class="lineno">  153</span>            }</div>
-<div class="line"><span class="lineno">  154</span> </div>
-<div class="line"><span class="lineno">  155</span>            <span class="comment">/* subtract the smallest element from each element of the column */</span></div>
-<div class="line"><span class="lineno">  156</span>            distMatrixTemp = distMatrix + nOfRows*col;</div>
-<div class="line"><span class="lineno">  157</span>            <span class="keywordflow">while</span> (distMatrixTemp &lt; columnEnd)</div>
-<div class="line"><span class="lineno">  158</span>                *distMatrixTemp++ -= minValue;</div>
-<div class="line"><span class="lineno">  159</span>        }</div>
-<div class="line"><span class="lineno">  160</span> </div>
-<div class="line"><span class="lineno">  161</span>        <span class="comment">/* Steps 1 and 2a */</span></div>
-<div class="line"><span class="lineno">  162</span>        <span class="keywordflow">for</span> (col = 0; col&lt;nOfColumns; col++)</div>
-<div class="line"><span class="lineno">  163</span>            <span class="keywordflow">for</span> (row = 0; row&lt;nOfRows; row++)</div>
-<div class="line"><span class="lineno">  164</span>                <span class="keywordflow">if</span> (fabs(distMatrix[row + nOfRows*col]) &lt; DBL_EPSILON)</div>
-<div class="line"><span class="lineno">  165</span>                    <span class="keywordflow">if</span> (!coveredRows[row])</div>
-<div class="line"><span class="lineno">  166</span>                    {</div>
-<div class="line"><span class="lineno">  167</span>                        starMatrix[row + nOfRows*col] = <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  168</span>                        coveredColumns[col] = <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  169</span>                        coveredRows[row] = <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  170</span>                        <span class="keywordflow">break</span>;</div>
-<div class="line"><span class="lineno">  171</span>                    }</div>
-<div class="line"><span class="lineno">  172</span>        <span class="keywordflow">for</span> (row = 0; row&lt;nOfRows; row++)</div>
-<div class="line"><span class="lineno">  173</span>            coveredRows[row] = <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">  174</span> </div>
-<div class="line"><span class="lineno">  175</span>    }</div>
+<div class="line"><span class="lineno">  141</span>    <span class="keywordflow">for</span> (col = 0; col &lt; nOfColumns; col++) {</div>
+<div class="line"><span class="lineno">  142</span>      <span class="comment">/* find the smallest element in the column */</span></div>
+<div class="line"><span class="lineno">  143</span>      distMatrixTemp = distMatrix + nOfRows * col;</div>
+<div class="line"><span class="lineno">  144</span>      columnEnd = distMatrixTemp + nOfRows;</div>
+<div class="line"><span class="lineno">  145</span> </div>
+<div class="line"><span class="lineno">  146</span>      minValue = *distMatrixTemp++;</div>
+<div class="line"><span class="lineno">  147</span>      <span class="keywordflow">while</span> (distMatrixTemp &lt; columnEnd) {</div>
+<div class="line"><span class="lineno">  148</span>        value = *distMatrixTemp++;</div>
+<div class="line"><span class="lineno">  149</span>        <span class="keywordflow">if</span> (value &lt; minValue) minValue = value;</div>
+<div class="line"><span class="lineno">  150</span>      }</div>
+<div class="line"><span class="lineno">  151</span> </div>
+<div class="line"><span class="lineno">  152</span>      <span class="comment">/* subtract the smallest element from each element of the column */</span></div>
+<div class="line"><span class="lineno">  153</span>      distMatrixTemp = distMatrix + nOfRows * col;</div>
+<div class="line"><span class="lineno">  154</span>      <span class="keywordflow">while</span> (distMatrixTemp &lt; columnEnd) *distMatrixTemp++ -= minValue;</div>
+<div class="line"><span class="lineno">  155</span>    }</div>
+<div class="line"><span class="lineno">  156</span> </div>
+<div class="line"><span class="lineno">  157</span>    <span class="comment">/* Steps 1 and 2a */</span></div>
+<div class="line"><span class="lineno">  158</span>    <span class="keywordflow">for</span> (col = 0; col &lt; nOfColumns; col++)</div>
+<div class="line"><span class="lineno">  159</span>      <span class="keywordflow">for</span> (row = 0; row &lt; nOfRows; row++)</div>
+<div class="line"><span class="lineno">  160</span>        <span class="keywordflow">if</span> (fabs(distMatrix[row + nOfRows * col]) &lt; DBL_EPSILON)</div>
+<div class="line"><span class="lineno">  161</span>          <span class="keywordflow">if</span> (!coveredRows[row]) {</div>
+<div class="line"><span class="lineno">  162</span>            starMatrix[row + nOfRows * col] = <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  163</span>            coveredColumns[col] = <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  164</span>            coveredRows[row] = <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  165</span>            <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">  166</span>          }</div>
+<div class="line"><span class="lineno">  167</span>    <span class="keywordflow">for</span> (row = 0; row &lt; nOfRows; row++) coveredRows[row] = <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">  168</span>  }</div>
+<div class="line"><span class="lineno">  169</span> </div>
+<div class="line"><span class="lineno">  170</span>  <span class="comment">/* move to step 2b */</span></div>
+<div class="line"><span class="lineno">  171</span>  <a class="code hl_function" href="structdyno_1_1internal_1_1HungarianAlgorithm.html#a5420826c147a5256ca048b751a36654b">step2b</a>(assignment, distMatrix, starMatrix, newStarMatrix, primeMatrix,</div>
+<div class="line"><span class="lineno">  172</span>         coveredColumns, coveredRows, nOfRows, nOfColumns, minDim);</div>
+<div class="line"><span class="lineno">  173</span> </div>
+<div class="line"><span class="lineno">  174</span>  <span class="comment">/* compute cost and remove invalid assignments */</span></div>
+<div class="line"><span class="lineno">  175</span>  <a class="code hl_function" href="structdyno_1_1internal_1_1HungarianAlgorithm.html#a0d698d068e1ffe22064098d0e4df65cb">computeassignmentcost</a>(assignment, cost, distMatrixIn, nOfRows);</div>
 <div class="line"><span class="lineno">  176</span> </div>
-<div class="line"><span class="lineno">  177</span>    <span class="comment">/* move to step 2b */</span></div>
-<div class="line"><span class="lineno">  178</span>    <a class="code hl_function" href="structdyno_1_1internal_1_1HungarianAlgorithm.html#a5420826c147a5256ca048b751a36654b">step2b</a>(assignment, distMatrix, starMatrix, newStarMatrix, primeMatrix, coveredColumns, coveredRows, nOfRows, nOfColumns, minDim);</div>
-<div class="line"><span class="lineno">  179</span> </div>
-<div class="line"><span class="lineno">  180</span>    <span class="comment">/* compute cost and remove invalid assignments */</span></div>
-<div class="line"><span class="lineno">  181</span>    <a class="code hl_function" href="structdyno_1_1internal_1_1HungarianAlgorithm.html#a0d698d068e1ffe22064098d0e4df65cb">computeassignmentcost</a>(assignment, cost, distMatrixIn, nOfRows);</div>
-<div class="line"><span class="lineno">  182</span> </div>
-<div class="line"><span class="lineno">  183</span>    <span class="comment">/* free allocated memory */</span></div>
-<div class="line"><span class="lineno">  184</span>    free(distMatrix);</div>
-<div class="line"><span class="lineno">  185</span>    free(coveredColumns);</div>
-<div class="line"><span class="lineno">  186</span>    free(coveredRows);</div>
-<div class="line"><span class="lineno">  187</span>    free(starMatrix);</div>
-<div class="line"><span class="lineno">  188</span>    free(primeMatrix);</div>
-<div class="line"><span class="lineno">  189</span>    free(newStarMatrix);</div>
-<div class="line"><span class="lineno">  190</span> </div>
-<div class="line"><span class="lineno">  191</span>}</div>
-<div class="ttc" id="astructdyno_1_1internal_1_1HungarianAlgorithm_html_a0d698d068e1ffe22064098d0e4df65cb"><div class="ttname"><a href="structdyno_1_1internal_1_1HungarianAlgorithm.html#a0d698d068e1ffe22064098d0e4df65cb">dyno::internal::HungarianAlgorithm::computeassignmentcost</a></div><div class="ttdeci">void computeassignmentcost(int *assignment, double *cost, double *distMatrix, int nOfRows) const</div><div class="ttdef"><b>Definition:</b> <a href="Algorithms_8cc_source.html#l00209">Algorithms.cc:209</a></div></div>
-<div class="ttc" id="astructdyno_1_1internal_1_1HungarianAlgorithm_html_a5420826c147a5256ca048b751a36654b"><div class="ttname"><a href="structdyno_1_1internal_1_1HungarianAlgorithm.html#a5420826c147a5256ca048b751a36654b">dyno::internal::HungarianAlgorithm::step2b</a></div><div class="ttdeci">void step2b(int *assignment, double *distMatrix, bool *starMatrix, bool *newStarMatrix, bool *primeMatrix, bool *coveredColumns, bool *coveredRows, int nOfRows, int nOfColumns, int minDim) const</div><div class="ttdef"><b>Definition:</b> <a href="Algorithms_8cc_source.html#l00242">Algorithms.cc:242</a></div></div>
+<div class="line"><span class="lineno">  177</span>  <span class="comment">/* free allocated memory */</span></div>
+<div class="line"><span class="lineno">  178</span>  free(distMatrix);</div>
+<div class="line"><span class="lineno">  179</span>  free(coveredColumns);</div>
+<div class="line"><span class="lineno">  180</span>  free(coveredRows);</div>
+<div class="line"><span class="lineno">  181</span>  free(starMatrix);</div>
+<div class="line"><span class="lineno">  182</span>  free(primeMatrix);</div>
+<div class="line"><span class="lineno">  183</span>  free(newStarMatrix);</div>
+<div class="line"><span class="lineno">  184</span>}</div>
+<div class="ttc" id="astructdyno_1_1internal_1_1HungarianAlgorithm_html_a0d698d068e1ffe22064098d0e4df65cb"><div class="ttname"><a href="structdyno_1_1internal_1_1HungarianAlgorithm.html#a0d698d068e1ffe22064098d0e4df65cb">dyno::internal::HungarianAlgorithm::computeassignmentcost</a></div><div class="ttdeci">void computeassignmentcost(int *assignment, double *cost, double *distMatrix, int nOfRows) const</div><div class="ttdef"><b>Definition:</b> <a href="Algorithms_8cc_source.html#l00203">Algorithms.cc:203</a></div></div>
+<div class="ttc" id="astructdyno_1_1internal_1_1HungarianAlgorithm_html_a5420826c147a5256ca048b751a36654b"><div class="ttname"><a href="structdyno_1_1internal_1_1HungarianAlgorithm.html#a5420826c147a5256ca048b751a36654b">dyno::internal::HungarianAlgorithm::step2b</a></div><div class="ttdeci">void step2b(int *assignment, double *distMatrix, bool *starMatrix, bool *newStarMatrix, bool *primeMatrix, bool *coveredColumns, bool *coveredRows, int nOfRows, int nOfColumns, int minDim) const</div><div class="ttdef"><b>Definition:</b> <a href="Algorithms_8cc_source.html#l00239">Algorithms.cc:239</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="structdyno_1_1internal_1_1HungarianAlgorithm.html#a0d698d068e1ffe22064098d0e4df65cb">computeassignmentcost()</a>, and <a class="el" href="structdyno_1_1internal_1_1HungarianAlgorithm.html#a5420826c147a5256ca048b751a36654b">step2b()</a>.</p>
 
@@ -401,22 +387,21 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Algorithms_8cc_source.html#l00193">193</a> of file <a class="el" href="Algorithms_8cc_source.html">Algorithms.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  193</span>                                                                                                                   {</div>
-<div class="line"><span class="lineno">  194</span>    <span class="keywordtype">int</span> row, col;</div>
-<div class="line"><span class="lineno">  195</span> </div>
-<div class="line"><span class="lineno">  196</span>    <span class="keywordflow">for</span> (row = 0; row&lt;nOfRows; row++)</div>
-<div class="line"><span class="lineno">  197</span>        <span class="keywordflow">for</span> (col = 0; col&lt;nOfColumns; col++)</div>
-<div class="line"><span class="lineno">  198</span>            <span class="keywordflow">if</span> (starMatrix[row + nOfRows*col])</div>
-<div class="line"><span class="lineno">  199</span>            {</div>
-<div class="line"><span class="lineno">  200</span><span class="preprocessor">#ifdef ONE_INDEXING</span></div>
-<div class="line"><span class="lineno">  201</span>                assignment[row] = col + 1; <span class="comment">/* MATLAB-Indexing */</span></div>
-<div class="line"><span class="lineno">  202</span><span class="preprocessor">#else</span></div>
-<div class="line"><span class="lineno">  203</span>                assignment[row] = col;</div>
-<div class="line"><span class="lineno">  204</span><span class="preprocessor">#endif</span></div>
-<div class="line"><span class="lineno">  205</span>                <span class="keywordflow">break</span>;</div>
-<div class="line"><span class="lineno">  206</span>            }</div>
-<div class="line"><span class="lineno">  207</span>}</div>
+<p class="definition">Definition at line <a class="el" href="Algorithms_8cc_source.html#l00186">186</a> of file <a class="el" href="Algorithms_8cc_source.html">Algorithms.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  188</span>                                                                     {</div>
+<div class="line"><span class="lineno">  189</span>  <span class="keywordtype">int</span> row, col;</div>
+<div class="line"><span class="lineno">  190</span> </div>
+<div class="line"><span class="lineno">  191</span>  <span class="keywordflow">for</span> (row = 0; row &lt; nOfRows; row++)</div>
+<div class="line"><span class="lineno">  192</span>    <span class="keywordflow">for</span> (col = 0; col &lt; nOfColumns; col++)</div>
+<div class="line"><span class="lineno">  193</span>      <span class="keywordflow">if</span> (starMatrix[row + nOfRows * col]) {</div>
+<div class="line"><span class="lineno">  194</span><span class="preprocessor">#ifdef ONE_INDEXING</span></div>
+<div class="line"><span class="lineno">  195</span>        assignment[row] = col + 1; <span class="comment">/* MATLAB-Indexing */</span></div>
+<div class="line"><span class="lineno">  196</span><span class="preprocessor">#else</span></div>
+<div class="line"><span class="lineno">  197</span>        assignment[row] = col;</div>
+<div class="line"><span class="lineno">  198</span><span class="preprocessor">#endif</span></div>
+<div class="line"><span class="lineno">  199</span>        <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">  200</span>      }</div>
+<div class="line"><span class="lineno">  201</span>}</div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="structdyno_1_1internal_1_1HungarianAlgorithm.html#a5420826c147a5256ca048b751a36654b">step2b()</a>.</p>
 <div class="dynheader">
@@ -485,17 +470,15 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Algorithms_8cc_source.html#l00209">209</a> of file <a class="el" href="Algorithms_8cc_source.html">Algorithms.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  209</span>                                                                                                                   {</div>
-<div class="line"><span class="lineno">  210</span>    <span class="keywordtype">int</span> row, col;</div>
-<div class="line"><span class="lineno">  211</span> </div>
-<div class="line"><span class="lineno">  212</span>    <span class="keywordflow">for</span> (row = 0; row&lt;nOfRows; row++)</div>
-<div class="line"><span class="lineno">  213</span>    {</div>
-<div class="line"><span class="lineno">  214</span>        col = assignment[row];</div>
-<div class="line"><span class="lineno">  215</span>        <span class="keywordflow">if</span> (col &gt;= 0)</div>
-<div class="line"><span class="lineno">  216</span>            *cost += distMatrix[row + nOfRows*col];</div>
-<div class="line"><span class="lineno">  217</span>    }</div>
-<div class="line"><span class="lineno">  218</span>}</div>
+<p class="definition">Definition at line <a class="el" href="Algorithms_8cc_source.html#l00203">203</a> of file <a class="el" href="Algorithms_8cc_source.html">Algorithms.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  205</span>                                                                  {</div>
+<div class="line"><span class="lineno">  206</span>  <span class="keywordtype">int</span> row, col;</div>
+<div class="line"><span class="lineno">  207</span> </div>
+<div class="line"><span class="lineno">  208</span>  <span class="keywordflow">for</span> (row = 0; row &lt; nOfRows; row++) {</div>
+<div class="line"><span class="lineno">  209</span>    col = assignment[row];</div>
+<div class="line"><span class="lineno">  210</span>    <span class="keywordflow">if</span> (col &gt;= 0) *cost += distMatrix[row + nOfRows * col];</div>
+<div class="line"><span class="lineno">  211</span>  }</div>
+<div class="line"><span class="lineno">  212</span>}</div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="structdyno_1_1internal_1_1HungarianAlgorithm.html#a4f657d2f47d441ca6ed9b904bf68ffae">assignmentoptimal()</a>.</p>
 <div class="dynheader">
@@ -551,36 +534,35 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>double </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Algorithms_8cc_source.html#l00036">36</a> of file <a class="el" href="Algorithms_8cc_source.html">Algorithms.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   36</span>                                                                                                  {</div>
-<div class="line"><span class="lineno">   37</span>    <span class="keyword">const</span> <span class="keyword">auto</span> nRows = cost_matrix.rows();</div>
-<div class="line"><span class="lineno">   38</span>    <span class="keyword">const</span> <span class="keyword">auto</span> nCols = cost_matrix.cols();</div>
-<div class="line"><span class="lineno">   39</span> </div>
-<div class="line"><span class="lineno">   40</span>    <span class="keywordtype">double</span> *distMatrixIn = <span class="keyword">new</span> <span class="keywordtype">double</span>[nRows * nCols];</div>
-<div class="line"><span class="lineno">   41</span>    <span class="keywordtype">int</span> *assignmentArr = <span class="keyword">new</span> <span class="keywordtype">int</span>[nRows];</div>
-<div class="line"><span class="lineno">   42</span>    <span class="keywordtype">double</span> cost = 0.0;</div>
-<div class="line"><span class="lineno">   43</span> </div>
-<div class="line"><span class="lineno">   44</span>    <span class="comment">// Fill in the distMatrixIn. Mind the index is &quot;i + nRows * j&quot;.</span></div>
-<div class="line"><span class="lineno">   45</span>    <span class="comment">// Here the cost matrix of size MxN is defined as a double precision array of N*M elements.</span></div>
-<div class="line"><span class="lineno">   46</span>    <span class="comment">// In the solving functions matrices are seen to be saved MATLAB-internally in row-order.</span></div>
-<div class="line"><span class="lineno">   47</span>    <span class="comment">// (i.e. the matrix [1 2; 3 4] will be stored as a vector [1 3 2 4], NOT [1 2 3 4]).</span></div>
-<div class="line"><span class="lineno">   48</span>    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i = 0; i &lt; nRows; i++)</div>
-<div class="line"><span class="lineno">   49</span>        <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> j = 0; j &lt; nCols; j++)</div>
-<div class="line"><span class="lineno">   50</span>            distMatrixIn[i + nRows * j] = cost_matrix(i, j);</div>
-<div class="line"><span class="lineno">   51</span> </div>
-<div class="line"><span class="lineno">   52</span> </div>
-<div class="line"><span class="lineno">   53</span>    <span class="comment">// call solving function</span></div>
-<div class="line"><span class="lineno">   54</span>    <a class="code hl_function" href="structdyno_1_1internal_1_1HungarianAlgorithm.html#a4f657d2f47d441ca6ed9b904bf68ffae">assignmentoptimal</a>(assignmentArr, &amp;cost, distMatrixIn, nRows, nCols);</div>
-<div class="line"><span class="lineno">   55</span> </div>
-<div class="line"><span class="lineno">   56</span>    assignment.resize(nRows);</div>
-<div class="line"><span class="lineno">   57</span>    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> r = 0; r &lt; nRows; r++)</div>
-<div class="line"><span class="lineno">   58</span>        assignment(r) = assignmentArr[r];</div>
+<p class="definition">Definition at line <a class="el" href="Algorithms_8cc_source.html#l00042">42</a> of file <a class="el" href="Algorithms_8cc_source.html">Algorithms.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   43</span>                                                                  {</div>
+<div class="line"><span class="lineno">   44</span>  <span class="keyword">const</span> <span class="keyword">auto</span> nRows = cost_matrix.rows();</div>
+<div class="line"><span class="lineno">   45</span>  <span class="keyword">const</span> <span class="keyword">auto</span> nCols = cost_matrix.cols();</div>
+<div class="line"><span class="lineno">   46</span> </div>
+<div class="line"><span class="lineno">   47</span>  <span class="keywordtype">double</span> *distMatrixIn = <span class="keyword">new</span> <span class="keywordtype">double</span>[nRows * nCols];</div>
+<div class="line"><span class="lineno">   48</span>  <span class="keywordtype">int</span> *assignmentArr = <span class="keyword">new</span> <span class="keywordtype">int</span>[nRows];</div>
+<div class="line"><span class="lineno">   49</span>  <span class="keywordtype">double</span> cost = 0.0;</div>
+<div class="line"><span class="lineno">   50</span> </div>
+<div class="line"><span class="lineno">   51</span>  <span class="comment">// Fill in the distMatrixIn. Mind the index is &quot;i + nRows * j&quot;.</span></div>
+<div class="line"><span class="lineno">   52</span>  <span class="comment">// Here the cost matrix of size MxN is defined as a double precision array of</span></div>
+<div class="line"><span class="lineno">   53</span>  <span class="comment">// N*M elements. In the solving functions matrices are seen to be saved</span></div>
+<div class="line"><span class="lineno">   54</span>  <span class="comment">// MATLAB-internally in row-order. (i.e. the matrix [1 2; 3 4] will be stored</span></div>
+<div class="line"><span class="lineno">   55</span>  <span class="comment">// as a vector [1 3 2 4], NOT [1 2 3 4]).</span></div>
+<div class="line"><span class="lineno">   56</span>  <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i = 0; i &lt; nRows; i++)</div>
+<div class="line"><span class="lineno">   57</span>    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> j = 0; j &lt; nCols; j++)</div>
+<div class="line"><span class="lineno">   58</span>      distMatrixIn[i + nRows * j] = cost_matrix(i, j);</div>
 <div class="line"><span class="lineno">   59</span> </div>
-<div class="line"><span class="lineno">   60</span>    <span class="keyword">delete</span>[] distMatrixIn;</div>
-<div class="line"><span class="lineno">   61</span>    <span class="keyword">delete</span>[] assignmentArr;</div>
-<div class="line"><span class="lineno">   62</span>    <span class="keywordflow">return</span> cost;</div>
-<div class="line"><span class="lineno">   63</span>}</div>
-<div class="ttc" id="astructdyno_1_1internal_1_1HungarianAlgorithm_html_a4f657d2f47d441ca6ed9b904bf68ffae"><div class="ttname"><a href="structdyno_1_1internal_1_1HungarianAlgorithm.html#a4f657d2f47d441ca6ed9b904bf68ffae">dyno::internal::HungarianAlgorithm::assignmentoptimal</a></div><div class="ttdeci">void assignmentoptimal(int *assignment, double *cost, double *distMatrixIn, int nOfRows, int nOfColumns) const</div><div class="ttdef"><b>Definition:</b> <a href="Algorithms_8cc_source.html#l00066">Algorithms.cc:66</a></div></div>
+<div class="line"><span class="lineno">   60</span>  <span class="comment">// call solving function</span></div>
+<div class="line"><span class="lineno">   61</span>  <a class="code hl_function" href="structdyno_1_1internal_1_1HungarianAlgorithm.html#a4f657d2f47d441ca6ed9b904bf68ffae">assignmentoptimal</a>(assignmentArr, &amp;cost, distMatrixIn, nRows, nCols);</div>
+<div class="line"><span class="lineno">   62</span> </div>
+<div class="line"><span class="lineno">   63</span>  assignment.resize(nRows);</div>
+<div class="line"><span class="lineno">   64</span>  <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> r = 0; r &lt; nRows; r++) assignment(r) = assignmentArr[r];</div>
+<div class="line"><span class="lineno">   65</span> </div>
+<div class="line"><span class="lineno">   66</span>  <span class="keyword">delete</span>[] distMatrixIn;</div>
+<div class="line"><span class="lineno">   67</span>  <span class="keyword">delete</span>[] assignmentArr;</div>
+<div class="line"><span class="lineno">   68</span>  <span class="keywordflow">return</span> cost;</div>
+<div class="line"><span class="lineno">   69</span>}</div>
+<div class="ttc" id="astructdyno_1_1internal_1_1HungarianAlgorithm_html_a4f657d2f47d441ca6ed9b904bf68ffae"><div class="ttname"><a href="structdyno_1_1internal_1_1HungarianAlgorithm.html#a4f657d2f47d441ca6ed9b904bf68ffae">dyno::internal::HungarianAlgorithm::assignmentoptimal</a></div><div class="ttdeci">void assignmentoptimal(int *assignment, double *cost, double *distMatrixIn, int nOfRows, int nOfColumns) const</div><div class="ttdef"><b>Definition:</b> <a href="Algorithms_8cc_source.html#l00071">Algorithms.cc:71</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="structdyno_1_1internal_1_1HungarianAlgorithm.html#a4f657d2f47d441ca6ed9b904bf68ffae">assignmentoptimal()</a>.</p>
 
@@ -696,28 +678,27 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Algorithms_8cc_source.html#l00220">220</a> of file <a class="el" href="Algorithms_8cc_source.html">Algorithms.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  220</span>                                                                                                                                                                                                                     {</div>
-<div class="line"><span class="lineno">  221</span>    <span class="keywordtype">bool</span> *starMatrixTemp, *columnEnd;</div>
-<div class="line"><span class="lineno">  222</span>    <span class="keywordtype">int</span> col;</div>
-<div class="line"><span class="lineno">  223</span> </div>
-<div class="line"><span class="lineno">  224</span>    <span class="comment">/* cover every column containing a starred zero */</span></div>
-<div class="line"><span class="lineno">  225</span>    <span class="keywordflow">for</span> (col = 0; col&lt;nOfColumns; col++)</div>
-<div class="line"><span class="lineno">  226</span>    {</div>
-<div class="line"><span class="lineno">  227</span>        starMatrixTemp = starMatrix + nOfRows*col;</div>
-<div class="line"><span class="lineno">  228</span>        columnEnd = starMatrixTemp + nOfRows;</div>
-<div class="line"><span class="lineno">  229</span>        <span class="keywordflow">while</span> (starMatrixTemp &lt; columnEnd){</div>
-<div class="line"><span class="lineno">  230</span>            <span class="keywordflow">if</span> (*starMatrixTemp++)</div>
-<div class="line"><span class="lineno">  231</span>            {</div>
-<div class="line"><span class="lineno">  232</span>                coveredColumns[col] = <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  233</span>                <span class="keywordflow">break</span>;</div>
-<div class="line"><span class="lineno">  234</span>            }</div>
-<div class="line"><span class="lineno">  235</span>        }</div>
-<div class="line"><span class="lineno">  236</span>    }</div>
-<div class="line"><span class="lineno">  237</span> </div>
-<div class="line"><span class="lineno">  238</span>    <span class="comment">/* move to step 3 */</span></div>
-<div class="line"><span class="lineno">  239</span>    <a class="code hl_function" href="structdyno_1_1internal_1_1HungarianAlgorithm.html#a5420826c147a5256ca048b751a36654b">step2b</a>(assignment, distMatrix, starMatrix, newStarMatrix, primeMatrix, coveredColumns, coveredRows, nOfRows, nOfColumns, minDim);</div>
-<div class="line"><span class="lineno">  240</span>}</div>
+<p class="definition">Definition at line <a class="el" href="Algorithms_8cc_source.html#l00214">214</a> of file <a class="el" href="Algorithms_8cc_source.html">Algorithms.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  218</span>                                                  {</div>
+<div class="line"><span class="lineno">  219</span>  <span class="keywordtype">bool</span> *starMatrixTemp, *columnEnd;</div>
+<div class="line"><span class="lineno">  220</span>  <span class="keywordtype">int</span> col;</div>
+<div class="line"><span class="lineno">  221</span> </div>
+<div class="line"><span class="lineno">  222</span>  <span class="comment">/* cover every column containing a starred zero */</span></div>
+<div class="line"><span class="lineno">  223</span>  <span class="keywordflow">for</span> (col = 0; col &lt; nOfColumns; col++) {</div>
+<div class="line"><span class="lineno">  224</span>    starMatrixTemp = starMatrix + nOfRows * col;</div>
+<div class="line"><span class="lineno">  225</span>    columnEnd = starMatrixTemp + nOfRows;</div>
+<div class="line"><span class="lineno">  226</span>    <span class="keywordflow">while</span> (starMatrixTemp &lt; columnEnd) {</div>
+<div class="line"><span class="lineno">  227</span>      <span class="keywordflow">if</span> (*starMatrixTemp++) {</div>
+<div class="line"><span class="lineno">  228</span>        coveredColumns[col] = <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  229</span>        <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">  230</span>      }</div>
+<div class="line"><span class="lineno">  231</span>    }</div>
+<div class="line"><span class="lineno">  232</span>  }</div>
+<div class="line"><span class="lineno">  233</span> </div>
+<div class="line"><span class="lineno">  234</span>  <span class="comment">/* move to step 3 */</span></div>
+<div class="line"><span class="lineno">  235</span>  <a class="code hl_function" href="structdyno_1_1internal_1_1HungarianAlgorithm.html#a5420826c147a5256ca048b751a36654b">step2b</a>(assignment, distMatrix, starMatrix, newStarMatrix, primeMatrix,</div>
+<div class="line"><span class="lineno">  236</span>         coveredColumns, coveredRows, nOfRows, nOfColumns, minDim);</div>
+<div class="line"><span class="lineno">  237</span>}</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="structdyno_1_1internal_1_1HungarianAlgorithm.html#a5420826c147a5256ca048b751a36654b">step2b()</a>.</p>
 
@@ -836,29 +817,26 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Algorithms_8cc_source.html#l00242">242</a> of file <a class="el" href="Algorithms_8cc_source.html">Algorithms.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  242</span>                                                                                                                                                                                                                     {</div>
-<div class="line"><span class="lineno">  243</span>    <span class="keywordtype">int</span> col, nOfCoveredColumns;</div>
-<div class="line"><span class="lineno">  244</span> </div>
-<div class="line"><span class="lineno">  245</span>    <span class="comment">/* count covered columns */</span></div>
-<div class="line"><span class="lineno">  246</span>    nOfCoveredColumns = 0;</div>
-<div class="line"><span class="lineno">  247</span>    <span class="keywordflow">for</span> (col = 0; col&lt;nOfColumns; col++)</div>
-<div class="line"><span class="lineno">  248</span>        <span class="keywordflow">if</span> (coveredColumns[col])</div>
-<div class="line"><span class="lineno">  249</span>            nOfCoveredColumns++;</div>
+<p class="definition">Definition at line <a class="el" href="Algorithms_8cc_source.html#l00239">239</a> of file <a class="el" href="Algorithms_8cc_source.html">Algorithms.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  243</span>                                                  {</div>
+<div class="line"><span class="lineno">  244</span>  <span class="keywordtype">int</span> col, nOfCoveredColumns;</div>
+<div class="line"><span class="lineno">  245</span> </div>
+<div class="line"><span class="lineno">  246</span>  <span class="comment">/* count covered columns */</span></div>
+<div class="line"><span class="lineno">  247</span>  nOfCoveredColumns = 0;</div>
+<div class="line"><span class="lineno">  248</span>  <span class="keywordflow">for</span> (col = 0; col &lt; nOfColumns; col++)</div>
+<div class="line"><span class="lineno">  249</span>    <span class="keywordflow">if</span> (coveredColumns[col]) nOfCoveredColumns++;</div>
 <div class="line"><span class="lineno">  250</span> </div>
-<div class="line"><span class="lineno">  251</span>    <span class="keywordflow">if</span> (nOfCoveredColumns == minDim)</div>
-<div class="line"><span class="lineno">  252</span>    {</div>
-<div class="line"><span class="lineno">  253</span>        <span class="comment">/* algorithm finished */</span></div>
-<div class="line"><span class="lineno">  254</span>        <a class="code hl_function" href="structdyno_1_1internal_1_1HungarianAlgorithm.html#a463b5538b087355adf05892b1f7202a4">buildassignmentvector</a>(assignment, starMatrix, nOfRows, nOfColumns);</div>
-<div class="line"><span class="lineno">  255</span>    }</div>
-<div class="line"><span class="lineno">  256</span>    <span class="keywordflow">else</span></div>
-<div class="line"><span class="lineno">  257</span>    {</div>
-<div class="line"><span class="lineno">  258</span>        <span class="comment">/* move to step 3 */</span></div>
-<div class="line"><span class="lineno">  259</span>        <a class="code hl_function" href="structdyno_1_1internal_1_1HungarianAlgorithm.html#a104861cd70f4082e54aa7fea2976a427">step3</a>(assignment, distMatrix, starMatrix, newStarMatrix, primeMatrix, coveredColumns, coveredRows, nOfRows, nOfColumns, minDim);</div>
-<div class="line"><span class="lineno">  260</span>    }</div>
-<div class="line"><span class="lineno">  261</span>}</div>
-<div class="ttc" id="astructdyno_1_1internal_1_1HungarianAlgorithm_html_a104861cd70f4082e54aa7fea2976a427"><div class="ttname"><a href="structdyno_1_1internal_1_1HungarianAlgorithm.html#a104861cd70f4082e54aa7fea2976a427">dyno::internal::HungarianAlgorithm::step3</a></div><div class="ttdeci">void step3(int *assignment, double *distMatrix, bool *starMatrix, bool *newStarMatrix, bool *primeMatrix, bool *coveredColumns, bool *coveredRows, int nOfRows, int nOfColumns, int minDim) const</div><div class="ttdef"><b>Definition:</b> <a href="Algorithms_8cc_source.html#l00263">Algorithms.cc:263</a></div></div>
-<div class="ttc" id="astructdyno_1_1internal_1_1HungarianAlgorithm_html_a463b5538b087355adf05892b1f7202a4"><div class="ttname"><a href="structdyno_1_1internal_1_1HungarianAlgorithm.html#a463b5538b087355adf05892b1f7202a4">dyno::internal::HungarianAlgorithm::buildassignmentvector</a></div><div class="ttdeci">void buildassignmentvector(int *assignment, bool *starMatrix, int nOfRows, int nOfColumns) const</div><div class="ttdef"><b>Definition:</b> <a href="Algorithms_8cc_source.html#l00193">Algorithms.cc:193</a></div></div>
+<div class="line"><span class="lineno">  251</span>  <span class="keywordflow">if</span> (nOfCoveredColumns == minDim) {</div>
+<div class="line"><span class="lineno">  252</span>    <span class="comment">/* algorithm finished */</span></div>
+<div class="line"><span class="lineno">  253</span>    <a class="code hl_function" href="structdyno_1_1internal_1_1HungarianAlgorithm.html#a463b5538b087355adf05892b1f7202a4">buildassignmentvector</a>(assignment, starMatrix, nOfRows, nOfColumns);</div>
+<div class="line"><span class="lineno">  254</span>  } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  255</span>    <span class="comment">/* move to step 3 */</span></div>
+<div class="line"><span class="lineno">  256</span>    <a class="code hl_function" href="structdyno_1_1internal_1_1HungarianAlgorithm.html#a104861cd70f4082e54aa7fea2976a427">step3</a>(assignment, distMatrix, starMatrix, newStarMatrix, primeMatrix,</div>
+<div class="line"><span class="lineno">  257</span>          coveredColumns, coveredRows, nOfRows, nOfColumns, minDim);</div>
+<div class="line"><span class="lineno">  258</span>  }</div>
+<div class="line"><span class="lineno">  259</span>}</div>
+<div class="ttc" id="astructdyno_1_1internal_1_1HungarianAlgorithm_html_a104861cd70f4082e54aa7fea2976a427"><div class="ttname"><a href="structdyno_1_1internal_1_1HungarianAlgorithm.html#a104861cd70f4082e54aa7fea2976a427">dyno::internal::HungarianAlgorithm::step3</a></div><div class="ttdeci">void step3(int *assignment, double *distMatrix, bool *starMatrix, bool *newStarMatrix, bool *primeMatrix, bool *coveredColumns, bool *coveredRows, int nOfRows, int nOfColumns, int minDim) const</div><div class="ttdef"><b>Definition:</b> <a href="Algorithms_8cc_source.html#l00261">Algorithms.cc:261</a></div></div>
+<div class="ttc" id="astructdyno_1_1internal_1_1HungarianAlgorithm_html_a463b5538b087355adf05892b1f7202a4"><div class="ttname"><a href="structdyno_1_1internal_1_1HungarianAlgorithm.html#a463b5538b087355adf05892b1f7202a4">dyno::internal::HungarianAlgorithm::buildassignmentvector</a></div><div class="ttdeci">void buildassignmentvector(int *assignment, bool *starMatrix, int nOfRows, int nOfColumns) const</div><div class="ttdef"><b>Definition:</b> <a href="Algorithms_8cc_source.html#l00186">Algorithms.cc:186</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="structdyno_1_1internal_1_1HungarianAlgorithm.html#a463b5538b087355adf05892b1f7202a4">buildassignmentvector()</a>, and <a class="el" href="structdyno_1_1internal_1_1HungarianAlgorithm.html#a104861cd70f4082e54aa7fea2976a427">step3()</a>.</p>
 
@@ -977,49 +955,48 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Algorithms_8cc_source.html#l00263">263</a> of file <a class="el" href="Algorithms_8cc_source.html">Algorithms.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  263</span>                                                                                                                                                                                                                    {</div>
-<div class="line"><span class="lineno">  264</span>    <span class="keywordtype">bool</span> zerosFound;</div>
-<div class="line"><span class="lineno">  265</span>    <span class="keywordtype">int</span> row, col, starCol;</div>
-<div class="line"><span class="lineno">  266</span> </div>
-<div class="line"><span class="lineno">  267</span>    zerosFound = <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  268</span>    <span class="keywordflow">while</span> (zerosFound)</div>
-<div class="line"><span class="lineno">  269</span>    {</div>
-<div class="line"><span class="lineno">  270</span>        zerosFound = <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">  271</span>        <span class="keywordflow">for</span> (col = 0; col&lt;nOfColumns; col++)</div>
-<div class="line"><span class="lineno">  272</span>            <span class="keywordflow">if</span> (!coveredColumns[col])</div>
-<div class="line"><span class="lineno">  273</span>                <span class="keywordflow">for</span> (row = 0; row&lt;nOfRows; row++)</div>
-<div class="line"><span class="lineno">  274</span>                    <span class="keywordflow">if</span> ((!coveredRows[row]) &amp;&amp; (fabs(distMatrix[row + nOfRows*col]) &lt; DBL_EPSILON))</div>
-<div class="line"><span class="lineno">  275</span>                    {</div>
-<div class="line"><span class="lineno">  276</span>                        <span class="comment">/* prime zero */</span></div>
-<div class="line"><span class="lineno">  277</span>                        primeMatrix[row + nOfRows*col] = <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  278</span> </div>
-<div class="line"><span class="lineno">  279</span>                        <span class="comment">/* find starred zero in current row */</span></div>
-<div class="line"><span class="lineno">  280</span>                        <span class="keywordflow">for</span> (starCol = 0; starCol&lt;nOfColumns; starCol++)</div>
-<div class="line"><span class="lineno">  281</span>                            <span class="keywordflow">if</span> (starMatrix[row + nOfRows*starCol])</div>
-<div class="line"><span class="lineno">  282</span>                                <span class="keywordflow">break</span>;</div>
+<p class="definition">Definition at line <a class="el" href="Algorithms_8cc_source.html#l00261">261</a> of file <a class="el" href="Algorithms_8cc_source.html">Algorithms.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  265</span>                                                 {</div>
+<div class="line"><span class="lineno">  266</span>  <span class="keywordtype">bool</span> zerosFound;</div>
+<div class="line"><span class="lineno">  267</span>  <span class="keywordtype">int</span> row, col, starCol;</div>
+<div class="line"><span class="lineno">  268</span> </div>
+<div class="line"><span class="lineno">  269</span>  zerosFound = <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  270</span>  <span class="keywordflow">while</span> (zerosFound) {</div>
+<div class="line"><span class="lineno">  271</span>    zerosFound = <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">  272</span>    <span class="keywordflow">for</span> (col = 0; col &lt; nOfColumns; col++)</div>
+<div class="line"><span class="lineno">  273</span>      <span class="keywordflow">if</span> (!coveredColumns[col])</div>
+<div class="line"><span class="lineno">  274</span>        <span class="keywordflow">for</span> (row = 0; row &lt; nOfRows; row++)</div>
+<div class="line"><span class="lineno">  275</span>          <span class="keywordflow">if</span> ((!coveredRows[row]) &amp;&amp;</div>
+<div class="line"><span class="lineno">  276</span>              (fabs(distMatrix[row + nOfRows * col]) &lt; DBL_EPSILON)) {</div>
+<div class="line"><span class="lineno">  277</span>            <span class="comment">/* prime zero */</span></div>
+<div class="line"><span class="lineno">  278</span>            primeMatrix[row + nOfRows * col] = <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  279</span> </div>
+<div class="line"><span class="lineno">  280</span>            <span class="comment">/* find starred zero in current row */</span></div>
+<div class="line"><span class="lineno">  281</span>            <span class="keywordflow">for</span> (starCol = 0; starCol &lt; nOfColumns; starCol++)</div>
+<div class="line"><span class="lineno">  282</span>              <span class="keywordflow">if</span> (starMatrix[row + nOfRows * starCol]) <span class="keywordflow">break</span>;</div>
 <div class="line"><span class="lineno">  283</span> </div>
-<div class="line"><span class="lineno">  284</span>                        <span class="keywordflow">if</span> (starCol == nOfColumns) <span class="comment">/* no starred zero found */</span></div>
-<div class="line"><span class="lineno">  285</span>                        {</div>
-<div class="line"><span class="lineno">  286</span>                            <span class="comment">/* move to step 4 */</span></div>
-<div class="line"><span class="lineno">  287</span>                            <a class="code hl_function" href="structdyno_1_1internal_1_1HungarianAlgorithm.html#a46efba4821d8bc4626f0d816407f3fa6">step4</a>(assignment, distMatrix, starMatrix, newStarMatrix, primeMatrix, coveredColumns, coveredRows, nOfRows, nOfColumns, minDim, row, col);</div>
-<div class="line"><span class="lineno">  288</span>                            <span class="keywordflow">return</span>;</div>
-<div class="line"><span class="lineno">  289</span>                        }</div>
-<div class="line"><span class="lineno">  290</span>                        <span class="keywordflow">else</span></div>
-<div class="line"><span class="lineno">  291</span>                        {</div>
-<div class="line"><span class="lineno">  292</span>                            coveredRows[row] = <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  293</span>                            coveredColumns[starCol] = <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">  294</span>                            zerosFound = <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  295</span>                            <span class="keywordflow">break</span>;</div>
-<div class="line"><span class="lineno">  296</span>                        }</div>
-<div class="line"><span class="lineno">  297</span>                    }</div>
-<div class="line"><span class="lineno">  298</span>    }</div>
+<div class="line"><span class="lineno">  284</span>            <span class="keywordflow">if</span> (starCol == nOfColumns) <span class="comment">/* no starred zero found */</span></div>
+<div class="line"><span class="lineno">  285</span>            {</div>
+<div class="line"><span class="lineno">  286</span>              <span class="comment">/* move to step 4 */</span></div>
+<div class="line"><span class="lineno">  287</span>              <a class="code hl_function" href="structdyno_1_1internal_1_1HungarianAlgorithm.html#a46efba4821d8bc4626f0d816407f3fa6">step4</a>(assignment, distMatrix, starMatrix, newStarMatrix,</div>
+<div class="line"><span class="lineno">  288</span>                    primeMatrix, coveredColumns, coveredRows, nOfRows,</div>
+<div class="line"><span class="lineno">  289</span>                    nOfColumns, minDim, row, col);</div>
+<div class="line"><span class="lineno">  290</span>              <span class="keywordflow">return</span>;</div>
+<div class="line"><span class="lineno">  291</span>            } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  292</span>              coveredRows[row] = <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  293</span>              coveredColumns[starCol] = <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">  294</span>              zerosFound = <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  295</span>              <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">  296</span>            }</div>
+<div class="line"><span class="lineno">  297</span>          }</div>
+<div class="line"><span class="lineno">  298</span>  }</div>
 <div class="line"><span class="lineno">  299</span> </div>
-<div class="line"><span class="lineno">  300</span>    <span class="comment">/* move to step 5 */</span></div>
-<div class="line"><span class="lineno">  301</span>    <a class="code hl_function" href="structdyno_1_1internal_1_1HungarianAlgorithm.html#a241ebba1dd0feab75ce38971b8ee1e0e">step5</a>(assignment, distMatrix, starMatrix, newStarMatrix, primeMatrix, coveredColumns, coveredRows, nOfRows, nOfColumns, minDim);</div>
-<div class="line"><span class="lineno">  302</span>}</div>
-<div class="ttc" id="astructdyno_1_1internal_1_1HungarianAlgorithm_html_a241ebba1dd0feab75ce38971b8ee1e0e"><div class="ttname"><a href="structdyno_1_1internal_1_1HungarianAlgorithm.html#a241ebba1dd0feab75ce38971b8ee1e0e">dyno::internal::HungarianAlgorithm::step5</a></div><div class="ttdeci">void step5(int *assignment, double *distMatrix, bool *starMatrix, bool *newStarMatrix, bool *primeMatrix, bool *coveredColumns, bool *coveredRows, int nOfRows, int nOfColumns, int minDim) const</div><div class="ttdef"><b>Definition:</b> <a href="Algorithms_8cc_source.html#l00356">Algorithms.cc:356</a></div></div>
-<div class="ttc" id="astructdyno_1_1internal_1_1HungarianAlgorithm_html_a46efba4821d8bc4626f0d816407f3fa6"><div class="ttname"><a href="structdyno_1_1internal_1_1HungarianAlgorithm.html#a46efba4821d8bc4626f0d816407f3fa6">dyno::internal::HungarianAlgorithm::step4</a></div><div class="ttdeci">void step4(int *assignment, double *distMatrix, bool *starMatrix, bool *newStarMatrix, bool *primeMatrix, bool *coveredColumns, bool *coveredRows, int nOfRows, int nOfColumns, int minDim, int row, int col) const</div><div class="ttdef"><b>Definition:</b> <a href="Algorithms_8cc_source.html#l00304">Algorithms.cc:304</a></div></div>
+<div class="line"><span class="lineno">  300</span>  <span class="comment">/* move to step 5 */</span></div>
+<div class="line"><span class="lineno">  301</span>  <a class="code hl_function" href="structdyno_1_1internal_1_1HungarianAlgorithm.html#a241ebba1dd0feab75ce38971b8ee1e0e">step5</a>(assignment, distMatrix, starMatrix, newStarMatrix, primeMatrix,</div>
+<div class="line"><span class="lineno">  302</span>        coveredColumns, coveredRows, nOfRows, nOfColumns, minDim);</div>
+<div class="line"><span class="lineno">  303</span>}</div>
+<div class="ttc" id="astructdyno_1_1internal_1_1HungarianAlgorithm_html_a241ebba1dd0feab75ce38971b8ee1e0e"><div class="ttname"><a href="structdyno_1_1internal_1_1HungarianAlgorithm.html#a241ebba1dd0feab75ce38971b8ee1e0e">dyno::internal::HungarianAlgorithm::step5</a></div><div class="ttdeci">void step5(int *assignment, double *distMatrix, bool *starMatrix, bool *newStarMatrix, bool *primeMatrix, bool *coveredColumns, bool *coveredRows, int nOfRows, int nOfColumns, int minDim) const</div><div class="ttdef"><b>Definition:</b> <a href="Algorithms_8cc_source.html#l00355">Algorithms.cc:355</a></div></div>
+<div class="ttc" id="astructdyno_1_1internal_1_1HungarianAlgorithm_html_a46efba4821d8bc4626f0d816407f3fa6"><div class="ttname"><a href="structdyno_1_1internal_1_1HungarianAlgorithm.html#a46efba4821d8bc4626f0d816407f3fa6">dyno::internal::HungarianAlgorithm::step4</a></div><div class="ttdeci">void step4(int *assignment, double *distMatrix, bool *starMatrix, bool *newStarMatrix, bool *primeMatrix, bool *coveredColumns, bool *coveredRows, int nOfRows, int nOfColumns, int minDim, int row, int col) const</div><div class="ttdef"><b>Definition:</b> <a href="Algorithms_8cc_source.html#l00305">Algorithms.cc:305</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="structdyno_1_1internal_1_1HungarianAlgorithm.html#a46efba4821d8bc4626f0d816407f3fa6">step4()</a>, and <a class="el" href="structdyno_1_1internal_1_1HungarianAlgorithm.html#a241ebba1dd0feab75ce38971b8ee1e0e">step5()</a>.</p>
 
@@ -1150,59 +1127,53 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Algorithms_8cc_source.html#l00304">304</a> of file <a class="el" href="Algorithms_8cc_source.html">Algorithms.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  304</span>                                                                                                                                                                                                                                      {</div>
-<div class="line"><span class="lineno">  305</span>    <span class="keywordtype">int</span> n, starRow, starCol, primeRow, primeCol;</div>
-<div class="line"><span class="lineno">  306</span>    <span class="keywordtype">int</span> nOfElements = nOfRows*nOfColumns;</div>
-<div class="line"><span class="lineno">  307</span> </div>
-<div class="line"><span class="lineno">  308</span>    <span class="comment">/* generate temporary copy of starMatrix */</span></div>
-<div class="line"><span class="lineno">  309</span>    <span class="keywordflow">for</span> (n = 0; n&lt;nOfElements; n++)</div>
-<div class="line"><span class="lineno">  310</span>        newStarMatrix[n] = starMatrix[n];</div>
-<div class="line"><span class="lineno">  311</span> </div>
-<div class="line"><span class="lineno">  312</span>    <span class="comment">/* star current zero */</span></div>
-<div class="line"><span class="lineno">  313</span>    newStarMatrix[row + nOfRows*col] = <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  314</span> </div>
-<div class="line"><span class="lineno">  315</span>    <span class="comment">/* find starred zero in current column */</span></div>
-<div class="line"><span class="lineno">  316</span>    starCol = col;</div>
-<div class="line"><span class="lineno">  317</span>    <span class="keywordflow">for</span> (starRow = 0; starRow&lt;nOfRows; starRow++)</div>
-<div class="line"><span class="lineno">  318</span>        <span class="keywordflow">if</span> (starMatrix[starRow + nOfRows*starCol])</div>
-<div class="line"><span class="lineno">  319</span>            <span class="keywordflow">break</span>;</div>
-<div class="line"><span class="lineno">  320</span> </div>
-<div class="line"><span class="lineno">  321</span>    <span class="keywordflow">while</span> (starRow&lt;nOfRows)</div>
-<div class="line"><span class="lineno">  322</span>    {</div>
-<div class="line"><span class="lineno">  323</span>        <span class="comment">/* unstar the starred zero */</span></div>
-<div class="line"><span class="lineno">  324</span>        newStarMatrix[starRow + nOfRows*starCol] = <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">  325</span> </div>
-<div class="line"><span class="lineno">  326</span>        <span class="comment">/* find primed zero in current row */</span></div>
-<div class="line"><span class="lineno">  327</span>        primeRow = starRow;</div>
-<div class="line"><span class="lineno">  328</span>        <span class="keywordflow">for</span> (primeCol = 0; primeCol&lt;nOfColumns; primeCol++)</div>
-<div class="line"><span class="lineno">  329</span>            <span class="keywordflow">if</span> (primeMatrix[primeRow + nOfRows*primeCol])</div>
-<div class="line"><span class="lineno">  330</span>                <span class="keywordflow">break</span>;</div>
-<div class="line"><span class="lineno">  331</span> </div>
-<div class="line"><span class="lineno">  332</span>        <span class="comment">/* star the primed zero */</span></div>
-<div class="line"><span class="lineno">  333</span>        newStarMatrix[primeRow + nOfRows*primeCol] = <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  334</span> </div>
-<div class="line"><span class="lineno">  335</span>        <span class="comment">/* find starred zero in current column */</span></div>
-<div class="line"><span class="lineno">  336</span>        starCol = primeCol;</div>
-<div class="line"><span class="lineno">  337</span>        <span class="keywordflow">for</span> (starRow = 0; starRow&lt;nOfRows; starRow++)</div>
-<div class="line"><span class="lineno">  338</span>            <span class="keywordflow">if</span> (starMatrix[starRow + nOfRows*starCol])</div>
-<div class="line"><span class="lineno">  339</span>                <span class="keywordflow">break</span>;</div>
-<div class="line"><span class="lineno">  340</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="Algorithms_8cc_source.html#l00305">305</a> of file <a class="el" href="Algorithms_8cc_source.html">Algorithms.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  309</span>                                                                   {</div>
+<div class="line"><span class="lineno">  310</span>  <span class="keywordtype">int</span> n, starRow, starCol, primeRow, primeCol;</div>
+<div class="line"><span class="lineno">  311</span>  <span class="keywordtype">int</span> nOfElements = nOfRows * nOfColumns;</div>
+<div class="line"><span class="lineno">  312</span> </div>
+<div class="line"><span class="lineno">  313</span>  <span class="comment">/* generate temporary copy of starMatrix */</span></div>
+<div class="line"><span class="lineno">  314</span>  <span class="keywordflow">for</span> (n = 0; n &lt; nOfElements; n++) newStarMatrix[n] = starMatrix[n];</div>
+<div class="line"><span class="lineno">  315</span> </div>
+<div class="line"><span class="lineno">  316</span>  <span class="comment">/* star current zero */</span></div>
+<div class="line"><span class="lineno">  317</span>  newStarMatrix[row + nOfRows * col] = <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  318</span> </div>
+<div class="line"><span class="lineno">  319</span>  <span class="comment">/* find starred zero in current column */</span></div>
+<div class="line"><span class="lineno">  320</span>  starCol = col;</div>
+<div class="line"><span class="lineno">  321</span>  <span class="keywordflow">for</span> (starRow = 0; starRow &lt; nOfRows; starRow++)</div>
+<div class="line"><span class="lineno">  322</span>    <span class="keywordflow">if</span> (starMatrix[starRow + nOfRows * starCol]) <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">  323</span> </div>
+<div class="line"><span class="lineno">  324</span>  <span class="keywordflow">while</span> (starRow &lt; nOfRows) {</div>
+<div class="line"><span class="lineno">  325</span>    <span class="comment">/* unstar the starred zero */</span></div>
+<div class="line"><span class="lineno">  326</span>    newStarMatrix[starRow + nOfRows * starCol] = <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">  327</span> </div>
+<div class="line"><span class="lineno">  328</span>    <span class="comment">/* find primed zero in current row */</span></div>
+<div class="line"><span class="lineno">  329</span>    primeRow = starRow;</div>
+<div class="line"><span class="lineno">  330</span>    <span class="keywordflow">for</span> (primeCol = 0; primeCol &lt; nOfColumns; primeCol++)</div>
+<div class="line"><span class="lineno">  331</span>      <span class="keywordflow">if</span> (primeMatrix[primeRow + nOfRows * primeCol]) <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">  332</span> </div>
+<div class="line"><span class="lineno">  333</span>    <span class="comment">/* star the primed zero */</span></div>
+<div class="line"><span class="lineno">  334</span>    newStarMatrix[primeRow + nOfRows * primeCol] = <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  335</span> </div>
+<div class="line"><span class="lineno">  336</span>    <span class="comment">/* find starred zero in current column */</span></div>
+<div class="line"><span class="lineno">  337</span>    starCol = primeCol;</div>
+<div class="line"><span class="lineno">  338</span>    <span class="keywordflow">for</span> (starRow = 0; starRow &lt; nOfRows; starRow++)</div>
+<div class="line"><span class="lineno">  339</span>      <span class="keywordflow">if</span> (starMatrix[starRow + nOfRows * starCol]) <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">  340</span>  }</div>
 <div class="line"><span class="lineno">  341</span> </div>
-<div class="line"><span class="lineno">  342</span>    <span class="comment">/* use temporary copy as new starMatrix */</span></div>
-<div class="line"><span class="lineno">  343</span>    <span class="comment">/* delete all primes, uncover all rows */</span></div>
-<div class="line"><span class="lineno">  344</span>    <span class="keywordflow">for</span> (n = 0; n&lt;nOfElements; n++)</div>
-<div class="line"><span class="lineno">  345</span>    {</div>
-<div class="line"><span class="lineno">  346</span>        primeMatrix[n] = <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">  347</span>        starMatrix[n] = newStarMatrix[n];</div>
-<div class="line"><span class="lineno">  348</span>    }</div>
-<div class="line"><span class="lineno">  349</span>    <span class="keywordflow">for</span> (n = 0; n&lt;nOfRows; n++)</div>
-<div class="line"><span class="lineno">  350</span>        coveredRows[n] = <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">  351</span> </div>
-<div class="line"><span class="lineno">  352</span>    <span class="comment">/* move to step 2a */</span></div>
-<div class="line"><span class="lineno">  353</span>    <a class="code hl_function" href="structdyno_1_1internal_1_1HungarianAlgorithm.html#a024f1f51b22daad6295f8b9b459530ce">step2a</a>(assignment, distMatrix, starMatrix, newStarMatrix, primeMatrix, coveredColumns, coveredRows, nOfRows, nOfColumns, minDim);</div>
-<div class="line"><span class="lineno">  354</span>}</div>
-<div class="ttc" id="astructdyno_1_1internal_1_1HungarianAlgorithm_html_a024f1f51b22daad6295f8b9b459530ce"><div class="ttname"><a href="structdyno_1_1internal_1_1HungarianAlgorithm.html#a024f1f51b22daad6295f8b9b459530ce">dyno::internal::HungarianAlgorithm::step2a</a></div><div class="ttdeci">void step2a(int *assignment, double *distMatrix, bool *starMatrix, bool *newStarMatrix, bool *primeMatrix, bool *coveredColumns, bool *coveredRows, int nOfRows, int nOfColumns, int minDim) const</div><div class="ttdef"><b>Definition:</b> <a href="Algorithms_8cc_source.html#l00220">Algorithms.cc:220</a></div></div>
+<div class="line"><span class="lineno">  342</span>  <span class="comment">/* use temporary copy as new starMatrix */</span></div>
+<div class="line"><span class="lineno">  343</span>  <span class="comment">/* delete all primes, uncover all rows */</span></div>
+<div class="line"><span class="lineno">  344</span>  <span class="keywordflow">for</span> (n = 0; n &lt; nOfElements; n++) {</div>
+<div class="line"><span class="lineno">  345</span>    primeMatrix[n] = <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">  346</span>    starMatrix[n] = newStarMatrix[n];</div>
+<div class="line"><span class="lineno">  347</span>  }</div>
+<div class="line"><span class="lineno">  348</span>  <span class="keywordflow">for</span> (n = 0; n &lt; nOfRows; n++) coveredRows[n] = <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">  349</span> </div>
+<div class="line"><span class="lineno">  350</span>  <span class="comment">/* move to step 2a */</span></div>
+<div class="line"><span class="lineno">  351</span>  <a class="code hl_function" href="structdyno_1_1internal_1_1HungarianAlgorithm.html#a024f1f51b22daad6295f8b9b459530ce">step2a</a>(assignment, distMatrix, starMatrix, newStarMatrix, primeMatrix,</div>
+<div class="line"><span class="lineno">  352</span>         coveredColumns, coveredRows, nOfRows, nOfColumns, minDim);</div>
+<div class="line"><span class="lineno">  353</span>}</div>
+<div class="ttc" id="astructdyno_1_1internal_1_1HungarianAlgorithm_html_a024f1f51b22daad6295f8b9b459530ce"><div class="ttname"><a href="structdyno_1_1internal_1_1HungarianAlgorithm.html#a024f1f51b22daad6295f8b9b459530ce">dyno::internal::HungarianAlgorithm::step2a</a></div><div class="ttdeci">void step2a(int *assignment, double *distMatrix, bool *starMatrix, bool *newStarMatrix, bool *primeMatrix, bool *coveredColumns, bool *coveredRows, int nOfRows, int nOfColumns, int minDim) const</div><div class="ttdef"><b>Definition:</b> <a href="Algorithms_8cc_source.html#l00214">Algorithms.cc:214</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="structdyno_1_1internal_1_1HungarianAlgorithm.html#a024f1f51b22daad6295f8b9b459530ce">step2a()</a>.</p>
 
@@ -1321,38 +1292,36 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Algorithms_8cc_source.html#l00356">356</a> of file <a class="el" href="Algorithms_8cc_source.html">Algorithms.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  356</span>                                                                                                                                                                                                                    {</div>
-<div class="line"><span class="lineno">  357</span>    <span class="keywordtype">double</span> h, value;</div>
-<div class="line"><span class="lineno">  358</span>    <span class="keywordtype">int</span> row, col;</div>
-<div class="line"><span class="lineno">  359</span> </div>
-<div class="line"><span class="lineno">  360</span>    <span class="comment">/* find smallest uncovered element h */</span></div>
-<div class="line"><span class="lineno">  361</span>    h = DBL_MAX;</div>
-<div class="line"><span class="lineno">  362</span>    <span class="keywordflow">for</span> (row = 0; row&lt;nOfRows; row++)</div>
-<div class="line"><span class="lineno">  363</span>        <span class="keywordflow">if</span> (!coveredRows[row])</div>
-<div class="line"><span class="lineno">  364</span>            <span class="keywordflow">for</span> (col = 0; col&lt;nOfColumns; col++)</div>
-<div class="line"><span class="lineno">  365</span>                <span class="keywordflow">if</span> (!coveredColumns[col])</div>
-<div class="line"><span class="lineno">  366</span>                {</div>
-<div class="line"><span class="lineno">  367</span>                    value = distMatrix[row + nOfRows*col];</div>
-<div class="line"><span class="lineno">  368</span>                    <span class="keywordflow">if</span> (value &lt; h)</div>
-<div class="line"><span class="lineno">  369</span>                        h = value;</div>
-<div class="line"><span class="lineno">  370</span>                }</div>
-<div class="line"><span class="lineno">  371</span> </div>
-<div class="line"><span class="lineno">  372</span>    <span class="comment">/* add h to each covered row */</span></div>
-<div class="line"><span class="lineno">  373</span>    <span class="keywordflow">for</span> (row = 0; row&lt;nOfRows; row++)</div>
-<div class="line"><span class="lineno">  374</span>        <span class="keywordflow">if</span> (coveredRows[row])</div>
-<div class="line"><span class="lineno">  375</span>            <span class="keywordflow">for</span> (col = 0; col&lt;nOfColumns; col++)</div>
-<div class="line"><span class="lineno">  376</span>                distMatrix[row + nOfRows*col] += h;</div>
-<div class="line"><span class="lineno">  377</span> </div>
-<div class="line"><span class="lineno">  378</span>    <span class="comment">/* subtract h from each uncovered column */</span></div>
-<div class="line"><span class="lineno">  379</span>    <span class="keywordflow">for</span> (col = 0; col&lt;nOfColumns; col++)</div>
-<div class="line"><span class="lineno">  380</span>        <span class="keywordflow">if</span> (!coveredColumns[col])</div>
-<div class="line"><span class="lineno">  381</span>            <span class="keywordflow">for</span> (row = 0; row&lt;nOfRows; row++)</div>
-<div class="line"><span class="lineno">  382</span>                distMatrix[row + nOfRows*col] -= h;</div>
+<p class="definition">Definition at line <a class="el" href="Algorithms_8cc_source.html#l00355">355</a> of file <a class="el" href="Algorithms_8cc_source.html">Algorithms.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  359</span>                                                 {</div>
+<div class="line"><span class="lineno">  360</span>  <span class="keywordtype">double</span> h, value;</div>
+<div class="line"><span class="lineno">  361</span>  <span class="keywordtype">int</span> row, col;</div>
+<div class="line"><span class="lineno">  362</span> </div>
+<div class="line"><span class="lineno">  363</span>  <span class="comment">/* find smallest uncovered element h */</span></div>
+<div class="line"><span class="lineno">  364</span>  h = DBL_MAX;</div>
+<div class="line"><span class="lineno">  365</span>  <span class="keywordflow">for</span> (row = 0; row &lt; nOfRows; row++)</div>
+<div class="line"><span class="lineno">  366</span>    <span class="keywordflow">if</span> (!coveredRows[row])</div>
+<div class="line"><span class="lineno">  367</span>      <span class="keywordflow">for</span> (col = 0; col &lt; nOfColumns; col++)</div>
+<div class="line"><span class="lineno">  368</span>        <span class="keywordflow">if</span> (!coveredColumns[col]) {</div>
+<div class="line"><span class="lineno">  369</span>          value = distMatrix[row + nOfRows * col];</div>
+<div class="line"><span class="lineno">  370</span>          <span class="keywordflow">if</span> (value &lt; h) h = value;</div>
+<div class="line"><span class="lineno">  371</span>        }</div>
+<div class="line"><span class="lineno">  372</span> </div>
+<div class="line"><span class="lineno">  373</span>  <span class="comment">/* add h to each covered row */</span></div>
+<div class="line"><span class="lineno">  374</span>  <span class="keywordflow">for</span> (row = 0; row &lt; nOfRows; row++)</div>
+<div class="line"><span class="lineno">  375</span>    <span class="keywordflow">if</span> (coveredRows[row])</div>
+<div class="line"><span class="lineno">  376</span>      <span class="keywordflow">for</span> (col = 0; col &lt; nOfColumns; col++)</div>
+<div class="line"><span class="lineno">  377</span>        distMatrix[row + nOfRows * col] += h;</div>
+<div class="line"><span class="lineno">  378</span> </div>
+<div class="line"><span class="lineno">  379</span>  <span class="comment">/* subtract h from each uncovered column */</span></div>
+<div class="line"><span class="lineno">  380</span>  <span class="keywordflow">for</span> (col = 0; col &lt; nOfColumns; col++)</div>
+<div class="line"><span class="lineno">  381</span>    <span class="keywordflow">if</span> (!coveredColumns[col])</div>
+<div class="line"><span class="lineno">  382</span>      <span class="keywordflow">for</span> (row = 0; row &lt; nOfRows; row++) distMatrix[row + nOfRows * col] -= h;</div>
 <div class="line"><span class="lineno">  383</span> </div>
-<div class="line"><span class="lineno">  384</span>    <span class="comment">/* move to step 3 */</span></div>
-<div class="line"><span class="lineno">  385</span>    <a class="code hl_function" href="structdyno_1_1internal_1_1HungarianAlgorithm.html#a104861cd70f4082e54aa7fea2976a427">step3</a>(assignment, distMatrix, starMatrix, newStarMatrix, primeMatrix, coveredColumns, coveredRows, nOfRows, nOfColumns, minDim);</div>
-<div class="line"><span class="lineno">  386</span>}</div>
+<div class="line"><span class="lineno">  384</span>  <span class="comment">/* move to step 3 */</span></div>
+<div class="line"><span class="lineno">  385</span>  <a class="code hl_function" href="structdyno_1_1internal_1_1HungarianAlgorithm.html#a104861cd70f4082e54aa7fea2976a427">step3</a>(assignment, distMatrix, starMatrix, newStarMatrix, primeMatrix,</div>
+<div class="line"><span class="lineno">  386</span>        coveredColumns, coveredRows, nOfRows, nOfColumns, minDim);</div>
+<div class="line"><span class="lineno">  387</span>}</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="structdyno_1_1internal_1_1HungarianAlgorithm.html#a104861cd70f4082e54aa7fea2976a427">step3()</a>.</p>
 
@@ -1390,8 +1359,8 @@ Here is the caller graph for this function:</div>
 </div>
 </div>
 <hr/>The documentation for this struct was generated from the following files:<ul>
-<li>dynosam/include/dynosam/common/<a class="el" href="Algorithms_8hpp_source.html">Algorithms.hpp</a></li>
-<li>dynosam/src/common/<a class="el" href="Algorithms_8cc_source.html">Algorithms.cc</a></li>
+<li>dynosam_common/include/dynosam_common/<a class="el" href="Algorithms_8hpp_source.html">Algorithms.hpp</a></li>
+<li>dynosam_common/src/<a class="el" href="Algorithms_8cc_source.html">Algorithms.cc</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

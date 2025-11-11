@@ -127,7 +127,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="PipelineSpinner_8hpp_source.html#l00062">62</a> of file <a class="el" href="PipelineSpinner_8hpp_source.html">PipelineSpinner.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="PipelineSpinner_8hpp_source.html#l00068">68</a> of file <a class="el" href="PipelineSpinner_8hpp_source.html">PipelineSpinner.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a799ef999fd5bc9c20d7e79f09e09999e" name="a799ef999fd5bc9c20d7e79f09e09999e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a799ef999fd5bc9c20d7e79f09e09999e">&#9670;&#160;</a></span>SynchronousSpinnerPair()</h2>
@@ -145,9 +145,9 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PipelineSpinner_8cc_source.html#l00083">83</a> of file <a class="el" href="PipelineSpinner_8cc_source.html">PipelineSpinner.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   83</span>: <a class="code hl_function" href="structdyno_1_1PipelineSpinner_1_1SpinnerPair.html#a69cef92e2438ab12d631c8678fb4f5b0">SpinnerPair</a>(p) {}</div>
-<div class="ttc" id="astructdyno_1_1PipelineSpinner_1_1SpinnerPair_html_a69cef92e2438ab12d631c8678fb4f5b0"><div class="ttname"><a href="structdyno_1_1PipelineSpinner_1_1SpinnerPair.html#a69cef92e2438ab12d631c8678fb4f5b0">dyno::PipelineSpinner::SpinnerPair::SpinnerPair</a></div><div class="ttdeci">SpinnerPair(PipelineBase::Ptr p)</div><div class="ttdef"><b>Definition:</b> <a href="PipelineSpinner_8hpp_source.html#l00055">PipelineSpinner.hpp:55</a></div></div>
+<p class="definition">Definition at line <a class="el" href="PipelineSpinner_8cc_source.html#l00096">96</a> of file <a class="el" href="PipelineSpinner_8cc_source.html">PipelineSpinner.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   98</span>    : <a class="code hl_function" href="structdyno_1_1PipelineSpinner_1_1SpinnerPair.html#a69cef92e2438ab12d631c8678fb4f5b0">SpinnerPair</a>(p) {}</div>
+<div class="ttc" id="astructdyno_1_1PipelineSpinner_1_1SpinnerPair_html_a69cef92e2438ab12d631c8678fb4f5b0"><div class="ttname"><a href="structdyno_1_1PipelineSpinner_1_1SpinnerPair.html#a69cef92e2438ab12d631c8678fb4f5b0">dyno::PipelineSpinner::SpinnerPair::SpinnerPair</a></div><div class="ttdeci">SpinnerPair(PipelineBase::Ptr p)</div><div class="ttdef"><b>Definition:</b> <a href="PipelineSpinner_8hpp_source.html#l00061">PipelineSpinner.hpp:61</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -177,13 +177,13 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="structdyno_1_1PipelineSpinner_1_1SpinnerPair.html#a11b8a962502104242bb963cdfc087f13">dyno::PipelineSpinner::SpinnerPair</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="PipelineSpinner_8cc_source.html#l00089">89</a> of file <a class="el" href="PipelineSpinner_8cc_source.html">PipelineSpinner.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   89</span>                                                     {</div>
-<div class="line"><span class="lineno">   90</span>    LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Shutting down pipeline: &quot;</span> + <a class="code hl_variable" href="structdyno_1_1PipelineSpinner_1_1SpinnerPair.html#ad5ab988f25fe716ea0e3b36da4fe723e">p_</a>-&gt;getModuleName();</div>
-<div class="line"><span class="lineno">   91</span>    <span class="comment">//shutdown pipeline</span></div>
-<div class="line"><span class="lineno">   92</span>    <a class="code hl_variable" href="structdyno_1_1PipelineSpinner_1_1SpinnerPair.html#ad5ab988f25fe716ea0e3b36da4fe723e">p_</a>-&gt;shutdown();</div>
-<div class="line"><span class="lineno">   93</span>}</div>
-<div class="ttc" id="astructdyno_1_1PipelineSpinner_1_1SpinnerPair_html_ad5ab988f25fe716ea0e3b36da4fe723e"><div class="ttname"><a href="structdyno_1_1PipelineSpinner_1_1SpinnerPair.html#ad5ab988f25fe716ea0e3b36da4fe723e">dyno::PipelineSpinner::SpinnerPair::p_</a></div><div class="ttdeci">PipelineBase::Ptr p_</div><div class="ttdef"><b>Definition:</b> <a href="PipelineSpinner_8hpp_source.html#l00053">PipelineSpinner.hpp:53</a></div></div>
+<p class="definition">Definition at line <a class="el" href="PipelineSpinner_8cc_source.html#l00104">104</a> of file <a class="el" href="PipelineSpinner_8cc_source.html">PipelineSpinner.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  104</span>                                                     {</div>
+<div class="line"><span class="lineno">  105</span>  LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Shutting down pipeline: &quot;</span> + <a class="code hl_variable" href="structdyno_1_1PipelineSpinner_1_1SpinnerPair.html#ad5ab988f25fe716ea0e3b36da4fe723e">p_</a>-&gt;getModuleName();</div>
+<div class="line"><span class="lineno">  106</span>  <span class="comment">// shutdown pipeline</span></div>
+<div class="line"><span class="lineno">  107</span>  <a class="code hl_variable" href="structdyno_1_1PipelineSpinner_1_1SpinnerPair.html#ad5ab988f25fe716ea0e3b36da4fe723e">p_</a>-&gt;shutdown();</div>
+<div class="line"><span class="lineno">  108</span>}</div>
+<div class="ttc" id="astructdyno_1_1PipelineSpinner_1_1SpinnerPair_html_ad5ab988f25fe716ea0e3b36da4fe723e"><div class="ttname"><a href="structdyno_1_1PipelineSpinner_1_1SpinnerPair.html#ad5ab988f25fe716ea0e3b36da4fe723e">dyno::PipelineSpinner::SpinnerPair::p_</a></div><div class="ttdeci">PipelineBase::Ptr p_</div><div class="ttdef"><b>Definition:</b> <a href="PipelineSpinner_8hpp_source.html#l00059">PipelineSpinner.hpp:59</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -212,10 +212,10 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="structdyno_1_1PipelineSpinner_1_1SpinnerPair.html#a34336aa63cf5c2e32bb7fe1754a67fd5">dyno::PipelineSpinner::SpinnerPair</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="PipelineSpinner_8cc_source.html#l00085">85</a> of file <a class="el" href="PipelineSpinner_8cc_source.html">PipelineSpinner.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   85</span>                                                     {</div>
-<div class="line"><span class="lineno">   86</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="structdyno_1_1PipelineSpinner_1_1SpinnerPair.html#ad5ab988f25fe716ea0e3b36da4fe723e">p_</a>-&gt;spinOnce();</div>
-<div class="line"><span class="lineno">   87</span>}</div>
+<p class="definition">Definition at line <a class="el" href="PipelineSpinner_8cc_source.html#l00100">100</a> of file <a class="el" href="PipelineSpinner_8cc_source.html">PipelineSpinner.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  100</span>                                                     {</div>
+<div class="line"><span class="lineno">  101</span>  <span class="keywordflow">return</span> <a class="code hl_variable" href="structdyno_1_1PipelineSpinner_1_1SpinnerPair.html#ad5ab988f25fe716ea0e3b36da4fe723e">p_</a>-&gt;spinOnce();</div>
+<div class="line"><span class="lineno">  102</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>

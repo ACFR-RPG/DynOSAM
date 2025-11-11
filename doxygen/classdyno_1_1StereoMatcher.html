@@ -134,7 +134,7 @@ Static Private Member Functions</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="StereoMatcher_8hpp_source.html#l00037">37</a> of file <a class="el" href="StereoMatcher_8hpp_source.html">StereoMatcher.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="StereoMatcher_8hpp_source.html#l00043">43</a> of file <a class="el" href="StereoMatcher_8hpp_source.html">StereoMatcher.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a1c9560e5df5d64878917261535d58399" name="a1c9560e5df5d64878917261535d58399"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1c9560e5df5d64878917261535d58399">&#9670;&#160;</a></span>StereoMatcher()</h2>
@@ -178,11 +178,11 @@ Static Private Member Functions</h2></td></tr>
 <div class="line"><span class="lineno">   46</span>      <a class="code hl_variable" href="classdyno_1_1StereoMatcher.html#a16e8b0b1ba261055ee0265bee50dee00">stereo_camera_</a>, <a class="code hl_variable" href="classdyno_1_1StereoMatcher.html#a94154e2e7d0d8ab7c19e2d521cce1ffe">stereo_matching_params_</a>, <a class="code hl_variable" href="classdyno_1_1StereoMatcher.html#a3571553629119904a040d6d98b03e590">dense_stereo_params_</a>);</div>
 <div class="line"><span class="lineno">   47</span>  CHECK_NOTNULL(<a class="code hl_variable" href="classdyno_1_1StereoMatcher.html#a209dd20f2b0b705c783876614219db87">cv_stereo_matcher_</a>);</div>
 <div class="line"><span class="lineno">   48</span>}</div>
-<div class="ttc" id="aclassdyno_1_1StereoMatcher_html_a16e8b0b1ba261055ee0265bee50dee00"><div class="ttname"><a href="classdyno_1_1StereoMatcher.html#a16e8b0b1ba261055ee0265bee50dee00">dyno::StereoMatcher::stereo_camera_</a></div><div class="ttdeci">StereoCamera::ConstPtr stereo_camera_</div><div class="ttdoc">Stereo camera shared that might be shared across modules.</div><div class="ttdef"><b>Definition:</b> <a href="StereoMatcher_8hpp_source.html#l00095">StereoMatcher.hpp:95</a></div></div>
-<div class="ttc" id="aclassdyno_1_1StereoMatcher_html_a209dd20f2b0b705c783876614219db87"><div class="ttname"><a href="classdyno_1_1StereoMatcher.html#a209dd20f2b0b705c783876614219db87">dyno::StereoMatcher::cv_stereo_matcher_</a></div><div class="ttdeci">cv::Ptr&lt; cv::StereoMatcher &gt; cv_stereo_matcher_</div><div class="ttdoc">Stereo matcher. Maybe unused.</div><div class="ttdef"><b>Definition:</b> <a href="StereoMatcher_8hpp_source.html#l00104">StereoMatcher.hpp:104</a></div></div>
-<div class="ttc" id="aclassdyno_1_1StereoMatcher_html_a3571553629119904a040d6d98b03e590"><div class="ttname"><a href="classdyno_1_1StereoMatcher.html#a3571553629119904a040d6d98b03e590">dyno::StereoMatcher::dense_stereo_params_</a></div><div class="ttdeci">const DenseStereoParams dense_stereo_params_</div><div class="ttdoc">Parameters for dense stereo matching.</div><div class="ttdef"><b>Definition:</b> <a href="StereoMatcher_8hpp_source.html#l00101">StereoMatcher.hpp:101</a></div></div>
+<div class="ttc" id="aclassdyno_1_1StereoMatcher_html_a16e8b0b1ba261055ee0265bee50dee00"><div class="ttname"><a href="classdyno_1_1StereoMatcher.html#a16e8b0b1ba261055ee0265bee50dee00">dyno::StereoMatcher::stereo_camera_</a></div><div class="ttdeci">StereoCamera::ConstPtr stereo_camera_</div><div class="ttdoc">Stereo camera shared that might be shared across modules.</div><div class="ttdef"><b>Definition:</b> <a href="StereoMatcher_8hpp_source.html#l00100">StereoMatcher.hpp:100</a></div></div>
+<div class="ttc" id="aclassdyno_1_1StereoMatcher_html_a209dd20f2b0b705c783876614219db87"><div class="ttname"><a href="classdyno_1_1StereoMatcher.html#a209dd20f2b0b705c783876614219db87">dyno::StereoMatcher::cv_stereo_matcher_</a></div><div class="ttdeci">cv::Ptr&lt; cv::StereoMatcher &gt; cv_stereo_matcher_</div><div class="ttdoc">Stereo matcher. Maybe unused.</div><div class="ttdef"><b>Definition:</b> <a href="StereoMatcher_8hpp_source.html#l00109">StereoMatcher.hpp:109</a></div></div>
+<div class="ttc" id="aclassdyno_1_1StereoMatcher_html_a3571553629119904a040d6d98b03e590"><div class="ttname"><a href="classdyno_1_1StereoMatcher.html#a3571553629119904a040d6d98b03e590">dyno::StereoMatcher::dense_stereo_params_</a></div><div class="ttdeci">const DenseStereoParams dense_stereo_params_</div><div class="ttdoc">Parameters for dense stereo matching.</div><div class="ttdef"><b>Definition:</b> <a href="StereoMatcher_8hpp_source.html#l00106">StereoMatcher.hpp:106</a></div></div>
 <div class="ttc" id="aclassdyno_1_1StereoMatcher_html_a81a02ee15c81caa8a2e230da1d9fa432"><div class="ttname"><a href="classdyno_1_1StereoMatcher.html#a81a02ee15c81caa8a2e230da1d9fa432">dyno::StereoMatcher::constructStereoMatcher</a></div><div class="ttdeci">static cv::Ptr&lt; cv::StereoMatcher &gt; constructStereoMatcher(StereoCamera::ConstPtr stereo_camera, const StereoMatchingParams &amp;stereo_param, const DenseStereoParams &amp;dense_stereo_params)</div><div class="ttdef"><b>Definition:</b> <a href="StereoMatcher_8cc_source.html#l00122">StereoMatcher.cc:122</a></div></div>
-<div class="ttc" id="aclassdyno_1_1StereoMatcher_html_a94154e2e7d0d8ab7c19e2d521cce1ffe"><div class="ttname"><a href="classdyno_1_1StereoMatcher.html#a94154e2e7d0d8ab7c19e2d521cce1ffe">dyno::StereoMatcher::stereo_matching_params_</a></div><div class="ttdeci">const StereoMatchingParams stereo_matching_params_</div><div class="ttdoc">Parameters for sparse stereo matching.</div><div class="ttdef"><b>Definition:</b> <a href="StereoMatcher_8hpp_source.html#l00098">StereoMatcher.hpp:98</a></div></div>
+<div class="ttc" id="aclassdyno_1_1StereoMatcher_html_a94154e2e7d0d8ab7c19e2d521cce1ffe"><div class="ttname"><a href="classdyno_1_1StereoMatcher.html#a94154e2e7d0d8ab7c19e2d521cce1ffe">dyno::StereoMatcher::stereo_matching_params_</a></div><div class="ttdeci">const StereoMatchingParams stereo_matching_params_</div><div class="ttdoc">Parameters for sparse stereo matching.</div><div class="ttdef"><b>Definition:</b> <a href="StereoMatcher_8hpp_source.html#l00103">StereoMatcher.hpp:103</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1StereoMatcher.html#a81a02ee15c81caa8a2e230da1d9fa432">constructStereoMatcher()</a>, <a class="el" href="classdyno_1_1StereoMatcher.html#a209dd20f2b0b705c783876614219db87">cv_stereo_matcher_</a>, <a class="el" href="classdyno_1_1StereoMatcher.html#a3571553629119904a040d6d98b03e590">dense_stereo_params_</a>, <a class="el" href="classdyno_1_1StereoMatcher.html#a16e8b0b1ba261055ee0265bee50dee00">stereo_camera_</a>, and <a class="el" href="classdyno_1_1StereoMatcher.html#a94154e2e7d0d8ab7c19e2d521cce1ffe">stereo_matching_params_</a>.</p>
 <div class="dynheader">
@@ -521,7 +521,7 @@ Here is the call graph for this function:</div>
 <div class="line"><span class="lineno">  118</span>    <a class="code hl_function" href="namespacedyno_1_1utils.html#a40e39763021c547fd3ddfd934637bebe">utils::getDisparityVis</a>(disparity_image, *disparity_viz);</div>
 <div class="line"><span class="lineno">  119</span>  }</div>
 <div class="line"><span class="lineno">  120</span>}</div>
-<div class="ttc" id="anamespacedyno_1_1utils_html_a40e39763021c547fd3ddfd934637bebe"><div class="ttname"><a href="namespacedyno_1_1utils.html#a40e39763021c547fd3ddfd934637bebe">dyno::utils::getDisparityVis</a></div><div class="ttdeci">void getDisparityVis(cv::InputArray src, cv::OutputArray dst, int unknown_disparity=16320)</div><div class="ttdoc">Allows visualization of disparity image (which is usually outputed as CV_16S or CV_32F from stereo de...</div><div class="ttdef"><b>Definition:</b> <a href="OpenCVUtils_8cc_source.html#l00275">OpenCVUtils.cc:275</a></div></div>
+<div class="ttc" id="anamespacedyno_1_1utils_html_a40e39763021c547fd3ddfd934637bebe"><div class="ttname"><a href="namespacedyno_1_1utils.html#a40e39763021c547fd3ddfd934637bebe">dyno::utils::getDisparityVis</a></div><div class="ttdeci">void getDisparityVis(cv::InputArray src, cv::OutputArray dst, int unknown_disparity=16320)</div><div class="ttdoc">Allows visualization of disparity image (which is usually outputed as CV_16S or CV_32F from stereo de...</div><div class="ttdef"><b>Definition:</b> <a href="OpenCVUtils_8cc_source.html#l00300">OpenCVUtils.cc:300</a></div></div>
 <div class="ttc" id="astructdyno_1_1DenseStereoParams_html_a7b7a3a96d9362c3ba74903b4bcce5682"><div class="ttname"><a href="structdyno_1_1DenseStereoParams.html#a7b7a3a96d9362c3ba74903b4bcce5682">dyno::DenseStereoParams::median_blur_disparity_</a></div><div class="ttdeci">bool median_blur_disparity_</div><div class="ttdef"><b>Definition:</b> <a href="StereoMatchingParams_8hpp_source.html#l00055">StereoMatchingParams.hpp:55</a></div></div>
 <div class="ttc" id="astructdyno_1_1ImageType_1_1RGBMono_html_ac6c656492aaeff4bb8b60f42b0cfa7a3"><div class="ttname"><a href="structdyno_1_1ImageType_1_1RGBMono.html#ac6c656492aaeff4bb8b60f42b0cfa7a3">dyno::ImageType::RGBMono::toMono</a></div><div class="ttdeci">static cv::Mat toMono(const ImageWrapper&lt; RGBMono &gt; &amp;image)</div><div class="ttdef"><b>Definition:</b> <a href="ImageTypes_8cc_source.html#l00119">ImageTypes.cc:119</a></div></div>
 </div><!-- fragment -->
@@ -574,7 +574,7 @@ Here is the caller graph for this function:</div>
 
 <p>Stereo matcher. Maybe unused. </p>
 
-<p class="definition">Definition at line <a class="el" href="StereoMatcher_8hpp_source.html#l00104">104</a> of file <a class="el" href="StereoMatcher_8hpp_source.html">StereoMatcher.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="StereoMatcher_8hpp_source.html#l00109">109</a> of file <a class="el" href="StereoMatcher_8hpp_source.html">StereoMatcher.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1StereoMatcher.html#afe57452a9951b94bb69fae54ec8ebaaf">disparityRectifiedReconstruction()</a>, and <a class="el" href="classdyno_1_1StereoMatcher.html#a1c9560e5df5d64878917261535d58399">StereoMatcher()</a>.</p>
 
@@ -602,7 +602,7 @@ Here is the caller graph for this function:</div>
 
 <p>Parameters for dense stereo matching. </p>
 
-<p class="definition">Definition at line <a class="el" href="StereoMatcher_8hpp_source.html#l00101">101</a> of file <a class="el" href="StereoMatcher_8hpp_source.html">StereoMatcher.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="StereoMatcher_8hpp_source.html#l00106">106</a> of file <a class="el" href="StereoMatcher_8hpp_source.html">StereoMatcher.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1StereoMatcher.html#afe57452a9951b94bb69fae54ec8ebaaf">disparityRectifiedReconstruction()</a>, and <a class="el" href="classdyno_1_1StereoMatcher.html#a1c9560e5df5d64878917261535d58399">StereoMatcher()</a>.</p>
 
@@ -630,7 +630,7 @@ Here is the caller graph for this function:</div>
 
 <p>Stereo camera shared that might be shared across modules. </p>
 
-<p class="definition">Definition at line <a class="el" href="StereoMatcher_8hpp_source.html#l00095">95</a> of file <a class="el" href="StereoMatcher_8hpp_source.html">StereoMatcher.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="StereoMatcher_8hpp_source.html#l00100">100</a> of file <a class="el" href="StereoMatcher_8hpp_source.html">StereoMatcher.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1StereoMatcher.html#a80a925f47436fb14d55bfe199260431e">denseStereoReconstruction()</a>, and <a class="el" href="classdyno_1_1StereoMatcher.html#a1c9560e5df5d64878917261535d58399">StereoMatcher()</a>.</p>
 
@@ -658,7 +658,7 @@ Here is the caller graph for this function:</div>
 
 <p>Parameters for sparse stereo matching. </p>
 
-<p class="definition">Definition at line <a class="el" href="StereoMatcher_8hpp_source.html#l00098">98</a> of file <a class="el" href="StereoMatcher_8hpp_source.html">StereoMatcher.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="StereoMatcher_8hpp_source.html#l00103">103</a> of file <a class="el" href="StereoMatcher_8hpp_source.html">StereoMatcher.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1StereoMatcher.html#a1c9560e5df5d64878917261535d58399">StereoMatcher()</a>.</p>
 

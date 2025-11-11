@@ -1,11 +1,10 @@
 <map id="dyno::StateQuery::NotInMap" name="dyno::StateQuery::NotInMap">
-<area shape="rect" id="node1" title=" " alt="" coords="864,237,1069,262"/>
+<area shape="rect" id="node1" title=" " alt="" coords="864,205,1069,230"/>
 <area shape="rect" id="node2" href="$classdyno_1_1HybridAccessor.html#ae7aef40f902a6179abc7996c27636482" title=" " alt="" coords="613,69,816,109"/>
 <area shape="rect" id="node7" href="$classdyno_1_1HybridAccessor.html#a80c4fda3bd35e70dad69f0b416a174e5" title="Get an absolute object motion (_{k&#45;1}^wH_k) from theta the requested time&#45;step (k) and object (j)." alt="" coords="633,133,796,173"/>
 <area shape="rect" id="node8" href="$classdyno_1_1WorldPoseAccessor.html#a3208d2b3d549ea804cfa783ad06e06cc" title="Get an absolute object motion (_{k&#45;1}^wH_k) from theta the requested time&#45;step (k) and object (j)." alt="" coords="621,197,809,237"/>
 <area shape="rect" id="node9" href="$classdyno_1_1HybridAccessor.html#ab0e3459519ed5ecbc91821b628e3ddfe" title="Get the pose (^wL_k) of an object (j) at time&#45;step (k)." alt="" coords="633,261,796,301"/>
-<area shape="rect" id="node11" href="$classdyno_1_1Accessor.html#a8adb62db84c73c20403fc8a3b750a8d1" title="Access a key in the current theta." alt="" coords="632,326,797,351"/>
-<area shape="rect" id="node12" href="$classdyno_1_1test__hybrid_1_1SmartStructurlessAccessor.html#a83eca5b6f2f4c0a4d1ca70b2cb195af8" title=" " alt="" coords="617,375,813,430"/>
+<area shape="rect" id="node11" href="$classdyno_1_1test__hybrid_1_1SmartStructurlessAccessor.html#a83eca5b6f2f4c0a4d1ca70b2cb195af8" title=" " alt="" coords="617,326,813,381"/>
 <area shape="rect" id="node3" href="$classdyno_1_1HybridAccessor.html#a393f72c835250a5fd7471fc764b95da7" title="Get a dynamic landmark (^wm_k) with tracklet id (i) at time&#45;step (k)." alt="" coords="341,5,516,45"/>
 <area shape="rect" id="node5" href="$classdyno_1_1HybridAccessor.html#a0c18ac82fc56a27c920d3c90c2981be0" title=" " alt="" coords="327,69,530,109"/>
 <area shape="rect" id="node6" href="$classdyno_1_1HybridAccessor.html#a6878cc88eb3a520f8e724bad2de857b5" title="Get all dynamic object estimates in the local object frame." alt="" coords="292,133,565,173"/>

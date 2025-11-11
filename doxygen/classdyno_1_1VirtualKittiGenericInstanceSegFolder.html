@@ -283,16 +283,16 @@ Additional Inherited Members</h2></td></tr>
 <div class="line"><span class="lineno">  730</span>    ss &lt;&lt; std::setfill(<span class="charliteral">&#39;0&#39;</span>) &lt;&lt; std::setw(5) &lt;&lt; idx;</div>
 <div class="line"><span class="lineno">  731</span>    <span class="keyword">const</span> std::string file_path =</div>
 <div class="line"><span class="lineno">  732</span>        <a class="code hl_variable" href="classdyno_1_1GenericVirtualKittiImageLoader.html#af7115eae0f1f0a8e8b3e3fdd2926ee5c">full_path_</a> + <span class="stringliteral">&quot;/instancegt_&quot;</span> + ss.str() + <span class="stringliteral">&quot;.png&quot;</span>;</div>
-<div class="line"><span class="lineno">  733</span>    <a class="code hl_function" href="namespacedyno.html#a163cb16ef980acda5b09d45c3a156e6f">throwExceptionIfPathInvalid</a>(file_path);</div>
+<div class="line"><span class="lineno">  733</span>    <a class="code hl_function" href="namespacedyno_1_1utils.html#a71785ed8de386df1fce95751bf5bec15">utils::throwExceptionIfPathInvalid</a>(file_path);</div>
 <div class="line"><span class="lineno">  734</span> </div>
 <div class="line"><span class="lineno">  735</span>    <span class="keyword">const</span> GroundTruthInputPacket&amp; gt_packet = <a class="code hl_variable" href="classdyno_1_1VirtualKittiGenericInstanceSegFolder.html#af25985576d9fb2db738c0bbff6bbebdb">gt_loader_</a>-&gt;getGTPacket(idx);</div>
 <div class="line"><span class="lineno">  736</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="classdyno_1_1VirtualKittiGenericInstanceSegFolder.html#a1613ef714a4187be70ed73e3071fd1c4">loadImage</a>(file_path, idx, gt_packet);</div>
 <div class="line"><span class="lineno">  737</span>  }</div>
 <div class="ttc" id="aclassdyno_1_1GenericVirtualKittiImageLoader_html_af7115eae0f1f0a8e8b3e3fdd2926ee5c"><div class="ttname"><a href="classdyno_1_1GenericVirtualKittiImageLoader.html#af7115eae0f1f0a8e8b3e3fdd2926ee5c">dyno::GenericVirtualKittiImageLoader::full_path_</a></div><div class="ttdeci">const std::string full_path_</div><div class="ttdef"><b>Definition:</b> <a href="VirtualKittidataProvider_8cc_source.html#l00072">VirtualKittidataProvider.cc:72</a></div></div>
 <div class="ttc" id="aclassdyno_1_1VirtualKittiGenericInstanceSegFolder_html_a1613ef714a4187be70ed73e3071fd1c4"><div class="ttname"><a href="classdyno_1_1VirtualKittiGenericInstanceSegFolder.html#a1613ef714a4187be70ed73e3071fd1c4">dyno::VirtualKittiGenericInstanceSegFolder::loadImage</a></div><div class="ttdeci">virtual cv::Mat loadImage(const std::string &amp;file_path, FrameId frame, const GroundTruthInputPacket &amp;gt_packet)=0</div></div>
-<div class="ttc" id="anamespacedyno_html_a163cb16ef980acda5b09d45c3a156e6f"><div class="ttname"><a href="namespacedyno.html#a163cb16ef980acda5b09d45c3a156e6f">dyno::throwExceptionIfPathInvalid</a></div><div class="ttdeci">void throwExceptionIfPathInvalid(const std::string &amp;image_path)</div><div class="ttdef"><b>Definition:</b> <a href="DataProviderUtils_8cc_source.html#l00048">DataProviderUtils.cc:48</a></div></div>
+<div class="ttc" id="anamespacedyno_1_1utils_html_a71785ed8de386df1fce95751bf5bec15"><div class="ttname"><a href="namespacedyno_1_1utils.html#a71785ed8de386df1fce95751bf5bec15">dyno::utils::throwExceptionIfPathInvalid</a></div><div class="ttdeci">void throwExceptionIfPathInvalid(const std::string &amp;image_path)</div><div class="ttdef"><b>Definition:</b> <a href="FileSystem_8cc_source.html#l00012">FileSystem.cc:12</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="classdyno_1_1GenericVirtualKittiImageLoader.html#af7115eae0f1f0a8e8b3e3fdd2926ee5c">dyno::GenericVirtualKittiImageLoader::full_path_</a>, <a class="el" href="classdyno_1_1VirtualKittiGenericInstanceSegFolder.html#af25985576d9fb2db738c0bbff6bbebdb">gt_loader_</a>, <a class="el" href="classdyno_1_1VirtualKittiGenericInstanceSegFolder.html#a1613ef714a4187be70ed73e3071fd1c4">loadImage()</a>, and <a class="el" href="namespacedyno.html#a163cb16ef980acda5b09d45c3a156e6f">dyno::throwExceptionIfPathInvalid()</a>.</p>
+<p class="reference">References <a class="el" href="classdyno_1_1GenericVirtualKittiImageLoader.html#af7115eae0f1f0a8e8b3e3fdd2926ee5c">dyno::GenericVirtualKittiImageLoader::full_path_</a>, <a class="el" href="classdyno_1_1VirtualKittiGenericInstanceSegFolder.html#af25985576d9fb2db738c0bbff6bbebdb">gt_loader_</a>, <a class="el" href="classdyno_1_1VirtualKittiGenericInstanceSegFolder.html#a1613ef714a4187be70ed73e3071fd1c4">loadImage()</a>, and <a class="el" href="namespacedyno_1_1utils.html#a71785ed8de386df1fce95751bf5bec15">dyno::utils::throwExceptionIfPathInvalid()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -300,7 +300,7 @@ Here is the call graph for this function:</div>
 <map name="aclassdyno_1_1VirtualKittiGenericInstanceSegFolder_aaa23b901619ff6d9abd28ab7484945c2_cgraph" id="aclassdyno_1_1VirtualKittiGenericInstanceSegFolder_aaa23b901619ff6d9abd28ab7484945c2_cgraph">
 <area shape="rect" title="Get the Item at an index in the dataset." alt="" coords="5,37,205,77"/>
 <area shape="rect" href="classdyno_1_1VirtualKittiGenericInstanceSegFolder.html#a1613ef714a4187be70ed73e3071fd1c4" title=" " alt="" coords="253,5,472,45"/>
-<area shape="rect" href="namespacedyno.html#a163cb16ef980acda5b09d45c3a156e6f" title=" " alt="" coords="263,69,463,109"/>
+<area shape="rect" href="namespacedyno_1_1utils.html#a71785ed8de386df1fce95751bf5bec15" title=" " alt="" coords="263,69,462,109"/>
 </map>
 </div>
 

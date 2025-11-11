@@ -171,10 +171,10 @@ Private Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="RosUtils_8cc_source.html#l00252">252</a> of file <a class="el" href="RosUtils_8cc_source.html">RosUtils.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  254</span>    : <a class="code hl_function" href="classdyno_1_1ParameterConstructor.html#ab5e60f8de5c4c11b1655a66ba2970d19">ParameterConstructor</a>(node.get(), <a class="code hl_function" href="classdyno_1_1ParameterConstructor.html#a7c9e1cb1ce2642ffa4b2ea6a1055a8d4">name</a>) {}</div>
+<p class="definition">Definition at line <a class="el" href="RosUtils_8cc_source.html#l00261">261</a> of file <a class="el" href="RosUtils_8cc_source.html">RosUtils.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  263</span>    : <a class="code hl_function" href="classdyno_1_1ParameterConstructor.html#ab5e60f8de5c4c11b1655a66ba2970d19">ParameterConstructor</a>(node.get(), <a class="code hl_function" href="classdyno_1_1ParameterConstructor.html#a7c9e1cb1ce2642ffa4b2ea6a1055a8d4">name</a>) {}</div>
 <div class="ttc" id="aclassdyno_1_1ParameterConstructor_html_a7c9e1cb1ce2642ffa4b2ea6a1055a8d4"><div class="ttname"><a href="classdyno_1_1ParameterConstructor.html#a7c9e1cb1ce2642ffa4b2ea6a1055a8d4">dyno::ParameterConstructor::name</a></div><div class="ttdeci">const std::string &amp; name() const</div><div class="ttdoc">Name of the paramter.</div><div class="ttdef"><b>Definition:</b> <a href="RosUtils_8hpp_source.html#l00373">RosUtils.hpp:373</a></div></div>
-<div class="ttc" id="aclassdyno_1_1ParameterConstructor_html_ab5e60f8de5c4c11b1655a66ba2970d19"><div class="ttname"><a href="classdyno_1_1ParameterConstructor.html#ab5e60f8de5c4c11b1655a66ba2970d19">dyno::ParameterConstructor::ParameterConstructor</a></div><div class="ttdeci">ParameterConstructor(rclcpp::Node::SharedPtr node, const std::string &amp;name)</div><div class="ttdoc">Constructor with a node and param name. Default value is set to type rclcpp::PARAMETER_NOT_SET and th...</div><div class="ttdef"><b>Definition:</b> <a href="RosUtils_8cc_source.html#l00252">RosUtils.cc:252</a></div></div>
+<div class="ttc" id="aclassdyno_1_1ParameterConstructor_html_ab5e60f8de5c4c11b1655a66ba2970d19"><div class="ttname"><a href="classdyno_1_1ParameterConstructor.html#ab5e60f8de5c4c11b1655a66ba2970d19">dyno::ParameterConstructor::ParameterConstructor</a></div><div class="ttdeci">ParameterConstructor(rclcpp::Node::SharedPtr node, const std::string &amp;name)</div><div class="ttdoc">Constructor with a node and param name. Default value is set to type rclcpp::PARAMETER_NOT_SET and th...</div><div class="ttdef"><b>Definition:</b> <a href="RosUtils_8cc_source.html#l00261">RosUtils.cc:261</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -204,12 +204,12 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="RosUtils_8cc_source.html#l00256">256</a> of file <a class="el" href="RosUtils_8cc_source.html">RosUtils.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  258</span>    : <a class="code hl_variable" href="classdyno_1_1ParameterConstructor.html#a99c049a841be6a6563ef4f2f13e182dd">node_</a>(node), <a class="code hl_variable" href="classdyno_1_1ParameterConstructor.html#ab9c0429c3c00fe901fba8a2943d14d7d">parameter_</a>(<a class="code hl_function" href="classdyno_1_1ParameterConstructor.html#a7c9e1cb1ce2642ffa4b2ea6a1055a8d4">name</a>) {</div>
-<div class="line"><span class="lineno">  259</span>  CHECK_NOTNULL(<a class="code hl_variable" href="classdyno_1_1ParameterConstructor.html#a99c049a841be6a6563ef4f2f13e182dd">node_</a>);</div>
-<div class="line"><span class="lineno">  260</span>  <a class="code hl_variable" href="classdyno_1_1ParameterConstructor.html#a093c3df0714dae36b2a65c9be23df9b4">parameter_descriptor_</a>.name = <a class="code hl_function" href="classdyno_1_1ParameterConstructor.html#a7c9e1cb1ce2642ffa4b2ea6a1055a8d4">name</a>;</div>
-<div class="line"><span class="lineno">  261</span>  <a class="code hl_variable" href="classdyno_1_1ParameterConstructor.html#a093c3df0714dae36b2a65c9be23df9b4">parameter_descriptor_</a>.dynamic_typing = <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  262</span>}</div>
+<p class="definition">Definition at line <a class="el" href="RosUtils_8cc_source.html#l00265">265</a> of file <a class="el" href="RosUtils_8cc_source.html">RosUtils.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  267</span>    : <a class="code hl_variable" href="classdyno_1_1ParameterConstructor.html#a99c049a841be6a6563ef4f2f13e182dd">node_</a>(node), <a class="code hl_variable" href="classdyno_1_1ParameterConstructor.html#ab9c0429c3c00fe901fba8a2943d14d7d">parameter_</a>(<a class="code hl_function" href="classdyno_1_1ParameterConstructor.html#a7c9e1cb1ce2642ffa4b2ea6a1055a8d4">name</a>) {</div>
+<div class="line"><span class="lineno">  268</span>  CHECK_NOTNULL(<a class="code hl_variable" href="classdyno_1_1ParameterConstructor.html#a99c049a841be6a6563ef4f2f13e182dd">node_</a>);</div>
+<div class="line"><span class="lineno">  269</span>  <a class="code hl_variable" href="classdyno_1_1ParameterConstructor.html#a093c3df0714dae36b2a65c9be23df9b4">parameter_descriptor_</a>.name = <a class="code hl_function" href="classdyno_1_1ParameterConstructor.html#a7c9e1cb1ce2642ffa4b2ea6a1055a8d4">name</a>;</div>
+<div class="line"><span class="lineno">  270</span>  <a class="code hl_variable" href="classdyno_1_1ParameterConstructor.html#a093c3df0714dae36b2a65c9be23df9b4">parameter_descriptor_</a>.dynamic_typing = <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  271</span>}</div>
 <div class="ttc" id="aclassdyno_1_1ParameterConstructor_html_a093c3df0714dae36b2a65c9be23df9b4"><div class="ttname"><a href="classdyno_1_1ParameterConstructor.html#a093c3df0714dae36b2a65c9be23df9b4">dyno::ParameterConstructor::parameter_descriptor_</a></div><div class="ttdeci">rcl_interfaces::msg::ParameterDescriptor parameter_descriptor_</div><div class="ttdef"><b>Definition:</b> <a href="RosUtils_8hpp_source.html#l00390">RosUtils.hpp:390</a></div></div>
 <div class="ttc" id="aclassdyno_1_1ParameterConstructor_html_a99c049a841be6a6563ef4f2f13e182dd"><div class="ttname"><a href="classdyno_1_1ParameterConstructor.html#a99c049a841be6a6563ef4f2f13e182dd">dyno::ParameterConstructor::node_</a></div><div class="ttdeci">rclcpp::Node * node_</div><div class="ttdef"><b>Definition:</b> <a href="RosUtils_8hpp_source.html#l00388">RosUtils.hpp:388</a></div></div>
 <div class="ttc" id="aclassdyno_1_1ParameterConstructor_html_ab9c0429c3c00fe901fba8a2943d14d7d"><div class="ttname"><a href="classdyno_1_1ParameterConstructor.html#ab9c0429c3c00fe901fba8a2943d14d7d">dyno::ParameterConstructor::parameter_</a></div><div class="ttdeci">rclcpp::Parameter parameter_</div><div class="ttdef"><b>Definition:</b> <a href="RosUtils_8hpp_source.html#l00389">RosUtils.hpp:389</a></div></div>
@@ -363,12 +363,12 @@ Here is the call graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><a class="el" href="classdyno_1_1ParameterConstructor.html" title="Wrapper class to define paramter details. Using these details a ParameterDetails object can be create...">ParameterConstructor</a>&amp; </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="RosUtils_8cc_source.html#l00268">268</a> of file <a class="el" href="RosUtils_8cc_source.html">RosUtils.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  269</span>                                  {</div>
-<div class="line"><span class="lineno">  270</span>  <a class="code hl_variable" href="classdyno_1_1ParameterConstructor.html#a093c3df0714dae36b2a65c9be23df9b4">parameter_descriptor_</a>.description = <a class="code hl_function" href="classdyno_1_1ParameterConstructor.html#a83e32e6b87f9aaa75e6b3564a960e9d9">description</a>;</div>
-<div class="line"><span class="lineno">  271</span>  <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
-<div class="line"><span class="lineno">  272</span>}</div>
-<div class="ttc" id="aclassdyno_1_1ParameterConstructor_html_a83e32e6b87f9aaa75e6b3564a960e9d9"><div class="ttname"><a href="classdyno_1_1ParameterConstructor.html#a83e32e6b87f9aaa75e6b3564a960e9d9">dyno::ParameterConstructor::description</a></div><div class="ttdeci">ParameterConstructor &amp; description(const std::string &amp;description)</div><div class="ttdoc">Updates the paramters description and a returns a reference to this.</div><div class="ttdef"><b>Definition:</b> <a href="RosUtils_8cc_source.html#l00268">RosUtils.cc:268</a></div></div>
+<p class="definition">Definition at line <a class="el" href="RosUtils_8cc_source.html#l00277">277</a> of file <a class="el" href="RosUtils_8cc_source.html">RosUtils.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  278</span>                                  {</div>
+<div class="line"><span class="lineno">  279</span>  <a class="code hl_variable" href="classdyno_1_1ParameterConstructor.html#a093c3df0714dae36b2a65c9be23df9b4">parameter_descriptor_</a>.description = <a class="code hl_function" href="classdyno_1_1ParameterConstructor.html#a83e32e6b87f9aaa75e6b3564a960e9d9">description</a>;</div>
+<div class="line"><span class="lineno">  280</span>  <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><span class="lineno">  281</span>}</div>
+<div class="ttc" id="aclassdyno_1_1ParameterConstructor_html_a83e32e6b87f9aaa75e6b3564a960e9d9"><div class="ttname"><a href="classdyno_1_1ParameterConstructor.html#a83e32e6b87f9aaa75e6b3564a960e9d9">dyno::ParameterConstructor::description</a></div><div class="ttdeci">ParameterConstructor &amp; description(const std::string &amp;description)</div><div class="ttdoc">Updates the paramters description and a returns a reference to this.</div><div class="ttdef"><b>Definition:</b> <a href="RosUtils_8cc_source.html#l00277">RosUtils.cc:277</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1ParameterConstructor.html#a83e32e6b87f9aaa75e6b3564a960e9d9">description()</a>, and <a class="el" href="classdyno_1_1ParameterConstructor.html#a093c3df0714dae36b2a65c9be23df9b4">parameter_descriptor_</a>.</p>
 
@@ -418,10 +418,10 @@ Here is the caller graph for this function:</div>
 <p>As per the <a class="el" href="classdyno_1_1ParameterDetails.html">ParameterDetails</a> comments, upon constructio the parameter is declared in the associated node (from this) and is kept in the <a class="el" href="classdyno_1_1ParameterDetails.html">ParameterDetails</a> as a shared pointer.</p>
 <dl class="section return"><dt>Returns</dt><dd><a class="el" href="classdyno_1_1ParameterDetails.html">ParameterDetails</a> </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="RosUtils_8cc_source.html#l00264">264</a> of file <a class="el" href="RosUtils_8cc_source.html">RosUtils.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  264</span>                                                    {</div>
-<div class="line"><span class="lineno">  265</span>  <span class="keywordflow">return</span> ParameterDetails(<a class="code hl_variable" href="classdyno_1_1ParameterConstructor.html#a99c049a841be6a6563ef4f2f13e182dd">node_</a>, <a class="code hl_variable" href="classdyno_1_1ParameterConstructor.html#ab9c0429c3c00fe901fba8a2943d14d7d">parameter_</a>, <a class="code hl_variable" href="classdyno_1_1ParameterConstructor.html#a093c3df0714dae36b2a65c9be23df9b4">parameter_descriptor_</a>);</div>
-<div class="line"><span class="lineno">  266</span>}</div>
+<p class="definition">Definition at line <a class="el" href="RosUtils_8cc_source.html#l00273">273</a> of file <a class="el" href="RosUtils_8cc_source.html">RosUtils.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  273</span>                                                    {</div>
+<div class="line"><span class="lineno">  274</span>  <span class="keywordflow">return</span> ParameterDetails(<a class="code hl_variable" href="classdyno_1_1ParameterConstructor.html#a99c049a841be6a6563ef4f2f13e182dd">node_</a>, <a class="code hl_variable" href="classdyno_1_1ParameterConstructor.html#ab9c0429c3c00fe901fba8a2943d14d7d">parameter_</a>, <a class="code hl_variable" href="classdyno_1_1ParameterConstructor.html#a093c3df0714dae36b2a65c9be23df9b4">parameter_descriptor_</a>);</div>
+<div class="line"><span class="lineno">  275</span>}</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1ParameterConstructor.html#a99c049a841be6a6563ef4f2f13e182dd">node_</a>, <a class="el" href="classdyno_1_1ParameterConstructor.html#ab9c0429c3c00fe901fba8a2943d14d7d">parameter_</a>, and <a class="el" href="classdyno_1_1ParameterConstructor.html#a093c3df0714dae36b2a65c9be23df9b4">parameter_descriptor_</a>.</p>
 
@@ -580,12 +580,12 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><a class="el" href="classdyno_1_1ParameterConstructor.html" title="Wrapper class to define paramter details. Using these details a ParameterDetails object can be create...">ParameterConstructor</a>&amp; </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="RosUtils_8cc_source.html#l00279">279</a> of file <a class="el" href="RosUtils_8cc_source.html">RosUtils.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  280</span>                                                                       {</div>
-<div class="line"><span class="lineno">  281</span>  <a class="code hl_variable" href="classdyno_1_1ParameterConstructor.html#a093c3df0714dae36b2a65c9be23df9b4">parameter_descriptor_</a> = <a class="code hl_function" href="classdyno_1_1ParameterConstructor.html#a1c0e6889f00b23ec4b45f3d0d013286c">parameter_description</a>;</div>
-<div class="line"><span class="lineno">  282</span>  <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
-<div class="line"><span class="lineno">  283</span>}</div>
-<div class="ttc" id="aclassdyno_1_1ParameterConstructor_html_a1c0e6889f00b23ec4b45f3d0d013286c"><div class="ttname"><a href="classdyno_1_1ParameterConstructor.html#a1c0e6889f00b23ec4b45f3d0d013286c">dyno::ParameterConstructor::parameter_description</a></div><div class="ttdeci">ParameterConstructor &amp; parameter_description(const rcl_interfaces::msg::ParameterDescriptor &amp;parameter_description)</div><div class="ttdoc">Updates the full internal paramter description and returns a reference to this.</div><div class="ttdef"><b>Definition:</b> <a href="RosUtils_8cc_source.html#l00279">RosUtils.cc:279</a></div></div>
+<p class="definition">Definition at line <a class="el" href="RosUtils_8cc_source.html#l00288">288</a> of file <a class="el" href="RosUtils_8cc_source.html">RosUtils.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  289</span>                                                                       {</div>
+<div class="line"><span class="lineno">  290</span>  <a class="code hl_variable" href="classdyno_1_1ParameterConstructor.html#a093c3df0714dae36b2a65c9be23df9b4">parameter_descriptor_</a> = <a class="code hl_function" href="classdyno_1_1ParameterConstructor.html#a1c0e6889f00b23ec4b45f3d0d013286c">parameter_description</a>;</div>
+<div class="line"><span class="lineno">  291</span>  <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><span class="lineno">  292</span>}</div>
+<div class="ttc" id="aclassdyno_1_1ParameterConstructor_html_a1c0e6889f00b23ec4b45f3d0d013286c"><div class="ttname"><a href="classdyno_1_1ParameterConstructor.html#a1c0e6889f00b23ec4b45f3d0d013286c">dyno::ParameterConstructor::parameter_description</a></div><div class="ttdeci">ParameterConstructor &amp; parameter_description(const rcl_interfaces::msg::ParameterDescriptor &amp;parameter_description)</div><div class="ttdoc">Updates the full internal paramter description and returns a reference to this.</div><div class="ttdef"><b>Definition:</b> <a href="RosUtils_8cc_source.html#l00288">RosUtils.cc:288</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1ParameterConstructor.html#a1c0e6889f00b23ec4b45f3d0d013286c">parameter_description()</a>, and <a class="el" href="classdyno_1_1ParameterConstructor.html#a093c3df0714dae36b2a65c9be23df9b4">parameter_descriptor_</a>.</p>
 
@@ -635,12 +635,12 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><a class="el" href="classdyno_1_1ParameterConstructor.html" title="Wrapper class to define paramter details. Using these details a ParameterDetails object can be create...">ParameterConstructor</a>&amp; </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="RosUtils_8cc_source.html#l00274">274</a> of file <a class="el" href="RosUtils_8cc_source.html">RosUtils.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  274</span>                                                                    {</div>
-<div class="line"><span class="lineno">  275</span>  <a class="code hl_variable" href="classdyno_1_1ParameterConstructor.html#a093c3df0714dae36b2a65c9be23df9b4">parameter_descriptor_</a>.read_only = <a class="code hl_function" href="classdyno_1_1ParameterConstructor.html#a660f7a64dc08f34dcbd2546fb192f604">read_only</a>;</div>
-<div class="line"><span class="lineno">  276</span>  <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
-<div class="line"><span class="lineno">  277</span>}</div>
-<div class="ttc" id="aclassdyno_1_1ParameterConstructor_html_a660f7a64dc08f34dcbd2546fb192f604"><div class="ttname"><a href="classdyno_1_1ParameterConstructor.html#a660f7a64dc08f34dcbd2546fb192f604">dyno::ParameterConstructor::read_only</a></div><div class="ttdeci">ParameterConstructor &amp; read_only(bool read_only)</div><div class="ttdoc">Updates the read only flag and a returns a reference to this.</div><div class="ttdef"><b>Definition:</b> <a href="RosUtils_8cc_source.html#l00274">RosUtils.cc:274</a></div></div>
+<p class="definition">Definition at line <a class="el" href="RosUtils_8cc_source.html#l00283">283</a> of file <a class="el" href="RosUtils_8cc_source.html">RosUtils.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  283</span>                                                                    {</div>
+<div class="line"><span class="lineno">  284</span>  <a class="code hl_variable" href="classdyno_1_1ParameterConstructor.html#a093c3df0714dae36b2a65c9be23df9b4">parameter_descriptor_</a>.read_only = <a class="code hl_function" href="classdyno_1_1ParameterConstructor.html#a660f7a64dc08f34dcbd2546fb192f604">read_only</a>;</div>
+<div class="line"><span class="lineno">  285</span>  <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><span class="lineno">  286</span>}</div>
+<div class="ttc" id="aclassdyno_1_1ParameterConstructor_html_a660f7a64dc08f34dcbd2546fb192f604"><div class="ttname"><a href="classdyno_1_1ParameterConstructor.html#a660f7a64dc08f34dcbd2546fb192f604">dyno::ParameterConstructor::read_only</a></div><div class="ttdeci">ParameterConstructor &amp; read_only(bool read_only)</div><div class="ttdoc">Updates the read only flag and a returns a reference to this.</div><div class="ttdef"><b>Definition:</b> <a href="RosUtils_8cc_source.html#l00283">RosUtils.cc:283</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1ParameterConstructor.html#a093c3df0714dae36b2a65c9be23df9b4">parameter_descriptor_</a>, and <a class="el" href="classdyno_1_1ParameterConstructor.html#a660f7a64dc08f34dcbd2546fb192f604">read_only()</a>.</p>
 

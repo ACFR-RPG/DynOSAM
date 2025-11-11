@@ -91,24 +91,48 @@ Public Types</h2></td></tr>
 <tr class="separator:aef2121ac71f1b0ffa5cace545970814b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a49c3dcb3c0ed8dabd60381a52b086dd7"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1QueueRegistra.html#a49c3dcb3c0ed8dabd60381a52b086dd7">Queue</a> = typename <a class="el" href="structdyno_1_1PipelineTypeTraits.html">PipelineTypeTraits</a>&lt; PAYLOAD &gt;::TypeQueue</td></tr>
 <tr class="separator:a49c3dcb3c0ed8dabd60381a52b086dd7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a669abc9310ff09152f80b3f2fc57275a"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1QueueRegistra.html#a669abc9310ff09152f80b3f2fc57275a">Callback</a> = typename <a class="el" href="structdyno_1_1PipelineTypeTraits.html">PipelineTypeTraits</a>&lt; PAYLOAD &gt;::TypeCallback</td></tr>
+<tr class="separator:a669abc9310ff09152f80b3f2fc57275a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a31569e55be5a89ab8b128c61a5f6eb0d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1QueueRegistra.html#a31569e55be5a89ab8b128c61a5f6eb0d">QueueRegistra</a> (std::vector&lt; <a class="el" href="structdyno_1_1QueueRegistra.html#a49c3dcb3c0ed8dabd60381a52b086dd7">Queue</a> * &gt; *queues)</td></tr>
-<tr class="separator:a31569e55be5a89ab8b128c61a5f6eb0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abc0eec40ef873f7e8399877795e6acdf"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1QueueRegistra.html#abc0eec40ef873f7e8399877795e6acdf">QueueRegistra</a> (std::vector&lt; <a class="el" href="structdyno_1_1QueueRegistra.html#a49c3dcb3c0ed8dabd60381a52b086dd7">Queue</a> * &gt; *queues, std::vector&lt; <a class="el" href="structdyno_1_1QueueRegistra.html#a669abc9310ff09152f80b3f2fc57275a">Callback</a> &gt; *callbacks)</td></tr>
+<tr class="separator:abc0eec40ef873f7e8399877795e6acdf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac48e365c56fde3453682df7c45e409c6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1QueueRegistra.html#ac48e365c56fde3453682df7c45e409c6">registerQueue</a> (<a class="el" href="structdyno_1_1QueueRegistra.html#a49c3dcb3c0ed8dabd60381a52b086dd7">Queue</a> *queue)</td></tr>
 <tr class="separator:ac48e365c56fde3453682df7c45e409c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a85e955c5f6f8f04446af98c0dda91d5a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1QueueRegistra.html#a85e955c5f6f8f04446af98c0dda91d5a">registerCallback</a> (<a class="el" href="structdyno_1_1QueueRegistra.html#a669abc9310ff09152f80b3f2fc57275a">Callback</a> callback)</td></tr>
+<tr class="separator:a85e955c5f6f8f04446af98c0dda91d5a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
 <tr class="memitem:a04e0088270fb95f2be96ac4b9f58381a"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="structdyno_1_1QueueRegistra.html#a49c3dcb3c0ed8dabd60381a52b086dd7">Queue</a> * &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1QueueRegistra.html#a04e0088270fb95f2be96ac4b9f58381a">queues_</a></td></tr>
 <tr class="separator:a04e0088270fb95f2be96ac4b9f58381a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac2099b6a35c3a27c1a91198763a91649"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="structdyno_1_1QueueRegistra.html#a669abc9310ff09152f80b3f2fc57275a">Callback</a> &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1QueueRegistra.html#ac2099b6a35c3a27c1a91198763a91649">output_callbacks_</a></td></tr>
+<tr class="separator:ac2099b6a35c3a27c1a91198763a91649"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename PAYLOAD&gt;<br />
 struct dyno::QueueRegistra&lt; PAYLOAD &gt;</div>
-<p class="definition">Definition at line <a class="el" href="PipelineBase_8hpp_source.html#l00230">230</a> of file <a class="el" href="PipelineBase_8hpp_source.html">PipelineBase.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="PipelineBase_8hpp_source.html#l00224">224</a> of file <a class="el" href="PipelineBase_8hpp_source.html">PipelineBase.hpp</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
+<a id="a669abc9310ff09152f80b3f2fc57275a" name="a669abc9310ff09152f80b3f2fc57275a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a669abc9310ff09152f80b3f2fc57275a">&#9670;&#160;</a></span>Callback</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename PAYLOAD &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="structdyno_1_1QueueRegistra.html">dyno::QueueRegistra</a>&lt; PAYLOAD &gt;::Callback =  typename <a class="el" href="structdyno_1_1PipelineTypeTraits.html">PipelineTypeTraits</a>&lt;PAYLOAD&gt;::TypeCallback</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="PipelineBase_8hpp_source.html#l00228">228</a> of file <a class="el" href="PipelineBase_8hpp_source.html">PipelineBase.hpp</a>.</p>
+
+</div>
+</div>
 <a id="a49c3dcb3c0ed8dabd60381a52b086dd7" name="a49c3dcb3c0ed8dabd60381a52b086dd7"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a49c3dcb3c0ed8dabd60381a52b086dd7">&#9670;&#160;</a></span>Queue</h2>
 
@@ -123,7 +147,7 @@ template&lt;typename PAYLOAD &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PipelineBase_8hpp_source.html#l00233">233</a> of file <a class="el" href="PipelineBase_8hpp_source.html">PipelineBase.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="PipelineBase_8hpp_source.html#l00227">227</a> of file <a class="el" href="PipelineBase_8hpp_source.html">PipelineBase.hpp</a>.</p>
 
 </div>
 </div>
@@ -141,13 +165,13 @@ template&lt;typename PAYLOAD &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PipelineBase_8hpp_source.html#l00232">232</a> of file <a class="el" href="PipelineBase_8hpp_source.html">PipelineBase.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="PipelineBase_8hpp_source.html#l00226">226</a> of file <a class="el" href="PipelineBase_8hpp_source.html">PipelineBase.hpp</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a31569e55be5a89ab8b128c61a5f6eb0d" name="a31569e55be5a89ab8b128c61a5f6eb0d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a31569e55be5a89ab8b128c61a5f6eb0d">&#9670;&#160;</a></span>QueueRegistra()</h2>
+<a id="abc0eec40ef873f7e8399877795e6acdf" name="abc0eec40ef873f7e8399877795e6acdf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abc0eec40ef873f7e8399877795e6acdf">&#9670;&#160;</a></span>QueueRegistra()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -161,7 +185,52 @@ template&lt;typename PAYLOAD &gt; </div>
           <td class="memname"><a class="el" href="structdyno_1_1QueueRegistra.html">dyno::QueueRegistra</a>&lt; PAYLOAD &gt;::QueueRegistra </td>
           <td>(</td>
           <td class="paramtype">std::vector&lt; <a class="el" href="structdyno_1_1QueueRegistra.html#a49c3dcb3c0ed8dabd60381a52b086dd7">Queue</a> * &gt; *&#160;</td>
-          <td class="paramname"><em>queues</em></td><td>)</td>
+          <td class="paramname"><em>queues</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; <a class="el" href="structdyno_1_1QueueRegistra.html#a669abc9310ff09152f80b3f2fc57275a">Callback</a> &gt; *&#160;</td>
+          <td class="paramname"><em>callbacks</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="PipelineBase_8hpp_source.html#l00232">232</a> of file <a class="el" href="PipelineBase_8hpp_source.html">PipelineBase.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  233</span>      : <a class="code hl_variable" href="structdyno_1_1QueueRegistra.html#a04e0088270fb95f2be96ac4b9f58381a">queues_</a>(CHECK_NOTNULL(queues)),</div>
+<div class="line"><span class="lineno">  234</span>        <a class="code hl_variable" href="structdyno_1_1QueueRegistra.html#ac2099b6a35c3a27c1a91198763a91649">output_callbacks_</a>(CHECK_NOTNULL(callbacks)) {}</div>
+<div class="ttc" id="astructdyno_1_1QueueRegistra_html_a04e0088270fb95f2be96ac4b9f58381a"><div class="ttname"><a href="structdyno_1_1QueueRegistra.html#a04e0088270fb95f2be96ac4b9f58381a">dyno::QueueRegistra::queues_</a></div><div class="ttdeci">std::vector&lt; Queue * &gt; * queues_</div><div class="ttdef"><b>Definition:</b> <a href="PipelineBase_8hpp_source.html#l00254">PipelineBase.hpp:254</a></div></div>
+<div class="ttc" id="astructdyno_1_1QueueRegistra_html_ac2099b6a35c3a27c1a91198763a91649"><div class="ttname"><a href="structdyno_1_1QueueRegistra.html#ac2099b6a35c3a27c1a91198763a91649">dyno::QueueRegistra::output_callbacks_</a></div><div class="ttdeci">std::vector&lt; Callback &gt; * output_callbacks_</div><div class="ttdef"><b>Definition:</b> <a href="PipelineBase_8hpp_source.html#l00255">PipelineBase.hpp:255</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a85e955c5f6f8f04446af98c0dda91d5a" name="a85e955c5f6f8f04446af98c0dda91d5a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a85e955c5f6f8f04446af98c0dda91d5a">&#9670;&#160;</a></span>registerCallback()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename PAYLOAD &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="structdyno_1_1QueueRegistra.html">dyno::QueueRegistra</a>&lt; PAYLOAD &gt;::registerCallback </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structdyno_1_1QueueRegistra.html#a669abc9310ff09152f80b3f2fc57275a">Callback</a>&#160;</td>
+          <td class="paramname"><em>callback</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -172,13 +241,18 @@ template&lt;typename PAYLOAD &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PipelineBase_8hpp_source.html#l00237">237</a> of file <a class="el" href="PipelineBase_8hpp_source.html">PipelineBase.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  237</span>: <a class="code hl_variable" href="structdyno_1_1QueueRegistra.html#a04e0088270fb95f2be96ac4b9f58381a">queues_</a>(CHECK_NOTNULL(queues)) {}</div>
-<div class="ttc" id="astructdyno_1_1QueueRegistra_html_a04e0088270fb95f2be96ac4b9f58381a"><div class="ttname"><a href="structdyno_1_1QueueRegistra.html#a04e0088270fb95f2be96ac4b9f58381a">dyno::QueueRegistra::queues_</a></div><div class="ttdeci">std::vector&lt; Queue * &gt; * queues_</div><div class="ttdef"><b>Definition:</b> <a href="PipelineBase_8hpp_source.html#l00249">PipelineBase.hpp:249</a></div></div>
+<p class="definition">Definition at line <a class="el" href="PipelineBase_8hpp_source.html#l00243">243</a> of file <a class="el" href="PipelineBase_8hpp_source.html">PipelineBase.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  243</span>                                           {</div>
+<div class="line"><span class="lineno">  244</span>    CHECK_NOTNULL(callback);</div>
+<div class="line"><span class="lineno">  245</span>    CHECK_NOTNULL(<a class="code hl_variable" href="structdyno_1_1QueueRegistra.html#ac2099b6a35c3a27c1a91198763a91649">output_callbacks_</a>);</div>
+<div class="line"><span class="lineno">  246</span>    <span class="comment">// TODO: not thread safe?</span></div>
+<div class="line"><span class="lineno">  247</span>    <a class="code hl_variable" href="structdyno_1_1QueueRegistra.html#ac2099b6a35c3a27c1a91198763a91649">output_callbacks_</a>-&gt;push_back(callback);</div>
+<div class="line"><span class="lineno">  248</span>  }</div>
 </div><!-- fragment -->
+<p class="reference">References <a class="el" href="structdyno_1_1QueueRegistra.html#ac2099b6a35c3a27c1a91198763a91649">dyno::QueueRegistra&lt; PAYLOAD &gt;::output_callbacks_</a>.</p>
+
 </div>
 </div>
-<h2 class="groupheader">Member Function Documentation</h2>
 <a id="ac48e365c56fde3453682df7c45e409c6" name="ac48e365c56fde3453682df7c45e409c6"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac48e365c56fde3453682df7c45e409c6">&#9670;&#160;</a></span>registerQueue()</h2>
 
@@ -205,19 +279,47 @@ template&lt;typename PAYLOAD &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PipelineBase_8hpp_source.html#l00239">239</a> of file <a class="el" href="PipelineBase_8hpp_source.html">PipelineBase.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  239</span>                                   {</div>
-<div class="line"><span class="lineno">  240</span>    CHECK_NOTNULL(queue);</div>
-<div class="line"><span class="lineno">  241</span>    CHECK_NOTNULL(<a class="code hl_variable" href="structdyno_1_1QueueRegistra.html#a04e0088270fb95f2be96ac4b9f58381a">queues_</a>);</div>
-<div class="line"><span class="lineno">  242</span>    <span class="comment">//TODO: not thread safe?</span></div>
-<div class="line"><span class="lineno">  243</span>    <a class="code hl_variable" href="structdyno_1_1QueueRegistra.html#a04e0088270fb95f2be96ac4b9f58381a">queues_</a>-&gt;push_back(queue);</div>
-<div class="line"><span class="lineno">  244</span>  }</div>
+<p class="definition">Definition at line <a class="el" href="PipelineBase_8hpp_source.html#l00236">236</a> of file <a class="el" href="PipelineBase_8hpp_source.html">PipelineBase.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  236</span>                                   {</div>
+<div class="line"><span class="lineno">  237</span>    CHECK_NOTNULL(queue);</div>
+<div class="line"><span class="lineno">  238</span>    CHECK_NOTNULL(<a class="code hl_variable" href="structdyno_1_1QueueRegistra.html#a04e0088270fb95f2be96ac4b9f58381a">queues_</a>);</div>
+<div class="line"><span class="lineno">  239</span>    <span class="comment">// TODO: not thread safe?</span></div>
+<div class="line"><span class="lineno">  240</span>    <a class="code hl_variable" href="structdyno_1_1QueueRegistra.html#a04e0088270fb95f2be96ac4b9f58381a">queues_</a>-&gt;push_back(queue);</div>
+<div class="line"><span class="lineno">  241</span>  }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="structdyno_1_1QueueRegistra.html#a04e0088270fb95f2be96ac4b9f58381a">dyno::QueueRegistra&lt; PAYLOAD &gt;::queues_</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
+<a id="ac2099b6a35c3a27c1a91198763a91649" name="ac2099b6a35c3a27c1a91198763a91649"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac2099b6a35c3a27c1a91198763a91649">&#9670;&#160;</a></span>output_callbacks_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename PAYLOAD &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;<a class="el" href="structdyno_1_1QueueRegistra.html#a669abc9310ff09152f80b3f2fc57275a">Callback</a>&gt;* <a class="el" href="structdyno_1_1QueueRegistra.html">dyno::QueueRegistra</a>&lt; PAYLOAD &gt;::output_callbacks_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="PipelineBase_8hpp_source.html#l00255">255</a> of file <a class="el" href="PipelineBase_8hpp_source.html">PipelineBase.hpp</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="structdyno_1_1QueueRegistra.html#a85e955c5f6f8f04446af98c0dda91d5a">dyno::QueueRegistra&lt; PAYLOAD &gt;::registerCallback()</a>.</p>
+
+</div>
+</div>
 <a id="a04e0088270fb95f2be96ac4b9f58381a" name="a04e0088270fb95f2be96ac4b9f58381a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a04e0088270fb95f2be96ac4b9f58381a">&#9670;&#160;</a></span>queues_</h2>
 
@@ -241,7 +343,7 @@ template&lt;typename PAYLOAD &gt; </div>
 </div><div class="memdoc">
 <p>Poitner to a vector of queue pointers (owned by the <a class="el" href="classdyno_1_1PipelineModule.html" title="A PipelineModule is responsible for taking data from an input (or input queues) processing it,...">PipelineModule</a>) Will only have the lifetime of the derived <a class="el" href="classdyno_1_1MIMOPipelineModule.html">MIMOPipelineModule</a> that created it </p>
 
-<p class="definition">Definition at line <a class="el" href="PipelineBase_8hpp_source.html#l00249">249</a> of file <a class="el" href="PipelineBase_8hpp_source.html">PipelineBase.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="PipelineBase_8hpp_source.html#l00254">254</a> of file <a class="el" href="PipelineBase_8hpp_source.html">PipelineBase.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="structdyno_1_1QueueRegistra.html#ac48e365c56fde3453682df7c45e409c6">dyno::QueueRegistra&lt; PAYLOAD &gt;::registerQueue()</a>.</p>
 

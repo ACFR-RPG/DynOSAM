@@ -147,7 +147,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="DatasetLoader_8hpp_source.html#l00164">164</a> of file <a class="el" href="DatasetLoader_8hpp_source.html">DatasetLoader.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="DatasetLoader_8hpp_source.html#l00173">173</a> of file <a class="el" href="DatasetLoader_8hpp_source.html">DatasetLoader.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a153806a5342c66c86ea87b38e2f637d2" name="a153806a5342c66c86ea87b38e2f637d2"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a153806a5342c66c86ea87b38e2f637d2">&#9670;&#160;</a></span>RGBDataFolder()</h2>
@@ -172,8 +172,8 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="DatasetLoader_8hpp_source.html#l00168">168</a> of file <a class="el" href="DatasetLoader_8hpp_source.html">DatasetLoader.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  168</span>{}</div>
+<p class="definition">Definition at line <a class="el" href="DatasetLoader_8hpp_source.html#l00176">176</a> of file <a class="el" href="DatasetLoader_8hpp_source.html">DatasetLoader.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  176</span>{}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -206,10 +206,8 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classdyno_1_1DataFolder.html#a63d64595445016c30e623154c45260b6">dyno::DataFolder&lt; cv::Mat &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="DatasetLoader_8cc_source.html#l00029">29</a> of file <a class="el" href="DatasetLoader_8cc_source.html">DatasetLoader.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   29</span>                                             {</div>
-<div class="line"><span class="lineno">   30</span>    <span class="keywordflow">return</span> <span class="stringliteral">&quot;image_0&quot;</span>;</div>
-<div class="line"><span class="lineno">   31</span>}</div>
+<p class="definition">Definition at line <a class="el" href="DatasetLoader_8cc_source.html#l00038">38</a> of file <a class="el" href="DatasetLoader_8cc_source.html">DatasetLoader.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   38</span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;image_0&quot;</span>; }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -249,22 +247,23 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classdyno_1_1DataFolder.html#a60162e20f359ad6f5ff58edf0964e3ac">dyno::DataFolder&lt; cv::Mat &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="DatasetLoader_8cc_source.html#l00033">33</a> of file <a class="el" href="DatasetLoader_8cc_source.html">DatasetLoader.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   33</span>                                       {</div>
-<div class="line"><span class="lineno">   34</span>    std::stringstream ss;</div>
-<div class="line"><span class="lineno">   35</span>    ss &lt;&lt; std::setfill(<span class="charliteral">&#39;0&#39;</span>) &lt;&lt; std::setw(6) &lt;&lt; idx;</div>
-<div class="line"><span class="lineno">   36</span>    <span class="keyword">const</span> std::string file_path = (std::string)<a class="code hl_function" href="classdyno_1_1DataFolder.html#ad832c1d501f9c40eefde4cfc3633e218">getAbsolutePath</a>()  + <span class="stringliteral">&quot;/&quot;</span> + ss.str() + <span class="stringliteral">&quot;.png&quot;</span>;</div>
-<div class="line"><span class="lineno">   37</span> </div>
-<div class="line"><span class="lineno">   38</span>    cv::Mat rgb;</div>
-<div class="line"><span class="lineno">   39</span>    <a class="code hl_function" href="namespacedyno.html#a7fd811cad6c8cd6edb2fb0c2902952cd">loadRGB</a>(file_path, rgb);</div>
-<div class="line"><span class="lineno">   40</span> </div>
-<div class="line"><span class="lineno">   41</span>    CHECK(!rgb.empty());</div>
-<div class="line"><span class="lineno">   42</span>    <span class="keywordflow">return</span> rgb;</div>
-<div class="line"><span class="lineno">   43</span>}</div>
-<div class="ttc" id="aclassdyno_1_1DataFolder_html_ad832c1d501f9c40eefde4cfc3633e218"><div class="ttname"><a href="classdyno_1_1DataFolder.html#ad832c1d501f9c40eefde4cfc3633e218">dyno::DataFolder&lt; cv::Mat &gt;::getAbsolutePath</a></div><div class="ttdeci">fs::path getAbsolutePath() const</div><div class="ttdef"><b>Definition:</b> <a href="DatasetLoader_8hpp_source.html#l00106">DatasetLoader.hpp:106</a></div></div>
-<div class="ttc" id="anamespacedyno_html_a7fd811cad6c8cd6edb2fb0c2902952cd"><div class="ttname"><a href="namespacedyno.html#a7fd811cad6c8cd6edb2fb0c2902952cd">dyno::loadRGB</a></div><div class="ttdeci">void loadRGB(const std::string &amp;image_path, cv::Mat &amp;img)</div><div class="ttdef"><b>Definition:</b> <a href="DataProviderUtils_8cc_source.html#l00055">DataProviderUtils.cc:55</a></div></div>
+<p class="definition">Definition at line <a class="el" href="DatasetLoader_8cc_source.html#l00040">40</a> of file <a class="el" href="DatasetLoader_8cc_source.html">DatasetLoader.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   40</span>                                       {</div>
+<div class="line"><span class="lineno">   41</span>  std::stringstream ss;</div>
+<div class="line"><span class="lineno">   42</span>  ss &lt;&lt; std::setfill(<span class="charliteral">&#39;0&#39;</span>) &lt;&lt; std::setw(6) &lt;&lt; idx;</div>
+<div class="line"><span class="lineno">   43</span>  <span class="keyword">const</span> std::string file_path =</div>
+<div class="line"><span class="lineno">   44</span>      (std::string)<a class="code hl_function" href="classdyno_1_1DataFolder.html#ad832c1d501f9c40eefde4cfc3633e218">getAbsolutePath</a>() + <span class="stringliteral">&quot;/&quot;</span> + ss.str() + <span class="stringliteral">&quot;.png&quot;</span>;</div>
+<div class="line"><span class="lineno">   45</span> </div>
+<div class="line"><span class="lineno">   46</span>  cv::Mat rgb;</div>
+<div class="line"><span class="lineno">   47</span>  <a class="code hl_function" href="namespacedyno_1_1utils.html#a5a99bccec94ae25e68cdfef2c093b7da">utils::loadRGB</a>(file_path, rgb);</div>
+<div class="line"><span class="lineno">   48</span> </div>
+<div class="line"><span class="lineno">   49</span>  CHECK(!rgb.empty());</div>
+<div class="line"><span class="lineno">   50</span>  <span class="keywordflow">return</span> rgb;</div>
+<div class="line"><span class="lineno">   51</span>}</div>
+<div class="ttc" id="aclassdyno_1_1DataFolder_html_ad832c1d501f9c40eefde4cfc3633e218"><div class="ttname"><a href="classdyno_1_1DataFolder.html#ad832c1d501f9c40eefde4cfc3633e218">dyno::DataFolder&lt; cv::Mat &gt;::getAbsolutePath</a></div><div class="ttdeci">fs::path getAbsolutePath() const</div><div class="ttdef"><b>Definition:</b> <a href="DatasetLoader_8hpp_source.html#l00112">DatasetLoader.hpp:112</a></div></div>
+<div class="ttc" id="anamespacedyno_1_1utils_html_a5a99bccec94ae25e68cdfef2c093b7da"><div class="ttname"><a href="namespacedyno_1_1utils.html#a5a99bccec94ae25e68cdfef2c093b7da">dyno::utils::loadRGB</a></div><div class="ttdeci">void loadRGB(const std::string &amp;image_path, cv::Mat &amp;img)</div><div class="ttdef"><b>Definition:</b> <a href="FileSystem_8cc_source.html#l00019">FileSystem.cc:19</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="classdyno_1_1DataFolder.html#ad832c1d501f9c40eefde4cfc3633e218">dyno::DataFolder&lt; cv::Mat &gt;::getAbsolutePath()</a>, and <a class="el" href="namespacedyno.html#a7fd811cad6c8cd6edb2fb0c2902952cd">dyno::loadRGB()</a>.</p>
+<p class="reference">References <a class="el" href="classdyno_1_1DataFolder.html#ad832c1d501f9c40eefde4cfc3633e218">dyno::DataFolder&lt; cv::Mat &gt;::getAbsolutePath()</a>, and <a class="el" href="namespacedyno_1_1utils.html#a5a99bccec94ae25e68cdfef2c093b7da">dyno::utils::loadRGB()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -272,8 +271,8 @@ Here is the call graph for this function:</div>
 <map name="aclassdyno_1_1RGBDataFolder_a1fbbb0f6d9c6b4a6f9e54bded018068c_cgraph" id="aclassdyno_1_1RGBDataFolder_a1fbbb0f6d9c6b4a6f9e54bded018068c_cgraph">
 <area shape="rect" title="Get the Item at an index in the dataset." alt="" coords="5,35,167,75"/>
 <area shape="rect" href="classdyno_1_1DataFolder.html#ad832c1d501f9c40eefde4cfc3633e218" title=" " alt="" coords="215,5,399,45"/>
-<area shape="rect" href="namespacedyno.html#a7fd811cad6c8cd6edb2fb0c2902952cd" title=" " alt="" coords="247,70,366,95"/>
-<area shape="rect" href="namespacedyno.html#a163cb16ef980acda5b09d45c3a156e6f" title=" " alt="" coords="447,63,647,103"/>
+<area shape="rect" href="namespacedyno_1_1utils.html#a5a99bccec94ae25e68cdfef2c093b7da" title=" " alt="" coords="229,70,384,95"/>
+<area shape="rect" href="namespacedyno_1_1utils.html#a71785ed8de386df1fce95751bf5bec15" title=" " alt="" coords="447,63,645,103"/>
 </map>
 </div>
 

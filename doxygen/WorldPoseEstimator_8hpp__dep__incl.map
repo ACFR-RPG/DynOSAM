@@ -1,10 +1,13 @@
 <map id="dynosam/include/dynosam/backend/rgbd/WorldPoseEstimator.hpp" name="dynosam/include/dynosam/backend/rgbd/WorldPoseEstimator.hpp">
-<area shape="rect" id="node1" title=" " alt="" coords="353,5,628,45"/>
-<area shape="rect" id="node2" href="$RegularBackendModule_8hpp.html" title=" " alt="" coords="175,181,441,221"/>
-<area shape="rect" id="node6" href="$WorldMotionEstimator_8hpp.html" title=" " alt="" coords="346,93,635,133"/>
-<area shape="rect" id="node8" href="$WorldPoseEstimator_8cc.html" title=" " alt="" coords="659,93,866,133"/>
-<area shape="rect" id="node3" href="$RegularBackendModule_8cc.html" title=" " alt="" coords="5,269,203,309"/>
-<area shape="rect" id="node4" href="$PipelineManager_8cc.html" title=" " alt="" coords="227,269,389,309"/>
-<area shape="rect" id="node5" href="$backend__experiments__node_8cc.html" title=" " alt="" coords="413,269,624,309"/>
-<area shape="rect" id="node7" href="$WorldMotionEstimator_8cc.html" title=" " alt="" coords="465,181,687,221"/>
+<area shape="rect" id="node1" title=" " alt="" coords="472,5,747,45"/>
+<area shape="rect" id="node2" href="$BackendFactory_8hpp.html" title=" " alt="" coords="321,181,533,221"/>
+<area shape="rect" id="node9" href="$WorldMotionEstimator_8hpp.html" title=" " alt="" coords="465,93,754,133"/>
+<area shape="rect" id="node11" href="$WorldPoseEstimator_8cc.html" title=" " alt="" coords="778,93,985,133"/>
+<area shape="rect" id="node3" href="$RegularBackendModule_8cc.html" title=" " alt="" coords="5,277,203,317"/>
+<area shape="rect" id="node4" href="$PipelineManager_8cc.html" title=" " alt="" coords="227,277,389,317"/>
+<area shape="rect" id="node5" href="$BackendDisplayPolicyRos_8hpp.html" title=" " alt="" coords="464,269,685,324"/>
+<area shape="rect" id="node6" href="$PipelineRos_8cc.html" title=" " alt="" coords="333,379,521,419"/>
+<area shape="rect" id="node8" href="$backend__experiments__node_8cc.html" title=" " alt="" coords="709,277,920,317"/>
+<area shape="rect" id="node7" href="$HybridBackendDisplay_8cc.html" title=" " alt="" coords="545,372,788,427"/>
+<area shape="rect" id="node10" href="$WorldMotionEstimator_8cc.html" title=" " alt="" coords="557,181,779,221"/>
 </map>

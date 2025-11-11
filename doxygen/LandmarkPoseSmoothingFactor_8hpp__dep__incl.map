@@ -1,6 +1,5 @@
 <map id="dynosam/include/dynosam/factors/LandmarkPoseSmoothingFactor.hpp" name="dynosam/include/dynosam/factors/LandmarkPoseSmoothingFactor.hpp">
-<area shape="rect" id="node1" title=" " alt="" coords="210,5,451,60"/>
-<area shape="rect" id="node2" href="$RegularBackendModule_8cc.html" title=" " alt="" coords="5,108,203,148"/>
-<area shape="rect" id="node3" href="$WorldPoseEstimator_8cc.html" title=" " alt="" coords="227,108,434,148"/>
-<area shape="rect" id="node4" href="$LandmarkPoseSmoothingFactor_8cc.html" title=" " alt="" coords="459,108,707,148"/>
+<area shape="rect" id="node1" title=" " alt="" coords="113,5,355,60"/>
+<area shape="rect" id="node2" href="$WorldPoseEstimator_8cc.html" title=" " alt="" coords="5,108,212,148"/>
+<area shape="rect" id="node3" href="$LandmarkPoseSmoothingFactor_8cc.html" title=" " alt="" coords="237,108,485,148"/>
 </map>

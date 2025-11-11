@@ -94,6 +94,8 @@ Public Types</h2></td></tr>
 <tr class="separator:a31a7af892c29c5cdbe3799a9d366eb87"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2b083dd9efa53f2e640ce2fd1cb4ac83"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1PipelineTypeTraits.html#a2b083dd9efa53f2e640ce2fd1cb4ac83">TypeQueue</a> = <a class="el" href="classThreadsafeQueue.html">ThreadsafeQueue</a>&lt; <a class="el" href="structdyno_1_1PipelineTypeTraits.html#a31a7af892c29c5cdbe3799a9d366eb87">TypeConstSharedPtr</a> &gt;</td></tr>
 <tr class="separator:a2b083dd9efa53f2e640ce2fd1cb4ac83"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9d6881c6a3d8079c957f7121bd19f243"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1PipelineTypeTraits.html#a9d6881c6a3d8079c957f7121bd19f243">TypeCallback</a> = std::function&lt; void(const <a class="el" href="structdyno_1_1PipelineTypeTraits.html#a31a7af892c29c5cdbe3799a9d366eb87">TypeConstSharedPtr</a> &amp;)&gt;</td></tr>
+<tr class="separator:a9d6881c6a3d8079c957f7121bd19f243"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename TYPE&gt;<br />
@@ -106,7 +108,7 @@ struct dyno::PipelineTypeTraits&lt; TYPE &gt;</div><p>Defines type alias's for a
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="PipelineBase_8hpp_source.html#l00156">156</a> of file <a class="el" href="PipelineBase_8hpp_source.html">PipelineBase.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="PipelineBase_8hpp_source.html#l00151">151</a> of file <a class="el" href="PipelineBase_8hpp_source.html">PipelineBase.hpp</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="a7d81c6b7e65b700268fbe0df24650902" name="a7d81c6b7e65b700268fbe0df24650902"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7d81c6b7e65b700268fbe0df24650902">&#9670;&#160;</a></span>Type</h2>
@@ -122,7 +124,25 @@ template&lt;typename TYPE &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PipelineBase_8hpp_source.html#l00157">157</a> of file <a class="el" href="PipelineBase_8hpp_source.html">PipelineBase.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="PipelineBase_8hpp_source.html#l00152">152</a> of file <a class="el" href="PipelineBase_8hpp_source.html">PipelineBase.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a9d6881c6a3d8079c957f7121bd19f243" name="a9d6881c6a3d8079c957f7121bd19f243"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9d6881c6a3d8079c957f7121bd19f243">&#9670;&#160;</a></span>TypeCallback</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename TYPE &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="structdyno_1_1PipelineTypeTraits.html">dyno::PipelineTypeTraits</a>&lt; TYPE &gt;::TypeCallback =  std::function&lt;void(const <a class="el" href="structdyno_1_1PipelineTypeTraits.html#a31a7af892c29c5cdbe3799a9d366eb87">TypeConstSharedPtr</a>&amp;)&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="PipelineBase_8hpp_source.html#l00155">155</a> of file <a class="el" href="PipelineBase_8hpp_source.html">PipelineBase.hpp</a>.</p>
 
 </div>
 </div>
@@ -140,7 +160,7 @@ template&lt;typename TYPE &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PipelineBase_8hpp_source.html#l00158">158</a> of file <a class="el" href="PipelineBase_8hpp_source.html">PipelineBase.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="PipelineBase_8hpp_source.html#l00153">153</a> of file <a class="el" href="PipelineBase_8hpp_source.html">PipelineBase.hpp</a>.</p>
 
 </div>
 </div>
@@ -158,7 +178,7 @@ template&lt;typename TYPE &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PipelineBase_8hpp_source.html#l00159">159</a> of file <a class="el" href="PipelineBase_8hpp_source.html">PipelineBase.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="PipelineBase_8hpp_source.html#l00154">154</a> of file <a class="el" href="PipelineBase_8hpp_source.html">PipelineBase.hpp</a>.</p>
 
 </div>
 </div>

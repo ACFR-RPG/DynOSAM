@@ -92,7 +92,7 @@ Static Public Member Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;size_t N&gt;<br />
 struct dyno::internal::Apply&lt; N &gt;</div>
-<p class="definition">Definition at line <a class="el" href="Tuple_8hpp_source.html#l00091">91</a> of file <a class="el" href="Tuple_8hpp_source.html">Tuple.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Tuple_8hpp_source.html#l00089">89</a> of file <a class="el" href="Tuple_8hpp_source.html">Tuple.hpp</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="aefa2d93c9f3938ca6e8a05d33b02892c" name="aefa2d93c9f3938ca6e8a05d33b02892c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aefa2d93c9f3938ca6e8a05d33b02892c">&#9670;&#160;</a></span>apply()</h2>
@@ -138,12 +138,13 @@ template&lt;typename F , typename T , typename... A&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Tuple_8hpp_source.html#l00094">94</a> of file <a class="el" href="Tuple_8hpp_source.html">Tuple.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   95</span>  {</div>
-<div class="line"><span class="lineno">   96</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="structdyno_1_1internal_1_1Apply.html#aefa2d93c9f3938ca6e8a05d33b02892c">Apply&lt;N - 1&gt;::apply</a>(::std::forward&lt;F&gt;(f), ::std::forward&lt;T&gt;(t), ::std::get&lt;N - 1&gt;(::std::forward&lt;T&gt;(t)),</div>
-<div class="line"><span class="lineno">   97</span>                               ::std::forward&lt;A&gt;(a)...);</div>
-<div class="line"><span class="lineno">   98</span>  }</div>
-<div class="ttc" id="astructdyno_1_1internal_1_1Apply_html_aefa2d93c9f3938ca6e8a05d33b02892c"><div class="ttname"><a href="structdyno_1_1internal_1_1Apply.html#aefa2d93c9f3938ca6e8a05d33b02892c">dyno::internal::Apply::apply</a></div><div class="ttdeci">static auto apply(F &amp;&amp;f, T &amp;&amp;t, A &amp;&amp;... a)</div><div class="ttdef"><b>Definition:</b> <a href="Tuple_8hpp_source.html#l00094">Tuple.hpp:94</a></div></div>
+<p class="definition">Definition at line <a class="el" href="Tuple_8hpp_source.html#l00091">91</a> of file <a class="el" href="Tuple_8hpp_source.html">Tuple.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   91</span>                                                   {</div>
+<div class="line"><span class="lineno">   92</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="structdyno_1_1internal_1_1Apply.html#aefa2d93c9f3938ca6e8a05d33b02892c">Apply&lt;N - 1&gt;::apply</a>(::std::forward&lt;F&gt;(f), ::std::forward&lt;T&gt;(t),</div>
+<div class="line"><span class="lineno">   93</span>                               ::std::get&lt;N - 1&gt;(::std::forward&lt;T&gt;(t)),</div>
+<div class="line"><span class="lineno">   94</span>                               ::std::forward&lt;A&gt;(a)...);</div>
+<div class="line"><span class="lineno">   95</span>  }</div>
+<div class="ttc" id="astructdyno_1_1internal_1_1Apply_html_aefa2d93c9f3938ca6e8a05d33b02892c"><div class="ttname"><a href="structdyno_1_1internal_1_1Apply.html#aefa2d93c9f3938ca6e8a05d33b02892c">dyno::internal::Apply::apply</a></div><div class="ttdeci">static auto apply(F &amp;&amp;f, T &amp;&amp;t, A &amp;&amp;... a)</div><div class="ttdef"><b>Definition:</b> <a href="Tuple_8hpp_source.html#l00091">Tuple.hpp:91</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="structdyno_1_1internal_1_1Apply.html#aefa2d93c9f3938ca6e8a05d33b02892c">dyno::internal::Apply&lt; N &gt;::apply()</a>.</p>
 
@@ -168,7 +169,7 @@ Here is the caller graph for this function:</div>
 </div>
 </div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
-<li>dynosam/include/dynosam/utils/<a class="el" href="Tuple_8hpp_source.html">Tuple.hpp</a></li>
+<li>dynosam_common/include/dynosam_common/utils/<a class="el" href="Tuple_8hpp_source.html">Tuple.hpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

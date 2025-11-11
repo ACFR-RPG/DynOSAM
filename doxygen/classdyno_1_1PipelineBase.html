@@ -95,11 +95,11 @@ Inheritance diagram for dyno::PipelineBase:</div>
 <area shape="rect" title=" " alt="" coords="5,128,152,153"/>
 <area shape="rect" href="classdyno_1_1PipelineModule.html" title=" " alt="" coords="212,5,417,60"/>
 <area shape="rect" href="classdyno_1_1PipelineModule.html" title=" " alt="" coords="200,85,429,125"/>
-<area shape="rect" href="classdyno_1_1PipelineModule.html" title=" " alt="" coords="207,149,423,204"/>
+<area shape="rect" href="classdyno_1_1PipelineModule.html" title=" " alt="" coords="229,149,400,204"/>
 <area shape="rect" href="classdyno_1_1PipelineModule.html" title="A PipelineModule is responsible for taking data from an input (or input queues) processing it,..." alt="" coords="233,229,396,269"/>
 <area shape="rect" href="classdyno_1_1MIMOPipelineModule.html" title=" " alt="" coords="489,113,695,168"/>
 <area shape="rect" href="classdyno_1_1MIMOPipelineModule.html" title=" " alt="" coords="477,193,707,233"/>
-<area shape="rect" href="classdyno_1_1MIMOPipelineModule.html" title=" " alt="" coords="484,257,700,312"/>
+<area shape="rect" href="classdyno_1_1MIMOPipelineModule.html" title=" " alt="" coords="492,257,692,312"/>
 <area shape="rect" href="classdyno_1_1MIMOPipelineModule.html" title=" " alt="" coords="492,337,692,377"/>
 <area shape="rect" href="classdyno_1_1DataInterfacePipeline.html" title="Takes data, synchronizes it and sends it to the output queue which should be connected to the fronten..." alt="" coords="768,128,971,153"/>
 <area shape="rect" href="classdyno_1_1FrontendOfflinePipeline.html" title="module traits of the associated backend..." alt="" coords="762,265,977,305"/>
@@ -158,7 +158,7 @@ Public Member Functions</h2></td></tr>
 Protected Attributes</h2></td></tr>
 <tr class="memitem:aa08d3c035aed987a2f25cdde0a488115"><td class="memItemLeft" align="right" valign="top">const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1PipelineBase.html#aa08d3c035aed987a2f25cdde0a488115">module_name_</a></td></tr>
 <tr class="separator:aa08d3c035aed987a2f25cdde0a488115"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab717fc5f0261f9529f09beda061728e0"><td class="memItemLeft" align="right" valign="top">std::atomic_bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1PipelineBase.html#ab717fc5f0261f9529f09beda061728e0">is_thread_working_</a> { false }</td></tr>
+<tr class="memitem:ab717fc5f0261f9529f09beda061728e0"><td class="memItemLeft" align="right" valign="top">std::atomic_bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1PipelineBase.html#ab717fc5f0261f9529f09beda061728e0">is_thread_working_</a> {false}</td></tr>
 <tr class="separator:ab717fc5f0261f9529f09beda061728e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-methods" name="pri-methods"></a>
@@ -170,13 +170,13 @@ Private Member Functions</h2></td></tr>
 Private Attributes</h2></td></tr>
 <tr class="memitem:af6a9fff493efafce66a4b4729e3bb736"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classdyno_1_1PipelineBase.html#a641c2a774c3d7b456604f3de07532ca4">OnPipelineFailureCallback</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1PipelineBase.html#af6a9fff493efafce66a4b4729e3bb736">on_failure_callbacks_</a></td></tr>
 <tr class="separator:af6a9fff493efafce66a4b4729e3bb736"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9eb2ee8aed1b93a463049fe1e73c9862"><td class="memItemLeft" align="right" valign="top">std::atomic_bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1PipelineBase.html#a9eb2ee8aed1b93a463049fe1e73c9862">is_shutdown_</a> { false }</td></tr>
+<tr class="memitem:a9eb2ee8aed1b93a463049fe1e73c9862"><td class="memItemLeft" align="right" valign="top">std::atomic_bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1PipelineBase.html#a9eb2ee8aed1b93a463049fe1e73c9862">is_shutdown_</a> {false}</td></tr>
 <tr class="memdesc:a9eb2ee8aed1b93a463049fe1e73c9862"><td class="mdescLeft">&#160;</td><td class="mdescRight">Thread related members.  <br /></td></tr>
 <tr class="separator:a9eb2ee8aed1b93a463049fe1e73c9862"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="PipelineBase_8hpp_source.html#l00029">29</a> of file <a class="el" href="PipelineBase_8hpp_source.html">PipelineBase.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="PipelineBase_8hpp_source.html#l00024">24</a> of file <a class="el" href="PipelineBase_8hpp_source.html">PipelineBase.hpp</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="a641c2a774c3d7b456604f3de07532ca4" name="a641c2a774c3d7b456604f3de07532ca4"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a641c2a774c3d7b456604f3de07532ca4">&#9670;&#160;</a></span>OnPipelineFailureCallback</h2>
@@ -190,7 +190,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PipelineBase_8hpp_source.html#l00058">58</a> of file <a class="el" href="PipelineBase_8hpp_source.html">PipelineBase.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="PipelineBase_8hpp_source.html#l00051">51</a> of file <a class="el" href="PipelineBase_8hpp_source.html">PipelineBase.hpp</a>.</p>
 
 </div>
 </div>
@@ -219,11 +219,9 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PipelineBase_8hpp_source.html#l00062">62</a> of file <a class="el" href="PipelineBase_8hpp_source.html">PipelineBase.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   62</span>                                             : <a class="code hl_variable" href="classdyno_1_1PipelineBase.html#aa08d3c035aed987a2f25cdde0a488115">module_name_</a>(module_name)</div>
-<div class="line"><span class="lineno">   63</span>  {</div>
-<div class="line"><span class="lineno">   64</span>  }</div>
-<div class="ttc" id="aclassdyno_1_1PipelineBase_html_aa08d3c035aed987a2f25cdde0a488115"><div class="ttname"><a href="classdyno_1_1PipelineBase.html#aa08d3c035aed987a2f25cdde0a488115">dyno::PipelineBase::module_name_</a></div><div class="ttdeci">const std::string module_name_</div><div class="ttdef"><b>Definition:</b> <a href="PipelineBase_8hpp_source.html#l00134">PipelineBase.hpp:134</a></div></div>
+<p class="definition">Definition at line <a class="el" href="PipelineBase_8hpp_source.html#l00053">53</a> of file <a class="el" href="PipelineBase_8hpp_source.html">PipelineBase.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   53</span>: <a class="code hl_variable" href="classdyno_1_1PipelineBase.html#aa08d3c035aed987a2f25cdde0a488115">module_name_</a>(module_name) {}</div>
+<div class="ttc" id="aclassdyno_1_1PipelineBase_html_aa08d3c035aed987a2f25cdde0a488115"><div class="ttname"><a href="classdyno_1_1PipelineBase.html#aa08d3c035aed987a2f25cdde0a488115">dyno::PipelineBase::module_name_</a></div><div class="ttdeci">const std::string module_name_</div><div class="ttdef"><b>Definition:</b> <a href="PipelineBase_8hpp_source.html#l00129">PipelineBase.hpp:129</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -279,8 +277,8 @@ Private Attributes</h2></td></tr>
 <p>Returns the given module name (for identifcation and debug printing) </p>
 <dl class="section return"><dt>Returns</dt><dd>std::string </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="PipelineBase_8hpp_source.html#l00099">99</a> of file <a class="el" href="PipelineBase_8hpp_source.html">PipelineBase.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   99</span>{<span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1PipelineBase.html#aa08d3c035aed987a2f25cdde0a488115">module_name_</a>;}</div>
+<p class="definition">Definition at line <a class="el" href="PipelineBase_8hpp_source.html#l00090">90</a> of file <a class="el" href="PipelineBase_8hpp_source.html">PipelineBase.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   90</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1PipelineBase.html#aa08d3c035aed987a2f25cdde0a488115">module_name_</a>; }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1PipelineBase.html#aa08d3c035aed987a2f25cdde0a488115">module_name_</a>.</p>
 
@@ -357,9 +355,9 @@ Here is the caller graph for this function:</div>
 <dd>
 false </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="PipelineBase_8hpp_source.html#l00092">92</a> of file <a class="el" href="PipelineBase_8hpp_source.html">PipelineBase.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   92</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1PipelineBase.html#a9eb2ee8aed1b93a463049fe1e73c9862">is_shutdown_</a>; }</div>
-<div class="ttc" id="aclassdyno_1_1PipelineBase_html_a9eb2ee8aed1b93a463049fe1e73c9862"><div class="ttname"><a href="classdyno_1_1PipelineBase.html#a9eb2ee8aed1b93a463049fe1e73c9862">dyno::PipelineBase::is_shutdown_</a></div><div class="ttdeci">std::atomic_bool is_shutdown_</div><div class="ttdoc">Thread related members.</div><div class="ttdef"><b>Definition:</b> <a href="PipelineBase_8hpp_source.html#l00143">PipelineBase.hpp:143</a></div></div>
+<p class="definition">Definition at line <a class="el" href="PipelineBase_8hpp_source.html#l00083">83</a> of file <a class="el" href="PipelineBase_8hpp_source.html">PipelineBase.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   83</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1PipelineBase.html#a9eb2ee8aed1b93a463049fe1e73c9862">is_shutdown_</a>; }</div>
+<div class="ttc" id="aclassdyno_1_1PipelineBase_html_a9eb2ee8aed1b93a463049fe1e73c9862"><div class="ttname"><a href="classdyno_1_1PipelineBase.html#a9eb2ee8aed1b93a463049fe1e73c9862">dyno::PipelineBase::is_shutdown_</a></div><div class="ttdeci">std::atomic_bool is_shutdown_</div><div class="ttdoc">Thread related members.</div><div class="ttdef"><b>Definition:</b> <a href="PipelineBase_8hpp_source.html#l00138">PipelineBase.hpp:138</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1PipelineBase.html#a9eb2ee8aed1b93a463049fe1e73c9862">is_shutdown_</a>.</p>
 
@@ -374,7 +372,7 @@ Here is the caller graph for this function:</div>
 <area shape="rect" href="classdyno_1_1PipelineBase.html#a56667b4574808e95f808d1b4d79a469b" title="Spins the pipeline via continuous calls to spinOnce until the pipeline is shutdown." alt="" coords="540,69,687,109"/>
 <area shape="rect" href="structdyno_1_1PipelineSpinner_1_1AsynchronousSpinnerPair.html#ab1673256404a04057a1514010e6cc677" title=" " alt="" coords="264,26,459,81"/>
 <area shape="rect" href="classdyno_1_1DynoPipelineManager.html#abe710e5db047895f61547936feb16637" title=" " alt="" coords="259,105,464,145"/>
-<area shape="rect" href="classdyno_1_1DynoPipelineManager.html#a283e891aa3d4ca8d2d671eb1e3d5d514" title=" " alt="" coords="5,105,211,145"/>
+<area shape="rect" href="classdyno_1_1DynoPipelineManager.html#a1e980339b4d308ab83d46ede524c3a46" title=" " alt="" coords="5,105,211,145"/>
 </map>
 </div>
 
@@ -400,11 +398,9 @@ Here is the caller graph for this function:</div>
 <dd>
 false </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="PipelineBase_8cc_source.html#l00056">56</a> of file <a class="el" href="PipelineBase_8cc_source.html">PipelineBase.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   57</span>{</div>
-<div class="line"><span class="lineno">   58</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1PipelineBase.html#ab717fc5f0261f9529f09beda061728e0">is_thread_working_</a> || <a class="code hl_function" href="classdyno_1_1PipelineBase.html#abb02cf85483c5e267db459381fad8cfa">hasWork</a>();</div>
-<div class="line"><span class="lineno">   59</span>}</div>
-<div class="ttc" id="aclassdyno_1_1PipelineBase_html_ab717fc5f0261f9529f09beda061728e0"><div class="ttname"><a href="classdyno_1_1PipelineBase.html#ab717fc5f0261f9529f09beda061728e0">dyno::PipelineBase::is_thread_working_</a></div><div class="ttdeci">std::atomic_bool is_thread_working_</div><div class="ttdef"><b>Definition:</b> <a href="PipelineBase_8hpp_source.html#l00135">PipelineBase.hpp:135</a></div></div>
+<p class="definition">Definition at line <a class="el" href="PipelineBase_8cc_source.html#l00061">61</a> of file <a class="el" href="PipelineBase_8cc_source.html">PipelineBase.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   61</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1PipelineBase.html#ab717fc5f0261f9529f09beda061728e0">is_thread_working_</a> || <a class="code hl_function" href="classdyno_1_1PipelineBase.html#abb02cf85483c5e267db459381fad8cfa">hasWork</a>(); }</div>
+<div class="ttc" id="aclassdyno_1_1PipelineBase_html_ab717fc5f0261f9529f09beda061728e0"><div class="ttname"><a href="classdyno_1_1PipelineBase.html#ab717fc5f0261f9529f09beda061728e0">dyno::PipelineBase::is_thread_working_</a></div><div class="ttdeci">std::atomic_bool is_thread_working_</div><div class="ttdef"><b>Definition:</b> <a href="PipelineBase_8hpp_source.html#l00130">PipelineBase.hpp:130</a></div></div>
 <div class="ttc" id="aclassdyno_1_1PipelineBase_html_abb02cf85483c5e267db459381fad8cfa"><div class="ttname"><a href="classdyno_1_1PipelineBase.html#abb02cf85483c5e267db459381fad8cfa">dyno::PipelineBase::hasWork</a></div><div class="ttdeci">virtual bool hasWork() const =0</div><div class="ttdoc">Virtual function that should check if (any of the) input queues have work to do.</div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1PipelineBase.html#abb02cf85483c5e267db459381fad8cfa">hasWork()</a>, and <a class="el" href="classdyno_1_1PipelineBase.html#ab717fc5f0261f9529f09beda061728e0">is_thread_working_</a>.</p>
@@ -444,21 +440,17 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PipelineBase_8cc_source.html#l00062">62</a> of file <a class="el" href="PipelineBase_8cc_source.html">PipelineBase.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   63</span>{</div>
-<div class="line"><span class="lineno">   64</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; failure_callbacks : <a class="code hl_variable" href="classdyno_1_1PipelineBase.html#af6a9fff493efafce66a4b4729e3bb736">on_failure_callbacks_</a>)</div>
-<div class="line"><span class="lineno">   65</span>    {</div>
-<div class="line"><span class="lineno">   66</span>        <span class="keywordflow">if</span> (failure_callbacks)</div>
-<div class="line"><span class="lineno">   67</span>        {</div>
-<div class="line"><span class="lineno">   68</span>            failure_callbacks(result);</div>
-<div class="line"><span class="lineno">   69</span>        }</div>
-<div class="line"><span class="lineno">   70</span>        <span class="keywordflow">else</span></div>
-<div class="line"><span class="lineno">   71</span>        {</div>
-<div class="line"><span class="lineno">   72</span>            LOG(ERROR) &lt;&lt; <span class="stringliteral">&quot;Invalid OnFailureCallback for module: &quot;</span> &lt;&lt; <a class="code hl_variable" href="classdyno_1_1PipelineBase.html#aa08d3c035aed987a2f25cdde0a488115">module_name_</a>;</div>
-<div class="line"><span class="lineno">   73</span>        }</div>
-<div class="line"><span class="lineno">   74</span>    }</div>
-<div class="line"><span class="lineno">   75</span>}</div>
-<div class="ttc" id="aclassdyno_1_1PipelineBase_html_af6a9fff493efafce66a4b4729e3bb736"><div class="ttname"><a href="classdyno_1_1PipelineBase.html#af6a9fff493efafce66a4b4729e3bb736">dyno::PipelineBase::on_failure_callbacks_</a></div><div class="ttdeci">std::vector&lt; OnPipelineFailureCallback &gt; on_failure_callbacks_</div><div class="ttdef"><b>Definition:</b> <a href="PipelineBase_8hpp_source.html#l00141">PipelineBase.hpp:141</a></div></div>
+<p class="definition">Definition at line <a class="el" href="PipelineBase_8cc_source.html#l00063">63</a> of file <a class="el" href="PipelineBase_8cc_source.html">PipelineBase.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   63</span>                                                                      {</div>
+<div class="line"><span class="lineno">   64</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; failure_callbacks : <a class="code hl_variable" href="classdyno_1_1PipelineBase.html#af6a9fff493efafce66a4b4729e3bb736">on_failure_callbacks_</a>) {</div>
+<div class="line"><span class="lineno">   65</span>    <span class="keywordflow">if</span> (failure_callbacks) {</div>
+<div class="line"><span class="lineno">   66</span>      failure_callbacks(result);</div>
+<div class="line"><span class="lineno">   67</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">   68</span>      LOG(ERROR) &lt;&lt; <span class="stringliteral">&quot;Invalid OnFailureCallback for module: &quot;</span> &lt;&lt; <a class="code hl_variable" href="classdyno_1_1PipelineBase.html#aa08d3c035aed987a2f25cdde0a488115">module_name_</a>;</div>
+<div class="line"><span class="lineno">   69</span>    }</div>
+<div class="line"><span class="lineno">   70</span>  }</div>
+<div class="line"><span class="lineno">   71</span>}</div>
+<div class="ttc" id="aclassdyno_1_1PipelineBase_html_af6a9fff493efafce66a4b4729e3bb736"><div class="ttname"><a href="classdyno_1_1PipelineBase.html#af6a9fff493efafce66a4b4729e3bb736">dyno::PipelineBase::on_failure_callbacks_</a></div><div class="ttdeci">std::vector&lt; OnPipelineFailureCallback &gt; on_failure_callbacks_</div><div class="ttdef"><b>Definition:</b> <a href="PipelineBase_8hpp_source.html#l00136">PipelineBase.hpp:136</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1PipelineBase.html#aa08d3c035aed987a2f25cdde0a488115">module_name_</a>, and <a class="el" href="classdyno_1_1PipelineBase.html#af6a9fff493efafce66a4b4729e3bb736">on_failure_callbacks_</a>.</p>
 
@@ -488,11 +480,11 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="PipelineBase_8cc_source.html#l00077">77</a> of file <a class="el" href="PipelineBase_8cc_source.html">PipelineBase.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   78</span>{</div>
-<div class="line"><span class="lineno">   79</span>    CHECK(callback_);</div>
-<div class="line"><span class="lineno">   80</span>    <a class="code hl_variable" href="classdyno_1_1PipelineBase.html#af6a9fff493efafce66a4b4729e3bb736">on_failure_callbacks_</a>.push_back(callback_);</div>
-<div class="line"><span class="lineno">   81</span>}</div>
+<p class="definition">Definition at line <a class="el" href="PipelineBase_8cc_source.html#l00073">73</a> of file <a class="el" href="PipelineBase_8cc_source.html">PipelineBase.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   74</span>                                                {</div>
+<div class="line"><span class="lineno">   75</span>  CHECK(callback_);</div>
+<div class="line"><span class="lineno">   76</span>  <a class="code hl_variable" href="classdyno_1_1PipelineBase.html#af6a9fff493efafce66a4b4729e3bb736">on_failure_callbacks_</a>.push_back(callback_);</div>
+<div class="line"><span class="lineno">   77</span>}</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1PipelineBase.html#af6a9fff493efafce66a4b4729e3bb736">on_failure_callbacks_</a>.</p>
 
@@ -521,12 +513,12 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PipelineBase_8cc_source.html#l00049">49</a> of file <a class="el" href="PipelineBase_8cc_source.html">PipelineBase.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   50</span>{</div>
-<div class="line"><span class="lineno">   51</span>    LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Shutting down module &quot;</span> &lt;&lt; <a class="code hl_variable" href="classdyno_1_1PipelineBase.html#aa08d3c035aed987a2f25cdde0a488115">module_name_</a>;</div>
-<div class="line"><span class="lineno">   52</span>    <a class="code hl_variable" href="classdyno_1_1PipelineBase.html#a9eb2ee8aed1b93a463049fe1e73c9862">is_shutdown_</a> = <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">   53</span>    <a class="code hl_function" href="classdyno_1_1PipelineBase.html#a94a7ee9d6d2139a6de9337b4bfb76546">shutdownQueues</a>();</div>
-<div class="line"><span class="lineno">   54</span>}</div>
+<p class="definition">Definition at line <a class="el" href="PipelineBase_8cc_source.html#l00055">55</a> of file <a class="el" href="PipelineBase_8cc_source.html">PipelineBase.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   55</span>                            {</div>
+<div class="line"><span class="lineno">   56</span>  LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Shutting down module &quot;</span> &lt;&lt; <a class="code hl_variable" href="classdyno_1_1PipelineBase.html#aa08d3c035aed987a2f25cdde0a488115">module_name_</a>;</div>
+<div class="line"><span class="lineno">   57</span>  <a class="code hl_variable" href="classdyno_1_1PipelineBase.html#a9eb2ee8aed1b93a463049fe1e73c9862">is_shutdown_</a> = <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">   58</span>  <a class="code hl_function" href="classdyno_1_1PipelineBase.html#a94a7ee9d6d2139a6de9337b4bfb76546">shutdownQueues</a>();</div>
+<div class="line"><span class="lineno">   59</span>}</div>
 <div class="ttc" id="aclassdyno_1_1PipelineBase_html_a94a7ee9d6d2139a6de9337b4bfb76546"><div class="ttname"><a href="classdyno_1_1PipelineBase.html#a94a7ee9d6d2139a6de9337b4bfb76546">dyno::PipelineBase::shutdownQueues</a></div><div class="ttdeci">virtual void shutdownQueues()=0</div><div class="ttdoc">Virtual function that should shutdown all associated queues. Generally this should shutdown input que...</div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1PipelineBase.html#a9eb2ee8aed1b93a463049fe1e73c9862">is_shutdown_</a>, <a class="el" href="classdyno_1_1PipelineBase.html#aa08d3c035aed987a2f25cdde0a488115">module_name_</a>, and <a class="el" href="classdyno_1_1PipelineBase.html#a94a7ee9d6d2139a6de9337b4bfb76546">shutdownQueues()</a>.</p>
@@ -615,18 +607,18 @@ Here is the caller graph for this function:</div>
 <dd>
 false </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="PipelineBase_8cc_source.html#l00037">37</a> of file <a class="el" href="PipelineBase_8cc_source.html">PipelineBase.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   38</span>  {</div>
-<div class="line"><span class="lineno">   39</span>    LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Starting module &quot;</span> &lt;&lt; <a class="code hl_variable" href="classdyno_1_1PipelineBase.html#aa08d3c035aed987a2f25cdde0a488115">module_name_</a>;</div>
-<div class="line"><span class="lineno">   40</span>    <span class="keywordflow">while</span> (!<a class="code hl_function" href="classdyno_1_1PipelineBase.html#a5c485b024b7b1c710c94303f29ca8e31">isShutdown</a>())</div>
-<div class="line"><span class="lineno">   41</span>    {</div>
-<div class="line"><span class="lineno">   42</span>      <a class="code hl_function" href="classdyno_1_1PipelineBase.html#a8853e3c9efbd227fbd6e5fc0a3220362">spinOnce</a>();</div>
-<div class="line"><span class="lineno">   43</span>    <span class="comment">//   using namespace std::chrono_literals;</span></div>
-<div class="line"><span class="lineno">   44</span>    <span class="comment">//   std::this_thread::sleep_for(1ms);  // give CPU thread some sleep time... //TODO: only if threaded?</span></div>
-<div class="line"><span class="lineno">   45</span>    }</div>
-<div class="line"><span class="lineno">   46</span>    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">   47</span>  }</div>
-<div class="ttc" id="aclassdyno_1_1PipelineBase_html_a5c485b024b7b1c710c94303f29ca8e31"><div class="ttname"><a href="classdyno_1_1PipelineBase.html#a5c485b024b7b1c710c94303f29ca8e31">dyno::PipelineBase::isShutdown</a></div><div class="ttdeci">bool isShutdown() const</div><div class="ttdoc">Returns true if the pipeline has been shutdown by shutdown().</div><div class="ttdef"><b>Definition:</b> <a href="PipelineBase_8hpp_source.html#l00092">PipelineBase.hpp:92</a></div></div>
+<p class="definition">Definition at line <a class="el" href="PipelineBase_8cc_source.html#l00044">44</a> of file <a class="el" href="PipelineBase_8cc_source.html">PipelineBase.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   44</span>                        {</div>
+<div class="line"><span class="lineno">   45</span>  LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Starting module &quot;</span> &lt;&lt; <a class="code hl_variable" href="classdyno_1_1PipelineBase.html#aa08d3c035aed987a2f25cdde0a488115">module_name_</a>;</div>
+<div class="line"><span class="lineno">   46</span>  <span class="keywordflow">while</span> (!<a class="code hl_function" href="classdyno_1_1PipelineBase.html#a5c485b024b7b1c710c94303f29ca8e31">isShutdown</a>()) {</div>
+<div class="line"><span class="lineno">   47</span>    <a class="code hl_function" href="classdyno_1_1PipelineBase.html#a8853e3c9efbd227fbd6e5fc0a3220362">spinOnce</a>();</div>
+<div class="line"><span class="lineno">   48</span>    <span class="comment">//   using namespace std::chrono_literals;</span></div>
+<div class="line"><span class="lineno">   49</span>    <span class="comment">//   std::this_thread::sleep_for(1ms);  // give CPU thread some sleep</span></div>
+<div class="line"><span class="lineno">   50</span>    <span class="comment">//   time... //TODO: only if threaded?</span></div>
+<div class="line"><span class="lineno">   51</span>  }</div>
+<div class="line"><span class="lineno">   52</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">   53</span>}</div>
+<div class="ttc" id="aclassdyno_1_1PipelineBase_html_a5c485b024b7b1c710c94303f29ca8e31"><div class="ttname"><a href="classdyno_1_1PipelineBase.html#a5c485b024b7b1c710c94303f29ca8e31">dyno::PipelineBase::isShutdown</a></div><div class="ttdeci">bool isShutdown() const</div><div class="ttdoc">Returns true if the pipeline has been shutdown by shutdown().</div><div class="ttdef"><b>Definition:</b> <a href="PipelineBase_8hpp_source.html#l00083">PipelineBase.hpp:83</a></div></div>
 <div class="ttc" id="aclassdyno_1_1PipelineBase_html_a8853e3c9efbd227fbd6e5fc0a3220362"><div class="ttname"><a href="classdyno_1_1PipelineBase.html#a8853e3c9efbd227fbd6e5fc0a3220362">dyno::PipelineBase::spinOnce</a></div><div class="ttdeci">virtual ReturnCode spinOnce()=0</div><div class="ttdoc">Processes for one iteration of the pipeline.</div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1PipelineBase.html#a5c485b024b7b1c710c94303f29ca8e31">isShutdown()</a>, <a class="el" href="classdyno_1_1PipelineBase.html#aa08d3c035aed987a2f25cdde0a488115">module_name_</a>, and <a class="el" href="classdyno_1_1PipelineBase.html#a8853e3c9efbd227fbd6e5fc0a3220362">spinOnce()</a>.</p>
@@ -650,7 +642,7 @@ Here is the caller graph for this function:</div>
 <area shape="rect" title="Spins the pipeline via continuous calls to spinOnce until the pipeline is shutdown." alt="" coords="512,49,659,89"/>
 <area shape="rect" href="structdyno_1_1PipelineSpinner_1_1AsynchronousSpinnerPair.html#ab1673256404a04057a1514010e6cc677" title=" " alt="" coords="264,5,459,60"/>
 <area shape="rect" href="classdyno_1_1DynoPipelineManager.html#abe710e5db047895f61547936feb16637" title=" " alt="" coords="259,85,464,125"/>
-<area shape="rect" href="classdyno_1_1DynoPipelineManager.html#a283e891aa3d4ca8d2d671eb1e3d5d514" title=" " alt="" coords="5,85,211,125"/>
+<area shape="rect" href="classdyno_1_1DynoPipelineManager.html#a1e980339b4d308ab83d46ede524c3a46" title=" " alt="" coords="5,85,211,125"/>
 </map>
 </div>
 
@@ -683,7 +675,7 @@ Here is the caller graph for this function:</div>
 <p>Pulls data from registetered input queues and sends the data to some output queues. Called by <a class="el" href="classdyno_1_1PipelineBase.html#a56667b4574808e95f808d1b4d79a469b" title="Spins the pipeline via continuous calls to spinOnce until the pipeline is shutdown.">spin()</a>.</p>
 <dl class="section return"><dt>Returns</dt><dd>PipelineReturnStatus </dd></dl>
 
-<p>Implemented in <a class="el" href="classdyno_1_1PipelineModule.html#a14790850c27a717c676ab1e09f558e81">dyno::PipelineModule&lt; INPUT, OUTPUT &gt;</a>, <a class="el" href="classdyno_1_1PipelineModule.html#a14790850c27a717c676ab1e09f558e81">dyno::PipelineModule&lt; FrontendInputPacketBase, FrontendInputPacketBase &gt;</a>, <a class="el" href="classdyno_1_1PipelineModule.html#a14790850c27a717c676ab1e09f558e81">dyno::PipelineModule&lt; INPUT, NullPipelinePayload &gt;</a>, and <a class="el" href="classdyno_1_1PipelineModule.html#a14790850c27a717c676ab1e09f558e81">dyno::PipelineModule&lt; NullPipelinePayload, FrontendOutputPacketBase &gt;</a>.</p>
+<p>Implemented in <a class="el" href="classdyno_1_1PipelineModule.html#a14790850c27a717c676ab1e09f558e81">dyno::PipelineModule&lt; INPUT, OUTPUT &gt;</a>, <a class="el" href="classdyno_1_1PipelineModule.html#a14790850c27a717c676ab1e09f558e81">dyno::PipelineModule&lt; FrontendInputPacketBase, FrontendInputPacketBase &gt;</a>, <a class="el" href="classdyno_1_1PipelineModule.html#a14790850c27a717c676ab1e09f558e81">dyno::PipelineModule&lt; INPUT, NullPipelinePayload &gt;</a>, and <a class="el" href="classdyno_1_1PipelineModule.html#a14790850c27a717c676ab1e09f558e81">dyno::PipelineModule&lt; NullPipelinePayload, VisionImuPacket &gt;</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1PipelineBase.html#a56667b4574808e95f808d1b4d79a469b">spin()</a>.</p>
 <div class="dynheader">
@@ -695,7 +687,7 @@ Here is the caller graph for this function:</div>
 <area shape="rect" href="classdyno_1_1PipelineBase.html#a56667b4574808e95f808d1b4d79a469b" title="Spins the pipeline via continuous calls to spinOnce until the pipeline is shutdown." alt="" coords="512,49,659,89"/>
 <area shape="rect" href="structdyno_1_1PipelineSpinner_1_1AsynchronousSpinnerPair.html#ab1673256404a04057a1514010e6cc677" title=" " alt="" coords="264,5,459,60"/>
 <area shape="rect" href="classdyno_1_1DynoPipelineManager.html#abe710e5db047895f61547936feb16637" title=" " alt="" coords="259,85,464,125"/>
-<area shape="rect" href="classdyno_1_1DynoPipelineManager.html#a283e891aa3d4ca8d2d671eb1e3d5d514" title=" " alt="" coords="5,85,211,125"/>
+<area shape="rect" href="classdyno_1_1DynoPipelineManager.html#a1e980339b4d308ab83d46ede524c3a46" title=" " alt="" coords="5,85,211,125"/>
 </map>
 </div>
 
@@ -712,7 +704,7 @@ Here is the caller graph for this function:</div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::atomic_bool dyno::PipelineBase::is_shutdown_ { false }</td>
+          <td class="memname">std::atomic_bool dyno::PipelineBase::is_shutdown_ {false}</td>
         </tr>
       </table>
   </td>
@@ -724,7 +716,7 @@ Here is the caller graph for this function:</div>
 
 <p>Thread related members. </p>
 
-<p class="definition">Definition at line <a class="el" href="PipelineBase_8hpp_source.html#l00143">143</a> of file <a class="el" href="PipelineBase_8hpp_source.html">PipelineBase.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="PipelineBase_8hpp_source.html#l00138">138</a> of file <a class="el" href="PipelineBase_8hpp_source.html">PipelineBase.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1PipelineBase.html#a5c485b024b7b1c710c94303f29ca8e31">isShutdown()</a>, and <a class="el" href="classdyno_1_1PipelineBase.html#a3fe02ed3b9e50f0da3b1619216a1caca">shutdown()</a>.</p>
 
@@ -740,7 +732,7 @@ Here is the caller graph for this function:</div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::atomic_bool dyno::PipelineBase::is_thread_working_ { false }</td>
+          <td class="memname">std::atomic_bool dyno::PipelineBase::is_thread_working_ {false}</td>
         </tr>
       </table>
   </td>
@@ -750,7 +742,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PipelineBase_8hpp_source.html#l00135">135</a> of file <a class="el" href="PipelineBase_8hpp_source.html">PipelineBase.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="PipelineBase_8hpp_source.html#l00130">130</a> of file <a class="el" href="PipelineBase_8hpp_source.html">PipelineBase.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1PipelineBase.html#a52e008605e03563ee26719d8cc414dab">isWorking()</a>.</p>
 
@@ -776,7 +768,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PipelineBase_8hpp_source.html#l00134">134</a> of file <a class="el" href="PipelineBase_8hpp_source.html">PipelineBase.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="PipelineBase_8hpp_source.html#l00129">129</a> of file <a class="el" href="PipelineBase_8hpp_source.html">PipelineBase.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1PipelineBase.html#a90bf18af953533433ef951ef8270b969">getModuleName()</a>, <a class="el" href="classdyno_1_1PipelineBase.html#a5d3554bcd68b61f6fca601b156506d17">notifyFailures()</a>, <a class="el" href="classdyno_1_1PipelineBase.html#a3fe02ed3b9e50f0da3b1619216a1caca">shutdown()</a>, and <a class="el" href="classdyno_1_1PipelineBase.html#a56667b4574808e95f808d1b4d79a469b">spin()</a>.</p>
 
@@ -802,7 +794,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PipelineBase_8hpp_source.html#l00141">141</a> of file <a class="el" href="PipelineBase_8hpp_source.html">PipelineBase.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="PipelineBase_8hpp_source.html#l00136">136</a> of file <a class="el" href="PipelineBase_8hpp_source.html">PipelineBase.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1PipelineBase.html#a5d3554bcd68b61f6fca601b156506d17">notifyFailures()</a>, and <a class="el" href="classdyno_1_1PipelineBase.html#aed43311b3ae474d6d9e9da3c37ab656f">registerOnFailureCallback()</a>.</p>
 

@@ -1,7 +1,7 @@
 <map id="dyno::WorldPoseAccessor::getObjectMotion" name="dyno::WorldPoseAccessor::getObjectMotion">
 <area shape="rect" id="node1" title="Get an absolute object motion (_{k&#45;1}^wH_k) from theta the requested time&#45;step (k) and object (j)." alt="" coords="5,63,193,103"/>
 <area shape="rect" id="node2" href="$classdyno_1_1WorldPoseAccessor.html#a0751d4c15e4628e05912d6e139a05417" title="Get the pose (^wL_k) of an object (j) at time&#45;step (k)." alt="" coords="250,5,438,45"/>
-<area shape="rect" id="node5" href="$classdyno_1_1Accessor.html#a7204bf6ab3ea8d16809049aa1553bccc" title=" " alt="" coords="505,59,699,99"/>
+<area shape="rect" id="node5" href="$classdyno_1_1AccessorT.html#aed6f20448b79c933f4bde4e3a518f846" title=" " alt="" coords="497,59,707,99"/>
 <area shape="rect" id="node6" href="$classdyno_1_1StateQuery.html#ad7e4445ee38e5e376aee9f95ec21d26e" title=" " alt="" coords="241,123,447,149"/>
 <area shape="rect" id="node3" href="$classdyno_1_1StateQuery.html#a11630f8b7aa055e0418c3008de72be4c" title=" " alt="" coords="495,9,709,34"/>
 <area shape="rect" id="node4" href="$classdyno_1_1StateQuery.html#a0fcc50e2a6b7bf7125d86af0a9bbc9ae" title=" " alt="" coords="757,66,972,91"/>

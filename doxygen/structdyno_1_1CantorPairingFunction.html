@@ -82,7 +82,7 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p><code>#include &lt;<a class="el" href="DynamicPointSymbol_8hpp_source.html">DynamicPointSymbol.hpp</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="Symbols_8hpp_source.html">Symbols.hpp</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
@@ -98,7 +98,7 @@ Static Public Member Functions</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="DynamicPointSymbol_8hpp_source.html#l00039">39</a> of file <a class="el" href="DynamicPointSymbol_8hpp_source.html">DynamicPointSymbol.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Symbols_8hpp_source.html#l00042">42</a> of file <a class="el" href="Symbols_8hpp_source.html">Symbols.hpp</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="a942348eb33a1b82be295c203cb3584b9" name="a942348eb33a1b82be295c203cb3584b9"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a942348eb33a1b82be295c203cb3584b9">&#9670;&#160;</a></span>Pair</h2>
@@ -112,7 +112,7 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="DynamicPointSymbol_8hpp_source.html#l00040">40</a> of file <a class="el" href="DynamicPointSymbol_8hpp_source.html">DynamicPointSymbol.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Symbols_8hpp_source.html#l00043">43</a> of file <a class="el" href="Symbols_8hpp_source.html">Symbols.hpp</a>.</p>
 
 </div>
 </div>
@@ -141,15 +141,16 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="DynamicPointSymbol_8cc_source.html#l00037">37</a> of file <a class="el" href="DynamicPointSymbol_8cc_source.html">DynamicPointSymbol.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   37</span>                                                                           {</div>
-<div class="line"><span class="lineno">   38</span>    std::uint64_t w = <span class="keyword">static_cast&lt;</span>std::uint64_t<span class="keyword">&gt;</span>(floor(((sqrt((z*8)+1))-1)/2));</div>
-<div class="line"><span class="lineno">   39</span>    std::uint64_t t = <span class="keyword">static_cast&lt;</span>std::uint64_t<span class="keyword">&gt;</span>((w*(w+1))/2);</div>
-<div class="line"><span class="lineno">   40</span> </div>
-<div class="line"><span class="lineno">   41</span>    std::uint64_t k2 = z - t;</div>
-<div class="line"><span class="lineno">   42</span>    std::uint64_t k1 = w - k2;</div>
-<div class="line"><span class="lineno">   43</span>    <span class="keywordflow">return</span> std::make_pair(k1, k2);</div>
-<div class="line"><span class="lineno">   44</span>}</div>
+<p class="definition">Definition at line <a class="el" href="Symbols_8cc_source.html#l00166">166</a> of file <a class="el" href="Symbols_8cc_source.html">Symbols.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  167</span>                         {</div>
+<div class="line"><span class="lineno">  168</span>  std::uint64_t w =</div>
+<div class="line"><span class="lineno">  169</span>      <span class="keyword">static_cast&lt;</span>std::uint64_t<span class="keyword">&gt;</span>(floor(((sqrt((z * 8) + 1)) - 1) / 2));</div>
+<div class="line"><span class="lineno">  170</span>  std::uint64_t t = <span class="keyword">static_cast&lt;</span>std::uint64_t<span class="keyword">&gt;</span>((w * (w + 1)) / 2);</div>
+<div class="line"><span class="lineno">  171</span> </div>
+<div class="line"><span class="lineno">  172</span>  std::uint64_t k2 = z - t;</div>
+<div class="line"><span class="lineno">  173</span>  std::uint64_t k1 = w - k2;</div>
+<div class="line"><span class="lineno">  174</span>  <span class="keywordflow">return</span> std::make_pair(k1, k2);</div>
+<div class="line"><span class="lineno">  175</span>}</div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1DynamicPointSymbol.html#a86cedb351c79814efddf85559525a16b">dyno::DynamicPointSymbol::DynamicPointSymbol()</a>, and <a class="el" href="classdyno_1_1DynamicPointSymbol.html#a9b4d7a269fd5a15bcab547de22f6e614">dyno::DynamicPointSymbol::recover()</a>.</p>
 <div class="dynheader">
@@ -190,12 +191,12 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="DynamicPointSymbol_8cc_source.html#l00031">31</a> of file <a class="el" href="DynamicPointSymbol_8cc_source.html">DynamicPointSymbol.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   31</span>                                                         {</div>
-<div class="line"><span class="lineno">   32</span>    <span class="keyword">const</span> <span class="keyword">auto</span> k1 = (input.first);</div>
-<div class="line"><span class="lineno">   33</span>    <span class="keyword">const</span> <span class="keyword">auto</span> k2 = (input.second);</div>
-<div class="line"><span class="lineno">   34</span>    <span class="keywordflow">return</span> ((k1+k2)*(k1+k2+1)/2) + k2;</div>
-<div class="line"><span class="lineno">   35</span>}</div>
+<p class="definition">Definition at line <a class="el" href="Symbols_8cc_source.html#l00160">160</a> of file <a class="el" href="Symbols_8cc_source.html">Symbols.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  160</span>                                                         {</div>
+<div class="line"><span class="lineno">  161</span>  <span class="keyword">const</span> <span class="keyword">auto</span> k1 = (input.first);</div>
+<div class="line"><span class="lineno">  162</span>  <span class="keyword">const</span> <span class="keyword">auto</span> k2 = (input.second);</div>
+<div class="line"><span class="lineno">  163</span>  <span class="keywordflow">return</span> ((k1 + k2) * (k1 + k2 + 1) / 2) + k2;</div>
+<div class="line"><span class="lineno">  164</span>}</div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1DynamicPointSymbol.html#abe966c192cd56f5dca380bbefe85c7c2">dyno::DynamicPointSymbol::constructIndex()</a>.</p>
 <div class="dynheader">
@@ -211,8 +212,8 @@ Here is the caller graph for this function:</div>
 </div>
 </div>
 <hr/>The documentation for this struct was generated from the following files:<ul>
-<li>dynosam/include/dynosam/backend/<a class="el" href="DynamicPointSymbol_8hpp_source.html">DynamicPointSymbol.hpp</a></li>
-<li>dynosam/src/backend/<a class="el" href="DynamicPointSymbol_8cc_source.html">DynamicPointSymbol.cc</a></li>
+<li>dynosam_opt/include/dynosam_opt/<a class="el" href="Symbols_8hpp_source.html">Symbols.hpp</a></li>
+<li>dynosam_opt/src/<a class="el" href="Symbols_8cc_source.html">Symbols.cc</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

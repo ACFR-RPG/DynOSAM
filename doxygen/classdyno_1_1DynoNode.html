@@ -147,7 +147,7 @@ Private Attributes</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="PipelineRos_8hpp_source.html#l00043">43</a> of file <a class="el" href="PipelineRos_8hpp_source.html">PipelineRos.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="PipelineRos_8hpp_source.html#l00041">41</a> of file <a class="el" href="PipelineRos_8hpp_source.html">PipelineRos.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="ab3963662760ee1fde2a603d4fec9804e" name="ab3963662760ee1fde2a603d4fec9804e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab3963662760ee1fde2a603d4fec9804e">&#9670;&#160;</a></span>DynoNode()</h2>
@@ -183,23 +183,23 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PipelineRos_8cc_source.html#l00052">52</a> of file <a class="el" href="PipelineRos_8cc_source.html">PipelineRos.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   54</span>    : Node(node_name, <span class="stringliteral">&quot;dynosam&quot;</span>, options) {</div>
-<div class="line"><span class="lineno">   55</span>  RCLCPP_INFO_STREAM(this-&gt;get_logger(), <span class="stringliteral">&quot;Starting DynoNode&quot;</span>);</div>
-<div class="line"><span class="lineno">   56</span>  <span class="keyword">auto</span> params_path = <a class="code hl_function" href="classdyno_1_1DynoNode.html#ae343bb671d0f962457efc8416037cdd4">getParamsPath</a>();</div>
-<div class="line"><span class="lineno">   57</span>  RCLCPP_INFO_STREAM(this-&gt;get_logger(),</div>
-<div class="line"><span class="lineno">   58</span>                     <span class="stringliteral">&quot;Loading Dyno VO params from: &quot;</span> &lt;&lt; params_path);</div>
-<div class="line"><span class="lineno">   59</span> </div>
-<div class="line"><span class="lineno">   60</span>  <a class="code hl_variable" href="classdyno_1_1DynoNode.html#a0d05c0c5f364f9de7236fe685dbd3197">is_online_</a> = ParameterConstructor(<span class="keyword">this</span>, <span class="stringliteral">&quot;online&quot;</span>, <span class="keyword">false</span>)</div>
-<div class="line"><span class="lineno">   61</span>                   .description(<span class="stringliteral">&quot;If the online DataProvider should be used&quot;</span>)</div>
-<div class="line"><span class="lineno">   62</span>                   .finish()</div>
-<div class="line"><span class="lineno">   63</span>                   .get&lt;<span class="keywordtype">bool</span>&gt;();</div>
-<div class="line"><span class="lineno">   64</span> </div>
-<div class="line"><span class="lineno">   65</span>  <a class="code hl_variable" href="classdyno_1_1DynoNode.html#a98f45f8f60086b3d486cf4a5220f2793">dyno_params_</a> = std::make_unique&lt;DynoParams&gt;(params_path);</div>
-<div class="line"><span class="lineno">   66</span>}</div>
-<div class="ttc" id="aclassdyno_1_1DynoNode_html_a0d05c0c5f364f9de7236fe685dbd3197"><div class="ttname"><a href="classdyno_1_1DynoNode.html#a0d05c0c5f364f9de7236fe685dbd3197">dyno::DynoNode::is_online_</a></div><div class="ttdeci">bool is_online_</div><div class="ttdef"><b>Definition:</b> <a href="PipelineRos_8hpp_source.html#l00074">PipelineRos.hpp:74</a></div></div>
-<div class="ttc" id="aclassdyno_1_1DynoNode_html_a98f45f8f60086b3d486cf4a5220f2793"><div class="ttname"><a href="classdyno_1_1DynoNode.html#a98f45f8f60086b3d486cf4a5220f2793">dyno::DynoNode::dyno_params_</a></div><div class="ttdeci">std::unique_ptr&lt; DynoParams &gt; dyno_params_</div><div class="ttdef"><b>Definition:</b> <a href="PipelineRos_8hpp_source.html#l00090">PipelineRos.hpp:90</a></div></div>
-<div class="ttc" id="aclassdyno_1_1DynoNode_html_ae343bb671d0f962457efc8416037cdd4"><div class="ttname"><a href="classdyno_1_1DynoNode.html#ae343bb671d0f962457efc8416037cdd4">dyno::DynoNode::getParamsPath</a></div><div class="ttdeci">std::string getParamsPath()</div><div class="ttdef"><b>Definition:</b> <a href="PipelineRos_8hpp_source.html#l00058">PipelineRos.hpp:58</a></div></div>
+<p class="definition">Definition at line <a class="el" href="PipelineRos_8cc_source.html#l00054">54</a> of file <a class="el" href="PipelineRos_8cc_source.html">PipelineRos.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   56</span>    : Node(node_name, <span class="stringliteral">&quot;dynosam&quot;</span>, options) {</div>
+<div class="line"><span class="lineno">   57</span>  RCLCPP_INFO_STREAM(this-&gt;get_logger(), <span class="stringliteral">&quot;Starting DynoNode&quot;</span>);</div>
+<div class="line"><span class="lineno">   58</span>  <span class="keyword">auto</span> params_path = <a class="code hl_function" href="classdyno_1_1DynoNode.html#ae343bb671d0f962457efc8416037cdd4">getParamsPath</a>();</div>
+<div class="line"><span class="lineno">   59</span>  RCLCPP_INFO_STREAM(this-&gt;get_logger(),</div>
+<div class="line"><span class="lineno">   60</span>                     <span class="stringliteral">&quot;Loading Dyno VO params from: &quot;</span> &lt;&lt; params_path);</div>
+<div class="line"><span class="lineno">   61</span> </div>
+<div class="line"><span class="lineno">   62</span>  <a class="code hl_variable" href="classdyno_1_1DynoNode.html#a0d05c0c5f364f9de7236fe685dbd3197">is_online_</a> = ParameterConstructor(<span class="keyword">this</span>, <span class="stringliteral">&quot;online&quot;</span>, <span class="keyword">false</span>)</div>
+<div class="line"><span class="lineno">   63</span>                   .description(<span class="stringliteral">&quot;If the online DataProvider should be used&quot;</span>)</div>
+<div class="line"><span class="lineno">   64</span>                   .finish()</div>
+<div class="line"><span class="lineno">   65</span>                   .get&lt;<span class="keywordtype">bool</span>&gt;();</div>
+<div class="line"><span class="lineno">   66</span> </div>
+<div class="line"><span class="lineno">   67</span>  <a class="code hl_variable" href="classdyno_1_1DynoNode.html#a98f45f8f60086b3d486cf4a5220f2793">dyno_params_</a> = std::make_unique&lt;DynoParams&gt;(params_path);</div>
+<div class="line"><span class="lineno">   68</span>}</div>
+<div class="ttc" id="aclassdyno_1_1DynoNode_html_a0d05c0c5f364f9de7236fe685dbd3197"><div class="ttname"><a href="classdyno_1_1DynoNode.html#a0d05c0c5f364f9de7236fe685dbd3197">dyno::DynoNode::is_online_</a></div><div class="ttdeci">bool is_online_</div><div class="ttdef"><b>Definition:</b> <a href="PipelineRos_8hpp_source.html#l00072">PipelineRos.hpp:72</a></div></div>
+<div class="ttc" id="aclassdyno_1_1DynoNode_html_a98f45f8f60086b3d486cf4a5220f2793"><div class="ttname"><a href="classdyno_1_1DynoNode.html#a98f45f8f60086b3d486cf4a5220f2793">dyno::DynoNode::dyno_params_</a></div><div class="ttdeci">std::unique_ptr&lt; DynoParams &gt; dyno_params_</div><div class="ttdef"><b>Definition:</b> <a href="PipelineRos_8hpp_source.html#l00088">PipelineRos.hpp:88</a></div></div>
+<div class="ttc" id="aclassdyno_1_1DynoNode_html_ae343bb671d0f962457efc8416037cdd4"><div class="ttname"><a href="classdyno_1_1DynoNode.html#ae343bb671d0f962457efc8416037cdd4">dyno::DynoNode::getParamsPath</a></div><div class="ttdeci">std::string getParamsPath()</div><div class="ttdef"><b>Definition:</b> <a href="PipelineRos_8hpp_source.html#l00056">PipelineRos.hpp:56</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1ParameterConstructor.html#a83e32e6b87f9aaa75e6b3564a960e9d9">dyno::ParameterConstructor::description()</a>, <a class="el" href="classdyno_1_1DynoNode.html#a98f45f8f60086b3d486cf4a5220f2793">dyno_params_</a>, <a class="el" href="classdyno_1_1ParameterConstructor.html#a2f64575e1752c6b9be7063c8467b627f">dyno::ParameterConstructor::finish()</a>, <a class="el" href="classdyno_1_1ParameterDetails.html#a68f46befd597e6b463dc0da16bdbd876">dyno::ParameterDetails::get()</a>, <a class="el" href="classdyno_1_1DynoNode.html#ae343bb671d0f962457efc8416037cdd4">getParamsPath()</a>, and <a class="el" href="classdyno_1_1DynoNode.html#a0d05c0c5f364f9de7236fe685dbd3197">is_online_</a>.</p>
 <div class="dynheader">
@@ -216,7 +216,7 @@ Here is the call graph for this function:</div>
 <area shape="rect" href="classdyno_1_1ParameterDetails.html#a606d5ea74ad42dc56142759bb2e17b11" title=" " alt="" coords="1267,243,1441,283"/>
 <area shape="rect" href="classdyno_1_1ParameterDetails.html#a5b29e21d596fc2efce6df3477f7c5961" title="Name of the paramter." alt="" coords="1489,215,1664,255"/>
 <area shape="rect" href="classdyno_1_1DynoNode.html#a8fdfaee1dd7e5904d9de47ac6d874d8f" title="Retrieves a std::string param (under param_name) which is expected to be a file path." alt="" coords="543,100,744,140"/>
-<area shape="rect" href="namespacedyno.html#a163cb16ef980acda5b09d45c3a156e6f" title=" " alt="" coords="794,93,994,133"/>
+<area shape="rect" href="namespacedyno_1_1utils.html#a71785ed8de386df1fce95751bf5bec15" title=" " alt="" coords="795,93,993,133"/>
 </map>
 </div>
 
@@ -271,48 +271,48 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PipelineRos_8cc_source.html#l00068">68</a> of file <a class="el" href="PipelineRos_8cc_source.html">PipelineRos.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   68</span>                                                 {</div>
-<div class="line"><span class="lineno">   69</span>  <span class="keywordflow">if</span> (<a class="code hl_variable" href="classdyno_1_1DynoNode.html#a0d05c0c5f364f9de7236fe685dbd3197">is_online_</a>) {</div>
-<div class="line"><span class="lineno">   70</span>    RCLCPP_INFO_STREAM(</div>
-<div class="line"><span class="lineno">   71</span>        this-&gt;get_logger(),</div>
-<div class="line"><span class="lineno">   72</span>        <span class="stringliteral">&quot;Online DataProvider selected. Waiting for ROS topics...&quot;</span>);</div>
-<div class="line"><span class="lineno">   73</span>    OnlineDataProviderRosParams online_params;</div>
-<div class="line"><span class="lineno">   74</span>    online_params.wait_for_camera_params =</div>
-<div class="line"><span class="lineno">   75</span>        ParameterConstructor(<span class="keyword">this</span>, <span class="stringliteral">&quot;wait_for_camera_params&quot;</span>,</div>
-<div class="line"><span class="lineno">   76</span>                             online_params.wait_for_camera_params)</div>
-<div class="line"><span class="lineno">   77</span>            .description(</div>
-<div class="line"><span class="lineno">   78</span>                <span class="stringliteral">&quot;If the online DataProvider should wait for the camera params &quot;</span></div>
-<div class="line"><span class="lineno">   79</span>                <span class="stringliteral">&quot;on a ROS topic!&quot;</span>)</div>
-<div class="line"><span class="lineno">   80</span>            .finish()</div>
-<div class="line"><span class="lineno">   81</span>            .get&lt;<span class="keywordtype">bool</span>&gt;();</div>
-<div class="line"><span class="lineno">   82</span>    online_params.camera_params_timeout =</div>
-<div class="line"><span class="lineno">   83</span>        ParameterConstructor(<span class="keyword">this</span>, <span class="stringliteral">&quot;camera_params_timeout&quot;</span>,</div>
-<div class="line"><span class="lineno">   84</span>                             online_params.camera_params_timeout)</div>
-<div class="line"><span class="lineno">   85</span>            .description(</div>
-<div class="line"><span class="lineno">   86</span>                <span class="stringliteral">&quot;When waiting for camera params, how long the online &quot;</span></div>
-<div class="line"><span class="lineno">   87</span>                <span class="stringliteral">&quot;DataProvider should wait before time out (ms)&quot;</span>)</div>
-<div class="line"><span class="lineno">   88</span>            .finish()</div>
-<div class="line"><span class="lineno">   89</span>            .get&lt;<span class="keywordtype">int</span>&gt;();</div>
-<div class="line"><span class="lineno">   90</span>    <span class="keywordflow">return</span> std::make_shared&lt;OnlineDataProviderRos&gt;(</div>
-<div class="line"><span class="lineno">   91</span>        this-&gt;create_sub_node(<span class="stringliteral">&quot;dataprovider&quot;</span>), online_params);</div>
-<div class="line"><span class="lineno">   92</span>  }</div>
-<div class="line"><span class="lineno">   93</span> </div>
-<div class="line"><span class="lineno">   94</span>  <span class="keyword">auto</span> params_path = <a class="code hl_function" href="classdyno_1_1DynoNode.html#ae343bb671d0f962457efc8416037cdd4">getParamsPath</a>();</div>
-<div class="line"><span class="lineno">   95</span>  <span class="keyword">auto</span> dataset_path = <a class="code hl_function" href="classdyno_1_1DynoNode.html#a73e4321916b456ba160cc15ca2a4e271">getDatasetPath</a>();</div>
-<div class="line"><span class="lineno">   96</span>  <span class="keyword">auto</span> dyno_params = <a class="code hl_function" href="classdyno_1_1DynoNode.html#a191b53eb69b5225a6395b9748979b013">getDynoParams</a>();</div>
-<div class="line"><span class="lineno">   97</span> </div>
-<div class="line"><span class="lineno">   98</span>  RCLCPP_INFO_STREAM(this-&gt;get_logger(),</div>
-<div class="line"><span class="lineno">   99</span>                     <span class="stringliteral">&quot;Loading dataset from: &quot;</span> &lt;&lt; dataset_path);</div>
-<div class="line"><span class="lineno">  100</span> </div>
-<div class="line"><span class="lineno">  101</span>  dyno::DataProvider::Ptr data_loader = <a class="code hl_function" href="structdyno_1_1DataProviderFactory.html#ab0b11d2d2d9773c6a36743e1ef5f552a">dyno::DataProviderFactory::Create</a>(</div>
-<div class="line"><span class="lineno">  102</span>      dataset_path, params_path,</div>
-<div class="line"><span class="lineno">  103</span>      <span class="keyword">static_cast&lt;</span><a class="code hl_enumeration" href="namespacedyno.html#ada04b22647b53dd4feb5a6b9b9c94480">dyno::DatasetType</a><span class="keyword">&gt;</span>(dyno_params.dataProviderType()));</div>
-<div class="line"><span class="lineno">  104</span>  RCLCPP_INFO_STREAM(this-&gt;get_logger(), <span class="stringliteral">&quot;Constructed data loader&quot;</span>);</div>
-<div class="line"><span class="lineno">  105</span>  <span class="keywordflow">return</span> data_loader;</div>
-<div class="line"><span class="lineno">  106</span>}</div>
-<div class="ttc" id="aclassdyno_1_1DynoNode_html_a191b53eb69b5225a6395b9748979b013"><div class="ttname"><a href="classdyno_1_1DynoNode.html#a191b53eb69b5225a6395b9748979b013">dyno::DynoNode::getDynoParams</a></div><div class="ttdeci">const DynoParams &amp; getDynoParams()</div><div class="ttdef"><b>Definition:</b> <a href="PipelineRos_8hpp_source.html#l00053">PipelineRos.hpp:53</a></div></div>
-<div class="ttc" id="aclassdyno_1_1DynoNode_html_a73e4321916b456ba160cc15ca2a4e271"><div class="ttname"><a href="classdyno_1_1DynoNode.html#a73e4321916b456ba160cc15ca2a4e271">dyno::DynoNode::getDatasetPath</a></div><div class="ttdeci">std::string getDatasetPath()</div><div class="ttdef"><b>Definition:</b> <a href="PipelineRos_8hpp_source.html#l00063">PipelineRos.hpp:63</a></div></div>
+<p class="definition">Definition at line <a class="el" href="PipelineRos_8cc_source.html#l00070">70</a> of file <a class="el" href="PipelineRos_8cc_source.html">PipelineRos.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   70</span>                                                 {</div>
+<div class="line"><span class="lineno">   71</span>  <span class="keywordflow">if</span> (<a class="code hl_variable" href="classdyno_1_1DynoNode.html#a0d05c0c5f364f9de7236fe685dbd3197">is_online_</a>) {</div>
+<div class="line"><span class="lineno">   72</span>    RCLCPP_INFO_STREAM(</div>
+<div class="line"><span class="lineno">   73</span>        this-&gt;get_logger(),</div>
+<div class="line"><span class="lineno">   74</span>        <span class="stringliteral">&quot;Online DataProvider selected. Waiting for ROS topics...&quot;</span>);</div>
+<div class="line"><span class="lineno">   75</span>    OnlineDataProviderRosParams online_params;</div>
+<div class="line"><span class="lineno">   76</span>    online_params.wait_for_camera_params =</div>
+<div class="line"><span class="lineno">   77</span>        ParameterConstructor(<span class="keyword">this</span>, <span class="stringliteral">&quot;wait_for_camera_params&quot;</span>,</div>
+<div class="line"><span class="lineno">   78</span>                             online_params.wait_for_camera_params)</div>
+<div class="line"><span class="lineno">   79</span>            .description(</div>
+<div class="line"><span class="lineno">   80</span>                <span class="stringliteral">&quot;If the online DataProvider should wait for the camera params &quot;</span></div>
+<div class="line"><span class="lineno">   81</span>                <span class="stringliteral">&quot;on a ROS topic!&quot;</span>)</div>
+<div class="line"><span class="lineno">   82</span>            .finish()</div>
+<div class="line"><span class="lineno">   83</span>            .get&lt;<span class="keywordtype">bool</span>&gt;();</div>
+<div class="line"><span class="lineno">   84</span>    online_params.camera_params_timeout =</div>
+<div class="line"><span class="lineno">   85</span>        ParameterConstructor(<span class="keyword">this</span>, <span class="stringliteral">&quot;camera_params_timeout&quot;</span>,</div>
+<div class="line"><span class="lineno">   86</span>                             online_params.camera_params_timeout)</div>
+<div class="line"><span class="lineno">   87</span>            .description(</div>
+<div class="line"><span class="lineno">   88</span>                <span class="stringliteral">&quot;When waiting for camera params, how long the online &quot;</span></div>
+<div class="line"><span class="lineno">   89</span>                <span class="stringliteral">&quot;DataProvider should wait before time out (ms)&quot;</span>)</div>
+<div class="line"><span class="lineno">   90</span>            .finish()</div>
+<div class="line"><span class="lineno">   91</span>            .get&lt;<span class="keywordtype">int</span>&gt;();</div>
+<div class="line"><span class="lineno">   92</span>    <span class="keywordflow">return</span> std::make_shared&lt;OnlineDataProviderRos&gt;(</div>
+<div class="line"><span class="lineno">   93</span>        this-&gt;create_sub_node(<span class="stringliteral">&quot;dataprovider&quot;</span>), online_params);</div>
+<div class="line"><span class="lineno">   94</span>  }</div>
+<div class="line"><span class="lineno">   95</span> </div>
+<div class="line"><span class="lineno">   96</span>  <span class="keyword">auto</span> params_path = <a class="code hl_function" href="classdyno_1_1DynoNode.html#ae343bb671d0f962457efc8416037cdd4">getParamsPath</a>();</div>
+<div class="line"><span class="lineno">   97</span>  <span class="keyword">auto</span> dataset_path = <a class="code hl_function" href="classdyno_1_1DynoNode.html#a73e4321916b456ba160cc15ca2a4e271">getDatasetPath</a>();</div>
+<div class="line"><span class="lineno">   98</span>  <span class="keyword">auto</span> dyno_params = <a class="code hl_function" href="classdyno_1_1DynoNode.html#a191b53eb69b5225a6395b9748979b013">getDynoParams</a>();</div>
+<div class="line"><span class="lineno">   99</span> </div>
+<div class="line"><span class="lineno">  100</span>  RCLCPP_INFO_STREAM(this-&gt;get_logger(),</div>
+<div class="line"><span class="lineno">  101</span>                     <span class="stringliteral">&quot;Loading dataset from: &quot;</span> &lt;&lt; dataset_path);</div>
+<div class="line"><span class="lineno">  102</span> </div>
+<div class="line"><span class="lineno">  103</span>  dyno::DataProvider::Ptr data_loader = <a class="code hl_function" href="structdyno_1_1DataProviderFactory.html#ab0b11d2d2d9773c6a36743e1ef5f552a">dyno::DataProviderFactory::Create</a>(</div>
+<div class="line"><span class="lineno">  104</span>      dataset_path, params_path,</div>
+<div class="line"><span class="lineno">  105</span>      <span class="keyword">static_cast&lt;</span><a class="code hl_enumeration" href="namespacedyno.html#ada04b22647b53dd4feb5a6b9b9c94480">dyno::DatasetType</a><span class="keyword">&gt;</span>(dyno_params.dataProviderType()));</div>
+<div class="line"><span class="lineno">  106</span>  RCLCPP_INFO_STREAM(this-&gt;get_logger(), <span class="stringliteral">&quot;Constructed data loader&quot;</span>);</div>
+<div class="line"><span class="lineno">  107</span>  <span class="keywordflow">return</span> data_loader;</div>
+<div class="line"><span class="lineno">  108</span>}</div>
+<div class="ttc" id="aclassdyno_1_1DynoNode_html_a191b53eb69b5225a6395b9748979b013"><div class="ttname"><a href="classdyno_1_1DynoNode.html#a191b53eb69b5225a6395b9748979b013">dyno::DynoNode::getDynoParams</a></div><div class="ttdeci">const DynoParams &amp; getDynoParams()</div><div class="ttdef"><b>Definition:</b> <a href="PipelineRos_8hpp_source.html#l00051">PipelineRos.hpp:51</a></div></div>
+<div class="ttc" id="aclassdyno_1_1DynoNode_html_a73e4321916b456ba160cc15ca2a4e271"><div class="ttname"><a href="classdyno_1_1DynoNode.html#a73e4321916b456ba160cc15ca2a4e271">dyno::DynoNode::getDatasetPath</a></div><div class="ttdeci">std::string getDatasetPath()</div><div class="ttdef"><b>Definition:</b> <a href="PipelineRos_8hpp_source.html#l00061">PipelineRos.hpp:61</a></div></div>
 <div class="ttc" id="anamespacedyno_html_ada04b22647b53dd4feb5a6b9b9c94480"><div class="ttname"><a href="namespacedyno.html#ada04b22647b53dd4feb5a6b9b9c94480">dyno::DatasetType</a></div><div class="ttdeci">DatasetType</div><div class="ttdef"><b>Definition:</b> <a href="DataProviderFactory_8hpp_source.html#l00037">DataProviderFactory.hpp:37</a></div></div>
 <div class="ttc" id="astructdyno_1_1DataProviderFactory_html_ab0b11d2d2d9773c6a36743e1ef5f552a"><div class="ttname"><a href="structdyno_1_1DataProviderFactory.html#ab0b11d2d2d9773c6a36743e1ef5f552a">dyno::DataProviderFactory::Create</a></div><div class="ttdeci">static DataProvider::Ptr Create(const std::string &amp;dataset_folder_path, const std::string &amp;params_folder_path, DatasetType dataset_type)</div><div class="ttdef"><b>Definition:</b> <a href="DataProviderFactory_8cc_source.html#l00054">DataProviderFactory.cc:54</a></div></div>
 </div><!-- fragment -->
@@ -340,7 +340,7 @@ Here is the call graph for this function:</div>
 <area shape="rect" href="classdyno_1_1ParameterDetails.html#a606d5ea74ad42dc56142759bb2e17b11" title=" " alt="" coords="1283,357,1457,397"/>
 <area shape="rect" href="classdyno_1_1ParameterDetails.html#a5b29e21d596fc2efce6df3477f7c5961" title="Name of the paramter." alt="" coords="1505,329,1680,369"/>
 <area shape="rect" href="classdyno_1_1DynoNode.html#a8fdfaee1dd7e5904d9de47ac6d874d8f" title="Retrieves a std::string param (under param_name) which is expected to be a file path." alt="" coords="556,213,757,253"/>
-<area shape="rect" href="namespacedyno.html#a163cb16ef980acda5b09d45c3a156e6f" title=" " alt="" coords="810,208,1010,248"/>
+<area shape="rect" href="namespacedyno_1_1utils.html#a71785ed8de386df1fce95751bf5bec15" title=" " alt="" coords="811,208,1009,248"/>
 </map>
 </div>
 <div class="dynheader">
@@ -379,12 +379,12 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PipelineRos_8hpp_source.html#l00063">63</a> of file <a class="el" href="PipelineRos_8hpp_source.html">PipelineRos.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   63</span>                                    {</div>
-<div class="line"><span class="lineno">   64</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="classdyno_1_1DynoNode.html#a8fdfaee1dd7e5904d9de47ac6d874d8f">searchForPathWithParams</a>(<span class="stringliteral">&quot;dataset_path&quot;</span>, <span class="stringliteral">&quot;dataset&quot;</span>,</div>
-<div class="line"><span class="lineno">   65</span>                                   <span class="stringliteral">&quot;Path to the dataset.&quot;</span>);</div>
-<div class="line"><span class="lineno">   66</span>  }</div>
-<div class="ttc" id="aclassdyno_1_1DynoNode_html_a8fdfaee1dd7e5904d9de47ac6d874d8f"><div class="ttname"><a href="classdyno_1_1DynoNode.html#a8fdfaee1dd7e5904d9de47ac6d874d8f">dyno::DynoNode::searchForPathWithParams</a></div><div class="ttdeci">std::string searchForPathWithParams(const std::string &amp;param_name, const std::string &amp;default_path, const std::string &amp;description=&quot;&quot;)</div><div class="ttdoc">Retrieves a std::string param (under param_name) which is expected to be a file path.</div><div class="ttdef"><b>Definition:</b> <a href="PipelineRos_8cc_source.html#l00108">PipelineRos.cc:108</a></div></div>
+<p class="definition">Definition at line <a class="el" href="PipelineRos_8hpp_source.html#l00061">61</a> of file <a class="el" href="PipelineRos_8hpp_source.html">PipelineRos.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   61</span>                                    {</div>
+<div class="line"><span class="lineno">   62</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="classdyno_1_1DynoNode.html#a8fdfaee1dd7e5904d9de47ac6d874d8f">searchForPathWithParams</a>(<span class="stringliteral">&quot;dataset_path&quot;</span>, <span class="stringliteral">&quot;dataset&quot;</span>,</div>
+<div class="line"><span class="lineno">   63</span>                                   <span class="stringliteral">&quot;Path to the dataset.&quot;</span>);</div>
+<div class="line"><span class="lineno">   64</span>  }</div>
+<div class="ttc" id="aclassdyno_1_1DynoNode_html_a8fdfaee1dd7e5904d9de47ac6d874d8f"><div class="ttname"><a href="classdyno_1_1DynoNode.html#a8fdfaee1dd7e5904d9de47ac6d874d8f">dyno::DynoNode::searchForPathWithParams</a></div><div class="ttdeci">std::string searchForPathWithParams(const std::string &amp;param_name, const std::string &amp;default_path, const std::string &amp;description=&quot;&quot;)</div><div class="ttdoc">Retrieves a std::string param (under param_name) which is expected to be a file path.</div><div class="ttdef"><b>Definition:</b> <a href="PipelineRos_8cc_source.html#l00110">PipelineRos.cc:110</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1DynoNode.html#a8fdfaee1dd7e5904d9de47ac6d874d8f">searchForPathWithParams()</a>.</p>
 
@@ -399,7 +399,7 @@ Here is the call graph for this function:</div>
 <area shape="rect" href="classdyno_1_1ParameterConstructor.html#a83e32e6b87f9aaa75e6b3564a960e9d9" title="Updates the paramters description and a returns a reference to this." alt="" coords="541,29,745,69"/>
 <area shape="rect" href="classdyno_1_1ParameterConstructor.html#a2f64575e1752c6b9be7063c8467b627f" title="Constructs a ParameterDetails object from the details in this." alt="" coords="541,93,745,133"/>
 <area shape="rect" href="classdyno_1_1ParameterDetails.html#a68f46befd597e6b463dc0da16bdbd876" title="Get the rclcpp::Parameter from the node." alt="" coords="541,158,745,183"/>
-<area shape="rect" href="namespacedyno.html#a163cb16ef980acda5b09d45c3a156e6f" title=" " alt="" coords="543,208,743,248"/>
+<area shape="rect" href="namespacedyno_1_1utils.html#a71785ed8de386df1fce95751bf5bec15" title=" " alt="" coords="544,208,743,248"/>
 <area shape="rect" href="classdyno_1_1ParameterDetails.html#a1370e883feff7a600c8fd9783e2b792d" title=" " alt="" coords="793,151,968,191"/>
 <area shape="rect" href="classdyno_1_1ParameterDetails.html#a606d5ea74ad42dc56142759bb2e17b11" title=" " alt="" coords="1016,121,1191,161"/>
 <area shape="rect" href="classdyno_1_1ParameterDetails.html#a5b29e21d596fc2efce6df3477f7c5961" title="Name of the paramter." alt="" coords="1239,151,1413,191"/>
@@ -442,11 +442,11 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PipelineRos_8hpp_source.html#l00053">53</a> of file <a class="el" href="PipelineRos_8hpp_source.html">PipelineRos.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   53</span>                                    {</div>
-<div class="line"><span class="lineno">   54</span>    CHECK_NOTNULL(<a class="code hl_variable" href="classdyno_1_1DynoNode.html#a98f45f8f60086b3d486cf4a5220f2793">dyno_params_</a>);</div>
-<div class="line"><span class="lineno">   55</span>    <span class="keywordflow">return</span> *<a class="code hl_variable" href="classdyno_1_1DynoNode.html#a98f45f8f60086b3d486cf4a5220f2793">dyno_params_</a>;</div>
-<div class="line"><span class="lineno">   56</span>  }</div>
+<p class="definition">Definition at line <a class="el" href="PipelineRos_8hpp_source.html#l00051">51</a> of file <a class="el" href="PipelineRos_8hpp_source.html">PipelineRos.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   51</span>                                    {</div>
+<div class="line"><span class="lineno">   52</span>    CHECK_NOTNULL(<a class="code hl_variable" href="classdyno_1_1DynoNode.html#a98f45f8f60086b3d486cf4a5220f2793">dyno_params_</a>);</div>
+<div class="line"><span class="lineno">   53</span>    <span class="keywordflow">return</span> *<a class="code hl_variable" href="classdyno_1_1DynoNode.html#a98f45f8f60086b3d486cf4a5220f2793">dyno_params_</a>;</div>
+<div class="line"><span class="lineno">   54</span>  }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1DynoNode.html#a98f45f8f60086b3d486cf4a5220f2793">dyno_params_</a>.</p>
 
@@ -488,12 +488,12 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PipelineRos_8hpp_source.html#l00058">58</a> of file <a class="el" href="PipelineRos_8hpp_source.html">PipelineRos.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   58</span>                                   {</div>
-<div class="line"><span class="lineno">   59</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="classdyno_1_1DynoNode.html#a8fdfaee1dd7e5904d9de47ac6d874d8f">searchForPathWithParams</a>(<span class="stringliteral">&quot;params_folder_path&quot;</span>, <span class="stringliteral">&quot;dynosam/params/&quot;</span>,</div>
-<div class="line"><span class="lineno">   60</span>                                   <span class="stringliteral">&quot;Path to the folder containing the yaml &quot;</span></div>
-<div class="line"><span class="lineno">   61</span>                                   <span class="stringliteral">&quot;files with the DynoVIO parameters.&quot;</span>);</div>
-<div class="line"><span class="lineno">   62</span>  }</div>
+<p class="definition">Definition at line <a class="el" href="PipelineRos_8hpp_source.html#l00056">56</a> of file <a class="el" href="PipelineRos_8hpp_source.html">PipelineRos.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   56</span>                                   {</div>
+<div class="line"><span class="lineno">   57</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="classdyno_1_1DynoNode.html#a8fdfaee1dd7e5904d9de47ac6d874d8f">searchForPathWithParams</a>(<span class="stringliteral">&quot;params_folder_path&quot;</span>, <span class="stringliteral">&quot;dynosam/params/&quot;</span>,</div>
+<div class="line"><span class="lineno">   58</span>                                   <span class="stringliteral">&quot;Path to the folder containing the yaml &quot;</span></div>
+<div class="line"><span class="lineno">   59</span>                                   <span class="stringliteral">&quot;files with the DynoVIO parameters.&quot;</span>);</div>
+<div class="line"><span class="lineno">   60</span>  }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1DynoNode.html#a8fdfaee1dd7e5904d9de47ac6d874d8f">searchForPathWithParams()</a>.</p>
 
@@ -508,7 +508,7 @@ Here is the call graph for this function:</div>
 <area shape="rect" href="classdyno_1_1ParameterConstructor.html#a83e32e6b87f9aaa75e6b3564a960e9d9" title="Updates the paramters description and a returns a reference to this." alt="" coords="537,29,741,69"/>
 <area shape="rect" href="classdyno_1_1ParameterConstructor.html#a2f64575e1752c6b9be7063c8467b627f" title="Constructs a ParameterDetails object from the details in this." alt="" coords="537,93,741,133"/>
 <area shape="rect" href="classdyno_1_1ParameterDetails.html#a68f46befd597e6b463dc0da16bdbd876" title="Get the rclcpp::Parameter from the node." alt="" coords="537,158,741,183"/>
-<area shape="rect" href="namespacedyno.html#a163cb16ef980acda5b09d45c3a156e6f" title=" " alt="" coords="539,208,739,248"/>
+<area shape="rect" href="namespacedyno_1_1utils.html#a71785ed8de386df1fce95751bf5bec15" title=" " alt="" coords="540,208,739,248"/>
 <area shape="rect" href="classdyno_1_1ParameterDetails.html#a1370e883feff7a600c8fd9783e2b792d" title=" " alt="" coords="789,151,964,191"/>
 <area shape="rect" href="classdyno_1_1ParameterDetails.html#a606d5ea74ad42dc56142759bb2e17b11" title=" " alt="" coords="1012,121,1187,161"/>
 <area shape="rect" href="classdyno_1_1ParameterDetails.html#a5b29e21d596fc2efce6df3477f7c5961" title="Name of the paramter." alt="" coords="1235,151,1409,191"/>
@@ -552,8 +552,8 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PipelineRos_8hpp_source.html#l00051">51</a> of file <a class="el" href="PipelineRos_8hpp_source.html">PipelineRos.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   51</span>{ <span class="keywordflow">return</span> <a class="code hl_function" href="classdyno_1_1utils_1_1Statistics.html#a52035ea594c5c02279cdd9ea52234785">utils::Statistics::Print</a>(); }</div>
+<p class="definition">Definition at line <a class="el" href="PipelineRos_8hpp_source.html#l00049">49</a> of file <a class="el" href="PipelineRos_8hpp_source.html">PipelineRos.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   49</span>{ <span class="keywordflow">return</span> <a class="code hl_function" href="classdyno_1_1utils_1_1Statistics.html#a52035ea594c5c02279cdd9ea52234785">utils::Statistics::Print</a>(); }</div>
 <div class="ttc" id="aclassdyno_1_1utils_1_1Statistics_html_a52035ea594c5c02279cdd9ea52234785"><div class="ttname"><a href="classdyno_1_1utils_1_1Statistics.html#a52035ea594c5c02279cdd9ea52234785">dyno::utils::Statistics::Print</a></div><div class="ttdeci">static std::string Print()</div><div class="ttdef"><b>Definition:</b> <a href="Statistics_8cc_source.html#l00494">Statistics.cc:494</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1utils_1_1Statistics.html#a52035ea594c5c02279cdd9ea52234785">dyno::utils::Statistics::Print()</a>.</p>
@@ -632,21 +632,21 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>std::string </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="PipelineRos_8cc_source.html#l00108">108</a> of file <a class="el" href="PipelineRos_8cc_source.html">PipelineRos.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  110</span>                                                                            {</div>
-<div class="line"><span class="lineno">  111</span>  <span class="comment">// check if we&#39;ve alrady declared this param</span></div>
-<div class="line"><span class="lineno">  112</span>  <span class="comment">// use non-default version so that ParameterConstructor throws exception if no</span></div>
-<div class="line"><span class="lineno">  113</span>  <span class="comment">// parameter is provided on the param server</span></div>
-<div class="line"><span class="lineno">  114</span>  <span class="keyword">const</span> std::string path = ParameterConstructor(<span class="keyword">this</span>, param_name)</div>
-<div class="line"><span class="lineno">  115</span>                               .description(description)</div>
-<div class="line"><span class="lineno">  116</span>                               .finish()</div>
-<div class="line"><span class="lineno">  117</span>                               .get&lt;std::string&gt;();</div>
-<div class="line"><span class="lineno">  118</span>  <a class="code hl_function" href="namespacedyno.html#a163cb16ef980acda5b09d45c3a156e6f">throwExceptionIfPathInvalid</a>(path);</div>
-<div class="line"><span class="lineno">  119</span>  <span class="keywordflow">return</span> path;</div>
-<div class="line"><span class="lineno">  120</span>}</div>
-<div class="ttc" id="anamespacedyno_html_a163cb16ef980acda5b09d45c3a156e6f"><div class="ttname"><a href="namespacedyno.html#a163cb16ef980acda5b09d45c3a156e6f">dyno::throwExceptionIfPathInvalid</a></div><div class="ttdeci">void throwExceptionIfPathInvalid(const std::string &amp;image_path)</div><div class="ttdef"><b>Definition:</b> <a href="DataProviderUtils_8cc_source.html#l00048">DataProviderUtils.cc:48</a></div></div>
+<p class="definition">Definition at line <a class="el" href="PipelineRos_8cc_source.html#l00110">110</a> of file <a class="el" href="PipelineRos_8cc_source.html">PipelineRos.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  112</span>                                                                            {</div>
+<div class="line"><span class="lineno">  113</span>  <span class="comment">// check if we&#39;ve alrady declared this param</span></div>
+<div class="line"><span class="lineno">  114</span>  <span class="comment">// use non-default version so that ParameterConstructor throws exception if no</span></div>
+<div class="line"><span class="lineno">  115</span>  <span class="comment">// parameter is provided on the param server</span></div>
+<div class="line"><span class="lineno">  116</span>  <span class="keyword">const</span> std::string path = ParameterConstructor(<span class="keyword">this</span>, param_name)</div>
+<div class="line"><span class="lineno">  117</span>                               .description(description)</div>
+<div class="line"><span class="lineno">  118</span>                               .finish()</div>
+<div class="line"><span class="lineno">  119</span>                               .get&lt;std::string&gt;();</div>
+<div class="line"><span class="lineno">  120</span>  <a class="code hl_function" href="namespacedyno_1_1utils.html#a71785ed8de386df1fce95751bf5bec15">utils::throwExceptionIfPathInvalid</a>(path);</div>
+<div class="line"><span class="lineno">  121</span>  <span class="keywordflow">return</span> path;</div>
+<div class="line"><span class="lineno">  122</span>}</div>
+<div class="ttc" id="anamespacedyno_1_1utils_html_a71785ed8de386df1fce95751bf5bec15"><div class="ttname"><a href="namespacedyno_1_1utils.html#a71785ed8de386df1fce95751bf5bec15">dyno::utils::throwExceptionIfPathInvalid</a></div><div class="ttdeci">void throwExceptionIfPathInvalid(const std::string &amp;image_path)</div><div class="ttdef"><b>Definition:</b> <a href="FileSystem_8cc_source.html#l00012">FileSystem.cc:12</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="classdyno_1_1ParameterConstructor.html#a83e32e6b87f9aaa75e6b3564a960e9d9">dyno::ParameterConstructor::description()</a>, <a class="el" href="classdyno_1_1ParameterConstructor.html#a2f64575e1752c6b9be7063c8467b627f">dyno::ParameterConstructor::finish()</a>, <a class="el" href="classdyno_1_1ParameterDetails.html#a68f46befd597e6b463dc0da16bdbd876">dyno::ParameterDetails::get()</a>, and <a class="el" href="namespacedyno.html#a163cb16ef980acda5b09d45c3a156e6f">dyno::throwExceptionIfPathInvalid()</a>.</p>
+<p class="reference">References <a class="el" href="classdyno_1_1ParameterConstructor.html#a83e32e6b87f9aaa75e6b3564a960e9d9">dyno::ParameterConstructor::description()</a>, <a class="el" href="classdyno_1_1ParameterConstructor.html#a2f64575e1752c6b9be7063c8467b627f">dyno::ParameterConstructor::finish()</a>, <a class="el" href="classdyno_1_1ParameterDetails.html#a68f46befd597e6b463dc0da16bdbd876">dyno::ParameterDetails::get()</a>, and <a class="el" href="namespacedyno_1_1utils.html#a71785ed8de386df1fce95751bf5bec15">dyno::utils::throwExceptionIfPathInvalid()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1DynoNode.html#a73e4321916b456ba160cc15ca2a4e271">getDatasetPath()</a>, and <a class="el" href="classdyno_1_1DynoNode.html#ae343bb671d0f962457efc8416037cdd4">getParamsPath()</a>.</p>
 <div class="dynheader">
@@ -658,7 +658,7 @@ Here is the call graph for this function:</div>
 <area shape="rect" href="classdyno_1_1ParameterConstructor.html#a83e32e6b87f9aaa75e6b3564a960e9d9" title="Updates the paramters description and a returns a reference to this." alt="" coords="255,29,459,69"/>
 <area shape="rect" href="classdyno_1_1ParameterConstructor.html#a2f64575e1752c6b9be7063c8467b627f" title="Constructs a ParameterDetails object from the details in this." alt="" coords="255,93,459,133"/>
 <area shape="rect" href="classdyno_1_1ParameterDetails.html#a68f46befd597e6b463dc0da16bdbd876" title="Get the rclcpp::Parameter from the node." alt="" coords="255,158,459,183"/>
-<area shape="rect" href="namespacedyno.html#a163cb16ef980acda5b09d45c3a156e6f" title=" " alt="" coords="257,208,457,248"/>
+<area shape="rect" href="namespacedyno_1_1utils.html#a71785ed8de386df1fce95751bf5bec15" title=" " alt="" coords="257,208,456,248"/>
 <area shape="rect" href="classdyno_1_1ParameterDetails.html#a1370e883feff7a600c8fd9783e2b792d" title=" " alt="" coords="507,151,681,191"/>
 <area shape="rect" href="classdyno_1_1ParameterDetails.html#a606d5ea74ad42dc56142759bb2e17b11" title=" " alt="" coords="729,121,904,161"/>
 <area shape="rect" href="classdyno_1_1ParameterDetails.html#a5b29e21d596fc2efce6df3477f7c5961" title="Name of the paramter." alt="" coords="952,151,1127,191"/>
@@ -706,8 +706,8 @@ Here is the caller graph for this function:</div>
 
 <p>Reimplemented in <a class="el" href="classdyno_1_1DynoPipelineManagerRos.html#a87626844ec5851cc9307981648667995">dyno::DynoPipelineManagerRos</a>, and <a class="el" href="classdyno_1_1BackendExperimentsNode.html#a5540023c11d87aeabc38a98cd461c918">dyno::BackendExperimentsNode</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="PipelineRos_8hpp_source.html#l00049">49</a> of file <a class="el" href="PipelineRos_8hpp_source.html">PipelineRos.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   49</span>{ <span class="keywordflow">return</span> <span class="keyword">true</span>; }</div>
+<p class="definition">Definition at line <a class="el" href="PipelineRos_8hpp_source.html#l00047">47</a> of file <a class="el" href="PipelineRos_8hpp_source.html">PipelineRos.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   47</span>{ <span class="keywordflow">return</span> <span class="keyword">true</span>; }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -732,7 +732,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PipelineRos_8hpp_source.html#l00090">90</a> of file <a class="el" href="PipelineRos_8hpp_source.html">PipelineRos.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="PipelineRos_8hpp_source.html#l00088">88</a> of file <a class="el" href="PipelineRos_8hpp_source.html">PipelineRos.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1DynoNode.html#ab3963662760ee1fde2a603d4fec9804e">DynoNode()</a>, and <a class="el" href="classdyno_1_1DynoNode.html#a191b53eb69b5225a6395b9748979b013">getDynoParams()</a>.</p>
 
@@ -759,7 +759,7 @@ Here is the caller graph for this function:</div>
 </div><div class="memdoc">
 <p>Set by the param 'online' and indicates if the <a class="el" href="classdyno_1_1OnlineDataProviderRos.html" title="Online data-provider for DynoSAM.">OnlineDataProviderRos</a> should be used or not </p>
 
-<p class="definition">Definition at line <a class="el" href="PipelineRos_8hpp_source.html#l00074">74</a> of file <a class="el" href="PipelineRos_8hpp_source.html">PipelineRos.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="PipelineRos_8hpp_source.html#l00072">72</a> of file <a class="el" href="PipelineRos_8hpp_source.html">PipelineRos.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1DynoNode.html#ad5ec1dc5c7b6faa13607bed8444e49c6">createDataProvider()</a>, <a class="el" href="classdyno_1_1DynoNode.html#ab3963662760ee1fde2a603d4fec9804e">DynoNode()</a>, and <a class="el" href="classdyno_1_1DynoPipelineManagerRos.html#a9b111354972184ae191c76dfb88f6820">dyno::DynoPipelineManagerRos::initalisePipeline()</a>.</p>
 

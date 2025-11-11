@@ -144,7 +144,7 @@ Private Attributes</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="TimingStats_8cc_source.html#l00042">42</a> of file <a class="el" href="TimingStats_8cc_source.html">TimingStats.cc</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">   43</span>    : <a class="code hl_variable" href="classdyno_1_1utils_1_1TimingStatsCollector.html#a291f6d7c3ce6d51f43d060c7a5dfa9b6">tic_time_</a>(<a class="code hl_function" href="classdyno_1_1utils_1_1Timer.html#a9dfd91c5a5d7cea18a766b8323854f15">Timer::tic</a>()), <a class="code hl_variable" href="classdyno_1_1utils_1_1TimingStatsCollector.html#a535acaebb340187a5a21b1080118df5e">collector_</a>(tag + <span class="stringliteral">&quot; [ms]&quot;</span>) {}</div>
-<div class="ttc" id="aclassdyno_1_1utils_1_1Timer_html_a9dfd91c5a5d7cea18a766b8323854f15"><div class="ttname"><a href="classdyno_1_1utils_1_1Timer.html#a9dfd91c5a5d7cea18a766b8323854f15">dyno::utils::Timer::tic</a></div><div class="ttdeci">static TimePoint tic()</div><div class="ttdef"><b>Definition:</b> <a href="Timing_8hpp_source.html#l00041">Timing.hpp:41</a></div></div>
+<div class="ttc" id="aclassdyno_1_1utils_1_1Timer_html_a9dfd91c5a5d7cea18a766b8323854f15"><div class="ttname"><a href="classdyno_1_1utils_1_1Timer.html#a9dfd91c5a5d7cea18a766b8323854f15">dyno::utils::Timer::tic</a></div><div class="ttdeci">static TimePoint tic()</div><div class="ttdef"><b>Definition:</b> <a href="Timing_8hpp_source.html#l00044">Timing.hpp:44</a></div></div>
 <div class="ttc" id="aclassdyno_1_1utils_1_1TimingStatsCollector_html_a291f6d7c3ce6d51f43d060c7a5dfa9b6"><div class="ttname"><a href="classdyno_1_1utils_1_1TimingStatsCollector.html#a291f6d7c3ce6d51f43d060c7a5dfa9b6">dyno::utils::TimingStatsCollector::tic_time_</a></div><div class="ttdeci">Timer::TimePoint tic_time_</div><div class="ttdef"><b>Definition:</b> <a href="TimingStats_8hpp_source.html#l00135">TimingStats.hpp:135</a></div></div>
 <div class="ttc" id="aclassdyno_1_1utils_1_1TimingStatsCollector_html_a535acaebb340187a5a21b1080118df5e"><div class="ttname"><a href="classdyno_1_1utils_1_1TimingStatsCollector.html#a535acaebb340187a5a21b1080118df5e">dyno::utils::TimingStatsCollector::collector_</a></div><div class="ttdeci">StatsCollector collector_</div><div class="ttdoc">Time on creation (the time to compare against)</div><div class="ttdef"><b>Definition:</b> <a href="TimingStats_8hpp_source.html#l00136">TimingStats.hpp:136</a></div></div>
 </div><!-- fragment -->
@@ -281,7 +281,7 @@ Here is the call graph for this function:</div>
 <div class="line"><span class="lineno">   60</span>    <a class="code hl_variable" href="classdyno_1_1utils_1_1TimingStatsCollector.html#ad912f4f2d8321f09a3826326d60a8e13">is_valid_</a> = <span class="keyword">false</span>;</div>
 <div class="line"><span class="lineno">   61</span>  }</div>
 <div class="line"><span class="lineno">   62</span>}</div>
-<div class="ttc" id="aclassdyno_1_1utils_1_1StatsCollectorImpl_html_ab92087ce27dbec18730bf779e48d6aec"><div class="ttname"><a href="classdyno_1_1utils_1_1StatsCollectorImpl.html#ab92087ce27dbec18730bf779e48d6aec">dyno::utils::StatsCollectorImpl::AddSample</a></div><div class="ttdeci">void AddSample(double sample) const</div><div class="ttdef"><b>Definition:</b> <a href="Statistics_8cc_source.html#l00127">Statistics.cc:127</a></div></div>
+<div class="ttc" id="aclassdyno_1_1utils_1_1StatsCollectorImpl_html_ab92087ce27dbec18730bf779e48d6aec"><div class="ttname"><a href="classdyno_1_1utils_1_1StatsCollectorImpl.html#ab92087ce27dbec18730bf779e48d6aec">dyno::utils::StatsCollectorImpl::AddSample</a></div><div class="ttdeci">void AddSample(double sample) const</div><div class="ttdef"><b>Definition:</b> <a href="Statistics_8cc_source.html#l00133">Statistics.cc:133</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1utils_1_1StatsCollectorImpl.html#ab92087ce27dbec18730bf779e48d6aec">dyno::utils::StatsCollectorImpl::AddSample()</a>, <a class="el" href="classdyno_1_1utils_1_1TimingStatsCollector.html#a535acaebb340187a5a21b1080118df5e">collector_</a>, <a class="el" href="classdyno_1_1utils_1_1TimingStatsCollector.html#ad912f4f2d8321f09a3826326d60a8e13">is_valid_</a>, and <a class="el" href="classdyno_1_1utils_1_1TimingStatsCollector.html#a291f6d7c3ce6d51f43d060c7a5dfa9b6">tic_time_</a>.</p>
 
@@ -393,8 +393,8 @@ Here is the caller graph for this function:</div>
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>dynosam/include/dynosam/utils/<a class="el" href="TimingStats_8hpp_source.html">TimingStats.hpp</a></li>
-<li>dynosam/src/utils/<a class="el" href="TimingStats_8cc_source.html">TimingStats.cc</a></li>
+<li>dynosam_common/include/dynosam_common/utils/<a class="el" href="TimingStats_8hpp_source.html">TimingStats.hpp</a></li>
+<li>dynosam_common/src/utils/<a class="el" href="TimingStats_8cc_source.html">TimingStats.cc</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

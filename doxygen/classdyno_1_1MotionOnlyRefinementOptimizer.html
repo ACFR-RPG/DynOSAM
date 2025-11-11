@@ -238,218 +238,219 @@ template&lt;typename CALIBRATION &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="MotionSolver-inl_8hpp_source.html#l00277">277</a> of file <a class="el" href="MotionSolver-inl_8hpp_source.html">MotionSolver-inl.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  280</span>                                                                            {</div>
-<div class="line"><span class="lineno">  281</span>  gtsam::NonlinearFactorGraph graph;</div>
-<div class="line"><span class="lineno">  282</span>  gtsam::Values values;</div>
-<div class="line"><span class="lineno">  283</span> </div>
-<div class="line"><span class="lineno">  284</span>  <span class="comment">// noise models are chosen arbitrarily :)</span></div>
-<div class="line"><span class="lineno">  285</span>  gtsam::SharedNoiseModel landmark_motion_noise =</div>
-<div class="line"><span class="lineno">  286</span>      gtsam::noiseModel::Isotropic::Sigma(3u, <a class="code hl_variable" href="classdyno_1_1MotionOnlyRefinementOptimizer.html#a340d76ff81e95c55de4c84b6f4f20970">params_</a>.<a class="code hl_variable" href="structdyno_1_1MotionOnlyRefinementOptimizer_1_1Params.html#a46c4fd02a6e847138138df41578e43a4">landmark_motion_sigma</a>);</div>
-<div class="line"><span class="lineno">  287</span> </div>
-<div class="line"><span class="lineno">  288</span>  <span class="comment">// TODO: this will break if we use 3d point error</span></div>
-<div class="line"><span class="lineno">  289</span>  gtsam::SharedNoiseModel projection_noise =</div>
-<div class="line"><span class="lineno">  290</span>      gtsam::noiseModel::Isotropic::Sigma(2u, <a class="code hl_variable" href="classdyno_1_1MotionOnlyRefinementOptimizer.html#a340d76ff81e95c55de4c84b6f4f20970">params_</a>.<a class="code hl_variable" href="structdyno_1_1MotionOnlyRefinementOptimizer_1_1Params.html#a484de3246636c520e3a865641291cc94">projection_sigma</a>);</div>
-<div class="line"><span class="lineno">  291</span> </div>
-<div class="line"><span class="lineno">  292</span>  <span class="comment">// make robust (I mean, why not?)</span></div>
-<div class="line"><span class="lineno">  293</span>  landmark_motion_noise = gtsam::noiseModel::Robust::Create(</div>
-<div class="line"><span class="lineno">  294</span>      gtsam::noiseModel::mEstimator::Huber::Create(<a class="code hl_variable" href="classdyno_1_1MotionOnlyRefinementOptimizer.html#a340d76ff81e95c55de4c84b6f4f20970">params_</a>.<a class="code hl_variable" href="structdyno_1_1MotionOnlyRefinementOptimizer_1_1Params.html#a1d7dea3a8cf4c377bd9b9e6414579601">k_huber</a>),</div>
-<div class="line"><span class="lineno">  295</span>      landmark_motion_noise);</div>
-<div class="line"><span class="lineno">  296</span>  projection_noise = gtsam::noiseModel::Robust::Create(</div>
-<div class="line"><span class="lineno">  297</span>      gtsam::noiseModel::mEstimator::Huber::Create(<a class="code hl_variable" href="classdyno_1_1MotionOnlyRefinementOptimizer.html#a340d76ff81e95c55de4c84b6f4f20970">params_</a>.<a class="code hl_variable" href="structdyno_1_1MotionOnlyRefinementOptimizer_1_1Params.html#a1d7dea3a8cf4c377bd9b9e6414579601">k_huber</a>),</div>
-<div class="line"><span class="lineno">  298</span>      projection_noise);</div>
-<div class="line"><span class="lineno">  299</span> </div>
-<div class="line"><span class="lineno">  300</span>  <span class="keyword">const</span> gtsam::Key pose_k_1_key = <a class="code hl_function" href="namespacedyno.html#a314d7f58c130d0aa28270309ff7500c5">CameraPoseSymbol</a>(frame_k_1-&gt;getFrameId());</div>
-<div class="line"><span class="lineno">  301</span>  <span class="keyword">const</span> gtsam::Key pose_k_key = <a class="code hl_function" href="namespacedyno.html#a314d7f58c130d0aa28270309ff7500c5">CameraPoseSymbol</a>(frame_k-&gt;getFrameId());</div>
-<div class="line"><span class="lineno">  302</span>  <span class="keyword">const</span> gtsam::Key object_motion_key =</div>
-<div class="line"><span class="lineno">  303</span>      <a class="code hl_function" href="namespacedyno.html#a23977a9581e8b4d2b684f749ec21cba2">ObjectMotionSymbol</a>(object_id, frame_k-&gt;getFrameId());</div>
-<div class="line"><span class="lineno">  304</span> </div>
-<div class="line"><span class="lineno">  305</span>  values.insert(pose_k_1_key, frame_k_1-&gt;getPose());</div>
-<div class="line"><span class="lineno">  306</span>  values.insert(pose_k_key, frame_k-&gt;getPose());</div>
-<div class="line"><span class="lineno">  307</span>  values.insert(object_motion_key, initial_motion);</div>
-<div class="line"><span class="lineno">  308</span> </div>
-<div class="line"><span class="lineno">  309</span>  <span class="keyword">auto</span> gtsam_calibration = boost::make_shared&lt;CALIBRATION&gt;(</div>
-<div class="line"><span class="lineno">  310</span>      frame_k_1-&gt;getFrameCamera().calibration());</div>
-<div class="line"><span class="lineno">  311</span> </div>
-<div class="line"><span class="lineno">  312</span>  <span class="keyword">auto</span> pose_prior = gtsam::noiseModel::Isotropic::Sigma(6u, 0.00001);</div>
-<div class="line"><span class="lineno">  313</span>  graph.addPrior(pose_k_1_key, frame_k_1-&gt;getPose(), pose_prior);</div>
-<div class="line"><span class="lineno">  314</span>  graph.addPrior(pose_k_key, frame_k-&gt;getPose(), pose_prior);</div>
-<div class="line"><span class="lineno">  315</span> </div>
-<div class="line"><span class="lineno">  316</span>  utils::TimingStatsCollector timer(<span class="stringliteral">&quot;motion_solver.object_nlo_refinement&quot;</span>);</div>
-<div class="line"><span class="lineno">  317</span> </div>
-<div class="line"><span class="lineno">  318</span>  <span class="keywordflow">for</span> (<a class="code hl_typedef" href="namespacedyno.html#afdd174eb44901fb205371d796287378c">TrackletId</a> tracklet_id : tracklets) {</div>
-<div class="line"><span class="lineno">  319</span>    Feature::Ptr feature_k_1 = frame_k_1-&gt;at(tracklet_id);</div>
-<div class="line"><span class="lineno">  320</span>    Feature::Ptr feature_k = frame_k-&gt;at(tracklet_id);</div>
-<div class="line"><span class="lineno">  321</span> </div>
-<div class="line"><span class="lineno">  322</span>    CHECK_NOTNULL(feature_k_1);</div>
-<div class="line"><span class="lineno">  323</span>    CHECK_NOTNULL(feature_k);</div>
-<div class="line"><span class="lineno">  324</span> </div>
-<div class="line"><span class="lineno">  325</span>    <span class="keywordflow">if</span> (!feature_k_1-&gt;usable() || !feature_k-&gt;usable()) {</div>
-<div class="line"><span class="lineno">  326</span>      <span class="keywordflow">continue</span>;</div>
-<div class="line"><span class="lineno">  327</span>    }</div>
-<div class="line"><span class="lineno">  328</span> </div>
-<div class="line"><span class="lineno">  329</span>    CHECK(feature_k_1-&gt;hasDepth());</div>
-<div class="line"><span class="lineno">  330</span>    CHECK(feature_k-&gt;hasDepth());</div>
-<div class="line"><span class="lineno">  331</span> </div>
-<div class="line"><span class="lineno">  332</span>    <span class="keyword">const</span> <a class="code hl_typedef" href="namespacedyno.html#aaa260a8022691078c59e1ac6a4fa05b5">Keypoint</a> kp_k_1 = feature_k_1-&gt;keypoint();</div>
-<div class="line"><span class="lineno">  333</span>    <span class="keyword">const</span> <a class="code hl_typedef" href="namespacedyno.html#aaa260a8022691078c59e1ac6a4fa05b5">Keypoint</a> kp_k = feature_k-&gt;keypoint();</div>
+<p class="definition">Definition at line <a class="el" href="MotionSolver-inl_8hpp_source.html#l00296">296</a> of file <a class="el" href="MotionSolver-inl_8hpp_source.html">MotionSolver-inl.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  299</span>                                                                            {</div>
+<div class="line"><span class="lineno">  300</span>  gtsam::NonlinearFactorGraph graph;</div>
+<div class="line"><span class="lineno">  301</span>  gtsam::Values values;</div>
+<div class="line"><span class="lineno">  302</span> </div>
+<div class="line"><span class="lineno">  303</span>  <span class="comment">// noise models are chosen arbitrarily :)</span></div>
+<div class="line"><span class="lineno">  304</span>  gtsam::SharedNoiseModel landmark_motion_noise =</div>
+<div class="line"><span class="lineno">  305</span>      gtsam::noiseModel::Isotropic::Sigma(3u, <a class="code hl_variable" href="classdyno_1_1MotionOnlyRefinementOptimizer.html#a340d76ff81e95c55de4c84b6f4f20970">params_</a>.<a class="code hl_variable" href="structdyno_1_1MotionOnlyRefinementOptimizer_1_1Params.html#a46c4fd02a6e847138138df41578e43a4">landmark_motion_sigma</a>);</div>
+<div class="line"><span class="lineno">  306</span> </div>
+<div class="line"><span class="lineno">  307</span>  <span class="comment">// TODO: this will break if we use 3d point error</span></div>
+<div class="line"><span class="lineno">  308</span>  gtsam::SharedNoiseModel projection_noise =</div>
+<div class="line"><span class="lineno">  309</span>      gtsam::noiseModel::Isotropic::Sigma(2u, <a class="code hl_variable" href="classdyno_1_1MotionOnlyRefinementOptimizer.html#a340d76ff81e95c55de4c84b6f4f20970">params_</a>.<a class="code hl_variable" href="structdyno_1_1MotionOnlyRefinementOptimizer_1_1Params.html#a484de3246636c520e3a865641291cc94">projection_sigma</a>);</div>
+<div class="line"><span class="lineno">  310</span> </div>
+<div class="line"><span class="lineno">  311</span>  <span class="comment">// make robust (I mean, why not?)</span></div>
+<div class="line"><span class="lineno">  312</span>  landmark_motion_noise = gtsam::noiseModel::Robust::Create(</div>
+<div class="line"><span class="lineno">  313</span>      gtsam::noiseModel::mEstimator::Huber::Create(<a class="code hl_variable" href="classdyno_1_1MotionOnlyRefinementOptimizer.html#a340d76ff81e95c55de4c84b6f4f20970">params_</a>.<a class="code hl_variable" href="structdyno_1_1MotionOnlyRefinementOptimizer_1_1Params.html#a1d7dea3a8cf4c377bd9b9e6414579601">k_huber</a>),</div>
+<div class="line"><span class="lineno">  314</span>      landmark_motion_noise);</div>
+<div class="line"><span class="lineno">  315</span>  projection_noise = gtsam::noiseModel::Robust::Create(</div>
+<div class="line"><span class="lineno">  316</span>      gtsam::noiseModel::mEstimator::Huber::Create(<a class="code hl_variable" href="classdyno_1_1MotionOnlyRefinementOptimizer.html#a340d76ff81e95c55de4c84b6f4f20970">params_</a>.<a class="code hl_variable" href="structdyno_1_1MotionOnlyRefinementOptimizer_1_1Params.html#a1d7dea3a8cf4c377bd9b9e6414579601">k_huber</a>),</div>
+<div class="line"><span class="lineno">  317</span>      projection_noise);</div>
+<div class="line"><span class="lineno">  318</span> </div>
+<div class="line"><span class="lineno">  319</span>  <span class="keyword">const</span> gtsam::Key pose_k_1_key = <a class="code hl_function" href="namespacedyno.html#a314d7f58c130d0aa28270309ff7500c5">CameraPoseSymbol</a>(frame_k_1-&gt;getFrameId());</div>
+<div class="line"><span class="lineno">  320</span>  <span class="keyword">const</span> gtsam::Key pose_k_key = <a class="code hl_function" href="namespacedyno.html#a314d7f58c130d0aa28270309ff7500c5">CameraPoseSymbol</a>(frame_k-&gt;getFrameId());</div>
+<div class="line"><span class="lineno">  321</span>  <span class="keyword">const</span> gtsam::Key object_motion_key =</div>
+<div class="line"><span class="lineno">  322</span>      <a class="code hl_function" href="namespacedyno.html#a23977a9581e8b4d2b684f749ec21cba2">ObjectMotionSymbol</a>(object_id, frame_k-&gt;getFrameId());</div>
+<div class="line"><span class="lineno">  323</span> </div>
+<div class="line"><span class="lineno">  324</span>  values.insert(pose_k_1_key, frame_k_1-&gt;getPose());</div>
+<div class="line"><span class="lineno">  325</span>  values.insert(pose_k_key, frame_k-&gt;getPose());</div>
+<div class="line"><span class="lineno">  326</span>  values.insert(object_motion_key, initial_motion);</div>
+<div class="line"><span class="lineno">  327</span> </div>
+<div class="line"><span class="lineno">  328</span>  <span class="keyword">auto</span> gtsam_calibration = boost::make_shared&lt;CALIBRATION&gt;(</div>
+<div class="line"><span class="lineno">  329</span>      frame_k_1-&gt;getFrameCamera().calibration());</div>
+<div class="line"><span class="lineno">  330</span> </div>
+<div class="line"><span class="lineno">  331</span>  <span class="keyword">auto</span> pose_prior = gtsam::noiseModel::Isotropic::Sigma(6u, 0.00001);</div>
+<div class="line"><span class="lineno">  332</span>  graph.addPrior(pose_k_1_key, frame_k_1-&gt;getPose(), pose_prior);</div>
+<div class="line"><span class="lineno">  333</span>  graph.addPrior(pose_k_key, frame_k-&gt;getPose(), pose_prior);</div>
 <div class="line"><span class="lineno">  334</span> </div>
-<div class="line"><span class="lineno">  335</span>    <span class="keyword">const</span> gtsam::Point3 lmk_k_1_world =</div>
-<div class="line"><span class="lineno">  336</span>        frame_k_1-&gt;backProjectToWorld(tracklet_id);</div>
-<div class="line"><span class="lineno">  337</span>    <span class="keyword">const</span> gtsam::Point3 lmk_k_world = frame_k-&gt;backProjectToWorld(tracklet_id);</div>
-<div class="line"><span class="lineno">  338</span> </div>
-<div class="line"><span class="lineno">  339</span>    <span class="keyword">const</span> gtsam::Point3 lmk_k_1_local =</div>
-<div class="line"><span class="lineno">  340</span>        frame_k_1-&gt;backProjectToCamera(tracklet_id);</div>
-<div class="line"><span class="lineno">  341</span>    <span class="keyword">const</span> gtsam::Point3 lmk_k_local = frame_k-&gt;backProjectToCamera(tracklet_id);</div>
-<div class="line"><span class="lineno">  342</span> </div>
-<div class="line"><span class="lineno">  343</span>    <span class="keyword">const</span> gtsam::Key lmk_k_1_key =</div>
-<div class="line"><span class="lineno">  344</span>        <a class="code hl_function" href="namespacedyno.html#abd0ce4d0c7ed8fc398cc515654019802">DynamicLandmarkSymbol</a>(frame_k_1-&gt;getFrameId(), tracklet_id);</div>
-<div class="line"><span class="lineno">  345</span>    <span class="keyword">const</span> gtsam::Key lmk_k_key =</div>
-<div class="line"><span class="lineno">  346</span>        <a class="code hl_function" href="namespacedyno.html#abd0ce4d0c7ed8fc398cc515654019802">DynamicLandmarkSymbol</a>(frame_k-&gt;getFrameId(), tracklet_id);</div>
+<div class="line"><span class="lineno">  335</span>  utils::TimingStatsCollector timer(<span class="stringliteral">&quot;motion_solver.object_nlo_refinement&quot;</span>);</div>
+<div class="line"><span class="lineno">  336</span> </div>
+<div class="line"><span class="lineno">  337</span>  <span class="keywordflow">for</span> (<a class="code hl_typedef" href="namespacedyno.html#afdd174eb44901fb205371d796287378c">TrackletId</a> tracklet_id : tracklets) {</div>
+<div class="line"><span class="lineno">  338</span>    Feature::Ptr feature_k_1 = frame_k_1-&gt;at(tracklet_id);</div>
+<div class="line"><span class="lineno">  339</span>    Feature::Ptr feature_k = frame_k-&gt;at(tracklet_id);</div>
+<div class="line"><span class="lineno">  340</span> </div>
+<div class="line"><span class="lineno">  341</span>    CHECK_NOTNULL(feature_k_1);</div>
+<div class="line"><span class="lineno">  342</span>    CHECK_NOTNULL(feature_k);</div>
+<div class="line"><span class="lineno">  343</span> </div>
+<div class="line"><span class="lineno">  344</span>    <span class="keywordflow">if</span> (!feature_k_1-&gt;usable() || !feature_k-&gt;usable()) {</div>
+<div class="line"><span class="lineno">  345</span>      <span class="keywordflow">continue</span>;</div>
+<div class="line"><span class="lineno">  346</span>    }</div>
 <div class="line"><span class="lineno">  347</span> </div>
-<div class="line"><span class="lineno">  348</span>    <span class="comment">// add initial for points</span></div>
-<div class="line"><span class="lineno">  349</span>    values.insert(lmk_k_1_key, lmk_k_1_world);</div>
-<div class="line"><span class="lineno">  350</span>    values.insert(lmk_k_key, lmk_k_world);</div>
-<div class="line"><span class="lineno">  351</span> </div>
-<div class="line"><span class="lineno">  352</span>    <span class="keywordflow">if</span> (solver == <a class="code hl_enumvalue" href="classdyno_1_1MotionOnlyRefinementOptimizer.html#a62fb52bd592e738694e8851bf8e0fd99aed53fa669f1a05cfee80463c8c94f122">RefinementSolver::PointError</a>) {</div>
-<div class="line"><span class="lineno">  353</span>      LOG(FATAL) &lt;&lt; <span class="stringliteral">&quot;RefinementSolver::PointError not implemented&quot;</span>;</div>
-<div class="line"><span class="lineno">  354</span>      <span class="comment">// graph.emplace_shared&lt;PoseToPointFactor&gt;(</span></div>
-<div class="line"><span class="lineno">  355</span>      <span class="comment">//     pose_k_1_key, //pose key at previous frames</span></div>
-<div class="line"><span class="lineno">  356</span>      <span class="comment">//     lmk_k_1_key,</span></div>
-<div class="line"><span class="lineno">  357</span>      <span class="comment">//     lmk_k_1_local,</span></div>
-<div class="line"><span class="lineno">  358</span>      <span class="comment">//     projection_noise</span></div>
-<div class="line"><span class="lineno">  359</span>      <span class="comment">// );</span></div>
-<div class="line"><span class="lineno">  360</span> </div>
-<div class="line"><span class="lineno">  361</span>      <span class="comment">// graph.emplace_shared&lt;PoseToPointFactor&gt;(</span></div>
-<div class="line"><span class="lineno">  362</span>      <span class="comment">//         pose_k_key, //pose key at current frames</span></div>
-<div class="line"><span class="lineno">  363</span>      <span class="comment">//         lmk_k_key,</span></div>
-<div class="line"><span class="lineno">  364</span>      <span class="comment">//         lmk_k_local,</span></div>
-<div class="line"><span class="lineno">  365</span>      <span class="comment">//         projection_noise</span></div>
-<div class="line"><span class="lineno">  366</span>      <span class="comment">// );</span></div>
-<div class="line"><span class="lineno">  367</span>    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (solver == <a class="code hl_enumvalue" href="classdyno_1_1MotionOnlyRefinementOptimizer.html#a62fb52bd592e738694e8851bf8e0fd99a83dddddaeb67cbe0d684911c66dc4b14">RefinementSolver::ProjectionError</a>) {</div>
-<div class="line"><span class="lineno">  368</span>      graph.emplace_shared&lt;<a class="code hl_typedef" href="namespacedyno.html#a0b2080ebc6273ea80d2716e39ead6525">GenericProjectionFactor</a>&gt;(</div>
-<div class="line"><span class="lineno">  369</span>          kp_k_1, projection_noise, pose_k_1_key, lmk_k_1_key,</div>
-<div class="line"><span class="lineno">  370</span>          gtsam_calibration, <span class="keyword">false</span>, <span class="keyword">false</span>);</div>
-<div class="line"><span class="lineno">  371</span> </div>
-<div class="line"><span class="lineno">  372</span>      graph.emplace_shared&lt;<a class="code hl_typedef" href="namespacedyno.html#a0b2080ebc6273ea80d2716e39ead6525">GenericProjectionFactor</a>&gt;(</div>
-<div class="line"><span class="lineno">  373</span>          kp_k, projection_noise, pose_k_key, lmk_k_key, gtsam_calibration,</div>
-<div class="line"><span class="lineno">  374</span>          <span class="keyword">false</span>, <span class="keyword">false</span>);</div>
-<div class="line"><span class="lineno">  375</span>    }</div>
-<div class="line"><span class="lineno">  376</span> </div>
-<div class="line"><span class="lineno">  377</span>    graph.emplace_shared&lt;LandmarkMotionTernaryFactor&gt;(</div>
-<div class="line"><span class="lineno">  378</span>        lmk_k_1_key, lmk_k_key, object_motion_key, landmark_motion_noise);</div>
-<div class="line"><span class="lineno">  379</span>  }</div>
-<div class="line"><span class="lineno">  380</span> </div>
-<div class="line"><span class="lineno">  381</span>  <span class="keywordtype">double</span> error_before = graph.error(values);</div>
-<div class="line"><span class="lineno">  382</span>  std::vector&lt;double&gt; post_errors;</div>
-<div class="line"><span class="lineno">  383</span> </div>
-<div class="line"><span class="lineno">  384</span>  gtsam::NonlinearFactorGraph mutable_graph = graph;</div>
-<div class="line"><span class="lineno">  385</span>  gtsam::Values optimised_values = values;</div>
-<div class="line"><span class="lineno">  386</span> </div>
-<div class="line"><span class="lineno">  387</span>  <a class="code hl_typedef" href="namespacedyno_1_1utils.html#a2a0bf9b09c753fdfa86ae7ebb92a0746">utils::StatsCollector</a>(<span class="stringliteral">&quot;motion_solver.object_nlo_refinement_num_vars_all&quot;</span>)</div>
-<div class="line"><span class="lineno">  388</span>      .<a class="code hl_function" href="classdyno_1_1utils_1_1StatsCollectorImpl.html#ab92087ce27dbec18730bf779e48d6aec">AddSample</a>(optimised_values.size());</div>
-<div class="line"><span class="lineno">  389</span> </div>
-<div class="line"><span class="lineno">  390</span>  gtsam::LevenbergMarquardtParams opt_params;</div>
-<div class="line"><span class="lineno">  391</span>  <span class="keywordflow">if</span> (VLOG_IS_ON(200))</div>
-<div class="line"><span class="lineno">  392</span>    opt_params.verbosity = gtsam::NonlinearOptimizerParams::Verbosity::ERROR;</div>
-<div class="line"><span class="lineno">  393</span> </div>
-<div class="line"><span class="lineno">  394</span>  optimised_values = gtsam::LevenbergMarquardtOptimizer(</div>
-<div class="line"><span class="lineno">  395</span>                         mutable_graph, optimised_values, opt_params)</div>
-<div class="line"><span class="lineno">  396</span>                         .optimize();</div>
-<div class="line"><span class="lineno">  397</span>  <span class="keywordtype">double</span> error_after = mutable_graph.error(optimised_values);</div>
-<div class="line"><span class="lineno">  398</span>  <span class="comment">// post_errors.push_back(error_after);</span></div>
+<div class="line"><span class="lineno">  348</span>    CHECK(feature_k_1-&gt;hasDepth());</div>
+<div class="line"><span class="lineno">  349</span>    CHECK(feature_k-&gt;hasDepth());</div>
+<div class="line"><span class="lineno">  350</span> </div>
+<div class="line"><span class="lineno">  351</span>    <span class="keyword">const</span> <a class="code hl_typedef" href="namespacedyno.html#aaa260a8022691078c59e1ac6a4fa05b5">Keypoint</a> kp_k_1 = feature_k_1-&gt;keypoint();</div>
+<div class="line"><span class="lineno">  352</span>    <span class="keyword">const</span> <a class="code hl_typedef" href="namespacedyno.html#aaa260a8022691078c59e1ac6a4fa05b5">Keypoint</a> kp_k = feature_k-&gt;keypoint();</div>
+<div class="line"><span class="lineno">  353</span> </div>
+<div class="line"><span class="lineno">  354</span>    <span class="keyword">const</span> gtsam::Point3 lmk_k_1_world =</div>
+<div class="line"><span class="lineno">  355</span>        frame_k_1-&gt;backProjectToWorld(tracklet_id);</div>
+<div class="line"><span class="lineno">  356</span>    <span class="keyword">const</span> gtsam::Point3 lmk_k_world = frame_k-&gt;backProjectToWorld(tracklet_id);</div>
+<div class="line"><span class="lineno">  357</span> </div>
+<div class="line"><span class="lineno">  358</span>    <span class="keyword">const</span> gtsam::Point3 lmk_k_1_local =</div>
+<div class="line"><span class="lineno">  359</span>        frame_k_1-&gt;backProjectToCamera(tracklet_id);</div>
+<div class="line"><span class="lineno">  360</span>    <span class="keyword">const</span> gtsam::Point3 lmk_k_local = frame_k-&gt;backProjectToCamera(tracklet_id);</div>
+<div class="line"><span class="lineno">  361</span> </div>
+<div class="line"><span class="lineno">  362</span>    <span class="keyword">const</span> gtsam::Key lmk_k_1_key =</div>
+<div class="line"><span class="lineno">  363</span>        <a class="code hl_function" href="namespacedyno.html#abd0ce4d0c7ed8fc398cc515654019802">DynamicLandmarkSymbol</a>(frame_k_1-&gt;getFrameId(), tracklet_id);</div>
+<div class="line"><span class="lineno">  364</span>    <span class="keyword">const</span> gtsam::Key lmk_k_key =</div>
+<div class="line"><span class="lineno">  365</span>        <a class="code hl_function" href="namespacedyno.html#abd0ce4d0c7ed8fc398cc515654019802">DynamicLandmarkSymbol</a>(frame_k-&gt;getFrameId(), tracklet_id);</div>
+<div class="line"><span class="lineno">  366</span> </div>
+<div class="line"><span class="lineno">  367</span>    <span class="comment">// add initial for points</span></div>
+<div class="line"><span class="lineno">  368</span>    values.insert(lmk_k_1_key, lmk_k_1_world);</div>
+<div class="line"><span class="lineno">  369</span>    values.insert(lmk_k_key, lmk_k_world);</div>
+<div class="line"><span class="lineno">  370</span> </div>
+<div class="line"><span class="lineno">  371</span>    <span class="keywordflow">if</span> (solver == <a class="code hl_enumvalue" href="classdyno_1_1MotionOnlyRefinementOptimizer.html#a62fb52bd592e738694e8851bf8e0fd99aed53fa669f1a05cfee80463c8c94f122">RefinementSolver::PointError</a>) {</div>
+<div class="line"><span class="lineno">  372</span>      LOG(FATAL) &lt;&lt; <span class="stringliteral">&quot;RefinementSolver::PointError not implemented&quot;</span>;</div>
+<div class="line"><span class="lineno">  373</span>      <span class="comment">// graph.emplace_shared&lt;PoseToPointFactor&gt;(</span></div>
+<div class="line"><span class="lineno">  374</span>      <span class="comment">//     pose_k_1_key, //pose key at previous frames</span></div>
+<div class="line"><span class="lineno">  375</span>      <span class="comment">//     lmk_k_1_key,</span></div>
+<div class="line"><span class="lineno">  376</span>      <span class="comment">//     lmk_k_1_local,</span></div>
+<div class="line"><span class="lineno">  377</span>      <span class="comment">//     projection_noise</span></div>
+<div class="line"><span class="lineno">  378</span>      <span class="comment">// );</span></div>
+<div class="line"><span class="lineno">  379</span> </div>
+<div class="line"><span class="lineno">  380</span>      <span class="comment">// graph.emplace_shared&lt;PoseToPointFactor&gt;(</span></div>
+<div class="line"><span class="lineno">  381</span>      <span class="comment">//         pose_k_key, //pose key at current frames</span></div>
+<div class="line"><span class="lineno">  382</span>      <span class="comment">//         lmk_k_key,</span></div>
+<div class="line"><span class="lineno">  383</span>      <span class="comment">//         lmk_k_local,</span></div>
+<div class="line"><span class="lineno">  384</span>      <span class="comment">//         projection_noise</span></div>
+<div class="line"><span class="lineno">  385</span>      <span class="comment">// );</span></div>
+<div class="line"><span class="lineno">  386</span>    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (solver == <a class="code hl_enumvalue" href="classdyno_1_1MotionOnlyRefinementOptimizer.html#a62fb52bd592e738694e8851bf8e0fd99a83dddddaeb67cbe0d684911c66dc4b14">RefinementSolver::ProjectionError</a>) {</div>
+<div class="line"><span class="lineno">  387</span>      graph.emplace_shared&lt;<a class="code hl_typedef" href="namespacedyno.html#a0b2080ebc6273ea80d2716e39ead6525">GenericProjectionFactor</a>&gt;(</div>
+<div class="line"><span class="lineno">  388</span>          kp_k_1, projection_noise, pose_k_1_key, lmk_k_1_key,</div>
+<div class="line"><span class="lineno">  389</span>          gtsam_calibration, <span class="keyword">false</span>, <span class="keyword">false</span>);</div>
+<div class="line"><span class="lineno">  390</span> </div>
+<div class="line"><span class="lineno">  391</span>      graph.emplace_shared&lt;<a class="code hl_typedef" href="namespacedyno.html#a0b2080ebc6273ea80d2716e39ead6525">GenericProjectionFactor</a>&gt;(</div>
+<div class="line"><span class="lineno">  392</span>          kp_k, projection_noise, pose_k_key, lmk_k_key, gtsam_calibration,</div>
+<div class="line"><span class="lineno">  393</span>          <span class="keyword">false</span>, <span class="keyword">false</span>);</div>
+<div class="line"><span class="lineno">  394</span>    }</div>
+<div class="line"><span class="lineno">  395</span> </div>
+<div class="line"><span class="lineno">  396</span>    graph.emplace_shared&lt;LandmarkMotionTernaryFactor&gt;(</div>
+<div class="line"><span class="lineno">  397</span>        lmk_k_1_key, lmk_k_key, object_motion_key, landmark_motion_noise);</div>
+<div class="line"><span class="lineno">  398</span>  }</div>
 <div class="line"><span class="lineno">  399</span> </div>
-<div class="line"><span class="lineno">  400</span>  gtsam::FactorIndices outlier_factors =</div>
-<div class="line"><span class="lineno">  401</span>      factor_graph_tools::determineFactorOutliers&lt;LandmarkMotionTernaryFactor&gt;(</div>
-<div class="line"><span class="lineno">  402</span>          mutable_graph, optimised_values);</div>
-<div class="line"><span class="lineno">  403</span> </div>
-<div class="line"><span class="lineno">  404</span>  std::set&lt;TrackletId&gt; outlier_tracks;</div>
-<div class="line"><span class="lineno">  405</span>  <span class="comment">// if we have outliers, enter iteration loop</span></div>
-<div class="line"><span class="lineno">  406</span>  <span class="keywordflow">if</span> (outlier_factors.size() &gt; 0u &amp;&amp; <a class="code hl_variable" href="classdyno_1_1MotionOnlyRefinementOptimizer.html#a340d76ff81e95c55de4c84b6f4f20970">params_</a>.<a class="code hl_variable" href="structdyno_1_1MotionOnlyRefinementOptimizer_1_1Params.html#a3eaa8e3e6fd351ca67626da65b468ba3">outlier_reject</a>) {</div>
-<div class="line"><span class="lineno">  407</span>    <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> itr = 0; itr &lt; 4; itr++) {</div>
-<div class="line"><span class="lineno">  408</span>      <span class="comment">// currently removing factors from graph makes them nullptr</span></div>
-<div class="line"><span class="lineno">  409</span>      gtsam::NonlinearFactorGraph mutable_graph_with_null = mutable_graph;</div>
-<div class="line"><span class="lineno">  410</span>      <span class="keywordflow">for</span> (<span class="keyword">auto</span> outlier_idx : outlier_factors) {</div>
-<div class="line"><span class="lineno">  411</span>        <span class="keyword">auto</span> factor = mutable_graph_with_null.at(outlier_idx);</div>
-<div class="line"><span class="lineno">  412</span>        DynamicPointSymbol point_symbol = factor-&gt;keys()[0];</div>
-<div class="line"><span class="lineno">  413</span>        outlier_tracks.insert(point_symbol.trackletId());</div>
-<div class="line"><span class="lineno">  414</span>        mutable_graph_with_null.remove(outlier_idx);</div>
-<div class="line"><span class="lineno">  415</span>      }</div>
-<div class="line"><span class="lineno">  416</span>      <span class="comment">// now iterate over graph and add factors that are not null to ensure all</span></div>
-<div class="line"><span class="lineno">  417</span>      <span class="comment">// factors are ok</span></div>
-<div class="line"><span class="lineno">  418</span>      mutable_graph.resize(0);</div>
-<div class="line"><span class="lineno">  419</span>      <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; mutable_graph_with_null.size(); i++) {</div>
-<div class="line"><span class="lineno">  420</span>        <span class="keyword">auto</span> factor = mutable_graph_with_null.at(i);</div>
-<div class="line"><span class="lineno">  421</span>        <span class="keywordflow">if</span> (factor) {</div>
-<div class="line"><span class="lineno">  422</span>          mutable_graph.add(factor);</div>
-<div class="line"><span class="lineno">  423</span>        }</div>
-<div class="line"><span class="lineno">  424</span>      }</div>
-<div class="line"><span class="lineno">  425</span> </div>
-<div class="line"><span class="lineno">  426</span>      values.insert(object_motion_key, initial_motion);</div>
-<div class="line"><span class="lineno">  427</span>      <span class="comment">// do we use values or optimised values here?</span></div>
-<div class="line"><span class="lineno">  428</span>      optimised_values = gtsam::LevenbergMarquardtOptimizer(</div>
-<div class="line"><span class="lineno">  429</span>                             mutable_graph, optimised_values, opt_params)</div>
-<div class="line"><span class="lineno">  430</span>                             .optimize();</div>
-<div class="line"><span class="lineno">  431</span>      error_after = mutable_graph.error(optimised_values);</div>
-<div class="line"><span class="lineno">  432</span>      post_errors.push_back(error_after);</div>
-<div class="line"><span class="lineno">  433</span> </div>
-<div class="line"><span class="lineno">  434</span>      outlier_factors = <a class="code hl_function" href="namespacedyno_1_1factor__graph__tools.html#af7b6cb76226919a10ad3cdac2ba3ac6a">factor_graph_tools::determineFactorOutliers</a>&lt;</div>
-<div class="line"><span class="lineno">  435</span>          LandmarkMotionTernaryFactor&gt;(mutable_graph, optimised_values);</div>
-<div class="line"><span class="lineno">  436</span> </div>
-<div class="line"><span class="lineno">  437</span>      <span class="keywordflow">if</span> (outlier_factors.size() == 0) {</div>
-<div class="line"><span class="lineno">  438</span>        <span class="keywordflow">break</span>;</div>
-<div class="line"><span class="lineno">  439</span>      }</div>
-<div class="line"><span class="lineno">  440</span>    }</div>
-<div class="line"><span class="lineno">  441</span>  }</div>
-<div class="line"><span class="lineno">  442</span> </div>
-<div class="line"><span class="lineno">  443</span>  <span class="keyword">const</span> <span class="keywordtype">size_t</span> initial_size = graph.size();</div>
-<div class="line"><span class="lineno">  444</span>  <span class="keyword">const</span> <span class="keywordtype">size_t</span> inlier_size = mutable_graph.size();</div>
-<div class="line"><span class="lineno">  445</span>  error_after = mutable_graph.error(optimised_values);</div>
-<div class="line"><span class="lineno">  446</span> </div>
-<div class="line"><span class="lineno">  447</span>  <a class="code hl_typedef" href="namespacedyno.html#a80a44a3e6e4745a2514ffdc58dbcfaac">Pose3SolverResult</a> result;</div>
-<div class="line"><span class="lineno">  448</span>  result.best_result = optimised_values.at&lt;gtsam::Pose3&gt;(object_motion_key);</div>
-<div class="line"><span class="lineno">  449</span>  result.outliers = <a class="code hl_typedef" href="namespacedyno.html#a7b74611da938f0d55a3b1fdb16219037">TrackletIds</a>(outlier_tracks.begin(), outlier_tracks.end());</div>
-<div class="line"><span class="lineno">  450</span>  result.error_before = error_before;</div>
-<div class="line"><span class="lineno">  451</span>  result.error_after = error_after;</div>
-<div class="line"><span class="lineno">  452</span> </div>
-<div class="line"><span class="lineno">  453</span>  <span class="comment">// naming is confusing, but we already have the outliers but we can use the</span></div>
-<div class="line"><span class="lineno">  454</span>  <span class="comment">// same function to find the inliers</span></div>
-<div class="line"><span class="lineno">  455</span>  <a class="code hl_function" href="namespacedyno.html#af008198dcb75012836115300a522ca86">determineOutlierIds</a>(result.outliers, tracklets, result.inliers);</div>
+<div class="line"><span class="lineno">  400</span>  <span class="keywordtype">double</span> error_before = graph.error(values);</div>
+<div class="line"><span class="lineno">  401</span>  std::vector&lt;double&gt; post_errors;</div>
+<div class="line"><span class="lineno">  402</span> </div>
+<div class="line"><span class="lineno">  403</span>  gtsam::NonlinearFactorGraph mutable_graph = graph;</div>
+<div class="line"><span class="lineno">  404</span>  gtsam::Values optimised_values = values;</div>
+<div class="line"><span class="lineno">  405</span> </div>
+<div class="line"><span class="lineno">  406</span>  <a class="code hl_typedef" href="namespacedyno_1_1utils.html#a2a0bf9b09c753fdfa86ae7ebb92a0746">utils::StatsCollector</a>(<span class="stringliteral">&quot;motion_solver.object_nlo_refinement_num_vars_all&quot;</span>)</div>
+<div class="line"><span class="lineno">  407</span>      .<a class="code hl_function" href="classdyno_1_1utils_1_1StatsCollectorImpl.html#ab92087ce27dbec18730bf779e48d6aec">AddSample</a>(optimised_values.size());</div>
+<div class="line"><span class="lineno">  408</span> </div>
+<div class="line"><span class="lineno">  409</span>  gtsam::LevenbergMarquardtParams opt_params;</div>
+<div class="line"><span class="lineno">  410</span>  opt_params.setMaxIterations(5);</div>
+<div class="line"><span class="lineno">  411</span>  <span class="keywordflow">if</span> (VLOG_IS_ON(200))</div>
+<div class="line"><span class="lineno">  412</span>    opt_params.verbosity = gtsam::NonlinearOptimizerParams::Verbosity::ERROR;</div>
+<div class="line"><span class="lineno">  413</span> </div>
+<div class="line"><span class="lineno">  414</span>  optimised_values = gtsam::LevenbergMarquardtOptimizer(</div>
+<div class="line"><span class="lineno">  415</span>                         mutable_graph, optimised_values, opt_params)</div>
+<div class="line"><span class="lineno">  416</span>                         .optimize();</div>
+<div class="line"><span class="lineno">  417</span>  <span class="keywordtype">double</span> error_after = mutable_graph.error(optimised_values);</div>
+<div class="line"><span class="lineno">  418</span>  <span class="comment">// post_errors.push_back(error_after);</span></div>
+<div class="line"><span class="lineno">  419</span> </div>
+<div class="line"><span class="lineno">  420</span>  gtsam::FactorIndices outlier_factors =</div>
+<div class="line"><span class="lineno">  421</span>      factor_graph_tools::determineFactorOutliers&lt;LandmarkMotionTernaryFactor&gt;(</div>
+<div class="line"><span class="lineno">  422</span>          mutable_graph, optimised_values);</div>
+<div class="line"><span class="lineno">  423</span> </div>
+<div class="line"><span class="lineno">  424</span>  std::set&lt;TrackletId&gt; outlier_tracks;</div>
+<div class="line"><span class="lineno">  425</span>  <span class="comment">// if we have outliers, enter iteration loop</span></div>
+<div class="line"><span class="lineno">  426</span>  <span class="keywordflow">if</span> (outlier_factors.size() &gt; 0u &amp;&amp; <a class="code hl_variable" href="classdyno_1_1MotionOnlyRefinementOptimizer.html#a340d76ff81e95c55de4c84b6f4f20970">params_</a>.<a class="code hl_variable" href="structdyno_1_1MotionOnlyRefinementOptimizer_1_1Params.html#a3eaa8e3e6fd351ca67626da65b468ba3">outlier_reject</a>) {</div>
+<div class="line"><span class="lineno">  427</span>    <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> itr = 0; itr &lt; 4; itr++) {</div>
+<div class="line"><span class="lineno">  428</span>      <span class="comment">// currently removing factors from graph makes them nullptr</span></div>
+<div class="line"><span class="lineno">  429</span>      gtsam::NonlinearFactorGraph mutable_graph_with_null = mutable_graph;</div>
+<div class="line"><span class="lineno">  430</span>      <span class="keywordflow">for</span> (<span class="keyword">auto</span> outlier_idx : outlier_factors) {</div>
+<div class="line"><span class="lineno">  431</span>        <span class="keyword">auto</span> factor = mutable_graph_with_null.at(outlier_idx);</div>
+<div class="line"><span class="lineno">  432</span>        DynamicPointSymbol point_symbol = factor-&gt;keys()[0];</div>
+<div class="line"><span class="lineno">  433</span>        outlier_tracks.insert(point_symbol.trackletId());</div>
+<div class="line"><span class="lineno">  434</span>        mutable_graph_with_null.remove(outlier_idx);</div>
+<div class="line"><span class="lineno">  435</span>      }</div>
+<div class="line"><span class="lineno">  436</span>      <span class="comment">// now iterate over graph and add factors that are not null to ensure all</span></div>
+<div class="line"><span class="lineno">  437</span>      <span class="comment">// factors are ok</span></div>
+<div class="line"><span class="lineno">  438</span>      mutable_graph.resize(0);</div>
+<div class="line"><span class="lineno">  439</span>      <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; mutable_graph_with_null.size(); i++) {</div>
+<div class="line"><span class="lineno">  440</span>        <span class="keyword">auto</span> factor = mutable_graph_with_null.at(i);</div>
+<div class="line"><span class="lineno">  441</span>        <span class="keywordflow">if</span> (factor) {</div>
+<div class="line"><span class="lineno">  442</span>          mutable_graph.add(factor);</div>
+<div class="line"><span class="lineno">  443</span>        }</div>
+<div class="line"><span class="lineno">  444</span>      }</div>
+<div class="line"><span class="lineno">  445</span> </div>
+<div class="line"><span class="lineno">  446</span>      values.insert(object_motion_key, initial_motion);</div>
+<div class="line"><span class="lineno">  447</span>      <span class="comment">// do we use values or optimised values here?</span></div>
+<div class="line"><span class="lineno">  448</span>      optimised_values = gtsam::LevenbergMarquardtOptimizer(</div>
+<div class="line"><span class="lineno">  449</span>                             mutable_graph, optimised_values, opt_params)</div>
+<div class="line"><span class="lineno">  450</span>                             .optimize();</div>
+<div class="line"><span class="lineno">  451</span>      error_after = mutable_graph.error(optimised_values);</div>
+<div class="line"><span class="lineno">  452</span>      post_errors.push_back(error_after);</div>
+<div class="line"><span class="lineno">  453</span> </div>
+<div class="line"><span class="lineno">  454</span>      outlier_factors = <a class="code hl_function" href="namespacedyno_1_1factor__graph__tools.html#af7b6cb76226919a10ad3cdac2ba3ac6a">factor_graph_tools::determineFactorOutliers</a>&lt;</div>
+<div class="line"><span class="lineno">  455</span>          LandmarkMotionTernaryFactor&gt;(mutable_graph, optimised_values);</div>
 <div class="line"><span class="lineno">  456</span> </div>
-<div class="line"><span class="lineno">  457</span>  <span class="keywordflow">for</span> (<span class="keyword">auto</span> outlier_tracklet : outlier_tracks) {</div>
-<div class="line"><span class="lineno">  458</span>    Feature::Ptr feature_k_1 = frame_k_1-&gt;at(outlier_tracklet);</div>
-<div class="line"><span class="lineno">  459</span>    Feature::Ptr feature_k = frame_k-&gt;at(outlier_tracklet);</div>
-<div class="line"><span class="lineno">  460</span> </div>
-<div class="line"><span class="lineno">  461</span>    CHECK(feature_k_1-&gt;usable());</div>
-<div class="line"><span class="lineno">  462</span>    CHECK(feature_k-&gt;usable());</div>
-<div class="line"><span class="lineno">  463</span> </div>
-<div class="line"><span class="lineno">  464</span>    feature_k-&gt;markOutlier();</div>
-<div class="line"><span class="lineno">  465</span>    feature_k_1-&gt;markOutlier();</div>
-<div class="line"><span class="lineno">  466</span>  }</div>
-<div class="line"><span class="lineno">  467</span> </div>
-<div class="line"><span class="lineno">  468</span>  <span class="comment">// number of variables after outlier removal</span></div>
-<div class="line"><span class="lineno">  469</span>  <a class="code hl_typedef" href="namespacedyno_1_1utils.html#a2a0bf9b09c753fdfa86ae7ebb92a0746">utils::StatsCollector</a>(<span class="stringliteral">&quot;motion_solver.object_nlo_refinement_num_vars_inliers&quot;</span>)</div>
-<div class="line"><span class="lineno">  470</span>      .<a class="code hl_function" href="classdyno_1_1utils_1_1StatsCollectorImpl.html#ab92087ce27dbec18730bf779e48d6aec">AddSample</a>(result.inliers.size());</div>
-<div class="line"><span class="lineno">  471</span> </div>
-<div class="line"><span class="lineno">  472</span>  <span class="comment">// LOG(INFO) &lt;&lt; &quot;Object Motion refinement - error before: &quot;</span></div>
-<div class="line"><span class="lineno">  473</span>  <span class="comment">//     &lt;&lt; error_before &lt;&lt; &quot; error after: &quot; &lt;&lt; error_after</span></div>
-<div class="line"><span class="lineno">  474</span>  <span class="comment">//     &lt;&lt; &quot; with initial size &quot; &lt;&lt; initial_size &lt;&lt; &quot; inlier size &quot; &lt;&lt;</span></div>
-<div class="line"><span class="lineno">  475</span>  <span class="comment">//     inlier_size;</span></div>
+<div class="line"><span class="lineno">  457</span>      <span class="keywordflow">if</span> (outlier_factors.size() == 0) {</div>
+<div class="line"><span class="lineno">  458</span>        <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">  459</span>      }</div>
+<div class="line"><span class="lineno">  460</span>    }</div>
+<div class="line"><span class="lineno">  461</span>  }</div>
+<div class="line"><span class="lineno">  462</span> </div>
+<div class="line"><span class="lineno">  463</span>  <span class="keyword">const</span> <span class="keywordtype">size_t</span> initial_size = graph.size();</div>
+<div class="line"><span class="lineno">  464</span>  <span class="keyword">const</span> <span class="keywordtype">size_t</span> inlier_size = mutable_graph.size();</div>
+<div class="line"><span class="lineno">  465</span>  error_after = mutable_graph.error(optimised_values);</div>
+<div class="line"><span class="lineno">  466</span> </div>
+<div class="line"><span class="lineno">  467</span>  <a class="code hl_typedef" href="namespacedyno.html#a80a44a3e6e4745a2514ffdc58dbcfaac">Pose3SolverResult</a> result;</div>
+<div class="line"><span class="lineno">  468</span>  result.best_result = optimised_values.at&lt;gtsam::Pose3&gt;(object_motion_key);</div>
+<div class="line"><span class="lineno">  469</span>  result.outliers = <a class="code hl_typedef" href="namespacedyno.html#a7b74611da938f0d55a3b1fdb16219037">TrackletIds</a>(outlier_tracks.begin(), outlier_tracks.end());</div>
+<div class="line"><span class="lineno">  470</span>  result.error_before = error_before;</div>
+<div class="line"><span class="lineno">  471</span>  result.error_after = error_after;</div>
+<div class="line"><span class="lineno">  472</span> </div>
+<div class="line"><span class="lineno">  473</span>  <span class="comment">// naming is confusing, but we already have the outliers but we can use the</span></div>
+<div class="line"><span class="lineno">  474</span>  <span class="comment">// same function to find the inliers</span></div>
+<div class="line"><span class="lineno">  475</span>  <a class="code hl_function" href="namespacedyno.html#af008198dcb75012836115300a522ca86">determineOutlierIds</a>(result.outliers, tracklets, result.inliers);</div>
 <div class="line"><span class="lineno">  476</span> </div>
-<div class="line"><span class="lineno">  477</span>  <span class="keywordflow">return</span> result;</div>
-<div class="line"><span class="lineno">  478</span>}</div>
-<div class="ttc" id="aclassdyno_1_1utils_1_1StatsCollectorImpl_html_ab92087ce27dbec18730bf779e48d6aec"><div class="ttname"><a href="classdyno_1_1utils_1_1StatsCollectorImpl.html#ab92087ce27dbec18730bf779e48d6aec">dyno::utils::StatsCollectorImpl::AddSample</a></div><div class="ttdeci">void AddSample(double sample) const</div><div class="ttdef"><b>Definition:</b> <a href="Statistics_8cc_source.html#l00127">Statistics.cc:127</a></div></div>
-<div class="ttc" id="anamespacedyno_1_1factor__graph__tools_html_af7b6cb76226919a10ad3cdac2ba3ac6a"><div class="ttname"><a href="namespacedyno_1_1factor__graph__tools.html#af7b6cb76226919a10ad3cdac2ba3ac6a">dyno::factor_graph_tools::determineFactorOutliers</a></div><div class="ttdeci">gtsam::FactorIndices determineFactorOutliers(const gtsam::NonlinearFactorGraph &amp;graph, const gtsam::Values &amp;values, double confidence=0.99)</div><div class="ttdef"><b>Definition:</b> <a href="FactorGraphTools_8hpp_source.html#l00077">FactorGraphTools.hpp:77</a></div></div>
-<div class="ttc" id="anamespacedyno_1_1utils_html_a2a0bf9b09c753fdfa86ae7ebb92a0746"><div class="ttname"><a href="namespacedyno_1_1utils.html#a2a0bf9b09c753fdfa86ae7ebb92a0746">dyno::utils::StatsCollector</a></div><div class="ttdeci">StatsCollectorImpl StatsCollector</div><div class="ttdef"><b>Definition:</b> <a href="Statistics_8hpp_source.html#l00296">Statistics.hpp:296</a></div></div>
-<div class="ttc" id="anamespacedyno_html_a0b2080ebc6273ea80d2716e39ead6525"><div class="ttname"><a href="namespacedyno.html#a0b2080ebc6273ea80d2716e39ead6525">dyno::GenericProjectionFactor</a></div><div class="ttdeci">gtsam::GenericProjectionFactor&lt; gtsam::Pose3, gtsam::Point3, CalibrationType &gt; GenericProjectionFactor</div><div class="ttdef"><b>Definition:</b> <a href="BackendDefinitions_8hpp_source.html#l00239">BackendDefinitions.hpp:241</a></div></div>
-<div class="ttc" id="anamespacedyno_html_a23977a9581e8b4d2b684f749ec21cba2"><div class="ttname"><a href="namespacedyno.html#a23977a9581e8b4d2b684f749ec21cba2">dyno::ObjectMotionSymbol</a></div><div class="ttdeci">gtsam::Key ObjectMotionSymbol(ObjectId object_label, FrameId frame_id)</div><div class="ttdef"><b>Definition:</b> <a href="BackendDefinitions_8hpp_source.html#l00082">BackendDefinitions.hpp:82</a></div></div>
-<div class="ttc" id="anamespacedyno_html_a314d7f58c130d0aa28270309ff7500c5"><div class="ttname"><a href="namespacedyno.html#a314d7f58c130d0aa28270309ff7500c5">dyno::CameraPoseSymbol</a></div><div class="ttdeci">gtsam::Symbol CameraPoseSymbol(FrameId frame_id)</div><div class="ttdef"><b>Definition:</b> <a href="BackendDefinitions_8hpp_source.html#l00072">BackendDefinitions.hpp:72</a></div></div>
-<div class="ttc" id="anamespacedyno_html_a7b74611da938f0d55a3b1fdb16219037"><div class="ttname"><a href="namespacedyno.html#a7b74611da938f0d55a3b1fdb16219037">dyno::TrackletIds</a></div><div class="ttdeci">std::vector&lt; TrackletId &gt; TrackletIds</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00082">Types.hpp:82</a></div></div>
+<div class="line"><span class="lineno">  477</span>  <span class="keywordflow">for</span> (<span class="keyword">auto</span> outlier_tracklet : outlier_tracks) {</div>
+<div class="line"><span class="lineno">  478</span>    Feature::Ptr feature_k_1 = frame_k_1-&gt;at(outlier_tracklet);</div>
+<div class="line"><span class="lineno">  479</span>    Feature::Ptr feature_k = frame_k-&gt;at(outlier_tracklet);</div>
+<div class="line"><span class="lineno">  480</span> </div>
+<div class="line"><span class="lineno">  481</span>    CHECK(feature_k_1-&gt;usable());</div>
+<div class="line"><span class="lineno">  482</span>    CHECK(feature_k-&gt;usable());</div>
+<div class="line"><span class="lineno">  483</span> </div>
+<div class="line"><span class="lineno">  484</span>    feature_k-&gt;markOutlier();</div>
+<div class="line"><span class="lineno">  485</span>    feature_k_1-&gt;markOutlier();</div>
+<div class="line"><span class="lineno">  486</span>  }</div>
+<div class="line"><span class="lineno">  487</span> </div>
+<div class="line"><span class="lineno">  488</span>  <span class="comment">// number of variables after outlier removal</span></div>
+<div class="line"><span class="lineno">  489</span>  <a class="code hl_typedef" href="namespacedyno_1_1utils.html#a2a0bf9b09c753fdfa86ae7ebb92a0746">utils::StatsCollector</a>(<span class="stringliteral">&quot;motion_solver.object_nlo_refinement_num_vars_inliers&quot;</span>)</div>
+<div class="line"><span class="lineno">  490</span>      .<a class="code hl_function" href="classdyno_1_1utils_1_1StatsCollectorImpl.html#ab92087ce27dbec18730bf779e48d6aec">AddSample</a>(result.inliers.size());</div>
+<div class="line"><span class="lineno">  491</span> </div>
+<div class="line"><span class="lineno">  492</span>  <span class="comment">// LOG(INFO) &lt;&lt; &quot;Object Motion refinement - error before: &quot;</span></div>
+<div class="line"><span class="lineno">  493</span>  <span class="comment">//     &lt;&lt; error_before &lt;&lt; &quot; error after: &quot; &lt;&lt; error_after</span></div>
+<div class="line"><span class="lineno">  494</span>  <span class="comment">//     &lt;&lt; &quot; with initial size &quot; &lt;&lt; initial_size &lt;&lt; &quot; inlier size &quot; &lt;&lt;</span></div>
+<div class="line"><span class="lineno">  495</span>  <span class="comment">//     inlier_size;</span></div>
+<div class="line"><span class="lineno">  496</span> </div>
+<div class="line"><span class="lineno">  497</span>  <span class="keywordflow">return</span> result;</div>
+<div class="line"><span class="lineno">  498</span>}</div>
+<div class="ttc" id="aclassdyno_1_1utils_1_1StatsCollectorImpl_html_ab92087ce27dbec18730bf779e48d6aec"><div class="ttname"><a href="classdyno_1_1utils_1_1StatsCollectorImpl.html#ab92087ce27dbec18730bf779e48d6aec">dyno::utils::StatsCollectorImpl::AddSample</a></div><div class="ttdeci">void AddSample(double sample) const</div><div class="ttdef"><b>Definition:</b> <a href="Statistics_8cc_source.html#l00133">Statistics.cc:133</a></div></div>
+<div class="ttc" id="anamespacedyno_1_1factor__graph__tools_html_af7b6cb76226919a10ad3cdac2ba3ac6a"><div class="ttname"><a href="namespacedyno_1_1factor__graph__tools.html#af7b6cb76226919a10ad3cdac2ba3ac6a">dyno::factor_graph_tools::determineFactorOutliers</a></div><div class="ttdeci">gtsam::FactorIndices determineFactorOutliers(const gtsam::NonlinearFactorGraph &amp;graph, const gtsam::Values &amp;values, double confidence=0.99)</div><div class="ttdef"><b>Definition:</b> <a href="FactorGraphTools_8hpp_source.html#l00075">FactorGraphTools.hpp:75</a></div></div>
+<div class="ttc" id="anamespacedyno_1_1utils_html_a2a0bf9b09c753fdfa86ae7ebb92a0746"><div class="ttname"><a href="namespacedyno_1_1utils.html#a2a0bf9b09c753fdfa86ae7ebb92a0746">dyno::utils::StatsCollector</a></div><div class="ttdeci">StatsCollectorImpl StatsCollector</div><div class="ttdef"><b>Definition:</b> <a href="Statistics_8hpp_source.html#l00305">Statistics.hpp:305</a></div></div>
+<div class="ttc" id="anamespacedyno_html_a0b2080ebc6273ea80d2716e39ead6525"><div class="ttname"><a href="namespacedyno.html#a0b2080ebc6273ea80d2716e39ead6525">dyno::GenericProjectionFactor</a></div><div class="ttdeci">gtsam::GenericProjectionFactor&lt; gtsam::Pose3, gtsam::Point3, CalibrationType &gt; GenericProjectionFactor</div><div class="ttdef"><b>Definition:</b> <a href="BackendDefinitions_8hpp_source.html#l00202">BackendDefinitions.hpp:204</a></div></div>
+<div class="ttc" id="anamespacedyno_html_a23977a9581e8b4d2b684f749ec21cba2"><div class="ttname"><a href="namespacedyno.html#a23977a9581e8b4d2b684f749ec21cba2">dyno::ObjectMotionSymbol</a></div><div class="ttdeci">gtsam::Key ObjectMotionSymbol(ObjectId object_label, FrameId frame_id)</div><div class="ttdef"><b>Definition:</b> <a href="Symbols_8hpp_source.html#l00143">Symbols.hpp:143</a></div></div>
+<div class="ttc" id="anamespacedyno_html_a314d7f58c130d0aa28270309ff7500c5"><div class="ttname"><a href="namespacedyno.html#a314d7f58c130d0aa28270309ff7500c5">dyno::CameraPoseSymbol</a></div><div class="ttdeci">gtsam::Symbol CameraPoseSymbol(FrameId frame_id)</div><div class="ttdef"><b>Definition:</b> <a href="Symbols_8hpp_source.html#l00133">Symbols.hpp:133</a></div></div>
+<div class="ttc" id="anamespacedyno_html_a7b74611da938f0d55a3b1fdb16219037"><div class="ttname"><a href="namespacedyno.html#a7b74611da938f0d55a3b1fdb16219037">dyno::TrackletIds</a></div><div class="ttdeci">std::vector&lt; TrackletId &gt; TrackletIds</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00083">Types.hpp:83</a></div></div>
 <div class="ttc" id="anamespacedyno_html_a80a44a3e6e4745a2514ffdc58dbcfaac"><div class="ttname"><a href="namespacedyno.html#a80a44a3e6e4745a2514ffdc58dbcfaac">dyno::Pose3SolverResult</a></div><div class="ttdeci">SolverResult&lt; gtsam::Pose3 &gt; Pose3SolverResult</div><div class="ttdef"><b>Definition:</b> <a href="MotionSolver_8hpp_source.html#l00114">MotionSolver.hpp:114</a></div></div>
-<div class="ttc" id="anamespacedyno_html_aaa260a8022691078c59e1ac6a4fa05b5"><div class="ttname"><a href="namespacedyno.html#aaa260a8022691078c59e1ac6a4fa05b5">dyno::Keypoint</a></div><div class="ttdeci">gtsam::Point2 Keypoint</div><div class="ttdoc">Observed optical flow vector (ordered x, y)</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00095">Types.hpp:95</a></div></div>
-<div class="ttc" id="anamespacedyno_html_abd0ce4d0c7ed8fc398cc515654019802"><div class="ttname"><a href="namespacedyno.html#abd0ce4d0c7ed8fc398cc515654019802">dyno::DynamicLandmarkSymbol</a></div><div class="ttdeci">DynamicPointSymbol DynamicLandmarkSymbol(FrameId frame_id, TrackletId tracklet_id)</div><div class="ttdef"><b>Definition:</b> <a href="BackendDefinitions_8hpp_source.html#l00078">BackendDefinitions.hpp:78</a></div></div>
-<div class="ttc" id="anamespacedyno_html_af008198dcb75012836115300a522ca86"><div class="ttname"><a href="namespacedyno.html#af008198dcb75012836115300a522ca86">dyno::determineOutlierIds</a></div><div class="ttdeci">void determineOutlierIds(const TrackletIds &amp;inliers, const TrackletIds &amp;tracklets, TrackletIds &amp;outliers)</div><div class="ttdoc">From a set a tracklets and a subset (of the tracklet) inliers, calculate the remaining subset of outl...</div><div class="ttdef"><b>Definition:</b> <a href="VisionTools_8cc_source.html#l00610">VisionTools.cc:610</a></div></div>
-<div class="ttc" id="anamespacedyno_html_afdd174eb44901fb205371d796287378c"><div class="ttname"><a href="namespacedyno.html#afdd174eb44901fb205371d796287378c">dyno::TrackletId</a></div><div class="ttdeci">long int TrackletId</div><div class="ttdoc">Unique tracklet/landmark id, i.</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00080">Types.hpp:80</a></div></div>
+<div class="ttc" id="anamespacedyno_html_aaa260a8022691078c59e1ac6a4fa05b5"><div class="ttname"><a href="namespacedyno.html#aaa260a8022691078c59e1ac6a4fa05b5">dyno::Keypoint</a></div><div class="ttdeci">gtsam::Point2 Keypoint</div><div class="ttdoc">Observed optical flow vector (ordered x, y)</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00096">Types.hpp:96</a></div></div>
+<div class="ttc" id="anamespacedyno_html_abd0ce4d0c7ed8fc398cc515654019802"><div class="ttname"><a href="namespacedyno.html#abd0ce4d0c7ed8fc398cc515654019802">dyno::DynamicLandmarkSymbol</a></div><div class="ttdeci">DynamicPointSymbol DynamicLandmarkSymbol(FrameId frame_id, TrackletId tracklet_id)</div><div class="ttdef"><b>Definition:</b> <a href="Symbols_8hpp_source.html#l00139">Symbols.hpp:139</a></div></div>
+<div class="ttc" id="anamespacedyno_html_af008198dcb75012836115300a522ca86"><div class="ttname"><a href="namespacedyno.html#af008198dcb75012836115300a522ca86">dyno::determineOutlierIds</a></div><div class="ttdeci">void determineOutlierIds(const TrackletIds &amp;inliers, const TrackletIds &amp;tracklets, TrackletIds &amp;outliers)</div><div class="ttdoc">From a set a tracklets and a subset (of the tracklet) inliers, calculate the remaining subset of outl...</div><div class="ttdef"><b>Definition:</b> <a href="VisionTools_8cc_source.html#l00744">VisionTools.cc:744</a></div></div>
+<div class="ttc" id="anamespacedyno_html_afdd174eb44901fb205371d796287378c"><div class="ttname"><a href="namespacedyno.html#afdd174eb44901fb205371d796287378c">dyno::TrackletId</a></div><div class="ttdeci">long int TrackletId</div><div class="ttdoc">Unique tracklet/landmark id, i.</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00081">Types.hpp:81</a></div></div>
 <div class="ttc" id="astructdyno_1_1MotionOnlyRefinementOptimizer_1_1Params_html_a1d7dea3a8cf4c377bd9b9e6414579601"><div class="ttname"><a href="structdyno_1_1MotionOnlyRefinementOptimizer_1_1Params.html#a1d7dea3a8cf4c377bd9b9e6414579601">dyno::MotionOnlyRefinementOptimizer::Params::k_huber</a></div><div class="ttdeci">double k_huber</div><div class="ttdef"><b>Definition:</b> <a href="MotionSolver_8hpp_source.html#l00222">MotionSolver.hpp:222</a></div></div>
 <div class="ttc" id="astructdyno_1_1MotionOnlyRefinementOptimizer_1_1Params_html_a3eaa8e3e6fd351ca67626da65b468ba3"><div class="ttname"><a href="structdyno_1_1MotionOnlyRefinementOptimizer_1_1Params.html#a3eaa8e3e6fd351ca67626da65b468ba3">dyno::MotionOnlyRefinementOptimizer::Params::outlier_reject</a></div><div class="ttdeci">bool outlier_reject</div><div class="ttdef"><b>Definition:</b> <a href="MotionSolver_8hpp_source.html#l00223">MotionSolver.hpp:223</a></div></div>
 <div class="ttc" id="astructdyno_1_1MotionOnlyRefinementOptimizer_1_1Params_html_a46c4fd02a6e847138138df41578e43a4"><div class="ttname"><a href="structdyno_1_1MotionOnlyRefinementOptimizer_1_1Params.html#a46c4fd02a6e847138138df41578e43a4">dyno::MotionOnlyRefinementOptimizer::Params::landmark_motion_sigma</a></div><div class="ttdeci">double landmark_motion_sigma</div><div class="ttdef"><b>Definition:</b> <a href="MotionSolver_8hpp_source.html#l00220">MotionSolver.hpp:220</a></div></div>
@@ -531,14 +532,14 @@ template&lt;typename CALIBRATION &gt; </div>
 </div><div class="memdoc">
 <p>currently no outlier rejection</p>
 
-<p class="definition">Definition at line <a class="el" href="MotionSolver-inl_8hpp_source.html#l00481">481</a> of file <a class="el" href="MotionSolver-inl_8hpp_source.html">MotionSolver-inl.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  484</span>                                                                            {</div>
-<div class="line"><span class="lineno">  486</span>  <span class="keyword">auto</span> result = this-&gt;optimize&lt;CALIBRATION&gt;(frame_k_1, frame_k, tracklets,</div>
-<div class="line"><span class="lineno">  487</span>                                            object_id, initial_motion, solver);</div>
-<div class="line"><span class="lineno">  488</span> </div>
-<div class="line"><span class="lineno">  489</span>  <span class="comment">// TODO: update frame with outliers</span></div>
-<div class="line"><span class="lineno">  490</span>  <span class="keywordflow">return</span> result;</div>
-<div class="line"><span class="lineno">  491</span>}</div>
+<p class="definition">Definition at line <a class="el" href="MotionSolver-inl_8hpp_source.html#l00501">501</a> of file <a class="el" href="MotionSolver-inl_8hpp_source.html">MotionSolver-inl.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  504</span>                                                                            {</div>
+<div class="line"><span class="lineno">  506</span>  <span class="keyword">auto</span> result = this-&gt;optimize&lt;CALIBRATION&gt;(frame_k_1, frame_k, tracklets,</div>
+<div class="line"><span class="lineno">  507</span>                                            object_id, initial_motion, solver);</div>
+<div class="line"><span class="lineno">  508</span> </div>
+<div class="line"><span class="lineno">  509</span>  <span class="comment">// TODO: update frame with outliers</span></div>
+<div class="line"><span class="lineno">  510</span>  <span class="keywordflow">return</span> result;</div>
+<div class="line"><span class="lineno">  511</span>}</div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1ObjectMotionSovlerF2F.html#a432924457f5c458282c63002648b99a9">dyno::ObjectMotionSovlerF2F::geometricOutlierRejection3d2d()</a>.</p>
 <div class="dynheader">

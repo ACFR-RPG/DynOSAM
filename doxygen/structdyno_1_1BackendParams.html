@@ -75,6 +75,7 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
@@ -84,9 +85,33 @@ $(function() {
 <div class="contents">
 
 <p><code>#include &lt;<a class="el" href="BackendParams_8hpp_source.html">BackendParams.hpp</a>&gt;</code></p>
+<div class="dynheader">
+Inheritance diagram for dyno::BackendParams:</div>
+<div class="dyncontent">
+<div class="center"><img src="structdyno_1_1BackendParams__inherit__graph.png" border="0" usemap="#adyno_1_1BackendParams_inherit__map" alt="Inheritance graph"/></div>
+<map name="adyno_1_1BackendParams_inherit__map" id="adyno_1_1BackendParams_inherit__map">
+<area shape="rect" title=" " alt="" coords="17,5,182,31"/>
+<area shape="rect" href="structdyno_1_1FormulationParams.html" title="Basic parameters for a Formulation. Right now is just directly the BackendParams since there is lots ..." alt="" coords="5,79,193,104"/>
+</map>
+<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:ad3b0c03565d85aa8e544ebbe1c0f9f18"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1BackendParams.html#ad3b0c03565d85aa8e544ebbe1c0f9f18">StaticFormulationType</a> { <a class="el" href="structdyno_1_1BackendParams.html#ad3b0c03565d85aa8e544ebbe1c0f9f18afde793d746ddf2a8fc02fbc710083051">PTP</a> = 0
+, <a class="el" href="structdyno_1_1BackendParams.html#ad3b0c03565d85aa8e544ebbe1c0f9f18a8aade0efbfa0aacf0de31e3742b37395">GENERIC_PROJECTION</a> = 1
+, <a class="el" href="structdyno_1_1BackendParams.html#ad3b0c03565d85aa8e544ebbe1c0f9f18ac13f77c1bc159118a6cb22d251fcd004">STEREO_PROJECTION</a> = 2
+, <a class="el" href="structdyno_1_1BackendParams.html#ad3b0c03565d85aa8e544ebbe1c0f9f18a6726bdf27a25ebf49d4a86916d292017">SMART_PROJECTION</a> = 3
+ }</td></tr>
+<tr class="separator:ad3b0c03565d85aa8e544ebbe1c0f9f18"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:a7dc6374307e5aa089f2e52246e0339c1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1BackendParams.html#a7dc6374307e5aa089f2e52246e0339c1">makeStaticMeasurementsRobust</a> () const</td></tr>
+<tr class="memdesc:a7dc6374307e5aa089f2e52246e0339c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">True if robust kernals are on and the static point noise should also be robust.  <br /></td></tr>
+<tr class="separator:a7dc6374307e5aa089f2e52246e0339c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a52c8dbf1d0bc61102e410ca896ce8db8"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1BackendParams.html#a52c8dbf1d0bc61102e410ca896ce8db8">makeDynamicMeasurementsRobust</a> () const</td></tr>
+<tr class="memdesc:a52c8dbf1d0bc61102e410ca896ce8db8"><td class="mdescLeft">&#160;</td><td class="mdescRight">True if robust kernals are on and the dynamic point noise should also be robust.  <br /></td></tr>
+<tr class="separator:a52c8dbf1d0bc61102e410ca896ce8db8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a56d568c7c8d64f35d8037eb46569ef75"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structdyno_1_1BackendParams.html">BackendParams</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1BackendParams.html#a56d568c7c8d64f35d8037eb46569ef75">useLogger</a> (bool value)</td></tr>
 <tr class="separator:a56d568c7c8d64f35d8037eb46569ef75"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -97,21 +122,24 @@ Static Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a8ce0ea41fd4bf63cefcaffe203c321bd"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1BackendParams.html#a8ce0ea41fd4bf63cefcaffe203c321bd">static_smart_projection_noise_sigma_</a></td></tr>
-<tr class="memdesc:a8ce0ea41fd4bf63cefcaffe203c321bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Only Mono.  <br /></td></tr>
-<tr class="separator:a8ce0ea41fd4bf63cefcaffe203c321bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7952aa157fb08a5e879aa1e6d08adf25"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1BackendParams.html#a7952aa157fb08a5e879aa1e6d08adf25">dynamic_smart_projection_noise_sigma_</a></td></tr>
-<tr class="separator:a7952aa157fb08a5e879aa1e6d08adf25"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaaa3fc2ee1222dbba03e2dca7af3e18d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1BackendParams.html#aaaa3fc2ee1222dbba03e2dca7af3e18d">use_robust_kernals_</a> = true</td></tr>
+<tr class="memitem:aaaa3fc2ee1222dbba03e2dca7af3e18d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1BackendParams.html#aaaa3fc2ee1222dbba03e2dca7af3e18d">use_robust_kernals_</a> = FLAGS_use_robust_kernals</td></tr>
 <tr class="memdesc:aaaa3fc2ee1222dbba03e2dca7af3e18d"><td class="mdescLeft">&#160;</td><td class="mdescRight">RGBD/Stereo.  <br /></td></tr>
 <tr class="separator:aaaa3fc2ee1222dbba03e2dca7af3e18d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3ac174a22fd462ba154346e255dc7f9c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1BackendParams.html#a3ac174a22fd462ba154346e255dc7f9c">static_point_noise_as_robust</a> = true</td></tr>
+<tr class="separator:a3ac174a22fd462ba154346e255dc7f9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1496ba184a228bb717166c02202a090a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1BackendParams.html#a1496ba184a228bb717166c02202a090a">dynamic_point_noise_as_robust</a> = FLAGS_dynamic_point_noise_as_robust</td></tr>
+<tr class="separator:a1496ba184a228bb717166c02202a090a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af863bf2642a031c6bfcfcf54479d56d4"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1BackendParams.html#af863bf2642a031c6bfcfcf54479d56d4">k_huber_3d_points_</a></td></tr>
 <tr class="separator:af863bf2642a031c6bfcfcf54479d56d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad34b4878d778cd6f5ea7d7c43f9b7748"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1BackendParams.html#ad34b4878d778cd6f5ea7d7c43f9b7748">static_point_noise_sigma_</a></td></tr>
-<tr class="memdesc:ad34b4878d778cd6f5ea7d7c43f9b7748"><td class="mdescLeft">&#160;</td><td class="mdescRight">Huber constant used for robust kernal on dynamic points.  <br /></td></tr>
-<tr class="separator:ad34b4878d778cd6f5ea7d7c43f9b7748"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaaabcb1f6cdbf0ef08210526a340a825"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1BackendParams.html#aaaabcb1f6cdbf0ef08210526a340a825">dynamic_point_noise_sigma_</a></td></tr>
-<tr class="separator:aaaabcb1f6cdbf0ef08210526a340a825"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a85e7211fae23f045fae08770932702ba"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1BackendParams.html#a85e7211fae23f045fae08770932702ba">static_point_noise_sigma</a></td></tr>
+<tr class="memdesc:a85e7211fae23f045fae08770932702ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Huber constant used for robust kernal on dynamic points.  <br /></td></tr>
+<tr class="separator:a85e7211fae23f045fae08770932702ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af658cc40730d872aad1e01b2fe7ebd78"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1BackendParams.html#af658cc40730d872aad1e01b2fe7ebd78">dynamic_point_noise_sigma</a></td></tr>
+<tr class="separator:af658cc40730d872aad1e01b2fe7ebd78"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3e1391c98fd8135d38299d1641652841"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1BackendParams.html#a3e1391c98fd8135d38299d1641652841">static_pixel_noise_sigma</a> = FLAGS_static_pixel_noise_sigma</td></tr>
+<tr class="separator:a3e1391c98fd8135d38299d1641652841"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a35392bd6a57cf68e7e5095b74b5c2895"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1BackendParams.html#a35392bd6a57cf68e7e5095b74b5c2895">dynamic_pixel_noise_sigma</a> = FLAGS_dynamic_pixel_noise_sigma</td></tr>
+<tr class="separator:a35392bd6a57cf68e7e5095b74b5c2895"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a19effdd93e47448a8befb6e7f44321fd"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1BackendParams.html#a19effdd93e47448a8befb6e7f44321fd">odometry_rotation_sigma_</a></td></tr>
 <tr class="separator:a19effdd93e47448a8befb6e7f44321fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2388f57e5904ef5a6f862be7afb96805"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1BackendParams.html#a2388f57e5904ef5a6f862be7afb96805">odometry_translation_sigma_</a></td></tr>
@@ -124,21 +152,62 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a0f956a9cb197f1b8013772b81f9c2fed"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aacb01950984427eafd7764ac0959ee70"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1BackendParams.html#aacb01950984427eafd7764ac0959ee70">use_logger_</a> = true</td></tr>
 <tr class="separator:aacb01950984427eafd7764ac0959ee70"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adb42ef30d2caa8d65783a7b1f6e1e163"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1BackendParams.html#adb42ef30d2caa8d65783a7b1f6e1e163">use_use_full_batch_opt</a> = true</td></tr>
-<tr class="separator:adb42ef30d2caa8d65783a7b1f6e1e163"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae439bb08d8a9f59c1e48ee994ce6744d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1BackendParams.html#ae439bb08d8a9f59c1e48ee994ce6744d">use_vo</a> = FLAGS_use_vo_factor</td></tr>
+<tr class="separator:ae439bb08d8a9f59c1e48ee994ce6744d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7e40628fdcdc344bf57dea5cc58aa3af"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacedyno.html#ad38da29a9b3ebc6451cb84941f9132b9">RegularOptimizationType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1BackendParams.html#a7e40628fdcdc344bf57dea5cc58aa3af">optimization_mode</a></td></tr>
+<tr class="separator:a7e40628fdcdc344bf57dea5cc58aa3af"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adc1201c3656713dc693b89387da89b6a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1BackendParams.html#adc1201c3656713dc693b89387da89b6a">use_smoothing_factor</a> = FLAGS_use_smoothing_factor</td></tr>
 <tr class="separator:adc1201c3656713dc693b89387da89b6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5434faf5e29966a32d3d4582a413a361"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1BackendParams.html#a5434faf5e29966a32d3d4582a413a361">min_static_obs_</a> = 2u</td></tr>
-<tr class="separator:a5434faf5e29966a32d3d4582a413a361"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8037a37438cacb5aafdb80e4f10882e9"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1BackendParams.html#a8037a37438cacb5aafdb80e4f10882e9">min_dynamic_obs_</a> = 3u</td></tr>
-<tr class="separator:a8037a37438cacb5aafdb80e4f10882e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a71d5d1921609c6023084a84c157cfa0d"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1BackendParams.html#a71d5d1921609c6023084a84c157cfa0d">updater_suffix</a> = FLAGS_updater_suffix</td></tr>
+<tr class="separator:a71d5d1921609c6023084a84c157cfa0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a64b29e621cf9cfbb5e143de4bec6113c"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1BackendParams.html#a64b29e621cf9cfbb5e143de4bec6113c">min_static_observations</a> = FLAGS_min_static_observations</td></tr>
+<tr class="separator:a64b29e621cf9cfbb5e143de4bec6113c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aad2084c0fde4e20ab9a7d149f22edb4b"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1BackendParams.html#aad2084c0fde4e20ab9a7d149f22edb4b">min_dynamic_observations</a> = FLAGS_min_dynamic_observations</td></tr>
+<tr class="separator:aad2084c0fde4e20ab9a7d149f22edb4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9679b7faef4689d6b809f4fec28ab937"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structdyno_1_1BackendParams.html#ad3b0c03565d85aa8e544ebbe1c0f9f18">StaticFormulationType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1BackendParams.html#a9679b7faef4689d6b809f4fec28ab937">static_formulation</a></td></tr>
+<tr class="separator:a9679b7faef4689d6b809f4fec28ab937"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a22d94a957fa882e446f730ca614eda84"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1BackendParams.html#a22d94a957fa882e446f730ca614eda84">full_batch_frame</a> = -1</td></tr>
 <tr class="separator:a22d94a957fa882e446f730ca614eda84"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="BackendParams_8hpp_source.html#l00056">56</a> of file <a class="el" href="BackendParams_8hpp_source.html">BackendParams.hpp</a>.</p>
-</div><h2 class="groupheader">Member Function Documentation</h2>
+<p class="definition">Definition at line <a class="el" href="BackendParams_8hpp_source.html#l00077">77</a> of file <a class="el" href="BackendParams_8hpp_source.html">BackendParams.hpp</a>.</p>
+</div><h2 class="groupheader">Member Enumeration Documentation</h2>
+<a id="ad3b0c03565d85aa8e544ebbe1c0f9f18" name="ad3b0c03565d85aa8e544ebbe1c0f9f18"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad3b0c03565d85aa8e544ebbe1c0f9f18">&#9670;&#160;</a></span>StaticFormulationType</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="structdyno_1_1BackendParams.html#ad3b0c03565d85aa8e544ebbe1c0f9f18">dyno::BackendParams::StaticFormulationType</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ad3b0c03565d85aa8e544ebbe1c0f9f18afde793d746ddf2a8fc02fbc710083051" name="ad3b0c03565d85aa8e544ebbe1c0f9f18afde793d746ddf2a8fc02fbc710083051"></a>PTP&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="ad3b0c03565d85aa8e544ebbe1c0f9f18a8aade0efbfa0aacf0de31e3742b37395" name="ad3b0c03565d85aa8e544ebbe1c0f9f18a8aade0efbfa0aacf0de31e3742b37395"></a>GENERIC_PROJECTION&#160;</td><td class="fielddoc"><p>Pose-to-point factor with 3D projection residual in the camera frame </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ad3b0c03565d85aa8e544ebbe1c0f9f18ac13f77c1bc159118a6cb22d251fcd004" name="ad3b0c03565d85aa8e544ebbe1c0f9f18ac13f77c1bc159118a6cb22d251fcd004"></a>STEREO_PROJECTION&#160;</td><td class="fielddoc"><p>Regular projection factor with 2D projection residual on the image plane </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ad3b0c03565d85aa8e544ebbe1c0f9f18a6726bdf27a25ebf49d4a86916d292017" name="ad3b0c03565d85aa8e544ebbe1c0f9f18a6726bdf27a25ebf49d4a86916d292017"></a>SMART_PROJECTION&#160;</td><td class="fielddoc"></td></tr>
+</table>
+
+<p class="definition">Definition at line <a class="el" href="BackendParams_8hpp_source.html#l00078">78</a> of file <a class="el" href="BackendParams_8hpp_source.html">BackendParams.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   78</span>                             {</div>
+<div class="line"><span class="lineno">   79</span>    <a class="code hl_enumvalue" href="structdyno_1_1BackendParams.html#ad3b0c03565d85aa8e544ebbe1c0f9f18afde793d746ddf2a8fc02fbc710083051">PTP</a> = 0,  </div>
+<div class="line"><span class="lineno">   81</span>    <a class="code hl_enumvalue" href="structdyno_1_1BackendParams.html#ad3b0c03565d85aa8e544ebbe1c0f9f18a8aade0efbfa0aacf0de31e3742b37395">GENERIC_PROJECTION</a> = 1,  </div>
+<div class="line"><span class="lineno">   83</span>    <a class="code hl_enumvalue" href="structdyno_1_1BackendParams.html#ad3b0c03565d85aa8e544ebbe1c0f9f18ac13f77c1bc159118a6cb22d251fcd004">STEREO_PROJECTION</a> = 2,</div>
+<div class="line"><span class="lineno">   84</span>    <a class="code hl_enumvalue" href="structdyno_1_1BackendParams.html#ad3b0c03565d85aa8e544ebbe1c0f9f18a6726bdf27a25ebf49d4a86916d292017">SMART_PROJECTION</a> = 3</div>
+<div class="line"><span class="lineno">   85</span>  };</div>
+<div class="ttc" id="astructdyno_1_1BackendParams_html_ad3b0c03565d85aa8e544ebbe1c0f9f18a6726bdf27a25ebf49d4a86916d292017"><div class="ttname"><a href="structdyno_1_1BackendParams.html#ad3b0c03565d85aa8e544ebbe1c0f9f18a6726bdf27a25ebf49d4a86916d292017">dyno::BackendParams::SMART_PROJECTION</a></div><div class="ttdeci">@ SMART_PROJECTION</div><div class="ttdef"><b>Definition:</b> <a href="BackendParams_8hpp_source.html#l00085">BackendParams.hpp:84</a></div></div>
+<div class="ttc" id="astructdyno_1_1BackendParams_html_ad3b0c03565d85aa8e544ebbe1c0f9f18a8aade0efbfa0aacf0de31e3742b37395"><div class="ttname"><a href="structdyno_1_1BackendParams.html#ad3b0c03565d85aa8e544ebbe1c0f9f18a8aade0efbfa0aacf0de31e3742b37395">dyno::BackendParams::GENERIC_PROJECTION</a></div><div class="ttdeci">@ GENERIC_PROJECTION</div><div class="ttdef"><b>Definition:</b> <a href="BackendParams_8hpp_source.html#l00081">BackendParams.hpp:81</a></div></div>
+<div class="ttc" id="astructdyno_1_1BackendParams_html_ad3b0c03565d85aa8e544ebbe1c0f9f18ac13f77c1bc159118a6cb22d251fcd004"><div class="ttname"><a href="structdyno_1_1BackendParams.html#ad3b0c03565d85aa8e544ebbe1c0f9f18ac13f77c1bc159118a6cb22d251fcd004">dyno::BackendParams::STEREO_PROJECTION</a></div><div class="ttdeci">@ STEREO_PROJECTION</div><div class="ttdef"><b>Definition:</b> <a href="BackendParams_8hpp_source.html#l00083">BackendParams.hpp:83</a></div></div>
+<div class="ttc" id="astructdyno_1_1BackendParams_html_ad3b0c03565d85aa8e544ebbe1c0f9f18afde793d746ddf2a8fc02fbc710083051"><div class="ttname"><a href="structdyno_1_1BackendParams.html#ad3b0c03565d85aa8e544ebbe1c0f9f18afde793d746ddf2a8fc02fbc710083051">dyno::BackendParams::PTP</a></div><div class="ttdeci">@ PTP</div><div class="ttdef"><b>Definition:</b> <a href="BackendParams_8hpp_source.html#l00079">BackendParams.hpp:79</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
 <a id="ab7f2f36a3022b3d8cce6eafcfa0d5402" name="ab7f2f36a3022b3d8cce6eafcfa0d5402"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab7f2f36a3022b3d8cce6eafcfa0d5402">&#9670;&#160;</a></span>fromYaml()</h2>
 
@@ -162,6 +231,110 @@ Public Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="a52c8dbf1d0bc61102e410ca896ce8db8" name="a52c8dbf1d0bc61102e410ca896ce8db8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a52c8dbf1d0bc61102e410ca896ce8db8">&#9670;&#160;</a></span>makeDynamicMeasurementsRobust()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool dyno::BackendParams::makeDynamicMeasurementsRobust </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>True if robust kernals are on and the dynamic point noise should also be robust. </p>
+<dl class="section return"><dt>Returns</dt><dd>true </dd>
+<dd>
+false </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="BackendParams_8hpp_source.html#l00160">160</a> of file <a class="el" href="BackendParams_8hpp_source.html">BackendParams.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  160</span>                                             {</div>
+<div class="line"><span class="lineno">  161</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="structdyno_1_1BackendParams.html#aaaa3fc2ee1222dbba03e2dca7af3e18d">use_robust_kernals_</a> &amp;&amp; <a class="code hl_variable" href="structdyno_1_1BackendParams.html#a1496ba184a228bb717166c02202a090a">dynamic_point_noise_as_robust</a>;</div>
+<div class="line"><span class="lineno">  162</span>  };</div>
+<div class="ttc" id="astructdyno_1_1BackendParams_html_a1496ba184a228bb717166c02202a090a"><div class="ttname"><a href="structdyno_1_1BackendParams.html#a1496ba184a228bb717166c02202a090a">dyno::BackendParams::dynamic_point_noise_as_robust</a></div><div class="ttdeci">bool dynamic_point_noise_as_robust</div><div class="ttdef"><b>Definition:</b> <a href="BackendParams_8hpp_source.html#l00090">BackendParams.hpp:90</a></div></div>
+<div class="ttc" id="astructdyno_1_1BackendParams_html_aaaa3fc2ee1222dbba03e2dca7af3e18d"><div class="ttname"><a href="structdyno_1_1BackendParams.html#aaaa3fc2ee1222dbba03e2dca7af3e18d">dyno::BackendParams::use_robust_kernals_</a></div><div class="ttdeci">bool use_robust_kernals_</div><div class="ttdoc">RGBD/Stereo.</div><div class="ttdef"><b>Definition:</b> <a href="BackendParams_8hpp_source.html#l00088">BackendParams.hpp:88</a></div></div>
+</div><!-- fragment -->
+<p class="reference">References <a class="el" href="structdyno_1_1BackendParams.html#a1496ba184a228bb717166c02202a090a">dynamic_point_noise_as_robust</a>, and <a class="el" href="structdyno_1_1BackendParams.html#aaaa3fc2ee1222dbba03e2dca7af3e18d">use_robust_kernals_</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1HybridFormulation.html#ae65a9c76b0363dde62eb86e6c0b2b832">dyno::HybridFormulation::dynamicPointUpdateCallback()</a>, <a class="el" href="classdyno_1_1WorldMotionFormulation.html#ad60f9621d41608943694144aad4d2e22">dyno::WorldMotionFormulation::dynamicPointUpdateCallback()</a>, and <a class="el" href="classdyno_1_1WorldPoseFormulation.html#ad1e6e0a4af9b06496359ceb969405f0a">dyno::WorldPoseFormulation::dynamicPointUpdateCallback()</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="structdyno_1_1BackendParams_a52c8dbf1d0bc61102e410ca896ce8db8_icgraph.png" border="0" usemap="#astructdyno_1_1BackendParams_a52c8dbf1d0bc61102e410ca896ce8db8_icgraph" alt=""/></div>
+<map name="astructdyno_1_1BackendParams_a52c8dbf1d0bc61102e410ca896ce8db8_icgraph" id="astructdyno_1_1BackendParams_a52c8dbf1d0bc61102e410ca896ce8db8_icgraph">
+<area shape="rect" title="True if robust kernals are on and the dynamic point noise should also be robust." alt="" coords="276,69,543,109"/>
+<area shape="rect" href="classdyno_1_1HybridFormulation.html#ae65a9c76b0363dde62eb86e6c0b2b832" title=" " alt="" coords="5,5,228,45"/>
+<area shape="rect" href="classdyno_1_1WorldMotionFormulation.html#ad60f9621d41608943694144aad4d2e22" title=" " alt="" coords="5,69,228,109"/>
+<area shape="rect" href="classdyno_1_1WorldPoseFormulation.html#ad1e6e0a4af9b06496359ceb969405f0a" title=" " alt="" coords="5,133,228,173"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a7dc6374307e5aa089f2e52246e0339c1" name="a7dc6374307e5aa089f2e52246e0339c1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7dc6374307e5aa089f2e52246e0339c1">&#9670;&#160;</a></span>makeStaticMeasurementsRobust()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool dyno::BackendParams::makeStaticMeasurementsRobust </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>True if robust kernals are on and the static point noise should also be robust. </p>
+<dl class="section return"><dt>Returns</dt><dd>true </dd>
+<dd>
+false </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="BackendParams_8hpp_source.html#l00149">149</a> of file <a class="el" href="BackendParams_8hpp_source.html">BackendParams.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  149</span>                                            {</div>
+<div class="line"><span class="lineno">  150</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="structdyno_1_1BackendParams.html#aaaa3fc2ee1222dbba03e2dca7af3e18d">use_robust_kernals_</a> &amp;&amp; <a class="code hl_variable" href="structdyno_1_1BackendParams.html#a3ac174a22fd462ba154346e255dc7f9c">static_point_noise_as_robust</a>;</div>
+<div class="line"><span class="lineno">  151</span>  };</div>
+<div class="ttc" id="astructdyno_1_1BackendParams_html_a3ac174a22fd462ba154346e255dc7f9c"><div class="ttname"><a href="structdyno_1_1BackendParams.html#a3ac174a22fd462ba154346e255dc7f9c">dyno::BackendParams::static_point_noise_as_robust</a></div><div class="ttdeci">bool static_point_noise_as_robust</div><div class="ttdef"><b>Definition:</b> <a href="BackendParams_8hpp_source.html#l00089">BackendParams.hpp:89</a></div></div>
+</div><!-- fragment -->
+<p class="reference">References <a class="el" href="structdyno_1_1BackendParams.html#a3ac174a22fd462ba154346e255dc7f9c">static_point_noise_as_robust</a>, and <a class="el" href="structdyno_1_1BackendParams.html#aaaa3fc2ee1222dbba03e2dca7af3e18d">use_robust_kernals_</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1internal_1_1StaticFormulationUpdaterImpl.html#a022677eb6d7dd081782c1e206a85b58c">dyno::internal::StaticFormulationUpdaterImpl&lt; MAP &gt;::isRobust()</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="structdyno_1_1BackendParams_a7dc6374307e5aa089f2e52246e0339c1_icgraph.png" border="0" usemap="#astructdyno_1_1BackendParams_a7dc6374307e5aa089f2e52246e0339c1_icgraph" alt=""/></div>
+<map name="astructdyno_1_1BackendParams_a7dc6374307e5aa089f2e52246e0339c1_icgraph" id="astructdyno_1_1BackendParams_a7dc6374307e5aa089f2e52246e0339c1_icgraph">
+<area shape="rect" title="True if robust kernals are on and the static point noise should also be robust." alt="" coords="853,37,1099,77"/>
+<area shape="rect" href="classdyno_1_1internal_1_1StaticFormulationUpdaterImpl.html#a022677eb6d7dd081782c1e206a85b58c" title=" " alt="" coords="571,37,805,77"/>
+<area shape="rect" href="classdyno_1_1internal_1_1StaticFormulationUpdaterImpl.html#a12c39fb613c4a3a9b382ade0a3c4fcdb" title=" " alt="" coords="288,37,523,77"/>
+<area shape="rect" href="structdyno_1_1internal_1_1StaticFormulationUpdater_1_1PTP.html#a89224a137fcdba2a535e63ffcea49fbe" title="Return results indicates if any factors/values were added (ie. the point was added)." alt="" coords="5,5,240,45"/>
+<area shape="rect" href="classdyno_1_1Formulation.html#aecc181278cdbd66990d3f5acf8b3f583" title=" " alt="" coords="25,69,220,109"/>
+</map>
+</div>
 
 </div>
 </div>
@@ -189,12 +362,12 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="BackendParams_8hpp_source.html#l00106">106</a> of file <a class="el" href="BackendParams_8hpp_source.html">BackendParams.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  106</span>                                       {</div>
-<div class="line"><span class="lineno">  107</span>    this-&gt;<a class="code hl_variable" href="structdyno_1_1BackendParams.html#aacb01950984427eafd7764ac0959ee70">use_logger_</a> = value;</div>
-<div class="line"><span class="lineno">  108</span>    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
-<div class="line"><span class="lineno">  109</span>  }</div>
-<div class="ttc" id="astructdyno_1_1BackendParams_html_aacb01950984427eafd7764ac0959ee70"><div class="ttname"><a href="structdyno_1_1BackendParams.html#aacb01950984427eafd7764ac0959ee70">dyno::BackendParams::use_logger_</a></div><div class="ttdeci">bool use_logger_</div><div class="ttdef"><b>Definition:</b> <a href="BackendParams_8hpp_source.html#l00096">BackendParams.hpp:96</a></div></div>
+<p class="definition">Definition at line <a class="el" href="BackendParams_8hpp_source.html#l00164">164</a> of file <a class="el" href="BackendParams_8hpp_source.html">BackendParams.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  164</span>                                       {</div>
+<div class="line"><span class="lineno">  165</span>    this-&gt;<a class="code hl_variable" href="structdyno_1_1BackendParams.html#aacb01950984427eafd7764ac0959ee70">use_logger_</a> = value;</div>
+<div class="line"><span class="lineno">  166</span>    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><span class="lineno">  167</span>  }</div>
+<div class="ttc" id="astructdyno_1_1BackendParams_html_aacb01950984427eafd7764ac0959ee70"><div class="ttname"><a href="structdyno_1_1BackendParams.html#aacb01950984427eafd7764ac0959ee70">dyno::BackendParams::use_logger_</a></div><div class="ttdeci">bool use_logger_</div><div class="ttdef"><b>Definition:</b> <a href="BackendParams_8hpp_source.html#l00124">BackendParams.hpp:124</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -214,7 +387,7 @@ Public Attributes</h2></td></tr>
 <div class="line">      FLAGS_constant_object_motion_rotation_sigma</div>
 </div><!-- fragment --><p>sigma used to construct the noise model on the translation component of the odomety (between factor) </p>
 
-<p class="definition">Definition at line <a class="el" href="BackendParams_8hpp_source.html#l00088">88</a> of file <a class="el" href="BackendParams_8hpp_source.html">BackendParams.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="BackendParams_8hpp_source.html#l00116">116</a> of file <a class="el" href="BackendParams_8hpp_source.html">BackendParams.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="structdyno_1_1NoiseModels.html#a8bef4bd578329e14ca739315ad597879">dyno::NoiseModels::fromBackendParams()</a>.</p>
 
@@ -234,20 +407,56 @@ Public Attributes</h2></td></tr>
 <b>Initial value:</b><div class="fragment"><div class="line">=</div>
 <div class="line">      FLAGS_constant_object_motion_translation_sigma</div>
 </div><!-- fragment -->
-<p class="definition">Definition at line <a class="el" href="BackendParams_8hpp_source.html#l00090">90</a> of file <a class="el" href="BackendParams_8hpp_source.html">BackendParams.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="BackendParams_8hpp_source.html#l00118">118</a> of file <a class="el" href="BackendParams_8hpp_source.html">BackendParams.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="structdyno_1_1NoiseModels.html#a8bef4bd578329e14ca739315ad597879">dyno::NoiseModels::fromBackendParams()</a>.</p>
 
 </div>
 </div>
-<a id="aaaabcb1f6cdbf0ef08210526a340a825" name="aaaabcb1f6cdbf0ef08210526a340a825"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aaaabcb1f6cdbf0ef08210526a340a825">&#9670;&#160;</a></span>dynamic_point_noise_sigma_</h2>
+<a id="a35392bd6a57cf68e7e5095b74b5c2895" name="a35392bd6a57cf68e7e5095b74b5c2895"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a35392bd6a57cf68e7e5095b74b5c2895">&#9670;&#160;</a></span>dynamic_pixel_noise_sigma</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">double dyno::BackendParams::dynamic_point_noise_sigma_</td>
+          <td class="memname">double dyno::BackendParams::dynamic_pixel_noise_sigma = FLAGS_dynamic_pixel_noise_sigma</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="BackendParams_8hpp_source.html#l00105">105</a> of file <a class="el" href="BackendParams_8hpp_source.html">BackendParams.hpp</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1RGBDInstanceFrontendModule.html#ab40113f18671c1f496269e8c7a18267a">dyno::RGBDInstanceFrontendModule::fillOutputPacketWithTracks()</a>.</p>
+
+</div>
+</div>
+<a id="a1496ba184a228bb717166c02202a090a" name="a1496ba184a228bb717166c02202a090a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1496ba184a228bb717166c02202a090a">&#9670;&#160;</a></span>dynamic_point_noise_as_robust</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool dyno::BackendParams::dynamic_point_noise_as_robust = FLAGS_dynamic_point_noise_as_robust</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="BackendParams_8hpp_source.html#l00090">90</a> of file <a class="el" href="BackendParams_8hpp_source.html">BackendParams.hpp</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="structdyno_1_1NoiseModels.html#a8bef4bd578329e14ca739315ad597879">dyno::NoiseModels::fromBackendParams()</a>, and <a class="el" href="structdyno_1_1BackendParams.html#a52c8dbf1d0bc61102e410ca896ce8db8">makeDynamicMeasurementsRobust()</a>.</p>
+
+</div>
+</div>
+<a id="af658cc40730d872aad1e01b2fe7ebd78" name="af658cc40730d872aad1e01b2fe7ebd78"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af658cc40730d872aad1e01b2fe7ebd78">&#9670;&#160;</a></span>dynamic_point_noise_sigma</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double dyno::BackendParams::dynamic_point_noise_sigma</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -255,28 +464,9 @@ Public Attributes</h2></td></tr>
 <div class="line">      FLAGS_dynamic_point_noise_sigma</div>
 </div><!-- fragment --><p>Isotropic noise used on PoseToPointFactor for static points </p>
 
-<p class="definition">Definition at line <a class="el" href="BackendParams_8hpp_source.html#l00074">74</a> of file <a class="el" href="BackendParams_8hpp_source.html">BackendParams.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="BackendParams_8hpp_source.html#l00099">99</a> of file <a class="el" href="BackendParams_8hpp_source.html">BackendParams.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="structdyno_1_1NoiseModels.html#a8bef4bd578329e14ca739315ad597879">dyno::NoiseModels::fromBackendParams()</a>.</p>
-
-</div>
-</div>
-<a id="a7952aa157fb08a5e879aa1e6d08adf25" name="a7952aa157fb08a5e879aa1e6d08adf25"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7952aa157fb08a5e879aa1e6d08adf25">&#9670;&#160;</a></span>dynamic_smart_projection_noise_sigma_</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">double dyno::BackendParams::dynamic_smart_projection_noise_sigma_</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">=</div>
-<div class="line">      FLAGS_dynamic_point_sigma</div>
-</div><!-- fragment --><p>Isotropic noise used for the smart projection factor (mono) on static points </p>
-
-<p class="definition">Definition at line <a class="el" href="BackendParams_8hpp_source.html#l00061">61</a> of file <a class="el" href="BackendParams_8hpp_source.html">BackendParams.hpp</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1RGBDInstanceFrontendModule.html#ab40113f18671c1f496269e8c7a18267a">dyno::RGBDInstanceFrontendModule::fillOutputPacketWithTracks()</a>, and <a class="el" href="structdyno_1_1NoiseModels.html#a8bef4bd578329e14ca739315ad597879">dyno::NoiseModels::fromBackendParams()</a>.</p>
 
 </div>
 </div>
@@ -300,9 +490,9 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="BackendParams_8hpp_source.html#l00112">112</a> of file <a class="el" href="BackendParams_8hpp_source.html">BackendParams.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="BackendParams_8hpp_source.html#l00170">170</a> of file <a class="el" href="BackendParams_8hpp_source.html">BackendParams.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1DynoPipelineManager.html#a7253b9241873476c79d38c607c95dea7">dyno::DynoPipelineManager::loadPipelines()</a>, and <a class="el" href="classdyno_1_1RegularBackendModule.html#aedf9cc9f68a38e7c6e91811ebda74f82">dyno::RegularBackendModule::updateBatch()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1DynoPipelineManager.html#aa181c6ed1e1b1c416eccca4e5bce8e29">dyno::DynoPipelineManager::loadPipelines()</a>, and <a class="el" href="classdyno_1_1RegularBackendModule.html#a8adffa54177bf64bfed8cc39bbd7e7cc">dyno::RegularBackendModule::updateBatch()</a>.</p>
 
 </div>
 </div>
@@ -320,45 +510,43 @@ Public Attributes</h2></td></tr>
 <b>Initial value:</b><div class="fragment"><div class="line">=</div>
 <div class="line">      0.0001</div>
 </div><!-- fragment -->
-<p class="definition">Definition at line <a class="el" href="BackendParams_8hpp_source.html#l00067">67</a> of file <a class="el" href="BackendParams_8hpp_source.html">BackendParams.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="BackendParams_8hpp_source.html#l00092">92</a> of file <a class="el" href="BackendParams_8hpp_source.html">BackendParams.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="structdyno_1_1NoiseModels.html#a8bef4bd578329e14ca739315ad597879">dyno::NoiseModels::fromBackendParams()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1HybridFormulation.html#ae65a9c76b0363dde62eb86e6c0b2b832">dyno::HybridFormulation::dynamicPointUpdateCallback()</a>, <a class="el" href="classdyno_1_1WorldMotionFormulation.html#ad60f9621d41608943694144aad4d2e22">dyno::WorldMotionFormulation::dynamicPointUpdateCallback()</a>, <a class="el" href="classdyno_1_1WorldPoseFormulation.html#ad1e6e0a4af9b06496359ceb969405f0a">dyno::WorldPoseFormulation::dynamicPointUpdateCallback()</a>, <a class="el" href="structdyno_1_1NoiseModels.html#a8bef4bd578329e14ca739315ad597879">dyno::NoiseModels::fromBackendParams()</a>, and <a class="el" href="classdyno_1_1internal_1_1StaticFormulationUpdaterImpl.html#a12c39fb613c4a3a9b382ade0a3c4fcdb">dyno::internal::StaticFormulationUpdaterImpl&lt; MAP &gt;::robustifyHuber()</a>.</p>
 
 </div>
 </div>
-<a id="a8037a37438cacb5aafdb80e4f10882e9" name="a8037a37438cacb5aafdb80e4f10882e9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8037a37438cacb5aafdb80e4f10882e9">&#9670;&#160;</a></span>min_dynamic_obs_</h2>
+<a id="aad2084c0fde4e20ab9a7d149f22edb4b" name="aad2084c0fde4e20ab9a7d149f22edb4b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aad2084c0fde4e20ab9a7d149f22edb4b">&#9670;&#160;</a></span>min_dynamic_observations</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">size_t dyno::BackendParams::min_dynamic_obs_ = 3u</td>
+          <td class="memname">size_t dyno::BackendParams::min_dynamic_observations = FLAGS_min_dynamic_observations</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="BackendParams_8hpp_source.html#l00102">102</a> of file <a class="el" href="BackendParams_8hpp_source.html">BackendParams.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="BackendParams_8hpp_source.html#l00135">135</a> of file <a class="el" href="BackendParams_8hpp_source.html">BackendParams.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1RegularBackendModule.html#a981f45e602804746db51e10350a060b6">dyno::RegularBackendModule::makeFormulation()</a>, and <a class="el" href="classdyno_1_1ParallelHybridBackendModule.html#a06ab247456bf85a1f6d67350f32eeb95">dyno::ParallelHybridBackendModule::ParallelHybridBackendModule()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1BackendFactory.html#a413f9f7a11bbb14af2daafab82d3a606">dyno::BackendFactory&lt; Policy, MAP &gt;::createFormulation()</a>, and <a class="el" href="classdyno_1_1ParallelObjectISAM.html#a208d31d31c213030005351feed247faa">dyno::ParallelObjectISAM::ParallelObjectISAM()</a>.</p>
 
 </div>
 </div>
-<a id="a5434faf5e29966a32d3d4582a413a361" name="a5434faf5e29966a32d3d4582a413a361"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5434faf5e29966a32d3d4582a413a361">&#9670;&#160;</a></span>min_static_obs_</h2>
+<a id="a64b29e621cf9cfbb5e143de4bec6113c" name="a64b29e621cf9cfbb5e143de4bec6113c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a64b29e621cf9cfbb5e143de4bec6113c">&#9670;&#160;</a></span>min_static_observations</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">size_t dyno::BackendParams::min_static_obs_ = 2u</td>
+          <td class="memname">size_t dyno::BackendParams::min_static_observations = FLAGS_min_static_observations</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="BackendParams_8hpp_source.html#l00101">101</a> of file <a class="el" href="BackendParams_8hpp_source.html">BackendParams.hpp</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1RegularBackendModule.html#a981f45e602804746db51e10350a060b6">dyno::RegularBackendModule::makeFormulation()</a>, and <a class="el" href="classdyno_1_1ParallelHybridBackendModule.html#a06ab247456bf85a1f6d67350f32eeb95">dyno::ParallelHybridBackendModule::ParallelHybridBackendModule()</a>.</p>
+<p class="definition">Definition at line <a class="el" href="BackendParams_8hpp_source.html#l00134">134</a> of file <a class="el" href="BackendParams_8hpp_source.html">BackendParams.hpp</a>.</p>
 
 </div>
 </div>
@@ -376,7 +564,7 @@ Public Attributes</h2></td></tr>
 <b>Initial value:</b><div class="fragment"><div class="line">=</div>
 <div class="line">      FLAGS_motion_ternary_factor_noise_sigma</div>
 </div><!-- fragment -->
-<p class="definition">Definition at line <a class="el" href="BackendParams_8hpp_source.html#l00093">93</a> of file <a class="el" href="BackendParams_8hpp_source.html">BackendParams.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="BackendParams_8hpp_source.html#l00121">121</a> of file <a class="el" href="BackendParams_8hpp_source.html">BackendParams.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="structdyno_1_1NoiseModels.html#a8bef4bd578329e14ca739315ad597879">dyno::NoiseModels::fromBackendParams()</a>.</p>
 
@@ -395,9 +583,8 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">=</div>
 <div class="line">      FLAGS_odometry_rotation_sigma</div>
-</div><!-- fragment --><p>Isotropic noise used on PoseToPointFactor for dynamic points //0.0125 </p>
-
-<p class="definition">Definition at line <a class="el" href="BackendParams_8hpp_source.html#l00079">79</a> of file <a class="el" href="BackendParams_8hpp_source.html">BackendParams.hpp</a>.</p>
+</div><!-- fragment -->
+<p class="definition">Definition at line <a class="el" href="BackendParams_8hpp_source.html#l00107">107</a> of file <a class="el" href="BackendParams_8hpp_source.html">BackendParams.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="structdyno_1_1NoiseModels.html#a8bef4bd578329e14ca739315ad597879">dyno::NoiseModels::fromBackendParams()</a>.</p>
 
@@ -418,20 +605,97 @@ Public Attributes</h2></td></tr>
 <div class="line">      FLAGS_odometry_translation_sigma</div>
 </div><!-- fragment --><p>sigma used to construct the noise model on the rotation component of the odomety (between factor) </p>
 
-<p class="definition">Definition at line <a class="el" href="BackendParams_8hpp_source.html#l00083">83</a> of file <a class="el" href="BackendParams_8hpp_source.html">BackendParams.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="BackendParams_8hpp_source.html#l00111">111</a> of file <a class="el" href="BackendParams_8hpp_source.html">BackendParams.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="structdyno_1_1NoiseModels.html#a8bef4bd578329e14ca739315ad597879">dyno::NoiseModels::fromBackendParams()</a>.</p>
 
 </div>
 </div>
-<a id="ad34b4878d778cd6f5ea7d7c43f9b7748" name="ad34b4878d778cd6f5ea7d7c43f9b7748"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad34b4878d778cd6f5ea7d7c43f9b7748">&#9670;&#160;</a></span>static_point_noise_sigma_</h2>
+<a id="a7e40628fdcdc344bf57dea5cc58aa3af" name="a7e40628fdcdc344bf57dea5cc58aa3af"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7e40628fdcdc344bf57dea5cc58aa3af">&#9670;&#160;</a></span>optimization_mode</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">double dyno::BackendParams::static_point_noise_sigma_</td>
+          <td class="memname"><a class="el" href="namespacedyno.html#ad38da29a9b3ebc6451cb84941f9132b9">RegularOptimizationType</a> dyno::BackendParams::optimization_mode</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">=</div>
+<div class="line">      <span class="keyword">static_cast&lt;</span><a class="code hl_enumeration" href="namespacedyno.html#ad38da29a9b3ebc6451cb84941f9132b9">RegularOptimizationType</a><span class="keyword">&gt;</span>(FLAGS_optimization_mode)</div>
+<div class="ttc" id="anamespacedyno_html_ad38da29a9b3ebc6451cb84941f9132b9"><div class="ttname"><a href="namespacedyno.html#ad38da29a9b3ebc6451cb84941f9132b9">dyno::RegularOptimizationType</a></div><div class="ttdeci">RegularOptimizationType</div><div class="ttdef"><b>Definition:</b> <a href="BackendParams_8hpp_source.html#l00071">BackendParams.hpp:71</a></div></div>
+</div><!-- fragment -->
+<p class="definition">Definition at line <a class="el" href="BackendParams_8hpp_source.html#l00127">127</a> of file <a class="el" href="BackendParams_8hpp_source.html">BackendParams.hpp</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1RegularBackendModule.html#a3b4dab2d820857bf083a6205c4416503">dyno::RegularBackendModule::getActiveOptimisation()</a>, <a class="el" href="classdyno_1_1DynoParams.html#a2094ff78794ca2147c07529a68dd8e9c">dyno::DynoParams::incrementalBackend()</a>, <a class="el" href="classdyno_1_1RegularBackendModule.html#a1d71056f178abdb8bf65f5ff91936a09">dyno::RegularBackendModule::setupUpdates()</a>, and <a class="el" href="classdyno_1_1RegularBackendModule.html#af37be3fb74afbf6b6a170b0cd13f38da">dyno::RegularBackendModule::updateAndOptimize()</a>.</p>
+
+</div>
+</div>
+<a id="a9679b7faef4689d6b809f4fec28ab937" name="a9679b7faef4689d6b809f4fec28ab937"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9679b7faef4689d6b809f4fec28ab937">&#9670;&#160;</a></span>static_formulation</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structdyno_1_1BackendParams.html#ad3b0c03565d85aa8e544ebbe1c0f9f18">StaticFormulationType</a> dyno::BackendParams::static_formulation</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">=</div>
+<div class="line">      <span class="keyword">static_cast&lt;</span><a class="code hl_enumeration" href="structdyno_1_1BackendParams.html#ad3b0c03565d85aa8e544ebbe1c0f9f18">StaticFormulationType</a><span class="keyword">&gt;</span>(FLAGS_static_formulation_type)</div>
+<div class="ttc" id="astructdyno_1_1BackendParams_html_ad3b0c03565d85aa8e544ebbe1c0f9f18"><div class="ttname"><a href="structdyno_1_1BackendParams.html#ad3b0c03565d85aa8e544ebbe1c0f9f18">dyno::BackendParams::StaticFormulationType</a></div><div class="ttdeci">StaticFormulationType</div><div class="ttdef"><b>Definition:</b> <a href="BackendParams_8hpp_source.html#l00078">BackendParams.hpp:78</a></div></div>
+</div><!-- fragment -->
+<p class="definition">Definition at line <a class="el" href="BackendParams_8hpp_source.html#l00137">137</a> of file <a class="el" href="BackendParams_8hpp_source.html">BackendParams.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a3e1391c98fd8135d38299d1641652841" name="a3e1391c98fd8135d38299d1641652841"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3e1391c98fd8135d38299d1641652841">&#9670;&#160;</a></span>static_pixel_noise_sigma</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double dyno::BackendParams::static_pixel_noise_sigma = FLAGS_static_pixel_noise_sigma</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Isotropic noise used on PoseToPointFactor for dynamic points //0.0125 </p>
+
+<p class="definition">Definition at line <a class="el" href="BackendParams_8hpp_source.html#l00104">104</a> of file <a class="el" href="BackendParams_8hpp_source.html">BackendParams.hpp</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1RGBDInstanceFrontendModule.html#ab40113f18671c1f496269e8c7a18267a">dyno::RGBDInstanceFrontendModule::fillOutputPacketWithTracks()</a>.</p>
+
+</div>
+</div>
+<a id="a3ac174a22fd462ba154346e255dc7f9c" name="a3ac174a22fd462ba154346e255dc7f9c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3ac174a22fd462ba154346e255dc7f9c">&#9670;&#160;</a></span>static_point_noise_as_robust</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool dyno::BackendParams::static_point_noise_as_robust = true</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="BackendParams_8hpp_source.html#l00089">89</a> of file <a class="el" href="BackendParams_8hpp_source.html">BackendParams.hpp</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="structdyno_1_1NoiseModels.html#a8bef4bd578329e14ca739315ad597879">dyno::NoiseModels::fromBackendParams()</a>, and <a class="el" href="structdyno_1_1BackendParams.html#a7dc6374307e5aa089f2e52246e0339c1">makeStaticMeasurementsRobust()</a>.</p>
+
+</div>
+</div>
+<a id="a85e7211fae23f045fae08770932702ba" name="a85e7211fae23f045fae08770932702ba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a85e7211fae23f045fae08770932702ba">&#9670;&#160;</a></span>static_point_noise_sigma</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double dyno::BackendParams::static_point_noise_sigma</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -440,29 +704,27 @@ Public Attributes</h2></td></tr>
 </div><!-- fragment -->
 <p>Huber constant used for robust kernal on dynamic points. </p>
 
-<p class="definition">Definition at line <a class="el" href="BackendParams_8hpp_source.html#l00069">69</a> of file <a class="el" href="BackendParams_8hpp_source.html">BackendParams.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="BackendParams_8hpp_source.html#l00094">94</a> of file <a class="el" href="BackendParams_8hpp_source.html">BackendParams.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="structdyno_1_1NoiseModels.html#a8bef4bd578329e14ca739315ad597879">dyno::NoiseModels::fromBackendParams()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1RGBDInstanceFrontendModule.html#ab40113f18671c1f496269e8c7a18267a">dyno::RGBDInstanceFrontendModule::fillOutputPacketWithTracks()</a>, and <a class="el" href="structdyno_1_1NoiseModels.html#a8bef4bd578329e14ca739315ad597879">dyno::NoiseModels::fromBackendParams()</a>.</p>
 
 </div>
 </div>
-<a id="a8ce0ea41fd4bf63cefcaffe203c321bd" name="a8ce0ea41fd4bf63cefcaffe203c321bd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8ce0ea41fd4bf63cefcaffe203c321bd">&#9670;&#160;</a></span>static_smart_projection_noise_sigma_</h2>
+<a id="a71d5d1921609c6023084a84c157cfa0d" name="a71d5d1921609c6023084a84c157cfa0d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a71d5d1921609c6023084a84c157cfa0d">&#9670;&#160;</a></span>updater_suffix</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">double dyno::BackendParams::static_smart_projection_noise_sigma_</td>
+          <td class="memname">std::string dyno::BackendParams::updater_suffix = FLAGS_updater_suffix</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">=</div>
-<div class="line">      FLAGS_static_point_sigma</div>
-</div><!-- fragment -->
-<p>Only Mono. </p>
 
-<p class="definition">Definition at line <a class="el" href="BackendParams_8hpp_source.html#l00058">58</a> of file <a class="el" href="BackendParams_8hpp_source.html">BackendParams.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="BackendParams_8hpp_source.html#l00132">132</a> of file <a class="el" href="BackendParams_8hpp_source.html">BackendParams.hpp</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1ParallelHybridBackendModule.html#a367a62d62ad07e49a2f2ef975e1bce8b">dyno::ParallelHybridBackendModule::logBackendFromEstimators()</a>, <a class="el" href="classdyno_1_1ParallelHybridBackendModule.html#a06ab247456bf85a1f6d67350f32eeb95">dyno::ParallelHybridBackendModule::ParallelHybridBackendModule()</a>, <a class="el" href="classdyno_1_1ParallelObjectISAM.html#a208d31d31c213030005351feed247faa">dyno::ParallelObjectISAM::ParallelObjectISAM()</a>, and <a class="el" href="classdyno_1_1ParallelHybridBackendModule.html#a368912f3c84f148843f4b6ef653f4a0c">dyno::ParallelHybridBackendModule::~ParallelHybridBackendModule()</a>.</p>
 
 </div>
 </div>
@@ -478,7 +740,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="BackendParams_8hpp_source.html#l00096">96</a> of file <a class="el" href="BackendParams_8hpp_source.html">BackendParams.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="BackendParams_8hpp_source.html#l00124">124</a> of file <a class="el" href="BackendParams_8hpp_source.html">BackendParams.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1ParallelHybridBackendModule.html#a368912f3c84f148843f4b6ef653f4a0c">dyno::ParallelHybridBackendModule::~ParallelHybridBackendModule()</a>, and <a class="el" href="classdyno_1_1RegularBackendModule.html#a26a1f7ce71fdabc65cdb711e48892b62">dyno::RegularBackendModule::~RegularBackendModule()</a>.</p>
 
@@ -491,17 +753,16 @@ Public Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool dyno::BackendParams::use_robust_kernals_ = true</td>
+          <td class="memname">bool dyno::BackendParams::use_robust_kernals_ = FLAGS_use_robust_kernals</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>RGBD/Stereo. </p>
-<p>Isotropic noise used for the smart projection factor (mono) on dynamic points </p>
 
-<p class="definition">Definition at line <a class="el" href="BackendParams_8hpp_source.html#l00066">66</a> of file <a class="el" href="BackendParams_8hpp_source.html">BackendParams.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="BackendParams_8hpp_source.html#l00088">88</a> of file <a class="el" href="BackendParams_8hpp_source.html">BackendParams.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="structdyno_1_1NoiseModels.html#a8bef4bd578329e14ca739315ad597879">dyno::NoiseModels::fromBackendParams()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="structdyno_1_1NoiseModels.html#a8bef4bd578329e14ca739315ad597879">dyno::NoiseModels::fromBackendParams()</a>, <a class="el" href="structdyno_1_1BackendParams.html#a52c8dbf1d0bc61102e410ca896ce8db8">makeDynamicMeasurementsRobust()</a>, and <a class="el" href="structdyno_1_1BackendParams.html#a7dc6374307e5aa089f2e52246e0339c1">makeStaticMeasurementsRobust()</a>.</p>
 
 </div>
 </div>
@@ -517,25 +778,27 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="BackendParams_8hpp_source.html#l00099">99</a> of file <a class="el" href="BackendParams_8hpp_source.html">BackendParams.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="BackendParams_8hpp_source.html#l00130">130</a> of file <a class="el" href="BackendParams_8hpp_source.html">BackendParams.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1RegularBackendModule.html#a981f45e602804746db51e10350a060b6">dyno::RegularBackendModule::makeFormulation()</a>, and <a class="el" href="classdyno_1_1ParallelHybridBackendModule.html#a06ab247456bf85a1f6d67350f32eeb95">dyno::ParallelHybridBackendModule::ParallelHybridBackendModule()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1HybridFormulation.html#ad05af62c9b437ad6613a191defeecb07">dyno::HybridFormulation::objectUpdateContext()</a>.</p>
 
 </div>
 </div>
-<a id="adb42ef30d2caa8d65783a7b1f6e1e163" name="adb42ef30d2caa8d65783a7b1f6e1e163"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adb42ef30d2caa8d65783a7b1f6e1e163">&#9670;&#160;</a></span>use_use_full_batch_opt</h2>
+<a id="ae439bb08d8a9f59c1e48ee994ce6744d" name="ae439bb08d8a9f59c1e48ee994ce6744d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae439bb08d8a9f59c1e48ee994ce6744d">&#9670;&#160;</a></span>use_vo</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool dyno::BackendParams::use_use_full_batch_opt = true</td>
+          <td class="memname">bool dyno::BackendParams::use_vo = FLAGS_use_vo_factor</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="BackendParams_8hpp_source.html#l00097">97</a> of file <a class="el" href="BackendParams_8hpp_source.html">BackendParams.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="BackendParams_8hpp_source.html#l00125">125</a> of file <a class="el" href="BackendParams_8hpp_source.html">BackendParams.hpp</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1VisionImuBackendModule.html#a67e4e733cd5724ba22900e531605d901">dyno::VisionImuBackendModule&lt; MODULE_TRAITS &gt;::addVisualInertialStates()</a>.</p>
 
 </div>
 </div>

@@ -1,5 +1,6 @@
 <map id="dyno::BackendDSDRos" name="dyno::BackendDSDRos">
-<area shape="rect" id="node1" title=" " alt="" coords="56,79,225,104"/>
-<area shape="rect" id="node2" href="$classdyno_1_1DisplayBase.html" title=" " alt="" coords="5,5,132,31"/>
-<area shape="rect" id="node3" href="$classdyno_1_1DSDRos.html" title="Shorthand for Dynamic Slam Display ROS." alt="" coords="157,5,271,31"/>
+<area shape="rect" id="node1" title=" " alt="" coords="99,152,269,177"/>
+<area shape="rect" id="node2" href="$classdyno_1_1DisplayBase.html" title=" " alt="" coords="49,79,175,104"/>
+<area shape="rect" id="node3" href="$structdyno_1_1SharedModuleInterface.html" title=" " alt="" coords="5,5,219,31"/>
+<area shape="rect" id="node4" href="$classdyno_1_1DSDRos.html" title="Shorthand for Dynamic Slam Display ROS." alt="" coords="200,79,315,104"/>
 </map>

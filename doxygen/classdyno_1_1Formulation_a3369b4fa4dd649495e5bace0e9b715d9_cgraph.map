@@ -1,6 +1,0 @@
-<map id="dyno::Formulation::getInitialOrLinearizedSensorPose" name="dyno::Formulation::getInitialOrLinearizedSensorPose">
-<area shape="rect" id="node1" title=" " alt="" coords="5,5,243,45"/>
-<area shape="rect" id="node2" href="$namespacedyno.html#ad5ce0869676f7888164ba26aceda60a9" title="Safe getter to a StateQuery object. If the StateQuery is successful, result is set to the value of th..." alt="" coords="291,13,441,38"/>
-<area shape="rect" id="node3" href="$classdyno_1_1StateQuery.html#af7ca5fb04717f5719c62a54b3b67fd17" title=" " alt="" coords="489,13,652,38"/>
-<area shape="rect" id="node4" href="$namespacedyno.html#a2d6f925680f57dbc72ada75daefdb2f9" title=" " alt="" coords="700,13,911,38"/>
-</map>

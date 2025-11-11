@@ -87,8 +87,9 @@ Inheritance diagram for dyno::OpenCVFrontendDisplay:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1OpenCVFrontendDisplay__inherit__graph.png" border="0" usemap="#adyno_1_1OpenCVFrontendDisplay_inherit__map" alt="Inheritance graph"/></div>
 <map name="adyno_1_1OpenCVFrontendDisplay_inherit__map" id="adyno_1_1OpenCVFrontendDisplay_inherit__map">
-<area shape="rect" title=" " alt="" coords="5,79,225,104"/>
-<area shape="rect" href="classdyno_1_1DisplayBase.html" title=" " alt="" coords="51,5,179,31"/>
+<area shape="rect" title=" " alt="" coords="5,152,225,177"/>
+<area shape="rect" href="classdyno_1_1DisplayBase.html" title=" " alt="" coords="51,79,179,104"/>
+<area shape="rect" href="structdyno_1_1SharedModuleInterface.html" title=" " alt="" coords="9,5,222,31"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
@@ -96,15 +97,19 @@ Collaboration diagram for dyno::OpenCVFrontendDisplay:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1OpenCVFrontendDisplay__coll__graph.png" border="0" usemap="#adyno_1_1OpenCVFrontendDisplay_coll__map" alt="Collaboration graph"/></div>
 <map name="adyno_1_1OpenCVFrontendDisplay_coll__map" id="adyno_1_1OpenCVFrontendDisplay_coll__map">
-<area shape="rect" title=" " alt="" coords="5,79,225,104"/>
-<area shape="rect" href="classdyno_1_1DisplayBase.html" title=" " alt="" coords="51,5,179,31"/>
+<area shape="rect" title=" " alt="" coords="5,420,225,445"/>
+<area shape="rect" href="classdyno_1_1DisplayBase.html" title=" " alt="" coords="51,345,179,371"/>
+<area shape="rect" href="structdyno_1_1SharedModuleInterface.html" title=" " alt="" coords="9,271,222,296"/>
+<area shape="rect" href="classdyno_1_1SharedModuleInfo.html" title=" " alt="" coords="25,183,205,208"/>
+<area shape="rect" href="classdyno_1_1GroundTruthPacketMap.html" title="FastMap from frame id to GroundTruthInputPacket." alt="" coords="10,95,221,120"/>
+<area shape="rect" title=" " alt="" coords="17,5,214,45"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-methods" name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
-<tr class="memitem:a6a9c40bf64a5cc7027dbc643ec591d81"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1OpenCVFrontendDisplay.html#a6a9c40bf64a5cc7027dbc643ec591d81">spinOnce</a> (const FrontendOutputPacketBase::ConstPtr &amp;frontend_output) override</td></tr>
-<tr class="separator:a6a9c40bf64a5cc7027dbc643ec591d81"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad9e48fbdf28e024a5321b217a2abaf88"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1OpenCVFrontendDisplay.html#ad9e48fbdf28e024a5321b217a2abaf88">spinOnceImpl</a> (const VisionImuPacket::ConstPtr &amp;frontend_output) override</td></tr>
+<tr class="separator:ad9e48fbdf28e024a5321b217a2abaf88"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="inherited" name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
@@ -120,15 +125,21 @@ Additional Inherited Members</h2></td></tr>
 <tr class="separator:af4d6e1990fe2d17b50434f958eff76d2 inherit pub_methods_classdyno_1_1DisplayBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac162cf49cd8c586590ac3e284963f383 inherit pub_methods_classdyno_1_1DisplayBase"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DisplayBase.html#ac162cf49cd8c586590ac3e284963f383">~DisplayBase</a> ()</td></tr>
 <tr class="separator:ac162cf49cd8c586590ac3e284963f383 inherit pub_methods_classdyno_1_1DisplayBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afb9c0becbfa36ca9c19261bb6d6d6ffb inherit pub_methods_classdyno_1_1DisplayBase"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DisplayBase.html#afb9c0becbfa36ca9c19261bb6d6d6ffb">spinOnce</a> (const <a class="el" href="classdyno_1_1DisplayBase.html#ad8fea9c8b3f0d1e4c1fb670359d53a4b">InputConstPtr</a> &amp;input)=0</td></tr>
-<tr class="separator:afb9c0becbfa36ca9c19261bb6d6d6ffb inherit pub_methods_classdyno_1_1DisplayBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8ef96ee9f0c793cfb54627cd6b3c1562 inherit pub_methods_classdyno_1_1DisplayBase"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DisplayBase.html#a8ef96ee9f0c793cfb54627cd6b3c1562">spinOnce</a> (const <a class="el" href="classdyno_1_1DisplayBase.html#ad8fea9c8b3f0d1e4c1fb670359d53a4b">InputConstPtr</a> &amp;input)</td></tr>
+<tr class="separator:a8ef96ee9f0c793cfb54627cd6b3c1562 inherit pub_methods_classdyno_1_1DisplayBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_attribs_structdyno_1_1SharedModuleInterface"><td colspan="2" onclick="javascript:toggleInherit('pub_attribs_structdyno_1_1SharedModuleInterface')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="structdyno_1_1SharedModuleInterface.html">dyno::SharedModuleInterface</a></td></tr>
+<tr class="memitem:afeac0a42a7ca31317d9267747e78b9e7 inherit pub_attribs_structdyno_1_1SharedModuleInterface"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classdyno_1_1SharedModuleInfo.html">SharedModuleInfo</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1SharedModuleInterface.html#afeac0a42a7ca31317d9267747e78b9e7">shared_module_info</a> = <a class="el" href="classdyno_1_1SharedModuleInfo.html#a75ec166db0c37e57b9ed31e425b86599">SharedModuleInfo::instance</a>()</td></tr>
+<tr class="separator:afeac0a42a7ca31317d9267747e78b9e7 inherit pub_attribs_structdyno_1_1SharedModuleInterface"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pro_methods_classdyno_1_1DisplayBase"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classdyno_1_1DisplayBase')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="classdyno_1_1DisplayBase.html">dyno::DisplayBase&lt; INPUT &gt;</a></td></tr>
+<tr class="memitem:a7cbae34bc7821aa2586d16f63158e258 inherit pro_methods_classdyno_1_1DisplayBase"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DisplayBase.html#a7cbae34bc7821aa2586d16f63158e258">spinOnceImpl</a> (const <a class="el" href="classdyno_1_1DisplayBase.html#ad8fea9c8b3f0d1e4c1fb670359d53a4b">InputConstPtr</a> &amp;input)=0</td></tr>
+<tr class="separator:a7cbae34bc7821aa2586d16f63158e258 inherit pro_methods_classdyno_1_1DisplayBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="OpenCVFrontendDisplay_8hpp_source.html#l00030">30</a> of file <a class="el" href="OpenCVFrontendDisplay_8hpp_source.html">OpenCVFrontendDisplay.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="OpenCVFrontendDisplay_8hpp_source.html#l00037">37</a> of file <a class="el" href="OpenCVFrontendDisplay_8hpp_source.html">OpenCVFrontendDisplay.hpp</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a6a9c40bf64a5cc7027dbc643ec591d81" name="a6a9c40bf64a5cc7027dbc643ec591d81"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6a9c40bf64a5cc7027dbc643ec591d81">&#9670;&#160;</a></span>spinOnce()</h2>
+<a id="ad9e48fbdf28e024a5321b217a2abaf88" name="ad9e48fbdf28e024a5321b217a2abaf88"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad9e48fbdf28e024a5321b217a2abaf88">&#9670;&#160;</a></span>spinOnceImpl()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -137,9 +148,9 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void dyno::OpenCVFrontendDisplay::spinOnce </td>
+          <td class="memname">void dyno::OpenCVFrontendDisplay::spinOnceImpl </td>
           <td>(</td>
-          <td class="paramtype">const FrontendOutputPacketBase::ConstPtr &amp;&#160;</td>
+          <td class="paramtype">const VisionImuPacket::ConstPtr &amp;&#160;</td>
           <td class="paramname"><em>frontend_output</em></td><td>)</td>
           <td></td>
         </tr>
@@ -151,18 +162,18 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="OpenCVFrontendDisplay_8cc_source.html#l00031">31</a> of file <a class="el" href="OpenCVFrontendDisplay_8cc_source.html">OpenCVFrontendDisplay.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   31</span>                                                                                            {</div>
-<div class="line"><span class="lineno">   32</span>    LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;In frontend opencv display&quot;</span>;</div>
-<div class="line"><span class="lineno">   33</span> </div>
-<div class="line"><span class="lineno">   34</span>    <span class="comment">// cv::Mat input_frames;</span></div>
-<div class="line"><span class="lineno">   35</span>    <span class="comment">// if(frontend_output.input) {</span></div>
-<div class="line"><span class="lineno">   36</span>    <span class="comment">//     frontend_output.input-&gt;image_packet_-&gt;draw(input_frames);</span></div>
-<div class="line"><span class="lineno">   37</span>    <span class="comment">// }</span></div>
-<div class="line"><span class="lineno">   38</span> </div>
-<div class="line"><span class="lineno">   39</span>    <span class="comment">// cv::imshow(&quot;Input Frames&quot;, input_frames);</span></div>
-<div class="line"><span class="lineno">   40</span>    <span class="comment">// cv::waitKey(1);</span></div>
-<div class="line"><span class="lineno">   41</span>}</div>
+<p class="definition">Definition at line <a class="el" href="OpenCVFrontendDisplay_8cc_source.html#l00039">39</a> of file <a class="el" href="OpenCVFrontendDisplay_8cc_source.html">OpenCVFrontendDisplay.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   39</span>                                                                       {</div>
+<div class="line"><span class="lineno">   40</span>  LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;In frontend opencv display&quot;</span>;</div>
+<div class="line"><span class="lineno">   41</span> </div>
+<div class="line"><span class="lineno">   42</span>  <span class="comment">// cv::Mat input_frames;</span></div>
+<div class="line"><span class="lineno">   43</span>  <span class="comment">// if(frontend_output.input) {</span></div>
+<div class="line"><span class="lineno">   44</span>  <span class="comment">//     frontend_output.input-&gt;image_packet_-&gt;draw(input_frames);</span></div>
+<div class="line"><span class="lineno">   45</span>  <span class="comment">// }</span></div>
+<div class="line"><span class="lineno">   46</span> </div>
+<div class="line"><span class="lineno">   47</span>  <span class="comment">// cv::imshow(&quot;Input Frames&quot;, input_frames);</span></div>
+<div class="line"><span class="lineno">   48</span>  <span class="comment">// cv::waitKey(1);</span></div>
+<div class="line"><span class="lineno">   49</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>

@@ -116,7 +116,7 @@ Public Member Functions</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="Metrics_8hpp_source.html#l00099">99</a> of file <a class="el" href="Metrics_8hpp_source.html">Metrics.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Metrics_8hpp_source.html#l00107">107</a> of file <a class="el" href="Metrics_8hpp_source.html">Metrics.hpp</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="a351a5be59014d3bc459c69185038a989" name="a351a5be59014d3bc459c69185038a989"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a351a5be59014d3bc459c69185038a989">&#9670;&#160;</a></span>Base</h2>
@@ -130,7 +130,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Metrics_8hpp_source.html#l00100">100</a> of file <a class="el" href="Metrics_8hpp_source.html">Metrics.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Metrics_8hpp_source.html#l00108">108</a> of file <a class="el" href="Metrics_8hpp_source.html">Metrics.hpp</a>.</p>
 
 </div>
 </div>
@@ -150,33 +150,31 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Metrics_8cc_source.html#l00063">63</a> of file <a class="el" href="Metrics_8cc_source.html">Metrics.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   64</span>{</div>
-<div class="line"><span class="lineno">   65</span>    <span class="keywordflow">if</span> (Base::empty())</div>
-<div class="line"><span class="lineno">   66</span>    {</div>
-<div class="line"><span class="lineno">   67</span>        <span class="keywordflow">return</span> TRErrorPair();</div>
-<div class="line"><span class="lineno">   68</span>    }</div>
-<div class="line"><span class="lineno">   69</span> </div>
-<div class="line"><span class="lineno">   70</span>    TRErrorPair error_pair;</div>
-<div class="line"><span class="lineno">   71</span> </div>
-<div class="line"><span class="lineno">   72</span>    <span class="keywordtype">double</span> x = 0, y = 0;</div>
-<div class="line"><span class="lineno">   73</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> TRErrorPair&amp; pair : *<span class="keyword">this</span>)</div>
-<div class="line"><span class="lineno">   74</span>    {</div>
-<div class="line"><span class="lineno">   75</span>        error_pair.translation_ += pair.translation_;</div>
+<p class="definition">Definition at line <a class="el" href="Metrics_8cc_source.html#l00072">72</a> of file <a class="el" href="Metrics_8cc_source.html">Metrics.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   72</span>                                             {</div>
+<div class="line"><span class="lineno">   73</span>  <span class="keywordflow">if</span> (Base::empty()) {</div>
+<div class="line"><span class="lineno">   74</span>    <span class="keywordflow">return</span> TRErrorPair();</div>
+<div class="line"><span class="lineno">   75</span>  }</div>
 <div class="line"><span class="lineno">   76</span> </div>
-<div class="line"><span class="lineno">   77</span>        y += std::sin(pair.rot_);</div>
-<div class="line"><span class="lineno">   78</span>        x += std::cos(pair.rot_);</div>
-<div class="line"><span class="lineno">   79</span>    }</div>
-<div class="line"><span class="lineno">   80</span> </div>
-<div class="line"><span class="lineno">   81</span>    <span class="keyword">const</span> <span class="keywordtype">double</span> length = <span class="keyword">static_cast&lt;</span><span class="keywordtype">double</span><span class="keyword">&gt;</span>(this-&gt;size());</div>
-<div class="line"><span class="lineno">   82</span>    x /= length;</div>
-<div class="line"><span class="lineno">   83</span>    y /= length;</div>
-<div class="line"><span class="lineno">   84</span>    error_pair.rot_ = <a class="code hl_function" href="namespacedyno.html#ad565ebafd792331e8d0ffab18a6f4407">dyno::wrapTwoPi</a>(std::atan2(y, x));</div>
-<div class="line"><span class="lineno">   85</span>    error_pair.translation_ /= length;</div>
+<div class="line"><span class="lineno">   77</span>  TRErrorPair error_pair;</div>
+<div class="line"><span class="lineno">   78</span> </div>
+<div class="line"><span class="lineno">   79</span>  <span class="keywordtype">double</span> x = 0, y = 0;</div>
+<div class="line"><span class="lineno">   80</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> TRErrorPair&amp; pair : *<span class="keyword">this</span>) {</div>
+<div class="line"><span class="lineno">   81</span>    error_pair.translation_ += pair.translation_;</div>
+<div class="line"><span class="lineno">   82</span> </div>
+<div class="line"><span class="lineno">   83</span>    y += std::sin(pair.rot_);</div>
+<div class="line"><span class="lineno">   84</span>    x += std::cos(pair.rot_);</div>
+<div class="line"><span class="lineno">   85</span>  }</div>
 <div class="line"><span class="lineno">   86</span> </div>
-<div class="line"><span class="lineno">   87</span>    <span class="keywordflow">return</span> error_pair;</div>
-<div class="line"><span class="lineno">   88</span>}</div>
-<div class="ttc" id="anamespacedyno_html_ad565ebafd792331e8d0ffab18a6f4407"><div class="ttname"><a href="namespacedyno.html#ad565ebafd792331e8d0ffab18a6f4407">dyno::wrapTwoPi</a></div><div class="ttdeci">double wrapTwoPi(double ang)</div><div class="ttdoc">Wraps an angle between [0... 2*PI].</div><div class="ttdef"><b>Definition:</b> <a href="Numerical_8hpp_source.html#l00198">Numerical.hpp:198</a></div></div>
+<div class="line"><span class="lineno">   87</span>  <span class="keyword">const</span> <span class="keywordtype">double</span> length = <span class="keyword">static_cast&lt;</span><span class="keywordtype">double</span><span class="keyword">&gt;</span>(this-&gt;size());</div>
+<div class="line"><span class="lineno">   88</span>  x /= length;</div>
+<div class="line"><span class="lineno">   89</span>  y /= length;</div>
+<div class="line"><span class="lineno">   90</span>  error_pair.rot_ = <a class="code hl_function" href="namespacedyno.html#ad565ebafd792331e8d0ffab18a6f4407">dyno::wrapTwoPi</a>(std::atan2(y, x));</div>
+<div class="line"><span class="lineno">   91</span>  error_pair.translation_ /= length;</div>
+<div class="line"><span class="lineno">   92</span> </div>
+<div class="line"><span class="lineno">   93</span>  <span class="keywordflow">return</span> error_pair;</div>
+<div class="line"><span class="lineno">   94</span>}</div>
+<div class="ttc" id="anamespacedyno_html_ad565ebafd792331e8d0ffab18a6f4407"><div class="ttname"><a href="namespacedyno.html#ad565ebafd792331e8d0ffab18a6f4407">dyno::wrapTwoPi</a></div><div class="ttdeci">double wrapTwoPi(double ang)</div><div class="ttdoc">Wraps an angle between [0... 2*PI].</div><div class="ttdef"><b>Definition:</b> <a href="Numerical_8hpp_source.html#l00190">Numerical.hpp:190</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="structdyno_1_1utils_1_1TRErrorPair.html#a9818c4047c022e6e2383a0336c484432">dyno::utils::TRErrorPair::rot_</a>, <a class="el" href="structdyno_1_1utils_1_1TRErrorPair.html#a0b7545fd305d4cd8beaf7aba838ddd44">dyno::utils::TRErrorPair::translation_</a>, and <a class="el" href="namespacedyno.html#ad565ebafd792331e8d0ffab18a6f4407">dyno::wrapTwoPi()</a>.</p>
 <div class="dynheader">
@@ -218,16 +216,16 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Metrics_8cc_source.html#l00059">59</a> of file <a class="el" href="Metrics_8cc_source.html">Metrics.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   59</span>                                                                {</div>
-<div class="line"><span class="lineno">   60</span>    Base::push_back(TRErrorPair(translation, rot));</div>
-<div class="line"><span class="lineno">   61</span>}</div>
+<p class="definition">Definition at line <a class="el" href="Metrics_8cc_source.html#l00068">68</a> of file <a class="el" href="Metrics_8cc_source.html">Metrics.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   68</span>                                                                {</div>
+<div class="line"><span class="lineno">   69</span>  Base::push_back(TRErrorPair(translation, rot));</div>
+<div class="line"><span class="lineno">   70</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
 <hr/>The documentation for this struct was generated from the following files:<ul>
-<li>dynosam/include/dynosam/utils/<a class="el" href="Metrics_8hpp_source.html">Metrics.hpp</a></li>
-<li>dynosam/src/utils/<a class="el" href="Metrics_8cc_source.html">Metrics.cc</a></li>
+<li>dynosam_common/include/dynosam_common/utils/<a class="el" href="Metrics_8hpp_source.html">Metrics.hpp</a></li>
+<li>dynosam_common/src/utils/<a class="el" href="Metrics_8cc_source.html">Metrics.cc</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

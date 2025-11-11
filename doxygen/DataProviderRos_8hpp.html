@@ -80,11 +80,11 @@ $(function() {
   <div class="headertitle"><div class="title">DataProviderRos.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;<a class="el" href="Exceptions_8hpp_source.html">dynosam/common/Exceptions.hpp</a>&gt;</code><br />
-<code>#include &lt;<a class="el" href="ImageTypes_8hpp_source.html">dynosam/common/ImageTypes.hpp</a>&gt;</code><br />
-<code>#include &lt;<a class="el" href="DataProvider_8hpp_source.html">dynosam/dataprovider/DataProvider.hpp</a>&gt;</code><br />
-<code>#include &lt;opencv4/opencv2/opencv.hpp&gt;</code><br />
-<code>#include &quot;cv_bridge/cv_bridge.h&quot;</code><br />
+<div class="textblock"><code>#include &lt;opencv4/opencv2/opencv.hpp&gt;</code><br />
+<code>#include &quot;cv_bridge/cv_bridge.hpp&quot;</code><br />
+<code>#include &quot;<a class="el" href="DataProvider_8hpp_source.html">dynosam/dataprovider/DataProvider.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="Exceptions_8hpp_source.html">dynosam_common/Exceptions.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="ImageTypes_8hpp_source.html">dynosam_cv/ImageTypes.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="CameraParamsAdaptor_8hpp_source.html">dynosam_ros/adaptors/CameraParamsAdaptor.hpp</a>&quot;</code><br />
 <code>#include &quot;rclcpp/node.hpp&quot;</code><br />
 <code>#include &quot;rclcpp/node_options.hpp&quot;</code><br />
@@ -96,56 +96,56 @@ Include dependency graph for DataProviderRos.hpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="DataProviderRos_8hpp__incl.png" border="0" usemap="#adynosam__ros_2include_2dynosam__ros_2DataProviderRos_8hpp" alt=""/></div>
 <map name="adynosam__ros_2include_2dynosam__ros_2DataProviderRos_8hpp" id="adynosam__ros_2include_2dynosam__ros_2DataProviderRos_8hpp">
-<area shape="rect" title=" " alt="" coords="2781,5,3035,45"/>
-<area shape="rect" href="Exceptions_8hpp.html" title=" " alt="" coords="122,445,369,471"/>
-<area shape="rect" href="ImageTypes_8hpp.html" title=" " alt="" coords="2220,101,2473,126"/>
-<area shape="rect" title=" " alt="" coords="2514,365,2729,390"/>
-<area shape="rect" href="DataProvider_8hpp.html" title=" " alt="" coords="754,93,923,133"/>
-<area shape="rect" title=" " alt="" coords="2826,101,2990,126"/>
-<area shape="rect" href="CameraParamsAdaptor_8hpp.html" title=" " alt="" coords="1611,93,1813,133"/>
-<area shape="rect" title=" " alt="" coords="3015,101,3140,126"/>
-<area shape="rect" title=" " alt="" coords="3165,101,3345,126"/>
-<area shape="rect" title=" " alt="" coords="3369,101,3581,126"/>
-<area shape="rect" title=" " alt="" coords="3605,101,3859,126"/>
-<area shape="rect" title=" " alt="" coords="3883,101,4095,126"/>
-<area shape="rect" title=" " alt="" coords="399,519,486,544"/>
-<area shape="rect" title=" " alt="" coords="299,519,375,544"/>
-<area shape="rect" title=" " alt="" coords="5,519,80,544"/>
-<area shape="rect" title=" " alt="" coords="105,519,191,544"/>
-<area shape="rect" title=" " alt="" coords="216,519,275,544"/>
-<area shape="rect" title=" " alt="" coords="2375,365,2489,390"/>
-<area shape="rect" title=" " alt="" coords="1954,277,2041,302"/>
-<area shape="rect" title=" " alt="" coords="2499,445,2591,471"/>
-<area shape="rect" href="Types_8hpp.html" title=" " alt="" coords="1099,277,1311,302"/>
-<area shape="rect" href="OpenCVUtils_8hpp.html" title=" " alt="" coords="2233,189,2461,214"/>
-<area shape="rect" href="Tuple_8hpp.html" title=" " alt="" coords="2667,189,2847,214"/>
-<area shape="rect" href="ImageTypes-inl_8hpp.html" title=" " alt="" coords="1933,181,2158,221"/>
-<area shape="rect" title=" " alt="" coords="1495,365,1663,390"/>
-<area shape="rect" title=" " alt="" coords="589,445,745,471"/>
-<area shape="rect" title=" " alt="" coords="2165,365,2350,390"/>
-<area shape="rect" title=" " alt="" coords="886,365,1029,390"/>
-<area shape="rect" title=" " alt="" coords="1279,445,1353,471"/>
-<area shape="rect" title=" " alt="" coords="1053,365,1150,390"/>
-<area shape="rect" title=" " alt="" coords="1174,365,1237,390"/>
-<area shape="rect" href="Flags_8hpp.html" title=" " alt="" coords="1260,365,1471,390"/>
-<area shape="rect" href="Macros_8hpp.html" title=" " alt="" coords="1687,365,1881,390"/>
-<area shape="rect" href="SensorModels_8hpp.html" title=" " alt="" coords="493,365,760,390"/>
-<area shape="rect" href="Types-inl_8hpp.html" title=" " alt="" coords="1905,357,2089,397"/>
-<area shape="rect" title=" " alt="" coords="2085,269,2253,309"/>
-<area shape="rect" title=" " alt="" coords="2278,277,2410,302"/>
-<area shape="rect" title=" " alt="" coords="2777,277,2831,302"/>
-<area shape="rect" title=" " alt="" coords="2855,277,2926,302"/>
-<area shape="rect" title=" " alt="" coords="2587,277,2647,302"/>
-<area shape="rect" title=" " alt="" coords="2672,277,2752,302"/>
-<area shape="rect" href="CameraParams_8hpp.html" title=" " alt="" coords="1115,189,1389,214"/>
-<area shape="rect" href="DataInterfacePipeline_8hpp.html" title=" " alt="" coords="845,181,1040,221"/>
-<area shape="rect" href="ImuParams_8hpp.html" title=" " alt="" coords="651,181,821,221"/>
-<area shape="rect" href="Frame_8hpp.html" title=" " alt="" coords="443,181,627,221"/>
-<area shape="rect" title=" " alt="" coords="785,269,945,309"/>
-<area shape="rect" title=" " alt="" coords="1335,277,1537,302"/>
-<area shape="rect" title=" " alt="" coords="1561,277,1786,302"/>
-<area shape="rect" title=" " alt="" coords="1413,189,1592,214"/>
-<area shape="rect" title=" " alt="" coords="1616,181,1808,221"/>
+<area shape="rect" title=" " alt="" coords="3430,5,3685,45"/>
+<area shape="rect" title=" " alt="" coords="151,783,366,808"/>
+<area shape="rect" title=" " alt="" coords="3467,101,3647,126"/>
+<area shape="rect" href="DataProvider_8hpp.html" title=" " alt="" coords="2869,93,3038,133"/>
+<area shape="rect" href="Exceptions_8hpp.html" title=" " alt="" coords="738,629,987,654"/>
+<area shape="rect" href="ImageTypes_8hpp.html" title=" " alt="" coords="1098,541,1313,566"/>
+<area shape="rect" href="CameraParamsAdaptor_8hpp.html" title=" " alt="" coords="3593,445,3796,485"/>
+<area shape="rect" title=" " alt="" coords="3672,101,3797,126"/>
+<area shape="rect" title=" " alt="" coords="3822,101,4002,126"/>
+<area shape="rect" title=" " alt="" coords="4026,101,4238,126"/>
+<area shape="rect" title=" " alt="" coords="4263,101,4516,126"/>
+<area shape="rect" title=" " alt="" coords="4541,101,4753,126"/>
+<area shape="rect" title=" " alt="" coords="1891,709,1978,735"/>
+<area shape="rect" href="DataInterfacePipeline_8hpp.html" title=" " alt="" coords="2027,269,2221,309"/>
+<area shape="rect" href="Types_8hpp.html" title=" " alt="" coords="2615,709,2830,735"/>
+<area shape="rect" href="ImuParams_8hpp.html" title=" " alt="" coords="3356,533,3527,573"/>
+<area shape="rect" href="Frame_8hpp.html" title=" " alt="" coords="2684,181,2868,221"/>
+<area shape="rect" href="CameraParams_8hpp.html" title=" " alt="" coords="3067,541,3301,566"/>
+<area shape="rect" href="FrontendInputPacket_8hpp.html" title=" " alt="" coords="1371,357,1573,397"/>
+<area shape="rect" href="ThreadSafeImuBuffer_8hpp.html" title=" " alt="" coords="2094,621,2285,661"/>
+<area shape="rect" href="PipelineBase_8hpp.html" title=" " alt="" coords="1509,533,1704,573"/>
+<area shape="rect" href="ThreadSafeQueue_8hpp.html" title=" " alt="" coords="448,621,664,661"/>
+<area shape="rect" title=" " alt="" coords="1959,783,2073,808"/>
+<area shape="rect" title=" " alt="" coords="1729,629,1815,654"/>
+<area shape="rect" title=" " alt="" coords="1003,783,1095,808"/>
+<area shape="rect" href="OpenCVUtils_8hpp.html" title=" " alt="" coords="1373,621,1552,661"/>
+<area shape="rect" href="Tuple_8hpp.html" title=" " alt="" coords="195,621,373,661"/>
+<area shape="rect" href="ImageContainer_8hpp.html" title=" " alt="" coords="1195,453,1434,478"/>
+<area shape="rect" title=" " alt="" coords="2639,783,2807,808"/>
+<area shape="rect" title=" " alt="" coords="2831,783,2987,808"/>
+<area shape="rect" title=" " alt="" coords="3023,783,3209,808"/>
+<area shape="rect" title=" " alt="" coords="2471,783,2614,808"/>
+<area shape="rect" title=" " alt="" coords="3419,783,3493,808"/>
+<area shape="rect" title=" " alt="" coords="811,709,887,735"/>
+<area shape="rect" title=" " alt="" coords="912,709,987,735"/>
+<area shape="rect" title=" " alt="" coords="701,709,787,735"/>
+<area shape="rect" title=" " alt="" coords="617,709,676,735"/>
+<area shape="rect" href="ImageTypes-inl_8hpp.html" title=" " alt="" coords="1112,621,1299,661"/>
+<area shape="rect" title=" " alt="" coords="3160,621,3320,661"/>
+<area shape="rect" title=" " alt="" coords="3395,629,3549,654"/>
+<area shape="rect" href="Vision-Definitions_8hpp.html" title=" " alt="" coords="2347,269,2531,309"/>
+<area shape="rect" href="Feature_8hpp.html" title=" " alt="" coords="2411,365,2597,390"/>
+<area shape="rect" href="StructuredContainers_8hpp.html" title=" " alt="" coords="2361,621,2578,661"/>
+<area shape="rect" href="DynamicObjects_8hpp.html" title=" " alt="" coords="2907,365,3192,390"/>
+<area shape="rect" href="PointCloudProcess_8hpp.html" title=" " alt="" coords="2195,533,2415,573"/>
+<area shape="rect" href="Camera_8hpp.html" title=" " alt="" coords="2957,453,3144,478"/>
+<area shape="rect" href="UndistortRectifier_8hpp.html" title=" " alt="" coords="3169,453,3418,478"/>
+<area shape="rect" href="Frame-inl_8hpp.html" title=" " alt="" coords="2555,269,2739,309"/>
+<area shape="rect" title=" " alt="" coords="3941,541,4120,566"/>
+<area shape="rect" title=" " alt="" coords="3725,533,3917,573"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">

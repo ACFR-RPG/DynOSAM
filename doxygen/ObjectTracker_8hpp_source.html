@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.6"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>DynoSAM: dynosam/include/dynosam/frontend/vision/ObjectTracker.hpp Source File</title>
+<title>DynoSAM: dynosam_nn/include/dynosam_nn/trackers/ObjectTracker.hpp Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -70,7 +70,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_5dee249e885e61d789509b2ad73060f7.html">dynosam</a></li><li class="navelem"><a class="el" href="dir_ae19c998a0d63c4a89d568f2bdaee525.html">include</a></li><li class="navelem"><a class="el" href="dir_0c508da48c40328131e0e187ecaa7ee4.html">dynosam</a></li><li class="navelem"><a class="el" href="dir_4545a13cb7472d9f8be7dcdc27139e51.html">frontend</a></li><li class="navelem"><a class="el" href="dir_195c8ff1e7084d053873bfdb43a4a6ae.html">vision</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_b0fdff66307b5214a6d62aa7cdc513ea.html">dynosam_nn</a></li><li class="navelem"><a class="el" href="dir_b490b179c8728c48e5fd2b4126446eb6.html">include</a></li><li class="navelem"><a class="el" href="dir_0f6a41313507631cf10d6aba77ec17e4.html">dynosam_nn</a></li><li class="navelem"><a class="el" href="dir_e3cdb37f391ec27305a6ddcdd92569ee.html">trackers</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -109,37 +109,43 @@ $(function() {
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="preprocessor">#include &quot;<a class="code" href="Types_8hpp.html">dynosam/common/Types.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="preprocessor">#include &quot;<a class="code" href="ByteTracker_8hpp.html">dynosam/common/byte_tracker/ByteTracker.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacedyno.html">dyno</a> {</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno"><a class="line" href="classdyno_1_1ObjectTracker.html">   38</a></span><span class="keyword">class </span><a class="code hl_class" href="classdyno_1_1ObjectTracker.html">ObjectTracker</a> {</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno"><a class="line" href="classdyno_1_1ObjectTracker.html#aab3fadbd4ea8c59419ab862971d17a0d">   40</a></span>  <span class="keyword">virtual</span> <a class="code hl_function" href="classdyno_1_1ObjectTracker.html#aab3fadbd4ea8c59419ab862971d17a0d">~ObjectTracker</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno"><a class="line" href="classdyno_1_1ObjectTracker.html#aa60a3e1b588e185c30154c0d0cc24316">   41</a></span>  <span class="keyword">virtual</span> cv::Mat <a class="code hl_function" href="classdyno_1_1ObjectTracker.html#aa60a3e1b588e185c30154c0d0cc24316">track</a>(<span class="keyword">const</span> cv::Mat&amp; mask, <a class="code hl_typedef" href="namespacedyno.html#ac4303d6fafb755f794b072d76f9cfb41">FrameId</a> frame_id) = 0;</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>};</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno"><a class="line" href="classdyno_1_1ByteObjectTracker.html">   44</a></span><span class="keyword">class </span><a class="code hl_class" href="classdyno_1_1ByteObjectTracker.html">ByteObjectTracker</a> : <span class="keyword">public</span> <a class="code hl_class" href="classdyno_1_1ObjectTracker.html">ObjectTracker</a> {</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>  cv::Mat <a class="code hl_function" href="classdyno_1_1ByteObjectTracker.html#aeb79dc19fb881160be780b9f4a2b2240">track</a>(<span class="keyword">const</span> cv::Mat&amp; mask, <a class="code hl_typedef" href="namespacedyno.html#ac4303d6fafb755f794b072d76f9cfb41">FrameId</a> frame_id) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="preprocessor">#include &quot;<a class="code" href="DynamicObjects_8hpp.html">dynosam_common/DynamicObjects.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="preprocessor">#include &quot;<a class="code" href="Types_8hpp.html">dynosam_common/Types.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="preprocessor">#include &quot;<a class="code" href="ByteTracker_8hpp.html">dynosam_nn/trackers/byte_tracker/ByteTracker.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacedyno.html">dyno</a> {</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span> </div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno"><a class="line" href="classdyno_1_1ObjectTracker.html">   39</a></span><span class="keyword">class </span><a class="code hl_class" href="classdyno_1_1ObjectTracker.html">ObjectTracker</a> {</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>  <a class="code hl_define" href="Macros_8hpp.html#a69eb5d764311b6affdc4e125b28a7db9">DYNO_POINTER_TYPEDEFS</a>(<a class="code hl_class" href="classdyno_1_1ObjectTracker.html">ObjectTracker</a>)</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno"><a class="line" href="classdyno_1_1ObjectTracker.html#aab3fadbd4ea8c59419ab862971d17a0d">   43</a></span>  virtual ~<a class="code hl_class" href="classdyno_1_1ObjectTracker.html">ObjectTracker</a>() = default;</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno"><a class="line" href="classdyno_1_1ObjectTracker.html#a81142e04f753b93b736e59c54e266d89">   44</a></span>  virtual std::vector&lt;<a class="code hl_struct" href="structdyno_1_1SingleDetectionResult.html">SingleDetectionResult</a>&gt; <a class="code hl_function" href="classdyno_1_1ObjectTracker.html#a81142e04f753b93b736e59c54e266d89">track</a>(</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>      const std::vector&lt;<a class="code hl_struct" href="structdyno_1_1ObjectDetection.html">ObjectDetection</a>&gt;&amp; detections) = 0;</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>};</div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno"><a class="line" href="classdyno_1_1ByteObjectTracker.html#a7e0aeb5a037bda4b4f13574cb0a7a928">   49</a></span>  <a class="code hl_class" href="classdyno_1_1byte__track_1_1ByteTracker.html">byte_track::ByteTracker</a> <a class="code hl_variable" href="classdyno_1_1ByteObjectTracker.html#a7e0aeb5a037bda4b4f13574cb0a7a928">impl_tracker_</a>;</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>};</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span> </div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>}  <span class="comment">// namespace dyno</span></div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno"><a class="line" href="classdyno_1_1ByteObjectTracker.html">   48</a></span>class <a class="code hl_class" href="classdyno_1_1ByteObjectTracker.html">ByteObjectTracker</a> : public <a class="code hl_class" href="classdyno_1_1ObjectTracker.html">ObjectTracker</a> {</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>  std::vector&lt;SingleDetectionResult&gt; <a class="code hl_function" href="classdyno_1_1ObjectTracker.html#a81142e04f753b93b736e59c54e266d89">track</a>(</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>      <span class="keyword">const</span> std::vector&lt;ObjectDetection&gt;&amp; detections) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno"><a class="line" href="classdyno_1_1ByteObjectTracker.html#a497cfe1febc5a9d29087c440ce82f1a0">   54</a></span>  <a class="code hl_class" href="classbyte__track_1_1ByteTracker.html">::byte_track::ByteTracker</a> <a class="code hl_variable" href="classdyno_1_1ByteObjectTracker.html#a497cfe1febc5a9d29087c440ce82f1a0">impl_tracker_</a>;</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>};</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span> </div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>}  <span class="comment">// namespace dyno</span></div>
 <div class="ttc" id="aByteTracker_8hpp_html"><div class="ttname"><a href="ByteTracker_8hpp.html">ByteTracker.hpp</a></div></div>
+<div class="ttc" id="aDynamicObjects_8hpp_html"><div class="ttname"><a href="DynamicObjects_8hpp.html">DynamicObjects.hpp</a></div></div>
+<div class="ttc" id="aMacros_8hpp_html_a69eb5d764311b6affdc4e125b28a7db9"><div class="ttname"><a href="Macros_8hpp.html#a69eb5d764311b6affdc4e125b28a7db9">DYNO_POINTER_TYPEDEFS</a></div><div class="ttdeci">#define DYNO_POINTER_TYPEDEFS(TypeName)</div><div class="ttdef"><b>Definition:</b> <a href="Macros_8hpp_source.html#l00038">Macros.hpp:38</a></div></div>
 <div class="ttc" id="aTypes_8hpp_html"><div class="ttname"><a href="Types_8hpp.html">Types.hpp</a></div></div>
-<div class="ttc" id="aclassdyno_1_1ByteObjectTracker_html"><div class="ttname"><a href="classdyno_1_1ByteObjectTracker.html">dyno::ByteObjectTracker</a></div><div class="ttdef"><b>Definition:</b> <a href="ObjectTracker_8hpp_source.html#l00044">ObjectTracker.hpp:44</a></div></div>
-<div class="ttc" id="aclassdyno_1_1ByteObjectTracker_html_a7e0aeb5a037bda4b4f13574cb0a7a928"><div class="ttname"><a href="classdyno_1_1ByteObjectTracker.html#a7e0aeb5a037bda4b4f13574cb0a7a928">dyno::ByteObjectTracker::impl_tracker_</a></div><div class="ttdeci">byte_track::ByteTracker impl_tracker_</div><div class="ttdef"><b>Definition:</b> <a href="ObjectTracker_8hpp_source.html#l00049">ObjectTracker.hpp:49</a></div></div>
-<div class="ttc" id="aclassdyno_1_1ByteObjectTracker_html_aeb79dc19fb881160be780b9f4a2b2240"><div class="ttname"><a href="classdyno_1_1ByteObjectTracker.html#aeb79dc19fb881160be780b9f4a2b2240">dyno::ByteObjectTracker::track</a></div><div class="ttdeci">cv::Mat track(const cv::Mat &amp;mask, FrameId frame_id) override</div><div class="ttdef"><b>Definition:</b> <a href="ObjectTracker_8cc_source.html#l00037">ObjectTracker.cc:37</a></div></div>
-<div class="ttc" id="aclassdyno_1_1ObjectTracker_html"><div class="ttname"><a href="classdyno_1_1ObjectTracker.html">dyno::ObjectTracker</a></div><div class="ttdef"><b>Definition:</b> <a href="ObjectTracker_8hpp_source.html#l00038">ObjectTracker.hpp:38</a></div></div>
-<div class="ttc" id="aclassdyno_1_1ObjectTracker_html_aa60a3e1b588e185c30154c0d0cc24316"><div class="ttname"><a href="classdyno_1_1ObjectTracker.html#aa60a3e1b588e185c30154c0d0cc24316">dyno::ObjectTracker::track</a></div><div class="ttdeci">virtual cv::Mat track(const cv::Mat &amp;mask, FrameId frame_id)=0</div></div>
-<div class="ttc" id="aclassdyno_1_1ObjectTracker_html_aab3fadbd4ea8c59419ab862971d17a0d"><div class="ttname"><a href="classdyno_1_1ObjectTracker.html#aab3fadbd4ea8c59419ab862971d17a0d">dyno::ObjectTracker::~ObjectTracker</a></div><div class="ttdeci">virtual ~ObjectTracker()=default</div></div>
-<div class="ttc" id="aclassdyno_1_1byte__track_1_1ByteTracker_html"><div class="ttname"><a href="classdyno_1_1byte__track_1_1ByteTracker.html">dyno::byte_track::ByteTracker</a></div><div class="ttdef"><b>Definition:</b> <a href="ByteTracker_8hpp_source.html#l00047">ByteTracker.hpp:47</a></div></div>
+<div class="ttc" id="aclassbyte__track_1_1ByteTracker_html"><div class="ttname"><a href="classbyte__track_1_1ByteTracker.html">byte_track::ByteTracker</a></div><div class="ttdef"><b>Definition:</b> <a href="ByteTracker_8hpp_source.html#l00014">ByteTracker.hpp:14</a></div></div>
+<div class="ttc" id="aclassdyno_1_1ByteObjectTracker_html"><div class="ttname"><a href="classdyno_1_1ByteObjectTracker.html">dyno::ByteObjectTracker</a></div><div class="ttdef"><b>Definition:</b> <a href="ObjectTracker_8hpp_source.html#l00048">ObjectTracker.hpp:48</a></div></div>
+<div class="ttc" id="aclassdyno_1_1ByteObjectTracker_html_a497cfe1febc5a9d29087c440ce82f1a0"><div class="ttname"><a href="classdyno_1_1ByteObjectTracker.html#a497cfe1febc5a9d29087c440ce82f1a0">dyno::ByteObjectTracker::impl_tracker_</a></div><div class="ttdeci">::byte_track::ByteTracker impl_tracker_</div><div class="ttdef"><b>Definition:</b> <a href="ObjectTracker_8hpp_source.html#l00054">ObjectTracker.hpp:54</a></div></div>
+<div class="ttc" id="aclassdyno_1_1ObjectTracker_html"><div class="ttname"><a href="classdyno_1_1ObjectTracker.html">dyno::ObjectTracker</a></div><div class="ttdef"><b>Definition:</b> <a href="ObjectTracker_8hpp_source.html#l00039">ObjectTracker.hpp:39</a></div></div>
+<div class="ttc" id="aclassdyno_1_1ObjectTracker_html_a81142e04f753b93b736e59c54e266d89"><div class="ttname"><a href="classdyno_1_1ObjectTracker.html#a81142e04f753b93b736e59c54e266d89">dyno::ObjectTracker::track</a></div><div class="ttdeci">virtual std::vector&lt; SingleDetectionResult &gt; track(const std::vector&lt; ObjectDetection &gt; &amp;detections)=0</div></div>
 <div class="ttc" id="anamespacedyno_html"><div class="ttname"><a href="namespacedyno.html">dyno</a></div><div class="ttdef"><b>Definition:</b> <a href="Accessor-impl_8hpp_source.html#l00037">Accessor-impl.hpp:37</a></div></div>
-<div class="ttc" id="anamespacedyno_html_ac4303d6fafb755f794b072d76f9cfb41"><div class="ttname"><a href="namespacedyno.html#ac4303d6fafb755f794b072d76f9cfb41">dyno::FrameId</a></div><div class="ttdeci">size_t FrameId</div><div class="ttdoc">Discrete time-step k.</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00073">Types.hpp:73</a></div></div>
+<div class="ttc" id="astructdyno_1_1ObjectDetection_html"><div class="ttname"><a href="structdyno_1_1ObjectDetection.html">dyno::ObjectDetection</a></div><div class="ttdoc">The result of an object detection from a detection network.</div><div class="ttdef"><b>Definition:</b> <a href="DynamicObjects_8hpp_source.html#l00044">DynamicObjects.hpp:44</a></div></div>
+<div class="ttc" id="astructdyno_1_1SingleDetectionResult_html"><div class="ttname"><a href="structdyno_1_1SingleDetectionResult.html">dyno::SingleDetectionResult</a></div><div class="ttdef"><b>Definition:</b> <a href="DynamicObjects_8hpp_source.html#l00052">DynamicObjects.hpp:52</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

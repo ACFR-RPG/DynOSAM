@@ -78,6 +78,7 @@ $(function() {
 <li>random()&#160;:&#160;<a class="el" href="structdyno_1_1Color.html#a1f5bf928657c46a7101ff27ce8a39247">dyno::Color</a></li>
 <li>rangetree()&#160;:&#160;<a class="el" href="classrangetree.html#a49b839b80f9ca26c7138ed93dbe64af6">rangetree&lt; point, data &gt;</a></li>
 <li>raw()&#160;:&#160;<a class="el" href="classdyno_1_1Flags.html#a6f7aa5bb5e854c02d1edcfa6b3290a33">dyno::Flags&lt; T &gt;</a></li>
+<li>reActivate()&#160;:&#160;<a class="el" href="classbyte__track_1_1STrack.html#aa3768a818d6efd9d4df268f605546a7a">byte_track::STrack</a></li>
 <li>read_only()&#160;:&#160;<a class="el" href="classdyno_1_1ParameterConstructor.html#a660f7a64dc08f34dcbd2546fb192f604">dyno::ParameterConstructor</a></li>
 <li>ReadBson()&#160;:&#160;<a class="el" href="classdyno_1_1JsonConverter.html#afa93060ae4b51ac24749d7aa9989601c">dyno::JsonConverter</a></li>
 <li>readDepthRosImage()&#160;:&#160;<a class="el" href="classdyno_1_1DataProviderRos.html#ad01ad2683eb35b1d6f76981c55ad7ee4">dyno::DataProviderRos</a></li>
@@ -91,15 +92,14 @@ $(function() {
 <li>recalculateIncremental()&#160;:&#160;<a class="el" href="classdyno_1_1ISAM2.html#abb59b06422896c04e2a6864ca3b06c47">dyno::ISAM2</a></li>
 <li>recordRelinearizeDetail()&#160;:&#160;<a class="el" href="structdyno_1_1UpdateImpl.html#acd1fd828599467da243f29014415e7c9">dyno::UpdateImpl</a></li>
 <li>recover()&#160;:&#160;<a class="el" href="classdyno_1_1DynamicPointSymbol.html#a9b4d7a269fd5a15bcab547de22f6e614">dyno::DynamicPointSymbol</a></li>
-<li>rect()&#160;:&#160;<a class="el" href="classdyno_1_1byte__track_1_1Detection.html#a3ad30c5a234fcde53080ccd2855b07ee">dyno::byte_track::Detection</a>, <a class="el" href="classdyno_1_1byte__track_1_1DetectionBase.html#a9c2998575531ed37bcb300ec31feddc2">dyno::byte_track::DetectionBase</a></li>
-<li>rect_to_xyah()&#160;:&#160;<a class="el" href="classdyno_1_1byte__track_1_1KalmanFilter.html#a2853593704f0e7c46335401e5fbc0c18">dyno::byte_track::KalmanFilter</a></li>
-<li>RectifyImages()&#160;:&#160;<a class="el" href="classdyno_1_1ImageContainerDeprecate.html#a00b784789d921adf59846618daae9b89">dyno::ImageContainerDeprecate</a></li>
+<li>Rect()&#160;:&#160;<a class="el" href="classbyte__track_1_1Rect.html#a8c6b2ef3a2fe3ec81b03cdb3a1c2e23e">byte_track::Rect&lt; T &gt;</a></li>
 <li>red()&#160;:&#160;<a class="el" href="structdyno_1_1Color.html#a1b75c1200495de0d1a32e382393e8dd7">dyno::Color</a></li>
 <li>reddishpurple()&#160;:&#160;<a class="el" href="structdyno_1_1NiceColors.html#a332d7d992fdea26a88e9e5fbbe96bb7c">dyno::NiceColors</a></li>
 <li>referenceFrame()&#160;:&#160;<a class="el" href="classdyno_1_1TrackedValueStatus.html#a5d820e9adc59afa9e6c5d1a2a78ca66b">dyno::TrackedValueStatus&lt; VALUE &gt;</a></li>
-<li>ReferenceFrameValue()&#160;:&#160;<a class="el" href="structdyno_1_1ReferenceFrameValue.html#a8338a03b9b3b80962ef4a2b51b867992">dyno::ReferenceFrameValue&lt; E &gt;</a></li>
+<li>ReferenceFrameValue()&#160;:&#160;<a class="el" href="structdyno_1_1ReferenceFrameValue.html#a709c171980e4ec7389c9e7647c9740d6">dyno::ReferenceFrameValue&lt; E &gt;</a></li>
 <li>referenceFrameValue()&#160;:&#160;<a class="el" href="classdyno_1_1TrackedValueStatus.html#ac3a01039ef49e8bb1b8cf75072f26dfd">dyno::TrackedValueStatus&lt; VALUE &gt;</a></li>
 <li>refreshPoseCache()&#160;:&#160;<a class="el" href="classdyno_1_1WorldMotionAccessor.html#a6485394be1e938b5ee3d9b9a65759cd8">dyno::WorldMotionAccessor</a></li>
+<li>registerCallback()&#160;:&#160;<a class="el" href="classdyno_1_1MultiSync.html#aee65a0c5b909233b65c59b04f22ce9b4">dyno::MultiSync&lt; Msg, N &gt;</a>, <a class="el" href="structdyno_1_1QueueRegistra.html#a85e955c5f6f8f04446af98c0dda91d5a">dyno::QueueRegistra&lt; PAYLOAD &gt;</a></li>
 <li>registerGroundTruthPacketCallback()&#160;:&#160;<a class="el" href="classdyno_1_1DataProvider.html#aad9b4cf15074068c1d185a4be3c54568">dyno::DataProvider</a></li>
 <li>registerImageContainerCallback()&#160;:&#160;<a class="el" href="classdyno_1_1DataProvider.html#ac659e4b4c130951d5862acb68d69d3b2">dyno::DataProvider</a></li>
 <li>registerImageContainerPreprocessor()&#160;:&#160;<a class="el" href="classdyno_1_1DataInterfacePipeline.html#ab88b90616b229e818886974553a68766">dyno::DataInterfacePipeline</a></li>
@@ -109,21 +109,24 @@ $(function() {
 <li>registerOnFailureCallback()&#160;:&#160;<a class="el" href="classdyno_1_1PipelineBase.html#aed43311b3ae474d6d9e9da3c37ab656f">dyno::PipelineBase</a></li>
 <li>registerOnFinishCallback()&#160;:&#160;<a class="el" href="classdyno_1_1DataProvider.html#a7ebaced11d2ae130a6dbcb463c14e3ab">dyno::DataProvider</a></li>
 <li>registerOnProcessCallback()&#160;:&#160;<a class="el" href="classdyno_1_1PipelineModule.html#aff4aa9e402563ef0f1627fdc79039af7">dyno::PipelineModule&lt; INPUT, OUTPUT &gt;</a></li>
-<li>registerOutputCallback()&#160;:&#160;<a class="el" href="classdyno_1_1ModuleBase.html#a62a179d22c30218987ed6bb20cfd7f9e">dyno::ModuleBase&lt; INPUT, OUTPUT &gt;</a></li>
+<li>registerOutputCallback()&#160;:&#160;<a class="el" href="classdyno_1_1MIMOPipelineModule.html#ae7389e6b41a829b921558fd3707e1a2d">dyno::MIMOPipelineModule&lt; INPUT, OUTPUT &gt;</a>, <a class="el" href="classdyno_1_1ModuleBase.html#a62a179d22c30218987ed6bb20cfd7f9e">dyno::ModuleBase&lt; INPUT, OUTPUT &gt;</a></li>
 <li>registerOutputQueue()&#160;:&#160;<a class="el" href="classdyno_1_1MIMOPipelineModule.html#af70631ed58ac3ae6f624d6abc708672b">dyno::MIMOPipelineModule&lt; INPUT, OUTPUT &gt;</a></li>
 <li>registerPipeline()&#160;:&#160;<a class="el" href="classdyno_1_1PipelineSpinner.html#a8bff34704aad867dd64552456bc18ec4">dyno::PipelineSpinner</a></li>
 <li>registerPostFormulationUpdateCallback()&#160;:&#160;<a class="el" href="classdyno_1_1RegularBackendModule.html#afc731a37a85c8f40b3c14ff12c5b5dc8">dyno::RegularBackendModule</a></li>
 <li>registerPreQueueContainerCallback()&#160;:&#160;<a class="el" href="classdyno_1_1DataInterfacePipeline.html#a739ce0a9a5fb2337cf6603f3716f048e">dyno::DataInterfacePipeline</a></li>
 <li>registerQueue()&#160;:&#160;<a class="el" href="structdyno_1_1QueueRegistra.html#ac48e365c56fde3453682df7c45e409c6">dyno::QueueRegistra&lt; PAYLOAD &gt;</a></li>
-<li>RegularBackendModule()&#160;:&#160;<a class="el" href="classdyno_1_1RegularBackendModule.html#aa33378ce5414bb129ed09060640130bf">dyno::RegularBackendModule</a></li>
-<li>RegularHybridFormulation()&#160;:&#160;<a class="el" href="classdyno_1_1RegularHybridFormulation.html#af3ae78cf195cf626af04b5584f54f02e">dyno::RegularHybridFormulation</a></li>
+<li>RegularBackendModule()&#160;:&#160;<a class="el" href="classdyno_1_1RegularBackendModule.html#a94392cca6473c1cbad0b9e37da4edde3">dyno::RegularBackendModule</a></li>
+<li>RegularHybridFormulation()&#160;:&#160;<a class="el" href="classdyno_1_1RegularHybridFormulation.html#aff84a5152382d1b6f36a166f05fa8892">dyno::RegularHybridFormulation</a></li>
+<li>RegularHybridFormulationDisplay()&#160;:&#160;<a class="el" href="classdyno_1_1RegularHybridFormulationDisplay.html#a0d1224984edd54c82d4e014cb9e477de">dyno::RegularHybridFormulationDisplay</a></li>
+<li>relativeCameraTransform()&#160;:&#160;<a class="el" href="classdyno_1_1VisionImuPacket.html#a5a7df3e25ee39959da60036060166673">dyno::VisionImuPacket</a></li>
 <li>relinarizationNeeded()&#160;:&#160;<a class="el" href="structdyno_1_1UpdateImpl.html#a9ea4f55dc3b1cc00ee10663bb2a762ff">dyno::UpdateImpl</a></li>
 <li>relinearizeAffectedFactors()&#160;:&#160;<a class="el" href="classdyno_1_1ISAM2.html#ab5d51d355ef7c72f44339c1860756ee3">dyno::ISAM2</a></li>
 <li>remove()&#160;:&#160;<a class="el" href="classdyno_1_1FeatureContainer.html#ad4d6a858c333b4c35d3e6b8fb519ccc0">dyno::FeatureContainer</a></li>
-<li>remove_duplicate_tracks()&#160;:&#160;<a class="el" href="classdyno_1_1byte__track_1_1ByteTracker.html#ab6212301e2183729281fbf165e3b7b3d">dyno::byte_track::ByteTracker</a></li>
 <li>removeByObjectId()&#160;:&#160;<a class="el" href="classdyno_1_1FeatureContainer.html#a4a7236c0a1b8c864962492839dcc743e">dyno::FeatureContainer</a></li>
+<li>removeDuplicateStracks()&#160;:&#160;<a class="el" href="classbyte__track_1_1ByteTracker.html#a8f2fe5b2b48aaf32c14ef0dcd87030c0">byte_track::ByteTracker</a></li>
 <li>removeOutdatedItems()&#160;:&#160;<a class="el" href="classdyno_1_1ThreadsafeTemporalBuffer.html#a016138209d4de7f83108aef3afc999f8">dyno::ThreadsafeTemporalBuffer&lt; ValueType, AllocatorType &gt;</a></li>
 <li>removeVariables()&#160;:&#160;<a class="el" href="classdyno_1_1ISAM2.html#abf70b2d98c9030012b0bd57b786d1abe">dyno::ISAM2</a></li>
+<li>replace()&#160;:&#160;<a class="el" href="classdyno_1_1ImageContainer.html#a0f5c67b77443b776a57d5ec38ddad291">dyno::ImageContainer</a></li>
 <li>reprojectionError()&#160;:&#160;<a class="el" href="classdyno_1_1SmartMotionFactor.html#af9c5779e956be81956e82428936e9f08">dyno::SmartMotionFactor&lt; DIM, MOTION, POSE &gt;</a></li>
 <li>requiresSampling()&#160;:&#160;<a class="el" href="classdyno_1_1FeatureTracker.html#ab50422938e62bccc34295c155357213a">dyno::FeatureTracker</a></li>
 <li>reset()&#160;:&#160;<a class="el" href="classdyno_1_1ApplyFunctionalSymbol.html#aaa6b097581ae33f79a579e2aa41b548d">dyno::ApplyFunctionalSymbol</a>, <a class="el" href="classdyno_1_1DynoDatasetProvider.html#a15bd16a890d94165cc5a00f82f5a6e83">dyno::DynoDatasetProvider&lt; DataTypes &gt;</a>, <a class="el" href="classdyno_1_1OccupandyGrid2D.html#a6cc314a92fe52341f3bb3577c39ec439">dyno::OccupandyGrid2D</a></li>
@@ -131,21 +134,23 @@ $(function() {
 <li>reset()&#160;:&#160;<a class="el" href="classdyno_1_1utils_1_1TimingStatsCollector.html#a2fb15570927fa9faf9bf7d97702ff15b">dyno::utils::TimingStatsCollector</a></li>
 <li>resetContent()&#160;:&#160;<a class="el" href="classdyno_1_1CsvWriter.html#a6ef8355559ffea969c51425511a0aa15">dyno::CsvWriter</a></li>
 <li>resetIntegration()&#160;:&#160;<a class="el" href="classdyno_1_1ImuFrontend.html#a08ba0040bc233103447556757adc5811">dyno::ImuFrontend</a></li>
-<li>residual()&#160;:&#160;<a class="el" href="structdyno_1_1HybridObjectMotion.html#a560af25270957d4a59523a114d482011">dyno::HybridObjectMotion</a>, <a class="el" href="classdyno_1_1HybridSmoothingFactor.html#ac1d0c014595bfeb32ac3e56c0e2688bc">dyno::HybridSmoothingFactor</a>, <a class="el" href="classdyno_1_1LandmarkMotionPoseFactor.html#a1e0734adaf3b9fcf91b456b3e170bda7">dyno::LandmarkMotionPoseFactor</a>, <a class="el" href="classdyno_1_1LandmarkPoseSmoothingFactor.html#a69a1cbd3e0b3b9ba5316c3246b0dea0c">dyno::LandmarkPoseSmoothingFactor</a>, <a class="el" href="classdyno_1_1test__hybrid_1_1DecoupledObjectCentricMotionFactor.html#a560af25270957d4a59523a114d482011">dyno::test_hybrid::DecoupledObjectCentricMotionFactor</a>, <a class="el" href="classdyno_1_1test__hybrid_1_1StructurelessDecoupledObjectCentricMotion.html#a5f3a8f60c4d268d39439acbeb099bd50">dyno::test_hybrid::StructurelessDecoupledObjectCentricMotion</a>, <a class="el" href="structdyno_1_1test__hybrid_1_1StructurelessObjectCentricMotion2.html#a5f3a8f60c4d268d39439acbeb099bd50">dyno::test_hybrid::StructurelessObjectCentricMotion2</a></li>
+<li>residual()&#160;:&#160;<a class="el" href="structdyno_1_1HybridObjectMotion.html#a560af25270957d4a59523a114d482011">dyno::HybridObjectMotion</a>, <a class="el" href="classdyno_1_1HybridSmoothingFactor.html#ac1d0c014595bfeb32ac3e56c0e2688bc">dyno::HybridSmoothingFactor</a>, <a class="el" href="classdyno_1_1LandmarkMotionPoseFactor.html#a1e0734adaf3b9fcf91b456b3e170bda7">dyno::LandmarkMotionPoseFactor</a>, <a class="el" href="classdyno_1_1LandmarkPoseSmoothingFactor.html#a69a1cbd3e0b3b9ba5316c3246b0dea0c">dyno::LandmarkPoseSmoothingFactor</a></li>
 <li>restoreFromOriginals()&#160;:&#160;<a class="el" href="classdyno_1_1ISAM2Clique.html#a2fee920fc8c76168c8ee3b087053e5c7">dyno::ISAM2Clique</a></li>
-<li>result()&#160;:&#160;<a class="el" href="classdyno_1_1IncrementalInterface.html#a48d1b07699542417c8e1e9d57fc0a50c">dyno::IncrementalInterface&lt; SMOOTHER &gt;</a></li>
+<li>result()&#160;:&#160;<a class="el" href="classdyno_1_1IncrementalInterface.html#a48d1b07699542417c8e1e9d57fc0a50c">dyno::IncrementalInterface&lt; SMOOTHER &gt;</a>, <a class="el" href="classdyno_1_1ObjectDetectionEngine.html#aeb6ddaa241b82fed758b55f56dd0bcaa">dyno::ObjectDetectionEngine</a>, <a class="el" href="classdyno_1_1ObjectDetectorEnginePy.html#a33d0c5d13103625571ba6ebce1db4061">dyno::ObjectDetectorEnginePy</a>, <a class="el" href="classdyno_1_1PyObjectDetectorWrapper.html#a66db207e17beb20a09a0832985cc2987">dyno::PyObjectDetectorWrapper</a>, <a class="el" href="classdyno_1_1YoloV8ObjectDetector.html#a834c62108fe1bcc8fabb52384583547b">dyno::YoloV8ObjectDetector</a></li>
 <li>resume()&#160;:&#160;<a class="el" href="classThreadsafeQueueBase.html#a0fffe1203aec7dfdf7862c11303e1182">ThreadsafeQueueBase&lt; T &gt;</a></li>
 <li>ReturnCode()&#160;:&#160;<a class="el" href="structdyno_1_1PipelineBase_1_1ReturnCode.html#a92bcb672f049cd8e7ca4ffb6118af236">dyno::PipelineBase::ReturnCode</a></li>
-<li>rgb()&#160;:&#160;<a class="el" href="classdyno_1_1ImageContainer.html#a1eb9f8964b8487144f9640c7738b6fa2">dyno::ImageContainer</a></li>
+<li>rgb()&#160;:&#160;<a class="el" href="classdyno_1_1ImageContainer.html#a6f35259f95c31b861ff6515c159e1ee3">dyno::ImageContainer</a></li>
 <li>rgba()&#160;:&#160;<a class="el" href="structdyno_1_1Color.html#a4325fe6598d8a9d8cc8bf47226a27c4a">dyno::Color</a></li>
-<li>RGBA()&#160;:&#160;<a class="el" href="structdyno_1_1RGBA.html#a8a9c41a42c85e48ac4f86d759752af93">dyno::RGBA&lt; T &gt;</a></li>
+<li>RGBA()&#160;:&#160;<a class="el" href="structdyno_1_1RGBA.html#a145f1f5b3c195907ce8bba27314a334f">dyno::RGBA&lt; T &gt;</a></li>
+<li>rgbd()&#160;:&#160;<a class="el" href="classdyno_1_1CameraMeasurement.html#a51479215d75376453682f5775d0ca448">dyno::CameraMeasurement</a></li>
 <li>RGBDataFolder()&#160;:&#160;<a class="el" href="classdyno_1_1RGBDataFolder.html#a153806a5342c66c86ea87b38e2f637d2">dyno::RGBDataFolder</a></li>
-<li>RGBDCamera()&#160;:&#160;<a class="el" href="classdyno_1_1RGBDCamera.html#afcfcd9f35bbcbcd1d928c98fe96bb021">dyno::RGBDCamera</a></li>
+<li>RGBDCamera()&#160;:&#160;<a class="el" href="classdyno_1_1RGBDCamera.html#a2bb0b9df30c23b20043a504e96a4777c">dyno::RGBDCamera</a></li>
 <li>RGBDFrontendLogger()&#160;:&#160;<a class="el" href="classdyno_1_1RGBDFrontendLogger.html#a3b13bd6bf8720eaac5d8308a1e68da0d">dyno::RGBDFrontendLogger</a></li>
-<li>RGBDInstanceFrontendModule()&#160;:&#160;<a class="el" href="classdyno_1_1RGBDInstanceFrontendModule.html#aa49fd74a92296c69f3bb0e1f964f089a">dyno::RGBDInstanceFrontendModule</a></li>
-<li>RGBDInstanceOutputPacket()&#160;:&#160;<a class="el" href="structdyno_1_1RGBDInstanceOutputPacket.html#ac6fae60b9068fe2086eabc92a2f0d8fb">dyno::RGBDInstanceOutputPacket</a></li>
-<li>rightKeypoint()&#160;:&#160;<a class="el" href="classdyno_1_1Feature.html#a1c2d26de2f440c7a45c0a1d70c28b5d5">dyno::Feature</a>, <a class="el" href="classdyno_1_1RGBDCamera.html#aa2fc2b2572ce4a41a8d31596c51c5e6c">dyno::RGBDCamera</a></li>
+<li>RGBDInstanceFrontendModule()&#160;:&#160;<a class="el" href="classdyno_1_1RGBDInstanceFrontendModule.html#aa699ea195ead49b2398063cef6500d99">dyno::RGBDInstanceFrontendModule</a></li>
+<li>rightKeypoint()&#160;:&#160;<a class="el" href="classdyno_1_1CameraMeasurement.html#afaa5ec67c2fdee558611d73db841d6d2">dyno::CameraMeasurement</a>, <a class="el" href="classdyno_1_1Feature.html#adc52f755fd9aaec607c00a11249df91e">dyno::Feature</a>, <a class="el" href="structdyno_1_1measurement__traits_3_01CameraMeasurement_01_4.html#ad91d2ea5c760680b5704591f50e4452a">dyno::measurement_traits&lt; CameraMeasurement &gt;</a>, <a class="el" href="classdyno_1_1RGBDCamera.html#aa2fc2b2572ce4a41a8d31596c51c5e6c">dyno::RGBDCamera</a></li>
+<li>rightKeypointWithCovariance()&#160;:&#160;<a class="el" href="structdyno_1_1measurement__traits_3_01CameraMeasurement_01_4.html#aa30af21481a5b06bded0e5baeef86518">dyno::measurement_traits&lt; CameraMeasurement &gt;</a></li>
 <li>rightRgb()&#160;:&#160;<a class="el" href="classdyno_1_1ImageContainer.html#a638ee1a86cecdb5d4b8123b950c8bb02">dyno::ImageContainer</a></li>
+<li>robustifyHuber()&#160;:&#160;<a class="el" href="classdyno_1_1internal_1_1StaticFormulationUpdaterImpl.html#a12c39fb613c4a3a9b382ade0a3c4fcdb">dyno::internal::StaticFormulationUpdaterImpl&lt; MAP &gt;</a></li>
 <li>RollingMean()&#160;:&#160;<a class="el" href="classdyno_1_1utils_1_1Accumulator.html#a4a6a69e744872d11c3b60f703f6e703a">dyno::utils::Accumulator&lt; SampleType, SumType, WindowSize &gt;</a>, <a class="el" href="structdyno_1_1utils_1_1StatisticsMapValue.html#a413f05a547cab122e3bc88f59a2d3898">dyno::utils::StatisticsMapValue</a></li>
 <li>RollingMeanDeltaTime()&#160;:&#160;<a class="el" href="structdyno_1_1utils_1_1StatisticsMapValue.html#a222cbc0de73512b9c43aada5023a3525">dyno::utils::StatisticsMapValue</a></li>
 <li>Row()&#160;:&#160;<a class="el" href="classdyno_1_1CsvReader_1_1Row.html#ab394f04ff99ea154602cf572b1fdbca5">dyno::CsvReader::Row</a></li>

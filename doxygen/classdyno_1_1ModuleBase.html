@@ -78,6 +78,7 @@ $(function() {
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
+<a href="#pri-methods">Private Member Functions</a> &#124;
 <a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="classdyno_1_1ModuleBase-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">dyno::ModuleBase&lt; INPUT, OUTPUT &gt; Class Template Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div></div>
@@ -139,6 +140,13 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:a40853af888720a8c0ffbcc97443b03d4"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classdyno_1_1ModuleBase.html#ac555603c9d728ceb0cc7a618829a3ffc">SpinReturn</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1ModuleBase.html#a40853af888720a8c0ffbcc97443b03d4">nominalSpin</a> (<a class="el" href="classdyno_1_1ModuleBase.html#af4668d9afeade1fc46375c837d095973">InputConstPtr</a> input)=0</td></tr>
 <tr class="separator:a40853af888720a8c0ffbcc97443b03d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-methods" name="pri-methods"></a>
+Private Member Functions</h2></td></tr>
+<tr class="memitem:ab56c5b7d0b4bc87e28f79a27ae8de248"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1ModuleBase.html#ab56c5b7d0b4bc87e28f79a27ae8de248">emitInputCallbacks</a> (<a class="el" href="classdyno_1_1ModuleBase.html#af4668d9afeade1fc46375c837d095973">InputConstPtr</a> input)</td></tr>
+<tr class="separator:ab56c5b7d0b4bc87e28f79a27ae8de248"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afa1ac9b2b2093ff043aec28b35a8ad34"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1ModuleBase.html#afa1ac9b2b2093ff043aec28b35a8ad34">emitOutputCallbacks</a> (<a class="el" href="classdyno_1_1ModuleBase.html#ad5da1afe10d7a16344f5e05a780d9c86">OutputConstPtr</a> output)</td></tr>
+<tr class="separator:afa1ac9b2b2093ff043aec28b35a8ad34"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
 <tr class="memitem:a5f6236a503a5373d6d3e06968d2a7901"><td class="memItemLeft" align="right" valign="top">const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1ModuleBase.html#a5f6236a503a5373d6d3e06968d2a7901">name_</a></td></tr>
@@ -147,10 +155,10 @@ Private Attributes</h2></td></tr>
 <tr class="separator:a3ccdfae550b1e97e06ac7b50ad25181e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6ac441f553a194befd74da5dade445c1"><td class="memItemLeft" align="right" valign="top">std::atomic&lt; <a class="el" href="classdyno_1_1ModuleBase.html#af93e734c9699b5bbdc8b786b64cef33f">State</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1ModuleBase.html#a6ac441f553a194befd74da5dade445c1">previous_module_state_</a></td></tr>
 <tr class="separator:a6ac441f553a194befd74da5dade445c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2e54e47b8bc5df6a093145b4a83a7bb6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classdyno_1_1ModuleBase.html#a7467e45d45af478b61ef9ed18ee29083">InputCallback</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1ModuleBase.html#a2e54e47b8bc5df6a093145b4a83a7bb6">input_callback_</a></td></tr>
-<tr class="separator:a2e54e47b8bc5df6a093145b4a83a7bb6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1374b57a84717e8a02f15dc52c8c5425"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classdyno_1_1ModuleBase.html#a01657f3937ee1fce652f936794b9e40b">OutputCallback</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1ModuleBase.html#a1374b57a84717e8a02f15dc52c8c5425">output_callback_</a></td></tr>
-<tr class="separator:a1374b57a84717e8a02f15dc52c8c5425"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa911f746265f503880c4acc93e0d2dd0"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classdyno_1_1ModuleBase.html#a7467e45d45af478b61ef9ed18ee29083">InputCallback</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1ModuleBase.html#aa911f746265f503880c4acc93e0d2dd0">input_callbacks_</a></td></tr>
+<tr class="separator:aa911f746265f503880c4acc93e0d2dd0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a20c2558b65900f75b351375eff7878d5"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classdyno_1_1ModuleBase.html#a01657f3937ee1fce652f936794b9e40b">OutputCallback</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1ModuleBase.html#a20c2558b65900f75b351375eff7878d5">output_callbacks_</a></td></tr>
+<tr class="separator:a20c2558b65900f75b351375eff7878d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename INPUT, typename OUTPUT&gt;<br />
@@ -381,8 +389,8 @@ template&lt;typename INPUT , typename OUTPUT &gt; </div>
 
 <p class="definition">Definition at line <a class="el" href="ModuleBase_8hpp_source.html#l00072">72</a> of file <a class="el" href="ModuleBase_8hpp_source.html">ModuleBase.hpp</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">   73</span>      : <a class="code hl_variable" href="classdyno_1_1ModuleBase.html#a5f6236a503a5373d6d3e06968d2a7901">name_</a>(name), <a class="code hl_variable" href="classdyno_1_1ModuleBase.html#a3ccdfae550b1e97e06ac7b50ad25181e">module_state_</a>(<a class="code hl_enumvalue" href="classdyno_1_1ModuleBase.html#af93e734c9699b5bbdc8b786b64cef33fa5caa32916a85c1acb3b62d671d484d42">State::Boostrap</a>) {}</div>
-<div class="ttc" id="aclassdyno_1_1ModuleBase_html_a3ccdfae550b1e97e06ac7b50ad25181e"><div class="ttname"><a href="classdyno_1_1ModuleBase.html#a3ccdfae550b1e97e06ac7b50ad25181e">dyno::ModuleBase::module_state_</a></div><div class="ttdeci">std::atomic&lt; State &gt; module_state_</div><div class="ttdef"><b>Definition:</b> <a href="ModuleBase_8hpp_source.html#l00140">ModuleBase.hpp:140</a></div></div>
-<div class="ttc" id="aclassdyno_1_1ModuleBase_html_a5f6236a503a5373d6d3e06968d2a7901"><div class="ttname"><a href="classdyno_1_1ModuleBase.html#a5f6236a503a5373d6d3e06968d2a7901">dyno::ModuleBase::name_</a></div><div class="ttdeci">const std::string name_</div><div class="ttdef"><b>Definition:</b> <a href="ModuleBase_8hpp_source.html#l00139">ModuleBase.hpp:139</a></div></div>
+<div class="ttc" id="aclassdyno_1_1ModuleBase_html_a3ccdfae550b1e97e06ac7b50ad25181e"><div class="ttname"><a href="classdyno_1_1ModuleBase.html#a3ccdfae550b1e97e06ac7b50ad25181e">dyno::ModuleBase::module_state_</a></div><div class="ttdeci">std::atomic&lt; State &gt; module_state_</div><div class="ttdef"><b>Definition:</b> <a href="ModuleBase_8hpp_source.html#l00153">ModuleBase.hpp:153</a></div></div>
+<div class="ttc" id="aclassdyno_1_1ModuleBase_html_a5f6236a503a5373d6d3e06968d2a7901"><div class="ttname"><a href="classdyno_1_1ModuleBase.html#a5f6236a503a5373d6d3e06968d2a7901">dyno::ModuleBase::name_</a></div><div class="ttdeci">const std::string name_</div><div class="ttdef"><b>Definition:</b> <a href="ModuleBase_8hpp_source.html#l00152">ModuleBase.hpp:152</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -440,7 +448,7 @@ template&lt;typename INPUT , typename OUTPUT &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classdyno_1_1BackendModuleType.html#ad464abad3d5e6c317b2a49c0d097bacb">dyno::BackendModuleType&lt; MODULE_TRAITS &gt;</a>, and <a class="el" href="classdyno_1_1BackendModuleType.html#ad464abad3d5e6c317b2a49c0d097bacb">dyno::BackendModuleType&lt; RGBDBackendModuleTraits &gt;</a>.</p>
+<p>Implemented in <a class="el" href="classdyno_1_1BackendModuleType.html#ad464abad3d5e6c317b2a49c0d097bacb">dyno::BackendModuleType&lt; MODULE_TRAITS &gt;</a>, and <a class="el" href="classdyno_1_1BackendModuleType.html#ad464abad3d5e6c317b2a49c0d097bacb">dyno::BackendModuleType&lt; RegularBackendModuleTraits &gt;</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1ModuleBase.html#a0f96cdad0420d14c305bb77f77455a54">dyno::ModuleBase&lt; INPUT, OUTPUT &gt;::spinOnce()</a>.</p>
 <div class="dynheader">
@@ -450,6 +458,104 @@ Here is the caller graph for this function:</div>
 <map name="aclassdyno_1_1ModuleBase_a53c686687f27562cc71a2fe8e5a2ae9e_icgraph" id="aclassdyno_1_1ModuleBase_a53c686687f27562cc71a2fe8e5a2ae9e_icgraph">
 <area shape="rect" title=" " alt="" coords="264,5,499,31"/>
 <area shape="rect" href="classdyno_1_1ModuleBase.html#a0f96cdad0420d14c305bb77f77455a54" title=" " alt="" coords="5,5,216,31"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="ab56c5b7d0b4bc87e28f79a27ae8de248" name="ab56c5b7d0b4bc87e28f79a27ae8de248"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab56c5b7d0b4bc87e28f79a27ae8de248">&#9670;&#160;</a></span>emitInputCallbacks()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename INPUT , typename OUTPUT &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classdyno_1_1ModuleBase.html">dyno::ModuleBase</a>&lt; INPUT, OUTPUT &gt;::emitInputCallbacks </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classdyno_1_1ModuleBase.html#af4668d9afeade1fc46375c837d095973">InputConstPtr</a>&#160;</td>
+          <td class="paramname"><em>input</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="ModuleBase_8hpp_source.html#l00139">139</a> of file <a class="el" href="ModuleBase_8hpp_source.html">ModuleBase.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  139</span>                                               {</div>
+<div class="line"><span class="lineno">  140</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> cb : <a class="code hl_variable" href="classdyno_1_1ModuleBase.html#aa911f746265f503880c4acc93e0d2dd0">input_callbacks_</a>) {</div>
+<div class="line"><span class="lineno">  141</span>      cb(input);</div>
+<div class="line"><span class="lineno">  142</span>    }</div>
+<div class="line"><span class="lineno">  143</span>  }</div>
+<div class="ttc" id="aclassdyno_1_1ModuleBase_html_aa911f746265f503880c4acc93e0d2dd0"><div class="ttname"><a href="classdyno_1_1ModuleBase.html#aa911f746265f503880c4acc93e0d2dd0">dyno::ModuleBase::input_callbacks_</a></div><div class="ttdeci">std::vector&lt; InputCallback &gt; input_callbacks_</div><div class="ttdef"><b>Definition:</b> <a href="ModuleBase_8hpp_source.html#l00156">ModuleBase.hpp:156</a></div></div>
+</div><!-- fragment -->
+<p class="reference">References <a class="el" href="classdyno_1_1ModuleBase.html#aa911f746265f503880c4acc93e0d2dd0">dyno::ModuleBase&lt; INPUT, OUTPUT &gt;::input_callbacks_</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1ModuleBase.html#a0f96cdad0420d14c305bb77f77455a54">dyno::ModuleBase&lt; INPUT, OUTPUT &gt;::spinOnce()</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classdyno_1_1ModuleBase_ab56c5b7d0b4bc87e28f79a27ae8de248_icgraph.png" border="0" usemap="#aclassdyno_1_1ModuleBase_ab56c5b7d0b4bc87e28f79a27ae8de248_icgraph" alt=""/></div>
+<map name="aclassdyno_1_1ModuleBase_ab56c5b7d0b4bc87e28f79a27ae8de248_icgraph" id="aclassdyno_1_1ModuleBase_ab56c5b7d0b4bc87e28f79a27ae8de248_icgraph">
+<area shape="rect" title=" " alt="" coords="264,5,477,45"/>
+<area shape="rect" href="classdyno_1_1ModuleBase.html#a0f96cdad0420d14c305bb77f77455a54" title=" " alt="" coords="5,13,216,38"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="afa1ac9b2b2093ff043aec28b35a8ad34" name="afa1ac9b2b2093ff043aec28b35a8ad34"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afa1ac9b2b2093ff043aec28b35a8ad34">&#9670;&#160;</a></span>emitOutputCallbacks()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename INPUT , typename OUTPUT &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classdyno_1_1ModuleBase.html">dyno::ModuleBase</a>&lt; INPUT, OUTPUT &gt;::emitOutputCallbacks </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classdyno_1_1ModuleBase.html#ad5da1afe10d7a16344f5e05a780d9c86">OutputConstPtr</a>&#160;</td>
+          <td class="paramname"><em>output</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="ModuleBase_8hpp_source.html#l00145">145</a> of file <a class="el" href="ModuleBase_8hpp_source.html">ModuleBase.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  145</span>                                                  {</div>
+<div class="line"><span class="lineno">  146</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> cb : <a class="code hl_variable" href="classdyno_1_1ModuleBase.html#a20c2558b65900f75b351375eff7878d5">output_callbacks_</a>) {</div>
+<div class="line"><span class="lineno">  147</span>      cb(output);</div>
+<div class="line"><span class="lineno">  148</span>    }</div>
+<div class="line"><span class="lineno">  149</span>  }</div>
+<div class="ttc" id="aclassdyno_1_1ModuleBase_html_a20c2558b65900f75b351375eff7878d5"><div class="ttname"><a href="classdyno_1_1ModuleBase.html#a20c2558b65900f75b351375eff7878d5">dyno::ModuleBase::output_callbacks_</a></div><div class="ttdeci">std::vector&lt; OutputCallback &gt; output_callbacks_</div><div class="ttdef"><b>Definition:</b> <a href="ModuleBase_8hpp_source.html#l00157">ModuleBase.hpp:157</a></div></div>
+</div><!-- fragment -->
+<p class="reference">References <a class="el" href="classdyno_1_1ModuleBase.html#a20c2558b65900f75b351375eff7878d5">dyno::ModuleBase&lt; INPUT, OUTPUT &gt;::output_callbacks_</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1ModuleBase.html#a0f96cdad0420d14c305bb77f77455a54">dyno::ModuleBase&lt; INPUT, OUTPUT &gt;::spinOnce()</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classdyno_1_1ModuleBase_afa1ac9b2b2093ff043aec28b35a8ad34_icgraph.png" border="0" usemap="#aclassdyno_1_1ModuleBase_afa1ac9b2b2093ff043aec28b35a8ad34_icgraph" alt=""/></div>
+<map name="aclassdyno_1_1ModuleBase_afa1ac9b2b2093ff043aec28b35a8ad34_icgraph" id="aclassdyno_1_1ModuleBase_afa1ac9b2b2093ff043aec28b35a8ad34_icgraph">
+<area shape="rect" title=" " alt="" coords="264,5,488,45"/>
+<area shape="rect" href="classdyno_1_1ModuleBase.html#a0f96cdad0420d14c305bb77f77455a54" title=" " alt="" coords="5,13,216,38"/>
 </map>
 </div>
 
@@ -481,7 +587,7 @@ template&lt;typename INPUT , typename OUTPUT &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classdyno_1_1BackendModuleType.html#abd702b82a3a94cfdc8dfd76d3cf60271">dyno::BackendModuleType&lt; MODULE_TRAITS &gt;</a>, and <a class="el" href="classdyno_1_1BackendModuleType.html#abd702b82a3a94cfdc8dfd76d3cf60271">dyno::BackendModuleType&lt; RGBDBackendModuleTraits &gt;</a>.</p>
+<p>Implemented in <a class="el" href="classdyno_1_1BackendModuleType.html#abd702b82a3a94cfdc8dfd76d3cf60271">dyno::BackendModuleType&lt; MODULE_TRAITS &gt;</a>, and <a class="el" href="classdyno_1_1BackendModuleType.html#abd702b82a3a94cfdc8dfd76d3cf60271">dyno::BackendModuleType&lt; RegularBackendModuleTraits &gt;</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1ModuleBase.html#a0f96cdad0420d14c305bb77f77455a54">dyno::ModuleBase&lt; INPUT, OUTPUT &gt;::spinOnce()</a>.</p>
 <div class="dynheader">
@@ -532,11 +638,10 @@ template&lt;typename INPUT , typename OUTPUT &gt; </div>
 
 <p class="definition">Definition at line <a class="el" href="ModuleBase_8hpp_source.html#l00109">109</a> of file <a class="el" href="ModuleBase_8hpp_source.html">ModuleBase.hpp</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">  109</span>                                                                         {</div>
-<div class="line"><span class="lineno">  110</span>    <a class="code hl_variable" href="classdyno_1_1ModuleBase.html#a2e54e47b8bc5df6a093145b4a83a7bb6">input_callback_</a> = input_callback;</div>
+<div class="line"><span class="lineno">  110</span>    <a class="code hl_variable" href="classdyno_1_1ModuleBase.html#aa911f746265f503880c4acc93e0d2dd0">input_callbacks_</a>.push_back(input_callback);</div>
 <div class="line"><span class="lineno">  111</span>  }</div>
-<div class="ttc" id="aclassdyno_1_1ModuleBase_html_a2e54e47b8bc5df6a093145b4a83a7bb6"><div class="ttname"><a href="classdyno_1_1ModuleBase.html#a2e54e47b8bc5df6a093145b4a83a7bb6">dyno::ModuleBase::input_callback_</a></div><div class="ttdeci">InputCallback input_callback_</div><div class="ttdef"><b>Definition:</b> <a href="ModuleBase_8hpp_source.html#l00143">ModuleBase.hpp:143</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="classdyno_1_1ModuleBase.html#a2e54e47b8bc5df6a093145b4a83a7bb6">dyno::ModuleBase&lt; INPUT, OUTPUT &gt;::input_callback_</a>.</p>
+<p class="reference">References <a class="el" href="classdyno_1_1ModuleBase.html#aa911f746265f503880c4acc93e0d2dd0">dyno::ModuleBase&lt; INPUT, OUTPUT &gt;::input_callbacks_</a>.</p>
 
 </div>
 </div>
@@ -576,11 +681,10 @@ template&lt;typename INPUT , typename OUTPUT &gt; </div>
 
 <p class="definition">Definition at line <a class="el" href="ModuleBase_8hpp_source.html#l00119">119</a> of file <a class="el" href="ModuleBase_8hpp_source.html">ModuleBase.hpp</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">  119</span>                                                                            {</div>
-<div class="line"><span class="lineno">  120</span>    <a class="code hl_variable" href="classdyno_1_1ModuleBase.html#a1374b57a84717e8a02f15dc52c8c5425">output_callback_</a> = output_callback;</div>
+<div class="line"><span class="lineno">  120</span>    <a class="code hl_variable" href="classdyno_1_1ModuleBase.html#a20c2558b65900f75b351375eff7878d5">output_callbacks_</a>.push_back(output_callback);</div>
 <div class="line"><span class="lineno">  121</span>  }</div>
-<div class="ttc" id="aclassdyno_1_1ModuleBase_html_a1374b57a84717e8a02f15dc52c8c5425"><div class="ttname"><a href="classdyno_1_1ModuleBase.html#a1374b57a84717e8a02f15dc52c8c5425">dyno::ModuleBase::output_callback_</a></div><div class="ttdeci">OutputCallback output_callback_</div><div class="ttdef"><b>Definition:</b> <a href="ModuleBase_8hpp_source.html#l00144">ModuleBase.hpp:144</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="classdyno_1_1ModuleBase.html#a1374b57a84717e8a02f15dc52c8c5425">dyno::ModuleBase&lt; INPUT, OUTPUT &gt;::output_callback_</a>.</p>
+<p class="reference">References <a class="el" href="classdyno_1_1ModuleBase.html#a20c2558b65900f75b351375eff7878d5">dyno::ModuleBase&lt; INPUT, OUTPUT &gt;::output_callbacks_</a>.</p>
 
 </div>
 </div>
@@ -617,7 +721,7 @@ template&lt;typename INPUT , typename OUTPUT &gt; </div>
 <div class="line"><span class="lineno">   79</span> </div>
 <div class="line"><span class="lineno">   80</span>    <a class="code hl_typedef" href="classdyno_1_1ModuleBase.html#ac555603c9d728ceb0cc7a618829a3ffc">SpinReturn</a> spin_return{<a class="code hl_enumvalue" href="classdyno_1_1ModuleBase.html#af93e734c9699b5bbdc8b786b64cef33fa5caa32916a85c1acb3b62d671d484d42">State::Boostrap</a>, <span class="keyword">nullptr</span>};</div>
 <div class="line"><span class="lineno">   81</span> </div>
-<div class="line"><span class="lineno">   82</span>    <span class="keywordflow">if</span> (<a class="code hl_variable" href="classdyno_1_1ModuleBase.html#a2e54e47b8bc5df6a093145b4a83a7bb6">input_callback_</a>) <a class="code hl_variable" href="classdyno_1_1ModuleBase.html#a2e54e47b8bc5df6a093145b4a83a7bb6">input_callback_</a>(input);</div>
+<div class="line"><span class="lineno">   82</span>    <a class="code hl_function" href="classdyno_1_1ModuleBase.html#ab56c5b7d0b4bc87e28f79a27ae8de248">emitInputCallbacks</a>(input);</div>
 <div class="line"><span class="lineno">   83</span> </div>
 <div class="line"><span class="lineno">   84</span>    <span class="keywordflow">switch</span> (<a class="code hl_variable" href="classdyno_1_1ModuleBase.html#a3ccdfae550b1e97e06ac7b50ad25181e">module_state_</a>) {</div>
 <div class="line"><span class="lineno">   85</span>      <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="classdyno_1_1ModuleBase.html#af93e734c9699b5bbdc8b786b64cef33fa5caa32916a85c1acb3b62d671d484d42">State::Boostrap</a>: {</div>
@@ -632,7 +736,7 @@ template&lt;typename INPUT , typename OUTPUT &gt; </div>
 <div class="line"><span class="lineno">   94</span>      }</div>
 <div class="line"><span class="lineno">   95</span>    }</div>
 <div class="line"><span class="lineno">   96</span> </div>
-<div class="line"><span class="lineno">   97</span>    <span class="keywordflow">if</span> (<a class="code hl_variable" href="classdyno_1_1ModuleBase.html#a1374b57a84717e8a02f15dc52c8c5425">output_callback_</a>) <a class="code hl_variable" href="classdyno_1_1ModuleBase.html#a1374b57a84717e8a02f15dc52c8c5425">output_callback_</a>(spin_return.second);</div>
+<div class="line"><span class="lineno">   97</span>    <span class="keywordflow">if</span> (spin_return.second) <a class="code hl_function" href="classdyno_1_1ModuleBase.html#afa1ac9b2b2093ff043aec28b35a8ad34">emitOutputCallbacks</a>(spin_return.second);</div>
 <div class="line"><span class="lineno">   98</span> </div>
 <div class="line"><span class="lineno">   99</span>    <a class="code hl_variable" href="classdyno_1_1ModuleBase.html#a3ccdfae550b1e97e06ac7b50ad25181e">module_state_</a> = spin_return.first;</div>
 <div class="line"><span class="lineno">  100</span>    <span class="keywordflow">return</span> spin_return.second;</div>
@@ -640,18 +744,22 @@ template&lt;typename INPUT , typename OUTPUT &gt; </div>
 <div class="ttc" id="aclassdyno_1_1ModuleBase_html_a40853af888720a8c0ffbcc97443b03d4"><div class="ttname"><a href="classdyno_1_1ModuleBase.html#a40853af888720a8c0ffbcc97443b03d4">dyno::ModuleBase::nominalSpin</a></div><div class="ttdeci">virtual SpinReturn nominalSpin(InputConstPtr input)=0</div></div>
 <div class="ttc" id="aclassdyno_1_1ModuleBase_html_a53c686687f27562cc71a2fe8e5a2ae9e"><div class="ttname"><a href="classdyno_1_1ModuleBase.html#a53c686687f27562cc71a2fe8e5a2ae9e">dyno::ModuleBase::boostrapSpin</a></div><div class="ttdeci">virtual SpinReturn boostrapSpin(InputConstPtr input)=0</div></div>
 <div class="ttc" id="aclassdyno_1_1ModuleBase_html_a875d83b98c984298bc8f6a51f9d9acff"><div class="ttname"><a href="classdyno_1_1ModuleBase.html#a875d83b98c984298bc8f6a51f9d9acff">dyno::ModuleBase::validateInput</a></div><div class="ttdeci">virtual void validateInput(const InputConstPtr &amp;input) const =0</div><div class="ttdoc">Checks the state of the input before running any virtual spin (boostrap or nominal) functions.</div></div>
+<div class="ttc" id="aclassdyno_1_1ModuleBase_html_ab56c5b7d0b4bc87e28f79a27ae8de248"><div class="ttname"><a href="classdyno_1_1ModuleBase.html#ab56c5b7d0b4bc87e28f79a27ae8de248">dyno::ModuleBase::emitInputCallbacks</a></div><div class="ttdeci">void emitInputCallbacks(InputConstPtr input)</div><div class="ttdef"><b>Definition:</b> <a href="ModuleBase_8hpp_source.html#l00139">ModuleBase.hpp:139</a></div></div>
 <div class="ttc" id="aclassdyno_1_1ModuleBase_html_ac555603c9d728ceb0cc7a618829a3ffc"><div class="ttname"><a href="classdyno_1_1ModuleBase.html#ac555603c9d728ceb0cc7a618829a3ffc">dyno::ModuleBase::SpinReturn</a></div><div class="ttdeci">std::pair&lt; State, OutputConstPtr &gt; SpinReturn</div><div class="ttdef"><b>Definition:</b> <a href="ModuleBase_8hpp_source.html#l00067">ModuleBase.hpp:67</a></div></div>
+<div class="ttc" id="aclassdyno_1_1ModuleBase_html_afa1ac9b2b2093ff043aec28b35a8ad34"><div class="ttname"><a href="classdyno_1_1ModuleBase.html#afa1ac9b2b2093ff043aec28b35a8ad34">dyno::ModuleBase::emitOutputCallbacks</a></div><div class="ttdeci">void emitOutputCallbacks(OutputConstPtr output)</div><div class="ttdef"><b>Definition:</b> <a href="ModuleBase_8hpp_source.html#l00145">ModuleBase.hpp:145</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="classdyno_1_1ModuleBase.html#af93e734c9699b5bbdc8b786b64cef33fa5caa32916a85c1acb3b62d671d484d42">dyno::ModuleBase&lt; INPUT, OUTPUT &gt;::Boostrap</a>, <a class="el" href="classdyno_1_1ModuleBase.html#a53c686687f27562cc71a2fe8e5a2ae9e">dyno::ModuleBase&lt; INPUT, OUTPUT &gt;::boostrapSpin()</a>, <a class="el" href="classdyno_1_1ModuleBase.html#a2e54e47b8bc5df6a093145b4a83a7bb6">dyno::ModuleBase&lt; INPUT, OUTPUT &gt;::input_callback_</a>, <a class="el" href="classdyno_1_1ModuleBase.html#a3ccdfae550b1e97e06ac7b50ad25181e">dyno::ModuleBase&lt; INPUT, OUTPUT &gt;::module_state_</a>, <a class="el" href="classdyno_1_1ModuleBase.html#a5f6236a503a5373d6d3e06968d2a7901">dyno::ModuleBase&lt; INPUT, OUTPUT &gt;::name_</a>, <a class="el" href="classdyno_1_1ModuleBase.html#af93e734c9699b5bbdc8b786b64cef33fa8c28d7c312116b8a46e2f466cb33d5b4">dyno::ModuleBase&lt; INPUT, OUTPUT &gt;::Nominal</a>, <a class="el" href="classdyno_1_1ModuleBase.html#a40853af888720a8c0ffbcc97443b03d4">dyno::ModuleBase&lt; INPUT, OUTPUT &gt;::nominalSpin()</a>, <a class="el" href="classdyno_1_1ModuleBase.html#a1374b57a84717e8a02f15dc52c8c5425">dyno::ModuleBase&lt; INPUT, OUTPUT &gt;::output_callback_</a>, and <a class="el" href="classdyno_1_1ModuleBase.html#a875d83b98c984298bc8f6a51f9d9acff">dyno::ModuleBase&lt; INPUT, OUTPUT &gt;::validateInput()</a>.</p>
+<p class="reference">References <a class="el" href="classdyno_1_1ModuleBase.html#af93e734c9699b5bbdc8b786b64cef33fa5caa32916a85c1acb3b62d671d484d42">dyno::ModuleBase&lt; INPUT, OUTPUT &gt;::Boostrap</a>, <a class="el" href="classdyno_1_1ModuleBase.html#a53c686687f27562cc71a2fe8e5a2ae9e">dyno::ModuleBase&lt; INPUT, OUTPUT &gt;::boostrapSpin()</a>, <a class="el" href="classdyno_1_1ModuleBase.html#ab56c5b7d0b4bc87e28f79a27ae8de248">dyno::ModuleBase&lt; INPUT, OUTPUT &gt;::emitInputCallbacks()</a>, <a class="el" href="classdyno_1_1ModuleBase.html#afa1ac9b2b2093ff043aec28b35a8ad34">dyno::ModuleBase&lt; INPUT, OUTPUT &gt;::emitOutputCallbacks()</a>, <a class="el" href="classdyno_1_1ModuleBase.html#a3ccdfae550b1e97e06ac7b50ad25181e">dyno::ModuleBase&lt; INPUT, OUTPUT &gt;::module_state_</a>, <a class="el" href="classdyno_1_1ModuleBase.html#a5f6236a503a5373d6d3e06968d2a7901">dyno::ModuleBase&lt; INPUT, OUTPUT &gt;::name_</a>, <a class="el" href="classdyno_1_1ModuleBase.html#af93e734c9699b5bbdc8b786b64cef33fa8c28d7c312116b8a46e2f466cb33d5b4">dyno::ModuleBase&lt; INPUT, OUTPUT &gt;::Nominal</a>, <a class="el" href="classdyno_1_1ModuleBase.html#a40853af888720a8c0ffbcc97443b03d4">dyno::ModuleBase&lt; INPUT, OUTPUT &gt;::nominalSpin()</a>, and <a class="el" href="classdyno_1_1ModuleBase.html#a875d83b98c984298bc8f6a51f9d9acff">dyno::ModuleBase&lt; INPUT, OUTPUT &gt;::validateInput()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1ModuleBase_a0f96cdad0420d14c305bb77f77455a54_cgraph.png" border="0" usemap="#aclassdyno_1_1ModuleBase_a0f96cdad0420d14c305bb77f77455a54_cgraph" alt=""/></div>
 <map name="aclassdyno_1_1ModuleBase_a0f96cdad0420d14c305bb77f77455a54_cgraph" id="aclassdyno_1_1ModuleBase_a0f96cdad0420d14c305bb77f77455a54_cgraph">
-<area shape="rect" title=" " alt="" coords="5,55,216,80"/>
+<area shape="rect" title=" " alt="" coords="5,127,216,152"/>
 <area shape="rect" href="classdyno_1_1ModuleBase.html#a53c686687f27562cc71a2fe8e5a2ae9e" title=" " alt="" coords="264,5,499,31"/>
-<area shape="rect" href="classdyno_1_1ModuleBase.html#a40853af888720a8c0ffbcc97443b03d4" title=" " alt="" coords="266,55,497,80"/>
-<area shape="rect" href="classdyno_1_1ModuleBase.html#a875d83b98c984298bc8f6a51f9d9acff" title="Checks the state of the input before running any virtual spin (boostrap or nominal) functions." alt="" coords="280,105,483,145"/>
+<area shape="rect" href="classdyno_1_1ModuleBase.html#ab56c5b7d0b4bc87e28f79a27ae8de248" title=" " alt="" coords="275,55,488,95"/>
+<area shape="rect" href="classdyno_1_1ModuleBase.html#afa1ac9b2b2093ff043aec28b35a8ad34" title=" " alt="" coords="269,119,493,159"/>
+<area shape="rect" href="classdyno_1_1ModuleBase.html#a40853af888720a8c0ffbcc97443b03d4" title=" " alt="" coords="266,184,497,209"/>
+<area shape="rect" href="classdyno_1_1ModuleBase.html#a875d83b98c984298bc8f6a51f9d9acff" title="Checks the state of the input before running any virtual spin (boostrap or nominal) functions." alt="" coords="280,234,483,274"/>
 </map>
 </div>
 
@@ -706,8 +814,8 @@ Here is the caller graph for this function:</div>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="a2e54e47b8bc5df6a093145b4a83a7bb6" name="a2e54e47b8bc5df6a093145b4a83a7bb6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2e54e47b8bc5df6a093145b4a83a7bb6">&#9670;&#160;</a></span>input_callback_</h2>
+<a id="aa911f746265f503880c4acc93e0d2dd0" name="aa911f746265f503880c4acc93e0d2dd0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa911f746265f503880c4acc93e0d2dd0">&#9670;&#160;</a></span>input_callbacks_</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -718,7 +826,7 @@ template&lt;typename INPUT , typename OUTPUT &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classdyno_1_1ModuleBase.html#a7467e45d45af478b61ef9ed18ee29083">InputCallback</a> <a class="el" href="classdyno_1_1ModuleBase.html">dyno::ModuleBase</a>&lt; INPUT, OUTPUT &gt;::input_callback_</td>
+          <td class="memname">std::vector&lt;<a class="el" href="classdyno_1_1ModuleBase.html#a7467e45d45af478b61ef9ed18ee29083">InputCallback</a>&gt; <a class="el" href="classdyno_1_1ModuleBase.html">dyno::ModuleBase</a>&lt; INPUT, OUTPUT &gt;::input_callbacks_</td>
         </tr>
       </table>
   </td>
@@ -728,9 +836,9 @@ template&lt;typename INPUT , typename OUTPUT &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ModuleBase_8hpp_source.html#l00143">143</a> of file <a class="el" href="ModuleBase_8hpp_source.html">ModuleBase.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ModuleBase_8hpp_source.html#l00156">156</a> of file <a class="el" href="ModuleBase_8hpp_source.html">ModuleBase.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1ModuleBase.html#a3a2819e9de31d4057773353d92925986">dyno::ModuleBase&lt; INPUT, OUTPUT &gt;::registerInputCallback()</a>, and <a class="el" href="classdyno_1_1ModuleBase.html#a0f96cdad0420d14c305bb77f77455a54">dyno::ModuleBase&lt; INPUT, OUTPUT &gt;::spinOnce()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1ModuleBase.html#ab56c5b7d0b4bc87e28f79a27ae8de248">dyno::ModuleBase&lt; INPUT, OUTPUT &gt;::emitInputCallbacks()</a>, and <a class="el" href="classdyno_1_1ModuleBase.html#a3a2819e9de31d4057773353d92925986">dyno::ModuleBase&lt; INPUT, OUTPUT &gt;::registerInputCallback()</a>.</p>
 
 </div>
 </div>
@@ -756,7 +864,7 @@ template&lt;typename INPUT , typename OUTPUT &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ModuleBase_8hpp_source.html#l00140">140</a> of file <a class="el" href="ModuleBase_8hpp_source.html">ModuleBase.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ModuleBase_8hpp_source.html#l00153">153</a> of file <a class="el" href="ModuleBase_8hpp_source.html">ModuleBase.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1ModuleBase.html#a0f96cdad0420d14c305bb77f77455a54">dyno::ModuleBase&lt; INPUT, OUTPUT &gt;::spinOnce()</a>.</p>
 
@@ -784,14 +892,14 @@ template&lt;typename INPUT , typename OUTPUT &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ModuleBase_8hpp_source.html#l00139">139</a> of file <a class="el" href="ModuleBase_8hpp_source.html">ModuleBase.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ModuleBase_8hpp_source.html#l00152">152</a> of file <a class="el" href="ModuleBase_8hpp_source.html">ModuleBase.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1ModuleBase.html#a0f96cdad0420d14c305bb77f77455a54">dyno::ModuleBase&lt; INPUT, OUTPUT &gt;::spinOnce()</a>.</p>
 
 </div>
 </div>
-<a id="a1374b57a84717e8a02f15dc52c8c5425" name="a1374b57a84717e8a02f15dc52c8c5425"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1374b57a84717e8a02f15dc52c8c5425">&#9670;&#160;</a></span>output_callback_</h2>
+<a id="a20c2558b65900f75b351375eff7878d5" name="a20c2558b65900f75b351375eff7878d5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a20c2558b65900f75b351375eff7878d5">&#9670;&#160;</a></span>output_callbacks_</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -802,7 +910,7 @@ template&lt;typename INPUT , typename OUTPUT &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classdyno_1_1ModuleBase.html#a01657f3937ee1fce652f936794b9e40b">OutputCallback</a> <a class="el" href="classdyno_1_1ModuleBase.html">dyno::ModuleBase</a>&lt; INPUT, OUTPUT &gt;::output_callback_</td>
+          <td class="memname">std::vector&lt;<a class="el" href="classdyno_1_1ModuleBase.html#a01657f3937ee1fce652f936794b9e40b">OutputCallback</a>&gt; <a class="el" href="classdyno_1_1ModuleBase.html">dyno::ModuleBase</a>&lt; INPUT, OUTPUT &gt;::output_callbacks_</td>
         </tr>
       </table>
   </td>
@@ -812,9 +920,9 @@ template&lt;typename INPUT , typename OUTPUT &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ModuleBase_8hpp_source.html#l00144">144</a> of file <a class="el" href="ModuleBase_8hpp_source.html">ModuleBase.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ModuleBase_8hpp_source.html#l00157">157</a> of file <a class="el" href="ModuleBase_8hpp_source.html">ModuleBase.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1ModuleBase.html#a62a179d22c30218987ed6bb20cfd7f9e">dyno::ModuleBase&lt; INPUT, OUTPUT &gt;::registerOutputCallback()</a>, and <a class="el" href="classdyno_1_1ModuleBase.html#a0f96cdad0420d14c305bb77f77455a54">dyno::ModuleBase&lt; INPUT, OUTPUT &gt;::spinOnce()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1ModuleBase.html#afa1ac9b2b2093ff043aec28b35a8ad34">dyno::ModuleBase&lt; INPUT, OUTPUT &gt;::emitOutputCallbacks()</a>, and <a class="el" href="classdyno_1_1ModuleBase.html#a62a179d22c30218987ed6bb20cfd7f9e">dyno::ModuleBase&lt; INPUT, OUTPUT &gt;::registerOutputCallback()</a>.</p>
 
 </div>
 </div>
@@ -840,12 +948,12 @@ template&lt;typename INPUT , typename OUTPUT &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ModuleBase_8hpp_source.html#l00141">141</a> of file <a class="el" href="ModuleBase_8hpp_source.html">ModuleBase.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ModuleBase_8hpp_source.html#l00154">154</a> of file <a class="el" href="ModuleBase_8hpp_source.html">ModuleBase.hpp</a>.</p>
 
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>dynosam/include/dynosam/common/<a class="el" href="ModuleBase_8hpp_source.html">ModuleBase.hpp</a></li>
+<li>dynosam_common/include/dynosam_common/<a class="el" href="ModuleBase_8hpp_source.html">ModuleBase.hpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

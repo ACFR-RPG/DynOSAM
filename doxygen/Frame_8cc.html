@@ -81,65 +81,65 @@ $(function() {
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="Frame_8hpp_source.html">dynosam/frontend/vision/Frame.hpp</a>&quot;</code><br />
 <code>#include &lt;tbb/parallel_for.h&gt;</code><br />
-<code>#include &quot;<a class="el" href="Types_8hpp_source.html">dynosam/common/Types.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="VisionTools_8hpp_source.html">dynosam/frontend/vision/VisionTools.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="TimingStats_8hpp_source.html">dynosam/utils/TimingStats.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="ColourMap_8hpp_source.html">dynosam/visualizer/ColourMap.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="Types_8hpp_source.html">dynosam_common/Types.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="TimingStats_8hpp_source.html">dynosam_common/utils/TimingStats.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="Colour_8hpp_source.html">dynosam_common/viz/Colour.hpp</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for Frame.cc:</div>
 <div class="dyncontent">
 <div class="center"><img src="Frame_8cc__incl.png" border="0" usemap="#adynosam_2src_2frontend_2vision_2Frame_8cc" alt=""/></div>
 <map name="adynosam_2src_2frontend_2vision_2Frame_8cc" id="adynosam_2src_2frontend_2vision_2Frame_8cc">
-<area shape="rect" title=" " alt="" coords="3123,5,3287,45"/>
-<area shape="rect" href="Frame_8hpp.html" title=" " alt="" coords="1259,181,1443,221"/>
-<area shape="rect" href="Types_8hpp.html" title=" " alt="" coords="1311,709,1523,735"/>
-<area shape="rect" href="ColourMap_8hpp.html" title=" " alt="" coords="3224,533,3373,573"/>
-<area shape="rect" title=" " alt="" coords="3651,101,3783,126"/>
-<area shape="rect" href="VisionTools_8hpp.html" title=" " alt="" coords="2933,93,3117,133"/>
-<area shape="rect" href="TimingStats_8hpp.html" title=" " alt="" coords="3600,629,3824,654"/>
-<area shape="rect" title=" " alt="" coords="734,959,821,984"/>
-<area shape="rect" href="Camera_8hpp.html" title=" " alt="" coords="1247,541,1473,566"/>
-<area shape="rect" href="DynamicObjects_8hpp.html" title=" " alt="" coords="584,541,867,566"/>
-<area shape="rect" href="ImageContainer_8hpp.html" title=" " alt="" coords="2086,453,2365,478"/>
-<area shape="rect" href="PointCloudProcess_8hpp.html" title=" " alt="" coords="1169,445,1386,485"/>
-<area shape="rect" href="StructuredContainers_8hpp.html" title=" " alt="" coords="1843,621,2058,661"/>
-<area shape="rect" href="Feature_8hpp.html" title=" " alt="" coords="1833,357,2017,397"/>
-<area shape="rect" href="UndistortRectifier_8hpp.html" title=" " alt="" coords="252,533,436,573"/>
-<area shape="rect" href="Vision-Definitions_8hpp.html" title=" " alt="" coords="2131,269,2315,309"/>
-<area shape="rect" href="Frame-inl_8hpp.html" title=" " alt="" coords="859,269,1043,309"/>
-<area shape="rect" title=" " alt="" coords="367,959,566,984"/>
-<area shape="rect" title=" " alt="" coords="1320,629,1565,654"/>
-<area shape="rect" href="CameraParams_8hpp.html" title=" " alt="" coords="717,629,992,654"/>
-<area shape="rect" title=" " alt="" coords="86,959,271,984"/>
-<area shape="rect" title=" " alt="" coords="2286,709,2373,735"/>
-<area shape="rect" title=" " alt="" coords="2759,959,2873,984"/>
-<area shape="rect" title=" " alt="" coords="1081,790,1249,815"/>
-<area shape="rect" title=" " alt="" coords="1067,878,1223,903"/>
-<area shape="rect" title=" " alt="" coords="1274,790,1417,815"/>
-<area shape="rect" title=" " alt="" coords="3109,959,3323,984"/>
-<area shape="rect" title=" " alt="" coords="845,959,920,984"/>
-<area shape="rect" title=" " alt="" coords="1441,790,1538,815"/>
-<area shape="rect" title=" " alt="" coords="2365,959,2457,984"/>
-<area shape="rect" title=" " alt="" coords="2259,790,2322,815"/>
-<area shape="rect" href="Flags_8hpp.html" title=" " alt="" coords="1563,790,1773,815"/>
-<area shape="rect" href="Macros_8hpp.html" title=" " alt="" coords="505,878,698,903"/>
-<area shape="rect" href="SensorModels_8hpp.html" title=" " alt="" coords="689,790,956,815"/>
-<area shape="rect" href="Types-inl_8hpp.html" title=" " alt="" coords="1797,783,1981,823"/>
-<area shape="rect" href="Exceptions_8hpp.html" title=" " alt="" coords="1247,878,1494,903"/>
-<area shape="rect" href="GtsamUtils_8hpp.html" title=" " alt="" coords="773,878,992,903"/>
-<area shape="rect" title=" " alt="" coords="246,629,442,654"/>
-<area shape="rect" href="GroundTruthPacket_8hpp.html" title=" " alt="" coords="467,621,693,661"/>
-<area shape="rect" href="ImageTypes_8hpp.html" title=" " alt="" coords="2541,541,2795,566"/>
-<area shape="rect" href="OpenCVUtils_8hpp.html" title=" " alt="" coords="2921,629,3149,654"/>
-<area shape="rect" href="Tuple_8hpp.html" title=" " alt="" coords="2235,629,2415,654"/>
-<area shape="rect" href="ImageContainer-inl_8hpp.html" title=" " alt="" coords="2115,533,2365,573"/>
-<area shape="rect" href="Colour_8hpp.html" title=" " alt="" coords="3224,621,3373,661"/>
-<area shape="rect" href="Histogram_8hpp.html" title=" " alt="" coords="3059,365,3274,390"/>
-<area shape="rect" href="Visualizer-Definitions_8hpp.html" title=" " alt="" coords="2985,871,3178,911"/>
-<area shape="rect" href="VisionTools-inl_8hpp.html" title=" " alt="" coords="3139,181,3323,221"/>
-<area shape="rect" title=" " alt="" coords="3824,709,3891,735"/>
-<area shape="rect" href="Statistics_8hpp.html" title=" " alt="" coords="2499,709,2706,735"/>
-<area shape="rect" href="Timing_8hpp.html" title=" " alt="" coords="3609,709,3799,735"/>
+<area shape="rect" title=" " alt="" coords="2837,5,3001,45"/>
+<area shape="rect" href="Frame_8hpp.html" title=" " alt="" coords="1445,181,1629,221"/>
+<area shape="rect" href="Types_8hpp.html" title=" " alt="" coords="1827,621,2042,647"/>
+<area shape="rect" href="Colour_8hpp.html" title=" " alt="" coords="94,533,263,573"/>
+<area shape="rect" title=" " alt="" coords="3565,101,3697,126"/>
+<area shape="rect" href="VisionTools_8hpp.html" title=" " alt="" coords="2508,93,2692,133"/>
+<area shape="rect" href="TimingStats_8hpp.html" title=" " alt="" coords="3513,269,3692,309"/>
+<area shape="rect" title=" " alt="" coords="854,621,941,647"/>
+<area shape="rect" href="Vision-Definitions_8hpp.html" title=" " alt="" coords="2267,269,2451,309"/>
+<area shape="rect" href="ImageContainer_8hpp.html" title=" " alt="" coords="2285,453,2523,478"/>
+<area shape="rect" href="Feature_8hpp.html" title=" " alt="" coords="1314,365,1499,390"/>
+<area shape="rect" href="StructuredContainers_8hpp.html" title=" " alt="" coords="978,533,1195,573"/>
+<area shape="rect" href="DynamicObjects_8hpp.html" title=" " alt="" coords="1625,365,1911,390"/>
+<area shape="rect" href="PointCloudProcess_8hpp.html" title=" " alt="" coords="501,445,721,485"/>
+<area shape="rect" href="Camera_8hpp.html" title=" " alt="" coords="1575,277,1761,302"/>
+<area shape="rect" href="UndistortRectifier_8hpp.html" title=" " alt="" coords="1934,365,2183,390"/>
+<area shape="rect" href="Frame-inl_8hpp.html" title=" " alt="" coords="1265,269,1449,309"/>
+<area shape="rect" title=" " alt="" coords="2548,453,2612,478"/>
+<area shape="rect" href="Frontend-Definitions_8hpp.html" title=" " alt="" coords="2257,357,2460,397"/>
+<area shape="rect" title=" " alt="" coords="1911,453,2107,478"/>
+<area shape="rect" title=" " alt="" coords="913,878,1028,903"/>
+<area shape="rect" title=" " alt="" coords="1851,702,2019,727"/>
+<area shape="rect" title=" " alt="" coords="1130,959,1286,984"/>
+<area shape="rect" title=" " alt="" coords="2338,878,2523,903"/>
+<area shape="rect" title=" " alt="" coords="2043,702,2186,727"/>
+<area shape="rect" title=" " alt="" coords="3031,878,3246,903"/>
+<area shape="rect" title=" " alt="" coords="2748,878,2823,903"/>
+<area shape="rect" title=" " alt="" coords="2210,702,2307,727"/>
+<area shape="rect" title=" " alt="" coords="1293,878,1385,903"/>
+<area shape="rect" title=" " alt="" coords="955,702,1018,727"/>
+<area shape="rect" href="Cuda_8hpp.html" title=" " alt="" coords="2975,702,3185,727"/>
+<area shape="rect" href="Flags_8hpp.html" title=" " alt="" coords="2332,702,2545,727"/>
+<area shape="rect" href="Macros_8hpp.html" title=" " alt="" coords="2468,783,2647,823"/>
+<area shape="rect" href="SensorModels_8hpp.html" title=" " alt="" coords="1557,702,1827,727"/>
+<area shape="rect" href="Types-inl_8hpp.html" title=" " alt="" coords="1245,695,1432,735"/>
+<area shape="rect" href="GtsamUtils_8hpp.html" title=" " alt="" coords="2215,783,2393,823"/>
+<area shape="rect" href="Numerical_8hpp.html" title=" " alt="" coords="676,871,855,911"/>
+<area shape="rect" href="OpenCVUtils_8hpp.html" title=" " alt="" coords="2905,533,3084,573"/>
+<area shape="rect" href="GroundTruthPacket_8hpp.html" title=" " alt="" coords="2551,533,2780,573"/>
+<area shape="rect" title=" " alt="" coords="621,533,801,573"/>
+<area shape="rect" title=" " alt="" coords="287,533,438,573"/>
+<area shape="rect" title=" " alt="" coords="463,541,596,566"/>
+<area shape="rect" title=" " alt="" coords="121,621,183,647"/>
+<area shape="rect" title=" " alt="" coords="208,621,376,647"/>
+<area shape="rect" href="Visualizer-Definitions_8hpp.html" title=" " alt="" coords="2975,783,3169,823"/>
+<area shape="rect" href="Histogram_8hpp.html" title=" " alt="" coords="1067,181,1245,221"/>
+<area shape="rect" href="VisionTools-inl_8hpp.html" title=" " alt="" coords="2508,181,2692,221"/>
+<area shape="rect" title=" " alt="" coords="3541,365,3608,390"/>
+<area shape="rect" href="Statistics_8hpp.html" title=" " alt="" coords="2939,357,3117,397"/>
+<area shape="rect" href="Timing_8hpp.html" title=" " alt="" coords="3632,357,3811,397"/>
 </map>
 </div>
 </div>

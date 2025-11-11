@@ -1,9 +1,0 @@
-<map id="dyno::loadFlow" name="dyno::loadFlow">
-<area shape="rect" id="node1" title=" " alt="" coords="264,173,385,198"/>
-<area shape="rect" id="node2" href="$classdyno_1_1OpticalFlowDataFolder.html#a54a9c99eb6b0d8ac8548a2ab819bf686" title="Get the Item at an index in the dataset." alt="" coords="5,5,216,45"/>
-<area shape="rect" id="node3" href="$classdyno_1_1ClusterSlamAllLoader.html#af5a56722301f81e6470366e5fbecbe96" title=" " alt="" coords="9,69,212,109"/>
-<area shape="rect" id="node4" href="$classdyno_1_1OMDOldAllLoader.html#a6825130101f6c72f1cf6154ff6e34f0d" title=" " alt="" coords="22,133,199,173"/>
-<area shape="rect" id="node5" href="$classdyno_1_1ProjectAriaAllLoader.html#ac28c716c4ff8f1d9dd542a0ee0f5732f" title=" " alt="" coords="13,197,208,237"/>
-<area shape="rect" id="node6" href="$classdyno_1_1TartanAirShibuyaAllLoader.html#ace1d32706c42bfdee7b8af7a7717f2a9" title=" " alt="" coords="16,261,205,301"/>
-<area shape="rect" id="node7" href="$classdyno_1_1ViodeAllLoader.html#a624910d8bac53c1f0eacece124c51ecb" title=" " alt="" coords="31,325,191,365"/>
-</map>

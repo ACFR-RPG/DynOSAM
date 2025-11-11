@@ -1,7 +1,6 @@
 <map id="dyno::KltFeatureTracker::constructNewStaticFeature" name="dyno::KltFeatureTracker::constructNewStaticFeature">
-<area shape="rect" id="node1" title="Construct a new static feature with a unique tracklet id." alt="" coords="5,69,211,109"/>
-<area shape="rect" id="node2" href="$classdyno_1_1TrackletIdManager.html#ab7ec1738de58e54adbdad49f1f44f7ae" title=" " alt="" coords="266,5,449,45"/>
-<area shape="rect" id="node3" href="$classdyno_1_1TrackletIdManager.html#a5b83806eebd74cfafc4d706cd4182c6b" title=" " alt="" coords="259,69,456,109"/>
-<area shape="rect" id="node4" href="$classdyno_1_1TrackletIdManager.html#a53cb3472fa0367b8dd2a9127111277b2" title=" " alt="" coords="266,133,449,173"/>
-<area shape="rect" id="node5" href="$classdyno_1_1TrackletIdManager.html#a2a115366087e907d04e6c0d62643ef20" title=" " alt="" coords="504,133,687,173"/>
+<area shape="rect" id="node1" title="Construct a new static feature with a unique tracklet id." alt="" coords="5,37,211,77"/>
+<area shape="rect" id="node2" href="$classdyno_1_1TrackletIdManager.html#acf6eded9b5e98917d2510d96074ef138" title=" " alt="" coords="259,5,464,45"/>
+<area shape="rect" id="node3" href="$classdyno_1_1TrackletIdManager.html#a53cb3472fa0367b8dd2a9127111277b2" title=" " alt="" coords="270,69,453,109"/>
+<area shape="rect" id="node4" href="$classdyno_1_1TrackletIdManager.html#a2a115366087e907d04e6c0d62643ef20" title=" " alt="" coords="512,69,695,109"/>
 </map>

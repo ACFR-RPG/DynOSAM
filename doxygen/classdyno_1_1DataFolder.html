@@ -140,7 +140,7 @@ class dyno::DataFolder&lt; T &gt;</div><p>Defines a set of datafiles within a fo
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="DatasetLoader_8hpp_source.html#l00053">53</a> of file <a class="el" href="DatasetLoader_8hpp_source.html">DatasetLoader.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="DatasetLoader_8hpp_source.html#l00060">60</a> of file <a class="el" href="DatasetLoader_8hpp_source.html">DatasetLoader.hpp</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="a8ca1470fc159fb79f1f6fa6e78a9cb04" name="a8ca1470fc159fb79f1f6fa6e78a9cb04"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8ca1470fc159fb79f1f6fa6e78a9cb04">&#9670;&#160;</a></span>This</h2>
@@ -156,7 +156,7 @@ template&lt;typename T  = cv::Mat&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="DatasetLoader_8hpp_source.html#l00057">57</a> of file <a class="el" href="DatasetLoader_8hpp_source.html">DatasetLoader.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="DatasetLoader_8hpp_source.html#l00063">63</a> of file <a class="el" href="DatasetLoader_8hpp_source.html">DatasetLoader.hpp</a>.</p>
 
 </div>
 </div>
@@ -174,7 +174,7 @@ template&lt;typename T  = cv::Mat&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="DatasetLoader_8hpp_source.html#l00058">58</a> of file <a class="el" href="DatasetLoader_8hpp_source.html">DatasetLoader.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="DatasetLoader_8hpp_source.html#l00064">64</a> of file <a class="el" href="DatasetLoader_8hpp_source.html">DatasetLoader.hpp</a>.</p>
 
 </div>
 </div>
@@ -231,8 +231,8 @@ template&lt;typename T  = cv::Mat&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="DatasetLoader_8hpp_source.html#l00061">61</a> of file <a class="el" href="DatasetLoader_8hpp_source.html">DatasetLoader.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   61</span>{}</div>
+<p class="definition">Definition at line <a class="el" href="DatasetLoader_8hpp_source.html#l00067">67</a> of file <a class="el" href="DatasetLoader_8hpp_source.html">DatasetLoader.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   67</span>{}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -262,14 +262,17 @@ template&lt;typename T  = cv::Mat&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="DatasetLoader_8hpp_source.html#l00106">106</a> of file <a class="el" href="DatasetLoader_8hpp_source.html">DatasetLoader.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  106</span>                                   {</div>
-<div class="line"><span class="lineno">  107</span>        <span class="keywordflow">if</span>(!<a class="code hl_variable" href="classdyno_1_1DataFolder.html#a608b0c9988f5840def8d9fb6992759f2">absolute_folder_path_</a>) {</div>
-<div class="line"><span class="lineno">  108</span>            <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;Error accessing absolute folder path for DataFolder (&quot;</span> + <a class="code hl_function" href="classdyno_1_1DataFolder.html#a63d64595445016c30e623154c45260b6">getFolderName</a>() + <span class="stringliteral">&quot;). Has the path been set with initAbsolutePath()?&quot;</span>);</div>
-<div class="line"><span class="lineno">  109</span>        }</div>
-<div class="line"><span class="lineno">  110</span>        <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1DataFolder.html#a608b0c9988f5840def8d9fb6992759f2">absolute_folder_path_</a>.value();</div>
-<div class="line"><span class="lineno">  111</span>    }</div>
-<div class="ttc" id="aclassdyno_1_1DataFolder_html_a608b0c9988f5840def8d9fb6992759f2"><div class="ttname"><a href="classdyno_1_1DataFolder.html#a608b0c9988f5840def8d9fb6992759f2">dyno::DataFolder::absolute_folder_path_</a></div><div class="ttdeci">std::optional&lt; fs::path &gt; absolute_folder_path_</div><div class="ttdef"><b>Definition:</b> <a href="DatasetLoader_8hpp_source.html#l00140">DatasetLoader.hpp:140</a></div></div>
+<p class="definition">Definition at line <a class="el" href="DatasetLoader_8hpp_source.html#l00112">112</a> of file <a class="el" href="DatasetLoader_8hpp_source.html">DatasetLoader.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  112</span>                                 {</div>
+<div class="line"><span class="lineno">  113</span>    <span class="keywordflow">if</span> (!<a class="code hl_variable" href="classdyno_1_1DataFolder.html#a608b0c9988f5840def8d9fb6992759f2">absolute_folder_path_</a>) {</div>
+<div class="line"><span class="lineno">  114</span>      <span class="keywordflow">throw</span> std::runtime_error(</div>
+<div class="line"><span class="lineno">  115</span>          <span class="stringliteral">&quot;Error accessing absolute folder path for DataFolder (&quot;</span> +</div>
+<div class="line"><span class="lineno">  116</span>          <a class="code hl_function" href="classdyno_1_1DataFolder.html#a63d64595445016c30e623154c45260b6">getFolderName</a>() +</div>
+<div class="line"><span class="lineno">  117</span>          <span class="stringliteral">&quot;). Has the path been set with initAbsolutePath()?&quot;</span>);</div>
+<div class="line"><span class="lineno">  118</span>    }</div>
+<div class="line"><span class="lineno">  119</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1DataFolder.html#a608b0c9988f5840def8d9fb6992759f2">absolute_folder_path_</a>.value();</div>
+<div class="line"><span class="lineno">  120</span>  }</div>
+<div class="ttc" id="aclassdyno_1_1DataFolder_html_a608b0c9988f5840def8d9fb6992759f2"><div class="ttname"><a href="classdyno_1_1DataFolder.html#a608b0c9988f5840def8d9fb6992759f2">dyno::DataFolder::absolute_folder_path_</a></div><div class="ttdeci">std::optional&lt; fs::path &gt; absolute_folder_path_</div><div class="ttdef"><b>Definition:</b> <a href="DatasetLoader_8hpp_source.html#l00152">DatasetLoader.hpp:152</a></div></div>
 <div class="ttc" id="aclassdyno_1_1DataFolder_html_a63d64595445016c30e623154c45260b6"><div class="ttname"><a href="classdyno_1_1DataFolder.html#a63d64595445016c30e623154c45260b6">dyno::DataFolder::getFolderName</a></div><div class="ttdeci">virtual std::string getFolderName() const =0</div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1DataFolder.html#a608b0c9988f5840def8d9fb6992759f2">dyno::DataFolder&lt; T &gt;::absolute_folder_path_</a>, and <a class="el" href="classdyno_1_1DataFolder.html#a63d64595445016c30e623154c45260b6">dyno::DataFolder&lt; T &gt;::getFolderName()</a>.</p>
@@ -401,19 +404,18 @@ template&lt;typename T  = cv::Mat&gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="DatasetLoader_8hpp_source.html#l00073">73</a> of file <a class="el" href="DatasetLoader_8hpp_source.html">DatasetLoader.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   73</span>                                                              {</div>
-<div class="line"><span class="lineno">   74</span>        <a class="code hl_variable" href="classdyno_1_1DataFolder.html#a608b0c9988f5840def8d9fb6992759f2">absolute_folder_path_</a> = absolute_folder_path;</div>
-<div class="line"><span class="lineno">   75</span>        <span class="keywordflow">try</span> {</div>
-<div class="line"><span class="lineno">   76</span>            <a class="code hl_function" href="classdyno_1_1DataFolder.html#aa85fd968b248a11a5a2534415981d08b">onPathInit</a>();</div>
-<div class="line"><span class="lineno">   77</span>        }</div>
-<div class="line"><span class="lineno">   78</span>        <span class="keywordflow">catch</span>(<span class="keyword">const</span> std::exception&amp; e) {</div>
-<div class="line"><span class="lineno">   79</span>            LOG(FATAL) &lt;&lt; <span class="stringliteral">&quot;Exception caught when running virtual onPathInit for DataFolder with absolute path: &quot;</span> &lt;&lt; absolute_folder_path</div>
-<div class="line"><span class="lineno">   80</span>                &lt;&lt; <span class="stringliteral">&quot;. Error: &quot;</span> &lt;&lt; e.what();</div>
-<div class="line"><span class="lineno">   81</span>        }</div>
-<div class="line"><span class="lineno">   82</span> </div>
-<div class="line"><span class="lineno">   83</span>    }</div>
-<div class="ttc" id="aclassdyno_1_1DataFolder_html_aa85fd968b248a11a5a2534415981d08b"><div class="ttname"><a href="classdyno_1_1DataFolder.html#aa85fd968b248a11a5a2534415981d08b">dyno::DataFolder::onPathInit</a></div><div class="ttdeci">virtual void onPathInit()</div><div class="ttdoc">Virtual function that is called once the absolute path to this folder is known This happens after con...</div><div class="ttdef"><b>Definition:</b> <a href="DatasetLoader_8hpp_source.html#l00135">DatasetLoader.hpp:135</a></div></div>
+<p class="definition">Definition at line <a class="el" href="DatasetLoader_8hpp_source.html#l00082">82</a> of file <a class="el" href="DatasetLoader_8hpp_source.html">DatasetLoader.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   82</span>                                                            {</div>
+<div class="line"><span class="lineno">   83</span>    <a class="code hl_variable" href="classdyno_1_1DataFolder.html#a608b0c9988f5840def8d9fb6992759f2">absolute_folder_path_</a> = absolute_folder_path;</div>
+<div class="line"><span class="lineno">   84</span>    <span class="keywordflow">try</span> {</div>
+<div class="line"><span class="lineno">   85</span>      <a class="code hl_function" href="classdyno_1_1DataFolder.html#aa85fd968b248a11a5a2534415981d08b">onPathInit</a>();</div>
+<div class="line"><span class="lineno">   86</span>    } <span class="keywordflow">catch</span> (<span class="keyword">const</span> std::exception&amp; e) {</div>
+<div class="line"><span class="lineno">   87</span>      LOG(FATAL) &lt;&lt; <span class="stringliteral">&quot;Exception caught when running virtual onPathInit for &quot;</span></div>
+<div class="line"><span class="lineno">   88</span>                    <span class="stringliteral">&quot;DataFolder with absolute path: &quot;</span></div>
+<div class="line"><span class="lineno">   89</span>                 &lt;&lt; absolute_folder_path &lt;&lt; <span class="stringliteral">&quot;. Error: &quot;</span> &lt;&lt; e.what();</div>
+<div class="line"><span class="lineno">   90</span>    }</div>
+<div class="line"><span class="lineno">   91</span>  }</div>
+<div class="ttc" id="aclassdyno_1_1DataFolder_html_aa85fd968b248a11a5a2534415981d08b"><div class="ttname"><a href="classdyno_1_1DataFolder.html#aa85fd968b248a11a5a2534415981d08b">dyno::DataFolder::onPathInit</a></div><div class="ttdeci">virtual void onPathInit()</div><div class="ttdoc">Virtual function that is called once the absolute path to this folder is known This happens after con...</div><div class="ttdef"><b>Definition:</b> <a href="DatasetLoader_8hpp_source.html#l00146">DatasetLoader.hpp:146</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1DataFolder.html#a608b0c9988f5840def8d9fb6992759f2">dyno::DataFolder&lt; T &gt;::absolute_folder_path_</a>, and <a class="el" href="classdyno_1_1DataFolder.html#aa85fd968b248a11a5a2534415981d08b">dyno::DataFolder&lt; T &gt;::onPathInit()</a>.</p>
 <div class="dynheader">
@@ -458,10 +460,8 @@ template&lt;typename T  = cv::Mat&gt; </div>
 <dd>
 false </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="DatasetLoader_8hpp_source.html#l00102">102</a> of file <a class="el" href="DatasetLoader_8hpp_source.html">DatasetLoader.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  102</span>                                          {</div>
-<div class="line"><span class="lineno">  103</span>        <span class="keywordflow">return</span> (<span class="keywordtype">bool</span>)<a class="code hl_variable" href="classdyno_1_1DataFolder.html#a608b0c9988f5840def8d9fb6992759f2">absolute_folder_path_</a>;</div>
-<div class="line"><span class="lineno">  104</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="DatasetLoader_8hpp_source.html#l00110">110</a> of file <a class="el" href="DatasetLoader_8hpp_source.html">DatasetLoader.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  110</span>{ <span class="keywordflow">return</span> (<span class="keywordtype">bool</span>)<a class="code hl_variable" href="classdyno_1_1DataFolder.html#a608b0c9988f5840def8d9fb6992759f2">absolute_folder_path_</a>; }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1DataFolder.html#a608b0c9988f5840def8d9fb6992759f2">dyno::DataFolder&lt; T &gt;::absolute_folder_path_</a>.</p>
 
@@ -508,8 +508,8 @@ template&lt;typename T  = cv::Mat&gt; </div>
 
 <p>Reimplemented in <a class="el" href="classdyno_1_1TimestampFile.html#af691e6e7ee10d87582bc8e3c3fef0b4b">dyno::TimestampFile</a>, <a class="el" href="classdyno_1_1KittiCameraPoseFolder.html#aefd157054db515cedb9382be067d9046">dyno::KittiCameraPoseFolder</a>, and <a class="el" href="classdyno_1_1KittiObjectPoseFolder.html#a98e83cb0df508e145d4057c7f01b499d">dyno::KittiObjectPoseFolder</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="DatasetLoader_8hpp_source.html#l00135">135</a> of file <a class="el" href="DatasetLoader_8hpp_source.html">DatasetLoader.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  135</span>{}</div>
+<p class="definition">Definition at line <a class="el" href="DatasetLoader_8hpp_source.html#l00146">146</a> of file <a class="el" href="DatasetLoader_8hpp_source.html">DatasetLoader.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  146</span>{}</div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1DataFolder.html#a3a821baf7ed4506f2dafa80450416560">dyno::DataFolder&lt; T &gt;::initAbsolutePath()</a>.</p>
 <div class="dynheader">
@@ -554,11 +554,9 @@ template&lt;typename T  = cv::Mat&gt; </div>
 <dd>
 false </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="DatasetLoader_8hpp_source.html#l00092">92</a> of file <a class="el" href="DatasetLoader_8hpp_source.html">DatasetLoader.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   92</span>                                   {</div>
-<div class="line"><span class="lineno">   93</span>        <span class="keywordflow">return</span> <a class="code hl_function" href="classdyno_1_1DataFolder.html#a80de9cc17cdad83606437b84c4c4699e">isAbsolutePathSet</a>();</div>
-<div class="line"><span class="lineno">   94</span>    }</div>
-<div class="ttc" id="aclassdyno_1_1DataFolder_html_a80de9cc17cdad83606437b84c4c4699e"><div class="ttname"><a href="classdyno_1_1DataFolder.html#a80de9cc17cdad83606437b84c4c4699e">dyno::DataFolder::isAbsolutePathSet</a></div><div class="ttdeci">bool isAbsolutePathSet() const</div><div class="ttdoc">Checks if the absolute path has been set and the data folder is ready to get items.</div><div class="ttdef"><b>Definition:</b> <a href="DatasetLoader_8hpp_source.html#l00102">DatasetLoader.hpp:102</a></div></div>
+<p class="definition">Definition at line <a class="el" href="DatasetLoader_8hpp_source.html#l00101">101</a> of file <a class="el" href="DatasetLoader_8hpp_source.html">DatasetLoader.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  101</span>{ <span class="keywordflow">return</span> <a class="code hl_function" href="classdyno_1_1DataFolder.html#a80de9cc17cdad83606437b84c4c4699e">isAbsolutePathSet</a>(); }</div>
+<div class="ttc" id="aclassdyno_1_1DataFolder_html_a80de9cc17cdad83606437b84c4c4699e"><div class="ttname"><a href="classdyno_1_1DataFolder.html#a80de9cc17cdad83606437b84c4c4699e">dyno::DataFolder::isAbsolutePathSet</a></div><div class="ttdeci">bool isAbsolutePathSet() const</div><div class="ttdoc">Checks if the absolute path has been set and the data folder is ready to get items.</div><div class="ttdef"><b>Definition:</b> <a href="DatasetLoader_8hpp_source.html#l00110">DatasetLoader.hpp:110</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1DataFolder.html#a80de9cc17cdad83606437b84c4c4699e">dyno::DataFolder&lt; T &gt;::isAbsolutePathSet()</a>.</p>
 <div class="dynheader">
@@ -597,7 +595,7 @@ template&lt;typename T  = cv::Mat&gt; </div>
 </div><div class="memdoc">
 <p>Set when init is called since we need a default constructor. This will not have the ending "/" on it Initially set to nullopt so we can check that the folder has been properly initalised via initAbsoluteFolderPath </p>
 
-<p class="definition">Definition at line <a class="el" href="DatasetLoader_8hpp_source.html#l00140">140</a> of file <a class="el" href="DatasetLoader_8hpp_source.html">DatasetLoader.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="DatasetLoader_8hpp_source.html#l00152">152</a> of file <a class="el" href="DatasetLoader_8hpp_source.html">DatasetLoader.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1DataFolder.html#ad832c1d501f9c40eefde4cfc3633e218">dyno::DataFolder&lt; T &gt;::getAbsolutePath()</a>, <a class="el" href="classdyno_1_1DataFolder.html#a3a821baf7ed4506f2dafa80450416560">dyno::DataFolder&lt; T &gt;::initAbsolutePath()</a>, and <a class="el" href="classdyno_1_1DataFolder.html#a80de9cc17cdad83606437b84c4c4699e">dyno::DataFolder&lt; T &gt;::isAbsolutePathSet()</a>.</p>
 

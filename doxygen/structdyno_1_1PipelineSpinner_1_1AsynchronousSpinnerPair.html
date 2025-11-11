@@ -132,7 +132,7 @@ Public Attributes</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="PipelineSpinner_8hpp_source.html#l00068">68</a> of file <a class="el" href="PipelineSpinner_8hpp_source.html">PipelineSpinner.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="PipelineSpinner_8hpp_source.html#l00074">74</a> of file <a class="el" href="PipelineSpinner_8hpp_source.html">PipelineSpinner.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a66f2213057a9f2c92b09564735c7ce8c" name="a66f2213057a9f2c92b09564735c7ce8c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a66f2213057a9f2c92b09564735c7ce8c">&#9670;&#160;</a></span>AsynchronousSpinnerPair()</h2>
@@ -150,9 +150,9 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PipelineSpinner_8cc_source.html#l00096">96</a> of file <a class="el" href="PipelineSpinner_8cc_source.html">PipelineSpinner.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   96</span>: <a class="code hl_function" href="structdyno_1_1PipelineSpinner_1_1SpinnerPair.html#a69cef92e2438ab12d631c8678fb4f5b0">SpinnerPair</a>(p) {}</div>
-<div class="ttc" id="astructdyno_1_1PipelineSpinner_1_1SpinnerPair_html_a69cef92e2438ab12d631c8678fb4f5b0"><div class="ttname"><a href="structdyno_1_1PipelineSpinner_1_1SpinnerPair.html#a69cef92e2438ab12d631c8678fb4f5b0">dyno::PipelineSpinner::SpinnerPair::SpinnerPair</a></div><div class="ttdeci">SpinnerPair(PipelineBase::Ptr p)</div><div class="ttdef"><b>Definition:</b> <a href="PipelineSpinner_8hpp_source.html#l00055">PipelineSpinner.hpp:55</a></div></div>
+<p class="definition">Definition at line <a class="el" href="PipelineSpinner_8cc_source.html#l00110">110</a> of file <a class="el" href="PipelineSpinner_8cc_source.html">PipelineSpinner.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  112</span>    : <a class="code hl_function" href="structdyno_1_1PipelineSpinner_1_1SpinnerPair.html#a69cef92e2438ab12d631c8678fb4f5b0">SpinnerPair</a>(p) {}</div>
+<div class="ttc" id="astructdyno_1_1PipelineSpinner_1_1SpinnerPair_html_a69cef92e2438ab12d631c8678fb4f5b0"><div class="ttname"><a href="structdyno_1_1PipelineSpinner_1_1SpinnerPair.html#a69cef92e2438ab12d631c8678fb4f5b0">dyno::PipelineSpinner::SpinnerPair::SpinnerPair</a></div><div class="ttdeci">SpinnerPair(PipelineBase::Ptr p)</div><div class="ttdef"><b>Definition:</b> <a href="PipelineSpinner_8hpp_source.html#l00061">PipelineSpinner.hpp:61</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -182,17 +182,18 @@ Public Attributes</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="structdyno_1_1PipelineSpinner_1_1SpinnerPair.html#a5e65969b2124d706f0498df34edd1665">dyno::PipelineSpinner::SpinnerPair</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="PipelineSpinner_8cc_source.html#l00098">98</a> of file <a class="el" href="PipelineSpinner_8cc_source.html">PipelineSpinner.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   98</span>                                                    {</div>
-<div class="line"><span class="lineno">   99</span>    CHECK(<a class="code hl_variable" href="structdyno_1_1PipelineSpinner_1_1AsynchronousSpinnerPair.html#ac96eb3127aec7f76ac664b2bb2bc03eb">spinner_</a> == <span class="keyword">nullptr</span>);</div>
-<div class="line"><span class="lineno">  100</span> </div>
-<div class="line"><span class="lineno">  101</span>    <span class="keyword">const</span> std::string spinner_name = <a class="code hl_variable" href="structdyno_1_1PipelineSpinner_1_1SpinnerPair.html#ad5ab988f25fe716ea0e3b36da4fe723e">p_</a>-&gt;getModuleName() + <span class="stringliteral">&quot;-spinner&quot;</span>;</div>
-<div class="line"><span class="lineno">  102</span>    <a class="code hl_variable" href="structdyno_1_1PipelineSpinner_1_1AsynchronousSpinnerPair.html#ac96eb3127aec7f76ac664b2bb2bc03eb">spinner_</a> = std::make_unique&lt;Spinner&gt;(std::bind(&amp;<a class="code hl_function" href="classdyno_1_1PipelineBase.html#a56667b4574808e95f808d1b4d79a469b">PipelineBase::spin</a>, <a class="code hl_variable" href="structdyno_1_1PipelineSpinner_1_1SpinnerPair.html#ad5ab988f25fe716ea0e3b36da4fe723e">p_</a>.get()), spinner_name);</div>
-<div class="line"><span class="lineno">  103</span>    LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Launching spinner: &quot;</span> &lt;&lt; spinner_name;</div>
-<div class="line"><span class="lineno">  104</span>}</div>
-<div class="ttc" id="aclassdyno_1_1PipelineBase_html_a56667b4574808e95f808d1b4d79a469b"><div class="ttname"><a href="classdyno_1_1PipelineBase.html#a56667b4574808e95f808d1b4d79a469b">dyno::PipelineBase::spin</a></div><div class="ttdeci">bool spin()</div><div class="ttdoc">Spins the pipeline via continuous calls to spinOnce until the pipeline is shutdown.</div><div class="ttdef"><b>Definition:</b> <a href="PipelineBase_8cc_source.html#l00037">PipelineBase.cc:37</a></div></div>
-<div class="ttc" id="astructdyno_1_1PipelineSpinner_1_1AsynchronousSpinnerPair_html_ac96eb3127aec7f76ac664b2bb2bc03eb"><div class="ttname"><a href="structdyno_1_1PipelineSpinner_1_1AsynchronousSpinnerPair.html#ac96eb3127aec7f76ac664b2bb2bc03eb">dyno::PipelineSpinner::AsynchronousSpinnerPair::spinner_</a></div><div class="ttdeci">Spinner::UniquePtr spinner_</div><div class="ttdef"><b>Definition:</b> <a href="PipelineSpinner_8hpp_source.html#l00069">PipelineSpinner.hpp:69</a></div></div>
-<div class="ttc" id="astructdyno_1_1PipelineSpinner_1_1SpinnerPair_html_ad5ab988f25fe716ea0e3b36da4fe723e"><div class="ttname"><a href="structdyno_1_1PipelineSpinner_1_1SpinnerPair.html#ad5ab988f25fe716ea0e3b36da4fe723e">dyno::PipelineSpinner::SpinnerPair::p_</a></div><div class="ttdeci">PipelineBase::Ptr p_</div><div class="ttdef"><b>Definition:</b> <a href="PipelineSpinner_8hpp_source.html#l00053">PipelineSpinner.hpp:53</a></div></div>
+<p class="definition">Definition at line <a class="el" href="PipelineSpinner_8cc_source.html#l00114">114</a> of file <a class="el" href="PipelineSpinner_8cc_source.html">PipelineSpinner.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  114</span>                                                    {</div>
+<div class="line"><span class="lineno">  115</span>  CHECK(<a class="code hl_variable" href="structdyno_1_1PipelineSpinner_1_1AsynchronousSpinnerPair.html#ac96eb3127aec7f76ac664b2bb2bc03eb">spinner_</a> == <span class="keyword">nullptr</span>);</div>
+<div class="line"><span class="lineno">  116</span> </div>
+<div class="line"><span class="lineno">  117</span>  <span class="keyword">const</span> std::string spinner_name = <a class="code hl_variable" href="structdyno_1_1PipelineSpinner_1_1SpinnerPair.html#ad5ab988f25fe716ea0e3b36da4fe723e">p_</a>-&gt;getModuleName() + <span class="stringliteral">&quot;-spinner&quot;</span>;</div>
+<div class="line"><span class="lineno">  118</span>  <a class="code hl_variable" href="structdyno_1_1PipelineSpinner_1_1AsynchronousSpinnerPair.html#ac96eb3127aec7f76ac664b2bb2bc03eb">spinner_</a> = std::make_unique&lt;Spinner&gt;(std::bind(&amp;<a class="code hl_function" href="classdyno_1_1PipelineBase.html#a56667b4574808e95f808d1b4d79a469b">PipelineBase::spin</a>, <a class="code hl_variable" href="structdyno_1_1PipelineSpinner_1_1SpinnerPair.html#ad5ab988f25fe716ea0e3b36da4fe723e">p_</a>.get()),</div>
+<div class="line"><span class="lineno">  119</span>                                       spinner_name);</div>
+<div class="line"><span class="lineno">  120</span>  LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Launching spinner: &quot;</span> &lt;&lt; spinner_name;</div>
+<div class="line"><span class="lineno">  121</span>}</div>
+<div class="ttc" id="aclassdyno_1_1PipelineBase_html_a56667b4574808e95f808d1b4d79a469b"><div class="ttname"><a href="classdyno_1_1PipelineBase.html#a56667b4574808e95f808d1b4d79a469b">dyno::PipelineBase::spin</a></div><div class="ttdeci">bool spin()</div><div class="ttdoc">Spins the pipeline via continuous calls to spinOnce until the pipeline is shutdown.</div><div class="ttdef"><b>Definition:</b> <a href="PipelineBase_8cc_source.html#l00044">PipelineBase.cc:44</a></div></div>
+<div class="ttc" id="astructdyno_1_1PipelineSpinner_1_1AsynchronousSpinnerPair_html_ac96eb3127aec7f76ac664b2bb2bc03eb"><div class="ttname"><a href="structdyno_1_1PipelineSpinner_1_1AsynchronousSpinnerPair.html#ac96eb3127aec7f76ac664b2bb2bc03eb">dyno::PipelineSpinner::AsynchronousSpinnerPair::spinner_</a></div><div class="ttdeci">Spinner::UniquePtr spinner_</div><div class="ttdef"><b>Definition:</b> <a href="PipelineSpinner_8hpp_source.html#l00075">PipelineSpinner.hpp:75</a></div></div>
+<div class="ttc" id="astructdyno_1_1PipelineSpinner_1_1SpinnerPair_html_ad5ab988f25fe716ea0e3b36da4fe723e"><div class="ttname"><a href="structdyno_1_1PipelineSpinner_1_1SpinnerPair.html#ad5ab988f25fe716ea0e3b36da4fe723e">dyno::PipelineSpinner::SpinnerPair::p_</a></div><div class="ttdeci">PipelineBase::Ptr p_</div><div class="ttdef"><b>Definition:</b> <a href="PipelineSpinner_8hpp_source.html#l00059">PipelineSpinner.hpp:59</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1PipelineBase.html#a56667b4574808e95f808d1b4d79a469b">dyno::PipelineBase::spin()</a>.</p>
 <div class="dynheader">
@@ -234,14 +235,15 @@ Here is the call graph for this function:</div>
 
 <p>Implements <a class="el" href="structdyno_1_1PipelineSpinner_1_1SpinnerPair.html#a11b8a962502104242bb963cdfc087f13">dyno::PipelineSpinner::SpinnerPair</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="PipelineSpinner_8cc_source.html#l00111">111</a> of file <a class="el" href="PipelineSpinner_8cc_source.html">PipelineSpinner.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  111</span>                                                      {</div>
-<div class="line"><span class="lineno">  112</span>    LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Shutting down pipeline and associated spinner: &quot;</span> + <a class="code hl_variable" href="structdyno_1_1PipelineSpinner_1_1SpinnerPair.html#ad5ab988f25fe716ea0e3b36da4fe723e">p_</a>-&gt;getModuleName();</div>
-<div class="line"><span class="lineno">  113</span>    <span class="comment">//shutdown pipeline</span></div>
-<div class="line"><span class="lineno">  114</span>    <a class="code hl_variable" href="structdyno_1_1PipelineSpinner_1_1SpinnerPair.html#ad5ab988f25fe716ea0e3b36da4fe723e">p_</a>-&gt;shutdown();</div>
-<div class="line"><span class="lineno">  115</span>    <span class="comment">//then shutdown spinner</span></div>
-<div class="line"><span class="lineno">  116</span>    <a class="code hl_variable" href="structdyno_1_1PipelineSpinner_1_1AsynchronousSpinnerPair.html#ac96eb3127aec7f76ac664b2bb2bc03eb">spinner_</a>-&gt;shutdown();</div>
-<div class="line"><span class="lineno">  117</span>}</div>
+<p class="definition">Definition at line <a class="el" href="PipelineSpinner_8cc_source.html#l00127">127</a> of file <a class="el" href="PipelineSpinner_8cc_source.html">PipelineSpinner.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  127</span>                                                      {</div>
+<div class="line"><span class="lineno">  128</span>  LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Shutting down pipeline and associated spinner: &quot;</span> +</div>
+<div class="line"><span class="lineno">  129</span>                   <a class="code hl_variable" href="structdyno_1_1PipelineSpinner_1_1SpinnerPair.html#ad5ab988f25fe716ea0e3b36da4fe723e">p_</a>-&gt;getModuleName();</div>
+<div class="line"><span class="lineno">  130</span>  <span class="comment">// shutdown pipeline</span></div>
+<div class="line"><span class="lineno">  131</span>  <a class="code hl_variable" href="structdyno_1_1PipelineSpinner_1_1SpinnerPair.html#ad5ab988f25fe716ea0e3b36da4fe723e">p_</a>-&gt;shutdown();</div>
+<div class="line"><span class="lineno">  132</span>  <span class="comment">// then shutdown spinner</span></div>
+<div class="line"><span class="lineno">  133</span>  <a class="code hl_variable" href="structdyno_1_1PipelineSpinner_1_1AsynchronousSpinnerPair.html#ac96eb3127aec7f76ac664b2bb2bc03eb">spinner_</a>-&gt;shutdown();</div>
+<div class="line"><span class="lineno">  134</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -270,10 +272,10 @@ Here is the call graph for this function:</div>
 
 <p>Implements <a class="el" href="structdyno_1_1PipelineSpinner_1_1SpinnerPair.html#a34336aa63cf5c2e32bb7fe1754a67fd5">dyno::PipelineSpinner::SpinnerPair</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="PipelineSpinner_8cc_source.html#l00107">107</a> of file <a class="el" href="PipelineSpinner_8cc_source.html">PipelineSpinner.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  107</span>                                                      {</div>
-<div class="line"><span class="lineno">  108</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="structdyno_1_1PipelineSpinner_1_1AsynchronousSpinnerPair.html#ac96eb3127aec7f76ac664b2bb2bc03eb">spinner_</a>-&gt;isRunning();</div>
-<div class="line"><span class="lineno">  109</span>}</div>
+<p class="definition">Definition at line <a class="el" href="PipelineSpinner_8cc_source.html#l00123">123</a> of file <a class="el" href="PipelineSpinner_8cc_source.html">PipelineSpinner.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  123</span>                                                      {</div>
+<div class="line"><span class="lineno">  124</span>  <span class="keywordflow">return</span> <a class="code hl_variable" href="structdyno_1_1PipelineSpinner_1_1AsynchronousSpinnerPair.html#ac96eb3127aec7f76ac664b2bb2bc03eb">spinner_</a>-&gt;isRunning();</div>
+<div class="line"><span class="lineno">  125</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -290,7 +292,7 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PipelineSpinner_8hpp_source.html#l00069">69</a> of file <a class="el" href="PipelineSpinner_8hpp_source.html">PipelineSpinner.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="PipelineSpinner_8hpp_source.html#l00075">75</a> of file <a class="el" href="PipelineSpinner_8hpp_source.html">PipelineSpinner.hpp</a>.</p>
 
 </div>
 </div>

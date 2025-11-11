@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.6"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>DynoSAM: dynosam/include/dynosam/common/ImageTypes.hpp Source File</title>
+<title>DynoSAM: dynosam_cv/include/dynosam_cv/ImageTypes.hpp Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -70,7 +70,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_5dee249e885e61d789509b2ad73060f7.html">dynosam</a></li><li class="navelem"><a class="el" href="dir_ae19c998a0d63c4a89d568f2bdaee525.html">include</a></li><li class="navelem"><a class="el" href="dir_0c508da48c40328131e0e187ecaa7ee4.html">dynosam</a></li><li class="navelem"><a class="el" href="dir_e90706111b527bd7d771e5120c1fb51f.html">common</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_c75bdbf9bf3d08a0587fb93cc35a1ce5.html">dynosam_cv</a></li><li class="navelem"><a class="el" href="dir_fdaad0c29899d55811f4b5eb6ff40995.html">include</a></li><li class="navelem"><a class="el" href="dir_f15b8a6f147051f211feffc8cd26072e.html">dynosam_cv</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -115,10 +115,10 @@ $(function() {
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="preprocessor">#include &lt;opencv4/opencv2/opencv.hpp&gt;</span></div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="preprocessor">#include &lt;type_traits&gt;</span></div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span> </div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="preprocessor">#include &quot;<a class="code" href="Exceptions_8hpp.html">dynosam/common/Exceptions.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="preprocessor">#include &quot;<a class="code" href="Types_8hpp.html">dynosam/common/Types.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="preprocessor">#include &quot;<a class="code" href="OpenCVUtils_8hpp.html">dynosam/utils/OpenCVUtils.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="preprocessor">#include &quot;<a class="code" href="Tuple_8hpp.html">dynosam/utils/Tuple.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="preprocessor">#include &quot;<a class="code" href="Exceptions_8hpp.html">dynosam_common/Exceptions.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="preprocessor">#include &quot;<a class="code" href="Types_8hpp.html">dynosam_common/Types.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="preprocessor">#include &quot;<a class="code" href="OpenCVUtils_8hpp.html">dynosam_common/utils/OpenCVUtils.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="preprocessor">#include &quot;<a class="code" href="Tuple_8hpp.html">dynosam_common/utils/Tuple.hpp</a>&quot;</span></div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacedyno.html">dyno</a> {</div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
@@ -178,7 +178,7 @@ $(function() {
 <div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span> </div>
 <div class="line"><a id="l00100" name="l00100"></a><span class="lineno"><a class="line" href="structdyno_1_1ImageBase.html#ac182daef2303850cd8e9d8463ea6481e">  100</a></span>  <span class="keyword">virtual</span> std::string <a class="code hl_function" href="structdyno_1_1ImageBase.html#ac182daef2303850cd8e9d8463ea6481e">toString</a>()<span class="keyword"> const </span>{</div>
 <div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>    std::stringstream ss;</div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>    ss &lt;&lt; (<a class="code hl_function" href="structdyno_1_1ImageBase.html#ab65f1947abc33b9b7c546795fb005771">exists</a>() ? <a class="code hl_function" href="namespacedyno.html#a809604e427db44cbf532a545c71a3b5d">to_string</a>(<a class="code hl_variable" href="structdyno_1_1ImageBase.html#addfd2b1d20539dfbcb0f4f27bbb48da2">image</a>.size()) : <span class="stringliteral">&quot;Empty&quot;</span>);</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>    ss &lt;&lt; (<a class="code hl_function" href="structdyno_1_1ImageBase.html#ab65f1947abc33b9b7c546795fb005771">exists</a>() ? <a class="code hl_function" href="namespacedyno.html#a8d1f85752688bf072f23fa6e8a1bde34">to_string</a>(<a class="code hl_variable" href="structdyno_1_1ImageBase.html#addfd2b1d20539dfbcb0f4f27bbb48da2">image</a>.size()) : <span class="stringliteral">&quot;Empty&quot;</span>);</div>
 <div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    <span class="keywordflow">return</span> ss.str();</div>
 <div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>  }</div>
 <div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>};</div>
@@ -308,7 +308,7 @@ $(function() {
 <div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span> </div>
 <div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>}  <span class="comment">// namespace dyno</span></div>
 <div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span> </div>
-<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span><span class="preprocessor">#include &quot;<a class="code" href="ImageTypes-inl_8hpp.html">dynosam/common/ImageTypes-inl.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span><span class="preprocessor">#include &quot;<a class="code" href="ImageTypes-inl_8hpp.html">dynosam_cv/ImageTypes-inl.hpp</a>&quot;</span></div>
 <div class="ttc" id="aExceptions_8hpp_html"><div class="ttname"><a href="Exceptions_8hpp.html">Exceptions.hpp</a></div></div>
 <div class="ttc" id="aImageTypes-inl_8hpp_html"><div class="ttname"><a href="ImageTypes-inl_8hpp.html">ImageTypes-inl.hpp</a></div></div>
 <div class="ttc" id="aOpenCVUtils_8hpp_html"><div class="ttname"><a href="OpenCVUtils_8hpp.html">OpenCVUtils.hpp</a></div></div>
@@ -318,10 +318,10 @@ $(function() {
 <div class="ttc" id="aclassdyno_1_1InvalidImageTypeException_html_ab16b30fa25aeaa2f96390e1ef6e1e25e"><div class="ttname"><a href="classdyno_1_1InvalidImageTypeException.html#ab16b30fa25aeaa2f96390e1ef6e1e25e">dyno::InvalidImageTypeException::InvalidImageTypeException</a></div><div class="ttdeci">InvalidImageTypeException(const std::string &amp;reason)</div><div class="ttdef"><b>Definition:</b> <a href="ImageTypes_8hpp_source.html#l00051">ImageTypes.hpp:51</a></div></div>
 <div class="ttc" id="anamespacedyno_html"><div class="ttname"><a href="namespacedyno.html">dyno</a></div><div class="ttdef"><b>Definition:</b> <a href="Accessor-impl_8hpp_source.html#l00037">Accessor-impl.hpp:37</a></div></div>
 <div class="ttc" id="anamespacedyno_html_a11e03724ae63e061e605426f0a6e68c2"><div class="ttname"><a href="namespacedyno.html#a11e03724ae63e061e605426f0a6e68c2">dyno::WrappedDepth</a></div><div class="ttdeci">ImageWrapper&lt; ImageType::Depth &gt; WrappedDepth</div><div class="ttdoc">Alias to an ImageWrapper&lt;ImageType::Depth&gt;</div><div class="ttdef"><b>Definition:</b> <a href="ImageTypes_8hpp_source.html#l00247">ImageTypes.hpp:247</a></div></div>
-<div class="ttc" id="anamespacedyno_html_a6154f8a946fc0fe72c0286a45ed9d51d"><div class="ttname"><a href="namespacedyno.html#a6154f8a946fc0fe72c0286a45ed9d51d">dyno::Depth</a></div><div class="ttdeci">double Depth</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00076">Types.hpp:76</a></div></div>
+<div class="ttc" id="anamespacedyno_html_a6154f8a946fc0fe72c0286a45ed9d51d"><div class="ttname"><a href="namespacedyno.html#a6154f8a946fc0fe72c0286a45ed9d51d">dyno::Depth</a></div><div class="ttdeci">double Depth</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00077">Types.hpp:77</a></div></div>
 <div class="ttc" id="anamespacedyno_html_a67c96d652e040e0f94d1fca9761b4d43"><div class="ttname"><a href="namespacedyno.html#a67c96d652e040e0f94d1fca9761b4d43">dyno::WrappedSemanticMask</a></div><div class="ttdeci">ImageWrapper&lt; ImageType::SemanticMask &gt; WrappedSemanticMask</div><div class="ttdoc">Alias to an ImageWrapper&lt;ImageType::SemanticMask&gt;</div><div class="ttdef"><b>Definition:</b> <a href="ImageTypes_8hpp_source.html#l00251">ImageTypes.hpp:251</a></div></div>
-<div class="ttc" id="anamespacedyno_html_a809604e427db44cbf532a545c71a3b5d"><div class="ttname"><a href="namespacedyno.html#a809604e427db44cbf532a545c71a3b5d">dyno::to_string</a></div><div class="ttdeci">std::string to_string(const T &amp;t)</div></div>
-<div class="ttc" id="anamespacedyno_html_aba8bf92162160923c6e5c7249892d5f8"><div class="ttname"><a href="namespacedyno.html#aba8bf92162160923c6e5c7249892d5f8">dyno::OpticalFlow</a></div><div class="ttdeci">gtsam::Point2 OpticalFlow</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00092">Types.hpp:93</a></div></div>
+<div class="ttc" id="anamespacedyno_html_a8d1f85752688bf072f23fa6e8a1bde34"><div class="ttname"><a href="namespacedyno.html#a8d1f85752688bf072f23fa6e8a1bde34">dyno::to_string</a></div><div class="ttdeci">std::string to_string(const TrackingStatus &amp;status)</div><div class="ttdef"><b>Definition:</b> <a href="Frontend-Definitions_8hpp_source.html#l00061">Frontend-Definitions.hpp:61</a></div></div>
+<div class="ttc" id="anamespacedyno_html_aba8bf92162160923c6e5c7249892d5f8"><div class="ttname"><a href="namespacedyno.html#aba8bf92162160923c6e5c7249892d5f8">dyno::OpticalFlow</a></div><div class="ttdeci">gtsam::Point2 OpticalFlow</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00093">Types.hpp:94</a></div></div>
 <div class="ttc" id="anamespacedyno_html_ad67dce7e1af472ab84b4b228d6f43d45"><div class="ttname"><a href="namespacedyno.html#ad67dce7e1af472ab84b4b228d6f43d45">dyno::WrappedOpticalFlow</a></div><div class="ttdeci">ImageWrapper&lt; ImageType::OpticalFlow &gt; WrappedOpticalFlow</div><div class="ttdoc">Alias to an ImageWrapper&lt;ImageType::OpticalFlow&gt;</div><div class="ttdef"><b>Definition:</b> <a href="ImageTypes_8hpp_source.html#l00249">ImageTypes.hpp:249</a></div></div>
 <div class="ttc" id="anamespacedyno_html_ae354482c17a0f43368a849432973177c"><div class="ttname"><a href="namespacedyno.html#ae354482c17a0f43368a849432973177c">dyno::WrappedRGBMono</a></div><div class="ttdeci">ImageWrapper&lt; ImageType::RGBMono &gt; WrappedRGBMono</div><div class="ttdoc">Alias to an ImageWrapper&lt;ImageType::RGBMono&gt;</div><div class="ttdef"><b>Definition:</b> <a href="ImageTypes_8hpp_source.html#l00245">ImageTypes.hpp:245</a></div></div>
 <div class="ttc" id="anamespacedyno_html_af060f04adafe0f7e7faeadeb8e8b8d7e"><div class="ttname"><a href="namespacedyno.html#af060f04adafe0f7e7faeadeb8e8b8d7e">dyno::WrappedMotionMask</a></div><div class="ttdeci">ImageWrapper&lt; ImageType::MotionMask &gt; WrappedMotionMask</div><div class="ttdoc">Alias to an ImageWrapper&lt;ImageType::MotionMask&gt;</div><div class="ttdef"><b>Definition:</b> <a href="ImageTypes_8hpp_source.html#l00253">ImageTypes.hpp:253</a></div></div>

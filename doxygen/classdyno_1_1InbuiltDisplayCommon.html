@@ -370,9 +370,9 @@ Protected Attributes</h2></td></tr>
 <div class="line"><span class="lineno">  378</span>    obb_markers.markers.push_back(obbx_marker);</div>
 <div class="line"><span class="lineno">  379</span>  }</div>
 <div class="line"><span class="lineno">  380</span>}</div>
-<div class="ttc" id="anamespacedyno_1_1utils_html_a81025ee06847cec0fd854eff05362d19"><div class="ttname"><a href="namespacedyno_1_1utils.html#a81025ee06847cec0fd854eff05362d19">dyno::utils::toRosTime</a></div><div class="ttdeci">rclcpp::Time toRosTime(Timestamp timestamp)</div><div class="ttdoc">Converts Timestamp (in seconds) to ROS time.</div><div class="ttdef"><b>Definition:</b> <a href="RosUtils_8cc_source.html#l00293">RosUtils.cc:293</a></div></div>
-<div class="ttc" id="anamespacedyno_html_aea2086519f9b7d60b882c6f81d11494a"><div class="ttname"><a href="namespacedyno.html#aea2086519f9b7d60b882c6f81d11494a">dyno::findLineListPointsFromAABBMinMax</a></div><div class="ttdeci">pcl::PointCloud&lt; pcl::PointXYZ &gt; findLineListPointsFromAABBMinMax(const PointT &amp;min_point_AABB, const PointT &amp;max_point_AABB)</div><div class="ttdef"><b>Definition:</b> <a href="PointCloudProcess_8hpp_source.html#l00275">PointCloudProcess.hpp:275</a></div></div>
-<div class="ttc" id="astructdyno_1_1Color_html_a6689af3d0ac5ceaa66000b5ca70becbd"><div class="ttname"><a href="structdyno_1_1Color.html#a6689af3d0ac5ceaa66000b5ca70becbd">dyno::Color::uniqueId</a></div><div class="ttdeci">static Color uniqueId(size_t id, float saturation=unique_id_default_saturation, float value=unique_id_default_value)</div><div class="ttdoc">Generates a sequence of never repeating colors using the golden ratio to seperate the colours along t...</div><div class="ttdef"><b>Definition:</b> <a href="ColourMap_8cc_source.html#l00169">ColourMap.cc:169</a></div></div>
+<div class="ttc" id="anamespacedyno_1_1utils_html_a81025ee06847cec0fd854eff05362d19"><div class="ttname"><a href="namespacedyno_1_1utils.html#a81025ee06847cec0fd854eff05362d19">dyno::utils::toRosTime</a></div><div class="ttdeci">rclcpp::Time toRosTime(Timestamp timestamp)</div><div class="ttdoc">Converts Timestamp (in seconds) to ROS time.</div><div class="ttdef"><b>Definition:</b> <a href="RosUtils_8cc_source.html#l00302">RosUtils.cc:302</a></div></div>
+<div class="ttc" id="anamespacedyno_html_aea2086519f9b7d60b882c6f81d11494a"><div class="ttname"><a href="namespacedyno.html#aea2086519f9b7d60b882c6f81d11494a">dyno::findLineListPointsFromAABBMinMax</a></div><div class="ttdeci">pcl::PointCloud&lt; pcl::PointXYZ &gt; findLineListPointsFromAABBMinMax(const PointT &amp;min_point_AABB, const PointT &amp;max_point_AABB)</div><div class="ttdef"><b>Definition:</b> <a href="PointCloudProcess_8hpp_source.html#l00279">PointCloudProcess.hpp:279</a></div></div>
+<div class="ttc" id="astructdyno_1_1Color_html_a6689af3d0ac5ceaa66000b5ca70becbd"><div class="ttname"><a href="structdyno_1_1Color.html#a6689af3d0ac5ceaa66000b5ca70becbd">dyno::Color::uniqueId</a></div><div class="ttdeci">static Color uniqueId(size_t id, float saturation=unique_id_default_saturation, float value=unique_id_default_value)</div><div class="ttdoc">Generates a sequence of never repeating colors using the golden ratio to seperate the colours along t...</div><div class="ttdef"><b>Definition:</b> <a href="Colour_8cc_source.html#l00178">Colour.cc:178</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="structdyno_1_1ObjectBBX.html#a0c30a2d25ea91bf84ed3495615b0f73d">dyno::ObjectBBX::bbx_position_</a>, <a class="el" href="namespacedyno.html#aea2086519f9b7d60b882c6f81d11494a">dyno::findLineListPointsFromAABBMinMax()</a>, <a class="el" href="structdyno_1_1ObjectBBX.html#ab7fed81770a0c832f77af744a281076a">dyno::ObjectBBX::max_bbx_point_</a>, <a class="el" href="structdyno_1_1ObjectBBX.html#a6814fcf43ae04f422f3128d6a14008a2">dyno::ObjectBBX::min_bbx_point_</a>, <a class="el" href="structdyno_1_1ObjectBBX.html#a7f0c10241b0f779846a21a7ea7bc4cf0">dyno::ObjectBBX::orientation_</a>, <a class="el" href="namespacedyno_1_1utils.html#a81025ee06847cec0fd854eff05362d19">dyno::utils::toRosTime()</a>, and <a class="el" href="structdyno_1_1Color.html#a6689af3d0ac5ceaa66000b5ca70becbd">dyno::Color::uniqueId()</a>.</p>
 
@@ -400,9 +400,8 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1InbuiltDisplayCommon_ac1b0d24582458add8b4f64738872ff33_icgraph.png" border="0" usemap="#aclassdyno_1_1InbuiltDisplayCommon_ac1b0d24582458add8b4f64738872ff33_icgraph" alt=""/></div>
 <map name="aclassdyno_1_1InbuiltDisplayCommon_ac1b0d24582458add8b4f64738872ff33_icgraph" id="aclassdyno_1_1InbuiltDisplayCommon_ac1b0d24582458add8b4f64738872ff33_icgraph">
-<area shape="rect" title="Constructs axis&#45;aligned BB (AABB) and oriented BB (OBB) marker arrays from a set of point clouds whic..." alt="" coords="519,5,753,45"/>
-<area shape="rect" href="classdyno_1_1InbuiltDisplayCommon.html#a1b2fa923dc466d1357936bf793d65ce2" title=" " alt="" coords="260,5,471,45"/>
-<area shape="rect" href="classdyno_1_1BackendInbuiltDisplayRos.html#ae435d50beb86a1beecb8bf249e723bf4" title=" " alt="" coords="5,5,212,45"/>
+<area shape="rect" title="Constructs axis&#45;aligned BB (AABB) and oriented BB (OBB) marker arrays from a set of point clouds whic..." alt="" coords="264,5,499,45"/>
+<area shape="rect" href="classdyno_1_1InbuiltDisplayCommon.html#a1b2fa923dc466d1357936bf793d65ce2" title=" " alt="" coords="5,5,216,45"/>
 </map>
 </div>
 
@@ -775,9 +774,8 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1InbuiltDisplayCommon_a5992ad04fa12e769f0fe7ebcc5f18053_icgraph.png" border="0" usemap="#aclassdyno_1_1InbuiltDisplayCommon_a5992ad04fa12e769f0fe7ebcc5f18053_icgraph" alt=""/></div>
 <map name="aclassdyno_1_1InbuiltDisplayCommon_a5992ad04fa12e769f0fe7ebcc5f18053_icgraph" id="aclassdyno_1_1InbuiltDisplayCommon_a5992ad04fa12e769f0fe7ebcc5f18053_icgraph">
-<area shape="rect" title=" " alt="" coords="519,5,729,45"/>
-<area shape="rect" href="classdyno_1_1InbuiltDisplayCommon.html#a1b2fa923dc466d1357936bf793d65ce2" title=" " alt="" coords="260,5,471,45"/>
-<area shape="rect" href="classdyno_1_1BackendInbuiltDisplayRos.html#ae435d50beb86a1beecb8bf249e723bf4" title=" " alt="" coords="5,5,212,45"/>
+<area shape="rect" title=" " alt="" coords="264,5,475,45"/>
+<area shape="rect" href="classdyno_1_1InbuiltDisplayCommon.html#a1b2fa923dc466d1357936bf793d65ce2" title=" " alt="" coords="5,5,216,45"/>
 </map>
 </div>
 
@@ -938,8 +936,6 @@ Here is the call graph for this function:</div>
 <div class="ttc" id="aclassdyno_1_1InbuiltDisplayCommon_html_ac1b0d24582458add8b4f64738872ff33"><div class="ttname"><a href="classdyno_1_1InbuiltDisplayCommon.html#ac1b0d24582458add8b4f64738872ff33">dyno::InbuiltDisplayCommon::constructBoundingBoxeMarkers</a></div><div class="ttdeci">static void constructBoundingBoxeMarkers(const CloudPerObject &amp;cloud_per_object, MarkerArray &amp;aabb_markers, MarkerArray &amp;obb_markers, Timestamp timestamp, const std::string &amp;prefix_marker_namespace)</div><div class="ttdoc">Constructs axis-aligned BB (AABB) and oriented BB (OBB) marker arrays from a set of point clouds whic...</div><div class="ttdef"><b>Definition:</b> <a href="InbuiltDisplayCommon_8cc_source.html#l00283">InbuiltDisplayCommon.cc:283</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1InbuiltDisplayCommon.html#ac1b0d24582458add8b4f64738872ff33">constructBoundingBoxeMarkers()</a>, and <a class="el" href="classdyno_1_1InbuiltDisplayCommon.html#a5992ad04fa12e769f0fe7ebcc5f18053">getDeletionMarker()</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1BackendInbuiltDisplayRos.html#ae435d50beb86a1beecb8bf249e723bf4">dyno::BackendInbuiltDisplayRos::spinOnce()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -958,15 +954,6 @@ Here is the call graph for this function:</div>
 <area shape="rect" href="structdyno_1_1Color.html#a08bcb6ea49861f6978858a2ff5159002" title=" " alt="" coords="1165,198,1328,223"/>
 <area shape="rect" href="structdyno_1_1Color.html#a6bc55a80a463a481dbf4778c70d04733" title=" " alt="" coords="1403,173,1542,198"/>
 <area shape="rect" href="namespacedyno.html#ab0e74ec8992860404a618192cc694b83" title=" " alt="" coords="1376,222,1569,247"/>
-</map>
-</div>
-<div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="classdyno_1_1InbuiltDisplayCommon_a1b2fa923dc466d1357936bf793d65ce2_icgraph.png" border="0" usemap="#aclassdyno_1_1InbuiltDisplayCommon_a1b2fa923dc466d1357936bf793d65ce2_icgraph" alt=""/></div>
-<map name="aclassdyno_1_1InbuiltDisplayCommon_a1b2fa923dc466d1357936bf793d65ce2_icgraph" id="aclassdyno_1_1InbuiltDisplayCommon_a1b2fa923dc466d1357936bf793d65ce2_icgraph">
-<area shape="rect" title=" " alt="" coords="260,5,471,45"/>
-<area shape="rect" href="classdyno_1_1BackendInbuiltDisplayRos.html#ae435d50beb86a1beecb8bf249e723bf4" title=" " alt="" coords="5,5,212,45"/>
 </map>
 </div>
 
@@ -1117,7 +1104,7 @@ Here is the caller graph for this function:</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="namespacedyno_1_1utils.html#a81025ee06847cec0fd854eff05362d19">dyno::utils::toRosTime()</a>, and <a class="el" href="structdyno_1_1Color.html#a6689af3d0ac5ceaa66000b5ca70becbd">dyno::Color::uniqueId()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1FrontendInbuiltDisplayRos.html#a4b6fefaf04a868c58cd85d8a741b4726">dyno::FrontendInbuiltDisplayRos::processRGBDOutputpacket()</a>, <a class="el" href="classdyno_1_1FrontendInbuiltDisplayRos.html#acdc1be16deea0c706451e415f303342f">dyno::FrontendInbuiltDisplayRos::publishGroundTruthInfo()</a>, and <a class="el" href="classdyno_1_1BackendInbuiltDisplayRos.html#ae435d50beb86a1beecb8bf249e723bf4">dyno::BackendInbuiltDisplayRos::spinOnce()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1FrontendInbuiltDisplayRos.html#a4b6fefaf04a868c58cd85d8a741b4726">dyno::FrontendInbuiltDisplayRos::processRGBDOutputpacket()</a>, and <a class="el" href="classdyno_1_1FrontendInbuiltDisplayRos.html#acdc1be16deea0c706451e415f303342f">dyno::FrontendInbuiltDisplayRos::publishGroundTruthInfo()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -1140,11 +1127,9 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1InbuiltDisplayCommon_a70f9716db81c6643674174da5a5f5f90_icgraph.png" border="0" usemap="#aclassdyno_1_1InbuiltDisplayCommon_a70f9716db81c6643674174da5a5f5f90_icgraph" alt=""/></div>
 <map name="aclassdyno_1_1InbuiltDisplayCommon_a70f9716db81c6643674174da5a5f5f90_icgraph" id="aclassdyno_1_1InbuiltDisplayCommon_a70f9716db81c6643674174da5a5f5f90_icgraph">
-<area shape="rect" title=" " alt="" coords="540,69,751,109"/>
-<area shape="rect" href="classdyno_1_1FrontendInbuiltDisplayRos.html#a4b6fefaf04a868c58cd85d8a741b4726" title=" " alt="" coords="263,5,492,45"/>
-<area shape="rect" href="classdyno_1_1FrontendInbuiltDisplayRos.html#acdc1be16deea0c706451e415f303342f" title=" " alt="" coords="273,69,482,109"/>
-<area shape="rect" href="classdyno_1_1BackendInbuiltDisplayRos.html#ae435d50beb86a1beecb8bf249e723bf4" title=" " alt="" coords="274,133,481,173"/>
-<area shape="rect" href="classdyno_1_1FrontendInbuiltDisplayRos.html#a8e47d6ce98cd285d8b6d9674cbacf334" title=" " alt="" coords="5,37,215,77"/>
+<area shape="rect" title=" " alt="" coords="283,37,493,77"/>
+<area shape="rect" href="classdyno_1_1FrontendInbuiltDisplayRos.html#a4b6fefaf04a868c58cd85d8a741b4726" title=" " alt="" coords="5,5,235,45"/>
+<area shape="rect" href="classdyno_1_1FrontendInbuiltDisplayRos.html#acdc1be16deea0c706451e415f303342f" title=" " alt="" coords="15,69,225,109"/>
 </map>
 </div>
 
@@ -1273,7 +1258,7 @@ Here is the caller graph for this function:</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1InbuiltDisplayCommon.html#ac97f0604560a86d02da38ddd376237e1">params_</a>, <a class="el" href="namespacedyno_1_1utils.html#a81025ee06847cec0fd854eff05362d19">dyno::utils::toRosTime()</a>, <a class="el" href="structdyno_1_1Color.html#a6689af3d0ac5ceaa66000b5ca70becbd">dyno::Color::uniqueId()</a>, and <a class="el" href="structdyno_1_1DisplayParams.html#a2847fed65922f575311e2181add1933e">dyno::DisplayParams::world_frame_id</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1FrontendInbuiltDisplayRos.html#a4b6fefaf04a868c58cd85d8a741b4726">dyno::FrontendInbuiltDisplayRos::processRGBDOutputpacket()</a>, <a class="el" href="classdyno_1_1FrontendInbuiltDisplayRos.html#acdc1be16deea0c706451e415f303342f">dyno::FrontendInbuiltDisplayRos::publishGroundTruthInfo()</a>, and <a class="el" href="classdyno_1_1BackendInbuiltDisplayRos.html#ae435d50beb86a1beecb8bf249e723bf4">dyno::BackendInbuiltDisplayRos::spinOnce()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1FrontendInbuiltDisplayRos.html#a4b6fefaf04a868c58cd85d8a741b4726">dyno::FrontendInbuiltDisplayRos::processRGBDOutputpacket()</a>, and <a class="el" href="classdyno_1_1FrontendInbuiltDisplayRos.html#acdc1be16deea0c706451e415f303342f">dyno::FrontendInbuiltDisplayRos::publishGroundTruthInfo()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -1296,11 +1281,9 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1InbuiltDisplayCommon_a59e66ed2ccc103f7bfdd420547ecdcad_icgraph.png" border="0" usemap="#aclassdyno_1_1InbuiltDisplayCommon_a59e66ed2ccc103f7bfdd420547ecdcad_icgraph" alt=""/></div>
 <map name="aclassdyno_1_1InbuiltDisplayCommon_a59e66ed2ccc103f7bfdd420547ecdcad_icgraph" id="aclassdyno_1_1InbuiltDisplayCommon_a59e66ed2ccc103f7bfdd420547ecdcad_icgraph">
-<area shape="rect" title=" " alt="" coords="540,69,751,109"/>
-<area shape="rect" href="classdyno_1_1FrontendInbuiltDisplayRos.html#a4b6fefaf04a868c58cd85d8a741b4726" title=" " alt="" coords="263,5,492,45"/>
-<area shape="rect" href="classdyno_1_1FrontendInbuiltDisplayRos.html#acdc1be16deea0c706451e415f303342f" title=" " alt="" coords="273,69,482,109"/>
-<area shape="rect" href="classdyno_1_1BackendInbuiltDisplayRos.html#ae435d50beb86a1beecb8bf249e723bf4" title=" " alt="" coords="274,133,481,173"/>
-<area shape="rect" href="classdyno_1_1FrontendInbuiltDisplayRos.html#a8e47d6ce98cd285d8b6d9674cbacf334" title=" " alt="" coords="5,37,215,77"/>
+<area shape="rect" title=" " alt="" coords="283,37,493,77"/>
+<area shape="rect" href="classdyno_1_1FrontendInbuiltDisplayRos.html#a4b6fefaf04a868c58cd85d8a741b4726" title=" " alt="" coords="5,5,235,45"/>
+<area shape="rect" href="classdyno_1_1FrontendInbuiltDisplayRos.html#acdc1be16deea0c706451e415f303342f" title=" " alt="" coords="15,69,225,109"/>
 </map>
 </div>
 
@@ -1351,7 +1334,7 @@ Here is the caller graph for this function:</div>
 <div class="line"><span class="lineno">   58</span>  <a class="code hl_function" href="structdyno_1_1DisplayCommon.html#a865dbb6ad128fb59970d187897cdd4b5">DisplayCommon::publishOdometry</a>(pub, T_world_camera, timestamp,</div>
 <div class="line"><span class="lineno">   59</span>                           <a class="code hl_variable" href="classdyno_1_1InbuiltDisplayCommon.html#ac97f0604560a86d02da38ddd376237e1">params_</a>.<a class="code hl_variable" href="structdyno_1_1DisplayParams.html#a2847fed65922f575311e2181add1933e">world_frame_id</a>, <a class="code hl_variable" href="classdyno_1_1InbuiltDisplayCommon.html#ac97f0604560a86d02da38ddd376237e1">params_</a>.<a class="code hl_variable" href="structdyno_1_1DisplayParams.html#abb3118ecfcfde5b12fab686f48eca829">camera_frame_id</a>);</div>
 <div class="line"><span class="lineno">   60</span>}</div>
-<div class="ttc" id="astructdyno_1_1DisplayCommon_html_a865dbb6ad128fb59970d187897cdd4b5"><div class="ttname"><a href="structdyno_1_1DisplayCommon.html#a865dbb6ad128fb59970d187897cdd4b5">dyno::DisplayCommon::publishOdometry</a></div><div class="ttdeci">static void publishOdometry(OdometryPub::SharedPtr pub, const gtsam::Pose3 &amp;T_world_camera, Timestamp timestamp, const std::string &amp;frame_id, const std::string &amp;child_frame_id)</div><div class="ttdef"><b>Definition:</b> <a href="DisplaysCommon_8cc_source.html#l00045">DisplaysCommon.cc:45</a></div></div>
+<div class="ttc" id="astructdyno_1_1DisplayCommon_html_a865dbb6ad128fb59970d187897cdd4b5"><div class="ttname"><a href="structdyno_1_1DisplayCommon.html#a865dbb6ad128fb59970d187897cdd4b5">dyno::DisplayCommon::publishOdometry</a></div><div class="ttdeci">static void publishOdometry(OdometryPub::SharedPtr pub, const gtsam::Pose3 &amp;T_world_camera, Timestamp timestamp, const std::string &amp;frame_id, const std::string &amp;child_frame_id)</div><div class="ttdef"><b>Definition:</b> <a href="DisplaysCommon_8cc_source.html#l00047">DisplaysCommon.cc:47</a></div></div>
 <div class="ttc" id="astructdyno_1_1DisplayParams_html_abb3118ecfcfde5b12fab686f48eca829"><div class="ttname"><a href="structdyno_1_1DisplayParams.html#abb3118ecfcfde5b12fab686f48eca829">dyno::DisplayParams::camera_frame_id</a></div><div class="ttdeci">std::string camera_frame_id</div><div class="ttdef"><b>Definition:</b> <a href="Display-Definitions_8hpp_source.html#l00039">Display-Definitions.hpp:39</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="structdyno_1_1DisplayParams.html#abb3118ecfcfde5b12fab686f48eca829">dyno::DisplayParams::camera_frame_id</a>, <a class="el" href="classdyno_1_1InbuiltDisplayCommon.html#ac97f0604560a86d02da38ddd376237e1">params_</a>, <a class="el" href="structdyno_1_1DisplayCommon.html#a865dbb6ad128fb59970d187897cdd4b5">dyno::DisplayCommon::publishOdometry()</a>, and <a class="el" href="structdyno_1_1DisplayParams.html#a2847fed65922f575311e2181add1933e">dyno::DisplayParams::world_frame_id</a>.</p>
@@ -1381,9 +1364,8 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1InbuiltDisplayCommon_a28289a89f07c591f35707b2d9e585631_icgraph.png" border="0" usemap="#aclassdyno_1_1InbuiltDisplayCommon_a28289a89f07c591f35707b2d9e585631_icgraph" alt=""/></div>
 <map name="aclassdyno_1_1InbuiltDisplayCommon_a28289a89f07c591f35707b2d9e585631_icgraph" id="aclassdyno_1_1InbuiltDisplayCommon_a28289a89f07c591f35707b2d9e585631_icgraph">
-<area shape="rect" title=" " alt="" coords="520,5,731,45"/>
-<area shape="rect" href="classdyno_1_1FrontendInbuiltDisplayRos.html#a7d7bf173d9dec25aa85f6f2daa2a6865" title=" " alt="" coords="263,5,472,45"/>
-<area shape="rect" href="classdyno_1_1FrontendInbuiltDisplayRos.html#a8e47d6ce98cd285d8b6d9674cbacf334" title=" " alt="" coords="5,5,215,45"/>
+<area shape="rect" title=" " alt="" coords="263,5,473,45"/>
+<area shape="rect" href="classdyno_1_1FrontendInbuiltDisplayRos.html#a7d7bf173d9dec25aa85f6f2daa2a6865" title=" " alt="" coords="5,5,215,45"/>
 </map>
 </div>
 
@@ -1433,11 +1415,9 @@ Here is the caller graph for this function:</div>
 <div class="fragment"><div class="line"><span class="lineno">   64</span>                                                                           {</div>
 <div class="line"><span class="lineno">   65</span>  <a class="code hl_function" href="structdyno_1_1DisplayCommon.html#aa626522a5e93ee7d72975e94260069a5">DisplayCommon::publishOdometryPath</a>(pub, poses, latest_timestamp, <a class="code hl_variable" href="classdyno_1_1InbuiltDisplayCommon.html#ac97f0604560a86d02da38ddd376237e1">params_</a>.<a class="code hl_variable" href="structdyno_1_1DisplayParams.html#a2847fed65922f575311e2181add1933e">world_frame_id</a>);</div>
 <div class="line"><span class="lineno">   66</span>}</div>
-<div class="ttc" id="astructdyno_1_1DisplayCommon_html_aa626522a5e93ee7d72975e94260069a5"><div class="ttname"><a href="structdyno_1_1DisplayCommon.html#aa626522a5e93ee7d72975e94260069a5">dyno::DisplayCommon::publishOdometryPath</a></div><div class="ttdeci">static void publishOdometryPath(PathPub::SharedPtr pub, const gtsam::Pose3Vector &amp;poses, Timestamp latest_timestamp, const std::string &amp;frame_id)</div><div class="ttdef"><b>Definition:</b> <a href="DisplaysCommon_8cc_source.html#l00056">DisplaysCommon.cc:56</a></div></div>
+<div class="ttc" id="astructdyno_1_1DisplayCommon_html_aa626522a5e93ee7d72975e94260069a5"><div class="ttname"><a href="structdyno_1_1DisplayCommon.html#aa626522a5e93ee7d72975e94260069a5">dyno::DisplayCommon::publishOdometryPath</a></div><div class="ttdeci">static void publishOdometryPath(PathPub::SharedPtr pub, const gtsam::Pose3Vector &amp;poses, Timestamp latest_timestamp, const std::string &amp;frame_id)</div><div class="ttdef"><b>Definition:</b> <a href="DisplaysCommon_8cc_source.html#l00058">DisplaysCommon.cc:58</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1InbuiltDisplayCommon.html#ac97f0604560a86d02da38ddd376237e1">params_</a>, <a class="el" href="structdyno_1_1DisplayCommon.html#aa626522a5e93ee7d72975e94260069a5">dyno::DisplayCommon::publishOdometryPath()</a>, and <a class="el" href="structdyno_1_1DisplayParams.html#a2847fed65922f575311e2181add1933e">dyno::DisplayParams::world_frame_id</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1FrontendInbuiltDisplayRos.html#a8e47d6ce98cd285d8b6d9674cbacf334">dyno::FrontendInbuiltDisplayRos::spinOnce()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -1455,15 +1435,6 @@ Here is the call graph for this function:</div>
 <area shape="rect" href="structdyno_1_1Color.html#a08bcb6ea49861f6978858a2ff5159002" title=" " alt="" coords="1319,134,1481,159"/>
 <area shape="rect" href="structdyno_1_1Color.html#a6bc55a80a463a481dbf4778c70d04733" title=" " alt="" coords="1557,109,1695,134"/>
 <area shape="rect" href="namespacedyno.html#ab0e74ec8992860404a618192cc694b83" title=" " alt="" coords="1529,158,1723,183"/>
-</map>
-</div>
-<div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="classdyno_1_1InbuiltDisplayCommon_aa43aaef03102f6bf73d8b010ff0f7233_icgraph.png" border="0" usemap="#aclassdyno_1_1InbuiltDisplayCommon_aa43aaef03102f6bf73d8b010ff0f7233_icgraph" alt=""/></div>
-<map name="aclassdyno_1_1InbuiltDisplayCommon_aa43aaef03102f6bf73d8b010ff0f7233_icgraph" id="aclassdyno_1_1InbuiltDisplayCommon_aa43aaef03102f6bf73d8b010ff0f7233_icgraph">
-<area shape="rect" title=" " alt="" coords="263,5,473,45"/>
-<area shape="rect" href="classdyno_1_1FrontendInbuiltDisplayRos.html#a8e47d6ce98cd285d8b6d9674cbacf334" title=" " alt="" coords="5,5,215,45"/>
 </map>
 </div>
 
@@ -1513,11 +1484,11 @@ Here is the caller graph for this function:</div>
 <div class="fragment"><div class="line"><span class="lineno">   51</span>                                      {</div>
 <div class="line"><span class="lineno">   52</span>  <span class="keywordflow">return</span> <a class="code hl_function" href="structdyno_1_1DisplayCommon.html#ad9251fcb86a8c872c6b3736d0c2cd8f8">DisplayCommon::publishPointCloud</a>(pub, landmarks, T_world_camera, <a class="code hl_variable" href="classdyno_1_1InbuiltDisplayCommon.html#ac97f0604560a86d02da38ddd376237e1">params_</a>.<a class="code hl_variable" href="structdyno_1_1DisplayParams.html#a2847fed65922f575311e2181add1933e">world_frame_id</a>);</div>
 <div class="line"><span class="lineno">   53</span>}</div>
-<div class="ttc" id="astructdyno_1_1DisplayCommon_html_ad9251fcb86a8c872c6b3736d0c2cd8f8"><div class="ttname"><a href="structdyno_1_1DisplayCommon.html#ad9251fcb86a8c872c6b3736d0c2cd8f8">dyno::DisplayCommon::publishPointCloud</a></div><div class="ttdeci">static CloudPerObject publishPointCloud(PointCloud2Pub::SharedPtr pub, const StatusLandmarkVector &amp;landmarks, const gtsam::Pose3 &amp;T_world_camera, const std::string &amp;frame_id)</div><div class="ttdef"><b>Definition:</b> <a href="DisplaysCommon_8cc_source.html#l00014">DisplaysCommon.cc:14</a></div></div>
+<div class="ttc" id="astructdyno_1_1DisplayCommon_html_ad9251fcb86a8c872c6b3736d0c2cd8f8"><div class="ttname"><a href="structdyno_1_1DisplayCommon.html#ad9251fcb86a8c872c6b3736d0c2cd8f8">dyno::DisplayCommon::publishPointCloud</a></div><div class="ttdeci">static CloudPerObject publishPointCloud(PointCloud2Pub::SharedPtr pub, const StatusLandmarkVector &amp;landmarks, const gtsam::Pose3 &amp;T_world_camera, const std::string &amp;frame_id)</div><div class="ttdef"><b>Definition:</b> <a href="DisplaysCommon_8cc_source.html#l00013">DisplaysCommon.cc:13</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1InbuiltDisplayCommon.html#ac97f0604560a86d02da38ddd376237e1">params_</a>, <a class="el" href="structdyno_1_1DisplayCommon.html#ad9251fcb86a8c872c6b3736d0c2cd8f8">dyno::DisplayCommon::publishPointCloud()</a>, and <a class="el" href="structdyno_1_1DisplayParams.html#a2847fed65922f575311e2181add1933e">dyno::DisplayParams::world_frame_id</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1FrontendInbuiltDisplayRos.html#a4b6fefaf04a868c58cd85d8a741b4726">dyno::FrontendInbuiltDisplayRos::processRGBDOutputpacket()</a>, and <a class="el" href="classdyno_1_1BackendInbuiltDisplayRos.html#ae435d50beb86a1beecb8bf249e723bf4">dyno::BackendInbuiltDisplayRos::spinOnce()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1FrontendInbuiltDisplayRos.html#a4b6fefaf04a868c58cd85d8a741b4726">dyno::FrontendInbuiltDisplayRos::processRGBDOutputpacket()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -1537,10 +1508,8 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1InbuiltDisplayCommon_a5ea9ec6ffedf2a6cb3a84a71fe0590fd_icgraph.png" border="0" usemap="#aclassdyno_1_1InbuiltDisplayCommon_a5ea9ec6ffedf2a6cb3a84a71fe0590fd_icgraph" alt=""/></div>
 <map name="aclassdyno_1_1InbuiltDisplayCommon_a5ea9ec6ffedf2a6cb3a84a71fe0590fd_icgraph" id="aclassdyno_1_1InbuiltDisplayCommon_a5ea9ec6ffedf2a6cb3a84a71fe0590fd_icgraph">
-<area shape="rect" title=" " alt="" coords="540,37,751,77"/>
-<area shape="rect" href="classdyno_1_1FrontendInbuiltDisplayRos.html#a4b6fefaf04a868c58cd85d8a741b4726" title=" " alt="" coords="263,5,492,45"/>
-<area shape="rect" href="classdyno_1_1BackendInbuiltDisplayRos.html#ae435d50beb86a1beecb8bf249e723bf4" title=" " alt="" coords="274,69,481,109"/>
-<area shape="rect" href="classdyno_1_1FrontendInbuiltDisplayRos.html#a8e47d6ce98cd285d8b6d9674cbacf334" title=" " alt="" coords="5,5,215,45"/>
+<area shape="rect" title=" " alt="" coords="283,5,493,45"/>
+<area shape="rect" href="classdyno_1_1FrontendInbuiltDisplayRos.html#a4b6fefaf04a868c58cd85d8a741b4726" title=" " alt="" coords="5,5,235,45"/>
 </map>
 </div>
 
@@ -1595,7 +1564,7 @@ Here is the caller graph for this function:</div>
 
 <p class="definition">Definition at line <a class="el" href="InbuiltDisplayCommon_8hpp_source.html#l00132">132</a> of file <a class="el" href="InbuiltDisplayCommon_8hpp_source.html">InbuiltDisplayCommon.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1FrontendInbuiltDisplayRos.html#adb59d79d374140c76505d6861f776699">dyno::FrontendInbuiltDisplayRos::FrontendInbuiltDisplayRos()</a>, <a class="el" href="classdyno_1_1FrontendInbuiltDisplayRos.html#a4b6fefaf04a868c58cd85d8a741b4726">dyno::FrontendInbuiltDisplayRos::processRGBDOutputpacket()</a>, <a class="el" href="classdyno_1_1FrontendInbuiltDisplayRos.html#a7d7bf173d9dec25aa85f6f2daa2a6865">dyno::FrontendInbuiltDisplayRos::publishOdometry()</a>, and <a class="el" href="classdyno_1_1BackendInbuiltDisplayRos.html#ae435d50beb86a1beecb8bf249e723bf4">dyno::BackendInbuiltDisplayRos::spinOnce()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1FrontendInbuiltDisplayRos.html#adb59d79d374140c76505d6861f776699">dyno::FrontendInbuiltDisplayRos::FrontendInbuiltDisplayRos()</a>, <a class="el" href="classdyno_1_1FrontendInbuiltDisplayRos.html#a4b6fefaf04a868c58cd85d8a741b4726">dyno::FrontendInbuiltDisplayRos::processRGBDOutputpacket()</a>, and <a class="el" href="classdyno_1_1FrontendInbuiltDisplayRos.html#a7d7bf173d9dec25aa85f6f2daa2a6865">dyno::FrontendInbuiltDisplayRos::publishOdometry()</a>.</p>
 
 </div>
 </div>

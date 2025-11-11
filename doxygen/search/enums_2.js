@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['datasettype_0',['DatasetType',['../namespacedyno.html#ada04b22647b53dd4feb5a6b9b9c94480',1,'dyno']]],
-  ['distortionmodel_1',['DistortionModel',['../namespacedyno.html#a7118762ab4c63de4996b3983b5b82356',1,'dyno']]]
+  ['code_0',['Code',['../structdyno_1_1PipelineBase_1_1ReturnCode.html#a11fbc2d1a37d13b5aaf89f152c28f4b0',1,'dyno::PipelineBase::ReturnCode']]]
 ];

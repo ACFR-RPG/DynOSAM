@@ -93,9 +93,6 @@ Functions</h2></td></tr>
 <tr class="memitem:a3a09fe6c15aeb5e18979dc27d68c4616"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacedyno.html#ae777b079c377ffa066d89051ee0cc623">ObjectIds</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno_1_1vision__tools.html#a3a09fe6c15aeb5e18979dc27d68c4616">getObjectLabels</a> (const cv::Mat &amp;image)</td></tr>
 <tr class="memdesc:a3a09fe6c15aeb5e18979dc27d68c4616"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finds the unique object labels (j) as present in the instance segmentation image. Does not include the background label.  <br /></td></tr>
 <tr class="separator:a3a09fe6c15aeb5e18979dc27d68c4616"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a70f3daa5a2a0fb3a715ffb1fb65992cb"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::vector&lt; int &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno_1_1vision__tools.html#a70f3daa5a2a0fb3a715ffb1fb65992cb">trackDynamic</a> (const <a class="el" href="structdyno_1_1FrontendParams.html">FrontendParams</a> &amp;params, const <a class="el" href="classdyno_1_1Frame.html">Frame</a> &amp;previous_frame, Frame::Ptr current_frame)</td></tr>
-<tr class="memdesc:a70f3daa5a2a0fb3a715ffb1fb65992cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Depricate ;)  <br /></td></tr>
-<tr class="separator:a70f3daa5a2a0fb3a715ffb1fb65992cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a518b3162f275ce3e2301d249a7e1a6ff"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno_1_1vision__tools.html#a518b3162f275ce3e2301d249a7e1a6ff">shrinkMask</a> (const cv::Mat &amp;mask, cv::Mat &amp;shrunk_mask, int erosion_size)</td></tr>
 <tr class="memdesc:a518b3162f275ce3e2301d249a7e1a6ff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Shrinks all found object masks by a given ammount.  <br /></td></tr>
 <tr class="separator:a518b3162f275ce3e2301d249a7e1a6ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -111,6 +108,9 @@ Functions</h2></td></tr>
 <tr class="memitem:ad7347d14d7f68183415227f23bbd6f7d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno_1_1vision__tools.html#ad7347d14d7f68183415227f23bbd6f7d">computeObjectMaskBoundaryMask</a> (<a class="el" href="structdyno_1_1vision__tools_1_1ObjectBoundaryMaskResult.html">ObjectBoundaryMaskResult</a> &amp;result, const cv::Mat &amp;mask, int thickness, bool use_as_feature_detection_mask=true)</td></tr>
 <tr class="memdesc:ad7347d14d7f68183415227f23bbd6f7d"><td class="mdescLeft">&#160;</td><td class="mdescRight">From an input instance/semantic mask type img construct a image mask (binary) that has True values around each object in the image, with a certain thickness.  <br /></td></tr>
 <tr class="separator:ad7347d14d7f68183415227f23bbd6f7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a57487b6d822f97c855d6bacf16bac9f7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno_1_1vision__tools.html#a57487b6d822f97c855d6bacf16bac9f7">computeObjectMaskBoundaryMask</a> (<a class="el" href="structdyno_1_1vision__tools_1_1ObjectBoundaryMaskResult.html">ObjectBoundaryMaskResult</a> &amp;result, const <a class="el" href="structdyno_1_1ObjectDetectionResult.html">ObjectDetectionResult</a> &amp;detection_result, int thickness, bool use_as_feature_detection_mask=true)</td></tr>
+<tr class="memdesc:a57487b6d822f97c855d6bacf16bac9f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Same as computeObjectMaskBoundaryMask but we construct the result from the pre-computed object mask and list of detected object labels. This saves a lot of compute and uses the detection result directly.  <br /></td></tr>
+<tr class="separator:a57487b6d822f97c855d6bacf16bac9f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae077e5d2722435f6731a8f58e3aab848"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno_1_1vision__tools.html#ae077e5d2722435f6731a8f58e3aab848">relabelMasks</a> (const cv::Mat &amp;mask, cv::Mat &amp;relabelled_mask, const <a class="el" href="namespacedyno.html#ae777b079c377ffa066d89051ee0cc623">ObjectIds</a> &amp;old_labels, const <a class="el" href="namespacedyno.html#ae777b079c377ffa066d89051ee0cc623">ObjectIds</a> &amp;new_labels)</td></tr>
 <tr class="separator:ae077e5d2722435f6731a8f58e3aab848"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a299ddb654abf59383dcf29f7b013ba6f"><td class="memItemLeft" align="right" valign="top">gtsam::FastMap&lt; <a class="el" href="namespacedyno.html#a38bb86e4154b86428b8d133be03fb2b5">ObjectId</a>, <a class="el" href="classdyno_1_1Histogram.html">Histogram</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno_1_1vision__tools.html#a299ddb654abf59383dcf29f7b013ba6f">makeTrackletLengthHistorgram</a> (const Frame::Ptr frame, const std::vector&lt; size_t &gt; &amp;bins={0, 1, 2, 3, 5, 7, 10, 15, 25, 40, 60, std::numeric_limits&lt; size_t &gt;::max()})</td></tr>
@@ -122,19 +122,21 @@ Functions</h2></td></tr>
 <tr class="memitem:a5d8b89d2b560b498934853c77a7d9f28"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno_1_1vision__tools.html#a5d8b89d2b560b498934853c77a7d9f28">writeOutProjectMaskAndDepthMap</a> (const <a class="el" href="structdyno_1_1ImageWrapper.html">ImageWrapper</a>&lt; <a class="el" href="structdyno_1_1ImageType_1_1Depth.html">ImageType::Depth</a> &gt; &amp;depth_image, const <a class="el" href="structdyno_1_1ImageWrapper.html">ImageWrapper</a>&lt; <a class="el" href="structdyno_1_1ImageType_1_1SemanticMask.html">ImageType::SemanticMask</a> &gt; &amp;mask_image, const <a class="el" href="classdyno_1_1Camera.html">Camera</a> &amp;camera, <a class="el" href="namespacedyno.html#ac4303d6fafb755f794b072d76f9cfb41">FrameId</a> frame_id)</td></tr>
 <tr class="memdesc:a5d8b89d2b560b498934853c77a7d9f28"><td class="mdescLeft">&#160;</td><td class="mdescRight">Saves a re-projected 3D point cloud with labelled points to file as a cv::Mat.  <br /></td></tr>
 <tr class="separator:a5d8b89d2b560b498934853c77a7d9f28"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8cf2c16aa30d7bfa4ea4844abb555716"><td class="memItemLeft" align="right" valign="top">std::pair&lt; gtsam::Vector3, gtsam::Matrix3 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno_1_1vision__tools.html#a8cf2c16aa30d7bfa4ea4844abb555716">backProjectAndCovariance</a> (const <a class="el" href="classdyno_1_1Feature.html">Feature</a> &amp;feature, const <a class="el" href="classdyno_1_1Camera.html">Camera</a> &amp;camera, double pixel_sigma, double depth_sigma)</td></tr>
-<tr class="memdesc:a8cf2c16aa30d7bfa4ea4844abb555716"><td class="mdescLeft">&#160;</td><td class="mdescRight">From a feature with valid depth, backproject to a 3D point in the camera frame with the associated covariance (3x3) matrix.  <br /></td></tr>
-<tr class="separator:a8cf2c16aa30d7bfa4ea4844abb555716"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5c6d086771d8b0ea5b2576d911eeea09"><td class="memItemLeft" align="right" valign="top">std::pair&lt; gtsam::Vector3, gtsam::Matrix33 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno_1_1vision__tools.html#a5c6d086771d8b0ea5b2576d911eeea09">backProjectAndCovariance</a> (const <a class="el" href="classdyno_1_1Feature.html">Feature</a> &amp;feature, const <a class="el" href="classdyno_1_1Camera.html">Camera</a> &amp;camera, double pixel_sigma, double depth_sigma)</td></tr>
+<tr class="memdesc:a5c6d086771d8b0ea5b2576d911eeea09"><td class="mdescLeft">&#160;</td><td class="mdescRight">From a feature with valid depth, backproject to a 3D point in the camera frame with the associated covariance (3x3) matrix.  <br /></td></tr>
+<tr class="separator:a5c6d086771d8b0ea5b2576d911eeea09"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6475f5fbab725229ac58186ad6e1272f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno_1_1vision__tools.html#a6475f5fbab725229ac58186ad6e1272f">computeObjectMaskBoundaryMaskHelper</a> (<a class="el" href="structdyno_1_1vision__tools_1_1ObjectBoundaryMaskResult.html">ObjectBoundaryMaskResult</a> &amp;result, const cv::Mat &amp;mask, int thickness, bool use_as_feature_detection_mask, std::function&lt; <a class="el" href="namespacedyno.html#ae777b079c377ffa066d89051ee0cc623">ObjectIds</a>()&gt; get_object_labels)</td></tr>
+<tr class="separator:a6475f5fbab725229ac58186ad6e1272f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="a8cf2c16aa30d7bfa4ea4844abb555716" name="a8cf2c16aa30d7bfa4ea4844abb555716"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8cf2c16aa30d7bfa4ea4844abb555716">&#9670;&#160;</a></span>backProjectAndCovariance()</h2>
+<a id="a5c6d086771d8b0ea5b2576d911eeea09" name="a5c6d086771d8b0ea5b2576d911eeea09"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5c6d086771d8b0ea5b2576d911eeea09">&#9670;&#160;</a></span>backProjectAndCovariance()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::pair&lt; gtsam::Vector3, gtsam::Matrix3 &gt; dyno::vision_tools::backProjectAndCovariance </td>
+          <td class="memname">std::pair&lt; gtsam::Vector3, gtsam::Matrix33 &gt; dyno::vision_tools::backProjectAndCovariance </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classdyno_1_1Feature.html">Feature</a> &amp;&#160;</td>
           <td class="paramname"><em>feature</em>, </td>
@@ -181,67 +183,64 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>std::pair&lt;gtsam::Vector3, gtsam::Matrix3&gt; </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="VisionTools_8cc_source.html#l00488">488</a> of file <a class="el" href="VisionTools_8cc_source.html">VisionTools.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  490</span>                        {</div>
-<div class="line"><span class="lineno">  491</span>  <span class="keyword">const</span> <span class="keyword">auto</span> gtsam_camera = camera.<a class="code hl_function" href="classdyno_1_1Camera.html#afa242b874c0c1a185adb8d83a35171c8">getImplCamera</a>();</div>
-<div class="line"><span class="lineno">  492</span>  <span class="keyword">const</span> <span class="keyword">auto</span> keypoint = feature.<a class="code hl_function" href="classdyno_1_1Feature.html#ada9f9980d950874a7a157a82b9921f8a">keypoint</a>();</div>
-<div class="line"><span class="lineno">  493</span> </div>
-<div class="line"><span class="lineno">  494</span>  CHECK(feature.<a class="code hl_function" href="classdyno_1_1Feature.html#ae7d554f489558630f69b617f82c24173">hasDepth</a>());</div>
-<div class="line"><span class="lineno">  495</span>  <span class="keyword">const</span> <span class="keyword">auto</span> depth = feature.<a class="code hl_function" href="classdyno_1_1Feature.html#aa1dad2ea2a931bbccb56ae5b53822943">depth</a>();</div>
-<div class="line"><span class="lineno">  496</span> </div>
-<div class="line"><span class="lineno">  497</span>  gtsam::Matrix32 J_keypoint;</div>
-<div class="line"><span class="lineno">  498</span>  gtsam::Matrix31 J_depth;</div>
-<div class="line"><span class="lineno">  499</span>  gtsam::Point3 landmark = gtsam_camera-&gt;backproject(</div>
-<div class="line"><span class="lineno">  500</span>      keypoint, depth, boost::none, J_keypoint, J_depth, boost::none);</div>
-<div class="line"><span class="lineno">  501</span> </div>
-<div class="line"><span class="lineno">  502</span>  <span class="comment">// form measurement covariance matrices</span></div>
-<div class="line"><span class="lineno">  503</span>  gtsam::Matrix22 pixel_covariance_matrix;</div>
-<div class="line"><span class="lineno">  504</span>  pixel_covariance_matrix &lt;&lt; pixel_sigma, 0.0, 0.0, pixel_sigma;</div>
-<div class="line"><span class="lineno">  505</span> </div>
-<div class="line"><span class="lineno">  506</span>  <span class="comment">// for depth uncertainty, we model it as a quadratic increase with distnace</span></div>
-<div class="line"><span class="lineno">  507</span>  <span class="keywordtype">double</span> depth_covariance = depth_sigma * std::pow(depth, 2);</div>
-<div class="line"><span class="lineno">  508</span> </div>
-<div class="line"><span class="lineno">  509</span>  <span class="comment">// calcualte 3x3 covairance matrix</span></div>
-<div class="line"><span class="lineno">  510</span>  gtsam::Matrix33 covariance =</div>
-<div class="line"><span class="lineno">  511</span>      J_keypoint * pixel_covariance_matrix * J_keypoint.transpose() +</div>
-<div class="line"><span class="lineno">  512</span>      J_depth * depth_covariance * J_depth.transpose();</div>
-<div class="line"><span class="lineno">  513</span>  <span class="keywordflow">return</span> {landmark, covariance};</div>
-<div class="line"><span class="lineno">  514</span>}</div>
-<div class="ttc" id="aclassdyno_1_1Camera_html_afa242b874c0c1a185adb8d83a35171c8"><div class="ttname"><a href="classdyno_1_1Camera.html#afa242b874c0c1a185adb8d83a35171c8">dyno::Camera::getImplCamera</a></div><div class="ttdeci">CameraImpl * getImplCamera() const</div><div class="ttdef"><b>Definition:</b> <a href="Camera_8hpp_source.html#l00178">Camera.hpp:178</a></div></div>
-<div class="ttc" id="aclassdyno_1_1Feature_html_aa1dad2ea2a931bbccb56ae5b53822943"><div class="ttname"><a href="classdyno_1_1Feature.html#aa1dad2ea2a931bbccb56ae5b53822943">dyno::Feature::depth</a></div><div class="ttdeci">Depth depth() const</div><div class="ttdoc">Depth of this keypoint (will be Feature::invalid_depth is depth is not set).</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00209">Feature.hpp:209</a></div></div>
-<div class="ttc" id="aclassdyno_1_1Feature_html_ada9f9980d950874a7a157a82b9921f8a"><div class="ttname"><a href="classdyno_1_1Feature.html#ada9f9980d950874a7a157a82b9921f8a">dyno::Feature::keypoint</a></div><div class="ttdeci">Keypoint keypoint() const</div><div class="ttdoc">Gets keypoint observation.</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00109">Feature.hpp:109</a></div></div>
-<div class="ttc" id="aclassdyno_1_1Feature_html_ae7d554f489558630f69b617f82c24173"><div class="ttname"><a href="classdyno_1_1Feature.html#ae7d554f489558630f69b617f82c24173">dyno::Feature::hasDepth</a></div><div class="ttdeci">bool hasDepth() const</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00343">Feature.hpp:343</a></div></div>
+<p class="definition">Definition at line <a class="el" href="VisionTools_8cc_source.html#l00617">617</a> of file <a class="el" href="VisionTools_8cc_source.html">VisionTools.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  619</span>                        {</div>
+<div class="line"><span class="lineno">  620</span>  <span class="keyword">const</span> <span class="keyword">auto</span> gtsam_camera = camera.<a class="code hl_function" href="classdyno_1_1Camera.html#afa242b874c0c1a185adb8d83a35171c8">getImplCamera</a>();</div>
+<div class="line"><span class="lineno">  621</span>  <span class="keyword">const</span> <span class="keyword">auto</span> keypoint = feature.<a class="code hl_function" href="classdyno_1_1Feature.html#ada9f9980d950874a7a157a82b9921f8a">keypoint</a>();</div>
+<div class="line"><span class="lineno">  622</span>  <span class="keyword">const</span> <span class="keyword">auto</span> u = keypoint(0);</div>
+<div class="line"><span class="lineno">  623</span>  <span class="keyword">const</span> <span class="keyword">auto</span> v = keypoint(1);</div>
+<div class="line"><span class="lineno">  624</span> </div>
+<div class="line"><span class="lineno">  625</span>  CHECK(feature.<a class="code hl_function" href="classdyno_1_1Feature.html#ae7d554f489558630f69b617f82c24173">hasDepth</a>());</div>
+<div class="line"><span class="lineno">  626</span>  <span class="keyword">const</span> <span class="keyword">auto</span> depth = feature.<a class="code hl_function" href="classdyno_1_1Feature.html#aa1dad2ea2a931bbccb56ae5b53822943">depth</a>();</div>
+<div class="line"><span class="lineno">  627</span>  <span class="keyword">const</span> <span class="keyword">auto</span>&amp; cam_params = camera.<a class="code hl_function" href="classdyno_1_1Camera.html#af56ce3541d3ef8a7bcb2246e4634ca59">getParams</a>();</div>
+<div class="line"><span class="lineno">  628</span>  <span class="keyword">const</span> <span class="keyword">auto</span> fx = cam_params.<a class="code hl_function" href="classdyno_1_1CameraParams.html#a006fa38075052f41cc49509fa16ba864">fx</a>();</div>
+<div class="line"><span class="lineno">  629</span>  <span class="keyword">const</span> <span class="keyword">auto</span> fy = cam_params.fy();</div>
+<div class="line"><span class="lineno">  630</span>  <span class="keyword">const</span> <span class="keyword">auto</span> cx = cam_params.cu();</div>
+<div class="line"><span class="lineno">  631</span>  <span class="keyword">const</span> <span class="keyword">auto</span> cy = cam_params.cv();</div>
+<div class="line"><span class="lineno">  632</span> </div>
+<div class="line"><span class="lineno">  633</span>  <span class="comment">// Jacobian J of backprojection w.r.t. (u, v, d) assuming pinhole camera</span></div>
+<div class="line"><span class="lineno">  634</span>  gtsam::Matrix33 J;</div>
+<div class="line"><span class="lineno">  635</span>  J &lt;&lt; depth / fx, 0, (u - cx) / fx, 0, depth / fy, (v - cy) / fy, 0, 0, 1;</div>
+<div class="line"><span class="lineno">  636</span> </div>
+<div class="line"><span class="lineno">  637</span>  <span class="keywordtype">double</span> pixel_sigma2 = pixel_sigma * pixel_sigma;</div>
+<div class="line"><span class="lineno">  638</span>  <span class="keywordtype">double</span> depth_sigma2 = depth_sigma * depth_sigma;</div>
+<div class="line"><span class="lineno">  639</span>  gtsam::Matrix33 sigma_uvd =</div>
+<div class="line"><span class="lineno">  640</span>      (Eigen::Vector3d(pixel_sigma2, pixel_sigma2, depth_sigma2)).asDiagonal();</div>
+<div class="line"><span class="lineno">  641</span> </div>
+<div class="line"><span class="lineno">  642</span>  <span class="comment">// Propagate to 3D covariance</span></div>
+<div class="line"><span class="lineno">  643</span>  gtsam::Matrix33 sigma_3d = J * sigma_uvd * J.transpose();</div>
+<div class="line"><span class="lineno">  644</span> </div>
+<div class="line"><span class="lineno">  645</span>  <span class="comment">// Back project point</span></div>
+<div class="line"><span class="lineno">  646</span>  gtsam::Point3 landmark = gtsam_camera-&gt;backproject(keypoint, depth);</div>
+<div class="line"><span class="lineno">  647</span>  <span class="keywordflow">return</span> {landmark, sigma_3d};</div>
+<div class="line"><span class="lineno">  648</span>}</div>
+<div class="ttc" id="aclassdyno_1_1CameraParams_html_a006fa38075052f41cc49509fa16ba864"><div class="ttname"><a href="classdyno_1_1CameraParams.html#a006fa38075052f41cc49509fa16ba864">dyno::CameraParams::fx</a></div><div class="ttdeci">double fx() const</div><div class="ttdef"><b>Definition:</b> <a href="CameraParams_8hpp_source.html#l00132">CameraParams.hpp:132</a></div></div>
+<div class="ttc" id="aclassdyno_1_1Camera_html_af56ce3541d3ef8a7bcb2246e4634ca59"><div class="ttname"><a href="classdyno_1_1Camera.html#af56ce3541d3ef8a7bcb2246e4634ca59">dyno::Camera::getParams</a></div><div class="ttdeci">const CameraParams &amp; getParams() const</div><div class="ttdef"><b>Definition:</b> <a href="Camera_8hpp_source.html#l00183">Camera.hpp:183</a></div></div>
+<div class="ttc" id="aclassdyno_1_1Camera_html_afa242b874c0c1a185adb8d83a35171c8"><div class="ttname"><a href="classdyno_1_1Camera.html#afa242b874c0c1a185adb8d83a35171c8">dyno::Camera::getImplCamera</a></div><div class="ttdeci">CameraImpl * getImplCamera() const</div><div class="ttdef"><b>Definition:</b> <a href="Camera_8hpp_source.html#l00180">Camera.hpp:180</a></div></div>
+<div class="ttc" id="aclassdyno_1_1Feature_html_aa1dad2ea2a931bbccb56ae5b53822943"><div class="ttname"><a href="classdyno_1_1Feature.html#aa1dad2ea2a931bbccb56ae5b53822943">dyno::Feature::depth</a></div><div class="ttdeci">Depth depth() const</div><div class="ttdoc">Depth of this keypoint (will be Feature::invalid_depth is depth is not set).</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00211">Feature.hpp:211</a></div></div>
+<div class="ttc" id="aclassdyno_1_1Feature_html_ada9f9980d950874a7a157a82b9921f8a"><div class="ttname"><a href="classdyno_1_1Feature.html#ada9f9980d950874a7a157a82b9921f8a">dyno::Feature::keypoint</a></div><div class="ttdeci">Keypoint keypoint() const</div><div class="ttdoc">Gets keypoint observation.</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00111">Feature.hpp:111</a></div></div>
+<div class="ttc" id="aclassdyno_1_1Feature_html_ae7d554f489558630f69b617f82c24173"><div class="ttname"><a href="classdyno_1_1Feature.html#ae7d554f489558630f69b617f82c24173">dyno::Feature::hasDepth</a></div><div class="ttdeci">bool hasDepth() const</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00347">Feature.hpp:347</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="classdyno_1_1Feature.html#aa1dad2ea2a931bbccb56ae5b53822943">dyno::Feature::depth()</a>, <a class="el" href="classdyno_1_1Camera.html#afa242b874c0c1a185adb8d83a35171c8">dyno::Camera::getImplCamera()</a>, <a class="el" href="classdyno_1_1Feature.html#ae7d554f489558630f69b617f82c24173">dyno::Feature::hasDepth()</a>, and <a class="el" href="classdyno_1_1Feature.html#ada9f9980d950874a7a157a82b9921f8a">dyno::Feature::keypoint()</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1RGBDInstanceFrontendModule.html#a246f701e4605c98dc7cb6bbd6f657998">dyno::RGBDInstanceFrontendModule::constructOutput()</a>.</p>
+<p class="reference">References <a class="el" href="classdyno_1_1Feature.html#aa1dad2ea2a931bbccb56ae5b53822943">dyno::Feature::depth()</a>, <a class="el" href="classdyno_1_1CameraParams.html#a006fa38075052f41cc49509fa16ba864">dyno::CameraParams::fx()</a>, <a class="el" href="classdyno_1_1Camera.html#afa242b874c0c1a185adb8d83a35171c8">dyno::Camera::getImplCamera()</a>, <a class="el" href="classdyno_1_1Camera.html#af56ce3541d3ef8a7bcb2246e4634ca59">dyno::Camera::getParams()</a>, <a class="el" href="classdyno_1_1Feature.html#ae7d554f489558630f69b617f82c24173">dyno::Feature::hasDepth()</a>, and <a class="el" href="classdyno_1_1Feature.html#ada9f9980d950874a7a157a82b9921f8a">dyno::Feature::keypoint()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="namespacedyno_1_1vision__tools_a8cf2c16aa30d7bfa4ea4844abb555716_cgraph.png" border="0" usemap="#anamespacedyno_1_1vision__tools_a8cf2c16aa30d7bfa4ea4844abb555716_cgraph" alt=""/></div>
-<map name="anamespacedyno_1_1vision__tools_a8cf2c16aa30d7bfa4ea4844abb555716_cgraph" id="anamespacedyno_1_1vision__tools_a8cf2c16aa30d7bfa4ea4844abb555716_cgraph">
-<area shape="rect" title="From a feature with valid depth, backproject to a 3D point in the camera frame with the associated co..." alt="" coords="5,73,209,113"/>
+<div class="center"><img src="namespacedyno_1_1vision__tools_a5c6d086771d8b0ea5b2576d911eeea09_cgraph.png" border="0" usemap="#anamespacedyno_1_1vision__tools_a5c6d086771d8b0ea5b2576d911eeea09_cgraph" alt=""/></div>
+<map name="anamespacedyno_1_1vision__tools_a5c6d086771d8b0ea5b2576d911eeea09_cgraph" id="anamespacedyno_1_1vision__tools_a5c6d086771d8b0ea5b2576d911eeea09_cgraph">
+<area shape="rect" title="From a feature with valid depth, backproject to a 3D point in the camera frame with the associated co..." alt="" coords="5,122,209,162"/>
 <area shape="rect" href="classdyno_1_1Feature.html#aa1dad2ea2a931bbccb56ae5b53822943" title="Depth of this keypoint (will be Feature::invalid_depth is depth is not set)." alt="" coords="291,5,447,31"/>
-<area shape="rect" href="classdyno_1_1Camera.html#afa242b874c0c1a185adb8d83a35171c8" title=" " alt="" coords="257,55,480,80"/>
-<area shape="rect" href="classdyno_1_1Feature.html#ae7d554f489558630f69b617f82c24173" title=" " alt="" coords="278,104,459,129"/>
-<area shape="rect" href="classdyno_1_1Feature.html#ada9f9980d950874a7a157a82b9921f8a" title="Gets keypoint observation." alt="" coords="281,153,456,179"/>
-</map>
-</div>
-<div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="namespacedyno_1_1vision__tools_a8cf2c16aa30d7bfa4ea4844abb555716_icgraph.png" border="0" usemap="#anamespacedyno_1_1vision__tools_a8cf2c16aa30d7bfa4ea4844abb555716_icgraph" alt=""/></div>
-<map name="anamespacedyno_1_1vision__tools_a8cf2c16aa30d7bfa4ea4844abb555716_icgraph" id="anamespacedyno_1_1vision__tools_a8cf2c16aa30d7bfa4ea4844abb555716_icgraph">
-<area shape="rect" title="From a feature with valid depth, backproject to a 3D point in the camera frame with the associated co..." alt="" coords="525,5,729,45"/>
-<area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#a246f701e4605c98dc7cb6bbd6f657998" title=" " alt="" coords="265,5,477,45"/>
-<area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2" title=" " alt="" coords="5,5,217,45"/>
+<area shape="rect" href="classdyno_1_1CameraParams.html#a006fa38075052f41cc49509fa16ba864" title=" " alt="" coords="277,55,460,80"/>
+<area shape="rect" href="classdyno_1_1Camera.html#afa242b874c0c1a185adb8d83a35171c8" title=" " alt="" coords="257,104,480,129"/>
+<area shape="rect" href="classdyno_1_1Camera.html#af56ce3541d3ef8a7bcb2246e4634ca59" title=" " alt="" coords="273,153,464,179"/>
+<area shape="rect" href="classdyno_1_1Feature.html#ae7d554f489558630f69b617f82c24173" title=" " alt="" coords="278,203,459,228"/>
+<area shape="rect" href="classdyno_1_1Feature.html#ada9f9980d950874a7a157a82b9921f8a" title="Gets keypoint observation." alt="" coords="281,252,456,277"/>
 </map>
 </div>
 
 </div>
 </div>
 <a id="ad7347d14d7f68183415227f23bbd6f7d" name="ad7347d14d7f68183415227f23bbd6f7d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad7347d14d7f68183415227f23bbd6f7d">&#9670;&#160;</a></span>computeObjectMaskBoundaryMask()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ad7347d14d7f68183415227f23bbd6f7d">&#9670;&#160;</a></span>computeObjectMaskBoundaryMask() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -282,113 +281,258 @@ Here is the caller graph for this function:</div>
 <p>This is used to mark all points intside the mask as invalid and should not be tracked. Like any mask used for an feature detector the output mask is a 8-bit integer matrix with non-zero values in the region of interest.</p>
 <p>When use_as_feature_detection_mask is True, all pixels inside the thicc boarder are set to zero, and all other values are 255. If this argument is False, the opposite is true (pixels inside the boarder are 255 and others are set to 0) </p>
 
-<p class="definition">Definition at line <a class="el" href="VisionTools_8cc_source.html#l00277">277</a> of file <a class="el" href="VisionTools_8cc_source.html">VisionTools.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  279</span>                                                                       {</div>
-<div class="line"><span class="lineno">  280</span>  cv::Mat thicc_boarder;  <span class="comment">// god im so funny</span></div>
-<div class="line"><span class="lineno">  281</span>  cv::Scalar fill_colour;</div>
-<div class="line"><span class="lineno">  282</span> </div>
-<div class="line"><span class="lineno">  283</span>  thicc_boarder = cv::Mat::zeros(mask.size(), CV_8UC1);</div>
-<div class="line"><span class="lineno">  284</span>  <span class="keyword">const</span> <span class="keywordtype">int</span> outer_thickness = thickness;</div>
-<div class="line"><span class="lineno">  285</span> </div>
-<div class="line"><span class="lineno">  286</span>  <span class="comment">// background should be 255 as we&#39;re can detect in this region and boarder</span></div>
-<div class="line"><span class="lineno">  287</span>  <span class="comment">// region should be zero</span></div>
-<div class="line"><span class="lineno">  288</span>  <span class="keywordflow">if</span> (use_as_feature_detection_mask) {</div>
-<div class="line"><span class="lineno">  289</span>    result.<a class="code hl_variable" href="structdyno_1_1vision__tools_1_1ObjectBoundaryMaskResult.html#ad9dd5629b10f507672aa4b623ca6f503">boundary_mask</a> = cv::Mat(mask.size(), CV_8U, cv::Scalar(255));</div>
-<div class="line"><span class="lineno">  290</span>    fill_colour = cv::Scalar(0);</div>
-<div class="line"><span class="lineno">  291</span>  } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  292</span>    result.<a class="code hl_variable" href="structdyno_1_1vision__tools_1_1ObjectBoundaryMaskResult.html#ad9dd5629b10f507672aa4b623ca6f503">boundary_mask</a> = cv::Mat(mask.size(), CV_8U, cv::Scalar(0));</div>
-<div class="line"><span class="lineno">  293</span>    fill_colour = cv::Scalar(255);</div>
-<div class="line"><span class="lineno">  294</span>  }</div>
-<div class="line"><span class="lineno">  295</span> </div>
-<div class="line"><span class="lineno">  296</span>  result.<a class="code hl_variable" href="structdyno_1_1vision__tools_1_1ObjectBoundaryMaskResult.html#a1c842ce8ec0121d8f5e71ba0e48a7a6b">objects_detected</a> = vision_tools::getObjectLabels(mask);</div>
-<div class="line"><span class="lineno">  297</span>  <span class="comment">// this basically just creates a full mask over the existing masks using the</span></div>
-<div class="line"><span class="lineno">  298</span>  <span class="comment">// detected contours</span></div>
-<div class="line"><span class="lineno">  299</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> object_id : result.<a class="code hl_variable" href="structdyno_1_1vision__tools_1_1ObjectBoundaryMaskResult.html#a1c842ce8ec0121d8f5e71ba0e48a7a6b">objects_detected</a>) {</div>
-<div class="line"><span class="lineno">  300</span>    std::vector&lt;std::vector&lt;cv::Point&gt;&gt; detected_contours;</div>
-<div class="line"><span class="lineno">  301</span>    cv::Rect detected_rect;</div>
-<div class="line"><span class="lineno">  302</span>    vision_tools::findObjectBoundingBox(mask, object_id, detected_rect,</div>
-<div class="line"><span class="lineno">  303</span>                                        detected_contours);</div>
-<div class="line"><span class="lineno">  304</span> </div>
-<div class="line"><span class="lineno">  305</span>    <span class="comment">// cv::drawContours(thicc_boarder, detected_contours, -1, 255, cv::FILLED);</span></div>
-<div class="line"><span class="lineno">  306</span>    CHECK_LE(object_id, 255);  <span class="comment">// works only with uint8 types...</span></div>
-<div class="line"><span class="lineno">  307</span>    cv::drawContours(thicc_boarder, detected_contours, -1, object_id,</div>
-<div class="line"><span class="lineno">  308</span>                     cv::FILLED);</div>
-<div class="line"><span class="lineno">  309</span>    result.<a class="code hl_variable" href="structdyno_1_1vision__tools_1_1ObjectBoundaryMaskResult.html#a29441e3eec8c8abe9cfc969eb4320930">object_bounding_boxes</a>.push_back(detected_rect);</div>
-<div class="line"><span class="lineno">  310</span>  }</div>
-<div class="line"><span class="lineno">  311</span>  <span class="comment">// cv::Mat thicc_boarder_8u; //viz</span></div>
-<div class="line"><span class="lineno">  312</span>  <span class="comment">// cv::threshold(thicc_boarder, thicc_boarder_8u, 0, 255, cv::THRESH_BINARY);</span></div>
-<div class="line"><span class="lineno">  313</span>  <span class="comment">// cv::imshow(&quot;Thicc boarder&quot;, thicc_boarder_8u);</span></div>
-<div class="line"><span class="lineno">  314</span>  <span class="comment">// cv::waitKey(1);</span></div>
-<div class="line"><span class="lineno">  315</span> </div>
-<div class="line"><span class="lineno">  316</span>  <span class="comment">// Dilate the mask to expand outwards by &#39;thickness&#39; pixels</span></div>
-<div class="line"><span class="lineno">  317</span>  cv::Mat dilated_mask;</div>
-<div class="line"><span class="lineno">  318</span>  cv::dilate(thicc_boarder, dilated_mask,</div>
-<div class="line"><span class="lineno">  319</span>             cv::getStructuringElement(</div>
-<div class="line"><span class="lineno">  320</span>                 cv::MORPH_ELLIPSE,</div>
-<div class="line"><span class="lineno">  321</span>                 cv::Size(2 * outer_thickness + 1, 2 * outer_thickness + 1)));</div>
-<div class="line"><span class="lineno">  322</span>  <span class="comment">// Compute the outer border mask</span></div>
-<div class="line"><span class="lineno">  323</span>  cv::Mat thicc_outer_boarder_mask = dilated_mask - thicc_boarder;</div>
-<div class="line"><span class="lineno">  324</span> </div>
-<div class="line"><span class="lineno">  325</span>  <span class="comment">// Additionally erode a little but on the inner-side of the mask</span></div>
-<div class="line"><span class="lineno">  326</span>  <span class="comment">// This helps get rid of pixels directly on the boarder which often have poor</span></div>
-<div class="line"><span class="lineno">  327</span>  <span class="comment">// depth</span></div>
-<div class="line"><span class="lineno">  328</span>  <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">int</span> inner_thickness = 10;</div>
-<div class="line"><span class="lineno">  329</span>  <span class="comment">// Generate the inner border</span></div>
-<div class="line"><span class="lineno">  330</span>  cv::Mat eroded_mask;</div>
-<div class="line"><span class="lineno">  331</span>  cv::erode(thicc_boarder, eroded_mask,</div>
-<div class="line"><span class="lineno">  332</span>            cv::getStructuringElement(</div>
-<div class="line"><span class="lineno">  333</span>                cv::MORPH_ELLIPSE,</div>
-<div class="line"><span class="lineno">  334</span>                cv::Size(2 * inner_thickness + 1, 2 * inner_thickness + 1)));</div>
-<div class="line"><span class="lineno">  335</span>  cv::Mat thicc_inner_boarder_mask = thicc_boarder - eroded_mask;</div>
-<div class="line"><span class="lineno">  336</span> </div>
-<div class="line"><span class="lineno">  337</span>  <span class="comment">// iterate over the objects in the eroded mask again to calculate their</span></div>
-<div class="line"><span class="lineno">  338</span>  <span class="comment">// bounding box&#39;s this will be &#39;very approximate&#39; area which features can be</span></div>
-<div class="line"><span class="lineno">  339</span>  <span class="comment">// detected for object j it is approximate because it may not well be</span></div>
-<div class="line"><span class="lineno">  340</span>  <span class="comment">// approximated by a bounding box</span></div>
-<div class="line"><span class="lineno">  341</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> object_id : result.<a class="code hl_variable" href="structdyno_1_1vision__tools_1_1ObjectBoundaryMaskResult.html#a1c842ce8ec0121d8f5e71ba0e48a7a6b">objects_detected</a>) {</div>
-<div class="line"><span class="lineno">  342</span>    cv::Rect detected_rect;</div>
-<div class="line"><span class="lineno">  343</span>    vision_tools::findObjectBoundingBox(eroded_mask, object_id, detected_rect);</div>
-<div class="line"><span class="lineno">  344</span>    result.<a class="code hl_variable" href="structdyno_1_1vision__tools_1_1ObjectBoundaryMaskResult.html#a958a5bea7c6cd388fcd88bfde7b2a730">inner_boarder_object_bounding_boxes</a>.push_back(detected_rect);</div>
-<div class="line"><span class="lineno">  345</span>  }</div>
-<div class="line"><span class="lineno">  346</span> </div>
-<div class="line"><span class="lineno">  347</span>  <span class="comment">// set boarder pixels to fill colour (e.g. zero if to be used as feature</span></div>
-<div class="line"><span class="lineno">  348</span>  <span class="comment">// detection mask)</span></div>
-<div class="line"><span class="lineno">  349</span>  result.<a class="code hl_variable" href="structdyno_1_1vision__tools_1_1ObjectBoundaryMaskResult.html#ad9dd5629b10f507672aa4b623ca6f503">boundary_mask</a>.setTo(fill_colour, thicc_outer_boarder_mask);</div>
-<div class="line"><span class="lineno">  350</span>  result.<a class="code hl_variable" href="structdyno_1_1vision__tools_1_1ObjectBoundaryMaskResult.html#ad9dd5629b10f507672aa4b623ca6f503">boundary_mask</a>.setTo(fill_colour, thicc_inner_boarder_mask);</div>
-<div class="line"><span class="lineno">  351</span> </div>
-<div class="line"><span class="lineno">  352</span>  result.<a class="code hl_variable" href="structdyno_1_1vision__tools_1_1ObjectBoundaryMaskResult.html#a0414a073fbcff43114d702cacdb9c90c">labelled_boundary_mask</a> = cv::Mat(mask.size(), CV_8U, cv::Scalar(0));</div>
-<div class="line"><span class="lineno">  353</span>  cv::bitwise_or(thicc_outer_boarder_mask, thicc_inner_boarder_mask,</div>
-<div class="line"><span class="lineno">  354</span>                 result.<a class="code hl_variable" href="structdyno_1_1vision__tools_1_1ObjectBoundaryMaskResult.html#a0414a073fbcff43114d702cacdb9c90c">labelled_boundary_mask</a>);</div>
-<div class="line"><span class="lineno">  355</span> </div>
-<div class="line"><span class="lineno">  356</span>  result.<a class="code hl_variable" href="structdyno_1_1vision__tools_1_1ObjectBoundaryMaskResult.html#aa7ce261103ba4304b10ad66305cd5caa">is_feature_detection_mask</a> = use_as_feature_detection_mask;</div>
-<div class="line"><span class="lineno">  357</span>}</div>
-<div class="ttc" id="astructdyno_1_1vision__tools_1_1ObjectBoundaryMaskResult_html_a0414a073fbcff43114d702cacdb9c90c"><div class="ttname"><a href="structdyno_1_1vision__tools_1_1ObjectBoundaryMaskResult.html#a0414a073fbcff43114d702cacdb9c90c">dyno::vision_tools::ObjectBoundaryMaskResult::labelled_boundary_mask</a></div><div class="ttdeci">cv::Mat labelled_boundary_mask</div><div class="ttdef"><b>Definition:</b> <a href="VisionTools_8hpp_source.html#l00157">VisionTools.hpp:157</a></div></div>
-<div class="ttc" id="astructdyno_1_1vision__tools_1_1ObjectBoundaryMaskResult_html_a1c842ce8ec0121d8f5e71ba0e48a7a6b"><div class="ttname"><a href="structdyno_1_1vision__tools_1_1ObjectBoundaryMaskResult.html#a1c842ce8ec0121d8f5e71ba0e48a7a6b">dyno::vision_tools::ObjectBoundaryMaskResult::objects_detected</a></div><div class="ttdeci">ObjectIds objects_detected</div><div class="ttdoc">Object labels (j) detected on the imput mask.</div><div class="ttdef"><b>Definition:</b> <a href="VisionTools_8hpp_source.html#l00159">VisionTools.hpp:159</a></div></div>
-<div class="ttc" id="astructdyno_1_1vision__tools_1_1ObjectBoundaryMaskResult_html_a29441e3eec8c8abe9cfc969eb4320930"><div class="ttname"><a href="structdyno_1_1vision__tools_1_1ObjectBoundaryMaskResult.html#a29441e3eec8c8abe9cfc969eb4320930">dyno::vision_tools::ObjectBoundaryMaskResult::object_bounding_boxes</a></div><div class="ttdeci">std::vector&lt; cv::Rect &gt; object_bounding_boxes</div><div class="ttdef"><b>Definition:</b> <a href="VisionTools_8hpp_source.html#l00162">VisionTools.hpp:162</a></div></div>
-<div class="ttc" id="astructdyno_1_1vision__tools_1_1ObjectBoundaryMaskResult_html_a958a5bea7c6cd388fcd88bfde7b2a730"><div class="ttname"><a href="structdyno_1_1vision__tools_1_1ObjectBoundaryMaskResult.html#a958a5bea7c6cd388fcd88bfde7b2a730">dyno::vision_tools::ObjectBoundaryMaskResult::inner_boarder_object_bounding_boxes</a></div><div class="ttdeci">std::vector&lt; cv::Rect &gt; inner_boarder_object_bounding_boxes</div><div class="ttdef"><b>Definition:</b> <a href="VisionTools_8hpp_source.html#l00166">VisionTools.hpp:166</a></div></div>
-<div class="ttc" id="astructdyno_1_1vision__tools_1_1ObjectBoundaryMaskResult_html_aa7ce261103ba4304b10ad66305cd5caa"><div class="ttname"><a href="structdyno_1_1vision__tools_1_1ObjectBoundaryMaskResult.html#aa7ce261103ba4304b10ad66305cd5caa">dyno::vision_tools::ObjectBoundaryMaskResult::is_feature_detection_mask</a></div><div class="ttdeci">bool is_feature_detection_mask</div><div class="ttdef"><b>Definition:</b> <a href="VisionTools_8hpp_source.html#l00153">VisionTools.hpp:153</a></div></div>
-<div class="ttc" id="astructdyno_1_1vision__tools_1_1ObjectBoundaryMaskResult_html_ad9dd5629b10f507672aa4b623ca6f503"><div class="ttname"><a href="structdyno_1_1vision__tools_1_1ObjectBoundaryMaskResult.html#ad9dd5629b10f507672aa4b623ca6f503">dyno::vision_tools::ObjectBoundaryMaskResult::boundary_mask</a></div><div class="ttdeci">cv::Mat boundary_mask</div><div class="ttdef"><b>Definition:</b> <a href="VisionTools_8hpp_source.html#l00150">VisionTools.hpp:150</a></div></div>
+<p class="definition">Definition at line <a class="el" href="VisionTools_8cc_source.html#l00443">443</a> of file <a class="el" href="VisionTools_8cc_source.html">VisionTools.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  445</span>                                                                       {</div>
+<div class="line"><span class="lineno">  446</span>  <a class="code hl_function" href="namespacedyno_1_1vision__tools.html#a6475f5fbab725229ac58186ad6e1272f">computeObjectMaskBoundaryMaskHelper</a>(</div>
+<div class="line"><span class="lineno">  447</span>      result, mask, thickness, use_as_feature_detection_mask,</div>
+<div class="line"><span class="lineno">  448</span>      [&amp;mask]() -&gt; <a class="code hl_typedef" href="namespacedyno.html#ae777b079c377ffa066d89051ee0cc623">ObjectIds</a> { <span class="keywordflow">return</span> vision_tools::getObjectLabels(mask); });</div>
+<div class="line"><span class="lineno">  449</span>}</div>
+<div class="ttc" id="anamespacedyno_1_1vision__tools_html_a6475f5fbab725229ac58186ad6e1272f"><div class="ttname"><a href="namespacedyno_1_1vision__tools.html#a6475f5fbab725229ac58186ad6e1272f">dyno::vision_tools::computeObjectMaskBoundaryMaskHelper</a></div><div class="ttdeci">void computeObjectMaskBoundaryMaskHelper(ObjectBoundaryMaskResult &amp;result, const cv::Mat &amp;mask, int thickness, bool use_as_feature_detection_mask, std::function&lt; ObjectIds()&gt; get_object_labels)</div><div class="ttdef"><b>Definition:</b> <a href="VisionTools_8cc_source.html#l00361">VisionTools.cc:361</a></div></div>
+<div class="ttc" id="anamespacedyno_html_ae777b079c377ffa066d89051ee0cc623"><div class="ttname"><a href="namespacedyno.html#ae777b079c377ffa066d89051ee0cc623">dyno::ObjectIds</a></div><div class="ttdeci">std::vector&lt; ObjectId &gt; ObjectIds</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00071">Types.hpp:71</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="structdyno_1_1vision__tools_1_1ObjectBoundaryMaskResult.html#ad9dd5629b10f507672aa4b623ca6f503">dyno::vision_tools::ObjectBoundaryMaskResult::boundary_mask</a>, <a class="el" href="namespacedyno_1_1vision__tools.html#a01601f2fba95a79f4ecaa11b89286d99">findObjectBoundingBox()</a>, <a class="el" href="namespacedyno_1_1vision__tools.html#a3a09fe6c15aeb5e18979dc27d68c4616">getObjectLabels()</a>, <a class="el" href="structdyno_1_1vision__tools_1_1ObjectBoundaryMaskResult.html#a958a5bea7c6cd388fcd88bfde7b2a730">dyno::vision_tools::ObjectBoundaryMaskResult::inner_boarder_object_bounding_boxes</a>, <a class="el" href="structdyno_1_1vision__tools_1_1ObjectBoundaryMaskResult.html#aa7ce261103ba4304b10ad66305cd5caa">dyno::vision_tools::ObjectBoundaryMaskResult::is_feature_detection_mask</a>, <a class="el" href="structdyno_1_1vision__tools_1_1ObjectBoundaryMaskResult.html#a0414a073fbcff43114d702cacdb9c90c">dyno::vision_tools::ObjectBoundaryMaskResult::labelled_boundary_mask</a>, <a class="el" href="structdyno_1_1vision__tools_1_1ObjectBoundaryMaskResult.html#a29441e3eec8c8abe9cfc969eb4320930">dyno::vision_tools::ObjectBoundaryMaskResult::object_bounding_boxes</a>, and <a class="el" href="structdyno_1_1vision__tools_1_1ObjectBoundaryMaskResult.html#a1c842ce8ec0121d8f5e71ba0e48a7a6b">dyno::vision_tools::ObjectBoundaryMaskResult::objects_detected</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1FeatureTracker.html#a9890ba0c11b5932b5b4954a86bd03948">dyno::FeatureTracker::track()</a>.</p>
+<p class="reference">References <a class="el" href="namespacedyno_1_1vision__tools.html#a6475f5fbab725229ac58186ad6e1272f">computeObjectMaskBoundaryMaskHelper()</a>, and <a class="el" href="namespacedyno_1_1vision__tools.html#a3a09fe6c15aeb5e18979dc27d68c4616">getObjectLabels()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="namespacedyno_1_1vision__tools_ad7347d14d7f68183415227f23bbd6f7d_cgraph.png" border="0" usemap="#anamespacedyno_1_1vision__tools_ad7347d14d7f68183415227f23bbd6f7d_cgraph" alt=""/></div>
 <map name="anamespacedyno_1_1vision__tools_ad7347d14d7f68183415227f23bbd6f7d_cgraph" id="anamespacedyno_1_1vision__tools_ad7347d14d7f68183415227f23bbd6f7d_cgraph">
-<area shape="rect" title="From an input instance/semantic mask type img construct a image mask (binary) that has True values ar..." alt="" coords="5,37,267,77"/>
-<area shape="rect" href="namespacedyno_1_1vision__tools.html#a01601f2fba95a79f4ecaa11b89286d99" title="From a instance/semantic mask type img, construct the bounding box for the mask of object_id." alt="" coords="315,5,497,45"/>
-<area shape="rect" href="namespacedyno_1_1vision__tools.html#a3a09fe6c15aeb5e18979dc27d68c4616" title="Finds the unique object labels (j) as present in the instance segmentation image. Does not include th..." alt="" coords="336,69,476,109"/>
+<area shape="rect" title="From an input instance/semantic mask type img construct a image mask (binary) that has True values ar..." alt="" coords="5,49,267,89"/>
+<area shape="rect" href="namespacedyno_1_1vision__tools.html#a6475f5fbab725229ac58186ad6e1272f" title=" " alt="" coords="315,5,541,60"/>
+<area shape="rect" href="namespacedyno_1_1vision__tools.html#a3a09fe6c15aeb5e18979dc27d68c4616" title="Finds the unique object labels (j) as present in the instance segmentation image. Does not include th..." alt="" coords="358,85,498,125"/>
+<area shape="rect" href="namespacedyno_1_1vision__tools.html#a01601f2fba95a79f4ecaa11b89286d99" title="From a instance/semantic mask type img, construct the bounding box for the mask of object_id." alt="" coords="589,13,772,53"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a57487b6d822f97c855d6bacf16bac9f7" name="a57487b6d822f97c855d6bacf16bac9f7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a57487b6d822f97c855d6bacf16bac9f7">&#9670;&#160;</a></span>computeObjectMaskBoundaryMask() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void dyno::vision_tools::computeObjectMaskBoundaryMask </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structdyno_1_1vision__tools_1_1ObjectBoundaryMaskResult.html">ObjectBoundaryMaskResult</a> &amp;&#160;</td>
+          <td class="paramname"><em>result</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structdyno_1_1ObjectDetectionResult.html">ObjectDetectionResult</a> &amp;&#160;</td>
+          <td class="paramname"><em>detection_result</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>thickness</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>use_as_feature_detection_mask</em> = <code>true</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Same as computeObjectMaskBoundaryMask but we construct the result from the pre-computed object mask and list of detected object labels. This saves a lot of compute and uses the detection result directly. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">result</td><td></td></tr>
+    <tr><td class="paramname">detection_result</td><td></td></tr>
+    <tr><td class="paramname">thickness</td><td></td></tr>
+    <tr><td class="paramname">use_as_feature_detection_mask</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="VisionTools_8cc_source.html#l00451">451</a> of file <a class="el" href="VisionTools_8cc_source.html">VisionTools.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  454</span>                                        {</div>
+<div class="line"><span class="lineno">  455</span>  <span class="keywordflow">if</span> (detection_result.<a class="code hl_function" href="structdyno_1_1ObjectDetectionResult.html#a446261a260a46d54ca27e92e47e70069">num</a>() == 0) {</div>
+<div class="line"><span class="lineno">  456</span>    <span class="keywordflow">return</span>;</div>
+<div class="line"><span class="lineno">  457</span>  }</div>
+<div class="line"><span class="lineno">  458</span> </div>
+<div class="line"><span class="lineno">  459</span>  computeObjectMaskBoundaryMaskHelper(result, detection_result.<a class="code hl_variable" href="structdyno_1_1ObjectDetectionResult.html#a619e9d2c4cabbd14410f835253707141">labelled_mask</a>,</div>
+<div class="line"><span class="lineno">  460</span>                                      thickness, use_as_feature_detection_mask,</div>
+<div class="line"><span class="lineno">  461</span>                                      [&amp;detection_result]() -&gt; <a class="code hl_typedef" href="namespacedyno.html#ae777b079c377ffa066d89051ee0cc623">ObjectIds</a> {</div>
+<div class="line"><span class="lineno">  462</span>                                        return detection_result.objectIds();</div>
+<div class="line"><span class="lineno">  463</span>                                      });</div>
+<div class="line"><span class="lineno">  464</span>}</div>
+<div class="ttc" id="astructdyno_1_1ObjectDetectionResult_html_a446261a260a46d54ca27e92e47e70069"><div class="ttname"><a href="structdyno_1_1ObjectDetectionResult.html#a446261a260a46d54ca27e92e47e70069">dyno::ObjectDetectionResult::num</a></div><div class="ttdeci">size_t num() const</div><div class="ttdoc">number of detections</div><div class="ttdef"><b>Definition:</b> <a href="DynamicObjects_8hpp_source.html#l00084">DynamicObjects.hpp:84</a></div></div>
+<div class="ttc" id="astructdyno_1_1ObjectDetectionResult_html_a619e9d2c4cabbd14410f835253707141"><div class="ttname"><a href="structdyno_1_1ObjectDetectionResult.html#a619e9d2c4cabbd14410f835253707141">dyno::ObjectDetectionResult::labelled_mask</a></div><div class="ttdeci">cv::Mat labelled_mask</div><div class="ttdef"><b>Definition:</b> <a href="DynamicObjects_8hpp_source.html#l00079">DynamicObjects.hpp:79</a></div></div>
+</div><!-- fragment -->
+<p class="reference">References <a class="el" href="namespacedyno_1_1vision__tools.html#a6475f5fbab725229ac58186ad6e1272f">computeObjectMaskBoundaryMaskHelper()</a>, <a class="el" href="structdyno_1_1ObjectDetectionResult.html#a619e9d2c4cabbd14410f835253707141">dyno::ObjectDetectionResult::labelled_mask</a>, and <a class="el" href="structdyno_1_1ObjectDetectionResult.html#a446261a260a46d54ca27e92e47e70069">dyno::ObjectDetectionResult::num()</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="namespacedyno_1_1vision__tools_a57487b6d822f97c855d6bacf16bac9f7_cgraph.png" border="0" usemap="#anamespacedyno_1_1vision__tools_a57487b6d822f97c855d6bacf16bac9f7_cgraph" alt=""/></div>
+<map name="anamespacedyno_1_1vision__tools_a57487b6d822f97c855d6bacf16bac9f7_cgraph" id="anamespacedyno_1_1vision__tools_a57487b6d822f97c855d6bacf16bac9f7_cgraph">
+<area shape="rect" title="Same as computeObjectMaskBoundaryMask but we construct the result from the pre&#45;computed object mask a..." alt="" coords="5,45,267,85"/>
+<area shape="rect" href="namespacedyno_1_1vision__tools.html#a6475f5fbab725229ac58186ad6e1272f" title=" " alt="" coords="324,5,551,60"/>
+<area shape="rect" href="structdyno_1_1ObjectDetectionResult.html#a446261a260a46d54ca27e92e47e70069" title="number of detections" alt="" coords="315,84,560,109"/>
+<area shape="rect" href="namespacedyno_1_1vision__tools.html#a01601f2fba95a79f4ecaa11b89286d99" title="From a instance/semantic mask type img, construct the bounding box for the mask of object_id." alt="" coords="608,13,791,53"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a6475f5fbab725229ac58186ad6e1272f" name="a6475f5fbab725229ac58186ad6e1272f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6475f5fbab725229ac58186ad6e1272f">&#9670;&#160;</a></span>computeObjectMaskBoundaryMaskHelper()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void dyno::vision_tools::computeObjectMaskBoundaryMaskHelper </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structdyno_1_1vision__tools_1_1ObjectBoundaryMaskResult.html">ObjectBoundaryMaskResult</a> &amp;&#160;</td>
+          <td class="paramname"><em>result</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const cv::Mat &amp;&#160;</td>
+          <td class="paramname"><em>mask</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>thickness</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>use_as_feature_detection_mask</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::function&lt; <a class="el" href="namespacedyno.html#ae777b079c377ffa066d89051ee0cc623">ObjectIds</a>()&gt;&#160;</td>
+          <td class="paramname"><em>get_object_labels</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="VisionTools_8cc_source.html#l00361">361</a> of file <a class="el" href="VisionTools_8cc_source.html">VisionTools.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  364</span>                                                {</div>
+<div class="line"><span class="lineno">  365</span>  cv::Mat thicc_boarder;  <span class="comment">// god im so funny</span></div>
+<div class="line"><span class="lineno">  366</span>  cv::Scalar fill_colour;</div>
+<div class="line"><span class="lineno">  367</span> </div>
+<div class="line"><span class="lineno">  368</span>  thicc_boarder = cv::Mat::zeros(mask.size(), CV_8UC1);</div>
+<div class="line"><span class="lineno">  369</span>  <span class="keyword">const</span> <span class="keywordtype">int</span> outer_thickness = thickness;</div>
+<div class="line"><span class="lineno">  370</span> </div>
+<div class="line"><span class="lineno">  371</span>  <span class="comment">// background should be 255 as we&#39;re can detect in this region and boarder</span></div>
+<div class="line"><span class="lineno">  372</span>  <span class="comment">// region should be zero</span></div>
+<div class="line"><span class="lineno">  373</span>  <span class="keywordflow">if</span> (use_as_feature_detection_mask) {</div>
+<div class="line"><span class="lineno">  374</span>    result.<a class="code hl_variable" href="structdyno_1_1vision__tools_1_1ObjectBoundaryMaskResult.html#ad9dd5629b10f507672aa4b623ca6f503">boundary_mask</a> = cv::Mat(mask.size(), CV_8U, cv::Scalar(255));</div>
+<div class="line"><span class="lineno">  375</span>    fill_colour = cv::Scalar(0);</div>
+<div class="line"><span class="lineno">  376</span>  } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  377</span>    result.<a class="code hl_variable" href="structdyno_1_1vision__tools_1_1ObjectBoundaryMaskResult.html#ad9dd5629b10f507672aa4b623ca6f503">boundary_mask</a> = cv::Mat(mask.size(), CV_8U, cv::Scalar(0));</div>
+<div class="line"><span class="lineno">  378</span>    fill_colour = cv::Scalar(255);</div>
+<div class="line"><span class="lineno">  379</span>  }</div>
+<div class="line"><span class="lineno">  380</span> </div>
+<div class="line"><span class="lineno">  381</span>  cv::Mat viz = cv::Mat(mask.size(), CV_8UC3, cv::Scalar(0));</div>
+<div class="line"><span class="lineno">  382</span> </div>
+<div class="line"><span class="lineno">  383</span>  result.<a class="code hl_variable" href="structdyno_1_1vision__tools_1_1ObjectBoundaryMaskResult.html#a1c842ce8ec0121d8f5e71ba0e48a7a6b">objects_detected</a> = get_object_labels();</div>
+<div class="line"><span class="lineno">  384</span>  <span class="comment">// this basically just creates a full mask over the existing masks using the</span></div>
+<div class="line"><span class="lineno">  385</span>  <span class="comment">// detected contours</span></div>
+<div class="line"><span class="lineno">  386</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> object_id : result.<a class="code hl_variable" href="structdyno_1_1vision__tools_1_1ObjectBoundaryMaskResult.html#a1c842ce8ec0121d8f5e71ba0e48a7a6b">objects_detected</a>) {</div>
+<div class="line"><span class="lineno">  387</span>    std::vector&lt;std::vector&lt;cv::Point&gt;&gt; detected_contours;</div>
+<div class="line"><span class="lineno">  388</span>    <span class="comment">// NOTE: if we use the object detection result I guess the discovered</span></div>
+<div class="line"><span class="lineno">  389</span>    <span class="comment">// rectangle here could be different to detection rectangle!</span></div>
+<div class="line"><span class="lineno">  390</span>    cv::Rect detected_rect;</div>
+<div class="line"><span class="lineno">  391</span>    CHECK(vision_tools::findObjectBoundingBox(mask, object_id, detected_rect,</div>
+<div class="line"><span class="lineno">  392</span>                                              detected_contours));</div>
+<div class="line"><span class="lineno">  393</span> </div>
+<div class="line"><span class="lineno">  394</span>    CHECK_LE(object_id, 255);  <span class="comment">// works only with uint8 types...</span></div>
+<div class="line"><span class="lineno">  395</span>    cv::drawContours(thicc_boarder, detected_contours, -1, object_id,</div>
+<div class="line"><span class="lineno">  396</span>                     cv::FILLED);</div>
+<div class="line"><span class="lineno">  397</span>    result.<a class="code hl_variable" href="structdyno_1_1vision__tools_1_1ObjectBoundaryMaskResult.html#a29441e3eec8c8abe9cfc969eb4320930">object_bounding_boxes</a>.push_back(detected_rect);</div>
+<div class="line"><span class="lineno">  398</span>  }</div>
+<div class="line"><span class="lineno">  399</span> </div>
+<div class="line"><span class="lineno">  400</span>  <span class="comment">// Dilate the mask to expand outwards by &#39;thickness&#39; pixels</span></div>
+<div class="line"><span class="lineno">  401</span>  cv::Mat dilated_mask;</div>
+<div class="line"><span class="lineno">  402</span>  cv::dilate(thicc_boarder, dilated_mask,</div>
+<div class="line"><span class="lineno">  403</span>             cv::getStructuringElement(</div>
+<div class="line"><span class="lineno">  404</span>                 cv::MORPH_ELLIPSE,</div>
+<div class="line"><span class="lineno">  405</span>                 cv::Size(2 * outer_thickness + 1, 2 * outer_thickness + 1)));</div>
+<div class="line"><span class="lineno">  406</span>  <span class="comment">// Compute the outer border mask</span></div>
+<div class="line"><span class="lineno">  407</span>  cv::Mat thicc_outer_boarder_mask = dilated_mask - thicc_boarder;</div>
+<div class="line"><span class="lineno">  408</span> </div>
+<div class="line"><span class="lineno">  409</span>  <span class="comment">// Additionally erode a little but on the inner-side of the mask</span></div>
+<div class="line"><span class="lineno">  410</span>  <span class="comment">// This helps get rid of pixels directly on the boarder which often have poor</span></div>
+<div class="line"><span class="lineno">  411</span>  <span class="comment">// depth</span></div>
+<div class="line"><span class="lineno">  412</span>  <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">int</span> inner_thickness = 10;</div>
+<div class="line"><span class="lineno">  413</span>  <span class="comment">// Generate the inner border</span></div>
+<div class="line"><span class="lineno">  414</span>  cv::Mat eroded_mask;</div>
+<div class="line"><span class="lineno">  415</span>  cv::erode(thicc_boarder, eroded_mask,</div>
+<div class="line"><span class="lineno">  416</span>            cv::getStructuringElement(</div>
+<div class="line"><span class="lineno">  417</span>                cv::MORPH_ELLIPSE,</div>
+<div class="line"><span class="lineno">  418</span>                cv::Size(2 * inner_thickness + 1, 2 * inner_thickness + 1)));</div>
+<div class="line"><span class="lineno">  419</span>  cv::Mat thicc_inner_boarder_mask = thicc_boarder - eroded_mask;</div>
+<div class="line"><span class="lineno">  420</span> </div>
+<div class="line"><span class="lineno">  421</span>  <span class="comment">// iterate over the objects in the eroded mask again to calculate their</span></div>
+<div class="line"><span class="lineno">  422</span>  <span class="comment">// bounding box&#39;s this will be &#39;very approximate&#39; area which features can be</span></div>
+<div class="line"><span class="lineno">  423</span>  <span class="comment">// detected for object j it is approximate because it may not well be</span></div>
+<div class="line"><span class="lineno">  424</span>  <span class="comment">// approximated by a bounding box</span></div>
+<div class="line"><span class="lineno">  425</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> object_id : result.<a class="code hl_variable" href="structdyno_1_1vision__tools_1_1ObjectBoundaryMaskResult.html#a1c842ce8ec0121d8f5e71ba0e48a7a6b">objects_detected</a>) {</div>
+<div class="line"><span class="lineno">  426</span>    cv::Rect detected_rect;</div>
+<div class="line"><span class="lineno">  427</span>    vision_tools::findObjectBoundingBox(eroded_mask, object_id, detected_rect);</div>
+<div class="line"><span class="lineno">  428</span>    result.<a class="code hl_variable" href="structdyno_1_1vision__tools_1_1ObjectBoundaryMaskResult.html#a958a5bea7c6cd388fcd88bfde7b2a730">inner_boarder_object_bounding_boxes</a>.push_back(detected_rect);</div>
+<div class="line"><span class="lineno">  429</span>  }</div>
+<div class="line"><span class="lineno">  430</span> </div>
+<div class="line"><span class="lineno">  431</span>  <span class="comment">// set boarder pixels to fill colour (e.g. zero if to be used as feature</span></div>
+<div class="line"><span class="lineno">  432</span>  <span class="comment">// detection mask)</span></div>
+<div class="line"><span class="lineno">  433</span>  result.<a class="code hl_variable" href="structdyno_1_1vision__tools_1_1ObjectBoundaryMaskResult.html#ad9dd5629b10f507672aa4b623ca6f503">boundary_mask</a>.setTo(fill_colour, thicc_outer_boarder_mask);</div>
+<div class="line"><span class="lineno">  434</span>  result.<a class="code hl_variable" href="structdyno_1_1vision__tools_1_1ObjectBoundaryMaskResult.html#ad9dd5629b10f507672aa4b623ca6f503">boundary_mask</a>.setTo(fill_colour, thicc_inner_boarder_mask);</div>
+<div class="line"><span class="lineno">  435</span> </div>
+<div class="line"><span class="lineno">  436</span>  result.<a class="code hl_variable" href="structdyno_1_1vision__tools_1_1ObjectBoundaryMaskResult.html#a0414a073fbcff43114d702cacdb9c90c">labelled_boundary_mask</a> = cv::Mat(mask.size(), CV_8U, cv::Scalar(0));</div>
+<div class="line"><span class="lineno">  437</span>  cv::bitwise_or(thicc_outer_boarder_mask, thicc_inner_boarder_mask,</div>
+<div class="line"><span class="lineno">  438</span>                 result.<a class="code hl_variable" href="structdyno_1_1vision__tools_1_1ObjectBoundaryMaskResult.html#a0414a073fbcff43114d702cacdb9c90c">labelled_boundary_mask</a>);</div>
+<div class="line"><span class="lineno">  439</span> </div>
+<div class="line"><span class="lineno">  440</span>  result.<a class="code hl_variable" href="structdyno_1_1vision__tools_1_1ObjectBoundaryMaskResult.html#aa7ce261103ba4304b10ad66305cd5caa">is_feature_detection_mask</a> = use_as_feature_detection_mask;</div>
+<div class="line"><span class="lineno">  441</span>}</div>
+<div class="ttc" id="astructdyno_1_1vision__tools_1_1ObjectBoundaryMaskResult_html_a0414a073fbcff43114d702cacdb9c90c"><div class="ttname"><a href="structdyno_1_1vision__tools_1_1ObjectBoundaryMaskResult.html#a0414a073fbcff43114d702cacdb9c90c">dyno::vision_tools::ObjectBoundaryMaskResult::labelled_boundary_mask</a></div><div class="ttdeci">cv::Mat labelled_boundary_mask</div><div class="ttdef"><b>Definition:</b> <a href="VisionTools_8hpp_source.html#l00200">VisionTools.hpp:200</a></div></div>
+<div class="ttc" id="astructdyno_1_1vision__tools_1_1ObjectBoundaryMaskResult_html_a1c842ce8ec0121d8f5e71ba0e48a7a6b"><div class="ttname"><a href="structdyno_1_1vision__tools_1_1ObjectBoundaryMaskResult.html#a1c842ce8ec0121d8f5e71ba0e48a7a6b">dyno::vision_tools::ObjectBoundaryMaskResult::objects_detected</a></div><div class="ttdeci">ObjectIds objects_detected</div><div class="ttdoc">Object labels (j) detected on the imput mask.</div><div class="ttdef"><b>Definition:</b> <a href="VisionTools_8hpp_source.html#l00202">VisionTools.hpp:202</a></div></div>
+<div class="ttc" id="astructdyno_1_1vision__tools_1_1ObjectBoundaryMaskResult_html_a29441e3eec8c8abe9cfc969eb4320930"><div class="ttname"><a href="structdyno_1_1vision__tools_1_1ObjectBoundaryMaskResult.html#a29441e3eec8c8abe9cfc969eb4320930">dyno::vision_tools::ObjectBoundaryMaskResult::object_bounding_boxes</a></div><div class="ttdeci">std::vector&lt; cv::Rect &gt; object_bounding_boxes</div><div class="ttdef"><b>Definition:</b> <a href="VisionTools_8hpp_source.html#l00205">VisionTools.hpp:205</a></div></div>
+<div class="ttc" id="astructdyno_1_1vision__tools_1_1ObjectBoundaryMaskResult_html_a958a5bea7c6cd388fcd88bfde7b2a730"><div class="ttname"><a href="structdyno_1_1vision__tools_1_1ObjectBoundaryMaskResult.html#a958a5bea7c6cd388fcd88bfde7b2a730">dyno::vision_tools::ObjectBoundaryMaskResult::inner_boarder_object_bounding_boxes</a></div><div class="ttdeci">std::vector&lt; cv::Rect &gt; inner_boarder_object_bounding_boxes</div><div class="ttdef"><b>Definition:</b> <a href="VisionTools_8hpp_source.html#l00209">VisionTools.hpp:209</a></div></div>
+<div class="ttc" id="astructdyno_1_1vision__tools_1_1ObjectBoundaryMaskResult_html_aa7ce261103ba4304b10ad66305cd5caa"><div class="ttname"><a href="structdyno_1_1vision__tools_1_1ObjectBoundaryMaskResult.html#aa7ce261103ba4304b10ad66305cd5caa">dyno::vision_tools::ObjectBoundaryMaskResult::is_feature_detection_mask</a></div><div class="ttdeci">bool is_feature_detection_mask</div><div class="ttdef"><b>Definition:</b> <a href="VisionTools_8hpp_source.html#l00196">VisionTools.hpp:196</a></div></div>
+<div class="ttc" id="astructdyno_1_1vision__tools_1_1ObjectBoundaryMaskResult_html_ad9dd5629b10f507672aa4b623ca6f503"><div class="ttname"><a href="structdyno_1_1vision__tools_1_1ObjectBoundaryMaskResult.html#ad9dd5629b10f507672aa4b623ca6f503">dyno::vision_tools::ObjectBoundaryMaskResult::boundary_mask</a></div><div class="ttdeci">cv::Mat boundary_mask</div><div class="ttdef"><b>Definition:</b> <a href="VisionTools_8hpp_source.html#l00193">VisionTools.hpp:193</a></div></div>
+</div><!-- fragment -->
+<p class="reference">References <a class="el" href="structdyno_1_1vision__tools_1_1ObjectBoundaryMaskResult.html#ad9dd5629b10f507672aa4b623ca6f503">dyno::vision_tools::ObjectBoundaryMaskResult::boundary_mask</a>, <a class="el" href="namespacedyno_1_1vision__tools.html#a01601f2fba95a79f4ecaa11b89286d99">findObjectBoundingBox()</a>, <a class="el" href="structdyno_1_1vision__tools_1_1ObjectBoundaryMaskResult.html#a958a5bea7c6cd388fcd88bfde7b2a730">dyno::vision_tools::ObjectBoundaryMaskResult::inner_boarder_object_bounding_boxes</a>, <a class="el" href="structdyno_1_1vision__tools_1_1ObjectBoundaryMaskResult.html#aa7ce261103ba4304b10ad66305cd5caa">dyno::vision_tools::ObjectBoundaryMaskResult::is_feature_detection_mask</a>, <a class="el" href="structdyno_1_1vision__tools_1_1ObjectBoundaryMaskResult.html#a0414a073fbcff43114d702cacdb9c90c">dyno::vision_tools::ObjectBoundaryMaskResult::labelled_boundary_mask</a>, <a class="el" href="structdyno_1_1vision__tools_1_1ObjectBoundaryMaskResult.html#a29441e3eec8c8abe9cfc969eb4320930">dyno::vision_tools::ObjectBoundaryMaskResult::object_bounding_boxes</a>, and <a class="el" href="structdyno_1_1vision__tools_1_1ObjectBoundaryMaskResult.html#a1c842ce8ec0121d8f5e71ba0e48a7a6b">dyno::vision_tools::ObjectBoundaryMaskResult::objects_detected</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="namespacedyno_1_1vision__tools.html#ad7347d14d7f68183415227f23bbd6f7d">computeObjectMaskBoundaryMask()</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="namespacedyno_1_1vision__tools_a6475f5fbab725229ac58186ad6e1272f_cgraph.png" border="0" usemap="#anamespacedyno_1_1vision__tools_a6475f5fbab725229ac58186ad6e1272f_cgraph" alt=""/></div>
+<map name="anamespacedyno_1_1vision__tools_a6475f5fbab725229ac58186ad6e1272f_cgraph" id="anamespacedyno_1_1vision__tools_a6475f5fbab725229ac58186ad6e1272f_cgraph">
+<area shape="rect" title=" " alt="" coords="5,5,232,60"/>
+<area shape="rect" href="namespacedyno_1_1vision__tools.html#a01601f2fba95a79f4ecaa11b89286d99" title="From a instance/semantic mask type img, construct the bounding box for the mask of object_id." alt="" coords="280,13,463,53"/>
 </map>
 </div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="namespacedyno_1_1vision__tools_ad7347d14d7f68183415227f23bbd6f7d_icgraph.png" border="0" usemap="#anamespacedyno_1_1vision__tools_ad7347d14d7f68183415227f23bbd6f7d_icgraph" alt=""/></div>
-<map name="anamespacedyno_1_1vision__tools_ad7347d14d7f68183415227f23bbd6f7d_icgraph" id="anamespacedyno_1_1vision__tools_ad7347d14d7f68183415227f23bbd6f7d_icgraph">
-<area shape="rect" title="From an input instance/semantic mask type img construct a image mask (binary) that has True values ar..." alt="" coords="211,5,472,45"/>
-<area shape="rect" href="classdyno_1_1FeatureTracker.html#a9890ba0c11b5932b5b4954a86bd03948" title=" " alt="" coords="5,5,163,45"/>
+<div class="center"><img src="namespacedyno_1_1vision__tools_a6475f5fbab725229ac58186ad6e1272f_icgraph.png" border="0" usemap="#anamespacedyno_1_1vision__tools_a6475f5fbab725229ac58186ad6e1272f_icgraph" alt=""/></div>
+<map name="anamespacedyno_1_1vision__tools_a6475f5fbab725229ac58186ad6e1272f_icgraph" id="anamespacedyno_1_1vision__tools_a6475f5fbab725229ac58186ad6e1272f_icgraph">
+<area shape="rect" title=" " alt="" coords="315,5,541,60"/>
+<area shape="rect" href="namespacedyno_1_1vision__tools.html#ad7347d14d7f68183415227f23bbd6f7d" title="From an input instance/semantic mask type img construct a image mask (binary) that has True values ar..." alt="" coords="5,13,267,53"/>
 </map>
 </div>
 
@@ -431,47 +575,47 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>cv::Mat </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="VisionTools_8cc_source.html#l00415">415</a> of file <a class="el" href="VisionTools_8cc_source.html">VisionTools.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  416</span>                                  {</div>
-<div class="line"><span class="lineno">  417</span>  <span class="keyword">const</span> cv::Mat&amp; depth_map = depth_image;</div>
-<div class="line"><span class="lineno">  418</span>  <span class="keywordtype">int</span> <a class="code hl_function" href="namespacedyno.html#a362927fda6438780973f55111b77455c">H</a> = depth_map.rows;</div>
-<div class="line"><span class="lineno">  419</span>  <span class="keywordtype">int</span> W = depth_map.cols;</div>
-<div class="line"><span class="lineno">  420</span> </div>
-<div class="line"><span class="lineno">  421</span>  <span class="comment">// Camera intrinsic parameters</span></div>
-<div class="line"><span class="lineno">  422</span>  <span class="keywordtype">double</span> fx = K.at&lt;<span class="keywordtype">double</span>&gt;(0, 0);</div>
-<div class="line"><span class="lineno">  423</span>  <span class="keywordtype">double</span> fy = K.at&lt;<span class="keywordtype">double</span>&gt;(1, 1);</div>
-<div class="line"><span class="lineno">  424</span>  <span class="keywordtype">double</span> cx = K.at&lt;<span class="keywordtype">double</span>&gt;(0, 2);</div>
-<div class="line"><span class="lineno">  425</span>  <span class="keywordtype">double</span> cy = K.at&lt;<span class="keywordtype">double</span>&gt;(1, 2);</div>
-<div class="line"><span class="lineno">  426</span> </div>
-<div class="line"><span class="lineno">  427</span>  <span class="comment">// Generate pixel grid</span></div>
-<div class="line"><span class="lineno">  428</span>  cv::Mat u_grid, v_grid;</div>
-<div class="line"><span class="lineno">  429</span>  cv::Mat u = cv::Mat::zeros(H, W, CV_64F);</div>
-<div class="line"><span class="lineno">  430</span>  cv::Mat v = cv::Mat::zeros(H, W, CV_64F);</div>
-<div class="line"><span class="lineno">  431</span> </div>
-<div class="line"><span class="lineno">  432</span>  <span class="keywordflow">for</span> (<span class="keywordtype">int</span> y = 0; y &lt; <a class="code hl_function" href="namespacedyno.html#a362927fda6438780973f55111b77455c">H</a>; ++y) {</div>
-<div class="line"><span class="lineno">  433</span>    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> x = 0; x &lt; W; ++x) {</div>
-<div class="line"><span class="lineno">  434</span>      u.at&lt;<span class="keywordtype">double</span>&gt;(y, x) = <span class="keyword">static_cast&lt;</span><span class="keywordtype">double</span><span class="keyword">&gt;</span>(x);</div>
-<div class="line"><span class="lineno">  435</span>      v.at&lt;<span class="keywordtype">double</span>&gt;(y, x) = <span class="keyword">static_cast&lt;</span><span class="keywordtype">double</span><span class="keyword">&gt;</span>(y);</div>
-<div class="line"><span class="lineno">  436</span>    }</div>
-<div class="line"><span class="lineno">  437</span>  }</div>
-<div class="line"><span class="lineno">  438</span> </div>
-<div class="line"><span class="lineno">  439</span>  <span class="comment">// Normalize pixel coordinates by the intrinsic matrix</span></div>
-<div class="line"><span class="lineno">  440</span>  cv::Mat X_norm = (u - cx) / fx;</div>
-<div class="line"><span class="lineno">  441</span>  cv::Mat Y_norm = (v - cy) / fy;</div>
-<div class="line"><span class="lineno">  442</span> </div>
-<div class="line"><span class="lineno">  443</span>  <span class="comment">// Depth map scaling for 3D coordinates</span></div>
-<div class="line"><span class="lineno">  444</span>  cv::Mat X_3D = X_norm.mul(depth_map);</div>
-<div class="line"><span class="lineno">  445</span>  cv::Mat Y_3D = Y_norm.mul(depth_map);</div>
-<div class="line"><span class="lineno">  446</span> </div>
-<div class="line"><span class="lineno">  447</span>  cv::Mat Z_3D = depth_map.clone();</div>
-<div class="line"><span class="lineno">  448</span> </div>
-<div class="line"><span class="lineno">  449</span>  std::vector&lt;cv::Mat&gt; channels = {X_3D, Y_3D, Z_3D};</div>
-<div class="line"><span class="lineno">  450</span>  cv::Mat point_cloud;</div>
-<div class="line"><span class="lineno">  451</span>  cv::merge(channels, point_cloud);</div>
-<div class="line"><span class="lineno">  452</span> </div>
-<div class="line"><span class="lineno">  453</span>  <span class="keywordflow">return</span> point_cloud;  <span class="comment">// 3-channel float matrix (H x W x 3)</span></div>
-<div class="line"><span class="lineno">  454</span>}</div>
-<div class="ttc" id="anamespacedyno_html_a362927fda6438780973f55111b77455c"><div class="ttname"><a href="namespacedyno.html#a362927fda6438780973f55111b77455c">dyno::H</a></div><div class="ttdeci">gtsam::Key H(unsigned char label, std::uint64_t j)</div><div class="ttdef"><b>Definition:</b> <a href="BackendDefinitions_8hpp_source.html#l00065">BackendDefinitions.hpp:65</a></div></div>
+<p class="definition">Definition at line <a class="el" href="VisionTools_8cc_source.html#l00542">542</a> of file <a class="el" href="VisionTools_8cc_source.html">VisionTools.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  543</span>                                  {</div>
+<div class="line"><span class="lineno">  544</span>  <span class="keyword">const</span> cv::Mat&amp; depth_map = depth_image;</div>
+<div class="line"><span class="lineno">  545</span>  <span class="keywordtype">int</span> <a class="code hl_function" href="namespacedyno.html#a362927fda6438780973f55111b77455c">H</a> = depth_map.rows;</div>
+<div class="line"><span class="lineno">  546</span>  <span class="keywordtype">int</span> W = depth_map.cols;</div>
+<div class="line"><span class="lineno">  547</span> </div>
+<div class="line"><span class="lineno">  548</span>  <span class="comment">// Camera intrinsic parameters</span></div>
+<div class="line"><span class="lineno">  549</span>  <span class="keywordtype">double</span> fx = K.at&lt;<span class="keywordtype">double</span>&gt;(0, 0);</div>
+<div class="line"><span class="lineno">  550</span>  <span class="keywordtype">double</span> fy = K.at&lt;<span class="keywordtype">double</span>&gt;(1, 1);</div>
+<div class="line"><span class="lineno">  551</span>  <span class="keywordtype">double</span> cx = K.at&lt;<span class="keywordtype">double</span>&gt;(0, 2);</div>
+<div class="line"><span class="lineno">  552</span>  <span class="keywordtype">double</span> cy = K.at&lt;<span class="keywordtype">double</span>&gt;(1, 2);</div>
+<div class="line"><span class="lineno">  553</span> </div>
+<div class="line"><span class="lineno">  554</span>  <span class="comment">// Generate pixel grid</span></div>
+<div class="line"><span class="lineno">  555</span>  cv::Mat u_grid, v_grid;</div>
+<div class="line"><span class="lineno">  556</span>  cv::Mat u = cv::Mat::zeros(H, W, CV_64F);</div>
+<div class="line"><span class="lineno">  557</span>  cv::Mat v = cv::Mat::zeros(H, W, CV_64F);</div>
+<div class="line"><span class="lineno">  558</span> </div>
+<div class="line"><span class="lineno">  559</span>  <span class="keywordflow">for</span> (<span class="keywordtype">int</span> y = 0; y &lt; <a class="code hl_function" href="namespacedyno.html#a362927fda6438780973f55111b77455c">H</a>; ++y) {</div>
+<div class="line"><span class="lineno">  560</span>    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> x = 0; x &lt; W; ++x) {</div>
+<div class="line"><span class="lineno">  561</span>      u.at&lt;<span class="keywordtype">double</span>&gt;(y, x) = <span class="keyword">static_cast&lt;</span><span class="keywordtype">double</span><span class="keyword">&gt;</span>(x);</div>
+<div class="line"><span class="lineno">  562</span>      v.at&lt;<span class="keywordtype">double</span>&gt;(y, x) = <span class="keyword">static_cast&lt;</span><span class="keywordtype">double</span><span class="keyword">&gt;</span>(y);</div>
+<div class="line"><span class="lineno">  563</span>    }</div>
+<div class="line"><span class="lineno">  564</span>  }</div>
+<div class="line"><span class="lineno">  565</span> </div>
+<div class="line"><span class="lineno">  566</span>  <span class="comment">// Normalize pixel coordinates by the intrinsic matrix</span></div>
+<div class="line"><span class="lineno">  567</span>  cv::Mat X_norm = (u - cx) / fx;</div>
+<div class="line"><span class="lineno">  568</span>  cv::Mat Y_norm = (v - cy) / fy;</div>
+<div class="line"><span class="lineno">  569</span> </div>
+<div class="line"><span class="lineno">  570</span>  <span class="comment">// Depth map scaling for 3D coordinates</span></div>
+<div class="line"><span class="lineno">  571</span>  cv::Mat X_3D = X_norm.mul(depth_map);</div>
+<div class="line"><span class="lineno">  572</span>  cv::Mat Y_3D = Y_norm.mul(depth_map);</div>
+<div class="line"><span class="lineno">  573</span> </div>
+<div class="line"><span class="lineno">  574</span>  cv::Mat Z_3D = depth_map.clone();</div>
+<div class="line"><span class="lineno">  575</span> </div>
+<div class="line"><span class="lineno">  576</span>  std::vector&lt;cv::Mat&gt; channels = {X_3D, Y_3D, Z_3D};</div>
+<div class="line"><span class="lineno">  577</span>  cv::Mat point_cloud;</div>
+<div class="line"><span class="lineno">  578</span>  cv::merge(channels, point_cloud);</div>
+<div class="line"><span class="lineno">  579</span> </div>
+<div class="line"><span class="lineno">  580</span>  <span class="keywordflow">return</span> point_cloud;  <span class="comment">// 3-channel float matrix (H x W x 3)</span></div>
+<div class="line"><span class="lineno">  581</span>}</div>
+<div class="ttc" id="anamespacedyno_html_a362927fda6438780973f55111b77455c"><div class="ttname"><a href="namespacedyno.html#a362927fda6438780973f55111b77455c">dyno::H</a></div><div class="ttdeci">gtsam::Key H(unsigned char label, std::uint64_t j)</div><div class="ttdef"><b>Definition:</b> <a href="Symbols_8hpp_source.html#l00126">Symbols.hpp:126</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="namespacedyno.html#a362927fda6438780973f55111b77455c">dyno::H()</a>.</p>
 
@@ -490,9 +634,8 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="namespacedyno_1_1vision__tools_aaabcfcca356f30c83a45a51259e39783_icgraph.png" border="0" usemap="#anamespacedyno_1_1vision__tools_aaabcfcca356f30c83a45a51259e39783_icgraph" alt=""/></div>
 <map name="anamespacedyno_1_1vision__tools_aaabcfcca356f30c83a45a51259e39783_icgraph" id="anamespacedyno_1_1vision__tools_aaabcfcca356f30c83a45a51259e39783_icgraph">
-<area shape="rect" title="Projects a dense depth map to 3D coordinates in the local frame." alt="" coords="572,5,712,45"/>
-<area shape="rect" href="namespacedyno_1_1vision__tools.html#a5d8b89d2b560b498934853c77a7d9f28" title="Saves a re&#45;projected 3D point cloud with labelled points to file as a cv::Mat." alt="" coords="265,5,524,45"/>
-<area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2" title=" " alt="" coords="5,5,217,45"/>
+<area shape="rect" title="Projects a dense depth map to 3D coordinates in the local frame." alt="" coords="312,5,452,45"/>
+<area shape="rect" href="namespacedyno_1_1vision__tools.html#a5d8b89d2b560b498934853c77a7d9f28" title="Saves a re&#45;projected 3D point cloud with labelled points to file as a cv::Mat." alt="" coords="5,5,264,45"/>
 </map>
 </div>
 
@@ -544,15 +687,15 @@ Here is the caller graph for this function:</div>
 <dd>
 false </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="VisionTools_8cc_source.html#l00241">241</a> of file <a class="el" href="VisionTools_8cc_source.html">VisionTools.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  242</span>                                                  {</div>
-<div class="line"><span class="lineno">  243</span>  std::vector&lt;std::vector&lt;cv::Point&gt;&gt; detected_contours;</div>
-<div class="line"><span class="lineno">  244</span>  <span class="keyword">auto</span> result =</div>
-<div class="line"><span class="lineno">  245</span>      <a class="code hl_function" href="namespacedyno_1_1vision__tools.html#a01601f2fba95a79f4ecaa11b89286d99">findObjectBoundingBox</a>(mask, object_id, detected_rect, detected_contours);</div>
-<div class="line"><span class="lineno">  246</span>  (void)detected_contours;</div>
-<div class="line"><span class="lineno">  247</span>  <span class="keywordflow">return</span> result;</div>
-<div class="line"><span class="lineno">  248</span>}</div>
-<div class="ttc" id="anamespacedyno_1_1vision__tools_html_a01601f2fba95a79f4ecaa11b89286d99"><div class="ttname"><a href="namespacedyno_1_1vision__tools.html#a01601f2fba95a79f4ecaa11b89286d99">dyno::vision_tools::findObjectBoundingBox</a></div><div class="ttdeci">bool findObjectBoundingBox(const cv::Mat &amp;mask, ObjectId object_id, cv::Rect &amp;detected_rect, std::vector&lt; std::vector&lt; cv::Point &gt; &gt; &amp;detected_contours)</div><div class="ttdoc">From a instance/semantic mask type img, construct the bounding box for the mask of object_id.</div><div class="ttdef"><b>Definition:</b> <a href="VisionTools_8cc_source.html#l00202">VisionTools.cc:202</a></div></div>
+<p class="definition">Definition at line <a class="el" href="VisionTools_8cc_source.html#l00325">325</a> of file <a class="el" href="VisionTools_8cc_source.html">VisionTools.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  326</span>                                                  {</div>
+<div class="line"><span class="lineno">  327</span>  std::vector&lt;std::vector&lt;cv::Point&gt;&gt; detected_contours;</div>
+<div class="line"><span class="lineno">  328</span>  <span class="keyword">auto</span> result =</div>
+<div class="line"><span class="lineno">  329</span>      <a class="code hl_function" href="namespacedyno_1_1vision__tools.html#a01601f2fba95a79f4ecaa11b89286d99">findObjectBoundingBox</a>(mask, object_id, detected_rect, detected_contours);</div>
+<div class="line"><span class="lineno">  330</span>  (void)detected_contours;</div>
+<div class="line"><span class="lineno">  331</span>  <span class="keywordflow">return</span> result;</div>
+<div class="line"><span class="lineno">  332</span>}</div>
+<div class="ttc" id="anamespacedyno_1_1vision__tools_html_a01601f2fba95a79f4ecaa11b89286d99"><div class="ttname"><a href="namespacedyno_1_1vision__tools.html#a01601f2fba95a79f4ecaa11b89286d99">dyno::vision_tools::findObjectBoundingBox</a></div><div class="ttdeci">bool findObjectBoundingBox(const cv::Mat &amp;mask, ObjectId object_id, cv::Rect &amp;detected_rect, std::vector&lt; std::vector&lt; cv::Point &gt; &gt; &amp;detected_contours)</div><div class="ttdoc">From a instance/semantic mask type img, construct the bounding box for the mask of object_id.</div><div class="ttdef"><b>Definition:</b> <a href="VisionTools_8cc_source.html#l00286">VisionTools.cc:286</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="namespacedyno_1_1vision__tools.html#a01601f2fba95a79f4ecaa11b89286d99">findObjectBoundingBox()</a>.</p>
 <div class="dynheader">
@@ -620,59 +763,57 @@ Here is the call graph for this function:</div>
 <dd>
 false </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="VisionTools_8cc_source.html#l00202">202</a> of file <a class="el" href="VisionTools_8cc_source.html">VisionTools.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  204</span>                                                      {</div>
-<div class="line"><span class="lineno">  205</span>  cv::Mat mask_copy = mask.clone();</div>
-<div class="line"><span class="lineno">  206</span> </div>
-<div class="line"><span class="lineno">  207</span>  cv::Mat obj_mask = (mask_copy == object_id);</div>
-<div class="line"><span class="lineno">  208</span>  cv::Mat dilated_obj_mask;</div>
-<div class="line"><span class="lineno">  209</span>  <span class="comment">// dilate to fill any small holes in the mask to get a more complete set of</span></div>
-<div class="line"><span class="lineno">  210</span>  <span class="comment">// contours</span></div>
-<div class="line"><span class="lineno">  211</span>  cv::Mat dilate_element = cv::getStructuringElement(</div>
-<div class="line"><span class="lineno">  212</span>      cv::MORPH_RECT, cv::Size(1, 11));  <span class="comment">// a rectangle of 1*5</span></div>
-<div class="line"><span class="lineno">  213</span>  cv::dilate(obj_mask, dilated_obj_mask, dilate_element, cv::Point(-1, -1));</div>
-<div class="line"><span class="lineno">  214</span> </div>
-<div class="line"><span class="lineno">  215</span>  std::vector&lt;std::vector&lt;cv::Point&gt;&gt; contours;</div>
-<div class="line"><span class="lineno">  216</span>  std::vector&lt;cv::Vec4i&gt; hierarchy;</div>
-<div class="line"><span class="lineno">  217</span>  cv::findContours(dilated_obj_mask, contours, hierarchy, cv::RETR_TREE,</div>
-<div class="line"><span class="lineno">  218</span>                   cv::CHAIN_APPROX_NONE);</div>
-<div class="line"><span class="lineno">  219</span> </div>
-<div class="line"><span class="lineno">  220</span>  detected_contours = contours;</div>
-<div class="line"><span class="lineno">  221</span> </div>
-<div class="line"><span class="lineno">  222</span>  <span class="keywordflow">if</span> (contours.empty()) {</div>
-<div class="line"><span class="lineno">  223</span>    detected_rect = cv::Rect();</div>
-<div class="line"><span class="lineno">  224</span>    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">  225</span>  } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (contours.size() == 1u) {</div>
-<div class="line"><span class="lineno">  226</span>    detected_rect = cv::boundingRect(contours.at(0));</div>
-<div class="line"><span class="lineno">  227</span>  } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  228</span>    std::vector&lt;cv::Rect&gt; rectangles;</div>
-<div class="line"><span class="lineno">  229</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> it : contours) {</div>
-<div class="line"><span class="lineno">  230</span>      rectangles.push_back(cv::boundingRect(it));</div>
-<div class="line"><span class="lineno">  231</span>    }</div>
-<div class="line"><span class="lineno">  232</span>    cv::Rect merged_rect = rectangles[0];</div>
-<div class="line"><span class="lineno">  233</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; r : rectangles) {</div>
-<div class="line"><span class="lineno">  234</span>      merged_rect |= r;</div>
-<div class="line"><span class="lineno">  235</span>    }</div>
-<div class="line"><span class="lineno">  236</span>    detected_rect = merged_rect;</div>
-<div class="line"><span class="lineno">  237</span>  }</div>
-<div class="line"><span class="lineno">  238</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  239</span>}</div>
+<p class="definition">Definition at line <a class="el" href="VisionTools_8cc_source.html#l00286">286</a> of file <a class="el" href="VisionTools_8cc_source.html">VisionTools.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  288</span>                                                      {</div>
+<div class="line"><span class="lineno">  289</span>  cv::Mat mask_copy = mask.clone();</div>
+<div class="line"><span class="lineno">  290</span> </div>
+<div class="line"><span class="lineno">  291</span>  cv::Mat obj_mask = (mask_copy == object_id);</div>
+<div class="line"><span class="lineno">  292</span>  cv::Mat dilated_obj_mask;</div>
+<div class="line"><span class="lineno">  293</span>  <span class="comment">// dilate to fill any small holes in the mask to get a more complete set of</span></div>
+<div class="line"><span class="lineno">  294</span>  <span class="comment">// contours</span></div>
+<div class="line"><span class="lineno">  295</span>  cv::Mat dilate_element = cv::getStructuringElement(</div>
+<div class="line"><span class="lineno">  296</span>      cv::MORPH_RECT, cv::Size(1, 11));  <span class="comment">// a rectangle of 1*5</span></div>
+<div class="line"><span class="lineno">  297</span>  cv::dilate(obj_mask, dilated_obj_mask, dilate_element, cv::Point(-1, -1));</div>
+<div class="line"><span class="lineno">  298</span> </div>
+<div class="line"><span class="lineno">  299</span>  std::vector&lt;std::vector&lt;cv::Point&gt;&gt; contours;</div>
+<div class="line"><span class="lineno">  300</span>  std::vector&lt;cv::Vec4i&gt; hierarchy;</div>
+<div class="line"><span class="lineno">  301</span>  cv::findContours(dilated_obj_mask, contours, hierarchy, cv::RETR_TREE,</div>
+<div class="line"><span class="lineno">  302</span>                   cv::CHAIN_APPROX_NONE);</div>
+<div class="line"><span class="lineno">  303</span> </div>
+<div class="line"><span class="lineno">  304</span>  detected_contours = contours;</div>
+<div class="line"><span class="lineno">  305</span> </div>
+<div class="line"><span class="lineno">  306</span>  <span class="keywordflow">if</span> (contours.empty()) {</div>
+<div class="line"><span class="lineno">  307</span>    detected_rect = cv::Rect();</div>
+<div class="line"><span class="lineno">  308</span>    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">  309</span>  } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (contours.size() == 1u) {</div>
+<div class="line"><span class="lineno">  310</span>    detected_rect = cv::boundingRect(contours.at(0));</div>
+<div class="line"><span class="lineno">  311</span>  } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  312</span>    std::vector&lt;cv::Rect&gt; rectangles;</div>
+<div class="line"><span class="lineno">  313</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> it : contours) {</div>
+<div class="line"><span class="lineno">  314</span>      rectangles.push_back(cv::boundingRect(it));</div>
+<div class="line"><span class="lineno">  315</span>    }</div>
+<div class="line"><span class="lineno">  316</span>    cv::Rect merged_rect = rectangles[0];</div>
+<div class="line"><span class="lineno">  317</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; r : rectangles) {</div>
+<div class="line"><span class="lineno">  318</span>      merged_rect |= r;</div>
+<div class="line"><span class="lineno">  319</span>    }</div>
+<div class="line"><span class="lineno">  320</span>    detected_rect = merged_rect;</div>
+<div class="line"><span class="lineno">  321</span>  }</div>
+<div class="line"><span class="lineno">  322</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  323</span>}</div>
 </div><!-- fragment -->
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1ClusterSlamAllLoader.html#a074af7358c98d715599460ca2671ecc4">dyno::ClusterSlamAllLoader::associateDetectedBBWithObject()</a>, <a class="el" href="namespacedyno_1_1vision__tools.html#ad7347d14d7f68183415227f23bbd6f7d">computeObjectMaskBoundaryMask()</a>, <a class="el" href="classdyno_1_1Frame.html#ab038b536516e42beb788f1b794801270">dyno::Frame::constructDynamicObservations()</a>, <a class="el" href="namespacedyno_1_1vision__tools.html#a46d0411291384b813e022cf32c66a82b">findObjectBoundingBox()</a>, and <a class="el" href="classdyno_1_1ByteObjectTracker.html#aeb79dc19fb881160be780b9f4a2b2240">dyno::ByteObjectTracker::track()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1ClusterSlamAllLoader.html#a074af7358c98d715599460ca2671ecc4">dyno::ClusterSlamAllLoader::associateDetectedBBWithObject()</a>, <a class="el" href="namespacedyno_1_1vision__tools.html#a6475f5fbab725229ac58186ad6e1272f">computeObjectMaskBoundaryMaskHelper()</a>, <a class="el" href="classdyno_1_1Frame.html#ab038b536516e42beb788f1b794801270">dyno::Frame::constructDynamicObservations()</a>, and <a class="el" href="namespacedyno_1_1vision__tools.html#a46d0411291384b813e022cf32c66a82b">findObjectBoundingBox()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="namespacedyno_1_1vision__tools_a01601f2fba95a79f4ecaa11b89286d99_icgraph.png" border="0" usemap="#anamespacedyno_1_1vision__tools_a01601f2fba95a79f4ecaa11b89286d99_icgraph" alt=""/></div>
 <map name="anamespacedyno_1_1vision__tools_a01601f2fba95a79f4ecaa11b89286d99_icgraph" id="anamespacedyno_1_1vision__tools_a01601f2fba95a79f4ecaa11b89286d99_icgraph">
-<area shape="rect" title="From a instance/semantic mask type img, construct the bounding box for the mask of object_id." alt="" coords="565,133,748,173"/>
-<area shape="rect" href="classdyno_1_1ClusterSlamAllLoader.html#a074af7358c98d715599460ca2671ecc4" title=" " alt="" coords="266,5,507,45"/>
-<area shape="rect" href="namespacedyno_1_1vision__tools.html#ad7347d14d7f68183415227f23bbd6f7d" title="From an input instance/semantic mask type img construct a image mask (binary) that has True values ar..." alt="" coords="256,69,517,109"/>
-<area shape="rect" href="classdyno_1_1Frame.html#ab038b536516e42beb788f1b794801270" title=" " alt="" coords="272,133,501,173"/>
-<area shape="rect" href="namespacedyno_1_1vision__tools.html#a46d0411291384b813e022cf32c66a82b" title="From a instance/semantic mask type img, construct the bounding box for the mask of object_id." alt="" coords="295,197,478,237"/>
-<area shape="rect" href="classdyno_1_1ByteObjectTracker.html#aeb79dc19fb881160be780b9f4a2b2240" title=" " alt="" coords="297,285,477,325"/>
-<area shape="rect" href="classdyno_1_1ClusterSlamAllLoader.html#a6dbf46c48ea9477aa915bff62ee98ea8" title=" " alt="" coords="5,5,208,45"/>
-<area shape="rect" href="classdyno_1_1FeatureTracker.html#a9890ba0c11b5932b5b4954a86bd03948" title=" " alt="" coords="28,69,185,109"/>
-<area shape="rect" href="classdyno_1_1Frame.html#a5553af4c0c310c23d0f39e0c1daf0478" title=" " alt="" coords="31,141,183,166"/>
+<area shape="rect" title="From a instance/semantic mask type img, construct the bounding box for the mask of object_id." alt="" coords="604,113,787,153"/>
+<area shape="rect" href="classdyno_1_1ClusterSlamAllLoader.html#a074af7358c98d715599460ca2671ecc4" title=" " alt="" coords="315,5,556,45"/>
+<area shape="rect" href="namespacedyno_1_1vision__tools.html#a6475f5fbab725229ac58186ad6e1272f" title=" " alt="" coords="322,70,549,125"/>
+<area shape="rect" href="classdyno_1_1Frame.html#ab038b536516e42beb788f1b794801270" title=" " alt="" coords="321,149,550,189"/>
+<area shape="rect" href="namespacedyno_1_1vision__tools.html#a46d0411291384b813e022cf32c66a82b" title="From a instance/semantic mask type img, construct the bounding box for the mask of object_id." alt="" coords="344,213,527,253"/>
+<area shape="rect" href="classdyno_1_1ClusterSlamAllLoader.html#a6dbf46c48ea9477aa915bff62ee98ea8" title=" " alt="" coords="35,5,237,45"/>
+<area shape="rect" href="namespacedyno_1_1vision__tools.html#ad7347d14d7f68183415227f23bbd6f7d" title="From an input instance/semantic mask type img construct a image mask (binary) that has True values ar..." alt="" coords="5,77,267,117"/>
 </map>
 </div>
 
@@ -724,14 +865,14 @@ Here is the caller graph for this function:</div>
 <dd>
 false </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="VisionTools_8cc_source.html#l00250">250</a> of file <a class="el" href="VisionTools_8cc_source.html">VisionTools.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  252</span>                                                      {</div>
-<div class="line"><span class="lineno">  253</span>  cv::Rect detected_rect;</div>
-<div class="line"><span class="lineno">  254</span>  <span class="keyword">auto</span> result =</div>
-<div class="line"><span class="lineno">  255</span>      <a class="code hl_function" href="namespacedyno_1_1vision__tools.html#a01601f2fba95a79f4ecaa11b89286d99">findObjectBoundingBox</a>(mask, object_id, detected_rect, detected_contours);</div>
-<div class="line"><span class="lineno">  256</span>  (void)detected_rect;</div>
-<div class="line"><span class="lineno">  257</span>  <span class="keywordflow">return</span> result;</div>
-<div class="line"><span class="lineno">  258</span>}</div>
+<p class="definition">Definition at line <a class="el" href="VisionTools_8cc_source.html#l00334">334</a> of file <a class="el" href="VisionTools_8cc_source.html">VisionTools.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  336</span>                                                      {</div>
+<div class="line"><span class="lineno">  337</span>  cv::Rect detected_rect;</div>
+<div class="line"><span class="lineno">  338</span>  <span class="keyword">auto</span> result =</div>
+<div class="line"><span class="lineno">  339</span>      <a class="code hl_function" href="namespacedyno_1_1vision__tools.html#a01601f2fba95a79f4ecaa11b89286d99">findObjectBoundingBox</a>(mask, object_id, detected_rect, detected_contours);</div>
+<div class="line"><span class="lineno">  340</span>  (void)detected_rect;</div>
+<div class="line"><span class="lineno">  341</span>  <span class="keywordflow">return</span> result;</div>
+<div class="line"><span class="lineno">  342</span>}</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="namespacedyno_1_1vision__tools.html#a01601f2fba95a79f4ecaa11b89286d99">findObjectBoundingBox()</a>.</p>
 <div class="dynheader">
@@ -778,33 +919,33 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="VisionTools_8cc_source.html#l00044">44</a> of file <a class="el" href="VisionTools_8cc_source.html">VisionTools.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   46</span>                                                                       {</div>
-<div class="line"><span class="lineno">   47</span>  correspondences.clear();</div>
-<div class="line"><span class="lineno">   48</span> </div>
-<div class="line"><span class="lineno">   49</span>  <span class="keyword">const</span> <a class="code hl_class" href="classdyno_1_1FeatureContainer.html">FeatureContainer</a>&amp; previous_feature_container =</div>
-<div class="line"><span class="lineno">   50</span>      previous_features.<a class="code hl_function" href="structdyno_1_1internal_1_1filter__iterator__base.html#ac1df3e0d6d5b4ef5851cd10f7d327a6f">getContainer</a>();</div>
-<div class="line"><span class="lineno">   51</span> </div>
-<div class="line"><span class="lineno">   52</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; curr_feature : current_features) {</div>
-<div class="line"><span class="lineno">   53</span>    <span class="comment">// check if previous feature and is valid</span></div>
-<div class="line"><span class="lineno">   54</span>    <span class="keywordflow">if</span> (previous_feature_container.<a class="code hl_function" href="classdyno_1_1FeatureContainer.html#abf2f2d568f5dc17944cc122c537a65f5">exists</a>(curr_feature-&gt;trackletId())) {</div>
-<div class="line"><span class="lineno">   55</span>      <span class="keyword">const</span> <span class="keyword">auto</span> prev_feature = previous_feature_container.<a class="code hl_function" href="classdyno_1_1FeatureContainer.html#a5b73e75d2f4063ac9c16dd0fd565f8da">getByTrackletId</a>(</div>
-<div class="line"><span class="lineno">   56</span>          curr_feature-&gt;trackletId());</div>
-<div class="line"><span class="lineno">   57</span>      CHECK(prev_feature);</div>
-<div class="line"><span class="lineno">   58</span> </div>
-<div class="line"><span class="lineno">   59</span>      <span class="comment">// having checked that feature is in the previous set, also check that it</span></div>
-<div class="line"><span class="lineno">   60</span>      <span class="comment">// ahderes to the filter</span></div>
-<div class="line"><span class="lineno">   61</span>      <span class="keywordflow">if</span> (!previous_features(prev_feature)) {</div>
-<div class="line"><span class="lineno">   62</span>        <span class="keywordflow">continue</span>;</div>
-<div class="line"><span class="lineno">   63</span>      }</div>
-<div class="line"><span class="lineno">   64</span>      correspondences.push_back({prev_feature, curr_feature});</div>
-<div class="line"><span class="lineno">   65</span>    }</div>
-<div class="line"><span class="lineno">   66</span>  }</div>
-<div class="line"><span class="lineno">   67</span>}</div>
-<div class="ttc" id="aclassdyno_1_1FeatureContainer_html"><div class="ttname"><a href="classdyno_1_1FeatureContainer.html">dyno::FeatureContainer</a></div><div class="ttdoc">Basic container mapping tracklet id's to a feature (pointer).</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00436">Feature.hpp:436</a></div></div>
-<div class="ttc" id="aclassdyno_1_1FeatureContainer_html_a5b73e75d2f4063ac9c16dd0fd565f8da"><div class="ttname"><a href="classdyno_1_1FeatureContainer.html#a5b73e75d2f4063ac9c16dd0fd565f8da">dyno::FeatureContainer::getByTrackletId</a></div><div class="ttdeci">Feature::Ptr getByTrackletId(TrackletId tracklet_id) const</div><div class="ttdoc">Gets a feature given its tracklet id. If the feature does not exist, nullptr is returned.</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8cc_source.html#l00122">Feature.cc:122</a></div></div>
-<div class="ttc" id="aclassdyno_1_1FeatureContainer_html_abf2f2d568f5dc17944cc122c537a65f5"><div class="ttname"><a href="classdyno_1_1FeatureContainer.html#abf2f2d568f5dc17944cc122c537a65f5">dyno::FeatureContainer::exists</a></div><div class="ttdeci">bool exists(TrackletId tracklet_id) const</div><div class="ttdoc">Returns true if a feature with the given tracklet id exists.</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8cc_source.html#l00129">Feature.cc:129</a></div></div>
-<div class="ttc" id="astructdyno_1_1internal_1_1filter__iterator__base_html_ac1df3e0d6d5b4ef5851cd10f7d327a6f"><div class="ttname"><a href="structdyno_1_1internal_1_1filter__iterator__base.html#ac1df3e0d6d5b4ef5851cd10f7d327a6f">dyno::internal::filter_iterator_base::getContainer</a></div><div class="ttdeci">Container &amp; getContainer()</div><div class="ttdef"><b>Definition:</b> <a href="StructuredContainers_8hpp_source.html#l00118">StructuredContainers.hpp:118</a></div></div>
+<p class="definition">Definition at line <a class="el" href="VisionTools_8cc_source.html#l00075">75</a> of file <a class="el" href="VisionTools_8cc_source.html">VisionTools.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   77</span>                                                                       {</div>
+<div class="line"><span class="lineno">   78</span>  correspondences.clear();</div>
+<div class="line"><span class="lineno">   79</span> </div>
+<div class="line"><span class="lineno">   80</span>  <span class="keyword">const</span> <a class="code hl_class" href="classdyno_1_1FeatureContainer.html">FeatureContainer</a>&amp; previous_feature_container =</div>
+<div class="line"><span class="lineno">   81</span>      previous_features.<a class="code hl_function" href="structdyno_1_1internal_1_1filter__iterator__base.html#ac1df3e0d6d5b4ef5851cd10f7d327a6f">getContainer</a>();</div>
+<div class="line"><span class="lineno">   82</span> </div>
+<div class="line"><span class="lineno">   83</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; curr_feature : current_features) {</div>
+<div class="line"><span class="lineno">   84</span>    <span class="comment">// check if previous feature and is valid</span></div>
+<div class="line"><span class="lineno">   85</span>    <span class="keywordflow">if</span> (previous_feature_container.<a class="code hl_function" href="classdyno_1_1FeatureContainer.html#abf2f2d568f5dc17944cc122c537a65f5">exists</a>(curr_feature-&gt;trackletId())) {</div>
+<div class="line"><span class="lineno">   86</span>      <span class="keyword">const</span> <span class="keyword">auto</span> prev_feature = previous_feature_container.<a class="code hl_function" href="classdyno_1_1FeatureContainer.html#a5b73e75d2f4063ac9c16dd0fd565f8da">getByTrackletId</a>(</div>
+<div class="line"><span class="lineno">   87</span>          curr_feature-&gt;trackletId());</div>
+<div class="line"><span class="lineno">   88</span>      CHECK(prev_feature);</div>
+<div class="line"><span class="lineno">   89</span> </div>
+<div class="line"><span class="lineno">   90</span>      <span class="comment">// having checked that feature is in the previous set, also check that it</span></div>
+<div class="line"><span class="lineno">   91</span>      <span class="comment">// ahderes to the filter</span></div>
+<div class="line"><span class="lineno">   92</span>      <span class="keywordflow">if</span> (!previous_features(prev_feature)) {</div>
+<div class="line"><span class="lineno">   93</span>        <span class="keywordflow">continue</span>;</div>
+<div class="line"><span class="lineno">   94</span>      }</div>
+<div class="line"><span class="lineno">   95</span>      correspondences.push_back({prev_feature, curr_feature});</div>
+<div class="line"><span class="lineno">   96</span>    }</div>
+<div class="line"><span class="lineno">   97</span>  }</div>
+<div class="line"><span class="lineno">   98</span>}</div>
+<div class="ttc" id="aclassdyno_1_1FeatureContainer_html"><div class="ttname"><a href="classdyno_1_1FeatureContainer.html">dyno::FeatureContainer</a></div><div class="ttdoc">Basic container mapping tracklet id's to a feature (pointer).</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00442">Feature.hpp:442</a></div></div>
+<div class="ttc" id="aclassdyno_1_1FeatureContainer_html_a5b73e75d2f4063ac9c16dd0fd565f8da"><div class="ttname"><a href="classdyno_1_1FeatureContainer.html#a5b73e75d2f4063ac9c16dd0fd565f8da">dyno::FeatureContainer::getByTrackletId</a></div><div class="ttdeci">Feature::Ptr getByTrackletId(TrackletId tracklet_id) const</div><div class="ttdoc">Gets a feature given its tracklet id. If the feature does not exist, nullptr is returned.</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8cc_source.html#l00149">Feature.cc:149</a></div></div>
+<div class="ttc" id="aclassdyno_1_1FeatureContainer_html_abf2f2d568f5dc17944cc122c537a65f5"><div class="ttname"><a href="classdyno_1_1FeatureContainer.html#abf2f2d568f5dc17944cc122c537a65f5">dyno::FeatureContainer::exists</a></div><div class="ttdeci">bool exists(TrackletId tracklet_id) const</div><div class="ttdoc">Returns true if a feature with the given tracklet id exists.</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8cc_source.html#l00156">Feature.cc:156</a></div></div>
+<div class="ttc" id="astructdyno_1_1internal_1_1filter__iterator__base_html_ac1df3e0d6d5b4ef5851cd10f7d327a6f"><div class="ttname"><a href="structdyno_1_1internal_1_1filter__iterator__base.html#ac1df3e0d6d5b4ef5851cd10f7d327a6f">dyno::internal::filter_iterator_base::getContainer</a></div><div class="ttdeci">Container &amp; getContainer()</div><div class="ttdef"><b>Definition:</b> <a href="StructuredContainers_8hpp_source.html#l00119">StructuredContainers.hpp:119</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1FeatureContainer.html#abf2f2d568f5dc17944cc122c537a65f5">dyno::FeatureContainer::exists()</a>, <a class="el" href="classdyno_1_1FeatureContainer.html#a5b73e75d2f4063ac9c16dd0fd565f8da">dyno::FeatureContainer::getByTrackletId()</a>, and <a class="el" href="structdyno_1_1internal_1_1filter__iterator__base.html#ac1df3e0d6d5b4ef5851cd10f7d327a6f">dyno::internal::filter_iterator_base&lt; Container, Iter, FilterFunction &gt;::getContainer()</a>.</p>
 
@@ -861,38 +1002,81 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>ObjectIds </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="VisionTools_8cc_source.html#l00069">69</a> of file <a class="el" href="VisionTools_8cc_source.html">VisionTools.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   69</span>                                              {</div>
-<div class="line"><span class="lineno">   70</span>  CHECK(!image.empty());</div>
-<div class="line"><span class="lineno">   71</span>  std::set&lt;ObjectId&gt; unique_labels;</div>
-<div class="line"><span class="lineno">   72</span>  <span class="keywordflow">for</span> (<span class="keyword">auto</span> it = image.begin&lt;<a class="code hl_typedef" href="namespacedyno.html#a38bb86e4154b86428b8d133be03fb2b5">ObjectId</a>&gt;(); it != image.end&lt;<a class="code hl_typedef" href="namespacedyno.html#a38bb86e4154b86428b8d133be03fb2b5">ObjectId</a>&gt;(); ++it) {</div>
-<div class="line"><span class="lineno">   73</span>    <span class="keywordflow">if</span> (*it != background_label) {</div>
-<div class="line"><span class="lineno">   74</span>      unique_labels.insert(*it);</div>
-<div class="line"><span class="lineno">   75</span>    }</div>
-<div class="line"><span class="lineno">   76</span>  }</div>
-<div class="line"><span class="lineno">   77</span>  <span class="keywordflow">return</span> ObjectIds(unique_labels.begin(), unique_labels.end());</div>
-<div class="line"><span class="lineno">   78</span>}</div>
-<div class="ttc" id="anamespacedyno_html_a38bb86e4154b86428b8d133be03fb2b5"><div class="ttname"><a href="namespacedyno.html#a38bb86e4154b86428b8d133be03fb2b5">dyno::ObjectId</a></div><div class="ttdeci">int ObjectId</div><div class="ttdoc">Discrete object id, j.</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00069">Types.hpp:69</a></div></div>
+<p class="definition">Definition at line <a class="el" href="VisionTools_8cc_source.html#l00100">100</a> of file <a class="el" href="VisionTools_8cc_source.html">VisionTools.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  100</span>                                              {</div>
+<div class="line"><span class="lineno">  101</span>  <span class="comment">// CHECK(!image.empty());</span></div>
+<div class="line"><span class="lineno">  102</span>  <span class="comment">// std::unordered_set&lt;ObjectId&gt; unique_labels;</span></div>
+<div class="line"><span class="lineno">  103</span>  <span class="comment">// for (auto it = image.begin&lt;ObjectId&gt;(); it != image.end&lt;ObjectId&gt;(); ++it)</span></div>
+<div class="line"><span class="lineno">  104</span>  <span class="comment">// {</span></div>
+<div class="line"><span class="lineno">  105</span>  <span class="comment">//   if (*it != background_label) {</span></div>
+<div class="line"><span class="lineno">  106</span>  <span class="comment">//     unique_labels.insert(*it);</span></div>
+<div class="line"><span class="lineno">  107</span>  <span class="comment">//   }</span></div>
+<div class="line"><span class="lineno">  108</span>  <span class="comment">// }</span></div>
+<div class="line"><span class="lineno">  109</span>  <span class="comment">// return ObjectIds(unique_labels.begin(), unique_labels.end());</span></div>
+<div class="line"><span class="lineno">  110</span>  <span class="comment">// std::vector&lt;ObjectId&gt; v(image.ptr&lt;ObjectId&gt;(), image.ptr&lt;ObjectId&gt;() +</span></div>
+<div class="line"><span class="lineno">  111</span>  <span class="comment">// image.total()); std::sort(v.begin(), v.end()); auto last =</span></div>
+<div class="line"><span class="lineno">  112</span>  <span class="comment">// std::unique(v.begin(), v.end()); v.erase(last, v.end());</span></div>
+<div class="line"><span class="lineno">  113</span>  <span class="comment">// v.erase(std::remove(v.begin(), v.end(), 0), v.end());</span></div>
+<div class="line"><span class="lineno">  114</span>  <span class="comment">// return v;</span></div>
+<div class="line"><span class="lineno">  115</span> </div>
+<div class="line"><span class="lineno">  116</span>  <span class="comment">// from testing in test_code_concepts.cc (CodeConcepts.uniqueLabelSpeed)</span></div>
+<div class="line"><span class="lineno">  117</span>  <span class="comment">// this implementation is up to 28x faster than a simple a std::set approach!!</span></div>
+<div class="line"><span class="lineno">  118</span>  <span class="keyword">const</span> <span class="keywordtype">int</span> numThreads =</div>
+<div class="line"><span class="lineno">  119</span>      std::min(std::thread::hardware_concurrency(), (<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span>)image.rows);</div>
+<div class="line"><span class="lineno">  120</span>  <span class="keyword">const</span> <span class="keywordtype">int</span> rowsPerThread = image.rows / numThreads;</div>
+<div class="line"><span class="lineno">  121</span> </div>
+<div class="line"><span class="lineno">  122</span>  std::vector&lt;std::future&lt;std::unordered_set&lt;int&gt;&gt;&gt; futures;</div>
+<div class="line"><span class="lineno">  123</span> </div>
+<div class="line"><span class="lineno">  124</span>  <span class="comment">// Launch threads to process row chunks</span></div>
+<div class="line"><span class="lineno">  125</span>  <span class="keywordflow">for</span> (<span class="keywordtype">int</span> t = 0; t &lt; numThreads; ++t) {</div>
+<div class="line"><span class="lineno">  126</span>    <span class="keywordtype">int</span> startRow = t * rowsPerThread;</div>
+<div class="line"><span class="lineno">  127</span>    <span class="keywordtype">int</span> endRow = (t == numThreads - 1) ? image.rows : (t + 1) * rowsPerThread;</div>
+<div class="line"><span class="lineno">  128</span> </div>
+<div class="line"><span class="lineno">  129</span>    futures.push_back(</div>
+<div class="line"><span class="lineno">  130</span>        std::async(std::launch::async, [&amp;image, startRow, endRow]() {</div>
+<div class="line"><span class="lineno">  131</span>          std::unordered_set&lt;int&gt; localUnique;</div>
+<div class="line"><span class="lineno">  132</span>          <span class="keywordflow">for</span> (<span class="keywordtype">int</span> row = startRow; row &lt; endRow; ++row) {</div>
+<div class="line"><span class="lineno">  133</span>            <span class="keyword">const</span> <span class="keywordtype">int</span>* rowPtr = image.ptr&lt;<span class="keywordtype">int</span>&gt;(row);</div>
+<div class="line"><span class="lineno">  134</span>            <span class="keywordflow">for</span> (<span class="keywordtype">int</span> col = 0; col &lt; image.cols; ++col) {</div>
+<div class="line"><span class="lineno">  135</span>              localUnique.insert(rowPtr[col]);</div>
+<div class="line"><span class="lineno">  136</span>            }</div>
+<div class="line"><span class="lineno">  137</span>          }</div>
+<div class="line"><span class="lineno">  138</span>          <span class="keywordflow">return</span> localUnique;</div>
+<div class="line"><span class="lineno">  139</span>        }));</div>
+<div class="line"><span class="lineno">  140</span>  }</div>
+<div class="line"><span class="lineno">  141</span> </div>
+<div class="line"><span class="lineno">  142</span>  <span class="comment">// Merge results</span></div>
+<div class="line"><span class="lineno">  143</span>  std::unordered_set&lt;int&gt; globalUnique;</div>
+<div class="line"><span class="lineno">  144</span>  <span class="keywordflow">for</span> (<span class="keyword">auto</span>&amp; future : futures) {</div>
+<div class="line"><span class="lineno">  145</span>    <span class="keyword">auto</span> localSet = future.get();</div>
+<div class="line"><span class="lineno">  146</span>    globalUnique.insert(localSet.begin(), localSet.end());</div>
+<div class="line"><span class="lineno">  147</span>  }</div>
+<div class="line"><span class="lineno">  148</span>  <span class="comment">// dont include background label!!</span></div>
+<div class="line"><span class="lineno">  149</span>  globalUnique.erase(background_label);</div>
+<div class="line"><span class="lineno">  150</span> </div>
+<div class="line"><span class="lineno">  151</span>  <span class="comment">// Convert to vector (NOTE: not sorted!!)</span></div>
+<div class="line"><span class="lineno">  152</span>  std::vector&lt;int&gt; result(globalUnique.begin(), globalUnique.end());</div>
+<div class="line"><span class="lineno">  153</span>  <span class="comment">// std::sort(result.begin(), result.end());</span></div>
+<div class="line"><span class="lineno">  154</span> </div>
+<div class="line"><span class="lineno">  155</span>  <span class="keywordflow">return</span> result;</div>
+<div class="line"><span class="lineno">  156</span>}</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="namespacedyno.html#ae78915ea0afc5025dafb398829f15ba3">dyno::background_label</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1ClusterSlamAllLoader.html#a074af7358c98d715599460ca2671ecc4">dyno::ClusterSlamAllLoader::associateDetectedBBWithObject()</a>, <a class="el" href="namespacedyno_1_1vision__tools.html#ad7347d14d7f68183415227f23bbd6f7d">computeObjectMaskBoundaryMask()</a>, <a class="el" href="classdyno_1_1Frame.html#ab038b536516e42beb788f1b794801270">dyno::Frame::constructDynamicObservations()</a>, <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#aadc1a14a0b67880dc979bc9ee8e85593">dyno::ProjectAriaAllLoader::getInstanceMask()</a>, <a class="el" href="namespacedyno.html#a4222260b2e297cbd6e2df476b0f58aaf">dyno::removeStaticObjectFromMask()</a>, <a class="el" href="namespacedyno_1_1vision__tools.html#a518b3162f275ce3e2301d249a7e1a6ff">shrinkMask()</a>, and <a class="el" href="classdyno_1_1ByteObjectTracker.html#aeb79dc19fb881160be780b9f4a2b2240">dyno::ByteObjectTracker::track()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1ClusterSlamAllLoader.html#a074af7358c98d715599460ca2671ecc4">dyno::ClusterSlamAllLoader::associateDetectedBBWithObject()</a>, <a class="el" href="namespacedyno_1_1vision__tools.html#ad7347d14d7f68183415227f23bbd6f7d">computeObjectMaskBoundaryMask()</a>, <a class="el" href="classdyno_1_1Frame.html#ab038b536516e42beb788f1b794801270">dyno::Frame::constructDynamicObservations()</a>, <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#aadc1a14a0b67880dc979bc9ee8e85593">dyno::ProjectAriaAllLoader::getInstanceMask()</a>, <a class="el" href="namespacedyno.html#a4222260b2e297cbd6e2df476b0f58aaf">dyno::removeStaticObjectFromMask()</a>, and <a class="el" href="namespacedyno_1_1vision__tools.html#a518b3162f275ce3e2301d249a7e1a6ff">shrinkMask()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="namespacedyno_1_1vision__tools_a3a09fe6c15aeb5e18979dc27d68c4616_icgraph.png" border="0" usemap="#anamespacedyno_1_1vision__tools_a3a09fe6c15aeb5e18979dc27d68c4616_icgraph" alt=""/></div>
 <map name="anamespacedyno_1_1vision__tools_a3a09fe6c15aeb5e18979dc27d68c4616_icgraph" id="anamespacedyno_1_1vision__tools_a3a09fe6c15aeb5e18979dc27d68c4616_icgraph">
-<area shape="rect" title="Finds the unique object labels (j) as present in the instance segmentation image. Does not include th..." alt="" coords="565,197,705,237"/>
+<area shape="rect" title="Finds the unique object labels (j) as present in the instance segmentation image. Does not include th..." alt="" coords="565,165,705,205"/>
 <area shape="rect" href="classdyno_1_1ClusterSlamAllLoader.html#a074af7358c98d715599460ca2671ecc4" title=" " alt="" coords="266,5,507,45"/>
 <area shape="rect" href="namespacedyno_1_1vision__tools.html#ad7347d14d7f68183415227f23bbd6f7d" title="From an input instance/semantic mask type img construct a image mask (binary) that has True values ar..." alt="" coords="256,69,517,109"/>
 <area shape="rect" href="classdyno_1_1Frame.html#ab038b536516e42beb788f1b794801270" title=" " alt="" coords="272,133,501,173"/>
 <area shape="rect" href="classdyno_1_1ProjectAriaAllLoader.html#aadc1a14a0b67880dc979bc9ee8e85593" title=" " alt="" coords="289,197,484,237"/>
 <area shape="rect" href="namespacedyno.html#a4222260b2e297cbd6e2df476b0f58aaf" title="From an instance semantic mask (one that satisfies the requirements for a SemanticMask),..." alt="" coords="291,261,482,301"/>
 <area shape="rect" href="namespacedyno_1_1vision__tools.html#a518b3162f275ce3e2301d249a7e1a6ff" title="Shrinks all found object masks by a given ammount." alt="" coords="317,325,457,365"/>
-<area shape="rect" href="classdyno_1_1ByteObjectTracker.html#aeb79dc19fb881160be780b9f4a2b2240" title=" " alt="" coords="297,413,477,453"/>
 <area shape="rect" href="classdyno_1_1ClusterSlamAllLoader.html#a6dbf46c48ea9477aa915bff62ee98ea8" title=" " alt="" coords="5,5,208,45"/>
-<area shape="rect" href="classdyno_1_1FeatureTracker.html#a9890ba0c11b5932b5b4954a86bd03948" title=" " alt="" coords="28,69,185,109"/>
-<area shape="rect" href="classdyno_1_1Frame.html#a5553af4c0c310c23d0f39e0c1daf0478" title=" " alt="" coords="31,141,183,166"/>
 <area shape="rect" href="classdyno_1_1VirtualKittiMotionSegFolder.html#a5fbe696de81a23607cfb6333a6ff1f94" title=" " alt="" coords="18,261,195,301"/>
 </map>
 </div>
@@ -935,37 +1119,57 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>gtsam::FastMap&lt;ObjectId, Histogram&gt; </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="VisionTools_8cc_source.html#l00384">384</a> of file <a class="el" href="VisionTools_8cc_source.html">VisionTools.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  385</span>                                                         {</div>
-<div class="line"><span class="lineno">  386</span>  <span class="comment">// one for every object + 1 for static points</span></div>
-<div class="line"><span class="lineno">  387</span>  gtsam::FastMap&lt;ObjectId, Histogram&gt; histograms;</div>
-<div class="line"><span class="lineno">  388</span> </div>
-<div class="line"><span class="lineno">  389</span>  <span class="comment">// collect dynamic features</span></div>
-<div class="line"><span class="lineno">  390</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [object_id, observations] : frame-&gt;getObjectObservations()) {</div>
-<div class="line"><span class="lineno">  391</span>    <a class="code hl_class" href="classdyno_1_1Histogram.html">Histogram</a> hist(bh::make_histogram(bh::axis::variable&lt;&gt;(bins)));</div>
-<div class="line"><span class="lineno">  392</span>    hist.name_ = <span class="stringliteral">&quot;tacklet-length-&quot;</span> + std::to_string(object_id);</div>
-<div class="line"><span class="lineno">  393</span> </div>
-<div class="line"><span class="lineno">  394</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> tracklet_id : observations.object_features_) {</div>
-<div class="line"><span class="lineno">  395</span>      <span class="keyword">const</span> Feature::Ptr feature = frame-&gt;at(tracklet_id);</div>
-<div class="line"><span class="lineno">  396</span>      CHECK(feature);</div>
-<div class="line"><span class="lineno">  397</span>      <span class="keywordflow">if</span> (feature-&gt;usable()) {</div>
-<div class="line"><span class="lineno">  398</span>        hist.histogram_(feature-&gt;age());</div>
-<div class="line"><span class="lineno">  399</span>      }</div>
-<div class="line"><span class="lineno">  400</span>    }</div>
-<div class="line"><span class="lineno">  401</span> </div>
-<div class="line"><span class="lineno">  402</span>    histograms.insert2(object_id, hist);</div>
-<div class="line"><span class="lineno">  403</span>  }</div>
-<div class="line"><span class="lineno">  404</span> </div>
-<div class="line"><span class="lineno">  405</span>  <span class="comment">// collect static features</span></div>
-<div class="line"><span class="lineno">  406</span>  Histogram static_hist(bh::make_histogram(bh::axis::variable&lt;&gt;(bins)));</div>
-<div class="line"><span class="lineno">  407</span>  static_hist.name_ = <span class="stringliteral">&quot;tacklet-length-0&quot;</span>;</div>
-<div class="line"><span class="lineno">  408</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; static_feature : frame-&gt;static_features_.beginUsable()) {</div>
-<div class="line"><span class="lineno">  409</span>    static_hist.histogram_(static_feature-&gt;age());</div>
-<div class="line"><span class="lineno">  410</span>  }</div>
-<div class="line"><span class="lineno">  411</span>  histograms.insert2(background_label, static_hist);</div>
-<div class="line"><span class="lineno">  412</span>  <span class="keywordflow">return</span> histograms;</div>
-<div class="line"><span class="lineno">  413</span>}</div>
-<div class="ttc" id="aclassdyno_1_1Histogram_html"><div class="ttname"><a href="classdyno_1_1Histogram.html">dyno::Histogram</a></div><div class="ttdef"><b>Definition:</b> <a href="Histogram_8hpp_source.html#l00038">Histogram.hpp:38</a></div></div>
+<p class="definition">Definition at line <a class="el" href="VisionTools_8cc_source.html#l00491">491</a> of file <a class="el" href="VisionTools_8cc_source.html">VisionTools.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  492</span>                                                         {</div>
+<div class="line"><span class="lineno">  493</span>  <span class="comment">// one for every object + 1 for static points</span></div>
+<div class="line"><span class="lineno">  494</span>  gtsam::FastMap&lt;ObjectId, Histogram&gt; histograms;</div>
+<div class="line"><span class="lineno">  495</span> </div>
+<div class="line"><span class="lineno">  496</span>  <span class="keyword">const</span> <span class="keyword">auto</span>&amp; dyamic_features = frame-&gt;dynamic_features_;</div>
+<div class="line"><span class="lineno">  497</span>  <span class="keyword">auto</span> itr = dyamic_features.beginObjectIterator();</div>
+<div class="line"><span class="lineno">  498</span>  <span class="keywordflow">for</span> (itr; itr != dyamic_features.endObjectIterator(); itr++) {</div>
+<div class="line"><span class="lineno">  499</span>    <span class="keyword">auto</span> [object_id, tracklet_ids] = *itr;</div>
+<div class="line"><span class="lineno">  500</span> </div>
+<div class="line"><span class="lineno">  501</span>    <a class="code hl_class" href="classdyno_1_1Histogram.html">Histogram</a> hist(bh::make_histogram(bh::axis::variable&lt;&gt;(bins)));</div>
+<div class="line"><span class="lineno">  502</span>    hist.name_ = <span class="stringliteral">&quot;tacklet-length-&quot;</span> + std::to_string(object_id);</div>
+<div class="line"><span class="lineno">  503</span> </div>
+<div class="line"><span class="lineno">  504</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> tracklet_id : tracklet_ids) {</div>
+<div class="line"><span class="lineno">  505</span>      <span class="keyword">const</span> Feature::Ptr feature = dyamic_features.getByTrackletId(tracklet_id);</div>
+<div class="line"><span class="lineno">  506</span>      CHECK(feature);</div>
+<div class="line"><span class="lineno">  507</span>      <span class="keywordflow">if</span> (feature-&gt;usable()) {</div>
+<div class="line"><span class="lineno">  508</span>        hist.histogram_(feature-&gt;age());</div>
+<div class="line"><span class="lineno">  509</span>      }</div>
+<div class="line"><span class="lineno">  510</span>    }</div>
+<div class="line"><span class="lineno">  511</span> </div>
+<div class="line"><span class="lineno">  512</span>    histograms.insert2(object_id, hist);</div>
+<div class="line"><span class="lineno">  513</span>  }</div>
+<div class="line"><span class="lineno">  514</span> </div>
+<div class="line"><span class="lineno">  515</span>  <span class="comment">// collect dynamic features</span></div>
+<div class="line"><span class="lineno">  516</span>  <span class="comment">// for (const auto&amp; [object_id, observations] :</span></div>
+<div class="line"><span class="lineno">  517</span>  <span class="comment">// frame-&gt;getObjectObservations()) {</span></div>
+<div class="line"><span class="lineno">  518</span>  <span class="comment">//   Histogram hist(bh::make_histogram(bh::axis::variable&lt;&gt;(bins)));</span></div>
+<div class="line"><span class="lineno">  519</span>  <span class="comment">//   hist.name_ = &quot;tacklet-length-&quot; + std::to_string(object_id);</span></div>
+<div class="line"><span class="lineno">  520</span> </div>
+<div class="line"><span class="lineno">  521</span>  <span class="comment">//   // for (auto tracklet_id : observations.object_features) {</span></div>
+<div class="line"><span class="lineno">  522</span>  <span class="comment">//   //   // const Feature::Ptr feature = frame-&gt;at(tracklet_id);</span></div>
+<div class="line"><span class="lineno">  523</span>  <span class="comment">//   //   // CHECK(feature);</span></div>
+<div class="line"><span class="lineno">  524</span>  <span class="comment">//   //   // if (feature-&gt;usable()) {</span></div>
+<div class="line"><span class="lineno">  525</span>  <span class="comment">//   //   //   hist.histogram_(feature-&gt;age());</span></div>
+<div class="line"><span class="lineno">  526</span>  <span class="comment">//   //   // }</span></div>
+<div class="line"><span class="lineno">  527</span>  <span class="comment">//   // }</span></div>
+<div class="line"><span class="lineno">  528</span> </div>
+<div class="line"><span class="lineno">  529</span>  <span class="comment">//   histograms.insert2(object_id, hist);</span></div>
+<div class="line"><span class="lineno">  530</span>  <span class="comment">// }</span></div>
+<div class="line"><span class="lineno">  531</span> </div>
+<div class="line"><span class="lineno">  532</span>  <span class="comment">// collect static features</span></div>
+<div class="line"><span class="lineno">  533</span>  Histogram static_hist(bh::make_histogram(bh::axis::variable&lt;&gt;(bins)));</div>
+<div class="line"><span class="lineno">  534</span>  static_hist.name_ = <span class="stringliteral">&quot;tacklet-length-0&quot;</span>;</div>
+<div class="line"><span class="lineno">  535</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; static_feature : frame-&gt;static_features_.beginUsable()) {</div>
+<div class="line"><span class="lineno">  536</span>    static_hist.histogram_(static_feature-&gt;age());</div>
+<div class="line"><span class="lineno">  537</span>  }</div>
+<div class="line"><span class="lineno">  538</span>  histograms.insert2(background_label, static_hist);</div>
+<div class="line"><span class="lineno">  539</span>  <span class="keywordflow">return</span> histograms;</div>
+<div class="line"><span class="lineno">  540</span>}</div>
+<div class="ttc" id="aclassdyno_1_1Histogram_html"><div class="ttname"><a href="classdyno_1_1Histogram.html">dyno::Histogram</a></div><div class="ttdef"><b>Definition:</b> <a href="Histogram_8hpp_source.html#l00044">Histogram.hpp:44</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="namespacedyno.html#ae78915ea0afc5025dafb398829f15ba3">dyno::background_label</a>, <a class="el" href="classdyno_1_1Histogram.html#a88536a6a75b12af6e2a480d856d56560">dyno::Histogram::histogram_</a>, and <a class="el" href="classdyno_1_1Histogram.html#a411c9781e100046a9ade240c287ba6d0">dyno::Histogram::name_</a>.</p>
 
@@ -1020,41 +1224,40 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="VisionTools_8cc_source.html#l00359">359</a> of file <a class="el" href="VisionTools_8cc_source.html">VisionTools.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  360</span>                                                                            {</div>
-<div class="line"><span class="lineno">  361</span>  <span class="keywordflow">if</span> (old_labels.size() != new_labels.size()) {</div>
-<div class="line"><span class="lineno">  362</span>    <span class="keywordflow">throw</span> std::invalid_argument(</div>
-<div class="line"><span class="lineno">  363</span>        <span class="stringliteral">&quot;Old labels and new labels must have the same size&quot;</span>);</div>
-<div class="line"><span class="lineno">  364</span>  }</div>
-<div class="line"><span class="lineno">  365</span> </div>
-<div class="line"><span class="lineno">  366</span>  <span class="comment">// Create a map from old labels to new labels</span></div>
-<div class="line"><span class="lineno">  367</span>  std::unordered_map&lt;ObjectId, ObjectId&gt; label_map;</div>
-<div class="line"><span class="lineno">  368</span>  <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; old_labels.size(); ++i) {</div>
-<div class="line"><span class="lineno">  369</span>    label_map[old_labels[i]] = new_labels[i];</div>
-<div class="line"><span class="lineno">  370</span>  }</div>
-<div class="line"><span class="lineno">  371</span> </div>
-<div class="line"><span class="lineno">  372</span>  mask.copyTo(relabelled_mask);</div>
-<div class="line"><span class="lineno">  373</span>  <span class="comment">// / Relabel the pixels</span></div>
-<div class="line"><span class="lineno">  374</span>  <span class="keywordflow">for</span> (<span class="keywordtype">int</span> r = 0; r &lt; relabelled_mask.rows; ++r) {</div>
-<div class="line"><span class="lineno">  375</span>    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> c = 0; c &lt; relabelled_mask.cols; ++c) {</div>
-<div class="line"><span class="lineno">  376</span>      ObjectId pixelValue = relabelled_mask.at&lt;ObjectId&gt;(r, c);</div>
-<div class="line"><span class="lineno">  377</span>      <span class="keywordflow">if</span> (label_map.find(pixelValue) != label_map.end()) {</div>
-<div class="line"><span class="lineno">  378</span>        relabelled_mask.at&lt;ObjectId&gt;(r, c) = label_map[pixelValue];</div>
-<div class="line"><span class="lineno">  379</span>      }</div>
-<div class="line"><span class="lineno">  380</span>    }</div>
-<div class="line"><span class="lineno">  381</span>  }</div>
-<div class="line"><span class="lineno">  382</span>}</div>
+<p class="definition">Definition at line <a class="el" href="VisionTools_8cc_source.html#l00466">466</a> of file <a class="el" href="VisionTools_8cc_source.html">VisionTools.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  467</span>                                                                            {</div>
+<div class="line"><span class="lineno">  468</span>  <span class="keywordflow">if</span> (old_labels.size() != new_labels.size()) {</div>
+<div class="line"><span class="lineno">  469</span>    <span class="keywordflow">throw</span> std::invalid_argument(</div>
+<div class="line"><span class="lineno">  470</span>        <span class="stringliteral">&quot;Old labels and new labels must have the same size&quot;</span>);</div>
+<div class="line"><span class="lineno">  471</span>  }</div>
+<div class="line"><span class="lineno">  472</span> </div>
+<div class="line"><span class="lineno">  473</span>  <span class="comment">// Create a map from old labels to new labels</span></div>
+<div class="line"><span class="lineno">  474</span>  std::unordered_map&lt;ObjectId, ObjectId&gt; label_map;</div>
+<div class="line"><span class="lineno">  475</span>  <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; old_labels.size(); ++i) {</div>
+<div class="line"><span class="lineno">  476</span>    label_map[old_labels[i]] = new_labels[i];</div>
+<div class="line"><span class="lineno">  477</span>  }</div>
+<div class="line"><span class="lineno">  478</span> </div>
+<div class="line"><span class="lineno">  479</span>  mask.copyTo(relabelled_mask);</div>
+<div class="line"><span class="lineno">  480</span>  <span class="comment">// / Relabel the pixels</span></div>
+<div class="line"><span class="lineno">  481</span>  <span class="keywordflow">for</span> (<span class="keywordtype">int</span> r = 0; r &lt; relabelled_mask.rows; ++r) {</div>
+<div class="line"><span class="lineno">  482</span>    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> c = 0; c &lt; relabelled_mask.cols; ++c) {</div>
+<div class="line"><span class="lineno">  483</span>      ObjectId pixelValue = relabelled_mask.at&lt;ObjectId&gt;(r, c);</div>
+<div class="line"><span class="lineno">  484</span>      <span class="keywordflow">if</span> (label_map.find(pixelValue) != label_map.end()) {</div>
+<div class="line"><span class="lineno">  485</span>        relabelled_mask.at&lt;ObjectId&gt;(r, c) = label_map[pixelValue];</div>
+<div class="line"><span class="lineno">  486</span>      }</div>
+<div class="line"><span class="lineno">  487</span>    }</div>
+<div class="line"><span class="lineno">  488</span>  }</div>
+<div class="line"><span class="lineno">  489</span>}</div>
 </div><!-- fragment -->
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1ClusterSlamAllLoader.html#a074af7358c98d715599460ca2671ecc4">dyno::ClusterSlamAllLoader::associateDetectedBBWithObject()</a>, <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#aadc1a14a0b67880dc979bc9ee8e85593">dyno::ProjectAriaAllLoader::getInstanceMask()</a>, and <a class="el" href="classdyno_1_1ByteObjectTracker.html#aeb79dc19fb881160be780b9f4a2b2240">dyno::ByteObjectTracker::track()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1ClusterSlamAllLoader.html#a074af7358c98d715599460ca2671ecc4">dyno::ClusterSlamAllLoader::associateDetectedBBWithObject()</a>, and <a class="el" href="classdyno_1_1ProjectAriaAllLoader.html#aadc1a14a0b67880dc979bc9ee8e85593">dyno::ProjectAriaAllLoader::getInstanceMask()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="namespacedyno_1_1vision__tools_ae077e5d2722435f6731a8f58e3aab848_icgraph.png" border="0" usemap="#anamespacedyno_1_1vision__tools_ae077e5d2722435f6731a8f58e3aab848_icgraph" alt=""/></div>
 <map name="anamespacedyno_1_1vision__tools_ae077e5d2722435f6731a8f58e3aab848_icgraph" id="anamespacedyno_1_1vision__tools_ae077e5d2722435f6731a8f58e3aab848_icgraph">
-<area shape="rect" title=" " alt="" coords="545,69,685,109"/>
+<area shape="rect" title=" " alt="" coords="545,37,685,77"/>
 <area shape="rect" href="classdyno_1_1ClusterSlamAllLoader.html#a074af7358c98d715599460ca2671ecc4" title=" " alt="" coords="256,5,497,45"/>
 <area shape="rect" href="classdyno_1_1ProjectAriaAllLoader.html#aadc1a14a0b67880dc979bc9ee8e85593" title=" " alt="" coords="279,69,474,109"/>
-<area shape="rect" href="classdyno_1_1ByteObjectTracker.html#aeb79dc19fb881160be780b9f4a2b2240" title=" " alt="" coords="287,157,467,197"/>
 <area shape="rect" href="classdyno_1_1ClusterSlamAllLoader.html#a6dbf46c48ea9477aa915bff62ee98ea8" title=" " alt="" coords="5,5,208,45"/>
 </map>
 </div>
@@ -1103,25 +1306,24 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="VisionTools_8cc_source.html#l00260">260</a> of file <a class="el" href="VisionTools_8cc_source.html">VisionTools.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  260</span>                                                                         {</div>
-<div class="line"><span class="lineno">  261</span>  shrunk_mask = cv::Mat::zeros(mask.size(), mask.type());</div>
-<div class="line"><span class="lineno">  262</span>  shrunk_mask.setTo(background_label);</div>
-<div class="line"><span class="lineno">  263</span> </div>
-<div class="line"><span class="lineno">  264</span>  <span class="keyword">const</span> <a class="code hl_typedef" href="namespacedyno.html#ae777b079c377ffa066d89051ee0cc623">ObjectIds</a> original_object_labels = <a class="code hl_function" href="namespacedyno_1_1vision__tools.html#a3a09fe6c15aeb5e18979dc27d68c4616">getObjectLabels</a>(mask);</div>
-<div class="line"><span class="lineno">  265</span> </div>
-<div class="line"><span class="lineno">  266</span>  <span class="keyword">const</span> cv::Mat element = cv::getStructuringElement(</div>
-<div class="line"><span class="lineno">  267</span>      cv::MORPH_RECT, cv::Size(2 * erosion_size + 1, 2 * erosion_size + 1));</div>
-<div class="line"><span class="lineno">  268</span> </div>
-<div class="line"><span class="lineno">  269</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> object_id : original_object_labels) {</div>
-<div class="line"><span class="lineno">  270</span>    cv::Mat obj_mask = (mask == object_id);</div>
-<div class="line"><span class="lineno">  271</span>    cv::Mat eroded_mask;</div>
-<div class="line"><span class="lineno">  272</span>    cv::erode(obj_mask, eroded_mask, element);</div>
-<div class="line"><span class="lineno">  273</span>    shrunk_mask = shrunk_mask.setTo(object_id, eroded_mask);</div>
-<div class="line"><span class="lineno">  274</span>  }</div>
-<div class="line"><span class="lineno">  275</span>}</div>
-<div class="ttc" id="anamespacedyno_1_1vision__tools_html_a3a09fe6c15aeb5e18979dc27d68c4616"><div class="ttname"><a href="namespacedyno_1_1vision__tools.html#a3a09fe6c15aeb5e18979dc27d68c4616">dyno::vision_tools::getObjectLabels</a></div><div class="ttdeci">ObjectIds getObjectLabels(const cv::Mat &amp;image)</div><div class="ttdoc">Finds the unique object labels (j) as present in the instance segmentation image. Does not include th...</div><div class="ttdef"><b>Definition:</b> <a href="VisionTools_8cc_source.html#l00069">VisionTools.cc:69</a></div></div>
-<div class="ttc" id="anamespacedyno_html_ae777b079c377ffa066d89051ee0cc623"><div class="ttname"><a href="namespacedyno.html#ae777b079c377ffa066d89051ee0cc623">dyno::ObjectIds</a></div><div class="ttdeci">std::vector&lt; ObjectId &gt; ObjectIds</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00070">Types.hpp:70</a></div></div>
+<p class="definition">Definition at line <a class="el" href="VisionTools_8cc_source.html#l00344">344</a> of file <a class="el" href="VisionTools_8cc_source.html">VisionTools.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  344</span>                                                                         {</div>
+<div class="line"><span class="lineno">  345</span>  shrunk_mask = cv::Mat::zeros(mask.size(), mask.type());</div>
+<div class="line"><span class="lineno">  346</span>  shrunk_mask.setTo(background_label);</div>
+<div class="line"><span class="lineno">  347</span> </div>
+<div class="line"><span class="lineno">  348</span>  <span class="keyword">const</span> <a class="code hl_typedef" href="namespacedyno.html#ae777b079c377ffa066d89051ee0cc623">ObjectIds</a> original_object_labels = <a class="code hl_function" href="namespacedyno_1_1vision__tools.html#a3a09fe6c15aeb5e18979dc27d68c4616">getObjectLabels</a>(mask);</div>
+<div class="line"><span class="lineno">  349</span> </div>
+<div class="line"><span class="lineno">  350</span>  <span class="keyword">const</span> cv::Mat element = cv::getStructuringElement(</div>
+<div class="line"><span class="lineno">  351</span>      cv::MORPH_RECT, cv::Size(2 * erosion_size + 1, 2 * erosion_size + 1));</div>
+<div class="line"><span class="lineno">  352</span> </div>
+<div class="line"><span class="lineno">  353</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> object_id : original_object_labels) {</div>
+<div class="line"><span class="lineno">  354</span>    cv::Mat obj_mask = (mask == object_id);</div>
+<div class="line"><span class="lineno">  355</span>    cv::Mat eroded_mask;</div>
+<div class="line"><span class="lineno">  356</span>    cv::erode(obj_mask, eroded_mask, element);</div>
+<div class="line"><span class="lineno">  357</span>    shrunk_mask = shrunk_mask.setTo(object_id, eroded_mask);</div>
+<div class="line"><span class="lineno">  358</span>  }</div>
+<div class="line"><span class="lineno">  359</span>}</div>
+<div class="ttc" id="anamespacedyno_1_1vision__tools_html_a3a09fe6c15aeb5e18979dc27d68c4616"><div class="ttname"><a href="namespacedyno_1_1vision__tools.html#a3a09fe6c15aeb5e18979dc27d68c4616">dyno::vision_tools::getObjectLabels</a></div><div class="ttdeci">ObjectIds getObjectLabels(const cv::Mat &amp;image)</div><div class="ttdoc">Finds the unique object labels (j) as present in the instance segmentation image. Does not include th...</div><div class="ttdef"><b>Definition:</b> <a href="VisionTools_8cc_source.html#l00100">VisionTools.cc:100</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="namespacedyno.html#ae78915ea0afc5025dafb398829f15ba3">dyno::background_label</a>, and <a class="el" href="namespacedyno_1_1vision__tools.html#a3a09fe6c15aeb5e18979dc27d68c4616">getObjectLabels()</a>.</p>
 <div class="dynheader">
@@ -1131,204 +1333,6 @@ Here is the call graph for this function:</div>
 <map name="anamespacedyno_1_1vision__tools_a518b3162f275ce3e2301d249a7e1a6ff_cgraph" id="anamespacedyno_1_1vision__tools_a518b3162f275ce3e2301d249a7e1a6ff_cgraph">
 <area shape="rect" title="Shrinks all found object masks by a given ammount." alt="" coords="5,5,145,45"/>
 <area shape="rect" href="namespacedyno_1_1vision__tools.html#a3a09fe6c15aeb5e18979dc27d68c4616" title="Finds the unique object labels (j) as present in the instance segmentation image. Does not include th..." alt="" coords="193,5,333,45"/>
-</map>
-</div>
-
-</div>
-</div>
-<a id="a70f3daa5a2a0fb3a715ffb1fb65992cb" name="a70f3daa5a2a0fb3a715ffb1fb65992cb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a70f3daa5a2a0fb3a715ffb1fb65992cb">&#9670;&#160;</a></span>trackDynamic()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::vector&lt; std::vector&lt; int &gt; &gt; dyno::vision_tools::trackDynamic </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="structdyno_1_1FrontendParams.html">FrontendParams</a> &amp;&#160;</td>
-          <td class="paramname"><em>params</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="classdyno_1_1Frame.html">Frame</a> &amp;&#160;</td>
-          <td class="paramname"><em>previous_frame</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">Frame::Ptr&#160;</td>
-          <td class="paramname"><em>current_frame</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Depricate ;) </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">params</td><td></td></tr>
-    <tr><td class="paramname">previous_frame</td><td></td></tr>
-    <tr><td class="paramname">current_frame</td><td></td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd></dd></dl>
-
-<p class="definition">Definition at line <a class="el" href="VisionTools_8cc_source.html#l00080">80</a> of file <a class="el" href="VisionTools_8cc_source.html">VisionTools.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   82</span>                                                                   {</div>
-<div class="line"><span class="lineno">   83</span>  <span class="keyword">auto</span>&amp; objects_by_instance_label = current_frame-&gt;object_observations_;</div>
-<div class="line"><span class="lineno">   84</span> </div>
-<div class="line"><span class="lineno">   85</span>  <span class="keyword">auto</span>&amp; previous_dynamic_feature_container = previous_frame.<a class="code hl_variable" href="classdyno_1_1Frame.html#a25df20e3d82010bd6d0fb5d9106ea5ff">dynamic_features_</a>;</div>
-<div class="line"><span class="lineno">   86</span>  <span class="keyword">auto</span>&amp; current_dynamic_feature_container = current_frame-&gt;dynamic_features_;</div>
-<div class="line"><span class="lineno">   87</span> </div>
-<div class="line"><span class="lineno">   88</span>  <a class="code hl_typedef" href="namespacedyno.html#ae777b079c377ffa066d89051ee0cc623">ObjectIds</a> instance_labels_to_remove;</div>
-<div class="line"><span class="lineno">   89</span> </div>
-<div class="line"><span class="lineno">   90</span>  <span class="keywordflow">for</span> (<span class="keyword">auto</span>&amp; [instance_label, object_observation] : objects_by_instance_label) {</div>
-<div class="line"><span class="lineno">   91</span>    <span class="keywordtype">double</span> obj_center_depth = 0, sf_min = 100, sf_max = 0, sf_mean = 0,</div>
-<div class="line"><span class="lineno">   92</span>           sf_count = 0;</div>
-<div class="line"><span class="lineno">   93</span>    std::vector&lt;int&gt; sf_range(10, 0);</div>
-<div class="line"><span class="lineno">   94</span> </div>
-<div class="line"><span class="lineno">   95</span>    <span class="keyword">const</span> <span class="keywordtype">size_t</span> num_object_features =</div>
-<div class="line"><span class="lineno">   96</span>        object_observation.object_features_.size();</div>
-<div class="line"><span class="lineno">   97</span>    <span class="comment">// LOG(INFO) &lt;&lt; &quot;tracking object observation with instance label &quot; &lt;&lt;</span></div>
-<div class="line"><span class="lineno">   98</span>    <span class="comment">// instance_label &lt;&lt; &quot; and &quot; &lt;&lt; num_object_features &lt;&lt; &quot; features&quot;;</span></div>
-<div class="line"><span class="lineno">   99</span> </div>
-<div class="line"><span class="lineno">  100</span>    <span class="keywordtype">int</span> feature_pairs_valid = 0;</div>
-<div class="line"><span class="lineno">  101</span>    <span class="keywordtype">int</span> num_found = 0;</div>
-<div class="line"><span class="lineno">  102</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <a class="code hl_typedef" href="namespacedyno.html#afdd174eb44901fb205371d796287378c">TrackletId</a> tracklet_id : object_observation.object_features_) {</div>
-<div class="line"><span class="lineno">  103</span>      <span class="keywordflow">if</span> (previous_dynamic_feature_container.exists(tracklet_id)) {</div>
-<div class="line"><span class="lineno">  104</span>        num_found++;</div>
-<div class="line"><span class="lineno">  105</span>        CHECK(current_dynamic_feature_container.exists(tracklet_id));</div>
-<div class="line"><span class="lineno">  106</span> </div>
-<div class="line"><span class="lineno">  107</span>        Feature::Ptr current_feature =</div>
-<div class="line"><span class="lineno">  108</span>            current_dynamic_feature_container.getByTrackletId(tracklet_id);</div>
-<div class="line"><span class="lineno">  109</span>        Feature::Ptr previous_feature =</div>
-<div class="line"><span class="lineno">  110</span>            previous_dynamic_feature_container.getByTrackletId(tracklet_id);</div>
-<div class="line"><span class="lineno">  111</span> </div>
-<div class="line"><span class="lineno">  112</span>        <span class="keywordflow">if</span> (!previous_feature-&gt;usable()) {</div>
-<div class="line"><span class="lineno">  113</span>          current_feature-&gt;markInvalid();</div>
-<div class="line"><span class="lineno">  114</span>          <span class="keywordflow">continue</span>;</div>
-<div class="line"><span class="lineno">  115</span>        }</div>
-<div class="line"><span class="lineno">  116</span> </div>
-<div class="line"><span class="lineno">  117</span>        <span class="comment">// this can happen in situations such as the updateDepths when depths &gt;</span></div>
-<div class="line"><span class="lineno">  118</span>        <span class="comment">// thresh are marked invalud</span></div>
-<div class="line"><span class="lineno">  119</span>        <span class="keywordflow">if</span> (!current_feature-&gt;usable()) {</div>
-<div class="line"><span class="lineno">  120</span>          <span class="keywordflow">continue</span>;</div>
-<div class="line"><span class="lineno">  121</span>        }</div>
-<div class="line"><span class="lineno">  122</span> </div>
-<div class="line"><span class="lineno">  123</span>        CHECK(!previous_feature-&gt;isStatic());</div>
-<div class="line"><span class="lineno">  124</span>        CHECK(!current_feature-&gt;isStatic());</div>
-<div class="line"><span class="lineno">  125</span> </div>
-<div class="line"><span class="lineno">  126</span>        Landmark lmk_previous = previous_frame.<a class="code hl_function" href="classdyno_1_1Frame.html#ae588299966f1a710e11db6d64cc5b707">backProjectToWorld</a>(tracklet_id);</div>
-<div class="line"><span class="lineno">  127</span>        Landmark lmk_current = current_frame-&gt;backProjectToWorld(tracklet_id);</div>
-<div class="line"><span class="lineno">  128</span> </div>
-<div class="line"><span class="lineno">  129</span>        Landmark flow_world = lmk_current - lmk_previous;</div>
-<div class="line"><span class="lineno">  130</span>        <span class="keywordtype">double</span> sf_norm = flow_world.norm();</div>
-<div class="line"><span class="lineno">  131</span> </div>
-<div class="line"><span class="lineno">  132</span>        feature_pairs_valid++;</div>
-<div class="line"><span class="lineno">  133</span> </div>
-<div class="line"><span class="lineno">  134</span>        <span class="keywordflow">if</span> (sf_norm &lt; params.<a class="code hl_variable" href="structdyno_1_1FrontendParams.html#a27cd8ab520f7cbeb68e75a3b49cf26ef">scene_flow_magnitude</a>) sf_count = sf_count + 1;</div>
-<div class="line"><span class="lineno">  135</span>        <span class="keywordflow">if</span> (sf_norm &lt; sf_min) sf_min = sf_norm;</div>
-<div class="line"><span class="lineno">  136</span>        <span class="keywordflow">if</span> (sf_norm &gt; sf_max) sf_max = sf_norm;</div>
-<div class="line"><span class="lineno">  137</span>        sf_mean = sf_mean + sf_norm;</div>
-<div class="line"><span class="lineno">  138</span> </div>
-<div class="line"><span class="lineno">  139</span>        {</div>
-<div class="line"><span class="lineno">  140</span>          <span class="keywordflow">if</span> (0.0 &lt;= sf_norm &amp;&amp; sf_norm &lt; 0.05)</div>
-<div class="line"><span class="lineno">  141</span>            sf_range[0] = sf_range[0] + 1;</div>
-<div class="line"><span class="lineno">  142</span>          <span class="keywordflow">else</span> <span class="keywordflow">if</span> (0.05 &lt;= sf_norm &amp;&amp; sf_norm &lt; 0.1)</div>
-<div class="line"><span class="lineno">  143</span>            sf_range[1] = sf_range[1] + 1;</div>
-<div class="line"><span class="lineno">  144</span>          <span class="keywordflow">else</span> <span class="keywordflow">if</span> (0.1 &lt;= sf_norm &amp;&amp; sf_norm &lt; 0.2)</div>
-<div class="line"><span class="lineno">  145</span>            sf_range[2] = sf_range[2] + 1;</div>
-<div class="line"><span class="lineno">  146</span>          <span class="keywordflow">else</span> <span class="keywordflow">if</span> (0.2 &lt;= sf_norm &amp;&amp; sf_norm &lt; 0.4)</div>
-<div class="line"><span class="lineno">  147</span>            sf_range[3] = sf_range[3] + 1;</div>
-<div class="line"><span class="lineno">  148</span>          <span class="keywordflow">else</span> <span class="keywordflow">if</span> (0.4 &lt;= sf_norm &amp;&amp; sf_norm &lt; 0.8)</div>
-<div class="line"><span class="lineno">  149</span>            sf_range[4] = sf_range[4] + 1;</div>
-<div class="line"><span class="lineno">  150</span>          <span class="keywordflow">else</span> <span class="keywordflow">if</span> (0.8 &lt;= sf_norm &amp;&amp; sf_norm &lt; 1.6)</div>
-<div class="line"><span class="lineno">  151</span>            sf_range[5] = sf_range[5] + 1;</div>
-<div class="line"><span class="lineno">  152</span>          <span class="keywordflow">else</span> <span class="keywordflow">if</span> (1.6 &lt;= sf_norm &amp;&amp; sf_norm &lt; 3.2)</div>
-<div class="line"><span class="lineno">  153</span>            sf_range[6] = sf_range[6] + 1;</div>
-<div class="line"><span class="lineno">  154</span>          <span class="keywordflow">else</span> <span class="keywordflow">if</span> (3.2 &lt;= sf_norm &amp;&amp; sf_norm &lt; 6.4)</div>
-<div class="line"><span class="lineno">  155</span>            sf_range[7] = sf_range[7] + 1;</div>
-<div class="line"><span class="lineno">  156</span>          <span class="keywordflow">else</span> <span class="keywordflow">if</span> (6.4 &lt;= sf_norm &amp;&amp; sf_norm &lt; 12.8)</div>
-<div class="line"><span class="lineno">  157</span>            sf_range[8] = sf_range[8] + 1;</div>
-<div class="line"><span class="lineno">  158</span>          <span class="keywordflow">else</span> <span class="keywordflow">if</span> (12.8 &lt;= sf_norm &amp;&amp; sf_norm &lt; 25.6)</div>
-<div class="line"><span class="lineno">  159</span>            sf_range[9] = sf_range[9] + 1;</div>
-<div class="line"><span class="lineno">  160</span>        }</div>
-<div class="line"><span class="lineno">  161</span>      }</div>
-<div class="line"><span class="lineno">  162</span>    }</div>
-<div class="line"><span class="lineno">  163</span> </div>
-<div class="line"><span class="lineno">  164</span>    VLOG(10) &lt;&lt; <span class="stringliteral">&quot;Number feature pairs valid &quot;</span> &lt;&lt; feature_pairs_valid</div>
-<div class="line"><span class="lineno">  165</span>             &lt;&lt; <span class="stringliteral">&quot; out of &quot;</span> &lt;&lt; num_object_features &lt;&lt; <span class="stringliteral">&quot; for instance  &quot;</span></div>
-<div class="line"><span class="lineno">  166</span>             &lt;&lt; instance_label &lt;&lt; <span class="stringliteral">&quot; num found &quot;</span> &lt;&lt; num_found;</div>
-<div class="line"><span class="lineno">  167</span> </div>
-<div class="line"><span class="lineno">  168</span>    <span class="comment">// if no points found (i.e tracked)</span></div>
-<div class="line"><span class="lineno">  169</span>    <span class="comment">// dont do anything as this is a new object so we cannot say if its dynamic</span></div>
-<div class="line"><span class="lineno">  170</span>    <span class="comment">// or not</span></div>
-<div class="line"><span class="lineno">  171</span>    <span class="keywordflow">if</span> (num_found == 0) {</div>
-<div class="line"><span class="lineno">  172</span>      <span class="comment">// TODO: i guess?</span></div>
-<div class="line"><span class="lineno">  173</span>      object_observation.marked_as_moving_ = <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  174</span>    }</div>
-<div class="line"><span class="lineno">  175</span>    <span class="keywordflow">if</span> (sf_count / num_object_features &gt; params.<a class="code hl_variable" href="structdyno_1_1FrontendParams.html#ae4e06ec2821e70fd421cfe0ba74ad8c5">scene_flow_percentage</a> ||</div>
-<div class="line"><span class="lineno">  176</span>        num_object_features &lt; 30)</div>
-<div class="line"><span class="lineno">  177</span>    <span class="comment">// else if (sf_count/num_object_features&gt;params.scene_flow_percentage ||</span></div>
-<div class="line"><span class="lineno">  178</span>    <span class="comment">// num_object_features &lt; 15)</span></div>
-<div class="line"><span class="lineno">  179</span>    {</div>
-<div class="line"><span class="lineno">  180</span>      <span class="comment">// label this object as static background</span></div>
-<div class="line"><span class="lineno">  181</span>      <span class="comment">// LOG(INFO) &lt;&lt; &quot;Instance object &quot; &lt;&lt; instance_label &lt;&lt; &quot; to static for</span></div>
-<div class="line"><span class="lineno">  182</span>      <span class="comment">// frame &quot; &lt;&lt; current_frame-&gt;frame_id_;</span></div>
-<div class="line"><span class="lineno">  183</span>      instance_labels_to_remove.push_back(instance_label);</div>
-<div class="line"><span class="lineno">  184</span>    } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  185</span>      <span class="comment">// LOG(INFO) &lt;&lt; &quot;Instance object &quot; &lt;&lt; instance_label &lt;&lt; &quot; marked as</span></div>
-<div class="line"><span class="lineno">  186</span>      <span class="comment">// dynamic&quot;;</span></div>
-<div class="line"><span class="lineno">  187</span>      object_observation.marked_as_moving_ = <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  188</span>    }</div>
-<div class="line"><span class="lineno">  189</span>  }</div>
-<div class="line"><span class="lineno">  190</span> </div>
-<div class="line"><span class="lineno">  191</span>  <span class="comment">// we do the removal after the iteration so as not to mess up the loop</span></div>
-<div class="line"><span class="lineno">  192</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> label : instance_labels_to_remove) {</div>
-<div class="line"><span class="lineno">  193</span>    VLOG(30) &lt;&lt; <span class="stringliteral">&quot;Removing label &quot;</span> &lt;&lt; label;</div>
-<div class="line"><span class="lineno">  194</span>    <span class="comment">// TODO: this is really really slow!!</span></div>
-<div class="line"><span class="lineno">  195</span>    current_frame-&gt;moveObjectToStatic(label);</div>
-<div class="line"><span class="lineno">  196</span>    <span class="comment">// LOG(INFO) &lt;&lt; &quot;Done Removing label &quot; &lt;&lt; label;</span></div>
-<div class="line"><span class="lineno">  197</span>  }</div>
-<div class="line"><span class="lineno">  198</span> </div>
-<div class="line"><span class="lineno">  199</span>  <span class="keywordflow">return</span> std::vector&lt;std::vector&lt;int&gt;&gt;();</div>
-<div class="line"><span class="lineno">  200</span>}</div>
-<div class="ttc" id="aclassdyno_1_1Frame_html_a25df20e3d82010bd6d0fb5d9106ea5ff"><div class="ttname"><a href="classdyno_1_1Frame.html#a25df20e3d82010bd6d0fb5d9106ea5ff">dyno::Frame::dynamic_features_</a></div><div class="ttdeci">FeatureContainer dynamic_features_</div><div class="ttdef"><b>Definition:</b> <a href="Frame_8hpp_source.html#l00058">Frame.hpp:58</a></div></div>
-<div class="ttc" id="aclassdyno_1_1Frame_html_ae588299966f1a710e11db6d64cc5b707"><div class="ttname"><a href="classdyno_1_1Frame.html#ae588299966f1a710e11db6d64cc5b707">dyno::Frame::backProjectToWorld</a></div><div class="ttdeci">Landmark backProjectToWorld(TrackletId tracklet_id) const</div><div class="ttdoc">Project the feature into the world frame using the frames pose (T_world_camera_) and returns the 3D l...</div><div class="ttdef"><b>Definition:</b> <a href="Frame_8cc_source.html#l00138">Frame.cc:138</a></div></div>
-<div class="ttc" id="anamespacedyno_html_afdd174eb44901fb205371d796287378c"><div class="ttname"><a href="namespacedyno.html#afdd174eb44901fb205371d796287378c">dyno::TrackletId</a></div><div class="ttdeci">long int TrackletId</div><div class="ttdoc">Unique tracklet/landmark id, i.</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00080">Types.hpp:80</a></div></div>
-<div class="ttc" id="astructdyno_1_1FrontendParams_html_a27cd8ab520f7cbeb68e75a3b49cf26ef"><div class="ttname"><a href="structdyno_1_1FrontendParams.html#a27cd8ab520f7cbeb68e75a3b49cf26ef">dyno::FrontendParams::scene_flow_magnitude</a></div><div class="ttdeci">double scene_flow_magnitude</div><div class="ttdef"><b>Definition:</b> <a href="FrontendParams_8hpp_source.html#l00045">FrontendParams.hpp:45</a></div></div>
-<div class="ttc" id="astructdyno_1_1FrontendParams_html_ae4e06ec2821e70fd421cfe0ba74ad8c5"><div class="ttname"><a href="structdyno_1_1FrontendParams.html#ae4e06ec2821e70fd421cfe0ba74ad8c5">dyno::FrontendParams::scene_flow_percentage</a></div><div class="ttdeci">double scene_flow_percentage</div><div class="ttdef"><b>Definition:</b> <a href="FrontendParams_8hpp_source.html#l00046">FrontendParams.hpp:46</a></div></div>
-</div><!-- fragment -->
-<p class="reference">References <a class="el" href="classdyno_1_1Frame.html#ae588299966f1a710e11db6d64cc5b707">dyno::Frame::backProjectToWorld()</a>, <a class="el" href="classdyno_1_1Frame.html#a25df20e3d82010bd6d0fb5d9106ea5ff">dyno::Frame::dynamic_features_</a>, <a class="el" href="structdyno_1_1FrontendParams.html#a27cd8ab520f7cbeb68e75a3b49cf26ef">dyno::FrontendParams::scene_flow_magnitude</a>, and <a class="el" href="structdyno_1_1FrontendParams.html#ae4e06ec2821e70fd421cfe0ba74ad8c5">dyno::FrontendParams::scene_flow_percentage</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2">dyno::RGBDInstanceFrontendModule::nominalSpin()</a>.</p>
-<div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="namespacedyno_1_1vision__tools_a70f3daa5a2a0fb3a715ffb1fb65992cb_cgraph.png" border="0" usemap="#anamespacedyno_1_1vision__tools_a70f3daa5a2a0fb3a715ffb1fb65992cb_cgraph" alt=""/></div>
-<map name="anamespacedyno_1_1vision__tools_a70f3daa5a2a0fb3a715ffb1fb65992cb_cgraph" id="anamespacedyno_1_1vision__tools_a70f3daa5a2a0fb3a715ffb1fb65992cb_cgraph">
-<area shape="rect" title="Depricate ;)" alt="" coords="5,45,145,85"/>
-<area shape="rect" href="classdyno_1_1Frame.html#ae588299966f1a710e11db6d64cc5b707" title="Project the feature into the world frame using the frames pose (T_world_camera_) and returns the 3D l..." alt="" coords="193,45,380,85"/>
-<area shape="rect" href="classdyno_1_1Frame.html#ab1af68fa722b3a69160ae0436318ad19" title="Gets a feature from its tracklet ID. Could be static or dynamic. Nullptr is returned if the feature d..." alt="" coords="465,23,589,49"/>
-<area shape="rect" href="classdyno_1_1Frame.html#a32308c0857baace44e2d5e8e406be685" title=" " alt="" coords="428,73,625,113"/>
-<area shape="rect" href="classdyno_1_1FeatureContainer.html#abf2f2d568f5dc17944cc122c537a65f5" title="Returns true if a feature with the given tracklet id exists." alt="" coords="896,16,1071,56"/>
-<area shape="rect" href="classdyno_1_1Frame.html#ab9f7b3f513aeff82d47de7a72d66a69a" title="Checks if a feature exists within this frame. Could be static or dynamic." alt="" coords="685,23,836,49"/>
-<area shape="rect" href="classdyno_1_1FeatureContainer.html#a5b73e75d2f4063ac9c16dd0fd565f8da" title="Gets a feature given its tracklet id. If the feature does not exist, nullptr is returned." alt="" coords="673,73,848,113"/>
-</map>
-</div>
-<div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="namespacedyno_1_1vision__tools_a70f3daa5a2a0fb3a715ffb1fb65992cb_icgraph.png" border="0" usemap="#anamespacedyno_1_1vision__tools_a70f3daa5a2a0fb3a715ffb1fb65992cb_icgraph" alt=""/></div>
-<map name="anamespacedyno_1_1vision__tools_a70f3daa5a2a0fb3a715ffb1fb65992cb_icgraph" id="anamespacedyno_1_1vision__tools_a70f3daa5a2a0fb3a715ffb1fb65992cb_icgraph">
-<area shape="rect" title="Depricate ;)" alt="" coords="265,5,405,45"/>
-<area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2" title=" " alt="" coords="5,5,217,45"/>
 </map>
 </div>
 
@@ -1386,44 +1390,41 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="VisionTools_8cc_source.html#l00456">456</a> of file <a class="el" href="VisionTools_8cc_source.html">VisionTools.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  459</span>                                            {</div>
-<div class="line"><span class="lineno">  460</span>  cv::Mat point_cloud =</div>
-<div class="line"><span class="lineno">  461</span>      <a class="code hl_function" href="namespacedyno_1_1vision__tools.html#aaabcfcca356f30c83a45a51259e39783">depthTo3D</a>(depth_image, camera.<a class="code hl_function" href="classdyno_1_1Camera.html#af56ce3541d3ef8a7bcb2246e4634ca59">getParams</a>().<a class="code hl_function" href="classdyno_1_1CameraParams.html#ae50eb600c23415b3f7bd46e70553f96a">getCameraMatrix</a>());</div>
-<div class="line"><span class="lineno">  462</span> </div>
-<div class="line"><span class="lineno">  463</span>  <span class="keyword">const</span> cv::Mat&amp; mask = mask_image;</div>
-<div class="line"><span class="lineno">  464</span> </div>
-<div class="line"><span class="lineno">  465</span>  <span class="comment">// new mask of double type to match the type of the output cloud</span></div>
-<div class="line"><span class="lineno">  466</span>  cv::Mat mask_double;</div>
-<div class="line"><span class="lineno">  467</span>  mask.copyTo(mask_double);</div>
-<div class="line"><span class="lineno">  468</span>  mask_double.convertTo(mask_double, CV_64F);</div>
-<div class="line"><span class="lineno">  469</span> </div>
-<div class="line"><span class="lineno">  470</span>  std::vector&lt;cv::Mat&gt; channels = {point_cloud, mask_double};</div>
-<div class="line"><span class="lineno">  471</span> </div>
-<div class="line"><span class="lineno">  472</span>  cv::Mat projected_cloud;</div>
-<div class="line"><span class="lineno">  473</span>  cv::merge(channels, projected_cloud);</div>
-<div class="line"><span class="lineno">  474</span> </div>
-<div class="line"><span class="lineno">  475</span>  <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">auto</span> folder_name = <span class="stringliteral">&quot;project_mask&quot;</span>;</div>
-<div class="line"><span class="lineno">  476</span>  <span class="keyword">const</span> std::string output_folder = <a class="code hl_function" href="namespacedyno.html#a80a71f28f4f692dc9c21976237dfcfe1">getOutputFilePath</a>(folder_name);</div>
-<div class="line"><span class="lineno">  477</span> </div>
-<div class="line"><span class="lineno">  478</span>  <span class="comment">// create write out directly if it does not exist</span></div>
-<div class="line"><span class="lineno">  479</span>  <a class="code hl_function" href="namespacedyno.html#a2c13b22c0d8be0826712863c5ce0770e">createDirectory</a>(output_folder);</div>
-<div class="line"><span class="lineno">  480</span> </div>
-<div class="line"><span class="lineno">  481</span>  <span class="keyword">const</span> std::string file_name =</div>
-<div class="line"><span class="lineno">  482</span>      output_folder + <span class="stringliteral">&quot;/&quot;</span> + std::to_string(frame_id) + <span class="stringliteral">&quot;.yml&quot;</span>;</div>
-<div class="line"><span class="lineno">  483</span>  cv::FileStorage file(file_name, cv::FileStorage::WRITE);</div>
-<div class="line"><span class="lineno">  484</span>  file &lt;&lt; <span class="stringliteral">&quot;matrix&quot;</span> &lt;&lt; projected_cloud;</div>
-<div class="line"><span class="lineno">  485</span>  file.release();</div>
-<div class="line"><span class="lineno">  486</span>}</div>
-<div class="ttc" id="aclassdyno_1_1CameraParams_html_ae50eb600c23415b3f7bd46e70553f96a"><div class="ttname"><a href="classdyno_1_1CameraParams.html#ae50eb600c23415b3f7bd46e70553f96a">dyno::CameraParams::getCameraMatrix</a></div><div class="ttdeci">cv::Mat getCameraMatrix() const</div><div class="ttdef"><b>Definition:</b> <a href="CameraParams_8hpp_source.html#l00110">CameraParams.hpp:110</a></div></div>
-<div class="ttc" id="aclassdyno_1_1Camera_html_af56ce3541d3ef8a7bcb2246e4634ca59"><div class="ttname"><a href="classdyno_1_1Camera.html#af56ce3541d3ef8a7bcb2246e4634ca59">dyno::Camera::getParams</a></div><div class="ttdeci">const CameraParams &amp; getParams() const</div><div class="ttdef"><b>Definition:</b> <a href="Camera_8hpp_source.html#l00180">Camera.hpp:180</a></div></div>
-<div class="ttc" id="anamespacedyno_1_1vision__tools_html_aaabcfcca356f30c83a45a51259e39783"><div class="ttname"><a href="namespacedyno_1_1vision__tools.html#aaabcfcca356f30c83a45a51259e39783">dyno::vision_tools::depthTo3D</a></div><div class="ttdeci">cv::Mat depthTo3D(const ImageWrapper&lt; ImageType::Depth &gt; &amp;depth_image, const cv::Mat &amp;K)</div><div class="ttdoc">Projects a dense depth map to 3D coordinates in the local frame.</div><div class="ttdef"><b>Definition:</b> <a href="VisionTools_8cc_source.html#l00415">VisionTools.cc:415</a></div></div>
-<div class="ttc" id="anamespacedyno_html_a2c13b22c0d8be0826712863c5ce0770e"><div class="ttname"><a href="namespacedyno.html#a2c13b22c0d8be0826712863c5ce0770e">dyno::createDirectory</a></div><div class="ttdeci">bool createDirectory(const std::string &amp;path)</div><div class="ttdoc">Create a directory at the given path.</div><div class="ttdef"><b>Definition:</b> <a href="Logger_8cc_source.html#l00064">Logger.cc:64</a></div></div>
-<div class="ttc" id="anamespacedyno_html_a80a71f28f4f692dc9c21976237dfcfe1"><div class="ttname"><a href="namespacedyno.html#a80a71f28f4f692dc9c21976237dfcfe1">dyno::getOutputFilePath</a></div><div class="ttdeci">std::string getOutputFilePath(const std::string &amp;file_name)</div><div class="ttdoc">Constructs a file path (using the file name) where the root of the path is defined by the FLAGS_outpu...</div><div class="ttdef"><b>Definition:</b> <a href="Logger_8cc_source.html#l00047">Logger.cc:47</a></div></div>
+<p class="definition">Definition at line <a class="el" href="VisionTools_8cc_source.html#l00583">583</a> of file <a class="el" href="VisionTools_8cc_source.html">VisionTools.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  586</span>                                            {</div>
+<div class="line"><span class="lineno">  587</span>  cv::Mat point_cloud =</div>
+<div class="line"><span class="lineno">  588</span>      <a class="code hl_function" href="namespacedyno_1_1vision__tools.html#aaabcfcca356f30c83a45a51259e39783">depthTo3D</a>(depth_image, camera.<a class="code hl_function" href="classdyno_1_1Camera.html#af56ce3541d3ef8a7bcb2246e4634ca59">getParams</a>().<a class="code hl_function" href="classdyno_1_1CameraParams.html#ae50eb600c23415b3f7bd46e70553f96a">getCameraMatrix</a>());</div>
+<div class="line"><span class="lineno">  589</span> </div>
+<div class="line"><span class="lineno">  590</span>  <span class="keyword">const</span> cv::Mat&amp; mask = mask_image;</div>
+<div class="line"><span class="lineno">  591</span> </div>
+<div class="line"><span class="lineno">  592</span>  <span class="comment">// new mask of double type to match the type of the output cloud</span></div>
+<div class="line"><span class="lineno">  593</span>  cv::Mat mask_double;</div>
+<div class="line"><span class="lineno">  594</span>  mask.copyTo(mask_double);</div>
+<div class="line"><span class="lineno">  595</span>  mask_double.convertTo(mask_double, CV_64F);</div>
+<div class="line"><span class="lineno">  596</span> </div>
+<div class="line"><span class="lineno">  597</span>  std::vector&lt;cv::Mat&gt; channels = {point_cloud, mask_double};</div>
+<div class="line"><span class="lineno">  598</span> </div>
+<div class="line"><span class="lineno">  599</span>  cv::Mat projected_cloud;</div>
+<div class="line"><span class="lineno">  600</span>  cv::merge(channels, projected_cloud);</div>
+<div class="line"><span class="lineno">  601</span> </div>
+<div class="line"><span class="lineno">  602</span>  <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">auto</span> folder_name = <span class="stringliteral">&quot;project_mask&quot;</span>;</div>
+<div class="line"><span class="lineno">  603</span>  <span class="keyword">const</span> std::string output_folder = <a class="code hl_function" href="namespacedyno.html#a80a71f28f4f692dc9c21976237dfcfe1">getOutputFilePath</a>(folder_name);</div>
+<div class="line"><span class="lineno">  604</span> </div>
+<div class="line"><span class="lineno">  605</span>  <span class="comment">// create write out directly if it does not exist</span></div>
+<div class="line"><span class="lineno">  606</span>  <a class="code hl_function" href="namespacedyno.html#a2c13b22c0d8be0826712863c5ce0770e">createDirectory</a>(output_folder);</div>
+<div class="line"><span class="lineno">  607</span> </div>
+<div class="line"><span class="lineno">  608</span>  <span class="keyword">const</span> std::string file_name =</div>
+<div class="line"><span class="lineno">  609</span>      output_folder + <span class="stringliteral">&quot;/&quot;</span> + std::to_string(frame_id) + <span class="stringliteral">&quot;.yml&quot;</span>;</div>
+<div class="line"><span class="lineno">  610</span>  cv::FileStorage file(file_name, cv::FileStorage::WRITE);</div>
+<div class="line"><span class="lineno">  611</span>  file &lt;&lt; <span class="stringliteral">&quot;matrix&quot;</span> &lt;&lt; projected_cloud;</div>
+<div class="line"><span class="lineno">  612</span>  file.release();</div>
+<div class="line"><span class="lineno">  613</span>}</div>
+<div class="ttc" id="aclassdyno_1_1CameraParams_html_ae50eb600c23415b3f7bd46e70553f96a"><div class="ttname"><a href="classdyno_1_1CameraParams.html#ae50eb600c23415b3f7bd46e70553f96a">dyno::CameraParams::getCameraMatrix</a></div><div class="ttdeci">cv::Mat getCameraMatrix() const</div><div class="ttdef"><b>Definition:</b> <a href="CameraParams_8hpp_source.html#l00141">CameraParams.hpp:141</a></div></div>
+<div class="ttc" id="anamespacedyno_1_1vision__tools_html_aaabcfcca356f30c83a45a51259e39783"><div class="ttname"><a href="namespacedyno_1_1vision__tools.html#aaabcfcca356f30c83a45a51259e39783">dyno::vision_tools::depthTo3D</a></div><div class="ttdeci">cv::Mat depthTo3D(const ImageWrapper&lt; ImageType::Depth &gt; &amp;depth_image, const cv::Mat &amp;K)</div><div class="ttdoc">Projects a dense depth map to 3D coordinates in the local frame.</div><div class="ttdef"><b>Definition:</b> <a href="VisionTools_8cc_source.html#l00542">VisionTools.cc:542</a></div></div>
+<div class="ttc" id="anamespacedyno_html_a2c13b22c0d8be0826712863c5ce0770e"><div class="ttname"><a href="namespacedyno.html#a2c13b22c0d8be0826712863c5ce0770e">dyno::createDirectory</a></div><div class="ttdeci">bool createDirectory(const std::string &amp;path)</div><div class="ttdoc">Create a directory at the given path.</div><div class="ttdef"><b>Definition:</b> <a href="Logger_8cc_source.html#l00063">Logger.cc:63</a></div></div>
+<div class="ttc" id="anamespacedyno_html_a80a71f28f4f692dc9c21976237dfcfe1"><div class="ttname"><a href="namespacedyno.html#a80a71f28f4f692dc9c21976237dfcfe1">dyno::getOutputFilePath</a></div><div class="ttdeci">std::string getOutputFilePath(const std::string &amp;file_name)</div><div class="ttdoc">Constructs a file path (using the file name) where the root of the path is defined by the FLAGS_outpu...</div><div class="ttdef"><b>Definition:</b> <a href="Logger_8cc_source.html#l00046">Logger.cc:46</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="namespacedyno.html#a2c13b22c0d8be0826712863c5ce0770e">dyno::createDirectory()</a>, <a class="el" href="namespacedyno_1_1vision__tools.html#aaabcfcca356f30c83a45a51259e39783">depthTo3D()</a>, <a class="el" href="classdyno_1_1CameraParams.html#ae50eb600c23415b3f7bd46e70553f96a">dyno::CameraParams::getCameraMatrix()</a>, <a class="el" href="namespacedyno.html#a80a71f28f4f692dc9c21976237dfcfe1">dyno::getOutputFilePath()</a>, and <a class="el" href="classdyno_1_1Camera.html#af56ce3541d3ef8a7bcb2246e4634ca59">dyno::Camera::getParams()</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2">dyno::RGBDInstanceFrontendModule::nominalSpin()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -1436,15 +1437,6 @@ Here is the call graph for this function:</div>
 <area shape="rect" href="namespacedyno.html#a80a71f28f4f692dc9c21976237dfcfe1" title="Constructs a file path (using the file name) where the root of the path is defined by the FLAGS_outpu..." alt="" coords="318,184,497,209"/>
 <area shape="rect" href="classdyno_1_1Camera.html#af56ce3541d3ef8a7bcb2246e4634ca59" title=" " alt="" coords="312,233,503,259"/>
 <area shape="rect" href="namespacedyno.html#a362927fda6438780973f55111b77455c" title=" " alt="" coords="551,63,623,88"/>
-</map>
-</div>
-<div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="namespacedyno_1_1vision__tools_a5d8b89d2b560b498934853c77a7d9f28_icgraph.png" border="0" usemap="#anamespacedyno_1_1vision__tools_a5d8b89d2b560b498934853c77a7d9f28_icgraph" alt=""/></div>
-<map name="anamespacedyno_1_1vision__tools_a5d8b89d2b560b498934853c77a7d9f28_icgraph" id="anamespacedyno_1_1vision__tools_a5d8b89d2b560b498934853c77a7d9f28_icgraph">
-<area shape="rect" title="Saves a re&#45;projected 3D point cloud with labelled points to file as a cv::Mat." alt="" coords="265,5,524,45"/>
-<area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2" title=" " alt="" coords="5,5,217,45"/>
 </map>
 </div>
 

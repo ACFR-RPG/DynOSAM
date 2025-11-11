@@ -136,7 +136,7 @@ Protected Attributes</h2></td></tr>
 class dyno::DataFolderStructure&lt; DataTypes &gt;</div><p>Defines the structure, image and type of different datasets (partially inspired by pytorch's dataset class). Each dataset contains a number of datafolders which defines the data for a particular input. Each datafolder is responsible for loading the file and all must contain the same number of input files (or some equivalent "length") so the data can be packaged together. </p>
 <p>This class intends to just enable access to all the datafolders by defining all the templated tuples </p>
 
-<p class="definition">Definition at line <a class="el" href="DatasetLoader_8hpp_source.html#l00337">337</a> of file <a class="el" href="DatasetLoader_8hpp_source.html">DatasetLoader.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="DatasetLoader_8hpp_source.html#l00343">343</a> of file <a class="el" href="DatasetLoader_8hpp_source.html">DatasetLoader.hpp</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="ae8a7c0728e9db590e09751744acd5931" name="ae8a7c0728e9db590e09751744acd5931"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae8a7c0728e9db590e09751744acd5931">&#9670;&#160;</a></span>DataFolderType</h2>
@@ -154,7 +154,7 @@ template&lt;size_t I&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="DatasetLoader_8hpp_source.html#l00351">351</a> of file <a class="el" href="DatasetLoader_8hpp_source.html">DatasetLoader.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="DatasetLoader_8hpp_source.html#l00357">357</a> of file <a class="el" href="DatasetLoader_8hpp_source.html">DatasetLoader.hpp</a>.</p>
 
 </div>
 </div>
@@ -174,7 +174,7 @@ template&lt;size_t I&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="DatasetLoader_8hpp_source.html#l00348">348</a> of file <a class="el" href="DatasetLoader_8hpp_source.html">DatasetLoader.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="DatasetLoader_8hpp_source.html#l00354">354</a> of file <a class="el" href="DatasetLoader_8hpp_source.html">DatasetLoader.hpp</a>.</p>
 
 </div>
 </div>
@@ -192,7 +192,7 @@ template&lt;typename... DataTypes&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="DatasetLoader_8hpp_source.html#l00341">341</a> of file <a class="el" href="DatasetLoader_8hpp_source.html">DatasetLoader.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="DatasetLoader_8hpp_source.html#l00346">346</a> of file <a class="el" href="DatasetLoader_8hpp_source.html">DatasetLoader.hpp</a>.</p>
 
 </div>
 </div>
@@ -210,7 +210,7 @@ template&lt;typename... DataTypes&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="DatasetLoader_8hpp_source.html#l00340">340</a> of file <a class="el" href="DatasetLoader_8hpp_source.html">DatasetLoader.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="DatasetLoader_8hpp_source.html#l00345">345</a> of file <a class="el" href="DatasetLoader_8hpp_source.html">DatasetLoader.hpp</a>.</p>
 
 </div>
 </div>
@@ -228,7 +228,7 @@ template&lt;typename... DataTypes&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="DatasetLoader_8hpp_source.html#l00342">342</a> of file <a class="el" href="DatasetLoader_8hpp_source.html">DatasetLoader.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="DatasetLoader_8hpp_source.html#l00347">347</a> of file <a class="el" href="DatasetLoader_8hpp_source.html">DatasetLoader.hpp</a>.</p>
 
 </div>
 </div>
@@ -269,10 +269,10 @@ template&lt;typename... DataTypes&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="DatasetLoader_8hpp_source.html#l00353">353</a> of file <a class="el" href="DatasetLoader_8hpp_source.html">DatasetLoader.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  353</span>: <a class="code hl_variable" href="classdyno_1_1DataFolderStructure.html#ac83ed2a21fd039609b73095a1674e0ed">dataset_path_</a>(dataset_path), <a class="code hl_variable" href="classdyno_1_1DataFolderStructure.html#a24a14acba1387b3b081bae3d64a9a3b0">data_folders_</a>(data_folders...) {}</div>
-<div class="ttc" id="aclassdyno_1_1DataFolderStructure_html_a24a14acba1387b3b081bae3d64a9a3b0"><div class="ttname"><a href="classdyno_1_1DataFolderStructure.html#a24a14acba1387b3b081bae3d64a9a3b0">dyno::DataFolderStructure::data_folders_</a></div><div class="ttdeci">TypedDataFolderTuple data_folders_</div><div class="ttdoc">Path to the dataset directory (ie. the parent folder)</div><div class="ttdef"><b>Definition:</b> <a href="DatasetLoader_8hpp_source.html#l00382">DatasetLoader.hpp:382</a></div></div>
-<div class="ttc" id="aclassdyno_1_1DataFolderStructure_html_ac83ed2a21fd039609b73095a1674e0ed"><div class="ttname"><a href="classdyno_1_1DataFolderStructure.html#ac83ed2a21fd039609b73095a1674e0ed">dyno::DataFolderStructure::dataset_path_</a></div><div class="ttdeci">const fs::path dataset_path_</div><div class="ttdef"><b>Definition:</b> <a href="DatasetLoader_8hpp_source.html#l00381">DatasetLoader.hpp:381</a></div></div>
+<p class="definition">Definition at line <a class="el" href="DatasetLoader_8hpp_source.html#l00359">359</a> of file <a class="el" href="DatasetLoader_8hpp_source.html">DatasetLoader.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  361</span>      : <a class="code hl_variable" href="classdyno_1_1DataFolderStructure.html#ac83ed2a21fd039609b73095a1674e0ed">dataset_path_</a>(dataset_path), <a class="code hl_variable" href="classdyno_1_1DataFolderStructure.html#a24a14acba1387b3b081bae3d64a9a3b0">data_folders_</a>(data_folders...) {}</div>
+<div class="ttc" id="aclassdyno_1_1DataFolderStructure_html_a24a14acba1387b3b081bae3d64a9a3b0"><div class="ttname"><a href="classdyno_1_1DataFolderStructure.html#a24a14acba1387b3b081bae3d64a9a3b0">dyno::DataFolderStructure::data_folders_</a></div><div class="ttdeci">TypedDataFolderTuple data_folders_</div><div class="ttdoc">Path to the dataset directory (ie. the parent folder)</div><div class="ttdef"><b>Definition:</b> <a href="DatasetLoader_8hpp_source.html#l00391">DatasetLoader.hpp:391</a></div></div>
+<div class="ttc" id="aclassdyno_1_1DataFolderStructure_html_ac83ed2a21fd039609b73095a1674e0ed"><div class="ttname"><a href="classdyno_1_1DataFolderStructure.html#ac83ed2a21fd039609b73095a1674e0ed">dyno::DataFolderStructure::dataset_path_</a></div><div class="ttdeci">const fs::path dataset_path_</div><div class="ttdef"><b>Definition:</b> <a href="DatasetLoader_8hpp_source.html#l00390">DatasetLoader.hpp:390</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -304,14 +304,14 @@ template&lt;size_t I&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="DatasetLoader_8hpp_source.html#l00362">362</a> of file <a class="el" href="DatasetLoader_8hpp_source.html">DatasetLoader.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  362</span>                                         {</div>
-<div class="line"><span class="lineno">  363</span>        <span class="keyword">const</span> <span class="keyword">auto</span> data_folder = this-&gt;<span class="keyword">template</span> getDataFolder&lt;I&gt;();</div>
-<div class="line"><span class="lineno">  364</span>        fs::path folder_path = <a class="code hl_variable" href="classdyno_1_1DataFolderStructure.html#ac83ed2a21fd039609b73095a1674e0ed">dataset_path_</a>;</div>
-<div class="line"><span class="lineno">  365</span>        <span class="comment">//technically this can also be a file path</span></div>
-<div class="line"><span class="lineno">  366</span>        folder_path /= fs::path(data_folder-&gt;getFolderName());</div>
-<div class="line"><span class="lineno">  367</span>        <span class="keywordflow">return</span> fs::absolute(folder_path);</div>
-<div class="line"><span class="lineno">  368</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="DatasetLoader_8hpp_source.html#l00371">371</a> of file <a class="el" href="DatasetLoader_8hpp_source.html">DatasetLoader.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  371</span>                                       {</div>
+<div class="line"><span class="lineno">  372</span>    <span class="keyword">const</span> <span class="keyword">auto</span> data_folder = this-&gt;<span class="keyword">template</span> getDataFolder&lt;I&gt;();</div>
+<div class="line"><span class="lineno">  373</span>    fs::path folder_path = <a class="code hl_variable" href="classdyno_1_1DataFolderStructure.html#ac83ed2a21fd039609b73095a1674e0ed">dataset_path_</a>;</div>
+<div class="line"><span class="lineno">  374</span>    <span class="comment">// technically this can also be a file path</span></div>
+<div class="line"><span class="lineno">  375</span>    folder_path /= fs::path(data_folder-&gt;getFolderName());</div>
+<div class="line"><span class="lineno">  376</span>    <span class="keywordflow">return</span> fs::absolute(folder_path);</div>
+<div class="line"><span class="lineno">  377</span>  }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1DataFolderStructure.html#ac83ed2a21fd039609b73095a1674e0ed">dyno::DataFolderStructure&lt; DataTypes &gt;::dataset_path_</a>.</p>
 
@@ -344,10 +344,10 @@ template&lt;size_t I&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="DatasetLoader_8hpp_source.html#l00357">357</a> of file <a class="el" href="DatasetLoader_8hpp_source.html">DatasetLoader.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  357</span>                               {</div>
-<div class="line"><span class="lineno">  358</span>        <span class="keywordflow">return</span> std::get&lt;I&gt;(<a class="code hl_variable" href="classdyno_1_1DataFolderStructure.html#a24a14acba1387b3b081bae3d64a9a3b0">data_folders_</a>);</div>
-<div class="line"><span class="lineno">  359</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="DatasetLoader_8hpp_source.html#l00366">366</a> of file <a class="el" href="DatasetLoader_8hpp_source.html">DatasetLoader.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  366</span>                             {</div>
+<div class="line"><span class="lineno">  367</span>    <span class="keywordflow">return</span> std::get&lt;I&gt;(<a class="code hl_variable" href="classdyno_1_1DataFolderStructure.html#a24a14acba1387b3b081bae3d64a9a3b0">data_folders_</a>);</div>
+<div class="line"><span class="lineno">  368</span>  }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1DataFolderStructure.html#a24a14acba1387b3b081bae3d64a9a3b0">dyno::DataFolderStructure&lt; DataTypes &gt;::data_folders_</a>.</p>
 
@@ -382,8 +382,8 @@ template&lt;typename... DataTypes&gt; </div>
 <p>All internal folders should be then found in dataset_path/folder</p>
 <dl class="section return"><dt>Returns</dt><dd>const fs::path&amp; </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="DatasetLoader_8hpp_source.html#l00377">377</a> of file <a class="el" href="DatasetLoader_8hpp_source.html">DatasetLoader.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  377</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1DataFolderStructure.html#ac83ed2a21fd039609b73095a1674e0ed">dataset_path_</a>; }</div>
+<p class="definition">Definition at line <a class="el" href="DatasetLoader_8hpp_source.html#l00386">386</a> of file <a class="el" href="DatasetLoader_8hpp_source.html">DatasetLoader.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  386</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1DataFolderStructure.html#ac83ed2a21fd039609b73095a1674e0ed">dataset_path_</a>; }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1DataFolderStructure.html#ac83ed2a21fd039609b73095a1674e0ed">dyno::DataFolderStructure&lt; DataTypes &gt;::dataset_path_</a>.</p>
 
@@ -414,7 +414,7 @@ template&lt;typename... DataTypes&gt; </div>
 
 <p>Path to the dataset directory (ie. the parent folder) </p>
 
-<p class="definition">Definition at line <a class="el" href="DatasetLoader_8hpp_source.html#l00382">382</a> of file <a class="el" href="DatasetLoader_8hpp_source.html">DatasetLoader.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="DatasetLoader_8hpp_source.html#l00391">391</a> of file <a class="el" href="DatasetLoader_8hpp_source.html">DatasetLoader.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1DataFolderStructure.html#a5ba6830389e7e31a78e4814073e3ced8">dyno::DataFolderStructure&lt; DataTypes &gt;::getDataFolder()</a>.</p>
 
@@ -442,7 +442,7 @@ template&lt;typename... DataTypes&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="DatasetLoader_8hpp_source.html#l00381">381</a> of file <a class="el" href="DatasetLoader_8hpp_source.html">DatasetLoader.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="DatasetLoader_8hpp_source.html#l00390">390</a> of file <a class="el" href="DatasetLoader_8hpp_source.html">DatasetLoader.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1DataFolderStructure.html#abbe94c998d385aee0e14a2abf5bc7b31">dyno::DataFolderStructure&lt; DataTypes &gt;::getAbsoluteFolderPath()</a>, and <a class="el" href="classdyno_1_1DataFolderStructure.html#a9bc481b359477b1330afb04f4b24f31b">dyno::DataFolderStructure&lt; DataTypes &gt;::getDatasetPath()</a>.</p>
 
@@ -470,7 +470,7 @@ template&lt;typename... DataTypes&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="DatasetLoader_8hpp_source.html#l00345">345</a> of file <a class="el" href="DatasetLoader_8hpp_source.html">DatasetLoader.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="DatasetLoader_8hpp_source.html#l00351">351</a> of file <a class="el" href="DatasetLoader_8hpp_source.html">DatasetLoader.hpp</a>.</p>
 
 </div>
 </div>

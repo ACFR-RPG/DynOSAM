@@ -102,7 +102,7 @@ Static Public Member Functions</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="CameraParamsAdaptor_8hpp_source.html#l00041">41</a> of file <a class="el" href="CameraParamsAdaptor_8hpp_source.html">CameraParamsAdaptor.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="CameraParamsAdaptor_8hpp_source.html#l00040">40</a> of file <a class="el" href="CameraParamsAdaptor_8hpp_source.html">CameraParamsAdaptor.hpp</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="af08bbc4fbdc287a577e1d2d322835d10" name="af08bbc4fbdc287a577e1d2d322835d10"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af08bbc4fbdc287a577e1d2d322835d10">&#9670;&#160;</a></span>custom_type</h2>
@@ -116,7 +116,7 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CameraParamsAdaptor_8hpp_source.html#l00043">43</a> of file <a class="el" href="CameraParamsAdaptor_8hpp_source.html">CameraParamsAdaptor.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="CameraParamsAdaptor_8hpp_source.html#l00042">42</a> of file <a class="el" href="CameraParamsAdaptor_8hpp_source.html">CameraParamsAdaptor.hpp</a>.</p>
 
 </div>
 </div>
@@ -132,7 +132,7 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CameraParamsAdaptor_8hpp_source.html#l00042">42</a> of file <a class="el" href="CameraParamsAdaptor_8hpp_source.html">CameraParamsAdaptor.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="CameraParamsAdaptor_8hpp_source.html#l00041">41</a> of file <a class="el" href="CameraParamsAdaptor_8hpp_source.html">CameraParamsAdaptor.hpp</a>.</p>
 
 </div>
 </div>
@@ -148,7 +148,7 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CameraParamsAdaptor_8hpp_source.html#l00044">44</a> of file <a class="el" href="CameraParamsAdaptor_8hpp_source.html">CameraParamsAdaptor.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="CameraParamsAdaptor_8hpp_source.html#l00043">43</a> of file <a class="el" href="CameraParamsAdaptor_8hpp_source.html">CameraParamsAdaptor.hpp</a>.</p>
 
 </div>
 </div>
@@ -187,30 +187,30 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CameraParamsAdaptor_8hpp_source.html#l00067">67</a> of file <a class="el" href="CameraParamsAdaptor_8hpp_source.html">CameraParamsAdaptor.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   68</span>                                                          {</div>
-<div class="line"><span class="lineno">   69</span>    <span class="comment">// bit gross but cv::Mat does not accept a const void* for data (which</span></div>
-<div class="line"><span class="lineno">   70</span>    <span class="comment">// source.k.data()) is so to ensure the data is safe (ie. rather than doing</span></div>
-<div class="line"><span class="lineno">   71</span>    <span class="comment">// a const conversion), I decide to copy the data into std::vector and then</span></div>
-<div class="line"><span class="lineno">   72</span>    <span class="comment">// copy into cv::Mat. this is inefficient but this conversion happens so</span></div>
-<div class="line"><span class="lineno">   73</span>    <span class="comment">// rarely and the data pakcet is tiny...</span></div>
-<div class="line"><span class="lineno">   74</span>    std::vector&lt;double&gt; k_vector(source.k.begin(), source.k.end());</div>
-<div class="line"><span class="lineno">   75</span>    cv::Mat K(3, 3, CV_64F, std::data(k_vector));</div>
-<div class="line"><span class="lineno">   76</span>    <a class="code hl_typedef" href="classdyno_1_1CameraParams.html#a2b2c8e9993ec05e2be9bbee6c3b73760">dyno::CameraParams::IntrinsicsCoeffs</a> intrinsics;</div>
-<div class="line"><span class="lineno">   77</span>    <span class="comment">// TODO: should make this a constructor...</span></div>
-<div class="line"><span class="lineno">   78</span>    <a class="code hl_function" href="classdyno_1_1CameraParams.html#ade9185c809685d1e4c523c2e9355091d">dyno::CameraParams::convertKMatrixToIntrinsicsCoeffs</a>(K, intrinsics);</div>
-<div class="line"><span class="lineno">   79</span>    <a class="code hl_typedef" href="classdyno_1_1CameraParams.html#a8349ad5f0c727d6ef16a1b127e620eae">dyno::CameraParams::DistortionCoeffs</a> distortion(source.d.begin(),</div>
-<div class="line"><span class="lineno">   80</span>                                                    source.d.end());</div>
-<div class="line"><span class="lineno">   81</span>    cv::Size size(source.width, source.height);</div>
-<div class="line"><span class="lineno">   82</span>    <span class="keyword">const</span> std::string&amp; distortion_model = source.distortion_model;</div>
-<div class="line"><span class="lineno">   83</span> </div>
-<div class="line"><span class="lineno">   84</span>    destination =</div>
-<div class="line"><span class="lineno">   85</span>        <a class="code hl_class" href="classdyno_1_1CameraParams.html">dyno::CameraParams</a>(intrinsics, distortion, size, distortion_model);</div>
-<div class="line"><span class="lineno">   86</span>  }</div>
+<p class="definition">Definition at line <a class="el" href="CameraParamsAdaptor_8hpp_source.html#l00066">66</a> of file <a class="el" href="CameraParamsAdaptor_8hpp_source.html">CameraParamsAdaptor.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   67</span>                                                          {</div>
+<div class="line"><span class="lineno">   68</span>    <span class="comment">// bit gross but cv::Mat does not accept a const void* for data (which</span></div>
+<div class="line"><span class="lineno">   69</span>    <span class="comment">// source.k.data()) is so to ensure the data is safe (ie. rather than doing</span></div>
+<div class="line"><span class="lineno">   70</span>    <span class="comment">// a const conversion), I decide to copy the data into std::vector and then</span></div>
+<div class="line"><span class="lineno">   71</span>    <span class="comment">// copy into cv::Mat. this is inefficient but this conversion happens so</span></div>
+<div class="line"><span class="lineno">   72</span>    <span class="comment">// rarely and the data pakcet is tiny...</span></div>
+<div class="line"><span class="lineno">   73</span>    std::vector&lt;double&gt; k_vector(source.k.begin(), source.k.end());</div>
+<div class="line"><span class="lineno">   74</span>    cv::Mat K(3, 3, CV_64F, std::data(k_vector));</div>
+<div class="line"><span class="lineno">   75</span>    <a class="code hl_typedef" href="classdyno_1_1CameraParams.html#a2b2c8e9993ec05e2be9bbee6c3b73760">dyno::CameraParams::IntrinsicsCoeffs</a> intrinsics;</div>
+<div class="line"><span class="lineno">   76</span>    <span class="comment">// TODO: should make this a constructor...</span></div>
+<div class="line"><span class="lineno">   77</span>    <a class="code hl_function" href="classdyno_1_1CameraParams.html#ade9185c809685d1e4c523c2e9355091d">dyno::CameraParams::convertKMatrixToIntrinsicsCoeffs</a>(K, intrinsics);</div>
+<div class="line"><span class="lineno">   78</span>    <a class="code hl_typedef" href="classdyno_1_1CameraParams.html#a8349ad5f0c727d6ef16a1b127e620eae">dyno::CameraParams::DistortionCoeffs</a> distortion(source.d.begin(),</div>
+<div class="line"><span class="lineno">   79</span>                                                    source.d.end());</div>
+<div class="line"><span class="lineno">   80</span>    cv::Size size(source.width, source.height);</div>
+<div class="line"><span class="lineno">   81</span>    <span class="keyword">const</span> std::string&amp; distortion_model = source.distortion_model;</div>
+<div class="line"><span class="lineno">   82</span> </div>
+<div class="line"><span class="lineno">   83</span>    destination =</div>
+<div class="line"><span class="lineno">   84</span>        <a class="code hl_class" href="classdyno_1_1CameraParams.html">dyno::CameraParams</a>(intrinsics, distortion, size, distortion_model);</div>
+<div class="line"><span class="lineno">   85</span>  }</div>
 <div class="ttc" id="aclassdyno_1_1CameraParams_html"><div class="ttname"><a href="classdyno_1_1CameraParams.html">dyno::CameraParams</a></div><div class="ttdef"><b>Definition:</b> <a href="CameraParams_8hpp_source.html#l00056">CameraParams.hpp:56</a></div></div>
 <div class="ttc" id="aclassdyno_1_1CameraParams_html_a2b2c8e9993ec05e2be9bbee6c3b73760"><div class="ttname"><a href="classdyno_1_1CameraParams.html#a2b2c8e9993ec05e2be9bbee6c3b73760">dyno::CameraParams::IntrinsicsCoeffs</a></div><div class="ttdeci">std::vector&lt; double &gt; IntrinsicsCoeffs</div><div class="ttdef"><b>Definition:</b> <a href="CameraParams_8hpp_source.html#l00062">CameraParams.hpp:62</a></div></div>
 <div class="ttc" id="aclassdyno_1_1CameraParams_html_a8349ad5f0c727d6ef16a1b127e620eae"><div class="ttname"><a href="classdyno_1_1CameraParams.html#a8349ad5f0c727d6ef16a1b127e620eae">dyno::CameraParams::DistortionCoeffs</a></div><div class="ttdeci">std::vector&lt; double &gt; DistortionCoeffs</div><div class="ttdef"><b>Definition:</b> <a href="CameraParams_8hpp_source.html#l00060">CameraParams.hpp:60</a></div></div>
-<div class="ttc" id="aclassdyno_1_1CameraParams_html_ade9185c809685d1e4c523c2e9355091d"><div class="ttname"><a href="classdyno_1_1CameraParams.html#ade9185c809685d1e4c523c2e9355091d">dyno::CameraParams::convertKMatrixToIntrinsicsCoeffs</a></div><div class="ttdeci">static void convertKMatrixToIntrinsicsCoeffs(const cv::Mat &amp;K, IntrinsicsCoeffs &amp;intrinsics)</div><div class="ttdoc">Converts a 3x3 camera calibration matrix to an IntrinsicsCoeffs in the form fu, fy,...</div><div class="ttdef"><b>Definition:</b> <a href="CameraParams_8cc_source.html#l00164">CameraParams.cc:164</a></div></div>
+<div class="ttc" id="aclassdyno_1_1CameraParams_html_ade9185c809685d1e4c523c2e9355091d"><div class="ttname"><a href="classdyno_1_1CameraParams.html#ade9185c809685d1e4c523c2e9355091d">dyno::CameraParams::convertKMatrixToIntrinsicsCoeffs</a></div><div class="ttdeci">static void convertKMatrixToIntrinsicsCoeffs(const cv::Mat &amp;K, IntrinsicsCoeffs &amp;intrinsics)</div><div class="ttdoc">Converts a 3x3 camera calibration matrix to an IntrinsicsCoeffs in the form fu, fy,...</div><div class="ttdef"><b>Definition:</b> <a href="CameraParams_8cc_source.html#l00180">CameraParams.cc:180</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1CameraParams.html#ade9185c809685d1e4c523c2e9355091d">dyno::CameraParams::convertKMatrixToIntrinsicsCoeffs()</a>.</p>
 <div class="dynheader">
@@ -260,27 +260,27 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CameraParamsAdaptor_8hpp_source.html#l00046">46</a> of file <a class="el" href="CameraParamsAdaptor_8hpp_source.html">CameraParamsAdaptor.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   47</span>                                                                    {</div>
-<div class="line"><span class="lineno">   48</span>    <span class="comment">// intrisincs</span></div>
-<div class="line"><span class="lineno">   49</span>    <span class="keyword">const</span> cv::Mat&amp; K = source.getCameraMatrix();</div>
-<div class="line"><span class="lineno">   50</span>    std::copy(K.begin&lt;<span class="keywordtype">double</span>&gt;(), K.end&lt;<span class="keywordtype">double</span>&gt;(), destination.k.begin());</div>
-<div class="line"><span class="lineno">   51</span> </div>
-<div class="line"><span class="lineno">   52</span>    <span class="comment">// distortion</span></div>
-<div class="line"><span class="lineno">   53</span>    <span class="keyword">const</span> cv::Mat&amp; D = source.getDistortionCoeffs();</div>
-<div class="line"><span class="lineno">   54</span>    destination.d.resize(D.total());</div>
-<div class="line"><span class="lineno">   55</span>    destination.d = std::vector&lt;double&gt;(D.begin&lt;<span class="keywordtype">double</span>&gt;(), D.end&lt;<span class="keywordtype">double</span>&gt;());</div>
-<div class="line"><span class="lineno">   56</span> </div>
-<div class="line"><span class="lineno">   57</span>    destination.height = source.ImageHeight();</div>
-<div class="line"><span class="lineno">   58</span>    destination.width = source.ImageWidth();</div>
-<div class="line"><span class="lineno">   59</span> </div>
-<div class="line"><span class="lineno">   60</span>    std::string camera_model;</div>
-<div class="line"><span class="lineno">   61</span>    CHECK(<a class="code hl_function" href="classdyno_1_1CameraParams.html#a1e68df8520ebfa61c9ccb5c8fd62fb2a">dyno::CameraParams::distortionModelToString</a>(</div>
-<div class="line"><span class="lineno">   62</span>        source.getDistortionModel(), destination.distortion_model,</div>
-<div class="line"><span class="lineno">   63</span>        camera_model));</div>
-<div class="line"><span class="lineno">   64</span>    (void)camera_model;</div>
-<div class="line"><span class="lineno">   65</span>  }</div>
-<div class="ttc" id="aclassdyno_1_1CameraParams_html_a1e68df8520ebfa61c9ccb5c8fd62fb2a"><div class="ttname"><a href="classdyno_1_1CameraParams.html#a1e68df8520ebfa61c9ccb5c8fd62fb2a">dyno::CameraParams::distortionModelToString</a></div><div class="ttdeci">static bool distortionModelToString(const DistortionModel &amp;model, std::string &amp;distortion_model, std::string &amp;camera_model)</div><div class="ttdoc">Converts the DistortionModel enum to a distortion model string and associated camera model.</div><div class="ttdef"><b>Definition:</b> <a href="CameraParams_8cc_source.html#l00216">CameraParams.cc:216</a></div></div>
+<p class="definition">Definition at line <a class="el" href="CameraParamsAdaptor_8hpp_source.html#l00045">45</a> of file <a class="el" href="CameraParamsAdaptor_8hpp_source.html">CameraParamsAdaptor.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   46</span>                                                                    {</div>
+<div class="line"><span class="lineno">   47</span>    <span class="comment">// intrisincs</span></div>
+<div class="line"><span class="lineno">   48</span>    <span class="keyword">const</span> cv::Mat&amp; K = source.getCameraMatrix();</div>
+<div class="line"><span class="lineno">   49</span>    std::copy(K.begin&lt;<span class="keywordtype">double</span>&gt;(), K.end&lt;<span class="keywordtype">double</span>&gt;(), destination.k.begin());</div>
+<div class="line"><span class="lineno">   50</span> </div>
+<div class="line"><span class="lineno">   51</span>    <span class="comment">// distortion</span></div>
+<div class="line"><span class="lineno">   52</span>    <span class="keyword">const</span> cv::Mat&amp; D = source.getDistortionCoeffs();</div>
+<div class="line"><span class="lineno">   53</span>    destination.d.resize(D.total());</div>
+<div class="line"><span class="lineno">   54</span>    destination.d = std::vector&lt;double&gt;(D.begin&lt;<span class="keywordtype">double</span>&gt;(), D.end&lt;<span class="keywordtype">double</span>&gt;());</div>
+<div class="line"><span class="lineno">   55</span> </div>
+<div class="line"><span class="lineno">   56</span>    destination.height = source.ImageHeight();</div>
+<div class="line"><span class="lineno">   57</span>    destination.width = source.ImageWidth();</div>
+<div class="line"><span class="lineno">   58</span> </div>
+<div class="line"><span class="lineno">   59</span>    std::string camera_model;</div>
+<div class="line"><span class="lineno">   60</span>    CHECK(<a class="code hl_function" href="classdyno_1_1CameraParams.html#a1e68df8520ebfa61c9ccb5c8fd62fb2a">dyno::CameraParams::distortionModelToString</a>(</div>
+<div class="line"><span class="lineno">   61</span>        source.getDistortionModel(), destination.distortion_model,</div>
+<div class="line"><span class="lineno">   62</span>        camera_model));</div>
+<div class="line"><span class="lineno">   63</span>    (void)camera_model;</div>
+<div class="line"><span class="lineno">   64</span>  }</div>
+<div class="ttc" id="aclassdyno_1_1CameraParams_html_a1e68df8520ebfa61c9ccb5c8fd62fb2a"><div class="ttname"><a href="classdyno_1_1CameraParams.html#a1e68df8520ebfa61c9ccb5c8fd62fb2a">dyno::CameraParams::distortionModelToString</a></div><div class="ttdeci">static bool distortionModelToString(const DistortionModel &amp;model, std::string &amp;distortion_model, std::string &amp;camera_model)</div><div class="ttdoc">Converts the DistortionModel enum to a distortion model string and associated camera model.</div><div class="ttdef"><b>Definition:</b> <a href="CameraParams_8cc_source.html#l00232">CameraParams.cc:232</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1CameraParams.html#a1e68df8520ebfa61c9ccb5c8fd62fb2a">dyno::CameraParams::distortionModelToString()</a>, <a class="el" href="classdyno_1_1CameraParams.html#ae50eb600c23415b3f7bd46e70553f96a">dyno::CameraParams::getCameraMatrix()</a>, <a class="el" href="classdyno_1_1CameraParams.html#a19bbd8710bfeec7e1dc1096f1ea773cd">dyno::CameraParams::getDistortionCoeffs()</a>, <a class="el" href="classdyno_1_1CameraParams.html#ad824176d6c92a8162e6360c0760fa304">dyno::CameraParams::getDistortionModel()</a>, <a class="el" href="classdyno_1_1CameraParams.html#a75e96fd0df57691134425ac9b9d55f09">dyno::CameraParams::ImageHeight()</a>, and <a class="el" href="classdyno_1_1CameraParams.html#ae09360028f240f884ad9fcb72e4f4cf1">dyno::CameraParams::ImageWidth()</a>.</p>
 <div class="dynheader">
@@ -295,7 +295,7 @@ Here is the call graph for this function:</div>
 <area shape="rect" href="classdyno_1_1CameraParams.html#ad824176d6c92a8162e6360c0760fa304" title=" " alt="" coords="295,197,457,237"/>
 <area shape="rect" href="classdyno_1_1CameraParams.html#a75e96fd0df57691134425ac9b9d55f09" title=" " alt="" coords="295,261,457,301"/>
 <area shape="rect" href="classdyno_1_1CameraParams.html#ae09360028f240f884ad9fcb72e4f4cf1" title=" " alt="" coords="295,325,457,365"/>
-<area shape="rect" href="namespacedyno.html#a809604e427db44cbf532a545c71a3b5d" title=" " alt="" coords="516,13,635,38"/>
+<area shape="rect" href="namespacedyno.html#a8d1f85752688bf072f23fa6e8a1bde34" title=" " alt="" coords="516,13,635,38"/>
 </map>
 </div>
 

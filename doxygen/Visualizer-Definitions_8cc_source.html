@@ -124,7 +124,7 @@ $(function() {
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>  <span class="keywordtype">bool</span> queue_state = <span class="keyword">false</span>;</div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>  <span class="keywordflow">if</span> (<a class="code hl_variable" href="classdyno_1_1OpenCVImageDisplayQueue.html#a8c024dd92e08422f75027805ea442ae6">parallel_run_</a>) {</div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <a class="code hl_struct" href="structdyno_1_1ImageToDisplay.html">ImageToDisplay</a> image_to_display;</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    queue_state = <a class="code hl_variable" href="classdyno_1_1OpenCVImageDisplayQueue.html#aaf4491e71724c9c7fbf0757c31da10fe">display_queue_</a>-&gt;<a class="code hl_function" href="classThreadsafeQueue.html#a46d8add3de7c66d4b6e743020a5c3ffd">popBlockingWithTimeout</a>(image_to_display, 5);</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    queue_state = <a class="code hl_variable" href="classdyno_1_1OpenCVImageDisplayQueue.html#aaf4491e71724c9c7fbf0757c31da10fe">display_queue_</a>-&gt;<a class="code hl_function" href="classThreadsafeQueue.html#a46d8add3de7c66d4b6e743020a5c3ffd">popBlockingWithTimeout</a>(image_to_display, 2);</div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <span class="keywordflow">if</span> (queue_state) {</div>
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>      <span class="comment">// cv::namedWindow(image_to_display.name_);</span></div>
@@ -133,7 +133,7 @@ $(function() {
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    }</div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>  } <span class="keywordflow">else</span> {</div>
 <div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    std::vector&lt;ImageToDisplay&gt; images_to_display;</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    queue_state = <a class="code hl_variable" href="classdyno_1_1OpenCVImageDisplayQueue.html#aaf4491e71724c9c7fbf0757c31da10fe">display_queue_</a>-&gt;<a class="code hl_function" href="classThreadsafeQueue.html#a33b9409368f81487e5999e208d7f69c6">popAll</a>(images_to_display, 3);</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    queue_state = <a class="code hl_variable" href="classdyno_1_1OpenCVImageDisplayQueue.html#aaf4491e71724c9c7fbf0757c31da10fe">display_queue_</a>-&gt;<a class="code hl_function" href="classThreadsafeQueue.html#a33b9409368f81487e5999e208d7f69c6">popAll</a>(images_to_display, 2);</div>
 <div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span> </div>
 <div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    <span class="keywordflow">if</span> (queue_state) {</div>
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>      <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; image_to_display : images_to_display) {</div>

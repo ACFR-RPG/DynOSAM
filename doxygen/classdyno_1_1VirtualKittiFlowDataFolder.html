@@ -237,24 +237,24 @@ Additional Inherited Members</h2></td></tr>
 <div class="line"><span class="lineno">  103</span>    <span class="keyword">const</span> std::string file_path = <a class="code hl_variable" href="classdyno_1_1GenericVirtualKittiImageLoader.html#af7115eae0f1f0a8e8b3e3fdd2926ee5c">full_path_</a> + <span class="stringliteral">&quot;/flow_&quot;</span> + ss.str() + <span class="stringliteral">&quot;.png&quot;</span>;</div>
 <div class="line"><span class="lineno">  104</span>    <span class="comment">// const std::string file_path = full_path_  + &quot;/backwardFlow_&quot; + ss.str() +</span></div>
 <div class="line"><span class="lineno">  105</span>    <span class="comment">// &quot;.png&quot;; //specific to backwards flow</span></div>
-<div class="line"><span class="lineno">  106</span>    <a class="code hl_function" href="namespacedyno.html#a163cb16ef980acda5b09d45c3a156e6f">throwExceptionIfPathInvalid</a>(file_path);</div>
+<div class="line"><span class="lineno">  106</span>    <a class="code hl_function" href="namespacedyno_1_1utils.html#a71785ed8de386df1fce95751bf5bec15">utils::throwExceptionIfPathInvalid</a>(file_path);</div>
 <div class="line"><span class="lineno">  107</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="classdyno_1_1VirtualKittiFlowDataFolder.html#ac0ca5eb1af1fee0108f1410f42efed18">vKittiPngToFlow</a>(file_path);</div>
 <div class="line"><span class="lineno">  108</span>  }</div>
 <div class="ttc" id="aclassdyno_1_1GenericVirtualKittiImageLoader_html_af7115eae0f1f0a8e8b3e3fdd2926ee5c"><div class="ttname"><a href="classdyno_1_1GenericVirtualKittiImageLoader.html#af7115eae0f1f0a8e8b3e3fdd2926ee5c">dyno::GenericVirtualKittiImageLoader::full_path_</a></div><div class="ttdeci">const std::string full_path_</div><div class="ttdef"><b>Definition:</b> <a href="VirtualKittidataProvider_8cc_source.html#l00072">VirtualKittidataProvider.cc:72</a></div></div>
 <div class="ttc" id="aclassdyno_1_1VirtualKittiFlowDataFolder_html_ac0ca5eb1af1fee0108f1410f42efed18"><div class="ttname"><a href="classdyno_1_1VirtualKittiFlowDataFolder.html#ac0ca5eb1af1fee0108f1410f42efed18">dyno::VirtualKittiFlowDataFolder::vKittiPngToFlow</a></div><div class="ttdeci">cv::Mat vKittiPngToFlow(const std::string &amp;path) const</div><div class="ttdef"><b>Definition:</b> <a href="VirtualKittidataProvider_8cc_source.html#l00116">VirtualKittidataProvider.cc:116</a></div></div>
-<div class="ttc" id="anamespacedyno_html_a163cb16ef980acda5b09d45c3a156e6f"><div class="ttname"><a href="namespacedyno.html#a163cb16ef980acda5b09d45c3a156e6f">dyno::throwExceptionIfPathInvalid</a></div><div class="ttdeci">void throwExceptionIfPathInvalid(const std::string &amp;image_path)</div><div class="ttdef"><b>Definition:</b> <a href="DataProviderUtils_8cc_source.html#l00048">DataProviderUtils.cc:48</a></div></div>
+<div class="ttc" id="anamespacedyno_1_1utils_html_a71785ed8de386df1fce95751bf5bec15"><div class="ttname"><a href="namespacedyno_1_1utils.html#a71785ed8de386df1fce95751bf5bec15">dyno::utils::throwExceptionIfPathInvalid</a></div><div class="ttdeci">void throwExceptionIfPathInvalid(const std::string &amp;image_path)</div><div class="ttdef"><b>Definition:</b> <a href="FileSystem_8cc_source.html#l00012">FileSystem.cc:12</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="classdyno_1_1GenericVirtualKittiImageLoader.html#af7115eae0f1f0a8e8b3e3fdd2926ee5c">dyno::GenericVirtualKittiImageLoader::full_path_</a>, <a class="el" href="namespacedyno.html#a163cb16ef980acda5b09d45c3a156e6f">dyno::throwExceptionIfPathInvalid()</a>, and <a class="el" href="classdyno_1_1VirtualKittiFlowDataFolder.html#ac0ca5eb1af1fee0108f1410f42efed18">vKittiPngToFlow()</a>.</p>
+<p class="reference">References <a class="el" href="classdyno_1_1GenericVirtualKittiImageLoader.html#af7115eae0f1f0a8e8b3e3fdd2926ee5c">dyno::GenericVirtualKittiImageLoader::full_path_</a>, <a class="el" href="namespacedyno_1_1utils.html#a71785ed8de386df1fce95751bf5bec15">dyno::utils::throwExceptionIfPathInvalid()</a>, and <a class="el" href="classdyno_1_1VirtualKittiFlowDataFolder.html#ac0ca5eb1af1fee0108f1410f42efed18">vKittiPngToFlow()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1VirtualKittiFlowDataFolder_ac86a6b85917c19d4c7b4dbad75231d38_cgraph.png" border="0" usemap="#aclassdyno_1_1VirtualKittiFlowDataFolder_ac86a6b85917c19d4c7b4dbad75231d38_cgraph" alt=""/></div>
 <map name="aclassdyno_1_1VirtualKittiFlowDataFolder_ac86a6b85917c19d4c7b4dbad75231d38_cgraph" id="aclassdyno_1_1VirtualKittiFlowDataFolder_ac86a6b85917c19d4c7b4dbad75231d38_cgraph">
 <area shape="rect" title="Get the Item at an index in the dataset." alt="" coords="5,5,200,45"/>
-<area shape="rect" href="namespacedyno.html#a163cb16ef980acda5b09d45c3a156e6f" title=" " alt="" coords="733,27,933,67"/>
+<area shape="rect" href="namespacedyno_1_1utils.html#a71785ed8de386df1fce95751bf5bec15" title=" " alt="" coords="733,27,932,67"/>
 <area shape="rect" href="classdyno_1_1VirtualKittiFlowDataFolder.html#ac0ca5eb1af1fee0108f1410f42efed18" title=" " alt="" coords="248,33,443,73"/>
 <area shape="rect" href="namespacedyno_1_1utils.html#a4bed389606523e7a31694ad904523c4d" title=" " alt="" coords="491,34,685,59"/>
-<area shape="rect" href="namespacedyno.html#a7fd811cad6c8cd6edb2fb0c2902952cd" title=" " alt="" coords="529,83,647,109"/>
+<area shape="rect" href="namespacedyno_1_1utils.html#a5a99bccec94ae25e68cdfef2c093b7da" title=" " alt="" coords="511,83,665,109"/>
 </map>
 </div>
 
@@ -289,7 +289,7 @@ Here is the call graph for this function:</div>
 <div class="line"><span class="lineno">  117</span>    <span class="comment">// cv::Mat bgr = cv::imread(path, cv::IMREAD_ANYCOLOR |</span></div>
 <div class="line"><span class="lineno">  118</span>    <span class="comment">// cv::IMREAD_ANYDEPTH);</span></div>
 <div class="line"><span class="lineno">  119</span>    cv::Mat bgr;</div>
-<div class="line"><span class="lineno">  120</span>    <a class="code hl_function" href="namespacedyno.html#a7fd811cad6c8cd6edb2fb0c2902952cd">loadRGB</a>(path, bgr);</div>
+<div class="line"><span class="lineno">  120</span>    <a class="code hl_function" href="namespacedyno_1_1utils.html#a5a99bccec94ae25e68cdfef2c093b7da">utils::loadRGB</a>(path, bgr);</div>
 <div class="line"><span class="lineno">  121</span> </div>
 <div class="line"><span class="lineno">  122</span>    CHECK(!bgr.empty());</div>
 <div class="line"><span class="lineno">  123</span> </div>
@@ -334,10 +334,10 @@ Here is the call graph for this function:</div>
 <div class="line"><span class="lineno">  162</span> </div>
 <div class="line"><span class="lineno">  163</span>    <span class="keywordflow">return</span> out_flow;</div>
 <div class="line"><span class="lineno">  164</span>  }</div>
-<div class="ttc" id="anamespacedyno_1_1utils_html_a4bed389606523e7a31694ad904523c4d"><div class="ttname"><a href="namespacedyno_1_1utils.html#a4bed389606523e7a31694ad904523c4d">dyno::utils::cvTypeToString</a></div><div class="ttdeci">std::string cvTypeToString(int type)</div><div class="ttdef"><b>Definition:</b> <a href="OpenCVUtils_8cc_source.html#l00094">OpenCVUtils.cc:94</a></div></div>
-<div class="ttc" id="anamespacedyno_html_a7fd811cad6c8cd6edb2fb0c2902952cd"><div class="ttname"><a href="namespacedyno.html#a7fd811cad6c8cd6edb2fb0c2902952cd">dyno::loadRGB</a></div><div class="ttdeci">void loadRGB(const std::string &amp;image_path, cv::Mat &amp;img)</div><div class="ttdef"><b>Definition:</b> <a href="DataProviderUtils_8cc_source.html#l00055">DataProviderUtils.cc:55</a></div></div>
+<div class="ttc" id="anamespacedyno_1_1utils_html_a4bed389606523e7a31694ad904523c4d"><div class="ttname"><a href="namespacedyno_1_1utils.html#a4bed389606523e7a31694ad904523c4d">dyno::utils::cvTypeToString</a></div><div class="ttdeci">std::string cvTypeToString(int type)</div><div class="ttdef"><b>Definition:</b> <a href="OpenCVUtils_8cc_source.html#l00119">OpenCVUtils.cc:119</a></div></div>
+<div class="ttc" id="anamespacedyno_1_1utils_html_a5a99bccec94ae25e68cdfef2c093b7da"><div class="ttname"><a href="namespacedyno_1_1utils.html#a5a99bccec94ae25e68cdfef2c093b7da">dyno::utils::loadRGB</a></div><div class="ttdeci">void loadRGB(const std::string &amp;image_path, cv::Mat &amp;img)</div><div class="ttdef"><b>Definition:</b> <a href="FileSystem_8cc_source.html#l00019">FileSystem.cc:19</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="namespacedyno_1_1utils.html#a4bed389606523e7a31694ad904523c4d">dyno::utils::cvTypeToString()</a>, and <a class="el" href="namespacedyno.html#a7fd811cad6c8cd6edb2fb0c2902952cd">dyno::loadRGB()</a>.</p>
+<p class="reference">References <a class="el" href="namespacedyno_1_1utils.html#a4bed389606523e7a31694ad904523c4d">dyno::utils::cvTypeToString()</a>, and <a class="el" href="namespacedyno_1_1utils.html#a5a99bccec94ae25e68cdfef2c093b7da">dyno::utils::loadRGB()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1VirtualKittiFlowDataFolder.html#ac86a6b85917c19d4c7b4dbad75231d38">getItem()</a>.</p>
 <div class="dynheader">
@@ -347,8 +347,8 @@ Here is the call graph for this function:</div>
 <map name="aclassdyno_1_1VirtualKittiFlowDataFolder_ac0ca5eb1af1fee0108f1410f42efed18_cgraph" id="aclassdyno_1_1VirtualKittiFlowDataFolder_ac0ca5eb1af1fee0108f1410f42efed18_cgraph">
 <area shape="rect" title=" " alt="" coords="5,23,200,63"/>
 <area shape="rect" href="namespacedyno_1_1utils.html#a4bed389606523e7a31694ad904523c4d" title=" " alt="" coords="248,5,443,31"/>
-<area shape="rect" href="namespacedyno.html#a7fd811cad6c8cd6edb2fb0c2902952cd" title=" " alt="" coords="286,55,405,80"/>
-<area shape="rect" href="namespacedyno.html#a163cb16ef980acda5b09d45c3a156e6f" title=" " alt="" coords="491,47,691,87"/>
+<area shape="rect" href="namespacedyno_1_1utils.html#a5a99bccec94ae25e68cdfef2c093b7da" title=" " alt="" coords="268,55,423,80"/>
+<area shape="rect" href="namespacedyno_1_1utils.html#a71785ed8de386df1fce95751bf5bec15" title=" " alt="" coords="491,47,689,87"/>
 </map>
 </div>
 <div class="dynheader">

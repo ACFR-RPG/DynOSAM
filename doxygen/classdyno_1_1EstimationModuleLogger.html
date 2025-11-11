@@ -106,8 +106,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:acb70c8cc277368b25d615612a1f4d8f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac77e5c49fa88bef8a71d668e346a9c67"><td class="memItemLeft" align="right" valign="top">virtual std::optional&lt; size_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1EstimationModuleLogger.html#ac77e5c49fa88bef8a71d668e346a9c67">logObjectMotion</a> (const <a class="el" href="namespacedyno.html#af0e7693f6363b7c2b87803049135cf43">ObjectMotionMap</a> &amp;object_motions, const std::optional&lt; <a class="el" href="classdyno_1_1GroundTruthPacketMap.html">GroundTruthPacketMap</a> &gt; &amp;gt_packets={})</td></tr>
 <tr class="separator:ac77e5c49fa88bef8a71d668e346a9c67"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a35d3a0c8b5a55cdbb35dcdbc2e340e04"><td class="memItemLeft" align="right" valign="top">virtual std::optional&lt; size_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1EstimationModuleLogger.html#a35d3a0c8b5a55cdbb35dcdbc2e340e04">logObjectPose</a> (<a class="el" href="namespacedyno.html#ac4303d6fafb755f794b072d76f9cfb41">FrameId</a> frame_id, const <a class="el" href="namespacedyno.html#a47c0a08523c12765d4bd6e243f900c16">ObjectPoseMap</a> &amp;propogated_poses, const std::optional&lt; <a class="el" href="classdyno_1_1GroundTruthPacketMap.html">GroundTruthPacketMap</a> &gt; &amp;gt_packets={})</td></tr>
-<tr class="separator:a35d3a0c8b5a55cdbb35dcdbc2e340e04"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a101ce5efbff62bafb916f0cb2397cca4"><td class="memItemLeft" align="right" valign="top">virtual std::optional&lt; size_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1EstimationModuleLogger.html#a101ce5efbff62bafb916f0cb2397cca4">logObjectPose</a> (<a class="el" href="namespacedyno.html#ac4303d6fafb755f794b072d76f9cfb41">FrameId</a> frame_id, const <a class="el" href="namespacedyno.html#a1dde6dda4e4eadfbde565851f992d0bf">PoseEstimateMap</a> &amp;object_poses, const std::optional&lt; <a class="el" href="classdyno_1_1GroundTruthPacketMap.html">GroundTruthPacketMap</a> &gt; &amp;gt_packets={})</td></tr>
+<tr class="separator:a101ce5efbff62bafb916f0cb2397cca4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae551714bec0a9001f9ca2db764107460"><td class="memItemLeft" align="right" valign="top">virtual std::optional&lt; size_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1EstimationModuleLogger.html#ae551714bec0a9001f9ca2db764107460">logObjectPose</a> (const <a class="el" href="namespacedyno.html#a47c0a08523c12765d4bd6e243f900c16">ObjectPoseMap</a> &amp;object_poses, const std::optional&lt; <a class="el" href="classdyno_1_1GroundTruthPacketMap.html">GroundTruthPacketMap</a> &gt; &amp;gt_packets={})</td></tr>
 <tr class="separator:ae551714bec0a9001f9ca2db764107460"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a72d45699a8019d7c18e9aa0ff121b86a"><td class="memItemLeft" align="right" valign="top">virtual std::optional&lt; size_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1EstimationModuleLogger.html#a72d45699a8019d7c18e9aa0ff121b86a">logCameraPose</a> (<a class="el" href="namespacedyno.html#ac4303d6fafb755f794b072d76f9cfb41">FrameId</a> frame_id, const gtsam::Pose3 &amp;T_world_camera, const std::optional&lt; <a class="el" href="classdyno_1_1GroundTruthPacketMap.html">GroundTruthPacketMap</a> &gt; &amp;gt_packets={})</td></tr>
@@ -189,41 +189,41 @@ Protected Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="Logger_8cc_source.html#l00139">139</a> of file <a class="el" href="Logger_8cc_source.html">Logger.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  140</span>    : <a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#a1189952decf2fd326f9e3b2c407dd578">module_name_</a>(module_name),</div>
-<div class="line"><span class="lineno">  141</span>      <a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#a9e2ca10e24d9a84c12d6b752c78d264e">object_pose_file_name_</a>(<a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#a1189952decf2fd326f9e3b2c407dd578">module_name_</a> + <span class="stringliteral">&quot;_object_pose_log.csv&quot;</span>),</div>
-<div class="line"><span class="lineno">  142</span>      <a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#a581f5326d1a20bc381b95d3da91684c3">object_motion_file_name_</a>(<a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#a1189952decf2fd326f9e3b2c407dd578">module_name_</a> + <span class="stringliteral">&quot;_object_motion_log.csv&quot;</span>),</div>
-<div class="line"><span class="lineno">  143</span>      <a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#a34d7bb15041aab4e4989fe921a81c165">object_bbx_file_name_</a>(<a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#a1189952decf2fd326f9e3b2c407dd578">module_name_</a> + <span class="stringliteral">&quot;_object_bbx_log.csv&quot;</span>),</div>
-<div class="line"><span class="lineno">  144</span>      <span class="comment">// camera_pose_errors_file_name_(module_name_ +</span></div>
-<div class="line"><span class="lineno">  145</span>      <span class="comment">// &quot;_camera_pose_error_log.csv&quot;),</span></div>
-<div class="line"><span class="lineno">  146</span>      <a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#a418e383b33e30fa37ab725a301b009ab">camera_pose_file_name_</a>(<a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#a1189952decf2fd326f9e3b2c407dd578">module_name_</a> + <span class="stringliteral">&quot;_camera_pose_log.csv&quot;</span>),</div>
-<div class="line"><span class="lineno">  147</span>      <a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#ac3440468bd1099f1cad34ed1b8e4051e">map_points_file_name_</a>(<a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#a1189952decf2fd326f9e3b2c407dd578">module_name_</a> + <span class="stringliteral">&quot;_map_points_log.csv&quot;</span>),</div>
-<div class="line"><span class="lineno">  148</span>      <a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#ad1aebb9d7a21b35f256952164f28f03c">frame_id_to_timestamp_file_name_</a>(</div>
-<div class="line"><span class="lineno">  149</span>          <span class="stringliteral">&quot;frame_id_timestamp.csv&quot;</span>)  <span class="comment">// NOTE: not prefixed by module</span></div>
-<div class="line"><span class="lineno">  150</span>{</div>
-<div class="line"><span class="lineno">  151</span>  <a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#a82ceda4ec4b8d8460242ee8668c3b14e">camera_pose_csv_</a> = std::make_unique&lt;CsvWriter&gt;(</div>
-<div class="line"><span class="lineno">  152</span>      CsvHeader(<span class="stringliteral">&quot;frame_id&quot;</span>, <span class="stringliteral">&quot;tx&quot;</span>, <span class="stringliteral">&quot;ty&quot;</span>, <span class="stringliteral">&quot;tz&quot;</span>, <span class="stringliteral">&quot;qx&quot;</span>, <span class="stringliteral">&quot;qy&quot;</span>, <span class="stringliteral">&quot;qz&quot;</span>, <span class="stringliteral">&quot;qw&quot;</span>, <span class="stringliteral">&quot;gt_tx&quot;</span>,</div>
-<div class="line"><span class="lineno">  153</span>                <span class="stringliteral">&quot;gt_ty&quot;</span>, <span class="stringliteral">&quot;gt_tz&quot;</span>, <span class="stringliteral">&quot;gt_qx&quot;</span>, <span class="stringliteral">&quot;gt_qy&quot;</span>, <span class="stringliteral">&quot;gt_qz&quot;</span>, <span class="stringliteral">&quot;gt_qw&quot;</span>));</div>
-<div class="line"><span class="lineno">  154</span> </div>
-<div class="line"><span class="lineno">  155</span>  <a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#a76ea4d6ecf7f891fa25d47912ce25a95">object_pose_csv_</a> = std::make_unique&lt;CsvWriter&gt;(CsvHeader(</div>
-<div class="line"><span class="lineno">  156</span>      <span class="stringliteral">&quot;frame_id&quot;</span>, <span class="stringliteral">&quot;object_id&quot;</span>, <span class="stringliteral">&quot;tx&quot;</span>, <span class="stringliteral">&quot;ty&quot;</span>, <span class="stringliteral">&quot;tz&quot;</span>, <span class="stringliteral">&quot;qx&quot;</span>, <span class="stringliteral">&quot;qy&quot;</span>, <span class="stringliteral">&quot;qz&quot;</span>, <span class="stringliteral">&quot;qw&quot;</span>,</div>
-<div class="line"><span class="lineno">  157</span>      <span class="stringliteral">&quot;gt_tx&quot;</span>, <span class="stringliteral">&quot;gt_ty&quot;</span>, <span class="stringliteral">&quot;gt_tz&quot;</span>, <span class="stringliteral">&quot;gt_qx&quot;</span>, <span class="stringliteral">&quot;gt_qy&quot;</span>, <span class="stringliteral">&quot;gt_qz&quot;</span>, <span class="stringliteral">&quot;gt_qw&quot;</span>));</div>
-<div class="line"><span class="lineno">  158</span> </div>
-<div class="line"><span class="lineno">  159</span>  <a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#ad845d962ed0a8b9719addb1cc3a98095">object_motion_csv_</a> = std::make_unique&lt;CsvWriter&gt;(CsvHeader(</div>
-<div class="line"><span class="lineno">  160</span>      <span class="stringliteral">&quot;frame_id&quot;</span>, <span class="stringliteral">&quot;object_id&quot;</span>, <span class="stringliteral">&quot;tx&quot;</span>, <span class="stringliteral">&quot;ty&quot;</span>, <span class="stringliteral">&quot;tz&quot;</span>, <span class="stringliteral">&quot;qx&quot;</span>, <span class="stringliteral">&quot;qy&quot;</span>, <span class="stringliteral">&quot;qz&quot;</span>, <span class="stringliteral">&quot;qw&quot;</span>,</div>
-<div class="line"><span class="lineno">  161</span>      <span class="stringliteral">&quot;gt_tx&quot;</span>, <span class="stringliteral">&quot;gt_ty&quot;</span>, <span class="stringliteral">&quot;gt_tz&quot;</span>, <span class="stringliteral">&quot;gt_qx&quot;</span>, <span class="stringliteral">&quot;gt_qy&quot;</span>, <span class="stringliteral">&quot;gt_qz&quot;</span>, <span class="stringliteral">&quot;gt_qw&quot;</span>));</div>
-<div class="line"><span class="lineno">  162</span> </div>
-<div class="line"><span class="lineno">  163</span>  <a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#af40c07cefe8651bc64e08178b4f940cf">map_points_csv_</a> = std::make_unique&lt;CsvWriter&gt;(CsvHeader(</div>
-<div class="line"><span class="lineno">  164</span>      <span class="stringliteral">&quot;frame_id&quot;</span>, <span class="stringliteral">&quot;object_id&quot;</span>, <span class="stringliteral">&quot;tracklet_id&quot;</span>, <span class="stringliteral">&quot;x_world&quot;</span>, <span class="stringliteral">&quot;y_world&quot;</span>, <span class="stringliteral">&quot;z_world&quot;</span>));</div>
-<div class="line"><span class="lineno">  165</span> </div>
-<div class="line"><span class="lineno">  166</span>  <a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#a2bb1feff30afd65cdb05badc8839b810">object_bbx_csv_</a> = std::make_unique&lt;CsvWriter&gt;(</div>
-<div class="line"><span class="lineno">  167</span>      CsvHeader(<span class="stringliteral">&quot;frame_id&quot;</span>, <span class="stringliteral">&quot;object_id&quot;</span>, <span class="stringliteral">&quot;min_bbx_x&quot;</span>, <span class="stringliteral">&quot;min_bbx_y&quot;</span>, <span class="stringliteral">&quot;min_bbx_z&quot;</span>,</div>
-<div class="line"><span class="lineno">  168</span>                <span class="stringliteral">&quot;max_bbx_x&quot;</span>, <span class="stringliteral">&quot;max_bbx_y&quot;</span>, <span class="stringliteral">&quot;max_bbx_z&quot;</span>, <span class="stringliteral">&quot;px&quot;</span>, <span class="stringliteral">&quot;py&quot;</span>, <span class="stringliteral">&quot;pz&quot;</span>, <span class="stringliteral">&quot;qw&quot;</span>,</div>
-<div class="line"><span class="lineno">  169</span>                <span class="stringliteral">&quot;qx&quot;</span>, <span class="stringliteral">&quot;qy&quot;</span>, <span class="stringliteral">&quot;qz&quot;</span>));</div>
-<div class="line"><span class="lineno">  170</span> </div>
-<div class="line"><span class="lineno">  171</span>  <a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#a9810f2f54b930e017e61cf7ad507df19">frame_id_timestamp_csv_</a> =</div>
-<div class="line"><span class="lineno">  172</span>      std::make_unique&lt;CsvWriter&gt;(CsvHeader(<span class="stringliteral">&quot;frame_id&quot;</span>, <span class="stringliteral">&quot;timestamp [ns]&quot;</span>));</div>
-<div class="line"><span class="lineno">  173</span>}</div>
+<p class="definition">Definition at line <a class="el" href="Logger_8cc_source.html#l00138">138</a> of file <a class="el" href="Logger_8cc_source.html">Logger.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  139</span>    : <a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#a1189952decf2fd326f9e3b2c407dd578">module_name_</a>(module_name),</div>
+<div class="line"><span class="lineno">  140</span>      <a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#a9e2ca10e24d9a84c12d6b752c78d264e">object_pose_file_name_</a>(<a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#a1189952decf2fd326f9e3b2c407dd578">module_name_</a> + <span class="stringliteral">&quot;_object_pose_log.csv&quot;</span>),</div>
+<div class="line"><span class="lineno">  141</span>      <a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#a581f5326d1a20bc381b95d3da91684c3">object_motion_file_name_</a>(<a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#a1189952decf2fd326f9e3b2c407dd578">module_name_</a> + <span class="stringliteral">&quot;_object_motion_log.csv&quot;</span>),</div>
+<div class="line"><span class="lineno">  142</span>      <a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#a34d7bb15041aab4e4989fe921a81c165">object_bbx_file_name_</a>(<a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#a1189952decf2fd326f9e3b2c407dd578">module_name_</a> + <span class="stringliteral">&quot;_object_bbx_log.csv&quot;</span>),</div>
+<div class="line"><span class="lineno">  143</span>      <span class="comment">// camera_pose_errors_file_name_(module_name_ +</span></div>
+<div class="line"><span class="lineno">  144</span>      <span class="comment">// &quot;_camera_pose_error_log.csv&quot;),</span></div>
+<div class="line"><span class="lineno">  145</span>      <a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#a418e383b33e30fa37ab725a301b009ab">camera_pose_file_name_</a>(<a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#a1189952decf2fd326f9e3b2c407dd578">module_name_</a> + <span class="stringliteral">&quot;_camera_pose_log.csv&quot;</span>),</div>
+<div class="line"><span class="lineno">  146</span>      <a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#ac3440468bd1099f1cad34ed1b8e4051e">map_points_file_name_</a>(<a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#a1189952decf2fd326f9e3b2c407dd578">module_name_</a> + <span class="stringliteral">&quot;_map_points_log.csv&quot;</span>),</div>
+<div class="line"><span class="lineno">  147</span>      <a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#ad1aebb9d7a21b35f256952164f28f03c">frame_id_to_timestamp_file_name_</a>(</div>
+<div class="line"><span class="lineno">  148</span>          <span class="stringliteral">&quot;frame_id_timestamp.csv&quot;</span>)  <span class="comment">// NOTE: not prefixed by module</span></div>
+<div class="line"><span class="lineno">  149</span>{</div>
+<div class="line"><span class="lineno">  150</span>  <a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#a82ceda4ec4b8d8460242ee8668c3b14e">camera_pose_csv_</a> = std::make_unique&lt;CsvWriter&gt;(</div>
+<div class="line"><span class="lineno">  151</span>      CsvHeader(<span class="stringliteral">&quot;frame_id&quot;</span>, <span class="stringliteral">&quot;tx&quot;</span>, <span class="stringliteral">&quot;ty&quot;</span>, <span class="stringliteral">&quot;tz&quot;</span>, <span class="stringliteral">&quot;qx&quot;</span>, <span class="stringliteral">&quot;qy&quot;</span>, <span class="stringliteral">&quot;qz&quot;</span>, <span class="stringliteral">&quot;qw&quot;</span>, <span class="stringliteral">&quot;gt_tx&quot;</span>,</div>
+<div class="line"><span class="lineno">  152</span>                <span class="stringliteral">&quot;gt_ty&quot;</span>, <span class="stringliteral">&quot;gt_tz&quot;</span>, <span class="stringliteral">&quot;gt_qx&quot;</span>, <span class="stringliteral">&quot;gt_qy&quot;</span>, <span class="stringliteral">&quot;gt_qz&quot;</span>, <span class="stringliteral">&quot;gt_qw&quot;</span>));</div>
+<div class="line"><span class="lineno">  153</span> </div>
+<div class="line"><span class="lineno">  154</span>  <a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#a76ea4d6ecf7f891fa25d47912ce25a95">object_pose_csv_</a> = std::make_unique&lt;CsvWriter&gt;(CsvHeader(</div>
+<div class="line"><span class="lineno">  155</span>      <span class="stringliteral">&quot;frame_id&quot;</span>, <span class="stringliteral">&quot;object_id&quot;</span>, <span class="stringliteral">&quot;tx&quot;</span>, <span class="stringliteral">&quot;ty&quot;</span>, <span class="stringliteral">&quot;tz&quot;</span>, <span class="stringliteral">&quot;qx&quot;</span>, <span class="stringliteral">&quot;qy&quot;</span>, <span class="stringliteral">&quot;qz&quot;</span>, <span class="stringliteral">&quot;qw&quot;</span>,</div>
+<div class="line"><span class="lineno">  156</span>      <span class="stringliteral">&quot;gt_tx&quot;</span>, <span class="stringliteral">&quot;gt_ty&quot;</span>, <span class="stringliteral">&quot;gt_tz&quot;</span>, <span class="stringliteral">&quot;gt_qx&quot;</span>, <span class="stringliteral">&quot;gt_qy&quot;</span>, <span class="stringliteral">&quot;gt_qz&quot;</span>, <span class="stringliteral">&quot;gt_qw&quot;</span>));</div>
+<div class="line"><span class="lineno">  157</span> </div>
+<div class="line"><span class="lineno">  158</span>  <a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#ad845d962ed0a8b9719addb1cc3a98095">object_motion_csv_</a> = std::make_unique&lt;CsvWriter&gt;(CsvHeader(</div>
+<div class="line"><span class="lineno">  159</span>      <span class="stringliteral">&quot;frame_id&quot;</span>, <span class="stringliteral">&quot;object_id&quot;</span>, <span class="stringliteral">&quot;tx&quot;</span>, <span class="stringliteral">&quot;ty&quot;</span>, <span class="stringliteral">&quot;tz&quot;</span>, <span class="stringliteral">&quot;qx&quot;</span>, <span class="stringliteral">&quot;qy&quot;</span>, <span class="stringliteral">&quot;qz&quot;</span>, <span class="stringliteral">&quot;qw&quot;</span>,</div>
+<div class="line"><span class="lineno">  160</span>      <span class="stringliteral">&quot;gt_tx&quot;</span>, <span class="stringliteral">&quot;gt_ty&quot;</span>, <span class="stringliteral">&quot;gt_tz&quot;</span>, <span class="stringliteral">&quot;gt_qx&quot;</span>, <span class="stringliteral">&quot;gt_qy&quot;</span>, <span class="stringliteral">&quot;gt_qz&quot;</span>, <span class="stringliteral">&quot;gt_qw&quot;</span>));</div>
+<div class="line"><span class="lineno">  161</span> </div>
+<div class="line"><span class="lineno">  162</span>  <a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#af40c07cefe8651bc64e08178b4f940cf">map_points_csv_</a> = std::make_unique&lt;CsvWriter&gt;(CsvHeader(</div>
+<div class="line"><span class="lineno">  163</span>      <span class="stringliteral">&quot;frame_id&quot;</span>, <span class="stringliteral">&quot;object_id&quot;</span>, <span class="stringliteral">&quot;tracklet_id&quot;</span>, <span class="stringliteral">&quot;x_world&quot;</span>, <span class="stringliteral">&quot;y_world&quot;</span>, <span class="stringliteral">&quot;z_world&quot;</span>));</div>
+<div class="line"><span class="lineno">  164</span> </div>
+<div class="line"><span class="lineno">  165</span>  <a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#a2bb1feff30afd65cdb05badc8839b810">object_bbx_csv_</a> = std::make_unique&lt;CsvWriter&gt;(</div>
+<div class="line"><span class="lineno">  166</span>      CsvHeader(<span class="stringliteral">&quot;frame_id&quot;</span>, <span class="stringliteral">&quot;object_id&quot;</span>, <span class="stringliteral">&quot;min_bbx_x&quot;</span>, <span class="stringliteral">&quot;min_bbx_y&quot;</span>, <span class="stringliteral">&quot;min_bbx_z&quot;</span>,</div>
+<div class="line"><span class="lineno">  167</span>                <span class="stringliteral">&quot;max_bbx_x&quot;</span>, <span class="stringliteral">&quot;max_bbx_y&quot;</span>, <span class="stringliteral">&quot;max_bbx_z&quot;</span>, <span class="stringliteral">&quot;px&quot;</span>, <span class="stringliteral">&quot;py&quot;</span>, <span class="stringliteral">&quot;pz&quot;</span>, <span class="stringliteral">&quot;qw&quot;</span>,</div>
+<div class="line"><span class="lineno">  168</span>                <span class="stringliteral">&quot;qx&quot;</span>, <span class="stringliteral">&quot;qy&quot;</span>, <span class="stringliteral">&quot;qz&quot;</span>));</div>
+<div class="line"><span class="lineno">  169</span> </div>
+<div class="line"><span class="lineno">  170</span>  <a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#a9810f2f54b930e017e61cf7ad507df19">frame_id_timestamp_csv_</a> =</div>
+<div class="line"><span class="lineno">  171</span>      std::make_unique&lt;CsvWriter&gt;(CsvHeader(<span class="stringliteral">&quot;frame_id&quot;</span>, <span class="stringliteral">&quot;timestamp [ns]&quot;</span>));</div>
+<div class="line"><span class="lineno">  172</span>}</div>
 <div class="ttc" id="aclassdyno_1_1EstimationModuleLogger_html_a1189952decf2fd326f9e3b2c407dd578"><div class="ttname"><a href="classdyno_1_1EstimationModuleLogger.html#a1189952decf2fd326f9e3b2c407dd578">dyno::EstimationModuleLogger::module_name_</a></div><div class="ttdeci">const std::string module_name_</div><div class="ttdef"><b>Definition:</b> <a href="Logger_8hpp_source.html#l00312">Logger.hpp:312</a></div></div>
 <div class="ttc" id="aclassdyno_1_1EstimationModuleLogger_html_a2bb1feff30afd65cdb05badc8839b810"><div class="ttname"><a href="classdyno_1_1EstimationModuleLogger.html#a2bb1feff30afd65cdb05badc8839b810">dyno::EstimationModuleLogger::object_bbx_csv_</a></div><div class="ttdeci">CsvWriter::UniquePtr object_bbx_csv_</div><div class="ttdef"><b>Definition:</b> <a href="Logger_8hpp_source.html#l00322">Logger.hpp:322</a></div></div>
 <div class="ttc" id="aclassdyno_1_1EstimationModuleLogger_html_a34d7bb15041aab4e4989fe921a81c165"><div class="ttname"><a href="classdyno_1_1EstimationModuleLogger.html#a34d7bb15041aab4e4989fe921a81c165">dyno::EstimationModuleLogger::object_bbx_file_name_</a></div><div class="ttdeci">const std::string object_bbx_file_name_</div><div class="ttdef"><b>Definition:</b> <a href="Logger_8hpp_source.html#l00315">Logger.hpp:315</a></div></div>
@@ -265,19 +265,19 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Logger_8cc_source.html#l00175">175</a> of file <a class="el" href="Logger_8cc_source.html">Logger.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  175</span>                                                {</div>
-<div class="line"><span class="lineno">  176</span>  LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Writing out &quot;</span> &lt;&lt; <a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#a1189952decf2fd326f9e3b2c407dd578">module_name_</a> &lt;&lt; <span class="stringliteral">&quot; logger...&quot;</span>;</div>
-<div class="line"><span class="lineno">  177</span>  <a class="code hl_function" href="classdyno_1_1OfstreamWrapper.html#a2ddd1f06ac6cfa7e46f15ddeb045f0c6">OfstreamWrapper::WriteOutCsvWriter</a>(*<a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#a76ea4d6ecf7f891fa25d47912ce25a95">object_pose_csv_</a>, <a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#a9e2ca10e24d9a84c12d6b752c78d264e">object_pose_file_name_</a>);</div>
-<div class="line"><span class="lineno">  178</span>  <a class="code hl_function" href="classdyno_1_1OfstreamWrapper.html#a2ddd1f06ac6cfa7e46f15ddeb045f0c6">OfstreamWrapper::WriteOutCsvWriter</a>(*<a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#a2bb1feff30afd65cdb05badc8839b810">object_bbx_csv_</a>, <a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#a34d7bb15041aab4e4989fe921a81c165">object_bbx_file_name_</a>);</div>
-<div class="line"><span class="lineno">  179</span>  <a class="code hl_function" href="classdyno_1_1OfstreamWrapper.html#a2ddd1f06ac6cfa7e46f15ddeb045f0c6">OfstreamWrapper::WriteOutCsvWriter</a>(*<a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#ad845d962ed0a8b9719addb1cc3a98095">object_motion_csv_</a>,</div>
-<div class="line"><span class="lineno">  180</span>                                     <a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#a581f5326d1a20bc381b95d3da91684c3">object_motion_file_name_</a>);</div>
-<div class="line"><span class="lineno">  181</span>  <a class="code hl_function" href="classdyno_1_1OfstreamWrapper.html#a2ddd1f06ac6cfa7e46f15ddeb045f0c6">OfstreamWrapper::WriteOutCsvWriter</a>(*<a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#a82ceda4ec4b8d8460242ee8668c3b14e">camera_pose_csv_</a>, <a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#a418e383b33e30fa37ab725a301b009ab">camera_pose_file_name_</a>);</div>
-<div class="line"><span class="lineno">  182</span>  <a class="code hl_function" href="classdyno_1_1OfstreamWrapper.html#a2ddd1f06ac6cfa7e46f15ddeb045f0c6">OfstreamWrapper::WriteOutCsvWriter</a>(*<a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#af40c07cefe8651bc64e08178b4f940cf">map_points_csv_</a>, <a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#ac3440468bd1099f1cad34ed1b8e4051e">map_points_file_name_</a>);</div>
-<div class="line"><span class="lineno">  183</span>  <span class="comment">// OfstreamWrapper::WriteOutCsvWriter(*frame_id_timestamp_csv_,</span></div>
-<div class="line"><span class="lineno">  184</span>  <span class="comment">//                                    frame_id_to_timestamp_file_name_);</span></div>
-<div class="line"><span class="lineno">  185</span>}</div>
-<div class="ttc" id="aclassdyno_1_1OfstreamWrapper_html_a2ddd1f06ac6cfa7e46f15ddeb045f0c6"><div class="ttname"><a href="classdyno_1_1OfstreamWrapper.html#a2ddd1f06ac6cfa7e46f15ddeb045f0c6">dyno::OfstreamWrapper::WriteOutCsvWriter</a></div><div class="ttdeci">static bool WriteOutCsvWriter(const CsvWriter &amp;csv, const std::string &amp;filename)</div><div class="ttdef"><b>Definition:</b> <a href="Logger_8cc_source.html#l00115">Logger.cc:115</a></div></div>
+<p class="definition">Definition at line <a class="el" href="Logger_8cc_source.html#l00174">174</a> of file <a class="el" href="Logger_8cc_source.html">Logger.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  174</span>                                                {</div>
+<div class="line"><span class="lineno">  175</span>  LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Writing out &quot;</span> &lt;&lt; <a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#a1189952decf2fd326f9e3b2c407dd578">module_name_</a> &lt;&lt; <span class="stringliteral">&quot; logger...&quot;</span>;</div>
+<div class="line"><span class="lineno">  176</span>  <a class="code hl_function" href="classdyno_1_1OfstreamWrapper.html#a2ddd1f06ac6cfa7e46f15ddeb045f0c6">OfstreamWrapper::WriteOutCsvWriter</a>(*<a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#a76ea4d6ecf7f891fa25d47912ce25a95">object_pose_csv_</a>, <a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#a9e2ca10e24d9a84c12d6b752c78d264e">object_pose_file_name_</a>);</div>
+<div class="line"><span class="lineno">  177</span>  <a class="code hl_function" href="classdyno_1_1OfstreamWrapper.html#a2ddd1f06ac6cfa7e46f15ddeb045f0c6">OfstreamWrapper::WriteOutCsvWriter</a>(*<a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#a2bb1feff30afd65cdb05badc8839b810">object_bbx_csv_</a>, <a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#a34d7bb15041aab4e4989fe921a81c165">object_bbx_file_name_</a>);</div>
+<div class="line"><span class="lineno">  178</span>  <a class="code hl_function" href="classdyno_1_1OfstreamWrapper.html#a2ddd1f06ac6cfa7e46f15ddeb045f0c6">OfstreamWrapper::WriteOutCsvWriter</a>(*<a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#ad845d962ed0a8b9719addb1cc3a98095">object_motion_csv_</a>,</div>
+<div class="line"><span class="lineno">  179</span>                                     <a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#a581f5326d1a20bc381b95d3da91684c3">object_motion_file_name_</a>);</div>
+<div class="line"><span class="lineno">  180</span>  <a class="code hl_function" href="classdyno_1_1OfstreamWrapper.html#a2ddd1f06ac6cfa7e46f15ddeb045f0c6">OfstreamWrapper::WriteOutCsvWriter</a>(*<a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#a82ceda4ec4b8d8460242ee8668c3b14e">camera_pose_csv_</a>, <a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#a418e383b33e30fa37ab725a301b009ab">camera_pose_file_name_</a>);</div>
+<div class="line"><span class="lineno">  181</span>  <a class="code hl_function" href="classdyno_1_1OfstreamWrapper.html#a2ddd1f06ac6cfa7e46f15ddeb045f0c6">OfstreamWrapper::WriteOutCsvWriter</a>(*<a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#af40c07cefe8651bc64e08178b4f940cf">map_points_csv_</a>, <a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#ac3440468bd1099f1cad34ed1b8e4051e">map_points_file_name_</a>);</div>
+<div class="line"><span class="lineno">  182</span>  <span class="comment">// OfstreamWrapper::WriteOutCsvWriter(*frame_id_timestamp_csv_,</span></div>
+<div class="line"><span class="lineno">  183</span>  <span class="comment">//                                    frame_id_to_timestamp_file_name_);</span></div>
+<div class="line"><span class="lineno">  184</span>}</div>
+<div class="ttc" id="aclassdyno_1_1OfstreamWrapper_html_a2ddd1f06ac6cfa7e46f15ddeb045f0c6"><div class="ttname"><a href="classdyno_1_1OfstreamWrapper.html#a2ddd1f06ac6cfa7e46f15ddeb045f0c6">dyno::OfstreamWrapper::WriteOutCsvWriter</a></div><div class="ttdeci">static bool WriteOutCsvWriter(const CsvWriter &amp;csv, const std::string &amp;filename)</div><div class="ttdef"><b>Definition:</b> <a href="Logger_8cc_source.html#l00114">Logger.cc:114</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1EstimationModuleLogger.html#a82ceda4ec4b8d8460242ee8668c3b14e">camera_pose_csv_</a>, <a class="el" href="classdyno_1_1EstimationModuleLogger.html#a418e383b33e30fa37ab725a301b009ab">camera_pose_file_name_</a>, <a class="el" href="classdyno_1_1EstimationModuleLogger.html#af40c07cefe8651bc64e08178b4f940cf">map_points_csv_</a>, <a class="el" href="classdyno_1_1EstimationModuleLogger.html#ac3440468bd1099f1cad34ed1b8e4051e">map_points_file_name_</a>, <a class="el" href="classdyno_1_1EstimationModuleLogger.html#a1189952decf2fd326f9e3b2c407dd578">module_name_</a>, <a class="el" href="classdyno_1_1EstimationModuleLogger.html#a2bb1feff30afd65cdb05badc8839b810">object_bbx_csv_</a>, <a class="el" href="classdyno_1_1EstimationModuleLogger.html#a34d7bb15041aab4e4989fe921a81c165">object_bbx_file_name_</a>, <a class="el" href="classdyno_1_1EstimationModuleLogger.html#ad845d962ed0a8b9719addb1cc3a98095">object_motion_csv_</a>, <a class="el" href="classdyno_1_1EstimationModuleLogger.html#a581f5326d1a20bc381b95d3da91684c3">object_motion_file_name_</a>, <a class="el" href="classdyno_1_1EstimationModuleLogger.html#a76ea4d6ecf7f891fa25d47912ce25a95">object_pose_csv_</a>, <a class="el" href="classdyno_1_1EstimationModuleLogger.html#a9e2ca10e24d9a84c12d6b752c78d264e">object_pose_file_name_</a>, and <a class="el" href="classdyno_1_1OfstreamWrapper.html#a2ddd1f06ac6cfa7e46f15ddeb045f0c6">dyno::OfstreamWrapper::WriteOutCsvWriter()</a>.</p>
 <div class="dynheader">
@@ -334,28 +334,28 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Logger_8cc_source.html#l00285">285</a> of file <a class="el" href="Logger_8cc_source.html">Logger.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  287</span>                                                         {</div>
-<div class="line"><span class="lineno">  288</span>  gtsam::Pose3 gt_T_world_camera_k = gtsam::Pose3::Identity();</div>
-<div class="line"><span class="lineno">  289</span>  <span class="comment">// if gt packet provided by no data exists at this frame</span></div>
-<div class="line"><span class="lineno">  290</span>  <span class="keywordflow">if</span> (gt_packets &amp;&amp; !gt_packets-&gt;exists(frame_id)) {</div>
-<div class="line"><span class="lineno">  291</span>    VLOG(100) &lt;&lt; <span class="stringliteral">&quot;No gt packet at frame id &quot;</span> &lt;&lt; frame_id</div>
-<div class="line"><span class="lineno">  292</span>              &lt;&lt; <span class="stringliteral">&quot;. Unable to log object motions&quot;</span>;</div>
-<div class="line"><span class="lineno">  293</span>    <span class="keywordflow">return</span> {};</div>
-<div class="line"><span class="lineno">  294</span>  } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (gt_packets &amp;&amp; gt_packets-&gt;exists(frame_id)) {</div>
-<div class="line"><span class="lineno">  295</span>    <span class="keyword">const</span> GroundTruthInputPacket&amp; gt_packet_k = gt_packets-&gt;at(frame_id);</div>
-<div class="line"><span class="lineno">  296</span>    gt_T_world_camera_k = gt_packet_k.X_world_;</div>
-<div class="line"><span class="lineno">  297</span>  }</div>
-<div class="line"><span class="lineno">  298</span> </div>
-<div class="line"><span class="lineno">  299</span>  <span class="keyword">const</span> <span class="keyword">auto</span>&amp; rot = T_world_camera.rotation().toQuaternion();</div>
-<div class="line"><span class="lineno">  300</span>  <span class="keyword">const</span> <span class="keyword">auto</span>&amp; gt_rot = gt_T_world_camera_k.rotation().toQuaternion();</div>
-<div class="line"><span class="lineno">  301</span>  *<a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#a82ceda4ec4b8d8460242ee8668c3b14e">camera_pose_csv_</a> &lt;&lt; frame_id &lt;&lt; T_world_camera.x() &lt;&lt; T_world_camera.y()</div>
-<div class="line"><span class="lineno">  302</span>                    &lt;&lt; T_world_camera.z() &lt;&lt; rot.x() &lt;&lt; rot.y() &lt;&lt; rot.z()</div>
-<div class="line"><span class="lineno">  303</span>                    &lt;&lt; rot.w() &lt;&lt; gt_T_world_camera_k.x()</div>
-<div class="line"><span class="lineno">  304</span>                    &lt;&lt; gt_T_world_camera_k.y() &lt;&lt; gt_T_world_camera_k.z()</div>
-<div class="line"><span class="lineno">  305</span>                    &lt;&lt; gt_rot.x() &lt;&lt; gt_rot.y() &lt;&lt; gt_rot.z() &lt;&lt; gt_rot.w();</div>
-<div class="line"><span class="lineno">  306</span>  <span class="keywordflow">return</span> 1;</div>
-<div class="line"><span class="lineno">  307</span>}</div>
+<p class="definition">Definition at line <a class="el" href="Logger_8cc_source.html#l00303">303</a> of file <a class="el" href="Logger_8cc_source.html">Logger.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  305</span>                                                         {</div>
+<div class="line"><span class="lineno">  306</span>  gtsam::Pose3 gt_T_world_camera_k = gtsam::Pose3::Identity();</div>
+<div class="line"><span class="lineno">  307</span>  <span class="comment">// if gt packet provided by no data exists at this frame</span></div>
+<div class="line"><span class="lineno">  308</span>  <span class="keywordflow">if</span> (gt_packets &amp;&amp; !gt_packets-&gt;exists(frame_id)) {</div>
+<div class="line"><span class="lineno">  309</span>    VLOG(100) &lt;&lt; <span class="stringliteral">&quot;No gt packet at frame id &quot;</span> &lt;&lt; frame_id</div>
+<div class="line"><span class="lineno">  310</span>              &lt;&lt; <span class="stringliteral">&quot;. Unable to log object motions&quot;</span>;</div>
+<div class="line"><span class="lineno">  311</span>    <span class="keywordflow">return</span> {};</div>
+<div class="line"><span class="lineno">  312</span>  } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (gt_packets &amp;&amp; gt_packets-&gt;exists(frame_id)) {</div>
+<div class="line"><span class="lineno">  313</span>    <span class="keyword">const</span> GroundTruthInputPacket&amp; gt_packet_k = gt_packets-&gt;at(frame_id);</div>
+<div class="line"><span class="lineno">  314</span>    gt_T_world_camera_k = gt_packet_k.X_world_;</div>
+<div class="line"><span class="lineno">  315</span>  }</div>
+<div class="line"><span class="lineno">  316</span> </div>
+<div class="line"><span class="lineno">  317</span>  <span class="keyword">const</span> <span class="keyword">auto</span>&amp; rot = T_world_camera.rotation().toQuaternion();</div>
+<div class="line"><span class="lineno">  318</span>  <span class="keyword">const</span> <span class="keyword">auto</span>&amp; gt_rot = gt_T_world_camera_k.rotation().toQuaternion();</div>
+<div class="line"><span class="lineno">  319</span>  *<a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#a82ceda4ec4b8d8460242ee8668c3b14e">camera_pose_csv_</a> &lt;&lt; frame_id &lt;&lt; T_world_camera.x() &lt;&lt; T_world_camera.y()</div>
+<div class="line"><span class="lineno">  320</span>                    &lt;&lt; T_world_camera.z() &lt;&lt; rot.x() &lt;&lt; rot.y() &lt;&lt; rot.z()</div>
+<div class="line"><span class="lineno">  321</span>                    &lt;&lt; rot.w() &lt;&lt; gt_T_world_camera_k.x()</div>
+<div class="line"><span class="lineno">  322</span>                    &lt;&lt; gt_T_world_camera_k.y() &lt;&lt; gt_T_world_camera_k.z()</div>
+<div class="line"><span class="lineno">  323</span>                    &lt;&lt; gt_rot.x() &lt;&lt; gt_rot.y() &lt;&lt; gt_rot.z() &lt;&lt; gt_rot.w();</div>
+<div class="line"><span class="lineno">  324</span>  <span class="keywordflow">return</span> 1;</div>
+<div class="line"><span class="lineno">  325</span>}</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1EstimationModuleLogger.html#a82ceda4ec4b8d8460242ee8668c3b14e">camera_pose_csv_</a>, and <a class="el" href="classdyno_1_1GroundTruthInputPacket.html#a343e782543b55700fa6adba76533b5fc">dyno::GroundTruthInputPacket::X_world_</a>.</p>
 
@@ -387,11 +387,11 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Logger_8cc_source.html#l00365">365</a> of file <a class="el" href="Logger_8cc_source.html">Logger.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  366</span>                                                                        {</div>
-<div class="line"><span class="lineno">  367</span>  <span class="keywordtype">long</span> <span class="keywordtype">int</span> nano_seconds = timestamp * 1e+9;</div>
-<div class="line"><span class="lineno">  368</span>  *<a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#a9810f2f54b930e017e61cf7ad507df19">frame_id_timestamp_csv_</a> &lt;&lt; frame_id &lt;&lt; nano_seconds;</div>
-<div class="line"><span class="lineno">  369</span>}</div>
+<p class="definition">Definition at line <a class="el" href="Logger_8cc_source.html#l00383">383</a> of file <a class="el" href="Logger_8cc_source.html">Logger.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  384</span>                                                                        {</div>
+<div class="line"><span class="lineno">  385</span>  <span class="keywordtype">long</span> <span class="keywordtype">int</span> nano_seconds = timestamp * 1e+9;</div>
+<div class="line"><span class="lineno">  386</span>  *<a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#a9810f2f54b930e017e61cf7ad507df19">frame_id_timestamp_csv_</a> &lt;&lt; frame_id &lt;&lt; nano_seconds;</div>
+<div class="line"><span class="lineno">  387</span>}</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1EstimationModuleLogger.html#a9810f2f54b930e017e61cf7ad507df19">frame_id_timestamp_csv_</a>.</p>
 
@@ -421,28 +421,28 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Logger_8cc_source.html#l00329">329</a> of file <a class="el" href="Logger_8cc_source.html">Logger.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  330</span>                                           {</div>
-<div class="line"><span class="lineno">  331</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; status_lmks : landmarks) {</div>
-<div class="line"><span class="lineno">  332</span>    <span class="keyword">const</span> <a class="code hl_typedef" href="namespacedyno.html#afdd174eb44901fb205371d796287378c">TrackletId</a> tracklet_id = status_lmks.trackletId();</div>
-<div class="line"><span class="lineno">  333</span>    <a class="code hl_typedef" href="namespacedyno.html#a38bb86e4154b86428b8d133be03fb2b5">ObjectId</a> object_id = status_lmks.objectId();</div>
-<div class="line"><span class="lineno">  334</span>    <a class="code hl_typedef" href="namespacedyno.html#a6c8dbdcd5e61797d494457220b875761">Landmark</a> lmk_world = status_lmks.value();</div>
-<div class="line"><span class="lineno">  335</span>    <a class="code hl_typedef" href="namespacedyno.html#ac4303d6fafb755f794b072d76f9cfb41">FrameId</a> frame_id = status_lmks.frameId();</div>
-<div class="line"><span class="lineno">  336</span> </div>
-<div class="line"><span class="lineno">  337</span>    <span class="keywordflow">if</span> (status_lmks.referenceFrame() != <a class="code hl_enumvalue" href="namespacedyno.html#a828b92ac8912e7d2ffc267eb0d08b74cae456468cc146bd360464043f0645212e">ReferenceFrame::GLOBAL</a>) {</div>
-<div class="line"><span class="lineno">  338</span>      <span class="keywordflow">throw</span> DynosamException(</div>
-<div class="line"><span class="lineno">  339</span>          <span class="stringliteral">&quot;Failure in logMapPoints(): Map point is not in the GLOBAL frame&quot;</span>);</div>
-<div class="line"><span class="lineno">  340</span>    }</div>
-<div class="line"><span class="lineno">  341</span> </div>
-<div class="line"><span class="lineno">  342</span>    *<a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#af40c07cefe8651bc64e08178b4f940cf">map_points_csv_</a> &lt;&lt; frame_id &lt;&lt; object_id &lt;&lt; tracklet_id &lt;&lt; lmk_world(0)</div>
-<div class="line"><span class="lineno">  343</span>                     &lt;&lt; lmk_world(1) &lt;&lt; lmk_world(2);</div>
-<div class="line"><span class="lineno">  344</span>  }</div>
-<div class="line"><span class="lineno">  345</span>}</div>
-<div class="ttc" id="anamespacedyno_html_a38bb86e4154b86428b8d133be03fb2b5"><div class="ttname"><a href="namespacedyno.html#a38bb86e4154b86428b8d133be03fb2b5">dyno::ObjectId</a></div><div class="ttdeci">int ObjectId</div><div class="ttdoc">Discrete object id, j.</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00069">Types.hpp:69</a></div></div>
-<div class="ttc" id="anamespacedyno_html_a6c8dbdcd5e61797d494457220b875761"><div class="ttname"><a href="namespacedyno.html#a6c8dbdcd5e61797d494457220b875761">dyno::Landmark</a></div><div class="ttdeci">gtsam::Point3 Landmark</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00087">Types.hpp:87</a></div></div>
-<div class="ttc" id="anamespacedyno_html_a828b92ac8912e7d2ffc267eb0d08b74cae456468cc146bd360464043f0645212e"><div class="ttname"><a href="namespacedyno.html#a828b92ac8912e7d2ffc267eb0d08b74cae456468cc146bd360464043f0645212e">dyno::GLOBAL</a></div><div class="ttdeci">@ GLOBAL</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00191">Types.hpp:191</a></div></div>
-<div class="ttc" id="anamespacedyno_html_ac4303d6fafb755f794b072d76f9cfb41"><div class="ttname"><a href="namespacedyno.html#ac4303d6fafb755f794b072d76f9cfb41">dyno::FrameId</a></div><div class="ttdeci">size_t FrameId</div><div class="ttdoc">Discrete time-step k.</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00073">Types.hpp:73</a></div></div>
-<div class="ttc" id="anamespacedyno_html_afdd174eb44901fb205371d796287378c"><div class="ttname"><a href="namespacedyno.html#afdd174eb44901fb205371d796287378c">dyno::TrackletId</a></div><div class="ttdeci">long int TrackletId</div><div class="ttdoc">Unique tracklet/landmark id, i.</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00080">Types.hpp:80</a></div></div>
+<p class="definition">Definition at line <a class="el" href="Logger_8cc_source.html#l00347">347</a> of file <a class="el" href="Logger_8cc_source.html">Logger.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  348</span>                                           {</div>
+<div class="line"><span class="lineno">  349</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; status_lmks : landmarks) {</div>
+<div class="line"><span class="lineno">  350</span>    <span class="keyword">const</span> <a class="code hl_typedef" href="namespacedyno.html#afdd174eb44901fb205371d796287378c">TrackletId</a> tracklet_id = status_lmks.trackletId();</div>
+<div class="line"><span class="lineno">  351</span>    <a class="code hl_typedef" href="namespacedyno.html#a38bb86e4154b86428b8d133be03fb2b5">ObjectId</a> object_id = status_lmks.objectId();</div>
+<div class="line"><span class="lineno">  352</span>    <a class="code hl_typedef" href="namespacedyno.html#a6c8dbdcd5e61797d494457220b875761">Landmark</a> lmk_world = status_lmks.value();</div>
+<div class="line"><span class="lineno">  353</span>    <a class="code hl_typedef" href="namespacedyno.html#ac4303d6fafb755f794b072d76f9cfb41">FrameId</a> frame_id = status_lmks.frameId();</div>
+<div class="line"><span class="lineno">  354</span> </div>
+<div class="line"><span class="lineno">  355</span>    <span class="keywordflow">if</span> (status_lmks.referenceFrame() != <a class="code hl_enumvalue" href="namespacedyno.html#a828b92ac8912e7d2ffc267eb0d08b74cae456468cc146bd360464043f0645212e">ReferenceFrame::GLOBAL</a>) {</div>
+<div class="line"><span class="lineno">  356</span>      <span class="keywordflow">throw</span> DynosamException(</div>
+<div class="line"><span class="lineno">  357</span>          <span class="stringliteral">&quot;Failure in logMapPoints(): Map point is not in the GLOBAL frame&quot;</span>);</div>
+<div class="line"><span class="lineno">  358</span>    }</div>
+<div class="line"><span class="lineno">  359</span> </div>
+<div class="line"><span class="lineno">  360</span>    *<a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#af40c07cefe8651bc64e08178b4f940cf">map_points_csv_</a> &lt;&lt; frame_id &lt;&lt; object_id &lt;&lt; tracklet_id &lt;&lt; lmk_world(0)</div>
+<div class="line"><span class="lineno">  361</span>                     &lt;&lt; lmk_world(1) &lt;&lt; lmk_world(2);</div>
+<div class="line"><span class="lineno">  362</span>  }</div>
+<div class="line"><span class="lineno">  363</span>}</div>
+<div class="ttc" id="anamespacedyno_html_a38bb86e4154b86428b8d133be03fb2b5"><div class="ttname"><a href="namespacedyno.html#a38bb86e4154b86428b8d133be03fb2b5">dyno::ObjectId</a></div><div class="ttdeci">int ObjectId</div><div class="ttdoc">Discrete object id, j.</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00070">Types.hpp:70</a></div></div>
+<div class="ttc" id="anamespacedyno_html_a6c8dbdcd5e61797d494457220b875761"><div class="ttname"><a href="namespacedyno.html#a6c8dbdcd5e61797d494457220b875761">dyno::Landmark</a></div><div class="ttdeci">gtsam::Point3 Landmark</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00088">Types.hpp:88</a></div></div>
+<div class="ttc" id="anamespacedyno_html_a828b92ac8912e7d2ffc267eb0d08b74cae456468cc146bd360464043f0645212e"><div class="ttname"><a href="namespacedyno.html#a828b92ac8912e7d2ffc267eb0d08b74cae456468cc146bd360464043f0645212e">dyno::GLOBAL</a></div><div class="ttdeci">@ GLOBAL</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00192">Types.hpp:192</a></div></div>
+<div class="ttc" id="anamespacedyno_html_ac4303d6fafb755f794b072d76f9cfb41"><div class="ttname"><a href="namespacedyno.html#ac4303d6fafb755f794b072d76f9cfb41">dyno::FrameId</a></div><div class="ttdeci">size_t FrameId</div><div class="ttdoc">Discrete time-step k.</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00074">Types.hpp:74</a></div></div>
+<div class="ttc" id="anamespacedyno_html_afdd174eb44901fb205371d796287378c"><div class="ttname"><a href="namespacedyno.html#afdd174eb44901fb205371d796287378c">dyno::TrackletId</a></div><div class="ttdeci">long int TrackletId</div><div class="ttdoc">Unique tracklet/landmark id, i.</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00081">Types.hpp:81</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="namespacedyno.html#a828b92ac8912e7d2ffc267eb0d08b74cae456468cc146bd360464043f0645212e">dyno::GLOBAL</a>, and <a class="el" href="classdyno_1_1EstimationModuleLogger.html#af40c07cefe8651bc64e08178b4f940cf">map_points_csv_</a>.</p>
 
@@ -482,23 +482,23 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Logger_8cc_source.html#l00347">347</a> of file <a class="el" href="Logger_8cc_source.html">Logger.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  348</span>                                                                              {</div>
-<div class="line"><span class="lineno">  349</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [object_id, this_object_bbx] : object_bbxes) {</div>
-<div class="line"><span class="lineno">  350</span>    <span class="keyword">const</span> gtsam::Quaternion&amp; q = this_object_bbx.orientation_.toQuaternion();</div>
-<div class="line"><span class="lineno">  351</span>    *<a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#a2bb1feff30afd65cdb05badc8839b810">object_bbx_csv_</a> &lt;&lt; frame_id &lt;&lt; object_id</div>
-<div class="line"><span class="lineno">  352</span>                     &lt;&lt; this_object_bbx.min_bbx_point_.x()</div>
-<div class="line"><span class="lineno">  353</span>                     &lt;&lt; this_object_bbx.min_bbx_point_.y()</div>
-<div class="line"><span class="lineno">  354</span>                     &lt;&lt; this_object_bbx.min_bbx_point_.z()</div>
-<div class="line"><span class="lineno">  355</span>                     &lt;&lt; this_object_bbx.max_bbx_point_.x()</div>
-<div class="line"><span class="lineno">  356</span>                     &lt;&lt; this_object_bbx.max_bbx_point_.y()</div>
-<div class="line"><span class="lineno">  357</span>                     &lt;&lt; this_object_bbx.max_bbx_point_.z()</div>
-<div class="line"><span class="lineno">  358</span>                     &lt;&lt; this_object_bbx.bbx_position_.x()</div>
-<div class="line"><span class="lineno">  359</span>                     &lt;&lt; this_object_bbx.bbx_position_.y()</div>
-<div class="line"><span class="lineno">  360</span>                     &lt;&lt; this_object_bbx.bbx_position_.z() &lt;&lt; q.w() &lt;&lt; q.x()</div>
-<div class="line"><span class="lineno">  361</span>                     &lt;&lt; q.y() &lt;&lt; q.z();</div>
-<div class="line"><span class="lineno">  362</span>  }</div>
-<div class="line"><span class="lineno">  363</span>}</div>
+<p class="definition">Definition at line <a class="el" href="Logger_8cc_source.html#l00365">365</a> of file <a class="el" href="Logger_8cc_source.html">Logger.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  366</span>                                                                              {</div>
+<div class="line"><span class="lineno">  367</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [object_id, this_object_bbx] : object_bbxes) {</div>
+<div class="line"><span class="lineno">  368</span>    <span class="keyword">const</span> gtsam::Quaternion&amp; q = this_object_bbx.orientation_.toQuaternion();</div>
+<div class="line"><span class="lineno">  369</span>    *<a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#a2bb1feff30afd65cdb05badc8839b810">object_bbx_csv_</a> &lt;&lt; frame_id &lt;&lt; object_id</div>
+<div class="line"><span class="lineno">  370</span>                     &lt;&lt; this_object_bbx.min_bbx_point_.x()</div>
+<div class="line"><span class="lineno">  371</span>                     &lt;&lt; this_object_bbx.min_bbx_point_.y()</div>
+<div class="line"><span class="lineno">  372</span>                     &lt;&lt; this_object_bbx.min_bbx_point_.z()</div>
+<div class="line"><span class="lineno">  373</span>                     &lt;&lt; this_object_bbx.max_bbx_point_.x()</div>
+<div class="line"><span class="lineno">  374</span>                     &lt;&lt; this_object_bbx.max_bbx_point_.y()</div>
+<div class="line"><span class="lineno">  375</span>                     &lt;&lt; this_object_bbx.max_bbx_point_.z()</div>
+<div class="line"><span class="lineno">  376</span>                     &lt;&lt; this_object_bbx.bbx_position_.x()</div>
+<div class="line"><span class="lineno">  377</span>                     &lt;&lt; this_object_bbx.bbx_position_.y()</div>
+<div class="line"><span class="lineno">  378</span>                     &lt;&lt; this_object_bbx.bbx_position_.z() &lt;&lt; q.w() &lt;&lt; q.x()</div>
+<div class="line"><span class="lineno">  379</span>                     &lt;&lt; q.y() &lt;&lt; q.z();</div>
+<div class="line"><span class="lineno">  380</span>  }</div>
+<div class="line"><span class="lineno">  381</span>}</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1EstimationModuleLogger.html#a2bb1feff30afd65cdb05badc8839b810">object_bbx_csv_</a>.</p>
 
@@ -538,19 +538,19 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Logger_8cc_source.html#l00201">201</a> of file <a class="el" href="Logger_8cc_source.html">Logger.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  203</span>                                                         {</div>
-<div class="line"><span class="lineno">  204</span>  <span class="keywordtype">size_t</span> number_logged = 0;</div>
-<div class="line"><span class="lineno">  205</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [object_id, motions_per_object] : object_motions) {</div>
-<div class="line"><span class="lineno">  206</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [frame_id, motion] : motions_per_object) {</div>
-<div class="line"><span class="lineno">  207</span>      <span class="keywordflow">if</span> (<a class="code hl_function" href="classdyno_1_1EstimationModuleLogger.html#acb70c8cc277368b25d615612a1f4d8f4">logObjectMotion</a>(*<a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#ad845d962ed0a8b9719addb1cc3a98095">object_motion_csv_</a>, motion, frame_id, object_id,</div>
-<div class="line"><span class="lineno">  208</span>                          gt_packets))</div>
-<div class="line"><span class="lineno">  209</span>        number_logged++;</div>
-<div class="line"><span class="lineno">  210</span>    }</div>
-<div class="line"><span class="lineno">  211</span>  }</div>
-<div class="line"><span class="lineno">  212</span>  <span class="keywordflow">return</span> number_logged;</div>
-<div class="line"><span class="lineno">  213</span>}</div>
-<div class="ttc" id="aclassdyno_1_1EstimationModuleLogger_html_acb70c8cc277368b25d615612a1f4d8f4"><div class="ttname"><a href="classdyno_1_1EstimationModuleLogger.html#acb70c8cc277368b25d615612a1f4d8f4">dyno::EstimationModuleLogger::logObjectMotion</a></div><div class="ttdeci">virtual std::optional&lt; size_t &gt; logObjectMotion(FrameId frame_id, const MotionEstimateMap &amp;motion_estimates, const std::optional&lt; GroundTruthPacketMap &gt; &amp;gt_packets={})</div><div class="ttdef"><b>Definition:</b> <a href="Logger_8cc_source.html#l00187">Logger.cc:187</a></div></div>
+<p class="definition">Definition at line <a class="el" href="Logger_8cc_source.html#l00200">200</a> of file <a class="el" href="Logger_8cc_source.html">Logger.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  202</span>                                                         {</div>
+<div class="line"><span class="lineno">  203</span>  <span class="keywordtype">size_t</span> number_logged = 0;</div>
+<div class="line"><span class="lineno">  204</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [object_id, motions_per_object] : object_motions) {</div>
+<div class="line"><span class="lineno">  205</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [frame_id, motion] : motions_per_object) {</div>
+<div class="line"><span class="lineno">  206</span>      <span class="keywordflow">if</span> (<a class="code hl_function" href="classdyno_1_1EstimationModuleLogger.html#acb70c8cc277368b25d615612a1f4d8f4">logObjectMotion</a>(*<a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#ad845d962ed0a8b9719addb1cc3a98095">object_motion_csv_</a>, motion, frame_id, object_id,</div>
+<div class="line"><span class="lineno">  207</span>                          gt_packets))</div>
+<div class="line"><span class="lineno">  208</span>        number_logged++;</div>
+<div class="line"><span class="lineno">  209</span>    }</div>
+<div class="line"><span class="lineno">  210</span>  }</div>
+<div class="line"><span class="lineno">  211</span>  <span class="keywordflow">return</span> number_logged;</div>
+<div class="line"><span class="lineno">  212</span>}</div>
+<div class="ttc" id="aclassdyno_1_1EstimationModuleLogger_html_acb70c8cc277368b25d615612a1f4d8f4"><div class="ttname"><a href="classdyno_1_1EstimationModuleLogger.html#acb70c8cc277368b25d615612a1f4d8f4">dyno::EstimationModuleLogger::logObjectMotion</a></div><div class="ttdeci">virtual std::optional&lt; size_t &gt; logObjectMotion(FrameId frame_id, const MotionEstimateMap &amp;motion_estimates, const std::optional&lt; GroundTruthPacketMap &gt; &amp;gt_packets={})</div><div class="ttdef"><b>Definition:</b> <a href="Logger_8cc_source.html#l00186">Logger.cc:186</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1EstimationModuleLogger.html#acb70c8cc277368b25d615612a1f4d8f4">logObjectMotion()</a>, and <a class="el" href="classdyno_1_1EstimationModuleLogger.html#ad845d962ed0a8b9719addb1cc3a98095">object_motion_csv_</a>.</p>
 <div class="dynheader">
@@ -617,44 +617,44 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Logger_8cc_source.html#l00371">371</a> of file <a class="el" href="Logger_8cc_source.html">Logger.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  373</span>                                                                             {</div>
-<div class="line"><span class="lineno">  374</span>  gtsam::Pose3 gt_motion = gtsam::Pose3::Identity();</div>
-<div class="line"><span class="lineno">  375</span>  CHECK_EQ(motion.style(), <a class="code hl_enumvalue" href="namespacedyno.html#aae74b3913f6c02a0c3364cd02a68b255a8992882dfbd013c73ead4128d267edf5">MotionRepresentationStyle::F2F</a>)</div>
-<div class="line"><span class="lineno">  376</span>      &lt;&lt; <span class="stringliteral">&quot;Output evaluation expects motion in F2F representation&quot;</span>;</div>
-<div class="line"><span class="lineno">  377</span>  <span class="keyword">const</span> gtsam::Pose3&amp; estimate = motion;</div>
-<div class="line"><span class="lineno">  378</span> </div>
-<div class="line"><span class="lineno">  379</span>  <span class="keywordflow">if</span> (gt_packets) {</div>
-<div class="line"><span class="lineno">  380</span>    <span class="keywordflow">if</span> (gt_packets-&gt;exists(frame_id)) {</div>
-<div class="line"><span class="lineno">  381</span>      <span class="keyword">const</span> GroundTruthInputPacket&amp; gt_packet_k = gt_packets-&gt;at(frame_id);</div>
-<div class="line"><span class="lineno">  382</span> </div>
-<div class="line"><span class="lineno">  383</span>      <span class="comment">// check object exists in this frame</span></div>
-<div class="line"><span class="lineno">  384</span>      ObjectPoseGT object_gt_k;</div>
-<div class="line"><span class="lineno">  385</span>      <span class="keywordflow">if</span> (!gt_packet_k.getObject(object_id, object_gt_k)) {</div>
-<div class="line"><span class="lineno">  386</span>        <span class="comment">// if no packet for this object found, continue and do not log</span></div>
-<div class="line"><span class="lineno">  387</span>        <span class="comment">// return false;</span></div>
-<div class="line"><span class="lineno">  388</span>      } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  389</span>        CHECK(object_gt_k.prev_H_current_world_);</div>
-<div class="line"><span class="lineno">  390</span>        gt_motion = *object_gt_k.prev_H_current_world_;</div>
-<div class="line"><span class="lineno">  391</span>      }</div>
-<div class="line"><span class="lineno">  392</span>    } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  393</span>      <span class="comment">// gt packet has no entry for this frame id and the object ground truth is</span></div>
-<div class="line"><span class="lineno">  394</span>      <span class="comment">// valid</span></div>
-<div class="line"><span class="lineno">  395</span>      <span class="comment">// TODO: for now?</span></div>
-<div class="line"><span class="lineno">  396</span>      <span class="comment">// return false;</span></div>
-<div class="line"><span class="lineno">  397</span>    }</div>
-<div class="line"><span class="lineno">  398</span>  }</div>
-<div class="line"><span class="lineno">  399</span> </div>
-<div class="line"><span class="lineno">  400</span>  <span class="keyword">const</span> <span class="keyword">auto</span>&amp; quat = estimate.rotation().toQuaternion();</div>
-<div class="line"><span class="lineno">  401</span>  <span class="keyword">const</span> <span class="keyword">auto</span>&amp; gt_quat = gt_motion.rotation().toQuaternion();</div>
-<div class="line"><span class="lineno">  402</span> </div>
-<div class="line"><span class="lineno">  403</span>  writer &lt;&lt; frame_id &lt;&lt; object_id &lt;&lt; estimate.x() &lt;&lt; estimate.y()</div>
-<div class="line"><span class="lineno">  404</span>         &lt;&lt; estimate.z() &lt;&lt; quat.x() &lt;&lt; quat.y() &lt;&lt; quat.z() &lt;&lt; quat.w()</div>
-<div class="line"><span class="lineno">  405</span>         &lt;&lt; gt_motion.x() &lt;&lt; gt_motion.y() &lt;&lt; gt_motion.z() &lt;&lt; gt_quat.x()</div>
-<div class="line"><span class="lineno">  406</span>         &lt;&lt; gt_quat.y() &lt;&lt; gt_quat.z() &lt;&lt; gt_quat.w();</div>
-<div class="line"><span class="lineno">  407</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  408</span>}</div>
-<div class="ttc" id="anamespacedyno_html_aae74b3913f6c02a0c3364cd02a68b255a8992882dfbd013c73ead4128d267edf5"><div class="ttname"><a href="namespacedyno.html#aae74b3913f6c02a0c3364cd02a68b255a8992882dfbd013c73ead4128d267edf5">dyno::F2F</a></div><div class="ttdeci">@ F2F</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00232">Types.hpp:232</a></div></div>
+<p class="definition">Definition at line <a class="el" href="Logger_8cc_source.html#l00389">389</a> of file <a class="el" href="Logger_8cc_source.html">Logger.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  391</span>                                                                             {</div>
+<div class="line"><span class="lineno">  392</span>  gtsam::Pose3 gt_motion = gtsam::Pose3::Identity();</div>
+<div class="line"><span class="lineno">  393</span>  CHECK_EQ(motion.style(), <a class="code hl_enumvalue" href="namespacedyno.html#aae74b3913f6c02a0c3364cd02a68b255a8992882dfbd013c73ead4128d267edf5">MotionRepresentationStyle::F2F</a>)</div>
+<div class="line"><span class="lineno">  394</span>      &lt;&lt; <span class="stringliteral">&quot;Output evaluation expects motion in F2F representation&quot;</span>;</div>
+<div class="line"><span class="lineno">  395</span>  <span class="keyword">const</span> gtsam::Pose3&amp; estimate = motion;</div>
+<div class="line"><span class="lineno">  396</span> </div>
+<div class="line"><span class="lineno">  397</span>  <span class="keywordflow">if</span> (gt_packets) {</div>
+<div class="line"><span class="lineno">  398</span>    <span class="keywordflow">if</span> (gt_packets-&gt;exists(frame_id)) {</div>
+<div class="line"><span class="lineno">  399</span>      <span class="keyword">const</span> GroundTruthInputPacket&amp; gt_packet_k = gt_packets-&gt;at(frame_id);</div>
+<div class="line"><span class="lineno">  400</span> </div>
+<div class="line"><span class="lineno">  401</span>      <span class="comment">// check object exists in this frame</span></div>
+<div class="line"><span class="lineno">  402</span>      ObjectPoseGT object_gt_k;</div>
+<div class="line"><span class="lineno">  403</span>      <span class="keywordflow">if</span> (!gt_packet_k.getObject(object_id, object_gt_k)) {</div>
+<div class="line"><span class="lineno">  404</span>        <span class="comment">// if no packet for this object found, continue and do not log</span></div>
+<div class="line"><span class="lineno">  405</span>        <span class="comment">// return false;</span></div>
+<div class="line"><span class="lineno">  406</span>      } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  407</span>        CHECK(object_gt_k.prev_H_current_world_);</div>
+<div class="line"><span class="lineno">  408</span>        gt_motion = *object_gt_k.prev_H_current_world_;</div>
+<div class="line"><span class="lineno">  409</span>      }</div>
+<div class="line"><span class="lineno">  410</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  411</span>      <span class="comment">// gt packet has no entry for this frame id and the object ground truth is</span></div>
+<div class="line"><span class="lineno">  412</span>      <span class="comment">// valid</span></div>
+<div class="line"><span class="lineno">  413</span>      <span class="comment">// TODO: for now?</span></div>
+<div class="line"><span class="lineno">  414</span>      <span class="comment">// return false;</span></div>
+<div class="line"><span class="lineno">  415</span>    }</div>
+<div class="line"><span class="lineno">  416</span>  }</div>
+<div class="line"><span class="lineno">  417</span> </div>
+<div class="line"><span class="lineno">  418</span>  <span class="keyword">const</span> <span class="keyword">auto</span>&amp; quat = estimate.rotation().toQuaternion();</div>
+<div class="line"><span class="lineno">  419</span>  <span class="keyword">const</span> <span class="keyword">auto</span>&amp; gt_quat = gt_motion.rotation().toQuaternion();</div>
+<div class="line"><span class="lineno">  420</span> </div>
+<div class="line"><span class="lineno">  421</span>  writer &lt;&lt; frame_id &lt;&lt; object_id &lt;&lt; estimate.x() &lt;&lt; estimate.y()</div>
+<div class="line"><span class="lineno">  422</span>         &lt;&lt; estimate.z() &lt;&lt; quat.x() &lt;&lt; quat.y() &lt;&lt; quat.z() &lt;&lt; quat.w()</div>
+<div class="line"><span class="lineno">  423</span>         &lt;&lt; gt_motion.x() &lt;&lt; gt_motion.y() &lt;&lt; gt_motion.z() &lt;&lt; gt_quat.x()</div>
+<div class="line"><span class="lineno">  424</span>         &lt;&lt; gt_quat.y() &lt;&lt; gt_quat.z() &lt;&lt; gt_quat.w();</div>
+<div class="line"><span class="lineno">  425</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  426</span>}</div>
+<div class="ttc" id="anamespacedyno_html_aae74b3913f6c02a0c3364cd02a68b255a8992882dfbd013c73ead4128d267edf5"><div class="ttname"><a href="namespacedyno.html#aae74b3913f6c02a0c3364cd02a68b255a8992882dfbd013c73ead4128d267edf5">dyno::F2F</a></div><div class="ttdeci">@ F2F</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00233">Types.hpp:233</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="namespacedyno.html#aae74b3913f6c02a0c3364cd02a68b255a8992882dfbd013c73ead4128d267edf5">dyno::F2F</a>, <a class="el" href="classdyno_1_1GroundTruthInputPacket.html#a165784c023bae31956393eb075ddc393">dyno::GroundTruthInputPacket::getObject()</a>, <a class="el" href="structdyno_1_1ObjectPoseGT.html#a364753d6ed0d595ec15d2783f29e2b92">dyno::ObjectPoseGT::prev_H_current_world_</a>, and <a class="el" href="structdyno_1_1MotionReferenceFrame.html#a49750e7bee73e02a0346a6c8fc04b08b">dyno::MotionReferenceFrame&lt; E &gt;::style()</a>.</p>
 <div class="dynheader">
@@ -710,18 +710,18 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Logger_8cc_source.html#l00187">187</a> of file <a class="el" href="Logger_8cc_source.html">Logger.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  189</span>                                                         {</div>
-<div class="line"><span class="lineno">  190</span>  <span class="keywordtype">size_t</span> number_logged = 0;</div>
-<div class="line"><span class="lineno">  191</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [object_id, motions] : motion_estimates) {</div>
-<div class="line"><span class="lineno">  192</span>    <span class="comment">// use identity motion if no ground truth so that we keep the csv file</span></div>
-<div class="line"><span class="lineno">  193</span>    <span class="comment">// format</span></div>
-<div class="line"><span class="lineno">  194</span>    <span class="keywordflow">if</span> (<a class="code hl_function" href="classdyno_1_1EstimationModuleLogger.html#acb70c8cc277368b25d615612a1f4d8f4">logObjectMotion</a>(*<a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#ad845d962ed0a8b9719addb1cc3a98095">object_motion_csv_</a>, motions, frame_id, object_id,</div>
-<div class="line"><span class="lineno">  195</span>                        gt_packets))</div>
-<div class="line"><span class="lineno">  196</span>      number_logged++;</div>
-<div class="line"><span class="lineno">  197</span>  }</div>
-<div class="line"><span class="lineno">  198</span>  <span class="keywordflow">return</span> number_logged;</div>
-<div class="line"><span class="lineno">  199</span>}</div>
+<p class="definition">Definition at line <a class="el" href="Logger_8cc_source.html#l00186">186</a> of file <a class="el" href="Logger_8cc_source.html">Logger.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  188</span>                                                         {</div>
+<div class="line"><span class="lineno">  189</span>  <span class="keywordtype">size_t</span> number_logged = 0;</div>
+<div class="line"><span class="lineno">  190</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [object_id, motions] : motion_estimates) {</div>
+<div class="line"><span class="lineno">  191</span>    <span class="comment">// use identity motion if no ground truth so that we keep the csv file</span></div>
+<div class="line"><span class="lineno">  192</span>    <span class="comment">// format</span></div>
+<div class="line"><span class="lineno">  193</span>    <span class="keywordflow">if</span> (<a class="code hl_function" href="classdyno_1_1EstimationModuleLogger.html#acb70c8cc277368b25d615612a1f4d8f4">logObjectMotion</a>(*<a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#ad845d962ed0a8b9719addb1cc3a98095">object_motion_csv_</a>, motions, frame_id, object_id,</div>
+<div class="line"><span class="lineno">  194</span>                        gt_packets))</div>
+<div class="line"><span class="lineno">  195</span>      number_logged++;</div>
+<div class="line"><span class="lineno">  196</span>  }</div>
+<div class="line"><span class="lineno">  197</span>  <span class="keywordflow">return</span> number_logged;</div>
+<div class="line"><span class="lineno">  198</span>}</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1EstimationModuleLogger.html#acb70c8cc277368b25d615612a1f4d8f4">logObjectMotion()</a>, and <a class="el" href="classdyno_1_1EstimationModuleLogger.html#ad845d962ed0a8b9719addb1cc3a98095">object_motion_csv_</a>.</p>
 
@@ -779,28 +779,28 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Logger_8cc_source.html#l00271">271</a> of file <a class="el" href="Logger_8cc_source.html">Logger.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  273</span>                                                         {</div>
-<div class="line"><span class="lineno">  274</span>  <span class="keywordtype">size_t</span> number_logged = 0;</div>
-<div class="line"><span class="lineno">  275</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [object_id, poses_per_object] : object_poses) {</div>
-<div class="line"><span class="lineno">  276</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [frame_id, pose] : poses_per_object) {</div>
-<div class="line"><span class="lineno">  277</span>      <span class="keywordflow">if</span> (<a class="code hl_function" href="classdyno_1_1EstimationModuleLogger.html#a35d3a0c8b5a55cdbb35dcdbc2e340e04">logObjectPose</a>(*<a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#a76ea4d6ecf7f891fa25d47912ce25a95">object_pose_csv_</a>, pose, frame_id, object_id,</div>
-<div class="line"><span class="lineno">  278</span>                        gt_packets))</div>
-<div class="line"><span class="lineno">  279</span>        number_logged++;</div>
-<div class="line"><span class="lineno">  280</span>    }</div>
-<div class="line"><span class="lineno">  281</span>  }</div>
-<div class="line"><span class="lineno">  282</span>  <span class="keywordflow">return</span> number_logged;</div>
-<div class="line"><span class="lineno">  283</span>}</div>
-<div class="ttc" id="aclassdyno_1_1EstimationModuleLogger_html_a35d3a0c8b5a55cdbb35dcdbc2e340e04"><div class="ttname"><a href="classdyno_1_1EstimationModuleLogger.html#a35d3a0c8b5a55cdbb35dcdbc2e340e04">dyno::EstimationModuleLogger::logObjectPose</a></div><div class="ttdeci">virtual std::optional&lt; size_t &gt; logObjectPose(FrameId frame_id, const ObjectPoseMap &amp;propogated_poses, const std::optional&lt; GroundTruthPacketMap &gt; &amp;gt_packets={})</div><div class="ttdef"><b>Definition:</b> <a href="Logger_8cc_source.html#l00216">Logger.cc:216</a></div></div>
+<p class="definition">Definition at line <a class="el" href="Logger_8cc_source.html#l00289">289</a> of file <a class="el" href="Logger_8cc_source.html">Logger.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  291</span>                                                         {</div>
+<div class="line"><span class="lineno">  292</span>  <span class="keywordtype">size_t</span> number_logged = 0;</div>
+<div class="line"><span class="lineno">  293</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [object_id, poses_per_object] : object_poses) {</div>
+<div class="line"><span class="lineno">  294</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [frame_id, pose] : poses_per_object) {</div>
+<div class="line"><span class="lineno">  295</span>      <span class="keywordflow">if</span> (<a class="code hl_function" href="classdyno_1_1EstimationModuleLogger.html#a101ce5efbff62bafb916f0cb2397cca4">logObjectPose</a>(*<a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#a76ea4d6ecf7f891fa25d47912ce25a95">object_pose_csv_</a>, pose, frame_id, object_id,</div>
+<div class="line"><span class="lineno">  296</span>                        gt_packets))</div>
+<div class="line"><span class="lineno">  297</span>        number_logged++;</div>
+<div class="line"><span class="lineno">  298</span>    }</div>
+<div class="line"><span class="lineno">  299</span>  }</div>
+<div class="line"><span class="lineno">  300</span>  <span class="keywordflow">return</span> number_logged;</div>
+<div class="line"><span class="lineno">  301</span>}</div>
+<div class="ttc" id="aclassdyno_1_1EstimationModuleLogger_html_a101ce5efbff62bafb916f0cb2397cca4"><div class="ttname"><a href="classdyno_1_1EstimationModuleLogger.html#a101ce5efbff62bafb916f0cb2397cca4">dyno::EstimationModuleLogger::logObjectPose</a></div><div class="ttdeci">virtual std::optional&lt; size_t &gt; logObjectPose(FrameId frame_id, const PoseEstimateMap &amp;object_poses, const std::optional&lt; GroundTruthPacketMap &gt; &amp;gt_packets={})</div><div class="ttdef"><b>Definition:</b> <a href="Logger_8cc_source.html#l00215">Logger.cc:215</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="classdyno_1_1EstimationModuleLogger.html#a35d3a0c8b5a55cdbb35dcdbc2e340e04">logObjectPose()</a>, and <a class="el" href="classdyno_1_1EstimationModuleLogger.html#a76ea4d6ecf7f891fa25d47912ce25a95">object_pose_csv_</a>.</p>
+<p class="reference">References <a class="el" href="classdyno_1_1EstimationModuleLogger.html#a101ce5efbff62bafb916f0cb2397cca4">logObjectPose()</a>, and <a class="el" href="classdyno_1_1EstimationModuleLogger.html#a76ea4d6ecf7f891fa25d47912ce25a95">object_pose_csv_</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1EstimationModuleLogger_ae551714bec0a9001f9ca2db764107460_cgraph.png" border="0" usemap="#aclassdyno_1_1EstimationModuleLogger_ae551714bec0a9001f9ca2db764107460_cgraph" alt=""/></div>
 <map name="aclassdyno_1_1EstimationModuleLogger_ae551714bec0a9001f9ca2db764107460_cgraph" id="aclassdyno_1_1EstimationModuleLogger_ae551714bec0a9001f9ca2db764107460_cgraph">
 <area shape="rect" title=" " alt="" coords="5,29,229,69"/>
-<area shape="rect" href="classdyno_1_1EstimationModuleLogger.html#a35d3a0c8b5a55cdbb35dcdbc2e340e04" title=" " alt="" coords="277,29,501,69"/>
+<area shape="rect" href="classdyno_1_1EstimationModuleLogger.html#a101ce5efbff62bafb916f0cb2397cca4" title=" " alt="" coords="277,29,501,69"/>
 </map>
 </div>
 
@@ -858,43 +858,43 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Logger_8cc_source.html#l00410">410</a> of file <a class="el" href="Logger_8cc_source.html">Logger.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  412</span>                                                                             {</div>
-<div class="line"><span class="lineno">  413</span>  <span class="comment">// use identity if no ground truth so that we keep the csv file format</span></div>
-<div class="line"><span class="lineno">  414</span>  gtsam::Pose3 gt_L_world_k = gtsam::Pose3::Identity();</div>
-<div class="line"><span class="lineno">  415</span>  <span class="keyword">const</span> gtsam::Pose3&amp; L_world_k = pose;</div>
-<div class="line"><span class="lineno">  416</span> </div>
-<div class="line"><span class="lineno">  417</span>  <span class="comment">// gt packet provided so only log if gt pose data found</span></div>
-<div class="line"><span class="lineno">  418</span>  <span class="keywordflow">if</span> (gt_packets) {</div>
-<div class="line"><span class="lineno">  419</span>    <span class="keywordflow">if</span> (gt_packets-&gt;exists(frame_id)) {</div>
-<div class="line"><span class="lineno">  420</span>      <span class="keyword">const</span> GroundTruthInputPacket&amp; gt_packet_k = gt_packets-&gt;at(frame_id);</div>
-<div class="line"><span class="lineno">  421</span>      <span class="comment">// check object exists in this frame</span></div>
-<div class="line"><span class="lineno">  422</span>      ObjectPoseGT object_gt_k;</div>
-<div class="line"><span class="lineno">  423</span>      <span class="keywordflow">if</span> (!gt_packet_k.getObject(object_id, object_gt_k)) {</div>
-<div class="line"><span class="lineno">  424</span>        <span class="comment">// if no packet for this object found, continue and do not log</span></div>
-<div class="line"><span class="lineno">  425</span>        <span class="comment">// return false;</span></div>
-<div class="line"><span class="lineno">  426</span>      } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  427</span>        gt_L_world_k = object_gt_k.L_world_;</div>
-<div class="line"><span class="lineno">  428</span>      }</div>
-<div class="line"><span class="lineno">  429</span>    } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  430</span>      <span class="comment">// gt packet has no entry for this frame id so skip</span></div>
-<div class="line"><span class="lineno">  431</span>      <span class="comment">// TODO: for now?</span></div>
-<div class="line"><span class="lineno">  432</span>      <span class="comment">// return false;</span></div>
-<div class="line"><span class="lineno">  433</span>    }</div>
-<div class="line"><span class="lineno">  434</span>  }</div>
-<div class="line"><span class="lineno">  435</span>  <span class="comment">// we have either skipped logging (if gt provided by the object gt pose was</span></div>
-<div class="line"><span class="lineno">  436</span>  <span class="comment">// not found) or no gt was provided</span></div>
-<div class="line"><span class="lineno">  437</span>  <span class="keyword">const</span> <span class="keyword">auto</span>&amp; gt_R_k = gt_L_world_k.rotation().toQuaternion();</div>
-<div class="line"><span class="lineno">  438</span>  <span class="comment">// estimate</span></div>
-<div class="line"><span class="lineno">  439</span>  <span class="keyword">const</span> <span class="keyword">auto</span> R_world_k = L_world_k.rotation().toQuaternion();</div>
-<div class="line"><span class="lineno">  440</span>  <span class="comment">// write out object pose with gt</span></div>
-<div class="line"><span class="lineno">  441</span>  writer &lt;&lt; frame_id &lt;&lt; object_id &lt;&lt; L_world_k.x() &lt;&lt; L_world_k.y()</div>
-<div class="line"><span class="lineno">  442</span>         &lt;&lt; L_world_k.z() &lt;&lt; R_world_k.x() &lt;&lt; R_world_k.y() &lt;&lt; R_world_k.z()</div>
-<div class="line"><span class="lineno">  443</span>         &lt;&lt; R_world_k.w() &lt;&lt; gt_L_world_k.x() &lt;&lt; gt_L_world_k.y()</div>
-<div class="line"><span class="lineno">  444</span>         &lt;&lt; gt_L_world_k.z() &lt;&lt; gt_R_k.x() &lt;&lt; gt_R_k.y() &lt;&lt; gt_R_k.z()</div>
-<div class="line"><span class="lineno">  445</span>         &lt;&lt; gt_R_k.w();</div>
-<div class="line"><span class="lineno">  446</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  447</span>}</div>
+<p class="definition">Definition at line <a class="el" href="Logger_8cc_source.html#l00428">428</a> of file <a class="el" href="Logger_8cc_source.html">Logger.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  430</span>                                                                             {</div>
+<div class="line"><span class="lineno">  431</span>  <span class="comment">// use identity if no ground truth so that we keep the csv file format</span></div>
+<div class="line"><span class="lineno">  432</span>  gtsam::Pose3 gt_L_world_k = gtsam::Pose3::Identity();</div>
+<div class="line"><span class="lineno">  433</span>  <span class="keyword">const</span> gtsam::Pose3&amp; L_world_k = pose;</div>
+<div class="line"><span class="lineno">  434</span> </div>
+<div class="line"><span class="lineno">  435</span>  <span class="comment">// gt packet provided so only log if gt pose data found</span></div>
+<div class="line"><span class="lineno">  436</span>  <span class="keywordflow">if</span> (gt_packets) {</div>
+<div class="line"><span class="lineno">  437</span>    <span class="keywordflow">if</span> (gt_packets-&gt;exists(frame_id)) {</div>
+<div class="line"><span class="lineno">  438</span>      <span class="keyword">const</span> GroundTruthInputPacket&amp; gt_packet_k = gt_packets-&gt;at(frame_id);</div>
+<div class="line"><span class="lineno">  439</span>      <span class="comment">// check object exists in this frame</span></div>
+<div class="line"><span class="lineno">  440</span>      ObjectPoseGT object_gt_k;</div>
+<div class="line"><span class="lineno">  441</span>      <span class="keywordflow">if</span> (!gt_packet_k.getObject(object_id, object_gt_k)) {</div>
+<div class="line"><span class="lineno">  442</span>        <span class="comment">// if no packet for this object found, continue and do not log</span></div>
+<div class="line"><span class="lineno">  443</span>        <span class="comment">// return false;</span></div>
+<div class="line"><span class="lineno">  444</span>      } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  445</span>        gt_L_world_k = object_gt_k.L_world_;</div>
+<div class="line"><span class="lineno">  446</span>      }</div>
+<div class="line"><span class="lineno">  447</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  448</span>      <span class="comment">// gt packet has no entry for this frame id so skip</span></div>
+<div class="line"><span class="lineno">  449</span>      <span class="comment">// TODO: for now?</span></div>
+<div class="line"><span class="lineno">  450</span>      <span class="comment">// return false;</span></div>
+<div class="line"><span class="lineno">  451</span>    }</div>
+<div class="line"><span class="lineno">  452</span>  }</div>
+<div class="line"><span class="lineno">  453</span>  <span class="comment">// we have either skipped logging (if gt provided by the object gt pose was</span></div>
+<div class="line"><span class="lineno">  454</span>  <span class="comment">// not found) or no gt was provided</span></div>
+<div class="line"><span class="lineno">  455</span>  <span class="keyword">const</span> <span class="keyword">auto</span>&amp; gt_R_k = gt_L_world_k.rotation().toQuaternion();</div>
+<div class="line"><span class="lineno">  456</span>  <span class="comment">// estimate</span></div>
+<div class="line"><span class="lineno">  457</span>  <span class="keyword">const</span> <span class="keyword">auto</span> R_world_k = L_world_k.rotation().toQuaternion();</div>
+<div class="line"><span class="lineno">  458</span>  <span class="comment">// write out object pose with gt</span></div>
+<div class="line"><span class="lineno">  459</span>  writer &lt;&lt; frame_id &lt;&lt; object_id &lt;&lt; L_world_k.x() &lt;&lt; L_world_k.y()</div>
+<div class="line"><span class="lineno">  460</span>         &lt;&lt; L_world_k.z() &lt;&lt; R_world_k.x() &lt;&lt; R_world_k.y() &lt;&lt; R_world_k.z()</div>
+<div class="line"><span class="lineno">  461</span>         &lt;&lt; R_world_k.w() &lt;&lt; gt_L_world_k.x() &lt;&lt; gt_L_world_k.y()</div>
+<div class="line"><span class="lineno">  462</span>         &lt;&lt; gt_L_world_k.z() &lt;&lt; gt_R_k.x() &lt;&lt; gt_R_k.y() &lt;&lt; gt_R_k.z()</div>
+<div class="line"><span class="lineno">  463</span>         &lt;&lt; gt_R_k.w();</div>
+<div class="line"><span class="lineno">  464</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  465</span>}</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1GroundTruthInputPacket.html#a165784c023bae31956393eb075ddc393">dyno::GroundTruthInputPacket::getObject()</a>, and <a class="el" href="structdyno_1_1ObjectPoseGT.html#aa429e971ef42a73438f9dbf00957edec">dyno::ObjectPoseGT::L_world_</a>.</p>
 <div class="dynheader">
@@ -909,8 +909,8 @@ Here is the call graph for this function:</div>
 
 </div>
 </div>
-<a id="a35d3a0c8b5a55cdbb35dcdbc2e340e04" name="a35d3a0c8b5a55cdbb35dcdbc2e340e04"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a35d3a0c8b5a55cdbb35dcdbc2e340e04">&#9670;&#160;</a></span>logObjectPose() <span class="overload">[3/3]</span></h2>
+<a id="a101ce5efbff62bafb916f0cb2397cca4" name="a101ce5efbff62bafb916f0cb2397cca4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a101ce5efbff62bafb916f0cb2397cca4">&#9670;&#160;</a></span>logObjectPose() <span class="overload">[3/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -927,8 +927,8 @@ Here is the call graph for this function:</div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="namespacedyno.html#a47c0a08523c12765d4bd6e243f900c16">ObjectPoseMap</a> &amp;&#160;</td>
-          <td class="paramname"><em>propogated_poses</em>, </td>
+          <td class="paramtype">const <a class="el" href="namespacedyno.html#a1dde6dda4e4eadfbde565851f992d0bf">PoseEstimateMap</a> &amp;&#160;</td>
+          <td class="paramname"><em>object_poses</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -949,76 +949,34 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Logger_8cc_source.html#l00216">216</a> of file <a class="el" href="Logger_8cc_source.html">Logger.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  218</span>                                                         {</div>
-<div class="line"><span class="lineno">  219</span>  <span class="keywordtype">size_t</span> number_logged = 0;</div>
-<div class="line"><span class="lineno">  220</span>  <span class="comment">// assume object poses get logged in frame order!!!</span></div>
-<div class="line"><span class="lineno">  221</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [object_id, poses_map] : propogated_poses) {</div>
-<div class="line"><span class="lineno">  222</span>    <span class="comment">// do not draw if in current frame</span></div>
-<div class="line"><span class="lineno">  223</span>    <span class="keywordflow">if</span> (!poses_map.exists(frame_id)) {</div>
-<div class="line"><span class="lineno">  224</span>      VLOG(100) &lt;&lt; <span class="stringliteral">&quot;Cannot log object pose (id=&quot;</span> &lt;&lt; object_id &lt;&lt; <span class="stringliteral">&quot;) for frame &quot;</span></div>
-<div class="line"><span class="lineno">  225</span>                &lt;&lt; frame_id &lt;&lt; <span class="stringliteral">&quot; as it does not exist in the map&quot;</span>;</div>
-<div class="line"><span class="lineno">  226</span>      <span class="keywordflow">continue</span>;</div>
-<div class="line"><span class="lineno">  227</span>    }</div>
-<div class="line"><span class="lineno">  228</span> </div>
-<div class="line"><span class="lineno">  229</span>    <span class="keyword">const</span> gtsam::Pose3&amp; L_W_k = poses_map.at(frame_id);</div>
-<div class="line"><span class="lineno">  230</span>    <span class="keywordflow">if</span> (<a class="code hl_function" href="classdyno_1_1EstimationModuleLogger.html#a35d3a0c8b5a55cdbb35dcdbc2e340e04">logObjectPose</a>(*<a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#a76ea4d6ecf7f891fa25d47912ce25a95">object_pose_csv_</a>, L_W_k, frame_id, object_id,</div>
-<div class="line"><span class="lineno">  231</span>                      gt_packets))</div>
-<div class="line"><span class="lineno">  232</span>      number_logged++;</div>
-<div class="line"><span class="lineno">  233</span>    <span class="comment">// use identity if no ground truth so that we keep the csv file format</span></div>
-<div class="line"><span class="lineno">  234</span>    <span class="comment">// gtsam::Pose3 gt_L_world_k = gtsam::Pose3::Identity();</span></div>
-<div class="line"><span class="lineno">  235</span>    <span class="comment">// const gtsam::Pose3&amp; L_world_k = poses_map.at(frame_id);</span></div>
-<div class="line"><span class="lineno">  236</span> </div>
-<div class="line"><span class="lineno">  237</span>    <span class="comment">// // gt packet provided so only log if gt pose data found</span></div>
-<div class="line"><span class="lineno">  238</span>    <span class="comment">// if (gt_packets) {</span></div>
-<div class="line"><span class="lineno">  239</span>    <span class="comment">//   if (gt_packets-&gt;exists(frame_id)) {</span></div>
-<div class="line"><span class="lineno">  240</span>    <span class="comment">//     const GroundTruthInputPacket&amp; gt_packet_k = gt_packets-&gt;at(frame_id);</span></div>
-<div class="line"><span class="lineno">  241</span>    <span class="comment">//     // check object exists in this frame</span></div>
-<div class="line"><span class="lineno">  242</span>    <span class="comment">//     ObjectPoseGT object_gt_k;</span></div>
-<div class="line"><span class="lineno">  243</span>    <span class="comment">//     if (!gt_packet_k.getObject(object_id, object_gt_k)) {</span></div>
-<div class="line"><span class="lineno">  244</span>    <span class="comment">//       // if no packet for this object found, continue and do not log</span></div>
-<div class="line"><span class="lineno">  245</span>    <span class="comment">//       continue;</span></div>
-<div class="line"><span class="lineno">  246</span>    <span class="comment">//     } else {</span></div>
-<div class="line"><span class="lineno">  247</span>    <span class="comment">//       gt_L_world_k = object_gt_k.L_world_;</span></div>
-<div class="line"><span class="lineno">  248</span>    <span class="comment">//     }</span></div>
-<div class="line"><span class="lineno">  249</span>    <span class="comment">//   } else {</span></div>
-<div class="line"><span class="lineno">  250</span>    <span class="comment">//     // gt packet has no entry for this frame id so skip</span></div>
-<div class="line"><span class="lineno">  251</span>    <span class="comment">//     continue;</span></div>
-<div class="line"><span class="lineno">  252</span>    <span class="comment">//   }</span></div>
-<div class="line"><span class="lineno">  253</span>    <span class="comment">// }</span></div>
-<div class="line"><span class="lineno">  254</span>    <span class="comment">// // we have either skipped logging (if gt provided by the object gt pose</span></div>
-<div class="line"><span class="lineno">  255</span>    <span class="comment">// was</span></div>
-<div class="line"><span class="lineno">  256</span>    <span class="comment">// // not found) or no gt was provided</span></div>
-<div class="line"><span class="lineno">  257</span>    <span class="comment">// const auto&amp; gt_R_k = gt_L_world_k.rotation().toQuaternion();</span></div>
-<div class="line"><span class="lineno">  258</span>    <span class="comment">// // estimate</span></div>
-<div class="line"><span class="lineno">  259</span>    <span class="comment">// const auto R_world_k = L_world_k.rotation().toQuaternion();</span></div>
-<div class="line"><span class="lineno">  260</span>    <span class="comment">// // write out object pose with gt</span></div>
-<div class="line"><span class="lineno">  261</span>    <span class="comment">// *object_pose_csv_ &lt;&lt; frame_id &lt;&lt; object_id &lt;&lt; L_world_k.x() &lt;&lt;</span></div>
-<div class="line"><span class="lineno">  262</span>    <span class="comment">// L_world_k.y()</span></div>
-<div class="line"><span class="lineno">  263</span>    <span class="comment">//                   &lt;&lt; L_world_k.z() &lt;&lt; R_world_k.x() &lt;&lt; R_world_k.y()</span></div>
-<div class="line"><span class="lineno">  264</span>    <span class="comment">//                   &lt;&lt; R_world_k.z() &lt;&lt; R_world_k.w() &lt;&lt; gt_L_world_k.x()</span></div>
-<div class="line"><span class="lineno">  265</span>    <span class="comment">//                   &lt;&lt; gt_L_world_k.y() &lt;&lt; gt_L_world_k.z() &lt;&lt; gt_R_k.x()</span></div>
-<div class="line"><span class="lineno">  266</span>    <span class="comment">//                   &lt;&lt; gt_R_k.y() &lt;&lt; gt_R_k.z() &lt;&lt; gt_R_k.w();</span></div>
-<div class="line"><span class="lineno">  267</span>  }</div>
-<div class="line"><span class="lineno">  268</span>  <span class="keywordflow">return</span> number_logged;</div>
-<div class="line"><span class="lineno">  269</span>}</div>
+<p class="definition">Definition at line <a class="el" href="Logger_8cc_source.html#l00215">215</a> of file <a class="el" href="Logger_8cc_source.html">Logger.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  217</span>                                                         {</div>
+<div class="line"><span class="lineno">  218</span>  <span class="keywordtype">size_t</span> number_logged = 0;</div>
+<div class="line"><span class="lineno">  219</span>  <span class="comment">// assume object poses get logged in frame order!!!</span></div>
+<div class="line"><span class="lineno">  220</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [object_id, L_W_k] : object_poses) {</div>
+<div class="line"><span class="lineno">  221</span>    <span class="keywordflow">if</span> (<a class="code hl_function" href="classdyno_1_1EstimationModuleLogger.html#a101ce5efbff62bafb916f0cb2397cca4">logObjectPose</a>(*<a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#a76ea4d6ecf7f891fa25d47912ce25a95">object_pose_csv_</a>, L_W_k, frame_id, object_id,</div>
+<div class="line"><span class="lineno">  222</span>                      gt_packets))</div>
+<div class="line"><span class="lineno">  223</span>      number_logged++;</div>
+<div class="line"><span class="lineno">  224</span>  }</div>
+<div class="line"><span class="lineno">  225</span>  <span class="keywordflow">return</span> number_logged;</div>
+<div class="line"><span class="lineno">  226</span>}</div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="classdyno_1_1EstimationModuleLogger.html#a35d3a0c8b5a55cdbb35dcdbc2e340e04">logObjectPose()</a>, and <a class="el" href="classdyno_1_1EstimationModuleLogger.html#a76ea4d6ecf7f891fa25d47912ce25a95">object_pose_csv_</a>.</p>
+<p class="reference">References <a class="el" href="classdyno_1_1EstimationModuleLogger.html#a101ce5efbff62bafb916f0cb2397cca4">logObjectPose()</a>, and <a class="el" href="classdyno_1_1EstimationModuleLogger.html#a76ea4d6ecf7f891fa25d47912ce25a95">object_pose_csv_</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1EstimationModuleLogger.html#a35d3a0c8b5a55cdbb35dcdbc2e340e04">logObjectPose()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1EstimationModuleLogger.html#a101ce5efbff62bafb916f0cb2397cca4">logObjectPose()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classdyno_1_1EstimationModuleLogger_a35d3a0c8b5a55cdbb35dcdbc2e340e04_cgraph.png" border="0" usemap="#aclassdyno_1_1EstimationModuleLogger_a35d3a0c8b5a55cdbb35dcdbc2e340e04_cgraph" alt=""/></div>
-<map name="aclassdyno_1_1EstimationModuleLogger_a35d3a0c8b5a55cdbb35dcdbc2e340e04_cgraph" id="aclassdyno_1_1EstimationModuleLogger_a35d3a0c8b5a55cdbb35dcdbc2e340e04_cgraph">
+<div class="center"><img src="classdyno_1_1EstimationModuleLogger_a101ce5efbff62bafb916f0cb2397cca4_cgraph.png" border="0" usemap="#aclassdyno_1_1EstimationModuleLogger_a101ce5efbff62bafb916f0cb2397cca4_cgraph" alt=""/></div>
+<map name="aclassdyno_1_1EstimationModuleLogger_a101ce5efbff62bafb916f0cb2397cca4_cgraph" id="aclassdyno_1_1EstimationModuleLogger_a101ce5efbff62bafb916f0cb2397cca4_cgraph">
 <area shape="rect" title=" " alt="" coords="5,29,229,69"/>
 </map>
 </div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classdyno_1_1EstimationModuleLogger_a35d3a0c8b5a55cdbb35dcdbc2e340e04_icgraph.png" border="0" usemap="#aclassdyno_1_1EstimationModuleLogger_a35d3a0c8b5a55cdbb35dcdbc2e340e04_icgraph" alt=""/></div>
-<map name="aclassdyno_1_1EstimationModuleLogger_a35d3a0c8b5a55cdbb35dcdbc2e340e04_icgraph" id="aclassdyno_1_1EstimationModuleLogger_a35d3a0c8b5a55cdbb35dcdbc2e340e04_icgraph">
+<div class="center"><img src="classdyno_1_1EstimationModuleLogger_a101ce5efbff62bafb916f0cb2397cca4_icgraph.png" border="0" usemap="#aclassdyno_1_1EstimationModuleLogger_a101ce5efbff62bafb916f0cb2397cca4_icgraph" alt=""/></div>
+<map name="aclassdyno_1_1EstimationModuleLogger_a101ce5efbff62bafb916f0cb2397cca4_icgraph" id="aclassdyno_1_1EstimationModuleLogger_a101ce5efbff62bafb916f0cb2397cca4_icgraph">
 <area shape="rect" title=" " alt="" coords="5,29,229,69"/>
 </map>
 </div>
@@ -1065,26 +1023,26 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Logger_8cc_source.html#l00309">309</a> of file <a class="el" href="Logger_8cc_source.html">Logger.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  311</span>                                                                              {</div>
-<div class="line"><span class="lineno">  312</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; status_lmks : landmarks) {</div>
-<div class="line"><span class="lineno">  313</span>    <span class="keyword">const</span> <a class="code hl_typedef" href="namespacedyno.html#afdd174eb44901fb205371d796287378c">TrackletId</a> tracklet_id = status_lmks.trackletId();</div>
-<div class="line"><span class="lineno">  314</span>    <a class="code hl_typedef" href="namespacedyno.html#a38bb86e4154b86428b8d133be03fb2b5">ObjectId</a> object_id = status_lmks.objectId();</div>
-<div class="line"><span class="lineno">  315</span>    <a class="code hl_typedef" href="namespacedyno.html#a6c8dbdcd5e61797d494457220b875761">Landmark</a> lmk_world = status_lmks.value();</div>
-<div class="line"><span class="lineno">  316</span> </div>
-<div class="line"><span class="lineno">  317</span>    <span class="keywordflow">if</span> (status_lmks.referenceFrame() == <a class="code hl_enumvalue" href="namespacedyno.html#a828b92ac8912e7d2ffc267eb0d08b74caa27154c3ecf3464fdba911247447813e">ReferenceFrame::LOCAL</a>) {</div>
-<div class="line"><span class="lineno">  318</span>      lmk_world = T_world_local_k * status_lmks.value();</div>
-<div class="line"><span class="lineno">  319</span>    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (status_lmks.referenceFrame() == <a class="code hl_enumvalue" href="namespacedyno.html#a828b92ac8912e7d2ffc267eb0d08b74ca3f3c55d40da302eff6999f6634bc8237">ReferenceFrame::OBJECT</a>) {</div>
-<div class="line"><span class="lineno">  320</span>      <span class="keywordflow">throw</span> DynosamException(</div>
-<div class="line"><span class="lineno">  321</span>          <span class="stringliteral">&quot;Cannot log object point in the object reference frame&quot;</span>);</div>
-<div class="line"><span class="lineno">  322</span>    }</div>
-<div class="line"><span class="lineno">  323</span> </div>
-<div class="line"><span class="lineno">  324</span>    *<a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#af40c07cefe8651bc64e08178b4f940cf">map_points_csv_</a> &lt;&lt; frame_id &lt;&lt; object_id &lt;&lt; tracklet_id &lt;&lt; lmk_world(0)</div>
-<div class="line"><span class="lineno">  325</span>                     &lt;&lt; lmk_world(1) &lt;&lt; lmk_world(2);</div>
-<div class="line"><span class="lineno">  326</span>  }</div>
-<div class="line"><span class="lineno">  327</span>}</div>
-<div class="ttc" id="anamespacedyno_html_a828b92ac8912e7d2ffc267eb0d08b74ca3f3c55d40da302eff6999f6634bc8237"><div class="ttname"><a href="namespacedyno.html#a828b92ac8912e7d2ffc267eb0d08b74ca3f3c55d40da302eff6999f6634bc8237">dyno::OBJECT</a></div><div class="ttdeci">@ OBJECT</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00191">Types.hpp:191</a></div></div>
-<div class="ttc" id="anamespacedyno_html_a828b92ac8912e7d2ffc267eb0d08b74caa27154c3ecf3464fdba911247447813e"><div class="ttname"><a href="namespacedyno.html#a828b92ac8912e7d2ffc267eb0d08b74caa27154c3ecf3464fdba911247447813e">dyno::LOCAL</a></div><div class="ttdeci">@ LOCAL</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00191">Types.hpp:191</a></div></div>
+<p class="definition">Definition at line <a class="el" href="Logger_8cc_source.html#l00327">327</a> of file <a class="el" href="Logger_8cc_source.html">Logger.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  329</span>                                                                              {</div>
+<div class="line"><span class="lineno">  330</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; status_lmks : landmarks) {</div>
+<div class="line"><span class="lineno">  331</span>    <span class="keyword">const</span> <a class="code hl_typedef" href="namespacedyno.html#afdd174eb44901fb205371d796287378c">TrackletId</a> tracklet_id = status_lmks.trackletId();</div>
+<div class="line"><span class="lineno">  332</span>    <a class="code hl_typedef" href="namespacedyno.html#a38bb86e4154b86428b8d133be03fb2b5">ObjectId</a> object_id = status_lmks.objectId();</div>
+<div class="line"><span class="lineno">  333</span>    <a class="code hl_typedef" href="namespacedyno.html#a6c8dbdcd5e61797d494457220b875761">Landmark</a> lmk_world = status_lmks.value();</div>
+<div class="line"><span class="lineno">  334</span> </div>
+<div class="line"><span class="lineno">  335</span>    <span class="keywordflow">if</span> (status_lmks.referenceFrame() == <a class="code hl_enumvalue" href="namespacedyno.html#a828b92ac8912e7d2ffc267eb0d08b74caa27154c3ecf3464fdba911247447813e">ReferenceFrame::LOCAL</a>) {</div>
+<div class="line"><span class="lineno">  336</span>      lmk_world = T_world_local_k * status_lmks.value();</div>
+<div class="line"><span class="lineno">  337</span>    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (status_lmks.referenceFrame() == <a class="code hl_enumvalue" href="namespacedyno.html#a828b92ac8912e7d2ffc267eb0d08b74ca3f3c55d40da302eff6999f6634bc8237">ReferenceFrame::OBJECT</a>) {</div>
+<div class="line"><span class="lineno">  338</span>      <span class="keywordflow">throw</span> DynosamException(</div>
+<div class="line"><span class="lineno">  339</span>          <span class="stringliteral">&quot;Cannot log object point in the object reference frame&quot;</span>);</div>
+<div class="line"><span class="lineno">  340</span>    }</div>
+<div class="line"><span class="lineno">  341</span> </div>
+<div class="line"><span class="lineno">  342</span>    *<a class="code hl_variable" href="classdyno_1_1EstimationModuleLogger.html#af40c07cefe8651bc64e08178b4f940cf">map_points_csv_</a> &lt;&lt; frame_id &lt;&lt; object_id &lt;&lt; tracklet_id &lt;&lt; lmk_world(0)</div>
+<div class="line"><span class="lineno">  343</span>                     &lt;&lt; lmk_world(1) &lt;&lt; lmk_world(2);</div>
+<div class="line"><span class="lineno">  344</span>  }</div>
+<div class="line"><span class="lineno">  345</span>}</div>
+<div class="ttc" id="anamespacedyno_html_a828b92ac8912e7d2ffc267eb0d08b74ca3f3c55d40da302eff6999f6634bc8237"><div class="ttname"><a href="namespacedyno.html#a828b92ac8912e7d2ffc267eb0d08b74ca3f3c55d40da302eff6999f6634bc8237">dyno::OBJECT</a></div><div class="ttdeci">@ OBJECT</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00192">Types.hpp:192</a></div></div>
+<div class="ttc" id="anamespacedyno_html_a828b92ac8912e7d2ffc267eb0d08b74caa27154c3ecf3464fdba911247447813e"><div class="ttname"><a href="namespacedyno.html#a828b92ac8912e7d2ffc267eb0d08b74caa27154c3ecf3464fdba911247447813e">dyno::LOCAL</a></div><div class="ttdeci">@ LOCAL</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00192">Types.hpp:192</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="namespacedyno.html#a828b92ac8912e7d2ffc267eb0d08b74caa27154c3ecf3464fdba911247447813e">dyno::LOCAL</a>, <a class="el" href="classdyno_1_1EstimationModuleLogger.html#af40c07cefe8651bc64e08178b4f940cf">map_points_csv_</a>, and <a class="el" href="namespacedyno.html#a828b92ac8912e7d2ffc267eb0d08b74ca3f3c55d40da302eff6999f6634bc8237">dyno::OBJECT</a>.</p>
 
@@ -1427,7 +1385,7 @@ Here is the caller graph for this function:</div>
 
 <p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00320">320</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1EstimationModuleLogger.html#a2bce1838e5bf4f7a14f9e8192210913d">EstimationModuleLogger()</a>, <a class="el" href="classdyno_1_1EstimationModuleLogger.html#a35d3a0c8b5a55cdbb35dcdbc2e340e04">logObjectPose()</a>, and <a class="el" href="classdyno_1_1EstimationModuleLogger.html#a9d4b7cebfb231a63cd34ef6da8f0dd70">~EstimationModuleLogger()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1EstimationModuleLogger.html#a2bce1838e5bf4f7a14f9e8192210913d">EstimationModuleLogger()</a>, <a class="el" href="classdyno_1_1EstimationModuleLogger.html#a101ce5efbff62bafb916f0cb2397cca4">logObjectPose()</a>, and <a class="el" href="classdyno_1_1EstimationModuleLogger.html#a9d4b7cebfb231a63cd34ef6da8f0dd70">~EstimationModuleLogger()</a>.</p>
 
 </div>
 </div>
@@ -1458,8 +1416,8 @@ Here is the caller graph for this function:</div>
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>dynosam/include/dynosam/logger/<a class="el" href="Logger_8hpp_source.html">Logger.hpp</a></li>
-<li>dynosam/src/logger/<a class="el" href="Logger_8cc_source.html">Logger.cc</a></li>
+<li>dynosam_common/include/dynosam_common/logger/<a class="el" href="Logger_8hpp_source.html">Logger.hpp</a></li>
+<li>dynosam_common/src/logger/<a class="el" href="Logger_8cc_source.html">Logger.cc</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

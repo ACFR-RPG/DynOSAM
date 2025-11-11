@@ -1,4 +1,8 @@
 <map id="dyno::OpenCVFrontendDisplay" name="dyno::OpenCVFrontendDisplay">
-<area shape="rect" id="node1" title=" " alt="" coords="5,79,225,104"/>
-<area shape="rect" id="node2" href="$classdyno_1_1DisplayBase.html" title=" " alt="" coords="51,5,179,31"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,420,225,445"/>
+<area shape="rect" id="node2" href="$classdyno_1_1DisplayBase.html" title=" " alt="" coords="51,345,179,371"/>
+<area shape="rect" id="node3" href="$structdyno_1_1SharedModuleInterface.html" title=" " alt="" coords="9,271,222,296"/>
+<area shape="rect" id="node4" href="$classdyno_1_1SharedModuleInfo.html" title=" " alt="" coords="25,183,205,208"/>
+<area shape="rect" id="node5" href="$classdyno_1_1GroundTruthPacketMap.html" title="FastMap from frame id to GroundTruthInputPacket." alt="" coords="10,95,221,120"/>
+<area shape="rect" id="node6" title=" " alt="" coords="17,5,214,45"/>
 </map>

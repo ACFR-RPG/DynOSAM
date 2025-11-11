@@ -1,16 +1,16 @@
 <map id="dyno::FeatureContainer::beginUsable" name="dyno::FeatureContainer::beginUsable">
-<area shape="rect" id="node1" title=" " alt="" coords="940,141,1115,181"/>
-<area shape="rect" id="node2" href="$classdyno_1_1Frame.html#ab038b536516e42beb788f1b794801270" title=" " alt="" coords="626,5,855,45"/>
-<area shape="rect" id="node4" href="$classdyno_1_1Frame.html#ada0730ff21a241c8948dfa6a4c233ce9" title=" " alt="" coords="589,70,892,95"/>
-<area shape="rect" id="node5" href="$classdyno_1_1Frame.html#a2dae0d4fd6d5ae47802ff8f6602d652b" title=" " alt="" coords="600,119,881,145"/>
-<area shape="rect" id="node8" href="$classdyno_1_1KltFeatureTracker.html#ab15aaa39f0c3adc62037d718b98039c0" title="Track features between frames k&#45;1 and the current set of images (at k)." alt="" coords="653,169,828,209"/>
-<area shape="rect" id="node9" href="$classdyno_1_1Frame.html#a7769d1c2fe4f5831191dc4da47d4404c" title=" " alt="" coords="635,233,847,273"/>
-<area shape="rect" id="node11" href="$classdyno_1_1Frame.html#ab036fb95341546a33d93bdd54d871452" title=" " alt="" coords="645,297,836,337"/>
-<area shape="rect" id="node3" href="$classdyno_1_1Frame.html#a5553af4c0c310c23d0f39e0c1daf0478" title=" " alt="" coords="343,13,495,38"/>
-<area shape="rect" id="node6" href="$classdyno_1_1Frame.html#a0ee3d3a6479eada0e5443feb48613cdc" title="Gets the set of tracked pairs between this frame and the previous frame. All correspondences will be ..." alt="" coords="297,119,541,145"/>
-<area shape="rect" id="node7" href="$classdyno_1_1Frame.html#a40ef74f44116cf581522314b3a053c3a" title=" " alt="" coords="5,119,249,145"/>
-<area shape="rect" id="node10" href="$classdyno_1_1Frame.html#abbc9eb125f3b9d963b45857a99e9c8a4" title="Gets the total number of dynamic inlier features." alt="" coords="298,233,541,273"/>
-<area shape="rect" id="node12" href="$classdyno_1_1RGBDInstanceFrontendModule.html#a246f701e4605c98dc7cb6bbd6f657998" title=" " alt="" coords="313,297,525,337"/>
-<area shape="rect" id="node14" href="$classdyno_1_1Frame.html#a6b8a9f20ec398a8046dc25f77277fc15" title="Gets the total number of static inlier features." alt="" coords="308,361,531,401"/>
-<area shape="rect" id="node13" href="$classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2" title=" " alt="" coords="21,297,233,337"/>
+<area shape="rect" id="node1" title=" " alt="" coords="947,176,1121,216"/>
+<area shape="rect" id="node2" href="$classdyno_1_1Frame.html#ab038b536516e42beb788f1b794801270" title=" " alt="" coords="633,5,862,45"/>
+<area shape="rect" id="node3" href="$classdyno_1_1FeatureTrackerBase.html#a4e9b9b77752d80d8bb8c2236776ca5a8" title=" " alt="" coords="653,69,842,109"/>
+<area shape="rect" id="node4" href="$classdyno_1_1Frame.html#ada0730ff21a241c8948dfa6a4c233ce9" title=" " alt="" coords="596,134,899,159"/>
+<area shape="rect" id="node5" href="$classdyno_1_1Frame.html#a2dae0d4fd6d5ae47802ff8f6602d652b" title=" " alt="" coords="607,183,888,209"/>
+<area shape="rect" id="node8" href="$classdyno_1_1KltFeatureTracker.html#ab15aaa39f0c3adc62037d718b98039c0" title="Track features between frames k&#45;1 and the current set of images (at k)." alt="" coords="660,233,835,273"/>
+<area shape="rect" id="node9" href="$classdyno_1_1Frame.html#a7769d1c2fe4f5831191dc4da47d4404c" title=" " alt="" coords="641,297,853,337"/>
+<area shape="rect" id="node13" href="$classdyno_1_1Frame.html#ab036fb95341546a33d93bdd54d871452" title=" " alt="" coords="652,361,843,401"/>
+<area shape="rect" id="node6" href="$classdyno_1_1Frame.html#a0ee3d3a6479eada0e5443feb48613cdc" title="Gets the set of tracked pairs between this frame and the previous frame. All correspondences will be ..." alt="" coords="301,183,545,209"/>
+<area shape="rect" id="node7" href="$classdyno_1_1Frame.html#a40ef74f44116cf581522314b3a053c3a" title=" " alt="" coords="5,183,249,209"/>
+<area shape="rect" id="node10" href="$classdyno_1_1RGBDInstanceFrontendModule.html#ab40113f18671c1f496269e8c7a18267a" title=" " alt="" coords="297,329,548,369"/>
+<area shape="rect" id="node12" href="$classdyno_1_1Frame.html#abbc9eb125f3b9d963b45857a99e9c8a4" title="Gets the total number of dynamic inlier features." alt="" coords="301,265,544,305"/>
+<area shape="rect" id="node11" href="$classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2" title=" " alt="" coords="21,329,233,369"/>
+<area shape="rect" id="node14" href="$classdyno_1_1Frame.html#a6b8a9f20ec398a8046dc25f77277fc15" title="Gets the total number of static inlier features." alt="" coords="311,393,534,433"/>
 </map>

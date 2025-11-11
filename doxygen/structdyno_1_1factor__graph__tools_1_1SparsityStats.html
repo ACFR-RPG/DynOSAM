@@ -113,7 +113,7 @@ Public Attributes</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="FactorGraphTools_8hpp_source.html#l00308">308</a> of file <a class="el" href="FactorGraphTools_8hpp_source.html">FactorGraphTools.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FactorGraphTools_8hpp_source.html#l00306">306</a> of file <a class="el" href="FactorGraphTools_8hpp_source.html">FactorGraphTools.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a64ee411936409c5d2cd7aa19ed8ceccf" name="a64ee411936409c5d2cd7aa19ed8ceccf"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a64ee411936409c5d2cd7aa19ed8ceccf">&#9670;&#160;</a></span>SparsityStats() <span class="overload">[1/2]</span></h2>
@@ -138,8 +138,8 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="FactorGraphTools_8hpp_source.html#l00317">317</a> of file <a class="el" href="FactorGraphTools_8hpp_source.html">FactorGraphTools.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  317</span>{};</div>
+<p class="definition">Definition at line <a class="el" href="FactorGraphTools_8hpp_source.html#l00315">315</a> of file <a class="el" href="FactorGraphTools_8hpp_source.html">FactorGraphTools.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  315</span>{};</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -184,23 +184,23 @@ template&lt;typename Derived &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="FactorGraphTools_8hpp_source.html#l00328">328</a> of file <a class="el" href="FactorGraphTools_8hpp_source.html">FactorGraphTools.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  329</span>      : <a class="code hl_variable" href="structdyno_1_1factor__graph__tools_1_1SparsityStats.html#a06f8ea12c0fb88d55cc6de8635778cfd">matrix</a>(M.template cast&lt;double&gt;()), <a class="code hl_variable" href="structdyno_1_1factor__graph__tools_1_1SparsityStats.html#a6d536bfe5ea07c279317a72d60728abf">nr_zero_elements</a>(0), <a class="code hl_variable" href="structdyno_1_1factor__graph__tools_1_1SparsityStats.html#aad109da3c6de702857e65c65d120f869">nr_elements</a>(0) {</div>
-<div class="line"><span class="lineno">  330</span>    <a class="code hl_variable" href="structdyno_1_1factor__graph__tools_1_1SparsityStats.html#aad109da3c6de702857e65c65d120f869">nr_elements</a> = M.rows() * M.cols();</div>
-<div class="line"><span class="lineno">  331</span>    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; M.rows(); ++i) {</div>
-<div class="line"><span class="lineno">  332</span>      <span class="keywordflow">for</span> (<span class="keywordtype">int</span> j = 0; j &lt; M.cols(); ++j) {</div>
-<div class="line"><span class="lineno">  333</span>        <span class="keywordflow">if</span> (std::fabs(M(i, j)) &lt; 1e-15) {</div>
-<div class="line"><span class="lineno">  334</span>          <a class="code hl_variable" href="structdyno_1_1factor__graph__tools_1_1SparsityStats.html#a6d536bfe5ea07c279317a72d60728abf">nr_zero_elements</a>++;</div>
-<div class="line"><span class="lineno">  335</span>        } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  336</span>          <a class="code hl_variable" href="structdyno_1_1factor__graph__tools_1_1SparsityStats.html#a8772726b0474cb1271879b53f2e30ef1">nnz_elements</a>++;</div>
-<div class="line"><span class="lineno">  337</span>        }</div>
-<div class="line"><span class="lineno">  338</span>      }</div>
-<div class="line"><span class="lineno">  339</span>    }</div>
-<div class="line"><span class="lineno">  340</span>  }</div>
-<div class="ttc" id="astructdyno_1_1factor__graph__tools_1_1SparsityStats_html_a06f8ea12c0fb88d55cc6de8635778cfd"><div class="ttname"><a href="structdyno_1_1factor__graph__tools_1_1SparsityStats.html#a06f8ea12c0fb88d55cc6de8635778cfd">dyno::factor_graph_tools::SparsityStats::matrix</a></div><div class="ttdeci">gtsam::Matrix matrix</div><div class="ttdef"><b>Definition:</b> <a href="FactorGraphTools_8hpp_source.html#l00309">FactorGraphTools.hpp:309</a></div></div>
-<div class="ttc" id="astructdyno_1_1factor__graph__tools_1_1SparsityStats_html_a6d536bfe5ea07c279317a72d60728abf"><div class="ttname"><a href="structdyno_1_1factor__graph__tools_1_1SparsityStats.html#a6d536bfe5ea07c279317a72d60728abf">dyno::factor_graph_tools::SparsityStats::nr_zero_elements</a></div><div class="ttdeci">size_t nr_zero_elements</div><div class="ttdoc">Number of zero elements.</div><div class="ttdef"><b>Definition:</b> <a href="FactorGraphTools_8hpp_source.html#l00311">FactorGraphTools.hpp:311</a></div></div>
-<div class="ttc" id="astructdyno_1_1factor__graph__tools_1_1SparsityStats_html_a8772726b0474cb1271879b53f2e30ef1"><div class="ttname"><a href="structdyno_1_1factor__graph__tools_1_1SparsityStats.html#a8772726b0474cb1271879b53f2e30ef1">dyno::factor_graph_tools::SparsityStats::nnz_elements</a></div><div class="ttdeci">size_t nnz_elements</div><div class="ttdoc">Number of non-zero elements.</div><div class="ttdef"><b>Definition:</b> <a href="FactorGraphTools_8hpp_source.html#l00315">FactorGraphTools.hpp:315</a></div></div>
-<div class="ttc" id="astructdyno_1_1factor__graph__tools_1_1SparsityStats_html_aad109da3c6de702857e65c65d120f869"><div class="ttname"><a href="structdyno_1_1factor__graph__tools_1_1SparsityStats.html#aad109da3c6de702857e65c65d120f869">dyno::factor_graph_tools::SparsityStats::nr_elements</a></div><div class="ttdeci">size_t nr_elements</div><div class="ttdoc">Number total elements in the matrix (rows * cols)</div><div class="ttdef"><b>Definition:</b> <a href="FactorGraphTools_8hpp_source.html#l00313">FactorGraphTools.hpp:313</a></div></div>
+<p class="definition">Definition at line <a class="el" href="FactorGraphTools_8hpp_source.html#l00326">326</a> of file <a class="el" href="FactorGraphTools_8hpp_source.html">FactorGraphTools.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  327</span>      : <a class="code hl_variable" href="structdyno_1_1factor__graph__tools_1_1SparsityStats.html#a06f8ea12c0fb88d55cc6de8635778cfd">matrix</a>(M.template cast&lt;double&gt;()), <a class="code hl_variable" href="structdyno_1_1factor__graph__tools_1_1SparsityStats.html#a6d536bfe5ea07c279317a72d60728abf">nr_zero_elements</a>(0), <a class="code hl_variable" href="structdyno_1_1factor__graph__tools_1_1SparsityStats.html#aad109da3c6de702857e65c65d120f869">nr_elements</a>(0) {</div>
+<div class="line"><span class="lineno">  328</span>    <a class="code hl_variable" href="structdyno_1_1factor__graph__tools_1_1SparsityStats.html#aad109da3c6de702857e65c65d120f869">nr_elements</a> = M.rows() * M.cols();</div>
+<div class="line"><span class="lineno">  329</span>    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; M.rows(); ++i) {</div>
+<div class="line"><span class="lineno">  330</span>      <span class="keywordflow">for</span> (<span class="keywordtype">int</span> j = 0; j &lt; M.cols(); ++j) {</div>
+<div class="line"><span class="lineno">  331</span>        <span class="keywordflow">if</span> (std::fabs(M(i, j)) &lt; 1e-15) {</div>
+<div class="line"><span class="lineno">  332</span>          <a class="code hl_variable" href="structdyno_1_1factor__graph__tools_1_1SparsityStats.html#a6d536bfe5ea07c279317a72d60728abf">nr_zero_elements</a>++;</div>
+<div class="line"><span class="lineno">  333</span>        } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  334</span>          <a class="code hl_variable" href="structdyno_1_1factor__graph__tools_1_1SparsityStats.html#a8772726b0474cb1271879b53f2e30ef1">nnz_elements</a>++;</div>
+<div class="line"><span class="lineno">  335</span>        }</div>
+<div class="line"><span class="lineno">  336</span>      }</div>
+<div class="line"><span class="lineno">  337</span>    }</div>
+<div class="line"><span class="lineno">  338</span>  }</div>
+<div class="ttc" id="astructdyno_1_1factor__graph__tools_1_1SparsityStats_html_a06f8ea12c0fb88d55cc6de8635778cfd"><div class="ttname"><a href="structdyno_1_1factor__graph__tools_1_1SparsityStats.html#a06f8ea12c0fb88d55cc6de8635778cfd">dyno::factor_graph_tools::SparsityStats::matrix</a></div><div class="ttdeci">gtsam::Matrix matrix</div><div class="ttdef"><b>Definition:</b> <a href="FactorGraphTools_8hpp_source.html#l00307">FactorGraphTools.hpp:307</a></div></div>
+<div class="ttc" id="astructdyno_1_1factor__graph__tools_1_1SparsityStats_html_a6d536bfe5ea07c279317a72d60728abf"><div class="ttname"><a href="structdyno_1_1factor__graph__tools_1_1SparsityStats.html#a6d536bfe5ea07c279317a72d60728abf">dyno::factor_graph_tools::SparsityStats::nr_zero_elements</a></div><div class="ttdeci">size_t nr_zero_elements</div><div class="ttdoc">Number of zero elements.</div><div class="ttdef"><b>Definition:</b> <a href="FactorGraphTools_8hpp_source.html#l00309">FactorGraphTools.hpp:309</a></div></div>
+<div class="ttc" id="astructdyno_1_1factor__graph__tools_1_1SparsityStats_html_a8772726b0474cb1271879b53f2e30ef1"><div class="ttname"><a href="structdyno_1_1factor__graph__tools_1_1SparsityStats.html#a8772726b0474cb1271879b53f2e30ef1">dyno::factor_graph_tools::SparsityStats::nnz_elements</a></div><div class="ttdeci">size_t nnz_elements</div><div class="ttdoc">Number of non-zero elements.</div><div class="ttdef"><b>Definition:</b> <a href="FactorGraphTools_8hpp_source.html#l00313">FactorGraphTools.hpp:313</a></div></div>
+<div class="ttc" id="astructdyno_1_1factor__graph__tools_1_1SparsityStats_html_aad109da3c6de702857e65c65d120f869"><div class="ttname"><a href="structdyno_1_1factor__graph__tools_1_1SparsityStats.html#aad109da3c6de702857e65c65d120f869">dyno::factor_graph_tools::SparsityStats::nr_elements</a></div><div class="ttdeci">size_t nr_elements</div><div class="ttdoc">Number total elements in the matrix (rows * cols)</div><div class="ttdef"><b>Definition:</b> <a href="FactorGraphTools_8hpp_source.html#l00311">FactorGraphTools.hpp:311</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="structdyno_1_1factor__graph__tools_1_1SparsityStats.html#a8772726b0474cb1271879b53f2e30ef1">nnz_elements</a>, <a class="el" href="structdyno_1_1factor__graph__tools_1_1SparsityStats.html#aad109da3c6de702857e65c65d120f869">nr_elements</a>, and <a class="el" href="structdyno_1_1factor__graph__tools_1_1SparsityStats.html#a6d536bfe5ea07c279317a72d60728abf">nr_zero_elements</a>.</p>
 
@@ -231,11 +231,11 @@ template&lt;typename Derived &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="FactorGraphTools_8hpp_source.html#l00346">346</a> of file <a class="el" href="FactorGraphTools_8hpp_source.html">FactorGraphTools.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  346</span>                                        {</div>
-<div class="line"><span class="lineno">  347</span>    VLOG(20) &lt;&lt; <span class="stringliteral">&quot;Writing matrix matrix to file_path &quot;</span> &lt;&lt; file_path;</div>
-<div class="line"><span class="lineno">  348</span>    gtsam::save(<a class="code hl_variable" href="structdyno_1_1factor__graph__tools_1_1SparsityStats.html#a06f8ea12c0fb88d55cc6de8635778cfd">matrix</a>, <span class="stringliteral">&quot;sparse_matrix&quot;</span>, file_path);</div>
-<div class="line"><span class="lineno">  349</span>  }</div>
+<p class="definition">Definition at line <a class="el" href="FactorGraphTools_8hpp_source.html#l00344">344</a> of file <a class="el" href="FactorGraphTools_8hpp_source.html">FactorGraphTools.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  344</span>                                        {</div>
+<div class="line"><span class="lineno">  345</span>    VLOG(20) &lt;&lt; <span class="stringliteral">&quot;Writing matrix matrix to file_path &quot;</span> &lt;&lt; file_path;</div>
+<div class="line"><span class="lineno">  346</span>    gtsam::save(<a class="code hl_variable" href="structdyno_1_1factor__graph__tools_1_1SparsityStats.html#a06f8ea12c0fb88d55cc6de8635778cfd">matrix</a>, <span class="stringliteral">&quot;sparse_matrix&quot;</span>, file_path);</div>
+<div class="line"><span class="lineno">  347</span>  }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="structdyno_1_1factor__graph__tools_1_1SparsityStats.html#a06f8ea12c0fb88d55cc6de8635778cfd">matrix</a>.</p>
 
@@ -278,12 +278,12 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="FactorGraphTools_8hpp_source.html#l00342">342</a> of file <a class="el" href="FactorGraphTools_8hpp_source.html">FactorGraphTools.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  342</span>                                                    {</div>
-<div class="line"><span class="lineno">  343</span>    <a class="code hl_function" href="structdyno_1_1factor__graph__tools_1_1SparsityStats.html#a488b320dd1b4049f55185ab90224c201">save</a>(<a class="code hl_function" href="namespacedyno.html#a80a71f28f4f692dc9c21976237dfcfe1">getOutputFilePath</a>(file_name));</div>
-<div class="line"><span class="lineno">  344</span>  }</div>
-<div class="ttc" id="anamespacedyno_html_a80a71f28f4f692dc9c21976237dfcfe1"><div class="ttname"><a href="namespacedyno.html#a80a71f28f4f692dc9c21976237dfcfe1">dyno::getOutputFilePath</a></div><div class="ttdeci">std::string getOutputFilePath(const std::string &amp;file_name)</div><div class="ttdoc">Constructs a file path (using the file name) where the root of the path is defined by the FLAGS_outpu...</div><div class="ttdef"><b>Definition:</b> <a href="Logger_8cc_source.html#l00047">Logger.cc:47</a></div></div>
-<div class="ttc" id="astructdyno_1_1factor__graph__tools_1_1SparsityStats_html_a488b320dd1b4049f55185ab90224c201"><div class="ttname"><a href="structdyno_1_1factor__graph__tools_1_1SparsityStats.html#a488b320dd1b4049f55185ab90224c201">dyno::factor_graph_tools::SparsityStats::save</a></div><div class="ttdeci">void save(const std::string &amp;file_path)</div><div class="ttdef"><b>Definition:</b> <a href="FactorGraphTools_8hpp_source.html#l00346">FactorGraphTools.hpp:346</a></div></div>
+<p class="definition">Definition at line <a class="el" href="FactorGraphTools_8hpp_source.html#l00340">340</a> of file <a class="el" href="FactorGraphTools_8hpp_source.html">FactorGraphTools.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  340</span>                                                    {</div>
+<div class="line"><span class="lineno">  341</span>    <a class="code hl_function" href="structdyno_1_1factor__graph__tools_1_1SparsityStats.html#a488b320dd1b4049f55185ab90224c201">save</a>(<a class="code hl_function" href="namespacedyno.html#a80a71f28f4f692dc9c21976237dfcfe1">getOutputFilePath</a>(file_name));</div>
+<div class="line"><span class="lineno">  342</span>  }</div>
+<div class="ttc" id="anamespacedyno_html_a80a71f28f4f692dc9c21976237dfcfe1"><div class="ttname"><a href="namespacedyno.html#a80a71f28f4f692dc9c21976237dfcfe1">dyno::getOutputFilePath</a></div><div class="ttdeci">std::string getOutputFilePath(const std::string &amp;file_name)</div><div class="ttdoc">Constructs a file path (using the file name) where the root of the path is defined by the FLAGS_outpu...</div><div class="ttdef"><b>Definition:</b> <a href="Logger_8cc_source.html#l00046">Logger.cc:46</a></div></div>
+<div class="ttc" id="astructdyno_1_1factor__graph__tools_1_1SparsityStats_html_a488b320dd1b4049f55185ab90224c201"><div class="ttname"><a href="structdyno_1_1factor__graph__tools_1_1SparsityStats.html#a488b320dd1b4049f55185ab90224c201">dyno::factor_graph_tools::SparsityStats::save</a></div><div class="ttdeci">void save(const std::string &amp;file_path)</div><div class="ttdef"><b>Definition:</b> <a href="FactorGraphTools_8hpp_source.html#l00344">FactorGraphTools.hpp:344</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="namespacedyno.html#a80a71f28f4f692dc9c21976237dfcfe1">dyno::getOutputFilePath()</a>, and <a class="el" href="structdyno_1_1factor__graph__tools_1_1SparsityStats.html#a488b320dd1b4049f55185ab90224c201">save()</a>.</p>
 
@@ -324,7 +324,7 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="FactorGraphTools_8hpp_source.html#l00309">309</a> of file <a class="el" href="FactorGraphTools_8hpp_source.html">FactorGraphTools.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FactorGraphTools_8hpp_source.html#l00307">307</a> of file <a class="el" href="FactorGraphTools_8hpp_source.html">FactorGraphTools.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="structdyno_1_1factor__graph__tools_1_1SparsityStats.html#a488b320dd1b4049f55185ab90224c201">save()</a>.</p>
 
@@ -344,7 +344,7 @@ Here is the caller graph for this function:</div>
 
 <p>Number of non-zero elements. </p>
 
-<p class="definition">Definition at line <a class="el" href="FactorGraphTools_8hpp_source.html#l00315">315</a> of file <a class="el" href="FactorGraphTools_8hpp_source.html">FactorGraphTools.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FactorGraphTools_8hpp_source.html#l00313">313</a> of file <a class="el" href="FactorGraphTools_8hpp_source.html">FactorGraphTools.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="structdyno_1_1factor__graph__tools_1_1SparsityStats.html#a63b6b4a73ba6bb3b40b4dd5fa7d9dc6a">SparsityStats()</a>.</p>
 
@@ -364,7 +364,7 @@ Here is the caller graph for this function:</div>
 
 <p>Number total elements in the matrix (rows * cols) </p>
 
-<p class="definition">Definition at line <a class="el" href="FactorGraphTools_8hpp_source.html#l00313">313</a> of file <a class="el" href="FactorGraphTools_8hpp_source.html">FactorGraphTools.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FactorGraphTools_8hpp_source.html#l00311">311</a> of file <a class="el" href="FactorGraphTools_8hpp_source.html">FactorGraphTools.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="structdyno_1_1factor__graph__tools_1_1SparsityStats.html#a63b6b4a73ba6bb3b40b4dd5fa7d9dc6a">SparsityStats()</a>.</p>
 
@@ -384,14 +384,14 @@ Here is the caller graph for this function:</div>
 
 <p>Number of zero elements. </p>
 
-<p class="definition">Definition at line <a class="el" href="FactorGraphTools_8hpp_source.html#l00311">311</a> of file <a class="el" href="FactorGraphTools_8hpp_source.html">FactorGraphTools.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FactorGraphTools_8hpp_source.html#l00309">309</a> of file <a class="el" href="FactorGraphTools_8hpp_source.html">FactorGraphTools.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="structdyno_1_1factor__graph__tools_1_1SparsityStats.html#a63b6b4a73ba6bb3b40b4dd5fa7d9dc6a">SparsityStats()</a>.</p>
 
 </div>
 </div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
-<li>dynosam/include/dynosam/backend/<a class="el" href="FactorGraphTools_8hpp_source.html">FactorGraphTools.hpp</a></li>
+<li>dynosam_opt/include/dynosam_opt/<a class="el" href="FactorGraphTools_8hpp_source.html">FactorGraphTools.hpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

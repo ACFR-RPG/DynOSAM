@@ -120,7 +120,7 @@ Public Attributes</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Translation-Rotation error pair. </p>
 
-<p class="definition">Definition at line <a class="el" href="Metrics_8hpp_source.html#l00038">38</a> of file <a class="el" href="Metrics_8hpp_source.html">Metrics.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Metrics_8hpp_source.html#l00046">46</a> of file <a class="el" href="Metrics_8hpp_source.html">Metrics.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="abe2ada54d46e863d6642ddbad53a5da2" name="abe2ada54d46e863d6642ddbad53a5da2"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#abe2ada54d46e863d6642ddbad53a5da2">&#9670;&#160;</a></span>TRErrorPair() <span class="overload">[1/2]</span></h2>
@@ -196,10 +196,10 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="Metrics_8cc_source.html#l00028">28</a> of file <a class="el" href="Metrics_8cc_source.html">Metrics.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   28</span>: <a class="code hl_variable" href="structdyno_1_1utils_1_1TRErrorPair.html#a0b7545fd305d4cd8beaf7aba838ddd44">translation_</a>(translation), <a class="code hl_variable" href="structdyno_1_1utils_1_1TRErrorPair.html#a9818c4047c022e6e2383a0336c484432">rot_</a>(rot) {}</div>
-<div class="ttc" id="astructdyno_1_1utils_1_1TRErrorPair_html_a0b7545fd305d4cd8beaf7aba838ddd44"><div class="ttname"><a href="structdyno_1_1utils_1_1TRErrorPair.html#a0b7545fd305d4cd8beaf7aba838ddd44">dyno::utils::TRErrorPair::translation_</a></div><div class="ttdeci">double translation_</div><div class="ttdef"><b>Definition:</b> <a href="Metrics_8hpp_source.html#l00040">Metrics.hpp:40</a></div></div>
-<div class="ttc" id="astructdyno_1_1utils_1_1TRErrorPair_html_a9818c4047c022e6e2383a0336c484432"><div class="ttname"><a href="structdyno_1_1utils_1_1TRErrorPair.html#a9818c4047c022e6e2383a0336c484432">dyno::utils::TRErrorPair::rot_</a></div><div class="ttdeci">double rot_</div><div class="ttdoc">meters</div><div class="ttdef"><b>Definition:</b> <a href="Metrics_8hpp_source.html#l00041">Metrics.hpp:41</a></div></div>
+<p class="definition">Definition at line <a class="el" href="Metrics_8cc_source.html#l00035">35</a> of file <a class="el" href="Metrics_8cc_source.html">Metrics.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   36</span>    : <a class="code hl_variable" href="structdyno_1_1utils_1_1TRErrorPair.html#a0b7545fd305d4cd8beaf7aba838ddd44">translation_</a>(translation), <a class="code hl_variable" href="structdyno_1_1utils_1_1TRErrorPair.html#a9818c4047c022e6e2383a0336c484432">rot_</a>(rot) {}</div>
+<div class="ttc" id="astructdyno_1_1utils_1_1TRErrorPair_html_a0b7545fd305d4cd8beaf7aba838ddd44"><div class="ttname"><a href="structdyno_1_1utils_1_1TRErrorPair.html#a0b7545fd305d4cd8beaf7aba838ddd44">dyno::utils::TRErrorPair::translation_</a></div><div class="ttdeci">double translation_</div><div class="ttdef"><b>Definition:</b> <a href="Metrics_8hpp_source.html#l00047">Metrics.hpp:47</a></div></div>
+<div class="ttc" id="astructdyno_1_1utils_1_1TRErrorPair_html_a9818c4047c022e6e2383a0336c484432"><div class="ttname"><a href="structdyno_1_1utils_1_1TRErrorPair.html#a9818c4047c022e6e2383a0336c484432">dyno::utils::TRErrorPair::rot_</a></div><div class="ttdeci">double rot_</div><div class="ttdoc">meters</div><div class="ttdef"><b>Definition:</b> <a href="Metrics_8hpp_source.html#l00048">Metrics.hpp:48</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -250,21 +250,22 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><a class="el" href="structdyno_1_1utils_1_1TRErrorPair.html" title="Translation-Rotation error pair.">TRErrorPair</a> </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Metrics_8cc_source.html#l00034">34</a> of file <a class="el" href="Metrics_8cc_source.html">Metrics.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   34</span>                                                                                        {</div>
-<div class="line"><span class="lineno">   35</span>    <span class="keyword">const</span> gtsam::Pose3 E = M.inverse() * M_hat;</div>
-<div class="line"><span class="lineno">   36</span> </div>
-<div class="line"><span class="lineno">   37</span>    <span class="comment">// L2 norm - ie. magnitude</span></div>
-<div class="line"><span class="lineno">   38</span>    <span class="keyword">const</span> <span class="keywordtype">double</span> t_e = E.translation().norm();</div>
-<div class="line"><span class="lineno">   39</span> </div>
-<div class="line"><span class="lineno">   40</span>    <span class="keyword">const</span> gtsam::Matrix33 rotation_error = E.rotation().matrix();</div>
-<div class="line"><span class="lineno">   41</span>    std::pair&lt;gtsam::Unit3, double&gt; axis_angle = gtsam::Rot3(rotation_error).axisAngle();</div>
-<div class="line"><span class="lineno">   42</span> </div>
-<div class="line"><span class="lineno">   43</span>    <span class="comment">//need to wrap?</span></div>
-<div class="line"><span class="lineno">   44</span>    <span class="keyword">const</span> <span class="keywordtype">double</span> r_e = axis_angle.second;</div>
+<p class="definition">Definition at line <a class="el" href="Metrics_8cc_source.html#l00042">42</a> of file <a class="el" href="Metrics_8cc_source.html">Metrics.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   43</span>                                                                     {</div>
+<div class="line"><span class="lineno">   44</span>  <span class="keyword">const</span> gtsam::Pose3 E = M.inverse() * M_hat;</div>
 <div class="line"><span class="lineno">   45</span> </div>
-<div class="line"><span class="lineno">   46</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="structdyno_1_1utils_1_1TRErrorPair.html#abe2ada54d46e863d6642ddbad53a5da2">TRErrorPair</a>(t_e, r_e);</div>
-<div class="line"><span class="lineno">   47</span>}</div>
+<div class="line"><span class="lineno">   46</span>  <span class="comment">// L2 norm - ie. magnitude</span></div>
+<div class="line"><span class="lineno">   47</span>  <span class="keyword">const</span> <span class="keywordtype">double</span> t_e = E.translation().norm();</div>
+<div class="line"><span class="lineno">   48</span> </div>
+<div class="line"><span class="lineno">   49</span>  <span class="keyword">const</span> gtsam::Matrix33 rotation_error = E.rotation().matrix();</div>
+<div class="line"><span class="lineno">   50</span>  std::pair&lt;gtsam::Unit3, double&gt; axis_angle =</div>
+<div class="line"><span class="lineno">   51</span>      gtsam::Rot3(rotation_error).axisAngle();</div>
+<div class="line"><span class="lineno">   52</span> </div>
+<div class="line"><span class="lineno">   53</span>  <span class="comment">// need to wrap?</span></div>
+<div class="line"><span class="lineno">   54</span>  <span class="keyword">const</span> <span class="keywordtype">double</span> r_e = axis_angle.second;</div>
+<div class="line"><span class="lineno">   55</span> </div>
+<div class="line"><span class="lineno">   56</span>  <span class="keywordflow">return</span> <a class="code hl_function" href="structdyno_1_1utils_1_1TRErrorPair.html#abe2ada54d46e863d6642ddbad53a5da2">TRErrorPair</a>(t_e, r_e);</div>
+<div class="line"><span class="lineno">   57</span>}</div>
 <div class="ttc" id="astructdyno_1_1utils_1_1TRErrorPair_html_abe2ada54d46e863d6642ddbad53a5da2"><div class="ttname"><a href="structdyno_1_1utils_1_1TRErrorPair.html#abe2ada54d46e863d6642ddbad53a5da2">dyno::utils::TRErrorPair::TRErrorPair</a></div><div class="ttdeci">TRErrorPair()=default</div><div class="ttdoc">rads</div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="structdyno_1_1utils_1_1TRErrorPair.html#abe2ada54d46e863d6642ddbad53a5da2">TRErrorPair()</a>.</p>
@@ -351,14 +352,14 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><a class="el" href="structdyno_1_1utils_1_1TRErrorPair.html" title="Translation-Rotation error pair.">TRErrorPair</a> </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Metrics_8cc_source.html#l00049">49</a> of file <a class="el" href="Metrics_8cc_source.html">Metrics.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   52</span>                                                                              {</div>
-<div class="line"><span class="lineno">   53</span>    <span class="comment">// pose change between ref and current</span></div>
-<div class="line"><span class="lineno">   54</span>    <span class="keyword">const</span> gtsam::Pose3 ref_T_curr = M_ref.inverse() * M_curr;</div>
-<div class="line"><span class="lineno">   55</span>    <span class="keyword">const</span> gtsam::Pose3 ref_T_hat_curr = M_hat_ref.inverse() * M_hat_curr;</div>
-<div class="line"><span class="lineno">   56</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="structdyno_1_1utils_1_1TRErrorPair.html#a663dd9aaa29bf2d2740554ecc8b24e94">CalculatePoseError</a>(ref_T_curr, ref_T_hat_curr);</div>
-<div class="line"><span class="lineno">   57</span>}</div>
-<div class="ttc" id="astructdyno_1_1utils_1_1TRErrorPair_html_a663dd9aaa29bf2d2740554ecc8b24e94"><div class="ttname"><a href="structdyno_1_1utils_1_1TRErrorPair.html#a663dd9aaa29bf2d2740554ecc8b24e94">dyno::utils::TRErrorPair::CalculatePoseError</a></div><div class="ttdeci">static TRErrorPair CalculatePoseError(const gtsam::Pose3 &amp;M, const gtsam::Pose3 &amp;M_hat)</div><div class="ttdoc">Calculates the pose error between two poses in the same frame.</div><div class="ttdef"><b>Definition:</b> <a href="Metrics_8cc_source.html#l00034">Metrics.cc:34</a></div></div>
+<p class="definition">Definition at line <a class="el" href="Metrics_8cc_source.html#l00059">59</a> of file <a class="el" href="Metrics_8cc_source.html">Metrics.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   61</span>                                                               {</div>
+<div class="line"><span class="lineno">   62</span>  <span class="comment">// pose change between ref and current</span></div>
+<div class="line"><span class="lineno">   63</span>  <span class="keyword">const</span> gtsam::Pose3 ref_T_curr = M_ref.inverse() * M_curr;</div>
+<div class="line"><span class="lineno">   64</span>  <span class="keyword">const</span> gtsam::Pose3 ref_T_hat_curr = M_hat_ref.inverse() * M_hat_curr;</div>
+<div class="line"><span class="lineno">   65</span>  <span class="keywordflow">return</span> <a class="code hl_function" href="structdyno_1_1utils_1_1TRErrorPair.html#a663dd9aaa29bf2d2740554ecc8b24e94">CalculatePoseError</a>(ref_T_curr, ref_T_hat_curr);</div>
+<div class="line"><span class="lineno">   66</span>}</div>
+<div class="ttc" id="astructdyno_1_1utils_1_1TRErrorPair_html_a663dd9aaa29bf2d2740554ecc8b24e94"><div class="ttname"><a href="structdyno_1_1utils_1_1TRErrorPair.html#a663dd9aaa29bf2d2740554ecc8b24e94">dyno::utils::TRErrorPair::CalculatePoseError</a></div><div class="ttdeci">static TRErrorPair CalculatePoseError(const gtsam::Pose3 &amp;M, const gtsam::Pose3 &amp;M_hat)</div><div class="ttdoc">Calculates the pose error between two poses in the same frame.</div><div class="ttdef"><b>Definition:</b> <a href="Metrics_8cc_source.html#l00042">Metrics.cc:42</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="structdyno_1_1utils_1_1TRErrorPair.html#a663dd9aaa29bf2d2740554ecc8b24e94">CalculatePoseError()</a>.</p>
 <div class="dynheader">
@@ -392,11 +393,11 @@ Here is the call graph for this function:</div>
 <p>Get the rotation error in degrees. </p>
 <dl class="section return"><dt>Returns</dt><dd>double </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Metrics_8cc_source.html#l00030">30</a> of file <a class="el" href="Metrics_8cc_source.html">Metrics.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   30</span>                                                  {</div>
-<div class="line"><span class="lineno">   31</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="namespacedyno.html#a1dadcc4234590a14f18c11ab67fe4293">dyno::rads2Deg</a>(<a class="code hl_variable" href="structdyno_1_1utils_1_1TRErrorPair.html#a9818c4047c022e6e2383a0336c484432">rot_</a>);</div>
-<div class="line"><span class="lineno">   32</span>}</div>
-<div class="ttc" id="anamespacedyno_html_a1dadcc4234590a14f18c11ab67fe4293"><div class="ttname"><a href="namespacedyno.html#a1dadcc4234590a14f18c11ab67fe4293">dyno::rads2Deg</a></div><div class="ttdeci">double rads2Deg(double rads)</div><div class="ttdoc">Converts radians to degrees.</div><div class="ttdef"><b>Definition:</b> <a href="Numerical_8hpp_source.html#l00097">Numerical.hpp:97</a></div></div>
+<p class="definition">Definition at line <a class="el" href="Metrics_8cc_source.html#l00038">38</a> of file <a class="el" href="Metrics_8cc_source.html">Metrics.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   38</span>                                                  {</div>
+<div class="line"><span class="lineno">   39</span>  <span class="keywordflow">return</span> <a class="code hl_function" href="namespacedyno.html#a1dadcc4234590a14f18c11ab67fe4293">dyno::rads2Deg</a>(<a class="code hl_variable" href="structdyno_1_1utils_1_1TRErrorPair.html#a9818c4047c022e6e2383a0336c484432">rot_</a>);</div>
+<div class="line"><span class="lineno">   40</span>}</div>
+<div class="ttc" id="anamespacedyno_html_a1dadcc4234590a14f18c11ab67fe4293"><div class="ttname"><a href="namespacedyno.html#a1dadcc4234590a14f18c11ab67fe4293">dyno::rads2Deg</a></div><div class="ttdeci">double rads2Deg(double rads)</div><div class="ttdoc">Converts radians to degrees.</div><div class="ttdef"><b>Definition:</b> <a href="Numerical_8hpp_source.html#l00098">Numerical.hpp:98</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="namespacedyno.html#a1dadcc4234590a14f18c11ab67fe4293">dyno::rads2Deg()</a>, and <a class="el" href="structdyno_1_1utils_1_1TRErrorPair.html#a9818c4047c022e6e2383a0336c484432">rot_</a>.</p>
 <div class="dynheader">
@@ -426,7 +427,7 @@ Here is the call graph for this function:</div>
 
 <p>meters </p>
 
-<p class="definition">Definition at line <a class="el" href="Metrics_8hpp_source.html#l00041">41</a> of file <a class="el" href="Metrics_8hpp_source.html">Metrics.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Metrics_8hpp_source.html#l00048">48</a> of file <a class="el" href="Metrics_8hpp_source.html">Metrics.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="structdyno_1_1utils_1_1TRErrorPairVector.html#a818f3d5e609286db7c0224199c3aae82">dyno::utils::TRErrorPairVector::average()</a>, and <a class="el" href="structdyno_1_1utils_1_1TRErrorPair.html#a54e770fcc3f3ad60767b30d30e836f07">getRotationErrorDegrees()</a>.</p>
 
@@ -444,15 +445,15 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Metrics_8hpp_source.html#l00040">40</a> of file <a class="el" href="Metrics_8hpp_source.html">Metrics.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Metrics_8hpp_source.html#l00047">47</a> of file <a class="el" href="Metrics_8hpp_source.html">Metrics.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="structdyno_1_1utils_1_1TRErrorPairVector.html#a818f3d5e609286db7c0224199c3aae82">dyno::utils::TRErrorPairVector::average()</a>.</p>
 
 </div>
 </div>
 <hr/>The documentation for this struct was generated from the following files:<ul>
-<li>dynosam/include/dynosam/utils/<a class="el" href="Metrics_8hpp_source.html">Metrics.hpp</a></li>
-<li>dynosam/src/utils/<a class="el" href="Metrics_8cc_source.html">Metrics.cc</a></li>
+<li>dynosam_common/include/dynosam_common/utils/<a class="el" href="Metrics_8hpp_source.html">Metrics.hpp</a></li>
+<li>dynosam_common/src/utils/<a class="el" href="Metrics_8cc_source.html">Metrics.cc</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

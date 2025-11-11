@@ -1,8 +1,8 @@
 <map id="dyno::Frame::backProjectToCamera" name="dyno::Frame::backProjectToCamera">
-<area shape="rect" id="node1" title="Project the feature into the camera frame and returns the 3D landmark. Currently requires the feature..." alt="" coords="5,45,192,85"/>
-<area shape="rect" id="node2" href="$classdyno_1_1Frame.html#ab1af68fa722b3a69160ae0436318ad19" title="Gets a feature from its tracklet ID. Could be static or dynamic. Nullptr is returned if the feature d..." alt="" coords="277,23,401,49"/>
-<area shape="rect" id="node6" href="$classdyno_1_1Frame.html#a32308c0857baace44e2d5e8e406be685" title=" " alt="" coords="240,73,437,113"/>
-<area shape="rect" id="node3" href="$classdyno_1_1FeatureContainer.html#abf2f2d568f5dc17944cc122c537a65f5" title="Returns true if a feature with the given tracklet id exists." alt="" coords="708,16,883,56"/>
-<area shape="rect" id="node4" href="$classdyno_1_1Frame.html#ab9f7b3f513aeff82d47de7a72d66a69a" title="Checks if a feature exists within this frame. Could be static or dynamic." alt="" coords="497,23,648,49"/>
-<area shape="rect" id="node5" href="$classdyno_1_1FeatureContainer.html#a5b73e75d2f4063ac9c16dd0fd565f8da" title="Gets a feature given its tracklet id. If the feature does not exist, nullptr is returned." alt="" coords="485,73,660,113"/>
+<area shape="rect" id="node1" title="Project the feature into the camera frame and returns the 3D landmark. Currently requires the feature..." alt="" coords="5,78,192,118"/>
+<area shape="rect" id="node2" href="$classdyno_1_1Frame.html#ab1af68fa722b3a69160ae0436318ad19" title="Gets a feature from its tracklet ID. Could be static or dynamic. Nullptr is returned if the feature d..." alt="" coords="277,56,401,81"/>
+<area shape="rect" id="node6" href="$classdyno_1_1Frame.html#a32308c0857baace44e2d5e8e406be685" title=" " alt="" coords="240,106,437,146"/>
+<area shape="rect" id="node3" href="$classdyno_1_1Frame.html#ab9f7b3f513aeff82d47de7a72d66a69a" title="Checks if a feature exists within this frame. Could be static or dynamic." alt="" coords="497,5,648,31"/>
+<area shape="rect" id="node4" href="$classdyno_1_1FeatureContainer.html#abf2f2d568f5dc17944cc122c537a65f5" title="Returns true if a feature with the given tracklet id exists." alt="" coords="708,49,883,89"/>
+<area shape="rect" id="node5" href="$classdyno_1_1FeatureContainer.html#a5b73e75d2f4063ac9c16dd0fd565f8da" title="Gets a feature given its tracklet id. If the feature does not exist, nullptr is returned." alt="" coords="485,106,660,146"/>
 </map>

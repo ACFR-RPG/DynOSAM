@@ -1,8 +1,4 @@
 <map id="dyno::saveMatrixAsUpperTriangular" name="dyno::saveMatrixAsUpperTriangular">
-<area shape="rect" id="node1" title=" " alt="" coords="303,185,557,210"/>
-<area shape="rect" id="node2" href="$namespacedyno_1_1utils.html#a5082a58575ef5cf7b9ad88c902b8d588" title=" " alt="" coords="27,5,233,45"/>
-<area shape="rect" id="node3" href="$namespacedyno_1_1factor__graph__tools.html#a9ff07a42f22b5b1f71de392339c354b0" title=" " alt="" coords="33,69,227,139"/>
-<area shape="rect" id="node4" href="$namespacedyno_1_1factor__graph__tools.html#ab411095eb8dc690c111c6a8315f12645" title=" " alt="" coords="16,163,244,232"/>
-<area shape="rect" id="node5" href="$namespacedyno_1_1factor__graph__tools.html#aac82e67b3cd2b5eed19aad5a4df1c04a" title=" " alt="" coords="25,256,235,325"/>
-<area shape="rect" id="node6" href="$namespacedyno_1_1factor__graph__tools.html#a5b7a6a1c6c8dcdae63e7fa26200ba89e" title=" " alt="" coords="5,350,255,405"/>
+<area shape="rect" id="node1" title=" " alt="" coords="260,13,515,38"/>
+<area shape="rect" id="node2" href="$namespacedyno_1_1utils.html#a5082a58575ef5cf7b9ad88c902b8d588" title=" " alt="" coords="5,5,212,45"/>
 </map>

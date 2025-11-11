@@ -147,8 +147,14 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:adfdbd8a6af9e324d913525004eedb375"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afa242b874c0c1a185adb8d83a35171c8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classdyno_1_1Camera.html#acd0cf4d89e94672703fa01e2507adb5a">CameraImpl</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1Camera.html#afa242b874c0c1a185adb8d83a35171c8">getImplCamera</a> () const</td></tr>
 <tr class="separator:afa242b874c0c1a185adb8d83a35171c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeb92d5e7da8172ad63ea18b939c54bbc"><td class="memItemLeft" align="right" valign="top">CalibrationType::shared_ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1Camera.html#aeb92d5e7da8172ad63ea18b939c54bbc">getGtsamCalibration</a> () const</td></tr>
+<tr class="separator:aeb92d5e7da8172ad63ea18b939c54bbc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af56ce3541d3ef8a7bcb2246e4634ca59"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classdyno_1_1CameraParams.html">CameraParams</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1Camera.html#af56ce3541d3ef8a7bcb2246e4634ca59">getParams</a> () const</td></tr>
 <tr class="separator:af56ce3541d3ef8a7bcb2246e4634ca59"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a719e3e3279371f2d6ee97d846b8b3eb9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classdyno_1_1RGBDCamera.html">RGBDCamera</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1Camera.html#a719e3e3279371f2d6ee97d846b8b3eb9">getRGBDCamera</a> () const</td></tr>
+<tr class="separator:a719e3e3279371f2d6ee97d846b8b3eb9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeed52b4791ce567afd89277cc0cb8e26"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classdyno_1_1RGBDCamera.html">RGBDCamera</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1Camera.html#aeed52b4791ce567afd89277cc0cb8e26">safeGetRGBDCamera</a> () const</td></tr>
+<tr class="separator:aeed52b4791ce567afd89277cc0cb8e26"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
@@ -164,7 +170,7 @@ Protected Attributes</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="Camera_8hpp_source.html#l00041">41</a> of file <a class="el" href="Camera_8hpp_source.html">Camera.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Camera_8hpp_source.html#l00043">43</a> of file <a class="el" href="Camera_8hpp_source.html">Camera.hpp</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="a553a1e3081bb239295adc3edac20fdca" name="a553a1e3081bb239295adc3edac20fdca"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a553a1e3081bb239295adc3edac20fdca">&#9670;&#160;</a></span>CalibrationType</h2>
@@ -178,7 +184,7 @@ Protected Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Camera_8hpp_source.html#l00052">52</a> of file <a class="el" href="Camera_8hpp_source.html">Camera.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Camera_8hpp_source.html#l00054">54</a> of file <a class="el" href="Camera_8hpp_source.html">Camera.hpp</a>.</p>
 
 </div>
 </div>
@@ -194,7 +200,7 @@ Protected Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Camera_8hpp_source.html#l00053">53</a> of file <a class="el" href="Camera_8hpp_source.html">Camera.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Camera_8hpp_source.html#l00055">55</a> of file <a class="el" href="Camera_8hpp_source.html">Camera.hpp</a>.</p>
 
 </div>
 </div>
@@ -215,20 +221,20 @@ Protected Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Camera_8cc_source.html#l00030">30</a> of file <a class="el" href="Camera_8cc_source.html">Camera.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   30</span>                                                : <a class="code hl_variable" href="classdyno_1_1Camera.html#aa314751071e993e4d18e7c6f19976f96">camera_params_</a>(camera_params)</div>
-<div class="line"><span class="lineno">   31</span>{</div>
-<div class="line"><span class="lineno">   32</span>    <a class="code hl_variable" href="classdyno_1_1Camera.html#ad1bd2b1dc4ba2e67537a72dae8533280">camera_impl_</a> = std::make_unique&lt;CameraImpl&gt;(</div>
-<div class="line"><span class="lineno">   33</span>        gtsam::Pose3::Identity(), <span class="comment">//this should be the body pose cam from the calibration but currently we want everything in camera frame,</span></div>
-<div class="line"><span class="lineno">   34</span>        <a class="code hl_variable" href="classdyno_1_1Camera.html#aa314751071e993e4d18e7c6f19976f96">camera_params_</a>.<a class="code hl_function" href="classdyno_1_1CameraParams.html#ad3fbc73c9769293edc2839b5405ddb2a">constructGtsamCalibration</a>&lt;<a class="code hl_typedef" href="classdyno_1_1Camera.html#a553a1e3081bb239295adc3edac20fdca">CalibrationType</a>&gt;()</div>
-<div class="line"><span class="lineno">   35</span>    );</div>
-<div class="line"><span class="lineno">   36</span> </div>
-<div class="line"><span class="lineno">   37</span>    CHECK(<a class="code hl_variable" href="classdyno_1_1Camera.html#ad1bd2b1dc4ba2e67537a72dae8533280">camera_impl_</a>);</div>
-<div class="line"><span class="lineno">   38</span>}</div>
+<p class="definition">Definition at line <a class="el" href="Camera_8cc_source.html#l00039">39</a> of file <a class="el" href="Camera_8cc_source.html">Camera.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   40</span>    : <a class="code hl_variable" href="classdyno_1_1Camera.html#aa314751071e993e4d18e7c6f19976f96">camera_params_</a>(camera_params) {</div>
+<div class="line"><span class="lineno">   41</span>  <a class="code hl_variable" href="classdyno_1_1Camera.html#ad1bd2b1dc4ba2e67537a72dae8533280">camera_impl_</a> = std::make_unique&lt;CameraImpl&gt;(</div>
+<div class="line"><span class="lineno">   42</span>      gtsam::Pose3::Identity(),  <span class="comment">// this should be the body pose cam from the</span></div>
+<div class="line"><span class="lineno">   43</span>                                 <span class="comment">// calibration but currently we want everything</span></div>
+<div class="line"><span class="lineno">   44</span>                                 <span class="comment">// in camera frame,</span></div>
+<div class="line"><span class="lineno">   45</span>      <a class="code hl_variable" href="classdyno_1_1Camera.html#aa314751071e993e4d18e7c6f19976f96">camera_params_</a>.<a class="code hl_function" href="classdyno_1_1CameraParams.html#ad3fbc73c9769293edc2839b5405ddb2a">constructGtsamCalibration</a>&lt;<a class="code hl_typedef" href="classdyno_1_1Camera.html#a553a1e3081bb239295adc3edac20fdca">CalibrationType</a>&gt;());</div>
+<div class="line"><span class="lineno">   46</span> </div>
+<div class="line"><span class="lineno">   47</span>  CHECK(<a class="code hl_variable" href="classdyno_1_1Camera.html#ad1bd2b1dc4ba2e67537a72dae8533280">camera_impl_</a>);</div>
+<div class="line"><span class="lineno">   48</span>}</div>
 <div class="ttc" id="aclassdyno_1_1CameraParams_html_ad3fbc73c9769293edc2839b5405ddb2a"><div class="ttname"><a href="classdyno_1_1CameraParams.html#ad3fbc73c9769293edc2839b5405ddb2a">dyno::CameraParams::constructGtsamCalibration</a></div><div class="ttdeci">CALIBRATION constructGtsamCalibration() const</div></div>
-<div class="ttc" id="aclassdyno_1_1Camera_html_a553a1e3081bb239295adc3edac20fdca"><div class="ttname"><a href="classdyno_1_1Camera.html#a553a1e3081bb239295adc3edac20fdca">dyno::Camera::CalibrationType</a></div><div class="ttdeci">gtsam::Cal3_S2 CalibrationType</div><div class="ttdef"><b>Definition:</b> <a href="Camera_8hpp_source.html#l00052">Camera.hpp:52</a></div></div>
-<div class="ttc" id="aclassdyno_1_1Camera_html_aa314751071e993e4d18e7c6f19976f96"><div class="ttname"><a href="classdyno_1_1Camera.html#aa314751071e993e4d18e7c6f19976f96">dyno::Camera::camera_params_</a></div><div class="ttdeci">const CameraParams camera_params_</div><div class="ttdef"><b>Definition:</b> <a href="Camera_8hpp_source.html#l00183">Camera.hpp:183</a></div></div>
-<div class="ttc" id="aclassdyno_1_1Camera_html_ad1bd2b1dc4ba2e67537a72dae8533280"><div class="ttname"><a href="classdyno_1_1Camera.html#ad1bd2b1dc4ba2e67537a72dae8533280">dyno::Camera::camera_impl_</a></div><div class="ttdeci">std::unique_ptr&lt; CameraImpl &gt; camera_impl_</div><div class="ttdef"><b>Definition:</b> <a href="Camera_8hpp_source.html#l00184">Camera.hpp:184</a></div></div>
+<div class="ttc" id="aclassdyno_1_1Camera_html_a553a1e3081bb239295adc3edac20fdca"><div class="ttname"><a href="classdyno_1_1Camera.html#a553a1e3081bb239295adc3edac20fdca">dyno::Camera::CalibrationType</a></div><div class="ttdeci">gtsam::Cal3_S2 CalibrationType</div><div class="ttdef"><b>Definition:</b> <a href="Camera_8hpp_source.html#l00054">Camera.hpp:54</a></div></div>
+<div class="ttc" id="aclassdyno_1_1Camera_html_aa314751071e993e4d18e7c6f19976f96"><div class="ttname"><a href="classdyno_1_1Camera.html#aa314751071e993e4d18e7c6f19976f96">dyno::Camera::camera_params_</a></div><div class="ttdeci">const CameraParams camera_params_</div><div class="ttdef"><b>Definition:</b> <a href="Camera_8hpp_source.html#l00189">Camera.hpp:189</a></div></div>
+<div class="ttc" id="aclassdyno_1_1Camera_html_ad1bd2b1dc4ba2e67537a72dae8533280"><div class="ttname"><a href="classdyno_1_1Camera.html#ad1bd2b1dc4ba2e67537a72dae8533280">dyno::Camera::camera_impl_</a></div><div class="ttdeci">std::unique_ptr&lt; CameraImpl &gt; camera_impl_</div><div class="ttdef"><b>Definition:</b> <a href="Camera_8hpp_source.html#l00190">Camera.hpp:190</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1Camera.html#ad1bd2b1dc4ba2e67537a72dae8533280">camera_impl_</a>, <a class="el" href="classdyno_1_1Camera.html#aa314751071e993e4d18e7c6f19976f96">camera_params_</a>, and <a class="el" href="classdyno_1_1CameraParams.html#ad3fbc73c9769293edc2839b5405ddb2a">dyno::CameraParams::constructGtsamCalibration()</a>.</p>
 <div class="dynheader">
@@ -311,12 +317,12 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="Camera_8cc_source.html#l00077">77</a> of file <a class="el" href="Camera_8cc_source.html">Camera.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   77</span>                                                                                    {</div>
-<div class="line"><span class="lineno">   78</span>    CHECK(lmk);</div>
-<div class="line"><span class="lineno">   79</span>    <a class="code hl_function" href="classdyno_1_1Camera.html#a8a831e03d5899d787453947e7073f1ee">backProject</a>(kp, depth, lmk, gtsam::Pose3::Identity());</div>
-<div class="line"><span class="lineno">   80</span>}</div>
-<div class="ttc" id="aclassdyno_1_1Camera_html_a8a831e03d5899d787453947e7073f1ee"><div class="ttname"><a href="classdyno_1_1Camera.html#a8a831e03d5899d787453947e7073f1ee">dyno::Camera::backProject</a></div><div class="ttdeci">void backProject(const Keypoints &amp;kps, const Depths &amp;depths, Landmarks *lmks) const</div><div class="ttdoc">Back projects a list of keypoints from the image frame and into the camera frame given a depth.</div><div class="ttdef"><b>Definition:</b> <a href="Camera_8cc_source.html#l00066">Camera.cc:66</a></div></div>
+<p class="definition">Definition at line <a class="el" href="Camera_8cc_source.html#l00088">88</a> of file <a class="el" href="Camera_8cc_source.html">Camera.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   89</span>                                              {</div>
+<div class="line"><span class="lineno">   90</span>  CHECK(lmk);</div>
+<div class="line"><span class="lineno">   91</span>  <a class="code hl_function" href="classdyno_1_1Camera.html#a8a831e03d5899d787453947e7073f1ee">backProject</a>(kp, depth, lmk, gtsam::Pose3::Identity());</div>
+<div class="line"><span class="lineno">   92</span>}</div>
+<div class="ttc" id="aclassdyno_1_1Camera_html_a8a831e03d5899d787453947e7073f1ee"><div class="ttname"><a href="classdyno_1_1Camera.html#a8a831e03d5899d787453947e7073f1ee">dyno::Camera::backProject</a></div><div class="ttdeci">void backProject(const Keypoints &amp;kps, const Depths &amp;depths, Landmarks *lmks) const</div><div class="ttdoc">Back projects a list of keypoints from the image frame and into the camera frame given a depth.</div><div class="ttdef"><b>Definition:</b> <a href="Camera_8cc_source.html#l00076">Camera.cc:76</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1Camera.html#a8a831e03d5899d787453947e7073f1ee">backProject()</a>.</p>
 <div class="dynheader">
@@ -369,11 +375,11 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Camera_8cc_source.html#l00083">83</a> of file <a class="el" href="Camera_8cc_source.html">Camera.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   83</span>                                                                                                               {</div>
-<div class="line"><span class="lineno">   84</span>  CHECK(lmk);</div>
-<div class="line"><span class="lineno">   85</span>  *lmk = X_world * <a class="code hl_variable" href="classdyno_1_1Camera.html#ad1bd2b1dc4ba2e67537a72dae8533280">camera_impl_</a>-&gt;backproject(kp, depth);</div>
-<div class="line"><span class="lineno">   86</span>}</div>
+<p class="definition">Definition at line <a class="el" href="Camera_8cc_source.html#l00095">95</a> of file <a class="el" href="Camera_8cc_source.html">Camera.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   96</span>                                                          {</div>
+<div class="line"><span class="lineno">   97</span>  CHECK(lmk);</div>
+<div class="line"><span class="lineno">   98</span>  *lmk = X_world * <a class="code hl_variable" href="classdyno_1_1Camera.html#ad1bd2b1dc4ba2e67537a72dae8533280">camera_impl_</a>-&gt;backproject(kp, depth);</div>
+<div class="line"><span class="lineno">   99</span>}</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1Camera.html#ad1bd2b1dc4ba2e67537a72dae8533280">camera_impl_</a>.</p>
 
@@ -422,19 +428,19 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="Camera_8cc_source.html#l00066">66</a> of file <a class="el" href="Camera_8cc_source.html">Camera.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   66</span>                                                                                          {</div>
-<div class="line"><span class="lineno">   67</span>    CHECK_NOTNULL(lmks)-&gt;clear();</div>
-<div class="line"><span class="lineno">   68</span>  lmks-&gt;reserve(kps.size());</div>
-<div class="line"><span class="lineno">   69</span>  CHECK_EQ(kps.size(), depths.size());</div>
-<div class="line"><span class="lineno">   70</span>  CHECK(<a class="code hl_variable" href="classdyno_1_1Camera.html#ad1bd2b1dc4ba2e67537a72dae8533280">camera_impl_</a>);</div>
-<div class="line"><span class="lineno">   71</span>  <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0u; i &lt; kps.size(); i++) {</div>
-<div class="line"><span class="lineno">   72</span>    <a class="code hl_typedef" href="namespacedyno.html#a6c8dbdcd5e61797d494457220b875761">Landmark</a> lmk;</div>
-<div class="line"><span class="lineno">   73</span>    <a class="code hl_function" href="classdyno_1_1Camera.html#a8a831e03d5899d787453947e7073f1ee">backProject</a>(kps[i], depths[i], &amp;lmk);</div>
-<div class="line"><span class="lineno">   74</span>    lmks-&gt;push_back(lmk);</div>
-<div class="line"><span class="lineno">   75</span>  }</div>
-<div class="line"><span class="lineno">   76</span>}</div>
-<div class="ttc" id="anamespacedyno_html_a6c8dbdcd5e61797d494457220b875761"><div class="ttname"><a href="namespacedyno.html#a6c8dbdcd5e61797d494457220b875761">dyno::Landmark</a></div><div class="ttdeci">gtsam::Point3 Landmark</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00087">Types.hpp:87</a></div></div>
+<p class="definition">Definition at line <a class="el" href="Camera_8cc_source.html#l00076">76</a> of file <a class="el" href="Camera_8cc_source.html">Camera.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   77</span>                                                {</div>
+<div class="line"><span class="lineno">   78</span>  CHECK_NOTNULL(lmks)-&gt;clear();</div>
+<div class="line"><span class="lineno">   79</span>  lmks-&gt;reserve(kps.size());</div>
+<div class="line"><span class="lineno">   80</span>  CHECK_EQ(kps.size(), depths.size());</div>
+<div class="line"><span class="lineno">   81</span>  CHECK(<a class="code hl_variable" href="classdyno_1_1Camera.html#ad1bd2b1dc4ba2e67537a72dae8533280">camera_impl_</a>);</div>
+<div class="line"><span class="lineno">   82</span>  <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0u; i &lt; kps.size(); i++) {</div>
+<div class="line"><span class="lineno">   83</span>    <a class="code hl_typedef" href="namespacedyno.html#a6c8dbdcd5e61797d494457220b875761">Landmark</a> lmk;</div>
+<div class="line"><span class="lineno">   84</span>    <a class="code hl_function" href="classdyno_1_1Camera.html#a8a831e03d5899d787453947e7073f1ee">backProject</a>(kps[i], depths[i], &amp;lmk);</div>
+<div class="line"><span class="lineno">   85</span>    lmks-&gt;push_back(lmk);</div>
+<div class="line"><span class="lineno">   86</span>  }</div>
+<div class="line"><span class="lineno">   87</span>}</div>
+<div class="ttc" id="anamespacedyno_html_a6c8dbdcd5e61797d494457220b875761"><div class="ttname"><a href="namespacedyno.html#a6c8dbdcd5e61797d494457220b875761">dyno::Landmark</a></div><div class="ttdeci">gtsam::Point3 Landmark</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00088">Types.hpp:88</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1Camera.html#a8a831e03d5899d787453947e7073f1ee">backProject()</a>, and <a class="el" href="classdyno_1_1Camera.html#ad1bd2b1dc4ba2e67537a72dae8533280">camera_impl_</a>.</p>
 
@@ -514,62 +520,65 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="Camera_8cc_source.html#l00093">93</a> of file <a class="el" href="Camera_8cc_source.html">Camera.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   93</span>                                                                                                                                                {</div>
-<div class="line"><span class="lineno">   94</span>  CHECK(lmk);</div>
-<div class="line"><span class="lineno">   95</span>  <span class="keyword">const</span> <span class="keyword">auto</span> calibration = <a class="code hl_variable" href="classdyno_1_1Camera.html#ad1bd2b1dc4ba2e67537a72dae8533280">camera_impl_</a>-&gt;calibration();</div>
-<div class="line"><span class="lineno">   96</span>  <span class="comment">//Convert (distorted) image coordinates uv to intrinsic coordinates xy</span></div>
-<div class="line"><span class="lineno">   97</span>  Eigen::Matrix&lt;double, 2, <span class="keyword">decltype</span>(calibration)::dimension&gt; Dcal; <span class="comment">//unused</span></div>
-<div class="line"><span class="lineno">   98</span>  gtsam::Matrix22 Dcal_point;</div>
-<div class="line"><span class="lineno">   99</span>  gtsam::Point2 pc = calibration.calibrate(kp, Dcal, Dcal_point);</div>
-<div class="line"><span class="lineno">  100</span> </div>
-<div class="line"><span class="lineno">  101</span>  <span class="comment">// projection equation x = f(X/Z). The f is used to normalize the image cooridinates and since we already have</span></div>
-<div class="line"><span class="lineno">  102</span>  <span class="comment">// normalized cordinates xy, we can omit the f</span></div>
-<div class="line"><span class="lineno">  103</span>  <span class="keyword">const</span> <span class="keywordtype">double</span> X = pc(0) * Z;</div>
-<div class="line"><span class="lineno">  104</span>  <span class="keyword">const</span> <span class="keywordtype">double</span> Y = pc(1) * Z;</div>
-<div class="line"><span class="lineno">  105</span> </div>
-<div class="line"><span class="lineno">  106</span>  <span class="keyword">const</span> gtsam::Point3 P_camera(X, Y, Z);</div>
-<div class="line"><span class="lineno">  107</span> </div>
-<div class="line"><span class="lineno">  108</span>  <span class="comment">//jacobian of the transforFrom function w.r.t P_camera</span></div>
-<div class="line"><span class="lineno">  109</span>  gtsam::Matrix33 H_point;</div>
-<div class="line"><span class="lineno">  110</span>  *lmk = X_world.transformFrom(P_camera, boost::none, H_point);</div>
-<div class="line"><span class="lineno">  111</span> </div>
-<div class="line"><span class="lineno">  112</span>  <span class="keywordflow">if</span>(Dp) {</div>
-<div class="line"><span class="lineno">  113</span>    <span class="comment">//TODO: test!!!</span></div>
-<div class="line"><span class="lineno">  114</span>    <span class="comment">//cal1 should be top row of Dcal_point which determines how the pc(0) changes with input u, v</span></div>
-<div class="line"><span class="lineno">  115</span>    <span class="keyword">const</span> <span class="keywordtype">double</span> dcal1_du = Dcal_point(0,0);</div>
-<div class="line"><span class="lineno">  116</span>    <span class="keyword">const</span> <span class="keywordtype">double</span> dcal1_dv = Dcal_point(0,1);</div>
-<div class="line"><span class="lineno">  117</span> </div>
-<div class="line"><span class="lineno">  118</span>    <span class="comment">//cal1 should be top row of Dcal_point which determines how the pc(1) changes with input u, v</span></div>
-<div class="line"><span class="lineno">  119</span>    <span class="keyword">const</span> <span class="keywordtype">double</span> dcal2_du = Dcal_point(1, 0);</div>
-<div class="line"><span class="lineno">  120</span>    <span class="keyword">const</span> <span class="keywordtype">double</span> dcal2_dv = Dcal_point(1, 1);</div>
-<div class="line"><span class="lineno">  121</span> </div>
-<div class="line"><span class="lineno">  122</span>    gtsam::Matrix33 J;</div>
-<div class="line"><span class="lineno">  123</span>    <span class="comment">//top row is how X changes with u, v and Z</span></div>
-<div class="line"><span class="lineno">  124</span>    J(0, 0) = dcal1_du * Z;</div>
-<div class="line"><span class="lineno">  125</span>    J(0, 1) = dcal1_dv * Z;</div>
-<div class="line"><span class="lineno">  126</span>    J(0, 2) = pc(0);</div>
-<div class="line"><span class="lineno">  127</span> </div>
-<div class="line"><span class="lineno">  128</span>    <span class="comment">//how Y changes with u, v and Z</span></div>
-<div class="line"><span class="lineno">  129</span>    J(1, 0) = dcal2_du * Z;</div>
-<div class="line"><span class="lineno">  130</span>    J(1, 1) = dcal2_dv * Z;</div>
-<div class="line"><span class="lineno">  131</span>    J(1, 2) = pc(1);</div>
-<div class="line"><span class="lineno">  132</span> </div>
-<div class="line"><span class="lineno">  133</span>    <span class="comment">//how Z changes with Z</span></div>
-<div class="line"><span class="lineno">  134</span>    J(2, 0) = 0;</div>
-<div class="line"><span class="lineno">  135</span>    J(2, 1) = 0;</div>
-<div class="line"><span class="lineno">  136</span>    J(2, 2) = 1;</div>
-<div class="line"><span class="lineno">  137</span> </div>
-<div class="line"><span class="lineno">  138</span>    <span class="comment">//J is computed as the jacobian without the affect of X_world</span></div>
-<div class="line"><span class="lineno">  139</span>    <span class="comment">// f = X_world * C(u, v, Z)</span></div>
-<div class="line"><span class="lineno">  140</span>    <span class="comment">//   = X_world * P_camera</span></div>
-<div class="line"><span class="lineno">  141</span>    <span class="comment">//df/dfuvz = df/dC * dC/duvz</span></div>
-<div class="line"><span class="lineno">  142</span>    <span class="comment">//         = df/dC * J</span></div>
-<div class="line"><span class="lineno">  143</span>    <span class="comment">//since C -&gt; C(u, v, z) = point in R^3, df/dC is the Jacobian of X_world * P_camera -&gt; Rotation component of X_world, or H_point</span></div>
-<div class="line"><span class="lineno">  144</span>    *Dp = H_point * J;</div>
-<div class="line"><span class="lineno">  145</span>  }</div>
+<p class="definition">Definition at line <a class="el" href="Camera_8cc_source.html#l00107">107</a> of file <a class="el" href="Camera_8cc_source.html">Camera.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  109</span>                                                                    {</div>
+<div class="line"><span class="lineno">  110</span>  CHECK(lmk);</div>
+<div class="line"><span class="lineno">  111</span>  <span class="keyword">const</span> <span class="keyword">auto</span> calibration = <a class="code hl_variable" href="classdyno_1_1Camera.html#ad1bd2b1dc4ba2e67537a72dae8533280">camera_impl_</a>-&gt;calibration();</div>
+<div class="line"><span class="lineno">  112</span>  <span class="comment">// Convert (distorted) image coordinates uv to intrinsic coordinates xy</span></div>
+<div class="line"><span class="lineno">  113</span>  Eigen::Matrix&lt;double, 2, <span class="keyword">decltype</span>(calibration)::dimension&gt; Dcal;  <span class="comment">// unused</span></div>
+<div class="line"><span class="lineno">  114</span>  gtsam::Matrix22 Dcal_point;</div>
+<div class="line"><span class="lineno">  115</span>  gtsam::Point2 pc = calibration.calibrate(kp, Dcal, Dcal_point);</div>
+<div class="line"><span class="lineno">  116</span> </div>
+<div class="line"><span class="lineno">  117</span>  <span class="comment">// projection equation x = f(X/Z). The f is used to normalize the image</span></div>
+<div class="line"><span class="lineno">  118</span>  <span class="comment">// cooridinates and since we already have normalized cordinates xy, we can</span></div>
+<div class="line"><span class="lineno">  119</span>  <span class="comment">// omit the f</span></div>
+<div class="line"><span class="lineno">  120</span>  <span class="keyword">const</span> <span class="keywordtype">double</span> X = pc(0) * Z;</div>
+<div class="line"><span class="lineno">  121</span>  <span class="keyword">const</span> <span class="keywordtype">double</span> Y = pc(1) * Z;</div>
+<div class="line"><span class="lineno">  122</span> </div>
+<div class="line"><span class="lineno">  123</span>  <span class="keyword">const</span> gtsam::Point3 P_camera(X, Y, Z);</div>
+<div class="line"><span class="lineno">  124</span> </div>
+<div class="line"><span class="lineno">  125</span>  <span class="comment">// jacobian of the transforFrom function w.r.t P_camera</span></div>
+<div class="line"><span class="lineno">  126</span>  gtsam::Matrix33 H_point;</div>
+<div class="line"><span class="lineno">  127</span>  *lmk = X_world.transformFrom(P_camera, boost::none, H_point);</div>
+<div class="line"><span class="lineno">  128</span> </div>
+<div class="line"><span class="lineno">  129</span>  <span class="keywordflow">if</span> (Dp) {</div>
+<div class="line"><span class="lineno">  130</span>    <span class="comment">// TODO: test!!!</span></div>
+<div class="line"><span class="lineno">  131</span>    <span class="comment">// cal1 should be top row of Dcal_point which determines how the pc(0)</span></div>
+<div class="line"><span class="lineno">  132</span>    <span class="comment">// changes with input u, v</span></div>
+<div class="line"><span class="lineno">  133</span>    <span class="keyword">const</span> <span class="keywordtype">double</span> dcal1_du = Dcal_point(0, 0);</div>
+<div class="line"><span class="lineno">  134</span>    <span class="keyword">const</span> <span class="keywordtype">double</span> dcal1_dv = Dcal_point(0, 1);</div>
+<div class="line"><span class="lineno">  135</span> </div>
+<div class="line"><span class="lineno">  136</span>    <span class="comment">// cal1 should be top row of Dcal_point which determines how the pc(1)</span></div>
+<div class="line"><span class="lineno">  137</span>    <span class="comment">// changes with input u, v</span></div>
+<div class="line"><span class="lineno">  138</span>    <span class="keyword">const</span> <span class="keywordtype">double</span> dcal2_du = Dcal_point(1, 0);</div>
+<div class="line"><span class="lineno">  139</span>    <span class="keyword">const</span> <span class="keywordtype">double</span> dcal2_dv = Dcal_point(1, 1);</div>
+<div class="line"><span class="lineno">  140</span> </div>
+<div class="line"><span class="lineno">  141</span>    gtsam::Matrix33 J;</div>
+<div class="line"><span class="lineno">  142</span>    <span class="comment">// top row is how X changes with u, v and Z</span></div>
+<div class="line"><span class="lineno">  143</span>    J(0, 0) = dcal1_du * Z;</div>
+<div class="line"><span class="lineno">  144</span>    J(0, 1) = dcal1_dv * Z;</div>
+<div class="line"><span class="lineno">  145</span>    J(0, 2) = pc(0);</div>
 <div class="line"><span class="lineno">  146</span> </div>
-<div class="line"><span class="lineno">  147</span>}</div>
+<div class="line"><span class="lineno">  147</span>    <span class="comment">// how Y changes with u, v and Z</span></div>
+<div class="line"><span class="lineno">  148</span>    J(1, 0) = dcal2_du * Z;</div>
+<div class="line"><span class="lineno">  149</span>    J(1, 1) = dcal2_dv * Z;</div>
+<div class="line"><span class="lineno">  150</span>    J(1, 2) = pc(1);</div>
+<div class="line"><span class="lineno">  151</span> </div>
+<div class="line"><span class="lineno">  152</span>    <span class="comment">// how Z changes with Z</span></div>
+<div class="line"><span class="lineno">  153</span>    J(2, 0) = 0;</div>
+<div class="line"><span class="lineno">  154</span>    J(2, 1) = 0;</div>
+<div class="line"><span class="lineno">  155</span>    J(2, 2) = 1;</div>
+<div class="line"><span class="lineno">  156</span> </div>
+<div class="line"><span class="lineno">  157</span>    <span class="comment">// J is computed as the jacobian without the affect of X_world</span></div>
+<div class="line"><span class="lineno">  158</span>    <span class="comment">//  f = X_world * C(u, v, Z)</span></div>
+<div class="line"><span class="lineno">  159</span>    <span class="comment">//    = X_world * P_camera</span></div>
+<div class="line"><span class="lineno">  160</span>    <span class="comment">// df/dfuvz = df/dC * dC/duvz</span></div>
+<div class="line"><span class="lineno">  161</span>    <span class="comment">//          = df/dC * J</span></div>
+<div class="line"><span class="lineno">  162</span>    <span class="comment">// since C -&gt; C(u, v, z) = point in R^3, df/dC is the Jacobian of X_world *</span></div>
+<div class="line"><span class="lineno">  163</span>    <span class="comment">// P_camera -&gt; Rotation component of X_world, or H_point</span></div>
+<div class="line"><span class="lineno">  164</span>    *Dp = H_point * J;</div>
+<div class="line"><span class="lineno">  165</span>  }</div>
+<div class="line"><span class="lineno">  166</span>}</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1Camera.html#ad1bd2b1dc4ba2e67537a72dae8533280">camera_impl_</a>.</p>
 
@@ -633,12 +642,12 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="Camera_8cc_source.html#l00088">88</a> of file <a class="el" href="Camera_8cc_source.html">Camera.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   88</span>                                                                                                                     {</div>
-<div class="line"><span class="lineno">   89</span>  CHECK(lmk);</div>
-<div class="line"><span class="lineno">   90</span>  <a class="code hl_function" href="classdyno_1_1Camera.html#a5cea7a341179d5cd7d9b5aeaba645586">backProjectFromZ</a>(kp, Z, lmk, gtsam::Pose3::Identity(), Dp);</div>
-<div class="line"><span class="lineno">   91</span>}</div>
-<div class="ttc" id="aclassdyno_1_1Camera_html_a5cea7a341179d5cd7d9b5aeaba645586"><div class="ttname"><a href="classdyno_1_1Camera.html#a5cea7a341179d5cd7d9b5aeaba645586">dyno::Camera::backProjectFromZ</a></div><div class="ttdeci">void backProjectFromZ(const Keypoint &amp;kp, const double Z, Landmark *lmk, gtsam::OptionalJacobian&lt; 3, 3 &gt; Dp={}) const</div><div class="ttdoc">Projects a point using a keypoint measurement and a Z measurement, rather than depth.</div><div class="ttdef"><b>Definition:</b> <a href="Camera_8cc_source.html#l00088">Camera.cc:88</a></div></div>
+<p class="definition">Definition at line <a class="el" href="Camera_8cc_source.html#l00101">101</a> of file <a class="el" href="Camera_8cc_source.html">Camera.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  102</span>                                                                    {</div>
+<div class="line"><span class="lineno">  103</span>  CHECK(lmk);</div>
+<div class="line"><span class="lineno">  104</span>  <a class="code hl_function" href="classdyno_1_1Camera.html#a5cea7a341179d5cd7d9b5aeaba645586">backProjectFromZ</a>(kp, Z, lmk, gtsam::Pose3::Identity(), Dp);</div>
+<div class="line"><span class="lineno">  105</span>}</div>
+<div class="ttc" id="aclassdyno_1_1Camera_html_a5cea7a341179d5cd7d9b5aeaba645586"><div class="ttname"><a href="classdyno_1_1Camera.html#a5cea7a341179d5cd7d9b5aeaba645586">dyno::Camera::backProjectFromZ</a></div><div class="ttdeci">void backProjectFromZ(const Keypoint &amp;kp, const double Z, Landmark *lmk, gtsam::OptionalJacobian&lt; 3, 3 &gt; Dp={}) const</div><div class="ttdoc">Projects a point using a keypoint measurement and a Z measurement, rather than depth.</div><div class="ttdef"><b>Definition:</b> <a href="Camera_8cc_source.html#l00101">Camera.cc:101</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1Camera.html#a5cea7a341179d5cd7d9b5aeaba645586">backProjectFromZ()</a>.</p>
 
@@ -686,12 +695,46 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Camera_8cc_source.html#l00150">150</a> of file <a class="el" href="Camera_8cc_source.html">Camera.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  150</span>                                                            {</div>
-<div class="line"><span class="lineno">  151</span>  <span class="comment">//expecting camera convention to be z forward, x, right and y down</span></div>
-<div class="line"><span class="lineno">  152</span>  <span class="keywordflow">return</span> <a class="code hl_typedef" href="namespacedyno.html#a6c8dbdcd5e61797d494457220b875761">Landmark</a>(lmk(2), lmk(0), -lmk(2));</div>
-<div class="line"><span class="lineno">  153</span>}</div>
+<p class="definition">Definition at line <a class="el" href="Camera_8cc_source.html#l00168">168</a> of file <a class="el" href="Camera_8cc_source.html">Camera.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  168</span>                                                            {</div>
+<div class="line"><span class="lineno">  169</span>  <span class="comment">// expecting camera convention to be z forward, x, right and y down</span></div>
+<div class="line"><span class="lineno">  170</span>  <span class="keywordflow">return</span> <a class="code hl_typedef" href="namespacedyno.html#a6c8dbdcd5e61797d494457220b875761">Landmark</a>(lmk(2), lmk(0), -lmk(2));</div>
+<div class="line"><span class="lineno">  171</span>}</div>
 </div><!-- fragment -->
+</div>
+</div>
+<a id="aeb92d5e7da8172ad63ea18b939c54bbc" name="aeb92d5e7da8172ad63ea18b939c54bbc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeb92d5e7da8172ad63ea18b939c54bbc">&#9670;&#160;</a></span>getGtsamCalibration()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Camera::CalibrationType::shared_ptr dyno::Camera::getGtsamCalibration </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Camera_8cc_source.html#l00189">189</a> of file <a class="el" href="Camera_8cc_source.html">Camera.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  189</span>                                                                  {</div>
+<div class="line"><span class="lineno">  190</span>  <span class="keywordflow">return</span> boost::make_shared&lt;CalibrationType&gt;(<a class="code hl_function" href="classdyno_1_1Camera.html#afa242b874c0c1a185adb8d83a35171c8">getImplCamera</a>()-&gt;calibration());</div>
+<div class="line"><span class="lineno">  191</span>}</div>
+<div class="ttc" id="aclassdyno_1_1Camera_html_afa242b874c0c1a185adb8d83a35171c8"><div class="ttname"><a href="classdyno_1_1Camera.html#afa242b874c0c1a185adb8d83a35171c8">dyno::Camera::getImplCamera</a></div><div class="ttdeci">CameraImpl * getImplCamera() const</div><div class="ttdef"><b>Definition:</b> <a href="Camera_8hpp_source.html#l00180">Camera.hpp:180</a></div></div>
+</div><!-- fragment -->
+<p class="reference">References <a class="el" href="classdyno_1_1Camera.html#afa242b874c0c1a185adb8d83a35171c8">getImplCamera()</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classdyno_1_1Camera_aeb92d5e7da8172ad63ea18b939c54bbc_cgraph.png" border="0" usemap="#aclassdyno_1_1Camera_aeb92d5e7da8172ad63ea18b939c54bbc_cgraph" alt=""/></div>
+<map name="aclassdyno_1_1Camera_aeb92d5e7da8172ad63ea18b939c54bbc_cgraph" id="aclassdyno_1_1Camera_aeb92d5e7da8172ad63ea18b939c54bbc_cgraph">
+<area shape="rect" title=" " alt="" coords="5,5,261,31"/>
+<area shape="rect" href="classdyno_1_1Camera.html#afa242b874c0c1a185adb8d83a35171c8" title=" " alt="" coords="309,5,532,31"/>
+</map>
+</div>
+
 </div>
 </div>
 <a id="afa242b874c0c1a185adb8d83a35171c8" name="afa242b874c0c1a185adb8d83a35171c8"></a>
@@ -717,21 +760,20 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Camera_8hpp_source.html#l00178">178</a> of file <a class="el" href="Camera_8hpp_source.html">Camera.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  178</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1Camera.html#ad1bd2b1dc4ba2e67537a72dae8533280">camera_impl_</a>.get(); }</div>
+<p class="definition">Definition at line <a class="el" href="Camera_8hpp_source.html#l00180">180</a> of file <a class="el" href="Camera_8hpp_source.html">Camera.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  180</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1Camera.html#ad1bd2b1dc4ba2e67537a72dae8533280">camera_impl_</a>.get(); }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1Camera.html#ad1bd2b1dc4ba2e67537a72dae8533280">camera_impl_</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="namespacedyno_1_1vision__tools.html#a8cf2c16aa30d7bfa4ea4844abb555716">dyno::vision_tools::backProjectAndCovariance()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="namespacedyno_1_1vision__tools.html#a5c6d086771d8b0ea5b2576d911eeea09">dyno::vision_tools::backProjectAndCovariance()</a>, and <a class="el" href="classdyno_1_1Camera.html#aeb92d5e7da8172ad63ea18b939c54bbc">getGtsamCalibration()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1Camera_afa242b874c0c1a185adb8d83a35171c8_icgraph.png" border="0" usemap="#aclassdyno_1_1Camera_afa242b874c0c1a185adb8d83a35171c8_icgraph" alt=""/></div>
 <map name="aclassdyno_1_1Camera_afa242b874c0c1a185adb8d83a35171c8_icgraph" id="aclassdyno_1_1Camera_afa242b874c0c1a185adb8d83a35171c8_icgraph">
-<area shape="rect" title=" " alt="" coords="777,13,1000,38"/>
-<area shape="rect" href="namespacedyno_1_1vision__tools.html#a8cf2c16aa30d7bfa4ea4844abb555716" title="From a feature with valid depth, backproject to a 3D point in the camera frame with the associated co..." alt="" coords="525,5,729,45"/>
-<area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#a246f701e4605c98dc7cb6bbd6f657998" title=" " alt="" coords="265,5,477,45"/>
-<area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2" title=" " alt="" coords="5,5,217,45"/>
+<area shape="rect" title=" " alt="" coords="309,42,532,67"/>
+<area shape="rect" href="namespacedyno_1_1vision__tools.html#a5c6d086771d8b0ea5b2576d911eeea09" title="From a feature with valid depth, backproject to a 3D point in the camera frame with the associated co..." alt="" coords="31,5,235,45"/>
+<area shape="rect" href="classdyno_1_1Camera.html#aeb92d5e7da8172ad63ea18b939c54bbc" title=" " alt="" coords="5,70,261,95"/>
 </map>
 </div>
 
@@ -760,23 +802,60 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Camera_8hpp_source.html#l00180">180</a> of file <a class="el" href="Camera_8hpp_source.html">Camera.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  180</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1Camera.html#aa314751071e993e4d18e7c6f19976f96">camera_params_</a>; }</div>
+<p class="definition">Definition at line <a class="el" href="Camera_8hpp_source.html#l00183">183</a> of file <a class="el" href="Camera_8hpp_source.html">Camera.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  183</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1Camera.html#aa314751071e993e4d18e7c6f19976f96">camera_params_</a>; }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1Camera.html#aa314751071e993e4d18e7c6f19976f96">camera_params_</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1RGBDCamera.html#ae1e3ae993c328df6c0e4fe5687483f16">dyno::RGBDCamera::getFakeStereoCalib()</a>, <a class="el" href="classdyno_1_1RGBDCamera.html#a46946b835a2e627714f16a9195eb6d29">dyno::RGBDCamera::projectRight()</a>, and <a class="el" href="namespacedyno_1_1vision__tools.html#a5d8b89d2b560b498934853c77a7d9f28">dyno::vision_tools::writeOutProjectMaskAndDepthMap()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="namespacedyno_1_1vision__tools.html#a5c6d086771d8b0ea5b2576d911eeea09">dyno::vision_tools::backProjectAndCovariance()</a>, <a class="el" href="classdyno_1_1RGBDCamera.html#aa439cd20cc600b867117d80e6e41e57c">dyno::RGBDCamera::baseline()</a>, <a class="el" href="classdyno_1_1RGBDCamera.html#ae1e3ae993c328df6c0e4fe5687483f16">dyno::RGBDCamera::getFakeStereoCalib()</a>, <a class="el" href="classdyno_1_1Camera.html#a719e3e3279371f2d6ee97d846b8b3eb9">getRGBDCamera()</a>, <a class="el" href="classdyno_1_1RGBDCamera.html#a46946b835a2e627714f16a9195eb6d29">dyno::RGBDCamera::projectRight()</a>, <a class="el" href="classdyno_1_1Camera.html#aeed52b4791ce567afd89277cc0cb8e26">safeGetRGBDCamera()</a>, and <a class="el" href="namespacedyno_1_1vision__tools.html#a5d8b89d2b560b498934853c77a7d9f28">dyno::vision_tools::writeOutProjectMaskAndDepthMap()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1Camera_af56ce3541d3ef8a7bcb2246e4634ca59_icgraph.png" border="0" usemap="#aclassdyno_1_1Camera_af56ce3541d3ef8a7bcb2246e4634ca59_icgraph" alt=""/></div>
 <map name="aclassdyno_1_1Camera_af56ce3541d3ef8a7bcb2246e4634ca59_icgraph" id="aclassdyno_1_1Camera_af56ce3541d3ef8a7bcb2246e4634ca59_icgraph">
-<area shape="rect" title=" " alt="" coords="572,77,763,102"/>
-<area shape="rect" href="classdyno_1_1RGBDCamera.html#ae1e3ae993c328df6c0e4fe5687483f16" title="Get gtsam::Cal3_S2Stereo from rgbd camera and virtual baseline." alt="" coords="290,5,499,45"/>
-<area shape="rect" href="classdyno_1_1RGBDCamera.html#a46946b835a2e627714f16a9195eb6d29" title="Projects a feature with valid depth and a left keypoint (uL) into the right keypoint (uR) of the feat..." alt="" coords="293,69,497,109"/>
-<area shape="rect" href="namespacedyno_1_1vision__tools.html#a5d8b89d2b560b498934853c77a7d9f28" title="Saves a re&#45;projected 3D point cloud with labelled points to file as a cv::Mat." alt="" coords="265,133,524,173"/>
-<area shape="rect" href="classdyno_1_1RGBDCamera.html#a76250e0244602304395e8963772c7bae" title=" " alt="" coords="7,5,216,45"/>
-<area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2" title=" " alt="" coords="5,133,217,173"/>
+<area shape="rect" title=" " alt="" coords="829,171,1020,197"/>
+<area shape="rect" href="namespacedyno_1_1vision__tools.html#a5c6d086771d8b0ea5b2576d911eeea09" title="From a feature with valid depth, backproject to a 3D point in the camera frame with the associated co..." alt="" coords="549,5,753,45"/>
+<area shape="rect" href="classdyno_1_1RGBDCamera.html#aa439cd20cc600b867117d80e6e41e57c" title=" " alt="" coords="543,70,758,95"/>
+<area shape="rect" href="classdyno_1_1RGBDCamera.html#ae1e3ae993c328df6c0e4fe5687483f16" title="Get gtsam::Cal3_S2Stereo from rgbd camera and virtual baseline." alt="" coords="263,88,472,128"/>
+<area shape="rect" href="classdyno_1_1Camera.html#a719e3e3279371f2d6ee97d846b8b3eb9" title=" " alt="" coords="535,171,766,197"/>
+<area shape="rect" href="classdyno_1_1RGBDCamera.html#a46946b835a2e627714f16a9195eb6d29" title="Projects a feature with valid depth and a left keypoint (uL) into the right keypoint (uR) of the feat..." alt="" coords="549,221,753,261"/>
+<area shape="rect" href="classdyno_1_1Camera.html#aeed52b4791ce567afd89277cc0cb8e26" title=" " alt="" coords="520,286,781,311"/>
+<area shape="rect" href="namespacedyno_1_1vision__tools.html#a5d8b89d2b560b498934853c77a7d9f28" title="Saves a re&#45;projected 3D point cloud with labelled points to file as a cv::Mat." alt="" coords="521,336,780,376"/>
+<area shape="rect" href="classdyno_1_1RGBDCamera.html#a76250e0244602304395e8963772c7bae" title=" " alt="" coords="5,88,215,128"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a719e3e3279371f2d6ee97d846b8b3eb9" name="a719e3e3279371f2d6ee97d846b8b3eb9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a719e3e3279371f2d6ee97d846b8b3eb9">&#9670;&#160;</a></span>getRGBDCamera()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classdyno_1_1RGBDCamera.html">RGBDCamera</a> dyno::Camera::getRGBDCamera </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Camera_8cc_source.html#l00193">193</a> of file <a class="el" href="Camera_8cc_source.html">Camera.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  193</span>                                       {</div>
+<div class="line"><span class="lineno">  194</span>  <span class="keywordflow">return</span> RGBDCamera(this-&gt;<a class="code hl_function" href="classdyno_1_1Camera.html#af56ce3541d3ef8a7bcb2246e4634ca59">getParams</a>());</div>
+<div class="line"><span class="lineno">  195</span>}</div>
+<div class="ttc" id="aclassdyno_1_1Camera_html_af56ce3541d3ef8a7bcb2246e4634ca59"><div class="ttname"><a href="classdyno_1_1Camera.html#af56ce3541d3ef8a7bcb2246e4634ca59">dyno::Camera::getParams</a></div><div class="ttdeci">const CameraParams &amp; getParams() const</div><div class="ttdef"><b>Definition:</b> <a href="Camera_8hpp_source.html#l00183">Camera.hpp:183</a></div></div>
+</div><!-- fragment -->
+<p class="reference">References <a class="el" href="classdyno_1_1Camera.html#af56ce3541d3ef8a7bcb2246e4634ca59">getParams()</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classdyno_1_1Camera_a719e3e3279371f2d6ee97d846b8b3eb9_cgraph.png" border="0" usemap="#aclassdyno_1_1Camera_a719e3e3279371f2d6ee97d846b8b3eb9_cgraph" alt=""/></div>
+<map name="aclassdyno_1_1Camera_a719e3e3279371f2d6ee97d846b8b3eb9_cgraph" id="aclassdyno_1_1Camera_a719e3e3279371f2d6ee97d846b8b3eb9_cgraph">
+<area shape="rect" title=" " alt="" coords="5,5,236,31"/>
+<area shape="rect" href="classdyno_1_1Camera.html#af56ce3541d3ef8a7bcb2246e4634ca59" title=" " alt="" coords="284,5,475,31"/>
 </map>
 </div>
 
@@ -798,13 +877,13 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Camera_8cc_source.html#l00061">61</a> of file <a class="el" href="Camera_8cc_source.html">Camera.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   61</span>                                                          {</div>
-<div class="line"><span class="lineno">   62</span>    <span class="keywordflow">return</span> kpt(0) &gt;= 0.0 &amp;&amp; kpt(0) &lt; <a class="code hl_variable" href="classdyno_1_1Camera.html#aa314751071e993e4d18e7c6f19976f96">camera_params_</a>.<a class="code hl_function" href="classdyno_1_1CameraParams.html#ae09360028f240f884ad9fcb72e4f4cf1">ImageWidth</a>() &amp;&amp;</div>
-<div class="line"><span class="lineno">   63</span>           kpt(1) &gt;= 0.0 &amp;&amp; kpt(1) &lt; <a class="code hl_variable" href="classdyno_1_1Camera.html#aa314751071e993e4d18e7c6f19976f96">camera_params_</a>.<a class="code hl_function" href="classdyno_1_1CameraParams.html#a75e96fd0df57691134425ac9b9d55f09">ImageHeight</a>();</div>
-<div class="line"><span class="lineno">   64</span>}</div>
-<div class="ttc" id="aclassdyno_1_1CameraParams_html_a75e96fd0df57691134425ac9b9d55f09"><div class="ttname"><a href="classdyno_1_1CameraParams.html#a75e96fd0df57691134425ac9b9d55f09">dyno::CameraParams::ImageHeight</a></div><div class="ttdeci">int ImageHeight() const</div><div class="ttdef"><b>Definition:</b> <a href="CameraParams_8hpp_source.html#l00106">CameraParams.hpp:106</a></div></div>
-<div class="ttc" id="aclassdyno_1_1CameraParams_html_ae09360028f240f884ad9fcb72e4f4cf1"><div class="ttname"><a href="classdyno_1_1CameraParams.html#ae09360028f240f884ad9fcb72e4f4cf1">dyno::CameraParams::ImageWidth</a></div><div class="ttdeci">int ImageWidth() const</div><div class="ttdef"><b>Definition:</b> <a href="CameraParams_8hpp_source.html#l00105">CameraParams.hpp:105</a></div></div>
+<p class="definition">Definition at line <a class="el" href="Camera_8cc_source.html#l00071">71</a> of file <a class="el" href="Camera_8cc_source.html">Camera.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   71</span>                                                          {</div>
+<div class="line"><span class="lineno">   72</span>  <span class="keywordflow">return</span> kpt(0) &gt;= 0.0 &amp;&amp; kpt(0) &lt; <a class="code hl_variable" href="classdyno_1_1Camera.html#aa314751071e993e4d18e7c6f19976f96">camera_params_</a>.<a class="code hl_function" href="classdyno_1_1CameraParams.html#ae09360028f240f884ad9fcb72e4f4cf1">ImageWidth</a>() &amp;&amp;</div>
+<div class="line"><span class="lineno">   73</span>         kpt(1) &gt;= 0.0 &amp;&amp; kpt(1) &lt; <a class="code hl_variable" href="classdyno_1_1Camera.html#aa314751071e993e4d18e7c6f19976f96">camera_params_</a>.<a class="code hl_function" href="classdyno_1_1CameraParams.html#a75e96fd0df57691134425ac9b9d55f09">ImageHeight</a>();</div>
+<div class="line"><span class="lineno">   74</span>}</div>
+<div class="ttc" id="aclassdyno_1_1CameraParams_html_a75e96fd0df57691134425ac9b9d55f09"><div class="ttname"><a href="classdyno_1_1CameraParams.html#a75e96fd0df57691134425ac9b9d55f09">dyno::CameraParams::ImageHeight</a></div><div class="ttdeci">int ImageHeight() const</div><div class="ttdef"><b>Definition:</b> <a href="CameraParams_8hpp_source.html#l00137">CameraParams.hpp:137</a></div></div>
+<div class="ttc" id="aclassdyno_1_1CameraParams_html_ae09360028f240f884ad9fcb72e4f4cf1"><div class="ttname"><a href="classdyno_1_1CameraParams.html#ae09360028f240f884ad9fcb72e4f4cf1">dyno::CameraParams::ImageWidth</a></div><div class="ttdeci">int ImageWidth() const</div><div class="ttdef"><b>Definition:</b> <a href="CameraParams_8hpp_source.html#l00136">CameraParams.hpp:136</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1Camera.html#aa314751071e993e4d18e7c6f19976f96">camera_params_</a>, <a class="el" href="classdyno_1_1CameraParams.html#a75e96fd0df57691134425ac9b9d55f09">dyno::CameraParams::ImageHeight()</a>, and <a class="el" href="classdyno_1_1CameraParams.html#ae09360028f240f884ad9fcb72e4f4cf1">dyno::CameraParams::ImageWidth()</a>.</p>
 <div class="dynheader">
@@ -859,11 +938,11 @@ Here is the call graph for this function:</div>
 <dd>
 false </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Camera_8cc_source.html#l00057">57</a> of file <a class="el" href="Camera_8cc_source.html">Camera.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   57</span>                                                                       {</div>
-<div class="line"><span class="lineno">   58</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="classdyno_1_1Camera.html#a1b0a5c4c80d414218df4c5af0bf360c4">isKeypointContained</a>(kpt) &amp;&amp; depth &gt; 0.0;</div>
-<div class="line"><span class="lineno">   59</span>}</div>
-<div class="ttc" id="aclassdyno_1_1Camera_html_a1b0a5c4c80d414218df4c5af0bf360c4"><div class="ttname"><a href="classdyno_1_1Camera.html#a1b0a5c4c80d414218df4c5af0bf360c4">dyno::Camera::isKeypointContained</a></div><div class="ttdeci">bool isKeypointContained(const Keypoint &amp;kpt, Depth depth) const</div><div class="ttdoc">Checks if a given keypoint is inside the image AND in front the camera (ie. depth &gt; 0).</div><div class="ttdef"><b>Definition:</b> <a href="Camera_8cc_source.html#l00057">Camera.cc:57</a></div></div>
+<p class="definition">Definition at line <a class="el" href="Camera_8cc_source.html#l00067">67</a> of file <a class="el" href="Camera_8cc_source.html">Camera.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   67</span>                                                                       {</div>
+<div class="line"><span class="lineno">   68</span>  <span class="keywordflow">return</span> <a class="code hl_function" href="classdyno_1_1Camera.html#a1b0a5c4c80d414218df4c5af0bf360c4">isKeypointContained</a>(kpt) &amp;&amp; depth &gt; 0.0;</div>
+<div class="line"><span class="lineno">   69</span>}</div>
+<div class="ttc" id="aclassdyno_1_1Camera_html_a1b0a5c4c80d414218df4c5af0bf360c4"><div class="ttname"><a href="classdyno_1_1Camera.html#a1b0a5c4c80d414218df4c5af0bf360c4">dyno::Camera::isKeypointContained</a></div><div class="ttdeci">bool isKeypointContained(const Keypoint &amp;kpt, Depth depth) const</div><div class="ttdoc">Checks if a given keypoint is inside the image AND in front the camera (ie. depth &gt; 0).</div><div class="ttdef"><b>Definition:</b> <a href="Camera_8cc_source.html#l00067">Camera.cc:67</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1Camera.html#a1b0a5c4c80d414218df4c5af0bf360c4">isKeypointContained()</a>.</p>
 
@@ -927,24 +1006,23 @@ Here is the caller graph for this function:</div>
 <dd>
 false </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Camera_8cc_source.html#l00155">155</a> of file <a class="el" href="Camera_8cc_source.html">Camera.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  155</span>                                                                              {</div>
-<div class="line"><span class="lineno">  156</span>    <a class="code hl_typedef" href="namespacedyno.html#aaa260a8022691078c59e1ac6a4fa05b5">Keypoint</a> kp;</div>
-<div class="line"><span class="lineno">  157</span> </div>
-<div class="line"><span class="lineno">  158</span>    <span class="keywordflow">try</span> {</div>
-<div class="line"><span class="lineno">  159</span>      <a class="code hl_function" href="classdyno_1_1Camera.html#a4b65a9e00aef7b4f7e2d58753d8d43b7">project</a>(lmk, &amp;kp);</div>
-<div class="line"><span class="lineno">  160</span>    }</div>
-<div class="line"><span class="lineno">  161</span>    <span class="keywordflow">catch</span>(<span class="keyword">const</span> gtsam::CheiralityException&amp;) {</div>
-<div class="line"><span class="lineno">  162</span>      <span class="comment">//if CheiralityException then point is behind camera</span></div>
-<div class="line"><span class="lineno">  163</span>      <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">  164</span>    }</div>
-<div class="line"><span class="lineno">  165</span> </div>
-<div class="line"><span class="lineno">  166</span>    <span class="keyword">const</span> <span class="keywordtype">bool</span> result = <a class="code hl_function" href="classdyno_1_1Camera.html#a1b0a5c4c80d414218df4c5af0bf360c4">isKeypointContained</a>(kp);</div>
-<div class="line"><span class="lineno">  167</span>    <span class="keywordflow">if</span>(keypoint) *keypoint = kp;</div>
-<div class="line"><span class="lineno">  168</span>    <span class="keywordflow">return</span> result;</div>
-<div class="line"><span class="lineno">  169</span>}</div>
-<div class="ttc" id="aclassdyno_1_1Camera_html_a4b65a9e00aef7b4f7e2d58753d8d43b7"><div class="ttname"><a href="classdyno_1_1Camera.html#a4b65a9e00aef7b4f7e2d58753d8d43b7">dyno::Camera::project</a></div><div class="ttdeci">void project(const Landmark &amp;lmk, Keypoint *kpt) const</div><div class="ttdoc">Projects a 3D point in the camera frame into the image frame as a keypoint. Doesnt do any checks if t...</div><div class="ttdef"><b>Definition:</b> <a href="Camera_8cc_source.html#l00040">Camera.cc:40</a></div></div>
-<div class="ttc" id="anamespacedyno_html_aaa260a8022691078c59e1ac6a4fa05b5"><div class="ttname"><a href="namespacedyno.html#aaa260a8022691078c59e1ac6a4fa05b5">dyno::Keypoint</a></div><div class="ttdeci">gtsam::Point2 Keypoint</div><div class="ttdoc">Observed optical flow vector (ordered x, y)</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00095">Types.hpp:95</a></div></div>
+<p class="definition">Definition at line <a class="el" href="Camera_8cc_source.html#l00173">173</a> of file <a class="el" href="Camera_8cc_source.html">Camera.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  174</span>                                                           {</div>
+<div class="line"><span class="lineno">  175</span>  <a class="code hl_typedef" href="namespacedyno.html#aaa260a8022691078c59e1ac6a4fa05b5">Keypoint</a> kp;</div>
+<div class="line"><span class="lineno">  176</span> </div>
+<div class="line"><span class="lineno">  177</span>  <span class="keywordflow">try</span> {</div>
+<div class="line"><span class="lineno">  178</span>    <a class="code hl_function" href="classdyno_1_1Camera.html#a4b65a9e00aef7b4f7e2d58753d8d43b7">project</a>(lmk, &amp;kp);</div>
+<div class="line"><span class="lineno">  179</span>  } <span class="keywordflow">catch</span> (<span class="keyword">const</span> gtsam::CheiralityException&amp;) {</div>
+<div class="line"><span class="lineno">  180</span>    <span class="comment">// if CheiralityException then point is behind camera</span></div>
+<div class="line"><span class="lineno">  181</span>    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">  182</span>  }</div>
+<div class="line"><span class="lineno">  183</span> </div>
+<div class="line"><span class="lineno">  184</span>  <span class="keyword">const</span> <span class="keywordtype">bool</span> result = <a class="code hl_function" href="classdyno_1_1Camera.html#a1b0a5c4c80d414218df4c5af0bf360c4">isKeypointContained</a>(kp);</div>
+<div class="line"><span class="lineno">  185</span>  <span class="keywordflow">if</span> (keypoint) *keypoint = kp;</div>
+<div class="line"><span class="lineno">  186</span>  <span class="keywordflow">return</span> result;</div>
+<div class="line"><span class="lineno">  187</span>}</div>
+<div class="ttc" id="aclassdyno_1_1Camera_html_a4b65a9e00aef7b4f7e2d58753d8d43b7"><div class="ttname"><a href="classdyno_1_1Camera.html#a4b65a9e00aef7b4f7e2d58753d8d43b7">dyno::Camera::project</a></div><div class="ttdeci">void project(const Landmark &amp;lmk, Keypoint *kpt) const</div><div class="ttdoc">Projects a 3D point in the camera frame into the image frame as a keypoint. Doesnt do any checks if t...</div><div class="ttdef"><b>Definition:</b> <a href="Camera_8cc_source.html#l00050">Camera.cc:50</a></div></div>
+<div class="ttc" id="anamespacedyno_html_aaa260a8022691078c59e1ac6a4fa05b5"><div class="ttname"><a href="namespacedyno.html#aaa260a8022691078c59e1ac6a4fa05b5">dyno::Keypoint</a></div><div class="ttdeci">gtsam::Point2 Keypoint</div><div class="ttdoc">Observed optical flow vector (ordered x, y)</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00096">Types.hpp:96</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1Camera.html#a1b0a5c4c80d414218df4c5af0bf360c4">isKeypointContained()</a>, and <a class="el" href="classdyno_1_1Camera.html#a4b65a9e00aef7b4f7e2d58753d8d43b7">project()</a>.</p>
 <div class="dynheader">
@@ -995,13 +1073,13 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="Camera_8cc_source.html#l00040">40</a> of file <a class="el" href="Camera_8cc_source.html">Camera.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   40</span>                                                             {</div>
-<div class="line"><span class="lineno">   41</span>  CHECK_NOTNULL(kpt);</div>
-<div class="line"><span class="lineno">   42</span>  <span class="comment">// I believe this project call in gtsam is quite inefficient as it goes</span></div>
-<div class="line"><span class="lineno">   43</span>  <span class="comment">// through a cascade of calls... Only useful if you want gradients I guess...</span></div>
-<div class="line"><span class="lineno">   44</span>  *kpt = <a class="code hl_variable" href="classdyno_1_1Camera.html#ad1bd2b1dc4ba2e67537a72dae8533280">camera_impl_</a>-&gt;project2(lmk);</div>
-<div class="line"><span class="lineno">   45</span>}</div>
+<p class="definition">Definition at line <a class="el" href="Camera_8cc_source.html#l00050">50</a> of file <a class="el" href="Camera_8cc_source.html">Camera.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   50</span>                                                             {</div>
+<div class="line"><span class="lineno">   51</span>  CHECK_NOTNULL(kpt);</div>
+<div class="line"><span class="lineno">   52</span>  <span class="comment">// I believe this project call in gtsam is quite inefficient as it goes</span></div>
+<div class="line"><span class="lineno">   53</span>  <span class="comment">// through a cascade of calls... Only useful if you want gradients I guess...</span></div>
+<div class="line"><span class="lineno">   54</span>  *kpt = <a class="code hl_variable" href="classdyno_1_1Camera.html#ad1bd2b1dc4ba2e67537a72dae8533280">camera_impl_</a>-&gt;project2(lmk);</div>
+<div class="line"><span class="lineno">   55</span>}</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1Camera.html#ad1bd2b1dc4ba2e67537a72dae8533280">camera_impl_</a>.</p>
 
@@ -1054,16 +1132,16 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="Camera_8cc_source.html#l00047">47</a> of file <a class="el" href="Camera_8cc_source.html">Camera.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   47</span>                                                                 {</div>
-<div class="line"><span class="lineno">   48</span>  CHECK_NOTNULL(kpts)-&gt;clear();</div>
-<div class="line"><span class="lineno">   49</span>  <span class="keyword">const</span> <span class="keyword">auto</span>&amp; n_lmks = lmks.size();</div>
-<div class="line"><span class="lineno">   50</span>  kpts-&gt;resize(n_lmks);</div>
-<div class="line"><span class="lineno">   51</span>  <span class="comment">// Can be greatly optimized with matrix mult or vectorization</span></div>
-<div class="line"><span class="lineno">   52</span>  <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0u; i &lt; n_lmks; i++) {</div>
-<div class="line"><span class="lineno">   53</span>    <a class="code hl_function" href="classdyno_1_1Camera.html#a4b65a9e00aef7b4f7e2d58753d8d43b7">project</a>(lmks[i], &amp;(*kpts)[i]);</div>
-<div class="line"><span class="lineno">   54</span>  }</div>
-<div class="line"><span class="lineno">   55</span>}</div>
+<p class="definition">Definition at line <a class="el" href="Camera_8cc_source.html#l00057">57</a> of file <a class="el" href="Camera_8cc_source.html">Camera.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   57</span>                                                                 {</div>
+<div class="line"><span class="lineno">   58</span>  CHECK_NOTNULL(kpts)-&gt;clear();</div>
+<div class="line"><span class="lineno">   59</span>  <span class="keyword">const</span> <span class="keyword">auto</span>&amp; n_lmks = lmks.size();</div>
+<div class="line"><span class="lineno">   60</span>  kpts-&gt;resize(n_lmks);</div>
+<div class="line"><span class="lineno">   61</span>  <span class="comment">// Can be greatly optimized with matrix mult or vectorization</span></div>
+<div class="line"><span class="lineno">   62</span>  <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0u; i &lt; n_lmks; i++) {</div>
+<div class="line"><span class="lineno">   63</span>    <a class="code hl_function" href="classdyno_1_1Camera.html#a4b65a9e00aef7b4f7e2d58753d8d43b7">project</a>(lmks[i], &amp;(*kpts)[i]);</div>
+<div class="line"><span class="lineno">   64</span>  }</div>
+<div class="line"><span class="lineno">   65</span>}</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1Camera.html#a4b65a9e00aef7b4f7e2d58753d8d43b7">project()</a>.</p>
 <div class="dynheader">
@@ -1073,6 +1151,44 @@ Here is the call graph for this function:</div>
 <map name="aclassdyno_1_1Camera_aa0eaa3238ce0a0d0fb6dc4e150bc04fc_cgraph" id="aclassdyno_1_1Camera_aa0eaa3238ce0a0d0fb6dc4e150bc04fc_cgraph">
 <area shape="rect" title="Projects a list 3D points in the camera frame into the image frame. Doesnt do any checks if the keypo..." alt="" coords="5,5,172,31"/>
 <area shape="rect" href="classdyno_1_1Camera.html#a4b65a9e00aef7b4f7e2d58753d8d43b7" title="Projects a 3D point in the camera frame into the image frame as a keypoint. Doesnt do any checks if t..." alt="" coords="220,5,387,31"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="aeed52b4791ce567afd89277cc0cb8e26" name="aeed52b4791ce567afd89277cc0cb8e26"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeed52b4791ce567afd89277cc0cb8e26">&#9670;&#160;</a></span>safeGetRGBDCamera()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt; <a class="el" href="classdyno_1_1RGBDCamera.html">RGBDCamera</a> &gt; dyno::Camera::safeGetRGBDCamera </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Camera_8cc_source.html#l00196">196</a> of file <a class="el" href="Camera_8cc_source.html">Camera.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  196</span>                                                          {</div>
+<div class="line"><span class="lineno">  197</span>  <span class="keywordflow">try</span> {</div>
+<div class="line"><span class="lineno">  198</span>    <span class="keywordflow">return</span> std::make_shared&lt;RGBDCamera&gt;(this-&gt;<a class="code hl_function" href="classdyno_1_1Camera.html#af56ce3541d3ef8a7bcb2246e4634ca59">getParams</a>());</div>
+<div class="line"><span class="lineno">  199</span>  } <span class="keywordflow">catch</span> (<span class="keyword">const</span> InvalidRGBDCameraParams&amp; e) {</div>
+<div class="line"><span class="lineno">  200</span>    VLOG(10) &lt;&lt; <span class="stringliteral">&quot;Cannot get RGBD Camera: &quot;</span> &lt;&lt; e.what();</div>
+<div class="line"><span class="lineno">  201</span>    <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
+<div class="line"><span class="lineno">  202</span>  }</div>
+<div class="line"><span class="lineno">  203</span>}</div>
+</div><!-- fragment -->
+<p class="reference">References <a class="el" href="classdyno_1_1Camera.html#af56ce3541d3ef8a7bcb2246e4634ca59">getParams()</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classdyno_1_1Camera_aeed52b4791ce567afd89277cc0cb8e26_cgraph.png" border="0" usemap="#aclassdyno_1_1Camera_aeed52b4791ce567afd89277cc0cb8e26_cgraph" alt=""/></div>
+<map name="aclassdyno_1_1Camera_aeed52b4791ce567afd89277cc0cb8e26_cgraph" id="aclassdyno_1_1Camera_aeed52b4791ce567afd89277cc0cb8e26_cgraph">
+<area shape="rect" title=" " alt="" coords="5,5,267,31"/>
+<area shape="rect" href="classdyno_1_1Camera.html#af56ce3541d3ef8a7bcb2246e4634ca59" title=" " alt="" coords="315,5,505,31"/>
 </map>
 </div>
 
@@ -1099,7 +1215,7 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Camera_8hpp_source.html#l00184">184</a> of file <a class="el" href="Camera_8hpp_source.html">Camera.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Camera_8hpp_source.html#l00190">190</a> of file <a class="el" href="Camera_8hpp_source.html">Camera.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1Camera.html#a8a831e03d5899d787453947e7073f1ee">backProject()</a>, <a class="el" href="classdyno_1_1Camera.html#a29c9a3d8dcf0e6c194ffdae9df9f1979">backProjectFromZ()</a>, <a class="el" href="classdyno_1_1Camera.html#a14ca13ab60989ac4322fddb38beaefa8">Camera()</a>, <a class="el" href="classdyno_1_1Camera.html#afa242b874c0c1a185adb8d83a35171c8">getImplCamera()</a>, and <a class="el" href="classdyno_1_1Camera.html#a4b65a9e00aef7b4f7e2d58753d8d43b7">project()</a>.</p>
 
@@ -1125,15 +1241,15 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Camera_8hpp_source.html#l00183">183</a> of file <a class="el" href="Camera_8hpp_source.html">Camera.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Camera_8hpp_source.html#l00189">189</a> of file <a class="el" href="Camera_8hpp_source.html">Camera.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1Camera.html#a14ca13ab60989ac4322fddb38beaefa8">Camera()</a>, <a class="el" href="classdyno_1_1Camera.html#af56ce3541d3ef8a7bcb2246e4634ca59">getParams()</a>, and <a class="el" href="classdyno_1_1Camera.html#a845f22af984678dddeed501bcdb26e51">isKeypointContained()</a>.</p>
 
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>dynosam/include/dynosam/common/<a class="el" href="Camera_8hpp_source.html">Camera.hpp</a></li>
-<li>dynosam/src/common/<a class="el" href="Camera_8cc_source.html">Camera.cc</a></li>
+<li>dynosam_cv/include/dynosam_cv/<a class="el" href="Camera_8hpp_source.html">Camera.hpp</a></li>
+<li>dynosam_cv/src/<a class="el" href="Camera_8cc_source.html">Camera.cc</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

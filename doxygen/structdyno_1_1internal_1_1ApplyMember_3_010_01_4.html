@@ -91,7 +91,7 @@ Static Public Member Functions</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="Tuple_8hpp_source.html#l00133">133</a> of file <a class="el" href="Tuple_8hpp_source.html">Tuple.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Tuple_8hpp_source.html#l00130">130</a> of file <a class="el" href="Tuple_8hpp_source.html">Tuple.hpp</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="adcbbec5c887f9b4a0713ac863cd74825" name="adcbbec5c887f9b4a0713ac863cd74825"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#adcbbec5c887f9b4a0713ac863cd74825">&#9670;&#160;</a></span>apply()</h2>
@@ -131,8 +131,7 @@ template&lt;typename C , typename F , typename T , typename... A&gt; </div>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td> -&gt; decltype((forward&lt;C&gt;(c)-&gt;*forward&lt;F&gt;(f))(forward&lt;A&gt;(a)...))
-  </td>
+          <td></td><td> -&gt; decltype((forward&lt;C&gt;(c)-&gt;*forward&lt;F&gt;(f))(forward&lt;A&gt;(a)...)) </td>
         </tr>
       </table>
   </td>
@@ -142,15 +141,15 @@ template&lt;typename C , typename F , typename T , typename... A&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Tuple_8hpp_source.html#l00136">136</a> of file <a class="el" href="Tuple_8hpp_source.html">Tuple.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  137</span>  {</div>
-<div class="line"><span class="lineno">  138</span>    <span class="keywordflow">return</span> (forward&lt;C&gt;(c)-&gt;*forward&lt;F&gt;(f))(forward&lt;A&gt;(a)...);</div>
-<div class="line"><span class="lineno">  139</span>  }</div>
+<p class="definition">Definition at line <a class="el" href="Tuple_8hpp_source.html#l00132">132</a> of file <a class="el" href="Tuple_8hpp_source.html">Tuple.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  133</span>                                                                     {</div>
+<div class="line"><span class="lineno">  134</span>    <span class="keywordflow">return</span> (forward&lt;C&gt;(c)-&gt;*forward&lt;F&gt;(f))(forward&lt;A&gt;(a)...);</div>
+<div class="line"><span class="lineno">  135</span>  }</div>
 </div><!-- fragment -->
 </div>
 </div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
-<li>dynosam/include/dynosam/utils/<a class="el" href="Tuple_8hpp_source.html">Tuple.hpp</a></li>
+<li>dynosam_common/include/dynosam_common/utils/<a class="el" href="Tuple_8hpp_source.html">Tuple.hpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

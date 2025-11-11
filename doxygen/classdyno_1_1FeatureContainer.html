@@ -88,6 +88,16 @@ $(function() {
  <a href="classdyno_1_1FeatureContainer.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>&gt;</code></p>
+<div class="dynheader">
+Collaboration diagram for dyno::FeatureContainer:</div>
+<div class="dyncontent">
+<div class="center"><img src="classdyno_1_1FeatureContainer__coll__graph.png" border="0" usemap="#adyno_1_1FeatureContainer_coll__map" alt="Collaboration graph"/></div>
+<map name="adyno_1_1FeatureContainer_coll__map" id="adyno_1_1FeatureContainer_coll__map">
+<area shape="rect" title="Basic container mapping tracklet id&#39;s to a feature (pointer)." alt="" coords="740,57,915,82"/>
+<area shape="rect" title=" " alt="" coords="357,42,551,97"/>
+<area shape="rect" title=" " alt="" coords="5,5,308,133"/>
+</map>
+<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
@@ -97,8 +107,10 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:ad54a3471417d9ff7ea626d37392dabae"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1FeatureContainer.html#ad54a3471417d9ff7ea626d37392dabae">TrackletToFeatureMap</a> = std::map&lt; <a class="el" href="namespacedyno.html#afdd174eb44901fb205371d796287378c">TrackletId</a>, Feature::Ptr &gt;</td></tr>
-<tr class="separator:ad54a3471417d9ff7ea626d37392dabae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a31d296f69d8884da064ffe71f28dfff9"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1FeatureContainer.html#a31d296f69d8884da064ffe71f28dfff9">TrackletToFeatureMap</a> = std::unordered_map&lt; <a class="el" href="namespacedyno.html#afdd174eb44901fb205371d796287378c">TrackletId</a>, Feature::Ptr &gt;</td></tr>
+<tr class="separator:a31d296f69d8884da064ffe71f28dfff9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aef79b539fc13edf71cab89cc7f2914a6"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1FeatureContainer.html#aef79b539fc13edf71cab89cc7f2914a6">ObjectToFeatureMap</a> = <a class="el" href="classdyno_1_1FastUnorderedMap.html">FastUnorderedMap</a>&lt; <a class="el" href="namespacedyno.html#a38bb86e4154b86428b8d133be03fb2b5">ObjectId</a>, std::unordered_set&lt; <a class="el" href="namespacedyno.html#afdd174eb44901fb205371d796287378c">TrackletId</a> &gt; &gt;</td></tr>
+<tr class="separator:aef79b539fc13edf71cab89cc7f2914a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a966260ea2e082e4cfaa6ba964df300e5"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1FeatureContainer.html#a966260ea2e082e4cfaa6ba964df300e5">vector_iterator</a> = <a class="el" href="structdyno_1_1FeatureContainer_1_1vector__iterator__base.html">vector_iterator_base</a>&lt; TrackletToFeatureMap::iterator, Feature::Ptr &gt;</td></tr>
 <tr class="memdesc:a966260ea2e082e4cfaa6ba964df300e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Vector-style iterator definition.  <br /></td></tr>
 <tr class="separator:a966260ea2e082e4cfaa6ba964df300e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -172,6 +184,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:abf2f2d568f5dc17944cc122c537a65f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac39c9fae3c9363e96cc0817f1a583c18"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classdyno_1_1FeatureContainer.html">FeatureContainer</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1FeatureContainer.html#ac39c9fae3c9363e96cc0817f1a583c18">operator+=</a> (const <a class="el" href="classdyno_1_1FeatureContainer.html">FeatureContainer</a> &amp;other)</td></tr>
 <tr class="separator:ac39c9fae3c9363e96cc0817f1a583c18"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9f23ba942bda519d6f8ae498410235a5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacedyno.html#a7b74611da938f0d55a3b1fdb16219037">TrackletIds</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1FeatureContainer.html#a9f23ba942bda519d6f8ae498410235a5">getByObject</a> (<a class="el" href="namespacedyno.html#a38bb86e4154b86428b8d133be03fb2b5">ObjectId</a>) const</td></tr>
+<tr class="separator:a9f23ba942bda519d6f8ae498410235a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a92d26549f952dcf51796495d0fc5df8e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classdyno_1_1FeatureContainer.html#a966260ea2e082e4cfaa6ba964df300e5">vector_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1FeatureContainer.html#a92d26549f952dcf51796495d0fc5df8e">begin</a> ()</td></tr>
 <tr class="separator:a92d26549f952dcf51796495d0fc5df8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa395b4189da0a54d305c48b55da997e6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classdyno_1_1FeatureContainer.html#a2741185eb29d57e75ddf4dd84d67caff">const_vector_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1FeatureContainer.html#aa395b4189da0a54d305c48b55da997e6">begin</a> () const</td></tr>
@@ -184,21 +198,31 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ab6187d4cb946a12bcea18482caf4e115"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a514a07e04a5e42957de579754d9b5f04"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classdyno_1_1FeatureContainer.html#adfe7dc618a19b055353122ffeda76171">FilterIterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1FeatureContainer.html#a514a07e04a5e42957de579754d9b5f04">beginUsable</a> () const</td></tr>
 <tr class="separator:a514a07e04a5e42957de579754d9b5f04"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6b5e87117fa01d0075f68a8ca2dc7814"><td class="memItemLeft" align="right" valign="top">ObjectToFeatureMap::iterator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1FeatureContainer.html#a6b5e87117fa01d0075f68a8ca2dc7814">beginObjectIterator</a> ()</td></tr>
+<tr class="separator:a6b5e87117fa01d0075f68a8ca2dc7814"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af09dcd9df85aac10df403f0057cd9f47"><td class="memItemLeft" align="right" valign="top">ObjectToFeatureMap::iterator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1FeatureContainer.html#af09dcd9df85aac10df403f0057cd9f47">endObjectIterator</a> ()</td></tr>
+<tr class="separator:af09dcd9df85aac10df403f0057cd9f47"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaf3e3205e804d2eaf798831caf9cda2c"><td class="memItemLeft" align="right" valign="top">ObjectToFeatureMap::const_iterator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1FeatureContainer.html#aaf3e3205e804d2eaf798831caf9cda2c">beginObjectIterator</a> () const</td></tr>
+<tr class="separator:aaf3e3205e804d2eaf798831caf9cda2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad1c49e4c37c80286c2dcd93c21b84016"><td class="memItemLeft" align="right" valign="top">ObjectToFeatureMap::const_iterator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1FeatureContainer.html#ad1c49e4c37c80286c2dcd93c21b84016">endObjectIterator</a> () const</td></tr>
+<tr class="separator:ad1c49e4c37c80286c2dcd93c21b84016"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a00fb07fccff523cba9783e6d00186f28"><td class="memItemLeft" align="right" valign="top">std::vector&lt; cv::Point2f &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1FeatureContainer.html#a00fb07fccff523cba9783e6d00186f28">toOpenCV</a> (<a class="el" href="namespacedyno.html#a7b74611da938f0d55a3b1fdb16219037">TrackletIds</a> *tracklet_ids=nullptr, bool only_inliers=false) const</td></tr>
 <tr class="memdesc:a00fb07fccff523cba9783e6d00186f28"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts the keypoints of all features in the container to cv::Point2f representation. This makes them compatible with OpenCV functions.  <br /></td></tr>
 <tr class="separator:a00fb07fccff523cba9783e6d00186f28"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
-<tr class="memitem:a21f147fb2c8b1eb3025a7bc451efdf3a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classdyno_1_1FeatureContainer.html#ad54a3471417d9ff7ea626d37392dabae">TrackletToFeatureMap</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1FeatureContainer.html#a21f147fb2c8b1eb3025a7bc451efdf3a">feature_map_</a></td></tr>
+<tr class="memitem:a21f147fb2c8b1eb3025a7bc451efdf3a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classdyno_1_1FeatureContainer.html#a31d296f69d8884da064ffe71f28dfff9">TrackletToFeatureMap</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1FeatureContainer.html#a21f147fb2c8b1eb3025a7bc451efdf3a">feature_map_</a></td></tr>
 <tr class="separator:a21f147fb2c8b1eb3025a7bc451efdf3a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0365776734d305cbdb942f39b715a967"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classdyno_1_1FeatureContainer.html#aef79b539fc13edf71cab89cc7f2914a6">ObjectToFeatureMap</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1FeatureContainer.html#a0365776734d305cbdb942f39b715a967">object_feature_map_</a></td></tr>
+<tr class="separator:a0365776734d305cbdb942f39b715a967"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Basic container mapping tracklet id's to a feature (pointer). </p>
 <p>Unlike a regular std::map, this container allows direct iteration over the feature's and modification of inliers/outliers etc.</p>
 <p>Used regular in frames and other data-structures to add and maintain features in different stages of their construction. </p>
 
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00436">436</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00442">442</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="a32f7c40cfef13e744e851140dcaec5cc" name="a32f7c40cfef13e744e851140dcaec5cc"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a32f7c40cfef13e744e851140dcaec5cc">&#9670;&#160;</a></span>const_iterator</h2>
@@ -212,7 +236,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00492">492</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00501">501</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
 
 </div>
 </div>
@@ -228,7 +252,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00493">493</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00502">502</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
 
 </div>
 </div>
@@ -244,7 +268,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00496">496</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00505">505</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
 
 </div>
 </div>
@@ -262,7 +286,7 @@ Private Attributes</h2></td></tr>
 
 <p>Vector-style const iterator definition. </p>
 
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00483">483</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00492">492</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
 
 </div>
 </div>
@@ -278,7 +302,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00504">504</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00513">513</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
 
 </div>
 </div>
@@ -294,7 +318,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00497">497</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00506">506</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
 
 </div>
 </div>
@@ -312,7 +336,7 @@ Private Attributes</h2></td></tr>
 
 <p>Typedefs for Filter iteratorss for the <a class="el" href="classdyno_1_1FeatureContainer.html" title="Basic container mapping tracklet id&#39;s to a feature (pointer).">FeatureContainer</a> allowing conditional iterators to be defined. Must be defined after the internal iterator, pointer.... typedefs as <a class="el" href="namespacedyno_1_1internal.html#aed2397bd2a95a4235a735f224afe2a44">internal::filter_iterator&lt;&gt;</a> expects the type defined to have a valid iterator. </p>
 
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00503">503</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00512">512</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
 
 </div>
 </div>
@@ -330,7 +354,23 @@ Private Attributes</h2></td></tr>
 
 <p>Internal typedefs to allow <a class="el" href="classdyno_1_1FeatureContainer.html" title="Basic container mapping tracklet id&#39;s to a feature (pointer).">FeatureContainer</a> to satisfy the definitions of a std::iterator See: <a href="https://en.cppreference.com/w/cpp/iterator/iterator_traits">https://en.cppreference.com/w/cpp/iterator/iterator_traits</a>. </p>
 
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00490">490</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00499">499</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+
+</div>
+</div>
+<a id="aef79b539fc13edf71cab89cc7f2914a6" name="aef79b539fc13edf71cab89cc7f2914a6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aef79b539fc13edf71cab89cc7f2914a6">&#9670;&#160;</a></span>ObjectToFeatureMap</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="classdyno_1_1FeatureContainer.html#aef79b539fc13edf71cab89cc7f2914a6">dyno::FeatureContainer::ObjectToFeatureMap</a> =  <a class="el" href="classdyno_1_1FastUnorderedMap.html">FastUnorderedMap</a>&lt;<a class="el" href="namespacedyno.html#a38bb86e4154b86428b8d133be03fb2b5">ObjectId</a>, std::unordered_set&lt;<a class="el" href="namespacedyno.html#afdd174eb44901fb205371d796287378c">TrackletId</a>&gt; &gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00446">446</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
 
 </div>
 </div>
@@ -346,7 +386,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00491">491</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00500">500</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
 
 </div>
 </div>
@@ -362,23 +402,23 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00495">495</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00504">504</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
 
 </div>
 </div>
-<a id="ad54a3471417d9ff7ea626d37392dabae" name="ad54a3471417d9ff7ea626d37392dabae"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad54a3471417d9ff7ea626d37392dabae">&#9670;&#160;</a></span>TrackletToFeatureMap</h2>
+<a id="a31d296f69d8884da064ffe71f28dfff9" name="a31d296f69d8884da064ffe71f28dfff9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a31d296f69d8884da064ffe71f28dfff9">&#9670;&#160;</a></span>TrackletToFeatureMap</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="classdyno_1_1FeatureContainer.html#ad54a3471417d9ff7ea626d37392dabae">dyno::FeatureContainer::TrackletToFeatureMap</a> =  std::map&lt;<a class="el" href="namespacedyno.html#afdd174eb44901fb205371d796287378c">TrackletId</a>, Feature::Ptr&gt;</td>
+          <td class="memname">using <a class="el" href="classdyno_1_1FeatureContainer.html#a31d296f69d8884da064ffe71f28dfff9">dyno::FeatureContainer::TrackletToFeatureMap</a> =  std::unordered_map&lt;<a class="el" href="namespacedyno.html#afdd174eb44901fb205371d796287378c">TrackletId</a>, Feature::Ptr&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00438">438</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00444">444</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
 
 </div>
 </div>
@@ -394,7 +434,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00494">494</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00503">503</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
 
 </div>
 </div>
@@ -412,7 +452,7 @@ Private Attributes</h2></td></tr>
 
 <p>Vector-style iterator definition. </p>
 
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00480">480</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00489">489</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
 
 </div>
 </div>
@@ -434,7 +474,7 @@ Private Attributes</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="Feature_8cc_source.html#l00037">37</a> of file <a class="el" href="Feature_8cc_source.html">Feature.cc</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">   37</span>: <a class="code hl_variable" href="classdyno_1_1FeatureContainer.html#a21f147fb2c8b1eb3025a7bc451efdf3a">feature_map_</a>() {}</div>
-<div class="ttc" id="aclassdyno_1_1FeatureContainer_html_a21f147fb2c8b1eb3025a7bc451efdf3a"><div class="ttname"><a href="classdyno_1_1FeatureContainer.html#a21f147fb2c8b1eb3025a7bc451efdf3a">dyno::FeatureContainer::feature_map_</a></div><div class="ttdeci">TrackletToFeatureMap feature_map_</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00654">Feature.hpp:654</a></div></div>
+<div class="ttc" id="aclassdyno_1_1FeatureContainer_html_a21f147fb2c8b1eb3025a7bc451efdf3a"><div class="ttname"><a href="classdyno_1_1FeatureContainer.html#a21f147fb2c8b1eb3025a7bc451efdf3a">dyno::FeatureContainer::feature_map_</a></div><div class="ttdeci">TrackletToFeatureMap feature_map_</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00675">Feature.hpp:675</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -509,7 +549,7 @@ Here is the call graph for this function:</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1FeatureContainer.html#a3af7c9e40df21b96a8c7067348aed5f5">add()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1FeatureContainer.html#a3af7c9e40df21b96a8c7067348aed5f5">add()</a>, <a class="el" href="classdyno_1_1KltFeatureTracker.html#a4870d167d7dbd1a04a8d7d15a376a573">dyno::KltFeatureTracker::detectFeatures()</a>, <a class="el" href="classdyno_1_1FeatureContainer.html#a623d1fd324327a2b21e3f5bac2a71413">FeatureContainer()</a>, <a class="el" href="classdyno_1_1FeatureTracker.html#af6093d870bad67d12dee0c9cb913f87c">dyno::FeatureTracker::sampleDynamic()</a>, <a class="el" href="classdyno_1_1KltFeatureTracker.html#a8f26d8fe56edd3e579a879e82a40457f">dyno::KltFeatureTracker::trackPoints()</a>, and <a class="el" href="classdyno_1_1KltFeatureTracker.html#ab15aaa39f0c3adc62037d718b98039c0">dyno::KltFeatureTracker::trackStatic()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1FeatureContainer.html#a3af7c9e40df21b96a8c7067348aed5f5">add()</a>, <a class="el" href="classdyno_1_1KltFeatureTracker.html#a4870d167d7dbd1a04a8d7d15a376a573">dyno::KltFeatureTracker::detectFeatures()</a>, <a class="el" href="classdyno_1_1FeatureContainer.html#a623d1fd324327a2b21e3f5bac2a71413">FeatureContainer()</a>, <a class="el" href="classdyno_1_1FeatureTracker.html#af6093d870bad67d12dee0c9cb913f87c">dyno::FeatureTracker::sampleDynamic()</a>, <a class="el" href="classdyno_1_1FeatureTracker.html#a4796a29c1f89cde0ace1668fc8fcd9a3">dyno::FeatureTracker::trackDynamicKLT()</a>, <a class="el" href="classdyno_1_1KltFeatureTracker.html#a8f26d8fe56edd3e579a879e82a40457f">dyno::KltFeatureTracker::trackPoints()</a>, and <a class="el" href="classdyno_1_1KltFeatureTracker.html#ab15aaa39f0c3adc62037d718b98039c0">dyno::KltFeatureTracker::trackStatic()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -523,14 +563,15 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1FeatureContainer_a3af7c9e40df21b96a8c7067348aed5f5_icgraph.png" border="0" usemap="#aclassdyno_1_1FeatureContainer_a3af7c9e40df21b96a8c7067348aed5f5_icgraph" alt=""/></div>
 <map name="aclassdyno_1_1FeatureContainer_a3af7c9e40df21b96a8c7067348aed5f5_icgraph" id="aclassdyno_1_1FeatureContainer_a3af7c9e40df21b96a8c7067348aed5f5_icgraph">
-<area shape="rect" title="Adds a new feature to the container. Uses feature.trackletId() to set the tracklet key." alt="" coords="673,123,880,149"/>
+<area shape="rect" title="Adds a new feature to the container. Uses feature.trackletId() to set the tracklet key." alt="" coords="673,153,880,178"/>
 <area shape="rect" href="classdyno_1_1KltFeatureTracker.html#a4870d167d7dbd1a04a8d7d15a376a573" title=" " alt="" coords="451,59,625,99"/>
 <area shape="rect" href="classdyno_1_1KltFeatureTracker.html#a8f26d8fe56edd3e579a879e82a40457f" title="Tracks features using KLT tracker between the previous image and the current one." alt="" coords="228,5,403,45"/>
 <area shape="rect" href="classdyno_1_1KltFeatureTracker.html#ab15aaa39f0c3adc62037d718b98039c0" title="Track features between frames k&#45;1 and the current set of images (at k)." alt="" coords="5,63,180,103"/>
 <area shape="rect" href="classdyno_1_1FeatureContainer.html#a623d1fd324327a2b21e3f5bac2a71413" title=" " alt="" coords="451,173,625,213"/>
 <area shape="rect" href="classdyno_1_1FeatureTracker.html#af6093d870bad67d12dee0c9cb913f87c" title=" " alt="" coords="459,237,617,277"/>
-<area shape="rect" href="classdyno_1_1FeatureTracker.html#a145614fe29bef7728075492870ac9c41" title=" " alt="" coords="237,237,394,277"/>
-<area shape="rect" href="classdyno_1_1FeatureTracker.html#a9890ba0c11b5932b5b4954a86bd03948" title=" " alt="" coords="14,237,171,277"/>
+<area shape="rect" href="classdyno_1_1FeatureTracker.html#a4796a29c1f89cde0ace1668fc8fcd9a3" title=" " alt="" coords="237,299,394,339"/>
+<area shape="rect" href="classdyno_1_1FeatureTracker.html#a145614fe29bef7728075492870ac9c41" title=" " alt="" coords="237,235,394,275"/>
+<area shape="rect" href="classdyno_1_1FeatureTracker.html#a40ee79c94fe2de7f16d2a4508cc2ba11" title=" " alt="" coords="14,267,171,307"/>
 </map>
 </div>
 
@@ -566,10 +607,18 @@ Here is the caller graph for this function:</div>
 <div class="line"><span class="lineno">   52</span>      &lt;&lt; <span class="stringliteral">&quot;Feailure in FeatureContainer::add - Tracklet Id &quot;</span></div>
 <div class="line"><span class="lineno">   53</span>      &lt;&lt; feature-&gt;trackletId() &lt;&lt; <span class="stringliteral">&quot; already exists&quot;</span>;</div>
 <div class="line"><span class="lineno">   54</span>  <a class="code hl_variable" href="classdyno_1_1FeatureContainer.html#a21f147fb2c8b1eb3025a7bc451efdf3a">feature_map_</a>[feature-&gt;trackletId()] = feature;</div>
-<div class="line"><span class="lineno">   55</span>}</div>
-<div class="ttc" id="aclassdyno_1_1FeatureContainer_html_abf2f2d568f5dc17944cc122c537a65f5"><div class="ttname"><a href="classdyno_1_1FeatureContainer.html#abf2f2d568f5dc17944cc122c537a65f5">dyno::FeatureContainer::exists</a></div><div class="ttdeci">bool exists(TrackletId tracklet_id) const</div><div class="ttdoc">Returns true if a feature with the given tracklet id exists.</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8cc_source.html#l00129">Feature.cc:129</a></div></div>
+<div class="line"><span class="lineno">   55</span> </div>
+<div class="line"><span class="lineno">   56</span>  <span class="comment">// TODO: what if object id is not valid!</span></div>
+<div class="line"><span class="lineno">   57</span>  <span class="keywordflow">if</span> (!<a class="code hl_variable" href="classdyno_1_1FeatureContainer.html#a0365776734d305cbdb942f39b715a967">object_feature_map_</a>.exists(feature-&gt;objectId())) {</div>
+<div class="line"><span class="lineno">   58</span>    <a class="code hl_variable" href="classdyno_1_1FeatureContainer.html#a0365776734d305cbdb942f39b715a967">object_feature_map_</a>.insert2(feature-&gt;objectId(),</div>
+<div class="line"><span class="lineno">   59</span>                                std::unordered_set&lt;TrackletId&gt;{});</div>
+<div class="line"><span class="lineno">   60</span>  }</div>
+<div class="line"><span class="lineno">   61</span>  <a class="code hl_variable" href="classdyno_1_1FeatureContainer.html#a0365776734d305cbdb942f39b715a967">object_feature_map_</a>[feature-&gt;objectId()].insert(feature-&gt;trackletId());</div>
+<div class="line"><span class="lineno">   62</span>}</div>
+<div class="ttc" id="aclassdyno_1_1FeatureContainer_html_a0365776734d305cbdb942f39b715a967"><div class="ttname"><a href="classdyno_1_1FeatureContainer.html#a0365776734d305cbdb942f39b715a967">dyno::FeatureContainer::object_feature_map_</a></div><div class="ttdeci">ObjectToFeatureMap object_feature_map_</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00676">Feature.hpp:676</a></div></div>
+<div class="ttc" id="aclassdyno_1_1FeatureContainer_html_abf2f2d568f5dc17944cc122c537a65f5"><div class="ttname"><a href="classdyno_1_1FeatureContainer.html#abf2f2d568f5dc17944cc122c537a65f5">dyno::FeatureContainer::exists</a></div><div class="ttdeci">bool exists(TrackletId tracklet_id) const</div><div class="ttdoc">Returns true if a feature with the given tracklet id exists.</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8cc_source.html#l00156">Feature.cc:156</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="classdyno_1_1FeatureContainer.html#abf2f2d568f5dc17944cc122c537a65f5">exists()</a>, and <a class="el" href="classdyno_1_1FeatureContainer.html#a21f147fb2c8b1eb3025a7bc451efdf3a">feature_map_</a>.</p>
+<p class="reference">References <a class="el" href="classdyno_1_1FeatureContainer.html#abf2f2d568f5dc17944cc122c537a65f5">exists()</a>, <a class="el" href="classdyno_1_1FeatureContainer.html#a21f147fb2c8b1eb3025a7bc451efdf3a">feature_map_</a>, and <a class="el" href="classdyno_1_1FeatureContainer.html#a0365776734d305cbdb942f39b715a967">object_feature_map_</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -605,11 +654,11 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00620">620</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  620</span>                                 {</div>
-<div class="line"><span class="lineno">  621</span>    <span class="keywordflow">return</span> <a class="code hl_typedef" href="classdyno_1_1FeatureContainer.html#a966260ea2e082e4cfaa6ba964df300e5">vector_iterator</a>(<a class="code hl_variable" href="classdyno_1_1FeatureContainer.html#a21f147fb2c8b1eb3025a7bc451efdf3a">feature_map_</a>.begin());</div>
-<div class="line"><span class="lineno">  622</span>  }</div>
-<div class="ttc" id="aclassdyno_1_1FeatureContainer_html_a966260ea2e082e4cfaa6ba964df300e5"><div class="ttname"><a href="classdyno_1_1FeatureContainer.html#a966260ea2e082e4cfaa6ba964df300e5">dyno::FeatureContainer::vector_iterator</a></div><div class="ttdeci">vector_iterator_base&lt; TrackletToFeatureMap::iterator, Feature::Ptr &gt; vector_iterator</div><div class="ttdoc">Vector-style iterator definition.</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00480">Feature.hpp:481</a></div></div>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00635">635</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  635</span>                                 {</div>
+<div class="line"><span class="lineno">  636</span>    <span class="keywordflow">return</span> <a class="code hl_typedef" href="classdyno_1_1FeatureContainer.html#a966260ea2e082e4cfaa6ba964df300e5">vector_iterator</a>(<a class="code hl_variable" href="classdyno_1_1FeatureContainer.html#a21f147fb2c8b1eb3025a7bc451efdf3a">feature_map_</a>.begin());</div>
+<div class="line"><span class="lineno">  637</span>  }</div>
+<div class="ttc" id="aclassdyno_1_1FeatureContainer_html_a966260ea2e082e4cfaa6ba964df300e5"><div class="ttname"><a href="classdyno_1_1FeatureContainer.html#a966260ea2e082e4cfaa6ba964df300e5">dyno::FeatureContainer::vector_iterator</a></div><div class="ttdeci">vector_iterator_base&lt; TrackletToFeatureMap::iterator, Feature::Ptr &gt; vector_iterator</div><div class="ttdoc">Vector-style iterator definition.</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00489">Feature.hpp:490</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1FeatureContainer.html#a21f147fb2c8b1eb3025a7bc451efdf3a">feature_map_</a>.</p>
 
@@ -638,13 +687,61 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00623">623</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  623</span>                                             {</div>
-<div class="line"><span class="lineno">  624</span>    <span class="keywordflow">return</span> <a class="code hl_typedef" href="classdyno_1_1FeatureContainer.html#a2741185eb29d57e75ddf4dd84d67caff">const_vector_iterator</a>(<a class="code hl_variable" href="classdyno_1_1FeatureContainer.html#a21f147fb2c8b1eb3025a7bc451efdf3a">feature_map_</a>.cbegin());</div>
-<div class="line"><span class="lineno">  625</span>  }</div>
-<div class="ttc" id="aclassdyno_1_1FeatureContainer_html_a2741185eb29d57e75ddf4dd84d67caff"><div class="ttname"><a href="classdyno_1_1FeatureContainer.html#a2741185eb29d57e75ddf4dd84d67caff">dyno::FeatureContainer::const_vector_iterator</a></div><div class="ttdeci">vector_iterator_base&lt; TrackletToFeatureMap::const_iterator, const Feature::Ptr &gt; const_vector_iterator</div><div class="ttdoc">Vector-style const iterator definition.</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00483">Feature.hpp:485</a></div></div>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00638">638</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  638</span>                                             {</div>
+<div class="line"><span class="lineno">  639</span>    <span class="keywordflow">return</span> <a class="code hl_typedef" href="classdyno_1_1FeatureContainer.html#a2741185eb29d57e75ddf4dd84d67caff">const_vector_iterator</a>(<a class="code hl_variable" href="classdyno_1_1FeatureContainer.html#a21f147fb2c8b1eb3025a7bc451efdf3a">feature_map_</a>.cbegin());</div>
+<div class="line"><span class="lineno">  640</span>  }</div>
+<div class="ttc" id="aclassdyno_1_1FeatureContainer_html_a2741185eb29d57e75ddf4dd84d67caff"><div class="ttname"><a href="classdyno_1_1FeatureContainer.html#a2741185eb29d57e75ddf4dd84d67caff">dyno::FeatureContainer::const_vector_iterator</a></div><div class="ttdeci">vector_iterator_base&lt; TrackletToFeatureMap::const_iterator, const Feature::Ptr &gt; const_vector_iterator</div><div class="ttdoc">Vector-style const iterator definition.</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00492">Feature.hpp:494</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1FeatureContainer.html#a21f147fb2c8b1eb3025a7bc451efdf3a">feature_map_</a>.</p>
+
+</div>
+</div>
+<a id="a6b5e87117fa01d0075f68a8ca2dc7814" name="a6b5e87117fa01d0075f68a8ca2dc7814"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6b5e87117fa01d0075f68a8ca2dc7814">&#9670;&#160;</a></span>beginObjectIterator() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">FeatureContainer::ObjectToFeatureMap::iterator dyno::FeatureContainer::beginObjectIterator </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Feature_8cc_source.html#l00182">182</a> of file <a class="el" href="Feature_8cc_source.html">Feature.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  182</span>                                      {</div>
+<div class="line"><span class="lineno">  183</span>  <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1FeatureContainer.html#a0365776734d305cbdb942f39b715a967">object_feature_map_</a>.begin();</div>
+<div class="line"><span class="lineno">  184</span>}</div>
+</div><!-- fragment -->
+<p class="reference">References <a class="el" href="classdyno_1_1FeatureContainer.html#a0365776734d305cbdb942f39b715a967">object_feature_map_</a>.</p>
+
+</div>
+</div>
+<a id="aaf3e3205e804d2eaf798831caf9cda2c" name="aaf3e3205e804d2eaf798831caf9cda2c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaf3e3205e804d2eaf798831caf9cda2c">&#9670;&#160;</a></span>beginObjectIterator() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">FeatureContainer::ObjectToFeatureMap::const_iterator dyno::FeatureContainer::beginObjectIterator </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Feature_8cc_source.html#l00191">191</a> of file <a class="el" href="Feature_8cc_source.html">Feature.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  191</span>                                            {</div>
+<div class="line"><span class="lineno">  192</span>  <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1FeatureContainer.html#a0365776734d305cbdb942f39b715a967">object_feature_map_</a>.begin();</div>
+<div class="line"><span class="lineno">  193</span>}</div>
+</div><!-- fragment -->
+<p class="reference">References <a class="el" href="classdyno_1_1FeatureContainer.html#a0365776734d305cbdb942f39b715a967">object_feature_map_</a>.</p>
 
 </div>
 </div>
@@ -663,18 +760,18 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Feature_8cc_source.html#l00133">133</a> of file <a class="el" href="Feature_8cc_source.html">Feature.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  133</span>                                                             {</div>
-<div class="line"><span class="lineno">  134</span>  <span class="keywordflow">return</span> <a class="code hl_typedef" href="classdyno_1_1FeatureContainer.html#adfe7dc618a19b055353122ffeda76171">FilterIterator</a>(*<span class="keyword">this</span>, [](<span class="keyword">const</span> Feature::Ptr&amp; f) -&gt; <span class="keywordtype">bool</span> {</div>
-<div class="line"><span class="lineno">  135</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="classdyno_1_1Feature.html#af6d8414c9ac11dc48a8c6a80c4eb4635">Feature::IsUsable</a>(f);</div>
-<div class="line"><span class="lineno">  136</span>  });</div>
-<div class="line"><span class="lineno">  137</span>}</div>
-<div class="ttc" id="aclassdyno_1_1FeatureContainer_html_adfe7dc618a19b055353122ffeda76171"><div class="ttname"><a href="classdyno_1_1FeatureContainer.html#adfe7dc618a19b055353122ffeda76171">dyno::FeatureContainer::FilterIterator</a></div><div class="ttdeci">internal::filter_iterator&lt; FeatureContainer &gt; FilterIterator</div><div class="ttdoc">Typedefs for Filter iteratorss for the FeatureContainer allowing conditional iterators to be defined....</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00503">Feature.hpp:503</a></div></div>
-<div class="ttc" id="aclassdyno_1_1Feature_html_af6d8414c9ac11dc48a8c6a80c4eb4635"><div class="ttname"><a href="classdyno_1_1Feature.html#af6d8414c9ac11dc48a8c6a80c4eb4635">dyno::Feature::IsUsable</a></div><div class="ttdeci">static bool IsUsable(const Feature::Ptr &amp;f)</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00353">Feature.hpp:353</a></div></div>
+<p class="definition">Definition at line <a class="el" href="Feature_8cc_source.html#l00169">169</a> of file <a class="el" href="Feature_8cc_source.html">Feature.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  169</span>                                                             {</div>
+<div class="line"><span class="lineno">  170</span>  <span class="keywordflow">return</span> <a class="code hl_typedef" href="classdyno_1_1FeatureContainer.html#adfe7dc618a19b055353122ffeda76171">FilterIterator</a>(*<span class="keyword">this</span>, [](<span class="keyword">const</span> Feature::Ptr&amp; f) -&gt; <span class="keywordtype">bool</span> {</div>
+<div class="line"><span class="lineno">  171</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="classdyno_1_1Feature.html#af6d8414c9ac11dc48a8c6a80c4eb4635">Feature::IsUsable</a>(f);</div>
+<div class="line"><span class="lineno">  172</span>  });</div>
+<div class="line"><span class="lineno">  173</span>}</div>
+<div class="ttc" id="aclassdyno_1_1FeatureContainer_html_adfe7dc618a19b055353122ffeda76171"><div class="ttname"><a href="classdyno_1_1FeatureContainer.html#adfe7dc618a19b055353122ffeda76171">dyno::FeatureContainer::FilterIterator</a></div><div class="ttdeci">internal::filter_iterator&lt; FeatureContainer &gt; FilterIterator</div><div class="ttdoc">Typedefs for Filter iteratorss for the FeatureContainer allowing conditional iterators to be defined....</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00512">Feature.hpp:512</a></div></div>
+<div class="ttc" id="aclassdyno_1_1Feature_html_af6d8414c9ac11dc48a8c6a80c4eb4635"><div class="ttname"><a href="classdyno_1_1Feature.html#af6d8414c9ac11dc48a8c6a80c4eb4635">dyno::Feature::IsUsable</a></div><div class="ttdeci">static bool IsUsable(const Feature::Ptr &amp;f)</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00357">Feature.hpp:357</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1Feature.html#af6d8414c9ac11dc48a8c6a80c4eb4635">dyno::Feature::IsUsable()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1Frame.html#ab038b536516e42beb788f1b794801270">dyno::Frame::constructDynamicObservations()</a>, <a class="el" href="classdyno_1_1Frame.html#ada0730ff21a241c8948dfa6a4c233ce9">dyno::Frame::getDynamicCorrespondences()</a>, <a class="el" href="classdyno_1_1Frame.html#a2dae0d4fd6d5ae47802ff8f6602d652b">dyno::Frame::getStaticCorrespondences()</a>, <a class="el" href="classdyno_1_1KltFeatureTracker.html#ab15aaa39f0c3adc62037d718b98039c0">dyno::KltFeatureTracker::trackStatic()</a>, <a class="el" href="classdyno_1_1Frame.html#a7769d1c2fe4f5831191dc4da47d4404c">dyno::Frame::usableDynamicFeaturesBegin()</a>, and <a class="el" href="classdyno_1_1Frame.html#ab036fb95341546a33d93bdd54d871452">dyno::Frame::usableStaticFeaturesBegin()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1Frame.html#ab038b536516e42beb788f1b794801270">dyno::Frame::constructDynamicObservations()</a>, <a class="el" href="classdyno_1_1FeatureTrackerBase.html#a4e9b9b77752d80d8bb8c2236776ca5a8">dyno::FeatureTrackerBase::drawStereoMatches()</a>, <a class="el" href="classdyno_1_1Frame.html#ada0730ff21a241c8948dfa6a4c233ce9">dyno::Frame::getDynamicCorrespondences()</a>, <a class="el" href="classdyno_1_1Frame.html#a2dae0d4fd6d5ae47802ff8f6602d652b">dyno::Frame::getStaticCorrespondences()</a>, <a class="el" href="classdyno_1_1KltFeatureTracker.html#ab15aaa39f0c3adc62037d718b98039c0">dyno::KltFeatureTracker::trackStatic()</a>, <a class="el" href="classdyno_1_1Frame.html#a7769d1c2fe4f5831191dc4da47d4404c">dyno::Frame::usableDynamicFeaturesBegin()</a>, and <a class="el" href="classdyno_1_1Frame.html#ab036fb95341546a33d93bdd54d871452">dyno::Frame::usableStaticFeaturesBegin()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -689,20 +786,20 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1FeatureContainer_ab6187d4cb946a12bcea18482caf4e115_icgraph.png" border="0" usemap="#aclassdyno_1_1FeatureContainer_ab6187d4cb946a12bcea18482caf4e115_icgraph" alt=""/></div>
 <map name="aclassdyno_1_1FeatureContainer_ab6187d4cb946a12bcea18482caf4e115_icgraph" id="aclassdyno_1_1FeatureContainer_ab6187d4cb946a12bcea18482caf4e115_icgraph">
-<area shape="rect" title=" " alt="" coords="940,141,1115,181"/>
-<area shape="rect" href="classdyno_1_1Frame.html#ab038b536516e42beb788f1b794801270" title=" " alt="" coords="626,5,855,45"/>
-<area shape="rect" href="classdyno_1_1Frame.html#ada0730ff21a241c8948dfa6a4c233ce9" title=" " alt="" coords="589,70,892,95"/>
-<area shape="rect" href="classdyno_1_1Frame.html#a2dae0d4fd6d5ae47802ff8f6602d652b" title=" " alt="" coords="600,119,881,145"/>
-<area shape="rect" href="classdyno_1_1KltFeatureTracker.html#ab15aaa39f0c3adc62037d718b98039c0" title="Track features between frames k&#45;1 and the current set of images (at k)." alt="" coords="653,169,828,209"/>
-<area shape="rect" href="classdyno_1_1Frame.html#a7769d1c2fe4f5831191dc4da47d4404c" title=" " alt="" coords="635,233,847,273"/>
-<area shape="rect" href="classdyno_1_1Frame.html#ab036fb95341546a33d93bdd54d871452" title=" " alt="" coords="645,297,836,337"/>
-<area shape="rect" href="classdyno_1_1Frame.html#a5553af4c0c310c23d0f39e0c1daf0478" title=" " alt="" coords="343,13,495,38"/>
-<area shape="rect" href="classdyno_1_1Frame.html#a0ee3d3a6479eada0e5443feb48613cdc" title="Gets the set of tracked pairs between this frame and the previous frame. All correspondences will be ..." alt="" coords="297,119,541,145"/>
-<area shape="rect" href="classdyno_1_1Frame.html#a40ef74f44116cf581522314b3a053c3a" title=" " alt="" coords="5,119,249,145"/>
-<area shape="rect" href="classdyno_1_1Frame.html#abbc9eb125f3b9d963b45857a99e9c8a4" title="Gets the total number of dynamic inlier features." alt="" coords="298,233,541,273"/>
-<area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#a246f701e4605c98dc7cb6bbd6f657998" title=" " alt="" coords="313,297,525,337"/>
-<area shape="rect" href="classdyno_1_1Frame.html#a6b8a9f20ec398a8046dc25f77277fc15" title="Gets the total number of static inlier features." alt="" coords="308,361,531,401"/>
-<area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2" title=" " alt="" coords="21,297,233,337"/>
+<area shape="rect" title=" " alt="" coords="947,176,1121,216"/>
+<area shape="rect" href="classdyno_1_1Frame.html#ab038b536516e42beb788f1b794801270" title=" " alt="" coords="633,5,862,45"/>
+<area shape="rect" href="classdyno_1_1FeatureTrackerBase.html#a4e9b9b77752d80d8bb8c2236776ca5a8" title=" " alt="" coords="653,69,842,109"/>
+<area shape="rect" href="classdyno_1_1Frame.html#ada0730ff21a241c8948dfa6a4c233ce9" title=" " alt="" coords="596,134,899,159"/>
+<area shape="rect" href="classdyno_1_1Frame.html#a2dae0d4fd6d5ae47802ff8f6602d652b" title=" " alt="" coords="607,183,888,209"/>
+<area shape="rect" href="classdyno_1_1KltFeatureTracker.html#ab15aaa39f0c3adc62037d718b98039c0" title="Track features between frames k&#45;1 and the current set of images (at k)." alt="" coords="660,233,835,273"/>
+<area shape="rect" href="classdyno_1_1Frame.html#a7769d1c2fe4f5831191dc4da47d4404c" title=" " alt="" coords="641,297,853,337"/>
+<area shape="rect" href="classdyno_1_1Frame.html#ab036fb95341546a33d93bdd54d871452" title=" " alt="" coords="652,361,843,401"/>
+<area shape="rect" href="classdyno_1_1Frame.html#a0ee3d3a6479eada0e5443feb48613cdc" title="Gets the set of tracked pairs between this frame and the previous frame. All correspondences will be ..." alt="" coords="301,183,545,209"/>
+<area shape="rect" href="classdyno_1_1Frame.html#a40ef74f44116cf581522314b3a053c3a" title=" " alt="" coords="5,183,249,209"/>
+<area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#ab40113f18671c1f496269e8c7a18267a" title=" " alt="" coords="297,329,548,369"/>
+<area shape="rect" href="classdyno_1_1Frame.html#abbc9eb125f3b9d963b45857a99e9c8a4" title="Gets the total number of dynamic inlier features." alt="" coords="301,265,544,305"/>
+<area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2" title=" " alt="" coords="21,329,233,369"/>
+<area shape="rect" href="classdyno_1_1Frame.html#a6b8a9f20ec398a8046dc25f77277fc15" title="Gets the total number of static inlier features." alt="" coords="311,393,534,433"/>
 </map>
 </div>
 
@@ -723,12 +820,12 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Feature_8cc_source.html#l00139">139</a> of file <a class="el" href="Feature_8cc_source.html">Feature.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  139</span>                                                                   {</div>
-<div class="line"><span class="lineno">  140</span>  <a class="code hl_function" href="classdyno_1_1FeatureContainer.html#aa6540e839a4826558e32a8e8cfb223e4">FeatureContainer</a>&amp; t = <span class="keyword">const_cast&lt;</span><a class="code hl_function" href="classdyno_1_1FeatureContainer.html#aa6540e839a4826558e32a8e8cfb223e4">FeatureContainer</a>&amp;<span class="keyword">&gt;</span>(*this);</div>
-<div class="line"><span class="lineno">  141</span>  <span class="keywordflow">return</span> <a class="code hl_typedef" href="classdyno_1_1FeatureContainer.html#adfe7dc618a19b055353122ffeda76171">FilterIterator</a>(</div>
-<div class="line"><span class="lineno">  142</span>      t, [](<span class="keyword">const</span> Feature::Ptr&amp; f) -&gt; <span class="keywordtype">bool</span> { <span class="keywordflow">return</span> <a class="code hl_function" href="classdyno_1_1Feature.html#af6d8414c9ac11dc48a8c6a80c4eb4635">Feature::IsUsable</a>(f); });</div>
-<div class="line"><span class="lineno">  143</span>}</div>
+<p class="definition">Definition at line <a class="el" href="Feature_8cc_source.html#l00175">175</a> of file <a class="el" href="Feature_8cc_source.html">Feature.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  175</span>                                                                   {</div>
+<div class="line"><span class="lineno">  176</span>  <a class="code hl_function" href="classdyno_1_1FeatureContainer.html#aa6540e839a4826558e32a8e8cfb223e4">FeatureContainer</a>&amp; t = <span class="keyword">const_cast&lt;</span><a class="code hl_function" href="classdyno_1_1FeatureContainer.html#aa6540e839a4826558e32a8e8cfb223e4">FeatureContainer</a>&amp;<span class="keyword">&gt;</span>(*this);</div>
+<div class="line"><span class="lineno">  177</span>  <span class="keywordflow">return</span> <a class="code hl_typedef" href="classdyno_1_1FeatureContainer.html#adfe7dc618a19b055353122ffeda76171">FilterIterator</a>(</div>
+<div class="line"><span class="lineno">  178</span>      t, [](<span class="keyword">const</span> Feature::Ptr&amp; f) -&gt; <span class="keywordtype">bool</span> { <span class="keywordflow">return</span> <a class="code hl_function" href="classdyno_1_1Feature.html#af6d8414c9ac11dc48a8c6a80c4eb4635">Feature::IsUsable</a>(f); });</div>
+<div class="line"><span class="lineno">  179</span>}</div>
 <div class="ttc" id="aclassdyno_1_1FeatureContainer_html_aa6540e839a4826558e32a8e8cfb223e4"><div class="ttname"><a href="classdyno_1_1FeatureContainer.html#aa6540e839a4826558e32a8e8cfb223e4">dyno::FeatureContainer::FeatureContainer</a></div><div class="ttdeci">FeatureContainer()</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8cc_source.html#l00037">Feature.cc:37</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1Feature.html#af6d8414c9ac11dc48a8c6a80c4eb4635">dyno::Feature::IsUsable()</a>.</p>
@@ -761,10 +858,13 @@ Here is the call graph for this function:</div>
 
 <p>Clears the entire container. </p>
 
-<p class="definition">Definition at line <a class="el" href="Feature_8cc_source.html#l00087">87</a> of file <a class="el" href="Feature_8cc_source.html">Feature.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   87</span>{ <a class="code hl_variable" href="classdyno_1_1FeatureContainer.html#a21f147fb2c8b1eb3025a7bc451efdf3a">feature_map_</a>.clear(); }</div>
+<p class="definition">Definition at line <a class="el" href="Feature_8cc_source.html#l00111">111</a> of file <a class="el" href="Feature_8cc_source.html">Feature.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  111</span>                             {</div>
+<div class="line"><span class="lineno">  112</span>  <a class="code hl_variable" href="classdyno_1_1FeatureContainer.html#a21f147fb2c8b1eb3025a7bc451efdf3a">feature_map_</a>.clear();</div>
+<div class="line"><span class="lineno">  113</span>  <a class="code hl_variable" href="classdyno_1_1FeatureContainer.html#a0365776734d305cbdb942f39b715a967">object_feature_map_</a>.clear();</div>
+<div class="line"><span class="lineno">  114</span>}</div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="classdyno_1_1FeatureContainer.html#a21f147fb2c8b1eb3025a7bc451efdf3a">feature_map_</a>.</p>
+<p class="reference">References <a class="el" href="classdyno_1_1FeatureContainer.html#a21f147fb2c8b1eb3025a7bc451efdf3a">feature_map_</a>, and <a class="el" href="classdyno_1_1FeatureContainer.html#a0365776734d305cbdb942f39b715a967">object_feature_map_</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1FeatureTracker.html#a145614fe29bef7728075492870ac9c41">dyno::FeatureTracker::trackDynamic()</a>.</p>
 <div class="dynheader">
@@ -774,7 +874,7 @@ Here is the caller graph for this function:</div>
 <map name="aclassdyno_1_1FeatureContainer_ae6b7ac557be9590ec1a329acfe00d1c7_icgraph" id="aclassdyno_1_1FeatureContainer_ae6b7ac557be9590ec1a329acfe00d1c7_icgraph">
 <area shape="rect" title="Clears the entire container." alt="" coords="416,5,591,45"/>
 <area shape="rect" href="classdyno_1_1FeatureTracker.html#a145614fe29bef7728075492870ac9c41" title=" " alt="" coords="211,5,368,45"/>
-<area shape="rect" href="classdyno_1_1FeatureTracker.html#a9890ba0c11b5932b5b4954a86bd03948" title=" " alt="" coords="5,5,163,45"/>
+<area shape="rect" href="classdyno_1_1FeatureTracker.html#a40ee79c94fe2de7f16d2a4508cc2ba11" title=" " alt="" coords="5,5,163,45"/>
 </map>
 </div>
 
@@ -805,20 +905,20 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>TrackletIds </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Feature_8cc_source.html#l00090">90</a> of file <a class="el" href="Feature_8cc_source.html">Feature.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   90</span>                                                                     {</div>
-<div class="line"><span class="lineno">   91</span>  <a class="code hl_typedef" href="namespacedyno.html#a7b74611da938f0d55a3b1fdb16219037">TrackletIds</a> tracklets;</div>
-<div class="line"><span class="lineno">   92</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; feature : *<span class="keyword">this</span>) {</div>
-<div class="line"><span class="lineno">   93</span>    <span class="keywordflow">if</span> (only_usable &amp;&amp; feature-&gt;usable()) {</div>
-<div class="line"><span class="lineno">   94</span>      tracklets.push_back(feature-&gt;trackletId());</div>
-<div class="line"><span class="lineno">   95</span>    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (!only_usable) {</div>
-<div class="line"><span class="lineno">   96</span>      tracklets.push_back(feature-&gt;trackletId());</div>
-<div class="line"><span class="lineno">   97</span>    }</div>
-<div class="line"><span class="lineno">   98</span>  }</div>
-<div class="line"><span class="lineno">   99</span> </div>
-<div class="line"><span class="lineno">  100</span>  <span class="keywordflow">return</span> tracklets;</div>
-<div class="line"><span class="lineno">  101</span>}</div>
-<div class="ttc" id="anamespacedyno_html_a7b74611da938f0d55a3b1fdb16219037"><div class="ttname"><a href="namespacedyno.html#a7b74611da938f0d55a3b1fdb16219037">dyno::TrackletIds</a></div><div class="ttdeci">std::vector&lt; TrackletId &gt; TrackletIds</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00082">Types.hpp:82</a></div></div>
+<p class="definition">Definition at line <a class="el" href="Feature_8cc_source.html#l00117">117</a> of file <a class="el" href="Feature_8cc_source.html">Feature.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  117</span>                                                                     {</div>
+<div class="line"><span class="lineno">  118</span>  <a class="code hl_typedef" href="namespacedyno.html#a7b74611da938f0d55a3b1fdb16219037">TrackletIds</a> tracklets;</div>
+<div class="line"><span class="lineno">  119</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; feature : *<span class="keyword">this</span>) {</div>
+<div class="line"><span class="lineno">  120</span>    <span class="keywordflow">if</span> (only_usable &amp;&amp; feature-&gt;usable()) {</div>
+<div class="line"><span class="lineno">  121</span>      tracklets.push_back(feature-&gt;trackletId());</div>
+<div class="line"><span class="lineno">  122</span>    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (!only_usable) {</div>
+<div class="line"><span class="lineno">  123</span>      tracklets.push_back(feature-&gt;trackletId());</div>
+<div class="line"><span class="lineno">  124</span>    }</div>
+<div class="line"><span class="lineno">  125</span>  }</div>
+<div class="line"><span class="lineno">  126</span> </div>
+<div class="line"><span class="lineno">  127</span>  <span class="keywordflow">return</span> tracklets;</div>
+<div class="line"><span class="lineno">  128</span>}</div>
+<div class="ttc" id="anamespacedyno_html_a7b74611da938f0d55a3b1fdb16219037"><div class="ttname"><a href="namespacedyno.html#a7b74611da938f0d55a3b1fdb16219037">dyno::TrackletIds</a></div><div class="ttdeci">std::vector&lt; TrackletId &gt; TrackletIds</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00083">Types.hpp:83</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -850,9 +950,9 @@ Here is the caller graph for this function:</div>
 <dd>
 false </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00570">570</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  570</span>{ <span class="keywordflow">return</span> <a class="code hl_function" href="classdyno_1_1FeatureContainer.html#afd095f6a9e0f25539e7febe6eeeaf003">size</a>() == 0u; }</div>
-<div class="ttc" id="aclassdyno_1_1FeatureContainer_html_afd095f6a9e0f25539e7febe6eeeaf003"><div class="ttname"><a href="classdyno_1_1FeatureContainer.html#afd095f6a9e0f25539e7febe6eeeaf003">dyno::FeatureContainer::size</a></div><div class="ttdeci">size_t size() const</div><div class="ttdoc">Returns the number of features in the container.</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8cc_source.html#l00111">Feature.cc:111</a></div></div>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00579">579</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  579</span>{ <span class="keywordflow">return</span> <a class="code hl_function" href="classdyno_1_1FeatureContainer.html#afd095f6a9e0f25539e7febe6eeeaf003">size</a>() == 0u; }</div>
+<div class="ttc" id="aclassdyno_1_1FeatureContainer_html_afd095f6a9e0f25539e7febe6eeeaf003"><div class="ttname"><a href="classdyno_1_1FeatureContainer.html#afd095f6a9e0f25539e7febe6eeeaf003">dyno::FeatureContainer::size</a></div><div class="ttdeci">size_t size() const</div><div class="ttdoc">Returns the number of features in the container.</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8cc_source.html#l00138">Feature.cc:138</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1FeatureContainer.html#afd095f6a9e0f25539e7febe6eeeaf003">size()</a>.</p>
 
@@ -902,8 +1002,8 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00628">628</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  628</span>{ <span class="keywordflow">return</span> <a class="code hl_typedef" href="classdyno_1_1FeatureContainer.html#a966260ea2e082e4cfaa6ba964df300e5">vector_iterator</a>(<a class="code hl_variable" href="classdyno_1_1FeatureContainer.html#a21f147fb2c8b1eb3025a7bc451efdf3a">feature_map_</a>.end()); }</div>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00643">643</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  643</span>{ <span class="keywordflow">return</span> <a class="code hl_typedef" href="classdyno_1_1FeatureContainer.html#a966260ea2e082e4cfaa6ba964df300e5">vector_iterator</a>(<a class="code hl_variable" href="classdyno_1_1FeatureContainer.html#a21f147fb2c8b1eb3025a7bc451efdf3a">feature_map_</a>.end()); }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1FeatureContainer.html#a21f147fb2c8b1eb3025a7bc451efdf3a">feature_map_</a>.</p>
 
@@ -932,12 +1032,60 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00629">629</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  629</span>                                           {</div>
-<div class="line"><span class="lineno">  630</span>    <span class="keywordflow">return</span> <a class="code hl_typedef" href="classdyno_1_1FeatureContainer.html#a2741185eb29d57e75ddf4dd84d67caff">const_vector_iterator</a>(<a class="code hl_variable" href="classdyno_1_1FeatureContainer.html#a21f147fb2c8b1eb3025a7bc451efdf3a">feature_map_</a>.cend());</div>
-<div class="line"><span class="lineno">  631</span>  }</div>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00644">644</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  644</span>                                           {</div>
+<div class="line"><span class="lineno">  645</span>    <span class="keywordflow">return</span> <a class="code hl_typedef" href="classdyno_1_1FeatureContainer.html#a2741185eb29d57e75ddf4dd84d67caff">const_vector_iterator</a>(<a class="code hl_variable" href="classdyno_1_1FeatureContainer.html#a21f147fb2c8b1eb3025a7bc451efdf3a">feature_map_</a>.cend());</div>
+<div class="line"><span class="lineno">  646</span>  }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1FeatureContainer.html#a21f147fb2c8b1eb3025a7bc451efdf3a">feature_map_</a>.</p>
+
+</div>
+</div>
+<a id="af09dcd9df85aac10df403f0057cd9f47" name="af09dcd9df85aac10df403f0057cd9f47"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af09dcd9df85aac10df403f0057cd9f47">&#9670;&#160;</a></span>endObjectIterator() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">FeatureContainer::ObjectToFeatureMap::iterator dyno::FeatureContainer::endObjectIterator </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Feature_8cc_source.html#l00186">186</a> of file <a class="el" href="Feature_8cc_source.html">Feature.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  186</span>                                    {</div>
+<div class="line"><span class="lineno">  187</span>  <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1FeatureContainer.html#a0365776734d305cbdb942f39b715a967">object_feature_map_</a>.end();</div>
+<div class="line"><span class="lineno">  188</span>}</div>
+</div><!-- fragment -->
+<p class="reference">References <a class="el" href="classdyno_1_1FeatureContainer.html#a0365776734d305cbdb942f39b715a967">object_feature_map_</a>.</p>
+
+</div>
+</div>
+<a id="ad1c49e4c37c80286c2dcd93c21b84016" name="ad1c49e4c37c80286c2dcd93c21b84016"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad1c49e4c37c80286c2dcd93c21b84016">&#9670;&#160;</a></span>endObjectIterator() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">FeatureContainer::ObjectToFeatureMap::const_iterator dyno::FeatureContainer::endObjectIterator </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Feature_8cc_source.html#l00195">195</a> of file <a class="el" href="Feature_8cc_source.html">Feature.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  195</span>                                          {</div>
+<div class="line"><span class="lineno">  196</span>  <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1FeatureContainer.html#a0365776734d305cbdb942f39b715a967">object_feature_map_</a>.end();</div>
+<div class="line"><span class="lineno">  197</span>}</div>
+</div><!-- fragment -->
+<p class="reference">References <a class="el" href="classdyno_1_1FeatureContainer.html#a0365776734d305cbdb942f39b715a967">object_feature_map_</a>.</p>
 
 </div>
 </div>
@@ -968,51 +1116,78 @@ Here is the caller graph for this function:</div>
 <dd>
 false </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Feature_8cc_source.html#l00129">129</a> of file <a class="el" href="Feature_8cc_source.html">Feature.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  129</span>                                                          {</div>
-<div class="line"><span class="lineno">  130</span>  <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1FeatureContainer.html#a21f147fb2c8b1eb3025a7bc451efdf3a">feature_map_</a>.find(tracklet_id) != <a class="code hl_variable" href="classdyno_1_1FeatureContainer.html#a21f147fb2c8b1eb3025a7bc451efdf3a">feature_map_</a>.end();</div>
-<div class="line"><span class="lineno">  131</span>}</div>
+<p class="definition">Definition at line <a class="el" href="Feature_8cc_source.html#l00156">156</a> of file <a class="el" href="Feature_8cc_source.html">Feature.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  156</span>                                                          {</div>
+<div class="line"><span class="lineno">  157</span>  <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1FeatureContainer.html#a21f147fb2c8b1eb3025a7bc451efdf3a">feature_map_</a>.find(tracklet_id) != <a class="code hl_variable" href="classdyno_1_1FeatureContainer.html#a21f147fb2c8b1eb3025a7bc451efdf3a">feature_map_</a>.end();</div>
+<div class="line"><span class="lineno">  158</span>}</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1FeatureContainer.html#a21f147fb2c8b1eb3025a7bc451efdf3a">feature_map_</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1FeatureContainer.html#a37c69e810a3d70841616c85d9be97418">add()</a>, <a class="el" href="classdyno_1_1Frame.html#ab1af68fa722b3a69160ae0436318ad19">dyno::Frame::at()</a>, <a class="el" href="classdyno_1_1Frame.html#ab9f7b3f513aeff82d47de7a72d66a69a">dyno::Frame::exists()</a>, <a class="el" href="classdyno_1_1FeatureContainer.html#a5b73e75d2f4063ac9c16dd0fd565f8da">getByTrackletId()</a>, <a class="el" href="namespacedyno_1_1vision__tools.html#ac7721b6e34c712cd9d194afe30dec47c">dyno::vision_tools::getCorrespondences()</a>, <a class="el" href="classdyno_1_1FeatureContainer.html#ae987542e555aa684659c07b3aa006a4f">markOutliers()</a>, <a class="el" href="classdyno_1_1Frame.html#aa2382204ba0abc50393dd52f06cfa590">dyno::Frame::moveObjectToStatic()</a>, and <a class="el" href="classdyno_1_1FeatureContainer.html#ad4d6a858c333b4c35d3e6b8fb519ccc0">remove()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1FeatureContainer.html#a37c69e810a3d70841616c85d9be97418">add()</a>, <a class="el" href="classdyno_1_1Frame.html#ab1af68fa722b3a69160ae0436318ad19">dyno::Frame::at()</a>, <a class="el" href="classdyno_1_1Frame.html#ab9f7b3f513aeff82d47de7a72d66a69a">dyno::Frame::exists()</a>, <a class="el" href="classdyno_1_1FeatureContainer.html#a5b73e75d2f4063ac9c16dd0fd565f8da">getByTrackletId()</a>, <a class="el" href="namespacedyno_1_1vision__tools.html#ac7721b6e34c712cd9d194afe30dec47c">dyno::vision_tools::getCorrespondences()</a>, <a class="el" href="classdyno_1_1FeatureContainer.html#ae987542e555aa684659c07b3aa006a4f">markOutliers()</a>, and <a class="el" href="classdyno_1_1FeatureContainer.html#ad4d6a858c333b4c35d3e6b8fb519ccc0">remove()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1FeatureContainer_abf2f2d568f5dc17944cc122c537a65f5_icgraph.png" border="0" usemap="#aclassdyno_1_1FeatureContainer_abf2f2d568f5dc17944cc122c537a65f5_icgraph" alt=""/></div>
 <map name="aclassdyno_1_1FeatureContainer_abf2f2d568f5dc17944cc122c537a65f5_icgraph" id="aclassdyno_1_1FeatureContainer_abf2f2d568f5dc17944cc122c537a65f5_icgraph">
-<area shape="rect" title="Returns true if a feature with the given tracklet id exists." alt="" coords="1505,500,1680,540"/>
-<area shape="rect" href="classdyno_1_1FeatureContainer.html#a37c69e810a3d70841616c85d9be97418" title="Adds a new feature to the container. Uses feature&#45;&gt;trackletId() to set the tracklet key." alt="" coords="1251,326,1457,351"/>
-<area shape="rect" href="classdyno_1_1Frame.html#ab1af68fa722b3a69160ae0436318ad19" title="Gets a feature from its tracklet ID. Could be static or dynamic. Nullptr is returned if the feature d..." alt="" coords="1039,318,1163,343"/>
-<area shape="rect" href="classdyno_1_1Frame.html#ab9f7b3f513aeff82d47de7a72d66a69a" title="Checks if a feature exists within this frame. Could be static or dynamic." alt="" coords="1279,427,1429,453"/>
-<area shape="rect" href="classdyno_1_1FeatureContainer.html#a5b73e75d2f4063ac9c16dd0fd565f8da" title="Gets a feature given its tracklet id. If the feature does not exist, nullptr is returned." alt="" coords="1267,528,1441,568"/>
-<area shape="rect" href="namespacedyno_1_1vision__tools.html#ac7721b6e34c712cd9d194afe30dec47c" title=" " alt="" coords="1019,368,1182,408"/>
-<area shape="rect" href="classdyno_1_1FeatureContainer.html#ae987542e555aa684659c07b3aa006a4f" title="Mark all features with the provided tracklet ids as outliers. If the present feature is already an ou..." alt="" coords="1013,675,1188,715"/>
-<area shape="rect" href="classdyno_1_1Frame.html#aa2382204ba0abc50393dd52f06cfa590" title=" " alt="" coords="999,739,1203,779"/>
-<area shape="rect" href="classdyno_1_1FeatureContainer.html#ad4d6a858c333b4c35d3e6b8fb519ccc0" title="Removes a feature by tracklet id by using std::map::erase." alt="" coords="1267,739,1441,779"/>
-<area shape="rect" href="classdyno_1_1Frame.html#a2ae8cf50090de2db5d1c4bba03bf4c3c" title="Project the feature into the camera frame and returns the 3D landmark. Currently requires the feature..." alt="" coords="706,368,893,408"/>
-<area shape="rect" href="classdyno_1_1Frame.html#ae588299966f1a710e11db6d64cc5b707" title="Project the feature into the world frame using the frames pose (T_world_camera_) and returns the 3D l..." alt="" coords="706,133,893,173"/>
-<area shape="rect" href="classdyno_1_1Frame.html#aa824566e1ca6fe3ec31cc0ae0c1e4b3e" title="Collects a vector of feature pointers given a vector of tracklet ids. Features returned could be inli..." alt="" coords="694,318,905,343"/>
-<area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#a246f701e4605c98dc7cb6bbd6f657998" title=" " alt="" coords="343,261,555,301"/>
-<area shape="rect" href="classdyno_1_1Frame.html#aa422da72388d9f58a41ba3fbf853470b" title="Returns true if the feature is usable (inlier). Throws std::runtime_error if the feature does not exi..." alt="" coords="691,269,907,294"/>
+<area shape="rect" title="Returns true if a feature with the given tracklet id exists." alt="" coords="1491,272,1665,312"/>
+<area shape="rect" href="classdyno_1_1FeatureContainer.html#a37c69e810a3d70841616c85d9be97418" title="Adds a new feature to the container. Uses feature&#45;&gt;trackletId() to set the tracklet key." alt="" coords="1236,129,1443,154"/>
+<area shape="rect" href="classdyno_1_1Frame.html#ab1af68fa722b3a69160ae0436318ad19" title="Gets a feature from its tracklet ID. Could be static or dynamic. Nullptr is returned if the feature d..." alt="" coords="1031,165,1155,190"/>
+<area shape="rect" href="classdyno_1_1Frame.html#ab9f7b3f513aeff82d47de7a72d66a69a" title="Checks if a feature exists within this frame. Could be static or dynamic." alt="" coords="1264,178,1415,203"/>
+<area shape="rect" href="classdyno_1_1FeatureContainer.html#a5b73e75d2f4063ac9c16dd0fd565f8da" title="Gets a feature given its tracklet id. If the feature does not exist, nullptr is returned." alt="" coords="1252,343,1427,383"/>
+<area shape="rect" href="namespacedyno_1_1vision__tools.html#ac7721b6e34c712cd9d194afe30dec47c" title=" " alt="" coords="1012,215,1175,255"/>
+<area shape="rect" href="classdyno_1_1FeatureContainer.html#ae987542e555aa684659c07b3aa006a4f" title="Mark all features with the provided tracklet ids as outliers. If the present feature is already an ou..." alt="" coords="1006,521,1181,561"/>
+<area shape="rect" href="classdyno_1_1FeatureContainer.html#ad4d6a858c333b4c35d3e6b8fb519ccc0" title="Removes a feature by tracklet id by using std::map::erase." alt="" coords="1006,585,1181,625"/>
+<area shape="rect" href="classdyno_1_1Frame.html#a2ae8cf50090de2db5d1c4bba03bf4c3c" title="Project the feature into the camera frame and returns the 3D landmark. Currently requires the feature..." alt="" coords="706,5,893,45"/>
+<area shape="rect" href="classdyno_1_1Frame.html#ae588299966f1a710e11db6d64cc5b707" title="Project the feature into the world frame using the frames pose (T_world_camera_) and returns the 3D l..." alt="" coords="706,69,893,109"/>
+<area shape="rect" href="classdyno_1_1Frame.html#aa824566e1ca6fe3ec31cc0ae0c1e4b3e" title="Collects a vector of feature pointers given a vector of tracklet ids. Features returned could be inli..." alt="" coords="694,134,905,159"/>
+<area shape="rect" href="classdyno_1_1Frame.html#aa422da72388d9f58a41ba3fbf853470b" title="Returns true if the feature is usable (inlier). Throws std::runtime_error if the feature does not exi..." alt="" coords="691,183,907,209"/>
 <area shape="rect" href="classdyno_1_1Frame.html#a3f31ac034ecc4e9c015f77efc30bb7c2" title="Helper function that creates a ConstructCorrespondanceFunc which operates to return a TrackletCorresp..." alt="" coords="343,133,554,173"/>
 <area shape="rect" href="classdyno_1_1Frame.html#a6827afe8532fbf39ae7e033d4d4c7371" title="Helper function ConstructCorrespondanceFunc which operates to return a TrackletCorrespondance where b..." alt="" coords="343,5,554,45"/>
 <area shape="rect" href="classdyno_1_1Frame.html#a692c305764890db8dbae7781a1a11544" title="Helper function that creates a ConstructCorrespondanceFunc which operates to return a TrackletCorresp..." alt="" coords="329,69,568,109"/>
-<area shape="rect" href="namespacedyno_1_1vision__tools.html#a70f3daa5a2a0fb3a715ffb1fb65992cb" title="Depricate ;)" alt="" coords="379,197,519,237"/>
-<area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2" title=" " alt="" coords="21,229,233,269"/>
-<area shape="rect" href="classdyno_1_1FeatureTrackerBase.html#aa902950650699301214f776a905e3b77" title=" " alt="" coords="1006,496,1195,536"/>
-<area shape="rect" href="classdyno_1_1FeatureTracker.html#a31f607c5d1fca4c1ace6af223abb5ead" title=" " alt="" coords="721,649,878,689"/>
-<area shape="rect" href="classdyno_1_1KltFeatureTracker.html#a8f26d8fe56edd3e579a879e82a40457f" title="Tracks features using KLT tracker between the previous image and the current one." alt="" coords="1013,560,1188,600"/>
-<area shape="rect" href="classdyno_1_1Frame.html#acc0b1ce3db98e32adf8ef52c39a82321" title=" " alt="" coords="1001,432,1200,472"/>
-<area shape="rect" href="classdyno_1_1Frame.html#acd53bfdd333a0577003c2c85f7d60dbd" title="Gets the set of tracked pairs between this frame and the previous frame for a tracked dynamic object ..." alt="" coords="648,433,951,458"/>
-<area shape="rect" href="classdyno_1_1Frame.html#a2dae0d4fd6d5ae47802ff8f6602d652b" title=" " alt="" coords="659,482,940,507"/>
-<area shape="rect" href="classdyno_1_1Frame.html#a0ee3d3a6479eada0e5443feb48613cdc" title="Gets the set of tracked pairs between this frame and the previous frame. All correspondences will be ..." alt="" coords="327,482,571,507"/>
-<area shape="rect" href="classdyno_1_1Frame.html#a2efd60e3d057b2519572ef951308dd8c" title=" " alt="" coords="297,433,600,458"/>
-<area shape="rect" href="classdyno_1_1Frame.html#a40ef74f44116cf581522314b3a053c3a" title=" " alt="" coords="5,482,249,507"/>
-<area shape="rect" href="classdyno_1_1KltFeatureTracker.html#ab15aaa39f0c3adc62037d718b98039c0" title="Track features between frames k&#45;1 and the current set of images (at k)." alt="" coords="712,560,887,600"/>
-<area shape="rect" href="classdyno_1_1FeatureContainer.html#a4a7236c0a1b8c864962492839dcc743e" title="Removes all features with a particular object id." alt="" coords="1013,803,1188,843"/>
+<area shape="rect" href="classdyno_1_1FeatureTrackerBase.html#aa902950650699301214f776a905e3b77" title=" " alt="" coords="999,279,1188,319"/>
+<area shape="rect" href="classdyno_1_1FeatureTracker.html#a31f607c5d1fca4c1ace6af223abb5ead" title=" " alt="" coords="721,496,878,536"/>
+<area shape="rect" href="classdyno_1_1FeatureTracker.html#a4796a29c1f89cde0ace1668fc8fcd9a3" title=" " alt="" coords="1015,343,1172,383"/>
+<area shape="rect" href="classdyno_1_1KltFeatureTracker.html#a8f26d8fe56edd3e579a879e82a40457f" title="Tracks features using KLT tracker between the previous image and the current one." alt="" coords="1006,407,1181,447"/>
+<area shape="rect" href="classdyno_1_1Frame.html#acd53bfdd333a0577003c2c85f7d60dbd" title="Gets the set of tracked pairs between this frame and the previous frame for a tracked dynamic object ..." alt="" coords="648,282,951,307"/>
+<area shape="rect" href="classdyno_1_1Frame.html#a2dae0d4fd6d5ae47802ff8f6602d652b" title=" " alt="" coords="659,233,940,258"/>
+<area shape="rect" href="classdyno_1_1Frame.html#a0ee3d3a6479eada0e5443feb48613cdc" title="Gets the set of tracked pairs between this frame and the previous frame. All correspondences will be ..." alt="" coords="327,233,571,258"/>
+<area shape="rect" href="classdyno_1_1Frame.html#a2efd60e3d057b2519572ef951308dd8c" title=" " alt="" coords="297,282,600,307"/>
+<area shape="rect" href="classdyno_1_1Frame.html#a40ef74f44116cf581522314b3a053c3a" title=" " alt="" coords="5,233,249,258"/>
+<area shape="rect" href="classdyno_1_1FeatureContainer.html#a4a7236c0a1b8c864962492839dcc743e" title="Removes all features with a particular object id." alt="" coords="712,585,887,625"/>
+<area shape="rect" href="classdyno_1_1FeatureTracker.html#a40ee79c94fe2de7f16d2a4508cc2ba11" title=" " alt="" coords="721,343,878,383"/>
+<area shape="rect" href="classdyno_1_1KltFeatureTracker.html#ab15aaa39f0c3adc62037d718b98039c0" title="Track features between frames k&#45;1 and the current set of images (at k)." alt="" coords="712,407,887,447"/>
 </map>
 </div>
+
+</div>
+</div>
+<a id="a9f23ba942bda519d6f8ae498410235a5" name="a9f23ba942bda519d6f8ae498410235a5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9f23ba942bda519d6f8ae498410235a5">&#9670;&#160;</a></span>getByObject()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespacedyno.html#a7b74611da938f0d55a3b1fdb16219037">TrackletIds</a> dyno::FeatureContainer::getByObject </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacedyno.html#a38bb86e4154b86428b8d133be03fb2b5">ObjectId</a>&#160;</td>
+          <td class="paramname"><em>object_id</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Feature_8cc_source.html#l00160">160</a> of file <a class="el" href="Feature_8cc_source.html">Feature.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  160</span>                                                                  {</div>
+<div class="line"><span class="lineno">  161</span>  <span class="keywordflow">if</span> (<a class="code hl_variable" href="classdyno_1_1FeatureContainer.html#a0365776734d305cbdb942f39b715a967">object_feature_map_</a>.exists(object_id)) {</div>
+<div class="line"><span class="lineno">  162</span>    <span class="keyword">const</span> <span class="keyword">auto</span>&amp; tracklets = <a class="code hl_variable" href="classdyno_1_1FeatureContainer.html#a0365776734d305cbdb942f39b715a967">object_feature_map_</a>.at(object_id);</div>
+<div class="line"><span class="lineno">  163</span>    <span class="keywordflow">return</span> <a class="code hl_typedef" href="namespacedyno.html#a7b74611da938f0d55a3b1fdb16219037">TrackletIds</a>(tracklets.begin(), tracklets.end());</div>
+<div class="line"><span class="lineno">  164</span>  } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  165</span>    <span class="keywordflow">return</span> <a class="code hl_typedef" href="namespacedyno.html#a7b74611da938f0d55a3b1fdb16219037">TrackletIds</a>{};</div>
+<div class="line"><span class="lineno">  166</span>  }</div>
+<div class="line"><span class="lineno">  167</span>}</div>
+</div><!-- fragment -->
+<p class="reference">References <a class="el" href="classdyno_1_1FeatureContainer.html#a0365776734d305cbdb942f39b715a967">object_feature_map_</a>.</p>
 
 </div>
 </div>
@@ -1041,17 +1216,17 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Feature::Ptr </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Feature_8cc_source.html#l00122">122</a> of file <a class="el" href="Feature_8cc_source.html">Feature.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  122</span>                                                                         {</div>
-<div class="line"><span class="lineno">  123</span>  <span class="keywordflow">if</span> (!<a class="code hl_function" href="classdyno_1_1FeatureContainer.html#abf2f2d568f5dc17944cc122c537a65f5">exists</a>(tracklet_id)) {</div>
-<div class="line"><span class="lineno">  124</span>    <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
-<div class="line"><span class="lineno">  125</span>  }</div>
-<div class="line"><span class="lineno">  126</span>  <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1FeatureContainer.html#a21f147fb2c8b1eb3025a7bc451efdf3a">feature_map_</a>.at(tracklet_id);</div>
-<div class="line"><span class="lineno">  127</span>}</div>
+<p class="definition">Definition at line <a class="el" href="Feature_8cc_source.html#l00149">149</a> of file <a class="el" href="Feature_8cc_source.html">Feature.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  149</span>                                                                         {</div>
+<div class="line"><span class="lineno">  150</span>  <span class="keywordflow">if</span> (!<a class="code hl_function" href="classdyno_1_1FeatureContainer.html#abf2f2d568f5dc17944cc122c537a65f5">exists</a>(tracklet_id)) {</div>
+<div class="line"><span class="lineno">  151</span>    <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
+<div class="line"><span class="lineno">  152</span>  }</div>
+<div class="line"><span class="lineno">  153</span>  <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1FeatureContainer.html#a21f147fb2c8b1eb3025a7bc451efdf3a">feature_map_</a>.at(tracklet_id);</div>
+<div class="line"><span class="lineno">  154</span>}</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1FeatureContainer.html#abf2f2d568f5dc17944cc122c537a65f5">exists()</a>, and <a class="el" href="classdyno_1_1FeatureContainer.html#a21f147fb2c8b1eb3025a7bc451efdf3a">feature_map_</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1Frame.html#ab1af68fa722b3a69160ae0436318ad19">dyno::Frame::at()</a>, <a class="el" href="classdyno_1_1FeatureTrackerBase.html#aa902950650699301214f776a905e3b77">dyno::FeatureTrackerBase::computeImageTracks()</a>, <a class="el" href="namespacedyno_1_1vision__tools.html#ac7721b6e34c712cd9d194afe30dec47c">dyno::vision_tools::getCorrespondences()</a>, <a class="el" href="classdyno_1_1FeatureContainer.html#ae987542e555aa684659c07b3aa006a4f">markOutliers()</a>, <a class="el" href="classdyno_1_1Frame.html#aa2382204ba0abc50393dd52f06cfa590">dyno::Frame::moveObjectToStatic()</a>, <a class="el" href="classdyno_1_1FeatureTracker.html#a31f607c5d1fca4c1ace6af223abb5ead">dyno::FeatureTracker::stereoTrack()</a>, <a class="el" href="classdyno_1_1KltFeatureTracker.html#a8f26d8fe56edd3e579a879e82a40457f">dyno::KltFeatureTracker::trackPoints()</a>, and <a class="el" href="classdyno_1_1Frame.html#acc0b1ce3db98e32adf8ef52c39a82321">dyno::Frame::updateObjectTrackingLabel()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1Frame.html#ab1af68fa722b3a69160ae0436318ad19">dyno::Frame::at()</a>, <a class="el" href="classdyno_1_1FeatureTrackerBase.html#aa902950650699301214f776a905e3b77">dyno::FeatureTrackerBase::computeImageTracks()</a>, <a class="el" href="namespacedyno_1_1vision__tools.html#ac7721b6e34c712cd9d194afe30dec47c">dyno::vision_tools::getCorrespondences()</a>, <a class="el" href="classdyno_1_1FeatureContainer.html#ae987542e555aa684659c07b3aa006a4f">markOutliers()</a>, <a class="el" href="classdyno_1_1FeatureContainer.html#ad4d6a858c333b4c35d3e6b8fb519ccc0">remove()</a>, <a class="el" href="classdyno_1_1FeatureTracker.html#a31f607c5d1fca4c1ace6af223abb5ead">dyno::FeatureTracker::stereoTrack()</a>, <a class="el" href="classdyno_1_1FeatureTracker.html#a4796a29c1f89cde0ace1668fc8fcd9a3">dyno::FeatureTracker::trackDynamicKLT()</a>, and <a class="el" href="classdyno_1_1KltFeatureTracker.html#a8f26d8fe56edd3e579a879e82a40457f">dyno::KltFeatureTracker::trackPoints()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -1066,31 +1241,30 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1FeatureContainer_a5b73e75d2f4063ac9c16dd0fd565f8da_icgraph.png" border="0" usemap="#aclassdyno_1_1FeatureContainer_a5b73e75d2f4063ac9c16dd0fd565f8da_icgraph" alt=""/></div>
 <map name="aclassdyno_1_1FeatureContainer_a5b73e75d2f4063ac9c16dd0fd565f8da_icgraph" id="aclassdyno_1_1FeatureContainer_a5b73e75d2f4063ac9c16dd0fd565f8da_icgraph">
-<area shape="rect" title="Gets a feature given its tracklet id. If the feature does not exist, nullptr is returned." alt="" coords="1251,423,1425,463"/>
-<area shape="rect" href="classdyno_1_1Frame.html#ab1af68fa722b3a69160ae0436318ad19" title="Gets a feature from its tracklet ID. Could be static or dynamic. Nullptr is returned if the feature d..." alt="" coords="1039,201,1163,226"/>
-<area shape="rect" href="classdyno_1_1FeatureTrackerBase.html#aa902950650699301214f776a905e3b77" title=" " alt="" coords="1006,265,1195,305"/>
-<area shape="rect" href="namespacedyno_1_1vision__tools.html#ac7721b6e34c712cd9d194afe30dec47c" title=" " alt="" coords="1019,329,1182,369"/>
-<area shape="rect" href="classdyno_1_1FeatureContainer.html#ae987542e555aa684659c07b3aa006a4f" title="Mark all features with the provided tracklet ids as outliers. If the present feature is already an ou..." alt="" coords="1013,393,1188,433"/>
-<area shape="rect" href="classdyno_1_1FeatureTracker.html#a31f607c5d1fca4c1ace6af223abb5ead" title=" " alt="" coords="721,444,878,484"/>
-<area shape="rect" href="classdyno_1_1Frame.html#aa2382204ba0abc50393dd52f06cfa590" title=" " alt="" coords="999,508,1203,548"/>
-<area shape="rect" href="classdyno_1_1KltFeatureTracker.html#a8f26d8fe56edd3e579a879e82a40457f" title="Tracks features using KLT tracker between the previous image and the current one." alt="" coords="1013,572,1188,612"/>
-<area shape="rect" href="classdyno_1_1Frame.html#acc0b1ce3db98e32adf8ef52c39a82321" title=" " alt="" coords="1001,636,1200,676"/>
-<area shape="rect" href="classdyno_1_1Frame.html#a2ae8cf50090de2db5d1c4bba03bf4c3c" title="Project the feature into the camera frame and returns the 3D landmark. Currently requires the feature..." alt="" coords="706,57,893,97"/>
-<area shape="rect" href="classdyno_1_1Frame.html#ae588299966f1a710e11db6d64cc5b707" title="Project the feature into the world frame using the frames pose (T_world_camera_) and returns the 3D l..." alt="" coords="706,121,893,161"/>
-<area shape="rect" href="classdyno_1_1Frame.html#aa824566e1ca6fe3ec31cc0ae0c1e4b3e" title="Collects a vector of feature pointers given a vector of tracklet ids. Features returned could be inli..." alt="" coords="694,186,905,211"/>
-<area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#a246f701e4605c98dc7cb6bbd6f657998" title=" " alt="" coords="343,261,555,301"/>
-<area shape="rect" href="classdyno_1_1Frame.html#aa422da72388d9f58a41ba3fbf853470b" title="Returns true if the feature is usable (inlier). Throws std::runtime_error if the feature does not exi..." alt="" coords="691,287,907,313"/>
+<area shape="rect" title="Gets a feature given its tracklet id. If the feature does not exist, nullptr is returned." alt="" coords="1236,335,1411,375"/>
+<area shape="rect" href="classdyno_1_1Frame.html#ab1af68fa722b3a69160ae0436318ad19" title="Gets a feature from its tracklet ID. Could be static or dynamic. Nullptr is returned if the feature d..." alt="" coords="1031,127,1155,153"/>
+<area shape="rect" href="classdyno_1_1FeatureTrackerBase.html#aa902950650699301214f776a905e3b77" title=" " alt="" coords="999,177,1188,217"/>
+<area shape="rect" href="namespacedyno_1_1vision__tools.html#ac7721b6e34c712cd9d194afe30dec47c" title=" " alt="" coords="1012,241,1175,281"/>
+<area shape="rect" href="classdyno_1_1FeatureContainer.html#ae987542e555aa684659c07b3aa006a4f" title="Mark all features with the provided tracklet ids as outliers. If the present feature is already an ou..." alt="" coords="1006,305,1181,345"/>
+<area shape="rect" href="classdyno_1_1FeatureTracker.html#a31f607c5d1fca4c1ace6af223abb5ead" title=" " alt="" coords="721,347,878,387"/>
+<area shape="rect" href="classdyno_1_1FeatureContainer.html#ad4d6a858c333b4c35d3e6b8fb519ccc0" title="Removes a feature by tracklet id by using std::map::erase." alt="" coords="1006,420,1181,460"/>
+<area shape="rect" href="classdyno_1_1FeatureTracker.html#a4796a29c1f89cde0ace1668fc8fcd9a3" title=" " alt="" coords="1015,484,1172,524"/>
+<area shape="rect" href="classdyno_1_1KltFeatureTracker.html#a8f26d8fe56edd3e579a879e82a40457f" title="Tracks features using KLT tracker between the previous image and the current one." alt="" coords="1006,548,1181,588"/>
+<area shape="rect" href="classdyno_1_1Frame.html#a2ae8cf50090de2db5d1c4bba03bf4c3c" title="Project the feature into the camera frame and returns the 3D landmark. Currently requires the feature..." alt="" coords="706,5,893,45"/>
+<area shape="rect" href="classdyno_1_1Frame.html#ae588299966f1a710e11db6d64cc5b707" title="Project the feature into the world frame using the frames pose (T_world_camera_) and returns the 3D l..." alt="" coords="706,69,893,109"/>
+<area shape="rect" href="classdyno_1_1Frame.html#aa824566e1ca6fe3ec31cc0ae0c1e4b3e" title="Collects a vector of feature pointers given a vector of tracklet ids. Features returned could be inli..." alt="" coords="694,134,905,159"/>
+<area shape="rect" href="classdyno_1_1Frame.html#aa422da72388d9f58a41ba3fbf853470b" title="Returns true if the feature is usable (inlier). Throws std::runtime_error if the feature does not exi..." alt="" coords="691,183,907,209"/>
 <area shape="rect" href="classdyno_1_1Frame.html#a3f31ac034ecc4e9c015f77efc30bb7c2" title="Helper function that creates a ConstructCorrespondanceFunc which operates to return a TrackletCorresp..." alt="" coords="343,5,554,45"/>
 <area shape="rect" href="classdyno_1_1Frame.html#a6827afe8532fbf39ae7e033d4d4c7371" title="Helper function ConstructCorrespondanceFunc which operates to return a TrackletCorrespondance where b..." alt="" coords="343,69,554,109"/>
 <area shape="rect" href="classdyno_1_1Frame.html#a692c305764890db8dbae7781a1a11544" title="Helper function that creates a ConstructCorrespondanceFunc which operates to return a TrackletCorresp..." alt="" coords="329,133,568,173"/>
-<area shape="rect" href="namespacedyno_1_1vision__tools.html#a70f3daa5a2a0fb3a715ffb1fb65992cb" title="Depricate ;)" alt="" coords="379,197,519,237"/>
-<area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2" title=" " alt="" coords="21,229,233,269"/>
-<area shape="rect" href="classdyno_1_1Frame.html#acd53bfdd333a0577003c2c85f7d60dbd" title="Gets the set of tracked pairs between this frame and the previous frame for a tracked dynamic object ..." alt="" coords="648,386,951,411"/>
-<area shape="rect" href="classdyno_1_1Frame.html#a2dae0d4fd6d5ae47802ff8f6602d652b" title=" " alt="" coords="659,337,940,362"/>
-<area shape="rect" href="classdyno_1_1Frame.html#a0ee3d3a6479eada0e5443feb48613cdc" title="Gets the set of tracked pairs between this frame and the previous frame. All correspondences will be ..." alt="" coords="327,337,571,362"/>
-<area shape="rect" href="classdyno_1_1Frame.html#a2efd60e3d057b2519572ef951308dd8c" title=" " alt="" coords="297,386,600,411"/>
-<area shape="rect" href="classdyno_1_1Frame.html#a40ef74f44116cf581522314b3a053c3a" title=" " alt="" coords="5,337,249,362"/>
-<area shape="rect" href="classdyno_1_1KltFeatureTracker.html#ab15aaa39f0c3adc62037d718b98039c0" title="Track features between frames k&#45;1 and the current set of images (at k)." alt="" coords="712,572,887,612"/>
+<area shape="rect" href="classdyno_1_1Frame.html#acd53bfdd333a0577003c2c85f7d60dbd" title="Gets the set of tracked pairs between this frame and the previous frame for a tracked dynamic object ..." alt="" coords="648,293,951,318"/>
+<area shape="rect" href="classdyno_1_1Frame.html#a2dae0d4fd6d5ae47802ff8f6602d652b" title=" " alt="" coords="659,243,940,269"/>
+<area shape="rect" href="classdyno_1_1Frame.html#a0ee3d3a6479eada0e5443feb48613cdc" title="Gets the set of tracked pairs between this frame and the previous frame. All correspondences will be ..." alt="" coords="327,243,571,269"/>
+<area shape="rect" href="classdyno_1_1Frame.html#a2efd60e3d057b2519572ef951308dd8c" title=" " alt="" coords="297,293,600,318"/>
+<area shape="rect" href="classdyno_1_1Frame.html#a40ef74f44116cf581522314b3a053c3a" title=" " alt="" coords="5,243,249,269"/>
+<area shape="rect" href="classdyno_1_1FeatureContainer.html#a4a7236c0a1b8c864962492839dcc743e" title="Removes all features with a particular object id." alt="" coords="712,420,887,460"/>
+<area shape="rect" href="classdyno_1_1FeatureTracker.html#a40ee79c94fe2de7f16d2a4508cc2ba11" title=" " alt="" coords="721,484,878,524"/>
+<area shape="rect" href="classdyno_1_1KltFeatureTracker.html#ab15aaa39f0c3adc62037d718b98039c0" title="Track features between frames k&#45;1 and the current set of images (at k)." alt="" coords="712,548,887,588"/>
 </map>
 </div>
 
@@ -1120,16 +1294,16 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="Feature_8cc_source.html#l00103">103</a> of file <a class="el" href="Feature_8cc_source.html">Feature.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  103</span>                                                               {</div>
-<div class="line"><span class="lineno">  104</span>  <span class="keywordflow">for</span> (<a class="code hl_typedef" href="namespacedyno.html#afdd174eb44901fb205371d796287378c">TrackletId</a> tracklet_id : outliers) {</div>
-<div class="line"><span class="lineno">  105</span>    CHECK(<a class="code hl_function" href="classdyno_1_1FeatureContainer.html#abf2f2d568f5dc17944cc122c537a65f5">exists</a>(tracklet_id));</div>
-<div class="line"><span class="lineno">  106</span> </div>
-<div class="line"><span class="lineno">  107</span>    <a class="code hl_function" href="classdyno_1_1FeatureContainer.html#a5b73e75d2f4063ac9c16dd0fd565f8da">getByTrackletId</a>(tracklet_id)-&gt;markOutlier();</div>
-<div class="line"><span class="lineno">  108</span>  }</div>
-<div class="line"><span class="lineno">  109</span>}</div>
-<div class="ttc" id="aclassdyno_1_1FeatureContainer_html_a5b73e75d2f4063ac9c16dd0fd565f8da"><div class="ttname"><a href="classdyno_1_1FeatureContainer.html#a5b73e75d2f4063ac9c16dd0fd565f8da">dyno::FeatureContainer::getByTrackletId</a></div><div class="ttdeci">Feature::Ptr getByTrackletId(TrackletId tracklet_id) const</div><div class="ttdoc">Gets a feature given its tracklet id. If the feature does not exist, nullptr is returned.</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8cc_source.html#l00122">Feature.cc:122</a></div></div>
-<div class="ttc" id="anamespacedyno_html_afdd174eb44901fb205371d796287378c"><div class="ttname"><a href="namespacedyno.html#afdd174eb44901fb205371d796287378c">dyno::TrackletId</a></div><div class="ttdeci">long int TrackletId</div><div class="ttdoc">Unique tracklet/landmark id, i.</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00080">Types.hpp:80</a></div></div>
+<p class="definition">Definition at line <a class="el" href="Feature_8cc_source.html#l00130">130</a> of file <a class="el" href="Feature_8cc_source.html">Feature.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  130</span>                                                               {</div>
+<div class="line"><span class="lineno">  131</span>  <span class="keywordflow">for</span> (<a class="code hl_typedef" href="namespacedyno.html#afdd174eb44901fb205371d796287378c">TrackletId</a> tracklet_id : outliers) {</div>
+<div class="line"><span class="lineno">  132</span>    CHECK(<a class="code hl_function" href="classdyno_1_1FeatureContainer.html#abf2f2d568f5dc17944cc122c537a65f5">exists</a>(tracklet_id));</div>
+<div class="line"><span class="lineno">  133</span> </div>
+<div class="line"><span class="lineno">  134</span>    <a class="code hl_function" href="classdyno_1_1FeatureContainer.html#a5b73e75d2f4063ac9c16dd0fd565f8da">getByTrackletId</a>(tracklet_id)-&gt;markOutlier();</div>
+<div class="line"><span class="lineno">  135</span>  }</div>
+<div class="line"><span class="lineno">  136</span>}</div>
+<div class="ttc" id="aclassdyno_1_1FeatureContainer_html_a5b73e75d2f4063ac9c16dd0fd565f8da"><div class="ttname"><a href="classdyno_1_1FeatureContainer.html#a5b73e75d2f4063ac9c16dd0fd565f8da">dyno::FeatureContainer::getByTrackletId</a></div><div class="ttdeci">Feature::Ptr getByTrackletId(TrackletId tracklet_id) const</div><div class="ttdoc">Gets a feature given its tracklet id. If the feature does not exist, nullptr is returned.</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8cc_source.html#l00149">Feature.cc:149</a></div></div>
+<div class="ttc" id="anamespacedyno_html_afdd174eb44901fb205371d796287378c"><div class="ttname"><a href="namespacedyno.html#afdd174eb44901fb205371d796287378c">dyno::TrackletId</a></div><div class="ttdeci">long int TrackletId</div><div class="ttdoc">Unique tracklet/landmark id, i.</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00081">Types.hpp:81</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1FeatureContainer.html#abf2f2d568f5dc17944cc122c537a65f5">exists()</a>, and <a class="el" href="classdyno_1_1FeatureContainer.html#a5b73e75d2f4063ac9c16dd0fd565f8da">getByTrackletId()</a>.</p>
 
@@ -1180,13 +1354,15 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00614">614</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  614</span>                                                              {</div>
-<div class="line"><span class="lineno">  615</span>    <a class="code hl_variable" href="classdyno_1_1FeatureContainer.html#a21f147fb2c8b1eb3025a7bc451efdf3a">feature_map_</a>.insert(other.feature_map_.begin(), other.feature_map_.end());</div>
-<div class="line"><span class="lineno">  616</span>    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
-<div class="line"><span class="lineno">  617</span>  }</div>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00625">625</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  625</span>                                                              {</div>
+<div class="line"><span class="lineno">  626</span>    <a class="code hl_variable" href="classdyno_1_1FeatureContainer.html#a21f147fb2c8b1eb3025a7bc451efdf3a">feature_map_</a>.insert(other.feature_map_.begin(), other.feature_map_.end());</div>
+<div class="line"><span class="lineno">  627</span>    <a class="code hl_variable" href="classdyno_1_1FeatureContainer.html#a0365776734d305cbdb942f39b715a967">object_feature_map_</a>.insert(other.object_feature_map_.begin(),</div>
+<div class="line"><span class="lineno">  628</span>                               other.object_feature_map_.end());</div>
+<div class="line"><span class="lineno">  629</span>    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><span class="lineno">  630</span>  }</div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="classdyno_1_1FeatureContainer.html#a21f147fb2c8b1eb3025a7bc451efdf3a">feature_map_</a>.</p>
+<p class="reference">References <a class="el" href="classdyno_1_1FeatureContainer.html#a21f147fb2c8b1eb3025a7bc451efdf3a">feature_map_</a>, and <a class="el" href="classdyno_1_1FeatureContainer.html#a0365776734d305cbdb942f39b715a967">object_feature_map_</a>.</p>
 
 </div>
 </div>
@@ -1215,27 +1391,42 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="Feature_8cc_source.html#l00060">60</a> of file <a class="el" href="Feature_8cc_source.html">Feature.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   60</span>                                                    {</div>
-<div class="line"><span class="lineno">   61</span>  <span class="keywordflow">if</span> (!<a class="code hl_function" href="classdyno_1_1FeatureContainer.html#abf2f2d568f5dc17944cc122c537a65f5">exists</a>(tracklet_id)) {</div>
-<div class="line"><span class="lineno">   62</span>    <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;Cannot remove feature with tracklet id &quot;</span> +</div>
-<div class="line"><span class="lineno">   63</span>                             std::to_string(tracklet_id) +</div>
-<div class="line"><span class="lineno">   64</span>                             <span class="stringliteral">&quot; as feature does not exist!&quot;</span>);</div>
-<div class="line"><span class="lineno">   65</span>  }</div>
-<div class="line"><span class="lineno">   66</span> </div>
-<div class="line"><span class="lineno">   67</span>  <a class="code hl_variable" href="classdyno_1_1FeatureContainer.html#a21f147fb2c8b1eb3025a7bc451efdf3a">feature_map_</a>.erase(tracklet_id);</div>
-<div class="line"><span class="lineno">   68</span>}</div>
+<p class="definition">Definition at line <a class="el" href="Feature_8cc_source.html#l00067">67</a> of file <a class="el" href="Feature_8cc_source.html">Feature.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   67</span>                                                    {</div>
+<div class="line"><span class="lineno">   68</span>  <span class="keywordflow">if</span> (!<a class="code hl_function" href="classdyno_1_1FeatureContainer.html#abf2f2d568f5dc17944cc122c537a65f5">exists</a>(tracklet_id)) {</div>
+<div class="line"><span class="lineno">   69</span>    <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;Cannot remove feature with tracklet id &quot;</span> +</div>
+<div class="line"><span class="lineno">   70</span>                             std::to_string(tracklet_id) +</div>
+<div class="line"><span class="lineno">   71</span>                             <span class="stringliteral">&quot; as feature does not exist!&quot;</span>);</div>
+<div class="line"><span class="lineno">   72</span>  }</div>
+<div class="line"><span class="lineno">   73</span> </div>
+<div class="line"><span class="lineno">   74</span>  <span class="keyword">auto</span> feature = this-&gt;<a class="code hl_function" href="classdyno_1_1FeatureContainer.html#a5b73e75d2f4063ac9c16dd0fd565f8da">getByTrackletId</a>(tracklet_id);</div>
+<div class="line"><span class="lineno">   75</span>  <span class="keyword">const</span> <span class="keyword">auto</span> object_id = feature-&gt;objectId();</div>
+<div class="line"><span class="lineno">   76</span>  <span class="comment">// check object id exists in map</span></div>
+<div class="line"><span class="lineno">   77</span>  CHECK(<a class="code hl_variable" href="classdyno_1_1FeatureContainer.html#a0365776734d305cbdb942f39b715a967">object_feature_map_</a>.exists(object_id));</div>
+<div class="line"><span class="lineno">   78</span>  <span class="comment">// remove tracklet id from tracklet set and if the set is now empty</span></div>
+<div class="line"><span class="lineno">   79</span>  <span class="comment">// remove object id entirely</span></div>
+<div class="line"><span class="lineno">   80</span>  <span class="keyword">auto</span>&amp; tracklets_per_object = <a class="code hl_variable" href="classdyno_1_1FeatureContainer.html#a0365776734d305cbdb942f39b715a967">object_feature_map_</a>.at(object_id);</div>
+<div class="line"><span class="lineno">   81</span>  tracklets_per_object.erase(tracklet_id);</div>
+<div class="line"><span class="lineno">   82</span> </div>
+<div class="line"><span class="lineno">   83</span>  <span class="keywordflow">if</span> (tracklets_per_object.empty()) {</div>
+<div class="line"><span class="lineno">   84</span>    <a class="code hl_variable" href="classdyno_1_1FeatureContainer.html#a0365776734d305cbdb942f39b715a967">object_feature_map_</a>.erase(object_id);</div>
+<div class="line"><span class="lineno">   85</span>  }</div>
+<div class="line"><span class="lineno">   86</span> </div>
+<div class="line"><span class="lineno">   87</span>  <span class="comment">// remove from main feature map</span></div>
+<div class="line"><span class="lineno">   88</span>  <a class="code hl_variable" href="classdyno_1_1FeatureContainer.html#a21f147fb2c8b1eb3025a7bc451efdf3a">feature_map_</a>.erase(tracklet_id);</div>
+<div class="line"><span class="lineno">   89</span>}</div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="classdyno_1_1FeatureContainer.html#abf2f2d568f5dc17944cc122c537a65f5">exists()</a>, and <a class="el" href="classdyno_1_1FeatureContainer.html#a21f147fb2c8b1eb3025a7bc451efdf3a">feature_map_</a>.</p>
+<p class="reference">References <a class="el" href="classdyno_1_1FeatureContainer.html#abf2f2d568f5dc17944cc122c537a65f5">exists()</a>, <a class="el" href="classdyno_1_1FeatureContainer.html#a21f147fb2c8b1eb3025a7bc451efdf3a">feature_map_</a>, <a class="el" href="classdyno_1_1FeatureContainer.html#a5b73e75d2f4063ac9c16dd0fd565f8da">getByTrackletId()</a>, and <a class="el" href="classdyno_1_1FeatureContainer.html#a0365776734d305cbdb942f39b715a967">object_feature_map_</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1Frame.html#aa2382204ba0abc50393dd52f06cfa590">dyno::Frame::moveObjectToStatic()</a>, and <a class="el" href="classdyno_1_1FeatureContainer.html#a4a7236c0a1b8c864962492839dcc743e">removeByObjectId()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1FeatureContainer.html#a4a7236c0a1b8c864962492839dcc743e">removeByObjectId()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1FeatureContainer_ad4d6a858c333b4c35d3e6b8fb519ccc0_cgraph.png" border="0" usemap="#aclassdyno_1_1FeatureContainer_ad4d6a858c333b4c35d3e6b8fb519ccc0_cgraph" alt=""/></div>
 <map name="aclassdyno_1_1FeatureContainer_ad4d6a858c333b4c35d3e6b8fb519ccc0_cgraph" id="aclassdyno_1_1FeatureContainer_ad4d6a858c333b4c35d3e6b8fb519ccc0_cgraph">
 <area shape="rect" title="Removes a feature by tracklet id by using std::map::erase." alt="" coords="5,5,180,45"/>
-<area shape="rect" href="classdyno_1_1FeatureContainer.html#abf2f2d568f5dc17944cc122c537a65f5" title="Returns true if a feature with the given tracklet id exists." alt="" coords="228,5,403,45"/>
+<area shape="rect" href="classdyno_1_1FeatureContainer.html#abf2f2d568f5dc17944cc122c537a65f5" title="Returns true if a feature with the given tracklet id exists." alt="" coords="451,5,625,45"/>
+<area shape="rect" href="classdyno_1_1FeatureContainer.html#a5b73e75d2f4063ac9c16dd0fd565f8da" title="Gets a feature given its tracklet id. If the feature does not exist, nullptr is returned." alt="" coords="228,33,403,73"/>
 </map>
 </div>
 <div class="dynheader">
@@ -1243,9 +1434,8 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1FeatureContainer_ad4d6a858c333b4c35d3e6b8fb519ccc0_icgraph.png" border="0" usemap="#aclassdyno_1_1FeatureContainer_ad4d6a858c333b4c35d3e6b8fb519ccc0_icgraph" alt=""/></div>
 <map name="aclassdyno_1_1FeatureContainer_ad4d6a858c333b4c35d3e6b8fb519ccc0_icgraph" id="aclassdyno_1_1FeatureContainer_ad4d6a858c333b4c35d3e6b8fb519ccc0_icgraph">
-<area shape="rect" title="Removes a feature by tracklet id by using std::map::erase." alt="" coords="257,37,432,77"/>
-<area shape="rect" href="classdyno_1_1Frame.html#aa2382204ba0abc50393dd52f06cfa590" title=" " alt="" coords="5,5,209,45"/>
-<area shape="rect" href="classdyno_1_1FeatureContainer.html#a4a7236c0a1b8c864962492839dcc743e" title="Removes all features with a particular object id." alt="" coords="20,69,195,109"/>
+<area shape="rect" title="Removes a feature by tracklet id by using std::map::erase." alt="" coords="228,5,403,45"/>
+<area shape="rect" href="classdyno_1_1FeatureContainer.html#a4a7236c0a1b8c864962492839dcc743e" title="Removes all features with a particular object id." alt="" coords="5,5,180,45"/>
 </map>
 </div>
 
@@ -1275,26 +1465,29 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="Feature_8cc_source.html#l00070">70</a> of file <a class="el" href="Feature_8cc_source.html">Feature.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   70</span>                                                          {</div>
-<div class="line"><span class="lineno">   71</span>  <span class="comment">// collect all tracklets</span></div>
-<div class="line"><span class="lineno">   72</span>  <span class="keyword">auto</span> itr = <a class="code hl_typedef" href="classdyno_1_1FeatureContainer.html#adfe7dc618a19b055353122ffeda76171">FilterIterator</a>(*<span class="keyword">this</span>, [object_id](<span class="keyword">const</span> Feature::Ptr&amp; f) -&gt; <span class="keywordtype">bool</span> {</div>
-<div class="line"><span class="lineno">   73</span>    <span class="keywordflow">return</span> f-&gt;objectId() == object_id;</div>
-<div class="line"><span class="lineno">   74</span>  });</div>
-<div class="line"><span class="lineno">   75</span> </div>
-<div class="line"><span class="lineno">   76</span>  <a class="code hl_typedef" href="namespacedyno.html#a7b74611da938f0d55a3b1fdb16219037">TrackletIds</a> tracklets_to_remove;</div>
-<div class="line"><span class="lineno">   77</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; feature : itr) {</div>
-<div class="line"><span class="lineno">   78</span>    CHECK_EQ(feature-&gt;objectId(), object_id);</div>
-<div class="line"><span class="lineno">   79</span>    tracklets_to_remove.push_back(feature-&gt;trackletId());</div>
-<div class="line"><span class="lineno">   80</span>  }</div>
-<div class="line"><span class="lineno">   81</span> </div>
-<div class="line"><span class="lineno">   82</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> tracklet_id : tracklets_to_remove) {</div>
-<div class="line"><span class="lineno">   83</span>    this-&gt;<a class="code hl_function" href="classdyno_1_1FeatureContainer.html#ad4d6a858c333b4c35d3e6b8fb519ccc0">remove</a>(tracklet_id);</div>
-<div class="line"><span class="lineno">   84</span>  }</div>
-<div class="line"><span class="lineno">   85</span>}</div>
-<div class="ttc" id="aclassdyno_1_1FeatureContainer_html_ad4d6a858c333b4c35d3e6b8fb519ccc0"><div class="ttname"><a href="classdyno_1_1FeatureContainer.html#ad4d6a858c333b4c35d3e6b8fb519ccc0">dyno::FeatureContainer::remove</a></div><div class="ttdeci">void remove(TrackletId tracklet_id)</div><div class="ttdoc">Removes a feature by tracklet id by using std::map::erase.</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8cc_source.html#l00060">Feature.cc:60</a></div></div>
+<p class="definition">Definition at line <a class="el" href="Feature_8cc_source.html#l00091">91</a> of file <a class="el" href="Feature_8cc_source.html">Feature.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   91</span>                                                          {</div>
+<div class="line"><span class="lineno">   92</span>  <span class="comment">// collect all tracklets</span></div>
+<div class="line"><span class="lineno">   93</span>  <span class="keyword">auto</span> itr = <a class="code hl_typedef" href="classdyno_1_1FeatureContainer.html#adfe7dc618a19b055353122ffeda76171">FilterIterator</a>(*<span class="keyword">this</span>, [object_id](<span class="keyword">const</span> Feature::Ptr&amp; f) -&gt; <span class="keywordtype">bool</span> {</div>
+<div class="line"><span class="lineno">   94</span>    <span class="keywordflow">return</span> f-&gt;objectId() == object_id;</div>
+<div class="line"><span class="lineno">   95</span>  });</div>
+<div class="line"><span class="lineno">   96</span> </div>
+<div class="line"><span class="lineno">   97</span>  <a class="code hl_typedef" href="namespacedyno.html#a7b74611da938f0d55a3b1fdb16219037">TrackletIds</a> tracklets_to_remove;</div>
+<div class="line"><span class="lineno">   98</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; feature : itr) {</div>
+<div class="line"><span class="lineno">   99</span>    CHECK_EQ(feature-&gt;objectId(), object_id);</div>
+<div class="line"><span class="lineno">  100</span>    tracklets_to_remove.push_back(feature-&gt;trackletId());</div>
+<div class="line"><span class="lineno">  101</span>  }</div>
+<div class="line"><span class="lineno">  102</span> </div>
+<div class="line"><span class="lineno">  103</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> tracklet_id : tracklets_to_remove) {</div>
+<div class="line"><span class="lineno">  104</span>    this-&gt;<a class="code hl_function" href="classdyno_1_1FeatureContainer.html#ad4d6a858c333b4c35d3e6b8fb519ccc0">remove</a>(tracklet_id);</div>
+<div class="line"><span class="lineno">  105</span>  }</div>
+<div class="line"><span class="lineno">  106</span> </div>
+<div class="line"><span class="lineno">  107</span>  <span class="comment">// remove from object_feature_map_</span></div>
+<div class="line"><span class="lineno">  108</span>  <a class="code hl_variable" href="classdyno_1_1FeatureContainer.html#a0365776734d305cbdb942f39b715a967">object_feature_map_</a>.erase(object_id);</div>
+<div class="line"><span class="lineno">  109</span>}</div>
+<div class="ttc" id="aclassdyno_1_1FeatureContainer_html_ad4d6a858c333b4c35d3e6b8fb519ccc0"><div class="ttname"><a href="classdyno_1_1FeatureContainer.html#ad4d6a858c333b4c35d3e6b8fb519ccc0">dyno::FeatureContainer::remove</a></div><div class="ttdeci">void remove(TrackletId tracklet_id)</div><div class="ttdoc">Removes a feature by tracklet id by using std::map::erase.</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8cc_source.html#l00067">Feature.cc:67</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="classdyno_1_1FeatureContainer.html#ad4d6a858c333b4c35d3e6b8fb519ccc0">remove()</a>.</p>
+<p class="reference">References <a class="el" href="classdyno_1_1FeatureContainer.html#a0365776734d305cbdb942f39b715a967">object_feature_map_</a>, and <a class="el" href="classdyno_1_1FeatureContainer.html#ad4d6a858c333b4c35d3e6b8fb519ccc0">remove()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -1302,7 +1495,8 @@ Here is the call graph for this function:</div>
 <map name="aclassdyno_1_1FeatureContainer_a4a7236c0a1b8c864962492839dcc743e_cgraph" id="aclassdyno_1_1FeatureContainer_a4a7236c0a1b8c864962492839dcc743e_cgraph">
 <area shape="rect" title="Removes all features with a particular object id." alt="" coords="5,5,180,45"/>
 <area shape="rect" href="classdyno_1_1FeatureContainer.html#ad4d6a858c333b4c35d3e6b8fb519ccc0" title="Removes a feature by tracklet id by using std::map::erase." alt="" coords="228,5,403,45"/>
-<area shape="rect" href="classdyno_1_1FeatureContainer.html#abf2f2d568f5dc17944cc122c537a65f5" title="Returns true if a feature with the given tracklet id exists." alt="" coords="451,5,625,45"/>
+<area shape="rect" href="classdyno_1_1FeatureContainer.html#abf2f2d568f5dc17944cc122c537a65f5" title="Returns true if a feature with the given tracklet id exists." alt="" coords="673,5,848,45"/>
+<area shape="rect" href="classdyno_1_1FeatureContainer.html#a5b73e75d2f4063ac9c16dd0fd565f8da" title="Gets a feature given its tracklet id. If the feature does not exist, nullptr is returned." alt="" coords="451,33,625,73"/>
 </map>
 </div>
 
@@ -1326,28 +1520,29 @@ Here is the call graph for this function:</div>
 <p>Returns the number of features in the container. </p>
 <dl class="section return"><dt>Returns</dt><dd>size_t </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Feature_8cc_source.html#l00111">111</a> of file <a class="el" href="Feature_8cc_source.html">Feature.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  111</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1FeatureContainer.html#a21f147fb2c8b1eb3025a7bc451efdf3a">feature_map_</a>.size(); }</div>
+<p class="definition">Definition at line <a class="el" href="Feature_8cc_source.html#l00138">138</a> of file <a class="el" href="Feature_8cc_source.html">Feature.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  138</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1FeatureContainer.html#a21f147fb2c8b1eb3025a7bc451efdf3a">feature_map_</a>.size(); }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1FeatureContainer.html#a21f147fb2c8b1eb3025a7bc451efdf3a">feature_map_</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1KltFeatureTracker.html#a4870d167d7dbd1a04a8d7d15a376a573">dyno::KltFeatureTracker::detectFeatures()</a>, <a class="el" href="classdyno_1_1FeatureContainer.html#a4d5e186005b95a09871538e314922a11">empty()</a>, <a class="el" href="classdyno_1_1Frame.html#ad8265cee40cb874631176482a9a40fc3">dyno::Frame::numDynamicFeatures()</a>, <a class="el" href="classdyno_1_1Frame.html#a5d875b237cb599cd8f5a2c13feaf0be8">dyno::Frame::numStaticFeatures()</a>, <a class="el" href="classdyno_1_1FeatureTracker.html#ab50422938e62bccc34295c155357213a">dyno::FeatureTracker::requiresSampling()</a>, <a class="el" href="classdyno_1_1KltFeatureTracker.html#a8f26d8fe56edd3e579a879e82a40457f">dyno::KltFeatureTracker::trackPoints()</a>, and <a class="el" href="classdyno_1_1KltFeatureTracker.html#ab15aaa39f0c3adc62037d718b98039c0">dyno::KltFeatureTracker::trackStatic()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1KltFeatureTracker.html#a4870d167d7dbd1a04a8d7d15a376a573">dyno::KltFeatureTracker::detectFeatures()</a>, <a class="el" href="classdyno_1_1FeatureContainer.html#a4d5e186005b95a09871538e314922a11">empty()</a>, <a class="el" href="classdyno_1_1Frame.html#ad8265cee40cb874631176482a9a40fc3">dyno::Frame::numDynamicFeatures()</a>, <a class="el" href="classdyno_1_1Frame.html#a5d875b237cb599cd8f5a2c13feaf0be8">dyno::Frame::numStaticFeatures()</a>, <a class="el" href="classdyno_1_1FeatureTracker.html#ab50422938e62bccc34295c155357213a">dyno::FeatureTracker::requiresSampling()</a>, <a class="el" href="classdyno_1_1FeatureTracker.html#a4796a29c1f89cde0ace1668fc8fcd9a3">dyno::FeatureTracker::trackDynamicKLT()</a>, <a class="el" href="classdyno_1_1KltFeatureTracker.html#a8f26d8fe56edd3e579a879e82a40457f">dyno::KltFeatureTracker::trackPoints()</a>, and <a class="el" href="classdyno_1_1KltFeatureTracker.html#ab15aaa39f0c3adc62037d718b98039c0">dyno::KltFeatureTracker::trackStatic()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1FeatureContainer_afd095f6a9e0f25539e7febe6eeeaf003_icgraph.png" border="0" usemap="#aclassdyno_1_1FeatureContainer_afd095f6a9e0f25539e7febe6eeeaf003_icgraph" alt=""/></div>
 <map name="aclassdyno_1_1FeatureContainer_afd095f6a9e0f25539e7febe6eeeaf003_icgraph" id="aclassdyno_1_1FeatureContainer_afd095f6a9e0f25539e7febe6eeeaf003_icgraph">
-<area shape="rect" title="Returns the number of features in the container." alt="" coords="805,173,980,213"/>
-<area shape="rect" href="classdyno_1_1KltFeatureTracker.html#a4870d167d7dbd1a04a8d7d15a376a573" title=" " alt="" coords="543,173,717,213"/>
-<area shape="rect" href="classdyno_1_1KltFeatureTracker.html#a8f26d8fe56edd3e579a879e82a40457f" title="Tracks features using KLT tracker between the previous image and the current one." alt="" coords="254,116,429,156"/>
-<area shape="rect" href="classdyno_1_1KltFeatureTracker.html#ab15aaa39f0c3adc62037d718b98039c0" title="Track features between frames k&#45;1 and the current set of images (at k)." alt="" coords="5,88,180,128"/>
-<area shape="rect" href="classdyno_1_1FeatureContainer.html#a4d5e186005b95a09871538e314922a11" title="If the container is empty." alt="" coords="543,59,717,99"/>
-<area shape="rect" href="classdyno_1_1Frame.html#ad8265cee40cb874631176482a9a40fc3" title="Gets the total number of dynamic features observed at this frame. Includes usables (inliers) and outl..." alt="" coords="503,287,757,313"/>
-<area shape="rect" href="classdyno_1_1Frame.html#a5d875b237cb599cd8f5a2c13feaf0be8" title="Gets the total number of static features observed at this frame. Includes usables (inliers) and outli..." alt="" coords="513,238,747,263"/>
-<area shape="rect" href="classdyno_1_1FeatureTracker.html#ab50422938e62bccc34295c155357213a" title="Check which objects require new features to be detected on them based on a set of &#39;keyframing&#39; criter..." alt="" coords="551,337,709,377"/>
-<area shape="rect" href="classdyno_1_1Frame.html#afe219d6ce6e007934982c6594fa70f65" title="Gets the total number of features (static + dynamic) in this frame. Includes usables (inliers) and ou..." alt="" coords="228,262,455,287"/>
-<area shape="rect" href="classdyno_1_1FeatureTracker.html#a145614fe29bef7728075492870ac9c41" title=" " alt="" coords="263,337,420,377"/>
-<area shape="rect" href="classdyno_1_1FeatureTracker.html#a9890ba0c11b5932b5b4954a86bd03948" title=" " alt="" coords="14,337,171,377"/>
+<area shape="rect" title="Returns the number of features in the container." alt="" coords="805,208,980,248"/>
+<area shape="rect" href="classdyno_1_1KltFeatureTracker.html#a4870d167d7dbd1a04a8d7d15a376a573" title=" " alt="" coords="543,178,717,218"/>
+<area shape="rect" href="classdyno_1_1KltFeatureTracker.html#a8f26d8fe56edd3e579a879e82a40457f" title="Tracks features using KLT tracker between the previous image and the current one." alt="" coords="254,121,429,161"/>
+<area shape="rect" href="classdyno_1_1KltFeatureTracker.html#ab15aaa39f0c3adc62037d718b98039c0" title="Track features between frames k&#45;1 and the current set of images (at k)." alt="" coords="5,93,180,133"/>
+<area shape="rect" href="classdyno_1_1FeatureContainer.html#a4d5e186005b95a09871538e314922a11" title="If the container is empty." alt="" coords="543,64,717,104"/>
+<area shape="rect" href="classdyno_1_1Frame.html#ad8265cee40cb874631176482a9a40fc3" title="Gets the total number of dynamic features observed at this frame. Includes usables (inliers) and outl..." alt="" coords="503,243,757,268"/>
+<area shape="rect" href="classdyno_1_1Frame.html#a5d875b237cb599cd8f5a2c13feaf0be8" title="Gets the total number of static features observed at this frame. Includes usables (inliers) and outli..." alt="" coords="513,292,747,318"/>
+<area shape="rect" href="classdyno_1_1FeatureTracker.html#ab50422938e62bccc34295c155357213a" title="Check which objects require new features to be detected on them based on a set of &#39;keyframing&#39; criter..." alt="" coords="551,393,709,433"/>
+<area shape="rect" href="classdyno_1_1FeatureTracker.html#a4796a29c1f89cde0ace1668fc8fcd9a3" title=" " alt="" coords="263,336,420,376"/>
+<area shape="rect" href="classdyno_1_1Frame.html#afe219d6ce6e007934982c6594fa70f65" title="Gets the total number of features (static + dynamic) in this frame. Includes usables (inliers) and ou..." alt="" coords="228,264,455,290"/>
+<area shape="rect" href="classdyno_1_1FeatureTracker.html#a145614fe29bef7728075492870ac9c41" title=" " alt="" coords="263,400,420,440"/>
+<area shape="rect" href="classdyno_1_1FeatureTracker.html#a40ee79c94fe2de7f16d2a4508cc2ba11" title=" " alt="" coords="14,368,171,408"/>
 </map>
 </div>
 
@@ -1378,16 +1573,16 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>size_t </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Feature_8cc_source.html#l00113">113</a> of file <a class="el" href="Feature_8cc_source.html">Feature.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  113</span>                                                      {</div>
-<div class="line"><span class="lineno">  114</span>  <span class="keyword">auto</span> itr =</div>
-<div class="line"><span class="lineno">  115</span>      <a class="code hl_typedef" href="classdyno_1_1FeatureContainer.html#ab39340769a91850621c7581ccfec902b">ConstFilterIterator</a>(*<span class="keyword">this</span>, [object_id](<span class="keyword">const</span> Feature::Ptr&amp; f) -&gt; <span class="keywordtype">bool</span> {</div>
-<div class="line"><span class="lineno">  116</span>        <span class="keywordflow">return</span> f-&gt;objectId() == object_id;</div>
-<div class="line"><span class="lineno">  117</span>      });</div>
-<div class="line"><span class="lineno">  118</span> </div>
-<div class="line"><span class="lineno">  119</span>  <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(std::distance(itr.begin(), itr.end()));</div>
-<div class="line"><span class="lineno">  120</span>}</div>
-<div class="ttc" id="aclassdyno_1_1FeatureContainer_html_ab39340769a91850621c7581ccfec902b"><div class="ttname"><a href="classdyno_1_1FeatureContainer.html#ab39340769a91850621c7581ccfec902b">dyno::FeatureContainer::ConstFilterIterator</a></div><div class="ttdeci">internal::filter_const_iterator&lt; const FeatureContainer &gt; ConstFilterIterator</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00504">Feature.hpp:505</a></div></div>
+<p class="definition">Definition at line <a class="el" href="Feature_8cc_source.html#l00140">140</a> of file <a class="el" href="Feature_8cc_source.html">Feature.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  140</span>                                                      {</div>
+<div class="line"><span class="lineno">  141</span>  <span class="keyword">auto</span> itr =</div>
+<div class="line"><span class="lineno">  142</span>      <a class="code hl_typedef" href="classdyno_1_1FeatureContainer.html#ab39340769a91850621c7581ccfec902b">ConstFilterIterator</a>(*<span class="keyword">this</span>, [object_id](<span class="keyword">const</span> Feature::Ptr&amp; f) -&gt; <span class="keywordtype">bool</span> {</div>
+<div class="line"><span class="lineno">  143</span>        <span class="keywordflow">return</span> f-&gt;objectId() == object_id;</div>
+<div class="line"><span class="lineno">  144</span>      });</div>
+<div class="line"><span class="lineno">  145</span> </div>
+<div class="line"><span class="lineno">  146</span>  <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(std::distance(itr.begin(), itr.end()));</div>
+<div class="line"><span class="lineno">  147</span>}</div>
+<div class="ttc" id="aclassdyno_1_1FeatureContainer_html_ab39340769a91850621c7581ccfec902b"><div class="ttname"><a href="classdyno_1_1FeatureContainer.html#ab39340769a91850621c7581ccfec902b">dyno::FeatureContainer::ConstFilterIterator</a></div><div class="ttdeci">internal::filter_const_iterator&lt; const FeatureContainer &gt; ConstFilterIterator</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00513">Feature.hpp:514</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1428,42 +1623,43 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>std::vector&lt;cv::Point2f&gt; </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Feature_8cc_source.html#l00146">146</a> of file <a class="el" href="Feature_8cc_source.html">Feature.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  147</span>                                                                             {</div>
-<div class="line"><span class="lineno">  148</span>  <span class="keywordflow">if</span> (tracklet_ids) tracklet_ids-&gt;clear();</div>
-<div class="line"><span class="lineno">  149</span> </div>
-<div class="line"><span class="lineno">  150</span>  std::vector&lt;cv::Point2f&gt; keypoints_cv;</div>
-<div class="line"><span class="lineno">  151</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; feature : *<span class="keyword">this</span>) {</div>
-<div class="line"><span class="lineno">  152</span>    <span class="keyword">const</span> <a class="code hl_typedef" href="namespacedyno.html#aaa260a8022691078c59e1ac6a4fa05b5">Keypoint</a>&amp; kp = feature-&gt;keypoint();</div>
-<div class="line"><span class="lineno">  153</span> </div>
-<div class="line"><span class="lineno">  154</span>    <span class="keywordtype">float</span> x = <span class="keyword">static_cast&lt;</span><span class="keywordtype">float</span><span class="keyword">&gt;</span>(kp(0));</div>
-<div class="line"><span class="lineno">  155</span>    <span class="keywordtype">float</span> y = <span class="keyword">static_cast&lt;</span><span class="keywordtype">float</span><span class="keyword">&gt;</span>(kp(1));</div>
-<div class="line"><span class="lineno">  156</span> </div>
-<div class="line"><span class="lineno">  157</span>    <span class="keywordflow">if</span> (only_inliers &amp;&amp; feature-&gt;usable()) {</div>
-<div class="line"><span class="lineno">  158</span>      keypoints_cv.push_back(cv::Point2f(x, y));</div>
-<div class="line"><span class="lineno">  159</span>      <span class="keywordflow">if</span> (tracklet_ids) tracklet_ids-&gt;push_back(feature-&gt;trackletId());</div>
-<div class="line"><span class="lineno">  160</span>    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (!only_inliers) {</div>
-<div class="line"><span class="lineno">  161</span>      keypoints_cv.push_back(cv::Point2f(x, y));</div>
-<div class="line"><span class="lineno">  162</span>      <span class="keywordflow">if</span> (tracklet_ids) tracklet_ids-&gt;push_back(feature-&gt;trackletId());</div>
-<div class="line"><span class="lineno">  163</span>    }</div>
-<div class="line"><span class="lineno">  164</span>  }</div>
-<div class="line"><span class="lineno">  165</span>  <span class="keywordflow">return</span> keypoints_cv;</div>
-<div class="line"><span class="lineno">  166</span>}</div>
-<div class="ttc" id="anamespacedyno_html_aaa260a8022691078c59e1ac6a4fa05b5"><div class="ttname"><a href="namespacedyno.html#aaa260a8022691078c59e1ac6a4fa05b5">dyno::Keypoint</a></div><div class="ttdeci">gtsam::Point2 Keypoint</div><div class="ttdoc">Observed optical flow vector (ordered x, y)</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00095">Types.hpp:95</a></div></div>
+<p class="definition">Definition at line <a class="el" href="Feature_8cc_source.html#l00200">200</a> of file <a class="el" href="Feature_8cc_source.html">Feature.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  201</span>                                                                             {</div>
+<div class="line"><span class="lineno">  202</span>  <span class="keywordflow">if</span> (tracklet_ids) tracklet_ids-&gt;clear();</div>
+<div class="line"><span class="lineno">  203</span> </div>
+<div class="line"><span class="lineno">  204</span>  std::vector&lt;cv::Point2f&gt; keypoints_cv;</div>
+<div class="line"><span class="lineno">  205</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; feature : *<span class="keyword">this</span>) {</div>
+<div class="line"><span class="lineno">  206</span>    <span class="keyword">const</span> <a class="code hl_typedef" href="namespacedyno.html#aaa260a8022691078c59e1ac6a4fa05b5">Keypoint</a>&amp; kp = feature-&gt;keypoint();</div>
+<div class="line"><span class="lineno">  207</span> </div>
+<div class="line"><span class="lineno">  208</span>    <span class="keywordtype">float</span> x = <span class="keyword">static_cast&lt;</span><span class="keywordtype">float</span><span class="keyword">&gt;</span>(kp(0));</div>
+<div class="line"><span class="lineno">  209</span>    <span class="keywordtype">float</span> y = <span class="keyword">static_cast&lt;</span><span class="keywordtype">float</span><span class="keyword">&gt;</span>(kp(1));</div>
+<div class="line"><span class="lineno">  210</span> </div>
+<div class="line"><span class="lineno">  211</span>    <span class="keywordflow">if</span> (only_inliers &amp;&amp; feature-&gt;usable()) {</div>
+<div class="line"><span class="lineno">  212</span>      keypoints_cv.push_back(cv::Point2f(x, y));</div>
+<div class="line"><span class="lineno">  213</span>      <span class="keywordflow">if</span> (tracklet_ids) tracklet_ids-&gt;push_back(feature-&gt;trackletId());</div>
+<div class="line"><span class="lineno">  214</span>    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (!only_inliers) {</div>
+<div class="line"><span class="lineno">  215</span>      keypoints_cv.push_back(cv::Point2f(x, y));</div>
+<div class="line"><span class="lineno">  216</span>      <span class="keywordflow">if</span> (tracklet_ids) tracklet_ids-&gt;push_back(feature-&gt;trackletId());</div>
+<div class="line"><span class="lineno">  217</span>    }</div>
+<div class="line"><span class="lineno">  218</span>  }</div>
+<div class="line"><span class="lineno">  219</span>  <span class="keywordflow">return</span> keypoints_cv;</div>
+<div class="line"><span class="lineno">  220</span>}</div>
+<div class="ttc" id="anamespacedyno_html_aaa260a8022691078c59e1ac6a4fa05b5"><div class="ttname"><a href="namespacedyno.html#aaa260a8022691078c59e1ac6a4fa05b5">dyno::Keypoint</a></div><div class="ttdeci">gtsam::Point2 Keypoint</div><div class="ttdoc">Observed optical flow vector (ordered x, y)</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00096">Types.hpp:96</a></div></div>
 </div><!-- fragment -->
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1FeatureTracker.html#ab50422938e62bccc34295c155357213a">dyno::FeatureTracker::requiresSampling()</a>, <a class="el" href="classdyno_1_1FeatureTracker.html#a31f607c5d1fca4c1ace6af223abb5ead">dyno::FeatureTracker::stereoTrack()</a>, and <a class="el" href="classdyno_1_1KltFeatureTracker.html#a8f26d8fe56edd3e579a879e82a40457f">dyno::KltFeatureTracker::trackPoints()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1FeatureTracker.html#ab50422938e62bccc34295c155357213a">dyno::FeatureTracker::requiresSampling()</a>, <a class="el" href="classdyno_1_1FeatureTracker.html#a31f607c5d1fca4c1ace6af223abb5ead">dyno::FeatureTracker::stereoTrack()</a>, <a class="el" href="classdyno_1_1FeatureTracker.html#a4796a29c1f89cde0ace1668fc8fcd9a3">dyno::FeatureTracker::trackDynamicKLT()</a>, and <a class="el" href="classdyno_1_1KltFeatureTracker.html#a8f26d8fe56edd3e579a879e82a40457f">dyno::KltFeatureTracker::trackPoints()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1FeatureContainer_a00fb07fccff523cba9783e6d00186f28_icgraph.png" border="0" usemap="#aclassdyno_1_1FeatureContainer_a00fb07fccff523cba9783e6d00186f28_icgraph" alt=""/></div>
 <map name="aclassdyno_1_1FeatureContainer_a00fb07fccff523cba9783e6d00186f28_icgraph" id="aclassdyno_1_1FeatureContainer_a00fb07fccff523cba9783e6d00186f28_icgraph">
-<area shape="rect" title="Converts the keypoints of all features in the container to cv::Point2f representation...." alt="" coords="656,69,831,109"/>
-<area shape="rect" href="classdyno_1_1FeatureTracker.html#ab50422938e62bccc34295c155357213a" title="Check which objects require new features to be detected on them based on a set of &#39;keyframing&#39; criter..." alt="" coords="442,5,599,45"/>
-<area shape="rect" href="classdyno_1_1FeatureTracker.html#a31f607c5d1fca4c1ace6af223abb5ead" title=" " alt="" coords="442,69,599,109"/>
-<area shape="rect" href="classdyno_1_1KltFeatureTracker.html#a8f26d8fe56edd3e579a879e82a40457f" title="Tracks features using KLT tracker between the previous image and the current one." alt="" coords="433,133,608,173"/>
+<area shape="rect" title="Converts the keypoints of all features in the container to cv::Point2f representation...." alt="" coords="656,99,831,139"/>
+<area shape="rect" href="classdyno_1_1FeatureTracker.html#ab50422938e62bccc34295c155357213a" title="Check which objects require new features to be detected on them based on a set of &#39;keyframing&#39; criter..." alt="" coords="442,12,599,52"/>
+<area shape="rect" href="classdyno_1_1FeatureTracker.html#a4796a29c1f89cde0ace1668fc8fcd9a3" title=" " alt="" coords="219,69,377,109"/>
+<area shape="rect" href="classdyno_1_1FeatureTracker.html#a31f607c5d1fca4c1ace6af223abb5ead" title=" " alt="" coords="442,127,599,167"/>
+<area shape="rect" href="classdyno_1_1KltFeatureTracker.html#a8f26d8fe56edd3e579a879e82a40457f" title="Tracks features using KLT tracker between the previous image and the current one." alt="" coords="433,191,608,231"/>
 <area shape="rect" href="classdyno_1_1FeatureTracker.html#a145614fe29bef7728075492870ac9c41" title=" " alt="" coords="219,5,377,45"/>
-<area shape="rect" href="classdyno_1_1FeatureTracker.html#a9890ba0c11b5932b5b4954a86bd03948" title=" " alt="" coords="5,5,163,45"/>
-<area shape="rect" href="classdyno_1_1KltFeatureTracker.html#ab15aaa39f0c3adc62037d718b98039c0" title="Track features between frames k&#45;1 and the current set of images (at k)." alt="" coords="211,133,385,173"/>
+<area shape="rect" href="classdyno_1_1FeatureTracker.html#a40ee79c94fe2de7f16d2a4508cc2ba11" title=" " alt="" coords="5,37,163,77"/>
+<area shape="rect" href="classdyno_1_1KltFeatureTracker.html#ab15aaa39f0c3adc62037d718b98039c0" title="Track features between frames k&#45;1 and the current set of images (at k)." alt="" coords="211,191,385,231"/>
 </map>
 </div>
 
@@ -1480,7 +1676,7 @@ Here is the caller graph for this function:</div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classdyno_1_1FeatureContainer.html#ad54a3471417d9ff7ea626d37392dabae">TrackletToFeatureMap</a> dyno::FeatureContainer::feature_map_</td>
+          <td class="memname"><a class="el" href="classdyno_1_1FeatureContainer.html#a31d296f69d8884da064ffe71f28dfff9">TrackletToFeatureMap</a> dyno::FeatureContainer::feature_map_</td>
         </tr>
       </table>
   </td>
@@ -1490,15 +1686,41 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00654">654</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00675">675</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1FeatureContainer.html#a37c69e810a3d70841616c85d9be97418">add()</a>, <a class="el" href="classdyno_1_1FeatureContainer.html#a92d26549f952dcf51796495d0fc5df8e">begin()</a>, <a class="el" href="classdyno_1_1FeatureContainer.html#ae6b7ac557be9590ec1a329acfe00d1c7">clear()</a>, <a class="el" href="classdyno_1_1FeatureContainer.html#aaeff23975773622eeb6b21e92885b612">end()</a>, <a class="el" href="classdyno_1_1FeatureContainer.html#abf2f2d568f5dc17944cc122c537a65f5">exists()</a>, <a class="el" href="classdyno_1_1FeatureContainer.html#a5b73e75d2f4063ac9c16dd0fd565f8da">getByTrackletId()</a>, <a class="el" href="classdyno_1_1FeatureContainer.html#ac39c9fae3c9363e96cc0817f1a583c18">operator+=()</a>, <a class="el" href="classdyno_1_1FeatureContainer.html#ad4d6a858c333b4c35d3e6b8fb519ccc0">remove()</a>, and <a class="el" href="classdyno_1_1FeatureContainer.html#afd095f6a9e0f25539e7febe6eeeaf003">size()</a>.</p>
 
 </div>
 </div>
+<a id="a0365776734d305cbdb942f39b715a967" name="a0365776734d305cbdb942f39b715a967"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0365776734d305cbdb942f39b715a967">&#9670;&#160;</a></span>object_feature_map_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classdyno_1_1FeatureContainer.html#aef79b539fc13edf71cab89cc7f2914a6">ObjectToFeatureMap</a> dyno::FeatureContainer::object_feature_map_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00676">676</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1FeatureContainer.html#a37c69e810a3d70841616c85d9be97418">add()</a>, <a class="el" href="classdyno_1_1FeatureContainer.html#a6b5e87117fa01d0075f68a8ca2dc7814">beginObjectIterator()</a>, <a class="el" href="classdyno_1_1FeatureContainer.html#ae6b7ac557be9590ec1a329acfe00d1c7">clear()</a>, <a class="el" href="classdyno_1_1FeatureContainer.html#af09dcd9df85aac10df403f0057cd9f47">endObjectIterator()</a>, <a class="el" href="classdyno_1_1FeatureContainer.html#a9f23ba942bda519d6f8ae498410235a5">getByObject()</a>, <a class="el" href="classdyno_1_1FeatureContainer.html#ac39c9fae3c9363e96cc0817f1a583c18">operator+=()</a>, <a class="el" href="classdyno_1_1FeatureContainer.html#ad4d6a858c333b4c35d3e6b8fb519ccc0">remove()</a>, and <a class="el" href="classdyno_1_1FeatureContainer.html#a4a7236c0a1b8c864962492839dcc743e">removeByObjectId()</a>.</p>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>dynosam/include/dynosam/frontend/vision/<a class="el" href="Feature_8hpp_source.html">Feature.hpp</a></li>
-<li>dynosam/src/frontend/vision/<a class="el" href="Feature_8cc_source.html">Feature.cc</a></li>
+<li>dynosam_cv/include/dynosam_cv/<a class="el" href="Feature_8hpp_source.html">Feature.hpp</a></li>
+<li>dynosam_cv/src/<a class="el" href="Feature_8cc_source.html">Feature.cc</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

@@ -77,6 +77,21 @@ $(function() {
 <blockquote class="doxtable">
 <p>&zwj;NOTE: this instructions are taken essentially verbatum from the included <a href="./../../docker/Dockerfile">Dockerfile</a> </p>
 </blockquote>
+<h1>CUDA dependancies</h1>
+<p>As of September 2025 we are adding cuda dependancies for certain OpenCV operations (and evenautually for running inference on images).</p>
+<blockquote class="doxtable">
+<p>&zwj;NOTE: I have a very old GPU (RTX 2080 which is only running CIDA 12.2 with Driver Version: 535.183.01), get CUDA support however you are able! </p>
+</blockquote>
+<p>The docker file has been updated and based off the <a href="https://github.com/ika-rwth-aachen/docker-ros-ml-images?tab=readme-ov-file#rwthikaros2-torch-ros-2-nvidia-cuda-nvidia-tensorrt-pytorch">docker-ros-ml-images</a> to include</p><ul>
+<li>CUDA</li>
+<li>TensorRT</li>
+<li>Pytorch built ontop of ROS2.</li>
+</ul>
+<p>The CUDA dependancies are mostly for OpenCV modules but also eventually for adding DNN inference into DynoSAM itself so processing of images can be handled internally (ie YOLO).</p>
+<ul>
+<li><b>Important:</b> Check <a href="https://developer.nvidia.com/cuda-gpus">GPU Compute Capability</a> to set <code>CUDA_ARCH_BIN</code> flag</li>
+<li>NVIDIA GeForce RTX 2080 is 7.5</li>
+</ul>
 <h1>Dependancies</h1>
 <div class="fragment"><div class="line">sudo apt-get install -y --no-install-recommends apt-utils</div>
 <div class="line"> </div>

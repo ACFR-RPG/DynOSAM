@@ -113,198 +113,227 @@ $(function() {
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="preprocessor">#include &lt;Eigen/Dense&gt;</span></div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="preprocessor">#include &lt;png++/png.hpp&gt;</span></div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="preprocessor">#include &quot;<a class="code" href="Camera_8hpp.html">dynosam/common/Camera.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="preprocessor">#include &quot;<a class="code" href="ImageContainer_8hpp.html">dynosam/common/ImageContainer.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="preprocessor">#include &quot;<a class="code" href="ClusterSlamDataProvider_8hpp.html">dynosam/dataprovider/ClusterSlamDataProvider.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="preprocessor">#include &quot;<a class="code" href="KittiDataProvider_8hpp.html">dynosam/dataprovider/KittiDataProvider.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="preprocessor">#include &quot;<a class="code" href="TartanAirShibuya_8hpp.html">dynosam/dataprovider/TartanAirShibuya.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="preprocessor">#include &quot;<a class="code" href="ViodeDataProvider_8hpp.html">dynosam/dataprovider/ViodeDataProvider.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="preprocessor">#include &quot;<a class="code" href="VirtualKittiDataProvider_8hpp.html">dynosam/dataprovider/VirtualKittiDataProvider.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="preprocessor">#include &quot;<a class="code" href="FeatureTracker_8hpp.html">dynosam/frontend/vision/FeatureTracker.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="preprocessor">#include &quot;<a class="code" href="Frame_8hpp.html">dynosam/frontend/vision/Frame.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span><span class="preprocessor">#include &quot;<a class="code" href="PipelineManager_8hpp.html">dynosam/pipeline/PipelineManager.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="preprocessor">#include &quot;<a class="code" href="PipelineParams_8hpp.html">dynosam/pipeline/PipelineParams.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="preprocessor">#include &quot;<a class="code" href="ColourMap_8hpp.html">dynosam/visualizer/ColourMap.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="preprocessor">#include &quot;<a class="code" href="OpenCVFrontendDisplay_8hpp.html">dynosam/visualizer/OpenCVFrontendDisplay.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno"><a class="line" href="dyno__sam_8cc.html#ad5e1edaae16107ffdc66a299e31ee46a">   51</a></span><a class="code hl_function" href="dyno__sam_8cc.html#ad5e1edaae16107ffdc66a299e31ee46a">DEFINE_string</a>(path_to_kitti, <span class="stringliteral">&quot;/root/data/kitti&quot;</span>, <span class="stringliteral">&quot;Path to KITTI dataset&quot;</span>);</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span><span class="comment">// TODO: (jesse) many better ways to do this with ros - just for now</span></div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno"><a class="line" href="dyno__sam_8cc.html#ac15a1d88cc90209adb9f7d0f1146c780">   53</a></span><a class="code hl_function" href="dyno__sam_8cc.html#ad5e1edaae16107ffdc66a299e31ee46a">DEFINE_string</a>(</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    params_folder_path, <span class="stringliteral">&quot;dynosam/params&quot;</span>,</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="stringliteral">&quot;Path to the folder containing the yaml files with the VIO parameters.&quot;</span>);</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span> </div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span><span class="preprocessor">#include &quot;<a class="code" href="KittiDataProvider_8hpp.html">dynosam/dataprovider/KittiDataProvider.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span><span class="preprocessor">#include &quot;<a class="code" href="OMDDataProvider_8hpp.html">dynosam/dataprovider/OMDDataProvider.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span><span class="preprocessor">#include &quot;<a class="code" href="VisionTools_8hpp.html">dynosam/frontend/vision/VisionTools.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span> </div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno"><a class="line" href="dyno__sam_8cc.html#a0ddf1224851353fc92bfbff6f499fa97">   61</a></span><span class="keywordtype">int</span> <a class="code hl_function" href="dyno__sam_8cc.html#a0ddf1224851353fc92bfbff6f499fa97">main</a>(<span class="keywordtype">int</span> argc, <span class="keywordtype">char</span>* argv[]) {</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>  <span class="keyword">using namespace </span><a class="code hl_namespace" href="namespacedyno.html">dyno</a>;</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>  google::ParseCommandLineFlags(&amp;argc, &amp;argv, <span class="keyword">true</span>);</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>  google::InitGoogleLogging(argv[0]);</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>  FLAGS_logtostderr = 1;</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>  FLAGS_colorlogtostderr = 1;</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>  FLAGS_log_prefix = 1;</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span> </div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>  <a class="code hl_struct" href="structdyno_1_1KittiDataLoader_1_1Params.html">KittiDataLoader::Params</a> params;</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>  <a class="code hl_class" href="classdyno_1_1KittiDataLoader.html">KittiDataLoader</a> loader(<span class="stringliteral">&quot;/root/data/vdo_slam/kitti/kitti/0000/&quot;</span>, params);</div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>  <span class="comment">// ClusterSlamDataLoader loader(&quot;/root/data/cluster_slam/CARLA-L1&quot;);</span></div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>  <span class="comment">// OMDDataLoader loader(</span></div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>  <span class="comment">//     &quot;/root/data/vdo_slam/omd/omd/swinging_4_unconstrained_stereo/&quot;);</span></div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span> </div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>  <span class="comment">// TartanAirShibuyaLoader</span></div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>  <span class="comment">// loader(&quot;/root/data/TartanAir_shibuya/RoadCrossing07/&quot;);</span></div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>  <span class="comment">// ViodeLoader loader(&quot;/root/data/VIODE/city_day/mid&quot;);</span></div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span> </div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>  <a class="code hl_struct" href="structdyno_1_1FrontendParams.html">FrontendParams</a> fp;</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>  fp.<a class="code hl_variable" href="structdyno_1_1FrontendParams.html#a6a99c9f2ac61d71c11b4e1d07df3681c">tracker_params</a>.<a class="code hl_variable" href="structdyno_1_1TrackerParams.html#a251d59812229f53def1c285d69d56b7e">max_dynamic_features_per_frame</a> = 300;</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="preprocessor">#include &quot;<a class="code" href="ClusterSlamDataProvider_8hpp.html">dynosam/dataprovider/ClusterSlamDataProvider.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="preprocessor">#include &quot;<a class="code" href="KittiDataProvider_8hpp.html">dynosam/dataprovider/KittiDataProvider.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="preprocessor">#include &quot;<a class="code" href="TartanAirShibuya_8hpp.html">dynosam/dataprovider/TartanAirShibuya.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="preprocessor">#include &quot;<a class="code" href="ViodeDataProvider_8hpp.html">dynosam/dataprovider/ViodeDataProvider.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="preprocessor">#include &quot;<a class="code" href="VirtualKittiDataProvider_8hpp.html">dynosam/dataprovider/VirtualKittiDataProvider.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="preprocessor">#include &quot;<a class="code" href="FeatureTracker_8hpp.html">dynosam/frontend/vision/FeatureTracker.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="preprocessor">#include &quot;<a class="code" href="Frame_8hpp.html">dynosam/frontend/vision/Frame.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="preprocessor">#include &quot;<a class="code" href="PipelineManager_8hpp.html">dynosam/pipeline/PipelineManager.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="preprocessor">#include &quot;<a class="code" href="PipelineParams_8hpp.html">dynosam/pipeline/PipelineParams.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span><span class="preprocessor">#include &quot;<a class="code" href="OpenCVFrontendDisplay_8hpp.html">dynosam/visualizer/OpenCVFrontendDisplay.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="preprocessor">#include &quot;<a class="code" href="Colour_8hpp.html">dynosam_common/viz/Colour.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="preprocessor">#include &quot;<a class="code" href="Camera_8hpp.html">dynosam_cv/Camera.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="preprocessor">#include &quot;<a class="code" href="ImageContainer_8hpp.html">dynosam_cv/ImageContainer.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span><span class="preprocessor">#include &quot;<a class="code" href="PyObjectDetector_8hpp.html">dynosam_nn/PyObjectDetector.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span> </div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno"><a class="line" href="dyno__sam_8cc.html#ad5e1edaae16107ffdc66a299e31ee46a">   52</a></span><a class="code hl_function" href="dyno__sam_8cc.html#ad5e1edaae16107ffdc66a299e31ee46a">DEFINE_string</a>(path_to_kitti, <span class="stringliteral">&quot;/root/data/kitti&quot;</span>, <span class="stringliteral">&quot;Path to KITTI dataset&quot;</span>);</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span><span class="comment">// TODO: (jesse) many better ways to do this with ros - just for now</span></div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno"><a class="line" href="dyno__sam_8cc.html#ac15a1d88cc90209adb9f7d0f1146c780">   54</a></span><a class="code hl_function" href="dyno__sam_8cc.html#ad5e1edaae16107ffdc66a299e31ee46a">DEFINE_string</a>(</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    params_folder_path, <span class="stringliteral">&quot;dynosam/params&quot;</span>,</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    <span class="stringliteral">&quot;Path to the folder containing the yaml files with the VIO parameters.&quot;</span>);</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span><span class="preprocessor">#include &quot;<a class="code" href="KittiDataProvider_8hpp.html">dynosam/dataprovider/KittiDataProvider.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span><span class="preprocessor">#include &quot;<a class="code" href="OMDDataProvider_8hpp.html">dynosam/dataprovider/OMDDataProvider.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span><span class="preprocessor">#include &quot;<a class="code" href="VisionTools_8hpp.html">dynosam/frontend/vision/VisionTools.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span> </div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno"><a class="line" href="dyno__sam_8cc.html#a0ddf1224851353fc92bfbff6f499fa97">   62</a></span><span class="keywordtype">int</span> <a class="code hl_function" href="dyno__sam_8cc.html#a0ddf1224851353fc92bfbff6f499fa97">main</a>(<span class="keywordtype">int</span> argc, <span class="keywordtype">char</span>* argv[]) {</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>  <span class="keyword">using namespace </span><a class="code hl_namespace" href="namespacedyno.html">dyno</a>;</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>  google::ParseCommandLineFlags(&amp;argc, &amp;argv, <span class="keyword">true</span>);</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>  google::InitGoogleLogging(argv[0]);</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>  FLAGS_logtostderr = 1;</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>  FLAGS_colorlogtostderr = 1;</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>  FLAGS_log_prefix = 1;</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>  FLAGS_v = 30;</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span> </div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>  <a class="code hl_struct" href="structdyno_1_1KittiDataLoader_1_1Params.html">KittiDataLoader::Params</a> params;</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>  <a class="code hl_class" href="classdyno_1_1KittiDataLoader.html">KittiDataLoader</a> loader(<span class="stringliteral">&quot;/root/data/vdo_slam/kitti/kitti/0004/&quot;</span>, params);</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>  <span class="comment">// ClusterSlamDataLoader loader(&quot;/root/data/cluster_slam/CARLA-S2&quot;);</span></div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>  <span class="comment">// loader.setStartingFrame(600);</span></div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>  <span class="comment">// OMDDataLoader loader(</span></div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>  <span class="comment">//     &quot;/root/data/vdo_slam/omd/omd/swinging_4_unconstrained_stereo/&quot;);</span></div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span> </div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>  <span class="comment">// TartanAirShibuyaLoader</span></div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>  <span class="comment">// loader(&quot;/root/data/TartanAir_shibuya/RoadCrossing07/&quot;);</span></div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>  <span class="comment">// ViodeLoader loader(&quot;/root/data/VIODE/city_day/mid&quot;);</span></div>
 <div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span> </div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>  <span class="keyword">auto</span> camera = std::make_shared&lt;Camera&gt;(*loader.<a class="code hl_function" href="classdyno_1_1KittiDataLoader.html#a1ae7994314d13f355483a3c4efa013a1">getCameraParams</a>());</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>  <span class="keyword">auto</span> tracker = std::make_shared&lt;FeatureTracker&gt;(fp, camera);</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>  <span class="comment">// auto detector = dyno::PyObjectDetectorWrapper::CreateYoloDetector();</span></div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>  <span class="comment">// CHECK_NOTNULL(detector);</span></div>
 <div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span> </div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>  <span class="comment">// loader.setCallback([&amp;](dyno::FrameId frame_id, dyno::Timestamp timestamp,</span></div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>  <span class="comment">//                        cv::Mat rgb, cv::Mat optical_flow, cv::Mat depth,</span></div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>  <span class="comment">//                        cv::Mat motion, GroundTruthInputPacket,</span></div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>  <span class="comment">//                        std::optional&lt;ImuMeasurements&gt; imu_measurements,</span></div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>  <span class="comment">//                        std::optional&lt;cv::Mat&gt;) -&gt; bool {</span></div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>  loader.<a class="code hl_function" href="structdyno_1_1__DynoDatasetConstructor.html#a5354a00794f43690a5bab204bda3879e">setCallback</a>([&amp;](<a class="code hl_typedef" href="namespacedyno.html#ac4303d6fafb755f794b072d76f9cfb41">dyno::FrameId</a> frame_id, <a class="code hl_typedef" href="namespacedyno.html#a7fda67c0575c4b7a8210dcc8ae227370">dyno::Timestamp</a> timestamp,</div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>                         cv::Mat rgb, cv::Mat optical_flow, cv::Mat depth,</div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>                         cv::Mat motion, gtsam::Pose3,</div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>                         <a class="code hl_class" href="classdyno_1_1GroundTruthInputPacket.html">GroundTruthInputPacket</a>) -&gt; <span class="keywordtype">bool</span> {</div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>    LOG(INFO) &lt;&lt; frame_id &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; timestamp;</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span> </div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>    cv::Mat of_viz, motion_viz, depth_viz;</div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>    of_viz = ImageType::OpticalFlow::toRGB(optical_flow);</div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>    motion_viz = ImageType::MotionMask::toRGB(motion);</div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>    depth_viz = ImageType::Depth::toRGB(depth);</div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span> </div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>    <a class="code hl_class" href="classdyno_1_1ImageContainer.html">ImageContainer</a> image_container(frame_id, timestamp);</div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>    image_container.<a class="code hl_function" href="classdyno_1_1ImageContainer.html#a6f35259f95c31b861ff6515c159e1ee3">rgb</a>(rgb)</div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>        .depth(depth)</div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>        .opticalFlow(optical_flow)</div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>        .objectMotionMask(motion);</div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span> </div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>    <span class="comment">// ImageContainerDeprecate::Ptr container = ImageContainerDeprecate::Create(</span></div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>    <span class="comment">//     timestamp, frame_id, ImageWrapper&lt;ImageType::RGBMono&gt;(rgb),</span></div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>    <span class="comment">//     ImageWrapper&lt;ImageType::Depth&gt;(depth),</span></div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>    <span class="comment">//     ImageWrapper&lt;ImageType::OpticalFlow&gt;(optical_flow),</span></div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>    <span class="comment">//     ImageWrapper&lt;ImageType::MotionMask&gt;(motion));</span></div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>  <a class="code hl_struct" href="structdyno_1_1FrontendParams.html">FrontendParams</a> fp;</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>  fp.<a class="code hl_variable" href="structdyno_1_1FrontendParams.html#a6a99c9f2ac61d71c11b4e1d07df3681c">tracker_params</a>.<a class="code hl_variable" href="structdyno_1_1TrackerParams.html#a8c5dcc9bc2ded3c66214340b3f9fd0a2">feature_detector_type</a> =</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>      TrackerParams::FeatureDetectorType::GFFT_CUDA;</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>  fp.<a class="code hl_variable" href="structdyno_1_1FrontendParams.html#a6a99c9f2ac61d71c11b4e1d07df3681c">tracker_params</a>.<a class="code hl_variable" href="structdyno_1_1TrackerParams.html#a251d59812229f53def1c285d69d56b7e">max_dynamic_features_per_frame</a> = 300;</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>  fp.<a class="code hl_variable" href="structdyno_1_1FrontendParams.html#a6a99c9f2ac61d71c11b4e1d07df3681c">tracker_params</a>.<a class="code hl_variable" href="structdyno_1_1TrackerParams.html#a7904cacb28831b9c8b1ddbb4affc5dda">prefer_provided_optical_flow</a> = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>  fp.<a class="code hl_variable" href="structdyno_1_1FrontendParams.html#a6a99c9f2ac61d71c11b4e1d07df3681c">tracker_params</a>.<a class="code hl_variable" href="structdyno_1_1TrackerParams.html#aa1ca252f62bd7adeaedc35e76a03be62">prefer_provided_object_detection</a> = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>  <span class="comment">// fp.tracker_params.feature_detector_type =</span></div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>  <span class="comment">// TrackerParams::FeatureDetectorType::ORB_SLAM_ORB;</span></div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span> </div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>  <span class="keyword">auto</span> camera = std::make_shared&lt;Camera&gt;(*loader.<a class="code hl_function" href="classdyno_1_1KittiDataLoader.html#a1ae7994314d13f355483a3c4efa013a1">getCameraParams</a>());</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>  <span class="keyword">auto</span> tracker = std::make_shared&lt;FeatureTracker&gt;(fp, camera);</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span> </div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>  loader.<a class="code hl_function" href="structdyno_1_1__DynoDatasetConstructor.html#a5354a00794f43690a5bab204bda3879e">setCallback</a>([&amp;](<a class="code hl_typedef" href="namespacedyno.html#ac4303d6fafb755f794b072d76f9cfb41">dyno::FrameId</a> frame_id, <a class="code hl_typedef" href="namespacedyno.html#a7fda67c0575c4b7a8210dcc8ae227370">dyno::Timestamp</a> timestamp,</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>                         cv::Mat rgb, cv::Mat optical_flow, cv::Mat depth,</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>                         cv::Mat motion, gtsam::Pose3,</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>                         <a class="code hl_class" href="classdyno_1_1GroundTruthInputPacket.html">GroundTruthInputPacket</a>) -&gt; <span class="keywordtype">bool</span> {</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>    <span class="comment">// LOG(INFO) &lt;&lt; utils::Statistics::Print();</span></div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>    <span class="comment">// loader.setCallback([&amp;](dyno::FrameId frame_id, dyno::Timestamp timestamp,</span></div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    <span class="comment">//                        cv::Mat rgb, cv::Mat optical_flow, cv::Mat depth,</span></div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    <span class="comment">//                        cv::Mat motion, GroundTruthInputPacket,</span></div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    <span class="comment">//                        std::optional&lt;ImuMeasurements&gt; imu_measurements,</span></div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>    <span class="comment">//                        std::optional&lt;cv::Mat&gt;) -&gt; bool {</span></div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>    <span class="comment">// loader.setCallback([&amp;](dyno::FrameId frame_id, dyno::Timestamp timestamp,</span></div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>    <span class="comment">//                        cv::Mat rgb, cv::Mat optical_flow, cv::Mat depth,</span></div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>    <span class="comment">//                        cv::Mat motion, GroundTruthInputPacket,</span></div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>    <span class="comment">//                        std::optional&lt;cv::Mat&gt;) -&gt; bool {</span></div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>    LOG(INFO) &lt;&lt; frame_id &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; timestamp;</div>
 <div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span> </div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>    <span class="comment">// cv::Mat boarder_mask;</span></div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>    <span class="comment">// vision_tools::computeObjectMaskBoundaryMask(</span></div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>    <span class="comment">//     motion,</span></div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>    <span class="comment">//     boarder_mask,</span></div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>    <span class="comment">//     8</span></div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>    <span class="comment">// );</span></div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span> </div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>    <span class="comment">// cv::Scalar red = dyno::Color::red();</span></div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span> </div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>    <span class="comment">// const ObjectIds instance_labels = vision_tools::getObjectLabels(motion);</span></div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>    <span class="comment">// for(const auto object_id : instance_labels) {</span></div>
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>    <span class="comment">//     std::vector&lt;std::vector&lt;cv::Point&gt;&gt; detected_contours;</span></div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>    <span class="comment">//     vision_tools::findObjectBoundingBox(motion,</span></div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>    <span class="comment">//     object_id,detected_contours);</span></div>
-<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span> </div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>    <span class="comment">//     cv::drawContours(boarder_mask, detected_contours, -1, red, 8);</span></div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>    <span class="comment">// }</span></div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>    cv::Mat of_viz, motion_viz, depth_viz;</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>    of_viz = ImageType::OpticalFlow::toRGB(optical_flow);</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>    motion_viz = ImageType::MotionMask::toRGB(motion);</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>    depth_viz = ImageType::Depth::toRGB(depth);</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span> </div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>    <span class="comment">// ImageContainerDeprecate::Ptr container = ImageContainerDeprecate::Create(</span></div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>    <span class="comment">//     timestamp, frame_id, ImageWrapper&lt;ImageType::RGBMono&gt;(rgb),</span></div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>    <span class="comment">//     ImageWrapper&lt;ImageType::Depth&gt;(depth),</span></div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>    <span class="comment">//     ImageWrapper&lt;ImageType::OpticalFlow&gt;(optical_flow),</span></div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>    <span class="comment">//     ImageWrapper&lt;ImageType::MotionMask&gt;(motion));</span></div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span> </div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>    <span class="comment">// cv::Mat boarder_mask;</span></div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>    <span class="comment">// vision_tools::computeObjectMaskBoundaryMask(</span></div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>    <span class="comment">//     motion,</span></div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>    <span class="comment">//     boarder_mask,</span></div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>    <span class="comment">//     8</span></div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>    <span class="comment">// );</span></div>
 <div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span> </div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>    <span class="comment">// cv::imshow(&quot;Mask with boarder&quot;, boarder_mask);</span></div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>    <span class="comment">// cv::Scalar red = dyno::Color::red();</span></div>
 <div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span> </div>
-<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>    <span class="comment">// cv::imshow(&quot;RGB&quot;, rgb);</span></div>
-<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>    <span class="comment">// cv::imshow(&quot;OF&quot;, of_viz);</span></div>
-<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>    cv::imshow(<span class="stringliteral">&quot;Motion&quot;</span>, motion_viz);</div>
-<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>    <span class="comment">// cv::waitKey(1);</span></div>
-<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>    cv::imshow(<span class="stringliteral">&quot;Depth&quot;</span>, depth_viz);</div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>    <span class="comment">// const ObjectIds instance_labels = vision_tools::getObjectLabels(motion);</span></div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>    <span class="comment">// for(const auto object_id : instance_labels) {</span></div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>    <span class="comment">//     std::vector&lt;std::vector&lt;cv::Point&gt;&gt; detected_contours;</span></div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>    <span class="comment">//     vision_tools::findObjectBoundingBox(motion,</span></div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>    <span class="comment">//     object_id,detected_contours);</span></div>
 <div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span> </div>
-<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>    std::set&lt;ObjectId&gt; object_keyframes;</div>
-<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>    <span class="keyword">auto</span> frame =</div>
-<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>        tracker-&gt;track(frame_id, timestamp, image_container, object_keyframes);</div>
-<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>    Frame::Ptr previous_frame = tracker-&gt;getPreviousFrame();</div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>    <span class="comment">//     cv::drawContours(boarder_mask, detected_contours, -1, red, 8);</span></div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>    <span class="comment">// }</span></div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span> </div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>    <span class="comment">// cv::imshow(&quot;Mask with boarder&quot;, boarder_mask);</span></div>
 <div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span> </div>
-<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>    <span class="comment">// // motion_viz =</span></div>
-<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>    <span class="comment">// ImageType::MotionMask::toRGB(frame-&gt;image_container_.get&lt;ImageType::MotionMask&gt;());</span></div>
-<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>    <span class="comment">// // // cv::imshow(&quot;Motion&quot;, motion_viz);</span></div>
-<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span> </div>
-<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>    cv::Mat tracking;</div>
-<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>    <span class="keywordflow">if</span> (previous_frame) {</div>
-<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>      tracking = tracker-&gt;computeImageTracks(*previous_frame, *frame, <span class="keyword">false</span>);</div>
-<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span> </div>
-<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>      <span class="comment">// if (imu_measurements) {</span></div>
-<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>      <span class="comment">//   const auto previous_timestamp = previous_frame-&gt;getTimestamp();</span></div>
-<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span> </div>
-<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>      <span class="comment">//   CHECK_GE(imu_measurements-&gt;timestamps_[0], previous_timestamp);</span></div>
-<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>      <span class="comment">//   CHECK_LT(imu_measurements</span></div>
-<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>      <span class="comment">//                -&gt;timestamps_[imu_measurements-&gt;timestamps_.cols() - 1],</span></div>
-<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>      <span class="comment">//            timestamp);</span></div>
-<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span> </div>
-<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>      <span class="comment">//   LOG(INFO) &lt;&lt; &quot;Gotten imu messages!&quot;;</span></div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>    <span class="comment">// cv::imshow(&quot;RGB&quot;, rgb);</span></div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>    <span class="comment">// cv::imshow(&quot;OF&quot;, of_viz);</span></div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>    <span class="comment">// cv::imshow(&quot;Motion&quot;, motion_viz);</span></div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>    <span class="comment">// // cv::waitKey(1);</span></div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>    <span class="comment">// cv::imshow(&quot;Depth&quot;, depth_viz);</span></div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span> </div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>    <span class="comment">// auto object_detection_result = detector-&gt;process(rgb);</span></div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>    <span class="comment">// cv::imshow(&quot;Detection Result&quot;, object_detection_result.colouredMask());</span></div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span> </div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>    <a class="code hl_class" href="classdyno_1_1ImageContainer.html">ImageContainer</a> image_container(frame_id, timestamp);</div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>    image_container.<a class="code hl_function" href="classdyno_1_1ImageContainer.html#a6f35259f95c31b861ff6515c159e1ee3">rgb</a>(rgb)</div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>        .depth(depth)</div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>        .opticalFlow(optical_flow)</div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>        .objectMotionMask(motion);</div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>    <span class="comment">// image_container.rgb(rgb).depth(depth).opticalFlow(optical_flow);</span></div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>    <span class="keyword">auto</span> frame = tracker-&gt;track(frame_id, timestamp, image_container);</div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>    Frame::Ptr previous_frame = tracker-&gt;getPreviousFrame();</div>
 <div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span> </div>
-<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>      <span class="comment">//   CHECK(imu_measurements-&gt;synchronised_frame_id);</span></div>
-<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>      <span class="comment">//   CHECK_EQ(imu_measurements-&gt;synchronised_frame_id.value(),</span></div>
-<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>      <span class="comment">//            frame-&gt;getFrameId());</span></div>
-<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>      <span class="comment">// }</span></div>
-<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>    }</div>
-<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>    <span class="keywordflow">if</span> (!tracking.empty()) cv::imshow(<span class="stringliteral">&quot;Tracking&quot;</span>, tracking);</div>
-<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span> </div>
-<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>    LOG(INFO) &lt;&lt; to_string(tracker-&gt;getTrackerInfo());</div>
-<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>    <span class="keyword">const</span> std::string path = <span class="stringliteral">&quot;/root/results/misc/&quot;</span>;</div>
-<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>    <span class="comment">// if ((char)cv::waitKey(0) == &#39;s&#39;) {</span></div>
-<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>    <span class="comment">//   LOG(INFO) &lt;&lt; &quot;Saving...&quot;;</span></div>
-<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>    <span class="comment">//   // cv::imwrite(path + &quot;omd_su4_rgb.png&quot;, rgb);</span></div>
-<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>    <span class="comment">//   // cv::imwrite(path + &quot;omd_su4_of.png&quot;, of_viz);</span></div>
-<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>    <span class="comment">//   // cv::imwrite(path + &quot;omd_su4_motion.png&quot;, motion_viz);</span></div>
-<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>    <span class="comment">//   // cv::imwrite(path + &quot;omd_su4_depth.png&quot;, depth_viz);</span></div>
-<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>    <span class="comment">//   cv::imwrite(path + &quot;omd_tracking.png&quot;, tracking);</span></div>
-<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>    <span class="comment">// }</span></div>
-<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>    cv::waitKey(1);</div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>    <span class="comment">// if(frame_id == 605) {</span></div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>    <span class="comment">//   auto all_tracks = frame-&gt;static_features_.collectTracklets();</span></div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>    <span class="comment">//   frame-&gt;static_features_.markOutliers(all_tracks);</span></div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>    <span class="comment">// }</span></div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span> </div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>    <span class="comment">// // motion_viz =</span></div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>    <span class="comment">// ImageType::MotionMask::toRGB(frame-&gt;image_container_.get&lt;ImageType::MotionMask&gt;());</span></div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>    <span class="comment">// // // cv::imshow(&quot;Motion&quot;, motion_viz);</span></div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span> </div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>    cv::Mat tracking;</div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>    <span class="keywordflow">if</span> (previous_frame) {</div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>      <a class="code hl_class" href="classdyno_1_1ImageTracksParams.html">ImageTracksParams</a> track_viz_params(<span class="keyword">true</span>);</div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>      track_viz_params.<a class="code hl_variable" href="classdyno_1_1ImageTracksParams.html#aa7a25f817501dd12acb53ebbb902b069">show_intermediate_tracking</a> = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>      tracking = tracker-&gt;computeImageTracks(*previous_frame, *frame,</div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>                                             track_viz_params);</div>
+<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span> </div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>      <span class="comment">// if (imu_measurements) {</span></div>
+<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>      <span class="comment">//   const auto previous_timestamp = previous_frame-&gt;getTimestamp();</span></div>
 <div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span> </div>
-<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>  });</div>
-<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span> </div>
-<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>  <span class="keywordflow">while</span> (loader.<a class="code hl_function" href="classdyno_1_1DynoDatasetProvider.html#aa400624ddd0204276ce512486effa160">spin</a>()) {</div>
-<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>  }</div>
-<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>}</div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>      <span class="comment">//   CHECK_GE(imu_measurements-&gt;timestamps_[0], previous_timestamp);</span></div>
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>      <span class="comment">//   CHECK_LT(imu_measurements</span></div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>      <span class="comment">//                -&gt;timestamps_[imu_measurements-&gt;timestamps_.cols() - 1],</span></div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>      <span class="comment">//            timestamp);</span></div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span> </div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>      <span class="comment">//   LOG(INFO) &lt;&lt; &quot;Gotten imu messages!&quot;;</span></div>
 <div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span> </div>
-<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span><span class="comment">// #include &quot;dynosam/dataprovider/ProjectAriaDataProvider.hpp&quot;</span></div>
-<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span><span class="comment">// #include &quot;dynosam/frontend/vision/VisionTools.hpp&quot;</span></div>
-<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span> </div>
-<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span><span class="comment">// int main(int argc, char* argv[]) {</span></div>
-<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span> </div>
-<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span><span class="comment">//     using namespace dyno;</span></div>
-<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span><span class="comment">//     google::ParseCommandLineFlags(&amp;argc, &amp;argv, true);</span></div>
-<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span><span class="comment">//     google::InitGoogleLogging(argv[0]);</span></div>
-<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span><span class="comment">//     FLAGS_logtostderr = 1;</span></div>
-<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span><span class="comment">//     FLAGS_colorlogtostderr = 1;</span></div>
-<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span><span class="comment">//     FLAGS_log_prefix = 1;</span></div>
-<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span> </div>
-<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span><span class="comment">//     // ClusterSlamDataLoader loader(&quot;/root/data/cluster_slam/CARLA-S1&quot;);</span></div>
-<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span><span class="comment">//     ProjectARIADataLoader loader(&quot;/root/data/zed/acfr_3_moving_medium/&quot;);</span></div>
-<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span> </div>
-<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span><span class="comment">//     loader.setCallback([&amp;](dyno::FrameId frame_id, dyno::Timestamp timestamp,</span></div>
-<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span><span class="comment">//     cv::Mat rgb, cv::Mat optical_flow, cv::Mat depth, cv::Mat motion) -&gt; bool</span></div>
-<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span><span class="comment">//     {</span></div>
-<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span> </div>
-<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span><span class="comment">//         LOG(INFO) &lt;&lt; frame_id &lt;&lt; &quot; &quot; &lt;&lt; timestamp;</span></div>
-<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span> </div>
-<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span><span class="comment">//         cv::imshow(&quot;RGB&quot;, rgb);</span></div>
-<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span><span class="comment">//         cv::imshow(&quot;OF&quot;, ImageType::OpticalFlow::toRGB(optical_flow));</span></div>
-<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span><span class="comment">//         cv::imshow(&quot;Motion&quot;, ImageType::MotionMask::toRGB(motion));</span></div>
-<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span><span class="comment">//         cv::imshow(&quot;Depth&quot;, ImageType::Depth::toRGB(depth));</span></div>
-<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span> </div>
-<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span><span class="comment">//         cv::Mat shrunk_mask;</span></div>
-<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span><span class="comment">//         vision_tools::shrinkMask(motion, shrunk_mask, 20);</span></div>
-<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span><span class="comment">//         cv::imshow(&quot;Shrunk Motion&quot;,</span></div>
-<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span><span class="comment">//         ImageType::MotionMask::toRGB(shrunk_mask));</span></div>
-<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span> </div>
-<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span><span class="comment">//         cv::waitKey(1);</span></div>
-<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span><span class="comment">//         return true;</span></div>
-<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span><span class="comment">//     });</span></div>
-<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span> </div>
-<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span><span class="comment">//     while(loader.spin()) {}</span></div>
-<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span> </div>
-<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span><span class="comment">// }</span></div>
+<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>      <span class="comment">//   CHECK(imu_measurements-&gt;synchronised_frame_id);</span></div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>      <span class="comment">//   CHECK_EQ(imu_measurements-&gt;synchronised_frame_id.value(),</span></div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>      <span class="comment">//            frame-&gt;getFrameId());</span></div>
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>      <span class="comment">// }</span></div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>    }</div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>    <span class="keywordflow">if</span> (!tracking.empty()) cv::imshow(<span class="stringliteral">&quot;Tracking&quot;</span>, tracking);</div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span> </div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>    LOG(INFO) &lt;&lt; to_string(tracker-&gt;getTrackerInfo());</div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>    <span class="keyword">const</span> std::string path = <span class="stringliteral">&quot;/root/results/misc/&quot;</span>;</div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>    <span class="comment">// if (previous_frame &amp;&amp; (char)cv::waitKey(0) == &#39;s&#39;) {</span></div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>    <span class="comment">//   LOG(INFO) &lt;&lt; &quot;Saving...&quot;;</span></div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>    <span class="comment">//   // cv::imwrite(path + &quot;omd_su4_rgb.png&quot;, rgb);</span></div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>    <span class="comment">//   // cv::imwrite(path + &quot;omd_su4_of.png&quot;, of_viz);</span></div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>    <span class="comment">//   // cv::imwrite(path + &quot;omd_su4_motion.png&quot;, motion_viz);</span></div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>    <span class="comment">//   // cv::imwrite(path + &quot;omd_su4_depth.png&quot;, depth_viz);</span></div>
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>    <span class="comment">//   // cv::imwrite(</span></div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>    <span class="comment">//   //     path + &quot;cluster_tracking_new&quot; + std::to_string(frame_id) +</span></div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>    <span class="comment">//   &quot;.png&quot;,</span></div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>    <span class="comment">//   //     tracking);</span></div>
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>    <span class="comment">// }</span></div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>    cv::waitKey(1);</div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span> </div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>  });</div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span> </div>
+<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>  <span class="keywordflow">while</span> (loader.<a class="code hl_function" href="classdyno_1_1DynoDatasetProvider.html#aa400624ddd0204276ce512486effa160">spin</a>()) {</div>
+<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>  }</div>
+<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>}</div>
+<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span> </div>
+<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span><span class="comment">// #include &quot;dynosam/dataprovider/ProjectAriaDataProvider.hpp&quot;</span></div>
+<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span><span class="comment">// #include &quot;dynosam/frontend/vision/VisionTools.hpp&quot;</span></div>
+<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span> </div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span><span class="comment">// int main(int argc, char* argv[]) {</span></div>
+<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span> </div>
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span><span class="comment">//     using namespace dyno;</span></div>
+<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span><span class="comment">//     google::ParseCommandLineFlags(&amp;argc, &amp;argv, true);</span></div>
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span><span class="comment">//     google::InitGoogleLogging(argv[0]);</span></div>
+<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span><span class="comment">//     FLAGS_logtostderr = 1;</span></div>
+<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span><span class="comment">//     FLAGS_colorlogtostderr = 1;</span></div>
+<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span><span class="comment">//     FLAGS_log_prefix = 1;</span></div>
+<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span> </div>
+<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span><span class="comment">//     // ClusterSlamDataLoader loader(&quot;/root/data/cluster_slam/CARLA-S1&quot;);</span></div>
+<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span><span class="comment">//     ProjectARIADataLoader loader(&quot;/root/data/zed/acfr_3_moving_medium/&quot;);</span></div>
+<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span> </div>
+<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span><span class="comment">//     loader.setCallback([&amp;](dyno::FrameId frame_id, dyno::Timestamp timestamp,</span></div>
+<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span><span class="comment">//     cv::Mat rgb, cv::Mat optical_flow, cv::Mat depth, cv::Mat motion) -&gt; bool</span></div>
+<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span><span class="comment">//     {</span></div>
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span> </div>
+<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span><span class="comment">//         LOG(INFO) &lt;&lt; frame_id &lt;&lt; &quot; &quot; &lt;&lt; timestamp;</span></div>
+<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span> </div>
+<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span><span class="comment">//         cv::imshow(&quot;RGB&quot;, rgb);</span></div>
+<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span><span class="comment">//         cv::imshow(&quot;OF&quot;, ImageType::OpticalFlow::toRGB(optical_flow));</span></div>
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span><span class="comment">//         cv::imshow(&quot;Motion&quot;, ImageType::MotionMask::toRGB(motion));</span></div>
+<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span><span class="comment">//         cv::imshow(&quot;Depth&quot;, ImageType::Depth::toRGB(depth));</span></div>
+<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span> </div>
+<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span><span class="comment">//         cv::Mat shrunk_mask;</span></div>
+<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span><span class="comment">//         vision_tools::shrinkMask(motion, shrunk_mask, 20);</span></div>
+<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span><span class="comment">//         cv::imshow(&quot;Shrunk Motion&quot;,</span></div>
+<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span><span class="comment">//         ImageType::MotionMask::toRGB(shrunk_mask));</span></div>
+<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span> </div>
+<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span><span class="comment">//         cv::waitKey(1);</span></div>
+<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span><span class="comment">//         return true;</span></div>
+<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span><span class="comment">//     });</span></div>
+<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span> </div>
+<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span><span class="comment">//     while(loader.spin()) {}</span></div>
+<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span> </div>
+<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span><span class="comment">// }</span></div>
 <div class="ttc" id="aCamera_8hpp_html"><div class="ttname"><a href="Camera_8hpp.html">Camera.hpp</a></div></div>
 <div class="ttc" id="aClusterSlamDataProvider_8hpp_html"><div class="ttname"><a href="ClusterSlamDataProvider_8hpp.html">ClusterSlamDataProvider.hpp</a></div></div>
-<div class="ttc" id="aColourMap_8hpp_html"><div class="ttname"><a href="ColourMap_8hpp.html">ColourMap.hpp</a></div></div>
+<div class="ttc" id="aColour_8hpp_html"><div class="ttname"><a href="Colour_8hpp.html">Colour.hpp</a></div></div>
 <div class="ttc" id="aFeatureTracker_8hpp_html"><div class="ttname"><a href="FeatureTracker_8hpp.html">FeatureTracker.hpp</a></div></div>
 <div class="ttc" id="aFrame_8hpp_html"><div class="ttname"><a href="Frame_8hpp.html">Frame.hpp</a></div></div>
 <div class="ttc" id="aImageContainer_8hpp_html"><div class="ttname"><a href="ImageContainer_8hpp.html">ImageContainer.hpp</a></div></div>
@@ -313,26 +342,32 @@ $(function() {
 <div class="ttc" id="aOpenCVFrontendDisplay_8hpp_html"><div class="ttname"><a href="OpenCVFrontendDisplay_8hpp.html">OpenCVFrontendDisplay.hpp</a></div></div>
 <div class="ttc" id="aPipelineManager_8hpp_html"><div class="ttname"><a href="PipelineManager_8hpp.html">PipelineManager.hpp</a></div></div>
 <div class="ttc" id="aPipelineParams_8hpp_html"><div class="ttname"><a href="PipelineParams_8hpp.html">PipelineParams.hpp</a></div></div>
+<div class="ttc" id="aPyObjectDetector_8hpp_html"><div class="ttname"><a href="PyObjectDetector_8hpp.html">PyObjectDetector.hpp</a></div></div>
 <div class="ttc" id="aTartanAirShibuya_8hpp_html"><div class="ttname"><a href="TartanAirShibuya_8hpp.html">TartanAirShibuya.hpp</a></div></div>
 <div class="ttc" id="aViodeDataProvider_8hpp_html"><div class="ttname"><a href="ViodeDataProvider_8hpp.html">ViodeDataProvider.hpp</a></div></div>
 <div class="ttc" id="aVirtualKittiDataProvider_8hpp_html"><div class="ttname"><a href="VirtualKittiDataProvider_8hpp.html">VirtualKittiDataProvider.hpp</a></div></div>
 <div class="ttc" id="aVisionTools_8hpp_html"><div class="ttname"><a href="VisionTools_8hpp.html">VisionTools.hpp</a></div></div>
-<div class="ttc" id="aclassdyno_1_1DynoDatasetProvider_html_aa400624ddd0204276ce512486effa160"><div class="ttname"><a href="classdyno_1_1DynoDatasetProvider.html#aa400624ddd0204276ce512486effa160">dyno::DynoDatasetProvider::spin</a></div><div class="ttdeci">virtual bool spin() override</div><div class="ttdoc">Spins the dataset for one &quot;step&quot; of the dataset.</div><div class="ttdef"><b>Definition:</b> <a href="DatasetProvider_8hpp_source.html#l00311">DatasetProvider.hpp:311</a></div></div>
-<div class="ttc" id="aclassdyno_1_1GroundTruthInputPacket_html"><div class="ttname"><a href="classdyno_1_1GroundTruthInputPacket.html">dyno::GroundTruthInputPacket</a></div><div class="ttdef"><b>Definition:</b> <a href="GroundTruthPacket_8hpp_source.html#l00119">GroundTruthPacket.hpp:119</a></div></div>
-<div class="ttc" id="aclassdyno_1_1ImageContainer_html"><div class="ttname"><a href="classdyno_1_1ImageContainer.html">dyno::ImageContainer</a></div><div class="ttdef"><b>Definition:</b> <a href="ImageContainer_8hpp_source.html#l00474">ImageContainer.hpp:474</a></div></div>
-<div class="ttc" id="aclassdyno_1_1ImageContainer_html_a6f35259f95c31b861ff6515c159e1ee3"><div class="ttname"><a href="classdyno_1_1ImageContainer.html#a6f35259f95c31b861ff6515c159e1ee3">dyno::ImageContainer::rgb</a></div><div class="ttdeci">const ImageWrapper&lt; ImageType::RGBMono &gt; &amp; rgb() const</div><div class="ttdef"><b>Definition:</b> <a href="ImageContainer_8cc_source.html#l00052">ImageContainer.cc:52</a></div></div>
+<div class="ttc" id="aclassdyno_1_1DynoDatasetProvider_html_aa400624ddd0204276ce512486effa160"><div class="ttname"><a href="classdyno_1_1DynoDatasetProvider.html#aa400624ddd0204276ce512486effa160">dyno::DynoDatasetProvider::spin</a></div><div class="ttdeci">virtual bool spin() override</div><div class="ttdoc">Spins the dataset for one &quot;step&quot; of the dataset.</div><div class="ttdef"><b>Definition:</b> <a href="DatasetProvider_8hpp_source.html#l00321">DatasetProvider.hpp:321</a></div></div>
+<div class="ttc" id="aclassdyno_1_1GroundTruthInputPacket_html"><div class="ttname"><a href="classdyno_1_1GroundTruthInputPacket.html">dyno::GroundTruthInputPacket</a></div><div class="ttdef"><b>Definition:</b> <a href="GroundTruthPacket_8hpp_source.html#l00118">GroundTruthPacket.hpp:118</a></div></div>
+<div class="ttc" id="aclassdyno_1_1ImageContainer_html"><div class="ttname"><a href="classdyno_1_1ImageContainer.html">dyno::ImageContainer</a></div><div class="ttdoc">Basic class to contain Images which are the input for the DynoSAM system. Instead of just containing ...</div><div class="ttdef"><b>Definition:</b> <a href="ImageContainer_8hpp_source.html#l00109">ImageContainer.hpp:109</a></div></div>
+<div class="ttc" id="aclassdyno_1_1ImageContainer_html_a6f35259f95c31b861ff6515c159e1ee3"><div class="ttname"><a href="classdyno_1_1ImageContainer.html#a6f35259f95c31b861ff6515c159e1ee3">dyno::ImageContainer::rgb</a></div><div class="ttdeci">const ImageWrapper&lt; ImageType::RGBMono &gt; &amp; rgb() const</div><div class="ttdef"><b>Definition:</b> <a href="ImageContainer_8cc_source.html#l00051">ImageContainer.cc:51</a></div></div>
+<div class="ttc" id="aclassdyno_1_1ImageTracksParams_html"><div class="ttname"><a href="classdyno_1_1ImageTracksParams.html">dyno::ImageTracksParams</a></div><div class="ttdoc">Parameter struct to control the visualisation for FeatureTrackerBase::computeImageTracks.</div><div class="ttdef"><b>Definition:</b> <a href="FeatureTrackerBase_8hpp_source.html#l00091">FeatureTrackerBase.hpp:91</a></div></div>
+<div class="ttc" id="aclassdyno_1_1ImageTracksParams_html_aa7a25f817501dd12acb53ebbb902b069"><div class="ttname"><a href="classdyno_1_1ImageTracksParams.html#aa7a25f817501dd12acb53ebbb902b069">dyno::ImageTracksParams::show_intermediate_tracking</a></div><div class="ttdeci">bool show_intermediate_tracking</div><div class="ttdoc">To show outliers and new feature tracks (red and blue)</div><div class="ttdef"><b>Definition:</b> <a href="FeatureTrackerBase_8hpp_source.html#l00131">FeatureTrackerBase.hpp:131</a></div></div>
 <div class="ttc" id="aclassdyno_1_1KittiDataLoader_html"><div class="ttname"><a href="classdyno_1_1KittiDataLoader.html">dyno::KittiDataLoader</a></div><div class="ttdef"><b>Definition:</b> <a href="KittiDataProvider_8hpp_source.html#l00352">KittiDataProvider.hpp:354</a></div></div>
 <div class="ttc" id="aclassdyno_1_1KittiDataLoader_html_a1ae7994314d13f355483a3c4efa013a1"><div class="ttname"><a href="classdyno_1_1KittiDataLoader.html#a1ae7994314d13f355483a3c4efa013a1">dyno::KittiDataLoader::getCameraParams</a></div><div class="ttdeci">CameraParams::Optional getCameraParams() const override</div><div class="ttdoc">Provides functionality to get camera paramters for the main pipeline, as these may be available from ...</div><div class="ttdef"><b>Definition:</b> <a href="KittiDataProvider_8hpp_source.html#l00484">KittiDataProvider.hpp:484</a></div></div>
-<div class="ttc" id="adyno__sam_8cc_html_a0ddf1224851353fc92bfbff6f499fa97"><div class="ttname"><a href="dyno__sam_8cc.html#a0ddf1224851353fc92bfbff6f499fa97">main</a></div><div class="ttdeci">int main(int argc, char *argv[])</div><div class="ttdef"><b>Definition:</b> <a href="dyno__sam_8cc_source.html#l00061">dyno_sam.cc:61</a></div></div>
+<div class="ttc" id="adyno__sam_8cc_html_a0ddf1224851353fc92bfbff6f499fa97"><div class="ttname"><a href="dyno__sam_8cc.html#a0ddf1224851353fc92bfbff6f499fa97">main</a></div><div class="ttdeci">int main(int argc, char *argv[])</div><div class="ttdef"><b>Definition:</b> <a href="dyno__sam_8cc_source.html#l00062">dyno_sam.cc:62</a></div></div>
 <div class="ttc" id="adyno__sam_8cc_html_ad5e1edaae16107ffdc66a299e31ee46a"><div class="ttname"><a href="dyno__sam_8cc.html#ad5e1edaae16107ffdc66a299e31ee46a">DEFINE_string</a></div><div class="ttdeci">DEFINE_string(path_to_kitti, &quot;/root/data/kitti&quot;, &quot;Path to KITTI dataset&quot;)</div></div>
 <div class="ttc" id="anamespacedyno_html"><div class="ttname"><a href="namespacedyno.html">dyno</a></div><div class="ttdef"><b>Definition:</b> <a href="Accessor-impl_8hpp_source.html#l00037">Accessor-impl.hpp:37</a></div></div>
-<div class="ttc" id="anamespacedyno_html_a7fda67c0575c4b7a8210dcc8ae227370"><div class="ttname"><a href="namespacedyno.html#a7fda67c0575c4b7a8210dcc8ae227370">dyno::Timestamp</a></div><div class="ttdeci">double Timestamp</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00064">Types.hpp:64</a></div></div>
-<div class="ttc" id="anamespacedyno_html_ac4303d6fafb755f794b072d76f9cfb41"><div class="ttname"><a href="namespacedyno.html#ac4303d6fafb755f794b072d76f9cfb41">dyno::FrameId</a></div><div class="ttdeci">size_t FrameId</div><div class="ttdoc">Discrete time-step k.</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00073">Types.hpp:73</a></div></div>
+<div class="ttc" id="anamespacedyno_html_a7fda67c0575c4b7a8210dcc8ae227370"><div class="ttname"><a href="namespacedyno.html#a7fda67c0575c4b7a8210dcc8ae227370">dyno::Timestamp</a></div><div class="ttdeci">double Timestamp</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00065">Types.hpp:65</a></div></div>
+<div class="ttc" id="anamespacedyno_html_ac4303d6fafb755f794b072d76f9cfb41"><div class="ttname"><a href="namespacedyno.html#ac4303d6fafb755f794b072d76f9cfb41">dyno::FrameId</a></div><div class="ttdeci">size_t FrameId</div><div class="ttdoc">Discrete time-step k.</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00074">Types.hpp:74</a></div></div>
 <div class="ttc" id="astructdyno_1_1FrontendParams_html"><div class="ttname"><a href="structdyno_1_1FrontendParams.html">dyno::FrontendParams</a></div><div class="ttdef"><b>Definition:</b> <a href="FrontendParams_8hpp_source.html#l00043">FrontendParams.hpp:43</a></div></div>
 <div class="ttc" id="astructdyno_1_1FrontendParams_html_a6a99c9f2ac61d71c11b4e1d07df3681c"><div class="ttname"><a href="structdyno_1_1FrontendParams.html#a6a99c9f2ac61d71c11b4e1d07df3681c">dyno::FrontendParams::tracker_params</a></div><div class="ttdeci">TrackerParams tracker_params</div><div class="ttdef"><b>Definition:</b> <a href="FrontendParams_8hpp_source.html#l00070">FrontendParams.hpp:70</a></div></div>
 <div class="ttc" id="astructdyno_1_1KittiDataLoader_1_1Params_html"><div class="ttname"><a href="structdyno_1_1KittiDataLoader_1_1Params.html">dyno::KittiDataLoader::Params</a></div><div class="ttdef"><b>Definition:</b> <a href="KittiDataProvider_8hpp_source.html#l00356">KittiDataProvider.hpp:356</a></div></div>
-<div class="ttc" id="astructdyno_1_1TrackerParams_html_a251d59812229f53def1c285d69d56b7e"><div class="ttname"><a href="structdyno_1_1TrackerParams.html#a251d59812229f53def1c285d69d56b7e">dyno::TrackerParams::max_dynamic_features_per_frame</a></div><div class="ttdeci">size_t max_dynamic_features_per_frame</div><div class="ttdef"><b>Definition:</b> <a href="TrackerParams_8hpp_source.html#l00124">TrackerParams.hpp:124</a></div></div>
-<div class="ttc" id="astructdyno_1_1__DynoDatasetConstructor_html_a5354a00794f43690a5bab204bda3879e"><div class="ttname"><a href="structdyno_1_1__DynoDatasetConstructor.html#a5354a00794f43690a5bab204bda3879e">dyno::_DynoDatasetConstructor::setCallback</a></div><div class="ttdeci">void setCallback(const DataInputCallback &amp;data_input_callback)</div><div class="ttdef"><b>Definition:</b> <a href="DatasetProvider_8hpp_source.html#l00067">DatasetProvider.hpp:67</a></div></div>
+<div class="ttc" id="astructdyno_1_1TrackerParams_html_a251d59812229f53def1c285d69d56b7e"><div class="ttname"><a href="structdyno_1_1TrackerParams.html#a251d59812229f53def1c285d69d56b7e">dyno::TrackerParams::max_dynamic_features_per_frame</a></div><div class="ttdeci">size_t max_dynamic_features_per_frame</div><div class="ttdef"><b>Definition:</b> <a href="TrackerParams_8hpp_source.html#l00133">TrackerParams.hpp:133</a></div></div>
+<div class="ttc" id="astructdyno_1_1TrackerParams_html_a7904cacb28831b9c8b1ddbb4affc5dda"><div class="ttname"><a href="structdyno_1_1TrackerParams.html#a7904cacb28831b9c8b1ddbb4affc5dda">dyno::TrackerParams::prefer_provided_optical_flow</a></div><div class="ttdeci">bool prefer_provided_optical_flow</div><div class="ttdef"><b>Definition:</b> <a href="TrackerParams_8hpp_source.html#l00125">TrackerParams.hpp:125</a></div></div>
+<div class="ttc" id="astructdyno_1_1TrackerParams_html_a8c5dcc9bc2ded3c66214340b3f9fd0a2"><div class="ttname"><a href="structdyno_1_1TrackerParams.html#a8c5dcc9bc2ded3c66214340b3f9fd0a2">dyno::TrackerParams::feature_detector_type</a></div><div class="ttdeci">FeatureDetectorType feature_detector_type</div><div class="ttdef"><b>Definition:</b> <a href="TrackerParams_8hpp_source.html#l00094">TrackerParams.hpp:94</a></div></div>
+<div class="ttc" id="astructdyno_1_1TrackerParams_html_aa1ca252f62bd7adeaedc35e76a03be62"><div class="ttname"><a href="structdyno_1_1TrackerParams.html#aa1ca252f62bd7adeaedc35e76a03be62">dyno::TrackerParams::prefer_provided_object_detection</a></div><div class="ttdeci">bool prefer_provided_object_detection</div><div class="ttdef"><b>Definition:</b> <a href="TrackerParams_8hpp_source.html#l00126">TrackerParams.hpp:126</a></div></div>
+<div class="ttc" id="astructdyno_1_1__DynoDatasetConstructor_html_a5354a00794f43690a5bab204bda3879e"><div class="ttname"><a href="structdyno_1_1__DynoDatasetConstructor.html#a5354a00794f43690a5bab204bda3879e">dyno::_DynoDatasetConstructor::setCallback</a></div><div class="ttdeci">void setCallback(const DataInputCallback &amp;data_input_callback)</div><div class="ttdef"><b>Definition:</b> <a href="DatasetProvider_8hpp_source.html#l00074">DatasetProvider.hpp:74</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

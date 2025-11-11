@@ -75,6 +75,7 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
@@ -86,6 +87,11 @@ $(function() {
 
 <p><code>#include &lt;<a class="el" href="CameraParams_8hpp_source.html">CameraParams.hpp</a>&gt;</code></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1CameraParams_1_1DepthParams.html">DepthParams</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
 <tr class="memitem:a8349ad5f0c727d6ef16a1b127e620eae"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1CameraParams.html#a8349ad5f0c727d6ef16a1b127e620eae">DistortionCoeffs</a> = std::vector&lt; double &gt;</td></tr>
@@ -132,6 +138,14 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ac5f6ec080db908038d9928c3a493327b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad824176d6c92a8162e6360c0760fa304"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacedyno.html#a7118762ab4c63de4996b3983b5b82356">DistortionModel</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1CameraParams.html#ad824176d6c92a8162e6360c0760fa304">getDistortionModel</a> () const</td></tr>
 <tr class="separator:ad824176d6c92a8162e6360c0760fa304"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1846d9aa734e56ec6b43c186881303e8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classdyno_1_1CameraParams.html">CameraParams</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1CameraParams.html#a1846d9aa734e56ec6b43c186881303e8">setDepthParams</a> (const <a class="el" href="structdyno_1_1CameraParams_1_1DepthParams.html">DepthParams</a> &amp;depth_params)</td></tr>
+<tr class="separator:a1846d9aa734e56ec6b43c186881303e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5416948f817248a1a2216eb04a0c723d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classdyno_1_1CameraParams.html">CameraParams</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1CameraParams.html#a5416948f817248a1a2216eb04a0c723d">setDepthParams</a> (double baseline)</td></tr>
+<tr class="separator:a5416948f817248a1a2216eb04a0c723d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1e6e32159599ac0ef4a354fb6c72128c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1CameraParams.html#a1e6e32159599ac0ef4a354fb6c72128c">hasDepthParams</a> () const</td></tr>
+<tr class="separator:a1e6e32159599ac0ef4a354fb6c72128c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8353d84805d7e45720433117114ab1b6"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structdyno_1_1CameraParams_1_1DepthParams.html">DepthParams</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1CameraParams.html#a8353d84805d7e45720433117114ab1b6">depthParams</a> () const</td></tr>
+<tr class="separator:a8353d84805d7e45720433117114ab1b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aed0b3bb94f86ce7d95789c4113a74bd6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1CameraParams.html#aed0b3bb94f86ce7d95789c4113a74bd6">equals</a> (const <a class="el" href="classdyno_1_1CameraParams.html">CameraParams</a> &amp;other, double tol=1e-9) const</td></tr>
 <tr class="separator:aed0b3bb94f86ce7d95789c4113a74bd6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7be21480072986b94e6484d9c4687ddf"><td class="memItemLeft" align="right" valign="top">const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1CameraParams.html#a7be21480072986b94e6484d9c4687ddf">toString</a> () const</td></tr>
@@ -180,6 +194,9 @@ Private Attributes</h2></td></tr>
 <tr class="separator:a169264ad4cfbcc068019b5c7fc89c3cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:add68d4b6cdf8d82755c3ddbd19cea253"><td class="memItemLeft" align="right" valign="top">cv::Mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1CameraParams.html#add68d4b6cdf8d82755c3ddbd19cea253">D_</a></td></tr>
 <tr class="separator:add68d4b6cdf8d82755c3ddbd19cea253"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0dca70bd2ff149a9fc24856457049bc1"><td class="memItemLeft" align="right" valign="top">std::optional&lt; <a class="el" href="structdyno_1_1CameraParams_1_1DepthParams.html">DepthParams</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1CameraParams.html#a0dca70bd2ff149a9fc24856457049bc1">depth_</a> = {}</td></tr>
+<tr class="memdesc:a0dca70bd2ff149a9fc24856457049bc1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Optional params for an RGB-D.  <br /></td></tr>
+<tr class="separator:a0dca70bd2ff149a9fc24856457049bc1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
@@ -259,8 +276,8 @@ Private Attributes</h2></td></tr>
 
 <p>Needed for IO construction. </p>
 
-<p class="definition">Definition at line <a class="el" href="CameraParams_8hpp_source.html#l00070">70</a> of file <a class="el" href="CameraParams_8hpp_source.html">CameraParams.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   70</span>{}</div>
+<p class="definition">Definition at line <a class="el" href="CameraParams_8hpp_source.html#l00101">101</a> of file <a class="el" href="CameraParams_8hpp_source.html">CameraParams.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  101</span>{}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -326,8 +343,8 @@ Private Attributes</h2></td></tr>
 <div class="line"><span class="lineno">  117</span>          intrinsics, distortion, image_size,</div>
 <div class="line"><span class="lineno">  118</span>          <a class="code hl_function" href="classdyno_1_1CameraParams.html#add58aad8e64c327cdf55e0d2c19e1b87">CameraParams::stringToDistortion</a>(distortion_model, <span class="stringliteral">&quot;pinhole&quot;</span>),</div>
 <div class="line"><span class="lineno">  119</span>          T_robot_camera) {}</div>
-<div class="ttc" id="aclassdyno_1_1CameraParams_html_a047f13f53faaf5364e999e855af7c1a8"><div class="ttname"><a href="classdyno_1_1CameraParams.html#a047f13f53faaf5364e999e855af7c1a8">dyno::CameraParams::CameraParams</a></div><div class="ttdeci">CameraParams()</div><div class="ttdoc">Needed for IO construction.</div><div class="ttdef"><b>Definition:</b> <a href="CameraParams_8hpp_source.html#l00070">CameraParams.hpp:70</a></div></div>
-<div class="ttc" id="aclassdyno_1_1CameraParams_html_add58aad8e64c327cdf55e0d2c19e1b87"><div class="ttname"><a href="classdyno_1_1CameraParams.html#add58aad8e64c327cdf55e0d2c19e1b87">dyno::CameraParams::stringToDistortion</a></div><div class="ttdeci">static DistortionModel stringToDistortion(const std::string &amp;distortion_model, const std::string &amp;camera_model)</div><div class="ttdoc">stringToDistortion</div><div class="ttdef"><b>Definition:</b> <a href="CameraParams_8cc_source.html#l00181">CameraParams.cc:181</a></div></div>
+<div class="ttc" id="aclassdyno_1_1CameraParams_html_a047f13f53faaf5364e999e855af7c1a8"><div class="ttname"><a href="classdyno_1_1CameraParams.html#a047f13f53faaf5364e999e855af7c1a8">dyno::CameraParams::CameraParams</a></div><div class="ttdeci">CameraParams()</div><div class="ttdoc">Needed for IO construction.</div><div class="ttdef"><b>Definition:</b> <a href="CameraParams_8hpp_source.html#l00101">CameraParams.hpp:101</a></div></div>
+<div class="ttc" id="aclassdyno_1_1CameraParams_html_add58aad8e64c327cdf55e0d2c19e1b87"><div class="ttname"><a href="classdyno_1_1CameraParams.html#add58aad8e64c327cdf55e0d2c19e1b87">dyno::CameraParams::stringToDistortion</a></div><div class="ttdeci">static DistortionModel stringToDistortion(const std::string &amp;distortion_model, const std::string &amp;camera_model)</div><div class="ttdoc">stringToDistortion</div><div class="ttdef"><b>Definition:</b> <a href="CameraParams_8cc_source.html#l00197">CameraParams.cc:197</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -391,17 +408,17 @@ Private Attributes</h2></td></tr>
 <div class="line"><span class="lineno">  138</span>  cv::cv2eigen(<a class="code hl_variable" href="classdyno_1_1CameraParams.html#ae9a814a6236c3eeef71eb93a03ad3e97">K_</a>, <a class="code hl_variable" href="classdyno_1_1CameraParams.html#af9ecf3838b27bcfffb04be485fe76e3c">K_eigen_</a>);</div>
 <div class="line"><span class="lineno">  139</span>  <a class="code hl_variable" href="classdyno_1_1CameraParams.html#ae9a814a6236c3eeef71eb93a03ad3e97">K_</a>.copyTo(<a class="code hl_variable" href="classdyno_1_1CameraParams.html#a169264ad4cfbcc068019b5c7fc89c3cf">P_</a>);</div>
 <div class="line"><span class="lineno">  140</span>}</div>
-<div class="ttc" id="aclassdyno_1_1CameraParams_html_a169264ad4cfbcc068019b5c7fc89c3cf"><div class="ttname"><a href="classdyno_1_1CameraParams.html#a169264ad4cfbcc068019b5c7fc89c3cf">dyno::CameraParams::P_</a></div><div class="ttdeci">cv::Mat P_</div><div class="ttdef"><b>Definition:</b> <a href="CameraParams_8hpp_source.html#l00217">CameraParams.hpp:217</a></div></div>
-<div class="ttc" id="aclassdyno_1_1CameraParams_html_a56408d20d8b16fadc9e7373c92e8977a"><div class="ttname"><a href="classdyno_1_1CameraParams.html#a56408d20d8b16fadc9e7373c92e8977a">dyno::CameraParams::convertDistortionVectorToMatrix</a></div><div class="ttdeci">static void convertDistortionVectorToMatrix(const DistortionCoeffs &amp;distortion_coeffs, cv::Mat *distortion_coeffs_mat)</div><div class="ttdef"><b>Definition:</b> <a href="CameraParams_8cc_source.html#l00142">CameraParams.cc:142</a></div></div>
-<div class="ttc" id="aclassdyno_1_1CameraParams_html_a88e86545ae266b99813affcc155f567f"><div class="ttname"><a href="classdyno_1_1CameraParams.html#a88e86545ae266b99813affcc155f567f">dyno::CameraParams::T_robot_camera_</a></div><div class="ttdeci">gtsam::Pose3 T_robot_camera_</div><div class="ttdef"><b>Definition:</b> <a href="CameraParams_8hpp_source.html#l00206">CameraParams.hpp:206</a></div></div>
-<div class="ttc" id="aclassdyno_1_1CameraParams_html_a969d8b0935dffdf1a722156a3a96ef39"><div class="ttname"><a href="classdyno_1_1CameraParams.html#a969d8b0935dffdf1a722156a3a96ef39">dyno::CameraParams::convertIntrinsicsVectorToMatrix</a></div><div class="ttdeci">static void convertIntrinsicsVectorToMatrix(const IntrinsicsCoeffs &amp;intrinsics, cv::Mat *camera_matrix)</div><div class="ttdoc">Converts the IntrinsicsCoeffs (in the form: fu, fy, cu, cv) to a 3x3 camera matrix in the form: [fx 0...</div><div class="ttdef"><b>Definition:</b> <a href="CameraParams_8cc_source.html#l00150">CameraParams.cc:150</a></div></div>
-<div class="ttc" id="aclassdyno_1_1CameraParams_html_aa8467c4426a825936619a5cd5832ed81"><div class="ttname"><a href="classdyno_1_1CameraParams.html#aa8467c4426a825936619a5cd5832ed81">dyno::CameraParams::intrinsics_</a></div><div class="ttdeci">IntrinsicsCoeffs intrinsics_</div><div class="ttdoc">fu, fv, cu, cv</div><div class="ttdef"><b>Definition:</b> <a href="CameraParams_8hpp_source.html#l00199">CameraParams.hpp:199</a></div></div>
-<div class="ttc" id="aclassdyno_1_1CameraParams_html_ab447798df360751d787e332a7db86aaa"><div class="ttname"><a href="classdyno_1_1CameraParams.html#ab447798df360751d787e332a7db86aaa">dyno::CameraParams::image_size_</a></div><div class="ttdeci">cv::Size image_size_</div><div class="ttdef"><b>Definition:</b> <a href="CameraParams_8hpp_source.html#l00201">CameraParams.hpp:201</a></div></div>
-<div class="ttc" id="aclassdyno_1_1CameraParams_html_add68d4b6cdf8d82755c3ddbd19cea253"><div class="ttname"><a href="classdyno_1_1CameraParams.html#add68d4b6cdf8d82755c3ddbd19cea253">dyno::CameraParams::D_</a></div><div class="ttdeci">cv::Mat D_</div><div class="ttdef"><b>Definition:</b> <a href="CameraParams_8hpp_source.html#l00219">CameraParams.hpp:219</a></div></div>
-<div class="ttc" id="aclassdyno_1_1CameraParams_html_ae9a814a6236c3eeef71eb93a03ad3e97"><div class="ttname"><a href="classdyno_1_1CameraParams.html#ae9a814a6236c3eeef71eb93a03ad3e97">dyno::CameraParams::K_</a></div><div class="ttdeci">cv::Mat K_</div><div class="ttdoc">Transform of the camera frame to the robot frame.</div><div class="ttdef"><b>Definition:</b> <a href="CameraParams_8hpp_source.html#l00211">CameraParams.hpp:211</a></div></div>
-<div class="ttc" id="aclassdyno_1_1CameraParams_html_aec88d010efafefd8adab1e3abb025471"><div class="ttname"><a href="classdyno_1_1CameraParams.html#aec88d010efafefd8adab1e3abb025471">dyno::CameraParams::distortion_coeff_</a></div><div class="ttdeci">DistortionCoeffs distortion_coeff_</div><div class="ttdef"><b>Definition:</b> <a href="CameraParams_8hpp_source.html#l00200">CameraParams.hpp:200</a></div></div>
-<div class="ttc" id="aclassdyno_1_1CameraParams_html_af56d9c8538fa9c6f1a681c8d57fd14d4"><div class="ttname"><a href="classdyno_1_1CameraParams.html#af56d9c8538fa9c6f1a681c8d57fd14d4">dyno::CameraParams::distortion_model_</a></div><div class="ttdeci">DistortionModel distortion_model_</div><div class="ttdoc">Distortion parameters.</div><div class="ttdef"><b>Definition:</b> <a href="CameraParams_8hpp_source.html#l00204">CameraParams.hpp:204</a></div></div>
-<div class="ttc" id="aclassdyno_1_1CameraParams_html_af9ecf3838b27bcfffb04be485fe76e3c"><div class="ttname"><a href="classdyno_1_1CameraParams.html#af9ecf3838b27bcfffb04be485fe76e3c">dyno::CameraParams::K_eigen_</a></div><div class="ttdeci">gtsam::Matrix3 K_eigen_</div><div class="ttdef"><b>Definition:</b> <a href="CameraParams_8hpp_source.html#l00212">CameraParams.hpp:212</a></div></div>
+<div class="ttc" id="aclassdyno_1_1CameraParams_html_a169264ad4cfbcc068019b5c7fc89c3cf"><div class="ttname"><a href="classdyno_1_1CameraParams.html#a169264ad4cfbcc068019b5c7fc89c3cf">dyno::CameraParams::P_</a></div><div class="ttdeci">cv::Mat P_</div><div class="ttdef"><b>Definition:</b> <a href="CameraParams_8hpp_source.html#l00250">CameraParams.hpp:250</a></div></div>
+<div class="ttc" id="aclassdyno_1_1CameraParams_html_a56408d20d8b16fadc9e7373c92e8977a"><div class="ttname"><a href="classdyno_1_1CameraParams.html#a56408d20d8b16fadc9e7373c92e8977a">dyno::CameraParams::convertDistortionVectorToMatrix</a></div><div class="ttdeci">static void convertDistortionVectorToMatrix(const DistortionCoeffs &amp;distortion_coeffs, cv::Mat *distortion_coeffs_mat)</div><div class="ttdef"><b>Definition:</b> <a href="CameraParams_8cc_source.html#l00158">CameraParams.cc:158</a></div></div>
+<div class="ttc" id="aclassdyno_1_1CameraParams_html_a88e86545ae266b99813affcc155f567f"><div class="ttname"><a href="classdyno_1_1CameraParams.html#a88e86545ae266b99813affcc155f567f">dyno::CameraParams::T_robot_camera_</a></div><div class="ttdeci">gtsam::Pose3 T_robot_camera_</div><div class="ttdef"><b>Definition:</b> <a href="CameraParams_8hpp_source.html#l00239">CameraParams.hpp:239</a></div></div>
+<div class="ttc" id="aclassdyno_1_1CameraParams_html_a969d8b0935dffdf1a722156a3a96ef39"><div class="ttname"><a href="classdyno_1_1CameraParams.html#a969d8b0935dffdf1a722156a3a96ef39">dyno::CameraParams::convertIntrinsicsVectorToMatrix</a></div><div class="ttdeci">static void convertIntrinsicsVectorToMatrix(const IntrinsicsCoeffs &amp;intrinsics, cv::Mat *camera_matrix)</div><div class="ttdoc">Converts the IntrinsicsCoeffs (in the form: fu, fy, cu, cv) to a 3x3 camera matrix in the form: [fx 0...</div><div class="ttdef"><b>Definition:</b> <a href="CameraParams_8cc_source.html#l00166">CameraParams.cc:166</a></div></div>
+<div class="ttc" id="aclassdyno_1_1CameraParams_html_aa8467c4426a825936619a5cd5832ed81"><div class="ttname"><a href="classdyno_1_1CameraParams.html#aa8467c4426a825936619a5cd5832ed81">dyno::CameraParams::intrinsics_</a></div><div class="ttdeci">IntrinsicsCoeffs intrinsics_</div><div class="ttdoc">fu, fv, cu, cv</div><div class="ttdef"><b>Definition:</b> <a href="CameraParams_8hpp_source.html#l00232">CameraParams.hpp:232</a></div></div>
+<div class="ttc" id="aclassdyno_1_1CameraParams_html_ab447798df360751d787e332a7db86aaa"><div class="ttname"><a href="classdyno_1_1CameraParams.html#ab447798df360751d787e332a7db86aaa">dyno::CameraParams::image_size_</a></div><div class="ttdeci">cv::Size image_size_</div><div class="ttdef"><b>Definition:</b> <a href="CameraParams_8hpp_source.html#l00234">CameraParams.hpp:234</a></div></div>
+<div class="ttc" id="aclassdyno_1_1CameraParams_html_add68d4b6cdf8d82755c3ddbd19cea253"><div class="ttname"><a href="classdyno_1_1CameraParams.html#add68d4b6cdf8d82755c3ddbd19cea253">dyno::CameraParams::D_</a></div><div class="ttdeci">cv::Mat D_</div><div class="ttdef"><b>Definition:</b> <a href="CameraParams_8hpp_source.html#l00252">CameraParams.hpp:252</a></div></div>
+<div class="ttc" id="aclassdyno_1_1CameraParams_html_ae9a814a6236c3eeef71eb93a03ad3e97"><div class="ttname"><a href="classdyno_1_1CameraParams.html#ae9a814a6236c3eeef71eb93a03ad3e97">dyno::CameraParams::K_</a></div><div class="ttdeci">cv::Mat K_</div><div class="ttdoc">Transform of the camera frame to the robot frame.</div><div class="ttdef"><b>Definition:</b> <a href="CameraParams_8hpp_source.html#l00244">CameraParams.hpp:244</a></div></div>
+<div class="ttc" id="aclassdyno_1_1CameraParams_html_aec88d010efafefd8adab1e3abb025471"><div class="ttname"><a href="classdyno_1_1CameraParams.html#aec88d010efafefd8adab1e3abb025471">dyno::CameraParams::distortion_coeff_</a></div><div class="ttdeci">DistortionCoeffs distortion_coeff_</div><div class="ttdef"><b>Definition:</b> <a href="CameraParams_8hpp_source.html#l00233">CameraParams.hpp:233</a></div></div>
+<div class="ttc" id="aclassdyno_1_1CameraParams_html_af56d9c8538fa9c6f1a681c8d57fd14d4"><div class="ttname"><a href="classdyno_1_1CameraParams.html#af56d9c8538fa9c6f1a681c8d57fd14d4">dyno::CameraParams::distortion_model_</a></div><div class="ttdeci">DistortionModel distortion_model_</div><div class="ttdoc">Distortion parameters.</div><div class="ttdef"><b>Definition:</b> <a href="CameraParams_8hpp_source.html#l00237">CameraParams.hpp:237</a></div></div>
+<div class="ttc" id="aclassdyno_1_1CameraParams_html_af9ecf3838b27bcfffb04be485fe76e3c"><div class="ttname"><a href="classdyno_1_1CameraParams.html#af9ecf3838b27bcfffb04be485fe76e3c">dyno::CameraParams::K_eigen_</a></div><div class="ttdeci">gtsam::Matrix3 K_eigen_</div><div class="ttdef"><b>Definition:</b> <a href="CameraParams_8hpp_source.html#l00245">CameraParams.hpp:245</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1CameraParams.html#a56408d20d8b16fadc9e7373c92e8977a">convertDistortionVectorToMatrix()</a>, <a class="el" href="classdyno_1_1CameraParams.html#a969d8b0935dffdf1a722156a3a96ef39">convertIntrinsicsVectorToMatrix()</a>, <a class="el" href="classdyno_1_1CameraParams.html#add68d4b6cdf8d82755c3ddbd19cea253">D_</a>, <a class="el" href="classdyno_1_1CameraParams.html#aec88d010efafefd8adab1e3abb025471">distortion_coeff_</a>, <a class="el" href="classdyno_1_1CameraParams.html#aa8467c4426a825936619a5cd5832ed81">intrinsics_</a>, <a class="el" href="classdyno_1_1CameraParams.html#ae9a814a6236c3eeef71eb93a03ad3e97">K_</a>, <a class="el" href="classdyno_1_1CameraParams.html#af9ecf3838b27bcfffb04be485fe76e3c">K_eigen_</a>, and <a class="el" href="classdyno_1_1CameraParams.html#a169264ad4cfbcc068019b5c7fc89c3cf">P_</a>.</p>
 <div class="dynheader">
@@ -511,13 +528,13 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CameraParams_8cc_source.html#l00142">142</a> of file <a class="el" href="CameraParams_8cc_source.html">CameraParams.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  143</span>                                                                             {</div>
-<div class="line"><span class="lineno">  144</span>  *distortion_coeffs_mat = cv::Mat::zeros(1, distortion_coeffs.size(), CV_64F);</div>
-<div class="line"><span class="lineno">  145</span>  <span class="keywordflow">for</span> (<span class="keywordtype">int</span> k = 0; k &lt; distortion_coeffs_mat-&gt;cols; k++) {</div>
-<div class="line"><span class="lineno">  146</span>    distortion_coeffs_mat-&gt;at&lt;<span class="keywordtype">double</span>&gt;(0, k) = distortion_coeffs[k];</div>
-<div class="line"><span class="lineno">  147</span>  }</div>
-<div class="line"><span class="lineno">  148</span>}</div>
+<p class="definition">Definition at line <a class="el" href="CameraParams_8cc_source.html#l00158">158</a> of file <a class="el" href="CameraParams_8cc_source.html">CameraParams.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  159</span>                                                                             {</div>
+<div class="line"><span class="lineno">  160</span>  *distortion_coeffs_mat = cv::Mat::zeros(1, distortion_coeffs.size(), CV_64F);</div>
+<div class="line"><span class="lineno">  161</span>  <span class="keywordflow">for</span> (<span class="keywordtype">int</span> k = 0; k &lt; distortion_coeffs_mat-&gt;cols; k++) {</div>
+<div class="line"><span class="lineno">  162</span>    distortion_coeffs_mat-&gt;at&lt;<span class="keywordtype">double</span>&gt;(0, k) = distortion_coeffs[k];</div>
+<div class="line"><span class="lineno">  163</span>  }</div>
+<div class="line"><span class="lineno">  164</span>}</div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1CameraParams.html#a6642eecb8ef2512150b358020a041141">CameraParams()</a>.</p>
 <div class="dynheader">
@@ -576,19 +593,19 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="CameraParams_8cc_source.html#l00150">150</a> of file <a class="el" href="CameraParams_8cc_source.html">CameraParams.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  151</span>                                                              {</div>
-<div class="line"><span class="lineno">  152</span>  CHECK_GT(intrinsics.at(0), 0.0) &lt;&lt; <span class="stringliteral">&quot;fx cannot be zero&quot;</span>;</div>
-<div class="line"><span class="lineno">  153</span>  CHECK_GT(intrinsics.at(1), 0.0) &lt;&lt; <span class="stringliteral">&quot;fy cannot be zero&quot;</span>;</div>
-<div class="line"><span class="lineno">  154</span>  CHECK_GT(intrinsics.at(2), 0.0) &lt;&lt; <span class="stringliteral">&quot;cx cannot be zero&quot;</span>;</div>
-<div class="line"><span class="lineno">  155</span>  CHECK_GT(intrinsics.at(3), 0.0) &lt;&lt; <span class="stringliteral">&quot;cy cannot be zero&quot;</span>;</div>
-<div class="line"><span class="lineno">  156</span> </div>
-<div class="line"><span class="lineno">  157</span>  *camera_matrix = cv::Mat::eye(3, 3, CV_64F);</div>
-<div class="line"><span class="lineno">  158</span>  camera_matrix-&gt;at&lt;<span class="keywordtype">double</span>&gt;(0, 0) = intrinsics[0];</div>
-<div class="line"><span class="lineno">  159</span>  camera_matrix-&gt;at&lt;<span class="keywordtype">double</span>&gt;(1, 1) = intrinsics[1];</div>
-<div class="line"><span class="lineno">  160</span>  camera_matrix-&gt;at&lt;<span class="keywordtype">double</span>&gt;(0, 2) = intrinsics[2];</div>
-<div class="line"><span class="lineno">  161</span>  camera_matrix-&gt;at&lt;<span class="keywordtype">double</span>&gt;(1, 2) = intrinsics[3];</div>
-<div class="line"><span class="lineno">  162</span>}</div>
+<p class="definition">Definition at line <a class="el" href="CameraParams_8cc_source.html#l00166">166</a> of file <a class="el" href="CameraParams_8cc_source.html">CameraParams.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  167</span>                                                              {</div>
+<div class="line"><span class="lineno">  168</span>  CHECK_GT(intrinsics.at(0), 0.0) &lt;&lt; <span class="stringliteral">&quot;fx cannot be zero&quot;</span>;</div>
+<div class="line"><span class="lineno">  169</span>  CHECK_GT(intrinsics.at(1), 0.0) &lt;&lt; <span class="stringliteral">&quot;fy cannot be zero&quot;</span>;</div>
+<div class="line"><span class="lineno">  170</span>  CHECK_GT(intrinsics.at(2), 0.0) &lt;&lt; <span class="stringliteral">&quot;cx cannot be zero&quot;</span>;</div>
+<div class="line"><span class="lineno">  171</span>  CHECK_GT(intrinsics.at(3), 0.0) &lt;&lt; <span class="stringliteral">&quot;cy cannot be zero&quot;</span>;</div>
+<div class="line"><span class="lineno">  172</span> </div>
+<div class="line"><span class="lineno">  173</span>  *camera_matrix = cv::Mat::eye(3, 3, CV_64F);</div>
+<div class="line"><span class="lineno">  174</span>  camera_matrix-&gt;at&lt;<span class="keywordtype">double</span>&gt;(0, 0) = intrinsics[0];</div>
+<div class="line"><span class="lineno">  175</span>  camera_matrix-&gt;at&lt;<span class="keywordtype">double</span>&gt;(1, 1) = intrinsics[1];</div>
+<div class="line"><span class="lineno">  176</span>  camera_matrix-&gt;at&lt;<span class="keywordtype">double</span>&gt;(0, 2) = intrinsics[2];</div>
+<div class="line"><span class="lineno">  177</span>  camera_matrix-&gt;at&lt;<span class="keywordtype">double</span>&gt;(1, 2) = intrinsics[3];</div>
+<div class="line"><span class="lineno">  178</span>}</div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1CameraParams.html#a6642eecb8ef2512150b358020a041141">CameraParams()</a>.</p>
 <div class="dynheader">
@@ -646,23 +663,23 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="CameraParams_8cc_source.html#l00164">164</a> of file <a class="el" href="CameraParams_8cc_source.html">CameraParams.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  165</span>                                                  {</div>
-<div class="line"><span class="lineno">  166</span>  CHECK_EQ(K.type(), CV_64F) &lt;&lt; <span class="stringliteral">&quot;Cannot convert: Camera Matrix (K) is expected &quot;</span></div>
-<div class="line"><span class="lineno">  167</span>                                <span class="stringliteral">&quot;to be of type CV_64F but is &quot;</span></div>
-<div class="line"><span class="lineno">  168</span>                             &lt;&lt; <a class="code hl_function" href="namespacedyno_1_1utils.html#a4bed389606523e7a31694ad904523c4d">utils::cvTypeToString</a>(K.type());</div>
-<div class="line"><span class="lineno">  169</span>  CHECK(K.rows == 3 &amp;&amp; K.cols) &lt;&lt; <span class="stringliteral">&quot;Cannot convert: Camera Matrix (K) is &quot;</span></div>
-<div class="line"><span class="lineno">  170</span>                                  <span class="stringliteral">&quot;expected to be of size (3 x 3) but is [&quot;</span></div>
-<div class="line"><span class="lineno">  171</span>                               &lt;&lt; K.rows &lt;&lt; <span class="stringliteral">&quot; x &quot;</span> &lt;&lt; K.cols &lt;&lt; <span class="stringliteral">&quot;]&quot;</span>;</div>
-<div class="line"><span class="lineno">  172</span>  ;</div>
-<div class="line"><span class="lineno">  173</span> </div>
-<div class="line"><span class="lineno">  174</span>  intrinsics.resize(4);</div>
-<div class="line"><span class="lineno">  175</span>  intrinsics[0] = K.at&lt;<span class="keywordtype">double</span>&gt;(0, 0);</div>
-<div class="line"><span class="lineno">  176</span>  intrinsics[1] = K.at&lt;<span class="keywordtype">double</span>&gt;(1, 1);</div>
-<div class="line"><span class="lineno">  177</span>  intrinsics[2] = K.at&lt;<span class="keywordtype">double</span>&gt;(0, 2);</div>
-<div class="line"><span class="lineno">  178</span>  intrinsics[3] = K.at&lt;<span class="keywordtype">double</span>&gt;(1, 2);</div>
-<div class="line"><span class="lineno">  179</span>}</div>
-<div class="ttc" id="anamespacedyno_1_1utils_html_a4bed389606523e7a31694ad904523c4d"><div class="ttname"><a href="namespacedyno_1_1utils.html#a4bed389606523e7a31694ad904523c4d">dyno::utils::cvTypeToString</a></div><div class="ttdeci">std::string cvTypeToString(int type)</div><div class="ttdef"><b>Definition:</b> <a href="OpenCVUtils_8cc_source.html#l00094">OpenCVUtils.cc:94</a></div></div>
+<p class="definition">Definition at line <a class="el" href="CameraParams_8cc_source.html#l00180">180</a> of file <a class="el" href="CameraParams_8cc_source.html">CameraParams.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  181</span>                                                  {</div>
+<div class="line"><span class="lineno">  182</span>  CHECK_EQ(K.type(), CV_64F) &lt;&lt; <span class="stringliteral">&quot;Cannot convert: Camera Matrix (K) is expected &quot;</span></div>
+<div class="line"><span class="lineno">  183</span>                                <span class="stringliteral">&quot;to be of type CV_64F but is &quot;</span></div>
+<div class="line"><span class="lineno">  184</span>                             &lt;&lt; <a class="code hl_function" href="namespacedyno_1_1utils.html#a4bed389606523e7a31694ad904523c4d">utils::cvTypeToString</a>(K.type());</div>
+<div class="line"><span class="lineno">  185</span>  CHECK(K.rows == 3 &amp;&amp; K.cols) &lt;&lt; <span class="stringliteral">&quot;Cannot convert: Camera Matrix (K) is &quot;</span></div>
+<div class="line"><span class="lineno">  186</span>                                  <span class="stringliteral">&quot;expected to be of size (3 x 3) but is [&quot;</span></div>
+<div class="line"><span class="lineno">  187</span>                               &lt;&lt; K.rows &lt;&lt; <span class="stringliteral">&quot; x &quot;</span> &lt;&lt; K.cols &lt;&lt; <span class="stringliteral">&quot;]&quot;</span>;</div>
+<div class="line"><span class="lineno">  188</span>  ;</div>
+<div class="line"><span class="lineno">  189</span> </div>
+<div class="line"><span class="lineno">  190</span>  intrinsics.resize(4);</div>
+<div class="line"><span class="lineno">  191</span>  intrinsics[0] = K.at&lt;<span class="keywordtype">double</span>&gt;(0, 0);</div>
+<div class="line"><span class="lineno">  192</span>  intrinsics[1] = K.at&lt;<span class="keywordtype">double</span>&gt;(1, 1);</div>
+<div class="line"><span class="lineno">  193</span>  intrinsics[2] = K.at&lt;<span class="keywordtype">double</span>&gt;(0, 2);</div>
+<div class="line"><span class="lineno">  194</span>  intrinsics[3] = K.at&lt;<span class="keywordtype">double</span>&gt;(1, 2);</div>
+<div class="line"><span class="lineno">  195</span>}</div>
+<div class="ttc" id="anamespacedyno_1_1utils_html_a4bed389606523e7a31694ad904523c4d"><div class="ttname"><a href="namespacedyno_1_1utils.html#a4bed389606523e7a31694ad904523c4d">dyno::utils::cvTypeToString</a></div><div class="ttdeci">std::string cvTypeToString(int type)</div><div class="ttdef"><b>Definition:</b> <a href="OpenCVUtils_8cc_source.html#l00119">OpenCVUtils.cc:119</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="namespacedyno_1_1utils.html#a4bed389606523e7a31694ad904523c4d">dyno::utils::cvTypeToString()</a>.</p>
 
@@ -711,8 +728,8 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CameraParams_8hpp_source.html#l00103">103</a> of file <a class="el" href="CameraParams_8hpp_source.html">CameraParams.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  103</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1CameraParams.html#aa8467c4426a825936619a5cd5832ed81">intrinsics_</a>[2]; }</div>
+<p class="definition">Definition at line <a class="el" href="CameraParams_8hpp_source.html#l00134">134</a> of file <a class="el" href="CameraParams_8hpp_source.html">CameraParams.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  134</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1CameraParams.html#aa8467c4426a825936619a5cd5832ed81">intrinsics_</a>[2]; }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1CameraParams.html#aa8467c4426a825936619a5cd5832ed81">intrinsics_</a>.</p>
 
@@ -756,8 +773,8 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CameraParams_8hpp_source.html#l00104">104</a> of file <a class="el" href="CameraParams_8hpp_source.html">CameraParams.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  104</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1CameraParams.html#aa8467c4426a825936619a5cd5832ed81">intrinsics_</a>[3]; }</div>
+<p class="definition">Definition at line <a class="el" href="CameraParams_8hpp_source.html#l00135">135</a> of file <a class="el" href="CameraParams_8hpp_source.html">CameraParams.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  135</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1CameraParams.html#aa8467c4426a825936619a5cd5832ed81">intrinsics_</a>[3]; }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1CameraParams.html#aa8467c4426a825936619a5cd5832ed81">intrinsics_</a>.</p>
 
@@ -773,6 +790,44 @@ Here is the caller graph for this function:</div>
 <area shape="rect" href="classdyno_1_1DataProviderRos.html#a1cb49fe70873ef4b7ed49afb75c013bc" title="Gets CameraParams from a sensor_msgs::msg::CameraInfo recieved on the specified topic...." alt="" coords="259,69,461,109"/>
 <area shape="rect" href="classdyno_1_1OMDOldAllLoader.html#a5407ba0dda29eaf6520c615807fe3b93" title=" " alt="" coords="19,5,197,45"/>
 <area shape="rect" href="classdyno_1_1OnlineDataProviderRos.html#abea751b62c91dbf7bfac759680a434f7" title="Construct a new OnlineDataProviderRos." alt="" coords="5,69,211,109"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a8353d84805d7e45720433117114ab1b6" name="a8353d84805d7e45720433117114ab1b6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8353d84805d7e45720433117114ab1b6">&#9670;&#160;</a></span>depthParams()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="structdyno_1_1CameraParams_1_1DepthParams.html">CameraParams::DepthParams</a> &amp; dyno::CameraParams::depthParams </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="CameraParams_8cc_source.html#l00154">154</a> of file <a class="el" href="CameraParams_8cc_source.html">CameraParams.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  154</span>                                                               {</div>
+<div class="line"><span class="lineno">  155</span>  <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1CameraParams.html#a0dca70bd2ff149a9fc24856457049bc1">depth_</a>.value();</div>
+<div class="line"><span class="lineno">  156</span>}</div>
+<div class="ttc" id="aclassdyno_1_1CameraParams_html_a0dca70bd2ff149a9fc24856457049bc1"><div class="ttname"><a href="classdyno_1_1CameraParams.html#a0dca70bd2ff149a9fc24856457049bc1">dyno::CameraParams::depth_</a></div><div class="ttdeci">std::optional&lt; DepthParams &gt; depth_</div><div class="ttdoc">Optional params for an RGB-D.</div><div class="ttdef"><b>Definition:</b> <a href="CameraParams_8hpp_source.html#l00255">CameraParams.hpp:255</a></div></div>
+</div><!-- fragment -->
+<p class="reference">References <a class="el" href="classdyno_1_1CameraParams.html#a0dca70bd2ff149a9fc24856457049bc1">depth_</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1RGBDCamera.html#aa439cd20cc600b867117d80e6e41e57c">dyno::RGBDCamera::baseline()</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classdyno_1_1CameraParams_a8353d84805d7e45720433117114ab1b6_icgraph.png" border="0" usemap="#aclassdyno_1_1CameraParams_a8353d84805d7e45720433117114ab1b6_icgraph" alt=""/></div>
+<map name="aclassdyno_1_1CameraParams_a8353d84805d7e45720433117114ab1b6_icgraph" id="aclassdyno_1_1CameraParams_a8353d84805d7e45720433117114ab1b6_icgraph">
+<area shape="rect" title=" " alt="" coords="783,5,944,45"/>
+<area shape="rect" href="classdyno_1_1RGBDCamera.html#aa439cd20cc600b867117d80e6e41e57c" title=" " alt="" coords="520,13,735,38"/>
+<area shape="rect" href="classdyno_1_1RGBDCamera.html#ae1e3ae993c328df6c0e4fe5687483f16" title="Get gtsam::Cal3_S2Stereo from rgbd camera and virtual baseline." alt="" coords="263,5,472,45"/>
+<area shape="rect" href="classdyno_1_1RGBDCamera.html#a76250e0244602304395e8963772c7bae" title=" " alt="" coords="5,5,215,45"/>
 </map>
 </div>
 
@@ -834,37 +889,37 @@ Here is the caller graph for this function:</div>
 <dd>
 false </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="CameraParams_8cc_source.html#l00216">216</a> of file <a class="el" href="CameraParams_8cc_source.html">CameraParams.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  218</span>                                                                    {</div>
-<div class="line"><span class="lineno">  219</span>  <span class="keywordflow">switch</span> (model) {</div>
-<div class="line"><span class="lineno">  220</span>    <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="namespacedyno.html#a7118762ab4c63de4996b3983b5b82356ab50339a10e1de285ac99d4c3990b8693">DistortionModel::NONE</a>:</div>
-<div class="line"><span class="lineno">  221</span>      <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">  222</span>    <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="namespacedyno.html#a7118762ab4c63de4996b3983b5b82356a57d07fba056969bb09dcb1459746cde5">DistortionModel::RADTAN</a>:</div>
-<div class="line"><span class="lineno">  223</span>      <span class="comment">// in ROS only plumb_bob is defined so we use this</span></div>
-<div class="line"><span class="lineno">  224</span>      distortion_model = <span class="stringliteral">&quot;plumb_bob&quot;</span>;</div>
-<div class="line"><span class="lineno">  225</span>      camera_model = <span class="stringliteral">&quot;pinhole&quot;</span>;</div>
-<div class="line"><span class="lineno">  226</span>      <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  227</span>    <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="namespacedyno.html#a7118762ab4c63de4996b3983b5b82356a00d0cd9f6b32fb176671646968102e78">DistortionModel::EQUIDISTANT</a>:</div>
-<div class="line"><span class="lineno">  228</span>      distortion_model = <span class="stringliteral">&quot;equidistant&quot;</span>;</div>
-<div class="line"><span class="lineno">  229</span>      camera_model = <span class="stringliteral">&quot;pinhole&quot;</span>;</div>
-<div class="line"><span class="lineno">  230</span>      <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  231</span>    <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="namespacedyno.html#a7118762ab4c63de4996b3983b5b82356a97567c965028c6fcdad81419ffbc34f5">DistortionModel::FISH_EYE</a>:</div>
-<div class="line"><span class="lineno">  232</span>      distortion_model = <span class="stringliteral">&quot;kannala_brandt&quot;</span>;</div>
-<div class="line"><span class="lineno">  233</span>      camera_model = <span class="stringliteral">&quot;pinhole&quot;</span>;</div>
-<div class="line"><span class="lineno">  234</span>      <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  235</span>    <span class="keywordflow">default</span>:</div>
-<div class="line"><span class="lineno">  236</span>      LOG(WARNING) &lt;&lt; <span class="stringliteral">&quot;Cannot convert distortion model to string: &quot;</span></div>
-<div class="line"><span class="lineno">  237</span>                   &lt;&lt; <a class="code hl_function" href="namespacedyno.html#a809604e427db44cbf532a545c71a3b5d">to_string</a>(model);</div>
-<div class="line"><span class="lineno">  238</span>      <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">  239</span>  }</div>
-<div class="line"><span class="lineno">  240</span>}</div>
+<p class="definition">Definition at line <a class="el" href="CameraParams_8cc_source.html#l00232">232</a> of file <a class="el" href="CameraParams_8cc_source.html">CameraParams.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  234</span>                                                                    {</div>
+<div class="line"><span class="lineno">  235</span>  <span class="keywordflow">switch</span> (model) {</div>
+<div class="line"><span class="lineno">  236</span>    <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="namespacedyno.html#a7118762ab4c63de4996b3983b5b82356ab50339a10e1de285ac99d4c3990b8693">DistortionModel::NONE</a>:</div>
+<div class="line"><span class="lineno">  237</span>      <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">  238</span>    <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="namespacedyno.html#a7118762ab4c63de4996b3983b5b82356a57d07fba056969bb09dcb1459746cde5">DistortionModel::RADTAN</a>:</div>
+<div class="line"><span class="lineno">  239</span>      <span class="comment">// in ROS only plumb_bob is defined so we use this</span></div>
+<div class="line"><span class="lineno">  240</span>      distortion_model = <span class="stringliteral">&quot;plumb_bob&quot;</span>;</div>
+<div class="line"><span class="lineno">  241</span>      camera_model = <span class="stringliteral">&quot;pinhole&quot;</span>;</div>
+<div class="line"><span class="lineno">  242</span>      <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  243</span>    <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="namespacedyno.html#a7118762ab4c63de4996b3983b5b82356a00d0cd9f6b32fb176671646968102e78">DistortionModel::EQUIDISTANT</a>:</div>
+<div class="line"><span class="lineno">  244</span>      distortion_model = <span class="stringliteral">&quot;equidistant&quot;</span>;</div>
+<div class="line"><span class="lineno">  245</span>      camera_model = <span class="stringliteral">&quot;pinhole&quot;</span>;</div>
+<div class="line"><span class="lineno">  246</span>      <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  247</span>    <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="namespacedyno.html#a7118762ab4c63de4996b3983b5b82356a97567c965028c6fcdad81419ffbc34f5">DistortionModel::FISH_EYE</a>:</div>
+<div class="line"><span class="lineno">  248</span>      distortion_model = <span class="stringliteral">&quot;kannala_brandt&quot;</span>;</div>
+<div class="line"><span class="lineno">  249</span>      camera_model = <span class="stringliteral">&quot;pinhole&quot;</span>;</div>
+<div class="line"><span class="lineno">  250</span>      <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  251</span>    <span class="keywordflow">default</span>:</div>
+<div class="line"><span class="lineno">  252</span>      LOG(WARNING) &lt;&lt; <span class="stringliteral">&quot;Cannot convert distortion model to string: &quot;</span></div>
+<div class="line"><span class="lineno">  253</span>                   &lt;&lt; <a class="code hl_function" href="namespacedyno.html#a8d1f85752688bf072f23fa6e8a1bde34">to_string</a>(model);</div>
+<div class="line"><span class="lineno">  254</span>      <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">  255</span>  }</div>
+<div class="line"><span class="lineno">  256</span>}</div>
 <div class="ttc" id="anamespacedyno_html_a7118762ab4c63de4996b3983b5b82356a00d0cd9f6b32fb176671646968102e78"><div class="ttname"><a href="namespacedyno.html#a7118762ab4c63de4996b3983b5b82356a00d0cd9f6b32fb176671646968102e78">dyno::DistortionModel::EQUIDISTANT</a></div><div class="ttdeci">@ EQUIDISTANT</div></div>
 <div class="ttc" id="anamespacedyno_html_a7118762ab4c63de4996b3983b5b82356a57d07fba056969bb09dcb1459746cde5"><div class="ttname"><a href="namespacedyno.html#a7118762ab4c63de4996b3983b5b82356a57d07fba056969bb09dcb1459746cde5">dyno::DistortionModel::RADTAN</a></div><div class="ttdeci">@ RADTAN</div></div>
 <div class="ttc" id="anamespacedyno_html_a7118762ab4c63de4996b3983b5b82356a97567c965028c6fcdad81419ffbc34f5"><div class="ttname"><a href="namespacedyno.html#a7118762ab4c63de4996b3983b5b82356a97567c965028c6fcdad81419ffbc34f5">dyno::DistortionModel::FISH_EYE</a></div><div class="ttdeci">@ FISH_EYE</div></div>
 <div class="ttc" id="anamespacedyno_html_a7118762ab4c63de4996b3983b5b82356ab50339a10e1de285ac99d4c3990b8693"><div class="ttname"><a href="namespacedyno.html#a7118762ab4c63de4996b3983b5b82356ab50339a10e1de285ac99d4c3990b8693">dyno::DistortionModel::NONE</a></div><div class="ttdeci">@ NONE</div></div>
-<div class="ttc" id="anamespacedyno_html_a809604e427db44cbf532a545c71a3b5d"><div class="ttname"><a href="namespacedyno.html#a809604e427db44cbf532a545c71a3b5d">dyno::to_string</a></div><div class="ttdeci">std::string to_string(const T &amp;t)</div></div>
+<div class="ttc" id="anamespacedyno_html_a8d1f85752688bf072f23fa6e8a1bde34"><div class="ttname"><a href="namespacedyno.html#a8d1f85752688bf072f23fa6e8a1bde34">dyno::to_string</a></div><div class="ttdeci">std::string to_string(const TrackingStatus &amp;status)</div><div class="ttdef"><b>Definition:</b> <a href="Frontend-Definitions_8hpp_source.html#l00061">Frontend-Definitions.hpp:61</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="namespacedyno.html#a7118762ab4c63de4996b3983b5b82356a00d0cd9f6b32fb176671646968102e78">dyno::EQUIDISTANT</a>, <a class="el" href="namespacedyno.html#a7118762ab4c63de4996b3983b5b82356a97567c965028c6fcdad81419ffbc34f5">dyno::FISH_EYE</a>, <a class="el" href="namespacedyno.html#a7118762ab4c63de4996b3983b5b82356ab50339a10e1de285ac99d4c3990b8693">dyno::NONE</a>, <a class="el" href="namespacedyno.html#a7118762ab4c63de4996b3983b5b82356a57d07fba056969bb09dcb1459746cde5">dyno::RADTAN</a>, and <a class="el" href="namespacedyno.html#a809604e427db44cbf532a545c71a3b5d">dyno::to_string()</a>.</p>
+<p class="reference">References <a class="el" href="namespacedyno.html#a7118762ab4c63de4996b3983b5b82356a00d0cd9f6b32fb176671646968102e78">dyno::EQUIDISTANT</a>, <a class="el" href="namespacedyno.html#a7118762ab4c63de4996b3983b5b82356a97567c965028c6fcdad81419ffbc34f5">dyno::FISH_EYE</a>, <a class="el" href="namespacedyno.html#a7118762ab4c63de4996b3983b5b82356ab50339a10e1de285ac99d4c3990b8693">dyno::NONE</a>, <a class="el" href="namespacedyno.html#a7118762ab4c63de4996b3983b5b82356a57d07fba056969bb09dcb1459746cde5">dyno::RADTAN</a>, and <a class="el" href="namespacedyno.html#a8d1f85752688bf072f23fa6e8a1bde34">dyno::to_string()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="structrclcpp_1_1TypeAdapter_3_01dyno_1_1CameraParams_00_01sensor__msgs_1_1msg_1_1CameraInfo_01_4.html#a88de3493ecfc9c56e7812f9a8919d673">rclcpp::TypeAdapter&lt; dyno::CameraParams, sensor_msgs::msg::CameraInfo &gt;::convert_to_ros_message()</a>.</p>
 <div class="dynheader">
@@ -873,7 +928,7 @@ Here is the call graph for this function:</div>
 <div class="center"><img src="classdyno_1_1CameraParams_a1e68df8520ebfa61c9ccb5c8fd62fb2a_cgraph.png" border="0" usemap="#aclassdyno_1_1CameraParams_a1e68df8520ebfa61c9ccb5c8fd62fb2a_cgraph" alt=""/></div>
 <map name="aclassdyno_1_1CameraParams_a1e68df8520ebfa61c9ccb5c8fd62fb2a_cgraph" id="aclassdyno_1_1CameraParams_a1e68df8520ebfa61c9ccb5c8fd62fb2a_cgraph">
 <area shape="rect" title="Converts the DistortionModel enum to a distortion model string and associated camera model." alt="" coords="5,5,189,45"/>
-<area shape="rect" href="namespacedyno.html#a809604e427db44cbf532a545c71a3b5d" title=" " alt="" coords="237,13,356,38"/>
+<area shape="rect" href="namespacedyno.html#a8d1f85752688bf072f23fa6e8a1bde34" title=" " alt="" coords="237,13,356,38"/>
 </map>
 </div>
 <div class="dynheader">
@@ -914,22 +969,22 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CameraParams_8cc_source.html#l00242">242</a> of file <a class="el" href="CameraParams_8cc_source.html">CameraParams.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  242</span>                                                                     {</div>
-<div class="line"><span class="lineno">  243</span>  <span class="keywordflow">return</span> <a class="code hl_function" href="namespacedyno.html#ab5ae05966c6056b343a960a80c5b1db3">dyno::equals_with_abs_tol</a>(<a class="code hl_variable" href="classdyno_1_1CameraParams.html#aa8467c4426a825936619a5cd5832ed81">intrinsics_</a>, other.intrinsics_, tol) &amp;&amp;</div>
-<div class="line"><span class="lineno">  244</span>         <a class="code hl_function" href="namespacedyno.html#ab5ae05966c6056b343a960a80c5b1db3">dyno::equals_with_abs_tol</a>(<a class="code hl_variable" href="classdyno_1_1CameraParams.html#aec88d010efafefd8adab1e3abb025471">distortion_coeff_</a>, other.distortion_coeff_,</div>
-<div class="line"><span class="lineno">  245</span>                                   tol) &amp;&amp;</div>
-<div class="line"><span class="lineno">  246</span>         (<a class="code hl_variable" href="classdyno_1_1CameraParams.html#ab447798df360751d787e332a7db86aaa">image_size_</a>.width == other.image_size_.width &amp;&amp;</div>
-<div class="line"><span class="lineno">  247</span>          <a class="code hl_variable" href="classdyno_1_1CameraParams.html#ab447798df360751d787e332a7db86aaa">image_size_</a>.height == other.image_size_.height) &amp;&amp;</div>
-<div class="line"><span class="lineno">  248</span>         <a class="code hl_variable" href="classdyno_1_1CameraParams.html#af56d9c8538fa9c6f1a681c8d57fd14d4">distortion_model_</a> == other.distortion_model_ &amp;&amp;</div>
-<div class="line"><span class="lineno">  249</span>         <a class="code hl_variable" href="classdyno_1_1CameraParams.html#a88e86545ae266b99813affcc155f567f">T_robot_camera_</a>.equals(other.T_robot_camera_, tol) &amp;&amp;</div>
-<div class="line"><span class="lineno">  250</span>         <a class="code hl_function" href="namespacedyno_1_1utils.html#ac8ff128f0c488db144db269ca8d8856e">utils::compareCvMatsUpToTol</a>(<a class="code hl_variable" href="classdyno_1_1CameraParams.html#ae9a814a6236c3eeef71eb93a03ad3e97">K_</a>, other.K_, tol) &amp;&amp;</div>
-<div class="line"><span class="lineno">  251</span>         <a class="code hl_function" href="namespacedyno_1_1utils.html#ac8ff128f0c488db144db269ca8d8856e">utils::compareCvMatsUpToTol</a>(</div>
-<div class="line"><span class="lineno">  252</span>             <a class="code hl_variable" href="classdyno_1_1CameraParams.html#add68d4b6cdf8d82755c3ddbd19cea253">D_</a>, other.D_);  <span class="comment">// NOTE: do not comapre with P matrix as currently</span></div>
-<div class="line"><span class="lineno">  253</span>                             <span class="comment">// not calculated</span></div>
-<div class="line"><span class="lineno">  254</span>}</div>
-<div class="ttc" id="anamespacedyno_1_1utils_html_ac8ff128f0c488db144db269ca8d8856e"><div class="ttname"><a href="namespacedyno_1_1utils.html#ac8ff128f0c488db144db269ca8d8856e">dyno::utils::compareCvMatsUpToTol</a></div><div class="ttdeci">bool compareCvMatsUpToTol(const cv::Mat &amp;mat1, const cv::Mat &amp;mat2, const double &amp;tol=1e-7)</div><div class="ttdef"><b>Definition:</b> <a href="OpenCVUtils_8cc_source.html#l00414">OpenCVUtils.cc:414</a></div></div>
-<div class="ttc" id="anamespacedyno_html_ab5ae05966c6056b343a960a80c5b1db3"><div class="ttname"><a href="namespacedyno.html#ab5ae05966c6056b343a960a80c5b1db3">dyno::equals_with_abs_tol</a></div><div class="ttdeci">bool equals_with_abs_tol(const std::vector&lt; T &gt; &amp;vec1, const std::vector&lt; T &gt; &amp;vec2, double tol=1e-9)</div><div class="ttdef"><b>Definition:</b> <a href="Numerical_8hpp_source.html#l00206">Numerical.hpp:206</a></div></div>
+<p class="definition">Definition at line <a class="el" href="CameraParams_8cc_source.html#l00258">258</a> of file <a class="el" href="CameraParams_8cc_source.html">CameraParams.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  258</span>                                                                     {</div>
+<div class="line"><span class="lineno">  259</span>  <span class="keywordflow">return</span> <a class="code hl_function" href="namespacedyno.html#ab5ae05966c6056b343a960a80c5b1db3">dyno::equals_with_abs_tol</a>(<a class="code hl_variable" href="classdyno_1_1CameraParams.html#aa8467c4426a825936619a5cd5832ed81">intrinsics_</a>, other.intrinsics_, tol) &amp;&amp;</div>
+<div class="line"><span class="lineno">  260</span>         <a class="code hl_function" href="namespacedyno.html#ab5ae05966c6056b343a960a80c5b1db3">dyno::equals_with_abs_tol</a>(<a class="code hl_variable" href="classdyno_1_1CameraParams.html#aec88d010efafefd8adab1e3abb025471">distortion_coeff_</a>, other.distortion_coeff_,</div>
+<div class="line"><span class="lineno">  261</span>                                   tol) &amp;&amp;</div>
+<div class="line"><span class="lineno">  262</span>         (<a class="code hl_variable" href="classdyno_1_1CameraParams.html#ab447798df360751d787e332a7db86aaa">image_size_</a>.width == other.image_size_.width &amp;&amp;</div>
+<div class="line"><span class="lineno">  263</span>          <a class="code hl_variable" href="classdyno_1_1CameraParams.html#ab447798df360751d787e332a7db86aaa">image_size_</a>.height == other.image_size_.height) &amp;&amp;</div>
+<div class="line"><span class="lineno">  264</span>         <a class="code hl_variable" href="classdyno_1_1CameraParams.html#af56d9c8538fa9c6f1a681c8d57fd14d4">distortion_model_</a> == other.distortion_model_ &amp;&amp;</div>
+<div class="line"><span class="lineno">  265</span>         <a class="code hl_variable" href="classdyno_1_1CameraParams.html#a88e86545ae266b99813affcc155f567f">T_robot_camera_</a>.equals(other.T_robot_camera_, tol) &amp;&amp;</div>
+<div class="line"><span class="lineno">  266</span>         <a class="code hl_function" href="namespacedyno_1_1utils.html#ac8ff128f0c488db144db269ca8d8856e">utils::compareCvMatsUpToTol</a>(<a class="code hl_variable" href="classdyno_1_1CameraParams.html#ae9a814a6236c3eeef71eb93a03ad3e97">K_</a>, other.K_, tol) &amp;&amp;</div>
+<div class="line"><span class="lineno">  267</span>         <a class="code hl_function" href="namespacedyno_1_1utils.html#ac8ff128f0c488db144db269ca8d8856e">utils::compareCvMatsUpToTol</a>(</div>
+<div class="line"><span class="lineno">  268</span>             <a class="code hl_variable" href="classdyno_1_1CameraParams.html#add68d4b6cdf8d82755c3ddbd19cea253">D_</a>, other.D_);  <span class="comment">// NOTE: do not comapre with P matrix as currently</span></div>
+<div class="line"><span class="lineno">  269</span>                             <span class="comment">// not calculated</span></div>
+<div class="line"><span class="lineno">  270</span>}</div>
+<div class="ttc" id="anamespacedyno_1_1utils_html_ac8ff128f0c488db144db269ca8d8856e"><div class="ttname"><a href="namespacedyno_1_1utils.html#ac8ff128f0c488db144db269ca8d8856e">dyno::utils::compareCvMatsUpToTol</a></div><div class="ttdeci">bool compareCvMatsUpToTol(const cv::Mat &amp;mat1, const cv::Mat &amp;mat2, const double &amp;tol=1e-7)</div><div class="ttdef"><b>Definition:</b> <a href="OpenCVUtils_8cc_source.html#l00439">OpenCVUtils.cc:439</a></div></div>
+<div class="ttc" id="anamespacedyno_html_ab5ae05966c6056b343a960a80c5b1db3"><div class="ttname"><a href="namespacedyno.html#ab5ae05966c6056b343a960a80c5b1db3">dyno::equals_with_abs_tol</a></div><div class="ttdeci">bool equals_with_abs_tol(const std::vector&lt; T &gt; &amp;vec1, const std::vector&lt; T &gt; &amp;vec2, double tol=1e-9)</div><div class="ttdef"><b>Definition:</b> <a href="Numerical_8hpp_source.html#l00195">Numerical.hpp:195</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="namespacedyno_1_1utils.html#ac8ff128f0c488db144db269ca8d8856e">dyno::utils::compareCvMatsUpToTol()</a>, <a class="el" href="classdyno_1_1CameraParams.html#add68d4b6cdf8d82755c3ddbd19cea253">D_</a>, <a class="el" href="classdyno_1_1CameraParams.html#aec88d010efafefd8adab1e3abb025471">distortion_coeff_</a>, <a class="el" href="classdyno_1_1CameraParams.html#af56d9c8538fa9c6f1a681c8d57fd14d4">distortion_model_</a>, <a class="el" href="namespacedyno.html#ab5ae05966c6056b343a960a80c5b1db3">dyno::equals_with_abs_tol()</a>, <a class="el" href="classdyno_1_1CameraParams.html#ab447798df360751d787e332a7db86aaa">image_size_</a>, <a class="el" href="classdyno_1_1CameraParams.html#aa8467c4426a825936619a5cd5832ed81">intrinsics_</a>, <a class="el" href="classdyno_1_1CameraParams.html#ae9a814a6236c3eeef71eb93a03ad3e97">K_</a>, and <a class="el" href="classdyno_1_1CameraParams.html#a88e86545ae266b99813affcc155f567f">T_robot_camera_</a>.</p>
 <div class="dynheader">
@@ -969,25 +1024,26 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CameraParams_8hpp_source.html#l00101">101</a> of file <a class="el" href="CameraParams_8hpp_source.html">CameraParams.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  101</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1CameraParams.html#aa8467c4426a825936619a5cd5832ed81">intrinsics_</a>[0]; }</div>
+<p class="definition">Definition at line <a class="el" href="CameraParams_8hpp_source.html#l00132">132</a> of file <a class="el" href="CameraParams_8hpp_source.html">CameraParams.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  132</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1CameraParams.html#aa8467c4426a825936619a5cd5832ed81">intrinsics_</a>[0]; }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1CameraParams.html#aa8467c4426a825936619a5cd5832ed81">intrinsics_</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1EgoMotionSolver.html#a6b176910a29c44e52305c1ce68ab656c">dyno::EgoMotionSolver::geometricOutlierRejection3d2d()</a>, <a class="el" href="classdyno_1_1OMDOldAllLoader.html#ac597db0d95b6608d9a95541ac0848e51">dyno::OMDOldAllLoader::getDepthImage()</a>, and <a class="el" href="classdyno_1_1CameraParams.html#a7be21480072986b94e6484d9c4687ddf">toString()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="namespacedyno_1_1vision__tools.html#a5c6d086771d8b0ea5b2576d911eeea09">dyno::vision_tools::backProjectAndCovariance()</a>, <a class="el" href="classdyno_1_1EgoMotionSolver.html#a6b176910a29c44e52305c1ce68ab656c">dyno::EgoMotionSolver::geometricOutlierRejection3d2d()</a>, <a class="el" href="classdyno_1_1OMDOldAllLoader.html#ac597db0d95b6608d9a95541ac0848e51">dyno::OMDOldAllLoader::getDepthImage()</a>, and <a class="el" href="classdyno_1_1CameraParams.html#a7be21480072986b94e6484d9c4687ddf">toString()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1CameraParams_a006fa38075052f41cc49509fa16ba864_icgraph.png" border="0" usemap="#aclassdyno_1_1CameraParams_a006fa38075052f41cc49509fa16ba864_icgraph" alt=""/></div>
 <map name="aclassdyno_1_1CameraParams_a006fa38075052f41cc49509fa16ba864_icgraph" id="aclassdyno_1_1CameraParams_a006fa38075052f41cc49509fa16ba864_icgraph">
-<area shape="rect" title=" " alt="" coords="791,77,973,102"/>
-<area shape="rect" href="classdyno_1_1EgoMotionSolver.html#a6b176910a29c44e52305c1ce68ab656c" title=" " alt="" coords="509,5,743,45"/>
-<area shape="rect" href="classdyno_1_1OMDOldAllLoader.html#ac597db0d95b6608d9a95541ac0848e51" title=" " alt="" coords="537,69,715,109"/>
-<area shape="rect" href="classdyno_1_1CameraParams.html#a7be21480072986b94e6484d9c4687ddf" title=" " alt="" coords="545,133,707,173"/>
-<area shape="rect" href="classdyno_1_1OMDOldAllLoader.html#a0bf74dd052ecef9baa3fd57050347dc3" title=" " alt="" coords="271,101,449,141"/>
-<area shape="rect" href="classdyno_1_1DataProviderRos.html#a1cb49fe70873ef4b7ed49afb75c013bc" title="Gets CameraParams from a sensor_msgs::msg::CameraInfo recieved on the specified topic...." alt="" coords="259,165,461,205"/>
-<area shape="rect" href="classdyno_1_1OMDOldAllLoader.html#a5407ba0dda29eaf6520c615807fe3b93" title=" " alt="" coords="19,101,197,141"/>
-<area shape="rect" href="classdyno_1_1OnlineDataProviderRos.html#abea751b62c91dbf7bfac759680a434f7" title="Construct a new OnlineDataProviderRos." alt="" coords="5,165,211,205"/>
+<area shape="rect" title=" " alt="" coords="791,109,973,134"/>
+<area shape="rect" href="namespacedyno_1_1vision__tools.html#a5c6d086771d8b0ea5b2576d911eeea09" title="From a feature with valid depth, backproject to a 3D point in the camera frame with the associated co..." alt="" coords="524,5,728,45"/>
+<area shape="rect" href="classdyno_1_1EgoMotionSolver.html#a6b176910a29c44e52305c1ce68ab656c" title=" " alt="" coords="509,69,743,109"/>
+<area shape="rect" href="classdyno_1_1OMDOldAllLoader.html#ac597db0d95b6608d9a95541ac0848e51" title=" " alt="" coords="537,133,715,173"/>
+<area shape="rect" href="classdyno_1_1CameraParams.html#a7be21480072986b94e6484d9c4687ddf" title=" " alt="" coords="545,197,707,237"/>
+<area shape="rect" href="classdyno_1_1OMDOldAllLoader.html#a0bf74dd052ecef9baa3fd57050347dc3" title=" " alt="" coords="271,165,449,205"/>
+<area shape="rect" href="classdyno_1_1DataProviderRos.html#a1cb49fe70873ef4b7ed49afb75c013bc" title="Gets CameraParams from a sensor_msgs::msg::CameraInfo recieved on the specified topic...." alt="" coords="259,229,461,269"/>
+<area shape="rect" href="classdyno_1_1OMDOldAllLoader.html#a5407ba0dda29eaf6520c615807fe3b93" title=" " alt="" coords="19,165,197,205"/>
+<area shape="rect" href="classdyno_1_1OnlineDataProviderRos.html#abea751b62c91dbf7bfac759680a434f7" title="Construct a new OnlineDataProviderRos." alt="" coords="5,229,211,269"/>
 </map>
 </div>
 
@@ -1016,8 +1072,8 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CameraParams_8hpp_source.html#l00102">102</a> of file <a class="el" href="CameraParams_8hpp_source.html">CameraParams.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  102</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1CameraParams.html#aa8467c4426a825936619a5cd5832ed81">intrinsics_</a>[1]; }</div>
+<p class="definition">Definition at line <a class="el" href="CameraParams_8hpp_source.html#l00133">133</a> of file <a class="el" href="CameraParams_8hpp_source.html">CameraParams.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  133</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1CameraParams.html#aa8467c4426a825936619a5cd5832ed81">intrinsics_</a>[1]; }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1CameraParams.html#aa8467c4426a825936619a5cd5832ed81">intrinsics_</a>.</p>
 
@@ -1062,12 +1118,12 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CameraParams_8hpp_source.html#l00110">110</a> of file <a class="el" href="CameraParams_8hpp_source.html">CameraParams.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  110</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1CameraParams.html#ae9a814a6236c3eeef71eb93a03ad3e97">K_</a>; }</div>
+<p class="definition">Definition at line <a class="el" href="CameraParams_8hpp_source.html#l00141">141</a> of file <a class="el" href="CameraParams_8hpp_source.html">CameraParams.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  141</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1CameraParams.html#ae9a814a6236c3eeef71eb93a03ad3e97">K_</a>; }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1CameraParams.html#ae9a814a6236c3eeef71eb93a03ad3e97">K_</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1StereoCamera.html#a6ce9ba10820d974b32a081868c224fad">dyno::StereoCamera::computeRectificationParameters()</a>, <a class="el" href="structrclcpp_1_1TypeAdapter_3_01dyno_1_1CameraParams_00_01sensor__msgs_1_1msg_1_1CameraInfo_01_4.html#a88de3493ecfc9c56e7812f9a8919d673">rclcpp::TypeAdapter&lt; dyno::CameraParams, sensor_msgs::msg::CameraInfo &gt;::convert_to_ros_message()</a>, <a class="el" href="classdyno_1_1Frame.html#a5553af4c0c310c23d0f39e0c1daf0478">dyno::Frame::Frame()</a>, <a class="el" href="classdyno_1_1UndistorterRectifier.html#a4a4cf24ce89d70f3ec6c3c25051f4691">dyno::UndistorterRectifier::initUndistortRectifyMaps()</a>, <a class="el" href="classdyno_1_1UndistorterRectifier.html#af102413f7c20a9120b1e1d0a7d848c41">dyno::UndistorterRectifier::UndistortKeypointAndGetProjectedVersor()</a>, <a class="el" href="classdyno_1_1UndistorterRectifier.html#ae64676bd43fb299d9c72034fa3ee3c09">dyno::UndistorterRectifier::UndistortRectifyKeypoints()</a>, and <a class="el" href="namespacedyno_1_1vision__tools.html#a5d8b89d2b560b498934853c77a7d9f28">dyno::vision_tools::writeOutProjectMaskAndDepthMap()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1StereoCamera.html#a6ce9ba10820d974b32a081868c224fad">dyno::StereoCamera::computeRectificationParameters()</a>, <a class="el" href="structrclcpp_1_1TypeAdapter_3_01dyno_1_1CameraParams_00_01sensor__msgs_1_1msg_1_1CameraInfo_01_4.html#a88de3493ecfc9c56e7812f9a8919d673">rclcpp::TypeAdapter&lt; dyno::CameraParams, sensor_msgs::msg::CameraInfo &gt;::convert_to_ros_message()</a>, <a class="el" href="classdyno_1_1Frame.html#ac0cb31923b35426420d5f4c363bedb94">dyno::Frame::Frame()</a>, <a class="el" href="classdyno_1_1UndistorterRectifier.html#a4a4cf24ce89d70f3ec6c3c25051f4691">dyno::UndistorterRectifier::initUndistortRectifyMaps()</a>, <a class="el" href="classdyno_1_1UndistorterRectifier.html#af102413f7c20a9120b1e1d0a7d848c41">dyno::UndistorterRectifier::UndistortKeypointAndGetProjectedVersor()</a>, <a class="el" href="classdyno_1_1UndistorterRectifier.html#ae64676bd43fb299d9c72034fa3ee3c09">dyno::UndistorterRectifier::UndistortRectifyKeypoints()</a>, and <a class="el" href="namespacedyno_1_1vision__tools.html#a5d8b89d2b560b498934853c77a7d9f28">dyno::vision_tools::writeOutProjectMaskAndDepthMap()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -1076,18 +1132,17 @@ Here is the caller graph for this function:</div>
 <area shape="rect" title=" " alt="" coords="919,213,1080,253"/>
 <area shape="rect" href="classdyno_1_1StereoCamera.html#a6ce9ba10820d974b32a081868c224fad" title="computeRectificationParameters" alt="" coords="620,5,863,45"/>
 <area shape="rect" href="structrclcpp_1_1TypeAdapter_3_01dyno_1_1CameraParams_00_01sensor__msgs_1_1msg_1_1CameraInfo_01_4.html#a88de3493ecfc9c56e7812f9a8919d673" title=" " alt="" coords="626,69,857,139"/>
-<area shape="rect" href="classdyno_1_1Frame.html#a5553af4c0c310c23d0f39e0c1daf0478" title=" " alt="" coords="665,163,817,189"/>
+<area shape="rect" href="classdyno_1_1Frame.html#ac0cb31923b35426420d5f4c363bedb94" title=" " alt="" coords="665,163,817,189"/>
 <area shape="rect" href="classdyno_1_1UndistorterRectifier.html#a4a4cf24ce89d70f3ec6c3c25051f4691" title="initUndistortRectifyMaps Initialize pixel to pixel maps for undistortion and rectification...." alt="" coords="646,213,837,253"/>
-<area shape="rect" href="classdyno_1_1UndistorterRectifier.html#af102413f7c20a9120b1e1d0a7d848c41" title="UndistortKeypointAndGetVersor undistort a single pixel, and return the corresponding projected versor..." alt="" coords="308,259,564,314"/>
-<area shape="rect" href="classdyno_1_1UndistorterRectifier.html#ae64676bd43fb299d9c72034fa3ee3c09" title="undistortRectifyKeypoints undistorts and rectifies" alt="" coords="642,335,841,375"/>
-<area shape="rect" href="namespacedyno_1_1vision__tools.html#a5d8b89d2b560b498934853c77a7d9f28" title="Saves a re&#45;projected 3D point cloud with labelled points to file as a cv::Mat." alt="" coords="612,431,871,471"/>
+<area shape="rect" href="classdyno_1_1UndistorterRectifier.html#af102413f7c20a9120b1e1d0a7d848c41" title="UndistortKeypointAndGetVersor undistort a single pixel, and return the corresponding projected versor..." alt="" coords="308,263,564,318"/>
+<area shape="rect" href="classdyno_1_1UndistorterRectifier.html#ae64676bd43fb299d9c72034fa3ee3c09" title="undistortRectifyKeypoints undistorts and rectifies" alt="" coords="642,328,841,368"/>
+<area shape="rect" href="namespacedyno_1_1vision__tools.html#a5d8b89d2b560b498934853c77a7d9f28" title="Saves a re&#45;projected 3D point cloud with labelled points to file as a cv::Mat." alt="" coords="612,392,871,432"/>
 <area shape="rect" href="classdyno_1_1StereoCamera.html#a2262c33a62cc297ecedbe5801fcd37df" title=" " alt="" coords="359,5,513,45"/>
-<area shape="rect" href="classdyno_1_1UndistorterRectifier.html#aaffa018d8098ac0c4916029c05340d0b" title="UndistorterRectifier." alt="" coords="341,195,531,235"/>
-<area shape="rect" href="classdyno_1_1UndistorterRectifier.html#a80b4a50fd637142aee912e2aa0f200ee" title=" " alt="" coords="5,259,260,314"/>
-<area shape="rect" href="classdyno_1_1UndistorterRectifier.html#a210fba595205f9c9f36eb76bb37a7b69" title="UndistortKeypointAndGetVersor undistort a single pixel, and return the corresponding versor...." alt="" coords="318,339,554,379"/>
-<area shape="rect" href="classdyno_1_1UndistorterRectifier.html#a870349a1e058dcd67b749bc8dcfbf9de" title="undistortRectifyKeypoints Undistorts and rectifies a sparse set of keypoints (instead of a whole imag..." alt="" coords="337,403,535,443"/>
-<area shape="rect" href="classdyno_1_1UndistorterRectifier.html#aa55a8cd2fa64ee3b968f2be1d6acf19f" title="Undistorts a single pixel and returns the corresponding versor (unit norm vector corresponding to bea..." alt="" coords="15,339,250,379"/>
-<area shape="rect" href="classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2" title=" " alt="" coords="330,467,542,507"/>
+<area shape="rect" href="classdyno_1_1UndistorterRectifier.html#aaffa018d8098ac0c4916029c05340d0b" title="UndistorterRectifier." alt="" coords="341,199,531,239"/>
+<area shape="rect" href="classdyno_1_1UndistorterRectifier.html#a80b4a50fd637142aee912e2aa0f200ee" title=" " alt="" coords="5,263,260,318"/>
+<area shape="rect" href="classdyno_1_1UndistorterRectifier.html#a210fba595205f9c9f36eb76bb37a7b69" title="UndistortKeypointAndGetVersor undistort a single pixel, and return the corresponding versor...." alt="" coords="318,343,554,383"/>
+<area shape="rect" href="classdyno_1_1UndistorterRectifier.html#a870349a1e058dcd67b749bc8dcfbf9de" title="undistortRectifyKeypoints Undistorts and rectifies a sparse set of keypoints (instead of a whole imag..." alt="" coords="337,407,535,447"/>
+<area shape="rect" href="classdyno_1_1UndistorterRectifier.html#aa55a8cd2fa64ee3b968f2be1d6acf19f" title="Undistorts a single pixel and returns the corresponding versor (unit norm vector corresponding to bea..." alt="" coords="15,343,250,383"/>
 </map>
 </div>
 
@@ -1116,8 +1171,8 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CameraParams_8hpp_source.html#l00112">112</a> of file <a class="el" href="CameraParams_8hpp_source.html">CameraParams.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  112</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1CameraParams.html#af9ecf3838b27bcfffb04be485fe76e3c">K_eigen_</a>; }</div>
+<p class="definition">Definition at line <a class="el" href="CameraParams_8hpp_source.html#l00143">143</a> of file <a class="el" href="CameraParams_8hpp_source.html">CameraParams.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  143</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1CameraParams.html#af9ecf3838b27bcfffb04be485fe76e3c">K_eigen_</a>; }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1CameraParams.html#af9ecf3838b27bcfffb04be485fe76e3c">K_eigen_</a>.</p>
 
@@ -1158,8 +1213,8 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CameraParams_8hpp_source.html#l00114">114</a> of file <a class="el" href="CameraParams_8hpp_source.html">CameraParams.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  114</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1CameraParams.html#add68d4b6cdf8d82755c3ddbd19cea253">D_</a>; }</div>
+<p class="definition">Definition at line <a class="el" href="CameraParams_8hpp_source.html#l00145">145</a> of file <a class="el" href="CameraParams_8hpp_source.html">CameraParams.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  145</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1CameraParams.html#add68d4b6cdf8d82755c3ddbd19cea253">D_</a>; }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1CameraParams.html#add68d4b6cdf8d82755c3ddbd19cea253">D_</a>.</p>
 
@@ -1209,10 +1264,10 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CameraParams_8hpp_source.html#l00124">124</a> of file <a class="el" href="CameraParams_8hpp_source.html">CameraParams.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  124</span>                                                    {</div>
-<div class="line"><span class="lineno">  125</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1CameraParams.html#af56d9c8538fa9c6f1a681c8d57fd14d4">distortion_model_</a>;</div>
-<div class="line"><span class="lineno">  126</span>  }</div>
+<p class="definition">Definition at line <a class="el" href="CameraParams_8hpp_source.html#l00155">155</a> of file <a class="el" href="CameraParams_8hpp_source.html">CameraParams.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  155</span>                                                    {</div>
+<div class="line"><span class="lineno">  156</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1CameraParams.html#af56d9c8538fa9c6f1a681c8d57fd14d4">distortion_model_</a>;</div>
+<div class="line"><span class="lineno">  157</span>  }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1CameraParams.html#af56d9c8538fa9c6f1a681c8d57fd14d4">distortion_model_</a>.</p>
 
@@ -1265,8 +1320,8 @@ Here is the caller graph for this function:</div>
 <p>Get the camera extrinsics - the transform of the camera in the body frame (e.g T_robot_camera or ^RT_C) </p>
 <dl class="section return"><dt>Returns</dt><dd>gtsam::Pose3 </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="CameraParams_8hpp_source.html#l00122">122</a> of file <a class="el" href="CameraParams_8hpp_source.html">CameraParams.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  122</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1CameraParams.html#a88e86545ae266b99813affcc155f567f">T_robot_camera_</a>; }</div>
+<p class="definition">Definition at line <a class="el" href="CameraParams_8hpp_source.html#l00153">153</a> of file <a class="el" href="CameraParams_8hpp_source.html">CameraParams.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  153</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1CameraParams.html#a88e86545ae266b99813affcc155f567f">T_robot_camera_</a>; }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1CameraParams.html#a88e86545ae266b99813affcc155f567f">T_robot_camera_</a>.</p>
 
@@ -1279,6 +1334,41 @@ Here is the caller graph for this function:</div>
 <area shape="rect" title="Get the camera extrinsics &#45; the transform of the camera in the body frame (e.g T_robot_camera or ^RT_..." alt="" coords="499,5,660,45"/>
 <area shape="rect" href="classdyno_1_1StereoCamera.html#a6ce9ba10820d974b32a081868c224fad" title="computeRectificationParameters" alt="" coords="208,5,451,45"/>
 <area shape="rect" href="classdyno_1_1StereoCamera.html#a2262c33a62cc297ecedbe5801fcd37df" title=" " alt="" coords="5,5,160,45"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a1e6e32159599ac0ef4a354fb6c72128c" name="a1e6e32159599ac0ef4a354fb6c72128c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1e6e32159599ac0ef4a354fb6c72128c">&#9670;&#160;</a></span>hasDepthParams()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool dyno::CameraParams::hasDepthParams </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="CameraParams_8cc_source.html#l00152">152</a> of file <a class="el" href="CameraParams_8cc_source.html">CameraParams.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  152</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1CameraParams.html#a0dca70bd2ff149a9fc24856457049bc1">depth_</a>.has_value(); }</div>
+</div><!-- fragment -->
+<p class="reference">References <a class="el" href="classdyno_1_1CameraParams.html#a0dca70bd2ff149a9fc24856457049bc1">depth_</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1DynoPipelineManager.html#aa181c6ed1e1b1c416eccca4e5bce8e29">dyno::DynoPipelineManager::loadPipelines()</a>, and <a class="el" href="classdyno_1_1RGBDCamera.html#a2bb0b9df30c23b20043a504e96a4777c">dyno::RGBDCamera::RGBDCamera()</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classdyno_1_1CameraParams_a1e6e32159599ac0ef4a354fb6c72128c_icgraph.png" border="0" usemap="#aclassdyno_1_1CameraParams_a1e6e32159599ac0ef4a354fb6c72128c_icgraph" alt=""/></div>
+<map name="aclassdyno_1_1CameraParams_a1e6e32159599ac0ef4a354fb6c72128c_icgraph" id="aclassdyno_1_1CameraParams_a1e6e32159599ac0ef4a354fb6c72128c_icgraph">
+<area shape="rect" title=" " alt="" coords="555,35,716,75"/>
+<area shape="rect" href="classdyno_1_1DynoPipelineManager.html#aa181c6ed1e1b1c416eccca4e5bce8e29" title=" " alt="" coords="280,5,485,45"/>
+<area shape="rect" href="classdyno_1_1RGBDCamera.html#a2bb0b9df30c23b20043a504e96a4777c" title=" " alt="" coords="259,70,507,95"/>
+<area shape="rect" href="classdyno_1_1DynoPipelineManager.html#a1e980339b4d308ab83d46ede524c3a46" title=" " alt="" coords="5,5,211,45"/>
 </map>
 </div>
 
@@ -1307,8 +1397,8 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CameraParams_8hpp_source.html#l00106">106</a> of file <a class="el" href="CameraParams_8hpp_source.html">CameraParams.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  106</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1CameraParams.html#ab447798df360751d787e332a7db86aaa">image_size_</a>.height; }</div>
+<p class="definition">Definition at line <a class="el" href="CameraParams_8hpp_source.html#l00137">137</a> of file <a class="el" href="CameraParams_8hpp_source.html">CameraParams.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  137</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1CameraParams.html#ab447798df360751d787e332a7db86aaa">image_size_</a>.height; }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1CameraParams.html#ab447798df360751d787e332a7db86aaa">image_size_</a>.</p>
 
@@ -1354,8 +1444,8 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CameraParams_8hpp_source.html#l00108">108</a> of file <a class="el" href="CameraParams_8hpp_source.html">CameraParams.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  108</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1CameraParams.html#ab447798df360751d787e332a7db86aaa">image_size_</a>; }</div>
+<p class="definition">Definition at line <a class="el" href="CameraParams_8hpp_source.html#l00139">139</a> of file <a class="el" href="CameraParams_8hpp_source.html">CameraParams.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  139</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1CameraParams.html#ab447798df360751d787e332a7db86aaa">image_size_</a>; }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1CameraParams.html#ab447798df360751d787e332a7db86aaa">image_size_</a>.</p>
 
@@ -1398,8 +1488,8 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CameraParams_8hpp_source.html#l00105">105</a> of file <a class="el" href="CameraParams_8hpp_source.html">CameraParams.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  105</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1CameraParams.html#ab447798df360751d787e332a7db86aaa">image_size_</a>.width; }</div>
+<p class="definition">Definition at line <a class="el" href="CameraParams_8hpp_source.html#l00136">136</a> of file <a class="el" href="CameraParams_8hpp_source.html">CameraParams.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  136</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1CameraParams.html#ab447798df360751d787e332a7db86aaa">image_size_</a>.width; }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1CameraParams.html#ab447798df360751d787e332a7db86aaa">image_size_</a>.</p>
 
@@ -1419,6 +1509,72 @@ Here is the caller graph for this function:</div>
 <area shape="rect" href="classdyno_1_1OnlineDataProviderRos.html#abea751b62c91dbf7bfac759680a434f7" title="Construct a new OnlineDataProviderRos." alt="" coords="5,195,211,235"/>
 </map>
 </div>
+
+</div>
+</div>
+<a id="a1846d9aa734e56ec6b43c186881303e8" name="a1846d9aa734e56ec6b43c186881303e8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1846d9aa734e56ec6b43c186881303e8">&#9670;&#160;</a></span>setDepthParams() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classdyno_1_1CameraParams.html">CameraParams</a> &amp; dyno::CameraParams::setDepthParams </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structdyno_1_1CameraParams_1_1DepthParams.html">DepthParams</a> &amp;&#160;</td>
+          <td class="paramname"><em>depth_params</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="CameraParams_8cc_source.html#l00142">142</a> of file <a class="el" href="CameraParams_8cc_source.html">CameraParams.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  142</span>                                                                          {</div>
+<div class="line"><span class="lineno">  143</span>  <a class="code hl_variable" href="classdyno_1_1CameraParams.html#a0dca70bd2ff149a9fc24856457049bc1">depth_</a> = depth_params;</div>
+<div class="line"><span class="lineno">  144</span>  <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><span class="lineno">  145</span>}</div>
+</div><!-- fragment -->
+<p class="reference">References <a class="el" href="classdyno_1_1CameraParams.html#a0dca70bd2ff149a9fc24856457049bc1">depth_</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1DynoPipelineManager.html#aa181c6ed1e1b1c416eccca4e5bce8e29">dyno::DynoPipelineManager::loadPipelines()</a>, and <a class="el" href="classdyno_1_1ViodeAllLoader.html#a893d8a1e24c05640d4d4131698cd9e5d">dyno::ViodeAllLoader::setSensorParams()</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classdyno_1_1CameraParams_a1846d9aa734e56ec6b43c186881303e8_icgraph.png" border="0" usemap="#aclassdyno_1_1CameraParams_a1846d9aa734e56ec6b43c186881303e8_icgraph" alt=""/></div>
+<map name="aclassdyno_1_1CameraParams_a1846d9aa734e56ec6b43c186881303e8_icgraph" id="aclassdyno_1_1CameraParams_a1846d9aa734e56ec6b43c186881303e8_icgraph">
+<area shape="rect" title=" " alt="" coords="512,37,673,77"/>
+<area shape="rect" href="classdyno_1_1DynoPipelineManager.html#aa181c6ed1e1b1c416eccca4e5bce8e29" title=" " alt="" coords="259,5,464,45"/>
+<area shape="rect" href="classdyno_1_1ViodeAllLoader.html#a893d8a1e24c05640d4d4131698cd9e5d" title=" " alt="" coords="281,69,441,109"/>
+<area shape="rect" href="classdyno_1_1DynoPipelineManager.html#a1e980339b4d308ab83d46ede524c3a46" title=" " alt="" coords="5,5,211,45"/>
+<area shape="rect" href="classdyno_1_1ViodeAllLoader.html#ac033c5781d882e6d120c6348dfc05e12" title=" " alt="" coords="28,69,188,109"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a5416948f817248a1a2216eb04a0c723d" name="a5416948f817248a1a2216eb04a0c723d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5416948f817248a1a2216eb04a0c723d">&#9670;&#160;</a></span>setDepthParams() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classdyno_1_1CameraParams.html">CameraParams</a> &amp; dyno::CameraParams::setDepthParams </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>baseline</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="CameraParams_8cc_source.html#l00147">147</a> of file <a class="el" href="CameraParams_8cc_source.html">CameraParams.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  147</span>                                                          {</div>
+<div class="line"><span class="lineno">  148</span>  <a class="code hl_variable" href="classdyno_1_1CameraParams.html#a0dca70bd2ff149a9fc24856457049bc1">depth_</a> = DepthParams(baseline);</div>
+<div class="line"><span class="lineno">  149</span>  <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><span class="lineno">  150</span>}</div>
+</div><!-- fragment -->
+<p class="reference">References <a class="el" href="classdyno_1_1CameraParams.html#a0dca70bd2ff149a9fc24856457049bc1">depth_</a>.</p>
 
 </div>
 </div>
@@ -1466,40 +1622,40 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>actual distortion model enum class </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="CameraParams_8cc_source.html#l00181">181</a> of file <a class="el" href="CameraParams_8cc_source.html">CameraParams.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  182</span>                                                                      {</div>
-<div class="line"><span class="lineno">  183</span>  std::string lower_case_distortion_model = distortion_model;</div>
-<div class="line"><span class="lineno">  184</span>  std::string lower_case_camera_model = camera_model;</div>
-<div class="line"><span class="lineno">  185</span> </div>
-<div class="line"><span class="lineno">  186</span>  std::transform(lower_case_distortion_model.begin(),</div>
-<div class="line"><span class="lineno">  187</span>                 lower_case_distortion_model.end(),</div>
-<div class="line"><span class="lineno">  188</span>                 lower_case_distortion_model.begin(), ::tolower);</div>
-<div class="line"><span class="lineno">  189</span>  std::transform(lower_case_camera_model.begin(), lower_case_camera_model.end(),</div>
-<div class="line"><span class="lineno">  190</span>                 lower_case_camera_model.begin(), ::tolower);</div>
-<div class="line"><span class="lineno">  191</span> </div>
-<div class="line"><span class="lineno">  192</span>  <span class="keywordflow">if</span> (lower_case_camera_model == <span class="stringliteral">&quot;pinhole&quot;</span>) {</div>
-<div class="line"><span class="lineno">  193</span>    <span class="keywordflow">if</span> (lower_case_distortion_model == <span class="stringliteral">&quot;none&quot;</span>) {</div>
-<div class="line"><span class="lineno">  194</span>      <span class="keywordflow">return</span> <a class="code hl_enumvalue" href="namespacedyno.html#a7118762ab4c63de4996b3983b5b82356ab50339a10e1de285ac99d4c3990b8693">DistortionModel::NONE</a>;</div>
-<div class="line"><span class="lineno">  195</span>    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> ((lower_case_distortion_model == <span class="stringliteral">&quot;plumb_bob&quot;</span>) ||</div>
-<div class="line"><span class="lineno">  196</span>               (lower_case_distortion_model == <span class="stringliteral">&quot;radial_tangential&quot;</span>) ||</div>
-<div class="line"><span class="lineno">  197</span>               (lower_case_distortion_model == <span class="stringliteral">&quot;radtan&quot;</span>)) {</div>
-<div class="line"><span class="lineno">  198</span>      <span class="keywordflow">return</span> <a class="code hl_enumvalue" href="namespacedyno.html#a7118762ab4c63de4996b3983b5b82356a57d07fba056969bb09dcb1459746cde5">DistortionModel::RADTAN</a>;</div>
-<div class="line"><span class="lineno">  199</span>    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (lower_case_distortion_model == <span class="stringliteral">&quot;equidistant&quot;</span>) {</div>
-<div class="line"><span class="lineno">  200</span>      <span class="keywordflow">return</span> <a class="code hl_enumvalue" href="namespacedyno.html#a7118762ab4c63de4996b3983b5b82356a00d0cd9f6b32fb176671646968102e78">DistortionModel::EQUIDISTANT</a>;</div>
-<div class="line"><span class="lineno">  201</span>    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (lower_case_distortion_model == <span class="stringliteral">&quot;kannala_brandt&quot;</span>) {</div>
-<div class="line"><span class="lineno">  202</span>      <span class="keywordflow">return</span> <a class="code hl_enumvalue" href="namespacedyno.html#a7118762ab4c63de4996b3983b5b82356a97567c965028c6fcdad81419ffbc34f5">DistortionModel::FISH_EYE</a>;</div>
-<div class="line"><span class="lineno">  203</span>    } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  204</span>      LOG(ERROR) &lt;&lt; <span class="stringliteral">&quot;Unrecognized distortion model for pinhole camera. Valid &quot;</span></div>
-<div class="line"><span class="lineno">  205</span>                    <span class="stringliteral">&quot;pinhole distortion model options are &#39;none&#39;, &#39;radtan&#39;, &quot;</span></div>
-<div class="line"><span class="lineno">  206</span>                    <span class="stringliteral">&quot;&#39;equidistant&#39;, &#39;fish eye&#39;.&quot;</span>;</div>
-<div class="line"><span class="lineno">  207</span>    }</div>
-<div class="line"><span class="lineno">  208</span>  } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  209</span>    LOG(ERROR)</div>
-<div class="line"><span class="lineno">  210</span>        &lt;&lt; <span class="stringliteral">&quot;Unrecognized camera model. Valid camera models are &#39;pinhole&#39;&quot;</span>;</div>
-<div class="line"><span class="lineno">  211</span>  }</div>
-<div class="line"><span class="lineno">  212</span>  <span class="comment">// Return no distortion model if invalid model is provided</span></div>
-<div class="line"><span class="lineno">  213</span>  <span class="keywordflow">return</span> <a class="code hl_enumvalue" href="namespacedyno.html#a7118762ab4c63de4996b3983b5b82356ab50339a10e1de285ac99d4c3990b8693">DistortionModel::NONE</a>;</div>
-<div class="line"><span class="lineno">  214</span>}</div>
+<p class="definition">Definition at line <a class="el" href="CameraParams_8cc_source.html#l00197">197</a> of file <a class="el" href="CameraParams_8cc_source.html">CameraParams.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  198</span>                                                                      {</div>
+<div class="line"><span class="lineno">  199</span>  std::string lower_case_distortion_model = distortion_model;</div>
+<div class="line"><span class="lineno">  200</span>  std::string lower_case_camera_model = camera_model;</div>
+<div class="line"><span class="lineno">  201</span> </div>
+<div class="line"><span class="lineno">  202</span>  std::transform(lower_case_distortion_model.begin(),</div>
+<div class="line"><span class="lineno">  203</span>                 lower_case_distortion_model.end(),</div>
+<div class="line"><span class="lineno">  204</span>                 lower_case_distortion_model.begin(), ::tolower);</div>
+<div class="line"><span class="lineno">  205</span>  std::transform(lower_case_camera_model.begin(), lower_case_camera_model.end(),</div>
+<div class="line"><span class="lineno">  206</span>                 lower_case_camera_model.begin(), ::tolower);</div>
+<div class="line"><span class="lineno">  207</span> </div>
+<div class="line"><span class="lineno">  208</span>  <span class="keywordflow">if</span> (lower_case_camera_model == <span class="stringliteral">&quot;pinhole&quot;</span>) {</div>
+<div class="line"><span class="lineno">  209</span>    <span class="keywordflow">if</span> (lower_case_distortion_model == <span class="stringliteral">&quot;none&quot;</span>) {</div>
+<div class="line"><span class="lineno">  210</span>      <span class="keywordflow">return</span> <a class="code hl_enumvalue" href="namespacedyno.html#a7118762ab4c63de4996b3983b5b82356ab50339a10e1de285ac99d4c3990b8693">DistortionModel::NONE</a>;</div>
+<div class="line"><span class="lineno">  211</span>    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> ((lower_case_distortion_model == <span class="stringliteral">&quot;plumb_bob&quot;</span>) ||</div>
+<div class="line"><span class="lineno">  212</span>               (lower_case_distortion_model == <span class="stringliteral">&quot;radial_tangential&quot;</span>) ||</div>
+<div class="line"><span class="lineno">  213</span>               (lower_case_distortion_model == <span class="stringliteral">&quot;radtan&quot;</span>)) {</div>
+<div class="line"><span class="lineno">  214</span>      <span class="keywordflow">return</span> <a class="code hl_enumvalue" href="namespacedyno.html#a7118762ab4c63de4996b3983b5b82356a57d07fba056969bb09dcb1459746cde5">DistortionModel::RADTAN</a>;</div>
+<div class="line"><span class="lineno">  215</span>    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (lower_case_distortion_model == <span class="stringliteral">&quot;equidistant&quot;</span>) {</div>
+<div class="line"><span class="lineno">  216</span>      <span class="keywordflow">return</span> <a class="code hl_enumvalue" href="namespacedyno.html#a7118762ab4c63de4996b3983b5b82356a00d0cd9f6b32fb176671646968102e78">DistortionModel::EQUIDISTANT</a>;</div>
+<div class="line"><span class="lineno">  217</span>    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (lower_case_distortion_model == <span class="stringliteral">&quot;kannala_brandt&quot;</span>) {</div>
+<div class="line"><span class="lineno">  218</span>      <span class="keywordflow">return</span> <a class="code hl_enumvalue" href="namespacedyno.html#a7118762ab4c63de4996b3983b5b82356a97567c965028c6fcdad81419ffbc34f5">DistortionModel::FISH_EYE</a>;</div>
+<div class="line"><span class="lineno">  219</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  220</span>      LOG(ERROR) &lt;&lt; <span class="stringliteral">&quot;Unrecognized distortion model for pinhole camera. Valid &quot;</span></div>
+<div class="line"><span class="lineno">  221</span>                    <span class="stringliteral">&quot;pinhole distortion model options are &#39;none&#39;, &#39;radtan&#39;, &quot;</span></div>
+<div class="line"><span class="lineno">  222</span>                    <span class="stringliteral">&quot;&#39;equidistant&#39;, &#39;fish eye&#39;.&quot;</span>;</div>
+<div class="line"><span class="lineno">  223</span>    }</div>
+<div class="line"><span class="lineno">  224</span>  } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  225</span>    LOG(ERROR)</div>
+<div class="line"><span class="lineno">  226</span>        &lt;&lt; <span class="stringliteral">&quot;Unrecognized camera model. Valid camera models are &#39;pinhole&#39;&quot;</span>;</div>
+<div class="line"><span class="lineno">  227</span>  }</div>
+<div class="line"><span class="lineno">  228</span>  <span class="comment">// Return no distortion model if invalid model is provided</span></div>
+<div class="line"><span class="lineno">  229</span>  <span class="keywordflow">return</span> <a class="code hl_enumvalue" href="namespacedyno.html#a7118762ab4c63de4996b3983b5b82356ab50339a10e1de285ac99d4c3990b8693">DistortionModel::NONE</a>;</div>
+<div class="line"><span class="lineno">  230</span>}</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="namespacedyno.html#a7118762ab4c63de4996b3983b5b82356a00d0cd9f6b32fb176671646968102e78">dyno::EQUIDISTANT</a>, <a class="el" href="namespacedyno.html#a7118762ab4c63de4996b3983b5b82356a97567c965028c6fcdad81419ffbc34f5">dyno::FISH_EYE</a>, <a class="el" href="namespacedyno.html#a7118762ab4c63de4996b3983b5b82356ab50339a10e1de285ac99d4c3990b8693">dyno::NONE</a>, and <a class="el" href="namespacedyno.html#a7118762ab4c63de4996b3983b5b82356a57d07fba056969bb09dcb1459746cde5">dyno::RADTAN</a>.</p>
 
@@ -1535,27 +1691,27 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CameraParams_8cc_source.html#l00256">256</a> of file <a class="el" href="CameraParams_8cc_source.html">CameraParams.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  256</span>                                             {</div>
-<div class="line"><span class="lineno">  257</span>  std::stringstream out;</div>
-<div class="line"><span class="lineno">  258</span>  out &lt;&lt; <span class="stringliteral">&quot;\nIntrinsics: \n- fx &quot;</span> &lt;&lt; <a class="code hl_function" href="classdyno_1_1CameraParams.html#a006fa38075052f41cc49509fa16ba864">fx</a>() &lt;&lt; <span class="stringliteral">&quot;\n- fy &quot;</span> &lt;&lt; <a class="code hl_function" href="classdyno_1_1CameraParams.html#af593866ca855cd9cf008275735596450">fy</a>() &lt;&lt; <span class="stringliteral">&quot;\n- cu &quot;</span></div>
-<div class="line"><span class="lineno">  259</span>      &lt;&lt; <a class="code hl_function" href="classdyno_1_1CameraParams.html#a0bd613ed86d45b2eb3597147c78f44cb">cu</a>() &lt;&lt; <span class="stringliteral">&quot;\n- cv &quot;</span> &lt;&lt; <a class="code hl_function" href="classdyno_1_1CameraParams.html#a11332373807121719cbd13b3c0aa5dfa">cv</a>()</div>
-<div class="line"><span class="lineno">  260</span>      &lt;&lt; <span class="stringliteral">&quot;\nimage_size: \n- width: &quot;</span> &lt;&lt; <a class="code hl_function" href="classdyno_1_1CameraParams.html#ae09360028f240f884ad9fcb72e4f4cf1">ImageWidth</a>()</div>
-<div class="line"><span class="lineno">  261</span>      &lt;&lt; <span class="stringliteral">&quot;\n- height: &quot;</span> &lt;&lt; <a class="code hl_function" href="classdyno_1_1CameraParams.html#a75e96fd0df57691134425ac9b9d55f09">ImageHeight</a>() &lt;&lt; <span class="stringliteral">&quot;\n- K: &quot;</span> &lt;&lt; <a class="code hl_variable" href="classdyno_1_1CameraParams.html#ae9a814a6236c3eeef71eb93a03ad3e97">K_</a> &lt;&lt; <span class="charliteral">&#39;\n&#39;</span></div>
-<div class="line"><span class="lineno">  262</span>      &lt;&lt; <span class="stringliteral">&quot;- Distortion Model: &quot;</span> &lt;&lt; <a class="code hl_function" href="namespacedyno.html#a809604e427db44cbf532a545c71a3b5d">to_string</a>(<a class="code hl_variable" href="classdyno_1_1CameraParams.html#af56d9c8538fa9c6f1a681c8d57fd14d4">distortion_model_</a>) &lt;&lt; <span class="charliteral">&#39;\n&#39;</span></div>
-<div class="line"><span class="lineno">  263</span>      &lt;&lt; <span class="stringliteral">&quot;- D: &quot;</span> &lt;&lt; <a class="code hl_variable" href="classdyno_1_1CameraParams.html#add68d4b6cdf8d82755c3ddbd19cea253">D_</a> &lt;&lt; <span class="charliteral">&#39;\n&#39;</span></div>
-<div class="line"><span class="lineno">  264</span>      &lt;&lt; <span class="stringliteral">&quot;- P: &quot;</span> &lt;&lt; <a class="code hl_variable" href="classdyno_1_1CameraParams.html#a169264ad4cfbcc068019b5c7fc89c3cf">P_</a> &lt;&lt; <span class="charliteral">&#39;\n&#39;</span>;</div>
-<div class="line"><span class="lineno">  265</span> </div>
-<div class="line"><span class="lineno">  266</span>  <span class="keywordflow">return</span> out.str();</div>
-<div class="line"><span class="lineno">  267</span>}</div>
-<div class="ttc" id="aclassdyno_1_1CameraParams_html_a006fa38075052f41cc49509fa16ba864"><div class="ttname"><a href="classdyno_1_1CameraParams.html#a006fa38075052f41cc49509fa16ba864">dyno::CameraParams::fx</a></div><div class="ttdeci">double fx() const</div><div class="ttdef"><b>Definition:</b> <a href="CameraParams_8hpp_source.html#l00101">CameraParams.hpp:101</a></div></div>
-<div class="ttc" id="aclassdyno_1_1CameraParams_html_a0bd613ed86d45b2eb3597147c78f44cb"><div class="ttname"><a href="classdyno_1_1CameraParams.html#a0bd613ed86d45b2eb3597147c78f44cb">dyno::CameraParams::cu</a></div><div class="ttdeci">double cu() const</div><div class="ttdef"><b>Definition:</b> <a href="CameraParams_8hpp_source.html#l00103">CameraParams.hpp:103</a></div></div>
-<div class="ttc" id="aclassdyno_1_1CameraParams_html_a11332373807121719cbd13b3c0aa5dfa"><div class="ttname"><a href="classdyno_1_1CameraParams.html#a11332373807121719cbd13b3c0aa5dfa">dyno::CameraParams::cv</a></div><div class="ttdeci">double cv() const</div><div class="ttdef"><b>Definition:</b> <a href="CameraParams_8hpp_source.html#l00104">CameraParams.hpp:104</a></div></div>
-<div class="ttc" id="aclassdyno_1_1CameraParams_html_a75e96fd0df57691134425ac9b9d55f09"><div class="ttname"><a href="classdyno_1_1CameraParams.html#a75e96fd0df57691134425ac9b9d55f09">dyno::CameraParams::ImageHeight</a></div><div class="ttdeci">int ImageHeight() const</div><div class="ttdef"><b>Definition:</b> <a href="CameraParams_8hpp_source.html#l00106">CameraParams.hpp:106</a></div></div>
-<div class="ttc" id="aclassdyno_1_1CameraParams_html_ae09360028f240f884ad9fcb72e4f4cf1"><div class="ttname"><a href="classdyno_1_1CameraParams.html#ae09360028f240f884ad9fcb72e4f4cf1">dyno::CameraParams::ImageWidth</a></div><div class="ttdeci">int ImageWidth() const</div><div class="ttdef"><b>Definition:</b> <a href="CameraParams_8hpp_source.html#l00105">CameraParams.hpp:105</a></div></div>
-<div class="ttc" id="aclassdyno_1_1CameraParams_html_af593866ca855cd9cf008275735596450"><div class="ttname"><a href="classdyno_1_1CameraParams.html#af593866ca855cd9cf008275735596450">dyno::CameraParams::fy</a></div><div class="ttdeci">double fy() const</div><div class="ttdef"><b>Definition:</b> <a href="CameraParams_8hpp_source.html#l00102">CameraParams.hpp:102</a></div></div>
+<p class="definition">Definition at line <a class="el" href="CameraParams_8cc_source.html#l00272">272</a> of file <a class="el" href="CameraParams_8cc_source.html">CameraParams.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  272</span>                                             {</div>
+<div class="line"><span class="lineno">  273</span>  std::stringstream out;</div>
+<div class="line"><span class="lineno">  274</span>  out &lt;&lt; <span class="stringliteral">&quot;\nIntrinsics: \n- fx &quot;</span> &lt;&lt; <a class="code hl_function" href="classdyno_1_1CameraParams.html#a006fa38075052f41cc49509fa16ba864">fx</a>() &lt;&lt; <span class="stringliteral">&quot;\n- fy &quot;</span> &lt;&lt; <a class="code hl_function" href="classdyno_1_1CameraParams.html#af593866ca855cd9cf008275735596450">fy</a>() &lt;&lt; <span class="stringliteral">&quot;\n- cu &quot;</span></div>
+<div class="line"><span class="lineno">  275</span>      &lt;&lt; <a class="code hl_function" href="classdyno_1_1CameraParams.html#a0bd613ed86d45b2eb3597147c78f44cb">cu</a>() &lt;&lt; <span class="stringliteral">&quot;\n- cv &quot;</span> &lt;&lt; <a class="code hl_function" href="classdyno_1_1CameraParams.html#a11332373807121719cbd13b3c0aa5dfa">cv</a>()</div>
+<div class="line"><span class="lineno">  276</span>      &lt;&lt; <span class="stringliteral">&quot;\nimage_size: \n- width: &quot;</span> &lt;&lt; <a class="code hl_function" href="classdyno_1_1CameraParams.html#ae09360028f240f884ad9fcb72e4f4cf1">ImageWidth</a>()</div>
+<div class="line"><span class="lineno">  277</span>      &lt;&lt; <span class="stringliteral">&quot;\n- height: &quot;</span> &lt;&lt; <a class="code hl_function" href="classdyno_1_1CameraParams.html#a75e96fd0df57691134425ac9b9d55f09">ImageHeight</a>() &lt;&lt; <span class="stringliteral">&quot;\n- K: &quot;</span> &lt;&lt; <a class="code hl_variable" href="classdyno_1_1CameraParams.html#ae9a814a6236c3eeef71eb93a03ad3e97">K_</a> &lt;&lt; <span class="charliteral">&#39;\n&#39;</span></div>
+<div class="line"><span class="lineno">  278</span>      &lt;&lt; <span class="stringliteral">&quot;- Distortion Model: &quot;</span> &lt;&lt; <a class="code hl_function" href="namespacedyno.html#a8d1f85752688bf072f23fa6e8a1bde34">to_string</a>(<a class="code hl_variable" href="classdyno_1_1CameraParams.html#af56d9c8538fa9c6f1a681c8d57fd14d4">distortion_model_</a>) &lt;&lt; <span class="charliteral">&#39;\n&#39;</span></div>
+<div class="line"><span class="lineno">  279</span>      &lt;&lt; <span class="stringliteral">&quot;- D: &quot;</span> &lt;&lt; <a class="code hl_variable" href="classdyno_1_1CameraParams.html#add68d4b6cdf8d82755c3ddbd19cea253">D_</a> &lt;&lt; <span class="charliteral">&#39;\n&#39;</span></div>
+<div class="line"><span class="lineno">  280</span>      &lt;&lt; <span class="stringliteral">&quot;- P: &quot;</span> &lt;&lt; <a class="code hl_variable" href="classdyno_1_1CameraParams.html#a169264ad4cfbcc068019b5c7fc89c3cf">P_</a> &lt;&lt; <span class="charliteral">&#39;\n&#39;</span>;</div>
+<div class="line"><span class="lineno">  281</span> </div>
+<div class="line"><span class="lineno">  282</span>  <span class="keywordflow">return</span> out.str();</div>
+<div class="line"><span class="lineno">  283</span>}</div>
+<div class="ttc" id="aclassdyno_1_1CameraParams_html_a006fa38075052f41cc49509fa16ba864"><div class="ttname"><a href="classdyno_1_1CameraParams.html#a006fa38075052f41cc49509fa16ba864">dyno::CameraParams::fx</a></div><div class="ttdeci">double fx() const</div><div class="ttdef"><b>Definition:</b> <a href="CameraParams_8hpp_source.html#l00132">CameraParams.hpp:132</a></div></div>
+<div class="ttc" id="aclassdyno_1_1CameraParams_html_a0bd613ed86d45b2eb3597147c78f44cb"><div class="ttname"><a href="classdyno_1_1CameraParams.html#a0bd613ed86d45b2eb3597147c78f44cb">dyno::CameraParams::cu</a></div><div class="ttdeci">double cu() const</div><div class="ttdef"><b>Definition:</b> <a href="CameraParams_8hpp_source.html#l00134">CameraParams.hpp:134</a></div></div>
+<div class="ttc" id="aclassdyno_1_1CameraParams_html_a11332373807121719cbd13b3c0aa5dfa"><div class="ttname"><a href="classdyno_1_1CameraParams.html#a11332373807121719cbd13b3c0aa5dfa">dyno::CameraParams::cv</a></div><div class="ttdeci">double cv() const</div><div class="ttdef"><b>Definition:</b> <a href="CameraParams_8hpp_source.html#l00135">CameraParams.hpp:135</a></div></div>
+<div class="ttc" id="aclassdyno_1_1CameraParams_html_a75e96fd0df57691134425ac9b9d55f09"><div class="ttname"><a href="classdyno_1_1CameraParams.html#a75e96fd0df57691134425ac9b9d55f09">dyno::CameraParams::ImageHeight</a></div><div class="ttdeci">int ImageHeight() const</div><div class="ttdef"><b>Definition:</b> <a href="CameraParams_8hpp_source.html#l00137">CameraParams.hpp:137</a></div></div>
+<div class="ttc" id="aclassdyno_1_1CameraParams_html_ae09360028f240f884ad9fcb72e4f4cf1"><div class="ttname"><a href="classdyno_1_1CameraParams.html#ae09360028f240f884ad9fcb72e4f4cf1">dyno::CameraParams::ImageWidth</a></div><div class="ttdeci">int ImageWidth() const</div><div class="ttdef"><b>Definition:</b> <a href="CameraParams_8hpp_source.html#l00136">CameraParams.hpp:136</a></div></div>
+<div class="ttc" id="aclassdyno_1_1CameraParams_html_af593866ca855cd9cf008275735596450"><div class="ttname"><a href="classdyno_1_1CameraParams.html#af593866ca855cd9cf008275735596450">dyno::CameraParams::fy</a></div><div class="ttdeci">double fy() const</div><div class="ttdef"><b>Definition:</b> <a href="CameraParams_8hpp_source.html#l00133">CameraParams.hpp:133</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="classdyno_1_1CameraParams.html#a0bd613ed86d45b2eb3597147c78f44cb">cu()</a>, <a class="el" href="classdyno_1_1CameraParams.html#a11332373807121719cbd13b3c0aa5dfa">cv()</a>, <a class="el" href="classdyno_1_1CameraParams.html#add68d4b6cdf8d82755c3ddbd19cea253">D_</a>, <a class="el" href="classdyno_1_1CameraParams.html#af56d9c8538fa9c6f1a681c8d57fd14d4">distortion_model_</a>, <a class="el" href="classdyno_1_1CameraParams.html#a006fa38075052f41cc49509fa16ba864">fx()</a>, <a class="el" href="classdyno_1_1CameraParams.html#af593866ca855cd9cf008275735596450">fy()</a>, <a class="el" href="classdyno_1_1CameraParams.html#a75e96fd0df57691134425ac9b9d55f09">ImageHeight()</a>, <a class="el" href="classdyno_1_1CameraParams.html#ae09360028f240f884ad9fcb72e4f4cf1">ImageWidth()</a>, <a class="el" href="classdyno_1_1CameraParams.html#ae9a814a6236c3eeef71eb93a03ad3e97">K_</a>, <a class="el" href="classdyno_1_1CameraParams.html#a169264ad4cfbcc068019b5c7fc89c3cf">P_</a>, and <a class="el" href="namespacedyno.html#a809604e427db44cbf532a545c71a3b5d">dyno::to_string()</a>.</p>
+<p class="reference">References <a class="el" href="classdyno_1_1CameraParams.html#a0bd613ed86d45b2eb3597147c78f44cb">cu()</a>, <a class="el" href="classdyno_1_1CameraParams.html#a11332373807121719cbd13b3c0aa5dfa">cv()</a>, <a class="el" href="classdyno_1_1CameraParams.html#add68d4b6cdf8d82755c3ddbd19cea253">D_</a>, <a class="el" href="classdyno_1_1CameraParams.html#af56d9c8538fa9c6f1a681c8d57fd14d4">distortion_model_</a>, <a class="el" href="classdyno_1_1CameraParams.html#a006fa38075052f41cc49509fa16ba864">fx()</a>, <a class="el" href="classdyno_1_1CameraParams.html#af593866ca855cd9cf008275735596450">fy()</a>, <a class="el" href="classdyno_1_1CameraParams.html#a75e96fd0df57691134425ac9b9d55f09">ImageHeight()</a>, <a class="el" href="classdyno_1_1CameraParams.html#ae09360028f240f884ad9fcb72e4f4cf1">ImageWidth()</a>, <a class="el" href="classdyno_1_1CameraParams.html#ae9a814a6236c3eeef71eb93a03ad3e97">K_</a>, <a class="el" href="classdyno_1_1CameraParams.html#a169264ad4cfbcc068019b5c7fc89c3cf">P_</a>, and <a class="el" href="namespacedyno.html#a8d1f85752688bf072f23fa6e8a1bde34">dyno::to_string()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1OMDOldAllLoader.html#a0bf74dd052ecef9baa3fd57050347dc3">dyno::OMDOldAllLoader::setCameraParams()</a>, and <a class="el" href="classdyno_1_1DataProviderRos.html#a1cb49fe70873ef4b7ed49afb75c013bc">dyno::DataProviderRos::waitAndSetCameraParams()</a>.</p>
 <div class="dynheader">
@@ -1570,7 +1726,7 @@ Here is the call graph for this function:</div>
 <area shape="rect" href="classdyno_1_1CameraParams.html#af593866ca855cd9cf008275735596450" title=" " alt="" coords="216,153,397,179"/>
 <area shape="rect" href="classdyno_1_1CameraParams.html#a75e96fd0df57691134425ac9b9d55f09" title=" " alt="" coords="226,203,387,243"/>
 <area shape="rect" href="classdyno_1_1CameraParams.html#ae09360028f240f884ad9fcb72e4f4cf1" title=" " alt="" coords="226,267,387,307"/>
-<area shape="rect" href="namespacedyno.html#a809604e427db44cbf532a545c71a3b5d" title=" " alt="" coords="247,332,366,357"/>
+<area shape="rect" href="namespacedyno.html#a8d1f85752688bf072f23fa6e8a1bde34" title=" " alt="" coords="247,332,366,357"/>
 </map>
 </div>
 <div class="dynheader">
@@ -1609,9 +1765,37 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CameraParams_8hpp_source.html#l00219">219</a> of file <a class="el" href="CameraParams_8hpp_source.html">CameraParams.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="CameraParams_8hpp_source.html#l00252">252</a> of file <a class="el" href="CameraParams_8hpp_source.html">CameraParams.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1CameraParams.html#a6642eecb8ef2512150b358020a041141">CameraParams()</a>, <a class="el" href="classdyno_1_1CameraParams.html#aed0b3bb94f86ce7d95789c4113a74bd6">equals()</a>, <a class="el" href="classdyno_1_1CameraParams.html#a19bbd8710bfeec7e1dc1096f1ea773cd">getDistortionCoeffs()</a>, and <a class="el" href="classdyno_1_1CameraParams.html#a7be21480072986b94e6484d9c4687ddf">toString()</a>.</p>
+
+</div>
+</div>
+<a id="a0dca70bd2ff149a9fc24856457049bc1" name="a0dca70bd2ff149a9fc24856457049bc1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0dca70bd2ff149a9fc24856457049bc1">&#9670;&#160;</a></span>depth_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::optional&lt;<a class="el" href="structdyno_1_1CameraParams_1_1DepthParams.html">DepthParams</a>&gt; dyno::CameraParams::depth_ = {}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Optional params for an RGB-D. </p>
+
+<p class="definition">Definition at line <a class="el" href="CameraParams_8hpp_source.html#l00255">255</a> of file <a class="el" href="CameraParams_8hpp_source.html">CameraParams.hpp</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1CameraParams.html#a8353d84805d7e45720433117114ab1b6">depthParams()</a>, <a class="el" href="classdyno_1_1CameraParams.html#a1e6e32159599ac0ef4a354fb6c72128c">hasDepthParams()</a>, and <a class="el" href="classdyno_1_1CameraParams.html#a1846d9aa734e56ec6b43c186881303e8">setDepthParams()</a>.</p>
 
 </div>
 </div>
@@ -1635,7 +1819,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CameraParams_8hpp_source.html#l00200">200</a> of file <a class="el" href="CameraParams_8hpp_source.html">CameraParams.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="CameraParams_8hpp_source.html#l00233">233</a> of file <a class="el" href="CameraParams_8hpp_source.html">CameraParams.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1CameraParams.html#a6642eecb8ef2512150b358020a041141">CameraParams()</a>, and <a class="el" href="classdyno_1_1CameraParams.html#aed0b3bb94f86ce7d95789c4113a74bd6">equals()</a>.</p>
 
@@ -1663,7 +1847,7 @@ Here is the caller graph for this function:</div>
 
 <p>Distortion parameters. </p>
 
-<p class="definition">Definition at line <a class="el" href="CameraParams_8hpp_source.html#l00204">204</a> of file <a class="el" href="CameraParams_8hpp_source.html">CameraParams.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="CameraParams_8hpp_source.html#l00237">237</a> of file <a class="el" href="CameraParams_8hpp_source.html">CameraParams.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1CameraParams.html#aed0b3bb94f86ce7d95789c4113a74bd6">equals()</a>, <a class="el" href="classdyno_1_1CameraParams.html#ad824176d6c92a8162e6360c0760fa304">getDistortionModel()</a>, and <a class="el" href="classdyno_1_1CameraParams.html#a7be21480072986b94e6484d9c4687ddf">toString()</a>.</p>
 
@@ -1689,7 +1873,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CameraParams_8hpp_source.html#l00201">201</a> of file <a class="el" href="CameraParams_8hpp_source.html">CameraParams.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="CameraParams_8hpp_source.html#l00234">234</a> of file <a class="el" href="CameraParams_8hpp_source.html">CameraParams.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1CameraParams.html#aed0b3bb94f86ce7d95789c4113a74bd6">equals()</a>, <a class="el" href="classdyno_1_1CameraParams.html#a75e96fd0df57691134425ac9b9d55f09">ImageHeight()</a>, <a class="el" href="classdyno_1_1CameraParams.html#abee4c6077c08a626e78d8bdab667b935">imageSize()</a>, and <a class="el" href="classdyno_1_1CameraParams.html#ae09360028f240f884ad9fcb72e4f4cf1">ImageWidth()</a>.</p>
 
@@ -1717,7 +1901,7 @@ Here is the caller graph for this function:</div>
 
 <p>fu, fv, cu, cv </p>
 
-<p class="definition">Definition at line <a class="el" href="CameraParams_8hpp_source.html#l00199">199</a> of file <a class="el" href="CameraParams_8hpp_source.html">CameraParams.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="CameraParams_8hpp_source.html#l00232">232</a> of file <a class="el" href="CameraParams_8hpp_source.html">CameraParams.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1CameraParams.html#a6642eecb8ef2512150b358020a041141">CameraParams()</a>, <a class="el" href="classdyno_1_1CameraParams.html#a0bd613ed86d45b2eb3597147c78f44cb">cu()</a>, <a class="el" href="classdyno_1_1CameraParams.html#a11332373807121719cbd13b3c0aa5dfa">cv()</a>, <a class="el" href="classdyno_1_1CameraParams.html#aed0b3bb94f86ce7d95789c4113a74bd6">equals()</a>, <a class="el" href="classdyno_1_1CameraParams.html#a006fa38075052f41cc49509fa16ba864">fx()</a>, and <a class="el" href="classdyno_1_1CameraParams.html#af593866ca855cd9cf008275735596450">fy()</a>.</p>
 
@@ -1746,7 +1930,7 @@ Here is the caller graph for this function:</div>
 <p>Transform of the camera frame to the robot frame. </p>
 <p>OpenCV structures: needed to compute the undistortion map. 3x3 camera matrix K (last row is {0,0,1}) stored as a CV_64F (double) </p>
 
-<p class="definition">Definition at line <a class="el" href="CameraParams_8hpp_source.html#l00211">211</a> of file <a class="el" href="CameraParams_8hpp_source.html">CameraParams.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="CameraParams_8hpp_source.html#l00244">244</a> of file <a class="el" href="CameraParams_8hpp_source.html">CameraParams.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1CameraParams.html#a6642eecb8ef2512150b358020a041141">CameraParams()</a>, <a class="el" href="classdyno_1_1CameraParams.html#aed0b3bb94f86ce7d95789c4113a74bd6">equals()</a>, <a class="el" href="classdyno_1_1CameraParams.html#ae50eb600c23415b3f7bd46e70553f96a">getCameraMatrix()</a>, and <a class="el" href="classdyno_1_1CameraParams.html#a7be21480072986b94e6484d9c4687ddf">toString()</a>.</p>
 
@@ -1772,7 +1956,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CameraParams_8hpp_source.html#l00212">212</a> of file <a class="el" href="CameraParams_8hpp_source.html">CameraParams.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="CameraParams_8hpp_source.html#l00245">245</a> of file <a class="el" href="CameraParams_8hpp_source.html">CameraParams.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1CameraParams.html#a6642eecb8ef2512150b358020a041141">CameraParams()</a>, and <a class="el" href="classdyno_1_1CameraParams.html#a5573f4552b86bb79f033168f078a30a9">getCameraMatrixEigen()</a>.</p>
 
@@ -1799,7 +1983,7 @@ Here is the caller graph for this function:</div>
 </div><div class="memdoc">
 <p>New camera matrix constructed from estimateNewCameraMatrixForUndistortRectify for mono case not touched and initalised as K_ </p>
 
-<p class="definition">Definition at line <a class="el" href="CameraParams_8hpp_source.html#l00217">217</a> of file <a class="el" href="CameraParams_8hpp_source.html">CameraParams.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="CameraParams_8hpp_source.html#l00250">250</a> of file <a class="el" href="CameraParams_8hpp_source.html">CameraParams.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1CameraParams.html#a6642eecb8ef2512150b358020a041141">CameraParams()</a>, and <a class="el" href="classdyno_1_1CameraParams.html#a7be21480072986b94e6484d9c4687ddf">toString()</a>.</p>
 
@@ -1825,15 +2009,15 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CameraParams_8hpp_source.html#l00206">206</a> of file <a class="el" href="CameraParams_8hpp_source.html">CameraParams.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="CameraParams_8hpp_source.html#l00239">239</a> of file <a class="el" href="CameraParams_8hpp_source.html">CameraParams.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1CameraParams.html#aed0b3bb94f86ce7d95789c4113a74bd6">equals()</a>, and <a class="el" href="classdyno_1_1CameraParams.html#ac5f6ec080db908038d9928c3a493327b">getExtrinsics()</a>.</p>
 
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>dynosam/include/dynosam/common/<a class="el" href="CameraParams_8hpp_source.html">CameraParams.hpp</a></li>
-<li>dynosam/src/common/<a class="el" href="CameraParams_8cc_source.html">CameraParams.cc</a></li>
+<li>dynosam_cv/include/dynosam_cv/<a class="el" href="CameraParams_8hpp_source.html">CameraParams.hpp</a></li>
+<li>dynosam_cv/src/<a class="el" href="CameraParams_8cc_source.html">CameraParams.cc</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

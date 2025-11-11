@@ -1,7 +1,8 @@
 <map id="dyno::utils::gtsamPointToCv" name="dyno::utils::gtsamPointToCv">
-<area shape="rect" id="node1" title=" " alt="" coords="545,77,748,102"/>
+<area shape="rect" id="node1" title=" " alt="" coords="545,109,748,134"/>
 <area shape="rect" id="node2" href="$classdyno_1_1ClusterSlamAllLoader.html#a074af7358c98d715599460ca2671ecc4" title=" " alt="" coords="256,5,497,45"/>
 <area shape="rect" id="node4" href="$classdyno_1_1FeatureTrackerBase.html#aa902950650699301214f776a905e3b77" title=" " alt="" coords="282,69,471,109"/>
-<area shape="rect" id="node5" href="$classdyno_1_1ParallelHybridBackendModule.html#a07ee75bebfcdf9cab20b6d2cc214b8e0" title=" " alt="" coords="273,133,481,173"/>
+<area shape="rect" id="node5" href="$classdyno_1_1FeatureTrackerBase.html#a4e9b9b77752d80d8bb8c2236776ca5a8" title=" " alt="" coords="282,133,471,173"/>
+<area shape="rect" id="node6" href="$classdyno_1_1ParallelHybridBackendModule.html#ae77dace65f727f878afcb7d6bf82a059" title=" " alt="" coords="273,197,481,237"/>
 <area shape="rect" id="node3" href="$classdyno_1_1ClusterSlamAllLoader.html#a6dbf46c48ea9477aa915bff62ee98ea8" title=" " alt="" coords="5,5,208,45"/>
 </map>

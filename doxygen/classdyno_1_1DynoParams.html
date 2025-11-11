@@ -131,6 +131,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a55143b60fd1418289b54025203aece83"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad225ed5a244cee216e2d63db4703856b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DynoParams.html#ad225ed5a244cee216e2d63db4703856b">preferDataProviderImuParams</a> () const</td></tr>
 <tr class="separator:ad225ed5a244cee216e2d63db4703856b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2094ff78794ca2147c07529a68dd8e9c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DynoParams.html#a2094ff78794ca2147c07529a68dd8e9c">incrementalBackend</a> () const</td></tr>
+<tr class="separator:a2094ff78794ca2147c07529a68dd8e9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -146,6 +148,8 @@ Public Attributes</h2></td></tr>
 <tr class="separator:ad8d3adb66a3e4a915f698eb1f1de5d66"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4bc68cd0a38dc2e39e7037554a3b0a20"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacedyno.html#a373dccfbe74119feedaaa3124678e5f5">FrontendType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DynoParams.html#a4bc68cd0a38dc2e39e7037554a3b0a20">frontend_type_</a> = <a class="el" href="namespacedyno.html#a373dccfbe74119feedaaa3124678e5f5a23c7055de1982c9646cb8ebcbc4cb632">FrontendType::kRGBD</a></td></tr>
 <tr class="separator:a4bc68cd0a38dc2e39e7037554a3b0a20"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9f35a51c05ba39f025ee648083a7c10c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacedyno.html#ab2bea061e9a47afecd7db1c56c1f1f17">BackendType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DynoParams.html#a9f35a51c05ba39f025ee648083a7c10c">backend_type</a> = <a class="el" href="namespacedyno.html#ab2bea061e9a47afecd7db1c56c1f1f17a96f5d9afed7f51cffe8673b2beb58e5f">BackendType::PARALLEL_HYBRID</a></td></tr>
+<tr class="separator:a9f35a51c05ba39f025ee648083a7c10c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
@@ -167,23 +171,27 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PipelineParams_8cc_source.html#l00058">58</a> of file <a class="el" href="PipelineParams_8cc_source.html">PipelineParams.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   58</span>                                                          {</div>
-<div class="line"><span class="lineno">   59</span>  <a class="code hl_variable" href="classdyno_1_1DynoParams.html#a5a0fc1061523549aa91c4b1a3c8ba2a5">pipeline_params_</a> = config::fromYamlFile&lt;PipelineParams&gt;(</div>
-<div class="line"><span class="lineno">   60</span>      params_folder_path + <span class="stringliteral">&quot;PipelineParams.yaml&quot;</span>);</div>
-<div class="line"><span class="lineno">   61</span>  <a class="code hl_variable" href="classdyno_1_1DynoParams.html#aac0013979a7fa1b36e94750f956a2847">camera_params_</a> = config::fromYamlFile&lt;CameraParams&gt;(params_folder_path +</div>
-<div class="line"><span class="lineno">   62</span>                                                      <span class="stringliteral">&quot;CameraParams.yaml&quot;</span>);</div>
-<div class="line"><span class="lineno">   63</span>  <a class="code hl_variable" href="classdyno_1_1DynoParams.html#ac6be57b51ea040afbb688410ce3751f3">frontend_params_</a> = config::fromYamlFile&lt;FrontendParams&gt;(</div>
-<div class="line"><span class="lineno">   64</span>      params_folder_path + <span class="stringliteral">&quot;FrontendParams.yaml&quot;</span>);</div>
-<div class="line"><span class="lineno">   65</span>  <a class="code hl_variable" href="classdyno_1_1DynoParams.html#ad8d3adb66a3e4a915f698eb1f1de5d66">imu_params_</a> =</div>
-<div class="line"><span class="lineno">   66</span>      config::fromYamlFile&lt;ImuParams&gt;(params_folder_path + <span class="stringliteral">&quot;ImuParams.yaml&quot;</span>);</div>
-<div class="line"><span class="lineno">   67</span>}</div>
-<div class="ttc" id="aclassdyno_1_1DynoParams_html_a5a0fc1061523549aa91c4b1a3c8ba2a5"><div class="ttname"><a href="classdyno_1_1DynoParams.html#a5a0fc1061523549aa91c4b1a3c8ba2a5">dyno::DynoParams::pipeline_params_</a></div><div class="ttdeci">PipelineParams pipeline_params_</div><div class="ttdef"><b>Definition:</b> <a href="PipelineParams_8hpp_source.html#l00111">PipelineParams.hpp:111</a></div></div>
-<div class="ttc" id="aclassdyno_1_1DynoParams_html_aac0013979a7fa1b36e94750f956a2847"><div class="ttname"><a href="classdyno_1_1DynoParams.html#aac0013979a7fa1b36e94750f956a2847">dyno::DynoParams::camera_params_</a></div><div class="ttdeci">CameraParams camera_params_</div><div class="ttdef"><b>Definition:</b> <a href="PipelineParams_8hpp_source.html#l00114">PipelineParams.hpp:114</a></div></div>
-<div class="ttc" id="aclassdyno_1_1DynoParams_html_ac6be57b51ea040afbb688410ce3751f3"><div class="ttname"><a href="classdyno_1_1DynoParams.html#ac6be57b51ea040afbb688410ce3751f3">dyno::DynoParams::frontend_params_</a></div><div class="ttdeci">FrontendParams frontend_params_</div><div class="ttdef"><b>Definition:</b> <a href="PipelineParams_8hpp_source.html#l00112">PipelineParams.hpp:112</a></div></div>
-<div class="ttc" id="aclassdyno_1_1DynoParams_html_ad8d3adb66a3e4a915f698eb1f1de5d66"><div class="ttname"><a href="classdyno_1_1DynoParams.html#ad8d3adb66a3e4a915f698eb1f1de5d66">dyno::DynoParams::imu_params_</a></div><div class="ttdeci">ImuParams imu_params_</div><div class="ttdef"><b>Definition:</b> <a href="PipelineParams_8hpp_source.html#l00115">PipelineParams.hpp:115</a></div></div>
+<p class="definition">Definition at line <a class="el" href="PipelineParams_8cc_source.html#l00062">62</a> of file <a class="el" href="PipelineParams_8cc_source.html">PipelineParams.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   62</span>                                                          {</div>
+<div class="line"><span class="lineno">   63</span>  <a class="code hl_variable" href="classdyno_1_1DynoParams.html#a5a0fc1061523549aa91c4b1a3c8ba2a5">pipeline_params_</a> = config::fromYamlFile&lt;PipelineParams&gt;(</div>
+<div class="line"><span class="lineno">   64</span>      params_folder_path + <span class="stringliteral">&quot;PipelineParams.yaml&quot;</span>);</div>
+<div class="line"><span class="lineno">   65</span>  <a class="code hl_variable" href="classdyno_1_1DynoParams.html#aac0013979a7fa1b36e94750f956a2847">camera_params_</a> = config::fromYamlFile&lt;CameraParams&gt;(params_folder_path +</div>
+<div class="line"><span class="lineno">   66</span>                                                      <span class="stringliteral">&quot;CameraParams.yaml&quot;</span>);</div>
+<div class="line"><span class="lineno">   67</span>  <a class="code hl_variable" href="classdyno_1_1DynoParams.html#ac6be57b51ea040afbb688410ce3751f3">frontend_params_</a> = config::fromYamlFile&lt;FrontendParams&gt;(</div>
+<div class="line"><span class="lineno">   68</span>      params_folder_path + <span class="stringliteral">&quot;FrontendParams.yaml&quot;</span>);</div>
+<div class="line"><span class="lineno">   69</span>  <a class="code hl_variable" href="classdyno_1_1DynoParams.html#ad8d3adb66a3e4a915f698eb1f1de5d66">imu_params_</a> =</div>
+<div class="line"><span class="lineno">   70</span>      config::fromYamlFile&lt;ImuParams&gt;(params_folder_path + <span class="stringliteral">&quot;ImuParams.yaml&quot;</span>);</div>
+<div class="line"><span class="lineno">   71</span> </div>
+<div class="line"><span class="lineno">   72</span>  <a class="code hl_variable" href="classdyno_1_1DynoParams.html#a9f35a51c05ba39f025ee648083a7c10c">backend_type</a> = <span class="keyword">static_cast&lt;</span><a class="code hl_enumeration" href="namespacedyno.html#ab2bea061e9a47afecd7db1c56c1f1f17">BackendType</a><span class="keyword">&gt;</span>(FLAGS_backend_updater_enum);</div>
+<div class="line"><span class="lineno">   73</span>}</div>
+<div class="ttc" id="aclassdyno_1_1DynoParams_html_a5a0fc1061523549aa91c4b1a3c8ba2a5"><div class="ttname"><a href="classdyno_1_1DynoParams.html#a5a0fc1061523549aa91c4b1a3c8ba2a5">dyno::DynoParams::pipeline_params_</a></div><div class="ttdeci">PipelineParams pipeline_params_</div><div class="ttdef"><b>Definition:</b> <a href="PipelineParams_8hpp_source.html#l00113">PipelineParams.hpp:113</a></div></div>
+<div class="ttc" id="aclassdyno_1_1DynoParams_html_a9f35a51c05ba39f025ee648083a7c10c"><div class="ttname"><a href="classdyno_1_1DynoParams.html#a9f35a51c05ba39f025ee648083a7c10c">dyno::DynoParams::backend_type</a></div><div class="ttdeci">BackendType backend_type</div><div class="ttdef"><b>Definition:</b> <a href="PipelineParams_8hpp_source.html#l00120">PipelineParams.hpp:120</a></div></div>
+<div class="ttc" id="aclassdyno_1_1DynoParams_html_aac0013979a7fa1b36e94750f956a2847"><div class="ttname"><a href="classdyno_1_1DynoParams.html#aac0013979a7fa1b36e94750f956a2847">dyno::DynoParams::camera_params_</a></div><div class="ttdeci">CameraParams camera_params_</div><div class="ttdef"><b>Definition:</b> <a href="PipelineParams_8hpp_source.html#l00116">PipelineParams.hpp:116</a></div></div>
+<div class="ttc" id="aclassdyno_1_1DynoParams_html_ac6be57b51ea040afbb688410ce3751f3"><div class="ttname"><a href="classdyno_1_1DynoParams.html#ac6be57b51ea040afbb688410ce3751f3">dyno::DynoParams::frontend_params_</a></div><div class="ttdeci">FrontendParams frontend_params_</div><div class="ttdef"><b>Definition:</b> <a href="PipelineParams_8hpp_source.html#l00114">PipelineParams.hpp:114</a></div></div>
+<div class="ttc" id="aclassdyno_1_1DynoParams_html_ad8d3adb66a3e4a915f698eb1f1de5d66"><div class="ttname"><a href="classdyno_1_1DynoParams.html#ad8d3adb66a3e4a915f698eb1f1de5d66">dyno::DynoParams::imu_params_</a></div><div class="ttdeci">ImuParams imu_params_</div><div class="ttdef"><b>Definition:</b> <a href="PipelineParams_8hpp_source.html#l00117">PipelineParams.hpp:117</a></div></div>
+<div class="ttc" id="anamespacedyno_html_ab2bea061e9a47afecd7db1c56c1f1f17"><div class="ttname"><a href="namespacedyno.html#ab2bea061e9a47afecd7db1c56c1f1f17">dyno::BackendType</a></div><div class="ttdeci">BackendType</div><div class="ttdef"><b>Definition:</b> <a href="BackendDefinitions_8hpp_source.html#l00055">BackendDefinitions.hpp:55</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="classdyno_1_1DynoParams.html#aac0013979a7fa1b36e94750f956a2847">camera_params_</a>, <a class="el" href="classdyno_1_1DynoParams.html#ac6be57b51ea040afbb688410ce3751f3">frontend_params_</a>, <a class="el" href="classdyno_1_1DynoParams.html#ad8d3adb66a3e4a915f698eb1f1de5d66">imu_params_</a>, and <a class="el" href="classdyno_1_1DynoParams.html#a5a0fc1061523549aa91c4b1a3c8ba2a5">pipeline_params_</a>.</p>
+<p class="reference">References <a class="el" href="classdyno_1_1DynoParams.html#a9f35a51c05ba39f025ee648083a7c10c">backend_type</a>, <a class="el" href="classdyno_1_1DynoParams.html#aac0013979a7fa1b36e94750f956a2847">camera_params_</a>, <a class="el" href="classdyno_1_1DynoParams.html#ac6be57b51ea040afbb688410ce3751f3">frontend_params_</a>, <a class="el" href="classdyno_1_1DynoParams.html#ad8d3adb66a3e4a915f698eb1f1de5d66">imu_params_</a>, and <a class="el" href="classdyno_1_1DynoParams.html#a5a0fc1061523549aa91c4b1a3c8ba2a5">pipeline_params_</a>.</p>
 
 </div>
 </div>
@@ -249,6 +257,36 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a2094ff78794ca2147c07529a68dd8e9c" name="a2094ff78794ca2147c07529a68dd8e9c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2094ff78794ca2147c07529a68dd8e9c">&#9670;&#160;</a></span>incrementalBackend()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool dyno::DynoParams::incrementalBackend </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="PipelineParams_8cc_source.html#l00088">88</a> of file <a class="el" href="PipelineParams_8cc_source.html">PipelineParams.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   88</span>                                          {</div>
+<div class="line"><span class="lineno">   89</span>  <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1DynoParams.html#a9f35a51c05ba39f025ee648083a7c10c">backend_type</a> == <a class="code hl_enumvalue" href="namespacedyno.html#ab2bea061e9a47afecd7db1c56c1f1f17a96f5d9afed7f51cffe8673b2beb58e5f">BackendType::PARALLEL_HYBRID</a> ||</div>
+<div class="line"><span class="lineno">   90</span>         <a class="code hl_variable" href="classdyno_1_1DynoParams.html#aba77d9978b33088e8a8c0433232b7e31">backend_params_</a>.<a class="code hl_variable" href="structdyno_1_1BackendParams.html#a7e40628fdcdc344bf57dea5cc58aa3af">optimization_mode</a> ==</div>
+<div class="line"><span class="lineno">   91</span>             <a class="code hl_enumvalue" href="namespacedyno.html#ad38da29a9b3ebc6451cb84941f9132b9a0a930e5400dc31b33dd5272cce8fc4da">RegularOptimizationType::INCREMENTAL</a>;</div>
+<div class="line"><span class="lineno">   92</span>}</div>
+<div class="ttc" id="aclassdyno_1_1DynoParams_html_aba77d9978b33088e8a8c0433232b7e31"><div class="ttname"><a href="classdyno_1_1DynoParams.html#aba77d9978b33088e8a8c0433232b7e31">dyno::DynoParams::backend_params_</a></div><div class="ttdeci">BackendParams backend_params_</div><div class="ttdef"><b>Definition:</b> <a href="PipelineParams_8hpp_source.html#l00115">PipelineParams.hpp:115</a></div></div>
+<div class="ttc" id="anamespacedyno_html_ab2bea061e9a47afecd7db1c56c1f1f17a96f5d9afed7f51cffe8673b2beb58e5f"><div class="ttname"><a href="namespacedyno.html#ab2bea061e9a47afecd7db1c56c1f1f17a96f5d9afed7f51cffe8673b2beb58e5f">dyno::PARALLEL_HYBRID</a></div><div class="ttdeci">@ PARALLEL_HYBRID</div><div class="ttdef"><b>Definition:</b> <a href="BackendDefinitions_8hpp_source.html#l00060">BackendDefinitions.hpp:60</a></div></div>
+<div class="ttc" id="anamespacedyno_html_ad38da29a9b3ebc6451cb84941f9132b9a0a930e5400dc31b33dd5272cce8fc4da"><div class="ttname"><a href="namespacedyno.html#ad38da29a9b3ebc6451cb84941f9132b9a0a930e5400dc31b33dd5272cce8fc4da">dyno::INCREMENTAL</a></div><div class="ttdeci">@ INCREMENTAL</div><div class="ttdef"><b>Definition:</b> <a href="BackendParams_8hpp_source.html#l00075">BackendParams.hpp:74</a></div></div>
+<div class="ttc" id="astructdyno_1_1BackendParams_html_a7e40628fdcdc344bf57dea5cc58aa3af"><div class="ttname"><a href="structdyno_1_1BackendParams.html#a7e40628fdcdc344bf57dea5cc58aa3af">dyno::BackendParams::optimization_mode</a></div><div class="ttdeci">RegularOptimizationType optimization_mode</div><div class="ttdef"><b>Definition:</b> <a href="BackendParams_8hpp_source.html#l00127">BackendParams.hpp:127</a></div></div>
+</div><!-- fragment -->
+<p class="reference">References <a class="el" href="classdyno_1_1DynoParams.html#aba77d9978b33088e8a8c0433232b7e31">backend_params_</a>, <a class="el" href="classdyno_1_1DynoParams.html#a9f35a51c05ba39f025ee648083a7c10c">backend_type</a>, <a class="el" href="namespacedyno.html#ad38da29a9b3ebc6451cb84941f9132b9a0a930e5400dc31b33dd5272cce8fc4da">dyno::INCREMENTAL</a>, <a class="el" href="structdyno_1_1BackendParams.html#a7e40628fdcdc344bf57dea5cc58aa3af">dyno::BackendParams::optimization_mode</a>, and <a class="el" href="namespacedyno.html#ab2bea061e9a47afecd7db1c56c1f1f17a96f5d9afed7f51cffe8673b2beb58e5f">dyno::PARALLEL_HYBRID</a>.</p>
+
+</div>
+</div>
 <a id="ab02ca24dcf94affa7705e9cdc63bd2d4" name="ab02ca24dcf94affa7705e9cdc63bd2d4"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab02ca24dcf94affa7705e9cdc63bd2d4">&#9670;&#160;</a></span>parallelRun()</h2>
 
@@ -278,16 +316,16 @@ Public Attributes</h2></td></tr>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="structdyno_1_1DynoParams_1_1PipelineParams.html#aa4f4ad6003e26f2d118bfcbfbd56df5d">dyno::DynoParams::PipelineParams::parallel_run</a>, and <a class="el" href="classdyno_1_1DynoParams.html#a5a0fc1061523549aa91c4b1a3c8ba2a5">pipeline_params_</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1DynoPipelineManager.html#a283e891aa3d4ca8d2d671eb1e3d5d514">dyno::DynoPipelineManager::DynoPipelineManager()</a>, <a class="el" href="classdyno_1_1DynoPipelineManager.html#abe710e5db047895f61547936feb16637">dyno::DynoPipelineManager::launchSpinners()</a>, <a class="el" href="classdyno_1_1DynoPipelineManager.html#a7253b9241873476c79d38c607c95dea7">dyno::DynoPipelineManager::loadPipelines()</a>, and <a class="el" href="classdyno_1_1DynoPipelineManager.html#a543b0e2db2996861c2872609fea448eb">dyno::DynoPipelineManager::spin()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1DynoPipelineManager.html#a1e980339b4d308ab83d46ede524c3a46">dyno::DynoPipelineManager::DynoPipelineManager()</a>, <a class="el" href="classdyno_1_1DynoPipelineManager.html#abe710e5db047895f61547936feb16637">dyno::DynoPipelineManager::launchSpinners()</a>, <a class="el" href="classdyno_1_1DynoPipelineManager.html#aa181c6ed1e1b1c416eccca4e5bce8e29">dyno::DynoPipelineManager::loadPipelines()</a>, and <a class="el" href="classdyno_1_1DynoPipelineManager.html#a543b0e2db2996861c2872609fea448eb">dyno::DynoPipelineManager::spin()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1DynoParams_ab02ca24dcf94affa7705e9cdc63bd2d4_icgraph.png" border="0" usemap="#aclassdyno_1_1DynoParams_ab02ca24dcf94affa7705e9cdc63bd2d4_icgraph" alt=""/></div>
 <map name="aclassdyno_1_1DynoParams_ab02ca24dcf94affa7705e9cdc63bd2d4_icgraph" id="aclassdyno_1_1DynoParams_ab02ca24dcf94affa7705e9cdc63bd2d4_icgraph">
 <area shape="rect" title=" " alt="" coords="512,67,739,93"/>
-<area shape="rect" href="classdyno_1_1DynoPipelineManager.html#a283e891aa3d4ca8d2d671eb1e3d5d514" title=" " alt="" coords="5,28,211,68"/>
+<area shape="rect" href="classdyno_1_1DynoPipelineManager.html#a1e980339b4d308ab83d46ede524c3a46" title=" " alt="" coords="5,28,211,68"/>
 <area shape="rect" href="classdyno_1_1DynoPipelineManager.html#abe710e5db047895f61547936feb16637" title=" " alt="" coords="259,28,464,68"/>
-<area shape="rect" href="classdyno_1_1DynoPipelineManager.html#a7253b9241873476c79d38c607c95dea7" title=" " alt="" coords="259,92,464,132"/>
+<area shape="rect" href="classdyno_1_1DynoPipelineManager.html#aa181c6ed1e1b1c416eccca4e5bce8e29" title=" " alt="" coords="259,92,464,132"/>
 <area shape="rect" href="classdyno_1_1DynoPipelineManager.html#a543b0e2db2996861c2872609fea448eb" title="Spins the whole pipeline by spinning the data provider. If in sequential mode, it will return for eac..." alt="" coords="259,156,464,196"/>
 </map>
 </div>
@@ -325,14 +363,14 @@ Here is the caller graph for this function:</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1DynoParams.html#a5a0fc1061523549aa91c4b1a3c8ba2a5">pipeline_params_</a>, and <a class="el" href="structdyno_1_1DynoParams_1_1PipelineParams.html#a7464e5defb74a15b3fcd0b2c1af88c0a">dyno::DynoParams::PipelineParams::prefer_data_provider_camera_params</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1DynoPipelineManager.html#a283e891aa3d4ca8d2d671eb1e3d5d514">dyno::DynoPipelineManager::DynoPipelineManager()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1DynoPipelineManager.html#a1e980339b4d308ab83d46ede524c3a46">dyno::DynoPipelineManager::DynoPipelineManager()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1DynoParams_a55143b60fd1418289b54025203aece83_icgraph.png" border="0" usemap="#aclassdyno_1_1DynoParams_a55143b60fd1418289b54025203aece83_icgraph" alt=""/></div>
 <map name="aclassdyno_1_1DynoParams_a55143b60fd1418289b54025203aece83_icgraph" id="aclassdyno_1_1DynoParams_a55143b60fd1418289b54025203aece83_icgraph">
 <area shape="rect" title=" " alt="" coords="259,5,465,45"/>
-<area shape="rect" href="classdyno_1_1DynoPipelineManager.html#a283e891aa3d4ca8d2d671eb1e3d5d514" title=" " alt="" coords="5,5,211,45"/>
+<area shape="rect" href="classdyno_1_1DynoPipelineManager.html#a1e980339b4d308ab83d46ede524c3a46" title=" " alt="" coords="5,5,211,45"/>
 </map>
 </div>
 
@@ -369,14 +407,14 @@ Here is the caller graph for this function:</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1DynoParams.html#a5a0fc1061523549aa91c4b1a3c8ba2a5">pipeline_params_</a>, and <a class="el" href="structdyno_1_1DynoParams_1_1PipelineParams.html#a3a1cdfe820653df9edc1b506c7f93a67">dyno::DynoParams::PipelineParams::prefer_data_provider_imu_params</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1DynoPipelineManager.html#a283e891aa3d4ca8d2d671eb1e3d5d514">dyno::DynoPipelineManager::DynoPipelineManager()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1DynoPipelineManager.html#a1e980339b4d308ab83d46ede524c3a46">dyno::DynoPipelineManager::DynoPipelineManager()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1DynoParams_ad225ed5a244cee216e2d63db4703856b_icgraph.png" border="0" usemap="#aclassdyno_1_1DynoParams_ad225ed5a244cee216e2d63db4703856b_icgraph" alt=""/></div>
 <map name="aclassdyno_1_1DynoParams_ad225ed5a244cee216e2d63db4703856b_icgraph" id="aclassdyno_1_1DynoParams_ad225ed5a244cee216e2d63db4703856b_icgraph">
 <area shape="rect" title=" " alt="" coords="259,5,449,45"/>
-<area shape="rect" href="classdyno_1_1DynoPipelineManager.html#a283e891aa3d4ca8d2d671eb1e3d5d514" title=" " alt="" coords="5,5,211,45"/>
+<area shape="rect" href="classdyno_1_1DynoPipelineManager.html#a1e980339b4d308ab83d46ede524c3a46" title=" " alt="" coords="5,5,211,45"/>
 </map>
 </div>
 
@@ -398,20 +436,20 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PipelineParams_8cc_source.html#l00069">69</a> of file <a class="el" href="PipelineParams_8cc_source.html">PipelineParams.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   69</span>                                                            {</div>
-<div class="line"><span class="lineno">   70</span>  LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Frontend Params: &quot;</span> &lt;&lt; <a class="code hl_function" href="namespaceconfig.html#ac642f97a7df2d80888e2896bd46b3a9b">config::toString</a>(<a class="code hl_variable" href="classdyno_1_1DynoParams.html#ac6be57b51ea040afbb688410ce3751f3">frontend_params_</a>);</div>
-<div class="line"><span class="lineno">   71</span>  LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Pipeline Params: &quot;</span> &lt;&lt; <a class="code hl_function" href="namespaceconfig.html#ac642f97a7df2d80888e2896bd46b3a9b">config::toString</a>(<a class="code hl_variable" href="classdyno_1_1DynoParams.html#a5a0fc1061523549aa91c4b1a3c8ba2a5">pipeline_params_</a>);</div>
-<div class="line"><span class="lineno">   72</span>  LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Camera Params: &quot;</span> &lt;&lt; <a class="code hl_function" href="namespaceconfig.html#ac642f97a7df2d80888e2896bd46b3a9b">config::toString</a>(<a class="code hl_variable" href="classdyno_1_1DynoParams.html#aac0013979a7fa1b36e94750f956a2847">camera_params_</a>);</div>
-<div class="line"><span class="lineno">   73</span>  LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;IMU Params: &quot;</span> &lt;&lt; <a class="code hl_function" href="namespaceconfig.html#ac642f97a7df2d80888e2896bd46b3a9b">config::toString</a>(<a class="code hl_variable" href="classdyno_1_1DynoParams.html#ad8d3adb66a3e4a915f698eb1f1de5d66">imu_params_</a>);</div>
-<div class="line"><span class="lineno">   74</span> </div>
-<div class="line"><span class="lineno">   75</span>  <span class="comment">// TODO: currently cannot print camera params becuase we use intermediate</span></div>
-<div class="line"><span class="lineno">   76</span>  <span class="comment">// variables in the loading process!!</span></div>
-<div class="line"><span class="lineno">   77</span>  <span class="comment">//  LOG(INFO) &lt;&lt; &quot;Camera Params: &quot; &lt;&lt; config::toString(camera_params_);</span></div>
-<div class="line"><span class="lineno">   78</span> </div>
-<div class="line"><span class="lineno">   79</span>  <span class="keywordflow">if</span> (print_glog_params) google::ShowUsageWithFlags(<span class="stringliteral">&quot;&quot;</span>);</div>
-<div class="line"><span class="lineno">   80</span>}</div>
-<div class="ttc" id="anamespaceconfig_html_ac642f97a7df2d80888e2896bd46b3a9b"><div class="ttname"><a href="namespaceconfig.html#ac642f97a7df2d80888e2896bd46b3a9b">config::toString</a></div><div class="ttdeci">std::string toString(const dyno::CameraParams &amp;config, bool)</div><div class="ttdef"><b>Definition:</b> <a href="CameraParams_8cc_source.html#l00358">CameraParams.cc:358</a></div></div>
+<p class="definition">Definition at line <a class="el" href="PipelineParams_8cc_source.html#l00075">75</a> of file <a class="el" href="PipelineParams_8cc_source.html">PipelineParams.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   75</span>                                                            {</div>
+<div class="line"><span class="lineno">   76</span>  LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Frontend Params: &quot;</span> &lt;&lt; <a class="code hl_function" href="namespaceconfig.html#ac642f97a7df2d80888e2896bd46b3a9b">config::toString</a>(<a class="code hl_variable" href="classdyno_1_1DynoParams.html#ac6be57b51ea040afbb688410ce3751f3">frontend_params_</a>);</div>
+<div class="line"><span class="lineno">   77</span>  LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Pipeline Params: &quot;</span> &lt;&lt; <a class="code hl_function" href="namespaceconfig.html#ac642f97a7df2d80888e2896bd46b3a9b">config::toString</a>(<a class="code hl_variable" href="classdyno_1_1DynoParams.html#a5a0fc1061523549aa91c4b1a3c8ba2a5">pipeline_params_</a>);</div>
+<div class="line"><span class="lineno">   78</span>  LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Camera Params: &quot;</span> &lt;&lt; <a class="code hl_function" href="namespaceconfig.html#ac642f97a7df2d80888e2896bd46b3a9b">config::toString</a>(<a class="code hl_variable" href="classdyno_1_1DynoParams.html#aac0013979a7fa1b36e94750f956a2847">camera_params_</a>);</div>
+<div class="line"><span class="lineno">   79</span>  LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;IMU Params: &quot;</span> &lt;&lt; <a class="code hl_function" href="namespaceconfig.html#ac642f97a7df2d80888e2896bd46b3a9b">config::toString</a>(<a class="code hl_variable" href="classdyno_1_1DynoParams.html#ad8d3adb66a3e4a915f698eb1f1de5d66">imu_params_</a>);</div>
+<div class="line"><span class="lineno">   80</span> </div>
+<div class="line"><span class="lineno">   81</span>  <span class="comment">// TODO: currently cannot print camera params becuase we use intermediate</span></div>
+<div class="line"><span class="lineno">   82</span>  <span class="comment">// variables in the loading process!!</span></div>
+<div class="line"><span class="lineno">   83</span>  <span class="comment">//  LOG(INFO) &lt;&lt; &quot;Camera Params: &quot; &lt;&lt; config::toString(camera_params_);</span></div>
+<div class="line"><span class="lineno">   84</span> </div>
+<div class="line"><span class="lineno">   85</span>  <span class="keywordflow">if</span> (print_glog_params) google::ShowUsageWithFlags(<span class="stringliteral">&quot;&quot;</span>);</div>
+<div class="line"><span class="lineno">   86</span>}</div>
+<div class="ttc" id="anamespaceconfig_html_ac642f97a7df2d80888e2896bd46b3a9b"><div class="ttname"><a href="namespaceconfig.html#ac642f97a7df2d80888e2896bd46b3a9b">config::toString</a></div><div class="ttdeci">std::string toString(const dyno::CameraParams &amp;config, bool)</div><div class="ttdef"><b>Definition:</b> <a href="CameraParams_8cc_source.html#l00374">CameraParams.cc:374</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1DynoParams.html#aac0013979a7fa1b36e94750f956a2847">camera_params_</a>, <a class="el" href="classdyno_1_1DynoParams.html#ac6be57b51ea040afbb688410ce3751f3">frontend_params_</a>, <a class="el" href="classdyno_1_1DynoParams.html#ad8d3adb66a3e4a915f698eb1f1de5d66">imu_params_</a>, <a class="el" href="classdyno_1_1DynoParams.html#a5a0fc1061523549aa91c4b1a3c8ba2a5">pipeline_params_</a>, and <a class="el" href="namespaceconfig.html#ac642f97a7df2d80888e2896bd46b3a9b">config::toString()</a>.</p>
 
@@ -450,9 +488,27 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PipelineParams_8hpp_source.html#l00113">113</a> of file <a class="el" href="PipelineParams_8hpp_source.html">PipelineParams.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="PipelineParams_8hpp_source.html#l00115">115</a> of file <a class="el" href="PipelineParams_8hpp_source.html">PipelineParams.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1DynoPipelineManager.html#a7253b9241873476c79d38c607c95dea7">dyno::DynoPipelineManager::loadPipelines()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1RGBDInstanceFrontendModule.html#ab40113f18671c1f496269e8c7a18267a">dyno::RGBDInstanceFrontendModule::fillOutputPacketWithTracks()</a>, <a class="el" href="classdyno_1_1DynoParams.html#a2094ff78794ca2147c07529a68dd8e9c">incrementalBackend()</a>, and <a class="el" href="classdyno_1_1DynoPipelineManager.html#aa181c6ed1e1b1c416eccca4e5bce8e29">dyno::DynoPipelineManager::loadPipelines()</a>.</p>
+
+</div>
+</div>
+<a id="a9f35a51c05ba39f025ee648083a7c10c" name="a9f35a51c05ba39f025ee648083a7c10c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9f35a51c05ba39f025ee648083a7c10c">&#9670;&#160;</a></span>backend_type</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespacedyno.html#ab2bea061e9a47afecd7db1c56c1f1f17">BackendType</a> dyno::DynoParams::backend_type = <a class="el" href="namespacedyno.html#ab2bea061e9a47afecd7db1c56c1f1f17a96f5d9afed7f51cffe8673b2beb58e5f">BackendType::PARALLEL_HYBRID</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="PipelineParams_8hpp_source.html#l00120">120</a> of file <a class="el" href="PipelineParams_8hpp_source.html">PipelineParams.hpp</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1DynoParams.html#af7435da3e90437ebf4d079fe5e78999f">DynoParams()</a>, and <a class="el" href="classdyno_1_1DynoParams.html#a2094ff78794ca2147c07529a68dd8e9c">incrementalBackend()</a>.</p>
 
 </div>
 </div>
@@ -468,9 +524,9 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PipelineParams_8hpp_source.html#l00114">114</a> of file <a class="el" href="PipelineParams_8hpp_source.html">PipelineParams.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="PipelineParams_8hpp_source.html#l00116">116</a> of file <a class="el" href="PipelineParams_8hpp_source.html">PipelineParams.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1DynoParams.html#af7435da3e90437ebf4d079fe5e78999f">DynoParams()</a>, <a class="el" href="classdyno_1_1DynoPipelineManager.html#a283e891aa3d4ca8d2d671eb1e3d5d514">dyno::DynoPipelineManager::DynoPipelineManager()</a>, and <a class="el" href="classdyno_1_1DynoParams.html#a5909da49f1fbe102cef6217a344b8e75">printAllParams()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1DynoParams.html#af7435da3e90437ebf4d079fe5e78999f">DynoParams()</a>, <a class="el" href="classdyno_1_1DynoPipelineManager.html#a1e980339b4d308ab83d46ede524c3a46">dyno::DynoPipelineManager::DynoPipelineManager()</a>, and <a class="el" href="classdyno_1_1DynoParams.html#a5909da49f1fbe102cef6217a344b8e75">printAllParams()</a>.</p>
 
 </div>
 </div>
@@ -486,9 +542,9 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PipelineParams_8hpp_source.html#l00112">112</a> of file <a class="el" href="PipelineParams_8hpp_source.html">PipelineParams.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="PipelineParams_8hpp_source.html#l00114">114</a> of file <a class="el" href="PipelineParams_8hpp_source.html">PipelineParams.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1DynoParams.html#af7435da3e90437ebf4d079fe5e78999f">DynoParams()</a>, <a class="el" href="classdyno_1_1DynoPipelineManager.html#a283e891aa3d4ca8d2d671eb1e3d5d514">dyno::DynoPipelineManager::DynoPipelineManager()</a>, <a class="el" href="classdyno_1_1DynoPipelineManager.html#a7253b9241873476c79d38c607c95dea7">dyno::DynoPipelineManager::loadPipelines()</a>, and <a class="el" href="classdyno_1_1DynoParams.html#a5909da49f1fbe102cef6217a344b8e75">printAllParams()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1DynoParams.html#af7435da3e90437ebf4d079fe5e78999f">DynoParams()</a>, <a class="el" href="classdyno_1_1DynoPipelineManager.html#a1e980339b4d308ab83d46ede524c3a46">dyno::DynoPipelineManager::DynoPipelineManager()</a>, <a class="el" href="classdyno_1_1FrontendModule.html#afd4abe37e0fcab1af5d4fe76b2cd86b5">dyno::FrontendModule::getFrontendParams()</a>, and <a class="el" href="classdyno_1_1DynoParams.html#a5909da49f1fbe102cef6217a344b8e75">printAllParams()</a>.</p>
 
 </div>
 </div>
@@ -504,9 +560,9 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PipelineParams_8hpp_source.html#l00117">117</a> of file <a class="el" href="PipelineParams_8hpp_source.html">PipelineParams.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="PipelineParams_8hpp_source.html#l00119">119</a> of file <a class="el" href="PipelineParams_8hpp_source.html">PipelineParams.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1DynoPipelineManager.html#a7253b9241873476c79d38c607c95dea7">dyno::DynoPipelineManager::loadPipelines()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1DynoPipelineManager.html#aa181c6ed1e1b1c416eccca4e5bce8e29">dyno::DynoPipelineManager::loadPipelines()</a>.</p>
 
 </div>
 </div>
@@ -522,9 +578,9 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PipelineParams_8hpp_source.html#l00115">115</a> of file <a class="el" href="PipelineParams_8hpp_source.html">PipelineParams.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="PipelineParams_8hpp_source.html#l00117">117</a> of file <a class="el" href="PipelineParams_8hpp_source.html">PipelineParams.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1DynoParams.html#af7435da3e90437ebf4d079fe5e78999f">DynoParams()</a>, <a class="el" href="classdyno_1_1DynoPipelineManager.html#a283e891aa3d4ca8d2d671eb1e3d5d514">dyno::DynoPipelineManager::DynoPipelineManager()</a>, and <a class="el" href="classdyno_1_1DynoParams.html#a5909da49f1fbe102cef6217a344b8e75">printAllParams()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1DynoParams.html#af7435da3e90437ebf4d079fe5e78999f">DynoParams()</a>, <a class="el" href="classdyno_1_1DynoPipelineManager.html#a1e980339b4d308ab83d46ede524c3a46">dyno::DynoPipelineManager::DynoPipelineManager()</a>, and <a class="el" href="classdyno_1_1DynoParams.html#a5909da49f1fbe102cef6217a344b8e75">printAllParams()</a>.</p>
 
 </div>
 </div>
@@ -540,7 +596,7 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PipelineParams_8hpp_source.html#l00111">111</a> of file <a class="el" href="PipelineParams_8hpp_source.html">PipelineParams.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="PipelineParams_8hpp_source.html#l00113">113</a> of file <a class="el" href="PipelineParams_8hpp_source.html">PipelineParams.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1DynoParams.html#ad9dd4e78a7ae542c96cf2ed7f388af2b">dataProviderType()</a>, <a class="el" href="classdyno_1_1DynoParams.html#af7435da3e90437ebf4d079fe5e78999f">DynoParams()</a>, <a class="el" href="classdyno_1_1DynoParams.html#ab02ca24dcf94affa7705e9cdc63bd2d4">parallelRun()</a>, <a class="el" href="classdyno_1_1DynoParams.html#a55143b60fd1418289b54025203aece83">preferDataProviderCameraParams()</a>, <a class="el" href="classdyno_1_1DynoParams.html#ad225ed5a244cee216e2d63db4703856b">preferDataProviderImuParams()</a>, and <a class="el" href="classdyno_1_1DynoParams.html#a5909da49f1fbe102cef6217a344b8e75">printAllParams()</a>.</p>
 

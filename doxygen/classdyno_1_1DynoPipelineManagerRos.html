@@ -146,7 +146,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="PipelineRos_8hpp_source.html#l00093">93</a> of file <a class="el" href="PipelineRos_8hpp_source.html">PipelineRos.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="PipelineRos_8hpp_source.html#l00091">91</a> of file <a class="el" href="PipelineRos_8hpp_source.html">PipelineRos.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="ab245d753bf63481b15cd5063015064d9" name="ab245d753bf63481b15cd5063015064d9"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab245d753bf63481b15cd5063015064d9">&#9670;&#160;</a></span>DynoPipelineManagerRos()</h2>
@@ -172,9 +172,9 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PipelineRos_8cc_source.html#l00122">122</a> of file <a class="el" href="PipelineRos_8cc_source.html">PipelineRos.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  124</span>    : <a class="code hl_function" href="classdyno_1_1DynoNode.html#ab3963662760ee1fde2a603d4fec9804e">DynoNode</a>(<span class="stringliteral">&quot;dynosam&quot;</span>, options) {}</div>
-<div class="ttc" id="aclassdyno_1_1DynoNode_html_ab3963662760ee1fde2a603d4fec9804e"><div class="ttname"><a href="classdyno_1_1DynoNode.html#ab3963662760ee1fde2a603d4fec9804e">dyno::DynoNode::DynoNode</a></div><div class="ttdeci">DynoNode(const std::string &amp;node_name, const rclcpp::NodeOptions &amp;options=rclcpp::NodeOptions())</div><div class="ttdef"><b>Definition:</b> <a href="PipelineRos_8cc_source.html#l00052">PipelineRos.cc:52</a></div></div>
+<p class="definition">Definition at line <a class="el" href="PipelineRos_8cc_source.html#l00124">124</a> of file <a class="el" href="PipelineRos_8cc_source.html">PipelineRos.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  126</span>    : <a class="code hl_function" href="classdyno_1_1DynoNode.html#ab3963662760ee1fde2a603d4fec9804e">DynoNode</a>(<span class="stringliteral">&quot;dynosam&quot;</span>, options) {}</div>
+<div class="ttc" id="aclassdyno_1_1DynoNode_html_ab3963662760ee1fde2a603d4fec9804e"><div class="ttname"><a href="classdyno_1_1DynoNode.html#ab3963662760ee1fde2a603d4fec9804e">dyno::DynoNode::DynoNode</a></div><div class="ttdeci">DynoNode(const std::string &amp;node_name, const rclcpp::NodeOptions &amp;options=rclcpp::NodeOptions())</div><div class="ttdef"><b>Definition:</b> <a href="PipelineRos_8cc_source.html#l00054">PipelineRos.cc:54</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -219,61 +219,73 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PipelineRos_8cc_source.html#l00126">126</a> of file <a class="el" href="PipelineRos_8cc_source.html">PipelineRos.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  126</span>                                               {</div>
-<div class="line"><span class="lineno">  127</span>  RCLCPP_INFO_STREAM(this-&gt;get_logger(), <span class="stringliteral">&quot;Starting DynoPipelineManagerRos&quot;</span>);</div>
-<div class="line"><span class="lineno">  128</span> </div>
-<div class="line"><span class="lineno">  129</span>  <span class="keyword">auto</span> params = <a class="code hl_function" href="classdyno_1_1DynoNode.html#a191b53eb69b5225a6395b9748979b013">getDynoParams</a>();</div>
+<p class="definition">Definition at line <a class="el" href="PipelineRos_8cc_source.html#l00128">128</a> of file <a class="el" href="PipelineRos_8cc_source.html">PipelineRos.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  128</span>                                               {</div>
+<div class="line"><span class="lineno">  129</span>  RCLCPP_INFO_STREAM(this-&gt;get_logger(), <span class="stringliteral">&quot;Starting DynoPipelineManagerRos&quot;</span>);</div>
 <div class="line"><span class="lineno">  130</span> </div>
-<div class="line"><span class="lineno">  131</span>  <span class="comment">// setup display params</span></div>
-<div class="line"><span class="lineno">  132</span>  DisplayParams display_params;</div>
-<div class="line"><span class="lineno">  133</span>  display_params.camera_frame_id =</div>
-<div class="line"><span class="lineno">  134</span>      ParameterConstructor(<span class="keyword">this</span>, <span class="stringliteral">&quot;camera_frame_id&quot;</span>,</div>
-<div class="line"><span class="lineno">  135</span>                           display_params.camera_frame_id)</div>
-<div class="line"><span class="lineno">  136</span>          .description(</div>
-<div class="line"><span class="lineno">  137</span>              <span class="stringliteral">&quot;ROS frame id for the camera (ie. the measured odometry)&quot;</span>)</div>
-<div class="line"><span class="lineno">  138</span>          .finish()</div>
-<div class="line"><span class="lineno">  139</span>          .get&lt;std::string&gt;();</div>
-<div class="line"><span class="lineno">  140</span>  display_params.world_frame_id =</div>
-<div class="line"><span class="lineno">  141</span>      ParameterConstructor(<span class="keyword">this</span>, <span class="stringliteral">&quot;world_frame_id&quot;</span>,</div>
-<div class="line"><span class="lineno">  142</span>                           display_params.world_frame_id)</div>
-<div class="line"><span class="lineno">  143</span>          .description(<span class="stringliteral">&quot;ROS frame id for the static workd frame (ie. odometry)&quot;</span>)</div>
-<div class="line"><span class="lineno">  144</span>          .finish()</div>
-<div class="line"><span class="lineno">  145</span>          .get&lt;std::string&gt;();</div>
-<div class="line"><span class="lineno">  146</span> </div>
-<div class="line"><span class="lineno">  147</span>  <span class="keyword">auto</span> frontend_display = std::make_shared&lt;dyno::FrontendDisplayRos&gt;(</div>
-<div class="line"><span class="lineno">  148</span>      display_params, this-&gt;create_sub_node(<span class="stringliteral">&quot;frontend&quot;</span>));</div>
-<div class="line"><span class="lineno">  149</span>  <span class="keyword">auto</span> backend_display = std::make_shared&lt;dyno::BackendDisplayRos&gt;(</div>
-<div class="line"><span class="lineno">  150</span>      display_params, this-&gt;create_sub_node(<span class="stringliteral">&quot;backend&quot;</span>));</div>
-<div class="line"><span class="lineno">  151</span> </div>
-<div class="line"><span class="lineno">  152</span>  ExternalHooks::Ptr hooks = std::make_shared&lt;ExternalHooks&gt;();</div>
-<div class="line"><span class="lineno">  153</span>  <span class="comment">// if online then we are using OnlineDataProviderRos, which should collect the</span></div>
-<div class="line"><span class="lineno">  154</span>  <span class="comment">// timestamp from ROS anyway. Otherwise, the timestamp comes from the dynosam</span></div>
-<div class="line"><span class="lineno">  155</span>  <span class="comment">// DataLoaders and so we need to artifially tell the ROS network what the time</span></div>
-<div class="line"><span class="lineno">  156</span>  <span class="comment">// is</span></div>
-<div class="line"><span class="lineno">  157</span>  <span class="keywordflow">if</span> (!<a class="code hl_variable" href="classdyno_1_1DynoNode.html#a0d05c0c5f364f9de7236fe685dbd3197">is_online_</a>) {</div>
-<div class="line"><span class="lineno">  158</span>    RCLCPP_INFO_STREAM(this-&gt;get_logger(),</div>
-<div class="line"><span class="lineno">  159</span>                       <span class="stringliteral">&quot;Update time external hook created. This will publish &quot;</span></div>
-<div class="line"><span class="lineno">  160</span>                       <span class="stringliteral">&quot;internal dynosam timestamp&#39;s to /clock!&quot;</span>);</div>
-<div class="line"><span class="lineno">  161</span>    rclcpp::Publisher&lt;rosgraph_msgs::msg::Clock&gt;::SharedPtr clock_pub =</div>
-<div class="line"><span class="lineno">  162</span>        this-&gt;create_publisher&lt;rosgraph_msgs::msg::Clock&gt;(<span class="stringliteral">&quot;/clock&quot;</span>, 10);</div>
-<div class="line"><span class="lineno">  163</span>    hooks-&gt;update_time = [clock_pub](<a class="code hl_typedef" href="namespacedyno.html#a7fda67c0575c4b7a8210dcc8ae227370">Timestamp</a> timestamp) -&gt; <span class="keywordtype">void</span> {</div>
-<div class="line"><span class="lineno">  164</span>      <span class="keyword">auto</span> msg = rosgraph_msgs::msg::Clock();</div>
-<div class="line"><span class="lineno">  165</span>      msg.clock = <a class="code hl_function" href="namespacedyno_1_1utils.html#a81025ee06847cec0fd854eff05362d19">utils::toRosTime</a>(timestamp);</div>
-<div class="line"><span class="lineno">  166</span>      CHECK_NOTNULL(clock_pub)-&gt;publish(msg);</div>
-<div class="line"><span class="lineno">  167</span>    };</div>
-<div class="line"><span class="lineno">  168</span>  }</div>
-<div class="line"><span class="lineno">  169</span> </div>
-<div class="line"><span class="lineno">  170</span>  <span class="keyword">auto</span> data_loader = <a class="code hl_function" href="classdyno_1_1DynoNode.html#ad5ec1dc5c7b6faa13607bed8444e49c6">createDataProvider</a>();</div>
-<div class="line"><span class="lineno">  171</span>  <a class="code hl_variable" href="classdyno_1_1DynoPipelineManagerRos.html#a5b310ade4d543bd6ee929bc0723ce201">pipeline_</a> = std::make_unique&lt;DynoPipelineManager&gt;(</div>
-<div class="line"><span class="lineno">  172</span>      params, data_loader, frontend_display, backend_display, hooks);</div>
-<div class="line"><span class="lineno">  173</span>}</div>
-<div class="ttc" id="aclassdyno_1_1DynoNode_html_a0d05c0c5f364f9de7236fe685dbd3197"><div class="ttname"><a href="classdyno_1_1DynoNode.html#a0d05c0c5f364f9de7236fe685dbd3197">dyno::DynoNode::is_online_</a></div><div class="ttdeci">bool is_online_</div><div class="ttdef"><b>Definition:</b> <a href="PipelineRos_8hpp_source.html#l00074">PipelineRos.hpp:74</a></div></div>
-<div class="ttc" id="aclassdyno_1_1DynoNode_html_a191b53eb69b5225a6395b9748979b013"><div class="ttname"><a href="classdyno_1_1DynoNode.html#a191b53eb69b5225a6395b9748979b013">dyno::DynoNode::getDynoParams</a></div><div class="ttdeci">const DynoParams &amp; getDynoParams()</div><div class="ttdef"><b>Definition:</b> <a href="PipelineRos_8hpp_source.html#l00053">PipelineRos.hpp:53</a></div></div>
-<div class="ttc" id="aclassdyno_1_1DynoNode_html_ad5ec1dc5c7b6faa13607bed8444e49c6"><div class="ttname"><a href="classdyno_1_1DynoNode.html#ad5ec1dc5c7b6faa13607bed8444e49c6">dyno::DynoNode::createDataProvider</a></div><div class="ttdeci">virtual dyno::DataProvider::Ptr createDataProvider()</div><div class="ttdef"><b>Definition:</b> <a href="PipelineRos_8cc_source.html#l00068">PipelineRos.cc:68</a></div></div>
-<div class="ttc" id="aclassdyno_1_1DynoPipelineManagerRos_html_a5b310ade4d543bd6ee929bc0723ce201"><div class="ttname"><a href="classdyno_1_1DynoPipelineManagerRos.html#a5b310ade4d543bd6ee929bc0723ce201">dyno::DynoPipelineManagerRos::pipeline_</a></div><div class="ttdeci">DynoPipelineManager::UniquePtr pipeline_</div><div class="ttdef"><b>Definition:</b> <a href="PipelineRos_8hpp_source.html#l00109">PipelineRos.hpp:109</a></div></div>
-<div class="ttc" id="anamespacedyno_1_1utils_html_a81025ee06847cec0fd854eff05362d19"><div class="ttname"><a href="namespacedyno_1_1utils.html#a81025ee06847cec0fd854eff05362d19">dyno::utils::toRosTime</a></div><div class="ttdeci">rclcpp::Time toRosTime(Timestamp timestamp)</div><div class="ttdoc">Converts Timestamp (in seconds) to ROS time.</div><div class="ttdef"><b>Definition:</b> <a href="RosUtils_8cc_source.html#l00293">RosUtils.cc:293</a></div></div>
-<div class="ttc" id="anamespacedyno_html_a7fda67c0575c4b7a8210dcc8ae227370"><div class="ttname"><a href="namespacedyno.html#a7fda67c0575c4b7a8210dcc8ae227370">dyno::Timestamp</a></div><div class="ttdeci">double Timestamp</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00064">Types.hpp:64</a></div></div>
+<div class="line"><span class="lineno">  131</span>  <span class="keyword">auto</span> params = <a class="code hl_function" href="classdyno_1_1DynoNode.html#a191b53eb69b5225a6395b9748979b013">getDynoParams</a>();</div>
+<div class="line"><span class="lineno">  132</span> </div>
+<div class="line"><span class="lineno">  133</span>  <span class="comment">// setup display params</span></div>
+<div class="line"><span class="lineno">  134</span>  DisplayParams display_params;</div>
+<div class="line"><span class="lineno">  135</span>  display_params.camera_frame_id =</div>
+<div class="line"><span class="lineno">  136</span>      ParameterConstructor(<span class="keyword">this</span>, <span class="stringliteral">&quot;camera_frame_id&quot;</span>,</div>
+<div class="line"><span class="lineno">  137</span>                           display_params.camera_frame_id)</div>
+<div class="line"><span class="lineno">  138</span>          .description(</div>
+<div class="line"><span class="lineno">  139</span>              <span class="stringliteral">&quot;ROS frame id for the camera (ie. the measured odometry)&quot;</span>)</div>
+<div class="line"><span class="lineno">  140</span>          .finish()</div>
+<div class="line"><span class="lineno">  141</span>          .get&lt;std::string&gt;();</div>
+<div class="line"><span class="lineno">  142</span>  display_params.world_frame_id =</div>
+<div class="line"><span class="lineno">  143</span>      ParameterConstructor(<span class="keyword">this</span>, <span class="stringliteral">&quot;world_frame_id&quot;</span>,</div>
+<div class="line"><span class="lineno">  144</span>                           display_params.world_frame_id)</div>
+<div class="line"><span class="lineno">  145</span>          .description(<span class="stringliteral">&quot;ROS frame id for the static workd frame (ie. odometry)&quot;</span>)</div>
+<div class="line"><span class="lineno">  146</span>          .finish()</div>
+<div class="line"><span class="lineno">  147</span>          .get&lt;std::string&gt;();</div>
+<div class="line"><span class="lineno">  148</span> </div>
+<div class="line"><span class="lineno">  149</span>  <span class="keyword">auto</span> frontend_display = std::make_shared&lt;dyno::FrontendDisplayRos&gt;(</div>
+<div class="line"><span class="lineno">  150</span>      display_params, this-&gt;create_sub_node(<span class="stringliteral">&quot;frontend&quot;</span>));</div>
+<div class="line"><span class="lineno">  151</span>  <span class="keyword">auto</span> backend_display = std::make_shared&lt;dyno::BackendDisplayRos&gt;(</div>
+<div class="line"><span class="lineno">  152</span>      display_params, this-&gt;create_sub_node(<span class="stringliteral">&quot;backend&quot;</span>));</div>
+<div class="line"><span class="lineno">  153</span> </div>
+<div class="line"><span class="lineno">  154</span>  ExternalHooks::Ptr hooks = std::make_shared&lt;ExternalHooks&gt;();</div>
+<div class="line"><span class="lineno">  155</span>  <span class="comment">// if online then we are using OnlineDataProviderRos, which should collect the</span></div>
+<div class="line"><span class="lineno">  156</span>  <span class="comment">// timestamp from ROS anyway. Otherwise, the timestamp comes from the dynosam</span></div>
+<div class="line"><span class="lineno">  157</span>  <span class="comment">// DataLoaders and so we need to artifially tell the ROS network what the time</span></div>
+<div class="line"><span class="lineno">  158</span>  <span class="comment">// is</span></div>
+<div class="line"><span class="lineno">  159</span>  <span class="keywordflow">if</span> (!<a class="code hl_variable" href="classdyno_1_1DynoNode.html#a0d05c0c5f364f9de7236fe685dbd3197">is_online_</a>) {</div>
+<div class="line"><span class="lineno">  160</span>    RCLCPP_INFO_STREAM(this-&gt;get_logger(),</div>
+<div class="line"><span class="lineno">  161</span>                       <span class="stringliteral">&quot;Update time external hook created. This will publish &quot;</span></div>
+<div class="line"><span class="lineno">  162</span>                       <span class="stringliteral">&quot;internal dynosam timestamp&#39;s to /clock!&quot;</span>);</div>
+<div class="line"><span class="lineno">  163</span>    rclcpp::Publisher&lt;rosgraph_msgs::msg::Clock&gt;::SharedPtr clock_pub =</div>
+<div class="line"><span class="lineno">  164</span>        this-&gt;create_publisher&lt;rosgraph_msgs::msg::Clock&gt;(<span class="stringliteral">&quot;/clock&quot;</span>, 10);</div>
+<div class="line"><span class="lineno">  165</span>    hooks-&gt;update_time = [clock_pub](<a class="code hl_typedef" href="namespacedyno.html#a7fda67c0575c4b7a8210dcc8ae227370">Timestamp</a> timestamp) -&gt; <span class="keywordtype">void</span> {</div>
+<div class="line"><span class="lineno">  166</span>      <span class="keyword">auto</span> msg = rosgraph_msgs::msg::Clock();</div>
+<div class="line"><span class="lineno">  167</span>      msg.clock = <a class="code hl_function" href="namespacedyno_1_1utils.html#a81025ee06847cec0fd854eff05362d19">utils::toRosTime</a>(timestamp);</div>
+<div class="line"><span class="lineno">  168</span>      CHECK_NOTNULL(clock_pub)-&gt;publish(msg);</div>
+<div class="line"><span class="lineno">  169</span>    };</div>
+<div class="line"><span class="lineno">  170</span>  }</div>
+<div class="line"><span class="lineno">  171</span> </div>
+<div class="line"><span class="lineno">  172</span>  <span class="keyword">using </span>RosBackendFactory = BackendFactory&lt;BackendModulePolicyRos,</div>
+<div class="line"><span class="lineno">  173</span>                                           <a class="code hl_typedef" href="structdyno_1_1BackendModuleTraits.html#a95cefea8c16f4fd8f2a9e0605c3e6c77">RegularBackendModuleTraits::MapType</a>&gt;;</div>
+<div class="line"><span class="lineno">  174</span>  <span class="comment">// for now we just support regular backend ... in fact this design means we</span></div>
+<div class="line"><span class="lineno">  175</span>  <span class="comment">// should depricate any other map...</span></div>
+<div class="line"><span class="lineno">  176</span>  <span class="comment">//   auto factory =</span></div>
+<div class="line"><span class="lineno">  177</span>  <span class="comment">//   DefaultBackendFactory&lt;RegularBackendModuleTraits::MapType&gt;::Create(params.backend_type);</span></div>
+<div class="line"><span class="lineno">  178</span>  <span class="comment">//   auto this_node = this-&gt;shared_from_this();</span></div>
+<div class="line"><span class="lineno">  179</span>  <span class="comment">//   CHECK_NOTNULL(this_node);</span></div>
+<div class="line"><span class="lineno">  180</span>  <span class="keyword">auto</span> factory =</div>
+<div class="line"><span class="lineno">  181</span>      RosBackendFactory::Create(params.backend_type, display_params, <span class="keyword">this</span>);</div>
+<div class="line"><span class="lineno">  182</span> </div>
+<div class="line"><span class="lineno">  183</span>  <span class="keyword">auto</span> data_loader = <a class="code hl_function" href="classdyno_1_1DynoNode.html#ad5ec1dc5c7b6faa13607bed8444e49c6">createDataProvider</a>();</div>
+<div class="line"><span class="lineno">  184</span>  <a class="code hl_variable" href="classdyno_1_1DynoPipelineManagerRos.html#a5b310ade4d543bd6ee929bc0723ce201">pipeline_</a> = std::make_unique&lt;DynoPipelineManager&gt;(</div>
+<div class="line"><span class="lineno">  185</span>      params, data_loader, frontend_display, backend_display, factory, hooks);</div>
+<div class="line"><span class="lineno">  186</span>}</div>
+<div class="ttc" id="aclassdyno_1_1DynoNode_html_a0d05c0c5f364f9de7236fe685dbd3197"><div class="ttname"><a href="classdyno_1_1DynoNode.html#a0d05c0c5f364f9de7236fe685dbd3197">dyno::DynoNode::is_online_</a></div><div class="ttdeci">bool is_online_</div><div class="ttdef"><b>Definition:</b> <a href="PipelineRos_8hpp_source.html#l00072">PipelineRos.hpp:72</a></div></div>
+<div class="ttc" id="aclassdyno_1_1DynoNode_html_a191b53eb69b5225a6395b9748979b013"><div class="ttname"><a href="classdyno_1_1DynoNode.html#a191b53eb69b5225a6395b9748979b013">dyno::DynoNode::getDynoParams</a></div><div class="ttdeci">const DynoParams &amp; getDynoParams()</div><div class="ttdef"><b>Definition:</b> <a href="PipelineRos_8hpp_source.html#l00051">PipelineRos.hpp:51</a></div></div>
+<div class="ttc" id="aclassdyno_1_1DynoNode_html_ad5ec1dc5c7b6faa13607bed8444e49c6"><div class="ttname"><a href="classdyno_1_1DynoNode.html#ad5ec1dc5c7b6faa13607bed8444e49c6">dyno::DynoNode::createDataProvider</a></div><div class="ttdeci">virtual dyno::DataProvider::Ptr createDataProvider()</div><div class="ttdef"><b>Definition:</b> <a href="PipelineRos_8cc_source.html#l00070">PipelineRos.cc:70</a></div></div>
+<div class="ttc" id="aclassdyno_1_1DynoPipelineManagerRos_html_a5b310ade4d543bd6ee929bc0723ce201"><div class="ttname"><a href="classdyno_1_1DynoPipelineManagerRos.html#a5b310ade4d543bd6ee929bc0723ce201">dyno::DynoPipelineManagerRos::pipeline_</a></div><div class="ttdeci">DynoPipelineManager::UniquePtr pipeline_</div><div class="ttdef"><b>Definition:</b> <a href="PipelineRos_8hpp_source.html#l00107">PipelineRos.hpp:107</a></div></div>
+<div class="ttc" id="anamespacedyno_1_1utils_html_a81025ee06847cec0fd854eff05362d19"><div class="ttname"><a href="namespacedyno_1_1utils.html#a81025ee06847cec0fd854eff05362d19">dyno::utils::toRosTime</a></div><div class="ttdeci">rclcpp::Time toRosTime(Timestamp timestamp)</div><div class="ttdoc">Converts Timestamp (in seconds) to ROS time.</div><div class="ttdef"><b>Definition:</b> <a href="RosUtils_8cc_source.html#l00302">RosUtils.cc:302</a></div></div>
+<div class="ttc" id="anamespacedyno_html_a7fda67c0575c4b7a8210dcc8ae227370"><div class="ttname"><a href="namespacedyno.html#a7fda67c0575c4b7a8210dcc8ae227370">dyno::Timestamp</a></div><div class="ttdeci">double Timestamp</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00065">Types.hpp:65</a></div></div>
+<div class="ttc" id="astructdyno_1_1BackendModuleTraits_html_a95cefea8c16f4fd8f2a9e0605c3e6c77"><div class="ttname"><a href="structdyno_1_1BackendModuleTraits.html#a95cefea8c16f4fd8f2a9e0605c3e6c77">dyno::BackendModuleTraits::MapType</a></div><div class="ttdeci">Map&lt; MeasurementType &gt; MapType</div><div class="ttdef"><b>Definition:</b> <a href="BackendModule_8hpp_source.html#l00063">BackendModule.hpp:63</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="structdyno_1_1DisplayParams.html#abb3118ecfcfde5b12fab686f48eca829">dyno::DisplayParams::camera_frame_id</a>, <a class="el" href="classdyno_1_1DynoNode.html#ad5ec1dc5c7b6faa13607bed8444e49c6">dyno::DynoNode::createDataProvider()</a>, <a class="el" href="classdyno_1_1ParameterConstructor.html#a83e32e6b87f9aaa75e6b3564a960e9d9">dyno::ParameterConstructor::description()</a>, <a class="el" href="classdyno_1_1ParameterConstructor.html#a2f64575e1752c6b9be7063c8467b627f">dyno::ParameterConstructor::finish()</a>, <a class="el" href="classdyno_1_1ParameterDetails.html#a68f46befd597e6b463dc0da16bdbd876">dyno::ParameterDetails::get()</a>, <a class="el" href="classdyno_1_1DynoNode.html#a191b53eb69b5225a6395b9748979b013">dyno::DynoNode::getDynoParams()</a>, <a class="el" href="classdyno_1_1DynoNode.html#a0d05c0c5f364f9de7236fe685dbd3197">dyno::DynoNode::is_online_</a>, <a class="el" href="classdyno_1_1DynoPipelineManagerRos.html#a5b310ade4d543bd6ee929bc0723ce201">pipeline_</a>, <a class="el" href="namespacedyno_1_1utils.html#a81025ee06847cec0fd854eff05362d19">dyno::utils::toRosTime()</a>, and <a class="el" href="structdyno_1_1DisplayParams.html#a2847fed65922f575311e2181add1933e">dyno::DisplayParams::world_frame_id</a>.</p>
 <div class="dynheader">
@@ -299,7 +311,7 @@ Here is the call graph for this function:</div>
 <area shape="rect" href="classdyno_1_1ParameterDetails.html#a606d5ea74ad42dc56142759bb2e17b11" title=" " alt="" coords="1555,79,1729,119"/>
 <area shape="rect" href="classdyno_1_1ParameterDetails.html#a5b29e21d596fc2efce6df3477f7c5961" title="Name of the paramter." alt="" coords="1777,108,1952,148"/>
 <area shape="rect" href="classdyno_1_1DynoNode.html#a8fdfaee1dd7e5904d9de47ac6d874d8f" title="Retrieves a std::string param (under param_name) which is expected to be a file path." alt="" coords="809,164,1011,204"/>
-<area shape="rect" href="namespacedyno.html#a163cb16ef980acda5b09d45c3a156e6f" title=" " alt="" coords="1063,164,1263,204"/>
+<area shape="rect" href="namespacedyno_1_1utils.html#a71785ed8de386df1fce95751bf5bec15" title=" " alt="" coords="1064,164,1263,204"/>
 <area shape="rect" href="namespacedyno.html#a8357d6a8de284f4d1fc3d074646b43bb" title=" " alt="" coords="583,558,693,584"/>
 <area shape="rect" href="classdyno_1_1TrackedValueStatus.html#a1741e83bf5442c885da98c9c5bb71f08" title="Returns true if the object lavel is equal to dyno::background_label." alt="" coords="816,672,1004,712"/>
 <area shape="rect" href="classdyno_1_1TrackedValueStatus.html#ae90b3059d173a9354cc6a55a55ef80ac" title="Get object id (j) for this status." alt="" coords="816,494,1004,534"/>
@@ -338,14 +350,14 @@ Here is the call graph for this function:</div>
 
 <p>Reimplemented from <a class="el" href="classdyno_1_1DynoNode.html#a16f5c25df2c7e9c7ede28d659011afa8">dyno::DynoNode</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="PipelineRos_8hpp_source.html#l00101">101</a> of file <a class="el" href="PipelineRos_8hpp_source.html">PipelineRos.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  101</span>                           {</div>
-<div class="line"><span class="lineno">  102</span>    RCLCPP_INFO_STREAM_THROTTLE(this-&gt;get_logger(), *this-&gt;get_clock(), 2000,</div>
-<div class="line"><span class="lineno">  103</span>                                <a class="code hl_function" href="classdyno_1_1DynoNode.html#ad30ea928a45d1e77c3897245ad08d8c1">getStats</a>());</div>
-<div class="line"><span class="lineno">  104</span> </div>
-<div class="line"><span class="lineno">  105</span>    <span class="keywordflow">return</span> CHECK_NOTNULL(<a class="code hl_variable" href="classdyno_1_1DynoPipelineManagerRos.html#a5b310ade4d543bd6ee929bc0723ce201">pipeline_</a>)-&gt;spin();</div>
-<div class="line"><span class="lineno">  106</span>  }</div>
-<div class="ttc" id="aclassdyno_1_1DynoNode_html_ad30ea928a45d1e77c3897245ad08d8c1"><div class="ttname"><a href="classdyno_1_1DynoNode.html#ad30ea928a45d1e77c3897245ad08d8c1">dyno::DynoNode::getStats</a></div><div class="ttdeci">std::string getStats() const</div><div class="ttdef"><b>Definition:</b> <a href="PipelineRos_8hpp_source.html#l00051">PipelineRos.hpp:51</a></div></div>
+<p class="definition">Definition at line <a class="el" href="PipelineRos_8hpp_source.html#l00099">99</a> of file <a class="el" href="PipelineRos_8hpp_source.html">PipelineRos.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   99</span>                           {</div>
+<div class="line"><span class="lineno">  100</span>    RCLCPP_INFO_STREAM_THROTTLE(this-&gt;get_logger(), *this-&gt;get_clock(), 2000,</div>
+<div class="line"><span class="lineno">  101</span>                                <a class="code hl_function" href="classdyno_1_1DynoNode.html#ad30ea928a45d1e77c3897245ad08d8c1">getStats</a>());</div>
+<div class="line"><span class="lineno">  102</span> </div>
+<div class="line"><span class="lineno">  103</span>    <span class="keywordflow">return</span> CHECK_NOTNULL(<a class="code hl_variable" href="classdyno_1_1DynoPipelineManagerRos.html#a5b310ade4d543bd6ee929bc0723ce201">pipeline_</a>)-&gt;spin();</div>
+<div class="line"><span class="lineno">  104</span>  }</div>
+<div class="ttc" id="aclassdyno_1_1DynoNode_html_ad30ea928a45d1e77c3897245ad08d8c1"><div class="ttname"><a href="classdyno_1_1DynoNode.html#ad30ea928a45d1e77c3897245ad08d8c1">dyno::DynoNode::getStats</a></div><div class="ttdeci">std::string getStats() const</div><div class="ttdef"><b>Definition:</b> <a href="PipelineRos_8hpp_source.html#l00049">PipelineRos.hpp:49</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1DynoNode.html#ad30ea928a45d1e77c3897245ad08d8c1">dyno::DynoNode::getStats()</a>, and <a class="el" href="classdyno_1_1DynoPipelineManagerRos.html#a5b310ade4d543bd6ee929bc0723ce201">pipeline_</a>.</p>
 <div class="dynheader">
@@ -382,7 +394,7 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PipelineRos_8hpp_source.html#l00109">109</a> of file <a class="el" href="PipelineRos_8hpp_source.html">PipelineRos.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="PipelineRos_8hpp_source.html#l00107">107</a> of file <a class="el" href="PipelineRos_8hpp_source.html">PipelineRos.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1DynoPipelineManagerRos.html#a9b111354972184ae191c76dfb88f6820">initalisePipeline()</a>, and <a class="el" href="classdyno_1_1DynoPipelineManagerRos.html#a87626844ec5851cc9307981648667995">spinOnce()</a>.</p>
 

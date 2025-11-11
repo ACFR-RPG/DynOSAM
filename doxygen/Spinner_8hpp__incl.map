@@ -1,11 +1,12 @@
-<map id="dynosam/include/dynosam/utils/Spinner.hpp" name="dynosam/include/dynosam/utils/Spinner.hpp">
-<area shape="rect" id="node1" title=" " alt="" coords="328,5,525,45"/>
-<area shape="rect" id="node2" href="$Macros_8hpp.html" title=" " alt="" coords="65,93,258,119"/>
-<area shape="rect" id="node3" title=" " alt="" coords="5,167,83,192"/>
-<area shape="rect" id="node5" title=" " alt="" coords="282,93,369,119"/>
-<area shape="rect" id="node6" title=" " alt="" coords="393,93,460,119"/>
-<area shape="rect" id="node7" title=" " alt="" coords="484,93,551,119"/>
-<area shape="rect" id="node8" title=" " alt="" coords="575,93,639,119"/>
-<area shape="rect" id="node9" title=" " alt="" coords="663,93,727,119"/>
-<area shape="rect" id="node4" title=" " alt="" coords="124,167,199,192"/>
+<map id="dynosam_common/include/dynosam_common/utils/Spinner.hpp" name="dynosam_common/include/dynosam_common/utils/Spinner.hpp">
+<area shape="rect" id="node1" title=" " alt="" coords="248,5,445,60"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,115,72,141"/>
+<area shape="rect" id="node3" title=" " alt="" coords="96,115,163,141"/>
+<area shape="rect" id="node4" title=" " alt="" coords="187,115,274,141"/>
+<area shape="rect" id="node5" title=" " alt="" coords="416,196,493,221"/>
+<area shape="rect" id="node6" title=" " alt="" coords="349,115,413,141"/>
+<area shape="rect" id="node7" title=" " alt="" coords="437,115,496,141"/>
+<area shape="rect" id="node8" title=" " alt="" coords="520,115,584,141"/>
+<area shape="rect" id="node9" href="$Macros_8hpp.html" title=" " alt="" coords="608,108,787,148"/>
+<area shape="rect" id="node10" title=" " alt="" coords="660,196,735,221"/>
 </map>

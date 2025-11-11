@@ -1,10 +1,4 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classdyno_1_1DisplayBase.html" title=" " alt="" coords="33,97,188,137"/>
-<area shape="rect" id="node2" href="$classdyno_1_1BackendDSDRos.html" title=" " alt="" coords="296,55,465,80"/>
-<area shape="rect" id="node3" href="$classdyno_1_1BackendInbuiltDisplayRos.html" title=" " alt="" coords="265,203,496,228"/>
-<area shape="rect" id="node4" href="$classdyno_1_1FrontendDSDRos.html" title=" " alt="" coords="295,5,466,31"/>
-<area shape="rect" id="node5" href="$classdyno_1_1FrontendInbuiltDisplayRos.html" title=" " alt="" coords="264,153,497,179"/>
-<area shape="rect" id="node6" href="$classdyno_1_1OpenCVFrontendDisplay.html" title=" " alt="" coords="271,104,491,129"/>
-<area shape="rect" id="node7" href="$classdyno_1_1DSDRos.html" title="Shorthand for Dynamic Slam Display ROS." alt="" coords="53,27,168,52"/>
-<area shape="rect" id="node8" href="$classdyno_1_1InbuiltDisplayCommon.html" title=" " alt="" coords="5,181,216,207"/>
+<area shape="rect" id="node1" href="$classdyno_1_1DataFolder.html" title=" " alt="" coords="5,5,195,45"/>
+<area shape="rect" id="node2" href="$classdyno_1_1KittiCameraPoseFolder.html" title=" " alt="" coords="243,13,453,38"/>
 </map>

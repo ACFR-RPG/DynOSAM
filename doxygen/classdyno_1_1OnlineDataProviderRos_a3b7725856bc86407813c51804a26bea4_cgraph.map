@@ -1,6 +1,7 @@
 <map id="dyno::OnlineDataProviderRos::connect" name="dyno::OnlineDataProviderRos::connect">
-<area shape="rect" id="node1" title="Connects all subscribers." alt="" coords="5,252,195,292"/>
-<area shape="rect" id="node2" href="$classdyno_1_1OnlineDataProviderRos.html#a02b6aa8b0f6c6c732310c0852f54ef42" title=" " alt="" coords="243,252,432,292"/>
+<area shape="rect" id="node1" title="Connects all subscribers." alt="" coords="5,284,195,324"/>
+<area shape="rect" id="node2" href="$classdyno_1_1OnlineDataProviderRos.html#a7c809e378b5d4b807e80abb43c0da23a" title=" " alt="" coords="243,252,432,292"/>
+<area shape="rect" id="node17" href="$classdyno_1_1OnlineDataProviderRos.html#ab4a159eb8a44bd46697f86256783dfd7" title=" " alt="" coords="243,316,432,356"/>
 <area shape="rect" id="node3" href="$namespacedyno_1_1utils.html#a367447d229280a53123017719e94f0d9" title="Convert ROS time to timestamp." alt="" coords="484,106,671,131"/>
 <area shape="rect" id="node12" href="$classdyno_1_1DataProviderRos.html#ad01ad2683eb35b1d6f76981c55ad7ee4" title="Convers a sensor_msgs::msg::Image to a cv::Mat while testing that the input has the correct datatype ..." alt="" coords="492,156,663,196"/>
 <area shape="rect" id="node13" href="$classdyno_1_1DataProviderRos.html#a1c795369f59e7383817adce94f164eaf" title="Convers a sensor_msgs::msg::Image to a cv::Mat while testing that the input has the correct datatype ..." alt="" coords="492,220,663,260"/>

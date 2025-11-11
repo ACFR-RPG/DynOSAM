@@ -355,24 +355,25 @@ template&lt;class point , class data &gt; </div>
 <div class="line"><span class="lineno">   77</span>            <span class="keywordflow">return</span> 1;</div>
 <div class="line"><span class="lineno">   78</span> </div>
 <div class="line"><span class="lineno">   79</span>        ptx px;</div>
-<div class="line"><span class="lineno">   80</span>        pty py;</div>
+<div class="line"><span class="lineno">   80</span>        pty <a class="code hl_namespace" href="namespacepybind11.html">py</a>;</div>
 <div class="line"><span class="lineno">   81</span> </div>
 <div class="line"><span class="lineno">   82</span>        px.x = x;</div>
-<div class="line"><span class="lineno">   83</span>        px.y = py.y = y;</div>
+<div class="line"><span class="lineno">   83</span>        px.y = <a class="code hl_namespace" href="namespacepybind11.html">py</a>.y = y;</div>
 <div class="line"><span class="lineno">   84</span>        px.ptr = ptr;</div>
 <div class="line"><span class="lineno">   85</span><span class="preprocessor">#ifndef LESSRAM64</span></div>
-<div class="line"><span class="lineno">   86</span>        py.ptr = ptr;</div>
+<div class="line"><span class="lineno">   86</span>        <a class="code hl_namespace" href="namespacepybind11.html">py</a>.ptr = ptr;</div>
 <div class="line"><span class="lineno">   87</span><span class="preprocessor">#else</span></div>
-<div class="line"><span class="lineno">   88</span>        py.offset = -1;</div>
+<div class="line"><span class="lineno">   88</span>        <a class="code hl_namespace" href="namespacepybind11.html">py</a>.offset = -1;</div>
 <div class="line"><span class="lineno">   89</span><span class="preprocessor">#endif</span></div>
 <div class="line"><span class="lineno">   90</span> </div>
 <div class="line"><span class="lineno">   91</span>        <a class="code hl_variable" href="classrangetree.html#a2475c78dfe781f97f6cb0a9223c36bbd">xtmparray</a>.push_back(px);</div>
-<div class="line"><span class="lineno">   92</span>        <a class="code hl_variable" href="classrangetree.html#a8ed382466cc2d3fdedf762e18739acec">ytmparray</a>.push_back(py);</div>
+<div class="line"><span class="lineno">   92</span>        <a class="code hl_variable" href="classrangetree.html#a8ed382466cc2d3fdedf762e18739acec">ytmparray</a>.push_back(<a class="code hl_namespace" href="namespacepybind11.html">py</a>);</div>
 <div class="line"><span class="lineno">   93</span> </div>
 <div class="line"><span class="lineno">   94</span>        <span class="keywordflow">return</span> 0;</div>
 <div class="line"><span class="lineno">   95</span>    }</div>
+<div class="ttc" id="anamespacepybind11_html"><div class="ttname"><a href="namespacepybind11.html">pybind11</a></div><div class="ttdef"><b>Definition:</b> <a href="cvnp_8hpp_source.html#l00071">cvnp.hpp:71</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="classrangetree.html#a4ac95ec3552e8687b13565ddcf71c56b">rangetree&lt; point, data &gt;::init</a>, <a class="el" href="structrangetree_1_1ptx.html#ab701bd22252b7665cefd93a3bd97c4d3">rangetree&lt; point, data &gt;::ptx::ptr</a>, <a class="el" href="structrangetree_1_1pty.html#a9c552c46e1a8d0fad697104b44534f6f">rangetree&lt; point, data &gt;::pty::ptr</a>, <a class="el" href="structrangetree_1_1ptx.html#a3e0bc00284c6e52b68a3cd95bad3cdcb">rangetree&lt; point, data &gt;::ptx::x</a>, <a class="el" href="classrangetree.html#a2475c78dfe781f97f6cb0a9223c36bbd">rangetree&lt; point, data &gt;::xtmparray</a>, <a class="el" href="structrangetree_1_1ptx.html#aa5b348b3dda258403e355ce30f3b3237">rangetree&lt; point, data &gt;::ptx::y</a>, <a class="el" href="structrangetree_1_1pty.html#a22c868fc9e68a834b5cd468a0da35dae">rangetree&lt; point, data &gt;::pty::y</a>, and <a class="el" href="classrangetree.html#a8ed382466cc2d3fdedf762e18739acec">rangetree&lt; point, data &gt;::ytmparray</a>.</p>
+<p class="reference">References <a class="el" href="classrangetree.html#a4ac95ec3552e8687b13565ddcf71c56b">rangetree&lt; point, data &gt;::init</a>, <a class="el" href="structrangetree_1_1ptx.html#ab701bd22252b7665cefd93a3bd97c4d3">rangetree&lt; point, data &gt;::ptx::ptr</a>, <a class="el" href="structrangetree_1_1ptx.html#a3e0bc00284c6e52b68a3cd95bad3cdcb">rangetree&lt; point, data &gt;::ptx::x</a>, <a class="el" href="classrangetree.html#a2475c78dfe781f97f6cb0a9223c36bbd">rangetree&lt; point, data &gt;::xtmparray</a>, <a class="el" href="structrangetree_1_1ptx.html#aa5b348b3dda258403e355ce30f3b3237">rangetree&lt; point, data &gt;::ptx::y</a>, and <a class="el" href="classrangetree.html#a8ed382466cc2d3fdedf762e18739acec">rangetree&lt; point, data &gt;::ytmparray</a>.</p>
 
 </div>
 </div>

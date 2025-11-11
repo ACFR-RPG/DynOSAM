@@ -92,7 +92,7 @@ Static Public Member Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;size_t N&gt;<br />
 struct dyno::internal::ApplyMember&lt; N &gt;</div>
-<p class="definition">Definition at line <a class="el" href="Tuple_8hpp_source.html#l00120">120</a> of file <a class="el" href="Tuple_8hpp_source.html">Tuple.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Tuple_8hpp_source.html#l00116">116</a> of file <a class="el" href="Tuple_8hpp_source.html">Tuple.hpp</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="a165cf77e9466ca0ca98dde215119dd6c" name="a165cf77e9466ca0ca98dde215119dd6c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a165cf77e9466ca0ca98dde215119dd6c">&#9670;&#160;</a></span>apply()</h2>
@@ -134,9 +134,10 @@ template&lt;typename C , typename F , typename T , typename... A&gt; </div>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td> -&gt; decltype(<a class="el" href="structdyno_1_1internal_1_1ApplyMember.html">ApplyMember</a>&lt;N - 1&gt;::apply(forward&lt;C&gt;(c), forward&lt;F&gt;(f), forward&lt;T&gt;(t), std::get&lt;N - 1&gt;(forward&lt;T&gt;(t)),
-                                            forward&lt;A&gt;(a)...))
-  </td>
+          <td></td><td> -&gt; decltype(<a class="el" href="structdyno_1_1internal_1_1ApplyMember.html">ApplyMember</a>&lt;N - 1&gt;::apply(forward&lt;C&gt;(c), forward&lt;F&gt;(f),
+                                            forward&lt;T&gt;(t),
+                                            std::get&lt;N - 1&gt;(forward&lt;T&gt;(t)),
+                                            forward&lt;A&gt;(a)...)) </td>
         </tr>
       </table>
   </td>
@@ -146,12 +147,13 @@ template&lt;typename C , typename F , typename T , typename... A&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Tuple_8hpp_source.html#l00123">123</a> of file <a class="el" href="Tuple_8hpp_source.html">Tuple.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  126</span>  {</div>
-<div class="line"><span class="lineno">  127</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="structdyno_1_1internal_1_1ApplyMember.html#a165cf77e9466ca0ca98dde215119dd6c">ApplyMember&lt;N - 1&gt;::apply</a>(forward&lt;C&gt;(c), forward&lt;F&gt;(f), forward&lt;T&gt;(t), std::get&lt;N - 1&gt;(forward&lt;T&gt;(t)),</div>
-<div class="line"><span class="lineno">  128</span>                                     forward&lt;A&gt;(a)...);</div>
-<div class="line"><span class="lineno">  129</span>  }</div>
-<div class="ttc" id="astructdyno_1_1internal_1_1ApplyMember_html_a165cf77e9466ca0ca98dde215119dd6c"><div class="ttname"><a href="structdyno_1_1internal_1_1ApplyMember.html#a165cf77e9466ca0ca98dde215119dd6c">dyno::internal::ApplyMember::apply</a></div><div class="ttdeci">static auto apply(C &amp;&amp;c, F &amp;&amp;f, T &amp;&amp;t, A &amp;&amp;... a) -&gt; decltype(ApplyMember&lt; N - 1 &gt;::apply(forward&lt; C &gt;(c), forward&lt; F &gt;(f), forward&lt; T &gt;(t), std::get&lt; N - 1 &gt;(forward&lt; T &gt;(t)), forward&lt; A &gt;(a)...))</div><div class="ttdef"><b>Definition:</b> <a href="Tuple_8hpp_source.html#l00123">Tuple.hpp:123</a></div></div>
+<p class="definition">Definition at line <a class="el" href="Tuple_8hpp_source.html#l00118">118</a> of file <a class="el" href="Tuple_8hpp_source.html">Tuple.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  122</span>                                                               {</div>
+<div class="line"><span class="lineno">  123</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="structdyno_1_1internal_1_1ApplyMember.html#a165cf77e9466ca0ca98dde215119dd6c">ApplyMember&lt;N - 1&gt;::apply</a>(</div>
+<div class="line"><span class="lineno">  124</span>        forward&lt;C&gt;(c), forward&lt;F&gt;(f), forward&lt;T&gt;(t),</div>
+<div class="line"><span class="lineno">  125</span>        std::get&lt;N - 1&gt;(forward&lt;T&gt;(t)), forward&lt;A&gt;(a)...);</div>
+<div class="line"><span class="lineno">  126</span>  }</div>
+<div class="ttc" id="astructdyno_1_1internal_1_1ApplyMember_html_a165cf77e9466ca0ca98dde215119dd6c"><div class="ttname"><a href="structdyno_1_1internal_1_1ApplyMember.html#a165cf77e9466ca0ca98dde215119dd6c">dyno::internal::ApplyMember::apply</a></div><div class="ttdeci">static auto apply(C &amp;&amp;c, F &amp;&amp;f, T &amp;&amp;t, A &amp;&amp;... a) -&gt; decltype(ApplyMember&lt; N - 1 &gt;::apply(forward&lt; C &gt;(c), forward&lt; F &gt;(f), forward&lt; T &gt;(t), std::get&lt; N - 1 &gt;(forward&lt; T &gt;(t)), forward&lt; A &gt;(a)...))</div><div class="ttdef"><b>Definition:</b> <a href="Tuple_8hpp_source.html#l00118">Tuple.hpp:118</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="structdyno_1_1internal_1_1ApplyMember.html#a165cf77e9466ca0ca98dde215119dd6c">dyno::internal::ApplyMember&lt; N &gt;::apply()</a>.</p>
 
@@ -176,7 +178,7 @@ Here is the caller graph for this function:</div>
 </div>
 </div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
-<li>dynosam/include/dynosam/utils/<a class="el" href="Tuple_8hpp_source.html">Tuple.hpp</a></li>
+<li>dynosam_common/include/dynosam_common/utils/<a class="el" href="Tuple_8hpp_source.html">Tuple.hpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

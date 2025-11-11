@@ -2,5 +2,5 @@
 <area shape="rect" id="node1" title="Push by value. Returns false if the queue has been shutdown. Not optimal, since it will make two move..." alt="" coords="519,45,695,70"/>
 <area shape="rect" id="node2" href="$classdyno_1_1DataInterfacePipeline.html#af34076d538c787a0044eb444586eed95" title=" " alt="" coords="263,5,466,45"/>
 <area shape="rect" id="node4" href="$classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2" title=" " alt="" coords="259,69,471,109"/>
-<area shape="rect" id="node3" href="$classdyno_1_1DynoPipelineManager.html#a283e891aa3d4ca8d2d671eb1e3d5d514" title=" " alt="" coords="5,5,211,45"/>
+<area shape="rect" id="node3" href="$classdyno_1_1DynoPipelineManager.html#a1e980339b4d308ab83d46ede524c3a46" title=" " alt="" coords="5,5,211,45"/>
 </map>

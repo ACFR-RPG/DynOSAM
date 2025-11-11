@@ -1,15 +1,11 @@
-<map id="dynosam/include/dynosam/common/byte_tracker/KalmanFilter.hpp" name="dynosam/include/dynosam/common/byte_tracker/KalmanFilter.hpp">
-<area shape="rect" id="node1" title=" " alt="" coords="816,5,1099,45"/>
-<area shape="rect" id="node2" href="$Track_8hpp.html" title=" " alt="" coords="717,93,952,133"/>
-<area shape="rect" id="node13" href="$KalmanFilter_8cc.html" title=" " alt="" coords="976,93,1187,133"/>
-<area shape="rect" id="node3" href="$ByteTracker_8hpp.html" title=" " alt="" coords="523,181,797,221"/>
-<area shape="rect" id="node11" href="$ByteTracker_8cc.html" title=" " alt="" coords="733,269,937,309"/>
-<area shape="rect" id="node12" href="$Track_8cc.html" title=" " alt="" coords="873,181,1039,221"/>
-<area shape="rect" id="node4" href="$ObjectTracker_8hpp.html" title=" " alt="" coords="465,269,708,309"/>
-<area shape="rect" id="node5" href="$RGBDInstanceFrontendModule_8hpp.html" title=" " alt="" coords="355,357,589,412"/>
-<area shape="rect" id="node10" href="$ObjectTracker_8cc.html" title=" " alt="" coords="614,365,789,405"/>
-<area shape="rect" id="node6" href="$ModuleFactory_8hpp.html" title=" " alt="" coords="5,460,213,500"/>
-<area shape="rect" id="node7" href="$RGBDInstanceFrontendModule_8cc.html" title=" " alt="" coords="237,460,480,500"/>
-<area shape="rect" id="node8" href="$PipelineManager_8cc.html" title=" " alt="" coords="505,460,666,500"/>
-<area shape="rect" id="node9" href="$backend__experiments__node_8cc.html" title=" " alt="" coords="691,460,901,500"/>
+<map id="dynosam_nn/include/dynosam_nn/trackers/byte_tracker/KalmanFilter.hpp" name="dynosam_nn/include/dynosam_nn/trackers/byte_tracker/KalmanFilter.hpp">
+<area shape="rect" id="node1" title=" " alt="" coords="428,5,649,60"/>
+<area shape="rect" id="node2" href="$STrack_8hpp.html" title=" " alt="" coords="339,108,520,163"/>
+<area shape="rect" id="node9" href="$KalmanFilter_8cc.html" title=" " alt="" coords="544,115,755,155"/>
+<area shape="rect" id="node3" href="$ByteTracker_8hpp.html" title=" " alt="" coords="210,211,425,265"/>
+<area shape="rect" id="node8" href="$STrack_8cc.html" title=" " alt="" coords="449,218,633,258"/>
+<area shape="rect" id="node4" href="$ObjectTracker_8hpp.html" title=" " alt="" coords="131,313,296,368"/>
+<area shape="rect" id="node7" href="$ByteTracker_8cc.html" title=" " alt="" coords="321,321,525,361"/>
+<area shape="rect" id="node5" href="$YoloObjectDetector_8cc.html" title=" " alt="" coords="5,416,205,456"/>
+<area shape="rect" id="node6" href="$ObjectTracker_8cc.html" title=" " alt="" coords="229,416,413,456"/>
 </map>

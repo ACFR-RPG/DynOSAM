@@ -1,52 +1,52 @@
-<map id="dynosam/src/common/StereoCamera.cc" name="dynosam/src/common/StereoCamera.cc">
-<area shape="rect" id="node1" title=" " alt="" coords="4209,5,4376,45"/>
-<area shape="rect" id="node2" href="$StereoCamera_8hpp.html" title=" " alt="" coords="1004,93,1272,119"/>
-<area shape="rect" id="node18" title=" " alt="" coords="2958,423,3073,449"/>
-<area shape="rect" id="node33" title=" " alt="" coords="4331,93,4423,119"/>
-<area shape="rect" id="node34" title=" " alt="" coords="4447,93,4603,119"/>
-<area shape="rect" id="node35" title=" " alt="" coords="4627,93,4764,119"/>
-<area shape="rect" id="node36" href="$GtsamUtils_8hpp.html" title=" " alt="" coords="3117,255,3335,280"/>
-<area shape="rect" id="node48" href="$OpenCVUtils_8hpp.html" title=" " alt="" coords="1835,255,2063,280"/>
-<area shape="rect" id="node3" title=" " alt="" coords="658,167,821,207"/>
-<area shape="rect" id="node4" title=" " alt="" coords="399,423,584,449"/>
-<area shape="rect" id="node5" title=" " alt="" coords="1147,174,1385,199"/>
-<area shape="rect" id="node6" title=" " alt="" coords="1847,423,2061,449"/>
-<area shape="rect" id="node7" href="$Camera_8hpp.html" title=" " alt="" coords="895,174,1122,199"/>
-<area shape="rect" id="node10" href="$CameraParams_8hpp.html" title=" " alt="" coords="605,255,879,280"/>
-<area shape="rect" id="node29" href="$UndistortRectifier_8hpp.html" title=" " alt="" coords="1410,167,1594,207"/>
-<area shape="rect" id="node8" title=" " alt="" coords="1011,335,1209,361"/>
-<area shape="rect" id="node9" title=" " alt="" coords="903,255,1149,280"/>
-<area shape="rect" id="node17" href="$Types_8hpp.html" title=" " alt="" coords="1283,335,1495,361"/>
-<area shape="rect" id="node11" title=" " alt="" coords="39,328,199,368"/>
-<area shape="rect" id="node12" title=" " alt="" coords="224,335,425,361"/>
-<area shape="rect" id="node13" title=" " alt="" coords="449,335,675,361"/>
-<area shape="rect" id="node14" title=" " alt="" coords="2311,335,2451,361"/>
-<area shape="rect" id="node15" title=" " alt="" coords="699,335,785,361"/>
-<area shape="rect" id="node16" title=" " alt="" coords="809,335,987,361"/>
-<area shape="rect" id="node26" href="$YamlParser_8hpp.html" title=" " alt="" coords="2070,335,2286,361"/>
-<area shape="rect" id="node19" title=" " alt="" coords="1305,423,1473,449"/>
-<area shape="rect" id="node20" title=" " alt="" coords="3464,423,3620,449"/>
-<area shape="rect" id="node21" title=" " alt="" coords="1497,423,1640,449"/>
-<area shape="rect" id="node22" title=" " alt="" coords="1665,423,1739,449"/>
-<area shape="rect" id="node23" title=" " alt="" coords="1096,423,1193,449"/>
-<area shape="rect" id="node24" title=" " alt="" coords="2109,423,2201,449"/>
-<area shape="rect" id="node25" title=" " alt="" coords="1217,423,1280,449"/>
-<area shape="rect" id="node27" title=" " alt="" coords="4024,423,4097,449"/>
-<area shape="rect" id="node28" title=" " alt="" coords="3827,423,3907,449"/>
-<area shape="rect" id="node30" title=" " alt="" coords="2475,335,2662,361"/>
-<area shape="rect" id="node31" title=" " alt="" coords="1376,255,1591,280"/>
-<area shape="rect" id="node32" title=" " alt="" coords="1615,255,1811,280"/>
-<area shape="rect" id="node37" title=" " alt="" coords="2737,335,2913,361"/>
-<area shape="rect" id="node38" title=" " alt="" coords="2937,335,3118,361"/>
-<area shape="rect" id="node39" title=" " alt="" coords="3143,335,3309,361"/>
-<area shape="rect" id="node40" title=" " alt="" coords="3333,335,3527,361"/>
-<area shape="rect" id="node41" title=" " alt="" coords="3551,335,3725,361"/>
-<area shape="rect" id="node42" title=" " alt="" coords="3749,328,3943,368"/>
-<area shape="rect" id="node43" title=" " alt="" coords="3967,335,4154,361"/>
-<area shape="rect" id="node44" href="$Numerical_8hpp.html" title=" " alt="" coords="4330,335,4543,361"/>
-<area shape="rect" id="node45" title=" " alt="" coords="4167,423,4322,449"/>
-<area shape="rect" id="node46" title=" " alt="" coords="4346,416,4527,456"/>
-<area shape="rect" id="node47" title=" " alt="" coords="4551,416,4733,456"/>
-<area shape="rect" id="node49" title=" " alt="" coords="1726,328,1894,368"/>
-<area shape="rect" id="node50" title=" " alt="" coords="1569,335,1701,361"/>
+<map id="dynosam_cv/src/StereoCamera.cc" name="dynosam_cv/src/StereoCamera.cc">
+<area shape="rect" id="node1" title=" " alt="" coords="2183,5,2426,31"/>
+<area shape="rect" id="node2" href="$StereoCamera_8hpp.html" title=" " alt="" coords="1410,79,1639,104"/>
+<area shape="rect" id="node11" title=" " alt="" coords="2091,423,2206,449"/>
+<area shape="rect" id="node33" title=" " alt="" coords="2111,79,2203,104"/>
+<area shape="rect" id="node34" title=" " alt="" coords="2227,79,2383,104"/>
+<area shape="rect" id="node35" title=" " alt="" coords="2407,79,2544,104"/>
+<area shape="rect" id="node36" href="$GtsamUtils_8hpp.html" title=" " alt="" coords="2493,240,2671,280"/>
+<area shape="rect" id="node48" href="$OpenCVUtils_8hpp.html" title=" " alt="" coords="3859,240,4038,280"/>
+<area shape="rect" id="node3" title=" " alt="" coords="1558,152,1721,192"/>
+<area shape="rect" id="node4" title=" " alt="" coords="676,423,861,449"/>
+<area shape="rect" id="node5" title=" " alt="" coords="1745,159,1984,185"/>
+<area shape="rect" id="node6" title=" " alt="" coords="3376,423,3591,449"/>
+<area shape="rect" id="node7" href="$Camera_8hpp.html" title=" " alt="" coords="1070,159,1257,185"/>
+<area shape="rect" id="node19" href="$CameraParams_8hpp.html" title=" " alt="" coords="622,247,857,273"/>
+<area shape="rect" id="node29" href="$UndistortRectifier_8hpp.html" title=" " alt="" coords="1284,159,1533,185"/>
+<area shape="rect" id="node8" title=" " alt="" coords="1213,335,1412,361"/>
+<area shape="rect" id="node9" title=" " alt="" coords="881,247,1126,273"/>
+<area shape="rect" id="node10" href="$Types_8hpp.html" title=" " alt="" coords="1487,335,1701,361"/>
+<area shape="rect" id="node12" title=" " alt="" coords="1510,423,1678,449"/>
+<area shape="rect" id="node13" title=" " alt="" coords="3615,423,3771,449"/>
+<area shape="rect" id="node14" title=" " alt="" coords="1703,423,1845,449"/>
+<area shape="rect" id="node15" title=" " alt="" coords="1870,423,1945,449"/>
+<area shape="rect" id="node16" title=" " alt="" coords="1301,423,1399,449"/>
+<area shape="rect" id="node17" title=" " alt="" coords="1972,423,2064,449"/>
+<area shape="rect" id="node18" title=" " alt="" coords="1423,423,1485,449"/>
+<area shape="rect" id="node20" title=" " alt="" coords="390,328,550,368"/>
+<area shape="rect" id="node21" title=" " alt="" coords="575,335,776,361"/>
+<area shape="rect" id="node22" title=" " alt="" coords="800,335,1025,361"/>
+<area shape="rect" id="node23" title=" " alt="" coords="1049,335,1189,361"/>
+<area shape="rect" id="node24" title=" " alt="" coords="27,335,113,361"/>
+<area shape="rect" id="node25" title=" " alt="" coords="137,335,315,361"/>
+<area shape="rect" id="node26" href="$YamlParser_8hpp.html" title=" " alt="" coords="2190,328,2369,368"/>
+<area shape="rect" id="node27" title=" " alt="" coords="3900,423,3973,449"/>
+<area shape="rect" id="node28" title=" " alt="" coords="3795,423,3875,449"/>
+<area shape="rect" id="node30" title=" " alt="" coords="1777,335,1963,361"/>
+<area shape="rect" id="node31" title=" " alt="" coords="1303,247,1517,273"/>
+<area shape="rect" id="node32" title=" " alt="" coords="1541,247,1737,273"/>
+<area shape="rect" id="node37" title=" " alt="" coords="2393,335,2569,361"/>
+<area shape="rect" id="node38" title=" " alt="" coords="2593,335,2774,361"/>
+<area shape="rect" id="node39" title=" " alt="" coords="2799,335,2965,361"/>
+<area shape="rect" id="node40" title=" " alt="" coords="2989,335,3183,361"/>
+<area shape="rect" id="node41" title=" " alt="" coords="3207,335,3381,361"/>
+<area shape="rect" id="node42" title=" " alt="" coords="3405,328,3599,368"/>
+<area shape="rect" id="node43" title=" " alt="" coords="3623,335,3810,361"/>
+<area shape="rect" id="node44" href="$Numerical_8hpp.html" title=" " alt="" coords="3986,328,4165,368"/>
+<area shape="rect" id="node45" title=" " alt="" coords="3998,423,4153,449"/>
+<area shape="rect" id="node46" title=" " alt="" coords="4177,416,4358,456"/>
+<area shape="rect" id="node47" title=" " alt="" coords="4382,416,4563,456"/>
+<area shape="rect" id="node49" title=" " alt="" coords="4189,328,4357,368"/>
+<area shape="rect" id="node50" title=" " alt="" coords="4381,335,4513,361"/>
 </map>

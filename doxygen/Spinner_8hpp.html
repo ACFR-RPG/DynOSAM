@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.6"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>DynoSAM: dynosam/include/dynosam/utils/Spinner.hpp File Reference</title>
+<title>DynoSAM: dynosam_common/include/dynosam_common/utils/Spinner.hpp File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -70,7 +70,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_5dee249e885e61d789509b2ad73060f7.html">dynosam</a></li><li class="navelem"><a class="el" href="dir_ae19c998a0d63c4a89d568f2bdaee525.html">include</a></li><li class="navelem"><a class="el" href="dir_0c508da48c40328131e0e187ecaa7ee4.html">dynosam</a></li><li class="navelem"><a class="el" href="dir_ecb64fd74fc702701a4d48ffddfe049d.html">utils</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_59022c2de10cb81abe7061856121e435.html">dynosam_common</a></li><li class="navelem"><a class="el" href="dir_1e5dca763677fcf884d3edfa4dbc3b7d.html">include</a></li><li class="navelem"><a class="el" href="dir_b2413b21460ca38253492cd2cfe1693f.html">dynosam_common</a></li><li class="navelem"><a class="el" href="dir_93e40a38ca0b24d85d942c52df9dca73.html">utils</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -80,45 +80,47 @@ $(function() {
   <div class="headertitle"><div class="title">Spinner.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;<a class="el" href="Macros_8hpp_source.html">dynosam/utils/Macros.hpp</a>&quot;</code><br />
-<code>#include &lt;functional&gt;</code><br />
-<code>#include &lt;atomic&gt;</code><br />
+<div class="textblock"><code>#include &lt;atomic&gt;</code><br />
 <code>#include &lt;chrono&gt;</code><br />
+<code>#include &lt;functional&gt;</code><br />
 <code>#include &lt;memory&gt;</code><br />
 <code>#include &lt;mutex&gt;</code><br />
+<code>#include &lt;string&gt;</code><br />
 <code>#include &lt;thread&gt;</code><br />
+<code>#include &quot;<a class="el" href="Macros_8hpp_source.html">dynosam_common/utils/Macros.hpp</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for Spinner.hpp:</div>
 <div class="dyncontent">
-<div class="center"><img src="Spinner_8hpp__incl.png" border="0" usemap="#adynosam_2include_2dynosam_2utils_2Spinner_8hpp" alt=""/></div>
-<map name="adynosam_2include_2dynosam_2utils_2Spinner_8hpp" id="adynosam_2include_2dynosam_2utils_2Spinner_8hpp">
-<area shape="rect" title=" " alt="" coords="328,5,525,45"/>
-<area shape="rect" href="Macros_8hpp.html" title=" " alt="" coords="65,93,258,119"/>
-<area shape="rect" title=" " alt="" coords="5,167,83,192"/>
-<area shape="rect" title=" " alt="" coords="282,93,369,119"/>
-<area shape="rect" title=" " alt="" coords="393,93,460,119"/>
-<area shape="rect" title=" " alt="" coords="484,93,551,119"/>
-<area shape="rect" title=" " alt="" coords="575,93,639,119"/>
-<area shape="rect" title=" " alt="" coords="663,93,727,119"/>
-<area shape="rect" title=" " alt="" coords="124,167,199,192"/>
+<div class="center"><img src="Spinner_8hpp__incl.png" border="0" usemap="#adynosam__common_2include_2dynosam__common_2utils_2Spinner_8hpp" alt=""/></div>
+<map name="adynosam__common_2include_2dynosam__common_2utils_2Spinner_8hpp" id="adynosam__common_2include_2dynosam__common_2utils_2Spinner_8hpp">
+<area shape="rect" title=" " alt="" coords="248,5,445,60"/>
+<area shape="rect" title=" " alt="" coords="5,115,72,141"/>
+<area shape="rect" title=" " alt="" coords="96,115,163,141"/>
+<area shape="rect" title=" " alt="" coords="187,115,274,141"/>
+<area shape="rect" title=" " alt="" coords="416,196,493,221"/>
+<area shape="rect" title=" " alt="" coords="349,115,413,141"/>
+<area shape="rect" title=" " alt="" coords="437,115,496,141"/>
+<area shape="rect" title=" " alt="" coords="520,115,584,141"/>
+<area shape="rect" href="Macros_8hpp.html" title=" " alt="" coords="608,108,787,148"/>
+<area shape="rect" title=" " alt="" coords="660,196,735,221"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
-<div class="center"><img src="Spinner_8hpp__dep__incl.png" border="0" usemap="#adynosam_2include_2dynosam_2utils_2Spinner_8hppdep" alt=""/></div>
-<map name="adynosam_2include_2dynosam_2utils_2Spinner_8hppdep" id="adynosam_2include_2dynosam_2utils_2Spinner_8hppdep">
-<area shape="rect" title=" " alt="" coords="573,5,771,45"/>
-<area shape="rect" href="PipelineManager_8hpp.html" title=" " alt="" coords="276,93,495,133"/>
-<area shape="rect" href="PipelineSpinner_8hpp.html" title=" " alt="" coords="567,93,777,133"/>
-<area shape="rect" href="Spinner_8cc.html" title=" " alt="" coords="802,101,1009,126"/>
-<area shape="rect" href="dyno__sam_8cc.html" title=" " alt="" coords="5,181,184,221"/>
-<area shape="rect" href="PipelineManager_8cc.html" title=" " alt="" coords="209,181,370,221"/>
-<area shape="rect" href="PipelineRos_8hpp.html" title=" " alt="" coords="395,181,616,221"/>
-<area shape="rect" href="backend__experiments__node_8cc.html" title=" " alt="" coords="163,269,373,309"/>
-<area shape="rect" href="dynosam__node_8cc.html" title=" " alt="" coords="397,269,613,309"/>
-<area shape="rect" href="PipelineRos_8cc.html" title=" " alt="" coords="638,269,826,309"/>
-<area shape="rect" href="PipelineSpinner_8cc.html" title=" " alt="" coords="641,181,802,221"/>
+<div class="center"><img src="Spinner_8hpp__dep__incl.png" border="0" usemap="#adynosam__common_2include_2dynosam__common_2utils_2Spinner_8hppdep" alt=""/></div>
+<map name="adynosam__common_2include_2dynosam__common_2utils_2Spinner_8hppdep" id="adynosam__common_2include_2dynosam__common_2utils_2Spinner_8hppdep">
+<area shape="rect" title=" " alt="" coords="573,5,771,60"/>
+<area shape="rect" href="PipelineManager_8hpp.html" title=" " alt="" coords="276,108,495,148"/>
+<area shape="rect" href="PipelineSpinner_8hpp.html" title=" " alt="" coords="567,108,777,148"/>
+<area shape="rect" href="Spinner_8cc.html" title=" " alt="" coords="802,108,971,148"/>
+<area shape="rect" href="dyno__sam_8cc.html" title=" " alt="" coords="5,196,184,236"/>
+<area shape="rect" href="PipelineManager_8cc.html" title=" " alt="" coords="209,196,370,236"/>
+<area shape="rect" href="PipelineRos_8hpp.html" title=" " alt="" coords="395,196,616,236"/>
+<area shape="rect" href="backend__experiments__node_8cc.html" title=" " alt="" coords="163,284,373,324"/>
+<area shape="rect" href="dynosam__node_8cc.html" title=" " alt="" coords="397,284,613,324"/>
+<area shape="rect" href="PipelineRos_8cc.html" title=" " alt="" coords="638,284,826,324"/>
+<area shape="rect" href="PipelineSpinner_8cc.html" title=" " alt="" coords="641,196,802,236"/>
 </map>
 </div>
 </div>

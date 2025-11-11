@@ -77,6 +77,7 @@ $(function() {
   <div class="summary">
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="classdyno_1_1DisplayBase-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">dyno::DisplayBase&lt; INPUT &gt; Class Template Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div></div>
 </div><!--header-->
@@ -88,12 +89,25 @@ Inheritance diagram for dyno::DisplayBase&lt; INPUT &gt;:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1DisplayBase__inherit__graph.png" border="0" usemap="#adyno_1_1DisplayBase_3_01INPUT_01_4_inherit__map" alt="Inheritance graph"/></div>
 <map name="adyno_1_1DisplayBase_3_01INPUT_01_4_inherit__map" id="adyno_1_1DisplayBase_3_01INPUT_01_4_inherit__map">
-<area shape="rect" title=" " alt="" coords="5,133,160,173"/>
-<area shape="rect" href="classdyno_1_1BackendDSDRos.html" title=" " alt="" coords="237,5,430,45"/>
-<area shape="rect" href="classdyno_1_1BackendInbuiltDisplayRos.html" title=" " alt="" coords="225,69,442,109"/>
-<area shape="rect" href="classdyno_1_1FrontendDSDRos.html" title=" " alt="" coords="220,133,447,173"/>
-<area shape="rect" href="classdyno_1_1FrontendInbuiltDisplayRos.html" title=" " alt="" coords="208,197,459,237"/>
-<area shape="rect" href="classdyno_1_1OpenCVFrontendDisplay.html" title=" " alt="" coords="220,261,447,301"/>
+<area shape="rect" title=" " alt="" coords="267,133,421,173"/>
+<area shape="rect" href="classdyno_1_1BackendDSDRos.html" title=" " alt="" coords="483,5,676,45"/>
+<area shape="rect" href="classdyno_1_1BackendInbuiltDisplayRos.html" title=" " alt="" coords="471,69,688,109"/>
+<area shape="rect" href="classdyno_1_1FrontendDSDRos.html" title=" " alt="" coords="494,133,665,173"/>
+<area shape="rect" href="classdyno_1_1FrontendInbuiltDisplayRos.html" title=" " alt="" coords="475,197,684,237"/>
+<area shape="rect" href="classdyno_1_1OpenCVFrontendDisplay.html" title=" " alt="" coords="469,261,689,301"/>
+<area shape="rect" href="structdyno_1_1SharedModuleInterface.html" title=" " alt="" coords="5,141,219,166"/>
+</map>
+<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
+<div class="dynheader">
+Collaboration diagram for dyno::DisplayBase&lt; INPUT &gt;:</div>
+<div class="dyncontent">
+<div class="center"><img src="classdyno_1_1DisplayBase__coll__graph.png" border="0" usemap="#adyno_1_1DisplayBase_3_01INPUT_01_4_coll__map" alt="Collaboration graph"/></div>
+<map name="adyno_1_1DisplayBase_3_01INPUT_01_4_coll__map" id="adyno_1_1DisplayBase_3_01INPUT_01_4_coll__map">
+<area shape="rect" title=" " alt="" coords="35,345,189,385"/>
+<area shape="rect" href="structdyno_1_1SharedModuleInterface.html" title=" " alt="" coords="5,271,219,296"/>
+<area shape="rect" href="classdyno_1_1SharedModuleInfo.html" title=" " alt="" coords="22,183,202,208"/>
+<area shape="rect" href="classdyno_1_1GroundTruthPacketMap.html" title="FastMap from frame id to GroundTruthInputPacket." alt="" coords="7,95,217,120"/>
+<area shape="rect" title=" " alt="" coords="13,5,211,45"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -112,13 +126,24 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:af4d6e1990fe2d17b50434f958eff76d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac162cf49cd8c586590ac3e284963f383"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DisplayBase.html#ac162cf49cd8c586590ac3e284963f383">~DisplayBase</a> ()</td></tr>
 <tr class="separator:ac162cf49cd8c586590ac3e284963f383"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afb9c0becbfa36ca9c19261bb6d6d6ffb"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DisplayBase.html#afb9c0becbfa36ca9c19261bb6d6d6ffb">spinOnce</a> (const <a class="el" href="classdyno_1_1DisplayBase.html#ad8fea9c8b3f0d1e4c1fb670359d53a4b">InputConstPtr</a> &amp;input)=0</td></tr>
-<tr class="separator:afb9c0becbfa36ca9c19261bb6d6d6ffb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8ef96ee9f0c793cfb54627cd6b3c1562"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DisplayBase.html#a8ef96ee9f0c793cfb54627cd6b3c1562">spinOnce</a> (const <a class="el" href="classdyno_1_1DisplayBase.html#ad8fea9c8b3f0d1e4c1fb670359d53a4b">InputConstPtr</a> &amp;input)</td></tr>
+<tr class="separator:a8ef96ee9f0c793cfb54627cd6b3c1562"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
+Protected Member Functions</h2></td></tr>
+<tr class="memitem:a7cbae34bc7821aa2586d16f63158e258"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DisplayBase.html#a7cbae34bc7821aa2586d16f63158e258">spinOnceImpl</a> (const <a class="el" href="classdyno_1_1DisplayBase.html#ad8fea9c8b3f0d1e4c1fb670359d53a4b">InputConstPtr</a> &amp;input)=0</td></tr>
+<tr class="separator:a7cbae34bc7821aa2586d16f63158e258"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="inherited" name="inherited"></a>
+Additional Inherited Members</h2></td></tr>
+<tr class="inherit_header pub_attribs_structdyno_1_1SharedModuleInterface"><td colspan="2" onclick="javascript:toggleInherit('pub_attribs_structdyno_1_1SharedModuleInterface')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="structdyno_1_1SharedModuleInterface.html">dyno::SharedModuleInterface</a></td></tr>
+<tr class="memitem:afeac0a42a7ca31317d9267747e78b9e7 inherit pub_attribs_structdyno_1_1SharedModuleInterface"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classdyno_1_1SharedModuleInfo.html">SharedModuleInfo</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1SharedModuleInterface.html#afeac0a42a7ca31317d9267747e78b9e7">shared_module_info</a> = <a class="el" href="classdyno_1_1SharedModuleInfo.html#a75ec166db0c37e57b9ed31e425b86599">SharedModuleInfo::instance</a>()</td></tr>
+<tr class="separator:afeac0a42a7ca31317d9267747e78b9e7 inherit pub_attribs_structdyno_1_1SharedModuleInterface"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename INPUT&gt;<br />
 class dyno::DisplayBase&lt; INPUT &gt;</div>
-<p class="definition">Definition at line <a class="el" href="Display_8hpp_source.html#l00036">36</a> of file <a class="el" href="Display_8hpp_source.html">Display.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Display_8hpp_source.html#l00058">58</a> of file <a class="el" href="Display_8hpp_source.html">Display.hpp</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="a8ccfbf3f8fc4d9f4154d4404ce18852e" name="a8ccfbf3f8fc4d9f4154d4404ce18852e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8ccfbf3f8fc4d9f4154d4404ce18852e">&#9670;&#160;</a></span>Input</h2>
@@ -134,7 +159,7 @@ template&lt;typename INPUT &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Display_8hpp_source.html#l00038">38</a> of file <a class="el" href="Display_8hpp_source.html">Display.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Display_8hpp_source.html#l00060">60</a> of file <a class="el" href="Display_8hpp_source.html">Display.hpp</a>.</p>
 
 </div>
 </div>
@@ -152,7 +177,7 @@ template&lt;typename INPUT &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Display_8hpp_source.html#l00042">42</a> of file <a class="el" href="Display_8hpp_source.html">Display.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Display_8hpp_source.html#l00064">64</a> of file <a class="el" href="Display_8hpp_source.html">Display.hpp</a>.</p>
 
 </div>
 </div>
@@ -170,7 +195,7 @@ template&lt;typename INPUT &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Display_8hpp_source.html#l00039">39</a> of file <a class="el" href="Display_8hpp_source.html">Display.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Display_8hpp_source.html#l00061">61</a> of file <a class="el" href="Display_8hpp_source.html">Display.hpp</a>.</p>
 
 </div>
 </div>
@@ -200,8 +225,8 @@ template&lt;typename INPUT &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Display_8hpp_source.html#l00044">44</a> of file <a class="el" href="Display_8hpp_source.html">Display.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   44</span>{}</div>
+<p class="definition">Definition at line <a class="el" href="Display_8hpp_source.html#l00066">66</a> of file <a class="el" href="Display_8hpp_source.html">Display.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   66</span>{}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -230,14 +255,14 @@ template&lt;typename INPUT &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Display_8hpp_source.html#l00045">45</a> of file <a class="el" href="Display_8hpp_source.html">Display.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   45</span>{}</div>
+<p class="definition">Definition at line <a class="el" href="Display_8hpp_source.html#l00067">67</a> of file <a class="el" href="Display_8hpp_source.html">Display.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   67</span>{}</div>
 </div><!-- fragment -->
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="afb9c0becbfa36ca9c19261bb6d6d6ffb" name="afb9c0becbfa36ca9c19261bb6d6d6ffb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afb9c0becbfa36ca9c19261bb6d6d6ffb">&#9670;&#160;</a></span>spinOnce()</h2>
+<a id="a8ef96ee9f0c793cfb54627cd6b3c1562" name="a8ef96ee9f0c793cfb54627cd6b3c1562"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8ef96ee9f0c793cfb54627cd6b3c1562">&#9670;&#160;</a></span>spinOnce()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -248,7 +273,7 @@ template&lt;typename INPUT &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual void <a class="el" href="classdyno_1_1DisplayBase.html">dyno::DisplayBase</a>&lt; INPUT &gt;::spinOnce </td>
+          <td class="memname">void <a class="el" href="classdyno_1_1DisplayBase.html">dyno::DisplayBase</a>&lt; INPUT &gt;::spinOnce </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classdyno_1_1DisplayBase.html#ad8fea9c8b3f0d1e4c1fb670359d53a4b">InputConstPtr</a> &amp;&#160;</td>
           <td class="paramname"><em>input</em></td><td>)</td>
@@ -257,10 +282,72 @@ template&lt;typename INPUT &gt; </div>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Display_8hpp_source.html#l00069">69</a> of file <a class="el" href="Display_8hpp_source.html">Display.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   69</span>                                            {</div>
+<div class="line"><span class="lineno">   70</span>    CHECK(input);</div>
+<div class="line"><span class="lineno">   71</span>    <span class="keyword">auto</span> [timestamp, frame_id] = internal::collectTemporalData&lt;INPUT&gt;(*input);</div>
+<div class="line"><span class="lineno">   72</span>    this-&gt;<a class="code hl_variable" href="structdyno_1_1SharedModuleInterface.html#afeac0a42a7ca31317d9267747e78b9e7">shared_module_info</a>.<a class="code hl_function" href="classdyno_1_1SharedModuleInfo.html#a1ebc41ec3d56d8ea770a523193662c25">updateTimestampMapping</a>(frame_id, timestamp);</div>
+<div class="line"><span class="lineno">   73</span>    <a class="code hl_function" href="classdyno_1_1DisplayBase.html#a7cbae34bc7821aa2586d16f63158e258">spinOnceImpl</a>(input);</div>
+<div class="line"><span class="lineno">   74</span>  }</div>
+<div class="ttc" id="aclassdyno_1_1DisplayBase_html_a7cbae34bc7821aa2586d16f63158e258"><div class="ttname"><a href="classdyno_1_1DisplayBase.html#a7cbae34bc7821aa2586d16f63158e258">dyno::DisplayBase::spinOnceImpl</a></div><div class="ttdeci">virtual void spinOnceImpl(const InputConstPtr &amp;input)=0</div></div>
+<div class="ttc" id="aclassdyno_1_1SharedModuleInfo_html_a1ebc41ec3d56d8ea770a523193662c25"><div class="ttname"><a href="classdyno_1_1SharedModuleInfo.html#a1ebc41ec3d56d8ea770a523193662c25">dyno::SharedModuleInfo::updateTimestampMapping</a></div><div class="ttdeci">SharedModuleInfo &amp; updateTimestampMapping(FrameId frame_id, Timestamp timestamp)</div><div class="ttdef"><b>Definition:</b> <a href="SharedModuleInfo_8cc_source.html#l00080">SharedModuleInfo.cc:80</a></div></div>
+<div class="ttc" id="astructdyno_1_1SharedModuleInterface_html_afeac0a42a7ca31317d9267747e78b9e7"><div class="ttname"><a href="structdyno_1_1SharedModuleInterface.html#afeac0a42a7ca31317d9267747e78b9e7">dyno::SharedModuleInterface::shared_module_info</a></div><div class="ttdeci">SharedModuleInfo &amp; shared_module_info</div><div class="ttdef"><b>Definition:</b> <a href="SharedModuleInfo_8hpp_source.html#l00064">SharedModuleInfo.hpp:64</a></div></div>
+</div><!-- fragment -->
+<p class="reference">References <a class="el" href="structdyno_1_1SharedModuleInterface.html#afeac0a42a7ca31317d9267747e78b9e7">dyno::SharedModuleInterface::shared_module_info</a>, <a class="el" href="classdyno_1_1DisplayBase.html#a7cbae34bc7821aa2586d16f63158e258">dyno::DisplayBase&lt; INPUT &gt;::spinOnceImpl()</a>, and <a class="el" href="classdyno_1_1SharedModuleInfo.html#a1ebc41ec3d56d8ea770a523193662c25">dyno::SharedModuleInfo::updateTimestampMapping()</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classdyno_1_1DisplayBase_a8ef96ee9f0c793cfb54627cd6b3c1562_cgraph.png" border="0" usemap="#aclassdyno_1_1DisplayBase_a8ef96ee9f0c793cfb54627cd6b3c1562_cgraph" alt=""/></div>
+<map name="aclassdyno_1_1DisplayBase_a8ef96ee9f0c793cfb54627cd6b3c1562_cgraph" id="aclassdyno_1_1DisplayBase_a8ef96ee9f0c793cfb54627cd6b3c1562_cgraph">
+<area shape="rect" title=" " alt="" coords="5,37,156,77"/>
+<area shape="rect" href="classdyno_1_1DisplayBase.html#a7cbae34bc7821aa2586d16f63158e258" title=" " alt="" coords="231,5,382,45"/>
+<area shape="rect" href="classdyno_1_1SharedModuleInfo.html#a1ebc41ec3d56d8ea770a523193662c25" title=" " alt="" coords="204,69,409,109"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a7cbae34bc7821aa2586d16f63158e258" name="a7cbae34bc7821aa2586d16f63158e258"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7cbae34bc7821aa2586d16f63158e258">&#9670;&#160;</a></span>spinOnceImpl()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename INPUT &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void <a class="el" href="classdyno_1_1DisplayBase.html">dyno::DisplayBase</a>&lt; INPUT &gt;::spinOnceImpl </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classdyno_1_1DisplayBase.html#ad8fea9c8b3f0d1e4c1fb670359d53a4b">InputConstPtr</a> &amp;&#160;</td>
+          <td class="paramname"><em>input</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1DisplayBase.html#a8ef96ee9f0c793cfb54627cd6b3c1562">dyno::DisplayBase&lt; INPUT &gt;::spinOnce()</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classdyno_1_1DisplayBase_a7cbae34bc7821aa2586d16f63158e258_icgraph.png" border="0" usemap="#aclassdyno_1_1DisplayBase_a7cbae34bc7821aa2586d16f63158e258_icgraph" alt=""/></div>
+<map name="aclassdyno_1_1DisplayBase_a7cbae34bc7821aa2586d16f63158e258_icgraph" id="aclassdyno_1_1DisplayBase_a7cbae34bc7821aa2586d16f63158e258_icgraph">
+<area shape="rect" title=" " alt="" coords="204,5,355,45"/>
+<area shape="rect" href="classdyno_1_1DisplayBase.html#a8ef96ee9f0c793cfb54627cd6b3c1562" title=" " alt="" coords="5,5,156,45"/>
+</map>
+</div>
 
 </div>
 </div>

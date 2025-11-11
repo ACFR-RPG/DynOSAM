@@ -111,13 +111,15 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a78f158a2f524dae37d96caccdb5b36ce"><td class="memItemLeft" align="right" valign="top">gtsam::Pose3&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1PointUpdateContext.html#a78f158a2f524dae37d96caccdb5b36ce">X_k_1_measured</a></td></tr>
 <tr class="memdesc:a78f158a2f524dae37d96caccdb5b36ce"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classdyno_1_1Camera.html">Camera</a> pose from measurement (or initial)  <br /></td></tr>
 <tr class="separator:a78f158a2f524dae37d96caccdb5b36ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af03a432282e3ac15681896c61fc4d75a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacedyno.html#ad0a86323bbb89fa492dd5fe7bf5b164a">Slot</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1PointUpdateContext.html#af03a432282e3ac15681896c61fc4d75a">starting_factor_slot</a> = -1</td></tr>
+<tr class="separator:af03a432282e3ac15681896c61fc4d75a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2986391596624f76139b02fdd8d94b4b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1PointUpdateContext.html#a2986391596624f76139b02fdd8d94b4b">is_starting_motion_frame</a> {false}</td></tr>
 <tr class="separator:a2986391596624f76139b02fdd8d94b4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename MAP&gt;<br />
 struct dyno::PointUpdateContext&lt; MAP &gt;</div>
-<p class="definition">Definition at line <a class="el" href="Formulation_8hpp_source.html#l00093">93</a> of file <a class="el" href="Formulation_8hpp_source.html">Formulation.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Formulation_8hpp_source.html#l00102">102</a> of file <a class="el" href="Formulation_8hpp_source.html">Formulation.hpp</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="aff4715e8006f3d41046a602ab005ab32" name="aff4715e8006f3d41046a602ab005ab32"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aff4715e8006f3d41046a602ab005ab32">&#9670;&#160;</a></span>MapTraitsType</h2>
@@ -133,7 +135,7 @@ template&lt;typename MAP &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Formulation_8hpp_source.html#l00094">94</a> of file <a class="el" href="Formulation_8hpp_source.html">Formulation.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Formulation_8hpp_source.html#l00103">103</a> of file <a class="el" href="Formulation_8hpp_source.html">Formulation.hpp</a>.</p>
 
 </div>
 </div>
@@ -163,12 +165,12 @@ template&lt;typename MAP &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Formulation_8hpp_source.html#l00110">110</a> of file <a class="el" href="Formulation_8hpp_source.html">Formulation.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  110</span>                                      {</div>
-<div class="line"><span class="lineno">  111</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="structdyno_1_1PointUpdateContext.html#ab4da3aec4629b2c51d998dd0b32f346e">lmk_node</a>-&gt;template <a class="code hl_function" href="structdyno_1_1PointUpdateContext.html#a681a7855f42bbba8bea0c8cd0cb6feaf">getObjectId</a>();</div>
-<div class="line"><span class="lineno">  112</span>  }</div>
-<div class="ttc" id="astructdyno_1_1PointUpdateContext_html_a681a7855f42bbba8bea0c8cd0cb6feaf"><div class="ttname"><a href="structdyno_1_1PointUpdateContext.html#a681a7855f42bbba8bea0c8cd0cb6feaf">dyno::PointUpdateContext::getObjectId</a></div><div class="ttdeci">ObjectId getObjectId() const</div><div class="ttdef"><b>Definition:</b> <a href="Formulation_8hpp_source.html#l00110">Formulation.hpp:110</a></div></div>
-<div class="ttc" id="astructdyno_1_1PointUpdateContext_html_ab4da3aec4629b2c51d998dd0b32f346e"><div class="ttname"><a href="structdyno_1_1PointUpdateContext.html#ab4da3aec4629b2c51d998dd0b32f346e">dyno::PointUpdateContext::lmk_node</a></div><div class="ttdeci">MapTraitsType::LandmarkNodePtr lmk_node</div><div class="ttdef"><b>Definition:</b> <a href="Formulation_8hpp_source.html#l00096">Formulation.hpp:96</a></div></div>
+<p class="definition">Definition at line <a class="el" href="Formulation_8hpp_source.html#l00124">124</a> of file <a class="el" href="Formulation_8hpp_source.html">Formulation.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  124</span>                                      {</div>
+<div class="line"><span class="lineno">  125</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="structdyno_1_1PointUpdateContext.html#ab4da3aec4629b2c51d998dd0b32f346e">lmk_node</a>-&gt;template <a class="code hl_function" href="structdyno_1_1PointUpdateContext.html#a681a7855f42bbba8bea0c8cd0cb6feaf">getObjectId</a>();</div>
+<div class="line"><span class="lineno">  126</span>  }</div>
+<div class="ttc" id="astructdyno_1_1PointUpdateContext_html_a681a7855f42bbba8bea0c8cd0cb6feaf"><div class="ttname"><a href="structdyno_1_1PointUpdateContext.html#a681a7855f42bbba8bea0c8cd0cb6feaf">dyno::PointUpdateContext::getObjectId</a></div><div class="ttdeci">ObjectId getObjectId() const</div><div class="ttdef"><b>Definition:</b> <a href="Formulation_8hpp_source.html#l00124">Formulation.hpp:124</a></div></div>
+<div class="ttc" id="astructdyno_1_1PointUpdateContext_html_ab4da3aec4629b2c51d998dd0b32f346e"><div class="ttname"><a href="structdyno_1_1PointUpdateContext.html#ab4da3aec4629b2c51d998dd0b32f346e">dyno::PointUpdateContext::lmk_node</a></div><div class="ttdeci">MapTraitsType::LandmarkNodePtr lmk_node</div><div class="ttdef"><b>Definition:</b> <a href="Formulation_8hpp_source.html#l00105">Formulation.hpp:105</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="structdyno_1_1PointUpdateContext.html#a681a7855f42bbba8bea0c8cd0cb6feaf">dyno::PointUpdateContext&lt; MAP &gt;::getObjectId()</a>, and <a class="el" href="structdyno_1_1PointUpdateContext.html#ab4da3aec4629b2c51d998dd0b32f346e">dyno::PointUpdateContext&lt; MAP &gt;::lmk_node</a>.</p>
 
@@ -217,10 +219,10 @@ template&lt;typename MAP &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Formulation_8hpp_source.html#l00113">113</a> of file <a class="el" href="Formulation_8hpp_source.html">Formulation.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  113</span>                                          {</div>
-<div class="line"><span class="lineno">  114</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="structdyno_1_1PointUpdateContext.html#ab4da3aec4629b2c51d998dd0b32f346e">lmk_node</a>-&gt;template tracklet_id;</div>
-<div class="line"><span class="lineno">  115</span>  }</div>
+<p class="definition">Definition at line <a class="el" href="Formulation_8hpp_source.html#l00127">127</a> of file <a class="el" href="Formulation_8hpp_source.html">Formulation.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  127</span>                                          {</div>
+<div class="line"><span class="lineno">  128</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="structdyno_1_1PointUpdateContext.html#ab4da3aec4629b2c51d998dd0b32f346e">lmk_node</a>-&gt;template tracklet_id;</div>
+<div class="line"><span class="lineno">  129</span>  }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="structdyno_1_1PointUpdateContext.html#ab4da3aec4629b2c51d998dd0b32f346e">dyno::PointUpdateContext&lt; MAP &gt;::lmk_node</a>.</p>
 
@@ -241,7 +243,9 @@ template&lt;typename MAP &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Formulation_8hpp_source.html#l00098">98</a> of file <a class="el" href="Formulation_8hpp_source.html">Formulation.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Formulation_8hpp_source.html#l00107">107</a> of file <a class="el" href="Formulation_8hpp_source.html">Formulation.hpp</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1Formulation.html#ad78d57e7de23e30b9aa287a3939bb3a9">dyno::Formulation&lt; MAP &gt;::updateDynamicObservations()</a>.</p>
 
 </div>
 </div>
@@ -259,7 +263,9 @@ template&lt;typename MAP &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Formulation_8hpp_source.html#l00097">97</a> of file <a class="el" href="Formulation_8hpp_source.html">Formulation.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Formulation_8hpp_source.html#l00106">106</a> of file <a class="el" href="Formulation_8hpp_source.html">Formulation.hpp</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1Formulation.html#ad78d57e7de23e30b9aa287a3939bb3a9">dyno::Formulation&lt; MAP &gt;::updateDynamicObservations()</a>.</p>
 
 </div>
 </div>
@@ -278,7 +284,9 @@ template&lt;typename MAP &gt; </div>
 </div><div class="memdoc">
 <p>If true then this frame is the first frame where a motion is available (i.e we have a pair of valid frames) e.g k-1 is the FIRST frame for this object and now, since we are at k, we can create a motion from k-1 to k </p>
 
-<p class="definition">Definition at line <a class="el" href="Formulation_8hpp_source.html#l00108">108</a> of file <a class="el" href="Formulation_8hpp_source.html">Formulation.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Formulation_8hpp_source.html#l00122">122</a> of file <a class="el" href="Formulation_8hpp_source.html">Formulation.hpp</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1Formulation.html#ad78d57e7de23e30b9aa287a3939bb3a9">dyno::Formulation&lt; MAP &gt;::updateDynamicObservations()</a>.</p>
 
 </div>
 </div>
@@ -296,9 +304,30 @@ template&lt;typename MAP &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Formulation_8hpp_source.html#l00096">96</a> of file <a class="el" href="Formulation_8hpp_source.html">Formulation.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Formulation_8hpp_source.html#l00105">105</a> of file <a class="el" href="Formulation_8hpp_source.html">Formulation.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="structdyno_1_1PointUpdateContext.html#a681a7855f42bbba8bea0c8cd0cb6feaf">dyno::PointUpdateContext&lt; MAP &gt;::getObjectId()</a>, and <a class="el" href="structdyno_1_1PointUpdateContext.html#ab114a4a7ebdc114daa844a010dd505c1">dyno::PointUpdateContext&lt; MAP &gt;::getTrackletId()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="structdyno_1_1PointUpdateContext.html#a681a7855f42bbba8bea0c8cd0cb6feaf">dyno::PointUpdateContext&lt; MAP &gt;::getObjectId()</a>, <a class="el" href="structdyno_1_1PointUpdateContext.html#ab114a4a7ebdc114daa844a010dd505c1">dyno::PointUpdateContext&lt; MAP &gt;::getTrackletId()</a>, and <a class="el" href="classdyno_1_1Formulation.html#ad78d57e7de23e30b9aa287a3939bb3a9">dyno::Formulation&lt; MAP &gt;::updateDynamicObservations()</a>.</p>
+
+</div>
+</div>
+<a id="af03a432282e3ac15681896c61fc4d75a" name="af03a432282e3ac15681896c61fc4d75a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af03a432282e3ac15681896c61fc4d75a">&#9670;&#160;</a></span>starting_factor_slot</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename MAP &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespacedyno.html#ad0a86323bbb89fa492dd5fe7bf5b164a">Slot</a> <a class="el" href="structdyno_1_1PointUpdateContext.html">dyno::PointUpdateContext</a>&lt; MAP &gt;::starting_factor_slot = -1</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>When an update starts only a subset of the factors are provided to the update This value indicates the factor slot offset (ie the total graph size before any update) </p>
+
+<p class="definition">Definition at line <a class="el" href="Formulation_8hpp_source.html#l00117">117</a> of file <a class="el" href="Formulation_8hpp_source.html">Formulation.hpp</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1Formulation.html#ad78d57e7de23e30b9aa287a3939bb3a9">dyno::Formulation&lt; MAP &gt;::updateDynamicObservations()</a>.</p>
 
 </div>
 </div>
@@ -318,7 +347,9 @@ template&lt;typename MAP &gt; </div>
 
 <p><a class="el" href="classdyno_1_1Camera.html">Camera</a> pose from measurement (or initial) </p>
 
-<p class="definition">Definition at line <a class="el" href="Formulation_8hpp_source.html#l00103">103</a> of file <a class="el" href="Formulation_8hpp_source.html">Formulation.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Formulation_8hpp_source.html#l00112">112</a> of file <a class="el" href="Formulation_8hpp_source.html">Formulation.hpp</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1Formulation.html#ad78d57e7de23e30b9aa287a3939bb3a9">dyno::Formulation&lt; MAP &gt;::updateDynamicObservations()</a>.</p>
 
 </div>
 </div>
@@ -338,7 +369,9 @@ template&lt;typename MAP &gt; </div>
 
 <p><a class="el" href="classdyno_1_1Camera.html">Camera</a> pose from measurement (or initial) </p>
 
-<p class="definition">Definition at line <a class="el" href="Formulation_8hpp_source.html#l00101">101</a> of file <a class="el" href="Formulation_8hpp_source.html">Formulation.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Formulation_8hpp_source.html#l00110">110</a> of file <a class="el" href="Formulation_8hpp_source.html">Formulation.hpp</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1Formulation.html#ad78d57e7de23e30b9aa287a3939bb3a9">dyno::Formulation&lt; MAP &gt;::updateDynamicObservations()</a>.</p>
 
 </div>
 </div>

@@ -130,7 +130,7 @@ Private Attributes</h2></td></tr>
 <div class="textblock"><p>Class for managing the publishing and conversion of ObjectOdometry messages. DSD is shorthand for Dynamic SLAM Display. </p>
 <p>Contains an ObjectOdometry publisher on the topic "object_odometry" and a tf2_ros::TransformBroadcaster to broadcast the object odometry TF. </p>
 
-<p class="definition">Definition at line <a class="el" href="DSDCommonRos_8hpp_source.html#l00067">67</a> of file <a class="el" href="DSDCommonRos_8hpp_source.html">DSDCommonRos.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="DSDCommonRos_8hpp_source.html#l00066">66</a> of file <a class="el" href="DSDCommonRos_8hpp_source.html">DSDCommonRos.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="ae7b7325756d28299858565630149c34e" name="ae7b7325756d28299858565630149c34e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae7b7325756d28299858565630149c34e">&#9670;&#160;</a></span>DSDTransport()</h2>
@@ -148,24 +148,24 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="DSDCommonRos_8cc_source.html#l00013">13</a> of file <a class="el" href="DSDCommonRos_8cc_source.html">DSDCommonRos.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   13</span>                                                   : <a class="code hl_variable" href="classdyno_1_1DSDTransport.html#a696520d40317a597358aa2629dea0855">node_</a>(node) {</div>
-<div class="line"><span class="lineno">   14</span>  <a class="code hl_variable" href="classdyno_1_1DSDTransport.html#a0e3949119fc2b3e90656f2422c79f6bf">object_odom_publisher_</a> =</div>
-<div class="line"><span class="lineno">   15</span>      node-&gt;create_publisher&lt;<a class="code hl_typedef" href="namespacedyno.html#a1e7b8e7cb9c94acacd56b98dc9900a97">ObjectOdometry</a>&gt;(<span class="stringliteral">&quot;object_odometry&quot;</span>, 1);</div>
-<div class="line"><span class="lineno">   16</span>  <a class="code hl_variable" href="classdyno_1_1DSDTransport.html#a8a8b65f994b5d8e6de606f1c63e45515">multi_object_odom_path_publisher_</a> =</div>
-<div class="line"><span class="lineno">   17</span>      node-&gt;create_publisher&lt;<a class="code hl_typedef" href="namespacedyno.html#a08ed1ede4e6919d056b91f50997b3cb5">MultiObjectOdometryPath</a>&gt;(<span class="stringliteral">&quot;object_odometry_path&quot;</span>,</div>
-<div class="line"><span class="lineno">   18</span>                                                      1);</div>
-<div class="line"><span class="lineno">   19</span>  <a class="code hl_variable" href="classdyno_1_1DSDTransport.html#abdeb10314e5bd23a2f1ac076cf2ddcaf">tf_broadcaster_</a> = std::make_unique&lt;tf2_ros::TransformBroadcaster&gt;(*<a class="code hl_variable" href="classdyno_1_1DSDTransport.html#a696520d40317a597358aa2629dea0855">node_</a>);</div>
-<div class="line"><span class="lineno">   20</span> </div>
-<div class="line"><span class="lineno">   21</span>  VLOG(20) &lt;&lt; <span class="stringliteral">&quot;Constructed DSDTransport with effective namespace &quot;</span></div>
-<div class="line"><span class="lineno">   22</span>           &lt;&lt; <a class="code hl_variable" href="classdyno_1_1DSDTransport.html#a696520d40317a597358aa2629dea0855">node_</a>-&gt;get_effective_namespace();</div>
-<div class="line"><span class="lineno">   23</span>}</div>
-<div class="ttc" id="aclassdyno_1_1DSDTransport_html_a0e3949119fc2b3e90656f2422c79f6bf"><div class="ttname"><a href="classdyno_1_1DSDTransport.html#a0e3949119fc2b3e90656f2422c79f6bf">dyno::DSDTransport::object_odom_publisher_</a></div><div class="ttdeci">ObjectOdometryPub::SharedPtr object_odom_publisher_</div><div class="ttdef"><b>Definition:</b> <a href="DSDCommonRos_8hpp_source.html#l00209">DSDCommonRos.hpp:209</a></div></div>
-<div class="ttc" id="aclassdyno_1_1DSDTransport_html_a696520d40317a597358aa2629dea0855"><div class="ttname"><a href="classdyno_1_1DSDTransport.html#a696520d40317a597358aa2629dea0855">dyno::DSDTransport::node_</a></div><div class="ttdeci">rclcpp::Node::SharedPtr node_</div><div class="ttdef"><b>Definition:</b> <a href="DSDCommonRos_8hpp_source.html#l00208">DSDCommonRos.hpp:208</a></div></div>
-<div class="ttc" id="aclassdyno_1_1DSDTransport_html_a8a8b65f994b5d8e6de606f1c63e45515"><div class="ttname"><a href="classdyno_1_1DSDTransport.html#a8a8b65f994b5d8e6de606f1c63e45515">dyno::DSDTransport::multi_object_odom_path_publisher_</a></div><div class="ttdeci">MultiObjectOdometryPathPub::SharedPtr multi_object_odom_path_publisher_</div><div class="ttdef"><b>Definition:</b> <a href="DSDCommonRos_8hpp_source.html#l00210">DSDCommonRos.hpp:210</a></div></div>
-<div class="ttc" id="aclassdyno_1_1DSDTransport_html_abdeb10314e5bd23a2f1ac076cf2ddcaf"><div class="ttname"><a href="classdyno_1_1DSDTransport.html#abdeb10314e5bd23a2f1ac076cf2ddcaf">dyno::DSDTransport::tf_broadcaster_</a></div><div class="ttdeci">std::shared_ptr&lt; tf2_ros::TransformBroadcaster &gt; tf_broadcaster_</div><div class="ttdef"><b>Definition:</b> <a href="DSDCommonRos_8hpp_source.html#l00211">DSDCommonRos.hpp:211</a></div></div>
-<div class="ttc" id="anamespacedyno_html_a08ed1ede4e6919d056b91f50997b3cb5"><div class="ttname"><a href="namespacedyno.html#a08ed1ede4e6919d056b91f50997b3cb5">dyno::MultiObjectOdometryPath</a></div><div class="ttdeci">dynamic_slam_interfaces::msg::MultiObjectOdometryPath MultiObjectOdometryPath</div><div class="ttdef"><b>Definition:</b> <a href="DSDCommonRos_8hpp_source.html#l00048">DSDCommonRos.hpp:49</a></div></div>
-<div class="ttc" id="anamespacedyno_html_a1e7b8e7cb9c94acacd56b98dc9900a97"><div class="ttname"><a href="namespacedyno.html#a1e7b8e7cb9c94acacd56b98dc9900a97">dyno::ObjectOdometry</a></div><div class="ttdeci">dynamic_slam_interfaces::msg::ObjectOdometry ObjectOdometry</div><div class="ttdef"><b>Definition:</b> <a href="DSDCommonRos_8hpp_source.html#l00046">DSDCommonRos.hpp:46</a></div></div>
+<p class="definition">Definition at line <a class="el" href="DSDCommonRos_8cc_source.html#l00012">12</a> of file <a class="el" href="DSDCommonRos_8cc_source.html">DSDCommonRos.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   12</span>                                                   : <a class="code hl_variable" href="classdyno_1_1DSDTransport.html#a696520d40317a597358aa2629dea0855">node_</a>(node) {</div>
+<div class="line"><span class="lineno">   13</span>  <a class="code hl_variable" href="classdyno_1_1DSDTransport.html#a0e3949119fc2b3e90656f2422c79f6bf">object_odom_publisher_</a> =</div>
+<div class="line"><span class="lineno">   14</span>      node-&gt;create_publisher&lt;<a class="code hl_typedef" href="namespacedyno.html#a1e7b8e7cb9c94acacd56b98dc9900a97">ObjectOdometry</a>&gt;(<span class="stringliteral">&quot;object_odometry&quot;</span>, 1);</div>
+<div class="line"><span class="lineno">   15</span>  <a class="code hl_variable" href="classdyno_1_1DSDTransport.html#a8a8b65f994b5d8e6de606f1c63e45515">multi_object_odom_path_publisher_</a> =</div>
+<div class="line"><span class="lineno">   16</span>      node-&gt;create_publisher&lt;<a class="code hl_typedef" href="namespacedyno.html#a08ed1ede4e6919d056b91f50997b3cb5">MultiObjectOdometryPath</a>&gt;(<span class="stringliteral">&quot;object_odometry_path&quot;</span>,</div>
+<div class="line"><span class="lineno">   17</span>                                                      1);</div>
+<div class="line"><span class="lineno">   18</span>  <a class="code hl_variable" href="classdyno_1_1DSDTransport.html#abdeb10314e5bd23a2f1ac076cf2ddcaf">tf_broadcaster_</a> = std::make_unique&lt;tf2_ros::TransformBroadcaster&gt;(*<a class="code hl_variable" href="classdyno_1_1DSDTransport.html#a696520d40317a597358aa2629dea0855">node_</a>);</div>
+<div class="line"><span class="lineno">   19</span> </div>
+<div class="line"><span class="lineno">   20</span>  VLOG(20) &lt;&lt; <span class="stringliteral">&quot;Constructed DSDTransport with effective namespace &quot;</span></div>
+<div class="line"><span class="lineno">   21</span>           &lt;&lt; <a class="code hl_variable" href="classdyno_1_1DSDTransport.html#a696520d40317a597358aa2629dea0855">node_</a>-&gt;get_effective_namespace();</div>
+<div class="line"><span class="lineno">   22</span>}</div>
+<div class="ttc" id="aclassdyno_1_1DSDTransport_html_a0e3949119fc2b3e90656f2422c79f6bf"><div class="ttname"><a href="classdyno_1_1DSDTransport.html#a0e3949119fc2b3e90656f2422c79f6bf">dyno::DSDTransport::object_odom_publisher_</a></div><div class="ttdeci">ObjectOdometryPub::SharedPtr object_odom_publisher_</div><div class="ttdef"><b>Definition:</b> <a href="DSDCommonRos_8hpp_source.html#l00208">DSDCommonRos.hpp:208</a></div></div>
+<div class="ttc" id="aclassdyno_1_1DSDTransport_html_a696520d40317a597358aa2629dea0855"><div class="ttname"><a href="classdyno_1_1DSDTransport.html#a696520d40317a597358aa2629dea0855">dyno::DSDTransport::node_</a></div><div class="ttdeci">rclcpp::Node::SharedPtr node_</div><div class="ttdef"><b>Definition:</b> <a href="DSDCommonRos_8hpp_source.html#l00207">DSDCommonRos.hpp:207</a></div></div>
+<div class="ttc" id="aclassdyno_1_1DSDTransport_html_a8a8b65f994b5d8e6de606f1c63e45515"><div class="ttname"><a href="classdyno_1_1DSDTransport.html#a8a8b65f994b5d8e6de606f1c63e45515">dyno::DSDTransport::multi_object_odom_path_publisher_</a></div><div class="ttdeci">MultiObjectOdometryPathPub::SharedPtr multi_object_odom_path_publisher_</div><div class="ttdef"><b>Definition:</b> <a href="DSDCommonRos_8hpp_source.html#l00209">DSDCommonRos.hpp:209</a></div></div>
+<div class="ttc" id="aclassdyno_1_1DSDTransport_html_abdeb10314e5bd23a2f1ac076cf2ddcaf"><div class="ttname"><a href="classdyno_1_1DSDTransport.html#abdeb10314e5bd23a2f1ac076cf2ddcaf">dyno::DSDTransport::tf_broadcaster_</a></div><div class="ttdeci">std::shared_ptr&lt; tf2_ros::TransformBroadcaster &gt; tf_broadcaster_</div><div class="ttdef"><b>Definition:</b> <a href="DSDCommonRos_8hpp_source.html#l00210">DSDCommonRos.hpp:210</a></div></div>
+<div class="ttc" id="anamespacedyno_html_a08ed1ede4e6919d056b91f50997b3cb5"><div class="ttname"><a href="namespacedyno.html#a08ed1ede4e6919d056b91f50997b3cb5">dyno::MultiObjectOdometryPath</a></div><div class="ttdeci">dynamic_slam_interfaces::msg::MultiObjectOdometryPath MultiObjectOdometryPath</div><div class="ttdef"><b>Definition:</b> <a href="DSDCommonRos_8hpp_source.html#l00047">DSDCommonRos.hpp:48</a></div></div>
+<div class="ttc" id="anamespacedyno_html_a1e7b8e7cb9c94acacd56b98dc9900a97"><div class="ttname"><a href="namespacedyno.html#a1e7b8e7cb9c94acacd56b98dc9900a97">dyno::ObjectOdometry</a></div><div class="ttdeci">dynamic_slam_interfaces::msg::ObjectOdometry ObjectOdometry</div><div class="ttdef"><b>Definition:</b> <a href="DSDCommonRos_8hpp_source.html#l00045">DSDCommonRos.hpp:45</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1DSDTransport.html#a8a8b65f994b5d8e6de606f1c63e45515">multi_object_odom_path_publisher_</a>, <a class="el" href="classdyno_1_1DSDTransport.html#a696520d40317a597358aa2629dea0855">node_</a>, <a class="el" href="classdyno_1_1DSDTransport.html#a0e3949119fc2b3e90656f2422c79f6bf">object_odom_publisher_</a>, and <a class="el" href="classdyno_1_1DSDTransport.html#abdeb10314e5bd23a2f1ac076cf2ddcaf">tf_broadcaster_</a>.</p>
 
@@ -235,26 +235,26 @@ Private Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><a class="el" href="classdyno_1_1DSDTransport_1_1Publisher.html" title="Nested Publisher that publishes all the object odometries for a single frame/timestamp....">Publisher</a> </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="DSDCommonRos_8cc_source.html#l00246">246</a> of file <a class="el" href="DSDCommonRos_8cc_source.html">DSDCommonRos.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  250</span>                         {</div>
-<div class="line"><span class="lineno">  251</span>  <span class="keywordflow">return</span> Publisher(<a class="code hl_variable" href="classdyno_1_1DSDTransport.html#a696520d40317a597358aa2629dea0855">node_</a>, <a class="code hl_variable" href="classdyno_1_1DSDTransport.html#a0e3949119fc2b3e90656f2422c79f6bf">object_odom_publisher_</a>,</div>
-<div class="line"><span class="lineno">  252</span>                   <a class="code hl_variable" href="classdyno_1_1DSDTransport.html#a8a8b65f994b5d8e6de606f1c63e45515">multi_object_odom_path_publisher_</a>, <a class="code hl_variable" href="classdyno_1_1DSDTransport.html#abdeb10314e5bd23a2f1ac076cf2ddcaf">tf_broadcaster_</a>, motions,</div>
-<div class="line"><span class="lineno">  253</span>                   poses, frame_id_link, frame_timestamp_map, frame_id,</div>
-<div class="line"><span class="lineno">  254</span>                   timestamp);</div>
-<div class="line"><span class="lineno">  255</span>}</div>
+<p class="definition">Definition at line <a class="el" href="DSDCommonRos_8cc_source.html#l00248">248</a> of file <a class="el" href="DSDCommonRos_8cc_source.html">DSDCommonRos.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  252</span>                         {</div>
+<div class="line"><span class="lineno">  253</span>  <span class="keywordflow">return</span> Publisher(<a class="code hl_variable" href="classdyno_1_1DSDTransport.html#a696520d40317a597358aa2629dea0855">node_</a>, <a class="code hl_variable" href="classdyno_1_1DSDTransport.html#a0e3949119fc2b3e90656f2422c79f6bf">object_odom_publisher_</a>,</div>
+<div class="line"><span class="lineno">  254</span>                   <a class="code hl_variable" href="classdyno_1_1DSDTransport.html#a8a8b65f994b5d8e6de606f1c63e45515">multi_object_odom_path_publisher_</a>, <a class="code hl_variable" href="classdyno_1_1DSDTransport.html#abdeb10314e5bd23a2f1ac076cf2ddcaf">tf_broadcaster_</a>, motions,</div>
+<div class="line"><span class="lineno">  255</span>                   poses, frame_id_link, frame_timestamp_map, frame_id,</div>
+<div class="line"><span class="lineno">  256</span>                   timestamp);</div>
+<div class="line"><span class="lineno">  257</span>}</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1DSDTransport.html#a8a8b65f994b5d8e6de606f1c63e45515">multi_object_odom_path_publisher_</a>, <a class="el" href="classdyno_1_1DSDTransport.html#a696520d40317a597358aa2629dea0855">node_</a>, <a class="el" href="classdyno_1_1DSDTransport.html#a0e3949119fc2b3e90656f2422c79f6bf">object_odom_publisher_</a>, and <a class="el" href="classdyno_1_1DSDTransport.html#abdeb10314e5bd23a2f1ac076cf2ddcaf">tf_broadcaster_</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1FrontendDSDRos.html#a9101c485338a62d8a86b37a56a68503e">dyno::FrontendDSDRos::processRGBDOutputpacket()</a>, and <a class="el" href="classdyno_1_1BackendDSDRos.html#a5316ec622424b5f5c3c5b111a56c4063">dyno::BackendDSDRos::spinOnce()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1BackendDSDRos.html#a67d3309d1d64b1a812ee713147196361">dyno::BackendDSDRos::spinOnceImpl()</a>, and <a class="el" href="classdyno_1_1FrontendDSDRos.html#afc399912f88290e381ced1860200ac4b">dyno::FrontendDSDRos::tryPublishObjects()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1DSDTransport_af3de22d3c37040622cda31ab745955fe_icgraph.png" border="0" usemap="#aclassdyno_1_1DSDTransport_af3de22d3c37040622cda31ab745955fe_icgraph" alt=""/></div>
 <map name="aclassdyno_1_1DSDTransport_af3de22d3c37040622cda31ab745955fe_icgraph" id="aclassdyno_1_1DSDTransport_af3de22d3c37040622cda31ab745955fe_icgraph">
-<area shape="rect" title="Create a object odometry Publisher given object state (motion and pose) information up to a given fra..." alt="" coords="477,37,628,77"/>
-<area shape="rect" href="classdyno_1_1FrontendDSDRos.html#a9101c485338a62d8a86b37a56a68503e" title=" " alt="" coords="224,5,429,45"/>
-<area shape="rect" href="classdyno_1_1BackendDSDRos.html#a5316ec622424b5f5c3c5b111a56c4063" title=" " alt="" coords="242,69,411,109"/>
-<area shape="rect" href="classdyno_1_1FrontendDSDRos.html#a633a457c51868257f25d44d1a99f0e12" title=" " alt="" coords="5,5,176,45"/>
+<area shape="rect" title="Create a object odometry Publisher given object state (motion and pose) information up to a given fra..." alt="" coords="443,37,593,77"/>
+<area shape="rect" href="classdyno_1_1BackendDSDRos.html#a67d3309d1d64b1a812ee713147196361" title=" " alt="" coords="225,5,394,45"/>
+<area shape="rect" href="classdyno_1_1FrontendDSDRos.html#afc399912f88290e381ced1860200ac4b" title=" " alt="" coords="224,69,395,109"/>
+<area shape="rect" href="classdyno_1_1FrontendDSDRos.html#a9ea761222ea4517c1ee4e562f6bdde83" title=" " alt="" coords="5,69,176,109"/>
 </map>
 </div>
 
@@ -318,23 +318,24 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="DSDCommonRos_8cc_source.html#l00090">90</a> of file <a class="el" href="DSDCommonRos_8cc_source.html">DSDCommonRos.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   93</span>                                                                       {</div>
-<div class="line"><span class="lineno">   94</span>  <a class="code hl_typedef" href="namespacedyno.html#a08ed1ede4e6919d056b91f50997b3cb5">MultiObjectOdometryPath</a> multi_path;</div>
-<div class="line"><span class="lineno">   95</span>  multi_path.header.stamp = <a class="code hl_function" href="namespacedyno_1_1utils.html#a81025ee06847cec0fd854eff05362d19">utils::toRosTime</a>(timestamp_k);</div>
+<p class="definition">Definition at line <a class="el" href="DSDCommonRos_8cc_source.html#l00089">89</a> of file <a class="el" href="DSDCommonRos_8cc_source.html">DSDCommonRos.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   92</span>                                                                       {</div>
+<div class="line"><span class="lineno">   93</span>  <a class="code hl_typedef" href="namespacedyno.html#a08ed1ede4e6919d056b91f50997b3cb5">MultiObjectOdometryPath</a> multi_path;</div>
+<div class="line"><span class="lineno">   94</span>  multi_path.header.stamp = <a class="code hl_function" href="namespacedyno_1_1utils.html#a81025ee06847cec0fd854eff05362d19">utils::toRosTime</a>(timestamp_k);</div>
+<div class="line"><span class="lineno">   95</span> </div>
 <div class="line"><span class="lineno">   96</span>  multi_path.header.frame_id = frame_id_link;</div>
 <div class="line"><span class="lineno">   97</span> </div>
 <div class="line"><span class="lineno">   98</span>  <span class="comment">// TODO: right now dont have the motion for every timestep so... just leave</span></div>
 <div class="line"><span class="lineno">   99</span>  <span class="comment">// blank?</span></div>
 <div class="line"><span class="lineno">  100</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [object_id, frame_pose_map] : poses) {</div>
 <div class="line"><span class="lineno">  101</span>    <span class="keyword">const</span> std::string child_frame_id_link = <a class="code hl_function" href="classdyno_1_1DSDTransport.html#a41525d7e486a44137435c5ed47a2e8db">constructObjectFrameLink</a>(object_id);</div>
-<div class="line"><span class="lineno">  102</span>    <a class="code hl_typedef" href="namespacedyno.html#ac4303d6fafb755f794b072d76f9cfb41">FrameId</a> previous_frame_id = -1;</div>
-<div class="line"><span class="lineno">  103</span>    <span class="keywordtype">bool</span> first = <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  104</span>    <span class="keywordtype">int</span> path_segment = 0;</div>
-<div class="line"><span class="lineno">  105</span> </div>
-<div class="line"><span class="lineno">  106</span>    std_msgs::msg::ColorRGBA colour_msg;</div>
-<div class="line"><span class="lineno">  107</span>    <a class="code hl_function" href="namespacedyno.html#a8357d6a8de284f4d1fc3d074646b43bb">convert</a>(<a class="code hl_function" href="structdyno_1_1Color.html#a6689af3d0ac5ceaa66000b5ca70becbd">Color::uniqueId</a>(object_id), colour_msg);</div>
-<div class="line"><span class="lineno">  108</span> </div>
+<div class="line"><span class="lineno">  102</span>    <span class="comment">// NOTE: cannot use FrameId for type (size_t)</span></div>
+<div class="line"><span class="lineno">  103</span>    <span class="keywordtype">int</span> previous_frame_id = -1;</div>
+<div class="line"><span class="lineno">  104</span>    <span class="keywordtype">bool</span> first = <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  105</span>    <span class="keywordtype">int</span> path_segment = 0;</div>
+<div class="line"><span class="lineno">  106</span> </div>
+<div class="line"><span class="lineno">  107</span>    std_msgs::msg::ColorRGBA colour_msg;</div>
+<div class="line"><span class="lineno">  108</span>    <a class="code hl_function" href="namespacedyno.html#a8357d6a8de284f4d1fc3d074646b43bb">convert</a>(<a class="code hl_function" href="structdyno_1_1Color.html#a6689af3d0ac5ceaa66000b5ca70becbd">Color::uniqueId</a>(object_id), colour_msg);</div>
 <div class="line"><span class="lineno">  109</span>    <span class="comment">// paths for this object, broken into segments</span></div>
 <div class="line"><span class="lineno">  110</span>    gtsam::FastMap&lt;int, ObjectOdometryPath&gt; segmented_paths;</div>
 <div class="line"><span class="lineno">  111</span> </div>
@@ -347,95 +348,96 @@ Here is the caller graph for this function:</div>
 <div class="line"><span class="lineno">  118</span>        <span class="comment">//     ObjectMotionMap&quot;;</span></div>
 <div class="line"><span class="lineno">  119</span>        <span class="keywordflow">continue</span>;</div>
 <div class="line"><span class="lineno">  120</span>      }</div>
-<div class="line"><span class="lineno">  121</span>      <span class="keyword">const</span> gtsam::Pose3&amp; object_motion = motions.at(object_id, frame_id);</div>
-<div class="line"><span class="lineno">  122</span> </div>
-<div class="line"><span class="lineno">  123</span>      <span class="keywordflow">if</span> (!frame_timestamp_map.exists(frame_id)) {</div>
-<div class="line"><span class="lineno">  124</span>        LOG(WARNING) &lt;&lt; <span class="stringliteral">&quot;Cannot construct ObjectOdometry for object &quot;</span></div>
-<div class="line"><span class="lineno">  125</span>                     &lt;&lt; object_id &lt;&lt; <span class="stringliteral">&quot;, at frame &quot;</span> &lt;&lt; frame_id</div>
-<div class="line"><span class="lineno">  126</span>                     &lt;&lt; <span class="stringliteral">&quot; for MultiObjectOdometryPath. Missing entry in &quot;</span></div>
-<div class="line"><span class="lineno">  127</span>                        <span class="stringliteral">&quot;FrameIdTimestampMap&quot;</span>;</div>
-<div class="line"><span class="lineno">  128</span>        <span class="keywordflow">continue</span>;</div>
-<div class="line"><span class="lineno">  129</span>      }</div>
-<div class="line"><span class="lineno">  130</span>      <span class="keyword">const</span> <a class="code hl_typedef" href="namespacedyno.html#a7fda67c0575c4b7a8210dcc8ae227370">Timestamp</a>&amp; timestamp = frame_timestamp_map.at(frame_id);</div>
+<div class="line"><span class="lineno">  121</span> </div>
+<div class="line"><span class="lineno">  122</span>      <span class="keyword">const</span> gtsam::Pose3&amp; object_motion = motions.at(object_id, frame_id);</div>
+<div class="line"><span class="lineno">  123</span> </div>
+<div class="line"><span class="lineno">  124</span>      <span class="keywordflow">if</span> (!frame_timestamp_map.exists(frame_id)) {</div>
+<div class="line"><span class="lineno">  125</span>        LOG(WARNING) &lt;&lt; <span class="stringliteral">&quot;Cannot construct ObjectOdometry for object &quot;</span></div>
+<div class="line"><span class="lineno">  126</span>                     &lt;&lt; object_id &lt;&lt; <span class="stringliteral">&quot;, at frame &quot;</span> &lt;&lt; frame_id</div>
+<div class="line"><span class="lineno">  127</span>                     &lt;&lt; <span class="stringliteral">&quot; for MultiObjectOdometryPath. Missing entry in &quot;</span></div>
+<div class="line"><span class="lineno">  128</span>                        <span class="stringliteral">&quot;FrameIdTimestampMap&quot;</span>;</div>
+<div class="line"><span class="lineno">  129</span>        <span class="keywordflow">continue</span>;</div>
+<div class="line"><span class="lineno">  130</span>      }</div>
 <div class="line"><span class="lineno">  131</span> </div>
-<div class="line"><span class="lineno">  132</span>      <span class="keywordflow">if</span> (!first &amp;&amp; frame_id != previous_frame_id + 1) {</div>
-<div class="line"><span class="lineno">  133</span>        path_segment++;</div>
-<div class="line"><span class="lineno">  134</span>      }</div>
-<div class="line"><span class="lineno">  135</span>      first = <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">  136</span>      previous_frame_id = frame_id;</div>
-<div class="line"><span class="lineno">  137</span> </div>
-<div class="line"><span class="lineno">  138</span>      <span class="comment">// RIGHT NOW MOTION IDENTITY</span></div>
-<div class="line"><span class="lineno">  139</span>      <span class="comment">// timestamp is wrong</span></div>
-<div class="line"><span class="lineno">  140</span>      gtsam::Pose3 motion;</div>
-<div class="line"><span class="lineno">  141</span>      <span class="keyword">const</span> <a class="code hl_typedef" href="namespacedyno.html#a1e7b8e7cb9c94acacd56b98dc9900a97">ObjectOdometry</a> object_odometry = <a class="code hl_function" href="classdyno_1_1DSDTransport.html#a68cd19d60a58b1b568f9006d5483ee97">constructObjectOdometry</a>(</div>
-<div class="line"><span class="lineno">  142</span>          object_motion, object_pose, object_id, frame_id, timestamp,</div>
-<div class="line"><span class="lineno">  143</span>          frame_id_link, child_frame_id_link);</div>
-<div class="line"><span class="lineno">  144</span> </div>
-<div class="line"><span class="lineno">  145</span>      <span class="keywordflow">if</span> (!segmented_paths.exists(path_segment)) {</div>
-<div class="line"><span class="lineno">  146</span>        <a class="code hl_typedef" href="namespacedyno.html#ae75f40076d0752a992e0a684f375de74">ObjectOdometryPath</a> path;</div>
-<div class="line"><span class="lineno">  147</span>        path.colour = colour_msg;</div>
-<div class="line"><span class="lineno">  148</span>        path.object_id = object_id;</div>
-<div class="line"><span class="lineno">  149</span>        path.path_segment = path_segment;</div>
-<div class="line"><span class="lineno">  150</span> </div>
-<div class="line"><span class="lineno">  151</span>        path.header = multi_path.header;</div>
+<div class="line"><span class="lineno">  132</span>      <span class="keyword">const</span> <a class="code hl_typedef" href="namespacedyno.html#a7fda67c0575c4b7a8210dcc8ae227370">Timestamp</a>&amp; timestamp = frame_timestamp_map.at(frame_id);</div>
+<div class="line"><span class="lineno">  133</span> </div>
+<div class="line"><span class="lineno">  134</span>      <span class="keywordflow">if</span> (!first &amp;&amp; <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(frame_id) != previous_frame_id + 1) {</div>
+<div class="line"><span class="lineno">  135</span>        path_segment++;</div>
+<div class="line"><span class="lineno">  136</span>      }</div>
+<div class="line"><span class="lineno">  137</span>      first = <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">  138</span>      previous_frame_id = <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(frame_id);</div>
+<div class="line"><span class="lineno">  139</span> </div>
+<div class="line"><span class="lineno">  140</span>      <span class="comment">// RIGHT NOW MOTION IDENTITY</span></div>
+<div class="line"><span class="lineno">  141</span>      <span class="comment">// timestamp is wrong</span></div>
+<div class="line"><span class="lineno">  142</span>      gtsam::Pose3 motion;</div>
+<div class="line"><span class="lineno">  143</span>      <span class="keyword">const</span> <a class="code hl_typedef" href="namespacedyno.html#a1e7b8e7cb9c94acacd56b98dc9900a97">ObjectOdometry</a> object_odometry = <a class="code hl_function" href="classdyno_1_1DSDTransport.html#a68cd19d60a58b1b568f9006d5483ee97">constructObjectOdometry</a>(</div>
+<div class="line"><span class="lineno">  144</span>          object_motion, object_pose, object_id, frame_id, timestamp,</div>
+<div class="line"><span class="lineno">  145</span>          frame_id_link, child_frame_id_link);</div>
+<div class="line"><span class="lineno">  146</span> </div>
+<div class="line"><span class="lineno">  147</span>      <span class="keywordflow">if</span> (!segmented_paths.exists(path_segment)) {</div>
+<div class="line"><span class="lineno">  148</span>        <a class="code hl_typedef" href="namespacedyno.html#ae75f40076d0752a992e0a684f375de74">ObjectOdometryPath</a> path;</div>
+<div class="line"><span class="lineno">  149</span>        path.colour = colour_msg;</div>
+<div class="line"><span class="lineno">  150</span>        path.object_id = object_id;</div>
+<div class="line"><span class="lineno">  151</span>        path.path_segment = path_segment;</div>
 <div class="line"><span class="lineno">  152</span> </div>
-<div class="line"><span class="lineno">  153</span>        segmented_paths.insert2(path_segment, path);</div>
-<div class="line"><span class="lineno">  154</span>      }</div>
-<div class="line"><span class="lineno">  155</span> </div>
-<div class="line"><span class="lineno">  156</span>      <a class="code hl_typedef" href="namespacedyno.html#ae75f40076d0752a992e0a684f375de74">ObjectOdometryPath</a>&amp; path = segmented_paths.at(path_segment);</div>
-<div class="line"><span class="lineno">  157</span>      path.object_odometries.push_back(object_odometry);</div>
-<div class="line"><span class="lineno">  158</span>    }</div>
-<div class="line"><span class="lineno">  159</span> </div>
-<div class="line"><span class="lineno">  160</span>    <span class="comment">// TODO: make this a flag and the frame diff!</span></div>
-<div class="line"><span class="lineno">  161</span>    <span class="keywordflow">if</span> (interpolate_missing_segments) {</div>
-<div class="line"><span class="lineno">  162</span>      <span class="comment">// assume segmented paths are in order</span></div>
-<div class="line"><span class="lineno">  163</span>      <span class="keywordflow">for</span> (<span class="keyword">auto</span> it = segmented_paths.begin();</div>
-<div class="line"><span class="lineno">  164</span>           std::next(it) != segmented_paths.end(); ++it) {</div>
-<div class="line"><span class="lineno">  165</span>        <span class="keyword">auto</span> current_segment_id = it-&gt;first;</div>
-<div class="line"><span class="lineno">  166</span>        <span class="keyword">auto</span> next_segment_id = std::next(it)-&gt;first;</div>
-<div class="line"><span class="lineno">  167</span>        CHECK_EQ(current_segment_id + 1, next_segment_id);</div>
-<div class="line"><span class="lineno">  168</span> </div>
-<div class="line"><span class="lineno">  169</span>        <span class="keyword">const</span> <a class="code hl_typedef" href="namespacedyno.html#ae75f40076d0752a992e0a684f375de74">ObjectOdometryPath</a>&amp; current_path_segment = it-&gt;second;</div>
-<div class="line"><span class="lineno">  170</span>        <span class="keyword">const</span> <a class="code hl_typedef" href="namespacedyno.html#ae75f40076d0752a992e0a684f375de74">ObjectOdometryPath</a>&amp; next_path_segment = std::next(it)-&gt;second;</div>
-<div class="line"><span class="lineno">  171</span> </div>
-<div class="line"><span class="lineno">  172</span>        <span class="keyword">const</span> <span class="keyword">auto</span> begin_object_odom =</div>
-<div class="line"><span class="lineno">  173</span>            current_path_segment.object_odometries.back();</div>
-<div class="line"><span class="lineno">  174</span>        <span class="keyword">const</span> <span class="keyword">auto</span> end_object_odom =</div>
-<div class="line"><span class="lineno">  175</span>            next_path_segment.object_odometries.front();</div>
-<div class="line"><span class="lineno">  176</span>        <span class="comment">// interpolate between end of current and start of next</span></div>
-<div class="line"><span class="lineno">  177</span>        <span class="comment">// less than 5 frames appart</span></div>
-<div class="line"><span class="lineno">  178</span> </div>
-<div class="line"><span class="lineno">  179</span>        <span class="keywordflow">if</span> (end_object_odom.sequence - begin_object_odom.sequence &lt; 5) {</div>
-<div class="line"><span class="lineno">  180</span>          <a class="code hl_typedef" href="namespacedyno.html#ae75f40076d0752a992e0a684f375de74">ObjectOdometryPath</a> interpolated_segment;</div>
-<div class="line"><span class="lineno">  181</span>          interpolated_segment.colour = colour_msg;</div>
-<div class="line"><span class="lineno">  182</span>          interpolated_segment.object_id = object_id;</div>
-<div class="line"><span class="lineno">  183</span>          <span class="comment">//-1 for path segment</span></div>
-<div class="line"><span class="lineno">  184</span>          interpolated_segment.path_segment = -1;</div>
-<div class="line"><span class="lineno">  185</span>          interpolated_segment.header = multi_path.header;</div>
-<div class="line"><span class="lineno">  186</span>          <span class="comment">// NOTE: this is not actually interpolating its just going to make</span></div>
-<div class="line"><span class="lineno">  187</span>          <span class="comment">// RVIZ draw a line between them!!</span></div>
-<div class="line"><span class="lineno">  188</span>          interpolated_segment.object_odometries.push_back(begin_object_odom);</div>
-<div class="line"><span class="lineno">  189</span>          interpolated_segment.object_odometries.push_back(end_object_odom);</div>
-<div class="line"><span class="lineno">  190</span>          multi_path.paths.push_back(interpolated_segment);</div>
-<div class="line"><span class="lineno">  191</span>        }</div>
-<div class="line"><span class="lineno">  192</span>      }</div>
-<div class="line"><span class="lineno">  193</span>    }</div>
-<div class="line"><span class="lineno">  194</span> </div>
-<div class="line"><span class="lineno">  195</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [_, path] : segmented_paths) {</div>
-<div class="line"><span class="lineno">  196</span>      multi_path.paths.push_back(path);</div>
-<div class="line"><span class="lineno">  197</span>    }</div>
-<div class="line"><span class="lineno">  198</span>  }</div>
-<div class="line"><span class="lineno">  199</span> </div>
-<div class="line"><span class="lineno">  200</span>  <span class="keywordflow">return</span> multi_path;</div>
-<div class="line"><span class="lineno">  201</span>}</div>
-<div class="ttc" id="aclassdyno_1_1DSDTransport_html_a41525d7e486a44137435c5ed47a2e8db"><div class="ttname"><a href="classdyno_1_1DSDTransport.html#a41525d7e486a44137435c5ed47a2e8db">dyno::DSDTransport::constructObjectFrameLink</a></div><div class="ttdeci">static std::string constructObjectFrameLink(ObjectId object_id)</div><div class="ttdoc">Construct object id tf link from an object id. This will be used as the link in the ROS tf tree and a...</div><div class="ttdef"><b>Definition:</b> <a href="DSDCommonRos_8cc_source.html#l00025">DSDCommonRos.cc:25</a></div></div>
-<div class="ttc" id="aclassdyno_1_1DSDTransport_html_a68cd19d60a58b1b568f9006d5483ee97"><div class="ttname"><a href="classdyno_1_1DSDTransport.html#a68cd19d60a58b1b568f9006d5483ee97">dyno::DSDTransport::constructObjectOdometry</a></div><div class="ttdeci">static ObjectOdometry constructObjectOdometry(const gtsam::Pose3 &amp;e_H_k_world, const gtsam::Pose3 &amp;pose_k, ObjectId object_id, FrameId frame_id_k, Timestamp timestamp_k, const std::string &amp;frame_id_link, const std::string &amp;child_frame_id_link)</div><div class="ttdef"><b>Definition:</b> <a href="DSDCommonRos_8cc_source.html#l00029">DSDCommonRos.cc:29</a></div></div>
-<div class="ttc" id="anamespacedyno_1_1utils_html_a81025ee06847cec0fd854eff05362d19"><div class="ttname"><a href="namespacedyno_1_1utils.html#a81025ee06847cec0fd854eff05362d19">dyno::utils::toRosTime</a></div><div class="ttdeci">rclcpp::Time toRosTime(Timestamp timestamp)</div><div class="ttdoc">Converts Timestamp (in seconds) to ROS time.</div><div class="ttdef"><b>Definition:</b> <a href="RosUtils_8cc_source.html#l00293">RosUtils.cc:293</a></div></div>
-<div class="ttc" id="anamespacedyno_html_a7fda67c0575c4b7a8210dcc8ae227370"><div class="ttname"><a href="namespacedyno.html#a7fda67c0575c4b7a8210dcc8ae227370">dyno::Timestamp</a></div><div class="ttdeci">double Timestamp</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00064">Types.hpp:64</a></div></div>
+<div class="line"><span class="lineno">  153</span>        path.header = multi_path.header;</div>
+<div class="line"><span class="lineno">  154</span> </div>
+<div class="line"><span class="lineno">  155</span>        segmented_paths.insert2(path_segment, path);</div>
+<div class="line"><span class="lineno">  156</span>      }</div>
+<div class="line"><span class="lineno">  157</span> </div>
+<div class="line"><span class="lineno">  158</span>      <a class="code hl_typedef" href="namespacedyno.html#ae75f40076d0752a992e0a684f375de74">ObjectOdometryPath</a>&amp; path = segmented_paths.at(path_segment);</div>
+<div class="line"><span class="lineno">  159</span>      path.object_odometries.push_back(object_odometry);</div>
+<div class="line"><span class="lineno">  160</span>    }</div>
+<div class="line"><span class="lineno">  161</span> </div>
+<div class="line"><span class="lineno">  162</span>    <span class="comment">// TODO: make this a flag and the frame diff!</span></div>
+<div class="line"><span class="lineno">  163</span>    <span class="keywordflow">if</span> (interpolate_missing_segments) {</div>
+<div class="line"><span class="lineno">  164</span>      <span class="comment">// assume segmented paths are in order</span></div>
+<div class="line"><span class="lineno">  165</span>      <span class="keywordflow">for</span> (<span class="keyword">auto</span> it = segmented_paths.begin();</div>
+<div class="line"><span class="lineno">  166</span>           std::next(it) != segmented_paths.end(); ++it) {</div>
+<div class="line"><span class="lineno">  167</span>        <span class="keyword">auto</span> current_segment_id = it-&gt;first;</div>
+<div class="line"><span class="lineno">  168</span>        <span class="keyword">auto</span> next_segment_id = std::next(it)-&gt;first;</div>
+<div class="line"><span class="lineno">  169</span>        CHECK_EQ(current_segment_id + 1, next_segment_id);</div>
+<div class="line"><span class="lineno">  170</span> </div>
+<div class="line"><span class="lineno">  171</span>        <span class="keyword">const</span> <a class="code hl_typedef" href="namespacedyno.html#ae75f40076d0752a992e0a684f375de74">ObjectOdometryPath</a>&amp; current_path_segment = it-&gt;second;</div>
+<div class="line"><span class="lineno">  172</span>        <span class="keyword">const</span> <a class="code hl_typedef" href="namespacedyno.html#ae75f40076d0752a992e0a684f375de74">ObjectOdometryPath</a>&amp; next_path_segment = std::next(it)-&gt;second;</div>
+<div class="line"><span class="lineno">  173</span> </div>
+<div class="line"><span class="lineno">  174</span>        <span class="keyword">const</span> <span class="keyword">auto</span> begin_object_odom =</div>
+<div class="line"><span class="lineno">  175</span>            current_path_segment.object_odometries.back();</div>
+<div class="line"><span class="lineno">  176</span>        <span class="keyword">const</span> <span class="keyword">auto</span> end_object_odom =</div>
+<div class="line"><span class="lineno">  177</span>            next_path_segment.object_odometries.front();</div>
+<div class="line"><span class="lineno">  178</span>        <span class="comment">// interpolate between end of current and start of next</span></div>
+<div class="line"><span class="lineno">  179</span>        <span class="comment">// less than 5 frames appart</span></div>
+<div class="line"><span class="lineno">  180</span> </div>
+<div class="line"><span class="lineno">  181</span>        <span class="keywordflow">if</span> (end_object_odom.sequence - begin_object_odom.sequence &lt; 5) {</div>
+<div class="line"><span class="lineno">  182</span>          <a class="code hl_typedef" href="namespacedyno.html#ae75f40076d0752a992e0a684f375de74">ObjectOdometryPath</a> interpolated_segment;</div>
+<div class="line"><span class="lineno">  183</span>          interpolated_segment.colour = colour_msg;</div>
+<div class="line"><span class="lineno">  184</span>          interpolated_segment.object_id = object_id;</div>
+<div class="line"><span class="lineno">  185</span>          <span class="comment">//-1 for path segment</span></div>
+<div class="line"><span class="lineno">  186</span>          interpolated_segment.path_segment = -1;</div>
+<div class="line"><span class="lineno">  187</span>          interpolated_segment.header = multi_path.header;</div>
+<div class="line"><span class="lineno">  188</span>          <span class="comment">// NOTE: this is not actually interpolating its just going to make</span></div>
+<div class="line"><span class="lineno">  189</span>          <span class="comment">// RVIZ draw a line between them!!</span></div>
+<div class="line"><span class="lineno">  190</span>          interpolated_segment.object_odometries.push_back(begin_object_odom);</div>
+<div class="line"><span class="lineno">  191</span>          interpolated_segment.object_odometries.push_back(end_object_odom);</div>
+<div class="line"><span class="lineno">  192</span>          multi_path.paths.push_back(interpolated_segment);</div>
+<div class="line"><span class="lineno">  193</span>        }</div>
+<div class="line"><span class="lineno">  194</span>      }</div>
+<div class="line"><span class="lineno">  195</span>    }</div>
+<div class="line"><span class="lineno">  196</span> </div>
+<div class="line"><span class="lineno">  197</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [_, path] : segmented_paths) {</div>
+<div class="line"><span class="lineno">  198</span>      multi_path.paths.push_back(path);</div>
+<div class="line"><span class="lineno">  199</span>    }</div>
+<div class="line"><span class="lineno">  200</span>  }</div>
+<div class="line"><span class="lineno">  201</span> </div>
+<div class="line"><span class="lineno">  202</span>  <span class="keywordflow">return</span> multi_path;</div>
+<div class="line"><span class="lineno">  203</span>}</div>
+<div class="ttc" id="aclassdyno_1_1DSDTransport_html_a41525d7e486a44137435c5ed47a2e8db"><div class="ttname"><a href="classdyno_1_1DSDTransport.html#a41525d7e486a44137435c5ed47a2e8db">dyno::DSDTransport::constructObjectFrameLink</a></div><div class="ttdeci">static std::string constructObjectFrameLink(ObjectId object_id)</div><div class="ttdoc">Construct object id tf link from an object id. This will be used as the link in the ROS tf tree and a...</div><div class="ttdef"><b>Definition:</b> <a href="DSDCommonRos_8cc_source.html#l00024">DSDCommonRos.cc:24</a></div></div>
+<div class="ttc" id="aclassdyno_1_1DSDTransport_html_a68cd19d60a58b1b568f9006d5483ee97"><div class="ttname"><a href="classdyno_1_1DSDTransport.html#a68cd19d60a58b1b568f9006d5483ee97">dyno::DSDTransport::constructObjectOdometry</a></div><div class="ttdeci">static ObjectOdometry constructObjectOdometry(const gtsam::Pose3 &amp;e_H_k_world, const gtsam::Pose3 &amp;pose_k, ObjectId object_id, FrameId frame_id_k, Timestamp timestamp_k, const std::string &amp;frame_id_link, const std::string &amp;child_frame_id_link)</div><div class="ttdef"><b>Definition:</b> <a href="DSDCommonRos_8cc_source.html#l00028">DSDCommonRos.cc:28</a></div></div>
+<div class="ttc" id="anamespacedyno_1_1utils_html_a81025ee06847cec0fd854eff05362d19"><div class="ttname"><a href="namespacedyno_1_1utils.html#a81025ee06847cec0fd854eff05362d19">dyno::utils::toRosTime</a></div><div class="ttdeci">rclcpp::Time toRosTime(Timestamp timestamp)</div><div class="ttdoc">Converts Timestamp (in seconds) to ROS time.</div><div class="ttdef"><b>Definition:</b> <a href="RosUtils_8cc_source.html#l00302">RosUtils.cc:302</a></div></div>
+<div class="ttc" id="anamespacedyno_html_a7fda67c0575c4b7a8210dcc8ae227370"><div class="ttname"><a href="namespacedyno.html#a7fda67c0575c4b7a8210dcc8ae227370">dyno::Timestamp</a></div><div class="ttdeci">double Timestamp</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00065">Types.hpp:65</a></div></div>
 <div class="ttc" id="anamespacedyno_html_a8357d6a8de284f4d1fc3d074646b43bb"><div class="ttname"><a href="namespacedyno.html#a8357d6a8de284f4d1fc3d074646b43bb">dyno::convert</a></div><div class="ttdeci">bool convert(const LandmarkStatus &amp;status, pcl::PointXYZRGB &amp;point)</div><div class="ttdef"><b>Definition:</b> <a href="PointCloudProcess_8hpp_source.html#l00055">PointCloudProcess.hpp:55</a></div></div>
-<div class="ttc" id="anamespacedyno_html_ac4303d6fafb755f794b072d76f9cfb41"><div class="ttname"><a href="namespacedyno.html#ac4303d6fafb755f794b072d76f9cfb41">dyno::FrameId</a></div><div class="ttdeci">size_t FrameId</div><div class="ttdoc">Discrete time-step k.</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00073">Types.hpp:73</a></div></div>
-<div class="ttc" id="anamespacedyno_html_ae75f40076d0752a992e0a684f375de74"><div class="ttname"><a href="namespacedyno.html#ae75f40076d0752a992e0a684f375de74">dyno::ObjectOdometryPath</a></div><div class="ttdeci">dynamic_slam_interfaces::msg::ObjectOdometryPath ObjectOdometryPath</div><div class="ttdef"><b>Definition:</b> <a href="DSDCommonRos_8hpp_source.html#l00047">DSDCommonRos.hpp:47</a></div></div>
-<div class="ttc" id="astructdyno_1_1Color_html_a6689af3d0ac5ceaa66000b5ca70becbd"><div class="ttname"><a href="structdyno_1_1Color.html#a6689af3d0ac5ceaa66000b5ca70becbd">dyno::Color::uniqueId</a></div><div class="ttdeci">static Color uniqueId(size_t id, float saturation=unique_id_default_saturation, float value=unique_id_default_value)</div><div class="ttdoc">Generates a sequence of never repeating colors using the golden ratio to seperate the colours along t...</div><div class="ttdef"><b>Definition:</b> <a href="ColourMap_8cc_source.html#l00169">ColourMap.cc:169</a></div></div>
+<div class="ttc" id="anamespacedyno_html_ae75f40076d0752a992e0a684f375de74"><div class="ttname"><a href="namespacedyno.html#ae75f40076d0752a992e0a684f375de74">dyno::ObjectOdometryPath</a></div><div class="ttdeci">dynamic_slam_interfaces::msg::ObjectOdometryPath ObjectOdometryPath</div><div class="ttdef"><b>Definition:</b> <a href="DSDCommonRos_8hpp_source.html#l00046">DSDCommonRos.hpp:46</a></div></div>
+<div class="ttc" id="astructdyno_1_1Color_html_a6689af3d0ac5ceaa66000b5ca70becbd"><div class="ttname"><a href="structdyno_1_1Color.html#a6689af3d0ac5ceaa66000b5ca70becbd">dyno::Color::uniqueId</a></div><div class="ttdeci">static Color uniqueId(size_t id, float saturation=unique_id_default_saturation, float value=unique_id_default_value)</div><div class="ttdoc">Generates a sequence of never repeating colors using the golden ratio to seperate the colours along t...</div><div class="ttdef"><b>Definition:</b> <a href="Colour_8cc_source.html#l00178">Colour.cc:178</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1GenericObjectCentricMap.html#af6ce62ffab5aadf1981a0ec04c3fad1e">dyno::GenericObjectCentricMap&lt; VALUE &gt;::at()</a>, <a class="el" href="classdyno_1_1DSDTransport.html#a41525d7e486a44137435c5ed47a2e8db">constructObjectFrameLink()</a>, <a class="el" href="classdyno_1_1DSDTransport.html#a68cd19d60a58b1b568f9006d5483ee97">constructObjectOdometry()</a>, <a class="el" href="namespacedyno.html#a8357d6a8de284f4d1fc3d074646b43bb">dyno::convert()</a>, <a class="el" href="classdyno_1_1GenericObjectCentricMap.html#a974563b8edd3f4b0cb6fe17615d04fbd">dyno::GenericObjectCentricMap&lt; VALUE &gt;::exists()</a>, <a class="el" href="namespacedyno_1_1utils.html#a81025ee06847cec0fd854eff05362d19">dyno::utils::toRosTime()</a>, and <a class="el" href="structdyno_1_1Color.html#a6689af3d0ac5ceaa66000b5ca70becbd">dyno::Color::uniqueId()</a>.</p>
 <div class="dynheader">
@@ -498,10 +500,10 @@ Here is the call graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>std::string </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="DSDCommonRos_8cc_source.html#l00025">25</a> of file <a class="el" href="DSDCommonRos_8cc_source.html">DSDCommonRos.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   25</span>                                                                   {</div>
-<div class="line"><span class="lineno">   26</span>  <span class="keywordflow">return</span> <span class="stringliteral">&quot;object_&quot;</span> + std::to_string(object_id) + <span class="stringliteral">&quot;_link&quot;</span>;</div>
-<div class="line"><span class="lineno">   27</span>}</div>
+<p class="definition">Definition at line <a class="el" href="DSDCommonRos_8cc_source.html#l00024">24</a> of file <a class="el" href="DSDCommonRos_8cc_source.html">DSDCommonRos.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   24</span>                                                                   {</div>
+<div class="line"><span class="lineno">   25</span>  <span class="keywordflow">return</span> <span class="stringliteral">&quot;object_&quot;</span> + std::to_string(object_id) + <span class="stringliteral">&quot;_link&quot;</span>;</div>
+<div class="line"><span class="lineno">   26</span>}</div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1DSDTransport.html#a6181566479bf9f5bad14d66c048afd9e">constructMultiObjectOdometryPaths()</a>, and <a class="el" href="classdyno_1_1DSDTransport.html#aa25a57f09531c34b256273e8b0fc2c63">constructObjectOdometries()</a>.</p>
 <div class="dynheader">
@@ -569,42 +571,42 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="DSDCommonRos_8cc_source.html#l00052">52</a> of file <a class="el" href="DSDCommonRos_8cc_source.html">DSDCommonRos.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   55</span>                                    {</div>
-<div class="line"><span class="lineno">   56</span>  <span class="comment">// need to get poses for k-1</span></div>
-<div class="line"><span class="lineno">   57</span>  <span class="comment">// TODO: no way to ensure that the motions are for frame k</span></div>
-<div class="line"><span class="lineno">   58</span>  <span class="comment">// this is a weird data-structure to use and motions are per frame and</span></div>
-<div class="line"><span class="lineno">   59</span>  <span class="comment">// ObjectPoseMap is over all k to K</span></div>
-<div class="line"><span class="lineno">   60</span>  <span class="comment">//  const FrameId frame_id_k_1 = frame_id_k - 1u;</span></div>
-<div class="line"><span class="lineno">   61</span>  <a class="code hl_typedef" href="namespacedyno.html#a17f4c1fe4d4fb10dff1544f64ac6aadc">ObjectOdometryMap</a> object_odom_map;</div>
-<div class="line"><span class="lineno">   62</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [object_id, per_frame_motions] : motions) {</div>
-<div class="line"><span class="lineno">   63</span>    <span class="keywordflow">if</span> (!per_frame_motions.exists(frame_id_k)) {</div>
-<div class="line"><span class="lineno">   64</span>      <span class="comment">// object does not exist at this frame.</span></div>
-<div class="line"><span class="lineno">   65</span>      <span class="keywordflow">continue</span>;</div>
-<div class="line"><span class="lineno">   66</span>    }</div>
-<div class="line"><span class="lineno">   67</span>    <span class="keyword">const</span> gtsam::Pose3&amp; e_H_k_world = per_frame_motions.at(frame_id_k);</div>
-<div class="line"><span class="lineno">   68</span> </div>
-<div class="line"><span class="lineno">   69</span>    <span class="keywordflow">if</span> (!poses.exists(object_id, frame_id_k)) {</div>
-<div class="line"><span class="lineno">   70</span>      VLOG(30) &lt;&lt; <span class="stringliteral">&quot;Cannot construct ObjectOdometry for object &quot;</span> &lt;&lt; object_id</div>
-<div class="line"><span class="lineno">   71</span>               &lt;&lt; <span class="stringliteral">&quot;, at frame &quot;</span> &lt;&lt; frame_id_k</div>
-<div class="line"><span class="lineno">   72</span>               &lt;&lt; <span class="stringliteral">&quot; Missing entry in ObjectPoseMap (but object motion &quot;</span></div>
-<div class="line"><span class="lineno">   73</span>                  <span class="stringliteral">&quot;entry found!!)&quot;</span>;</div>
-<div class="line"><span class="lineno">   74</span>      <span class="keywordflow">continue</span>;</div>
-<div class="line"><span class="lineno">   75</span>    }</div>
-<div class="line"><span class="lineno">   76</span>    <span class="keyword">const</span> gtsam::Pose3&amp; pose_k = poses.at(object_id, frame_id_k);</div>
-<div class="line"><span class="lineno">   77</span> </div>
-<div class="line"><span class="lineno">   78</span>    <span class="keyword">const</span> std::string child_frame_id_link = <a class="code hl_function" href="classdyno_1_1DSDTransport.html#a41525d7e486a44137435c5ed47a2e8db">constructObjectFrameLink</a>(object_id);</div>
-<div class="line"><span class="lineno">   79</span> </div>
-<div class="line"><span class="lineno">   80</span>    object_odom_map.insert2(</div>
-<div class="line"><span class="lineno">   81</span>        child_frame_id_link,</div>
-<div class="line"><span class="lineno">   82</span>        <a class="code hl_function" href="classdyno_1_1DSDTransport.html#a68cd19d60a58b1b568f9006d5483ee97">constructObjectOdometry</a>(e_H_k_world, pose_k, object_id, frame_id_k,</div>
-<div class="line"><span class="lineno">   83</span>                                timestamp_k, frame_id_link,</div>
-<div class="line"><span class="lineno">   84</span>                                child_frame_id_link));</div>
-<div class="line"><span class="lineno">   85</span>  }</div>
-<div class="line"><span class="lineno">   86</span> </div>
-<div class="line"><span class="lineno">   87</span>  <span class="keywordflow">return</span> object_odom_map;</div>
-<div class="line"><span class="lineno">   88</span>}</div>
-<div class="ttc" id="anamespacedyno_html_a17f4c1fe4d4fb10dff1544f64ac6aadc"><div class="ttname"><a href="namespacedyno.html#a17f4c1fe4d4fb10dff1544f64ac6aadc">dyno::ObjectOdometryMap</a></div><div class="ttdeci">gtsam::FastMap&lt; std::string, ObjectOdometry &gt; ObjectOdometryMap</div><div class="ttdef"><b>Definition:</b> <a href="DSDCommonRos_8hpp_source.html#l00056">DSDCommonRos.hpp:56</a></div></div>
+<p class="definition">Definition at line <a class="el" href="DSDCommonRos_8cc_source.html#l00051">51</a> of file <a class="el" href="DSDCommonRos_8cc_source.html">DSDCommonRos.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   54</span>                                    {</div>
+<div class="line"><span class="lineno">   55</span>  <span class="comment">// need to get poses for k-1</span></div>
+<div class="line"><span class="lineno">   56</span>  <span class="comment">// TODO: no way to ensure that the motions are for frame k</span></div>
+<div class="line"><span class="lineno">   57</span>  <span class="comment">// this is a weird data-structure to use and motions are per frame and</span></div>
+<div class="line"><span class="lineno">   58</span>  <span class="comment">// ObjectPoseMap is over all k to K</span></div>
+<div class="line"><span class="lineno">   59</span>  <span class="comment">//  const FrameId frame_id_k_1 = frame_id_k - 1u;</span></div>
+<div class="line"><span class="lineno">   60</span>  <a class="code hl_typedef" href="namespacedyno.html#a17f4c1fe4d4fb10dff1544f64ac6aadc">ObjectOdometryMap</a> object_odom_map;</div>
+<div class="line"><span class="lineno">   61</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [object_id, per_frame_motions] : motions) {</div>
+<div class="line"><span class="lineno">   62</span>    <span class="keywordflow">if</span> (!per_frame_motions.exists(frame_id_k)) {</div>
+<div class="line"><span class="lineno">   63</span>      <span class="comment">// object does not exist at this frame.</span></div>
+<div class="line"><span class="lineno">   64</span>      <span class="keywordflow">continue</span>;</div>
+<div class="line"><span class="lineno">   65</span>    }</div>
+<div class="line"><span class="lineno">   66</span>    <span class="keyword">const</span> gtsam::Pose3&amp; e_H_k_world = per_frame_motions.at(frame_id_k);</div>
+<div class="line"><span class="lineno">   67</span> </div>
+<div class="line"><span class="lineno">   68</span>    <span class="keywordflow">if</span> (!poses.exists(object_id, frame_id_k)) {</div>
+<div class="line"><span class="lineno">   69</span>      VLOG(30) &lt;&lt; <span class="stringliteral">&quot;Cannot construct ObjectOdometry for object &quot;</span> &lt;&lt; object_id</div>
+<div class="line"><span class="lineno">   70</span>               &lt;&lt; <span class="stringliteral">&quot;, at frame &quot;</span> &lt;&lt; frame_id_k</div>
+<div class="line"><span class="lineno">   71</span>               &lt;&lt; <span class="stringliteral">&quot; Missing entry in ObjectPoseMap (but object motion &quot;</span></div>
+<div class="line"><span class="lineno">   72</span>                  <span class="stringliteral">&quot;entry found!!)&quot;</span>;</div>
+<div class="line"><span class="lineno">   73</span>      <span class="keywordflow">continue</span>;</div>
+<div class="line"><span class="lineno">   74</span>    }</div>
+<div class="line"><span class="lineno">   75</span>    <span class="keyword">const</span> gtsam::Pose3&amp; pose_k = poses.at(object_id, frame_id_k);</div>
+<div class="line"><span class="lineno">   76</span> </div>
+<div class="line"><span class="lineno">   77</span>    <span class="keyword">const</span> std::string child_frame_id_link = <a class="code hl_function" href="classdyno_1_1DSDTransport.html#a41525d7e486a44137435c5ed47a2e8db">constructObjectFrameLink</a>(object_id);</div>
+<div class="line"><span class="lineno">   78</span> </div>
+<div class="line"><span class="lineno">   79</span>    object_odom_map.insert2(</div>
+<div class="line"><span class="lineno">   80</span>        child_frame_id_link,</div>
+<div class="line"><span class="lineno">   81</span>        <a class="code hl_function" href="classdyno_1_1DSDTransport.html#a68cd19d60a58b1b568f9006d5483ee97">constructObjectOdometry</a>(e_H_k_world, pose_k, object_id, frame_id_k,</div>
+<div class="line"><span class="lineno">   82</span>                                timestamp_k, frame_id_link,</div>
+<div class="line"><span class="lineno">   83</span>                                child_frame_id_link));</div>
+<div class="line"><span class="lineno">   84</span>  }</div>
+<div class="line"><span class="lineno">   85</span> </div>
+<div class="line"><span class="lineno">   86</span>  <span class="keywordflow">return</span> object_odom_map;</div>
+<div class="line"><span class="lineno">   87</span>}</div>
+<div class="ttc" id="anamespacedyno_html_a17f4c1fe4d4fb10dff1544f64ac6aadc"><div class="ttname"><a href="namespacedyno.html#a17f4c1fe4d4fb10dff1544f64ac6aadc">dyno::ObjectOdometryMap</a></div><div class="ttdeci">gtsam::FastMap&lt; std::string, ObjectOdometry &gt; ObjectOdometryMap</div><div class="ttdef"><b>Definition:</b> <a href="DSDCommonRos_8hpp_source.html#l00055">DSDCommonRos.hpp:55</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1GenericObjectCentricMap.html#af6ce62ffab5aadf1981a0ec04c3fad1e">dyno::GenericObjectCentricMap&lt; VALUE &gt;::at()</a>, <a class="el" href="classdyno_1_1DSDTransport.html#a41525d7e486a44137435c5ed47a2e8db">constructObjectFrameLink()</a>, <a class="el" href="classdyno_1_1DSDTransport.html#a68cd19d60a58b1b568f9006d5483ee97">constructObjectOdometry()</a>, and <a class="el" href="classdyno_1_1GenericObjectCentricMap.html#a974563b8edd3f4b0cb6fe17615d04fbd">dyno::GenericObjectCentricMap&lt; VALUE &gt;::exists()</a>.</p>
 <div class="dynheader">
@@ -698,28 +700,28 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="DSDCommonRos_8cc_source.html#l00029">29</a> of file <a class="el" href="DSDCommonRos_8cc_source.html">DSDCommonRos.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   32</span>                                                                          {</div>
-<div class="line"><span class="lineno">   33</span>  <a class="code hl_typedef" href="namespacedyno.html#a1e7b8e7cb9c94acacd56b98dc9900a97">ObjectOdometry</a> object_odom;</div>
-<div class="line"><span class="lineno">   34</span> </div>
-<div class="line"><span class="lineno">   35</span>  <span class="comment">// technically this shoudl be k-1</span></div>
-<div class="line"><span class="lineno">   36</span>  gtsam::Point3 body_velocity = <a class="code hl_function" href="namespacedyno.html#a2e68bad5f89fd79e6a7515919080c286">calculateBodyMotion</a>(e_H_k_world, pose_k);</div>
-<div class="line"><span class="lineno">   37</span> </div>
-<div class="line"><span class="lineno">   38</span>  nav_msgs::msg::Odometry odom_msg;</div>
-<div class="line"><span class="lineno">   39</span>  <a class="code hl_function" href="namespacedyno_1_1utils.html#a7efb03484e6c5b1cc0d0eeeb43546ffa">utils::convertWithHeader</a>(pose_k, odom_msg, timestamp_k, frame_id_link,</div>
-<div class="line"><span class="lineno">   40</span>                           child_frame_id_link);</div>
-<div class="line"><span class="lineno">   41</span> </div>
-<div class="line"><span class="lineno">   42</span>  object_odom.odom = odom_msg;</div>
-<div class="line"><span class="lineno">   43</span>  <span class="comment">// TODO: can check if correct representation?</span></div>
-<div class="line"><span class="lineno">   44</span> </div>
-<div class="line"><span class="lineno">   45</span>  <a class="code hl_function" href="namespacedyno.html#a8357d6a8de284f4d1fc3d074646b43bb">dyno::convert</a>(e_H_k_world, object_odom.h_w_km1_k.pose);</div>
-<div class="line"><span class="lineno">   46</span>  <span class="comment">// NO velocity!!</span></div>
-<div class="line"><span class="lineno">   47</span>  object_odom.object_id = object_id;</div>
-<div class="line"><span class="lineno">   48</span>  object_odom.sequence = frame_id_k;</div>
-<div class="line"><span class="lineno">   49</span>  <span class="keywordflow">return</span> object_odom;</div>
-<div class="line"><span class="lineno">   50</span>}</div>
+<p class="definition">Definition at line <a class="el" href="DSDCommonRos_8cc_source.html#l00028">28</a> of file <a class="el" href="DSDCommonRos_8cc_source.html">DSDCommonRos.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   31</span>                                                                          {</div>
+<div class="line"><span class="lineno">   32</span>  <a class="code hl_typedef" href="namespacedyno.html#a1e7b8e7cb9c94acacd56b98dc9900a97">ObjectOdometry</a> object_odom;</div>
+<div class="line"><span class="lineno">   33</span> </div>
+<div class="line"><span class="lineno">   34</span>  <span class="comment">// technically this shoudl be k-1</span></div>
+<div class="line"><span class="lineno">   35</span>  gtsam::Point3 body_velocity = <a class="code hl_function" href="namespacedyno.html#a2e68bad5f89fd79e6a7515919080c286">calculateBodyMotion</a>(e_H_k_world, pose_k);</div>
+<div class="line"><span class="lineno">   36</span> </div>
+<div class="line"><span class="lineno">   37</span>  nav_msgs::msg::Odometry odom_msg;</div>
+<div class="line"><span class="lineno">   38</span>  <a class="code hl_function" href="namespacedyno_1_1utils.html#a7efb03484e6c5b1cc0d0eeeb43546ffa">utils::convertWithHeader</a>(pose_k, odom_msg, timestamp_k, frame_id_link,</div>
+<div class="line"><span class="lineno">   39</span>                           child_frame_id_link);</div>
+<div class="line"><span class="lineno">   40</span> </div>
+<div class="line"><span class="lineno">   41</span>  object_odom.odom = odom_msg;</div>
+<div class="line"><span class="lineno">   42</span>  <span class="comment">// TODO: can check if correct representation?</span></div>
+<div class="line"><span class="lineno">   43</span> </div>
+<div class="line"><span class="lineno">   44</span>  <a class="code hl_function" href="namespacedyno.html#a8357d6a8de284f4d1fc3d074646b43bb">dyno::convert</a>(e_H_k_world, object_odom.h_w_km1_k.pose);</div>
+<div class="line"><span class="lineno">   45</span>  <span class="comment">// NO velocity!!</span></div>
+<div class="line"><span class="lineno">   46</span>  object_odom.object_id = object_id;</div>
+<div class="line"><span class="lineno">   47</span>  object_odom.sequence = frame_id_k;</div>
+<div class="line"><span class="lineno">   48</span>  <span class="keywordflow">return</span> object_odom;</div>
+<div class="line"><span class="lineno">   49</span>}</div>
 <div class="ttc" id="anamespacedyno_1_1utils_html_a7efb03484e6c5b1cc0d0eeeb43546ffa"><div class="ttname"><a href="namespacedyno_1_1utils.html#a7efb03484e6c5b1cc0d0eeeb43546ffa">dyno::utils::convertWithHeader</a></div><div class="ttdeci">bool convertWithHeader(const INPUT &amp;input, OUTPUT &amp;output, Timestamp timestamp, const std::string &amp;frame_id, std::optional&lt; std::string &gt; child_frame_id=std::nullopt)</div><div class="ttdoc">Converts from input type to output type where output type is a ROS message with a header....</div><div class="ttdef"><b>Definition:</b> <a href="RosUtils_8hpp_source.html#l00423">RosUtils.hpp:423</a></div></div>
-<div class="ttc" id="anamespacedyno_html_a2e68bad5f89fd79e6a7515919080c286"><div class="ttname"><a href="namespacedyno.html#a2e68bad5f89fd79e6a7515919080c286">dyno::calculateBodyMotion</a></div><div class="ttdeci">gtsam::Vector3 calculateBodyMotion(const gtsam::Pose3 &amp;w_k_1_H_k, const gtsam::Pose3 &amp;w_L_k_1)</div><div class="ttdoc">Calculate the local body velocity given the motion in world from k-1 to k and the object pose at k-1....</div><div class="ttdef"><b>Definition:</b> <a href="DynamicObjects_8cc_source.html#l00037">DynamicObjects.cc:37</a></div></div>
+<div class="ttc" id="anamespacedyno_html_a2e68bad5f89fd79e6a7515919080c286"><div class="ttname"><a href="namespacedyno.html#a2e68bad5f89fd79e6a7515919080c286">dyno::calculateBodyMotion</a></div><div class="ttdeci">gtsam::Vector3 calculateBodyMotion(const gtsam::Pose3 &amp;w_k_1_H_k, const gtsam::Pose3 &amp;w_L_k_1)</div><div class="ttdoc">Calculate the local body velocity given the motion in world from k-1 to k and the object pose at k-1....</div><div class="ttdef"><b>Definition:</b> <a href="DynamicObjects_8cc_source.html#l00076">DynamicObjects.cc:76</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="namespacedyno.html#a2e68bad5f89fd79e6a7515919080c286">dyno::calculateBodyMotion()</a>, <a class="el" href="namespacedyno.html#a8357d6a8de284f4d1fc3d074646b43bb">dyno::convert()</a>, and <a class="el" href="namespacedyno_1_1utils.html#a7efb03484e6c5b1cc0d0eeeb43546ffa">dyno::utils::convertWithHeader()</a>.</p>
 
@@ -777,7 +779,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="DSDCommonRos_8hpp_source.html#l00210">210</a> of file <a class="el" href="DSDCommonRos_8hpp_source.html">DSDCommonRos.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="DSDCommonRos_8hpp_source.html#l00209">209</a> of file <a class="el" href="DSDCommonRos_8hpp_source.html">DSDCommonRos.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1DSDTransport.html#af3de22d3c37040622cda31ab745955fe">addObjectInfo()</a>, <a class="el" href="classdyno_1_1DSDTransport.html#ae7b7325756d28299858565630149c34e">DSDTransport()</a>, and <a class="el" href="classdyno_1_1DSDTransport_1_1Publisher.html#a13fa5d59dbc73f40fd2969b33a2f7c9d">dyno::DSDTransport::Publisher::publishObjectPaths()</a>.</p>
 
@@ -803,7 +805,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="DSDCommonRos_8hpp_source.html#l00208">208</a> of file <a class="el" href="DSDCommonRos_8hpp_source.html">DSDCommonRos.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="DSDCommonRos_8hpp_source.html#l00207">207</a> of file <a class="el" href="DSDCommonRos_8hpp_source.html">DSDCommonRos.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1DSDTransport.html#af3de22d3c37040622cda31ab745955fe">addObjectInfo()</a>, and <a class="el" href="classdyno_1_1DSDTransport.html#ae7b7325756d28299858565630149c34e">DSDTransport()</a>.</p>
 
@@ -829,7 +831,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="DSDCommonRos_8hpp_source.html#l00209">209</a> of file <a class="el" href="DSDCommonRos_8hpp_source.html">DSDCommonRos.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="DSDCommonRos_8hpp_source.html#l00208">208</a> of file <a class="el" href="DSDCommonRos_8hpp_source.html">DSDCommonRos.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1DSDTransport.html#af3de22d3c37040622cda31ab745955fe">addObjectInfo()</a>, and <a class="el" href="classdyno_1_1DSDTransport.html#ae7b7325756d28299858565630149c34e">DSDTransport()</a>.</p>
 
@@ -855,7 +857,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="DSDCommonRos_8hpp_source.html#l00211">211</a> of file <a class="el" href="DSDCommonRos_8hpp_source.html">DSDCommonRos.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="DSDCommonRos_8hpp_source.html#l00210">210</a> of file <a class="el" href="DSDCommonRos_8hpp_source.html">DSDCommonRos.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1DSDTransport.html#af3de22d3c37040622cda31ab745955fe">addObjectInfo()</a>, <a class="el" href="classdyno_1_1DSDTransport.html#ae7b7325756d28299858565630149c34e">DSDTransport()</a>, and <a class="el" href="classdyno_1_1DSDTransport_1_1Publisher.html#a273d58dd87e02093d55d866ea687a29f">dyno::DSDTransport::Publisher::publishObjectTransforms()</a>.</p>
 

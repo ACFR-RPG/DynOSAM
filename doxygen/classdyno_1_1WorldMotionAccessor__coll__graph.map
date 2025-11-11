@@ -1,9 +1,10 @@
 <map id="dyno::WorldMotionAccessor" name="dyno::WorldMotionAccessor">
-<area shape="rect" id="node1" title=" " alt="" coords="1277,41,1480,66"/>
-<area shape="rect" id="node2" href="$classdyno_1_1WorldPoseAccessor.html" title=" " alt="" coords="901,10,1089,35"/>
-<area shape="rect" id="node3" href="$classdyno_1_1Accessor.html" title=" " alt="" coords="635,7,845,33"/>
-<area shape="rect" id="node4" href="$structdyno_1_1SharedFormulationData.html" title="Data shared between a Formulation and its accessor." alt="" coords="279,7,495,33"/>
-<area shape="rect" id="node5" href="$structdyno_1_1FormulationHooks.html" title="Defines a set of input hooks to the formulation that allow communication to outside the formulation." alt="" coords="5,7,187,33"/>
-<area shape="rect" id="node6" href="$classdyno_1_1GenericObjectCentricMap.html" title=" " alt="" coords="895,61,1095,101"/>
-<area shape="rect" id="node7" title=" " alt="" coords="639,57,841,111"/>
+<area shape="rect" id="node1" title=" " alt="" coords="1293,59,1496,84"/>
+<area shape="rect" id="node2" href="$classdyno_1_1WorldPoseAccessor.html" title=" " alt="" coords="917,28,1105,53"/>
+<area shape="rect" id="node3" href="$classdyno_1_1AccessorT.html" title=" " alt="" coords="635,25,861,51"/>
+<area shape="rect" id="node4" href="$classdyno_1_1Accessor.html" title="Accessor defines the interface between the structured output of a BackendModule and any formulation u..." alt="" coords="327,5,447,31"/>
+<area shape="rect" id="node5" href="$structdyno_1_1SharedFormulationData.html" title="Data shared between a Formulation and its accessor." alt="" coords="279,55,495,80"/>
+<area shape="rect" id="node6" href="$structdyno_1_1FormulationHooks.html" title="Defines a set of input hooks to the formulation that allow communication to outside the formulation." alt="" coords="5,55,187,80"/>
+<area shape="rect" id="node7" href="$classdyno_1_1GenericObjectCentricMap.html" title=" " alt="" coords="911,79,1111,119"/>
+<area shape="rect" id="node8" title=" " alt="" coords="647,75,849,129"/>
 </map>

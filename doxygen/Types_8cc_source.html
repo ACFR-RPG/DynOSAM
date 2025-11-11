@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.6"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>DynoSAM: dynosam/src/common/Types.cc Source File</title>
+<title>DynoSAM: dynosam_common/src/Types.cc Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -70,7 +70,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_5dee249e885e61d789509b2ad73060f7.html">dynosam</a></li><li class="navelem"><a class="el" href="dir_967826b48aab5e644207159adfa580e7.html">src</a></li><li class="navelem"><a class="el" href="dir_b7f1fe6bdf2c751e876c6e51542fc3c7.html">common</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_59022c2de10cb81abe7061856121e435.html">dynosam_common</a></li><li class="navelem"><a class="el" href="dir_8dda260cc3fa4078daa006fdb5813365.html">src</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -107,14 +107,14 @@ $(function() {
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="comment"> *   SOFTWARE.</span></div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="comment"> */</span></div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="preprocessor">#include &quot;<a class="code" href="Types_8hpp.html">dynosam/common/Types.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="preprocessor">#include &quot;<a class="code" href="Types_8hpp.html">dynosam_common/Types.hpp</a>&quot;</span></div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="preprocessor">#include &lt;cxxabi.h&gt;</span></div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="preprocessor">#include &lt;gflags/gflags.h&gt;</span></div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="preprocessor">#include &lt;string&gt;</span></div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="preprocessor">#include &quot;<a class="code" href="Flags_8hpp.html">dynosam/common/Flags.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="preprocessor">#include &quot;<a class="code" href="Flags_8hpp.html">dynosam_common/Flags.hpp</a>&quot;</span></div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="comment">// common glags used in multiple modules</span></div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno"><a class="line" href="Types_8cc.html#ab2018cd5ca03d6704b3a67deefa0ca7f">   41</a></span><a class="code hl_function" href="Types_8cc.html#ab2018cd5ca03d6704b3a67deefa0ca7f">DEFINE_bool</a>(init_object_pose_from_gt, <span class="keyword">false</span>,</div>
@@ -126,72 +126,68 @@ $(function() {
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno"><a class="line" href="Types_8cc.html#a2b45247a604c7f1a0545acaee5ef1dd4">   47</a></span><a class="code hl_function" href="Types_8cc.html#ab2018cd5ca03d6704b3a67deefa0ca7f">DEFINE_bool</a>(frontend_from_file, <span class="keyword">false</span>,</div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>            <span class="stringliteral">&quot;If true, the frontend will try and load all the data from a &quot;</span></div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>            <span class="stringliteral">&quot;seralized json file&quot;</span>);</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno"><a class="line" href="Types_8cc.html#a4b074d97934e0cfb94775e0c29193ad4">   50</a></span><a class="code hl_function" href="Types_8cc.html#a4b074d97934e0cfb94775e0c29193ad4">DEFINE_int32</a>(backend_updater_enum, 0,</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>             <span class="stringliteral">&quot;Which UpdaterType the backend should use and should match an &quot;</span></div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>             <span class="stringliteral">&quot;enum in whatever backend module type is loaded&quot;</span>);</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno"><a class="line" href="Types_8cc.html#ad56be3dc7ec6cd0109216e0d1e0a19f4">   53</a></span><a class="code hl_function" href="Types_8cc.html#ab2018cd5ca03d6704b3a67deefa0ca7f">DEFINE_bool</a>(</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    use_byte_tracker, <span class="keyword">false</span>,</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="stringliteral">&quot;If true, the ByteTracking will be used to associated objects between &quot;</span></div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    <span class="stringliteral">&quot;frames. Else, the instance label will be used as the object id&quot;</span>);</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacedyno.html">dyno</a> {</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span><span class="keyword">template</span> &lt;&gt;</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno"><a class="line" href="namespacedyno.html#a7fb63a9d03a9df5e7c1ce233b26adc0d">   61</a></span>std::string <a class="code hl_function" href="namespacedyno.html#a809604e427db44cbf532a545c71a3b5d">to_string</a>(<span class="keyword">const</span> <a class="code hl_enumeration" href="namespacedyno.html#a828b92ac8912e7d2ffc267eb0d08b74c">ReferenceFrame</a>&amp; reference_frame) {</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>  <span class="keywordflow">switch</span> (reference_frame) {</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="namespacedyno.html#a828b92ac8912e7d2ffc267eb0d08b74caa27154c3ecf3464fdba911247447813e">ReferenceFrame::LOCAL</a>:</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>      <span class="keywordflow">return</span> <span class="stringliteral">&quot;local&quot;</span>;</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="namespacedyno.html#a828b92ac8912e7d2ffc267eb0d08b74cae456468cc146bd360464043f0645212e">ReferenceFrame::GLOBAL</a>:</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>      <span class="keywordflow">return</span> <span class="stringliteral">&quot;global&quot;</span>;</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="namespacedyno.html#a828b92ac8912e7d2ffc267eb0d08b74ca3f3c55d40da302eff6999f6634bc8237">ReferenceFrame::OBJECT</a>:</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>      <span class="keywordflow">return</span> <span class="stringliteral">&quot;object&quot;</span>;</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    <span class="keywordflow">default</span>:</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>      <span class="keywordflow">return</span> <span class="stringliteral">&quot;Unknown reference frame&quot;</span>;</div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>  }</div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>};</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span> </div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span><span class="keyword">template</span> &lt;&gt;</div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno"><a class="line" href="namespacedyno.html#a840d871eb14f453af3f1b0c4fca9ddb5">   75</a></span>std::string <a class="code hl_function" href="namespacedyno.html#a809604e427db44cbf532a545c71a3b5d">to_string</a>(<span class="keyword">const</span> <a class="code hl_enumeration" href="namespacedyno.html#aae74b3913f6c02a0c3364cd02a68b255">MotionRepresentationStyle</a>&amp; style) {</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>  <span class="keywordflow">switch</span> (style) {</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="namespacedyno.html#aae74b3913f6c02a0c3364cd02a68b255a8992882dfbd013c73ead4128d267edf5">MotionRepresentationStyle::F2F</a>:</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>      <span class="keywordflow">return</span> <span class="stringliteral">&quot;F2F&quot;</span>;</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="namespacedyno.html#aae74b3913f6c02a0c3364cd02a68b255a0e3c58af6b5c1e85d2131d05f3f97df8">MotionRepresentationStyle::KF</a>:</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>      <span class="keywordflow">return</span> <span class="stringliteral">&quot;KF&quot;</span>;</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    <span class="keywordflow">default</span>:</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>      <span class="keywordflow">return</span> <span class="stringliteral">&quot;Unknown MotionRepresentationStyle&quot;</span>;</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>  }</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>};</div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span> </div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno"><a class="line" href="namespacedyno.html#a1b5b67db2d2a5b28501c1aa6e9d72b5c">   86</a></span>std::string <a class="code hl_function" href="namespacedyno.html#a1b5b67db2d2a5b28501c1aa6e9d72b5c">demangle</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* name) {</div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>  <span class="comment">// by default set to the original mangled name</span></div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>  std::string demangled_name = std::string(name);</div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span> </div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>  <span class="comment">// g++ version of demangle</span></div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>  <span class="keywordtype">char</span>* demangled = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>  <span class="keywordtype">int</span> status = -1;  <span class="comment">// some arbitrary value to eliminate the compiler warning</span></div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>  demangled = abi::__cxa_demangle(name, <span class="keyword">nullptr</span>, <span class="keyword">nullptr</span>, &amp;status);</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno"><a class="line" href="Types_8cc.html#ad56be3dc7ec6cd0109216e0d1e0a19f4">   50</a></span><a class="code hl_function" href="Types_8cc.html#ab2018cd5ca03d6704b3a67deefa0ca7f">DEFINE_bool</a>(</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    use_byte_tracker, <span class="keyword">false</span>,</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <span class="stringliteral">&quot;If true, the ByteTracking will be used to associated objects between &quot;</span></div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    <span class="stringliteral">&quot;frames. Else, the instance label will be used as the object id&quot;</span>);</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacedyno.html">dyno</a> {</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span> </div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span><span class="keyword">template</span> &lt;&gt;</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno"><a class="line" href="namespacedyno.html#a7fb63a9d03a9df5e7c1ce233b26adc0d">   58</a></span>std::string <a class="code hl_function" href="namespacedyno.html#a8d1f85752688bf072f23fa6e8a1bde34">to_string</a>(<span class="keyword">const</span> <a class="code hl_enumeration" href="namespacedyno.html#a828b92ac8912e7d2ffc267eb0d08b74c">ReferenceFrame</a>&amp; reference_frame) {</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>  <span class="keywordflow">switch</span> (reference_frame) {</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="namespacedyno.html#a828b92ac8912e7d2ffc267eb0d08b74caa27154c3ecf3464fdba911247447813e">ReferenceFrame::LOCAL</a>:</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>      <span class="keywordflow">return</span> <span class="stringliteral">&quot;local&quot;</span>;</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="namespacedyno.html#a828b92ac8912e7d2ffc267eb0d08b74cae456468cc146bd360464043f0645212e">ReferenceFrame::GLOBAL</a>:</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>      <span class="keywordflow">return</span> <span class="stringliteral">&quot;global&quot;</span>;</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="namespacedyno.html#a828b92ac8912e7d2ffc267eb0d08b74ca3f3c55d40da302eff6999f6634bc8237">ReferenceFrame::OBJECT</a>:</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>      <span class="keywordflow">return</span> <span class="stringliteral">&quot;object&quot;</span>;</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    <span class="keywordflow">default</span>:</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>      <span class="keywordflow">return</span> <span class="stringliteral">&quot;Unknown reference frame&quot;</span>;</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>  }</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>};</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span> </div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span><span class="keyword">template</span> &lt;&gt;</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno"><a class="line" href="namespacedyno.html#a840d871eb14f453af3f1b0c4fca9ddb5">   72</a></span>std::string <a class="code hl_function" href="namespacedyno.html#a8d1f85752688bf072f23fa6e8a1bde34">to_string</a>(<span class="keyword">const</span> <a class="code hl_enumeration" href="namespacedyno.html#aae74b3913f6c02a0c3364cd02a68b255">MotionRepresentationStyle</a>&amp; style) {</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>  <span class="keywordflow">switch</span> (style) {</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="namespacedyno.html#aae74b3913f6c02a0c3364cd02a68b255a8992882dfbd013c73ead4128d267edf5">MotionRepresentationStyle::F2F</a>:</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>      <span class="keywordflow">return</span> <span class="stringliteral">&quot;F2F&quot;</span>;</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="namespacedyno.html#aae74b3913f6c02a0c3364cd02a68b255a0e3c58af6b5c1e85d2131d05f3f97df8">MotionRepresentationStyle::KF</a>:</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>      <span class="keywordflow">return</span> <span class="stringliteral">&quot;KF&quot;</span>;</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    <span class="keywordflow">default</span>:</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>      <span class="keywordflow">return</span> <span class="stringliteral">&quot;Unknown MotionRepresentationStyle&quot;</span>;</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>  }</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>};</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span> </div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno"><a class="line" href="namespacedyno.html#a1b5b67db2d2a5b28501c1aa6e9d72b5c">   83</a></span>std::string <a class="code hl_function" href="namespacedyno.html#a1b5b67db2d2a5b28501c1aa6e9d72b5c">demangle</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* name) {</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>  <span class="comment">// by default set to the original mangled name</span></div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>  std::string demangled_name = std::string(name);</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span> </div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>  <span class="comment">// g++ version of demangle</span></div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>  <span class="keywordtype">char</span>* demangled = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>  <span class="keywordtype">int</span> status = -1;  <span class="comment">// some arbitrary value to eliminate the compiler warning</span></div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>  demangled = abi::__cxa_demangle(name, <span class="keyword">nullptr</span>, <span class="keyword">nullptr</span>, &amp;status);</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span> </div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>  demangled_name = (status == 0) ? std::string(demangled) : std::string(name);</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>  std::free(demangled);</div>
 <div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span> </div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>  demangled_name = (status == 0) ? std::string(demangled) : std::string(name);</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>  std::free(demangled);</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>  <span class="keywordflow">return</span> demangled_name;</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>}</div>
 <div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span> </div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>  <span class="keywordflow">return</span> demangled_name;</div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>}</div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span> </div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>}  <span class="comment">// namespace dyno</span></div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>}  <span class="comment">// namespace dyno</span></div>
 <div class="ttc" id="aFlags_8hpp_html"><div class="ttname"><a href="Flags_8hpp.html">Flags.hpp</a></div></div>
-<div class="ttc" id="aTypes_8cc_html_a4b074d97934e0cfb94775e0c29193ad4"><div class="ttname"><a href="Types_8cc.html#a4b074d97934e0cfb94775e0c29193ad4">DEFINE_int32</a></div><div class="ttdeci">DEFINE_int32(backend_updater_enum, 0, &quot;Which UpdaterType the backend should use and should match an &quot; &quot;enum in whatever backend module type is loaded&quot;)</div></div>
 <div class="ttc" id="aTypes_8cc_html_ab2018cd5ca03d6704b3a67deefa0ca7f"><div class="ttname"><a href="Types_8cc.html#ab2018cd5ca03d6704b3a67deefa0ca7f">DEFINE_bool</a></div><div class="ttdeci">DEFINE_bool(init_object_pose_from_gt, false, &quot;If true, then the viz pose from the frontend/backend will start &quot; &quot;from the gt&quot;)</div></div>
 <div class="ttc" id="aTypes_8hpp_html"><div class="ttname"><a href="Types_8hpp.html">Types.hpp</a></div></div>
 <div class="ttc" id="anamespacedyno_html"><div class="ttname"><a href="namespacedyno.html">dyno</a></div><div class="ttdef"><b>Definition:</b> <a href="Accessor-impl_8hpp_source.html#l00037">Accessor-impl.hpp:37</a></div></div>
-<div class="ttc" id="anamespacedyno_html_a1b5b67db2d2a5b28501c1aa6e9d72b5c"><div class="ttname"><a href="namespacedyno.html#a1b5b67db2d2a5b28501c1aa6e9d72b5c">dyno::demangle</a></div><div class="ttdeci">std::string demangle(const char *name)</div><div class="ttdoc">Get demangled class name.</div><div class="ttdef"><b>Definition:</b> <a href="Types_8cc_source.html#l00086">Types.cc:86</a></div></div>
-<div class="ttc" id="anamespacedyno_html_a809604e427db44cbf532a545c71a3b5d"><div class="ttname"><a href="namespacedyno.html#a809604e427db44cbf532a545c71a3b5d">dyno::to_string</a></div><div class="ttdeci">std::string to_string(const T &amp;t)</div></div>
-<div class="ttc" id="anamespacedyno_html_a828b92ac8912e7d2ffc267eb0d08b74c"><div class="ttname"><a href="namespacedyno.html#a828b92ac8912e7d2ffc267eb0d08b74c">dyno::ReferenceFrame</a></div><div class="ttdeci">ReferenceFrame</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00191">Types.hpp:191</a></div></div>
-<div class="ttc" id="anamespacedyno_html_a828b92ac8912e7d2ffc267eb0d08b74ca3f3c55d40da302eff6999f6634bc8237"><div class="ttname"><a href="namespacedyno.html#a828b92ac8912e7d2ffc267eb0d08b74ca3f3c55d40da302eff6999f6634bc8237">dyno::OBJECT</a></div><div class="ttdeci">@ OBJECT</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00191">Types.hpp:191</a></div></div>
-<div class="ttc" id="anamespacedyno_html_a828b92ac8912e7d2ffc267eb0d08b74caa27154c3ecf3464fdba911247447813e"><div class="ttname"><a href="namespacedyno.html#a828b92ac8912e7d2ffc267eb0d08b74caa27154c3ecf3464fdba911247447813e">dyno::LOCAL</a></div><div class="ttdeci">@ LOCAL</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00191">Types.hpp:191</a></div></div>
-<div class="ttc" id="anamespacedyno_html_a828b92ac8912e7d2ffc267eb0d08b74cae456468cc146bd360464043f0645212e"><div class="ttname"><a href="namespacedyno.html#a828b92ac8912e7d2ffc267eb0d08b74cae456468cc146bd360464043f0645212e">dyno::GLOBAL</a></div><div class="ttdeci">@ GLOBAL</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00191">Types.hpp:191</a></div></div>
-<div class="ttc" id="anamespacedyno_html_aae74b3913f6c02a0c3364cd02a68b255"><div class="ttname"><a href="namespacedyno.html#aae74b3913f6c02a0c3364cd02a68b255">dyno::MotionRepresentationStyle</a></div><div class="ttdeci">MotionRepresentationStyle</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00231">Types.hpp:231</a></div></div>
-<div class="ttc" id="anamespacedyno_html_aae74b3913f6c02a0c3364cd02a68b255a0e3c58af6b5c1e85d2131d05f3f97df8"><div class="ttname"><a href="namespacedyno.html#aae74b3913f6c02a0c3364cd02a68b255a0e3c58af6b5c1e85d2131d05f3f97df8">dyno::KF</a></div><div class="ttdeci">@ KF</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00234">Types.hpp:233</a></div></div>
-<div class="ttc" id="anamespacedyno_html_aae74b3913f6c02a0c3364cd02a68b255a8992882dfbd013c73ead4128d267edf5"><div class="ttname"><a href="namespacedyno.html#aae74b3913f6c02a0c3364cd02a68b255a8992882dfbd013c73ead4128d267edf5">dyno::F2F</a></div><div class="ttdeci">@ F2F</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00232">Types.hpp:232</a></div></div>
+<div class="ttc" id="anamespacedyno_html_a1b5b67db2d2a5b28501c1aa6e9d72b5c"><div class="ttname"><a href="namespacedyno.html#a1b5b67db2d2a5b28501c1aa6e9d72b5c">dyno::demangle</a></div><div class="ttdeci">std::string demangle(const char *name)</div><div class="ttdoc">Get demangled class name.</div><div class="ttdef"><b>Definition:</b> <a href="Types_8cc_source.html#l00083">Types.cc:83</a></div></div>
+<div class="ttc" id="anamespacedyno_html_a828b92ac8912e7d2ffc267eb0d08b74c"><div class="ttname"><a href="namespacedyno.html#a828b92ac8912e7d2ffc267eb0d08b74c">dyno::ReferenceFrame</a></div><div class="ttdeci">ReferenceFrame</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00192">Types.hpp:192</a></div></div>
+<div class="ttc" id="anamespacedyno_html_a828b92ac8912e7d2ffc267eb0d08b74ca3f3c55d40da302eff6999f6634bc8237"><div class="ttname"><a href="namespacedyno.html#a828b92ac8912e7d2ffc267eb0d08b74ca3f3c55d40da302eff6999f6634bc8237">dyno::OBJECT</a></div><div class="ttdeci">@ OBJECT</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00192">Types.hpp:192</a></div></div>
+<div class="ttc" id="anamespacedyno_html_a828b92ac8912e7d2ffc267eb0d08b74caa27154c3ecf3464fdba911247447813e"><div class="ttname"><a href="namespacedyno.html#a828b92ac8912e7d2ffc267eb0d08b74caa27154c3ecf3464fdba911247447813e">dyno::LOCAL</a></div><div class="ttdeci">@ LOCAL</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00192">Types.hpp:192</a></div></div>
+<div class="ttc" id="anamespacedyno_html_a828b92ac8912e7d2ffc267eb0d08b74cae456468cc146bd360464043f0645212e"><div class="ttname"><a href="namespacedyno.html#a828b92ac8912e7d2ffc267eb0d08b74cae456468cc146bd360464043f0645212e">dyno::GLOBAL</a></div><div class="ttdeci">@ GLOBAL</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00192">Types.hpp:192</a></div></div>
+<div class="ttc" id="anamespacedyno_html_a8d1f85752688bf072f23fa6e8a1bde34"><div class="ttname"><a href="namespacedyno.html#a8d1f85752688bf072f23fa6e8a1bde34">dyno::to_string</a></div><div class="ttdeci">std::string to_string(const TrackingStatus &amp;status)</div><div class="ttdef"><b>Definition:</b> <a href="Frontend-Definitions_8hpp_source.html#l00061">Frontend-Definitions.hpp:61</a></div></div>
+<div class="ttc" id="anamespacedyno_html_aae74b3913f6c02a0c3364cd02a68b255"><div class="ttname"><a href="namespacedyno.html#aae74b3913f6c02a0c3364cd02a68b255">dyno::MotionRepresentationStyle</a></div><div class="ttdeci">MotionRepresentationStyle</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00232">Types.hpp:232</a></div></div>
+<div class="ttc" id="anamespacedyno_html_aae74b3913f6c02a0c3364cd02a68b255a0e3c58af6b5c1e85d2131d05f3f97df8"><div class="ttname"><a href="namespacedyno.html#aae74b3913f6c02a0c3364cd02a68b255a0e3c58af6b5c1e85d2131d05f3f97df8">dyno::KF</a></div><div class="ttdeci">@ KF</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00235">Types.hpp:234</a></div></div>
+<div class="ttc" id="anamespacedyno_html_aae74b3913f6c02a0c3364cd02a68b255a8992882dfbd013c73ead4128d267edf5"><div class="ttname"><a href="namespacedyno.html#aae74b3913f6c02a0c3364cd02a68b255a8992882dfbd013c73ead4128d267edf5">dyno::F2F</a></div><div class="ttdeci">@ F2F</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00233">Types.hpp:233</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

@@ -8,5 +8,6 @@ var searchData=
   ['keypointmeasurement_5',['KeypointMeasurement',['../namespacedyno.html#abc873e7d92e4fd1f86e6c0deed65bce3',1,'dyno']]],
   ['keypoints_6',['Keypoints',['../namespacedyno.html#a6e4b9811fc666e292979ad077f5cca41',1,'dyno']]],
   ['keypointscv_7',['KeypointsCV',['../namespacedyno.html#ae45b8b62a0efd7dbcf047db8751f6739',1,'dyno']]],
-  ['keypointstatus_8',['KeypointStatus',['../namespacedyno.html#af911cd33910f0fae61d3ff5048eed8fc',1,'dyno']]]
+  ['keypointstatus_8',['KeypointStatus',['../namespacedyno.html#af911cd33910f0fae61d3ff5048eed8fc',1,'dyno']]],
+  ['kwargs_9',['Kwargs',['../classdyno_1_1PyObjectDetectorWrapper.html#a1c1cb4da9aac954b0e7f00762fc6805e',1,'dyno::PyObjectDetectorWrapper']]]
 ];

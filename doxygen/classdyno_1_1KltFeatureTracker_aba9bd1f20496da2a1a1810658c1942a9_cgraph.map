@@ -1,4 +1,6 @@
 <map id="dyno::KltFeatureTracker::KltFeatureTracker" name="dyno::KltFeatureTracker::KltFeatureTracker">
 <area shape="rect" id="node1" title=" " alt="" coords="5,5,180,45"/>
 <area shape="rect" id="node2" href="$classdyno_1_1FunctionalDetector.html#a33c5f19a57da4a129c4cde81ce4d183d" title="Factory method that uses the TrackerParams::feature_detector_type to determine the detector." alt="" coords="228,5,413,45"/>
+<area shape="rect" id="node3" href="$namespacedyno_1_1utils.html#a7066c94afb8dbcf488c00d6ea32b0593" title=" " alt="" coords="461,13,700,38"/>
+<area shape="rect" id="node4" href="$Cuda_8hpp.html#aae93075628a9e8e0ece19007d12abc89" title="! Re&#45;expose OpenCV&#39;s CUDA define under our own project macro" alt="" coords="748,13,915,38"/>
 </map>

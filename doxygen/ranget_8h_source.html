@@ -156,19 +156,19 @@ $(function() {
 <div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>            <span class="keywordflow">return</span> 1;</div>
 <div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span> </div>
 <div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>        <a class="code hl_struct" href="structrangetree_1_1ptx.html">ptx</a> px;</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>        <a class="code hl_struct" href="structrangetree_1_1pty.html">pty</a> py;</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>        <a class="code hl_struct" href="structrangetree_1_1pty.html">pty</a> <a class="code hl_namespace" href="namespacepybind11.html">py</a>;</div>
 <div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span> </div>
 <div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>        px.<a class="code hl_variable" href="structrangetree_1_1ptx.html#a3e0bc00284c6e52b68a3cd95bad3cdcb">x</a> = x;</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>        px.<a class="code hl_variable" href="structrangetree_1_1ptx.html#aa5b348b3dda258403e355ce30f3b3237">y</a> = py.<a class="code hl_variable" href="structrangetree_1_1pty.html#a22c868fc9e68a834b5cd468a0da35dae">y</a> = y;</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>        px.<a class="code hl_variable" href="structrangetree_1_1ptx.html#aa5b348b3dda258403e355ce30f3b3237">y</a> = <a class="code hl_namespace" href="namespacepybind11.html">py</a>.y = y;</div>
 <div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>        px.<a class="code hl_variable" href="structrangetree_1_1ptx.html#ab701bd22252b7665cefd93a3bd97c4d3">ptr</a> = ptr;</div>
 <div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span><span class="preprocessor">#ifndef LESSRAM64</span></div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>        py.<a class="code hl_variable" href="structrangetree_1_1pty.html#a9c552c46e1a8d0fad697104b44534f6f">ptr</a> = ptr;</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>        <a class="code hl_namespace" href="namespacepybind11.html">py</a>.ptr = ptr;</div>
 <div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span><span class="preprocessor">#else</span></div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>        py.offset = -1;</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>        <a class="code hl_namespace" href="namespacepybind11.html">py</a>.offset = -1;</div>
 <div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span><span class="preprocessor">#endif</span></div>
 <div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span> </div>
 <div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>        <a class="code hl_variable" href="classrangetree.html#a2475c78dfe781f97f6cb0a9223c36bbd">xtmparray</a>.push_back(px);</div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>        <a class="code hl_variable" href="classrangetree.html#a8ed382466cc2d3fdedf762e18739acec">ytmparray</a>.push_back(py);</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>        <a class="code hl_variable" href="classrangetree.html#a8ed382466cc2d3fdedf762e18739acec">ytmparray</a>.push_back(<a class="code hl_namespace" href="namespacepybind11.html">py</a>);</div>
 <div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span> </div>
 <div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>        <span class="keywordflow">return</span> 0;</div>
 <div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>    }</div>
@@ -829,6 +829,7 @@ $(function() {
 <div class="ttc" id="alrtypes_8h_html"><div class="ttname"><a href="lrtypes_8h.html">lrtypes.h</a></div></div>
 <div class="ttc" id="alrtypes_8h_html_a350c6fc928e3bdc6c6486268ac8fb269"><div class="ttname"><a href="lrtypes_8h.html#a350c6fc928e3bdc6c6486268ac8fb269">s64</a></div><div class="ttdeci">int64_t s64</div><div class="ttdef"><b>Definition:</b> <a href="lrtypes_8h_source.html#l00011">lrtypes.h:11</a></div></div>
 <div class="ttc" id="alrtypes_8h_html_afaa62991928fb9fb18ff0db62a040aba"><div class="ttname"><a href="lrtypes_8h.html#afaa62991928fb9fb18ff0db62a040aba">u32</a></div><div class="ttdeci">uint32_t u32</div><div class="ttdef"><b>Definition:</b> <a href="lrtypes_8h_source.html#l00007">lrtypes.h:7</a></div></div>
+<div class="ttc" id="anamespacepybind11_html"><div class="ttname"><a href="namespacepybind11.html">pybind11</a></div><div class="ttdef"><b>Definition:</b> <a href="cvnp_8hpp_source.html#l00071">cvnp.hpp:71</a></div></div>
 <div class="ttc" id="aranget_8h_html_a24d63f7ffba541c358d4425b23f043e9"><div class="ttname"><a href="ranget_8h.html#a24d63f7ffba541c358d4425b23f043e9">fetch</a></div><div class="ttdeci">#define fetch(a)</div><div class="ttdef"><b>Definition:</b> <a href="ranget_8h_source.html#l00037">ranget.h:37</a></div></div>
 <div class="ttc" id="astructrangetree_1_1node_html"><div class="ttname"><a href="structrangetree_1_1node.html">rangetree::node</a></div><div class="ttdef"><b>Definition:</b> <a href="ranget_8h_source.html#l00306">ranget.h:306</a></div></div>
 <div class="ttc" id="astructrangetree_1_1node_html_a16aad73e87da115e55ac4590ee6a94d0"><div class="ttname"><a href="structrangetree_1_1node.html#a16aad73e87da115e55ac4590ee6a94d0">rangetree::node::right</a></div><div class="ttdeci">node * right</div><div class="ttdef"><b>Definition:</b> <a href="ranget_8h_source.html#l00308">ranget.h:308</a></div></div>

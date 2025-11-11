@@ -1,22 +1,4 @@
 <map id="dyno::getAllFilesInDir" name="dyno::getAllFilesInDir">
-<area shape="rect" id="node1" title="Returns a ORDERED vector of all files in the given directory. (jesse) is this the file name or the ab..." alt="" coords="805,397,967,422"/>
-<area shape="rect" id="node2" href="$classdyno_1_1ClusterSlamAllLoader.html#a8e7921bc6573358b74e4fe7df753589c" title=" " alt="" coords="539,453,742,493"/>
-<area shape="rect" id="node4" href="$classdyno_1_1ProjectAriaAllLoader.html#a664781c8a3f89499f188b3a436363ee5" title=" " alt="" coords="543,133,738,173"/>
-<area shape="rect" id="node6" href="$classdyno_1_1TartanAirShibuyaAllLoader.html#a7a11330902a2f1698b41a92dccecfbe4" title=" " alt="" coords="524,69,757,109"/>
-<area shape="rect" id="node8" href="$classdyno_1_1ViodeAllLoader.html#a3f2539b6431c35746d053e3bfc4d95d2" title=" " alt="" coords="546,197,735,237"/>
-<area shape="rect" id="node9" href="$classdyno_1_1ClusterSlamAllLoader.html#afee0442f2187eb2374ff76fd57508a70" title=" " alt="" coords="539,581,742,621"/>
-<area shape="rect" id="node10" href="$classdyno_1_1TartanAirShibuyaAllLoader.html#a26f49941935ba2338fccf719da235517" title=" " alt="" coords="546,5,735,45"/>
-<area shape="rect" id="node11" href="$classdyno_1_1ViodeAllLoader.html#a1c422f0d2bad5182b4085e9fe7e27abc" title=" " alt="" coords="561,389,721,429"/>
-<area shape="rect" id="node12" href="$classdyno_1_1ClusterSlamAllLoader.html#a9003203ef15e9f1538857a07ac16a260" title=" " alt="" coords="539,325,742,365"/>
-<area shape="rect" id="node13" href="$classdyno_1_1ClusterSlamAllLoader.html#a1595d55b903ac7ece3902808aef764f4" title=" " alt="" coords="539,517,742,557"/>
-<area shape="rect" id="node14" href="$classdyno_1_1ProjectAriaAllLoader.html#a3b467d8b21e57f428b50d03024ea0f40" title=" " alt="" coords="543,261,738,301"/>
-<area shape="rect" id="node15" href="$namespacedyno.html#a918ea547295befa3915845ecd7ac61ac" title=" " alt="" coords="542,710,739,735"/>
-<area shape="rect" id="node18" href="$classdyno_1_1ClusterSlamAllLoader.html#ab475a49ae3fc624f16b9b5cf3210dda7" title=" " alt="" coords="539,645,742,685"/>
-<area shape="rect" id="node19" href="$classdyno_1_1ViodeAllLoader.html#abe37fa4b83b0869c9c3e3107fbfe143e" title=" " alt="" coords="527,761,754,801"/>
-<area shape="rect" id="node3" href="$classdyno_1_1ClusterSlamAllLoader.html#a3475570fea904450975ee52c48fb298c" title="Construct a new Cluster Slam Gt Loader object." alt="" coords="252,517,455,557"/>
-<area shape="rect" id="node5" href="$classdyno_1_1ProjectAriaAllLoader.html#aa71e71c72d3e058293141d0c4955f5a9" title=" " alt="" coords="256,197,451,237"/>
-<area shape="rect" id="node7" href="$classdyno_1_1TartanAirShibuyaAllLoader.html#a7d08a422327d4c993a3f6b72ce5740fe" title=" " alt="" coords="231,37,476,77"/>
-<area shape="rect" id="node16" href="$classdyno_1_1OMDOldAllLoader.html#a3b098f14caca41fbd0c7b4adc3ca5e4b" title=" " alt="" coords="265,700,442,740"/>
-<area shape="rect" id="node17" href="$classdyno_1_1OMDOldAllLoader.html#a5407ba0dda29eaf6520c615807fe3b93" title=" " alt="" coords="5,700,183,740"/>
-<area shape="rect" id="node20" href="$classdyno_1_1ViodeAllLoader.html#ac033c5781d882e6d120c6348dfc05e12" title=" " alt="" coords="273,764,433,804"/>
+<area shape="rect" id="node1" title=" " alt="" coords="251,5,412,31"/>
+<area shape="rect" id="node2" href="$namespacedyno.html#a3108e2c89fd6db992bd8a023661e2709" title=" " alt="" coords="5,5,203,31"/>
 </map>

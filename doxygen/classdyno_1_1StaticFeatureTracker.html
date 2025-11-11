@@ -124,6 +124,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a4e2f1808b0a97e128df8f7a6695161d5 inherit pub_methods_classdyno_1_1FeatureTrackerBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa902950650699301214f776a905e3b77 inherit pub_methods_classdyno_1_1FeatureTrackerBase"><td class="memItemLeft" align="right" valign="top">cv::Mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1FeatureTrackerBase.html#aa902950650699301214f776a905e3b77">computeImageTracks</a> (const <a class="el" href="classdyno_1_1Frame.html">Frame</a> &amp;previous_frame, const <a class="el" href="classdyno_1_1Frame.html">Frame</a> &amp;current_frame, const <a class="el" href="classdyno_1_1ImageTracksParams.html">ImageTracksParams</a> &amp;config=false) const</td></tr>
 <tr class="separator:aa902950650699301214f776a905e3b77 inherit pub_methods_classdyno_1_1FeatureTrackerBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4e9b9b77752d80d8bb8c2236776ca5a8 inherit pub_methods_classdyno_1_1FeatureTrackerBase"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1FeatureTrackerBase.html#a4e9b9b77752d80d8bb8c2236776ca5a8">drawStereoMatches</a> (cv::Mat &amp;output_image, const <a class="el" href="classdyno_1_1Frame.html">Frame</a> &amp;current_frame) const</td></tr>
+<tr class="separator:a4e9b9b77752d80d8bb8c2236776ca5a8 inherit pub_methods_classdyno_1_1FeatureTrackerBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aac4fd637116f1a55b857968d6f84d33d inherit pub_methods_classdyno_1_1FeatureTrackerBase"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1FeatureTrackerBase.html#aac4fd637116f1a55b857968d6f84d33d">predictKeypointsGivenRotation</a> (std::vector&lt; cv::Point2f &gt; &amp;predicted_pts_k, const std::vector&lt; cv::Point2f &gt; &amp;pts_km1, const gtsam::Rot3 &amp;R_km1_k) const</td></tr>
 <tr class="separator:aac4fd637116f1a55b857968d6f84d33d inherit pub_methods_classdyno_1_1FeatureTrackerBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -148,7 +150,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="StaticFeatureTracker_8hpp_source.html#l00044">44</a> of file <a class="el" href="StaticFeatureTracker_8hpp_source.html">StaticFeatureTracker.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="StaticFeatureTracker_8hpp_source.html#l00045">45</a> of file <a class="el" href="StaticFeatureTracker_8hpp_source.html">StaticFeatureTracker.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="ab192c0fe22aa7a3b7751cb47db62cf00" name="ab192c0fe22aa7a3b7751cb47db62cf00"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab192c0fe22aa7a3b7751cb47db62cf00">&#9670;&#160;</a></span>StaticFeatureTracker()</h2>
@@ -182,8 +184,8 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="StaticFeatureTracker_8cc_source.html#l00043">43</a> of file <a class="el" href="StaticFeatureTracker_8cc_source.html">StaticFeatureTracker.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   46</span>    : <a class="code hl_function" href="classdyno_1_1FeatureTrackerBase.html#a4e2f1808b0a97e128df8f7a6695161d5">FeatureTrackerBase</a>(params, camera, display_queue) {}</div>
+<p class="definition">Definition at line <a class="el" href="StaticFeatureTracker_8cc_source.html#l00044">44</a> of file <a class="el" href="StaticFeatureTracker_8cc_source.html">StaticFeatureTracker.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   47</span>    : <a class="code hl_function" href="classdyno_1_1FeatureTrackerBase.html#a4e2f1808b0a97e128df8f7a6695161d5">FeatureTrackerBase</a>(params, camera, display_queue) {}</div>
 <div class="ttc" id="aclassdyno_1_1FeatureTrackerBase_html_a4e2f1808b0a97e128df8f7a6695161d5"><div class="ttname"><a href="classdyno_1_1FeatureTrackerBase.html#a4e2f1808b0a97e128df8f7a6695161d5">dyno::FeatureTrackerBase::FeatureTrackerBase</a></div><div class="ttdeci">FeatureTrackerBase(const TrackerParams &amp;params, Camera::Ptr camera, ImageDisplayQueue *display_queue)</div><div class="ttdef"><b>Definition:</b> <a href="FeatureTrackerBase_8cc_source.html#l00042">FeatureTrackerBase.cc:42</a></div></div>
 </div><!-- fragment -->
 </div>
@@ -211,8 +213,8 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="StaticFeatureTracker_8hpp_source.html#l00050">50</a> of file <a class="el" href="StaticFeatureTracker_8hpp_source.html">StaticFeatureTracker.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   50</span>{}</div>
+<p class="definition">Definition at line <a class="el" href="StaticFeatureTracker_8hpp_source.html#l00051">51</a> of file <a class="el" href="StaticFeatureTracker_8hpp_source.html">StaticFeatureTracker.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   51</span>{}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -275,7 +277,7 @@ Additional Inherited Members</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">previous_frame</td><td>Frame::Ptr. Previous frame (k-1) with filled-out features to be tracked. </td></tr>
-    <tr><td class="paramname">image_container</td><td>const <a class="el" href="classdyno_1_1ImageContainer.html">ImageContainer</a>&amp;. Contains current (k) images which will be tracked from the previous frame. </td></tr>
+    <tr><td class="paramname">image_container</td><td>const <a class="el" href="classdyno_1_1ImageContainer.html" title="Basic class to contain Images which are the input for the DynoSAM system. Instead of just containing ...">ImageContainer</a>&amp;. Contains current (k) images which will be tracked from the previous frame. </td></tr>
     <tr><td class="paramname">tracker_info</td><td><a class="el" href="structdyno_1_1FeatureTrackerInfo.html">FeatureTrackerInfo</a>&amp;. Tracking metadata to be filled out. </td></tr>
     <tr><td class="paramname">detection_mask</td><td>const cv::Mat&amp; A detection mask in the opencv feature tracking form: CV_8UC1 where white pixels (255) are valid and black pixels (0) should not be detected on </td></tr>
   </table>

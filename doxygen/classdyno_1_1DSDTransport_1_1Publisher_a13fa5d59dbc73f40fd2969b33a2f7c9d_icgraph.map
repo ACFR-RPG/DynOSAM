@@ -1,6 +1,6 @@
 <map id="dyno::DSDTransport::Publisher::publishObjectPaths" name="dyno::DSDTransport::Publisher::publishObjectPaths">
-<area shape="rect" id="node1" title=" " alt="" coords="477,30,664,85"/>
-<area shape="rect" id="node2" href="$classdyno_1_1FrontendDSDRos.html#a9101c485338a62d8a86b37a56a68503e" title=" " alt="" coords="224,5,429,45"/>
-<area shape="rect" id="node4" href="$classdyno_1_1BackendDSDRos.html#a5316ec622424b5f5c3c5b111a56c4063" title=" " alt="" coords="242,69,411,109"/>
-<area shape="rect" id="node3" href="$classdyno_1_1FrontendDSDRos.html#a633a457c51868257f25d44d1a99f0e12" title=" " alt="" coords="5,5,176,45"/>
+<area shape="rect" id="node1" title=" " alt="" coords="443,30,629,85"/>
+<area shape="rect" id="node2" href="$classdyno_1_1BackendDSDRos.html#a67d3309d1d64b1a812ee713147196361" title=" " alt="" coords="225,5,394,45"/>
+<area shape="rect" id="node3" href="$classdyno_1_1FrontendDSDRos.html#afc399912f88290e381ced1860200ac4b" title=" " alt="" coords="224,69,395,109"/>
+<area shape="rect" id="node4" href="$classdyno_1_1FrontendDSDRos.html#a9ea761222ea4517c1ee4e562f6bdde83" title=" " alt="" coords="5,69,176,109"/>
 </map>

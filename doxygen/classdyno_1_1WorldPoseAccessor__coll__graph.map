@@ -1,6 +1,7 @@
 <map id="dyno::WorldPoseAccessor" name="dyno::WorldPoseAccessor">
-<area shape="rect" id="node1" title=" " alt="" coords="19,256,207,281"/>
-<area shape="rect" id="node2" href="$classdyno_1_1Accessor.html" title=" " alt="" coords="8,181,219,207"/>
-<area shape="rect" id="node3" href="$structdyno_1_1SharedFormulationData.html" title="Data shared between a Formulation and its accessor." alt="" coords="5,93,221,119"/>
-<area shape="rect" id="node4" href="$structdyno_1_1FormulationHooks.html" title="Defines a set of input hooks to the formulation that allow communication to outside the formulation." alt="" coords="23,5,204,31"/>
+<area shape="rect" id="node1" title=" " alt="" coords="30,256,218,281"/>
+<area shape="rect" id="node2" href="$classdyno_1_1AccessorT.html" title=" " alt="" coords="11,181,237,207"/>
+<area shape="rect" id="node3" href="$classdyno_1_1Accessor.html" title="Accessor defines the interface between the structured output of a BackendModule and any formulation u..." alt="" coords="5,93,125,119"/>
+<area shape="rect" id="node4" href="$structdyno_1_1SharedFormulationData.html" title="Data shared between a Formulation and its accessor." alt="" coords="149,93,365,119"/>
+<area shape="rect" id="node5" href="$structdyno_1_1FormulationHooks.html" title="Defines a set of input hooks to the formulation that allow communication to outside the formulation." alt="" coords="167,5,348,31"/>
 </map>

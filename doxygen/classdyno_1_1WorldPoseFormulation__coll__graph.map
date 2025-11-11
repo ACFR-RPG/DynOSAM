@@ -1,7 +1,9 @@
 <map id="dyno::WorldPoseFormulation" name="dyno::WorldPoseFormulation">
-<area shape="rect" id="node1" title=" " alt="" coords="187,183,395,208"/>
-<area shape="rect" id="node2" href="$classdyno_1_1Formulation.html" title=" " alt="" coords="216,93,367,133"/>
-<area shape="rect" id="node3" href="$structdyno_1_1FormulationParams.html" title=" " alt="" coords="5,5,193,31"/>
-<area shape="rect" id="node4" href="$structdyno_1_1NoiseModels.html" title=" " alt="" coords="218,5,365,31"/>
-<area shape="rect" id="node5" href="$structdyno_1_1FormulationHooks.html" title="Defines a set of input hooks to the formulation that allow communication to outside the formulation." alt="" coords="389,5,570,31"/>
+<area shape="rect" id="node1" title=" " alt="" coords="265,257,473,283"/>
+<area shape="rect" id="node2" href="$classdyno_1_1Formulation.html" title=" " alt="" coords="293,168,444,208"/>
+<area shape="rect" id="node3" href="$structdyno_1_1FormulationParams.html" title="Basic parameters for a Formulation. Right now is just directly the BackendParams since there is lots ..." alt="" coords="5,80,193,105"/>
+<area shape="rect" id="node4" href="$structdyno_1_1BackendParams.html" title=" " alt="" coords="17,5,182,31"/>
+<area shape="rect" id="node5" href="$structdyno_1_1NoiseModels.html" title=" " alt="" coords="218,80,365,105"/>
+<area shape="rect" id="node6" href="$structdyno_1_1Sensors.html" title="Encapsulation of various sensor types, giving the Formulation access to different models." alt="" coords="389,80,503,105"/>
+<area shape="rect" id="node7" href="$structdyno_1_1FormulationHooks.html" title="Defines a set of input hooks to the formulation that allow communication to outside the formulation." alt="" coords="527,80,709,105"/>
 </map>

@@ -1,5 +1,0 @@
-<map id="dyno::RGBDInstanceOutputPacket::hasObject" name="dyno::RGBDInstanceOutputPacket::hasObject">
-<area shape="rect" id="node1" title="Checks if an object id exists within the frontend output." alt="" coords="316,37,515,77"/>
-<area shape="rect" id="node2" href="$structdyno_1_1RGBDInstanceOutputPacket.html#adce5c0aa3031196dd4d697885d705195" title=" " alt="" coords="27,5,247,45"/>
-<area shape="rect" id="node3" href="$structdyno_1_1RGBDInstanceOutputPacket.html#ad0d60f62c076de98f10cecf1788210d3" title=" " alt="" coords="5,69,268,109"/>
-</map>

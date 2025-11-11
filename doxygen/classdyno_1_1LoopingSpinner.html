@@ -140,7 +140,7 @@ Private Member Functions</h2></td></tr>
 Private Attributes</h2></td></tr>
 <tr class="memitem:a92b1e0b776ca1250b0d837859fedff1c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classdyno_1_1Spinner.html#a6ea8f13308414e84742ddfef6b9d98e4">Evoke</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1LoopingSpinner.html#a92b1e0b776ca1250b0d837859fedff1c">spinOnce_</a></td></tr>
 <tr class="separator:a92b1e0b776ca1250b0d837859fedff1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab162bb98c3c29785a10eb1310fed3df2"><td class="memItemLeft" align="right" valign="top">std::atomic&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1LoopingSpinner.html#ab162bb98c3c29785a10eb1310fed3df2">is_shutdown_</a> { false }</td></tr>
+<tr class="memitem:ab162bb98c3c29785a10eb1310fed3df2"><td class="memItemLeft" align="right" valign="top">std::atomic&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1LoopingSpinner.html#ab162bb98c3c29785a10eb1310fed3df2">is_shutdown_</a> {false}</td></tr>
 <tr class="separator:ab162bb98c3c29785a10eb1310fed3df2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa7b7674abc79af8129eb6ab28d59e62c"><td class="memItemLeft" align="right" valign="top">const std::chrono::milliseconds&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1LoopingSpinner.html#aa7b7674abc79af8129eb6ab28d59e62c">delay_</a></td></tr>
 <tr class="separator:aa7b7674abc79af8129eb6ab28d59e62c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -154,7 +154,7 @@ Additional Inherited Members</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>A spinner that will take a non-blocking function (spinOnce) and puts it in a loop with a given delay. Similar to timer functionality but guarantees that the function is called within a loop. Unlike a timer, the class does not take into account how long the function takes to run as the delay period will be used regardless. </p>
 
-<p class="definition">Definition at line <a class="el" href="Spinner_8hpp_source.html#l00108">108</a> of file <a class="el" href="Spinner_8hpp_source.html">Spinner.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Spinner_8hpp_source.html#l00116">116</a> of file <a class="el" href="Spinner_8hpp_source.html">Spinner.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="ab2febdca9434264bd213e57c39524ceb" name="ab2febdca9434264bd213e57c39524ceb"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab2febdca9434264bd213e57c39524ceb">&#9670;&#160;</a></span>LoopingSpinner()</h2>
@@ -193,7 +193,7 @@ template&lt;typename DurationRepT  = std::int64_t, typename DurationT  = std::mi
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">explicit</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">explicit</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -216,16 +216,17 @@ template&lt;typename DurationRepT  = std::int64_t, typename DurationT  = std::mi
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="Spinner_8hpp_source.html#l00145">145</a> of file <a class="el" href="Spinner_8hpp_source.html">Spinner.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  147</span>  : <a class="code hl_function" href="classdyno_1_1Spinner.html#a76a7f1ca2ddfa98c3ca91b35fad3130f">Spinner</a>(std::bind(&amp;<a class="code hl_function" href="classdyno_1_1LoopingSpinner.html#a56f5a7c08f17a6e6e155c6a43a2d2d89">LoopingSpinner::spin</a>, <span class="keyword">this</span>), name, <span class="keyword">false</span>), <a class="code hl_variable" href="classdyno_1_1LoopingSpinner.html#a92b1e0b776ca1250b0d837859fedff1c">spinOnce_</a>(func), <a class="code hl_variable" href="classdyno_1_1LoopingSpinner.html#aa7b7674abc79af8129eb6ab28d59e62c">delay_</a>(period)</div>
-<div class="line"><span class="lineno">  148</span>{</div>
-<div class="line"><span class="lineno">  149</span>  <a class="code hl_function" href="classdyno_1_1Spinner.html#a687ff6b61b822035bf5adeabda5d1ca3">start</a>();</div>
-<div class="line"><span class="lineno">  150</span>}</div>
-<div class="ttc" id="aclassdyno_1_1LoopingSpinner_html_a56f5a7c08f17a6e6e155c6a43a2d2d89"><div class="ttname"><a href="classdyno_1_1LoopingSpinner.html#a56f5a7c08f17a6e6e155c6a43a2d2d89">dyno::LoopingSpinner::spin</a></div><div class="ttdeci">void spin()</div><div class="ttdef"><b>Definition:</b> <a href="Spinner_8cc_source.html#l00081">Spinner.cc:81</a></div></div>
-<div class="ttc" id="aclassdyno_1_1LoopingSpinner_html_a92b1e0b776ca1250b0d837859fedff1c"><div class="ttname"><a href="classdyno_1_1LoopingSpinner.html#a92b1e0b776ca1250b0d837859fedff1c">dyno::LoopingSpinner::spinOnce_</a></div><div class="ttdeci">Evoke spinOnce_</div><div class="ttdef"><b>Definition:</b> <a href="Spinner_8hpp_source.html#l00138">Spinner.hpp:138</a></div></div>
-<div class="ttc" id="aclassdyno_1_1LoopingSpinner_html_aa7b7674abc79af8129eb6ab28d59e62c"><div class="ttname"><a href="classdyno_1_1LoopingSpinner.html#aa7b7674abc79af8129eb6ab28d59e62c">dyno::LoopingSpinner::delay_</a></div><div class="ttdeci">const std::chrono::milliseconds delay_</div><div class="ttdef"><b>Definition:</b> <a href="Spinner_8hpp_source.html#l00141">Spinner.hpp:141</a></div></div>
-<div class="ttc" id="aclassdyno_1_1Spinner_html_a687ff6b61b822035bf5adeabda5d1ca3"><div class="ttname"><a href="classdyno_1_1Spinner.html#a687ff6b61b822035bf5adeabda5d1ca3">dyno::Spinner::start</a></div><div class="ttdeci">void start()</div><div class="ttdoc">Starts the function in a thread. If the spinner has already been started (i.e from auto_start),...</div><div class="ttdef"><b>Definition:</b> <a href="Spinner_8cc_source.html#l00051">Spinner.cc:51</a></div></div>
-<div class="ttc" id="aclassdyno_1_1Spinner_html_a76a7f1ca2ddfa98c3ca91b35fad3130f"><div class="ttname"><a href="classdyno_1_1Spinner.html#a76a7f1ca2ddfa98c3ca91b35fad3130f">dyno::Spinner::Spinner</a></div><div class="ttdeci">Spinner(Evoke func, const std::string &amp;name, bool auto_start=true)</div><div class="ttdoc">Construct a new Spinner given a function which is blocking (ie. has a loop within the function method...</div><div class="ttdef"><b>Definition:</b> <a href="Spinner_8cc_source.html#l00035">Spinner.cc:35</a></div></div>
+<p class="definition">Definition at line <a class="el" href="Spinner_8hpp_source.html#l00140">140</a> of file <a class="el" href="Spinner_8hpp_source.html">Spinner.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  142</span>      : <a class="code hl_function" href="classdyno_1_1Spinner.html#a76a7f1ca2ddfa98c3ca91b35fad3130f">Spinner</a>(std::bind(&amp;<a class="code hl_function" href="classdyno_1_1LoopingSpinner.html#a56f5a7c08f17a6e6e155c6a43a2d2d89">LoopingSpinner::spin</a>, <span class="keyword">this</span>), name, <span class="keyword">false</span>),</div>
+<div class="line"><span class="lineno">  143</span>        <a class="code hl_variable" href="classdyno_1_1LoopingSpinner.html#a92b1e0b776ca1250b0d837859fedff1c">spinOnce_</a>(func),</div>
+<div class="line"><span class="lineno">  144</span>        <a class="code hl_variable" href="classdyno_1_1LoopingSpinner.html#aa7b7674abc79af8129eb6ab28d59e62c">delay_</a>(period) {</div>
+<div class="line"><span class="lineno">  145</span>    <a class="code hl_function" href="classdyno_1_1Spinner.html#a687ff6b61b822035bf5adeabda5d1ca3">start</a>();</div>
+<div class="line"><span class="lineno">  146</span>  }</div>
+<div class="ttc" id="aclassdyno_1_1LoopingSpinner_html_a56f5a7c08f17a6e6e155c6a43a2d2d89"><div class="ttname"><a href="classdyno_1_1LoopingSpinner.html#a56f5a7c08f17a6e6e155c6a43a2d2d89">dyno::LoopingSpinner::spin</a></div><div class="ttdeci">void spin()</div><div class="ttdef"><b>Definition:</b> <a href="Spinner_8cc_source.html#l00076">Spinner.cc:76</a></div></div>
+<div class="ttc" id="aclassdyno_1_1LoopingSpinner_html_a92b1e0b776ca1250b0d837859fedff1c"><div class="ttname"><a href="classdyno_1_1LoopingSpinner.html#a92b1e0b776ca1250b0d837859fedff1c">dyno::LoopingSpinner::spinOnce_</a></div><div class="ttdeci">Evoke spinOnce_</div><div class="ttdef"><b>Definition:</b> <a href="Spinner_8hpp_source.html#l00158">Spinner.hpp:158</a></div></div>
+<div class="ttc" id="aclassdyno_1_1LoopingSpinner_html_aa7b7674abc79af8129eb6ab28d59e62c"><div class="ttname"><a href="classdyno_1_1LoopingSpinner.html#aa7b7674abc79af8129eb6ab28d59e62c">dyno::LoopingSpinner::delay_</a></div><div class="ttdeci">const std::chrono::milliseconds delay_</div><div class="ttdef"><b>Definition:</b> <a href="Spinner_8hpp_source.html#l00161">Spinner.hpp:161</a></div></div>
+<div class="ttc" id="aclassdyno_1_1Spinner_html_a687ff6b61b822035bf5adeabda5d1ca3"><div class="ttname"><a href="classdyno_1_1Spinner.html#a687ff6b61b822035bf5adeabda5d1ca3">dyno::Spinner::start</a></div><div class="ttdeci">void start()</div><div class="ttdoc">Starts the function in a thread. If the spinner has already been started (i.e from auto_start),...</div><div class="ttdef"><b>Definition:</b> <a href="Spinner_8cc_source.html#l00053">Spinner.cc:53</a></div></div>
+<div class="ttc" id="aclassdyno_1_1Spinner_html_a76a7f1ca2ddfa98c3ca91b35fad3130f"><div class="ttname"><a href="classdyno_1_1Spinner.html#a76a7f1ca2ddfa98c3ca91b35fad3130f">dyno::Spinner::Spinner</a></div><div class="ttdeci">Spinner(Evoke func, const std::string &amp;name, bool auto_start=true)</div><div class="ttdoc">Construct a new Spinner given a function which is blocking (ie. has a loop within the function method...</div><div class="ttdef"><b>Definition:</b> <a href="Spinner_8cc_source.html#l00041">Spinner.cc:41</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1Spinner.html#a687ff6b61b822035bf5adeabda5d1ca3">dyno::Spinner::start()</a>.</p>
 <div class="dynheader">
@@ -268,13 +269,13 @@ Here is the call graph for this function:</div>
 
 <p>Reimplemented from <a class="el" href="classdyno_1_1Spinner.html#af55891df661602adcaad443f0f48543b">dyno::Spinner</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="Spinner_8cc_source.html#l00074">74</a> of file <a class="el" href="Spinner_8cc_source.html">Spinner.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   75</span>{</div>
-<div class="line"><span class="lineno">   76</span>  <a class="code hl_variable" href="classdyno_1_1LoopingSpinner.html#ab162bb98c3c29785a10eb1310fed3df2">is_shutdown_</a> = <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">   77</span>  std::this_thread::sleep_for(100ms);</div>
-<div class="line"><span class="lineno">   78</span>  <a class="code hl_function" href="classdyno_1_1Spinner.html#af55891df661602adcaad443f0f48543b">Spinner::shutdown</a>();</div>
-<div class="line"><span class="lineno">   79</span>}</div>
-<div class="ttc" id="aclassdyno_1_1LoopingSpinner_html_ab162bb98c3c29785a10eb1310fed3df2"><div class="ttname"><a href="classdyno_1_1LoopingSpinner.html#ab162bb98c3c29785a10eb1310fed3df2">dyno::LoopingSpinner::is_shutdown_</a></div><div class="ttdeci">std::atomic&lt; bool &gt; is_shutdown_</div><div class="ttdef"><b>Definition:</b> <a href="Spinner_8hpp_source.html#l00139">Spinner.hpp:139</a></div></div>
+<p class="definition">Definition at line <a class="el" href="Spinner_8cc_source.html#l00070">70</a> of file <a class="el" href="Spinner_8cc_source.html">Spinner.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   70</span>                              {</div>
+<div class="line"><span class="lineno">   71</span>  <a class="code hl_variable" href="classdyno_1_1LoopingSpinner.html#ab162bb98c3c29785a10eb1310fed3df2">is_shutdown_</a> = <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">   72</span>  std::this_thread::sleep_for(100ms);</div>
+<div class="line"><span class="lineno">   73</span>  <a class="code hl_function" href="classdyno_1_1Spinner.html#af55891df661602adcaad443f0f48543b">Spinner::shutdown</a>();</div>
+<div class="line"><span class="lineno">   74</span>}</div>
+<div class="ttc" id="aclassdyno_1_1LoopingSpinner_html_ab162bb98c3c29785a10eb1310fed3df2"><div class="ttname"><a href="classdyno_1_1LoopingSpinner.html#ab162bb98c3c29785a10eb1310fed3df2">dyno::LoopingSpinner::is_shutdown_</a></div><div class="ttdeci">std::atomic&lt; bool &gt; is_shutdown_</div><div class="ttdef"><b>Definition:</b> <a href="Spinner_8hpp_source.html#l00159">Spinner.hpp:159</a></div></div>
 <div class="ttc" id="aclassdyno_1_1Spinner_html_af55891df661602adcaad443f0f48543b"><div class="ttname"><a href="classdyno_1_1Spinner.html#af55891df661602adcaad443f0f48543b">dyno::Spinner::shutdown</a></div><div class="ttdeci">virtual void shutdown()</div><div class="ttdoc">Shutdown the spinner - once stopped cannot be restarted. Used to ensure the thread closes safely....</div><div class="ttdef"><b>Definition:</b> <a href="Spinner_8cc_source.html#l00060">Spinner.cc:60</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1LoopingSpinner.html#ab162bb98c3c29785a10eb1310fed3df2">is_shutdown_</a>, and <a class="el" href="classdyno_1_1Spinner.html#af55891df661602adcaad443f0f48543b">dyno::Spinner::shutdown()</a>.</p>
@@ -313,14 +314,13 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Spinner_8cc_source.html#l00081">81</a> of file <a class="el" href="Spinner_8cc_source.html">Spinner.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   82</span>{</div>
-<div class="line"><span class="lineno">   83</span>  <span class="keywordflow">while</span> (!<a class="code hl_variable" href="classdyno_1_1LoopingSpinner.html#ab162bb98c3c29785a10eb1310fed3df2">is_shutdown_</a>)</div>
-<div class="line"><span class="lineno">   84</span>  {</div>
-<div class="line"><span class="lineno">   85</span>    <a class="code hl_variable" href="classdyno_1_1LoopingSpinner.html#a92b1e0b776ca1250b0d837859fedff1c">spinOnce_</a>();</div>
-<div class="line"><span class="lineno">   86</span>    std::this_thread::sleep_for(<a class="code hl_variable" href="classdyno_1_1LoopingSpinner.html#aa7b7674abc79af8129eb6ab28d59e62c">delay_</a>);</div>
-<div class="line"><span class="lineno">   87</span>  }</div>
-<div class="line"><span class="lineno">   88</span>}</div>
+<p class="definition">Definition at line <a class="el" href="Spinner_8cc_source.html#l00076">76</a> of file <a class="el" href="Spinner_8cc_source.html">Spinner.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   76</span>                          {</div>
+<div class="line"><span class="lineno">   77</span>  <span class="keywordflow">while</span> (!<a class="code hl_variable" href="classdyno_1_1LoopingSpinner.html#ab162bb98c3c29785a10eb1310fed3df2">is_shutdown_</a>) {</div>
+<div class="line"><span class="lineno">   78</span>    <a class="code hl_variable" href="classdyno_1_1LoopingSpinner.html#a92b1e0b776ca1250b0d837859fedff1c">spinOnce_</a>();</div>
+<div class="line"><span class="lineno">   79</span>    std::this_thread::sleep_for(<a class="code hl_variable" href="classdyno_1_1LoopingSpinner.html#aa7b7674abc79af8129eb6ab28d59e62c">delay_</a>);</div>
+<div class="line"><span class="lineno">   80</span>  }</div>
+<div class="line"><span class="lineno">   81</span>}</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1LoopingSpinner.html#aa7b7674abc79af8129eb6ab28d59e62c">delay_</a>, <a class="el" href="classdyno_1_1LoopingSpinner.html#ab162bb98c3c29785a10eb1310fed3df2">is_shutdown_</a>, and <a class="el" href="classdyno_1_1LoopingSpinner.html#a92b1e0b776ca1250b0d837859fedff1c">spinOnce_</a>.</p>
 
@@ -347,7 +347,7 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Spinner_8hpp_source.html#l00141">141</a> of file <a class="el" href="Spinner_8hpp_source.html">Spinner.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Spinner_8hpp_source.html#l00161">161</a> of file <a class="el" href="Spinner_8hpp_source.html">Spinner.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1LoopingSpinner.html#a56f5a7c08f17a6e6e155c6a43a2d2d89">spin()</a>.</p>
 
@@ -363,7 +363,7 @@ Here is the call graph for this function:</div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::atomic&lt;bool&gt; dyno::LoopingSpinner::is_shutdown_ { false }</td>
+          <td class="memname">std::atomic&lt;bool&gt; dyno::LoopingSpinner::is_shutdown_ {false}</td>
         </tr>
       </table>
   </td>
@@ -373,7 +373,7 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Spinner_8hpp_source.html#l00139">139</a> of file <a class="el" href="Spinner_8hpp_source.html">Spinner.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Spinner_8hpp_source.html#l00159">159</a> of file <a class="el" href="Spinner_8hpp_source.html">Spinner.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1LoopingSpinner.html#a294a869ebb18a445208319b6127cb209">shutdown()</a>, and <a class="el" href="classdyno_1_1LoopingSpinner.html#a56f5a7c08f17a6e6e155c6a43a2d2d89">spin()</a>.</p>
 
@@ -399,15 +399,15 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Spinner_8hpp_source.html#l00138">138</a> of file <a class="el" href="Spinner_8hpp_source.html">Spinner.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Spinner_8hpp_source.html#l00158">158</a> of file <a class="el" href="Spinner_8hpp_source.html">Spinner.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1LoopingSpinner.html#a56f5a7c08f17a6e6e155c6a43a2d2d89">spin()</a>.</p>
 
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>dynosam/include/dynosam/utils/<a class="el" href="Spinner_8hpp_source.html">Spinner.hpp</a></li>
-<li>dynosam/src/utils/<a class="el" href="Spinner_8cc_source.html">Spinner.cc</a></li>
+<li>dynosam_common/include/dynosam_common/utils/<a class="el" href="Spinner_8hpp_source.html">Spinner.hpp</a></li>
+<li>dynosam_common/src/utils/<a class="el" href="Spinner_8cc_source.html">Spinner.cc</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

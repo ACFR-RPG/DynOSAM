@@ -113,7 +113,7 @@ Public Attributes</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="FactorGraphTools_8hpp_source.html#l00494">494</a> of file <a class="el" href="FactorGraphTools_8hpp_source.html">FactorGraphTools.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FactorGraphTools_8hpp_source.html#l00481">481</a> of file <a class="el" href="FactorGraphTools_8hpp_source.html">FactorGraphTools.hpp</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="a90ec60134eb78be4f45e9b2baee83da9" name="a90ec60134eb78be4f45e9b2baee83da9"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a90ec60134eb78be4f45e9b2baee83da9">&#9670;&#160;</a></span>ColourSelector</h2>
@@ -128,7 +128,7 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p>Alias to a function that takes a key and returns a colour. Used to colour the non-zero elements of the Jacobian depending on the variable (block) </p>
 
-<p class="definition">Definition at line <a class="el" href="FactorGraphTools_8hpp_source.html#l00506">506</a> of file <a class="el" href="FactorGraphTools_8hpp_source.html">FactorGraphTools.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FactorGraphTools_8hpp_source.html#l00493">493</a> of file <a class="el" href="FactorGraphTools_8hpp_source.html">FactorGraphTools.hpp</a>.</p>
 
 </div>
 </div>
@@ -157,10 +157,10 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="FactorGraphTools_8hpp_source.html#l00508">508</a> of file <a class="el" href="FactorGraphTools_8hpp_source.html">FactorGraphTools.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  508</span>                                                         {</div>
-<div class="line"><span class="lineno">  509</span>    <span class="keywordflow">return</span> cv::viz::Color::black();</div>
-<div class="line"><span class="lineno">  510</span>  }</div>
+<p class="definition">Definition at line <a class="el" href="FactorGraphTools_8hpp_source.html#l00495">495</a> of file <a class="el" href="FactorGraphTools_8hpp_source.html">FactorGraphTools.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  495</span>                                                         {</div>
+<div class="line"><span class="lineno">  496</span>    <span class="keywordflow">return</span> cv::viz::Color::black();</div>
+<div class="line"><span class="lineno">  497</span>  }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -189,7 +189,7 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Constructs a set of options which has the label formatter and colour selector set to the Dyno sam versions. </p>
-<p>Specifcially the label formatter uses DynoLikeKeyFormatter and the colour selector uses knowledge of the keys in our graph structructure to pick colours for our variables</p>
+<p>Specifcially the label formatter uses DynosamKeyFormatter and the colour selector uses knowledge of the keys in our graph structructure to pick colours for our variables</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">options</td><td></td></tr>
@@ -198,24 +198,24 @@ Public Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><a class="el" href="structdyno_1_1factor__graph__tools_1_1DrawBlockJacobiansOptions.html">DrawBlockJacobiansOptions</a> </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="FactorGraphTools_8hpp_source.html#l00525">525</a> of file <a class="el" href="FactorGraphTools_8hpp_source.html">FactorGraphTools.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  526</span>                                                       {}) {</div>
-<div class="line"><span class="lineno">  527</span>    DrawBlockJacobiansOptions dyno_sam_options;</div>
-<div class="line"><span class="lineno">  528</span>    <span class="keywordflow">if</span> (options) dyno_sam_options = *options;</div>
-<div class="line"><span class="lineno">  529</span> </div>
-<div class="line"><span class="lineno">  530</span>    <span class="comment">// override label and colour formatter fucntion for dynosam</span></div>
-<div class="line"><span class="lineno">  531</span>    dyno_sam_options.label_formatter = <a class="code hl_function" href="namespacedyno.html#a2d6f925680f57dbc72ada75daefdb2f9">DynoLikeKeyFormatter</a>;</div>
-<div class="line"><span class="lineno">  532</span> </div>
-<div class="line"><span class="lineno">  533</span>    <span class="keyword">auto</span> dyno_sam_colour_selector = [](gtsam::Key key) {</div>
-<div class="line"><span class="lineno">  534</span>      <span class="keywordflow">return</span> <a class="code hl_function" href="structdyno_1_1Color.html#a6689af3d0ac5ceaa66000b5ca70becbd">Color::uniqueId</a>((<span class="keywordtype">size_t</span>)gtsam::Symbol(key).chr()).<a class="code hl_function" href="structdyno_1_1Color.html#a19ef171ae71fa3481957f66d420ced3b">bgra</a>();</div>
-<div class="line"><span class="lineno">  535</span>    };</div>
-<div class="line"><span class="lineno">  536</span> </div>
-<div class="line"><span class="lineno">  537</span>    dyno_sam_options.colour_selector = dyno_sam_colour_selector;</div>
-<div class="line"><span class="lineno">  538</span>    <span class="keywordflow">return</span> dyno_sam_options;</div>
-<div class="line"><span class="lineno">  539</span>  }</div>
-<div class="ttc" id="anamespacedyno_html_a2d6f925680f57dbc72ada75daefdb2f9"><div class="ttname"><a href="namespacedyno.html#a2d6f925680f57dbc72ada75daefdb2f9">dyno::DynoLikeKeyFormatter</a></div><div class="ttdeci">std::string DynoLikeKeyFormatter(gtsam::Key)</div><div class="ttdef"><b>Definition:</b> <a href="BackendDefinitions_8cc_source.html#l00229">BackendDefinitions.cc:229</a></div></div>
+<p class="definition">Definition at line <a class="el" href="FactorGraphTools_8hpp_source.html#l00512">512</a> of file <a class="el" href="FactorGraphTools_8hpp_source.html">FactorGraphTools.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  513</span>                                                       {}) {</div>
+<div class="line"><span class="lineno">  514</span>    DrawBlockJacobiansOptions dyno_sam_options;</div>
+<div class="line"><span class="lineno">  515</span>    <span class="keywordflow">if</span> (options) dyno_sam_options = *options;</div>
+<div class="line"><span class="lineno">  516</span> </div>
+<div class="line"><span class="lineno">  517</span>    <span class="comment">// override label and colour formatter fucntion for dynosam</span></div>
+<div class="line"><span class="lineno">  518</span>    dyno_sam_options.label_formatter = <a class="code hl_function" href="namespacedyno.html#af86d00d51197894e11bd78ec0f84024a">DynosamKeyFormatter</a>;</div>
+<div class="line"><span class="lineno">  519</span> </div>
+<div class="line"><span class="lineno">  520</span>    <span class="keyword">auto</span> dyno_sam_colour_selector = [](gtsam::Key key) {</div>
+<div class="line"><span class="lineno">  521</span>      <span class="keywordflow">return</span> <a class="code hl_function" href="structdyno_1_1Color.html#a6689af3d0ac5ceaa66000b5ca70becbd">Color::uniqueId</a>((<span class="keywordtype">size_t</span>)gtsam::Symbol(key).chr()).<a class="code hl_function" href="structdyno_1_1Color.html#a19ef171ae71fa3481957f66d420ced3b">bgra</a>();</div>
+<div class="line"><span class="lineno">  522</span>    };</div>
+<div class="line"><span class="lineno">  523</span> </div>
+<div class="line"><span class="lineno">  524</span>    dyno_sam_options.colour_selector = dyno_sam_colour_selector;</div>
+<div class="line"><span class="lineno">  525</span>    <span class="keywordflow">return</span> dyno_sam_options;</div>
+<div class="line"><span class="lineno">  526</span>  }</div>
+<div class="ttc" id="anamespacedyno_html_af86d00d51197894e11bd78ec0f84024a"><div class="ttname"><a href="namespacedyno.html#af86d00d51197894e11bd78ec0f84024a">dyno::DynosamKeyFormatter</a></div><div class="ttdeci">std::string DynosamKeyFormatter(gtsam::Key)</div><div class="ttdef"><b>Definition:</b> <a href="Symbols_8cc_source.html#l00135">Symbols.cc:135</a></div></div>
 <div class="ttc" id="astructdyno_1_1Color_html_a19ef171ae71fa3481957f66d420ced3b"><div class="ttname"><a href="structdyno_1_1Color.html#a19ef171ae71fa3481957f66d420ced3b">dyno::Color::bgra</a></div><div class="ttdeci">cv::Scalar bgra() const</div><div class="ttdoc">Return in BGRA format.</div><div class="ttdef"><b>Definition:</b> <a href="Colour_8hpp_source.html#l00140">Colour.hpp:140</a></div></div>
-<div class="ttc" id="astructdyno_1_1Color_html_a6689af3d0ac5ceaa66000b5ca70becbd"><div class="ttname"><a href="structdyno_1_1Color.html#a6689af3d0ac5ceaa66000b5ca70becbd">dyno::Color::uniqueId</a></div><div class="ttdeci">static Color uniqueId(size_t id, float saturation=unique_id_default_saturation, float value=unique_id_default_value)</div><div class="ttdoc">Generates a sequence of never repeating colors using the golden ratio to seperate the colours along t...</div><div class="ttdef"><b>Definition:</b> <a href="ColourMap_8cc_source.html#l00169">ColourMap.cc:169</a></div></div>
+<div class="ttc" id="astructdyno_1_1Color_html_a6689af3d0ac5ceaa66000b5ca70becbd"><div class="ttname"><a href="structdyno_1_1Color.html#a6689af3d0ac5ceaa66000b5ca70becbd">dyno::Color::uniqueId</a></div><div class="ttdeci">static Color uniqueId(size_t id, float saturation=unique_id_default_saturation, float value=unique_id_default_value)</div><div class="ttdoc">Generates a sequence of never repeating colors using the golden ratio to seperate the colours along t...</div><div class="ttdef"><b>Definition:</b> <a href="Colour_8cc_source.html#l00178">Colour.cc:178</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -232,7 +232,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="FactorGraphTools_8hpp_source.html#l00512">512</a> of file <a class="el" href="FactorGraphTools_8hpp_source.html">FactorGraphTools.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FactorGraphTools_8hpp_source.html#l00499">499</a> of file <a class="el" href="FactorGraphTools_8hpp_source.html">FactorGraphTools.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="namespacedyno_1_1factor__graph__tools.html#a8dcf4e933768cd1d2bf6878e0388e089">dyno::factor_graph_tools::drawBlockJacobians()</a>.</p>
 
@@ -250,7 +250,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="FactorGraphTools_8hpp_source.html#l00495">495</a> of file <a class="el" href="FactorGraphTools_8hpp_source.html">FactorGraphTools.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FactorGraphTools_8hpp_source.html#l00482">482</a> of file <a class="el" href="FactorGraphTools_8hpp_source.html">FactorGraphTools.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="namespacedyno_1_1factor__graph__tools.html#a8dcf4e933768cd1d2bf6878e0388e089">dyno::factor_graph_tools::drawBlockJacobians()</a>.</p>
 
@@ -268,7 +268,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="FactorGraphTools_8hpp_source.html#l00497">497</a> of file <a class="el" href="FactorGraphTools_8hpp_source.html">FactorGraphTools.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FactorGraphTools_8hpp_source.html#l00484">484</a> of file <a class="el" href="FactorGraphTools_8hpp_source.html">FactorGraphTools.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="namespacedyno_1_1factor__graph__tools.html#a8dcf4e933768cd1d2bf6878e0388e089">dyno::factor_graph_tools::drawBlockJacobians()</a>.</p>
 
@@ -288,7 +288,7 @@ Public Attributes</h2></td></tr>
 <b>Initial value:</b><div class="fragment"><div class="line">=</div>
 <div class="line">      gtsam::DefaultKeyFormatter</div>
 </div><!-- fragment -->
-<p class="definition">Definition at line <a class="el" href="FactorGraphTools_8hpp_source.html#l00500">500</a> of file <a class="el" href="FactorGraphTools_8hpp_source.html">FactorGraphTools.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FactorGraphTools_8hpp_source.html#l00487">487</a> of file <a class="el" href="FactorGraphTools_8hpp_source.html">FactorGraphTools.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="namespacedyno_1_1factor__graph__tools.html#a8dcf4e933768cd1d2bf6878e0388e089">dyno::factor_graph_tools::drawBlockJacobians()</a>.</p>
 
@@ -306,14 +306,14 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="FactorGraphTools_8hpp_source.html#l00499">499</a> of file <a class="el" href="FactorGraphTools_8hpp_source.html">FactorGraphTools.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FactorGraphTools_8hpp_source.html#l00486">486</a> of file <a class="el" href="FactorGraphTools_8hpp_source.html">FactorGraphTools.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="namespacedyno_1_1factor__graph__tools.html#a8dcf4e933768cd1d2bf6878e0388e089">dyno::factor_graph_tools::drawBlockJacobians()</a>.</p>
 
 </div>
 </div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
-<li>dynosam/include/dynosam/backend/<a class="el" href="FactorGraphTools_8hpp_source.html">FactorGraphTools.hpp</a></li>
+<li>dynosam_opt/include/dynosam_opt/<a class="el" href="FactorGraphTools_8hpp_source.html">FactorGraphTools.hpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
