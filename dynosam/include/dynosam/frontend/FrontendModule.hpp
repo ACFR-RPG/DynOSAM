@@ -30,6 +30,7 @@
 
 #pragma once
 
+#include "dynosam/backend/Accessor.hpp"
 #include "dynosam/frontend/FrontendParams.hpp"
 #include "dynosam/frontend/VisionImuOutputPacket.hpp"
 #include "dynosam/pipeline/PipelineParams.hpp"
@@ -75,6 +76,11 @@ class FrontendModule
     return params_.frontend_params_;
   }
 
+  void setAccessor(Accessor::Ptr accessor) {
+    CHECK_NOTNULL(accessor);
+    accessor_ = accessor;
+  }
+
  protected:
   /**
    * @brief Defines the result of checking the image container which is a done
@@ -118,6 +124,8 @@ class FrontendModule
   gtsam::Pose3Vector
       camera_poses_;  //! Keeps track of current camera trajectory. Really just
                       //! for (viz) and drawn everytime
+  //! Accessor for the backend (i.e optimized values)
+  Accessor::Ptr accessor_{nullptr};
 };
 
 }  // namespace dyno

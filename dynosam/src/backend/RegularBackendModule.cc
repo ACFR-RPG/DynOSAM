@@ -301,6 +301,10 @@ RegularBackendModule::getActiveOptimisation() const {
   }
 }
 
+Accessor::Ptr RegularBackendModule::getAccessor() {
+  return formulation_->accessorFromTheta();
+}
+
 void RegularBackendModule::updateAndOptimize(
     FrameId frame_id_k, const gtsam::Values& new_values,
     const gtsam::NonlinearFactorGraph& new_factors,

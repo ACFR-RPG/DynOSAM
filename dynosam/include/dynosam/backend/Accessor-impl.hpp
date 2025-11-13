@@ -73,22 +73,6 @@ MotionEstimateMap AccessorT<MAP>::getObjectMotions(FrameId frame_id) const {
 }
 
 template <class MAP>
-StateQuery<Motion3ReferenceFrame> AccessorT<MAP>::getObjectMotionReferenceFrame(
-    FrameId frame_id, ObjectId object_id) const {
-  StateQuery<Motion3> motion_query = this->getObjectMotion(frame_id, object_id);
-  if (motion_query) {
-    return StateQuery<Motion3ReferenceFrame>(
-        motion_query.key_,
-        Motion3ReferenceFrame(motion_query.get(),
-                              Motion3ReferenceFrame::Style::F2F,
-                              ReferenceFrame::GLOBAL, frame_id - 1u, frame_id));
-  } else {
-    return StateQuery<Motion3ReferenceFrame>(motion_query.key_,
-                                             motion_query.status_);
-  }
-}
-
-template <class MAP>
 EstimateMap<ObjectId, gtsam::Pose3> AccessorT<MAP>::getObjectPoses(
     FrameId frame_id) const {
   EstimateMap<ObjectId, gtsam::Pose3> pose_estimates;

@@ -252,6 +252,7 @@ void DynoPipelineManager::loadPipelines(const CameraParams& camera_params,
                                         FrontendDisplay::Ptr frontend_display,
                                         BackendDisplay::Ptr backend_display,
                                         BackendModuleFactory::Ptr factory) {
+  FrontendModule::Ptr frontend = nullptr;
   BackendModule::Ptr backend = nullptr;
   BackendModuleDisplay::Ptr additional_backend_display = nullptr;
   // the registra for the frontend pipeline
@@ -266,7 +267,6 @@ void DynoPipelineManager::loadPipelines(const CameraParams& camera_params,
   switch (params_.frontend_type_) {
     case FrontendType::kRGBD: {
       LOG(INFO) << "Making RGBDInstance frontend";
-      FrontendModule::Ptr frontend = nullptr;
 
       CameraParams mutable_camera_params = camera_params;
       // TODO: make this conversion to RGBD param based
@@ -392,6 +392,13 @@ void DynoPipelineManager::loadPipelines(const CameraParams& camera_params,
 
     backend_pipeline_->registerOutputQueue(&backend_output_queue_);
 
+    if (frontend) {
+      LOG(INFO) << "Setting frontend accessor";
+      // set frontend accessor
+      frontend->setAccessor(backend->getAccessor());
+    }
+
+    // set backend display (if any!)
     if (additional_backend_display) {
       VLOG(10) << "Connecting BackendModuleDisplay";
       backend_pipeline_->registerOutputCallback(

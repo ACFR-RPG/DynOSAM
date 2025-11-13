@@ -74,6 +74,16 @@ struct UpdateObservationParams {
   bool enable_incremental_detail = false;
 };
 
+/**
+ * @brief Result of a static/dynamic point update by calling
+ * Formulation<MAP>#updateStaticObservations or
+ * Formulation<MAP>#updateDynamicObservations
+ *
+ * The objects affected per frame should be specified and any additional
+ * paramters for the optimisation (i.e gtsam::ISAM2UpdateParams) can be set,
+ * which will then be parsed to the optimiser by the BackendModule.
+ *
+ */
 struct UpdateObservationResult {
   gtsam::FastMap<ObjectId, std::set<FrameId>>
       objects_affected_per_frame;  // per frame
@@ -170,7 +180,11 @@ struct PreUpdateData {
  */
 struct PostUpdateData {
   FrameId frame_id;
+  //! Result from constructing the factor-graph based on dynamic point
+  //! observations
   UpdateObservationResult dynamic_update_result;
+  //! Result from constructing the factor-graph based on static point
+  //! observations
   UpdateObservationResult static_update_result;
 
   struct IncrementalResult {
@@ -182,6 +196,9 @@ struct PostUpdateData {
 
   // TODO: batch result!!!
 
+  //! Result from the optimiser after updating/optimising the lastest
+  //! factor-graph Incremental result is set only if incremental optimisation
+  //! used.
   std::optional<IncrementalResult> incremental_result = {};
 
   PostUpdateData() {}

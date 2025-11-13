@@ -48,4 +48,19 @@ StatusLandmarkVector Accessor::getLandmarkEstimates(FrameId frame_id) const {
   return estimates;
 }
 
+StateQuery<Motion3ReferenceFrame> Accessor::getObjectMotionReferenceFrame(
+    FrameId frame_id, ObjectId object_id) const {
+  StateQuery<Motion3> motion_query = this->getObjectMotion(frame_id, object_id);
+  if (motion_query) {
+    return StateQuery<Motion3ReferenceFrame>(
+        motion_query.key_,
+        Motion3ReferenceFrame(motion_query.get(),
+                              Motion3ReferenceFrame::Style::F2F,
+                              ReferenceFrame::GLOBAL, frame_id - 1u, frame_id));
+  } else {
+    return StateQuery<Motion3ReferenceFrame>(motion_query.key_,
+                                             motion_query.status_);
+  }
+}
+
 }  // namespace dyno

@@ -46,10 +46,10 @@ tracker_params:
 
   shrink_row: 0
   shrink_col: 0
-  max_nr_keypoints_before_anms: 1000
-  max_features_per_frame: 600
+  max_nr_keypoints_before_anms: 800
+  max_features_per_frame: 300
   max_feature_track_age: 20
-  min_features_per_frame: 600
+  min_features_per_frame: 300
   # This should be wide to get a good spread.
   # Ideally should be calculated as some function of the input image size
   min_distance_btw_tracked_and_detected_static_features: 15
@@ -58,10 +58,10 @@ tracker_params:
   # subpixel_corner_refinement_params: true
   # use_clahe_filter: false
 
-  prefer_provided_optical_flow: false
+  prefer_provided_optical_flow: true
   prefer_provided_object_detection: true
 
-  max_dynamic_features_per_frame: 400
+  max_dynamic_features_per_frame: 200
   min_distance_btw_tracked_and_detected_dynamic_features: 2
   max_dynamic_feature_age: 20
 

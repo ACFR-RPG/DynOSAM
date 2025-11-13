@@ -84,6 +84,14 @@ class BackendModule
   const NoiseModels& getNoiseModels() const { return noise_models_; }
   const BackendSpinState& getSpinState() const { return spin_state_; }
 
+  /**
+   * @brief Get the accessor the the underlying formulation, allowing the
+   * optimised values to be directly accessed
+   *
+   * @return Accessor::Ptr
+   */
+  virtual Accessor::Ptr getAccessor() = 0;
+
  protected:
   // called in ModuleBase immediately before the spin function is called
   virtual void validateInput(

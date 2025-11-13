@@ -66,7 +66,7 @@ struct SingleDetectionResult : public ObjectDetection {
     // This is implicitly checks that object_id is not -1 (ie not set)
     // AND is a valiid object label (i.e. is non-zero which is the background
     // label)
-    return object_id > background_label || well_tracked;
+    return (object_id > background_label) && well_tracked;
   }
 };
 

@@ -275,7 +275,7 @@ Pose3SolverResult EgoMotionSolver::geometricOutlierRejection3d2d(
     utils::TimingStatsCollector timer("motion_solver.solve_3d2d.ransac");
     success = runRansac<AbsolutePoseProblem>(
         std::make_shared<AbsolutePoseProblem>(adapter,
-                                              AbsolutePoseProblem::KNEIP),
+                                              AbsolutePoseProblem::EPNP),
         threshold, params_.ransac_iterations, params_.ransac_probability,
         params_.optimize_3d2d_pose_from_inliers, best_result, ransac_inliers);
   }
@@ -303,7 +303,7 @@ void OpticalFlowAndPoseOptimizer::updateFrameOutliersWithResult(
   utils::TimingStatsCollector timer("of_motion_solver.update_frame");
   // //original flow image that goes from k to k+1 (gross, im sorry!)
   // TODO: use flow_is_future param
-  const cv::Mat& flow_image = frame_k->image_container_.opticalFlow();
+  // const cv::Mat& flow_image = frame_k->image_container_.opticalFlow();
   const cv::Mat& motion_mask = frame_k->image_container_.objectMotionMask();
 
   auto camera = frame_k->camera_;
@@ -340,18 +340,32 @@ void OpticalFlowAndPoseOptimizer::updateFrameOutliersWithResult(
       continue;
     }
 
-    // we now have to update the prediced keypoint using the original flow!!
-    // TODO: code copied from feature tracker
-    const int x = functional_keypoint::u(refined_keypoint);
-    const int y = functional_keypoint::v(refined_keypoint);
-    double flow_xe = static_cast<double>(flow_image.at<cv::Vec2f>(y, x)[0]);
-    double flow_ye = static_cast<double>(flow_image.at<cv::Vec2f>(y, x)[1]);
+    // // we now have to update the prediced keypoint using the original flow!!
+    // // TODO: code copied from feature tracker
+    // const int x = functional_keypoint::u(refined_keypoint);
+    // const int y = functional_keypoint::v(refined_keypoint);
+    // double flow_xe = static_cast<double>(flow_image.at<cv::Vec2f>(y, x)[0]);
+    // double flow_ye = static_cast<double>(flow_image.at<cv::Vec2f>(y, x)[1]);
+    // // the measured flow after the origin has been updated
+    // OpticalFlow new_measured_flow(flow_xe, flow_ye);
+    // feature_k->measuredFlow(new_measured_flow);
+    // // TODO: check predicted flow is within image
+    // Keypoint predicted_kp = Feature::CalculatePredictedKeypoint(
+    //     refined_keypoint, new_measured_flow);
+    // feature_k->predictedKeypoint(predicted_kp);
+    // feature_k->keypoint(refined_keypoint);
+
+    // // we now have to update the prediced keypoint using the original flow!!
+    // // TODO: code copied from feature tracker
+    // const int x = functional_keypoint::u(refined_keypoint);
+    // const int y = functional_keypoint::v(refined_keypoint);
+    // double flow_xe = static_cast<double>(flow_image.at<cv::Vec2f>(y, x)[0]);
+    // double flow_ye = static_cast<double>(flow_image.at<cv::Vec2f>(y, x)[1]);
     // the measured flow after the origin has been updated
-    OpticalFlow new_measured_flow(flow_xe, flow_ye);
-    feature_k->measuredFlow(new_measured_flow);
+    feature_k->measuredFlow(refined_flow);
     // TODO: check predicted flow is within image
-    Keypoint predicted_kp = Feature::CalculatePredictedKeypoint(
-        refined_keypoint, new_measured_flow);
+    Keypoint predicted_kp =
+        Feature::CalculatePredictedKeypoint(refined_keypoint, refined_flow);
     feature_k->predictedKeypoint(predicted_kp);
     feature_k->keypoint(refined_keypoint);
   }
@@ -692,106 +706,400 @@ Motion3SolverResult ObjectMotionSovlerF2F::geometricOutlierRejection3d2d(
   return motion_result;
 }
 
-// Pose3SolverResult ObjectMotionSovler::geometricOutlierRejection3d3d(
-//     Frame::Ptr frame_k_1, Frame::Ptr frame_k, const gtsam::Pose3& T_world_k,
-//     ObjectId object_id) {
-//   PointCloudCorrespondences dynamic_correspondences;
-//   // get the corresponding feature pairs
-//   bool corr_result = frame_k->getDynamicCorrespondences(
-//       dynamic_correspondences, *frame_k_1, object_id,
-//       frame_k->landmarkWorldPointCloudCorrespondance());
+namespace testing {
 
-//   const size_t& n_matches = dynamic_correspondences.size();
+using namespace cv;
+using namespace std;
 
-//   Pose3SolverResult result;
-//   result =
-//       EgoMotionSolver::geometricOutlierRejection3d3d(dynamic_correspondences);
+// Compute isotropic normalization transform for a set of 2D points
+static Mat computeNormalizationTransform(const vector<Point2f>& pts) {
+  int n = (int)pts.size();
+  Point2f centroid(0, 0);
+  for (const auto& p : pts) centroid += p;
+  centroid.x /= n;
+  centroid.y /= n;
 
-//   Motion3SolverResult motion_result;
-//   motion_result.status = result.status;
+  double meanDist = 0.0;
+  for (const auto& p : pts) {
+    double dx = p.x - centroid.x;
+    double dy = p.y - centroid.y;
+    meanDist += sqrt(dx * dx + dy * dy);
+  }
+  meanDist /= n;
 
-//   if (result.status == TrackingStatus::VALID) {
-//     const gtsam::Pose3 G_w = result.best_result.inverse();
-//     const gtsam::Pose3 H_w = T_world_k * G_w;
-//     result.best_result = H_w;
-//   }
+  double scale = (meanDist > 0) ? (sqrt(2.0) / meanDist) : 1.0;
 
-//   // if not valid, return motion result as is
-//   return motion_result;
-// }
+  Mat T = Mat::eye(3, 3, CV_64F);
+  T.at<double>(0, 0) = scale;
+  T.at<double>(1, 1) = scale;
+  T.at<double>(0, 2) = -scale * centroid.x;
+  T.at<double>(1, 2) = -scale * centroid.y;
+  return T;
+}
 
-// // TODO: dont actually need all these variables
-// Pose3SolverResult ObjectMotionSovler::motionModelOutlierRejection3d2d(
-//     const AbsolutePoseCorrespondences& dynamic_correspondences,
-//     Frame::Ptr frame_k_1, Frame::Ptr frame_k, const gtsam::Pose3& T_world_k,
-//     ObjectId object_id) {
-//   Pose3SolverResult result;
+// Normalized DLT homography estimation: src -> dst (both length >= 4)
+Mat estimateHomographyDLT(const vector<Point2f>& src,
+                          const vector<Point2f>& dst) {
+  CV_Assert(src.size() >= 4 && src.size() == dst.size());
+  int n = (int)src.size();
 
-//   // get object motions in previous frame (so k-2 to k-1)
-//   const MotionEstimateMap& motion_estiamtes_k_1 =
-//   frame_k_1->motion_estimates_; if (!motion_estiamtes_k_1.exists(object_id))
-//   {
-//     result.status = TrackingStatus::INVALID;
-//     return result;
-//   }
+  Mat T1 = computeNormalizationTransform(src);
+  Mat T2 = computeNormalizationTransform(dst);
 
-//   // previous motion model: k-2 to k-1 in w
-//   const gtsam::Pose3 motion_model = motion_estiamtes_k_1.at(object_id);
+  // Normalize points
+  vector<Point2f> nsrc(n), ndst(n);
+  for (int i = 0; i < n; i++) {
+    Mat p = (Mat_<double>(3, 1) << src[i].x, src[i].y, 1.0);
+    Mat pn = T1 * p;
+    nsrc[i] = Point2f((float)(pn.at<double>(0, 0) / pn.at<double>(2, 0)),
+                      (float)(pn.at<double>(1, 0) / pn.at<double>(2, 0)));
 
-//   using Calibration = Camera::CalibrationType;
-//   const auto calibration =
-//       camera_params_.constructGtsamCalibration<Calibration>();
+    Mat q = (Mat_<double>(3, 1) << dst[i].x, dst[i].y, 1.0);
+    Mat qn = T2 * q;
+    ndst[i] = Point2f((float)(qn.at<double>(0, 0) / qn.at<double>(2, 0)),
+                      (float)(qn.at<double>(1, 0) / qn.at<double>(2, 0)));
+  }
 
-//   auto I = gtsam::traits<gtsam::Pose3>::Identity();
-//   gtsam::PinholeCamera<Calibration> camera(I, calibration);
+  // Build A matrix (2n x 9)
+  Mat A = Mat::zeros(n * 2, 9, CV_64F);
+  for (int i = 0; i < n; i++) {
+    double x = nsrc[i].x;
+    double y = nsrc[i].y;
+    double u = ndst[i].x;
+    double v = ndst[i].y;
+    A.at<double>(2 * i, 0) = -x;
+    A.at<double>(2 * i, 1) = -y;
+    A.at<double>(2 * i, 2) = -1;
+    A.at<double>(2 * i, 6) = x * u;
+    A.at<double>(2 * i, 7) = y * u;
+    A.at<double>(2 * i, 8) = u;
 
-//   const double reprojection_error = params_.ransac_threshold_pnp;
+    A.at<double>(2 * i + 1, 3) = -x;
+    A.at<double>(2 * i + 1, 4) = -y;
+    A.at<double>(2 * i + 1, 5) = -1;
+    A.at<double>(2 * i + 1, 6) = x * v;
+    A.at<double>(2 * i + 1, 7) = y * v;
+    A.at<double>(2 * i + 1, 8) = v;
+  }
 
-//   TrackletIds tracklets;
-//   TrackletIds inlier_tracklets;
+  // Solve Ah = 0 via SVD
+  Mat w, u, vt;
+  SVD::compute(A, w, u, vt, SVD::MODIFY_A);
+  Mat h =
+      vt.row(8).reshape(0, 3);  // last row of V^T -> smallest singular value
 
-//   utils::Accumulatord total_repr_error, inlier_repr_error;
+  // Denormalize: H = inv(T2) * h * T1
+  Mat H = Mat::zeros(3, 3, CV_64F);
+  Mat Hn;
+  h.convertTo(Hn, CV_64F);
+  H = T2.inv() * Hn * T1;
 
-//   const size_t& n_matches = dynamic_correspondences.size();
-//   for (size_t i = 0u; i < n_matches; i++) {
-//     const AbsolutePoseCorrespondence& corres = dynamic_correspondences.at(i);
-//     tracklets.push_back(corres.tracklet_id_);
+  // Normalize so H(2,2)=1
+  if (fabs(H.at<double>(2, 2)) > 1e-12) H /= H.at<double>(2, 2);
+  return H;
+}
 
-//     const Keypoint& kp_k = corres.cur_;
-//     // the landmark int the world frame at k-1
-//     const Landmark& w_lmk_k_1 = corres.ref_;
+// Decompose homography to possible poses and choose best using cheirality
+// (points in front)
+bool recoverPoseFromHomography(const Mat& H_in, const Mat& K,
+                               const vector<Point3f>& planePts3D,
+                               const vector<Point2f>& imagePts, Mat& bestR,
+                               Mat& bestT) {
+  CV_Assert(H_in.size() == Size(3, 3));
+  Mat H;
+  H_in.convertTo(H, CV_64F);
 
-//     // using the motion, put the lmk in the world frame at k
-//     const Landmark w_lmk_k = motion_model * w_lmk_k_1;
-//     // using camera pose, put the lmk in the camera frame at k
-//     const Landmark c_lmk_c = T_world_k.inverse() * w_lmk_k;
+  // OpenCV expects normalized homography such that H = K * [r1 r2 t]
+  vector<Mat> Rs, Ts, Ns;
+  int solutions = decomposeHomographyMat(H, K, Rs, Ts, Ns);
+  if (solutions == 0) return false;
 
-//     try {
-//       double repr_error = camera.reprojectionError(c_lmk_c,
-//       kp_k).squaredNorm();
+  int bestIdx = -1;
+  int bestFront = -1;
 
-//       total_repr_error.Add(repr_error);
-//       if (repr_error < reprojection_error) {
-//         inlier_tracklets.push_back(corres.tracklet_id_);
-//         inlier_repr_error.Add(repr_error);
-//       }
-//     } catch (const gtsam::CheiralityException&) {
-//     }
-//   }
+  // For each solution count number of points with positive depth
+  for (int i = 0; i < solutions; i++) {
+    Mat R = Rs[i];
+    Mat t = Ts[i];
 
-//   TrackletIds outliers;
-//   determineOutlierIds(inlier_tracklets, tracklets, outliers);
+    int frontCount = 0;
+    vector<Point2f> proj;
+    // Project 3D plane points with candidate pose
+    projectPoints(planePts3D, R, t, K, Mat(), proj);
+    for (size_t j = 0; j < proj.size(); j++) {
+      // Reconstruct depth sign by transforming a 3D point and looking at z in
+      // camera frame
+      Mat X = (Mat_<double>(3, 1) << planePts3D[j].x, planePts3D[j].y,
+               planePts3D[j].z);
+      Mat Xcam = R * X + t;
+      if (Xcam.at<double>(2, 0) > 0) frontCount++;
+    }
+    if (frontCount > bestFront) {
+      bestFront = frontCount;
+      bestIdx = i;
+    }
+  }
 
-//   VLOG(20) << "(Object) motion model inliers/total(error) "
-//            << inlier_tracklets.size() << "(" << inlier_repr_error.Mean()
-//            << ") / " << tracklets.size() << "(" << total_repr_error.Mean()
-//            << ")";
+  if (bestIdx < 0) return false;
+  bestR = Rs[bestIdx].clone();
+  bestT = Ts[bestIdx].clone();
+  return true;
+}
 
-//   result.best_result = motion_model;
-//   result.inliers = inlier_tracklets;
-//   result.outliers = outliers;
-//   result.status = TrackingStatus::VALID;
-//   return result;
-// }
+bool poseFromHomograph(const std::vector<cv::Point3f>& points3D,
+                       const std::vector<cv::Point2f>& points2D,
+                       const cv::Mat& K, gtsam::Pose3& Gw) {
+  // Ensure we have enough correspondences
+  if (points3D.size() < 4 || points3D.size() != points2D.size()) {
+    return false;
+  }
+
+  // Convert 3D points to 2D by projecting onto XY plane (Z=0)
+  std::vector<cv::Point2f> points3D_2D;
+  for (const auto& pt : points3D) {
+    points3D_2D.push_back(cv::Point2f(pt.x, pt.y));
+  }
+
+  // Find homography matrix
+  cv::Mat H = cv::findHomography(points3D_2D, points2D, cv::RANSAC, 3.0);
+
+  if (H.empty()) {
+    throw std::runtime_error("Failed to compute homography");
+  }
+
+  // Decompose homography to get rotation and translation
+  // H = K * [r1 r2 t] where r1, r2 are first two columns of rotation matrix
+  cv::Mat K_inv = K.inv();
+
+  // Normalize: H_normalized = K^(-1) * H
+  cv::Mat H_normalized = K_inv * H;
+
+  // Extract columns
+  cv::Mat col1 = H_normalized.col(0);
+  cv::Mat col2 = H_normalized.col(1);
+  cv::Mat col3 = H_normalized.col(2);
+
+  // Normalize rotation columns
+  double lambda1 = cv::norm(col1);
+  double lambda2 = cv::norm(col2);
+  double lambda = (lambda1 + lambda2) / 2.0;
+
+  cv::Mat r1 = col1 / lambda;
+  cv::Mat r2 = col2 / lambda;
+  cv::Mat t = col3 / lambda;
+
+  // Compute r3 as cross product of r1 and r2
+  cv::Mat r3 = r1.cross(r2);
+
+  // Build rotation matrix
+  cv::Mat R = cv::Mat(3, 3, CV_64F);
+  r1.copyTo(R.col(0));
+  r2.copyTo(R.col(1));
+  r3.copyTo(R.col(2));
+
+  // Ensure R is a valid rotation matrix using SVD
+  cv::Mat W, U, Vt;
+  cv::SVD::compute(R, W, U, Vt);
+  R = U * Vt;
+
+  // Convert OpenCV matrices to Eigen
+  Eigen::Matrix3d R_eigen;
+  Eigen::Vector3d t_eigen;
+
+  for (int i = 0; i < 3; i++) {
+    for (int j = 0; j < 3; j++) {
+      R_eigen(i, j) = R.at<double>(i, j);
+    }
+    t_eigen(i) = t.at<double>(i, 0);
+  }
+
+  // Create 4x4 homogeneous transformation matrix
+  Eigen::Matrix4d transform = Eigen::Matrix4d::Identity();
+  transform.block<3, 3>(0, 0) = R_eigen;
+  transform.block<3, 1>(0, 3) = t_eigen;
+
+  Gw = gtsam::Pose3(transform);
+  return true;
+}
+
+bool poseFromPnP(const std::vector<cv::Point3f>& points3D,
+                 const std::vector<cv::Point2f>& points2D, const cv::Mat& K,
+                 gtsam::Pose3& Gw, cv::Mat& inliers) {
+  // Ensure we have enough correspondences
+  if (points3D.size() < 4 || points3D.size() != points2D.size()) {
+    return false;
+  }
+
+  // Output vectors
+  Mat rvec, tvec;
+
+  cv::Mat distCoeffs = cv::Mat::zeros(1, 4, CV_64FC1);
+
+  // --- 1. Run solvePnPRansac ---
+  bool success =
+      solvePnPRansac(points3D, points2D, K, distCoeffs, rvec, tvec,
+                     false,  // useExtrinsicGuess
+                     500,    // iterationsCount (number of RANSAC iterations)
+                     0.4,    // reprojectionError (max allowed error in pixels)
+                     0.99,   // confidence
+                     inliers,       // Output for inlier indices
+                     SOLVEPNP_IPPE  // PnP method (EPnP is a good default)
+      );
+
+  if (!success) {
+    return false;
+  }
+
+  // cout << "Pose calculation successful using " << inliers.rows << " inliers."
+  // << endl;
+
+  // --- 2. Convert rvec to a 3x3 Rotation Matrix (R) ---
+  Mat R_mat;               // OpenCV Mat for the 3x3 rotation matrix
+  Rodrigues(rvec, R_mat);  // rvec (Rodrigues form) -> R_mat (3x3 matrix)
+
+  // --- 3. Assemble the Homogeneous Matrix (T) using Eigen ---
+  Eigen::Matrix4d T_homo =
+      Eigen::Matrix4d::Identity();  // Start with an Identity matrix
+
+  // Copy Rotation (R) from OpenCV Mat to Eigen 3x3 block
+  for (int i = 0; i < 3; ++i) {
+    for (int j = 0; j < 3; ++j) {
+      // R_mat is CV_64F (double) by default from Rodrigues
+      T_homo(i, j) = R_mat.at<double>(i, j);
+    }
+  }
+
+  // Copy Translation (t) from OpenCV Mat to Eigen 3x1 block
+  T_homo(0, 3) = tvec.at<double>(0, 0);  // T_x
+  T_homo(1, 3) = tvec.at<double>(1, 0);  // T_y
+  T_homo(2, 3) = tvec.at<double>(2, 0);  // T_z
+
+  Gw = gtsam::Pose3(T_homo);
+  return true;
+}
+
+}  // namespace testing
+
+ObjectMotionSolverFilter::ObjectMotionSolverFilter(
+    const ObjectMotionSolverFilter::Params& params,
+    const CameraParams& camera_params)
+    : ObjectMotionSovlerF2F(params, camera_params) {}
+
+bool ObjectMotionSolverFilter::solveImpl(Frame::Ptr frame_k,
+                                         Frame::Ptr frame_k_1,
+                                         ObjectId object_id,
+                                         MotionEstimateMap& motion_estimates) {
+  AbsolutePoseCorrespondences dynamic_correspondences;
+  // get the corresponding feature pairs
+  bool corr_result = frame_k->getDynamicCorrespondences(
+      dynamic_correspondences, *frame_k_1, object_id,
+      frame_k->landmarkWorldKeypointCorrespondance());
+
+  const size_t& n_matches = dynamic_correspondences.size();
+
+  cv::Mat rgb = frame_k->image_container_.rgb();
+  cv::Mat viz;
+  rgb.copyTo(viz);
+
+  TrackletIds all_tracklets;
+  std::transform(dynamic_correspondences.begin(), dynamic_correspondences.end(),
+                 std::back_inserter(all_tracklets),
+                 [](const AbsolutePoseCorrespondence& corres) {
+                   return corres.tracklet_id_;
+                 });
+  CHECK_EQ(all_tracklets.size(), n_matches);
+
+  Pose3SolverResult geometric_result =
+      EgoMotionSolver::geometricOutlierRejection3d2d(dynamic_correspondences);
+
+  std::vector<cv::Point3f> object_points;
+  std::vector<cv::Point2f> image_points;
+
+  for (const auto& corres : dynamic_correspondences) {
+    Landmark lmk = corres.ref_;
+    Keypoint kp = corres.cur_;
+
+    object_points.push_back(
+        cv::Point3f((float)lmk(0), (float)lmk(1), (float)lmk(2)));
+    image_points.push_back(utils::gtsamPointToCv(kp));
+  };
+
+  const auto K = camera_params_.getCameraMatrix();
+
+  gtsam::Pose3 G_w;
+  cv::Mat inliers_ransac;
+  bool homography_result =
+      testing::poseFromPnP(object_points, image_points, K, G_w, inliers_ransac);
+
+  // if (geometric_result.status == TrackingStatus::VALID) {
+  if (homography_result) {
+    // gtsam::Pose3 G_w = geometric_result.best_result.inverse();
+    gtsam::Pose3 H_w = frame_k->getPose() * G_w;
+
+    TrackletIds inlier_tracklets;
+    for (size_t i = 0; i < inliers_ransac.rows; i++) {
+      inlier_tracklets.push_back(all_tracklets.at(inliers_ransac.at<int>(i)));
+    }
+    geometric_result.inliers = inlier_tracklets;
+    determineOutlierIds(geometric_result.inliers, all_tracklets,
+                        geometric_result.outliers);
+
+    // camera at frame_k->getPose()
+    auto gtsam_camera = frame_k->getFrameCamera();
+
+    // calcuate reprojection error
+    double inlier_error = 0, outlier_error = 0;
+    int inlier_count = 0, outlier_count = 0;
+    // for(const AbsolutePoseCorrespondence& corr : dynamic_correspondences) {
+    //   gtsam::Point3 lmk_W_k_1 = corr.ref_;
+    //   gtsam::Point3 lmk_W_k = H_w * lmk_W_k_1;
+    //   Keypoint kp_k_measured = corr.cur_;
+
+    //   Keypoint kp_k_projected = gtsam_camera.project2(lmk_W_k);
+    //   double repr = (kp_k_measured - kp_k_projected).norm();
+
+    //   cv::Scalar colour;
+
+    //   auto it = std::find(geometric_result.inliers.begin(),
+    //   geometric_result.inliers.end(), corr.tracklet_id_); if(it !=
+    //   geometric_result.inliers.end()) {
+    //     //inlier
+    //     inlier_error += repr;
+    //     inlier_count++;
+    //     colour = Color::green().bgra();
+    //   }
+    //   else {
+    //     //outlier
+    //     outlier_error += repr;
+    //     outlier_count++;
+    //     colour = Color::red().bgra();
+    //   }
+    //   cv::arrowedLine(viz, utils::gtsamPointToCv(kp_k_measured),
+    //                   utils::gtsamPointToCv(kp_k_projected), colour, 1, 8, 0,
+    //                   0.1);
+    // cv::circle(viz, utils::gtsamPointToCv(kp_k_measured), 2, colour, -1);
+    // }
+
+    // LOG(INFO) << "Inlier repr " << inlier_error/(double)inlier_count << "
+    // outlier rpr " << outlier_error/(double)outlier_count;
+
+    // cv::imshow("Inlier/Outlier", viz);
+    // cv::waitKey(0);
+
+    Motion3SolverResult motion_result;
+    motion_result.status = geometric_result.status;
+    motion_result.inliers = geometric_result.inliers;
+    motion_result.outliers = geometric_result.outliers;
+    motion_result.best_result = Motion3ReferenceFrame(
+        H_w, Motion3ReferenceFrame::Style::F2F, ReferenceFrame::GLOBAL,
+        frame_k_1->getFrameId(), frame_k->getFrameId());
+
+    frame_k->dynamic_features_.markOutliers(motion_result.outliers);
+    motion_estimates.insert({object_id, motion_result.best_result});
+    return true;
+  } else {
+    return false;
+  }
+}
 
 }  // namespace dyno

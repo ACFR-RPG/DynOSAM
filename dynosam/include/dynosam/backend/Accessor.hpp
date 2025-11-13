@@ -30,6 +30,8 @@
 
 #pragma once
 
+#include <mutex>
+
 #include "dynosam/backend/BackendDefinitions.hpp"
 #include "dynosam_common/Types.hpp"
 #include "dynosam_opt/Map.hpp"
@@ -39,6 +41,9 @@ namespace dyno {
 /**
  * @brief Accessor defines the interface between the structured output of a
  * BackendModule and any formulation used to construct the Dynamic SLAM problem.
+ *
+ * Accesors are shared between the frontend and backend and therefore should be
+ * threadsafe!
  *
  * Each derived Accessor is associated with a derived Formulation and knows how
  * to access the variables in that problem and convert them into the form
@@ -71,17 +76,6 @@ class Accessor {
    * @return StateQuery<gtsam::Pose3>
    */
   virtual StateQuery<gtsam::Pose3> getObjectMotion(
-      FrameId frame_id, ObjectId object_id) const = 0;
-
-  /**
-   * @brief Gets the motion _{k-1}^wH_k attime-step (k) and object (j) with the
-   * associated reference frame.
-   *
-   * @param frame_id FrameId
-   * @param object_id ObjectId
-   * @return StateQuery<Motion3ReferenceFrame>
-   */
-  virtual StateQuery<Motion3ReferenceFrame> getObjectMotionReferenceFrame(
       FrameId frame_id, ObjectId object_id) const = 0;
 
   /**
@@ -278,6 +272,25 @@ class Accessor {
    */
   bool hasObjectMotionEstimate(FrameId frame_id, ObjectId object_id,
                                Motion3& motion) const;
+
+  /**
+   * @brief Gets the absolute motion (_{k-1}^wH_k) from theta the requested
+   * time-step (k) and object (j) with the associated reference frame.
+   * Internally this uses getObjectMotion and constructs a Motion3ReferenceFrame
+   * using the global frame, k-1 and k. No checks are done on the underlying
+   * function call so it assumes that the virtual getObjectMotion function has
+   * been implemented correctly and returns a motion in the right
+   * representation.
+   *
+   * @param frame_id FrameId
+   * @param object_id ObjectId
+   * @return StateQuery<Motion3ReferenceFrame>
+   */
+  StateQuery<Motion3ReferenceFrame> getObjectMotionReferenceFrame(
+      FrameId frame_id, ObjectId object_id) const;
+
+ protected:
+  mutable std::mutex mutex_;
 };
 
 /**
@@ -295,22 +308,6 @@ class AccessorT : public Accessor {
 
   AccessorT(const SharedFormulationData& shared_data, typename Map::Ptr map);
   virtual ~AccessorT() {}
-
-  /**
-   * @brief Gets the absolute motion (_{k-1}^wH_k) from theta the requested
-   * time-step (k) and object (j) with the associated reference frame.
-   * Internally this uses getObjectMotion and constructs a Motion3ReferenceFrame
-   * using the global frame, k-1 and k. No checks are done on the underlying
-   * function call so it assumes that the virtual getObjectMotion function has
-   * been implemented correctly and returns a motion in the right
-   * representation.
-   *
-   * @param frame_id FrameId
-   * @param object_id ObjectId
-   * @return StateQuery<Motion3ReferenceFrame>
-   */
-  StateQuery<Motion3ReferenceFrame> getObjectMotionReferenceFrame(
-      FrameId frame_id, ObjectId object_id) const override;
 
   /**
    * @brief Get a static landmark (^wm) with tracklet id (i).

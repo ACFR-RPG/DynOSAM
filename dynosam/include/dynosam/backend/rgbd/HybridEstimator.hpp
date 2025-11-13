@@ -1154,8 +1154,8 @@ class SmartMotionFactor : public gtsam::NonlinearFactor,
 using HybridSmartFactor = SmartMotionFactor<3, gtsam::Pose3, gtsam::Pose3>;
 
 struct HybridFormulationProperties {
-  inline gtsam::Symbol makeDynamicKey(TrackletId tracklet_id) const {
-    return (gtsam::Symbol)DynamicLandmarkSymbol(0u, tracklet_id);
+  static inline gtsam::Symbol makeDynamicKey(TrackletId tracklet_id) {
+    return static_cast<gtsam::Symbol>(DynamicLandmarkSymbol(0u, tracklet_id));
   }
 };
 

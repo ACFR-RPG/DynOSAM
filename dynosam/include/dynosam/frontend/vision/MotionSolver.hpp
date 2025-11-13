@@ -386,9 +386,12 @@ class ObjectMotionSovlerF2F : public ObjectMotionSolver,
     return object_motion_params;
   }
 
+ protected:
+  virtual bool solveImpl(Frame::Ptr frame_k, Frame::Ptr frame_k_1,
+                         ObjectId object_id,
+                         MotionEstimateMap& motion_estimates);
+
  private:
-  bool solveImpl(Frame::Ptr frame_k, Frame::Ptr frame_k_1, ObjectId object_id,
-                 MotionEstimateMap& motion_estimates);
   const ObjectPoseMap& updatePoses(MotionEstimateMap& motion_estimates,
                                    Frame::Ptr frame_k, Frame::Ptr frame_k_1);
 
@@ -406,6 +409,22 @@ class ObjectMotionSovlerF2F : public ObjectMotionSolver,
 
  protected:
   const ObjectMotionSovlerF2F::Params object_motion_params;
+};
+
+class ObjectMotionSolverFilter : public ObjectMotionSovlerF2F {
+ public:
+  //! Result from solve including the object motions and poses
+  using ObjectMotionSovlerF2F::Params;
+  using ObjectMotionSovlerF2F::Result;
+
+  using ObjectMotionSovlerF2F::EgoMotionSolver;
+
+  ObjectMotionSolverFilter(const Params& params,
+                           const CameraParams& camera_params);
+
+ protected:
+  bool solveImpl(Frame::Ptr frame_k, Frame::Ptr frame_k_1, ObjectId object_id,
+                 MotionEstimateMap& motion_estimates) override;
 };
 
 void declare_config(OpticalFlowAndPoseOptimizer::Params& config);

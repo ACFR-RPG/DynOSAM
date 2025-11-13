@@ -72,12 +72,12 @@ TEST(OnlineDataProviderRos, testwaitCameraInfoSubscribe) {
   camera_info_msg.distortion_model = "plumb_bob";
 
   auto received = false;
-  std::shared_ptr<OnlineDataProviderRos> odpr = nullptr;
+  std::shared_ptr<RGBDTypeCalibrationHelper> odpr = nullptr;
   std::shared_future<bool> wait = std::async(std::launch::async, [&]() {
     OnlineDataProviderRosParams params;
     params.wait_for_camera_params = true;
     params.camera_params_timeout = -1;
-    odpr = std::make_shared<OnlineDataProviderRos>(node, params);
+    odpr = std::make_shared<RGBDTypeCalibrationHelper>(node, params);
     received = true;
     return true;
   });
@@ -98,7 +98,7 @@ TEST(OnlineDataProviderRos, testNowaitCameraInfoSubscribe) {
 
   OnlineDataProviderRosParams params;
   params.wait_for_camera_params = false;
-  auto odpr = std::make_shared<OnlineDataProviderRos>(node, params);
+  auto odpr = std::make_shared<RGBDTypeCalibrationHelper>(node, params);
   EXPECT_FALSE(odpr->getCameraParams());
 }
 

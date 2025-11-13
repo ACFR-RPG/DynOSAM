@@ -8,6 +8,7 @@
 #include "message_filters/synchronizer.hpp"
 #include "rclcpp/node.hpp"
 #include "rclcpp/node_interfaces/node_interfaces.hpp"
+#include "rclcpp/node_interfaces/node_topics.hpp"
 #include "rclcpp/node_options.hpp"
 #include "sensor_msgs/msg/image.hpp"
 
@@ -58,6 +59,17 @@ class MultiSyncBase {
   virtual void shutdown() = 0;
 };
 
+struct MultiSyncConfig {
+  uint32_t queue_size = 20u;
+  //! Initalised with SensorDataQoS
+  rclcpp::QoS subscriber_qos = rclcpp::QoS(
+      rclcpp::QoSInitialization::from_rmw(rmw_qos_profile_sensor_data));
+  rclcpp::SubscriptionOptions subscriber_options{};
+
+  MultiSyncConfig() = default;
+  MultiSyncConfig(uint32_t _queue_size) : queue_size(_queue_size) {}
+};
+
 /**
  * @brief Wrapper for a message_filters::Synchronizer that encapsualtes
  * subscribing to N topics of type Msg.
@@ -72,17 +84,6 @@ class MultiSyncBase {
 template <typename Msg, size_t N>
 class MultiSync : public MultiSyncBase {
  public:
-  struct Config {
-    uint32_t queue_size = 20u;
-    //! Initalised with SensorDataQoS
-    rclcpp::QoS subscriber_qos = rclcpp::QoS(
-        rclcpp::QoSInitialization::from_rmw(rmw_qos_profile_sensor_data));
-    rclcpp::SubscriptionOptions subscriber_options{};
-
-    Config() = default;
-    Config(uint32_t _queue_size) : queue_size(_queue_size) {}
-  };
-
   // In ROS Kilted curent version the message filter subscriber base requires a
   // node interface to the patramters and topics not the node itself. See:
   // https://docs.ros.org/en/humble/Tutorials/Intermediate/Using-Node-Interfaces-Template-Class.html
@@ -105,7 +106,7 @@ class MultiSync : public MultiSyncBase {
 
   // tuple of pointers must be explicitly initalised
   MultiSync(rclcpp::Node& node, const std::array<std::string, N>& topics,
-            const Config& config = Config())
+            const MultiSyncConfig& config = MultiSyncConfig())
       : node_(node), topics_(topics), config_(config) {}
 
   bool connect() override {
@@ -129,12 +130,24 @@ class MultiSync : public MultiSyncBase {
     ss << "MultiSync of type " << msg_name << " and size " << N
        << " is subscribing to topics: ";
     RequiredInterfaces interface(node_);
+
+    rclcpp::node_interfaces::NodeTopics* node_topics =
+        dynamic_cast<rclcpp::node_interfaces::NodeTopics*>(
+            node_.get_node_topics_interface().get());
+    CHECK_NOTNULL(node_topics);
+
     for (size_t i = 0; i < N; i++) {
       internal::select_apply<N>(i, [&](auto I) {
+        // for some reason using the message_filter::Subscriber does not adhere
+        // to remapping manually resolve the topic node
+        //  false is for only_expand
+        std::string resolved_topic =
+            node_topics->resolve_topic_name(topics_.at(i), false);
+
         std::get<I>(subs_) = std::make_shared<Subscriber>(
-            interface, topics_.at(i), config_.subscriber_qos,
+            interface, resolved_topic, config_.subscriber_qos,
             config_.subscriber_options);
-        ss << std::get<I>(subs_)->getSubscriber()->get_topic_name() << " ";
+        ss << resolved_topic << " ";
       });
     }
     ss << "\n";
@@ -184,7 +197,7 @@ class MultiSync : public MultiSyncBase {
 
   rclcpp::Node& node_;
   std::array<std::string, N> topics_;
-  Config config_;
+  MultiSyncConfig config_;
   SubscriberTuple subs_{};
 
   std::shared_ptr<SyncType> sync_;

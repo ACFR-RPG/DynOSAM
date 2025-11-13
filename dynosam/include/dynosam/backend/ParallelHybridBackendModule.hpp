@@ -45,6 +45,73 @@
 
 namespace dyno {
 
+class ParallelHybridBackendModule;
+
+/**
+ * @brief Special accessor class to access all values via a single interface
+ * since the optimisation of the static scene and dynamic objects are decoupled
+ * and therefore handled by their own formulation
+ *
+ */
+class ParallelHybridAccessor : public Accessor {
+ public:
+  DYNO_POINTER_TYPEDEFS(ParallelHybridAccessor)
+
+  ParallelHybridAccessor(ParallelHybridBackendModule* parallel_hybrid_module);
+
+  StateQuery<gtsam::Pose3> getSensorPose(FrameId frame_id) const override;
+
+  StateQuery<gtsam::Pose3> getObjectMotion(FrameId frame_id,
+                                           ObjectId object_id) const override;
+
+  StateQuery<gtsam::Pose3> getObjectPose(FrameId frame_id,
+                                         ObjectId object_id) const override;
+
+  StateQuery<gtsam::Point3> getDynamicLandmark(
+      FrameId frame_id, TrackletId tracklet_id) const override;
+
+  StateQuery<gtsam::Point3> getStaticLandmark(
+      TrackletId tracklet_id) const override;
+
+  EstimateMap<ObjectId, gtsam::Pose3> getObjectPoses(
+      FrameId frame_id) const override;
+
+  MotionEstimateMap getObjectMotions(FrameId frame_id) const override;
+
+  ObjectPoseMap getObjectPoses() const override;
+
+  ObjectMotionMap getObjectMotions() const override;
+
+  StatusLandmarkVector getDynamicLandmarkEstimates(
+      FrameId frame_id) const override;
+
+  StatusLandmarkVector getDynamicLandmarkEstimates(
+      FrameId frame_id, ObjectId object_id) const override;
+
+  StatusLandmarkVector getStaticLandmarkEstimates(
+      FrameId frame_id) const override;
+
+  StatusLandmarkVector getFullStaticMap() const override;
+  bool hasObjectMotionEstimate(FrameId frame_id, ObjectId object_id,
+                               Motion3* motion) const override;
+
+  bool hasObjectPoseEstimate(FrameId frame_id, ObjectId object_id,
+                             gtsam::Pose3* pose) const override;
+
+  gtsam::FastMap<ObjectId, gtsam::Point3> computeObjectCentroids(
+      FrameId frame_id) const override;
+
+ protected:
+  // Helper function to call a function on an ObjectEstimator if it exists
+  //  in the map of sam estimators
+  //  otherwise the result of the FallbackFunc will be used (as default)
+  template <typename Func, typename FallbackFunc>
+  auto withOr(ObjectId object_id, Func&& func, FallbackFunc&& fallback) const;
+
+  ParallelHybridBackendModule* parallel_hybrid_module_;
+  HybridAccessor::Ptr static_accessor_;
+};
+
 class ParallelHybridBackendModule
     : public VisionImuBackendModule<RegularBackendModuleTraits> {
  public:
@@ -66,6 +133,8 @@ class ParallelHybridBackendModule
 
   std::pair<gtsam::Values, gtsam::NonlinearFactorGraph> getActiveOptimisation()
       const override;
+
+  Accessor::Ptr getAccessor() override;
 
  private:
   using SpinReturn = Base::SpinReturn;
@@ -92,6 +161,7 @@ class ParallelHybridBackendModule
                                                  Timestamp timestamp) const;
 
   void logBackendFromEstimators();
+  void updateTrackletMapping(const VisionImuPacket::ConstPtr input);
 
  private:
   Camera::Ptr camera_;
@@ -108,8 +178,25 @@ class ParallelHybridBackendModule
   //! Vector of object ids that are new for this frame. Cleared after each spin
   ObjectIds new_objects_estimators_;
 
+  friend class ParallelHybridAccessor;
+  ParallelHybridAccessor::Ptr combined_accessor_;
+
+  //! Fast look up of object ids for each point
+  //! Needed to look up the right object estimator for each point
+  FastUnorderedMap<TrackletId, ObjectId> tracklet_id_to_object_;
+
   //! used to cache the result of each update which will we log to file
   GenericObjectCentricMap<ParallelObjectISAM::Result> result_map_;
 };
+
+// implement function after ParallelHybridBackendModule has been fully defined
+template <typename Func, typename FallbackFunc>
+auto ParallelHybridAccessor::withOr(ObjectId object_id, Func&& func,
+                                    FallbackFunc&& fallback) const {
+  const auto& object_estimators = parallel_hybrid_module_->sam_estimators_;
+  auto it = object_estimators.find(object_id);
+  if (it != object_estimators.end()) return func(it->second);
+  return fallback();
+}
 
 }  // namespace dyno
