@@ -1,4 +1,4 @@
-from dynosam_ros.DynosamNode import DynoSAMNode
+from dynosam_ros.dynosam_node import DynosamNode
 from launch.substitutions import LaunchConfiguration
 from launch.actions import DeclareLaunchArgument
 from launch import LaunchDescription
@@ -17,7 +17,7 @@ def generate_launch_description():
         DeclareLaunchArgument("rescale_width", default_value="640", description="Image width to rescale to"),
         DeclareLaunchArgument("rescale_height", default_value="480", description="Image height to rescale to"),
 
-        DynoSAMNode(
+        DynosamNode(
                 package="dynosam_ros",
                 executable="dynosam_node",
                 output="screen",

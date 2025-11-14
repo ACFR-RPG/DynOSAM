@@ -263,20 +263,16 @@ class StaticFormulationUpdater : public StaticFormulationUpdaterImpl<MAP> {
           CHECK_NOTNULL(camera->safeGetRGBDCamera());
       K_stereo_ = rgbd_camera->getFakeStereoCalib();
       CHECK_NOTNULL(K_stereo_);
-
-      K_stereo_->print("Stero K\n");
       K_ = camera->getGtsamCalibration();
     }
 
     bool addLandmark(LmkNode& lmk, const FrameNode& frame,
-                     const UpdateObservationParams& update_params,
+                     const UpdateObservationParams& /*update_params*/,
                      gtsam::Values& values, gtsam::NonlinearFactorGraph& graph,
                      gtsam::Key& point_key, UpdateObservationResult& result,
                      std::optional<Landmark>& initial) override {
       point_key = lmk->makeStaticKey();
       const FrameId frame_k = FrameId(frame->getId());
-
-      const auto& params = this->formulation_->params();
 
       // NOTE: not handling the case a lmk becomes an outlier once already added
       // to the opt
@@ -449,7 +445,10 @@ Formulation<MAP>::Formulation(const FormulationParams& params,
       map_(map),
       noise_models_(noise_models),
       sensors_(sensors),
-      hooks_(hooks) {}
+      hooks_(hooks) {
+  static_updater_ =
+      std::make_unique<internal::StaticFormulationUpdater<MAP>>(this);
+}
 
 template <typename MAP>
 void Formulation<MAP>::setTheta(const gtsam::Values& linearization) {
@@ -569,15 +568,13 @@ UpdateObservationResult Formulation<MAP>::updateStaticObservations(
   auto frame_node_k = map->getFrame(frame_id_k);
   CHECK_NOTNULL(frame_node_k);
 
-  internal::StaticFormulationUpdater<MAP> static_updater(this);
-
   VLOG(20) << "Looping over " << frame_node_k->static_landmarks.size()
            << " static lmks for frame " << frame_id_k;
   for (auto lmk_node : frame_node_k->static_landmarks) {
     gtsam::Key point_key;
     std::optional<Landmark> initial_value;
 
-    bool lmk_result = static_updater.addLandmark(
+    bool lmk_result = static_updater_->addLandmark(
         lmk_node, frame_node_k, update_params, new_values, internal_new_factors,
         point_key, result, initial_value);
 

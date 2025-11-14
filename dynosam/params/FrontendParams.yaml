@@ -18,7 +18,7 @@ refine_camera_pose_with_joint_of: True
 
 object_motion_solver:
   ransac_threshold_pnp: 1.0
-  refine_motion_with_joint_of: True
+  refine_motion_with_joint_of: False
   refine_motion_with_3d: False
 
   ransac_iterations: 500
@@ -58,7 +58,7 @@ tracker_params:
   # subpixel_corner_refinement_params: true
   # use_clahe_filter: false
 
-  prefer_provided_optical_flow: true
+  prefer_provided_optical_flow: false
   prefer_provided_object_detection: true
 
   max_dynamic_features_per_frame: 200

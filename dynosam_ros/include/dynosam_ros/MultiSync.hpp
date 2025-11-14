@@ -140,7 +140,7 @@ class MultiSync : public MultiSyncBase {
       internal::select_apply<N>(i, [&](auto I) {
         // for some reason using the message_filter::Subscriber does not adhere
         // to remapping manually resolve the topic node
-        //  false is for only_expand
+        // false is for only_expand
         std::string resolved_topic =
             node_topics->resolve_topic_name(topics_.at(i), false);
 

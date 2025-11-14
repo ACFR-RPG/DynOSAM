@@ -617,8 +617,6 @@ void FeatureTracker::trackDynamicKLT(
     std::vector<cv::Point2f> current_points;
     current_points.resize(previous_pts.size());
 
-    LOG(INFO) << "Found " << tracklet_ids.size() << " dynamic inliers for KLT";
-
     if (tracklet_ids.size() > 0) {
       utils::TimingStatsCollector tracking_t(
           "dynamic_feature_track_klt.tracking");
@@ -771,8 +769,6 @@ void FeatureTracker::trackDynamicKLT(
     }
 
     for (const auto& [object_id, features_j] : tracks_per_object) {
-      LOG(INFO) << "Tracked " << features_j.size() << " j= " << object_id
-                << " with KLT";
       dynamic_features += features_j;
     }
   }

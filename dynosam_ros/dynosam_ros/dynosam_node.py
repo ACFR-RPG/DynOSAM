@@ -1,16 +1,24 @@
 from launch_ros.actions import Node
-from launch.actions import SetLaunchConfiguration
 from launch.substitutions import LaunchConfiguration
-from launch.utilities import normalize_to_list_of_substitutions
 
 import os, copy, rclpy
 import launch.logging
 
 
-class DynoSAMNode(Node):
+class DynosamNode(Node):
     """Custom Node that auto-builds gflags + dynamic args."""
 
+    DEFAULT_ROS_PACKGE = "dynosam_ros"
+    DEFAULT_EXECUTABLE_NAME = "dynosam_node"
+
     def __init__(self, **kwargs):
+
+        if "package" not in kwargs:
+            kwargs.update("package", DynosamNode.DEFAULT_ROS_PACKGE)
+
+        if "executable" not in kwargs:
+            kwargs.update("executable", DynosamNode.DEFAULT_EXECUTABLE_NAME)
+
         super().__init__(**kwargs)
         self._logger = launch.logging.get_logger("dynosam_launch.DynoSAMNode")
 

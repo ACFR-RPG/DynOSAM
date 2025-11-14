@@ -628,6 +628,9 @@ class Formulation {
   mutable std::optional<std::string> fully_qualified_name_{std::nullopt};
 
   friend class internal::StaticFormulationUpdaterImpl<MAP>;
+
+  using StaticFormulationUpdaterT = internal::StaticFormulationUpdaterImpl<MAP>;
+  std::unique_ptr<StaticFormulationUpdaterT> static_updater_;
 };
 
 }  // namespace dyno

@@ -1,5 +1,5 @@
 
-from dynosam_ros.DynosamNode import DynoSAMNode
+from dynosam_ros.dynosam_node import DynosamNode
 from launch.substitutions import LaunchConfiguration
 from launch.actions import DeclareLaunchArgument
 from launch import LaunchDescription
@@ -14,7 +14,7 @@ def generate_launch_description():
         DeclareLaunchArgument("v", default_value="30"),
         DeclareLaunchArgument("output_path", default_value="/root/results/DynoSAM/"),
         DeclareLaunchArgument("dataset_path", default_value="/root/data/VDO/kitti/0004"),
-        DynoSAMNode(
+        DynosamNode(
             package="dynosam_ros",
             executable="dynosam_node",
             output="screen",

@@ -254,6 +254,8 @@ FrontendModule::SpinReturn RGBDInstanceFrontendModule::nominalSpin(
 
   if (FLAGS_set_dense_labelled_cloud) {
     VLOG(30) << "Setting dense labelled cloud";
+    utils::TimingStatsCollector labelled_clout_timer(
+        "frontend.dense_labelled_cloud");
     const cv::Mat& board_detection_mask = tracker_->getBoarderDetectionMask();
     PointCloudLabelRGB::Ptr dense_labelled_cloud =
         frame->projectToDenseCloud(&board_detection_mask);

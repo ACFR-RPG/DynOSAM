@@ -54,6 +54,16 @@
 #include "dynosam_common/utils/TimingStats.hpp"
 #include "dynosam_opt/FactorGraphTools.hpp"  //TODO: clean
 
+// GTSAM Includes
+// FOR TESTING!
+#include <gtsam/base/Matrix.h>
+#include <gtsam/base/Vector.h>
+#include <gtsam/base/numericalDerivative.h>
+#include <gtsam/geometry/Cal3_S2.h>
+#include <gtsam/geometry/PinholeCamera.h>
+#include <gtsam/geometry/Pose3.h>
+// #include <gtsam/base/FullLinearSolver.h>
+
 namespace dyno {
 
 void declare_config(OpticalFlowAndPoseOptimizer::Params& config) {
@@ -931,22 +941,61 @@ bool poseFromPnP(const std::vector<cv::Point3f>& points3D,
   }
 
   // Output vectors
-  Mat rvec, tvec;
-
+  Mat rvec1, tvec1;
   cv::Mat distCoeffs = cv::Mat::zeros(1, 4, CV_64FC1);
+  cv::Mat inliers1;
 
   // --- 1. Run solvePnPRansac ---
-  bool success =
-      solvePnPRansac(points3D, points2D, K, distCoeffs, rvec, tvec,
+  bool success_ippe =
+      solvePnPRansac(points3D, points2D, K, distCoeffs, rvec1, tvec1,
                      false,  // useExtrinsicGuess
                      500,    // iterationsCount (number of RANSAC iterations)
                      0.4,    // reprojectionError (max allowed error in pixels)
                      0.99,   // confidence
-                     inliers,       // Output for inlier indices
+                     inliers1,      // Output for inlier indices
                      SOLVEPNP_IPPE  // PnP method (EPnP is a good default)
       );
 
-  if (!success) {
+  Mat rvec2, tvec2, inliers2;
+  bool success_epnp =
+      solvePnPRansac(points3D, points2D, K, distCoeffs, rvec2, tvec2,
+                     false,  // useExtrinsicGuess
+                     500,    // iterationsCount (number of RANSAC iterations)
+                     0.4,    // reprojectionError (max allowed error in pixels)
+                     0.99,   // confidence
+                     inliers2,      // Output for inlier indices
+                     SOLVEPNP_AP3P  // PnP method (EPnP is a good default)
+      );
+
+  Mat rvec, tvec;
+  if (success_ippe && success_epnp) {
+    LOG(INFO) << "Solved both object motions with ippe and epnp"
+                 " IPPE inliers: "
+              << inliers1.rows << " EPnP inliers: " << inliers2.rows;
+    ;
+
+    if (inliers1.rows > inliers2.rows) {
+      // IPPE better
+      rvec = rvec1;
+      tvec = tvec1;
+      inliers = inliers1;
+    } else {
+      rvec = rvec2;
+      tvec = tvec2;
+      inliers = inliers2;
+    }
+  } else if (success_ippe) {
+    LOG(INFO) << "Only solved for IPPE";
+    rvec = rvec1;
+    tvec = tvec1;
+    inliers = inliers1;
+  } else if (success_epnp) {
+    LOG(INFO) << "Only solved for EPnP";
+    rvec = rvec2;
+    tvec = tvec2;
+    inliers = inliers2;
+  } else {
+    LOG(WARNING) << "Failed to solve object motion EPnP or IPPE";
     return false;
   }
 
@@ -976,6 +1025,150 @@ bool poseFromPnP(const std::vector<cv::Point3f>& points3D,
 
   Gw = gtsam::Pose3(T_homo);
   return true;
+}
+
+void testing::ExtendedKalmanFilterGTSAM::update(
+    const vector<Point3>& P_w_list, const vector<Point2>& z_obs_list,
+    const gtsam::Pose3& X_W_k) {
+  if (P_w_list.empty() || P_w_list.size() != z_obs_list.size()) {
+    cerr << "EKF Update skipped: Input lists are empty or mismatched." << endl;
+    return;
+  }
+
+  const size_t num_measurements = P_w_list.size();
+  const size_t total_rows =
+      num_measurements * 2;  // Each measurement has 2 dimensions (u, v)
+
+  // Stacked Jacobian H (M x 6) and Stacked Residual y (M x 1)
+  gtsam::Matrix H_stacked = gtsam::Matrix::Zero(total_rows, 6);
+  gtsam::Vector y_stacked = gtsam::Vector::Zero(total_rows);
+
+  // Stacked Measurement Noise R_stacked (M x M)
+  gtsam::Matrix R_stacked = gtsam::Matrix::Zero(total_rows, total_rows);
+  // camera with fixed calibration so HPose is of dims 2x6
+  //  gtsam::PinholePose<Cal3_S2> camera(G_w_, K_gtsam_);
+
+  // auto project = [&](const gtsam::Point3& P_w, const gtsam::Pose3& H_w) ->
+  // gtsam::Point2 {
+  //       const gtsam::Pose3 Gw = X_W_k.inverse() * H_w;
+  //       gtsam::PinholePose<Cal3_S2> camera(Gw.inverse(), K_gtsam_);
+  //       // return camera.project2(P_w);
+  //       auto [p, success] = camera.projectSafe(P_w);
+  //       return p;
+  // };
+
+  // Calculate the combined pose T_cw = X^{-1} * H
+  // Pose3 G_w = X_W_k.inverse() * H_w_;
+
+  // gtsam::PinholePose<Cal3_S2> camera(G_w, K_gtsam_);
+  // Calculate the Adjoint Matrix of X^{-1}, which links delta_h to delta_t_cw
+  gtsam::Matrix Ad_X_inv = X_W_k.inverse().AdjointMap();  // 6x6 matrix
+
+  Pose3 G_w = X_W_k.inverse() * H_w_;
+  gtsam::PinholePose<Cal3_S2> camera(G_w.inverse(), K_gtsam_);
+  // gtsam::Matrix Ad_X = X_W_k.AdjointMap(); // 6x6 matrix
+  // 3. Calculate Correction Factor: J_corr = d(delta_t_wc)/d(delta_w) =
+  // -Ad_{T_cw} This corrects the Jacobian returned by GTSAM (w.r.t. T_wc) to be
+  // w.r.t. the state W.
+  gtsam::Matrix Ad_G_w = G_w.AdjointMap();
+  gtsam::Matrix CorrectionFactor = -Ad_G_w;
+
+  for (size_t i = 0; i < num_measurements; ++i) {
+    const gtsam::Point3& P_w = P_w_list[i];
+    const gtsam::Point2& z_obs = z_obs_list[i];
+
+    gtsam::Matrix26 H_pose;  // 2x6 Jacobian for this measurement (This was
+                             // missing/corrupted)
+
+    // // 1. Calculate Predicted Measurement (h(x)) and Jacobian (H)
+    // gtsam::Point2 z_pred;
+    // try {
+    //     // // GTSAM's project() automatically computes the 2x6 Jacobian w.r.t
+    //     the camera pose.
+    //     // // The Jacobian is stored in H_pose.
+    //     // z_pred = camera.project2(P_w, H_pose, boost::none);
+    //     H_pose = gtsam::numericalDerivative22<gtsam::Vector2, gtsam::Point3,
+    //     gtsam::Pose3>(
+    //       project, P_w, H_w_
+    //     );
+
+    //   z_pred = project(P_w, H_w_);
+
+    // } catch (const gtsam::CheiralityException& e) {
+    //     // Handle points behind the camera
+    //     cerr << "Warning: Point " << i << " behind camera. Skipping." <<
+    //     endl; continue;
+    // }
+    // J_pi: Jacobian of projection w.r.t. T_cw perturbation (delta_t_cw)
+    gtsam::Matrix J_pi;  // 2x6 matrix
+
+    // 1. Calculate Predicted Measurement (h(H)) and Jacobian (J_pi)
+    gtsam::Point2 z_pred;
+    try {
+      // GTSAM's project() computes: z_pred = pi(T_cw * P_w), J_pi =
+      // d(pi)/d(delta_t_cw)
+      z_pred = camera.project(P_w, J_pi);
+    } catch (const gtsam::CheiralityException& e) {
+      // Handle points behind the camera
+      cerr << "Warning: Point " << i << " behind camera. Skipping." << endl;
+      continue;
+    }
+    // 2. Calculate Residual (Error) y = z_obs - z_pred
+    gtsam::Vector2 y_i = z_obs - z_pred;  // 2x1 residual vector
+
+    // 3. Calculate EKF Jacobian: H_EKF = J_pi * Ad_X_inv
+    // H_EKF = d(z)/d(delta_h) = (d(z)/d(delta_t_cw)) *
+    // (d(delta_t_cw)/d(delta_h))
+    gtsam::Matrix H_ekf_i = J_pi * CorrectionFactor;  // 2x6 matrix
+
+    // 3. Stack H and y
+    H_stacked.block<2, 6>(i * 2, 0) = H_ekf_i;
+    y_stacked.segment<2>(i * 2) = y_i;
+
+    // 4. Stack R (R_stacked is block diagonal with R)
+    R_stacked.block<2, 2>(i * 2, i * 2) = R_;
+  }
+
+  // --- EKF Formulas using stacked matrices ---
+
+  // 1. Innovation Covariance (S)
+  // S = H_stacked * P * H_stacked^T + R_stacked
+  gtsam::Matrix S = H_stacked * P_ * H_stacked.transpose() + R_stacked;
+
+  // 2. Kalman Gain (K)
+  // K = P * H_stacked^T * S^-1
+  // We use FullLinearSolver for robustness with potentially large S
+  Eigen::LLT<gtsam::Matrix> ldlt(S);
+  gtsam::Matrix S_inv;
+  {
+    utils::TimingStatsCollector timer("ekfgtsam.inv");
+    S_inv = ldlt.solve(Eigen::MatrixXd::Identity(S.rows(), S.cols()));
+  }
+  // gtsam::Matrix S_inv = ldlt.solve(Eigen::MatrixXd::Identity(S.rows(),
+  // S.cols())); gtsam::Matrix S_inv = S.inverse();
+  gtsam::Matrix K = P_ * H_stacked.transpose() * S_inv;  // 6 x M
+
+  // 3. State Update (Perturbation Vector delta_x)
+  // delta_x = K * y_stacked
+  PerturbationVector delta_x = K * y_stacked;  // 6 x 1
+
+  // 4. State Retraction (Update T_cw)
+  // T_new = T_old.retract(delta_x)
+  // GTSAM's retract is the generalized exponential map on the manifold.
+  H_w_ = H_w_.retract(delta_x);
+
+  // 5. Covariance Update
+  // P = (I - K * H_stacked) * P
+  gtsam::Matrix I = gtsam::Matrix66::Identity();
+  // P_ = (I - K * H_stacked) * P_;
+  gtsam::Matrix I_KH = I - K * H_stacked;
+  P_ = I_KH * P_ * I_KH.transpose() + K * R_stacked * K.transpose();
+
+  // cout << "\n--- EKF Update Complete ---" << endl;
+  // cout << "Number of measurements processed: " << num_measurements << endl;
+  // cout << "Total Residual Norm (||y||): " << y_stacked.norm() << endl;
+  // cout << "Perturbation (delta_x) [t, phi]:\n" << delta_x.transpose() <<
+  // endl;
 }
 
 }  // namespace testing
@@ -1012,37 +1205,75 @@ bool ObjectMotionSolverFilter::solveImpl(Frame::Ptr frame_k,
   Pose3SolverResult geometric_result =
       EgoMotionSolver::geometricOutlierRejection3d2d(dynamic_correspondences);
 
-  std::vector<cv::Point3f> object_points;
-  std::vector<cv::Point2f> image_points;
+  const auto K = camera_params_.getCameraMatrix();
+
+  testing::ExtendedKalmanFilterGTSAM* filter = nullptr;
+  if (!filters_.exists(object_id)) {
+    testing::MeasurementCovariance R =
+        testing::MeasurementCovariance::Identity() * (1 * 1.0);
+
+    // Initial State Covariance P (6x6)
+    testing::StateCovariance P = testing::StateCovariance::Identity() * 0.3;
+
+    filters_.insert2(object_id,
+                     std::make_shared<testing::ExtendedKalmanFilterGTSAM>(
+                         gtsam::Pose3::Identity(), P,
+                         camera_params_.getCameraMatrixEigen(), R));
+  }
+  filter = filters_.at(object_id).get();
+
+  CHECK_NOTNULL(filter);
+
+  // std::vector<cv::Point3f> object_points;
+  // std::vector<cv::Point2f> image_points;
+
+  // for (const auto& corres : dynamic_correspondences) {
+  //   Landmark lmk = corres.ref_;
+  //   Keypoint kp = corres.cur_;
+
+  //   object_points.push_back(
+  //       cv::Point3f((float)lmk(0), (float)lmk(1), (float)lmk(2)));
+  //   image_points.push_back(utils::gtsamPointToCv(kp));
+  // };
+
+  std::vector<gtsam::Point3> object_points;
+  std::vector<gtsam::Point2> image_points;
 
   for (const auto& corres : dynamic_correspondences) {
     Landmark lmk = corres.ref_;
     Keypoint kp = corres.cur_;
 
-    object_points.push_back(
-        cv::Point3f((float)lmk(0), (float)lmk(1), (float)lmk(2)));
-    image_points.push_back(utils::gtsamPointToCv(kp));
-  };
+    object_points.push_back(lmk);
+    image_points.push_back(kp);
+  }
 
-  const auto K = camera_params_.getCameraMatrix();
+  filter->predict();
+  {
+    utils::TimingStatsCollector timer("motion_solver.ekf_update");
+    filter->update(object_points, image_points, frame_k->getPose());
+  }
 
-  gtsam::Pose3 G_w;
-  cv::Mat inliers_ransac;
-  bool homography_result =
-      testing::poseFromPnP(object_points, image_points, K, G_w, inliers_ransac);
+  // gtsam::Pose3 G_w;
+  // cv::Mat inliers_ransac;
+  // bool homography_result =
+  //     testing::poseFromPnP(object_points, image_points, K, G_w,
+  //     inliers_ransac);
 
-  // if (geometric_result.status == TrackingStatus::VALID) {
-  if (homography_result) {
+  bool homography_result = false;
+
+  if (geometric_result.status == TrackingStatus::VALID) {
+    // if (homography_result) {
     // gtsam::Pose3 G_w = geometric_result.best_result.inverse();
-    gtsam::Pose3 H_w = frame_k->getPose() * G_w;
+    gtsam::Pose3 H_w = filter->getPose();
+    // gtsam::Pose3 H_w = frame_k->getPose() * G_w;
 
-    TrackletIds inlier_tracklets;
-    for (size_t i = 0; i < inliers_ransac.rows; i++) {
-      inlier_tracklets.push_back(all_tracklets.at(inliers_ransac.at<int>(i)));
-    }
-    geometric_result.inliers = inlier_tracklets;
-    determineOutlierIds(geometric_result.inliers, all_tracklets,
-                        geometric_result.outliers);
+    // TrackletIds inlier_tracklets;
+    // for (size_t i = 0; i < inliers_ransac.rows; i++) {
+    //   inlier_tracklets.push_back(all_tracklets.at(inliers_ransac.at<int>(i)));
+    // }
+    // geometric_result.inliers = inlier_tracklets;
+    // determineOutlierIds(geometric_result.inliers, all_tracklets,
+    //                     geometric_result.outliers);
 
     // camera at frame_k->getPose()
     auto gtsam_camera = frame_k->getFrameCamera();
