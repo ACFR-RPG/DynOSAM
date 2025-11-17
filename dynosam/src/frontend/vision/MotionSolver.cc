@@ -380,8 +380,8 @@ void OpticalFlowAndPoseOptimizer::updateFrameOutliersWithResult(
     feature_k->predictedKeypoint(predicted_kp);
     feature_k->keypoint(refined_keypoint);
 
-    feature_k_1->predictedKeypoint(refined_keypoint);
-    feature_k_1->measuredFlow(refined_flow);
+    // feature_k_1->predictedKeypoint(refined_keypoint);
+    // feature_k_1->measuredFlow(refined_flow);
   }
 
   // update tracks
