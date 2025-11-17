@@ -208,9 +208,9 @@ if __name__ == '__main__':
     # )
 
     # run_viodes()
-    run_tartan_air()
+    # run_tartan_air()
     # run_cluster()
-    # run_omd()
+    run_omd()
     # run_aria()
     # run_kitti()
     # run_analysis("kitti_0001_static_only")

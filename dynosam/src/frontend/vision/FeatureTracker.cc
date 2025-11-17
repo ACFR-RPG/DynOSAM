@@ -817,8 +817,9 @@ void FeatureTracker::trackDynamicKLT(
         cv::bitwise_and(obj_mask, detection_mask_impl, combined_mask);
 
         std::vector<cv::Point2f> detected_points;
-        cv::goodFeaturesToTrack(mono, detected_points, 300, qualityLevel,
-                                min_feature_distance, combined_mask);
+        cv::goodFeaturesToTrack(mono, detected_points, max_features_to_track,
+                                qualityLevel, min_feature_distance,
+                                combined_mask);
 
         std::vector<KeypointCV> keypoints;
         cv::KeyPoint::convert(detected_points, keypoints);

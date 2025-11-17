@@ -15,7 +15,7 @@
 
 --log_projected_masks=false
 
---set_dense_labelled_cloud=true
+--set_dense_labelled_cloud=false
 
 --refine_motion_estimate=true
 --refine_with_optical_flow=true

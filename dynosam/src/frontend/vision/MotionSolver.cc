@@ -52,6 +52,7 @@
 #include "dynosam_common/utils/GtsamUtils.hpp"
 #include "dynosam_common/utils/Numerical.hpp"
 #include "dynosam_common/utils/TimingStats.hpp"
+#include "dynosam_cv/RGBDCamera.hpp"
 #include "dynosam_opt/FactorGraphTools.hpp"  //TODO: clean
 
 // GTSAM Includes
@@ -285,7 +286,7 @@ Pose3SolverResult EgoMotionSolver::geometricOutlierRejection3d2d(
     utils::TimingStatsCollector timer("motion_solver.solve_3d2d.ransac");
     success = runRansac<AbsolutePoseProblem>(
         std::make_shared<AbsolutePoseProblem>(adapter,
-                                              AbsolutePoseProblem::EPNP),
+                                              AbsolutePoseProblem::KNEIP),
         threshold, params_.ransac_iterations, params_.ransac_probability,
         params_.optimize_3d2d_pose_from_inliers, best_result, ransac_inliers);
   }
@@ -327,7 +328,7 @@ void OpticalFlowAndPoseOptimizer::updateFrameOutliersWithResult(
     TrackletId tracklet_id = refined_inliers.at(i);
     gtsam::Point2 refined_flow = refined_flows.at(i);
 
-    const Feature::Ptr feature_k_1 = frame_k_1->at(tracklet_id);
+    Feature::Ptr feature_k_1 = frame_k_1->at(tracklet_id);
     Feature::Ptr feature_k = frame_k->at(tracklet_id);
 
     CHECK_EQ(feature_k->objectId(), result.best_result.object_id);
@@ -378,6 +379,9 @@ void OpticalFlowAndPoseOptimizer::updateFrameOutliersWithResult(
         Feature::CalculatePredictedKeypoint(refined_keypoint, refined_flow);
     feature_k->predictedKeypoint(predicted_kp);
     feature_k->keypoint(refined_keypoint);
+
+    feature_k_1->predictedKeypoint(refined_keypoint);
+    feature_k_1->measuredFlow(refined_flow);
   }
 
   // update tracks
@@ -660,7 +664,6 @@ Motion3SolverResult ObjectMotionSovlerF2F::geometricOutlierRejection3d2d(
 
     gtsam::Pose3 G_w = pose_result.best_result.inverse();
     if (object_motion_params.refine_motion_with_joint_of) {
-      VLOG(10) << "Refining object motion pose with joint of";
       OpticalFlowAndPoseOptimizer flow_optimizer(
           object_motion_params.joint_of_params);
       // Use the original result as the input to the refine joint optical flow
@@ -677,6 +680,11 @@ Motion3SolverResult ObjectMotionSovlerF2F::geometricOutlierRejection3d2d(
       G_w = flow_opt_result.best_result.refined_pose.inverse();
       // inliers should be a subset of the original refined inlier tracks
       refined_inlier_tracklets = flow_opt_result.inliers;
+
+      VLOG(10) << "Refined object " << object_id
+               << "pose with optical flow - error before: "
+               << flow_opt_result.error_before.value_or(NaN)
+               << " error_after: " << flow_opt_result.error_after.value_or(NaN);
     }
     // still need to take the inverse as we get the inverse of G out
     gtsam::Pose3 H_w = T_world_k * G_w;
@@ -1188,11 +1196,16 @@ bool ObjectMotionSolverFilter::solveImpl(Frame::Ptr frame_k,
       dynamic_correspondences, *frame_k_1, object_id,
       frame_k->landmarkWorldKeypointCorrespondance());
 
+  // FeaturePairs correspondences;
+  // frame_k->getDynamicCorrespondences(correspondences, *frame_k_1, object_id);
+
   const size_t& n_matches = dynamic_correspondences.size();
 
   cv::Mat rgb = frame_k->image_container_.rgb();
   cv::Mat viz;
   rgb.copyTo(viz);
+
+  // TrackletIds all_tracklets(n_matches);
 
   TrackletIds all_tracklets;
   std::transform(dynamic_correspondences.begin(), dynamic_correspondences.end(),
@@ -1207,7 +1220,9 @@ bool ObjectMotionSolverFilter::solveImpl(Frame::Ptr frame_k,
 
   const auto K = camera_params_.getCameraMatrix();
 
-  testing::ExtendedKalmanFilterGTSAM* filter = nullptr;
+  auto rgbd_camera = frame_k->camera_->safeGetRGBDCamera();
+  CHECK_NOTNULL(rgbd_camera);
+
   if (!filters_.exists(object_id)) {
     testing::MeasurementCovariance R =
         testing::MeasurementCovariance::Identity() * (1 * 1.0);
@@ -1215,12 +1230,23 @@ bool ObjectMotionSolverFilter::solveImpl(Frame::Ptr frame_k,
     // Initial State Covariance P (6x6)
     testing::StateCovariance P = testing::StateCovariance::Identity() * 0.3;
 
+    // filters_.insert2(object_id,
+    //                  std::make_shared<testing::ExtendedKalmanFilterGTSAM>(
+    //                      gtsam::Pose3::Identity(), P,
+    //                      camera_params_.getCameraMatrixEigen(), R));
+
     filters_.insert2(object_id,
-                     std::make_shared<testing::ExtendedKalmanFilterGTSAM>(
+                     std::make_shared<testing::SquareRootInfoFilterGTSAM>(
                          gtsam::Pose3::Identity(), P,
                          camera_params_.getCameraMatrixEigen(), R));
+    filters_.at(object_id)->R_stereo_noise_ =
+        testing::MeasurementCovarianceStereo::Identity() * 1.0;
   }
-  filter = filters_.at(object_id).get();
+  auto filter = filters_.at(object_id).get();
+
+  if (filter->stereo_calib_ == nullptr) {
+    filter->stereo_calib_ = rgbd_camera->getFakeStereoCalib();
+  }
 
   CHECK_NOTNULL(filter);
 
@@ -1238,19 +1264,53 @@ bool ObjectMotionSolverFilter::solveImpl(Frame::Ptr frame_k,
 
   std::vector<gtsam::Point3> object_points;
   std::vector<gtsam::Point2> image_points;
+  std::vector<gtsam::StereoPoint2> stereo_measurements;
 
-  for (const auto& corres : dynamic_correspondences) {
-    Landmark lmk = corres.ref_;
-    Keypoint kp = corres.cur_;
+  for (TrackletId inlier_tracklet : geometric_result.inliers) {
+    const Feature::Ptr feature_k_1 = frame_k_1->at(inlier_tracklet);
+    Feature::Ptr feature_k = frame_k->at(inlier_tracklet);
 
-    object_points.push_back(lmk);
-    image_points.push_back(kp);
+    if (feature_k->hasDepth()) {
+      bool right_projection_result = rgbd_camera->projectRight(feature_k);
+      if (!right_projection_result) {
+        // TODO: for now mark as outlier and ignore point
+        feature_k->markOutlier();
+        continue;
+      }
+    }
+    const Keypoint& L = feature_k->keypoint();
+    const Keypoint& R = feature_k->rightKeypoint();
+
+    gtsam::StereoPoint2 stereo_measurement(L(0), R(0), L(1));
+
+    // (rgbd_camera && f->hasDepth()) {
+    //         bool right_projection_result = rgbd_camera->projectRight(f);
+    //         if (!right_projection_result) {
+    //           // TODO: for now mark as outlier and ignore point
+    //           f->markOutlier();
+    //           continue;
+    //         }
+
+    CHECK_NOTNULL(feature_k_1);
+    CHECK_NOTNULL(feature_k);
+
+    const Keypoint kp_k = feature_k->keypoint();
+    const gtsam::Point3 lmk_k_1_world =
+        frame_k_1->backProjectToWorld(inlier_tracklet);
+
+    object_points.push_back(lmk_k_1_world);
+    image_points.push_back(kp_k);
+    stereo_measurements.push_back(stereo_measurement);
   }
 
+  // update and predict should be one step so that if we dont have enough points
+  // we dont predict?
   filter->predict();
   {
     utils::TimingStatsCollector timer("motion_solver.ekf_update");
     filter->update(object_points, image_points, frame_k->getPose());
+    // filter->updateStereo(object_points, stereo_measurements,
+    // frame_k->getPose());
   }
 
   // gtsam::Pose3 G_w;
@@ -1262,25 +1322,36 @@ bool ObjectMotionSolverFilter::solveImpl(Frame::Ptr frame_k,
   bool homography_result = false;
 
   if (geometric_result.status == TrackingStatus::VALID) {
+    TrackletIds refined_inlier_tracklets = geometric_result.inliers;
     // if (homography_result) {
     // gtsam::Pose3 G_w = geometric_result.best_result.inverse();
-    gtsam::Pose3 H_w = filter->getPose();
+    // gtsam::Pose3 H_w = filter->getPose();
+    gtsam::Pose3 H_w_filter = filter->getStatePoseW();
+    gtsam::Pose3 G_w_filter_inv =
+        (frame_k->getPose().inverse() * H_w_filter).inverse();
     // gtsam::Pose3 H_w = frame_k->getPose() * G_w;
 
-    // TrackletIds inlier_tracklets;
-    // for (size_t i = 0; i < inliers_ransac.rows; i++) {
-    //   inlier_tracklets.push_back(all_tracklets.at(inliers_ransac.at<int>(i)));
-    // }
-    // geometric_result.inliers = inlier_tracklets;
-    // determineOutlierIds(geometric_result.inliers, all_tracklets,
-    //                     geometric_result.outliers);
+    // OpticalFlowAndPoseOptimizer flow_optimizer(
+    //       object_motion_params.joint_of_params);
+
+    // auto flow_opt_result = flow_optimizer.optimizeAndUpdate<CalibrationType>(
+    //       frame_k_1, frame_k, refined_inlier_tracklets,
+    //       G_w_filter_inv);
+
+    // // still need to take the inverse as we get the inverse of G out
+    // const auto G_w_flow = flow_opt_result.best_result.refined_pose.inverse();
+    // // inliers should be a subset of the original refined inlier tracks
+    // refined_inlier_tracklets = flow_opt_result.inliers;
+    // gtsam::Pose3 H_w = frame_k->getPose() * G_w_flow;
+
+    gtsam::Pose3 H_w = H_w_filter;
 
     // camera at frame_k->getPose()
     auto gtsam_camera = frame_k->getFrameCamera();
 
     // calcuate reprojection error
-    double inlier_error = 0, outlier_error = 0;
-    int inlier_count = 0, outlier_count = 0;
+    // double inlier_error = 0, outlier_error = 0;
+    // int inlier_count = 0, outlier_count = 0;
     // for(const AbsolutePoseCorrespondence& corr : dynamic_correspondences) {
     //   gtsam::Point3 lmk_W_k_1 = corr.ref_;
     //   gtsam::Point3 lmk_W_k = H_w * lmk_W_k_1;
@@ -1311,8 +1382,8 @@ bool ObjectMotionSolverFilter::solveImpl(Frame::Ptr frame_k,
     // cv::circle(viz, utils::gtsamPointToCv(kp_k_measured), 2, colour, -1);
     // }
 
-    // LOG(INFO) << "Inlier repr " << inlier_error/(double)inlier_count << "
-    // outlier rpr " << outlier_error/(double)outlier_count;
+    // LOG(INFO) << "Inlier repr " << inlier_error/(double)inlier_count <<
+    // " outlier rpr " << outlier_error/(double)outlier_count;
 
     // cv::imshow("Inlier/Outlier", viz);
     // cv::waitKey(0);
@@ -1321,6 +1392,10 @@ bool ObjectMotionSolverFilter::solveImpl(Frame::Ptr frame_k,
     motion_result.status = geometric_result.status;
     motion_result.inliers = geometric_result.inliers;
     motion_result.outliers = geometric_result.outliers;
+    // motion_result.inliers = refined_inlier_tracklets;
+    // determineOutlierIds(motion_result.inliers, all_tracklets,
+    //                     motion_result.outliers);
+
     motion_result.best_result = Motion3ReferenceFrame(
         H_w, Motion3ReferenceFrame::Style::F2F, ReferenceFrame::GLOBAL,
         frame_k_1->getFrameId(), frame_k->getFrameId());

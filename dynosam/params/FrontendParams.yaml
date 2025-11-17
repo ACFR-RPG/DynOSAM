@@ -6,7 +6,7 @@ scene_flow_dist_threshold: 0.5
 # max_object_depth: 20.0
 # max_background_depth: 40.0
 max_background_depth: 100.0
-max_object_depth: 25.0
+max_object_depth: 30.0
 
 # max_object_depth: 8.0 #indoors
 
@@ -18,7 +18,7 @@ refine_camera_pose_with_joint_of: True
 
 object_motion_solver:
   ransac_threshold_pnp: 1.0
-  refine_motion_with_joint_of: False
+  refine_motion_with_joint_of: True
   refine_motion_with_3d: False
 
   ransac_iterations: 500
@@ -58,10 +58,10 @@ tracker_params:
   # subpixel_corner_refinement_params: true
   # use_clahe_filter: false
 
-  prefer_provided_optical_flow: false
+  prefer_provided_optical_flow: true
   prefer_provided_object_detection: true
 
-  max_dynamic_features_per_frame: 200
+  max_dynamic_features_per_frame: 400
   min_distance_btw_tracked_and_detected_dynamic_features: 2
   max_dynamic_feature_age: 20
 
@@ -69,7 +69,7 @@ tracker_params:
   # dynamic keyframing criteria
   dynamic_feature_age_buffer: 3
   min_dynamic_tracks: 20
-  min_dynamic_mask_iou: 0.3
+  min_dynamic_mask_iou: 0.7
 
 image_tracks_vis_params:
   is_debug: true

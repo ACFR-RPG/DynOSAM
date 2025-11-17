@@ -82,10 +82,10 @@ RGBDInstanceFrontendModule::RGBDInstanceFrontendModule(
   };
   object_motion_solver_params.refine_motion_with_3d = false;
 
-  // object_motion_solver_ = std::make_unique<ObjectMotionSovlerF2F>(
-  //     object_motion_solver_params, camera->getParams());
-  object_motion_solver_ = std::make_unique<ObjectMotionSolverFilter>(
+  object_motion_solver_ = std::make_unique<ObjectMotionSovlerF2F>(
       object_motion_solver_params, camera->getParams());
+  // object_motion_solver_ = std::make_unique<ObjectMotionSolverFilter>(
+  //     object_motion_solver_params, camera->getParams());
 }
 
 RGBDInstanceFrontendModule::~RGBDInstanceFrontendModule() {
