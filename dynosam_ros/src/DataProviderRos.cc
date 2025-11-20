@@ -62,10 +62,6 @@ const cv::Mat DataProviderRos::convertRosImage<ImageType::Depth>(
     } else if (img.type() == CV_16UC1) {
       cv::Mat depth64;
       img.convertTo(depth64, CV_64FC1);
-
-      const double depth_scale = 0.001;
-      depth64 *= depth_scale;
-
       image_traits<ImageType::Depth>::validate(depth64);
       return depth64;
     }

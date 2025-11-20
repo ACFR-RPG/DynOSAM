@@ -152,7 +152,8 @@ class RGBDTypeCalibrationHelper {
   RGBDTypeCalibrationHelper(rclcpp::Node::SharedPtr node,
                             const OnlineDataProviderRosParams& params);
 
-  void undistort(const cv::Mat& src, cv::Mat& dst);
+  void processRGB(const cv::Mat& src, cv::Mat& dst);
+  void processDepth(const cv::Mat& src, cv::Mat& dst);
 
   const CameraParams::Optional& getOriginalCameraParams() const;
   const CameraParams::Optional& getCameraParams() const;
@@ -164,12 +165,17 @@ class RGBDTypeCalibrationHelper {
                             const int& rescale_height);
 
   void getParamsFromRos(const CameraParams& original_camera_params,
-                        int& rescale_width, int& rescale_height);
+                        int& rescale_width, int& rescale_height,
+                        double& depth_scale);
 
  private:
   rclcpp::Node::SharedPtr node_;
   CameraParams::Optional original_camera_params_;
   CameraParams::Optional camera_params_;
+
+  //! Scale that will be multiplied by the depth image to convert to metric
+  //! depth Set by ros params
+  double depth_scale_{0.001};
 
   //! Undistort maps
   cv::Mat mapx_;

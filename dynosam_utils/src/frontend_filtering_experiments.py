@@ -152,13 +152,13 @@ def run_viodes():
     # run_experiment_sequences("/root/data/VIODE/parking_lot/high", "parking_lot_night_high", viode)
 
 def run_omd():
-    run_experiment_sequences("/root/data/vdo_slam/omd/omd/swinging_4_unconstrained_stereo/","test", omd_dataset, "--ending_frame=300", "--use-backend=false")
+    run_experiment_sequences("/root/data/vdo_slam/omd/omd/swinging_4_unconstrained_stereo/","test", omd_dataset, "--ending_frame=300", "--use-backend=true", "--use_object_motion_filtering=true")
 
 
 def run_tartan_air():
     # run_experiment_sequences("/root/data/TartanAir_shibuya/RoadCrossing03", "tas_rc3", tartan_air) #max_object_depth: 10.0
     # run_experiment_sequences("/root/data/TartanAir_shibuya/RoadCrossing04", "test_tartan", tartan_air, "--use_backend=false")
-    run_experiment_sequences("/root/data/TartanAir_shibuya/RoadCrossing05", "test_tartan", tartan_air, "--use_backend=false")
+    run_experiment_sequences("/root/data/TartanAir_shibuya/RoadCrossing05", "test_tartan", tartan_air, "--use_backend=false", "--use_object_motion_filtering=true")
     # run_experiment_sequences("/root/data/TartanAir_shibuya/RoadCrossing06", "tas_rc6", tartan_air, "--use_backend=false")
     # run_experiment_sequences("/root/data/TartanAir_shibuya/RoadCrossing07", "tas_rc7", tartan_air, "--starting_frame=5", "--ending_frame=65")
     # run_analysis("tas_rc7")
@@ -180,12 +180,12 @@ def run_kitti():
     # run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0005/", "kitti_0005_static_only", kitti_dataset, "--shrink_row=25", "--shrink_col=50")
     # run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0006/", "kitti_0006_static_only", kitti_dataset, "--shrink_row=25", "--shrink_col=50")
     # run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0018/", "kitti_0018_static_only", kitti_dataset, "--shrink_row=25", "--shrink_col=50")
-    run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0020/", "test", kitti_dataset, "--shrink_row=25", "--shrink_col=50",  "--use_backend=false")
-    # run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0004/", "test", kitti_dataset, "--shrink_row=25", "--shrink_col=50", "--use_backend=false")
+    # run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0020/", "test", kitti_dataset, "--shrink_row=25", "--shrink_col=50",  "--use_backend=false", "--use_object_motion_filtering=true")
+    run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0004/", "test", kitti_dataset, "--shrink_row=25", "--shrink_col=50", "--use_backend=true", "--use_object_motion_filtering=true")
 
 
 def run_aria():
-    run_experiment_sequences("/root/data/zed/acfr_2_moving_small", "test_small", aria, "--use_backend=false", "--v=30")
+    run_experiment_sequences("/root/data/zed/acfr_2_moving_small", "test_small", aria, "--use_backend=true", "--v=30", "--use_object_motion_filtering=true")
 
 
 if __name__ == '__main__':

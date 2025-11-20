@@ -55,6 +55,8 @@ DEFINE_bool(log_projected_masks, false,
 DEFINE_bool(set_dense_labelled_cloud, false,
             "If true, the dense labelled point cloud will be set");
 
+DEFINE_bool(use_object_motion_filtering, false, "For testing!");
+
 namespace dyno {
 
 RGBDInstanceFrontendModule::RGBDInstanceFrontendModule(
@@ -82,10 +84,13 @@ RGBDInstanceFrontendModule::RGBDInstanceFrontendModule(
   };
   object_motion_solver_params.refine_motion_with_3d = false;
 
-  object_motion_solver_ = std::make_unique<ObjectMotionSovlerF2F>(
-      object_motion_solver_params, camera->getParams());
-  // object_motion_solver_ = std::make_unique<ObjectMotionSolverFilter>(
-  //     object_motion_solver_params, camera->getParams());
+  if (FLAGS_use_object_motion_filtering) {
+    object_motion_solver_ = std::make_unique<ObjectMotionSolverFilter>(
+        object_motion_solver_params, camera->getParams());
+  } else {
+    object_motion_solver_ = std::make_unique<ObjectMotionSovlerF2F>(
+        object_motion_solver_params, camera->getParams());
+  }
 }
 
 RGBDInstanceFrontendModule::~RGBDInstanceFrontendModule() {

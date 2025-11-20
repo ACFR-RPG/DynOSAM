@@ -312,10 +312,8 @@ Pose3SolverResult EgoMotionSolver::geometricOutlierRejection3d2d(
 void OpticalFlowAndPoseOptimizer::updateFrameOutliersWithResult(
     const Result& result, Frame::Ptr frame_k_1, Frame::Ptr frame_k) const {
   utils::TimingStatsCollector timer("of_motion_solver.update_frame");
-  // //original flow image that goes from k to k+1 (gross, im sorry!)
-  // TODO: use flow_is_future param
-  // const cv::Mat& flow_image = frame_k->image_container_.opticalFlow();
-  const cv::Mat& motion_mask = frame_k->image_container_.objectMotionMask();
+  const auto& image_container_k = frame_k->image_container_;
+  const cv::Mat& motion_mask = image_container_k.objectMotionMask();
 
   auto camera = frame_k->camera_;
   const auto& refined_inliers = result.inliers;
@@ -351,37 +349,41 @@ void OpticalFlowAndPoseOptimizer::updateFrameOutliersWithResult(
       continue;
     }
 
-    // // we now have to update the prediced keypoint using the original flow!!
-    // // TODO: code copied from feature tracker
-    // const int x = functional_keypoint::u(refined_keypoint);
-    // const int y = functional_keypoint::v(refined_keypoint);
-    // double flow_xe = static_cast<double>(flow_image.at<cv::Vec2f>(y, x)[0]);
-    // double flow_ye = static_cast<double>(flow_image.at<cv::Vec2f>(y, x)[1]);
-    // // the measured flow after the origin has been updated
-    // OpticalFlow new_measured_flow(flow_xe, flow_ye);
-    // feature_k->measuredFlow(new_measured_flow);
-    // // TODO: check predicted flow is within image
-    // Keypoint predicted_kp = Feature::CalculatePredictedKeypoint(
-    //     refined_keypoint, new_measured_flow);
-    // feature_k->predictedKeypoint(predicted_kp);
-    // feature_k->keypoint(refined_keypoint);
-
-    // // we now have to update the prediced keypoint using the original flow!!
-    // // TODO: code copied from feature tracker
-    // const int x = functional_keypoint::u(refined_keypoint);
-    // const int y = functional_keypoint::v(refined_keypoint);
-    // double flow_xe = static_cast<double>(flow_image.at<cv::Vec2f>(y, x)[0]);
-    // double flow_ye = static_cast<double>(flow_image.at<cv::Vec2f>(y, x)[1]);
-    // the measured flow after the origin has been updated
-    feature_k->measuredFlow(refined_flow);
-    // TODO: check predicted flow is within image
-    Keypoint predicted_kp =
-        Feature::CalculatePredictedKeypoint(refined_keypoint, refined_flow);
-    feature_k->predictedKeypoint(predicted_kp);
+    // update current keypoint
     feature_k->keypoint(refined_keypoint);
+    // update refined frlow
+    feature_k_1->measuredFlow(refined_flow);
+    // update refined predicted keypoint
+    feature_k_1->predictedKeypoint(refined_keypoint);
 
-    // feature_k_1->predictedKeypoint(refined_keypoint);
-    // feature_k_1->measuredFlow(refined_flow);
+    // Logic is a bit convoluted and dependant on other things
+    // if we have optical flow (from k to k+1 due to historical reaseons)
+    // then use this to set the predicted keypoint
+    // if we are tracking using the provided flow then this MUST get set
+    // otherwise tracking will fail as tracking with provided optical flow uses
+    // the predicted keypoint to get the next keypoint!
+    if (image_container_k.hasOpticalFlow()) {
+      const cv::Mat& flow_image = image_container_k.opticalFlow();
+      const int x = functional_keypoint::u(refined_keypoint);
+      const int y = functional_keypoint::v(refined_keypoint);
+      double flow_xe = static_cast<double>(flow_image.at<cv::Vec2f>(y, x)[0]);
+      double flow_ye = static_cast<double>(flow_image.at<cv::Vec2f>(y, x)[1]);
+
+      OpticalFlow new_measured_flow(flow_xe, flow_ye);
+      feature_k->measuredFlow(new_measured_flow);
+      // TODO: check predicted flow is within image
+      Keypoint predicted_kp = Feature::CalculatePredictedKeypoint(
+          refined_keypoint, new_measured_flow);
+      feature_k->predictedKeypoint(predicted_kp);
+    } else {
+      // we dont have a predicted flow but we assume we are using KLT tracking
+      //  in this case we dont have a predicted keypoint.
+      //  just use the refined flow as the measured flow
+      feature_k->measuredFlow(refined_flow);
+      Keypoint predicted_kp =
+          Feature::CalculatePredictedKeypoint(refined_keypoint, refined_flow);
+      feature_k->predictedKeypoint(predicted_kp);
+    }
   }
 
   // update tracks
@@ -1053,22 +1055,6 @@ void testing::ExtendedKalmanFilterGTSAM::update(
 
   // Stacked Measurement Noise R_stacked (M x M)
   gtsam::Matrix R_stacked = gtsam::Matrix::Zero(total_rows, total_rows);
-  // camera with fixed calibration so HPose is of dims 2x6
-  //  gtsam::PinholePose<Cal3_S2> camera(G_w_, K_gtsam_);
-
-  // auto project = [&](const gtsam::Point3& P_w, const gtsam::Pose3& H_w) ->
-  // gtsam::Point2 {
-  //       const gtsam::Pose3 Gw = X_W_k.inverse() * H_w;
-  //       gtsam::PinholePose<Cal3_S2> camera(Gw.inverse(), K_gtsam_);
-  //       // return camera.project2(P_w);
-  //       auto [p, success] = camera.projectSafe(P_w);
-  //       return p;
-  // };
-
-  // Calculate the combined pose T_cw = X^{-1} * H
-  // Pose3 G_w = X_W_k.inverse() * H_w_;
-
-  // gtsam::PinholePose<Cal3_S2> camera(G_w, K_gtsam_);
   // Calculate the Adjoint Matrix of X^{-1}, which links delta_h to delta_t_cw
   gtsam::Matrix Ad_X_inv = X_W_k.inverse().AdjointMap();  // 6x6 matrix
 
@@ -1088,25 +1074,6 @@ void testing::ExtendedKalmanFilterGTSAM::update(
     gtsam::Matrix26 H_pose;  // 2x6 Jacobian for this measurement (This was
                              // missing/corrupted)
 
-    // // 1. Calculate Predicted Measurement (h(x)) and Jacobian (H)
-    // gtsam::Point2 z_pred;
-    // try {
-    //     // // GTSAM's project() automatically computes the 2x6 Jacobian w.r.t
-    //     the camera pose.
-    //     // // The Jacobian is stored in H_pose.
-    //     // z_pred = camera.project2(P_w, H_pose, boost::none);
-    //     H_pose = gtsam::numericalDerivative22<gtsam::Vector2, gtsam::Point3,
-    //     gtsam::Pose3>(
-    //       project, P_w, H_w_
-    //     );
-
-    //   z_pred = project(P_w, H_w_);
-
-    // } catch (const gtsam::CheiralityException& e) {
-    //     // Handle points behind the camera
-    //     cerr << "Warning: Point " << i << " behind camera. Skipping." <<
-    //     endl; continue;
-    // }
     // J_pi: Jacobian of projection w.r.t. T_cw perturbation (delta_t_cw)
     gtsam::Matrix J_pi;  // 2x6 matrix
 
@@ -1171,15 +1138,247 @@ void testing::ExtendedKalmanFilterGTSAM::update(
   // P_ = (I - K * H_stacked) * P_;
   gtsam::Matrix I_KH = I - K * H_stacked;
   P_ = I_KH * P_ * I_KH.transpose() + K * R_stacked * K.transpose();
-
-  // cout << "\n--- EKF Update Complete ---" << endl;
-  // cout << "Number of measurements processed: " << num_measurements << endl;
-  // cout << "Total Residual Norm (||y||): " << y_stacked.norm() << endl;
-  // cout << "Perturbation (delta_x) [t, phi]:\n" << delta_x.transpose() <<
-  // endl;
 }
 
 }  // namespace testing
+
+SquareRootInfoFilterGTSAM::SquareRootInfoFilterGTSAM(
+    const gtsam::Pose3& initial_state_H, const gtsam::Matrix66& initial_P,
+    const gtsam::Cal3_S2::shared_ptr& K, const gtsam::Matrix22& R)
+    : H_linearization_point_(initial_state_H), K_gtsam_(K), R_noise_(R) {
+  Q_ = gtsam::Matrix66::Identity() * 1e-4;
+
+  // 2. Initialize SRIF State (R, d) from EKF State (W, P)
+  // W_linearization_point_ is set to initial_state_W
+  // The initial perturbation is 0, so the initial d_info_ is 0.
+  d_info_ = gtsam::Vector6::Zero();
+
+  // Calculate initial Information Matrix Lambda = P^-1
+  gtsam::Matrix66 Lambda_initial = initial_P.inverse();
+
+  // Calculate R_info_ from Cholesky decomposition: Lambda = R^T * R
+  // We use LLT (L*L^T) and take the upper-triangular factor of L^T.
+  // Or, more robustly, U^T*U from a U^T*U decomposition.
+  // Eigen's LLT computes L (lower) such that A = L * L^T.
+  // We need U (upper) such that A = U^T * U.
+  // A.llt().matrixU() gives U where A = L*L^T (U is L^T). No.
+  // A.llt().matrixL() gives L where A = L*L^T.
+  // Let's use Eigen's LDLT and reconstruct.
+  // A more direct way:
+  R_info_ = Lambda_initial.llt().matrixU();  // L^T
+}
+
+/**
+ * @brief Recovers the state perturbation delta_w by solving R * delta_w = d.
+ */
+gtsam::Vector6 SquareRootInfoFilterGTSAM::getStatePerturbation() const {
+  // R is upper triangular, so this is a fast back-substitution
+  return R_info_.triangularView<Eigen::Upper>().solve(d_info_);
+}
+
+const gtsam::Pose3& SquareRootInfoFilterGTSAM::getCurrentLinearization() const {
+  return H_linearization_point_;
+}
+
+gtsam::Pose3 SquareRootInfoFilterGTSAM::getStatePoseW() const {
+  return H_linearization_point_.retract(getStatePerturbation());
+}
+
+gtsam::Matrix66 SquareRootInfoFilterGTSAM::getCovariance() const {
+  gtsam::Matrix66 Lambda = R_info_.transpose() * R_info_;
+  return Lambda.inverse();
+}
+
+gtsam::Matrix66 SquareRootInfoFilterGTSAM::getInformationMatrix() const {
+  return R_info_.transpose() * R_info_;
+}
+
+void SquareRootInfoFilterGTSAM::predict() {
+  // 1. Get current mean state and covariance
+  gtsam::Vector6 delta_w = getStatePerturbation();
+  gtsam::Pose3 H_current_mean = H_linearization_point_.retract(delta_w);
+  gtsam::Matrix66 P_current = getCovariance();  // Slow step
+
+  // 2. Perform EKF prediction (add process noise)
+  // P_k = P_{k-1} + Q
+  gtsam::Matrix66 P_predicted = P_current + Q_;
+
+  // 3. Re-linearize: Set new linearization point to the current mean
+  H_linearization_point_ = H_current_mean;
+
+  // 4. Recalculate R and d based on new P and new linearization point
+  // The new perturbation is 0 relative to the new linearization point.
+  d_info_ = gtsam::Vector6::Zero();
+  gtsam::Matrix66 Lambda_predicted = P_predicted.inverse();
+  R_info_ =
+      Lambda_predicted.llt().matrixU();  // R_info_ = L^T where L*L^T = Lambda
+}
+
+void SquareRootInfoFilterGTSAM::update(
+    const std::vector<gtsam::Point3>& P_w_list,
+    const std::vector<gtsam::Point2>& z_obs_list, const gtsam::Pose3& X_W_k,
+    const int num_irls_iterations) {
+  if (P_w_list.empty() || P_w_list.size() != z_obs_list.size()) {
+    LOG(WARNING) << "SRIF Update skipped: Input lists empty/mismatched.";
+    return;
+  }
+
+  const size_t num_measurements = P_w_list.size();
+  const size_t total_rows = num_measurements * 2;
+  const size_t state_dim = 6;
+
+  gtsam::noiseModel::mEstimator::Huber::shared_ptr huber =
+      gtsam::noiseModel::mEstimator::Huber::Create(0.01);
+
+  double huber_delta_ = 1.2;
+
+  LOG(INFO) << "SRIF update with " << num_measurements << " measurements";
+
+  // 1. Calculate Jacobians (H) and Linearized Residuals (y_lin)
+  // These are calculated ONCE at the linearization point and are fixed
+  // for all IRLS iterations.
+  gtsam::Matrix H_stacked = gtsam::Matrix ::Zero(total_rows, state_dim);
+  gtsam::Vector y_linearized = gtsam::Vector::Zero(total_rows);
+
+  // Pre-calculate constant values
+  gtsam::Pose3 G_w = X_W_k.inverse() * H_linearization_point_;
+  gtsam::Matrix6 Ad_G_w = G_w.AdjointMap();
+  gtsam::Matrix6 CorrectionFactor = -Ad_G_w;
+
+  const gtsam::Matrix22 R_inv = R_noise_.inverse();
+
+  // whitened error
+  gtsam::Vector initial_error = gtsam::Vector::Zero(num_measurements);
+
+  gtsam::PinholeCamera<gtsam::Cal3_S2> camera(G_w.inverse(), *K_gtsam_);
+  for (size_t i = 0; i < num_measurements; ++i) {
+    const Point3& P_w = P_w_list[i];
+    const Point2& z_obs = z_obs_list[i];
+    gtsam::Matrix26 J_pi;  // 2x6
+    gtsam::Point2 z_pred;
+    try {
+      // Project using the *linearization point*
+      z_pred = camera.project(P_w, J_pi);
+    } catch (const gtsam::CheiralityException& e) {
+      LOG(WARNING) << "Warning: Point " << i << " behind camera. Skipping.";
+      continue;  // Skip this measurement
+    }
+
+    // Calculate linearized residual y_lin = z - h(x_nom)
+    gtsam::Vector2 y_i_lin = z_obs - z_pred;
+
+    // Calculate EKF Jacobian H_i = J_pi * CorrectionFactor
+    Eigen::Matrix<double, 2, 6> H_ekf_i = J_pi * CorrectionFactor;
+
+    size_t row_idx = i * 2;
+    H_stacked.block<2, 6>(row_idx, 0) = H_ekf_i;
+    y_linearized.segment<2>(row_idx) = y_i_lin;
+
+    double error_sq = y_i_lin.transpose() * R_inv * y_i_lin;
+    double error = std::sqrt(error_sq);
+    initial_error(i) = error;
+  }
+
+  // 2. Store the prior information
+  gtsam::Matrix6 R_info_prior = R_info_;
+  gtsam::Vector6 d_info_prior = d_info_;
+
+  gtsam::Vector re_weighted_error = gtsam::Vector::Zero(num_measurements);
+
+  // 3. --- Start Iteratively Reweighted Least Squares (IRLS) Loop ---
+  // cout << "\n--- SRIF Robust Update (IRLS) Started ---" << endl;
+  for (int iter = 0; iter < num_irls_iterations; ++iter) {
+    // 3a. Get current state estimate (from previous iteration)
+    gtsam::Vector6 delta_w =
+        R_info_.triangularView<Eigen::Upper>().solve(d_info_);
+    gtsam::Pose3 H_current_mean = H_linearization_point_.retract(delta_w);
+    // Need to validate this:
+    //  We intentionally do not recalculate the Jacobian block (H_stacked).
+    //  to solve for the single best perturbation (delta_w) relative to the
+    //  single linearization point (W_linearization_point_) that we had at the
+    //  start of the update.
+    gtsam::Pose3 G_w = X_W_k.inverse() * H_current_mean;
+    PinholeCamera<Cal3_S2> camera_current(G_w.inverse(), *K_gtsam_);
+
+    gtsam::Vector weights = gtsam::Vector::Ones(num_measurements);
+
+    for (size_t i = 0; i < num_measurements; ++i) {
+      const gtsam::Point3& P_w = P_w_list[i];
+      const gtsam::Point2& z_obs = z_obs_list[i];
+      gtsam::Point2 z_pred_current;
+      try {
+        z_pred_current = camera_current.project(P_w);
+      } catch (const gtsam::CheiralityException&) {
+        LOG(WARNING) << "Warning: Point " << i << " behind camera. Skipping.";
+        weights(i) = 0.0;  // Skip point
+        continue;
+      }
+
+      // Calculate non-linear residual
+      gtsam::Vector2 y_nonlinear = z_obs - z_pred_current;
+
+      // //CHECK we cannot do this with gtsam's noise models (we can...)
+      // // Calculate Mahalanobis-like distance (whitened error)
+      double error_sq = y_nonlinear.transpose() * R_inv * y_nonlinear;
+      double error = std::sqrt(error_sq);
+
+      re_weighted_error(i) = error;
+
+      // Calculate Huber weight w(e) = min(1, delta / |e|)
+      weights(i) = (error <= huber_delta_) ? 1.0 : huber_delta_ / error;
+      if (/*weights(i) < 0.99 &&*/ iter == num_irls_iterations - 1) {
+        VLOG(20) << "  [Meas " << i << "] Final Weight: " << weights(i)
+                 << " (Error: " << error << ")";
+      }
+    }
+
+    // 3c. Construct the giant matrix A_qr for this iteration
+    gtsam::Matrix A_qr =
+        gtsam::Matrix::Zero(total_rows + state_dim, state_dim + 1);
+
+    for (size_t i = 0; i < num_measurements; ++i) {
+      double w_i = weights(i);
+      if (w_i < 1e-6) continue;  // Skip 0-weighted points
+
+      // R_robust = R / w_i  (Note: w is |e|^-1, so R_robust = R * |e|/delta)
+      // R_robust_inv = R_inv * w_i
+      // We need W_i such that W_i^T * W_i = R_robust_inv
+      // W_i = sqrt(w_i) * R_inv_sqrt
+
+      gtsam::Matrix22 R_robust_i = R_noise_ / w_i;
+      gtsam::Matrix22 L_robust_i = R_robust_i.llt().matrixL();
+      gtsam::Matrix22 R_robust_inv_sqrt = L_robust_i.inverse();
+
+      size_t row_idx = i * 2;
+
+      // Fill matrix [ W_i * H | W_i * y_lin ]
+      A_qr.block<2, 6>(row_idx, 0) =
+          R_robust_inv_sqrt * H_stacked.block<2, 6>(row_idx, 0);
+      A_qr.block<2, 1>(row_idx, 6) =
+          R_robust_inv_sqrt * y_linearized.segment<2>(row_idx);
+    }
+
+    // 3d. Fill the prior part of the QR matrix
+    // This is *always* the original prior
+    A_qr.block<6, 6>(total_rows, 0) = R_info_prior;
+    A_qr.block<6, 1>(total_rows, 6) = d_info_prior;
+
+    // 3e. Perform QR decomposition
+    Eigen::HouseholderQR<gtsam::Matrix> qr(A_qr);
+    gtsam::Matrix R_full = qr.matrixQR().triangularView<Eigen::Upper>();
+
+    // 3f. Extract the new R_info and d_info for the *next* iteration
+    R_info_ = R_full.block<6, 6>(0, 0);
+    d_info_ = R_full.block<6, 1>(0, 6);
+  }
+
+  // (Optional) Enforce R is upper-triangular
+  R_info_ = R_info_.triangularView<Eigen::Upper>();
+
+  LOG(INFO) << "--- SRIF Robust Update Complete --- initial error "
+            << initial_error.norm()
+            << " re-weighted error: " << re_weighted_error.norm();
+}
 
 ObjectMotionSolverFilter::ObjectMotionSolverFilter(
     const ObjectMotionSolverFilter::Params& params,
@@ -1218,79 +1417,31 @@ bool ObjectMotionSolverFilter::solveImpl(Frame::Ptr frame_k,
   Pose3SolverResult geometric_result =
       EgoMotionSolver::geometricOutlierRejection3d2d(dynamic_correspondences);
 
-  const auto K = camera_params_.getCameraMatrix();
-
-  auto rgbd_camera = frame_k->camera_->safeGetRGBDCamera();
-  CHECK_NOTNULL(rgbd_camera);
+  auto gtsam_camera_calibration = frame_k->camera_->getGtsamCalibration();
 
   if (!filters_.exists(object_id)) {
-    testing::MeasurementCovariance R =
-        testing::MeasurementCovariance::Identity() * (1 * 1.0);
+    gtsam::Matrix22 R = gtsam::Matrix22::Identity() * (1 * 1.0);
 
     // Initial State Covariance P (6x6)
-    testing::StateCovariance P = testing::StateCovariance::Identity() * 0.3;
+    gtsam::Matrix66 P = gtsam::Matrix66::Identity() * 0.3;
 
     // filters_.insert2(object_id,
     //                  std::make_shared<testing::ExtendedKalmanFilterGTSAM>(
     //                      gtsam::Pose3::Identity(), P,
     //                      camera_params_.getCameraMatrixEigen(), R));
 
-    filters_.insert2(object_id,
-                     std::make_shared<testing::SquareRootInfoFilterGTSAM>(
-                         gtsam::Pose3::Identity(), P,
-                         camera_params_.getCameraMatrixEigen(), R));
-    filters_.at(object_id)->R_stereo_noise_ =
-        testing::MeasurementCovarianceStereo::Identity() * 1.0;
+    filters_.insert2(object_id, std::make_shared<SquareRootInfoFilterGTSAM>(
+                                    gtsam::Pose3::Identity(), P,
+                                    gtsam_camera_calibration, R));
   }
   auto filter = filters_.at(object_id).get();
 
-  if (filter->stereo_calib_ == nullptr) {
-    filter->stereo_calib_ = rgbd_camera->getFakeStereoCalib();
-  }
-
-  CHECK_NOTNULL(filter);
-
-  // std::vector<cv::Point3f> object_points;
-  // std::vector<cv::Point2f> image_points;
-
-  // for (const auto& corres : dynamic_correspondences) {
-  //   Landmark lmk = corres.ref_;
-  //   Keypoint kp = corres.cur_;
-
-  //   object_points.push_back(
-  //       cv::Point3f((float)lmk(0), (float)lmk(1), (float)lmk(2)));
-  //   image_points.push_back(utils::gtsamPointToCv(kp));
-  // };
-
   std::vector<gtsam::Point3> object_points;
   std::vector<gtsam::Point2> image_points;
-  std::vector<gtsam::StereoPoint2> stereo_measurements;
 
   for (TrackletId inlier_tracklet : geometric_result.inliers) {
     const Feature::Ptr feature_k_1 = frame_k_1->at(inlier_tracklet);
-    Feature::Ptr feature_k = frame_k->at(inlier_tracklet);
-
-    if (feature_k->hasDepth()) {
-      bool right_projection_result = rgbd_camera->projectRight(feature_k);
-      if (!right_projection_result) {
-        // TODO: for now mark as outlier and ignore point
-        feature_k->markOutlier();
-        continue;
-      }
-    }
-    const Keypoint& L = feature_k->keypoint();
-    const Keypoint& R = feature_k->rightKeypoint();
-
-    gtsam::StereoPoint2 stereo_measurement(L(0), R(0), L(1));
-
-    // (rgbd_camera && f->hasDepth()) {
-    //         bool right_projection_result = rgbd_camera->projectRight(f);
-    //         if (!right_projection_result) {
-    //           // TODO: for now mark as outlier and ignore point
-    //           f->markOutlier();
-    //           continue;
-    //         }
-
+    const Feature::Ptr feature_k = frame_k->at(inlier_tracklet);
     CHECK_NOTNULL(feature_k_1);
     CHECK_NOTNULL(feature_k);
 
@@ -1300,7 +1451,6 @@ bool ObjectMotionSolverFilter::solveImpl(Frame::Ptr frame_k,
 
     object_points.push_back(lmk_k_1_world);
     image_points.push_back(kp_k);
-    stereo_measurements.push_back(stereo_measurement);
   }
 
   // update and predict should be one step so that if we dont have enough points
@@ -1308,7 +1458,7 @@ bool ObjectMotionSolverFilter::solveImpl(Frame::Ptr frame_k,
   filter->predict();
   {
     utils::TimingStatsCollector timer("motion_solver.ekf_update");
-    filter->update(object_points, image_points, frame_k->getPose());
+    filter->update(object_points, image_points, frame_k->getPose(), 2);
     // filter->updateStereo(object_points, stereo_measurements,
     // frame_k->getPose());
   }

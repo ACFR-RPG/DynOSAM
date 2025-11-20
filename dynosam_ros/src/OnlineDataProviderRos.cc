@@ -121,7 +121,8 @@ RGBDTypeCalibrationHelper::RGBDTypeCalibrationHelper(
         std::chrono::milliseconds(params.camera_params_timeout));
 
     int rescale_width, rescale_height;
-    getParamsFromRos(original_camera_params, rescale_width, rescale_height);
+    getParamsFromRos(original_camera_params, rescale_width, rescale_height,
+                     depth_scale_);
 
     CameraParams camera_params;
     setupNewCameraParams(original_camera_params, camera_params, rescale_width,
@@ -132,11 +133,20 @@ RGBDTypeCalibrationHelper::RGBDTypeCalibrationHelper(
   }
 }
 
-void RGBDTypeCalibrationHelper::undistort(const cv::Mat& src, cv::Mat& dst) {
+void RGBDTypeCalibrationHelper::processRGB(const cv::Mat& src, cv::Mat& dst) {
   cv::remap(src, dst, mapx_, mapy_, cv::INTER_LINEAR);
-
   // output will have the same type as mapx/y so covnert back to required type
   dst.convertTo(dst, src.type());
+}
+void RGBDTypeCalibrationHelper::processDepth(const cv::Mat& src, cv::Mat& dst) {
+  cv::remap(src, dst, mapx_, mapy_, cv::INTER_LINEAR);
+  CHECK(src.type() == ImageType::Depth::OpenCVType);
+  // output will have the same type as mapx/y so covnert back to required type
+  dst.convertTo(dst, src.type());
+
+  // convert the depth map to metirc scale
+  // data-type shoule match
+  src *= depth_scale_;
 }
 
 const CameraParams::Optional&
@@ -175,7 +185,7 @@ void RGBDTypeCalibrationHelper::setupNewCameraParams(
 
 void RGBDTypeCalibrationHelper::getParamsFromRos(
     const CameraParams& original_camera_params, int& rescale_width,
-    int& rescale_height) {
+    int& rescale_height, double& depth_scale) {
   rescale_width = ParameterConstructor(node_.get(), "rescale_width",
                                        original_camera_params.ImageWidth())
                       .description(
@@ -197,6 +207,13 @@ void RGBDTypeCalibrationHelper::getParamsFromRos(
   if (rescale_height == -1) {
     rescale_height = original_camera_params.ImageHeight();
   }
+
+  depth_scale = ParameterConstructor(node_.get(), "depth_scale", 0.001)
+                    .description(
+                        "Value to scale the depth image from a disparity map "
+                        "to metric depth")
+                    .finish()
+                    .get<double>();
 }
 
 void updateAndCheckDynoParamsForRawImageInput(DynoParams& dyno_params) {
@@ -329,8 +346,8 @@ void RGBDOnlineProviderRos::subscribeImages() {
         cv::Mat rgb = readRgbRosImage(rgb_msg);
         cv::Mat depth = readDepthRosImage(depth_msg);
 
-        calibration_helper_->undistort(rgb, rgb);
-        calibration_helper_->undistort(depth, depth);
+        calibration_helper_->processRGB(rgb, rgb);
+        calibration_helper_->processDepth(depth, depth);
 
         const Timestamp timestamp = utils::fromRosTime(rgb_msg->header.stamp);
         const FrameId frame_id = frame_id_;
