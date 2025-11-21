@@ -552,32 +552,56 @@ class SquareRootInfoFilterGTSAM {
               const gtsam::Pose3& X_W_k, const int num_irls_iterations = 1);
 };
 
-class SquareRootInfoFilterHybridMotionGTSAM {
+/**
+ * @brief Hybrid Object motion Square-Root Information Filter
+ *
+ */
+class HybridObjectMotionSRIF {
+ public:
+  struct Result {
+    double error{0.0};
+    double reweighted_error{0.0};
+    // gtsam::Pose3 H_W_e_k;
+    // gtsam::Pose3 H_W_km1_k;
+  };
+
  private:
   // --- SRIF State Variables ---
+  gtsam::Pose3 H_linearization_point_;  // Nominal state (linearization point)
+  const gtsam::Matrix66 Q_;  // Process Noise Covariance (for prediction step)
+  const gtsam::Matrix33 R_noise_;  // 3x3 Measurement Noise
+  //! Cached R_noise inverse
+  const gtsam::Matrix33 R_inv_;
+  const gtsam::Matrix66 initial_P_;
+
+  gtsam::Pose3 L_e_;
+  // Frame Id for the reference frame e
+  FrameId frame_id_e_;
+
   gtsam::Matrix66
       R_info_;  // R (6x6) - Upper triangular Cholesky factor of Info Matrix
   gtsam::Vector6 d_info_;  // d (6x1) - Transformed information vector
-  gtsam::Pose3 H_linearization_point_;  // Nominal state (linearization point)
-  gtsam::Pose3 L_e_;
 
   // --- System Parameters ---
-  gtsam::Cal3_S2::shared_ptr K_gtsam_;  // GTSAM Camera Intrinsic
-  gtsam::Matrix33 R_noise_;             // 3x3 Measurement Noise
-  gtsam::Matrix66 Q_;  // Process Noise Covariance (for prediction step)
+  std::shared_ptr<RGBDCamera> rgbd_camera_;
+  gtsam::Cal3_S2Stereo::shared_ptr stereo_calibration_;
 
   //! Points in L (current linearization)
   gtsam::FastMap<TrackletId, gtsam::Point3> m_linearized_;
 
   //! should be from e to k-1. Currently set in predict
   gtsam::Pose3 previous_H_;
+  double huber_k_{1.23};
+
+  constexpr static int StateDim = gtsam::traits<gtsam::Pose3>::dimension;
+  constexpr static int ZDim = gtsam::traits<gtsam::StereoPoint2>::dimension;
 
  public:
-  SquareRootInfoFilterHybridMotionGTSAM(const gtsam::Pose3& initial_state_H,
-                                        const gtsam::Pose3& L_e,
-                                        const gtsam::Matrix66& initial_P,
-                                        const gtsam::Cal3_S2::shared_ptr& K,
-                                        const gtsam::Matrix33& R);
+  HybridObjectMotionSRIF(const gtsam::Pose3& initial_state_H,
+                         const gtsam::Pose3& L_e, const FrameId& frame_id_e,
+                         const gtsam::Matrix66& initial_P,
+                         const gtsam::Matrix66& Q, const gtsam::Matrix33& R,
+                         Camera::Ptr camera, double huber_k = 1.23);
 
   /**
    * @brief Recovers the state perturbation delta_w by solving R * delta_w = d.
@@ -615,8 +639,20 @@ class SquareRootInfoFilterHybridMotionGTSAM {
    * @brief SRIF Update Step using Iteratively Reweighted Least Squares (IRLS)
    * with QR decomposition to achieve robustness.
    */
-  void update(Frame::Ptr frame, const TrackletIds& tracklets,
-              const int num_irls_iterations = 1);
+  Result update(Frame::Ptr frame, const TrackletIds& tracklets,
+                const int num_irls_iterations = 1);
+
+ private:
+  /**
+   * @brief Resets information d_info_ and R_info.
+   * d_inifo is set to zero and R_info is constructed from the initial
+   * covariance P. L_e_ is updated with new value and previous_H_ reset to
+   * identity
+   *
+   * @param L_e
+   * @param frame_id_e
+   */
+  void resetState(const gtsam::Pose3& L_e, FrameId frame_id_e);
 };
 
 class ObjectMotionSolverFilter : public ObjectMotionSovlerF2F {
@@ -637,9 +673,7 @@ class ObjectMotionSolverFilter : public ObjectMotionSovlerF2F {
   // gtsam::FastMap<ObjectId,
   // std::shared_ptr<testing::ExtendedKalmanFilterGTSAM>>
   //     filters_;
-  gtsam::FastMap<ObjectId,
-                 std::shared_ptr<SquareRootInfoFilterHybridMotionGTSAM>>
-      filters_;
+  gtsam::FastMap<ObjectId, std::shared_ptr<HybridObjectMotionSRIF>> filters_;
 };
 
 void declare_config(OpticalFlowAndPoseOptimizer::Params& config);

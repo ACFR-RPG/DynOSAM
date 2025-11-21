@@ -167,21 +167,21 @@ def run_tartan_air():
     # run_experiment_sequences("/root/data/TartanAir_shibuya/Standing02", "tas_s2", tartan_air)
 
 def run_cluster():
-    run_experiment_sequences("/root/data/cluster_slam/CARLA-L2/", "cluster_l2_static_only", cluster_dataset)
-    # run_experiment_sequences("/root/data/cluster_slam/CARLA-L1/", "cluster_l1_static_only", cluster_dataset)
-    run_experiment_sequences("/root/data/cluster_slam/CARLA-S2/", "cluster_s2_static_only", cluster_dataset)
-    run_experiment_sequences("/root/data/cluster_slam/CARLA-S1/", "cluster_s1_static_only", cluster_dataset)
+    # run_experiment_sequences("/root/data/cluster_slam/CARLA-L2/", "cluster_l2_static_only", cluster_dataset)
+    run_experiment_sequences("/root/data/cluster_slam/CARLA-L1/", "test", cluster_dataset,  "--use_backend=false", "--use_object_motion_filtering=true")
+    # run_experiment_sequences("/root/data/cluster_slam/CARLA-S2/", "cluster_s2_static_only", cluster_dataset)
+    # run_experiment_sequences("/root/data/cluster_slam/CARLA-S1/", "cluster_s1_static_only", cluster_dataset)
 
 def run_kitti():
-    # run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0000/", "test", kitti_dataset, "--shrink_row=25", "--shrink_col=50", "--use_backend=false")
+    # run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0000/", "test", kitti_dataset, "--shrink_row=25", "--shrink_col=50", "--use_backend=false", "--use_object_motion_filtering=true")
     # run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0001/", "kitti_0001_static_only", kitti_dataset, "--shrink_row=25", "--shrink_col=50")
     # run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0002/", "kitti_0002_static_only", kitti_dataset, "--shrink_row=25", "--shrink_col=50")
-    # run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0003/", "kitti_0003_static_only", kitti_dataset, "--shrink_row=25", "--shrink_col=50", "--save_per_frame_dynamic_cloud=false")
+    # run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0003/", "test", kitti_dataset, "--shrink_row=25", "--shrink_col=50",  "--use_backend=false", "--use_object_motion_filtering=true")
     # run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0005/", "kitti_0005_static_only", kitti_dataset, "--shrink_row=25", "--shrink_col=50")
     # run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0006/", "kitti_0006_static_only", kitti_dataset, "--shrink_row=25", "--shrink_col=50")
     # run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0018/", "kitti_0018_static_only", kitti_dataset, "--shrink_row=25", "--shrink_col=50")
-    run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0020/", "test", kitti_dataset, "--shrink_row=25", "--shrink_col=50",  "--use_backend=false", "--use_object_motion_filtering=true")
-    # run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0004/", "test", kitti_dataset, "--shrink_row=25", "--shrink_col=50", "--use_backend=false", "--use_object_motion_filtering=true")
+    # run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0020/", "test", kitti_dataset, "--shrink_row=25", "--shrink_col=50",  "--use_backend=false", "--use_object_motion_filtering=true")
+    run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0004/", "test", kitti_dataset, "--shrink_row=25", "--shrink_col=50", "--use_backend=false", "--use_object_motion_filtering=true")
 
 
 def run_aria():
@@ -192,6 +192,7 @@ if __name__ == '__main__':
     # run_tartan_air()
     # run_kitti()
     # run_kitti()
-    run_tartan_air()
+    # run_cluster()
+    # run_tartan_air()
     # run_aria()
-    # run_omd()
+    run_omd()

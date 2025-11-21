@@ -415,9 +415,11 @@ void DynoPipelineManager::loadPipelines(const CameraParams& camera_params,
     if (backend && backend_display) {
       backend_viz_pipeline_ = std::make_unique<BackendVizPipeline>(
           "backend-viz-pipeline", &backend_output_queue_, backend_display);
+      backend_viz_pipeline_->parallelRun(parallel_run);
     }
     frontend_viz_pipeline_ = std::make_unique<FrontendVizPipeline>(
         "frontend-viz-pipeline", &frontend_viz_input_queue_, frontend_display);
+    frontend_viz_pipeline_->parallelRun(parallel_run);
   }
 }
 

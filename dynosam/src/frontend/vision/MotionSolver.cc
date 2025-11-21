@@ -1384,69 +1384,53 @@ void SquareRootInfoFilterGTSAM::update(
 
 ///////////////////////////////////////////////////////////////////////////
 
-SquareRootInfoFilterHybridMotionGTSAM::SquareRootInfoFilterHybridMotionGTSAM(
+HybridObjectMotionSRIF::HybridObjectMotionSRIF(
     const gtsam::Pose3& initial_state_H, const gtsam::Pose3& L_e,
-    const gtsam::Matrix66& initial_P, const gtsam::Cal3_S2::shared_ptr& K,
-    const gtsam::Matrix33& R)
+    const FrameId& frame_id_e, const gtsam::Matrix66& initial_P,
+    const gtsam::Matrix66& Q, const gtsam::Matrix33& R, Camera::Ptr camera,
+    double huber_k)
     : H_linearization_point_(initial_state_H),
-      L_e_(L_e),
-      K_gtsam_(K),
-      R_noise_(R) {
-  // should implement constant acceleration model!~
-  // large covariance on process model (since PnP may be bad!)
-  Q_ = gtsam::Matrix66::Identity() * 0.5;
+      Q_(Q),
+      R_noise_(R),
+      R_inv_(R.inverse()),
+      initial_P_(initial_P),
+      huber_k_(huber_k) {
+  // set camera
+  rgbd_camera_ = CHECK_NOTNULL(camera)->safeGetRGBDCamera();
+  CHECK(rgbd_camera_);
+  stereo_calibration_ = rgbd_camera_->getFakeStereoCalib();
 
-  // 2. Initialize SRIF State (R, d) from EKF State (W, P)
-  // W_linearization_point_ is set to initial_state_W
-  // The initial perturbation is 0, so the initial d_info_ is 0.
-  d_info_ = gtsam::Vector6::Zero();
-
-  // Calculate initial Information Matrix Lambda = P^-1
-  gtsam::Matrix66 Lambda_initial = initial_P.inverse();
-
-  // Calculate R_info_ from Cholesky decomposition: Lambda = R^T * R
-  // We use LLT (L*L^T) and take the upper-triangular factor of L^T.
-  // Or, more robustly, U^T*U from a U^T*U decomposition.
-  // Eigen's LLT computes L (lower) such that A = L * L^T.
-  // We need U (upper) such that A = U^T * U.
-  // A.llt().matrixU() gives U where A = L*L^T (U is L^T). No.
-  // A.llt().matrixL() gives L where A = L*L^T.
-  // Let's use Eigen's LDLT and reconstruct.
-  // A more direct way:
-  R_info_ = Lambda_initial.llt().matrixU();  // L^T
+  resetState(L_e, frame_id_e);
 }
 
 /**
  * @brief Recovers the state perturbation delta_w by solving R * delta_w = d.
  */
-gtsam::Vector6 SquareRootInfoFilterHybridMotionGTSAM::getStatePerturbation()
-    const {
+gtsam::Vector6 HybridObjectMotionSRIF::getStatePerturbation() const {
   // R is upper triangular, so this is a fast back-substitution
   return R_info_.triangularView<Eigen::Upper>().solve(d_info_);
 }
 
-const gtsam::Pose3&
-SquareRootInfoFilterHybridMotionGTSAM::getCurrentLinearization() const {
+const gtsam::Pose3& HybridObjectMotionSRIF::getCurrentLinearization() const {
   return H_linearization_point_;
 }
 
-gtsam::Pose3 SquareRootInfoFilterHybridMotionGTSAM::getStatePoseW() const {
+gtsam::Pose3 HybridObjectMotionSRIF::getStatePoseW() const {
   gtsam::Pose3 H_W_e_k = H_linearization_point_.retract(getStatePerturbation());
   gtsam::Pose3 H_W_e_km1 = previous_H_;
   return H_W_e_k * H_W_e_km1.inverse();
 }
 
-gtsam::Matrix66 SquareRootInfoFilterHybridMotionGTSAM::getCovariance() const {
+gtsam::Matrix66 HybridObjectMotionSRIF::getCovariance() const {
   gtsam::Matrix66 Lambda = R_info_.transpose() * R_info_;
   return Lambda.inverse();
 }
 
-gtsam::Matrix66 SquareRootInfoFilterHybridMotionGTSAM::getInformationMatrix()
-    const {
+gtsam::Matrix66 HybridObjectMotionSRIF::getInformationMatrix() const {
   return R_info_.transpose() * R_info_;
 }
 
-void SquareRootInfoFilterHybridMotionGTSAM::predict(const gtsam::Pose3&) {
+void HybridObjectMotionSRIF::predict(const gtsam::Pose3&) {
   // 1. Get current mean state and covariance
   gtsam::Vector6 delta_w = getStatePerturbation();
   gtsam::Pose3 H_current_mean = H_linearization_point_.retract(delta_w);
@@ -1487,47 +1471,32 @@ void SquareRootInfoFilterHybridMotionGTSAM::predict(const gtsam::Pose3&) {
       Lambda_predicted.llt().matrixU();  // R_info_ = L^T where L*L^T = Lambda
 }
 
-void SquareRootInfoFilterHybridMotionGTSAM::update(
+HybridObjectMotionSRIF::Result HybridObjectMotionSRIF::update(
     Frame::Ptr frame, const TrackletIds& tracklets,
     const int num_irls_iterations) {
   const size_t num_measurements = tracklets.size();
-  const size_t total_rows = num_measurements * 3;
-  const size_t state_dim = 6;
-
-  auto camera = frame->getCamera();
-  std::shared_ptr<RGBDCamera> rgbd_camera = camera->safeGetRGBDCamera();
-  auto gtsam_stereo_calib = rgbd_camera->getFakeStereoCalib();
-
-  gtsam::noiseModel::mEstimator::Huber::shared_ptr huber =
-      gtsam::noiseModel::mEstimator::Huber::Create(0.01);
-
-  double huber_delta_ = 0.1;
+  const size_t total_rows = num_measurements * ZDim;
 
   const gtsam::Pose3& X_W_k = frame->getPose();
-
-  LOG(INFO) << "SRIF update with " << num_measurements << " measurements";
+  const gtsam::Pose3 X_W_k_inv = X_W_k.inverse();
 
   // 1. Calculate Jacobians (H) and Linearized Residuals (y_lin)
   // These are calculated ONCE at the linearization point and are fixed
   // for all IRLS iterations.
-  gtsam::Matrix H_stacked = gtsam::Matrix ::Zero(total_rows, state_dim);
+  gtsam::Matrix H_stacked = gtsam::Matrix ::Zero(total_rows, StateDim);
   gtsam::Vector y_linearized = gtsam::Vector::Zero(total_rows);
 
-  // Pre-calculate constant values
-  gtsam::Pose3 G_w = X_W_k.inverse() * H_linearization_point_ * L_e_;
-  gtsam::Matrix6 CorrectionFactor =
-      -((X_W_k.inverse() * H_linearization_point_).AdjointMap());
+  const gtsam::Pose3 A = X_W_k_inv * H_linearization_point_;
+  // G will project the point from the object frame into the camera frame
+  const gtsam::Pose3 G_w = A * L_e_;
+  const gtsam::Matrix6 J_correction = -A.AdjointMap();
 
-  const gtsam::Matrix33 R_inv = R_noise_.inverse();
-  // VLOG(20) << "Current Hlin " << H_linearization_point_;
-
+  gtsam::StereoCamera gtsam_stereo_camera(G_w.inverse(), stereo_calibration_);
   // whitened error
   gtsam::Vector initial_error = gtsam::Vector::Zero(num_measurements);
+  gtsam::Vector re_weighted_error = gtsam::Vector::Zero(num_measurements);
 
   size_t num_new_features = 0u, num_tracked_features = 0u;
-
-  // gtsam::PinholeCamera<gtsam::Cal3_S2> camera(G_w.inverse(), *K_gtsam_);
-  gtsam::StereoCamera gtsam_stereo_camera(G_w.inverse(), gtsam_stereo_calib);
 
   for (size_t i = 0; i < num_measurements; ++i) {
     const TrackletId& tracklet_id = tracklets.at(i);
@@ -1550,20 +1519,13 @@ void SquareRootInfoFilterHybridMotionGTSAM::update(
 
     gtsam::Point3 m_L = m_linearized_.at(tracklet_id);
 
-    CHECK(feature->depth());
-    if (!feature->hasRightKeypoint()) {
-      bool right_projection_result = rgbd_camera->projectRight(feature);
-      if (!right_projection_result) {
-        // TODO: for now mark as outlier and ignore point
-        // feature->markOutlier();
-        continue;
-      }
+    const auto [stereo_keypoint_status, stereo_measurement] =
+        rgbd_camera_->getStereo(feature);
+    if (!stereo_keypoint_status) {
+      continue;
     }
-    // should b e a function to do this!!
-    const Keypoint& L = feature->keypoint();
-    const Keypoint& R = feature->rightKeypoint();
-    gtsam::StereoPoint2 stereo_measurement(L(0), R(0), L(1));
-    auto z_obs = stereo_measurement;
+
+    const auto& z_obs = stereo_measurement;
 
     // const Point2& z_obs = feature->keypoint();
     gtsam::Matrix36 J_pi;  // 2x6
@@ -1579,47 +1541,43 @@ void SquareRootInfoFilterHybridMotionGTSAM::update(
 
     // Calculate linearized residual y_lin = z - h(x_nom)
     gtsam::Vector3 y_i_lin = (z_obs - z_pred).vector();
-    // LOG(INFO) << y_i_lin << " obs " << z_obs << " pred " << z_pred;
+    Eigen::Matrix<double, ZDim, StateDim> H_ekf_i = J_pi * J_correction;
 
-    // Calculate EKF Jacobian H_i = J_pi * CorrectionFactor
-    Eigen::Matrix<double, 3, 6> H_ekf_i = J_pi * CorrectionFactor;
+    size_t row_idx = i * ZDim;
 
-    size_t row_idx = i * 3;
-    // H_stacked.block<2, 6>(row_idx, 0) = H_ekf_i;
-    // y_linearized.segment<2>(row_idx) = y_i_lin;
-    H_stacked.block<3, 6>(row_idx, 0) = H_ekf_i;
-    y_linearized.segment<3>(row_idx) = y_i_lin;
+    H_stacked.block<ZDim, StateDim>(row_idx, 0) = H_ekf_i;
+    y_linearized.segment<ZDim>(row_idx) = y_i_lin;
 
-    double error_sq = y_i_lin.transpose() * R_inv * y_i_lin;
+    double error_sq = y_i_lin.transpose() * R_inv_ * y_i_lin;
     double error = std::sqrt(error_sq);
     initial_error(i) = error;
   }
 
-  LOG(INFO) << "Feature stats. New features: " << num_new_features << "/"
-            << num_measurements << " Tracked features " << num_tracked_features
-            << "/" << num_measurements;
+  VLOG(30) << "Feature stats. New features: " << num_new_features << "/"
+           << num_measurements << " Tracked features " << num_tracked_features
+           << "/" << num_measurements;
 
   // 2. Store the prior information
   gtsam::Matrix6 R_info_prior = R_info_;
   gtsam::Vector6 d_info_prior = d_info_;
 
-  gtsam::Vector re_weighted_error = gtsam::Vector::Zero(num_measurements);
-
   // 3. --- Start Iteratively Reweighted Least Squares (IRLS) Loop ---
   // cout << "\n--- SRIF Robust Update (IRLS) Started ---" << endl;
   for (int iter = 0; iter < num_irls_iterations; ++iter) {
     // 3a. Get current state estimate (from previous iteration)
-    gtsam::Vector6 delta_w =
+    const gtsam::Vector6 delta_w =
         R_info_.triangularView<Eigen::Upper>().solve(d_info_);
-    gtsam::Pose3 H_current_mean = H_linearization_point_.retract(delta_w);
+    const gtsam::Pose3 H_current_mean = H_linearization_point_.retract(delta_w);
     // Need to validate this:
     //  We intentionally do not recalculate the Jacobian block (H_stacked).
     //  to solve for the single best perturbation (delta_w) relative to the
     //  single linearization point (W_linearization_point_) that we had at the
     //  start of the update.
-    gtsam::Pose3 G_w = X_W_k.inverse() * H_current_mean * L_e_;
+    const gtsam::Pose3 A = X_W_k_inv * H_current_mean;
+    const gtsam::Pose3 G_w = A * L_e_;
+    const gtsam::Matrix6 J_correction = -A.AdjointMap();
     gtsam::StereoCamera gtsam_stereo_camera_current(G_w.inverse(),
-                                                    gtsam_stereo_calib);
+                                                    stereo_calibration_);
 
     gtsam::Vector weights = gtsam::Vector::Ones(num_measurements);
 
@@ -1628,15 +1586,13 @@ void SquareRootInfoFilterHybridMotionGTSAM::update(
       const Feature::Ptr feature = frame->at(tracklet_id);
       CHECK(feature);
 
-      // should b e a function to do this!!
-      const Keypoint& L = feature->keypoint();
-
-      if (!feature->hasRightKeypoint()) {
+      const auto [stereo_keypoint_status, stereo_measurement] =
+          rgbd_camera_->getStereo(feature);
+      if (!stereo_keypoint_status) {
         weights(i) = 0.0;  // Skip point
         continue;
       }
-      const Keypoint& R = feature->rightKeypoint();
-      gtsam::StereoPoint2 stereo_measurement(L(0), R(0), L(1));
+
       auto z_obs = stereo_measurement;
 
       gtsam::Point3 m_L = m_linearized_.at(tracklet_id);
@@ -1652,17 +1608,16 @@ void SquareRootInfoFilterHybridMotionGTSAM::update(
 
       // Calculate non-linear residual
       gtsam::Vector3 y_nonlinear = (z_obs - z_pred_current).vector();
-      // VLOG(20) << " [Meas " << i << "] " << z_obs <<  " " << z_pred_current;
 
       // //CHECK we cannot do this with gtsam's noise models (we can...)
       // // Calculate Mahalanobis-like distance (whitened error)
-      double error_sq = y_nonlinear.transpose() * R_inv * y_nonlinear;
+      double error_sq = y_nonlinear.transpose() * R_inv_ * y_nonlinear;
       double error = std::sqrt(error_sq);
 
       re_weighted_error(i) = error;
 
       // Calculate Huber weight w(e) = min(1, delta / |e|)
-      weights(i) = (error <= huber_delta_) ? 1.0 : huber_delta_ / error;
+      weights(i) = (error <= huber_k_) ? 1.0 : huber_k_ / error;
       if (/*weights(i) < 0.99 &&*/ iter == num_irls_iterations - 1) {
         VLOG(20) << "  [Meas " << i << "] Final Weight: " << weights(i)
                  << " (Error: " << error << ")";
@@ -1671,7 +1626,7 @@ void SquareRootInfoFilterHybridMotionGTSAM::update(
 
     // 3c. Construct the giant matrix A_qr for this iteration
     gtsam::Matrix A_qr =
-        gtsam::Matrix::Zero(total_rows + state_dim, state_dim + 1);
+        gtsam::Matrix::Zero(total_rows + StateDim, StateDim + 1);
 
     for (size_t i = 0; i < num_measurements; ++i) {
       double w_i = weights(i);
@@ -1686,39 +1641,67 @@ void SquareRootInfoFilterHybridMotionGTSAM::update(
       gtsam::Matrix33 L_robust_i = R_robust_i.llt().matrixL();
       gtsam::Matrix33 R_robust_inv_sqrt = L_robust_i.inverse();
 
-      size_t row_idx = i * 3;
+      size_t row_idx = i * ZDim;
 
-      // Fill matrix [ W_i * H | W_i * y_lin ]
-      // A_qr.block<2, 6>(row_idx, 0) =
-      //     R_robust_inv_sqrt * H_stacked.block<2, 6>(row_idx, 0);
-      // A_qr.block<2, 1>(row_idx, 6) =
-      //     R_robust_inv_sqrt * y_linearized.segment<2>(row_idx);
-      A_qr.block<3, 6>(row_idx, 0) =
-          R_robust_inv_sqrt * H_stacked.block<3, 6>(row_idx, 0);
-      A_qr.block<3, 1>(row_idx, 6) =
+      A_qr.block<ZDim, StateDim>(row_idx, 0) =
+          R_robust_inv_sqrt * H_stacked.block<3, StateDim>(row_idx, 0);
+      A_qr.block<ZDim, 1>(row_idx, StateDim) =
           R_robust_inv_sqrt * y_linearized.segment<3>(row_idx);
     }
 
     // 3d. Fill the prior part of the QR matrix
     // This is *always* the original prior
-    A_qr.block<6, 6>(total_rows, 0) = R_info_prior;
-    A_qr.block<6, 1>(total_rows, 6) = d_info_prior;
+    A_qr.block<StateDim, StateDim>(total_rows, 0) = R_info_prior;
+    A_qr.block<StateDim, 1>(total_rows, StateDim) = d_info_prior;
 
     // 3e. Perform QR decomposition
     Eigen::HouseholderQR<gtsam::Matrix> qr(A_qr);
     gtsam::Matrix R_full = qr.matrixQR().triangularView<Eigen::Upper>();
 
     // 3f. Extract the new R_info and d_info for the *next* iteration
-    R_info_ = R_full.block<6, 6>(0, 0);
-    d_info_ = R_full.block<6, 1>(0, 6);
+    R_info_ = R_full.block<StateDim, StateDim>(0, 0);
+    d_info_ = R_full.block<StateDim, 1>(0, StateDim);
   }
 
   // (Optional) Enforce R is upper-triangular
   R_info_ = R_info_.triangularView<Eigen::Upper>();
 
-  LOG(INFO) << "--- SRIF Robust Update Complete --- initial error "
-            << initial_error.norm()
-            << " re-weighted error: " << re_weighted_error.norm();
+  Result result;
+  result.error = initial_error.norm();
+  result.reweighted_error = re_weighted_error.norm();
+  return result;
+
+  // LOG(INFO) << "--- SRIF Robust Update Complete --- initial error "
+  //           << initial_error.norm()
+  //           << " re-weighted error: " << re_weighted_error.norm();
+}
+
+void HybridObjectMotionSRIF::resetState(const gtsam::Pose3& L_e,
+                                        FrameId frame_id_e) {
+  // 2. Initialize SRIF State (R, d) from EKF State (W, P)
+  // W_linearization_point_ is set to initial_state_W
+  // The initial perturbation is 0, so the initial d_info_ is 0.
+  d_info_ = gtsam::Vector6::Zero();
+
+  // Calculate initial Information Matrix Lambda = P^-1
+  gtsam::Matrix66 Lambda_initial = initial_P_.inverse();
+
+  // Calculate R_info_ from Cholesky decomposition: Lambda = R^T * R
+  // We use LLT (L*L^T) and take the upper-triangular factor of L^T.
+  // Or, more robustly, U^T*U from a U^T*U decomposition.
+  // Eigen's LLT computes L (lower) such that A = L * L^T.
+  // We need U (upper) such that A = U^T * U.
+  // A.llt().matrixU() gives U where A = L*L^T (U is L^T). No.
+  // A.llt().matrixL() gives L where A = L*L^T.
+  // Let's use Eigen's LDLT and reconstruct.
+  // A more direct way:
+  R_info_ = Lambda_initial.llt().matrixU();  // L^T
+
+  // will this give us discontinuinities betweek keyframes?
+  //  reset other variables
+  previous_H_ = gtsam::Pose3::Identity();
+  L_e_ = L_e;
+  frame_id_e_ = frame_id_e;
 }
 
 ObjectMotionSolverFilter::ObjectMotionSolverFilter(
@@ -1785,6 +1768,9 @@ bool ObjectMotionSolverFilter::solveImpl(Frame::Ptr frame_k,
     // Initial State Covariance P (6x6)
     gtsam::Matrix66 P = gtsam::Matrix66::Identity() * 0.3;
 
+    // Process Model noise (6x6)
+    gtsam::Matrix66 Q = gtsam::Matrix66::Identity() * 2.0;
+
     if (geometric_result.inliers.size() < 4) {
       LOG(WARNING) << "Could not make initial frame for object " << object_id
                    << " as not enough inlier tracks!";
@@ -1817,12 +1803,13 @@ bool ObjectMotionSolverFilter::solveImpl(Frame::Ptr frame_k,
     // filters_.insert2(object_id, std::make_shared<SquareRootInfoFilterGTSAM>(
     //                                 gtsam::Pose3::Identity(), P,
     //                                 gtsam_camera_calibration, R));
-    filters_.insert2(
-        object_id,
-        std::make_shared<SquareRootInfoFilterHybridMotionGTSAM>(
-            gtsam::Pose3::Identity(),
-            gtsam::Pose3(gtsam::Rot3::Identity(), initial_object_frame), P,
-            gtsam_camera_calibration, R));
+    constexpr static double kHuberKFilter = 0.1;
+    filters_.insert2(object_id, std::make_shared<HybridObjectMotionSRIF>(
+                                    gtsam::Pose3::Identity(),
+                                    gtsam::Pose3(gtsam::Rot3::Identity(),
+                                                 initial_object_frame),
+                                    frame_k_1->getFrameId(), P, Q, R,
+                                    frame_k_1->getCamera(), kHuberKFilter));
   }
   auto filter = filters_.at(object_id).get();
 

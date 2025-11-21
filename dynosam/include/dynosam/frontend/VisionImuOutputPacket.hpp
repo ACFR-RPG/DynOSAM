@@ -87,6 +87,16 @@ class VisionImuPacket {
     Motion3ReferenceFrame H_W_k_1_k;
     //! Object pose at k in W
     gtsam::Pose3 L_W_k;
+
+    // TODO: for now structure!
+    struct HybridInfo {
+      //! Initial object points in L
+      StatusLandmarkVector initial_object_points;
+      //! Associated keyframe
+      gtsam::Pose3 L_W_e;
+    };
+    // Should also set is_keyframe
+    std::optional<HybridInfo> hybrid_info;
   };
   //! Map of object id's to ObjectTracks
   using ObjectTrackMap = gtsam::FastMap<ObjectId, ObjectTracks>;
