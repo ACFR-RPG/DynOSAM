@@ -7,7 +7,6 @@ Panels:
         - /Global Options1
         - /Status1
         - /Backend1
-        - /Backend1/Dynamic Map1
         - /Backend1/ObjectOdometryPath1
         - /Backend1/Visual Odometry1/Status1
         - /Backend1/Visual Odometry1/Shape1
@@ -71,7 +70,7 @@ Visualization Manager:
           Color: 255; 255; 255
           Color Transformer: RGB8
           Decay Time: 0
-          Enabled: false
+          Enabled: true
           Invert Rainbow: false
           Max Color: 255; 255; 255
           Max Intensity: 4096
@@ -91,7 +90,7 @@ Visualization Manager:
             Value: /dynosam/backend/dynamic_cloud
           Use Fixed Frame: true
           Use rainbow: true
-          Value: false
+          Value: true
         - Alpha: 1
           Autocompute Intensity Bounds: true
           Autocompute Value Bounds:
@@ -431,7 +430,7 @@ Visualization Manager:
             Reliability Policy: Reliable
             Value: /dynosam/frontend/odometry_path
           Value: true
-      Enabled: true
+      Enabled: false
       Name: Frontend
     - Class: rviz_common/Group
       Displays:
@@ -647,9 +646,9 @@ Visualization Manager:
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: -0.8857747316360474
-        Y: 0.2746201157569885
-        Z: 2.695808172225952
+        X: -0.2903532385826111
+        Y: 0.3766527473926544
+        Z: 2.6053965091705322
       Focal Shape Fixed Size: false
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
