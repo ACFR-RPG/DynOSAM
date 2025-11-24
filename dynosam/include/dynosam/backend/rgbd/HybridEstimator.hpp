@@ -1262,8 +1262,7 @@ class HybridFormulation : public Formulation<MapVision>,
 
   HybridFormulation(const FormulationParams& params, typename Map::Ptr map,
                     const NoiseModels& noise_models, const Sensors& sensors,
-                    const FormulationHooks& hooks)
-      : Base(params, map, noise_models, sensors, hooks) {}
+                    const FormulationHooks& hooks);
   virtual ~HybridFormulation() {}
 
   virtual void dynamicPointUpdateCallback(
@@ -1324,6 +1323,24 @@ class HybridFormulation : public Formulation<MapVision>,
   virtual std::string loggerPrefix() const override { return "hybrid"; }
 
  protected:
+  // bool addHybridMotionFactor3(
+  //   typename MapTraitsType::FrameNodePtr frame_node,
+  //   typename MapTraitsType::LandmarkNodePtr landmark_node,
+  //   const gtsam::Pose3& L_e,
+  //   const gtsam::Key& camera_pose_key,
+  //   const gtsam::Key& object_motion_key,
+  //   const gtsam::Key& m_key,
+  //   gtsam::NonlinearFactorGraph& graph) const;
+
+  // bool addStereoHybridMotionFactor(
+  //   typename MapTraitsType::FrameNodePtr frame_node,
+  //   typename MapTraitsType::LandmarkNodePtr landmark_node,
+  //   const gtsam::Pose3& L_e,
+  //   const gtsam::Key& camera_pose_key,
+  //   const gtsam::Key& object_motion_key,
+  //   const gtsam::Key& m_key,
+  // gtsam::NonlinearFactorGraph& graph) const;
+
   std::pair<FrameId, gtsam::Pose3> getOrConstructL0(ObjectId object_id,
                                                     FrameId frame_id);
 
@@ -1369,6 +1386,8 @@ class HybridFormulation : public Formulation<MapVision>,
 
  protected:
   KeyFrameData key_frame_data_;
+  //! Virtual RGBD camera
+  RGBDCamera::Ptr rgbd_camera_;
 };
 
 // additional functionality when solved with the Regular Backend!

@@ -15,6 +15,7 @@ class HybridModuleDisplayCommon : public BackendModuleDisplayRos {
   HybridModuleDisplayCommon(const DisplayParams& params, rclcpp::Node* node);
 
   void publishObjectBoundingBoxes(const BackendOutputPacket::ConstPtr& outpu);
+  void publishObjectKeyFrames();
 
  private:
   MarkerArrayPub::SharedPtr object_bounding_box_pub_;

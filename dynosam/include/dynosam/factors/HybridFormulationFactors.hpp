@@ -192,6 +192,10 @@ class StereoHybridMotionFactor
       boost::optional<gtsam::Matrix&> J1 = boost::none,
       boost::optional<gtsam::Matrix&> J2 = boost::none,
       boost::optional<gtsam::Matrix&> J3 = boost::none) const override;
+
+  const gtsam::StereoPoint2& measured() const;
+  const gtsam::Cal3_S2Stereo::shared_ptr calibration() const;
+  const gtsam::Pose3& embeddedPose() const;
 };
 
 /**

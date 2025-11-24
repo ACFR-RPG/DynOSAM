@@ -32,6 +32,8 @@ void HybridModuleDisplayCommon::publishObjectBoundingBoxes(
   object_bounding_box_pub_->publish(array);
 }
 
+void HybridModuleDisplayCommon::publishObjectKeyFrames() {}
+
 void ParalleHybridModuleDisplay::spin(
     const BackendOutputPacket::ConstPtr& output) {
   this->publishObjectBoundingBoxes(output);

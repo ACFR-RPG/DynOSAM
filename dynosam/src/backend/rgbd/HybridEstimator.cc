@@ -502,6 +502,18 @@ std::pair<FrameId, gtsam::Pose3> HybridFormulation::forceNewKeyFrame(
   return result;
 }
 
+HybridFormulation::HybridFormulation(const FormulationParams& params,
+                                     typename Map::Ptr map,
+                                     const NoiseModels& noise_models,
+                                     const Sensors& sensors,
+                                     const FormulationHooks& hooks)
+    : Base(params, map, noise_models, sensors, hooks) {
+  auto camera = sensors_.camera;
+  CHECK_NOTNULL(camera);
+  rgbd_camera_ = camera->safeGetRGBDCamera();
+  CHECK_NOTNULL(rgbd_camera_);
+}
+
 bool HybridFormulation::getObjectKeyFrameHistory(
     ObjectId object_id, const KeyFrameRanges* ranges) const {
   CHECK_NOTNULL(ranges);
@@ -795,6 +807,58 @@ void HybridFormulation::objectUpdateContext(
     }
   }
 }
+
+// bool HybridFormulation::addHybridMotionFactor3(
+//     typename MapTraitsType::FrameNodePtr frame_node,
+//     typename MapTraitsType::LandmarkNodePtr landmark_node,
+//     const gtsam::Pose3& L_e,
+//     const gtsam::Key& camera_pose_key,
+//     const gtsam::Key& object_motion_key,
+//     const gtsam::Key& m_key,
+//     gtsam::NonlinearFactorGraph& graph) const
+// {
+//   const TrackletId& tracklet_id = landmark_node.tracklet_id;
+//   const ObjectId& object_id = landmark_node.object_id;
+//   CHECK_EQ(camera_pose_key, frame_node->makePoseKey());
+//   CHECK_EQ(object_motion_key, frame_node->makeObjectMotionKey(object_id));
+//   CHECK_EQ(m_key, this->makeDynamicKey(tracklet_id));
+
+//   auto [measured_point_camera, measurement_covariance] =
+//     MeasurementTraits::pointWithCovariance(
+//             lmk_node->getMeasurement(frame_node));
+
+//   if (params_.makeDynamicMeasurementsRobust()) {
+//       measurement_covariance = factor_graph_tools::robustifyHuber(
+//           params_.k_huber_3d_points_, measurement_covariance);
+//     }
+
+//   graph.emplace_shared<HybridMotionFactor>(
+//       camera_pose_key,
+//       object_motion_key,
+//       m_key,
+//       measured_point_camera,
+//       L_e,
+//       measurement_covariance);
+
+//   return true;
+
+// }
+
+// bool HybridFormulation::addStereoHybridMotionFactor(
+//   typename MapTraitsType::FrameNodePtr frame_node,
+//   typename MapTraitsType::LandmarkNodePtr landmark_node,
+//   const gtsam::Pose3& L_e,
+//   const gtsam::Key& camera_pose_key,
+//   const gtsam::Key& object_motion_key,
+//   const gtsam::Key& m_key,
+//   gtsam::NonlinearFactorGraph& graph) const
+// {
+//   const TrackletId& tracklet_id = landmark_node.tracklet_id;
+//   const ObjectId& object_id = landmark_node.object_id;
+//   CHECK_EQ(camera_pose_key, frame_node->makePoseKey());
+//   CHECK_EQ(object_motion_key, frame_node->makeObjectMotionKey(object_id));
+//   CHECK_EQ(m_key, this->makeDynamicKey(tracklet_id));
+// }
 
 std::pair<FrameId, gtsam::Pose3> HybridFormulation::getOrConstructL0(
     ObjectId object_id, FrameId frame_id) {

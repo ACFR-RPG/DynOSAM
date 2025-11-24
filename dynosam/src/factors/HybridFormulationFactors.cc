@@ -164,58 +164,6 @@ gtsam::Pose3 HybridObjectMotion::projectToCamera3Transform(
 
   return result;
 }
-
-// gtsam::Point3 HybridObjectMotion::projectToCamera3(
-//     const gtsam::Pose3& X_k,
-//     const gtsam::Pose3& e_H_k_world,
-//     const gtsam::Pose3& L_e,
-//     const gtsam::Point3& m_L,
-//     gtsam::OptionalJacobian<3, 6> H_Xk,
-//     gtsam::OptionalJacobian<3, 6> H_eHk,
-//     gtsam::OptionalJacobian<3, 6> H_Le,
-//     gtsam::OptionalJacobian<3, 6> H_mL) {
-
-//   gtsam::Matrix36 H_A_Xk, H_A_eHk, H_A_Le;
-//   gtsam::Pose3 A = projectToCamera3Transform(X_k, e_H_k_world, L_e,
-//                                       H_Xk ? &H_A_Xk : {},
-//                                       H_eHk ? &H_A_eHk : boost::none,
-//                                       H_Le ? &H_A_Le : boost::none);
-
-//   gtsam::Matrix33 H_mL_local;
-//   gtsam::Point3 m_camera_k = A.transformFrom(m_L, H_mL ? &H_mL_local :
-//   boost::none);
-
-//   // Chain Jacobians
-//   if (H_Xk)   *H_Xk   = H_mL_local * H_A_Xk;
-//   if (H_eHk)  *H_eHk  = H_mL_local * H_A_eHk;
-//   if (H_Le)   *H_Le   = H_mL_local * H_A_Le;
-//   if (H_mL)   *H_mL   = H_mL_local;
-
-//   return m_camera_k;
-// }
-
-// gtsam::Pose3 HybridObjectMotion::projectToCamera3Transform(
-//     const gtsam::Pose3& X_k,
-//     const gtsam::Pose3& e_H_k_world,
-//     const gtsam::Pose3& L_e,
-//     gtsam::OptionalJacobian<6, 6> H_Xk,
-//     gtsam::OptionalJacobian<6, 6> H_eHk,
-//     gtsam::OptionalJacobian<6, 6> H_Le) {
-
-//   gtsam::Matrix66 H_inv_Xk, H_comp1, H_comp2;
-//   gtsam::Pose3 X_k_inv = X_k.inverse(H_Xk ? &H_inv_Xk : boost::none);
-//   gtsam::Pose3 comp1 = X_k_inv.compose(e_H_k_world, H_Xk ? &H_comp1 :
-//   boost::none, H_eHk ? &H_comp2 : nullptr); gtsam::Pose3 result =
-//   comp1.compose(L_e, H_Xk ? H_Xk : boost::none, H_Le ? &H_comp2 :
-//   boost::none);
-
-//   if (H_Xk) {
-//     *H_Xk = H_comp2 * H_comp1 * H_inv_Xk;  // chain rule: dR/dX = dR/dC1 *
-//     dC1/dXinv * dXinv/dX
-//   }
-//   return result;
-// }
-
 gtsam::Vector3 HybridObjectMotion::residual(const gtsam::Pose3& X_k,
                                             const gtsam::Pose3& e_H_k_world,
                                             const gtsam::Point3& m_L,
@@ -224,7 +172,6 @@ gtsam::Vector3 HybridObjectMotion::residual(const gtsam::Pose3& X_k,
   return projectToCamera3(X_k, e_H_k_world, L_e, m_L) - Z_k;
 }
 
-// TODO: use analytical Jacobians!
 gtsam::Vector HybridMotionFactor::evaluateError(
     const gtsam::Pose3& X_k, const gtsam::Pose3& e_H_k_world,
     const gtsam::Point3& m_L, boost::optional<gtsam::Matrix&> J1,
@@ -238,47 +185,6 @@ gtsam::Vector HybridMotionFactor::evaluateError(
              J3            // J w.r.t m_L
              ) -
          z_k_;
-
-  // if (J1) {
-  //   // error w.r.t to camera pose
-  //   Eigen::Matrix<double, 3, 6> df_dX =
-  //       gtsam::numericalDerivative31<gtsam::Vector3, gtsam::Pose3,
-  //       gtsam::Pose3,
-  //                                    gtsam::Point3>(
-  //           std::bind(&HybridMotionFactor::residual, std::placeholders::_1,
-  //                     std::placeholders::_2, std::placeholders::_3, z_k_,
-  //                     L_e_),
-  //           X_k, e_H_k_world, m_L);
-  //   *J1 = df_dX;
-  // }
-
-  // if (J2) {
-  //   // error w.r.t to motion
-  //   Eigen::Matrix<double, 3, 6> df_dH =
-  //       gtsam::numericalDerivative32<gtsam::Vector3, gtsam::Pose3,
-  //       gtsam::Pose3,
-  //                                    gtsam::Point3>(
-  //           std::bind(&HybridMotionFactor::residual, std::placeholders::_1,
-  //                     std::placeholders::_2, std::placeholders::_3, z_k_,
-  //                     L_e_),
-  //           X_k, e_H_k_world, m_L);
-  //   *J2 = df_dH;
-  // }
-
-  // if (J3) {
-  //   // error w.r.t to point in local
-  //   Eigen::Matrix<double, 3, 3> df_dm =
-  //       gtsam::numericalDerivative33<gtsam::Vector3, gtsam::Pose3,
-  //       gtsam::Pose3,
-  //                                    gtsam::Point3>(
-  //           std::bind(&HybridMotionFactor::residual, std::placeholders::_1,
-  //                     std::placeholders::_2, std::placeholders::_3, z_k_,
-  //                     L_e_),
-  //           X_k, e_H_k_world, m_L);
-  //   *J3 = df_dm;
-  // }
-
-  // return residual(X_k, e_H_k_world, m_L, z_k_, L_e_);
 }
 
 StereoHybridMotionFactor::StereoHybridMotionFactor(
@@ -312,37 +218,57 @@ gtsam::Vector StereoHybridMotionFactor::evaluateError(
   // 1. Project map point to camera frame using HybridObjectMotion
   // We need Jacobians w.r.t inputs, but L_e is constant here so we pass none
   // for it.
-  gtsam::Matrix36 H_cam_X, H_cam_E;
-  gtsam::Matrix33 H_cam_m;
-  const gtsam::Point3 m_camera = HybridObjectMotion::projectToCamera3(
-      X_k, e_H_k_world, L_e_, m_L, J1 ? &H_cam_X : 0, J2 ? &H_cam_E : 0,
-      boost::none,  // L_e is fixed
-      J3 ? &H_cam_m : 0);
+  try {
+    gtsam::Matrix36 H_cam_X, H_cam_E;
+    gtsam::Matrix33 H_cam_m;
+    const gtsam::Point3 m_camera = HybridObjectMotion::projectToCamera3(
+        X_k, e_H_k_world, L_e_, m_L, J1 ? &H_cam_X : 0, J2 ? &H_cam_E : 0,
+        boost::none,  // L_e is fixed
+        J3 ? &H_cam_m : 0);
 
-  gtsam::Matrix36
-      H_stereo_pose;  // J1: Jacobian w.r.t the Camera Pose (Identity) - 3x6
-  gtsam::Matrix33
-      H_stereo_point;  // J2: Jacobian w.r.t the Point (p_camera) - 3x3
-                       // We request both Jacobians as requested, though only J2
-                       // is needed for the chain rule since the camera pose
-                       // (Identity) is constant and not part of the
-                       // optimization.
-  const gtsam::StereoPoint2 projected_stereo =
-      camera_.project2(m_camera, (J1 || J2 || J3) ? &H_stereo_pose : 0,
-                       (J1 || J2 || J3) ? &H_stereo_point : 0);
-  // 3. Compute Error
-  const gtsam::Vector3 error = (projected_stereo - measured_).vector();
+    gtsam::Matrix36
+        H_stereo_pose;  // J1: Jacobian w.r.t the Camera Pose (Identity) - 3x6
+    gtsam::Matrix33
+        H_stereo_point;  // J2: Jacobian w.r.t the Point (p_camera) - 3x3
+                         // We request both Jacobians as requested, though only
+                         // J2 is needed for the chain rule since the camera
+                         // pose (Identity) is constant and not part of the
+                         // optimization.
+    const gtsam::StereoPoint2 projected_stereo =
+        camera_.project2(m_camera, (J1 || J2 || J3) ? &H_stereo_pose : 0,
+                         (J1 || J2 || J3) ? &H_stereo_point : 0);
+    // dErr/dX
+    if (J1) *J1 = H_stereo_point * H_cam_X;
+    // dErr/dE
+    if (J2) *J2 = H_stereo_point * H_cam_E;
+    // dErr/dm
+    if (J3) *J3 = H_stereo_point * H_cam_m;
 
-  // dErr/dX
-  if (J1) *J1 = H_stereo_point * H_cam_X;
+    // 3. Compute Error
+    const gtsam::Vector3 error = (projected_stereo - measured_).vector();
+    return error;
+  } catch (gtsam::StereoCheiralityException& e) {
+    if (J1) *J1 = gtsam::Matrix36::Zero();
+    if (J2) *J2 = gtsam::Matrix36::Zero();
+    if (J3) *J3 = gtsam::Matrix33::Zero();
 
-  // dErr/dE
-  if (J2) *J2 = H_stereo_point * H_cam_E;
+    if (throw_cheirality_) {
+      throw gtsam::StereoCheiralityException(this->key3());
+    }
+  }
+  return gtsam::Vector3::Constant(2.0 * K_->fx());
+}
 
-  // dErr/dm
-  if (J3) *J3 = H_stereo_point * H_cam_m;
+const gtsam::StereoPoint2& StereoHybridMotionFactor::measured() const {
+  return measured_;
+}
+const gtsam::Cal3_S2Stereo::shared_ptr StereoHybridMotionFactor::calibration()
+    const {
+  return K_;
+}
 
-  return error;
+const gtsam::Pose3& StereoHybridMotionFactor::embeddedPose() const {
+  return L_e_;
 }
 
 gtsam::Vector HybridSmoothingFactor::evaluateError(

@@ -152,7 +152,7 @@ def run_viodes():
     # run_experiment_sequences("/root/data/VIODE/parking_lot/high", "parking_lot_night_high", viode)
 
 def run_omd():
-    run_experiment_sequences("/root/data/vdo_slam/omd/omd/swinging_4_unconstrained_stereo/","test", omd_dataset, "--ending_frame=300", "--use-backend=true", "--use_object_motion_filtering=true")
+    run_experiment_sequences("/root/data/vdo_slam/omd/omd/swinging_4_unconstrained_stereo/","test", omd_dataset, "--ending_frame=300", "--use-backend=true", "--use_object_motion_filtering=false")
 
 
 def run_tartan_air():
@@ -191,8 +191,8 @@ def run_aria():
 if __name__ == '__main__':
     # run_tartan_air()
     # run_kitti()
-    run_kitti()
+    # run_kitti()
     # run_cluster()
     # run_tartan_air()
     # run_aria()
-    # run_omd()
+    run_omd()
