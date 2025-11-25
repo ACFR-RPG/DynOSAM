@@ -899,6 +899,73 @@ StatusLandmarkVector ParallelHybridAccessor::getStaticLandmarkEstimates(
 StatusLandmarkVector ParallelHybridAccessor::getFullStaticMap() const {
   return static_accessor_->getFullStaticMap();
 }
+
+StatusLandmarkVector ParallelHybridAccessor::getLocalDynamicLandmarkEstimates(
+    ObjectId object_id) const {
+  return withOr(
+      object_id,
+      [object_id](ParallelObjectISAM::Ptr estimator) {
+        return estimator->accessor()->getLocalDynamicLandmarkEstimates(
+            object_id);
+      },
+      []() { return StatusLandmarkVector{}; });
+}
+
+TrackletIds ParallelHybridAccessor::collectPointsAtKeyFrame(
+    ObjectId object_id, FrameId frame_id, FrameId* keyframe_id) const {
+  return withOr(
+      object_id,
+      [object_id, frame_id, keyframe_id](ParallelObjectISAM::Ptr estimator) {
+        return estimator->accessor()->collectPointsAtKeyFrame(
+            object_id, frame_id, keyframe_id);
+      },
+      []() { return TrackletIds{}; });
+}
+
+bool ParallelHybridAccessor::getObjectKeyFrameHistory(
+    ObjectId object_id, const KeyFrameRanges*& ranges) const {
+  return withOr(
+      object_id,
+      [object_id, &ranges](ParallelObjectISAM::Ptr estimator) {
+        return estimator->accessor()->getObjectKeyFrameHistory(object_id,
+                                                               ranges);
+      },
+      []() { return false; });
+}
+
+bool ParallelHybridAccessor::hasObjectKeyFrame(ObjectId object_id,
+                                               FrameId frame_id) const {
+  return withOr(
+      object_id,
+      [frame_id, object_id](ParallelObjectISAM::Ptr estimator) {
+        return estimator->accessor()->hasObjectKeyFrame(object_id, frame_id);
+      },
+      []() { return false; });
+}
+
+std::pair<FrameId, gtsam::Pose3> ParallelHybridAccessor::getObjectKeyFrame(
+    ObjectId object_id, FrameId frame_id) const {
+  return withOr(
+      object_id,
+      [frame_id, object_id](ParallelObjectISAM::Ptr estimator) {
+        return estimator->accessor()->getObjectKeyFrame(object_id, frame_id);
+      },
+      []() { return std::make_pair(FrameId(1), gtsam::Pose3::Identity()); });
+}
+
+StateQuery<Motion3ReferenceFrame> ParallelHybridAccessor::getEstimatedMotion(
+    ObjectId object_id, FrameId frame_id) const {
+  return withOr(
+      object_id,
+      [frame_id, object_id](ParallelObjectISAM::Ptr estimator) {
+        return estimator->accessor()->getEstimatedMotion(object_id, frame_id);
+      },
+      [object_id, frame_id]() {
+        return StateQuery<Motion3ReferenceFrame>::NotInMap(
+            ObjectMotionSymbol(object_id, frame_id));
+      });
+}
+
 bool ParallelHybridAccessor::hasObjectMotionEstimate(FrameId frame_id,
                                                      ObjectId object_id,
                                                      Motion3* motion) const {
@@ -935,6 +1002,27 @@ ParallelHybridAccessor::computeObjectCentroids(FrameId frame_id) const {
     centroids.insert(centroid_map.begin(), centroid_map.end());
   }
   return centroids;
+}
+
+boost::optional<const gtsam::Value&> ParallelHybridAccessor::getValueImpl(
+    const gtsam::Key key) const {
+  // NOTE: returns the value with the requested key as soon as it is found,
+  // starting with the static accessor
+  //  does not check that it does not exist in subsequent accessors (it should
+  //  not!!)
+  boost::optional<const gtsam::Value&> value_opt =
+      static_accessor_->getValueImpl(key);
+  if (value_opt) {
+    return value_opt;
+  }
+  const auto& object_estimators = parallel_hybrid_module_->sam_estimators_;
+  for (const auto& [_, estimator] : object_estimators) {
+    value_opt = estimator->accessor()->getValueImpl(key);
+    if (value_opt) {
+      return value_opt;
+    }
+  }
+  return boost::none;
 }
 
 }  // namespace dyno

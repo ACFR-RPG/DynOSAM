@@ -82,7 +82,7 @@ StateQuery<Motion3ReferenceFrame> ParallelObjectISAM::getFrame2FrameMotion(
 Motion3ReferenceFrame ParallelObjectISAM::getKeyFramedMotion(
     FrameId frame_id) const {
   StateQuery<Motion3ReferenceFrame> e_H_k_world =
-      decoupled_formulation_->getEstimatedMotion(object_id_, frame_id);
+      accessor_->getEstimatedMotion(object_id_, frame_id);
   CHECK(e_H_k_world);
   CHECK(e_H_k_world->style() == MotionRepresentationStyle::KF);
   CHECK(e_H_k_world->origin() == ReferenceFrame::GLOBAL);

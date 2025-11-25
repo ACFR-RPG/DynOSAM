@@ -1171,13 +1171,106 @@ struct SharedHybridFormulationData {
   //! Maps an object j with an embedded frame (gtsam::Pose3) for a range of
   //! timesteps k. Each embedded frame L_e is defined such that the range is e
   //! to e + N.
+  //! Pointer to HybridEstimator#key_frame_data_
   const KeyFrameData* key_frame_data;
   //! Tracklet Id to the embedded frame (e) the point is represented in (ie.
-  //! which timestep, k)
+  //! which timestep, k).
+  //! Pointer to HybridEstimator#all_dynamic_landmarks_
   const gtsam::FastMap<TrackletId, FrameId>* tracklet_id_to_keyframe;
 };
 
-class HybridAccessor : public AccessorT<MapVision>,
+/**
+ * @brief Accesor class that extends the basic functionlity of the Accessor
+ * with additional getter functions that are specific to the Hybrid formualtion.
+ *
+ * This will then form the base class for the HybridAccessor as well as the
+ * ParallelHybridAccessor. It must inherit from Acessor to allow it to be used
+ * within AccessorT
+ *
+ */
+class HybridAccessorCommon : public Accessor {
+ public:
+  DYNO_POINTER_TYPEDEFS(HybridAccessorCommon)
+  HybridAccessorCommon() = default;
+  virtual ~HybridAccessorCommon() = default;
+
+  /**
+   * @brief Get all dynamic object estimates in the local object frame
+   *
+   * @param object_id
+   * @return StatusLandmarkVector
+   */
+  virtual StatusLandmarkVector getLocalDynamicLandmarkEstimates(
+      ObjectId object_id) const = 0;
+
+  /**
+   * @brief Collect all tracklet ids associated with a keyframe (ie. constructed
+   * using L_e where e is the keyframe id).
+   *
+   * The frame_id argument is not necessarily a keyframe but is used to find the
+   * associated keyframe id
+   *
+   *
+   *
+   * @param frame_id
+   * @return TrackletIds
+   */
+  virtual TrackletIds collectPointsAtKeyFrame(ObjectId object_id,
+                                              FrameId frame_id,
+                                              FrameId* keyframe_id) const = 0;
+
+  /**
+   * @brief Sets a pointer to the keyframe range information for the requested
+   * object.
+   *
+   * The ranges argument is intended to be parsed in as a pointer which is then
+   * updated to point towards the intended KeyFrameRanges object which is
+   * managed internally.
+   *
+   * We parse by reference-to-pointer to allow the pointer value to be updated.
+   *
+   * @param object_id ObjectId
+   * @param ranges const KeyFrameRanges*&
+   * @return true
+   * @return false
+   */
+  virtual bool getObjectKeyFrameHistory(
+      ObjectId object_id, const KeyFrameRanges*& ranges) const = 0;
+
+  virtual bool hasObjectKeyFrame(ObjectId object_id,
+                                 FrameId frame_id) const = 0;
+
+  /**
+   * @brief Get the the objects keyframe information for the give frame id.
+   * The frame_id argument is used to look up the keyframe_id that was/is active
+   * for the frame_id.
+   *
+   * @param object_id
+   * @param frame_id
+   * @return std::pair<FrameId, gtsam::Pose3>
+   */
+  virtual std::pair<FrameId, gtsam::Pose3> getObjectKeyFrame(
+      ObjectId object_id, FrameId frame_id) const = 0;
+
+  /**
+   * @brief Get the directly estiamted object motion (i.e H_w_e_k)
+   *
+   * @param object_id
+   * @param frame_id
+   * @return StateQuery<Motion3ReferenceFrame>
+   */
+  virtual StateQuery<Motion3ReferenceFrame> getEstimatedMotion(
+      ObjectId object_id, FrameId frame_id) const = 0;
+};
+
+/**
+ * @brief Accessor for the Hybrid Formulation.
+ * The internal AccessorT is templated on MapVision to define the map type and
+ * HybridAccessorCommon which extends the functionality of the base Acessor with
+ * functionality specific to the Hybrid representation.
+ *
+ */
+class HybridAccessor : public AccessorT<MapVision, HybridAccessorCommon>,
                        public HybridFormulationProperties {
  public:
   DYNO_POINTER_TYPEDEFS(HybridAccessor)
@@ -1185,7 +1278,7 @@ class HybridAccessor : public AccessorT<MapVision>,
   HybridAccessor(
       const SharedFormulationData& shared_data, MapVision::Ptr map,
       const SharedHybridFormulationData& shared_hybrid_formulation_data)
-      : AccessorT<MapVision>(shared_data, map),
+      : AccessorT<MapVision, HybridAccessorCommon>(shared_data, map),
         shared_hybrid_formulation_data_(shared_hybrid_formulation_data) {}
   virtual ~HybridAccessor() {}
 
@@ -1206,14 +1299,23 @@ class HybridAccessor : public AccessorT<MapVision>,
   std::optional<Motion3ReferenceFrame> getRelativeLocalMotion(
       FrameId frame_id, ObjectId object_id) const;
 
-  /**
-   * @brief Get all dynamic object estimates in the local object frame
-   *
-   * @param object_id
-   * @return StatusLandmarkVector
-   */
   StatusLandmarkVector getLocalDynamicLandmarkEstimates(
-      ObjectId object_id) const;
+      ObjectId object_id) const override;
+
+  TrackletIds collectPointsAtKeyFrame(
+      ObjectId object_id, FrameId frame_id,
+      FrameId* keyframe_id = nullptr) const override;
+
+  bool getObjectKeyFrameHistory(ObjectId object_id,
+                                const KeyFrameRanges*& ranges) const override;
+
+  bool hasObjectKeyFrame(ObjectId object_id, FrameId frame_id) const override;
+
+  std::pair<FrameId, gtsam::Pose3> getObjectKeyFrame(
+      ObjectId object_id, FrameId frame_id) const override;
+
+  StateQuery<Motion3ReferenceFrame> getEstimatedMotion(
+      ObjectId object_id, FrameId frame_id) const override;
 
  private:
   struct DynamicLandmarkQuery {
@@ -1280,32 +1382,8 @@ class HybridFormulation : public Formulation<MapVision>,
     return is_dynamic_tracklet_in_map_.exists(tracklet_id);
   }
 
-  // TODO: functions should be shared with accessor
-  bool getObjectKeyFrameHistory(ObjectId object_id,
-                                const KeyFrameRanges* ranges) const;
-
-  bool hasObjectKeyFrame(ObjectId object_id, FrameId frame_id) const;
-  std::pair<FrameId, gtsam::Pose3> getObjectKeyFrame(ObjectId object_id,
-                                                     FrameId frame_id) const;
-  // get the estimated motion in the representation used directly by the
-  // estimation (ie. not frame-2-frame)
-  // TODO: should be in accessor!!!!
-  StateQuery<Motion3ReferenceFrame> getEstimatedMotion(ObjectId object_id,
-                                                       FrameId frame_id) const;
-
   std::pair<FrameId, gtsam::Pose3> forceNewKeyFrame(FrameId frame_id,
                                                     ObjectId object_id);
-  /**
-   * @brief
-   *
-   * frame_id is not necessary a keyframe but will be used to search for the
-   * keyframe in the range
-   *
-   * @param frame_id
-   * @return TrackletIds
-   */
-  TrackletIds collectPointsAtKeyFrame(ObjectId object_id,
-                                      FrameId frame_id) const;
 
  protected:
   // TODO: make this virtual for now - eventual move structureless etc

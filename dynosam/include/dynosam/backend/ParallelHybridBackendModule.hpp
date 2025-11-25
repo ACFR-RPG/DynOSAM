@@ -50,10 +50,13 @@ class ParallelHybridBackendModule;
 /**
  * @brief Special accessor class to access all values via a single interface
  * since the optimisation of the static scene and dynamic objects are decoupled
- * and therefore handled by their own formulation
+ * and therefore handled by their own formulation.
+ *
+ * Inherits from HybridAccessorCommon to extends the functionality of the base
+ * Acessor with functionality specific to the Hybrid representation.
  *
  */
-class ParallelHybridAccessor : public Accessor {
+class ParallelHybridAccessor : public HybridAccessorCommon {
  public:
   DYNO_POINTER_TYPEDEFS(ParallelHybridAccessor)
 
@@ -92,6 +95,25 @@ class ParallelHybridAccessor : public Accessor {
       FrameId frame_id) const override;
 
   StatusLandmarkVector getFullStaticMap() const override;
+
+  StatusLandmarkVector getLocalDynamicLandmarkEstimates(
+      ObjectId object_id) const override;
+
+  TrackletIds collectPointsAtKeyFrame(
+      ObjectId object_id, FrameId frame_id,
+      FrameId* keyframe_id = nullptr) const override;
+
+  bool getObjectKeyFrameHistory(ObjectId object_id,
+                                const KeyFrameRanges*& ranges) const override;
+
+  bool hasObjectKeyFrame(ObjectId object_id, FrameId frame_id) const override;
+
+  std::pair<FrameId, gtsam::Pose3> getObjectKeyFrame(
+      ObjectId object_id, FrameId frame_id) const override;
+
+  StateQuery<Motion3ReferenceFrame> getEstimatedMotion(
+      ObjectId object_id, FrameId frame_id) const override;
+
   bool hasObjectMotionEstimate(FrameId frame_id, ObjectId object_id,
                                Motion3* motion) const override;
 
@@ -107,6 +129,9 @@ class ParallelHybridAccessor : public Accessor {
   //  otherwise the result of the FallbackFunc will be used (as default)
   template <typename Func, typename FallbackFunc>
   auto withOr(ObjectId object_id, Func&& func, FallbackFunc&& fallback) const;
+
+  boost::optional<const gtsam::Value&> getValueImpl(
+      const gtsam::Key key) const override;
 
   ParallelHybridBackendModule* parallel_hybrid_module_;
   HybridAccessor::Ptr static_accessor_;
@@ -134,6 +159,11 @@ class ParallelHybridBackendModule
   std::pair<gtsam::Values, gtsam::NonlinearFactorGraph> getActiveOptimisation()
       const override;
 
+  /**
+   * @brief Get the Accessor objecs implemented as the ParallelHybridAccessor
+   *
+   * @return Accessor::Ptr
+   */
   Accessor::Ptr getAccessor() override;
 
  private:

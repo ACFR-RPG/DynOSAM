@@ -63,4 +63,8 @@ StateQuery<Motion3ReferenceFrame> Accessor::getObjectMotionReferenceFrame(
   }
 }
 
+bool Accessor::exists(gtsam::Key key) const {
+  return (bool)this->getValueImpl(key);
+}
+
 }  // namespace dyno
