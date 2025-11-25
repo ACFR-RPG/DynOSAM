@@ -53,7 +53,8 @@ class RGBDInstanceFrontendModule : public FrontendModule {
  private:
   Camera::Ptr camera_;
   EgoMotionSolver motion_solver_;
-  ObjectMotionSolver::UniquePtr object_motion_solver_;
+  // TODO: shared pointer for now during debig phase!
+  ObjectMotionSolver::Ptr object_motion_solver_;
   FeatureTracker::UniquePtr tracker_;
   RGBDFrontendLogger::UniquePtr logger_;
 

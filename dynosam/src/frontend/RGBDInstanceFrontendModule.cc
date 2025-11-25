@@ -52,6 +52,8 @@ DEFINE_bool(use_dynamic_track, true,
 DEFINE_bool(log_projected_masks, false,
             "If true, projected masks will be saved at every frame");
 
+DEFINE_bool(use_object_motion_filtering, false, "For testing!");
+
 namespace dyno {
 
 RGBDInstanceFrontendModule::RGBDInstanceFrontendModule(
@@ -79,8 +81,13 @@ RGBDInstanceFrontendModule::RGBDInstanceFrontendModule(
   };
   object_motion_solver_params.refine_motion_with_3d = false;
 
-  object_motion_solver_ = std::make_unique<ObjectMotionSovlerF2F>(
-      object_motion_solver_params, camera->getParams());
+  if (FLAGS_use_object_motion_filtering) {
+    object_motion_solver_ = std::make_shared<ObjectMotionSolverFilter>(
+        object_motion_solver_params, camera->getParams());
+  } else {
+    object_motion_solver_ = std::make_shared<ObjectMotionSovlerF2F>(
+        object_motion_solver_params, camera->getParams());
+  }
 }
 
 RGBDInstanceFrontendModule::~RGBDInstanceFrontendModule() {
@@ -247,11 +254,34 @@ FrontendModule::SpinReturn RGBDInstanceFrontendModule::nominalSpin(
 
   vision_imu_packet->debugImagery(debug_imagery);
 
+<<<<<<< HEAD
   // // const cv::Mat& board_detection_mask =
   // tracker_->getBoarderDetectionMask(); PointCloudLabelRGB::Ptr
   // dense_labelled_cloud =
   //     frame->projectToDenseCloud(&board_detection_mask);
   PointCloudLabelRGB::Ptr dense_labelled_cloud = nullptr;
+=======
+  if (FLAGS_use_object_motion_filtering) {
+    auto motion_filter = std::dynamic_pointer_cast<ObjectMotionSolverFilter>(
+        object_motion_solver_);
+    CHECK_NOTNULL(motion_filter);
+    for (const auto& [object_id, _] : object_motions) {
+      auto object_motion_srif = motion_filter->filters_.at(object_id);
+      CHECK_NOTNULL(object_motion_srif);
+      vision_imu_packet->active_filters.insert2(object_id, *object_motion_srif);
+    }
+  }
+
+  if (FLAGS_set_dense_labelled_cloud) {
+    VLOG(30) << "Setting dense labelled cloud";
+    utils::TimingStatsCollector labelled_clout_timer(
+        "frontend.dense_labelled_cloud");
+    const cv::Mat& board_detection_mask = tracker_->getBoarderDetectionMask();
+    PointCloudLabelRGB::Ptr dense_labelled_cloud =
+        frame->projectToDenseCloud(&board_detection_mask);
+    vision_imu_packet->denseLabelledCloud(dense_labelled_cloud);
+  }
+>>>>>>> c68662d9... publishing frontend-filtering keyframes for debugging
 
   // if (FLAGS_save_frontend_json)
   //   output_packet_record_.insert({output->getFrameId(), output});
