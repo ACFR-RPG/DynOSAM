@@ -85,10 +85,10 @@ RGBDInstanceFrontendModule::RGBDInstanceFrontendModule(
   object_motion_solver_params.refine_motion_with_3d = false;
 
   if (FLAGS_use_object_motion_filtering) {
-    object_motion_solver_ = std::make_unique<ObjectMotionSolverFilter>(
+    object_motion_solver_ = std::make_shared<ObjectMotionSolverFilter>(
         object_motion_solver_params, camera->getParams());
   } else {
-    object_motion_solver_ = std::make_unique<ObjectMotionSovlerF2F>(
+    object_motion_solver_ = std::make_shared<ObjectMotionSovlerF2F>(
         object_motion_solver_params, camera->getParams());
   }
 }
@@ -256,6 +256,17 @@ FrontendModule::SpinReturn RGBDInstanceFrontendModule::nominalSpin(
   }
 
   vision_imu_packet->debugImagery(debug_imagery);
+
+  if (FLAGS_use_object_motion_filtering) {
+    auto motion_filter = std::dynamic_pointer_cast<ObjectMotionSolverFilter>(
+        object_motion_solver_);
+    CHECK_NOTNULL(motion_filter);
+    for (const auto& [object_id, _] : object_motions) {
+      auto object_motion_srif = motion_filter->filters_.at(object_id);
+      CHECK_NOTNULL(object_motion_srif);
+      vision_imu_packet->active_filters.insert2(object_id, *object_motion_srif);
+    }
+  }
 
   if (FLAGS_set_dense_labelled_cloud) {
     VLOG(30) << "Setting dense labelled cloud";

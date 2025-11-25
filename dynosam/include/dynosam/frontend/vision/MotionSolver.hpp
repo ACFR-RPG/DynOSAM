@@ -413,70 +413,71 @@ class ObjectMotionSovlerF2F : public ObjectMotionSolver,
   const ObjectMotionSovlerF2F::Params object_motion_params;
 };
 
-namespace testing {
-using namespace Eigen;
-using namespace std;
-using namespace gtsam;
-
-// Define common matrix types for EKF
-using StateCovariance = gtsam::Matrix66;        // P (6x6)
-using PerturbationVector = gtsam::Vector6;      // delta_x (6x1)
-using MeasurementCovariance = gtsam::Matrix22;  // R (2x2)
-
-using MeasurementCovarianceStereo = gtsam::Matrix33;
+// namespace testing {
+// using namespace Eigen;
+// using namespace std;
+// using namespace gtsam;
 
 // // Define common matrix types for EKF
-// using StateCovariance = Matrix6d;        // P (6x6)
-// using PerturbationVector = Vector6d;     // delta_w (6x1)
-// using MeasurementCovariance = Matrix2d;  // R (2x2)
+// using StateCovariance = gtsam::Matrix66;        // P (6x6)
+// using PerturbationVector = gtsam::Vector6;      // delta_x (6x1)
+// using MeasurementCovariance = gtsam::Matrix22;  // R (2x2)
 
-class ExtendedKalmanFilterGTSAM {
- private:
-  Pose3 H_w_;
-  StateCovariance P_;            // State Covariance Matrix
-  Cal3_S2::shared_ptr K_gtsam_;  // GTSAM Camera Intrinsic (shared pointer)
-  MeasurementCovariance
-      R_;  // Individual Measurement Noise Covariance (assumed constant)
-  StateCovariance Q_;  // Process Noise Covariance (for prediction step)
+// using MeasurementCovarianceStereo = gtsam::Matrix33;
 
- public:
-  // Constructor initializes state, covariance, and GTSAM camera model
-  ExtendedKalmanFilterGTSAM(const Pose3& initial_pose,
-                            const StateCovariance& initial_P,
-                            const Matrix3d& K_eigen,
-                            const MeasurementCovariance& R)
-      : H_w_(initial_pose), P_(initial_P), R_(R) {
-    // Extract intrinsic parameters from Eigen matrix K
-    double fx = K_eigen(0, 0);
-    double fy = K_eigen(1, 1);
-    double s = K_eigen(0, 1);  // Skew is usually zero
-    double u0 = K_eigen(0, 2);
-    double v0 = K_eigen(1, 2);
+// // // Define common matrix types for EKF
+// // using StateCovariance = Matrix6d;        // P (6x6)
+// // using PerturbationVector = Vector6d;     // delta_w (6x1)
+// // using MeasurementCovariance = Matrix2d;  // R (2x2)
 
-    // Create GTSAM intrinsic object
-    K_gtsam_ = boost::make_shared<Cal3_S2>(fx, fy, s, u0, v0);
+// class ExtendedKalmanFilterGTSAM {
+//  private:
+//   Pose3 H_w_;
+//   StateCovariance P_;            // State Covariance Matrix
+//   Cal3_S2::shared_ptr K_gtsam_;  // GTSAM Camera Intrinsic (shared pointer)
+//   MeasurementCovariance
+//       R_;  // Individual Measurement Noise Covariance (assumed constant)
+//   StateCovariance Q_;  // Process Noise Covariance (for prediction step)
 
-    // For simplicity, initialize process noise Q
-    Q_ = StateCovariance::Identity() * 1e-4;
-  }
+//  public:
+//   // Constructor initializes state, covariance, and GTSAM camera model
+//   ExtendedKalmanFilterGTSAM(const Pose3& initial_pose,
+//                             const StateCovariance& initial_P,
+//                             const Matrix3d& K_eigen,
+//                             const MeasurementCovariance& R)
+//       : H_w_(initial_pose), P_(initial_P), R_(R) {
+//     // Extract intrinsic parameters from Eigen matrix K
+//     double fx = K_eigen(0, 0);
+//     double fy = K_eigen(1, 1);
+//     double s = K_eigen(0, 1);  // Skew is usually zero
+//     double u0 = K_eigen(0, 2);
+//     double v0 = K_eigen(1, 2);
 
-  // EKF Prediction Step (Trivial motion model)
-  void predict() {
-    // P_k = P_{k-1} + Q
-    // H_w_ = H_w_;
-    P_ = P_ + Q_;
-    // H_w remains unchanged
-    cout << "Prediction Step Complete. Covariance inflated by Q." << endl;
-  }
+//     // Create GTSAM intrinsic object
+//     K_gtsam_ = boost::make_shared<Cal3_S2>(fx, fy, s, u0, v0);
 
-  void update(const vector<Point3>& P_w_list, const vector<Point2>& z_obs_list,
-              const gtsam::Pose3& X_W_k);
+//     // For simplicity, initialize process noise Q
+//     Q_ = StateCovariance::Identity() * 1e-4;
+//   }
 
-  const Pose3& getPose() const { return H_w_; }
-  const StateCovariance& getCovariance() const { return P_; }
-};
+//   // EKF Prediction Step (Trivial motion model)
+//   void predict() {
+//     // P_k = P_{k-1} + Q
+//     // H_w_ = H_w_;
+//     P_ = P_ + Q_;
+//     // H_w remains unchanged
+//     cout << "Prediction Step Complete. Covariance inflated by Q." << endl;
+//   }
 
-}  // namespace testing
+//   void update(const vector<Point3>& P_w_list, const vector<Point2>&
+//   z_obs_list,
+//               const gtsam::Pose3& X_W_k);
+
+//   const Pose3& getPose() const { return H_w_; }
+//   const StateCovariance& getCovariance() const { return P_; }
+// };
+
+// }  // namespace testing
 
 /**
  * @brief Implements a Square Root Information Filter (SRIF) for 6-DoF pose
@@ -577,6 +578,8 @@ class HybridObjectMotionSRIF {
   gtsam::Pose3 L_e_;
   // Frame Id for the reference frame e
   FrameId frame_id_e_;
+  //! Last camera pose used within predict
+  gtsam::Pose3 X_K_;
 
   gtsam::Matrix66
       R_info_;  // R (6x6) - Upper triangular Cholesky factor of Info Matrix
@@ -597,22 +600,36 @@ class HybridObjectMotionSRIF {
   constexpr static int ZDim = gtsam::traits<gtsam::StereoPoint2>::dimension;
 
  public:
+  std::vector<gtsam::Pose3> keyframe_history;
+
+ public:
   HybridObjectMotionSRIF(const gtsam::Pose3& initial_state_H,
                          const gtsam::Pose3& L_e, const FrameId& frame_id_e,
                          const gtsam::Matrix66& initial_P,
                          const gtsam::Matrix66& Q, const gtsam::Matrix33& R,
                          Camera::Ptr camera, double huber_k = 1.23);
 
+  inline const gtsam::Pose3& getKeyFramePose() const { return L_e_; }
+  inline const gtsam::Pose3& lastCameraPose() const { return X_K_; }
+  inline FrameId getKeyFrameId() const { return frame_id_e_; }
+  inline const gtsam::FastMap<TrackletId, gtsam::Point3>&
+  getCurrentLinearizedPoints() const {
+    return m_linearized_;
+  }
+
   /**
    * @brief Recovers the state perturbation delta_w by solving R * delta_w = d.
    */
   gtsam::Vector6 getStatePerturbation() const;
 
+  // this is H_W_e_k
   const gtsam::Pose3& getCurrentLinearization() const;
 
   /**
    * @brief Recovers the full state pose W by applying the perturbation
    * to the linearization point.
+   *
+   * LIES: thie is H_W_km1_k
    */
   gtsam::Pose3 getStatePoseW() const;
 
@@ -642,7 +659,6 @@ class HybridObjectMotionSRIF {
   Result update(Frame::Ptr frame, const TrackletIds& tracklets,
                 const int num_irls_iterations = 1);
 
- private:
   /**
    * @brief Resets information d_info_ and R_info.
    * d_inifo is set to zero and R_info is constructed from the initial
@@ -670,9 +686,7 @@ class ObjectMotionSolverFilter : public ObjectMotionSovlerF2F {
   bool solveImpl(Frame::Ptr frame_k, Frame::Ptr frame_k_1, ObjectId object_id,
                  MotionEstimateMap& motion_estimates) override;
 
-  // gtsam::FastMap<ObjectId,
-  // std::shared_ptr<testing::ExtendedKalmanFilterGTSAM>>
-  //     filters_;
+ public:  // TODO: for testing!
   gtsam::FastMap<ObjectId, std::shared_ptr<HybridObjectMotionSRIF>> filters_;
 };
 

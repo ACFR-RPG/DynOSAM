@@ -39,6 +39,9 @@
 #include "dynosam_common/Types.hpp"
 #include "dynosam_cv/Camera.hpp"
 
+// only for HybridObjectMotionSRIF
+#include "dynosam/frontend/vision/MotionSolver.hpp"
+
 namespace dyno {
 
 /**
@@ -53,6 +56,10 @@ namespace dyno {
 class VisionImuPacket {
  public:
   DYNO_POINTER_TYPEDEFS(VisionImuPacket)
+
+  // TODO: for filtering/smoothing debugging!
+  //! Just need this here for viz!!
+  gtsam::FastMap<ObjectId, HybridObjectMotionSRIF> active_filters;
 
   /// @brief Basic track structure representing a tracking status and visual
   /// measurements

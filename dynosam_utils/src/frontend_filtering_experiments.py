@@ -136,7 +136,7 @@ def run_experiment_sequences(dataset_path, dataset_name, dataset_loader, *args):
         args_list.extend(list(specific_args))
         return args_list
     # run fukk hybrid in (full)batch mode to get results!!
-    run_sequnce(dataset_path, dataset_name, dataset_loader, parallel_hybrid,  *append_args_list(), run_as_frontend=False, run_as_experiment=False, run_analysis=False)
+    run_sequnce(dataset_path, dataset_name, dataset_loader, full_hybrid,  *append_args_list(), run_as_frontend=False, run_as_experiment=False, run_analysis=False)
 
 
 def run_viodes():
@@ -152,7 +152,7 @@ def run_viodes():
     # run_experiment_sequences("/root/data/VIODE/parking_lot/high", "parking_lot_night_high", viode)
 
 def run_omd():
-    run_experiment_sequences("/root/data/vdo_slam/omd/omd/swinging_4_unconstrained_stereo/","test", omd_dataset, "--ending_frame=300", "--use-backend=true", "--use_object_motion_filtering=false")
+    run_experiment_sequences("/root/data/vdo_slam/omd/omd/swinging_4_unconstrained_stereo/","test", omd_dataset, "--ending_frame=300", "--use-backend=true", "--use_object_motion_filtering=true")
 
 
 def run_tartan_air():
@@ -191,8 +191,8 @@ def run_aria():
 if __name__ == '__main__':
     # run_tartan_air()
     # run_kitti()
-    run_kitti()
+    # run_kitti()
     # run_cluster()
     # run_tartan_air()
     # run_aria()
-    # run_omd()
+    run_omd()

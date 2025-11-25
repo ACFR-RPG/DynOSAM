@@ -728,421 +728,425 @@ Motion3SolverResult ObjectMotionSovlerF2F::geometricOutlierRejection3d2d(
   return motion_result;
 }
 
-namespace testing {
-
-using namespace cv;
-using namespace std;
-
-// Compute isotropic normalization transform for a set of 2D points
-static Mat computeNormalizationTransform(const vector<Point2f>& pts) {
-  int n = (int)pts.size();
-  Point2f centroid(0, 0);
-  for (const auto& p : pts) centroid += p;
-  centroid.x /= n;
-  centroid.y /= n;
-
-  double meanDist = 0.0;
-  for (const auto& p : pts) {
-    double dx = p.x - centroid.x;
-    double dy = p.y - centroid.y;
-    meanDist += sqrt(dx * dx + dy * dy);
-  }
-  meanDist /= n;
-
-  double scale = (meanDist > 0) ? (sqrt(2.0) / meanDist) : 1.0;
-
-  Mat T = Mat::eye(3, 3, CV_64F);
-  T.at<double>(0, 0) = scale;
-  T.at<double>(1, 1) = scale;
-  T.at<double>(0, 2) = -scale * centroid.x;
-  T.at<double>(1, 2) = -scale * centroid.y;
-  return T;
-}
-
-// Normalized DLT homography estimation: src -> dst (both length >= 4)
-Mat estimateHomographyDLT(const vector<Point2f>& src,
-                          const vector<Point2f>& dst) {
-  CV_Assert(src.size() >= 4 && src.size() == dst.size());
-  int n = (int)src.size();
-
-  Mat T1 = computeNormalizationTransform(src);
-  Mat T2 = computeNormalizationTransform(dst);
-
-  // Normalize points
-  vector<Point2f> nsrc(n), ndst(n);
-  for (int i = 0; i < n; i++) {
-    Mat p = (Mat_<double>(3, 1) << src[i].x, src[i].y, 1.0);
-    Mat pn = T1 * p;
-    nsrc[i] = Point2f((float)(pn.at<double>(0, 0) / pn.at<double>(2, 0)),
-                      (float)(pn.at<double>(1, 0) / pn.at<double>(2, 0)));
-
-    Mat q = (Mat_<double>(3, 1) << dst[i].x, dst[i].y, 1.0);
-    Mat qn = T2 * q;
-    ndst[i] = Point2f((float)(qn.at<double>(0, 0) / qn.at<double>(2, 0)),
-                      (float)(qn.at<double>(1, 0) / qn.at<double>(2, 0)));
-  }
-
-  // Build A matrix (2n x 9)
-  Mat A = Mat::zeros(n * 2, 9, CV_64F);
-  for (int i = 0; i < n; i++) {
-    double x = nsrc[i].x;
-    double y = nsrc[i].y;
-    double u = ndst[i].x;
-    double v = ndst[i].y;
-    A.at<double>(2 * i, 0) = -x;
-    A.at<double>(2 * i, 1) = -y;
-    A.at<double>(2 * i, 2) = -1;
-    A.at<double>(2 * i, 6) = x * u;
-    A.at<double>(2 * i, 7) = y * u;
-    A.at<double>(2 * i, 8) = u;
-
-    A.at<double>(2 * i + 1, 3) = -x;
-    A.at<double>(2 * i + 1, 4) = -y;
-    A.at<double>(2 * i + 1, 5) = -1;
-    A.at<double>(2 * i + 1, 6) = x * v;
-    A.at<double>(2 * i + 1, 7) = y * v;
-    A.at<double>(2 * i + 1, 8) = v;
-  }
-
-  // Solve Ah = 0 via SVD
-  Mat w, u, vt;
-  SVD::compute(A, w, u, vt, SVD::MODIFY_A);
-  Mat h =
-      vt.row(8).reshape(0, 3);  // last row of V^T -> smallest singular value
-
-  // Denormalize: H = inv(T2) * h * T1
-  Mat H = Mat::zeros(3, 3, CV_64F);
-  Mat Hn;
-  h.convertTo(Hn, CV_64F);
-  H = T2.inv() * Hn * T1;
-
-  // Normalize so H(2,2)=1
-  if (fabs(H.at<double>(2, 2)) > 1e-12) H /= H.at<double>(2, 2);
-  return H;
-}
-
-// Decompose homography to possible poses and choose best using cheirality
-// (points in front)
-bool recoverPoseFromHomography(const Mat& H_in, const Mat& K,
-                               const vector<Point3f>& planePts3D,
-                               const vector<Point2f>& imagePts, Mat& bestR,
-                               Mat& bestT) {
-  CV_Assert(H_in.size() == Size(3, 3));
-  Mat H;
-  H_in.convertTo(H, CV_64F);
-
-  // OpenCV expects normalized homography such that H = K * [r1 r2 t]
-  vector<Mat> Rs, Ts, Ns;
-  int solutions = decomposeHomographyMat(H, K, Rs, Ts, Ns);
-  if (solutions == 0) return false;
-
-  int bestIdx = -1;
-  int bestFront = -1;
-
-  // For each solution count number of points with positive depth
-  for (int i = 0; i < solutions; i++) {
-    Mat R = Rs[i];
-    Mat t = Ts[i];
-
-    int frontCount = 0;
-    vector<Point2f> proj;
-    // Project 3D plane points with candidate pose
-    projectPoints(planePts3D, R, t, K, Mat(), proj);
-    for (size_t j = 0; j < proj.size(); j++) {
-      // Reconstruct depth sign by transforming a 3D point and looking at z in
-      // camera frame
-      Mat X = (Mat_<double>(3, 1) << planePts3D[j].x, planePts3D[j].y,
-               planePts3D[j].z);
-      Mat Xcam = R * X + t;
-      if (Xcam.at<double>(2, 0) > 0) frontCount++;
-    }
-    if (frontCount > bestFront) {
-      bestFront = frontCount;
-      bestIdx = i;
-    }
-  }
-
-  if (bestIdx < 0) return false;
-  bestR = Rs[bestIdx].clone();
-  bestT = Ts[bestIdx].clone();
-  return true;
-}
-
-bool poseFromHomograph(const std::vector<cv::Point3f>& points3D,
-                       const std::vector<cv::Point2f>& points2D,
-                       const cv::Mat& K, gtsam::Pose3& Gw) {
-  // Ensure we have enough correspondences
-  if (points3D.size() < 4 || points3D.size() != points2D.size()) {
-    return false;
-  }
-
-  // Convert 3D points to 2D by projecting onto XY plane (Z=0)
-  std::vector<cv::Point2f> points3D_2D;
-  for (const auto& pt : points3D) {
-    points3D_2D.push_back(cv::Point2f(pt.x, pt.y));
-  }
-
-  // Find homography matrix
-  cv::Mat H = cv::findHomography(points3D_2D, points2D, cv::RANSAC, 3.0);
-
-  if (H.empty()) {
-    throw std::runtime_error("Failed to compute homography");
-  }
-
-  // Decompose homography to get rotation and translation
-  // H = K * [r1 r2 t] where r1, r2 are first two columns of rotation matrix
-  cv::Mat K_inv = K.inv();
-
-  // Normalize: H_normalized = K^(-1) * H
-  cv::Mat H_normalized = K_inv * H;
-
-  // Extract columns
-  cv::Mat col1 = H_normalized.col(0);
-  cv::Mat col2 = H_normalized.col(1);
-  cv::Mat col3 = H_normalized.col(2);
-
-  // Normalize rotation columns
-  double lambda1 = cv::norm(col1);
-  double lambda2 = cv::norm(col2);
-  double lambda = (lambda1 + lambda2) / 2.0;
-
-  cv::Mat r1 = col1 / lambda;
-  cv::Mat r2 = col2 / lambda;
-  cv::Mat t = col3 / lambda;
-
-  // Compute r3 as cross product of r1 and r2
-  cv::Mat r3 = r1.cross(r2);
-
-  // Build rotation matrix
-  cv::Mat R = cv::Mat(3, 3, CV_64F);
-  r1.copyTo(R.col(0));
-  r2.copyTo(R.col(1));
-  r3.copyTo(R.col(2));
-
-  // Ensure R is a valid rotation matrix using SVD
-  cv::Mat W, U, Vt;
-  cv::SVD::compute(R, W, U, Vt);
-  R = U * Vt;
-
-  // Convert OpenCV matrices to Eigen
-  Eigen::Matrix3d R_eigen;
-  Eigen::Vector3d t_eigen;
-
-  for (int i = 0; i < 3; i++) {
-    for (int j = 0; j < 3; j++) {
-      R_eigen(i, j) = R.at<double>(i, j);
-    }
-    t_eigen(i) = t.at<double>(i, 0);
-  }
-
-  // Create 4x4 homogeneous transformation matrix
-  Eigen::Matrix4d transform = Eigen::Matrix4d::Identity();
-  transform.block<3, 3>(0, 0) = R_eigen;
-  transform.block<3, 1>(0, 3) = t_eigen;
-
-  Gw = gtsam::Pose3(transform);
-  return true;
-}
-
-bool poseFromPnP(const std::vector<cv::Point3f>& points3D,
-                 const std::vector<cv::Point2f>& points2D, const cv::Mat& K,
-                 gtsam::Pose3& Gw, cv::Mat& inliers) {
-  // Ensure we have enough correspondences
-  if (points3D.size() < 4 || points3D.size() != points2D.size()) {
-    return false;
-  }
-
-  // Output vectors
-  Mat rvec1, tvec1;
-  cv::Mat distCoeffs = cv::Mat::zeros(1, 4, CV_64FC1);
-  cv::Mat inliers1;
-
-  // --- 1. Run solvePnPRansac ---
-  bool success_ippe =
-      solvePnPRansac(points3D, points2D, K, distCoeffs, rvec1, tvec1,
-                     false,  // useExtrinsicGuess
-                     500,    // iterationsCount (number of RANSAC iterations)
-                     0.4,    // reprojectionError (max allowed error in pixels)
-                     0.99,   // confidence
-                     inliers1,      // Output for inlier indices
-                     SOLVEPNP_IPPE  // PnP method (EPnP is a good default)
-      );
-
-  Mat rvec2, tvec2, inliers2;
-  bool success_epnp =
-      solvePnPRansac(points3D, points2D, K, distCoeffs, rvec2, tvec2,
-                     false,  // useExtrinsicGuess
-                     500,    // iterationsCount (number of RANSAC iterations)
-                     0.4,    // reprojectionError (max allowed error in pixels)
-                     0.99,   // confidence
-                     inliers2,      // Output for inlier indices
-                     SOLVEPNP_AP3P  // PnP method (EPnP is a good default)
-      );
-
-  Mat rvec, tvec;
-  if (success_ippe && success_epnp) {
-    LOG(INFO) << "Solved both object motions with ippe and epnp"
-                 " IPPE inliers: "
-              << inliers1.rows << " EPnP inliers: " << inliers2.rows;
-    ;
-
-    if (inliers1.rows > inliers2.rows) {
-      // IPPE better
-      rvec = rvec1;
-      tvec = tvec1;
-      inliers = inliers1;
-    } else {
-      rvec = rvec2;
-      tvec = tvec2;
-      inliers = inliers2;
-    }
-  } else if (success_ippe) {
-    LOG(INFO) << "Only solved for IPPE";
-    rvec = rvec1;
-    tvec = tvec1;
-    inliers = inliers1;
-  } else if (success_epnp) {
-    LOG(INFO) << "Only solved for EPnP";
-    rvec = rvec2;
-    tvec = tvec2;
-    inliers = inliers2;
-  } else {
-    LOG(WARNING) << "Failed to solve object motion EPnP or IPPE";
-    return false;
-  }
-
-  // cout << "Pose calculation successful using " << inliers.rows << " inliers."
-  // << endl;
-
-  // --- 2. Convert rvec to a 3x3 Rotation Matrix (R) ---
-  Mat R_mat;               // OpenCV Mat for the 3x3 rotation matrix
-  Rodrigues(rvec, R_mat);  // rvec (Rodrigues form) -> R_mat (3x3 matrix)
-
-  // --- 3. Assemble the Homogeneous Matrix (T) using Eigen ---
-  Eigen::Matrix4d T_homo =
-      Eigen::Matrix4d::Identity();  // Start with an Identity matrix
-
-  // Copy Rotation (R) from OpenCV Mat to Eigen 3x3 block
-  for (int i = 0; i < 3; ++i) {
-    for (int j = 0; j < 3; ++j) {
-      // R_mat is CV_64F (double) by default from Rodrigues
-      T_homo(i, j) = R_mat.at<double>(i, j);
-    }
-  }
-
-  // Copy Translation (t) from OpenCV Mat to Eigen 3x1 block
-  T_homo(0, 3) = tvec.at<double>(0, 0);  // T_x
-  T_homo(1, 3) = tvec.at<double>(1, 0);  // T_y
-  T_homo(2, 3) = tvec.at<double>(2, 0);  // T_z
-
-  Gw = gtsam::Pose3(T_homo);
-  return true;
-}
-
-void testing::ExtendedKalmanFilterGTSAM::update(
-    const vector<Point3>& P_w_list, const vector<Point2>& z_obs_list,
-    const gtsam::Pose3& X_W_k) {
-  if (P_w_list.empty() || P_w_list.size() != z_obs_list.size()) {
-    cerr << "EKF Update skipped: Input lists are empty or mismatched." << endl;
-    return;
-  }
-
-  const size_t num_measurements = P_w_list.size();
-  const size_t total_rows =
-      num_measurements * 2;  // Each measurement has 2 dimensions (u, v)
-
-  // Stacked Jacobian H (M x 6) and Stacked Residual y (M x 1)
-  gtsam::Matrix H_stacked = gtsam::Matrix::Zero(total_rows, 6);
-  gtsam::Vector y_stacked = gtsam::Vector::Zero(total_rows);
-
-  // Stacked Measurement Noise R_stacked (M x M)
-  gtsam::Matrix R_stacked = gtsam::Matrix::Zero(total_rows, total_rows);
-  // Calculate the Adjoint Matrix of X^{-1}, which links delta_h to delta_t_cw
-  gtsam::Matrix Ad_X_inv = X_W_k.inverse().AdjointMap();  // 6x6 matrix
-
-  Pose3 G_w = X_W_k.inverse() * H_w_;
-  gtsam::PinholePose<Cal3_S2> camera(G_w.inverse(), K_gtsam_);
-  // gtsam::Matrix Ad_X = X_W_k.AdjointMap(); // 6x6 matrix
-  // 3. Calculate Correction Factor: J_corr = d(delta_t_wc)/d(delta_w) =
-  // -Ad_{T_cw} This corrects the Jacobian returned by GTSAM (w.r.t. T_wc) to be
-  // w.r.t. the state W.
-  gtsam::Matrix Ad_G_w = G_w.AdjointMap();
-  gtsam::Matrix CorrectionFactor = -Ad_G_w;
-
-  for (size_t i = 0; i < num_measurements; ++i) {
-    const gtsam::Point3& P_w = P_w_list[i];
-    const gtsam::Point2& z_obs = z_obs_list[i];
-
-    gtsam::Matrix26 H_pose;  // 2x6 Jacobian for this measurement (This was
-                             // missing/corrupted)
-
-    // J_pi: Jacobian of projection w.r.t. T_cw perturbation (delta_t_cw)
-    gtsam::Matrix J_pi;  // 2x6 matrix
-
-    // 1. Calculate Predicted Measurement (h(H)) and Jacobian (J_pi)
-    gtsam::Point2 z_pred;
-    try {
-      // GTSAM's project() computes: z_pred = pi(T_cw * P_w), J_pi =
-      // d(pi)/d(delta_t_cw)
-      z_pred = camera.project(P_w, J_pi);
-    } catch (const gtsam::CheiralityException& e) {
-      // Handle points behind the camera
-      cerr << "Warning: Point " << i << " behind camera. Skipping." << endl;
-      continue;
-    }
-    // 2. Calculate Residual (Error) y = z_obs - z_pred
-    gtsam::Vector2 y_i = z_obs - z_pred;  // 2x1 residual vector
-
-    // 3. Calculate EKF Jacobian: H_EKF = J_pi * Ad_X_inv
-    // H_EKF = d(z)/d(delta_h) = (d(z)/d(delta_t_cw)) *
-    // (d(delta_t_cw)/d(delta_h))
-    gtsam::Matrix H_ekf_i = J_pi * CorrectionFactor;  // 2x6 matrix
-
-    // 3. Stack H and y
-    H_stacked.block<2, 6>(i * 2, 0) = H_ekf_i;
-    y_stacked.segment<2>(i * 2) = y_i;
-
-    // 4. Stack R (R_stacked is block diagonal with R)
-    R_stacked.block<2, 2>(i * 2, i * 2) = R_;
-  }
-
-  // --- EKF Formulas using stacked matrices ---
-
-  // 1. Innovation Covariance (S)
-  // S = H_stacked * P * H_stacked^T + R_stacked
-  gtsam::Matrix S = H_stacked * P_ * H_stacked.transpose() + R_stacked;
-
-  // 2. Kalman Gain (K)
-  // K = P * H_stacked^T * S^-1
-  // We use FullLinearSolver for robustness with potentially large S
-  Eigen::LLT<gtsam::Matrix> ldlt(S);
-  gtsam::Matrix S_inv;
-  {
-    utils::TimingStatsCollector timer("ekfgtsam.inv");
-    S_inv = ldlt.solve(Eigen::MatrixXd::Identity(S.rows(), S.cols()));
-  }
-  // gtsam::Matrix S_inv = ldlt.solve(Eigen::MatrixXd::Identity(S.rows(),
-  // S.cols())); gtsam::Matrix S_inv = S.inverse();
-  gtsam::Matrix K = P_ * H_stacked.transpose() * S_inv;  // 6 x M
-
-  // 3. State Update (Perturbation Vector delta_x)
-  // delta_x = K * y_stacked
-  PerturbationVector delta_x = K * y_stacked;  // 6 x 1
-
-  // 4. State Retraction (Update T_cw)
-  // T_new = T_old.retract(delta_x)
-  // GTSAM's retract is the generalized exponential map on the manifold.
-  H_w_ = H_w_.retract(delta_x);
-
-  // 5. Covariance Update
-  // P = (I - K * H_stacked) * P
-  gtsam::Matrix I = gtsam::Matrix66::Identity();
-  // P_ = (I - K * H_stacked) * P_;
-  gtsam::Matrix I_KH = I - K * H_stacked;
-  P_ = I_KH * P_ * I_KH.transpose() + K * R_stacked * K.transpose();
-}
-
-}  // namespace testing
+// namespace testing {
+
+// using namespace cv;
+// using namespace std;
+
+// // Compute isotropic normalization transform for a set of 2D points
+// static Mat computeNormalizationTransform(const vector<Point2f>& pts) {
+//   int n = (int)pts.size();
+//   Point2f centroid(0, 0);
+//   for (const auto& p : pts) centroid += p;
+//   centroid.x /= n;
+//   centroid.y /= n;
+
+//   double meanDist = 0.0;
+//   for (const auto& p : pts) {
+//     double dx = p.x - centroid.x;
+//     double dy = p.y - centroid.y;
+//     meanDist += sqrt(dx * dx + dy * dy);
+//   }
+//   meanDist /= n;
+
+//   double scale = (meanDist > 0) ? (sqrt(2.0) / meanDist) : 1.0;
+
+//   Mat T = Mat::eye(3, 3, CV_64F);
+//   T.at<double>(0, 0) = scale;
+//   T.at<double>(1, 1) = scale;
+//   T.at<double>(0, 2) = -scale * centroid.x;
+//   T.at<double>(1, 2) = -scale * centroid.y;
+//   return T;
+// }
+
+// // Normalized DLT homography estimation: src -> dst (both length >= 4)
+// Mat estimateHomographyDLT(const vector<Point2f>& src,
+//                           const vector<Point2f>& dst) {
+//   CV_Assert(src.size() >= 4 && src.size() == dst.size());
+//   int n = (int)src.size();
+
+//   Mat T1 = computeNormalizationTransform(src);
+//   Mat T2 = computeNormalizationTransform(dst);
+
+//   // Normalize points
+//   vector<Point2f> nsrc(n), ndst(n);
+//   for (int i = 0; i < n; i++) {
+//     Mat p = (Mat_<double>(3, 1) << src[i].x, src[i].y, 1.0);
+//     Mat pn = T1 * p;
+//     nsrc[i] = Point2f((float)(pn.at<double>(0, 0) / pn.at<double>(2, 0)),
+//                       (float)(pn.at<double>(1, 0) / pn.at<double>(2, 0)));
+
+//     Mat q = (Mat_<double>(3, 1) << dst[i].x, dst[i].y, 1.0);
+//     Mat qn = T2 * q;
+//     ndst[i] = Point2f((float)(qn.at<double>(0, 0) / qn.at<double>(2, 0)),
+//                       (float)(qn.at<double>(1, 0) / qn.at<double>(2, 0)));
+//   }
+
+//   // Build A matrix (2n x 9)
+//   Mat A = Mat::zeros(n * 2, 9, CV_64F);
+//   for (int i = 0; i < n; i++) {
+//     double x = nsrc[i].x;
+//     double y = nsrc[i].y;
+//     double u = ndst[i].x;
+//     double v = ndst[i].y;
+//     A.at<double>(2 * i, 0) = -x;
+//     A.at<double>(2 * i, 1) = -y;
+//     A.at<double>(2 * i, 2) = -1;
+//     A.at<double>(2 * i, 6) = x * u;
+//     A.at<double>(2 * i, 7) = y * u;
+//     A.at<double>(2 * i, 8) = u;
+
+//     A.at<double>(2 * i + 1, 3) = -x;
+//     A.at<double>(2 * i + 1, 4) = -y;
+//     A.at<double>(2 * i + 1, 5) = -1;
+//     A.at<double>(2 * i + 1, 6) = x * v;
+//     A.at<double>(2 * i + 1, 7) = y * v;
+//     A.at<double>(2 * i + 1, 8) = v;
+//   }
+
+//   // Solve Ah = 0 via SVD
+//   Mat w, u, vt;
+//   SVD::compute(A, w, u, vt, SVD::MODIFY_A);
+//   Mat h =
+//       vt.row(8).reshape(0, 3);  // last row of V^T -> smallest singular value
+
+//   // Denormalize: H = inv(T2) * h * T1
+//   Mat H = Mat::zeros(3, 3, CV_64F);
+//   Mat Hn;
+//   h.convertTo(Hn, CV_64F);
+//   H = T2.inv() * Hn * T1;
+
+//   // Normalize so H(2,2)=1
+//   if (fabs(H.at<double>(2, 2)) > 1e-12) H /= H.at<double>(2, 2);
+//   return H;
+// }
+
+// // Decompose homography to possible poses and choose best using cheirality
+// // (points in front)
+// bool recoverPoseFromHomography(const Mat& H_in, const Mat& K,
+//                                const vector<Point3f>& planePts3D,
+//                                const vector<Point2f>& imagePts, Mat& bestR,
+//                                Mat& bestT) {
+//   CV_Assert(H_in.size() == Size(3, 3));
+//   Mat H;
+//   H_in.convertTo(H, CV_64F);
+
+//   // OpenCV expects normalized homography such that H = K * [r1 r2 t]
+//   vector<Mat> Rs, Ts, Ns;
+//   int solutions = decomposeHomographyMat(H, K, Rs, Ts, Ns);
+//   if (solutions == 0) return false;
+
+//   int bestIdx = -1;
+//   int bestFront = -1;
+
+//   // For each solution count number of points with positive depth
+//   for (int i = 0; i < solutions; i++) {
+//     Mat R = Rs[i];
+//     Mat t = Ts[i];
+
+//     int frontCount = 0;
+//     vector<Point2f> proj;
+//     // Project 3D plane points with candidate pose
+//     projectPoints(planePts3D, R, t, K, Mat(), proj);
+//     for (size_t j = 0; j < proj.size(); j++) {
+//       // Reconstruct depth sign by transforming a 3D point and looking at z
+//       in
+//       // camera frame
+//       Mat X = (Mat_<double>(3, 1) << planePts3D[j].x, planePts3D[j].y,
+//                planePts3D[j].z);
+//       Mat Xcam = R * X + t;
+//       if (Xcam.at<double>(2, 0) > 0) frontCount++;
+//     }
+//     if (frontCount > bestFront) {
+//       bestFront = frontCount;
+//       bestIdx = i;
+//     }
+//   }
+
+//   if (bestIdx < 0) return false;
+//   bestR = Rs[bestIdx].clone();
+//   bestT = Ts[bestIdx].clone();
+//   return true;
+// }
+
+// bool poseFromHomograph(const std::vector<cv::Point3f>& points3D,
+//                        const std::vector<cv::Point2f>& points2D,
+//                        const cv::Mat& K, gtsam::Pose3& Gw) {
+//   // Ensure we have enough correspondences
+//   if (points3D.size() < 4 || points3D.size() != points2D.size()) {
+//     return false;
+//   }
+
+//   // Convert 3D points to 2D by projecting onto XY plane (Z=0)
+//   std::vector<cv::Point2f> points3D_2D;
+//   for (const auto& pt : points3D) {
+//     points3D_2D.push_back(cv::Point2f(pt.x, pt.y));
+//   }
+
+//   // Find homography matrix
+//   cv::Mat H = cv::findHomography(points3D_2D, points2D, cv::RANSAC, 3.0);
+
+//   if (H.empty()) {
+//     throw std::runtime_error("Failed to compute homography");
+//   }
+
+//   // Decompose homography to get rotation and translation
+//   // H = K * [r1 r2 t] where r1, r2 are first two columns of rotation matrix
+//   cv::Mat K_inv = K.inv();
+
+//   // Normalize: H_normalized = K^(-1) * H
+//   cv::Mat H_normalized = K_inv * H;
+
+//   // Extract columns
+//   cv::Mat col1 = H_normalized.col(0);
+//   cv::Mat col2 = H_normalized.col(1);
+//   cv::Mat col3 = H_normalized.col(2);
+
+//   // Normalize rotation columns
+//   double lambda1 = cv::norm(col1);
+//   double lambda2 = cv::norm(col2);
+//   double lambda = (lambda1 + lambda2) / 2.0;
+
+//   cv::Mat r1 = col1 / lambda;
+//   cv::Mat r2 = col2 / lambda;
+//   cv::Mat t = col3 / lambda;
+
+//   // Compute r3 as cross product of r1 and r2
+//   cv::Mat r3 = r1.cross(r2);
+
+//   // Build rotation matrix
+//   cv::Mat R = cv::Mat(3, 3, CV_64F);
+//   r1.copyTo(R.col(0));
+//   r2.copyTo(R.col(1));
+//   r3.copyTo(R.col(2));
+
+//   // Ensure R is a valid rotation matrix using SVD
+//   cv::Mat W, U, Vt;
+//   cv::SVD::compute(R, W, U, Vt);
+//   R = U * Vt;
+
+//   // Convert OpenCV matrices to Eigen
+//   Eigen::Matrix3d R_eigen;
+//   Eigen::Vector3d t_eigen;
+
+//   for (int i = 0; i < 3; i++) {
+//     for (int j = 0; j < 3; j++) {
+//       R_eigen(i, j) = R.at<double>(i, j);
+//     }
+//     t_eigen(i) = t.at<double>(i, 0);
+//   }
+
+//   // Create 4x4 homogeneous transformation matrix
+//   Eigen::Matrix4d transform = Eigen::Matrix4d::Identity();
+//   transform.block<3, 3>(0, 0) = R_eigen;
+//   transform.block<3, 1>(0, 3) = t_eigen;
+
+//   Gw = gtsam::Pose3(transform);
+//   return true;
+// }
+
+// bool poseFromPnP(const std::vector<cv::Point3f>& points3D,
+//                  const std::vector<cv::Point2f>& points2D, const cv::Mat& K,
+//                  gtsam::Pose3& Gw, cv::Mat& inliers) {
+//   // Ensure we have enough correspondences
+//   if (points3D.size() < 4 || points3D.size() != points2D.size()) {
+//     return false;
+//   }
+
+//   // Output vectors
+//   Mat rvec1, tvec1;
+//   cv::Mat distCoeffs = cv::Mat::zeros(1, 4, CV_64FC1);
+//   cv::Mat inliers1;
+
+//   // --- 1. Run solvePnPRansac ---
+//   bool success_ippe =
+//       solvePnPRansac(points3D, points2D, K, distCoeffs, rvec1, tvec1,
+//                      false,  // useExtrinsicGuess
+//                      500,    // iterationsCount (number of RANSAC iterations)
+//                      0.4,    // reprojectionError (max allowed error in
+//                      pixels) 0.99,   // confidence inliers1,      // Output
+//                      for inlier indices SOLVEPNP_IPPE  // PnP method (EPnP is
+//                      a good default)
+//       );
+
+//   Mat rvec2, tvec2, inliers2;
+//   bool success_epnp =
+//       solvePnPRansac(points3D, points2D, K, distCoeffs, rvec2, tvec2,
+//                      false,  // useExtrinsicGuess
+//                      500,    // iterationsCount (number of RANSAC iterations)
+//                      0.4,    // reprojectionError (max allowed error in
+//                      pixels) 0.99,   // confidence inliers2,      // Output
+//                      for inlier indices SOLVEPNP_AP3P  // PnP method (EPnP is
+//                      a good default)
+//       );
+
+//   Mat rvec, tvec;
+//   if (success_ippe && success_epnp) {
+//     LOG(INFO) << "Solved both object motions with ippe and epnp"
+//                  " IPPE inliers: "
+//               << inliers1.rows << " EPnP inliers: " << inliers2.rows;
+//     ;
+
+//     if (inliers1.rows > inliers2.rows) {
+//       // IPPE better
+//       rvec = rvec1;
+//       tvec = tvec1;
+//       inliers = inliers1;
+//     } else {
+//       rvec = rvec2;
+//       tvec = tvec2;
+//       inliers = inliers2;
+//     }
+//   } else if (success_ippe) {
+//     LOG(INFO) << "Only solved for IPPE";
+//     rvec = rvec1;
+//     tvec = tvec1;
+//     inliers = inliers1;
+//   } else if (success_epnp) {
+//     LOG(INFO) << "Only solved for EPnP";
+//     rvec = rvec2;
+//     tvec = tvec2;
+//     inliers = inliers2;
+//   } else {
+//     LOG(WARNING) << "Failed to solve object motion EPnP or IPPE";
+//     return false;
+//   }
+
+//   // cout << "Pose calculation successful using " << inliers.rows << "
+//   inliers."
+//   // << endl;
+
+//   // --- 2. Convert rvec to a 3x3 Rotation Matrix (R) ---
+//   Mat R_mat;               // OpenCV Mat for the 3x3 rotation matrix
+//   Rodrigues(rvec, R_mat);  // rvec (Rodrigues form) -> R_mat (3x3 matrix)
+
+//   // --- 3. Assemble the Homogeneous Matrix (T) using Eigen ---
+//   Eigen::Matrix4d T_homo =
+//       Eigen::Matrix4d::Identity();  // Start with an Identity matrix
+
+//   // Copy Rotation (R) from OpenCV Mat to Eigen 3x3 block
+//   for (int i = 0; i < 3; ++i) {
+//     for (int j = 0; j < 3; ++j) {
+//       // R_mat is CV_64F (double) by default from Rodrigues
+//       T_homo(i, j) = R_mat.at<double>(i, j);
+//     }
+//   }
+
+//   // Copy Translation (t) from OpenCV Mat to Eigen 3x1 block
+//   T_homo(0, 3) = tvec.at<double>(0, 0);  // T_x
+//   T_homo(1, 3) = tvec.at<double>(1, 0);  // T_y
+//   T_homo(2, 3) = tvec.at<double>(2, 0);  // T_z
+
+//   Gw = gtsam::Pose3(T_homo);
+//   return true;
+// }
+
+// void testing::ExtendedKalmanFilterGTSAM::update(
+//     const vector<Point3>& P_w_list, const vector<Point2>& z_obs_list,
+//     const gtsam::Pose3& X_W_k) {
+//   if (P_w_list.empty() || P_w_list.size() != z_obs_list.size()) {
+//     cerr << "EKF Update skipped: Input lists are empty or mismatched." <<
+//     endl; return;
+//   }
+
+//   const size_t num_measurements = P_w_list.size();
+//   const size_t total_rows =
+//       num_measurements * 2;  // Each measurement has 2 dimensions (u, v)
+
+//   // Stacked Jacobian H (M x 6) and Stacked Residual y (M x 1)
+//   gtsam::Matrix H_stacked = gtsam::Matrix::Zero(total_rows, 6);
+//   gtsam::Vector y_stacked = gtsam::Vector::Zero(total_rows);
+
+//   // Stacked Measurement Noise R_stacked (M x M)
+//   gtsam::Matrix R_stacked = gtsam::Matrix::Zero(total_rows, total_rows);
+//   // Calculate the Adjoint Matrix of X^{-1}, which links delta_h to
+//   delta_t_cw gtsam::Matrix Ad_X_inv = X_W_k.inverse().AdjointMap();  // 6x6
+//   matrix
+
+//   Pose3 G_w = X_W_k.inverse() * H_w_;
+//   gtsam::PinholePose<Cal3_S2> camera(G_w.inverse(), K_gtsam_);
+//   // gtsam::Matrix Ad_X = X_W_k.AdjointMap(); // 6x6 matrix
+//   // 3. Calculate Correction Factor: J_corr = d(delta_t_wc)/d(delta_w) =
+//   // -Ad_{T_cw} This corrects the Jacobian returned by GTSAM (w.r.t. T_wc) to
+//   be
+//   // w.r.t. the state W.
+//   gtsam::Matrix Ad_G_w = G_w.AdjointMap();
+//   gtsam::Matrix CorrectionFactor = -Ad_G_w;
+
+//   for (size_t i = 0; i < num_measurements; ++i) {
+//     const gtsam::Point3& P_w = P_w_list[i];
+//     const gtsam::Point2& z_obs = z_obs_list[i];
+
+//     gtsam::Matrix26 H_pose;  // 2x6 Jacobian for this measurement (This was
+//                              // missing/corrupted)
+
+//     // J_pi: Jacobian of projection w.r.t. T_cw perturbation (delta_t_cw)
+//     gtsam::Matrix J_pi;  // 2x6 matrix
+
+//     // 1. Calculate Predicted Measurement (h(H)) and Jacobian (J_pi)
+//     gtsam::Point2 z_pred;
+//     try {
+//       // GTSAM's project() computes: z_pred = pi(T_cw * P_w), J_pi =
+//       // d(pi)/d(delta_t_cw)
+//       z_pred = camera.project(P_w, J_pi);
+//     } catch (const gtsam::CheiralityException& e) {
+//       // Handle points behind the camera
+//       cerr << "Warning: Point " << i << " behind camera. Skipping." << endl;
+//       continue;
+//     }
+//     // 2. Calculate Residual (Error) y = z_obs - z_pred
+//     gtsam::Vector2 y_i = z_obs - z_pred;  // 2x1 residual vector
+
+//     // 3. Calculate EKF Jacobian: H_EKF = J_pi * Ad_X_inv
+//     // H_EKF = d(z)/d(delta_h) = (d(z)/d(delta_t_cw)) *
+//     // (d(delta_t_cw)/d(delta_h))
+//     gtsam::Matrix H_ekf_i = J_pi * CorrectionFactor;  // 2x6 matrix
+
+//     // 3. Stack H and y
+//     H_stacked.block<2, 6>(i * 2, 0) = H_ekf_i;
+//     y_stacked.segment<2>(i * 2) = y_i;
+
+//     // 4. Stack R (R_stacked is block diagonal with R)
+//     R_stacked.block<2, 2>(i * 2, i * 2) = R_;
+//   }
+
+//   // --- EKF Formulas using stacked matrices ---
+
+//   // 1. Innovation Covariance (S)
+//   // S = H_stacked * P * H_stacked^T + R_stacked
+//   gtsam::Matrix S = H_stacked * P_ * H_stacked.transpose() + R_stacked;
+
+//   // 2. Kalman Gain (K)
+//   // K = P * H_stacked^T * S^-1
+//   // We use FullLinearSolver for robustness with potentially large S
+//   Eigen::LLT<gtsam::Matrix> ldlt(S);
+//   gtsam::Matrix S_inv;
+//   {
+//     utils::TimingStatsCollector timer("ekfgtsam.inv");
+//     S_inv = ldlt.solve(Eigen::MatrixXd::Identity(S.rows(), S.cols()));
+//   }
+//   // gtsam::Matrix S_inv = ldlt.solve(Eigen::MatrixXd::Identity(S.rows(),
+//   // S.cols())); gtsam::Matrix S_inv = S.inverse();
+//   gtsam::Matrix K = P_ * H_stacked.transpose() * S_inv;  // 6 x M
+
+//   // 3. State Update (Perturbation Vector delta_x)
+//   // delta_x = K * y_stacked
+//   PerturbationVector delta_x = K * y_stacked;  // 6 x 1
+
+//   // 4. State Retraction (Update T_cw)
+//   // T_new = T_old.retract(delta_x)
+//   // GTSAM's retract is the generalized exponential map on the manifold.
+//   H_w_ = H_w_.retract(delta_x);
+
+//   // 5. Covariance Update
+//   // P = (I - K * H_stacked) * P
+//   gtsam::Matrix I = gtsam::Matrix66::Identity();
+//   // P_ = (I - K * H_stacked) * P_;
+//   gtsam::Matrix I_KH = I - K * H_stacked;
+//   P_ = I_KH * P_ * I_KH.transpose() + K * R_stacked * K.transpose();
+// }
+
+// }  // namespace testing
 
 SquareRootInfoFilterGTSAM::SquareRootInfoFilterGTSAM(
     const gtsam::Pose3& initial_state_H, const gtsam::Matrix66& initial_P,
@@ -1479,6 +1483,7 @@ HybridObjectMotionSRIF::Result HybridObjectMotionSRIF::update(
 
   const gtsam::Pose3& X_W_k = frame->getPose();
   const gtsam::Pose3 X_W_k_inv = X_W_k.inverse();
+  X_K_ = X_W_k;
 
   // 1. Calculate Jacobians (H) and Linearized Residuals (y_lin)
   // These are calculated ONCE at the linearization point and are fixed
@@ -1702,6 +1707,16 @@ void HybridObjectMotionSRIF::resetState(const gtsam::Pose3& L_e,
   previous_H_ = gtsam::Pose3::Identity();
   L_e_ = L_e;
   frame_id_e_ = frame_id_e;
+  X_K_ = gtsam::Pose3::Identity();
+
+  keyframe_history.push_back(L_e);
+
+  m_linearized_.clear();
+
+  // should always be identity since the deviation from L_e = I when frame = e
+  // the initial H should not be parsed into the constructor by this logic as
+  // well!
+  H_linearization_point_ = gtsam::Pose3::Identity();
 }
 
 ObjectMotionSolverFilter::ObjectMotionSolverFilter(
@@ -1743,6 +1758,27 @@ bool ObjectMotionSolverFilter::solveImpl(Frame::Ptr frame_k,
 
   auto gtsam_camera_calibration = frame_k->camera_->getGtsamCalibration();
 
+  auto construct_initial_frame =
+      [](const Frame::Ptr frame, const TrackletIds& tracklets) -> gtsam::Pose3 {
+    // L_e
+    gtsam::Point3 initial_object_frame(
+        0, 0, 0);  // important to initliase with zero values (otherwise nan's!)
+    size_t count = 0;
+    for (TrackletId tracklet : tracklets) {
+      const Feature::Ptr feature = frame->at(tracklet);
+      CHECK_NOTNULL(feature);
+
+      gtsam::Point3 lmk = frame->backProjectToCamera(feature->trackletId());
+      initial_object_frame += lmk;
+
+      count++;
+    }
+
+    initial_object_frame /= count;
+    initial_object_frame = frame->getPose() * initial_object_frame;
+    return gtsam::Pose3(gtsam::Rot3::Identity(), initial_object_frame);
+  };
+
   //# if retracked - reset filter (HACk)
   // what happens when re-track - initial point values are wrong (this is maybe
   // the case when we loos all points!) what about in the OMD case? we get a
@@ -1751,13 +1787,24 @@ bool ObjectMotionSolverFilter::solveImpl(Frame::Ptr frame_k,
   auto it = std::find(frame_k->retracked_objects_.begin(),
                       frame_k->retracked_objects_.end(), object_id);
 
+  bool new_object = false;
   if (it != frame_k->retracked_objects_.end() && filters_.exists(object_id)) {
     LOG(INFO) << object_id << " retracked - resetting filter!";
     // Not thread safe!
-    filters_.erase(object_id);
+    // filters_.erase(object_id);
+    new_object = true;
+    gtsam::Pose3 keyframe_pose =
+        construct_initial_frame(frame_k_1, geometric_result.inliers);
+
+    auto filter = filters_.at(object_id);
+
+    // instead of using new pose (use last motion) (if last frame id was k-1?)
+    //  we start to drift from the center of the object!!
+    //  keyframe_pose = filter->getCurrentLinearization() *
+    //  filter->getKeyFramePose(); filters_.erase(object_id);
+    filters_.at(object_id)->resetState(keyframe_pose, frame_k_1->getFrameId());
   }
 
-  bool new_object = false;
   if (!filters_.exists(object_id)) {
     new_object = true;
     // gtsam::Vector3 noise;
@@ -1777,37 +1824,12 @@ bool ObjectMotionSolverFilter::solveImpl(Frame::Ptr frame_k,
       return false;
     }
 
-    // L_e
-    gtsam::Point3 initial_object_frame(
-        0, 0, 0);  // important to initliase with zero values (otherwise nan's!)
-    size_t count = 0;
-    for (TrackletId inlier_tracklet : geometric_result.inliers) {
-      const Feature::Ptr feature_k_1 = frame_k_1->at(inlier_tracklet);
-      CHECK_NOTNULL(feature_k_1);
+    gtsam::Pose3 keyframe_pose =
+        construct_initial_frame(frame_k_1, geometric_result.inliers);
 
-      gtsam::Point3 lmk_k_1 =
-          frame_k_1->backProjectToCamera(feature_k_1->trackletId());
-      initial_object_frame += lmk_k_1;
-
-      count++;
-    }
-
-    initial_object_frame /= count;
-    initial_object_frame = frame_k_1->getPose() * initial_object_frame;
-
-    // filters_.insert2(object_id,
-    //                  std::make_shared<testing::ExtendedKalmanFilterGTSAM>(
-    //                      gtsam::Pose3::Identity(), P,
-    //                      camera_params_.getCameraMatrixEigen(), R));
-
-    // filters_.insert2(object_id, std::make_shared<SquareRootInfoFilterGTSAM>(
-    //                                 gtsam::Pose3::Identity(), P,
-    //                                 gtsam_camera_calibration, R));
     constexpr static double kHuberKFilter = 0.1;
     filters_.insert2(object_id, std::make_shared<HybridObjectMotionSRIF>(
-                                    gtsam::Pose3::Identity(),
-                                    gtsam::Pose3(gtsam::Rot3::Identity(),
-                                                 initial_object_frame),
+                                    gtsam::Pose3::Identity(), keyframe_pose,
                                     frame_k_1->getFrameId(), P, Q, R,
                                     frame_k_1->getCamera(), kHuberKFilter));
   }

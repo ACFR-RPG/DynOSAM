@@ -50,7 +50,6 @@ void HybridModuleDisplayCommon::publishObjectKeyFrames(
     const KeyFrameRanges* object_range = nullptr;
     if (hybrid_accessor_->getObjectKeyFrameHistory(object_id, object_range)) {
       CHECK_NOTNULL(object_range);
-      LOG(INFO) << "Got ranges for object " << object_id;
       std_msgs::msg::ColorRGBA colour_msg;
       convert(Color::uniqueId(object_id), colour_msg);
 
@@ -58,8 +57,6 @@ void HybridModuleDisplayCommon::publishObjectKeyFrames(
       size_t count = 0;
       for (const FrameRange<gtsam::Pose3>::Ptr& frame_range : *object_range) {
         const auto [keyframe_id, L_e] = frame_range->dataPair();
-
-        LOG(INFO) << "Got keyframe " << keyframe_id << " for " << object_id;
 
         visualization_msgs::msg::Marker marker;
         // Header and Metadata
@@ -72,9 +69,7 @@ void HybridModuleDisplayCommon::publishObjectKeyFrames(
         // Marker Type: LINE_LIST allows us to draw multiple lines (the three
         // axes)
         marker.type = visualization_msgs::msg::Marker::LINE_LIST;
-        marker.lifetime = rclcpp::Duration::from_seconds(
-            5.0);  // Set a short lifetime to refresh the marker
-
+        // marker.lifetime =
         // Translation
         marker.pose.position.x = L_e.x();
         marker.pose.position.y = L_e.y();
