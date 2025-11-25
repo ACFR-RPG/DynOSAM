@@ -79,6 +79,13 @@
         <span>Documentation</span>
       </a>
 
+       <a href="https://data.acfr.usyd.edu.au/rpg" target="_blank" class="btn btn-dark" role="button">
+        <span class="icon">
+          <i class="ai ai-open-data"></i>
+        </span>
+        <span>Datasets</span>
+      </a>
+
     </div>
 
     <!-- Teaser -->
@@ -92,16 +99,37 @@
     <!-- Abstract -->
     <h2>Abstract</h2>
     <p class="mb-4">
-      Traditional Visual Simultaneous Localization and Mapping (vSLAM) systems focus solely on static scene structures, overlooking dynamic elements in the environment.
-Although effective for accurate visual odometry in complex scenarios, these methods discard crucial information about moving objects.
-By incorporating this information into a Dynamic SLAM framework, the motion of dynamic entities can be estimated, enhancing navigation whilst ensuring accurate localization.
-However, the fundamental formulation of Dynamic SLAM remains an open challenge, with no consensus on the optimal approach for accurate motion estimation within a SLAM pipeline.
+     Traditional Visual Simultaneous Localization and
+Mapping systems focus solely on static scene structures,
+overlooking dynamic elements in the environment. Although
+effective for accurate visual odometry in complex scenarios,
+these methods discard crucial information about moving ob-
+jects. By incorporating this information into a Dynamic SLAM
+framework, the motion of dynamic entities can be estimated,
+enhancing navigation whilst ensuring accurate localization.
+However, the fundamental formulation of Dynamic SLAM
+remains an open challenge, with no consensus on the optimal
+approach for accurate motion estimation within a SLAM
+pipeline.
 
-Therefore, we developed DynoSAM, an open-source framework for Dynamic SLAM that enables the efficient implementation, testing, and comparison of various Dynamic SLAM optimization formulations.
-DynoSAM integrates static and dynamic measurements into a unified optimization problem solved using factor graphs, simultaneously estimating camera poses, static scene, object motion or poses, and object structures.
-We evaluate DynoSAM across diverse simulated and real-world datasets, achieving state-of-the-art motion estimation in indoor and outdoor environments, with substantial improvements over existing systems.
-Additionally, we demonstrate DynoSAM's utility in downstream applications, including 3D reconstruction of dynamic scenes and trajectory prediction, thereby showcasing potential for advancing dynamic object-aware SLAM systems.
-    <!-- </p>
+Therefore, we developed DynoSAM, an open-source frame-
+work for Dynamic Objects SLAM that enables the efficient
+implementation, testing, and comparison of various Dynamic
+SLAM optimization formulations. We further propose a novel
+formulation that encodes rigid-body motion model in object
+pose estimation as well as an error metric agnostic to object
+frame definition. DynoSAM integrates static and dynamic
+measurements into a unified optimization problem solved using
+factor graphs, simultaneously estimating camera poses, static
+scene, object motion or poses, and object structures. We
+evaluate DynoSAM across diverse simulated and real-world
+datasets, achieving state-of-the-art motion estimation in indoor
+and outdoor environments, with substantial improvements over
+existing systems. Additionally, we demonstrate DynoSAM’s
+contributions to downstream applications, including 3D re-
+construction of dynamic scenes and trajectory prediction,
+thereby showcasing potential for advancing dynamic object-
+aware SLAM system    <!-- </p>
 
     <div class="sep"></div>
     <h3>BibTex</h3>
