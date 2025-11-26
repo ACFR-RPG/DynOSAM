@@ -61,6 +61,8 @@ class VisionImuPacket {
   //! Just need this here for viz!!
   gtsam::FastMap<ObjectId, HybridObjectMotionSRIF> active_filters;
 
+  FrameId kf_id{0};
+
   /// @brief Basic track structure representing a tracking status and visual
   /// measurements
   struct Tracks {
@@ -98,9 +100,13 @@ class VisionImuPacket {
     // TODO: for now structure!
     struct HybridInfo {
       //! Initial object points in L
+      // TODO: only contain new ones!!?
       StatusLandmarkVector initial_object_points;
       //! Associated keyframe
+      //! if keyframe then this value is NEW (ie changed from the previous one)
+      //! and the initial motion should be identity
       gtsam::Pose3 L_W_e;
+      gtsam::Pose3 H_W_e_k;
     };
     // Should also set is_keyframe
     std::optional<HybridInfo> hybrid_info;
@@ -113,6 +119,7 @@ class VisionImuPacket {
   ImuFrontend::PimPtr pim() const;
   Camera::ConstPtr camera() const;
   PointCloudLabelRGB::Ptr denseLabelledCloud() const;
+  bool isCameraKeyFrame() const;
 
   const CameraTracks& cameraTracks() const;
   const gtsam::Pose3& cameraPose() const;

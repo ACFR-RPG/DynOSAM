@@ -99,6 +99,11 @@ struct FeatureTrackerInfo {
   size_t static_track_optical_flow{0};
   size_t static_track_detections{0};
 
+  //! If new features were extracted at this frame
+  //! Set in the (static) tracker and partially used to indicate if a new static
+  //! kf is needed
+  bool new_static_detections{false};
+
   inline PerObjectStatus& getObjectStatus(ObjectId object_id) {
     if (!dynamic_track.exists(object_id)) {
       dynamic_track.insert2(object_id, PerObjectStatus(object_id));
@@ -117,7 +122,8 @@ inline std::string to_string(const FeatureTrackerInfo& info) {
      << " - frame id: " << info.frame_id << "\n"
      << " - timestamp: " << std::setprecision(15) << info.timestamp << "\n"
      << "\t- # optical flow: " << info.static_track_optical_flow << "\n"
-     << "\t- # detections: " << info.static_track_detections << "\n";
+     << "\t- # detections: " << info.static_track_detections << "\n"
+     << "\t- # new detections: " << info.new_static_detections << "\n";
 
   for (const auto& [object_id, object_status] : info.dynamic_track) {
     ss << "\t- Object: " << object_id << ": \n";

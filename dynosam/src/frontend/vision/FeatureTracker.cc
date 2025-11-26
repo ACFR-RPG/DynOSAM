@@ -239,19 +239,20 @@ bool FeatureTracker::stereoTrack(FeaturePtrs& stereo_features,
     return std::sqrt(dx * dx + dy * dy);
   };
   // update klt status based on result from flow
-  for (size_t i = 0; i < klt_status.size(); i++) {
-    const bool both_status_good = klt_status.at(i) && klt_reverse_status.at(i);
-    const bool within_image = isWithinShrunkenImage(right_feature_points.at(i));
-    const bool within_distance =
-        distance(left_feature_points.at(i),
-                 reverse_left_feature_points.at(i)) <= 0.5;
+  // for (size_t i = 0; i < klt_status.size(); i++) {
+  //   const bool both_status_good = klt_status.at(i) &&
+  //   klt_reverse_status.at(i); const bool within_image =
+  //   isWithinShrunkenImage(right_feature_points.at(i)); const bool
+  //   within_distance =
+  //       distance(left_feature_points.at(i),
+  //                reverse_left_feature_points.at(i)) <= 0.5;
 
-    if (both_status_good && within_image && within_distance) {
-      klt_status.at(i) = 1;
-    } else {
-      klt_status.at(i) = 0;
-    }
-  }
+  //   if (both_status_good && within_image && within_distance) {
+  //     klt_status.at(i) = 1;
+  //   } else {
+  //     klt_status.at(i) = 0;
+  //   }
+  // }
 
   TrackletIds good_stereo_tracklets;
 

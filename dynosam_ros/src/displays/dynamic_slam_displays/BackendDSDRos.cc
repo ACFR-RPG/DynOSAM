@@ -62,7 +62,7 @@ void BackendDSDRos::spinOnceImpl(
   this->publishDynamicPointCloud(backend_output->dynamic_landmarks,
                                  backend_output->pose());
 
-  publishTemporalDynamicMaps(backend_output);
+  // publishTemporalDynamicMaps(backend_output);
   auto clouds_toc = utils::Timer::toc<std::chrono::nanoseconds>(tic);
 
   const auto& object_motions = backend_output->optimized_object_motions;

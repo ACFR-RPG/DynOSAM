@@ -143,7 +143,7 @@ def run_viodes():
 
 #     run_experiment_sequences("/root/data/VIODE/city_day/mid", "viode_city_day_mid", viode, "--v=100")
     # run_experiment_sequences("/root/data/VIODE/city_day/high","viode_city_day_high", viode, "--ending_frame=1110")
-    run_experiment_sequences("/root/data/VIODE/city_day/high","test_viode", viode,"--starting_frame=0", "--ending_frame=1110", "--v=30",  "--use_backend=true")
+    run_experiment_sequences("/root/data/VIODE/city_day/high","test_viode", viode,"--starting_frame=0", "--ending_frame=1110", "--v=10",  "--use_backend=true", "--use_object_motion_filtering=false")
 # # zero_elements_ratio
 #     run_experiment_sequences("/root/data/VIODE/city_night/mid", "viode_city_night_mid", viode)
     # run_experiment_sequences("/root/data/VIODE/city_night/high", "viode_city_night_high", viode)
@@ -152,7 +152,7 @@ def run_viodes():
     # run_experiment_sequences("/root/data/VIODE/parking_lot/high", "parking_lot_night_high", viode)
 
 def run_omd():
-    run_experiment_sequences("/root/data/vdo_slam/omd/omd/swinging_4_unconstrained_stereo/","test", omd_dataset, "--ending_frame=300", "--use-backend=true", "--use_object_motion_filtering=true")
+    run_experiment_sequences("/root/data/vdo_slam/omd/omd/swinging_4_unconstrained_stereo/","test", omd_dataset, "--ending_frame=300", "--use_backend=true", "--v=10", "--use_object_motion_filtering=true")
 
 
 def run_tartan_air():
@@ -191,7 +191,7 @@ def run_aria():
 if __name__ == '__main__':
     # run_tartan_air()
     # run_kitti()
-    # run_kitti()
+    # run_viodes()
     # run_cluster()
     # run_tartan_air()
     # run_aria()

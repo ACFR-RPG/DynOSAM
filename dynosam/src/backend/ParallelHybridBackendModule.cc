@@ -140,7 +140,7 @@ ParallelHybridBackendModule::ParallelHybridBackendModule(
   FormulationParams formulation_params(base_params_);
   formulation_params.updater_suffix = "static";
 
-  static_formulation_ = std::make_shared<HybridFormulation>(
+  static_formulation_ = std::make_shared<HybridFormulationV1>(
       formulation_params, RGBDMap::create(), noise_models_, sensors, hooks);
 
   combined_accessor_ = std::make_shared<ParallelHybridAccessor>(this);
@@ -170,7 +170,7 @@ ParallelHybridBackendModule::objectEstimators() const {
   return sam_estimators_;
 }
 
-HybridFormulation::Ptr ParallelHybridBackendModule::staticEstimator() const {
+HybridFormulationV1::Ptr ParallelHybridBackendModule::staticEstimator() const {
   return static_formulation_;
 }
 
@@ -345,6 +345,7 @@ Pose3Measurement ParallelHybridBackendModule::bootstrapUpdateStaticEstimator(
   utils::TimingStatsCollector timer("parallel_object_sam.static_estimator");
 
   const FrameId frame_k = input->frameId();
+  const Timestamp timestamp_k = input->timestamp();
   auto map = static_formulation_->map();
 
   const auto& X_k_initial = input->cameraPose();
@@ -362,16 +363,16 @@ Pose3Measurement ParallelHybridBackendModule::bootstrapUpdateStaticEstimator(
   if (input->pim()) {
     LOG(INFO) << "Initialising backend with IMU states!";
     nav_state = this->addInitialVisualInertialState(
-        frame_k, static_formulation_.get(), new_values, new_factors,
-        static_formulation_->noiseModels(),
+        frame_k, timestamp_k, static_formulation_.get(), new_values,
+        new_factors, static_formulation_->noiseModels(),
         gtsam::NavState(X_k_initial, gtsam::Vector3(0, 0, 0)),
         gtsam::imuBias::ConstantBias{});
 
   } else {
     LOG(INFO) << "Initialising backend with VO only states!";
     nav_state = this->addInitialVisualState(
-        frame_k, static_formulation_.get(), new_values, new_factors,
-        static_formulation_->noiseModels(), X_k_initial);
+        frame_k, timestamp_k, static_formulation_.get(), new_values,
+        new_factors, static_formulation_->noiseModels(), X_k_initial);
   }
 
   // marginalise all values
@@ -404,6 +405,8 @@ Pose3Measurement ParallelHybridBackendModule::nominalUpdateStaticEstimator(
   utils::TimingStatsCollector timer("parallel_object_sam.static_estimator");
 
   const FrameId frame_k = input->frameId();
+  const Timestamp timestamp_k = input->timestamp();
+
   auto map = static_formulation_->map();
   map->updateObservations(input->staticMeasurements());
 
@@ -411,7 +414,7 @@ Pose3Measurement ParallelHybridBackendModule::nominalUpdateStaticEstimator(
   gtsam::NonlinearFactorGraph new_factors;
 
   const gtsam::NavState predicted_nav_state = this->addVisualInertialStates(
-      frame_k, static_formulation_.get(), new_values, new_factors,
+      frame_k, timestamp_k, static_formulation_.get(), new_values, new_factors,
       noise_models_, input->relativeCameraTransform(), input->pim());
   // we dont have an uncertainty from the frontend
   map->updateSensorPoseMeasurement(
@@ -462,8 +465,8 @@ Pose3Measurement ParallelHybridBackendModule::nominalUpdateStaticEstimator(
   gtsam::Values optimised_values = static_estimator_.calculateEstimate();
   static_formulation_->updateTheta(optimised_values);
 
-  const gtsam::NavState& updated_nav_state =
-      updateNavStateFromFormulation(frame_k, static_formulation_.get());
+  const gtsam::NavState& updated_nav_state = updateNavStateFromFormulation(
+      frame_k, timestamp_k, static_formulation_.get());
 
   auto accessor = static_formulation_->accessorFromTheta();
   StateQuery<gtsam::Pose3> X_w_k_opt_query = accessor->getSensorPose(frame_k);

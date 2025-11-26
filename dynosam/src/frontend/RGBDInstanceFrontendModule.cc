@@ -128,19 +128,22 @@ FrontendModule::SpinReturn RGBDInstanceFrontendModule::nominalSpin(
   const bool has_imu = input->imu_measurements.has_value();
   const bool has_stereo = image_container->hasRightRgb();
 
+  //! Rotation from k-1 to k in k-1
   std::optional<gtsam::Rot3> R_curr_ref;
   ImuFrontend::PimPtr pim;
   if (has_imu) {
     pim = imu_frontend_.preintegrateImuMeasurements(
         input->imu_measurements.value());
 
-    nav_state_ =
-        pim->predict(previous_nav_state_, gtsam::imuBias::ConstantBias{});
+    // nav_state_curr_ =
+    //     pim->predict(nav_state_prev_, gtsam::imuBias::ConstantBias{});
+    nav_state_curr_ =
+        pim->predict(nav_state_last_kf_, gtsam::imuBias::ConstantBias{});
+    last_imu_k_ = input->getFrameId();
 
-    last_imu_nav_state_update_ = input->getFrameId();
-
+    // relative rotation
     R_curr_ref =
-        previous_nav_state_.attitude().inverse() * nav_state_.attitude();
+        nav_state_prev_.attitude().inverse() * nav_state_curr_.attitude();
   }
 
   Frame::Ptr frame = tracker_->track(input->getFrameId(), input->getTimestamp(),
@@ -198,7 +201,7 @@ FrontendModule::SpinReturn RGBDInstanceFrontendModule::nominalSpin(
 
   // VERY important calculation
   const gtsam::Pose3 T_k_1_k =
-      previous_nav_state_.pose().inverse() * frame->T_world_camera_;
+      nav_state_prev_.pose().inverse() * frame->T_world_camera_;
   vo_velocity_ = T_k_1_k;
 
   // we currently use the frame pose as the nav state - this value can come from
@@ -206,18 +209,13 @@ FrontendModule::SpinReturn RGBDInstanceFrontendModule::nominalSpin(
   // solveCameraMotion this is only relevant since we dont solve incremental so
   // the backend is not immediately updating the frontend at which point we can
   // just use the best estimate in the case of the VO, the nav_state velocity
+  const gtsam::NavState best_nav_state(frame->T_world_camera_,
+                                       nav_state_curr_.velocity());
   // will be wrong (currently!!)
-  previous_nav_state_ =
-      gtsam::NavState(frame->T_world_camera_, nav_state_.velocity());
-  // previous_nav_state_ = nav_state_;
+  nav_state_prev_ = best_nav_state;
 
-  if (R_curr_ref) {
-    imu_frontend_.resetIntegration();
-  }
-
-  // if (FLAGS_use_dynamic_track) {
-  //   utils::TimingStatsCollector track_dynamic_timer("tracking_dynamic");
-  //   vision_tools::trackDynamic(getFrontendParams(), *previous_frame, frame);
+  // if (R_curr_ref) {
+  //   imu_frontend_.resetIntegration();
   // }
 
   const auto [object_motions, object_poses] =
@@ -230,6 +228,20 @@ FrontendModule::SpinReturn RGBDInstanceFrontendModule::nominalSpin(
   vision_imu_packet->groundTruthPacket(input->optional_gt_);
   fillOutputPacketWithTracks(vision_imu_packet, *frame, T_k_1_k, object_motions,
                              object_poses);
+
+  // // only reset timu frontend if we are keyframe
+  // if (vision_imu_packet->isCameraKeyFrame() && R_curr_ref) {
+  //   imu_frontend_.resetIntegration();
+  // }
+  if (vision_imu_packet->isCameraKeyFrame()) {
+    // update last kf nav state with current state
+    nav_state_last_kf_ = best_nav_state;
+    imu_frontend_.resetIntegration();
+  }
+
+  // if (R_curr_ref) {
+  //   imu_frontend_.resetIntegration();
+  // }
 
   DebugImagery debug_imagery;
   debug_imagery.tracking_image =
@@ -248,11 +260,10 @@ FrontendModule::SpinReturn RGBDInstanceFrontendModule::nominalSpin(
     display_queue_->push(
         ImageToDisplay("Tracks", debug_imagery.tracking_image));
 
-    // cv::Mat stereo_matches;
-    // if(tracker_->drawStereoMatches(stereo_matches, *frame)){
-    //   display_queue_->push(
-    //     ImageToDisplay("Stereo Matches", stereo_matches));
-    // }
+    cv::Mat stereo_matches;
+    if (tracker_->drawStereoMatches(stereo_matches, *frame)) {
+      display_queue_->push(ImageToDisplay("Stereo Matches", stereo_matches));
+    }
   }
 
   vision_imu_packet->debugImagery(debug_imagery);
@@ -261,11 +272,35 @@ FrontendModule::SpinReturn RGBDInstanceFrontendModule::nominalSpin(
     auto motion_filter = std::dynamic_pointer_cast<ObjectMotionSolverFilter>(
         object_motion_solver_);
     CHECK_NOTNULL(motion_filter);
+
+    // also update object tracks with filtering stuff!!
+    auto object_tracks = vision_imu_packet->objectTracks();
+
     for (const auto& [object_id, _] : object_motions) {
       auto object_motion_srif = motion_filter->filters_.at(object_id);
       CHECK_NOTNULL(object_motion_srif);
       vision_imu_packet->active_filters.insert2(object_id, *object_motion_srif);
+
+      auto& object_track = object_tracks.at(object_id);
+
+      VisionImuPacket::ObjectTracks::HybridInfo hybrid_info;
+      hybrid_info.H_W_e_k = object_motion_srif->getCurrentLinearization();
+      hybrid_info.L_W_e = object_motion_srif->getKeyFramePose();
+
+      // hacky way of detecting if the filter was reset (ie. keyframed) this
+      // frame!
+      //  object motion happens between k-1 and k and k-1 is used to reset the
+      //  filter I guess this means that the keyframe is actually at the
+      //  previous frame not this frame which is problematic!
+      if (vision_imu_packet->frameId() - 1u ==
+          object_motion_srif->getKeyFrameId()) {
+        object_track.is_keyframe = true;
+      }
+      object_track.hybrid_info = hybrid_info;
     }
+
+    // update object tracks with hybrid info
+    vision_imu_packet->objectTracks(object_tracks);
   }
 
   if (FLAGS_set_dense_labelled_cloud) {
@@ -339,16 +374,16 @@ bool RGBDInstanceFrontendModule::solveCameraMotion(
     // way of checking that we HAVE an imu). If we do we can use the nav state
     // directly to update the current pose as the nav state is the forward
     // prediction from the IMU
-    if (last_imu_nav_state_update_ == frame_k->getFrameId()) {
-      frame_k->T_world_camera_ = nav_state_.pose();
+    if (last_imu_k_ == frame_k->getFrameId()) {
+      frame_k->T_world_camera_ = nav_state_curr_.pose();
       ss << "Nav state was previous updated with IMU. Using predicted pose to "
             "set camera transform; k"
          << frame_k->getFrameId();
     } else {
       // no IMU for forward prediction, use constant velocity model to propogate
-      // pose expect previous_nav_state_ to always be updated with the best
+      // pose expect nav_state_prev_ to always be updated with the best
       // pose!
-      frame_k->T_world_camera_ = previous_nav_state_.pose() * vo_velocity_;
+      frame_k->T_world_camera_ = nav_state_prev_.pose() * vo_velocity_;
       ss << "Nav state has no information from imu. Using constant velocity "
             "model to propofate pose; k"
          << frame_k->getFrameId();
@@ -495,21 +530,61 @@ void RGBDInstanceFrontendModule::fillOutputPacketWithTracks(
       };
 
   // TODO: fill ttracking status?
+  static int count = 0;
+  // static FrameId kf_id = frame_id;
+  FrameId kf_id = frame_id;
+
   VisionImuPacket::CameraTracks camera_tracks;
+  // NOTE: using kf id for sensor measurements!!
+  //  NOTE: this will break all the things!! but is needed for adding
+  //  measurements to the map!
+
   auto* static_measurements = &camera_tracks.measurements;
   fill_camera_measurements(frame.usableStaticFeaturesBegin(),
-                           static_measurements, frame_id, static_pixel_sigmas,
+                           static_measurements, kf_id, static_pixel_sigmas,
                            static_point_sigma);
   camera_tracks.X_W_k = frame.getPose();
-  camera_tracks.T_k_1_k = T_k_1_k;
-  vision_imu_packet->cameraTracks(camera_tracks);
+  // camera_tracks.T_k_1_k = T_k_1_k;
+  // camera_tracks.is_keyframe = true;
+  // accumulate relative motions so T_lkf is the relative transform
+  // from previous kf to current frame
+  T_lkf_ = T_lkf_ * T_k_1_k;
+  camera_tracks.T_k_1_k = T_lkf_;
+
+  // if(count % 4 == 0) {
+  //   camera_tracks.is_keyframe = true;
+  //   vision_imu_packet->kf_id = kf_id;
+  //   ++kf_id;
+  //   //reset relative transform!
+  //   T_lkf_ = gtsam::Pose3::Identity();
+  // }
+  // else {
+  //   camera_tracks.is_keyframe = false;
+  // }
+  // count++;
 
   // First collect all dynamic measurements then split them by object
   // This is a bit silly
   CameraMeasurementStatusVector dynamic_measurements;
   fill_camera_measurements(frame.usableDynamicFeaturesBegin(),
-                           &dynamic_measurements, frame_id,
-                           dynamic_pixel_sigmas, dynamic_point_sigma);
+                           &dynamic_measurements, kf_id, dynamic_pixel_sigmas,
+                           dynamic_point_sigma);
+
+  const auto& tracking_info = *frame.getTrackingInfo();
+  // logic and structure to be improved!!
+  const bool is_keyframe = tracking_info.new_static_detections;
+  // if(count % 4 == 0) {
+  if (true) {
+    // if(is_keyframe) {
+    camera_tracks.is_keyframe = true;
+    vision_imu_packet->kf_id = kf_id;
+    ++kf_id;
+    // reset relative transform!
+    T_lkf_ = gtsam::Pose3::Identity();
+  } else {
+    camera_tracks.is_keyframe = false;
+  }
+  count++;
 
   VisionImuPacket::ObjectTrackMap object_tracks;
   // motions in this frame (ie. new motions!!)
@@ -537,6 +612,7 @@ void RGBDInstanceFrontendModule::fillOutputPacketWithTracks(
       object_track.measurements.push_back(dm);
     }
   }
+  vision_imu_packet->cameraTracks(camera_tracks);
   vision_imu_packet->objectTracks(object_tracks);
 }
 

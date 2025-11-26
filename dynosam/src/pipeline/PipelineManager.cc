@@ -387,8 +387,16 @@ void DynoPipelineManager::loadPipelines(const CameraParams& camera_params,
     backend_pipeline_ = std::make_unique<BackendPipeline>(
         "backend-pipeline", &backend_input_queue_, backend);
     backend_pipeline_->parallelRun(parallel_run);
-    // also register connection between front and back
-    frontend_output_registra->registerQueue(&backend_input_queue_);
+    // // also register connection between front and back
+    // frontend_output_registra->registerQueue(&backend_input_queue_);
+    FrontendPipeline::OutputQueue& backend_input_queue = backend_input_queue_;
+    frontend_output_registra->registerCallback(
+        [&backend_input_queue](const auto& frontend_output) -> void {
+          // push to backend if keyframe
+          if (frontend_output->isCameraKeyFrame()) {
+            backend_input_queue.push(frontend_output);
+          }
+        });
 
     backend_pipeline_->registerOutputQueue(&backend_output_queue_);
 

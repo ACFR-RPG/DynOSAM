@@ -154,7 +154,7 @@ class ParallelHybridBackendModule
 
   const gtsam::FastMap<ObjectId, ParallelObjectISAM::Ptr>& objectEstimators()
       const;
-  HybridFormulation::Ptr staticEstimator() const;
+  HybridFormulationV1::Ptr staticEstimator() const;
 
   std::pair<gtsam::Values, gtsam::NonlinearFactorGraph> getActiveOptimisation()
       const override;
@@ -199,7 +199,7 @@ class ParallelHybridBackendModule
   mutable std::mutex mutex_;
 
   gtsam::ISAM2Params static_isam2_params_;
-  HybridFormulation::Ptr static_formulation_;
+  HybridFormulationV1::Ptr static_formulation_;
   gtsam::IncrementalFixedLagSmoother static_estimator_;
 
   gtsam::ISAM2Params dynamic_isam2_params_;

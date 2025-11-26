@@ -69,6 +69,10 @@ class RegularHybridFormulationDisplay : public HybridModuleDisplayCommon {
   std::shared_ptr<RegularHybridFormulation> module_;
 };
 
+// TODO: in light of now having many Hybrid formulations we should template on
+// HybridFormulation not on RegularHybridFormulation as the display should work
+// for all!!
+
 /// @brief Register ParalleHybridModuleDisplay as the acting backend display for
 /// the Factory policy
 template <>

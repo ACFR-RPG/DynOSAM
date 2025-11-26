@@ -44,6 +44,10 @@ PointCloudLabelRGB::Ptr VisionImuPacket::denseLabelledCloud() const {
   return dense_labelled_cloud_;
 }
 
+bool VisionImuPacket::isCameraKeyFrame() const {
+  return camera_tracks_.is_keyframe;
+}
+
 const VisionImuPacket::CameraTracks& VisionImuPacket::cameraTracks() const {
   return camera_tracks_;
 }
