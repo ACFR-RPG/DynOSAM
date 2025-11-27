@@ -1416,6 +1416,7 @@ class HybridFormulation : public Formulation<MapVision>,
   //   const gtsam::Key& m_key,
   // gtsam::NonlinearFactorGraph& graph) const;
 
+  // TODO: this should be KF0_to_k
   struct IntermediateMotionInfo {
     //! frame id of the object keyframe (i.e. e)
     FrameId kf_id;
@@ -1538,12 +1539,20 @@ class HybridFormulationKeyFrame : public HybridFormulation {
   // added!! in this case we need to look up by objectid and frame id!
   // gtsam::FastMap<ObjectId, gtsam::Pose3> initial_H_W_e_k_;
   // better data-structure later!
+  // Frames should only exist at keyframes! ie (e_1, e_2...)
   GenericObjectCentricMap<gtsam::Pose3> initial_H_W_e_k_;
   // Temporal variable (until I figure out how to reconcile kf_id's and
   // frame_ids)
   //  just used to ensure that the values in initial_H_W_e_k_ reference the
   //  right frame id!
   FrameId last_kf_update_initial_{0};
+
+  //! Bookkeeps the keyframing from the front-end so we manage the to/from
+  //! frames provided by the front-end estimate This is not used to manage the
+  //! keyframe pose or keyframe id in the backend Since this is DIFFERENT to the
+  //! frontend The pose held in each KeyFrameRangeis the L_e_frontend (which is
+  //! used to anchor) The frontend estimates
+  KeyFrameData front_end_keyframes_;
 };
 
 // additional functionality when solved with the Regular Backend!

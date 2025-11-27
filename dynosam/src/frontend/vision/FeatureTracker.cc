@@ -1019,7 +1019,7 @@ void FeatureTracker::sampleDynamic(FrameId frame_id,
 }
 
 void FeatureTracker::requiresSampling(
-    std::set<ObjectId>& objects_to_sample, const FeatureTrackerInfo& info,
+    std::set<ObjectId>& objects_to_sample, FeatureTrackerInfo& info,
     const ImageContainer& image_container,
     const gtsam::FastMap<ObjectId, FeatureContainer>& features_per_object,
     const vision_tools::ObjectBoundaryMaskResult& boundary_mask_result,
@@ -1043,14 +1043,23 @@ void FeatureTracker::requiresSampling(
         << " this could happen if the object mask changes dramatically...!!";
   }
 
-  if (!previous_frame_) {
-    if (!detected_objects.empty()) {
-      VLOG(5) << "All objects sampled as first frame";
-      objects_to_sample.insert(detected_objects.begin(),
-                               detected_objects.end());
-    }
-    return;
-  }
+  // NOTE: the object_reampled info is epeated on objects_to_sample
+  // but during testing trying not to change the functional interface!!
+  //  if (!previous_frame_) {
+  //    if (!detected_objects.empty()) {
+  //      VLOG(5) << "All objects sampled as first frame";
+  //      objects_to_sample.insert(detected_objects.begin(),
+  //                               detected_objects.end());
+  //      for(const ObjectId& object_id : objects_to_sample) {
+  //        CHECK(!info.dynamic_track.exists(object_id));
+  //        // this will make a new object status
+  //        auto& per_object_status = info.getObjectStatus(object_id);
+  //        per_object_status.object_new = true;
+  //        per_object_status.object_resampled = true;
+  //      }
+  //    }
+  //    return;
+  //  }
 
   const int& max_dynamic_point_age = params_.max_dynamic_feature_age;
   // bascially how early we want to retrack points based on their expiry
@@ -1065,11 +1074,11 @@ void FeatureTracker::requiresSampling(
   CHECK_GT(expiry_age, 0u);
 
   for (size_t i = 0; i < detected_objects.size(); i++) {
-    ObjectId object_id = detected_objects.at(i);
+    const ObjectId object_id = detected_objects.at(i);
 
     // object is tracked and therefore should exist in the previous frame!
     if (info.dynamic_track.exists(object_id)) {
-      const auto& per_object_status = info.dynamic_track.at(object_id);
+      auto& per_object_status = info.dynamic_track.at(object_id);
 
       if (!features_per_object.exists(object_id)) {
         LOG(WARNING) << "Object " << object_id
@@ -1121,6 +1130,7 @@ void FeatureTracker::requiresSampling(
 
       if (needs_sampling) {
         objects_to_sample.insert(object_id);
+        per_object_status.object_resampled = true;
 
         VLOG(5) << "Object " << info_string(info.frame_id, object_id)
                 << " requires sampling";
@@ -1133,6 +1143,10 @@ void FeatureTracker::requiresSampling(
       objects_to_sample.insert(object_id);
       VLOG(5) << "Object " << info_string(info.frame_id, object_id)
               << " requires sampling. Sampling reason: new object";
+      // this will make a new object status
+      auto& per_object_status = info.getObjectStatus(object_id);
+      per_object_status.object_new = true;
+      per_object_status.object_resampled = true;
     }
   }
 }

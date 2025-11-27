@@ -721,6 +721,7 @@ BackendOutputPacket::Ptr RegularBackendModule::constructOutputPacket(
   }
 
   // fill temporal map information
+  LOG(INFO) << "Object ids " << container_to_string(map->getObjectIds());
   for (ObjectId object_id : map->getObjectIds()) {
     const auto& object_node = map->getObject(object_id);
     CHECK_NOTNULL(object_node);

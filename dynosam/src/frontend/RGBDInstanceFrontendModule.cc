@@ -152,7 +152,8 @@ FrontendModule::SpinReturn RGBDInstanceFrontendModule::nominalSpin(
   Frame::Ptr previous_frame = tracker_->getPreviousFrame();
   CHECK(previous_frame);
 
-  VLOG(1) << to_string(tracker_->getTrackerInfo());
+  // const FeatureTrackerInfo& tracker_info = tracker_->getTrackerInfo();
+  // VLOG(1) << to_string(tracker_info);
 
   {
     // this will mark some points as invalid if they are out of depth range
@@ -221,6 +222,9 @@ FrontendModule::SpinReturn RGBDInstanceFrontendModule::nominalSpin(
   const auto [object_motions, object_poses] =
       object_motion_solver_->solve(frame, previous_frame);
 
+  const FeatureTrackerInfo& tracker_info = *frame->getTrackingInfo();
+  VLOG(1) << to_string(tracker_info);
+
   VisionImuPacket::Ptr vision_imu_packet = std::make_shared<VisionImuPacket>();
   vision_imu_packet->frameId(frame->getFrameId());
   vision_imu_packet->timestamp(frame->getTimestamp());
@@ -233,6 +237,7 @@ FrontendModule::SpinReturn RGBDInstanceFrontendModule::nominalSpin(
   // if (vision_imu_packet->isCameraKeyFrame() && R_curr_ref) {
   //   imu_frontend_.resetIntegration();
   // }
+  // TODO: should be isKeyFrame()!!!
   if (vision_imu_packet->isCameraKeyFrame()) {
     // update last kf nav state with current state
     nav_state_last_kf_ = best_nav_state;
@@ -276,31 +281,61 @@ FrontendModule::SpinReturn RGBDInstanceFrontendModule::nominalSpin(
     // also update object tracks with filtering stuff!!
     auto object_tracks = vision_imu_packet->objectTracks();
 
-    for (const auto& [object_id, _] : object_motions) {
+    // only send object tracks with keyframes!?
+    VisionImuPacket::ObjectTrackMap new_object_tracks;
+
+    // go over tracks not motions as these are just those for this frame!
+    for (const auto& [object_id, _] : object_tracks) {
+      CHECK(motion_filter->filters_.exists(object_id));
       auto object_motion_srif = motion_filter->filters_.at(object_id);
       CHECK_NOTNULL(object_motion_srif);
       vision_imu_packet->active_filters.insert2(object_id, *object_motion_srif);
 
-      auto& object_track = object_tracks.at(object_id);
+      CHECK(object_tracks.exists(object_id)) << "j=" << object_id;
+      auto object_track = object_tracks.at(object_id);
 
       VisionImuPacket::ObjectTracks::HybridInfo hybrid_info;
-      hybrid_info.H_W_e_k = object_motion_srif->getCurrentLinearization();
-      hybrid_info.L_W_e = object_motion_srif->getKeyFramePose();
+      hybrid_info.H_W_e_k = object_motion_srif->H_W_e_k_before_reset;
+      hybrid_info.L_W_k = object_motion_srif->getKeyFramePose();
+      // hybrid_info.from = object_motion_srif->getKeyFrameId();
+      hybrid_info.from = object_motion_srif->frame_id_e_before_reset;
+      // this will be off by one!
+      hybrid_info.to = vision_imu_packet->frameId();
+
+      LOG(INFO) << vision_imu_packet->frameId() << " "
+                << object_motion_srif->getKeyFrameId();
+      LOG(INFO) << "Hybrid motion info j=" << object_id
+                << " k_from= " << hybrid_info.from
+                << " k_to= " << hybrid_info.to;
 
       // hacky way of detecting if the filter was reset (ie. keyframed) this
       // frame!
-      //  object motion happens between k-1 and k and k-1 is used to reset the
-      //  filter I guess this means that the keyframe is actually at the
-      //  previous frame not this frame which is problematic!
-      if (vision_imu_packet->frameId() - 1u ==
-          object_motion_srif->getKeyFrameId()) {
+      if (vision_imu_packet->frameId() == object_motion_srif->getKeyFrameId()) {
+        // TODO: check that tracker info object_resampled!?
         object_track.is_keyframe = true;
       }
       object_track.hybrid_info = hybrid_info;
+
+      CHECK(tracker_info.dynamic_track.exists(object_id));
+      const bool is_object_new =
+          tracker_info.dynamic_track.at(object_id).object_new;
+      object_track.is_object_new = is_object_new;
+
+      if (is_object_new) {
+        CHECK(object_track.is_keyframe);
+      }
+
+      LOG(INFO) << "Here";
+
+      if (object_track.is_keyframe) {
+        // new_object_tracks.insert2(object_id, object_track);
+      }
+      new_object_tracks.insert2(object_id, object_track);
     }
 
     // update object tracks with hybrid info
-    vision_imu_packet->objectTracks(object_tracks);
+    // with keyframe!!
+    vision_imu_packet->objectTracks(new_object_tracks);
   }
 
   if (FLAGS_set_dense_labelled_cloud) {
@@ -317,6 +352,8 @@ FrontendModule::SpinReturn RGBDInstanceFrontendModule::nominalSpin(
   //   output_packet_record_.insert({output->getFrameId(), output});
 
   sendToFrontendLogger(frame, vision_imu_packet);
+
+  LOG(INFO) << "Here";
 
   // if (FLAGS_log_projected_masks)
   //   vision_tools::writeOutProjectMaskAndDepthMap(

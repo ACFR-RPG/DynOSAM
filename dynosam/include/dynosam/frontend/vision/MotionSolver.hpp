@@ -566,7 +566,8 @@ class HybridObjectMotionSRIF {
     // gtsam::Pose3 H_W_km1_k;
   };
 
- private:
+  // FOR TESTING!
+ public:
   // --- SRIF State Variables ---
   gtsam::Pose3 H_linearization_point_;  // Nominal state (linearization point)
   const gtsam::Matrix66 Q_;  // Process Noise Covariance (for prediction step)
@@ -601,6 +602,11 @@ class HybridObjectMotionSRIF {
 
  public:
   std::vector<gtsam::Pose3> keyframe_history;
+  //! Need access to the motion estimate before the filter is resrt
+  //! AS this is the information of how we get from e -> k, and k is when we
+  //! reset the filter!
+  gtsam::Pose3 H_W_e_k_before_reset;
+  FrameId frame_id_e_before_reset;
 
  public:
   HybridObjectMotionSRIF(const gtsam::Pose3& initial_state_H,

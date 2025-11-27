@@ -69,6 +69,34 @@ void BackendDSDRos::spinOnceImpl(
   const auto& object_poses = backend_output->optimized_object_poses;
   const auto& timestamp_map = this->shared_module_info.getTimestampMap();
 
+  ObjectMotionMap keyframed_motions;
+  ObjectMotionMap keyframed_poses;
+
+  // this is awful - hack to make the frame ids consequative (not sure if this
+  // is the final way of doing this)
+  //  only now for when camera keyframe every pose but objects do not!
+  //   for(const auto& [object_id, per_frame_motion] : object_motions) {
+  //    // this is awful
+  //    // hack for now to make frames consecutaive. may not be the same for
+  //    each object/pose!! FrameId key_frame_id = 0; for(const auto& [frame_id,
+  //    motion] : per_frame_motion) {
+
+  //   }
+  //   ss << "\n";
+  // }
+
+  // this is awful
+  // FrameId key_frame_id = 0;
+  std::stringstream ss;
+  for (const auto& [object_id, per_frame_motion] : object_poses) {
+    ss << "j= " << object_id << " appeared at ";
+    for (const auto& [frame_id, motion] : per_frame_motion) {
+      ss << frame_id << " ";
+    }
+    ss << "\n";
+  }
+  LOG(INFO) << ss.str();
+
   // // publish objects
   DSDTransport::Publisher object_poses_publisher = dsd_transport_.addObjectInfo(
       object_motions, object_poses, params_.world_frame_id, timestamp_map,

@@ -131,9 +131,9 @@ MultiObjectOdometryPath DSDTransport::constructMultiObjectOdometryPaths(
 
       const Timestamp& timestamp = frame_timestamp_map.at(frame_id);
 
-      if (!first && static_cast<int>(frame_id) != previous_frame_id + 1) {
-        path_segment++;
-      }
+      // if (!first && static_cast<int>(frame_id) != previous_frame_id + 1) {
+      //   path_segment++;
+      // }
       first = false;
       previous_frame_id = static_cast<int>(frame_id);
 

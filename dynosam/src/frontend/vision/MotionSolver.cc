@@ -1460,7 +1460,7 @@ void HybridObjectMotionSRIF::predict(const gtsam::Pose3&) {
   // P_k = P_{k-1} + Q
   gtsam::Matrix66 P_predicted = P_current + Q_;
 
-  // LOG(INFO) << "Previous H " << H_current_mean << " delta H " << H_W_km1_k;
+  LOG(INFO) << "Previous H " << H_current_mean << " delta H " << H_W_km1_k;
 
   // 3. Re-linearize: Set new linearization point to the current mean
   H_linearization_point_ = H_W_km1_k * H_current_mean;
@@ -1624,7 +1624,7 @@ HybridObjectMotionSRIF::Result HybridObjectMotionSRIF::update(
       // Calculate Huber weight w(e) = min(1, delta / |e|)
       weights(i) = (error <= huber_k_) ? 1.0 : huber_k_ / error;
       if (/*weights(i) < 0.99 &&*/ iter == num_irls_iterations - 1) {
-        VLOG(20) << "  [Meas " << i << "] Final Weight: " << weights(i)
+        VLOG(40) << "  [Meas " << i << "] Final Weight: " << weights(i)
                  << " (Error: " << error << ")";
       }
     }
@@ -1784,29 +1784,63 @@ bool ObjectMotionSolverFilter::solveImpl(Frame::Ptr frame_k,
   // the case when we loos all points!) what about in the OMD case? we get a
   // bunch more points but now linearization of points is wrong!? WOW okay this
   // fixed all the things!!!!!
+  // TODO: repeated information in the FeatureTrackingInfo (which one to use!!)
   auto it = std::find(frame_k->retracked_objects_.begin(),
                       frame_k->retracked_objects_.end(), object_id);
 
-  bool new_object = false;
+  // TODO: object is new is not getting set!!! (this should be for when the
+  // object is re-tracked too!!!)
+  //  maybe somehow its in the previous frame!!?
+  //  this is becuase when an object is new it just has sampled points and no
+  //  tracked points and therefore no points go to the backend and therefore we
+  //  do not update it!! therefore the ObjectTrack object wont exist!!
+
+  bool new_or_reset_object = false;
+  // bool new_object = false;
+  // bool object_reset = false;
   if (it != frame_k->retracked_objects_.end() && filters_.exists(object_id)) {
-    LOG(INFO) << object_id << " retracked - resetting filter!";
+    LOG(INFO) << object_id
+              << " retracked - resetting filter k=" << frame_k->getFrameId();
     // Not thread safe!
     // filters_.erase(object_id);
-    new_object = true;
+    // new object false so we dont
+    // new_object = true;
+    new_or_reset_object = true;
     gtsam::Pose3 keyframe_pose =
         construct_initial_frame(frame_k_1, geometric_result.inliers);
 
     auto filter = filters_.at(object_id);
+    // must set value before reset to get the last value
+    // NOTE: we currently KF to k-1 so this will be a little bit wrong!!!
+    // assume that we only take this value if the object was retracked!!
+    // as we dont set it anywhere else!!
+    filter->H_W_e_k_before_reset = filter->getCurrentLinearization();
+    // filter->frame_id_e_before_reset = filter->getKeyFrameId();
+    filter->frame_id_e_before_reset = filter->getKeyFrameId();
 
     // instead of using new pose (use last motion) (if last frame id was k-1?)
     //  we start to drift from the center of the object!!
     //  keyframe_pose = filter->getCurrentLinearization() *
     //  filter->getKeyFramePose(); filters_.erase(object_id);
     filters_.at(object_id)->resetState(keyframe_pose, frame_k_1->getFrameId());
+    filters_.at(object_id)->frame_id_e_ = frame_k->getFrameId();
+    frame_k->tracking_info_->dynamic_track.at(object_id).object_resampled =
+        true;
   }
 
+  // hack to handle object new is to update it from fame_k-1!
+  frame_k->tracking_info_->dynamic_track.at(object_id).object_resampled = true;
+
   if (!filters_.exists(object_id)) {
-    new_object = true;
+    new_or_reset_object = true;
+
+    // update new object tracking
+    // the tracking cannot do it (for now) as this is delayed one frame with the
+    // backend! frame_k->tracking_info_->dynamic_track.at(object_id).object_new
+    // = true;
+    // frame_k->tracking_info_->dynamic_track.at(object_id).object_resampled =
+    // true;
+
     // gtsam::Vector3 noise;
     // noise << 1.0, 1.0, 3.0;
     // gtsam::Matrix33 R = noise.array().matrix().asDiagonal();
@@ -1816,7 +1850,7 @@ bool ObjectMotionSolverFilter::solveImpl(Frame::Ptr frame_k,
     gtsam::Matrix66 P = gtsam::Matrix66::Identity() * 0.3;
 
     // Process Model noise (6x6)
-    gtsam::Matrix66 Q = gtsam::Matrix66::Identity() * 2.0;
+    gtsam::Matrix66 Q = gtsam::Matrix66::Identity() * 3.0;
 
     if (geometric_result.inliers.size() < 4) {
       LOG(WARNING) << "Could not make initial frame for object " << object_id
@@ -1824,6 +1858,14 @@ bool ObjectMotionSolverFilter::solveImpl(Frame::Ptr frame_k,
       return false;
     }
 
+    frame_k->tracking_info_->dynamic_track.at(object_id).object_new = true;
+    frame_k->tracking_info_->dynamic_track.at(object_id).object_resampled =
+        true;
+
+    // keyframe at k not k-1
+    // this means we drop the information at k-1 but due to the system design
+    // we cannot send k-1 and k to the backend
+    // and now the front-end and backend need to be synchronized
     gtsam::Pose3 keyframe_pose =
         construct_initial_frame(frame_k_1, geometric_result.inliers);
 
@@ -1832,11 +1874,10 @@ bool ObjectMotionSolverFilter::solveImpl(Frame::Ptr frame_k,
                                     gtsam::Pose3::Identity(), keyframe_pose,
                                     frame_k_1->getFrameId(), P, Q, R,
                                     frame_k_1->getCamera(), kHuberKFilter));
+    // fake KF is this frame
+    filters_.at(object_id)->frame_id_e_ = frame_k->getFrameId();
   }
   auto filter = filters_.at(object_id).get();
-
-  gtsam::Pose3 G_w_inv_pnp = geometric_result.best_result.inverse();
-  gtsam::Pose3 H_w_km1_k_pnp = frame_k->getPose() * G_w_inv_pnp;
 
   // std::vector<gtsam::Point3> object_points;
   // std::vector<gtsam::Point2> image_points;
@@ -1856,8 +1897,9 @@ bool ObjectMotionSolverFilter::solveImpl(Frame::Ptr frame_k,
   // }
 
   // update and predict should be one step so that if we dont have enough points
+  // NOTE: this logic seemed pretty important to ensure the estimate was good!!!
   // we dont predict?
-  if (new_object) {
+  if (new_or_reset_object) {
     filter->predict(gtsam::Pose3::Identity());
     {
       utils::TimingStatsCollector timer("motion_solver.ekf_update");
@@ -1867,6 +1909,21 @@ bool ObjectMotionSolverFilter::solveImpl(Frame::Ptr frame_k,
       // frame_k->getPose());
     }
   }
+
+  // on the first frame we want to init everything (ie. points)
+  // so that they align with the keyframe but dont need to update anyting
+  //  as the motion should be identity!!!
+  gtsam::Pose3 G_w_inv_pnp = geometric_result.best_result.inverse();
+  gtsam::Pose3 H_w_km1_k_pnp = frame_k->getPose() * G_w_inv_pnp;
+  // predict with identity if mew
+  // if(new_or_reset_object) {
+  //   H_w_km1_k_pnp = gtsam::Pose3::Identity();
+  // }
+
+  // only estimate if new - otherwise motion is identity as this is the current
+  // keyframe!
+  //  if(!new_or_reset_object) {
+
   filter->predict(H_w_km1_k_pnp);
   {
     utils::TimingStatsCollector timer("motion_solver.ekf_update");
@@ -1875,6 +1932,7 @@ bool ObjectMotionSolverFilter::solveImpl(Frame::Ptr frame_k,
     // filter->updateStereo(object_points, stereo_measurements,
     // frame_k->getPose());
   }
+  // }
 
   // gtsam::Pose3 G_w;
   // cv::Mat inliers_ransac;

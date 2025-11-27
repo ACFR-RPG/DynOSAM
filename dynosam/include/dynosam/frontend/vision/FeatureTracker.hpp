@@ -135,7 +135,7 @@ class FeatureTracker : public FeatureTrackerBase {
    * @param dynamic_tracking_mask const cv::Mat&
    */
   void requiresSampling(
-      std::set<ObjectId>& objects_to_sample, const FeatureTrackerInfo& info,
+      std::set<ObjectId>& objects_to_sample, FeatureTrackerInfo& info,
       const ImageContainer& image_container,
       const gtsam::FastMap<ObjectId, FeatureContainer>& features_per_object,
       const vision_tools::ObjectBoundaryMaskResult& boundary_mask_result,

@@ -147,8 +147,10 @@ StateQuery<gtsam::Pose3> HybridAccessor::getSensorPose(FrameId frame_id) const {
 
 StateQuery<gtsam::Pose3> HybridAccessor::getObjectMotion(
     FrameId frame_id, ObjectId object_id) const {
+  const auto object_node = map()->getObject(object_id);
   const auto frame_node_k = map()->getFrame(frame_id);
-  const auto frame_node_k_1 = map()->getFrame(frame_id - 1u);
+  CHECK(object_node);
+  // const auto frame_node_k_1 = map()->getFrame(frame_id - 1u);
 
   if (!frame_node_k) {
     VLOG(30) << "Could not construct object motion frame id=" << frame_id
@@ -168,17 +170,30 @@ StateQuery<gtsam::Pose3> HybridAccessor::getObjectMotion(
   // first object motion (ie s0 -> s1)
   auto key_frame_data =
       CHECK_NOTNULL(shared_hybrid_formulation_data_.key_frame_data);
-  if (!frame_node_k_1) {
-    CHECK_NOTNULL(frame_node_k);
-    // FrameId s0 = L0_values_->at(object_id).first;
+
+  FrameId last_seen;
+  if (!object_node->previouslySeenFrame(&last_seen)) {
     const auto range = CHECK_NOTNULL(key_frame_data->find(object_id, frame_id));
     const auto [s0, L0] = range->dataPair();
     // check that the first frame of the object motion is actually this frame
     // this motion should actually be identity
     CHECK_EQ(s0, frame_id);
     return StateQuery<gtsam::Pose3>(motion_key, *e_H_k_world);
-  } else {
+  }
+  // if (!frame_node_k_1) {
+  //   CHECK_NOTNULL(frame_node_k);
+  //   // const auto range = CHECK_NOTNULL(key_frame_data->find(object_id,
+  //   frame_id));
+  //   // const auto [s0, L0] = range->dataPair();
+  //   // // check that the first frame of the object motion is actually this
+  //   frame
+  //   // // this motion should actually be identity
+  //   // CHECK_EQ(s0, frame_id);
+  //   // return StateQuery<gtsam::Pose3>(motion_key, *e_H_k_world);
+  // }
+  else {
     CHECK_NOTNULL(frame_node_k);
+    const auto frame_node_k_1 = map()->getFrame(last_seen);
     CHECK_NOTNULL(frame_node_k_1);
 
     StateQuery<gtsam::Pose3> e_H_km1_world = this->query<gtsam::Pose3>(
@@ -217,6 +232,8 @@ StateQuery<gtsam::Pose3> HybridAccessor::getObjectPose(
   // in the case of identity, the pose at k will just be L_s0 which we dont
   // want?
   StateQuery<gtsam::Pose3> e_H_k_world = this->query<gtsam::Pose3>(motion_key);
+  LOG(INFO) << "Got object motion " << (bool)e_H_k_world << " "
+            << DynosamKeyFormatter(motion_key);
   // CHECK(false);
 
   if (e_H_k_world) {
@@ -463,6 +480,8 @@ bool HybridAccessor::getDynamicLandmarkImpl(FrameId frame_id,
   FrameId point_embedded_frame = tracklet_id_to_keyframe->at(tracklet_id);
   const auto range = key_frame_data->find(object_id, frame_id);
 
+  // TODO: check the &= is right!
+  //  we might mean result = result || (condition)
   bool result = true;
 
   // update intermediate queries
@@ -717,6 +736,7 @@ void HybridFormulation::objectUpdateContext(
           .num_motion_factors++;
 
     // we are at object keyframe
+    // NOTE: this should never happen for hybrid KF!!
     if (keyframe_info.kf_id == frame_id) {
       // add prior
       new_factors.addPrior<gtsam::Pose3>(object_motion_key_k,
@@ -1142,7 +1162,10 @@ void HybridFormulationKeyFrame::preUpdate(const PreUpdateData& data) {
   // initial_H_W_e_k_.clear();
   // last_kf_update_initial_ = kf_id;
 
-  LOG(INFO) << "preUpdate kfid = " << last_kf_update_initial_;
+  HybridAccessor::Ptr accessor = this->derivedAccessor<HybridAccessor>();
+  CHECK_NOTNULL(accessor);
+
+  LOG(INFO) << "preUpdate kfid = " << kf_id;
 
   CHECK(data.input);
   using ObjectTrackMap = VisionImuPacket::ObjectTrackMap;
@@ -1151,18 +1174,79 @@ void HybridFormulationKeyFrame::preUpdate(const PreUpdateData& data) {
   const VisionImuPacket& input = *data.input;
   const ObjectTrackMap& object_tracks = input.objectTracks();
   for (const auto& [object_id, object_track] : object_tracks) {
+    gtsam::Pose3 H_W_KF0_KF_initial;
+
     LOG(INFO) << "Object tracks " << object_id;
     CHECK(object_track.hybrid_info)
         << "Hybrid info must be provided as part of the object track for this "
            "formulation!";
     const ObjectTracks::HybridInfo& hybrid_initial_info =
         object_track.hybrid_info.value();
-    if (object_track.is_keyframe) {
-      LOG(INFO) << "New keyframe detected for j=" << object_id;
+    CHECK(object_track.is_keyframe)
+        << "Object j=" << object_id << " is not a OKF!";
+    if (object_track.is_object_new) {
+      LOG(INFO) << "New object detected for j=" << object_id;
       key_frame_data_.startNewActiveRange(object_id, kf_id,
-                                          hybrid_initial_info.L_W_e);
+                                          hybrid_initial_info.L_W_k);
+      front_end_keyframes_.startNewActiveRange(object_id, kf_id,
+                                               hybrid_initial_info.L_W_k);
+
+      // k may actually be k-1 or somethign!!!
+      H_W_KF0_KF_initial = hybrid_initial_info.H_W_e_k;
+    } else {
+      const KeyFrameRange::ConstPtr frontend_range =
+          front_end_keyframes_.find(object_id, kf_id);
+      const KeyFrameRange::ConstPtr backend_range =
+          key_frame_data_.find(object_id, kf_id);
+
+      CHECK(frontend_range);
+      CHECK(backend_range);
+      // lkf is the previous OKF (from the frontend) before we;re about to make
+      // our new one!
+      const auto [lkf, lkf_pose] = frontend_range->dataPair();
+      const auto [backend_lkf, backend_lkf_pose] = backend_range->dataPair();
+
+      LOG(INFO) << "Frontend lkf " << lkf;
+      LOG(INFO) << "Backend lkf " << backend_lkf;
+
+      // most from the first KF (ie the fixed frame) to the most recent KF
+      StateQuery<Motion3ReferenceFrame> H_W_KF0_lKF =
+          accessor->getEstimatedMotion(object_id, lkf);
+      if (!H_W_KF0_lKF) {
+        // should happen only on the first two frames so hopefully the lkf and
+        // the backend_lkf are the same!! in this case the estimated motion is
+        // the frontend motion
+        LOG(INFO) << "Not estimated motion!";
+        CHECK_EQ(hybrid_initial_info.from, lkf);
+        CHECK_EQ(kf_id, hybrid_initial_info.to);
+        H_W_KF0_KF_initial = hybrid_initial_info.H_W_e_k;
+      } else {
+        // check all keyframe ids match
+        // the frontend estimate goes from lkf to k and k is about to become a
+        // new motion the backend has an estimate from e_0 (ie when the object
+        // first first seen, or when it reappeared) and is estimating from e_o
+        // to lkf
+        CHECK(H_W_KF0_lKF);
+        CHECK_EQ(H_W_KF0_lKF->from(), backend_lkf);
+        CHECK_EQ(H_W_KF0_lKF->to(), lkf);
+        CHECK_EQ(H_W_KF0_lKF->to(), hybrid_initial_info.from);
+        // the kf id should bt the same as hybrid_initial_info.kf_id_e in the
+        // case that the object track is a keyframe (which it must be) mighjt be
+        // off by one!!
+        CHECK_EQ(kf_id, hybrid_initial_info.to);
+        // compose last estimate with new integrated motion to get a motion arch
+        // from the first KF to this KF
+        H_W_KF0_KF_initial =
+            H_W_KF0_lKF->estimate() * hybrid_initial_info.H_W_e_k;
+      }
+      front_end_keyframes_.startNewActiveRange(
+          object_id, hybrid_initial_info.to, hybrid_initial_info.L_W_k);
+      LOG(INFO) << "Adding initial motion j=" << object_id
+                << " e = " << hybrid_initial_info.from
+                << " k = " << hybrid_initial_info.to;
     }
-    initial_H_W_e_k_.insert22(object_id, kf_id, hybrid_initial_info.H_W_e_k);
+
+    initial_H_W_e_k_.insert22(object_id, kf_id, H_W_KF0_KF_initial);
   }
 }
 
@@ -1181,6 +1265,9 @@ HybridFormulationKeyFrame::getIntermediateMotionInfo(ObjectId object_id,
       key_frame_data_.find(object_id, frame_id);
   CHECK(range);
   std::tie(info.kf_id, info.keyframe_pose) = range->dataPair();
+
+  // info.kf_id != frame_id!!
+
   return info;
 }
 

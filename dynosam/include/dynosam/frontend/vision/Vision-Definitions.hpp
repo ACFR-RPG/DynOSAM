@@ -87,6 +87,8 @@ struct PerObjectStatus {
       0};  // number of points tracked from previous frame wehre current label
            // is the background
   // would be nice to have some histogram data about each tracked point etc...
+  bool object_new{false};
+  bool object_resampled{false};
 
   PerObjectStatus(ObjectId id) : object_id(id) {}
 };
@@ -129,6 +131,10 @@ inline std::string to_string(const FeatureTrackerInfo& info) {
     ss << "\t- Object: " << object_id << ": \n";
     ss << "\t\t - num_track " << object_status.num_track << "\n";
     ss << "\t\t - num_sampled " << object_status.num_sampled << "\n";
+    ss << "\t\t - is new " << std::boolalpha << object_status.object_new
+       << "\n";
+    ss << "\t\t - resampled " << std::boolalpha
+       << object_status.object_resampled << "\n";
 
     if (VLOG_IS_ON(20)) {
       ss << "\t\t - num_previous_track " << object_status.num_previous_track
