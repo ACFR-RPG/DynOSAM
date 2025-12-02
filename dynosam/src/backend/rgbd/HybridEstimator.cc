@@ -330,6 +330,10 @@ StatusLandmarkVector HybridAccessor::getLocalDynamicLandmarkEstimates(
     }
   }
 
+  VLOG(40) << "Collecting points for j=" << object_id
+           << " kf with max tracks KF=" << kf_with_max_tracks
+           << " count=" << max_count;
+
   StatusLandmarkVector estimates;
   if (max_count == 0) {
     return estimates;

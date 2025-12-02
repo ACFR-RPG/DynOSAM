@@ -324,6 +324,8 @@ void RegularBackendModule::updateAndOptimize(
   } else {
     LOG(FATAL) << "Unknown optimisation mode" << optimization_mode;
   }
+
+  if (frontend_update_callback_) frontend_update_callback_(frame_id_k, 0);
 }
 
 void RegularBackendModule::updateIncremental(

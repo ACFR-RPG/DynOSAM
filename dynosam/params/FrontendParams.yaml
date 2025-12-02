@@ -71,7 +71,7 @@ tracker_params:
   min_dynamic_tracks: 20
   # causes retracking if current mask IOU with new mask < min_dynamic_mask_iou
   # ie. smaller causes less triggering
-  min_dynamic_mask_iou: 0.5
+  min_dynamic_mask_iou: 0.1
 
 image_tracks_vis_params:
   is_debug: true

@@ -347,9 +347,20 @@ class ObjectMotionSolver {
 
   using Result = std::pair<ObjectMotionMap, ObjectPoseMap>;
 
-  virtual Result solve(Frame::Ptr frame_k, Frame::Ptr frame_k_1) = 0;
+  Result solve(Frame::Ptr frame_k, Frame::Ptr frame_k_1);
 
  protected:
+  virtual bool solveImpl(Frame::Ptr frame_k, Frame::Ptr frame_k_1,
+                         ObjectId object_id,
+                         MotionEstimateMap& motion_estimates) = 0;
+
+  virtual void updatePoses(ObjectPoseMap& object_poses,
+                           const MotionEstimateMap& motion_estimates,
+                           Frame::Ptr frame_k, Frame::Ptr frame_k_1) = 0;
+
+  virtual void updateMotions(ObjectMotionMap& object_motions,
+                             const MotionEstimateMap& motion_estimates,
+                             Frame::Ptr frame_k, Frame::Ptr frame_k_1) = 0;
 };
 
 class ObjectMotionSovlerF2F : public ObjectMotionSolver,
@@ -378,8 +389,6 @@ class ObjectMotionSovlerF2F : public ObjectMotionSolver,
   ObjectMotionSovlerF2F(const Params& params,
                         const CameraParams& camera_params);
 
-  Result solve(Frame::Ptr frame_k, Frame::Ptr frame_k_1) override;
-
   Motion3SolverResult geometricOutlierRejection3d2d(
       Frame::Ptr frame_k_1, Frame::Ptr frame_k, const gtsam::Pose3& T_world_k,
       ObjectId object_id);
@@ -391,15 +400,16 @@ class ObjectMotionSovlerF2F : public ObjectMotionSolver,
  protected:
   virtual bool solveImpl(Frame::Ptr frame_k, Frame::Ptr frame_k_1,
                          ObjectId object_id,
-                         MotionEstimateMap& motion_estimates);
+                         MotionEstimateMap& motion_estimates) override;
 
  private:
-  const ObjectPoseMap& updatePoses(MotionEstimateMap& motion_estimates,
-                                   Frame::Ptr frame_k, Frame::Ptr frame_k_1);
+  void updatePoses(ObjectPoseMap& object_poses,
+                   const MotionEstimateMap& motion_estimates,
+                   Frame::Ptr frame_k, Frame::Ptr frame_k_1) override;
 
-  const ObjectMotionMap& updateMotions(MotionEstimateMap& motion_estimates,
-                                       Frame::Ptr frame_k,
-                                       Frame::Ptr frame_k_1);
+  void updateMotions(ObjectMotionMap& object_motions,
+                     const MotionEstimateMap& motion_estimates,
+                     Frame::Ptr frame_k, Frame::Ptr frame_k_1) override;
 
  private:
   //! All object poses (from k to K) and updated by updatePoses at each
@@ -631,13 +641,17 @@ class HybridObjectMotionSRIF {
   // this is H_W_e_k
   const gtsam::Pose3& getCurrentLinearization() const;
 
+  // this is H_W_e_k
+  // calculate best estimate!!
+  gtsam::Pose3 getKeyFramedMotion() const;
+
   /**
    * @brief Recovers the full state pose W by applying the perturbation
    * to the linearization point.
    *
    * LIES: thie is H_W_km1_k
    */
-  gtsam::Pose3 getStatePoseW() const;
+  gtsam::Pose3 getF2FMotion() const;
 
   /**
    * @brief Recovers the state covariance P by inverting the information matrix.
@@ -677,13 +691,15 @@ class HybridObjectMotionSRIF {
   void resetState(const gtsam::Pose3& L_e, FrameId frame_id_e);
 };
 
-class ObjectMotionSolverFilter : public ObjectMotionSovlerF2F {
+class ObjectMotionSolverFilter : public ObjectMotionSolver,
+                                 protected EgoMotionSolver {
  public:
   //! Result from solve including the object motions and poses
-  using ObjectMotionSovlerF2F::Params;
-  using ObjectMotionSovlerF2F::Result;
+  using ObjectMotionSolver::Result;
 
-  using ObjectMotionSovlerF2F::EgoMotionSolver;
+  struct Params : public EgoMotionSolver::Params {
+    // TODO: filter params!!
+  };
 
   ObjectMotionSolverFilter(const Params& params,
                            const CameraParams& camera_params);
@@ -691,6 +707,23 @@ class ObjectMotionSolverFilter : public ObjectMotionSovlerF2F {
  protected:
   bool solveImpl(Frame::Ptr frame_k, Frame::Ptr frame_k_1, ObjectId object_id,
                  MotionEstimateMap& motion_estimates) override;
+
+  void updatePoses(ObjectPoseMap& object_poses,
+                   const MotionEstimateMap& motion_estimates,
+                   Frame::Ptr frame_k, Frame::Ptr frame_k_1) override;
+
+  void updateMotions(ObjectMotionMap& object_motions,
+                     const MotionEstimateMap& motion_estimates,
+                     Frame::Ptr frame_k, Frame::Ptr frame_k_1) override;
+
+ private:
+  const Params filter_params_;
+  //! All object poses (from k to K) and updated by updatePoses at each
+  //! iteration of sovled
+  ObjectPoseMap object_poses_;
+  //! All object motions (from k to K) and updated by updatedMotions at each
+  //! iteration of sovled
+  ObjectMotionMap object_motions_;
 
  public:  // TODO: for testing!
   gtsam::FastMap<ObjectId, std::shared_ptr<HybridObjectMotionSRIF>> filters_;

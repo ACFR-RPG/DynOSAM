@@ -81,6 +81,9 @@ class FrontendModule
     accessor_ = accessor;
   }
 
+  virtual void onBackendUpdateCallback(const FrameId /*frame_id*/,
+                                       const Timestamp /*timestamp*/) {}
+
  protected:
   /**
    * @brief Defines the result of checking the image container which is a done

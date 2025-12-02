@@ -84,13 +84,13 @@ gtsam::Vector3 calculateBodyMotion(const gtsam::Pose3& w_k_1_H_k,
   return t_motion - (gtsam::Rot3(I.matrix() - R_motion.matrix())) * t_pose;
 }
 
-void propogateObjectPoses(
-    ObjectPoseMap& object_poses, const MotionEstimateMap& object_motions_k,
-    const gtsam::Point3Vector& object_centroids_k_1,
-    const gtsam::Point3Vector&
-        object_centroids_k,  // TODO: dont actually need this one!!
-    FrameId frame_id_k, std::optional<GroundTruthPacketMap> gt_packet_map,
-    PropogatePoseResult* result) {
+void propogateObjectPoses(ObjectPoseMap& object_poses,
+                          const MotionEstimateMap& object_motions_k,
+                          const gtsam::Point3Vector& object_centroids_k_1,
+                          const gtsam::Point3Vector& object_centroids_k,
+                          FrameId frame_id_k,
+                          std::optional<GroundTruthPacketMap> gt_packet_map,
+                          PropogatePoseResult* result) {
   CHECK_EQ(object_motions_k.size(), object_centroids_k_1.size());
   CHECK_EQ(object_centroids_k.size(), object_centroids_k_1.size());
   const FrameId frame_id_k_1 = frame_id_k - 1;
@@ -126,7 +126,6 @@ void propogateObjectPoses(
 
   size_t i = 0;  // used to index the object centroid vectors
   for (const auto& [object_id, motion] : object_motions_k) {
-    const auto centroid_k = object_centroids_k.at(i);
     const auto centroid_k_1 = object_centroids_k_1.at(i);
     const gtsam::Pose3 prev_H_world_curr = motion;
     // new object - so we need to add at k-1 and k
@@ -161,9 +160,10 @@ void propogateObjectPoses(
       const FrameId last_frame = last_record_itr->first;
       const gtsam::Pose3 last_recorded_pose = last_record_itr->second;
 
+      const gtsam::Pose3& centroid_k = object_centroids_k.at(i);
       // construct current pose using last poses rotation (I guess?)
       gtsam::Pose3 current_pose =
-          gtsam::Pose3(last_recorded_pose.rotation(), object_centroids_k.at(i));
+          gtsam::Pose3(last_recorded_pose.rotation(), centroid_k);
 
       CHECK_LT(last_frame, frame_id_k_1);
       if (frame_id_k - last_frame < min_diff_frames) {

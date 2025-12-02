@@ -76,18 +76,18 @@ RGBDInstanceFrontendModule::RGBDInstanceFrontendModule(
     logger_ = std::make_unique<RGBDFrontendLogger>();
   }
 
-  ObjectMotionSovlerF2F::Params object_motion_solver_params =
-      getFrontendParams().object_motion_solver_params;
-  // add ground truth hook
-  object_motion_solver_params.ground_truth_packets_request = [&]() {
-    return this->shared_module_info.getGroundTruthPackets();
-  };
-  object_motion_solver_params.refine_motion_with_3d = false;
-
   if (FLAGS_use_object_motion_filtering) {
+    ObjectMotionSolverFilter::Params filter_params;
     object_motion_solver_ = std::make_shared<ObjectMotionSolverFilter>(
-        object_motion_solver_params, camera->getParams());
+        filter_params, camera->getParams());
   } else {
+    ObjectMotionSovlerF2F::Params object_motion_solver_params =
+        getFrontendParams().object_motion_solver_params;
+    // add ground truth hook
+    object_motion_solver_params.ground_truth_packets_request = [&]() {
+      return this->shared_module_info.getGroundTruthPackets();
+    };
+    object_motion_solver_params.refine_motion_with_3d = false;
     object_motion_solver_ = std::make_shared<ObjectMotionSovlerF2F>(
         object_motion_solver_params, camera->getParams());
   }
@@ -223,6 +223,8 @@ FrontendModule::SpinReturn RGBDInstanceFrontendModule::nominalSpin(
       object_motion_solver_->solve(frame, previous_frame);
 
   const FeatureTrackerInfo& tracker_info = *frame->getTrackingInfo();
+  const FeatureTrackerInfo& tracker_info_prev =
+      *previous_frame->getTrackingInfo();
   VLOG(1) << to_string(tracker_info);
 
   VisionImuPacket::Ptr vision_imu_packet = std::make_shared<VisionImuPacket>();
@@ -316,14 +318,22 @@ FrontendModule::SpinReturn RGBDInstanceFrontendModule::nominalSpin(
       }
       object_track.hybrid_info = hybrid_info;
 
+      const bool object_in_previous =
+          tracker_info_prev.dynamic_track.exists(object_id);
+      const bool object_new_in_previous =
+          object_in_previous &&
+          tracker_info_prev.dynamic_track.at(object_id).object_new;
+
       CHECK(tracker_info.dynamic_track.exists(object_id));
       const bool is_object_new =
-          tracker_info.dynamic_track.at(object_id).object_new;
+          tracker_info.dynamic_track.at(object_id).object_new ||
+          object_new_in_previous;
       object_track.is_object_new = is_object_new;
 
-      if (is_object_new) {
-        CHECK(object_track.is_keyframe);
-      }
+      // if new and tracked!!!
+      // if (is_object_new) {
+      //   CHECK(object_track.is_keyframe);
+      // }
 
       LOG(INFO) << "Here";
 

@@ -355,11 +355,12 @@ void DynoPipelineManager::loadPipelines(const CameraParams& camera_params,
         additional_backend_display = backend_wrapper.backend_viz;
         CHECK(backend);
 
-        // if(frontend && backend) {
-        //   backend->registerMapUpdater(std::bind(&FrontendModule::mapUpdate,
-        //   frontend.get(), std::placeholders::_1)); LOG(INFO) << "Bound map
-        //   update between frontend and backend";
-        // }
+        if (frontend && backend) {
+          backend->registerFrontendUpdateInterface(std::bind(
+              &FrontendModule::onBackendUpdateCallback, frontend.get(),
+              std::placeholders::_1, std::placeholders::_2));
+          LOG(INFO) << "Bound update between frontend and backend";
+        }
 
       } else if (use_offline_frontend_) {
         LOG(WARNING)

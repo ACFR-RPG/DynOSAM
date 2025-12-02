@@ -471,15 +471,8 @@ Pose3SolverResult EgoMotionSolver::geometricOutlierRejection3d3d(
   return result;
 }
 
-ObjectMotionSovlerF2F::ObjectMotionSovlerF2F(
-    const ObjectMotionSovlerF2F::Params& params,
-    const CameraParams& camera_params)
-    : EgoMotionSolver(static_cast<const EgoMotionSolver::Params&>(params),
-                      camera_params),
-      object_motion_params(params) {}
-
-ObjectMotionSovlerF2F::Result ObjectMotionSovlerF2F::solve(
-    Frame::Ptr frame_k, Frame::Ptr frame_k_1) {
+ObjectMotionSolver::Result ObjectMotionSolver::solve(Frame::Ptr frame_k,
+                                                     Frame::Ptr frame_k_1) {
   ObjectIds failed_object_tracks;
   MotionEstimateMap motion_estimates;
 
@@ -520,14 +513,25 @@ ObjectMotionSovlerF2F::Result ObjectMotionSovlerF2F::solve(
   for (auto object_id : failed_object_tracks) {
     frame_k->object_observations_.erase(object_id);
   }
-  auto motions = updateMotions(motion_estimates, frame_k, frame_k_1);
-  auto poses = updatePoses(motion_estimates, frame_k, frame_k_1);
-  return std::make_pair(motions, poses);
+
+  ObjectPoseMap poses;
+  ObjectMotionMap motions;
+
+  updateMotions(motions, motion_estimates, frame_k, frame_k_1);
+  updatePoses(poses, motion_estimates, frame_k, frame_k_1);
+  return {motions, poses};
 }
 
-const ObjectPoseMap& ObjectMotionSovlerF2F::updatePoses(
-    MotionEstimateMap& motion_estimates, Frame::Ptr frame_k,
-    Frame::Ptr frame_k_1) {
+ObjectMotionSovlerF2F::ObjectMotionSovlerF2F(
+    const ObjectMotionSovlerF2F::Params& params,
+    const CameraParams& camera_params)
+    : EgoMotionSolver(static_cast<const EgoMotionSolver::Params&>(params),
+                      camera_params),
+      object_motion_params(params) {}
+
+void ObjectMotionSovlerF2F::updatePoses(
+    ObjectPoseMap& object_poses, const MotionEstimateMap& motion_estimates,
+    Frame::Ptr frame_k, Frame::Ptr frame_k_1) {
   gtsam::Point3Vector object_centroids_k_1, object_centroids_k;
 
   for (const auto& [object_id, motion_estimate] : motion_estimates) {
@@ -583,16 +587,17 @@ const ObjectPoseMap& ObjectMotionSovlerF2F::updatePoses(
                                frame_k->getFrameId());
   }
 
-  return object_poses_;
+  object_poses = object_poses_;
 }
 
-const ObjectMotionMap& ObjectMotionSovlerF2F::updateMotions(
-    MotionEstimateMap& motion_estimates, Frame::Ptr frame_k, Frame::Ptr) {
+void ObjectMotionSovlerF2F::updateMotions(
+    ObjectMotionMap& object_motions, const MotionEstimateMap& motion_estimates,
+    Frame::Ptr frame_k, Frame::Ptr) {
   const FrameId frame_id_k = frame_k->getFrameId();
   for (const auto& [object_id, motion_reference_frame] : motion_estimates) {
     object_motions_.insert22(object_id, frame_id_k, motion_reference_frame);
   }
-  return object_motions_;
+  object_motions = object_motions_;
 }
 
 bool ObjectMotionSovlerF2F::solveImpl(Frame::Ptr frame_k, Frame::Ptr frame_k_1,
@@ -1419,7 +1424,11 @@ const gtsam::Pose3& HybridObjectMotionSRIF::getCurrentLinearization() const {
   return H_linearization_point_;
 }
 
-gtsam::Pose3 HybridObjectMotionSRIF::getStatePoseW() const {
+gtsam::Pose3 HybridObjectMotionSRIF::getKeyFramedMotion() const {
+  return H_linearization_point_.retract(getStatePerturbation());
+}
+
+gtsam::Pose3 HybridObjectMotionSRIF::getF2FMotion() const {
   gtsam::Pose3 H_W_e_k = H_linearization_point_.retract(getStatePerturbation());
   gtsam::Pose3 H_W_e_km1 = previous_H_;
   return H_W_e_k * H_W_e_km1.inverse();
@@ -1442,7 +1451,7 @@ void HybridObjectMotionSRIF::predict(const gtsam::Pose3&) {
 
   // call before updating the previous_H_
   // previous motion -> assume constant!
-  gtsam::Pose3 H_W_km1_k = getStatePoseW();
+  gtsam::Pose3 H_W_km1_k = getF2FMotion();
 
   // gtsam::Pose3 L_km1 = previous_H_ * L_e_;
   // gtsam::Pose3 L_k = H_current_mean * L_e_;
@@ -1580,7 +1589,6 @@ HybridObjectMotionSRIF::Result HybridObjectMotionSRIF::update(
     //  start of the update.
     const gtsam::Pose3 A = X_W_k_inv * H_current_mean;
     const gtsam::Pose3 G_w = A * L_e_;
-    const gtsam::Matrix6 J_correction = -A.AdjointMap();
     gtsam::StereoCamera gtsam_stereo_camera_current(G_w.inverse(),
                                                     stereo_calibration_);
 
@@ -1624,7 +1632,7 @@ HybridObjectMotionSRIF::Result HybridObjectMotionSRIF::update(
       // Calculate Huber weight w(e) = min(1, delta / |e|)
       weights(i) = (error <= huber_k_) ? 1.0 : huber_k_ / error;
       if (/*weights(i) < 0.99 &&*/ iter == num_irls_iterations - 1) {
-        VLOG(40) << "  [Meas " << i << "] Final Weight: " << weights(i)
+        VLOG(50) << "  [Meas " << i << "] Final Weight: " << weights(i)
                  << " (Error: " << error << ")";
       }
     }
@@ -1722,7 +1730,9 @@ void HybridObjectMotionSRIF::resetState(const gtsam::Pose3& L_e,
 ObjectMotionSolverFilter::ObjectMotionSolverFilter(
     const ObjectMotionSolverFilter::Params& params,
     const CameraParams& camera_params)
-    : ObjectMotionSovlerF2F(params, camera_params) {}
+    : EgoMotionSolver(static_cast<const EgoMotionSolver::Params&>(params),
+                      camera_params),
+      filter_params_(params) {}
 
 bool ObjectMotionSolverFilter::solveImpl(Frame::Ptr frame_k,
                                          Frame::Ptr frame_k_1,
@@ -1788,6 +1798,17 @@ bool ObjectMotionSolverFilter::solveImpl(Frame::Ptr frame_k,
   auto it = std::find(frame_k->retracked_objects_.begin(),
                       frame_k->retracked_objects_.end(), object_id);
 
+  // TODO: refine complex logic!
+  const bool object_resampled = it != frame_k->retracked_objects_.end();
+  const bool object_in_previous =
+      frame_k_1->tracking_info_->dynamic_track.exists(object_id);
+  const bool object_in_filter = filters_.exists(object_id);
+
+  const bool object_new_in_previous =
+      object_in_previous &&
+      frame_k_1->tracking_info_->dynamic_track.at(object_id).object_new;
+  const bool object_new = !filters_.exists(object_id);
+
   // TODO: object is new is not getting set!!! (this should be for when the
   // object is re-tracked too!!!)
   //  maybe somehow its in the previous frame!!?
@@ -1798,7 +1819,7 @@ bool ObjectMotionSolverFilter::solveImpl(Frame::Ptr frame_k,
   bool new_or_reset_object = false;
   // bool new_object = false;
   // bool object_reset = false;
-  if (it != frame_k->retracked_objects_.end() && filters_.exists(object_id)) {
+  if (object_resampled && object_in_filter) {
     LOG(INFO) << object_id
               << " retracked - resetting filter k=" << frame_k->getFrameId();
     // Not thread safe!
@@ -1822,15 +1843,30 @@ bool ObjectMotionSolverFilter::solveImpl(Frame::Ptr frame_k,
     //  we start to drift from the center of the object!!
     //  keyframe_pose = filter->getCurrentLinearization() *
     //  filter->getKeyFramePose(); filters_.erase(object_id);
-    filters_.at(object_id)->resetState(keyframe_pose, frame_k_1->getFrameId());
-    filters_.at(object_id)->frame_id_e_ = frame_k->getFrameId();
+    filter->resetState(keyframe_pose, frame_k_1->getFrameId());
+    filter->frame_id_e_ = frame_k->getFrameId();
     frame_k->tracking_info_->dynamic_track.at(object_id).object_resampled =
         true;
   }
 
-  // hack to handle object new is to update it from fame_k-1!
-  frame_k->tracking_info_->dynamic_track.at(object_id).object_resampled = true;
+  // // hack to handle object new is to update it from fame_k-1!
+  // if(object_new_in_previous) {
+  //   LOG(INFO) << "Object " << object_id << " was new in previous -
+  //   clearing!";
+  //   // //TODO: currently only setting both object new and object resampled to
+  //   true
+  //   // // becuause logic in frontend says if new then must be resampled (not
+  //   sure how to handle this yet!)
+  //   //   frame_k->tracking_info_->dynamic_track.at(object_id).object_new =
+  //   true;
+  //      frame_k->tracking_info_->dynamic_track.at(object_id).object_resampled
+  //      =
+  //       true;
+  //   filters_.erase(object_id);
+  // }
 
+  // becuuse we erase it if object new in previous!
+  // not sure this is the best way to handle reappearing objects!
   if (!filters_.exists(object_id)) {
     new_or_reset_object = true;
 
@@ -1850,7 +1886,7 @@ bool ObjectMotionSolverFilter::solveImpl(Frame::Ptr frame_k,
     gtsam::Matrix66 P = gtsam::Matrix66::Identity() * 0.3;
 
     // Process Model noise (6x6)
-    gtsam::Matrix66 Q = gtsam::Matrix66::Identity() * 3.0;
+    gtsam::Matrix66 Q = gtsam::Matrix66::Identity() * 0.2;
 
     if (geometric_result.inliers.size() < 4) {
       LOG(WARNING) << "Could not make initial frame for object " << object_id
@@ -1947,7 +1983,7 @@ bool ObjectMotionSolverFilter::solveImpl(Frame::Ptr frame_k,
     // if (homography_result) {
     // gtsam::Pose3 G_w = geometric_result.best_result.inverse();
     // gtsam::Pose3 H_w = filter->getPose();
-    gtsam::Pose3 H_w_filter = filter->getStatePoseW();
+    gtsam::Pose3 H_w_filter = filter->getF2FMotion();
     gtsam::Pose3 G_w_filter_inv =
         (frame_k->getPose().inverse() * H_w_filter).inverse();
     // gtsam::Pose3 H_w = frame_k->getPose() * G_w;
@@ -2027,6 +2063,32 @@ bool ObjectMotionSolverFilter::solveImpl(Frame::Ptr frame_k,
   } else {
     return false;
   }
+}
+
+void ObjectMotionSolverFilter::updatePoses(
+    ObjectPoseMap& object_poses, const MotionEstimateMap& motion_estimates,
+    Frame::Ptr frame_k, Frame::Ptr /*frame_k_1*/) {
+  const FrameId frame_id_k = frame_k->getFrameId();
+  for (const auto& [object_id, _] : motion_estimates) {
+    CHECK(filters_.exists(object_id));
+
+    auto filter = filters_.at(object_id);
+    gtsam::Pose3 L_k_j =
+        filter->getKeyFramedMotion() * filter->getKeyFramePose();
+    object_poses_.insert22(object_id, frame_id_k, L_k_j);
+  }
+  object_poses = object_poses_;
+}
+
+void ObjectMotionSolverFilter::updateMotions(
+    ObjectMotionMap& object_motions, const MotionEstimateMap& motion_estimates,
+    Frame::Ptr frame_k, Frame::Ptr frame_k_1) {
+  // same as ObjectMotionSovlerF2F
+  const FrameId frame_id_k = frame_k->getFrameId();
+  for (const auto& [object_id, motion_reference_frame] : motion_estimates) {
+    object_motions_.insert22(object_id, frame_id_k, motion_reference_frame);
+  }
+  object_motions = object_motions_;
 }
 
 }  // namespace dyno
