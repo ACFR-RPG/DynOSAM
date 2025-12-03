@@ -105,18 +105,18 @@ TEST(OnlineDataProviderRos, testNowaitCameraInfoSubscribe) {
 TEST(MultiSync, basicInvalidConnect) {
   auto node = std::make_shared<rclcpp::Node>("test");
 
-  using MIS = MultiImageSync<1>;
-  MIS image_sync(*node, {"image_raw"}, 10);
+  using MIS = MultiImageSync<2>;
+  MIS image_sync(*node, {"image_raw1", "image_raw2"}, 10);
   EXPECT_FALSE(image_sync.connect());
 }
 
 TEST(MultiSync, basicConnect) {
   auto node = std::make_shared<rclcpp::Node>("test");
 
-  using MIS = MultiImageSync<1>;
-  MIS image_sync(*node, {"image_raw"}, 10);
+  using MIS = MultiImageSync<2>;
+  MIS image_sync(*node, {"image_raw1", "image_raw2"}, 10);
   image_sync.registerCallback(
-      [](const sensor_msgs::msg::Image::ConstSharedPtr&) {});
+      [](const sensor_msgs::msg::Image::ConstSharedPtr&, const sensor_msgs::msg::Image::ConstSharedPtr&) {});
 
   EXPECT_TRUE(image_sync.connect());
 }

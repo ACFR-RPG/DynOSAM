@@ -42,6 +42,7 @@ include_directories(
   ${EIGEN3_INCLUDE_DIRS}
   ${PCL_INCLUDE_DIRS}
   ${dynosam_INCLUDE_DIRS}
+  ${pcl_conversions_INCLUDE_DIRS}
 )
 
 
