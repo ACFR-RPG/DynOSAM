@@ -33,9 +33,13 @@ find_package(TensorRT COMPONENTS onnxparser infer_plugin)
 
 set(ENABLE_TENSORRT_CXX_VALUE 1)
 if(DYNOSAM_NN_USE_TRT AND (NOT CUDAToolkit_FOUND OR NOT TensorRT_FOUND))
-  message(WARNING "TensorRT is required for inference to run!"
-                  " Follow the install instructions (if possible) to enable inference"
-  )
+  message(WARNING "TensorRT is required for inference to run!") 
+  if(NOT CUDAToolkit_FOUND)
+    message(WARNING "Missing CUDAToolkit")
+  endif()
+  if(NOT TensorRT_FOUND)
+    message(WARNING "Missing TensorRT")
+  endif()
   set(ENABLE_TENSORRT_CXX_VALUE 0)
 elseif(NOT DYNOSAM_NN_USE_TRT)
   message(STATUS "Disabling TensorRT! Inference will not work!")
