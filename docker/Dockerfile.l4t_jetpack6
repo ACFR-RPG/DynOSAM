@@ -50,7 +50,8 @@ RUN apt-get install -y \
       ros-jazzy-pcl-ros \
       ros-jazzy-rmw-fastrtps-cpp \
       ros-jazzy-rmw-zenoh-cpp \
-      ros-jazzy-image-transport
+      ros-jazzy-image-transport \
+      libpcl-conversions-dev
 
 # other deps
 # RUN apt-get install libpng++-dev
