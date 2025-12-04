@@ -163,6 +163,8 @@ target_link_libraries(_core
   dynosam_common::dynosam_common
 )
 
+message(${PYTHON_INSTALL_DIR})
+
 # Install the compiled extension into the Python package folder
 install(
   TARGETS _core

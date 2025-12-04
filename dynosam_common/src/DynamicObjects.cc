@@ -160,7 +160,7 @@ void propogateObjectPoses(ObjectPoseMap& object_poses,
       const FrameId last_frame = last_record_itr->first;
       const gtsam::Pose3 last_recorded_pose = last_record_itr->second;
 
-      const gtsam::Pose3& centroid_k = object_centroids_k.at(i);
+      const gtsam::Point3& centroid_k = object_centroids_k.at(i);
       // construct current pose using last poses rotation (I guess?)
       gtsam::Pose3 current_pose =
           gtsam::Pose3(last_recorded_pose.rotation(), centroid_k);
