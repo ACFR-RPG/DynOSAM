@@ -387,8 +387,9 @@ class ObjectMotionSovlerF2F : public ObjectMotionSolver,
   }
 
  private:
-  bool solveImpl(Frame::Ptr frame_k, Frame::Ptr frame_k_1, ObjectId object_id,
-                 MotionEstimateMap& motion_estimates);
+  virtual bool solveImpl(Frame::Ptr frame_k, Frame::Ptr frame_k_1,
+                         ObjectId object_id,
+                         MotionEstimateMap& motion_estimates);
   const ObjectPoseMap& updatePoses(MotionEstimateMap& motion_estimates,
                                    Frame::Ptr frame_k, Frame::Ptr frame_k_1);
 

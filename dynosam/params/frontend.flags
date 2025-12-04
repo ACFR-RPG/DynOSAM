@@ -14,6 +14,8 @@
 --use_dynamic_track=false
 
 --log_projected_masks=false
+--set_dense_labelled_cloud=false
+--use_object_motion_filtering=true
 
 --refine_motion_estimate=true
 --refine_with_optical_flow=true

@@ -69,6 +69,7 @@ set(LINK_LIBS
   dynosam::dynosam
   image_transport::image_transport
   message_filters::message_filters
+  pcl_conversions::pcl_conversions
   rclcpp::rclcpp
   sensor_msgs::sensor_msgs_library
   tf2_ros::static_transform_broadcaster_node

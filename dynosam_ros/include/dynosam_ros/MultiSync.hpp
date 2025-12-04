@@ -1,5 +1,7 @@
 #pragma once
 
+#include <type_traits>
+
 #include "dynosam/dataprovider/DataProvider.hpp"  // for ImageContainerCallback
 #include "dynosam_common/Types.hpp"
 #include "dynosam_common/utils/Tuple.hpp"
@@ -11,36 +13,32 @@
 #include "rclcpp/node_options.hpp"
 #include "sensor_msgs/msg/image.hpp"
 
-#include <type_traits>
+// namespace  {
 
-namespace  {
-
-using namespace message_filters;
+// using namespace message_filters;
 // in the message_filters interface changes between Jazzy and Kilted
 template <typename, typename = void>
 struct message_filters_has_required_interfaces : std::false_type {};
 
 template <typename T>
-struct message_filters_has_required_interfaces<T, std::void_t<typename T::RequiredInterfaces>>
-    : std::true_type {};
+struct message_filters_has_required_interfaces<
+    T, std::void_t<typename T::NodeParametersInterface>> : std::true_type {};
 
 constexpr static bool message_filters_uses_node_interface =
-    message_filters_has_required_interfaces<SubscriberBase<>>::value;
-
-}
-
+    message_filters_has_required_interfaces<
+        message_filters::SubscriberBase<>>::value;
 
 #if message_filters_uses_node_interface
 // for Kilted and above
 #define MESSAGE_FILTERS_USES_NODE_INTERFACE 1
+#pragma message("ROS2 message filters version >=Kilted detected")
 #else
 // for at least Jazzy
 #define MESSAGE_FILTERS_USES_NODE_INTERFACE 0
+#pragma message("ROS2 message filters version <=Jazzy detected")
 #endif
 
 namespace dyno {
-
-
 
 /**
  * @brief Helper to define a function definition based on many messages type
@@ -60,23 +58,25 @@ namespace {
 
 template <typename Msg, std::size_t N>
 struct ExactTimePolicyHelperImpl {
-  
-  // in Jazzy ExactTime filter requires at least two message types to be defined (ie. does not support N==1)
-  #if !MESSAGE_FILTERS_USES_NODE_INTERFACE
-    static_assert(N > 1, "Message filters (in at least Jazzy) does not support N==1. MultiSync with N>=2 must be used!");
-  #endif
+// in Jazzy ExactTime filter requires at least two message types to be defined
+// (ie. does not support N==1)
+#if !MESSAGE_FILTERS_USES_NODE_INTERFACE
+  static_assert(N > 1,
+                "Message filters (in at least Jazzy) does not support N==1. "
+                "MultiSync with N>=2 must be used!");
+#endif
 
   template <std::size_t... Is>
   static auto get_policy(std::index_sequence<Is...>)
-      -> message_filters::sync_policies::ExactTime<
-          std::remove_reference_t<decltype((void(Is), std::declval<Msg>()))>...>;
+      -> message_filters::sync_policies::ExactTime<std::remove_reference_t<
+          decltype((void(Is), std::declval<Msg>()))>...>;
 
   using Type = decltype(get_policy(std::make_index_sequence<N>{}));
 };
 
-
 template <typename Msg, std::size_t N>
-using exact_time_policy_helper = typename ExactTimePolicyHelperImpl<Msg, N>::Type;
+using exact_time_policy_helper =
+    typename ExactTimePolicyHelperImpl<Msg, N>::Type;
 
 template <typename Msg, std::size_t... Is>
 auto callback_type_helper_impl(std::index_sequence<Is...>)
@@ -171,31 +171,41 @@ class MultiSync : public MultiSyncBase {
     std::stringstream ss;
     ss << "MultiSync of type " << msg_name << " and size " << N
        << " is subscribing to topics: ";
-  #if MESSAGE_FILTERS_USES_NODE_INTERFACE
+#if MESSAGE_FILTERS_USES_NODE_INTERFACE
     RequiredInterfaces interface(node_);
-    auto make_subscriber = [&](const std::string& topic) -> std::shared_ptr<Subscriber> {
+    auto make_subscriber =
+        [&](const std::string& topic) -> std::shared_ptr<Subscriber> {
       return std::make_shared<Subscriber>(
-          interface, topic, config_.subscriber_qos,
-          config_.subscriber_options);
+          interface, topic, config_.subscriber_qos, config_.subscriber_options);
     };
-  #else
+#else
     rclcpp::Node* interface = &node_;
     CHECK_NOTNULL(interface);
-    auto make_subscriber = [&](const std::string& topic) -> std::shared_ptr<Subscriber> {
+    auto make_subscriber =
+        [&](const std::string& topic) -> std::shared_ptr<Subscriber> {
       auto subscriber = std::make_shared<Subscriber>();
-      subscriber->subscribe(interface, topic, config_.subscriber_qos.get_rmw_qos_profile(), config_.subscriber_options);
+      subscriber->subscribe(interface, topic,
+                            config_.subscriber_qos.get_rmw_qos_profile(),
+                            config_.subscriber_options);
       return subscriber;
     };
-  #endif
+#endif
+
+    auto node_topics = node_.get_node_topics_interface();
+    CHECK_NOTNULL(node_topics);
 
     for (size_t i = 0; i < N; i++) {
       internal::select_apply<N>(i, [&](auto I) {
-        std::get<I>(subs_) = make_subscriber(topics_.at(i));
+        // for some reason using the message_filter::Subscriber does not adhere
+        // to remapping manually resolve the topic node
+        // false is for only_expand
+        const std::string resolved_topic =
+            node_topics->resolve_topic_name(topics_.at(i), false);
+        std::get<I>(subs_) = make_subscriber(resolved_topic);
         ss << std::get<I>(subs_)->getSubscriber()->get_topic_name() << " ";
       });
     }
     ss << "\n";
-
     RCLCPP_INFO_STREAM(node_.get_logger(), ss.str());
   }
 
@@ -217,17 +227,18 @@ class MultiSync : public MultiSyncBase {
                                          *std::get<Is>(subs_)...);
 
       // Use lambda to forward messages to callDerived
-    #if MESSAGE_FILTERS_USES_NODE_INTERFACE
+#if MESSAGE_FILTERS_USES_NODE_INTERFACE
       sync_->registerCallback(callback_);
-    #else
+#else
       // 1. Lambda accepts all 9 arguments (as auto).
-      // 2. The arguments are passed to the slice_and_call helper, along with 
-      //    the compile-time index sequence (Is...), which dictates how many to keep (N).
+      // 2. The arguments are passed to the slice_and_call helper, along with
+      //    the compile-time index sequence (Is...), which dictates how many to
+      //    keep (N).
       sync_->registerCallback([this](const auto&... args) {
         // Is... is visible here as a compile-time constant parameter pack
         this->slice_and_call(std::index_sequence<Is...>(), args...);
       });
-    #endif
+#endif
       RCLCPP_INFO_STREAM(node_.get_logger(),
                          "MultiSync connected and subscribed");
       return true;
@@ -242,30 +253,30 @@ class MultiSync : public MultiSyncBase {
     }
   }
 
-  private:
-  #if !MESSAGE_FILTERS_USES_NODE_INTERFACE
-    /**
-     * @brief Helper function to slice the 9-argument signal down to N for the callback_.
-     * @tparam Is Indices 0 to N-1 (provided by the outer createSyncImpl)
-     * @tparam Args The full 9 arguments from the Signal9
-     */
-    template <size_t... Is, typename... Args>
-    void slice_and_call(std::index_sequence<Is...>, const Args&... args) {
-      // Create a tuple containing the 9 incoming arguments (by const reference)
-      auto args_tuple = std::forward_as_tuple(args...);
-      // Call the user callback, expanding the tuple only for indices 0 to N-1
-      this->callback_(std::get<Is>(args_tuple)...);
-    }
-  #endif
+ private:
+#if !MESSAGE_FILTERS_USES_NODE_INTERFACE
+  /**
+   * @brief Helper function to slice the 9-argument signal down to N for the
+   * callback_.
+   * @tparam Is Indices 0 to N-1 (provided by the outer createSyncImpl)
+   * @tparam Args The full 9 arguments from the Signal9
+   */
+  template <size_t... Is, typename... Args>
+  void slice_and_call(std::index_sequence<Is...>, const Args&... args) {
+    // Create a tuple containing the 9 incoming arguments (by const reference)
+    auto args_tuple = std::forward_as_tuple(args...);
+    // Call the user callback, expanding the tuple only for indices 0 to N-1
+    this->callback_(std::get<Is>(args_tuple)...);
+  }
+#endif
 
  protected:
-  #if MESSAGE_FILTERS_USES_NODE_INTERFACE
-    using Subscriber =
-        message_filters::Subscriber<MessageType, RequiredInterfaces>;
-  #else
-    using Subscriber =
-        message_filters::Subscriber<MessageType>;
-  #endif
+#if MESSAGE_FILTERS_USES_NODE_INTERFACE
+  using Subscriber =
+      message_filters::Subscriber<MessageType, RequiredInterfaces>;
+#else
+  using Subscriber = message_filters::Subscriber<MessageType>;
+#endif
   /// @brief a tuple of Subscribers of size N
   using SubscriberTuple =
       typename internal::repeat_type<std::shared_ptr<Subscriber>, N>::type;

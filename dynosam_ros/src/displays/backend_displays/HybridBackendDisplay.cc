@@ -2,15 +2,20 @@
 
 #include "dynosam_common/PointCloudProcess.hpp"
 #include "dynosam_ros/BackendDisplayPolicyRos.hpp"
+#include "dynosam_ros/RosUtils.hpp"
 #include "dynosam_ros/displays/BackendDisplayRos.hpp"
 
 namespace dyno {
 
 HybridModuleDisplayCommon::HybridModuleDisplayCommon(
-    const DisplayParams& params, rclcpp::Node* node)
-    : BackendModuleDisplayRos(params, node) {
+    const DisplayParams& params, rclcpp::Node* node,
+    HybridAccessorCommon::Ptr hybrid_accessor)
+    : BackendModuleDisplayRos(params, node),
+      hybrid_accessor_(CHECK_NOTNULL(hybrid_accessor)) {
   object_bounding_box_pub_ =
       node_->create_publisher<MarkerArray>("object_bounding_boxes", 1);
+  object_key_frame_pub_ =
+      node_->create_publisher<MarkerArray>("object_keyframes", 1);
 }
 
 void HybridModuleDisplayCommon::publishObjectBoundingBoxes(
@@ -122,11 +127,13 @@ void HybridModuleDisplayCommon::publishObjectKeyFrames(
 void ParalleHybridModuleDisplay::spin(
     const BackendOutputPacket::ConstPtr& output) {
   this->publishObjectBoundingBoxes(output);
+  this->publishObjectKeyFrames(output->getFrameId(), output->getTimestamp());
 }
 
 void RegularHybridFormulationDisplay::spin(
     const BackendOutputPacket::ConstPtr& output) {
   this->publishObjectBoundingBoxes(output);
+  this->publishObjectKeyFrames(output->getFrameId(), output->getTimestamp());
 }
 
 }  // namespace dyno

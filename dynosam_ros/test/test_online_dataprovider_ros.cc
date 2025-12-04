@@ -102,6 +102,15 @@ TEST(OnlineDataProviderRos, testNowaitCameraInfoSubscribe) {
   EXPECT_FALSE(odpr->getCameraParams());
 }
 
+TEST(MultiSync, printVersionMessageFilters) {
+  std::cout << "--- Detection Check ---" << std::endl;
+  std::cout << "Message filters use NodeParametersInterface: " << std::boolalpha
+            << message_filters_uses_node_interface << std::endl;
+  // This will print the version number defined by the preprocessor logic
+  std::cout << "Defined MESSAGE_FILTERS_USES_NODE_INTERFACE: "
+            << MESSAGE_FILTERS_USES_NODE_INTERFACE << std::endl;
+}
+
 TEST(MultiSync, basicInvalidConnect) {
   auto node = std::make_shared<rclcpp::Node>("test");
 
@@ -116,7 +125,8 @@ TEST(MultiSync, basicConnect) {
   using MIS = MultiImageSync<2>;
   MIS image_sync(*node, {"image_raw1", "image_raw2"}, 10);
   image_sync.registerCallback(
-      [](const sensor_msgs::msg::Image::ConstSharedPtr&, const sensor_msgs::msg::Image::ConstSharedPtr&) {});
+      [](const sensor_msgs::msg::Image::ConstSharedPtr&,
+         const sensor_msgs::msg::Image::ConstSharedPtr&) {});
 
   EXPECT_TRUE(image_sync.connect());
 }

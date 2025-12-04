@@ -30,6 +30,8 @@
 
 #pragma once
 
+#include <mutex>
+
 #include "dynosam/backend/BackendDefinitions.hpp"
 #include "dynosam_common/Types.hpp"
 #include "dynosam_opt/Map.hpp"
@@ -39,6 +41,9 @@ namespace dyno {
 /**
  * @brief Accessor defines the interface between the structured output of a
  * BackendModule and any formulation used to construct the Dynamic SLAM problem.
+ *
+ * Accesors are shared between the frontend and backend and therefore should be
+ * threadsafe!
  *
  * Each derived Accessor is associated with a derived Formulation and knows how
  * to access the variables in that problem and convert them into the form
@@ -71,17 +76,6 @@ class Accessor {
    * @return StateQuery<gtsam::Pose3>
    */
   virtual StateQuery<gtsam::Pose3> getObjectMotion(
-      FrameId frame_id, ObjectId object_id) const = 0;
-
-  /**
-   * @brief Gets the motion _{k-1}^wH_k attime-step (k) and object (j) with the
-   * associated reference frame.
-   *
-   * @param frame_id FrameId
-   * @param object_id ObjectId
-   * @return StateQuery<Motion3ReferenceFrame>
-   */
-  virtual StateQuery<Motion3ReferenceFrame> getObjectMotionReferenceFrame(
       FrameId frame_id, ObjectId object_id) const = 0;
 
   /**
@@ -278,23 +272,6 @@ class Accessor {
    */
   bool hasObjectMotionEstimate(FrameId frame_id, ObjectId object_id,
                                Motion3& motion) const;
-};
-
-/**
- * @brief Derived Accessor that knows about the MAP used with the formulation.
- *
- * @tparam MAP
- */
-template <class MAP>
-class AccessorT : public Accessor {
- public:
-  using Map = MAP;
-  using This = AccessorT<Map>;
-
-  DYNO_POINTER_TYPEDEFS(This)
-
-  AccessorT(const SharedFormulationData& shared_data, typename Map::Ptr map);
-  virtual ~AccessorT() {}
 
   /**
    * @brief Gets the absolute motion (_{k-1}^wH_k) from theta the requested
@@ -310,7 +287,93 @@ class AccessorT : public Accessor {
    * @return StateQuery<Motion3ReferenceFrame>
    */
   StateQuery<Motion3ReferenceFrame> getObjectMotionReferenceFrame(
-      FrameId frame_id, ObjectId object_id) const override;
+      FrameId frame_id, ObjectId object_id) const;
+
+  /**
+   * @brief Check if the key exists in the current theta.
+   * Utilises the derived Accessor#getValueImpl function
+   * to check the existance of the variable
+   *
+   * @param key gtsam::Key
+   * @return true
+   * @return false
+   */
+  bool exists(gtsam::Key key) const;
+
+  /**
+   * @brief Access a key in the current theta.
+   * Utilises the derived Accessor#getValueImpl function
+   * to check the existance of the variable and get the value.
+   *
+   * Throws gtsam::ValuesIncorrectType if ValueType does not match the internal
+   * type.
+   *
+   * @tparam ValueType
+   * @param key gtsam::Key
+   * @return StateQuery<ValueType>
+   */
+  template <typename ValueType>
+  StateQuery<ValueType> query(gtsam::Key key) const {
+    boost::optional<const gtsam::Value&> value_opt = this->getValueImpl(key);
+    if (value_opt) {
+      // Check the type and throw exception if incorrect
+      // h() split in two lines to avoid internal compiler error (MSVC2017)
+      const gtsam::Value* value = value_opt.get_ptr();
+      auto h = gtsam::internal::handle<ValueType>();
+      return StateQuery<ValueType>(key, h(key, value));
+    } else {
+      return StateQuery<ValueType>::NotInMap(key);
+    }
+  }
+
+ protected:
+  mutable std::mutex mutex_;
+
+  /**
+   * @brief Gets the gtsam::Value object as an optional.
+   * The existance of the optional indicates existance of the value.
+   * We use this functionality as a replacement for the if(exists()) -> return
+   * at() paradigm so that the derived class can check and return the value as a
+   * single unit which reduces overhead.
+   *
+   * @param key
+   * @return boost::optional<const gtsam::Value&>
+   */
+  virtual boost::optional<const gtsam::Value&> getValueImpl(
+      const gtsam::Key key) const = 0;
+};
+
+/**
+ * @brief Derived Accessor that knows about the MAP used with the formulation.
+ * The class will inherit from DerivedAccessor (which must itself be an
+ * Accessor), which allows this class to act as an Acessor. The DerivedAccessor
+ * class allows additional functionality to be added to the accessor beyond the
+ * base functionality (i.e. the virtual functions provided by Accessor) while
+ * still being an accessor.
+ *
+ * By default DerivedAccessor = Acessor, which therefore provides the base level
+ * functionlity of an acessor.
+ *
+ * @tparam MAP
+ * @tparam DerivedAccessor
+ */
+template <class MAP, class DerivedAccessor = Accessor>
+class AccessorT : public DerivedAccessor {
+ public:
+  // Compile-time assertion to ensure DerivedAccessor is a type of Accessor
+  // This is optional but highly recommended for safety
+  static_assert(std::is_base_of_v<Accessor, DerivedAccessor>,
+                "DerivedAccessor must be derived from Accessor.");
+
+  using Map = MAP;
+  using This = AccessorT<Map, DerivedAccessor>;
+
+  DYNO_POINTER_TYPEDEFS(This)
+
+  template <typename... DerivedArgs>
+  AccessorT(const SharedFormulationData& shared_data, typename Map::Ptr map,
+            DerivedArgs&&... derived_args);
+  virtual ~AccessorT() {}
 
   /**
    * @brief Get a static landmark (^wm) with tracklet id (i).
@@ -442,24 +505,8 @@ class AccessorT : public Accessor {
   gtsam::FastMap<ObjectId, gtsam::Point3> computeObjectCentroids(
       FrameId frame_id) const override;
 
-  /**
-   * @brief Check if the key exists in the current theta.
-   *
-   * @param key gtsam::Key
-   * @return true
-   * @return false
-   */
-  bool exists(gtsam::Key key) const;
-
-  /**
-   * @brief Access a key in the current theta.
-   *
-   * @tparam ValueType
-   * @param key gtsam::Key
-   * @return StateQuery<ValueType>
-   */
-  template <typename ValueType>
-  StateQuery<ValueType> query(gtsam::Key key) const;
+  boost::optional<const gtsam::Value&> getValueImpl(
+      const gtsam::Key key) const override;
 
  protected:
   auto map() const { return map_; }
@@ -471,7 +518,6 @@ class AccessorT : public Accessor {
     return *CHECK_NOTNULL(shared_data_.hooks);
   }
 
- private:
  private:  //! in the associated formulation
   const SharedFormulationData shared_data_;
   typename Map::Ptr map_;  //! Pointer to internal map structure;

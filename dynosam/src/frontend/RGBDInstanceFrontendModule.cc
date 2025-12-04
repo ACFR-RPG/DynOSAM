@@ -52,6 +52,9 @@ DEFINE_bool(use_dynamic_track, true,
 DEFINE_bool(log_projected_masks, false,
             "If true, projected masks will be saved at every frame");
 
+DEFINE_bool(set_dense_labelled_cloud, false,
+            "If true, the dense labelled point cloud will be set");
+
 DEFINE_bool(use_object_motion_filtering, false, "For testing!");
 
 namespace dyno {
@@ -254,13 +257,6 @@ FrontendModule::SpinReturn RGBDInstanceFrontendModule::nominalSpin(
 
   vision_imu_packet->debugImagery(debug_imagery);
 
-<<<<<<< HEAD
-  // // const cv::Mat& board_detection_mask =
-  // tracker_->getBoarderDetectionMask(); PointCloudLabelRGB::Ptr
-  // dense_labelled_cloud =
-  //     frame->projectToDenseCloud(&board_detection_mask);
-  PointCloudLabelRGB::Ptr dense_labelled_cloud = nullptr;
-=======
   if (FLAGS_use_object_motion_filtering) {
     auto motion_filter = std::dynamic_pointer_cast<ObjectMotionSolverFilter>(
         object_motion_solver_);
@@ -281,7 +277,6 @@ FrontendModule::SpinReturn RGBDInstanceFrontendModule::nominalSpin(
         frame->projectToDenseCloud(&board_detection_mask);
     vision_imu_packet->denseLabelledCloud(dense_labelled_cloud);
   }
->>>>>>> c68662d9... publishing frontend-filtering keyframes for debugging
 
   // if (FLAGS_save_frontend_json)
   //   output_packet_record_.insert({output->getFrameId(), output});
