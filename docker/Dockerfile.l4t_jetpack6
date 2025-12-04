@@ -65,7 +65,7 @@ RUN apt-get update && apt-get install -y libgflags2.2 libgflags-dev libgoogle-gl
 
 # Install xvfb to provide a display to container for GUI realted testing.
 # vtk is needed for OpenCV to build its viz module (from contrib!)
-RUN apt-get update && apt-get install -y xvfb python3-dev python3-setuptools libvtk9-dev python3-pybind11
+RUN apt-get update && apt-get install -y xvfb python3-dev python3-setuptools libvtk9-dev
 
 RUN pip3 install setuptools pre-commit scipy matplotlib argcomplete
 
@@ -74,12 +74,6 @@ RUN DEBIAN_FRONTEND=noninteractive apt install -y libsuitesparse-dev
 
 # Parallelism C++ for CPU
 RUN apt-get update && apt-get install -y libboost-all-dev libtbb-dev
-
-RUN python3 -m pip install "ultralytics==8.3.0" "numpy<2.0" "opencv-python<5.0"
-
-# The onnxruntime-gpu package hosted in PyPI does not have aarch64 binaries for the Jetson. So we need to manually install this package. This package is needed for some of the exports.
-# https://docs.ultralytics.com/guides/nvidia-jetson/#install-pytorch-and-torchvision_1
-RUN python3 -m pip install https://github.com/ultralytics/assets/releases/download/v0.0.0/onnxruntime_gpu-1.23.0-cp310-cp310-linux_aarch64.whl
 
 WORKDIR /root/
 
@@ -108,8 +102,8 @@ RUN cd json && mkdir build && \
       cmake .. && make -j$(nproc) install
 
 # OpenCV looks for the cuDNN version in cudnn_version.h, but it's been renamed to cudnn_version_v8.h
-RUN ln -sfnv /usr/include/$(uname -i)-linux-gnu/cudnn_version_v*.h /usr/include/$(uname -i)-linux-gnu/cudnn_version.h
-
+RUN ln -sfnv /usr/include/$(uname -i)-linux-gnu/cudnn_version_v*.h /usr/include/$(uname -i)-linux-gnu/cudnn_version.h  
+    
 # IMPORTANT: must specify CXX_17 version. Default is c++11 which will cause compilation issues
 # On aarch64 we can enable NEON for CPU level optimisations
 # It is vital we use gcc-11 as otheriwise we cannot compile the cuda level code (ie. CUDA 12.9)

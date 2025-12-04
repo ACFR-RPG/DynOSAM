@@ -33,7 +33,7 @@ find_package(TensorRT COMPONENTS onnxparser infer_plugin)
 
 set(ENABLE_TENSORRT_CXX_VALUE 1)
 if(DYNOSAM_NN_USE_TRT AND (NOT CUDAToolkit_FOUND OR NOT TensorRT_FOUND))
-  message(WARNING "TensorRT is required for inference to run!")
+  message(WARNING "TensorRT is required for inference to run!") 
   if(NOT CUDAToolkit_FOUND)
     message(WARNING "Missing CUDAToolkit")
   endif()
@@ -166,8 +166,6 @@ target_link_libraries(_core
    ${PROJECT_NAME}
   dynosam_common::dynosam_common
 )
-
-message(${PYTHON_INSTALL_DIR})
 
 # Install the compiled extension into the Python package folder
 install(
