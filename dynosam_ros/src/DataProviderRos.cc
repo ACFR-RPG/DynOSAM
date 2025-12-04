@@ -40,6 +40,45 @@ namespace dyno {
 DataProviderRos::DataProviderRos(rclcpp::Node::SharedPtr node)
     : DataProvider(), node_(node) {}
 
+// specalise conversion function for depth image to handle the case we are given
+// float32 and 16UC1 bit images
+template <>
+const cv::Mat DataProviderRos::convertRosImage<ImageType::Depth>(
+    const sensor_msgs::msg::Image::ConstSharedPtr& img_msg) const {
+  const cv_bridge::CvImageConstPtr cvb_image = readRosImage(img_msg);
+  const cv::Mat img = cvb_image->image;
+
+  try {
+    image_traits<ImageType::Depth>::validate(img);
+    return img;
+
+  } catch (const InvalidImageTypeException& exception) {
+    // handle the case its a float32
+    if (img.type() == CV_32FC1) {
+      cv::Mat depth64;
+      img.convertTo(depth64, CV_64FC1);
+      image_traits<ImageType::Depth>::validate(depth64);
+      return depth64;
+    } else if (img.type() == CV_16UC1) {
+      cv::Mat depth64;
+      img.convertTo(depth64, CV_64FC1);
+      image_traits<ImageType::Depth>::validate(depth64);
+      return depth64;
+    }
+
+    RCLCPP_FATAL_STREAM(node_->get_logger(),
+                        image_traits<ImageType::Depth>::name()
+                            << " Image msg was of the wrong type (validate "
+                               "failed with exception "
+                            << exception.what() << "). "
+                            << "ROS encoding type used was "
+                            << cvb_image->encoding);
+
+    rclcpp::shutdown();
+    return cv::Mat();
+  }
+}
+
 const cv::Mat DataProviderRos::readRgbRosImage(
     const sensor_msgs::msg::Image::ConstSharedPtr& img_msg) const {
   return convertRosImage<ImageType::RGBMono>(img_msg);

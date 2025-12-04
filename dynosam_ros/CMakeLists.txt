@@ -163,9 +163,20 @@ target_link_libraries(dynosam_node
   ${PCL_LIBRARIES}
 
 )
-
 install(TARGETS
   dynosam_node
+  DESTINATION lib/${PROJECT_NAME})
+
+
+
+add_executable(dynosam_tracking_demo_node nodes/dynosam_tracking_demo_node.cc)
+target_link_libraries(dynosam_tracking_demo_node
+  ${PROJECT_NAME}
+  ${PCL_LIBRARIES}
+
+)
+install(TARGETS
+  dynosam_tracking_demo_node
   DESTINATION lib/${PROJECT_NAME})
 
 

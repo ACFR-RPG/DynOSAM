@@ -239,19 +239,20 @@ bool FeatureTracker::stereoTrack(FeaturePtrs& stereo_features,
     return std::sqrt(dx * dx + dy * dy);
   };
   // update klt status based on result from flow
-  for (size_t i = 0; i < klt_status.size(); i++) {
-    const bool both_status_good = klt_status.at(i) && klt_reverse_status.at(i);
-    const bool within_image = isWithinShrunkenImage(right_feature_points.at(i));
-    const bool within_distance =
-        distance(left_feature_points.at(i),
-                 reverse_left_feature_points.at(i)) <= 0.5;
+  // for (size_t i = 0; i < klt_status.size(); i++) {
+  //   const bool both_status_good = klt_status.at(i) &&
+  //   klt_reverse_status.at(i); const bool within_image =
+  //   isWithinShrunkenImage(right_feature_points.at(i)); const bool
+  //   within_distance =
+  //       distance(left_feature_points.at(i),
+  //                reverse_left_feature_points.at(i)) <= 0.5;
 
-    if (both_status_good && within_image && within_distance) {
-      klt_status.at(i) = 1;
-    } else {
-      klt_status.at(i) = 0;
-    }
-  }
+  //   if (both_status_good && within_image && within_distance) {
+  //     klt_status.at(i) = 1;
+  //   } else {
+  //     klt_status.at(i) = 0;
+  //   }
+  // }
 
   TrackletIds good_stereo_tracklets;
 
@@ -617,8 +618,6 @@ void FeatureTracker::trackDynamicKLT(
     std::vector<cv::Point2f> current_points;
     current_points.resize(previous_pts.size());
 
-    LOG(INFO) << "Found " << tracklet_ids.size() << " dynamic inliers for KLT";
-
     if (tracklet_ids.size() > 0) {
       utils::TimingStatsCollector tracking_t(
           "dynamic_feature_track_klt.tracking");
@@ -771,8 +770,6 @@ void FeatureTracker::trackDynamicKLT(
     }
 
     for (const auto& [object_id, features_j] : tracks_per_object) {
-      LOG(INFO) << "Tracked " << features_j.size() << " j= " << object_id
-                << " with KLT";
       dynamic_features += features_j;
     }
   }
@@ -821,8 +818,9 @@ void FeatureTracker::trackDynamicKLT(
         cv::bitwise_and(obj_mask, detection_mask_impl, combined_mask);
 
         std::vector<cv::Point2f> detected_points;
-        cv::goodFeaturesToTrack(mono, detected_points, 300, qualityLevel,
-                                min_feature_distance, combined_mask);
+        cv::goodFeaturesToTrack(mono, detected_points, max_features_to_track,
+                                qualityLevel, min_feature_distance,
+                                combined_mask);
 
         std::vector<KeypointCV> keypoints;
         cv::KeyPoint::convert(detected_points, keypoints);
@@ -1021,7 +1019,7 @@ void FeatureTracker::sampleDynamic(FrameId frame_id,
 }
 
 void FeatureTracker::requiresSampling(
-    std::set<ObjectId>& objects_to_sample, const FeatureTrackerInfo& info,
+    std::set<ObjectId>& objects_to_sample, FeatureTrackerInfo& info,
     const ImageContainer& image_container,
     const gtsam::FastMap<ObjectId, FeatureContainer>& features_per_object,
     const vision_tools::ObjectBoundaryMaskResult& boundary_mask_result,
@@ -1045,14 +1043,23 @@ void FeatureTracker::requiresSampling(
         << " this could happen if the object mask changes dramatically...!!";
   }
 
-  if (!previous_frame_) {
-    if (!detected_objects.empty()) {
-      VLOG(5) << "All objects sampled as first frame";
-      objects_to_sample.insert(detected_objects.begin(),
-                               detected_objects.end());
-    }
-    return;
-  }
+  // NOTE: the object_reampled info is epeated on objects_to_sample
+  // but during testing trying not to change the functional interface!!
+  //  if (!previous_frame_) {
+  //    if (!detected_objects.empty()) {
+  //      VLOG(5) << "All objects sampled as first frame";
+  //      objects_to_sample.insert(detected_objects.begin(),
+  //                               detected_objects.end());
+  //      for(const ObjectId& object_id : objects_to_sample) {
+  //        CHECK(!info.dynamic_track.exists(object_id));
+  //        // this will make a new object status
+  //        auto& per_object_status = info.getObjectStatus(object_id);
+  //        per_object_status.object_new = true;
+  //        per_object_status.object_resampled = true;
+  //      }
+  //    }
+  //    return;
+  //  }
 
   const int& max_dynamic_point_age = params_.max_dynamic_feature_age;
   // bascially how early we want to retrack points based on their expiry
@@ -1067,11 +1074,11 @@ void FeatureTracker::requiresSampling(
   CHECK_GT(expiry_age, 0u);
 
   for (size_t i = 0; i < detected_objects.size(); i++) {
-    ObjectId object_id = detected_objects.at(i);
+    const ObjectId object_id = detected_objects.at(i);
 
     // object is tracked and therefore should exist in the previous frame!
     if (info.dynamic_track.exists(object_id)) {
-      const auto& per_object_status = info.dynamic_track.at(object_id);
+      auto& per_object_status = info.dynamic_track.at(object_id);
 
       if (!features_per_object.exists(object_id)) {
         LOG(WARNING) << "Object " << object_id
@@ -1123,6 +1130,7 @@ void FeatureTracker::requiresSampling(
 
       if (needs_sampling) {
         objects_to_sample.insert(object_id);
+        per_object_status.object_resampled = true;
 
         VLOG(5) << "Object " << info_string(info.frame_id, object_id)
                 << " requires sampling";
@@ -1135,6 +1143,10 @@ void FeatureTracker::requiresSampling(
       objects_to_sample.insert(object_id);
       VLOG(5) << "Object " << info_string(info.frame_id, object_id)
               << " requires sampling. Sampling reason: new object";
+      // this will make a new object status
+      auto& per_object_status = info.getObjectStatus(object_id);
+      per_object_status.object_new = true;
+      per_object_status.object_resampled = true;
     }
   }
 }

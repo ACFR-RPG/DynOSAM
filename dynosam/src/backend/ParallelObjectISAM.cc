@@ -56,7 +56,7 @@ ParallelObjectISAM::ParallelObjectISAM(
   // HACK for now so that we get object motions at every frame!!!?
   formulation_params.min_dynamic_observations = 2u;
 
-  decoupled_formulation_ = std::make_shared<HybridFormulation>(
+  decoupled_formulation_ = std::make_shared<HybridFormulationV1>(
       formulation_params, map_, noise_models, sensors, formulation_hooks);
   accessor_ = std::dynamic_pointer_cast<HybridAccessor>(
       decoupled_formulation_->accessorFromTheta());

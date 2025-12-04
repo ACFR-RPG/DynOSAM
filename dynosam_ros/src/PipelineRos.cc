@@ -89,8 +89,35 @@ dyno::DataProvider::Ptr DynoNode::createDataProvider() {
                 "DataProvider should wait before time out (ms)")
             .finish()
             .get<int>();
-    return std::make_shared<OnlineDataProviderRos>(
-        this->create_sub_node("dataprovider"), online_params);
+    InputImageMode image_mode = static_cast<InputImageMode>(
+        ParameterConstructor(this, "input_image_mode",
+                             static_cast<int>(InputImageMode::ALL))
+            .description("Which input image mode to run the pipeline in (e.g "
+                         "ALL, RGBD, STEREO)...")
+            .finish()
+            .get<int>());
+
+    OnlineDataProviderRos::Ptr online_data_provider = nullptr;
+    switch (image_mode) {
+      case InputImageMode::ALL:
+        online_data_provider = std::make_shared<AllImagesOnlineProviderRos>(
+            this->create_sub_node("dataprovider"), online_params);
+        break;
+      case InputImageMode::RGBD:
+        online_data_provider = std::make_shared<RGBDOnlineProviderRos>(
+            this->create_sub_node("dataprovider"), online_params);
+        break;
+
+      default:
+        LOG(FATAL) << "Unknown image_mode";
+        return nullptr;
+    }
+
+    CHECK(online_data_provider);
+    // update any params in case they do not conflixt with the expected input
+    online_data_provider->updateAndCheckParams(*dyno_params_);
+    online_data_provider->setupSubscribers();
+    return online_data_provider;
   }
 
   auto params_path = getParamsPath();
@@ -128,6 +155,9 @@ DynoPipelineManagerRos::DynoPipelineManagerRos(
 void DynoPipelineManagerRos::initalisePipeline() {
   RCLCPP_INFO_STREAM(this->get_logger(), "Starting DynoPipelineManagerRos");
 
+  // load data provider first as this could change some params to ensure
+  // they match with the data-provider selected!
+  auto data_loader = createDataProvider();
   auto params = getDynoParams();
 
   // setup display params
@@ -180,7 +210,6 @@ void DynoPipelineManagerRos::initalisePipeline() {
   auto factory =
       RosBackendFactory::Create(params.backend_type, display_params, this);
 
-  auto data_loader = createDataProvider();
   pipeline_ = std::make_unique<DynoPipelineManager>(
       params, data_loader, frontend_display, backend_display, factory, hooks);
 }

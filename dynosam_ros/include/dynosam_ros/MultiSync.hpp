@@ -10,6 +10,7 @@
 #include "message_filters/synchronizer.hpp"
 #include "rclcpp/node.hpp"
 #include "rclcpp/node_interfaces/node_interfaces.hpp"
+#include "rclcpp/node_interfaces/node_topics.hpp"
 #include "rclcpp/node_options.hpp"
 #include "sensor_msgs/msg/image.hpp"
 
@@ -99,6 +100,17 @@ class MultiSyncBase {
   virtual void shutdown() = 0;
 };
 
+struct MultiSyncConfig {
+  uint32_t queue_size = 20u;
+  //! Initalised with SensorDataQoS
+  rclcpp::QoS subscriber_qos = rclcpp::QoS(
+      rclcpp::QoSInitialization::from_rmw(rmw_qos_profile_sensor_data));
+  rclcpp::SubscriptionOptions subscriber_options{};
+
+  MultiSyncConfig() = default;
+  MultiSyncConfig(uint32_t _queue_size) : queue_size(_queue_size) {}
+};
+
 /**
  * @brief Wrapper for a message_filters::Synchronizer that encapsualtes
  * subscribing to N topics of type Msg.
@@ -148,7 +160,7 @@ class MultiSync : public MultiSyncBase {
 
   // tuple of pointers must be explicitly initalised
   MultiSync(rclcpp::Node& node, const std::array<std::string, N>& topics,
-            const Config& config = Config())
+            const MultiSyncConfig& config = MultiSyncConfig())
       : node_(node), topics_(topics), config_(config) {}
 
   bool connect() override {
@@ -283,7 +295,7 @@ class MultiSync : public MultiSyncBase {
 
   rclcpp::Node& node_;
   std::array<std::string, N> topics_;
-  Config config_;
+  MultiSyncConfig config_;
   SubscriberTuple subs_{};
 
   std::shared_ptr<SyncType> sync_;

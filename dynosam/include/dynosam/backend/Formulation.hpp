@@ -40,6 +40,7 @@
 #include "dynosam_opt/Map.hpp"
 
 // really this should be in a more 'core' file
+#include "dynosam/frontend/VisionImuOutputPacket.hpp"
 #include "dynosam_opt/IncrementalOptimization.hpp"  // only for ErrorHandlingHooks
 
 namespace dyno {
@@ -168,7 +169,9 @@ class BackendParams;
  *
  */
 struct PreUpdateData {
+  //! Should be keyframe id
   FrameId frame_id;
+  VisionImuPacket::ConstPtr input;
 
   PreUpdateData() {}
   PreUpdateData(FrameId _frame_id) : frame_id(_frame_id) {}

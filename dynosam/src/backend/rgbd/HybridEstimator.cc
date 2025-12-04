@@ -147,8 +147,10 @@ StateQuery<gtsam::Pose3> HybridAccessor::getSensorPose(FrameId frame_id) const {
 
 StateQuery<gtsam::Pose3> HybridAccessor::getObjectMotion(
     FrameId frame_id, ObjectId object_id) const {
+  const auto object_node = map()->getObject(object_id);
   const auto frame_node_k = map()->getFrame(frame_id);
-  const auto frame_node_k_1 = map()->getFrame(frame_id - 1u);
+  CHECK(object_node);
+  // const auto frame_node_k_1 = map()->getFrame(frame_id - 1u);
 
   if (!frame_node_k) {
     VLOG(30) << "Could not construct object motion frame id=" << frame_id
@@ -168,17 +170,30 @@ StateQuery<gtsam::Pose3> HybridAccessor::getObjectMotion(
   // first object motion (ie s0 -> s1)
   auto key_frame_data =
       CHECK_NOTNULL(shared_hybrid_formulation_data_.key_frame_data);
-  if (!frame_node_k_1) {
-    CHECK_NOTNULL(frame_node_k);
-    // FrameId s0 = L0_values_->at(object_id).first;
+
+  FrameId last_seen;
+  if (!object_node->previouslySeenFrame(&last_seen)) {
     const auto range = CHECK_NOTNULL(key_frame_data->find(object_id, frame_id));
     const auto [s0, L0] = range->dataPair();
     // check that the first frame of the object motion is actually this frame
     // this motion should actually be identity
     CHECK_EQ(s0, frame_id);
     return StateQuery<gtsam::Pose3>(motion_key, *e_H_k_world);
-  } else {
+  }
+  // if (!frame_node_k_1) {
+  //   CHECK_NOTNULL(frame_node_k);
+  //   // const auto range = CHECK_NOTNULL(key_frame_data->find(object_id,
+  //   frame_id));
+  //   // const auto [s0, L0] = range->dataPair();
+  //   // // check that the first frame of the object motion is actually this
+  //   frame
+  //   // // this motion should actually be identity
+  //   // CHECK_EQ(s0, frame_id);
+  //   // return StateQuery<gtsam::Pose3>(motion_key, *e_H_k_world);
+  // }
+  else {
     CHECK_NOTNULL(frame_node_k);
+    const auto frame_node_k_1 = map()->getFrame(last_seen);
     CHECK_NOTNULL(frame_node_k_1);
 
     StateQuery<gtsam::Pose3> e_H_km1_world = this->query<gtsam::Pose3>(
@@ -217,6 +232,8 @@ StateQuery<gtsam::Pose3> HybridAccessor::getObjectPose(
   // in the case of identity, the pose at k will just be L_s0 which we dont
   // want?
   StateQuery<gtsam::Pose3> e_H_k_world = this->query<gtsam::Pose3>(motion_key);
+  LOG(INFO) << "Got object motion " << (bool)e_H_k_world << " "
+            << DynosamKeyFormatter(motion_key);
   // CHECK(false);
 
   if (e_H_k_world) {
@@ -312,6 +329,10 @@ StatusLandmarkVector HybridAccessor::getLocalDynamicLandmarkEstimates(
       kf_with_max_tracks = kf;
     }
   }
+
+  VLOG(40) << "Collecting points for j=" << object_id
+           << " kf with max tracks KF=" << kf_with_max_tracks
+           << " count=" << max_count;
 
   StatusLandmarkVector estimates;
   if (max_count == 0) {
@@ -463,6 +484,8 @@ bool HybridAccessor::getDynamicLandmarkImpl(FrameId frame_id,
   FrameId point_embedded_frame = tracklet_id_to_keyframe->at(tracklet_id);
   const auto range = key_frame_data->find(object_id, frame_id);
 
+  // TODO: check the &= is right!
+  //  we might mean result = result || (condition)
   bool result = true;
 
   // update intermediate queries
@@ -537,46 +560,6 @@ bool HybridAccessor::getDynamicLandmarkImpl(
   return getDynamicLandmarkImpl(frame_id, tracklet_id, query);
 }
 
-// this needs to happen (mostly) before factor graph construction to take
-// effect!!
-std::pair<FrameId, gtsam::Pose3> HybridFormulation::forceNewKeyFrame(
-    FrameId frame_id, ObjectId object_id) {
-  LOG(INFO) << "Starting new range of object k=" << frame_id
-            << " j=" << object_id;
-  gtsam::Pose3 center = calculateObjectCentroid(object_id, frame_id);
-
-  auto result =
-      key_frame_data_.startNewActiveRange(object_id, frame_id, center)
-          ->dataPair();
-
-  // clear meta-data to start new tracklets
-  // TODO: somehow adding this back in causes a segfault when ISAM2::update step
-  // happens... in combinating with clearing the internal graph
-  // (this->clearGraph) and resetting the smoother in ParlallelObjectSAM. I
-  // think we should do this!!
-  // HACK - these vairblaes will still be in the values and therefore we will
-  // get some kind of 'gtsam::ValuesKeyAlreadyExists' when updating the
-  // formulation we therefore need to remove these from the theta - this will
-  // remove old data
-  // from the accessor (even though we keep track of the meta-data)
-  // when the frontend is updated to include keyframe information this should
-  // not be an issue as the frontend will ensure new measurements dont refer to
-  // landmarks in old keypoints
-  // for (const auto& [tracklet_id, _] : is_dynamic_tracklet_in_map_) {
-  //     ObjectId lmk_object_id;
-  //     CHECK(map()->getLandmarkObjectId(lmk_object_id, tracklet_id));
-  //     //only delete for requested object
-  //     if(lmk_object_id == object_id) {
-  //       theta_.erase(this->makeDynamicKey(tracklet_id));
-  //     }
-  // }
-  // is_dynamic_tracklet_in_map_.clear();
-
-  // sanity check
-  CHECK_EQ(result.first, frame_id);
-  return result;
-}
-
 HybridFormulation::HybridFormulation(const FormulationParams& params,
                                      typename Map::Ptr map,
                                      const NoiseModels& noise_models,
@@ -595,20 +578,28 @@ void HybridFormulation::dynamicPointUpdateCallback(
   const auto lmk_node = context.lmk_node;
   const auto frame_node_k_1 = context.frame_node_k_1;
   const auto frame_node_k = context.frame_node_k;
+  const auto object_id = context.getObjectId();
+  const auto frame_id_k_1 = frame_node_k_1->getId();
 
   auto theta_accessor = this->accessorFromTheta();
 
   gtsam::Key point_key = this->makeDynamicKey(context.getTrackletId());
 
   const gtsam::Key object_motion_key_k =
-      frame_node_k->makeObjectMotionKey(context.getObjectId());
+      frame_node_k->makeObjectMotionKey(object_id);
   const gtsam::Key object_motion_key_k_1 =
-      frame_node_k_1->makeObjectMotionKey(context.getObjectId());
+      frame_node_k_1->makeObjectMotionKey(object_id);
 
-  gtsam::Pose3 L_e;
-  FrameId s0;
-  std::tie(s0, L_e) =
-      getOrConstructL0(context.getObjectId(), frame_node_k_1->getId());
+  // gtsam::Pose3 L_e;
+  const IntermediateMotionInfo keyframe_info =
+      getIntermediateMotionInfo(object_id, frame_id_k_1);
+
+  const FrameId& s0 = keyframe_info.kf_id;
+  const gtsam::Pose3& L_e = keyframe_info.keyframe_pose;
+  const gtsam::Pose3& H_W_e_k_initial = keyframe_info.H_W_e_k_initial;
+  // FrameId s0;
+  // std::tie(s0, L_e) =
+  //     getOrConstructL0(context.getObjectId(), frame_node_k_1->getId());
   auto landmark_motion_noise = noise_models_.landmark_motion_noise;
   // check that the first frame id is at least the initial frame for s0
 
@@ -626,20 +617,20 @@ void HybridFormulation::dynamicPointUpdateCallback(
 
     // use first point as initalisation?
     // in this case k is k-1 as we use frame_node_k_1
-    bool keyframe_updated;
-    gtsam::Pose3 e_H_k_world = computeInitialH(
-        context.getObjectId(), frame_node_k_1->getId(), &keyframe_updated);
+    // bool keyframe_updated;
+    // gtsam::Pose3 e_H_k_world = computeInitialH(
+    //     context.getObjectId(), frame_node_k_1->getId(), &keyframe_updated);
 
     // TODO: we should never actually let this happen during an update
     //  it should only happen before measurements are added
     // want to avoid somehow a situation where some (landmark)variables are at
     // an old keyframe I dont think this will happen with the current
     // implementation...
-    if (keyframe_updated) {
-      // TODO: gross I have to re-get them again!!
-      std::tie(s0, L_e) =
-          getOrConstructL0(context.getObjectId(), frame_node_k_1->getId());
-    }
+    // if (keyframe_updated) {
+    //   // TODO: gross I have to re-get them again!!
+    //   std::tie(s0, L_e) =
+    //       getOrConstructL0(context.getObjectId(), frame_node_k_1->getId());
+    // }
 
     // mark as now in map and include associated frame!!s
     is_dynamic_tracklet_in_map_.insert2(context.getTrackletId(), s0);
@@ -656,7 +647,7 @@ void HybridFormulation::dynamicPointUpdateCallback(
     // Landmark lmk_L0_init =
     //     L_e.inverse() * k_H_s0_W * context.X_k_1_measured * m_camera;
     Landmark lmk_L0_init = HybridObjectMotion::projectToObject3(
-        context.X_k_1_measured, e_H_k_world, L_e,
+        context.X_k_1_measured, H_W_e_k_initial, L_e,
         MeasurementTraits::point(lmk_node->getMeasurement(frame_node_k_1)));
 
     // TODO: this should not every be true as this is a new value!!!
@@ -731,13 +722,16 @@ void HybridFormulation::objectUpdateContext(
   const auto frame_id = context.getFrameId();
   const auto object_id = context.getObjectId();
 
+  const IntermediateMotionInfo keyframe_info =
+      getIntermediateMotionInfo(object_id, frame_id);
+
   if (!is_other_values_in_map.exists(object_motion_key_k)) {
     // gtsam::Pose3 motion;
     const gtsam::Pose3 X_world = getInitialOrLinearizedSensorPose(frame_id);
-    gtsam::Pose3 motion = computeInitialH(object_id, frame_id);
+    // gtsam::Pose3 motion = computeInitialH(object_id, frame_id);
     VLOG(5) << "Added motion at  " << DynosamKeyFormatter(object_motion_key_k);
     // gtsam::Pose3 motion;
-    new_values.insert(object_motion_key_k, motion);
+    new_values.insert(object_motion_key_k, keyframe_info.H_W_e_k_initial);
     is_other_values_in_map.insert2(object_motion_key_k, true);
 
     // for now lets treat num_motion_factors as motion (values) added!!
@@ -745,8 +739,9 @@ void HybridFormulation::objectUpdateContext(
       result.debug_info->getObjectInfo(context.getObjectId())
           .num_motion_factors++;
 
-    const auto [s0, L0] = getOrConstructL0(object_id, frame_id);
-    if (s0 == frame_id) {
+    // we are at object keyframe
+    // NOTE: this should never happen for hybrid KF!!
+    if (keyframe_info.kf_id == frame_id) {
       // add prior
       new_factors.addPrior<gtsam::Pose3>(object_motion_key_k,
                                          gtsam::Pose3::Identity(),
@@ -756,7 +751,7 @@ void HybridFormulation::objectUpdateContext(
     // test stuff
     FrameId first_seen_object_frame = object_node->getFirstSeenFrame();
     if (first_seen_object_frame == frame_id) {
-      CHECK_EQ(s0, frame_id);
+      CHECK_EQ(keyframe_info.kf_id, frame_id);
     }
   }
 
@@ -806,7 +801,7 @@ void HybridFormulation::objectUpdateContext(
         is_other_values_in_map.exists(object_motion_key_k)) {
       new_factors.emplace_shared<HybridSmoothingFactor>(
           object_motion_key_k_2, object_motion_key_k_1, object_motion_key_k,
-          getOrConstructL0(object_id, frame_id).second, object_smoothing_noise);
+          keyframe_info.keyframe_pose, object_smoothing_noise);
       if (result.debug_info)
         result.debug_info->getObjectInfo(context.getObjectId())
             .smoothing_factor_added = true;
@@ -869,7 +864,61 @@ void HybridFormulation::objectUpdateContext(
 //   CHECK_EQ(m_key, this->makeDynamicKey(tracklet_id));
 // }
 
-std::pair<FrameId, gtsam::Pose3> HybridFormulation::getOrConstructL0(
+// this needs to happen (mostly) before factor graph construction to take
+// effect!!
+std::pair<FrameId, gtsam::Pose3> HybridFormulationV1::forceNewKeyFrame(
+    FrameId frame_id, ObjectId object_id) {
+  LOG(INFO) << "Starting new range of object k=" << frame_id
+            << " j=" << object_id;
+  gtsam::Pose3 center = calculateObjectCentroid(object_id, frame_id);
+
+  auto result =
+      key_frame_data_.startNewActiveRange(object_id, frame_id, center)
+          ->dataPair();
+
+  // clear meta-data to start new tracklets
+  // TODO: somehow adding this back in causes a segfault when ISAM2::update step
+  // happens... in combinating with clearing the internal graph
+  // (this->clearGraph) and resetting the smoother in ParlallelObjectSAM. I
+  // think we should do this!!
+  // HACK - these vairblaes will still be in the values and therefore we will
+  // get some kind of 'gtsam::ValuesKeyAlreadyExists' when updating the
+  // formulation we therefore need to remove these from the theta - this will
+  // remove old data
+  // from the accessor (even though we keep track of the meta-data)
+  // when the frontend is updated to include keyframe information this should
+  // not be an issue as the frontend will ensure new measurements dont refer to
+  // landmarks in old keypoints
+  // for (const auto& [tracklet_id, _] : is_dynamic_tracklet_in_map_) {
+  //     ObjectId lmk_object_id;
+  //     CHECK(map()->getLandmarkObjectId(lmk_object_id, tracklet_id));
+  //     //only delete for requested object
+  //     if(lmk_object_id == object_id) {
+  //       theta_.erase(this->makeDynamicKey(tracklet_id));
+  //     }
+  // }
+  // is_dynamic_tracklet_in_map_.clear();
+
+  // sanity check
+  CHECK_EQ(result.first, frame_id);
+  return result;
+}
+
+HybridFormulation::IntermediateMotionInfo
+HybridFormulationV1::getIntermediateMotionInfo(ObjectId object_id,
+                                               FrameId frame_id) {
+  IntermediateMotionInfo info;
+  bool keyframe_updated;
+  info.H_W_e_k_initial =
+      computeInitialH(object_id, frame_id, &keyframe_updated);
+  (void)keyframe_updated;
+
+  std::tie(info.kf_id, info.keyframe_pose) =
+      getOrConstructL0(object_id, frame_id);
+  return info;
+}
+
+std::pair<FrameId, gtsam::Pose3> HybridFormulationV1::getOrConstructL0(
     ObjectId object_id, FrameId frame_id) {
   const KeyFrameRange::ConstPtr range =
       key_frame_data_.find(object_id, frame_id);
@@ -884,9 +933,9 @@ std::pair<FrameId, gtsam::Pose3> HybridFormulation::getOrConstructL0(
 // should also check if the last object motion from the estimation can be used
 // as the last motion
 //  so only one composition is needed to get the latest motion
-gtsam::Pose3 HybridFormulation::computeInitialH(ObjectId object_id,
-                                                FrameId frame_id,
-                                                bool* keyframe_updated) {
+gtsam::Pose3 HybridFormulationV1::computeInitialH(ObjectId object_id,
+                                                  FrameId frame_id,
+                                                  bool* keyframe_updated) {
   // TODO: could this ever update the keyframe?
   auto [s0, L_e] = getOrConstructL0(object_id, frame_id);
 
@@ -1044,7 +1093,7 @@ gtsam::Pose3 HybridFormulation::computeInitialH(ObjectId object_id,
   }
 }
 
-gtsam::Pose3 HybridFormulation::calculateObjectCentroid(
+gtsam::Pose3 HybridFormulationV1::calculateObjectCentroid(
     ObjectId object_id, FrameId frame_id) const {
   if (FLAGS_init_object_pose_from_gt) {
     const auto gt_packets = hooks().ground_truth_packets_request();
@@ -1109,6 +1158,121 @@ gtsam::Pose3 HybridFormulation::calculateObjectCentroid(
   gtsam::Point3 translation = pclPointToGtsam(centroid);
   gtsam::Pose3 center(gtsam::Rot3::Identity(), X_world * translation);
   return center;
+}
+
+void HybridFormulationKeyFrame::preUpdate(const PreUpdateData& data) {
+  // frame id or kf_id
+  const FrameId kf_id = data.frame_id;
+  // initial_H_W_e_k_.clear();
+  // last_kf_update_initial_ = kf_id;
+
+  HybridAccessor::Ptr accessor = this->derivedAccessor<HybridAccessor>();
+  CHECK_NOTNULL(accessor);
+
+  LOG(INFO) << "preUpdate kfid = " << kf_id;
+
+  CHECK(data.input);
+  using ObjectTrackMap = VisionImuPacket::ObjectTrackMap;
+  using ObjectTracks = VisionImuPacket::ObjectTracks;
+
+  const VisionImuPacket& input = *data.input;
+  const ObjectTrackMap& object_tracks = input.objectTracks();
+  for (const auto& [object_id, object_track] : object_tracks) {
+    gtsam::Pose3 H_W_KF0_KF_initial;
+
+    LOG(INFO) << "Object tracks " << object_id;
+    CHECK(object_track.hybrid_info)
+        << "Hybrid info must be provided as part of the object track for this "
+           "formulation!";
+    const ObjectTracks::HybridInfo& hybrid_initial_info =
+        object_track.hybrid_info.value();
+    CHECK(object_track.is_keyframe)
+        << "Object j=" << object_id << " is not a OKF!";
+    if (object_track.is_object_new) {
+      LOG(INFO) << "New object detected for j=" << object_id;
+      key_frame_data_.startNewActiveRange(object_id, kf_id,
+                                          hybrid_initial_info.L_W_k);
+      front_end_keyframes_.startNewActiveRange(object_id, kf_id,
+                                               hybrid_initial_info.L_W_k);
+
+      // k may actually be k-1 or somethign!!!
+      H_W_KF0_KF_initial = hybrid_initial_info.H_W_e_k;
+    } else {
+      const KeyFrameRange::ConstPtr frontend_range =
+          front_end_keyframes_.find(object_id, kf_id);
+      const KeyFrameRange::ConstPtr backend_range =
+          key_frame_data_.find(object_id, kf_id);
+
+      CHECK(frontend_range);
+      CHECK(backend_range);
+      // lkf is the previous OKF (from the frontend) before we;re about to make
+      // our new one!
+      const auto [lkf, lkf_pose] = frontend_range->dataPair();
+      const auto [backend_lkf, backend_lkf_pose] = backend_range->dataPair();
+
+      LOG(INFO) << "Frontend lkf " << lkf;
+      LOG(INFO) << "Backend lkf " << backend_lkf;
+
+      // most from the first KF (ie the fixed frame) to the most recent KF
+      StateQuery<Motion3ReferenceFrame> H_W_KF0_lKF =
+          accessor->getEstimatedMotion(object_id, lkf);
+      if (!H_W_KF0_lKF) {
+        // should happen only on the first two frames so hopefully the lkf and
+        // the backend_lkf are the same!! in this case the estimated motion is
+        // the frontend motion
+        LOG(INFO) << "Not estimated motion!";
+        CHECK_EQ(hybrid_initial_info.from, lkf);
+        CHECK_EQ(kf_id, hybrid_initial_info.to);
+        H_W_KF0_KF_initial = hybrid_initial_info.H_W_e_k;
+      } else {
+        // check all keyframe ids match
+        // the frontend estimate goes from lkf to k and k is about to become a
+        // new motion the backend has an estimate from e_0 (ie when the object
+        // first first seen, or when it reappeared) and is estimating from e_o
+        // to lkf
+        CHECK(H_W_KF0_lKF);
+        CHECK_EQ(H_W_KF0_lKF->from(), backend_lkf);
+        CHECK_EQ(H_W_KF0_lKF->to(), lkf);
+        CHECK_EQ(H_W_KF0_lKF->to(), hybrid_initial_info.from);
+        // the kf id should bt the same as hybrid_initial_info.kf_id_e in the
+        // case that the object track is a keyframe (which it must be) mighjt be
+        // off by one!!
+        CHECK_EQ(kf_id, hybrid_initial_info.to);
+        // compose last estimate with new integrated motion to get a motion arch
+        // from the first KF to this KF
+        H_W_KF0_KF_initial =
+            H_W_KF0_lKF->estimate() * hybrid_initial_info.H_W_e_k;
+      }
+      front_end_keyframes_.startNewActiveRange(
+          object_id, hybrid_initial_info.to, hybrid_initial_info.L_W_k);
+      LOG(INFO) << "Adding initial motion j=" << object_id
+                << " e = " << hybrid_initial_info.from
+                << " k = " << hybrid_initial_info.to;
+    }
+
+    initial_H_W_e_k_.insert22(object_id, kf_id, H_W_KF0_KF_initial);
+  }
+}
+
+HybridFormulation::IntermediateMotionInfo
+HybridFormulationKeyFrame::getIntermediateMotionInfo(ObjectId object_id,
+                                                     FrameId frame_id) {
+  // tempory solution
+  //  as we sometimes add two motions currently not checking that frameids
+  //  match! CHECK_EQ(frame_id, last_kf_update_initial_);
+  CHECK(initial_H_W_e_k_.exists(object_id, frame_id));
+
+  IntermediateMotionInfo info;
+  info.H_W_e_k_initial = initial_H_W_e_k_.at(object_id, frame_id);
+
+  const KeyFrameRange::ConstPtr range =
+      key_frame_data_.find(object_id, frame_id);
+  CHECK(range);
+  std::tie(info.kf_id, info.keyframe_pose) = range->dataPair();
+
+  // info.kf_id != frame_id!!
+
+  return info;
 }
 
 void RegularHybridFormulation::preUpdate(const PreUpdateData& data) {

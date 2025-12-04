@@ -74,6 +74,11 @@ struct YoloV8ObjectDetector::Impl {
     const cv::Size required_size = input_info.shape();
     const cv::Size original_size = rgb.size();
 
+    // result result regardless
+    result.labelled_mask =
+        cv::Mat::zeros(original_size, ObjectDetectionEngine::MaskDType);
+    result.input_image = rgb;
+
     const float* output0_data = output0.data();
     const float* output1_data = output1.data();
 
@@ -185,10 +190,6 @@ struct YoloV8ObjectDetector::Impl {
         static_cast<float>(mask_h) / required_size.height;
 
     std::vector<ObjectDetection> detections;
-    std::vector<cv::Mat> binary_detection_masks;
-    detections.reserve(nms_indices.size());
-    binary_detection_masks.reserve(nms_indices.size());
-
     for (const int idx : nms_indices) {
       const float confidence = confidences[idx];
       const int class_id = class_ids[idx];
@@ -259,23 +260,20 @@ struct YoloV8ObjectDetector::Impl {
         binary_mask(roi).copyTo(final_binary_mask(roi));
       }
 
-      binary_detection_masks.push_back(final_binary_mask);
-
       ObjectDetection detection{final_binary_mask, bounding_box, class_label,
                                 confidence};
       detections.push_back(detection);
     }
 
-    cv::Mat labelled_mask =
-        cv::Mat::zeros(original_size, ObjectDetectionEngine::MaskDType);
+    // return false;
 
     std::vector<SingleDetectionResult> tracking_result =
         tracker_->track(detections);
 
-    // //construct label mask from tracked result
-    for (size_t i = 0; i < tracking_result.size(); i++) {
-      const SingleDetectionResult& single_result = tracking_result.at(i);
+    // return false;
 
+    // //construct label mask from tracked result
+    for (const SingleDetectionResult& single_result : tracking_result) {
       // this may happen if the object was not well tracked
       if (!single_result.isValid()) {
         continue;
@@ -286,14 +284,12 @@ struct YoloV8ObjectDetector::Impl {
       single_label_mask.setTo(single_result.object_id, single_result.mask);
       // set pixel values to object label and update full labelled mask
       // cv::Mat binary_mask = single_result.mask * single_result.object_id;
-      labelled_mask += single_label_mask;
+      result.labelled_mask += single_label_mask;
     }
 
     result.detections = tracking_result;
-    result.labelled_mask = labelled_mask;
-    result.input_image = rgb;
 
-    return false;
+    return true;
   }
 
   inline cv::Mat sigmoid(const cv::Mat& src) {

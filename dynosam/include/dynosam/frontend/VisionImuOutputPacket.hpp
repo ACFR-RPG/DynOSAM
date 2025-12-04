@@ -61,6 +61,8 @@ class VisionImuPacket {
   //! Just need this here for viz!!
   gtsam::FastMap<ObjectId, HybridObjectMotionSRIF> active_filters;
 
+  FrameId kf_id{0};
+
   /// @brief Basic track structure representing a tracking status and visual
   /// measurements
   struct Tracks {
@@ -94,6 +96,30 @@ class VisionImuPacket {
     Motion3ReferenceFrame H_W_k_1_k;
     //! Object pose at k in W
     gtsam::Pose3 L_W_k;
+
+    // TODO: change to better tracking status
+    // need this info to know when to make a new keyframe!!
+    bool is_object_new{false};
+
+    // TODO: for now structure!
+    struct HybridInfo {
+      //! Initial object points in L
+      // TODO: only contain new ones!!?
+      StatusLandmarkVector initial_object_points;
+      //! Associated keyframe
+      //! if keyframe then this value is NEW (ie changed from the previous one)
+      //! and the initial motion should be identity
+      gtsam::Pose3 L_W_k;
+      //! This is the preintegrated motion immediately before the current
+      //! keyframe at k
+      gtsam::Pose3 H_W_e_k;
+      //! Frame e (the last keyframe)
+      FrameId from;
+      //! Frame k (the current keyframe)
+      FrameId to;
+    };
+    // Should also set is_keyframe
+    std::optional<HybridInfo> hybrid_info;
   };
   //! Map of object id's to ObjectTracks
   using ObjectTrackMap = gtsam::FastMap<ObjectId, ObjectTracks>;
@@ -103,6 +129,11 @@ class VisionImuPacket {
   ImuFrontend::PimPtr pim() const;
   Camera::ConstPtr camera() const;
   PointCloudLabelRGB::Ptr denseLabelledCloud() const;
+  bool isCameraKeyFrame() const;
+  bool isObjectKeyFrame(ObjectId object_id) const;
+
+  // static or dynamic!!
+  bool isKeyFrame() const;
 
   const CameraTracks& cameraTracks() const;
   const gtsam::Pose3& cameraPose() const;

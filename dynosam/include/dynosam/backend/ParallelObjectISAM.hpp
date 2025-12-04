@@ -208,7 +208,7 @@ class ParallelObjectISAM {
   const Params params_;
   const ObjectId object_id_;
   Map::Ptr map_;
-  HybridFormulation::Ptr decoupled_formulation_;
+  HybridFormulationV1::Ptr decoupled_formulation_;
   HybridAccessor::Ptr accessor_;
   std::shared_ptr<gtsam::ISAM2> smoother_;
   Result result_;

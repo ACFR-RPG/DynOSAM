@@ -194,10 +194,19 @@ class BackendFactory
 
     } else if (this->backend_type_ == BackendType::HYBRID) {
       LOG(INFO) << "Using HYBRID";
-      std::shared_ptr<RegularHybridFormulation> formulation =
-          std::make_shared<RegularHybridFormulation>(formulation_params, map,
-                                                     noise_models, sensors,
-                                                     formulation_hooks);
+      // std::shared_ptr<RegularHybridFormulation> formulation =
+      //     std::make_shared<RegularHybridFormulation>(formulation_params, map,
+      //                                                noise_models, sensors,
+      //                                                formulation_hooks);
+
+      // TODO: this will break a few things
+      //  ie where we check in the RegularBackend if hybrid to do the keyframe
+      //  thing! and in the HybridDisplayBackend (we check for regular, but we
+      //  should actually just check for Hybrid!!)
+      std::shared_ptr<HybridFormulationKeyFrame> formulation =
+          std::make_shared<HybridFormulationKeyFrame>(formulation_params, map,
+                                                      noise_models, sensors,
+                                                      formulation_hooks);
 
       // call polciy function
       wrapper.display = this->createDisplay(formulation);

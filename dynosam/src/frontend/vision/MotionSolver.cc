@@ -56,6 +56,18 @@
 #include "dynosam_cv/RGBDCamera.hpp"
 #include "dynosam_opt/FactorGraphTools.hpp"  //TODO: clean
 
+// GTSAM Includes
+// FOR TESTING!
+#include <gtsam/base/Matrix.h>
+#include <gtsam/base/Vector.h>
+#include <gtsam/base/numericalDerivative.h>
+#include <gtsam/geometry/Cal3_S2.h>
+#include <gtsam/geometry/PinholeCamera.h>
+#include <gtsam/geometry/Pose3.h>
+// #include <gtsam/base/FullLinearSolver.h>
+
+#include "dynosam/factors/HybridFormulationFactors.hpp"
+
 namespace dyno {
 
 void declare_config(OpticalFlowAndPoseOptimizer::Params& config) {
@@ -303,10 +315,8 @@ Pose3SolverResult EgoMotionSolver::geometricOutlierRejection3d2d(
 void OpticalFlowAndPoseOptimizer::updateFrameOutliersWithResult(
     const Result& result, Frame::Ptr frame_k_1, Frame::Ptr frame_k) const {
   utils::TimingStatsCollector timer("of_motion_solver.update_frame");
-  // //original flow image that goes from k to k+1 (gross, im sorry!)
-  // TODO: use flow_is_future param
-  const cv::Mat& flow_image = frame_k->image_container_.opticalFlow();
-  const cv::Mat& motion_mask = frame_k->image_container_.objectMotionMask();
+  const auto& image_container_k = frame_k->image_container_;
+  const cv::Mat& motion_mask = image_container_k.objectMotionMask();
 
   auto camera = frame_k->camera_;
   const auto& refined_inliers = result.inliers;
@@ -319,7 +329,7 @@ void OpticalFlowAndPoseOptimizer::updateFrameOutliersWithResult(
     TrackletId tracklet_id = refined_inliers.at(i);
     gtsam::Point2 refined_flow = refined_flows.at(i);
 
-    const Feature::Ptr feature_k_1 = frame_k_1->at(tracklet_id);
+    Feature::Ptr feature_k_1 = frame_k_1->at(tracklet_id);
     Feature::Ptr feature_k = frame_k->at(tracklet_id);
 
     CHECK_EQ(feature_k->objectId(), result.best_result.object_id);
@@ -342,20 +352,41 @@ void OpticalFlowAndPoseOptimizer::updateFrameOutliersWithResult(
       continue;
     }
 
-    // we now have to update the prediced keypoint using the original flow!!
-    // TODO: code copied from feature tracker
-    const int x = functional_keypoint::u(refined_keypoint);
-    const int y = functional_keypoint::v(refined_keypoint);
-    double flow_xe = static_cast<double>(flow_image.at<cv::Vec2f>(y, x)[0]);
-    double flow_ye = static_cast<double>(flow_image.at<cv::Vec2f>(y, x)[1]);
-    // the measured flow after the origin has been updated
-    OpticalFlow new_measured_flow(flow_xe, flow_ye);
-    feature_k->measuredFlow(new_measured_flow);
-    // TODO: check predicted flow is within image
-    Keypoint predicted_kp = Feature::CalculatePredictedKeypoint(
-        refined_keypoint, new_measured_flow);
-    feature_k->predictedKeypoint(predicted_kp);
+    // update current keypoint
     feature_k->keypoint(refined_keypoint);
+    // update refined frlow
+    feature_k_1->measuredFlow(refined_flow);
+    // update refined predicted keypoint
+    feature_k_1->predictedKeypoint(refined_keypoint);
+
+    // Logic is a bit convoluted and dependant on other things
+    // if we have optical flow (from k to k+1 due to historical reaseons)
+    // then use this to set the predicted keypoint
+    // if we are tracking using the provided flow then this MUST get set
+    // otherwise tracking will fail as tracking with provided optical flow uses
+    // the predicted keypoint to get the next keypoint!
+    if (image_container_k.hasOpticalFlow()) {
+      const cv::Mat& flow_image = image_container_k.opticalFlow();
+      const int x = functional_keypoint::u(refined_keypoint);
+      const int y = functional_keypoint::v(refined_keypoint);
+      double flow_xe = static_cast<double>(flow_image.at<cv::Vec2f>(y, x)[0]);
+      double flow_ye = static_cast<double>(flow_image.at<cv::Vec2f>(y, x)[1]);
+
+      OpticalFlow new_measured_flow(flow_xe, flow_ye);
+      feature_k->measuredFlow(new_measured_flow);
+      // TODO: check predicted flow is within image
+      Keypoint predicted_kp = Feature::CalculatePredictedKeypoint(
+          refined_keypoint, new_measured_flow);
+      feature_k->predictedKeypoint(predicted_kp);
+    } else {
+      // we dont have a predicted flow but we assume we are using KLT tracking
+      //  in this case we dont have a predicted keypoint.
+      //  just use the refined flow as the measured flow
+      feature_k->measuredFlow(refined_flow);
+      Keypoint predicted_kp =
+          Feature::CalculatePredictedKeypoint(refined_keypoint, refined_flow);
+      feature_k->predictedKeypoint(predicted_kp);
+    }
   }
 
   // update tracks
@@ -441,15 +472,8 @@ Pose3SolverResult EgoMotionSolver::geometricOutlierRejection3d3d(
   return result;
 }
 
-ObjectMotionSovlerF2F::ObjectMotionSovlerF2F(
-    const ObjectMotionSovlerF2F::Params& params,
-    const CameraParams& camera_params)
-    : EgoMotionSolver(static_cast<const EgoMotionSolver::Params&>(params),
-                      camera_params),
-      object_motion_params(params) {}
-
-ObjectMotionSovlerF2F::Result ObjectMotionSovlerF2F::solve(
-    Frame::Ptr frame_k, Frame::Ptr frame_k_1) {
+ObjectMotionSolver::Result ObjectMotionSolver::solve(Frame::Ptr frame_k,
+                                                     Frame::Ptr frame_k_1) {
   ObjectIds failed_object_tracks;
   MotionEstimateMap motion_estimates;
 
@@ -490,14 +514,25 @@ ObjectMotionSovlerF2F::Result ObjectMotionSovlerF2F::solve(
   for (auto object_id : failed_object_tracks) {
     frame_k->object_observations_.erase(object_id);
   }
-  auto motions = updateMotions(motion_estimates, frame_k, frame_k_1);
-  auto poses = updatePoses(motion_estimates, frame_k, frame_k_1);
-  return std::make_pair(motions, poses);
+
+  ObjectPoseMap poses;
+  ObjectMotionMap motions;
+
+  updateMotions(motions, motion_estimates, frame_k, frame_k_1);
+  updatePoses(poses, motion_estimates, frame_k, frame_k_1);
+  return {motions, poses};
 }
 
-const ObjectPoseMap& ObjectMotionSovlerF2F::updatePoses(
-    MotionEstimateMap& motion_estimates, Frame::Ptr frame_k,
-    Frame::Ptr frame_k_1) {
+ObjectMotionSovlerF2F::ObjectMotionSovlerF2F(
+    const ObjectMotionSovlerF2F::Params& params,
+    const CameraParams& camera_params)
+    : EgoMotionSolver(static_cast<const EgoMotionSolver::Params&>(params),
+                      camera_params),
+      object_motion_params(params) {}
+
+void ObjectMotionSovlerF2F::updatePoses(
+    ObjectPoseMap& object_poses, const MotionEstimateMap& motion_estimates,
+    Frame::Ptr frame_k, Frame::Ptr frame_k_1) {
   gtsam::Point3Vector object_centroids_k_1, object_centroids_k;
 
   for (const auto& [object_id, motion_estimate] : motion_estimates) {
@@ -553,16 +588,17 @@ const ObjectPoseMap& ObjectMotionSovlerF2F::updatePoses(
                                frame_k->getFrameId());
   }
 
-  return object_poses_;
+  object_poses = object_poses_;
 }
 
-const ObjectMotionMap& ObjectMotionSovlerF2F::updateMotions(
-    MotionEstimateMap& motion_estimates, Frame::Ptr frame_k, Frame::Ptr) {
+void ObjectMotionSovlerF2F::updateMotions(
+    ObjectMotionMap& object_motions, const MotionEstimateMap& motion_estimates,
+    Frame::Ptr frame_k, Frame::Ptr) {
   const FrameId frame_id_k = frame_k->getFrameId();
   for (const auto& [object_id, motion_reference_frame] : motion_estimates) {
     object_motions_.insert22(object_id, frame_id_k, motion_reference_frame);
   }
-  return object_motions_;
+  object_motions = object_motions_;
 }
 
 bool ObjectMotionSovlerF2F::solveImpl(Frame::Ptr frame_k, Frame::Ptr frame_k_1,
@@ -638,7 +674,6 @@ Motion3SolverResult ObjectMotionSovlerF2F::geometricOutlierRejection3d2d(
 
     gtsam::Pose3 G_w = pose_result.best_result.inverse();
     if (object_motion_params.refine_motion_with_joint_of) {
-      VLOG(10) << "Refining object motion pose with joint of";
       OpticalFlowAndPoseOptimizer flow_optimizer(
           object_motion_params.joint_of_params);
       // Use the original result as the input to the refine joint optical flow
@@ -655,6 +690,11 @@ Motion3SolverResult ObjectMotionSovlerF2F::geometricOutlierRejection3d2d(
       G_w = flow_opt_result.best_result.refined_pose.inverse();
       // inliers should be a subset of the original refined inlier tracks
       refined_inlier_tracklets = flow_opt_result.inliers;
+
+      VLOG(10) << "Refined object " << object_id
+               << "pose with optical flow - error before: "
+               << flow_opt_result.error_before.value_or(NaN)
+               << " error_after: " << flow_opt_result.error_after.value_or(NaN);
     }
     // still need to take the inverse as we get the inverse of G out
     gtsam::Pose3 H_w = T_world_k * G_w;
@@ -1385,7 +1425,11 @@ const gtsam::Pose3& HybridObjectMotionSRIF::getCurrentLinearization() const {
   return H_linearization_point_;
 }
 
-gtsam::Pose3 HybridObjectMotionSRIF::getStatePoseW() const {
+gtsam::Pose3 HybridObjectMotionSRIF::getKeyFramedMotion() const {
+  return H_linearization_point_.retract(getStatePerturbation());
+}
+
+gtsam::Pose3 HybridObjectMotionSRIF::getF2FMotion() const {
   gtsam::Pose3 H_W_e_k = H_linearization_point_.retract(getStatePerturbation());
   gtsam::Pose3 H_W_e_km1 = previous_H_;
   return H_W_e_k * H_W_e_km1.inverse();
@@ -1408,7 +1452,7 @@ void HybridObjectMotionSRIF::predict(const gtsam::Pose3&) {
 
   // call before updating the previous_H_
   // previous motion -> assume constant!
-  gtsam::Pose3 H_W_km1_k = getStatePoseW();
+  gtsam::Pose3 H_W_km1_k = getF2FMotion();
 
   // gtsam::Pose3 L_km1 = previous_H_ * L_e_;
   // gtsam::Pose3 L_k = H_current_mean * L_e_;
@@ -1425,8 +1469,6 @@ void HybridObjectMotionSRIF::predict(const gtsam::Pose3&) {
   // 2. Perform EKF prediction (add process noise)
   // P_k = P_{k-1} + Q
   gtsam::Matrix66 P_predicted = P_current + Q_;
-
-  // LOG(INFO) << "Previous H " << H_current_mean << " delta H " << H_W_km1_k;
 
   // 3. Re-linearize: Set new linearization point to the current mean
   H_linearization_point_ = H_W_km1_k * H_current_mean;
@@ -1546,7 +1588,6 @@ HybridObjectMotionSRIF::Result HybridObjectMotionSRIF::update(
     //  start of the update.
     const gtsam::Pose3 A = X_W_k_inv * H_current_mean;
     const gtsam::Pose3 G_w = A * L_e_;
-    const gtsam::Matrix6 J_correction = -A.AdjointMap();
     gtsam::StereoCamera gtsam_stereo_camera_current(G_w.inverse(),
                                                     stereo_calibration_);
 
@@ -1590,7 +1631,7 @@ HybridObjectMotionSRIF::Result HybridObjectMotionSRIF::update(
       // Calculate Huber weight w(e) = min(1, delta / |e|)
       weights(i) = (error <= huber_k_) ? 1.0 : huber_k_ / error;
       if (/*weights(i) < 0.99 &&*/ iter == num_irls_iterations - 1) {
-        VLOG(20) << "  [Meas " << i << "] Final Weight: " << weights(i)
+        VLOG(50) << "  [Meas " << i << "] Final Weight: " << weights(i)
                  << " (Error: " << error << ")";
       }
     }
@@ -1688,7 +1729,9 @@ void HybridObjectMotionSRIF::resetState(const gtsam::Pose3& L_e,
 ObjectMotionSolverFilter::ObjectMotionSolverFilter(
     const ObjectMotionSolverFilter::Params& params,
     const CameraParams& camera_params)
-    : ObjectMotionSovlerF2F(params, camera_params) {}
+    : EgoMotionSolver(static_cast<const EgoMotionSolver::Params&>(params),
+                      camera_params),
+      filter_params_(params) {}
 
 bool ObjectMotionSolverFilter::solveImpl(Frame::Ptr frame_k,
                                          Frame::Ptr frame_k_1,
@@ -1750,29 +1793,89 @@ bool ObjectMotionSolverFilter::solveImpl(Frame::Ptr frame_k,
   // the case when we loos all points!) what about in the OMD case? we get a
   // bunch more points but now linearization of points is wrong!? WOW okay this
   // fixed all the things!!!!!
+  // TODO: repeated information in the FeatureTrackingInfo (which one to use!!)
   auto it = std::find(frame_k->retracked_objects_.begin(),
                       frame_k->retracked_objects_.end(), object_id);
 
-  bool new_object = false;
-  if (it != frame_k->retracked_objects_.end() && filters_.exists(object_id)) {
-    LOG(INFO) << object_id << " retracked - resetting filter!";
+  // TODO: refine complex logic!
+  const bool object_resampled = it != frame_k->retracked_objects_.end();
+  const bool object_in_previous =
+      frame_k_1->tracking_info_->dynamic_track.exists(object_id);
+  const bool object_in_filter = filters_.exists(object_id);
+
+  const bool object_new_in_previous =
+      object_in_previous &&
+      frame_k_1->tracking_info_->dynamic_track.at(object_id).object_new;
+  const bool object_new = !filters_.exists(object_id);
+
+  // TODO: object is new is not getting set!!! (this should be for when the
+  // object is re-tracked too!!!)
+  //  maybe somehow its in the previous frame!!?
+  //  this is becuase when an object is new it just has sampled points and no
+  //  tracked points and therefore no points go to the backend and therefore we
+  //  do not update it!! therefore the ObjectTrack object wont exist!!
+
+  bool new_or_reset_object = false;
+  // bool new_object = false;
+  // bool object_reset = false;
+  if (object_resampled && object_in_filter) {
+    LOG(INFO) << object_id
+              << " retracked - resetting filter k=" << frame_k->getFrameId();
     // Not thread safe!
     // filters_.erase(object_id);
-    new_object = true;
+    // new object false so we dont
+    // new_object = true;
+    new_or_reset_object = true;
     gtsam::Pose3 keyframe_pose =
         construct_initial_frame(frame_k_1, geometric_result.inliers);
 
     auto filter = filters_.at(object_id);
+    // must set value before reset to get the last value
+    // NOTE: we currently KF to k-1 so this will be a little bit wrong!!!
+    // assume that we only take this value if the object was retracked!!
+    // as we dont set it anywhere else!!
+    filter->H_W_e_k_before_reset = filter->getCurrentLinearization();
+    // filter->frame_id_e_before_reset = filter->getKeyFrameId();
+    filter->frame_id_e_before_reset = filter->getKeyFrameId();
 
     // instead of using new pose (use last motion) (if last frame id was k-1?)
     //  we start to drift from the center of the object!!
     //  keyframe_pose = filter->getCurrentLinearization() *
     //  filter->getKeyFramePose(); filters_.erase(object_id);
-    filters_.at(object_id)->resetState(keyframe_pose, frame_k_1->getFrameId());
+    filter->resetState(keyframe_pose, frame_k_1->getFrameId());
+    filter->frame_id_e_ = frame_k->getFrameId();
+    frame_k->tracking_info_->dynamic_track.at(object_id).object_resampled =
+        true;
   }
 
+  // // hack to handle object new is to update it from fame_k-1!
+  // if(object_new_in_previous) {
+  //   LOG(INFO) << "Object " << object_id << " was new in previous -
+  //   clearing!";
+  //   // //TODO: currently only setting both object new and object resampled to
+  //   true
+  //   // // becuause logic in frontend says if new then must be resampled (not
+  //   sure how to handle this yet!)
+  //   //   frame_k->tracking_info_->dynamic_track.at(object_id).object_new =
+  //   true;
+  //      frame_k->tracking_info_->dynamic_track.at(object_id).object_resampled
+  //      =
+  //       true;
+  //   filters_.erase(object_id);
+  // }
+
+  // becuuse we erase it if object new in previous!
+  // not sure this is the best way to handle reappearing objects!
   if (!filters_.exists(object_id)) {
-    new_object = true;
+    new_or_reset_object = true;
+
+    // update new object tracking
+    // the tracking cannot do it (for now) as this is delayed one frame with the
+    // backend! frame_k->tracking_info_->dynamic_track.at(object_id).object_new
+    // = true;
+    // frame_k->tracking_info_->dynamic_track.at(object_id).object_resampled =
+    // true;
+
     // gtsam::Vector3 noise;
     // noise << 1.0, 1.0, 3.0;
     // gtsam::Matrix33 R = noise.array().matrix().asDiagonal();
@@ -1782,7 +1885,7 @@ bool ObjectMotionSolverFilter::solveImpl(Frame::Ptr frame_k,
     gtsam::Matrix66 P = gtsam::Matrix66::Identity() * 0.3;
 
     // Process Model noise (6x6)
-    gtsam::Matrix66 Q = gtsam::Matrix66::Identity() * 2.0;
+    gtsam::Matrix66 Q = gtsam::Matrix66::Identity() * 0.2;
 
     if (geometric_result.inliers.size() < 4) {
       LOG(WARNING) << "Could not make initial frame for object " << object_id
@@ -1790,6 +1893,14 @@ bool ObjectMotionSolverFilter::solveImpl(Frame::Ptr frame_k,
       return false;
     }
 
+    frame_k->tracking_info_->dynamic_track.at(object_id).object_new = true;
+    frame_k->tracking_info_->dynamic_track.at(object_id).object_resampled =
+        true;
+
+    // keyframe at k not k-1
+    // this means we drop the information at k-1 but due to the system design
+    // we cannot send k-1 and k to the backend
+    // and now the front-end and backend need to be synchronized
     gtsam::Pose3 keyframe_pose =
         construct_initial_frame(frame_k_1, geometric_result.inliers);
 
@@ -1798,11 +1909,10 @@ bool ObjectMotionSolverFilter::solveImpl(Frame::Ptr frame_k,
                                     gtsam::Pose3::Identity(), keyframe_pose,
                                     frame_k_1->getFrameId(), P, Q, R,
                                     frame_k_1->getCamera(), kHuberKFilter));
+    // fake KF is this frame
+    filters_.at(object_id)->frame_id_e_ = frame_k->getFrameId();
   }
   auto filter = filters_.at(object_id).get();
-
-  gtsam::Pose3 G_w_inv_pnp = geometric_result.best_result.inverse();
-  gtsam::Pose3 H_w_km1_k_pnp = frame_k->getPose() * G_w_inv_pnp;
 
   // std::vector<gtsam::Point3> object_points;
   // std::vector<gtsam::Point2> image_points;
@@ -1822,8 +1932,9 @@ bool ObjectMotionSolverFilter::solveImpl(Frame::Ptr frame_k,
   // }
 
   // update and predict should be one step so that if we dont have enough points
+  // NOTE: this logic seemed pretty important to ensure the estimate was good!!!
   // we dont predict?
-  if (new_object) {
+  if (new_or_reset_object) {
     filter->predict(gtsam::Pose3::Identity());
     {
       utils::TimingStatsCollector timer("motion_solver.ekf_update");
@@ -1833,6 +1944,21 @@ bool ObjectMotionSolverFilter::solveImpl(Frame::Ptr frame_k,
       // frame_k->getPose());
     }
   }
+
+  // on the first frame we want to init everything (ie. points)
+  // so that they align with the keyframe but dont need to update anyting
+  //  as the motion should be identity!!!
+  gtsam::Pose3 G_w_inv_pnp = geometric_result.best_result.inverse();
+  gtsam::Pose3 H_w_km1_k_pnp = frame_k->getPose() * G_w_inv_pnp;
+  // predict with identity if mew
+  // if(new_or_reset_object) {
+  //   H_w_km1_k_pnp = gtsam::Pose3::Identity();
+  // }
+
+  // only estimate if new - otherwise motion is identity as this is the current
+  // keyframe!
+  //  if(!new_or_reset_object) {
+
   filter->predict(H_w_km1_k_pnp);
   {
     utils::TimingStatsCollector timer("motion_solver.ekf_update");
@@ -1841,6 +1967,7 @@ bool ObjectMotionSolverFilter::solveImpl(Frame::Ptr frame_k,
     // filter->updateStereo(object_points, stereo_measurements,
     // frame_k->getPose());
   }
+  // }
 
   // gtsam::Pose3 G_w;
   // cv::Mat inliers_ransac;
@@ -1855,7 +1982,7 @@ bool ObjectMotionSolverFilter::solveImpl(Frame::Ptr frame_k,
     // if (homography_result) {
     // gtsam::Pose3 G_w = geometric_result.best_result.inverse();
     // gtsam::Pose3 H_w = filter->getPose();
-    gtsam::Pose3 H_w_filter = filter->getStatePoseW();
+    gtsam::Pose3 H_w_filter = filter->getF2FMotion();
     gtsam::Pose3 G_w_filter_inv =
         (frame_k->getPose().inverse() * H_w_filter).inverse();
     // gtsam::Pose3 H_w = frame_k->getPose() * G_w;
@@ -1935,6 +2062,32 @@ bool ObjectMotionSolverFilter::solveImpl(Frame::Ptr frame_k,
   } else {
     return false;
   }
+}
+
+void ObjectMotionSolverFilter::updatePoses(
+    ObjectPoseMap& object_poses, const MotionEstimateMap& motion_estimates,
+    Frame::Ptr frame_k, Frame::Ptr /*frame_k_1*/) {
+  const FrameId frame_id_k = frame_k->getFrameId();
+  for (const auto& [object_id, _] : motion_estimates) {
+    CHECK(filters_.exists(object_id));
+
+    auto filter = filters_.at(object_id);
+    gtsam::Pose3 L_k_j =
+        filter->getKeyFramedMotion() * filter->getKeyFramePose();
+    object_poses_.insert22(object_id, frame_id_k, L_k_j);
+  }
+  object_poses = object_poses_;
+}
+
+void ObjectMotionSolverFilter::updateMotions(
+    ObjectMotionMap& object_motions, const MotionEstimateMap& motion_estimates,
+    Frame::Ptr frame_k, Frame::Ptr frame_k_1) {
+  // same as ObjectMotionSovlerF2F
+  const FrameId frame_id_k = frame_k->getFrameId();
+  for (const auto& [object_id, motion_reference_frame] : motion_estimates) {
+    object_motions_.insert22(object_id, frame_id_k, motion_reference_frame);
+  }
+  object_motions = object_motions_;
 }
 
 }  // namespace dyno

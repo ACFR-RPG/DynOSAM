@@ -87,6 +87,8 @@ struct PerObjectStatus {
       0};  // number of points tracked from previous frame wehre current label
            // is the background
   // would be nice to have some histogram data about each tracked point etc...
+  bool object_new{false};
+  bool object_resampled{false};
 
   PerObjectStatus(ObjectId id) : object_id(id) {}
 };
@@ -98,6 +100,11 @@ struct FeatureTrackerInfo {
   // static track info
   size_t static_track_optical_flow{0};
   size_t static_track_detections{0};
+
+  //! If new features were extracted at this frame
+  //! Set in the (static) tracker and partially used to indicate if a new static
+  //! kf is needed
+  bool new_static_detections{false};
 
   inline PerObjectStatus& getObjectStatus(ObjectId object_id) {
     if (!dynamic_track.exists(object_id)) {
@@ -117,12 +124,17 @@ inline std::string to_string(const FeatureTrackerInfo& info) {
      << " - frame id: " << info.frame_id << "\n"
      << " - timestamp: " << std::setprecision(15) << info.timestamp << "\n"
      << "\t- # optical flow: " << info.static_track_optical_flow << "\n"
-     << "\t- # detections: " << info.static_track_detections << "\n";
+     << "\t- # detections: " << info.static_track_detections << "\n"
+     << "\t- # new detections: " << info.new_static_detections << "\n";
 
   for (const auto& [object_id, object_status] : info.dynamic_track) {
     ss << "\t- Object: " << object_id << ": \n";
     ss << "\t\t - num_track " << object_status.num_track << "\n";
     ss << "\t\t - num_sampled " << object_status.num_sampled << "\n";
+    ss << "\t\t - is new " << std::boolalpha << object_status.object_new
+       << "\n";
+    ss << "\t\t - resampled " << std::boolalpha
+       << object_status.object_resampled << "\n";
 
     if (VLOG_IS_ON(20)) {
       ss << "\t\t - num_previous_track " << object_status.num_previous_track

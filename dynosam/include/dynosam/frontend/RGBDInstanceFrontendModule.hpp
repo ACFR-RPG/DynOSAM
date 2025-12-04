@@ -99,21 +99,33 @@ class RGBDInstanceFrontendModule : public FrontendModule {
   // FLAGS_save_frontend_json flag
   //   std::map<FrameId, RGBDInstanceOutputPacket::Ptr> output_packet_record_;
 
+  //! Imu frontend - mantains pre-integration from last kf to current k
   ImuFrontend imu_frontend_;
-  gtsam::NavState nav_state_;
+  //! Nav state at k
+  gtsam::NavState nav_state_curr_;
   // this is always udpated with the best X_k pose but the velocity may be wrong
   // if no IMU...
-  gtsam::NavState previous_nav_state_;
+  //! Nav state at k-1
+  gtsam::NavState nav_state_prev_;
+
+  //! Nav state of the last key-frame
+  gtsam::NavState nav_state_last_kf_;
 
   //! Tracks when the nav state was updated using IMU, else VO
   //! in the front-end, when updating with VO, the velocity will (currently) be
   //! wrong!!
-  FrameId last_imu_nav_state_update_{0};
+  FrameId last_imu_k_{0};
 
   //! The relative camera pose (T_k_1_k) from the previous frame
   //! this is used as a constant velocity model when VO tracking fails and the
   //! IMU is not available!
   gtsam::Pose3 vo_velocity_;
+
+  // DEBUGGING FOR KF
+  mutable gtsam::Pose3 T_lkf_;
+
+  //! Last keyframe
+  Frame::Ptr frame_lkf_;
 };
 
 }  // namespace dyno
