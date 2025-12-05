@@ -104,8 +104,6 @@ TEST(OnlineDataProviderRos, testNowaitCameraInfoSubscribe) {
 
 TEST(MultiSync, printVersionMessageFilters) {
   std::cout << "--- Detection Check ---" << std::endl;
-  std::cout << "Message filters use NodeParametersInterface: " << std::boolalpha
-            << message_filters_uses_node_interface << std::endl;
   // This will print the version number defined by the preprocessor logic
   std::cout << "Defined MESSAGE_FILTERS_USES_NODE_INTERFACE: "
             << MESSAGE_FILTERS_USES_NODE_INTERFACE << std::endl;

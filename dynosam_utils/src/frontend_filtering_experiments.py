@@ -191,8 +191,8 @@ def run_aria():
 if __name__ == '__main__':
     # run_tartan_air()
     # run_kitti()
-    # run_viodes()
+    run_viodes()
     # run_cluster()
     # run_tartan_air()
     # run_aria()
-    run_omd()
+    # run_omd()

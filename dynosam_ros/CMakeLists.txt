@@ -35,6 +35,22 @@ find_package(rclpy REQUIRED)
 find_package(message_filters REQUIRED)
 
 
+# conditionally compile for message filters
+# as the API changes between Jazzy and Kilted
+# in Jazzy the version is 4 and Kilted is 7
+if(${message_filters_VERSION_MAJOR} GREATER_EQUAL 7)
+message(
+  "message filters version detected > 7. Assumuing ROS Kilted is used. "
+  " Setting MESSAGE_FILTERS_USES_NODE_INTERFACE=1")
+add_compile_definitions(MESSAGE_FILTERS_USES_NODE_INTERFACE=1)
+else()
+message(
+  "message filters version detected < 7. Assumuing at least ROS Jazzy is used."
+  " Setting MESSAGE_FILTERS_USES_NODE_INTERFACE=0")
+add_compile_definitions(MESSAGE_FILTERS_USES_NODE_INTERFACE=0)
+endif()
+
+
 # setup targets
 include_directories(
   include

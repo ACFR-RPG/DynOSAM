@@ -14,30 +14,15 @@
 #include "rclcpp/node_options.hpp"
 #include "sensor_msgs/msg/image.hpp"
 
-// namespace  {
-
-// using namespace message_filters;
-// in the message_filters interface changes between Jazzy and Kilted
-template <typename, typename = void>
-struct message_filters_has_required_interfaces : std::false_type {};
-
-template <typename T>
-struct message_filters_has_required_interfaces<
-    T, std::void_t<typename T::NodeParametersInterface>> : std::true_type {};
-
-constexpr static bool message_filters_uses_node_interface =
-    message_filters_has_required_interfaces<
-        message_filters::SubscriberBase<>>::value;
-
-#if message_filters_uses_node_interface
+#if MESSAGE_FILTERS_USES_NODE_INTERFACE
 // for Kilted and above
-#define MESSAGE_FILTERS_USES_NODE_INTERFACE 1
 #pragma message("ROS2 message filters version >=Kilted detected")
 #else
 // for at least Jazzy
-#define MESSAGE_FILTERS_USES_NODE_INTERFACE 0
 #pragma message("ROS2 message filters version <=Jazzy detected")
 #endif
+
+// struct
 
 namespace dyno {
 
@@ -59,14 +44,13 @@ namespace {
 
 template <typename Msg, std::size_t N>
 struct ExactTimePolicyHelperImpl {
-// in Jazzy ExactTime filter requires at least two message types to be defined
-// (ie. does not support N==1)
+  // in Jazzy ExactTime filter requires at least two message types to be defined
+  // (ie. does not support N==1)
 #if !MESSAGE_FILTERS_USES_NODE_INTERFACE
   static_assert(N > 1,
                 "Message filters (in at least Jazzy) does not support N==1. "
                 "MultiSync with N>=2 must be used!");
 #endif
-
   template <std::size_t... Is>
   static auto get_policy(std::index_sequence<Is...>)
       -> message_filters::sync_policies::ExactTime<std::remove_reference_t<
@@ -149,7 +133,6 @@ class MultiSync : public MultiSyncBase {
       rclcpp::node_interfaces::NodeInterfaces<NodeParametersInterface,
                                               NodeTopicsInterface>;
 #endif
-
   using MessageType = Msg;
 
   using SyncPolicy = exact_time_policy_helper<MessageType, N>;
