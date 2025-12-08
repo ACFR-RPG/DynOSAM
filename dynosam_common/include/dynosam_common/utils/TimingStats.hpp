@@ -105,19 +105,15 @@ class TimingStatsCollector {
  public:
   DYNO_POINTER_TYPEDEFS(TimingStatsCollector)
 
-  TimingStatsCollector(const std::string& tag);
+  TimingStatsCollector(const std::string& tag, bool construct_stopped = false);
   ~TimingStatsCollector();
 
-  /**
-   * @brief Resets the current tic_time and sets is_valid = true,
-   * such that when the collector tries to toc, the tic (comparison time) will
-   * be valid
-   *
-   *
-   */
-  void reset();
+  void start();
+  void stop();
+  bool isTiming() const;
+  void discardTiming();
 
-  bool isValid() const;
+  std::chrono::milliseconds delta() const;
 
  private:
   /**
@@ -128,16 +124,18 @@ class TimingStatsCollector {
    * The collector then needs to be reset to be used again
    *
    */
-  void tocAndLog();
+  void log();
 
  private:
-  Timer::TimePoint
-      tic_time_;  //! Time on creation (the time to compare against)
-  StatsCollector collector_;
-
-  std::atomic_bool is_valid_{
-      true};  //! Indiactes validity of the tic_time and if the collector has
-              //! been reset allowing a new toc to be made
+  const std::string tag_;
+  //! Comparison time
+  Timer::TimePoint tic_time_;
+  //! Timing state
+  std::atomic_bool is_timing_;
+  //! Internal logger.
+  //! Created only first time logging ocurs to ensure the tag only appears if
+  //! the timing actually logs and not just if it is instantiated.
+  std::unique_ptr<StatsCollector> collector_;
 };
 
 }  // namespace utils

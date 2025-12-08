@@ -44,23 +44,56 @@ PipelineBase::ReturnCode PipelineModule<INPUT, OUTPUT>::spinOnce() {
     return ReturnCode::IS_SHUTDOWN;
   }
 
+  // log get_input, process and get_output packet timing explicitly if VLOG >=
+  // 20
+  const bool should_log_intermediate_timing = VLOG_IS_ON(10);
+  // parse !should_log_intermediate_timing to the timing stats collectors as
+  // this will set construct_stopped to be true we are not logging intermediate
+  // timing we never call timer.start() and therefore they will not be logged
+  const bool construct_intermediate_timers_as_stopped =
+      !should_log_intermediate_timing;
+
+  auto getInputPacketWrapped = [&]() -> InputConstSharedPtr {
+    // LOG(INFO) << "construct_intermediate_timers_as_stopped " <<
+    // construct_intermediate_timers_as_stopped;
+    utils::TimingStatsCollector timing(
+        module_name_ + ".get_input", construct_intermediate_timers_as_stopped);
+    InputConstSharedPtr input = nullptr;
+    is_thread_working_ = false;
+    input = getInputPacket();
+    is_thread_working_ = true;
+    return input;
+  };
+
+  auto processWrapped = [&](InputConstSharedPtr input) -> OutputConstSharedPtr {
+    utils::TimingStatsCollector timing(
+        module_name_ + ".process", construct_intermediate_timers_as_stopped);
+    OutputConstSharedPtr output = nullptr;
+    output = process(input);
+    return output;
+  };
+
+  auto pushOutputPacketWrapped = [&](OutputConstSharedPtr output) -> bool {
+    // Received a valid output, send to output queue
+    utils::TimingStatsCollector timing(
+        module_name_ + ".push_output",
+        construct_intermediate_timers_as_stopped);
+    const bool push_packet_result = pushOutputPacket(output);
+    return push_packet_result;
+  };
+
   ReturnCode return_code;
   utils::TimingStatsCollector timing_stats(module_name_);
 
-  InputConstSharedPtr input = nullptr;
-  is_thread_working_ = false;
-  input = getInputPacket();
-  is_thread_working_ = true;
+  InputConstSharedPtr input = getInputPacketWrapped();
 
   if (input) {
     // Transfer the ownership of input to the actual pipeline module.
     // From this point on, you cannot use input, since process owns it.
-    OutputConstSharedPtr output = nullptr;
-    output = process(input);
+    OutputConstSharedPtr output = processWrapped(input);
 
     if (output) {
-      // Received a valid output, send to output queue
-      if (!pushOutputPacket(output)) {
+      if (!pushOutputPacketWrapped(output)) {
         LOG_EVERY_N(WARNING, 100)
             << "Module: " << module_name_ << " - Output push failed.";
         is_thread_working_ = false;
