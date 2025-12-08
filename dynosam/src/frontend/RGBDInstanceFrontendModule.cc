@@ -172,10 +172,6 @@ FrontendModule::SpinReturn RGBDInstanceFrontendModule::nominalSpin(
     const cv::Mat& left_rgb = image_container->rgb();
     const cv::Mat& right_rgb = image_container->rightRgb();
 
-    auto usable_iterator = frame->static_features_.beginUsable();
-    LOG(INFO) << "Counted intliers "
-              << std::distance(usable_iterator.begin(), usable_iterator.end());
-
     FeaturePtrs stereo_features_1;
     stereo_result =
         tracker_->stereoTrack(stereo_features_1, frame->static_features_,
@@ -278,8 +274,6 @@ FrontendModule::SpinReturn RGBDInstanceFrontendModule::nominalSpin(
   //   output_packet_record_.insert({output->getFrameId(), output});
 
   sendToFrontendLogger(frame, vision_imu_packet);
-
-  LOG(INFO) << "Here";
 
   // if (FLAGS_log_projected_masks)
   //   vision_tools::writeOutProjectMaskAndDepthMap(

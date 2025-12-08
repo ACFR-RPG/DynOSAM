@@ -232,8 +232,6 @@ StateQuery<gtsam::Pose3> HybridAccessor::getObjectPose(
   // in the case of identity, the pose at k will just be L_s0 which we dont
   // want?
   StateQuery<gtsam::Pose3> e_H_k_world = this->query<gtsam::Pose3>(motion_key);
-  LOG(INFO) << "Got object motion " << (bool)e_H_k_world << " "
-            << DynosamKeyFormatter(motion_key);
   // CHECK(false);
 
   if (e_H_k_world) {

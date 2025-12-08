@@ -9,7 +9,7 @@
 
   DynoSAM estimates camera poses, object motions/poses, as well as static background and temporal dynamic object maps. It provides **full-batch**, **sliding-window**, and **incremental** optimization procedures and is fully integrated with **ROS2**.
 
-  [![ROS2](https://img.shields.io/badge/ROS2-Humble-blue.svg)](https://docs.ros.org/en/humble/index.html)
+  [![ROS2](https://img.shields.io/badge/ROS2-Kilted-blue.svg)](https://docs.ros.org/en/kilted/index.html)
   [![License](https://img.shields.io/badge/License-BSD-green.svg)](./LICENSE)
   [![Paper](https://img.shields.io/badge/arXiv-2501.11893-b31b1b.svg)](https://arxiv.org/pdf/2501.11893)
 
@@ -179,14 +179,19 @@ DynoSAM requires input image data in the form:
 - Dense Optical Flow
 - Dense Semantic Instance mask
 
-which can be obtained by image pre-processing.
+Each image is expected in the following form:
+-  __rgb__ image is expected to be a valid 8bit image (1, 3 and 4 channel images are accepted).
+-  __depth__ must be a _CV_64F_ image where the value of each pixel represents the _metric depth_.
+-  __mask__ must be a CV_32SC1 where the static background is of value $0$ and all other objects are lablled with a tracking label $j$. $j$ is assumed to be globally consistent and is used to map the tracked object $j$ to the ground truth.
+- __flow__ must be a CV_32FC2 representing a standard optical-flow image representation.
 
 For dense optical flow (ie. pre Novemeber 2025) we use [RAFT](https://link.springer.com/chapter/10.1007/978-3-030-58536-5_24). Currently this pre-processing code is not available.
 
-- If `prefer_provided_optical_flow: true` (YAML), the pipeline expects a dense flow image. Otherwise, it falls back to sparse KLT.
-- If `prefer_provided_object_detection: true` (YAML) , an instance mask must be provided. If false, masks are generated online via YOLOv7 using TensorRT acceleration (See the [dynosam_nn](./dynosam_nn/) package for details).
+For instance segmentation we use [YOLOv8](https://docs.ultralytics.com/models/yolov8/) for both image pre-processing and online processing. Both Python and C++ (using TensorRT acceleration) models can be found in the [dynosam_nn](./dynosam_nn/) package. See the [REAMDE](./dynosam_nn/README.md) for more details.
 
-For each semantic mask, a pixel value $>0$ represents the tracked object index $j$ and background pixels are labelled $0$. $j$ is assumed to be globally consistent and is used to map the tracked object $j$ to the ground truth.
+- If `prefer_provided_optical_flow: true` (YAML), the pipeline expects a dense flow image. Otherwise, it falls back to sparse KLT.
+- If `prefer_provided_object_detection: true` (YAML) , an instance mask must be provided. If false, masks are generated online via.
+
 
 
 ## 3.2 Running with pre-processed data
@@ -215,7 +220,7 @@ To run a specific dataset only two GFLAGS are required:
 where `--dataset_path` points to the location of the dataset and `--data_provider_type` should be set to Dataset ID.
 
 
-
+> NOTE: when using ground truth for evaluation it is important to ensure that `prefer_provided_object_detection: false` so that the pre-processing object masks are used. This ensures that tracking label $j$ used within the pipeline aligns with the ground truth label.
 ## 3.3 Online Data
 DynoSAM can also run from data provided by ROS.
 
@@ -225,7 +230,9 @@ To run with online data (e.g. from raw sensor data) set the ROS parameter:
 online:=True
 ```
 
-DynoSAM can run in two input modes which can be set using the ROS parameter `input_image_mode`: `ALL` (`input_image_mode=0`) and `RGBD` (`input_image_mode=1`).
+DynoSAM can run in two input modes which can be set using the ROS parameter `input_image_mode`:
+- `ALL` (`input_image_mode=0`)
+- `RGBD` (`input_image_mode=1`).
 
 When in `ALL` mode, all image-preprocessing is done upstream and five inputs are required:
 By default this node subscribes to five topics:
@@ -235,13 +242,8 @@ By default this node subscribes to five topics:
  - `dataprovider/image/mask` (sensor_msgs.msg.Image)
  - `dataprovider/image/flow` (sensor_msgs.msg.Image)
 
-where each topic represents one of the expected input images in the following form:
--  __rgb__ image is expected to be a valid 8bit image (1, 3 and 4 channel images are accepted).
--  __depth__ must be a _CV_64F_ image where the value of each pixel represents the _metric depth_.
--  __mask__ must be a CV_32SC1 where the static background is of value 0 and all other objects are lablled with a tracking label $j$.
-- __flow__ must be a CV_32FC2 representing a standard optical-flow image representation.
 
-In `RGBD` mode only camera intrinsics, rgb and depth images are required and all other image processing (including object detection) is done as part of the pipeline.
+In `RGBD` mode, only camera intrinsics, rgb and depth images are required and all other image processing (including object detection) is done as part of the pipeline.
 
 
 ### 3.2.1 Running using RBG-D camera
@@ -283,7 +285,7 @@ All 3D visualisation in DynoSAM is done using RVIZ. Camera pose and point clouds
 
 # 5. 📊 Output & Metrics
 
-The eval script to be used when generating results
+The eval script should be used when generating results
 ```
 ros2 run dynosam_utils eval_launch.py
   --output_path=/tmp/results \
@@ -301,7 +303,7 @@ Scripts for reproducing experiments:
 While we attempt to maintain compatibility, minor differences may arise due to ongoing development.
 
 ## 5.2 Output Logs
-If run with --run_analysis, DynoSAM generates a "results folder" containing:
+When `eval_launch.py` is run with `--run_analysis`, DynoSAM generates a "results folder" containing:
 
 - __Logs__: `camera_pose_log.csv`, `object_motion_log.csv`, etc.
 - __Plots__: `*results.pdf` (ATE, RPE, Trajectory plots).
@@ -358,7 +360,7 @@ We strongly encourage you to submit issues, feedback and potential improvements.
 We follow the branch, open PR, review, and merge workflow.
 
 
-### Support ###
+## Support
 
 The developpers will be happy to assist you or to consider bug reports / feature requests. But
 questions that can be answered reading this document will be ignored. Please contact
