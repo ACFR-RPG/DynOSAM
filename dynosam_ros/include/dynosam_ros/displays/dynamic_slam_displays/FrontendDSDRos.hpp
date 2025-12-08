@@ -61,8 +61,6 @@ class FrontendDSDRos : public FrontendDisplay, DSDRos {
   void updateAccumulatedDataStructured(
       const VisionImuPacket::ConstPtr& frontend_output);
 
-  void publishFilters(const VisionImuPacket::ConstPtr& frontend_output);
-
  private:
   //! Transport for ground truth publishing
   DSDTransport::UniquePtr dsd_ground_truth_transport_;
@@ -74,11 +72,6 @@ class FrontendDSDRos : public FrontendDisplay, DSDRos {
 
   rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr
       dense_dynamic_cloud_pub_;
-
-  rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr
-      filters_linearization_cloud_;
-
-  MarkerArrayPub::SharedPtr filters_object_key_frame_pub_;
 
   //! Accumulated camera poses
   gtsam::Pose3Vector camera_poses_;

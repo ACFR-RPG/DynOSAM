@@ -1469,10 +1469,11 @@ class HybridFormulation : public Formulation<MapVision>,
 };
 
 /**
- * @brief The original Hybrid motion implementation - this is independant
- * from the frontend and ONLY accepts frame-to-frame motion (i.e H_W_k_1_k)
- * as input. It constructs object keyframes independantly of the front-end
- * and therefore has slightly different embedded poses
+ * @brief The original Hybrid motion implementation (as presented in
+ * "Online Dynamic SLAM with Incremental Smoothing and Mapping" from RA-L) -
+ * this is independant from the frontend and ONLY accepts frame-to-frame motion
+ * (i.e H_W_k_1_k) as input. It constructs object keyframes independantly of the
+ * front-end and therefore has slightly different embedded poses
  *
  */
 class HybridFormulationV1 : public HybridFormulation {
@@ -1503,56 +1504,6 @@ class HybridFormulationV1 : public HybridFormulation {
 
   gtsam::Pose3 calculateObjectCentroid(ObjectId object_id,
                                        FrameId frame_id) const;
-};
-
-// additional functionality when solved with the Regular Backend!
-class HybridFormulationKeyFrame : public HybridFormulation {
- public:
-  using Base = HybridFormulation;
-
-  DYNO_POINTER_TYPEDEFS(HybridFormulationKeyFrame)
-
-  HybridFormulationKeyFrame(const FormulationParams& params,
-                            typename Map::Ptr map,
-                            const NoiseModels& noise_models,
-                            const Sensors& sensors,
-                            const FormulationHooks& hooks)
-      : Base(params, map, noise_models, sensors, hooks) {}
-
-  /**
-   * @brief Uses input data to update interal data-structures with initial
-   * motion data and keyframes. This is then retrieved during the update
-   * formulations via getIntermediateMotionInfo
-   *
-   * @param data
-   */
-  void preUpdate(const PreUpdateData& data) override;
-
- protected:
-  IntermediateMotionInfo getIntermediateMotionInfo(ObjectId object_id,
-                                                   FrameId frame_id) override;
-
-  // initial object motions in keyframe form
-  // set in preUpdate cleared at each perUpdate before setting
-  // only valid for that keyframe
-  // AAAH we cannot have just one frame as sometimes two sets of motions are
-  // added!! in this case we need to look up by objectid and frame id!
-  // gtsam::FastMap<ObjectId, gtsam::Pose3> initial_H_W_e_k_;
-  // better data-structure later!
-  // Frames should only exist at keyframes! ie (e_1, e_2...)
-  GenericObjectCentricMap<gtsam::Pose3> initial_H_W_e_k_;
-  // Temporal variable (until I figure out how to reconcile kf_id's and
-  // frame_ids)
-  //  just used to ensure that the values in initial_H_W_e_k_ reference the
-  //  right frame id!
-  FrameId last_kf_update_initial_{0};
-
-  //! Bookkeeps the keyframing from the front-end so we manage the to/from
-  //! frames provided by the front-end estimate This is not used to manage the
-  //! keyframe pose or keyframe id in the backend Since this is DIFFERENT to the
-  //! frontend The pose held in each KeyFrameRangeis the L_e_frontend (which is
-  //! used to anchor) The frontend estimates
-  KeyFrameData front_end_keyframes_;
 };
 
 // additional functionality when solved with the Regular Backend!

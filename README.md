@@ -78,62 +78,7 @@ November 2025
 
 # 1. Installtion
 
-Tested on Ubuntu 20.04
-
-
-## Prerequisites
-- [ROS2](https://docs.ros.org/en/humble/Installation.html)
-    > NOTE: this links to the Humble distribution which used during development. Other distro's will probably work.
-- [GTSAM](https://github.com/borglab/gtsam) >= 4.1
-- [OpenCV](https://github.com/opencv/opencv) >= 3.4
-- [OpenGV](https://github.com/MIT-SPARK/opengv)
-- [Glog](http://rpg.ifi.uzh.ch/docs/glog.html), [Gflags](https://gflags.github.io/gflags/)
-- [Gtest](https://github.com/google/googletest/blob/master/googletest/docs/primer.md) (installed automagically)
-- [config_utilities](https://github.com/MIT-SPARK/config_utilities)
-- [dynamic_slam_interfaces](https://github.com/ACFR-RPG/dynamic_slam_interfaces) (Required by default. Can be optionally made not a requirement. See Insallation instructions below)
-
-External dependancies (for visualization) not required for compilation.
-- [rviz_dynamic_slam_plugins](https://github.com/ACFR-RPG/rviz_dynamic_slam_plugins) (Plugin to display custom `dynamic_slam_interfaces` messages which are advertised by default.)
-
-
-GPU acceleration:
-- [TensorRT](https://github.com/NVIDIA/TensorRT)
-- [CUDA](https://docs.nvidia.com/cuda/cuda-runtime-api/index.html)
-
-are now supported with the new Docker image.
-This provides support for TensorRT accellerated object-instance segmentation (which is now part of the DynoSAM pipeline) and CUDA acceleration in the front-end.
-Backwards compatability (i.e no CUDA support) is not currently a priority.
-> NOTE: documentation coming soon...
-
-
-
-## Installation Instructions
-DynoSAM is currently built within the ROS2 infrastructure (if there is enough interest I will split out each component into ROS and non-ROS modules.)
-
-We provide a development [Dockerfile](./docker/Dockerfile) that will install all dependancies but expects DynoSAM to be cloned locally. The associated [container creation](./docker/create_container.sh) will then mount the local DynoSAM folder into the container along with local results/dataset folders.
-
-
-The general ROS2 build procedure holds as all relevant subfolders in DynoSAM are built as packages.
-
-More detailed instructions are found here: [Insallation instructions](./docs/media/INSTALL.md)
-
-```
-# Finally compile
-cd ros_ws && colcon build
-
-# Refresh workspace
-source ~/ros_ws/install/setup.bash
-```
-
-`dynamic_slam_interfaces` is a require dependacy by default. This package is used to include custom messages that represet the state of each dynamic object per frame and is used by the ROS publishers.
-
-To disable this dependancy compile the code as
-```
-colcon build --cmake-args -DENABLE_DYNAMIC_SLAM_INTERFACES=OFF
-```
-By default `ENABLE_DYNAMIC_SLAM_INTERFACES=ON` in the [CMakeLists.txt](./dynosam_ros/CMakeLists.txt). This CMake option will additionally change the _visualisation_ (and the output topics) used by DynoSAM. See the [ROS Visualisation](#ros-visualisation) section below.
-
-
+See detailed instructions here: [Insallation instructions](./docs/media/INSTALL.md)
 
 # 2. Usage
 

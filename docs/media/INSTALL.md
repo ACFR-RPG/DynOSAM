@@ -1,13 +1,87 @@
 # DynoSAM Installation
 
-Tested on Ubuntu 20.04
+## Prerequisites
+- [ROS2](https://docs.ros.org/en/kilted/Installation.html)
+    > NOTE: this links to the kilted distribution which used during development. We have also tested on Jazzy for the NVIDIA ORIN
+- [GTSAM](https://github.com/borglab/gtsam) >= 4.1
+- [OpenCV](https://github.com/opencv/opencv) >= 3.4
+- [OpenGV](https://github.com/MIT-SPARK/opengv)
+- [Glog](http://rpg.ifi.uzh.ch/docs/glog.html), [Gflags](https://gflags.github.io/gflags/)
+- [Gtest](https://github.com/google/googletest/blob/master/googletest/docs/primer.md) (installed automagically)
+- [config_utilities](https://github.com/MIT-SPARK/config_utilities)
+- [dynamic_slam_interfaces](https://github.com/ACFR-RPG/dynamic_slam_interfaces) (Required by default. Can be optionally made not a requirement. See Insallation instructions below)
 
-> NOTE: this instructions are taken essentially verbatum from the included [Dockerfile](./../../docker/Dockerfile)
+External dependancies (for visualization) not required for compilation.
+- [rviz_dynamic_slam_plugins](https://github.com/ACFR-RPG/rviz_dynamic_slam_plugins) (Plugin to display custom `dynamic_slam_interfaces` messages which are advertised by default.)
+
+
+GPU acceleration:
+- [TensorRT](https://github.com/NVIDIA/TensorRT)
+- [CUDA](https://docs.nvidia.com/cuda/cuda-runtime-api/index.html)
+
+are now supported with the new Docker image.
+This provides support for TensorRT accellerated object-instance segmentation (which is now part of the DynoSAM pipeline) and CUDA acceleration in the front-end.
+Backwards compatability (i.e no CUDA support) is not currently a priority.
+
+We provide detailed install instructions when using the Docker.
+
+To install natively, install the dependancies as required by docker and build as a ROS2 package.
+
+## Docker Install instructions
+
+DynoSAM has been tested on x86_64 and aarm64 (with a NVIDIA ORIN) devices using the [two docker files](../../docker/) provided. See the [REAMDE.md](../../docker/README.md) for more detail on hardware used etc.
+
+We provide scripts to build and create docker containers to run and develop DynoSAM which is intendend to be mounted within the created container.
+
+### Folder Structure
+To DynoSAM code to be changed within the docker environment, we mount the local version of the code within the container. To ensure this happens smoothly please download the DynoSAM code in the following structure
+
+```
+dynosam_pkg/
+    DynoSAM/
+    extras/
+        rviz_dynamic_slam_plugins
+        dynamic_slam_interfaces
+    results/
+```
+where DynoSAM is this repository and anything in `extras` are other ROS packages that wish to be built alongside DynoSAM.
+
+> NOTE: `dynosam_pkg' may be any folder, its just a place to put all the DynoSAM related code.
+
+> NOTE: the reason for this structure is historical and due to the way the _create_container_ scripts are written; you don't need to do this but I provide complete instructures for simplicity.
+
+
+### Docker Build
+Build the relevant docker file:
+```
+cd dynosam_pkg/DynoSAM/docker &&
+./build_docker_amd64.sh //or build_docker_l4t.sh
+```
+### Create Container
+Once built, you should have a docker image called `acfr_rpg/dyno_sam_cuda` or `acfr_rpg/dynosam_cuda_l4t`
+
+In the associated _create_container_ scripts modify the local variables to match the folder paths on the local machine. These folders will be mounted as a volume within the container
+```
+LOCAL_DATA_FOLDER=/path/to/some/datasets/
+LOCAL_RESULTS_FOLDER=/path/to/dynosam_pkg/results/
+LOCAL_DYNO_SAM_FOLDER=/path/to/dynosam_pkg/DynoSAM/
+LOCAL_THIRD_PARTY_DYNO_SAM_FOLDER=/path/to/dynosam_pkg/extras
+```
+Run the creation script. The created container will be called `dyno_sam`
+```
+./create_container_amd64.sh //or ./create_container_l4t_jetpack6.sh
+```
+
+Finally enter into the container and build DynoSAM
+```
+cd /home/user/dev_w &&
+export MAKEFLAGS="-j10" && clear && colcon build
+```
 
 ## CUDA dependancies
 As of September 2025 we are adding cuda dependancies for certain OpenCV operations (and evenautually for running inference on images).
 
-> NOTE: I have a very old GPU (RTX 2080 which is only running CIDA 12.2 with Driver Version: 535.183.01), get CUDA support however you are able!
+> NOTE: I have a very old GPU (RTX 2080 which is only running CUDA 12.2 with Driver Version: 535.183.01), get CUDA support however you are able!
 
 The docker file has been updated and based off the [docker-ros-ml-images](https://github.com/ika-rwth-aachen/docker-ros-ml-images?tab=readme-ov-file#rwthikaros2-torch-ros-2-nvidia-cuda-nvidia-tensorrt-pytorch) to include
 - CUDA
@@ -21,112 +95,15 @@ can be handled internally (ie YOLO).
 - **Important:** Check [GPU Compute Capability](https://developer.nvidia.com/cuda-gpus) to set `CUDA_ARCH_BIN` flag
 - NVIDIA GeForce RTX 2080 is 7.5
 
-## Dependancies
-
-```bash
-sudo apt-get install -y --no-install-recommends apt-utils
-
-sudo apt-get install -y cmake
-
-sudo apt install unzip libjpeg-dev libpng-dev libpng++-dev libtiff-dev libgtk2.0-dev libatlas-base-dev gfortran libgflags2.2 libgflags-dev libgoogle-glog0v5 libgoogle-glog-dev  python3-dev python3-setuptools clang-format python3-pip nlohmann-json3-dev libsuitesparse-dev
-```
-
-GTSAM's Optional dependencies (highly recommended for speed) also include
-```bash
-sudo apt install libboost-all-dev libtbb-dev
-```
-
-For evaluation we also need various formatting tools
-```bash
-sudo apt-get install texlive-pictures texlive-science texlive-latex-extra latexmk
-```
-
-Python (pip) dependancies:
-```bash
-python3 -m pip install pylatex evo setuptools pre-commit scipy matplotlib argcomplete black pre-commit
-```
-
-NOTE: There seems to be a conflict between the version of matplotlib and numpy. In this case following worked for me:
-```
-sudo apt remove python3-matplotlib
-python3 -m pip install numpy==1.26.3
-```
-
-## Install OpenCV
-
-Note that you can use `apt-get install libopencv-dev libopencv-contrib-dev` on 20.04 instead of building from source.
-
-> Also note, I have not actually tried this!
-
-To build from source
-
-```bash
-git git clone https://github.com/opencv/opencv_contrib.git
-cd opencv_contrib && \
-    git checkout tags/4.8.0
-
-cd ../ &&
-git clone git clone https://github.com/opencv/opencv.git
-
-cd opencv && \
-git checkout tags/4.8.0 && mkdir build
-cmake -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_PREFIX=/usr/local \
-    -D BUILD_opencv_python=OFF \
-    -D BUILD_opencv_python2=OFF \
-    -D BUILD_opencv_python3=ON \
-    -DOPENCV_EXTRA_MODULES_PATH=../../opencv_contrib/modules .. # Use -DWITH_TBB=On if you have TBB
-
-sudo make -j$(nproc) install
-```
-
-## Install GTSAM
-
-Tested with release 4.2
-
-```bash
-
-git clone https://github.com/borglab/gtsam.git
-cd gtsam && \
-    git fetch && \
-    git checkout tags/4.2.0 && \
-    mkdir build && \
-    cd build && \
-    cmake -DCMAKE_INSTALL_PREFIX=/usr/local \
-    -DGTSAM_USE_SYSTEM_EIGEN=ON \
-    -DGTSAM_BUILD_TESTS=OFF -DGTSAM_BUILD_EXAMPLES_ALWAYS=OFF -DCMAKE_BUILD_TYPE=Release -DGTSAM_BUILD_UNSTABLE=ON -DGTSAM_POSE3_EXPMAP=ON -DGTSAM_ROT3_EXPMAP=ON -DGTSAM_TANGENT_PREINTEGRATION=OFF .. && \
-
-sudo make -j$(nproc) install
-```
-
-## Install OpenGV
-
-```bash
-git clone https://github.com/MIT-SPARK/opengv
-cd opengv && mkdir build && cd build &&
-cmake -DCMAKE_BUILD_TYPE=Release \
-      -DCMAKE_INSTALL_PREFIX=/usr/local ..
-
-sudo make -j$(nproc) install
-
-```
-Note: This links to a forked version of OpenGV which contains an updated fix the CMakeLists.txt due to issues with -march=native being set. This links to original version of [OpenGV](https://github.com/laurentkneip/opengv), which contains the problematic flag.
-
-## Install Config Utilities
-
-```bash
-git clone git@github.com:MIT-SPARK/config_utilities.git
-
-cd config_utilities/config_utilities
-mkdir build
-cd build
-cmake ..
-make -j
-
-sudo make install
-```
-
 ## Additional Installation Notes
+
+`dynamic_slam_interfaces` is a require dependacy by default. This package is used to include custom messages that represet the state of each dynamic object per frame and is used by the ROS publishers.
+
+To disable this dependancy compile the code as
+```
+colcon build --cmake-args -DENABLE_DYNAMIC_SLAM_INTERFACES=OFF
+```
+By default `ENABLE_DYNAMIC_SLAM_INTERFACES=ON` in the [CMakeLists.txt](./dynosam_ros/CMakeLists.txt). This CMake option will additionally change the _visualisation_ (and the output topics) used by DynoSAM. See the [ROS Visualisation](#ros-visualisation) section below.
 
 
 Due to DynoSAM being build within ROS:

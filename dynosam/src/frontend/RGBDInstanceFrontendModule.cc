@@ -235,20 +235,9 @@ FrontendModule::SpinReturn RGBDInstanceFrontendModule::nominalSpin(
   fillOutputPacketWithTracks(vision_imu_packet, *frame, T_k_1_k, object_motions,
                              object_poses);
 
-  // // only reset timu frontend if we are keyframe
-  // if (vision_imu_packet->isCameraKeyFrame() && R_curr_ref) {
-  //   imu_frontend_.resetIntegration();
-  // }
-  // TODO: should be isKeyFrame()!!!
-  if (vision_imu_packet->isCameraKeyFrame()) {
-    // update last kf nav state with current state
-    nav_state_last_kf_ = best_nav_state;
+  if (R_curr_ref) {
     imu_frontend_.resetIntegration();
   }
-
-  // if (R_curr_ref) {
-  //   imu_frontend_.resetIntegration();
-  // }
 
   DebugImagery debug_imagery;
   debug_imagery.tracking_image =
@@ -274,79 +263,6 @@ FrontendModule::SpinReturn RGBDInstanceFrontendModule::nominalSpin(
   }
 
   vision_imu_packet->debugImagery(debug_imagery);
-
-  if (FLAGS_use_object_motion_filtering) {
-    auto motion_filter = std::dynamic_pointer_cast<ObjectMotionSolverFilter>(
-        object_motion_solver_);
-    CHECK_NOTNULL(motion_filter);
-
-    // also update object tracks with filtering stuff!!
-    auto object_tracks = vision_imu_packet->objectTracks();
-
-    // only send object tracks with keyframes!?
-    VisionImuPacket::ObjectTrackMap new_object_tracks;
-
-    // go over tracks not motions as these are just those for this frame!
-    for (const auto& [object_id, _] : object_tracks) {
-      CHECK(motion_filter->filters_.exists(object_id));
-      auto object_motion_srif = motion_filter->filters_.at(object_id);
-      CHECK_NOTNULL(object_motion_srif);
-      vision_imu_packet->active_filters.insert2(object_id, *object_motion_srif);
-
-      CHECK(object_tracks.exists(object_id)) << "j=" << object_id;
-      auto object_track = object_tracks.at(object_id);
-
-      VisionImuPacket::ObjectTracks::HybridInfo hybrid_info;
-      hybrid_info.H_W_e_k = object_motion_srif->H_W_e_k_before_reset;
-      hybrid_info.L_W_k = object_motion_srif->getKeyFramePose();
-      // hybrid_info.from = object_motion_srif->getKeyFrameId();
-      hybrid_info.from = object_motion_srif->frame_id_e_before_reset;
-      // this will be off by one!
-      hybrid_info.to = vision_imu_packet->frameId();
-
-      LOG(INFO) << vision_imu_packet->frameId() << " "
-                << object_motion_srif->getKeyFrameId();
-      LOG(INFO) << "Hybrid motion info j=" << object_id
-                << " k_from= " << hybrid_info.from
-                << " k_to= " << hybrid_info.to;
-
-      // hacky way of detecting if the filter was reset (ie. keyframed) this
-      // frame!
-      if (vision_imu_packet->frameId() == object_motion_srif->getKeyFrameId()) {
-        // TODO: check that tracker info object_resampled!?
-        object_track.is_keyframe = true;
-      }
-      object_track.hybrid_info = hybrid_info;
-
-      const bool object_in_previous =
-          tracker_info_prev.dynamic_track.exists(object_id);
-      const bool object_new_in_previous =
-          object_in_previous &&
-          tracker_info_prev.dynamic_track.at(object_id).object_new;
-
-      CHECK(tracker_info.dynamic_track.exists(object_id));
-      const bool is_object_new =
-          tracker_info.dynamic_track.at(object_id).object_new ||
-          object_new_in_previous;
-      object_track.is_object_new = is_object_new;
-
-      // if new and tracked!!!
-      // if (is_object_new) {
-      //   CHECK(object_track.is_keyframe);
-      // }
-
-      LOG(INFO) << "Here";
-
-      if (object_track.is_keyframe) {
-        // new_object_tracks.insert2(object_id, object_track);
-      }
-      new_object_tracks.insert2(object_id, object_track);
-    }
-
-    // update object tracks with hybrid info
-    // with keyframe!!
-    vision_imu_packet->objectTracks(new_object_tracks);
-  }
 
   if (FLAGS_set_dense_labelled_cloud) {
     VLOG(30) << "Setting dense labelled cloud";
@@ -577,61 +493,21 @@ void RGBDInstanceFrontendModule::fillOutputPacketWithTracks(
       };
 
   // TODO: fill ttracking status?
-  static int count = 0;
-  // static FrameId kf_id = frame_id;
-  FrameId kf_id = frame_id;
-
   VisionImuPacket::CameraTracks camera_tracks;
-  // NOTE: using kf id for sensor measurements!!
-  //  NOTE: this will break all the things!! but is needed for adding
-  //  measurements to the map!
-
   auto* static_measurements = &camera_tracks.measurements;
   fill_camera_measurements(frame.usableStaticFeaturesBegin(),
-                           static_measurements, kf_id, static_pixel_sigmas,
+                           static_measurements, frame_id, static_pixel_sigmas,
                            static_point_sigma);
   camera_tracks.X_W_k = frame.getPose();
-  // camera_tracks.T_k_1_k = T_k_1_k;
-  // camera_tracks.is_keyframe = true;
-  // accumulate relative motions so T_lkf is the relative transform
-  // from previous kf to current frame
-  T_lkf_ = T_lkf_ * T_k_1_k;
-  camera_tracks.T_k_1_k = T_lkf_;
-
-  // if(count % 4 == 0) {
-  //   camera_tracks.is_keyframe = true;
-  //   vision_imu_packet->kf_id = kf_id;
-  //   ++kf_id;
-  //   //reset relative transform!
-  //   T_lkf_ = gtsam::Pose3::Identity();
-  // }
-  // else {
-  //   camera_tracks.is_keyframe = false;
-  // }
-  // count++;
+  camera_tracks.T_k_1_k = T_k_1_k;
+  vision_imu_packet->cameraTracks(camera_tracks);
 
   // First collect all dynamic measurements then split them by object
   // This is a bit silly
   CameraMeasurementStatusVector dynamic_measurements;
   fill_camera_measurements(frame.usableDynamicFeaturesBegin(),
-                           &dynamic_measurements, kf_id, dynamic_pixel_sigmas,
-                           dynamic_point_sigma);
-
-  const auto& tracking_info = *frame.getTrackingInfo();
-  // logic and structure to be improved!!
-  const bool is_keyframe = tracking_info.new_static_detections;
-  // if(count % 4 == 0) {
-  if (true) {
-    // if(is_keyframe) {
-    camera_tracks.is_keyframe = true;
-    vision_imu_packet->kf_id = kf_id;
-    ++kf_id;
-    // reset relative transform!
-    T_lkf_ = gtsam::Pose3::Identity();
-  } else {
-    camera_tracks.is_keyframe = false;
-  }
-  count++;
+                           &dynamic_measurements, frame_id,
+                           dynamic_pixel_sigmas, dynamic_point_sigma);
 
   VisionImuPacket::ObjectTrackMap object_tracks;
   // motions in this frame (ie. new motions!!)
@@ -659,7 +535,6 @@ void RGBDInstanceFrontendModule::fillOutputPacketWithTracks(
       object_track.measurements.push_back(dm);
     }
   }
-  vision_imu_packet->cameraTracks(camera_tracks);
   vision_imu_packet->objectTracks(object_tracks);
 }
 

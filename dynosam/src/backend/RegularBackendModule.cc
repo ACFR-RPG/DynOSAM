@@ -118,10 +118,10 @@ RegularBackendModule::~RegularBackendModule() {
 RegularBackendModule::SpinReturn RegularBackendModule::boostrapSpinImpl(
     VisionImuPacket::ConstPtr input) {
   const FrameId frame_k = input->frameId();
-  const FrameId kf_id = input->kf_id;
+  // const FrameId kf_id = input->kf_id;
   const Timestamp timestamp = input->timestamp();
   CHECK_EQ(spin_state_.frame_id, frame_k);
-  LOG(INFO) << "Running backend kf " << kf_id;
+  LOG(INFO) << "Running backend kf " << frame_k;
   gtsam::Values new_values;
   gtsam::NonlinearFactorGraph new_factors;
 
@@ -130,7 +130,7 @@ RegularBackendModule::SpinReturn RegularBackendModule::boostrapSpinImpl(
   CHECK(formulation_);
 
   // should this be kf id ot frame id??
-  PreUpdateData pre_update_data(kf_id);
+  PreUpdateData pre_update_data(frame_k);
   pre_update_data.input = input;
   formulation_->preUpdate(pre_update_data);
 
@@ -139,13 +139,13 @@ RegularBackendModule::SpinReturn RegularBackendModule::boostrapSpinImpl(
   update_params.do_backtrack =
       false;  // apparently this is v important for making the results == ICRA
 
-  PostUpdateData post_update_data(kf_id);
-  addMeasurements(update_params, kf_id, new_values, new_factors,
+  PostUpdateData post_update_data(frame_k);
+  addMeasurements(update_params, frame_k, new_values, new_factors,
                   post_update_data);
 
   LOG(INFO) << "Starting any updates";
 
-  updateAndOptimize(kf_id, new_values, new_factors, post_update_data);
+  updateAndOptimize(frame_k, new_values, new_factors, post_update_data);
   LOG(INFO) << "Done any udpates";
 
   // Should be no need to update after opt as we just added the initial state!?
@@ -163,7 +163,7 @@ RegularBackendModule::SpinReturn RegularBackendModule::boostrapSpinImpl(
   // use kf id for everything but update the actualy frame id after!!
   LOG(INFO) << "Starting any backend output construct";
   BackendOutputPacket::Ptr backend_output =
-      constructOutputPacket(kf_id, timestamp);
+      constructOutputPacket(frame_k, timestamp);
   // dont update the frame_id (yet!) as the visualisation will look for keys
   // with with this frame
   //  however, eventaully will need to log with the original frame_id so that
@@ -178,7 +178,6 @@ RegularBackendModule::SpinReturn RegularBackendModule::boostrapSpinImpl(
 RegularBackendModule::SpinReturn RegularBackendModule::nominalSpinImpl(
     VisionImuPacket::ConstPtr input) {
   const FrameId frame_k = input->frameId();
-  const FrameId kf_id = input->kf_id;
   const Timestamp timestamp = input->timestamp();
   LOG(INFO) << "Running backend " << frame_k;
   CHECK_EQ(spin_state_.frame_id, frame_k);
@@ -189,7 +188,7 @@ RegularBackendModule::SpinReturn RegularBackendModule::nominalSpinImpl(
 
   addStates(input, formulation_.get(), new_values, new_factors);
 
-  PreUpdateData pre_update_data(kf_id);
+  PreUpdateData pre_update_data(frame_k);
   pre_update_data.input = input;
   formulation_->preUpdate(pre_update_data);
 
@@ -198,20 +197,20 @@ RegularBackendModule::SpinReturn RegularBackendModule::nominalSpinImpl(
   update_params.do_backtrack =
       false;  // apparently this is v important for making the results == ICRA
 
-  PostUpdateData post_update_data(kf_id);
-  addMeasurements(update_params, kf_id, new_values, new_factors,
+  PostUpdateData post_update_data(frame_k);
+  addMeasurements(update_params, frame_k, new_values, new_factors,
                   post_update_data);
 
   LOG(INFO) << "Starting any updates";
 
-  updateAndOptimize(kf_id, new_values, new_factors, post_update_data);
+  updateAndOptimize(frame_k, new_values, new_factors, post_update_data);
   LOG(INFO) << "Done any udpates";
 
   auto accessor = formulation_->accessorFromTheta();
   // update internal nav state based on the initial/optimised estimated in the
   // formulation this is also necessary to update the internal timestamp/frameid
   // variables within the VisionImuBackendModule
-  updateNavStateFromFormulation(kf_id, timestamp, formulation_.get());
+  updateNavStateFromFormulation(frame_k, timestamp, formulation_.get());
 
   // TODO: sanity checks that vision states are inline with the other frame idss
   // etc
@@ -221,7 +220,7 @@ RegularBackendModule::SpinReturn RegularBackendModule::nominalSpinImpl(
   formulation_->postUpdate(post_update_data);
 
   BackendOutputPacket::Ptr backend_output =
-      constructOutputPacket(kf_id, timestamp);
+      constructOutputPacket(frame_k, timestamp);
   // TODO: bring back!
   //  backend_output->involved_timestamp = input->involved_timestamps_;
 
@@ -531,25 +530,24 @@ void RegularBackendModule::addInitialStates(
     gtsam::Values& new_values, gtsam::NonlinearFactorGraph& new_factors) {
   CHECK(formulation);
 
-  // const FrameId frame_k = input->frameId();
-  const FrameId kf_id = input->kf_id;
+  const FrameId frame_k = input->frameId();
   const Timestamp timestamp_k = input->timestamp();
   const auto& X_k_initial = input->cameraPose();
 
   // update map
-  updateMapWithMeasurements(kf_id, input, X_k_initial);
+  updateMapWithMeasurements(frame_k, input, X_k_initial);
 
   // update formulation with initial states
   if (input->pim()) {
     LOG(INFO) << "Initialising backend with IMU states!";
     this->addInitialVisualInertialState(
-        kf_id, timestamp_k, formulation, new_values, new_factors, noise_models_,
-        gtsam::NavState(X_k_initial, gtsam::Vector3(0, 0, 0)),
+        frame_k, timestamp_k, formulation, new_values, new_factors,
+        noise_models_, gtsam::NavState(X_k_initial, gtsam::Vector3(0, 0, 0)),
         gtsam::imuBias::ConstantBias{});
 
   } else {
     LOG(INFO) << "Initialising backend with VO only states!";
-    this->addInitialVisualState(kf_id, timestamp_k, formulation, new_values,
+    this->addInitialVisualState(frame_k, timestamp_k, formulation, new_values,
                                 new_factors, noise_models_, X_k_initial);
   }
 
@@ -561,22 +559,21 @@ void RegularBackendModule::addStates(const VisionImuPacket::ConstPtr& input,
                                      gtsam::NonlinearFactorGraph& new_factors) {
   CHECK(formulation);
 
-  // const FrameId frame_k = input->frameId();
-  const FrameId kf_id = input->kf_id;
+  const FrameId frame_k = input->frameId();
   const Timestamp timestamp_k = input->timestamp();
 
   const gtsam::NavState predicted_nav_state = this->addVisualInertialStates(
-      kf_id, timestamp_k, formulation, new_values, new_factors, noise_models_,
+      frame_k, timestamp_k, formulation, new_values, new_factors, noise_models_,
       input->relativeCameraTransform(), input->pim());
 
-  updateMapWithMeasurements(kf_id, input, predicted_nav_state.pose());
+  updateMapWithMeasurements(frame_k, input, predicted_nav_state.pose());
 }
 
 void RegularBackendModule::updateMapWithMeasurements(
     FrameId frame_id_k, const VisionImuPacket::ConstPtr& input,
     const gtsam::Pose3& X_k_w) {
-  // CHECK_EQ(frame_id_k, input->frameId());
-  CHECK_EQ(frame_id_k, input->kf_id);
+  CHECK_EQ(frame_id_k, input->frameId());
+  // CHECK_EQ(frame_id_k, input->kf_id);
 
   // update static and ego motion
   map_->updateObservations(input->staticMeasurements());

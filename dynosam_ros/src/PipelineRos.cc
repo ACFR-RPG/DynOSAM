@@ -69,57 +69,65 @@ DynoNode::DynoNode(const std::string& node_name,
 
 dyno::DataProvider::Ptr DynoNode::createDataProvider() {
   if (is_online_) {
-    RCLCPP_INFO_STREAM(
-        this->get_logger(),
-        "Online DataProvider selected. Waiting for ROS topics...");
-    OnlineDataProviderRosParams online_params;
-    online_params.wait_for_camera_params =
-        ParameterConstructor(this, "wait_for_camera_params",
-                             online_params.wait_for_camera_params)
-            .description(
-                "If the online DataProvider should wait for the camera params "
-                "on a ROS topic!")
-            .finish()
-            .get<bool>();
-    online_params.camera_params_timeout =
-        ParameterConstructor(this, "camera_params_timeout",
-                             online_params.camera_params_timeout)
-            .description(
-                "When waiting for camera params, how long the online "
-                "DataProvider should wait before time out (ms)")
-            .finish()
-            .get<int>();
-    InputImageMode image_mode = static_cast<InputImageMode>(
-        ParameterConstructor(this, "input_image_mode",
-                             static_cast<int>(InputImageMode::ALL))
-            .description("Which input image mode to run the pipeline in (e.g "
-                         "ALL, RGBD, STEREO)...")
-            .finish()
-            .get<int>());
+    return createOnlineDataProvider();
+  } else {
+    return createDatasetDataProvider();
+  }
+}
 
-    OnlineDataProviderRos::Ptr online_data_provider = nullptr;
-    switch (image_mode) {
-      case InputImageMode::ALL:
-        online_data_provider = std::make_shared<AllImagesOnlineProviderRos>(
-            this->create_sub_node("dataprovider"), online_params);
-        break;
-      case InputImageMode::RGBD:
-        online_data_provider = std::make_shared<RGBDOnlineProviderRos>(
-            this->create_sub_node("dataprovider"), online_params);
-        break;
+dyno::DataProvider::Ptr DynoNode::createOnlineDataProvider() {
+  RCLCPP_INFO_STREAM(this->get_logger(),
+                     "Online DataProvider selected. Waiting for ROS topics...");
 
-      default:
-        LOG(FATAL) << "Unknown image_mode";
-        return nullptr;
-    }
+  OnlineDataProviderRosParams online_params;
+  online_params.wait_for_camera_params =
+      ParameterConstructor(this, "wait_for_camera_params",
+                           online_params.wait_for_camera_params)
+          .description(
+              "If the online DataProvider should wait for the camera params "
+              "on a ROS topic!")
+          .finish()
+          .get<bool>();
+  online_params.camera_params_timeout =
+      ParameterConstructor(this, "camera_params_timeout",
+                           online_params.camera_params_timeout)
+          .description(
+              "When waiting for camera params, how long the online "
+              "DataProvider should wait before time out (ms)")
+          .finish()
+          .get<int>();
+  InputImageMode image_mode = static_cast<InputImageMode>(
+      ParameterConstructor(this, "input_image_mode",
+                           static_cast<int>(InputImageMode::ALL))
+          .description("Which input image mode to run the pipeline in (e.g "
+                       "ALL, RGBD, STEREO)...")
+          .finish()
+          .get<int>());
 
-    CHECK(online_data_provider);
-    // update any params in case they do not conflixt with the expected input
-    online_data_provider->updateAndCheckParams(*dyno_params_);
-    online_data_provider->setupSubscribers();
-    return online_data_provider;
+  OnlineDataProviderRos::Ptr online_data_provider = nullptr;
+  switch (image_mode) {
+    case InputImageMode::ALL:
+      online_data_provider = std::make_shared<AllImagesOnlineProviderRos>(
+          this->create_sub_node("dataprovider"), online_params);
+      break;
+    case InputImageMode::RGBD:
+      online_data_provider = std::make_shared<RGBDOnlineProviderRos>(
+          this->create_sub_node("dataprovider"), online_params);
+      break;
+
+    default:
+      LOG(FATAL) << "Unknown image_mode";
+      return nullptr;
   }
 
+  CHECK(online_data_provider);
+  // update any params in case they do not conflixt with the expected input
+  online_data_provider->updateAndCheckParams(*dyno_params_);
+  online_data_provider->setupSubscribers();
+  return online_data_provider;
+}
+
+dyno::DataProvider::Ptr DynoNode::createDatasetDataProvider() {
   auto params_path = getParamsPath();
   auto dataset_path = getDatasetPath();
   auto dyno_params = getDynoParams();
@@ -134,9 +142,9 @@ dyno::DataProvider::Ptr DynoNode::createDataProvider() {
   return data_loader;
 }
 
-std::string DynoNode::searchForPathWithParams(const std::string& param_name,
-                                              const std::string& default_path,
-                                              const std::string& description) {
+std::string DynoNode::searchForPathWithParams(
+    const std::string& param_name, const std::string& /*default_path*/,
+    const std::string& description) {
   // check if we've alrady declared this param
   // use non-default version so that ParameterConstructor throws exception if no
   // parameter is provided on the param server

@@ -58,13 +58,6 @@ FrontendDSDRos::FrontendDSDRos(const DisplayParams params,
   dense_dynamic_cloud_pub_ =
       node->create_publisher<sensor_msgs::msg::PointCloud2>(
           "dense_labelled_cloud", 1);
-
-  filters_linearization_cloud_ =
-      node->create_publisher<sensor_msgs::msg::PointCloud2>(
-          "filters/linearized_cloud", 1);
-
-  filters_object_key_frame_pub_ =
-      node->create_publisher<MarkerArray>("filters/object_keyframes", 1);
 }
 
 void FrontendDSDRos::spinOnceImpl(
@@ -83,8 +76,6 @@ void FrontendDSDRos::spinOnceImpl(
   tryPublishPointClouds(frontend_output);
 
   tryPublishObjects(frontend_output);
-
-  publishFilters(frontend_output);
 }
 
 void FrontendDSDRos::tryPublishDebugImagery(
@@ -233,151 +224,5 @@ void FrontendDSDRos::updateAccumulatedDataStructured(
   object_poses_.insert2(frontend_output->frameId(),
                         frontend_output->objectPoses());
 }
-
-void FrontendDSDRos::publishFilters(
-    const VisionImuPacket::ConstPtr& frontend_output) {
-  pcl::PointCloud<pcl::PointXYZRGB> cloud;
-  visualization_msgs::msg::MarkerArray array;
-
-  auto ros_time = utils::toRosTime(frontend_output->timestamp());
-
-  for (const auto& [object_id, filter] : frontend_output->active_filters) {
-    auto current_linearization = filter.getCurrentLinearizedPoints();
-    const gtsam::Pose3& L_e = filter.getKeyFramePose();
-    const gtsam::Pose3& X_k = filter.lastCameraPose();
-    const gtsam::Pose3 H_W_e_k = filter.getCurrentLinearization();
-    const Color colour = Color::uniqueId(object_id);
-
-    std_msgs::msg::ColorRGBA colour_msg;
-    convert(colour, colour_msg);
-
-    for (const auto& [tracklet_id, m_object] : current_linearization) {
-      const gtsam::Point3 m_world = H_W_e_k * L_e * m_object;
-      pcl::PointXYZRGB point(
-          static_cast<float>(m_world(0)), static_cast<float>(m_world(1)),
-          static_cast<float>(m_world(2)), static_cast<std::uint8_t>(colour.r),
-          static_cast<std::uint8_t>(colour.g),
-          static_cast<std::uint8_t>(colour.b));
-
-      cloud.push_back(point);
-    }
-
-    auto keyframes = filter.keyframe_history;
-    keyframes.push_back(gtsam::Pose3(H_W_e_k * L_e));
-
-    size_t count = 0;
-    for (const gtsam::Pose3& keyframe_pose : keyframes) {
-      // copied from HybridBackendDisplay
-      visualization_msgs::msg::Marker marker;
-      // Header and Metadata
-      marker.header.frame_id = params_.world_frame_id;
-      marker.header.stamp = ros_time;
-      marker.ns = "obj_" + std::to_string(object_id) + "_keyframe";
-      marker.id = count;
-      marker.action = visualization_msgs::msg::Marker::ADD;
-
-      // Marker Type: LINE_LIST allows us to draw multiple lines (the three
-      // axes)
-      marker.type = visualization_msgs::msg::Marker::LINE_LIST;
-      // marker.lifetime = rclcpp::Duration::from_seconds(
-      // 5.0);  // Set a short lifetime to refresh the marker
-
-      // Translation
-      marker.pose.position.x = keyframe_pose.x();
-      marker.pose.position.y = keyframe_pose.y();
-      marker.pose.position.z = keyframe_pose.z();
-
-      // --- Line Properties ---
-      marker.scale.x = 0.04;                      // Line width in meters
-      constexpr static double axis_length = 0.4;  // Length of the axes
-
-      // Orientation (Convert GTSAM Rotation to ROS Quaternion)
-      const gtsam::Quaternion gtsam_q = keyframe_pose.rotation().toQuaternion();
-      marker.pose.orientation.w = gtsam_q.w();
-      marker.pose.orientation.x = gtsam_q.x();
-      marker.pose.orientation.y = gtsam_q.y();
-      marker.pose.orientation.z = gtsam_q.z();
-
-      geometry_msgs::msg::Point origin;  // (0, 0, 0)
-      origin.x = 0.0;
-      origin.y = 0.0;
-      origin.z = 0.0;
-
-      // X-Axis (start at origin, end at +X)
-      geometry_msgs::msg::Point x_end = origin;
-      x_end.x = axis_length;
-      marker.points.push_back(origin);
-      marker.points.push_back(x_end);
-      marker.colors.push_back(colour_msg);
-      marker.colors.push_back(colour_msg);
-
-      // Y-Axis (start at origin, end at +Y)
-      geometry_msgs::msg::Point y_end = origin;
-      y_end.y = axis_length;
-      marker.points.push_back(origin);
-      marker.points.push_back(y_end);
-      marker.colors.push_back(colour_msg);
-      marker.colors.push_back(colour_msg);
-
-      // Z-Axis (start at origin, end at +Z)
-      geometry_msgs::msg::Point z_end = origin;
-      z_end.z = axis_length;
-      marker.points.push_back(origin);
-      marker.points.push_back(z_end);
-      marker.colors.push_back(colour_msg);
-      marker.colors.push_back(colour_msg);
-
-      array.markers.push_back(marker);
-
-      count++;
-    }
-  }
-
-  sensor_msgs::msg::PointCloud2 pc2_msg;
-  pcl::toROSMsg(cloud, pc2_msg);
-  pc2_msg.header.frame_id = params_.world_frame_id;
-  pc2_msg.header.stamp = ros_time;
-  filters_linearization_cloud_->publish(pc2_msg);
-
-  filters_object_key_frame_pub_->publish(array);
-}
-
-// void FrontendDSDRos::processRGBDOutputpacket(
-//     const RGBDInstanceOutputPacket::ConstPtr& rgbd_packet) {
-//   // publish path
-//   // why the camera poses are only in the RGBDInstanceOutputPacket and not in
-//   // the base... I have no idea :)
-//   this->publishVisualOdometryPath(rgbd_packet->camera_poses_,
-//                                   rgbd_packet->getTimestamp());
-
-//   // publish static cloud
-//   CHECK(rgbd_packet);
-//   this->publishStaticPointCloud(rgbd_packet->static_landmarks_,
-//                                 rgbd_packet->T_world_camera_);
-
-//   // publish and collect dynamic cloud
-//   CloudPerObject clouds_per_obj = this->publishDynamicPointCloud(
-//       rgbd_packet->dynamic_landmarks_, rgbd_packet->T_world_camera_);
-
-//   const auto& object_motions = rgbd_packet->object_motions_;
-//   const auto& object_poses = rgbd_packet->propogated_object_poses_;
-//   const auto& timestamp_map = rgbd_packet->involved_timestamps_;
-
-//   DSDTransport::Publisher object_poses_publisher =
-//   dsd_transport_.addObjectInfo(
-//       object_motions, object_poses, params_.world_frame_id, timestamp_map,
-//       rgbd_packet->getFrameId(), rgbd_packet->getTimestamp());
-//   object_poses_publisher.publishObjectOdometry();
-//   object_poses_publisher.publishObjectTransforms();
-//   object_poses_publisher.publishObjectPaths();
-
-//   if (rgbd_packet->dense_labelled_cloud_) {
-//     sensor_msgs::msg::PointCloud2 pc2_msg;
-//     pcl::toROSMsg(*rgbd_packet->dense_labelled_cloud_, pc2_msg);
-//     pc2_msg.header.frame_id = params_.camera_frame_id;
-//     pc2_msg.header.stamp = utils::toRosTime(rgbd_packet->getTimestamp());
-//     dense_dynamic_cloud_pub_->publish(pc2_msg);
-//   }
-// }
 
 }  // namespace dyno

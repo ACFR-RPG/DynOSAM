@@ -393,26 +393,7 @@ void DynoPipelineManager::loadPipelines(const CameraParams& camera_params,
     FrontendPipeline::OutputQueue& backend_input_queue = backend_input_queue_;
     frontend_output_registra->registerCallback(
         [&backend_input_queue](const auto& frontend_output) -> void {
-          // hack for now so only object tracks with keyframes to to backend!
-          // push to backend if keyframe
-          LOG(INFO) << "Is kf " << frontend_output->isKeyFrame();
-          if (frontend_output->isKeyFrame()) {
-            VisionImuPacket::Ptr output =
-                std::make_shared<VisionImuPacket>(*frontend_output);
-            auto object_tracks = output->objectTracks();
-
-            VisionImuPacket::ObjectTrackMap new_object_tracks;
-            for (const auto& [object_id, object_track] : object_tracks) {
-              if (object_track.is_keyframe) {
-                new_object_tracks.insert2(object_id, object_track);
-              }
-            }
-
-            output->objectTracks(new_object_tracks);
-
-            // backend_input_queue.push(frontend_output);
-            backend_input_queue.push(output);
-          }
+          backend_input_queue.push(frontend_output);
         });
 
     backend_pipeline_->registerOutputQueue(&backend_output_queue_);
