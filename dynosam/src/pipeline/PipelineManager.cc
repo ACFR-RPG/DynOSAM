@@ -39,6 +39,8 @@
 #include "dynosam_opt/Map.hpp"
 
 DEFINE_bool(use_backend, false, "If any backend should be initalised");
+DEFINE_bool(use_opencv_display, true,
+            "If true, the OpenCVImageDisplayQueue will be processed");
 
 namespace dyno {
 
@@ -210,10 +212,9 @@ bool DynoPipelineManager::spin() {
 }
 
 bool DynoPipelineManager::spinViz() {
-  // if()
-  displayer_
-      .process();  // when enabled this gives a segafault when the process ends.
-                   // when commented out the program just waits at thee end
+  if (FLAGS_use_opencv_display) {
+    displayer_.process();
+  }
   return true;
 }
 

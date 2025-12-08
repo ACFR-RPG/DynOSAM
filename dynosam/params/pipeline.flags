@@ -22,3 +22,5 @@
 # and the bson file is searched for on output_path / <output_file>.json
 # where the output file name is determined by the frontend mode (RGB, mono)
 --frontend_from_file=false
+
+--use_opencv_display=true
