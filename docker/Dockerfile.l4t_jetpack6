@@ -43,7 +43,7 @@ RUN apt-get update \
 
 
 # # ROS installs
-RUN apt-get install -y \
+RUN apt-get update && apt-get install -y \
       ros-jazzy-ros2cli-common-extensions \
       ros-jazzy-cv-bridge \
       ros-jazzy-vision-opencv \
@@ -102,8 +102,8 @@ RUN cd json && mkdir build && \
       cmake .. && make -j$(nproc) install
 
 # OpenCV looks for the cuDNN version in cudnn_version.h, but it's been renamed to cudnn_version_v8.h
-RUN ln -sfnv /usr/include/$(uname -i)-linux-gnu/cudnn_version_v*.h /usr/include/$(uname -i)-linux-gnu/cudnn_version.h  
-    
+RUN ln -sfnv /usr/include/$(uname -i)-linux-gnu/cudnn_version_v*.h /usr/include/$(uname -i)-linux-gnu/cudnn_version.h
+
 # IMPORTANT: must specify CXX_17 version. Default is c++11 which will cause compilation issues
 # On aarch64 we can enable NEON for CPU level optimisations
 # It is vital we use gcc-11 as otheriwise we cannot compile the cuda level code (ie. CUDA 12.9)

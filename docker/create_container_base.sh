@@ -1,22 +1,20 @@
 #!/usr/bin/env bash
 
 CONTAINER_IMAGE_NAME=$1
+CONTAINER_NAME=$2
 
-### EDIT THIS TO WHEREVER YOU'RE STORING YOU DATA ###
-# folder should exist before you mount it
-LOCAL_DATA_FOLDER=$2
-LOCAL_RESULTS_FOLDER=$3
-LOCAL_DYNO_SAM_FOLDER=$4
-LOCAL_THIRD_PARTY_DYNO_SAM_FOLDER=$5
+LOCAL_DATA_FOLDER=$3
+LOCAL_RESULTS_FOLDER=$4
+LOCAL_DYNO_SAM_FOLDER=$5
+LOCAL_THIRD_PARTY_DYNO_SAM_FOLDER=$6
 
-echo "Creating dynosam container from image: $CONTAINER_IMAGE_NAME"
+echo "Creating dynosam container ($CONTAINER_NAME) from image: $CONTAINER_IMAGE_NAME"
 echo "Local data folder: $LOCAL_DATA_FOLDER"
 echo "Local results folder: $LOCAL_RESULTS_FOLDER"
 echo "Local DynoSAM folder: $LOCAL_DYNO_SAM_FOLDER"
 echo "Local third party dynosam folder: $LOCAL_THIRD_PARTY_DYNO_SAM_FOLDER"
 
 
-CONTAINER_NAME=dyno_sam
 CONTAINER_DATA_FOLDER=/root/data
 CONTAINER_RESULTS_FOLDER=/root/results
 CONTAINER_WORKSPACE_FOLDER=/home/user/dev_ws/src/core/
