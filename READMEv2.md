@@ -199,7 +199,11 @@ For instance segmentation we use [YOLOv8](https://docs.ultralytics.com/models/yo
 DynoSAM provides dataset loaders that parse pre-processed images (ie. depth, optical flow, masks), and ground truth into a unified format.
 
 All official datasets are hosted at the [ACFR-RPG Datasets page](https://data.acfr.usyd.edu.au/rpg/).
-To download the datasets use the [`curl`](https://www.geeksforgeeks.org/linux-unix/curl-command-in-linux-with-examples/) command.
+To download a dataset, create a directory for the relevant dataset and, within the directory, run the command
+```bash
+wget -m -np -nH --cut-dirs=4 -R "index.html*" https://data.acfr.usyd.edu.au/rpg/dynosam/[Dataset]/[Subset]
+```
+For example, for the `kitti` dataset with subset `0004`, create a directory `kitti-0004` and run `wget -m -np -nH --cut-dirs=4 -R "index.html*" https://data.acfr.usyd.edu.au/rpg/dynosam/kitti/0004`.
 
 | Dataset | Dataset ID | Notes |
 |--------|--------------|-------|
@@ -209,7 +213,6 @@ To download the datasets use the [`curl`](https://www.geeksforgeeks.org/linux-un
 | Oxford Multimotion (OMD) | 3 | Modified 2024 version available. |
 | TartanAir Shibuya | 5 | Preprocessed version supported. |
 | VIODE | 6 | IMU-enabled sequences supported. |
-
 
 To run a specific dataset only two GFLAGS are required:
 
