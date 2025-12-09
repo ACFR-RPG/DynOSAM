@@ -110,8 +110,12 @@ Due to DynoSAM being build within ROS:
 - Need to build GTSAM with `-DGTSAM_USE_SYSTEM_EIGEN=ON` to avoid issues with ROS and OpenCV-Eigen compatability. Confirmed from https://discourse.ros.org/t/announcing-gtsam-as-a-ros-1-2-package/32739 which explains that the GTSAM ROS package is build with this flag set to ON (and describes it as "problematic"). We still want to build GTSAM from source so we can control the version and other compiler flags.
 Kimera-VIO's install instructions indicate that OpenGV must use the same version of Eigen as GTSAM, which can be set using compiler flags. Since we are using the ROS install Eigen, I have removed these flags and hope that the package manager with CMake can find the right (and only) version. This has not proved problematic... yet...
 
-### MPI Missing Error
-When first compiling DynoSAM, this error may appear as MPI relies on a non-existent directory. If this issue arises, the following is a known fix.
+## Possible Compilation Issues
+### Missing MPI Header Error
+When first compiling DynoSAM, this error may appear as MPI relies on a non-existent directory. 
+This issue _should_ be fixed a patch in the `dynosam_common` CMakeLists.txt which directly updates the `MPI_INCLUDE_PATH`.
+
+However, if the issue persists, the following is a known fix.
 1. Unset HPC-X variables
    ```bash
    unset OPENMPI_VERSION
