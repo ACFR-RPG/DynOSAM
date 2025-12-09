@@ -135,10 +135,10 @@ FrontendModule::SpinReturn RGBDInstanceFrontendModule::nominalSpin(
     pim = imu_frontend_.preintegrateImuMeasurements(
         input->imu_measurements.value());
 
-    // nav_state_curr_ =
-    //     pim->predict(nav_state_prev_, gtsam::imuBias::ConstantBias{});
     nav_state_curr_ =
-        pim->predict(nav_state_last_kf_, gtsam::imuBias::ConstantBias{});
+        pim->predict(nav_state_prev_, gtsam::imuBias::ConstantBias{});
+    // nav_state_curr_ =
+    //     pim->predict(nav_state_last_kf_, gtsam::imuBias::ConstantBias{});
     last_imu_k_ = input->getFrameId();
 
     // relative rotation
