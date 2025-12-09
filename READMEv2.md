@@ -203,8 +203,14 @@ To download a dataset, create a directory for the relevant dataset and, within t
 ```bash
 wget -m -np -nH --cut-dirs=4 -R "index.html*" https://data.acfr.usyd.edu.au/rpg/dynosam/[Dataset]/[Subset]
 ```
-For example, for the `kitti` dataset with subset `0004`, create a directory `kitti-0004` and run `wget -m -np -nH --cut-dirs=4 -R "index.html*" https://data.acfr.usyd.edu.au/rpg/dynosam/kitti/0004`.
+For example, for the `kitti` dataset with subset `0004`, create and enter the directory `kitti-0004` download all files:
+```
+wget -m -np -nH --cut-dirs=4 -R "index.html*" https://data.acfr.usyd.edu.au/rpg/dynosam/kitti/0004
+```
 
+> NOTE: when developing using docker, download the sequences into the data folder mounted into the docker container so it may be accessed by the program.
+
+The following datasets are officially supported:
 | Dataset | Dataset ID | Notes |
 |--------|--------------|-------|
 | KITTI Tracking | 0 | Uses modified version with GT motion, flow, masks. |
@@ -215,7 +221,6 @@ For example, for the `kitti` dataset with subset `0004`, create a directory `kit
 | VIODE | 6 | IMU-enabled sequences supported. |
 
 To run a specific dataset only two GFLAGS are required:
-
 ```
 --dataset_path
 --data_provider_type
