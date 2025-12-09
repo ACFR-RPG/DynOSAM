@@ -14,7 +14,10 @@ Panels:
         - /Frontend1/Dynamic Map1
         - /Frontend1/Visual Odometry1/Shape1
         - /Ground Truth1
+        - /Ground Truth1/Visual Odometry1/Topic1
         - /Ground Truth1/Visual Odometry1/Shape1
+        - /Ground Truth1/Camera Path1/Topic1
+        - /Ground Truth1/Object Odometry1/Topic1
       Splitter Ratio: 0.49902912974357605
     Tree Height: 752
   - Class: rviz_common/Selection
@@ -430,7 +433,7 @@ Visualization Manager:
             Reliability Policy: Reliable
             Value: /dynosam/frontend/odometry_path
           Value: true
-      Enabled: false
+      Enabled: true
       Name: Frontend
     - Class: rviz_common/Group
       Displays:
@@ -470,8 +473,8 @@ Visualization Manager:
             Durability Policy: Volatile
             Filter size: 10
             History Policy: Keep Last
-            Reliability Policy: Reliable
-            Value: /dynosam/frontend/ground_truth/odometry
+            Reliability Policy: Best Effort
+            Value: /dynosam/ground_truth/odometry
           Value: true
         - Alpha: 1
           Buffer Length: 1
@@ -498,8 +501,8 @@ Visualization Manager:
             Durability Policy: Volatile
             Filter size: 10
             History Policy: Keep Last
-            Reliability Policy: Reliable
-            Value: /dynosam/frontend/ground_truth/odometry_path
+            Reliability Policy: Best Effort
+            Value: /dynosam/ground_truth/odometry_path
           Value: true
         - Axes Length: 0.4000000059604645
           Axes Radius: 0.029999999329447746
@@ -528,11 +531,11 @@ Visualization Manager:
             Durability Policy: Volatile
             Filter size: 10
             History Policy: Keep Last
-            Reliability Policy: Reliable
-            Value: /dynosam/frontend/ground_truth/object_odometry
+            Reliability Policy: Best Effort
+            Value: /dynosam/ground_truth/object_odometry
           Value: true
           Velocity: true
-      Enabled: false
+      Enabled: true
       Name: Ground Truth
     - Class: rviz_default_plugins/Image
       Enabled: false
@@ -639,25 +642,25 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 5.939165115356445
+      Distance: 8.309072494506836
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: -0.2903532385826111
-        Y: 0.3766527473926544
-        Z: 2.6053965091705322
+        X: 1.266749382019043
+        Y: 1.5098763704299927
+        Z: 1.9570939540863037
       Focal Shape Fixed Size: false
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: -1.0696011781692505
+      Pitch: -1.0147963762283325
       Target Frame: camera
       Value: Orbit (rviz_default_plugins)
-      Yaw: 4.605403423309326
+      Yaw: 4.7804036140441895
     Saved: ~
 Window Geometry:
   Displays:

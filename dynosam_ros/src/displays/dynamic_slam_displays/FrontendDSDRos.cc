@@ -38,26 +38,30 @@
 namespace dyno {
 
 FrontendDSDRos::FrontendDSDRos(const DisplayParams params,
-                               rclcpp::Node::SharedPtr node)
+                               rclcpp::Node::SharedPtr node,
+                               rclcpp::Node::SharedPtr ground_truth_node)
     : FrontendDisplay(), DSDRos(params, node) {
   tracking_image_pub_ =
       image_transport::create_publisher(node.get(), "tracking_image");
 
   // const rclcpp::SensorDataQoS sensor_qos;
-
-  auto ground_truth_node = node->create_sub_node("ground_truth");
-  dsd_ground_truth_transport_ =
-      std::make_unique<DSDTransport>(ground_truth_node);
-  vo_ground_truth_publisher_ =
-      ground_truth_node->create_publisher<nav_msgs::msg::Odometry>("odometry",
-                                                                   1);
-  vo_path_ground_truth_publisher_ =
-      ground_truth_node->create_publisher<nav_msgs::msg::Path>("odometry_path",
-                                                               1);
-
   dense_dynamic_cloud_pub_ =
       node->create_publisher<sensor_msgs::msg::PointCloud2>(
-          "dense_labelled_cloud", 1);
+          "dense_labelled_cloud", rclcpp::SensorDataQoS());
+
+  if (ground_truth_node) {
+    RCLCPP_INFO_STREAM(node->get_logger(), "Creating ground truth publishers");
+    ground_truth_publishers_ = GroundTruthPublishers(ground_truth_node);
+  }
+}
+
+FrontendDSDRos::GroundTruthPublishers::GroundTruthPublishers(
+    rclcpp::Node::SharedPtr ground_truth_node)
+    : dsd_transport_(CHECK_NOTNULL(ground_truth_node)) {
+  vo_publisher_ = ground_truth_node->create_publisher<nav_msgs::msg::Odometry>(
+      "odometry", rclcpp::SensorDataQoS());
+  vo_path_publisher_ = ground_truth_node->create_publisher<nav_msgs::msg::Path>(
+      "odometry_path", rclcpp::SensorDataQoS());
 }
 
 void FrontendDSDRos::spinOnceImpl(
@@ -94,7 +98,8 @@ void FrontendDSDRos::tryPublishDebugImagery(
 
 void FrontendDSDRos::tryPublishGroundTruth(
     const VisionImuPacket::ConstPtr& frontend_output) {
-  if (!frontend_output->groundTruthPacket() || !frontend_output->debugImagery())
+  if (!ground_truth_publishers_ || !frontend_output->groundTruthPacket() ||
+      !frontend_output->debugImagery())
     return;
 
   const DebugImagery& debug_imagery = *frontend_output->debugImagery();
@@ -132,10 +137,11 @@ void FrontendDSDRos::tryPublishGroundTruth(
     motions.insert22(object_pose_gt.object_id_, gt_packet.frame_id_, gt_motion);
   }
 
+  GroundTruthPublishers& ground_truth_pubs = ground_truth_publishers_.value();
   // will this result in confusing tf's since the gt object and estimated
   // objects use the same link?
   DSDTransport::Publisher publisher =
-      dsd_ground_truth_transport_->addObjectInfo(
+      ground_truth_pubs.dsd_transport_.addObjectInfo(
           motions, poses, params_.world_frame_id, timestamp_map, frame_id,
           timestamp);
   publisher.publishObjectOdometry();
@@ -145,7 +151,7 @@ void FrontendDSDRos::tryPublishGroundTruth(
   nav_msgs::msg::Odometry odom_msg;
   utils::convertWithHeader(T_world_camera, odom_msg, timestamp,
                            params_.world_frame_id, params_.camera_frame_id);
-  vo_ground_truth_publisher_->publish(odom_msg);
+  ground_truth_pubs.vo_publisher_->publish(odom_msg);
 
   // odom path gt
   // make static variable since we dont build up the path anywhere else
@@ -162,7 +168,7 @@ void FrontendDSDRos::tryPublishGroundTruth(
   gt_odom_path_msg.header = header;
   gt_odom_path_msg.poses.push_back(pose_stamped);
 
-  vo_path_ground_truth_publisher_->publish(gt_odom_path_msg);
+  ground_truth_pubs.vo_path_publisher_->publish(gt_odom_path_msg);
 }
 void FrontendDSDRos::tryPublishVisualOdometry(
     const VisionImuPacket::ConstPtr& frontend_output) {

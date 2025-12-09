@@ -280,10 +280,22 @@ DynoSAM supports multiple backend formulations. Set the `backend_updater_enum` f
 
 Many factor-graph related paramters exist in the `backend.flags` file.
 
-## 4.2 IMU integration
+## 4.2 Instance Segmentation
+DynoSAM uses YOLOv8 for object detection. The model is integrated into the front-end and accelerated using CUDA and TensorRT.
+
+To run the pipeline with online segmentation and object tracking set
+```
+prefer_provided_object_detection: true
+```
+
+See the [dynosam_nn README.md](./dynosam_nn//README.md) for more detail on the models used and how to export the weights.
+
+> NOTE: the provided datasets contain pre-computed object masks with tracking labels $j$ that align with the ground truth. Use `prefer_provided_object_detection: false`.
+
+## 4.3 IMU integration
 We additionally support IMU integration using the `PreintegrationFactor` from GTSAM in the backend. However, this has only been tested on VIODE.
 
-## 4.3 ROS Visualisation
+## 4.4 ROS Visualisation
 All 3D visualisation in DynoSAM is done using RVIZ. Camera pose and point clouds are vizualised using standard ROS messages. Visualising the objects is more complex and we provide two different ways to do this which can be controlled at compile time using the cmake flag `-DENABLE_DYNAMIC_SLAM_INTERFACES=ON/OFF`
 
 1. (`ON`, now default) Usage of the custom `dynamic_slam_interfaces::msg::ObjectOdometry` (in [dynamic_slam_interfaces](https://github.com/ACFR-RPG/dynamic_slam_interfaces)) to publish to current state of the each object per frame. Our custom RVIZ plugin [rviz_dynamic_slam_plugins](https://github.com/ACFR-RPG/rviz_dynamic_slam_plugins) can be used to visualize this message type. The object id, current pose, velocity, path etc... will be shown for each object. See this [README.md](./dynosam_ros/include/dynosam_ros/displays/dynamic_slam_displays/README.md) for more detail.
@@ -291,7 +303,7 @@ All 3D visualisation in DynoSAM is done using RVIZ. Camera pose and point clouds
 
 > NOTE: the publishing of object states is meant primilarily for __visualisation__ purposes and not for recording data used for evaluation. This is done using csv files in a different submodule: see [Evaluation](#4-evaluation).
 
-## 4.4 Tests
+## 4.5 Tests
 We use [gtest](https://github.com/google/googletest) for unit testing. This is installed automagically. When building with ROS, all tests will go into the install folder.
 
 

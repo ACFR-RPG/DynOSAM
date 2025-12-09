@@ -72,6 +72,9 @@ RUN pip3 install setuptools pre-commit scipy matplotlib argcomplete
 # install CSparse
 RUN DEBIAN_FRONTEND=noninteractive apt install -y libsuitesparse-dev
 
+RUN python3 -m pip install "ultralytics==8.3.0" "numpy<2.0" "opencv-python<5.0"
+RUN python3 -m pip install https://github.com/ultralytics/assets/releases/download/v0.0.0/onnxruntime_gpu-1.23.0-cp310-cp310-linux_aarch64.whl
+
 # Parallelism C++ for CPU
 RUN apt-get update && apt-get install -y libboost-all-dev libtbb-dev
 

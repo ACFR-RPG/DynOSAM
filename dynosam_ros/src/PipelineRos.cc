@@ -185,7 +185,8 @@ void DynoPipelineManagerRos::initalisePipeline() {
           .get<std::string>();
 
   auto frontend_display = std::make_shared<dyno::FrontendDisplayRos>(
-      display_params, this->create_sub_node("frontend"));
+      display_params, this->create_sub_node("frontend"),
+      this->create_sub_node("ground_truth"));
   auto backend_display = std::make_shared<dyno::BackendDisplayRos>(
       display_params, this->create_sub_node("backend"));
 
