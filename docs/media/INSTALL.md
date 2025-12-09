@@ -109,3 +109,42 @@ By default `ENABLE_DYNAMIC_SLAM_INTERFACES=ON` in the [CMakeLists.txt](./dynosam
 Due to DynoSAM being build within ROS:
 - Need to build GTSAM with `-DGTSAM_USE_SYSTEM_EIGEN=ON` to avoid issues with ROS and OpenCV-Eigen compatability. Confirmed from https://discourse.ros.org/t/announcing-gtsam-as-a-ros-1-2-package/32739 which explains that the GTSAM ROS package is build with this flag set to ON (and describes it as "problematic"). We still want to build GTSAM from source so we can control the version and other compiler flags.
 Kimera-VIO's install instructions indicate that OpenGV must use the same version of Eigen as GTSAM, which can be set using compiler flags. Since we are using the ROS install Eigen, I have removed these flags and hope that the package manager with CMake can find the right (and only) version. This has not proved problematic... yet...
+
+## Possible Compilation Issues
+### Missing MPI Header Error
+When first compiling DynoSAM, this error may appear as MPI relies on a non-existent directory. 
+This issue _should_ be fixed a patch in the `dynosam_common` CMakeLists.txt which directly updates the `MPI_INCLUDE_PATH`.
+
+However, if the issue persists, the following is a known fix.
+1. Unset HPC-X variables
+   ```bash
+   unset OPENMPI_VERSION
+   unset OMPI_MCA_coll_hcoll_enable 
+   unset OPAL_PREFIX 
+   export PATH=$(echo $PATH | tr ':' '\n' | grep -v '/opt/hpcx' | grep -v '/usr/local/mpi/bin' | paste -sd:)
+    ```
+   Now verify `env | grep -i mpi echo $PATH` that the `OPAL_PREFIX` and HPC-X paths no longer appear
+2. Install OpenMPI
+   ```bash
+   sudo apt update
+   sudo apt install libopenmpi-dev openmpi-bin
+   ```
+   and verify that the following points to `/usr/bin/mpicc`
+   ```bash
+   which mpicc
+   mpicc --version   
+   ```
+3. Clear the ROS2 workspace
+   ```bash
+   rm -rf build/ install/ log/
+   ```
+4. Build with the system MPI
+   ```bash
+   export MPI_C_COMPILER=/usr/bin/mpicc 
+   export MPI_CXX_COMPILER=/usr/bin/mpicxx 
+   colcon build
+   ```
+### Missing Dependencies 
+- `nlohmannjson` may not be installed, so install with `sudo apt install nlohmann-json3-dev`
+- GTSAM may not be installed, so install with `pip install gtsam`
+   
