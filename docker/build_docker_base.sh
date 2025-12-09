@@ -20,11 +20,10 @@ cd "$SCRIPT_DIR" || { echo "Failed to change directory"; exit 1; }
 # 4. Verify the file exists in this directory
 if [ -f "$DOCKERFILE" ]; then
     echo "Building dockerfile $DOCKERFILE with tag $TAG"
-    # DOCKER_BUILDKIT=1 docker build --network=host -f $DOCKERFILE -t $TAG .
+    DOCKER_BUILDKIT=1 docker build --network=host -f $DOCKERFILE -t $TAG .
     # ----------------------------
 
 else
     echo "Error: File '$DOCKERFILE' not found in $SCRIPT_DIR"
     exit 1
 fi
-
