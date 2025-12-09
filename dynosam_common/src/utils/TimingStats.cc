@@ -30,6 +30,8 @@
 
 #include "dynosam_common/utils/TimingStats.hpp"
 
+#include <glog/vlog_is_on.h>
+
 namespace dyno {
 namespace utils {
 
@@ -40,8 +42,12 @@ namespace utils {
 // }
 
 TimingStatsCollector::TimingStatsCollector(const std::string& tag,
+                                           int glog_level,
                                            bool construct_stopped)
-    : tag_(tag + " [ms]"), tic_time_(Timer::tic()), is_timing_(false) {
+    : tag_(tag + " [ms]"),
+      glog_level_(glog_level),
+      tic_time_(Timer::tic()),
+      is_timing_(false) {
   if (!construct_stopped) {
     start();
   }
@@ -55,7 +61,7 @@ void TimingStatsCollector::start() {
 }
 
 void TimingStatsCollector::stop() {
-  if (isTiming()) {
+  if (isTiming() && shouldGlog()) {
     log();
   }
 
@@ -64,6 +70,14 @@ void TimingStatsCollector::stop() {
 }
 
 bool TimingStatsCollector::isTiming() const { return is_timing_; }
+
+bool TimingStatsCollector::shouldGlog() const {
+  if (glog_level_ == 0) {
+    return true;
+  }
+
+  return VLOG_IS_ON(glog_level_);
+}
 
 void TimingStatsCollector::discardTiming() { is_timing_ = false; }
 

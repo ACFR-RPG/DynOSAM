@@ -105,7 +105,8 @@ class TimingStatsCollector {
  public:
   DYNO_POINTER_TYPEDEFS(TimingStatsCollector)
 
-  TimingStatsCollector(const std::string& tag, bool construct_stopped = false);
+  TimingStatsCollector(const std::string& tag, int glog_level = 0,
+                       bool construct_stopped = false);
   ~TimingStatsCollector();
 
   void start();
@@ -114,6 +115,10 @@ class TimingStatsCollector {
   void discardTiming();
 
   std::chrono::milliseconds delta() const;
+
+  // not that it will log to glog, but that the glog verbosity level is set
+  // such that it will log to the collector
+  bool shouldGlog() const;
 
  private:
   /**
@@ -128,6 +133,7 @@ class TimingStatsCollector {
 
  private:
   const std::string tag_;
+  const int glog_level_;
   //! Comparison time
   Timer::TimePoint tic_time_;
   //! Timing state

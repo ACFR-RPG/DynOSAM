@@ -7,6 +7,7 @@
 #include <opencv4/opencv2/opencv.hpp>
 
 #include "cv_bridge/cv_bridge.hpp"
+#include "dynosam_common/utils/Statistics.hpp"
 #include "dynosam_nn/ModelConfig.hpp"
 #include "dynosam_nn/PyObjectDetector.hpp"
 #include "dynosam_nn/TrtUtilities.hpp"
@@ -54,15 +55,18 @@ class ImageSegmenterNode : public rclcpp::Node {
       //             resized.rows);
       // auto r = engine_->process(resized);
 
-      // // LOG(INFO) << r;
+      LOG(INFO) << result;
 
       // // // // Optional: visualize (disable in headless mode)
-      cv::imshow("View", result.colouredMask());
-      cv::waitKey(1);
+      // cv::imshow("View", result.colouredMask());
+      // cv::waitKey(1);
 
     } catch (const cv_bridge::Exception& e) {
       RCLCPP_ERROR(this->get_logger(), "cv_bridge exception: %s", e.what());
     }
+
+    RCLCPP_INFO_STREAM_THROTTLE(this->get_logger(), *this->get_clock(), 2000,
+                                dyno::utils::Statistics::Print());
   }
 
   rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr subscription_;
@@ -77,6 +81,7 @@ int main(int argc, char** argv) {
   FLAGS_logtostderr = 1;
   FLAGS_colorlogtostderr = 1;
   FLAGS_log_prefix = 1;
+  FLAGS_v = 5;
 
   // const std::string enginePath = dyno::getNNWeightsPath() /
   // "yolov8n-seg.engine";

@@ -5,6 +5,7 @@
 #include <cuda_runtime.h>
 #include <cuda_runtime_api.h>
 
+#include "dynosam_common/utils/TimingStats.hpp"
 #include "dynosam_common/viz/Colour.hpp"
 #include "dynosam_nn/trackers/ObjectTracker.hpp"
 
@@ -459,12 +460,18 @@ YoloV8ObjectDetector::YoloV8ObjectDetector(const ModelConfig& config,
 YoloV8ObjectDetector::~YoloV8ObjectDetector() = default;
 
 ObjectDetectionResult YoloV8ObjectDetector::process(const cv::Mat& image) {
+  static constexpr int kTimingVerbosityLevel = 5;
+
   const auto& input_info = model_info_.input();
   const auto& output0_info = model_info_.output0();
   const auto& output1_info = model_info_.output1();
 
   std::vector<float> input_data;
-  impl_->preprocess(input_info, image, input_data);
+  {
+    utils::TimingStatsCollector timing("yolov8_detection.pre_process",
+                                       kTimingVerbosityLevel);
+    impl_->preprocess(input_info, image, input_data);
+  }
   // allocate input data
   CHECK(input_device_ptr_.allocate(input_info));
   CHECK_EQ(input_device_ptr_.tensor_size, input_data.size());
@@ -485,11 +492,14 @@ ObjectDetectionResult YoloV8ObjectDetector::process(const cv::Mat& image) {
   context_->setTensorAddress(output1_info.name.c_str(),
                              output1_device_ptr_.device_pointer.get());
 
-  cudaStreamSynchronize(stream_);
-  bool status = context_->enqueueV3(stream_);
-  if (!status) {
-    LOG(ERROR) << "initializing inference failed!";
-    return ObjectDetectionResult{};
+  {
+    utils::TimingStatsCollector timing("yolov8_detection.infer");
+    cudaStreamSynchronize(stream_);
+    bool status = context_->enqueueV3(stream_);
+    if (!status) {
+      LOG(ERROR) << "initializing inference failed!";
+      return ObjectDetectionResult{};
+    }
   }
 
   std::vector<float> output0_data, output1_data;
@@ -502,8 +512,12 @@ ObjectDetectionResult YoloV8ObjectDetector::process(const cv::Mat& image) {
   const auto output1_dims = context_->getTensorShape(output1_info.name.c_str());
 
   ObjectDetectionResult result;
-  impl_->postprocess(input_info, image, output0_data, output1_data,
-                     output0_dims, output1_dims, result);
+  {
+    utils::TimingStatsCollector timing("yolov8_detection.post_process",
+                                       kTimingVerbosityLevel);
+    impl_->postprocess(input_info, image, output0_data, output1_data,
+                       output0_dims, output1_dims, result);
+  }
 
   result_ = result;
   return result_;

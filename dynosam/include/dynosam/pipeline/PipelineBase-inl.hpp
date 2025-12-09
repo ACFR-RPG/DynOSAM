@@ -45,19 +45,13 @@ PipelineBase::ReturnCode PipelineModule<INPUT, OUTPUT>::spinOnce() {
   }
 
   // log get_input, process and get_output packet timing explicitly if VLOG >=
-  // 20
-  const bool should_log_intermediate_timing = VLOG_IS_ON(10);
-  // parse !should_log_intermediate_timing to the timing stats collectors as
-  // this will set construct_stopped to be true we are not logging intermediate
-  // timing we never call timer.start() and therefore they will not be logged
-  const bool construct_intermediate_timers_as_stopped =
-      !should_log_intermediate_timing;
-
+  // 10
+  static constexpr int intermediate_timing_glog_verbosity = 5;
   auto getInputPacketWrapped = [&]() -> InputConstSharedPtr {
     // LOG(INFO) << "construct_intermediate_timers_as_stopped " <<
     // construct_intermediate_timers_as_stopped;
-    utils::TimingStatsCollector timing(
-        module_name_ + ".get_input", construct_intermediate_timers_as_stopped);
+    utils::TimingStatsCollector timing(module_name_ + ".get_input",
+                                       intermediate_timing_glog_verbosity);
     InputConstSharedPtr input = nullptr;
     is_thread_working_ = false;
     input = getInputPacket();
@@ -66,8 +60,8 @@ PipelineBase::ReturnCode PipelineModule<INPUT, OUTPUT>::spinOnce() {
   };
 
   auto processWrapped = [&](InputConstSharedPtr input) -> OutputConstSharedPtr {
-    utils::TimingStatsCollector timing(
-        module_name_ + ".process", construct_intermediate_timers_as_stopped);
+    utils::TimingStatsCollector timing(module_name_ + ".process",
+                                       intermediate_timing_glog_verbosity);
     OutputConstSharedPtr output = nullptr;
     output = process(input);
     return output;
@@ -75,9 +69,8 @@ PipelineBase::ReturnCode PipelineModule<INPUT, OUTPUT>::spinOnce() {
 
   auto pushOutputPacketWrapped = [&](OutputConstSharedPtr output) -> bool {
     // Received a valid output, send to output queue
-    utils::TimingStatsCollector timing(
-        module_name_ + ".push_output",
-        construct_intermediate_timers_as_stopped);
+    utils::TimingStatsCollector timing(module_name_ + ".push_output",
+                                       intermediate_timing_glog_verbosity);
     const bool push_packet_result = pushOutputPacket(output);
     return push_packet_result;
   };
