@@ -74,8 +74,6 @@ add_library(${PROJECT_NAME} SHARED
   src/bindings/PyBoostWrapper.cc
 )
 
-
-
 target_link_libraries(${PROJECT_NAME}
 PUBLIC
   #  ${Boost_LIBRARIES}

@@ -78,6 +78,9 @@ struct YoloV8ObjectDetector::Impl {
     const cv::Size required_size = input_info.shape();
     const cv::Size original_size = rgb.size();
 
+    utils::TimingStatsCollector timing_setup(
+        "yolov8_detection.post_process.setup", 5);
+
     // result result regardless
     result.labelled_mask =
         cv::Mat::zeros(original_size, ObjectDetectionEngine::MaskDType);
@@ -102,6 +105,8 @@ struct YoloV8ObjectDetector::Impl {
     constexpr int ClassConfOffset = YoloV8ModelInfo::Constants::ClassConfOffset;
     const int MaskCoeffOffset =
         YoloV8ModelInfo::Constants::MaskCoeffOffset(num_classes);
+
+    timing_setup.stop();
 
     // 1. Process prototype masks
     // Store all prototype masks in a vector for easy access
@@ -296,8 +301,6 @@ struct YoloV8ObjectDetector::Impl {
     std::vector<SingleDetectionResult> tracking_result =
         tracker_->track(detections);
     timing_track.stop();
-
-    // return false;
 
     // //construct label mask from tracked result
     utils::TimingStatsCollector timing_finalise(
@@ -509,7 +512,11 @@ ObjectDetectionResult YoloV8ObjectDetector::process(const cv::Mat& image) {
   context_->setInputTensorAddress(input_info.name.c_str(),
                                   input_device_ptr_.device_pointer.get());
   // put image data onto gpu
-  CHECK(input_device_ptr_.pushFromHost(input_data, stream_));
+  {
+    utils::TimingStatsCollector timing("yolov8_detection.push_from_host",
+                                       kTimingVerbosityLevel);
+    CHECK(input_device_ptr_.pushFromHost(input_data, stream_));
+  }
 
   // prepare output data
   CHECK(output0_device_ptr_.allocate(output0_info));
@@ -533,10 +540,18 @@ ObjectDetectionResult YoloV8ObjectDetector::process(const cv::Mat& image) {
   }
 
   std::vector<float> output0_data, output1_data;
-  CHECK(output0_device_ptr_.getFromDevice(output0_data, stream_));
-  CHECK(output1_device_ptr_.getFromDevice(output1_data, stream_));
+  {
+    utils::TimingStatsCollector timing("yolov8_detection.get_from_device",
+                                       kTimingVerbosityLevel);
+    CHECK(output0_device_ptr_.getFromDevice(output0_data, stream_));
+    CHECK(output1_device_ptr_.getFromDevice(output1_data, stream_));
+  }
 
-  cudaStreamSynchronize(stream_);
+  {
+    utils::TimingStatsCollector timing("yolov8_detection.synchronize",
+                                       kTimingVerbosityLevel);
+    cudaStreamSynchronize(stream_);
+  }
 
   const auto output0_dims = context_->getTensorShape(output0_info.name.c_str());
   const auto output1_dims = context_->getTensorShape(output1_info.name.c_str());

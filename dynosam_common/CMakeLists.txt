@@ -13,7 +13,6 @@ set(CMAKE_CXX_STANDARD 17)
 # Must be set **before** find_package(PCL)
 list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_SOURCE_DIR}/cmake)
 
-
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     # Determine the processor part of the triplet
     if(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
