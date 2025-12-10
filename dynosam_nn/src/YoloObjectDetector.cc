@@ -131,24 +131,27 @@ struct YoloV8ObjectDetector::Impl {
     utils::TimingStatsCollector timing_boxes(
         "yolov8_detection.post_process.boxes", 5);
     for (int i = 0; i < num_boxes; ++i) {
-      // Extract box coordinates
+      // // Extract box coordinates
       float xc = output0_data[BoxOffset * num_boxes + i];
       float yc = output0_data[(BoxOffset + 1) * num_boxes + i];
       float w = output0_data[(BoxOffset + 2) * num_boxes + i];
       float h = output0_data[(BoxOffset + 3) * num_boxes + i];
 
-      cv::Rect box_cv(
-          static_cast<int>(std::round(xc - w / 2.0f)),  // top-left x
-          static_cast<int>(std::round(yc - h / 2.0f)),  // top-left y
-          static_cast<int>(std::round(w)),              // width
-          static_cast<int>(std::round(h))               // height
-      );
+      // Computational Optimization: Calculate half-width/height once.
+      float half_w = w * 0.5f;
+      float half_h = h * 0.5f;
 
+      cv::Rect box_cv(static_cast<int>(std::round(xc - half_w)),  // top-left x
+                      static_cast<int>(std::round(yc - half_h)),  // top-left y
+                      static_cast<int>(std::round(w)),            // width
+                      static_cast<int>(std::round(h))             // height
+      );
       // Get class confidence
       float maxConf = 0.0f;
       int classId = -1;
       for (int c = 0; c < num_classes; ++c) {
         float conf = output0_data[(ClassConfOffset + c) * num_boxes + i];
+        // const float conf = output0_data[base_conf_idx + c * num_boxes + i];
         if (conf > maxConf) {
           maxConf = conf;
           classId = c;
@@ -166,6 +169,7 @@ struct YoloV8ObjectDetector::Impl {
       // Store mask coefficients
       std::vector<float> mask_coeffs(32);
       for (int m = 0; m < 32; ++m) {
+        // mask_coeffs[m] = output0_data[base_mask_idx + m * num_boxes + i];
         mask_coeffs[m] = output0_data[(MaskCoeffOffset + m) * num_boxes + i];
       }
       mask_coefficients.emplace_back(std::move(mask_coeffs));
@@ -188,6 +192,8 @@ struct YoloV8ObjectDetector::Impl {
       return false;
     }
 
+    utils::TimingStatsCollector timing_gain(
+        "yolov8_detection.post_process.gain", 5);
     // Calculate letterbox parameters
     const float gain = std::min(
         static_cast<float>(required_size.height) / original_size.height,
@@ -201,6 +207,8 @@ struct YoloV8ObjectDetector::Impl {
     const float mask_scale_x = static_cast<float>(mask_w) / required_size.width;
     const float mask_scale_y =
         static_cast<float>(mask_h) / required_size.height;
+
+    timing_gain.stop();
 
     utils::TimingStatsCollector timing_detections(
         "yolov8_detection.post_process.detections", 5);
@@ -481,6 +489,7 @@ YoloV8ObjectDetector::YoloV8ObjectDetector(const ModelConfig& config,
 YoloV8ObjectDetector::~YoloV8ObjectDetector() = default;
 
 ObjectDetectionResult YoloV8ObjectDetector::process(const cv::Mat& image) {
+  utils::TimingStatsCollector timing("yolov8_detection.process");
   static constexpr int kTimingVerbosityLevel = 5;
 
   const auto& input_info = model_info_.input();
