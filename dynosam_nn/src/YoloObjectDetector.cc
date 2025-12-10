@@ -67,6 +67,9 @@ struct YoloV8ObjectDetector::Impl {
                    const nvinfer1::Dims& output0_dims,
                    const nvinfer1::Dims& output1_dims,
                    ObjectDetectionResult& result) {
+    utils::TimingStatsCollector timing_all("yolov8_detection.post_process.run",
+                                           5);
+
     if (output1_dims.nbDims != 4 || output1_dims.d[0] != 1 ||
         output1_dims.d[1] != 32)
       throw std::runtime_error(
@@ -102,6 +105,8 @@ struct YoloV8ObjectDetector::Impl {
 
     // 1. Process prototype masks
     // Store all prototype masks in a vector for easy access
+    utils::TimingStatsCollector timing_proto(
+        "yolov8_detection.post_process.proto", 5);
     std::vector<cv::Mat> prototypeMasks;
     prototypeMasks.reserve(32);
     for (int m = 0; m < 32; ++m) {
@@ -111,6 +116,7 @@ struct YoloV8ObjectDetector::Impl {
       prototypeMasks.emplace_back(
           proto.clone());  // Clone to ensure data integrity
     }
+    timing_proto.stop();
 
     // 2. Process detections
     std::vector<cv::Rect> boxes;
@@ -122,6 +128,8 @@ struct YoloV8ObjectDetector::Impl {
     std::vector<std::vector<float>> mask_coefficients;
     mask_coefficients.reserve(num_boxes);
 
+    utils::TimingStatsCollector timing_boxes(
+        "yolov8_detection.post_process.boxes", 5);
     for (int i = 0; i < num_boxes; ++i) {
       // Extract box coordinates
       float xc = output0_data[BoxOffset * num_boxes + i];
@@ -162,6 +170,7 @@ struct YoloV8ObjectDetector::Impl {
       }
       mask_coefficients.emplace_back(std::move(mask_coeffs));
     }
+    timing_boxes.stop();
 
     // Early exit if no boxes after confidence threshold
     if (boxes.empty()) {
@@ -169,9 +178,12 @@ struct YoloV8ObjectDetector::Impl {
     }
 
     // 3. Apply NMS
+    utils::TimingStatsCollector timing_nms("yolov8_detection.post_process.nms",
+                                           5);
     std::vector<int> nms_indices;
     cv::dnn::NMSBoxes(boxes, confidences, yolo_config_.conf_threshold,
                       yolo_config_.nms_threshold, nms_indices);
+    timing_nms.stop();
     if (nms_indices.empty()) {
       return false;
     }
@@ -190,6 +202,8 @@ struct YoloV8ObjectDetector::Impl {
     const float mask_scale_y =
         static_cast<float>(mask_h) / required_size.height;
 
+    utils::TimingStatsCollector timing_detections(
+        "yolov8_detection.post_process.detections", 5);
     std::vector<ObjectDetection> detections;
     for (const int idx : nms_indices) {
       const float confidence = confidences[idx];
@@ -265,15 +279,21 @@ struct YoloV8ObjectDetector::Impl {
                                 confidence};
       detections.push_back(detection);
     }
+    timing_detections.stop();
 
     // return false;
 
+    utils::TimingStatsCollector timing_track(
+        "yolov8_detection.post_process.track", 5);
     std::vector<SingleDetectionResult> tracking_result =
         tracker_->track(detections);
+    timing_track.stop();
 
     // return false;
 
     // //construct label mask from tracked result
+    utils::TimingStatsCollector timing_finalise(
+        "yolov8_detection.post_process.finalise", 5);
     for (const SingleDetectionResult& single_result : tracking_result) {
       // this may happen if the object was not well tracked
       if (!single_result.isValid()) {
@@ -287,6 +307,7 @@ struct YoloV8ObjectDetector::Impl {
       // cv::Mat binary_mask = single_result.mask * single_result.object_id;
       result.labelled_mask += single_label_mask;
     }
+    // timing_finalise.stop();
 
     result.detections = tracking_result;
 
