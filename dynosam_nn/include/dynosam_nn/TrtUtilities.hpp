@@ -127,6 +127,8 @@ struct DeviceMemory {
   //! This in effect is tensor_size * sizeof(T)
   size_t allocated_size{0};
 
+  DataTypePtr get() { return device_pointer.get(); }
+
   bool allocate(const TensorInfo& info) {
     try {
       // TODO: check info type is same as T!
@@ -166,10 +168,23 @@ struct DeviceMemory {
     return {total_memory, tensor_size};
   }
 
-  bool getFromDevice(std::vector<DataType>& data, cudaStream_t stream = 0) {
-    data.resize(tensor_size);
+  // bool getFromDevice(std::vector<DataType>& data, cudaStream_t stream = 0) {
+  //   data.resize(tensor_size);
+  //   auto error =
+  //       cudaMemcpyAsync(data.data(), device_pointer.get(),
+  //                       allocated_size,  // note allocated size not tensor
+  //                       size, cudaMemcpyDeviceToHost, stream);
+  //   if (error != cudaSuccess) {
+  //     LOG(ERROR) << "Error copying host -> device: "
+  //                << cudaGetErrorString(error);
+  //     return false;
+  //   }
+  //   return true;
+  // }
+  bool getFromDevice(DataType* data, cudaStream_t stream = 0) {
+    // data.resize(tensor_size);
     auto error =
-        cudaMemcpyAsync(data.data(), device_pointer.get(),
+        cudaMemcpyAsync(data, device_pointer.get(),
                         allocated_size,  // note allocated size not tensor size,
                         cudaMemcpyDeviceToHost, stream);
     if (error != cudaSuccess) {

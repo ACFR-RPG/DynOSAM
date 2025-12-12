@@ -1,6 +1,6 @@
-cmake_minimum_required(VERSION 3.11)
+cmake_minimum_required(VERSION 3.17 FATAL_ERROR)
 
-project(dynosam_nn)
+project(dynosam_nn LANGUAGES CXX CUDA)
 
 set(CMAKE_C_FLAGS "-Wall -Wextra  -O3")
 
@@ -26,6 +26,13 @@ find_package(image_transport REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(sensor_msgs REQUIRED)
 
+find_package(OpenMP REQUIRED)
+if (OPENMP_FOUND)
+    set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
+    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+    set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
+endif()
+
 option(DYNOSAM_NN_USE_TRT "Build with TensorRT" ON)
 
 find_package(CUDAToolkit)
@@ -45,6 +52,8 @@ elseif(NOT DYNOSAM_NN_USE_TRT)
   message(STATUS "Disabling TensorRT! Inference will not work!")
   set(ENABLE_TENSORRT_CXX_VALUE 0)
 endif()
+
+set(CMAKE_CUDA_ARCHITECTURES all)
 
 # setup targets
 include_directories(
@@ -72,6 +81,10 @@ add_library(${PROJECT_NAME} SHARED
   src/trackers/ObjectTracker.cc
 
   src/bindings/PyBoostWrapper.cc
+
+  src/yolov11_preprocess.cu
+  src/yolov8_postprocess.cu
+  src/YOLOV11.cc
 )
 
 target_link_libraries(${PROJECT_NAME}
@@ -86,6 +99,11 @@ PUBLIC
 PRIVATE
   TensorRT::TensorRT
   CUDA::cudart
+)
+
+# Enable separable compilation for CUDA (optional but recommended)
+set_target_properties(${PROJECT_NAME} PROPERTIES
+    CUDA_SEPARABLE_COMPILATION ON
 )
 
 target_include_directories(${PROJECT_NAME}
@@ -151,7 +169,12 @@ install(TARGETS
   image_segmenter_node
   DESTINATION lib/${PROJECT_NAME})
 
-
+# set_target_properties(image_segmenter_node PROPERTIES
+#     CUDA_ARCHITECTURES "75"
+# )
+# set_target_properties(image_segmenter_node PROPERTIES
+#     CUDA_ARCHITECTURES "75;80-real;86-real;89;90"
+# )
 
 pybind11_add_module(_core MODULE
 src/bindings/PyBindings.cc
@@ -170,6 +193,7 @@ install(
   TARGETS _core
   DESTINATION "${PYTHON_INSTALL_DIR}/${PROJECT_NAME}_py"
 )
+
 
 
 #install python scripts/modules

@@ -114,7 +114,8 @@ class TimingStatsCollector {
   bool isTiming() const;
   void discardTiming();
 
-  std::chrono::milliseconds delta() const;
+  // Time delta (dt) in nano seconds
+  double delta() const;
 
   // not that it will log to glog, but that the glog verbosity level is set
   // such that it will log to the collector

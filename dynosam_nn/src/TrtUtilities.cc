@@ -216,11 +216,11 @@ class LoggingShim : public nvinfer1::ILogger {
 
 void* CudaMemoryManager::alloc(size_t size) {
   void* raw_ptr = nullptr;
-  // auto error = cudaMalloc(&raw_ptr, size);
+  auto error = cudaMalloc(&raw_ptr, size);
   // enabling faster, asynchronous data transfers (like DMA) to the GPU
   // compared to regular, pageable memory, which is crucial for high-performance
   // streaming applications
-  auto error = cudaMallocHost(&raw_ptr, size);
+  // auto error = cudaMallocHost(&raw_ptr, size);
   if (error != cudaSuccess) {
     // LOG(ERROR) << "Failed to allocate " << size << " bytes on device";
   }
@@ -230,8 +230,8 @@ void* CudaMemoryManager::alloc(size_t size) {
 
 void CudaMemoryManager::Delete::operator()(void* object) {
   if (object != nullptr) {
-    // cudaFree(object);
-    cudaFreeHost(object);
+    cudaFree(object);
+    // cudaFreeHost(object);
   }
 }
 

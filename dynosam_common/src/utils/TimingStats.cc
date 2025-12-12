@@ -81,18 +81,19 @@ bool TimingStatsCollector::shouldGlog() const {
 
 void TimingStatsCollector::discardTiming() { is_timing_ = false; }
 
-std::chrono::milliseconds TimingStatsCollector::delta() const {
+double TimingStatsCollector::delta() const {
   const auto toc = Timer::toc<std::chrono::nanoseconds>(tic_time_);
-  return std::chrono::duration_cast<std::chrono::milliseconds>(toc);
+  return static_cast<double>(toc.count());
 }
 
 void TimingStatsCollector::log() {
-  const auto milliseconds = delta();
+  const double nanoseconds = delta();
+  const double milliseconds = nanoseconds / 1e6;
 
   if (!collector_) {
     collector_ = std::make_unique<StatsCollector>(tag_);
   }
-  collector_->AddSample(static_cast<double>(milliseconds.count()));
+  collector_->AddSample(milliseconds);
 }
 
 }  // namespace utils

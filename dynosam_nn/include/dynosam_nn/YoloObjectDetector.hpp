@@ -69,6 +69,8 @@ class YoloV8ModelInfo {
 
 std::ostream& operator<<(std::ostream& out, const YoloV8ModelInfo& info);
 
+static constexpr int MaxDetections = 8400;
+
 /**
  * @brief TensorRT accelerated inference for object detection using YOLOv8.
  *
@@ -102,6 +104,10 @@ class YoloV8ObjectDetector : public ObjectDetectionEngine, public TRTEngine {
   DeviceMemory<float> input_device_ptr_;
   DeviceMemory<float> output0_device_ptr_;
   DeviceMemory<float> output1_device_ptr_;
+
+  // TODO: free!? Make a HostMemory
+  float* output0_data_ = nullptr;
+  float* output1_data_ = nullptr;
 };
 
 }  // namespace dyno
