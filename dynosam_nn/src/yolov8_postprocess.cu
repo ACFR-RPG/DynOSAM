@@ -1,4 +1,7 @@
 #include "dynosam_nn/YoloV8Utils.hpp"
+#include "dynosam_common/DynamicObjects.hpp"
+
+
 #include <cuda_runtime.h>
 #include <cstdio>
 #include <stdio.h>
@@ -298,10 +301,12 @@ void RunFullMaskPipelineGPU(
     const DetectionGpuMats& wrappers,
     const cv::cuda::GpuMat& d_prototype_masks,
     const cv::Rect& prototype_crop_rect, // Pre-calculated crop area
+    const YoloDetection* h_detection,
     const cv::Size& required_size,
     const cv::Size& original_size,
     const int mask_h,
-    const int mask_w)
+    const int mask_w,
+    dyno::ObjectDetection& detection)
 {
     //This should be 1!
     int N_Detections = wrappers.boxes.rows;
@@ -405,16 +410,19 @@ void RunFullMaskPipelineGPU(
         cv::Mat final_cpu_mask = cv::Mat::zeros(original_size, CV_8U);
         d_final_masks_full_res.download(final_cpu_mask);
 
+
+        const float confidence = h_detection->confidence;
+        const int class_id = static_cast<int>(h_detection->class_id);
         // float confidence = wrappers.scores_and_classes.row(i).ptr<float>()[0]; // Re-download or pass via arg
         // int class_id = static_cast<int>(wrappers.scores_and_classes.row(i).ptr<float>()[1]);
+
+        detection = dyno::ObjectDetection{final_cpu_mask, bounding_box, "",confidence};
 
         // LOG(INFO) << "class id " << class_id;
 
         // ... retrieve class_label and push to detections ...
         // (This final step requires the small download, but everything before it was GPU-accelerated).
 
-        cv::imshow("cpu mask", final_cpu_mask);
-        cv::waitKey(1);
     }
 }
 

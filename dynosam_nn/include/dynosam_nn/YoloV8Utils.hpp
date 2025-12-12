@@ -3,6 +3,8 @@
 #include <opencv4/opencv2/core/cuda.hpp>
 #include <opencv4/opencv2/core/types.hpp>
 
+#include "dynosam_common/DynamicObjects.hpp"
+
 // A single detection struct that overlays the raw float data
 struct alignas(float) YoloDetection {
   // 0-3: Box Coordinates (Center X, Center Y, Width, Height)
@@ -75,8 +77,9 @@ int LaunchYoloPostProcess(const float* d_model_output,
 void RunFullMaskPipelineGPU(
     const DetectionGpuMats& wrappers, const cv::cuda::GpuMat& d_prototype_masks,
     const cv::Rect& prototype_crop_rect,  // Pre-calculated crop area
-    const cv::Size& required_size, const cv::Size& original_size,
-    const int mask_h, const int mask_w);
+    const YoloDetection* h_detection, const cv::Size& required_size,
+    const cv::Size& original_size, const int mask_h, const int mask_w,
+    dyno::ObjectDetection& detection);
 
 void LaunchGrayscaleConversion(
     const std::vector<cv::cuda::GpuMat>& channel_wrappers,

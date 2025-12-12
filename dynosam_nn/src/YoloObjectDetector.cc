@@ -245,7 +245,7 @@ struct YoloV8ObjectDetector::Impl {
         d_counter_  // Temp counter on GPU
     );
 
-    LOG(INFO) << "yolo boxes post process " << count;
+    // LOG(INFO) << "yolo boxes post process " << count;
     // return false;
     // mask_coefficients.reserve(num_boxes);
 
@@ -540,13 +540,26 @@ struct YoloV8ObjectDetector::Impl {
     utils::TimingStatsCollector timing_detections(
         "yolov8_detection.post_process.detections", 5);
     std::vector<ObjectDetection> detections;
+    detections.reserve(nms_indices.size());
     for (const int idx : nms_indices) {
-      YoloDetection* det = d_buffer_ + idx;
-      DetectionGpuMats detection_gpu_mats = createDetectionGpuMatWrappers(det);
+      YoloDetection* d_det = d_buffer_ + idx;
+      const YoloDetection* h_det = h_buffer_ + idx;
 
+      const int class_id = static_cast<int>(h_det->class_id);
+
+      std::string class_label;
+      if (!safeGetClassLabel(class_id, class_label)) {
+        continue;
+      }
+
+      DetectionGpuMats detection_gpu_mats =
+          createDetectionGpuMatWrappers(d_det);
+
+      ObjectDetection detection;
       RunFullMaskPipelineGPU(detection_gpu_mats, d_prototype_masks,
-                             prototype_crop_rect, required_size, original_size,
-                             mask_h, mask_w);
+                             prototype_crop_rect, h_det, required_size,
+                             original_size, mask_h, mask_w, detection);
+      detections.push_back(detection);
     }
     //   const float confidence = confidences[idx];
     //   const int class_id = class_ids[idx];

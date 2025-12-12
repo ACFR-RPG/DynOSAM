@@ -241,10 +241,10 @@ struct MotionReferenceFrame : public ReferenceFrameValue<E> {
   using ConstEstimate = typename Base::ConstEstimate;
   using Estimate = typename Base::Estimate;
 
-  // explicitly inherit casting operators
-  using Base::operator Estimate&;
-  using Base::operator const Estimate&;
-  using Base::operator const ReferenceFrame&;
+  // // explicitly inherit casting operators
+  // using Base::operator Estimate&;
+  // using Base::operator const Estimate&;
+  // using Base::operator const ReferenceFrame&;
 
   // forward the style ;)
   using Style = MotionRepresentationStyle;
