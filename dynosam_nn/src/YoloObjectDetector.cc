@@ -5,9 +5,11 @@
 #include <cuda_runtime.h>
 #include <cuda_runtime_api.h>
 
+#include "dynosam_common/utils/OpenCVUtils.hpp"
 #include "dynosam_common/utils/TimingStats.hpp"
 #include "dynosam_common/viz/Colour.hpp"
 #include "dynosam_nn/YoloV8Utils.hpp"
+#include "dynosam_nn/cuda_utils.hpp"
 #include "dynosam_nn/trackers/ObjectTracker.hpp"
 
 // TODO: to remove and from cmake!
@@ -81,6 +83,12 @@ namespace dyno {
  */
 
 struct YoloV8ObjectDetector::Impl {
+  const YoloConfig yolo_config_;
+  // Information about the tensor to be provided as input directly to the model
+  const ImageTensorInfo input_info_;
+
+  bool is_first{true};
+  ObjectTracker::UniquePtr tracker_;
   // Device (GPU) detection buffer
   YoloDetection* d_buffer_;
   // Host (CPU) detection buffer
@@ -88,8 +96,22 @@ struct YoloV8ObjectDetector::Impl {
   // Device (GPU) detection count
   int* d_counter_;
 
-  Impl(const YoloConfig& yolo_config)
+  //! Size of the input image prior to preprocessing (ie. size of the camera
+  //! image)
+  cv::Size original_size_;
+
+  CudaStreamPool stream_pool_;
+  //! Mapping of class ids (as provided by the detection) to class labels (i.e 0
+  //! -> "person") but only for the included classes as requested by the
+  //! YoloConfig
+  std::unordered_map<int, std::string> included_class_names_;
+
+  static constexpr char kUnknownClassLabel[] = "unknown";
+
+  Impl(const YoloConfig& yolo_config, const ImageTensorInfo& input_info)
       : yolo_config_(yolo_config),
+        input_info_(input_info),
+        is_first{true},
         tracker_(std::make_unique<ByteObjectTracker>()) {
     // load
     const std::filesystem::path file_names_resouce =
@@ -104,20 +126,47 @@ struct YoloV8ObjectDetector::Impl {
 
     cudaMallocHost(&h_buffer_, det_size);
 
-    // TODO: free!!!!
     size_t count_size = sizeof(int);
     cudaMalloc(&d_counter_, count_size);
     cudaMemset(d_counter_, 0, count_size);
   }
 
-  bool preprocess(const ImageTensorInfo& input_info, const cv::Mat& rgb,
-                  std::vector<float>& processed_vector) {
-    const cv::Size required_size = input_info.shape();
+  ~Impl() {
+    if (d_buffer_) {
+      cudaFree(d_buffer_);
+    }
+    if (h_buffer_) {
+      cudaFreeHost(h_buffer_);
+    }
+    if (d_counter_) {
+      cudaFree(d_counter_);
+    }
+  }
 
+  inline const cv::Size requiredInputSize() const {
+    return input_info_.shape();
+  }
+
+  const cv::Size& originalSize(const cv::Mat& rgb) {
+    //! is the first call OR
+    //! if dynamic input dimensions, update original size at each pre-processing
+    if (is_first || !yolo_config_.assume_static_input_dimensions) {
+      original_size_ = rgb.size();
+    } else {
+      CHECK(utils::cvSizeEqual(original_size_, rgb.size()));
+    }
+    return original_size_;
+  }
+
+  bool preprocess(const ImageTensorInfo& input_info, const cv::Mat& rgb,
+                  HostMemory<float>& input_vector) {
+    // set input image size
+    originalSize(rgb);
     // preprocess image according to YOLO training pre-procesing
     cv::Mat letterbox_image;
     // assume not dynamic
-    letterBox(rgb, letterbox_image, required_size, cv::Scalar(114, 114, 114),
+    letterBox(rgb, letterbox_image, requiredInputSize(),
+              cv::Scalar(114, 114, 114),
               /*auto_=*/false,
               /*scaleFill=*/false, /*scaleUp=*/true, /*stride=*/32);
     letterbox_image.convertTo(letterbox_image, CV_32FC3, 1.0f / 255.0f);
@@ -125,26 +174,28 @@ struct YoloV8ObjectDetector::Impl {
     size_t letter_box_size = static_cast<size_t>(letterbox_image.rows) *
                              static_cast<size_t>(letterbox_image.cols) * 3;
     CHECK_EQ(letter_box_size, input_info.size());
-    float* blobPtr = new float[letter_box_size];
+    // float* blobPtr = new float[letter_box_size];
+    input_vector.allocate(input_info);
+
+    float* input_data = input_vector.get();
 
     std::vector<cv::Mat> channels(3);
     for (int c = 0; c < 3; ++c) {
-      channels[c] =
-          cv::Mat(letterbox_image.rows, letterbox_image.cols, CV_32FC1,
-                  blobPtr + c * (letterbox_image.rows * letterbox_image.cols));
+      channels[c] = cv::Mat(
+          letterbox_image.rows, letterbox_image.cols, CV_32FC1,
+          input_data + c * (letterbox_image.rows * letterbox_image.cols));
     }
     cv::split(letterbox_image, channels);
-    std::vector<float> input_vector(blobPtr, blobPtr + letter_box_size);
+    // std::vector<float> input_vector(blobPtr, blobPtr + letter_box_size);
 
-    delete[] blobPtr;
-    processed_vector = input_vector;
+    // delete[] blobPtr;
+    // processed_vector = input_vector;
+    is_first = false;
     return true;
   }
 
-  bool postprocess(const ImageTensorInfo& input_info, const cv::Mat& rgb,
-                   const float* d_output0, const float* d_output1,
-                   const float* output0, const float* output1,
-                   const nvinfer1::Dims& output0_dims,
+  bool postprocess(const cv::Mat& rgb, const float* d_output0,
+                   const float* d_output1, const nvinfer1::Dims& output0_dims,
                    const nvinfer1::Dims& output1_dims,
                    ObjectDetectionResult& result) {
     utils::TimingStatsCollector timing_all("yolov8_detection.post_process.run",
@@ -155,8 +206,8 @@ struct YoloV8ObjectDetector::Impl {
       throw std::runtime_error(
           "Unexpected output1 shape. Expected [1, 32, mask_h, mask_w].");
 
-    const cv::Size required_size = input_info.shape();
-    const cv::Size original_size = rgb.size();
+    const cv::Size& required_size = requiredInputSize();
+    const cv::Size& original_size = originalSize(rgb);
 
     utils::TimingStatsCollector timing_setup(
         "yolov8_detection.post_process.setup", 5);
@@ -166,8 +217,8 @@ struct YoloV8ObjectDetector::Impl {
         cv::Mat::zeros(original_size, ObjectDetectionEngine::MaskDType);
     result.input_image = rgb;
 
-    const float* output0_data = output0;
-    const float* output1_data = output1;
+    // const float* output0_data = output0;
+    // const float* output1_data = output1;
 
     const size_t num_features =
         output0_dims.d[1];  // e.g 80 class + 4 bbox parms + 32 seg masks = 116
@@ -192,27 +243,23 @@ struct YoloV8ObjectDetector::Impl {
     // Store all prototype masks in a vector for easy access
     utils::TimingStatsCollector timing_proto(
         "yolov8_detection.post_process.proto", 5);
-    std::vector<cv::Mat> prototypeMasks;
 
-    prototypeMasks.reserve(32);
-    for (int m = 0; m < 32; ++m) {
-      // Each mask is mask_h x mask_w
-      cv::Mat proto(mask_h, mask_w, CV_32F,
-                    const_cast<float*>(output1_data + m * mask_h * mask_w));
-      prototypeMasks.emplace_back(
-          proto.clone());  // Clone to ensure data integrity
-    }
-
-    const size_t total_elements = static_cast<size_t>(32) * mask_h * mask_w;
-    const size_t plane_size_elements = static_cast<size_t>(mask_h) * mask_w;
-    const size_t step_bytes = static_cast<size_t>(mask_w) * sizeof(float);
+    // prototypeMasks.reserve(32);
+    // for (int m = 0; m < 32; ++m) {
+    //   // Each mask is mask_h x mask_w
+    //   cv::Mat proto(mask_h, mask_w, CV_32F,
+    //                 const_cast<float*>(output1_data + m * mask_h * mask_w));
+    //   prototypeMasks.emplace_back(
+    //       proto.clone());  // Clone to ensure data integrity
+    // }
 
     // mat does not take const pointer!!
     const void* d_output1_void = d_output1;
 
     cv::cuda::GpuMat d_prototype_masks(
-        32 * mask_h,  // rows = stacked vertically
-        mask_w,       // cols
+        YoloV8ModelInfo::Constants::NumMasks *
+            mask_h,  // rows = stacked vertically
+        mask_w,      // cols
         CV_32F, const_cast<void*>(d_output1_void), mask_w * sizeof(float));
 
     timing_proto.stop();
@@ -237,6 +284,8 @@ struct YoloV8ObjectDetector::Impl {
     config.class_conf_offset = ClassConfOffset;
     config.mask_coeff_offset = MaskCoeffOffset;
 
+    utils::TimingStatsCollector timing_boxes(
+        "yolov8_detection.post_process.boxes", 5);
     int count = LaunchYoloPostProcess(
         d_output0,  // The raw GPU pointer from TensorRT/ONNX
         config,
@@ -255,9 +304,6 @@ struct YoloV8ObjectDetector::Impl {
     // std::vector<float> private_confidences; thread_local std::vector<int>
     // private_class_ids; thread_local std::vector<std::vector<float>>
     // private_mask_coefficients;
-
-    utils::TimingStatsCollector timing_boxes(
-        "yolov8_detection.post_process.boxes", 5);
     //   for (int i = 0; i < num_boxes; ++i) {
     //     // // Extract box coordinates
     //     float xc = output0_data[BoxOffset * num_boxes + i];
@@ -447,9 +493,6 @@ struct YoloV8ObjectDetector::Impl {
     boxes.reserve(num_boxes);
     std::vector<float> confidences;
     confidences.reserve(num_boxes);
-    std::vector<int> class_ids;
-    class_ids.reserve(num_boxes);
-    std::vector<std::vector<float>> mask_coefficients;
 
     for (int i = 0; i < count; ++i) {
       // 1. Get a reference to the detection data in the contiguous array
@@ -462,24 +505,6 @@ struct YoloV8ObjectDetector::Impl {
 
       // Confidence is a straight copy
       confidences.push_back(det.confidence);
-
-      // Class ID requires casting the float back to an int
-      // Note: If you stored the int via __int_as_float(), use __float_as_int()
-      // here. Assuming a simple cast is sufficient if you wrote it as
-      // (float)classId:
-      class_ids.push_back(static_cast<int>(det.class_id));
-
-      // 3. Store Mask Coefficients (The only expensive part, but necessary)
-
-      // Create a new vector for the mask coefficients (size 32)
-      std::vector<float> mask_coeffs(32);
-
-      // Copy the 32 floats from the raw struct array into the new std::vector
-      // The C++ standard library's copy is highly optimized for flat arrays.
-      std::copy(std::begin(det.mask), std::end(det.mask), mask_coeffs.begin());
-
-      // Add the new vector to the vector-of-vectors structure
-      mask_coefficients.emplace_back(std::move(mask_coeffs));
     }
     // Early exit if no boxes after confidence threshold
     if (boxes.empty()) {
@@ -555,10 +580,12 @@ struct YoloV8ObjectDetector::Impl {
       DetectionGpuMats detection_gpu_mats =
           createDetectionGpuMatWrappers(d_det);
 
+      cv::cuda::Stream stream = stream_pool_.getCvStream();
+
       ObjectDetection detection;
       RunFullMaskPipelineGPU(detection_gpu_mats, d_prototype_masks,
                              prototype_crop_rect, h_det, required_size,
-                             original_size, mask_h, mask_w, detection);
+                             original_size, mask_h, mask_w, stream, detection);
       detections.push_back(detection);
     }
     //   const float confidence = confidences[idx];
@@ -835,15 +862,6 @@ struct YoloV8ObjectDetector::Impl {
       }
     }
   }
-
-  YoloConfig yolo_config_;
-  ObjectTracker::UniquePtr tracker_;
-  //! Mapping of class ids (as provided by the detection) to class labels (i.e 0
-  //! -> "person") but only for the included classes as requested by the
-  //! YoloConfig
-  std::unordered_map<int, std::string> included_class_names_;
-
-  static constexpr char kUnknownClassLabel[] = "unknown";
 };
 
 void ConstructPlanarGpuMat(float* d_input_ptr, int H, int W,
@@ -894,7 +912,7 @@ YoloV8ObjectDetector::YoloV8ObjectDetector(const ModelConfig& config,
     LOG(ERROR) << "Invalid engine for segmentation!";
     throw std::runtime_error("invalid model");
   }
-  impl_ = std::make_unique<Impl>(yolo_config);
+  impl_ = std::make_unique<Impl>(yolo_config, model_info_.input());
 }
 
 YoloV8ObjectDetector::~YoloV8ObjectDetector() = default;
@@ -908,81 +926,72 @@ ObjectDetectionResult YoloV8ObjectDetector::process(const cv::Mat& image) {
   const auto& output1_info = model_info_.output1();
 
   // TODO: should cuda MallocHost!!
-  std::vector<float> input_data;
+  // std::vector<float> input_data;
   {
     utils::TimingStatsCollector timing("yolov8_detection.pre_process",
                                        kTimingVerbosityLevel);
-    impl_->preprocess(input_info, image, input_data);
+    impl_->preprocess(input_info, image, preprocessed_host_ptr_);
   }
 
   {
     // allocate input data
     utils::TimingStatsCollector timing("yolov8_detection.allocInput",
                                        kTimingVerbosityLevel);
-    CHECK(input_device_ptr_.allocate(input_info));
-    CHECK_EQ(input_device_ptr_.tensor_size, input_data.size());
+    bool allocated = input_device_ptr_.allocate(input_info);
+    CHECK(
+        input_device_ptr_.checkTensorSize(preprocessed_host_ptr_.tensor_size));
+
+    if (allocated) {
+      context_->setInputTensorAddress(input_info.name.c_str(),
+                                      input_device_ptr_.get());
+    }
   }
 
-  {
-    utils::TimingStatsCollector timing(
-        "yolov8_detection.process.set_input_addy");
-    context_->setInputTensorAddress(input_info.name.c_str(),
-                                    input_device_ptr_.device_pointer.get());
-  }
   // put image data onto gpu
   {
     utils::TimingStatsCollector timing("yolov8_detection.push_from_host",
                                        kTimingVerbosityLevel);
-    CHECK(input_device_ptr_.pushFromHost(input_data, stream_));
+    CHECK(
+        input_device_ptr_.pushFromHost(preprocessed_host_ptr_.get(), stream_));
   }
-
-  // test GPU Mat wrapper
-  std::vector<cv::cuda::GpuMat> channel_wrappers;
-  ConstructPlanarGpuMat(input_device_ptr_.get(), input_info.shape().height,
-                        input_info.shape().width, channel_wrappers);
-
-  cv::Mat grey_output;
-  LaunchGrayscaleConversion(channel_wrappers, grey_output);
-  cv::imshow("Grey GPU", grey_output);
-  cv::waitKey(1);
 
   // prepare output data
   {
     utils::TimingStatsCollector timing("yolov8_detection.allocOutput",
                                        kTimingVerbosityLevel);
-    CHECK(output0_device_ptr_.allocate(output0_info));
-    CHECK(output1_device_ptr_.allocate(output1_info));
-  }
+    bool output0_allocated = output0_device_ptr_.allocate(output0_info);
+    bool output1_allocated = output1_device_ptr_.allocate(output1_info);
 
-  if (output0_data_ == nullptr) {
-    LOG(INFO) << "Alloc 0";
-    auto error =
-        cudaMallocHost(&output0_data_, output0_device_ptr_.allocated_size);
-    if (error != cudaSuccess) {
-      LOG(ERROR) << "Failed to allocate output0_data_";
+    if (output0_allocated) {
+      context_->setTensorAddress(output0_info.name.c_str(),
+                                 output0_device_ptr_.get());
+    }
+
+    if (output1_allocated) {
+      context_->setTensorAddress(output1_info.name.c_str(),
+                                 output1_device_ptr_.get());
     }
   }
 
-  if (output1_data_ == nullptr) {
-    LOG(INFO) << "Alloc 1";
-    auto error =
-        cudaMallocHost(&output1_data_, output1_device_ptr_.allocated_size);
-    if (error != cudaSuccess) {
-      LOG(ERROR) << "Failed to allocate output1_data_";
-    }
-  }
+  // if (output0_data_ == nullptr) {
+  //   LOG(INFO) << "Alloc 0";
+  //   auto error =
+  //       cudaMallocHost(&output0_data_, output0_device_ptr_.allocated_size);
+  //   if (error != cudaSuccess) {
+  //     LOG(ERROR) << "Failed to allocate output0_data_";
+  //   }
+  // }
+
+  // if (output1_data_ == nullptr) {
+  //   LOG(INFO) << "Alloc 1";
+  //   auto error =
+  //       cudaMallocHost(&output1_data_, output1_device_ptr_.allocated_size);
+  //   if (error != cudaSuccess) {
+  //     LOG(ERROR) << "Failed to allocate output1_data_";
+  //   }
+  // }
 
   // set output address tensors
-  {
-    utils::TimingStatsCollector timing(
-        "yolov8_detection.process.set_output_addy");
-    context_->setTensorAddress(output0_info.name.c_str(),
-                               output0_device_ptr_.device_pointer.get());
-
-    context_->setTensorAddress(output1_info.name.c_str(),
-                               output1_device_ptr_.device_pointer.get());
-  }
-
   {
     utils::TimingStatsCollector timing("yolov8_detection.infer");
     cudaStreamSynchronize(stream_);
@@ -995,13 +1004,15 @@ ObjectDetectionResult YoloV8ObjectDetector::process(const cv::Mat& image) {
 
   // std::vector<float> output0_data, output1_data;
   {
-    utils::TimingStatsCollector timing("yolov8_detection.get_from_device",
-                                       kTimingVerbosityLevel);
-    CHECK(output0_device_ptr_.getFromDevice(output0_data_, stream_));
-    CHECK(output1_device_ptr_.getFromDevice(output1_data_, stream_));
+      // utils::TimingStatsCollector timing("yolov8_detection.get_from_device",
+      //                                    kTimingVerbosityLevel);
+      // CHECK(output0_device_ptr_.getFromDevice(output0_data_, stream_));
+      // CHECK(output1_device_ptr_.getFromDevice(output1_data_, stream_));
   }
 
   {
+    // now we do need to synchronize since post-processing has its own stream
+    // pool
     utils::TimingStatsCollector timing("yolov8_detection.synchronize",
                                        kTimingVerbosityLevel);
     cudaStreamSynchronize(stream_);
@@ -1016,9 +1027,8 @@ ObjectDetectionResult YoloV8ObjectDetector::process(const cv::Mat& image) {
     const float* d_output1_data = output1_device_ptr_.get();
     utils::TimingStatsCollector timing("yolov8_detection.post_process",
                                        kTimingVerbosityLevel);
-    impl_->postprocess(input_info, image, d_output0_data, d_output1_data,
-                       output0_data_, output1_data_, output0_dims, output1_dims,
-                       result);
+    impl_->postprocess(image, d_output0_data, d_output1_data, output0_dims,
+                       output1_dims, result);
   }
 
   result_ = result;

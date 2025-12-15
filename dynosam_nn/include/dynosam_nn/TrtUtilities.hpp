@@ -55,7 +55,7 @@ using Severity = nvinfer1::ILogger::Severity;
 using EnginePtr = std::unique_ptr<nvinfer1::ICudaEngine>;
 using RuntimePtr = std::unique_ptr<nvinfer1::IRuntime>;
 
-struct CudaMemoryManager {
+struct CudaMemoryAllocator {
   static void* alloc(size_t size);
 
   struct Delete {
@@ -63,8 +63,13 @@ struct CudaMemoryManager {
   };
 };
 
-template <typename T>
-using unique_cuda_ptr = std::unique_ptr<T, CudaMemoryManager::Delete>;
+struct HostMemoryAllocator {
+  static void* alloc(size_t size);
+
+  struct Delete {
+    void operator()(void* object);
+  };
+};
 
 struct TensorInfo {
   std::string name;
@@ -102,7 +107,7 @@ class ImageTensorInfo : public TensorInfo {
   ImageTensorInfo(const TensorInfo& info);
   ImageTensorInfo& operator=(const TensorInfo& info);
 
-  Shape shape() const { return shape_; }
+  const Shape& shape() const { return shape_; }
 
  private:
   Shape shape_;
@@ -114,44 +119,51 @@ std::ostream& operator<<(std::ostream& out, const ImageTensorInfo& info);
 
 bool isDynamic(const nvinfer1::Dims& dims);
 
-template <typename T>
-struct DeviceMemory {
+template <typename T, typename Allocator>
+struct MemoryManager {
+  using This = MemoryManager<T, Allocator>;
   using DataType = T;
   using DataTypePtr = T*;
-  using UniqueDevicePtr = unique_cuda_ptr<T>;
+  using UniquePtr = std::unique_ptr<T, typename Allocator::Delete>;
 
-  UniqueDevicePtr device_pointer;
+  UniquePtr data_ptr{nullptr};
   //! Size of requested tensor
   size_t tensor_size{0};
-  //! Memory (in bytes) allocated to the device pointer.
+  //! Memory (in bytes) allocated to the pointer.
   //! This in effect is tensor_size * sizeof(T)
   size_t allocated_size{0};
 
-  DataTypePtr get() { return device_pointer.get(); }
+  DataTypePtr get() { return data_ptr.get(); }
 
+  bool checkTensorSize(size_t size) const {
+    return data_ptr != nullptr && tensor_size == size;
+  }
+
+  // returns true if allocation occured
   bool allocate(const TensorInfo& info) {
     try {
       // TODO: check info type is same as T!
 
       // returns total memory needed for allocation and the size of the tensor
       //  total memory is effectively t_size * size of datatype
-      auto [memory_needed, t_size] = DeviceMemory<T>::memorySize(info);
+      auto [memory_needed, t_size] = This::memorySize(info);
 
       if (allocated_size == memory_needed) {
         CHECK_EQ(tensor_size, t_size);
-        return true;
+        return false;
       }
 
       LOG(INFO) << "Allocating " << memory_needed << " from tensor info "
                 << info << " and tensor size " << t_size;
-      device_pointer.reset(reinterpret_cast<DataTypePtr>(
-          CudaMemoryManager::alloc(memory_needed)));
+      data_ptr.reset(
+          reinterpret_cast<DataTypePtr>(Allocator::alloc(memory_needed)));
       allocated_size = memory_needed;
       tensor_size = t_size;
       return true;
 
     } catch (const DynosamException& e) {
       LOG(WARNING) << "Failed to allocate device memory: " << e.what();
+      data_ptr.reset(nullptr);
       return false;
     }
   }
@@ -167,24 +179,21 @@ struct DeviceMemory {
     size_t total_memory = sizeof(DataType) * tensor_size;
     return {total_memory, tensor_size};
   }
+};
 
-  // bool getFromDevice(std::vector<DataType>& data, cudaStream_t stream = 0) {
-  //   data.resize(tensor_size);
-  //   auto error =
-  //       cudaMemcpyAsync(data.data(), device_pointer.get(),
-  //                       allocated_size,  // note allocated size not tensor
-  //                       size, cudaMemcpyDeviceToHost, stream);
-  //   if (error != cudaSuccess) {
-  //     LOG(ERROR) << "Error copying host -> device: "
-  //                << cudaGetErrorString(error);
-  //     return false;
-  //   }
-  //   return true;
-  // }
-  bool getFromDevice(DataType* data, cudaStream_t stream = 0) {
+template <typename T>
+struct DeviceMemory : public MemoryManager<T, CudaMemoryAllocator> {
+  using Base = MemoryManager<T, CudaMemoryAllocator>;
+  using Base::allocated_size;
+  using Base::data_ptr;
+  using Base::tensor_size;
+  using typename Base::DataType;
+
+  bool getFromDevice(DataType* host_data, cudaStream_t stream = 0) {
     // data.resize(tensor_size);
+    auto device_data = data_ptr.get();
     auto error =
-        cudaMemcpyAsync(data, device_pointer.get(),
+        cudaMemcpyAsync(host_data, device_data,
                         allocated_size,  // note allocated size not tensor size,
                         cudaMemcpyDeviceToHost, stream);
     if (error != cudaSuccess) {
@@ -195,12 +204,16 @@ struct DeviceMemory {
     return true;
   }
 
+  bool pushFromHost(std::vector<DataType>& host_data, cudaStream_t stream = 0) {
+    CHECK_EQ(host_data.size(), tensor_size);
+    return pushFromHost(host_data.data(), stream);
+  }
+
   // data should really be const here
-  bool pushFromHost(std::vector<DataType>& data, cudaStream_t stream = 0) {
-    CHECK_EQ(data.size(), tensor_size);
-    auto error =
-        cudaMemcpyAsync(device_pointer.get(), data.data(), allocated_size,
-                        cudaMemcpyHostToDevice, stream);
+  bool pushFromHost(DataType* host_data, cudaStream_t stream = 0) {
+    auto device_data = data_ptr.get();
+    auto error = cudaMemcpyAsync(device_data, host_data, allocated_size,
+                                 cudaMemcpyHostToDevice, stream);
 
     if (error != cudaSuccess) {
       LOG(ERROR) << "Error copying device -> host: "
@@ -211,19 +224,8 @@ struct DeviceMemory {
   }
 };
 
-struct ImageMemoryPair {
-  std::unique_ptr<float, CudaMemoryManager::Delete> device_image;
-  cv::Mat host_image;
-  // Shape shape;
-
-  inline operator bool() const {
-    return !host_image.empty() && device_image != nullptr;
-  }
-
-  // bool updateShape(const Shape& shape);
-
-  // size_t size() const;
-};
+template <typename T>
+using HostMemory = MemoryManager<T, HostMemoryAllocator>;
 
 class TRTEngine {
  public:

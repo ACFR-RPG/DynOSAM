@@ -96,6 +96,7 @@ __global__ void YOLO_PostProcess_Kernel(
     out_ptr[5] = (float)classId;
 
     // Copy mask coeffs
+    #pragma unroll
     for (int m = 0; m < 32; ++m) {
         out_ptr[6 + m] = d_input[(MaskCoeffOffset + m) * N + i];
     }
@@ -140,8 +141,8 @@ int LaunchYoloPostProcess(
         printf("CUDA Error: %s\n", cudaGetErrorString(err));
     }
 
-    cudaDeviceSynchronize();
-    fflush(stdout);
+    // cudaDeviceSynchronize();
+    // fflush(stdout);
 
     // 3. Copy Count Back to Host
     // We need a small temporary host variable for the count.
@@ -306,13 +307,9 @@ void RunFullMaskPipelineGPU(
     const cv::Size& original_size,
     const int mask_h,
     const int mask_w,
+    cv::cuda::Stream stream,
     dyno::ObjectDetection& detection)
 {
-    //This should be 1!
-    int N_Detections = wrappers.boxes.rows;
-    CHECK_EQ(N_Detections, 1);
-    if (N_Detections == 0) return;
-
     // --- 1. Launch Mask Combination Kernel (Run once for all detections) ---
     // Kernel launch configuration for 160x160 mask for N_Detections
     dim3 block(16, 16);
@@ -321,6 +318,8 @@ void RunFullMaskPipelineGPU(
         (mask_h + block.y - 1) / block.y
     );
 
+    cudaStream_t c_stream = (cudaStream_t)stream.cudaPtr();
+
     cv::cuda::GpuMat d_combined_masks;
     d_combined_masks.create(
         mask_h,                         // rows: Treat as a flattened 1D array
@@ -328,102 +327,110 @@ void RunFullMaskPipelineGPU(
         CV_32FC1                   // type: Output of sigmoid is a float (0.0 to 1.0)
     );
     // Assuming d_prototypes is a linear array, not pitched.
-    YOLO_Mask_Combination_Kernel<<<grid, block>>>(
+    YOLO_Mask_Combination_Kernel<<<grid, block, 0, c_stream>>>(
         wrappers.mask_coeffs,
         d_prototype_masks, // Assuming d_prototype_masks contains 32*H*W linear floats
         d_combined_masks,  // The N x mask_h x mask_w combined float mask buffer
-        N_Detections, mask_h, mask_w
+        1, mask_h, mask_w
     );
-
-    LOG(INFO) << "Done YOLO comb mask";
-    cudaDeviceSynchronize();
 
 
     // --- 2. Sequential Post-Processing (Loop over detections, using cv::cuda) ---
     cv::cuda::GpuMat d_final_masks_full_res(
         original_size, CV_8UC1); // Reusable buffer for final binary mask
 
-    for(int i = 0; i < N_Detections; ++i) {
-        // --- A. Define ROI wrappers for the combined mask ---
-        // Create a wrapper for the i-th 160x160 mask plane
-        cv::cuda::GpuMat d_combined_mask_plane = d_combined_masks;
-        // --- B. Crop to Letterbox Area (GPU Sub-Region) ---
-        cv::cuda::GpuMat d_cropped_mask =
-            d_combined_mask_plane(prototype_crop_rect);
+    // --- A. Define ROI wrappers for the combined mask ---
+    // Create a wrapper for the i-th 160x160 mask plane
+    cv::cuda::GpuMat d_combined_mask_plane = d_combined_masks;
+    // --- B. Crop to Letterbox Area (GPU Sub-Region) ---
+    cv::cuda::GpuMat d_cropped_mask =
+        d_combined_mask_plane(prototype_crop_rect);
 
-        // --- C. Resize to Original Dimensions (GPU) ---
-        cv::cuda::GpuMat d_resized_mask(original_size, CV_32FC1);
-        cv::cuda::resize(d_cropped_mask, d_resized_mask, original_size,
-                         0, 0, cv::INTER_LINEAR);
+    // --- C. Resize to Original Dimensions (GPU) ---
+    cv::cuda::GpuMat d_resized_mask(original_size, CV_32FC1);
+    cv::cuda::resize(d_cropped_mask, d_resized_mask, original_size,
+                        0, 0, cv::INTER_LINEAR, stream);
 
-        // // --- D. Threshold and Convert to Binary (GPU) ---
-        // // stream?
-        cv::cuda::GpuMat d_binary_mask(original_size, CV_8UC1);
-        cv::cuda::threshold(d_resized_mask, d_binary_mask, 0.5, 255.0,
-                            cv::THRESH_BINARY);
+    // // --- D. Threshold and Convert to Binary (GPU) ---
+    // // stream?
+    cv::cuda::GpuMat d_binary_mask(original_size, CV_8UC1);
+    cv::cuda::threshold(d_resized_mask, d_binary_mask, 0.5, 255.0,
+                        cv::THRESH_BINARY, stream);
 
-        // // Convert to 8-bit unsigned integer (CV_8UC1)
-        d_binary_mask.convertTo(d_binary_mask, CV_8UC1);
+    // // Convert to 8-bit unsigned integer (CV_8UC1)
+    d_binary_mask.convertTo(d_binary_mask, CV_8UC1);
 
-        // --- E. Final Crop/Copy to Bounding Box (GPU) ---
-        // The final mask is only valid inside the detection box.
+    // --- E. Final Crop/Copy to Bounding Box (GPU) ---
+    // The final mask is only valid inside the detection box.
 
-        // 1. Download bounding box data (Smallest possible transfer)
-        cv::Mat box_data; // x, y, w, h
-        cv::cuda::GpuMat box_row = wrappers.boxes.row(i);
-        box_row.download(box_data);
+    // 1. Download bounding box data (Smallest possible transfer)
+    // cudaDeviceSynchronize();
 
-        const float bb_x = box_data.at<float>(0);
-        const float bb_y = box_data.at<float>(1);
-        const float bb_w = box_data.at<float>(2);
-        const float bb_h = box_data.at<float>(3);
-        float half_w = bb_w * 0.5f;
-        float half_h = bb_h * 0.5f;
-        const cv::Rect box(
-            static_cast<int>(bb_x - half_w + 0.5f), // round
-            static_cast<int>(bb_y - half_h + 0.5f), // round
-            static_cast<int>(bb_w + 0.5f),
-            static_cast<int>(bb_h + 0.5f)
-        );
+    cv::Mat box_data; // x, y, w, h
+    cv::cuda::GpuMat box_row = wrappers.boxes.row(0);
+    box_row.download(box_data, stream);
 
-        LOG(INFO) << bb_x << " " << bb_y << " " << bb_w << " " << bb_h;
-
-        // 2. Calculate final ROI on CPU
-        cv::Rect bounding_box = scaleCoords(required_size, box,
-             original_size, true); // Assuming this CPU helper exists
-
-        cv::Rect roi = bounding_box;
-        roi &= cv::Rect(0, 0, original_size.width, original_size.height);
-
-        // // 3. Clear the output mask buffer and copy the binary mask into the ROI
-        d_final_masks_full_res.setTo(cv::Scalar(0)); // Clear previous mask
-
-        if (roi.area() > 0) {
-            // Copy the relevant ROI data from the binary mask into the final
-            // mask's ROI. The full binary mask is HxW, so we sub-region both.
-            d_binary_mask(roi).copyTo(d_final_masks_full_res(roi));
-        }
-
-        // // --- F. Final Download (Minimal Transfer) ---
-        // // Download only the final result and metadata for ObjectDetection struct
-        // //TODO: pinned memory!!
-        cv::Mat final_cpu_mask = cv::Mat::zeros(original_size, CV_8U);
-        d_final_masks_full_res.download(final_cpu_mask);
+    stream.waitForCompletion();
 
 
-        const float confidence = h_detection->confidence;
-        const int class_id = static_cast<int>(h_detection->class_id);
-        // float confidence = wrappers.scores_and_classes.row(i).ptr<float>()[0]; // Re-download or pass via arg
-        // int class_id = static_cast<int>(wrappers.scores_and_classes.row(i).ptr<float>()[1]);
+    const float bb_x = box_data.at<float>(0);
+    const float bb_y = box_data.at<float>(1);
+    const float bb_w = box_data.at<float>(2);
+    const float bb_h = box_data.at<float>(3);
+    const cv::Rect box(
+        static_cast<int>(std::round(bb_x - bb_w / 2.0f)),
+        static_cast<int>(std::round(bb_y - bb_h / 2.0f)),
+        static_cast<int>(std::round(bb_w)),
+        static_cast<int>(std::round(bb_h))
+    );
 
-        detection = dyno::ObjectDetection{final_cpu_mask, bounding_box, "",confidence};
+    // LOG(INFO) << bb_x << " " << bb_y << " " << bb_w << " " << bb_h;
 
-        // LOG(INFO) << "class id " << class_id;
+    // 2. Calculate final ROI on CPU
+    cv::Rect bounding_box = scaleCoords(required_size, box,
+            original_size, true); // Assuming this CPU helper exists
 
-        // ... retrieve class_label and push to detections ...
-        // (This final step requires the small download, but everything before it was GPU-accelerated).
+    cv::Rect roi = bounding_box;
+    roi &= cv::Rect(0, 0, original_size.width, original_size.height);
 
+    // // 3. Clear the output mask buffer and copy the binary mask into the ROI
+    d_final_masks_full_res.setTo(cv::Scalar(0)); // Clear previous mask
+
+    if (roi.area() > 0) {
+        // Copy the relevant ROI data from the binary mask into the final
+        // mask's ROI. The full binary mask is HxW, so we sub-region both.
+        d_binary_mask(roi).copyTo(d_final_masks_full_res(roi));
     }
+
+    // // --- F. Final Download (Minimal Transfer) ---
+    // // Download only the final result and metadata for ObjectDetection struct
+    // //TODO: pinned memory!!
+    //TODO: this seems slower than doing CPU (maybe due to copy or constant realloc?)
+    // cv::cuda::HostMem h_mem(original_size, CV_8U, cv::cuda::HostMem::PAGE_LOCKED);
+    // cv::cuda::HostMem h_mem;
+    cv::Mat final_cpu_mask = cv::Mat::zeros(original_size, CV_8U);
+    d_final_masks_full_res.download(final_cpu_mask, stream);
+    // d_final_masks_full_res.download(h_mem, stream);
+    stream.waitForCompletion();
+
+    // should synchronize!?
+    // cv::Mat final_cpu_mask = h_mem.createMatHeader().clone();
+
+
+
+    const float confidence = h_detection->confidence;
+    const int class_id = static_cast<int>(h_detection->class_id);
+    // float confidence = wrappers.scores_and_classes.row(i).ptr<float>()[0]; // Re-download or pass via arg
+    // int class_id = static_cast<int>(wrappers.scores_and_classes.row(i).ptr<float>()[1]);
+
+
+    detection = dyno::ObjectDetection{final_cpu_mask, bounding_box, "",confidence};
+
+    // LOG(INFO) << "class id " << class_id;
+
+    // ... retrieve class_label and push to detections ...
+    // (This final step requires the small download, but everything before it was GPU-accelerated).
+
 }
 
 void LaunchGrayscaleConversion(

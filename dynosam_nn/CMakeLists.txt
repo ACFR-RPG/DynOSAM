@@ -73,6 +73,8 @@ add_library(${PROJECT_NAME} SHARED
   src/ModelConfig.cc
   src/YoloObjectDetector.cc
 
+  src/CudaUtils.cc
+
   src/trackers/byte_tracker/ByteTracker.cc
   src/trackers/byte_tracker/KalmanFilter.cc
   src/trackers/byte_tracker/lapjv.cc
@@ -82,9 +84,7 @@ add_library(${PROJECT_NAME} SHARED
 
   src/bindings/PyBoostWrapper.cc
 
-  src/yolov11_preprocess.cu
   src/yolov8_postprocess.cu
-  src/YOLOV11.cc
 )
 
 target_link_libraries(${PROJECT_NAME}
@@ -168,13 +168,6 @@ target_link_libraries(image_segmenter_node
 install(TARGETS
   image_segmenter_node
   DESTINATION lib/${PROJECT_NAME})
-
-# set_target_properties(image_segmenter_node PROPERTIES
-#     CUDA_ARCHITECTURES "75"
-# )
-# set_target_properties(image_segmenter_node PROPERTIES
-#     CUDA_ARCHITECTURES "75;80-real;86-real;89;90"
-# )
 
 pybind11_add_module(_core MODULE
 src/bindings/PyBindings.cc

@@ -24,11 +24,11 @@ struct alignas(float) YoloDetection {
 // If not, remove this helper and do the math at the usage site.
 #ifdef __cplusplus
   inline cv::Rect toCvRect() const {
-    float half_w = w * 0.5f;
-    float half_h = h * 0.5f;
-    return cv::Rect(static_cast<int>(x - half_w + 0.5f),  // round
-                    static_cast<int>(y - half_h + 0.5f),  // round
-                    static_cast<int>(w + 0.5f), static_cast<int>(h + 0.5f));
+    return cv::Rect(static_cast<int>(std::round(x - w / 2.0f)),  // top-left x
+                    static_cast<int>(std::round(y - h / 2.0f)),  // top-left y
+                    static_cast<int>(std::round(w)),             // width
+                    static_cast<int>(std::round(h))              // height);
+    );
   }
 #endif
 };
@@ -79,7 +79,7 @@ void RunFullMaskPipelineGPU(
     const cv::Rect& prototype_crop_rect,  // Pre-calculated crop area
     const YoloDetection* h_detection, const cv::Size& required_size,
     const cv::Size& original_size, const int mask_h, const int mask_w,
-    dyno::ObjectDetection& detection);
+    cv::cuda::Stream stream, dyno::ObjectDetection& detection);
 
 void LaunchGrayscaleConversion(
     const std::vector<cv::cuda::GpuMat>& channel_wrappers,
