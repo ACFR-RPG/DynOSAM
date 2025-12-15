@@ -1,4 +1,4 @@
-#include "dynosam_nn/YoloObjectDetector.hpp"
+#include "dynosam_nn/YoloV8ObjectDetector.hpp"
 
 #include <NvInfer.h>
 #include <NvInferRuntime.h>
@@ -8,12 +8,9 @@
 #include "dynosam_common/utils/OpenCVUtils.hpp"
 #include "dynosam_common/utils/TimingStats.hpp"
 #include "dynosam_common/viz/Colour.hpp"
-#include "dynosam_nn/YoloV8Utils.hpp"
-#include "dynosam_nn/cuda_utils.hpp"
+#include "dynosam_nn/CudaUtils.hpp"
+#include "dynosam_nn/YoloV8CudaUtils.hpp"
 #include "dynosam_nn/trackers/ObjectTracker.hpp"
-
-// TODO: to remove and from cmake!
-#include <omp.h>
 
 DetectionGpuMats createDetectionGpuMatWrappers(YoloDetection* d_detections) {
   DetectionGpuMats wrappers;
@@ -286,7 +283,7 @@ struct YoloV8ObjectDetector::Impl {
 
     utils::TimingStatsCollector timing_boxes(
         "yolov8_detection.post_process.boxes", 5);
-    int count = LaunchYoloPostProcess(
+    int count = YoloOutputToDetections(
         d_output0,  // The raw GPU pointer from TensorRT/ONNX
         config,
         h_buffer_,  // Destination on CPU
@@ -294,199 +291,6 @@ struct YoloV8ObjectDetector::Impl {
         d_counter_  // Temp counter on GPU
     );
 
-    // LOG(INFO) << "yolo boxes post process " << count;
-    // return false;
-    // mask_coefficients.reserve(num_boxes);
-
-    // Define the temporary storage variables for each thread.
-    // These are created privately for each thread that executes the parallel
-    // region. thread_local std::vector<cv::Rect> private_boxes; thread_local
-    // std::vector<float> private_confidences; thread_local std::vector<int>
-    // private_class_ids; thread_local std::vector<std::vector<float>>
-    // private_mask_coefficients;
-    //   for (int i = 0; i < num_boxes; ++i) {
-    //     // // Extract box coordinates
-    //     float xc = output0_data[BoxOffset * num_boxes + i];
-    //     float yc = output0_data[(BoxOffset + 1) * num_boxes + i];
-    //     float w = output0_data[(BoxOffset + 2) * num_boxes + i];
-    //     float h = output0_data[(BoxOffset + 3) * num_boxes + i];
-
-    //     // Computational Optimization: Calculate half-width/height once.
-    //     float half_w = w * 0.5f;
-    //     float half_h = h * 0.5f;
-
-    //     // Get class confidence
-    //     float maxConf = 0.0f;
-    //     int classId = -1;
-    //     for (int c = 0; c < num_classes; ++c) {
-    //       float conf = output0_data[(ClassConfOffset + c) * num_boxes + i];
-    //       // const float conf = output0_data[base_conf_idx + c * num_boxes +
-    //       i]; if (conf > maxConf) {
-    //         maxConf = conf;
-    //         classId = c;
-    //       }
-    //     }
-
-    //     if (maxConf < yolo_config_.conf_threshold) continue;
-
-    //     {
-    //       cv::Rect box_cv(static_cast<int>(std::round(xc - half_w)),  //
-    //       top-left x
-    //                       static_cast<int>(std::round(yc - half_h)),  //
-    //                       top-left y static_cast<int>(std::round(w)), //
-    //                       width static_cast<int>(std::round(h)) // height
-    //       );
-
-    //       // Store detection
-    //       boxes.push_back(box_cv);
-    //       confidences.push_back(maxConf);
-    //       class_ids.push_back(classId);
-
-    //       // LOG(INFO) << "Found box with id " << classId;
-
-    //       // Store mask coefficients
-    //       std::vector<float> mask_coeffs(32);
-    //       for (int m = 0; m < 32; ++m) {
-    //         // mask_coeffs[m] = output0_data[base_mask_idx + m * num_boxes +
-    //         i]; mask_coeffs[m] = output0_data[(MaskCoeffOffset + m) *
-    //         num_boxes + i];
-    //       }
-    //       mask_coefficients.emplace_back(std::move(mask_coeffs));
-    //     }
-    //   }
-    // #pragma omp parallel for default(none) \
-    //   shared(output0_data, num_boxes, num_classes, yolo_config_, BoxOffset,
-    //   ClassConfOffset, MaskCoeffOffset) \ schedule(static) //
-    // for (int i = 0; i < num_boxes; ++i) {
-
-    //     // ------------------------------------------------
-    //     // A. Extract and Transform Box Coordinates
-    //     // ------------------------------------------------
-    //     // Large stride access pattern (slow but unavoidable given input
-    //     layout) float xc = output0_data[BoxOffset * num_boxes + i]; float yc
-    //     = output0_data[(BoxOffset + 1) * num_boxes + i]; float w =
-    //     output0_data[(BoxOffset + 2) * num_boxes + i]; float h =
-    //     output0_data[(BoxOffset + 3) * num_boxes + i];
-
-    //     float half_w = w * 0.5f;
-    //     float half_h = h * 0.5f;
-
-    //     // We defer the creation of cv::Rect until we know the box is kept.
-    //     // This saves creating an object that might be immediately thrown
-    //     away.
-
-    //     // ------------------------------------------------
-    //     // B. Find Max Class Confidence
-    //     // ------------------------------------------------
-    //     float maxConf = 0.0f;
-    //     int classId = -1;
-
-    //     // Inner loop for class confidence search
-    //     for (int c = 0; c < num_classes; ++c) {
-    //         float conf = output0_data[(ClassConfOffset + c) * num_boxes + i];
-    //         if (conf > maxConf) {
-    //             maxConf = conf;
-    //             classId = c;
-    //         }
-    //     }
-
-    //     // ------------------------------------------------
-    //     // C. Filtering and Storage
-    //     // ------------------------------------------------
-    //     if (maxConf < yolo_config_.conf_threshold) {
-    //         // Skip this box immediately if below threshold
-    //         continue;
-    //     }
-
-    //     // --- Only if the box is kept, perform object creation/vector write
-    //     ---
-
-    //     // Create the cv::Rect now
-    //     cv::Rect box_cv(static_cast<int>(std::round(xc - half_w)),  //
-    //     top-left x
-    //                     static_cast<int>(std::round(yc - half_h)),  //
-    //                     top-left y static_cast<int>(std::round(w)), // width
-    //                     static_cast<int>(std::round(h)));           // height
-
-    //     // Store detection in thread-local vectors
-    //     private_boxes.push_back(box_cv);
-    //     private_confidences.push_back(maxConf);
-    //     private_class_ids.push_back(classId);
-
-    //     // Store mask coefficients
-    //     std::vector<float> mask_coeffs(32);
-    //     for (int m = 0; m < 32; ++m) {
-    //         mask_coeffs[m] = output0_data[(MaskCoeffOffset + m) * num_boxes +
-    //         i];
-    //     }
-    //     private_mask_coefficients.emplace_back(std::move(mask_coeffs));
-    // }
-
-    // // ----------------------------------------------------------------------
-    // // 3. Merging Private Results into Shared Vectors
-    // // ----------------------------------------------------------------------
-
-    // // The merging step must be sequential, but it only involves fast memory
-    // copies
-    // // and runs much faster than the computation loop.
-    // // Note: This merging must happen AFTER the parallel region (outside the
-    // #pragma).
-
-    // size_t total_detections = 0;
-
-    // // Step 1: Calculate the total number of detections across all threads
-    // // This is required to pre-allocate the main vectors, avoiding expensive
-    // reallocations. #pragma omp parallel reduction(+:total_detections)
-    // {
-    //     total_detections += private_boxes.size();
-    // }
-
-    // // Step 2: Resize the main vectors
-    // //TODO!!!
-    // boxes.reserve(boxes.size() + total_detections);
-    // confidences.reserve(confidences.size() + total_detections);
-    // class_ids.reserve(class_ids.size() + total_detections);
-    // mask_coefficients.reserve(mask_coefficients.size() + total_detections);
-
-    // // Step 3: Append data from all thread-local vectors to the main vectors
-    // // This can be done efficiently using another parallel loop or
-    // sequentially.
-    // // Since the vectors are not being modified within the loop, the append
-    // operation
-    // // is sequential, but fast. The `reduction(merge)` is not used here for
-    // custom types. #pragma omp parallel
-    // {
-    //     // Append the local vectors to the shared vectors within a critical
-    //     section
-    //     // using move semantics to avoid copy overhead.
-    //     // Critical is necessary here because writing to the shared vector's
-    //     capacity
-    //     // or size must be atomic.
-    //     #pragma omp critical
-    //     {
-    //         if (!private_boxes.empty()) {
-    //             boxes.insert(boxes.end(),
-    //                         std::make_move_iterator(private_boxes.begin()),
-    //                         std::make_move_iterator(private_boxes.end()));
-
-    //             confidences.insert(confidences.end(),
-    //                               std::make_move_iterator(private_confidences.begin()),
-    //                               std::make_move_iterator(private_confidences.end()));
-
-    //             class_ids.insert(class_ids.end(),
-    //                             std::make_move_iterator(private_class_ids.begin()),
-    //                             std::make_move_iterator(private_class_ids.end()));
-
-    //             // mask_coefficients.insert(mask_coefficients.end(),
-    //             //
-    //             std::make_move_iterator(private_mask_coefficients.begin()),
-    //             // std::make_move_iterator(private_mask_coefficients.end()));
-    //             mask_coefficients.insert(mask_coefficients.end(),
-    //                                     private_mask_coefficients.begin(),
-    //                                     private_mask_coefficients.end());
-    //         }
-    //     }
-    // }
     timing_boxes.stop();
 
     std::vector<cv::Rect> boxes;
@@ -583,109 +387,13 @@ struct YoloV8ObjectDetector::Impl {
       cv::cuda::Stream stream = stream_pool_.getCvStream();
 
       ObjectDetection detection;
-      RunFullMaskPipelineGPU(detection_gpu_mats, d_prototype_masks,
-                             prototype_crop_rect, h_det, required_size,
-                             original_size, mask_h, mask_w, stream, detection);
+      YoloDetectionsToObjects(detection_gpu_mats, d_prototype_masks,
+                              prototype_crop_rect, h_det, required_size,
+                              original_size, class_label, mask_h, mask_w,
+                              stream, detection);
       detections.push_back(detection);
     }
-    //   const float confidence = confidences[idx];
-    //   const int class_id = class_ids[idx];
 
-    //    std::string class_label;
-    //   if (!safeGetClassLabel(class_id, class_label)) {
-    //     continue;
-    //   }
-
-    //   // detection still on the GPU
-    //   YoloDetection* det = d_buffer_[idx];
-    //   DetectionGpuMats detection_gpu_mats =
-    //   createDetectionGpuMatWrappers(det);
-
-    //   const auto& mask_coeffs = mask_coefficients[idx];
-
-    //   // // Linear combination of prototype masks
-    //   // cv::cuda::GpuMat final_mask = cv::cuda::GpuMat::zeros(mask_h,
-    //   mask_w, CV_32F);
-    //   // for (int m = 0; m < 32; ++m) {
-    //   //   final_mask += mask_coeffs[m] * prototypeMasks[m];
-    //   // }
-
-    // }
-    // std::vector<ObjectDetection> detections;
-    // for (const int idx : nms_indices) {
-    //   const float confidence = confidences[idx];
-    //   const int class_id = class_ids[idx];
-
-    //   // skip object if not in the set of included class labels
-    //   std::string class_label;
-    //   if (!safeGetClassLabel(class_id, class_label)) {
-    //     continue;
-    //   }
-
-    // 5. Scale box to original image
-    //   const cv::Rect bounding_box =
-    //       scaleCoords(required_size, boxes[idx], original_size, true);
-
-    //   // 6. Process mask
-    //   const auto& mask_coeffs = mask_coefficients[idx];
-
-    //   // Linear combination of prototype masks
-    //   cv::Mat final_mask = cv::Mat::zeros(mask_h, mask_w, CV_32F);
-    //   for (int m = 0; m < 32; ++m) {
-    //     final_mask += mask_coeffs[m] * prototypeMasks[m];
-    //   }
-    //   // Apply sigmoid activation
-    //   final_mask = sigmoid(final_mask);
-
-    //   // Crop mask to letterbox area with a slight padding to avoid border
-    //   // issues
-    //   int x1 = static_cast<int>(std::round((pad_w - 0.1f) * mask_scale_x));
-    //   int y1 = static_cast<int>(std::round((pad_h - 0.1f) * mask_scale_y));
-    //   int x2 = static_cast<int>(
-    //       std::round((required_size.width - pad_w + 0.1f) * mask_scale_x));
-    //   int y2 = static_cast<int>(
-    //       std::round((required_size.height - pad_h + 0.1f) * mask_scale_y));
-
-    //   // Ensure coordinates are within mask bounds
-    //   x1 = std::max(0, std::min(x1, mask_w - 1));
-    //   y1 = std::max(0, std::min(y1, mask_h - 1));
-    //   x2 = std::max(x1, std::min(x2, mask_w));
-    //   y2 = std::max(y1, std::min(y2, mask_h));
-
-    //   // Handle cases where cropping might result in zero area
-    //   if (x2 <= x1 || y2 <= y1) {
-    //     // Skip this mask as cropping is invalid
-    //     LOG(INFO) << "Mask invalud?";
-    //     continue;
-    //   }
-
-    //   cv::Rect cropRect(x1, y1, x2 - x1, y2 - y1);
-    //   cv::Mat croppedMask =
-    //       final_mask(cropRect).clone();  // Clone to ensure data integrity
-
-    //   // Resize to original dimensions
-    //   cv::Mat resized_mask;
-    //   cv::resize(croppedMask, resized_mask, original_size, 0, 0,
-    //              cv::INTER_LINEAR);
-
-    //   // Threshold and convert to binary
-    //   cv::Mat binary_mask;
-    //   cv::threshold(resized_mask, binary_mask, 0.5, 255.0,
-    //   cv::THRESH_BINARY); binary_mask.convertTo(binary_mask, CV_8U);
-
-    //   // Crop to bounding box
-    //   cv::Mat final_binary_mask = cv::Mat::zeros(original_size, CV_8U);
-    //   cv::Rect roi = bounding_box;
-    //   roi &= cv::Rect(0, 0, binary_mask.cols,
-    //                   binary_mask.rows);  // Ensure ROI is within mask
-    //   if (roi.area() > 0) {
-    //     binary_mask(roi).copyTo(final_binary_mask(roi));
-    //   }
-
-    //   ObjectDetection detection{final_binary_mask, bounding_box, class_label,
-    //                             confidence};
-    //   detections.push_back(detection);
-    // }
     timing_detections.stop();
 
     // return false;
@@ -864,45 +572,6 @@ struct YoloV8ObjectDetector::Impl {
   }
 };
 
-void ConstructPlanarGpuMat(float* d_input_ptr, int H, int W,
-                           std::vector<cv::cuda::GpuMat>& channel_wrappers) {
-  // The number of elements per channel (Height * Width)
-  const size_t channel_size_elements = static_cast<size_t>(H) * W;
-
-  // The stride (pitch) in bytes for a single row.
-  // Since the data is linear/non-pitched (CHW), the row stride is simply
-  // the width (W) times the size of a float (4 bytes).
-  const size_t step_bytes = static_cast<size_t>(W) * sizeof(float);
-
-  // The memory offset for the next channel (in bytes)
-  const size_t channel_offset_bytes = channel_size_elements * sizeof(float);
-
-  // --- Allocate the vector to hold the wrappers ---
-  channel_wrappers.resize(3);
-
-  for (int c = 0; c < 3; ++c) {
-    // 1. Calculate the starting address for this channel (R, G, or B)
-    float* d_channel_ptr = d_input_ptr + (c * channel_size_elements);
-
-    // 2. Wrap the memory with cv::cuda::GpuMat
-    // GpuMat(rows, cols, type, data_ptr, step_bytes)
-    channel_wrappers[c] = cv::cuda::GpuMat(
-        H,              // rows
-        W,              // cols
-        CV_32FC1,       // type (float, 1 channel)
-        d_channel_ptr,  // raw pointer to the start of this channel
-        step_bytes      // step (W * sizeof(float))
-    );
-
-    std::cout << "Channel " << c
-              << " wrapped. Start address: " << (void*)d_channel_ptr
-              << ", Step: " << step_bytes << " bytes." << std::endl;
-  }
-
-  // Now channel_wrappers[0] points to R, [1] to G, [2] to B.
-  // They can be used in your subsequent CUDA kernels or OpenCV CUDA functions.
-}
-
 YoloV8ObjectDetector::YoloV8ObjectDetector(const ModelConfig& config,
                                            const YoloConfig& yolo_config)
     : ObjectDetectionEngine(), TRTEngine(config) {
@@ -1013,9 +682,9 @@ ObjectDetectionResult YoloV8ObjectDetector::process(const cv::Mat& image) {
   {
     // now we do need to synchronize since post-processing has its own stream
     // pool
-    utils::TimingStatsCollector timing("yolov8_detection.synchronize",
-                                       kTimingVerbosityLevel);
-    cudaStreamSynchronize(stream_);
+    // utils::TimingStatsCollector timing("yolov8_detection.synchronize",
+    //                                    kTimingVerbosityLevel);
+    // cudaStreamSynchronize(stream_);
   }
 
   const auto output0_dims = context_->getTensorShape(output0_info.name.c_str());

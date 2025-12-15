@@ -34,3 +34,28 @@ which should export a `.onnx` model to the weights directory.
 ## Details
 The OpenCV/Numpy converion code was taken verbatum from https://gitverse.ru/githubcopy/cvnp/content/master
 Much of the TensorRT code and structure of the Model class was taken from https://github.com/MIT-SPARK/semantic_inference
+
+## Embedded System Performance
+We have tested our system on an NVIDIA ORIN NX.
+
+As this platform supports multiple performance modes, it is important to select the highest mode to ensure best performance.
+
+Change modes
+```
+sudo nvpmodel -m <POWER_MODEL>
+```
+The different power modes can be checked by vieweing
+```
+cat /etc/nvpmodel.conf
+```
+while the current settings can be viewed
+```
+sudo jetson_clocks --show
+```
+> NOTE: setting `POWER_MODEL=1` was the most performant for our hardware.
+
+keep in mind, that the mode switching only changes the maximum ATTAINABLE clocks, the clocks are dynamically changed based on the load.
+In order to set the clocks statically to their highest setting WITHIN the mode, execute:
+```
+sudo jetson_clocks
+```

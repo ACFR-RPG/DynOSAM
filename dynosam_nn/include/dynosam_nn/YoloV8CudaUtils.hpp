@@ -68,19 +68,16 @@ struct YoloKernelConfig {
  * @param stream            (Optional) CUDA stream to launch kernels on.
  * @return int              The number of valid detections found.
  */
-int LaunchYoloPostProcess(const float* d_model_output,
-                          const YoloKernelConfig& config,
-                          YoloDetection* h_output_buffer,
-                          YoloDetection* d_output_buffer, int* d_count_buffer,
-                          void* stream = nullptr);
+int YoloOutputToDetections(const float* d_model_output,
+                           const YoloKernelConfig& config,
+                           YoloDetection* h_output_buffer,
+                           YoloDetection* d_output_buffer, int* d_count_buffer,
+                           void* stream = nullptr);
 
-void RunFullMaskPipelineGPU(
+void YoloDetectionsToObjects(
     const DetectionGpuMats& wrappers, const cv::cuda::GpuMat& d_prototype_masks,
     const cv::Rect& prototype_crop_rect,  // Pre-calculated crop area
     const YoloDetection* h_detection, const cv::Size& required_size,
-    const cv::Size& original_size, const int mask_h, const int mask_w,
-    cv::cuda::Stream stream, dyno::ObjectDetection& detection);
-
-void LaunchGrayscaleConversion(
-    const std::vector<cv::cuda::GpuMat>& channel_wrappers,
-    cv::Mat& h_grayscale_out, cudaStream_t stream = 0);
+    const cv::Size& original_size, const std::string& label, const int mask_h,
+    const int mask_w, cv::cuda::Stream stream,
+    dyno::ObjectDetection& detection);

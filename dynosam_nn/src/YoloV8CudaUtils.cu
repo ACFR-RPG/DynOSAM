@@ -1,4 +1,5 @@
-#include "dynosam_nn/YoloV8Utils.hpp"
+#include "dynosam_nn/YoloV8CudaUtils.hpp"
+#include "dynosam_nn/CudaUtils.hpp"
 #include "dynosam_common/DynamicObjects.hpp"
 
 
@@ -14,8 +15,6 @@
 #include <opencv4/opencv2/opencv.hpp>
 
 #include <glog/logging.h>
-
-static const int STRIDE = sizeof(YoloDetection) / sizeof(float);
 
 // // rect should be of length 4 in the form x,y, width, height
 // __device__ void jaccardDistance(const float* __restrict__ rect_a,
@@ -58,9 +57,6 @@ __global__ void YOLO_PostProcess_Kernel(
 {
     const int i = blockIdx.x * blockDim.x + threadIdx.x;
 
-    // printf("In kernel\n");
-    // printf("i %d, N %d\n", i, N);
-
     if (i >= N) return;
 
     // 1. Find Max Confidence
@@ -76,8 +72,6 @@ __global__ void YOLO_PostProcess_Kernel(
         }
     }
 
-    // printf("Class id %d\n", classId);
-
     if (maxConf < CONF_THRESHOLD) return;
 
     // 2. Atomic Allocation
@@ -86,6 +80,7 @@ __global__ void YOLO_PostProcess_Kernel(
 
     // 3. Write Data (38 floats per detection)
     // const int STRIDE = 38; // sizeof(YoloDetection) / sizeof(float)
+    static constexpr int STRIDE = sizeof(YoloDetection) / sizeof(float);
     float* out_ptr = d_detections + (write_idx * STRIDE);
 
     out_ptr[0] = d_input[BoxOffset * N + i];       // x
@@ -103,7 +98,7 @@ __global__ void YOLO_PostProcess_Kernel(
 }
 
 // --- Host Wrapper Function ---
-int LaunchYoloPostProcess(
+int YoloOutputToDetections(
     const float* d_model_output,
     const YoloKernelConfig& config,
     YoloDetection* h_output_buffer,
@@ -117,13 +112,9 @@ int LaunchYoloPostProcess(
     cudaMemsetAsync(d_count_buffer, 0, sizeof(int), stream);
 
     // 2. Launch Kernel
-    const int threads = 256;
+    static constexpr int threads = 256;
     const int blocks = (config.num_boxes + threads - 1) / threads;
 
-    // LOG(INFO) << "Here " << blocks;
-    // printf("Here");
-
-    // Cast YoloDetection* to float* for the kernel
     YOLO_PostProcess_Kernel<<<blocks, threads, 0, stream>>>(
         d_model_output,
         reinterpret_cast<float*>(d_output_buffer),
@@ -137,9 +128,7 @@ int LaunchYoloPostProcess(
     );
 
     cudaError_t err = cudaGetLastError();
-    if (err != cudaSuccess) {
-        printf("CUDA Error: %s\n", cudaGetErrorString(err));
-    }
+    CUDA_CHECK(err);
 
     // cudaDeviceSynchronize();
     // fflush(stdout);
@@ -168,40 +157,6 @@ int LaunchYoloPostProcess(
     return valid_count;
 }
 
-// ITU-R BT.601 coefficients for Luminance (Y) calculation
-#define R_WEIGHT 0.299f
-#define G_WEIGHT 0.587f
-#define B_WEIGHT 0.114f
-
-__global__ void PlanarRGBToGrayscaleKernel(
-    cv::cuda::PtrStepSz<const float> R,
-    cv::cuda::PtrStepSz<const float> G,
-    cv::cuda::PtrStepSz<const float> B,
-    cv::cuda::PtrStepSz<float> output) // Output is a single-channel float GpuMat
-{
-    // Map thread indices to pixel coordinates
-    int x = blockIdx.x * blockDim.x + threadIdx.x;
-    int y = blockIdx.y * blockDim.y + threadIdx.y;
-
-    // Boundary check using the output dimensions
-    if (x < output.cols && y < output.rows) {
-
-        // 1. Read the normalized channel values (0.0 to 1.0)
-        // Since input GpuMats are wrappers on *contiguous* CHW memory,
-        // using the accessors (y, x) ensures correct pitch handling (if any, though expected 0).
-        float val_r = R(y, x);
-        float val_g = G(y, x);
-        float val_b = B(y, x);
-
-        // 2. Calculate Luminance (Greyscale intensity)
-        float grayscale_intensity = (R_WEIGHT * val_r) +
-                                   (G_WEIGHT * val_g) +
-                                   (B_WEIGHT * val_b);
-
-        // 3. Write the result to the single-channel output GpuMat
-        output(y, x) = grayscale_intensity;
-    }
-}
 
 __device__ __forceinline__ float sigmoidf(float x)
 {
@@ -217,7 +172,7 @@ __global__ void YOLO_Mask_Combination_Kernel(
     int mask_h,
     int mask_w)
 {
-    // Map thread indices: x/y for the pixel, z for the detection index
+    // Map thread indices: x/y for the pixel
     int x = blockIdx.x * blockDim.x + threadIdx.x;
     int y = blockIdx.y * blockDim.y + threadIdx.y;
     // int det_idx = blockIdx.z;
@@ -238,26 +193,6 @@ __global__ void YOLO_Mask_Combination_Kernel(
     }
 
     d_output_masks(y, x) = sigmoidf(acc);
-    // int pixel_idx = y * Mask_W + x; // Pixel index within the 160x160 plane
-
-    // // 1. Linear Combination Loop (Sequential inside the thread)
-    // for (int m = 0; m < 32; ++m) {
-    //     // Access coefficient m for this detection row
-    //     // d_mask_coeffs(det_idx, m) accesses the coefficient
-    //     float coeff = d_mask_coeffs(det_idx, m);
-
-    //     // Prototype memory index: (m * H + y) * W + x
-    //     int proto_idx = (m * Mask_H * Mask_W) + pixel_idx;
-    //     float proto_val = d_prototypes.data[proto_idx]; // Assuming d_prototypes is linear (often true for TensorRT)
-
-    //     pixel_sum += coeff * proto_val;
-    // }
-
-    // // 2. Sigmoid Activation
-    // float final_float_mask_val = 1.0f / (1.0f + __expf(-pixel_sum));
-
-    // // 3. Write to the output buffer
-    // d_output_masks.data[det_idx * Mask_H * Mask_W + pixel_idx] = final_float_mask_val;
 }
 
 template <typename T>
@@ -298,13 +233,14 @@ inline cv::Rect scaleCoords(const cv::Size& required_shape,
     return ret;
   }
 
-void RunFullMaskPipelineGPU(
+void YoloDetectionsToObjects(
     const DetectionGpuMats& wrappers,
     const cv::cuda::GpuMat& d_prototype_masks,
     const cv::Rect& prototype_crop_rect, // Pre-calculated crop area
     const YoloDetection* h_detection,
     const cv::Size& required_size,
     const cv::Size& original_size,
+    const std::string& label,
     const int mask_h,
     const int mask_w,
     cv::cuda::Stream stream,
@@ -416,55 +352,9 @@ void RunFullMaskPipelineGPU(
     // should synchronize!?
     // cv::Mat final_cpu_mask = h_mem.createMatHeader().clone();
 
-
-
     const float confidence = h_detection->confidence;
     const int class_id = static_cast<int>(h_detection->class_id);
-    // float confidence = wrappers.scores_and_classes.row(i).ptr<float>()[0]; // Re-download or pass via arg
-    // int class_id = static_cast<int>(wrappers.scores_and_classes.row(i).ptr<float>()[1]);
 
+    detection = dyno::ObjectDetection{final_cpu_mask, bounding_box, label ,confidence};
 
-    detection = dyno::ObjectDetection{final_cpu_mask, bounding_box, "",confidence};
-
-    // LOG(INFO) << "class id " << class_id;
-
-    // ... retrieve class_label and push to detections ...
-    // (This final step requires the small download, but everything before it was GPU-accelerated).
-
-}
-
-void LaunchGrayscaleConversion(
-    const std::vector<cv::cuda::GpuMat>& channel_wrappers,
-    cv::Mat& h_grayscale_out,
-    cudaStream_t stream)
-{
-
-    cv::cuda::GpuMat d_grayscale_out;
-
-    // Sanity check
-    if (channel_wrappers.size() != 3 || channel_wrappers[0].type() != CV_32FC1) {
-        throw std::runtime_error("Input channel wrappers must be 3x CV_32FC1.");
-    }
-
-    int H = channel_wrappers[0].rows;
-    int W = channel_wrappers[0].cols;
-
-    // 1. Allocate the output GpuMat (single channel, float)
-    // This GpuMat will own its memory and use OpenCV's pitch.
-    d_grayscale_out.create(H, W, CV_32FC1);
-
-    // 2. Configure grid and block dimensions
-    dim3 block(16, 16);
-    dim3 grid((W + block.x - 1) / block.x,
-              (H + block.y - 1) / block.y);
-
-    // 3. Launch the kernel
-    PlanarRGBToGrayscaleKernel<<<grid, block, 0, stream>>>(
-        channel_wrappers[0], // R
-        channel_wrappers[1], // G
-        channel_wrappers[2], // B
-        d_grayscale_out        // Output (CV_32FC1)
-    );
-
-    d_grayscale_out.download(h_grayscale_out);
 }

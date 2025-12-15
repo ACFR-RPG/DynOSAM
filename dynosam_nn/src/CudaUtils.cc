@@ -1,6 +1,6 @@
-#include <glog/logging.h>
+#include "dynosam_nn/CudaUtils.hpp"
 
-#include "dynosam_nn/cuda_utils.hpp"
+#include <glog/logging.h>
 
 namespace dyno {
 

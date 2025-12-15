@@ -43,7 +43,7 @@
 #include "dynosam_common/utils/GtsamUtils.hpp"
 #include "dynosam_common/utils/OpenCVUtils.hpp"
 #include "dynosam_common/utils/TimingStats.hpp"
-#include "dynosam_nn/YoloObjectDetector.hpp"
+#include "dynosam_nn/YoloV8ObjectDetector.hpp"
 
 namespace dyno {
 

@@ -26,12 +26,6 @@ find_package(image_transport REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(sensor_msgs REQUIRED)
 
-find_package(OpenMP REQUIRED)
-if (OPENMP_FOUND)
-    set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
-    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
-    set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
-endif()
 
 option(DYNOSAM_NN_USE_TRT "Build with TensorRT" ON)
 
@@ -49,11 +43,44 @@ if(DYNOSAM_NN_USE_TRT AND (NOT CUDAToolkit_FOUND OR NOT TensorRT_FOUND))
   endif()
   set(ENABLE_TENSORRT_CXX_VALUE 0)
 elseif(NOT DYNOSAM_NN_USE_TRT)
-  message(STATUS "Disabling TensorRT! Inference will not work!")
+  message(WARNING "Disabling TensorRT! Inference will not work!")
   set(ENABLE_TENSORRT_CXX_VALUE 0)
 endif()
 
-set(CMAKE_CUDA_ARCHITECTURES all)
+string(TOLOWER "${CMAKE_SYSTEM_PROCESSOR}" SYSTEM_ARCH_LOWER)
+
+## --- 1. Detect and Set CUDA Architecture ---
+if (SYSTEM_ARCH_LOWER MATCHES "^(x86_64|amd64)$")
+    # Case 1: Standard Desktop/Server (x86_64)
+    # Use 'all' to target the maximum number of modern GPUs, relying on the user
+    # or the CI system to set a more specific list if needed.
+    message("Detected x86_64/AMD64. Setting CUDA Architectures to 'all' (flexible build).")
+    set(CMAKE_CUDA_ARCHITECTURES all)
+
+elseif (SYSTEM_ARCH_LOWER MATCHES "^(aarch64|arm64)$")
+    # Case 2: 64-bit Embedded/ARM (NVIDIA ORIN, Jetson)
+    # The NVIDIA ORIN/Jetson series typically uses the Volta (72) or Ampere (87) generation.
+    # We will use 72/87 as a robust default.
+    # NOTE: Check your specific Jetson model! 75/87 are common targets.
+    message("Detected AARCH64/ARM64. Setting CUDA Architectures to 87 (e.g., Orin/Ampere target).")
+    set(CMAKE_CUDA_ARCHITECTURES 75 87)
+
+    # Optional: If you support older Jetsons (e.g., Xavier/TX2), you might add:
+    # list(APPEND CMAKE_CUDA_ARCHITECTURES 72)
+
+else()
+    message(FATAL_ERROR
+        "Unsupported System Processor Architecture: ${SYSTEM_ARCH_LOWER}\n"
+        "This project only supports x86_64/AMD64 or AARCH64/ARM64. "
+        "Please check CMAKE_SYSTEM_PROCESSOR or adjust the build script."
+    )
+
+endif()
+
+set(nvcc_options --device-w --ftz=true --prec-div=false --prec-sqrt=false --fmad=true --default-stream per-thread -O3)
+
+# --- 2. Final Output ---
+message("Final CMAKE_CUDA_ARCHITECTURES set to: ${CMAKE_CUDA_ARCHITECTURES}")
 
 # setup targets
 include_directories(
@@ -71,9 +98,11 @@ add_library(${PROJECT_NAME} SHARED
   src/ObjectDetector.cc
   src/TrtUtilities.cc
   src/ModelConfig.cc
-  src/YoloObjectDetector.cc
+  src/YoloV8ObjectDetector.cc
 
   src/CudaUtils.cc
+  src/YoloV8CudaUtils.cu
+
 
   src/trackers/byte_tracker/ByteTracker.cc
   src/trackers/byte_tracker/KalmanFilter.cc
@@ -83,8 +112,6 @@ add_library(${PROJECT_NAME} SHARED
   src/trackers/ObjectTracker.cc
 
   src/bindings/PyBoostWrapper.cc
-
-  src/yolov8_postprocess.cu
 )
 
 target_link_libraries(${PROJECT_NAME}

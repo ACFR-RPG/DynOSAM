@@ -11,7 +11,7 @@
 #include "dynosam_nn/ModelConfig.hpp"
 #include "dynosam_nn/PyObjectDetector.hpp"
 #include "dynosam_nn/TrtUtilities.hpp"
-#include "dynosam_nn/YoloObjectDetector.hpp"
+#include "dynosam_nn/YoloV8ObjectDetector.hpp"
 #include "image_transport/image_transport.hpp"
 #include "rclcpp/rclcpp.hpp"
 #include "sensor_msgs/image_encodings.hpp"
