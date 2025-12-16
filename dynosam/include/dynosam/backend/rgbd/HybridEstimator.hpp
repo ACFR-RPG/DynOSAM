@@ -553,7 +553,7 @@ class SmartMotionFactor : public gtsam::NonlinearFactor,
                                   const gtsam::Point3& point_l,
                                   GBlocks* Gs = nullptr, FBlocks* Fs = nullptr,
                                   EBlocks* Es = nullptr) const {
-    utils::TimingStatsCollector timer("smf_reprojectionError");
+    utils::ChronoTimingStats timer("smf_reprojectionError");
     CHECK_EQ(motions.size(), poses.size());
     const auto measurements = measured();
     CHECK_EQ(motions.size(), measurements.size());
@@ -678,7 +678,7 @@ class SmartMotionFactor : public gtsam::NonlinearFactor,
   // TriangulationResult
   gtsam::TriangulationResult triangulateLinear(const Motions& motions,
                                                const Poses& poses) const {
-    utils::TimingStatsCollector timer("smf_triangulateLinear");
+    utils::ChronoTimingStats timer("smf_triangulateLinear");
     CHECK_EQ(motions.size(), poses.size());
     CHECK_EQ(motions.size(), measured_.size());
 
@@ -718,7 +718,7 @@ class SmartMotionFactor : public gtsam::NonlinearFactor,
   gtsam::TriangulationResult triangulateNonlinear(
       const Motions& motions, const Poses& poses,
       const gtsam::Point3& m_L) const {
-    utils::TimingStatsCollector timer("smf_triangulateNonlinear");
+    utils::ChronoTimingStats timer("smf_triangulateNonlinear");
     CHECK_EQ(motions.size(), poses.size());
     CHECK_EQ(motions.size(), measured_.size());
 
@@ -819,7 +819,7 @@ class SmartMotionFactor : public gtsam::NonlinearFactor,
   //      const GFBlocks& GFs, const gtsam::Matrix& E,
   //      const Eigen::Matrix<double, N, N>& P, const gtsam::Vector& b) {
 
-  //   utils::TimingStatsCollector timer("smf_SchurComplement");
+  //   utils::ChronoTimingStats timer("smf_SchurComplement");
   //     size_t m = GFs.size();
 
   //   // SymmetricBlockMatrix augmentedHessian(dims, Matrix::Zero(M1, M1));
@@ -917,7 +917,7 @@ class SmartMotionFactor : public gtsam::NonlinearFactor,
   //     const GFBlocks& GFs, const gtsam::Matrix& E,
   //     const Eigen::Matrix<double, N, N>& P, const gtsam::Vector& b) {
 
-  //   utils::TimingStatsCollector timer("smf_SchurComplement");
+  //   utils::ChronoTimingStats timer("smf_SchurComplement");
   //   const size_t m = GFs.size();
   //   const size_t last_block_idx = 2 * m;
 
@@ -1007,7 +1007,7 @@ class SmartMotionFactor : public gtsam::NonlinearFactor,
   static gtsam::SymmetricBlockMatrix SchurComplement(
       const GFBlocks& GFs, const gtsam::Matrix& E,
       const Eigen::Matrix<double, N, N>& P, const gtsam::Vector& b) {
-    utils::TimingStatsCollector timer("smf_SchurComplement");
+    utils::ChronoTimingStats timer("smf_SchurComplement");
     // a single point is observed in m cameras
     size_t m = GFs.size();
     // gtsam::Matrix Et = E.transpose();
@@ -1023,13 +1023,12 @@ class SmartMotionFactor : public gtsam::NonlinearFactor,
     // TODO: F block should be close to diagonal - inverting can be made much
     // faster!!!!
     auto ft_timer =
-        std::make_unique<utils::TimingStatsCollector>("smf_F_transpose");
+        std::make_unique<utils::ChronoTimingStats>("smf_F_transpose");
     gtsam::Matrix F = F_block_matrix;
     gtsam::Matrix Ft = F.transpose();
     ft_timer.reset();
 
-    auto gg_timer =
-        std::make_unique<utils::TimingStatsCollector>("smf_Gg_calc");
+    auto gg_timer = std::make_unique<utils::ChronoTimingStats>("smf_Gg_calc");
     // gtsam::Matrix g = Ft * (b - E * P * Et * b);
     // gtsam::Matrix G = Ft * F - Ft * E * P * Et * F;
 
@@ -1064,8 +1063,7 @@ class SmartMotionFactor : public gtsam::NonlinearFactor,
     gg_timer.reset();
 
     // size of schur = num measurements * Hessian size + 1
-    auto shur_timer =
-        std::make_unique<utils::TimingStatsCollector>("smf_schur");
+    auto shur_timer = std::make_unique<utils::ChronoTimingStats>("smf_schur");
     size_t aug_hessian_size = m * HessianDim + 1;
     gtsam::Matrix schur(aug_hessian_size, aug_hessian_size);
 

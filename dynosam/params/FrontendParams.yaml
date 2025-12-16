@@ -14,7 +14,7 @@ max_object_depth: 30.0
 use_ego_motion_pnp: True
 # When using rgbd-pipeline, camera-motion will be solved using 3d-2d pnp, not stereo (3d-3d) pnp
 use_object_motion_pnp: True
-refine_camera_pose_with_joint_of: False
+refine_camera_pose_with_joint_of: True
 
 object_motion_solver:
   ransac_threshold_pnp: 1.0
@@ -48,7 +48,7 @@ tracker_params:
   shrink_col: 0
   max_nr_keypoints_before_anms: 1000
   max_features_per_frame: 800
-  max_feature_track_age: 50
+  max_feature_track_age: 15
   min_features_per_frame: 200
   # This should be wide to get a good spread.
   # Ideally should be calculated as some function of the input image size

@@ -6,6 +6,8 @@
 #include <mutex>
 #include <opencv2/core/cuda.hpp>
 
+#include "dynosam_common/utils/TimingStats.hpp"
+
 #ifndef CUDA_CHECK
 #define CUDA_CHECK(callstr)                                                  \
   {                                                                          \
@@ -18,15 +20,45 @@
   }
 #endif  // CUDA_CHECK
 
+#define CUDA_API_CALL(__CALL__)                                    \
+  do {                                                             \
+    const cudaError_t a = __CALL__;                                \
+    if (a != cudaSuccess) {                                        \
+      std::cout << "CUDA Error: " << cudaGetErrorString(a)         \
+                << " (err_num=" << a << ")" << std::endl;          \
+      std::cout << "File: " << __FILE__ << " | Line: " << __LINE__ \
+                << std::endl;                                      \
+      cudaDeviceReset();                                           \
+      assert(0);                                                   \
+    }                                                              \
+  } while (0)
+
 namespace dyno {
 
-// class ThreadSafeCvStream {
+struct CudaTimeGenerator {
+  cudaStream_t stream_;
+  cudaEvent_t start_event_;
+  cudaEvent_t stop_event_;
 
-// private:
-//   cv::cuda::Stream stream_;
-//   mutable std::mutex mutex_;
+  CudaTimeGenerator(cudaStream_t stream);
+  ~CudaTimeGenerator();
 
-// };
+  void onStart();
+  void onStop() {}
+
+  double calcDelta() const;
+};
+
+class GpuTimingStats
+    : public utils::BaseTimingStatsCollector<CudaTimeGenerator> {
+ public:
+  using This = utils::BaseTimingStatsCollector<CudaTimeGenerator>;
+  GpuTimingStats(const std::string& tag, cudaStream_t stream = 0,
+                 int glog_level = 0, bool construct_stopped = false);
+
+  GpuTimingStats(const std::string& tag, cv::cuda::Stream cv_stream,
+                 int glog_level = 0, bool construct_stopped = false);
+};
 
 class CudaStreamPool {
  public:

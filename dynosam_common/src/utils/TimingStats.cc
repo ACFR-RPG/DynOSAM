@@ -35,66 +35,17 @@
 namespace dyno {
 namespace utils {
 
-// std::ostream& operator<<(std::ostream& os, const TimingStatsNamespace&
-// stats_namespace) {
-//     os << (std::string)stats_namespace;
-//     return os;
-// }
+void ChronoTimeGenerator::onStart() { tic_time_ = Timer::tic(); }
+void ChronoTimeGenerator::onStop() { tic_time_ = Timer::tic(); }
 
-TimingStatsCollector::TimingStatsCollector(const std::string& tag,
-                                           int glog_level,
-                                           bool construct_stopped)
-    : tag_(tag + " [ms]"),
-      glog_level_(glog_level),
-      tic_time_(Timer::tic()),
-      is_timing_(false) {
-  if (!construct_stopped) {
-    start();
-  }
-}
-
-TimingStatsCollector::~TimingStatsCollector() { stop(); }
-
-void TimingStatsCollector::start() {
-  tic_time_ = Timer::tic();
-  is_timing_ = true;
-}
-
-void TimingStatsCollector::stop() {
-  if (isTiming() && shouldGlog()) {
-    log();
-  }
-
-  tic_time_ = Timer::tic();
-  is_timing_ = false;
-}
-
-bool TimingStatsCollector::isTiming() const { return is_timing_; }
-
-bool TimingStatsCollector::shouldGlog() const {
-  if (glog_level_ == 0) {
-    return true;
-  }
-
-  return VLOG_IS_ON(glog_level_);
-}
-
-void TimingStatsCollector::discardTiming() { is_timing_ = false; }
-
-double TimingStatsCollector::delta() const {
+double ChronoTimeGenerator::calcDelta() const {
   const auto toc = Timer::toc<std::chrono::nanoseconds>(tic_time_);
   return static_cast<double>(toc.count());
 }
 
-void TimingStatsCollector::log() {
-  const double nanoseconds = delta();
-  const double milliseconds = nanoseconds / 1e6;
-
-  if (!collector_) {
-    collector_ = std::make_unique<StatsCollector>(tag_);
-  }
-  collector_->AddSample(milliseconds);
-}
+ChronoTimingStats::ChronoTimingStats(const std::string& tag, int glog_level,
+                                     bool construct_stopped)
+    : This(ChronoTimeGenerator{}, tag, glog_level, construct_stopped) {}
 
 }  // namespace utils
 }  // namespace dyno

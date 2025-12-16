@@ -90,7 +90,7 @@ template <typename CALIBRATION>
 OpticalFlowAndPoseOptimizer::Result OpticalFlowAndPoseOptimizer::optimize(
     const Frame::Ptr frame_k_1, const Frame::Ptr frame_k,
     const TrackletIds& tracklets, const gtsam::Pose3& initial_pose) const {
-  utils::TimingStatsCollector timer("of_motion_solver.optimize");
+  utils::ChronoTimingStats timer("of_motion_solver.optimize");
 
   using Calibration = CALIBRATION;
   using Pose3FlowProjectionFactorCalib = Pose3FlowProjectionFactor<Calibration>;
@@ -192,7 +192,7 @@ OpticalFlowAndPoseOptimizer::Result OpticalFlowAndPoseOptimizer::optimize(
     opt_params.verbosity = gtsam::NonlinearOptimizerParams::Verbosity::ERROR;
 
   {
-    utils::TimingStatsCollector timer("of_motion_solver.LM_solve");
+    utils::ChronoTimingStats timer("of_motion_solver.LM_solve");
     optimised_values = gtsam::LevenbergMarquardtOptimizer(
                            mutable_graph, optimised_values, opt_params)
                            .optimize();
@@ -201,7 +201,7 @@ OpticalFlowAndPoseOptimizer::Result OpticalFlowAndPoseOptimizer::optimize(
   gtsam::FactorIndices outlier_factors;
   // if we have outliers, enter iteration loop
   if (params_.outlier_reject) {
-    utils::TimingStatsCollector timer("of_motion_solver.outlier_reject");
+    utils::ChronoTimingStats timer("of_motion_solver.outlier_reject");
 
     outlier_factors = factor_graph_tools::determineFactorOutliers<
         Pose3FlowProjectionFactorCalib>(mutable_graph, optimised_values);
@@ -329,7 +329,7 @@ Pose3SolverResult MotionOnlyRefinementOptimizer::optimize(
   graph.addPrior(pose_k_1_key, frame_k_1->getPose(), pose_prior);
   graph.addPrior(pose_k_key, frame_k->getPose(), pose_prior);
 
-  utils::TimingStatsCollector timer("motion_solver.object_nlo_refinement");
+  utils::ChronoTimingStats timer("motion_solver.object_nlo_refinement");
 
   for (TrackletId tracklet_id : tracklets) {
     Feature::Ptr feature_k_1 = frame_k_1->at(tracklet_id);

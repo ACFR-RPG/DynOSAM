@@ -207,7 +207,7 @@ bool DynoPipelineManager::spin() {
     };
   }
 
-  utils::TimingStatsCollector timer("pipeline_spin");
+  utils::ChronoTimingStats timer("pipeline_spin");
   return spin_func();
 }
 

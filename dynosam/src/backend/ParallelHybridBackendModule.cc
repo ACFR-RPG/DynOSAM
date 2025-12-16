@@ -342,7 +342,7 @@ Accessor::Ptr ParallelHybridBackendModule::getAccessor() {
 
 Pose3Measurement ParallelHybridBackendModule::bootstrapUpdateStaticEstimator(
     VisionImuPacket::ConstPtr input) {
-  utils::TimingStatsCollector timer("parallel_object_sam.static_estimator");
+  utils::ChronoTimingStats timer("parallel_object_sam.static_estimator");
 
   const FrameId frame_k = input->frameId();
   const Timestamp timestamp_k = input->timestamp();
@@ -384,7 +384,7 @@ Pose3Measurement ParallelHybridBackendModule::bootstrapUpdateStaticEstimator(
   }
 
   {
-    utils::TimingStatsCollector timer(
+    utils::ChronoTimingStats timer(
         "parallel_object_sam.static_estimator.update");
     static_estimator_.update(new_factors, new_values, timestamps);
   }
@@ -402,7 +402,7 @@ Pose3Measurement ParallelHybridBackendModule::bootstrapUpdateStaticEstimator(
 
 Pose3Measurement ParallelHybridBackendModule::nominalUpdateStaticEstimator(
     VisionImuPacket::ConstPtr input, bool should_calculate_covariance) {
-  utils::TimingStatsCollector timer("parallel_object_sam.static_estimator");
+  utils::ChronoTimingStats timer("parallel_object_sam.static_estimator");
 
   const FrameId frame_k = input->frameId();
   const Timestamp timestamp_k = input->timestamp();
@@ -479,7 +479,7 @@ Pose3Measurement ParallelHybridBackendModule::nominalUpdateStaticEstimator(
   if (should_calculate_covariance) {
     if (FLAGS_use_marginal_covariance) {
       gtsam::Matrix66 X_w_k_cov;
-      utils::TimingStatsCollector timer(
+      utils::ChronoTimingStats timer(
           "parallel_object_sam.camera_pose_cov_calc");
       gtsam::Marginals marginals(static_estimator_.getFactors(),
                                  optimised_values,
@@ -542,7 +542,7 @@ ParallelObjectISAM::Ptr ParallelHybridBackendModule::getEstimator(
 
 void ParallelHybridBackendModule::parallelObjectSolve(
     VisionImuPacket::ConstPtr input, const Pose3Measurement& X_W_k) {
-  utils::TimingStatsCollector timer("parallel_object_sam.dynamic_estimator");
+  utils::ChronoTimingStats timer("parallel_object_sam.dynamic_estimator");
   const auto frame_id = input->frameId();
   const auto& object_tracks = input->objectTracks();
   tbb::parallel_for_each(

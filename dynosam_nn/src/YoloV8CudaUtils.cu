@@ -104,12 +104,14 @@ int YoloOutputToDetections(
     YoloDetection* h_output_buffer,
     YoloDetection* d_output_buffer,
     int* d_count_buffer,
+    int* h_count_buffer,
     void* stream_ptr)
 {
     cudaStream_t stream = static_cast<cudaStream_t>(stream_ptr);
 
-    // 1. Reset the atomic counter on Device
-    cudaMemsetAsync(d_count_buffer, 0, sizeof(int), stream);
+    // // 1. Reset the atomic counter on Device
+    // cudaMemsetAsync(d_count_buffer, 0, sizeof(int), stream);
+    *h_count_buffer = 0;
 
     // 2. Launch Kernel
     static constexpr int threads = 256;
@@ -131,30 +133,31 @@ int YoloOutputToDetections(
     CUDA_CHECK(err);
 
     // cudaDeviceSynchronize();
+    cudaStreamSynchronize(stream);
     // fflush(stdout);
 
     // 3. Copy Count Back to Host
     // We need a small temporary host variable for the count.
     // Ideally, this is a pinned memory member of your class, but local var is okay for sync.
-    int valid_count = 0;
-    cudaMemcpyAsync(&valid_count, d_count_buffer, sizeof(int), cudaMemcpyDeviceToHost, stream);
+    // int valid_count = 0;
+    // cudaMemcpyAsync(&valid_count, d_count_buffer, sizeof(int), cudaMemcpyDeviceToHost, stream);
 
-    // SYNC POINT: We must know the count to know how much data to copy next.
-    // If you want to be fully async, you'd need to copy the *max* buffer or use unified memory.
-    // For simplicity/safety here, we sync the stream.
-    cudaStreamSynchronize(stream);
-    //for printf!
+    // // SYNC POINT: We must know the count to know how much data to copy next.
+    // // If you want to be fully async, you'd need to copy the *max* buffer or use unified memory.
+    // // For simplicity/safety here, we sync the stream.
+    // cudaStreamSynchronize(stream);
+    // //for printf!
 
-    // 4. Copy Valid Data Back to Host
-    if (valid_count > 0) {
-        size_t copy_size = valid_count * sizeof(YoloDetection);
-        cudaMemcpyAsync(h_output_buffer, d_output_buffer, copy_size, cudaMemcpyDeviceToHost, stream);
+    // // 4. Copy Valid Data Back to Host
+    // if (valid_count > 0) {
+    //     size_t copy_size = valid_count * sizeof(YoloDetection);
+    //     cudaMemcpyAsync(h_output_buffer, d_output_buffer, copy_size, cudaMemcpyDeviceToHost, stream);
 
-        // Final sync ensures data is ready on CPU before function returns
-        cudaStreamSynchronize(stream);
-    }
+    //     // Final sync ensures data is ready on CPU before function returns
+    //     cudaStreamSynchronize(stream);
+    // }
 
-    return valid_count;
+    return *h_count_buffer;
 }
 
 
@@ -248,7 +251,9 @@ void YoloDetectionsToObjects(
 {
     // --- 1. Launch Mask Combination Kernel (Run once for all detections) ---
     // Kernel launch configuration for 160x160 mask for N_Detections
-    dim3 block(16, 16);
+    // dim3 block(16, 16);
+    //32 and 8 is the default transform policy for opencv
+    dim3 block(32, 8);
     dim3 grid(
         (mask_w + block.x - 1) / block.x,
         (mask_h + block.y - 1) / block.y
@@ -263,14 +268,19 @@ void YoloDetectionsToObjects(
         CV_32FC1                   // type: Output of sigmoid is a float (0.0 to 1.0)
     );
     // Assuming d_prototypes is a linear array, not pitched.
+    dyno::GpuTimingStats mask_combination_kernel(
+        "yolov8_detection.post_process.combination_kernel", c_stream, 5);
     YOLO_Mask_Combination_Kernel<<<grid, block, 0, c_stream>>>(
         wrappers.mask_coeffs,
         d_prototype_masks, // Assuming d_prototype_masks contains 32*H*W linear floats
         d_combined_masks,  // The N x mask_h x mask_w combined float mask buffer
         1, mask_h, mask_w
     );
+    mask_combination_kernel.stop();
 
 
+     dyno::GpuTimingStats timing_detections(
+        "yolov8_detection.post_process.cv_processing", stream, 5);
     // --- 2. Sequential Post-Processing (Loop over detections, using cv::cuda) ---
     cv::cuda::GpuMat d_final_masks_full_res(
         original_size, CV_8UC1); // Reusable buffer for final binary mask

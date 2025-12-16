@@ -631,8 +631,8 @@ UpdateObservationResult Formulation<MAP>::updateDynamicObservations(
   VLOG(20) << "Add dynamic observations at " << frame_id_k << " for objects "
            << container_to_string(frame_node_k->getObservedObjects());
 
-  utils::TimingStatsCollector dyn_obj_itr_timer(this->loggerPrefix() +
-                                                ".dynamic_object_itr");
+  utils::ChronoTimingStats dyn_obj_itr_timer(this->loggerPrefix() +
+                                             ".dynamic_object_itr");
   for (const auto& object_node : frame_node_k->objects_seen) {
     DebugInfo::ObjectInfo object_debug_info;
     const ObjectId object_id = object_node->getId();
@@ -669,8 +669,8 @@ UpdateObservationResult Formulation<MAP>::updateDynamicObservations(
       continue;
     }
 
-    utils::TimingStatsCollector dyn_point_itr_timer(this->loggerPrefix() +
-                                                    ".dynamic_point_itr");
+    utils::ChronoTimingStats dyn_point_itr_timer(this->loggerPrefix() +
+                                                 ".dynamic_point_itr");
     VLOG(10) << "Seen lmks at frame " << frame_id_k << " obj " << object_id
              << ": " << seen_lmks_k.size();
     // iterate over each lmk we have on this object
@@ -733,7 +733,7 @@ UpdateObservationResult Formulation<MAP>::updateDynamicObservations(
            << " at frames\n";
 
         // iterate over k-N to k (inclusive) and all all
-        utils::TimingStatsCollector dyn_point_backtrack_timer(
+        utils::ChronoTimingStats dyn_point_backtrack_timer(
             this->loggerPrefix() + ".dynamic_point_backtrack");
         for (auto seen_frames_itr = starting_motion_frame_itr;
              seen_frames_itr != seen_frames.end(); seen_frames_itr++) {
@@ -786,7 +786,7 @@ UpdateObservationResult Formulation<MAP>::updateDynamicObservations(
           if (seen_frames_itr == starting_motion_frame_itr) {
             point_context.is_starting_motion_frame = true;
           }
-          utils::TimingStatsCollector dyn_point_update_timer(
+          utils::ChronoTimingStats dyn_point_update_timer(
               this->loggerPrefix() + ".dyn_point_update_1");
           // the true set of values that are added from the update
           dynamicPointUpdateCallback(point_context, result, internal_new_values,
@@ -813,8 +813,8 @@ UpdateObservationResult Formulation<MAP>::updateDynamicObservations(
             getInitialOrLinearizedSensorPose(frame_node_k->frame_id);
         point_context.starting_factor_slot = starting_factor_slot;
         point_context.is_starting_motion_frame = false;
-        utils::TimingStatsCollector dyn_point_update_timer(
-            this->loggerPrefix() + ".dyn_point_update_2");
+        utils::ChronoTimingStats dyn_point_update_timer(this->loggerPrefix() +
+                                                        ".dyn_point_update_2");
         // the true set of values that are added from the update
         // gtsam::Values local_new_values;
         dynamicPointUpdateCallback(point_context, result, internal_new_values,
@@ -832,7 +832,7 @@ UpdateObservationResult Formulation<MAP>::updateDynamicObservations(
   // object this is a bit inefficient as we do this iteration even if no new
   // object values are added becuuse we dont know if the affected frames are
   // becuase of old points as well as new points
-  //  utils::TimingStatsCollector dyn_obj_affected_timer(this->loggerPrefix() +
+  //  utils::ChronoTimingStats dyn_obj_affected_timer(this->loggerPrefix() +
   //  ".dyn_object_affected");
   for (const auto& [object_id, frames_affected] :
        result.objects_affected_per_frame) {

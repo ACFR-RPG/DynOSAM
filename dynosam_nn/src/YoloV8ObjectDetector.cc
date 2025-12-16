@@ -86,12 +86,20 @@ struct YoloV8ObjectDetector::Impl {
 
   bool is_first{true};
   ObjectTracker::UniquePtr tracker_;
+  // // Device (GPU) detection buffer
+  // YoloDetection* d_buffer_;
+  // // Host (CPU) detection buffer
+  // YoloDetection* h_buffer_;
+  // // Device (GPU) detection count
+  // int* d_counter_;
+
   // Device (GPU) detection buffer
-  YoloDetection* d_buffer_;
+  YoloDetection* d_indir_buffer_;
   // Host (CPU) detection buffer
-  YoloDetection* h_buffer_;
+  YoloDetection* h_indir_buffer_;
   // Device (GPU) detection count
-  int* d_counter_;
+  int* d_indir_counter_;
+  int* h_indir_counter_;
 
   //! Size of the input image prior to preprocessing (ie. size of the camera
   //! image)
@@ -118,26 +126,41 @@ struct YoloV8ObjectDetector::Impl {
     // be included, making it easy to check which class ids we want to track
     setIncludedClassMapping(file_names_resouce, yolo_config);
 
-    size_t det_size = MaxDetections * sizeof(YoloDetection);
-    cudaMalloc(&d_buffer_, det_size);
+    const size_t det_size = MaxDetections * sizeof(YoloDetection);
+    const size_t count_size = sizeof(int);
 
-    cudaMallocHost(&h_buffer_, det_size);
+    // cudaMalloc(&d_buffer_, det_size);
+    cudaHostAlloc(&h_indir_buffer_, det_size, cudaHostAllocMapped);
+    cudaHostAlloc(&h_indir_counter_, count_size, cudaHostAllocMapped);
 
-    size_t count_size = sizeof(int);
-    cudaMalloc(&d_counter_, count_size);
-    cudaMemset(d_counter_, 0, count_size);
+    // cudaMallocHost(&h_buffer_, det_size);
+    cudaHostGetDevicePointer(&d_indir_buffer_, h_indir_buffer_, 0);
+    cudaHostGetDevicePointer(&d_indir_counter_, h_indir_counter_, 0);
+
+    *h_indir_counter_ = 0;
+
+    // size_t count_size = sizeof(int);
+    // cudaMalloc(&d_counter_, count_size);
+    // cudaMemset(d_counter_, 0, count_size);
   }
 
   ~Impl() {
-    if (d_buffer_) {
-      cudaFree(d_buffer_);
+    if (h_indir_buffer_) {
+      cudaFreeHost(h_indir_buffer_);
     }
-    if (h_buffer_) {
-      cudaFreeHost(h_buffer_);
+
+    if (h_indir_counter_) {
+      cudaFreeHost(h_indir_counter_);
     }
-    if (d_counter_) {
-      cudaFree(d_counter_);
-    }
+    // if (d_buffer_) {
+    //   cudaFree(d_buffer_);
+    // }
+    // if (h_buffer_) {
+    //   cudaFreeHost(h_buffer_);
+    // }
+    // if (d_counter_) {
+    //   cudaFree(d_counter_);
+    // }
   }
 
   inline const cv::Size requiredInputSize() const {
@@ -195,8 +218,7 @@ struct YoloV8ObjectDetector::Impl {
                    const float* d_output1, const nvinfer1::Dims& output0_dims,
                    const nvinfer1::Dims& output1_dims,
                    ObjectDetectionResult& result) {
-    utils::TimingStatsCollector timing_all("yolov8_detection.post_process.run",
-                                           5);
+    utils::ChronoTimingStats timing_all("yolov8_detection.post_process.run", 5);
 
     if (output1_dims.nbDims != 4 || output1_dims.d[0] != 1 ||
         output1_dims.d[1] != 32)
@@ -206,8 +228,8 @@ struct YoloV8ObjectDetector::Impl {
     const cv::Size& required_size = requiredInputSize();
     const cv::Size& original_size = originalSize(rgb);
 
-    utils::TimingStatsCollector timing_setup(
-        "yolov8_detection.post_process.setup", 5);
+    utils::ChronoTimingStats timing_setup("yolov8_detection.post_process.setup",
+                                          5);
 
     // result result regardless
     result.labelled_mask =
@@ -238,8 +260,8 @@ struct YoloV8ObjectDetector::Impl {
 
     // 1. Process prototype masks
     // Store all prototype masks in a vector for easy access
-    utils::TimingStatsCollector timing_proto(
-        "yolov8_detection.post_process.proto", 5);
+    utils::ChronoTimingStats timing_proto("yolov8_detection.post_process.proto",
+                                          5);
 
     // prototypeMasks.reserve(32);
     // for (int m = 0; m < 32; ++m) {
@@ -281,15 +303,15 @@ struct YoloV8ObjectDetector::Impl {
     config.class_conf_offset = ClassConfOffset;
     config.mask_coeff_offset = MaskCoeffOffset;
 
-    utils::TimingStatsCollector timing_boxes(
-        "yolov8_detection.post_process.boxes", 5);
+    utils::ChronoTimingStats timing_boxes("yolov8_detection.post_process.boxes",
+                                          5);
     int count = YoloOutputToDetections(
         d_output0,  // The raw GPU pointer from TensorRT/ONNX
         config,
-        h_buffer_,  // Destination on CPU
-        d_buffer_,  // Temp storage on GPU
-        d_counter_  // Temp counter on GPU
-    );
+        h_indir_buffer_,   // Destination on CPU
+        d_indir_buffer_,   // Temp storage on GPU
+        d_indir_counter_,  // Temp counter on GPU,
+        h_indir_counter_, stream_pool_.getCudaStream());
 
     timing_boxes.stop();
 
@@ -300,7 +322,7 @@ struct YoloV8ObjectDetector::Impl {
 
     for (int i = 0; i < count; ++i) {
       // 1. Get a reference to the detection data in the contiguous array
-      const YoloDetection& det = h_buffer_[i];
+      const YoloDetection& det = h_indir_buffer_[i];
 
       // 2. Convert and Store Box/Confidence/Class ID
 
@@ -316,8 +338,7 @@ struct YoloV8ObjectDetector::Impl {
     }
 
     // 3. Apply NMS
-    utils::TimingStatsCollector timing_nms("yolov8_detection.post_process.nms",
-                                           5);
+    utils::ChronoTimingStats timing_nms("yolov8_detection.post_process.nms", 5);
     std::vector<int> nms_indices;
     cv::dnn::NMSBoxes(boxes, confidences, yolo_config_.conf_threshold,
                       yolo_config_.nms_threshold, nms_indices);
@@ -326,8 +347,8 @@ struct YoloV8ObjectDetector::Impl {
       return false;
     }
 
-    utils::TimingStatsCollector timing_gain(
-        "yolov8_detection.post_process.gain", 5);
+    utils::ChronoTimingStats timing_gain("yolov8_detection.post_process.gain",
+                                         5);
     // Calculate letterbox parameters
     const float gain = std::min(
         static_cast<float>(required_size.height) / original_size.height,
@@ -366,13 +387,13 @@ struct YoloV8ObjectDetector::Impl {
     //   mask CV_8UC1
     // );
 
-    utils::TimingStatsCollector timing_detections(
+    utils::ChronoTimingStats timing_detections(
         "yolov8_detection.post_process.detections", 5);
     std::vector<ObjectDetection> detections;
     detections.reserve(nms_indices.size());
     for (const int idx : nms_indices) {
-      YoloDetection* d_det = d_buffer_ + idx;
-      const YoloDetection* h_det = h_buffer_ + idx;
+      YoloDetection* d_det = d_indir_buffer_ + idx;
+      const YoloDetection* h_det = h_indir_buffer_ + idx;
 
       const int class_id = static_cast<int>(h_det->class_id);
 
@@ -387,6 +408,8 @@ struct YoloV8ObjectDetector::Impl {
       cv::cuda::Stream stream = stream_pool_.getCvStream();
 
       ObjectDetection detection;
+      utils::ChronoTimingStats timing_detections_gpu(
+          "yolov8_detection.post_process.detections_gpu", 5);
       YoloDetectionsToObjects(detection_gpu_mats, d_prototype_masks,
                               prototype_crop_rect, h_det, required_size,
                               original_size, class_label, mask_h, mask_w,
@@ -398,14 +421,14 @@ struct YoloV8ObjectDetector::Impl {
 
     // return false;
 
-    utils::TimingStatsCollector timing_track(
-        "yolov8_detection.post_process.track", 5);
+    utils::ChronoTimingStats timing_track("yolov8_detection.post_process.track",
+                                          5);
     std::vector<SingleDetectionResult> tracking_result =
         tracker_->track(detections);
     timing_track.stop();
 
     // //construct label mask from tracked result
-    utils::TimingStatsCollector timing_finalise(
+    utils::ChronoTimingStats timing_finalise(
         "yolov8_detection.post_process.finalise", 5);
     for (const SingleDetectionResult& single_result : tracking_result) {
       // this may happen if the object was not well tracked
@@ -587,7 +610,7 @@ YoloV8ObjectDetector::YoloV8ObjectDetector(const ModelConfig& config,
 YoloV8ObjectDetector::~YoloV8ObjectDetector() = default;
 
 ObjectDetectionResult YoloV8ObjectDetector::process(const cv::Mat& image) {
-  utils::TimingStatsCollector timing("yolov8_detection.process");
+  utils::ChronoTimingStats timing("yolov8_detection.process");
   static constexpr int kTimingVerbosityLevel = 5;
 
   const auto& input_info = model_info_.input();
@@ -597,15 +620,15 @@ ObjectDetectionResult YoloV8ObjectDetector::process(const cv::Mat& image) {
   // TODO: should cuda MallocHost!!
   // std::vector<float> input_data;
   {
-    utils::TimingStatsCollector timing("yolov8_detection.pre_process",
-                                       kTimingVerbosityLevel);
+    utils::ChronoTimingStats timing("yolov8_detection.pre_process",
+                                    kTimingVerbosityLevel);
     impl_->preprocess(input_info, image, preprocessed_host_ptr_);
   }
 
   {
     // allocate input data
-    utils::TimingStatsCollector timing("yolov8_detection.allocInput",
-                                       kTimingVerbosityLevel);
+    utils::ChronoTimingStats timing("yolov8_detection.allocInput",
+                                    kTimingVerbosityLevel);
     bool allocated = input_device_ptr_.allocate(input_info);
     CHECK(
         input_device_ptr_.checkTensorSize(preprocessed_host_ptr_.tensor_size));
@@ -618,16 +641,16 @@ ObjectDetectionResult YoloV8ObjectDetector::process(const cv::Mat& image) {
 
   // put image data onto gpu
   {
-    utils::TimingStatsCollector timing("yolov8_detection.push_from_host",
-                                       kTimingVerbosityLevel);
+    utils::ChronoTimingStats timing("yolov8_detection.push_from_host",
+                                    kTimingVerbosityLevel);
     CHECK(
         input_device_ptr_.pushFromHost(preprocessed_host_ptr_.get(), stream_));
   }
 
   // prepare output data
   {
-    utils::TimingStatsCollector timing("yolov8_detection.allocOutput",
-                                       kTimingVerbosityLevel);
+    utils::ChronoTimingStats timing("yolov8_detection.allocOutput",
+                                    kTimingVerbosityLevel);
     bool output0_allocated = output0_device_ptr_.allocate(output0_info);
     bool output1_allocated = output1_device_ptr_.allocate(output1_info);
 
@@ -662,7 +685,7 @@ ObjectDetectionResult YoloV8ObjectDetector::process(const cv::Mat& image) {
 
   // set output address tensors
   {
-    utils::TimingStatsCollector timing("yolov8_detection.infer");
+    utils::ChronoTimingStats timing("yolov8_detection.infer");
     cudaStreamSynchronize(stream_);
     bool status = context_->enqueueV3(stream_);
     if (!status) {
@@ -673,7 +696,7 @@ ObjectDetectionResult YoloV8ObjectDetector::process(const cv::Mat& image) {
 
   // std::vector<float> output0_data, output1_data;
   {
-      // utils::TimingStatsCollector timing("yolov8_detection.get_from_device",
+      // utils::ChronoTimingStats timing("yolov8_detection.get_from_device",
       //                                    kTimingVerbosityLevel);
       // CHECK(output0_device_ptr_.getFromDevice(output0_data_, stream_));
       // CHECK(output1_device_ptr_.getFromDevice(output1_data_, stream_));
@@ -682,7 +705,7 @@ ObjectDetectionResult YoloV8ObjectDetector::process(const cv::Mat& image) {
   {
     // now we do need to synchronize since post-processing has its own stream
     // pool
-    // utils::TimingStatsCollector timing("yolov8_detection.synchronize",
+    // utils::ChronoTimingStats timing("yolov8_detection.synchronize",
     //                                    kTimingVerbosityLevel);
     // cudaStreamSynchronize(stream_);
   }
@@ -694,8 +717,8 @@ ObjectDetectionResult YoloV8ObjectDetector::process(const cv::Mat& image) {
   {
     const float* d_output0_data = output0_device_ptr_.get();
     const float* d_output1_data = output1_device_ptr_.get();
-    utils::TimingStatsCollector timing("yolov8_detection.post_process",
-                                       kTimingVerbosityLevel);
+    utils::ChronoTimingStats timing("yolov8_detection.post_process",
+                                    kTimingVerbosityLevel);
     impl_->postprocess(image, d_output0_data, d_output1_data, output0_dims,
                        output1_dims, result);
   }

@@ -131,8 +131,7 @@ Pose3SolverResult EgoMotionSolver::geometricOutlierRejection2d2d(
   // this does not create proper bearing vectors (at leas tnot for 3d-2d pnp
   // solve) bearing vectors are also not undistorted atm!!
   {
-    utils::TimingStatsCollector track_dynamic_timer(
-        "mono_frame_correspondences");
+    utils::ChronoTimingStats track_dynamic_timer("mono_frame_correspondences");
     frame_k->getCorrespondences(correspondences, *frame_k_1,
                                 KeyPointType::STATIC,
                                 frame_k->imageKeypointCorrespondance());
@@ -223,8 +222,7 @@ Pose3SolverResult EgoMotionSolver::geometricOutlierRejection3d2d(
   // TODO: change to use landmarkWorldProjectedBearingCorrespondance and then
   // change motion solver to take already projected bearing vectors
   {
-    utils::TimingStatsCollector timer(
-        "motion_solver.solve_3d2d.correspondances");
+    utils::ChronoTimingStats timer("motion_solver.solve_3d2d.correspondances");
     frame_k->getCorrespondences(correspondences, *frame_k_1,
                                 KeyPointType::STATIC,
                                 frame_k->landmarkWorldKeypointCorrespondance());
@@ -236,7 +234,7 @@ Pose3SolverResult EgoMotionSolver::geometricOutlierRejection3d2d(
 Pose3SolverResult EgoMotionSolver::geometricOutlierRejection3d2d(
     const AbsolutePoseCorrespondences& correspondences,
     std::optional<gtsam::Rot3> R_curr_ref) {
-  utils::TimingStatsCollector timer("motion_solver.solve_3d2d");
+  utils::ChronoTimingStats timer("motion_solver.solve_3d2d");
   Pose3SolverResult result;
   const size_t& n_matches = correspondences.size();
 
@@ -286,7 +284,7 @@ Pose3SolverResult EgoMotionSolver::geometricOutlierRejection3d2d(
 
   bool success;
   {
-    utils::TimingStatsCollector timer("motion_solver.solve_3d2d.ransac");
+    utils::ChronoTimingStats timer("motion_solver.solve_3d2d.ransac");
     success = runRansac<AbsolutePoseProblem>(
         std::make_shared<AbsolutePoseProblem>(adapter,
                                               AbsolutePoseProblem::KNEIP),
@@ -314,7 +312,7 @@ Pose3SolverResult EgoMotionSolver::geometricOutlierRejection3d2d(
 
 void OpticalFlowAndPoseOptimizer::updateFrameOutliersWithResult(
     const Result& result, Frame::Ptr frame_k_1, Frame::Ptr frame_k) const {
-  utils::TimingStatsCollector timer("of_motion_solver.update_frame");
+  utils::ChronoTimingStats timer("of_motion_solver.update_frame");
   const auto& image_container_k = frame_k->image_container_;
   const cv::Mat& motion_mask = image_container_k.objectMotionMask();
 
@@ -410,7 +408,7 @@ Pose3SolverResult EgoMotionSolver::geometricOutlierRejection3d3d(
     std::optional<gtsam::Rot3> R_curr_ref) {
   PointCloudCorrespondences correspondences;
   {
-    utils::TimingStatsCollector("pc_correspondences");
+    utils::ChronoTimingStats("pc_correspondences");
     frame_k->getCorrespondences(
         correspondences, *frame_k_1, KeyPointType::STATIC,
         frame_k->landmarkWorldPointCloudCorrespondance());
@@ -632,7 +630,7 @@ bool ObjectMotionSovlerF2F::solveImpl(Frame::Ptr frame_k, Frame::Ptr frame_k_1,
 Motion3SolverResult ObjectMotionSovlerF2F::geometricOutlierRejection3d2d(
     Frame::Ptr frame_k_1, Frame::Ptr frame_k, const gtsam::Pose3& T_world_k,
     ObjectId object_id) {
-  utils::TimingStatsCollector timer("motion_solver.object_solve3d2d");
+  utils::ChronoTimingStats timer("motion_solver.object_solve3d2d");
   AbsolutePoseCorrespondences dynamic_correspondences;
   // get the corresponding feature pairs
   bool corr_result = frame_k->getDynamicCorrespondences(
@@ -1128,7 +1126,7 @@ Motion3SolverResult ObjectMotionSovlerF2F::geometricOutlierRejection3d2d(
 //   Eigen::LLT<gtsam::Matrix> ldlt(S);
 //   gtsam::Matrix S_inv;
 //   {
-//     utils::TimingStatsCollector timer("ekfgtsam.inv");
+//     utils::ChronoTimingStats timer("ekfgtsam.inv");
 //     S_inv = ldlt.solve(Eigen::MatrixXd::Identity(S.rows(), S.cols()));
 //   }
 //   // gtsam::Matrix S_inv = ldlt.solve(Eigen::MatrixXd::Identity(S.rows(),
@@ -1937,7 +1935,7 @@ bool ObjectMotionSolverFilter::solveImpl(Frame::Ptr frame_k,
   if (new_or_reset_object) {
     filter->predict(gtsam::Pose3::Identity());
     {
-      utils::TimingStatsCollector timer("motion_solver.ekf_update");
+      utils::ChronoTimingStats timer("motion_solver.ekf_update");
       // first time we should run this twice (for k-1 and k)!
       filter->update(frame_k_1, geometric_result.inliers, 2);
       // filter->updateStereo(object_points, stereo_measurements,
@@ -1961,7 +1959,7 @@ bool ObjectMotionSolverFilter::solveImpl(Frame::Ptr frame_k,
 
   filter->predict(H_w_km1_k_pnp);
   {
-    utils::TimingStatsCollector timer("motion_solver.ekf_update");
+    utils::ChronoTimingStats timer("motion_solver.ekf_update");
     // first time we should run this twice (for k-1 and k)!
     filter->update(frame_k, geometric_result.inliers, 2);
     // filter->updateStereo(object_points, stereo_measurements,

@@ -35,7 +35,7 @@ std::vector<cv::KeyPoint> AdaptiveNonMaximumSuppression::suppressNonMax(
     const float& tolerance, const int& cols, const int& rows,
     const int& nr_horizontal_bins, const int& nr_vertical_bins,
     const Eigen::MatrixXd& binning_mask) {
-  utils::TimingStatsCollector timer("anms_timer");
+  utils::ChronoTimingStats timer("anms_timer");
 
   if (keyPoints.size() == 0) {
     std::cout << "No keypoints for non-max suppression..." << std::endl;

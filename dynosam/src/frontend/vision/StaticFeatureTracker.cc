@@ -388,7 +388,7 @@ bool KltFeatureTracker::detectFeatures(const cv::Mat& processed_img,
 
   std::vector<cv::Point2f> detected_points;
   {
-    utils::TimingStatsCollector timer("static_feature_track.detect_raw");
+    utils::ChronoTimingStats timer("static_feature_track.detect_raw");
     detected_points = detectRawFeatures(processed_img, current_features.size(),
                                         detection_mask_impl);
   }
@@ -466,7 +466,7 @@ bool KltFeatureTracker::trackPoints(const cv::Mat& current_processed_img,
   CHECK_EQ(current_points.size(), previous_pts.size());
 
   {
-    // utils::TimingStatsCollector timer("static_feature_track.calc_LK");
+    // utils::ChronoTimingStats timer("static_feature_track.calc_LK");
     // cv::cuda::GpuMat gpu_prev_img(previous_processed_img);
     // cv::cuda::GpuMat gpu_current_img(current_processed_img);
 
@@ -601,7 +601,7 @@ bool KltFeatureTracker::trackPoints(const cv::Mat& current_processed_img,
   // place we just want the set difference between the original features and
   // ones we KNOW are outliers
   {
-    utils::TimingStatsCollector timer("static_feature_track.find_outliers");
+    utils::ChronoTimingStats timer("static_feature_track.find_outliers");
     determineOutlierIds(verified_tracklets, tracklet_ids,
                         outlier_previous_features);
   }
@@ -611,7 +611,7 @@ bool KltFeatureTracker::trackPoints(const cv::Mat& current_processed_img,
 
   if (tracked_features.size() <
       static_cast<size_t>(params_.min_features_per_frame)) {
-    utils::TimingStatsCollector timer("static_feature_track.detect");
+    utils::ChronoTimingStats timer("static_feature_track.detect");
     // if we do not have enough features, detect more on the current image
     detectFeatures(current_processed_img, image_container, tracked_features,
                    tracked_features, detection_mask);

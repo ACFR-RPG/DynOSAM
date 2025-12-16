@@ -76,7 +76,7 @@ Frame::Ptr FeatureTracker::track(FrameId frame_id, Timestamp timestamp,
   // take "copy" of tracking_images which is then given to the frame
   // this will mean that the tracking images (input) are not necessarily the
   // same as the ones inside the returned frame
-  utils::TimingStatsCollector tracking_timer("tracking_timer");
+  utils::ChronoTimingStats tracking_timer("tracking_timer");
   ImageContainer input_images = image_container;
 
   info_ = FeatureTrackerInfo();  // clear the info
@@ -105,7 +105,7 @@ Frame::Ptr FeatureTracker::track(FrameId frame_id, Timestamp timestamp,
   objectDetection(boundary_mask_result, input_images);
 
   if (!initial_computation_ && params_.use_propogate_mask) {
-    utils::TimingStatsCollector timer("propogate_mask");
+    utils::ChronoTimingStats timer("propogate_mask");
     propogateMask(input_images);
   }
 
@@ -114,7 +114,7 @@ Frame::Ptr FeatureTracker::track(FrameId frame_id, Timestamp timestamp,
 
   auto static_track = [&](FeatureContainer& static_features) {
     VLOG(20) << "Starting static track";
-    utils::TimingStatsCollector static_track_timer("static_feature_track");
+    utils::ChronoTimingStats static_track_timer("static_feature_track");
     static_features = static_feature_tracker_->trackStatic(
         previous_frame_, input_images, info_,
         boundary_mask_result.boundary_mask, R_km1_k);
@@ -124,7 +124,7 @@ Frame::Ptr FeatureTracker::track(FrameId frame_id, Timestamp timestamp,
     VLOG(30) << "Starting dynamic track";
     if (params_.prefer_provided_optical_flow && input_images.hasOpticalFlow()) {
       VLOG(30) << "Starting dense object feature tracking";
-      utils::TimingStatsCollector dynamic_track_timer("dynamic_feature_track");
+      utils::ChronoTimingStats dynamic_track_timer("dynamic_feature_track");
       trackDynamic(frame_id, input_images, dynamic_features, object_keyframes,
                    boundary_mask_result);
     } else {
@@ -134,8 +134,7 @@ Frame::Ptr FeatureTracker::track(FrameId frame_id, Timestamp timestamp,
                         "is missing! Falling back to KLT";
       }
       VLOG(30) << "Starting KLT object feature tracking";
-      utils::TimingStatsCollector dynamic_track_timer(
-          "dynamic_feature_track_klt");
+      utils::ChronoTimingStats dynamic_track_timer("dynamic_feature_track_klt");
       trackDynamicKLT(frame_id, input_images, dynamic_features,
                       object_keyframes, boundary_mask_result);
     }
@@ -170,7 +169,7 @@ Frame::Ptr FeatureTracker::track(FrameId frame_id, Timestamp timestamp,
     object_observations[object_id] = observation;
   }
 
-  utils::TimingStatsCollector f_timer("tracking_timer.frame_construction");
+  utils::ChronoTimingStats f_timer("tracking_timer.frame_construction");
   auto new_frame = std::make_shared<Frame>(
       frame_id, timestamp, camera_, input_images, static_features,
       dynamic_features, object_observations, info_);
@@ -197,7 +196,7 @@ bool FeatureTracker::stereoTrack(FeaturePtrs& stereo_features,
                                  const cv::Mat& left_image,
                                  const cv::Mat& right_image,
                                  const double& virtual_baseline) const {
-  utils::TimingStatsCollector timing("stereo_track_timer");
+  utils::ChronoTimingStats timing("stereo_track_timer");
   TrackletIds tracklets_ids;
   // collect left feature points to cv::point2f
   std::vector<cv::Point2f> left_feature_points =
@@ -379,7 +378,7 @@ void FeatureTracker::trackDynamic(
   if (previous_frame_) {
     const cv::Mat& previous_motion_mask =
         previous_frame_->image_container_.objectMotionMask();
-    utils::TimingStatsCollector tracked_dynamic_features(
+    utils::ChronoTimingStats tracked_dynamic_features(
         "tracked_dynamic_features");
     for (Feature::Ptr previous_dynamic_feature :
          previous_frame_->usableDynamicFeaturesBegin()) {
@@ -619,8 +618,7 @@ void FeatureTracker::trackDynamicKLT(
     current_points.resize(previous_pts.size());
 
     if (tracklet_ids.size() > 0) {
-      utils::TimingStatsCollector tracking_t(
-          "dynamic_feature_track_klt.tracking");
+      utils::ChronoTimingStats tracking_t("dynamic_feature_track_klt.tracking");
 
       static const cv::Size klt_window_size(21, 21);  // Window size for KLT
       static const int klt_max_level = 3;  // Max pyramid levels for KLT
@@ -634,7 +632,7 @@ void FeatureTracker::trackDynamicKLT(
       std::vector<float> err;
 
       {
-        utils::TimingStatsCollector timing("dynamic_feature_track_klt.calc_LK");
+        utils::ChronoTimingStats timing("dynamic_feature_track_klt.calc_LK");
         // cv::calcOpticalFlowPyrLK(previous_mono, mono, previous_pts,
         //                          current_points, status, err,
         //                          klt_window_size, klt_max_level,
@@ -775,7 +773,7 @@ void FeatureTracker::trackDynamicKLT(
   }
 
   {
-    utils::TimingStatsCollector ts_t(
+    utils::ChronoTimingStats ts_t(
         "dynamic_feature_track_klt.requires_sampling");
     requiresSampling(object_keyframes, info_, image_container,
                      tracks_per_object, boundary_mask_result,
@@ -808,8 +806,7 @@ void FeatureTracker::trackDynamicKLT(
   tbb::concurrent_unordered_map<ObjectId, std::vector<KeypointCV>>
       keypoints_per_object;
 
-  utils::TimingStatsCollector detection_t(
-      "dynamic_feature_track_klt.detection");
+  utils::ChronoTimingStats detection_t("dynamic_feature_track_klt.detection");
   tbb::parallel_for_each(
       object_keyframes.begin(), object_keyframes.end(), [&](auto& object_id) {
         cv::Mat obj_mask = (motion_mask == object_id);
@@ -1028,7 +1025,7 @@ void FeatureTracker::requiresSampling(
   ObjectIds detected_objects = boundary_mask_result.objects_detected;
 
   // {
-  //   utils::TimingStatsCollector
+  //   utils::ChronoTimingStats
   //   timing("dynamic_feature_track_klt.get_labels"); detected_objects =
   //   vision_tools::getObjectLabels(image_container.objectMotionMask());
   // }
@@ -1113,14 +1110,14 @@ void FeatureTracker::requiresSampling(
       // bounding box of the tracked feature points on the object
       cv::Rect tracked_bb;
       {
-        utils::TimingStatsCollector timing(
+        utils::ChronoTimingStats timing(
             "dynamic_feature_track_klt.tracking_BB");
         tracked_bb =
             cv::boundingRect(per_object_tracks.toOpenCV(nullptr, true));
       }
       double iou;
       {
-        utils::TimingStatsCollector timing("dynamic_feature_track_klt.iou");
+        utils::ChronoTimingStats timing("dynamic_feature_track_klt.iou");
         iou = utils::calculateIoU(detection_bb, tracked_bb);
       }
       const bool small_iou = iou < min_iou;
@@ -1193,14 +1190,13 @@ bool FeatureTracker::objectDetection(
              << image_container.frameId();
     ObjectDetectionResult detection_result;
     {
-      utils::TimingStatsCollector timing("tracking_timer.detection_inference");
+      utils::ChronoTimingStats timing("tracking_timer.detection_inference");
       detection_result = object_detection_->process(image_container.rgb());
     }
     cv::Mat object_mask = detection_result.labelled_mask;
 
     {
-      utils::TimingStatsCollector timing(
-          "tracking_timer.compute_boundary_mask");
+      utils::ChronoTimingStats timing("tracking_timer.compute_boundary_mask");
       vision_tools::computeObjectMaskBoundaryMask(
           boundary_mask_result, detection_result, scaled_boarder_thickness,
           kUseAsFeatureDetectionMask);

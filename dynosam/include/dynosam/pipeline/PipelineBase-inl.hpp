@@ -50,8 +50,8 @@ PipelineBase::ReturnCode PipelineModule<INPUT, OUTPUT>::spinOnce() {
   auto getInputPacketWrapped = [&]() -> InputConstSharedPtr {
     // LOG(INFO) << "construct_intermediate_timers_as_stopped " <<
     // construct_intermediate_timers_as_stopped;
-    utils::TimingStatsCollector timing(module_name_ + ".get_input",
-                                       intermediate_timing_glog_verbosity);
+    utils::ChronoTimingStats timing(module_name_ + ".get_input",
+                                    intermediate_timing_glog_verbosity);
     InputConstSharedPtr input = nullptr;
     is_thread_working_ = false;
     input = getInputPacket();
@@ -60,8 +60,8 @@ PipelineBase::ReturnCode PipelineModule<INPUT, OUTPUT>::spinOnce() {
   };
 
   auto processWrapped = [&](InputConstSharedPtr input) -> OutputConstSharedPtr {
-    utils::TimingStatsCollector timing(module_name_ + ".process",
-                                       intermediate_timing_glog_verbosity);
+    utils::ChronoTimingStats timing(module_name_ + ".process",
+                                    intermediate_timing_glog_verbosity);
     OutputConstSharedPtr output = nullptr;
     output = process(input);
     return output;
@@ -69,14 +69,14 @@ PipelineBase::ReturnCode PipelineModule<INPUT, OUTPUT>::spinOnce() {
 
   auto pushOutputPacketWrapped = [&](OutputConstSharedPtr output) -> bool {
     // Received a valid output, send to output queue
-    utils::TimingStatsCollector timing(module_name_ + ".push_output",
-                                       intermediate_timing_glog_verbosity);
+    utils::ChronoTimingStats timing(module_name_ + ".push_output",
+                                    intermediate_timing_glog_verbosity);
     const bool push_packet_result = pushOutputPacket(output);
     return push_packet_result;
   };
 
   ReturnCode return_code;
-  utils::TimingStatsCollector timing_stats(module_name_);
+  utils::ChronoTimingStats timing_stats(module_name_);
 
   InputConstSharedPtr input = getInputPacketWrapped();
 

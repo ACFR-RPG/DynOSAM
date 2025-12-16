@@ -72,7 +72,7 @@ int YoloOutputToDetections(const float* d_model_output,
                            const YoloKernelConfig& config,
                            YoloDetection* h_output_buffer,
                            YoloDetection* d_output_buffer, int* d_count_buffer,
-                           void* stream = nullptr);
+                           int* h_count_buffer, void* stream = nullptr);
 
 void YoloDetectionsToObjects(
     const DetectionGpuMats& wrappers, const cv::cuda::GpuMat& d_prototype_masks,

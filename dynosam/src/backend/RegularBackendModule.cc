@@ -154,8 +154,8 @@ RegularBackendModule::SpinReturn RegularBackendModule::boostrapSpinImpl(
   // TODO: sanity checks that vision states are inline with the other frame idss
   // etc
 
-  utils::TimingStatsCollector timer(formulation_->getFullyQualifiedName() +
-                                    ".post_update");
+  utils::ChronoTimingStats timer(formulation_->getFullyQualifiedName() +
+                                 ".post_update");
   LOG(INFO) << "Starting any post updates";
   formulation_->postUpdate(post_update_data);
   LOG(INFO) << "Done any post updates";
@@ -215,8 +215,8 @@ RegularBackendModule::SpinReturn RegularBackendModule::nominalSpinImpl(
   // TODO: sanity checks that vision states are inline with the other frame idss
   // etc
 
-  utils::TimingStatsCollector timer(formulation_->getFullyQualifiedName() +
-                                    ".post_update");
+  utils::ChronoTimingStats timer(formulation_->getFullyQualifiedName() +
+                                 ".post_update");
   formulation_->postUpdate(post_update_data);
 
   BackendOutputPacket::Ptr backend_output =
@@ -260,7 +260,7 @@ void RegularBackendModule::addMeasurements(
     PostUpdateData& post_update_data) {
   {
     LOG(INFO) << "Starting updateStaticObservations";
-    utils::TimingStatsCollector timer("backend.update_static_obs");
+    utils::ChronoTimingStats timer("backend.update_static_obs");
     post_update_data.static_update_result =
         formulation_->updateStaticObservations(frame_k, new_values, new_factors,
                                                update_params);
@@ -269,7 +269,7 @@ void RegularBackendModule::addMeasurements(
   {
     if (!FLAGS_regular_backend_static_only) {
       LOG(INFO) << "Starting updateDynamicObservations";
-      utils::TimingStatsCollector timer("backend.update_dynamic_obs");
+      utils::ChronoTimingStats timer("backend.update_dynamic_obs");
       post_update_data.dynamic_update_result =
           formulation_->updateDynamicObservations(frame_k, new_values,
                                                   new_factors, update_params);
@@ -332,8 +332,8 @@ void RegularBackendModule::updateIncremental(
     const gtsam::NonlinearFactorGraph& new_factors,
     PostUpdateData& post_update_data) {
   CHECK(smoother_) << "updateIncremental run but smoother was not setup!";
-  utils::TimingStatsCollector timer(formulation_->getFullyQualifiedName() +
-                                    ".update_incremental");
+  utils::ChronoTimingStats timer(formulation_->getFullyQualifiedName() +
+                                 ".update_incremental");
 
   using SmootherInterface = IncrementalInterface<dyno::ISAM2>;
   SmootherInterface smoother_interface(smoother_.get());
@@ -412,8 +412,8 @@ void RegularBackendModule::updateBatch(FrameId frame_id_k, const gtsam::Values&,
         .AddSample(theta.size());
 
     double error_before = graph.error(theta);
-    utils::TimingStatsCollector timer(formulation_->getFullyQualifiedName() +
-                                      ".full_batch_opt");
+    utils::ChronoTimingStats timer(formulation_->getFullyQualifiedName() +
+                                   ".full_batch_opt");
 
     gtsam::LevenbergMarquardtOptimizer problem(graph, theta, opt_params);
     gtsam::Values optimised_values = problem.optimize();

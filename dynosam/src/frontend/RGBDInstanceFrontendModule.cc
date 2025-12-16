@@ -157,7 +157,7 @@ FrontendModule::SpinReturn RGBDInstanceFrontendModule::nominalSpin(
 
   {
     // this will mark some points as invalid if they are out of depth range
-    utils::TimingStatsCollector update_depths_timer("depth_updater");
+    utils::ChronoTimingStats update_depths_timer("depth_updater");
     frame->updateDepths();
   }
 
@@ -262,7 +262,7 @@ FrontendModule::SpinReturn RGBDInstanceFrontendModule::nominalSpin(
 
   if (FLAGS_set_dense_labelled_cloud) {
     VLOG(30) << "Setting dense labelled cloud";
-    utils::TimingStatsCollector labelled_clout_timer(
+    utils::ChronoTimingStats labelled_clout_timer(
         "frontend.dense_labelled_cloud");
     const cv::Mat& board_detection_mask = tracker_->getBoarderDetectionMask();
     PointCloudLabelRGB::Ptr dense_labelled_cloud =
@@ -287,7 +287,7 @@ FrontendModule::SpinReturn RGBDInstanceFrontendModule::nominalSpin(
 bool RGBDInstanceFrontendModule::solveCameraMotion(
     Frame::Ptr frame_k, const Frame::Ptr& frame_k_1,
     std::optional<gtsam::Rot3> R_curr_ref) {
-  utils::TimingStatsCollector timer("frontend.solve_camera_motion");
+  utils::ChronoTimingStats timer("frontend.solve_camera_motion");
   Pose3SolverResult result;
 
   const auto& frontend_params = getFrontendParams();
@@ -373,8 +373,7 @@ bool RGBDInstanceFrontendModule::solveCameraMotion(
 
     if (frontend_params.refine_camera_pose_with_joint_of) {
       VLOG(10) << "Refining camera pose with joint of";
-      utils::TimingStatsCollector timer(
-          "frontend.solve_camera_motion.of_refine");
+      utils::ChronoTimingStats timer("frontend.solve_camera_motion.of_refine");
       OpticalFlowAndPoseOptimizer flow_optimizer(
           frontend_params.object_motion_solver_params.joint_of_params);
 
