@@ -44,23 +44,49 @@ PipelineBase::ReturnCode PipelineModule<INPUT, OUTPUT>::spinOnce() {
     return ReturnCode::IS_SHUTDOWN;
   }
 
-  ReturnCode return_code;
-  utils::TimingStatsCollector timing_stats(module_name_);
+  // log get_input, process and get_output packet timing explicitly if VLOG >=
+  // 10
+  static constexpr int intermediate_timing_glog_verbosity = 5;
+  auto getInputPacketWrapped = [&]() -> InputConstSharedPtr {
+    // LOG(INFO) << "construct_intermediate_timers_as_stopped " <<
+    // construct_intermediate_timers_as_stopped;
+    utils::ChronoTimingStats timing(module_name_ + ".get_input",
+                                    intermediate_timing_glog_verbosity);
+    InputConstSharedPtr input = nullptr;
+    is_thread_working_ = false;
+    input = getInputPacket();
+    is_thread_working_ = true;
+    return input;
+  };
 
-  InputConstSharedPtr input = nullptr;
-  is_thread_working_ = false;
-  input = getInputPacket();
-  is_thread_working_ = true;
+  auto processWrapped = [&](InputConstSharedPtr input) -> OutputConstSharedPtr {
+    utils::ChronoTimingStats timing(module_name_ + ".process",
+                                    intermediate_timing_glog_verbosity);
+    OutputConstSharedPtr output = nullptr;
+    output = process(input);
+    return output;
+  };
+
+  auto pushOutputPacketWrapped = [&](OutputConstSharedPtr output) -> bool {
+    // Received a valid output, send to output queue
+    utils::ChronoTimingStats timing(module_name_ + ".push_output",
+                                    intermediate_timing_glog_verbosity);
+    const bool push_packet_result = pushOutputPacket(output);
+    return push_packet_result;
+  };
+
+  ReturnCode return_code;
+  utils::ChronoTimingStats timing_stats(module_name_);
+
+  InputConstSharedPtr input = getInputPacketWrapped();
 
   if (input) {
     // Transfer the ownership of input to the actual pipeline module.
     // From this point on, you cannot use input, since process owns it.
-    OutputConstSharedPtr output = nullptr;
-    output = process(input);
+    OutputConstSharedPtr output = processWrapped(input);
 
     if (output) {
-      // Received a valid output, send to output queue
-      if (!pushOutputPacket(output)) {
+      if (!pushOutputPacketWrapped(output)) {
         LOG_EVERY_N(WARNING, 100)
             << "Module: " << module_name_ << " - Output push failed.";
         is_thread_working_ = false;

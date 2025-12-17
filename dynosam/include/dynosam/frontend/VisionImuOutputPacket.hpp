@@ -39,6 +39,9 @@
 #include "dynosam_common/Types.hpp"
 #include "dynosam_cv/Camera.hpp"
 
+// only for HybridObjectMotionSRIF
+#include "dynosam/frontend/vision/MotionSolver.hpp"
+
 namespace dyno {
 
 /**
@@ -96,6 +99,11 @@ class VisionImuPacket {
   ImuFrontend::PimPtr pim() const;
   Camera::ConstPtr camera() const;
   PointCloudLabelRGB::Ptr denseLabelledCloud() const;
+  bool isCameraKeyFrame() const;
+  bool isObjectKeyFrame(ObjectId object_id) const;
+
+  // static or dynamic!!
+  bool isKeyFrame() const;
 
   const CameraTracks& cameraTracks() const;
   const gtsam::Pose3& cameraPose() const;

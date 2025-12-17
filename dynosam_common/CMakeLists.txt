@@ -13,9 +13,29 @@ set(CMAKE_CXX_STANDARD 17)
 # Must be set **before** find_package(PCL)
 list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_SOURCE_DIR}/cmake)
 
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    # Determine the processor part of the triplet
+    if(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
+        set(ARCH_TRIPLET "x86_64-linux-gnu")
+    elseif(CMAKE_SYSTEM_PROCESSOR STREQUAL "aarch64")
+        set(ARCH_TRIPLET "aarch64-linux-gnu")
+    # Add more architectures (e.g., armv7, ppc64) as needed
+    else()
+        # Fallback or error if architecture is not explicitly handled
+        set(ARCH_TRIPLET "")
+        message(WARNING "Unknown processor architecture: ${CMAKE_SYSTEM_PROCESSOR}")
+    endif()
 
+    if(ARCH_TRIPLET)
+        set(ARCHITECTURE_INCLUDE_PATH "/usr/include/${ARCH_TRIPLET}")
+        message("Architecture-specific include path: ${ARCHITECTURE_INCLUDE_PATH}")
+    endif()
+endif()
 
+# on some systems it seems that openmpi install path is wrong (or the find_package macro is wrong...)
 set(WITH_MPI OFF CACHE BOOL "Disable MPI in PCL")
+# set(MPI_INCLUDE_PATH /usr/include/x86_64-linux-gnu/openmpi/)
+set(MPI_INCLUDE_PATH ${ARCHITECTURE_INCLUDE_PATH}/openmpi/)
 
 find_package(ament_cmake REQUIRED)
 find_package(ament_index_cpp REQUIRED)

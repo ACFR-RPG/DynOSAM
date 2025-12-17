@@ -52,6 +52,11 @@ DEFINE_bool(use_dynamic_track, true,
 DEFINE_bool(log_projected_masks, false,
             "If true, projected masks will be saved at every frame");
 
+DEFINE_bool(set_dense_labelled_cloud, false,
+            "If true, the dense labelled point cloud will be set");
+
+DEFINE_bool(use_object_motion_filtering, false, "For testing!");
+
 namespace dyno {
 
 RGBDInstanceFrontendModule::RGBDInstanceFrontendModule(
@@ -71,16 +76,21 @@ RGBDInstanceFrontendModule::RGBDInstanceFrontendModule(
     logger_ = std::make_unique<RGBDFrontendLogger>();
   }
 
-  ObjectMotionSovlerF2F::Params object_motion_solver_params =
-      getFrontendParams().object_motion_solver_params;
-  // add ground truth hook
-  object_motion_solver_params.ground_truth_packets_request = [&]() {
-    return this->shared_module_info.getGroundTruthPackets();
-  };
-  object_motion_solver_params.refine_motion_with_3d = false;
-
-  object_motion_solver_ = std::make_unique<ObjectMotionSovlerF2F>(
-      object_motion_solver_params, camera->getParams());
+  if (FLAGS_use_object_motion_filtering) {
+    ObjectMotionSolverFilter::Params filter_params;
+    object_motion_solver_ = std::make_shared<ObjectMotionSolverFilter>(
+        filter_params, camera->getParams());
+  } else {
+    ObjectMotionSovlerF2F::Params object_motion_solver_params =
+        getFrontendParams().object_motion_solver_params;
+    // add ground truth hook
+    object_motion_solver_params.ground_truth_packets_request = [&]() {
+      return this->shared_module_info.getGroundTruthPackets();
+    };
+    object_motion_solver_params.refine_motion_with_3d = false;
+    object_motion_solver_ = std::make_shared<ObjectMotionSovlerF2F>(
+        object_motion_solver_params, camera->getParams());
+  }
 }
 
 RGBDInstanceFrontendModule::~RGBDInstanceFrontendModule() {
@@ -118,19 +128,22 @@ FrontendModule::SpinReturn RGBDInstanceFrontendModule::nominalSpin(
   const bool has_imu = input->imu_measurements.has_value();
   const bool has_stereo = image_container->hasRightRgb();
 
+  //! Rotation from k-1 to k in k-1
   std::optional<gtsam::Rot3> R_curr_ref;
   ImuFrontend::PimPtr pim;
   if (has_imu) {
     pim = imu_frontend_.preintegrateImuMeasurements(
         input->imu_measurements.value());
 
-    nav_state_ =
-        pim->predict(previous_nav_state_, gtsam::imuBias::ConstantBias{});
+    nav_state_curr_ =
+        pim->predict(nav_state_prev_, gtsam::imuBias::ConstantBias{});
+    // nav_state_curr_ =
+    //     pim->predict(nav_state_last_kf_, gtsam::imuBias::ConstantBias{});
+    last_imu_k_ = input->getFrameId();
 
-    last_imu_nav_state_update_ = input->getFrameId();
-
+    // relative rotation
     R_curr_ref =
-        previous_nav_state_.attitude().inverse() * nav_state_.attitude();
+        nav_state_prev_.attitude().inverse() * nav_state_curr_.attitude();
   }
 
   Frame::Ptr frame = tracker_->track(input->getFrameId(), input->getTimestamp(),
@@ -139,11 +152,12 @@ FrontendModule::SpinReturn RGBDInstanceFrontendModule::nominalSpin(
   Frame::Ptr previous_frame = tracker_->getPreviousFrame();
   CHECK(previous_frame);
 
-  VLOG(1) << to_string(tracker_->getTrackerInfo());
+  // const FeatureTrackerInfo& tracker_info = tracker_->getTrackerInfo();
+  // VLOG(1) << to_string(tracker_info);
 
   {
     // this will mark some points as invalid if they are out of depth range
-    utils::TimingStatsCollector update_depths_timer("depth_updater");
+    utils::ChronoTimingStats update_depths_timer("depth_updater");
     frame->updateDepths();
   }
 
@@ -157,10 +171,6 @@ FrontendModule::SpinReturn RGBDInstanceFrontendModule::nominalSpin(
   if (has_stereo) {
     const cv::Mat& left_rgb = image_container->rgb();
     const cv::Mat& right_rgb = image_container->rightRgb();
-
-    auto usable_iterator = frame->static_features_.beginUsable();
-    LOG(INFO) << "Counted intliers "
-              << std::distance(usable_iterator.begin(), usable_iterator.end());
 
     FeaturePtrs stereo_features_1;
     stereo_result =
@@ -188,7 +198,7 @@ FrontendModule::SpinReturn RGBDInstanceFrontendModule::nominalSpin(
 
   // VERY important calculation
   const gtsam::Pose3 T_k_1_k =
-      previous_nav_state_.pose().inverse() * frame->T_world_camera_;
+      nav_state_prev_.pose().inverse() * frame->T_world_camera_;
   vo_velocity_ = T_k_1_k;
 
   // we currently use the frame pose as the nav state - this value can come from
@@ -196,22 +206,22 @@ FrontendModule::SpinReturn RGBDInstanceFrontendModule::nominalSpin(
   // solveCameraMotion this is only relevant since we dont solve incremental so
   // the backend is not immediately updating the frontend at which point we can
   // just use the best estimate in the case of the VO, the nav_state velocity
+  const gtsam::NavState best_nav_state(frame->T_world_camera_,
+                                       nav_state_curr_.velocity());
   // will be wrong (currently!!)
-  previous_nav_state_ =
-      gtsam::NavState(frame->T_world_camera_, nav_state_.velocity());
-  // previous_nav_state_ = nav_state_;
+  nav_state_prev_ = best_nav_state;
 
-  if (R_curr_ref) {
-    imu_frontend_.resetIntegration();
-  }
-
-  // if (FLAGS_use_dynamic_track) {
-  //   utils::TimingStatsCollector track_dynamic_timer("tracking_dynamic");
-  //   vision_tools::trackDynamic(getFrontendParams(), *previous_frame, frame);
+  // if (R_curr_ref) {
+  //   imu_frontend_.resetIntegration();
   // }
 
   const auto [object_motions, object_poses] =
       object_motion_solver_->solve(frame, previous_frame);
+
+  const FeatureTrackerInfo& tracker_info = *frame->getTrackingInfo();
+  const FeatureTrackerInfo& tracker_info_prev =
+      *previous_frame->getTrackingInfo();
+  VLOG(1) << to_string(tracker_info);
 
   VisionImuPacket::Ptr vision_imu_packet = std::make_shared<VisionImuPacket>();
   vision_imu_packet->frameId(frame->getFrameId());
@@ -221,16 +231,20 @@ FrontendModule::SpinReturn RGBDInstanceFrontendModule::nominalSpin(
   fillOutputPacketWithTracks(vision_imu_packet, *frame, T_k_1_k, object_motions,
                              object_poses);
 
+  if (R_curr_ref) {
+    imu_frontend_.resetIntegration();
+  }
+
   DebugImagery debug_imagery;
   debug_imagery.tracking_image =
       createTrackingImage(frame, previous_frame, object_poses);
   const ImageContainer& processed_image_container = frame->image_container_;
   debug_imagery.rgb_viz =
       ImageType::RGBMono::toRGB(processed_image_container.rgb());
-  debug_imagery.flow_viz =
-      ImageType::OpticalFlow::toRGB(processed_image_container.opticalFlow());
-  debug_imagery.mask_viz = ImageType::MotionMask::toRGB(
-      processed_image_container.objectMotionMask());
+  // debug_imagery.flow_viz =
+  //     ImageType::OpticalFlow::toRGB(processed_image_container.opticalFlow());
+  // debug_imagery.mask_viz = ImageType::MotionMask::toRGB(
+  //     processed_image_container.objectMotionMask());
   debug_imagery.depth_viz =
       ImageType::Depth::toRGB(processed_image_container.depth());
 
@@ -238,20 +252,23 @@ FrontendModule::SpinReturn RGBDInstanceFrontendModule::nominalSpin(
     display_queue_->push(
         ImageToDisplay("Tracks", debug_imagery.tracking_image));
 
-    // cv::Mat stereo_matches;
-    // if(tracker_->drawStereoMatches(stereo_matches, *frame)){
-    //   display_queue_->push(
-    //     ImageToDisplay("Stereo Matches", stereo_matches));
-    // }
+    cv::Mat stereo_matches;
+    if (tracker_->drawStereoMatches(stereo_matches, *frame)) {
+      display_queue_->push(ImageToDisplay("Stereo Matches", stereo_matches));
+    }
   }
 
   vision_imu_packet->debugImagery(debug_imagery);
 
-  // // const cv::Mat& board_detection_mask =
-  // tracker_->getBoarderDetectionMask(); PointCloudLabelRGB::Ptr
-  // dense_labelled_cloud =
-  //     frame->projectToDenseCloud(&board_detection_mask);
-  PointCloudLabelRGB::Ptr dense_labelled_cloud = nullptr;
+  if (FLAGS_set_dense_labelled_cloud) {
+    VLOG(30) << "Setting dense labelled cloud";
+    utils::ChronoTimingStats labelled_clout_timer(
+        "frontend.dense_labelled_cloud");
+    const cv::Mat& board_detection_mask = tracker_->getBoarderDetectionMask();
+    PointCloudLabelRGB::Ptr dense_labelled_cloud =
+        frame->projectToDenseCloud(&board_detection_mask);
+    vision_imu_packet->denseLabelledCloud(dense_labelled_cloud);
+  }
 
   // if (FLAGS_save_frontend_json)
   //   output_packet_record_.insert({output->getFrameId(), output});
@@ -270,7 +287,7 @@ FrontendModule::SpinReturn RGBDInstanceFrontendModule::nominalSpin(
 bool RGBDInstanceFrontendModule::solveCameraMotion(
     Frame::Ptr frame_k, const Frame::Ptr& frame_k_1,
     std::optional<gtsam::Rot3> R_curr_ref) {
-  utils::TimingStatsCollector timer("frontend.solve_camera_motion");
+  utils::ChronoTimingStats timer("frontend.solve_camera_motion");
   Pose3SolverResult result;
 
   const auto& frontend_params = getFrontendParams();
@@ -314,16 +331,16 @@ bool RGBDInstanceFrontendModule::solveCameraMotion(
     // way of checking that we HAVE an imu). If we do we can use the nav state
     // directly to update the current pose as the nav state is the forward
     // prediction from the IMU
-    if (last_imu_nav_state_update_ == frame_k->getFrameId()) {
-      frame_k->T_world_camera_ = nav_state_.pose();
+    if (last_imu_k_ == frame_k->getFrameId()) {
+      frame_k->T_world_camera_ = nav_state_curr_.pose();
       ss << "Nav state was previous updated with IMU. Using predicted pose to "
             "set camera transform; k"
          << frame_k->getFrameId();
     } else {
       // no IMU for forward prediction, use constant velocity model to propogate
-      // pose expect previous_nav_state_ to always be updated with the best
+      // pose expect nav_state_prev_ to always be updated with the best
       // pose!
-      frame_k->T_world_camera_ = previous_nav_state_.pose() * vo_velocity_;
+      frame_k->T_world_camera_ = nav_state_prev_.pose() * vo_velocity_;
       ss << "Nav state has no information from imu. Using constant velocity "
             "model to propofate pose; k"
          << frame_k->getFrameId();
@@ -356,8 +373,7 @@ bool RGBDInstanceFrontendModule::solveCameraMotion(
 
     if (frontend_params.refine_camera_pose_with_joint_of) {
       VLOG(10) << "Refining camera pose with joint of";
-      utils::TimingStatsCollector timer(
-          "frontend.solve_camera_motion.of_refine");
+      utils::ChronoTimingStats timer("frontend.solve_camera_motion.of_refine");
       OpticalFlowAndPoseOptimizer flow_optimizer(
           frontend_params.object_motion_solver_params.joint_of_params);
 

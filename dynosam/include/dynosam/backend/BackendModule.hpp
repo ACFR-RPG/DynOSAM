@@ -63,6 +63,9 @@ struct BackendModuleTraits {
   using MapType = Map<MeasurementType>;
 };
 
+using FrontendUpdateInterface =
+    std::function<void(const FrameId, const Timestamp)>;
+
 /**
  * @brief Base class to actually do processing. Data passed to this module from
  * the frontend
@@ -83,6 +86,19 @@ class BackendModule
   const BackendParams& getParams() const { return base_params_; }
   const NoiseModels& getNoiseModels() const { return noise_models_; }
   const BackendSpinState& getSpinState() const { return spin_state_; }
+
+  /**
+   * @brief Get the accessor the the underlying formulation, allowing the
+   * optimised values to be directly accessed
+   *
+   * @return Accessor::Ptr
+   */
+  virtual Accessor::Ptr getAccessor() = 0;
+
+  void registerFrontendUpdateInterface(const FrontendUpdateInterface& cb) {
+    CHECK(cb);
+    frontend_update_callback_ = cb;
+  }
 
  protected:
   // called in ModuleBase immediately before the spin function is called
@@ -105,6 +121,7 @@ class BackendModule
       spin_state_;  //! Spin state of the backend. Updated in the backend module
                     //! base via InputCallback (see BackendModule constructor).
   NoiseModels noise_models_;
+  FrontendUpdateInterface frontend_update_callback_;
 
  private:
 };

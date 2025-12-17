@@ -16,6 +16,8 @@ struct YoloConfig {
   //! IoU threshold for NMS
   float nms_threshold = 0.4;
 
+  bool assume_static_input_dimensions = true;
+
   //! Class labels to include when tracking - all other classes will be excluded
   //! If empty, all classes will be considered
   std::vector<std::string> included_classes = {
@@ -39,6 +41,7 @@ class YoloV8ModelInfo {
   struct Constants {
     constexpr static int BoxOffset = 0;
     constexpr static int ClassConfOffset = 4;
+    constexpr static int NumMasks = 32;
 
     static int MaskCoeffOffset(int num_classes) {
       return num_classes + ClassConfOffset;
@@ -68,6 +71,8 @@ class YoloV8ModelInfo {
 };
 
 std::ostream& operator<<(std::ostream& out, const YoloV8ModelInfo& info);
+
+static constexpr int MaxDetections = 8400;
 
 /**
  * @brief TensorRT accelerated inference for object detection using YOLOv8.
@@ -102,6 +107,12 @@ class YoloV8ObjectDetector : public ObjectDetectionEngine, public TRTEngine {
   DeviceMemory<float> input_device_ptr_;
   DeviceMemory<float> output0_device_ptr_;
   DeviceMemory<float> output1_device_ptr_;
+
+  HostMemory<float> preprocessed_host_ptr_;
+  // HostMemory<float> output1_host_data_;
+  // // TODO: free!? Make a HostMemory
+  // float* output0_data_ = nullptr;
+  // float* output1_data_ = nullptr;
 };
 
 }  // namespace dyno

@@ -97,7 +97,7 @@ struct IncrementalTester : public RegularBackendTester {
           auto isam = data->isam2;
           gtsam::ISAM2Result result;
           {
-            dyno::utils::TimingStatsCollector timer(
+            dyno::utils::ChronoTimingStats timer(
                 "isam2_oc_test_update." + formulation->getFullyQualifiedName());
             result = isam->update(new_factors, new_values);
           }

@@ -1,22 +1,24 @@
 #!/usr/bin/env bash
 
-CONTAINER_NAME=dyno_sam
-CONTAINER_IMAGE_NAME=acfr_rpg/dyno_sam_cuda
+CONTAINER_IMAGE_NAME=$1
+CONTAINER_NAME=$2
 
-### EDIT THIS TO WHEREVER YOU'RE STORING YOU DATA ###
-# folder should exist before you mount it
-LOCAL_DATA_FOLDER=/media/jmor6670/T7/datasets
-LOCAL_RESULTS_FOLDER=~/results/
-LOCAL_DYNO_SAM_FOLDER=~/Code/src/DynOSAM/
-LOCAL_THIRD_PARTY_DYNO_SAM_FOLDER=~/Code/src/third_party_dynosam/
+LOCAL_DATA_FOLDER=$3
+LOCAL_RESULTS_FOLDER=$4
+LOCAL_DYNO_SAM_FOLDER=$5
+LOCAL_THIRD_PARTY_DYNO_SAM_FOLDER=$6
+
+echo "Creating dynosam container ($CONTAINER_NAME) from image: $CONTAINER_IMAGE_NAME"
+echo "Local data folder: $LOCAL_DATA_FOLDER"
+echo "Local results folder: $LOCAL_RESULTS_FOLDER"
+echo "Local DynoSAM folder: $LOCAL_DYNO_SAM_FOLDER"
+echo "Local third party dynosam folder: $LOCAL_THIRD_PARTY_DYNO_SAM_FOLDER"
 
 
 CONTAINER_DATA_FOLDER=/root/data
 CONTAINER_RESULTS_FOLDER=/root/results
 CONTAINER_WORKSPACE_FOLDER=/home/user/dev_ws/src/core/
 CONTAINER_WORKSPACE_FOLDER_THIRD_PARTY=/home/user/dev_ws/src/third_parties/
-
-
 
 
 USE_NVIDIA=false
@@ -78,11 +80,34 @@ if "$USE_NVIDIA"; then
     else
         TERMINAL_FLAGS='-t'
     fi
+
+    echo "$@"
     # Create the container based on the launchfile it's launching (if any)
     # removes '.launch' from the last argument
     echo "Container name will be: $CONTAINER_NAME"
     # docker run $DOCKER_NVIDIA_SO_VOLUMES \
-     docker run \
+    #  docker run \
+    #     --privileged \
+    #     --gpus all \
+    #     -i -d \
+    #     --volume $XSOCK:$XSOCK:rw \
+    #     -v $LOCAL_DATA_FOLDER:$CONTAINER_DATA_FOLDER \
+    #     -v $LOCAL_RESULTS_FOLDER:$CONTAINER_RESULTS_FOLDER \
+    #     -v $LOCAL_DYNO_SAM_FOLDER:$CONTAINER_WORKSPACE_FOLDER \
+    #     -v $LOCAL_THIRD_PARTY_DYNO_SAM_FOLDER:$CONTAINER_WORKSPACE_FOLDER_THIRD_PARTY \
+    #     -v /var/run/docker.sock:/var/run/docker.sock \
+    #     --env DISPLAY=$DISPLAY \
+    #     --env XAUTHORITY=$XAUTH \
+    #     --env QT_X11_NO_MITSHM=0 \
+    #     --env QT_X11_NO_XRENDER=0 \
+    #     --volume $XAUTH:$XAUTH:rw \
+    #     --net host \
+    #     --pid host \
+    #     --ipc host \
+    #     -it \
+    #     --name=$CONTAINER_NAME \
+    #     $CONTAINER_IMAGE_NAME "$@"
+    docker run \
         --privileged \
         --gpus all \
         -i -d \
@@ -102,7 +127,8 @@ if "$USE_NVIDIA"; then
         --ipc host \
         -it \
         --name=$CONTAINER_NAME \
-        $CONTAINER_IMAGE_NAME "$@"
+        $CONTAINER_IMAGE_NAME
 fi
 
+# FOR NOW?
 xhost +local:`docker inspect --format='{{ .Config.Hostname }}' $CONTAINER_NAME`

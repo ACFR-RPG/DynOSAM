@@ -37,6 +37,32 @@
 
 namespace dyno {
 
+// TODO: eventually this should be the same as from the object-track module!
+// right now detected by frontend
+enum class ObjectTrackingStatus { New = 0, Tracked = 1, ReTracked = 2 };
+
+// kind of repeatition of TrackingStatus (which is not really used anywhere!!!)
+enum class ObjectFeatureTrackingStatus {
+  Valid = 0,
+  //! New features were detected not that the object itself is retracked
+  Resampled = 1
+  // TODO: maybe too few etc
+};
+
+// should probably go in SingleDetecionResult!
+struct ObjectStatus {
+  ObjectTrackingStatus tracking_status;
+  ObjectFeatureTrackingStatus feature_status;
+};
+
+class ObjectStatusMap : public gtsam::FastMap<ObjectId, ObjectStatus> {
+ public:
+  using Base = gtsam::FastMap<ObjectId, ObjectStatus>;
+  using Base::Base;
+
+  ObjectIds getResampledObjects() const;
+};
+
 /**
  * @brief The result of an object detection from a detection network
  *
@@ -66,7 +92,7 @@ struct SingleDetectionResult : public ObjectDetection {
     // This is implicitly checks that object_id is not -1 (ie not set)
     // AND is a valiid object label (i.e. is non-zero which is the background
     // label)
-    return object_id > background_label || well_tracked;
+    return (object_id > background_label) && well_tracked;
   }
 };
 

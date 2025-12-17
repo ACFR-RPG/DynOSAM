@@ -140,8 +140,10 @@ ParallelHybridBackendModule::ParallelHybridBackendModule(
   FormulationParams formulation_params(base_params_);
   formulation_params.updater_suffix = "static";
 
-  static_formulation_ = std::make_shared<HybridFormulation>(
+  static_formulation_ = std::make_shared<HybridFormulationV1>(
       formulation_params, RGBDMap::create(), noise_models_, sensors, hooks);
+
+  combined_accessor_ = std::make_shared<ParallelHybridAccessor>(this);
 }
 
 ParallelHybridBackendModule::~ParallelHybridBackendModule() {
@@ -168,7 +170,7 @@ ParallelHybridBackendModule::objectEstimators() const {
   return sam_estimators_;
 }
 
-HybridFormulation::Ptr ParallelHybridBackendModule::staticEstimator() const {
+HybridFormulationV1::Ptr ParallelHybridBackendModule::staticEstimator() const {
   return static_formulation_;
 }
 
@@ -176,6 +178,8 @@ ParallelHybridBackendModule::SpinReturn
 ParallelHybridBackendModule::boostrapSpinImpl(VisionImuPacket::ConstPtr input) {
   const FrameId frame_k = input->frameId();
   const Timestamp timestamp = input->timestamp();
+
+  updateTrackletMapping(input);
   // TODO: sovle smoother
   //  non-sequentially?
   Pose3Measurement optimized_camera_pose =
@@ -207,6 +211,8 @@ ParallelHybridBackendModule::SpinReturn
 ParallelHybridBackendModule::nominalSpinImpl(VisionImuPacket::ConstPtr input) {
   const FrameId frame_k = input->frameId();
   const Timestamp timestamp = input->timestamp();
+
+  updateTrackletMapping(input);
 
   const ObjectIds tracked_objects = input->getObjectIds();
   const bool has_objects = tracked_objects.size() > 0u;
@@ -330,11 +336,16 @@ ParallelHybridBackendModule::getActiveOptimisation() const {
   return {theta, graph};
 }
 
+Accessor::Ptr ParallelHybridBackendModule::getAccessor() {
+  return combined_accessor_;
+};
+
 Pose3Measurement ParallelHybridBackendModule::bootstrapUpdateStaticEstimator(
     VisionImuPacket::ConstPtr input) {
-  utils::TimingStatsCollector timer("parallel_object_sam.static_estimator");
+  utils::ChronoTimingStats timer("parallel_object_sam.static_estimator");
 
   const FrameId frame_k = input->frameId();
+  const Timestamp timestamp_k = input->timestamp();
   auto map = static_formulation_->map();
 
   const auto& X_k_initial = input->cameraPose();
@@ -352,16 +363,16 @@ Pose3Measurement ParallelHybridBackendModule::bootstrapUpdateStaticEstimator(
   if (input->pim()) {
     LOG(INFO) << "Initialising backend with IMU states!";
     nav_state = this->addInitialVisualInertialState(
-        frame_k, static_formulation_.get(), new_values, new_factors,
-        static_formulation_->noiseModels(),
+        frame_k, timestamp_k, static_formulation_.get(), new_values,
+        new_factors, static_formulation_->noiseModels(),
         gtsam::NavState(X_k_initial, gtsam::Vector3(0, 0, 0)),
         gtsam::imuBias::ConstantBias{});
 
   } else {
     LOG(INFO) << "Initialising backend with VO only states!";
     nav_state = this->addInitialVisualState(
-        frame_k, static_formulation_.get(), new_values, new_factors,
-        static_formulation_->noiseModels(), X_k_initial);
+        frame_k, timestamp_k, static_formulation_.get(), new_values,
+        new_factors, static_formulation_->noiseModels(), X_k_initial);
   }
 
   // marginalise all values
@@ -373,7 +384,7 @@ Pose3Measurement ParallelHybridBackendModule::bootstrapUpdateStaticEstimator(
   }
 
   {
-    utils::TimingStatsCollector timer(
+    utils::ChronoTimingStats timer(
         "parallel_object_sam.static_estimator.update");
     static_estimator_.update(new_factors, new_values, timestamps);
   }
@@ -391,9 +402,11 @@ Pose3Measurement ParallelHybridBackendModule::bootstrapUpdateStaticEstimator(
 
 Pose3Measurement ParallelHybridBackendModule::nominalUpdateStaticEstimator(
     VisionImuPacket::ConstPtr input, bool should_calculate_covariance) {
-  utils::TimingStatsCollector timer("parallel_object_sam.static_estimator");
+  utils::ChronoTimingStats timer("parallel_object_sam.static_estimator");
 
   const FrameId frame_k = input->frameId();
+  const Timestamp timestamp_k = input->timestamp();
+
   auto map = static_formulation_->map();
   map->updateObservations(input->staticMeasurements());
 
@@ -401,7 +414,7 @@ Pose3Measurement ParallelHybridBackendModule::nominalUpdateStaticEstimator(
   gtsam::NonlinearFactorGraph new_factors;
 
   const gtsam::NavState predicted_nav_state = this->addVisualInertialStates(
-      frame_k, static_formulation_.get(), new_values, new_factors,
+      frame_k, timestamp_k, static_formulation_.get(), new_values, new_factors,
       noise_models_, input->relativeCameraTransform(), input->pim());
   // we dont have an uncertainty from the frontend
   map->updateSensorPoseMeasurement(
@@ -452,8 +465,8 @@ Pose3Measurement ParallelHybridBackendModule::nominalUpdateStaticEstimator(
   gtsam::Values optimised_values = static_estimator_.calculateEstimate();
   static_formulation_->updateTheta(optimised_values);
 
-  const gtsam::NavState& updated_nav_state =
-      updateNavStateFromFormulation(frame_k, static_formulation_.get());
+  const gtsam::NavState& updated_nav_state = updateNavStateFromFormulation(
+      frame_k, timestamp_k, static_formulation_.get());
 
   auto accessor = static_formulation_->accessorFromTheta();
   StateQuery<gtsam::Pose3> X_w_k_opt_query = accessor->getSensorPose(frame_k);
@@ -466,7 +479,7 @@ Pose3Measurement ParallelHybridBackendModule::nominalUpdateStaticEstimator(
   if (should_calculate_covariance) {
     if (FLAGS_use_marginal_covariance) {
       gtsam::Matrix66 X_w_k_cov;
-      utils::TimingStatsCollector timer(
+      utils::ChronoTimingStats timer(
           "parallel_object_sam.camera_pose_cov_calc");
       gtsam::Marginals marginals(static_estimator_.getFactors(),
                                  optimised_values,
@@ -529,7 +542,7 @@ ParallelObjectISAM::Ptr ParallelHybridBackendModule::getEstimator(
 
 void ParallelHybridBackendModule::parallelObjectSolve(
     VisionImuPacket::ConstPtr input, const Pose3Measurement& X_W_k) {
-  utils::TimingStatsCollector timer("parallel_object_sam.dynamic_estimator");
+  utils::ChronoTimingStats timer("parallel_object_sam.dynamic_estimator");
   const auto frame_id = input->frameId();
   const auto& object_tracks = input->objectTracks();
   tbb::parallel_for_each(
@@ -732,6 +745,287 @@ void ParallelHybridBackendModule::logGraphs() {
                                 std::to_string(frame_id_k) + "_static.dot"),
         dyno::DynosamKeyFormatter);
   }
+}
+
+void ParallelHybridBackendModule::updateTrackletMapping(
+    const VisionImuPacket::ConstPtr input) {
+  for (const auto& static_track : input->staticMeasurements()) {
+    const TrackletId tracklet_id = static_track.trackletId();
+    const ObjectId object_id = static_track.trackletId();
+
+    tracklet_id_to_object_.insert2(tracklet_id, object_id);
+  }
+
+  for (const auto& dynamic_track : input->objectMeasurements()) {
+    const TrackletId tracklet_id = dynamic_track.trackletId();
+    const ObjectId object_id = dynamic_track.trackletId();
+
+    tracklet_id_to_object_.insert2(tracklet_id, object_id);
+  }
+}
+
+ParallelHybridAccessor::ParallelHybridAccessor(
+    ParallelHybridBackendModule* parallel_hybrid_module)
+    : parallel_hybrid_module_(CHECK_NOTNULL(parallel_hybrid_module)) {
+  auto static_formulation = parallel_hybrid_module_->staticEstimator();
+  static_accessor_ = static_formulation->derivedAccessor<HybridAccessor>();
+  CHECK_NOTNULL(static_accessor_);
+}
+
+StateQuery<gtsam::Pose3> ParallelHybridAccessor::getSensorPose(
+    FrameId frame_id) const {
+  return static_accessor_->getSensorPose(frame_id);
+}
+
+StateQuery<gtsam::Pose3> ParallelHybridAccessor::getObjectMotion(
+    FrameId frame_id, ObjectId object_id) const {
+  return withOr(
+      object_id,
+      [frame_id, object_id](ParallelObjectISAM::Ptr estimator) {
+        return estimator->accessor()->getObjectMotion(frame_id, object_id);
+      },
+      [frame_id, object_id]() {
+        return StateQuery<gtsam::Pose3>::NotInMap(
+            ObjectMotionSymbol(object_id, frame_id));
+      });
+}
+
+StateQuery<gtsam::Pose3> ParallelHybridAccessor::getObjectPose(
+    FrameId frame_id, ObjectId object_id) const {
+  return withOr(
+      object_id,
+      [frame_id, object_id](ParallelObjectISAM::Ptr estimator) {
+        return estimator->accessor()->getObjectPose(frame_id, object_id);
+      },
+      [frame_id, object_id]() {
+        return StateQuery<gtsam::Pose3>::NotInMap(
+            ObjectPoseSymbol(object_id, frame_id));
+      });
+}
+
+StateQuery<gtsam::Point3> ParallelHybridAccessor::getDynamicLandmark(
+    FrameId frame_id, TrackletId tracklet_id) const {
+  const auto& tracklet_id_to_object =
+      parallel_hybrid_module_->tracklet_id_to_object_;
+  if (tracklet_id_to_object.exists(tracklet_id)) {
+    const ObjectId object_id = tracklet_id_to_object.at(tracklet_id);
+    return withOr(
+        object_id,
+        [frame_id, tracklet_id](ParallelObjectISAM::Ptr estimator) {
+          return estimator->accessor()->getDynamicLandmark(frame_id,
+                                                           tracklet_id);
+        },
+        [tracklet_id]() {
+          return StateQuery<gtsam::Point3>::NotInMap(
+              HybridAccessor::makeDynamicKey(tracklet_id));
+        });
+  } else {
+    return StateQuery<gtsam::Point3>::NotInMap(
+        HybridAccessor::makeDynamicKey(tracklet_id));
+  }
+}
+
+StateQuery<gtsam::Point3> ParallelHybridAccessor::getStaticLandmark(
+    TrackletId tracklet_id) const {
+  return static_accessor_->getStaticLandmark(tracklet_id);
+}
+
+EstimateMap<ObjectId, gtsam::Pose3> ParallelHybridAccessor::getObjectPoses(
+    FrameId frame_id) const {
+  EstimateMap<ObjectId, gtsam::Pose3> all_poses;
+  const auto& object_estimators = parallel_hybrid_module_->sam_estimators_;
+  for (const auto& [object_id, estimator] : object_estimators) {
+    auto poses = estimator->getObjectPoses(frame_id);
+    all_poses.insert(poses.begin(), poses.end());
+  }
+  return all_poses;
+}
+
+MotionEstimateMap ParallelHybridAccessor::getObjectMotions(
+    FrameId frame_id) const {
+  MotionEstimateMap all_motions;
+  const auto& object_estimators = parallel_hybrid_module_->sam_estimators_;
+  for (const auto& [object_id, estimator] : object_estimators) {
+    auto motions = estimator->accessor()->getObjectMotions(frame_id);
+    all_motions.insert(motions.begin(), motions.end());
+  }
+  return all_motions;
+}
+
+ObjectPoseMap ParallelHybridAccessor::getObjectPoses() const {
+  ObjectPoseMap all_poses;
+  const auto& object_estimators = parallel_hybrid_module_->sam_estimators_;
+  for (const auto& [object_id, estimator] : object_estimators) {
+    auto poses = estimator->accessor()->getObjectPoses();
+    all_poses.insert(poses.begin(), poses.end());
+  }
+  return all_poses;
+}
+
+ObjectMotionMap ParallelHybridAccessor::getObjectMotions() const {
+  ObjectMotionMap all_motions;
+  const auto& object_estimators = parallel_hybrid_module_->sam_estimators_;
+  for (const auto& [object_id, estimator] : object_estimators) {
+    auto motions = estimator->accessor()->getObjectMotions();
+    all_motions.insert(motions.begin(), motions.end());
+  }
+  return all_motions;
+}
+
+StatusLandmarkVector ParallelHybridAccessor::getDynamicLandmarkEstimates(
+    FrameId frame_id) const {
+  StatusLandmarkVector all_landmarks;
+  const auto& object_estimators = parallel_hybrid_module_->sam_estimators_;
+  for (const auto& [object_id, estimator] : object_estimators) {
+    auto landmarks = estimator->getDynamicLandmarks(frame_id);
+    all_landmarks.insert(all_landmarks.end(), landmarks.begin(),
+                         landmarks.end());
+  }
+  return all_landmarks;
+}
+
+StatusLandmarkVector ParallelHybridAccessor::getDynamicLandmarkEstimates(
+    FrameId frame_id, ObjectId object_id) const {
+  return withOr(
+      object_id,
+      [frame_id](ParallelObjectISAM::Ptr estimator) {
+        return estimator->getDynamicLandmarks(frame_id);
+      },
+      []() { return StatusLandmarkVector{}; });
+}
+
+StatusLandmarkVector ParallelHybridAccessor::getStaticLandmarkEstimates(
+    FrameId frame_id) const {
+  return static_accessor_->getStaticLandmarkEstimates(frame_id);
+}
+
+StatusLandmarkVector ParallelHybridAccessor::getFullStaticMap() const {
+  return static_accessor_->getFullStaticMap();
+}
+
+StatusLandmarkVector ParallelHybridAccessor::getLocalDynamicLandmarkEstimates(
+    ObjectId object_id) const {
+  return withOr(
+      object_id,
+      [object_id](ParallelObjectISAM::Ptr estimator) {
+        return estimator->accessor()->getLocalDynamicLandmarkEstimates(
+            object_id);
+      },
+      []() { return StatusLandmarkVector{}; });
+}
+
+TrackletIds ParallelHybridAccessor::collectPointsAtKeyFrame(
+    ObjectId object_id, FrameId frame_id, FrameId* keyframe_id) const {
+  return withOr(
+      object_id,
+      [object_id, frame_id, keyframe_id](ParallelObjectISAM::Ptr estimator) {
+        return estimator->accessor()->collectPointsAtKeyFrame(
+            object_id, frame_id, keyframe_id);
+      },
+      []() { return TrackletIds{}; });
+}
+
+bool ParallelHybridAccessor::getObjectKeyFrameHistory(
+    ObjectId object_id, const KeyFrameRanges*& ranges) const {
+  return withOr(
+      object_id,
+      [object_id, &ranges](ParallelObjectISAM::Ptr estimator) {
+        return estimator->accessor()->getObjectKeyFrameHistory(object_id,
+                                                               ranges);
+      },
+      []() { return false; });
+}
+
+bool ParallelHybridAccessor::hasObjectKeyFrame(ObjectId object_id,
+                                               FrameId frame_id) const {
+  return withOr(
+      object_id,
+      [frame_id, object_id](ParallelObjectISAM::Ptr estimator) {
+        return estimator->accessor()->hasObjectKeyFrame(object_id, frame_id);
+      },
+      []() { return false; });
+}
+
+std::pair<FrameId, gtsam::Pose3> ParallelHybridAccessor::getObjectKeyFrame(
+    ObjectId object_id, FrameId frame_id) const {
+  return withOr(
+      object_id,
+      [frame_id, object_id](ParallelObjectISAM::Ptr estimator) {
+        return estimator->accessor()->getObjectKeyFrame(object_id, frame_id);
+      },
+      []() { return std::make_pair(FrameId(1), gtsam::Pose3::Identity()); });
+}
+
+StateQuery<Motion3ReferenceFrame> ParallelHybridAccessor::getEstimatedMotion(
+    ObjectId object_id, FrameId frame_id) const {
+  return withOr(
+      object_id,
+      [frame_id, object_id](ParallelObjectISAM::Ptr estimator) {
+        return estimator->accessor()->getEstimatedMotion(object_id, frame_id);
+      },
+      [object_id, frame_id]() {
+        return StateQuery<Motion3ReferenceFrame>::NotInMap(
+            ObjectMotionSymbol(object_id, frame_id));
+      });
+}
+
+bool ParallelHybridAccessor::hasObjectMotionEstimate(FrameId frame_id,
+                                                     ObjectId object_id,
+                                                     Motion3* motion) const {
+  return withOr(
+      object_id,
+      [frame_id, object_id, motion](ParallelObjectISAM::Ptr estimator) {
+        return estimator->accessor()->hasObjectMotionEstimate(
+            frame_id, object_id, motion);
+      },
+      []() { return false; });
+}
+
+bool ParallelHybridAccessor::hasObjectPoseEstimate(FrameId frame_id,
+                                                   ObjectId object_id,
+                                                   gtsam::Pose3* pose) const {
+  return withOr(
+      object_id,
+      [frame_id, object_id, pose](ParallelObjectISAM::Ptr estimator) {
+        return estimator->accessor()->hasObjectPoseEstimate(frame_id, object_id,
+                                                            pose);
+      },
+      []() { return false; });
+}
+
+gtsam::FastMap<ObjectId, gtsam::Point3>
+ParallelHybridAccessor::computeObjectCentroids(FrameId frame_id) const {
+  gtsam::FastMap<ObjectId, gtsam::Point3> centroids;
+  const auto& object_estimators = parallel_hybrid_module_->sam_estimators_;
+  for (const auto& [object_id, estimator] : object_estimators) {
+    const auto centroid_map =
+        estimator->accessor()->computeObjectCentroids(frame_id);
+    CHECK(centroid_map.size() == 0u || centroid_map.size() == 1u);
+
+    centroids.insert(centroid_map.begin(), centroid_map.end());
+  }
+  return centroids;
+}
+
+boost::optional<const gtsam::Value&> ParallelHybridAccessor::getValueImpl(
+    const gtsam::Key key) const {
+  // NOTE: returns the value with the requested key as soon as it is found,
+  // starting with the static accessor
+  //  does not check that it does not exist in subsequent accessors (it should
+  //  not!!)
+  boost::optional<const gtsam::Value&> value_opt =
+      static_accessor_->getValueImpl(key);
+  if (value_opt) {
+    return value_opt;
+  }
+  const auto& object_estimators = parallel_hybrid_module_->sam_estimators_;
+  for (const auto& [_, estimator] : object_estimators) {
+    value_opt = estimator->accessor()->getValueImpl(key);
+    if (value_opt) {
+      return value_opt;
+    }
+  }
+  return boost::none;
 }
 
 }  // namespace dyno

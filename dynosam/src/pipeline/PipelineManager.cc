@@ -39,6 +39,8 @@
 #include "dynosam_opt/Map.hpp"
 
 DEFINE_bool(use_backend, false, "If any backend should be initalised");
+DEFINE_bool(use_opencv_display, true,
+            "If true, the OpenCVImageDisplayQueue will be processed");
 
 namespace dyno {
 
@@ -205,15 +207,14 @@ bool DynoPipelineManager::spin() {
     };
   }
 
-  utils::TimingStatsCollector timer("pipeline_spin");
+  utils::ChronoTimingStats timer("pipeline_spin");
   return spin_func();
 }
 
 bool DynoPipelineManager::spinViz() {
-  // if()
-  displayer_
-      .process();  // when enabled this gives a segafault when the process ends.
-                   // when commented out the program just waits at thee end
+  if (FLAGS_use_opencv_display) {
+    displayer_.process();
+  }
   return true;
 }
 
@@ -252,6 +253,7 @@ void DynoPipelineManager::loadPipelines(const CameraParams& camera_params,
                                         FrontendDisplay::Ptr frontend_display,
                                         BackendDisplay::Ptr backend_display,
                                         BackendModuleFactory::Ptr factory) {
+  FrontendModule::Ptr frontend = nullptr;
   BackendModule::Ptr backend = nullptr;
   BackendModuleDisplay::Ptr additional_backend_display = nullptr;
   // the registra for the frontend pipeline
@@ -266,7 +268,6 @@ void DynoPipelineManager::loadPipelines(const CameraParams& camera_params,
   switch (params_.frontend_type_) {
     case FrontendType::kRGBD: {
       LOG(INFO) << "Making RGBDInstance frontend";
-      FrontendModule::Ptr frontend = nullptr;
 
       CameraParams mutable_camera_params = camera_params;
       // TODO: make this conversion to RGBD param based
@@ -355,11 +356,12 @@ void DynoPipelineManager::loadPipelines(const CameraParams& camera_params,
         additional_backend_display = backend_wrapper.backend_viz;
         CHECK(backend);
 
-        // if(frontend && backend) {
-        //   backend->registerMapUpdater(std::bind(&FrontendModule::mapUpdate,
-        //   frontend.get(), std::placeholders::_1)); LOG(INFO) << "Bound map
-        //   update between frontend and backend";
-        // }
+        if (frontend && backend) {
+          backend->registerFrontendUpdateInterface(std::bind(
+              &FrontendModule::onBackendUpdateCallback, frontend.get(),
+              std::placeholders::_1, std::placeholders::_2));
+          LOG(INFO) << "Bound update between frontend and backend";
+        }
 
       } else if (use_offline_frontend_) {
         LOG(WARNING)
@@ -387,11 +389,23 @@ void DynoPipelineManager::loadPipelines(const CameraParams& camera_params,
     backend_pipeline_ = std::make_unique<BackendPipeline>(
         "backend-pipeline", &backend_input_queue_, backend);
     backend_pipeline_->parallelRun(parallel_run);
-    // also register connection between front and back
-    frontend_output_registra->registerQueue(&backend_input_queue_);
+    // // also register connection between front and back
+    // frontend_output_registra->registerQueue(&backend_input_queue_);
+    FrontendPipeline::OutputQueue& backend_input_queue = backend_input_queue_;
+    frontend_output_registra->registerCallback(
+        [&backend_input_queue](const auto& frontend_output) -> void {
+          backend_input_queue.push(frontend_output);
+        });
 
     backend_pipeline_->registerOutputQueue(&backend_output_queue_);
 
+    if (frontend) {
+      LOG(INFO) << "Setting frontend accessor";
+      // set frontend accessor
+      frontend->setAccessor(backend->getAccessor());
+    }
+
+    // set backend display (if any!)
     if (additional_backend_display) {
       VLOG(10) << "Connecting BackendModuleDisplay";
       backend_pipeline_->registerOutputCallback(
@@ -408,9 +422,11 @@ void DynoPipelineManager::loadPipelines(const CameraParams& camera_params,
     if (backend && backend_display) {
       backend_viz_pipeline_ = std::make_unique<BackendVizPipeline>(
           "backend-viz-pipeline", &backend_output_queue_, backend_display);
+      backend_viz_pipeline_->parallelRun(parallel_run);
     }
     frontend_viz_pipeline_ = std::make_unique<FrontendVizPipeline>(
         "frontend-viz-pipeline", &frontend_viz_input_queue_, frontend_display);
+    frontend_viz_pipeline_->parallelRun(parallel_run);
   }
 }
 

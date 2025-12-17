@@ -194,7 +194,7 @@ void SparseFeatureDetector::detect(const cv::Mat& image, KeypointsCV& keypoints,
 
   std::vector<cv::KeyPoint> raw_keypoints;
   {
-    utils::TimingStatsCollector timer("feature_detector.detect");
+    utils::ChronoTimingStats timer("feature_detector.detect");
     feature_detector_->detect(processed_image, raw_keypoints, detection_mask);
   }
 
@@ -210,7 +210,7 @@ void SparseFeatureDetector::detect(const cv::Mat& image, KeypointsCV& keypoints,
     Eigen::MatrixXd binning_mask = anms_params.binning_mask;
 
     {
-      utils::TimingStatsCollector timer("feature_detector.anms");
+      utils::ChronoTimingStats timer("feature_detector.anms");
       max_keypoints = non_maximum_supression_->suppressNonMax(
           raw_keypoints, nr_corners_needed, tolerance, processed_image.cols,
           processed_image.rows, anms_params.nr_horizontal_bins,
@@ -226,7 +226,7 @@ void SparseFeatureDetector::detect(const cv::Mat& image, KeypointsCV& keypoints,
 
     const auto& subpixel_corner_refinement_params =
         tracker_params_.subpixel_corner_refinement_params;
-    utils::TimingStatsCollector timer("feature_detector.sub_pix");
+    utils::ChronoTimingStats timer("feature_detector.sub_pix");
     cv::cornerSubPix(processed_image, points,
                      subpixel_corner_refinement_params.window_size,
                      subpixel_corner_refinement_params.zero_zone,

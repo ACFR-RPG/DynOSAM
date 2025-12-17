@@ -553,7 +553,7 @@ class SmartMotionFactor : public gtsam::NonlinearFactor,
                                   const gtsam::Point3& point_l,
                                   GBlocks* Gs = nullptr, FBlocks* Fs = nullptr,
                                   EBlocks* Es = nullptr) const {
-    utils::TimingStatsCollector timer("smf_reprojectionError");
+    utils::ChronoTimingStats timer("smf_reprojectionError");
     CHECK_EQ(motions.size(), poses.size());
     const auto measurements = measured();
     CHECK_EQ(motions.size(), measurements.size());
@@ -678,7 +678,7 @@ class SmartMotionFactor : public gtsam::NonlinearFactor,
   // TriangulationResult
   gtsam::TriangulationResult triangulateLinear(const Motions& motions,
                                                const Poses& poses) const {
-    utils::TimingStatsCollector timer("smf_triangulateLinear");
+    utils::ChronoTimingStats timer("smf_triangulateLinear");
     CHECK_EQ(motions.size(), poses.size());
     CHECK_EQ(motions.size(), measured_.size());
 
@@ -718,7 +718,7 @@ class SmartMotionFactor : public gtsam::NonlinearFactor,
   gtsam::TriangulationResult triangulateNonlinear(
       const Motions& motions, const Poses& poses,
       const gtsam::Point3& m_L) const {
-    utils::TimingStatsCollector timer("smf_triangulateNonlinear");
+    utils::ChronoTimingStats timer("smf_triangulateNonlinear");
     CHECK_EQ(motions.size(), poses.size());
     CHECK_EQ(motions.size(), measured_.size());
 
@@ -819,7 +819,7 @@ class SmartMotionFactor : public gtsam::NonlinearFactor,
   //      const GFBlocks& GFs, const gtsam::Matrix& E,
   //      const Eigen::Matrix<double, N, N>& P, const gtsam::Vector& b) {
 
-  //   utils::TimingStatsCollector timer("smf_SchurComplement");
+  //   utils::ChronoTimingStats timer("smf_SchurComplement");
   //     size_t m = GFs.size();
 
   //   // SymmetricBlockMatrix augmentedHessian(dims, Matrix::Zero(M1, M1));
@@ -917,7 +917,7 @@ class SmartMotionFactor : public gtsam::NonlinearFactor,
   //     const GFBlocks& GFs, const gtsam::Matrix& E,
   //     const Eigen::Matrix<double, N, N>& P, const gtsam::Vector& b) {
 
-  //   utils::TimingStatsCollector timer("smf_SchurComplement");
+  //   utils::ChronoTimingStats timer("smf_SchurComplement");
   //   const size_t m = GFs.size();
   //   const size_t last_block_idx = 2 * m;
 
@@ -1007,7 +1007,7 @@ class SmartMotionFactor : public gtsam::NonlinearFactor,
   static gtsam::SymmetricBlockMatrix SchurComplement(
       const GFBlocks& GFs, const gtsam::Matrix& E,
       const Eigen::Matrix<double, N, N>& P, const gtsam::Vector& b) {
-    utils::TimingStatsCollector timer("smf_SchurComplement");
+    utils::ChronoTimingStats timer("smf_SchurComplement");
     // a single point is observed in m cameras
     size_t m = GFs.size();
     // gtsam::Matrix Et = E.transpose();
@@ -1023,13 +1023,12 @@ class SmartMotionFactor : public gtsam::NonlinearFactor,
     // TODO: F block should be close to diagonal - inverting can be made much
     // faster!!!!
     auto ft_timer =
-        std::make_unique<utils::TimingStatsCollector>("smf_F_transpose");
+        std::make_unique<utils::ChronoTimingStats>("smf_F_transpose");
     gtsam::Matrix F = F_block_matrix;
     gtsam::Matrix Ft = F.transpose();
     ft_timer.reset();
 
-    auto gg_timer =
-        std::make_unique<utils::TimingStatsCollector>("smf_Gg_calc");
+    auto gg_timer = std::make_unique<utils::ChronoTimingStats>("smf_Gg_calc");
     // gtsam::Matrix g = Ft * (b - E * P * Et * b);
     // gtsam::Matrix G = Ft * F - Ft * E * P * Et * F;
 
@@ -1064,8 +1063,7 @@ class SmartMotionFactor : public gtsam::NonlinearFactor,
     gg_timer.reset();
 
     // size of schur = num measurements * Hessian size + 1
-    auto shur_timer =
-        std::make_unique<utils::TimingStatsCollector>("smf_schur");
+    auto shur_timer = std::make_unique<utils::ChronoTimingStats>("smf_schur");
     size_t aug_hessian_size = m * HessianDim + 1;
     gtsam::Matrix schur(aug_hessian_size, aug_hessian_size);
 
@@ -1154,8 +1152,8 @@ class SmartMotionFactor : public gtsam::NonlinearFactor,
 using HybridSmartFactor = SmartMotionFactor<3, gtsam::Pose3, gtsam::Pose3>;
 
 struct HybridFormulationProperties {
-  inline gtsam::Symbol makeDynamicKey(TrackletId tracklet_id) const {
-    return (gtsam::Symbol)DynamicLandmarkSymbol(0u, tracklet_id);
+  static inline gtsam::Symbol makeDynamicKey(TrackletId tracklet_id) {
+    return static_cast<gtsam::Symbol>(DynamicLandmarkSymbol(0u, tracklet_id));
   }
 };
 
@@ -1171,13 +1169,106 @@ struct SharedHybridFormulationData {
   //! Maps an object j with an embedded frame (gtsam::Pose3) for a range of
   //! timesteps k. Each embedded frame L_e is defined such that the range is e
   //! to e + N.
+  //! Pointer to HybridEstimator#key_frame_data_
   const KeyFrameData* key_frame_data;
   //! Tracklet Id to the embedded frame (e) the point is represented in (ie.
-  //! which timestep, k)
+  //! which timestep, k).
+  //! Pointer to HybridEstimator#all_dynamic_landmarks_
   const gtsam::FastMap<TrackletId, FrameId>* tracklet_id_to_keyframe;
 };
 
-class HybridAccessor : public AccessorT<MapVision>,
+/**
+ * @brief Accesor class that extends the basic functionlity of the Accessor
+ * with additional getter functions that are specific to the Hybrid formualtion.
+ *
+ * This will then form the base class for the HybridAccessor as well as the
+ * ParallelHybridAccessor. It must inherit from Acessor to allow it to be used
+ * within AccessorT
+ *
+ */
+class HybridAccessorCommon : public Accessor {
+ public:
+  DYNO_POINTER_TYPEDEFS(HybridAccessorCommon)
+  HybridAccessorCommon() = default;
+  virtual ~HybridAccessorCommon() = default;
+
+  /**
+   * @brief Get all dynamic object estimates in the local object frame
+   *
+   * @param object_id
+   * @return StatusLandmarkVector
+   */
+  virtual StatusLandmarkVector getLocalDynamicLandmarkEstimates(
+      ObjectId object_id) const = 0;
+
+  /**
+   * @brief Collect all tracklet ids associated with a keyframe (ie. constructed
+   * using L_e where e is the keyframe id).
+   *
+   * The frame_id argument is not necessarily a keyframe but is used to find the
+   * associated keyframe id
+   *
+   *
+   *
+   * @param frame_id
+   * @return TrackletIds
+   */
+  virtual TrackletIds collectPointsAtKeyFrame(ObjectId object_id,
+                                              FrameId frame_id,
+                                              FrameId* keyframe_id) const = 0;
+
+  /**
+   * @brief Sets a pointer to the keyframe range information for the requested
+   * object.
+   *
+   * The ranges argument is intended to be parsed in as a pointer which is then
+   * updated to point towards the intended KeyFrameRanges object which is
+   * managed internally.
+   *
+   * We parse by reference-to-pointer to allow the pointer value to be updated.
+   *
+   * @param object_id ObjectId
+   * @param ranges const KeyFrameRanges*&
+   * @return true
+   * @return false
+   */
+  virtual bool getObjectKeyFrameHistory(
+      ObjectId object_id, const KeyFrameRanges*& ranges) const = 0;
+
+  virtual bool hasObjectKeyFrame(ObjectId object_id,
+                                 FrameId frame_id) const = 0;
+
+  /**
+   * @brief Get the the objects keyframe information for the give frame id.
+   * The frame_id argument is used to look up the keyframe_id that was/is active
+   * for the frame_id.
+   *
+   * @param object_id
+   * @param frame_id
+   * @return std::pair<FrameId, gtsam::Pose3>
+   */
+  virtual std::pair<FrameId, gtsam::Pose3> getObjectKeyFrame(
+      ObjectId object_id, FrameId frame_id) const = 0;
+
+  /**
+   * @brief Get the directly estiamted object motion (i.e H_w_e_k)
+   *
+   * @param object_id
+   * @param frame_id
+   * @return StateQuery<Motion3ReferenceFrame>
+   */
+  virtual StateQuery<Motion3ReferenceFrame> getEstimatedMotion(
+      ObjectId object_id, FrameId frame_id) const = 0;
+};
+
+/**
+ * @brief Accessor for the Hybrid Formulation.
+ * The internal AccessorT is templated on MapVision to define the map type and
+ * HybridAccessorCommon which extends the functionality of the base Acessor with
+ * functionality specific to the Hybrid representation.
+ *
+ */
+class HybridAccessor : public AccessorT<MapVision, HybridAccessorCommon>,
                        public HybridFormulationProperties {
  public:
   DYNO_POINTER_TYPEDEFS(HybridAccessor)
@@ -1185,7 +1276,7 @@ class HybridAccessor : public AccessorT<MapVision>,
   HybridAccessor(
       const SharedFormulationData& shared_data, MapVision::Ptr map,
       const SharedHybridFormulationData& shared_hybrid_formulation_data)
-      : AccessorT<MapVision>(shared_data, map),
+      : AccessorT<MapVision, HybridAccessorCommon>(shared_data, map),
         shared_hybrid_formulation_data_(shared_hybrid_formulation_data) {}
   virtual ~HybridAccessor() {}
 
@@ -1206,14 +1297,23 @@ class HybridAccessor : public AccessorT<MapVision>,
   std::optional<Motion3ReferenceFrame> getRelativeLocalMotion(
       FrameId frame_id, ObjectId object_id) const;
 
-  /**
-   * @brief Get all dynamic object estimates in the local object frame
-   *
-   * @param object_id
-   * @return StatusLandmarkVector
-   */
   StatusLandmarkVector getLocalDynamicLandmarkEstimates(
-      ObjectId object_id) const;
+      ObjectId object_id) const override;
+
+  TrackletIds collectPointsAtKeyFrame(
+      ObjectId object_id, FrameId frame_id,
+      FrameId* keyframe_id = nullptr) const override;
+
+  bool getObjectKeyFrameHistory(ObjectId object_id,
+                                const KeyFrameRanges*& ranges) const override;
+
+  bool hasObjectKeyFrame(ObjectId object_id, FrameId frame_id) const override;
+
+  std::pair<FrameId, gtsam::Pose3> getObjectKeyFrame(
+      ObjectId object_id, FrameId frame_id) const override;
+
+  StateQuery<Motion3ReferenceFrame> getEstimatedMotion(
+      ObjectId object_id, FrameId frame_id) const override;
 
  private:
   struct DynamicLandmarkQuery {
@@ -1262,8 +1362,7 @@ class HybridFormulation : public Formulation<MapVision>,
 
   HybridFormulation(const FormulationParams& params, typename Map::Ptr map,
                     const NoiseModels& noise_models, const Sensors& sensors,
-                    const FormulationHooks& hooks)
-      : Base(params, map, noise_models, sensors, hooks) {}
+                    const FormulationHooks& hooks);
   virtual ~HybridFormulation() {}
 
   virtual void dynamicPointUpdateCallback(
@@ -1281,33 +1380,6 @@ class HybridFormulation : public Formulation<MapVision>,
     return is_dynamic_tracklet_in_map_.exists(tracklet_id);
   }
 
-  // TODO: functions should be shared with accessor
-  bool getObjectKeyFrameHistory(ObjectId object_id,
-                                const KeyFrameRanges* ranges) const;
-
-  bool hasObjectKeyFrame(ObjectId object_id, FrameId frame_id) const;
-  std::pair<FrameId, gtsam::Pose3> getObjectKeyFrame(ObjectId object_id,
-                                                     FrameId frame_id) const;
-  // get the estimated motion in the representation used directly by the
-  // estimation (ie. not frame-2-frame)
-  // TODO: should be in accessor!!!!
-  StateQuery<Motion3ReferenceFrame> getEstimatedMotion(ObjectId object_id,
-                                                       FrameId frame_id) const;
-
-  std::pair<FrameId, gtsam::Pose3> forceNewKeyFrame(FrameId frame_id,
-                                                    ObjectId object_id);
-  /**
-   * @brief
-   *
-   * frame_id is not necessary a keyframe but will be used to search for the
-   * keyframe in the range
-   *
-   * @param frame_id
-   * @return TrackletIds
-   */
-  TrackletIds collectPointsAtKeyFrame(ObjectId object_id,
-                                      FrameId frame_id) const;
-
  protected:
   // TODO: make this virtual for now - eventual move structureless etc
   // properties into a class to encapsulate!
@@ -1324,15 +1396,36 @@ class HybridFormulation : public Formulation<MapVision>,
   virtual std::string loggerPrefix() const override { return "hybrid"; }
 
  protected:
-  std::pair<FrameId, gtsam::Pose3> getOrConstructL0(ObjectId object_id,
-                                                    FrameId frame_id);
+  // bool addHybridMotionFactor3(
+  //   typename MapTraitsType::FrameNodePtr frame_node,
+  //   typename MapTraitsType::LandmarkNodePtr landmark_node,
+  //   const gtsam::Pose3& L_e,
+  //   const gtsam::Key& camera_pose_key,
+  //   const gtsam::Key& object_motion_key,
+  //   const gtsam::Key& m_key,
+  //   gtsam::NonlinearFactorGraph& graph) const;
 
-  // hacky update solution for now!!
-  gtsam::Pose3 computeInitialH(ObjectId object_id, FrameId frame_id,
-                               bool* keyframe_updated = nullptr);
+  // bool addStereoHybridMotionFactor(
+  //   typename MapTraitsType::FrameNodePtr frame_node,
+  //   typename MapTraitsType::LandmarkNodePtr landmark_node,
+  //   const gtsam::Pose3& L_e,
+  //   const gtsam::Key& camera_pose_key,
+  //   const gtsam::Key& object_motion_key,
+  //   const gtsam::Key& m_key,
+  // gtsam::NonlinearFactorGraph& graph) const;
 
-  gtsam::Pose3 calculateObjectCentroid(ObjectId object_id,
-                                       FrameId frame_id) const;
+  // TODO: this should be KF0_to_k
+  struct IntermediateMotionInfo {
+    //! frame id of the object keyframe (i.e. e)
+    FrameId kf_id;
+    //! Fixed pose associated with the embedded frame (i.e L_e)
+    gtsam::Pose3 keyframe_pose;
+    //! Initial guess of object motion
+    gtsam::Pose3 H_W_e_k_initial;
+  };
+
+  virtual IntermediateMotionInfo getIntermediateMotionInfo(
+      ObjectId object_id, FrameId frame_id) = 0;
 
   // TODO: in the sliding window case the formulation gets reallcoated every
   // time so that L0 map is different, but the values will share the same H
@@ -1369,12 +1462,52 @@ class HybridFormulation : public Formulation<MapVision>,
 
  protected:
   KeyFrameData key_frame_data_;
+  //! Virtual RGBD camera
+  RGBDCamera::Ptr rgbd_camera_;
+};
+
+/**
+ * @brief The original Hybrid motion implementation (as presented in
+ * "Online Dynamic SLAM with Incremental Smoothing and Mapping" from RA-L) -
+ * this is independant from the frontend and ONLY accepts frame-to-frame motion
+ * (i.e H_W_k_1_k) as input. It constructs object keyframes independantly of the
+ * front-end and therefore has slightly different embedded poses
+ *
+ */
+class HybridFormulationV1 : public HybridFormulation {
+ public:
+  using Base = HybridFormulation;
+  DYNO_POINTER_TYPEDEFS(HybridFormulationV1)
+
+  HybridFormulationV1(const FormulationParams& params, typename Map::Ptr map,
+                      const NoiseModels& noise_models, const Sensors& sensors,
+                      const FormulationHooks& hooks)
+      : Base(params, map, noise_models, sensors, hooks) {}
+
+  // SHOULD be in variation of Hybrid that is independant of the front-end
+  //  leave in for now!
+  std::pair<FrameId, gtsam::Pose3> forceNewKeyFrame(FrameId frame_id,
+                                                    ObjectId object_id);
+
+ protected:
+  IntermediateMotionInfo getIntermediateMotionInfo(ObjectId object_id,
+                                                   FrameId frame_id) override;
+
+  std::pair<FrameId, gtsam::Pose3> getOrConstructL0(ObjectId object_id,
+                                                    FrameId frame_id);
+
+  // hacky update solution for now!!
+  gtsam::Pose3 computeInitialH(ObjectId object_id, FrameId frame_id,
+                               bool* keyframe_updated = nullptr);
+
+  gtsam::Pose3 calculateObjectCentroid(ObjectId object_id,
+                                       FrameId frame_id) const;
 };
 
 // additional functionality when solved with the Regular Backend!
-class RegularHybridFormulation : public HybridFormulation {
+class RegularHybridFormulation : public HybridFormulationV1 {
  public:
-  using Base = HybridFormulation;
+  using Base = HybridFormulationV1;
 
   RegularHybridFormulation(const FormulationParams& params,
                            typename Map::Ptr map,

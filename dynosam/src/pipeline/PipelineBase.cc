@@ -45,8 +45,8 @@ bool PipelineBase::spin() {
   LOG(INFO) << "Starting module " << module_name_;
   while (!isShutdown()) {
     spinOnce();
-    //   using namespace std::chrono_literals;
-    //   std::this_thread::sleep_for(1ms);  // give CPU thread some sleep
+    using namespace std::chrono_literals;
+    std::this_thread::sleep_for(5ns);  // give CPU thread some sleep
     //   time... //TODO: only if threaded?
   }
   return true;

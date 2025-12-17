@@ -332,6 +332,7 @@ void Statistics::Print(std::ostream& out) {  // NOLINT
     out << t.first << "\t";
 
     out.setf(std::ios::right, std::ios::adjustfield);
+    out << std::setprecision(5);
     // Print #
     out << std::setw(5) << GetNumSamples(i) << "\t";
     if (GetNumSamples(i) > 0) {

@@ -147,8 +147,20 @@ class ParallelObjectISAM {
   ObjectMotionMap getKeyFramedMotions() const;
 
   // due to the nature of this formulation, this will be the accumulated cloud!!
+  // points are in the world frame
+  // this is the same as calling this->getDynamicLandmarkEstimates(frame_id,
+  // object_id_);
   StatusLandmarkVector getDynamicLandmarks(FrameId frame_id) const;
 
+  // should return at most a map of size 1 (with the key being object_id_) or of
+  // size 0 if the object does not exist at the requested frame
+  EstimateMap<ObjectId, gtsam::Pose3> getObjectPoses(FrameId frame_id) const {
+    return accessor_->getObjectPoses(frame_id);
+  }
+
+  StateQuery<gtsam::Pose3> getObjectPose(FrameId frame_id) const {
+    return accessor_->getObjectPose(frame_id, object_id_);
+  }
   std::pair<FrameId, gtsam::Pose3> insertNewKeyFrame(FrameId frame_id);
 
   inline const gtsam::ISAM2& getSmoother() const { return *smoother_; }
@@ -196,7 +208,7 @@ class ParallelObjectISAM {
   const Params params_;
   const ObjectId object_id_;
   Map::Ptr map_;
-  HybridFormulation::Ptr decoupled_formulation_;
+  HybridFormulationV1::Ptr decoupled_formulation_;
   HybridAccessor::Ptr accessor_;
   std::shared_ptr<gtsam::ISAM2> smoother_;
   Result result_;

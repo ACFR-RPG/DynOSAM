@@ -263,20 +263,16 @@ class StaticFormulationUpdater : public StaticFormulationUpdaterImpl<MAP> {
           CHECK_NOTNULL(camera->safeGetRGBDCamera());
       K_stereo_ = rgbd_camera->getFakeStereoCalib();
       CHECK_NOTNULL(K_stereo_);
-
-      K_stereo_->print("Stero K\n");
       K_ = camera->getGtsamCalibration();
     }
 
     bool addLandmark(LmkNode& lmk, const FrameNode& frame,
-                     const UpdateObservationParams& update_params,
+                     const UpdateObservationParams& /*update_params*/,
                      gtsam::Values& values, gtsam::NonlinearFactorGraph& graph,
                      gtsam::Key& point_key, UpdateObservationResult& result,
                      std::optional<Landmark>& initial) override {
       point_key = lmk->makeStaticKey();
       const FrameId frame_k = FrameId(frame->getId());
-
-      const auto& params = this->formulation_->params();
 
       // NOTE: not handling the case a lmk becomes an outlier once already added
       // to the opt
@@ -449,7 +445,10 @@ Formulation<MAP>::Formulation(const FormulationParams& params,
       map_(map),
       noise_models_(noise_models),
       sensors_(sensors),
-      hooks_(hooks) {}
+      hooks_(hooks) {
+  static_updater_ =
+      std::make_unique<internal::StaticFormulationUpdater<MAP>>(this);
+}
 
 template <typename MAP>
 void Formulation<MAP>::setTheta(const gtsam::Values& linearization) {
@@ -569,15 +568,13 @@ UpdateObservationResult Formulation<MAP>::updateStaticObservations(
   auto frame_node_k = map->getFrame(frame_id_k);
   CHECK_NOTNULL(frame_node_k);
 
-  internal::StaticFormulationUpdater<MAP> static_updater(this);
-
   VLOG(20) << "Looping over " << frame_node_k->static_landmarks.size()
            << " static lmks for frame " << frame_id_k;
   for (auto lmk_node : frame_node_k->static_landmarks) {
     gtsam::Key point_key;
     std::optional<Landmark> initial_value;
 
-    bool lmk_result = static_updater.addLandmark(
+    bool lmk_result = static_updater_->addLandmark(
         lmk_node, frame_node_k, update_params, new_values, internal_new_factors,
         point_key, result, initial_value);
 
@@ -627,35 +624,53 @@ UpdateObservationResult Formulation<MAP>::updateDynamicObservations(
   // as long as the new factor slot is calculated before adding a new factor
   const Slot starting_factor_slot = new_factors.size();
 
-  const FrameId frame_id_k_1 = frame_id_k - 1u;
-  VLOG(20) << "Add dynamic observations between frames " << frame_id_k_1
-           << " and " << frame_id_k;
   const auto frame_node_k = map->getFrame(frame_id_k);
 
-  utils::TimingStatsCollector dyn_obj_itr_timer(this->loggerPrefix() +
-                                                ".dynamic_object_itr");
+  // well not true for keyframes!!
+  //  const FrameId frame_id_k_1 = frame_id_k - 1u;
+  VLOG(20) << "Add dynamic observations at " << frame_id_k << " for objects "
+           << container_to_string(frame_node_k->getObservedObjects());
+
+  utils::ChronoTimingStats dyn_obj_itr_timer(this->loggerPrefix() +
+                                             ".dynamic_object_itr");
   for (const auto& object_node : frame_node_k->objects_seen) {
     DebugInfo::ObjectInfo object_debug_info;
     const ObjectId object_id = object_node->getId();
 
-    // first check that object exists in the previous frame
-    if (!frame_node_k->objectMotionExpected(object_id)) {
+    const FrameId seen_most_rectently = object_node->getLastSeenFrame();
+    CHECK_EQ(seen_most_rectently, frame_id_k);
+    // the frame id the object was observed in immediately prior to this one
+
+    FrameId last_seen;
+    if (!object_node->previouslySeenFrame(&last_seen)) {
+      VLOG(20) << "Skipping j=" << object_id
+               << " as it has not been seen twice!";
       continue;
     }
+    // auto frame_node
+
+    // // first check that object exists in the previous frame
+    // objectMotionExpected looks at a hardcoded k-1 (should instead use last
+    // seen!?) if (!frame_node_k->objectMotionExpected(object_id)) {
+    //   continue;
+    // }
     // possibly the longest call?
     // landmarks on this object seen at frame k
     auto seen_lmks_k = object_node->getLandmarksSeenAtFrame(frame_id_k);
+    VLOG(20) << "Adding N= " << seen_lmks_k.size()
+             << " measurements j=" << object_id << " from=" << last_seen
+             << " to= " << frame_id_k;
 
     // if we dont have at least N observations of this object in this frame AND
     // the previous frame
     if (seen_lmks_k.size() < params_.min_dynamic_observations ||
-        object_node->getLandmarksSeenAtFrame(frame_id_k_1).size() <
+        object_node->getLandmarksSeenAtFrame(last_seen).size() <
             params_.min_dynamic_observations) {
       continue;
     }
 
-    utils::TimingStatsCollector dyn_point_itr_timer(this->loggerPrefix() +
-                                                    ".dynamic_point_itr");
+    utils::ChronoTimingStats dyn_point_itr_timer(this->loggerPrefix() +
+                                                 ".dynamic_point_itr");
     VLOG(10) << "Seen lmks at frame " << frame_id_k << " obj " << object_id
              << ": " << seen_lmks_k.size();
     // iterate over each lmk we have on this object
@@ -718,7 +733,7 @@ UpdateObservationResult Formulation<MAP>::updateDynamicObservations(
            << " at frames\n";
 
         // iterate over k-N to k (inclusive) and all all
-        utils::TimingStatsCollector dyn_point_backtrack_timer(
+        utils::ChronoTimingStats dyn_point_backtrack_timer(
             this->loggerPrefix() + ".dynamic_point_backtrack");
         for (auto seen_frames_itr = starting_motion_frame_itr;
              seen_frames_itr != seen_frames.end(); seen_frames_itr++) {
@@ -730,8 +745,8 @@ UpdateObservationResult Formulation<MAP>::updateDynamicObservations(
           auto query_frame_node_k = *seen_frames_itr;
           auto query_frame_node_k_1 = *seen_frames_itr_prev;
 
-          CHECK_EQ(query_frame_node_k->frame_id,
-                   query_frame_node_k_1->frame_id + 1u);
+          // CHECK_EQ(query_frame_node_k->frame_id,
+          //          query_frame_node_k_1->frame_id + 1u);
 
           // add points UP TO AND INCLUDING the current frame
           if (query_frame_node_k->frame_id > frame_id_k) {
@@ -771,7 +786,7 @@ UpdateObservationResult Formulation<MAP>::updateDynamicObservations(
           if (seen_frames_itr == starting_motion_frame_itr) {
             point_context.is_starting_motion_frame = true;
           }
-          utils::TimingStatsCollector dyn_point_update_timer(
+          utils::ChronoTimingStats dyn_point_update_timer(
               this->loggerPrefix() + ".dyn_point_update_1");
           // the true set of values that are added from the update
           dynamicPointUpdateCallback(point_context, result, internal_new_values,
@@ -782,7 +797,7 @@ UpdateObservationResult Formulation<MAP>::updateDynamicObservations(
           // new_values.insert(local_new_values);
         }
       } else {
-        const auto frame_node_k_1 = map->getFrame(frame_id_k_1);
+        const auto frame_node_k_1 = map->getFrame(last_seen);
         CHECK_NOTNULL(frame_node_k_1);
 
         // these tracklets should already be in the graph so we should only need
@@ -798,8 +813,8 @@ UpdateObservationResult Formulation<MAP>::updateDynamicObservations(
             getInitialOrLinearizedSensorPose(frame_node_k->frame_id);
         point_context.starting_factor_slot = starting_factor_slot;
         point_context.is_starting_motion_frame = false;
-        utils::TimingStatsCollector dyn_point_update_timer(
-            this->loggerPrefix() + ".dyn_point_update_2");
+        utils::ChronoTimingStats dyn_point_update_timer(this->loggerPrefix() +
+                                                        ".dyn_point_update_2");
         // the true set of values that are added from the update
         // gtsam::Values local_new_values;
         dynamicPointUpdateCallback(point_context, result, internal_new_values,
@@ -817,7 +832,7 @@ UpdateObservationResult Formulation<MAP>::updateDynamicObservations(
   // object this is a bit inefficient as we do this iteration even if no new
   // object values are added becuuse we dont know if the affected frames are
   // becuase of old points as well as new points
-  //  utils::TimingStatsCollector dyn_obj_affected_timer(this->loggerPrefix() +
+  //  utils::ChronoTimingStats dyn_obj_affected_timer(this->loggerPrefix() +
   //  ".dyn_object_affected");
   for (const auto& [object_id, frames_affected] :
        result.objects_affected_per_frame) {

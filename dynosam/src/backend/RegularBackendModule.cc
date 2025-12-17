@@ -72,6 +72,10 @@ DEFINE_bool(
     "If ISAM2 stats should be logged to file when running incrementally."
     " This will slow down compute!!");
 
+DEFINE_bool(
+    regular_backend_static_only, false,
+    "Run as a Static SLAM backend only (i.e ignore dynamic measurements!)");
+
 namespace dyno {
 
 RegularBackendModule::RegularBackendModule(
@@ -114,9 +118,10 @@ RegularBackendModule::~RegularBackendModule() {
 RegularBackendModule::SpinReturn RegularBackendModule::boostrapSpinImpl(
     VisionImuPacket::ConstPtr input) {
   const FrameId frame_k = input->frameId();
+  // const FrameId kf_id = input->kf_id;
   const Timestamp timestamp = input->timestamp();
   CHECK_EQ(spin_state_.frame_id, frame_k);
-  LOG(INFO) << "Running backend " << frame_k;
+  LOG(INFO) << "Running backend kf " << frame_k;
   gtsam::Values new_values;
   gtsam::NonlinearFactorGraph new_factors;
 
@@ -124,7 +129,9 @@ RegularBackendModule::SpinReturn RegularBackendModule::boostrapSpinImpl(
 
   CHECK(formulation_);
 
+  // should this be kf id ot frame id??
   PreUpdateData pre_update_data(frame_k);
+  pre_update_data.input = input;
   formulation_->preUpdate(pre_update_data);
 
   UpdateObservationParams update_params;
@@ -133,27 +140,8 @@ RegularBackendModule::SpinReturn RegularBackendModule::boostrapSpinImpl(
       false;  // apparently this is v important for making the results == ICRA
 
   PostUpdateData post_update_data(frame_k);
-  // addMeasurements(update_params, frame_k, new_values, new_factors,
-  //                 post_update_data);
-  {
-    LOG(INFO) << "Starting updateStaticObservations";
-    utils::TimingStatsCollector timer("backend.update_static_obs");
-    post_update_data.static_update_result =
-        formulation_->updateStaticObservations(frame_k, new_values, new_factors,
-                                               update_params);
-  }
-  // DONT run dynamic updates on the first frame (if any...)
-  {
-    LOG(INFO) << "Starting updateDynamicObservations";
-    utils::TimingStatsCollector timer("backend.update_dynamic_obs");
-    post_update_data.dynamic_update_result =
-        formulation_->updateDynamicObservations(frame_k, new_values,
-                                                new_factors, update_params);
-  }
-
-  if (post_formulation_update_cb_) {
-    post_formulation_update_cb_(formulation_, frame_k, new_values, new_factors);
-  }
+  addMeasurements(update_params, frame_k, new_values, new_factors,
+                  post_update_data);
 
   LOG(INFO) << "Starting any updates";
 
@@ -166,12 +154,21 @@ RegularBackendModule::SpinReturn RegularBackendModule::boostrapSpinImpl(
   // TODO: sanity checks that vision states are inline with the other frame idss
   // etc
 
-  utils::TimingStatsCollector timer(formulation_->getFullyQualifiedName() +
-                                    ".post_update");
+  utils::ChronoTimingStats timer(formulation_->getFullyQualifiedName() +
+                                 ".post_update");
+  LOG(INFO) << "Starting any post updates";
   formulation_->postUpdate(post_update_data);
+  LOG(INFO) << "Done any post updates";
 
+  // use kf id for everything but update the actualy frame id after!!
+  LOG(INFO) << "Starting any backend output construct";
   BackendOutputPacket::Ptr backend_output =
       constructOutputPacket(frame_k, timestamp);
+  // dont update the frame_id (yet!) as the visualisation will look for keys
+  // with with this frame
+  //  however, eventaully will need to log with the original frame_id so that
+  //  the evaluation is consistent!! backend_output->frame_id = frame_k;
+  LOG(INFO) << "Done any backend output construct";
 
   debug_info_ = DebugInfo();
 
@@ -190,7 +187,10 @@ RegularBackendModule::SpinReturn RegularBackendModule::nominalSpinImpl(
   gtsam::NonlinearFactorGraph new_factors;
 
   addStates(input, formulation_.get(), new_values, new_factors);
-  formulation_->preUpdate(PreUpdateData(frame_k));
+
+  PreUpdateData pre_update_data(frame_k);
+  pre_update_data.input = input;
+  formulation_->preUpdate(pre_update_data);
 
   UpdateObservationParams update_params;
   update_params.enable_debug_info = true;
@@ -210,13 +210,13 @@ RegularBackendModule::SpinReturn RegularBackendModule::nominalSpinImpl(
   // update internal nav state based on the initial/optimised estimated in the
   // formulation this is also necessary to update the internal timestamp/frameid
   // variables within the VisionImuBackendModule
-  updateNavStateFromFormulation(frame_k, formulation_.get());
+  updateNavStateFromFormulation(frame_k, timestamp, formulation_.get());
 
   // TODO: sanity checks that vision states are inline with the other frame idss
   // etc
 
-  utils::TimingStatsCollector timer(formulation_->getFullyQualifiedName() +
-                                    ".post_update");
+  utils::ChronoTimingStats timer(formulation_->getFullyQualifiedName() +
+                                 ".post_update");
   formulation_->postUpdate(post_update_data);
 
   BackendOutputPacket::Ptr backend_output =
@@ -260,18 +260,20 @@ void RegularBackendModule::addMeasurements(
     PostUpdateData& post_update_data) {
   {
     LOG(INFO) << "Starting updateStaticObservations";
-    utils::TimingStatsCollector timer("backend.update_static_obs");
+    utils::ChronoTimingStats timer("backend.update_static_obs");
     post_update_data.static_update_result =
         formulation_->updateStaticObservations(frame_k, new_values, new_factors,
                                                update_params);
   }
 
   {
-    LOG(INFO) << "Starting updateDynamicObservations";
-    utils::TimingStatsCollector timer("backend.update_dynamic_obs");
-    post_update_data.dynamic_update_result =
-        formulation_->updateDynamicObservations(frame_k, new_values,
-                                                new_factors, update_params);
+    if (!FLAGS_regular_backend_static_only) {
+      LOG(INFO) << "Starting updateDynamicObservations";
+      utils::ChronoTimingStats timer("backend.update_dynamic_obs");
+      post_update_data.dynamic_update_result =
+          formulation_->updateDynamicObservations(frame_k, new_values,
+                                                  new_factors, update_params);
+    }
   }
 
   if (post_formulation_update_cb_) {
@@ -301,6 +303,10 @@ RegularBackendModule::getActiveOptimisation() const {
   }
 }
 
+Accessor::Ptr RegularBackendModule::getAccessor() {
+  return formulation_->accessorFromTheta();
+}
+
 void RegularBackendModule::updateAndOptimize(
     FrameId frame_id_k, const gtsam::Values& new_values,
     const gtsam::NonlinearFactorGraph& new_factors,
@@ -317,6 +323,8 @@ void RegularBackendModule::updateAndOptimize(
   } else {
     LOG(FATAL) << "Unknown optimisation mode" << optimization_mode;
   }
+
+  if (frontend_update_callback_) frontend_update_callback_(frame_id_k, 0);
 }
 
 void RegularBackendModule::updateIncremental(
@@ -324,8 +332,8 @@ void RegularBackendModule::updateIncremental(
     const gtsam::NonlinearFactorGraph& new_factors,
     PostUpdateData& post_update_data) {
   CHECK(smoother_) << "updateIncremental run but smoother was not setup!";
-  utils::TimingStatsCollector timer(formulation_->getFullyQualifiedName() +
-                                    ".update_incremental");
+  utils::ChronoTimingStats timer(formulation_->getFullyQualifiedName() +
+                                 ".update_incremental");
 
   using SmootherInterface = IncrementalInterface<dyno::ISAM2>;
   SmootherInterface smoother_interface(smoother_.get());
@@ -404,8 +412,8 @@ void RegularBackendModule::updateBatch(FrameId frame_id_k, const gtsam::Values&,
         .AddSample(theta.size());
 
     double error_before = graph.error(theta);
-    utils::TimingStatsCollector timer(formulation_->getFullyQualifiedName() +
-                                      ".full_batch_opt");
+    utils::ChronoTimingStats timer(formulation_->getFullyQualifiedName() +
+                                   ".full_batch_opt");
 
     gtsam::LevenbergMarquardtOptimizer problem(graph, theta, opt_params);
     gtsam::Values optimised_values = problem.optimize();
@@ -523,7 +531,7 @@ void RegularBackendModule::addInitialStates(
   CHECK(formulation);
 
   const FrameId frame_k = input->frameId();
-  const Timestamp timestamp = input->timestamp();
+  const Timestamp timestamp_k = input->timestamp();
   const auto& X_k_initial = input->cameraPose();
 
   // update map
@@ -533,14 +541,14 @@ void RegularBackendModule::addInitialStates(
   if (input->pim()) {
     LOG(INFO) << "Initialising backend with IMU states!";
     this->addInitialVisualInertialState(
-        frame_k, formulation, new_values, new_factors, noise_models_,
-        gtsam::NavState(X_k_initial, gtsam::Vector3(0, 0, 0)),
+        frame_k, timestamp_k, formulation, new_values, new_factors,
+        noise_models_, gtsam::NavState(X_k_initial, gtsam::Vector3(0, 0, 0)),
         gtsam::imuBias::ConstantBias{});
 
   } else {
     LOG(INFO) << "Initialising backend with VO only states!";
-    this->addInitialVisualState(frame_k, formulation, new_values, new_factors,
-                                noise_models_, X_k_initial);
+    this->addInitialVisualState(frame_k, timestamp_k, formulation, new_values,
+                                new_factors, noise_models_, X_k_initial);
   }
 
   LOG(INFO) << "Done!";
@@ -552,9 +560,10 @@ void RegularBackendModule::addStates(const VisionImuPacket::ConstPtr& input,
   CHECK(formulation);
 
   const FrameId frame_k = input->frameId();
+  const Timestamp timestamp_k = input->timestamp();
 
   const gtsam::NavState predicted_nav_state = this->addVisualInertialStates(
-      frame_k, formulation, new_values, new_factors, noise_models_,
+      frame_k, timestamp_k, formulation, new_values, new_factors, noise_models_,
       input->relativeCameraTransform(), input->pim());
 
   updateMapWithMeasurements(frame_k, input, predicted_nav_state.pose());
@@ -564,6 +573,7 @@ void RegularBackendModule::updateMapWithMeasurements(
     FrameId frame_id_k, const VisionImuPacket::ConstPtr& input,
     const gtsam::Pose3& X_k_w) {
   CHECK_EQ(frame_id_k, input->frameId());
+  // CHECK_EQ(frame_id_k, input->kf_id);
 
   // update static and ego motion
   map_->updateObservations(input->staticMeasurements());
@@ -648,7 +658,7 @@ void RegularBackendModule::setFormulation(
   CHECK_NOTNULL(formulation_);
   // add additional error handling for incremental based on formulation
   auto* hybrid_formulation =
-      static_cast<HybridFormulation*>(formulation_.get());
+      static_cast<HybridFormulationV1*>(formulation_.get());
   if (hybrid_formulation) {
     LOG(INFO) << "Adding additional error hooks for Hybrid formulation";
     error_hooks.handle_failed_object =
@@ -688,6 +698,8 @@ BackendOutputPacket::Ptr RegularBackendModule::constructOutputPacket(
     FrameId frame_k, Timestamp timestamp) const {
   auto accessor = formulation_->accessorFromTheta();
 
+  LOG(INFO) << "Making output packet with kf id=" << frame_k;
+
   auto backend_output = std::make_shared<BackendOutputPacket>();
   backend_output->timestamp = timestamp;
   backend_output->frame_id = frame_k;
@@ -695,15 +707,20 @@ BackendOutputPacket::Ptr RegularBackendModule::constructOutputPacket(
   backend_output->static_landmarks = accessor->getFullStaticMap();
   // backend_output->optimized_object_motions =
   //     accessor->getObjectMotions(frame_k);
+
+  auto map = formulation_->map();
+  LOG(INFO) << "Map frame ids " << container_to_string(map->getFrameIds());
+
   backend_output->dynamic_landmarks =
       accessor->getDynamicLandmarkEstimates(frame_k);
-  auto map = formulation_->map();
+  // auto map = formulation_->map();
   for (FrameId frame_id : map->getFrameIds()) {
     backend_output->optimized_camera_poses.push_back(
         accessor->getSensorPose(frame_id).get());
   }
 
   // fill temporal map information
+  LOG(INFO) << "Object ids " << container_to_string(map->getObjectIds());
   for (ObjectId object_id : map->getObjectIds()) {
     const auto& object_node = map->getObject(object_id);
     CHECK_NOTNULL(object_node);

@@ -30,6 +30,7 @@
 
 #pragma once
 
+#include "dynosam/pipeline/PipelineParams.hpp"
 #include "dynosam_ros/DataProviderRos.hpp"
 #include "dynosam_ros/MultiSync.hpp"
 #include "dynosam_ros/adaptors/ImuMeasurementAdaptor.hpp"
@@ -40,23 +41,35 @@
 
 namespace dyno {
 
+enum InputImageMode : int {
+  //! Expects rgb, depth, flow and semantics to be provided
+  ALL = 0,
+  //! Expects only rgb and depth images to be provided
+  RGBD = 1,
+  STEREO = 2
+};
+
 struct OnlineDataProviderRosParams {
+  bool subscribe_imu{true};
   bool wait_for_camera_params{true};
   int32_t camera_params_timeout{-1};
 };
 
 /**
- * @brief Online data-provider for DynoSAM.
+ * @brief Online data-provider for DynoSAM which handles subcription to the IMU
+ * and the interface for subscribing to images but does not implement this.
  *
- * Subscribes to four synchronized image topics (rgb, depth, mask and optical
- * flow) and a camera_info topic (to define the camera intrinsics of the
- * system).
+ * Instead input image mode specific classes derive from this class to implement
+ * the image subscription
+ *
  *
  *
  *
  */
 class OnlineDataProviderRos : public DataProviderRos {
  public:
+  DYNO_POINTER_TYPEDEFS(OnlineDataProviderRos)
+
   /**
    * @brief Construct a new OnlineDataProviderRos.
    *
@@ -67,7 +80,9 @@ class OnlineDataProviderRos : public DataProviderRos {
    * @param params const OnlineDataProviderRosParams&
    */
   OnlineDataProviderRos(rclcpp::Node::SharedPtr node,
-                        const OnlineDataProviderRosParams &params);
+                        const OnlineDataProviderRosParams& params);
+
+  virtual ~OnlineDataProviderRos() = default;
 
   /**
    * @brief Indicates that there is no known end to the dataset
@@ -94,21 +109,126 @@ class OnlineDataProviderRos : public DataProviderRos {
    * @brief Connects all subscribers.
    *
    */
-  void connect();
+  void setupSubscribers();
 
- private:
-  void connectImages();
-  void connectImu();
+  /**
+   * @brief Checks all params are configured correctly for this (derived)
+   * data-loader and updates them if necessary
+   *
+   * @param dyno_params
+   */
+  virtual void updateAndCheckParams(DynoParams&){};
 
- private:
+ protected:
+  virtual void subscribeImages() = 0;
+  virtual void unsubscribeImages() = 0;
+
+  OnlineDataProviderRosParams params_;
   //! Driving frame id for the enture dynosam pipeline
   FrameId frame_id_;
-  MultiSyncBase::Ptr image_subscriber_;
+
+ private:
+  void subscribeImu();
 
   rclcpp::CallbackGroup::SharedPtr imu_callback_group_;
   using ImuAdaptedType =
       rclcpp::adapt_type<dyno::ImuMeasurement>::as<sensor_msgs::msg::Imu>;
   rclcpp::Subscription<ImuAdaptedType>::SharedPtr imu_sub_;
+
+  std::atomic_bool is_connected{false};
+};
+
+/**
+ * @brief Class to help setup calibration for undistortion/resizing etc
+ * for an RGBD style input where only a single CameraParams is needed to
+ * represent a pinhole camera, rather than a stereo setup which needs different
+ * management
+ *
+ * TODO: why not use the UndistortRectifier?!
+ *
+ */
+class RGBDTypeCalibrationHelper {
+ public:
+  RGBDTypeCalibrationHelper(rclcpp::Node::SharedPtr node,
+                            const OnlineDataProviderRosParams& params);
+
+  void processRGB(const cv::Mat& src, cv::Mat& dst);
+  void processDepth(const cv::Mat& src, cv::Mat& dst);
+
+  const CameraParams::Optional& getOriginalCameraParams() const;
+  const CameraParams::Optional& getCameraParams() const;
+
+ private:
+  void setupNewCameraParams(const CameraParams& original_camera_params,
+                            CameraParams& new_camera_params,
+                            const int& rescale_width,
+                            const int& rescale_height);
+
+  void getParamsFromRos(const CameraParams& original_camera_params,
+                        int& rescale_width, int& rescale_height,
+                        double& depth_scale);
+
+ private:
+  rclcpp::Node::SharedPtr node_;
+  CameraParams::Optional original_camera_params_;
+  CameraParams::Optional camera_params_;
+
+  //! Scale that will be multiplied by the depth image to convert to metric
+  //! depth Set by ros params
+  double depth_scale_{0.001};
+
+  //! Undistort maps
+  cv::Mat mapx_;
+  cv::Mat mapy_;
+};
+
+/**
+ * @brief Updates and checks that all dyno params are set correctly
+ * for when only raw image data is providd (ie. RBGD or Stereo) and no
+ * object/flow pre-processing has been done
+ *
+ * @param dyno_params
+ */
+void updateAndCheckDynoParamsForRawImageInput(DynoParams& dyno_params);
+
+/**
+ * @brief Class that subscribes to rgb, depth, motion mask and dense optical
+ * flow topics.
+ *
+ */
+class AllImagesOnlineProviderRos : public OnlineDataProviderRos {
+ public:
+  AllImagesOnlineProviderRos(rclcpp::Node::SharedPtr node,
+                             const OnlineDataProviderRosParams& params);
+
+  void subscribeImages() override;
+  void unsubscribeImages() override;
+  CameraParams::Optional getCameraParams() const override;
+
+ private:
+  std::unique_ptr<RGBDTypeCalibrationHelper> calibration_helper_;
+  MultiSyncBase::Ptr image_subscriber_;
+};
+
+/**
+ * @brief Class that subscribes to rgb, depth, motion mask and dense optical
+ * flow topics.
+ *
+ */
+class RGBDOnlineProviderRos : public OnlineDataProviderRos {
+ public:
+  RGBDOnlineProviderRos(rclcpp::Node::SharedPtr node,
+                        const OnlineDataProviderRosParams& params);
+
+  void subscribeImages() override;
+  void unsubscribeImages() override;
+  CameraParams::Optional getCameraParams() const override;
+
+  void updateAndCheckParams(DynoParams& dyno_params) override;
+
+ private:
+  std::unique_ptr<RGBDTypeCalibrationHelper> calibration_helper_;
+  MultiSyncBase::Ptr image_subscriber_;
 };
 
 }  // namespace dyno

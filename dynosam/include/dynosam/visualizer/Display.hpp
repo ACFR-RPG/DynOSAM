@@ -68,8 +68,9 @@ class DisplayBase : public SharedModuleInterface {
 
   void spinOnce(const InputConstPtr& input) {
     CHECK(input);
-    auto [timestamp, frame_id] = internal::collectTemporalData<INPUT>(*input);
-    this->shared_module_info.updateTimestampMapping(frame_id, timestamp);
+    // auto [timestamp, frame_id] =
+    // internal::collectTemporalData<INPUT>(*input);
+    // this->shared_module_info.updateTimestampMapping(frame_id, timestamp);
     spinOnceImpl(input);
   }
 

@@ -54,10 +54,12 @@ struct HybridObjectMotion {
    * frame.
    * @return gtsam::Point3 point in the object frame (m_L).
    */
-  static gtsam::Point3 projectToObject3(const gtsam::Pose3& X_k,
-                                        const gtsam::Pose3& e_H_k_world,
-                                        const gtsam::Pose3& L_s0,
-                                        const gtsam::Point3& Z_k);
+  static gtsam::Point3 projectToObject3(
+      const gtsam::Pose3& X_k, const gtsam::Pose3& e_H_k_world,
+      const gtsam::Pose3& L_s0, const gtsam::Point3& Z_k,
+      gtsam::OptionalJacobian<3, 6> J1 = boost::none,
+      gtsam::OptionalJacobian<3, 6> J2 = boost::none,
+      gtsam::OptionalJacobian<3, 6> J3 = boost::none);
 
   /**
    * @brief Project a point in the object frame to the camera frame (at time k)
@@ -72,10 +74,13 @@ struct HybridObjectMotion {
    * @param m_L gtsam::Point3 point in the object frame (m_L).
    * @return gtsam::Point3 measured 3D point in the camera frame (z_k).
    */
-  static gtsam::Point3 projectToCamera3(const gtsam::Pose3& X_k,
-                                        const gtsam::Pose3& e_H_k_world,
-                                        const gtsam::Pose3& L_e,
-                                        const gtsam::Point3& m_L);
+  static gtsam::Point3 projectToCamera3(
+      const gtsam::Pose3& X_k, const gtsam::Pose3& e_H_k_world,
+      const gtsam::Pose3& L_e, const gtsam::Point3& m_L,
+      gtsam::OptionalJacobian<3, 6> J1 = boost::none,
+      gtsam::OptionalJacobian<3, 6> J2 = boost::none,
+      gtsam::OptionalJacobian<3, 6> J3 = boost::none,
+      gtsam::OptionalJacobian<3, 3> J4 = boost::none);
 
   /**
    * @brief Constructs the transform that projects a point/pose in L_e into W.
@@ -87,9 +92,11 @@ struct HybridObjectMotion {
    * @param L_e const gtsam::Pose3& embedded object frame.
    * @return gtsam::Pose3
    */
-  static gtsam::Pose3 projectToCamera3Transform(const gtsam::Pose3& X_k,
-                                                const gtsam::Pose3& e_H_k_world,
-                                                const gtsam::Pose3& L_e);
+  static gtsam::Pose3 projectToCamera3Transform(
+      const gtsam::Pose3& X_k, const gtsam::Pose3& e_H_k_world,
+      const gtsam::Pose3& L_e, gtsam::OptionalJacobian<6, 6> J1 = boost::none,
+      gtsam::OptionalJacobian<6, 6> J2 = boost::none,
+      gtsam::OptionalJacobian<6, 6> J3 = boost::none);
 
   /**
    * @brief Residual 3D error for a measured 3D point (z_k) and an estimated
@@ -146,6 +153,49 @@ class HybridMotionFactor
       boost::optional<gtsam::Matrix&> J1 = boost::none,
       boost::optional<gtsam::Matrix&> J2 = boost::none,
       boost::optional<gtsam::Matrix&> J3 = boost::none) const override;
+};
+
+class StereoHybridMotionFactor
+    : public gtsam::NoiseModelFactor3<gtsam::Pose3, gtsam::Pose3,
+                                      gtsam::Point3> {
+ private:
+  gtsam::StereoPoint2 measured_;
+  // fixed reference frame
+  gtsam::Pose3 L_e_;
+  gtsam::Cal3_S2Stereo::shared_ptr K_;
+
+  // with identity pose, acts as the refenence frame
+  gtsam::StereoCamera camera_;
+
+  bool throw_cheirality_;
+
+ public:
+  using This = StereoHybridMotionFactor;
+  using Base =
+      gtsam::NoiseModelFactor3<gtsam::Pose3, gtsam::Pose3, gtsam::Point3>;
+
+  StereoHybridMotionFactor(const gtsam::StereoPoint2& measured,
+                           const gtsam::Pose3& L_e,
+                           const gtsam::SharedNoiseModel& model,
+                           gtsam::Cal3_S2Stereo::shared_ptr K,
+                           gtsam::Key X_k_key, gtsam::Key e_H_k_world_key,
+                           gtsam::Key m_L_key, bool throw_cheirality = false);
+
+  gtsam::NonlinearFactor::shared_ptr clone() const override;
+  void print(const std::string& s = "",
+             const gtsam::KeyFormatter& keyFormatter =
+                 DynosamKeyFormatter) const override;
+
+  gtsam::Vector evaluateError(
+      const gtsam::Pose3& X_k, const gtsam::Pose3& e_H_k_world,
+      const gtsam::Point3& m_L,
+      boost::optional<gtsam::Matrix&> J1 = boost::none,
+      boost::optional<gtsam::Matrix&> J2 = boost::none,
+      boost::optional<gtsam::Matrix&> J3 = boost::none) const override;
+
+  const gtsam::StereoPoint2& measured() const;
+  const gtsam::Cal3_S2Stereo::shared_ptr calibration() const;
+  const gtsam::Pose3& embeddedPose() const;
 };
 
 /**

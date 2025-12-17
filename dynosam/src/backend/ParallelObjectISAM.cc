@@ -56,7 +56,7 @@ ParallelObjectISAM::ParallelObjectISAM(
   // HACK for now so that we get object motions at every frame!!!?
   formulation_params.min_dynamic_observations = 2u;
 
-  decoupled_formulation_ = std::make_shared<HybridFormulation>(
+  decoupled_formulation_ = std::make_shared<HybridFormulationV1>(
       formulation_params, map_, noise_models, sensors, formulation_hooks);
   accessor_ = std::dynamic_pointer_cast<HybridAccessor>(
       decoupled_formulation_->accessorFromTheta());
@@ -82,7 +82,7 @@ StateQuery<Motion3ReferenceFrame> ParallelObjectISAM::getFrame2FrameMotion(
 Motion3ReferenceFrame ParallelObjectISAM::getKeyFramedMotion(
     FrameId frame_id) const {
   StateQuery<Motion3ReferenceFrame> e_H_k_world =
-      decoupled_formulation_->getEstimatedMotion(object_id_, frame_id);
+      accessor_->getEstimatedMotion(object_id_, frame_id);
   CHECK(e_H_k_world);
   CHECK(e_H_k_world->style() == MotionRepresentationStyle::KF);
   CHECK(e_H_k_world->origin() == ReferenceFrame::GLOBAL);

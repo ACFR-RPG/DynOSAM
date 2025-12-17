@@ -180,7 +180,7 @@ std::string type_name(const T& t) {
  * @return std::string
  */
 template <class T>
-constexpr std::string type_name() {
+std::string type_name() {
   return demangle(typeid(T).name());
 }
 
@@ -224,7 +224,7 @@ struct ReferenceFrameValue {
 
   friend std::ostream& operator<<(std::ostream& os, const This& t) {
     os << type_name<Estimate>() << ": " << t.estimate() << "\n";
-    os << "frame: " << to_string(t.frame()) << "\n";
+    os << "frame: " << std::to_string(t.frame()) << "\n";
     return os;
   }
 };
@@ -241,10 +241,10 @@ struct MotionReferenceFrame : public ReferenceFrameValue<E> {
   using ConstEstimate = typename Base::ConstEstimate;
   using Estimate = typename Base::Estimate;
 
-  // explicitly inherit casting operators
-  using Base::operator Estimate&;
-  using Base::operator const Estimate&;
-  using Base::operator const ReferenceFrame&;
+  // // explicitly inherit casting operators
+  // using Base::operator Estimate&;
+  // using Base::operator const Estimate&;
+  // using Base::operator const ReferenceFrame&;
 
   // forward the style ;)
   using Style = MotionRepresentationStyle;
@@ -272,7 +272,7 @@ struct MotionReferenceFrame : public ReferenceFrameValue<E> {
     os << static_cast<const Base&>(t);
     os << "from: " << t.from() << "\n";
     os << "to: " << t.to() << "\n";
-    os << "style : " << to_string(t.style()) << "\n";
+    os << "style : " << std::to_string(t.style()) << "\n";
     return os;
   }
 };

@@ -1,6 +1,6 @@
-cmake_minimum_required(VERSION 3.11)
+cmake_minimum_required(VERSION 3.17 FATAL_ERROR)
 
-project(dynosam_nn)
+project(dynosam_nn LANGUAGES CXX CUDA)
 
 set(CMAKE_C_FLAGS "-Wall -Wextra  -O3")
 
@@ -26,6 +26,7 @@ find_package(image_transport REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(sensor_msgs REQUIRED)
 
+
 option(DYNOSAM_NN_USE_TRT "Build with TensorRT" ON)
 
 find_package(CUDAToolkit)
@@ -33,14 +34,53 @@ find_package(TensorRT COMPONENTS onnxparser infer_plugin)
 
 set(ENABLE_TENSORRT_CXX_VALUE 1)
 if(DYNOSAM_NN_USE_TRT AND (NOT CUDAToolkit_FOUND OR NOT TensorRT_FOUND))
-  message(WARNING "TensorRT is required for inference to run!"
-                  " Follow the install instructions (if possible) to enable inference"
-  )
+  message(WARNING "TensorRT is required for inference to run!")
+  if(NOT CUDAToolkit_FOUND)
+    message(WARNING "Missing CUDAToolkit")
+  endif()
+  if(NOT TensorRT_FOUND)
+    message(WARNING "Missing TensorRT")
+  endif()
   set(ENABLE_TENSORRT_CXX_VALUE 0)
 elseif(NOT DYNOSAM_NN_USE_TRT)
-  message(STATUS "Disabling TensorRT! Inference will not work!")
+  message(WARNING "Disabling TensorRT! Inference will not work!")
   set(ENABLE_TENSORRT_CXX_VALUE 0)
 endif()
+
+string(TOLOWER "${CMAKE_SYSTEM_PROCESSOR}" SYSTEM_ARCH_LOWER)
+
+## --- 1. Detect and Set CUDA Architecture ---
+if (SYSTEM_ARCH_LOWER MATCHES "^(x86_64|amd64)$")
+    # Case 1: Standard Desktop/Server (x86_64)
+    # Use 'all' to target the maximum number of modern GPUs, relying on the user
+    # or the CI system to set a more specific list if needed.
+    message("Detected x86_64/AMD64. Setting CUDA Architectures to 'all' (flexible build).")
+    set(CMAKE_CUDA_ARCHITECTURES all)
+
+elseif (SYSTEM_ARCH_LOWER MATCHES "^(aarch64|arm64)$")
+    # Case 2: 64-bit Embedded/ARM (NVIDIA ORIN, Jetson)
+    # The NVIDIA ORIN/Jetson series typically uses the Volta (72) or Ampere (87) generation.
+    # We will use 72/87 as a robust default.
+    # NOTE: Check your specific Jetson model! 75/87 are common targets.
+    message("Detected AARCH64/ARM64. Setting CUDA Architectures to 87 (e.g., Orin/Ampere target).")
+    set(CMAKE_CUDA_ARCHITECTURES 75 87)
+
+    # Optional: If you support older Jetsons (e.g., Xavier/TX2), you might add:
+    # list(APPEND CMAKE_CUDA_ARCHITECTURES 72)
+
+else()
+    message(FATAL_ERROR
+        "Unsupported System Processor Architecture: ${SYSTEM_ARCH_LOWER}\n"
+        "This project only supports x86_64/AMD64 or AARCH64/ARM64. "
+        "Please check CMAKE_SYSTEM_PROCESSOR or adjust the build script."
+    )
+
+endif()
+
+set(nvcc_options --device-w --ftz=true --prec-div=false --prec-sqrt=false --fmad=true --default-stream per-thread -O3)
+
+# --- 2. Final Output ---
+message("Final CMAKE_CUDA_ARCHITECTURES set to: ${CMAKE_CUDA_ARCHITECTURES}")
 
 # setup targets
 include_directories(
@@ -58,7 +98,11 @@ add_library(${PROJECT_NAME} SHARED
   src/ObjectDetector.cc
   src/TrtUtilities.cc
   src/ModelConfig.cc
-  src/YoloObjectDetector.cc
+  src/YoloV8ObjectDetector.cc
+
+  src/CudaUtils.cc
+  src/YoloV8CudaUtils.cu
+
 
   src/trackers/byte_tracker/ByteTracker.cc
   src/trackers/byte_tracker/KalmanFilter.cc
@@ -69,8 +113,6 @@ add_library(${PROJECT_NAME} SHARED
 
   src/bindings/PyBoostWrapper.cc
 )
-
-
 
 target_link_libraries(${PROJECT_NAME}
 PUBLIC
@@ -84,6 +126,11 @@ PUBLIC
 PRIVATE
   TensorRT::TensorRT
   CUDA::cudart
+)
+
+# Enable separable compilation for CUDA (optional but recommended)
+set_target_properties(${PROJECT_NAME} PROPERTIES
+    CUDA_SEPARABLE_COMPILATION ON
 )
 
 target_include_directories(${PROJECT_NAME}
@@ -149,8 +196,6 @@ install(TARGETS
   image_segmenter_node
   DESTINATION lib/${PROJECT_NAME})
 
-
-
 pybind11_add_module(_core MODULE
 src/bindings/PyBindings.cc
 src/bindings/cvnp.cc
@@ -168,6 +213,7 @@ install(
   TARGETS _core
   DESTINATION "${PYTHON_INSTALL_DIR}/${PROJECT_NAME}_py"
 )
+
 
 
 #install python scripts/modules

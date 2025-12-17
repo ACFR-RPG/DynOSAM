@@ -30,36 +30,22 @@
 
 #include "dynosam_common/utils/TimingStats.hpp"
 
+#include <glog/vlog_is_on.h>
+
 namespace dyno {
 namespace utils {
 
-// std::ostream& operator<<(std::ostream& os, const TimingStatsNamespace&
-// stats_namespace) {
-//     os << (std::string)stats_namespace;
-//     return os;
-// }
+void ChronoTimeGenerator::onStart() { tic_time_ = Timer::tic(); }
+void ChronoTimeGenerator::onStop() { tic_time_ = Timer::tic(); }
 
-TimingStatsCollector::TimingStatsCollector(const std::string& tag)
-    : tic_time_(Timer::tic()), collector_(tag + " [ms]") {}
-
-TimingStatsCollector::~TimingStatsCollector() { tocAndLog(); }
-
-void TimingStatsCollector::reset() {
-  tic_time_ = Timer::tic();
-  is_valid_ = true;
+double ChronoTimeGenerator::calcDelta() const {
+  const auto toc = Timer::toc<std::chrono::nanoseconds>(tic_time_);
+  return static_cast<double>(toc.count());
 }
 
-bool TimingStatsCollector::isValid() const { return is_valid_; }
-
-void TimingStatsCollector::tocAndLog() {
-  if (is_valid_) {
-    auto toc = Timer::toc<std::chrono::nanoseconds>(tic_time_);
-    auto milliseconds =
-        std::chrono::duration_cast<std::chrono::milliseconds>(toc);
-    collector_.AddSample(static_cast<double>(milliseconds.count()));
-    is_valid_ = false;
-  }
-}
+ChronoTimingStats::ChronoTimingStats(const std::string& tag, int glog_level,
+                                     bool construct_stopped)
+    : This(ChronoTimeGenerator{}, tag, glog_level, construct_stopped) {}
 
 }  // namespace utils
 }  // namespace dyno

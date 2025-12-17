@@ -101,23 +101,70 @@ namespace utils {
 // std::ostream& operator<<(std::ostream& os, const TimingStatsNamespace&
 // stats_namespace);
 
-class TimingStatsCollector {
+/**
+ * @brief Timing logger that allows for scoped timing and manual (ie.
+ * start/stop) and access (ie. get the delta without logging) functionalities.
+ *
+ * Class uses a TimingGenerator to generate the start and stop comparison times
+ * as this may be different depending on what is being timed (ie. CPU vs GPU
+ * timing). TimingGenerator class must implement void onStart(); void onStop();
+ *  double calcDelta() const;
+ *
+ * Functions where calcDelta() returns the dt in nanoseconds.
+ *
+ * @tparam TIMING_GENERATOR
+ */
+template <typename TIMING_GENERATOR>
+class BaseTimingStatsCollector {
  public:
-  DYNO_POINTER_TYPEDEFS(TimingStatsCollector)
+  using TimingGenerator = TIMING_GENERATOR;
 
-  TimingStatsCollector(const std::string& tag);
-  ~TimingStatsCollector();
+  DYNO_POINTER_TYPEDEFS(BaseTimingStatsCollector)
 
-  /**
-   * @brief Resets the current tic_time and sets is_valid = true,
-   * such that when the collector tries to toc, the tic (comparison time) will
-   * be valid
-   *
-   *
-   */
-  void reset();
+ protected:
+  BaseTimingStatsCollector(const TimingGenerator& timing_generator,
+                           const std::string& tag, int glog_level,
+                           bool construct_stopped)
+      : timing_generator_(timing_generator),
+        tag_(tag + " [ms]"),
+        glog_level_(glog_level),
+        is_timing_(false) {
+    if (!construct_stopped) {
+      start();
+    }
+  }
 
-  bool isValid() const;
+ public:
+  ~BaseTimingStatsCollector() { stop(); }
+
+  void start() {
+    timing_generator_.onStart();
+    is_timing_ = true;
+  }
+
+  void stop() {
+    if (isTiming() && shouldGlog()) {
+      log();
+    }
+
+    timing_generator_.onStop();
+    is_timing_ = false;
+  }
+
+  bool isTiming() const { return is_timing_; }
+  void discardTiming() { is_timing_ = false; }
+
+  // Time delta (dt) in nano seconds
+  inline double delta() const { return timing_generator_.calcDelta(); }
+
+  // not that it will log to glog, but that the glog verbosity level is set
+  // such that it will log to the collector
+  bool shouldGlog() const {
+    if (glog_level_ == 0) {
+      return true;
+    }
+    return VLOG_IS_ON(glog_level_);
+  }
 
  private:
   /**
@@ -128,20 +175,43 @@ class TimingStatsCollector {
    * The collector then needs to be reset to be used again
    *
    */
-  void tocAndLog();
+  void log() {
+    const double nanoseconds = delta();
+    const double milliseconds = nanoseconds / 1e6;
+
+    if (!collector_) {
+      collector_ = std::make_unique<StatsCollector>(tag_);
+    }
+    collector_->AddSample(milliseconds);
+  }
 
  private:
-  Timer::TimePoint
-      tic_time_;  //! Time on creation (the time to compare against)
-  StatsCollector collector_;
+  TimingGenerator timing_generator_;
+  const std::string tag_;
+  const int glog_level_;
+  //! Timing state
+  std::atomic_bool is_timing_;
+  //! Internal logger.
+  //! Created only first time logging ocurs to ensure the tag only appears if
+  //! the timing actually logs and not just if it is instantiated.
+  std::unique_ptr<StatsCollector> collector_;
+};
 
-  std::atomic_bool is_valid_{
-      true};  //! Indiactes validity of the tic_time and if the collector has
-              //! been reset allowing a new toc to be made
+struct ChronoTimeGenerator {
+  //! Comparison time
+  Timer::TimePoint tic_time_;
+  void onStart();
+  void onStop();
+
+  double calcDelta() const;
+};
+
+class ChronoTimingStats : public BaseTimingStatsCollector<ChronoTimeGenerator> {
+ public:
+  using This = BaseTimingStatsCollector<ChronoTimeGenerator>;
+  ChronoTimingStats(const std::string& tag, int glog_level = 0,
+                    bool construct_stopped = false);
 };
 
 }  // namespace utils
 }  // namespace dyno
-
-#define TIMING_STATS(tag) \
-  dyno::utils::TimingStatsCollector timing_stats_##tag(tag);

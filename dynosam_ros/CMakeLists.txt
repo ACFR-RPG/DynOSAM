@@ -35,6 +35,7 @@ find_package(rclpy REQUIRED)
 find_package(message_filters REQUIRED)
 
 
+
 # setup targets
 include_directories(
   include
@@ -42,6 +43,7 @@ include_directories(
   ${EIGEN3_INCLUDE_DIRS}
   ${PCL_INCLUDE_DIRS}
   ${dynosam_INCLUDE_DIRS}
+  ${pcl_conversions_INCLUDE_DIRS}
 )
 
 
@@ -68,13 +70,31 @@ set(LINK_LIBS
   dynosam::dynosam
   image_transport::image_transport
   message_filters::message_filters
-  pcl_conversions::pcl_conversions
   rclcpp::rclcpp
   sensor_msgs::sensor_msgs_library
   tf2_ros::static_transform_broadcaster_node
   tf2_ros::tf2_ros
 
 )
+
+# conditionally compile for message filters
+# as the API changes between Jazzy and Kilted
+# in Jazzy the version is 4 and Kilted is 7
+# also for some reason in the kilted version we need pcl_conversions
+# in the link librariers but in Jazzy we dont
+if(${message_filters_VERSION_MAJOR} GREATER_EQUAL 7)
+message(
+  "message filters version detected > 7. Assumuing ROS Kilted is used. "
+  " Setting MESSAGE_FILTERS_USES_NODE_INTERFACE=1")
+add_compile_definitions(MESSAGE_FILTERS_USES_NODE_INTERFACE=1)
+# add pcl conversions lib
+list(APPEND LINK_LIBS pcl_conversions::pcl_conversions)
+else()
+message(
+  "message filters version detected < 7. Assumuing at least ROS Jazzy is used."
+  " Setting MESSAGE_FILTERS_USES_NODE_INTERFACE=0")
+add_compile_definitions(MESSAGE_FILTERS_USES_NODE_INTERFACE=0)
+endif()
 
 set(TARGET_EXPORT_DEPS
   rclcpp
@@ -162,9 +182,20 @@ target_link_libraries(dynosam_node
   ${PCL_LIBRARIES}
 
 )
-
 install(TARGETS
   dynosam_node
+  DESTINATION lib/${PROJECT_NAME})
+
+
+
+add_executable(dynosam_tracking_demo_node nodes/dynosam_tracking_demo_node.cc)
+target_link_libraries(dynosam_tracking_demo_node
+  ${PROJECT_NAME}
+  ${PCL_LIBRARIES}
+
+)
+install(TARGETS
+  dynosam_tracking_demo_node
   DESTINATION lib/${PROJECT_NAME})
 
 

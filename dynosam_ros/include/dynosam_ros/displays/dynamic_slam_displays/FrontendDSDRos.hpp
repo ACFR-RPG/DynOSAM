@@ -44,7 +44,8 @@ namespace dyno {
 
 class FrontendDSDRos : public FrontendDisplay, DSDRos {
  public:
-  FrontendDSDRos(const DisplayParams params, rclcpp::Node::SharedPtr node);
+  FrontendDSDRos(const DisplayParams params, rclcpp::Node::SharedPtr node,
+                 rclcpp::Node::SharedPtr ground_truth_node = nullptr);
   ~FrontendDSDRos() = default;
 
   void spinOnceImpl(const VisionImuPacket::ConstPtr& frontend_output) override;
@@ -62,16 +63,20 @@ class FrontendDSDRos : public FrontendDisplay, DSDRos {
       const VisionImuPacket::ConstPtr& frontend_output);
 
  private:
-  //! Transport for ground truth publishing
-  DSDTransport::UniquePtr dsd_ground_truth_transport_;
+  struct GroundTruthPublishers {
+    //! Transport for ground truth publishing
+    DSDTransport dsd_transport_;
+    OdometryPub::SharedPtr vo_publisher_;
+    PathPub::SharedPtr vo_path_publisher_;
+
+    GroundTruthPublishers(rclcpp::Node::SharedPtr ground_truth_node);
+  };
   //! Image Transport for tracking image
   image_transport::Publisher tracking_image_pub_;
-
-  OdometryPub::SharedPtr vo_ground_truth_publisher_;
-  PathPub::SharedPtr vo_path_ground_truth_publisher_;
-
   rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr
       dense_dynamic_cloud_pub_;
+
+  std::optional<GroundTruthPublishers> ground_truth_publishers_;
 
   //! Accumulated camera poses
   gtsam::Pose3Vector camera_poses_;

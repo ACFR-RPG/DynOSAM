@@ -65,10 +65,15 @@ class Timer {
            1e9;
   }
 
+  template <typename U, typename T = std::chrono::milliseconds>
+  static double toUnits(const T& time) {
+    const auto unit = std::chrono::duration_cast<U>(time);
+    return static_cast<double>(unit.count());
+  }
+
   template <typename T = std::chrono::milliseconds>
   static double toSeconds(const T& time) {
-    auto seconds = std::chrono::duration_cast<std::chrono::seconds>(time);
-    return static_cast<double>(seconds.count());
+    return toUnits<std::chrono::seconds>(time);
   }
 };
 
