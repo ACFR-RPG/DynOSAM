@@ -48,19 +48,19 @@
 namespace dyno {
 
   // HELPER FUNCTION ADDED BY ETHAN
-// map for classes to number IDs (so we can expand later)
-static const std::map<std::string, ClassSegmentation::Labels> class_name_to_id{
-    {"Undefined", ClassSegmentation::Undefined},  // 0
-    {"Road", ClassSegmentation::Road},            // 1
-    {"Rider", ClassSegmentation::Rider},          // 2
+// TODO: make this map for the class labels
+static const std::map<std::string, int> class_name_to_id{
+    {"Undefined", 0},  // 0
+    {"Road", 1},            // 1
+    {"Rider", 2},          // 2
 };
 
 int objectIdToClassId(ObjectId obj_id, const std::map<ObjectId, std::string>& object_classes) {
 
   auto it = object_classes.find(obj_id);                                  // find the object in the map
 
-  if (it == object_classes.end()) {
-    return ClassSegmentation::Undefined;  
+  if (it == object_classes.end() || it->second == "Unknown") {
+    return 0;  
   }
   
   auto class_it = class_name_to_id.find(it->second);
@@ -68,7 +68,7 @@ int objectIdToClassId(ObjectId obj_id, const std::map<ObjectId, std::string>& ob
     return class_it->second;
   } 
 
-  return ClassSegmentation::Undefined;
+  return 1;
 
 }
 
@@ -1255,12 +1255,12 @@ void FeatureTracker::propogateMask(ImageContainer& image_container) {
 
   // building map of previous classes
   std::map<ObjectId, std::string> object_classes;
-  for (const auto& detection : previous_frame->object_detection_.detections) {
+  for (const auto& [obj_id, detection] : previous_frame_->object_observations_) {
     if (detection.isValid()) {
-      object_classes[detection.obj_id] = detection.class_name;
+      object_classes[obj_id] = detection.class_name;
     } 
     else {
-      object_classes[detection.obj_id] = "Unknown";
+      object_classes[obj_id] = "Unknown";
     }
   }
 
