@@ -146,7 +146,7 @@ class FeatureTracker : public FeatureTrackerBase {
  private:
   // TODO: for now we loose the actual object detection result if inference was
   // run!
-  bool objectDetection(
+  std::optional<ObjectDetectionResult> objectDetection(
       vision_tools::ObjectBoundaryMaskResult& boundary_mask_result,
       ImageContainer& image_container);
 

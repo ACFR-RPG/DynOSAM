@@ -231,6 +231,13 @@ FrontendModule::SpinReturn RGBDInstanceFrontendModule::nominalSpin(
   fillOutputPacketWithTracks(vision_imu_packet, *frame, T_k_1_k, object_motions,
                              object_poses);
 
+  // Update the body velocity according to the previous vision IMU packet
+  if (previous_vision_imu_packet_) {
+    vision_imu_packet->updateBodyVelocity(*previous_vision_imu_packet_);
+  }
+
+  previous_vision_imu_packet_ = vision_imu_packet;
+
   if (R_curr_ref) {
     imu_frontend_.resetIntegration();
   }

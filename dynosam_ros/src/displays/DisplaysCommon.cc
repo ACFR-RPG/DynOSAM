@@ -44,15 +44,23 @@ CloudPerObject DisplayCommon::publishPointCloud(
   return clouds_per_obj;
 }
 
+// ================================================================================================================
+// TODO: look here edit this function to include velocities
+// ================================================================================================================
+
 void DisplayCommon::publishOdometry(OdometryPub::SharedPtr pub,
                                     const gtsam::Pose3& T_world_camera,
                                     Timestamp timestamp,
                                     const std::string& frame_id,
-                                    const std::string& child_frame_id) {
+                                    const std::string& child_frame_id,
+                                    const gtsam::Vector6& velocity
+                                    ) {
   nav_msgs::msg::Odometry odom_msg;
   utils::convertWithHeader(T_world_camera, odom_msg, timestamp, frame_id,
                            child_frame_id);
-  pub->publish(odom_msg);
+  
+  dyno::convert(velocity, odom_msg.twist.twist);
+  pub->publish(odom_msg); 
 }
 
 void DisplayCommon::publishOdometryPath(PathPub::SharedPtr pub,

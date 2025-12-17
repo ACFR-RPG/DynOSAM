@@ -62,6 +62,12 @@ const ImageWrapper<ImageType::MotionMask>& ImageContainer::objectMotionMask()
     const {
   return this->at<ImageType::MotionMask>(kObjectMask);
 }
+
+const ImageWrapper<ImageType::ClassSegmentation>& ImageContainer::objectClassMask()
+      const {
+    return this->at<ImageType::ClassMask>(kClassMask);
+  }
+
 const ImageWrapper<ImageType::RGBMono>& ImageContainer::rightRgb() const {
   return this->at<ImageType::RGBMono>(kRightRgb);
 }
@@ -78,6 +84,11 @@ ImageWrapper<ImageType::OpticalFlow>& ImageContainer::opticalFlow() {
 ImageWrapper<ImageType::MotionMask>& ImageContainer::objectMotionMask() {
   return this->at<ImageType::MotionMask>(kObjectMask);
 }
+
+ImageWrapper<ImageType::ClassMask>& ImageContainer::objectClassMask() {
+  return this->at<ImageType::ClassSegmentation>(kClassMask);
+}
+
 ImageWrapper<ImageType::RGBMono>& ImageContainer::rightRgb() {
   return this->at<ImageType::RGBMono>(kRightRgb);
 }
@@ -96,6 +107,10 @@ ImageContainer& ImageContainer::opticalFlow(const cv::Mat& image) {
 
 ImageContainer& ImageContainer::objectMotionMask(const cv::Mat& image) {
   return this->add<ImageType::MotionMask>(kObjectMask, image);
+}
+
+ImageContainer& ImageContainer::objectClassMask(const cv::Mat& image) {
+  return this->add<ImageType::ClassSegmentation>(kClassMask, image);
 }
 
 ImageContainer& ImageContainer::rightRgb(const cv::Mat& image) {

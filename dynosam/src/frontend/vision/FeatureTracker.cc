@@ -47,6 +47,32 @@
 
 namespace dyno {
 
+  // HELPER FUNCTION ADDED BY ETHAN
+// map for classes to number IDs (so we can expand later)
+static const std::map<std::string, ClassSegmentation::Labels> class_name_to_id{
+    {"Undefined", ClassSegmentation::Undefined},  // 0
+    {"Road", ClassSegmentation::Road},            // 1
+    {"Rider", ClassSegmentation::Rider},          // 2
+};
+
+int objectIdToClassId(ObjectId obj_id, const std::map<ObjectId, std::string>& object_classes) {
+
+  auto it = object_classes.find(obj_id);                                  // find the object in the map
+
+  if (it == object_classes.end()) {
+    return ClassSegmentation::Undefined;  
+  }
+  
+  auto class_it = class_name_to_id.find(it->second);
+  if (class_it != class_name_to_id.end()) {
+    return class_it->second;
+  } 
+
+  return ClassSegmentation::Undefined;
+
+}
+
+
 FeatureTracker::FeatureTracker(const FrontendParams& params, Camera::Ptr camera,
                                ImageDisplayQueue* display_queue)
     : FeatureTrackerBase(params.tracker_params, camera, display_queue),
@@ -102,6 +128,7 @@ Frame::Ptr FeatureTracker::track(FrameId frame_id, Timestamp timestamp,
   // result after the function call) ObjectDetectionEngine is used if
   // params_.prefer_provided_object_detection is false
   vision_tools::ObjectBoundaryMaskResult boundary_mask_result;
+
   objectDetection(boundary_mask_result, input_images);
 
   if (!initial_computation_ && params_.use_propogate_mask) {
@@ -1151,7 +1178,7 @@ void FeatureTracker::requiresSampling(
   }
 }
 
-bool FeatureTracker::objectDetection(
+std::optional<ObjectDetectionResult> FeatureTracker::objectDetection(
     vision_tools::ObjectBoundaryMaskResult& boundary_mask_result,
     ImageContainer& image_container) {
   // from some experimental testing 10 pixles is a good boarder to add around
@@ -1182,7 +1209,7 @@ bool FeatureTracker::objectDetection(
       vision_tools::computeObjectMaskBoundaryMask(
           boundary_mask_result, object_mask, scaled_boarder_thickness,
           kUseAsFeatureDetectionMask);
-      return false;
+      return std::nullopt;
     } else {
       LOG(FATAL) << "Params specify prefer provided object mask but input "
                     "is missing!";
@@ -1209,7 +1236,7 @@ bool FeatureTracker::objectDetection(
     // update or insert image container with object mask
     image_container.replace<ImageType::MotionMask>(ImageContainer::kObjectMask,
                                                    object_mask);
-    return true;
+    return detection_result;
   }
 }
 
@@ -1224,6 +1251,18 @@ void FeatureTracker::propogateMask(ImageContainer& image_container) {
 
   // note reference
   cv::Mat& current_mask = image_container.objectMotionMask();
+  cv::Mat& current_class_mask = image_container.objectClassMask();
+
+  // building map of previous classes
+  std::map<ObjectId, std::string> object_classes;
+  for (const auto& detection : previous_frame->object_detection_.detections) {
+    if (detection.isValid()) {
+      object_classes[detection.obj_id] = detection.class_name;
+    } 
+    else {
+      object_classes[detection.obj_id] = "Unknown";
+    }
+  }
 
   ObjectIds instance_labels;
   for (const Feature::Ptr& dynamic_feature :
@@ -1352,6 +1391,13 @@ void FeatureTracker::propogateMask(ImageContainer& image_container) {
               current_mask.at<ObjectId>(functional_keypoint::v(predicted_kp),
                                         functional_keypoint::u(predicted_kp)) =
                   instance_labels[i];
+              
+              const ObjectId obj_id = instance_labels[i];
+              int class_id = objectIdToClassId(obj_id, object_classes);
+
+              current_class_mask.at<int>(functional_keypoint::v(predicted_kp), 
+                                         functional_keypoint::u(predicted_kp)) = 
+                    class_id;
               //  current_rgb
               // updated_mask_points++;
             }
@@ -1361,5 +1407,6 @@ void FeatureTracker::propogateMask(ImageContainer& image_container) {
     }
   }
 }
+
 
 }  // namespace dyno

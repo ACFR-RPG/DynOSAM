@@ -83,12 +83,12 @@ class DSDTransport {
   // to get velocity...
   static ObjectOdometry constructObjectOdometry(
       const gtsam::Pose3& e_H_k_world, const gtsam::Pose3& pose_k,
-      ObjectId object_id, FrameId frame_id_k, Timestamp timestamp_k,
+      ObjectId object_id, FrameId frame_id_k, Timestamp timestamp_k, Timestamp timestamp_km1,
       const std::string& frame_id_link, const std::string& child_frame_id_link);
 
   static ObjectOdometryMap constructObjectOdometries(
       const ObjectMotionMap& motions, const ObjectPoseMap& poses,
-      FrameId frame_id_k, Timestamp timestamp_k,
+      FrameId frame_id_k, Timestamp timestamp_k, Timestamp timestamp_km1,
       const std::string& frame_id_link);
 
   static MultiObjectOdometryPath constructMultiObjectOdometryPaths(
@@ -146,6 +146,7 @@ class DSDTransport {
     std::string frame_id_link_;
     FrameId frame_id_;
     Timestamp timestamp_;
+    Timestamp timestamp_km1_;
 
     //! Object odometries for this frame
     ObjectOdometryMap object_odometries_;
@@ -231,7 +232,8 @@ class DSDRos {
   DSDRos(const DisplayParams& params, rclcpp::Node::SharedPtr node);
 
   void publishVisualOdometry(const gtsam::Pose3& T_world_camera,
-                             Timestamp timestamp, const bool publish_tf);
+                             Timestamp timestamp, const bool publish_tf, 
+                             const gtsam::Vector6& velocity = gtsam::Vector6::Zero());
   void publishVisualOdometryPath(const gtsam::Pose3Vector& poses,
                                  Timestamp latest_timestamp);
 
