@@ -126,6 +126,13 @@ class RGBDInstanceFrontendModule : public FrontendModule {
 
   //! Last keyframe
   Frame::Ptr frame_lkf_;
+
+  // Previous packet
+  VisionImuPacket::Ptr previous_vision_imu_packet_;
+
+
 };
+
+
 
 }  // namespace dyno

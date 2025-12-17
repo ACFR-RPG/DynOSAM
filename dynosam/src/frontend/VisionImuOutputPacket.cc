@@ -40,6 +40,8 @@ ImuFrontend::PimPtr VisionImuPacket::pim() const { return pim_; }
 
 Camera::ConstPtr VisionImuPacket::camera() const { return camera_; }
 
+gtsam::Vector6 VisionImuPacket::getBodyVelocity() const { return *stored_body_velocity; }
+
 PointCloudLabelRGB::Ptr VisionImuPacket::denseLabelledCloud() const {
   return dense_labelled_cloud_;
 }
@@ -212,6 +214,32 @@ void VisionImuPacket::fillLandmarkMeasurements(
     }
   }
 }
+
+// Adding velocity information into the VisionImuPacket
+
+// * Function to update the previous body velocity *
+VisionImuPacket& VisionImuPacket::updateBodyVelocity(const VisionImuPacket& prev_state) {
+
+  // Getting the pose at k-1
+  const gtsam::Pose3& w_L_k_1 = prev_state.cameraPose();
+
+  // Getting the motion from k-1 to k
+  const gtsam::Pose3& w_k_1_H_k = camera_tracks_.T_k_1_k;
+
+  stored_body_velocity = calculateBodyMotion(
+    w_k_1_H_k,
+    w_L_k_1,
+    prev_state.timestamp(),
+    timestamp_
+  );
+
+  return *this;
+
+}
+
+// * Function to get the body velocity *
+
+
 
 }  // namespace dyno
 

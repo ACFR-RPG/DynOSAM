@@ -68,7 +68,8 @@ struct DisplayCommon {
   static void publishOdometry(OdometryPub::SharedPtr pub,
                               const gtsam::Pose3& T_world_camera,
                               Timestamp timestamp, const std::string& frame_id,
-                              const std::string& child_frame_id);
+                              const std::string& child_frame_id,
+                              const gtsam::Vector6& velocity = gtsam::Vector6::Zero());
   static void publishOdometryPath(PathPub::SharedPtr pub,
                                   const gtsam::Pose3Vector& poses,
                                   Timestamp latest_timestamp,

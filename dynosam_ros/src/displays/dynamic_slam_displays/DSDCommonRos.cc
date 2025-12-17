@@ -25,24 +25,29 @@ std::string DSDTransport::constructObjectFrameLink(ObjectId object_id) {
   return "object_" + std::to_string(object_id) + "_link";
 }
 
+// ================================================================================================================
+// TODO: Fill in the velocity and check calculateBodyMotion is correct (only linear, add angular component too)
+// ================================================================================================================
 ObjectOdometry DSDTransport::constructObjectOdometry(
-    const gtsam::Pose3& e_H_k_world, const gtsam::Pose3& pose_k,
-    ObjectId object_id, FrameId frame_id_k, Timestamp timestamp_k,
+    const gtsam::Pose3& e_H_k_world, const gtsam::Pose3& pose_km1,
+    ObjectId object_id, FrameId frame_id_k, Timestamp timestamp_k, Timestamp timestamp_km1,
     const std::string& frame_id_link, const std::string& child_frame_id_link) {
   ObjectOdometry object_odom;
 
-  // technically this shoudl be k-1
-  gtsam::Point3 body_velocity = calculateBodyMotion(e_H_k_world, pose_k);
+  // technically this should be k-1
+  gtsam::Vector6 body_velocity = calculateBodyMotion(e_H_k_world, pose_km1, timestamp_km1, timestamp_k);
 
   nav_msgs::msg::Odometry odom_msg;
-  utils::convertWithHeader(pose_k, odom_msg, timestamp_k, frame_id_link,
+  utils::convertWithHeader(pose_km1, odom_msg, timestamp_k, frame_id_link,
                            child_frame_id_link);
 
   object_odom.odom = odom_msg;
   // TODO: can check if correct representation?
 
   dyno::convert(e_H_k_world, object_odom.h_w_km1_k.pose);
-  // NO velocity!!
+
+  dyno::convert(body_velocity, object_odom.odom.twist.twist); // Add velocity to message
+ 
   object_odom.object_id = object_id;
   object_odom.sequence = frame_id_k;
   return object_odom;
@@ -50,7 +55,7 @@ ObjectOdometry DSDTransport::constructObjectOdometry(
 
 ObjectOdometryMap DSDTransport::constructObjectOdometries(
     const ObjectMotionMap& motions, const ObjectPoseMap& poses,
-    FrameId frame_id_k, Timestamp timestamp_k,
+    FrameId frame_id_k, Timestamp timestamp_k, Timestamp timestamp_km1,
     const std::string& frame_id_link) {
   // need to get poses for k-1
   // TODO: no way to ensure that the motions are for frame k
@@ -79,8 +84,8 @@ ObjectOdometryMap DSDTransport::constructObjectOdometries(
     object_odom_map.insert2(
         child_frame_id_link,
         constructObjectOdometry(e_H_k_world, pose_k, object_id, frame_id_k,
-                                timestamp_k, frame_id_link,
-                                child_frame_id_link));
+                                timestamp_k, timestamp_km1, 
+                                frame_id_link, child_frame_id_link));
   }
 
   return object_odom_map;
@@ -139,9 +144,19 @@ MultiObjectOdometryPath DSDTransport::constructMultiObjectOdometryPaths(
 
       // RIGHT NOW MOTION IDENTITY
       // timestamp is wrong
+
+      // Adding the (k-1)th timestamp
+      Timestamp timestamp_km1; 
+      if (previous_frame_id >= 0) {
+        timestamp_km1 = frame_timestamp_map.at(previous_frame_id);
+      }
+      else {
+        timestamp_km1 = timestamp;
+      }
+
       gtsam::Pose3 motion;
       const ObjectOdometry object_odometry = constructObjectOdometry(
-          object_motion, object_pose, object_id, frame_id, timestamp,
+          object_motion, object_pose, object_id, frame_id, timestamp, timestamp_km1,
           frame_id_link, child_frame_id_link);
 
       if (!segmented_paths.exists(path_segment)) {
@@ -224,6 +239,23 @@ void DSDTransport::Publisher::publishObjectPaths() {
   multi_object_odom_path_publisher_->publish(object_paths_);
 }
 
+// ============================== ADDED HELPER FUNCTION TO GET PREVIOUS TIMESTEP ==============================
+Timestamp getPrevTimestamp(const FrameIdTimestampMap& map, FrameId id, Timestamp current_timestamp) {
+
+  if (id < 0) return current_timestamp;
+
+  FrameId prev_id = id - 1;
+
+  auto it = map.find(prev_id);
+  if (it != map.end()) {
+    return it->second;
+  } 
+  else {
+    return current_timestamp;
+  }
+}
+// ============================================================================================================
+
 DSDTransport::Publisher::Publisher(
     rclcpp::Node::SharedPtr node,
     ObjectOdometryPub::SharedPtr object_odom_publisher,
@@ -240,8 +272,9 @@ DSDTransport::Publisher::Publisher(
       frame_id_link_(frame_id_link),
       frame_id_(frame_id),
       timestamp_(timestamp),
+      timestamp_km1_(getPrevTimestamp(frame_timestamp_map, frame_id, timestamp)), // added to get (k-1)th timestamp
       object_odometries_(DSDTransport::constructObjectOdometries(
-          motions, poses, frame_id, timestamp, frame_id_link)),
+          motions, poses, frame_id, timestamp, timestamp_km1_, frame_id_link)),
       object_paths_(DSDTransport::constructMultiObjectOdometryPaths(
           motions, poses, timestamp, frame_timestamp_map, frame_id_link)) {}
 
@@ -271,10 +304,12 @@ DSDRos::DSDRos(const DisplayParams& params, rclcpp::Node::SharedPtr node)
 }
 
 void DSDRos::publishVisualOdometry(const gtsam::Pose3& T_world_camera,
-                                   Timestamp timestamp, const bool publish_tf) {
+                                   Timestamp timestamp, const bool publish_tf,
+                                   const gtsam::Vector6& velocity) {
   DisplayCommon::publishOdometry(vo_publisher_, T_world_camera, timestamp,
                                  params_.world_frame_id,
-                                 params_.camera_frame_id);
+                                 params_.camera_frame_id,
+                                 velocity);
 
   if (publish_tf) {
     geometry_msgs::msg::TransformStamped t;
