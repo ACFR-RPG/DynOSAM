@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['map_0',['Map',['../structdyno_1_1MapTraits.html#a932243a56602a56a5b0bd7d249fd999e',1,'dyno::MapTraits::Map()'],['../classdyno_1_1Formulation.html#a0d23288e66f5eeb4022958765693a6e2',1,'dyno::Formulation::Map()'],['../classdyno_1_1ParallelObjectISAM.html#ac56b5c71977109bcd436312102756a10',1,'dyno::ParallelObjectISAM::Map()'],['../classdyno_1_1AccessorT.html#a62dc6e02f26cf2fa9f1a25c8c9c1fde8',1,'dyno::AccessorT::Map()']]],
+  ['map_0',['Map',['../structdyno_1_1MapTraits.html#a932243a56602a56a5b0bd7d249fd999e',1,'dyno::MapTraits::Map()'],['../classdyno_1_1Formulation.html#a0d23288e66f5eeb4022958765693a6e2',1,'dyno::Formulation::Map()'],['../classdyno_1_1ParallelObjectISAM.html#ac56b5c71977109bcd436312102756a10',1,'dyno::ParallelObjectISAM::Map()'],['../classdyno_1_1AccessorT.html#a53392b65722268368a74e72555ffe9e1',1,'dyno::AccessorT::Map()']]],
   ['map2d_1',['Map2d',['../namespacedyno.html#a9adb692e25b0a3c21550b6685a069447',1,'dyno']]],
   ['map3d_2',['Map3d',['../namespacedyno.html#a7c2a0f6ddab35d15fc692843219c63ed',1,'dyno']]],
   ['map_5ft_3',['map_t',['../classdyno_1_1utils_1_1Statistics.html#a4da93fbc4d563d83623f6a6f894c4574',1,'dyno::utils::Statistics']]],
@@ -20,7 +20,7 @@ var searchData=
   ['measurements_17',['Measurements',['../structdyno_1_1LandmarkNode.html#a3d1d767378eebbfe071f1484c220d65e',1,'dyno::LandmarkNode']]],
   ['measurementstatusvector_18',['MeasurementStatusVector',['../classdyno_1_1Map.html#abdcbb0023e28a3eb9ff387217c4bd6fd',1,'dyno::Map::MeasurementStatusVector()'],['../classdyno_1_1ParallelObjectISAM.html#a0b9f9ad9e1f5fd36c433794ee61319dd',1,'dyno::ParallelObjectISAM::MeasurementStatusVector()']]],
   ['measurementtraits_19',['MeasurementTraits',['../classdyno_1_1Formulation.html#ab26582b919eeb3e37d6c4d5725d0a5af',1,'dyno::Formulation::MeasurementTraits()'],['../classdyno_1_1internal_1_1StaticFormulationUpdater.html#a1c10edadf0f2bdc0f95f32a109258a3e',1,'dyno::internal::StaticFormulationUpdater::MeasurementTraits()'],['../classdyno_1_1internal_1_1StaticFormulationUpdaterImpl.html#aae448276c4e3175e02aa8058c06efec8',1,'dyno::internal::StaticFormulationUpdaterImpl::MeasurementTraits()']]],
-  ['measurementtype_20',['MeasurementType',['../classdyno_1_1Formulation.html#ad5c53ea227b7b8abb6e5490d6149af51',1,'dyno::Formulation::MeasurementType()'],['../structdyno_1_1BackendModuleTraits.html#aabcb8520e31c25f55897be761992d8a7',1,'dyno::BackendModuleTraits::MeasurementType()'],['../classdyno_1_1BackendModuleType.html#ad366d32366f1a0e74ebf93cfdcba89ad',1,'dyno::BackendModuleType::MeasurementType()'],['../classdyno_1_1internal_1_1StaticFormulationUpdaterImpl.html#aceb6895afca782bc5a33ccfceb9c5d56',1,'dyno::internal::StaticFormulationUpdaterImpl::MeasurementType()'],['../structdyno_1_1MapTraits.html#a12b6c0f27a3a4cd1c9ceee571d41c2ca',1,'dyno::MapTraits::MeasurementType()']]],
+  ['measurementtype_20',['MeasurementType',['../structdyno_1_1MapTraits.html#a12b6c0f27a3a4cd1c9ceee571d41c2ca',1,'dyno::MapTraits::MeasurementType()'],['../structdyno_1_1BackendModuleTraits.html#aabcb8520e31c25f55897be761992d8a7',1,'dyno::BackendModuleTraits::MeasurementType()'],['../classdyno_1_1BackendModuleType.html#ad366d32366f1a0e74ebf93cfdcba89ad',1,'dyno::BackendModuleType::MeasurementType()'],['../classdyno_1_1internal_1_1StaticFormulationUpdaterImpl.html#aceb6895afca782bc5a33ccfceb9c5d56',1,'dyno::internal::StaticFormulationUpdaterImpl::MeasurementType()'],['../classdyno_1_1Formulation.html#ad5c53ea227b7b8abb6e5490d6149af51',1,'dyno::Formulation::MeasurementType()']]],
   ['messagetype_21',['MessageType',['../classdyno_1_1MultiSync.html#abc83ed0d2f7636f21cc7295f3fde0b43',1,'dyno::MultiSync']]],
   ['methodtype_22',['MethodType',['../classdyno_1_1internal_1_1StaticFormulationUpdater.html#a2ca6901bb765fa2da3b9a18ea3c90386',1,'dyno::internal::StaticFormulationUpdater']]],
   ['mimo_23',['MIMO',['../classdyno_1_1DataInterfacePipeline.html#a945c27ddf3b841d60022ee96ec783cc3',1,'dyno::DataInterfacePipeline']]],
@@ -37,10 +37,9 @@ var searchData=
   ['motions_34',['Motions',['../classdyno_1_1SmartMotionFactor.html#a7d857bc2285f1ee1109400ac66666cc9',1,'dyno::SmartMotionFactor::Motions()'],['../structdyno_1_1MotionFactorTraits.html#a7d857bc2285f1ee1109400ac66666cc9',1,'dyno::MotionFactorTraits::Motions()']]],
   ['motiontraits_35',['MotionTraits',['../classdyno_1_1SmartMotionFactor.html#ad390464b186e74483db608127f423846',1,'dyno::SmartMotionFactor']]],
   ['multiimagesync_36',['MultiImageSync',['../namespacedyno.html#a518747c222a92611219720fe53292daf',1,'dyno']]],
-  ['multiimagesync1_37',['MultiImageSync1',['../namespacedyno.html#a7e3c87fe612de2f0475d1d6f2420ff96',1,'dyno']]],
-  ['multiimagesync2_38',['MultiImageSync2',['../namespacedyno.html#a09470c0bc9770c0335e60cae02a239a8',1,'dyno']]],
-  ['multiimagesync3_39',['MultiImageSync3',['../namespacedyno.html#a102bbb9fd7a19b37a23ae7ac09fc146e',1,'dyno']]],
-  ['multiimagesync4_40',['MultiImageSync4',['../namespacedyno.html#a380df4a97ee0e1c493d393b72708efba',1,'dyno']]],
-  ['multiobjectodometrypath_41',['MultiObjectOdometryPath',['../namespacedyno.html#a08ed1ede4e6919d056b91f50997b3cb5',1,'dyno']]],
-  ['multiobjectodometrypathpub_42',['MultiObjectOdometryPathPub',['../namespacedyno.html#af4017ef83a94752067ec0043f2eae994',1,'dyno']]]
+  ['multiimagesync2_37',['MultiImageSync2',['../namespacedyno.html#a09470c0bc9770c0335e60cae02a239a8',1,'dyno']]],
+  ['multiimagesync3_38',['MultiImageSync3',['../namespacedyno.html#a102bbb9fd7a19b37a23ae7ac09fc146e',1,'dyno']]],
+  ['multiimagesync4_39',['MultiImageSync4',['../namespacedyno.html#a380df4a97ee0e1c493d393b72708efba',1,'dyno']]],
+  ['multiobjectodometrypath_40',['MultiObjectOdometryPath',['../namespacedyno.html#a08ed1ede4e6919d056b91f50997b3cb5',1,'dyno']]],
+  ['multiobjectodometrypathpub_41',['MultiObjectOdometryPathPub',['../namespacedyno.html#af4017ef83a94752067ec0043f2eae994',1,'dyno']]]
 ];

@@ -1,20 +1,22 @@
 <map id="dyno::H" name="dyno::H">
-<area shape="rect" id="node1" title=" " alt="" coords="843,239,915,265"/>
-<area shape="rect" id="node2" href="$classdyno_1_1ORBextractor.html#a562881ff59ebda31b98b1c5f27125135" title=" " alt="" coords="591,40,766,80"/>
-<area shape="rect" id="node3" href="$namespacedyno_1_1utils.html#ae54978140c5727f3962fc255cad59952" title=" " alt="" coords="581,104,776,144"/>
-<area shape="rect" id="node9" href="$namespacedyno_1_1vision__tools.html#aaabcfcca356f30c83a45a51259e39783" title="Projects a dense depth map to 3D coordinates in the local frame." alt="" coords="609,168,749,208"/>
-<area shape="rect" id="node11" href="$classdyno_1_1Pose3FlowProjectionFactor.html#a0cd395907689db2beddc9b56035992a0" title=" " alt="" coords="580,232,777,272"/>
-<area shape="rect" id="node12" href="$classdyno_1_1LandmarkMotionTernaryFactor.html#a0707afd8ae2267508b562f110d17cf95" title=" " alt="" coords="569,296,789,336"/>
-<area shape="rect" id="node13" href="$namespacedyno.html#a23977a9581e8b4d2b684f749ec21cba2" title=" " alt="" coords="579,361,778,386"/>
-<area shape="rect" id="node16" href="$classdyno_1_1FeatureTrackerBase.html#aac4fd637116f1a55b857968d6f84d33d" title=" " alt="" coords="563,413,795,453"/>
+<area shape="rect" id="node1" title=" " alt="" coords="843,269,915,294"/>
+<area shape="rect" id="node2" href="$classdyno_1_1ORBextractor.html#a562881ff59ebda31b98b1c5f27125135" title=" " alt="" coords="591,69,766,109"/>
+<area shape="rect" id="node3" href="$namespacedyno_1_1utils.html#ae54978140c5727f3962fc255cad59952" title=" " alt="" coords="581,133,776,173"/>
+<area shape="rect" id="node9" href="$namespacedyno_1_1vision__tools.html#aaabcfcca356f30c83a45a51259e39783" title="Projects a dense depth map to 3D coordinates in the local frame." alt="" coords="609,197,749,237"/>
+<area shape="rect" id="node11" href="$classdyno_1_1Pose3FlowProjectionFactor.html#a0cd395907689db2beddc9b56035992a0" title=" " alt="" coords="580,261,777,301"/>
+<area shape="rect" id="node12" href="$classdyno_1_1LandmarkMotionTernaryFactor.html#a0707afd8ae2267508b562f110d17cf95" title=" " alt="" coords="569,325,789,365"/>
+<area shape="rect" id="node13" href="$namespacedyno.html#a23977a9581e8b4d2b684f749ec21cba2" title=" " alt="" coords="579,390,778,415"/>
+<area shape="rect" id="node18" href="$classdyno_1_1FeatureTrackerBase.html#aac4fd637116f1a55b857968d6f84d33d" title=" " alt="" coords="563,503,795,543"/>
 <area shape="rect" id="node4" href="$classdyno_1_1KittiObjectPoseFolder.html#ac6679f59966e1a46c93dbbb3629a468d" title=" " alt="" coords="284,5,487,45"/>
 <area shape="rect" id="node6" href="$classdyno_1_1OMDOldAllLoader.html#a3b098f14caca41fbd0c7b4adc3ca5e4b" title=" " alt="" coords="297,69,474,109"/>
 <area shape="rect" id="node8" href="$classdyno_1_1KittiCameraPoseFolder.html#aefd157054db515cedb9382be067d9046" title="Virtual function that is called once the absolute path to this folder is known This happens after con..." alt="" coords="280,133,491,173"/>
 <area shape="rect" id="node5" href="$classdyno_1_1KittiObjectPoseFolder.html#a98e83cb0df508e145d4057c7f01b499d" title="Setup ifstream and read everything in the data vector." alt="" coords="5,5,208,45"/>
 <area shape="rect" id="node7" href="$classdyno_1_1OMDOldAllLoader.html#a5407ba0dda29eaf6520c615807fe3b93" title=" " alt="" coords="18,69,195,109"/>
 <area shape="rect" id="node10" href="$namespacedyno_1_1vision__tools.html#a5d8b89d2b560b498934853c77a7d9f28" title="Saves a re&#45;projected 3D point cloud with labelled points to file as a cv::Mat." alt="" coords="256,197,515,237"/>
-<area shape="rect" id="node14" href="$structdyno_1_1FrameNode.html#a4d6390c39ed912081600bf8d8c108d33" title="Consturcts an object motion key. The associated motion will be from k&#45;1 to k." alt="" coords="274,289,497,329"/>
-<area shape="rect" id="node15" href="$classdyno_1_1MotionOnlyRefinementOptimizer.html#ab9ea6586ab1c0a64f008a05a38350aae" title=" " alt="" coords="279,353,491,393"/>
-<area shape="rect" id="node17" href="$classdyno_1_1KltFeatureTracker.html#a8f26d8fe56edd3e579a879e82a40457f" title="Tracks features using KLT tracker between the previous image and the current one." alt="" coords="298,417,473,457"/>
-<area shape="rect" id="node18" href="$classdyno_1_1KltFeatureTracker.html#ab15aaa39f0c3adc62037d718b98039c0" title="Track features between frames k&#45;1 and the current set of images (at k)." alt="" coords="19,417,194,457"/>
+<area shape="rect" id="node14" href="$classdyno_1_1ParallelHybridAccessor.html#aa598928ab25f9781f57a74cec81a9b51" title="Get the directly estiamted object motion (i.e H_w_e_k)" alt="" coords="280,285,491,325"/>
+<area shape="rect" id="node15" href="$classdyno_1_1ParallelHybridAccessor.html#a7e6f71ab92476f5c2d6170bb8a544f9b" title="Get an absolute object motion (_{k&#45;1}^wH_k) from theta the requested time&#45;step (k) and object (j)." alt="" coords="280,373,491,413"/>
+<area shape="rect" id="node16" href="$structdyno_1_1FrameNode.html#a4d6390c39ed912081600bf8d8c108d33" title="Consturcts an object motion key. The associated motion will be from k&#45;1 to k." alt="" coords="274,437,497,477"/>
+<area shape="rect" id="node17" href="$classdyno_1_1MotionOnlyRefinementOptimizer.html#ab9ea6586ab1c0a64f008a05a38350aae" title=" " alt="" coords="279,501,491,541"/>
+<area shape="rect" id="node19" href="$classdyno_1_1KltFeatureTracker.html#a8f26d8fe56edd3e579a879e82a40457f" title="Tracks features using KLT tracker between the previous image and the current one." alt="" coords="298,565,473,605"/>
+<area shape="rect" id="node20" href="$classdyno_1_1KltFeatureTracker.html#ab15aaa39f0c3adc62037d718b98039c0" title="Track features between frames k&#45;1 and the current set of images (at k)." alt="" coords="19,565,194,605"/>
 </map>

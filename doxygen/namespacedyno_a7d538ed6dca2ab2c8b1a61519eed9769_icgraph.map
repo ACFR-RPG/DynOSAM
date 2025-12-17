@@ -1,8 +1,10 @@
 <map id="dyno::L" name="dyno::L">
-<area shape="rect" id="node1" title=" " alt="" coords="547,109,616,134"/>
-<area shape="rect" id="node2" href="$namespacedyno.html#a3ddefad6204b5a599687d5a17b09f2bf" title=" " alt="" coords="305,77,489,102"/>
-<area shape="rect" id="node5" href="$classdyno_1_1CameraMeasurement.html#ad1b4139206f0a6a9e070c6d50d95e211" title=" " alt="" coords="296,129,499,169"/>
-<area shape="rect" id="node3" href="$classdyno_1_1WorldMotionAccessor.html#a261be7df36333929259a315767fc6578" title="Get the pose (^wL_k) of an object (j) at time&#45;step (k)." alt="" coords="25,5,228,45"/>
-<area shape="rect" id="node4" href="$structdyno_1_1FrameNode.html#abe39c4e00fca2c55f343a1afe6caf35b" title="Construct an object pose key. The associated pose will be for frame k." alt="" coords="15,69,238,109"/>
-<area shape="rect" id="node6" href="$structdyno_1_1measurement__traits_3_01CameraMeasurement_01_4.html#acc753a7917d47061a7f67cda4c49a546" title=" " alt="" coords="5,133,248,173"/>
+<area shape="rect" id="node1" title=" " alt="" coords="547,226,616,251"/>
+<area shape="rect" id="node2" href="$namespacedyno.html#a3ddefad6204b5a599687d5a17b09f2bf" title=" " alt="" coords="305,133,489,158"/>
+<area shape="rect" id="node6" href="$classdyno_1_1CameraMeasurement.html#ad1b4139206f0a6a9e070c6d50d95e211" title=" " alt="" coords="296,219,499,259"/>
+<area shape="rect" id="node8" href="$classdyno_1_1Feature.html#a01c29765d61f9e82a304a82723c7d503" title=" " alt="" coords="301,283,494,309"/>
+<area shape="rect" id="node3" href="$classdyno_1_1ParallelHybridAccessor.html#a341adcfa2f0729b5134048a198cbaef8" title="Get the pose (^wL_k) of an object (j) at time&#45;step (k)." alt="" coords="21,29,232,69"/>
+<area shape="rect" id="node4" href="$classdyno_1_1WorldMotionAccessor.html#a261be7df36333929259a315767fc6578" title="Get the pose (^wL_k) of an object (j) at time&#45;step (k)." alt="" coords="25,93,228,133"/>
+<area shape="rect" id="node5" href="$structdyno_1_1FrameNode.html#abe39c4e00fca2c55f343a1afe6caf35b" title="Construct an object pose key. The associated pose will be for frame k." alt="" coords="15,157,238,197"/>
+<area shape="rect" id="node7" href="$structdyno_1_1measurement__traits_3_01CameraMeasurement_01_4.html#acc753a7917d47061a7f67cda4c49a546" title=" " alt="" coords="5,221,248,261"/>
 </map>

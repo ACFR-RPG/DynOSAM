@@ -6,5 +6,5 @@ var searchData=
   ['testing_5fhybrid_5fsd_3',['TESTING_HYBRID_SD',['../namespacedyno.html#ab2bea061e9a47afecd7db1c56c1f1f17ada49257bd557373c9c1b71de7fe47cc3',1,'dyno']]],
   ['testing_5fhybrid_5fsmf_4',['TESTING_HYBRID_SMF',['../namespacedyno.html#ab2bea061e9a47afecd7db1c56c1f1f17a59645c52a3f87220a32f86eb05d66e4c',1,'dyno']]],
   ['topn_5',['TopN',['../namespacedyno.html#aaa3fc401755b74df984257e66999d2d5ab9f0cd909054e1419b7d418587459d29',1,'dyno']]],
-  ['tracked_6',['Tracked',['../namespacebyte__track.html#a0cc5f78b402d2b1cb6d4ea30a6abecb2a5e1b39ae9fac0eab832877bd5cd01690',1,'byte_track']]]
+  ['tracked_6',['Tracked',['../namespacedyno.html#a74539dee7316250ee24d9dd9cb94bdf5a5e1b39ae9fac0eab832877bd5cd01690',1,'dyno::Tracked()'],['../namespacebyte__track.html#a0cc5f78b402d2b1cb6d4ea30a6abecb2a5e1b39ae9fac0eab832877bd5cd01690',1,'byte_track::Tracked()']]]
 ];

@@ -14,7 +14,7 @@ var searchData=
   ['reorderingmode_11',['ReorderingMode',['../structdyno_1_1DeltaImpl_1_1ReorderingMode.html',1,'dyno::DeltaImpl']]],
   ['repeat_5ftype_12',['repeat_type',['../structdyno_1_1internal_1_1repeat__type.html',1,'dyno::internal']]],
   ['repeat_5ftype_3c_20std_3a_3ashared_5fptr_3c_20subscriber_20_3e_2c_20n_20_3e_13',['repeat_type&lt; std::shared_ptr&lt; Subscriber &gt;, N &gt;',['../structdyno_1_1internal_1_1repeat__type.html',1,'dyno::internal']]],
-  ['result_14',['Result',['../structdyno_1_1ParallelObjectISAM_1_1Result.html',1,'dyno::ParallelObjectISAM']]],
+  ['result_14',['Result',['../structdyno_1_1HybridObjectMotionSRIF_1_1Result.html',1,'dyno::HybridObjectMotionSRIF::Result'],['../structdyno_1_1ParallelObjectISAM_1_1Result.html',1,'dyno::ParallelObjectISAM::Result']]],
   ['resulttype_15',['ResultType',['../structdyno_1_1OpticalFlowAndPoseOptimizer_1_1ResultType.html',1,'dyno::OpticalFlowAndPoseOptimizer']]],
   ['returncode_16',['ReturnCode',['../structdyno_1_1PipelineBase_1_1ReturnCode.html',1,'dyno::PipelineBase']]],
   ['rgba_17',['RGBA',['../structdyno_1_1RGBA.html',1,'dyno']]],
@@ -23,10 +23,12 @@ var searchData=
   ['rgbdcamera_20',['RGBDCamera',['../classdyno_1_1RGBDCamera.html',1,'dyno']]],
   ['rgbdfrontendlogger_21',['RGBDFrontendLogger',['../classdyno_1_1RGBDFrontendLogger.html',1,'dyno']]],
   ['rgbdinstancefrontendmodule_22',['RGBDInstanceFrontendModule',['../classdyno_1_1RGBDInstanceFrontendModule.html',1,'dyno']]],
-  ['rgbmono_23',['RGBMono',['../structdyno_1_1ImageType_1_1RGBMono.html',1,'dyno::ImageType']]],
-  ['ros_5fparam_5ftraits_24',['ros_param_traits',['../structdyno_1_1ros__param__traits.html',1,'dyno']]],
-  ['rosparametertype_25',['RosParameterType',['../structdyno_1_1internal_1_1RosParameterType.html',1,'dyno::internal']]],
-  ['rosparametertype_3c_20rcl_5finterfaces_3a_3amsg_3a_3aparametertype_3a_3aparameter_5fstring_20_3e_26',['RosParameterType&lt; rcl_interfaces::msg::ParameterType::PARAMETER_STRING &gt;',['../structdyno_1_1internal_1_1RosParameterType.html',1,'dyno::internal']]],
-  ['row_27',['Row',['../classdyno_1_1CsvReader_1_1Row.html',1,'dyno::CsvReader']]],
-  ['rowiterator_28',['RowIterator',['../classdyno_1_1CsvReader_1_1RowIterator.html',1,'dyno::CsvReader']]]
+  ['rgbdonlineproviderros_23',['RGBDOnlineProviderRos',['../classdyno_1_1RGBDOnlineProviderRos.html',1,'dyno']]],
+  ['rgbdtypecalibrationhelper_24',['RGBDTypeCalibrationHelper',['../classdyno_1_1RGBDTypeCalibrationHelper.html',1,'dyno']]],
+  ['rgbmono_25',['RGBMono',['../structdyno_1_1ImageType_1_1RGBMono.html',1,'dyno::ImageType']]],
+  ['ros_5fparam_5ftraits_26',['ros_param_traits',['../structdyno_1_1ros__param__traits.html',1,'dyno']]],
+  ['rosparametertype_27',['RosParameterType',['../structdyno_1_1internal_1_1RosParameterType.html',1,'dyno::internal']]],
+  ['rosparametertype_3c_20rcl_5finterfaces_3a_3amsg_3a_3aparametertype_3a_3aparameter_5fstring_20_3e_28',['RosParameterType&lt; rcl_interfaces::msg::ParameterType::PARAMETER_STRING &gt;',['../structdyno_1_1internal_1_1RosParameterType.html',1,'dyno::internal']]],
+  ['row_29',['Row',['../classdyno_1_1CsvReader_1_1Row.html',1,'dyno::CsvReader']]],
+  ['rowiterator_30',['RowIterator',['../classdyno_1_1CsvReader_1_1RowIterator.html',1,'dyno::CsvReader']]]
 ];

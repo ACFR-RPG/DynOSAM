@@ -1,5 +1,6 @@
 <map id="dyno::OnlineDataProviderRos" name="dyno::OnlineDataProviderRos">
-<area shape="rect" id="node1" title="Online data&#45;provider for DynoSAM." alt="" coords="5,152,219,177"/>
-<area shape="rect" id="node2" href="$classdyno_1_1DataProviderRos.html" title="Base Dataprovider for ROS that implements common image processing functionalities." alt="" coords="27,79,197,104"/>
-<area shape="rect" id="node3" href="$classdyno_1_1DataProvider.html" title="A data provider is a module that actually gets the inididual image and/or IMU data from some source a..." alt="" coords="39,5,185,31"/>
+<area shape="rect" id="node1" title="Online data&#45;provider for DynoSAM which handles subcription to the IMU and the interface for subscribi..." alt="" coords="136,183,349,208"/>
+<area shape="rect" id="node2" href="$classdyno_1_1DataProviderRos.html" title="Base Dataprovider for ROS that implements common image processing functionalities." alt="" coords="5,87,176,113"/>
+<area shape="rect" id="node3" href="$classdyno_1_1DataProvider.html" title="A data provider is a module that actually gets the inididual image and/or IMU data from some source a..." alt="" coords="17,5,164,31"/>
+<area shape="rect" id="node4" href="$structdyno_1_1OnlineDataProviderRosParams.html" title=" " alt="" coords="200,80,389,120"/>
 </map>

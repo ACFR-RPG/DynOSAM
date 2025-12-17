@@ -122,7 +122,7 @@ Public Attributes</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00362">362</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00253">253</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="a09ae6afc37d19908327767ab444be67c" name="a09ae6afc37d19908327767ab444be67c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a09ae6afc37d19908327767ab444be67c">&#9670;&#160;</a></span>operator==()</h2>
@@ -148,34 +148,34 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00382">382</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  382</span>                                             {</div>
-<div class="line"><span class="lineno">  383</span>      <span class="comment">// TODO: lock?</span></div>
-<div class="line"><span class="lineno">  384</span>      <span class="keywordflow">return</span> gtsam::equal_with_abs_tol(<a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#a0e26894a8159608acba0c8580cb7c64b">keypoint</a>, other.keypoint) &amp;&amp;</div>
-<div class="line"><span class="lineno">  385</span>             gtsam::equal_with_abs_tol(<a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#a16b11020ef1ab510de95176e521b9517">measured_flow</a>, other.measured_flow) &amp;&amp;</div>
-<div class="line"><span class="lineno">  386</span>             gtsam::equal_with_abs_tol(<a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#a4738cc4af5b5602964437c41577202b7">predicted_keypoint</a>,</div>
-<div class="line"><span class="lineno">  387</span>                                       other.predicted_keypoint) &amp;&amp;</div>
-<div class="line"><span class="lineno">  388</span>             <a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#a79e713020e6499af0ebcdb0120837c95">age</a> == other.age &amp;&amp; <a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#ac66ef7a83384411f5cf8bacccb37844d">type</a> == other.type &amp;&amp;</div>
-<div class="line"><span class="lineno">  389</span>             <a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#a5d56a8c05702e5912cf19b8ba4cab365">tracklet_id</a> == other.tracklet_id &amp;&amp; <a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#ab49bc00e533c81bc1796c60f4bd95c76">frame_id</a> == other.frame_id &amp;&amp;</div>
-<div class="line"><span class="lineno">  390</span>             <a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#a32a44c2018ac870b7a51d5dd06ceb59d">inlier</a> == other.inlier &amp;&amp; <a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#a0444f526409318e98cae903fed7636fd">instance_label</a> == other.instance_label &amp;&amp;</div>
-<div class="line"><span class="lineno">  391</span>             <a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#a88ab3b54141d1726d99a9532aefb1bf1">tracking_label</a> == other.tracking_label &amp;&amp;</div>
-<div class="line"><span class="lineno">  392</span>             <a class="code hl_function" href="namespacedyno.html#adf545b8b790321f0f83e16e7b4927192">fpEqual</a>(<a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#a541092f3dbb1430115d2668adb660609">depth</a>, other.depth) &amp;&amp;</div>
-<div class="line"><span class="lineno">  393</span>             <a class="code hl_function" href="namespacedyno_1_1utils.html#a25e3c9c2f7d3786e3b70d3373592a325">utils::equateGtsamOptionalValues</a>(<a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#a5adb22cc24a251047f54189b2f7764be">right_kp</a>, other.right_kp);</div>
-<div class="line"><span class="lineno">  394</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00273">273</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  273</span>                                             {</div>
+<div class="line"><span class="lineno">  274</span>      <span class="comment">// TODO: lock?</span></div>
+<div class="line"><span class="lineno">  275</span>      <span class="keywordflow">return</span> gtsam::equal_with_abs_tol(<a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#a0e26894a8159608acba0c8580cb7c64b">keypoint</a>, other.keypoint) &amp;&amp;</div>
+<div class="line"><span class="lineno">  276</span>             gtsam::equal_with_abs_tol(<a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#a16b11020ef1ab510de95176e521b9517">measured_flow</a>, other.measured_flow) &amp;&amp;</div>
+<div class="line"><span class="lineno">  277</span>             gtsam::equal_with_abs_tol(<a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#a4738cc4af5b5602964437c41577202b7">predicted_keypoint</a>,</div>
+<div class="line"><span class="lineno">  278</span>                                       other.predicted_keypoint) &amp;&amp;</div>
+<div class="line"><span class="lineno">  279</span>             <a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#a79e713020e6499af0ebcdb0120837c95">age</a> == other.age &amp;&amp; <a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#ac66ef7a83384411f5cf8bacccb37844d">type</a> == other.type &amp;&amp;</div>
+<div class="line"><span class="lineno">  280</span>             <a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#a5d56a8c05702e5912cf19b8ba4cab365">tracklet_id</a> == other.tracklet_id &amp;&amp; <a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#ab49bc00e533c81bc1796c60f4bd95c76">frame_id</a> == other.frame_id &amp;&amp;</div>
+<div class="line"><span class="lineno">  281</span>             <a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#a32a44c2018ac870b7a51d5dd06ceb59d">inlier</a> == other.inlier &amp;&amp; <a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#a0444f526409318e98cae903fed7636fd">instance_label</a> == other.instance_label &amp;&amp;</div>
+<div class="line"><span class="lineno">  282</span>             <a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#a88ab3b54141d1726d99a9532aefb1bf1">tracking_label</a> == other.tracking_label &amp;&amp;</div>
+<div class="line"><span class="lineno">  283</span>             <a class="code hl_function" href="namespacedyno.html#adf545b8b790321f0f83e16e7b4927192">fpEqual</a>(<a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#a541092f3dbb1430115d2668adb660609">depth</a>, other.depth) &amp;&amp;</div>
+<div class="line"><span class="lineno">  284</span>             <a class="code hl_function" href="namespacedyno_1_1utils.html#a25e3c9c2f7d3786e3b70d3373592a325">utils::equateGtsamOptionalValues</a>(<a class="code hl_variable" href="structdyno_1_1Feature_1_1impl.html#a5adb22cc24a251047f54189b2f7764be">right_kp</a>, other.right_kp);</div>
+<div class="line"><span class="lineno">  285</span>    }</div>
 <div class="ttc" id="anamespacedyno_1_1utils_html_a25e3c9c2f7d3786e3b70d3373592a325"><div class="ttname"><a href="namespacedyno_1_1utils.html#a25e3c9c2f7d3786e3b70d3373592a325">dyno::utils::equateGtsamOptionalValues</a></div><div class="ttdeci">bool equateGtsamOptionalValues(const std::optional&lt; T &gt; &amp;a, const std::optional&lt; T &gt; &amp;b, double tol=1e-8)</div><div class="ttdoc">Check if two objects wrapped in std::optional are equal. If both are std::nullopt,...</div><div class="ttdef"><b>Definition:</b> <a href="GtsamUtils_8hpp_source.html#l00139">GtsamUtils.hpp:139</a></div></div>
 <div class="ttc" id="anamespacedyno_html_adf545b8b790321f0f83e16e7b4927192"><div class="ttname"><a href="namespacedyno.html#adf545b8b790321f0f83e16e7b4927192">dyno::fpEqual</a></div><div class="ttdeci">bool fpEqual(double a, double b, double tol=1e-9)</div><div class="ttdoc">Float point comparison up to a tolerance.</div><div class="ttdef"><b>Definition:</b> <a href="Numerical_8hpp_source.html#l00077">Numerical.hpp:77</a></div></div>
-<div class="ttc" id="astructdyno_1_1Feature_1_1impl_html_a0444f526409318e98cae903fed7636fd"><div class="ttname"><a href="structdyno_1_1Feature_1_1impl.html#a0444f526409318e98cae903fed7636fd">dyno::Feature::impl::instance_label</a></div><div class="ttdeci">ObjectId instance_label</div><div class="ttdoc">Starts as inlier.</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00372">Feature.hpp:372</a></div></div>
-<div class="ttc" id="astructdyno_1_1Feature_1_1impl_html_a0e26894a8159608acba0c8580cb7c64b"><div class="ttname"><a href="structdyno_1_1Feature_1_1impl.html#a0e26894a8159608acba0c8580cb7c64b">dyno::Feature::impl::keypoint</a></div><div class="ttdeci">Keypoint keypoint</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00363">Feature.hpp:363</a></div></div>
-<div class="ttc" id="astructdyno_1_1Feature_1_1impl_html_a16b11020ef1ab510de95176e521b9517"><div class="ttname"><a href="structdyno_1_1Feature_1_1impl.html#a16b11020ef1ab510de95176e521b9517">dyno::Feature::impl::measured_flow</a></div><div class="ttdeci">OpticalFlow measured_flow</div><div class="ttdoc">u,v keypoint at this frame (frame_id)</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00364">Feature.hpp:364</a></div></div>
-<div class="ttc" id="astructdyno_1_1Feature_1_1impl_html_a32a44c2018ac870b7a51d5dd06ceb59d"><div class="ttname"><a href="structdyno_1_1Feature_1_1impl.html#a32a44c2018ac870b7a51d5dd06ceb59d">dyno::Feature::impl::inlier</a></div><div class="ttdeci">bool inlier</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00371">Feature.hpp:371</a></div></div>
-<div class="ttc" id="astructdyno_1_1Feature_1_1impl_html_a4738cc4af5b5602964437c41577202b7"><div class="ttname"><a href="structdyno_1_1Feature_1_1impl.html#a4738cc4af5b5602964437c41577202b7">dyno::Feature::impl::predicted_keypoint</a></div><div class="ttdeci">Keypoint predicted_keypoint</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00366">Feature.hpp:366</a></div></div>
-<div class="ttc" id="astructdyno_1_1Feature_1_1impl_html_a541092f3dbb1430115d2668adb660609"><div class="ttname"><a href="structdyno_1_1Feature_1_1impl.html#a541092f3dbb1430115d2668adb660609">dyno::Feature::impl::depth</a></div><div class="ttdeci">Depth depth</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00377">Feature.hpp:377</a></div></div>
-<div class="ttc" id="astructdyno_1_1Feature_1_1impl_html_a5adb22cc24a251047f54189b2f7764be"><div class="ttname"><a href="structdyno_1_1Feature_1_1impl.html#a5adb22cc24a251047f54189b2f7764be">dyno::Feature::impl::right_kp</a></div><div class="ttdeci">std::optional&lt; Keypoint &gt; right_kp</div><div class="ttdoc">Possible stereo keypoint in the right image.</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00380">Feature.hpp:380</a></div></div>
-<div class="ttc" id="astructdyno_1_1Feature_1_1impl_html_a5d56a8c05702e5912cf19b8ba4cab365"><div class="ttname"><a href="structdyno_1_1Feature_1_1impl.html#a5d56a8c05702e5912cf19b8ba4cab365">dyno::Feature::impl::tracklet_id</a></div><div class="ttdeci">TrackletId tracklet_id</div><div class="ttdoc">starts STATIC</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00369">Feature.hpp:369</a></div></div>
-<div class="ttc" id="astructdyno_1_1Feature_1_1impl_html_a79e713020e6499af0ebcdb0120837c95"><div class="ttname"><a href="structdyno_1_1Feature_1_1impl.html#a79e713020e6499af0ebcdb0120837c95">dyno::Feature::impl::age</a></div><div class="ttdeci">size_t age</div><div class="ttdoc">from optical flow</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00367">Feature.hpp:367</a></div></div>
-<div class="ttc" id="astructdyno_1_1Feature_1_1impl_html_a88ab3b54141d1726d99a9532aefb1bf1"><div class="ttname"><a href="structdyno_1_1Feature_1_1impl.html#a88ab3b54141d1726d99a9532aefb1bf1">dyno::Feature::impl::tracking_label</a></div><div class="ttdeci">ObjectId tracking_label</div><div class="ttdoc">instance label as provided by the input mask</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00374">Feature.hpp:374</a></div></div>
-<div class="ttc" id="astructdyno_1_1Feature_1_1impl_html_ab49bc00e533c81bc1796c60f4bd95c76"><div class="ttname"><a href="structdyno_1_1Feature_1_1impl.html#ab49bc00e533c81bc1796c60f4bd95c76">dyno::Feature::impl::frame_id</a></div><div class="ttdeci">FrameId frame_id</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00370">Feature.hpp:370</a></div></div>
-<div class="ttc" id="astructdyno_1_1Feature_1_1impl_html_ac66ef7a83384411f5cf8bacccb37844d"><div class="ttname"><a href="structdyno_1_1Feature_1_1impl.html#ac66ef7a83384411f5cf8bacccb37844d">dyno::Feature::impl::type</a></div><div class="ttdeci">KeyPointType type</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00368">Feature.hpp:368</a></div></div>
+<div class="ttc" id="astructdyno_1_1Feature_1_1impl_html_a0444f526409318e98cae903fed7636fd"><div class="ttname"><a href="structdyno_1_1Feature_1_1impl.html#a0444f526409318e98cae903fed7636fd">dyno::Feature::impl::instance_label</a></div><div class="ttdeci">ObjectId instance_label</div><div class="ttdoc">Starts as inlier.</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00263">Feature.hpp:263</a></div></div>
+<div class="ttc" id="astructdyno_1_1Feature_1_1impl_html_a0e26894a8159608acba0c8580cb7c64b"><div class="ttname"><a href="structdyno_1_1Feature_1_1impl.html#a0e26894a8159608acba0c8580cb7c64b">dyno::Feature::impl::keypoint</a></div><div class="ttdeci">Keypoint keypoint</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00254">Feature.hpp:254</a></div></div>
+<div class="ttc" id="astructdyno_1_1Feature_1_1impl_html_a16b11020ef1ab510de95176e521b9517"><div class="ttname"><a href="structdyno_1_1Feature_1_1impl.html#a16b11020ef1ab510de95176e521b9517">dyno::Feature::impl::measured_flow</a></div><div class="ttdeci">OpticalFlow measured_flow</div><div class="ttdoc">u,v keypoint at this frame (frame_id)</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00255">Feature.hpp:255</a></div></div>
+<div class="ttc" id="astructdyno_1_1Feature_1_1impl_html_a32a44c2018ac870b7a51d5dd06ceb59d"><div class="ttname"><a href="structdyno_1_1Feature_1_1impl.html#a32a44c2018ac870b7a51d5dd06ceb59d">dyno::Feature::impl::inlier</a></div><div class="ttdeci">bool inlier</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00262">Feature.hpp:262</a></div></div>
+<div class="ttc" id="astructdyno_1_1Feature_1_1impl_html_a4738cc4af5b5602964437c41577202b7"><div class="ttname"><a href="structdyno_1_1Feature_1_1impl.html#a4738cc4af5b5602964437c41577202b7">dyno::Feature::impl::predicted_keypoint</a></div><div class="ttdeci">Keypoint predicted_keypoint</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00257">Feature.hpp:257</a></div></div>
+<div class="ttc" id="astructdyno_1_1Feature_1_1impl_html_a541092f3dbb1430115d2668adb660609"><div class="ttname"><a href="structdyno_1_1Feature_1_1impl.html#a541092f3dbb1430115d2668adb660609">dyno::Feature::impl::depth</a></div><div class="ttdeci">Depth depth</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00268">Feature.hpp:268</a></div></div>
+<div class="ttc" id="astructdyno_1_1Feature_1_1impl_html_a5adb22cc24a251047f54189b2f7764be"><div class="ttname"><a href="structdyno_1_1Feature_1_1impl.html#a5adb22cc24a251047f54189b2f7764be">dyno::Feature::impl::right_kp</a></div><div class="ttdeci">std::optional&lt; Keypoint &gt; right_kp</div><div class="ttdoc">Possible stereo keypoint in the right image.</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00271">Feature.hpp:271</a></div></div>
+<div class="ttc" id="astructdyno_1_1Feature_1_1impl_html_a5d56a8c05702e5912cf19b8ba4cab365"><div class="ttname"><a href="structdyno_1_1Feature_1_1impl.html#a5d56a8c05702e5912cf19b8ba4cab365">dyno::Feature::impl::tracklet_id</a></div><div class="ttdeci">TrackletId tracklet_id</div><div class="ttdoc">starts STATIC</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00260">Feature.hpp:260</a></div></div>
+<div class="ttc" id="astructdyno_1_1Feature_1_1impl_html_a79e713020e6499af0ebcdb0120837c95"><div class="ttname"><a href="structdyno_1_1Feature_1_1impl.html#a79e713020e6499af0ebcdb0120837c95">dyno::Feature::impl::age</a></div><div class="ttdeci">size_t age</div><div class="ttdoc">from optical flow</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00258">Feature.hpp:258</a></div></div>
+<div class="ttc" id="astructdyno_1_1Feature_1_1impl_html_a88ab3b54141d1726d99a9532aefb1bf1"><div class="ttname"><a href="structdyno_1_1Feature_1_1impl.html#a88ab3b54141d1726d99a9532aefb1bf1">dyno::Feature::impl::tracking_label</a></div><div class="ttdeci">ObjectId tracking_label</div><div class="ttdoc">instance label as provided by the input mask</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00265">Feature.hpp:265</a></div></div>
+<div class="ttc" id="astructdyno_1_1Feature_1_1impl_html_ab49bc00e533c81bc1796c60f4bd95c76"><div class="ttname"><a href="structdyno_1_1Feature_1_1impl.html#ab49bc00e533c81bc1796c60f4bd95c76">dyno::Feature::impl::frame_id</a></div><div class="ttdeci">FrameId frame_id</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00261">Feature.hpp:261</a></div></div>
+<div class="ttc" id="astructdyno_1_1Feature_1_1impl_html_ac66ef7a83384411f5cf8bacccb37844d"><div class="ttname"><a href="structdyno_1_1Feature_1_1impl.html#ac66ef7a83384411f5cf8bacccb37844d">dyno::Feature::impl::type</a></div><div class="ttdeci">KeyPointType type</div><div class="ttdef"><b>Definition:</b> <a href="Feature_8hpp_source.html#l00259">Feature.hpp:259</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="structdyno_1_1Feature_1_1impl.html#a79e713020e6499af0ebcdb0120837c95">age</a>, <a class="el" href="structdyno_1_1Feature_1_1impl.html#a541092f3dbb1430115d2668adb660609">depth</a>, <a class="el" href="namespacedyno_1_1utils.html#a25e3c9c2f7d3786e3b70d3373592a325">dyno::utils::equateGtsamOptionalValues()</a>, <a class="el" href="namespacedyno.html#adf545b8b790321f0f83e16e7b4927192">dyno::fpEqual()</a>, <a class="el" href="structdyno_1_1Feature_1_1impl.html#ab49bc00e533c81bc1796c60f4bd95c76">frame_id</a>, <a class="el" href="structdyno_1_1Feature_1_1impl.html#a32a44c2018ac870b7a51d5dd06ceb59d">inlier</a>, <a class="el" href="structdyno_1_1Feature_1_1impl.html#a0444f526409318e98cae903fed7636fd">instance_label</a>, <a class="el" href="structdyno_1_1Feature_1_1impl.html#a0e26894a8159608acba0c8580cb7c64b">keypoint</a>, <a class="el" href="structdyno_1_1Feature_1_1impl.html#a16b11020ef1ab510de95176e521b9517">measured_flow</a>, <a class="el" href="structdyno_1_1Feature_1_1impl.html#a4738cc4af5b5602964437c41577202b7">predicted_keypoint</a>, <a class="el" href="structdyno_1_1Feature_1_1impl.html#a5adb22cc24a251047f54189b2f7764be">right_kp</a>, <a class="el" href="structdyno_1_1Feature_1_1impl.html#a88ab3b54141d1726d99a9532aefb1bf1">tracking_label</a>, <a class="el" href="structdyno_1_1Feature_1_1impl.html#a5d56a8c05702e5912cf19b8ba4cab365">tracklet_id</a>, and <a class="el" href="structdyno_1_1Feature_1_1impl.html#ac66ef7a83384411f5cf8bacccb37844d">type</a>.</p>
 <div class="dynheader">
@@ -206,7 +206,7 @@ Here is the call graph for this function:</div>
 
 <p>from optical flow </p>
 
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00367">367</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00258">258</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1Feature.html#af8f99706ad246f779ea9334863f479da">dyno::Feature::age()</a>, and <a class="el" href="structdyno_1_1Feature_1_1impl.html#a09ae6afc37d19908327767ab444be67c">operator==()</a>.</p>
 
@@ -225,7 +225,7 @@ Here is the call graph for this function:</div>
 </div><div class="memdoc">
 <p>object tracking label that should indicate the same tracked object between frames </p>
 
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00377">377</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00268">268</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1Feature.html#aa1dad2ea2a931bbccb56ae5b53822943">dyno::Feature::depth()</a>, <a class="el" href="classdyno_1_1Feature.html#ae7d554f489558630f69b617f82c24173">dyno::Feature::hasDepth()</a>, and <a class="el" href="structdyno_1_1Feature_1_1impl.html#a09ae6afc37d19908327767ab444be67c">operator==()</a>.</p>
 
@@ -243,7 +243,7 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00370">370</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00261">261</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1Feature.html#a71203f342bdd4af7b5f883cd86259b26">dyno::Feature::frameId()</a>, and <a class="el" href="structdyno_1_1Feature_1_1impl.html#a09ae6afc37d19908327767ab444be67c">operator==()</a>.</p>
 
@@ -261,7 +261,7 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00371">371</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00262">262</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1Feature.html#a323d04b529f39ce489a8e86589fcfc74">dyno::Feature::inlier()</a>, <a class="el" href="classdyno_1_1Feature.html#abdac649e20fd337d4bec6644a8b294ae">dyno::Feature::markInlier()</a>, <a class="el" href="classdyno_1_1Feature.html#a8ba41c7616bbb4f726b711f5c2e4b835">dyno::Feature::markOutlier()</a>, <a class="el" href="structdyno_1_1Feature_1_1impl.html#a09ae6afc37d19908327767ab444be67c">operator==()</a>, and <a class="el" href="classdyno_1_1Feature.html#a3135a4ec8e529e4aeefe4cdcdf2abd58">dyno::Feature::usable()</a>.</p>
 
@@ -284,7 +284,7 @@ Here is the call graph for this function:</div>
 </div><!-- fragment -->
 <p>Starts as inlier. </p>
 
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00372">372</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00263">263</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="structdyno_1_1Feature_1_1impl.html#a09ae6afc37d19908327767ab444be67c">operator==()</a>.</p>
 
@@ -302,7 +302,7 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00363">363</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00254">254</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1Feature.html#ada9f9980d950874a7a157a82b9921f8a">dyno::Feature::keypoint()</a>, <a class="el" href="structdyno_1_1Feature_1_1impl.html#a09ae6afc37d19908327767ab444be67c">operator==()</a>, and <a class="el" href="classdyno_1_1Feature.html#a01bbe09de30e6892a5cb9cfb89eb131a">dyno::Feature::setPredictedKeypoint()</a>.</p>
 
@@ -322,7 +322,7 @@ Here is the call graph for this function:</div>
 
 <p>u,v keypoint at this frame (frame_id) </p>
 
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00364">364</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00255">255</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1Feature.html#ae7fa1721a1738a778637bba285a9064f">dyno::Feature::measuredFlow()</a>, <a class="el" href="structdyno_1_1Feature_1_1impl.html#a09ae6afc37d19908327767ab444be67c">operator==()</a>, and <a class="el" href="classdyno_1_1Feature.html#a01bbe09de30e6892a5cb9cfb89eb131a">dyno::Feature::setPredictedKeypoint()</a>.</p>
 
@@ -341,7 +341,7 @@ Here is the call graph for this function:</div>
 </div><div class="memdoc">
 <p>Observed optical flow that. The predicted keypoint is calculated as keypoint + flow </p>
 
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00366">366</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00257">257</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="structdyno_1_1Feature_1_1impl.html#a09ae6afc37d19908327767ab444be67c">operator==()</a>, <a class="el" href="classdyno_1_1Feature.html#abdeaa93a327f02d856407a41e8244622">dyno::Feature::predictedKeypoint()</a>, and <a class="el" href="classdyno_1_1Feature.html#a01bbe09de30e6892a5cb9cfb89eb131a">dyno::Feature::setPredictedKeypoint()</a>.</p>
 
@@ -362,7 +362,7 @@ Here is the call graph for this function:</div>
 <p>Possible stereo keypoint in the right image. </p>
 <p>Depth as provided by a depth image (not Z). Initalised as invalid_depth (NaN) </p>
 
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00380">380</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00271">271</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1Feature.html#a83fdfc4e338ef1b30edae48ed6eaf9c7">dyno::Feature::hasRightKeypoint()</a>, <a class="el" href="structdyno_1_1Feature_1_1impl.html#a09ae6afc37d19908327767ab444be67c">operator==()</a>, and <a class="el" href="classdyno_1_1Feature.html#adc52f755fd9aaec607c00a11249df91e">dyno::Feature::rightKeypoint()</a>.</p>
 
@@ -384,7 +384,7 @@ Here is the call graph for this function:</div>
 </div><!-- fragment -->
 <p>instance label as provided by the input mask </p>
 
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00374">374</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00265">265</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1Feature.html#a93ac27ea317b53fd8a72a7689b48ce9b">dyno::Feature::objectId()</a>, and <a class="el" href="structdyno_1_1Feature_1_1impl.html#a09ae6afc37d19908327767ab444be67c">operator==()</a>.</p>
 
@@ -404,7 +404,7 @@ Here is the call graph for this function:</div>
 
 <p>starts STATIC </p>
 
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00369">369</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00260">260</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1Feature.html#aa869ff62fbc666d42f585a47f18fc590">dyno::Feature::markInvalid()</a>, <a class="el" href="structdyno_1_1Feature_1_1impl.html#a09ae6afc37d19908327767ab444be67c">operator==()</a>, <a class="el" href="classdyno_1_1Feature.html#adc52f755fd9aaec607c00a11249df91e">dyno::Feature::rightKeypoint()</a>, <a class="el" href="classdyno_1_1Feature.html#a6cd1826958eef55d51382228bd06f651">dyno::Feature::trackletId()</a>, and <a class="el" href="classdyno_1_1Feature.html#a3135a4ec8e529e4aeefe4cdcdf2abd58">dyno::Feature::usable()</a>.</p>
 
@@ -422,7 +422,7 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00368">368</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00259">259</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1Feature.html#af8ecd1b5b7d9484dde99aff5544e91ed">dyno::Feature::isStatic()</a>, <a class="el" href="classdyno_1_1Feature.html#a4840858a89dc722db07380a0cf62a94b">dyno::Feature::keypointType()</a>, and <a class="el" href="structdyno_1_1Feature_1_1impl.html#a09ae6afc37d19908327767ab444be67c">operator==()</a>.</p>
 

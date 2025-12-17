@@ -103,6 +103,9 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a43bca06baccc5f77807839369c812de4"><td class="memItemLeft" align="right" valign="top">static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1utils_1_1Timer.html#a43bca06baccc5f77807839369c812de4">now</a> ()</td></tr>
 <tr class="memdesc:a43bca06baccc5f77807839369c812de4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Time in seconds since epoch. Uses std::chrono::high_resolution_clock::now().  <br /></td></tr>
 <tr class="separator:a43bca06baccc5f77807839369c812de4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeb4ad42526d14d6309b1f4fe219e3fa5"><td class="memTemplParams" colspan="2">template&lt;typename U , typename T  = std::chrono::milliseconds&gt; </td></tr>
+<tr class="memitem:aeb4ad42526d14d6309b1f4fe219e3fa5"><td class="memTemplItemLeft" align="right" valign="top">static double&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classdyno_1_1utils_1_1Timer.html#aeb4ad42526d14d6309b1f4fe219e3fa5">toUnits</a> (const T &amp;time)</td></tr>
+<tr class="separator:aeb4ad42526d14d6309b1f4fe219e3fa5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adcd60d25d9ef4970c00428d71b79ea23"><td class="memTemplParams" colspan="2">template&lt;typename T  = std::chrono::milliseconds&gt; </td></tr>
 <tr class="memitem:adcd60d25d9ef4970c00428d71b79ea23"><td class="memTemplItemLeft" align="right" valign="top">static double&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classdyno_1_1utils_1_1Timer.html#adcd60d25d9ef4970c00428d71b79ea23">toSeconds</a> (const T &amp;time)</td></tr>
 <tr class="separator:adcd60d25d9ef4970c00428d71b79ea23"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -211,21 +214,22 @@ Static Public Member Functions</h2></td></tr>
 <p class="definition">Definition at line <a class="el" href="Timing_8hpp_source.html#l00044">44</a> of file <a class="el" href="Timing_8hpp_source.html">Timing.hpp</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">   44</span>{ <span class="keywordflow">return</span> Clock::now(); }</div>
 </div><!-- fragment -->
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1ThreadsafeImuBuffer.html#a801e12f38e80e2f87ba7293bfa2bfa58">dyno::ThreadsafeImuBuffer::getImuDataInterpolatedBordersBlocking()</a>, <a class="el" href="classdyno_1_1ParallelHybridBackendModule.html#a3ff7497b87c3ae0a18f604b0c0423cf6">dyno::ParallelHybridBackendModule::nominalUpdateStaticEstimator()</a>, <a class="el" href="classdyno_1_1MIMOPipelineModule.html#ad0993bad6118d7521ec6f844b8f9be8c">dyno::MIMOPipelineModule&lt; INPUT, OUTPUT &gt;::pushOutputPacket()</a>, <a class="el" href="classdyno_1_1utils_1_1TimingStatsCollector.html#a2fb15570927fa9faf9bf7d97702ff15b">dyno::utils::TimingStatsCollector::reset()</a>, <a class="el" href="classdyno_1_1BackendDSDRos.html#a67d3309d1d64b1a812ee713147196361">dyno::BackendDSDRos::spinOnceImpl()</a>, and <a class="el" href="classdyno_1_1ParallelObjectISAM.html#a71b737a3ffd6f37722393df4f46d37f4">dyno::ParallelObjectISAM::updateSmoother()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1ThreadsafeImuBuffer.html#a801e12f38e80e2f87ba7293bfa2bfa58">dyno::ThreadsafeImuBuffer::getImuDataInterpolatedBordersBlocking()</a>, <a class="el" href="classdyno_1_1ParallelHybridBackendModule.html#a3ff7497b87c3ae0a18f604b0c0423cf6">dyno::ParallelHybridBackendModule::nominalUpdateStaticEstimator()</a>, <a class="el" href="structdyno_1_1utils_1_1ChronoTimeGenerator.html#a5b05287fbc566b5b4416953838d9f1bc">dyno::utils::ChronoTimeGenerator::onStart()</a>, <a class="el" href="structdyno_1_1utils_1_1ChronoTimeGenerator.html#a22248263649240288f6bd02b8801baf6">dyno::utils::ChronoTimeGenerator::onStop()</a>, <a class="el" href="classdyno_1_1MIMOPipelineModule.html#ad0993bad6118d7521ec6f844b8f9be8c">dyno::MIMOPipelineModule&lt; INPUT, OUTPUT &gt;::pushOutputPacket()</a>, <a class="el" href="classdyno_1_1BackendDSDRos.html#a67d3309d1d64b1a812ee713147196361">dyno::BackendDSDRos::spinOnceImpl()</a>, and <a class="el" href="classdyno_1_1ParallelObjectISAM.html#a71b737a3ffd6f37722393df4f46d37f4">dyno::ParallelObjectISAM::updateSmoother()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1utils_1_1Timer_a9dfd91c5a5d7cea18a766b8323854f15_icgraph.png" border="0" usemap="#aclassdyno_1_1utils_1_1Timer_a9dfd91c5a5d7cea18a766b8323854f15_icgraph" alt=""/></div>
 <map name="aclassdyno_1_1utils_1_1Timer_a9dfd91c5a5d7cea18a766b8323854f15_icgraph" id="aclassdyno_1_1utils_1_1Timer_a9dfd91c5a5d7cea18a766b8323854f15_icgraph">
-<area shape="rect" title=" " alt="" coords="588,188,748,213"/>
+<area shape="rect" title=" " alt="" coords="588,220,748,245"/>
 <area shape="rect" href="classdyno_1_1ThreadsafeImuBuffer.html#a801e12f38e80e2f87ba7293bfa2bfa58" title=" " alt="" coords="283,5,519,60"/>
 <area shape="rect" href="classdyno_1_1ParallelHybridBackendModule.html#a3ff7497b87c3ae0a18f604b0c0423cf6" title=" " alt="" coords="261,85,540,125"/>
-<area shape="rect" href="classdyno_1_1MIMOPipelineModule.html#ad0993bad6118d7521ec6f844b8f9be8c" title=" " alt="" coords="301,149,501,189"/>
-<area shape="rect" href="classdyno_1_1utils_1_1TimingStatsCollector.html#a2fb15570927fa9faf9bf7d97702ff15b" title="Resets the current tic_time and sets is_valid = true, such that when the collector tries to toc,..." alt="" coords="313,213,489,253"/>
-<area shape="rect" href="classdyno_1_1BackendDSDRos.html#a67d3309d1d64b1a812ee713147196361" title=" " alt="" coords="316,277,485,317"/>
-<area shape="rect" href="classdyno_1_1ParallelObjectISAM.html#a71b737a3ffd6f37722393df4f46d37f4" title=" " alt="" coords="307,341,494,381"/>
+<area shape="rect" href="structdyno_1_1utils_1_1ChronoTimeGenerator.html#a5b05287fbc566b5b4416953838d9f1bc" title=" " alt="" coords="279,149,522,189"/>
+<area shape="rect" href="structdyno_1_1utils_1_1ChronoTimeGenerator.html#a22248263649240288f6bd02b8801baf6" title=" " alt="" coords="279,213,522,253"/>
+<area shape="rect" href="classdyno_1_1MIMOPipelineModule.html#ad0993bad6118d7521ec6f844b8f9be8c" title=" " alt="" coords="301,277,501,317"/>
+<area shape="rect" href="classdyno_1_1BackendDSDRos.html#a67d3309d1d64b1a812ee713147196361" title=" " alt="" coords="316,341,485,381"/>
+<area shape="rect" href="classdyno_1_1ParallelObjectISAM.html#a71b737a3ffd6f37722393df4f46d37f4" title=" " alt="" coords="307,405,494,445"/>
 <area shape="rect" href="classdyno_1_1ParallelHybridBackendModule.html#ae77dace65f727f878afcb7d6bf82a059" title=" " alt="" coords="5,85,213,125"/>
-<area shape="rect" href="classdyno_1_1ParallelObjectISAM.html#aebe02d7a654d9829c361eece7374dd1f" title=" " alt="" coords="16,341,203,381"/>
+<area shape="rect" href="classdyno_1_1ParallelObjectISAM.html#aebe02d7a654d9829c361eece7374dd1f" title=" " alt="" coords="16,405,203,445"/>
 </map>
 </div>
 
@@ -301,10 +305,43 @@ template&lt;typename T  = std::chrono::milliseconds&gt; </div>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="Timing_8hpp_source.html#l00075">75</a> of file <a class="el" href="Timing_8hpp_source.html">Timing.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   75</span>                                         {</div>
+<div class="line"><span class="lineno">   76</span>    <span class="keywordflow">return</span> toUnits&lt;std::chrono::seconds&gt;(time);</div>
+<div class="line"><span class="lineno">   77</span>  }</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="aeb4ad42526d14d6309b1f4fe219e3fa5" name="aeb4ad42526d14d6309b1f4fe219e3fa5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeb4ad42526d14d6309b1f4fe219e3fa5">&#9670;&#160;</a></span>toUnits()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename U , typename T  = std::chrono::milliseconds&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static double dyno::utils::Timer::toUnits </td>
+          <td>(</td>
+          <td class="paramtype">const T &amp;&#160;</td>
+          <td class="paramname"><em>time</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
 <p class="definition">Definition at line <a class="el" href="Timing_8hpp_source.html#l00069">69</a> of file <a class="el" href="Timing_8hpp_source.html">Timing.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   69</span>                                         {</div>
-<div class="line"><span class="lineno">   70</span>    <span class="keyword">auto</span> seconds = std::chrono::duration_cast&lt;std::chrono::seconds&gt;(time);</div>
-<div class="line"><span class="lineno">   71</span>    <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span><span class="keywordtype">double</span><span class="keyword">&gt;</span>(seconds.count());</div>
+<div class="fragment"><div class="line"><span class="lineno">   69</span>                                       {</div>
+<div class="line"><span class="lineno">   70</span>    <span class="keyword">const</span> <span class="keyword">auto</span> unit = std::chrono::duration_cast&lt;U&gt;(time);</div>
+<div class="line"><span class="lineno">   71</span>    <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span><span class="keywordtype">double</span><span class="keyword">&gt;</span>(unit.count());</div>
 <div class="line"><span class="lineno">   72</span>  }</div>
 </div><!-- fragment -->
 </div>

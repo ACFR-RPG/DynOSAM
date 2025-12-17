@@ -1,8 +1,9 @@
 <map id="dynosam_ros/include/dynosam_ros/adaptors/CameraParamsAdaptor.hpp" name="dynosam_ros/include/dynosam_ros/adaptors/CameraParamsAdaptor.hpp">
-<area shape="rect" id="node1" title=" " alt="" coords="247,5,450,60"/>
-<area shape="rect" id="node2" href="$DataProviderRos_8hpp.html" title=" " alt="" coords="221,108,476,148"/>
+<area shape="rect" id="node1" title=" " alt="" coords="374,5,577,60"/>
+<area shape="rect" id="node2" href="$DataProviderRos_8hpp.html" title=" " alt="" coords="348,108,603,148"/>
 <area shape="rect" id="node3" href="$OnlineDataProviderRos_8hpp.html" title=" " alt="" coords="99,196,343,251"/>
-<area shape="rect" id="node6" href="$DataProviderRos_8cc.html" title=" " alt="" coords="367,203,589,243"/>
+<area shape="rect" id="node6" href="$dynosam__tracking__demo__node_8cc.html" title=" " alt="" coords="367,203,583,243"/>
+<area shape="rect" id="node7" href="$DataProviderRos_8cc.html" title=" " alt="" coords="607,203,829,243"/>
 <area shape="rect" id="node4" href="$OnlineDataProviderRos_8cc.html" title=" " alt="" coords="5,299,215,339"/>
 <area shape="rect" id="node5" href="$PipelineRos_8cc.html" title=" " alt="" coords="239,299,427,339"/>
 </map>

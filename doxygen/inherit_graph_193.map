@@ -1,3 +1,6 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classdyno_1_1MeasurementWithCovariance.html" title="Defines a measurement/value with associated covariance matrix." alt="" coords="5,5,260,45"/>
+<area shape="rect" id="node1" href="$classdyno_1_1MapNodeBase.html" title=" " alt="" coords="5,55,172,95"/>
+<area shape="rect" id="node2" href="$structdyno_1_1FrameNode.html" title="Frame node representing all temporal data at a frame id (k) in the map&#45;graph." alt="" coords="221,5,490,31"/>
+<area shape="rect" id="node3" href="$structdyno_1_1LandmarkNode.html" title="Landmark node representing all the measurements of a particular landmark (i) over all time (k to K) i..." alt="" coords="275,55,436,95"/>
+<area shape="rect" id="node4" href="$structdyno_1_1ObjectNode.html" title="Object node representing all object related data (j) over all time(k to K) in the map&#45;graph." alt="" coords="220,120,491,145"/>
 </map>

@@ -310,24 +310,24 @@ Here is the call graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Feature::Ptr </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="StaticFeatureTracker_8cc_source.html#l00678">678</a> of file <a class="el" href="StaticFeatureTracker_8cc_source.html">StaticFeatureTracker.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  679</span>                                                              {</div>
-<div class="line"><span class="lineno">  680</span>  <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">auto</span> kAge = 0u;</div>
-<div class="line"><span class="lineno">  681</span> </div>
-<div class="line"><span class="lineno">  682</span>  TrackletIdManager&amp; tracked_id_manager = <a class="code hl_function" href="classdyno_1_1TrackletIdManager.html#a53cb3472fa0367b8dd2a9127111277b2">TrackletIdManager::instance</a>();</div>
-<div class="line"><span class="lineno">  683</span>  <a class="code hl_typedef" href="namespacedyno.html#afdd174eb44901fb205371d796287378c">TrackletId</a> tracklet_to_use = tracked_id_manager.getAndIncrementTrackletId();</div>
-<div class="line"><span class="lineno">  684</span> </div>
-<div class="line"><span class="lineno">  685</span>  Feature::Ptr feature = std::make_shared&lt;Feature&gt;();</div>
-<div class="line"><span class="lineno">  686</span>  (*feature)</div>
-<div class="line"><span class="lineno">  687</span>      .objectId(<a class="code hl_variable" href="namespacedyno.html#ae78915ea0afc5025dafb398829f15ba3">background_label</a>)</div>
-<div class="line"><span class="lineno">  688</span>      .frameId(frame_id)</div>
-<div class="line"><span class="lineno">  689</span>      .keypointType(<a class="code hl_enumvalue" href="namespacedyno.html#ad6aa767541eb74e30fc5a7b018322952aa7ffd97a62d9e9295b5f90cea20c2833">KeyPointType::STATIC</a>)</div>
-<div class="line"><span class="lineno">  690</span>      .age(kAge)</div>
-<div class="line"><span class="lineno">  691</span>      .markInlier()</div>
-<div class="line"><span class="lineno">  692</span>      .trackletId(tracklet_to_use)</div>
-<div class="line"><span class="lineno">  693</span>      .keypoint(kp_current);</div>
-<div class="line"><span class="lineno">  694</span>  <span class="keywordflow">return</span> feature;</div>
-<div class="line"><span class="lineno">  695</span>}</div>
+<p class="definition">Definition at line <a class="el" href="StaticFeatureTracker_8cc_source.html#l00679">679</a> of file <a class="el" href="StaticFeatureTracker_8cc_source.html">StaticFeatureTracker.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  680</span>                                                              {</div>
+<div class="line"><span class="lineno">  681</span>  <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">auto</span> kAge = 0u;</div>
+<div class="line"><span class="lineno">  682</span> </div>
+<div class="line"><span class="lineno">  683</span>  TrackletIdManager&amp; tracked_id_manager = <a class="code hl_function" href="classdyno_1_1TrackletIdManager.html#a53cb3472fa0367b8dd2a9127111277b2">TrackletIdManager::instance</a>();</div>
+<div class="line"><span class="lineno">  684</span>  <a class="code hl_typedef" href="namespacedyno.html#afdd174eb44901fb205371d796287378c">TrackletId</a> tracklet_to_use = tracked_id_manager.getAndIncrementTrackletId();</div>
+<div class="line"><span class="lineno">  685</span> </div>
+<div class="line"><span class="lineno">  686</span>  Feature::Ptr feature = std::make_shared&lt;Feature&gt;();</div>
+<div class="line"><span class="lineno">  687</span>  (*feature)</div>
+<div class="line"><span class="lineno">  688</span>      .objectId(<a class="code hl_variable" href="namespacedyno.html#ae78915ea0afc5025dafb398829f15ba3">background_label</a>)</div>
+<div class="line"><span class="lineno">  689</span>      .frameId(frame_id)</div>
+<div class="line"><span class="lineno">  690</span>      .keypointType(<a class="code hl_enumvalue" href="namespacedyno.html#ad6aa767541eb74e30fc5a7b018322952aa7ffd97a62d9e9295b5f90cea20c2833">KeyPointType::STATIC</a>)</div>
+<div class="line"><span class="lineno">  691</span>      .age(kAge)</div>
+<div class="line"><span class="lineno">  692</span>      .markInlier()</div>
+<div class="line"><span class="lineno">  693</span>      .trackletId(tracklet_to_use)</div>
+<div class="line"><span class="lineno">  694</span>      .keypoint(kp_current);</div>
+<div class="line"><span class="lineno">  695</span>  <span class="keywordflow">return</span> feature;</div>
+<div class="line"><span class="lineno">  696</span>}</div>
 <div class="ttc" id="aclassdyno_1_1TrackletIdManager_html_a53cb3472fa0367b8dd2a9127111277b2"><div class="ttname"><a href="classdyno_1_1TrackletIdManager.html#a53cb3472fa0367b8dd2a9127111277b2">dyno::TrackletIdManager::instance</a></div><div class="ttdeci">static TrackletIdManager &amp; instance()</div><div class="ttdef"><b>Definition:</b> <a href="FeatureTrackerBase_8hpp_source.html#l00054">FeatureTrackerBase.hpp:54</a></div></div>
 <div class="ttc" id="anamespacedyno_html_ad6aa767541eb74e30fc5a7b018322952aa7ffd97a62d9e9295b5f90cea20c2833"><div class="ttname"><a href="namespacedyno.html#ad6aa767541eb74e30fc5a7b018322952aa7ffd97a62d9e9295b5f90cea20c2833">dyno::STATIC</a></div><div class="ttdeci">@ STATIC</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00190">Types.hpp:190</a></div></div>
 <div class="ttc" id="anamespacedyno_html_ae78915ea0afc5025dafb398829f15ba3"><div class="ttname"><a href="namespacedyno.html#ae78915ea0afc5025dafb398829f15ba3">dyno::background_label</a></div><div class="ttdeci">static constexpr ObjectId background_label</div><div class="ttdoc">Expected label for the background in a semantic or motion mask.</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00188">Types.hpp:188</a></div></div>
@@ -423,42 +423,42 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Feature::Ptr </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="StaticFeatureTracker_8cc_source.html#l00640">640</a> of file <a class="el" href="StaticFeatureTracker_8cc_source.html">StaticFeatureTracker.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  642</span>                                                                {</div>
-<div class="line"><span class="lineno">  643</span>  CHECK(previous_feature);</div>
-<div class="line"><span class="lineno">  644</span>  CHECK_EQ(previous_feature-&gt;trackletId(), tracklet_id);</div>
-<div class="line"><span class="lineno">  645</span> </div>
-<div class="line"><span class="lineno">  646</span>  <span class="keywordtype">size_t</span> age = previous_feature-&gt;age();</div>
-<div class="line"><span class="lineno">  647</span>  age++;</div>
-<div class="line"><span class="lineno">  648</span> </div>
-<div class="line"><span class="lineno">  649</span>  <a class="code hl_typedef" href="namespacedyno.html#afdd174eb44901fb205371d796287378c">TrackletId</a> tracklet_to_use = tracklet_id;</div>
-<div class="line"><span class="lineno">  650</span>  <span class="comment">// if age is too large, or age is zero, retrieve new tracklet id</span></div>
-<div class="line"><span class="lineno">  651</span>  <span class="keywordflow">if</span> (age &gt; <a class="code hl_variable" href="classdyno_1_1FeatureTrackerBase.html#a04f0948954381269fedd5a6856662cb7">params_</a>.<a class="code hl_variable" href="structdyno_1_1TrackerParams.html#a98efd475a7e932081f948b84518d6dea">max_feature_track_age</a>) {</div>
-<div class="line"><span class="lineno">  652</span>    <span class="comment">// TrackletIdManager&amp; tracked_id_manager = TrackletIdManager::instance();</span></div>
-<div class="line"><span class="lineno">  653</span>    <span class="comment">// tracklet_to_use = tracked_id_manager.getTrackletIdCount();</span></div>
-<div class="line"><span class="lineno">  654</span>    <span class="comment">// tracked_id_manager.incrementTrackletIdCount();</span></div>
-<div class="line"><span class="lineno">  655</span>    <span class="comment">// age = 0u;</span></div>
-<div class="line"><span class="lineno">  656</span>    <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
-<div class="line"><span class="lineno">  657</span>  }</div>
-<div class="line"><span class="lineno">  658</span> </div>
-<div class="line"><span class="lineno">  659</span>  <span class="comment">// update previous keypoint</span></div>
-<div class="line"><span class="lineno">  660</span>  previous_feature-&gt;measuredFlow(kp_current - previous_feature-&gt;keypoint());</div>
-<div class="line"><span class="lineno">  661</span>  <span class="comment">// This is so awful, but happens becuase the way the code was originally</span></div>
-<div class="line"><span class="lineno">  662</span>  <span class="comment">// written, we expect flow from k to k+1 (grrrr)</span></div>
-<div class="line"><span class="lineno">  663</span>  previous_feature-&gt;predictedKeypoint(kp_current);</div>
-<div class="line"><span class="lineno">  664</span> </div>
-<div class="line"><span class="lineno">  665</span>  Feature::Ptr feature = std::make_shared&lt;Feature&gt;();</div>
-<div class="line"><span class="lineno">  666</span>  (*feature)</div>
-<div class="line"><span class="lineno">  667</span>      .objectId(<a class="code hl_variable" href="namespacedyno.html#ae78915ea0afc5025dafb398829f15ba3">background_label</a>)</div>
-<div class="line"><span class="lineno">  668</span>      .frameId(frame_id)</div>
-<div class="line"><span class="lineno">  669</span>      .keypointType(<a class="code hl_enumvalue" href="namespacedyno.html#ad6aa767541eb74e30fc5a7b018322952aa7ffd97a62d9e9295b5f90cea20c2833">KeyPointType::STATIC</a>)</div>
-<div class="line"><span class="lineno">  670</span>      .age(age)</div>
-<div class="line"><span class="lineno">  671</span>      .markInlier()</div>
-<div class="line"><span class="lineno">  672</span>      .trackletId(tracklet_to_use)</div>
-<div class="line"><span class="lineno">  673</span>      .keypoint(kp_current);</div>
-<div class="line"><span class="lineno">  674</span> </div>
-<div class="line"><span class="lineno">  675</span>  <span class="keywordflow">return</span> feature;</div>
-<div class="line"><span class="lineno">  676</span>}</div>
+<p class="definition">Definition at line <a class="el" href="StaticFeatureTracker_8cc_source.html#l00641">641</a> of file <a class="el" href="StaticFeatureTracker_8cc_source.html">StaticFeatureTracker.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  643</span>                                                                {</div>
+<div class="line"><span class="lineno">  644</span>  CHECK(previous_feature);</div>
+<div class="line"><span class="lineno">  645</span>  CHECK_EQ(previous_feature-&gt;trackletId(), tracklet_id);</div>
+<div class="line"><span class="lineno">  646</span> </div>
+<div class="line"><span class="lineno">  647</span>  <span class="keywordtype">size_t</span> age = previous_feature-&gt;age();</div>
+<div class="line"><span class="lineno">  648</span>  age++;</div>
+<div class="line"><span class="lineno">  649</span> </div>
+<div class="line"><span class="lineno">  650</span>  <a class="code hl_typedef" href="namespacedyno.html#afdd174eb44901fb205371d796287378c">TrackletId</a> tracklet_to_use = tracklet_id;</div>
+<div class="line"><span class="lineno">  651</span>  <span class="comment">// if age is too large, or age is zero, retrieve new tracklet id</span></div>
+<div class="line"><span class="lineno">  652</span>  <span class="keywordflow">if</span> (age &gt; <a class="code hl_variable" href="classdyno_1_1FeatureTrackerBase.html#a04f0948954381269fedd5a6856662cb7">params_</a>.<a class="code hl_variable" href="structdyno_1_1TrackerParams.html#a98efd475a7e932081f948b84518d6dea">max_feature_track_age</a>) {</div>
+<div class="line"><span class="lineno">  653</span>    <span class="comment">// TrackletIdManager&amp; tracked_id_manager = TrackletIdManager::instance();</span></div>
+<div class="line"><span class="lineno">  654</span>    <span class="comment">// tracklet_to_use = tracked_id_manager.getTrackletIdCount();</span></div>
+<div class="line"><span class="lineno">  655</span>    <span class="comment">// tracked_id_manager.incrementTrackletIdCount();</span></div>
+<div class="line"><span class="lineno">  656</span>    <span class="comment">// age = 0u;</span></div>
+<div class="line"><span class="lineno">  657</span>    <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
+<div class="line"><span class="lineno">  658</span>  }</div>
+<div class="line"><span class="lineno">  659</span> </div>
+<div class="line"><span class="lineno">  660</span>  <span class="comment">// update previous keypoint</span></div>
+<div class="line"><span class="lineno">  661</span>  previous_feature-&gt;measuredFlow(kp_current - previous_feature-&gt;keypoint());</div>
+<div class="line"><span class="lineno">  662</span>  <span class="comment">// This is so awful, but happens becuase the way the code was originally</span></div>
+<div class="line"><span class="lineno">  663</span>  <span class="comment">// written, we expect flow from k to k+1 (grrrr)</span></div>
+<div class="line"><span class="lineno">  664</span>  previous_feature-&gt;predictedKeypoint(kp_current);</div>
+<div class="line"><span class="lineno">  665</span> </div>
+<div class="line"><span class="lineno">  666</span>  Feature::Ptr feature = std::make_shared&lt;Feature&gt;();</div>
+<div class="line"><span class="lineno">  667</span>  (*feature)</div>
+<div class="line"><span class="lineno">  668</span>      .objectId(<a class="code hl_variable" href="namespacedyno.html#ae78915ea0afc5025dafb398829f15ba3">background_label</a>)</div>
+<div class="line"><span class="lineno">  669</span>      .frameId(frame_id)</div>
+<div class="line"><span class="lineno">  670</span>      .keypointType(<a class="code hl_enumvalue" href="namespacedyno.html#ad6aa767541eb74e30fc5a7b018322952aa7ffd97a62d9e9295b5f90cea20c2833">KeyPointType::STATIC</a>)</div>
+<div class="line"><span class="lineno">  671</span>      .age(age)</div>
+<div class="line"><span class="lineno">  672</span>      .markInlier()</div>
+<div class="line"><span class="lineno">  673</span>      .trackletId(tracklet_to_use)</div>
+<div class="line"><span class="lineno">  674</span>      .keypoint(kp_current);</div>
+<div class="line"><span class="lineno">  675</span> </div>
+<div class="line"><span class="lineno">  676</span>  <span class="keywordflow">return</span> feature;</div>
+<div class="line"><span class="lineno">  677</span>}</div>
 <div class="ttc" id="aclassdyno_1_1FeatureTrackerBase_html_a04f0948954381269fedd5a6856662cb7"><div class="ttname"><a href="classdyno_1_1FeatureTrackerBase.html#a04f0948954381269fedd5a6856662cb7">dyno::FeatureTrackerBase::params_</a></div><div class="ttdeci">const TrackerParams params_</div><div class="ttdef"><b>Definition:</b> <a href="FeatureTrackerBase_8hpp_source.html#l00173">FeatureTrackerBase.hpp:173</a></div></div>
 <div class="ttc" id="astructdyno_1_1TrackerParams_html_a98efd475a7e932081f948b84518d6dea"><div class="ttname"><a href="structdyno_1_1TrackerParams.html#a98efd475a7e932081f948b84518d6dea">dyno::TrackerParams::max_feature_track_age</a></div><div class="ttdeci">size_t max_feature_track_age</div><div class="ttdoc">We relabel the track as a new track for any features longer that this.</div><div class="ttdef"><b>Definition:</b> <a href="TrackerParams_8hpp_source.html#l00119">TrackerParams.hpp:119</a></div></div>
 </div><!-- fragment -->
@@ -588,7 +588,7 @@ Here is the caller graph for this function:</div>
 <div class="line"><span class="lineno">  388</span> </div>
 <div class="line"><span class="lineno">  389</span>  std::vector&lt;cv::Point2f&gt; detected_points;</div>
 <div class="line"><span class="lineno">  390</span>  {</div>
-<div class="line"><span class="lineno">  391</span>    utils::TimingStatsCollector timer(<span class="stringliteral">&quot;static_feature_track.detect_raw&quot;</span>);</div>
+<div class="line"><span class="lineno">  391</span>    utils::ChronoTimingStats timer(<span class="stringliteral">&quot;static_feature_track.detect_raw&quot;</span>);</div>
 <div class="line"><span class="lineno">  392</span>    detected_points = <a class="code hl_function" href="classdyno_1_1KltFeatureTracker.html#a8d1fe23ea28bc785dc41afa798a952a4">detectRawFeatures</a>(processed_img, current_features.size(),</div>
 <div class="line"><span class="lineno">  393</span>                                        detection_mask_impl);</div>
 <div class="line"><span class="lineno">  394</span>  }</div>
@@ -619,7 +619,7 @@ Here is the caller graph for this function:</div>
 <div class="ttc" id="aclassdyno_1_1FeatureTrackerBase_html_a32d80be7e74a096c2b816529b7fd2c69"><div class="ttname"><a href="classdyno_1_1FeatureTrackerBase.html#a32d80be7e74a096c2b816529b7fd2c69">dyno::FeatureTrackerBase::isWithinShrunkenImage</a></div><div class="ttdeci">bool isWithinShrunkenImage(const Keypoint &amp;kp) const</div><div class="ttdoc">Checks if a keypoint is within an image, taking into account the shrink row/col values in the params....</div><div class="ttdef"><b>Definition:</b> <a href="FeatureTrackerBase_8cc_source.html#l00313">FeatureTrackerBase.cc:313</a></div></div>
 <div class="ttc" id="aclassdyno_1_1FeatureTrackerBase_html_abf6eba19baf18b1c3648347401c15a56"><div class="ttname"><a href="classdyno_1_1FeatureTrackerBase.html#abf6eba19baf18b1c3648347401c15a56">dyno::FeatureTrackerBase::camera_</a></div><div class="ttdeci">Camera::Ptr camera_</div><div class="ttdoc">Expected image size from the camera.</div><div class="ttdef"><b>Definition:</b> <a href="FeatureTrackerBase_8hpp_source.html#l00176">FeatureTrackerBase.hpp:176</a></div></div>
 <div class="ttc" id="aclassdyno_1_1KltFeatureTracker_html_a8d1fe23ea28bc785dc41afa798a952a4"><div class="ttname"><a href="classdyno_1_1KltFeatureTracker.html#a8d1fe23ea28bc785dc41afa798a952a4">dyno::KltFeatureTracker::detectRawFeatures</a></div><div class="ttdeci">std::vector&lt; cv::Point2f &gt; detectRawFeatures(const cv::Mat &amp;processed_img, int number_tracked, const cv::Mat &amp;mask=cv::Mat())</div><div class="ttdoc">Detects features on the input image using the feature detector.</div><div class="ttdef"><b>Definition:</b> <a href="StaticFeatureTracker_8cc_source.html#l00320">StaticFeatureTracker.cc:320</a></div></div>
-<div class="ttc" id="aclassdyno_1_1KltFeatureTracker_html_af29a1c043d097f368a86b346bcfe33e0"><div class="ttname"><a href="classdyno_1_1KltFeatureTracker.html#af29a1c043d097f368a86b346bcfe33e0">dyno::KltFeatureTracker::constructNewStaticFeature</a></div><div class="ttdeci">Feature::Ptr constructNewStaticFeature(const Keypoint &amp;kp_current, const FrameId frame_id) const</div><div class="ttdoc">Construct a new static feature with a unique tracklet id.</div><div class="ttdef"><b>Definition:</b> <a href="StaticFeatureTracker_8cc_source.html#l00678">StaticFeatureTracker.cc:678</a></div></div>
+<div class="ttc" id="aclassdyno_1_1KltFeatureTracker_html_af29a1c043d097f368a86b346bcfe33e0"><div class="ttname"><a href="classdyno_1_1KltFeatureTracker.html#af29a1c043d097f368a86b346bcfe33e0">dyno::KltFeatureTracker::constructNewStaticFeature</a></div><div class="ttdeci">Feature::Ptr constructNewStaticFeature(const Keypoint &amp;kp_current, const FrameId frame_id) const</div><div class="ttdoc">Construct a new static feature with a unique tracklet id.</div><div class="ttdef"><b>Definition:</b> <a href="StaticFeatureTracker_8cc_source.html#l00679">StaticFeatureTracker.cc:679</a></div></div>
 <div class="ttc" id="anamespacedyno_html_aaa260a8022691078c59e1ac6a4fa05b5"><div class="ttname"><a href="namespacedyno.html#aaa260a8022691078c59e1ac6a4fa05b5">dyno::Keypoint</a></div><div class="ttdeci">gtsam::Point2 Keypoint</div><div class="ttdoc">Observed optical flow vector (ordered x, y)</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00096">Types.hpp:96</a></div></div>
 <div class="ttc" id="anamespacedyno_html_ac4303d6fafb755f794b072d76f9cfb41"><div class="ttname"><a href="namespacedyno.html#ac4303d6fafb755f794b072d76f9cfb41">dyno::FrameId</a></div><div class="ttdeci">size_t FrameId</div><div class="ttdoc">Discrete time-step k.</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00074">Types.hpp:74</a></div></div>
 <div class="ttc" id="astructdyno_1_1TrackerParams_html_a358f74608a754655091c61a537b90fd6"><div class="ttname"><a href="structdyno_1_1TrackerParams.html#a358f74608a754655091c61a537b90fd6">dyno::TrackerParams::min_distance_btw_tracked_and_detected_static_features</a></div><div class="ttdeci">int min_distance_btw_tracked_and_detected_static_features</div><div class="ttdef"><b>Definition:</b> <a href="TrackerParams_8hpp_source.html#l00111">TrackerParams.hpp:111</a></div></div>
@@ -871,18 +871,18 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>cv::Mat </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="StaticFeatureTracker_8cc_source.html#l00626">626</a> of file <a class="el" href="StaticFeatureTracker_8cc_source.html">StaticFeatureTracker.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  628</span>                                                {</div>
-<div class="line"><span class="lineno">  629</span>  <span class="keywordflow">if</span> (good_old.size() &gt;= 4) {  <span class="comment">// Minimum number of points required for RANSAC</span></div>
-<div class="line"><span class="lineno">  630</span>    cv::Mat mask;</div>
-<div class="line"><span class="lineno">  631</span>    cv::findHomography(good_old, good_new, cv::RANSAC, 5.0, mask);</div>
-<div class="line"><span class="lineno">  632</span>    <span class="keywordflow">return</span> mask;</div>
-<div class="line"><span class="lineno">  633</span>  } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  634</span>    <span class="keywordflow">return</span> cv::Mat::ones(</div>
-<div class="line"><span class="lineno">  635</span>        good_old.size(), 1,</div>
-<div class="line"><span class="lineno">  636</span>        CV_8U);  <span class="comment">// If not enough points, assume all are inliers</span></div>
-<div class="line"><span class="lineno">  637</span>  }</div>
-<div class="line"><span class="lineno">  638</span>}</div>
+<p class="definition">Definition at line <a class="el" href="StaticFeatureTracker_8cc_source.html#l00627">627</a> of file <a class="el" href="StaticFeatureTracker_8cc_source.html">StaticFeatureTracker.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  629</span>                                                {</div>
+<div class="line"><span class="lineno">  630</span>  <span class="keywordflow">if</span> (good_old.size() &gt;= 4) {  <span class="comment">// Minimum number of points required for RANSAC</span></div>
+<div class="line"><span class="lineno">  631</span>    cv::Mat mask;</div>
+<div class="line"><span class="lineno">  632</span>    cv::findHomography(good_old, good_new, cv::RANSAC, 5.0, mask);</div>
+<div class="line"><span class="lineno">  633</span>    <span class="keywordflow">return</span> mask;</div>
+<div class="line"><span class="lineno">  634</span>  } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  635</span>    <span class="keywordflow">return</span> cv::Mat::ones(</div>
+<div class="line"><span class="lineno">  636</span>        good_old.size(), 1,</div>
+<div class="line"><span class="lineno">  637</span>        CV_8U);  <span class="comment">// If not enough points, assume all are inliers</span></div>
+<div class="line"><span class="lineno">  638</span>  }</div>
+<div class="line"><span class="lineno">  639</span>}</div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1KltFeatureTracker.html#a8f26d8fe56edd3e579a879e82a40457f">trackPoints()</a>.</p>
 <div class="dynheader">
@@ -1037,7 +1037,7 @@ false </dd></dl>
 <div class="line"><span class="lineno">  466</span>  CHECK_EQ(current_points.size(), previous_pts.size());</div>
 <div class="line"><span class="lineno">  467</span> </div>
 <div class="line"><span class="lineno">  468</span>  {</div>
-<div class="line"><span class="lineno">  469</span>    <span class="comment">// utils::TimingStatsCollector timer(&quot;static_feature_track.calc_LK&quot;);</span></div>
+<div class="line"><span class="lineno">  469</span>    <span class="comment">// utils::ChronoTimingStats timer(&quot;static_feature_track.calc_LK&quot;);</span></div>
 <div class="line"><span class="lineno">  470</span>    <span class="comment">// cv::cuda::GpuMat gpu_prev_img(previous_processed_img);</span></div>
 <div class="line"><span class="lineno">  471</span>    <span class="comment">// cv::cuda::GpuMat gpu_current_img(current_processed_img);</span></div>
 <div class="line"><span class="lineno">  472</span> </div>
@@ -1172,7 +1172,7 @@ false </dd></dl>
 <div class="line"><span class="lineno">  601</span>  <span class="comment">// place we just want the set difference between the original features and</span></div>
 <div class="line"><span class="lineno">  602</span>  <span class="comment">// ones we KNOW are outliers</span></div>
 <div class="line"><span class="lineno">  603</span>  {</div>
-<div class="line"><span class="lineno">  604</span>    utils::TimingStatsCollector timer(<span class="stringliteral">&quot;static_feature_track.find_outliers&quot;</span>);</div>
+<div class="line"><span class="lineno">  604</span>    utils::ChronoTimingStats timer(<span class="stringliteral">&quot;static_feature_track.find_outliers&quot;</span>);</div>
 <div class="line"><span class="lineno">  605</span>    <a class="code hl_function" href="namespacedyno.html#af008198dcb75012836115300a522ca86">determineOutlierIds</a>(verified_tracklets, tracklet_ids,</div>
 <div class="line"><span class="lineno">  606</span>                        outlier_previous_features);</div>
 <div class="line"><span class="lineno">  607</span>  }</div>
@@ -1182,26 +1182,27 @@ false </dd></dl>
 <div class="line"><span class="lineno">  611</span> </div>
 <div class="line"><span class="lineno">  612</span>  <span class="keywordflow">if</span> (tracked_features.size() &lt;</div>
 <div class="line"><span class="lineno">  613</span>      <span class="keyword">static_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(<a class="code hl_variable" href="classdyno_1_1FeatureTrackerBase.html#a04f0948954381269fedd5a6856662cb7">params_</a>.<a class="code hl_variable" href="structdyno_1_1TrackerParams.html#a530c573728820b7131d6e4a2fd37be1c">min_features_per_frame</a>)) {</div>
-<div class="line"><span class="lineno">  614</span>    utils::TimingStatsCollector timer(<span class="stringliteral">&quot;static_feature_track.detect&quot;</span>);</div>
+<div class="line"><span class="lineno">  614</span>    utils::ChronoTimingStats timer(<span class="stringliteral">&quot;static_feature_track.detect&quot;</span>);</div>
 <div class="line"><span class="lineno">  615</span>    <span class="comment">// if we do not have enough features, detect more on the current image</span></div>
 <div class="line"><span class="lineno">  616</span>    <a class="code hl_function" href="classdyno_1_1KltFeatureTracker.html#a4870d167d7dbd1a04a8d7d15a376a573">detectFeatures</a>(current_processed_img, image_container, tracked_features,</div>
 <div class="line"><span class="lineno">  617</span>                   tracked_features, detection_mask);</div>
-<div class="line"><span class="lineno">  618</span> </div>
-<div class="line"><span class="lineno">  619</span>    <span class="keyword">const</span> <span class="keyword">auto</span> n_detected = tracked_features.size() - n_tracked;</div>
-<div class="line"><span class="lineno">  620</span>    tracker_info.static_track_detections += n_detected;</div>
-<div class="line"><span class="lineno">  621</span>  }</div>
-<div class="line"><span class="lineno">  622</span> </div>
-<div class="line"><span class="lineno">  623</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  624</span>}</div>
+<div class="line"><span class="lineno">  618</span>    tracker_info.new_static_detections = <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  619</span> </div>
+<div class="line"><span class="lineno">  620</span>    <span class="keyword">const</span> <span class="keyword">auto</span> n_detected = tracked_features.size() - n_tracked;</div>
+<div class="line"><span class="lineno">  621</span>    tracker_info.static_track_detections += n_detected;</div>
+<div class="line"><span class="lineno">  622</span>  }</div>
+<div class="line"><span class="lineno">  623</span> </div>
+<div class="line"><span class="lineno">  624</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  625</span>}</div>
 <div class="ttc" id="aclassdyno_1_1FeatureTrackerBase_html_aac4fd637116f1a55b857968d6f84d33d"><div class="ttname"><a href="classdyno_1_1FeatureTrackerBase.html#aac4fd637116f1a55b857968d6f84d33d">dyno::FeatureTrackerBase::predictKeypointsGivenRotation</a></div><div class="ttdeci">bool predictKeypointsGivenRotation(std::vector&lt; cv::Point2f &gt; &amp;predicted_pts_k, const std::vector&lt; cv::Point2f &gt; &amp;pts_km1, const gtsam::Rot3 &amp;R_km1_k) const</div><div class="ttdef"><b>Definition:</b> <a href="FeatureTrackerBase_8cc_source.html#l00050">FeatureTrackerBase.cc:50</a></div></div>
-<div class="ttc" id="aclassdyno_1_1KltFeatureTracker_html_a009ab3664d0280cb1fc6cb8b37a7a570"><div class="ttname"><a href="classdyno_1_1KltFeatureTracker.html#a009ab3664d0280cb1fc6cb8b37a7a570">dyno::KltFeatureTracker::constructStaticFeatureFromPrevious</a></div><div class="ttdeci">Feature::Ptr constructStaticFeatureFromPrevious(const Keypoint &amp;kp_current, Feature::Ptr previous_feature, const TrackletId tracklet_id, const FrameId frame_id) const</div><div class="ttdoc">A more concise static feature constructor that the one in ExternalFlowFeatureTracker.</div><div class="ttdef"><b>Definition:</b> <a href="StaticFeatureTracker_8cc_source.html#l00640">StaticFeatureTracker.cc:640</a></div></div>
+<div class="ttc" id="aclassdyno_1_1KltFeatureTracker_html_a009ab3664d0280cb1fc6cb8b37a7a570"><div class="ttname"><a href="classdyno_1_1KltFeatureTracker.html#a009ab3664d0280cb1fc6cb8b37a7a570">dyno::KltFeatureTracker::constructStaticFeatureFromPrevious</a></div><div class="ttdeci">Feature::Ptr constructStaticFeatureFromPrevious(const Keypoint &amp;kp_current, Feature::Ptr previous_feature, const TrackletId tracklet_id, const FrameId frame_id) const</div><div class="ttdoc">A more concise static feature constructor that the one in ExternalFlowFeatureTracker.</div><div class="ttdef"><b>Definition:</b> <a href="StaticFeatureTracker_8cc_source.html#l00641">StaticFeatureTracker.cc:641</a></div></div>
 <div class="ttc" id="aclassdyno_1_1KltFeatureTracker_html_a4870d167d7dbd1a04a8d7d15a376a573"><div class="ttname"><a href="classdyno_1_1KltFeatureTracker.html#a4870d167d7dbd1a04a8d7d15a376a573">dyno::KltFeatureTracker::detectFeatures</a></div><div class="ttdeci">bool detectFeatures(const cv::Mat &amp;processed_img, const ImageContainer &amp;image_container, const FeatureContainer &amp;current_features, FeatureContainer &amp;new_features, const cv::Mat &amp;detection_mask)</div><div class="ttdef"><b>Definition:</b> <a href="StaticFeatureTracker_8cc_source.html#l00330">StaticFeatureTracker.cc:330</a></div></div>
-<div class="ttc" id="aclassdyno_1_1KltFeatureTracker_html_ad796963f2948751d26e41fd0a890d0fc"><div class="ttname"><a href="classdyno_1_1KltFeatureTracker.html#ad796963f2948751d26e41fd0a890d0fc">dyno::KltFeatureTracker::geometricVerification</a></div><div class="ttdeci">cv::Mat geometricVerification(const std::vector&lt; cv::Point2f &gt; &amp;good_old, const std::vector&lt; cv::Point2f &gt; &amp;good_new) const</div><div class="ttdoc">Geometric verification using homograph + RANSAC. Input vectors have the same size and are a 1-to-1 of...</div><div class="ttdef"><b>Definition:</b> <a href="StaticFeatureTracker_8cc_source.html#l00626">StaticFeatureTracker.cc:626</a></div></div>
+<div class="ttc" id="aclassdyno_1_1KltFeatureTracker_html_ad796963f2948751d26e41fd0a890d0fc"><div class="ttname"><a href="classdyno_1_1KltFeatureTracker.html#ad796963f2948751d26e41fd0a890d0fc">dyno::KltFeatureTracker::geometricVerification</a></div><div class="ttdeci">cv::Mat geometricVerification(const std::vector&lt; cv::Point2f &gt; &amp;good_old, const std::vector&lt; cv::Point2f &gt; &amp;good_new) const</div><div class="ttdoc">Geometric verification using homograph + RANSAC. Input vectors have the same size and are a 1-to-1 of...</div><div class="ttdef"><b>Definition:</b> <a href="StaticFeatureTracker_8cc_source.html#l00627">StaticFeatureTracker.cc:627</a></div></div>
 <div class="ttc" id="anamespacedyno_html_a7b74611da938f0d55a3b1fdb16219037"><div class="ttname"><a href="namespacedyno.html#a7b74611da938f0d55a3b1fdb16219037">dyno::TrackletIds</a></div><div class="ttdeci">std::vector&lt; TrackletId &gt; TrackletIds</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00083">Types.hpp:83</a></div></div>
 <div class="ttc" id="anamespacedyno_html_af008198dcb75012836115300a522ca86"><div class="ttname"><a href="namespacedyno.html#af008198dcb75012836115300a522ca86">dyno::determineOutlierIds</a></div><div class="ttdeci">void determineOutlierIds(const TrackletIds &amp;inliers, const TrackletIds &amp;tracklets, TrackletIds &amp;outliers)</div><div class="ttdoc">From a set a tracklets and a subset (of the tracklet) inliers, calculate the remaining subset of outl...</div><div class="ttdef"><b>Definition:</b> <a href="VisionTools_8cc_source.html#l00744">VisionTools.cc:744</a></div></div>
 <div class="ttc" id="astructdyno_1_1TrackerParams_html_a530c573728820b7131d6e4a2fd37be1c"><div class="ttname"><a href="structdyno_1_1TrackerParams.html#a530c573728820b7131d6e4a2fd37be1c">dyno::TrackerParams::min_features_per_frame</a></div><div class="ttdeci">int min_features_per_frame</div><div class="ttdef"><b>Definition:</b> <a href="TrackerParams_8hpp_source.html#l00117">TrackerParams.hpp:117</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="classdyno_1_1FeatureContainer.html#a3af7c9e40df21b96a8c7067348aed5f5">dyno::FeatureContainer::add()</a>, <a class="el" href="namespacedyno.html#ae78915ea0afc5025dafb398829f15ba3">dyno::background_label</a>, <a class="el" href="classdyno_1_1FeatureTrackerBase.html#abf6eba19baf18b1c3648347401c15a56">dyno::FeatureTrackerBase::camera_</a>, <a class="el" href="classdyno_1_1KltFeatureTracker.html#a009ab3664d0280cb1fc6cb8b37a7a570">constructStaticFeatureFromPrevious()</a>, <a class="el" href="classdyno_1_1KltFeatureTracker.html#a4870d167d7dbd1a04a8d7d15a376a573">detectFeatures()</a>, <a class="el" href="namespacedyno.html#af008198dcb75012836115300a522ca86">dyno::determineOutlierIds()</a>, <a class="el" href="classdyno_1_1FeatureContainer.html#a4d5e186005b95a09871538e314922a11">dyno::FeatureContainer::empty()</a>, <a class="el" href="classdyno_1_1ImageContainer.html#ae5023f3df359ad7a5196ce15cd632ca3">dyno::ImageContainer::frameId()</a>, <a class="el" href="classdyno_1_1KltFeatureTracker.html#ad796963f2948751d26e41fd0a890d0fc">geometricVerification()</a>, <a class="el" href="classdyno_1_1FeatureContainer.html#a5b73e75d2f4063ac9c16dd0fd565f8da">dyno::FeatureContainer::getByTrackletId()</a>, <a class="el" href="classdyno_1_1FeatureTrackerBase.html#a32d80be7e74a096c2b816529b7fd2c69">dyno::FeatureTrackerBase::isWithinShrunkenImage()</a>, <a class="el" href="structdyno_1_1TrackerParams.html#a530c573728820b7131d6e4a2fd37be1c">dyno::TrackerParams::min_features_per_frame</a>, <a class="el" href="classdyno_1_1ImageContainer.html#ae5eead678f02be0ab9de7464e1833c55">dyno::ImageContainer::objectMotionMask()</a>, <a class="el" href="classdyno_1_1FeatureTrackerBase.html#a04f0948954381269fedd5a6856662cb7">dyno::FeatureTrackerBase::params_</a>, <a class="el" href="classdyno_1_1FeatureTrackerBase.html#aac4fd637116f1a55b857968d6f84d33d">dyno::FeatureTrackerBase::predictKeypointsGivenRotation()</a>, <a class="el" href="classdyno_1_1FeatureContainer.html#afd095f6a9e0f25539e7febe6eeeaf003">dyno::FeatureContainer::size()</a>, <a class="el" href="structdyno_1_1FeatureTrackerInfo.html#a28c134cb8fd5e56abc9b0fe8d92955c5">dyno::FeatureTrackerInfo::static_track_detections</a>, <a class="el" href="structdyno_1_1FeatureTrackerInfo.html#a11ddaea878d4040f670152dc27ed43dd">dyno::FeatureTrackerInfo::static_track_optical_flow</a>, <a class="el" href="classdyno_1_1FeatureContainer.html#a00fb07fccff523cba9783e6d00186f28">dyno::FeatureContainer::toOpenCV()</a>, <a class="el" href="structdyno_1_1functional__keypoint.html#a3896d96a6f95b5311ae768cdd0ad97e8">dyno::functional_keypoint::u()</a>, and <a class="el" href="structdyno_1_1functional__keypoint.html#a24933450cad8bc70b7b76b339756cd94">dyno::functional_keypoint::v()</a>.</p>
+<p class="reference">References <a class="el" href="classdyno_1_1FeatureContainer.html#a3af7c9e40df21b96a8c7067348aed5f5">dyno::FeatureContainer::add()</a>, <a class="el" href="namespacedyno.html#ae78915ea0afc5025dafb398829f15ba3">dyno::background_label</a>, <a class="el" href="classdyno_1_1FeatureTrackerBase.html#abf6eba19baf18b1c3648347401c15a56">dyno::FeatureTrackerBase::camera_</a>, <a class="el" href="classdyno_1_1KltFeatureTracker.html#a009ab3664d0280cb1fc6cb8b37a7a570">constructStaticFeatureFromPrevious()</a>, <a class="el" href="classdyno_1_1KltFeatureTracker.html#a4870d167d7dbd1a04a8d7d15a376a573">detectFeatures()</a>, <a class="el" href="namespacedyno.html#af008198dcb75012836115300a522ca86">dyno::determineOutlierIds()</a>, <a class="el" href="classdyno_1_1FeatureContainer.html#a4d5e186005b95a09871538e314922a11">dyno::FeatureContainer::empty()</a>, <a class="el" href="classdyno_1_1ImageContainer.html#ae5023f3df359ad7a5196ce15cd632ca3">dyno::ImageContainer::frameId()</a>, <a class="el" href="classdyno_1_1KltFeatureTracker.html#ad796963f2948751d26e41fd0a890d0fc">geometricVerification()</a>, <a class="el" href="classdyno_1_1FeatureContainer.html#a5b73e75d2f4063ac9c16dd0fd565f8da">dyno::FeatureContainer::getByTrackletId()</a>, <a class="el" href="classdyno_1_1FeatureTrackerBase.html#a32d80be7e74a096c2b816529b7fd2c69">dyno::FeatureTrackerBase::isWithinShrunkenImage()</a>, <a class="el" href="structdyno_1_1TrackerParams.html#a530c573728820b7131d6e4a2fd37be1c">dyno::TrackerParams::min_features_per_frame</a>, <a class="el" href="structdyno_1_1FeatureTrackerInfo.html#a5f73086418202135772735c1fa4c37d4">dyno::FeatureTrackerInfo::new_static_detections</a>, <a class="el" href="classdyno_1_1ImageContainer.html#ae5eead678f02be0ab9de7464e1833c55">dyno::ImageContainer::objectMotionMask()</a>, <a class="el" href="classdyno_1_1FeatureTrackerBase.html#a04f0948954381269fedd5a6856662cb7">dyno::FeatureTrackerBase::params_</a>, <a class="el" href="classdyno_1_1FeatureTrackerBase.html#aac4fd637116f1a55b857968d6f84d33d">dyno::FeatureTrackerBase::predictKeypointsGivenRotation()</a>, <a class="el" href="classdyno_1_1FeatureContainer.html#afd095f6a9e0f25539e7febe6eeeaf003">dyno::FeatureContainer::size()</a>, <a class="el" href="structdyno_1_1FeatureTrackerInfo.html#a28c134cb8fd5e56abc9b0fe8d92955c5">dyno::FeatureTrackerInfo::static_track_detections</a>, <a class="el" href="structdyno_1_1FeatureTrackerInfo.html#a11ddaea878d4040f670152dc27ed43dd">dyno::FeatureTrackerInfo::static_track_optical_flow</a>, <a class="el" href="classdyno_1_1FeatureContainer.html#a00fb07fccff523cba9783e6d00186f28">dyno::FeatureContainer::toOpenCV()</a>, <a class="el" href="structdyno_1_1functional__keypoint.html#a3896d96a6f95b5311ae768cdd0ad97e8">dyno::functional_keypoint::u()</a>, and <a class="el" href="structdyno_1_1functional__keypoint.html#a24933450cad8bc70b7b76b339756cd94">dyno::functional_keypoint::v()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1KltFeatureTracker.html#ab15aaa39f0c3adc62037d718b98039c0">trackStatic()</a>.</p>
 <div class="dynheader">

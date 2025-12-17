@@ -1,7 +1,8 @@
 <map id="dynosam_ros/include/dynosam_ros/DataProviderRos.hpp" name="dynosam_ros/include/dynosam_ros/DataProviderRos.hpp">
-<area shape="rect" id="node1" title=" " alt="" coords="221,5,476,45"/>
+<area shape="rect" id="node1" title=" " alt="" coords="348,5,603,45"/>
 <area shape="rect" id="node2" href="$OnlineDataProviderRos_8hpp.html" title=" " alt="" coords="99,93,343,148"/>
-<area shape="rect" id="node5" href="$DataProviderRos_8cc.html" title=" " alt="" coords="367,101,589,141"/>
+<area shape="rect" id="node5" href="$dynosam__tracking__demo__node_8cc.html" title=" " alt="" coords="367,101,583,141"/>
+<area shape="rect" id="node6" href="$DataProviderRos_8cc.html" title=" " alt="" coords="607,101,829,141"/>
 <area shape="rect" id="node3" href="$OnlineDataProviderRos_8cc.html" title=" " alt="" coords="5,196,215,236"/>
 <area shape="rect" id="node4" href="$PipelineRos_8cc.html" title=" " alt="" coords="239,196,427,236"/>
 </map>

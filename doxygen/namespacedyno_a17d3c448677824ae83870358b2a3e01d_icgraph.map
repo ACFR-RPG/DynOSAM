@@ -1,24 +1,23 @@
 <map id="dyno::container_to_string" name="dyno::container_to_string">
-<area shape="rect" id="node1" title=" " alt="" coords="824,321,967,361"/>
-<area shape="rect" id="node2" href="$classdyno_1_1Frame.html#ab038b536516e42beb788f1b794801270" title=" " alt="" coords="547,5,776,45"/>
-<area shape="rect" id="node3" href="$classdyno_1_1WorldMotionFormulation.html#ad60f9621d41608943694144aad4d2e22" title=" " alt="" coords="550,69,773,109"/>
-<area shape="rect" id="node4" href="$classdyno_1_1VirtualKittiTextGtLoader.html#a01356211695c59b6ec68677bb81ab59b" title=" " alt="" coords="561,133,761,173"/>
-<area shape="rect" id="node6" href="$classdyno_1_1ClusterSlamAllLoader.html#abcfd6e30d4452f898bed934965e1bd4e" title=" " alt="" coords="282,167,485,207"/>
-<area shape="rect" id="node8" href="$classdyno_1_1ClusterSlamAllLoader.html#a1595d55b903ac7ece3902808aef764f4" title=" " alt="" coords="282,231,485,271"/>
-<area shape="rect" id="node9" href="$InstanceVizReader_8cc.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="634,299,689,325"/>
-<area shape="rect" id="node10" href="$classdyno_1_1ClusterSlamAllLoader.html#a35bb5a50e7fe4d28cfbc225443aa5361" title=" " alt="" coords="560,349,763,389"/>
-<area shape="rect" id="node12" href="$classdyno_1_1FeatureTracker.html#ab50422938e62bccc34295c155357213a" title="Check which objects require new features to be detected on them based on a set of &#39;keyframing&#39; criter..." alt="" coords="583,413,740,453"/>
-<area shape="rect" id="node14" href="$classdyno_1_1FeatureTracker.html#a40ee79c94fe2de7f16d2a4508cc2ba11" title=" " alt="" coords="34,423,191,463"/>
-<area shape="rect" id="node16" href="$structdyno_1_1FrameNode.html#a95fc3bac0f68b28780e4d24dec0b6975" title=" " alt="" coords="563,538,759,563"/>
-<area shape="rect" id="node17" href="$classdyno_1_1Formulation.html#ad78d57e7de23e30b9aa287a3939bb3a9" title="Updates the dyanmic&#45;point part of the factor graph for frame k. This contains all the big&#45;boi bookeep..." alt="" coords="556,588,767,628"/>
-<area shape="rect" id="node21" href="$classdyno_1_1ParallelObjectISAM.html#a96475152a11275ac46c4767b5dbae8aa" title=" " alt="" coords="568,659,755,699"/>
-<area shape="rect" id="node5" href="$classdyno_1_1VirtualKittiTextGtLoader.html#acd84a6178b51cde7490b662d4c0143d7" title="Construct a new Virtual Kitti Text Gt Laoder object." alt="" coords="268,103,499,143"/>
-<area shape="rect" id="node7" href="$classdyno_1_1ClusterSlamAllLoader.html#a3475570fea904450975ee52c48fb298c" title="Construct a new Cluster Slam Gt Loader object." alt="" coords="11,231,214,271"/>
-<area shape="rect" id="node11" href="$classdyno_1_1ClusterSlamAllLoader.html#ab475a49ae3fc624f16b9b5cf3210dda7" title=" " alt="" coords="282,295,485,335"/>
-<area shape="rect" id="node13" href="$classdyno_1_1FeatureTracker.html#a145614fe29bef7728075492870ac9c41" title=" " alt="" coords="305,359,462,399"/>
-<area shape="rect" id="node15" href="$classdyno_1_1FeatureTracker.html#a4796a29c1f89cde0ace1668fc8fcd9a3" title=" " alt="" coords="305,423,462,463"/>
-<area shape="rect" id="node18" href="$classdyno_1_1RegularBackendModule.html#a87d612af436f57a4ecaf37652064538b" title="Construct factors and new values for static and dynamic features. Does the bulk of the graph construc..." alt="" coords="276,537,491,577"/>
-<area shape="rect" id="node20" href="$classdyno_1_1RegularBackendModule.html#ab253e9d8df2177ea7a5bdb044239af46" title=" " alt="" coords="276,601,491,641"/>
-<area shape="rect" id="node19" href="$classdyno_1_1RegularBackendModule.html#a2ffdf0389a19bc9898825b8e3a86eccb" title=" " alt="" coords="5,537,220,577"/>
-<area shape="rect" id="node22" href="$classdyno_1_1ParallelObjectISAM.html#aebe02d7a654d9829c361eece7374dd1f" title=" " alt="" coords="290,665,477,705"/>
+<area shape="rect" id="node1" title=" " alt="" coords="812,331,955,371"/>
+<area shape="rect" id="node2" href="$classdyno_1_1Frame.html#ab038b536516e42beb788f1b794801270" title=" " alt="" coords="535,5,764,45"/>
+<area shape="rect" id="node3" href="$classdyno_1_1RegularBackendModule.html#adc99585a2a17b45657ad063a59aefe70" title=" " alt="" coords="542,69,757,109"/>
+<area shape="rect" id="node6" href="$classdyno_1_1WorldMotionFormulation.html#ad60f9621d41608943694144aad4d2e22" title=" " alt="" coords="538,133,761,173"/>
+<area shape="rect" id="node7" href="$classdyno_1_1VirtualKittiTextGtLoader.html#a01356211695c59b6ec68677bb81ab59b" title=" " alt="" coords="549,197,749,237"/>
+<area shape="rect" id="node9" href="$classdyno_1_1ClusterSlamAllLoader.html#abcfd6e30d4452f898bed934965e1bd4e" title=" " alt="" coords="270,241,473,281"/>
+<area shape="rect" id="node11" href="$classdyno_1_1ClusterSlamAllLoader.html#a1595d55b903ac7ece3902808aef764f4" title=" " alt="" coords="270,305,473,345"/>
+<area shape="rect" id="node12" href="$InstanceVizReader_8cc.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="622,363,677,389"/>
+<area shape="rect" id="node13" href="$classdyno_1_1ClusterSlamAllLoader.html#a35bb5a50e7fe4d28cfbc225443aa5361" title=" " alt="" coords="548,413,751,453"/>
+<area shape="rect" id="node15" href="$classdyno_1_1FeatureTracker.html#aa56ab13c85913180c0a8169458452d3b" title="Check which objects require new features to be detected on them based on a set of &#39;keyframing&#39; criter..." alt="" coords="571,477,728,517"/>
+<area shape="rect" id="node17" href="$classdyno_1_1FeatureTracker.html#a40ee79c94fe2de7f16d2a4508cc2ba11" title=" " alt="" coords="28,497,185,537"/>
+<area shape="rect" id="node19" href="$structdyno_1_1FrameNode.html#a95fc3bac0f68b28780e4d24dec0b6975" title=" " alt="" coords="551,613,747,638"/>
+<area shape="rect" id="node20" href="$classdyno_1_1ParallelObjectISAM.html#a96475152a11275ac46c4767b5dbae8aa" title=" " alt="" coords="556,663,743,703"/>
+<area shape="rect" id="node4" href="$classdyno_1_1RegularBackendModule.html#ab253e9d8df2177ea7a5bdb044239af46" title=" " alt="" coords="264,28,479,68"/>
+<area shape="rect" id="node5" href="$classdyno_1_1RegularBackendModule.html#a2ffdf0389a19bc9898825b8e3a86eccb" title=" " alt="" coords="264,92,479,132"/>
+<area shape="rect" id="node8" href="$classdyno_1_1VirtualKittiTextGtLoader.html#acd84a6178b51cde7490b662d4c0143d7" title="Construct a new Virtual Kitti Text Gt Laoder object." alt="" coords="256,177,487,217"/>
+<area shape="rect" id="node10" href="$classdyno_1_1ClusterSlamAllLoader.html#a3475570fea904450975ee52c48fb298c" title="Construct a new Cluster Slam Gt Loader object." alt="" coords="5,305,208,345"/>
+<area shape="rect" id="node14" href="$classdyno_1_1ClusterSlamAllLoader.html#ab475a49ae3fc624f16b9b5cf3210dda7" title=" " alt="" coords="270,369,473,409"/>
+<area shape="rect" id="node16" href="$classdyno_1_1FeatureTracker.html#a145614fe29bef7728075492870ac9c41" title=" " alt="" coords="293,433,450,473"/>
+<area shape="rect" id="node18" href="$classdyno_1_1FeatureTracker.html#a4796a29c1f89cde0ace1668fc8fcd9a3" title=" " alt="" coords="293,497,450,537"/>
+<area shape="rect" id="node21" href="$classdyno_1_1ParallelObjectISAM.html#aebe02d7a654d9829c361eece7374dd1f" title=" " alt="" coords="278,663,465,703"/>
 </map>

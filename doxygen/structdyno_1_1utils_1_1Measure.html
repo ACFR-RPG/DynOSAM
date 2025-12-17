@@ -92,7 +92,7 @@ Static Public Member Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename T = std::chrono::milliseconds&gt;<br />
 struct dyno::utils::Measure&lt; T &gt;</div>
-<p class="definition">Definition at line <a class="el" href="Timing_8hpp_source.html#l00077">77</a> of file <a class="el" href="Timing_8hpp_source.html">Timing.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Timing_8hpp_source.html#l00082">82</a> of file <a class="el" href="Timing_8hpp_source.html">Timing.hpp</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="a921bc00a6d15b578bfe9197a159ae3ca" name="a921bc00a6d15b578bfe9197a159ae3ca"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a921bc00a6d15b578bfe9197a159ae3ca">&#9670;&#160;</a></span>execution()</h2>
@@ -132,14 +132,14 @@ template&lt;typename F , typename... Args&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Timing_8hpp_source.html#l00079">79</a> of file <a class="el" href="Timing_8hpp_source.html">Timing.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   79</span>                                                           {</div>
-<div class="line"><span class="lineno">   80</span>    <span class="keyword">auto</span> start = std::chrono::steady_clock::now();</div>
-<div class="line"><span class="lineno">   81</span>    std::forward&lt;decltype(func)&gt;(func)(std::forward&lt;Args&gt;(args)...);</div>
-<div class="line"><span class="lineno">   82</span>    <span class="keyword">auto</span> duration =</div>
-<div class="line"><span class="lineno">   83</span>        std::chrono::duration_cast&lt;T&gt;(std::chrono::steady_clock::now() - start);</div>
-<div class="line"><span class="lineno">   84</span>    <span class="keywordflow">return</span> duration.count();</div>
-<div class="line"><span class="lineno">   85</span>  }</div>
+<p class="definition">Definition at line <a class="el" href="Timing_8hpp_source.html#l00084">84</a> of file <a class="el" href="Timing_8hpp_source.html">Timing.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   84</span>                                                           {</div>
+<div class="line"><span class="lineno">   85</span>    <span class="keyword">auto</span> start = std::chrono::steady_clock::now();</div>
+<div class="line"><span class="lineno">   86</span>    std::forward&lt;decltype(func)&gt;(func)(std::forward&lt;Args&gt;(args)...);</div>
+<div class="line"><span class="lineno">   87</span>    <span class="keyword">auto</span> duration =</div>
+<div class="line"><span class="lineno">   88</span>        std::chrono::duration_cast&lt;T&gt;(std::chrono::steady_clock::now() - start);</div>
+<div class="line"><span class="lineno">   89</span>    <span class="keywordflow">return</span> duration.count();</div>
+<div class="line"><span class="lineno">   90</span>  }</div>
 </div><!-- fragment -->
 </div>
 </div>

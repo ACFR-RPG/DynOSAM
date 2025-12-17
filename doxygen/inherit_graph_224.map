@@ -1,3 +1,8 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$structdyno_1_1OpticalFlowAndPoseOptimizer_1_1ResultType.html" title=" " alt="" coords="5,5,200,45"/>
+<area shape="rect" id="node1" href="$classdyno_1_1ObjectDetectionEngine.html" title="Base class for a ObjectDetection network." alt="" coords="5,70,216,95"/>
+<area shape="rect" id="node2" href="$classdyno_1_1PyObjectDetectionEngineTrampoline.html" title="Trampoline class allowing additional python specific virtual functions to be defined." alt="" coords="266,5,493,45"/>
+<area shape="rect" id="node4" href="$classdyno_1_1PyObjectDetectorWrapper.html" title="A C++ wrapper for the a ObjectDetectionEngine written in python!" alt="" coords="264,70,495,95"/>
+<area shape="rect" id="node5" href="$classdyno_1_1YoloV8ObjectDetector.html" title="TensorRT accelerated inference for object detection using YOLOv8." alt="" coords="278,119,481,145"/>
+<area shape="rect" id="node3" href="$classdyno_1_1ObjectDetectorEnginePy.html" title="Python Wrapper for ObjectDetectionEngine allowing implementation in pure python. Python classes shoul..." alt="" coords="543,13,763,38"/>
+<area shape="rect" id="node6" href="$classdyno_1_1TRTEngine.html" title=" " alt="" coords="45,119,176,145"/>
 </map>

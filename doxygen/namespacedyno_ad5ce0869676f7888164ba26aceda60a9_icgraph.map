@@ -1,8 +1,9 @@
 <map id="dyno::getSafeQuery" name="dyno::getSafeQuery">
-<area shape="rect" id="node1" title="Safe getter to a StateQuery object. If the StateQuery is successful, result is set to the value of th..." alt="" coords="276,157,427,182"/>
-<area shape="rect" id="node2" href="$classdyno_1_1HybridFormulation.html#ae65a9c76b0363dde62eb86e6c0b2b832" title=" " alt="" coords="5,5,228,45"/>
-<area shape="rect" id="node3" href="$classdyno_1_1test__hybrid_1_1SmartStructurlessFormulation.html#a40673e16631d1d3e8775e33116f85f6a" title=" " alt="" coords="5,70,228,125"/>
-<area shape="rect" id="node4" href="$classdyno_1_1WorldMotionFormulation.html#ad60f9621d41608943694144aad4d2e22" title=" " alt="" coords="5,149,228,189"/>
-<area shape="rect" id="node5" href="$classdyno_1_1WorldPoseFormulation.html#ad1e6e0a4af9b06496359ceb969405f0a" title=" " alt="" coords="5,213,228,253"/>
-<area shape="rect" id="node6" href="$classdyno_1_1WorldPoseFormulation.html#a2fe402643436b3cdf4b38748317c284c" title=" " alt="" coords="13,277,221,317"/>
+<area shape="rect" id="node1" title="Safe getter to a StateQuery object. If the StateQuery is successful, result is set to the value of th..." alt="" coords="291,189,441,214"/>
+<area shape="rect" id="node2" href="$classdyno_1_1HybridFormulation.html#ae65a9c76b0363dde62eb86e6c0b2b832" title=" " alt="" coords="13,5,235,45"/>
+<area shape="rect" id="node3" href="$classdyno_1_1test__hybrid_1_1SmartStructurlessFormulation.html#a40673e16631d1d3e8775e33116f85f6a" title=" " alt="" coords="13,70,235,125"/>
+<area shape="rect" id="node4" href="$classdyno_1_1WorldMotionFormulation.html#ad60f9621d41608943694144aad4d2e22" title=" " alt="" coords="13,149,235,189"/>
+<area shape="rect" id="node5" href="$classdyno_1_1WorldPoseFormulation.html#ad1e6e0a4af9b06496359ceb969405f0a" title=" " alt="" coords="13,213,235,253"/>
+<area shape="rect" id="node6" href="$classdyno_1_1Formulation.html#a3369b4fa4dd649495e5bace0e9b715d9" title=" " alt="" coords="5,277,243,317"/>
+<area shape="rect" id="node7" href="$classdyno_1_1WorldPoseFormulation.html#a2fe402643436b3cdf4b38748317c284c" title=" " alt="" coords="20,341,228,381"/>
 </map>

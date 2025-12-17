@@ -22,10 +22,13 @@ var searchData=
   ['backendparams_19',['BackendParams',['../structdyno_1_1BackendParams.html',1,'dyno']]],
   ['backendspinstate_20',['BackendSpinState',['../structdyno_1_1BackendSpinState.html',1,'dyno']]],
   ['backendwrapper_21',['BackendWrapper',['../structdyno_1_1BackendWrapper.html',1,'dyno']]],
-  ['batch_5ffixed_5flag_5ftraits_22',['batch_fixed_lag_traits',['../structdyno_1_1batch__fixed__lag__traits.html',1,'dyno']]],
-  ['bayestreemarginalizationhelper_23',['BayesTreeMarginalizationHelper',['../classdyno_1_1BayesTreeMarginalizationHelper.html',1,'dyno']]],
-  ['bayestreemarginalizationhelper_3c_20gtsam_3a_3aisam2_3a_3abase_20_3e_24',['BayesTreeMarginalizationHelper&lt; gtsam::ISAM2::Base &gt;',['../classdyno_1_1BayesTreeMarginalizationHelper.html',1,'dyno']]],
-  ['bboxmetadata_25',['BBoxMetaData',['../structdyno_1_1VirtualKittiTextGtLoader_1_1BBoxMetaData.html',1,'dyno::VirtualKittiTextGtLoader']]],
-  ['byteobjecttracker_26',['ByteObjectTracker',['../classdyno_1_1ByteObjectTracker.html',1,'dyno']]],
-  ['bytetracker_27',['ByteTracker',['../classbyte__track_1_1ByteTracker.html',1,'byte_track']]]
+  ['basetimingstatscollector_22',['BaseTimingStatsCollector',['../classdyno_1_1utils_1_1BaseTimingStatsCollector.html',1,'dyno::utils']]],
+  ['basetimingstatscollector_3c_20chronotimegenerator_20_3e_23',['BaseTimingStatsCollector&lt; ChronoTimeGenerator &gt;',['../classdyno_1_1utils_1_1BaseTimingStatsCollector.html',1,'dyno::utils']]],
+  ['basetimingstatscollector_3c_20cudatimegenerator_20_3e_24',['BaseTimingStatsCollector&lt; CudaTimeGenerator &gt;',['../classdyno_1_1utils_1_1BaseTimingStatsCollector.html',1,'dyno::utils']]],
+  ['batch_5ffixed_5flag_5ftraits_25',['batch_fixed_lag_traits',['../structdyno_1_1batch__fixed__lag__traits.html',1,'dyno']]],
+  ['bayestreemarginalizationhelper_26',['BayesTreeMarginalizationHelper',['../classdyno_1_1BayesTreeMarginalizationHelper.html',1,'dyno']]],
+  ['bayestreemarginalizationhelper_3c_20gtsam_3a_3aisam2_3a_3abase_20_3e_27',['BayesTreeMarginalizationHelper&lt; gtsam::ISAM2::Base &gt;',['../classdyno_1_1BayesTreeMarginalizationHelper.html',1,'dyno']]],
+  ['bboxmetadata_28',['BBoxMetaData',['../structdyno_1_1VirtualKittiTextGtLoader_1_1BBoxMetaData.html',1,'dyno::VirtualKittiTextGtLoader']]],
+  ['byteobjecttracker_29',['ByteObjectTracker',['../classdyno_1_1ByteObjectTracker.html',1,'dyno']]],
+  ['bytetracker_30',['ByteTracker',['../classbyte__track_1_1ByteTracker.html',1,'byte_track']]]
 ];

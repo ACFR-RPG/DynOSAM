@@ -15,7 +15,7 @@ var searchData=
   ['dataproviderros_12',['DataProviderRos',['../classdyno_1_1DataProviderRos.html',1,'dyno']]],
   ['debugimagery_13',['DebugImagery',['../structdyno_1_1DebugImagery.html',1,'dyno']]],
   ['debuginfo_14',['DebugInfo',['../classdyno_1_1DebugInfo.html',1,'dyno']]],
-  ['delete_15',['Delete',['../structdyno_1_1CudaMemoryManager_1_1Delete.html',1,'dyno::CudaMemoryManager']]],
+  ['delete_15',['Delete',['../structdyno_1_1CudaMemoryAllocator_1_1Delete.html',1,'dyno::CudaMemoryAllocator::Delete'],['../structdyno_1_1HostMemoryAllocator_1_1Delete.html',1,'dyno::HostMemoryAllocator::Delete']]],
   ['deltaimpl_16',['DeltaImpl',['../structdyno_1_1DeltaImpl.html',1,'dyno']]],
   ['densestereoparams_17',['DenseStereoParams',['../structdyno_1_1DenseStereoParams.html',1,'dyno']]],
   ['depth_18',['Depth',['../structdyno_1_1ImageType_1_1Depth.html',1,'dyno::ImageType']]],

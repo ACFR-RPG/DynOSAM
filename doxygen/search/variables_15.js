@@ -24,11 +24,9 @@ var searchData=
   ['virtual_5fbaseline_21',['virtual_baseline',['../structdyno_1_1CameraParams_1_1DepthParams.html#a3b3015d6edb48b3830eb81f223855887',1,'dyno::CameraParams::DepthParams']]],
   ['visitor_5f_22',['visitor_',['../structdyno_1_1factor__graph__tools_1_1travsersal_1_1NodeVisitor.html#a1bb16a71c6c6714539f62fbc566c62ea',1,'dyno::factor_graph_tools::travsersal::NodeVisitor']]],
   ['vkeys_23',['vKeys',['../classdyno_1_1ExtractorNode.html#a3ed9ec7ebe8d31b0d5d1fb21d06707c2',1,'dyno::ExtractorNode']]],
-  ['vo_5fground_5ftruth_5fpublisher_5f_24',['vo_ground_truth_publisher_',['../classdyno_1_1FrontendDSDRos.html#a90803608af861e0c2480bdd9f62ec882',1,'dyno::FrontendDSDRos']]],
-  ['vo_5fpath_5fground_5ftruth_5fpublisher_5f_25',['vo_path_ground_truth_publisher_',['../classdyno_1_1FrontendDSDRos.html#a765b409eb864e2d2360e70adbea99763',1,'dyno::FrontendDSDRos']]],
-  ['vo_5fpath_5fpublisher_5f_26',['vo_path_publisher_',['../classdyno_1_1DSDRos.html#a8f610bac05a0bc16940ad839a32920ab',1,'dyno::DSDRos']]],
-  ['vo_5fpublisher_5f_27',['vo_publisher_',['../classdyno_1_1DSDRos.html#ac93b662a89d4df544e00527aa60b867b',1,'dyno::DSDRos']]],
-  ['vo_5fvelocity_5f_28',['vo_velocity_',['../classdyno_1_1RGBDInstanceFrontendModule.html#a59c5b06db52eab551383552bfcf735e4',1,'dyno::RGBDInstanceFrontendModule']]],
-  ['vobjposegt_5f_29',['vObjPoseGT_',['../classdyno_1_1OMDOldAllLoader.html#a6ca0e7bdbf730f99fa29be1ed50a5ad0',1,'dyno::OMDOldAllLoader']]],
-  ['vposegt_5f_30',['vPoseGT_',['../classdyno_1_1OMDOldAllLoader.html#aa2dbfb586a1a47c6bf2d7f778732a629',1,'dyno::OMDOldAllLoader']]]
+  ['vo_5fpath_5fpublisher_5f_24',['vo_path_publisher_',['../classdyno_1_1DSDRos.html#a8f610bac05a0bc16940ad839a32920ab',1,'dyno::DSDRos::vo_path_publisher_()'],['../structdyno_1_1FrontendDSDRos_1_1GroundTruthPublishers.html#a043311c88008a93bdff8ae3e97f5ab9e',1,'dyno::FrontendDSDRos::GroundTruthPublishers::vo_path_publisher_()']]],
+  ['vo_5fpublisher_5f_25',['vo_publisher_',['../classdyno_1_1DSDRos.html#ac93b662a89d4df544e00527aa60b867b',1,'dyno::DSDRos::vo_publisher_()'],['../structdyno_1_1FrontendDSDRos_1_1GroundTruthPublishers.html#a2d1dfcc2744bc7c3448eb37e6933cc81',1,'dyno::FrontendDSDRos::GroundTruthPublishers::vo_publisher_()']]],
+  ['vo_5fvelocity_5f_26',['vo_velocity_',['../classdyno_1_1RGBDInstanceFrontendModule.html#a59c5b06db52eab551383552bfcf735e4',1,'dyno::RGBDInstanceFrontendModule']]],
+  ['vobjposegt_5f_27',['vObjPoseGT_',['../classdyno_1_1OMDOldAllLoader.html#a6ca0e7bdbf730f99fa29be1ed50a5ad0',1,'dyno::OMDOldAllLoader']]],
+  ['vposegt_5f_28',['vPoseGT_',['../classdyno_1_1OMDOldAllLoader.html#aa2dbfb586a1a47c6bf2d7f778732a629',1,'dyno::OMDOldAllLoader']]]
 ];

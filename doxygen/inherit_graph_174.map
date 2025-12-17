@@ -1,3 +1,7 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$structdyno_1_1ISAM2DoglegParams.html" title=" " alt="" coords="5,5,204,31"/>
+<area shape="rect" id="node1" href="$classdyno_1_1internal_1_1StaticFormulationUpdaterImpl.html" title="Base class helper for the static formulation updater. This forms the basis for &quot;regular&quot; Visual SLAM ..." alt="" coords="5,101,240,141"/>
+<area shape="rect" id="node2" href="$classdyno_1_1internal_1_1StaticFormulationUpdater.html" title=" " alt="" coords="299,5,533,45"/>
+<area shape="rect" id="node3" href="$structdyno_1_1internal_1_1StaticFormulationUpdater_1_1GenericProjection.html" title=" " alt="" coords="288,69,544,109"/>
+<area shape="rect" id="node4" href="$structdyno_1_1internal_1_1StaticFormulationUpdater_1_1PTP.html" title="Implementation for the Point&#45;to&#45;Pose (PTP) functions for Visual SLAM." alt="" coords="299,133,533,173"/>
+<area shape="rect" id="node5" href="$structdyno_1_1internal_1_1StaticFormulationUpdater_1_1StereoProjection.html" title=" " alt="" coords="292,197,540,237"/>
 </map>

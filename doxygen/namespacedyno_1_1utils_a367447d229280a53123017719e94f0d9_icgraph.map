@@ -1,6 +1,6 @@
 <map id="dyno::utils::fromRosTime" name="dyno::utils::fromRosTime">
-<area shape="rect" id="node1" title="Convert ROS time to timestamp." alt="" coords="733,13,920,38"/>
-<area shape="rect" id="node2" href="$classdyno_1_1OnlineDataProviderRos.html#a7c809e378b5d4b807e80abb43c0da23a" title=" " alt="" coords="496,5,685,45"/>
-<area shape="rect" id="node3" href="$classdyno_1_1OnlineDataProviderRos.html#a3b7725856bc86407813c51804a26bea4" title="Connects all subscribers." alt="" coords="259,5,448,45"/>
-<area shape="rect" id="node4" href="$classdyno_1_1OnlineDataProviderRos.html#abea751b62c91dbf7bfac759680a434f7" title="Construct a new OnlineDataProviderRos." alt="" coords="5,5,211,45"/>
+<area shape="rect" id="node1" title="Convert ROS time to timestamp." alt="" coords="276,63,463,88"/>
+<area shape="rect" id="node2" href="$dynosam__tracking__demo__node_8cc.html#a3c04138a5bfe5d72780bb7e82a18e627" title=" " alt="" coords="89,5,144,31"/>
+<area shape="rect" id="node3" href="$classdyno_1_1AllImagesOnlineProviderRos.html#aa919b75571cfe2e8ffd8a0e8dc0c1c51" title=" " alt="" coords="5,55,228,95"/>
+<area shape="rect" id="node4" href="$classdyno_1_1RGBDOnlineProviderRos.html#a2d8711722bb51a96c4cc99f2b79069b9" title=" " alt="" coords="19,119,215,159"/>
 </map>

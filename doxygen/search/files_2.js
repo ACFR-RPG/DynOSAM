@@ -14,8 +14,10 @@ var searchData=
   ['csvparser_2ecc_11',['CsvParser.cc',['../CsvParser_8cc.html',1,'']]],
   ['csvparser_2ehpp_12',['CsvParser.hpp',['../CsvParser_8hpp.html',1,'']]],
   ['cuda_2ehpp_13',['Cuda.hpp',['../Cuda_8hpp.html',1,'']]],
-  ['cvnp_2ecc_14',['cvnp.cc',['../cvnp_8cc.html',1,'']]],
-  ['cvnp_2ehpp_15',['cvnp.hpp',['../cvnp_8hpp.html',1,'']]],
-  ['cvnp_5fsynonyms_2ecc_16',['cvnp_synonyms.cc',['../cvnp__synonyms_8cc.html',1,'']]],
-  ['cvnp_5fsynonyms_2ehpp_17',['cvnp_synonyms.hpp',['../cvnp__synonyms_8hpp.html',1,'']]]
+  ['cudautils_2ecc_14',['CudaUtils.cc',['../CudaUtils_8cc.html',1,'']]],
+  ['cudautils_2ehpp_15',['CudaUtils.hpp',['../CudaUtils_8hpp.html',1,'']]],
+  ['cvnp_2ecc_16',['cvnp.cc',['../cvnp_8cc.html',1,'']]],
+  ['cvnp_2ehpp_17',['cvnp.hpp',['../cvnp_8hpp.html',1,'']]],
+  ['cvnp_5fsynonyms_2ecc_18',['cvnp_synonyms.cc',['../cvnp__synonyms_8cc.html',1,'']]],
+  ['cvnp_5fsynonyms_2ehpp_19',['cvnp_synonyms.hpp',['../cvnp__synonyms_8hpp.html',1,'']]]
 ];

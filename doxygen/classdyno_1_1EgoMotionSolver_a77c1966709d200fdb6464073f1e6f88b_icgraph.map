@@ -1,5 +1,8 @@
 <map id="dyno::EgoMotionSolver::geometricOutlierRejection3d2d" name="dyno::EgoMotionSolver::geometricOutlierRejection3d2d">
-<area shape="rect" id="node1" title="Runs 3d&#45;2d PnP with optional Rotation (i.e from IMU)" alt="" coords="525,29,759,69"/>
-<area shape="rect" id="node2" href="$classdyno_1_1RGBDInstanceFrontendModule.html#ad89ae2ee89eaa41ef536e2e409809b69" title="Solves PnP between frame_k&#45;1 and frame_k using the tracked correspondances to estimate the frame of t..." alt="" coords="265,29,477,69"/>
-<area shape="rect" id="node3" href="$classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2" title=" " alt="" coords="5,29,217,69"/>
+<area shape="rect" id="node1" title="Runs 3d&#45;2d PnP with optional Rotation (i.e from IMU)" alt="" coords="569,69,803,109"/>
+<area shape="rect" id="node2" href="$classdyno_1_1ObjectMotionSovlerF2F.html#a432924457f5c458282c63002648b99a9" title=" " alt="" coords="265,5,521,45"/>
+<area shape="rect" id="node4" href="$classdyno_1_1RGBDInstanceFrontendModule.html#ad89ae2ee89eaa41ef536e2e409809b69" title="Solves PnP between frame_k&#45;1 and frame_k using the tracked correspondances to estimate the frame of t..." alt="" coords="287,69,499,109"/>
+<area shape="rect" id="node6" href="$classdyno_1_1ObjectMotionSolverFilter.html#a189ba7646c6a80f2a689daff47560e8b" title=" " alt="" coords="298,133,489,173"/>
+<area shape="rect" id="node3" href="$classdyno_1_1ObjectMotionSovlerF2F.html#a5ba48941f5b2cf548249b7efee399ed4" title=" " alt="" coords="16,5,207,45"/>
+<area shape="rect" id="node5" href="$classdyno_1_1RGBDInstanceFrontendModule.html#a4528368033583ee53198dac3a803c5f2" title=" " alt="" coords="5,69,217,109"/>
 </map>

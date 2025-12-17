@@ -404,7 +404,7 @@ Here is the caller graph for this function:</div>
 
 <p class="definition">Definition at line <a class="el" href="NonMaximumSupression_8cc_source.html#l00033">33</a> of file <a class="el" href="NonMaximumSupression_8cc_source.html">NonMaximumSupression.cc</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">   37</span>                                       {</div>
-<div class="line"><span class="lineno">   38</span>  utils::TimingStatsCollector timer(<span class="stringliteral">&quot;anms_timer&quot;</span>);</div>
+<div class="line"><span class="lineno">   38</span>  utils::ChronoTimingStats timer(<span class="stringliteral">&quot;anms_timer&quot;</span>);</div>
 <div class="line"><span class="lineno">   39</span> </div>
 <div class="line"><span class="lineno">   40</span>  <span class="keywordflow">if</span> (keyPoints.size() == 0) {</div>
 <div class="line"><span class="lineno">   41</span>    std::cout &lt;&lt; <span class="stringliteral">&quot;No keypoints for non-max suppression...&quot;</span> &lt;&lt; std::endl;</div>

@@ -1,9 +1,9 @@
 <map id="dyno::UpdateObservationResult::updateAffectedObject" name="dyno::UpdateObservationResult::updateAffectedObject">
-<area shape="rect" id="node1" title=" " alt="" coords="288,177,517,217"/>
-<area shape="rect" id="node2" href="$structdyno_1_1internal_1_1StaticFormulationUpdater_1_1PTP.html#a89224a137fcdba2a535e63ffcea49fbe" title="Return results indicates if any factors/values were added (ie. the point was added)." alt="" coords="5,5,240,45"/>
-<area shape="rect" id="node3" href="$classdyno_1_1HybridFormulation.html#ae65a9c76b0363dde62eb86e6c0b2b832" title=" " alt="" coords="11,69,234,109"/>
-<area shape="rect" id="node4" href="$classdyno_1_1test__hybrid_1_1SmartStructurlessFormulation.html#a40673e16631d1d3e8775e33116f85f6a" title=" " alt="" coords="11,134,234,189"/>
-<area shape="rect" id="node5" href="$classdyno_1_1WorldMotionFormulation.html#ad60f9621d41608943694144aad4d2e22" title=" " alt="" coords="11,213,234,253"/>
-<area shape="rect" id="node6" href="$classdyno_1_1WorldPoseFormulation.html#ad1e6e0a4af9b06496359ceb969405f0a" title=" " alt="" coords="11,277,234,317"/>
-<area shape="rect" id="node7" href="$classdyno_1_1Formulation.html#aecc181278cdbd66990d3f5acf8b3f583" title=" " alt="" coords="25,341,220,381"/>
+<area shape="rect" id="node1" title=" " alt="" coords="288,185,517,225"/>
+<area shape="rect" id="node2" href="$structdyno_1_1internal_1_1StaticFormulationUpdater_1_1StereoProjection.html#aec89d96460a30bce5af148fcb25d97bc" title="Return results indicates if any factors/values were added (ie. the point was added)." alt="" coords="5,5,240,60"/>
+<area shape="rect" id="node3" href="$structdyno_1_1internal_1_1StaticFormulationUpdater_1_1PTP.html#a89224a137fcdba2a535e63ffcea49fbe" title="Return results indicates if any factors/values were added (ie. the point was added)." alt="" coords="5,85,240,125"/>
+<area shape="rect" id="node4" href="$classdyno_1_1HybridFormulation.html#ae65a9c76b0363dde62eb86e6c0b2b832" title=" " alt="" coords="11,149,234,189"/>
+<area shape="rect" id="node5" href="$classdyno_1_1test__hybrid_1_1SmartStructurlessFormulation.html#a40673e16631d1d3e8775e33116f85f6a" title=" " alt="" coords="11,213,234,268"/>
+<area shape="rect" id="node6" href="$classdyno_1_1WorldMotionFormulation.html#ad60f9621d41608943694144aad4d2e22" title=" " alt="" coords="11,293,234,333"/>
+<area shape="rect" id="node7" href="$classdyno_1_1WorldPoseFormulation.html#ad1e6e0a4af9b06496359ceb969405f0a" title=" " alt="" coords="11,357,234,397"/>
 </map>

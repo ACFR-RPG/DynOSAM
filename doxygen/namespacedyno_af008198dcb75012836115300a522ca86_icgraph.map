@@ -1,12 +1,13 @@
 <map id="dyno::determineOutlierIds" name="dyno::determineOutlierIds">
-<area shape="rect" id="node1" title="From a set a tracklets and a subset (of the tracklet) inliers, calculate the remaining subset of outl..." alt="" coords="591,205,783,230"/>
-<area shape="rect" id="node2" href="$classdyno_1_1EgoMotionSolver.html#a39f88d947e0e5dbb4b3d59bf4dac4548" title=" " alt="" coords="324,69,505,109"/>
-<area shape="rect" id="node6" href="$classdyno_1_1ObjectMotionSovlerF2F.html#a432924457f5c458282c63002648b99a9" title=" " alt="" coords="287,133,543,173"/>
-<area shape="rect" id="node7" href="$classdyno_1_1MotionOnlyRefinementOptimizer.html#ab9ea6586ab1c0a64f008a05a38350aae" title=" " alt="" coords="309,197,521,237"/>
-<area shape="rect" id="node8" href="$classdyno_1_1FeatureTracker.html#a31f607c5d1fca4c1ace6af223abb5ead" title=" " alt="" coords="336,261,493,301"/>
-<area shape="rect" id="node9" href="$classdyno_1_1KltFeatureTracker.html#a8f26d8fe56edd3e579a879e82a40457f" title="Tracks features using KLT tracker between the previous image and the current one." alt="" coords="327,325,502,365"/>
+<area shape="rect" id="node1" title="From a set a tracklets and a subset (of the tracklet) inliers, calculate the remaining subset of outl..." alt="" coords="591,253,783,278"/>
+<area shape="rect" id="node2" href="$classdyno_1_1EgoMotionSolver.html#a39f88d947e0e5dbb4b3d59bf4dac4548" title=" " alt="" coords="324,85,505,125"/>
+<area shape="rect" id="node6" href="$classdyno_1_1ObjectMotionSovlerF2F.html#a432924457f5c458282c63002648b99a9" title=" " alt="" coords="287,181,543,221"/>
+<area shape="rect" id="node8" href="$classdyno_1_1MotionOnlyRefinementOptimizer.html#ab9ea6586ab1c0a64f008a05a38350aae" title=" " alt="" coords="309,245,521,285"/>
+<area shape="rect" id="node9" href="$classdyno_1_1FeatureTracker.html#a31f607c5d1fca4c1ace6af223abb5ead" title=" " alt="" coords="336,309,493,349"/>
+<area shape="rect" id="node10" href="$classdyno_1_1KltFeatureTracker.html#a8f26d8fe56edd3e579a879e82a40457f" title="Tracks features using KLT tracker between the previous image and the current one." alt="" coords="327,373,502,413"/>
 <area shape="rect" id="node3" href="$classdyno_1_1EgoMotionSolver.html#a63b3bc2d024df5c56cfc9f6c7646f2af" title="Runs 2d&#45;2d PnP with optional Rotation (ie. from IMU)" alt="" coords="5,5,239,45"/>
 <area shape="rect" id="node4" href="$classdyno_1_1EgoMotionSolver.html#a6b176910a29c44e52305c1ce68ab656c" title=" " alt="" coords="5,69,239,109"/>
 <area shape="rect" id="node5" href="$classdyno_1_1EgoMotionSolver.html#a2a78b0b807853a0a0aa90d814bf07a18" title=" " alt="" coords="5,133,239,173"/>
-<area shape="rect" id="node10" href="$classdyno_1_1KltFeatureTracker.html#ab15aaa39f0c3adc62037d718b98039c0" title="Track features between frames k&#45;1 and the current set of images (at k)." alt="" coords="35,325,209,365"/>
+<area shape="rect" id="node7" href="$classdyno_1_1ObjectMotionSovlerF2F.html#a5ba48941f5b2cf548249b7efee399ed4" title=" " alt="" coords="27,197,217,237"/>
+<area shape="rect" id="node11" href="$classdyno_1_1KltFeatureTracker.html#ab15aaa39f0c3adc62037d718b98039c0" title="Track features between frames k&#45;1 and the current set of images (at k)." alt="" coords="35,373,209,413"/>
 </map>

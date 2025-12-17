@@ -5,7 +5,7 @@ var searchData=
   ['acc_5fgyr_5f_2',['acc_gyr_',['../structdyno_1_1ImuMeasurement.html#a0d235d4a91e15564bcf4ea41cb707686',1,'dyno::ImuMeasurement::acc_gyr_()'],['../structdyno_1_1ImuMeasurements.html#a42faa3d66c9540bc3e25bbb6d32de251',1,'dyno::ImuMeasurements::acc_gyr_()']]],
   ['acc_5fnoise_5fdensity_3',['acc_noise_density',['../structdyno_1_1ImuParams.html#a8a0c11151f4771e64a914946647046c9',1,'dyno::ImuParams']]],
   ['acc_5frandom_5fwalk_4',['acc_random_walk',['../structdyno_1_1ImuParams.html#a480ba851da58b3539a3d267f9da834a4',1,'dyno::ImuParams']]],
-  ['accessor_5f_5',['accessor_',['../classdyno_1_1ParallelObjectISAM.html#aab8eac575cd05ac48fd1331b4a0f0d39',1,'dyno::ParallelObjectISAM']]],
+  ['accessor_5f_5',['accessor_',['../classdyno_1_1ParallelObjectISAM.html#aab8eac575cd05ac48fd1331b4a0f0d39',1,'dyno::ParallelObjectISAM::accessor_()'],['../classdyno_1_1FrontendModule.html#ababff42d2e66d1325c391091628cd55b',1,'dyno::FrontendModule::accessor_()']]],
   ['accessor_5ftheta_5f_6',['accessor_theta_',['../classdyno_1_1Formulation.html#ad73481666a52d300f4a4e4da65a718ba',1,'dyno::Formulation']]],
   ['active_5fframe_5fid_5f_7',['active_frame_id_',['../classdyno_1_1DynoDatasetProvider.html#a4474f152cc29414c091973e7276d367a',1,'dyno::DynoDatasetProvider']]],
   ['active_5fgraph_8',['active_graph',['../structdyno_1_1BackendOutputPacket.html#a305715fc95800f21b76ff4f3a91789bd',1,'dyno::BackendOutputPacket']]],
@@ -16,10 +16,11 @@ var searchData=
   ['age_13',['age',['../structdyno_1_1Feature_1_1impl.html#a79e713020e6499af0ebcdb0120837c95',1,'dyno::Feature::impl']]],
   ['algorithm_14',['algorithm',['../structdyno_1_1DeltaImpl_1_1ReorderingMode.html#ab726da2687e014772b846bef2321ef09',1,'dyno::DeltaImpl::ReorderingMode']]],
   ['all_5fdynamic_5flandmarks_5f_15',['all_dynamic_landmarks_',['../classdyno_1_1HybridFormulation.html#a25f26b1273319ea994e0e78bf327f816',1,'dyno::HybridFormulation']]],
-  ['allocated_5fsize_16',['allocated_size',['../structdyno_1_1DeviceMemory.html#a9fd37db3ecbd65cdaf0e5e8bef4b2449',1,'dyno::DeviceMemory']]],
+  ['allocated_5fsize_16',['allocated_size',['../structdyno_1_1MemoryManager.html#aa78ca86622ea9eb484d629636a17de76',1,'dyno::MemoryManager']]],
   ['anms_5falgorithm_5ftype_5f_17',['anms_algorithm_type_',['../classdyno_1_1AdaptiveNonMaximumSuppression.html#aa912ff8b033a97d0416408da53bdb6fb',1,'dyno::AdaptiveNonMaximumSuppression']]],
   ['anms_5fparams_18',['anms_params',['../structdyno_1_1TrackerParams.html#a55f85ceb738c793066aaf96a0fdd01e2',1,'dyno::TrackerParams']]],
   ['are_5floaders_5fset_5f_19',['are_loaders_set_',['../classdyno_1_1DynoDataset.html#aaa7db360cbef0a1404e0eb234a975cff',1,'dyno::DynoDataset']]],
-  ['average_5fclique_5fsize_20',['average_clique_size',['../structdyno_1_1ParallelObjectISAM_1_1Result.html#ac960ec4efdb6589023a3c1a0abb9fb58',1,'dyno::ParallelObjectISAM::Result']]],
-  ['axis_5flinewidth_21',['axis_linewidth',['../plot__triangulation_8m.html#a4e456186a381112584a4378d0a030729',1,'plot_triangulation.m']]]
+  ['assume_5fstatic_5finput_5fdimensions_20',['assume_static_input_dimensions',['../structdyno_1_1YoloConfig.html#a11e781a4f7b9fc044b1af77f8d0e364e',1,'dyno::YoloConfig']]],
+  ['average_5fclique_5fsize_21',['average_clique_size',['../structdyno_1_1ParallelObjectISAM_1_1Result.html#ac960ec4efdb6589023a3c1a0abb9fb58',1,'dyno::ParallelObjectISAM::Result']]],
+  ['axis_5flinewidth_22',['axis_linewidth',['../plot__triangulation_8m.html#a4e456186a381112584a4378d0a030729',1,'plot_triangulation.m']]]
 ];

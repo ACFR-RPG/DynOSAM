@@ -245,16 +245,17 @@ Private Attributes</h2></td></tr>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1DSDTransport.html#a8a8b65f994b5d8e6de606f1c63e45515">multi_object_odom_path_publisher_</a>, <a class="el" href="classdyno_1_1DSDTransport.html#a696520d40317a597358aa2629dea0855">node_</a>, <a class="el" href="classdyno_1_1DSDTransport.html#a0e3949119fc2b3e90656f2422c79f6bf">object_odom_publisher_</a>, and <a class="el" href="classdyno_1_1DSDTransport.html#abdeb10314e5bd23a2f1ac076cf2ddcaf">tf_broadcaster_</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1BackendDSDRos.html#a67d3309d1d64b1a812ee713147196361">dyno::BackendDSDRos::spinOnceImpl()</a>, and <a class="el" href="classdyno_1_1FrontendDSDRos.html#afc399912f88290e381ced1860200ac4b">dyno::FrontendDSDRos::tryPublishObjects()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1BackendDSDRos.html#a67d3309d1d64b1a812ee713147196361">dyno::BackendDSDRos::spinOnceImpl()</a>, <a class="el" href="classdyno_1_1FrontendDSDRos.html#a74c8db1eea412197af4934298700e93a">dyno::FrontendDSDRos::tryPublishGroundTruth()</a>, and <a class="el" href="classdyno_1_1FrontendDSDRos.html#afc399912f88290e381ced1860200ac4b">dyno::FrontendDSDRos::tryPublishObjects()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1DSDTransport_af3de22d3c37040622cda31ab745955fe_icgraph.png" border="0" usemap="#aclassdyno_1_1DSDTransport_af3de22d3c37040622cda31ab745955fe_icgraph" alt=""/></div>
 <map name="aclassdyno_1_1DSDTransport_af3de22d3c37040622cda31ab745955fe_icgraph" id="aclassdyno_1_1DSDTransport_af3de22d3c37040622cda31ab745955fe_icgraph">
-<area shape="rect" title="Create a object odometry Publisher given object state (motion and pose) information up to a given fra..." alt="" coords="443,37,593,77"/>
-<area shape="rect" href="classdyno_1_1BackendDSDRos.html#a67d3309d1d64b1a812ee713147196361" title=" " alt="" coords="225,5,394,45"/>
-<area shape="rect" href="classdyno_1_1FrontendDSDRos.html#afc399912f88290e381ced1860200ac4b" title=" " alt="" coords="224,69,395,109"/>
-<area shape="rect" href="classdyno_1_1FrontendDSDRos.html#a9ea761222ea4517c1ee4e562f6bdde83" title=" " alt="" coords="5,69,176,109"/>
+<area shape="rect" title="Create a object odometry Publisher given object state (motion and pose) information up to a given fra..." alt="" coords="447,69,597,109"/>
+<area shape="rect" href="classdyno_1_1BackendDSDRos.html#a67d3309d1d64b1a812ee713147196361" title=" " alt="" coords="227,5,396,45"/>
+<area shape="rect" href="classdyno_1_1FrontendDSDRos.html#a74c8db1eea412197af4934298700e93a" title=" " alt="" coords="224,69,399,109"/>
+<area shape="rect" href="classdyno_1_1FrontendDSDRos.html#afc399912f88290e381ced1860200ac4b" title=" " alt="" coords="226,133,397,173"/>
+<area shape="rect" href="classdyno_1_1FrontendDSDRos.html#a9ea761222ea4517c1ee4e562f6bdde83" title=" " alt="" coords="5,101,176,141"/>
 </map>
 </div>
 
@@ -361,9 +362,9 @@ Here is the caller graph for this function:</div>
 <div class="line"><span class="lineno">  131</span> </div>
 <div class="line"><span class="lineno">  132</span>      <span class="keyword">const</span> <a class="code hl_typedef" href="namespacedyno.html#a7fda67c0575c4b7a8210dcc8ae227370">Timestamp</a>&amp; timestamp = frame_timestamp_map.at(frame_id);</div>
 <div class="line"><span class="lineno">  133</span> </div>
-<div class="line"><span class="lineno">  134</span>      <span class="keywordflow">if</span> (!first &amp;&amp; <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(frame_id) != previous_frame_id + 1) {</div>
-<div class="line"><span class="lineno">  135</span>        path_segment++;</div>
-<div class="line"><span class="lineno">  136</span>      }</div>
+<div class="line"><span class="lineno">  134</span>      <span class="comment">// if (!first &amp;&amp; static_cast&lt;int&gt;(frame_id) != previous_frame_id + 1) {</span></div>
+<div class="line"><span class="lineno">  135</span>      <span class="comment">//   path_segment++;</span></div>
+<div class="line"><span class="lineno">  136</span>      <span class="comment">// }</span></div>
 <div class="line"><span class="lineno">  137</span>      first = <span class="keyword">false</span>;</div>
 <div class="line"><span class="lineno">  138</span>      previous_frame_id = <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(frame_id);</div>
 <div class="line"><span class="lineno">  139</span> </div>

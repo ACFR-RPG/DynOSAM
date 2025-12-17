@@ -1,5 +1,8 @@
 <map id="dyno::CameraParams::getExtrinsics" name="dyno::CameraParams::getExtrinsics">
-<area shape="rect" id="node1" title="Get the camera extrinsics &#45; the transform of the camera in the body frame (e.g T_robot_camera or ^RT_..." alt="" coords="499,5,660,45"/>
-<area shape="rect" id="node2" href="$classdyno_1_1StereoCamera.html#a6ce9ba10820d974b32a081868c224fad" title="computeRectificationParameters" alt="" coords="208,5,451,45"/>
-<area shape="rect" id="node3" href="$classdyno_1_1StereoCamera.html#a2262c33a62cc297ecedbe5801fcd37df" title=" " alt="" coords="5,5,160,45"/>
+<area shape="rect" id="node1" title="Get the camera extrinsics &#45; the transform of the camera in the body frame (e.g T_robot_camera or ^RT_..." alt="" coords="599,63,760,103"/>
+<area shape="rect" id="node2" href="$classdyno_1_1StereoCamera.html#a6ce9ba10820d974b32a081868c224fad" title="computeRectificationParameters" alt="" coords="308,5,551,45"/>
+<area shape="rect" id="node4" href="$dynosam__tracking__demo__node_8cc.html#a3c04138a5bfe5d72780bb7e82a18e627" title=" " alt="" coords="402,70,457,95"/>
+<area shape="rect" id="node5" href="$classdyno_1_1RGBDTypeCalibrationHelper.html#a86830a12650b74d5497de6e9240e416f" title=" " alt="" coords="311,120,548,160"/>
+<area shape="rect" id="node3" href="$classdyno_1_1StereoCamera.html#a2262c33a62cc297ecedbe5801fcd37df" title=" " alt="" coords="55,5,210,45"/>
+<area shape="rect" id="node6" href="$classdyno_1_1RGBDTypeCalibrationHelper.html#ad6a5cc5e138741db5d3a5a2e6d9c05cf" title=" " alt="" coords="5,120,260,160"/>
 </map>

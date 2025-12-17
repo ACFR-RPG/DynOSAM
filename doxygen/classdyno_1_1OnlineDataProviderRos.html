@@ -76,15 +76,17 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pro-methods">Protected Member Functions</a> &#124;
+<a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="#pri-types">Private Types</a> &#124;
 <a href="#pri-methods">Private Member Functions</a> &#124;
 <a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="classdyno_1_1OnlineDataProviderRos-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">dyno::OnlineDataProviderRos Class Reference</div></div>
+  <div class="headertitle"><div class="title">dyno::OnlineDataProviderRos Class Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>Online data-provider for DynoSAM.  
+<p>Online data-provider for DynoSAM which handles subcription to the IMU and the interface for subscribing to images but does not implement this.  
  <a href="classdyno_1_1OnlineDataProviderRos.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="OnlineDataProviderRos_8hpp_source.html">OnlineDataProviderRos.hpp</a>&gt;</code></p>
@@ -93,9 +95,11 @@ Inheritance diagram for dyno::OnlineDataProviderRos:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1OnlineDataProviderRos__inherit__graph.png" border="0" usemap="#adyno_1_1OnlineDataProviderRos_inherit__map" alt="Inheritance graph"/></div>
 <map name="adyno_1_1OnlineDataProviderRos_inherit__map" id="adyno_1_1OnlineDataProviderRos_inherit__map">
-<area shape="rect" title="Online data&#45;provider for DynoSAM." alt="" coords="5,152,219,177"/>
-<area shape="rect" href="classdyno_1_1DataProviderRos.html" title="Base Dataprovider for ROS that implements common image processing functionalities." alt="" coords="27,79,197,104"/>
-<area shape="rect" href="classdyno_1_1DataProvider.html" title="A data provider is a module that actually gets the inididual image and/or IMU data from some source a..." alt="" coords="39,5,185,31"/>
+<area shape="rect" title="Online data&#45;provider for DynoSAM which handles subcription to the IMU and the interface for subscribi..." alt="" coords="150,152,363,177"/>
+<area shape="rect" href="classdyno_1_1AllImagesOnlineProviderRos.html" title="Class that subscribes to rgb, depth, motion mask and dense optical flow topics." alt="" coords="5,225,252,251"/>
+<area shape="rect" href="classdyno_1_1RGBDOnlineProviderRos.html" title="Class that subscribes to rgb, depth, motion mask and dense optical flow topics." alt="" coords="276,225,496,251"/>
+<area shape="rect" href="classdyno_1_1DataProviderRos.html" title="Base Dataprovider for ROS that implements common image processing functionalities." alt="" coords="171,79,342,104"/>
+<area shape="rect" href="classdyno_1_1DataProvider.html" title="A data provider is a module that actually gets the inididual image and/or IMU data from some source a..." alt="" coords="183,5,330,31"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
@@ -103,17 +107,20 @@ Collaboration diagram for dyno::OnlineDataProviderRos:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1OnlineDataProviderRos__coll__graph.png" border="0" usemap="#adyno_1_1OnlineDataProviderRos_coll__map" alt="Collaboration graph"/></div>
 <map name="adyno_1_1OnlineDataProviderRos_coll__map" id="adyno_1_1OnlineDataProviderRos_coll__map">
-<area shape="rect" title="Online data&#45;provider for DynoSAM." alt="" coords="5,152,219,177"/>
-<area shape="rect" href="classdyno_1_1DataProviderRos.html" title="Base Dataprovider for ROS that implements common image processing functionalities." alt="" coords="27,79,197,104"/>
-<area shape="rect" href="classdyno_1_1DataProvider.html" title="A data provider is a module that actually gets the inididual image and/or IMU data from some source a..." alt="" coords="39,5,185,31"/>
+<area shape="rect" title="Online data&#45;provider for DynoSAM which handles subcription to the IMU and the interface for subscribi..." alt="" coords="136,183,349,208"/>
+<area shape="rect" href="classdyno_1_1DataProviderRos.html" title="Base Dataprovider for ROS that implements common image processing functionalities." alt="" coords="5,87,176,113"/>
+<area shape="rect" href="classdyno_1_1DataProvider.html" title="A data provider is a module that actually gets the inididual image and/or IMU data from some source a..." alt="" coords="17,5,164,31"/>
+<area shape="rect" href="structdyno_1_1OnlineDataProviderRosParams.html" title=" " alt="" coords="200,80,389,120"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:abea751b62c91dbf7bfac759680a434f7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1OnlineDataProviderRos.html#abea751b62c91dbf7bfac759680a434f7">OnlineDataProviderRos</a> (rclcpp::Node::SharedPtr node, const <a class="el" href="structdyno_1_1OnlineDataProviderRosParams.html">OnlineDataProviderRosParams</a> &amp;params)</td></tr>
-<tr class="memdesc:abea751b62c91dbf7bfac759680a434f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a new <a class="el" href="classdyno_1_1OnlineDataProviderRos.html" title="Online data-provider for DynoSAM.">OnlineDataProviderRos</a>.  <br /></td></tr>
+<tr class="memdesc:abea751b62c91dbf7bfac759680a434f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a new <a class="el" href="classdyno_1_1OnlineDataProviderRos.html" title="Online data-provider for DynoSAM which handles subcription to the IMU and the interface for subscribi...">OnlineDataProviderRos</a>.  <br /></td></tr>
 <tr class="separator:abea751b62c91dbf7bfac759680a434f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1ba88698ff9dea2ceb62b5549dee1189"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1OnlineDataProviderRos.html#a1ba88698ff9dea2ceb62b5549dee1189">~OnlineDataProviderRos</a> ()=default</td></tr>
+<tr class="separator:a1ba88698ff9dea2ceb62b5549dee1189"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac3f8e1e8ca6167cc926f1a9a17071c49"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1OnlineDataProviderRos.html#ac3f8e1e8ca6167cc926f1a9a17071c49">datasetSize</a> () const override</td></tr>
 <tr class="memdesc:ac3f8e1e8ca6167cc926f1a9a17071c49"><td class="mdescLeft">&#160;</td><td class="mdescRight">Indicates that there is no known end to the dataset.  <br /></td></tr>
 <tr class="separator:ac3f8e1e8ca6167cc926f1a9a17071c49"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -123,9 +130,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a7a29e46f09c1a033d158e4c43585e508"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1OnlineDataProviderRos.html#a7a29e46f09c1a033d158e4c43585e508">shutdown</a> () override</td></tr>
 <tr class="memdesc:a7a29e46f09c1a033d158e4c43585e508"><td class="mdescLeft">&#160;</td><td class="mdescRight">Disconnects all subscribers.  <br /></td></tr>
 <tr class="separator:a7a29e46f09c1a033d158e4c43585e508"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3b7725856bc86407813c51804a26bea4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1OnlineDataProviderRos.html#a3b7725856bc86407813c51804a26bea4">connect</a> ()</td></tr>
-<tr class="memdesc:a3b7725856bc86407813c51804a26bea4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Connects all subscribers.  <br /></td></tr>
-<tr class="separator:a3b7725856bc86407813c51804a26bea4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a56ed20eb32809730f7cfa3e1f216cf29"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1OnlineDataProviderRos.html#a56ed20eb32809730f7cfa3e1f216cf29">setupSubscribers</a> ()</td></tr>
+<tr class="memdesc:a56ed20eb32809730f7cfa3e1f216cf29"><td class="mdescLeft">&#160;</td><td class="mdescRight">Connects all subscribers.  <br /></td></tr>
+<tr class="separator:a56ed20eb32809730f7cfa3e1f216cf29"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a04b15cc8cb8128d53f5bb6e889818a98"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1OnlineDataProviderRos.html#a04b15cc8cb8128d53f5bb6e889818a98">updateAndCheckParams</a> (<a class="el" href="classdyno_1_1DynoParams.html">DynoParams</a> &amp;)</td></tr>
+<tr class="memdesc:a04b15cc8cb8128d53f5bb6e889818a98"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks all params are configured correctly for this (derived) data-loader and updates them if necessary.  <br /></td></tr>
+<tr class="separator:a04b15cc8cb8128d53f5bb6e889818a98"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classdyno_1_1DataProviderRos"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classdyno_1_1DataProviderRos')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classdyno_1_1DataProviderRos.html">dyno::DataProviderRos</a></td></tr>
 <tr class="memitem:acce86da16f15747e39fdb17a045df17c inherit pub_methods_classdyno_1_1DataProviderRos"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DataProviderRos.html#acce86da16f15747e39fdb17a045df17c">DataProviderRos</a> (rclcpp::Node::SharedPtr node)</td></tr>
 <tr class="separator:acce86da16f15747e39fdb17a045df17c inherit pub_methods_classdyno_1_1DataProviderRos"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -143,17 +153,11 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ae12caad2bd612a1a1d4fa0f93c17279d inherit pub_methods_classdyno_1_1DataProviderRos"><td class="memItemLeft" align="right" valign="top">const cv::Mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DataProviderRos.html#ae12caad2bd612a1a1d4fa0f93c17279d">readMaskRosImage</a> (const sensor_msgs::msg::Image::ConstSharedPtr &amp;img_msg) const</td></tr>
 <tr class="memdesc:ae12caad2bd612a1a1d4fa0f93c17279d inherit pub_methods_classdyno_1_1DataProviderRos"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convers a sensor_msgs::msg::Image to a cv::Mat while testing that the input has the correct datatype for an Motion Mask image (as defined by <a class="el" href="structdyno_1_1ImageType_1_1MotionMask.html">ImageType::MotionMask</a>).  <br /></td></tr>
 <tr class="separator:ae12caad2bd612a1a1d4fa0f93c17279d inherit pub_methods_classdyno_1_1DataProviderRos"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1cb49fe70873ef4b7ed49afb75c013bc inherit pub_methods_classdyno_1_1DataProviderRos"><td class="memTemplParams" colspan="2">template&lt;class Rep  = int64_t, class Period  = std::milli&gt; </td></tr>
-<tr class="memitem:a1cb49fe70873ef4b7ed49afb75c013bc inherit pub_methods_classdyno_1_1DataProviderRos"><td class="memTemplItemLeft" align="right" valign="top">const <a class="el" href="classdyno_1_1CameraParams.html">CameraParams</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classdyno_1_1DataProviderRos.html#a1cb49fe70873ef4b7ed49afb75c013bc">waitAndSetCameraParams</a> (const std::chrono::duration&lt; Rep, Period &gt; &amp;time_to_wait=std::chrono::duration&lt; Rep, Period &gt;(-1), const std::string &amp;topic=&quot;image/camera_info&quot;)</td></tr>
-<tr class="memdesc:a1cb49fe70873ef4b7ed49afb75c013bc inherit pub_methods_classdyno_1_1DataProviderRos"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets <a class="el" href="classdyno_1_1CameraParams.html">CameraParams</a> from a sensor_msgs::msg::CameraInfo recieved on the specified topic. This function is blocking until a message is recieved (or until the time_to_wait) elapses.  <br /></td></tr>
-<tr class="separator:a1cb49fe70873ef4b7ed49afb75c013bc inherit pub_methods_classdyno_1_1DataProviderRos"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7afae88aebb8a7b0f873a700ea961e7b inherit pub_methods_classdyno_1_1DataProviderRos"><td class="memItemLeft" align="right" valign="top">CameraParams::Optional&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DataProviderRos.html#a7afae88aebb8a7b0f873a700ea961e7b">getCameraParams</a> () const override</td></tr>
-<tr class="memdesc:a7afae88aebb8a7b0f873a700ea961e7b inherit pub_methods_classdyno_1_1DataProviderRos"><td class="mdescLeft">&#160;</td><td class="mdescRight">Provides functionality to get camera paramters for the main pipeline, as these may be available from the dataset.  <br /></td></tr>
-<tr class="separator:a7afae88aebb8a7b0f873a700ea961e7b inherit pub_methods_classdyno_1_1DataProviderRos"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classdyno_1_1DataProvider"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classdyno_1_1DataProvider')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classdyno_1_1DataProvider.html">dyno::DataProvider</a></td></tr>
 <tr class="memitem:aad6d856034b3333ff6c9df69be2a271a inherit pub_methods_classdyno_1_1DataProvider"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DataProvider.html#aad6d856034b3333ff6c9df69be2a271a">DataProvider</a> ()=default</td></tr>
 <tr class="separator:aad6d856034b3333ff6c9df69be2a271a inherit pub_methods_classdyno_1_1DataProvider"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adda0f52bfea3dcc51b3ccfd9e06c4f8b inherit pub_methods_classdyno_1_1DataProvider"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DataProvider.html#adda0f52bfea3dcc51b3ccfd9e06c4f8b">~DataProvider</a> ()</td></tr>
+<tr class="memdesc:adda0f52bfea3dcc51b3ccfd9e06c4f8b inherit pub_methods_classdyno_1_1DataProvider"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calls the virtual <a class="el" href="classdyno_1_1DataProvider.html#aab837117aea198eb0b7afb261ff757fb">DataProvider::shutdown()</a> function.  <br /></td></tr>
 <tr class="separator:adda0f52bfea3dcc51b3ccfd9e06c4f8b inherit pub_methods_classdyno_1_1DataProvider"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a107b3898bf7f793093c76c4405c608f0 inherit pub_methods_classdyno_1_1DataProvider"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DataProvider.html#a107b3898bf7f793093c76c4405c608f0">registerImuSingleCallback</a> (const <a class="el" href="classdyno_1_1DataProvider.html#ada0c50fb63e4e328da1a89f65c83470e">ImuSingleInputCallback</a> &amp;callback)</td></tr>
 <tr class="separator:a107b3898bf7f793093c76c4405c608f0 inherit pub_methods_classdyno_1_1DataProvider"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -182,6 +186,46 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:af26a9e848a9c6261fb18d249fc8282e8 inherit pub_methods_classdyno_1_1DataProvider"><td class="memItemLeft" align="right" valign="top">virtual ImuParams::Optional&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DataProvider.html#af26a9e848a9c6261fb18d249fc8282e8">getImuParams</a> () const</td></tr>
 <tr class="separator:af26a9e848a9c6261fb18d249fc8282e8 inherit pub_methods_classdyno_1_1DataProvider"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
+Protected Member Functions</h2></td></tr>
+<tr class="memitem:ac3af12363ea9ebdde27b9c767c94dc35"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1OnlineDataProviderRos.html#ac3af12363ea9ebdde27b9c767c94dc35">subscribeImages</a> ()=0</td></tr>
+<tr class="separator:ac3af12363ea9ebdde27b9c767c94dc35"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a77e9e4b8d9a84ca09cc641b0cb8692c8"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1OnlineDataProviderRos.html#a77e9e4b8d9a84ca09cc641b0cb8692c8">unsubscribeImages</a> ()=0</td></tr>
+<tr class="separator:a77e9e4b8d9a84ca09cc641b0cb8692c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pro_methods_classdyno_1_1DataProviderRos"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classdyno_1_1DataProviderRos')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="classdyno_1_1DataProviderRos.html">dyno::DataProviderRos</a></td></tr>
+<tr class="memitem:a357560017941cf0553aa36f20887c027 inherit pro_methods_classdyno_1_1DataProviderRos"><td class="memItemLeft" align="right" valign="top">const cv_bridge::CvImageConstPtr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DataProviderRos.html#a357560017941cf0553aa36f20887c027">readRosImage</a> (const sensor_msgs::msg::Image::ConstSharedPtr &amp;img_msg) const</td></tr>
+<tr class="memdesc:a357560017941cf0553aa36f20887c027 inherit pro_methods_classdyno_1_1DataProviderRos"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper function to convert a ROS Image message to a CvImageConstPtr via the cv bridge.  <br /></td></tr>
+<tr class="separator:a357560017941cf0553aa36f20887c027 inherit pro_methods_classdyno_1_1DataProviderRos"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1b074062e0b3a1fd62fbb32d1cdad91b inherit pro_methods_classdyno_1_1DataProviderRos"><td class="memTemplParams" colspan="2">template&lt;typename IMAGETYPE &gt; </td></tr>
+<tr class="memitem:a1b074062e0b3a1fd62fbb32d1cdad91b inherit pro_methods_classdyno_1_1DataProviderRos"><td class="memTemplItemLeft" align="right" valign="top">const cv::Mat&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classdyno_1_1DataProviderRos.html#a1b074062e0b3a1fd62fbb32d1cdad91b">convertRosImage</a> (const sensor_msgs::msg::Image::ConstSharedPtr &amp;img_msg) const</td></tr>
+<tr class="memdesc:a1b074062e0b3a1fd62fbb32d1cdad91b inherit pro_methods_classdyno_1_1DataProviderRos"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper function to convert a sensor_msgs::msg::Image::ConstSharedPtr&amp; to a cv::Mat with the right datatype.  <br /></td></tr>
+<tr class="separator:a1b074062e0b3a1fd62fbb32d1cdad91b inherit pro_methods_classdyno_1_1DataProviderRos"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pro_methods_classdyno_1_1DataProvider"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classdyno_1_1DataProvider')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="classdyno_1_1DataProvider.html">dyno::DataProvider</a></td></tr>
+<tr class="memitem:aeed0a3ab688356858ca5831289ffaa1f inherit pro_methods_classdyno_1_1DataProvider"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DataProvider.html#aeed0a3ab688356858ca5831289ffaa1f">emitOnFinishCallbacks</a> ()</td></tr>
+<tr class="separator:aeed0a3ab688356858ca5831289ffaa1f inherit pro_methods_classdyno_1_1DataProvider"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
+Protected Attributes</h2></td></tr>
+<tr class="memitem:a3f1a84c94a80822ffc3ea6a307ed3eb0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structdyno_1_1OnlineDataProviderRosParams.html">OnlineDataProviderRosParams</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1OnlineDataProviderRos.html#a3f1a84c94a80822ffc3ea6a307ed3eb0">params_</a></td></tr>
+<tr class="separator:a3f1a84c94a80822ffc3ea6a307ed3eb0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae8d393df189c517d6cc8273fcf6f2e99"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacedyno.html#ac4303d6fafb755f794b072d76f9cfb41">FrameId</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1OnlineDataProviderRos.html#ae8d393df189c517d6cc8273fcf6f2e99">frame_id_</a></td></tr>
+<tr class="memdesc:ae8d393df189c517d6cc8273fcf6f2e99"><td class="mdescLeft">&#160;</td><td class="mdescRight">Driving frame id for the enture dynosam pipeline.  <br /></td></tr>
+<tr class="separator:ae8d393df189c517d6cc8273fcf6f2e99"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pro_attribs_classdyno_1_1DataProviderRos"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classdyno_1_1DataProviderRos')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classdyno_1_1DataProviderRos.html">dyno::DataProviderRos</a></td></tr>
+<tr class="memitem:a8114936181e3a44e6941fee36d0518cb inherit pro_attribs_classdyno_1_1DataProviderRos"><td class="memItemLeft" align="right" valign="top">rclcpp::Node::SharedPtr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DataProviderRos.html#a8114936181e3a44e6941fee36d0518cb">node_</a></td></tr>
+<tr class="separator:a8114936181e3a44e6941fee36d0518cb inherit pro_attribs_classdyno_1_1DataProviderRos"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pro_attribs_classdyno_1_1DataProvider"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classdyno_1_1DataProvider')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classdyno_1_1DataProvider.html">dyno::DataProvider</a></td></tr>
+<tr class="memitem:aa11672e30d895d97f113076391bc02cc inherit pro_attribs_classdyno_1_1DataProvider"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classdyno_1_1DataProvider.html#a6c2b79535349bc8319907eb031ea4926">ImageContainerCallback</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DataProvider.html#aa11672e30d895d97f113076391bc02cc">image_container_callback_</a></td></tr>
+<tr class="separator:aa11672e30d895d97f113076391bc02cc inherit pro_attribs_classdyno_1_1DataProvider"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7fec88275bd9e687cc846a1c9095f767 inherit pro_attribs_classdyno_1_1DataProvider"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classdyno_1_1DataProvider.html#ada0c50fb63e4e328da1a89f65c83470e">ImuSingleInputCallback</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DataProvider.html#a7fec88275bd9e687cc846a1c9095f767">imu_single_input_callback_</a></td></tr>
+<tr class="separator:a7fec88275bd9e687cc846a1c9095f767 inherit pro_attribs_classdyno_1_1DataProvider"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9eb6049732fcc7725e4de30d6ec79ec6 inherit pro_attribs_classdyno_1_1DataProvider"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classdyno_1_1DataProvider.html#abdcb6c93917453cd5fdf9dd09018c533">ImuMultiInputCallback</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DataProvider.html#a9eb6049732fcc7725e4de30d6ec79ec6">imu_multi_input_callback_</a></td></tr>
+<tr class="separator:a9eb6049732fcc7725e4de30d6ec79ec6 inherit pro_attribs_classdyno_1_1DataProvider"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1691b6605c29a0bfda5fea991c6bc199 inherit pro_attribs_classdyno_1_1DataProvider"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classdyno_1_1DataProvider.html#a94437a44fed773c176b62932164fa40d">GroundTruthPacketCallback</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DataProvider.html#a1691b6605c29a0bfda5fea991c6bc199">ground_truth_packet_callback_</a></td></tr>
+<tr class="separator:a1691b6605c29a0bfda5fea991c6bc199 inherit pro_attribs_classdyno_1_1DataProvider"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4a1d8a48c87a76d781858b1af69e2def inherit pro_attribs_classdyno_1_1DataProvider"><td class="memItemLeft" align="right" valign="top">std::atomic_bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DataProvider.html#a4a1d8a48c87a76d781858b1af69e2def">shutdown_</a> = {false}</td></tr>
+<tr class="separator:a4a1d8a48c87a76d781858b1af69e2def inherit pro_attribs_classdyno_1_1DataProvider"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-types" name="pri-types"></a>
 Private Types</h2></td></tr>
 <tr class="memitem:a46d9827face795bda2109509bf584070"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1OnlineDataProviderRos.html#a46d9827face795bda2109509bf584070">ImuAdaptedType</a> = rclcpp::adapt_type&lt; <a class="el" href="structdyno_1_1ImuMeasurement.html">dyno::ImuMeasurement</a> &gt;::as&lt; sensor_msgs::msg::Imu &gt;</td></tr>
@@ -189,22 +233,17 @@ Private Types</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-methods" name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
-<tr class="memitem:a7c809e378b5d4b807e80abb43c0da23a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1OnlineDataProviderRos.html#a7c809e378b5d4b807e80abb43c0da23a">connectImages</a> ()</td></tr>
-<tr class="separator:a7c809e378b5d4b807e80abb43c0da23a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab4a159eb8a44bd46697f86256783dfd7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1OnlineDataProviderRos.html#ab4a159eb8a44bd46697f86256783dfd7">connectImu</a> ()</td></tr>
-<tr class="separator:ab4a159eb8a44bd46697f86256783dfd7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9de803a0df3bddbcc9755c440e87fcb3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1OnlineDataProviderRos.html#a9de803a0df3bddbcc9755c440e87fcb3">subscribeImu</a> ()</td></tr>
+<tr class="separator:a9de803a0df3bddbcc9755c440e87fcb3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
-<tr class="memitem:ae8d393df189c517d6cc8273fcf6f2e99"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacedyno.html#ac4303d6fafb755f794b072d76f9cfb41">FrameId</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1OnlineDataProviderRos.html#ae8d393df189c517d6cc8273fcf6f2e99">frame_id_</a></td></tr>
-<tr class="memdesc:ae8d393df189c517d6cc8273fcf6f2e99"><td class="mdescLeft">&#160;</td><td class="mdescRight">Driving frame id for the enture dynosam pipeline.  <br /></td></tr>
-<tr class="separator:ae8d393df189c517d6cc8273fcf6f2e99"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab58c07d0a7b48bf52c8108e399357b30"><td class="memItemLeft" align="right" valign="top">MultiSyncBase::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1OnlineDataProviderRos.html#ab58c07d0a7b48bf52c8108e399357b30">image_subscriber_</a></td></tr>
-<tr class="separator:ab58c07d0a7b48bf52c8108e399357b30"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a182f1c23dfe3c118bb06c770107e1bb1"><td class="memItemLeft" align="right" valign="top">rclcpp::CallbackGroup::SharedPtr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1OnlineDataProviderRos.html#a182f1c23dfe3c118bb06c770107e1bb1">imu_callback_group_</a></td></tr>
 <tr class="separator:a182f1c23dfe3c118bb06c770107e1bb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af606c8c71c4b8b1fe5a11efbae1f3689"><td class="memItemLeft" align="right" valign="top">rclcpp::Subscription&lt; <a class="el" href="classdyno_1_1OnlineDataProviderRos.html#a46d9827face795bda2109509bf584070">ImuAdaptedType</a> &gt;::SharedPtr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1OnlineDataProviderRos.html#af606c8c71c4b8b1fe5a11efbae1f3689">imu_sub_</a></td></tr>
 <tr class="separator:af606c8c71c4b8b1fe5a11efbae1f3689"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a516af70a585d16fc54783262a767fb9c"><td class="memItemLeft" align="right" valign="top">std::atomic_bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1OnlineDataProviderRos.html#a516af70a585d16fc54783262a767fb9c">is_connected</a> {false}</td></tr>
+<tr class="separator:a516af70a585d16fc54783262a767fb9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="inherited" name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
@@ -217,39 +256,12 @@ Additional Inherited Members</h2></td></tr>
 <tr class="separator:abdcb6c93917453cd5fdf9dd09018c533 inherit pub_types_classdyno_1_1DataProvider"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a94437a44fed773c176b62932164fa40d inherit pub_types_classdyno_1_1DataProvider"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DataProvider.html#a94437a44fed773c176b62932164fa40d">GroundTruthPacketCallback</a> = std::function&lt; void(const <a class="el" href="classdyno_1_1GroundTruthInputPacket.html">GroundTruthInputPacket</a> &amp;)&gt;</td></tr>
 <tr class="separator:a94437a44fed773c176b62932164fa40d inherit pub_types_classdyno_1_1DataProvider"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pro_methods_classdyno_1_1DataProviderRos"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classdyno_1_1DataProviderRos')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="classdyno_1_1DataProviderRos.html">dyno::DataProviderRos</a></td></tr>
-<tr class="memitem:a357560017941cf0553aa36f20887c027 inherit pro_methods_classdyno_1_1DataProviderRos"><td class="memItemLeft" align="right" valign="top">const cv_bridge::CvImageConstPtr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DataProviderRos.html#a357560017941cf0553aa36f20887c027">readRosImage</a> (const sensor_msgs::msg::Image::ConstSharedPtr &amp;img_msg) const</td></tr>
-<tr class="memdesc:a357560017941cf0553aa36f20887c027 inherit pro_methods_classdyno_1_1DataProviderRos"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper function to convert a ROS Image message to a CvImageConstPtr via the cv bridge.  <br /></td></tr>
-<tr class="separator:a357560017941cf0553aa36f20887c027 inherit pro_methods_classdyno_1_1DataProviderRos"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1b074062e0b3a1fd62fbb32d1cdad91b inherit pro_methods_classdyno_1_1DataProviderRos"><td class="memTemplParams" colspan="2">template&lt;typename IMAGETYPE &gt; </td></tr>
-<tr class="memitem:a1b074062e0b3a1fd62fbb32d1cdad91b inherit pro_methods_classdyno_1_1DataProviderRos"><td class="memTemplItemLeft" align="right" valign="top">const cv::Mat&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classdyno_1_1DataProviderRos.html#a1b074062e0b3a1fd62fbb32d1cdad91b">convertRosImage</a> (const sensor_msgs::msg::Image::ConstSharedPtr &amp;img_msg) const</td></tr>
-<tr class="memdesc:a1b074062e0b3a1fd62fbb32d1cdad91b inherit pro_methods_classdyno_1_1DataProviderRos"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper function to convert a sensor_msgs::msg::Image::ConstSharedPtr&amp; to a cv::Mat with the right datatype.  <br /></td></tr>
-<tr class="separator:a1b074062e0b3a1fd62fbb32d1cdad91b inherit pro_methods_classdyno_1_1DataProviderRos"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pro_methods_classdyno_1_1DataProvider"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classdyno_1_1DataProvider')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="classdyno_1_1DataProvider.html">dyno::DataProvider</a></td></tr>
-<tr class="memitem:aeed0a3ab688356858ca5831289ffaa1f inherit pro_methods_classdyno_1_1DataProvider"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DataProvider.html#aeed0a3ab688356858ca5831289ffaa1f">emitOnFinishCallbacks</a> ()</td></tr>
-<tr class="separator:aeed0a3ab688356858ca5831289ffaa1f inherit pro_methods_classdyno_1_1DataProvider"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pro_attribs_classdyno_1_1DataProviderRos"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classdyno_1_1DataProviderRos')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classdyno_1_1DataProviderRos.html">dyno::DataProviderRos</a></td></tr>
-<tr class="memitem:a8114936181e3a44e6941fee36d0518cb inherit pro_attribs_classdyno_1_1DataProviderRos"><td class="memItemLeft" align="right" valign="top">rclcpp::Node::SharedPtr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DataProviderRos.html#a8114936181e3a44e6941fee36d0518cb">node_</a></td></tr>
-<tr class="separator:a8114936181e3a44e6941fee36d0518cb inherit pro_attribs_classdyno_1_1DataProviderRos"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8dc20e39a658bd0e153fb54b455495b3 inherit pro_attribs_classdyno_1_1DataProviderRos"><td class="memItemLeft" align="right" valign="top">CameraParams::Optional&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DataProviderRos.html#a8dc20e39a658bd0e153fb54b455495b3">camera_params_</a></td></tr>
-<tr class="separator:a8dc20e39a658bd0e153fb54b455495b3 inherit pro_attribs_classdyno_1_1DataProviderRos"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pro_attribs_classdyno_1_1DataProvider"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classdyno_1_1DataProvider')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classdyno_1_1DataProvider.html">dyno::DataProvider</a></td></tr>
-<tr class="memitem:aa11672e30d895d97f113076391bc02cc inherit pro_attribs_classdyno_1_1DataProvider"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classdyno_1_1DataProvider.html#a6c2b79535349bc8319907eb031ea4926">ImageContainerCallback</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DataProvider.html#aa11672e30d895d97f113076391bc02cc">image_container_callback_</a></td></tr>
-<tr class="separator:aa11672e30d895d97f113076391bc02cc inherit pro_attribs_classdyno_1_1DataProvider"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7fec88275bd9e687cc846a1c9095f767 inherit pro_attribs_classdyno_1_1DataProvider"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classdyno_1_1DataProvider.html#ada0c50fb63e4e328da1a89f65c83470e">ImuSingleInputCallback</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DataProvider.html#a7fec88275bd9e687cc846a1c9095f767">imu_single_input_callback_</a></td></tr>
-<tr class="separator:a7fec88275bd9e687cc846a1c9095f767 inherit pro_attribs_classdyno_1_1DataProvider"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9eb6049732fcc7725e4de30d6ec79ec6 inherit pro_attribs_classdyno_1_1DataProvider"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classdyno_1_1DataProvider.html#abdcb6c93917453cd5fdf9dd09018c533">ImuMultiInputCallback</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DataProvider.html#a9eb6049732fcc7725e4de30d6ec79ec6">imu_multi_input_callback_</a></td></tr>
-<tr class="separator:a9eb6049732fcc7725e4de30d6ec79ec6 inherit pro_attribs_classdyno_1_1DataProvider"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1691b6605c29a0bfda5fea991c6bc199 inherit pro_attribs_classdyno_1_1DataProvider"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classdyno_1_1DataProvider.html#a94437a44fed773c176b62932164fa40d">GroundTruthPacketCallback</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DataProvider.html#a1691b6605c29a0bfda5fea991c6bc199">ground_truth_packet_callback_</a></td></tr>
-<tr class="separator:a1691b6605c29a0bfda5fea991c6bc199 inherit pro_attribs_classdyno_1_1DataProvider"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4a1d8a48c87a76d781858b1af69e2def inherit pro_attribs_classdyno_1_1DataProvider"><td class="memItemLeft" align="right" valign="top">std::atomic_bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1DataProvider.html#a4a1d8a48c87a76d781858b1af69e2def">shutdown_</a> = {false}</td></tr>
-<tr class="separator:a4a1d8a48c87a76d781858b1af69e2def inherit pro_attribs_classdyno_1_1DataProvider"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Online data-provider for DynoSAM. </p>
-<p>Subscribes to four synchronized image topics (rgb, depth, mask and optical flow) and a camera_info topic (to define the camera intrinsics of the system). </p>
+<div class="textblock"><p>Online data-provider for DynoSAM which handles subcription to the IMU and the interface for subscribing to images but does not implement this. </p>
+<p>Instead input image mode specific classes derive from this class to implement the image subscription </p>
 
-<p class="definition">Definition at line <a class="el" href="OnlineDataProviderRos_8hpp_source.html#l00058">58</a> of file <a class="el" href="OnlineDataProviderRos_8hpp_source.html">OnlineDataProviderRos.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="OnlineDataProviderRos_8hpp_source.html#l00069">69</a> of file <a class="el" href="OnlineDataProviderRos_8hpp_source.html">OnlineDataProviderRos.hpp</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="a46d9827face795bda2109509bf584070" name="a46d9827face795bda2109509bf584070"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a46d9827face795bda2109509bf584070">&#9670;&#160;</a></span>ImuAdaptedType</h2>
@@ -271,7 +283,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="OnlineDataProviderRos_8hpp_source.html#l00109">109</a> of file <a class="el" href="OnlineDataProviderRos_8hpp_source.html">OnlineDataProviderRos.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="OnlineDataProviderRos_8hpp_source.html#l00134">134</a> of file <a class="el" href="OnlineDataProviderRos_8hpp_source.html">OnlineDataProviderRos.hpp</a>.</p>
 
 </div>
 </div>
@@ -302,7 +314,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Construct a new <a class="el" href="classdyno_1_1OnlineDataProviderRos.html" title="Online data-provider for DynoSAM.">OnlineDataProviderRos</a>. </p>
+<p>Construct a new <a class="el" href="classdyno_1_1OnlineDataProviderRos.html" title="Online data-provider for DynoSAM which handles subcription to the IMU and the interface for subscribi...">OnlineDataProviderRos</a>. </p>
 <p>Constructor will block until camera info has been received (if <a class="el" href="structdyno_1_1OnlineDataProviderRosParams.html#a71d65fbcafed38b82188d10424c1d341">OnlineDataProviderRosParams::wait_for_camera_params</a> is true).</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -312,309 +324,45 @@ Additional Inherited Members</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="OnlineDataProviderRos_8cc_source.html#l00037">37</a> of file <a class="el" href="OnlineDataProviderRos_8cc_source.html">OnlineDataProviderRos.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   39</span>    : <a class="code hl_function" href="classdyno_1_1DataProviderRos.html#acce86da16f15747e39fdb17a045df17c">DataProviderRos</a>(node), <a class="code hl_variable" href="classdyno_1_1OnlineDataProviderRos.html#ae8d393df189c517d6cc8273fcf6f2e99">frame_id_</a>(0u) {</div>
-<div class="line"><span class="lineno">   40</span>  <span class="keywordflow">if</span> (params.wait_for_camera_params) {</div>
-<div class="line"><span class="lineno">   41</span>    <a class="code hl_function" href="classdyno_1_1DataProviderRos.html#a1cb49fe70873ef4b7ed49afb75c013bc">waitAndSetCameraParams</a>(</div>
-<div class="line"><span class="lineno">   42</span>        std::chrono::milliseconds(params.camera_params_timeout));</div>
-<div class="line"><span class="lineno">   43</span>  }</div>
-<div class="line"><span class="lineno">   44</span> </div>
-<div class="line"><span class="lineno">   45</span>  <a class="code hl_function" href="classdyno_1_1OnlineDataProviderRos.html#a3b7725856bc86407813c51804a26bea4">connect</a>();</div>
-<div class="line"><span class="lineno">   46</span>  CHECK_EQ(<a class="code hl_variable" href="classdyno_1_1DataProvider.html#a4a1d8a48c87a76d781858b1af69e2def">shutdown_</a>, <span class="keyword">false</span>);</div>
-<div class="line"><span class="lineno">   47</span>}</div>
-<div class="ttc" id="aclassdyno_1_1DataProviderRos_html_a1cb49fe70873ef4b7ed49afb75c013bc"><div class="ttname"><a href="classdyno_1_1DataProviderRos.html#a1cb49fe70873ef4b7ed49afb75c013bc">dyno::DataProviderRos::waitAndSetCameraParams</a></div><div class="ttdeci">const CameraParams &amp; waitAndSetCameraParams(const std::chrono::duration&lt; Rep, Period &gt; &amp;time_to_wait=std::chrono::duration&lt; Rep, Period &gt;(-1), const std::string &amp;topic=&quot;image/camera_info&quot;)</div><div class="ttdoc">Gets CameraParams from a sensor_msgs::msg::CameraInfo recieved on the specified topic....</div><div class="ttdef"><b>Definition:</b> <a href="DataProviderRos_8hpp_source.html#l00119">DataProviderRos.hpp:119</a></div></div>
+<p class="definition">Definition at line <a class="el" href="OnlineDataProviderRos_8cc_source.html#l00058">58</a> of file <a class="el" href="OnlineDataProviderRos_8cc_source.html">OnlineDataProviderRos.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   60</span>    : <a class="code hl_function" href="classdyno_1_1DataProviderRos.html#acce86da16f15747e39fdb17a045df17c">DataProviderRos</a>(node), <a class="code hl_variable" href="classdyno_1_1OnlineDataProviderRos.html#a3f1a84c94a80822ffc3ea6a307ed3eb0">params_</a>(params), <a class="code hl_variable" href="classdyno_1_1OnlineDataProviderRos.html#ae8d393df189c517d6cc8273fcf6f2e99">frame_id_</a>(0u) {</div>
+<div class="line"><span class="lineno">   61</span>  CHECK_EQ(<a class="code hl_variable" href="classdyno_1_1DataProvider.html#a4a1d8a48c87a76d781858b1af69e2def">shutdown_</a>, <span class="keyword">false</span>);</div>
+<div class="line"><span class="lineno">   62</span>}</div>
 <div class="ttc" id="aclassdyno_1_1DataProviderRos_html_acce86da16f15747e39fdb17a045df17c"><div class="ttname"><a href="classdyno_1_1DataProviderRos.html#acce86da16f15747e39fdb17a045df17c">dyno::DataProviderRos::DataProviderRos</a></div><div class="ttdeci">DataProviderRos(rclcpp::Node::SharedPtr node)</div><div class="ttdef"><b>Definition:</b> <a href="DataProviderRos_8cc_source.html#l00040">DataProviderRos.cc:40</a></div></div>
-<div class="ttc" id="aclassdyno_1_1DataProvider_html_a4a1d8a48c87a76d781858b1af69e2def"><div class="ttname"><a href="classdyno_1_1DataProvider.html#a4a1d8a48c87a76d781858b1af69e2def">dyno::DataProvider::shutdown_</a></div><div class="ttdeci">std::atomic_bool shutdown_</div><div class="ttdef"><b>Definition:</b> <a href="DataProvider_8hpp_source.html#l00133">DataProvider.hpp:133</a></div></div>
-<div class="ttc" id="aclassdyno_1_1OnlineDataProviderRos_html_a3b7725856bc86407813c51804a26bea4"><div class="ttname"><a href="classdyno_1_1OnlineDataProviderRos.html#a3b7725856bc86407813c51804a26bea4">dyno::OnlineDataProviderRos::connect</a></div><div class="ttdeci">void connect()</div><div class="ttdoc">Connects all subscribers.</div><div class="ttdef"><b>Definition:</b> <a href="OnlineDataProviderRos_8cc_source.html#l00059">OnlineDataProviderRos.cc:59</a></div></div>
-<div class="ttc" id="aclassdyno_1_1OnlineDataProviderRos_html_ae8d393df189c517d6cc8273fcf6f2e99"><div class="ttname"><a href="classdyno_1_1OnlineDataProviderRos.html#ae8d393df189c517d6cc8273fcf6f2e99">dyno::OnlineDataProviderRos::frame_id_</a></div><div class="ttdeci">FrameId frame_id_</div><div class="ttdoc">Driving frame id for the enture dynosam pipeline.</div><div class="ttdef"><b>Definition:</b> <a href="OnlineDataProviderRos_8hpp_source.html#l00105">OnlineDataProviderRos.hpp:105</a></div></div>
+<div class="ttc" id="aclassdyno_1_1DataProvider_html_a4a1d8a48c87a76d781858b1af69e2def"><div class="ttname"><a href="classdyno_1_1DataProvider.html#a4a1d8a48c87a76d781858b1af69e2def">dyno::DataProvider::shutdown_</a></div><div class="ttdeci">std::atomic_bool shutdown_</div><div class="ttdef"><b>Definition:</b> <a href="DataProvider_8hpp_source.html#l00137">DataProvider.hpp:137</a></div></div>
+<div class="ttc" id="aclassdyno_1_1OnlineDataProviderRos_html_a3f1a84c94a80822ffc3ea6a307ed3eb0"><div class="ttname"><a href="classdyno_1_1OnlineDataProviderRos.html#a3f1a84c94a80822ffc3ea6a307ed3eb0">dyno::OnlineDataProviderRos::params_</a></div><div class="ttdeci">OnlineDataProviderRosParams params_</div><div class="ttdef"><b>Definition:</b> <a href="OnlineDataProviderRos_8hpp_source.html#l00126">OnlineDataProviderRos.hpp:126</a></div></div>
+<div class="ttc" id="aclassdyno_1_1OnlineDataProviderRos_html_ae8d393df189c517d6cc8273fcf6f2e99"><div class="ttname"><a href="classdyno_1_1OnlineDataProviderRos.html#ae8d393df189c517d6cc8273fcf6f2e99">dyno::OnlineDataProviderRos::frame_id_</a></div><div class="ttdeci">FrameId frame_id_</div><div class="ttdoc">Driving frame id for the enture dynosam pipeline.</div><div class="ttdef"><b>Definition:</b> <a href="OnlineDataProviderRos_8hpp_source.html#l00128">OnlineDataProviderRos.hpp:128</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="structdyno_1_1OnlineDataProviderRosParams.html#ac7c39eedb09914857b2de1ec5acc9371">dyno::OnlineDataProviderRosParams::camera_params_timeout</a>, <a class="el" href="classdyno_1_1OnlineDataProviderRos.html#a3b7725856bc86407813c51804a26bea4">connect()</a>, <a class="el" href="classdyno_1_1DataProvider.html#a4a1d8a48c87a76d781858b1af69e2def">dyno::DataProvider::shutdown_</a>, <a class="el" href="structdyno_1_1OnlineDataProviderRosParams.html#a71d65fbcafed38b82188d10424c1d341">dyno::OnlineDataProviderRosParams::wait_for_camera_params</a>, and <a class="el" href="classdyno_1_1DataProviderRos.html#a1cb49fe70873ef4b7ed49afb75c013bc">dyno::DataProviderRos::waitAndSetCameraParams()</a>.</p>
-<div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="classdyno_1_1OnlineDataProviderRos_abea751b62c91dbf7bfac759680a434f7_cgraph.png" border="0" usemap="#aclassdyno_1_1OnlineDataProviderRos_abea751b62c91dbf7bfac759680a434f7_cgraph" alt=""/></div>
-<map name="aclassdyno_1_1OnlineDataProviderRos_abea751b62c91dbf7bfac759680a434f7_cgraph" id="aclassdyno_1_1OnlineDataProviderRos_abea751b62c91dbf7bfac759680a434f7_cgraph">
-<area shape="rect" title="Construct a new OnlineDataProviderRos." alt="" coords="5,511,211,551"/>
-<area shape="rect" href="classdyno_1_1OnlineDataProviderRos.html#a3b7725856bc86407813c51804a26bea4" title="Connects all subscribers." alt="" coords="265,384,455,424"/>
-<area shape="rect" href="classdyno_1_1DataProviderRos.html#a1cb49fe70873ef4b7ed49afb75c013bc" title="Gets CameraParams from a sensor_msgs::msg::CameraInfo recieved on the specified topic...." alt="" coords="259,543,461,583"/>
-<area shape="rect" href="classdyno_1_1OnlineDataProviderRos.html#a7c809e378b5d4b807e80abb43c0da23a" title=" " alt="" coords="509,284,699,324"/>
-<area shape="rect" href="classdyno_1_1OnlineDataProviderRos.html#ab4a159eb8a44bd46697f86256783dfd7" title=" " alt="" coords="509,384,699,424"/>
-<area shape="rect" href="namespacedyno_1_1utils.html#a367447d229280a53123017719e94f0d9" title="Convert ROS time to timestamp." alt="" coords="751,106,937,131"/>
-<area shape="rect" href="classdyno_1_1DataProviderRos.html#ad01ad2683eb35b1d6f76981c55ad7ee4" title="Convers a sensor_msgs::msg::Image to a cv::Mat while testing that the input has the correct datatype ..." alt="" coords="759,156,929,196"/>
-<area shape="rect" href="classdyno_1_1DataProviderRos.html#a1c795369f59e7383817adce94f164eaf" title="Convers a sensor_msgs::msg::Image to a cv::Mat while testing that the input has the correct datatype ..." alt="" coords="759,220,929,260"/>
-<area shape="rect" href="classdyno_1_1DataProviderRos.html#ae12caad2bd612a1a1d4fa0f93c17279d" title="Convers a sensor_msgs::msg::Image to a cv::Mat while testing that the input has the correct datatype ..." alt="" coords="759,284,929,324"/>
-<area shape="rect" href="classdyno_1_1DataProviderRos.html#a9432150f495ce791c2789badbcc88652" title="Convers a sensor_msgs::msg::Image to a cv::Mat while testing that the input has the correct datatype ..." alt="" coords="759,348,929,388"/>
-<area shape="rect" href="classdyno_1_1ImageContainer.html#a6f35259f95c31b861ff6515c159e1ee3" title=" " alt="" coords="747,413,941,438"/>
-<area shape="rect" href="namespacedyno.html#a8357d6a8de284f4d1fc3d074646b43bb" title=" " alt="" coords="989,106,1100,131"/>
-<area shape="rect" href="classdyno_1_1TrackedValueStatus.html#a1741e83bf5442c885da98c9c5bb71f08" title="Returns true if the object lavel is equal to dyno::background_label." alt="" coords="1148,5,1336,45"/>
-<area shape="rect" href="classdyno_1_1TrackedValueStatus.html#ae90b3059d173a9354cc6a55a55ef80ac" title="Get object id (j) for this status." alt="" coords="1148,69,1336,109"/>
-<area shape="rect" href="structdyno_1_1Color.html#a6689af3d0ac5ceaa66000b5ca70becbd" title="Generates a sequence of never repeating colors using the golden ratio to seperate the colours along t..." alt="" coords="1162,134,1322,159"/>
-<area shape="rect" href="classdyno_1_1TrackedValueStatus.html#a828faf38cea11c1dcc7651d49b68d8e1" title="Get value. Const version." alt="" coords="1148,184,1336,224"/>
-<area shape="rect" href="structdyno_1_1Color.html#a08bcb6ea49861f6978858a2ff5159002" title=" " alt="" coords="1384,134,1547,159"/>
-<area shape="rect" href="structdyno_1_1Color.html#a6bc55a80a463a481dbf4778c70d04733" title=" " alt="" coords="1622,109,1761,134"/>
-<area shape="rect" href="namespacedyno.html#ab0e74ec8992860404a618192cc694b83" title=" " alt="" coords="1595,158,1788,183"/>
-<area shape="rect" href="classdyno_1_1CameraParams.html#a7be21480072986b94e6484d9c4687ddf" title=" " alt="" coords="523,579,685,619"/>
-<area shape="rect" href="classdyno_1_1CameraParams.html#a0bd613ed86d45b2eb3597147c78f44cb" title=" " alt="" coords="752,462,936,487"/>
-<area shape="rect" href="classdyno_1_1CameraParams.html#a11332373807121719cbd13b3c0aa5dfa" title=" " alt="" coords="752,511,936,537"/>
-<area shape="rect" href="classdyno_1_1CameraParams.html#a006fa38075052f41cc49509fa16ba864" title=" " alt="" coords="753,561,935,586"/>
-<area shape="rect" href="classdyno_1_1CameraParams.html#af593866ca855cd9cf008275735596450" title=" " alt="" coords="753,610,935,635"/>
-<area shape="rect" href="classdyno_1_1CameraParams.html#a75e96fd0df57691134425ac9b9d55f09" title=" " alt="" coords="763,660,925,700"/>
-<area shape="rect" href="classdyno_1_1CameraParams.html#ae09360028f240f884ad9fcb72e4f4cf1" title=" " alt="" coords="763,724,925,764"/>
-<area shape="rect" href="namespacedyno.html#a8d1f85752688bf072f23fa6e8a1bde34" title=" " alt="" coords="785,789,903,814"/>
-</map>
+<p class="reference">References <a class="el" href="classdyno_1_1DataProvider.html#a4a1d8a48c87a76d781858b1af69e2def">dyno::DataProvider::shutdown_</a>.</p>
+
 </div>
+</div>
+<a id="a1ba88698ff9dea2ceb62b5549dee1189" name="a1ba88698ff9dea2ceb62b5549dee1189"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1ba88698ff9dea2ceb62b5549dee1189">&#9670;&#160;</a></span>~OnlineDataProviderRos()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual dyno::OnlineDataProviderRos::~OnlineDataProviderRos </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span><span class="mlabel">default</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a3b7725856bc86407813c51804a26bea4" name="a3b7725856bc86407813c51804a26bea4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3b7725856bc86407813c51804a26bea4">&#9670;&#160;</a></span>connect()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void dyno::OnlineDataProviderRos::connect </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Connects all subscribers. </p>
-
-<p class="definition">Definition at line <a class="el" href="OnlineDataProviderRos_8cc_source.html#l00059">59</a> of file <a class="el" href="OnlineDataProviderRos_8cc_source.html">OnlineDataProviderRos.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   59</span>                                    {</div>
-<div class="line"><span class="lineno">   60</span>  <a class="code hl_function" href="classdyno_1_1OnlineDataProviderRos.html#a7c809e378b5d4b807e80abb43c0da23a">connectImages</a>();</div>
-<div class="line"><span class="lineno">   61</span>  <a class="code hl_function" href="classdyno_1_1OnlineDataProviderRos.html#ab4a159eb8a44bd46697f86256783dfd7">connectImu</a>();</div>
-<div class="line"><span class="lineno">   62</span>  <a class="code hl_variable" href="classdyno_1_1DataProvider.html#a4a1d8a48c87a76d781858b1af69e2def">shutdown_</a> = <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">   63</span>}</div>
-<div class="ttc" id="aclassdyno_1_1OnlineDataProviderRos_html_a7c809e378b5d4b807e80abb43c0da23a"><div class="ttname"><a href="classdyno_1_1OnlineDataProviderRos.html#a7c809e378b5d4b807e80abb43c0da23a">dyno::OnlineDataProviderRos::connectImages</a></div><div class="ttdeci">void connectImages()</div><div class="ttdef"><b>Definition:</b> <a href="OnlineDataProviderRos_8cc_source.html#l00065">OnlineDataProviderRos.cc:65</a></div></div>
-<div class="ttc" id="aclassdyno_1_1OnlineDataProviderRos_html_ab4a159eb8a44bd46697f86256783dfd7"><div class="ttname"><a href="classdyno_1_1OnlineDataProviderRos.html#ab4a159eb8a44bd46697f86256783dfd7">dyno::OnlineDataProviderRos::connectImu</a></div><div class="ttdeci">void connectImu()</div><div class="ttdef"><b>Definition:</b> <a href="OnlineDataProviderRos_8cc_source.html#l00107">OnlineDataProviderRos.cc:107</a></div></div>
-</div><!-- fragment -->
-<p class="reference">References <a class="el" href="classdyno_1_1OnlineDataProviderRos.html#a7c809e378b5d4b807e80abb43c0da23a">connectImages()</a>, <a class="el" href="classdyno_1_1OnlineDataProviderRos.html#ab4a159eb8a44bd46697f86256783dfd7">connectImu()</a>, and <a class="el" href="classdyno_1_1DataProvider.html#a4a1d8a48c87a76d781858b1af69e2def">dyno::DataProvider::shutdown_</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1OnlineDataProviderRos.html#abea751b62c91dbf7bfac759680a434f7">OnlineDataProviderRos()</a>.</p>
-<div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="classdyno_1_1OnlineDataProviderRos_a3b7725856bc86407813c51804a26bea4_cgraph.png" border="0" usemap="#aclassdyno_1_1OnlineDataProviderRos_a3b7725856bc86407813c51804a26bea4_cgraph" alt=""/></div>
-<map name="aclassdyno_1_1OnlineDataProviderRos_a3b7725856bc86407813c51804a26bea4_cgraph" id="aclassdyno_1_1OnlineDataProviderRos_a3b7725856bc86407813c51804a26bea4_cgraph">
-<area shape="rect" title="Connects all subscribers." alt="" coords="5,284,195,324"/>
-<area shape="rect" href="classdyno_1_1OnlineDataProviderRos.html#a7c809e378b5d4b807e80abb43c0da23a" title=" " alt="" coords="243,252,432,292"/>
-<area shape="rect" href="classdyno_1_1OnlineDataProviderRos.html#ab4a159eb8a44bd46697f86256783dfd7" title=" " alt="" coords="243,316,432,356"/>
-<area shape="rect" href="namespacedyno_1_1utils.html#a367447d229280a53123017719e94f0d9" title="Convert ROS time to timestamp." alt="" coords="484,106,671,131"/>
-<area shape="rect" href="classdyno_1_1DataProviderRos.html#ad01ad2683eb35b1d6f76981c55ad7ee4" title="Convers a sensor_msgs::msg::Image to a cv::Mat while testing that the input has the correct datatype ..." alt="" coords="492,156,663,196"/>
-<area shape="rect" href="classdyno_1_1DataProviderRos.html#a1c795369f59e7383817adce94f164eaf" title="Convers a sensor_msgs::msg::Image to a cv::Mat while testing that the input has the correct datatype ..." alt="" coords="492,220,663,260"/>
-<area shape="rect" href="classdyno_1_1DataProviderRos.html#ae12caad2bd612a1a1d4fa0f93c17279d" title="Convers a sensor_msgs::msg::Image to a cv::Mat while testing that the input has the correct datatype ..." alt="" coords="492,284,663,324"/>
-<area shape="rect" href="classdyno_1_1DataProviderRos.html#a9432150f495ce791c2789badbcc88652" title="Convers a sensor_msgs::msg::Image to a cv::Mat while testing that the input has the correct datatype ..." alt="" coords="492,348,663,388"/>
-<area shape="rect" href="classdyno_1_1ImageContainer.html#a6f35259f95c31b861ff6515c159e1ee3" title=" " alt="" coords="480,413,675,438"/>
-<area shape="rect" href="namespacedyno.html#a8357d6a8de284f4d1fc3d074646b43bb" title=" " alt="" coords="723,106,833,131"/>
-<area shape="rect" href="classdyno_1_1TrackedValueStatus.html#a1741e83bf5442c885da98c9c5bb71f08" title="Returns true if the object lavel is equal to dyno::background_label." alt="" coords="881,5,1069,45"/>
-<area shape="rect" href="classdyno_1_1TrackedValueStatus.html#ae90b3059d173a9354cc6a55a55ef80ac" title="Get object id (j) for this status." alt="" coords="881,69,1069,109"/>
-<area shape="rect" href="structdyno_1_1Color.html#a6689af3d0ac5ceaa66000b5ca70becbd" title="Generates a sequence of never repeating colors using the golden ratio to seperate the colours along t..." alt="" coords="895,134,1055,159"/>
-<area shape="rect" href="classdyno_1_1TrackedValueStatus.html#a828faf38cea11c1dcc7651d49b68d8e1" title="Get value. Const version." alt="" coords="881,184,1069,224"/>
-<area shape="rect" href="structdyno_1_1Color.html#a08bcb6ea49861f6978858a2ff5159002" title=" " alt="" coords="1117,134,1280,159"/>
-<area shape="rect" href="structdyno_1_1Color.html#a6bc55a80a463a481dbf4778c70d04733" title=" " alt="" coords="1355,109,1494,134"/>
-<area shape="rect" href="namespacedyno.html#ab0e74ec8992860404a618192cc694b83" title=" " alt="" coords="1328,158,1521,183"/>
-</map>
-</div>
-<div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="classdyno_1_1OnlineDataProviderRos_a3b7725856bc86407813c51804a26bea4_icgraph.png" border="0" usemap="#aclassdyno_1_1OnlineDataProviderRos_a3b7725856bc86407813c51804a26bea4_icgraph" alt=""/></div>
-<map name="aclassdyno_1_1OnlineDataProviderRos_a3b7725856bc86407813c51804a26bea4_icgraph" id="aclassdyno_1_1OnlineDataProviderRos_a3b7725856bc86407813c51804a26bea4_icgraph">
-<area shape="rect" title="Connects all subscribers." alt="" coords="259,5,448,45"/>
-<area shape="rect" href="classdyno_1_1OnlineDataProviderRos.html#abea751b62c91dbf7bfac759680a434f7" title="Construct a new OnlineDataProviderRos." alt="" coords="5,5,211,45"/>
-</map>
-</div>
-
-</div>
-</div>
-<a id="a7c809e378b5d4b807e80abb43c0da23a" name="a7c809e378b5d4b807e80abb43c0da23a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7c809e378b5d4b807e80abb43c0da23a">&#9670;&#160;</a></span>connectImages()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void dyno::OnlineDataProviderRos::connectImages </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="OnlineDataProviderRos_8cc_source.html#l00065">65</a> of file <a class="el" href="OnlineDataProviderRos_8cc_source.html">OnlineDataProviderRos.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   65</span>                                          {</div>
-<div class="line"><span class="lineno">   66</span>  rclcpp::Node &amp;node_ref = *<a class="code hl_variable" href="classdyno_1_1DataProviderRos.html#a8114936181e3a44e6941fee36d0518cb">node_</a>;</div>
-<div class="line"><span class="lineno">   67</span> </div>
-<div class="line"><span class="lineno">   68</span>  <span class="keyword">static</span> <span class="keyword">const</span> std::array&lt;std::string, 4&gt; &amp;topics = {</div>
-<div class="line"><span class="lineno">   69</span>      <span class="stringliteral">&quot;image/rgb&quot;</span>, <span class="stringliteral">&quot;image/depth&quot;</span>, <span class="stringliteral">&quot;image/flow&quot;</span>, <span class="stringliteral">&quot;image/mask&quot;</span>};</div>
-<div class="line"><span class="lineno">   70</span> </div>
-<div class="line"><span class="lineno">   71</span>  std::shared_ptr&lt;MultiImageSync4&gt; multi_image_sync =</div>
-<div class="line"><span class="lineno">   72</span>      std::make_shared&lt;MultiImageSync4&gt;(node_ref, topics, 20);</div>
-<div class="line"><span class="lineno">   73</span>  multi_image_sync-&gt;registerCallback(</div>
-<div class="line"><span class="lineno">   74</span>      [<span class="keyword">this</span>](<span class="keyword">const</span> sensor_msgs::msg::Image::ConstSharedPtr &amp;rgb_msg,</div>
-<div class="line"><span class="lineno">   75</span>             <span class="keyword">const</span> sensor_msgs::msg::Image::ConstSharedPtr &amp;depth_msg,</div>
-<div class="line"><span class="lineno">   76</span>             <span class="keyword">const</span> sensor_msgs::msg::Image::ConstSharedPtr &amp;flow_msg,</div>
-<div class="line"><span class="lineno">   77</span>             <span class="keyword">const</span> sensor_msgs::msg::Image::ConstSharedPtr &amp;mask_msg) {</div>
-<div class="line"><span class="lineno">   78</span>        <span class="keywordflow">if</span> (!<a class="code hl_variable" href="classdyno_1_1DataProvider.html#aa11672e30d895d97f113076391bc02cc">image_container_callback_</a>) {</div>
-<div class="line"><span class="lineno">   79</span>          RCLCPP_ERROR_THROTTLE(<a class="code hl_variable" href="classdyno_1_1DataProviderRos.html#a8114936181e3a44e6941fee36d0518cb">node_</a>-&gt;get_logger(), *<a class="code hl_variable" href="classdyno_1_1DataProviderRos.html#a8114936181e3a44e6941fee36d0518cb">node_</a>-&gt;get_clock(), 1000,</div>
-<div class="line"><span class="lineno">   80</span>                                <span class="stringliteral">&quot;Image Sync callback triggered but &quot;</span></div>
-<div class="line"><span class="lineno">   81</span>                                <span class="stringliteral">&quot;image_container_callback_ is not registered!&quot;</span>);</div>
-<div class="line"><span class="lineno">   82</span>          <span class="keywordflow">return</span>;</div>
-<div class="line"><span class="lineno">   83</span>        }</div>
-<div class="line"><span class="lineno">   84</span> </div>
-<div class="line"><span class="lineno">   85</span>        <span class="keyword">const</span> cv::Mat rgb = <a class="code hl_function" href="classdyno_1_1DataProviderRos.html#a9432150f495ce791c2789badbcc88652">readRgbRosImage</a>(rgb_msg);</div>
-<div class="line"><span class="lineno">   86</span>        <span class="keyword">const</span> cv::Mat depth = <a class="code hl_function" href="classdyno_1_1DataProviderRos.html#ad01ad2683eb35b1d6f76981c55ad7ee4">readDepthRosImage</a>(depth_msg);</div>
-<div class="line"><span class="lineno">   87</span>        <span class="keyword">const</span> cv::Mat flow = <a class="code hl_function" href="classdyno_1_1DataProviderRos.html#a1c795369f59e7383817adce94f164eaf">readFlowRosImage</a>(flow_msg);</div>
-<div class="line"><span class="lineno">   88</span>        <span class="keyword">const</span> cv::Mat mask = <a class="code hl_function" href="classdyno_1_1DataProviderRos.html#ae12caad2bd612a1a1d4fa0f93c17279d">readMaskRosImage</a>(mask_msg);</div>
-<div class="line"><span class="lineno">   89</span> </div>
-<div class="line"><span class="lineno">   90</span>        <span class="keyword">const</span> <a class="code hl_typedef" href="namespacedyno.html#a7fda67c0575c4b7a8210dcc8ae227370">Timestamp</a> timestamp = <a class="code hl_function" href="namespacedyno_1_1utils.html#a367447d229280a53123017719e94f0d9">utils::fromRosTime</a>(rgb_msg-&gt;header.stamp);</div>
-<div class="line"><span class="lineno">   91</span>        <span class="keyword">const</span> <a class="code hl_typedef" href="namespacedyno.html#ac4303d6fafb755f794b072d76f9cfb41">FrameId</a> frame_id = <a class="code hl_variable" href="classdyno_1_1OnlineDataProviderRos.html#ae8d393df189c517d6cc8273fcf6f2e99">frame_id_</a>;</div>
-<div class="line"><span class="lineno">   92</span>        <a class="code hl_variable" href="classdyno_1_1OnlineDataProviderRos.html#ae8d393df189c517d6cc8273fcf6f2e99">frame_id_</a>++;</div>
-<div class="line"><span class="lineno">   93</span> </div>
-<div class="line"><span class="lineno">   94</span>        ImageContainer image_container(frame_id, timestamp);</div>
-<div class="line"><span class="lineno">   95</span>        image_container.rgb(rgb)</div>
-<div class="line"><span class="lineno">   96</span>            .depth(depth)</div>
-<div class="line"><span class="lineno">   97</span>            .opticalFlow(flow)</div>
-<div class="line"><span class="lineno">   98</span>            .objectMotionMask(mask);</div>
-<div class="line"><span class="lineno">   99</span> </div>
-<div class="line"><span class="lineno">  100</span>        <a class="code hl_variable" href="classdyno_1_1DataProvider.html#aa11672e30d895d97f113076391bc02cc">image_container_callback_</a>(</div>
-<div class="line"><span class="lineno">  101</span>            std::make_shared&lt;ImageContainer&gt;(image_container));</div>
-<div class="line"><span class="lineno">  102</span>      });</div>
-<div class="line"><span class="lineno">  103</span>  CHECK(multi_image_sync-&gt;connect());</div>
-<div class="line"><span class="lineno">  104</span>  <a class="code hl_variable" href="classdyno_1_1OnlineDataProviderRos.html#ab58c07d0a7b48bf52c8108e399357b30">image_subscriber_</a> = multi_image_sync;</div>
-<div class="line"><span class="lineno">  105</span>}</div>
-<div class="ttc" id="aclassdyno_1_1DataProviderRos_html_a1c795369f59e7383817adce94f164eaf"><div class="ttname"><a href="classdyno_1_1DataProviderRos.html#a1c795369f59e7383817adce94f164eaf">dyno::DataProviderRos::readFlowRosImage</a></div><div class="ttdeci">const cv::Mat readFlowRosImage(const sensor_msgs::msg::Image::ConstSharedPtr &amp;img_msg) const</div><div class="ttdoc">Convers a sensor_msgs::msg::Image to a cv::Mat while testing that the input has the correct datatype ...</div><div class="ttdef"><b>Definition:</b> <a href="DataProviderRos_8cc_source.html#l00053">DataProviderRos.cc:53</a></div></div>
-<div class="ttc" id="aclassdyno_1_1DataProviderRos_html_a8114936181e3a44e6941fee36d0518cb"><div class="ttname"><a href="classdyno_1_1DataProviderRos.html#a8114936181e3a44e6941fee36d0518cb">dyno::DataProviderRos::node_</a></div><div class="ttdeci">rclcpp::Node::SharedPtr node_</div><div class="ttdef"><b>Definition:</b> <a href="DataProviderRos_8hpp_source.html#l00200">DataProviderRos.hpp:200</a></div></div>
-<div class="ttc" id="aclassdyno_1_1DataProviderRos_html_a9432150f495ce791c2789badbcc88652"><div class="ttname"><a href="classdyno_1_1DataProviderRos.html#a9432150f495ce791c2789badbcc88652">dyno::DataProviderRos::readRgbRosImage</a></div><div class="ttdeci">const cv::Mat readRgbRosImage(const sensor_msgs::msg::Image::ConstSharedPtr &amp;img_msg) const</div><div class="ttdoc">Convers a sensor_msgs::msg::Image to a cv::Mat while testing that the input has the correct datatype ...</div><div class="ttdef"><b>Definition:</b> <a href="DataProviderRos_8cc_source.html#l00043">DataProviderRos.cc:43</a></div></div>
-<div class="ttc" id="aclassdyno_1_1DataProviderRos_html_ad01ad2683eb35b1d6f76981c55ad7ee4"><div class="ttname"><a href="classdyno_1_1DataProviderRos.html#ad01ad2683eb35b1d6f76981c55ad7ee4">dyno::DataProviderRos::readDepthRosImage</a></div><div class="ttdeci">const cv::Mat readDepthRosImage(const sensor_msgs::msg::Image::ConstSharedPtr &amp;img_msg) const</div><div class="ttdoc">Convers a sensor_msgs::msg::Image to a cv::Mat while testing that the input has the correct datatype ...</div><div class="ttdef"><b>Definition:</b> <a href="DataProviderRos_8cc_source.html#l00048">DataProviderRos.cc:48</a></div></div>
-<div class="ttc" id="aclassdyno_1_1DataProviderRos_html_ae12caad2bd612a1a1d4fa0f93c17279d"><div class="ttname"><a href="classdyno_1_1DataProviderRos.html#ae12caad2bd612a1a1d4fa0f93c17279d">dyno::DataProviderRos::readMaskRosImage</a></div><div class="ttdeci">const cv::Mat readMaskRosImage(const sensor_msgs::msg::Image::ConstSharedPtr &amp;img_msg) const</div><div class="ttdoc">Convers a sensor_msgs::msg::Image to a cv::Mat while testing that the input has the correct datatype ...</div><div class="ttdef"><b>Definition:</b> <a href="DataProviderRos_8cc_source.html#l00058">DataProviderRos.cc:58</a></div></div>
-<div class="ttc" id="aclassdyno_1_1DataProvider_html_aa11672e30d895d97f113076391bc02cc"><div class="ttname"><a href="classdyno_1_1DataProvider.html#aa11672e30d895d97f113076391bc02cc">dyno::DataProvider::image_container_callback_</a></div><div class="ttdeci">ImageContainerCallback image_container_callback_</div><div class="ttdef"><b>Definition:</b> <a href="DataProvider_8hpp_source.html#l00126">DataProvider.hpp:126</a></div></div>
-<div class="ttc" id="aclassdyno_1_1OnlineDataProviderRos_html_ab58c07d0a7b48bf52c8108e399357b30"><div class="ttname"><a href="classdyno_1_1OnlineDataProviderRos.html#ab58c07d0a7b48bf52c8108e399357b30">dyno::OnlineDataProviderRos::image_subscriber_</a></div><div class="ttdeci">MultiSyncBase::Ptr image_subscriber_</div><div class="ttdef"><b>Definition:</b> <a href="OnlineDataProviderRos_8hpp_source.html#l00106">OnlineDataProviderRos.hpp:106</a></div></div>
-<div class="ttc" id="anamespacedyno_1_1utils_html_a367447d229280a53123017719e94f0d9"><div class="ttname"><a href="namespacedyno_1_1utils.html#a367447d229280a53123017719e94f0d9">dyno::utils::fromRosTime</a></div><div class="ttdeci">Timestamp fromRosTime(const rclcpp::Time &amp;time)</div><div class="ttdoc">Convert ROS time to timestamp.</div><div class="ttdef"><b>Definition:</b> <a href="RosUtils_8cc_source.html#l00296">RosUtils.cc:296</a></div></div>
-<div class="ttc" id="anamespacedyno_html_a7fda67c0575c4b7a8210dcc8ae227370"><div class="ttname"><a href="namespacedyno.html#a7fda67c0575c4b7a8210dcc8ae227370">dyno::Timestamp</a></div><div class="ttdeci">double Timestamp</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00065">Types.hpp:65</a></div></div>
-<div class="ttc" id="anamespacedyno_html_ac4303d6fafb755f794b072d76f9cfb41"><div class="ttname"><a href="namespacedyno.html#ac4303d6fafb755f794b072d76f9cfb41">dyno::FrameId</a></div><div class="ttdeci">size_t FrameId</div><div class="ttdoc">Discrete time-step k.</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00074">Types.hpp:74</a></div></div>
-</div><!-- fragment -->
-<p class="reference">References <a class="el" href="classdyno_1_1OnlineDataProviderRos.html#ae8d393df189c517d6cc8273fcf6f2e99">frame_id_</a>, <a class="el" href="namespacedyno_1_1utils.html#a367447d229280a53123017719e94f0d9">dyno::utils::fromRosTime()</a>, <a class="el" href="classdyno_1_1DataProvider.html#aa11672e30d895d97f113076391bc02cc">dyno::DataProvider::image_container_callback_</a>, <a class="el" href="classdyno_1_1OnlineDataProviderRos.html#ab58c07d0a7b48bf52c8108e399357b30">image_subscriber_</a>, <a class="el" href="classdyno_1_1DataProviderRos.html#a8114936181e3a44e6941fee36d0518cb">dyno::DataProviderRos::node_</a>, <a class="el" href="classdyno_1_1DataProviderRos.html#ad01ad2683eb35b1d6f76981c55ad7ee4">dyno::DataProviderRos::readDepthRosImage()</a>, <a class="el" href="classdyno_1_1DataProviderRos.html#a1c795369f59e7383817adce94f164eaf">dyno::DataProviderRos::readFlowRosImage()</a>, <a class="el" href="classdyno_1_1DataProviderRos.html#ae12caad2bd612a1a1d4fa0f93c17279d">dyno::DataProviderRos::readMaskRosImage()</a>, <a class="el" href="classdyno_1_1DataProviderRos.html#a9432150f495ce791c2789badbcc88652">dyno::DataProviderRos::readRgbRosImage()</a>, and <a class="el" href="classdyno_1_1ImageContainer.html#a6f35259f95c31b861ff6515c159e1ee3">dyno::ImageContainer::rgb()</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1OnlineDataProviderRos.html#a3b7725856bc86407813c51804a26bea4">connect()</a>.</p>
-<div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="classdyno_1_1OnlineDataProviderRos_a7c809e378b5d4b807e80abb43c0da23a_cgraph.png" border="0" usemap="#aclassdyno_1_1OnlineDataProviderRos_a7c809e378b5d4b807e80abb43c0da23a_cgraph" alt=""/></div>
-<map name="aclassdyno_1_1OnlineDataProviderRos_a7c809e378b5d4b807e80abb43c0da23a_cgraph" id="aclassdyno_1_1OnlineDataProviderRos_a7c809e378b5d4b807e80abb43c0da23a_cgraph">
-<area shape="rect" title=" " alt="" coords="5,252,195,292"/>
-<area shape="rect" href="namespacedyno_1_1utils.html#a367447d229280a53123017719e94f0d9" title="Convert ROS time to timestamp." alt="" coords="247,106,433,131"/>
-<area shape="rect" href="classdyno_1_1DataProviderRos.html#ad01ad2683eb35b1d6f76981c55ad7ee4" title="Convers a sensor_msgs::msg::Image to a cv::Mat while testing that the input has the correct datatype ..." alt="" coords="255,156,425,196"/>
-<area shape="rect" href="classdyno_1_1DataProviderRos.html#a1c795369f59e7383817adce94f164eaf" title="Convers a sensor_msgs::msg::Image to a cv::Mat while testing that the input has the correct datatype ..." alt="" coords="255,220,425,260"/>
-<area shape="rect" href="classdyno_1_1DataProviderRos.html#ae12caad2bd612a1a1d4fa0f93c17279d" title="Convers a sensor_msgs::msg::Image to a cv::Mat while testing that the input has the correct datatype ..." alt="" coords="255,284,425,324"/>
-<area shape="rect" href="classdyno_1_1DataProviderRos.html#a9432150f495ce791c2789badbcc88652" title="Convers a sensor_msgs::msg::Image to a cv::Mat while testing that the input has the correct datatype ..." alt="" coords="255,348,425,388"/>
-<area shape="rect" href="classdyno_1_1ImageContainer.html#a6f35259f95c31b861ff6515c159e1ee3" title=" " alt="" coords="243,413,437,438"/>
-<area shape="rect" href="namespacedyno.html#a8357d6a8de284f4d1fc3d074646b43bb" title=" " alt="" coords="485,106,596,131"/>
-<area shape="rect" href="classdyno_1_1TrackedValueStatus.html#a1741e83bf5442c885da98c9c5bb71f08" title="Returns true if the object lavel is equal to dyno::background_label." alt="" coords="644,5,832,45"/>
-<area shape="rect" href="classdyno_1_1TrackedValueStatus.html#ae90b3059d173a9354cc6a55a55ef80ac" title="Get object id (j) for this status." alt="" coords="644,69,832,109"/>
-<area shape="rect" href="structdyno_1_1Color.html#a6689af3d0ac5ceaa66000b5ca70becbd" title="Generates a sequence of never repeating colors using the golden ratio to seperate the colours along t..." alt="" coords="658,134,818,159"/>
-<area shape="rect" href="classdyno_1_1TrackedValueStatus.html#a828faf38cea11c1dcc7651d49b68d8e1" title="Get value. Const version." alt="" coords="644,184,832,224"/>
-<area shape="rect" href="structdyno_1_1Color.html#a08bcb6ea49861f6978858a2ff5159002" title=" " alt="" coords="880,134,1043,159"/>
-<area shape="rect" href="structdyno_1_1Color.html#a6bc55a80a463a481dbf4778c70d04733" title=" " alt="" coords="1118,109,1257,134"/>
-<area shape="rect" href="namespacedyno.html#ab0e74ec8992860404a618192cc694b83" title=" " alt="" coords="1091,158,1284,183"/>
-</map>
-</div>
-<div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="classdyno_1_1OnlineDataProviderRos_a7c809e378b5d4b807e80abb43c0da23a_icgraph.png" border="0" usemap="#aclassdyno_1_1OnlineDataProviderRos_a7c809e378b5d4b807e80abb43c0da23a_icgraph" alt=""/></div>
-<map name="aclassdyno_1_1OnlineDataProviderRos_a7c809e378b5d4b807e80abb43c0da23a_icgraph" id="aclassdyno_1_1OnlineDataProviderRos_a7c809e378b5d4b807e80abb43c0da23a_icgraph">
-<area shape="rect" title=" " alt="" coords="496,5,685,45"/>
-<area shape="rect" href="classdyno_1_1OnlineDataProviderRos.html#a3b7725856bc86407813c51804a26bea4" title="Connects all subscribers." alt="" coords="259,5,448,45"/>
-<area shape="rect" href="classdyno_1_1OnlineDataProviderRos.html#abea751b62c91dbf7bfac759680a434f7" title="Construct a new OnlineDataProviderRos." alt="" coords="5,5,211,45"/>
-</map>
-</div>
-
-</div>
-</div>
-<a id="ab4a159eb8a44bd46697f86256783dfd7" name="ab4a159eb8a44bd46697f86256783dfd7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab4a159eb8a44bd46697f86256783dfd7">&#9670;&#160;</a></span>connectImu()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void dyno::OnlineDataProviderRos::connectImu </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="OnlineDataProviderRos_8cc_source.html#l00107">107</a> of file <a class="el" href="OnlineDataProviderRos_8cc_source.html">OnlineDataProviderRos.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  107</span>                                       {</div>
-<div class="line"><span class="lineno">  108</span>  <span class="keywordflow">if</span> (<a class="code hl_variable" href="classdyno_1_1OnlineDataProviderRos.html#af606c8c71c4b8b1fe5a11efbae1f3689">imu_sub_</a>) <a class="code hl_variable" href="classdyno_1_1OnlineDataProviderRos.html#af606c8c71c4b8b1fe5a11efbae1f3689">imu_sub_</a>.reset();</div>
-<div class="line"><span class="lineno">  109</span> </div>
-<div class="line"><span class="lineno">  110</span>  <a class="code hl_variable" href="classdyno_1_1OnlineDataProviderRos.html#a182f1c23dfe3c118bb06c770107e1bb1">imu_callback_group_</a> = <a class="code hl_variable" href="classdyno_1_1DataProviderRos.html#a8114936181e3a44e6941fee36d0518cb">node_</a>-&gt;create_callback_group(</div>
-<div class="line"><span class="lineno">  111</span>      rclcpp::CallbackGroupType::MutuallyExclusive);</div>
-<div class="line"><span class="lineno">  112</span> </div>
-<div class="line"><span class="lineno">  113</span>  rclcpp::SubscriptionOptions imu_sub_options;</div>
-<div class="line"><span class="lineno">  114</span>  imu_sub_options.callback_group = <a class="code hl_variable" href="classdyno_1_1OnlineDataProviderRos.html#a182f1c23dfe3c118bb06c770107e1bb1">imu_callback_group_</a>;</div>
-<div class="line"><span class="lineno">  115</span> </div>
-<div class="line"><span class="lineno">  116</span>  <a class="code hl_variable" href="classdyno_1_1OnlineDataProviderRos.html#af606c8c71c4b8b1fe5a11efbae1f3689">imu_sub_</a> = <a class="code hl_variable" href="classdyno_1_1DataProviderRos.html#a8114936181e3a44e6941fee36d0518cb">node_</a>-&gt;create_subscription&lt;<a class="code hl_typedef" href="classdyno_1_1OnlineDataProviderRos.html#a46d9827face795bda2109509bf584070">ImuAdaptedType</a>&gt;(</div>
-<div class="line"><span class="lineno">  117</span>      <span class="stringliteral">&quot;imu&quot;</span>, rclcpp::SensorDataQoS(),</div>
-<div class="line"><span class="lineno">  118</span>      [&amp;](<span class="keyword">const</span> <a class="code hl_struct" href="structdyno_1_1ImuMeasurement.html">dyno::ImuMeasurement</a> &amp;imu) -&gt; <span class="keywordtype">void</span> {</div>
-<div class="line"><span class="lineno">  119</span>        <span class="keywordflow">if</span> (!<a class="code hl_variable" href="classdyno_1_1DataProvider.html#a7fec88275bd9e687cc846a1c9095f767">imu_single_input_callback_</a>) {</div>
-<div class="line"><span class="lineno">  120</span>          RCLCPP_ERROR_THROTTLE(</div>
-<div class="line"><span class="lineno">  121</span>              <a class="code hl_variable" href="classdyno_1_1DataProviderRos.html#a8114936181e3a44e6941fee36d0518cb">node_</a>-&gt;get_logger(), *<a class="code hl_variable" href="classdyno_1_1DataProviderRos.html#a8114936181e3a44e6941fee36d0518cb">node_</a>-&gt;get_clock(), 1000,</div>
-<div class="line"><span class="lineno">  122</span>              <span class="stringliteral">&quot;Imu callback triggered but &quot;</span></div>
-<div class="line"><span class="lineno">  123</span>              <span class="stringliteral">&quot;imu_single_input_callback_ is not registered!&quot;</span>);</div>
-<div class="line"><span class="lineno">  124</span>          <span class="keywordflow">return</span>;</div>
-<div class="line"><span class="lineno">  125</span>        }</div>
-<div class="line"><span class="lineno">  126</span>        <a class="code hl_variable" href="classdyno_1_1DataProvider.html#a7fec88275bd9e687cc846a1c9095f767">imu_single_input_callback_</a>(imu);</div>
-<div class="line"><span class="lineno">  127</span>      },</div>
-<div class="line"><span class="lineno">  128</span>      imu_sub_options);</div>
-<div class="line"><span class="lineno">  129</span>}</div>
-<div class="ttc" id="aclassdyno_1_1DataProvider_html_a7fec88275bd9e687cc846a1c9095f767"><div class="ttname"><a href="classdyno_1_1DataProvider.html#a7fec88275bd9e687cc846a1c9095f767">dyno::DataProvider::imu_single_input_callback_</a></div><div class="ttdeci">ImuSingleInputCallback imu_single_input_callback_</div><div class="ttdef"><b>Definition:</b> <a href="DataProvider_8hpp_source.html#l00127">DataProvider.hpp:127</a></div></div>
-<div class="ttc" id="aclassdyno_1_1OnlineDataProviderRos_html_a182f1c23dfe3c118bb06c770107e1bb1"><div class="ttname"><a href="classdyno_1_1OnlineDataProviderRos.html#a182f1c23dfe3c118bb06c770107e1bb1">dyno::OnlineDataProviderRos::imu_callback_group_</a></div><div class="ttdeci">rclcpp::CallbackGroup::SharedPtr imu_callback_group_</div><div class="ttdef"><b>Definition:</b> <a href="OnlineDataProviderRos_8hpp_source.html#l00108">OnlineDataProviderRos.hpp:108</a></div></div>
-<div class="ttc" id="aclassdyno_1_1OnlineDataProviderRos_html_a46d9827face795bda2109509bf584070"><div class="ttname"><a href="classdyno_1_1OnlineDataProviderRos.html#a46d9827face795bda2109509bf584070">dyno::OnlineDataProviderRos::ImuAdaptedType</a></div><div class="ttdeci">rclcpp::adapt_type&lt; dyno::ImuMeasurement &gt;::as&lt; sensor_msgs::msg::Imu &gt; ImuAdaptedType</div><div class="ttdef"><b>Definition:</b> <a href="OnlineDataProviderRos_8hpp_source.html#l00109">OnlineDataProviderRos.hpp:110</a></div></div>
-<div class="ttc" id="aclassdyno_1_1OnlineDataProviderRos_html_af606c8c71c4b8b1fe5a11efbae1f3689"><div class="ttname"><a href="classdyno_1_1OnlineDataProviderRos.html#af606c8c71c4b8b1fe5a11efbae1f3689">dyno::OnlineDataProviderRos::imu_sub_</a></div><div class="ttdeci">rclcpp::Subscription&lt; ImuAdaptedType &gt;::SharedPtr imu_sub_</div><div class="ttdef"><b>Definition:</b> <a href="OnlineDataProviderRos_8hpp_source.html#l00111">OnlineDataProviderRos.hpp:111</a></div></div>
-<div class="ttc" id="astructdyno_1_1ImuMeasurement_html"><div class="ttname"><a href="structdyno_1_1ImuMeasurement.html">dyno::ImuMeasurement</a></div><div class="ttdef"><b>Definition:</b> <a href="ImuMeasurements_8hpp_source.html#l00038">ImuMeasurements.hpp:38</a></div></div>
-</div><!-- fragment -->
-<p class="reference">References <a class="el" href="classdyno_1_1OnlineDataProviderRos.html#a182f1c23dfe3c118bb06c770107e1bb1">imu_callback_group_</a>, <a class="el" href="classdyno_1_1DataProvider.html#a7fec88275bd9e687cc846a1c9095f767">dyno::DataProvider::imu_single_input_callback_</a>, <a class="el" href="classdyno_1_1OnlineDataProviderRos.html#af606c8c71c4b8b1fe5a11efbae1f3689">imu_sub_</a>, and <a class="el" href="classdyno_1_1DataProviderRos.html#a8114936181e3a44e6941fee36d0518cb">dyno::DataProviderRos::node_</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1OnlineDataProviderRos.html#a3b7725856bc86407813c51804a26bea4">connect()</a>.</p>
-<div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="classdyno_1_1OnlineDataProviderRos_ab4a159eb8a44bd46697f86256783dfd7_icgraph.png" border="0" usemap="#aclassdyno_1_1OnlineDataProviderRos_ab4a159eb8a44bd46697f86256783dfd7_icgraph" alt=""/></div>
-<map name="aclassdyno_1_1OnlineDataProviderRos_ab4a159eb8a44bd46697f86256783dfd7_icgraph" id="aclassdyno_1_1OnlineDataProviderRos_ab4a159eb8a44bd46697f86256783dfd7_icgraph">
-<area shape="rect" title=" " alt="" coords="496,5,685,45"/>
-<area shape="rect" href="classdyno_1_1OnlineDataProviderRos.html#a3b7725856bc86407813c51804a26bea4" title="Connects all subscribers." alt="" coords="259,5,448,45"/>
-<area shape="rect" href="classdyno_1_1OnlineDataProviderRos.html#abea751b62c91dbf7bfac759680a434f7" title="Construct a new OnlineDataProviderRos." alt="" coords="5,5,211,45"/>
-</map>
-</div>
-
-</div>
-</div>
 <a id="ac3f8e1e8ca6167cc926f1a9a17071c49" name="ac3f8e1e8ca6167cc926f1a9a17071c49"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac3f8e1e8ca6167cc926f1a9a17071c49">&#9670;&#160;</a></span>datasetSize()</h2>
 
@@ -643,9 +391,51 @@ Here is the caller graph for this function:</div>
 
 <p>Implements <a class="el" href="classdyno_1_1DataProvider.html#ade5d29ded857a6f471c393511cdf2105">dyno::DataProvider</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="OnlineDataProviderRos_8hpp_source.html#l00077">77</a> of file <a class="el" href="OnlineDataProviderRos_8hpp_source.html">OnlineDataProviderRos.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   77</span>{ <span class="keywordflow">return</span> -1; }</div>
+<p class="definition">Definition at line <a class="el" href="OnlineDataProviderRos_8hpp_source.html#l00092">92</a> of file <a class="el" href="OnlineDataProviderRos_8hpp_source.html">OnlineDataProviderRos.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   92</span>{ <span class="keywordflow">return</span> -1; }</div>
 </div><!-- fragment -->
+</div>
+</div>
+<a id="a56ed20eb32809730f7cfa3e1f216cf29" name="a56ed20eb32809730f7cfa3e1f216cf29"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a56ed20eb32809730f7cfa3e1f216cf29">&#9670;&#160;</a></span>setupSubscribers()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void dyno::OnlineDataProviderRos::setupSubscribers </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Connects all subscribers. </p>
+
+<p class="definition">Definition at line <a class="el" href="OnlineDataProviderRos_8cc_source.html#l00084">84</a> of file <a class="el" href="OnlineDataProviderRos_8cc_source.html">OnlineDataProviderRos.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   84</span>                                             {</div>
+<div class="line"><span class="lineno">   85</span>  <a class="code hl_function" href="classdyno_1_1OnlineDataProviderRos.html#ac3af12363ea9ebdde27b9c767c94dc35">subscribeImages</a>();</div>
+<div class="line"><span class="lineno">   86</span>  <a class="code hl_function" href="classdyno_1_1OnlineDataProviderRos.html#a9de803a0df3bddbcc9755c440e87fcb3">subscribeImu</a>();</div>
+<div class="line"><span class="lineno">   87</span>  <a class="code hl_variable" href="classdyno_1_1DataProvider.html#a4a1d8a48c87a76d781858b1af69e2def">shutdown_</a> = <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">   88</span>  <a class="code hl_variable" href="classdyno_1_1OnlineDataProviderRos.html#a516af70a585d16fc54783262a767fb9c">is_connected</a> = <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">   89</span>}</div>
+<div class="ttc" id="aclassdyno_1_1OnlineDataProviderRos_html_a516af70a585d16fc54783262a767fb9c"><div class="ttname"><a href="classdyno_1_1OnlineDataProviderRos.html#a516af70a585d16fc54783262a767fb9c">dyno::OnlineDataProviderRos::is_connected</a></div><div class="ttdeci">std::atomic_bool is_connected</div><div class="ttdef"><b>Definition:</b> <a href="OnlineDataProviderRos_8hpp_source.html#l00138">OnlineDataProviderRos.hpp:138</a></div></div>
+<div class="ttc" id="aclassdyno_1_1OnlineDataProviderRos_html_a9de803a0df3bddbcc9755c440e87fcb3"><div class="ttname"><a href="classdyno_1_1OnlineDataProviderRos.html#a9de803a0df3bddbcc9755c440e87fcb3">dyno::OnlineDataProviderRos::subscribeImu</a></div><div class="ttdeci">void subscribeImu()</div><div class="ttdef"><b>Definition:</b> <a href="OnlineDataProviderRos_8cc_source.html#l00091">OnlineDataProviderRos.cc:91</a></div></div>
+<div class="ttc" id="aclassdyno_1_1OnlineDataProviderRos_html_ac3af12363ea9ebdde27b9c767c94dc35"><div class="ttname"><a href="classdyno_1_1OnlineDataProviderRos.html#ac3af12363ea9ebdde27b9c767c94dc35">dyno::OnlineDataProviderRos::subscribeImages</a></div><div class="ttdeci">virtual void subscribeImages()=0</div></div>
+</div><!-- fragment -->
+<p class="reference">References <a class="el" href="classdyno_1_1OnlineDataProviderRos.html#a516af70a585d16fc54783262a767fb9c">is_connected</a>, <a class="el" href="classdyno_1_1DataProvider.html#a4a1d8a48c87a76d781858b1af69e2def">dyno::DataProvider::shutdown_</a>, <a class="el" href="classdyno_1_1OnlineDataProviderRos.html#ac3af12363ea9ebdde27b9c767c94dc35">subscribeImages()</a>, and <a class="el" href="classdyno_1_1OnlineDataProviderRos.html#a9de803a0df3bddbcc9755c440e87fcb3">subscribeImu()</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classdyno_1_1OnlineDataProviderRos_a56ed20eb32809730f7cfa3e1f216cf29_cgraph.png" border="0" usemap="#aclassdyno_1_1OnlineDataProviderRos_a56ed20eb32809730f7cfa3e1f216cf29_cgraph" alt=""/></div>
+<map name="aclassdyno_1_1OnlineDataProviderRos_a56ed20eb32809730f7cfa3e1f216cf29_cgraph" id="aclassdyno_1_1OnlineDataProviderRos_a56ed20eb32809730f7cfa3e1f216cf29_cgraph">
+<area shape="rect" title="Connects all subscribers." alt="" coords="5,37,195,77"/>
+<area shape="rect" href="classdyno_1_1OnlineDataProviderRos.html#ac3af12363ea9ebdde27b9c767c94dc35" title=" " alt="" coords="243,5,432,45"/>
+<area shape="rect" href="classdyno_1_1OnlineDataProviderRos.html#a9de803a0df3bddbcc9755c440e87fcb3" title=" " alt="" coords="243,69,432,109"/>
+</map>
+</div>
+
 </div>
 </div>
 <a id="a7a29e46f09c1a033d158e4c43585e508" name="a7a29e46f09c1a033d158e4c43585e508"></a>
@@ -675,16 +465,30 @@ Here is the caller graph for this function:</div>
 
 <p>Reimplemented from <a class="el" href="classdyno_1_1DataProvider.html#aab837117aea198eb0b7afb261ff757fb">dyno::DataProvider</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="OnlineDataProviderRos_8cc_source.html#l00051">51</a> of file <a class="el" href="OnlineDataProviderRos_8cc_source.html">OnlineDataProviderRos.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   51</span>                                     {</div>
-<div class="line"><span class="lineno">   52</span>  <a class="code hl_variable" href="classdyno_1_1DataProvider.html#a4a1d8a48c87a76d781858b1af69e2def">shutdown_</a> = <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">   53</span>  <span class="comment">// shutdown synchronizer</span></div>
-<div class="line"><span class="lineno">   54</span>  RCLCPP_INFO_STREAM(<a class="code hl_variable" href="classdyno_1_1DataProviderRos.html#a8114936181e3a44e6941fee36d0518cb">node_</a>-&gt;get_logger(),</div>
-<div class="line"><span class="lineno">   55</span>                     <span class="stringliteral">&quot;Shutting down OnlineDataProviderRos&quot;</span>);</div>
-<div class="line"><span class="lineno">   56</span>  <a class="code hl_variable" href="classdyno_1_1OnlineDataProviderRos.html#ab58c07d0a7b48bf52c8108e399357b30">image_subscriber_</a>-&gt;shutdown();</div>
-<div class="line"><span class="lineno">   57</span>}</div>
+<p class="definition">Definition at line <a class="el" href="OnlineDataProviderRos_8cc_source.html#l00074">74</a> of file <a class="el" href="OnlineDataProviderRos_8cc_source.html">OnlineDataProviderRos.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   74</span>                                     {</div>
+<div class="line"><span class="lineno">   75</span>  <a class="code hl_variable" href="classdyno_1_1DataProvider.html#a4a1d8a48c87a76d781858b1af69e2def">shutdown_</a> = <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">   76</span>  <span class="comment">// shutdown synchronizer</span></div>
+<div class="line"><span class="lineno">   77</span>  RCLCPP_INFO_STREAM(<a class="code hl_variable" href="classdyno_1_1DataProviderRos.html#a8114936181e3a44e6941fee36d0518cb">node_</a>-&gt;get_logger(),</div>
+<div class="line"><span class="lineno">   78</span>                     <span class="stringliteral">&quot;Shutting down OnlineDataProviderRos&quot;</span>);</div>
+<div class="line"><span class="lineno">   79</span>  <span class="keywordflow">if</span> (<a class="code hl_variable" href="classdyno_1_1OnlineDataProviderRos.html#af606c8c71c4b8b1fe5a11efbae1f3689">imu_sub_</a>) <a class="code hl_variable" href="classdyno_1_1OnlineDataProviderRos.html#af606c8c71c4b8b1fe5a11efbae1f3689">imu_sub_</a>.reset();</div>
+<div class="line"><span class="lineno">   80</span>  <a class="code hl_function" href="classdyno_1_1OnlineDataProviderRos.html#a77e9e4b8d9a84ca09cc641b0cb8692c8">unsubscribeImages</a>();</div>
+<div class="line"><span class="lineno">   81</span>  <a class="code hl_variable" href="classdyno_1_1OnlineDataProviderRos.html#a516af70a585d16fc54783262a767fb9c">is_connected</a> = <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">   82</span>}</div>
+<div class="ttc" id="aclassdyno_1_1DataProviderRos_html_a8114936181e3a44e6941fee36d0518cb"><div class="ttname"><a href="classdyno_1_1DataProviderRos.html#a8114936181e3a44e6941fee36d0518cb">dyno::DataProviderRos::node_</a></div><div class="ttdeci">rclcpp::Node::SharedPtr node_</div><div class="ttdef"><b>Definition:</b> <a href="DataProviderRos_8hpp_source.html#l00195">DataProviderRos.hpp:195</a></div></div>
+<div class="ttc" id="aclassdyno_1_1OnlineDataProviderRos_html_a77e9e4b8d9a84ca09cc641b0cb8692c8"><div class="ttname"><a href="classdyno_1_1OnlineDataProviderRos.html#a77e9e4b8d9a84ca09cc641b0cb8692c8">dyno::OnlineDataProviderRos::unsubscribeImages</a></div><div class="ttdeci">virtual void unsubscribeImages()=0</div></div>
+<div class="ttc" id="aclassdyno_1_1OnlineDataProviderRos_html_af606c8c71c4b8b1fe5a11efbae1f3689"><div class="ttname"><a href="classdyno_1_1OnlineDataProviderRos.html#af606c8c71c4b8b1fe5a11efbae1f3689">dyno::OnlineDataProviderRos::imu_sub_</a></div><div class="ttdeci">rclcpp::Subscription&lt; ImuAdaptedType &gt;::SharedPtr imu_sub_</div><div class="ttdef"><b>Definition:</b> <a href="OnlineDataProviderRos_8hpp_source.html#l00136">OnlineDataProviderRos.hpp:136</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="classdyno_1_1OnlineDataProviderRos.html#ab58c07d0a7b48bf52c8108e399357b30">image_subscriber_</a>, <a class="el" href="classdyno_1_1DataProviderRos.html#a8114936181e3a44e6941fee36d0518cb">dyno::DataProviderRos::node_</a>, and <a class="el" href="classdyno_1_1DataProvider.html#a4a1d8a48c87a76d781858b1af69e2def">dyno::DataProvider::shutdown_</a>.</p>
+<p class="reference">References <a class="el" href="classdyno_1_1OnlineDataProviderRos.html#af606c8c71c4b8b1fe5a11efbae1f3689">imu_sub_</a>, <a class="el" href="classdyno_1_1OnlineDataProviderRos.html#a516af70a585d16fc54783262a767fb9c">is_connected</a>, <a class="el" href="classdyno_1_1DataProviderRos.html#a8114936181e3a44e6941fee36d0518cb">dyno::DataProviderRos::node_</a>, <a class="el" href="classdyno_1_1DataProvider.html#a4a1d8a48c87a76d781858b1af69e2def">dyno::DataProvider::shutdown_</a>, and <a class="el" href="classdyno_1_1OnlineDataProviderRos.html#a77e9e4b8d9a84ca09cc641b0cb8692c8">unsubscribeImages()</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classdyno_1_1OnlineDataProviderRos_a7a29e46f09c1a033d158e4c43585e508_cgraph.png" border="0" usemap="#aclassdyno_1_1OnlineDataProviderRos_a7a29e46f09c1a033d158e4c43585e508_cgraph" alt=""/></div>
+<map name="aclassdyno_1_1OnlineDataProviderRos_a7a29e46f09c1a033d158e4c43585e508_cgraph" id="aclassdyno_1_1OnlineDataProviderRos_a7a29e46f09c1a033d158e4c43585e508_cgraph">
+<area shape="rect" title="Disconnects all subscribers." alt="" coords="5,5,195,45"/>
+<area shape="rect" href="classdyno_1_1OnlineDataProviderRos.html#a77e9e4b8d9a84ca09cc641b0cb8692c8" title=" " alt="" coords="243,5,432,45"/>
+</map>
+</div>
 
 </div>
 </div>
@@ -718,11 +522,201 @@ false </dd></dl>
 
 <p>Implements <a class="el" href="classdyno_1_1DataProvider.html#a26c474bce5255c9d0b5eb710f5646d2d">dyno::DataProvider</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="OnlineDataProviderRos_8cc_source.html#l00049">49</a> of file <a class="el" href="OnlineDataProviderRos_8cc_source.html">OnlineDataProviderRos.cc</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   49</span>{ <span class="keywordflow">return</span> !<a class="code hl_variable" href="classdyno_1_1DataProvider.html#a4a1d8a48c87a76d781858b1af69e2def">shutdown_</a>; }</div>
+<p class="definition">Definition at line <a class="el" href="OnlineDataProviderRos_8cc_source.html#l00064">64</a> of file <a class="el" href="OnlineDataProviderRos_8cc_source.html">OnlineDataProviderRos.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   64</span>                                 {</div>
+<div class="line"><span class="lineno">   65</span>  <span class="keywordflow">if</span> (!<a class="code hl_variable" href="classdyno_1_1OnlineDataProviderRos.html#a516af70a585d16fc54783262a767fb9c">is_connected</a>) {</div>
+<div class="line"><span class="lineno">   66</span>    RCLCPP_ERROR_THROTTLE(</div>
+<div class="line"><span class="lineno">   67</span>        <a class="code hl_variable" href="classdyno_1_1DataProviderRos.html#a8114936181e3a44e6941fee36d0518cb">node_</a>-&gt;get_logger(), *<a class="code hl_variable" href="classdyno_1_1DataProviderRos.html#a8114936181e3a44e6941fee36d0518cb">node_</a>-&gt;get_clock(), 1000,</div>
+<div class="line"><span class="lineno">   68</span>        <span class="stringliteral">&quot;OnlineDataProviderRos spinning but subscribers are not connected. &quot;</span></div>
+<div class="line"><span class="lineno">   69</span>        <span class="stringliteral">&quot;Did you forget to call OnlineDataProviderRos::setupSubscribers()?&quot;</span>);</div>
+<div class="line"><span class="lineno">   70</span>  }</div>
+<div class="line"><span class="lineno">   71</span>  <span class="keywordflow">return</span> !<a class="code hl_variable" href="classdyno_1_1DataProvider.html#a4a1d8a48c87a76d781858b1af69e2def">shutdown_</a>;</div>
+<div class="line"><span class="lineno">   72</span>}</div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="classdyno_1_1DataProvider.html#a4a1d8a48c87a76d781858b1af69e2def">dyno::DataProvider::shutdown_</a>.</p>
+<p class="reference">References <a class="el" href="classdyno_1_1OnlineDataProviderRos.html#a516af70a585d16fc54783262a767fb9c">is_connected</a>, <a class="el" href="classdyno_1_1DataProviderRos.html#a8114936181e3a44e6941fee36d0518cb">dyno::DataProviderRos::node_</a>, and <a class="el" href="classdyno_1_1DataProvider.html#a4a1d8a48c87a76d781858b1af69e2def">dyno::DataProvider::shutdown_</a>.</p>
 
+</div>
+</div>
+<a id="ac3af12363ea9ebdde27b9c767c94dc35" name="ac3af12363ea9ebdde27b9c767c94dc35"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac3af12363ea9ebdde27b9c767c94dc35">&#9670;&#160;</a></span>subscribeImages()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void dyno::OnlineDataProviderRos::subscribeImages </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implemented in <a class="el" href="classdyno_1_1AllImagesOnlineProviderRos.html#aa919b75571cfe2e8ffd8a0e8dc0c1c51">dyno::AllImagesOnlineProviderRos</a>, and <a class="el" href="classdyno_1_1RGBDOnlineProviderRos.html#a2d8711722bb51a96c4cc99f2b79069b9">dyno::RGBDOnlineProviderRos</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1OnlineDataProviderRos.html#a56ed20eb32809730f7cfa3e1f216cf29">setupSubscribers()</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classdyno_1_1OnlineDataProviderRos_ac3af12363ea9ebdde27b9c767c94dc35_icgraph.png" border="0" usemap="#aclassdyno_1_1OnlineDataProviderRos_ac3af12363ea9ebdde27b9c767c94dc35_icgraph" alt=""/></div>
+<map name="aclassdyno_1_1OnlineDataProviderRos_ac3af12363ea9ebdde27b9c767c94dc35_icgraph" id="aclassdyno_1_1OnlineDataProviderRos_ac3af12363ea9ebdde27b9c767c94dc35_icgraph">
+<area shape="rect" title=" " alt="" coords="243,5,432,45"/>
+<area shape="rect" href="classdyno_1_1OnlineDataProviderRos.html#a56ed20eb32809730f7cfa3e1f216cf29" title="Connects all subscribers." alt="" coords="5,5,195,45"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a9de803a0df3bddbcc9755c440e87fcb3" name="a9de803a0df3bddbcc9755c440e87fcb3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9de803a0df3bddbcc9755c440e87fcb3">&#9670;&#160;</a></span>subscribeImu()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void dyno::OnlineDataProviderRos::subscribeImu </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="OnlineDataProviderRos_8cc_source.html#l00091">91</a> of file <a class="el" href="OnlineDataProviderRos_8cc_source.html">OnlineDataProviderRos.cc</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   91</span>                                         {</div>
+<div class="line"><span class="lineno">   92</span>  <span class="keywordflow">if</span> (<a class="code hl_variable" href="classdyno_1_1OnlineDataProviderRos.html#af606c8c71c4b8b1fe5a11efbae1f3689">imu_sub_</a>) <a class="code hl_variable" href="classdyno_1_1OnlineDataProviderRos.html#af606c8c71c4b8b1fe5a11efbae1f3689">imu_sub_</a>.reset();</div>
+<div class="line"><span class="lineno">   93</span> </div>
+<div class="line"><span class="lineno">   94</span>  <a class="code hl_variable" href="classdyno_1_1OnlineDataProviderRos.html#a182f1c23dfe3c118bb06c770107e1bb1">imu_callback_group_</a> =</div>
+<div class="line"><span class="lineno">   95</span>      <a class="code hl_variable" href="classdyno_1_1DataProviderRos.html#a8114936181e3a44e6941fee36d0518cb">node_</a>-&gt;create_callback_group(rclcpp::CallbackGroupType::Reentrant);</div>
+<div class="line"><span class="lineno">   96</span> </div>
+<div class="line"><span class="lineno">   97</span>  rclcpp::SubscriptionOptions imu_sub_options;</div>
+<div class="line"><span class="lineno">   98</span>  imu_sub_options.callback_group = <a class="code hl_variable" href="classdyno_1_1OnlineDataProviderRos.html#a182f1c23dfe3c118bb06c770107e1bb1">imu_callback_group_</a>;</div>
+<div class="line"><span class="lineno">   99</span> </div>
+<div class="line"><span class="lineno">  100</span>  <a class="code hl_variable" href="classdyno_1_1OnlineDataProviderRos.html#af606c8c71c4b8b1fe5a11efbae1f3689">imu_sub_</a> = <a class="code hl_variable" href="classdyno_1_1DataProviderRos.html#a8114936181e3a44e6941fee36d0518cb">node_</a>-&gt;create_subscription&lt;<a class="code hl_typedef" href="classdyno_1_1OnlineDataProviderRos.html#a46d9827face795bda2109509bf584070">ImuAdaptedType</a>&gt;(</div>
+<div class="line"><span class="lineno">  101</span>      <span class="stringliteral">&quot;imu&quot;</span>, rclcpp::SensorDataQoS(),</div>
+<div class="line"><span class="lineno">  102</span>      [&amp;](<span class="keyword">const</span> <a class="code hl_struct" href="structdyno_1_1ImuMeasurement.html">dyno::ImuMeasurement</a>&amp; imu) -&gt; <span class="keywordtype">void</span> {</div>
+<div class="line"><span class="lineno">  103</span>        <span class="keywordflow">if</span> (!<a class="code hl_variable" href="classdyno_1_1DataProvider.html#a7fec88275bd9e687cc846a1c9095f767">imu_single_input_callback_</a>) {</div>
+<div class="line"><span class="lineno">  104</span>          RCLCPP_ERROR_THROTTLE(</div>
+<div class="line"><span class="lineno">  105</span>              <a class="code hl_variable" href="classdyno_1_1DataProviderRos.html#a8114936181e3a44e6941fee36d0518cb">node_</a>-&gt;get_logger(), *<a class="code hl_variable" href="classdyno_1_1DataProviderRos.html#a8114936181e3a44e6941fee36d0518cb">node_</a>-&gt;get_clock(), 1000,</div>
+<div class="line"><span class="lineno">  106</span>              <span class="stringliteral">&quot;Imu callback triggered but &quot;</span></div>
+<div class="line"><span class="lineno">  107</span>              <span class="stringliteral">&quot;imu_single_input_callback_ is not registered!&quot;</span>);</div>
+<div class="line"><span class="lineno">  108</span>          <span class="keywordflow">return</span>;</div>
+<div class="line"><span class="lineno">  109</span>        }</div>
+<div class="line"><span class="lineno">  110</span>        <a class="code hl_variable" href="classdyno_1_1DataProvider.html#a7fec88275bd9e687cc846a1c9095f767">imu_single_input_callback_</a>(imu);</div>
+<div class="line"><span class="lineno">  111</span>      },</div>
+<div class="line"><span class="lineno">  112</span>      imu_sub_options);</div>
+<div class="line"><span class="lineno">  113</span>}</div>
+<div class="ttc" id="aclassdyno_1_1DataProvider_html_a7fec88275bd9e687cc846a1c9095f767"><div class="ttname"><a href="classdyno_1_1DataProvider.html#a7fec88275bd9e687cc846a1c9095f767">dyno::DataProvider::imu_single_input_callback_</a></div><div class="ttdeci">ImuSingleInputCallback imu_single_input_callback_</div><div class="ttdef"><b>Definition:</b> <a href="DataProvider_8hpp_source.html#l00131">DataProvider.hpp:131</a></div></div>
+<div class="ttc" id="aclassdyno_1_1OnlineDataProviderRos_html_a182f1c23dfe3c118bb06c770107e1bb1"><div class="ttname"><a href="classdyno_1_1OnlineDataProviderRos.html#a182f1c23dfe3c118bb06c770107e1bb1">dyno::OnlineDataProviderRos::imu_callback_group_</a></div><div class="ttdeci">rclcpp::CallbackGroup::SharedPtr imu_callback_group_</div><div class="ttdef"><b>Definition:</b> <a href="OnlineDataProviderRos_8hpp_source.html#l00133">OnlineDataProviderRos.hpp:133</a></div></div>
+<div class="ttc" id="aclassdyno_1_1OnlineDataProviderRos_html_a46d9827face795bda2109509bf584070"><div class="ttname"><a href="classdyno_1_1OnlineDataProviderRos.html#a46d9827face795bda2109509bf584070">dyno::OnlineDataProviderRos::ImuAdaptedType</a></div><div class="ttdeci">rclcpp::adapt_type&lt; dyno::ImuMeasurement &gt;::as&lt; sensor_msgs::msg::Imu &gt; ImuAdaptedType</div><div class="ttdef"><b>Definition:</b> <a href="OnlineDataProviderRos_8hpp_source.html#l00134">OnlineDataProviderRos.hpp:135</a></div></div>
+<div class="ttc" id="astructdyno_1_1ImuMeasurement_html"><div class="ttname"><a href="structdyno_1_1ImuMeasurement.html">dyno::ImuMeasurement</a></div><div class="ttdef"><b>Definition:</b> <a href="ImuMeasurements_8hpp_source.html#l00038">ImuMeasurements.hpp:38</a></div></div>
+</div><!-- fragment -->
+<p class="reference">References <a class="el" href="classdyno_1_1OnlineDataProviderRos.html#a182f1c23dfe3c118bb06c770107e1bb1">imu_callback_group_</a>, <a class="el" href="classdyno_1_1DataProvider.html#a7fec88275bd9e687cc846a1c9095f767">dyno::DataProvider::imu_single_input_callback_</a>, <a class="el" href="classdyno_1_1OnlineDataProviderRos.html#af606c8c71c4b8b1fe5a11efbae1f3689">imu_sub_</a>, and <a class="el" href="classdyno_1_1DataProviderRos.html#a8114936181e3a44e6941fee36d0518cb">dyno::DataProviderRos::node_</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1OnlineDataProviderRos.html#a56ed20eb32809730f7cfa3e1f216cf29">setupSubscribers()</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classdyno_1_1OnlineDataProviderRos_a9de803a0df3bddbcc9755c440e87fcb3_icgraph.png" border="0" usemap="#aclassdyno_1_1OnlineDataProviderRos_a9de803a0df3bddbcc9755c440e87fcb3_icgraph" alt=""/></div>
+<map name="aclassdyno_1_1OnlineDataProviderRos_a9de803a0df3bddbcc9755c440e87fcb3_icgraph" id="aclassdyno_1_1OnlineDataProviderRos_a9de803a0df3bddbcc9755c440e87fcb3_icgraph">
+<area shape="rect" title=" " alt="" coords="243,5,432,45"/>
+<area shape="rect" href="classdyno_1_1OnlineDataProviderRos.html#a56ed20eb32809730f7cfa3e1f216cf29" title="Connects all subscribers." alt="" coords="5,5,195,45"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a77e9e4b8d9a84ca09cc641b0cb8692c8" name="a77e9e4b8d9a84ca09cc641b0cb8692c8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a77e9e4b8d9a84ca09cc641b0cb8692c8">&#9670;&#160;</a></span>unsubscribeImages()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void dyno::OnlineDataProviderRos::unsubscribeImages </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implemented in <a class="el" href="classdyno_1_1AllImagesOnlineProviderRos.html#ad8e98fadc2df8024ca495c92b60b11e5">dyno::AllImagesOnlineProviderRos</a>, and <a class="el" href="classdyno_1_1RGBDOnlineProviderRos.html#aff03d49951571ef93cc866790a4cce5c">dyno::RGBDOnlineProviderRos</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1OnlineDataProviderRos.html#a7a29e46f09c1a033d158e4c43585e508">shutdown()</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classdyno_1_1OnlineDataProviderRos_a77e9e4b8d9a84ca09cc641b0cb8692c8_icgraph.png" border="0" usemap="#aclassdyno_1_1OnlineDataProviderRos_a77e9e4b8d9a84ca09cc641b0cb8692c8_icgraph" alt=""/></div>
+<map name="aclassdyno_1_1OnlineDataProviderRos_a77e9e4b8d9a84ca09cc641b0cb8692c8_icgraph" id="aclassdyno_1_1OnlineDataProviderRos_a77e9e4b8d9a84ca09cc641b0cb8692c8_icgraph">
+<area shape="rect" title=" " alt="" coords="243,5,432,45"/>
+<area shape="rect" href="classdyno_1_1OnlineDataProviderRos.html#a7a29e46f09c1a033d158e4c43585e508" title="Disconnects all subscribers." alt="" coords="5,5,195,45"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a04b15cc8cb8128d53f5bb6e889818a98" name="a04b15cc8cb8128d53f5bb6e889818a98"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a04b15cc8cb8128d53f5bb6e889818a98">&#9670;&#160;</a></span>updateAndCheckParams()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void dyno::OnlineDataProviderRos::updateAndCheckParams </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classdyno_1_1DynoParams.html">DynoParams</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Checks all params are configured correctly for this (derived) data-loader and updates them if necessary. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">dyno_params</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Reimplemented in <a class="el" href="classdyno_1_1RGBDOnlineProviderRos.html#aa8fc453805bf2db5c8193367a0fad3e9">dyno::RGBDOnlineProviderRos</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="OnlineDataProviderRos_8hpp_source.html#l00120">120</a> of file <a class="el" href="OnlineDataProviderRos_8hpp_source.html">OnlineDataProviderRos.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  120</span>{};</div>
+</div><!-- fragment -->
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
@@ -741,42 +735,16 @@ false </dd></dl>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
 <p>Driving frame id for the enture dynosam pipeline. </p>
 
-<p class="definition">Definition at line <a class="el" href="OnlineDataProviderRos_8hpp_source.html#l00105">105</a> of file <a class="el" href="OnlineDataProviderRos_8hpp_source.html">OnlineDataProviderRos.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="OnlineDataProviderRos_8hpp_source.html#l00128">128</a> of file <a class="el" href="OnlineDataProviderRos_8hpp_source.html">OnlineDataProviderRos.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1OnlineDataProviderRos.html#a7c809e378b5d4b807e80abb43c0da23a">connectImages()</a>.</p>
-
-</div>
-</div>
-<a id="ab58c07d0a7b48bf52c8108e399357b30" name="ab58c07d0a7b48bf52c8108e399357b30"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab58c07d0a7b48bf52c8108e399357b30">&#9670;&#160;</a></span>image_subscriber_</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">MultiSyncBase::Ptr dyno::OnlineDataProviderRos::image_subscriber_</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="OnlineDataProviderRos_8hpp_source.html#l00106">106</a> of file <a class="el" href="OnlineDataProviderRos_8hpp_source.html">OnlineDataProviderRos.hpp</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1OnlineDataProviderRos.html#a7c809e378b5d4b807e80abb43c0da23a">connectImages()</a>, and <a class="el" href="classdyno_1_1OnlineDataProviderRos.html#a7a29e46f09c1a033d158e4c43585e508">shutdown()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1AllImagesOnlineProviderRos.html#aa919b75571cfe2e8ffd8a0e8dc0c1c51">dyno::AllImagesOnlineProviderRos::subscribeImages()</a>, and <a class="el" href="classdyno_1_1RGBDOnlineProviderRos.html#a2d8711722bb51a96c4cc99f2b79069b9">dyno::RGBDOnlineProviderRos::subscribeImages()</a>.</p>
 
 </div>
 </div>
@@ -800,9 +768,9 @@ false </dd></dl>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="OnlineDataProviderRos_8hpp_source.html#l00108">108</a> of file <a class="el" href="OnlineDataProviderRos_8hpp_source.html">OnlineDataProviderRos.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="OnlineDataProviderRos_8hpp_source.html#l00133">133</a> of file <a class="el" href="OnlineDataProviderRos_8hpp_source.html">OnlineDataProviderRos.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1OnlineDataProviderRos.html#ab4a159eb8a44bd46697f86256783dfd7">connectImu()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1OnlineDataProviderRos.html#a9de803a0df3bddbcc9755c440e87fcb3">subscribeImu()</a>.</p>
 
 </div>
 </div>
@@ -826,9 +794,59 @@ false </dd></dl>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="OnlineDataProviderRos_8hpp_source.html#l00111">111</a> of file <a class="el" href="OnlineDataProviderRos_8hpp_source.html">OnlineDataProviderRos.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="OnlineDataProviderRos_8hpp_source.html#l00136">136</a> of file <a class="el" href="OnlineDataProviderRos_8hpp_source.html">OnlineDataProviderRos.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1OnlineDataProviderRos.html#ab4a159eb8a44bd46697f86256783dfd7">connectImu()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1OnlineDataProviderRos.html#a7a29e46f09c1a033d158e4c43585e508">shutdown()</a>, and <a class="el" href="classdyno_1_1OnlineDataProviderRos.html#a9de803a0df3bddbcc9755c440e87fcb3">subscribeImu()</a>.</p>
+
+</div>
+</div>
+<a id="a516af70a585d16fc54783262a767fb9c" name="a516af70a585d16fc54783262a767fb9c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a516af70a585d16fc54783262a767fb9c">&#9670;&#160;</a></span>is_connected</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::atomic_bool dyno::OnlineDataProviderRos::is_connected {false}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="OnlineDataProviderRos_8hpp_source.html#l00138">138</a> of file <a class="el" href="OnlineDataProviderRos_8hpp_source.html">OnlineDataProviderRos.hpp</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1OnlineDataProviderRos.html#a56ed20eb32809730f7cfa3e1f216cf29">setupSubscribers()</a>, <a class="el" href="classdyno_1_1OnlineDataProviderRos.html#a7a29e46f09c1a033d158e4c43585e508">shutdown()</a>, and <a class="el" href="classdyno_1_1OnlineDataProviderRos.html#ace65280b44a739073adfba0fad1ae759">spin()</a>.</p>
+
+</div>
+</div>
+<a id="a3f1a84c94a80822ffc3ea6a307ed3eb0" name="a3f1a84c94a80822ffc3ea6a307ed3eb0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3f1a84c94a80822ffc3ea6a307ed3eb0">&#9670;&#160;</a></span>params_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structdyno_1_1OnlineDataProviderRosParams.html">OnlineDataProviderRosParams</a> dyno::OnlineDataProviderRos::params_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="OnlineDataProviderRos_8hpp_source.html#l00126">126</a> of file <a class="el" href="OnlineDataProviderRos_8hpp_source.html">OnlineDataProviderRos.hpp</a>.</p>
 
 </div>
 </div>

@@ -1,12 +1,11 @@
 <map id="dyno::FeatureTrackerBase::isWithinShrunkenImage" name="dyno::FeatureTrackerBase::isWithinShrunkenImage">
-<area shape="rect" id="node1" title="Checks if a keypoint is within an image, taking into account the shrink row/col values in the params...." alt="" coords="731,184,920,224"/>
+<area shape="rect" id="node1" title="Checks if a keypoint is within an image, taking into account the shrink row/col values in the params...." alt="" coords="731,152,920,192"/>
 <area shape="rect" id="node2" href="$classdyno_1_1KltFeatureTracker.html#a4870d167d7dbd1a04a8d7d15a376a573" title=" " alt="" coords="479,5,654,45"/>
 <area shape="rect" id="node3" href="$classdyno_1_1KltFeatureTracker.html#a8f26d8fe56edd3e579a879e82a40457f" title="Tracks features using KLT tracker between the previous image and the current one." alt="" coords="228,63,403,103"/>
 <area shape="rect" id="node5" href="$classdyno_1_1FeatureTrackerBase.html#af4e17d3f13305f40698a9b284d767c74" title=" " alt="" coords="472,120,661,160"/>
 <area shape="rect" id="node6" href="$classdyno_1_1FeatureTrackerBase.html#aac4fd637116f1a55b857968d6f84d33d" title=" " alt="" coords="451,184,683,224"/>
-<area shape="rect" id="node7" href="$classdyno_1_1FeatureTracker.html#a31f607c5d1fca4c1ace6af223abb5ead" title=" " alt="" coords="488,248,645,288"/>
-<area shape="rect" id="node8" href="$classdyno_1_1FeatureTracker.html#a145614fe29bef7728075492870ac9c41" title=" " alt="" coords="488,312,645,352"/>
-<area shape="rect" id="node10" href="$classdyno_1_1FeatureTracker.html#a4796a29c1f89cde0ace1668fc8fcd9a3" title=" " alt="" coords="488,376,645,416"/>
+<area shape="rect" id="node7" href="$classdyno_1_1FeatureTracker.html#a145614fe29bef7728075492870ac9c41" title=" " alt="" coords="488,248,645,288"/>
+<area shape="rect" id="node9" href="$classdyno_1_1FeatureTracker.html#a4796a29c1f89cde0ace1668fc8fcd9a3" title=" " alt="" coords="488,312,645,352"/>
 <area shape="rect" id="node4" href="$classdyno_1_1KltFeatureTracker.html#ab15aaa39f0c3adc62037d718b98039c0" title="Track features between frames k&#45;1 and the current set of images (at k)." alt="" coords="5,35,180,75"/>
-<area shape="rect" id="node9" href="$classdyno_1_1FeatureTracker.html#a40ee79c94fe2de7f16d2a4508cc2ba11" title=" " alt="" coords="237,344,394,384"/>
+<area shape="rect" id="node8" href="$classdyno_1_1FeatureTracker.html#a40ee79c94fe2de7f16d2a4508cc2ba11" title=" " alt="" coords="237,280,394,320"/>
 </map>

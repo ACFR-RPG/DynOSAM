@@ -6,7 +6,7 @@
 <area shape="rect" id="node5" href="$classdyno_1_1FeatureContainer.html#a4d5e186005b95a09871538e314922a11" title="If the container is empty." alt="" coords="543,64,717,104"/>
 <area shape="rect" id="node6" href="$classdyno_1_1Frame.html#ad8265cee40cb874631176482a9a40fc3" title="Gets the total number of dynamic features observed at this frame. Includes usables (inliers) and outl..." alt="" coords="503,243,757,268"/>
 <area shape="rect" id="node8" href="$classdyno_1_1Frame.html#a5d875b237cb599cd8f5a2c13feaf0be8" title="Gets the total number of static features observed at this frame. Includes usables (inliers) and outli..." alt="" coords="513,292,747,318"/>
-<area shape="rect" id="node9" href="$classdyno_1_1FeatureTracker.html#ab50422938e62bccc34295c155357213a" title="Check which objects require new features to be detected on them based on a set of &#39;keyframing&#39; criter..." alt="" coords="551,393,709,433"/>
+<area shape="rect" id="node9" href="$classdyno_1_1FeatureTracker.html#aa56ab13c85913180c0a8169458452d3b" title="Check which objects require new features to be detected on them based on a set of &#39;keyframing&#39; criter..." alt="" coords="551,393,709,433"/>
 <area shape="rect" id="node12" href="$classdyno_1_1FeatureTracker.html#a4796a29c1f89cde0ace1668fc8fcd9a3" title=" " alt="" coords="263,336,420,376"/>
 <area shape="rect" id="node7" href="$classdyno_1_1Frame.html#afe219d6ce6e007934982c6594fa70f65" title="Gets the total number of features (static + dynamic) in this frame. Includes usables (inliers) and ou..." alt="" coords="228,264,455,290"/>
 <area shape="rect" id="node10" href="$classdyno_1_1FeatureTracker.html#a145614fe29bef7728075492870ac9c41" title=" " alt="" coords="263,400,420,440"/>

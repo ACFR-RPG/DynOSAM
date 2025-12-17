@@ -233,7 +233,7 @@ Private Attributes</h2></td></tr>
 <div class="line"><span class="lineno">  194</span> </div>
 <div class="line"><span class="lineno">  195</span>  std::vector&lt;cv::KeyPoint&gt; raw_keypoints;</div>
 <div class="line"><span class="lineno">  196</span>  {</div>
-<div class="line"><span class="lineno">  197</span>    utils::TimingStatsCollector timer(<span class="stringliteral">&quot;feature_detector.detect&quot;</span>);</div>
+<div class="line"><span class="lineno">  197</span>    utils::ChronoTimingStats timer(<span class="stringliteral">&quot;feature_detector.detect&quot;</span>);</div>
 <div class="line"><span class="lineno">  198</span>    <a class="code hl_variable" href="classdyno_1_1SparseFeatureDetector.html#ae8ef22f1d65d5063c5a2ead2bb5f57df">feature_detector_</a>-&gt;detect(processed_image, raw_keypoints, detection_mask);</div>
 <div class="line"><span class="lineno">  199</span>  }</div>
 <div class="line"><span class="lineno">  200</span> </div>
@@ -249,7 +249,7 @@ Private Attributes</h2></td></tr>
 <div class="line"><span class="lineno">  210</span>    Eigen::MatrixXd binning_mask = anms_params.<a class="code hl_variable" href="structdyno_1_1TrackerParams_1_1AnmsParams.html#a5fd21b756714cdc7d21a3e36ee46c18d">binning_mask</a>;</div>
 <div class="line"><span class="lineno">  211</span> </div>
 <div class="line"><span class="lineno">  212</span>    {</div>
-<div class="line"><span class="lineno">  213</span>      utils::TimingStatsCollector timer(<span class="stringliteral">&quot;feature_detector.anms&quot;</span>);</div>
+<div class="line"><span class="lineno">  213</span>      utils::ChronoTimingStats timer(<span class="stringliteral">&quot;feature_detector.anms&quot;</span>);</div>
 <div class="line"><span class="lineno">  214</span>      max_keypoints = <a class="code hl_variable" href="classdyno_1_1SparseFeatureDetector.html#a589962cf4694f2e23a14ef4744d8cc36">non_maximum_supression_</a>-&gt;suppressNonMax(</div>
 <div class="line"><span class="lineno">  215</span>          raw_keypoints, nr_corners_needed, tolerance, processed_image.cols,</div>
 <div class="line"><span class="lineno">  216</span>          processed_image.rows, anms_params.nr_horizontal_bins,</div>
@@ -265,7 +265,7 @@ Private Attributes</h2></td></tr>
 <div class="line"><span class="lineno">  226</span> </div>
 <div class="line"><span class="lineno">  227</span>    <span class="keyword">const</span> <span class="keyword">auto</span>&amp; subpixel_corner_refinement_params =</div>
 <div class="line"><span class="lineno">  228</span>        <a class="code hl_variable" href="classdyno_1_1SparseFeatureDetector.html#a5be45cde180755f34d29edd9d5185bf2">tracker_params_</a>.<a class="code hl_variable" href="structdyno_1_1TrackerParams.html#afffb056ebf98b21326c19b1c13b1a9a6">subpixel_corner_refinement_params</a>;</div>
-<div class="line"><span class="lineno">  229</span>    utils::TimingStatsCollector timer(<span class="stringliteral">&quot;feature_detector.sub_pix&quot;</span>);</div>
+<div class="line"><span class="lineno">  229</span>    utils::ChronoTimingStats timer(<span class="stringliteral">&quot;feature_detector.sub_pix&quot;</span>);</div>
 <div class="line"><span class="lineno">  230</span>    cv::cornerSubPix(processed_image, points,</div>
 <div class="line"><span class="lineno">  231</span>                     subpixel_corner_refinement_params.window_size,</div>
 <div class="line"><span class="lineno">  232</span>                     subpixel_corner_refinement_params.zero_zone,</div>

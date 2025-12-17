@@ -8,7 +8,7 @@ var searchData=
   ['backend_5fparams_5f_5',['backend_params_',['../classdyno_1_1DynoParams.html#aba77d9978b33088e8a8c0433232b7e31',1,'dyno::DynoParams']]],
   ['backend_5fpipeline_5f_6',['backend_pipeline_',['../classdyno_1_1DynoPipelineManager.html#ac54c14380931cb8fa4c7ccbd1b2ab2b9',1,'dyno::DynoPipelineManager::backend_pipeline_()'],['../classdyno_1_1BackendExperimentsNode.html#a9ba888b7ffc0e1b09d6406efc3eb02fd',1,'dyno::BackendExperimentsNode::backend_pipeline_()']]],
   ['backend_5fpipeline_5fspinner_5f_7',['backend_pipeline_spinner_',['../classdyno_1_1DynoPipelineManager.html#a744ba1125f05940b0b2374d059e5e7d9',1,'dyno::DynoPipelineManager']]],
-  ['backend_5ftype_8',['backend_type',['../classdyno_1_1DynoParams.html#a9f35a51c05ba39f025ee648083a7c10c',1,'dyno::DynoParams::backend_type()'],['../structdyno_1_1BackendFactory_1_1PrivateBackendType.html#ae7e115d3d75bd4acad51355282ca0f4f',1,'dyno::BackendFactory::PrivateBackendType::backend_type()']]],
+  ['backend_5ftype_8',['backend_type',['../structdyno_1_1BackendFactory_1_1PrivateBackendType.html#ae7e115d3d75bd4acad51355282ca0f4f',1,'dyno::BackendFactory::PrivateBackendType::backend_type()'],['../classdyno_1_1DynoParams.html#a9f35a51c05ba39f025ee648083a7c10c',1,'dyno::DynoParams::backend_type()']]],
   ['backend_5ftype_5f_9',['backend_type_',['../classdyno_1_1BackendFormulationFactory.html#af5f7ef04bf57428f858429ff9277b85c',1,'dyno::BackendFormulationFactory']]],
   ['backend_5fviz_10',['backend_viz',['../structdyno_1_1BackendWrapper.html#adc679ce0b01e0a7790f95e91a70f173c',1,'dyno::BackendWrapper']]],
   ['backend_5fviz_5fpipeline_5f_11',['backend_viz_pipeline_',['../classdyno_1_1DynoPipelineManager.html#ae289b4f6787dc5d37e5232a1b1a61536',1,'dyno::DynoPipelineManager']]],
@@ -38,8 +38,10 @@ var searchData=
   ['boundary_5fmask_35',['boundary_mask',['../structdyno_1_1vision__tools_1_1ObjectBoundaryMaskResult.html#ad9dd5629b10f507672aa4b623ca6f503',1,'dyno::vision_tools::ObjectBoundaryMaskResult']]],
   ['bounding_5fbox_36',['bounding_box',['../structdyno_1_1ObjectDetection.html#ad9fabdcfbe6598d220f7756d65425dd1',1,'dyno::ObjectDetection']]],
   ['bounding_5fbox_5f_37',['bounding_box_',['../structdyno_1_1ObjectPoseGT.html#a53b962d61b679ab943d5140b98e7db02',1,'dyno::ObjectPoseGT']]],
-  ['boxoffset_38',['BoxOffset',['../structdyno_1_1YoloV8ModelInfo_1_1Constants.html#a3275c0a8ed88e0e5d113597e6178ff8c',1,'dyno::YoloV8ModelInfo::Constants']]],
-  ['br_39',['BR',['../classdyno_1_1ExtractorNode.html#a5c61c8f715a89d1d801071ad92ba540c',1,'dyno::ExtractorNode']]],
-  ['buffer_5f_40',['buffer_',['../classdyno_1_1ThreadsafeImuBuffer.html#a5575442e9b1023e50060c58cea10e8c6',1,'dyno::ThreadsafeImuBuffer']]],
-  ['buffer_5flength_5fseconds_5f_41',['buffer_length_seconds_',['../classdyno_1_1ThreadsafeTemporalBuffer.html#ad79e06fb9e788d7babf170e2dde28633',1,'dyno::ThreadsafeTemporalBuffer']]]
+  ['box_5foffset_38',['box_offset',['../structdyno_1_1internal_1_1YoloKernelConfig.html#afef124d873a0eb9a096c9d370192402f',1,'dyno::internal::YoloKernelConfig']]],
+  ['boxes_39',['boxes',['../structdyno_1_1internal_1_1YoloDetectionGpuMatDevice.html#aa4dc7e77679af45dc49fc9e43e885914',1,'dyno::internal::YoloDetectionGpuMatDevice']]],
+  ['boxoffset_40',['BoxOffset',['../structdyno_1_1YoloV8ModelInfo_1_1Constants.html#a3275c0a8ed88e0e5d113597e6178ff8c',1,'dyno::YoloV8ModelInfo::Constants']]],
+  ['br_41',['BR',['../classdyno_1_1ExtractorNode.html#a5c61c8f715a89d1d801071ad92ba540c',1,'dyno::ExtractorNode']]],
+  ['buffer_5f_42',['buffer_',['../classdyno_1_1ThreadsafeImuBuffer.html#a5575442e9b1023e50060c58cea10e8c6',1,'dyno::ThreadsafeImuBuffer']]],
+  ['buffer_5flength_5fseconds_5f_43',['buffer_length_seconds_',['../classdyno_1_1ThreadsafeTemporalBuffer.html#ad79e06fb9e788d7babf170e2dde28633',1,'dyno::ThreadsafeTemporalBuffer']]]
 ];

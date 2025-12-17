@@ -1,5 +1,5 @@
 <map id="dynosam_nn/include/dynosam_nn/trackers/ObjectTracker.hpp" name="dynosam_nn/include/dynosam_nn/trackers/ObjectTracker.hpp">
-<area shape="rect" id="node1" title=" " alt="" coords="131,5,296,60"/>
-<area shape="rect" id="node2" href="$YoloObjectDetector_8cc.html" title=" " alt="" coords="5,108,205,148"/>
-<area shape="rect" id="node3" href="$ObjectTracker_8cc.html" title=" " alt="" coords="229,108,413,148"/>
+<area shape="rect" id="node1" title=" " alt="" coords="143,5,309,60"/>
+<area shape="rect" id="node2" href="$YoloV8ObjectDetector_8cc.html" title=" " alt="" coords="5,108,223,148"/>
+<area shape="rect" id="node3" href="$ObjectTracker_8cc.html" title=" " alt="" coords="247,108,431,148"/>
 </map>

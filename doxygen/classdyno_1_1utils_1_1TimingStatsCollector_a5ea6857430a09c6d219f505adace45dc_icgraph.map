@@ -1,4 +1,0 @@
-<map id="dyno::utils::TimingStatsCollector::tocAndLog" name="dyno::utils::TimingStatsCollector::tocAndLog">
-<area shape="rect" id="node1" title="Creates a toc time to compare against the latest tic time and logs the diff as sample to the collecto..." alt="" coords="288,5,464,45"/>
-<area shape="rect" id="node2" href="$classdyno_1_1utils_1_1TimingStatsCollector.html#ab6affecf7e30d7c5c47e3487ac75e868" title=" " alt="" coords="5,5,240,45"/>
-</map>

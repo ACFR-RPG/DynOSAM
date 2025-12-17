@@ -1,9 +1,10 @@
 <map id="dyno::maskTypeFromString" name="dyno::maskTypeFromString">
-<area shape="rect" id="node1" title="Converts an input string into a enun MaskType." alt="" coords="1044,45,1243,70"/>
-<area shape="rect" id="node2" href="$structdyno_1_1KittiDataLoader_1_1Params.html#a48b0a50d7f9066da3edf421d77154f36" title=" " alt="" coords="811,5,975,45"/>
-<area shape="rect" id="node7" href="$structdyno_1_1VirtualKittiDataLoader_1_1Params.html#a6d941f69683e696948874f4d0b955f9a" title=" " alt="" coords="789,69,996,109"/>
-<area shape="rect" id="node3" href="$structdyno_1_1DataProviderFactory.html#ab0b11d2d2d9773c6a36743e1ef5f552a" title=" " alt="" coords="547,37,741,77"/>
-<area shape="rect" id="node4" href="$classdyno_1_1DynoNode.html#ad5ec1dc5c7b6faa13607bed8444e49c6" title=" " alt="" coords="288,37,499,77"/>
-<area shape="rect" id="node5" href="$classdyno_1_1BackendExperimentsNode.html#ab5270451ea207126ab1937ea3f54f521" title=" " alt="" coords="5,5,240,45"/>
-<area shape="rect" id="node6" href="$classdyno_1_1DynoPipelineManagerRos.html#a9b111354972184ae191c76dfb88f6820" title=" " alt="" coords="20,69,225,109"/>
+<area shape="rect" id="node1" title="Converts an input string into a enun MaskType." alt="" coords="1323,45,1521,70"/>
+<area shape="rect" id="node2" href="$structdyno_1_1KittiDataLoader_1_1Params.html#a48b0a50d7f9066da3edf421d77154f36" title=" " alt="" coords="1089,5,1253,45"/>
+<area shape="rect" id="node8" href="$structdyno_1_1VirtualKittiDataLoader_1_1Params.html#a6d941f69683e696948874f4d0b955f9a" title=" " alt="" coords="1068,69,1275,109"/>
+<area shape="rect" id="node3" href="$structdyno_1_1DataProviderFactory.html#ab0b11d2d2d9773c6a36743e1ef5f552a" title=" " alt="" coords="825,37,1020,77"/>
+<area shape="rect" id="node4" href="$classdyno_1_1DynoNode.html#a8edd905e1335eadb14986f81ccbbcac9" title=" " alt="" coords="547,37,777,77"/>
+<area shape="rect" id="node5" href="$classdyno_1_1DynoNode.html#ad5ec1dc5c7b6faa13607bed8444e49c6" title=" " alt="" coords="288,37,499,77"/>
+<area shape="rect" id="node6" href="$classdyno_1_1BackendExperimentsNode.html#ab5270451ea207126ab1937ea3f54f521" title=" " alt="" coords="5,5,240,45"/>
+<area shape="rect" id="node7" href="$classdyno_1_1DynoPipelineManagerRos.html#a9b111354972184ae191c76dfb88f6820" title=" " alt="" coords="20,69,225,109"/>
 </map>

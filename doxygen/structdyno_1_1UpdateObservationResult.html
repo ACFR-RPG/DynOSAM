@@ -82,6 +82,9 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
+<p>Result of a static/dynamic point update by calling <a class="el" href="classdyno_1_1Formulation.html#a74de91cf6b4755060af63627d28fed2c" title="Updates the static-point part of the factor graph for frame k. This contains all the bookeeping logic...">Formulation&lt;MAP&gt;::updateStaticObservations</a> or <a class="el" href="classdyno_1_1Formulation.html#ad78d57e7de23e30b9aa287a3939bb3a9" title="Updates the dyanmic-point part of the factor graph for frame k. This contains all the big-boi bookeep...">Formulation&lt;MAP&gt;::updateDynamicObservations</a>.  
+ <a href="structdyno_1_1UpdateObservationResult.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="Formulation_8hpp_source.html">Formulation.hpp</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
@@ -103,8 +106,10 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a226d4f3aef91f50c13d02c7566d9328b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock">
-<p class="definition">Definition at line <a class="el" href="Formulation_8hpp_source.html#l00077">77</a> of file <a class="el" href="Formulation_8hpp_source.html">Formulation.hpp</a>.</p>
+<div class="textblock"><p>Result of a static/dynamic point update by calling <a class="el" href="classdyno_1_1Formulation.html#a74de91cf6b4755060af63627d28fed2c" title="Updates the static-point part of the factor graph for frame k. This contains all the bookeeping logic...">Formulation&lt;MAP&gt;::updateStaticObservations</a> or <a class="el" href="classdyno_1_1Formulation.html#ad78d57e7de23e30b9aa287a3939bb3a9" title="Updates the dyanmic-point part of the factor graph for frame k. This contains all the big-boi bookeep...">Formulation&lt;MAP&gt;::updateDynamicObservations</a>. </p>
+<p>The objects affected per frame should be specified and any additional paramters for the optimisation (i.e gtsam::ISAM2UpdateParams) can be set, which will then be parsed to the optimiser by the <a class="el" href="classdyno_1_1BackendModule.html" title="Base class to actually do processing. Data passed to this module from the frontend.">BackendModule</a>. </p>
+
+<p class="definition">Definition at line <a class="el" href="Formulation_8hpp_source.html#l00088">88</a> of file <a class="el" href="Formulation_8hpp_source.html">Formulation.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a40331d9ed7c6dc2a1bbfa8cd46157702" name="a40331d9ed7c6dc2a1bbfa8cd46157702"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a40331d9ed7c6dc2a1bbfa8cd46157702">&#9670;&#160;</a></span>UpdateObservationResult() <span class="overload">[1/2]</span></h2>
@@ -129,8 +134,8 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Formulation_8hpp_source.html#l00085">85</a> of file <a class="el" href="Formulation_8hpp_source.html">Formulation.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   85</span>{}</div>
+<p class="definition">Definition at line <a class="el" href="Formulation_8hpp_source.html#l00096">96</a> of file <a class="el" href="Formulation_8hpp_source.html">Formulation.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   96</span>{}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -158,13 +163,13 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Formulation_8hpp_source.html#l00087">87</a> of file <a class="el" href="Formulation_8hpp_source.html">Formulation.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   87</span>                                                                        {</div>
-<div class="line"><span class="lineno">   88</span>    <span class="keywordflow">if</span> (update_params.enable_debug_info) {</div>
-<div class="line"><span class="lineno">   89</span>      this-&gt;<a class="code hl_variable" href="structdyno_1_1UpdateObservationResult.html#a8a980ad2e2f463b0a78b5c6e8a412976">debug_info</a> = DebugInfo();</div>
-<div class="line"><span class="lineno">   90</span>    }</div>
-<div class="line"><span class="lineno">   91</span>  }</div>
-<div class="ttc" id="astructdyno_1_1UpdateObservationResult_html_a8a980ad2e2f463b0a78b5c6e8a412976"><div class="ttname"><a href="structdyno_1_1UpdateObservationResult.html#a8a980ad2e2f463b0a78b5c6e8a412976">dyno::UpdateObservationResult::debug_info</a></div><div class="ttdeci">DebugInfo::Optional debug_info</div><div class="ttdef"><b>Definition:</b> <a href="Formulation_8hpp_source.html#l00080">Formulation.hpp:80</a></div></div>
+<p class="definition">Definition at line <a class="el" href="Formulation_8hpp_source.html#l00098">98</a> of file <a class="el" href="Formulation_8hpp_source.html">Formulation.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   98</span>                                                                        {</div>
+<div class="line"><span class="lineno">   99</span>    <span class="keywordflow">if</span> (update_params.enable_debug_info) {</div>
+<div class="line"><span class="lineno">  100</span>      this-&gt;<a class="code hl_variable" href="structdyno_1_1UpdateObservationResult.html#a8a980ad2e2f463b0a78b5c6e8a412976">debug_info</a> = DebugInfo();</div>
+<div class="line"><span class="lineno">  101</span>    }</div>
+<div class="line"><span class="lineno">  102</span>  }</div>
+<div class="ttc" id="astructdyno_1_1UpdateObservationResult_html_a8a980ad2e2f463b0a78b5c6e8a412976"><div class="ttname"><a href="structdyno_1_1UpdateObservationResult.html#a8a980ad2e2f463b0a78b5c6e8a412976">dyno::UpdateObservationResult::debug_info</a></div><div class="ttdeci">DebugInfo::Optional debug_info</div><div class="ttdef"><b>Definition:</b> <a href="Formulation_8hpp_source.html#l00091">Formulation.hpp:91</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="structdyno_1_1UpdateObservationResult.html#a8a980ad2e2f463b0a78b5c6e8a412976">debug_info</a>, and <a class="el" href="structdyno_1_1UpdateObservationParams.html#aaca4a55e978d91915de6b99e98e8ae3d">dyno::UpdateObservationParams::enable_debug_info</a>.</p>
 
@@ -205,30 +210,30 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Formulation_8hpp_source.html#l00093">93</a> of file <a class="el" href="Formulation_8hpp_source.html">Formulation.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   93</span>                                                                  {</div>
-<div class="line"><span class="lineno">   94</span>    <span class="keywordflow">if</span> (!<a class="code hl_variable" href="structdyno_1_1UpdateObservationResult.html#aa8a56a0e3632e23508a0215690caeceb">objects_affected_per_frame</a>.exists(object_id)) {</div>
-<div class="line"><span class="lineno">   95</span>      <a class="code hl_variable" href="structdyno_1_1UpdateObservationResult.html#aa8a56a0e3632e23508a0215690caeceb">objects_affected_per_frame</a>.insert2(object_id, std::set&lt;FrameId&gt;{});</div>
-<div class="line"><span class="lineno">   96</span>    }</div>
-<div class="line"><span class="lineno">   97</span>    <a class="code hl_variable" href="structdyno_1_1UpdateObservationResult.html#aa8a56a0e3632e23508a0215690caeceb">objects_affected_per_frame</a>[object_id].insert(frame_id);</div>
-<div class="line"><span class="lineno">   98</span>  }</div>
-<div class="ttc" id="astructdyno_1_1UpdateObservationResult_html_aa8a56a0e3632e23508a0215690caeceb"><div class="ttname"><a href="structdyno_1_1UpdateObservationResult.html#aa8a56a0e3632e23508a0215690caeceb">dyno::UpdateObservationResult::objects_affected_per_frame</a></div><div class="ttdeci">gtsam::FastMap&lt; ObjectId, std::set&lt; FrameId &gt; &gt; objects_affected_per_frame</div><div class="ttdef"><b>Definition:</b> <a href="Formulation_8hpp_source.html#l00079">Formulation.hpp:79</a></div></div>
+<p class="definition">Definition at line <a class="el" href="Formulation_8hpp_source.html#l00104">104</a> of file <a class="el" href="Formulation_8hpp_source.html">Formulation.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  104</span>                                                                  {</div>
+<div class="line"><span class="lineno">  105</span>    <span class="keywordflow">if</span> (!<a class="code hl_variable" href="structdyno_1_1UpdateObservationResult.html#aa8a56a0e3632e23508a0215690caeceb">objects_affected_per_frame</a>.exists(object_id)) {</div>
+<div class="line"><span class="lineno">  106</span>      <a class="code hl_variable" href="structdyno_1_1UpdateObservationResult.html#aa8a56a0e3632e23508a0215690caeceb">objects_affected_per_frame</a>.insert2(object_id, std::set&lt;FrameId&gt;{});</div>
+<div class="line"><span class="lineno">  107</span>    }</div>
+<div class="line"><span class="lineno">  108</span>    <a class="code hl_variable" href="structdyno_1_1UpdateObservationResult.html#aa8a56a0e3632e23508a0215690caeceb">objects_affected_per_frame</a>[object_id].insert(frame_id);</div>
+<div class="line"><span class="lineno">  109</span>  }</div>
+<div class="ttc" id="astructdyno_1_1UpdateObservationResult_html_aa8a56a0e3632e23508a0215690caeceb"><div class="ttname"><a href="structdyno_1_1UpdateObservationResult.html#aa8a56a0e3632e23508a0215690caeceb">dyno::UpdateObservationResult::objects_affected_per_frame</a></div><div class="ttdeci">gtsam::FastMap&lt; ObjectId, std::set&lt; FrameId &gt; &gt; objects_affected_per_frame</div><div class="ttdef"><b>Definition:</b> <a href="Formulation_8hpp_source.html#l00090">Formulation.hpp:90</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="structdyno_1_1UpdateObservationResult.html#aa8a56a0e3632e23508a0215690caeceb">objects_affected_per_frame</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="structdyno_1_1internal_1_1StaticFormulationUpdater_1_1PTP.html#a89224a137fcdba2a535e63ffcea49fbe">dyno::internal::StaticFormulationUpdater&lt; MAP &gt;::PTP::addLandmark()</a>, <a class="el" href="classdyno_1_1HybridFormulation.html#ae65a9c76b0363dde62eb86e6c0b2b832">dyno::HybridFormulation::dynamicPointUpdateCallback()</a>, <a class="el" href="classdyno_1_1test__hybrid_1_1SmartStructurlessFormulation.html#a40673e16631d1d3e8775e33116f85f6a">dyno::test_hybrid::SmartStructurlessFormulation::dynamicPointUpdateCallback()</a>, <a class="el" href="classdyno_1_1WorldMotionFormulation.html#ad60f9621d41608943694144aad4d2e22">dyno::WorldMotionFormulation::dynamicPointUpdateCallback()</a>, <a class="el" href="classdyno_1_1WorldPoseFormulation.html#ad1e6e0a4af9b06496359ceb969405f0a">dyno::WorldPoseFormulation::dynamicPointUpdateCallback()</a>, and <a class="el" href="classdyno_1_1Formulation.html#aecc181278cdbd66990d3f5acf8b3f583">dyno::Formulation&lt; MapVision &gt;::Formulation()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="structdyno_1_1internal_1_1StaticFormulationUpdater_1_1StereoProjection.html#aec89d96460a30bce5af148fcb25d97bc">dyno::internal::StaticFormulationUpdater&lt; MAP &gt;::StereoProjection::addLandmark()</a>, <a class="el" href="structdyno_1_1internal_1_1StaticFormulationUpdater_1_1PTP.html#a89224a137fcdba2a535e63ffcea49fbe">dyno::internal::StaticFormulationUpdater&lt; MAP &gt;::PTP::addLandmark()</a>, <a class="el" href="classdyno_1_1HybridFormulation.html#ae65a9c76b0363dde62eb86e6c0b2b832">dyno::HybridFormulation::dynamicPointUpdateCallback()</a>, <a class="el" href="classdyno_1_1test__hybrid_1_1SmartStructurlessFormulation.html#a40673e16631d1d3e8775e33116f85f6a">dyno::test_hybrid::SmartStructurlessFormulation::dynamicPointUpdateCallback()</a>, <a class="el" href="classdyno_1_1WorldMotionFormulation.html#ad60f9621d41608943694144aad4d2e22">dyno::WorldMotionFormulation::dynamicPointUpdateCallback()</a>, and <a class="el" href="classdyno_1_1WorldPoseFormulation.html#ad1e6e0a4af9b06496359ceb969405f0a">dyno::WorldPoseFormulation::dynamicPointUpdateCallback()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="structdyno_1_1UpdateObservationResult_a002ddcad2bc2b520dd274acc8370d0a9_icgraph.png" border="0" usemap="#astructdyno_1_1UpdateObservationResult_a002ddcad2bc2b520dd274acc8370d0a9_icgraph" alt=""/></div>
 <map name="astructdyno_1_1UpdateObservationResult_a002ddcad2bc2b520dd274acc8370d0a9_icgraph" id="astructdyno_1_1UpdateObservationResult_a002ddcad2bc2b520dd274acc8370d0a9_icgraph">
-<area shape="rect" title=" " alt="" coords="288,177,517,217"/>
-<area shape="rect" href="structdyno_1_1internal_1_1StaticFormulationUpdater_1_1PTP.html#a89224a137fcdba2a535e63ffcea49fbe" title="Return results indicates if any factors/values were added (ie. the point was added)." alt="" coords="5,5,240,45"/>
-<area shape="rect" href="classdyno_1_1HybridFormulation.html#ae65a9c76b0363dde62eb86e6c0b2b832" title=" " alt="" coords="11,69,234,109"/>
-<area shape="rect" href="classdyno_1_1test__hybrid_1_1SmartStructurlessFormulation.html#a40673e16631d1d3e8775e33116f85f6a" title=" " alt="" coords="11,134,234,189"/>
-<area shape="rect" href="classdyno_1_1WorldMotionFormulation.html#ad60f9621d41608943694144aad4d2e22" title=" " alt="" coords="11,213,234,253"/>
-<area shape="rect" href="classdyno_1_1WorldPoseFormulation.html#ad1e6e0a4af9b06496359ceb969405f0a" title=" " alt="" coords="11,277,234,317"/>
-<area shape="rect" href="classdyno_1_1Formulation.html#aecc181278cdbd66990d3f5acf8b3f583" title=" " alt="" coords="25,341,220,381"/>
+<area shape="rect" title=" " alt="" coords="288,185,517,225"/>
+<area shape="rect" href="structdyno_1_1internal_1_1StaticFormulationUpdater_1_1StereoProjection.html#aec89d96460a30bce5af148fcb25d97bc" title="Return results indicates if any factors/values were added (ie. the point was added)." alt="" coords="5,5,240,60"/>
+<area shape="rect" href="structdyno_1_1internal_1_1StaticFormulationUpdater_1_1PTP.html#a89224a137fcdba2a535e63ffcea49fbe" title="Return results indicates if any factors/values were added (ie. the point was added)." alt="" coords="5,85,240,125"/>
+<area shape="rect" href="classdyno_1_1HybridFormulation.html#ae65a9c76b0363dde62eb86e6c0b2b832" title=" " alt="" coords="11,149,234,189"/>
+<area shape="rect" href="classdyno_1_1test__hybrid_1_1SmartStructurlessFormulation.html#a40673e16631d1d3e8775e33116f85f6a" title=" " alt="" coords="11,213,234,268"/>
+<area shape="rect" href="classdyno_1_1WorldMotionFormulation.html#ad60f9621d41608943694144aad4d2e22" title=" " alt="" coords="11,293,234,333"/>
+<area shape="rect" href="classdyno_1_1WorldPoseFormulation.html#ad1e6e0a4af9b06496359ceb969405f0a" title=" " alt="" coords="11,357,234,397"/>
 </map>
 </div>
 
@@ -247,9 +252,9 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Formulation_8hpp_source.html#l00080">80</a> of file <a class="el" href="Formulation_8hpp_source.html">Formulation.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Formulation_8hpp_source.html#l00091">91</a> of file <a class="el" href="Formulation_8hpp_source.html">Formulation.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1HybridFormulation.html#ae65a9c76b0363dde62eb86e6c0b2b832">dyno::HybridFormulation::dynamicPointUpdateCallback()</a>, <a class="el" href="classdyno_1_1test__hybrid_1_1SmartStructurlessFormulation.html#a40673e16631d1d3e8775e33116f85f6a">dyno::test_hybrid::SmartStructurlessFormulation::dynamicPointUpdateCallback()</a>, <a class="el" href="classdyno_1_1WorldMotionFormulation.html#ad60f9621d41608943694144aad4d2e22">dyno::WorldMotionFormulation::dynamicPointUpdateCallback()</a>, <a class="el" href="classdyno_1_1WorldPoseFormulation.html#ad1e6e0a4af9b06496359ceb969405f0a">dyno::WorldPoseFormulation::dynamicPointUpdateCallback()</a>, <a class="el" href="classdyno_1_1Formulation.html#a3369b4fa4dd649495e5bace0e9b715d9">dyno::Formulation&lt; MapVision &gt;::getInitialOrLinearizedSensorPose()</a>, <a class="el" href="classdyno_1_1HybridFormulation.html#ad05af62c9b437ad6613a191defeecb07">dyno::HybridFormulation::objectUpdateContext()</a>, <a class="el" href="classdyno_1_1WorldMotionFormulation.html#a3889c53e3fdf718a4cbab8d615f757f0">dyno::WorldMotionFormulation::objectUpdateContext()</a>, <a class="el" href="classdyno_1_1WorldPoseFormulation.html#a2fe402643436b3cdf4b38748317c284c">dyno::WorldPoseFormulation::objectUpdateContext()</a>, <a class="el" href="classdyno_1_1Formulation.html#ad78d57e7de23e30b9aa287a3939bb3a9">dyno::Formulation&lt; MAP &gt;::updateDynamicObservations()</a>, and <a class="el" href="structdyno_1_1UpdateObservationResult.html#ab069f0de92d758540c65728505feff0a">UpdateObservationResult()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1HybridFormulation.html#ae65a9c76b0363dde62eb86e6c0b2b832">dyno::HybridFormulation::dynamicPointUpdateCallback()</a>, <a class="el" href="classdyno_1_1test__hybrid_1_1SmartStructurlessFormulation.html#a40673e16631d1d3e8775e33116f85f6a">dyno::test_hybrid::SmartStructurlessFormulation::dynamicPointUpdateCallback()</a>, <a class="el" href="classdyno_1_1WorldMotionFormulation.html#ad60f9621d41608943694144aad4d2e22">dyno::WorldMotionFormulation::dynamicPointUpdateCallback()</a>, <a class="el" href="classdyno_1_1WorldPoseFormulation.html#ad1e6e0a4af9b06496359ceb969405f0a">dyno::WorldPoseFormulation::dynamicPointUpdateCallback()</a>, <a class="el" href="classdyno_1_1HybridFormulation.html#ad05af62c9b437ad6613a191defeecb07">dyno::HybridFormulation::objectUpdateContext()</a>, <a class="el" href="classdyno_1_1WorldMotionFormulation.html#a3889c53e3fdf718a4cbab8d615f757f0">dyno::WorldMotionFormulation::objectUpdateContext()</a>, <a class="el" href="classdyno_1_1WorldPoseFormulation.html#a2fe402643436b3cdf4b38748317c284c">dyno::WorldPoseFormulation::objectUpdateContext()</a>, and <a class="el" href="structdyno_1_1UpdateObservationResult.html#ab069f0de92d758540c65728505feff0a">UpdateObservationResult()</a>.</p>
 
 </div>
 </div>
@@ -265,7 +270,7 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Formulation_8hpp_source.html#l00083">83</a> of file <a class="el" href="Formulation_8hpp_source.html">Formulation.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Formulation_8hpp_source.html#l00094">94</a> of file <a class="el" href="Formulation_8hpp_source.html">Formulation.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1test__hybrid_1_1SmartStructurlessFormulation.html#a40673e16631d1d3e8775e33116f85f6a">dyno::test_hybrid::SmartStructurlessFormulation::dynamicPointUpdateCallback()</a>, and <a class="el" href="classdyno_1_1RegularBackendModule.html#acbcc7cfe0714b52a071b01e3885935a1">dyno::RegularBackendModule::updateIncremental()</a>.</p>
 
@@ -283,9 +288,9 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Formulation_8hpp_source.html#l00079">79</a> of file <a class="el" href="Formulation_8hpp_source.html">Formulation.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Formulation_8hpp_source.html#l00090">90</a> of file <a class="el" href="Formulation_8hpp_source.html">Formulation.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1RegularHybridFormulation.html#adae4ccb91031c6df8c1c915f2d98e960">dyno::RegularHybridFormulation::postUpdate()</a>, <a class="el" href="structdyno_1_1UpdateObservationResult.html#a002ddcad2bc2b520dd274acc8370d0a9">updateAffectedObject()</a>, and <a class="el" href="classdyno_1_1Formulation.html#ad78d57e7de23e30b9aa287a3939bb3a9">dyno::Formulation&lt; MAP &gt;::updateDynamicObservations()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1RegularHybridFormulation.html#adae4ccb91031c6df8c1c915f2d98e960">dyno::RegularHybridFormulation::postUpdate()</a>, and <a class="el" href="structdyno_1_1UpdateObservationResult.html#a002ddcad2bc2b520dd274acc8370d0a9">updateAffectedObject()</a>.</p>
 
 </div>
 </div>

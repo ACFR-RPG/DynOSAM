@@ -450,12 +450,12 @@ template&lt;typename INPUT , typename OUTPUT &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PipelineBase-inl_8hpp_source.html#l00093">93</a> of file <a class="el" href="PipelineBase-inl_8hpp_source.html">PipelineBase-inl.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   95</span>                                               {</div>
-<div class="line"><span class="lineno">   96</span>  <span class="keywordflow">for</span> (<a class="code hl_typedef" href="classdyno_1_1PipelineModule.html#abd4960932be4d0b016ba93219b77724e">OnProcessCallback</a> callbacks : <a class="code hl_variable" href="classdyno_1_1PipelineModule.html#a79e0fc7aa13d32cbe8adfab877cd7f02">on_process_callbacks_</a>) {</div>
-<div class="line"><span class="lineno">   97</span>    callbacks(input_packet, output_packet);</div>
-<div class="line"><span class="lineno">   98</span>  }</div>
-<div class="line"><span class="lineno">   99</span>}</div>
+<p class="definition">Definition at line <a class="el" href="PipelineBase-inl_8hpp_source.html#l00119">119</a> of file <a class="el" href="PipelineBase-inl_8hpp_source.html">PipelineBase-inl.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  121</span>                                               {</div>
+<div class="line"><span class="lineno">  122</span>  <span class="keywordflow">for</span> (<a class="code hl_typedef" href="classdyno_1_1PipelineModule.html#abd4960932be4d0b016ba93219b77724e">OnProcessCallback</a> callbacks : <a class="code hl_variable" href="classdyno_1_1PipelineModule.html#a79e0fc7aa13d32cbe8adfab877cd7f02">on_process_callbacks_</a>) {</div>
+<div class="line"><span class="lineno">  123</span>    callbacks(input_packet, output_packet);</div>
+<div class="line"><span class="lineno">  124</span>  }</div>
+<div class="line"><span class="lineno">  125</span>}</div>
 <div class="ttc" id="aclassdyno_1_1PipelineModule_html_a79e0fc7aa13d32cbe8adfab877cd7f02"><div class="ttname"><a href="classdyno_1_1PipelineModule.html#a79e0fc7aa13d32cbe8adfab877cd7f02">dyno::PipelineModule::on_process_callbacks_</a></div><div class="ttdeci">std::vector&lt; OnProcessCallback &gt; on_process_callbacks_</div><div class="ttdef"><b>Definition:</b> <a href="PipelineBase_8hpp_source.html#l00220">PipelineBase.hpp:220</a></div></div>
 <div class="ttc" id="aclassdyno_1_1PipelineModule_html_abd4960932be4d0b016ba93219b77724e"><div class="ttname"><a href="classdyno_1_1PipelineModule.html#abd4960932be4d0b016ba93219b77724e">dyno::PipelineModule::OnProcessCallback</a></div><div class="ttdeci">std::function&lt; void(const InputConstSharedPtr &amp;, const OutputConstSharedPtr &amp;)&gt; OnProcessCallback</div><div class="ttdef"><b>Definition:</b> <a href="PipelineBase_8hpp_source.html#l00183">PipelineBase.hpp:184</a></div></div>
 </div><!-- fragment -->
@@ -577,11 +577,11 @@ template&lt;typename INPUT , typename OUTPUT &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="PipelineBase-inl_8hpp_source.html#l00086">86</a> of file <a class="el" href="PipelineBase-inl_8hpp_source.html">PipelineBase-inl.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   87</span>                                       {</div>
-<div class="line"><span class="lineno">   88</span>  CHECK(callback);</div>
-<div class="line"><span class="lineno">   89</span>  <a class="code hl_variable" href="classdyno_1_1PipelineModule.html#a79e0fc7aa13d32cbe8adfab877cd7f02">on_process_callbacks_</a>.push_back(callback);</div>
-<div class="line"><span class="lineno">   90</span>}</div>
+<p class="definition">Definition at line <a class="el" href="PipelineBase-inl_8hpp_source.html#l00112">112</a> of file <a class="el" href="PipelineBase-inl_8hpp_source.html">PipelineBase-inl.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  113</span>                                       {</div>
+<div class="line"><span class="lineno">  114</span>  CHECK(callback);</div>
+<div class="line"><span class="lineno">  115</span>  <a class="code hl_variable" href="classdyno_1_1PipelineModule.html#a79e0fc7aa13d32cbe8adfab877cd7f02">on_process_callbacks_</a>.push_back(callback);</div>
+<div class="line"><span class="lineno">  116</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -620,48 +620,74 @@ template&lt;typename INPUT , typename OUTPUT &gt; </div>
 <div class="line"><span class="lineno">   44</span>    <span class="keywordflow">return</span> ReturnCode::IS_SHUTDOWN;</div>
 <div class="line"><span class="lineno">   45</span>  }</div>
 <div class="line"><span class="lineno">   46</span> </div>
-<div class="line"><span class="lineno">   47</span>  ReturnCode return_code;</div>
-<div class="line"><span class="lineno">   48</span>  utils::TimingStatsCollector timing_stats(<a class="code hl_variable" href="classdyno_1_1PipelineBase.html#aa08d3c035aed987a2f25cdde0a488115">module_name_</a>);</div>
-<div class="line"><span class="lineno">   49</span> </div>
-<div class="line"><span class="lineno">   50</span>  <a class="code hl_typedef" href="classdyno_1_1PipelineModule.html#af2a1a86735ce9c0f3dffe142284fae81">InputConstSharedPtr</a> input = <span class="keyword">nullptr</span>;</div>
-<div class="line"><span class="lineno">   51</span>  <a class="code hl_variable" href="classdyno_1_1PipelineBase.html#ab717fc5f0261f9529f09beda061728e0">is_thread_working_</a> = <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">   52</span>  input = <a class="code hl_function" href="classdyno_1_1PipelineModule.html#a0961a7fb2ec456f1aac2173f1cf201de">getInputPacket</a>();</div>
-<div class="line"><span class="lineno">   53</span>  <a class="code hl_variable" href="classdyno_1_1PipelineBase.html#ab717fc5f0261f9529f09beda061728e0">is_thread_working_</a> = <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">   54</span> </div>
-<div class="line"><span class="lineno">   55</span>  <span class="keywordflow">if</span> (input) {</div>
-<div class="line"><span class="lineno">   56</span>    <span class="comment">// Transfer the ownership of input to the actual pipeline module.</span></div>
-<div class="line"><span class="lineno">   57</span>    <span class="comment">// From this point on, you cannot use input, since process owns it.</span></div>
-<div class="line"><span class="lineno">   58</span>    <a class="code hl_typedef" href="classdyno_1_1PipelineModule.html#af97c658c833751f9a97c25c7959177bb">OutputConstSharedPtr</a> output = <span class="keyword">nullptr</span>;</div>
-<div class="line"><span class="lineno">   59</span>    output = <a class="code hl_function" href="classdyno_1_1PipelineModule.html#a897267070c3a2fdf6a92b477d1b4b02e">process</a>(input);</div>
-<div class="line"><span class="lineno">   60</span> </div>
-<div class="line"><span class="lineno">   61</span>    <span class="keywordflow">if</span> (output) {</div>
-<div class="line"><span class="lineno">   62</span>      <span class="comment">// Received a valid output, send to output queue</span></div>
-<div class="line"><span class="lineno">   63</span>      <span class="keywordflow">if</span> (!<a class="code hl_function" href="classdyno_1_1PipelineModule.html#a7e780c92e82405964c0b55e90ef4a23b">pushOutputPacket</a>(output)) {</div>
-<div class="line"><span class="lineno">   64</span>        LOG_EVERY_N(WARNING, 100)</div>
-<div class="line"><span class="lineno">   65</span>            &lt;&lt; <span class="stringliteral">&quot;Module: &quot;</span> &lt;&lt; <a class="code hl_variable" href="classdyno_1_1PipelineBase.html#aa08d3c035aed987a2f25cdde0a488115">module_name_</a> &lt;&lt; <span class="stringliteral">&quot; - Output push failed.&quot;</span>;</div>
-<div class="line"><span class="lineno">   66</span>        <a class="code hl_variable" href="classdyno_1_1PipelineBase.html#ab717fc5f0261f9529f09beda061728e0">is_thread_working_</a> = <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">   67</span>        return_code = ReturnCode::OUTPUT_PUSH_FAILURE;</div>
-<div class="line"><span class="lineno">   68</span>      } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">   69</span>        <a class="code hl_function" href="classdyno_1_1PipelineModule.html#a5f2609cfd593c93c1025887d3e026727">emitProcessCallbacks</a>(input, output);</div>
-<div class="line"><span class="lineno">   70</span>        <a class="code hl_variable" href="classdyno_1_1PipelineBase.html#ab717fc5f0261f9529f09beda061728e0">is_thread_working_</a> = <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">   71</span>        return_code = ReturnCode::SUCCESS;</div>
-<div class="line"><span class="lineno">   72</span>      }</div>
-<div class="line"><span class="lineno">   73</span>    } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">   74</span>      return_code = ReturnCode::PROCESSING_FAILURE;</div>
-<div class="line"><span class="lineno">   75</span>      <a class="code hl_variable" href="classdyno_1_1PipelineBase.html#ab717fc5f0261f9529f09beda061728e0">is_thread_working_</a> = <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">   76</span>    }</div>
-<div class="line"><span class="lineno">   77</span>  } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">   78</span>    <a class="code hl_variable" href="classdyno_1_1PipelineBase.html#ab717fc5f0261f9529f09beda061728e0">is_thread_working_</a> = <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">   79</span>    return_code = ReturnCode::GET_PACKET_FAILURE;</div>
-<div class="line"><span class="lineno">   80</span>  }</div>
-<div class="line"><span class="lineno">   81</span> </div>
-<div class="line"><span class="lineno">   82</span>  <span class="keywordflow">return</span> return_code;</div>
-<div class="line"><span class="lineno">   83</span>}</div>
+<div class="line"><span class="lineno">   47</span>  <span class="comment">// log get_input, process and get_output packet timing explicitly if VLOG &gt;=</span></div>
+<div class="line"><span class="lineno">   48</span>  <span class="comment">// 10</span></div>
+<div class="line"><span class="lineno">   49</span>  <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">int</span> intermediate_timing_glog_verbosity = 5;</div>
+<div class="line"><span class="lineno">   50</span>  <span class="keyword">auto</span> getInputPacketWrapped = [&amp;]() -&gt; <a class="code hl_typedef" href="classdyno_1_1PipelineModule.html#af2a1a86735ce9c0f3dffe142284fae81">InputConstSharedPtr</a> {</div>
+<div class="line"><span class="lineno">   51</span>    <span class="comment">// LOG(INFO) &lt;&lt; &quot;construct_intermediate_timers_as_stopped &quot; &lt;&lt;</span></div>
+<div class="line"><span class="lineno">   52</span>    <span class="comment">// construct_intermediate_timers_as_stopped;</span></div>
+<div class="line"><span class="lineno">   53</span>    utils::ChronoTimingStats timing(<a class="code hl_variable" href="classdyno_1_1PipelineBase.html#aa08d3c035aed987a2f25cdde0a488115">module_name_</a> + <span class="stringliteral">&quot;.get_input&quot;</span>,</div>
+<div class="line"><span class="lineno">   54</span>                                    intermediate_timing_glog_verbosity);</div>
+<div class="line"><span class="lineno">   55</span>    <a class="code hl_typedef" href="classdyno_1_1PipelineModule.html#af2a1a86735ce9c0f3dffe142284fae81">InputConstSharedPtr</a> input = <span class="keyword">nullptr</span>;</div>
+<div class="line"><span class="lineno">   56</span>    <a class="code hl_variable" href="classdyno_1_1PipelineBase.html#ab717fc5f0261f9529f09beda061728e0">is_thread_working_</a> = <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">   57</span>    input = <a class="code hl_function" href="classdyno_1_1PipelineModule.html#a0961a7fb2ec456f1aac2173f1cf201de">getInputPacket</a>();</div>
+<div class="line"><span class="lineno">   58</span>    <a class="code hl_variable" href="classdyno_1_1PipelineBase.html#ab717fc5f0261f9529f09beda061728e0">is_thread_working_</a> = <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">   59</span>    <span class="keywordflow">return</span> input;</div>
+<div class="line"><span class="lineno">   60</span>  };</div>
+<div class="line"><span class="lineno">   61</span> </div>
+<div class="line"><span class="lineno">   62</span>  <span class="keyword">auto</span> processWrapped = [&amp;](<a class="code hl_typedef" href="classdyno_1_1PipelineModule.html#af2a1a86735ce9c0f3dffe142284fae81">InputConstSharedPtr</a> input) -&gt; <a class="code hl_typedef" href="classdyno_1_1PipelineModule.html#af97c658c833751f9a97c25c7959177bb">OutputConstSharedPtr</a> {</div>
+<div class="line"><span class="lineno">   63</span>    utils::ChronoTimingStats timing(<a class="code hl_variable" href="classdyno_1_1PipelineBase.html#aa08d3c035aed987a2f25cdde0a488115">module_name_</a> + <span class="stringliteral">&quot;.process&quot;</span>,</div>
+<div class="line"><span class="lineno">   64</span>                                    intermediate_timing_glog_verbosity);</div>
+<div class="line"><span class="lineno">   65</span>    <a class="code hl_typedef" href="classdyno_1_1PipelineModule.html#af97c658c833751f9a97c25c7959177bb">OutputConstSharedPtr</a> output = <span class="keyword">nullptr</span>;</div>
+<div class="line"><span class="lineno">   66</span>    output = <a class="code hl_function" href="classdyno_1_1PipelineModule.html#a897267070c3a2fdf6a92b477d1b4b02e">process</a>(input);</div>
+<div class="line"><span class="lineno">   67</span>    <span class="keywordflow">return</span> output;</div>
+<div class="line"><span class="lineno">   68</span>  };</div>
+<div class="line"><span class="lineno">   69</span> </div>
+<div class="line"><span class="lineno">   70</span>  <span class="keyword">auto</span> pushOutputPacketWrapped = [&amp;](<a class="code hl_typedef" href="classdyno_1_1PipelineModule.html#af97c658c833751f9a97c25c7959177bb">OutputConstSharedPtr</a> output) -&gt; <span class="keywordtype">bool</span> {</div>
+<div class="line"><span class="lineno">   71</span>    <span class="comment">// Received a valid output, send to output queue</span></div>
+<div class="line"><span class="lineno">   72</span>    utils::ChronoTimingStats timing(<a class="code hl_variable" href="classdyno_1_1PipelineBase.html#aa08d3c035aed987a2f25cdde0a488115">module_name_</a> + <span class="stringliteral">&quot;.push_output&quot;</span>,</div>
+<div class="line"><span class="lineno">   73</span>                                    intermediate_timing_glog_verbosity);</div>
+<div class="line"><span class="lineno">   74</span>    <span class="keyword">const</span> <span class="keywordtype">bool</span> push_packet_result = <a class="code hl_function" href="classdyno_1_1PipelineModule.html#a7e780c92e82405964c0b55e90ef4a23b">pushOutputPacket</a>(output);</div>
+<div class="line"><span class="lineno">   75</span>    <span class="keywordflow">return</span> push_packet_result;</div>
+<div class="line"><span class="lineno">   76</span>  };</div>
+<div class="line"><span class="lineno">   77</span> </div>
+<div class="line"><span class="lineno">   78</span>  ReturnCode return_code;</div>
+<div class="line"><span class="lineno">   79</span>  utils::ChronoTimingStats timing_stats(<a class="code hl_variable" href="classdyno_1_1PipelineBase.html#aa08d3c035aed987a2f25cdde0a488115">module_name_</a>);</div>
+<div class="line"><span class="lineno">   80</span> </div>
+<div class="line"><span class="lineno">   81</span>  <a class="code hl_typedef" href="classdyno_1_1PipelineModule.html#af2a1a86735ce9c0f3dffe142284fae81">InputConstSharedPtr</a> input = getInputPacketWrapped();</div>
+<div class="line"><span class="lineno">   82</span> </div>
+<div class="line"><span class="lineno">   83</span>  <span class="keywordflow">if</span> (input) {</div>
+<div class="line"><span class="lineno">   84</span>    <span class="comment">// Transfer the ownership of input to the actual pipeline module.</span></div>
+<div class="line"><span class="lineno">   85</span>    <span class="comment">// From this point on, you cannot use input, since process owns it.</span></div>
+<div class="line"><span class="lineno">   86</span>    <a class="code hl_typedef" href="classdyno_1_1PipelineModule.html#af97c658c833751f9a97c25c7959177bb">OutputConstSharedPtr</a> output = processWrapped(input);</div>
+<div class="line"><span class="lineno">   87</span> </div>
+<div class="line"><span class="lineno">   88</span>    <span class="keywordflow">if</span> (output) {</div>
+<div class="line"><span class="lineno">   89</span>      <span class="keywordflow">if</span> (!pushOutputPacketWrapped(output)) {</div>
+<div class="line"><span class="lineno">   90</span>        LOG_EVERY_N(WARNING, 100)</div>
+<div class="line"><span class="lineno">   91</span>            &lt;&lt; <span class="stringliteral">&quot;Module: &quot;</span> &lt;&lt; <a class="code hl_variable" href="classdyno_1_1PipelineBase.html#aa08d3c035aed987a2f25cdde0a488115">module_name_</a> &lt;&lt; <span class="stringliteral">&quot; - Output push failed.&quot;</span>;</div>
+<div class="line"><span class="lineno">   92</span>        <a class="code hl_variable" href="classdyno_1_1PipelineBase.html#ab717fc5f0261f9529f09beda061728e0">is_thread_working_</a> = <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">   93</span>        return_code = ReturnCode::OUTPUT_PUSH_FAILURE;</div>
+<div class="line"><span class="lineno">   94</span>      } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">   95</span>        <a class="code hl_function" href="classdyno_1_1PipelineModule.html#a5f2609cfd593c93c1025887d3e026727">emitProcessCallbacks</a>(input, output);</div>
+<div class="line"><span class="lineno">   96</span>        <a class="code hl_variable" href="classdyno_1_1PipelineBase.html#ab717fc5f0261f9529f09beda061728e0">is_thread_working_</a> = <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">   97</span>        return_code = ReturnCode::SUCCESS;</div>
+<div class="line"><span class="lineno">   98</span>      }</div>
+<div class="line"><span class="lineno">   99</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  100</span>      return_code = ReturnCode::PROCESSING_FAILURE;</div>
+<div class="line"><span class="lineno">  101</span>      <a class="code hl_variable" href="classdyno_1_1PipelineBase.html#ab717fc5f0261f9529f09beda061728e0">is_thread_working_</a> = <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">  102</span>    }</div>
+<div class="line"><span class="lineno">  103</span>  } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  104</span>    <a class="code hl_variable" href="classdyno_1_1PipelineBase.html#ab717fc5f0261f9529f09beda061728e0">is_thread_working_</a> = <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">  105</span>    return_code = ReturnCode::GET_PACKET_FAILURE;</div>
+<div class="line"><span class="lineno">  106</span>  }</div>
+<div class="line"><span class="lineno">  107</span> </div>
+<div class="line"><span class="lineno">  108</span>  <span class="keywordflow">return</span> return_code;</div>
+<div class="line"><span class="lineno">  109</span>}</div>
 <div class="ttc" id="aclassdyno_1_1PipelineBase_html_a5c485b024b7b1c710c94303f29ca8e31"><div class="ttname"><a href="classdyno_1_1PipelineBase.html#a5c485b024b7b1c710c94303f29ca8e31">dyno::PipelineBase::isShutdown</a></div><div class="ttdeci">bool isShutdown() const</div><div class="ttdoc">Returns true if the pipeline has been shutdown by shutdown().</div><div class="ttdef"><b>Definition:</b> <a href="PipelineBase_8hpp_source.html#l00083">PipelineBase.hpp:83</a></div></div>
 <div class="ttc" id="aclassdyno_1_1PipelineBase_html_aa08d3c035aed987a2f25cdde0a488115"><div class="ttname"><a href="classdyno_1_1PipelineBase.html#aa08d3c035aed987a2f25cdde0a488115">dyno::PipelineBase::module_name_</a></div><div class="ttdeci">const std::string module_name_</div><div class="ttdef"><b>Definition:</b> <a href="PipelineBase_8hpp_source.html#l00129">PipelineBase.hpp:129</a></div></div>
 <div class="ttc" id="aclassdyno_1_1PipelineBase_html_ab717fc5f0261f9529f09beda061728e0"><div class="ttname"><a href="classdyno_1_1PipelineBase.html#ab717fc5f0261f9529f09beda061728e0">dyno::PipelineBase::is_thread_working_</a></div><div class="ttdeci">std::atomic_bool is_thread_working_</div><div class="ttdef"><b>Definition:</b> <a href="PipelineBase_8hpp_source.html#l00130">PipelineBase.hpp:130</a></div></div>
 <div class="ttc" id="aclassdyno_1_1PipelineModule_html_a0961a7fb2ec456f1aac2173f1cf201de"><div class="ttname"><a href="classdyno_1_1PipelineModule.html#a0961a7fb2ec456f1aac2173f1cf201de">dyno::PipelineModule::getInputPacket</a></div><div class="ttdeci">virtual InputConstSharedPtr getInputPacket()=0</div></div>
-<div class="ttc" id="aclassdyno_1_1PipelineModule_html_a5f2609cfd593c93c1025887d3e026727"><div class="ttname"><a href="classdyno_1_1PipelineModule.html#a5f2609cfd593c93c1025887d3e026727">dyno::PipelineModule::emitProcessCallbacks</a></div><div class="ttdeci">void emitProcessCallbacks(const InputConstSharedPtr &amp;input_packet, const OutputConstSharedPtr &amp;output_packet)</div><div class="ttdef"><b>Definition:</b> <a href="PipelineBase-inl_8hpp_source.html#l00093">PipelineBase-inl.hpp:93</a></div></div>
+<div class="ttc" id="aclassdyno_1_1PipelineModule_html_a5f2609cfd593c93c1025887d3e026727"><div class="ttname"><a href="classdyno_1_1PipelineModule.html#a5f2609cfd593c93c1025887d3e026727">dyno::PipelineModule::emitProcessCallbacks</a></div><div class="ttdeci">void emitProcessCallbacks(const InputConstSharedPtr &amp;input_packet, const OutputConstSharedPtr &amp;output_packet)</div><div class="ttdef"><b>Definition:</b> <a href="PipelineBase-inl_8hpp_source.html#l00119">PipelineBase-inl.hpp:119</a></div></div>
 <div class="ttc" id="aclassdyno_1_1PipelineModule_html_a7e780c92e82405964c0b55e90ef4a23b"><div class="ttname"><a href="classdyno_1_1PipelineModule.html#a7e780c92e82405964c0b55e90ef4a23b">dyno::PipelineModule::pushOutputPacket</a></div><div class="ttdeci">virtual bool pushOutputPacket(const OutputConstSharedPtr &amp;output_packet) const =0</div></div>
 <div class="ttc" id="aclassdyno_1_1PipelineModule_html_a897267070c3a2fdf6a92b477d1b4b02e"><div class="ttname"><a href="classdyno_1_1PipelineModule.html#a897267070c3a2fdf6a92b477d1b4b02e">dyno::PipelineModule::process</a></div><div class="ttdeci">virtual OutputConstSharedPtr process(const InputConstSharedPtr &amp;input)=0</div></div>
 <div class="ttc" id="aclassdyno_1_1PipelineModule_html_af2a1a86735ce9c0f3dffe142284fae81"><div class="ttname"><a href="classdyno_1_1PipelineModule.html#af2a1a86735ce9c0f3dffe142284fae81">dyno::PipelineModule::InputConstSharedPtr</a></div><div class="ttdeci">typename InputTypeTraits::TypeConstSharedPtr InputConstSharedPtr</div><div class="ttdef"><b>Definition:</b> <a href="PipelineBase_8hpp_source.html#l00176">PipelineBase.hpp:176</a></div></div>

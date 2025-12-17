@@ -1,7 +1,7 @@
 <map id="dyno::equals_with_abs_tol" name="dyno::equals_with_abs_tol">
 <area shape="rect" id="node1" title=" " alt="" coords="625,45,820,70"/>
 <area shape="rect" id="node2" href="$classdyno_1_1CameraParams.html#aed0b3bb94f86ce7d95789c4113a74bd6" title=" " alt="" coords="416,5,577,45"/>
-<area shape="rect" id="node3" href="$classdyno_1_1FeatureTracker.html#ab50422938e62bccc34295c155357213a" title="Check which objects require new features to be detected on them based on a set of &#39;keyframing&#39; criter..." alt="" coords="418,69,575,109"/>
+<area shape="rect" id="node3" href="$classdyno_1_1FeatureTracker.html#aa56ab13c85913180c0a8169458452d3b" title="Check which objects require new features to be detected on them based on a set of &#39;keyframing&#39; criter..." alt="" coords="418,69,575,109"/>
 <area shape="rect" id="node4" href="$classdyno_1_1FeatureTracker.html#a145614fe29bef7728075492870ac9c41" title=" " alt="" coords="211,37,368,77"/>
 <area shape="rect" id="node6" href="$classdyno_1_1FeatureTracker.html#a4796a29c1f89cde0ace1668fc8fcd9a3" title=" " alt="" coords="211,101,368,141"/>
 <area shape="rect" id="node5" href="$classdyno_1_1FeatureTracker.html#a40ee79c94fe2de7f16d2a4508cc2ba11" title=" " alt="" coords="5,69,163,109"/>

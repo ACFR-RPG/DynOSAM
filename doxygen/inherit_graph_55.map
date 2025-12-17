@@ -1,3 +1,4 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$structdyno_1_1DebugImagery.html" title="Struct containing debug imagery from the frontend that (optionally) is included in the frontend outpu..." alt="" coords="5,5,164,31"/>
+<area shape="rect" id="node1" href="$classdyno_1_1DataFolderStructure.html" title=" " alt="" coords="5,5,197,45"/>
+<area shape="rect" id="node2" href="$classdyno_1_1GenericDataset.html" title="GenericDataset extends the DataFolderStructure to include functionality such as validation of each fo..." alt="" coords="245,5,408,45"/>
 </map>

@@ -1,4 +1,5 @@
 <map id="dyno::EgoMotionSolver::Params" name="dyno::EgoMotionSolver::Params">
-<area shape="rect" id="node1" title=" " alt="" coords="15,5,187,45"/>
-<area shape="rect" id="node2" href="$structdyno_1_1ObjectMotionSovlerF2F_1_1Params.html" title=" " alt="" coords="5,93,196,133"/>
+<area shape="rect" id="node1" title=" " alt="" coords="121,5,293,45"/>
+<area shape="rect" id="node2" href="$structdyno_1_1ObjectMotionSolverFilter_1_1Params.html" title=" " alt="" coords="5,93,196,133"/>
+<area shape="rect" id="node3" href="$structdyno_1_1ObjectMotionSovlerF2F_1_1Params.html" title=" " alt="" coords="220,93,411,133"/>
 </map>

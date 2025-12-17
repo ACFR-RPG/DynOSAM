@@ -2,19 +2,19 @@
 <area shape="rect" id="node1" title=" " alt="" coords="1485,5,1736,45"/>
 <area shape="rect" id="node2" title=" " alt="" coords="93,189,280,214"/>
 <area shape="rect" id="node3" title=" " alt="" coords="789,805,1003,830"/>
-<area shape="rect" id="node4" href="$FrontendParams_8hpp.html" title=" " alt="" coords="2881,93,3084,133"/>
+<area shape="rect" id="node4" href="$FrontendParams_8hpp.html" title=" " alt="" coords="2725,93,2928,133"/>
 <area shape="rect" id="node16" href="$FeatureTrackerBase_8hpp.html" title=" " alt="" coords="1423,181,1607,221"/>
-<area shape="rect" id="node17" href="$Frame_8hpp.html" title=" " alt="" coords="1871,269,2055,309"/>
+<area shape="rect" id="node17" href="$Frame_8hpp.html" title=" " alt="" coords="1899,269,2083,309"/>
 <area shape="rect" id="node21" href="$Feature_8hpp.html" title=" " alt="" coords="2463,453,2649,478"/>
-<area shape="rect" id="node32" href="$Camera_8hpp.html" title=" " alt="" coords="1445,365,1632,390"/>
+<area shape="rect" id="node32" href="$Camera_8hpp.html" title=" " alt="" coords="1444,365,1631,390"/>
 <area shape="rect" id="node38" href="$Visualizer-Definitions_8hpp.html" title=" " alt="" coords="2907,269,3101,309"/>
-<area shape="rect" id="node46" href="$StaticFeatureTracker_8hpp.html" title=" " alt="" coords="977,93,1162,133"/>
+<area shape="rect" id="node46" href="$StaticFeatureTracker_8hpp.html" title=" " alt="" coords="978,93,1163,133"/>
 <area shape="rect" id="node50" href="$ObjectDetector_8hpp.html" title=" " alt="" coords="45,541,280,566"/>
-<area shape="rect" id="node5" title=" " alt="" coords="2951,189,3014,214"/>
+<area shape="rect" id="node5" title=" " alt="" coords="2795,189,2858,214"/>
 <area shape="rect" id="node6" title=" " alt="" coords="3295,453,3353,478"/>
 <area shape="rect" id="node7" href="$ImuParams_8hpp.html" title=" " alt="" coords="2356,621,2527,661"/>
 <area shape="rect" id="node37" href="$TrackerParams_8hpp.html" title=" " alt="" coords="1180,621,1364,661"/>
-<area shape="rect" id="node40" href="$MotionSolver_8hpp.html" title=" " alt="" coords="3504,181,3688,221"/>
+<area shape="rect" id="node40" href="$MotionSolver_8hpp.html" title=" " alt="" coords="3501,181,3685,221"/>
 <area shape="rect" id="node8" title=" " alt="" coords="1780,709,1940,749"/>
 <area shape="rect" id="node9" title=" " alt="" coords="2928,805,3083,830"/>
 <area shape="rect" id="node10" href="$Types_8hpp.html" title=" " alt="" coords="1541,717,1755,742"/>
@@ -30,7 +30,7 @@
 <area shape="rect" id="node30" href="$DynamicObjects_8hpp.html" title=" " alt="" coords="377,629,663,654"/>
 <area shape="rect" id="node31" href="$PointCloudProcess_8hpp.html" title=" " alt="" coords="1946,445,2166,485"/>
 <area shape="rect" id="node35" href="$UndistortRectifier_8hpp.html" title=" " alt="" coords="1793,541,2042,566"/>
-<area shape="rect" id="node36" href="$Frame-inl_8hpp.html" title=" " alt="" coords="1656,357,1840,397"/>
+<area shape="rect" id="node36" href="$Frame-inl_8hpp.html" title=" " alt="" coords="1655,357,1839,397"/>
 <area shape="rect" id="node20" title=" " alt="" coords="3196,541,3260,566"/>
 <area shape="rect" id="node22" title=" " alt="" coords="2463,541,2513,566"/>
 <area shape="rect" id="node23" title=" " alt="" coords="2537,541,2652,566"/>
@@ -41,11 +41,11 @@
 <area shape="rect" id="node33" title=" " alt="" coords="1423,453,1668,478"/>
 <area shape="rect" id="node34" href="$CameraParams_8hpp.html" title=" " alt="" coords="1743,629,1977,654"/>
 <area shape="rect" id="node39" href="$ThreadSafeQueue_8hpp.html" title=" " alt="" coords="3087,357,3303,397"/>
-<area shape="rect" id="node41" title=" " alt="" coords="3479,277,3713,302"/>
-<area shape="rect" id="node42" title=" " alt="" coords="3737,269,3945,309"/>
-<area shape="rect" id="node43" title=" " alt="" coords="3969,269,4137,309"/>
-<area shape="rect" id="node44" title=" " alt="" coords="4162,269,4337,309"/>
-<area shape="rect" id="node45" title=" " alt="" coords="4361,269,4511,309"/>
+<area shape="rect" id="node41" title=" " alt="" coords="3479,277,3708,302"/>
+<area shape="rect" id="node42" title=" " alt="" coords="3732,277,3943,302"/>
+<area shape="rect" id="node43" title=" " alt="" coords="3967,277,4201,302"/>
+<area shape="rect" id="node44" title=" " alt="" coords="4225,269,4433,309"/>
+<area shape="rect" id="node45" title=" " alt="" coords="4457,269,4625,309"/>
 <area shape="rect" id="node47" href="$FeatureDetector_8hpp.html" title=" " alt="" coords="871,533,1055,573"/>
 <area shape="rect" id="node48" href="$ORBextractor_8hpp.html" title=" " alt="" coords="529,709,713,749"/>
 <area shape="rect" id="node49" href="$OccupancyGrid2D_8hpp.html" title=" " alt="" coords="1063,357,1247,397"/>

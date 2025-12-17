@@ -131,7 +131,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a45b594ce44ad91a7a528c2387a9d63a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">True if the requested object was observed in this frame.  <br /></td></tr>
 <tr class="separator:a45b594ce44ad91a7a528c2387a9d63a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa105d1d2cff499448ca9f17eb498f583"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1FrameNode.html#aa105d1d2cff499448ca9f17eb498f583">objectObservedInPrevious</a> (<a class="el" href="namespacedyno.html#a38bb86e4154b86428b8d133be03fb2b5">ObjectId</a> object_id) const</td></tr>
-<tr class="memdesc:aa105d1d2cff499448ca9f17eb498f583"><td class="mdescLeft">&#160;</td><td class="mdescRight">True if the requested object was observed at the previous frame.  <br /></td></tr>
+<tr class="memdesc:aa105d1d2cff499448ca9f17eb498f583"><td class="mdescLeft">&#160;</td><td class="mdescRight">True if the requested object was observed at the previous frame. TODO: this is hardcoded with k-1!!! Not valid for keyframing!!!  <br /></td></tr>
 <tr class="separator:aa105d1d2cff499448ca9f17eb498f583"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a133770c1ed91854633232305fdb77a48"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1FrameNode.html#a133770c1ed91854633232305fdb77a48">objectMotionExpected</a> (<a class="el" href="namespacedyno.html#a38bb86e4154b86428b8d133be03fb2b5">ObjectId</a> object_id) const</td></tr>
 <tr class="memdesc:a133770c1ed91854633232305fdb77a48"><td class="mdescLeft">&#160;</td><td class="mdescRight">True if the object appears at this (k) and the previous frame (k-1) and therefore we expect a motion to exist taking us from k-1 to k.  <br /></td></tr>
@@ -249,7 +249,7 @@ template&lt;typename MEASUREMENT &gt; </div>
 
 <p>Const LandmarkNodePtr with corresponding Measurement value. </p>
 
-<p class="definition">Definition at line <a class="el" href="MapNodes_8hpp_source.html#l00493">493</a> of file <a class="el" href="MapNodes_8hpp_source.html">MapNodes.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="MapNodes_8hpp_source.html#l00494">494</a> of file <a class="el" href="MapNodes_8hpp_source.html">MapNodes.hpp</a>.</p>
 
 </div>
 </div>
@@ -438,10 +438,10 @@ template&lt;typename MEASUREMENT &gt; </div>
 <p>Get the ids (j) of objects observed at this frame. </p>
 <dl class="section return"><dt>Returns</dt><dd>ObjectIds </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="MapNodes_8hpp_source.html#l00531">531</a> of file <a class="el" href="MapNodes_8hpp_source.html">MapNodes.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  531</span>                                       {</div>
-<div class="line"><span class="lineno">  532</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="structdyno_1_1FrameNode.html#af3f9d97008cfc82637fbd35629553e3a">objects_seen</a>.template collectIds&lt;ObjectId&gt;();</div>
-<div class="line"><span class="lineno">  533</span>  }</div>
+<p class="definition">Definition at line <a class="el" href="MapNodes_8hpp_source.html#l00532">532</a> of file <a class="el" href="MapNodes_8hpp_source.html">MapNodes.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  532</span>                                       {</div>
+<div class="line"><span class="lineno">  533</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="structdyno_1_1FrameNode.html#af3f9d97008cfc82637fbd35629553e3a">objects_seen</a>.template collectIds&lt;ObjectId&gt;();</div>
+<div class="line"><span class="lineno">  534</span>  }</div>
 <div class="ttc" id="astructdyno_1_1FrameNode_html_af3f9d97008cfc82637fbd35629553e3a"><div class="ttname"><a href="structdyno_1_1FrameNode.html#af3f9d97008cfc82637fbd35629553e3a">dyno::FrameNode::objects_seen</a></div><div class="ttdeci">ObjectNodePtrSet&lt; MEASUREMENT &gt; objects_seen</div><div class="ttdoc">All objects seen at this frame. NOTE that this means that we have point observations at this frame,...</div><div class="ttdef"><b>Definition:</b> <a href="MapNodes_8hpp_source.html#l00416">MapNodes.hpp:416</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="structdyno_1_1FrameNode.html#af3f9d97008cfc82637fbd35629553e3a">dyno::FrameNode&lt; MEASUREMENT &gt;::objects_seen</a>.</p>
@@ -647,10 +647,10 @@ template&lt;typename MEASUREMENT &gt; </div>
 <p>Number of dynamic measurements for this frame. </p>
 <dl class="section return"><dt>Returns</dt><dd>size_t </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="MapNodes_8hpp_source.html#l00540">540</a> of file <a class="el" href="MapNodes_8hpp_source.html">MapNodes.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  540</span>                                               {</div>
-<div class="line"><span class="lineno">  541</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="structdyno_1_1FrameNode.html#abaa8e0e43e91e27aed099b00d50951de">dynamic_landmarks</a>.size();</div>
-<div class="line"><span class="lineno">  542</span>  }</div>
+<p class="definition">Definition at line <a class="el" href="MapNodes_8hpp_source.html#l00541">541</a> of file <a class="el" href="MapNodes_8hpp_source.html">MapNodes.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  541</span>                                               {</div>
+<div class="line"><span class="lineno">  542</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="structdyno_1_1FrameNode.html#abaa8e0e43e91e27aed099b00d50951de">dynamic_landmarks</a>.size();</div>
+<div class="line"><span class="lineno">  543</span>  }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="structdyno_1_1FrameNode.html#abaa8e0e43e91e27aed099b00d50951de">dyno::FrameNode&lt; MEASUREMENT &gt;::dynamic_landmarks</a>.</p>
 
@@ -695,8 +695,8 @@ template&lt;typename MEASUREMENT &gt; </div>
 <p>Number of observed objects at this frame. </p>
 <dl class="section return"><dt>Returns</dt><dd>size_t </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="MapNodes_8hpp_source.html#l00524">524</a> of file <a class="el" href="MapNodes_8hpp_source.html">MapNodes.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  524</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="structdyno_1_1FrameNode.html#af3f9d97008cfc82637fbd35629553e3a">objects_seen</a>.size(); }</div>
+<p class="definition">Definition at line <a class="el" href="MapNodes_8hpp_source.html#l00525">525</a> of file <a class="el" href="MapNodes_8hpp_source.html">MapNodes.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  525</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="structdyno_1_1FrameNode.html#af3f9d97008cfc82637fbd35629553e3a">objects_seen</a>.size(); }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="structdyno_1_1FrameNode.html#af3f9d97008cfc82637fbd35629553e3a">dyno::FrameNode&lt; MEASUREMENT &gt;::objects_seen</a>.</p>
 
@@ -730,10 +730,10 @@ template&lt;typename MEASUREMENT &gt; </div>
 <p>Number of static measurements for this frame. </p>
 <dl class="section return"><dt>Returns</dt><dd>size_t </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="MapNodes_8hpp_source.html#l00549">549</a> of file <a class="el" href="MapNodes_8hpp_source.html">MapNodes.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  549</span>                                              {</div>
-<div class="line"><span class="lineno">  550</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="structdyno_1_1FrameNode.html#a35ea28e1530d437b4a8031b8ba77fa08">static_landmarks</a>.size();</div>
-<div class="line"><span class="lineno">  551</span>  }</div>
+<p class="definition">Definition at line <a class="el" href="MapNodes_8hpp_source.html#l00550">550</a> of file <a class="el" href="MapNodes_8hpp_source.html">MapNodes.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  550</span>                                              {</div>
+<div class="line"><span class="lineno">  551</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="structdyno_1_1FrameNode.html#a35ea28e1530d437b4a8031b8ba77fa08">static_landmarks</a>.size();</div>
+<div class="line"><span class="lineno">  552</span>  }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="structdyno_1_1FrameNode.html#a35ea28e1530d437b4a8031b8ba77fa08">dyno::FrameNode&lt; MEASUREMENT &gt;::static_landmarks</a>.</p>
 
@@ -784,7 +784,7 @@ false </dd></dl>
 <div class="line"><span class="lineno">   79</span>  <span class="keywordflow">return</span> <a class="code hl_function" href="structdyno_1_1FrameNode.html#a45b594ce44ad91a7a528c2387a9d63a8">objectObserved</a>(object_id) &amp;&amp; <a class="code hl_function" href="structdyno_1_1FrameNode.html#aa105d1d2cff499448ca9f17eb498f583">objectObservedInPrevious</a>(object_id);</div>
 <div class="line"><span class="lineno">   80</span>}</div>
 <div class="ttc" id="astructdyno_1_1FrameNode_html_a45b594ce44ad91a7a528c2387a9d63a8"><div class="ttname"><a href="structdyno_1_1FrameNode.html#a45b594ce44ad91a7a528c2387a9d63a8">dyno::FrameNode::objectObserved</a></div><div class="ttdeci">bool objectObserved(ObjectId object_id) const</div><div class="ttdoc">True if the requested object was observed in this frame.</div><div class="ttdef"><b>Definition:</b> <a href="MapNodes-inl_8hpp_source.html#l00044">MapNodes-inl.hpp:44</a></div></div>
-<div class="ttc" id="astructdyno_1_1FrameNode_html_aa105d1d2cff499448ca9f17eb498f583"><div class="ttname"><a href="structdyno_1_1FrameNode.html#aa105d1d2cff499448ca9f17eb498f583">dyno::FrameNode::objectObservedInPrevious</a></div><div class="ttdeci">bool objectObservedInPrevious(ObjectId object_id) const</div><div class="ttdoc">True if the requested object was observed at the previous frame.</div><div class="ttdef"><b>Definition:</b> <a href="MapNodes-inl_8hpp_source.html#l00049">MapNodes-inl.hpp:49</a></div></div>
+<div class="ttc" id="astructdyno_1_1FrameNode_html_aa105d1d2cff499448ca9f17eb498f583"><div class="ttname"><a href="structdyno_1_1FrameNode.html#aa105d1d2cff499448ca9f17eb498f583">dyno::FrameNode::objectObservedInPrevious</a></div><div class="ttdeci">bool objectObservedInPrevious(ObjectId object_id) const</div><div class="ttdoc">True if the requested object was observed at the previous frame. TODO: this is hardcoded with k-1!...</div><div class="ttdef"><b>Definition:</b> <a href="MapNodes-inl_8hpp_source.html#l00049">MapNodes-inl.hpp:49</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -842,7 +842,7 @@ template&lt;typename MEASUREMENT &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p>True if the requested object was observed at the previous frame. </p>
+<p>True if the requested object was observed at the previous frame. TODO: this is hardcoded with k-1!!! Not valid for keyframing!!! </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">object_id</td><td>ObjectId </td></tr>
@@ -905,9 +905,9 @@ template&lt;typename MEASUREMENT &gt; </div>
 <div class="line"><span class="lineno">  436</span>    <span class="keywordflow">return</span> ss.str();</div>
 <div class="line"><span class="lineno">  437</span>  }</div>
 <div class="ttc" id="anamespacedyno_html_a17d3c448677824ae83870358b2a3e01d"><div class="ttname"><a href="namespacedyno.html#a17d3c448677824ae83870358b2a3e01d">dyno::container_to_string</a></div><div class="ttdeci">std::string container_to_string(const Container &amp;container, const std::string &amp;delimiter=&quot; &quot;)</div><div class="ttdef"><b>Definition:</b> <a href="Types_8hpp_source.html#l00717">Types.hpp:717</a></div></div>
-<div class="ttc" id="astructdyno_1_1FrameNode_html_a9de09adaaec699595f7e7c83736c029a"><div class="ttname"><a href="structdyno_1_1FrameNode.html#a9de09adaaec699595f7e7c83736c029a">dyno::FrameNode::getObservedObjects</a></div><div class="ttdeci">ObjectIds getObservedObjects() const</div><div class="ttdoc">Get the ids (j) of objects observed at this frame.</div><div class="ttdef"><b>Definition:</b> <a href="MapNodes_8hpp_source.html#l00531">MapNodes.hpp:531</a></div></div>
-<div class="ttc" id="astructdyno_1_1FrameNode_html_ad7c6e24fb31032de05d77d3dc15ab2f3"><div class="ttname"><a href="structdyno_1_1FrameNode.html#ad7c6e24fb31032de05d77d3dc15ab2f3">dyno::FrameNode::numDynamicMeasurements</a></div><div class="ttdeci">size_t numDynamicMeasurements() const</div><div class="ttdoc">Number of dynamic measurements for this frame.</div><div class="ttdef"><b>Definition:</b> <a href="MapNodes_8hpp_source.html#l00540">MapNodes.hpp:540</a></div></div>
-<div class="ttc" id="astructdyno_1_1FrameNode_html_af0287156595740882fd899088c7777f2"><div class="ttname"><a href="structdyno_1_1FrameNode.html#af0287156595740882fd899088c7777f2">dyno::FrameNode::numStaticMeasurements</a></div><div class="ttdeci">size_t numStaticMeasurements() const</div><div class="ttdoc">Number of static measurements for this frame.</div><div class="ttdef"><b>Definition:</b> <a href="MapNodes_8hpp_source.html#l00549">MapNodes.hpp:549</a></div></div>
+<div class="ttc" id="astructdyno_1_1FrameNode_html_a9de09adaaec699595f7e7c83736c029a"><div class="ttname"><a href="structdyno_1_1FrameNode.html#a9de09adaaec699595f7e7c83736c029a">dyno::FrameNode::getObservedObjects</a></div><div class="ttdeci">ObjectIds getObservedObjects() const</div><div class="ttdoc">Get the ids (j) of objects observed at this frame.</div><div class="ttdef"><b>Definition:</b> <a href="MapNodes_8hpp_source.html#l00532">MapNodes.hpp:532</a></div></div>
+<div class="ttc" id="astructdyno_1_1FrameNode_html_ad7c6e24fb31032de05d77d3dc15ab2f3"><div class="ttname"><a href="structdyno_1_1FrameNode.html#ad7c6e24fb31032de05d77d3dc15ab2f3">dyno::FrameNode::numDynamicMeasurements</a></div><div class="ttdeci">size_t numDynamicMeasurements() const</div><div class="ttdoc">Number of dynamic measurements for this frame.</div><div class="ttdef"><b>Definition:</b> <a href="MapNodes_8hpp_source.html#l00541">MapNodes.hpp:541</a></div></div>
+<div class="ttc" id="astructdyno_1_1FrameNode_html_af0287156595740882fd899088c7777f2"><div class="ttname"><a href="structdyno_1_1FrameNode.html#af0287156595740882fd899088c7777f2">dyno::FrameNode::numStaticMeasurements</a></div><div class="ttdeci">size_t numStaticMeasurements() const</div><div class="ttdoc">Number of static measurements for this frame.</div><div class="ttdef"><b>Definition:</b> <a href="MapNodes_8hpp_source.html#l00550">MapNodes.hpp:550</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="namespacedyno.html#a17d3c448677824ae83870358b2a3e01d">dyno::container_to_string()</a>, <a class="el" href="structdyno_1_1FrameNode.html#a63d7210525fcf603614025357433f2b7">dyno::FrameNode&lt; MEASUREMENT &gt;::frame_id</a>, <a class="el" href="structdyno_1_1FrameNode.html#a9de09adaaec699595f7e7c83736c029a">dyno::FrameNode&lt; MEASUREMENT &gt;::getObservedObjects()</a>, <a class="el" href="structdyno_1_1FrameNode.html#ad7c6e24fb31032de05d77d3dc15ab2f3">dyno::FrameNode&lt; MEASUREMENT &gt;::numDynamicMeasurements()</a>, and <a class="el" href="structdyno_1_1FrameNode.html#af0287156595740882fd899088c7777f2">dyno::FrameNode&lt; MEASUREMENT &gt;::numStaticMeasurements()</a>.</p>
 <div class="dynheader">

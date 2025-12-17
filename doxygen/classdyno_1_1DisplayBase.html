@@ -290,23 +290,21 @@ template&lt;typename INPUT &gt; </div>
 <p class="definition">Definition at line <a class="el" href="Display_8hpp_source.html#l00069">69</a> of file <a class="el" href="Display_8hpp_source.html">Display.hpp</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">   69</span>                                            {</div>
 <div class="line"><span class="lineno">   70</span>    CHECK(input);</div>
-<div class="line"><span class="lineno">   71</span>    <span class="keyword">auto</span> [timestamp, frame_id] = internal::collectTemporalData&lt;INPUT&gt;(*input);</div>
-<div class="line"><span class="lineno">   72</span>    this-&gt;<a class="code hl_variable" href="structdyno_1_1SharedModuleInterface.html#afeac0a42a7ca31317d9267747e78b9e7">shared_module_info</a>.<a class="code hl_function" href="classdyno_1_1SharedModuleInfo.html#a1ebc41ec3d56d8ea770a523193662c25">updateTimestampMapping</a>(frame_id, timestamp);</div>
-<div class="line"><span class="lineno">   73</span>    <a class="code hl_function" href="classdyno_1_1DisplayBase.html#a7cbae34bc7821aa2586d16f63158e258">spinOnceImpl</a>(input);</div>
-<div class="line"><span class="lineno">   74</span>  }</div>
+<div class="line"><span class="lineno">   71</span>    <span class="comment">// auto [timestamp, frame_id] =</span></div>
+<div class="line"><span class="lineno">   72</span>    <span class="comment">// internal::collectTemporalData&lt;INPUT&gt;(*input);</span></div>
+<div class="line"><span class="lineno">   73</span>    <span class="comment">// this-&gt;shared_module_info.updateTimestampMapping(frame_id, timestamp);</span></div>
+<div class="line"><span class="lineno">   74</span>    <a class="code hl_function" href="classdyno_1_1DisplayBase.html#a7cbae34bc7821aa2586d16f63158e258">spinOnceImpl</a>(input);</div>
+<div class="line"><span class="lineno">   75</span>  }</div>
 <div class="ttc" id="aclassdyno_1_1DisplayBase_html_a7cbae34bc7821aa2586d16f63158e258"><div class="ttname"><a href="classdyno_1_1DisplayBase.html#a7cbae34bc7821aa2586d16f63158e258">dyno::DisplayBase::spinOnceImpl</a></div><div class="ttdeci">virtual void spinOnceImpl(const InputConstPtr &amp;input)=0</div></div>
-<div class="ttc" id="aclassdyno_1_1SharedModuleInfo_html_a1ebc41ec3d56d8ea770a523193662c25"><div class="ttname"><a href="classdyno_1_1SharedModuleInfo.html#a1ebc41ec3d56d8ea770a523193662c25">dyno::SharedModuleInfo::updateTimestampMapping</a></div><div class="ttdeci">SharedModuleInfo &amp; updateTimestampMapping(FrameId frame_id, Timestamp timestamp)</div><div class="ttdef"><b>Definition:</b> <a href="SharedModuleInfo_8cc_source.html#l00080">SharedModuleInfo.cc:80</a></div></div>
-<div class="ttc" id="astructdyno_1_1SharedModuleInterface_html_afeac0a42a7ca31317d9267747e78b9e7"><div class="ttname"><a href="structdyno_1_1SharedModuleInterface.html#afeac0a42a7ca31317d9267747e78b9e7">dyno::SharedModuleInterface::shared_module_info</a></div><div class="ttdeci">SharedModuleInfo &amp; shared_module_info</div><div class="ttdef"><b>Definition:</b> <a href="SharedModuleInfo_8hpp_source.html#l00064">SharedModuleInfo.hpp:64</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="structdyno_1_1SharedModuleInterface.html#afeac0a42a7ca31317d9267747e78b9e7">dyno::SharedModuleInterface::shared_module_info</a>, <a class="el" href="classdyno_1_1DisplayBase.html#a7cbae34bc7821aa2586d16f63158e258">dyno::DisplayBase&lt; INPUT &gt;::spinOnceImpl()</a>, and <a class="el" href="classdyno_1_1SharedModuleInfo.html#a1ebc41ec3d56d8ea770a523193662c25">dyno::SharedModuleInfo::updateTimestampMapping()</a>.</p>
+<p class="reference">References <a class="el" href="classdyno_1_1DisplayBase.html#a7cbae34bc7821aa2586d16f63158e258">dyno::DisplayBase&lt; INPUT &gt;::spinOnceImpl()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdyno_1_1DisplayBase_a8ef96ee9f0c793cfb54627cd6b3c1562_cgraph.png" border="0" usemap="#aclassdyno_1_1DisplayBase_a8ef96ee9f0c793cfb54627cd6b3c1562_cgraph" alt=""/></div>
 <map name="aclassdyno_1_1DisplayBase_a8ef96ee9f0c793cfb54627cd6b3c1562_cgraph" id="aclassdyno_1_1DisplayBase_a8ef96ee9f0c793cfb54627cd6b3c1562_cgraph">
-<area shape="rect" title=" " alt="" coords="5,37,156,77"/>
-<area shape="rect" href="classdyno_1_1DisplayBase.html#a7cbae34bc7821aa2586d16f63158e258" title=" " alt="" coords="231,5,382,45"/>
-<area shape="rect" href="classdyno_1_1SharedModuleInfo.html#a1ebc41ec3d56d8ea770a523193662c25" title=" " alt="" coords="204,69,409,109"/>
+<area shape="rect" title=" " alt="" coords="5,5,156,45"/>
+<area shape="rect" href="classdyno_1_1DisplayBase.html#a7cbae34bc7821aa2586d16f63158e258" title=" " alt="" coords="204,5,355,45"/>
 </map>
 </div>
 

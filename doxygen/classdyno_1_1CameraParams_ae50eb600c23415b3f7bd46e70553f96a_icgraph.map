@@ -1,16 +1,19 @@
 <map id="dyno::CameraParams::getCameraMatrix" name="dyno::CameraParams::getCameraMatrix">
-<area shape="rect" id="node1" title=" " alt="" coords="919,213,1080,253"/>
+<area shape="rect" id="node1" title=" " alt="" coords="919,271,1080,311"/>
 <area shape="rect" id="node2" href="$classdyno_1_1StereoCamera.html#a6ce9ba10820d974b32a081868c224fad" title="computeRectificationParameters" alt="" coords="620,5,863,45"/>
 <area shape="rect" id="node4" href="$structrclcpp_1_1TypeAdapter_3_01dyno_1_1CameraParams_00_01sensor__msgs_1_1msg_1_1CameraInfo_01_4.html#a88de3493ecfc9c56e7812f9a8919d673" title=" " alt="" coords="626,69,857,139"/>
 <area shape="rect" id="node5" href="$classdyno_1_1Frame.html#ac0cb31923b35426420d5f4c363bedb94" title=" " alt="" coords="665,163,817,189"/>
 <area shape="rect" id="node6" href="$classdyno_1_1UndistorterRectifier.html#a4a4cf24ce89d70f3ec6c3c25051f4691" title="initUndistortRectifyMaps Initialize pixel to pixel maps for undistortion and rectification...." alt="" coords="646,213,837,253"/>
-<area shape="rect" id="node8" href="$classdyno_1_1UndistorterRectifier.html#af102413f7c20a9120b1e1d0a7d848c41" title="UndistortKeypointAndGetVersor undistort a single pixel, and return the corresponding projected versor..." alt="" coords="308,263,564,318"/>
-<area shape="rect" id="node10" href="$classdyno_1_1UndistorterRectifier.html#ae64676bd43fb299d9c72034fa3ee3c09" title="undistortRectifyKeypoints undistorts and rectifies" alt="" coords="642,328,841,368"/>
-<area shape="rect" id="node14" href="$namespacedyno_1_1vision__tools.html#a5d8b89d2b560b498934853c77a7d9f28" title="Saves a re&#45;projected 3D point cloud with labelled points to file as a cv::Mat." alt="" coords="612,392,871,432"/>
+<area shape="rect" id="node8" href="$dynosam__tracking__demo__node_8cc.html#a3c04138a5bfe5d72780bb7e82a18e627" title=" " alt="" coords="714,278,769,303"/>
+<area shape="rect" id="node9" href="$classdyno_1_1RGBDTypeCalibrationHelper.html#a86830a12650b74d5497de6e9240e416f" title=" " alt="" coords="623,328,860,368"/>
+<area shape="rect" id="node11" href="$classdyno_1_1UndistorterRectifier.html#af102413f7c20a9120b1e1d0a7d848c41" title="UndistortKeypointAndGetVersor undistort a single pixel, and return the corresponding projected versor..." alt="" coords="308,378,564,433"/>
+<area shape="rect" id="node13" href="$classdyno_1_1UndistorterRectifier.html#ae64676bd43fb299d9c72034fa3ee3c09" title="undistortRectifyKeypoints undistorts and rectifies" alt="" coords="642,443,841,483"/>
+<area shape="rect" id="node17" href="$namespacedyno_1_1vision__tools.html#a5d8b89d2b560b498934853c77a7d9f28" title="Saves a re&#45;projected 3D point cloud with labelled points to file as a cv::Mat." alt="" coords="612,507,871,547"/>
 <area shape="rect" id="node3" href="$classdyno_1_1StereoCamera.html#a2262c33a62cc297ecedbe5801fcd37df" title=" " alt="" coords="359,5,513,45"/>
-<area shape="rect" id="node7" href="$classdyno_1_1UndistorterRectifier.html#aaffa018d8098ac0c4916029c05340d0b" title="UndistorterRectifier." alt="" coords="341,199,531,239"/>
-<area shape="rect" id="node9" href="$classdyno_1_1UndistorterRectifier.html#a80b4a50fd637142aee912e2aa0f200ee" title=" " alt="" coords="5,263,260,318"/>
-<area shape="rect" id="node11" href="$classdyno_1_1UndistorterRectifier.html#a210fba595205f9c9f36eb76bb37a7b69" title="UndistortKeypointAndGetVersor undistort a single pixel, and return the corresponding versor...." alt="" coords="318,343,554,383"/>
-<area shape="rect" id="node13" href="$classdyno_1_1UndistorterRectifier.html#a870349a1e058dcd67b749bc8dcfbf9de" title="undistortRectifyKeypoints Undistorts and rectifies a sparse set of keypoints (instead of a whole imag..." alt="" coords="337,407,535,447"/>
-<area shape="rect" id="node12" href="$classdyno_1_1UndistorterRectifier.html#aa55a8cd2fa64ee3b968f2be1d6acf19f" title="Undistorts a single pixel and returns the corresponding versor (unit norm vector corresponding to bea..." alt="" coords="15,343,250,383"/>
+<area shape="rect" id="node7" href="$classdyno_1_1UndistorterRectifier.html#aaffa018d8098ac0c4916029c05340d0b" title="UndistorterRectifier." alt="" coords="341,213,531,253"/>
+<area shape="rect" id="node10" href="$classdyno_1_1RGBDTypeCalibrationHelper.html#ad6a5cc5e138741db5d3a5a2e6d9c05cf" title=" " alt="" coords="309,313,563,353"/>
+<area shape="rect" id="node12" href="$classdyno_1_1UndistorterRectifier.html#a80b4a50fd637142aee912e2aa0f200ee" title=" " alt="" coords="5,378,260,433"/>
+<area shape="rect" id="node14" href="$classdyno_1_1UndistorterRectifier.html#a210fba595205f9c9f36eb76bb37a7b69" title="UndistortKeypointAndGetVersor undistort a single pixel, and return the corresponding versor...." alt="" coords="318,457,554,497"/>
+<area shape="rect" id="node16" href="$classdyno_1_1UndistorterRectifier.html#a870349a1e058dcd67b749bc8dcfbf9de" title="undistortRectifyKeypoints Undistorts and rectifies a sparse set of keypoints (instead of a whole imag..." alt="" coords="337,521,535,561"/>
+<area shape="rect" id="node15" href="$classdyno_1_1UndistorterRectifier.html#aa55a8cd2fa64ee3b968f2be1d6acf19f" title="Undistorts a single pixel and returns the corresponding versor (unit norm vector corresponding to bea..." alt="" coords="15,457,250,497"/>
 </map>

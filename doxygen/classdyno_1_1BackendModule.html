@@ -81,7 +81,7 @@ $(function() {
 <a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="classdyno_1_1BackendModule-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">dyno::BackendModule Class Reference</div></div>
+  <div class="headertitle"><div class="title">dyno::BackendModule Class Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div></div>
 </div><!--header-->
 <div class="contents">
 
@@ -162,6 +162,11 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a66737a912311cd392f7264443cc5aa0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac15bb8ad2c07c99e54ae7e6a3263542b"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structdyno_1_1BackendSpinState.html">BackendSpinState</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1BackendModule.html#ac15bb8ad2c07c99e54ae7e6a3263542b">getSpinState</a> () const</td></tr>
 <tr class="separator:ac15bb8ad2c07c99e54ae7e6a3263542b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab06ea2667a161b801dfd3c1f98bd26c0"><td class="memItemLeft" align="right" valign="top">virtual Accessor::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1BackendModule.html#ab06ea2667a161b801dfd3c1f98bd26c0">getAccessor</a> ()=0</td></tr>
+<tr class="memdesc:ab06ea2667a161b801dfd3c1f98bd26c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the accessor the the underlying formulation, allowing the optimised values to be directly accessed.  <br /></td></tr>
+<tr class="separator:ab06ea2667a161b801dfd3c1f98bd26c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a496e697c8a34958611994a245ef7dc8e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1BackendModule.html#a496e697c8a34958611994a245ef7dc8e">registerFrontendUpdateInterface</a> (const <a class="el" href="namespacedyno.html#a22baa9d4ee738efc564d98877249a456">FrontendUpdateInterface</a> &amp;cb)</td></tr>
+<tr class="separator:a496e697c8a34958611994a245ef7dc8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classdyno_1_1ModuleBase"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classdyno_1_1ModuleBase')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classdyno_1_1ModuleBase.html">dyno::ModuleBase&lt; BackendInputPacket, BackendOutputPacket &gt;</a></td></tr>
 <tr class="memitem:a329b6e9ab24d2b49a35d0d97106003d1 inherit pub_methods_classdyno_1_1ModuleBase"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1ModuleBase.html#a329b6e9ab24d2b49a35d0d97106003d1">ModuleBase</a> (const std::string &amp;name)</td></tr>
 <tr class="separator:a329b6e9ab24d2b49a35d0d97106003d1 inherit pub_methods_classdyno_1_1ModuleBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -209,6 +214,8 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:a0fa2685fdfae16c75f537b5a86e98493"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af1fd7b04a90c2a06ddc832b4647ff77d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structdyno_1_1NoiseModels.html">NoiseModels</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1BackendModule.html#af1fd7b04a90c2a06ddc832b4647ff77d">noise_models_</a></td></tr>
 <tr class="separator:af1fd7b04a90c2a06ddc832b4647ff77d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac7c5be755b4e457182b7fb31c85a1b27"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacedyno.html#a22baa9d4ee738efc564d98877249a456">FrontendUpdateInterface</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdyno_1_1BackendModule.html#ac7c5be755b4e457182b7fb31c85a1b27">frontend_update_callback_</a></td></tr>
+<tr class="separator:ac7c5be755b4e457182b7fb31c85a1b27"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="inherited" name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
@@ -219,7 +226,7 @@ Additional Inherited Members</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Base class to actually do processing. Data passed to this module from the frontend. </p>
 
-<p class="definition">Definition at line <a class="el" href="BackendModule_8hpp_source.html#l00071">71</a> of file <a class="el" href="BackendModule_8hpp_source.html">BackendModule.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="BackendModule_8hpp_source.html#l00074">74</a> of file <a class="el" href="BackendModule_8hpp_source.html">BackendModule.hpp</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="a380b1543b1e1d90de3e5df9fc3d19d3f" name="a380b1543b1e1d90de3e5df9fc3d19d3f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a380b1543b1e1d90de3e5df9fc3d19d3f">&#9670;&#160;</a></span>Base</h2>
@@ -233,7 +240,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="BackendModule_8hpp_source.html#l00077">77</a> of file <a class="el" href="BackendModule_8hpp_source.html">BackendModule.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="BackendModule_8hpp_source.html#l00080">80</a> of file <a class="el" href="BackendModule_8hpp_source.html">BackendModule.hpp</a>.</p>
 
 </div>
 </div>
@@ -257,7 +264,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="BackendModule_8hpp_source.html#l00098">98</a> of file <a class="el" href="BackendModule_8hpp_source.html">BackendModule.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="BackendModule_8hpp_source.html#l00114">114</a> of file <a class="el" href="BackendModule_8hpp_source.html">BackendModule.hpp</a>.</p>
 
 </div>
 </div>
@@ -281,7 +288,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="BackendModule_8hpp_source.html#l00097">97</a> of file <a class="el" href="BackendModule_8hpp_source.html">BackendModule.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="BackendModule_8hpp_source.html#l00113">113</a> of file <a class="el" href="BackendModule_8hpp_source.html">BackendModule.hpp</a>.</p>
 
 </div>
 </div>
@@ -337,11 +344,11 @@ Additional Inherited Members</h2></td></tr>
 <div class="line"><span class="lineno">   62</span>                                   previous_spin_state.iteration + 1);</div>
 <div class="line"><span class="lineno">   63</span>  });</div>
 <div class="line"><span class="lineno">   64</span>}</div>
-<div class="ttc" id="aclassdyno_1_1BackendModule_html_a0fa2685fdfae16c75f537b5a86e98493"><div class="ttname"><a href="classdyno_1_1BackendModule.html#a0fa2685fdfae16c75f537b5a86e98493">dyno::BackendModule::spin_state_</a></div><div class="ttdeci">BackendSpinState spin_state_</div><div class="ttdoc">Optional display queue.</div><div class="ttdef"><b>Definition:</b> <a href="BackendModule_8hpp_source.html#l00105">BackendModule.hpp:105</a></div></div>
+<div class="ttc" id="aclassdyno_1_1BackendModule_html_a0fa2685fdfae16c75f537b5a86e98493"><div class="ttname"><a href="classdyno_1_1BackendModule.html#a0fa2685fdfae16c75f537b5a86e98493">dyno::BackendModule::spin_state_</a></div><div class="ttdeci">BackendSpinState spin_state_</div><div class="ttdoc">Optional display queue.</div><div class="ttdef"><b>Definition:</b> <a href="BackendModule_8hpp_source.html#l00121">BackendModule.hpp:121</a></div></div>
 <div class="ttc" id="aclassdyno_1_1BackendModule_html_a1803b6a19bd4c08d24cb46d5e066e56f"><div class="ttname"><a href="classdyno_1_1BackendModule.html#a1803b6a19bd4c08d24cb46d5e066e56f">dyno::BackendModule::setFactorParams</a></div><div class="ttdeci">void setFactorParams(const BackendParams &amp;backend_params)</div><div class="ttdef"><b>Definition:</b> <a href="BackendModule_8cc_source.html#l00066">BackendModule.cc:66</a></div></div>
-<div class="ttc" id="aclassdyno_1_1BackendModule_html_a273b119d1f4c38b9216c95d3ce7b76f9"><div class="ttname"><a href="classdyno_1_1BackendModule.html#a273b119d1f4c38b9216c95d3ce7b76f9">dyno::BackendModule::base_params_</a></div><div class="ttdeci">const BackendParams base_params_</div><div class="ttdef"><b>Definition:</b> <a href="BackendModule_8hpp_source.html#l00101">BackendModule.hpp:101</a></div></div>
-<div class="ttc" id="aclassdyno_1_1BackendModule_html_a380b1543b1e1d90de3e5df9fc3d19d3f"><div class="ttname"><a href="classdyno_1_1BackendModule.html#a380b1543b1e1d90de3e5df9fc3d19d3f">dyno::BackendModule::Base</a></div><div class="ttdeci">ModuleBase&lt; BackendInputPacket, BackendOutputPacket &gt; Base</div><div class="ttdef"><b>Definition:</b> <a href="BackendModule_8hpp_source.html#l00077">BackendModule.hpp:77</a></div></div>
-<div class="ttc" id="aclassdyno_1_1BackendModule_html_a86c8256dd694e78db30a7ffe4445a758"><div class="ttname"><a href="classdyno_1_1BackendModule.html#a86c8256dd694e78db30a7ffe4445a758">dyno::BackendModule::display_queue_</a></div><div class="ttdeci">ImageDisplayQueue * display_queue_</div><div class="ttdef"><b>Definition:</b> <a href="BackendModule_8hpp_source.html#l00102">BackendModule.hpp:102</a></div></div>
+<div class="ttc" id="aclassdyno_1_1BackendModule_html_a273b119d1f4c38b9216c95d3ce7b76f9"><div class="ttname"><a href="classdyno_1_1BackendModule.html#a273b119d1f4c38b9216c95d3ce7b76f9">dyno::BackendModule::base_params_</a></div><div class="ttdeci">const BackendParams base_params_</div><div class="ttdef"><b>Definition:</b> <a href="BackendModule_8hpp_source.html#l00117">BackendModule.hpp:117</a></div></div>
+<div class="ttc" id="aclassdyno_1_1BackendModule_html_a380b1543b1e1d90de3e5df9fc3d19d3f"><div class="ttname"><a href="classdyno_1_1BackendModule.html#a380b1543b1e1d90de3e5df9fc3d19d3f">dyno::BackendModule::Base</a></div><div class="ttdeci">ModuleBase&lt; BackendInputPacket, BackendOutputPacket &gt; Base</div><div class="ttdef"><b>Definition:</b> <a href="BackendModule_8hpp_source.html#l00080">BackendModule.hpp:80</a></div></div>
+<div class="ttc" id="aclassdyno_1_1BackendModule_html_a86c8256dd694e78db30a7ffe4445a758"><div class="ttname"><a href="classdyno_1_1BackendModule.html#a86c8256dd694e78db30a7ffe4445a758">dyno::BackendModule::display_queue_</a></div><div class="ttdeci">ImageDisplayQueue * display_queue_</div><div class="ttdef"><b>Definition:</b> <a href="BackendModule_8hpp_source.html#l00118">BackendModule.hpp:118</a></div></div>
 <div class="ttc" id="aclassdyno_1_1ModuleBase_html_a3a2819e9de31d4057773353d92925986"><div class="ttname"><a href="classdyno_1_1ModuleBase.html#a3a2819e9de31d4057773353d92925986">dyno::ModuleBase&lt; BackendInputPacket, BackendOutputPacket &gt;::registerInputCallback</a></div><div class="ttdeci">void registerInputCallback(const InputCallback &amp;input_callback)</div><div class="ttdoc">Registeres a function callback to be triggered prior to nominal/bootstrapSpin being called.</div><div class="ttdef"><b>Definition:</b> <a href="ModuleBase_8hpp_source.html#l00109">ModuleBase.hpp:109</a></div></div>
 <div class="ttc" id="aclassdyno_1_1SharedModuleInfo_html_a1ebc41ec3d56d8ea770a523193662c25"><div class="ttname"><a href="classdyno_1_1SharedModuleInfo.html#a1ebc41ec3d56d8ea770a523193662c25">dyno::SharedModuleInfo::updateTimestampMapping</a></div><div class="ttdeci">SharedModuleInfo &amp; updateTimestampMapping(FrameId frame_id, Timestamp timestamp)</div><div class="ttdef"><b>Definition:</b> <a href="SharedModuleInfo_8cc_source.html#l00080">SharedModuleInfo.cc:80</a></div></div>
 <div class="ttc" id="aclassdyno_1_1SharedModuleInfo_html_acd861bcac956ec0797bde56aa44034f6"><div class="ttname"><a href="classdyno_1_1SharedModuleInfo.html#acd861bcac956ec0797bde56aa44034f6">dyno::SharedModuleInfo::updateGroundTruthPacket</a></div><div class="ttdeci">SharedModuleInfo &amp; updateGroundTruthPacket(FrameId frame_id, const GroundTruthInputPacket &amp;ground_truth_packet)</div><div class="ttdef"><b>Definition:</b> <a href="SharedModuleInfo_8cc_source.html#l00073">SharedModuleInfo.cc:73</a></div></div>
@@ -390,6 +397,36 @@ Here is the call graph for this function:</div>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="ab06ea2667a161b801dfd3c1f98bd26c0" name="ab06ea2667a161b801dfd3c1f98bd26c0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab06ea2667a161b801dfd3c1f98bd26c0">&#9670;&#160;</a></span>getAccessor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual Accessor::Ptr dyno::BackendModule::getAccessor </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the accessor the the underlying formulation, allowing the optimised values to be directly accessed. </p>
+<dl class="section return"><dt>Returns</dt><dd>Accessor::Ptr </dd></dl>
+
+<p>Implemented in <a class="el" href="classdyno_1_1ParallelHybridBackendModule.html#afb78b220e1829f74b386dfe2c56da6b0">dyno::ParallelHybridBackendModule</a>, and <a class="el" href="classdyno_1_1RegularBackendModule.html#a5a3a963762e99a367327031e06d1e44e">dyno::RegularBackendModule</a>.</p>
+
+</div>
+</div>
 <a id="a66737a912311cd392f7264443cc5aa0a" name="a66737a912311cd392f7264443cc5aa0a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a66737a912311cd392f7264443cc5aa0a">&#9670;&#160;</a></span>getNoiseModels()</h2>
 
@@ -413,9 +450,9 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="BackendModule_8hpp_source.html#l00084">84</a> of file <a class="el" href="BackendModule_8hpp_source.html">BackendModule.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   84</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1BackendModule.html#af1fd7b04a90c2a06ddc832b4647ff77d">noise_models_</a>; }</div>
-<div class="ttc" id="aclassdyno_1_1BackendModule_html_af1fd7b04a90c2a06ddc832b4647ff77d"><div class="ttname"><a href="classdyno_1_1BackendModule.html#af1fd7b04a90c2a06ddc832b4647ff77d">dyno::BackendModule::noise_models_</a></div><div class="ttdeci">NoiseModels noise_models_</div><div class="ttdef"><b>Definition:</b> <a href="BackendModule_8hpp_source.html#l00107">BackendModule.hpp:107</a></div></div>
+<p class="definition">Definition at line <a class="el" href="BackendModule_8hpp_source.html#l00087">87</a> of file <a class="el" href="BackendModule_8hpp_source.html">BackendModule.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   87</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1BackendModule.html#af1fd7b04a90c2a06ddc832b4647ff77d">noise_models_</a>; }</div>
+<div class="ttc" id="aclassdyno_1_1BackendModule_html_af1fd7b04a90c2a06ddc832b4647ff77d"><div class="ttname"><a href="classdyno_1_1BackendModule.html#af1fd7b04a90c2a06ddc832b4647ff77d">dyno::BackendModule::noise_models_</a></div><div class="ttdeci">NoiseModels noise_models_</div><div class="ttdef"><b>Definition:</b> <a href="BackendModule_8hpp_source.html#l00123">BackendModule.hpp:123</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1BackendModule.html#af1fd7b04a90c2a06ddc832b4647ff77d">noise_models_</a>.</p>
 
@@ -444,8 +481,8 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="BackendModule_8hpp_source.html#l00083">83</a> of file <a class="el" href="BackendModule_8hpp_source.html">BackendModule.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   83</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1BackendModule.html#a273b119d1f4c38b9216c95d3ce7b76f9">base_params_</a>; }</div>
+<p class="definition">Definition at line <a class="el" href="BackendModule_8hpp_source.html#l00086">86</a> of file <a class="el" href="BackendModule_8hpp_source.html">BackendModule.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   86</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1BackendModule.html#a273b119d1f4c38b9216c95d3ce7b76f9">base_params_</a>; }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1BackendModule.html#a273b119d1f4c38b9216c95d3ce7b76f9">base_params_</a>.</p>
 
@@ -474,10 +511,45 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="BackendModule_8hpp_source.html#l00085">85</a> of file <a class="el" href="BackendModule_8hpp_source.html">BackendModule.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   85</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1BackendModule.html#a0fa2685fdfae16c75f537b5a86e98493">spin_state_</a>; }</div>
+<p class="definition">Definition at line <a class="el" href="BackendModule_8hpp_source.html#l00088">88</a> of file <a class="el" href="BackendModule_8hpp_source.html">BackendModule.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   88</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classdyno_1_1BackendModule.html#a0fa2685fdfae16c75f537b5a86e98493">spin_state_</a>; }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="classdyno_1_1BackendModule.html#a0fa2685fdfae16c75f537b5a86e98493">spin_state_</a>.</p>
+
+</div>
+</div>
+<a id="a496e697c8a34958611994a245ef7dc8e" name="a496e697c8a34958611994a245ef7dc8e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a496e697c8a34958611994a245ef7dc8e">&#9670;&#160;</a></span>registerFrontendUpdateInterface()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void dyno::BackendModule::registerFrontendUpdateInterface </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespacedyno.html#a22baa9d4ee738efc564d98877249a456">FrontendUpdateInterface</a> &amp;&#160;</td>
+          <td class="paramname"><em>cb</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="BackendModule_8hpp_source.html#l00098">98</a> of file <a class="el" href="BackendModule_8hpp_source.html">BackendModule.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   98</span>                                                                          {</div>
+<div class="line"><span class="lineno">   99</span>    CHECK(cb);</div>
+<div class="line"><span class="lineno">  100</span>    <a class="code hl_variable" href="classdyno_1_1BackendModule.html#ac7c5be755b4e457182b7fb31c85a1b27">frontend_update_callback_</a> = cb;</div>
+<div class="line"><span class="lineno">  101</span>  }</div>
+<div class="ttc" id="aclassdyno_1_1BackendModule_html_ac7c5be755b4e457182b7fb31c85a1b27"><div class="ttname"><a href="classdyno_1_1BackendModule.html#ac7c5be755b4e457182b7fb31c85a1b27">dyno::BackendModule::frontend_update_callback_</a></div><div class="ttdeci">FrontendUpdateInterface frontend_update_callback_</div><div class="ttdef"><b>Definition:</b> <a href="BackendModule_8hpp_source.html#l00124">BackendModule.hpp:124</a></div></div>
+</div><!-- fragment -->
+<p class="reference">References <a class="el" href="classdyno_1_1BackendModule.html#ac7c5be755b4e457182b7fb31c85a1b27">frontend_update_callback_</a>.</p>
 
 </div>
 </div>
@@ -585,9 +657,9 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="BackendModule_8hpp_source.html#l00101">101</a> of file <a class="el" href="BackendModule_8hpp_source.html">BackendModule.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="BackendModule_8hpp_source.html#l00117">117</a> of file <a class="el" href="BackendModule_8hpp_source.html">BackendModule.hpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1VisionImuBackendModule.html#a67e4e733cd5724ba22900e531605d901">dyno::VisionImuBackendModule&lt; MODULE_TRAITS &gt;::addVisualInertialStates()</a>, <a class="el" href="classdyno_1_1RegularBackendModule.html#ab63dc8dd69d582874b25dc62828c14d2">dyno::RegularBackendModule::createBackendMetadata()</a>, <a class="el" href="classdyno_1_1RegularBackendModule.html#a3b4dab2d820857bf083a6205c4416503">dyno::RegularBackendModule::getActiveOptimisation()</a>, <a class="el" href="classdyno_1_1ParallelHybridBackendModule.html#afcfb8db249efb4497490497c4c19366f">dyno::ParallelHybridBackendModule::getEstimator()</a>, <a class="el" href="classdyno_1_1BackendModule.html#a6bcfb713f06215d64f607b8e3e577b6a">getParams()</a>, <a class="el" href="classdyno_1_1ParallelHybridBackendModule.html#a367a62d62ad07e49a2f2ef975e1bce8b">dyno::ParallelHybridBackendModule::logBackendFromEstimators()</a>, <a class="el" href="classdyno_1_1ParallelHybridBackendModule.html#a06ab247456bf85a1f6d67350f32eeb95">dyno::ParallelHybridBackendModule::ParallelHybridBackendModule()</a>, <a class="el" href="classdyno_1_1RegularBackendModule.html#ad8696fae27c16c0ce05109820099bd93">dyno::RegularBackendModule::setFormulation()</a>, <a class="el" href="classdyno_1_1RegularBackendModule.html#a1d71056f178abdb8bf65f5ff91936a09">dyno::RegularBackendModule::setupUpdates()</a>, <a class="el" href="classdyno_1_1RegularBackendModule.html#af37be3fb74afbf6b6a170b0cd13f38da">dyno::RegularBackendModule::updateAndOptimize()</a>, <a class="el" href="classdyno_1_1RegularBackendModule.html#a8adffa54177bf64bfed8cc39bbd7e7cc">dyno::RegularBackendModule::updateBatch()</a>, <a class="el" href="classdyno_1_1ParallelHybridBackendModule.html#a368912f3c84f148843f4b6ef653f4a0c">dyno::ParallelHybridBackendModule::~ParallelHybridBackendModule()</a>, and <a class="el" href="classdyno_1_1RegularBackendModule.html#a26a1f7ce71fdabc65cdb711e48892b62">dyno::RegularBackendModule::~RegularBackendModule()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1VisionImuBackendModule.html#a1757fadff6a79325826a0834534926b2">dyno::VisionImuBackendModule&lt; MODULE_TRAITS &gt;::addVisualInertialStates()</a>, <a class="el" href="classdyno_1_1RegularBackendModule.html#ab63dc8dd69d582874b25dc62828c14d2">dyno::RegularBackendModule::createBackendMetadata()</a>, <a class="el" href="classdyno_1_1RegularBackendModule.html#a3b4dab2d820857bf083a6205c4416503">dyno::RegularBackendModule::getActiveOptimisation()</a>, <a class="el" href="classdyno_1_1ParallelHybridBackendModule.html#afcfb8db249efb4497490497c4c19366f">dyno::ParallelHybridBackendModule::getEstimator()</a>, <a class="el" href="classdyno_1_1BackendModule.html#a6bcfb713f06215d64f607b8e3e577b6a">getParams()</a>, <a class="el" href="classdyno_1_1ParallelHybridBackendModule.html#a367a62d62ad07e49a2f2ef975e1bce8b">dyno::ParallelHybridBackendModule::logBackendFromEstimators()</a>, <a class="el" href="classdyno_1_1ParallelHybridBackendModule.html#a06ab247456bf85a1f6d67350f32eeb95">dyno::ParallelHybridBackendModule::ParallelHybridBackendModule()</a>, <a class="el" href="classdyno_1_1RegularBackendModule.html#ad8696fae27c16c0ce05109820099bd93">dyno::RegularBackendModule::setFormulation()</a>, <a class="el" href="classdyno_1_1RegularBackendModule.html#a1d71056f178abdb8bf65f5ff91936a09">dyno::RegularBackendModule::setupUpdates()</a>, <a class="el" href="classdyno_1_1RegularBackendModule.html#af37be3fb74afbf6b6a170b0cd13f38da">dyno::RegularBackendModule::updateAndOptimize()</a>, <a class="el" href="classdyno_1_1RegularBackendModule.html#a8adffa54177bf64bfed8cc39bbd7e7cc">dyno::RegularBackendModule::updateBatch()</a>, <a class="el" href="classdyno_1_1ParallelHybridBackendModule.html#a368912f3c84f148843f4b6ef653f4a0c">dyno::ParallelHybridBackendModule::~ParallelHybridBackendModule()</a>, and <a class="el" href="classdyno_1_1RegularBackendModule.html#a26a1f7ce71fdabc65cdb711e48892b62">dyno::RegularBackendModule::~RegularBackendModule()</a>.</p>
 
 </div>
 </div>
@@ -611,7 +683,33 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="BackendModule_8hpp_source.html#l00102">102</a> of file <a class="el" href="BackendModule_8hpp_source.html">BackendModule.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="BackendModule_8hpp_source.html#l00118">118</a> of file <a class="el" href="BackendModule_8hpp_source.html">BackendModule.hpp</a>.</p>
+
+</div>
+</div>
+<a id="ac7c5be755b4e457182b7fb31c85a1b27" name="ac7c5be755b4e457182b7fb31c85a1b27"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac7c5be755b4e457182b7fb31c85a1b27">&#9670;&#160;</a></span>frontend_update_callback_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespacedyno.html#a22baa9d4ee738efc564d98877249a456">FrontendUpdateInterface</a> dyno::BackendModule::frontend_update_callback_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="BackendModule_8hpp_source.html#l00124">124</a> of file <a class="el" href="BackendModule_8hpp_source.html">BackendModule.hpp</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1BackendModule.html#a496e697c8a34958611994a245ef7dc8e">registerFrontendUpdateInterface()</a>, and <a class="el" href="classdyno_1_1RegularBackendModule.html#af37be3fb74afbf6b6a170b0cd13f38da">dyno::RegularBackendModule::updateAndOptimize()</a>.</p>
 
 </div>
 </div>
@@ -636,7 +734,7 @@ Here is the caller graph for this function:</div>
 </div><div class="memdoc">
 <p>Spin state of the backend. Updated in the backend module base via InputCallback (see <a class="el" href="classdyno_1_1BackendModule.html" title="Base class to actually do processing. Data passed to this module from the frontend.">BackendModule</a> constructor). </p>
 
-<p class="definition">Definition at line <a class="el" href="BackendModule_8hpp_source.html#l00107">107</a> of file <a class="el" href="BackendModule_8hpp_source.html">BackendModule.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="BackendModule_8hpp_source.html#l00123">123</a> of file <a class="el" href="BackendModule_8hpp_source.html">BackendModule.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1RegularBackendModule.html#ae5fedb2fd39831ed3bb1b57bce07bcc4">dyno::RegularBackendModule::addInitialStates()</a>, <a class="el" href="classdyno_1_1RegularBackendModule.html#aa735123d7ce4c6fbb5751df5327b32ce">dyno::RegularBackendModule::addStates()</a>, <a class="el" href="classdyno_1_1BackendModule.html#a66737a912311cd392f7264443cc5aa0a">getNoiseModels()</a>, <a class="el" href="classdyno_1_1ParallelHybridBackendModule.html#a3ff7497b87c3ae0a18f604b0c0423cf6">dyno::ParallelHybridBackendModule::nominalUpdateStaticEstimator()</a>, <a class="el" href="classdyno_1_1ParallelHybridBackendModule.html#a06ab247456bf85a1f6d67350f32eeb95">dyno::ParallelHybridBackendModule::ParallelHybridBackendModule()</a>, <a class="el" href="classdyno_1_1RegularBackendModule.html#a94392cca6473c1cbad0b9e37da4edde3">dyno::RegularBackendModule::RegularBackendModule()</a>, <a class="el" href="classdyno_1_1BackendModule.html#a1803b6a19bd4c08d24cb46d5e066e56f">setFactorParams()</a>, and <a class="el" href="classdyno_1_1RegularBackendModule.html#ad8696fae27c16c0ce05109820099bd93">dyno::RegularBackendModule::setFormulation()</a>.</p>
 
@@ -664,7 +762,7 @@ Here is the caller graph for this function:</div>
 
 <p>Optional display queue. </p>
 
-<p class="definition">Definition at line <a class="el" href="BackendModule_8hpp_source.html#l00105">105</a> of file <a class="el" href="BackendModule_8hpp_source.html">BackendModule.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="BackendModule_8hpp_source.html#l00121">121</a> of file <a class="el" href="BackendModule_8hpp_source.html">BackendModule.hpp</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classdyno_1_1BackendModule.html#a719631280fcd29fedc11ba2a54f15caa">BackendModule()</a>, <a class="el" href="classdyno_1_1RegularBackendModule.html#ab253e9d8df2177ea7a5bdb044239af46">dyno::RegularBackendModule::boostrapSpinImpl()</a>, <a class="el" href="classdyno_1_1ParallelHybridBackendModule.html#adebef602aa454442f7edebaa8b2458a7">dyno::ParallelHybridBackendModule::bootstrapUpdateStaticEstimator()</a>, <a class="el" href="classdyno_1_1BackendModule.html#ac15bb8ad2c07c99e54ae7e6a3263542b">getSpinState()</a>, <a class="el" href="classdyno_1_1ParallelHybridBackendModule.html#a367a62d62ad07e49a2f2ef975e1bce8b">dyno::ParallelHybridBackendModule::logBackendFromEstimators()</a>, <a class="el" href="classdyno_1_1ParallelHybridBackendModule.html#a0da19e58aa04386a4d5bd6be23c038f8">dyno::ParallelHybridBackendModule::logGraphs()</a>, <a class="el" href="classdyno_1_1RegularBackendModule.html#a2ffdf0389a19bc9898825b8e3a86eccb">dyno::RegularBackendModule::nominalSpinImpl()</a>, <a class="el" href="classdyno_1_1ParallelHybridBackendModule.html#a3ff7497b87c3ae0a18f604b0c0423cf6">dyno::ParallelHybridBackendModule::nominalUpdateStaticEstimator()</a>, and <a class="el" href="classdyno_1_1RegularBackendModule.html#a26a1f7ce71fdabc65cdb711e48892b62">dyno::RegularBackendModule::~RegularBackendModule()</a>.</p>
 

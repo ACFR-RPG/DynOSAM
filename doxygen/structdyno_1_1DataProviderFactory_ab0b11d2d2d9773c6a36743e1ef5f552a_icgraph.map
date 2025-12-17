@@ -1,6 +1,7 @@
 <map id="dyno::DataProviderFactory::Create" name="dyno::DataProviderFactory::Create">
-<area shape="rect" id="node1" title=" " alt="" coords="547,37,741,77"/>
-<area shape="rect" id="node2" href="$classdyno_1_1DynoNode.html#ad5ec1dc5c7b6faa13607bed8444e49c6" title=" " alt="" coords="288,37,499,77"/>
-<area shape="rect" id="node3" href="$classdyno_1_1BackendExperimentsNode.html#ab5270451ea207126ab1937ea3f54f521" title=" " alt="" coords="5,5,240,45"/>
-<area shape="rect" id="node4" href="$classdyno_1_1DynoPipelineManagerRos.html#a9b111354972184ae191c76dfb88f6820" title=" " alt="" coords="20,69,225,109"/>
+<area shape="rect" id="node1" title=" " alt="" coords="825,37,1020,77"/>
+<area shape="rect" id="node2" href="$classdyno_1_1DynoNode.html#a8edd905e1335eadb14986f81ccbbcac9" title=" " alt="" coords="547,37,777,77"/>
+<area shape="rect" id="node3" href="$classdyno_1_1DynoNode.html#ad5ec1dc5c7b6faa13607bed8444e49c6" title=" " alt="" coords="288,37,499,77"/>
+<area shape="rect" id="node4" href="$classdyno_1_1BackendExperimentsNode.html#ab5270451ea207126ab1937ea3f54f521" title=" " alt="" coords="5,5,240,45"/>
+<area shape="rect" id="node5" href="$classdyno_1_1DynoPipelineManagerRos.html#a9b111354972184ae191c76dfb88f6820" title=" " alt="" coords="20,69,225,109"/>
 </map>

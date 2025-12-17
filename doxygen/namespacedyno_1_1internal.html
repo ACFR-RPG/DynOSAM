@@ -88,6 +88,9 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1internal_1_1AlignedYoloDetection.html">AlignedYoloDetection</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A single detection struct that overlays the raw float data from the device (GPU)  <a href="structdyno_1_1internal_1_1AlignedYoloDetection.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1internal_1_1Apply.html">Apply</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1internal_1_1Apply_3_010_01_4.html">Apply&lt; 0 &gt;</a></td></tr>
@@ -169,6 +172,11 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1internal_1_1type__identity.html">type_identity</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1internal_1_1YoloDetectionGpuMatDevice.html">YoloDetectionGpuMatDevice</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Wraps a <a class="el" href="structdyno_1_1internal_1_1AlignedYoloDetection.html" title="A single detection struct that overlays the raw float data from the device (GPU)">AlignedYoloDetection</a> struct to a set of GpuMat's. The alignment of the <a class="el" href="structdyno_1_1internal_1_1AlignedYoloDetection.html" title="A single detection struct that overlays the raw float data from the device (GPU)">AlignedYoloDetection</a> is used to set point the cv::cuda::GpuMat to the internal layout of the detection.  <a href="structdyno_1_1internal_1_1YoloDetectionGpuMatDevice.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdyno_1_1internal_1_1YoloKernelConfig.html">YoloKernelConfig</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
@@ -236,6 +244,11 @@ Functions</h2></td></tr>
 <tr class="memitem:a83a83b227f4519ab857427a74f1ffc1d"><td class="memTemplParams" colspan="2">template&lt;typename U , typename... T&gt; </td></tr>
 <tr class="memitem:a83a83b227f4519ab857427a74f1ffc1d"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacedyno_1_1internal.html#a83a83b227f4519ab857427a74f1ffc1d">contains</a> (std::tuple&lt; T... &gt;)</td></tr>
 <tr class="separator:a83a83b227f4519ab857427a74f1ffc1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa7f06ba2107d4d131286db14d03faabf"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno_1_1internal.html#aa7f06ba2107d4d131286db14d03faabf">YoloOutputToDetections</a> (const float *d_model_output, const <a class="el" href="structdyno_1_1internal_1_1YoloKernelConfig.html">YoloKernelConfig</a> &amp;config, <a class="el" href="structdyno_1_1internal_1_1AlignedYoloDetection.html">AlignedYoloDetection</a> *h_output_buffer, <a class="el" href="structdyno_1_1internal_1_1AlignedYoloDetection.html">AlignedYoloDetection</a> *d_output_buffer, int *d_count_buffer, int *h_count_buffer, void *stream=nullptr)</td></tr>
+<tr class="memdesc:aa7f06ba2107d4d131286db14d03faabf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Runs YOLO post-processing on the GPU.  <br /></td></tr>
+<tr class="separator:aa7f06ba2107d4d131286db14d03faabf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a78f0ccbd5305895c66edb914ce0f3d15"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno_1_1internal.html#a78f0ccbd5305895c66edb914ce0f3d15">YoloDetectionsToObjects</a> (const <a class="el" href="structdyno_1_1internal_1_1YoloDetectionGpuMatDevice.html">YoloDetectionGpuMatDevice</a> &amp;wrappers, const cv::cuda::GpuMat &amp;d_prototype_masks, const cv::Rect &amp;prototype_crop_rect, const <a class="el" href="structdyno_1_1internal_1_1AlignedYoloDetection.html">AlignedYoloDetection</a> *h_detection, const cv::Size &amp;required_size, const cv::Size &amp;original_size, const std::string &amp;label, const int mask_h, const int mask_w, cv::cuda::Stream stream, <a class="el" href="structdyno_1_1ObjectDetection.html">dyno::ObjectDetection</a> &amp;detection)</td></tr>
+<tr class="separator:a78f0ccbd5305895c66edb914ce0f3d15"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a35df6955bb63b53316c47099f513c571"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno_1_1internal.html#a35df6955bb63b53316c47099f513c571">optimizeInPlace</a> (const <a class="el" href="classdyno_1_1ISAM2.html#a1d31dd01d48733c972497c10051e88b8">ISAM2::sharedClique</a> &amp;clique, VectorValues *result)</td></tr>
 <tr class="separator:a35df6955bb63b53316c47099f513c571"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab59eaf9a9e6593b1859012fbf52bd1a7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedyno_1_1internal.html#ab59eaf9a9e6593b1859012fbf52bd1a7">updateRgProd</a> (const <a class="el" href="classdyno_1_1ISAM2.html#a1d31dd01d48733c972497c10051e88b8">ISAM2::sharedClique</a> &amp;clique, const gtsam::KeySet &amp;replacedKeys, const gtsam::VectorValues &amp;grad, gtsam::VectorValues *RgProd, size_t *varsUpdated)</td></tr>
@@ -268,7 +281,7 @@ template&lt;typename Iter &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00427">427</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00318">318</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
 
 </div>
 </div>
@@ -330,7 +343,7 @@ template&lt;typename Iter &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00423">423</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Feature_8hpp_source.html#l00314">314</a> of file <a class="el" href="Feature_8hpp_source.html">Feature.hpp</a>.</p>
 
 </div>
 </div>
@@ -480,7 +493,7 @@ template&lt;typename F , typename T &gt; </div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="namespacedyno_1_1internal.html#a7bbc6fb7391396e5b0c1865e5b6060ef">apply()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="namespacedyno_1_1internal.html#a7bbc6fb7391396e5b0c1865e5b6060ef">apply()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="namespacedyno_1_1internal.html#a7bbc6fb7391396e5b0c1865e5b6060ef">apply()</a>, and <a class="el" href="classdyno_1_1PipelineSpinner.html#abdd7a915b4a1e11961d703c20c4ba82c">dyno::PipelineSpinner::appyAll()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -494,7 +507,12 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="namespacedyno_1_1internal_a7bbc6fb7391396e5b0c1865e5b6060ef_icgraph.png" border="0" usemap="#anamespacedyno_1_1internal_a7bbc6fb7391396e5b0c1865e5b6060ef_icgraph" alt=""/></div>
 <map name="anamespacedyno_1_1internal_a7bbc6fb7391396e5b0c1865e5b6060ef_icgraph" id="anamespacedyno_1_1internal_a7bbc6fb7391396e5b0c1865e5b6060ef_icgraph">
-<area shape="rect" title=" " alt="" coords="5,29,161,55"/>
+<area shape="rect" title=" " alt="" coords="637,77,793,102"/>
+<area shape="rect" href="classdyno_1_1PipelineSpinner.html#abdd7a915b4a1e11961d703c20c4ba82c" title=" " alt="" coords="427,69,589,109"/>
+<area shape="rect" href="classdyno_1_1PipelineSpinner.html#a7e3eefa04a9b51f4480fa286a9f3f605" title=" " alt="" coords="216,5,379,45"/>
+<area shape="rect" href="classdyno_1_1PipelineSpinner.html#a48b927d6558e88ff93b71bd7c5a857d3" title=" " alt="" coords="216,69,379,109"/>
+<area shape="rect" href="classdyno_1_1PipelineSpinner.html#ac38786dd0c0d562079c9f6195473e0fa" title=" " alt="" coords="216,133,379,173"/>
+<area shape="rect" href="classdyno_1_1PipelineSpinner.html#a86344a93353c2d4ca0b83abffa800e2d" title=" " alt="" coords="5,69,168,109"/>
 </map>
 </div>
 
@@ -1211,6 +1229,202 @@ Here is the caller graph for this function:</div>
 <area shape="rect" href="classdyno_1_1ISAM2.html#a0bb058dd96bf558ec0617c3b71df029a" title=" " alt="" coords="283,5,483,45"/>
 <area shape="rect" href="classdyno_1_1ISAM2.html#a1a0f2be4c1764abfb584c2dc0dbd7bea" title=" " alt="" coords="299,70,467,95"/>
 <area shape="rect" href="classdyno_1_1ISAM2.html#a27eddb589249ad539b3fd5ff5367ac95" title=" " alt="" coords="5,70,235,95"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a78f0ccbd5305895c66edb914ce0f3d15" name="a78f0ccbd5305895c66edb914ce0f3d15"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a78f0ccbd5305895c66edb914ce0f3d15">&#9670;&#160;</a></span>YoloDetectionsToObjects()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void dyno::internal::YoloDetectionsToObjects </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structdyno_1_1internal_1_1YoloDetectionGpuMatDevice.html">YoloDetectionGpuMatDevice</a> &amp;&#160;</td>
+          <td class="paramname"><em>wrappers</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const cv::cuda::GpuMat &amp;&#160;</td>
+          <td class="paramname"><em>d_prototype_masks</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const cv::Rect &amp;&#160;</td>
+          <td class="paramname"><em>prototype_crop_rect</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structdyno_1_1internal_1_1AlignedYoloDetection.html">AlignedYoloDetection</a> *&#160;</td>
+          <td class="paramname"><em>h_detection</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const cv::Size &amp;&#160;</td>
+          <td class="paramname"><em>required_size</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const cv::Size &amp;&#160;</td>
+          <td class="paramname"><em>original_size</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>label</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const int&#160;</td>
+          <td class="paramname"><em>mask_h</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const int&#160;</td>
+          <td class="paramname"><em>mask_w</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">cv::cuda::Stream&#160;</td>
+          <td class="paramname"><em>stream</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structdyno_1_1ObjectDetection.html">dyno::ObjectDetection</a> &amp;&#160;</td>
+          <td class="paramname"><em>detection</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="namespacedyno_1_1internal.html#a78f0ccbd5305895c66edb914ce0f3d15">YoloDetectionsToObjects()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="structdyno_1_1YoloV8ObjectDetector_1_1Impl.html#aa6226663ad24367f4f0838968630c912">dyno::YoloV8ObjectDetector::Impl::postprocess()</a>, and <a class="el" href="namespacedyno_1_1internal.html#a78f0ccbd5305895c66edb914ce0f3d15">YoloDetectionsToObjects()</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="namespacedyno_1_1internal_a78f0ccbd5305895c66edb914ce0f3d15_cgraph.png" border="0" usemap="#anamespacedyno_1_1internal_a78f0ccbd5305895c66edb914ce0f3d15_cgraph" alt=""/></div>
+<map name="anamespacedyno_1_1internal_a78f0ccbd5305895c66edb914ce0f3d15_cgraph" id="anamespacedyno_1_1internal_a78f0ccbd5305895c66edb914ce0f3d15_cgraph">
+<area shape="rect" title=" " alt="" coords="5,29,221,69"/>
+</map>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="namespacedyno_1_1internal_a78f0ccbd5305895c66edb914ce0f3d15_icgraph.png" border="0" usemap="#anamespacedyno_1_1internal_a78f0ccbd5305895c66edb914ce0f3d15_icgraph" alt=""/></div>
+<map name="anamespacedyno_1_1internal_a78f0ccbd5305895c66edb914ce0f3d15_icgraph" id="anamespacedyno_1_1internal_a78f0ccbd5305895c66edb914ce0f3d15_icgraph">
+<area shape="rect" title=" " alt="" coords="256,29,472,69"/>
+<area shape="rect" href="structdyno_1_1YoloV8ObjectDetector_1_1Impl.html#aa6226663ad24367f4f0838968630c912" title=" " alt="" coords="5,29,208,69"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="aa7f06ba2107d4d131286db14d03faabf" name="aa7f06ba2107d4d131286db14d03faabf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa7f06ba2107d4d131286db14d03faabf">&#9670;&#160;</a></span>YoloOutputToDetections()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int dyno::internal::YoloOutputToDetections </td>
+          <td>(</td>
+          <td class="paramtype">const float *&#160;</td>
+          <td class="paramname"><em>d_model_output</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structdyno_1_1internal_1_1YoloKernelConfig.html">YoloKernelConfig</a> &amp;&#160;</td>
+          <td class="paramname"><em>config</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structdyno_1_1internal_1_1AlignedYoloDetection.html">AlignedYoloDetection</a> *&#160;</td>
+          <td class="paramname"><em>h_output_buffer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structdyno_1_1internal_1_1AlignedYoloDetection.html">AlignedYoloDetection</a> *&#160;</td>
+          <td class="paramname"><em>d_output_buffer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int *&#160;</td>
+          <td class="paramname"><em>d_count_buffer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int *&#160;</td>
+          <td class="paramname"><em>h_count_buffer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>stream</em> = <code>nullptr</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Runs YOLO post-processing on the GPU. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">d_model_output</td><td>Pointer to the raw YOLO output on Device (float*). </td></tr>
+    <tr><td class="paramname">config</td><td>Configuration struct for offsets and thresholds. </td></tr>
+    <tr><td class="paramname">h_output_buffer</td><td>Pointer to Host memory where results will be copied. Must be large enough: num_boxes * sizeof(YoloDetection). </td></tr>
+    <tr><td class="paramname">d_output_buffer</td><td>Pointer to Device memory for temporary storage. Must be large enough: num_boxes * sizeof(YoloDetection). </td></tr>
+    <tr><td class="paramname">d_count_buffer</td><td>Pointer to Device memory for the atomic counter (sizeof(int)). </td></tr>
+    <tr><td class="paramname">stream</td><td>(Optional) CUDA stream to launch kernels on. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>int The number of valid detections found. </dd></dl>
+
+<p class="reference">References <a class="el" href="namespacedyno_1_1internal.html#aa7f06ba2107d4d131286db14d03faabf">YoloOutputToDetections()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="structdyno_1_1YoloV8ObjectDetector_1_1Impl.html#aa6226663ad24367f4f0838968630c912">dyno::YoloV8ObjectDetector::Impl::postprocess()</a>, and <a class="el" href="namespacedyno_1_1internal.html#aa7f06ba2107d4d131286db14d03faabf">YoloOutputToDetections()</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="namespacedyno_1_1internal_aa7f06ba2107d4d131286db14d03faabf_cgraph.png" border="0" usemap="#anamespacedyno_1_1internal_aa7f06ba2107d4d131286db14d03faabf_cgraph" alt=""/></div>
+<map name="anamespacedyno_1_1internal_aa7f06ba2107d4d131286db14d03faabf_cgraph" id="anamespacedyno_1_1internal_aa7f06ba2107d4d131286db14d03faabf_cgraph">
+<area shape="rect" title="Runs YOLO post&#45;processing on the GPU." alt="" coords="5,29,196,69"/>
+</map>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="namespacedyno_1_1internal_aa7f06ba2107d4d131286db14d03faabf_icgraph.png" border="0" usemap="#anamespacedyno_1_1internal_aa7f06ba2107d4d131286db14d03faabf_icgraph" alt=""/></div>
+<map name="anamespacedyno_1_1internal_aa7f06ba2107d4d131286db14d03faabf_icgraph" id="anamespacedyno_1_1internal_aa7f06ba2107d4d131286db14d03faabf_icgraph">
+<area shape="rect" title="Runs YOLO post&#45;processing on the GPU." alt="" coords="256,29,447,69"/>
+<area shape="rect" href="structdyno_1_1YoloV8ObjectDetector_1_1Impl.html#aa6226663ad24367f4f0838968630c912" title=" " alt="" coords="5,29,208,69"/>
 </map>
 </div>
 

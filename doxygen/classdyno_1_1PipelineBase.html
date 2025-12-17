@@ -612,8 +612,8 @@ false </dd></dl>
 <div class="line"><span class="lineno">   45</span>  LOG(INFO) &lt;&lt; <span class="stringliteral">&quot;Starting module &quot;</span> &lt;&lt; <a class="code hl_variable" href="classdyno_1_1PipelineBase.html#aa08d3c035aed987a2f25cdde0a488115">module_name_</a>;</div>
 <div class="line"><span class="lineno">   46</span>  <span class="keywordflow">while</span> (!<a class="code hl_function" href="classdyno_1_1PipelineBase.html#a5c485b024b7b1c710c94303f29ca8e31">isShutdown</a>()) {</div>
 <div class="line"><span class="lineno">   47</span>    <a class="code hl_function" href="classdyno_1_1PipelineBase.html#a8853e3c9efbd227fbd6e5fc0a3220362">spinOnce</a>();</div>
-<div class="line"><span class="lineno">   48</span>    <span class="comment">//   using namespace std::chrono_literals;</span></div>
-<div class="line"><span class="lineno">   49</span>    <span class="comment">//   std::this_thread::sleep_for(1ms);  // give CPU thread some sleep</span></div>
+<div class="line"><span class="lineno">   48</span>    <span class="keyword">using namespace </span>std::chrono_literals;</div>
+<div class="line"><span class="lineno">   49</span>    std::this_thread::sleep_for(5ns);  <span class="comment">// give CPU thread some sleep</span></div>
 <div class="line"><span class="lineno">   50</span>    <span class="comment">//   time... //TODO: only if threaded?</span></div>
 <div class="line"><span class="lineno">   51</span>  }</div>
 <div class="line"><span class="lineno">   52</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>

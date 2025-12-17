@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['keypointtype_0',['KeyPointType',['../namespacedyno.html#ad6aa767541eb74e30fc5a7b018322952',1,'dyno']]]
+  ['inputimagemode_0',['InputImageMode',['../namespacedyno.html#a63a32838b58645637a3a40f1ff376f2e',1,'dyno']]]
 ];

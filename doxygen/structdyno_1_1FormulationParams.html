@@ -185,7 +185,7 @@ Additional Inherited Members</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Basic parameters for a <a class="el" href="classdyno_1_1Formulation.html" title="Base class for a formulation that defines the structure and implementation for a factor-graph based D...">Formulation</a>. Right now is just directly the <a class="el" href="structdyno_1_1BackendParams.html">BackendParams</a> since there is lots of cross-over, but later we may add formulation specific ones. </p>
 
-<p class="definition">Definition at line <a class="el" href="Formulation_8hpp_source.html#l00197">197</a> of file <a class="el" href="Formulation_8hpp_source.html">Formulation.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Formulation_8hpp_source.html#l00217">217</a> of file <a class="el" href="Formulation_8hpp_source.html">Formulation.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a259fe786bd38c03d4ade857b14c749ae" name="a259fe786bd38c03d4ade857b14c749ae"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a259fe786bd38c03d4ade857b14c749ae">&#9670;&#160;</a></span>FormulationParams() <span class="overload">[1/2]</span></h2>
@@ -210,8 +210,8 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Formulation_8hpp_source.html#l00198">198</a> of file <a class="el" href="Formulation_8hpp_source.html">Formulation.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  198</span>{}</div>
+<p class="definition">Definition at line <a class="el" href="Formulation_8hpp_source.html#l00218">218</a> of file <a class="el" href="Formulation_8hpp_source.html">Formulation.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  218</span>{}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -239,9 +239,9 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Formulation_8hpp_source.html#l00200">200</a> of file <a class="el" href="Formulation_8hpp_source.html">Formulation.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  200</span>{ <a class="code hl_function" href="structdyno_1_1FormulationParams.html#ac55a5393128fb72943e5f9b70e0c31f1">FormulationParams::operator=</a>(b); }</div>
-<div class="ttc" id="astructdyno_1_1FormulationParams_html_ac55a5393128fb72943e5f9b70e0c31f1"><div class="ttname"><a href="structdyno_1_1FormulationParams.html#ac55a5393128fb72943e5f9b70e0c31f1">dyno::FormulationParams::operator=</a></div><div class="ttdeci">FormulationParams &amp; operator=(const BackendParams &amp;b)</div><div class="ttdef"><b>Definition:</b> <a href="Formulation_8hpp_source.html#l00202">Formulation.hpp:202</a></div></div>
+<p class="definition">Definition at line <a class="el" href="Formulation_8hpp_source.html#l00220">220</a> of file <a class="el" href="Formulation_8hpp_source.html">Formulation.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  220</span>{ <a class="code hl_function" href="structdyno_1_1FormulationParams.html#ac55a5393128fb72943e5f9b70e0c31f1">FormulationParams::operator=</a>(b); }</div>
+<div class="ttc" id="astructdyno_1_1FormulationParams_html_ac55a5393128fb72943e5f9b70e0c31f1"><div class="ttname"><a href="structdyno_1_1FormulationParams.html#ac55a5393128fb72943e5f9b70e0c31f1">dyno::FormulationParams::operator=</a></div><div class="ttdeci">FormulationParams &amp; operator=(const BackendParams &amp;b)</div><div class="ttdef"><b>Definition:</b> <a href="Formulation_8hpp_source.html#l00222">Formulation.hpp:222</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="structdyno_1_1FormulationParams.html#ac55a5393128fb72943e5f9b70e0c31f1">operator=()</a>.</p>
 <div class="dynheader">
@@ -281,11 +281,11 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Formulation_8hpp_source.html#l00202">202</a> of file <a class="el" href="Formulation_8hpp_source.html">Formulation.hpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  202</span>                                                       {</div>
-<div class="line"><span class="lineno">  203</span>    <span class="keyword">static_cast&lt;</span>BackendParams&amp;<span class="keyword">&gt;</span>(*this) = b;</div>
-<div class="line"><span class="lineno">  204</span>    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
-<div class="line"><span class="lineno">  205</span>  }</div>
+<p class="definition">Definition at line <a class="el" href="Formulation_8hpp_source.html#l00222">222</a> of file <a class="el" href="Formulation_8hpp_source.html">Formulation.hpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  222</span>                                                       {</div>
+<div class="line"><span class="lineno">  223</span>    <span class="keyword">static_cast&lt;</span>BackendParams&amp;<span class="keyword">&gt;</span>(*this) = b;</div>
+<div class="line"><span class="lineno">  224</span>    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><span class="lineno">  225</span>  }</div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="structdyno_1_1FormulationParams.html#ae03c0aaff950baf8d491a84329869f58">FormulationParams()</a>.</p>
 <div class="dynheader">

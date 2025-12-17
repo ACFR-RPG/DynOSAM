@@ -1,13 +1,12 @@
 <map id="dyno::VisualMeasurementStatus::DynamicInGLobal" name="dyno::VisualMeasurementStatus::DynamicInGLobal">
-<area shape="rect" id="node1" title="Constructs a dynamic Visual Measurement Status in the global frame." alt="" coords="1305,180,1539,220"/>
-<area shape="rect" id="node2" href="$classdyno_1_1HybridFormulation.html#a41a208f1552daac149906b0b98296bcd" title=" " alt="" coords="1045,116,1231,156"/>
-<area shape="rect" id="node10" href="$classdyno_1_1AccessorT.html#a236d89424c42a6f47526a1db9b45b205" title="Get all dynamic landmarks for object j at time&#45;step k." alt="" coords="1031,180,1245,220"/>
-<area shape="rect" id="node11" href="$classdyno_1_1HybridAccessor.html#a6ddab2629b303977d1acb42db391cb6c" title="Get all dynamic landmarks for object j at time&#45;step k." alt="" coords="1019,244,1257,284"/>
-<area shape="rect" id="node3" href="$classdyno_1_1HybridFormulation.html#aa9c51eb4e4aaf1c5560b9cb75bf63699" title=" " alt="" coords="788,116,971,156"/>
-<area shape="rect" id="node4" href="$classdyno_1_1HybridFormulation.html#ab6c9ea5d69eacec56ccfd11f9f46191c" title=" " alt="" coords="276,59,459,99"/>
-<area shape="rect" id="node8" href="$classdyno_1_1HybridFormulation.html#a44e4f2af2151ac490c6e4b3ff17f2204" title=" " alt="" coords="532,116,715,156"/>
-<area shape="rect" id="node9" href="$classdyno_1_1RegularHybridFormulation.html#ae0d9f964cef04c9fb89b402e261e9f63" title="Pre update hook called in the RegularBackend after the map is updated with new measurements but befor..." alt="" coords="507,180,740,220"/>
-<area shape="rect" id="node5" href="$classdyno_1_1HybridFormulation.html#ae65a9c76b0363dde62eb86e6c0b2b832" title=" " alt="" coords="5,5,228,45"/>
-<area shape="rect" id="node6" href="$classdyno_1_1test__hybrid_1_1SmartStructurlessFormulation.html#a40673e16631d1d3e8775e33116f85f6a" title=" " alt="" coords="5,145,228,199"/>
-<area shape="rect" id="node7" href="$classdyno_1_1HybridFormulation.html#ad05af62c9b437ad6613a191defeecb07" title=" " alt="" coords="25,73,208,113"/>
+<area shape="rect" id="node1" title="Constructs a dynamic Visual Measurement Status in the global frame." alt="" coords="1340,127,1573,167"/>
+<area shape="rect" id="node2" href="$classdyno_1_1HybridFormulationV1.html#a9f39c72bf7f132178b7176cf01e6c2fc" title=" " alt="" coords="1073,63,1273,103"/>
+<area shape="rect" id="node9" href="$classdyno_1_1AccessorT.html#a851abc3a5e54e192038973c1fcb8e1a7" title="Get all dynamic landmarks for object j at time&#45;step k." alt="" coords="1065,127,1280,167"/>
+<area shape="rect" id="node10" href="$classdyno_1_1HybridAccessor.html#a6ddab2629b303977d1acb42db391cb6c" title="Get all dynamic landmarks for object j at time&#45;step k." alt="" coords="1053,191,1292,231"/>
+<area shape="rect" id="node3" href="$classdyno_1_1HybridFormulationV1.html#addba99a29e6c0e62184816dd2b5d9033" title=" " alt="" coords="805,63,1005,103"/>
+<area shape="rect" id="node4" href="$classdyno_1_1HybridFormulationV1.html#aa5e980db89987c42a01228b71e4e298f" title=" " alt="" coords="276,5,476,45"/>
+<area shape="rect" id="node7" href="$classdyno_1_1HybridFormulationV1.html#a0c46a85765218bcaf0494f7d433795b1" title=" " alt="" coords="541,63,741,103"/>
+<area shape="rect" id="node8" href="$classdyno_1_1RegularHybridFormulation.html#ae0d9f964cef04c9fb89b402e261e9f63" title="Pre update hook called in the RegularBackend after the map is updated with new measurements but befor..." alt="" coords="524,127,757,167"/>
+<area shape="rect" id="node5" href="$classdyno_1_1test__hybrid_1_1SmartStructurlessFormulation.html#a40673e16631d1d3e8775e33116f85f6a" title=" " alt="" coords="5,89,228,143"/>
+<area shape="rect" id="node6" href="$classdyno_1_1HybridFormulationV1.html#ab226260f417422880be00a39e8d0d489" title=" " alt="" coords="14,15,219,55"/>
 </map>

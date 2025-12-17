@@ -343,17 +343,16 @@ template&lt;typename E &gt; </div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="structdyno_1_1ReferenceFrameValue.html#a6c9a5afbfc3c218fcb9c70479b82dd43">dyno::ReferenceFrameValue&lt; E &gt;::frame_</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classdyno_1_1HybridFormulation.html#ab6c9ea5d69eacec56ccfd11f9f46191c">dyno::HybridFormulation::computeInitialH()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classdyno_1_1HybridFormulationV1.html#aa5e980db89987c42a01228b71e4e298f">dyno::HybridFormulationV1::computeInitialH()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="structdyno_1_1ReferenceFrameValue_a600d7c898acc35a5e44434a293cc9a86_icgraph.png" border="0" usemap="#astructdyno_1_1ReferenceFrameValue_a600d7c898acc35a5e44434a293cc9a86_icgraph" alt=""/></div>
 <map name="astructdyno_1_1ReferenceFrameValue_a600d7c898acc35a5e44434a293cc9a86_icgraph" id="astructdyno_1_1ReferenceFrameValue_a600d7c898acc35a5e44434a293cc9a86_icgraph">
-<area shape="rect" title=" " alt="" coords="507,77,712,117"/>
-<area shape="rect" href="classdyno_1_1HybridFormulation.html#ab6c9ea5d69eacec56ccfd11f9f46191c" title=" " alt="" coords="276,77,459,117"/>
-<area shape="rect" href="classdyno_1_1HybridFormulation.html#ae65a9c76b0363dde62eb86e6c0b2b832" title=" " alt="" coords="5,5,228,45"/>
-<area shape="rect" href="classdyno_1_1test__hybrid_1_1SmartStructurlessFormulation.html#a40673e16631d1d3e8775e33116f85f6a" title=" " alt="" coords="5,70,228,125"/>
-<area shape="rect" href="classdyno_1_1HybridFormulation.html#ad05af62c9b437ad6613a191defeecb07" title=" " alt="" coords="25,149,208,189"/>
+<area shape="rect" title=" " alt="" coords="524,49,729,89"/>
+<area shape="rect" href="classdyno_1_1HybridFormulationV1.html#aa5e980db89987c42a01228b71e4e298f" title=" " alt="" coords="276,49,476,89"/>
+<area shape="rect" href="classdyno_1_1test__hybrid_1_1SmartStructurlessFormulation.html#a40673e16631d1d3e8775e33116f85f6a" title=" " alt="" coords="5,5,228,60"/>
+<area shape="rect" href="classdyno_1_1HybridFormulationV1.html#ab226260f417422880be00a39e8d0d489" title=" " alt="" coords="14,85,219,125"/>
 </map>
 </div>
 
@@ -495,10 +494,9 @@ template&lt;typename E &gt; </div>
 <p class="definition">Definition at line <a class="el" href="Types_8hpp_source.html#l00225">225</a> of file <a class="el" href="Types_8hpp_source.html">Types.hpp</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">  225</span>                                                               {</div>
 <div class="line"><span class="lineno">  226</span>    os &lt;&lt; type_name&lt;Estimate&gt;() &lt;&lt; <span class="stringliteral">&quot;: &quot;</span> &lt;&lt; t.estimate() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
-<div class="line"><span class="lineno">  227</span>    os &lt;&lt; <span class="stringliteral">&quot;frame: &quot;</span> &lt;&lt; <a class="code hl_function" href="namespacedyno.html#a8d1f85752688bf072f23fa6e8a1bde34">to_string</a>(t.frame()) &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
+<div class="line"><span class="lineno">  227</span>    os &lt;&lt; <span class="stringliteral">&quot;frame: &quot;</span> &lt;&lt; std::to_string(t.frame()) &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
 <div class="line"><span class="lineno">  228</span>    <span class="keywordflow">return</span> os;</div>
 <div class="line"><span class="lineno">  229</span>  }</div>
-<div class="ttc" id="anamespacedyno_html_a8d1f85752688bf072f23fa6e8a1bde34"><div class="ttname"><a href="namespacedyno.html#a8d1f85752688bf072f23fa6e8a1bde34">dyno::to_string</a></div><div class="ttdeci">std::string to_string(const TrackingStatus &amp;status)</div><div class="ttdef"><b>Definition:</b> <a href="Frontend-Definitions_8hpp_source.html#l00061">Frontend-Definitions.hpp:61</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>

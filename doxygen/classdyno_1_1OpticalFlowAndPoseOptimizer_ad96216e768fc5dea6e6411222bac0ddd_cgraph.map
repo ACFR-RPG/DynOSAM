@@ -1,7 +1,7 @@
 <map id="dyno::OpticalFlowAndPoseOptimizer::optimizeAndUpdate" name="dyno::OpticalFlowAndPoseOptimizer::optimizeAndUpdate">
 <area shape="rect" id="node1" title="Builds the factor&#45;graph problem using the set of specificed correspondences (tracklets) in frame k&#45;1 ..." alt="" coords="5,63,228,103"/>
 <area shape="rect" id="node2" href="$classdyno_1_1OpticalFlowAndPoseOptimizer.html#af1037c8661213cd6e602b30918b6b3ec" title=" " alt="" coords="276,55,507,110"/>
-<area shape="rect" id="node3" href="$classdyno_1_1Feature.html#a37dbbe8da704c2f51e237d38760534fb" title=" " alt="" coords="568,5,748,45"/>
+<area shape="rect" id="node3" href="$classdyno_1_1Feature.html#af7c177f4116b09ae5d88f61bf338bbd5" title=" " alt="" coords="568,5,748,45"/>
 <area shape="rect" id="node5" href="$structdyno_1_1functional__keypoint.html#a3896d96a6f95b5311ae768cdd0ad97e8" title=" " alt="" coords="555,70,761,95"/>
 <area shape="rect" id="node6" href="$structdyno_1_1functional__keypoint.html#a24933450cad8bc70b7b76b339756cd94" title=" " alt="" coords="555,119,761,145"/>
 <area shape="rect" id="node4" href="$classdyno_1_1Feature.html#ada9f9980d950874a7a157a82b9921f8a" title="Gets keypoint observation." alt="" coords="809,13,984,38"/>

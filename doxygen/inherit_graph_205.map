@@ -1,3 +1,4 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$structdyno_1_1NiceColors.html" title="Palette of colours based of &#39;color blindness&#39; which presents a set of colours which are optimized for..." alt="" coords="5,5,137,31"/>
+<area shape="rect" id="node1" href="$structdyno_1_1MemoryManager.html" title=" " alt="" coords="5,5,219,45"/>
+<area shape="rect" id="node2" href="$structdyno_1_1DeviceMemory.html" title="Allocates and manages device (GPU) memory using the CudaMemoryAllocator." alt="" coords="267,13,465,38"/>
 </map>

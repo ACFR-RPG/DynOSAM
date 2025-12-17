@@ -73,14 +73,66 @@ $(function() {
   <div class="headertitle"><div class="title">DynoSAM Installation </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>Tested on Ubuntu 20.04</p>
-<blockquote class="doxtable">
-<p>&zwj;NOTE: this instructions are taken essentially verbatum from the included <a href="./../../docker/Dockerfile">Dockerfile</a> </p>
+<div class="textblock"><h1>Prerequisites</h1>
+<ul>
+<li><a href="https://docs.ros.org/en/kilted/Installation.html">ROS2</a> <blockquote class="doxtable">
+<p>&zwj;NOTE: this links to the kilted distribution which used during development. We have also tested on Jazzy for the NVIDIA ORIN </p>
 </blockquote>
-<h1>CUDA dependancies</h1>
+- <a href="https://github.com/borglab/gtsam">GTSAM</a> &gt;= 4.1</li>
+<li><a href="https://github.com/opencv/opencv">OpenCV</a> &gt;= 3.4</li>
+<li><a href="https://github.com/MIT-SPARK/opengv">OpenGV</a></li>
+<li><a href="http://rpg.ifi.uzh.ch/docs/glog.html">Glog</a>, <a href="https://gflags.github.io/gflags/">Gflags</a></li>
+<li><a href="https://github.com/google/googletest/blob/master/googletest/docs/primer.md">Gtest</a> (installed automagically)</li>
+<li><a href="https://github.com/MIT-SPARK/config_utilities">config_utilities</a></li>
+<li><a href="https://github.com/ACFR-RPG/dynamic_slam_interfaces">dynamic_slam_interfaces</a> (Required by default. Can be optionally made not a requirement. See Insallation instructions below)</li>
+</ul>
+<p>External dependancies (for visualization) not required for compilation.</p><ul>
+<li><a href="https://github.com/ACFR-RPG/rviz_dynamic_slam_plugins">rviz_dynamic_slam_plugins</a> (Plugin to display custom <code>dynamic_slam_interfaces</code> messages which are advertised by default.)</li>
+</ul>
+<p>GPU acceleration:</p><ul>
+<li><a href="https://github.com/NVIDIA/TensorRT">TensorRT</a></li>
+<li><a href="https://docs.nvidia.com/cuda/cuda-runtime-api/index.html">CUDA</a></li>
+</ul>
+<p>are now supported with the new Docker image. This provides support for TensorRT accellerated object-instance segmentation (which is now part of the DynoSAM pipeline) and CUDA acceleration in the front-end. Backwards compatability (i.e no CUDA support) is not currently a priority.</p>
+<p>We provide detailed install instructions when using the Docker.</p>
+<p>To install natively, install the dependancies as required by docker and build as a ROS2 package.</p>
+<h1>Docker Install instructions</h1>
+<p>DynoSAM has been tested on <b>x86_64</b> and <b>aarm64</b> (with a NVIDIA ORIN NX) devices using the <a href="../../docker/">two docker files</a> provided. See the <a class="el" href="md_docker_README.html">REAMDE.md</a> for more detail on hardware used etc.</p>
+<p>We provide scripts to build and create docker containers to run and develop DynoSAM which is intendend to be mounted within the created container.</p>
+<blockquote class="doxtable">
+<p>&zwj;NOTE: with the current setup the embedded device only supports ROS Jazzy. The code should compile on either device without modification. </p>
+</blockquote>
+<h2>Folder Structure</h2>
+<p>To DynoSAM code to be changed within the docker environment, we mount the local version of the code within the container. To ensure this happens smoothly please download the DynoSAM code in the following structure</p>
+<div class="fragment"><div class="line">dynosam_pkg/</div>
+<div class="line">    DynoSAM/</div>
+<div class="line">    extras/</div>
+<div class="line">        rviz_dynamic_slam_plugins</div>
+<div class="line">        dynamic_slam_interfaces</div>
+<div class="line">    results/</div>
+</div><!-- fragment --><p> where DynoSAM is this repository and anything in <code>extras</code> are other ROS packages that wish to be built alongside DynoSAM.</p>
+<blockquote class="doxtable">
+<p>&zwj;NOTE: &lsquo;dynosam_pkg&rsquo; may be any folder, its just a place to put all the DynoSAM related code. </p>
+</blockquote>
+<blockquote class="doxtable">
+<p>&zwj;NOTE: the reason for this structure is historical and due to the way the <em>create_container</em> scripts are written; you don't need to do this but I provide complete instructures for simplicity. </p>
+</blockquote>
+<h2>Docker Build</h2>
+<p>Build the relevant docker file: </p><div class="fragment"><div class="line">cd dynosam_pkg/DynoSAM/docker &amp;&amp;</div>
+<div class="line">./build_docker_amd64.sh //or build_docker_l4t.sh</div>
+</div><!-- fragment --> <h2>Create Container</h2>
+<p>Once built, you should have a docker image called <code>acfr_rpg/dyno_sam_cuda</code> or <code>acfr_rpg/dynosam_cuda_l4t</code></p>
+<p>In the associated <em>create_container</em> scripts modify the local variables to match the folder paths on the local machine. These folders will be mounted as a volume within the container </p><div class="fragment"><div class="line">LOCAL_DATA_FOLDER=/path/to/some/datasets/</div>
+<div class="line">LOCAL_RESULTS_FOLDER=/path/to/dynosam_pkg/results/</div>
+<div class="line">LOCAL_DYNO_SAM_FOLDER=/path/to/dynosam_pkg/DynoSAM/</div>
+<div class="line">LOCAL_THIRD_PARTY_DYNO_SAM_FOLDER=/path/to/dynosam_pkg/extras</div>
+</div><!-- fragment --><p> Run the creation script. The created container will be called <code>dyno_sam</code> </p><div class="fragment"><div class="line">./create_container_amd64.sh //or ./create_container_l4t_jetpack6.sh</div>
+</div><!-- fragment --><p>Finally enter into the container and build DynoSAM </p><div class="fragment"><div class="line">cd /home/user/dev_w &amp;&amp;</div>
+<div class="line">export MAKEFLAGS=&quot;-j10&quot; &amp;&amp; clear &amp;&amp; colcon build</div>
+</div><!-- fragment --><h1>CUDA dependancies</h1>
 <p>As of September 2025 we are adding cuda dependancies for certain OpenCV operations (and evenautually for running inference on images).</p>
 <blockquote class="doxtable">
-<p>&zwj;NOTE: I have a very old GPU (RTX 2080 which is only running CIDA 12.2 with Driver Version: 535.183.01), get CUDA support however you are able! </p>
+<p>&zwj;NOTE: I have a very old GPU (RTX 2080 which is only running CUDA 12.2 with Driver Version: 535.183.01), get CUDA support however you are able! </p>
 </blockquote>
 <p>The docker file has been updated and based off the <a href="https://github.com/ika-rwth-aachen/docker-ros-ml-images?tab=readme-ov-file#rwthikaros2-torch-ros-2-nvidia-cuda-nvidia-tensorrt-pytorch">docker-ros-ml-images</a> to include</p><ul>
 <li>CUDA</li>
@@ -92,74 +144,38 @@ $(function() {
 <li><b>Important:</b> Check <a href="https://developer.nvidia.com/cuda-gpus">GPU Compute Capability</a> to set <code>CUDA_ARCH_BIN</code> flag</li>
 <li>NVIDIA GeForce RTX 2080 is 7.5</li>
 </ul>
-<h1>Dependancies</h1>
-<div class="fragment"><div class="line">sudo apt-get install -y --no-install-recommends apt-utils</div>
-<div class="line"> </div>
-<div class="line">sudo apt-get install -y cmake</div>
-<div class="line"> </div>
-<div class="line">sudo apt install unzip libjpeg-dev libpng-dev libpng++-dev libtiff-dev libgtk2.0-dev libatlas-base-dev gfortran libgflags2.2 libgflags-dev libgoogle-glog0v5 libgoogle-glog-dev  python3-dev python3-setuptools clang-format python3-pip nlohmann-json3-dev libsuitesparse-dev</div>
-</div><!-- fragment --><p>GTSAM's Optional dependencies (highly recommended for speed) also include </p><div class="fragment"><div class="line">sudo apt install libboost-all-dev libtbb-dev</div>
-</div><!-- fragment --><p>For evaluation we also need various formatting tools </p><div class="fragment"><div class="line">sudo apt-get install texlive-pictures texlive-science texlive-latex-extra latexmk</div>
-</div><!-- fragment --><p>Python (pip) dependancies: </p><div class="fragment"><div class="line">python3 -m pip install pylatex evo setuptools pre-commit scipy matplotlib argcomplete black pre-commit</div>
-</div><!-- fragment --><p>NOTE: There seems to be a conflict between the version of matplotlib and numpy. In this case following worked for me: </p><div class="fragment"><div class="line">sudo apt remove python3-matplotlib</div>
-<div class="line">python3 -m pip install numpy==1.26.3</div>
-</div><!-- fragment --><h1>Install OpenCV</h1>
-<p>Note that you can use <code>apt-get install libopencv-dev libopencv-contrib-dev</code> on 20.04 instead of building from source.</p>
-<blockquote class="doxtable">
-<p>&zwj;Also note, I have not actually tried this! </p>
-</blockquote>
-<p>To build from source</p>
-<div class="fragment"><div class="line">git git clone https://github.com/opencv/opencv_contrib.git</div>
-<div class="line">cd opencv_contrib &amp;&amp; \</div>
-<div class="line">    git checkout tags/4.8.0</div>
-<div class="line"> </div>
-<div class="line">cd ../ &amp;&amp;</div>
-<div class="line">git clone git clone https://github.com/opencv/opencv.git</div>
-<div class="line"> </div>
-<div class="line">cd opencv &amp;&amp; \</div>
-<div class="line">git checkout tags/4.8.0 &amp;&amp; mkdir build</div>
-<div class="line">cmake -DCMAKE_BUILD_TYPE=Release \</div>
-<div class="line">    -DCMAKE_INSTALL_PREFIX=/usr/local \</div>
-<div class="line">    -D BUILD_opencv_python=OFF \</div>
-<div class="line">    -D BUILD_opencv_python2=OFF \</div>
-<div class="line">    -D BUILD_opencv_python3=ON \</div>
-<div class="line">    -DOPENCV_EXTRA_MODULES_PATH=../../opencv_contrib/modules .. # Use -DWITH_TBB=On if you have TBB</div>
-<div class="line"> </div>
-<div class="line">sudo make -j$(nproc) install</div>
-</div><!-- fragment --><h1>Install GTSAM</h1>
-<p>Tested with release 4.2</p>
-<div class="fragment"><div class="line">git clone https://github.com/borglab/gtsam.git</div>
-<div class="line">cd gtsam &amp;&amp; \</div>
-<div class="line">    git fetch &amp;&amp; \</div>
-<div class="line">    git checkout tags/4.2.0 &amp;&amp; \</div>
-<div class="line">    mkdir build &amp;&amp; \</div>
-<div class="line">    cd build &amp;&amp; \</div>
-<div class="line">    cmake -DCMAKE_INSTALL_PREFIX=/usr/local \</div>
-<div class="line">    -DGTSAM_USE_SYSTEM_EIGEN=ON \</div>
-<div class="line">    -DGTSAM_BUILD_TESTS=OFF -DGTSAM_BUILD_EXAMPLES_ALWAYS=OFF -DCMAKE_BUILD_TYPE=Release -DGTSAM_BUILD_UNSTABLE=ON -DGTSAM_POSE3_EXPMAP=ON -DGTSAM_ROT3_EXPMAP=ON -DGTSAM_TANGENT_PREINTEGRATION=OFF .. &amp;&amp; \</div>
-<div class="line"> </div>
-<div class="line">sudo make -j$(nproc) install</div>
-</div><!-- fragment --><h1>Install OpenGV</h1>
-<div class="fragment"><div class="line">git clone https://github.com/MIT-SPARK/opengv</div>
-<div class="line">cd opengv &amp;&amp; mkdir build &amp;&amp; cd build &amp;&amp;</div>
-<div class="line">cmake -DCMAKE_BUILD_TYPE=Release \</div>
-<div class="line">      -DCMAKE_INSTALL_PREFIX=/usr/local ..</div>
-<div class="line"> </div>
-<div class="line">sudo make -j$(nproc) install</div>
-</div><!-- fragment --><p> Note: This links to a forked version of OpenGV which contains an updated fix the CMakeLists.txt due to issues with -march=native being set. This links to original version of <a href="https://github.com/laurentkneip/opengv">OpenGV</a>, which contains the problematic flag.</p>
-<h1>Install Config Utilities</h1>
-<div class="fragment"><div class="line">git clone git@github.com:MIT-SPARK/config_utilities.git</div>
-<div class="line"> </div>
-<div class="line">cd config_utilities/config_utilities</div>
-<div class="line">mkdir build</div>
-<div class="line">cd build</div>
-<div class="line">cmake ..</div>
-<div class="line">make -j</div>
-<div class="line"> </div>
-<div class="line">sudo make install</div>
-</div><!-- fragment --><h1>Additional Installation Notes</h1>
+<h1>Additional Installation Notes</h1>
+<p><code>dynamic_slam_interfaces</code> is a require dependacy by default. This package is used to include custom messages that represet the state of each dynamic object per frame and is used by the ROS publishers.</p>
+<p>To disable this dependancy compile the code as </p><div class="fragment"><div class="line">colcon build --cmake-args -DENABLE_DYNAMIC_SLAM_INTERFACES=OFF</div>
+</div><!-- fragment --><p> By default <code>ENABLE_DYNAMIC_SLAM_INTERFACES=ON</code> in the <a href="./dynosam_ros/CMakeLists.txt">CMakeLists.txt</a>. This CMake option will additionally change the <em>visualisation</em> (and the output topics) used by DynoSAM. See the ROS Visualisation section below.</p>
 <p>Due to DynoSAM being build within ROS:</p><ul>
-<li>Need to build GTSAM with <code>-DGTSAM_USE_SYSTEM_EIGEN=ON</code> to avoid issues with ROS and OpenCV-Eigen compatability. Confirmed from <a href="https://discourse.ros.org/t/announcing-gtsam-as-a-ros-1-2-package/32739">https://discourse.ros.org/t/announcing-gtsam-as-a-ros-1-2-package/32739</a> which explains that the GTSAM ROS package is build with this flag set to ON (and describes it as "problematic"). We still want to build GTSAM from source so we can control the version and other compiler flags. Kimera-VIO's install instructions indicate that OpenGV must use the same version of Eigen as GTSAM, which can be set using compiler flags. Since we are using the ROS install Eigen, I have removed these flags and hope that the package manager with CMake can find the right (and only) version. This has not proved problematic... yet... </li>
+<li>Need to build GTSAM with <code>-DGTSAM_USE_SYSTEM_EIGEN=ON</code> to avoid issues with ROS and OpenCV-Eigen compatability. Confirmed from <a href="https://discourse.ros.org/t/announcing-gtsam-as-a-ros-1-2-package/32739">https://discourse.ros.org/t/announcing-gtsam-as-a-ros-1-2-package/32739</a> which explains that the GTSAM ROS package is build with this flag set to ON (and describes it as "problematic"). We still want to build GTSAM from source so we can control the version and other compiler flags. Kimera-VIO's install instructions indicate that OpenGV must use the same version of Eigen as GTSAM, which can be set using compiler flags. Since we are using the ROS install Eigen, I have removed these flags and hope that the package manager with CMake can find the right (and only) version. This has not proved problematic... yet...</li>
+</ul>
+<h1>Possible Compilation Issues</h1>
+<h2>Missing MPI Header Error</h2>
+<p>When first compiling DynoSAM, this error may appear as MPI relies on a non-existent directory. This issue <em>should</em> be fixed a patch in the <code>dynosam_common</code> CMakeLists.txt which directly updates the <code>MPI_INCLUDE_PATH</code>.</p>
+<p>However, if the issue persists, the following is a known fix.</p><ol type="1">
+<li>Unset HPC-X variables <div class="fragment"><div class="line">unset OPENMPI_VERSION</div>
+<div class="line">unset OMPI_MCA_coll_hcoll_enable</div>
+<div class="line">unset OPAL_PREFIX</div>
+<div class="line">export PATH=$(echo $PATH | tr &#39;:&#39; &#39;\n&#39; | grep -v &#39;/opt/hpcx&#39; | grep -v &#39;/usr/local/mpi/bin&#39; | paste -sd:)</div>
+</div><!-- fragment --> Now verify <code>env | grep -i mpi echo $PATH</code> that the <code>OPAL_PREFIX</code> and HPC-X paths no longer appear</li>
+<li>Install OpenMPI <div class="fragment"><div class="line">sudo apt update</div>
+<div class="line">sudo apt install libopenmpi-dev openmpi-bin</div>
+</div><!-- fragment --> and verify that the following points to <code>/usr/bin/mpicc</code> <div class="fragment"><div class="line">which mpicc</div>
+<div class="line">mpicc --version</div>
+</div><!-- fragment --></li>
+<li>Clear the ROS2 workspace <div class="fragment"><div class="line">rm -rf build/ install/ log/</div>
+</div><!-- fragment --></li>
+<li>Build with the system MPI <div class="fragment"><div class="line">export MPI_C_COMPILER=/usr/bin/mpicc</div>
+<div class="line">export MPI_CXX_COMPILER=/usr/bin/mpicxx</div>
+<div class="line">colcon build</div>
+</div><!-- fragment --> <h2>Missing Dependencies</h2>
+</li>
+</ol>
+<ul>
+<li><code>nlohmannjson</code> may not be installed, so install with <code>sudo apt install nlohmann-json3-dev</code></li>
+<li>GTSAM may not be installed, so install with <code>pip install gtsam</code> </li>
 </ul>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->

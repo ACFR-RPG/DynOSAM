@@ -1,6 +1,8 @@
 <map id="dyno::utils::Statistics::Print" name="dyno::utils::Statistics::Print">
-<area shape="rect" id="node1" title=" " alt="" coords="499,37,657,77"/>
-<area shape="rect" id="node2" href="$classdyno_1_1DynoNode.html#ad30ea928a45d1e77c3897245ad08d8c1" title=" " alt="" coords="259,45,451,70"/>
+<area shape="rect" id="node1" title=" " alt="" coords="499,101,657,141"/>
+<area shape="rect" id="node2" href="$classdyno_1_1DynoNode.html#ad30ea928a45d1e77c3897245ad08d8c1" title=" " alt="" coords="259,77,451,102"/>
+<area shape="rect" id="node5" href="$classImageSegmenterNode.html#a1e6d2543b4ab79f638029392afda1b41" title=" " alt="" coords="271,129,439,169"/>
 <area shape="rect" id="node3" href="$classdyno_1_1DynoPipelineManagerRos.html#a87626844ec5851cc9307981648667995" title=" " alt="" coords="5,5,211,45"/>
 <area shape="rect" id="node4" href="$classdyno_1_1BackendExperimentsNode.html#a5540023c11d87aeabc38a98cd461c918" title=" " alt="" coords="9,69,207,109"/>
+<area shape="rect" id="node6" href="$classImageSegmenterNode.html#adac34661c1d0edcb93fbadb0043af688" title=" " alt="" coords="20,133,196,173"/>
 </map>

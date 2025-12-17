@@ -1,11 +1,11 @@
 var searchData=
 [
-  ['y_0',['y',['../structrangetree_1_1ptx.html#aa5b348b3dda258403e355ce30f3b3237',1,'rangetree::ptx::y()'],['../structrangetree_1_1pty.html#a22c868fc9e68a834b5cd468a0da35dae',1,'rangetree::pty::y()']]],
+  ['y_0',['y',['../structrangetree_1_1ptx.html#aa5b348b3dda258403e355ce30f3b3237',1,'rangetree::ptx::y()'],['../structrangetree_1_1pty.html#a22c868fc9e68a834b5cd468a0da35dae',1,'rangetree::pty::y()'],['../structdyno_1_1internal_1_1AlignedYoloDetection.html#a45b8c9c84cb25030e08961e2d4a5f9ff',1,'dyno::internal::AlignedYoloDetection::y()']]],
   ['y_5faxis_1',['y_axis',['../plot__triangulation_8m.html#a9611c323f3ba95d92fa470b40a3a9d7a',1,'plot_triangulation.m']]],
   ['y_5forigin_2',['y_origin',['../plot__triangulation_8m.html#a5aff4dbf8b6d243b129b219c74547b98',1,'plot_triangulation.m']]],
   ['y_5ftarget_3',['y_target',['../plot__triangulation_8m.html#a0c1f44a1dbd2acc452fb4ca1ae932cb4',1,'plot_triangulation.m']]],
   ['ycount_4',['ycount',['../structrangetree_1_1node.html#aefa2a49cad0fa7362c39578a9f84a806',1,'rangetree::node']]],
-  ['yolo_5fconfig_5f_5',['yolo_config_',['../structdyno_1_1YoloV8ObjectDetector_1_1Impl.html#af508d732a60008b5d715b66d14550836',1,'dyno::YoloV8ObjectDetector::Impl']]],
+  ['yolo_5fconfig_5f_5',['yolo_config_',['../structdyno_1_1YoloV8ObjectDetector_1_1Impl.html#a959160d360be3350a95f787a10c3aacc',1,'dyno::YoloV8ObjectDetector::Impl']]],
   ['ypoints_6',['ypoints',['../structrangetree_1_1node.html#ae018e1b9e121b5f646e2563ee86fee11',1,'rangetree::node']]],
   ['ytmparray_7',['ytmparray',['../classrangetree.html#a8ed382466cc2d3fdedf762e18739acec',1,'rangetree']]]
 ];

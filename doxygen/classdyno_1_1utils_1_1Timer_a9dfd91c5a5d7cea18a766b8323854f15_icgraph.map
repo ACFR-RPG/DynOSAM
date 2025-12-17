@@ -1,11 +1,12 @@
 <map id="dyno::utils::Timer::tic" name="dyno::utils::Timer::tic">
-<area shape="rect" id="node1" title=" " alt="" coords="588,188,748,213"/>
+<area shape="rect" id="node1" title=" " alt="" coords="588,220,748,245"/>
 <area shape="rect" id="node2" href="$classdyno_1_1ThreadsafeImuBuffer.html#a801e12f38e80e2f87ba7293bfa2bfa58" title=" " alt="" coords="283,5,519,60"/>
 <area shape="rect" id="node3" href="$classdyno_1_1ParallelHybridBackendModule.html#a3ff7497b87c3ae0a18f604b0c0423cf6" title=" " alt="" coords="261,85,540,125"/>
-<area shape="rect" id="node5" href="$classdyno_1_1MIMOPipelineModule.html#ad0993bad6118d7521ec6f844b8f9be8c" title=" " alt="" coords="301,149,501,189"/>
-<area shape="rect" id="node6" href="$classdyno_1_1utils_1_1TimingStatsCollector.html#a2fb15570927fa9faf9bf7d97702ff15b" title="Resets the current tic_time and sets is_valid = true, such that when the collector tries to toc,..." alt="" coords="313,213,489,253"/>
-<area shape="rect" id="node7" href="$classdyno_1_1BackendDSDRos.html#a67d3309d1d64b1a812ee713147196361" title=" " alt="" coords="316,277,485,317"/>
-<area shape="rect" id="node8" href="$classdyno_1_1ParallelObjectISAM.html#a71b737a3ffd6f37722393df4f46d37f4" title=" " alt="" coords="307,341,494,381"/>
+<area shape="rect" id="node5" href="$structdyno_1_1utils_1_1ChronoTimeGenerator.html#a5b05287fbc566b5b4416953838d9f1bc" title=" " alt="" coords="279,149,522,189"/>
+<area shape="rect" id="node6" href="$structdyno_1_1utils_1_1ChronoTimeGenerator.html#a22248263649240288f6bd02b8801baf6" title=" " alt="" coords="279,213,522,253"/>
+<area shape="rect" id="node7" href="$classdyno_1_1MIMOPipelineModule.html#ad0993bad6118d7521ec6f844b8f9be8c" title=" " alt="" coords="301,277,501,317"/>
+<area shape="rect" id="node8" href="$classdyno_1_1BackendDSDRos.html#a67d3309d1d64b1a812ee713147196361" title=" " alt="" coords="316,341,485,381"/>
+<area shape="rect" id="node9" href="$classdyno_1_1ParallelObjectISAM.html#a71b737a3ffd6f37722393df4f46d37f4" title=" " alt="" coords="307,405,494,445"/>
 <area shape="rect" id="node4" href="$classdyno_1_1ParallelHybridBackendModule.html#ae77dace65f727f878afcb7d6bf82a059" title=" " alt="" coords="5,85,213,125"/>
-<area shape="rect" id="node9" href="$classdyno_1_1ParallelObjectISAM.html#aebe02d7a654d9829c361eece7374dd1f" title=" " alt="" coords="16,341,203,381"/>
+<area shape="rect" id="node10" href="$classdyno_1_1ParallelObjectISAM.html#aebe02d7a654d9829c361eece7374dd1f" title=" " alt="" coords="16,405,203,445"/>
 </map>

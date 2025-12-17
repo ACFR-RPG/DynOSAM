@@ -1,4 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$structdyno_1_1EgoMotionSolver_1_1Params.html" title=" " alt="" coords="5,5,177,45"/>
-<area shape="rect" id="node2" href="$structdyno_1_1ObjectMotionSovlerF2F_1_1Params.html" title=" " alt="" coords="225,5,416,45"/>
+<area shape="rect" id="node1" href="$structdyno_1_1EgoMotionSolver_1_1Params.html" title=" " alt="" coords="5,37,177,77"/>
+<area shape="rect" id="node2" href="$structdyno_1_1ObjectMotionSolverFilter_1_1Params.html" title=" " alt="" coords="225,5,416,45"/>
+<area shape="rect" id="node3" href="$structdyno_1_1ObjectMotionSovlerF2F_1_1Params.html" title=" " alt="" coords="225,69,416,109"/>
 </map>
