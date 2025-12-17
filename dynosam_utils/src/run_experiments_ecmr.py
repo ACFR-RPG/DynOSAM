@@ -206,12 +206,12 @@ if __name__ == '__main__':
     #     "--ending_frame=150"
     # )
 
-    run_viodes()
+    # run_viodes()
     # run_tartan_air()
     # run_cluster()
     # run_omd()
     # run_aria()
-    # run_kitti()
+    run_kitti()
     # run_analysis("kitti_0001_static_only")
     # run_analysis("kitti_0002_static_only")
     # run_analysis("kitti_0003_static_only")

@@ -230,7 +230,7 @@ class ImageContainer {
   static constexpr char kOPticalFlow[] = "opticalflow";
   static constexpr char kDepth[] = "depth";
   static constexpr char kObjectMask[] = "objectmask";
-  static constexpr char kClassMask[] = "classmask"
+  static constexpr char kClassMask[] = "classmask";
   static constexpr char kRightRgb[] = "rightrgb";
 
  public:
@@ -314,14 +314,14 @@ class ImageContainer {
   const ImageWrapper<ImageType::Depth>& depth() const;
   const ImageWrapper<ImageType::OpticalFlow>& opticalFlow() const;
   const ImageWrapper<ImageType::MotionMask>& objectMotionMask() const;
-  const ImageWrapper<ImageType::ClassSegmentation>& objectClassMask() const;
+  const ImageWrapper<ImageType::SemanticMask>& objectClassMask() const;
   const ImageWrapper<ImageType::RGBMono>& rightRgb() const;
 
   ImageWrapper<ImageType::RGBMono>& rgb();
   ImageWrapper<ImageType::Depth>& depth();
   ImageWrapper<ImageType::OpticalFlow>& opticalFlow();
   ImageWrapper<ImageType::MotionMask>& objectMotionMask();
-  ImageWrapper<ImageType::ClassSegmentation>& objectClassMask();
+  ImageWrapper<ImageType::SemanticMask>& objectClassMask();
   ImageWrapper<ImageType::RGBMono>& rightRgb();
 
   ImageContainer& rgb(const cv::Mat& image);
