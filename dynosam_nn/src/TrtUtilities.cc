@@ -216,11 +216,7 @@ class LoggingShim : public nvinfer1::ILogger {
 
 void* CudaMemoryAllocator::alloc(size_t size) {
   void* raw_ptr = nullptr;
-  auto error = cudaMalloc(&raw_ptr, size);
-  if (error != cudaSuccess) {
-    // LOG(ERROR) << "Failed to allocate " << size << " bytes on device";
-  }
-
+  CUDA_API_CALL(cudaMalloc(&raw_ptr, size));
   return raw_ptr;
 }
 
@@ -232,11 +228,7 @@ void CudaMemoryAllocator::Delete::operator()(void* object) {
 
 void* HostMemoryAllocator::alloc(size_t size) {
   void* raw_ptr = nullptr;
-  auto error = cudaMallocHost(&raw_ptr, size);
-  if (error != cudaSuccess) {
-    // LOG(ERROR) << "Failed to allocate " << size << " bytes on device";
-  }
-
+  CUDA_API_CALL(cudaMallocHost(&raw_ptr, size));
   return raw_ptr;
 }
 

@@ -5,8 +5,15 @@
 
 #include "dynosam_common/DynamicObjects.hpp"
 
-// A single detection struct that overlays the raw float data
-struct alignas(float) YoloDetection {
+namespace dyno {
+namespace internal {
+
+/**
+ * @brief A single detection struct that overlays the raw float data from the
+ * device (GPU)
+ *
+ */
+struct alignas(float) AlignedYoloDetection {
   // 0-3: Box Coordinates (Center X, Center Y, Width, Height)
   float x, y, w, h;
 
@@ -33,7 +40,17 @@ struct alignas(float) YoloDetection {
 #endif
 };
 
-struct DetectionGpuMats {
+/**
+ * @brief Wraps a AlignedYoloDetection struct to a set of GpuMat's.
+ * The alignment of the AlignedYoloDetection is used to set
+ * point the cv::cuda::GpuMat to the internal layout of the detection.
+ *
+ * Memory is not allocated and d_detection must stay in scope.
+ *
+ */
+struct YoloDetectionGpuMatDevice {
+  YoloDetectionGpuMatDevice(AlignedYoloDetection* d_detection);
+
   // Wrapper for all box coordinates (count rows x 4 cols, float)
   cv::cuda::GpuMat boxes;
 
@@ -43,8 +60,6 @@ struct DetectionGpuMats {
   // Wrapper for all mask coefficients (count rows x 32 cols, float)
   cv::cuda::GpuMat mask_coeffs;
 };
-
-DetectionGpuMats createDetectionGpuMatWrappers(YoloDetection* d_detections);
 
 struct YoloKernelConfig {
   int num_boxes;    // e.g., 8400
@@ -70,14 +85,19 @@ struct YoloKernelConfig {
  */
 int YoloOutputToDetections(const float* d_model_output,
                            const YoloKernelConfig& config,
-                           YoloDetection* h_output_buffer,
-                           YoloDetection* d_output_buffer, int* d_count_buffer,
-                           int* h_count_buffer, void* stream = nullptr);
+                           AlignedYoloDetection* h_output_buffer,
+                           AlignedYoloDetection* d_output_buffer,
+                           int* d_count_buffer, int* h_count_buffer,
+                           void* stream = nullptr);
 
 void YoloDetectionsToObjects(
-    const DetectionGpuMats& wrappers, const cv::cuda::GpuMat& d_prototype_masks,
+    const YoloDetectionGpuMatDevice& wrappers,
+    const cv::cuda::GpuMat& d_prototype_masks,
     const cv::Rect& prototype_crop_rect,  // Pre-calculated crop area
-    const YoloDetection* h_detection, const cv::Size& required_size,
+    const AlignedYoloDetection* h_detection, const cv::Size& required_size,
     const cv::Size& original_size, const std::string& label, const int mask_h,
     const int mask_w, cv::cuda::Stream stream,
     dyno::ObjectDetection& detection);
+
+}  // namespace internal
+}  // namespace dyno

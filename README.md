@@ -29,7 +29,10 @@
 
 ## 📚 Publications
 The offical code used for our paper:
-- [Jesse Morris](https://jessemorris.github.io/), Yiduo Wang, Mikolaj Kliniewski, Viorela Ila, [*DynoSAM: Open-Source Smoothing and Mapping Framework for Dynamic SLAM*](https://arxiv.org/pdf/2501.11893), Arxiv.  Submitted Transactions on Robotics (T-RO) Visual SLAM Special Issue (2025).
+- [Jesse Morris](https://jessemorris.github.io/), Yiduo Wang, Mikolaj Kliniewski, Viorela Ila, [*DynoSAM: Open-Source Smoothing and Mapping Framework for Dynamic SLAM*](https://arxiv.org/pdf/2501.11893).  Accepted Transactions on Robotics (T-RO) Visual SLAM Special Issue (2025).
+
+#### ** Update November 2025 **
+Our work has been accepted to IEEE Transactions on Robotics (T-RO)
 
 
 #### ** Update September 2025 **
@@ -43,13 +46,11 @@ We kindly ask to cite our papers if you find these works useful:
 ```bibtex
 
 @misc{morris2025dynosam,
-      title={DynoSAM: Open-Source Smoothing and Mapping Framework for Dynamic SLAM},
-      author={Jesse Morris and Yiduo Wang and Mikolaj Kliniewski and Viorela Ila},
-      year={2025},
-      eprint={2501.11893},
-      archivePrefix={arXiv},
-      primaryClass={cs.RO},
-      url={https://arxiv.org/abs/2501.11893},
+  author={Morris, Jesse and Wang, Yiduo and Kliniewski, Mikolaj and Ila, Viorela},
+  journal={IEEE Transactions on Robotics},
+  title={DynoSAM: Open-Source Smoothing and Mapping Framework for Dynamic SLAM},
+  year={2025},
+  doi={10.1109/TRO.2025.3641813}
 }
 
 @article{morris2025online,
@@ -85,6 +86,13 @@ We auto generate [Doxygen code docs](https://acfr-rpg.github.io/DynOSAM/doxygen/
 
 We provide a detailed installation guide including dependencies and Docker support.
 See detailed instructions here: [Insallation instructions](./docs/media/INSTALL.md)
+
+## 1.1 Edge Device Support
+We currently support building for AARM64 devices and DynoSAM has been tested on an NVIDIA ORIN NX. Docker file support and more details are provided in the install instructions.
+
+> NOTE: DynoSAM does not currently run real-time on the ORIN NX (mostly bottlenecked by the object detection process). On a more powerful device better performance is expected.
+
+Also see the [Docker REAMDE.md](./docker/README.md) and the [dynosam_nn README.md](./dynosam_nn//README.md) for more information on hardware and performance.
 
 # 2. 🚀 Running DynoSAM
 

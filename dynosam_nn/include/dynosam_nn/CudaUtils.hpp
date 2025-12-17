@@ -20,17 +20,16 @@
   }
 #endif  // CUDA_CHECK
 
-#define CUDA_API_CALL(__CALL__)                                    \
-  do {                                                             \
-    const cudaError_t a = __CALL__;                                \
-    if (a != cudaSuccess) {                                        \
-      std::cout << "CUDA Error: " << cudaGetErrorString(a)         \
-                << " (err_num=" << a << ")" << std::endl;          \
-      std::cout << "File: " << __FILE__ << " | Line: " << __LINE__ \
-                << std::endl;                                      \
-      cudaDeviceReset();                                           \
-      assert(0);                                                   \
-    }                                                              \
+#define CUDA_API_CALL(__CALL__)                                          \
+  do {                                                                   \
+    const cudaError_t a = __CALL__;                                      \
+    if (a != cudaSuccess) {                                              \
+      std::cerr << "CUDA Error: " << cudaGetErrorString(a)               \
+                << " (err_num=" << a << ")"                              \
+                << "at: " << __FILE__ << " | " << __LINE__ << std::endl; \
+      cudaDeviceReset();                                                 \
+      assert(0);                                                         \
+    }                                                                    \
   } while (0)
 
 namespace dyno {

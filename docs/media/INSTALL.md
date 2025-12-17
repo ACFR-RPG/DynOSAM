@@ -29,9 +29,11 @@ To install natively, install the dependancies as required by docker and build as
 
 ## Docker Install instructions
 
-DynoSAM has been tested on x86_64 and aarm64 (with a NVIDIA ORIN) devices using the [two docker files](../../docker/) provided. See the [REAMDE.md](../../docker/README.md) for more detail on hardware used etc.
+DynoSAM has been tested on __x86_64__ and __aarm64__ (with a NVIDIA ORIN NX) devices using the [two docker files](../../docker/) provided. See the [REAMDE.md](../../docker/README.md) for more detail on hardware used etc.
 
 We provide scripts to build and create docker containers to run and develop DynoSAM which is intendend to be mounted within the created container.
+
+> NOTE: with the current setup the embedded device only supports ROS Jazzy. The code should compile on either device without modification.
 
 ### Folder Structure
 To DynoSAM code to be changed within the docker environment, we mount the local version of the code within the container. To ensure this happens smoothly please download the DynoSAM code in the following structure
@@ -112,15 +114,15 @@ Kimera-VIO's install instructions indicate that OpenGV must use the same version
 
 ## Possible Compilation Issues
 ### Missing MPI Header Error
-When first compiling DynoSAM, this error may appear as MPI relies on a non-existent directory. 
+When first compiling DynoSAM, this error may appear as MPI relies on a non-existent directory.
 This issue _should_ be fixed a patch in the `dynosam_common` CMakeLists.txt which directly updates the `MPI_INCLUDE_PATH`.
 
 However, if the issue persists, the following is a known fix.
 1. Unset HPC-X variables
    ```bash
    unset OPENMPI_VERSION
-   unset OMPI_MCA_coll_hcoll_enable 
-   unset OPAL_PREFIX 
+   unset OMPI_MCA_coll_hcoll_enable
+   unset OPAL_PREFIX
    export PATH=$(echo $PATH | tr ':' '\n' | grep -v '/opt/hpcx' | grep -v '/usr/local/mpi/bin' | paste -sd:)
     ```
    Now verify `env | grep -i mpi echo $PATH` that the `OPAL_PREFIX` and HPC-X paths no longer appear
@@ -132,7 +134,7 @@ However, if the issue persists, the following is a known fix.
    and verify that the following points to `/usr/bin/mpicc`
    ```bash
    which mpicc
-   mpicc --version   
+   mpicc --version
    ```
 3. Clear the ROS2 workspace
    ```bash
@@ -140,11 +142,10 @@ However, if the issue persists, the following is a known fix.
    ```
 4. Build with the system MPI
    ```bash
-   export MPI_C_COMPILER=/usr/bin/mpicc 
-   export MPI_CXX_COMPILER=/usr/bin/mpicxx 
+   export MPI_C_COMPILER=/usr/bin/mpicc
+   export MPI_CXX_COMPILER=/usr/bin/mpicxx
    colcon build
    ```
-### Missing Dependencies 
+### Missing Dependencies
 - `nlohmannjson` may not be installed, so install with `sudo apt install nlohmann-json3-dev`
 - GTSAM may not be installed, so install with `pip install gtsam`
-   

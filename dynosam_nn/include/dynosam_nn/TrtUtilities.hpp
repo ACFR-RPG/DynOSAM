@@ -47,6 +47,7 @@
 #include <string>
 
 #include "dynosam_common/Exceptions.hpp"
+#include "dynosam_nn/CudaUtils.hpp"
 #include "dynosam_nn/ModelConfig.hpp"
 
 namespace dyno {
@@ -55,6 +56,13 @@ using Severity = nvinfer1::ILogger::Severity;
 using EnginePtr = std::unique_ptr<nvinfer1::ICudaEngine>;
 using RuntimePtr = std::unique_ptr<nvinfer1::IRuntime>;
 
+/**
+ * @brief Allocates and frees GPU (device) memory using cudaMalloc.
+ *
+ * See:
+ * https://developer.download.nvidia.com/compute/DevZone/docs/html/C/doc/html/group__CUDART__MEMORY_gc63ffd93e344b939d6399199d8b12fef.html#gc63ffd93e344b939d6399199d8b12fef
+ *
+ */
 struct CudaMemoryAllocator {
   static void* alloc(size_t size);
 
@@ -63,6 +71,16 @@ struct CudaMemoryAllocator {
   };
 };
 
+/**
+ * @brief Allocates and free CPU (host) memory using cudaMallocHost.
+ * This allocates memory using cudaMallocHost. This memory is page-locked and
+ * therefore can be read or written with much higher bandwidth than pageable
+ * memory.
+ *
+ * See:
+ * https://developer.download.nvidia.com/compute/DevZone/docs/html/C/doc/html/group__CUDART__MEMORY_g9f93d9600f4504e0d637ceb43c91ebad.html#g9f93d9600f4504e0d637ceb43c91ebad
+ *
+ */
 struct HostMemoryAllocator {
   static void* alloc(size_t size);
 
@@ -119,6 +137,21 @@ std::ostream& operator<<(std::ostream& out, const ImageTensorInfo& info);
 
 bool isDynamic(const nvinfer1::Dims& dims);
 
+/**
+ * @brief Memory wrapper for cuda allocated memory of type T.
+ *
+ * Allocator requires
+ *  static void* alloc(size_t size);
+ *  struct Delete {
+ *   void operator()(void* object);
+ *  };
+ *
+ * And is used to allocate and free memory.
+ *
+ *
+ * @tparam T
+ * @tparam Allocator
+ */
 template <typename T, typename Allocator>
 struct MemoryManager {
   using This = MemoryManager<T, Allocator>;
@@ -181,6 +214,16 @@ struct MemoryManager {
   }
 };
 
+/**
+ * @brief Allocates and manages device (GPU) memory using the
+ * CudaMemoryAllocator.
+ *
+ * Includes additional functions to copy memory to and from the host (CPU)
+ * to the device (GPU).
+ *
+ *
+ * @tparam T
+ */
 template <typename T>
 struct DeviceMemory : public MemoryManager<T, CudaMemoryAllocator> {
   using Base = MemoryManager<T, CudaMemoryAllocator>;
@@ -189,6 +232,16 @@ struct DeviceMemory : public MemoryManager<T, CudaMemoryAllocator> {
   using Base::tensor_size;
   using typename Base::DataType;
 
+  /**
+   * @brief Copies data from device (GPU) to the host (CPU).
+   * Host data should be pre-allocated with Base#allocated_size BYTES
+   * (i.e tensor_size * sizeof(T)).
+   *
+   * @param host_data DataType* allocated CPU memory.
+   * @param stream cudaStream_t
+   * @return true
+   * @return false
+   */
   bool getFromDevice(DataType* host_data, cudaStream_t stream = 0) {
     // data.resize(tensor_size);
     auto device_data = data_ptr.get();
@@ -204,12 +257,34 @@ struct DeviceMemory : public MemoryManager<T, CudaMemoryAllocator> {
     return true;
   }
 
+  /**
+   * @brief Copies data from host (CPU) to device (GPU) at the location
+   * sepcified by the pre-allocated Base#data_ptr.
+   *
+   * Host data should be pre-allocated of size Base#tensor_size.
+   *
+   * @param host_data std::vector<DataType>&
+   * @param stream
+   * @return true
+   * @return false
+   */
   bool pushFromHost(std::vector<DataType>& host_data, cudaStream_t stream = 0) {
     CHECK_EQ(host_data.size(), tensor_size);
     return pushFromHost(host_data.data(), stream);
   }
 
-  // data should really be const here
+  /**
+   * @brief Copies data from host (CPU) to device (GPU) at the location
+   * sepcified by the pre-allocated Base#data_ptr.
+   *
+   * Host data should be pre-allocated with Base#allocated_size BYTES
+   * (i.e tensor_size * sizeof(T)).
+   *
+   * @param host_data std::vector<DataType>&
+   * @param stream
+   * @return true
+   * @return false
+   */
   bool pushFromHost(DataType* host_data, cudaStream_t stream = 0) {
     auto device_data = data_ptr.get();
     auto error = cudaMemcpyAsync(device_data, host_data, allocated_size,
@@ -224,6 +299,15 @@ struct DeviceMemory : public MemoryManager<T, CudaMemoryAllocator> {
   }
 };
 
+/**
+ * @brief Allocates and manages host (CPU) memory allocated with
+ * HostMemoryAllocator. This allocates memory using cudaMallocHost. This memory
+ * is page-locked and therefore can be read or written with much higher
+ * bandwidth than pageable memory.
+ *
+ *
+ * @tparam T
+ */
 template <typename T>
 using HostMemory = MemoryManager<T, HostMemoryAllocator>;
 

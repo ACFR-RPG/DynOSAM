@@ -16,38 +16,10 @@
 
 #include <glog/logging.h>
 
-// // rect should be of length 4 in the form x,y, width, height
-// __device__ void jaccardDistance(const float* __restrict__ rect_a,
-//                                 const float* __restrict__ rect_b,
-//                                 float* __restrict__ distance) {
-//     const float Aa = rect_a[3] * rect_a[4];
-//     const float Ab = rect_a[3] * rect_a[4];
-
-//     if ((Aa + Ab) <= std::numeric_limits<float>::epsilon()) {
-//         // jaccard_index = 1 -> distance = 0
-//         *distance = 0.0;
-//         return;
-//     }
-
-//     // compute intersection
-
-//     const float x1 = fmaxf(rect_a[0], rect_b[0]);
-//     const float y1 = fmaxf(rect_a[1], rect_b[1]);
-//     const float x2 = fminf(rect_a[0] + rect_a[2], rect_b[0] + rect_b[2]);
-//     const float y2 = fminf(rect_a[1] + rect_a[3], rect_b[1] + rect_b[3]);
-
-//     // Compute width/height of intersection
-//     float w = fmaxf(0.0f, x2 - x1);
-//     float h = fmaxf(0.0f, y2 - y1);
-
-//     // Intersection area (cast to double if you want double)
-//     float Aab = w * h;
-//     // distance = 1 - jaccard_index
-//     *distance = 1.0 - Aab / (Aa + Ab - Aab);
-// }
-
 
 // --- Device Kernel ---
+//TODO: I think N, C, ClassConfOffset and MaskCoeffOffset should also be constexpr
+// can use C to unroll!?
 __global__ void YOLO_PostProcess_Kernel(
     const float* __restrict__ d_input,
     float* __restrict__ d_detections, // Treated as flat float array
@@ -80,7 +52,7 @@ __global__ void YOLO_PostProcess_Kernel(
 
     // 3. Write Data (38 floats per detection)
     // const int STRIDE = 38; // sizeof(YoloDetection) / sizeof(float)
-    static constexpr int STRIDE = sizeof(YoloDetection) / sizeof(float);
+    static constexpr int STRIDE = sizeof(dyno::internal::AlignedYoloDetection) / sizeof(float);
     float* out_ptr = d_detections + (write_idx * STRIDE);
 
     out_ptr[0] = d_input[BoxOffset * N + i];       // x
@@ -97,68 +69,6 @@ __global__ void YOLO_PostProcess_Kernel(
     }
 }
 
-// --- Host Wrapper Function ---
-int YoloOutputToDetections(
-    const float* d_model_output,
-    const YoloKernelConfig& config,
-    YoloDetection* h_output_buffer,
-    YoloDetection* d_output_buffer,
-    int* d_count_buffer,
-    int* h_count_buffer,
-    void* stream_ptr)
-{
-    cudaStream_t stream = static_cast<cudaStream_t>(stream_ptr);
-
-    // // 1. Reset the atomic counter on Device
-    // cudaMemsetAsync(d_count_buffer, 0, sizeof(int), stream);
-    *h_count_buffer = 0;
-
-    // 2. Launch Kernel
-    static constexpr int threads = 256;
-    const int blocks = (config.num_boxes + threads - 1) / threads;
-
-    YOLO_PostProcess_Kernel<<<blocks, threads, 0, stream>>>(
-        d_model_output,
-        reinterpret_cast<float*>(d_output_buffer),
-        d_count_buffer,
-        config.num_boxes,
-        config.num_classes,
-        config.conf_threshold,
-        config.box_offset,
-        config.class_conf_offset,
-        config.mask_coeff_offset
-    );
-
-    cudaError_t err = cudaGetLastError();
-    CUDA_CHECK(err);
-
-    // cudaDeviceSynchronize();
-    cudaStreamSynchronize(stream);
-    // fflush(stdout);
-
-    // 3. Copy Count Back to Host
-    // We need a small temporary host variable for the count.
-    // Ideally, this is a pinned memory member of your class, but local var is okay for sync.
-    // int valid_count = 0;
-    // cudaMemcpyAsync(&valid_count, d_count_buffer, sizeof(int), cudaMemcpyDeviceToHost, stream);
-
-    // // SYNC POINT: We must know the count to know how much data to copy next.
-    // // If you want to be fully async, you'd need to copy the *max* buffer or use unified memory.
-    // // For simplicity/safety here, we sync the stream.
-    // cudaStreamSynchronize(stream);
-    // //for printf!
-
-    // // 4. Copy Valid Data Back to Host
-    // if (valid_count > 0) {
-    //     size_t copy_size = valid_count * sizeof(YoloDetection);
-    //     cudaMemcpyAsync(h_output_buffer, d_output_buffer, copy_size, cudaMemcpyDeviceToHost, stream);
-
-    //     // Final sync ensures data is ready on CPU before function returns
-    //     cudaStreamSynchronize(stream);
-    // }
-
-    return *h_count_buffer;
-}
 
 
 __device__ __forceinline__ float sigmoidf(float x)
@@ -236,11 +146,55 @@ inline cv::Rect scaleCoords(const cv::Size& required_shape,
     return ret;
   }
 
+namespace dyno {
+namespace internal {
+
+// --- Host Wrapper Function ---
+int YoloOutputToDetections(
+    const float* d_model_output,
+    const YoloKernelConfig& config,
+    AlignedYoloDetection* h_output_buffer,
+    AlignedYoloDetection* d_output_buffer,
+    int* d_count_buffer,
+    int* h_count_buffer,
+    void* stream_ptr)
+{
+    cudaStream_t stream = static_cast<cudaStream_t>(stream_ptr);
+
+    // // 1. Reset the atomic counter on Device
+    // cudaMemsetAsync(d_count_buffer, 0, sizeof(int), stream);
+    *h_count_buffer = 0;
+
+    // 2. Launch Kernel
+    static constexpr int threads = 256;
+    const int blocks = (config.num_boxes + threads - 1) / threads;
+
+    YOLO_PostProcess_Kernel<<<blocks, threads, 0, stream>>>(
+        d_model_output,
+        reinterpret_cast<float*>(d_output_buffer),
+        d_count_buffer,
+        config.num_boxes,
+        config.num_classes,
+        config.conf_threshold,
+        config.box_offset,
+        config.class_conf_offset,
+        config.mask_coeff_offset
+    );
+
+    cudaError_t err = cudaGetLastError();
+    CUDA_CHECK(err);
+
+    // cudaDeviceSynchronize();
+    cudaStreamSynchronize(stream);
+
+    return *h_count_buffer;
+}
+
 void YoloDetectionsToObjects(
-    const DetectionGpuMats& wrappers,
+    const YoloDetectionGpuMatDevice& wrappers,
     const cv::cuda::GpuMat& d_prototype_masks,
     const cv::Rect& prototype_crop_rect, // Pre-calculated crop area
-    const YoloDetection* h_detection,
+    const AlignedYoloDetection* h_detection,
     const cv::Size& required_size,
     const cv::Size& original_size,
     const std::string& label,
@@ -368,3 +322,6 @@ void YoloDetectionsToObjects(
     detection = dyno::ObjectDetection{final_cpu_mask, bounding_box, label ,confidence};
 
 }
+
+} //internal
+} //dyno
