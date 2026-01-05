@@ -13,7 +13,7 @@
 # if -1, defaults to 0 for starting frame (i.e the first frame) and ending_frame=dataset_size
 --starting_frame=-1
 --ending_frame=-1
---use_backend=false
+--use_backend=true
 
 --save_frontend_json=false
 

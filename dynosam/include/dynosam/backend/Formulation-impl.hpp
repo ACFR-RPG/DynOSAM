@@ -631,8 +631,10 @@ UpdateObservationResult Formulation<MAP>::updateDynamicObservations(
   VLOG(20) << "Add dynamic observations at " << frame_id_k << " for objects "
            << container_to_string(frame_node_k->getObservedObjects());
 
-  utils::ChronoTimingStats dyn_obj_itr_timer(this->loggerPrefix() +
-                                             ".dynamic_object_itr");
+  constexpr static int kItrTimerLoggerLevel = 20;
+
+  utils::ChronoTimingStats dyn_obj_itr_timer(
+      this->loggerPrefix() + ".dynamic_object_itr", kItrTimerLoggerLevel);
   for (const auto& object_node : frame_node_k->objects_seen) {
     DebugInfo::ObjectInfo object_debug_info;
     const ObjectId object_id = object_node->getId();
@@ -787,7 +789,8 @@ UpdateObservationResult Formulation<MAP>::updateDynamicObservations(
             point_context.is_starting_motion_frame = true;
           }
           utils::ChronoTimingStats dyn_point_update_timer(
-              this->loggerPrefix() + ".dyn_point_update_1");
+              this->loggerPrefix() + ".dyn_point_update_1",
+              kItrTimerLoggerLevel);
           // the true set of values that are added from the update
           dynamicPointUpdateCallback(point_context, result, internal_new_values,
                                      internal_new_factors);
@@ -813,8 +816,8 @@ UpdateObservationResult Formulation<MAP>::updateDynamicObservations(
             getInitialOrLinearizedSensorPose(frame_node_k->frame_id);
         point_context.starting_factor_slot = starting_factor_slot;
         point_context.is_starting_motion_frame = false;
-        utils::ChronoTimingStats dyn_point_update_timer(this->loggerPrefix() +
-                                                        ".dyn_point_update_2");
+        utils::ChronoTimingStats dyn_point_update_timer(
+            this->loggerPrefix() + ".dyn_point_update_2", kItrTimerLoggerLevel);
         // the true set of values that are added from the update
         // gtsam::Values local_new_values;
         dynamicPointUpdateCallback(point_context, result, internal_new_values,
