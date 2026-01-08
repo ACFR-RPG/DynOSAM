@@ -148,6 +148,7 @@ struct YoloV8ObjectDetector::Impl {
     }
   }
 
+  // input to the model
   inline const cv::Size requiredInputSize() const {
     return input_info_.shape();
   }

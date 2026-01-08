@@ -69,6 +69,22 @@ __global__ void YOLO_PostProcess_Kernel(
     }
 }
 
+// Custom kernal to perform binary thresholding with a float mat as input and unsigned char
+// mat as output. This is different from the opencv implementation which requires converting the
+// float mat before thresholding which takes up most of the computation
+__global__ void binaryThreshold(
+    cv::cuda::PtrStepSz<const float> in,
+    cv::cuda::PtrStepSz<unsigned char> out,
+    float thresh,
+    unsigned char maxval
+) {
+    int x = blockIdx.x * blockDim.x + threadIdx.x;
+    int y = blockIdx.y * blockDim.y + threadIdx.y;
+
+    if (x < in.cols && y < in.rows) {
+        out(y, x) = (in(y, x) > thresh) ? maxval : 0;
+    }
+}
 
 
 __device__ __forceinline__ float sigmoidf(float x)
@@ -236,8 +252,8 @@ void YoloDetectionsToObjects(
      dyno::GpuTimingStats timing_detections(
         "yolov8_detection.post_process.cv_processing", stream, 5);
     // --- 2. Sequential Post-Processing (Loop over detections, using cv::cuda) ---
-    cv::cuda::GpuMat d_final_masks_full_res(
-        original_size, CV_8UC1); // Reusable buffer for final binary mask
+    static cv::cuda::GpuMat d_final_masks_full_res;
+    d_final_masks_full_res.create(original_size, CV_8UC1);
 
     // --- A. Define ROI wrappers for the combined mask ---
     // Create a wrapper for the i-th 160x160 mask plane
@@ -247,18 +263,27 @@ void YoloDetectionsToObjects(
         d_combined_mask_plane(prototype_crop_rect);
 
     // --- C. Resize to Original Dimensions (GPU) ---
-    cv::cuda::GpuMat d_resized_mask(original_size, CV_32FC1);
+    static cv::cuda::GpuMat d_resized_mask;
+    d_resized_mask.create(original_size, CV_32FC1);
     cv::cuda::resize(d_cropped_mask, d_resized_mask, original_size,
                         0, 0, cv::INTER_LINEAR, stream);
 
     // // --- D. Threshold and Convert to Binary (GPU) ---
     // // stream?
-    cv::cuda::GpuMat d_binary_mask(original_size, CV_8UC1);
-    cv::cuda::threshold(d_resized_mask, d_binary_mask, 0.5, 255.0,
-                        cv::THRESH_BINARY, stream);
+    static cv::cuda::GpuMat d_binary_mask;
+    d_binary_mask.create(original_size, CV_8UC1);
+    // cv::cuda::threshold(d_resized_mask, d_binary_mask, 0.5, 255.0,
+    //                     cv::THRESH_BINARY, stream);
+    dim3 full_size_grid(
+        (original_size.width + block.x - 1) / block.x,
+        (original_size.height + block.y - 1) / block.y
+    );
+
+    // custom binary thresholding function that is faster than opencv
+    binaryThreshold<<<full_size_grid, block, 0, c_stream>>>(d_resized_mask, d_binary_mask, 0.5, 255);
 
     // // Convert to 8-bit unsigned integer (CV_8UC1)
-    d_binary_mask.convertTo(d_binary_mask, CV_8UC1);
+    // d_binary_mask.convertTo(d_binary_mask, CV_8UC1);
 
     // --- E. Final Crop/Copy to Bounding Box (GPU) ---
     // The final mask is only valid inside the detection box.
@@ -270,7 +295,7 @@ void YoloDetectionsToObjects(
     cv::cuda::GpuMat box_row = wrappers.boxes.row(0);
     box_row.download(box_data, stream);
 
-    stream.waitForCompletion();
+    // stream.waitForCompletion();
 
 
     const float bb_x = box_data.at<float>(0);
@@ -290,36 +315,38 @@ void YoloDetectionsToObjects(
     cv::Rect bounding_box = scaleCoords(required_size, box,
             original_size, true); // Assuming this CPU helper exists
 
-    cv::Rect roi = bounding_box;
-    roi &= cv::Rect(0, 0, original_size.width, original_size.height);
+    // cv::Rect roi = bounding_box;
+    // roi &= cv::Rect(0, 0, original_size.width, original_size.height);
 
-    // // 3. Clear the output mask buffer and copy the binary mask into the ROI
-    d_final_masks_full_res.setTo(cv::Scalar(0)); // Clear previous mask
+    // // // 3. Clear the output mask buffer and copy the binary mask into the ROI
+    // d_final_masks_full_res.setTo(cv::Scalar(0)); // Clear previous mask
 
-    if (roi.area() > 0) {
-        // Copy the relevant ROI data from the binary mask into the final
-        // mask's ROI. The full binary mask is HxW, so we sub-region both.
-        d_binary_mask(roi).copyTo(d_final_masks_full_res(roi));
-    }
+    // if (roi.area() > 0) {
+    //     // Copy the relevant ROI data from the binary mask into the final
+    //     // mask's ROI. The full binary mask is HxW, so we sub-region both.
+    //     d_binary_mask(roi).copyTo(d_final_masks_full_res(roi));
+    // }
 
-    // // --- F. Final Download (Minimal Transfer) ---
-    // // Download only the final result and metadata for ObjectDetection struct
-    // //TODO: pinned memory!!
-    //TODO: this seems slower than doing CPU (maybe due to copy or constant realloc?)
-    // cv::cuda::HostMem h_mem(original_size, CV_8U, cv::cuda::HostMem::PAGE_LOCKED);
-    // cv::cuda::HostMem h_mem;
-    cv::Mat final_cpu_mask = cv::Mat::zeros(original_size, CV_8U);
-    d_final_masks_full_res.download(final_cpu_mask, stream);
+    // // // --- F. Final Download (Minimal Transfer) ---
+    // // // Download only the final result and metadata for ObjectDetection struct
+    // // //TODO: pinned memory!!
+    // //TODO: this seems slower than doing CPU (maybe due to copy or constant realloc?)
+    // // cv::cuda::HostMem h_mem(original_size, CV_8U, cv::cuda::HostMem::PAGE_LOCKED);
+    // static cv::cuda::HostMem h_mem(cv::cuda::HostMem::PAGE_LOCKED);
+    // h_mem.create(original_size, CV_8U);
+    // // cv::cuda::HostMem h_mem;
+    // // cv::Mat final_cpu_mask = cv::Mat::zeros(original_size, CV_8U);
+    // // d_final_masks_full_res.download(final_cpu_mask, stream);
     // d_final_masks_full_res.download(h_mem, stream);
-    stream.waitForCompletion();
+    // stream.waitForCompletion();
 
-    // should synchronize!?
-    // cv::Mat final_cpu_mask = h_mem.createMatHeader().clone();
+    // // should synchronize!?
+    // cv::Mat final_cpu_mask = h_mem.createMatHeader();
 
     const float confidence = h_detection->confidence;
     const int class_id = static_cast<int>(h_detection->class_id);
 
-    detection = dyno::ObjectDetection{final_cpu_mask, bounding_box, label ,confidence};
+    // detection = dyno::ObjectDetection{final_cpu_mask, bounding_box, label ,confidence};
 
 }
 
