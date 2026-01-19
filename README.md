@@ -92,7 +92,7 @@ We currently support building for AARM64 devices and DynoSAM has been tested on 
 
 > NOTE: DynoSAM does not currently run real-time on the ORIN NX (mostly bottlenecked by the object detection process). On a more powerful device better performance is expected.
 
-Also see the [Docker REAMDE.md](./docker/README.md) and the [dynosam_nn README.md](./dynosam_nn//README.md) for more information on hardware and performance.
+Also see the [Docker README.md](./docker/README.md) and the [dynosam_nn README.md](./dynosam_nn//README.md) for more information on hardware and performance.
 
 # 2. 🚀 Running DynoSAM
 
