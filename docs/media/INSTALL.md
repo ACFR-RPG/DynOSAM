@@ -97,6 +97,20 @@ can be handled internally (ie YOLO).
 - **Important:** Check [GPU Compute Capability](https://developer.nvidia.com/cuda-gpus) to set `CUDA_ARCH_BIN` flag
 - NVIDIA GeForce RTX 2080 is 7.5
 
+### Installation for NVIDIA Blackwell workstations
+NVIDIA Blackwell systems support higher torch, CUDA etc, versions than is currently available with the base docker image. 
+
+Testing with a NVIDIA GeForce RTX 5070 the follow manual updates were made
+```
+pip install torch==2.8.0 torchvision==0.23.0 torchaudio==2.8.0 --index-url https://download.pytorch.org/whl/cu128
+```
+
+When testing the _tensorrt-dev_ (and therefore all associated development librariers) were versioned to 10.14.1.48-1+cuda13.0.
+```
+sudo apt install tensorrt-dev --upgrade
+```
+
+
 ## Additional Installation Notes
 
 `dynamic_slam_interfaces` is a require dependacy by default. This package is used to include custom messages that represet the state of each dynamic object per frame and is used by the ROS publishers.
