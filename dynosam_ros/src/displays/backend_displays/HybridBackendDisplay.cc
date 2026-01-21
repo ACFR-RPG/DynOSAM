@@ -136,4 +136,27 @@ void RegularHybridFormulationDisplay::spin(
   this->publishObjectKeyFrames(output->getFrameId(), output->getTimestamp());
 }
 
+void HybridKeyFrameFormulationDisplay::spin(
+    const BackendOutputPacket::ConstPtr& output) {
+  LOG(INFO) << "In HybridKeyFrameFormulationDisplay::spin";
+
+  auto ros_time = utils::toRosTime(output->getTimestamp());
+
+  visualization_msgs::msg::MarkerArray array;
+  const auto& regular_keyframes = module_->getRegularKeyFrames();
+  const auto& anchor_keyframes = module_->getAnchorKeyFrames();
+
+  auto map = module_->map();
+  auto frame_node = map->getFrame(output->getFrameId());
+  ObjectIds observed_objects = frame_node->getObservedObjects();
+
+  auto make_range_markers = [](const KeyFrameRanges& kf_range)
+
+      for (ObjectId object_id : observed_objects) {
+    LOG(INFO) << "Looking for KF ranges for j=" << object_id;
+    auto regular_kf_range = regular_keyframes->at(object_id);
+    auto anchor_kf_range = anchor_keyframes->at(object_id);
+  }
+}
+
 }  // namespace dyno

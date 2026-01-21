@@ -39,7 +39,12 @@ namespace dyno {
 
 // TODO: eventually this should be the same as from the object-track module!
 // right now detected by frontend
-enum class ObjectTrackingStatus { New = 0, Tracked = 1, ReTracked = 2 };
+enum class ObjectTrackingStatus {
+  New = 0,
+  Tracked = 1,
+  ReTracked = 2,
+  Lost = 3
+};
 
 // kind of repeatition of TrackingStatus (which is not really used anywhere!!!)
 enum class ObjectFeatureTrackingStatus {
@@ -48,6 +53,30 @@ enum class ObjectFeatureTrackingStatus {
   Resampled = 1
   // TODO: maybe too few etc
 };
+
+template <>
+inline std::string to_string(const ObjectTrackingStatus& status) {
+  std::string status_str = "";
+  switch (status) {
+    case ObjectTrackingStatus::New: {
+      status_str = "New";
+      break;
+    }
+    case ObjectTrackingStatus::Tracked: {
+      status_str = "Tracked";
+      break;
+    }
+    case ObjectTrackingStatus::ReTracked: {
+      status_str = "ReTracked";
+      break;
+    }
+    case ObjectTrackingStatus::Lost: {
+      status_str = "Lost";
+      break;
+    }
+  }
+  return status_str;
+}
 
 // should probably go in SingleDetecionResult!
 struct ObjectStatus {
@@ -60,7 +89,7 @@ class ObjectStatusMap : public gtsam::FastMap<ObjectId, ObjectStatus> {
   using Base = gtsam::FastMap<ObjectId, ObjectStatus>;
   using Base::Base;
 
-  ObjectIds getResampledObjects() const;
+  // ObjectIds getResampledObjects() const;
 };
 
 /**

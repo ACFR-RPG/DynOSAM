@@ -1505,6 +1505,56 @@ class HybridFormulationV1 : public HybridFormulation {
 };
 
 // additional functionality when solved with the Regular Backend!
+class HybridFormulationKeyFrame : public HybridFormulation {
+ public:
+  using Base = HybridFormulation;
+
+  DYNO_POINTER_TYPEDEFS(HybridFormulationKeyFrame)
+
+  HybridFormulationKeyFrame(const FormulationParams& params,
+                            typename Map::Ptr map,
+                            const NoiseModels& noise_models,
+                            const Sensors& sensors,
+                            const FormulationHooks& hooks)
+      : Base(params, map, noise_models, sensors, hooks) {}
+
+  void dynamicPointUpdateCallback(
+      const PointUpdateContextType& context, UpdateObservationResult& result,
+      gtsam::Values& new_values,
+      gtsam::NonlinearFactorGraph& new_factors) override {}
+  void objectUpdateContext(const ObjectUpdateContextType& context,
+                           UpdateObservationResult& result,
+                           gtsam::Values& new_values,
+                           gtsam::NonlinearFactorGraph& new_factors) override {}
+
+  /**
+   * @brief Uses input data to update interal data-structures with initial
+   * motion data and keyframes. This is then retrieved during the update
+   * formulations via getIntermediateMotionInfo
+   *
+   * @param data
+   */
+  void preUpdate(const PreUpdateData& data) override;
+
+  const KeyFrameData& getRegularKeyFrames() const {
+    return front_end_keyframes_;
+  }
+  const KeyFrameData& getAnchorKeyFrames() const { return key_frame_data_; }
+
+ protected:
+  IntermediateMotionInfo getIntermediateMotionInfo(ObjectId object_id,
+                                                   FrameId frame_id) override;
+
+  GenericObjectCentricMap<gtsam::Pose3> initial_H_W_e_k_;
+  //! Bookkeeps the keyframing from the front-end so we manage the to/from
+  //! frames provided by the front-end estimate This is not used to manage the
+  //! keyframe pose or keyframe id in the backend Since this is DIFFERENT to the
+  //! frontend The pose held in each KeyFrameRangeis the L_e_frontend (which is
+  //! used to anchor) The frontend estimates
+  KeyFrameData front_end_keyframes_;
+};
+
+// additional functionality when solved with the Regular Backend!
 class RegularHybridFormulation : public HybridFormulationV1 {
  public:
   using Base = HybridFormulationV1;

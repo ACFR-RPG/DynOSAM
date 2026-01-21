@@ -78,7 +78,7 @@
 # currently only for rgbd, indicates which updater the rgbd backend should use
 # i.e which formulation is used for solving
 # MotionInWorld = 0, LLWorld=1, Parallel-Hybrid=3
---backend_updater_enum=3
+--backend_updater_enum=2
 
 --init_H_with_identity=true
 --updater_suffix=

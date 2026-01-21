@@ -589,9 +589,13 @@ void ParallelHybridBackendModule::implSolvePerObject(
     needs_new_key_frame = true;
   }
 
-  if (object_update.is_keyframe) {
-    needs_new_key_frame = true;
-  }
+  // TODO: untested logic now that we actually implement keyframing from
+  // frontend theoretically it should be the anchor KF (as this indicates a new
+  // starting point) and in this formulation we add motion variables every frame
+  // (ie. regular_keyframe == true for all frames)
+  //  if (object_update.anchor_keyframe) {
+  //    needs_new_key_frame = true;
+  //  }
 
   estimator->update(frame_id_k, object_update.measurements, X_W_k, H_W_k_1_k,
                     should_update_smoother);

@@ -1158,6 +1158,52 @@ gtsam::Pose3 HybridFormulationV1::calculateObjectCentroid(
   return center;
 }
 
+HybridFormulationKeyFrame::IntermediateMotionInfo
+HybridFormulationKeyFrame::getIntermediateMotionInfo(ObjectId object_id,
+                                                     FrameId frame_id) {
+  return IntermediateMotionInfo{};
+}
+
+void HybridFormulationKeyFrame::preUpdate(const PreUpdateData& data) {
+  // LOG(INFO) << "preUpdate kfid = " << kf_id;
+
+  CHECK(data.input);
+  using ObjectTrackMap = VisionImuPacket::ObjectTrackMap;
+  using ObjectTracks = VisionImuPacket::ObjectTracks;
+
+  const VisionImuPacket& input = *data.input;
+  const ObjectTrackMap& object_tracks = input.objectTracks();
+  for (const auto& [object_id, object_track] : object_tracks) {
+    CHECK(object_track.hybrid_info)
+        << "Hybrid info must be provided as part of the object track for this "
+           "formulation!";
+
+    const ObjectTracks::HybridInfo& hybrid_info =
+        object_track.hybrid_info.value();
+
+    const bool regular_keyframe = object_track.regular_keyframe;
+    const bool anchor_keyframe = object_track.anchor_keyframe;
+
+    if (anchor_keyframe) CHECK(regular_keyframe);
+
+    if (regular_keyframe) {
+      CHECK_EQ(hybrid_info.to, hybrid_info.from);
+      front_end_keyframes_.startNewActiveRange(object_id, hybrid_info.from,
+                                               hybrid_info.L_W_KF);
+      LOG(INFO) << "Making Regular KF for "
+                << info_string(hybrid_info.from, object_id);
+    }
+
+    if (anchor_keyframe) {
+      CHECK_EQ(hybrid_info.to, hybrid_info.from);
+      key_frame_data_.startNewActiveRange(object_id, hybrid_info.from,
+                                          hybrid_info.L_W_KF);
+      LOG(INFO) << "Making Anchor KF for "
+                << info_string(hybrid_info.from, object_id);
+    }
+  }
+}
+
 void RegularHybridFormulation::preUpdate(const PreUpdateData& data) {
   // get objects seen in this frame from the map
   const typename Map::Ptr map = this->map();

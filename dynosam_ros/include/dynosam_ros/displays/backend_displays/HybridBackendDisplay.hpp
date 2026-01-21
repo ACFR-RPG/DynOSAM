@@ -69,6 +69,23 @@ class RegularHybridFormulationDisplay : public HybridModuleDisplayCommon {
   std::shared_ptr<RegularHybridFormulation> module_;
 };
 
+class HybridKeyFrameFormulationDisplay : public HybridModuleDisplayCommon {
+ public:
+  HybridKeyFrameFormulationDisplay(
+      const DisplayParams& params, rclcpp::Node* node,
+      std::shared_ptr<HybridFormulationKeyFrame> module)
+      : HybridModuleDisplayCommon(
+            params, node, module->derivedAccessor<HybridAccessorCommon>()),
+        module_(CHECK_NOTNULL(module)) {
+    CHECK_NOTNULL(module);
+  }
+
+  void spin(const BackendOutputPacket::ConstPtr& output) override;
+
+ private:
+  std::shared_ptr<HybridFormulationKeyFrame> module_;
+};
+
 // TODO: in light of now having many Hybrid formulations we should template on
 // HybridFormulation not on RegularHybridFormulation as the display should work
 // for all!!
@@ -85,6 +102,11 @@ struct BackendModuleDisplayTraits<ParallelHybridBackendModule> {
 template <>
 struct BackendModuleDisplayTraits<RegularHybridFormulation> {
   using type = RegularHybridFormulationDisplay;
+};
+
+template <>
+struct BackendModuleDisplayTraits<HybridFormulationKeyFrame> {
+  using type = HybridKeyFrameFormulationDisplay;
 };
 
 }  // namespace dyno

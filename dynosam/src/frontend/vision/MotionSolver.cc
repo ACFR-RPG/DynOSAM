@@ -1490,6 +1490,7 @@ HybridObjectMotionSRIF::Result HybridObjectMotionSRIF::update(
   const gtsam::Pose3& X_W_k = frame->getPose();
   const gtsam::Pose3 X_W_k_inv = X_W_k.inverse();
   X_K_ = X_W_k;
+  frame_id_ = frame->getFrameId();
 
   // 1. Calculate Jacobians (H) and Linearized Residuals (y_lin)
   // These are calculated ONCE at the linearization point and are fixed
@@ -1712,9 +1713,8 @@ void HybridObjectMotionSRIF::resetState(const gtsam::Pose3& L_e,
   previous_H_ = gtsam::Pose3::Identity();
   L_e_ = L_e;
   frame_id_e_ = frame_id_e;
+  frame_id_ = frame_id_e;
   X_K_ = gtsam::Pose3::Identity();
-
-  keyframe_history.push_back(L_e);
 
   m_linearized_.clear();
 
@@ -1797,13 +1797,6 @@ bool ObjectMotionSolverFilter::solveImpl(Frame::Ptr frame_k,
 
   // TODO: refine complex logic!
   const bool object_resampled = it != frame_k->retracked_objects_.end();
-  const bool object_in_previous =
-      frame_k_1->tracking_info_->dynamic_track.exists(object_id);
-  const bool object_in_filter = filters_.exists(object_id);
-
-  const bool object_new_in_previous =
-      object_in_previous &&
-      frame_k_1->tracking_info_->dynamic_track.at(object_id).object_new;
   const bool object_new = !filters_.exists(object_id);
 
   // TODO: object is new is not getting set!!! (this should be for when the
@@ -1816,7 +1809,7 @@ bool ObjectMotionSolverFilter::solveImpl(Frame::Ptr frame_k,
   bool new_or_reset_object = false;
   // bool new_object = false;
   // bool object_reset = false;
-  if (object_resampled && object_in_filter) {
+  if (object_resampled && !object_new) {
     LOG(INFO) << object_id
               << " retracked - resetting filter k=" << frame_k->getFrameId();
     // Not thread safe!
@@ -1832,18 +1825,16 @@ bool ObjectMotionSolverFilter::solveImpl(Frame::Ptr frame_k,
     // NOTE: we currently KF to k-1 so this will be a little bit wrong!!!
     // assume that we only take this value if the object was retracked!!
     // as we dont set it anywhere else!!
-    filter->H_W_e_k_before_reset = filter->getCurrentLinearization();
+    // filter->H_W_e_k_before_reset = filter->getCurrentLinearization();
+    // // filter->frame_id_e_before_reset = filter->getKeyFrameId();
     // filter->frame_id_e_before_reset = filter->getKeyFrameId();
-    filter->frame_id_e_before_reset = filter->getKeyFrameId();
 
     // instead of using new pose (use last motion) (if last frame id was k-1?)
     //  we start to drift from the center of the object!!
     //  keyframe_pose = filter->getCurrentLinearization() *
     //  filter->getKeyFramePose(); filters_.erase(object_id);
-    filter->resetState(keyframe_pose, frame_k_1->getFrameId());
-    filter->frame_id_e_ = frame_k->getFrameId();
-    frame_k->tracking_info_->dynamic_track.at(object_id).object_resampled =
-        true;
+    filter->resetState(keyframe_pose, frame_k->getFrameId());
+    // filter->frame_id_e_ = frame_k->getFrameId();
   }
 
   // // hack to handle object new is to update it from fame_k-1!
@@ -1891,9 +1882,9 @@ bool ObjectMotionSolverFilter::solveImpl(Frame::Ptr frame_k,
       return false;
     }
 
-    frame_k->tracking_info_->dynamic_track.at(object_id).object_new = true;
-    frame_k->tracking_info_->dynamic_track.at(object_id).object_resampled =
-        true;
+    // frame_k->tracking_info_->dynamic_track.at(object_id).object_new = true;
+    // frame_k->tracking_info_->dynamic_track.at(object_id).object_resampled =
+    //     true;
 
     // keyframe at k not k-1
     // this means we drop the information at k-1 but due to the system design
@@ -2060,6 +2051,26 @@ bool ObjectMotionSolverFilter::solveImpl(Frame::Ptr frame_k,
   } else {
     return false;
   }
+}
+
+void ObjectMotionSolverFilter::fillHybridInfo(
+    ObjectId object_id, VisionImuPacket::ObjectTracks& object_track) {
+  CHECK(filters_.exists(object_id));
+  auto filter = filters_.at(object_id);
+
+  VisionImuPacket::ObjectTracks::HybridInfo hybrid_info;
+  hybrid_info.H_W_KF_k = filter->getKeyFramedMotion();
+  hybrid_info.L_W_KF = filter->getKeyFramePose();
+  hybrid_info.from = filter->getKeyFrameId();
+  hybrid_info.to = filter->getFrameId();
+  hybrid_info.was_reset = filter->resetThisUpdate();
+
+  LOG(INFO) << "Making hybrid info for j=" << object_id << " with "
+            << "motion KF: " << hybrid_info.from << " to: " << hybrid_info.to
+            << " and filter was reset " << std::boolalpha
+            << hybrid_info.was_reset;
+
+  object_track.hybrid_info = hybrid_info;
 }
 
 void ObjectMotionSolverFilter::updatePoses(

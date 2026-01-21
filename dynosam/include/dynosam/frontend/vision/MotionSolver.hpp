@@ -49,6 +49,7 @@
 
 #include "dynosam/backend/BackendDefinitions.hpp"  //for formulation hooks
 #include "dynosam/frontend/Frontend-Definitions.hpp"
+#include "dynosam/frontend/VisionImuOutputPacket.hpp"
 #include "dynosam/frontend/vision/Frame.hpp"
 #include "dynosam/frontend/vision/Vision-Definitions.hpp"
 #include "dynosam/frontend/vision/VisionTools.hpp"
@@ -587,10 +588,12 @@ class HybridObjectMotionSRIF {
   const gtsam::Matrix66 initial_P_;
 
   gtsam::Pose3 L_e_;
-  // Frame Id for the reference frame e
+  // Frame Id for the reference KF
   FrameId frame_id_e_;
   //! Last camera pose used within predict
   gtsam::Pose3 X_K_;
+  //! Frame id used for last update
+  FrameId frame_id_;
 
   gtsam::Matrix66
       R_info_;  // R (6x6) - Upper triangular Cholesky factor of Info Matrix
@@ -611,14 +614,6 @@ class HybridObjectMotionSRIF {
   constexpr static int ZDim = gtsam::traits<gtsam::StereoPoint2>::dimension;
 
  public:
-  std::vector<gtsam::Pose3> keyframe_history;
-  //! Need access to the motion estimate before the filter is resrt
-  //! AS this is the information of how we get from e -> k, and k is when we
-  //! reset the filter!
-  gtsam::Pose3 H_W_e_k_before_reset;
-  FrameId frame_id_e_before_reset;
-
- public:
   HybridObjectMotionSRIF(const gtsam::Pose3& initial_state_H,
                          const gtsam::Pose3& L_e, const FrameId& frame_id_e,
                          const gtsam::Matrix66& initial_P,
@@ -628,6 +623,11 @@ class HybridObjectMotionSRIF {
   inline const gtsam::Pose3& getKeyFramePose() const { return L_e_; }
   inline const gtsam::Pose3& lastCameraPose() const { return X_K_; }
   inline FrameId getKeyFrameId() const { return frame_id_e_; }
+  inline FrameId getFrameId() const { return frame_id_; }
+
+  // could also mean the object was new?
+  inline bool resetThisUpdate() const { return frame_id_e_ == frame_id_; }
+
   inline const gtsam::FastMap<TrackletId, gtsam::Point3>&
   getCurrentLinearizedPoints() const {
     return m_linearized_;
@@ -703,6 +703,9 @@ class ObjectMotionSolverFilter : public ObjectMotionSolver,
 
   ObjectMotionSolverFilter(const Params& params,
                            const CameraParams& camera_params);
+
+  void fillHybridInfo(ObjectId object_id,
+                      VisionImuPacket::ObjectTracks& object_track);
 
  protected:
   bool solveImpl(Frame::Ptr frame_k, Frame::Ptr frame_k_1, ObjectId object_id,

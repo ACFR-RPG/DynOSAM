@@ -124,6 +124,8 @@ class RGBDInstanceFrontendModule : public FrontendModule {
   // DEBUGGING FOR KF
   mutable gtsam::Pose3 T_lkf_;
 
+  ObjectStatusMap motion_track_status_;
+
   //! Last keyframe
   Frame::Ptr frame_lkf_;
 };
