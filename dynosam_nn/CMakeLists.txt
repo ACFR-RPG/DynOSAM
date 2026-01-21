@@ -12,7 +12,6 @@ set(CMAKE_CXX_STANDARD 17)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
-
 find_package(MPI REQUIRED)
 find_package(dynosam_common REQUIRED)
 find_package(dynosam_cv REQUIRED)

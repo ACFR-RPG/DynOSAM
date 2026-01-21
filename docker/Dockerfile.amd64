@@ -30,7 +30,7 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 # ROS installs
-RUN apt-get install -y \
+RUN apt-get update && apt-get install -y \
       ros-kilted-ros2cli-common-extensions \
       ros-kilted-vision-opencv \
       nlohmann-json3-dev

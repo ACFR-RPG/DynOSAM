@@ -29,9 +29,9 @@ To install natively, install the dependancies as required by docker and build as
 
 ## Docker Install instructions
 
-DynoSAM has been tested on __x86_64__ and __aarm64__ (with a NVIDIA ORIN NX) devices using the [two docker files](../../docker/) provided. See the [REAMDE.md](../../docker/README.md) for more detail on hardware used etc.
+DynoSAM has been tested on __x86_64__ and __aarm64__ (with a NVIDIA ORIN NX) devices using the [two docker files](../../docker/) provided. See the [README.md](../../docker/README.md) for more detail on hardware used etc.
 
-We provide scripts to build and create docker containers to run and develop DynoSAM which is intendend to be mounted within the created container.
+We provide scripts to build and create docker containers to run and develop DynoSAM which is intended to be mounted within the created container.
 
 > NOTE: with the current setup the embedded device only supports ROS Jazzy. The code should compile on either device without modification.
 
