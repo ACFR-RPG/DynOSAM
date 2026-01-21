@@ -223,8 +223,10 @@ KltFeatureTracker::KltFeatureTracker(const TrackerParams& params,
                                      Camera::Ptr camera,
                                      ImageDisplayQueue* display_queue)
     : StaticFeatureTracker(params, camera, display_queue) {
+
+  auto detector = FunctionalDetector::FactoryCreate(params);
   detector_ = std::make_shared<SparseFeatureDetector>(
-      params, FunctionalDetector::FactoryCreate(params));
+      params, detector);
 
   static const cv::Size klt_window_size(21, 21);  // Window size for KLT
   static const int klt_max_level = 3;             // Max pyramid levels for KLT
@@ -359,29 +361,12 @@ bool KltFeatureTracker::detectFeatures(const cv::Mat& processed_img,
   cv::bitwise_and(detection_mask_impl, object_feature_mask,
                   detection_mask_impl);
 
-  // slow
-  // add mask over objects detected in the scene
-  // TODO: should just be a masking operation but treating all non-zero pixels
-  // as 1 (ie make binary) and then inveverting the mask so that object pixels
-  // (originally 1) become 0, indicating they should not be used! for (int i =
-  // 0; i < motion_mask.rows; i++) {
-  //   for (int j = 0; j < motion_mask.cols; j++) {
-  //     const ObjectId label = motion_mask.at<ObjectId>(i, j);
-
-  //     if (label != background_label) {
-  //       cv::circle(
-  //           detection_mask_impl, cv::Point2f(j, i),
-  //           params_.min_distance_btw_tracked_and_detected_static_features,
-  //           cv::Scalar(0), cv::FILLED);
-  //     }
-  //   }
-  // }
-
   // add mask over current static features
   for (const auto& feature : current_features) {
     const Keypoint kp = feature->keypoint();
     CHECK(feature->usable());
-    cv::circle(detection_mask_impl, cv::Point2f(kp(0), kp(1)),
+    CHECK(isWithinShrunkenImage(kp));
+    cv::circle(detection_mask_impl, utils::gtsamPointToCv(kp),
                params_.min_distance_btw_tracked_and_detected_static_features,
                cv::Scalar(0), cv::FILLED);
   }
@@ -394,8 +379,9 @@ bool KltFeatureTracker::detectFeatures(const cv::Mat& processed_img,
   }
 
   for (const cv::Point2f& detected_point : detected_points) {
-    Keypoint kp(static_cast<double>(detected_point.x),
-                static_cast<double>(detected_point.y));
+    Keypoint kp = utils::cvPointToGtsam(detected_point);
+    // Keypoint kp(static_cast<double>(detected_point.x),
+    //             static_cast<double>(detected_point.y));
     const int x = functional_keypoint::u(kp);
     const int y = functional_keypoint::v(kp);
 
@@ -573,19 +559,19 @@ bool KltFeatureTracker::trackPoints(const cv::Mat& current_processed_img,
 
     CHECK(previous_feature->usable());
 
-    const cv::Point2f kp_cv = verified_current.at(i);
-    Keypoint kp(static_cast<double>(kp_cv.x), static_cast<double>(kp_cv.y));
+    // const cv::Point2f kp_cv = verified_current.at(i);
+    // Keypoint kp(static_cast<double>(kp_cv.x), static_cast<double>(kp_cv.y));
+    const Keypoint kp = utils::cvPointToGtsam(verified_current.at(i));
 
-    const int x = functional_keypoint::u(kp);
-    const int y = functional_keypoint::v(kp);
-
-    if (motion_mask.at<int>(y, x) != background_label) {
-      continue;
-    }
 
     if (!(camera_->isKeypointContained(kp) && isWithinShrunkenImage(kp))) {
       continue;
     }
+
+    if (functional_keypoint::at<ObjectId>(kp, motion_mask) != background_label) {
+      continue;
+    }
+
     Feature::Ptr feature = constructStaticFeatureFromPrevious(
         kp, previous_feature, tracklet_id, frame_k);
     if (feature) {
@@ -609,8 +595,7 @@ bool KltFeatureTracker::trackPoints(const cv::Mat& current_processed_img,
   const auto& n_tracked = tracked_features.size();
   tracker_info.static_track_optical_flow = n_tracked;
 
-  if (tracked_features.size() <
-      static_cast<size_t>(params_.min_features_per_frame)) {
+  if (shouldResample(tracked_features)) {
     utils::ChronoTimingStats timer("static_feature_track.detect");
     // if we do not have enough features, detect more on the current image
     detectFeatures(current_processed_img, image_container, tracked_features,
@@ -622,6 +607,29 @@ bool KltFeatureTracker::trackPoints(const cv::Mat& current_processed_img,
   }
 
   return true;
+}
+
+bool KltFeatureTracker::shouldResample(const FeatureContainer& tracked_features) const {
+  const bool too_few_features = tracked_features.size() <
+      static_cast<size_t>(params_.min_features_per_frame);
+
+  constexpr static auto age_buffer = 3u;
+  const auto max_static_point_age = params_.max_feature_track_age;
+  const size_t expiry_age =
+      static_cast<size_t>(max_static_point_age - age_buffer);
+   // if more than 80% of points on the object are going to expire within the
+  // next (at least 3) frames
+  size_t are_geriatric = 0u;
+  for (const auto& feature : tracked_features) {
+    size_t age = feature->age();
+    if (age > expiry_age) {
+      are_geriatric++;
+    }
+  }
+  const bool many_old_points =
+      (double)are_geriatric / (double)tracked_features.size() > 0.8;
+
+  return too_few_features || many_old_points;
 }
 
 cv::Mat KltFeatureTracker::geometricVerification(

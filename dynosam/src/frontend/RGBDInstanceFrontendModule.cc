@@ -152,8 +152,7 @@ FrontendModule::SpinReturn RGBDInstanceFrontendModule::nominalSpin(
   Frame::Ptr previous_frame = tracker_->getPreviousFrame();
   CHECK(previous_frame);
 
-  // const FeatureTrackerInfo& tracker_info = tracker_->getTrackerInfo();
-  // VLOG(1) << to_string(tracker_info);
+  VLOG(5) << to_string(tracker_->getTrackerInfo());
 
   {
     // this will mark some points as invalid if they are out of depth range

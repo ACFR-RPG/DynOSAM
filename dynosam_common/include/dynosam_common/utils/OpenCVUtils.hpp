@@ -112,6 +112,18 @@ bool cvSizeEqual(const cv::Mat& a, const cv::Mat& b);
 
 /**
  * @brief Returns true of the point is inside bounds of the cv::Mat.
+ * 
+ * @param x int. x coordinate to check (cols)
+ * @param y int. y coordinate to check (rows)
+ * @return true 
+ * @return false 
+ */
+inline bool matContains(const cv::Mat& mat, int x, int y) {
+  return x >= 0 && y >= 0 && x < mat.cols && y < mat.rows;
+}
+
+/**
+ * @brief Returns true of the point is inside bounds of the cv::Mat.
  *
  * @tparam T Point template to work with any cv::Point type
  * @param mat const cv::Mat&
@@ -123,7 +135,7 @@ template <typename T>
 inline bool matContains(const cv::Mat& mat, const cv::Point_<T>& point) {
   const auto x = static_cast<int>(point.x);
   const auto y = static_cast<int>(point.y);
-  return x >= 0 && y >= 0 && x < mat.cols && y < mat.rows;
+  return matContains(mat, x, y);
 }
 
 // checks if point is within image

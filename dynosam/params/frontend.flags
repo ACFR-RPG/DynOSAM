@@ -15,7 +15,7 @@
 
 --log_projected_masks=false
 --set_dense_labelled_cloud=false
---use_object_motion_filtering=false
+--use_object_motion_filtering=true
 
 --set_dense_labelled_cloud=false
 

@@ -1902,7 +1902,7 @@ bool ObjectMotionSolverFilter::solveImpl(Frame::Ptr frame_k,
     gtsam::Pose3 keyframe_pose =
         construct_initial_frame(frame_k_1, geometric_result.inliers);
 
-    constexpr static double kHuberKFilter = 0.1;
+    constexpr static double kHuberKFilter = 0.05;
     filters_.insert2(object_id, std::make_shared<HybridObjectMotionSRIF>(
                                     gtsam::Pose3::Identity(), keyframe_pose,
                                     frame_k_1->getFrameId(), P, Q, R,

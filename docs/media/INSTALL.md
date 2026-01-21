@@ -108,6 +108,22 @@ pip install torch==2.8.0 torchvision==0.23.0 torchaudio==2.8.0 --index-url https
 When testing the _tensorrt-dev_ (and therefore all associated development librariers) were versioned to 10.14.1.48-1+cuda13.0.
 ```
 sudo apt install tensorrt-dev --upgrade
+```
+
+CUDA also needed to be upgraded to 12.9 (from 12.6) as this supports _compute_120_ which needed for the Blackwell GPU's.
+
+This was achieved by
+```
+sudo apt install cuda-toolkit-12-9
+sudo apt autoremove
+```
+_compute_120_ should then appear under the list displayed by `nvcc --list-gpu-arch` and _release 12.9_ should be shown when `nvcc --version`.
+
+OpenCV was upgraded to 4.12.0 as earlier versions do now support the correct compute architecure. Set
+```
+-DCMAKE_CUDA_ARCHITECTURES="120"
+```
+when compiling OpenCV.
 
 ## Additional Installation Notes
 

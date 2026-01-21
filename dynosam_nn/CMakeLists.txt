@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.17 FATAL_ERROR)
 
-project(dynosam_nn LANGUAGES CXX CUDA)
+project(dynosam_nn LANGUAGES C CXX CUDA)
 
 set(CMAKE_C_FLAGS "-Wall -Wextra  -O3")
 
@@ -12,6 +12,8 @@ set(CMAKE_CXX_STANDARD 17)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
+
+find_package(MPI REQUIRED)
 find_package(dynosam_common REQUIRED)
 find_package(dynosam_cv REQUIRED)
 find_package(cv_bridge REQUIRED)

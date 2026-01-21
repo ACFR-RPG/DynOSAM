@@ -38,6 +38,7 @@
 #include "dynosam_common/StructuredContainers.hpp"
 #include "dynosam_common/Types.hpp"
 #include "dynosam_common/utils/GtsamUtils.hpp"
+#include "dynosam_common/utils/OpenCVUtils.hpp"
 #include "dynosam_common/utils/Numerical.hpp"
 #include "dynosam_cv/ImageContainer.hpp"
 
@@ -54,21 +55,22 @@ struct functional_keypoint {
     return static_cast<T>(kp(1));
   }
 
-  // ImageWrapperType should be a ImageType, eg ImageType::RGBMono etc...
-  template <typename ImageWrapperType,
-            typename AccessType = typename ImageWrapperType::OpenCVType>
-  static AccessType at(const Keypoint& kp,
-                       const ImageWrapper<ImageWrapperType>& image_wrapper) {
-    return at<AccessType>(kp, static_cast<const cv::Mat&>(image_wrapper));
-  }
-
-  template <typename AccessType>
-  static AccessType at(const Keypoint& kp, const cv::Mat& img) {
+  template <typename Tp>
+  static Tp at(const Keypoint& kp, const cv::Mat& img) {
     const int x = functional_keypoint::u<int>(kp);
     const int y = functional_keypoint::v<int>(kp);
-    return img.at<AccessType>(y, x);
+
+    if(!utils::matContains(img, x, y)) {
+      DYNO_THROW_MSG(DynosamException) 
+        << "Keypoint x: " << x  << ", y: " << y << " out of bounds for image of size " << to_string(img.size());
+      throw;
+    }
+
+    return img.at<Tp>(y, x);
   }
 };
+
+// DEBUG_CVMAT_AT()
 
 // /// @brief adaptor struct to allow types to act like a cv::KeyPoint
 // template<typename T>

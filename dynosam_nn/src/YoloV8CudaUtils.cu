@@ -315,30 +315,30 @@ void YoloDetectionsToObjects(
     cv::Rect bounding_box = scaleCoords(required_size, box,
             original_size, true); // Assuming this CPU helper exists
 
-    // cv::Rect roi = bounding_box;
-    // roi &= cv::Rect(0, 0, original_size.width, original_size.height);
+    cv::Rect roi = bounding_box;
+    roi &= cv::Rect(0, 0, original_size.width, original_size.height);
 
-    // // // 3. Clear the output mask buffer and copy the binary mask into the ROI
-    // d_final_masks_full_res.setTo(cv::Scalar(0)); // Clear previous mask
+    // // 3. Clear the output mask buffer and copy the binary mask into the ROI
+    d_final_masks_full_res.setTo(cv::Scalar(0)); // Clear previous mask
 
-    // if (roi.area() > 0) {
-    //     // Copy the relevant ROI data from the binary mask into the final
-    //     // mask's ROI. The full binary mask is HxW, so we sub-region both.
-    //     d_binary_mask(roi).copyTo(d_final_masks_full_res(roi));
-    // }
+    if (roi.area() > 0) {
+        // Copy the relevant ROI data from the binary mask into the final
+        // mask's ROI. The full binary mask is HxW, so we sub-region both.
+        d_binary_mask(roi).copyTo(d_final_masks_full_res(roi));
+    }
 
-    // // // --- F. Final Download (Minimal Transfer) ---
-    // // // Download only the final result and metadata for ObjectDetection struct
-    // // //TODO: pinned memory!!
-    // //TODO: this seems slower than doing CPU (maybe due to copy or constant realloc?)
-    // // cv::cuda::HostMem h_mem(original_size, CV_8U, cv::cuda::HostMem::PAGE_LOCKED);
+    // // --- F. Final Download (Minimal Transfer) ---
+    // // Download only the final result and metadata for ObjectDetection struct
+    // //TODO: pinned memory!!
+    //TODO: this seems slower than doing CPU (maybe due to copy or constant realloc?)
+    // cv::cuda::HostMem h_mem(original_size, CV_8U, cv::cuda::HostMem::PAGE_LOCKED);
     // static cv::cuda::HostMem h_mem(cv::cuda::HostMem::PAGE_LOCKED);
     // h_mem.create(original_size, CV_8U);
-    // // cv::cuda::HostMem h_mem;
-    // // cv::Mat final_cpu_mask = cv::Mat::zeros(original_size, CV_8U);
-    // // d_final_masks_full_res.download(final_cpu_mask, stream);
+    // cv::cuda::HostMem h_mem;
+    cv::Mat final_cpu_mask = cv::Mat::zeros(original_size, CV_8U);
+    d_final_masks_full_res.download(final_cpu_mask, stream);
     // d_final_masks_full_res.download(h_mem, stream);
-    // stream.waitForCompletion();
+    stream.waitForCompletion();
 
     // // should synchronize!?
     // cv::Mat final_cpu_mask = h_mem.createMatHeader();
@@ -346,7 +346,7 @@ void YoloDetectionsToObjects(
     const float confidence = h_detection->confidence;
     const int class_id = static_cast<int>(h_detection->class_id);
 
-    // detection = dyno::ObjectDetection{final_cpu_mask, bounding_box, label ,confidence};
+    detection = dyno::ObjectDetection{final_cpu_mask, bounding_box, label ,confidence};
 
 }
 

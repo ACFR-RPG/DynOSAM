@@ -55,6 +55,7 @@ FeatureTracker::FeatureTracker(const FrontendParams& params, Camera::Ptr camera,
       params.tracker_params, camera, display_queue);
   CHECK(!img_size_.empty());
 
+  LOG(INFO) << "Creating cv::cuda::SparsePyrLKOpticalFlow";
   static const cv::Size klt_window_size(21, 21);  // Window size for KLT
   static const int klt_max_level = 3;             // Max pyramid levels for KLT
   lk_cuda_tracker_ = cv::cuda::SparsePyrLKOpticalFlow::create(
@@ -491,6 +492,8 @@ void FeatureTracker::trackDynamic(
   requiresSampling(object_keyframes, info_, image_container, tracks_per_object,
                    boundary_mask_result, dynamic_tracking_mask);
 
+  LOG(INFO) << "here";
+
   std::set<ObjectId> objects_sampled;
   sampleDynamic(frame_id, image_container,
                 object_keyframes,  // indicates which objects to sample!!
@@ -693,13 +696,12 @@ void FeatureTracker::trackDynamicKLT(
             previous_inliers.getByTrackletId(tracklet_id);
         CHECK(previous_feature->usable());
 
-        const cv::Point2f kp_cv = good_current.at(i);
-        Keypoint kp(static_cast<double>(kp_cv.x), static_cast<double>(kp_cv.y));
+        const Keypoint kp = utils::cvPointToGtsam(good_current.at(i));
 
         const int x = functional_keypoint::u(kp);
         const int y = functional_keypoint::v(kp);
+        const ObjectId predicted_label = functional_keypoint::at<ObjectId>(kp, motion_mask);
 
-        const ObjectId predicted_label = motion_mask.at<ObjectId>(y, x);
 
         if (!detection_mask_impl.empty()) {
           const unsigned char valid_detection =
@@ -846,10 +848,9 @@ void FeatureTracker::trackDynamicKLT(
     for (const KeypointCV& cv_keypoint : keypoints) {
       Keypoint keypoint = utils::cvKeypointToGtsam(cv_keypoint);
 
-      const int x = functional_keypoint::u(keypoint);
-      const int y = functional_keypoint::v(keypoint);
+      if(!isWithinShrunkenImage(keypoint)) { continue; }
 
-      const ObjectId predicted_label = motion_mask.at<ObjectId>(y, x);
+      const ObjectId predicted_label = functional_keypoint::at<ObjectId>(keypoint, motion_mask);
       CHECK_EQ(predicted_label, object_id);
 
       auto feature = constructNewDynamicFeature(keypoint, object_id, frame_id);
@@ -867,6 +868,7 @@ void FeatureTracker::sampleDynamic(FrameId frame_id,
                                    FeatureContainer& dynamic_features,
                                    std::set<ObjectId>& objects_sampled,
                                    const cv::Mat& detection_mask) {
+  VLOG(20) << "Begin sample dynamic";
   struct KeypointData {
     OpticalFlow flow;
     Keypoint predicted_kp;
@@ -890,6 +892,7 @@ void FeatureTracker::sampleDynamic(FrameId frame_id,
   // TODO: since we're looping over the whole image here anyway why dont we also
   // use this to create the dense point cloud image and then pass it to the
   // frame!!!
+  VLOG(20) << "Begin parallel dynamic sample";
   std::mutex mutex;
   tbb::parallel_for(0, rows, [&](int i) {
     const unsigned char* detection_ptr = detection_mask.ptr<unsigned char>(i);
@@ -952,10 +955,13 @@ void FeatureTracker::sampleDynamic(FrameId frame_id,
     }
   });
 
+  VLOG(20) << "End parallel dynamic sample";
+
   const int& max_features_to_track = params_.max_dynamic_features_per_frame;
   static constexpr float tolerance = 0.01;
   Eigen::MatrixXd binning_mask;
 
+  VLOG(20) << "Begin parallel dynamic ANMS";
   // for(const auto& [object_id, opencv_keypoints] : sampled_keypoints) {
   tbb::parallel_for_each(
       sampled_keypoints.begin(), sampled_keypoints.end(), [&](auto& entry) {
@@ -1013,6 +1019,7 @@ void FeatureTracker::sampleDynamic(FrameId frame_id,
           }
         }
       });
+  VLOG(20) << "End parallel dynamic ANMS";
 }
 
 void FeatureTracker::requiresSampling(
@@ -1146,6 +1153,8 @@ void FeatureTracker::requiresSampling(
       per_object_status.object_resampled = true;
     }
   }
+
+  VLOG(20) << "Finished sampling check";
 }
 
 bool FeatureTracker::objectDetection(

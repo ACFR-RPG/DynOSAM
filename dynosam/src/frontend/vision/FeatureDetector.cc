@@ -66,6 +66,19 @@ FunctionalDetector::Ptr FunctionalDetector::Create<GFTTDetectorCUDA>(
           tracker_params.gfft_params.use_harris_corner_detector,
           tracker_params.gfft_params.k);
 
+  struct GpuMats {
+    cv::cuda::GpuMat d_img;
+    cv::cuda::GpuMat d_mask;
+    cv::cuda::GpuMat keypointsGPU;
+
+    void create(const cv::Size& size, int img_type, int mask_type) {
+      d_img.create(size, img_type);
+      d_mask.create(size, mask_type);
+    }
+  };
+
+  auto gpu_mats = std::make_shared<GpuMats>();
+
   // auto feature_detector_ = cv::GFTTDetector::create(
   //     tracker_params.max_nr_keypoints_before_anms,
   //     tracker_params.gfft_params.quality_level,
@@ -77,20 +90,14 @@ FunctionalDetector::Ptr FunctionalDetector::Create<GFTTDetectorCUDA>(
                                  const cv::Mat& mask) -> void {
     // Detect keypoints
     // Upload to GPU
-    unsigned int width = img.size().width;
-    unsigned int height = img.size().height;
+    gpu_mats->create(img.size(), img.type(), mask.type());
+    gpu_mats->d_img.upload(img);
+    gpu_mats->d_mask.upload(mask);
 
-    cv::cuda::GpuMat d_img(height, width, img.type());
-    d_img.upload(img);  // simple and portable
-
-    cv::cuda::GpuMat d_mask(height, width, mask.type());
-    d_mask.upload(mask);  // simple and portable
-
-    cv::cuda::GpuMat keypointsGPU;
-    detector->detect(d_img, keypointsGPU, d_mask);
+    detector->detect(gpu_mats->d_img, gpu_mats->keypointsGPU, gpu_mats->d_mask);
 
     std::vector<cv::Point2f> points;
-    keypointsGPU.download(points);
+    gpu_mats->keypointsGPU.download(points);
 
     cv::KeyPoint::convert(points, keypoints);
   };
@@ -130,6 +137,7 @@ FunctionalDetector::Ptr FunctionalDetector::Create<ORBextractor>(
       tracker_params.orb_params.n_levels,
       tracker_params.orb_params.init_threshold_fast,
       tracker_params.orb_params.min_threshold_fast);
+  LOG(INFO) << "Done";
 
   // NOTE that the mask is not used in this implementation
   auto functional_detector = [=](const cv::Mat& img, KeypointsCV& keypoints,
@@ -146,27 +154,35 @@ FunctionalDetector::Ptr FunctionalDetector::Create<ORBextractor>(
 FunctionalDetector::Ptr FunctionalDetector::FactoryCreate(
     const TrackerParams& tracker_params) {
   using FDT = TrackerParams::FeatureDetectorType;
+
+  FunctionalDetector::Ptr detector = nullptr;
   switch (tracker_params.feature_detector_type) {
     case FDT::GFTT:
-      return FunctionalDetector::Create<cv::GFTTDetector>(tracker_params);
+      detector = FunctionalDetector::Create<cv::GFTTDetector>(tracker_params);
+      break;
     case FDT::ORB_SLAM_ORB:
-      return FunctionalDetector::Create<ORBextractor>(tracker_params);
+      detector = FunctionalDetector::Create<ORBextractor>(tracker_params);
+      break;
     case FDT::GFFT_CUDA: {
       // TODO: this should actually be a #ifdef because
       // Create<cv::cuda::FastFeatureDetector> is conditionally compiled
       if (utils::opencvCudaAvailable()) {
-        return FunctionalDetector::Create<GFTTDetectorCUDA>(tracker_params);
+        detector = FunctionalDetector::Create<GFTTDetectorCUDA>(tracker_params);
       } else {
         LOG(WARNING) << "GFFT_CUDA selected but OPENCV CUDA not enabled. "
                         "Falling back to GFFT";
-        return FunctionalDetector::Create<cv::GFTTDetector>(tracker_params);
+        detector = FunctionalDetector::Create<cv::GFTTDetector>(tracker_params);
       }
+      break;
     }
     default:
       LOG(ERROR) << "Unknown Feature detection type!";
       return nullptr;
       break;
   }
+
+  LOG(INFO) << "Done detector factory";
+  return detector;
 }
 
 SparseFeatureDetector::SparseFeatureDetector(

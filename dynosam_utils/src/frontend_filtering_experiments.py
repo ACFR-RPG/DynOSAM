@@ -143,7 +143,7 @@ def run_viodes():
 
 #     run_experiment_sequences("/root/data/VIODE/city_day/mid", "viode_city_day_mid", viode, "--v=100")
     # run_experiment_sequences("/root/data/VIODE/city_day/high","viode_city_day_high", viode, "--ending_frame=1110")
-    run_experiment_sequences("/root/data/VIODE/city_day/high","test_viode", viode,"--starting_frame=0", "--ending_frame=1110", "--v=10",  "--use_backend=true", "--use_object_motion_filtering=false")
+    run_experiment_sequences("/root/data/VIODE/city_day/high","test_viode", viode,"--starting_frame=0", "--ending_frame=1110", "--v=10",  "--use_backend=true", "--use_object_motion_filtering=true")
 # # zero_elements_ratio
 #     run_experiment_sequences("/root/data/VIODE/city_night/mid", "viode_city_night_mid", viode)
     # run_experiment_sequences("/root/data/VIODE/city_night/high", "viode_city_night_high", viode)

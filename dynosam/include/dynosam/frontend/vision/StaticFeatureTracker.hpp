@@ -239,6 +239,8 @@ class KltFeatureTracker : public StaticFeatureTracker {
   cv::Mat geometricVerification(const std::vector<cv::Point2f>& good_old,
                                 const std::vector<cv::Point2f>& good_new) const;
 
+  bool shouldResample(const FeatureContainer& tracked_features) const;
+
   /**
    * @brief A more concise static feature constructor that the one in
    * ExternalFlowFeatureTracker.
