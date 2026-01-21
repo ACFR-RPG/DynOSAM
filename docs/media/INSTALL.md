@@ -98,7 +98,7 @@ can be handled internally (ie YOLO).
 - NVIDIA GeForce RTX 2080 is 7.5
 
 ### Installation for NVIDIA Blackwell workstations
-NVIDIA Blackwell systems support higher torch, CUDA etc, versions than is currently available with the base docker image. 
+NVIDIA Blackwell systems support higher torch, CUDA etc, versions than is currently available with the base docker image.
 
 Testing with a NVIDIA GeForce RTX 5070 the follow manual updates were made
 ```
@@ -119,7 +119,7 @@ sudo apt autoremove
 ```
 _compute_120_ should then appear under the list displayed by `nvcc --list-gpu-arch` and _release 12.9_ should be shown when `nvcc --version`.
 
-OpenCV was upgraded to 4.12.0 as earlier versions do now support the correct compute architecure. Set
+OpenCV was upgraded to 4.12.0 as earlier versions do not support the correct compute architecure (i.e the Blackwell generation). Set
 ```
 -DCMAKE_CUDA_ARCHITECTURES="120"
 ```
