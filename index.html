@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
   <meta charset="utf-8">
@@ -27,200 +27,322 @@
   <title>DynoSAM: Dynamic Object Smoothing and Mapping for Dynamic SLAM</title>
   <link rel="icon" type="image/x-icon" href="static/images/acfr_rpg_logo.png">
 
+
+  <title>DynoSAM Project Hub</title>
+
+  <link rel="icon" type="image/x-icon" href="static/images/acfr_rpg_logo.png">
   <link rel="stylesheet" href="static/css/bootstrap.min.css">
   <link rel="stylesheet" href="static/css/fontawesome.all.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
-  <link rel="stylesheet" href="static/css/index.css">
 
-  <!-- <script src="https://documentcloud.adobe.com/view-sdk/main.js"></script> -->
+  <style>
+    body { background-color: #f8f9fa; color: #333; }
+    .project-header { background: #fff; border-bottom: 1px solid #ddd; padding: 3rem 0; margin-bottom: 2rem; }
+    .paper-card { background: white; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); padding: 2.5rem; margin-bottom: 3rem; border: 1px solid #eee; }
+    .author-list { color: #555; font-size: 1.1rem; margin-bottom: 1.5rem; }
+    .section-title { border-left: 5px solid #007bff; padding-left: 15px; margin-bottom: 1.5rem; font-weight: bold; }
+    .btn-links { margin-bottom: 2rem; }
+    .nav-pills .nav-link.active { background-color: #343a40; }
+    .sticky-nav { position: sticky; top: 0; z-index: 1000; background: rgba(255,255,255,0.95); backdrop-filter: blur(6px); border-bottom: 1px solid #e9ecef; box-shadow: 0 4px 12px rgba(0,0,0,0.04); }
+    .sticky-nav .nav { gap: 0.5rem; }
+    .sticky-nav .nav-label { color: #495057; font-weight: 600; display: inline-flex; align-items: center; gap: .4rem; }
+    .sticky-nav .nav-link { color: #343a40; background: transparent; border-radius: 999px; padding: .35rem .85rem; transition: background .15s, transform .06s; cursor: pointer; }
+    .sticky-nav .nav-link:hover { background: rgba(0,0,0,0.04); transform: translateY(-1px); text-decoration: none; }
+    .sticky-nav .nav-link i { margin-right: .4rem; }
+    .sticky-nav .nav-link.active { background: #343a40; color: #fff; }
+    .project-summary { background: #fff; border-radius: 10px; padding: 1rem; margin-bottom: 1.5rem; box-shadow: 0 6px 18px rgba(0,0,0,0.03); }
+    .project-summary img { max-width: 220px; border-radius: 8px; }
+    @media (max-width: 576px) { .project-summary { text-align: center; } .project-summary img { margin: .75rem auto 0; } }
+    .project-header .logos { margin-top: .5rem; gap: 1rem; justify-content: center; }
+    .project-header .logos img { height: 64px; object-fit: contain; margin: 0 1rem; }
+    @media (max-width: 576px) { .project-header .logos img { height: 64px; margin: 0 .6rem; } }
+    video, img { border-radius: 8px; }
+    .bluehighlight {
+        color: #0368ff; /* light blue */
+        font-weight: 500;
+    }
+
+  </style>
+
   <script defer src="static/js/fontawesome.all.min.js"></script>
   <script src="static/js/bootstrap.bundle.min.js"></script>
 </head>
 
-
-
 <body>
+
+  <header class="project-header text-center">
+    <div class="container">
+      <h1 class="display-4 fw-bold">DynoSAM Project Hub</h1>
+      <p class="lead">A Unified Open-Source Framework for Dynamic Object Smoothing and Mapping</p>
+
+      <div class="logos d-flex justify-content-center align-items-center">
+        <a href="https://robotics.sydney.edu.au/" target="_blank" rel="noopener noreferrer">
+          <img src="static/images/acfr_mono.png" alt="ACFR logo" class="img-fluid">
+        </a>
+        <a href="https://robotics.sydney.edu.au/our-research/robotic-perception/" target="_blank" rel="noopener noreferrer">
+          <img src="static/images/acfr_rpg_logo.png" alt="RPG logo" class="img-fluid">
+        </a>
+      </div>
+
+      <div class="d-flex justify-content-center flex-wrap gap-2 mt-4">
+        <a href="https://github.com/ACFR-RPG/DynOSAM/tree/main" target="_blank" class="btn btn-outline-dark">
+          <i class="fab fa-github"></i> Codebase
+        </a>
+        <a href="https://acfr-rpg.github.io/DynOSAM/doxygen" target="_blank" class="btn btn-outline-dark">
+          <i class="fa fa-code"></i> Documentation
+        </a>
+        <a href="https://data.acfr.usyd.edu.au/rpg" target="_blank" class="btn btn-outline-dark">
+          <i class="ai ai-open-data"></i> Datasets
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <nav class="sticky-nav py-2 mb-5">
+    <div class="container">
+      <ul class="nav nav-pills justify-content-center align-items-center">
+        <li class="nav-item me-3 d-flex align-items-center"><span class="nav-label"><i class="fa fa-book"></i> Related Papers</span></li>
+        <li class="nav-item"><a class="nav-link" href="#paper1"><i class="fa fa-file-alt"></i> DynoSAM</a></li>
+        <li class="nav-item"><a class="nav-link" href="#paper2"><i class="fa fa-file-alt"></i> Online Dynamic SLAM</a></li>
+      </ul>
+    </div>
+  </nav>
+
   <div class="container">
-    <!-- Title -->
-    <h1 class="pt-5 title">DynoSAM: Open-Source Smoothing and Mapping Framework for Dynamic SLAM</h1>
-    <div class="d-flex flex-row justify-content-center">
-      Jesse Morris, Yiduo Wang, Mikolaj Kliniewski, Viorela Ila
+    <div class="project-summary">
+      <div class="d-flex align-items-center flex-wrap">
+        <div class="flex-grow-1">
+          <h3 class="h5 mb-1">DynoSAM Project Hub</h3>
+          <p class="mb-3 text-muted">
+            The DynoSAM project is a Stereo/RGB-D Visual Odometry pipeline for Dynamic SLAM developed by the <span class="bluehighlight">ACFR-RPG research group at the University of Sydney</span>.
+            A number of publications have been produced as part of this open-source project, which can be found below.
+          </p>
+          <p class="mb-0 text-muted">
+           DynoSAM is a factor-graph based framework that integrates static and dynamic measurements into a unified optimization problem solved using factor graphs, simultaneously estimating camera poses, static scene, object motion or poses, and object structures.
+          </p>
+
+        </div>
+        <div class="ms-3 text-center">
+          <!-- <h4 class="section-title">Teaser</h4> -->
+          <img src="static/images/omd-demo.gif" class="img-fluid shadow-sm" alt="DynoSAM Demo" style="max-width:480px; width:100%; object-fit:contain;" />
+          <p style="font-style: italic; color: gray;"> Example output running on the Oxford Multimotion Dataset (OMD, 'Swinging 4 Unconstrained'). This visualisation was generated using playback after full-batch optimisation.</p>
+        </div>
+
+        <div class="ms-3 text-center">
+         <img src="static/images/aria_demo_parallel_hybrid.gif" class="img-fluid shadow-sm" style="max-width:480px; width:100%; object-fit:contain;" alt="Parallel-Hybrid Demo">
+            <p style="font-style: italic; color: gray;"> DynoSAM running Parallel-Hybrid formulation in incremental optimisation mode on a indoor sequence recorded with an Intel RealSense. Playback is 2x speed.</p>
+        </div>
+
+      </div>
     </div>
 
-    <div class="w-100 d-flex flex-row justify-content-center mt-4 gap-2">
-      <!-- Paper PDF -->
-      <!-- <a href="https://ieeexplore.ieee.org/abstract/document/10610840" target="_blank" class="btn btn-dark" role="button">
-        <span class="icon">
-          <i class="ai ai-ieee"></i>
-        </span>
-        <span>Paper</span>
-      </a> -->
 
-      <!-- Paper PDF -->
-      <a href="https://arxiv.org/pdf/2501.11893" target="_blank" class="btn btn-dark" role="button">
-        <span class="icon">
-          <i class="ai ai-arxiv"></i>
-        </span>
-        <span>Arxiv</span>
-      </a>
+    <section id="paper1" class="paper-card">
+      <div class="d-flex justify-content-between align-items-start">
+        <h2 class="fw-bold mb-0">DynoSAM: Open-Source Smoothing and Mapping Framework for Dynamic SLAM</h2>
+        <button class="btn btn-sm btn-outline-secondary ms-3" data-bs-toggle="collapse" data-bs-target="#paper1-body" aria-expanded="true" aria-controls="paper1-body">
+          <i class="fa fa-chevron-down" id="paper1-toggle-icon"></i>
+        </button>
+      </div>
+      <div class="author-list mt-2">
+        Jesse Morris, Yiduo Wang, Mikolaj Kliniewski, Viorela Ila
+        <p class="mb-2 text-muted small">Accepted to: <em>IEEE Transcations on Robotics (T-RO) 2025</em></p>
+      </div>
 
-      <!-- Code -->
-      <a href="https://github.com/ACFR-RPG/DynOSAM/tree/main" target="_blank" class="btn btn-dark" role="button">
-        <span class="icon">
-          <i class="fab fa-github"></i>
-        </span>
-        <span>Code</span>
-      </a>
+      <div id="paper1-body" class="collapse show mt-3">
 
-      <a href="https://acfr-rpg.github.io/DynOSAM/doxygen" target="_blank" class="btn btn-dark" role="button">
-        <span class="icon">
-          <i class="fa fa-code"></i>
-        </span>
-        <span>Documentation</span>
-      </a>
+        <div class="btn-links">
+          <a href="https://arxiv.org/pdf/2501.11893" target="_blank" class="btn btn-dark btn-sm"><i class="ai ai-arxiv"></i> Arxiv</a>
+          <a href="https://ieeexplore.ieee.org/document/11288097" target="_blank" class="btn btn-primary btn-sm ms-2"><i class="ai ai-ieee"></i> IEEE</a>
+        </div>
 
-       <a href="https://data.acfr.usyd.edu.au/rpg" target="_blank" class="btn btn-dark" role="button">
-        <span class="icon">
-          <i class="ai ai-open-data"></i>
-        </span>
-        <span>Datasets</span>
-      </a>
+        <div class="row">
+          <div class="col-lg-7">
+            <h4 class="section-title">Abstract</h4>
+            <p>
+              Traditional Visual Simultaneous Localization and Mapping systems focus solely on static scene structures, overlooking dynamic elements in the environment. Although effective for accurate visual odometry in complex scenarios, these methods discard crucial information about moving objects. By incorporating this information into a Dynamic SLAM framework, the motion of dynamic entities can be estimated, enhancing navigation whilst ensuring accurate localization. However, the fundamental formulation of Dynamic SLAM remains an open challenge, with no consensus on the optimal approach for accurate motion estimation within a SLAM pipeline. Therefore, we developed DynoSAM, an open-source framework for Dynamic Objects SLAM that enables the efficient implementation, testing, and comparison of various Dynamic SLAM optimization formulations. We further propose a novel formulation that encodes rigid-body motion model in object pose estimation as well as an error metric agnostic to object frame definition. DynoSAM integrates static and dynamic measurements into a unified optimization problem solved using factor graphs, simultaneously estimating camera poses, static scene, object motion or poses, and object structures. We evaluate DynoSAM across diverse simulated and real-world datasets, achieving state-of-the-art motion estimation in indoor and outdoor environments, with substantial improvements over existing systems. Additionally, we demonstrate DynoSAM's contributions to downstream applications, including 3D reconstruction of dynamic scenes and trajectory prediction, thereby showcasing potential for advancing dynamic object-aware SLAM systems
+            </p>
+          </div>
+        </div>
 
-    </div>
+        <hr class="my-5">
 
-    <!-- Teaser -->
-
-    <!-- TL;DR
-    <h2>TL;DR</h2>
-    <div class="alert alert-primary tldr mb-4">
-      pixelSplat infers a 3D Gaussian scene from two input views in a single forward pass.
-    </div> -->
-
-    <!-- Abstract -->
-    <h2>Abstract</h2>
-    <p class="mb-4">
-     Traditional Visual Simultaneous Localization and
-Mapping systems focus solely on static scene structures,
-overlooking dynamic elements in the environment. Although
-effective for accurate visual odometry in complex scenarios,
-these methods discard crucial information about moving ob-
-jects. By incorporating this information into a Dynamic SLAM
-framework, the motion of dynamic entities can be estimated,
-enhancing navigation whilst ensuring accurate localization.
-However, the fundamental formulation of Dynamic SLAM
-remains an open challenge, with no consensus on the optimal
-approach for accurate motion estimation within a SLAM
-pipeline.
-
-Therefore, we developed DynoSAM, an open-source frame-
-work for Dynamic Objects SLAM that enables the efficient
-implementation, testing, and comparison of various Dynamic
-SLAM optimization formulations. We further propose a novel
-formulation that encodes rigid-body motion model in object
-pose estimation as well as an error metric agnostic to object
-frame definition. DynoSAM integrates static and dynamic
-measurements into a unified optimization problem solved using
-factor graphs, simultaneously estimating camera poses, static
-scene, object motion or poses, and object structures. We
-evaluate DynoSAM across diverse simulated and real-world
-datasets, achieving state-of-the-art motion estimation in indoor
-and outdoor environments, with substantial improvements over
-existing systems. Additionally, we demonstrate DynoSAM’s
-contributions to downstream applications, including 3D re-
-construction of dynamic scenes and trajectory prediction,
-thereby showcasing potential for advancing dynamic object-
-aware SLAM system    <!-- </p>
-
-    <div class="sep"></div>
-    <h3>BibTex</h3>
-    <pre class="bib">
-      @article{Morris2024TheIO,
-        title={The Importance of Coordinate Frames in Dynamic SLAM},
-        author={Jesse Morris and Yiduo Wang and Viorela Ila},
-        journal={2024 IEEE International Conference on Robotics and Automation (ICRA)},
-        year={2024},
-        pages={13755-13761},
-        url={https://api.semanticscholar.org/CorpusID:266044146}
-      }
-    </pre> -->
+        <h4 class="section-title">Supplementary Video</h4>
+        <div class="ratio ratio-16x9 shadow-sm mb-4">
+          <video controls muted loop>
+            <source src="static/images/video/supplementary.mp4" type="video/mp4">
+          </video>
+        </div>
+        <hr class="my-4">
+        <h4 class="section-title">Citation</h4>
+        <div class="mb-3">
+          <p class="mb-1 small">BibTeX:</p>
+          <pre class="bg-light p-3 small"><code>
+@inproceedings{morris2025dynosam,
+  author={Morris, Jesse and Wang, Yiduo and Kliniewski, Mikolaj and Ila, Viorela},
+  journal={IEEE Transactions on Robotics},
+  title={DynoSAM: Open-Source Smoothing and Mapping Framework for Dynamic SLAM},
+  year={2025},
+  volume={},
+  number={},
+  pages={1-19},
+  keywords={Simultaneous localization and mapping;Accuracy;Vehicle dynamics;Aerodynamics;Cameras;Trajectory;Robots;Pose estimation;Optimization;Kinematics;Dynamic SLAM;Mapping;RGBD Perception},
+  doi={10.1109/TRO.2025.3641813}}
+          </code></pre>
+        </div>
+      </div>
+    </section>
 
 
-    <img src="static/images/omd-demo.gif" class="img-fluid w-100 mt-2 mb-3" alt="Frontpage figure" />
-    <!-- <h2>Comparison vs. Baselines</h2> -->
-    <!-- <p>Our paper compares and evaluates two formulations for Dynamic SLAM, where we joinly optimize for camera poses, object motions/poses as well as static and dynamic
-      points using factor graphs. The first formulation represents dynamic points in the object (or local) frame and is an intuiative approach as it easy to represent a rigid body
-      using points that are static with-respect-to their local body frame. The second formulation represents dynamic points in the world frame which allows direct 3D point measurements to model the object motion in common reference frame.
-      Our work addresses and analyses each approach in terms of estimation accuracy and the systems behaviour during optimization and conclues that the world-centric formulation is the better formulation.
-    </p>
-    <ul> -->
-      <!-- <li><a href="https://yilundu.github.io/wide_baseline/">The Method of Du et al.</a>: A light field renderer
-        designed for wide-baseline novel view synthesis.</li>
-      <li><a href="https://mohammedsuhail.net/gen_patch_neural_rendering/">GPNR</a>: A light field transformer which
-        struggles with only two input views.</li>
-      <li><a href="https://alexyu.net/pixelnerf/">pixelNeRF</a>: A well-known NeRF-based approach which struggles on
-        scene-scale datasets because it does not handle scale ambiguity.</li> -->
-    <!-- </ul> -->
+    <section id="paper2" class="paper-card">
+      <div class="d-flex justify-content-between align-items-start">
+        <h2 class="fw-bold mb-0">Online Dynamic SLAM with Incremental Smoothing and Mapping</h2>
+        <button class="btn btn-sm btn-outline-secondary ms-3" data-bs-toggle="collapse" data-bs-target="#paper2-body" aria-expanded="true" aria-controls="paper2-body">
+          <i class="fa fa-chevron-down" id="paper2-toggle-icon"></i>
+        </button>
+      </div>
+      <div class="author-list mt-2">
+        Jesse Morris, Yiduo Wang, Viorela Ila
+        <p class="mb-2 text-muted small">Accepted to: <em>IEEE Robotics and Automation Letters (RA-L) 2025</em></p>
+      </div>
 
-    <!-- <div class="w-100 my-4">
-      <h1 class="pt-5 title">Presentation</h1>
-        <video class="w-100 d-block" autoplay controls muted loop>
-          <source src="static/videos/ICRA2024_1643_presentation.mp4" type="video/mp4">
-        </video>
+      <div id="paper2-body" class="collapse show mt-3">
+
+         <div class="btn-links">
+          <a href="https://arxiv.org/pdf/2509.08197" target="_blank" class="btn btn-dark btn-sm"><i class="ai ai-arxiv"></i> Arxiv</a>
+          <a href="https://ieeexplore.ieee.org/document/11358721" target="_blank" class="btn btn-primary btn-sm ms-2"><i class="ai ai-ieee"></i> IEEE</a>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-7">
+            <h4 class="section-title">Abstract</h4>
+            <p>
+              Dynamic SLAM methods jointly estimate for the
+static and dynamic scene components, however existing ap-
+proaches, while accurate, are computationally expensive and
+unsuitable for online applications. In this work, we present the
+first application of incremental optimisation techniques to Dy-
+namic SLAM. We introduce a novel factor-graph formulation
+and system architecture designed to take advantage of existing
+incremental optimisation methods and support online estima-
+tion. On multiple datasets, we demonstrate that our method
+achieves equal to or better than state-of-the-art in camera pose
+and object motion accuracy. We further analyse the structural
+properties of our approach to demonstrate its scalability and
+provide insight regarding the challenges of solving Dynamic
+SLAM incrementally. Finally, we show that our formulation
+results in problem structure well-suited to incremental solvers,
+while our system architecture further enhances performance,
+achieving a 5x speed-up over existing methods.
+            </p>
+          </div>
+        </div>
+
+        <div class="row">
+        <div class="col-lg-12">
+              <h4 class="section-title">Key Contributions</h4>
+              <ul class="mb-3">
+                <li>A novel Hybrid formulation for Dynamic SLAM that combines the benefits of existing representations.</li>
+                <li>A novel Parallel-Hybrid architecture for Dynamic SLAM that facilitates online and incremental estimation. To the best of our knowledge, this is the first work to apply incremental optimisation methods to the Dynamic SLAM problem</li>
+                <li>An analysis of the proposed architecture in the context of incremental inference, which highlights the practical trade-off's between accuracy and computation, as well as key challenges specific to Dynamic SLAM</li>
+              </ul>
+
+              <div class="row mb-4">
+                <div class="col-md-6 text-center mb-3 mb-md-0">
+                  <figure>
+                    <img src="static/images/ral_2025/notion_fig.png" class="img-fluid shadow-sm" alt="Key figure left">
+                    <figcaption class="text-muted small mt-2">(a) Hybrid representation for Dynamic SLAM.</figcaption>
+                  </figure>
+                </div>
+                <div class="col-md-6 text-center">
+                  <figure>
+                    <img src="static/images/ral_2025/hybrid_factor_graph.png" class="img-fluid shadow-sm" alt="Key figure right">
+                    <figcaption class="text-muted small mt-2">(b) Factor graph design for Hybrid representation.</figcaption>
+                  </figure>
+                </div>
+              </div>
+        </div>
+      </div>
+
+         <hr class="my-5">
+
+        <h4 class="section-title">Supplementary Video</h4>
+        <div class="ratio ratio-16x9 shadow-sm mb-4">
+          <video controls muted loop>
+            <source src="static/images/video/RAL_2025_video.mp4" type="video/mp4">
+          </video>
+        </div>
+
+        <hr class="my-4">
+        <h4 class="section-title">Citation</h4>
+        <div class="mb-3">
+          <p class="mb-1 small">BibTeX:</p>
+          <pre class="bg-light p-3 small"><code>
+@inproceedings{morris2025online,
+  author={Morris, Jesse and Wang, Yiduo and Ila, Viorela},
+  journal={IEEE Robotics and Automation Letters},
+  title={Online Dynamic SLAM with Incremental Smoothing and Mapping},
+  year={2026},
+  volume={},
+  number={},
+  pages={1-8},
+  keywords={Simultaneous localization and mapping;Estimation;Accuracy;Aerodynamics;Optimization;Cameras;Trees (botanical);Bayes methods;Tracking;Scalability;SLAM;Localization;RGB-D Perception},
+  doi={10.1109/LRA.2026.3655286}}
+
+        </code></pre>
+        </div>
+      <!-- <h4 class="section-title">Experimental Results</h4>
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <h5>ACID Dataset Results</h5>
+          <video class="w-100 shadow-sm" autoplay controls muted loop>
+            <source src="static/videos/output_acid.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="col-md-6 mb-3">
+          <h5>Real Estate 10k Results</h5>
+          <video class="w-100 shadow-sm" autoplay controls muted loop>
+            <source src="static/videos/output_re10k.mp4" type="video/mp4">
+          </video>
+        </div>
       </div> -->
+      </div>
+    </section>
 
-  <div class="w-100 my-4">
-    <h1 class="pt-5 title">Supplementary Video</h1>
-      <video class="w-100 d-block" autoplay controls muted loop>
-        <source src="static/images/video/supplementary.mp4" type="video/mp4">
-      </video>
-    </div>
-
-    <!-- Comparisons -->
-    <!-- <h2>Comparison vs. Baselines</h2>
-    <p>We compare our method against the following baselines:</p>
-    <ul>
-      <li><a href="https://yilundu.github.io/wide_baseline/">The Method of Du et al.</a>: A light field renderer
-        designed for wide-baseline novel view synthesis.</li>
-      <li><a href="https://mohammedsuhail.net/gen_patch_neural_rendering/">GPNR</a>: A light field transformer which
-        struggles with only two input views.</li>
-      <li><a href="https://alexyu.net/pixelnerf/">pixelNeRF</a>: A well-known NeRF-based approach which struggles on
-        scene-scale datasets because it does not handle scale ambiguity.</li>
-    </ul>
-
-    <h3>ACID Dataset</h3>
-    <img src="static/images/comparison_acid.svg" class="img-fluid w-100 mt-2 mb-3" alt="comparison on ACID dataset" />
-    <div class="border w-100 mb-4">
-      <video class="w-100 d-block" autoplay controls muted loop>
-        <source src="static/videos/output_acid.mp4" type="video/mp4">
-      </video>
-    </div>
-
-    <h3>Real Estate 10k Dataset</h3>
-    <img src="static/images/comparison_re10k.svg" class="img-fluid w-100 mt-2 mb-3" alt="comparison on ACID dataset" />
-    <div class="border w-100 mb-4">
-      <video class="w-100 d-block" autoplay controls muted loop>
-        <source src="static/videos/output_re10k.mp4" type="video/mp4">
-      </video>
-    </div> -->
-
-    <!-- Point Clouds -->
-    <!-- <h2>3D Gaussian Point Clouds</h2>
-    <p>Because pixelSplat infers a set of 3D Gaussians, we can visualize these Gaussians and render them to produce
-      depth maps. Since the Real Estate 10k and ACID datasets contain many areas with ambiguous depth (e.g., large,
-      textureless surfaces like interior walls), we fine-tune pixelSplat for 50,000 iterations using a depth regularizer
-      before exporting 3D Gaussian point clouds.</p>
-    <img src="static/images/point_clouds.svg" class="img-fluid w-100 mt-2 mb-3" alt="point clouds and depth maps" /> -->
-
-    <!-- <p>Use the interactive 3D viewer below to explore a set of 3D Gaussians generated by pixelSplat. However, note that the renderings produced by the interactive Spline viewer do not exactly match those produced by the original CUDA-based implementation of 3D Gaussian splatting.</p>
-    <iframe src='https://my.spline.design/untitled-56829706657b783ffda8a7682085e706/' frameborder='0' width='100%' height='400px'></iframe> -->
-
-    <!-- Footer -->
-    <footer class="border-top mt-5 py-4">
-      This page's code uses elements from this <a href="https://github.com/eliahuhorwitz/Academic-project-page-template"
-        target="_blank">Academic Project Page
-        Template</a>.
+    <footer class="border-top mt-5 py-4 text-center text-muted">
+      <p>&copy; 2025 ACFR-RPG Research Group</p>
+      <small>Template adapted from <a href="https://github.com/eliahuhorwitz/Academic-project-page-template">Academic Project Page Template</a>.</small>
     </footer>
-  </div>
-</body>
 
+  </div>
+
+  <script>
+    // Smooth scrolling for navigation
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            document.querySelector(this.getAttribute('href')).scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+    });
+  </script>
+  <script>
+    // Toggle chevron icons for collapsible paper sections
+    document.addEventListener('DOMContentLoaded', () => {
+      const paper1 = document.getElementById('paper1-body');
+      const icon1 = document.getElementById('paper1-toggle-icon');
+      const paper2 = document.getElementById('paper2-body');
+      const icon2 = document.getElementById('paper2-toggle-icon');
+      if (paper1 && icon1) {
+        paper1.addEventListener('show.bs.collapse', () => { icon1.classList.remove('fa-chevron-down'); icon1.classList.add('fa-chevron-up'); });
+        paper1.addEventListener('hide.bs.collapse', () => { icon1.classList.remove('fa-chevron-up'); icon1.classList.add('fa-chevron-down'); });
+      }
+      if (paper2 && icon2) {
+        paper2.addEventListener('show.bs.collapse', () => { icon2.classList.remove('fa-chevron-down'); icon2.classList.add('fa-chevron-up'); });
+        paper2.addEventListener('hide.bs.collapse', () => { icon2.classList.remove('fa-chevron-up'); icon2.classList.add('fa-chevron-down'); });
+      }
+    });
+  </script>
+</body>
 </html>
