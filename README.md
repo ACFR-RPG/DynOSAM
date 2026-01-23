@@ -29,7 +29,11 @@
 
 ## 📚 Publications
 The offical code used for our paper:
-- [Jesse Morris](https://jessemorris.github.io/), Yiduo Wang, Mikolaj Kliniewski, Viorela Ila, [*DynoSAM: Open-Source Smoothing and Mapping Framework for Dynamic SLAM*](https://arxiv.org/pdf/2501.11893).  Accepted Transactions on Robotics (T-RO) Visual SLAM Special Issue (2025).
+- [Jesse Morris](https://jessemorris.github.io/), Yiduo Wang, Mikolaj Kliniewski, Viorela Ila, [*DynoSAM: Open-Source Smoothing and Mapping Framework for Dynamic SLAM*](https://arxiv.org/pdf/2501.11893).  Accepted Transactions on Robotics (T-RO) Visual SLAM Special Issue, 2025.
+
+
+#### ** Update December 2025 **
+Our work has been accepted to IEEE Robotics and Automation Letters (RA-L)
 
 #### ** Update November 2025 **
 Our work has been accepted to IEEE Transactions on Robotics (T-RO)
@@ -37,7 +41,7 @@ Our work has been accepted to IEEE Transactions on Robotics (T-RO)
 
 #### ** Update September 2025 **
 This code now also contains the code for our new work
-- J.Morris, Y. Wang, V. Ila. [*Online Dynamic SLAM with Incremental Smoothing and Mapping*](https://www.arxiv.org/abs/2509.08197), Arxiv. Submitted RA-L (2025)
+- J.Morris, Y. Wang, V. Ila. [*Online Dynamic SLAM with Incremental Smoothing and Mapping*](https://www.arxiv.org/abs/2509.08197), Accepted Robotics and Automation Letters (RA-L), 2025
 
 
 We kindly ask to cite our papers if you find these works useful:
@@ -53,11 +57,15 @@ We kindly ask to cite our papers if you find these works useful:
   doi={10.1109/TRO.2025.3641813}
 }
 
-@article{morris2025online,
-  title={Online Dynamic SLAM with Incremental Smoothing and Mapping},
+@inproceedings{morris2025online,
   author={Morris, Jesse and Wang, Yiduo and Ila, Viorela},
-  journal={arXiv preprint arXiv:2509.08197},
-  year={2025}
+  journal={IEEE Robotics and Automation Letters},
+  title={Online Dynamic SLAM with Incremental Smoothing and Mapping},
+  year={2026},
+  volume={},
+  number={},
+  pages={1-8},
+  doi={10.1109/LRA.2026.3655286}}
 }
 ```
 
