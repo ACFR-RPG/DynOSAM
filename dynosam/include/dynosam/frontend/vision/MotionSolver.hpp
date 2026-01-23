@@ -614,6 +614,10 @@ class HybridObjectMotionSRIF {
   constexpr static int ZDim = gtsam::traits<gtsam::StereoPoint2>::dimension;
 
  public:
+  bool needs_resetting_from_last_frame{false};
+  bool was_reset_this_update{false};
+
+ public:
   HybridObjectMotionSRIF(const gtsam::Pose3& initial_state_H,
                          const gtsam::Pose3& L_e, const FrameId& frame_id_e,
                          const gtsam::Matrix66& initial_P,
@@ -626,11 +630,15 @@ class HybridObjectMotionSRIF {
   inline FrameId getFrameId() const { return frame_id_; }
 
   // could also mean the object was new?
-  inline bool resetThisUpdate() const { return frame_id_e_ == frame_id_; }
+  inline bool resetThisUpdate() const { return was_reset_this_update; }
 
   inline const gtsam::FastMap<TrackletId, gtsam::Point3>&
   getCurrentLinearizedPoints() const {
     return m_linearized_;
+  }
+
+  gtsam::Pose3 getPose() const {
+    return getKeyFramedMotion() * getKeyFramePose();
   }
 
   /**
@@ -644,6 +652,8 @@ class HybridObjectMotionSRIF {
   // this is H_W_e_k
   // calculate best estimate!!
   gtsam::Pose3 getKeyFramedMotion() const;
+
+  Motion3ReferenceFrame getKeyFramedMotionReference() const;
 
   /**
    * @brief Recovers the full state pose W by applying the perturbation

@@ -109,12 +109,7 @@ class VisionImuPacket {
       gtsam::Pose3 L_W_KF;
       //! This is the preintegrated motion immediately before the current
       //! keyframe at k
-      gtsam::Pose3 H_W_KF_k;
-      //! Frame KF (the last keyframe)
-      FrameId from;
-      //! Frame k (the keyframe)
-      FrameId to;
-
+      Motion3ReferenceFrame H_W_KF_k;
       //! Happens as a result of feature tracking and indicates that a regular
       //! OKF should be made
       bool was_reset{false};

@@ -1544,14 +1544,18 @@ class HybridFormulationKeyFrame : public HybridFormulation {
  protected:
   IntermediateMotionInfo getIntermediateMotionInfo(ObjectId object_id,
                                                    FrameId frame_id) override;
-
-  GenericObjectCentricMap<gtsam::Pose3> initial_H_W_e_k_;
+  GenericObjectCentricMap<Motion3ReferenceFrame> initial_H_W_AKF_k_;
   //! Bookkeeps the keyframing from the front-end so we manage the to/from
   //! frames provided by the front-end estimate This is not used to manage the
   //! keyframe pose or keyframe id in the backend Since this is DIFFERENT to the
   //! frontend The pose held in each KeyFrameRangeis the L_e_frontend (which is
   //! used to anchor) The frontend estimates
   KeyFrameData front_end_keyframes_;
+
+  // initial motion estimates aligned with the fronte-end keyframe structure
+  // from the frontend frame id is stored using the "to" frame id since this is
+  // unique
+  GenericObjectCentricMap<Motion3ReferenceFrame> initial_H_W_RKF_k_;
 };
 
 // additional functionality when solved with the Regular Backend!

@@ -591,6 +591,7 @@ void RGBDInstanceFrontendModule::fillOutputPacketWithTracks(
           motion_track_status_.at(object_id).tracking_status;
 
       // some sanity check logic!
+      // should this also be in the backend!?
       if (object_motion_track_status == ObjectTrackingStatus::ReTracked ||
           object_motion_track_status == ObjectTrackingStatus::New) {
         // if the object is new or re-tracked it should have also been reset!!
@@ -611,7 +612,7 @@ void RGBDInstanceFrontendModule::fillOutputPacketWithTracks(
       // (ie. its KF has moved!)
       object_track.motion_track_status = object_motion_track_status;
 
-      CHECK_EQ(object_track.hybrid_info->to, frame_id);
+      CHECK_EQ(object_track.hybrid_info->H_W_KF_k.to(), frame_id);
     }
 
     object_tracks.insert2(object_id, object_track);

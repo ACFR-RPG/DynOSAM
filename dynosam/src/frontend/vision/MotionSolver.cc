@@ -1427,6 +1427,13 @@ gtsam::Pose3 HybridObjectMotionSRIF::getKeyFramedMotion() const {
   return H_linearization_point_.retract(getStatePerturbation());
 }
 
+Motion3ReferenceFrame HybridObjectMotionSRIF::getKeyFramedMotionReference()
+    const {
+  return Motion3ReferenceFrame(
+      getKeyFramedMotion(), Motion3ReferenceFrame::Style::KF,
+      ReferenceFrame::GLOBAL, getKeyFrameId(), getFrameId());
+}
+
 gtsam::Pose3 HybridObjectMotionSRIF::getF2FMotion() const {
   gtsam::Pose3 H_W_e_k = H_linearization_point_.retract(getStatePerturbation());
   gtsam::Pose3 H_W_e_km1 = previous_H_;
@@ -1807,50 +1814,45 @@ bool ObjectMotionSolverFilter::solveImpl(Frame::Ptr frame_k,
   //  do not update it!! therefore the ObjectTrack object wont exist!!
 
   bool new_or_reset_object = false;
+  bool filter_needs_reset = false;
   // bool new_object = false;
   // bool object_reset = false;
-  if (object_resampled && !object_new) {
-    LOG(INFO) << object_id
-              << " retracked - resetting filter k=" << frame_k->getFrameId();
-    // Not thread safe!
-    // filters_.erase(object_id);
-    // new object false so we dont
-    // new_object = true;
-    new_or_reset_object = true;
-    gtsam::Pose3 keyframe_pose =
-        construct_initial_frame(frame_k_1, geometric_result.inliers);
-
+  if (!object_new) {
     auto filter = filters_.at(object_id);
-    // must set value before reset to get the last value
-    // NOTE: we currently KF to k-1 so this will be a little bit wrong!!!
-    // assume that we only take this value if the object was retracked!!
-    // as we dont set it anywhere else!!
-    // filter->H_W_e_k_before_reset = filter->getCurrentLinearization();
-    // // filter->frame_id_e_before_reset = filter->getKeyFrameId();
-    // filter->frame_id_e_before_reset = filter->getKeyFrameId();
+    if (object_resampled) {
+      LOG(INFO) << object_id
+                << " retracked - resetting filter k=" << frame_k->getFrameId();
+      // new_or_reset_object = true;
+      // filter_needs_reset = true;
+      // gtsam::Pose3 keyframe_pose =
+      //     construct_initial_frame(frame_k_1, geometric_result.inliers);
+      filter->needs_resetting_from_last_frame = true;
+    } else if (filter->needs_resetting_from_last_frame) {
+      LOG(INFO) << object_id << " needs retting from last frame! current k="
+                << frame_k->getFrameId();
+      filter->needs_resetting_from_last_frame = false;
 
-    // instead of using new pose (use last motion) (if last frame id was k-1?)
-    //  we start to drift from the center of the object!!
-    //  keyframe_pose = filter->getCurrentLinearization() *
-    //  filter->getKeyFramePose(); filters_.erase(object_id);
-    filter->resetState(keyframe_pose, frame_k->getFrameId());
-    // filter->frame_id_e_ = frame_k->getFrameId();
+      // this is the pose as the last frame (ie k-1) which will serve as the new
+      // keyframe pose
+      gtsam::Pose3 pose = filter->getPose();
+      // assert that the last filter update was at k-1 and therefore the pose
+      // should be L_w_km1
+      CHECK_EQ(filter->getFrameId(), frame_k_1->getFrameId());
+      filter->resetState(pose, frame_k_1->getFrameId());
+      new_or_reset_object = true;
+    }
   }
+  // if (object_resampled && !object_new) {
+  //   LOG(INFO) << object_id
+  //             << " retracked - resetting filter k=" << frame_k->getFrameId();
+  //   // new_or_reset_object = true;
+  //   // filter_needs_reset = true;
+  //   // gtsam::Pose3 keyframe_pose =
+  //   //     construct_initial_frame(frame_k_1, geometric_result.inliers);
 
-  // // hack to handle object new is to update it from fame_k-1!
-  // if(object_new_in_previous) {
-  //   LOG(INFO) << "Object " << object_id << " was new in previous -
-  //   clearing!";
-  //   // //TODO: currently only setting both object new and object resampled to
-  //   true
-  //   // // becuause logic in frontend says if new then must be resampled (not
-  //   sure how to handle this yet!)
-  //   //   frame_k->tracking_info_->dynamic_track.at(object_id).object_new =
-  //   true;
-  //      frame_k->tracking_info_->dynamic_track.at(object_id).object_resampled
-  //      =
-  //       true;
-  //   filters_.erase(object_id);
+  //   auto filter = filters_.at(object_id);
+  //   filter->needs_resetting_from_last_frame = true;
+  //   // filter->resetState(keyframe_pose, frame_k->getFrameId());
   // }
 
   // becuuse we erase it if object new in previous!
@@ -1899,31 +1901,15 @@ bool ObjectMotionSolverFilter::solveImpl(Frame::Ptr frame_k,
                                     frame_k_1->getFrameId(), P, Q, R,
                                     frame_k_1->getCamera(), kHuberKFilter));
     // fake KF is this frame
-    filters_.at(object_id)->frame_id_e_ = frame_k->getFrameId();
+    // filters_.at(object_id)->frame_id_e_ = frame_k->getFrameId();
   }
   auto filter = filters_.at(object_id).get();
-
-  // std::vector<gtsam::Point3> object_points;
-  // std::vector<gtsam::Point2> image_points;
-
-  // for (TrackletId inlier_tracklet : geometric_result.inliers) {
-  //   const Feature::Ptr feature_k_1 = frame_k_1->at(inlier_tracklet);
-  //   const Feature::Ptr feature_k = frame_k->at(inlier_tracklet);
-  //   CHECK_NOTNULL(feature_k_1);
-  //   CHECK_NOTNULL(feature_k);
-
-  //   const Keypoint kp_k = feature_k->keypoint();
-  //   const gtsam::Point3 lmk_k_1_world =
-  //       frame_k_1->backProjectToWorld(inlier_tracklet);
-
-  //   object_points.push_back(lmk_k_1_world);
-  //   image_points.push_back(kp_k);
-  // }
 
   // update and predict should be one step so that if we dont have enough points
   // NOTE: this logic seemed pretty important to ensure the estimate was good!!!
   // we dont predict?
   if (new_or_reset_object) {
+    filter->was_reset_this_update = true;
     filter->predict(gtsam::Pose3::Identity());
     {
       utils::ChronoTimingStats timer("motion_solver.ekf_update");
@@ -1932,6 +1918,8 @@ bool ObjectMotionSolverFilter::solveImpl(Frame::Ptr frame_k,
       // filter->updateStereo(object_points, stereo_measurements,
       // frame_k->getPose());
     }
+  } else {
+    filter->was_reset_this_update = false;
   }
 
   // on the first frame we want to init everything (ie. points)
@@ -2059,16 +2047,14 @@ void ObjectMotionSolverFilter::fillHybridInfo(
   auto filter = filters_.at(object_id);
 
   VisionImuPacket::ObjectTracks::HybridInfo hybrid_info;
-  hybrid_info.H_W_KF_k = filter->getKeyFramedMotion();
+  hybrid_info.H_W_KF_k = filter->getKeyFramedMotionReference();
   hybrid_info.L_W_KF = filter->getKeyFramePose();
-  hybrid_info.from = filter->getKeyFrameId();
-  hybrid_info.to = filter->getFrameId();
   hybrid_info.was_reset = filter->resetThisUpdate();
 
   LOG(INFO) << "Making hybrid info for j=" << object_id << " with "
-            << "motion KF: " << hybrid_info.from << " to: " << hybrid_info.to
-            << " and filter was reset " << std::boolalpha
-            << hybrid_info.was_reset;
+            << "motion KF: " << hybrid_info.H_W_KF_k.from()
+            << " to: " << hybrid_info.H_W_KF_k.to() << " and filter was reset "
+            << std::boolalpha << hybrid_info.was_reset;
 
   object_track.hybrid_info = hybrid_info;
 }

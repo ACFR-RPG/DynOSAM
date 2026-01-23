@@ -1167,9 +1167,14 @@ HybridFormulationKeyFrame::getIntermediateMotionInfo(ObjectId object_id,
 void HybridFormulationKeyFrame::preUpdate(const PreUpdateData& data) {
   // LOG(INFO) << "preUpdate kfid = " << kf_id;
 
+  // frame id or kf_id
+  const FrameId frame_id = data.frame_id;
   CHECK(data.input);
   using ObjectTrackMap = VisionImuPacket::ObjectTrackMap;
   using ObjectTracks = VisionImuPacket::ObjectTracks;
+
+  HybridAccessor::Ptr accessor = this->derivedAccessor<HybridAccessor>();
+  CHECK_NOTNULL(accessor);
 
   const VisionImuPacket& input = *data.input;
   const ObjectTrackMap& object_tracks = input.objectTracks();
@@ -1181,25 +1186,150 @@ void HybridFormulationKeyFrame::preUpdate(const PreUpdateData& data) {
     const ObjectTracks::HybridInfo& hybrid_info =
         object_track.hybrid_info.value();
 
+    // intermediate keyframe?
     const bool regular_keyframe = object_track.regular_keyframe;
     const bool anchor_keyframe = object_track.anchor_keyframe;
+    const ObjectTrackingStatus& object_motion_tracking_status =
+        object_track.motion_track_status;
 
     if (anchor_keyframe) CHECK(regular_keyframe);
 
-    if (regular_keyframe) {
-      CHECK_EQ(hybrid_info.to, hybrid_info.from);
-      front_end_keyframes_.startNewActiveRange(object_id, hybrid_info.from,
-                                               hybrid_info.L_W_KF);
-      LOG(INFO) << "Making Regular KF for "
-                << info_string(hybrid_info.from, object_id);
+    const bool is_only_regular_keyframe = regular_keyframe && !anchor_keyframe;
+
+    // sanity check
+    if (object_motion_tracking_status == ObjectTrackingStatus::New) {
+      // no previous keyframes should exist
+      CHECK(!front_end_keyframes_.exists(object_id));
+    } else if (object_motion_tracking_status ==
+               ObjectTrackingStatus::ReTracked) {
+      LOG(FATAL) << "Object re-tracked. Not handling this case yet!";
+    }
+
+    // estimated keyframe motioa from the frontend
+    const Motion3ReferenceFrame& H_W_RKF_k = hybrid_info.H_W_KF_k;
+    initial_H_W_RKF_k_.insert22(object_id, H_W_RKF_k.to(), H_W_RKF_k);
+
+    // I think this logic is easier if we make it if(only_regular_kf) and
+    // elseif(anchor_keyframe) since if anchor then must be regular if
+    // (regular_keyframe) {
+    if (is_only_regular_keyframe) {
+      if (object_motion_tracking_status == ObjectTrackingStatus::Tracked) {
+        // keyframes before update
+        const KeyFrameRange::ConstPtr frontend_range =
+            front_end_keyframes_.find(object_id, frame_id);
+        CHECK(frontend_range);
+        // to ensure consistency of trajectory ensure that the "to" of the last
+        // motion estimate matches the from of the new keyframe
+        const auto [last_kf_id, last_kf_pose] = frontend_range->dataPair();
+        // if it is well tracked we assume the object exists at the previous
+        // frame
+        CHECK(initial_H_W_RKF_k_.exists(object_id, frame_id - 1));
+        const Motion3ReferenceFrame& H_W_RKF_km1 =
+            initial_H_W_RKF_k_.at(object_id, frame_id - 1);
+
+        // some checks
+        // 1. both RKF should also be a AKF (TODO!)
+        // 2. the RKF's should not be the same but the motions should connect to
+        // form a continuous trajectory
+        CHECK_EQ(H_W_RKF_km1.to(), H_W_RKF_k.from());
+        // probably not necessary: chheck that the last keyframe is in line with
+        // the last motion from the frontend
+        CHECK_EQ(last_kf_id, H_W_RKF_km1.from());
+
+        // a connection representing the estimated object odometry between the
+        // lastkeyframe and the current keyframe
+        LOG(INFO) << "Expected object odometry from: " << last_kf_id << " -> "
+                  << H_W_RKF_k.from();
+
+      } else if (object_motion_tracking_status == ObjectTrackingStatus::New) {
+        CHECK(!front_end_keyframes_.exists(object_id));
+      }
+
+      // TODO: hybrid_info.to will be from+1 right now as the frontend only
+      // sends the second motion frame needs to fix this design...?
+      //  in the cases where H_W_RKF_k is a keyframe, this motion will only ever
+      //  a F2F motion!
+      CHECK_EQ(H_W_RKF_k.to(), H_W_RKF_k.from() + 1);
     }
 
     if (anchor_keyframe) {
-      CHECK_EQ(hybrid_info.to, hybrid_info.from);
-      key_frame_data_.startNewActiveRange(object_id, hybrid_info.from,
+      // if anchor, then must be regular
+      CHECK(regular_keyframe);
+      CHECK_EQ(H_W_RKF_k.to(), H_W_RKF_k.from() + 1);
+      key_frame_data_.startNewActiveRange(object_id, H_W_RKF_k.from(),
                                           hybrid_info.L_W_KF);
       LOG(INFO) << "Making Anchor KF for "
-                << info_string(hybrid_info.from, object_id);
+                << info_string(H_W_RKF_k.from(), object_id) << " with motion "
+                << H_W_RKF_k.from() << " -> " << H_W_RKF_k.to();
+    }
+
+    if (regular_keyframe) {
+      front_end_keyframes_.startNewActiveRange(object_id, H_W_RKF_k.from(),
+                                               hybrid_info.L_W_KF);
+      LOG(INFO) << "Making Regular KF for "
+                << info_string(H_W_RKF_k.from(), object_id) << " with motion "
+                << H_W_RKF_k.from() << " -> " << H_W_RKF_k.to();
+
+      // get backend anchor point and confert motion if necessary
+      const KeyFrameRange::ConstPtr backend_range =
+          CHECK_NOTNULL(key_frame_data_.find(object_id, frame_id));
+      const auto [backend_kf_id, backend_kf_pose] = backend_range->dataPair();
+      LOG(INFO) << "Anchor KF id: " << backend_kf_id;
+
+      const KeyFrameRange::ConstPtr frontend_range =
+          front_end_keyframes_.find(object_id, frame_id);
+      CHECK(frontend_range);
+      // the most recent motion added to the estimator should take us from
+      // backend_kf_id to last_kf_id
+      const auto [current_kf_id, current_kf_pose] = frontend_range->dataPair();
+
+      // motion from anchor point to current k
+      // this value will be added to the estimator
+      Motion3ReferenceFrame H_W_AKF_KF_initial;
+      if (H_W_RKF_k.from() == backend_kf_id) {
+        // TODO: also check pose is close?
+        H_W_AKF_KF_initial = H_W_RKF_k;
+      } else {
+        // need to transform into correct frame using (ideally the most up to
+        // date, i.e estimated motion)
+        LOG(INFO) << "Looking up estimated motion from " << backend_kf_id
+                  << " -> " << current_kf_id;
+
+        // TODO: eventually should come from optimizer
+        CHECK(initial_H_W_AKF_k_.exists(object_id, current_kf_id));
+        // from current anchor keyframe to last regular kf
+        const auto H_W_AKF_lKF =
+            initial_H_W_AKF_k_.at(object_id, current_kf_id);
+        CHECK_EQ(H_W_AKF_lKF.from(), backend_kf_id);
+        CHECK_EQ(H_W_AKF_lKF.to(), current_kf_id);
+        CHECK_EQ(H_W_AKF_lKF.to(), H_W_RKF_k.from());
+
+        CHECK_EQ(H_W_RKF_k.to(), current_kf_id);
+
+        H_W_AKF_KF_initial = Motion3ReferenceFrame(
+            H_W_AKF_lKF.estimate() * H_W_RKF_k.estimate(),
+            Motion3ReferenceFrame::Style::KF, ReferenceFrame::GLOBAL,
+            backend_kf_id, current_kf_id);
+
+        // if (const auto H_W_AKF_lKF =
+        //     accessor->getEstimatedMotion(object_id, last_kf_id))
+        // {
+        //   CHECK_EQ(H_W_AKF_lKF->from(), backend_kf_id);
+        //   CHECK_EQ(H_W_AKF_lKF->to(), last_kf_id);
+        //   CHECK_EQ(H_W_AKF_lKF->to(), H_W_RKF_k.from());
+
+        //   // compose together such that H_W_AKF_KF_initial is from anchor
+        //   point to current kf H_W_AKF_KF_initial =
+        //       H_W_AKF_lKF->estimate() * H_W_RKF_k.estimate();
+        // }
+        // else {
+        //   LOG(FATAL) << "No estimated motion!?"
+        // }
+      }
+
+      // for now as a fake we add it to the map so the accessor gets access to
+      // it!
+      initial_H_W_AKF_k_.insert22(object_id, current_kf_id, H_W_AKF_KF_initial);
     }
   }
 }

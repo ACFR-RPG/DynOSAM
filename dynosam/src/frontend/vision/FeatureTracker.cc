@@ -697,11 +697,14 @@ void FeatureTracker::trackDynamicKLT(
         CHECK(previous_feature->usable());
 
         const Keypoint kp = utils::cvPointToGtsam(good_current.at(i));
+        if (!isWithinShrunkenImage(kp)) {
+          continue;
+        }
 
         const int x = functional_keypoint::u(kp);
         const int y = functional_keypoint::v(kp);
-        const ObjectId predicted_label = functional_keypoint::at<ObjectId>(kp, motion_mask);
-
+        const ObjectId predicted_label =
+            functional_keypoint::at<ObjectId>(kp, motion_mask);
 
         if (!detection_mask_impl.empty()) {
           const unsigned char valid_detection =
@@ -848,9 +851,12 @@ void FeatureTracker::trackDynamicKLT(
     for (const KeypointCV& cv_keypoint : keypoints) {
       Keypoint keypoint = utils::cvKeypointToGtsam(cv_keypoint);
 
-      if(!isWithinShrunkenImage(keypoint)) { continue; }
+      if (!isWithinShrunkenImage(keypoint)) {
+        continue;
+      }
 
-      const ObjectId predicted_label = functional_keypoint::at<ObjectId>(keypoint, motion_mask);
+      const ObjectId predicted_label =
+          functional_keypoint::at<ObjectId>(keypoint, motion_mask);
       CHECK_EQ(predicted_label, object_id);
 
       auto feature = constructNewDynamicFeature(keypoint, object_id, frame_id);
