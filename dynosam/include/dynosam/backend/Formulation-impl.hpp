@@ -436,16 +436,12 @@ class StaticFormulationUpdater : public StaticFormulationUpdaterImpl<MAP> {
 }  // namespace internal
 
 template <typename MAP>
-Formulation<MAP>::Formulation(const FormulationParams& params,
-                              typename Map::Ptr map,
-                              const NoiseModels& noise_models,
-                              const Sensors& sensors,
-                              const FormulationHooks& hooks)
-    : params_(params),
-      map_(map),
-      noise_models_(noise_models),
-      sensors_(sensors),
-      hooks_(hooks) {
+Formulation<MAP>::Formulation(const ConstructorParams& constructor_params)
+    : params_(constructor_params.params),
+      map_(CHECK_NOTNULL(constructor_params.map)),
+      noise_models_(constructor_params.noise_models),
+      sensors_(constructor_params.sensors),
+      hooks_(constructor_params.hooks) {
   static_updater_ =
       std::make_unique<internal::StaticFormulationUpdater<MAP>>(this);
 }

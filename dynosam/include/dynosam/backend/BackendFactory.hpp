@@ -42,7 +42,6 @@
 #include "dynosam/backend/rgbd/HybridEstimator.hpp"
 #include "dynosam/backend/rgbd/WorldMotionEstimator.hpp"
 #include "dynosam/backend/rgbd/WorldPoseEstimator.hpp"
-#include "dynosam/backend/rgbd/impl/test_HybridFormulations.hpp"
 #include "dynosam/visualizer/VisualizerPipelines.hpp"  //for BackendModuleDisplay
 #include "dynosam_opt/IncrementalOptimization.hpp"     // for ErrorHandlingHooks
 
@@ -54,6 +53,7 @@ class IncorrectParallelHybridConstruction : public DynosamException {
       : DynosamException(what) {}
 };
 
+// TODO: update policy to reflect new concept (external any loader!!)
 /**
  * @brief Factory to create the backend module and associated formulations.
  * This class is quite complex due to the interdepencies between backend and
@@ -160,10 +160,25 @@ class BackendFactory
  private:
   // implements the BackendFormulationFactory<MAP> class
   FormulationVizWrapper<MAP> createFormulation(
-      const FormulationParams& formulation_params, std::shared_ptr<MAP> map,
-      const NoiseModels& noise_models, const Sensors& sensors,
-      const FormulationHooks& formulation_hooks) override {
+      const FormulationConstructorParams<MAP>& constructor_params) override {
     FormulationVizWrapper<MAP> wrapper;
+
+    auto makeFormulationImpl =
+        [=](auto formulation) -> FormulationVizWrapper<MAP> {
+      // assume formulation is a shared pointer
+      using PtrType = std::decay_t<decltype(formulation)>;
+      using FormulationType = typename PtrType::element_type;
+      LOG(INFO) << "Creating formulation: " << type_name<FormulationType>();
+
+      CHECK(formulation);
+      FormulationVizWrapper<MAP> wrapper;
+      wrapper.formulation = formulation;
+
+      // call createDisplay as defined by the CRTP Policy type!
+      wrapper.display =
+          this->template createDisplay<FormulationType>(formulation);
+      return wrapper;
+    };
 
     if (this->backend_type_ == BackendType::PARALLEL_HYBRID) {
       DYNO_THROW_MSG(IncorrectParallelHybridConstruction)
@@ -172,58 +187,16 @@ class BackendFactory
           << " Use BackendFactory::createModule instead!";
       return wrapper;
     } else if (this->backend_type_ == BackendType::WCME) {
-      LOG(INFO) << "Using WCME";
-      std::shared_ptr<WorldMotionFormulation> formulation =
-          std::make_shared<WorldMotionFormulation>(formulation_params, map,
-                                                   noise_models, sensors,
-                                                   formulation_hooks);
-
-      // call polciy function
-      wrapper.display = this->createDisplay(formulation);
-      wrapper.formulation = formulation;
+      wrapper = makeFormulationImpl(
+          std::make_shared<WorldMotionFormulation>(constructor_params));
 
     } else if (this->backend_type_ == BackendType::WCPE) {
-      LOG(INFO) << "Using WCPE";
-      std::shared_ptr<WorldPoseFormulation> formulation =
-          std::make_shared<WorldPoseFormulation>(formulation_params, map,
-                                                 noise_models, sensors,
-                                                 formulation_hooks);
-      // call polciy function
-      wrapper.display = this->createDisplay(formulation);
-      wrapper.formulation = formulation;
+      wrapper = makeFormulationImpl(
+          std::make_shared<WorldPoseFormulation>(constructor_params));
 
     } else if (this->backend_type_ == BackendType::HYBRID) {
-      LOG(INFO) << "Using HYBRID";
-      std::shared_ptr<RegularHybridFormulation> formulation =
-          std::make_shared<RegularHybridFormulation>(formulation_params, map,
-                                                     noise_models, sensors,
-                                                     formulation_hooks);
-
-      // call polciy function
-      wrapper.display = this->createDisplay(formulation);
-      wrapper.formulation = formulation;
-
-    } else if (this->backend_type_ == BackendType::TESTING_HYBRID_SD) {
-      LOG(FATAL) << "Using Hybrid Structureless Decoupled. Warning this is a "
-                    "testing only formulation!";
-    } else if (this->backend_type_ == BackendType::TESTING_HYBRID_D) {
-      LOG(FATAL) << "Using Hybrid Decoupled. Warning this is a testing only "
-                    "formulation!";
-    } else if (this->backend_type_ == BackendType::TESTING_HYBRID_S) {
-      LOG(FATAL) << "Using Hybrid Structurless. Warning this is a testing only "
-                    "formulation!";
-    } else if (this->backend_type_ == BackendType::TESTING_HYBRID_SMF) {
-      LOG(INFO)
-          << "Using Hybrid Smart Motion Factor. Warning this is a testing "
-             "only formulation!";
-      FormulationParams fp = formulation_params;
-      fp.min_dynamic_observations = 1u;
-      std::shared_ptr<test_hybrid::SmartStructurlessFormulation> formulation =
-          std::make_shared<test_hybrid::SmartStructurlessFormulation>(
-              fp, map, noise_models, sensors, formulation_hooks);
-      wrapper.display = this->createDisplay(formulation);
-      wrapper.formulation = formulation;
-
+      wrapper = makeFormulationImpl(
+          std::make_shared<RegularHybridFormulation>(constructor_params));
     } else {
       CHECK(false) << "Not implemented";
       return wrapper;

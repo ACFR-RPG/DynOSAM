@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format2.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="2">
+  <name>test_dynosam_ros_plugins</name>
+  <version>2.2.0</version>
+  <description>
+    This tests plugins for dynosam_ros.
+  </description>
+  <license>BSD</license>
+</package>

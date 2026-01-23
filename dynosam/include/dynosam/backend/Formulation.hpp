@@ -243,6 +243,22 @@ template <typename MAP>
 class StaticFormulationUpdaterImpl;
 }
 
+// TODO: make all formulations use this!!
+/**
+ * @brief Wrapper on all formulation constructor arguments to simplify
+ * function signatures
+ *
+ * @tparam MAP
+ */
+template <typename MAP>
+struct FormulationConstructorParams {
+  FormulationParams params;
+  typename MAP::Ptr map;
+  NoiseModels noise_models;
+  Sensors sensors;
+  FormulationHooks hooks = FormulationHooks();
+};
+
 /**
  * @brief Base class for a formulation that defines the structure and
  * implementation for a factor-graph based Dynamic SLAM solution. Derived
@@ -290,6 +306,7 @@ class Formulation {
   using This = Formulation<Map>;
   using MapTraitsType = MapTraits<Map>;
   using MeasurementType = typename MapTraitsType::MeasurementType;
+  using ConstructorParams = FormulationConstructorParams<Map>;
 
   using MeasurementTraits = measurement_traits<MeasurementType>;
 
@@ -304,9 +321,7 @@ class Formulation {
 
   DYNO_POINTER_TYPEDEFS(This)
 
-  Formulation(const FormulationParams& params, typename Map::Ptr map,
-              const NoiseModels& noise_models, const Sensors& sensors,
-              const FormulationHooks& hooks = FormulationHooks());
+  Formulation(const ConstructorParams& constructor_params);
   virtual ~Formulation() = default;
 
  protected:

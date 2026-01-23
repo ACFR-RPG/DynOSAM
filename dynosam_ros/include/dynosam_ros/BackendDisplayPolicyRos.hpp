@@ -3,6 +3,7 @@
 #include "dynosam/backend/BackendModule.hpp"
 #include "dynosam/backend/BackendParams.hpp"
 #include "dynosam_ros/Display-Definitions.hpp"
+#include "dynosam_ros/FormulationFactoryPlugin.hpp"
 #include "dynosam_ros/displays/BackendDisplayRos.hpp"
 #include "rclcpp/node.hpp"
 #include "rclcpp/node_options.hpp"
@@ -29,6 +30,10 @@ template <typename T>
 struct has_backend_module_display<
     T, std::void_t<typename BackendModuleDisplayTraits<T>::type>>
     : std::true_type {};
+
+// TODO: better documentation to consider policy as a general extenal policy
+// generator (ie. handles)
+//  all extental loaders for different purposes (display, backend plugins etc)
 
 /**
  * @brief Creates a ROS based visualisation policy based on the templated type T
@@ -78,9 +83,18 @@ class BackendModulePolicyRos {
     return nullptr;
   }
 
+  template <typename MAP>
+  typename FormulationVizWrapper<MAP>::Ptr createExternalFormulation(
+      const std::string& formulation_class,
+      const FormulationConstructorParams<MAP>& constructor_params) {
+    return formulation_plugin_loader_.loadFormulation<MAP>(
+        formulation_class, node_, constructor_params);
+  }
+
  private:
   DisplayParams params_;
   rclcpp::Node* node_;
+  FormulationFactoryPluginLoader formulation_plugin_loader_;
 };
 
 // class BackendModuleFactoryRos : public BackendModuleFactory {

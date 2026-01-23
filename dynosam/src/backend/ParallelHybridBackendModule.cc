@@ -141,7 +141,9 @@ ParallelHybridBackendModule::ParallelHybridBackendModule(
   formulation_params.updater_suffix = "static";
 
   static_formulation_ = std::make_shared<HybridFormulationV1>(
-      formulation_params, RGBDMap::create(), noise_models_, sensors, hooks);
+      HybridFormulationV1::ConstructorParams{formulation_params,
+                                             RGBDMap::create(), noise_models_,
+                                             sensors, hooks});
 
   combined_accessor_ = std::make_shared<ParallelHybridAccessor>(this);
 }

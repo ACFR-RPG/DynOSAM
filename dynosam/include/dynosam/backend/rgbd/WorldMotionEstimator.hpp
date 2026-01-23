@@ -72,15 +72,14 @@ class WorldMotionFormulation : public WorldPoseFormulation {
  public:
   using Base = WorldPoseFormulation;
   using Base::AccessorTypePointer;
+  using Base::ConstructorParams;
   using Base::ObjectUpdateContextType;
   using Base::PointUpdateContextType;
 
   DYNO_POINTER_TYPEDEFS(WorldMotionFormulation)
 
-  WorldMotionFormulation(const FormulationParams& params, typename Map::Ptr map,
-                         const NoiseModels& noise_models,
-                         const Sensors& sensors, const FormulationHooks& hooks)
-      : WorldPoseFormulation(params, map, noise_models, sensors, hooks) {
+  WorldMotionFormulation(const ConstructorParams& constructor_params)
+      : WorldPoseFormulation(constructor_params) {
     derived_accessor_ = derivedAccessor<WorldMotionAccessor>();
     CHECK_NOTNULL(derived_accessor_);
   }

@@ -558,12 +558,9 @@ bool HybridAccessor::getDynamicLandmarkImpl(
   return getDynamicLandmarkImpl(frame_id, tracklet_id, query);
 }
 
-HybridFormulation::HybridFormulation(const FormulationParams& params,
-                                     typename Map::Ptr map,
-                                     const NoiseModels& noise_models,
-                                     const Sensors& sensors,
-                                     const FormulationHooks& hooks)
-    : Base(params, map, noise_models, sensors, hooks) {
+HybridFormulation::HybridFormulation(
+    const ConstructorParams& constructor_params)
+    : Base(constructor_params) {
   auto camera = sensors_.camera;
   CHECK_NOTNULL(camera);
   rgbd_camera_ = camera->safeGetRGBDCamera();

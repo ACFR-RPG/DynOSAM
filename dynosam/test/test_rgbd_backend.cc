@@ -869,7 +869,7 @@ TEST(RegularBackendModule, testObjectCentric) {
 
   dyno::RegularBackendModule backend(backend_params,
                                      dyno_testing::makeDefaultCameraPtr(),
-                                     dyno::BackendType::TESTING_HYBRID_SD);
+                                     dyno::BackendType::HYBRID);
 
   gtsam::ISAM2Params isam2_params;
   isam2_params.evaluateNonlinearError = true;

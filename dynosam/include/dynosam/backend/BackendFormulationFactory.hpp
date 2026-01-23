@@ -26,9 +26,7 @@ class BackendFormulationFactory {
   virtual ~BackendFormulationFactory() = default;
 
   virtual FormulationVizWrapper<MAP> createFormulation(
-      const FormulationParams& formulation_params, std::shared_ptr<MAP> map,
-      const NoiseModels& noise_models, const Sensors& sensors,
-      const FormulationHooks& formulation_hooks) = 0;
+      const FormulationConstructorParams<MAP>& constructor_params) = 0;
 
   BackendType backendType() const { return backend_type_; }
 

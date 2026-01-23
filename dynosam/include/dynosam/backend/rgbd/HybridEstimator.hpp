@@ -1354,15 +1354,14 @@ class HybridFormulation : public Formulation<MapVision>,
  public:
   using Base = Formulation<MapVision>;
   using Base::AccessorTypePointer;
+  using Base::ConstructorParams;
   using Base::MapTraitsType;
   using Base::ObjectUpdateContextType;
   using Base::PointUpdateContextType;
 
   DYNO_POINTER_TYPEDEFS(HybridFormulation)
 
-  HybridFormulation(const FormulationParams& params, typename Map::Ptr map,
-                    const NoiseModels& noise_models, const Sensors& sensors,
-                    const FormulationHooks& hooks);
+  HybridFormulation(const ConstructorParams& constructor_params);
   virtual ~HybridFormulation() {}
 
   virtual void dynamicPointUpdateCallback(
@@ -1477,12 +1476,11 @@ class HybridFormulation : public Formulation<MapVision>,
 class HybridFormulationV1 : public HybridFormulation {
  public:
   using Base = HybridFormulation;
+  using Base::ConstructorParams;
   DYNO_POINTER_TYPEDEFS(HybridFormulationV1)
 
-  HybridFormulationV1(const FormulationParams& params, typename Map::Ptr map,
-                      const NoiseModels& noise_models, const Sensors& sensors,
-                      const FormulationHooks& hooks)
-      : Base(params, map, noise_models, sensors, hooks) {}
+  HybridFormulationV1(const ConstructorParams& constructor_params)
+      : Base(constructor_params) {}
 
   // SHOULD be in variation of Hybrid that is independant of the front-end
   //  leave in for now!
@@ -1509,12 +1507,8 @@ class RegularHybridFormulation : public HybridFormulationV1 {
  public:
   using Base = HybridFormulationV1;
 
-  RegularHybridFormulation(const FormulationParams& params,
-                           typename Map::Ptr map,
-                           const NoiseModels& noise_models,
-                           const Sensors& sensors,
-                           const FormulationHooks& hooks)
-      : Base(params, map, noise_models, sensors, hooks) {}
+  RegularHybridFormulation(const ConstructorParams& constructor_params)
+      : Base(constructor_params) {}
 
   // using previous (postUdpate) check when the last time an object was updated
   // (in the estimator) if more than 1 frame ago, create new keyframe - this

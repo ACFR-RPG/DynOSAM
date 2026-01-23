@@ -640,17 +640,10 @@ void RegularBackendModule::setFormulation(
   Sensors sensors;
   sensors.camera = camera_;
 
-  auto map = getMap();
-  auto formulation_hooks = createFormulationHooks();
-
-  CHECK_NOTNULL(factory);
-
-  // Formulation<RegularBackendModule::RGBDMap>::Ptr formulation =
-  //     BackendFactory::createFormulation(backend_type, formulation_params,
-  //                                       getMap(), noise_models_, sensors,
-  //                                       createFormulationHooks());
-  FormulationVizWrapper<RGBDMap> wrapper = factory->createFormulation(
-      formulation_params, map, noise_models_, sensors, formulation_hooks);
+  FormulationVizWrapper<RGBDMap> wrapper =
+      factory->createFormulation(Formulation<RGBDMap>::ConstructorParams{
+          formulation_params, getMap(), noise_models_, sensors,
+          createFormulationHooks()});
 
   formulation_ = wrapper.formulation;
   formulation_display_ = wrapper.display;

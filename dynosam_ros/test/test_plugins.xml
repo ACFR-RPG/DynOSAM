@@ -1,0 +1,5 @@
+<library path="test_dynosam_ros_plugins">
+  <class type="dyno_testing::TestFormulationFactoryPlugin" base_class_type="dyno::FormulationFactoryPlugin">
+    <description>Test formulation plugin factory with dummy formulation.</description>
+  </class>
+</library>

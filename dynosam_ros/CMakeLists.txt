@@ -33,6 +33,7 @@ find_package(dynosam REQUIRED)
 find_package(PCL REQUIRED conversions)
 find_package(rclpy REQUIRED)
 find_package(message_filters REQUIRED)
+find_package(pluginlib REQUIRED)
 
 
 
@@ -53,6 +54,7 @@ set(SRC_FILES
   src/Utils.cc
   src/DataProviderRos.cc
   src/OnlineDataProviderRos.cc
+  src/FormulationFactoryPlugin.cc
 
   src/displays/backend_displays/HybridBackendDisplay.cc
   src/displays/DisplaysCommon.cc
@@ -74,6 +76,7 @@ set(LINK_LIBS
   sensor_msgs::sensor_msgs_library
   tf2_ros::static_transform_broadcaster_node
   tf2_ros::tf2_ros
+  pluginlib::pluginlib
 
 )
 
@@ -103,6 +106,7 @@ set(TARGET_EXPORT_DEPS
   dynosam
   nav_msgs
   message_filters
+  pluginlib
 )
 
 
@@ -212,10 +216,29 @@ if(BUILD_TESTING)
   # find_package(ament_cmake_gtest REQUIRED)
   find_package(ament_cmake_gmock REQUIRED)
   find_package(ament_lint_auto REQUIRED)
-    find_package(ament_index_cpp REQUIRED)
+  find_package(ament_index_cpp REQUIRED)
 
 
   ament_lint_auto_find_test_dependencies()
+
+  # adding plugins into tests
+  # code taken from pluginlib CMakeLists.txt
+  # make plugins are separate lib
+  add_library(test_dynosam_ros_plugins SHARED ./test/formulation_plugins.cc)
+  target_include_directories(test_dynosam_ros_plugins PRIVATE
+    "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/test>")
+  target_link_libraries(test_dynosam_ros_plugins ${PROJECT_NAME} ${rclcpp_LIBRARIES})
+
+  install(
+    TARGETS test_dynosam_ros_plugins
+    EXPORT export_test_dynosam_ros_plugins
+    ARCHIVE DESTINATION lib
+    LIBRARY DESTINATION lib
+    RUNTIME DESTINATION bin
+  )
+
+  pluginlib_export_plugin_description_file(dynosam_ros test/test_plugins.xml)
+
 
   # Run all lint tests in package.xml except those listed above
   ament_lint_auto_find_test_dependencies()
@@ -224,14 +247,20 @@ if(BUILD_TESTING)
     test/test_ros_utils.cc
     test/test_adaptors.cc
     test/test_online_dataprovider_ros.cc
-)
-
-target_include_directories(${PROJECT_NAME}_test
-    PRIVATE
-     ${ament_index_cpp_INCLUDE_DIRS}
+    test/test_formulation_plugins.cc
   )
 
-target_link_libraries(${PROJECT_NAME}_test ${PROJECT_NAME} ${rclcpp_LIBRARIES} ${ament_index_cpp_TARGETS})
+
+  target_link_libraries(${PROJECT_NAME}_test
+    ${PROJECT_NAME}
+    ${rclcpp_LIBRARIES}
+    ${ament_index_cpp_TARGETS}
+    test_dynosam_ros_plugins
+  )
+
+  target_include_directories(${PROJECT_NAME}_test PRIVATE
+      ${ament_index_cpp_INCLUDE_DIRS}
+      "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/test>")
 
 
   install(TARGETS
