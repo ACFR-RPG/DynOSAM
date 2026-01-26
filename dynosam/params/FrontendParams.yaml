@@ -61,7 +61,7 @@ tracker_params:
   prefer_provided_optical_flow: false
   prefer_provided_object_detection: true
 
-  max_dynamic_features_per_frame: 200
+  max_dynamic_features_per_frame: 250
   min_distance_btw_tracked_and_detected_dynamic_features: 2
   max_dynamic_feature_age: 20
 

@@ -1200,9 +1200,12 @@ class OMDOldAllLoader {
         cv::Mat Rvec(3, 1, CV_64F);
 
         // assign r vector
-        Rvec.at<double>(0, 0) = ObjPose_tmp[5];
-        Rvec.at<double>(0, 1) = ObjPose_tmp[6];
-        Rvec.at<double>(0, 2) = ObjPose_tmp[7];
+        // Rvec.at<double>(0, 0) = ObjPose_tmp[5];
+        // Rvec.at<double>(0, 1) = ObjPose_tmp[6];
+        // Rvec.at<double>(0, 2) = ObjPose_tmp[7];
+        Rvec.at<double>(0) = ObjPose_tmp[5];
+        Rvec.at<double>(1) = ObjPose_tmp[6];
+        Rvec.at<double>(2) = ObjPose_tmp[7];
 
         // *******************************************************************
 
@@ -1211,18 +1214,24 @@ class OMDOldAllLoader {
                                        ObjPose_tmp[7] * ObjPose_tmp[7]);
 
         if (angle > 0) {
-          Rvec.at<double>(0, 0) = Rvec.at<double>(0, 0) / angle;
-          Rvec.at<double>(0, 1) = Rvec.at<double>(0, 1) / angle;
-          Rvec.at<double>(0, 2) = Rvec.at<double>(0, 2) / angle;
+          // Rvec.at<double>(0, 0) = Rvec.at<double>(0, 0) / angle;
+          // Rvec.at<double>(0, 1) = Rvec.at<double>(0, 1) / angle;
+          // Rvec.at<double>(0, 2) = Rvec.at<double>(0, 2) / angle;
+          Rvec.at<double>(0) = Rvec.at<double>(0) / angle;
+          Rvec.at<double>(1) = Rvec.at<double>(1) / angle;
+          Rvec.at<double>(2) = Rvec.at<double>(2) / angle;
         }
 
         const double s = std::sin(angle);
         const double c = std::cos(angle);
 
         const double v = 1 - c;
-        const double x = Rvec.at<double>(0, 0);
-        const double y = Rvec.at<double>(0, 1);
-        const double z = Rvec.at<double>(0, 2);
+        // const double x = Rvec.at<double>(0, 0);
+        // const double y = Rvec.at<double>(0, 1);
+        // const double z = Rvec.at<double>(0, 2);
+        const double x = Rvec.at<double>(0);
+        const double y = Rvec.at<double>(1);
+        const double z = Rvec.at<double>(2);
         const double xyv = x * y * v;
         const double yzv = y * z * v;
         const double xzv = x * z * v;

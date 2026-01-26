@@ -617,11 +617,6 @@ class HybridObjectMotionSRIF {
   bool needs_resetting_from_last_frame{false};
   bool was_reset_this_update{false};
 
-  // set when reset
-  // TODO: should also carry frame id info so we know what lkf is
-  gtsam::Pose3 L_lKF_;
-  Motion3ReferenceFrame H_W_lKF_KF_;
-
  public:
   HybridObjectMotionSRIF(const gtsam::Pose3& initial_state_H,
                          const gtsam::Pose3& L_e, const FrameId& frame_id_e,
@@ -721,6 +716,7 @@ class ObjectMotionSolverFilter : public ObjectMotionSolver,
 
   void fillHybridInfo(ObjectId object_id,
                       VisionImuPacket::ObjectTracks& object_track);
+  void markObjectAsLost(ObjectId object_id) { filters_.erase(object_id); }
 
  protected:
   bool solveImpl(Frame::Ptr frame_k, Frame::Ptr frame_k_1, ObjectId object_id,

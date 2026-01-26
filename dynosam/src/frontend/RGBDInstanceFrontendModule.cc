@@ -257,6 +257,16 @@ FrontendModule::SpinReturn RGBDInstanceFrontendModule::nominalSpin(
       motion_track_status_.at(object_id).tracking_status =
           ObjectTrackingStatus::Lost;
       objects_with_status_update.push_back(object_id);
+
+      // TODO: hack for now
+      if (FLAGS_use_object_motion_filtering) {
+        auto motion_filter =
+            std::dynamic_pointer_cast<ObjectMotionSolverFilter>(
+                object_motion_solver_);
+        CHECK_NOTNULL(motion_filter);
+        VLOG(5) << "Marking " << object_id << " as lost in filter";
+        motion_filter->markObjectAsLost(object_id);
+      }
     }
   }
 

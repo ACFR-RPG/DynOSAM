@@ -327,9 +327,9 @@ void RGBDOnlineProviderRos::subscribeImages() {
                                                      "image/depth"};
 
   MultiSyncConfig config;
-  config.queue_size = 20;
-  // config.subscriber_options.callback_group =
-  //     node_ref.create_callback_group(rclcpp::CallbackGroupType::Reentrant);
+  config.queue_size = 1000;
+  config.subscriber_options.callback_group =
+      node_ref.create_callback_group(rclcpp::CallbackGroupType::Reentrant);
 
   std::shared_ptr<MultiImageSync2> multi_image_sync =
       std::make_shared<MultiImageSync2>(node_ref, topics, config);

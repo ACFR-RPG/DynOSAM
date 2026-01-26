@@ -1541,6 +1541,8 @@ class HybridFormulationKeyFrame : public HybridFormulation {
   }
   const KeyFrameData& getAnchorKeyFrames() const { return key_frame_data_; }
 
+  ObjectPoseMap getInitialObjectPoses() const;
+
  protected:
   IntermediateMotionInfo getIntermediateMotionInfo(ObjectId object_id,
                                                    FrameId frame_id) override;

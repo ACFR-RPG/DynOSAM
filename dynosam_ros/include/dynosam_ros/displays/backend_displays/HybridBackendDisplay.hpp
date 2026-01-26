@@ -73,17 +73,13 @@ class HybridKeyFrameFormulationDisplay : public HybridModuleDisplayCommon {
  public:
   HybridKeyFrameFormulationDisplay(
       const DisplayParams& params, rclcpp::Node* node,
-      std::shared_ptr<HybridFormulationKeyFrame> module)
-      : HybridModuleDisplayCommon(
-            params, node, module->derivedAccessor<HybridAccessorCommon>()),
-        module_(CHECK_NOTNULL(module)) {
-    CHECK_NOTNULL(module);
-  }
+      std::shared_ptr<HybridFormulationKeyFrame> module);
 
   void spin(const BackendOutputPacket::ConstPtr& output) override;
 
  private:
   std::shared_ptr<HybridFormulationKeyFrame> module_;
+  MarkerArrayPub::SharedPtr initial_anchor_object_key_frame_pub_;
 };
 
 // TODO: in light of now having many Hybrid formulations we should template on
