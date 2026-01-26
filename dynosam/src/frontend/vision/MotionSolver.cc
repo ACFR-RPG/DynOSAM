@@ -1408,6 +1408,10 @@ HybridObjectMotionSRIF::HybridObjectMotionSRIF(
   CHECK(rgbd_camera_);
   stereo_calibration_ = rgbd_camera_->getFakeStereoCalib();
 
+  // TODO: for now set these first so that
+  // the getKeyFramedMotionReference() call in resetState gives valid frame ids
+  frame_id_e_ = frame_id_e;
+  frame_id_ = frame_id_e;
   resetState(L_e, frame_id_e);
 }
 
@@ -1696,6 +1700,9 @@ HybridObjectMotionSRIF::Result HybridObjectMotionSRIF::update(
 
 void HybridObjectMotionSRIF::resetState(const gtsam::Pose3& L_e,
                                         FrameId frame_id_e) {
+  L_lKF_ = L_e_;
+  H_W_lKF_KF_ = getKeyFramedMotionReference();
+
   // 2. Initialize SRIF State (R, d) from EKF State (W, P)
   // W_linearization_point_ is set to initial_state_W
   // The initial perturbation is 0, so the initial d_info_ is 0.
@@ -1822,10 +1829,6 @@ bool ObjectMotionSolverFilter::solveImpl(Frame::Ptr frame_k,
     if (object_resampled) {
       LOG(INFO) << object_id
                 << " retracked - resetting filter k=" << frame_k->getFrameId();
-      // new_or_reset_object = true;
-      // filter_needs_reset = true;
-      // gtsam::Pose3 keyframe_pose =
-      //     construct_initial_frame(frame_k_1, geometric_result.inliers);
       filter->needs_resetting_from_last_frame = true;
     } else if (filter->needs_resetting_from_last_frame) {
       LOG(INFO) << object_id << " needs retting from last frame! current k="
@@ -1842,39 +1845,13 @@ bool ObjectMotionSolverFilter::solveImpl(Frame::Ptr frame_k,
       new_or_reset_object = true;
     }
   }
-  // if (object_resampled && !object_new) {
-  //   LOG(INFO) << object_id
-  //             << " retracked - resetting filter k=" << frame_k->getFrameId();
-  //   // new_or_reset_object = true;
-  //   // filter_needs_reset = true;
-  //   // gtsam::Pose3 keyframe_pose =
-  //   //     construct_initial_frame(frame_k_1, geometric_result.inliers);
-
-  //   auto filter = filters_.at(object_id);
-  //   filter->needs_resetting_from_last_frame = true;
-  //   // filter->resetState(keyframe_pose, frame_k->getFrameId());
-  // }
-
   // becuuse we erase it if object new in previous!
   // not sure this is the best way to handle reappearing objects!
   if (!filters_.exists(object_id)) {
     new_or_reset_object = true;
-
-    // update new object tracking
-    // the tracking cannot do it (for now) as this is delayed one frame with the
-    // backend! frame_k->tracking_info_->dynamic_track.at(object_id).object_new
-    // = true;
-    // frame_k->tracking_info_->dynamic_track.at(object_id).object_resampled =
-    // true;
-
-    // gtsam::Vector3 noise;
-    // noise << 1.0, 1.0, 3.0;
-    // gtsam::Matrix33 R = noise.array().matrix().asDiagonal();
     gtsam::Matrix33 R = gtsam::Matrix33::Identity() * 1.0;
-
     // Initial State Covariance P (6x6)
     gtsam::Matrix66 P = gtsam::Matrix66::Identity() * 0.3;
-
     // Process Model noise (6x6)
     gtsam::Matrix66 Q = gtsam::Matrix66::Identity() * 0.2;
 
@@ -1884,14 +1861,6 @@ bool ObjectMotionSolverFilter::solveImpl(Frame::Ptr frame_k,
       return false;
     }
 
-    // frame_k->tracking_info_->dynamic_track.at(object_id).object_new = true;
-    // frame_k->tracking_info_->dynamic_track.at(object_id).object_resampled =
-    //     true;
-
-    // keyframe at k not k-1
-    // this means we drop the information at k-1 but due to the system design
-    // we cannot send k-1 and k to the backend
-    // and now the front-end and backend need to be synchronized
     gtsam::Pose3 keyframe_pose =
         construct_initial_frame(frame_k_1, geometric_result.inliers);
 
@@ -1927,14 +1896,6 @@ bool ObjectMotionSolverFilter::solveImpl(Frame::Ptr frame_k,
   //  as the motion should be identity!!!
   gtsam::Pose3 G_w_inv_pnp = geometric_result.best_result.inverse();
   gtsam::Pose3 H_w_km1_k_pnp = frame_k->getPose() * G_w_inv_pnp;
-  // predict with identity if mew
-  // if(new_or_reset_object) {
-  //   H_w_km1_k_pnp = gtsam::Pose3::Identity();
-  // }
-
-  // only estimate if new - otherwise motion is identity as this is the current
-  // keyframe!
-  //  if(!new_or_reset_object) {
 
   filter->predict(H_w_km1_k_pnp);
   {
@@ -1944,13 +1905,6 @@ bool ObjectMotionSolverFilter::solveImpl(Frame::Ptr frame_k,
     // filter->updateStereo(object_points, stereo_measurements,
     // frame_k->getPose());
   }
-  // }
-
-  // gtsam::Pose3 G_w;
-  // cv::Mat inliers_ransac;
-  // bool homography_result =
-  //     testing::poseFromPnP(object_points, image_points, K, G_w,
-  //     inliers_ransac);
 
   bool homography_result = false;
 
@@ -1982,45 +1936,6 @@ bool ObjectMotionSolverFilter::solveImpl(Frame::Ptr frame_k,
     // camera at frame_k->getPose()
     auto gtsam_camera = frame_k->getFrameCamera();
 
-    // calcuate reprojection error
-    // double inlier_error = 0, outlier_error = 0;
-    // int inlier_count = 0, outlier_count = 0;
-    // for(const AbsolutePoseCorrespondence& corr : dynamic_correspondences) {
-    //   gtsam::Point3 lmk_W_k_1 = corr.ref_;
-    //   gtsam::Point3 lmk_W_k = H_w * lmk_W_k_1;
-    //   Keypoint kp_k_measured = corr.cur_;
-
-    //   Keypoint kp_k_projected = gtsam_camera.project2(lmk_W_k);
-    //   double repr = (kp_k_measured - kp_k_projected).norm();
-
-    //   cv::Scalar colour;
-
-    //   auto it = std::find(geometric_result.inliers.begin(),
-    //   geometric_result.inliers.end(), corr.tracklet_id_); if(it !=
-    //   geometric_result.inliers.end()) {
-    //     //inlier
-    //     inlier_error += repr;
-    //     inlier_count++;
-    //     colour = Color::green().bgra();
-    //   }
-    //   else {
-    //     //outlier
-    //     outlier_error += repr;
-    //     outlier_count++;
-    //     colour = Color::red().bgra();
-    //   }
-    //   cv::arrowedLine(viz, utils::gtsamPointToCv(kp_k_measured),
-    //                   utils::gtsamPointToCv(kp_k_projected), colour, 1, 8, 0,
-    //                   0.1);
-    // cv::circle(viz, utils::gtsamPointToCv(kp_k_measured), 2, colour, -1);
-    // }
-
-    // LOG(INFO) << "Inlier repr " << inlier_error/(double)inlier_count <<
-    // " outlier rpr " << outlier_error/(double)outlier_count;
-
-    // cv::imshow("Inlier/Outlier", viz);
-    // cv::waitKey(0);
-
     Motion3SolverResult motion_result;
     motion_result.status = geometric_result.status;
     motion_result.inliers = geometric_result.inliers;
@@ -2050,6 +1965,11 @@ void ObjectMotionSolverFilter::fillHybridInfo(
   hybrid_info.H_W_KF_k = filter->getKeyFramedMotionReference();
   hybrid_info.L_W_KF = filter->getKeyFramePose();
   hybrid_info.was_reset = filter->resetThisUpdate();
+
+  if (hybrid_info.was_reset) {
+    hybrid_info.L_lKF = filter->L_lKF_;
+    hybrid_info.H_W_lKF_KF = filter->H_W_lKF_KF_;
+  }
 
   LOG(INFO) << "Making hybrid info for j=" << object_id << " with "
             << "motion KF: " << hybrid_info.H_W_KF_k.from()

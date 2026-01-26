@@ -617,6 +617,11 @@ class HybridObjectMotionSRIF {
   bool needs_resetting_from_last_frame{false};
   bool was_reset_this_update{false};
 
+  // set when reset
+  // TODO: should also carry frame id info so we know what lkf is
+  gtsam::Pose3 L_lKF_;
+  Motion3ReferenceFrame H_W_lKF_KF_;
+
  public:
   HybridObjectMotionSRIF(const gtsam::Pose3& initial_state_H,
                          const gtsam::Pose3& L_e, const FrameId& frame_id_e,

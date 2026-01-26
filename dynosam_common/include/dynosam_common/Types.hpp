@@ -250,8 +250,8 @@ struct MotionReferenceFrame : public ReferenceFrameValue<E> {
   using Style = MotionRepresentationStyle;
 
   MotionRepresentationStyle style_;
-  FrameId from_;
-  FrameId to_;
+  FrameId from_{0};
+  FrameId to_{0};
 
   inline FrameId from() const { return from_; }
   inline FrameId to() const { return to_; }
