@@ -52,21 +52,67 @@ namespace dyno {
 /// @brief Alias to a gtsam::PoseToPointFactor<gtsam::Pose3, Landmark>
 using PoseToPointFactor = gtsam::PoseToPointFactor<gtsam::Pose3, Landmark>;
 
-enum BackendType : int {
+// template<>
+// std::string to_string()
 
-  WCME = 0,             // world-centric motion estimator
-  WCPE = 1,             // world-centric pose estimator
-  HYBRID = 2,           // full-hybrid
-  PARALLEL_HYBRID = 3,  // associated to its own special class
-  // // the following are test formulations that were not specifcially part of a
-  // // paper but were used for (internal) development/research. they may not
-  // work
-  // // as intended and are included for posterity
-  // TESTING_HYBRID_SD = 4,  // (SD) structureless-decoupled
-  // TESTING_HYBRID_D = 5,   // (D) decoupled
-  // TESTING_HYBRID_S = 6,   // (S) structureless
-  // TESTING_HYBRID_SMF = 7  // (SFM) smart motion factor
+class IncorrectBackendTypeRequest : public DynosamException {
+ public:
+  IncorrectBackendTypeRequest(const std::string& requested_type_string,
+                              const std::string& actual_type_string,
+                              const std::string& actual_type_value)
+      : DynosamException("Requested backend was " + requested_type_string +
+                         " but actual type was " + actual_type_string +
+                         " with value " + actual_type_value) {}
 };
+
+class BackendType {
+ public:
+  /**
+   * @brief Internal backend formulations (or modules) that are provided
+   * directly as part of DynoSAM.
+   *
+   */
+  enum Internal : int {
+    //! World-Centric Motion Estimator
+    WCME = 0,
+    //! World-centric Pose Estimator
+    WCPE = 1,
+    //! Hybrid Estimator
+    HYBRID = 2,
+    //! Parallel-Hybrid method (associated to its own special class)
+    PARALLEL_HYBRID = 3
+  };
+
+  BackendType(int int_enum);
+  BackendType(const Internal& interal);
+  BackendType(const std::string& external);
+
+  bool isExternalType() const;
+  bool isInternalType() const;
+
+  const std::string& asExternalType() const;
+  BackendType::Internal asInternalType() const;
+
+  bool operator==(const BackendType::Internal& internal_type) const;
+  bool operator!=(const BackendType::Internal& internal_type) const;
+
+  bool operator==(const std::string& external_type) const;
+  bool operator!=(const std::string& external_type) const;
+
+  operator std::string() const;
+
+  friend std::ostream& operator<<(std::ostream& os,
+                                  const BackendType& backend_type);
+
+  friend std::ostream& operator<<(
+      std::ostream& os, const BackendType::Internal& internal_backend_type);
+
+ private:
+  std::variant<Internal, std::string> type_;
+};
+
+template <>
+std::string to_string(const BackendType::Internal& internal_backend_type);
 
 // TODO: this information is sort of duplicated when the ROS odometry messages
 // are constructed.

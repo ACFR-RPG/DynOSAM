@@ -1487,6 +1487,8 @@ class HybridFormulationV1 : public HybridFormulation {
   std::pair<FrameId, gtsam::Pose3> forceNewKeyFrame(FrameId frame_id,
                                                     ObjectId object_id);
 
+  virtual ErrorHandlingHooks getCustomErrorHooks() override;
+
  protected:
   IntermediateMotionInfo getIntermediateMotionInfo(ObjectId object_id,
                                                    FrameId frame_id) override;

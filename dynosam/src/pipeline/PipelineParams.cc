@@ -43,8 +43,26 @@ DEFINE_int32(
 DEFINE_int32(backend_updater_enum, 0,
              "Which BackendType the backend should use and should match an "
              "enum in whatever backend module type is loaded");
+DEFINE_string(backend_formulation_plugin_type, "",
+              "Exported name of the formulation plugin to load");
+
+// hacky solution to determine if backend_updater_enum or
+// backend_formulation_plugin_type should be used as we are still using gflags
+// for this!!
+DEFINE_bool(load_backend_formulations_as_internal, true,
+            "If false, then the backend will be loaded via a plugin.");
 
 namespace dyno {
+
+BackendType backendTypeFromGFlags(
+    bool load_backend_formulations_as_internal, int32_t backend_updater_enum,
+    const std::string& backend_formulation_plugin_type) {
+  if (load_backend_formulations_as_internal) {
+    return BackendType(backend_updater_enum);
+  } else {
+    return BackendType(backend_formulation_plugin_type);
+  }
+}
 
 void declare_config(DynoParams::PipelineParams& config) {
   using namespace config;
@@ -69,7 +87,10 @@ DynoParams::DynoParams(const std::string& params_folder_path) {
   imu_params_ =
       config::fromYamlFile<ImuParams>(params_folder_path + "ImuParams.yaml");
 
-  backend_type = static_cast<BackendType>(FLAGS_backend_updater_enum);
+  backend_type = backendTypeFromGFlags(
+      FLAGS_load_backend_formulations_as_internal, FLAGS_backend_updater_enum,
+      FLAGS_backend_formulation_plugin_type);
+  LOG(INFO) << "Constructed backend type " << backend_type;
 }
 
 void DynoParams::printAllParams(bool print_glog_params) const {

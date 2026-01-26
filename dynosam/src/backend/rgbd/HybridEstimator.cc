@@ -899,6 +899,18 @@ std::pair<FrameId, gtsam::Pose3> HybridFormulationV1::forceNewKeyFrame(
   return result;
 }
 
+ErrorHandlingHooks HybridFormulationV1::getCustomErrorHooks() {
+  ErrorHandlingHooks error_hooks;
+  error_hooks.handle_failed_object =
+      [&](const std::pair<FrameId, ObjectId>& failed_on_object) {
+        const auto [frame_id, object_id] = failed_on_object;
+        LOG(INFO) << "Is hybrid formulation with failed estimation at "
+                  << info_string(frame_id, object_id);
+        this->forceNewKeyFrame(frame_id, object_id);
+      };
+  return error_hooks;
+}
+
 HybridFormulation::IntermediateMotionInfo
 HybridFormulationV1::getIntermediateMotionInfo(ObjectId object_id,
                                                FrameId frame_id) {

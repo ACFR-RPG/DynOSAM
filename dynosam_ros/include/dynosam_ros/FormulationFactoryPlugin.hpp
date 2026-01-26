@@ -13,7 +13,9 @@ class FormulationFactoryPlugin {
   FormulationFactoryPlugin() {}
   virtual ~FormulationFactoryPlugin() = default;
 
-  // virtual std::optional<std::string> extendDynosamNamespace() const = 0;
+  virtual std::optional<std::string> extendDynosamNamespace() const {
+    return {};
+  };
 };
 
 template <class MAP>
@@ -22,7 +24,7 @@ class FormulationFactoryPluginT : public FormulationFactoryPlugin {
   FormulationFactoryPluginT() = default;
 
   virtual FormulationVizWrapper<MAP> create(
-      rclcpp::Node* node,
+      rclcpp::Node::SharedPtr node,
       const FormulationConstructorParams<MAP>& constructor_params) = 0;
 };
 
@@ -57,8 +59,9 @@ class FormulationFactoryPluginLoader {
 
   template <class MAP>
   FormulationVizWrapper<MAP> loadFormulation(
-      const std::string& formulation_class, rclcpp::Node* node,
+      const std::string& formulation_class, rclcpp::Node::SharedPtr node,
       const FormulationConstructorParams<MAP>& constructor_params) {
+    CHECK_NOTNULL(node);
     // load base class
     std::shared_ptr<FormulationFactoryPlugin> base_factory =
         loader_.createSharedInstance(formulation_class);
@@ -66,9 +69,14 @@ class FormulationFactoryPluginLoader {
       throw InvalidFormulationFactoryPlugin(formulation_class);
     }
 
-    // TODO: fix rclpp::Node* parsing problem (make ref?)
-    //  std::optional<std::string> sub_namespace =
-    //  base_factory->extendDynosamNamespace(); if()
+    rclcpp::Node::SharedPtr node_for_factory = node;
+    std::optional<std::string> sub_namespace =
+        base_factory->extendDynosamNamespace();
+    if (sub_namespace) {
+      VLOG(5) << "Extending namespace of node -> " << sub_namespace.value();
+      node_for_factory =
+          node_for_factory->create_sub_node(sub_namespace.value());
+    }
 
     // try casting to derived factory class with plugin so we can load the
     // formulation with the correct MAP type
@@ -82,7 +90,7 @@ class FormulationFactoryPluginLoader {
     }
 
     FormulationVizWrapper<MAP> formulation_wrapper =
-        derived_factory->create(node, constructor_params);
+        derived_factory->create(node_for_factory, constructor_params);
 
     CHECK(formulation_wrapper.formulation);
     LOG(INFO) << "Successfully loaded plugin " << formulation_class

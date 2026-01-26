@@ -49,8 +49,9 @@ struct has_backend_module_display<
  */
 class BackendModulePolicyRos {
  public:
-  BackendModulePolicyRos(const DisplayParams& params, rclcpp::Node* node)
-      : params_(params), node_(node) {
+  BackendModulePolicyRos(const DisplayParams& params,
+                         rclcpp::Node::SharedPtr node)
+      : params_(params), node_(CHECK_NOTNULL(node)) {
     VLOG(10) << "Creating BackendModulePolicyRos";
   }
 
@@ -62,7 +63,7 @@ class BackendModulePolicyRos {
    * If the module has an associated display type (derived from
    * BackendModuleDisplayRos) it will be constructed. The display type
    * (DisplayT) must have a constructor in the form DisplayT(const
-   * DisplayParams&, rclcpp::Node*, std::shared_ptr<T>).
+   * DisplayParams&, rclcpp::Node::SharedPtr, std::shared_ptr<T>).
    *
    *
    * @tparam T
@@ -84,7 +85,7 @@ class BackendModulePolicyRos {
   }
 
   template <typename MAP>
-  typename FormulationVizWrapper<MAP>::Ptr createExternalFormulation(
+  FormulationVizWrapper<MAP> createExternalFormulation(
       const std::string& formulation_class,
       const FormulationConstructorParams<MAP>& constructor_params) {
     return formulation_plugin_loader_.loadFormulation<MAP>(
@@ -93,7 +94,7 @@ class BackendModulePolicyRos {
 
  private:
   DisplayParams params_;
-  rclcpp::Node* node_;
+  rclcpp::Node::SharedPtr node_;
   FormulationFactoryPluginLoader formulation_plugin_loader_;
 };
 

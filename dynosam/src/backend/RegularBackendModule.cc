@@ -649,22 +649,8 @@ void RegularBackendModule::setFormulation(
   formulation_display_ = wrapper.display;
 
   CHECK_NOTNULL(formulation_);
-  // add additional error handling for incremental based on formulation
-  auto* hybrid_formulation =
-      static_cast<HybridFormulationV1*>(formulation_.get());
-  if (hybrid_formulation) {
-    LOG(INFO) << "Adding additional error hooks for Hybrid formulation";
-    error_hooks.handle_failed_object =
-        [&hybrid_formulation](
-            const std::pair<FrameId, ObjectId>& failed_on_object) {
-          CHECK_NOTNULL(hybrid_formulation);
-          const auto [frame_id, object_id] = failed_on_object;
-          LOG(INFO) << "Is hybrid formulation with failed estimation at "
-                    << info_string(frame_id, object_id);
-          hybrid_formulation->forceNewKeyFrame(frame_id, object_id);
-        };
-  }
-  error_hooks_ = error_hooks;
+  // load custom error handling hooks for the formulation
+  error_hooks_ = formulation_->getCustomErrorHooks();
 }
 
 BackendMetaData RegularBackendModule::createBackendMetadata() const {

@@ -24,7 +24,8 @@ static HybridAccessorCommon::Ptr hybridAccessorCommonHelper(
 
 class HybridModuleDisplayCommon : public BackendModuleDisplayRos {
  public:
-  HybridModuleDisplayCommon(const DisplayParams& params, rclcpp::Node* node,
+  HybridModuleDisplayCommon(const DisplayParams& params,
+                            rclcpp::Node::SharedPtr node,
                             HybridAccessorCommon::Ptr hybrid_accessor);
 
   void publishObjectBoundingBoxes(const BackendOutputPacket::ConstPtr& output);
@@ -40,7 +41,7 @@ class HybridModuleDisplayCommon : public BackendModuleDisplayRos {
 class ParalleHybridModuleDisplay : public HybridModuleDisplayCommon {
  public:
   ParalleHybridModuleDisplay(
-      const DisplayParams& params, rclcpp::Node* node,
+      const DisplayParams& params, rclcpp::Node::SharedPtr node,
       std::shared_ptr<ParallelHybridBackendModule> module)
       : HybridModuleDisplayCommon(
             params, node, hybridAccessorCommonHelper(module->getAccessor())),
@@ -55,7 +56,7 @@ class ParalleHybridModuleDisplay : public HybridModuleDisplayCommon {
 class RegularHybridFormulationDisplay : public HybridModuleDisplayCommon {
  public:
   RegularHybridFormulationDisplay(
-      const DisplayParams& params, rclcpp::Node* node,
+      const DisplayParams& params, rclcpp::Node::SharedPtr node,
       std::shared_ptr<RegularHybridFormulation> module)
       : HybridModuleDisplayCommon(
             params, node, module->derivedAccessor<HybridAccessorCommon>()),

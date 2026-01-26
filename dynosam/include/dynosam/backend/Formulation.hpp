@@ -433,8 +433,6 @@ class Formulation {
   virtual typename AccessorType::Ptr createAccessor(
       const SharedFormulationData& shared_data) const = 0;
 
-  // virtual void
-
  public:
   /**
    * @brief Get the map used by the formulation
@@ -494,6 +492,17 @@ class Formulation {
 
   inline std::string format(const gtsam::Key& key) const {
     return this->formatter()(key);
+  }
+
+  /**
+   * @brief Get custom error handling hooks for this formulation.
+   *
+   * By default returns empty hooks.
+   *
+   * @return ErrorHandlingHooks
+   */
+  virtual ErrorHandlingHooks getCustomErrorHooks() {
+    return ErrorHandlingHooks{};
   }
 
   /**

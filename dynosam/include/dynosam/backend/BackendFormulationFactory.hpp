@@ -11,7 +11,6 @@ struct FormulationVizWrapper {
   typename Formulation<MAP>::Ptr formulation;
   //! Display associated with the formulation. May be nullptr
   BackendModuleDisplay::Ptr display;
-
   inline bool hasDisplay() const { return display != nullptr; }
 };
 

@@ -45,7 +45,7 @@ class TestFormulationFactoryPlugin
   TestFormulationFactoryPlugin() = default;
 
   FormulationVizWrapper<MapVision> create(
-      rclcpp::Node* node,
+      rclcpp::Node::SharedPtr node,
       const FormulationConstructorParams<MapVision>& constructor_params)
       override {
     LOG(INFO) << "In TestFormulationFactoryPlugin";

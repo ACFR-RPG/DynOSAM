@@ -15,6 +15,13 @@
 --ending_frame=-1
 --use_backend=true
 
+# currently only for rgbd, indicates which updater the rgbd backend should use
+# i.e which formulation is used for solving
+# MotionInWorld = 0, LLWorld=1, Parallel-Hybrid=3
+--backend_updater_enum=2
+--backend_formulation_plugin_type="test"
+--load_backend_formulations_as_internal=true
+
 --save_frontend_json=false
 
 # load the frontend using a .bson file

@@ -8,7 +8,7 @@
 namespace dyno {
 
 HybridModuleDisplayCommon::HybridModuleDisplayCommon(
-    const DisplayParams& params, rclcpp::Node* node,
+    const DisplayParams& params, rclcpp::Node::SharedPtr node,
     HybridAccessorCommon::Ptr hybrid_accessor)
     : BackendModuleDisplayRos(params, node),
       hybrid_accessor_(CHECK_NOTNULL(hybrid_accessor)) {

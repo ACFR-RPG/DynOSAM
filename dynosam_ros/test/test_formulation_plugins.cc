@@ -15,7 +15,7 @@ TEST(FormulationPlugins, testLoadDummyPlugin) {
 
   auto node = std::make_shared<rclcpp::Node>("dyno_plugin");
   auto result = loader.loadFormulation<MapVision>(
-      "dyno_testing::TestFormulationFactoryPlugin", node.get(), params);
+      "dyno_testing::TestFormulationFactoryPlugin", node, params);
 
   auto formulation = result.formulation;
   EXPECT_TRUE(formulation != nullptr);

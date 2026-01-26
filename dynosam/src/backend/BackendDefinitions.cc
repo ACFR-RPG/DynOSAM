@@ -38,6 +38,103 @@
 
 namespace dyno {
 
+BackendType::BackendType(int int_enum)
+    : BackendType(static_cast<Internal>(int_enum)) {}
+BackendType::BackendType(const BackendType::Internal& interal)
+    : type_(interal) {
+  CHECK(!isExternalType());
+}
+BackendType::BackendType(const std::string& external) : type_(external) {
+  CHECK(isExternalType());
+}
+
+bool BackendType::isExternalType() const {
+  return std::holds_alternative<std::string>(type_);
+}
+
+bool BackendType::isInternalType() const {
+  return std::holds_alternative<BackendType::Internal>(type_);
+}
+
+const std::string& BackendType::asExternalType() const {
+  if (!isExternalType()) {
+    throw IncorrectBackendTypeRequest(
+        type_name<std::string>(), type_name<BackendType::Internal>(),
+        to_string(std::get<BackendType::Internal>(type_)));
+  }
+
+  return std::get<std::string>(type_);
+}
+
+BackendType::Internal BackendType::asInternalType() const {
+  if (isExternalType()) {
+    throw IncorrectBackendTypeRequest(type_name<BackendType::Internal>(),
+                                      type_name<std::string>(),
+                                      std::get<std::string>(type_));
+  }
+  return std::get<BackendType::Internal>(type_);
+}
+
+bool BackendType::operator==(const BackendType::Internal& internal_type) const {
+  if (!isExternalType()) {
+    return asInternalType() == internal_type;
+  }
+  return false;
+}
+
+bool BackendType::operator!=(const BackendType::Internal& internal_type) const {
+  return !(*this == internal_type);
+}
+
+bool BackendType::operator==(const std::string& external_type) const {
+  if (isExternalType()) {
+    return asExternalType() == external_type;
+  }
+  return false;
+}
+
+bool BackendType::operator!=(const std::string& external_type) const {
+  return !(*this == external_type);
+}
+
+BackendType::operator std::string() const {
+  std::stringstream ss;
+  if (isExternalType()) {
+    ss << asExternalType() << " (external type)";
+  } else {
+    ss << asInternalType() << " (internal type)";
+  }
+  return ss.str();
+}
+
+std::ostream& operator<<(std::ostream& os, const BackendType& backend_type) {
+  os << (std::string)backend_type;
+  return os;
+}
+
+std::ostream& operator<<(std::ostream& os,
+                         const BackendType::Internal& internal_backend_type) {
+  os << to_string(internal_backend_type);
+  return os;
+}
+
+template <>
+std::string to_string(const BackendType::Internal& internal_backend_type) {
+  switch (internal_backend_type) {
+    case BackendType::Internal::WCME:
+      return "WCME";
+    case BackendType::Internal::WCPE:
+      return "WCPE";
+    case BackendType::Internal::HYBRID:
+      return "HYBRID";
+    case BackendType::Internal::PARALLEL_HYBRID:
+      return "PARALLEL-HYBRID";
+    default:
+      return "UNKNOWN BackendType::Internal";
+      break;
+  }
+}
+
 bool ApplyFunctionalSymbol::operator()(gtsam::Key key) const {
   const gtsam::Symbol sym(key);
   switch (sym.chr()) {

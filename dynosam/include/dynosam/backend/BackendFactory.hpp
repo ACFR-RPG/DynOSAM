@@ -64,14 +64,28 @@ class IncorrectParallelHybridConstruction : public DynosamException {
  * ParallelHybridBackendModule which is a special backend) while a formulation
  * is derived from Formulation<MAP>.
  *
- * We also template the BackendFactory on a Policy class which must implement
+ * We also template the BackendFactory on a Policy class which
+ * allows interaction with an external interface allowing external displays
+ * and formulations to be defined.
+ *
+ * The policy must implement
  * createDisplay<T>(std::shared_ptr<T> module) ->
- * std::shared_ptr<BackendModuleDisplayRos> where T is a Formulation (except in
- * the Parallel-Hybrid case where it is the BackendModule itself) but can be
- * anything loaded by the BackendFactory. This allows module/formulation
- * specific displays to be written independantly from the class and injected
- * into the loader. If non null, this display will be called once per iteration
- * after the backend has spun.
+ * std::shared_ptr<BackendModuleDisplayRos>
+ *
+ * where T is a Formulation (except in the Parallel-Hybrid case where it is the
+ * BackendModule itself) but can be anything loaded by the BackendFactory. This
+ * allows module/formulation specific displays to be written independantly from
+ * the class and injected into the loader. If non null, this display will be
+ * called once per iteration after the backend has spun.
+ *
+ * The policy must also implement
+ *  template <typename MAP>FormulationVizWrapper<MAP> createExternalFormulation(
+ *     const std::string& formulation_class,
+ *     const FormulationConstructorParams<MAP>& constructor_params)
+ *
+ * Which allows an formulation defined externally to be injected into the
+ * RegularBackendModule. This is loaded when BackendType represents an external
+ * type.
  *
  * @tparam Policy
  * @tparam MAP
@@ -180,26 +194,36 @@ class BackendFactory
       return wrapper;
     };
 
-    if (this->backend_type_ == BackendType::PARALLEL_HYBRID) {
-      DYNO_THROW_MSG(IncorrectParallelHybridConstruction)
-          << "Cannot construct PARALLEL_HYBRID backend with a call to "
-             "BackendFactory::createFormulation"
-          << " Use BackendFactory::createModule instead!";
-      return wrapper;
-    } else if (this->backend_type_ == BackendType::WCME) {
-      wrapper = makeFormulationImpl(
-          std::make_shared<WorldMotionFormulation>(constructor_params));
+    if (this->backend_type_.isInternalType()) {
+      if (this->backend_type_ == BackendType::PARALLEL_HYBRID) {
+        DYNO_THROW_MSG(IncorrectParallelHybridConstruction)
+            << "Cannot construct PARALLEL_HYBRID backend with a call to "
+               "BackendFactory::createFormulation"
+            << " Use BackendFactory::createModule instead!";
+        return wrapper;
+      } else if (this->backend_type_ == BackendType::WCME) {
+        wrapper = makeFormulationImpl(
+            std::make_shared<WorldMotionFormulation>(constructor_params));
 
-    } else if (this->backend_type_ == BackendType::WCPE) {
-      wrapper = makeFormulationImpl(
-          std::make_shared<WorldPoseFormulation>(constructor_params));
+      } else if (this->backend_type_ == BackendType::WCPE) {
+        wrapper = makeFormulationImpl(
+            std::make_shared<WorldPoseFormulation>(constructor_params));
 
-    } else if (this->backend_type_ == BackendType::HYBRID) {
-      wrapper = makeFormulationImpl(
-          std::make_shared<RegularHybridFormulation>(constructor_params));
+      } else if (this->backend_type_ == BackendType::HYBRID) {
+        wrapper = makeFormulationImpl(
+            std::make_shared<RegularHybridFormulation>(constructor_params));
+      } else {
+        CHECK(false) << "Not implemented";
+        return wrapper;
+      }
+    } else if (this->backend_type_.isExternalType()) {
+      // call creation function defined by the policy
+      wrapper = this->createExternalFormulation(
+          this->backend_type_.asExternalType(), constructor_params);
     } else {
-      CHECK(false) << "Not implemented";
-      return wrapper;
+      DYNO_THROW_MSG(DynosamException) << "Cannot load backend formulation! "
+                                          "BackendType was not of known type!";
+      throw;
     }
 
     return wrapper;
@@ -208,21 +232,33 @@ class BackendFactory
  private:
 };
 
-struct NoVizPolicy {
+/**
+ * @brief Default policy which has no external creation capabilities
+ * i.e no display and no external formulation loading
+ *
+ */
+struct DefaultPolicy {
   template <typename Formulation>
   BackendModuleDisplay::Ptr createDisplay(std::shared_ptr<Formulation>) {
     VLOG(20) << "No display will be created for formulation "
              << type_name<Formulation>();
     return nullptr;
   }
+
+  template <typename MAP>
+  FormulationVizWrapper<MAP> createExternalFormulation(
+      const std::string&, const FormulationConstructorParams<MAP>&) {
+    LOG(ERROR) << "DefaultPolicy cannot create external formulations!";
+    return FormulationVizWrapper<MAP>{};
+  }
 };
 
 /// @brief a BackendFactory with a Policy that creates no additional displays
 template <typename MAP>
-using DefaultBackendFactory = BackendFactory<NoVizPolicy, MAP>;
+using DefaultBackendFactory = BackendFactory<DefaultPolicy, MAP>;
 
 /// @brief BackendModuleFactory templated on the correct map type and with the
-/// default (NoVizPolicy) policy
+/// default (DefaultPolicy) policy
 using DefaultRegularBackendModuleFactory =
     DefaultBackendFactory<RegularBackendModuleTraits::MapType>;
 
