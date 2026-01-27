@@ -53,6 +53,7 @@
 #include "dynosam/frontend/vision/Frame.hpp"
 #include "dynosam/frontend/vision/Vision-Definitions.hpp"
 #include "dynosam/frontend/vision/VisionTools.hpp"
+#include "dynosam_common/DynamicObjects.hpp"
 #include "dynosam_common/Types.hpp"
 
 // PnP (3d2d)
@@ -348,7 +349,7 @@ class ObjectMotionSolver {
 
   using Result = std::pair<ObjectMotionMap, ObjectPoseMap>;
 
-  Result solve(Frame::Ptr frame_k, Frame::Ptr frame_k_1);
+  virtual Result solve(Frame::Ptr frame_k, Frame::Ptr frame_k_1);
 
  protected:
   virtual bool solveImpl(Frame::Ptr frame_k, Frame::Ptr frame_k_1,
@@ -584,6 +585,12 @@ class ObjectMotionSolverFilter : public ObjectMotionSolver,
   ObjectMotionSolverFilter(const Params& params,
                            const CameraParams& camera_params);
 
+  Result solve(Frame::Ptr frame_k, Frame::Ptr frame_k_1) override;
+
+  ObjectTrackingStatus getTrackingStatus(ObjectId object_id) const {
+    return object_statuses_.at(object_id);
+  }
+
   void fillHybridInfo(ObjectId object_id,
                       VisionImuPacket::ObjectTracks& object_track);
   void markObjectAsLost(ObjectId object_id) { filters_.erase(object_id); }
@@ -611,6 +618,11 @@ class ObjectMotionSolverFilter : public ObjectMotionSolver,
 
  public:  // TODO: for testing!
   gtsam::FastMap<ObjectId, std::shared_ptr<HybridObjectMotionSRIF>> filters_;
+
+ private:
+  gtsam::FastMap<ObjectId, ObjectTrackingStatus> object_statuses_;
+  gtsam::FastMap<ObjectId, int> stable_frame_counts_;
+  gtsam::FastMap<ObjectId, ObjectKeyFrameStatus> object_keyframe_statuses_;
 };
 
 void declare_config(OpticalFlowAndPoseOptimizer::Params& config);

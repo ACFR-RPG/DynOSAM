@@ -57,6 +57,12 @@ enum class TrackingStatus {
   DISABLED
 };
 
+enum class ObjectKeyFrameStatus {
+  NonKeyFrame = 0,
+  RegularKeyFrame = 1,
+  AnchorKeyFrame = 2
+};
+
 template <>
 inline std::string to_string(const TrackingStatus& status) {
   std::string status_str = "";
@@ -79,6 +85,26 @@ inline std::string to_string(const TrackingStatus& status) {
     }
     case TrackingStatus::LOW_DISPARITY: {
       status_str = "LOW_DISPARITY";
+      break;
+    }
+  }
+  return status_str;
+}
+
+template <>
+inline std::string to_string(const ObjectKeyFrameStatus& status) {
+  std::string status_str = "";
+  switch (status) {
+    case ObjectKeyFrameStatus::NonKeyFrame: {
+      status_str = "NonKeyFrame";
+      break;
+    }
+    case ObjectKeyFrameStatus::RegularKeyFrame: {
+      status_str = "RegularKeyFrame";
+      break;
+    }
+    case ObjectKeyFrameStatus::AnchorKeyFrame: {
+      status_str = "AnchorKeyFrame";
       break;
     }
   }

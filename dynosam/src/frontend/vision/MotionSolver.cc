@@ -46,7 +46,9 @@
 #include "dynosam/factors/HybridFormulationFactors.hpp"
 #include "dynosam/factors/LandmarkMotionTernaryFactor.hpp"
 #include "dynosam/factors/Pose3FlowProjectionFactor.h"
+#include "dynosam/frontend/Frontend-Definitions.hpp"
 #include "dynosam/frontend/vision/VisionTools.hpp"
+#include "dynosam_common/DynamicObjects.hpp"
 #include "dynosam_common/Flags.hpp"
 #include "dynosam_common/Types.hpp"
 #include "dynosam_common/utils/Accumulator.hpp"
@@ -1093,10 +1095,70 @@ ObjectMotionSolverFilter::ObjectMotionSolverFilter(
                       camera_params),
       filter_params_(params) {}
 
+ObjectMotionSolver::Result ObjectMotionSolverFilter::solve(
+    Frame::Ptr frame_k, Frame::Ptr frame_k_1) {
+  // Handle lost objects: objects in filters_ but not in current frame's
+  // object_observations_
+  std::set<ObjectId> current_objects;
+  for (const auto& [obj_id, _] : frame_k->object_observations_) {
+    current_objects.insert(obj_id);
+  }
+  for (const auto& [obj_id, _] : filters_) {
+    if (current_objects.find(obj_id) == current_objects.end()) {
+      object_statuses_[obj_id] = ObjectTrackingStatus::Lost;
+      filters_.erase(obj_id);
+      LOG(INFO) << "Object " << obj_id << " marked as Lost at frame "
+                << frame_k->getFrameId();
+    }
+    // TODO: no re-tracked logic!!
+
+    object_keyframe_statuses_[obj_id] = ObjectKeyFrameStatus::NonKeyFrame;
+  }
+
+  // Call base solve
+  return ObjectMotionSolver::solve(frame_k, frame_k_1);
+}
+
 bool ObjectMotionSolverFilter::solveImpl(Frame::Ptr frame_k,
                                          Frame::Ptr frame_k_1,
                                          ObjectId object_id,
                                          MotionEstimateMap& motion_estimates) {
+  // Initialize or update tracking status
+  bool is_new = !filters_.exists(object_id);
+  bool is_resampled = std::find(frame_k->retracked_objects_.begin(),
+                                frame_k->retracked_objects_.end(),
+                                object_id) != frame_k->retracked_objects_.end();
+
+  const ObjectTrackingStatus& previous_tracking_state =
+      object_statuses_[object_id];
+
+  // if (is_new) {
+  //   object_statuses_[object_id] = ObjectTrackingStatus::New;
+  //   stable_frame_counts_[object_id] = 0;
+  //   LOG(INFO) << "Object " << object_id << " initialized as New at frame " <<
+  //   frame_k->getFrameId();
+  //   // dont update keyframe status to anchor yet - only do so if object
+  //   successfully created
+  // } else if (is_retracked) {
+
+  //   //if re-tracked and previous state was well tracked - set keyframe status
+  //   to regular if(previous_tracking_state ==
+  //   ObjectTrackingStatus::WellTracked){
+  //     LOG(INFO) << "Object " << object_id << " re-tracked at frame " <<
+  //     frame_k->getFrameId() << ", but WellTracked maintained, set to
+  //     RegularKeyFrame"; object_keyframe_statuses_[object_id] =
+  //     ObjectKeyFrameStatus::RegularKeyFrame;
+  //   }
+  //   else {
+  //     //keep object as poorly tracked if was poorly tracked before
+  //     object_statuses_[object_id] = ObjectTrackingStatus::PoorlyTracked;
+  //     stable_frame_counts_[object_id] = 0;
+  //     LOG(INFO) << "Object " << object_id << " re-tracked at frame " <<
+  //     frame_k->getFrameId() << ", set to PoorlyTracked";
+
+  //   }
+  // }
+
   AbsolutePoseCorrespondences dynamic_correspondences;
   // get the corresponding feature pairs
   bool corr_result = frame_k->getDynamicCorrespondences(
@@ -1125,7 +1187,35 @@ bool ObjectMotionSolverFilter::solveImpl(Frame::Ptr frame_k,
   Pose3SolverResult geometric_result =
       EgoMotionSolver::geometricOutlierRejection3d2d(dynamic_correspondences);
 
-  auto gtsam_camera_calibration = frame_k->camera_->getGtsamCalibration();
+  const size_t num_inliers =
+      geometric_result.inliers.size();  // after outlier rejection
+
+  if (is_new) {
+    object_statuses_[object_id] = ObjectTrackingStatus::New;
+    stable_frame_counts_[object_id] = 0;
+    LOG(INFO) << "Object " << object_id << " initialized as New at frame "
+              << frame_k->getFrameId();
+    // dont update keyframe status to anchor yet - only do so if object
+    // successfully created
+  } else if (is_resampled) {
+    if (num_inliers > 4) {
+      object_statuses_[object_id] = ObjectTrackingStatus::WellTracked;
+      // stable_frame_counts_[object_id] = 0;
+      LOG(INFO) << "Object " << object_id
+                << "resampled & WellTracked  at frame " << frame_k->getFrameId()
+                << ", set to RegularKeyFrame";
+      object_keyframe_statuses_[object_id] =
+          ObjectKeyFrameStatus::RegularKeyFrame;
+    } else {
+      // keep object as poorly tracked if was poorly tracked before
+      object_statuses_[object_id] = ObjectTrackingStatus::WellTracked;
+      object_keyframe_statuses_[object_id] =
+          ObjectKeyFrameStatus::AnchorKeyFrame;
+      LOG(INFO) << "Object " << object_id
+                << "resampled & WellTracked  at frame " << frame_k->getFrameId()
+                << ", set to AnchorKeyFrame";
+    }
+  }
 
   auto construct_initial_frame =
       [](const Frame::Ptr frame, const TrackletIds& tracklets) -> gtsam::Pose3 {
@@ -1148,33 +1238,13 @@ bool ObjectMotionSolverFilter::solveImpl(Frame::Ptr frame_k,
     return gtsam::Pose3(gtsam::Rot3::Identity(), initial_object_frame);
   };
 
-  //# if retracked - reset filter (HACk)
-  // what happens when re-track - initial point values are wrong (this is maybe
-  // the case when we loos all points!) what about in the OMD case? we get a
-  // bunch more points but now linearization of points is wrong!? WOW okay this
-  // fixed all the things!!!!!
-  // TODO: repeated information in the FeatureTrackingInfo (which one to use!!)
-  auto it = std::find(frame_k->retracked_objects_.begin(),
-                      frame_k->retracked_objects_.end(), object_id);
-
-  // TODO: refine complex logic!
-  const bool object_resampled = it != frame_k->retracked_objects_.end();
-  const bool object_new = !filters_.exists(object_id);
-
-  // TODO: object is new is not getting set!!! (this should be for when the
-  // object is re-tracked too!!!)
-  //  maybe somehow its in the previous frame!!?
-  //  this is becuase when an object is new it just has sampled points and no
-  //  tracked points and therefore no points go to the backend and therefore we
-  //  do not update it!! therefore the ObjectTrack object wont exist!!
-
   bool new_or_reset_object = false;
   bool filter_needs_reset = false;
   // bool new_object = false;
   // bool object_reset = false;
-  if (!object_new) {
+  if (!is_new) {
     auto filter = filters_.at(object_id);
-    filter->was_reset_this_update = false;
+    // filter->was_reset_this_update = false;
     // if (object_resampled) {
     //   LOG(INFO) << object_id
     //             << " retracked - resetting filter k=" <<
@@ -1212,19 +1282,23 @@ bool ObjectMotionSolverFilter::solveImpl(Frame::Ptr frame_k,
       CHECK_EQ(filter->getFrameId(), frame_k_1->getFrameId());
       filter->resetState(pose, frame_k_1->getFrameId());
       new_or_reset_object = true;
+      // stable_frame_counts_[object_id] = 0;
+      LOG(INFO) << "Object " << object_id << " reset, stable count reset to 0";
     }
 
-    if (object_resampled) {
+    if (is_resampled) {
       LOG(INFO) << object_id
                 << " retracked - resetting filter k=" << frame_k->getFrameId();
+
       // with current logic will trigger a keyframe at k
-      filter->was_reset_this_update = true;
+      // filter->was_reset_this_update = true;
       filter->needs_resetting_from_last_frame = true;
+      LOG(INFO) << "Object " << object_id << " resampled, marked for reset";
     }
   }
   // becuuse we erase it if object new in previous!
   // not sure this is the best way to handle reappearing objects!
-  if (object_new) {
+  if (is_new) {
     new_or_reset_object = true;
     gtsam::Matrix33 R = gtsam::Matrix33::Identity() * 1.0;
     // Initial State Covariance P (6x6)
@@ -1235,6 +1309,12 @@ bool ObjectMotionSolverFilter::solveImpl(Frame::Ptr frame_k,
     if (geometric_result.inliers.size() < 4) {
       LOG(WARNING) << "Could not make initial frame for object " << object_id
                    << " as not enough inlier tracks!";
+      // TODO: set tracking state to POOR!
+      //  stable_frame_counts_[object_id] = 0;
+      object_statuses_[object_id] = ObjectTrackingStatus::PoorlyTracked;
+      // LOG(INFO) << "Object " << object_id << " in PoorlyTracked state at
+      // frame " << frame_k->getFrameId() << " with stable count " <<
+      // stable_frame_counts_[object_id];
       return false;
     }
 
@@ -1247,7 +1327,12 @@ bool ObjectMotionSolverFilter::solveImpl(Frame::Ptr frame_k,
                                     frame_k_1->getFrameId(), P, Q, R,
                                     frame_k_1->getCamera(), kHuberKFilter));
     // tell frontend to make a new kf
-    filters_.at(object_id)->was_reset_this_update = true;
+    // filters_.at(object_id)->was_reset_this_update = true;
+
+    object_keyframe_statuses_[object_id] = ObjectKeyFrameStatus::AnchorKeyFrame;
+
+    LOG(INFO) << "Created new filter for object " << object_id << " at frame "
+              << frame_k->getFrameId();
   }
   auto filter = filters_.at(object_id).get();
 
@@ -1270,14 +1355,9 @@ bool ObjectMotionSolverFilter::solveImpl(Frame::Ptr frame_k,
   gtsam::Pose3 G_w_inv_pnp = geometric_result.best_result.inverse();
   gtsam::Pose3 H_w_km1_k_pnp = frame_k->getPose() * G_w_inv_pnp;
 
-  filter->predict(H_w_km1_k_pnp);
-  {
-    filter->predictAndUpdate(H_w_km1_k_pnp, frame_k, geometric_result.inliers,
-                             2);
-  }
+  filter->predictAndUpdate(H_w_km1_k_pnp, frame_k, geometric_result.inliers, 2);
 
-  bool homography_result = false;
-
+  bool return_result = false;
   if (geometric_result.status == TrackingStatus::VALID) {
     TrackletIds refined_inlier_tracklets = geometric_result.inliers;
     // if (homography_result) {
@@ -1306,10 +1386,60 @@ bool ObjectMotionSolverFilter::solveImpl(Frame::Ptr frame_k,
 
     frame_k->dynamic_features_.markOutliers(motion_result.outliers);
     motion_estimates.insert({object_id, motion_result.best_result});
-    return true;
+
+    // Update stable frames and status
+    // stable_frame_counts_[object_id]++;
+    // if (stable_frame_counts_[object_id] >= 2 && object_statuses_[object_id]
+    // != ObjectTrackingStatus::Tracked) {
+    //   object_statuses_[object_id] = ObjectTrackingStatus::Tracked;
+    //   LOG(INFO) << "Object " << object_id << " promoted to Tracked at frame "
+    //   << frame_k->getFrameId() << " with stable count " <<
+    //   stable_frame_counts_[object_id];
+    // }
+
+    // MUST be >= 2 so we only need two good frames in a row to be well tracked
+    // if more, need to be careful when the object filter "reset" so that we
+    // dont send a motion which an updated reference frame before telling the
+    // backend to also update its reference frame!
+    //  stable_frame_counts_[object_id]++;
+    //  if (stable_frame_counts_[object_id] >= 2) {
+    //    if (object_statuses_[object_id] != ObjectTrackingStatus::WellTracked)
+    //    {
+    //      object_statuses_[object_id] = ObjectTrackingStatus::WellTracked;
+    //      LOG(INFO) << "Object " << object_id << " promoted to WellTracked at
+    //      frame " << frame_k->getFrameId() << " with stable count " <<
+    //      stable_frame_counts_[object_id];
+    //    }
+    //  } else {
+    //    //not new and not poorly tracked already
+    //    if (object_statuses_[object_id] != ObjectTrackingStatus::New &&
+    //    object_statuses_[object_id] != ObjectTrackingStatus::PoorlyTracked) {
+    //      object_statuses_[object_id] = ObjectTrackingStatus::PoorlyTracked;
+    //      LOG(INFO) << "Object " << object_id << " in PoorlyTracked state at
+    //      frame " << frame_k->getFrameId() << " with stable count " <<
+    //      stable_frame_counts_[object_id];
+    //    }
+    //  }
+
+    return_result = true;
   } else {
-    return false;
+    // TODO: not sure lost is the right logic here!
+    object_statuses_[object_id] = ObjectTrackingStatus::Lost;
+    // stable_frame_counts_[object_id] = 0;
+    LOG(INFO) << "Object " << object_id << " set to Lost at frame "
+              << frame_k->getFrameId();
+    // so tha
+    filters_.erase(object_id);
+    return_result = false;
+    ;
   }
+
+  LOG(INFO) << "Object " << object_id
+            << " final status: " << to_string(object_statuses_[object_id])
+            << ", stable frames: " << stable_frame_counts_[object_id]
+            << " with keyframe status: "
+            << to_string(object_keyframe_statuses_[object_id]);
+  return return_result;
 }
 
 void ObjectMotionSolverFilter::fillHybridInfo(
@@ -1317,16 +1447,40 @@ void ObjectMotionSolverFilter::fillHybridInfo(
   CHECK(filters_.exists(object_id));
   auto filter = filters_.at(object_id);
 
+  CHECK(object_keyframe_statuses_.exists(object_id));
+  auto object_kf_status = object_keyframe_statuses_.at(object_id);
+
+  CHECK(object_statuses_.exists(object_id));
+  auto object_motion_track_status = object_statuses_.at(object_id);
+
   VisionImuPacket::ObjectTracks::HybridInfo hybrid_info;
   hybrid_info.H_W_KF_k = filter->getKeyFramedMotionReference();
   hybrid_info.L_W_KF = filter->getKeyFramePose();
   hybrid_info.L_W_k = filter->getPose();
-  hybrid_info.was_reset = filter->resetThisUpdate();
+  // hybrid_info.was_reset = filter->resetThisUpdate();
+
+  object_track.regular_keyframe = false;
+  object_track.anchor_keyframe = false;
+
+  object_track.motion_track_status = object_motion_track_status;
+
+  if (object_track.motion_track_status == ObjectTrackingStatus::New ||
+      object_track.motion_track_status == ObjectTrackingStatus::WellTracked) {
+    if (object_kf_status == ObjectKeyFrameStatus::AnchorKeyFrame) {
+      object_track.regular_keyframe = true;
+      object_track.anchor_keyframe = true;
+    } else if (object_kf_status == ObjectKeyFrameStatus::RegularKeyFrame) {
+      object_track.regular_keyframe = true;
+    }
+  }
 
   LOG(INFO) << "Making hybrid info for j=" << object_id << " with "
             << "motion KF: " << hybrid_info.H_W_KF_k.from()
-            << " to: " << hybrid_info.H_W_KF_k.to() << " and filter was reset "
-            << std::boolalpha << hybrid_info.was_reset;
+            << " to: " << hybrid_info.H_W_KF_k.to()
+            << " track status: " << to_string(object_motion_track_status)
+            << " with regular kf " << std::boolalpha
+            << object_track.regular_keyframe << " anchor kf "
+            << object_track.anchor_keyframe;
 
   object_track.hybrid_info = hybrid_info;
 }

@@ -226,60 +226,60 @@ FrontendModule::SpinReturn RGBDInstanceFrontendModule::nominalSpin(
   // object motion solver status (ie. new, re-appeared from the perspetive of
   // the motion estimation)
   // TODO: use TemporalObjectMetaData!!
-  const auto& previously_motion_tracked = previous_frame->motion_estimates_;
-  ObjectIds objects_with_status_update;
-  for (const auto& [object_id, _] : motion_estimates_k) {
-    objects_with_status_update.push_back(object_id);
-    // well tracked in the the previous frame
-    if (previously_motion_tracked.exists(object_id)) {
-      CHECK(motion_track_status_.exists(object_id));
-      motion_track_status_.at(object_id).tracking_status =
-          ObjectTrackingStatus::Tracked;
-    } else {
-      // has been seen before (TODO: at what frame!?)
-      if (motion_track_status_.exists(object_id)) {
-        motion_track_status_.at(object_id).tracking_status =
-            ObjectTrackingStatus::ReTracked;
-      } else {
-        // has not been seen before!
-        motion_track_status_[object_id].tracking_status =
-            ObjectTrackingStatus::New;
-      }
-    }
-  }
+  // const auto& previously_motion_tracked = previous_frame->motion_estimates_;
+  // ObjectIds objects_with_status_update;
+  // for (const auto& [object_id, _] : motion_estimates_k) {
+  //   objects_with_status_update.push_back(object_id);
+  //   // well tracked in the the previous frame
+  //   if (previously_motion_tracked.exists(object_id)) {
+  //     CHECK(motion_track_status_.exists(object_id));
+  //     motion_track_status_.at(object_id).tracking_status =
+  //         ObjectTrackingStatus::Tracked;
+  //   } else {
+  //     // has been seen before (TODO: at what frame!?)
+  //     if (motion_track_status_.exists(object_id)) {
+  //       motion_track_status_.at(object_id).tracking_status =
+  //           ObjectTrackingStatus::ReTracked;
+  //     } else {
+  //       // has not been seen before!
+  //       motion_track_status_[object_id].tracking_status =
+  //           ObjectTrackingStatus::New;
+  //     }
+  //   }
+  // }
 
   // find those in the previous frame not in the current frame (ie. those LOST)
-  ObjectIds objects_lost;
-  for (const auto& [object_id, _] : previously_motion_tracked) {
-    // not in current motion track set
-    if (!motion_estimates_k.exists(object_id)) {
-      CHECK(motion_track_status_.exists(object_id));
-      motion_track_status_.at(object_id).tracking_status =
-          ObjectTrackingStatus::Lost;
-      objects_with_status_update.push_back(object_id);
+  // ObjectIds objects_lost;
+  // for (const auto& [object_id, _] : previously_motion_tracked) {
+  //   // not in current motion track set
+  //   if (!motion_estimates_k.exists(object_id)) {
+  //     CHECK(motion_track_status_.exists(object_id));
+  //     motion_track_status_.at(object_id).tracking_status =
+  //         ObjectTrackingStatus::Lost;
+  //     objects_with_status_update.push_back(object_id);
 
-      // TODO: hack for now
-      if (FLAGS_use_object_motion_filtering) {
-        auto motion_filter =
-            std::dynamic_pointer_cast<ObjectMotionSolverFilter>(
-                object_motion_solver_);
-        CHECK_NOTNULL(motion_filter);
-        VLOG(5) << "Marking " << object_id << " as lost in filter";
-        motion_filter->markObjectAsLost(object_id);
-      }
-    }
-  }
+  //     // TODO: hack for now
+  //     if (FLAGS_use_object_motion_filtering) {
+  //       auto motion_filter =
+  //           std::dynamic_pointer_cast<ObjectMotionSolverFilter>(
+  //               object_motion_solver_);
+  //       CHECK_NOTNULL(motion_filter);
+  //       VLOG(5) << "Marking " << object_id << " as lost in filter";
+  //       motion_filter->markObjectAsLost(object_id);
+  //     }
+  //   }
+  // }
 
-  if (!objects_with_status_update.empty()) {
-    std::stringstream ss;
-    ss << "After tracking k=" << input->getFrameId()
-       << " motion tracking status:\n";
-    for (const auto object_id : objects_with_status_update) {
-      ss << "j: " << object_id << " "
-         << to_string(motion_track_status_.at(object_id).tracking_status);
-    }
-    LOG(INFO) << ss.str();
-  }
+  // if (!objects_with_status_update.empty()) {
+  //   std::stringstream ss;
+  //   ss << "After tracking k=" << input->getFrameId()
+  //      << " motion tracking status:\n";
+  //   for (const auto object_id : objects_with_status_update) {
+  //     ss << "j: " << object_id << " "
+  //        << to_string(motion_track_status_.at(object_id).tracking_status);
+  //   }
+  //   // LOG(INFO) << ss.str();
+  // }
 
   const FeatureTrackerInfo& tracker_info = *frame->getTrackingInfo();
   const FeatureTrackerInfo& tracker_info_prev =
@@ -584,45 +584,13 @@ void RGBDInstanceFrontendModule::fillOutputPacketWithTracks(
     object_track.L_W_k = L_W_k;
 
     if (FLAGS_use_object_motion_filtering) {
-      VLOG(10) << "Adding hybrid info for object tracks";
+      // VLOG(10) << "Adding hybrid info for object tracks";
       auto motion_filter = std::dynamic_pointer_cast<ObjectMotionSolverFilter>(
           object_motion_solver_);
       CHECK_NOTNULL(motion_filter);
       // currently also sets object track is_keyframe
       motion_filter->fillHybridInfo(object_id, object_track);
       CHECK(object_track.hybrid_info);
-
-      // TODO: or maybe use the object tracking status map to set the OKF
-      // instead of the filter only issue is that that filter gets reset and
-      // this is sort of a keyframe, or at least there is a strong relationship
-      // there!!
-      CHECK(motion_track_status_.exists(object_id));
-      auto object_motion_track_status =
-          motion_track_status_.at(object_id).tracking_status;
-
-      // some sanity check logic!
-      // should this also be in the backend!?
-      if (object_motion_track_status == ObjectTrackingStatus::ReTracked ||
-          object_motion_track_status == ObjectTrackingStatus::New) {
-        // if the object is new or re-tracked it should have also been reset!!
-        CHECK(object_track.hybrid_info->was_reset);
-        object_track.anchor_keyframe = true;
-        object_track.regular_keyframe = true;
-      }
-
-      // the object tracker can be reset while tracking status is still ok!
-      if (object_track.hybrid_info->was_reset) {
-        object_track.regular_keyframe = true;
-      }
-
-      // TODO: check that status is not lost?
-
-      // unsure about relationship between keyframing
-      // definitely required as the backend needs to know if the anchor frame
-      // (ie. its KF has moved!)
-      object_track.motion_track_status = object_motion_track_status;
-
-      CHECK_EQ(object_track.hybrid_info->H_W_KF_k.to(), frame_id);
     }
 
     object_tracks.insert2(object_id, object_track);

@@ -1158,6 +1158,44 @@ gtsam::Pose3 HybridFormulationV1::calculateObjectCentroid(
   return center;
 }
 
+void HybridFormulationKeyFrame::dynamicPointUpdateCallback(
+    const PointUpdateContextType& context, UpdateObservationResult& result,
+    gtsam::Values& new_values, gtsam::NonlinearFactorGraph& new_factors) {
+  const auto lmk_node = context.lmk_node;
+  const auto frame_node_k_1 = context.frame_node_k_1;
+  const auto frame_node_k = context.frame_node_k;
+  const auto object_id = context.getObjectId();
+  const auto frame_id_k_1 = frame_node_k_1->getId();
+  const auto frame_id_k = frame_node_k->getId();
+
+  const auto frame_range = front_end_keyframes_.find(object_id, frame_id_k_1);
+
+  // not keyframe
+  if (!frame_range) {
+    return;
+  }
+
+  auto theta_accessor = this->accessorFromTheta();
+
+  gtsam::Key point_key = this->makeDynamicKey(context.getTrackletId());
+
+  const gtsam::Key object_motion_key_k =
+      frame_node_k->makeObjectMotionKey(object_id);
+  const gtsam::Key object_motion_key_k_1 =
+      frame_node_k_1->makeObjectMotionKey(object_id);
+
+  // // gtsam::Pose3 L_e;
+  // const IntermediateMotionInfo keyframe_info =
+  //     getIntermediateMotionInfo(object_id, frame_id_k_1);
+
+  LOG(INFO) << "dynamicPointUpdateCallback " << frame_id_k << " with "
+            << context.is_starting_motion_frame;
+}
+
+void HybridFormulationKeyFrame::objectUpdateContext(
+    const ObjectUpdateContextType& context, UpdateObservationResult& result,
+    gtsam::Values& new_values, gtsam::NonlinearFactorGraph& new_factors) {}
+
 HybridFormulationKeyFrame::IntermediateMotionInfo
 HybridFormulationKeyFrame::getIntermediateMotionInfo(ObjectId object_id,
                                                      FrameId frame_id) {
@@ -1179,6 +1217,8 @@ void HybridFormulationKeyFrame::preUpdate(const PreUpdateData& data) {
   const VisionImuPacket& input = *data.input;
   const ObjectTrackMap& object_tracks = input.objectTracks();
   for (const auto& [object_id, object_track] : object_tracks) {
+    // LOG(INFO) << "Processing object track for object "
+    //           << info_string(frame_id, object_id);
     CHECK(object_track.hybrid_info)
         << "Hybrid info must be provided as part of the object track for this "
            "formulation!";
@@ -1194,6 +1234,11 @@ void HybridFormulationKeyFrame::preUpdate(const PreUpdateData& data) {
 
     if (anchor_keyframe) CHECK(regular_keyframe);
 
+    LOG(INFO) << "Processing object track: " << info_string(frame_id, object_id)
+              << " keyframe status: anchor_keyframe=" << anchor_keyframe
+              << " regular_keyframe=" << regular_keyframe << " tracking_status="
+              << to_string(object_motion_tracking_status);
+
     const bool is_only_regular_keyframe = regular_keyframe && !anchor_keyframe;
 
     // estimated keyframe motioa from the frontend
@@ -1201,8 +1246,10 @@ void HybridFormulationKeyFrame::preUpdate(const PreUpdateData& data) {
     initial_H_W_RKF_k_.insert22(object_id, H_W_RKF_k.to(), H_W_RKF_k);
 
     if (!anchor_keyframe && !regular_keyframe) {
-      return;
+      continue;
     }
+
+    CHECK(object_motion_tracking_status != ObjectTrackingStatus::PoorlyTracked);
 
     // TODO: we initalie the new KF with the pose provided from the frontend
     // for consistency. This is fine when the object observations are continuous
@@ -1230,7 +1277,8 @@ void HybridFormulationKeyFrame::preUpdate(const PreUpdateData& data) {
                 << info_string(H_W_RKF_k.from(), object_id) << " with motion "
                 << H_W_RKF_k.from() << " -> " << H_W_RKF_k.to();
       initial_H_W_AKF_k_.insert22(object_id, H_W_RKF_k.to(), H_W_RKF_k);
-    } else if (object_motion_tracking_status == ObjectTrackingStatus::Tracked) {
+    } else if (object_motion_tracking_status ==
+               ObjectTrackingStatus::WellTracked) {
       CHECK(regular_keyframe);
       CHECK(!anchor_keyframe);
 

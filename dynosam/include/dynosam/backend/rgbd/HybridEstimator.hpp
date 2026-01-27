@@ -1521,11 +1521,12 @@ class HybridFormulationKeyFrame : public HybridFormulation {
   void dynamicPointUpdateCallback(
       const PointUpdateContextType& context, UpdateObservationResult& result,
       gtsam::Values& new_values,
-      gtsam::NonlinearFactorGraph& new_factors) override {}
+      gtsam::NonlinearFactorGraph& new_factors) override;
+
   void objectUpdateContext(const ObjectUpdateContextType& context,
                            UpdateObservationResult& result,
                            gtsam::Values& new_values,
-                           gtsam::NonlinearFactorGraph& new_factors) override {}
+                           gtsam::NonlinearFactorGraph& new_factors) override;
 
   /**
    * @brief Uses input data to update interal data-structures with initial

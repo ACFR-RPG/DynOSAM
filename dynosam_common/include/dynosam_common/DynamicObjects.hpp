@@ -41,9 +41,10 @@ namespace dyno {
 // right now detected by frontend
 enum class ObjectTrackingStatus {
   New = 0,
-  Tracked = 1,
-  ReTracked = 2,
-  Lost = 3
+  WellTracked = 1,
+  PoorlyTracked = 2,
+  ReTracked = 3,
+  Lost = 4
 };
 
 // kind of repeatition of TrackingStatus (which is not really used anywhere!!!)
@@ -62,8 +63,12 @@ inline std::string to_string(const ObjectTrackingStatus& status) {
       status_str = "New";
       break;
     }
-    case ObjectTrackingStatus::Tracked: {
-      status_str = "Tracked";
+    case ObjectTrackingStatus::WellTracked: {
+      status_str = "WellTracked";
+      break;
+    }
+    case ObjectTrackingStatus::PoorlyTracked: {
+      status_str = "PoorlyTracked";
       break;
     }
     case ObjectTrackingStatus::ReTracked: {
