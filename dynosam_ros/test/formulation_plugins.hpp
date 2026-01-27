@@ -1,10 +1,12 @@
 #pragma once
 
 #include "dynosam_ros/FormulationFactoryPlugin.hpp"
+#include "dynosam_ros/displays/BackendDisplayRos.hpp"
 
 using namespace dyno;
 
 namespace dyno_testing {
+
 class DummyFormulation : public Formulation<MapVision> {
  public:
   using Base = Formulation<MapVision>;
@@ -39,18 +41,38 @@ class DummyFormulation : public Formulation<MapVision> {
   std::string loggerPrefix() const override { return "dummy_formulation"; }
 };
 
+class DummyFormulationDisplay : public BackendModuleDisplayRos {
+ public:
+  DummyFormulationDisplay(const DisplayParams& params,
+                          rclcpp::Node::SharedPtr node,
+                          std::shared_ptr<DummyFormulation> formulation)
+      : BackendModuleDisplayRos(params, node), formulation_(formulation) {}
+
+  inline void spin(const BackendOutputPacket::ConstPtr& output) override {}
+
+ private:
+  std::shared_ptr<DummyFormulation> formulation_;
+};
+
 class TestFormulationFactoryPlugin
     : public FormulationFactoryPluginT<MapVision> {
  public:
   TestFormulationFactoryPlugin() = default;
 
   FormulationVizWrapper<MapVision> create(
-      rclcpp::Node::SharedPtr node,
+      rclcpp::Node::SharedPtr node, const DisplayParams& display_params,
       const FormulationConstructorParams<MapVision>& constructor_params)
       override {
     LOG(INFO) << "In TestFormulationFactoryPlugin";
     FormulationVizWrapper<MapVision> result;
-    result.formulation = std::make_shared<DummyFormulation>(constructor_params);
+
+    auto dummy_formulation =
+        std::make_shared<DummyFormulation>(constructor_params);
+
+    result.formulation = dummy_formulation;
+    result.display = std::make_shared<DummyFormulationDisplay>(
+        display_params, node, dummy_formulation);
+
     return result;
   }
 };

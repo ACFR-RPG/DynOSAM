@@ -4,27 +4,53 @@
 #include <pluginlib/class_loader.hpp>
 
 #include "dynosam/backend/BackendFormulationFactory.hpp"
+#include "dynosam_ros/Display-Definitions.hpp"
 #include "rclcpp/node.hpp"
 
 namespace dyno {
 
+/**
+ * @brief Formulation (Factory) Plugin base class.
+ *
+ * Instead of loading the plugin directly we dynamic load a factory which
+ * is responsible for creating a single formulation and associated display.
+ *
+ * Once loaded the formulation will be injected into the RegularBackendModule.
+ *
+ * Since all formulations are depending on a templated MAP type, we use
+ * this (non-templated) base class to act as the base interface before
+ * dynamically casting to the derived plugin type FormulationFactoryPluginT.
+ *
+ */
 class FormulationFactoryPlugin {
  public:
   FormulationFactoryPlugin() {}
   virtual ~FormulationFactoryPlugin() = default;
 
+  /**
+   * @brief Allows extending of the ROS namespace
+   *
+   * @return std::optional<std::string>
+   */
   virtual std::optional<std::string> extendDynosamNamespace() const {
     return {};
   };
 };
 
+/**
+ * @brief Derived Formulation (Factory) Plugin base class from which all
+ * formulation plugins must inherit and includes the pure virtual create
+ * function which actually constructs the formulation and associated display.
+ *
+ * @tparam MAP
+ */
 template <class MAP>
 class FormulationFactoryPluginT : public FormulationFactoryPlugin {
  public:
   FormulationFactoryPluginT() = default;
 
   virtual FormulationVizWrapper<MAP> create(
-      rclcpp::Node::SharedPtr node,
+      rclcpp::Node::SharedPtr node, const DisplayParams& display_params,
       const FormulationConstructorParams<MAP>& constructor_params) = 0;
 };
 
@@ -53,20 +79,39 @@ class InvalidDerivedFormulationFactoryPlugin : public DynosamException {
                          derived_factory_name + "!") {}
 };
 
+/**
+ * @brief Loads a formulation and display from the dynamically loaded
+ * formulation factory.
+ *
+ *
+ */
 class FormulationFactoryPluginLoader {
  public:
   FormulationFactoryPluginLoader();
 
+  /**
+   * @brief Loads a formulation by dynamically loading the requested factory
+   * plugin
+   *
+   * @tparam MAP type the formulation is expected to be templated on
+   * @param lookup_name const std::string& The name of the class to load.
+   * @param node rclcpp::Node::SharedPtr Node to be passed to the formulation
+   * plgin
+   * @param constructor_params const FormulationConstructorParams<MAP> Generic
+   * paramters for the formulation.
+   * @return FormulationVizWrapper<MAP>
+   */
   template <class MAP>
   FormulationVizWrapper<MAP> loadFormulation(
-      const std::string& formulation_class, rclcpp::Node::SharedPtr node,
+      const std::string& lookup_name, rclcpp::Node::SharedPtr node,
+      const DisplayParams& display_params,
       const FormulationConstructorParams<MAP>& constructor_params) {
     CHECK_NOTNULL(node);
     // load base class
     std::shared_ptr<FormulationFactoryPlugin> base_factory =
-        loader_.createSharedInstance(formulation_class);
+        loader_.createSharedInstance(lookup_name);
     if (!base_factory) {
-      throw InvalidFormulationFactoryPlugin(formulation_class);
+      throw InvalidFormulationFactoryPlugin(lookup_name);
     }
 
     rclcpp::Node::SharedPtr node_for_factory = node;
@@ -86,14 +131,14 @@ class FormulationFactoryPluginLoader {
 
     if (!derived_factory) {
       throw InvalidDerivedFormulationFactoryPlugin(
-          type_name<DerivedFactory>(), type_name<MAP>(), formulation_class);
+          type_name<DerivedFactory>(), type_name<MAP>(), lookup_name);
     }
 
-    FormulationVizWrapper<MAP> formulation_wrapper =
-        derived_factory->create(node_for_factory, constructor_params);
+    FormulationVizWrapper<MAP> formulation_wrapper = derived_factory->create(
+        node_for_factory, display_params, constructor_params);
 
     CHECK(formulation_wrapper.formulation);
-    LOG(INFO) << "Successfully loaded plugin " << formulation_class
+    LOG(INFO) << "Successfully loaded plugin " << lookup_name
               << " with associated formulation: "
               << formulation_wrapper.formulation->getFullyQualifiedName();
 

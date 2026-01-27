@@ -29,4 +29,55 @@
  */
 
 #include "dynosam_opt/IncrementalOptimization.hpp"
-namespace dyno {}  // namespace dyno
+namespace dyno {
+
+ErrorHandlingHooks getDefaultILSErrorHandlingHooks(
+    const ErrorHandlingHooks::OnFailedObject& on_failed_object) {
+  ErrorHandlingHooks error_hooks;
+  error_hooks.handle_ils_exception = [](const gtsam::Values& current_values,
+                                        gtsam::Key problematic_key) {
+    ErrorHandlingHooks::HandleILSResult ils_handle_result;
+    // a little gross that I need to set this up in this function
+    gtsam::NonlinearFactorGraph& prior_factors = ils_handle_result.pior_factors;
+    auto& failed_on_object = ils_handle_result.failed_objects;
+
+    ApplyFunctionalSymbol afs;
+    afs.cameraPose([&prior_factors, &current_values](FrameId,
+                                                     const gtsam::Symbol& sym) {
+         const gtsam::Key& key = sym;
+         gtsam::Pose3 pose = current_values.at<gtsam::Pose3>(key);
+         gtsam::Vector6 sigmas;
+         sigmas.head<3>().setConstant(0.001);  // rotation
+         sigmas.tail<3>().setConstant(0.01);   // translation
+         gtsam::SharedNoiseModel noise =
+             gtsam::noiseModel::Diagonal::Sigmas(sigmas);
+         prior_factors.emplace_shared<gtsam::PriorFactor<gtsam::Pose3>>(
+             key, pose, noise);
+       })
+        .objectMotion(
+            [&prior_factors, &current_values, &failed_on_object](
+                FrameId k, ObjectId j, const gtsam::LabeledSymbol& sym) {
+              const gtsam::Key& key = sym;
+              gtsam::Pose3 pose = current_values.at<gtsam::Pose3>(key);
+              gtsam::Vector6 sigmas;
+              sigmas.head<3>().setConstant(0.001);  // rotation
+              sigmas.tail<3>().setConstant(0.01);   // translation
+              gtsam::SharedNoiseModel noise =
+                  gtsam::noiseModel::Diagonal::Sigmas(sigmas);
+              prior_factors.emplace_shared<gtsam::PriorFactor<gtsam::Pose3>>(
+                  key, pose, noise);
+              failed_on_object.push_back(std::make_pair(k, j));
+            })
+        .
+        operator()(problematic_key);
+    return ils_handle_result;
+  };
+
+  if (on_failed_object) {
+    error_hooks.handle_failed_object = on_failed_object;
+  }
+
+  return error_hooks;
+}
+
+}  // namespace dyno

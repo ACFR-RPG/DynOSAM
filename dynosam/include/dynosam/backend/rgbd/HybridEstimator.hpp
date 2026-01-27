@@ -1487,6 +1487,13 @@ class HybridFormulationV1 : public HybridFormulation {
   std::pair<FrameId, gtsam::Pose3> forceNewKeyFrame(FrameId frame_id,
                                                     ObjectId object_id);
 
+  /**
+   * @brief Override custom error hooks.
+   *
+   * Creates handling hooks with default ILS and custom on failed object hook.
+   *
+   * @return ErrorHandlingHooks
+   */
   virtual ErrorHandlingHooks getCustomErrorHooks() override;
 
  protected:

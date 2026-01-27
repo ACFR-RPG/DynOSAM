@@ -325,6 +325,13 @@ This script forwards all arguments to the test executable. This allows GFLAGS to
 ```
 run dynosam_ros run_dynosam_gtest.py --package=dynosam_ros --gtest_filter=TestConcepts*
 ```
+## 4.6 Backend Plugins
+
+We provide the functionality to write new formulations for DynoSAM via a __plugin__ system.
+
+Plugins are dynamically loadable classes that are loaded from a runtime library (i.e. shared object, dynamically linked library). Plugins allow for extending/modifying the backend behavior of DynoSAM without needing to modify the base source code.
+
+See this [ROS2 plugin tutorial](https://docs.ros.org/en/foxy/Tutorials/Beginner-Client-Libraries/Pluginlib.html) to become more familar with plugins as a concept and our [PLUGIN readme](./docs/media/PLUGINS.md) for information on how to use the plugin system.
 
 
 # 5. 📊 Output & Metrics

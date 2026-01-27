@@ -900,15 +900,17 @@ std::pair<FrameId, gtsam::Pose3> HybridFormulationV1::forceNewKeyFrame(
 }
 
 ErrorHandlingHooks HybridFormulationV1::getCustomErrorHooks() {
-  ErrorHandlingHooks error_hooks;
-  error_hooks.handle_failed_object =
+  // base error hooks set "handle ILS exceptions"
+  auto handle_failed_object =
       [&](const std::pair<FrameId, ObjectId>& failed_on_object) {
         const auto [frame_id, object_id] = failed_on_object;
         LOG(INFO) << "Is hybrid formulation with failed estimation at "
                   << info_string(frame_id, object_id);
         this->forceNewKeyFrame(frame_id, object_id);
       };
-  return error_hooks;
+
+  // make error handling hooks with default ILS and custom on failed object hook
+  return getDefaultILSErrorHandlingHooks(handle_failed_object);
 }
 
 HybridFormulation::IntermediateMotionInfo

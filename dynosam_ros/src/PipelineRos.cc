@@ -40,7 +40,7 @@
 #include "dynosam/pipeline/PipelineHooks.hpp"
 #include "dynosam/pipeline/PipelineParams.hpp"
 #include "dynosam/visualizer/OpenCVFrontendDisplay.hpp"
-#include "dynosam_ros/BackendDisplayPolicyRos.hpp"
+#include "dynosam_ros/BackendPolicyRos.hpp"
 #include "dynosam_ros/Display-Definitions.hpp"
 #include "dynosam_ros/OnlineDataProviderRos.hpp"
 #include "dynosam_ros/RosUtils.hpp"

@@ -150,4 +150,51 @@ inline gtsam::Key ObjectPoseSymbol(ObjectId object_label, FrameId frame_id) {
   return L(label, static_cast<std::uint64_t>(frame_id));
 }
 
+/**
+ * @brief Helper class that allows functional callbacks to be triggered based on
+ * the type of gtsam::Key provided, where the key should refer to a valid type
+ * within the DynoSAM ecosystem.
+ *
+ * These include the symbols defined by CameraPoseSymbol, StaticLandmarkSymbol,
+ * DynamicLandmarkSymbol, ObjectMotionSymbol and ObjectPoseSymbol.
+ *
+ * Callbacks can be registered to the class and then the operator will trigger
+ * the callback based on the type, extracting and providing associated
+ * meta-data.
+ *
+ * Not all callbacks for all symbols need to be registered.
+ *
+ */
+class ApplyFunctionalSymbol {
+ public:
+  using CameraPoseFunc = std::function<void(FrameId, const gtsam::Symbol&)>;
+  using ObjectMotionFunc =
+      std::function<void(FrameId, ObjectId, const gtsam::LabeledSymbol&)>;
+  using ObjectPoseFunc =
+      std::function<void(FrameId, ObjectId, const gtsam::LabeledSymbol&)>;
+  using StaticLmkFunc = std::function<void(TrackletId, const gtsam::Symbol&)>;
+  using DynamicLmkFunc =
+      std::function<void(TrackletId, const DynamicPointSymbol&)>;
+
+  ApplyFunctionalSymbol() = default;
+  virtual ~ApplyFunctionalSymbol() = default;
+
+  bool operator()(gtsam::Key key) const;
+
+  void reset();
+
+  ApplyFunctionalSymbol& cameraPose(const CameraPoseFunc&);
+  ApplyFunctionalSymbol& objectMotion(const ObjectMotionFunc&);
+  ApplyFunctionalSymbol& objectPose(const ObjectPoseFunc&);
+  ApplyFunctionalSymbol& staticLandmark(const StaticLmkFunc&);
+  ApplyFunctionalSymbol& dynamicLandmark(const DynamicLmkFunc&);
+
+ protected:
+  CameraPoseFunc pose_func_;
+  ObjectMotionFunc object_motion_func_;
+  ObjectPoseFunc object_pose_func_;
+  StaticLmkFunc static_lmk_func_;
+  DynamicLmkFunc dynamic_lmk_func_;
+};
+
 }  // namespace dyno

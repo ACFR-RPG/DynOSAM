@@ -497,12 +497,13 @@ class Formulation {
   /**
    * @brief Get custom error handling hooks for this formulation.
    *
-   * By default returns empty hooks.
+   * By default returns getDefaultILSErrorHandlingHooks();
+   * Only sets error handling for ILS not for on failed object.
    *
    * @return ErrorHandlingHooks
    */
   virtual ErrorHandlingHooks getCustomErrorHooks() {
-    return ErrorHandlingHooks{};
+    return getDefaultILSErrorHandlingHooks();
   }
 
   /**

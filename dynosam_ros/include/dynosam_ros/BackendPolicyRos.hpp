@@ -49,9 +49,9 @@ struct has_backend_module_display<
  */
 class BackendModulePolicyRos {
  public:
-  BackendModulePolicyRos(const DisplayParams& params,
+  BackendModulePolicyRos(const DisplayParams& display_params,
                          rclcpp::Node::SharedPtr node)
-      : params_(params), node_(CHECK_NOTNULL(node)) {
+      : display_params_(display_params), node_(CHECK_NOTNULL(node)) {
     VLOG(10) << "Creating BackendModulePolicyRos";
   }
 
@@ -79,7 +79,7 @@ class BackendModulePolicyRos {
       using DisplayT = typename BackendModuleDisplayTraits<T>::type;
       VLOG(10) << "Found additional ROS display " << type_name<DisplayT>()
                << "for module " << type_name<T>();
-      return std::make_shared<DisplayT>(params_, node_, module);
+      return std::make_shared<DisplayT>(display_params_, node_, module);
     }
     return nullptr;
   }
@@ -89,11 +89,11 @@ class BackendModulePolicyRos {
       const std::string& formulation_class,
       const FormulationConstructorParams<MAP>& constructor_params) {
     return formulation_plugin_loader_.loadFormulation<MAP>(
-        formulation_class, node_, constructor_params);
+        formulation_class, node_, display_params_, constructor_params);
   }
 
  private:
-  DisplayParams params_;
+  DisplayParams display_params_;
   rclcpp::Node::SharedPtr node_;
   FormulationFactoryPluginLoader formulation_plugin_loader_;
 };

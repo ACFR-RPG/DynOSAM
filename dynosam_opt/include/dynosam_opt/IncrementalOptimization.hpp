@@ -309,6 +309,23 @@ struct ErrorHandlingHooks {
   OnFailedObject handle_failed_object;
 };
 
+/**
+ * @brief Get default error handling object for Indeterminate Linear System
+ * (ILS) exception.
+ *
+ * Adds simple error handling for ILS
+ * excecptions where small priors are added to camera pose and object motion
+ * values.
+ *
+ * If ErrorHandlingHooks::OnFailedObject provided, additionally sets the
+ * ErrorHandlingHooks#handle_failed_object hook, otherwise empty.
+ *
+ * @param on_failed_object
+ * @return ErrorHandlingHooks
+ */
+ErrorHandlingHooks getDefaultILSErrorHandlingHooks(
+    const ErrorHandlingHooks::OnFailedObject& on_failed_object = nullptr);
+
 template <typename SMOOTHER>
 class IncrementalInterface {
  public:
