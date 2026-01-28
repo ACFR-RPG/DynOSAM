@@ -118,7 +118,6 @@ RegularBackendModule::~RegularBackendModule() {
 RegularBackendModule::SpinReturn RegularBackendModule::boostrapSpinImpl(
     VisionImuPacket::ConstPtr input) {
   const FrameId frame_k = input->frameId();
-  // const FrameId kf_id = input->kf_id;
   const Timestamp timestamp = input->timestamp();
   CHECK_EQ(spin_state_.frame_id, frame_k);
   LOG(INFO) << "Running backend kf " << frame_k;
@@ -657,20 +656,22 @@ void RegularBackendModule::setFormulation(
 
   CHECK_NOTNULL(formulation_);
   // add additional error handling for incremental based on formulation
-  auto* hybrid_formulation =
-      static_cast<HybridFormulationV1*>(formulation_.get());
-  if (hybrid_formulation) {
-    LOG(INFO) << "Adding additional error hooks for Hybrid formulation";
-    error_hooks.handle_failed_object =
-        [&hybrid_formulation](
-            const std::pair<FrameId, ObjectId>& failed_on_object) {
-          CHECK_NOTNULL(hybrid_formulation);
-          const auto [frame_id, object_id] = failed_on_object;
-          LOG(INFO) << "Is hybrid formulation with failed estimation at "
-                    << info_string(frame_id, object_id);
-          hybrid_formulation->forceNewKeyFrame(frame_id, object_id);
-        };
-  }
+  // TODO: removed for KF testing
+  // should eventually merge with the add custom hooks function (I think this is
+  // in jm/plugins) auto* hybrid_formulation =
+  //     static_cast<HybridFormulationV1*>(formulation_.get());
+  // if (hybrid_formulation) {
+  //   LOG(INFO) << "Adding additional error hooks for Hybrid formulation";
+  //   error_hooks.handle_failed_object =
+  //       [&hybrid_formulation](
+  //           const std::pair<FrameId, ObjectId>& failed_on_object) {
+  //         CHECK_NOTNULL(hybrid_formulation);
+  //         const auto [frame_id, object_id] = failed_on_object;
+  //         LOG(INFO) << "Is hybrid formulation with failed estimation at "
+  //                   << info_string(frame_id, object_id);
+  //         hybrid_formulation->forceNewKeyFrame(frame_id, object_id);
+  //       };
+  // }
   error_hooks_ = error_hooks;
 }
 

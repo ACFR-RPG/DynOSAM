@@ -49,6 +49,7 @@ BackendModule::BackendModule(const BackendParams& params,
   // need to manage this
   // TODO: this logic is exactly the same as in FrontendModule - functionalise!!
   registerInputCallback([=](BackendInputPacket::ConstPtr input) {
+    CHECK(input->isKeyFrame());
     if (input->groundTruthPacket())
       shared_module_info.updateGroundTruthPacket(input->frameId(),
                                                  *input->groundTruthPacket());

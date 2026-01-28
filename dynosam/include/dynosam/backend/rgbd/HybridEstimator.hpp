@@ -1508,6 +1508,10 @@ class HybridFormulationV1 : public HybridFormulation {
 class HybridFormulationKeyFrame : public HybridFormulation {
  public:
   using Base = HybridFormulation;
+  using Base::MapTraitsType;
+  using ObjectNodePtr = typename MapTraitsType::ObjectNodePtr;
+  using LandmarkNodePtr = typename MapTraitsType::LandmarkNodePtr;
+  using FrameNodePtr = typename MapTraitsType::FrameNodePtr;
 
   DYNO_POINTER_TYPEDEFS(HybridFormulationKeyFrame)
 
@@ -1518,15 +1522,10 @@ class HybridFormulationKeyFrame : public HybridFormulation {
                             const FormulationHooks& hooks)
       : Base(params, map, noise_models, sensors, hooks) {}
 
-  void dynamicPointUpdateCallback(
-      const PointUpdateContextType& context, UpdateObservationResult& result,
-      gtsam::Values& new_values,
-      gtsam::NonlinearFactorGraph& new_factors) override;
-
-  void objectUpdateContext(const ObjectUpdateContextType& context,
-                           UpdateObservationResult& result,
-                           gtsam::Values& new_values,
-                           gtsam::NonlinearFactorGraph& new_factors) override;
+  UpdateObservationResult updateDynamicObservations(
+      FrameId frame_id_k, gtsam::Values& new_values,
+      gtsam::NonlinearFactorGraph& new_factors,
+      const UpdateObservationParams& update_params) override;
 
   /**
    * @brief Uses input data to update interal data-structures with initial
@@ -1544,10 +1543,45 @@ class HybridFormulationKeyFrame : public HybridFormulation {
 
   ObjectPoseMap getInitialObjectPoses() const;
 
+ private:
+  struct Context {
+    ObjectNodePtr object_node;
+    FrameNodePtr frame_node;
+    gtsam::Pose3 X_k_measured;
+    //! When an update starts only a subset of the factors are provided to the
+    //! update This value indicates the factor slot offset (ie the total graph
+    //! size before any update)
+    Slot starting_factor_slot = -1;
+
+    inline ObjectId getObjectId() const { return object_node->object_id; }
+    inline FrameId getFrameId() const { return frame_node->frame_id; }
+  };
+
+  void updateObject(const Context& context, UpdateObservationResult& result,
+                    gtsam::Values& new_values,
+                    gtsam::NonlinearFactorGraph& new_factors);
+
+  void addHybridMotionFactor(gtsam::NonlinearFactorGraph& new_factors,
+                             gtsam::Key pose_key, gtsam::Key object_motion_key,
+                             gtsam::Key point_key, const gtsam::Pose3& KF_pose,
+                             LandmarkNodePtr lmk_node, FrameNodePtr frame_node);
+
  protected:
-  IntermediateMotionInfo getIntermediateMotionInfo(ObjectId object_id,
-                                                   FrameId frame_id) override;
-  GenericObjectCentricMap<Motion3ReferenceFrame> initial_H_W_AKF_k_;
+  // neither overridden update callback is used as we directly overwrite the
+  // updateDynamicObservations and use with our specific callback function
+  inline void dynamicPointUpdateCallback(
+      const PointUpdateContextType& context, UpdateObservationResult& result,
+      gtsam::Values& new_values,
+      gtsam::NonlinearFactorGraph& new_factors) override {}
+
+  inline void objectUpdateContext(
+      const ObjectUpdateContextType& context, UpdateObservationResult& result,
+      gtsam::Values& new_values,
+      gtsam::NonlinearFactorGraph& new_factors) override {}
+
+  inline IntermediateMotionInfo getIntermediateMotionInfo(ObjectId object_id,
+                                                          FrameId frame_id) {}
+  TemporalObjectCentricMap<Motion3ReferenceFrame> initial_H_W_AKF_k_;
   //! Bookkeeps the keyframing from the front-end so we manage the to/from
   //! frames provided by the front-end estimate This is not used to manage the
   //! keyframe pose or keyframe id in the backend Since this is DIFFERENT to the
@@ -1555,10 +1589,8 @@ class HybridFormulationKeyFrame : public HybridFormulation {
   //! used to anchor) The frontend estimates
   KeyFrameData front_end_keyframes_;
 
-  // initial motion estimates aligned with the fronte-end keyframe structure
-  // from the frontend frame id is stored using the "to" frame id since this is
-  // unique
-  GenericObjectCentricMap<Motion3ReferenceFrame> initial_H_W_RKF_k_;
+  //! Initial estimate of points in object frame from frontend
+  GenericObjectCentricMap<gtsam::Point3, TrackletId> m_L_initial_;
 };
 
 // additional functionality when solved with the Regular Backend!

@@ -1345,21 +1345,29 @@ void ObjectMotionSolverFilter::fillHybridInfo(
   hybrid_info.H_W_KF_k = filter->getKeyFramedMotionReference();
   hybrid_info.L_W_KF = filter->getKeyFramePose();
   hybrid_info.L_W_k = filter->getPose();
-  // hybrid_info.was_reset = filter->resetThisUpdate();
 
-  object_track.regular_keyframe = false;
-  object_track.anchor_keyframe = false;
+  hybrid_info.regular_keyframe = false;
+  hybrid_info.anchor_keyframe = false;
 
   object_track.motion_track_status = object_motion_track_status;
 
   if (object_track.motion_track_status == ObjectTrackingStatus::New ||
       object_track.motion_track_status == ObjectTrackingStatus::WellTracked) {
     if (object_kf_status == ObjectKeyFrameStatus::AnchorKeyFrame) {
-      object_track.regular_keyframe = true;
-      object_track.anchor_keyframe = true;
+      hybrid_info.regular_keyframe = true;
+      hybrid_info.anchor_keyframe = true;
     } else if (object_kf_status == ObjectKeyFrameStatus::RegularKeyFrame) {
-      object_track.regular_keyframe = true;
+      hybrid_info.regular_keyframe = true;
     }
+  }
+
+  // TODO: check for online inliers or set inliers after RLLS
+  const auto fixed_points = filter->getCurrentLinearizedPoints();
+  for (const auto& [tracklet_id, m_L] : fixed_points) {
+    hybrid_info.initial_object_points.push_back(LandmarkStatus::Dynamic(
+        // currently no covariance!
+        Point3Measurement(m_L), LandmarkStatus::MeaninglessFrame, tracklet_id,
+        object_id, ReferenceFrame::OBJECT));
   }
 
   LOG(INFO) << "Making hybrid info for j=" << object_id << " with "
@@ -1367,8 +1375,8 @@ void ObjectMotionSolverFilter::fillHybridInfo(
             << " to: " << hybrid_info.H_W_KF_k.to()
             << " track status: " << to_string(object_motion_track_status)
             << " with regular kf " << std::boolalpha
-            << object_track.regular_keyframe << " anchor kf "
-            << object_track.anchor_keyframe;
+            << hybrid_info.regular_keyframe << " anchor kf "
+            << hybrid_info.anchor_keyframe;
 
   object_track.hybrid_info = hybrid_info;
 }

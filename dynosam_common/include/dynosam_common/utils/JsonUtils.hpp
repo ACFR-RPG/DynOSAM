@@ -356,22 +356,22 @@ struct adl_serializer<gtsam::FastSet<VALUE>> {
 };
 // end gtsam::FastSet
 
-// begin dyno::GenericObjectCentricMap
+// begin dyno::TemporalObjectCentricMap
 template <typename VALUE>
-struct adl_serializer<dyno::GenericObjectCentricMap<VALUE>> {
-  using Map = dyno::GenericObjectCentricMap<VALUE>;
+struct adl_serializer<dyno::TemporalObjectCentricMap<VALUE>> {
+  using Map = dyno::TemporalObjectCentricMap<VALUE>;
 
   static void to_json(json& j,
-                      const dyno::GenericObjectCentricMap<VALUE>& map) {
+                      const dyno::TemporalObjectCentricMap<VALUE>& map) {
     j = static_cast<typename Map::Base>(map);
   }
 
   static void from_json(const json& j,
-                        dyno::GenericObjectCentricMap<VALUE>& map) {
+                        dyno::TemporalObjectCentricMap<VALUE>& map) {
     map = Map(j.template get<typename Map::Base>());
   }
 };
-// end dyno::GenericObjectCentricMap
+// end dyno::TemporalObjectCentricMap
 
 template <typename T>
 struct adl_serializer<cv::Rect_<T>> {

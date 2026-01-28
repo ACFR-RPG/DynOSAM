@@ -167,7 +167,7 @@ enum PropogateType {
   Reinit        // Reinitalisaed via a centroid
 };
 
-using PropogatePoseResult = GenericObjectCentricMap<PropogateType>;
+using PropogatePoseResult = TemporalObjectCentricMap<PropogateType>;
 
 /**
  * @brief Propogated a map of object poses via their motions or otherwise.

@@ -117,13 +117,18 @@ class BackendModule
   const BackendParams base_params_;
   ImageDisplayQueue* display_queue_{nullptr};  //! Optional display queue
 
-  BackendSpinState
-      spin_state_;  //! Spin state of the backend. Updated in the backend module
-                    //! base via InputCallback (see BackendModule constructor).
+  //! Spin state of the backend. Updated in the backend module
+  //! base via InputCallback (see BackendModule constructor).
+  BackendSpinState spin_state_;
+
   NoiseModels noise_models_;
   FrontendUpdateInterface frontend_update_callback_;
 
  private:
+  //! Maps which iteration of the backend corresponds with a frame id
+  //! Used primarily to handle KF's as the BackendSpinState#iterations
+  //! are used as an analog for KF ids
+  gtsam::FastMap<int, FrameId> iteration_to_frame_id_;
 };
 
 template <class MODULE_TRAITS>

@@ -1158,49 +1158,179 @@ gtsam::Pose3 HybridFormulationV1::calculateObjectCentroid(
   return center;
 }
 
-void HybridFormulationKeyFrame::dynamicPointUpdateCallback(
-    const PointUpdateContextType& context, UpdateObservationResult& result,
-    gtsam::Values& new_values, gtsam::NonlinearFactorGraph& new_factors) {
-  const auto lmk_node = context.lmk_node;
-  const auto frame_node_k_1 = context.frame_node_k_1;
-  const auto frame_node_k = context.frame_node_k;
-  const auto object_id = context.getObjectId();
-  const auto frame_id_k_1 = frame_node_k_1->getId();
-  const auto frame_id_k = frame_node_k->getId();
+UpdateObservationResult HybridFormulationKeyFrame::updateDynamicObservations(
+    FrameId frame_id_k, gtsam::Values& new_values,
+    gtsam::NonlinearFactorGraph& new_factors,
+    const UpdateObservationParams& update_params) {
+  typename Map::Ptr map = this->map();
+  auto accessor = this->accessorFromTheta();
 
-  // const auto frame_range = front_end_keyframes_.find(object_id,
-  // frame_id_k_1);
+  // keep track of the new factors added in this function
+  // these are then appended to the internal factors_ and new_factors
+  gtsam::NonlinearFactorGraph internal_new_factors;
+  // keep track of the new values added in this function
+  // these are then appended to the internal values_ and new_values
+  gtsam::Values internal_new_values;
 
-  // // not keyframe
-  // if (!frame_range) {
-  //   return;
-  // }
+  UpdateObservationResult result(update_params);
 
-  // auto theta_accessor = this->accessorFromTheta();
+  // starting slot number is size of new factors
+  // as long as the new factor slot is calculated before adding a new factor
+  const Slot starting_factor_slot = new_factors.size();
 
-  // gtsam::Key point_key = this->makeDynamicKey(context.getTrackletId());
+  const auto frame_node_k = map->getFrame(frame_id_k);
 
-  // const gtsam::Key object_motion_key_k =
-  //     frame_node_k->makeObjectMotionKey(object_id);
-  // const gtsam::Key object_motion_key_k_1 =
-  //     frame_node_k_1->makeObjectMotionKey(object_id);
+  for (const auto& object_node : frame_node_k->objects_seen) {
+    const ObjectId object_id = object_node->getId();
 
-  // // // gtsam::Pose3 L_e;
-  // // const IntermediateMotionInfo keyframe_info =
-  // //     getIntermediateMotionInfo(object_id, frame_id_k_1);
+    Context context;
+    context.object_node = object_node;
+    context.frame_node = frame_node_k;
+    context.X_k_measured = getInitialOrLinearizedSensorPose(frame_id_k);
+    context.starting_factor_slot = starting_factor_slot;
 
-  // LOG(INFO) << "dynamicPointUpdateCallback " << frame_id_k << " with "
-  //           << context.is_starting_motion_frame;
+    LOG(INFO) << "Updating object " << info_string(frame_id_k, object_id);
+    updateObject(context, result, internal_new_values, internal_new_factors);
+    // auto seen_lmks_k = object_node->getLandmarksSeenAtFrame(frame_id_k);
+
+    // for (const auto& obj_lmk_node : seen_lmks_k) {
+    //   CHECK_EQ(obj_lmk_node->getObjectId(), object_id);
+    //   const TrackletId tracklet_id = obj_lmk_node->getId();
+
+    // }
+  }
+
+  if (result.debug_info && VLOG_IS_ON(20)) {
+    for (const auto& [object_id, object_info] :
+         result.debug_info->getObjectInfos()) {
+      std::stringstream ss;
+      ss << "Object id debug info: " << object_id << "\n";
+      ss << object_info;
+      LOG(INFO) << ss.str();
+    }
+  }
+
+  factors_ += internal_new_factors;
+  new_factors += internal_new_factors;
+  // update internal theta and factors
+  theta_.insert(internal_new_values);
+  // add to the external new_values
+  new_values.insert(internal_new_values);
+  return result;
 }
 
-void HybridFormulationKeyFrame::objectUpdateContext(
-    const ObjectUpdateContextType& context, UpdateObservationResult& result,
-    gtsam::Values& new_values, gtsam::NonlinearFactorGraph& new_factors) {}
+void HybridFormulationKeyFrame::updateObject(
+    const Context& context, UpdateObservationResult& result,
+    gtsam::Values& new_values, gtsam::NonlinearFactorGraph& new_factors) {
+  auto object_node = context.object_node;
+  auto frame_node_kf = context.frame_node;
+  const auto frame_id_kf = context.getFrameId();
+  const auto object_id = context.getObjectId();
 
-HybridFormulationKeyFrame::IntermediateMotionInfo
-HybridFormulationKeyFrame::getIntermediateMotionInfo(ObjectId object_id,
-                                                     FrameId frame_id) {
-  return IntermediateMotionInfo{};
+  const gtsam::Key object_motion_key =
+      frame_node_kf->makeObjectMotionKey(object_id);
+  const gtsam::Key pose_key = frame_node_kf->makePoseKey();
+
+  auto seen_lmks_k = object_node->getLandmarksSeenAtFrame(frame_id_kf);
+
+  CHECK(!is_other_values_in_map.exists(object_motion_key));
+  CHECK(initial_H_W_AKF_k_.exists(object_id, frame_id_kf));
+
+  const KeyFrameRange::ConstPtr kf_range =
+      key_frame_data_.find(object_id, frame_id_kf);
+  CHECK(kf_range);
+
+  // TODO: should check if the AKF_id is different for the from and the to?
+  const auto [AKF_id, AKF_pose] = kf_range->dataPair();
+
+  Motion3ReferenceFrame H_W_AKF_k =
+      initial_H_W_AKF_k_.at(object_id, frame_id_kf);
+
+  CHECK_EQ(H_W_AKF_k.from(), AKF_id);
+  CHECK_EQ(H_W_AKF_k.to(), frame_id_kf);
+
+  // Must add measurements at both AKF and KF (ie. multi view)
+  // since the motion is constructed between these two frames
+  const FrameId frame_id_akf = AKF_id;
+
+  typename Map::Ptr map = this->map();
+  auto frame_node_akf = map->getFrame(frame_id_akf);
+  CHECK(frame_node_akf);
+
+  new_values.insert(object_motion_key, H_W_AKF_k.estimate());
+  is_other_values_in_map.insert2(object_motion_key, true);
+
+  result.updateAffectedObject(frame_id_kf, object_id);
+
+  for (const auto& obj_lmk_node : seen_lmks_k) {
+    CHECK_EQ(obj_lmk_node->getObjectId(), object_id);
+    const TrackletId tracklet_id = obj_lmk_node->tracklet_id;
+    // LOG(INFO) << "Iterating through dynamic lmk " << tracklet_id;
+    const gtsam::Key point_key = this->makeDynamicKey(tracklet_id);
+
+    // must be seen at both frames
+    CHECK(obj_lmk_node->seenAtFrame(frame_id_akf));
+    CHECK(obj_lmk_node->seenAtFrame(frame_id_kf));
+
+    if (!isDynamicTrackletInMap(obj_lmk_node)) {
+      // we may have more seen landmarks than points in the filter
+      // This "shouldn't" happen but is maybe some slightly bug in bookkeeping
+      // somewhere CHECK(m_L_initial_.exists(object_id, tracklet_id)) <<
+      // "Missing initalisation for j=" << object_id << " i=" << tracklet_id;
+      if (!m_L_initial_.exists(object_id, tracklet_id)) {
+        continue;
+      }
+
+      // uuuh need to update these becuase something in the accessor
+      //  needs them!
+      // TODO: double check implementation and write comment!
+      is_dynamic_tracklet_in_map_.insert2(tracklet_id, AKF_id);
+      all_dynamic_landmarks_.insert2(tracklet_id, AKF_id);
+
+      gtsam::Point3 m_L_initial = m_L_initial_.at(object_id, tracklet_id);
+      new_values.insert(point_key, m_L_initial);
+
+      if (result.debug_info) {
+        result.debug_info->getObjectInfo(object_id).num_new_dynamic_points++;
+      }
+
+      // add at from frame if point is new
+      //  assume that once we have seen it we only need to add measurements
+      //  at the newest KF, since we will have added measurements
+      //  for the previous KF last iteration (if all works well!)
+      addHybridMotionFactor(new_factors, pose_key, object_motion_key, point_key,
+                            AKF_pose, obj_lmk_node, frame_node_akf);
+    }
+
+    addHybridMotionFactor(new_factors, pose_key, object_motion_key, point_key,
+                          AKF_pose, obj_lmk_node, frame_node_kf);
+
+    if (result.debug_info) {
+      result.debug_info->getObjectInfo(context.getObjectId())
+          .num_dynamic_factors++;
+    }
+  }
+}
+
+void HybridFormulationKeyFrame::addHybridMotionFactor(
+    gtsam::NonlinearFactorGraph& new_factors, gtsam::Key pose_key,
+    gtsam::Key object_motion_key, gtsam::Key point_key,
+    const gtsam::Pose3& KF_pose, LandmarkNodePtr lmk_node,
+    FrameNodePtr frame_node) {
+  Landmark measured_point_local;
+  gtsam::SharedNoiseModel measurement_covariance;
+  std::tie(measured_point_local, measurement_covariance) =
+      MeasurementTraits::pointWithCovariance(
+          lmk_node->getMeasurement(frame_node));
+
+  if (params_.makeDynamicMeasurementsRobust()) {
+    measurement_covariance = factor_graph_tools::robustifyHuber(
+        params_.k_huber_3d_points_, measurement_covariance);
+  }
+
+  new_factors.emplace_shared<HybridMotionFactor>(
+      pose_key, object_motion_key, point_key, measured_point_local, KF_pose,
+      measurement_covariance);
 }
 
 void HybridFormulationKeyFrame::preUpdate(const PreUpdateData& data) {
@@ -1226,10 +1356,11 @@ void HybridFormulationKeyFrame::preUpdate(const PreUpdateData& data) {
 
     const ObjectTracks::HybridInfo& hybrid_info =
         object_track.hybrid_info.value();
+    CHECK(hybrid_info.isKeyFrame());
 
     // intermediate keyframe?
-    const bool regular_keyframe = object_track.regular_keyframe;
-    const bool anchor_keyframe = object_track.anchor_keyframe;
+    const bool regular_keyframe = hybrid_info.regular_keyframe;
+    const bool anchor_keyframe = hybrid_info.anchor_keyframe;
     const ObjectTrackingStatus& object_motion_tracking_status =
         object_track.motion_track_status;
 
@@ -1243,12 +1374,8 @@ void HybridFormulationKeyFrame::preUpdate(const PreUpdateData& data) {
     const bool is_only_regular_keyframe = regular_keyframe && !anchor_keyframe;
 
     // estimated keyframe motioa from the frontend
+    // in this case k is the current but will now also be the latest KF
     const Motion3ReferenceFrame& H_W_RKF_k = hybrid_info.H_W_KF_k;
-    initial_H_W_RKF_k_.insert22(object_id, H_W_RKF_k.to(), H_W_RKF_k);
-
-    if (!anchor_keyframe && !regular_keyframe) {
-      continue;
-    }
 
     CHECK(object_motion_tracking_status != ObjectTrackingStatus::PoorlyTracked);
 
@@ -1256,6 +1383,21 @@ void HybridFormulationKeyFrame::preUpdate(const PreUpdateData& data) {
     // for consistency. This is fine when the object observations are continuous
     // but at some point the KF pose in the frontend and back-end will change
     // (i.e after opt!)
+
+    // ad new initialisation points to backend
+    // misleading print as we dont add this many points! Only new ones
+    VLOG(10) << "Adding initial object points of size "
+             << hybrid_info.initial_object_points.size();
+    for (const auto& landmark_status : hybrid_info.initial_object_points) {
+      const TrackletId& tracklet_id = landmark_status.trackletId();
+      const gtsam::Point3& m_L = landmark_status.value();
+      // only add new ones?
+      if (!m_L_initial_.exists(object_id, tracklet_id)) {
+        // LOG(INFO) << "Making initial object points j=" << object_id << " i="
+        // << tracklet_id;
+        m_L_initial_.insert22(object_id, tracklet_id, m_L);
+      }
+    }
 
     // sanity check
     if (object_motion_tracking_status == ObjectTrackingStatus::New ||

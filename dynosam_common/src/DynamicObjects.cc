@@ -134,8 +134,10 @@ void propogateObjectPoses(ObjectPoseMap& object_poses,
       auto propgate_result = get_centroid(object_id, centroid_k_1, pose_k_1);
       if (result) result->insert22(object_id, frame_id_k_1, propgate_result);
 
-      object_poses.insert2(object_id, gtsam::FastMap<FrameId, gtsam::Pose3>{});
-      object_poses.at(object_id).insert2(frame_id_k_1, pose_k_1);
+      // object_poses.insert2(object_id, gtsam::FastMap<FrameId,
+      // gtsam::Pose3>{}); object_poses.at(object_id).insert2(frame_id_k_1,
+      // pose_k_1);
+      object_poses.insert22(object_id, frame_id_k_1, pose_k_1);
     }
 
     auto& per_frame_poses = object_poses.at(object_id);

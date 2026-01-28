@@ -109,7 +109,7 @@ class RGBDInstanceFrontendModule : public FrontendModule {
   gtsam::NavState nav_state_prev_;
 
   //! Nav state of the last key-frame
-  gtsam::NavState nav_state_last_kf_;
+  gtsam::NavState nav_state_lkf_;
 
   //! Tracks when the nav state was updated using IMU, else VO
   //! in the front-end, when updating with VO, the velocity will (currently) be
@@ -119,12 +119,9 @@ class RGBDInstanceFrontendModule : public FrontendModule {
   //! The relative camera pose (T_k_1_k) from the previous frame
   //! this is used as a constant velocity model when VO tracking fails and the
   //! IMU is not available!
-  gtsam::Pose3 vo_velocity_;
+  gtsam::Pose3 T_k_1_k_;
 
-  // DEBUGGING FOR KF
-  mutable gtsam::Pose3 T_lkf_;
-
-  ObjectStatusMap motion_track_status_;
+  gtsam::Pose3 T_lkf_k;
 
   //! Last keyframe
   Frame::Ptr frame_lkf_;

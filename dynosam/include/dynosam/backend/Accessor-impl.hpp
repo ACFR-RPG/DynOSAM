@@ -109,13 +109,14 @@ ObjectPoseMap AccessorT<MAP, DerivedAccessor>::getObjectPoses() const {
         this->getObjectPoses(frame_id);
 
     for (const auto& [object_id, pose] : per_object_pose) {
-      if (!object_poses.exists(object_id)) {
-        object_poses.insert2(object_id,
-                             gtsam::FastMap<FrameId, gtsam::Pose3>{});
-      }
+      object_poses.insert22(object_id, frame_id, pose);
+      // if (!object_poses.exists(object_id)) {
+      //   object_poses.insert2(object_id,
+      //                        gtsam::FastMap<FrameId, gtsam::Pose3>{});
+      // }
 
-      auto& per_frame_pose = object_poses.at(object_id);
-      per_frame_pose.insert2(frame_id, pose);
+      // auto& per_frame_pose = object_poses.at(object_id);
+      // per_frame_pose.insert2(frame_id, pose);
     }
   }
   return object_poses;
@@ -128,12 +129,13 @@ ObjectMotionMap AccessorT<MAP, DerivedAccessor>::getObjectMotions() const {
     MotionEstimateMap per_object_motions = this->getObjectMotions(frame_id);
 
     for (const auto& [object_id, motion] : per_object_motions) {
-      if (!object_motions.exists(object_id)) {
-        object_motions.insert2(object_id, ObjectMotionMap::NestedBase{});
-      }
+      object_motions.insert22(object_id, frame_id, motion);
+      // if (!object_motions.exists(object_id)) {
+      //   object_motions.insert2(object_id, ObjectMotionMap::NestedBase{});
+      // }
 
-      auto& per_frame_motion = object_motions.at(object_id);
-      per_frame_motion.insert2(frame_id, motion);
+      // auto& per_frame_motion = object_motions.at(object_id);
+      // per_frame_motion.insert2(frame_id, motion);
     }
   }
   return object_motions;

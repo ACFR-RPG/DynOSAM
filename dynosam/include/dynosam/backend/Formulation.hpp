@@ -572,13 +572,16 @@ class Formulation {
    * with dyanmic points and objects. This is where the virtual
    * dynamicPointUpdateCallback and objectUpdateContext functions are called.
    *
+   * This function is also virtual to allow a more custom implementation if
+   * necessary.
+   *
    * @param frame_id_k
    * @param new_values
    * @param new_factors
    * @param update_params
    * @return UpdateObservationResult
    */
-  UpdateObservationResult updateDynamicObservations(
+  virtual UpdateObservationResult updateDynamicObservations(
       FrameId frame_id_k, gtsam::Values& new_values,
       gtsam::NonlinearFactorGraph& new_factors,
       const UpdateObservationParams& update_params);

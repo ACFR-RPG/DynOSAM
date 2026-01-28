@@ -216,7 +216,7 @@ class ParallelHybridBackendModule
   FastUnorderedMap<TrackletId, ObjectId> tracklet_id_to_object_;
 
   //! used to cache the result of each update which will we log to file
-  GenericObjectCentricMap<ParallelObjectISAM::Result> result_map_;
+  TemporalObjectCentricMap<ParallelObjectISAM::Result> result_map_;
 };
 
 // implement function after ParallelHybridBackendModule has been fully defined

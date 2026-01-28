@@ -246,9 +246,10 @@ class VisionImuBackendModule : public BackendModuleType<MODULE_TRAITS> {
                                   const gtsam::Pose3& T_k_1_k,
                                   const ImuFrontend::PimPtr& pim) const {
     CHECK_GT(frame_id_k, 0);
-    CHECK_EQ(frame_id_k, (last_nav_state_frame_id_ + 1))
+    CHECK_GT(frame_id_k, last_nav_state_frame_id_)
         << "State frame id's are not incrementally ascending. Are we dropping "
            "inertial/VO data per frame?";
+    // CHECK_EQ(frame_id_k, (last_nav_state_frame_id_ + 1))
 
     gtsam::NavState navstate_k;
 

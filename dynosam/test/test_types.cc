@@ -886,8 +886,8 @@ TEST(JsonIO, eigenJsonIO) {
   EXPECT_TRUE(gtsam::assert_equal(m, m2));
 }
 
-TEST(JsonIO, testGenericObjectCentricMap) {
-  using Map = GenericObjectCentricMap<gtsam::Pose3>;
+TEST(JsonIO, testTemporalObjectCentricMap) {
+  using Map = TemporalObjectCentricMap<gtsam::Pose3>;
 
   Map map;
   // add two frames for object 1

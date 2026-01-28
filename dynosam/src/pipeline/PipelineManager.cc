@@ -394,7 +394,9 @@ void DynoPipelineManager::loadPipelines(const CameraParams& camera_params,
     FrontendPipeline::OutputQueue& backend_input_queue = backend_input_queue_;
     frontend_output_registra->registerCallback(
         [&backend_input_queue](const auto& frontend_output) -> void {
-          backend_input_queue.push(frontend_output);
+          if (frontend_output->isKeyFrame()) {
+            backend_input_queue.push(frontend_output);
+          }
         });
 
     backend_pipeline_->registerOutputQueue(&backend_output_queue_);

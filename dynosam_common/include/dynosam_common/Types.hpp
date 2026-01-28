@@ -510,25 +510,16 @@ using PoseEstimateMap = gtsam::FastMap<ObjectId, gtsam::Pose3>;
 
 // TODO: outer layer should be a unorderd map!
 // TODO: should be more generic than encoding a FrameId!
-/**
- * @brief Generic mapping of Object Id to FrameId to VALUE within a nested
- * gtsam::FastMap structure. This is a common datastrcture used to
- * store temporal information about each object.
- *
- * We call it ObjectCentric map as we order by ObjectId first.
- *
- * @tparam VALUE Value type to be stored
- */
-template <typename VALUE>
+template <typename VALUE, typename KEY>
 class GenericObjectCentricMap
-    : public gtsam::FastMap<ObjectId, gtsam::FastMap<FrameId, VALUE>> {
+    : public gtsam::FastMap<ObjectId, gtsam::FastMap<KEY, VALUE>> {
  public:
-  using Base = gtsam::FastMap<ObjectId, gtsam::FastMap<FrameId, VALUE>>;
-  using NestedBase = gtsam::FastMap<FrameId, VALUE>;
-  using EstimateMap = gtsam::FastMap<ObjectId, VALUE>;
+  using Base = gtsam::FastMap<ObjectId, gtsam::FastMap<KEY, VALUE>>;
+  using NestedBase = gtsam::FastMap<KEY, VALUE>;
 
-  using This = GenericObjectCentricMap<VALUE>;
+  using This = GenericObjectCentricMap<VALUE, KEY>;
   using Value = VALUE;
+  using Key = KEY;
 
   using Base::at;
   using Base::Base;  // all the stl map stuff
@@ -547,18 +538,127 @@ class GenericObjectCentricMap
    * structure.
    *
    * @param object_id
-   * @param frame_id
+   * @param key
    * @param value
    * @return true
    * @return false
    */
-  bool insert22(ObjectId object_id, FrameId frame_id, const Value& value) {
+  bool insert22(ObjectId object_id, Key key, const Value& value) {
     if (!this->exists(object_id)) {
       this->insert2(object_id, NestedBase{});
     }
 
     NestedBase& frame_map = this->at(object_id);
-    return frame_map.insert2(frame_id, value);
+    return frame_map.insert2(key, value);
+  }
+
+  bool exists(ObjectId object_id, Key key) const {
+    static size_t out_of_range_flag;
+    return existsImpl(object_id, key, out_of_range_flag);
+  }
+
+  const Value& at(ObjectId object_id, Key key) const {
+    return atImpl<const This, const Value&>(this, object_id, key);
+  }
+
+  Value& at(ObjectId object_id, Key key) {
+    return atImpl<This, Value&>(const_cast<This*>(this), object_id, key);
+  }
+
+  // wont update key if exists?
+  This& operator+=(const This& rhs) {
+    for (const auto& [key, value] : rhs) {
+      this->operator[](key).insert(value.begin(), value.end());
+    }
+    return *this;
+  }
+
+  ObjectIds gatherInvolvedObjects() const {
+    ObjectIds object_ids;
+    object_ids.reserve(this->size());
+    for (const auto& [object_id, _] : *this) {
+      object_ids.emplace_back(object_id);
+    }
+    return object_ids;
+  }
+
+ private:
+  template <typename Container, typename Return>
+  static Return atImpl(Container* container, ObjectId object_id, Key key) {
+    size_t out_of_range_flag;
+    const bool result =
+        container->existsImpl(object_id, key, out_of_range_flag);
+    if (result) {
+      CHECK_EQ(out_of_range_flag, 2u);
+      return container->at(object_id).at(key);
+    } else {
+      std::stringstream ss;
+      ss << "Index out of range: "
+         << ((out_of_range_flag == 0) ? " object id " : " frame id")
+         << " missing. Full query - (object id " << object_id << ", frame id "
+         << key << ").";
+      throw std::out_of_range(ss.str());
+    }
+  }
+
+  /**
+   * @brief Helper function to determine if the query exists.
+   * Operates like a regular exists function but also sets out_of_range_flag
+   * to indicate which query (object_id or frame_id) is out of range:
+   * out_of_range_flag = 0, object_id out of range
+   * out_of_range_flag = 1, frame_id out of range
+   * out_of_range_flag = 2 both queries exist and the function should return
+   * true
+   *
+   * @param object_id
+   * @param key
+   * @param out_of_range_flag
+   * @return true
+   * @return false
+   */
+  bool existsImpl(ObjectId object_id, Key key,
+                  size_t& out_of_range_flag) const {
+    if (!this->exists(object_id)) {
+      out_of_range_flag = 0;
+      return false;
+    }
+
+    const auto& frame_map = this->at(object_id);
+    if (!frame_map.exists(key)) {
+      out_of_range_flag = 1;
+      return false;
+    } else {
+      out_of_range_flag = 2;
+      return true;
+    }
+  }
+};
+
+/**
+ * @brief Generic mapping of Object Id to FrameId to VALUE within a nested
+ * gtsam::FastMap structure. This is a common datastrcture used to
+ * store temporal information about each object.
+ *
+ * We call it ObjectCentric map as we order by ObjectId first.
+ *
+ * @tparam VALUE Value type to be stored
+ */
+template <typename VALUE>
+class TemporalObjectCentricMap
+    : public GenericObjectCentricMap<VALUE, FrameId> {
+ public:
+  using Base = GenericObjectCentricMap<VALUE, FrameId>;
+  using NestedBase = typename Base::NestedBase;
+  using EstimateMap = gtsam::FastMap<ObjectId, VALUE>;
+
+  using This = TemporalObjectCentricMap<VALUE>;
+  using Value = VALUE;
+
+  /** Conversion to a gtsam::FastMap container */
+  operator Base() const { return Base(this->begin(), this->end()); }
+
+  operator typename Base::Base() const {
+    return typename Base::Base(this->begin(), this->end());
   }
 
   // construct from an estimate map
@@ -568,27 +668,6 @@ class GenericObjectCentricMap
       result &= this->insert22(object_id, frame_id, estimate_value);
     }
     return result;
-  }
-
-  bool exists(ObjectId object_id, FrameId frame_id) const {
-    static size_t out_of_range_flag;
-    return existsImpl(object_id, frame_id, out_of_range_flag);
-  }
-
-  const Value& at(ObjectId object_id, FrameId frame_id) const {
-    return atImpl<const This, const Value&>(this, object_id, frame_id);
-  }
-
-  Value& at(ObjectId object_id, FrameId frame_id) {
-    return atImpl<This, Value&>(const_cast<This*>(this), object_id, frame_id);
-  }
-
-  // wont update key if exists?
-  This& operator+=(const This& rhs) {
-    for (const auto& [key, value] : rhs) {
-      this->operator[](key).insert(value.begin(), value.end());
-    }
-    return *this;
   }
 
   /**
@@ -612,15 +691,6 @@ class GenericObjectCentricMap
     return object_map;
   }
 
-  ObjectIds gatherInvolvedObjects() const {
-    ObjectIds object_ids;
-    object_ids.reserve(this->size());
-    for (const auto& [object_id, _] : *this) {
-      object_ids.emplace_back(object_id);
-    }
-    return object_ids;
-  }
-
   // maybe slow!!
   // TODO: maybe remove and cache frames somewhere else if necessary!!!
   FrameIds getInvovledFrameIds() const {
@@ -632,64 +702,12 @@ class GenericObjectCentricMap
     }
     return frame_ids;
   }
-
- private:
-  template <typename Container, typename Return>
-  static Return atImpl(Container* container, ObjectId object_id,
-                       FrameId frame_id) {
-    size_t out_of_range_flag;
-    const bool result =
-        container->existsImpl(object_id, frame_id, out_of_range_flag);
-    if (result) {
-      CHECK_EQ(out_of_range_flag, 2u);
-      return container->at(object_id).at(frame_id);
-    } else {
-      std::stringstream ss;
-      ss << "Index out of range: "
-         << ((out_of_range_flag == 0) ? " object id " : " frame id")
-         << " missing. Full query - (object id " << object_id << ", frame id "
-         << frame_id << ").";
-      throw std::out_of_range(ss.str());
-    }
-  }
-
-  /**
-   * @brief Helper function to determine if the query exists.
-   * Operates like a regular exists function but also sets out_of_range_flag
-   * to indicate which query (object_id or frame_id) is out of range:
-   * out_of_range_flag = 0, object_id out of range
-   * out_of_range_flag = 1, frame_id out of range
-   * out_of_range_flag = 2 both queries exist and the function should return
-   * true
-   *
-   * @param object_id
-   * @param frame_id
-   * @param out_of_range_flag
-   * @return true
-   * @return false
-   */
-  bool existsImpl(ObjectId object_id, FrameId frame_id,
-                  size_t& out_of_range_flag) const {
-    if (!this->exists(object_id)) {
-      out_of_range_flag = 0;
-      return false;
-    }
-
-    const auto& frame_map = this->at(object_id);
-    if (!frame_map.exists(frame_id)) {
-      out_of_range_flag = 1;
-      return false;
-    } else {
-      out_of_range_flag = 2;
-      return true;
-    }
-  }
 };
 
 /// @brief Map of object poses per object per frame
-using ObjectPoseMap = GenericObjectCentricMap<gtsam::Pose3>;
+using ObjectPoseMap = TemporalObjectCentricMap<gtsam::Pose3>;
 /// @brief Map of object motions per object per frame
-using ObjectMotionMap = GenericObjectCentricMap<Motion3ReferenceFrame>;
+using ObjectMotionMap = TemporalObjectCentricMap<Motion3ReferenceFrame>;
 
 // Optional string that can be modified directly (similar to old-stype
 // boost::optional) to access the mutable reference the internal string must be

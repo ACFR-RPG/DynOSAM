@@ -73,7 +73,8 @@ class VisionImuPacket {
     gtsam::Pose3 X_W_k;
     //! Relative camera pose from k-1 to k
     gtsam::Pose3 T_k_1_k;
-    bool is_keyframe{false};
+
+    bool is_keyframe{true};
   };
 
   /**
@@ -90,15 +91,6 @@ class VisionImuPacket {
 
     ObjectTrackingStatus motion_track_status;
 
-    // make intermediate keyframe to optimise w.r.t to the same anchor point
-    // ie. indicates if a motion variable should be added this frame
-    bool regular_keyframe{false};
-    // make a new anchor point for the object
-    // this happens when the object is new or has re-appeared (and therefore has
-    // no contuous tracks) in this case a regular keyframe MUST also be made a
-    // motion will added this frame AND the anchor pose will be updated
-    bool anchor_keyframe{false};
-
     struct HybridInfo {
       //! Initial object points in L
       // TODO: only contain new ones!!?
@@ -111,9 +103,30 @@ class VisionImuPacket {
       //! keyframe at k
       Motion3ReferenceFrame H_W_KF_k;
       gtsam::Pose3 L_W_k;
+
+      // make intermediate keyframe to optimise w.r.t to the same anchor point
+      // ie. indicates if a motion variable should be added this frame
+      bool regular_keyframe{false};
+      // make a new anchor point for the object
+      // this happens when the object is new or has re-appeared (and therefore
+      // has no contuous tracks) in this case a regular keyframe MUST also be
+      // made a motion will added this frame AND the anchor pose will be updated
+      bool anchor_keyframe{false};
+
+      bool isKeyFrame() const { return regular_keyframe || anchor_keyframe; }
     };
     // Should also set is_keyframe
     std::optional<HybridInfo> hybrid_info;
+
+    bool isKeyFrame() const {
+      // without the hybrid info we must optimise every frame
+      // as such every frame is a keyframe
+      if (!hybrid_info) {
+        return true;
+      }
+
+      return hybrid_info->isKeyFrame();
+    }
   };
   //! Map of object id's to ObjectTracks
   using ObjectTrackMap = gtsam::FastMap<ObjectId, ObjectTracks>;
@@ -123,11 +136,13 @@ class VisionImuPacket {
   ImuFrontend::PimPtr pim() const;
   Camera::ConstPtr camera() const;
   PointCloudLabelRGB::Ptr denseLabelledCloud() const;
-  // bool isCameraKeyFrame() const;
-  // bool isObjectKeyFrame(ObjectId object_id) const;
+  bool isCameraKeyFrame() const;
+  bool isObjectKeyFrame(ObjectId object_id) const;
 
   // static or dynamic!!
-  // bool isKeyFrame() const;
+  bool isKeyFrame() const;
+
+  void setCameraKeyFrame(bool keyframe);
 
   const CameraTracks& cameraTracks() const;
   const gtsam::Pose3& cameraPose() const;
