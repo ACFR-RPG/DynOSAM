@@ -111,9 +111,6 @@ class VisionImuPacket {
       //! keyframe at k
       Motion3ReferenceFrame H_W_KF_k;
       gtsam::Pose3 L_W_k;
-      //! Happens as a result of feature tracking and indicates that a regular
-      //! OKF should be made
-      bool was_reset{false};
     };
     // Should also set is_keyframe
     std::optional<HybridInfo> hybrid_info;

@@ -1168,28 +1168,29 @@ void HybridFormulationKeyFrame::dynamicPointUpdateCallback(
   const auto frame_id_k_1 = frame_node_k_1->getId();
   const auto frame_id_k = frame_node_k->getId();
 
-  const auto frame_range = front_end_keyframes_.find(object_id, frame_id_k_1);
+  // const auto frame_range = front_end_keyframes_.find(object_id,
+  // frame_id_k_1);
 
-  // not keyframe
-  if (!frame_range) {
-    return;
-  }
+  // // not keyframe
+  // if (!frame_range) {
+  //   return;
+  // }
 
-  auto theta_accessor = this->accessorFromTheta();
+  // auto theta_accessor = this->accessorFromTheta();
 
-  gtsam::Key point_key = this->makeDynamicKey(context.getTrackletId());
+  // gtsam::Key point_key = this->makeDynamicKey(context.getTrackletId());
 
-  const gtsam::Key object_motion_key_k =
-      frame_node_k->makeObjectMotionKey(object_id);
-  const gtsam::Key object_motion_key_k_1 =
-      frame_node_k_1->makeObjectMotionKey(object_id);
+  // const gtsam::Key object_motion_key_k =
+  //     frame_node_k->makeObjectMotionKey(object_id);
+  // const gtsam::Key object_motion_key_k_1 =
+  //     frame_node_k_1->makeObjectMotionKey(object_id);
 
-  // // gtsam::Pose3 L_e;
-  // const IntermediateMotionInfo keyframe_info =
-  //     getIntermediateMotionInfo(object_id, frame_id_k_1);
+  // // // gtsam::Pose3 L_e;
+  // // const IntermediateMotionInfo keyframe_info =
+  // //     getIntermediateMotionInfo(object_id, frame_id_k_1);
 
-  LOG(INFO) << "dynamicPointUpdateCallback " << frame_id_k << " with "
-            << context.is_starting_motion_frame;
+  // LOG(INFO) << "dynamicPointUpdateCallback " << frame_id_k << " with "
+  //           << context.is_starting_motion_frame;
 }
 
 void HybridFormulationKeyFrame::objectUpdateContext(
@@ -1289,6 +1290,9 @@ void HybridFormulationKeyFrame::preUpdate(const PreUpdateData& data) {
       const auto [lRKF_id, L_lRKF] = last_frontend_range->dataPair();
       LOG(INFO) << "Last regular KF " << lRKF_id;
 
+      // TODO: if this is regular KF then the position of this KF will change
+      // according to the motion that is refined
+      //  as L_W_k = L_W_KF = H_W_AKF_KF * L_AKF
       front_end_keyframes_.startNewActiveRange(object_id, H_W_RKF_k.to(),
                                                hybrid_info.L_W_k);
       LOG(INFO) << "Making Regular KF for tracked object "

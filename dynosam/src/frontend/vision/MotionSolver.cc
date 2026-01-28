@@ -1132,49 +1132,13 @@ bool ObjectMotionSolverFilter::solveImpl(Frame::Ptr frame_k,
   const ObjectTrackingStatus& previous_tracking_state =
       object_statuses_[object_id];
 
-  // if (is_new) {
-  //   object_statuses_[object_id] = ObjectTrackingStatus::New;
-  //   stable_frame_counts_[object_id] = 0;
-  //   LOG(INFO) << "Object " << object_id << " initialized as New at frame " <<
-  //   frame_k->getFrameId();
-  //   // dont update keyframe status to anchor yet - only do so if object
-  //   successfully created
-  // } else if (is_retracked) {
-
-  //   //if re-tracked and previous state was well tracked - set keyframe status
-  //   to regular if(previous_tracking_state ==
-  //   ObjectTrackingStatus::WellTracked){
-  //     LOG(INFO) << "Object " << object_id << " re-tracked at frame " <<
-  //     frame_k->getFrameId() << ", but WellTracked maintained, set to
-  //     RegularKeyFrame"; object_keyframe_statuses_[object_id] =
-  //     ObjectKeyFrameStatus::RegularKeyFrame;
-  //   }
-  //   else {
-  //     //keep object as poorly tracked if was poorly tracked before
-  //     object_statuses_[object_id] = ObjectTrackingStatus::PoorlyTracked;
-  //     stable_frame_counts_[object_id] = 0;
-  //     LOG(INFO) << "Object " << object_id << " re-tracked at frame " <<
-  //     frame_k->getFrameId() << ", set to PoorlyTracked";
-
-  //   }
-  // }
-
-  AbsolutePoseCorrespondences dynamic_correspondences;
   // get the corresponding feature pairs
+  AbsolutePoseCorrespondences dynamic_correspondences;
   bool corr_result = frame_k->getDynamicCorrespondences(
       dynamic_correspondences, *frame_k_1, object_id,
       frame_k->landmarkWorldKeypointCorrespondance());
 
-  // FeaturePairs correspondences;
-  // frame_k->getDynamicCorrespondences(correspondences, *frame_k_1, object_id);
-
   const size_t& n_matches = dynamic_correspondences.size();
-
-  cv::Mat rgb = frame_k->image_container_.rgb();
-  cv::Mat viz;
-  rgb.copyTo(viz);
-
-  // TrackletIds all_tracklets(n_matches);
 
   TrackletIds all_tracklets;
   std::transform(dynamic_correspondences.begin(), dynamic_correspondences.end(),
@@ -1187,12 +1151,23 @@ bool ObjectMotionSolverFilter::solveImpl(Frame::Ptr frame_k,
   Pose3SolverResult geometric_result =
       EgoMotionSolver::geometricOutlierRejection3d2d(dynamic_correspondences);
 
+  const TrackletIds& inlier_tracklets = geometric_result.inliers;
+
   const size_t num_inliers =
-      geometric_result.inliers.size();  // after outlier rejection
+      inlier_tracklets.size();  // after outlier rejection
+
+  if (inlier_tracklets.size() < 4) {
+    LOG(WARNING) << "Could not make initial frame for object " << object_id
+                 << " as not enough inlier tracks!";
+    object_statuses_[object_id] = ObjectTrackingStatus::PoorlyTracked;
+    return false;
+  }
+
+  const gtsam::Pose3 G_w_inv_pnp = geometric_result.best_result.inverse();
+  const gtsam::Pose3 H_w_km1_k_pnp = frame_k->getPose() * G_w_inv_pnp;
 
   if (is_new) {
     object_statuses_[object_id] = ObjectTrackingStatus::New;
-    stable_frame_counts_[object_id] = 0;
     LOG(INFO) << "Object " << object_id << " initialized as New at frame "
               << frame_k->getFrameId();
     // dont update keyframe status to anchor yet - only do so if object
@@ -1200,14 +1175,14 @@ bool ObjectMotionSolverFilter::solveImpl(Frame::Ptr frame_k,
   } else if (is_resampled) {
     if (num_inliers > 4) {
       object_statuses_[object_id] = ObjectTrackingStatus::WellTracked;
-      // stable_frame_counts_[object_id] = 0;
       LOG(INFO) << "Object " << object_id
                 << "resampled & WellTracked  at frame " << frame_k->getFrameId()
                 << ", set to RegularKeyFrame";
       object_keyframe_statuses_[object_id] =
           ObjectKeyFrameStatus::RegularKeyFrame;
     } else {
-      // keep object as poorly tracked if was poorly tracked before
+      // TODO: this should actually be that all features are new!!!!!
+      //  keep object as poorly tracked if was poorly tracked before
       object_statuses_[object_id] = ObjectTrackingStatus::WellTracked;
       object_keyframe_statuses_[object_id] =
           ObjectKeyFrameStatus::AnchorKeyFrame;
@@ -1217,63 +1192,17 @@ bool ObjectMotionSolverFilter::solveImpl(Frame::Ptr frame_k,
     }
   }
 
-  auto construct_initial_frame =
-      [](const Frame::Ptr frame, const TrackletIds& tracklets) -> gtsam::Pose3 {
-    // L_e
-    gtsam::Point3 initial_object_frame(
-        0, 0, 0);  // important to initliase with zero values (otherwise nan's!)
-    size_t count = 0;
-    for (TrackletId tracklet : tracklets) {
-      const Feature::Ptr feature = frame->at(tracklet);
-      CHECK_NOTNULL(feature);
-
-      gtsam::Point3 lmk = frame->backProjectToCamera(feature->trackletId());
-      initial_object_frame += lmk;
-
-      count++;
-    }
-
-    initial_object_frame /= count;
-    initial_object_frame = frame->getPose() * initial_object_frame;
-    return gtsam::Pose3(gtsam::Rot3::Identity(), initial_object_frame);
-  };
-
   bool new_or_reset_object = false;
   bool filter_needs_reset = false;
   // bool new_object = false;
   // bool object_reset = false;
   if (!is_new) {
-    auto filter = filters_.at(object_id);
-    // filter->was_reset_this_update = false;
-    // if (object_resampled) {
-    //   LOG(INFO) << object_id
-    //             << " retracked - resetting filter k=" <<
-    //             frame_k->getFrameId();
-    //   // with current logic will trigger a keyframe at k
-    //   filter->was_reset_this_update = true;
-    //   filter->needs_resetting_from_last_frame = true;
-    // } else if (filter->needs_resetting_from_last_frame) {
-    //   LOG(INFO) << object_id << " needs retting from last frame! current k="
-    //             << frame_k->getFrameId();
-    //   filter->needs_resetting_from_last_frame = false;
-
-    //   // this is the pose as the last frame (ie k-1) which will serve as the
-    //   new
-    //   // keyframe pose
-    //   gtsam::Pose3 pose = filter->getPose();
-    //   // assert that the last filter update was at k-1 and therefore the pose
-    //   // should be L_w_km1
-    //   CHECK_EQ(filter->getFrameId(), frame_k_1->getFrameId());
-    //   filter->resetState(pose, frame_k_1->getFrameId());
-    //   new_or_reset_object = true;
-    // }
-    // handle reset first so the object actual gets reset even if it also needs
-    // resampling
-    if (filter->needs_resetting_from_last_frame) {
+    if (filterNeedsReset(object_id)) {
       LOG(INFO) << object_id << " needs retting from last frame! current k="
                 << frame_k->getFrameId();
-      filter->needs_resetting_from_last_frame = false;
+      filter_needs_reset_[object_id] = false;
 
+      auto filter = filters_.at(object_id);
       // this is the pose as the last frame (ie k-1) which will serve as the new
       // keyframe pose
       gtsam::Pose3 pose = filter->getPose();
@@ -1292,7 +1221,7 @@ bool ObjectMotionSolverFilter::solveImpl(Frame::Ptr frame_k,
 
       // with current logic will trigger a keyframe at k
       // filter->was_reset_this_update = true;
-      filter->needs_resetting_from_last_frame = true;
+      filter_needs_reset_[object_id] = true;
       LOG(INFO) << "Object " << object_id << " resampled, marked for reset";
     }
   }
@@ -1300,126 +1229,35 @@ bool ObjectMotionSolverFilter::solveImpl(Frame::Ptr frame_k,
   // not sure this is the best way to handle reappearing objects!
   if (is_new) {
     new_or_reset_object = true;
-    gtsam::Matrix33 R = gtsam::Matrix33::Identity() * 1.0;
-    // Initial State Covariance P (6x6)
-    gtsam::Matrix66 P = gtsam::Matrix66::Identity() * 0.3;
-    // Process Model noise (6x6)
-    gtsam::Matrix66 Q = gtsam::Matrix66::Identity() * 0.2;
-
-    if (geometric_result.inliers.size() < 4) {
-      LOG(WARNING) << "Could not make initial frame for object " << object_id
-                   << " as not enough inlier tracks!";
-      // TODO: set tracking state to POOR!
-      //  stable_frame_counts_[object_id] = 0;
-      object_statuses_[object_id] = ObjectTrackingStatus::PoorlyTracked;
-      // LOG(INFO) << "Object " << object_id << " in PoorlyTracked state at
-      // frame " << frame_k->getFrameId() << " with stable count " <<
-      // stable_frame_counts_[object_id];
-      return false;
-    }
-
-    gtsam::Pose3 keyframe_pose =
-        construct_initial_frame(frame_k_1, geometric_result.inliers);
-
-    constexpr static double kHuberKFilter = 0.05;
-    filters_.insert2(object_id, std::make_shared<HybridObjectMotionSRIF>(
-                                    gtsam::Pose3::Identity(), keyframe_pose,
-                                    frame_k_1->getFrameId(), P, Q, R,
-                                    frame_k_1->getCamera(), kHuberKFilter));
-    // tell frontend to make a new kf
-    // filters_.at(object_id)->was_reset_this_update = true;
-
-    object_keyframe_statuses_[object_id] = ObjectKeyFrameStatus::AnchorKeyFrame;
-
-    LOG(INFO) << "Created new filter for object " << object_id << " at frame "
-              << frame_k->getFrameId();
+    createAndInsertFilter(object_id, frame_k_1, inlier_tracklets);
   }
-  auto filter = filters_.at(object_id).get();
 
+  auto filter = filters_.at(object_id);
   // update and predict should be one step so that if we dont have enough points
   // NOTE: this logic seemed pretty important to ensure the estimate was good!!!
   // we dont predict?
   if (new_or_reset_object) {
-    // if new or set must perform two predict and update steps?
-    // //this must get set
-    // filter->was_reset_this_update = true;
     filter->predictAndUpdate(gtsam::Pose3::Identity(), frame_k_1,
-                             geometric_result.inliers, 2);
-  } else {
-    // filter->was_reset_this_update = false;
+                             inlier_tracklets, 2);
   }
 
-  // on the first frame we want to init everything (ie. points)
-  // so that they align with the keyframe but dont need to update anyting
-  //  as the motion should be identity!!!
-  gtsam::Pose3 G_w_inv_pnp = geometric_result.best_result.inverse();
-  gtsam::Pose3 H_w_km1_k_pnp = frame_k->getPose() * G_w_inv_pnp;
-
-  filter->predictAndUpdate(H_w_km1_k_pnp, frame_k, geometric_result.inliers, 2);
+  filter->predictAndUpdate(H_w_km1_k_pnp, frame_k, inlier_tracklets, 2);
 
   bool return_result = false;
   if (geometric_result.status == TrackingStatus::VALID) {
-    TrackletIds refined_inlier_tracklets = geometric_result.inliers;
-    // if (homography_result) {
-    // gtsam::Pose3 G_w = geometric_result.best_result.inverse();
-    // gtsam::Pose3 H_w = filter->getPose();
-    gtsam::Pose3 H_w_filter = filter->getF2FMotion();
-    gtsam::Pose3 G_w_filter_inv =
-        (frame_k->getPose().inverse() * H_w_filter).inverse();
-
-    gtsam::Pose3 H_w = H_w_filter;
-
-    // camera at frame_k->getPose()
-    auto gtsam_camera = frame_k->getFrameCamera();
+    const gtsam::Pose3 H_w_km1_k = filter->getF2FMotion();
 
     Motion3SolverResult motion_result;
     motion_result.status = geometric_result.status;
     motion_result.inliers = geometric_result.inliers;
     motion_result.outliers = geometric_result.outliers;
-    // motion_result.inliers = refined_inlier_tracklets;
-    // determineOutlierIds(motion_result.inliers, all_tracklets,
-    //                     motion_result.outliers);
 
     motion_result.best_result = Motion3ReferenceFrame(
-        H_w, Motion3ReferenceFrame::Style::F2F, ReferenceFrame::GLOBAL,
+        H_w_km1_k, Motion3ReferenceFrame::Style::F2F, ReferenceFrame::GLOBAL,
         frame_k_1->getFrameId(), frame_k->getFrameId());
 
     frame_k->dynamic_features_.markOutliers(motion_result.outliers);
     motion_estimates.insert({object_id, motion_result.best_result});
-
-    // Update stable frames and status
-    // stable_frame_counts_[object_id]++;
-    // if (stable_frame_counts_[object_id] >= 2 && object_statuses_[object_id]
-    // != ObjectTrackingStatus::Tracked) {
-    //   object_statuses_[object_id] = ObjectTrackingStatus::Tracked;
-    //   LOG(INFO) << "Object " << object_id << " promoted to Tracked at frame "
-    //   << frame_k->getFrameId() << " with stable count " <<
-    //   stable_frame_counts_[object_id];
-    // }
-
-    // MUST be >= 2 so we only need two good frames in a row to be well tracked
-    // if more, need to be careful when the object filter "reset" so that we
-    // dont send a motion which an updated reference frame before telling the
-    // backend to also update its reference frame!
-    //  stable_frame_counts_[object_id]++;
-    //  if (stable_frame_counts_[object_id] >= 2) {
-    //    if (object_statuses_[object_id] != ObjectTrackingStatus::WellTracked)
-    //    {
-    //      object_statuses_[object_id] = ObjectTrackingStatus::WellTracked;
-    //      LOG(INFO) << "Object " << object_id << " promoted to WellTracked at
-    //      frame " << frame_k->getFrameId() << " with stable count " <<
-    //      stable_frame_counts_[object_id];
-    //    }
-    //  } else {
-    //    //not new and not poorly tracked already
-    //    if (object_statuses_[object_id] != ObjectTrackingStatus::New &&
-    //    object_statuses_[object_id] != ObjectTrackingStatus::PoorlyTracked) {
-    //      object_statuses_[object_id] = ObjectTrackingStatus::PoorlyTracked;
-    //      LOG(INFO) << "Object " << object_id << " in PoorlyTracked state at
-    //      frame " << frame_k->getFrameId() << " with stable count " <<
-    //      stable_frame_counts_[object_id];
-    //    }
-    //  }
 
     return_result = true;
   } else {
@@ -1431,15 +1269,65 @@ bool ObjectMotionSolverFilter::solveImpl(Frame::Ptr frame_k,
     // so tha
     filters_.erase(object_id);
     return_result = false;
-    ;
   }
 
   LOG(INFO) << "Object " << object_id
             << " final status: " << to_string(object_statuses_[object_id])
-            << ", stable frames: " << stable_frame_counts_[object_id]
             << " with keyframe status: "
             << to_string(object_keyframe_statuses_[object_id]);
   return return_result;
+}
+
+bool ObjectMotionSolverFilter::filterNeedsReset(ObjectId object_id) {
+  if (filter_needs_reset_.exists(object_id)) {
+    return filter_needs_reset_.at(object_id);
+  }
+  return false;
+}
+
+gtsam::Pose3 ObjectMotionSolverFilter::constructPoseFromCentroid(
+    const Frame::Ptr frame, const TrackletIds& tracklets) const {
+  // important to initliase with zero values (otherwise nan's!)
+  gtsam::Point3 object_position(0, 0, 0);
+  size_t count = 0;
+  for (TrackletId tracklet : tracklets) {
+    const Feature::Ptr feature = frame->at(tracklet);
+    CHECK_NOTNULL(feature);
+
+    gtsam::Point3 lmk = frame->backProjectToCamera(feature->trackletId());
+    object_position += lmk;
+
+    count++;
+  }
+
+  object_position /= count;
+  object_position = frame->getPose() * object_position;
+  return gtsam::Pose3(gtsam::Rot3::Identity(), object_position);
+}
+
+std::shared_ptr<HybridObjectMotionSRIF>
+ObjectMotionSolverFilter::createAndInsertFilter(ObjectId object_id,
+                                                Frame::Ptr frame,
+                                                const TrackletIds& tracklets) {
+  gtsam::Matrix33 R = gtsam::Matrix33::Identity() * 1.0;
+  // Initial State Covariance P (6x6)
+  gtsam::Matrix66 P = gtsam::Matrix66::Identity() * 0.3;
+  // Process Model noise (6x6)
+  gtsam::Matrix66 Q = gtsam::Matrix66::Identity() * 0.2;
+
+  gtsam::Pose3 keyframe_pose = constructPoseFromCentroid(frame, tracklets);
+
+  constexpr static double kHuberKFilter = 0.05;
+  auto filter = std::make_shared<HybridObjectMotionSRIF>(
+      gtsam::Pose3::Identity(), keyframe_pose, frame->getFrameId(), P, Q, R,
+      frame->getCamera(), kHuberKFilter);
+  filters_.insert2(object_id, filter);
+  object_keyframe_statuses_[object_id] = ObjectKeyFrameStatus::AnchorKeyFrame;
+
+  LOG(INFO) << "Created new filter for object " << object_id << " at frame "
+            << frame->getFrameId();
+
+  return filter;
 }
 
 void ObjectMotionSolverFilter::fillHybridInfo(

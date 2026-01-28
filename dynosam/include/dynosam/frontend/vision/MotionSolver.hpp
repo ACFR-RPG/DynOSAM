@@ -477,9 +477,6 @@ class HybridObjectMotionSRIF {
   constexpr static int ZDim = gtsam::traits<gtsam::StereoPoint2>::dimension;
 
  public:
-  bool needs_resetting_from_last_frame{false};
-  bool was_reset_this_update{false};
-
  public:
   HybridObjectMotionSRIF(const gtsam::Pose3& initial_state_H,
                          const gtsam::Pose3& L_e, const FrameId& frame_id_e,
@@ -494,9 +491,6 @@ class HybridObjectMotionSRIF {
     return motion_track_status_;
   }
   inline FrameId getFrameId() const { return frame_id_; }
-
-  // could also mean the object was new?
-  inline bool resetThisUpdate() const { return was_reset_this_update; }
 
   inline const gtsam::FastMap<TrackletId, gtsam::Point3>&
   getCurrentLinearizedPoints() const {
@@ -608,6 +602,15 @@ class ObjectMotionSolverFilter : public ObjectMotionSolver,
                      Frame::Ptr frame_k, Frame::Ptr frame_k_1) override;
 
  private:
+  bool filterNeedsReset(ObjectId object_id);
+
+  gtsam::Pose3 constructPoseFromCentroid(const Frame::Ptr frame,
+                                         const TrackletIds& tracklets) const;
+
+  std::shared_ptr<HybridObjectMotionSRIF> createAndInsertFilter(
+      ObjectId object_id, Frame::Ptr frame, const TrackletIds& tracklets);
+
+ private:
   const Params filter_params_;
   //! All object poses (from k to K) and updated by updatePoses at each
   //! iteration of sovled
@@ -621,7 +624,8 @@ class ObjectMotionSolverFilter : public ObjectMotionSolver,
 
  private:
   gtsam::FastMap<ObjectId, ObjectTrackingStatus> object_statuses_;
-  gtsam::FastMap<ObjectId, int> stable_frame_counts_;
+  //! If filter needs resetting from last frame
+  gtsam::FastMap<ObjectId, bool> filter_needs_reset_;
   gtsam::FastMap<ObjectId, ObjectKeyFrameStatus> object_keyframe_statuses_;
 };
 
