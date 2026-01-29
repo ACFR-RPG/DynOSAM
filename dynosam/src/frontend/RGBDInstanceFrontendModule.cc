@@ -116,6 +116,9 @@ FrontendModule::SpinReturn RGBDInstanceFrontendModule::boostrapSpin(
 
   Frame::Ptr frame = tracker_->track(input->getFrameId(), input->getTimestamp(),
                                      *image_container);
+  FrontendModule::FrameToClassMap(frame);
+
+  
   CHECK(frame->updateDepths());
 
   return {State::Nominal, nullptr};
@@ -148,6 +151,7 @@ FrontendModule::SpinReturn RGBDInstanceFrontendModule::nominalSpin(
 
   Frame::Ptr frame = tracker_->track(input->getFrameId(), input->getTimestamp(),
                                      *image_container, R_curr_ref);
+  FrontendModule::FrameToClassMap(frame);
 
   Frame::Ptr previous_frame = tracker_->getPreviousFrame();
   CHECK(previous_frame);
@@ -230,6 +234,13 @@ FrontendModule::SpinReturn RGBDInstanceFrontendModule::nominalSpin(
   vision_imu_packet->groundTruthPacket(input->optional_gt_);
   fillOutputPacketWithTracks(vision_imu_packet, *frame, T_k_1_k, object_motions,
                              object_poses);
+
+  // Update the body velocity according to the previous vision IMU packet
+  if (previous_vision_imu_packet_) {
+    vision_imu_packet->updateBodyVelocity(*previous_vision_imu_packet_);
+  }
+
+  previous_vision_imu_packet_ = vision_imu_packet;
 
   if (R_curr_ref) {
     imu_frontend_.resetIntegration();

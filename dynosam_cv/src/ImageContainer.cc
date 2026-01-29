@@ -62,6 +62,8 @@ const ImageWrapper<ImageType::MotionMask>& ImageContainer::objectMotionMask()
     const {
   return this->at<ImageType::MotionMask>(kObjectMask);
 }
+
+
 const ImageWrapper<ImageType::RGBMono>& ImageContainer::rightRgb() const {
   return this->at<ImageType::RGBMono>(kRightRgb);
 }
@@ -78,6 +80,7 @@ ImageWrapper<ImageType::OpticalFlow>& ImageContainer::opticalFlow() {
 ImageWrapper<ImageType::MotionMask>& ImageContainer::objectMotionMask() {
   return this->at<ImageType::MotionMask>(kObjectMask);
 }
+
 ImageWrapper<ImageType::RGBMono>& ImageContainer::rightRgb() {
   return this->at<ImageType::RGBMono>(kRightRgb);
 }

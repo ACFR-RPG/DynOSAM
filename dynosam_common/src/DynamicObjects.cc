@@ -73,16 +73,70 @@ std::ostream& operator<<(std::ostream& os,
   return os;
 }
 
-gtsam::Vector3 calculateBodyMotion(const gtsam::Pose3& w_k_1_H_k,
-                                   const gtsam::Pose3& w_L_k_1) {
+
+// OLD BODY MOTION CALCULATION IMPLEMENTATION
+// want this to also output angular velocity too
+gtsam::Vector6 calculateBodyMotion(const gtsam::Pose3& w_k_1_H_k,
+                                   const gtsam::Pose3& w_L_k_1,
+                                   Timestamp timestamp_km1,
+                                   Timestamp timestamp_k) {
   const gtsam::Point3& t_motion = w_k_1_H_k.translation();
   const gtsam::Rot3& R_motion = w_k_1_H_k.rotation();
   const gtsam::Point3& t_pose = w_L_k_1.translation();
+  const gtsam::Rot3& R_pose = w_L_k_1.rotation();
 
   static const gtsam::Rot3 I = gtsam::Rot3::Identity();
 
-  return t_motion - (gtsam::Rot3(I.matrix() - R_motion.matrix())) * t_pose;
+  double dt = timestamp_k - timestamp_km1;
+  if (dt <= 1e-6) {
+      dt = 0.1;  // fallback to nominal frame interval
+  }
+
+  gtsam::Vector3 trans_vel = (t_motion - (gtsam::Rot3(I.matrix() - R_motion.matrix())) * t_pose) / dt;
+  
+// ===== NOW CALCULATING  THE ANGULAR VELOCITY =====
+
+  // Finding the relative rotation over the timestep
+  gtsam::Rot3 R_pose_transpose = R_pose.inverse();
+  gtsam::Rot3 R_new = R_motion * R_pose;
+  gtsam::Rot3 R_rel = R_pose_transpose * R_new;
+  
+  // Calculating the trace of the relative rotation and the angle of rotation
+  double trace = R_rel.matrix().trace();
+  double angle = std::acos((trace - 1) / 2);
+
+  gtsam::Matrix3 R_rel_m = R_rel.matrix();
+
+  // Finding the unit axis of rotation
+  double ux = (1 / (2 * std::sin(angle))) * (R_rel_m(2,1) - R_rel_m(1,2));
+  double uy = (1 / (2 * std::sin(angle))) * (R_rel_m(0,2) - R_rel_m(2,0));
+  double uz = (1 / (2 * std::sin(angle))) * (R_rel_m(1,0) - R_rel_m(0,1));
+  const gtsam::Vector3 axis(ux, uy, uz);
+
+  const gtsam::Vector3 angular_vel = (angle / dt) * axis;
+
+  gtsam::Vector6 body_velocity;
+  body_velocity.head<3>() = trans_vel;
+  body_velocity.tail<3>() = angular_vel;
+
+  return body_velocity;
 }
+
+// gtsam::Vector6 calculateBodyMotion(const gtsam::Pose3& w_k_1_H_k,
+//                                    const gtsam::Pose3& w_L_k_1,
+//                                    Timestamp timestamp_km1,
+//                                    Timestamp timestamp_k) {
+
+//   // Finding relative pose
+//   Timestamp dt = 0.04; // Estimated time between frames in kitti datasets
+
+//   gtsam::Pose3 T_rel = w_L_k_1.inverse() * (w_k_1_H_k * w_L_k_1);  // if pose is given in world frame 
+//   // gtsam::Pose3 T_rel = w_k_1_H_k;                                  // if pose is already in body frame
+
+//   gtsam::Vector6 body_velocity = gtsam::Pose3::Logmap(T_rel) / dt;
+
+//   return body_velocity;            
+// }
 
 void propogateObjectPoses(ObjectPoseMap& object_poses,
                           const MotionEstimateMap& object_motions_k,
