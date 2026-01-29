@@ -66,4 +66,18 @@ void FrontendModule::validateInput(
       result.valid_, *input->image_container_, result.requirement_);
 }
 
+void FrontendModule::FrameToClassMap(const Frame::Ptr& frame) const {
+  const auto& object_observations = frame->getObjectObservations();
+
+  for (const auto& [object_id, detection] : object_observations) {
+    if (!detection.class_name.empty()) {
+      shared_module_info.updateClassLabelMapping(object_id, detection.class_name);
+      std::cout << "UPDATING CLASS LABEL MAPPING " << object_id << " IS " << detection.class_name << std::endl;
+    }
+    else {
+      std::cout << "CANNOT UPDATE CLASS LABEL MAPPING; IT WAS EMPTY!" << std::endl;
+    }
+  }
+}
+
 }  // namespace dyno

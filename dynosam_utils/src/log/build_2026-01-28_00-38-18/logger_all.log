@@ -1,0 +1,65 @@
+[0.726s] DEBUG:colcon:Command line arguments: ['/usr/bin/colcon', 'build', '--symlink-install']
+[0.726s] DEBUG:colcon:Parsed command line arguments: Namespace(log_base=None, log_level=None, verb_name='build', build_base='build', install_base='install', merge_install=False, symlink_install=True, test_result_base=None, continue_on_error=False, executor='parallel', parallel_workers=20, event_handlers=None, ignore_user_meta=False, metas=['./colcon.meta'], base_paths=['.'], packages_ignore=None, packages_ignore_regex=None, paths=None, packages_up_to=None, packages_up_to_regex=None, packages_above=None, packages_above_and_dependencies=None, packages_above_depth=None, packages_select_by_dep=None, packages_skip_by_dep=None, packages_skip_up_to=None, packages_select_build_failed=False, packages_skip_build_finished=False, packages_select_test_failures=False, packages_skip_test_passed=False, packages_select=None, packages_skip=None, packages_select_regex=None, packages_skip_regex=None, packages_start=None, packages_end=None, allow_overriding=[], cmake_args=None, cmake_target=None, cmake_target_skip_unavailable=False, cmake_clean_cache=False, cmake_clean_first=False, cmake_force_configure=False, ament_cmake_args=None, catkin_cmake_args=None, catkin_skip_building_tests=False, verb_parser=<colcon_defaults.argument_parser.defaults.DefaultArgumentsDecorator object at 0x78f4b91e6ff0>, verb_extension=<colcon_core.verb.build.BuildVerb object at 0x78f4b962d0d0>, main=<bound method BuildVerb.main of <colcon_core.verb.build.BuildVerb object at 0x78f4b962d0d0>>)
+[0.881s] Level 1:colcon.colcon_core.package_discovery:discover_packages(colcon_meta) check parameters
+[0.882s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) check parameters
+[0.882s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) check parameters
+[0.882s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) check parameters
+[0.882s] Level 1:colcon.colcon_core.package_discovery:discover_packages(colcon_meta) discover
+[0.882s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) discover
+[0.882s] INFO:colcon.colcon_core.package_discovery:Crawling recursively for packages in '/home/user/dev_ws/src/core/dynosam_utils/src'
+[0.882s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['ignore', 'ignore_ament_install']
+[0.883s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ignore'
+[0.883s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ignore_ament_install'
+[0.883s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['colcon_pkg']
+[0.883s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'colcon_pkg'
+[0.883s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['colcon_meta']
+[0.883s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'colcon_meta'
+[0.883s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['ros']
+[0.884s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ros'
+[0.941s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['cmake', 'python']
+[0.941s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'cmake'
+[0.941s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'python'
+[0.941s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['python_setup_py']
+[0.941s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'python_setup_py'
+[0.942s] Level 1:colcon.colcon_core.package_identification:_identify(build) by extensions ['ignore', 'ignore_ament_install']
+[0.942s] Level 1:colcon.colcon_core.package_identification:_identify(build) by extension 'ignore'
+[0.942s] Level 1:colcon.colcon_core.package_identification:_identify(build) ignored
+[0.942s] Level 1:colcon.colcon_core.package_identification:_identify(install) by extensions ['ignore', 'ignore_ament_install']
+[0.942s] Level 1:colcon.colcon_core.package_identification:_identify(install) by extension 'ignore'
+[0.942s] Level 1:colcon.colcon_core.package_identification:_identify(install) ignored
+[0.942s] Level 1:colcon.colcon_core.package_identification:_identify(log) by extensions ['ignore', 'ignore_ament_install']
+[0.942s] Level 1:colcon.colcon_core.package_identification:_identify(log) by extension 'ignore'
+[0.942s] Level 1:colcon.colcon_core.package_identification:_identify(log) ignored
+[0.942s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) using defaults
+[0.942s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) discover
+[0.942s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) using defaults
+[0.942s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) discover
+[0.942s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) using defaults
+[0.990s] Level 1:colcon.colcon_core.package_discovery:discover_packages(prefix_path) check parameters
+[0.990s] Level 1:colcon.colcon_core.package_discovery:discover_packages(prefix_path) discover
+[1.029s] DEBUG:colcon.colcon_installed_package_information.package_discovery:Found 10 installed packages in /home/user/dev_ws/install
+[1.038s] DEBUG:colcon.colcon_installed_package_information.package_discovery:Found 345 installed packages in /opt/ros/kilted
+[1.039s] Level 1:colcon.colcon_core.package_discovery:discover_packages(prefix_path) using defaults
+[1.335s] INFO:colcon.colcon_core.executor:Executing jobs using 'parallel' executor
+[1.336s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:run_until_complete
+[1.337s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:closing loop
+[1.337s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:loop closed
+[1.337s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:run_until_complete finished with '0'
+[1.337s] DEBUG:colcon.colcon_core.event_reactor:joining thread
+[1.377s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_notification.desktop_notification.notify_send': Could not find 'notify-send'
+[1.377s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_notification.desktop_notification.terminal_notifier': Not used on non-Darwin systems
+[1.377s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_notification.desktop_notification.win32': Not used on non-Windows systems
+[1.377s] INFO:colcon.colcon_notification.desktop_notification:Sending desktop notification using 'notify2'
+[1.383s] DEBUG:colcon.colcon_notification.desktop_notification.notify2:Failed to initialize notify2: org.freedesktop.DBus.Error.Spawn.ExecFailed: /usr/bin/dbus-launch terminated abnormally without any error message
+[1.384s] DEBUG:colcon.colcon_core.event_reactor:joined thread
+[1.397s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_core.shell.bat': Not used on non-Windows systems
+[1.398s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/user/dev_ws/src/core/dynosam_utils/src/install/local_setup.ps1'
+[1.401s] INFO:colcon.colcon_core.shell:Creating prefix util module '/home/user/dev_ws/src/core/dynosam_utils/src/install/_local_setup_util_ps1.py'
+[1.404s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/user/dev_ws/src/core/dynosam_utils/src/install/setup.ps1'
+[1.407s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/user/dev_ws/src/core/dynosam_utils/src/install/local_setup.sh'
+[1.408s] INFO:colcon.colcon_core.shell:Creating prefix util module '/home/user/dev_ws/src/core/dynosam_utils/src/install/_local_setup_util_sh.py'
+[1.409s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/user/dev_ws/src/core/dynosam_utils/src/install/setup.sh'
+[1.412s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/user/dev_ws/src/core/dynosam_utils/src/install/local_setup.bash'
+[1.415s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/user/dev_ws/src/core/dynosam_utils/src/install/setup.bash'
+[1.417s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/user/dev_ws/src/core/dynosam_utils/src/install/local_setup.zsh'
+[1.420s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/user/dev_ws/src/core/dynosam_utils/src/install/setup.zsh'

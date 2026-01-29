@@ -73,6 +73,8 @@ std::ostream& operator<<(std::ostream& os,
   return os;
 }
 
+
+// OLD BODY MOTION CALCULATION IMPLEMENTATION
 // want this to also output angular velocity too
 gtsam::Vector6 calculateBodyMotion(const gtsam::Pose3& w_k_1_H_k,
                                    const gtsam::Pose3& w_L_k_1,
@@ -85,7 +87,10 @@ gtsam::Vector6 calculateBodyMotion(const gtsam::Pose3& w_k_1_H_k,
 
   static const gtsam::Rot3 I = gtsam::Rot3::Identity();
 
-  Timestamp dt = 0.04;
+  double dt = timestamp_k - timestamp_km1;
+  if (dt <= 1e-6) {
+      dt = 0.1;  // fallback to nominal frame interval
+  }
 
   gtsam::Vector3 trans_vel = (t_motion - (gtsam::Rot3(I.matrix() - R_motion.matrix())) * t_pose) / dt;
   
@@ -116,6 +121,22 @@ gtsam::Vector6 calculateBodyMotion(const gtsam::Pose3& w_k_1_H_k,
 
   return body_velocity;
 }
+
+// gtsam::Vector6 calculateBodyMotion(const gtsam::Pose3& w_k_1_H_k,
+//                                    const gtsam::Pose3& w_L_k_1,
+//                                    Timestamp timestamp_km1,
+//                                    Timestamp timestamp_k) {
+
+//   // Finding relative pose
+//   Timestamp dt = 0.04; // Estimated time between frames in kitti datasets
+
+//   gtsam::Pose3 T_rel = w_L_k_1.inverse() * (w_k_1_H_k * w_L_k_1);  // if pose is given in world frame 
+//   // gtsam::Pose3 T_rel = w_k_1_H_k;                                  // if pose is already in body frame
+
+//   gtsam::Vector6 body_velocity = gtsam::Pose3::Logmap(T_rel) / dt;
+
+//   return body_velocity;            
+// }
 
 void propogateObjectPoses(ObjectPoseMap& object_poses,
                           const MotionEstimateMap& object_motions_k,
