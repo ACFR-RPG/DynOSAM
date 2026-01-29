@@ -230,7 +230,6 @@ class ImageContainer {
   static constexpr char kOPticalFlow[] = "opticalflow";
   static constexpr char kDepth[] = "depth";
   static constexpr char kObjectMask[] = "objectmask";
-  static constexpr char kClassMask[] = "classmask";
   static constexpr char kRightRgb[] = "rightrgb";
 
  public:
@@ -307,28 +306,24 @@ class ImageContainer {
   inline bool hasDepth() const { return exists(kDepth); }
   inline bool hasOpticalFlow() const { return exists(kOPticalFlow); }
   inline bool hasObjectMask() const { return exists(kObjectMask); }
-  inline bool hasClassMask() const { return exists(kClassMask); }
   inline bool hasRightRgb() const { return exists(kRightRgb); }
 
   const ImageWrapper<ImageType::RGBMono>& rgb() const;
   const ImageWrapper<ImageType::Depth>& depth() const;
   const ImageWrapper<ImageType::OpticalFlow>& opticalFlow() const;
   const ImageWrapper<ImageType::MotionMask>& objectMotionMask() const;
-  const ImageWrapper<ImageType::SemanticMask>& objectClassMask() const;
   const ImageWrapper<ImageType::RGBMono>& rightRgb() const;
 
   ImageWrapper<ImageType::RGBMono>& rgb();
   ImageWrapper<ImageType::Depth>& depth();
   ImageWrapper<ImageType::OpticalFlow>& opticalFlow();
   ImageWrapper<ImageType::MotionMask>& objectMotionMask();
-  ImageWrapper<ImageType::SemanticMask>& objectClassMask();
   ImageWrapper<ImageType::RGBMono>& rightRgb();
 
   ImageContainer& rgb(const cv::Mat& image);
   ImageContainer& depth(const cv::Mat& image);
   ImageContainer& opticalFlow(const cv::Mat& image);
   ImageContainer& objectMotionMask(const cv::Mat& image);
-  ImageContainer& objectClassMask(const cv::Mat& image);
   ImageContainer& rightRgb(const cv::Mat& image);
 
   Timestamp timestamp() const { return timestamp_; }

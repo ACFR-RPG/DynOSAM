@@ -57,6 +57,11 @@ std::optional<GroundTruthPacketMap> SharedModuleInfo::getGroundTruthPackets()
   return gt_packet_map_;
 }
 
+const ObjectIdClassMap& SharedModuleInfo::getClassLabelMap() const {
+  const std::lock_guard<std::mutex> lock(mutex_);
+  return object_id_to_class_map_;
+}
+
 bool SharedModuleInfo::getTimestamp(FrameId frame_id,
                                     Timestamp& timestamp) const {
   const FrameIdTimestampMap& timestamp_map = getTimestampMap();
@@ -84,6 +89,19 @@ SharedModuleInfo& SharedModuleInfo::updateTimestampMapping(
     CHECK_EQ(frame_id_to_timestamp_map_.at(frame_id), timestamp);
   } else {
     frame_id_to_timestamp_map_.insert2(frame_id, timestamp);
+  }
+  return *this;
+}
+
+SharedModuleInfo& SharedModuleInfo::updateClassLabelMapping(
+    ObjectId object_id, std::string class_label) {
+
+  const std::lock_guard<std::mutex> lock(mutex_);
+
+  if (object_id_to_class_map_.exists(object_id)) {
+    CHECK_EQ(object_id_to_class_map_.at(object_id), class_label);
+  } else {
+    object_id_to_class_map_.insert2(object_id, class_label);
   }
   return *this;
 }

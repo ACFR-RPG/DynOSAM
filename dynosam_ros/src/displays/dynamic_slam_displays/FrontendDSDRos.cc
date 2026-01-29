@@ -216,10 +216,11 @@ void FrontendDSDRos::tryPublishObjects(
   const auto& object_motions = object_motions_;
   const auto& object_poses = object_poses_;
   const auto& timestamp_map = this->shared_module_info.getTimestampMap();
+  const auto& label_map = this->shared_module_info.getClassLabelMap(); 
 
   DSDTransport::Publisher object_poses_publisher = dsd_transport_.addObjectInfo(
       object_motions, object_poses, params_.world_frame_id, timestamp_map,
-      frontend_output->frameId(), frontend_output->timestamp());
+      frontend_output->frameId(), frontend_output->timestamp(), label_map);
   object_poses_publisher.publishObjectOdometry();
   object_poses_publisher.publishObjectTransforms();
   object_poses_publisher.publishObjectPaths();

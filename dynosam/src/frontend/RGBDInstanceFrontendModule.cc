@@ -116,6 +116,9 @@ FrontendModule::SpinReturn RGBDInstanceFrontendModule::boostrapSpin(
 
   Frame::Ptr frame = tracker_->track(input->getFrameId(), input->getTimestamp(),
                                      *image_container);
+  FrontendModule::FrameToClassMap(frame);
+
+  
   CHECK(frame->updateDepths());
 
   return {State::Nominal, nullptr};
@@ -148,6 +151,7 @@ FrontendModule::SpinReturn RGBDInstanceFrontendModule::nominalSpin(
 
   Frame::Ptr frame = tracker_->track(input->getFrameId(), input->getTimestamp(),
                                      *image_container, R_curr_ref);
+  FrontendModule::FrameToClassMap(frame);
 
   Frame::Ptr previous_frame = tracker_->getPreviousFrame();
   CHECK(previous_frame);

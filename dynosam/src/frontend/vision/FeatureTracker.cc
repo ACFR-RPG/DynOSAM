@@ -47,32 +47,6 @@
 
 namespace dyno {
 
-  // HELPER FUNCTION ADDED BY ETHAN
-// TODO: make this map for the class labels
-static const std::map<std::string, int> class_name_to_id{
-    {"Undefined", 0},  // 0
-    {"Road", 1},            // 1
-    {"Rider", 2},          // 2
-};
-
-int objectIdToClassId(ObjectId obj_id, const std::map<ObjectId, std::string>& object_classes) {
-
-  auto it = object_classes.find(obj_id);                                  // find the object in the map
-
-  if (it == object_classes.end() || it->second == "Unknown") {
-    return 0;  
-  }
-  
-  auto class_it = class_name_to_id.find(it->second);
-  if (class_it != class_name_to_id.end()) {
-    return class_it->second;
-  } 
-
-  return 1;
-
-}
-
-
 FeatureTracker::FeatureTracker(const FrontendParams& params, Camera::Ptr camera,
                                ImageDisplayQueue* display_queue)
     : FeatureTrackerBase(params.tracker_params, camera, display_queue),
@@ -129,7 +103,12 @@ Frame::Ptr FeatureTracker::track(FrameId frame_id, Timestamp timestamp,
   // params_.prefer_provided_object_detection is false
   vision_tools::ObjectBoundaryMaskResult boundary_mask_result;
 
-  objectDetection(boundary_mask_result, input_images);
+  ObjectDetectionResult observations = objectDetection(boundary_mask_result, input_images);
+
+  for (const auto& det : observations.detections) {
+      std::cout << "Detected object_id=" << det.object_id
+                << " class_name=" << det.class_name << std::endl;
+  }
 
   if (!initial_computation_ && params_.use_propogate_mask) {
     utils::TimingStatsCollector timer("propogate_mask");
@@ -183,18 +162,10 @@ Frame::Ptr FeatureTracker::track(FrameId frame_id, Timestamp timestamp,
   // TODO: SingleDetectionResult really does not need the tracklet ids they
   // are never actually used!! this prevents the frame from needing to do the
   // same calculations we've alrady done
+
   std::map<ObjectId, SingleDetectionResult> object_observations;
-  for (size_t i = 0; i < boundary_mask_result.objects_detected.size(); i++) {
-    ObjectId object_id = boundary_mask_result.objects_detected.at(i);
-    const cv::Rect& bb_detection =
-        boundary_mask_result.object_bounding_boxes.at(i);
-
-    SingleDetectionResult observation;
-    observation.object_id = object_id;
-    // observation.object_features = dynamic_features.getByObject(object_id);
-    observation.bounding_box = bb_detection;
-
-    object_observations[object_id] = observation;
+  for (const auto& detection : observations.detections) {
+    object_observations[detection.object_id] = detection;
   }
 
   utils::TimingStatsCollector f_timer("tracking_timer.frame_construction");
@@ -215,6 +186,8 @@ Frame::Ptr FeatureTracker::track(FrameId frame_id, Timestamp timestamp,
           << container_to_string(new_frame->getObjectIds());
   previous_frame_ = new_frame;
   boarder_detection_mask_ = boundary_mask_result.boundary_mask;
+
+  // FrontendModule::FrameToClassMap(new_frame);
 
   return new_frame;
 }
@@ -1178,7 +1151,7 @@ void FeatureTracker::requiresSampling(
   }
 }
 
-std::optional<ObjectDetectionResult> FeatureTracker::objectDetection(
+ObjectDetectionResult FeatureTracker::objectDetection(
     vision_tools::ObjectBoundaryMaskResult& boundary_mask_result,
     ImageContainer& image_container) {
   // from some experimental testing 10 pixles is a good boarder to add around
@@ -1209,7 +1182,25 @@ std::optional<ObjectDetectionResult> FeatureTracker::objectDetection(
       vision_tools::computeObjectMaskBoundaryMask(
           boundary_mask_result, object_mask, scaled_boarder_thickness,
           kUseAsFeatureDetectionMask);
-      return std::nullopt;
+      
+      ObjectDetectionResult detection_result;
+      detection_result.input_image = image_container.rgb();
+      detection_result.labelled_mask = object_mask;
+
+      for (size_t i = 0; i < boundary_mask_result.objects_detected.size(); i++) {
+        ObjectId object_id = boundary_mask_result.objects_detected.at(i);
+        const cv::Rect& bb_detection =
+            boundary_mask_result.object_bounding_boxes.at(i);
+
+        SingleDetectionResult observation;
+        observation.object_id = object_id;
+        // observation.object_features = dynamic_features.getByObject(object_id);
+        observation.bounding_box = bb_detection;
+        observation.class_name = "goober";
+        detection_result.detections.push_back(observation);      
+      }
+
+      return detection_result;
     } else {
       LOG(FATAL) << "Params specify prefer provided object mask but input "
                     "is missing!";
@@ -1251,18 +1242,7 @@ void FeatureTracker::propogateMask(ImageContainer& image_container) {
 
   // note reference
   cv::Mat& current_mask = image_container.objectMotionMask();
-  cv::Mat& current_class_mask = image_container.objectClassMask();
 
-  // building map of previous classes
-  std::map<ObjectId, std::string> object_classes;
-  for (const auto& [obj_id, detection] : previous_frame_->object_observations_) {
-    if (detection.isValid()) {
-      object_classes[obj_id] = detection.class_name;
-    } 
-    else {
-      object_classes[obj_id] = "Unknown";
-    }
-  }
 
   ObjectIds instance_labels;
   for (const Feature::Ptr& dynamic_feature :
@@ -1391,13 +1371,7 @@ void FeatureTracker::propogateMask(ImageContainer& image_container) {
               current_mask.at<ObjectId>(functional_keypoint::v(predicted_kp),
                                         functional_keypoint::u(predicted_kp)) =
                   instance_labels[i];
-              
-              const ObjectId obj_id = instance_labels[i];
-              int class_id = objectIdToClassId(obj_id, object_classes);
 
-              current_class_mask.at<int>(functional_keypoint::v(predicted_kp), 
-                                         functional_keypoint::u(predicted_kp)) = 
-                    class_id;
               //  current_rgb
               // updated_mask_points++;
             }

@@ -84,18 +84,21 @@ class DSDTransport {
   static ObjectOdometry constructObjectOdometry(
       const gtsam::Pose3& e_H_k_world, const gtsam::Pose3& pose_k,
       ObjectId object_id, FrameId frame_id_k, Timestamp timestamp_k, Timestamp timestamp_km1,
-      const std::string& frame_id_link, const std::string& child_frame_id_link);
+      const std::string& frame_id_link, const std::string& child_frame_id_link,
+      const ObjectIdClassMap& object_class_map);
 
   static ObjectOdometryMap constructObjectOdometries(
       const ObjectMotionMap& motions, const ObjectPoseMap& poses,
       FrameId frame_id_k, Timestamp timestamp_k, Timestamp timestamp_km1,
-      const std::string& frame_id_link);
+      const std::string& frame_id_link,
+      const ObjectIdClassMap& object_class_map);
 
   static MultiObjectOdometryPath constructMultiObjectOdometryPaths(
       const ObjectMotionMap& motions, const ObjectPoseMap& poses,
       Timestamp timestamp_k, const FrameIdTimestampMap& frame_timestamp_map,
       const std::string& frame_id_link,
-      bool interpolate_missing_segments = true);
+      bool interpolate_missing_segments = true,
+      const ObjectIdClassMap& object_class_map = {});
 
   /**
    * @brief Nested Publisher that publishes all the object odometries for a
@@ -152,6 +155,8 @@ class DSDTransport {
     ObjectOdometryMap object_odometries_;
     MultiObjectOdometryPath object_paths_;
 
+    ObjectIdClassMap object_class_map_;
+
     friend class DSDTransport;
 
     /**
@@ -181,7 +186,8 @@ class DSDTransport {
         const ObjectMotionMap& motions, const ObjectPoseMap& poses,
         const std::string& frame_id_link,
         const FrameIdTimestampMap& frame_timestamp_map, FrameId frame_id,
-        Timestamp timestamp);
+        Timestamp timestamp,
+        const ObjectIdClassMap& object_class_map = {});
   };
 
   /**
@@ -202,7 +208,8 @@ class DSDTransport {
                           const ObjectPoseMap& poses,
                           const std::string& frame_id_link,
                           const FrameIdTimestampMap& frame_timestamp_map,
-                          FrameId frame_id, Timestamp timestamp);
+                          FrameId frame_id, Timestamp timestamp,
+                          const ObjectIdClassMap& object_class_map = {});
 
  private:
   rclcpp::Node::SharedPtr node_;
