@@ -140,7 +140,7 @@ class FastMapNodeSet
     std::vector<Index> ids;
     for (const auto& node : *this) {
       // ducktyping for node to have a getId function
-      ids.push_back(static_cast<Index>(node->getId()));
+      ids.push_back(getIndexSafe<Index>(node));
     }
 
     return ids;
@@ -212,6 +212,10 @@ class FastMapNodeSet
   template <typename Index = int>
   bool exists(Index index) const {
     return this->find(index) != this->end();
+  }
+
+  bool exists(const NODE& node) const {
+    return exists(getIndexSafe<int>(node));
   }
 
   /**
@@ -835,9 +839,15 @@ class LandmarkNode : public MapNodeBase<MEASUREMENT> {
    */
   DynamicPointSymbol makeDynamicSymbol(FrameId frame_id) const;
 
+ private:
+  bool addAvoidDupliactes(FrameNodePtr<MEASUREMENT> frame_node,
+                          const MEASUREMENT& measurement);
+
  protected:
   FrameNodePtrSet<MEASUREMENT> frames_seen_;
   Measurements measurements_;
+
+  friend class Map<MEASUREMENT>;
 };
 
 }  // namespace dyno

@@ -155,6 +155,20 @@ void LandmarkNode<MEASUREMENT>::add(FrameNodePtr<MEASUREMENT> frame_node,
 }
 
 template <typename MEASUREMENT>
+bool LandmarkNode<MEASUREMENT>::addAvoidDupliactes(
+    FrameNodePtr<MEASUREMENT> frame_node, const MEASUREMENT& measurement) {
+  if (frames_seen_.exists(frame_node)) {
+    // measurement already added
+    // sanity check with the measurement data-structure
+    CHECK(measurements_.exists(frame_node));
+    return false;
+  }
+
+  add(frame_node, measurement);
+  return true;
+}
+
+template <typename MEASUREMENT>
 bool LandmarkNode<MEASUREMENT>::seenAtFrame(FrameId frame_id) const {
   return frames_seen_.exists(frame_id);
 }

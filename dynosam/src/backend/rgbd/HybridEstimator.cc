@@ -1183,21 +1183,18 @@ UpdateObservationResult HybridFormulationKeyFrame::updateDynamicObservations(
   for (const auto& object_node : frame_node_k->objects_seen) {
     const ObjectId object_id = object_node->getId();
 
-    Context context;
-    context.object_node = object_node;
-    context.frame_node = frame_node_k;
-    context.X_k_measured = getInitialOrLinearizedSensorPose(frame_id_k);
-    context.starting_factor_slot = starting_factor_slot;
+    // depending on how the frontend is implemented we may have measurements in
+    // the map at non-keyframes but only want to update objects at KFs
+    if (isObjectKeyFrame(object_id, frame_id_k)) {
+      Context context;
+      context.object_node = object_node;
+      context.frame_node = frame_node_k;
+      context.X_k_measured = getInitialOrLinearizedSensorPose(frame_id_k);
+      context.starting_factor_slot = starting_factor_slot;
 
-    LOG(INFO) << "Updating object " << info_string(frame_id_k, object_id);
-    updateObject(context, result, internal_new_values, internal_new_factors);
-    // auto seen_lmks_k = object_node->getLandmarksSeenAtFrame(frame_id_k);
-
-    // for (const auto& obj_lmk_node : seen_lmks_k) {
-    //   CHECK_EQ(obj_lmk_node->getObjectId(), object_id);
-    //   const TrackletId tracklet_id = obj_lmk_node->getId();
-
-    // }
+      LOG(INFO) << "Updating object " << info_string(frame_id_k, object_id);
+      updateObject(context, result, internal_new_values, internal_new_factors);
+    }
   }
 
   if (result.debug_info && VLOG_IS_ON(20)) {
@@ -1217,6 +1214,11 @@ UpdateObservationResult HybridFormulationKeyFrame::updateDynamicObservations(
   // add to the external new_values
   new_values.insert(internal_new_values);
   return result;
+}
+
+bool HybridFormulationKeyFrame::isObjectKeyFrame(ObjectId object_id,
+                                                 FrameId frame_id) const {
+  return key_frames_per_object_.exists(object_id, frame_id);
 }
 
 void HybridFormulationKeyFrame::updateObject(
@@ -1268,9 +1270,19 @@ void HybridFormulationKeyFrame::updateObject(
     // LOG(INFO) << "Iterating through dynamic lmk " << tracklet_id;
     const gtsam::Key point_key = this->makeDynamicKey(tracklet_id);
 
-    // must be seen at both frames
-    CHECK(obj_lmk_node->seenAtFrame(frame_id_akf));
-    CHECK(obj_lmk_node->seenAtFrame(frame_id_kf));
+    // becuase we dont anchor the motion (like in the original Hybrid with an
+    // identity motion) we dont always have a motion at an anchor keyframe so
+    // the point doesnt need to be seen there
+    // TODO: depending in implementation of regular vs anchor KF, we may expect
+    // that at anchor frames a point is not necessarily
+    // seen at both the AKF and the RKF but should be seen at RKF-1 and RKF-k
+    // (ie. if the previous KF was only a RKF, points should be seen at both?
+    // MAYBE) CHECK(obj_lmk_node->seenAtFrame(frame_id_akf)) << "Lmk i=" <<
+    // tracklet_id << " Object " << object_id << " not seen at " << frame_id_akf
+    // << " but this is the from motion";
+    CHECK(obj_lmk_node->seenAtFrame(frame_id_kf))
+        << "Lmk i=" << tracklet_id << "Object " << object_id << " not seen at "
+        << frame_id_kf << " but this is the to motion";
 
     if (!isDynamicTrackletInMap(obj_lmk_node)) {
       // we may have more seen landmarks than points in the filter
@@ -1287,6 +1299,8 @@ void HybridFormulationKeyFrame::updateObject(
       is_dynamic_tracklet_in_map_.insert2(tracklet_id, AKF_id);
       all_dynamic_landmarks_.insert2(tracklet_id, AKF_id);
 
+      CHECK(isDynamicTrackletInMap(obj_lmk_node));
+
       gtsam::Point3 m_L_initial = m_L_initial_.at(object_id, tracklet_id);
       new_values.insert(point_key, m_L_initial);
 
@@ -1298,8 +1312,9 @@ void HybridFormulationKeyFrame::updateObject(
       //  assume that once we have seen it we only need to add measurements
       //  at the newest KF, since we will have added measurements
       //  for the previous KF last iteration (if all works well!)
-      addHybridMotionFactor(new_factors, pose_key, object_motion_key, point_key,
-                            AKF_pose, obj_lmk_node, frame_node_akf);
+      // addHybridMotionFactor(new_factors, pose_key, object_motion_key,
+      // point_key,
+      //                       AKF_pose, obj_lmk_node, frame_node_akf);
     }
 
     addHybridMotionFactor(new_factors, pose_key, object_motion_key, point_key,
@@ -1363,6 +1378,12 @@ void HybridFormulationKeyFrame::preUpdate(const PreUpdateData& data) {
     const bool anchor_keyframe = hybrid_info.anchor_keyframe;
     const ObjectTrackingStatus& object_motion_tracking_status =
         object_track.motion_track_status;
+
+    KeyFrameMetaData kf_data;
+    kf_data.is_regular = regular_keyframe;
+    kf_data.is_anchor = anchor_keyframe;
+
+    key_frames_per_object_.insert22(object_id, frame_id, kf_data);
 
     if (anchor_keyframe) CHECK(regular_keyframe);
 

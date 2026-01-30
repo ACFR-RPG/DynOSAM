@@ -144,7 +144,7 @@ RegularBackendModule::SpinReturn RegularBackendModule::boostrapSpinImpl(
 
   LOG(INFO) << "Starting any updates";
 
-  updateAndOptimize(frame_k, new_values, new_factors, post_update_data);
+  // updateAndOptimize(frame_k, new_values, new_factors, post_update_data);
   LOG(INFO) << "Done any udpates";
 
   // Should be no need to update after opt as we just added the initial state!?
@@ -202,7 +202,7 @@ RegularBackendModule::SpinReturn RegularBackendModule::nominalSpinImpl(
 
   LOG(INFO) << "Starting any updates";
 
-  updateAndOptimize(frame_k, new_values, new_factors, post_update_data);
+  // updateAndOptimize(frame_k, new_values, new_factors, post_update_data);
   LOG(INFO) << "Done any udpates";
 
   auto accessor = formulation_->accessorFromTheta();
@@ -289,7 +289,8 @@ RegularBackendModule::getActiveOptimisation() const {
     const auto graph = formulation_->getGraph();
     return {theta, graph};
   } else if (optimization_mode == RegularOptimizationType::SLIDING_WINDOW) {
-    LOG(FATAL) << "Not implemented!";
+    LOG(ERROR) << "Not implemented!";
+    return {gtsam::Values{}, gtsam::NonlinearFactorGraph{}};
 
   } else if (optimization_mode == RegularOptimizationType::INCREMENTAL) {
     using SmootherInterface = IncrementalInterface<dyno::ISAM2>;
@@ -574,14 +575,21 @@ void RegularBackendModule::updateMapWithMeasurements(
   CHECK_EQ(frame_id_k, input->frameId());
   // CHECK_EQ(frame_id_k, input->kf_id);
 
+  CHECK(input->local_map);
+  // TODO: wait why even bother to UPDATE? maybe unless we prune the frontend
+  // map
+  //  they should just be the same, no?
+  auto map_update_result = map_->updateFromMap(*input->local_map);
+  // LOG(INFO) << "Map update result: " << to_string(map_update_result);
+
   // update static and ego motion
-  map_->updateObservations(input->staticMeasurements());
+  // map_->updateObservations(input->staticMeasurements());
   map_->updateSensorPoseMeasurement(frame_id_k, Pose3Measurement(X_k_w));
 
   // update dynamic and motions
   MotionEstimateMap object_motions;
   for (const auto& [object_id, object_track] : input->objectTracks()) {
-    map_->updateObservations(object_track.measurements);
+    // map_->updateObservations(object_track.measurements);
     object_motions.insert2(object_id, object_track.H_W_k_1_k);
   }
   // collected motion estimates for this current frame (ie. new motions!)
@@ -708,6 +716,9 @@ BackendOutputPacket::Ptr RegularBackendModule::constructOutputPacket(
   backend_output->static_landmarks = accessor->getFullStaticMap();
   // backend_output->optimized_object_motions =
   //     accessor->getObjectMotions(frame_k);
+
+  LOG(INFO) << "Static map " << backend_output->static_landmarks.size();
+  LOG(INFO) << "OPt pose " << backend_output->T_world_camera;
 
   auto map = formulation_->map();
   LOG(INFO) << "Map frame ids " << container_to_string(map->getFrameIds());

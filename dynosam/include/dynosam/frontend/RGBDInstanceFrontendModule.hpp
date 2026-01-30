@@ -39,6 +39,7 @@
 #include "dynosam/frontend/vision/MotionSolver.hpp"
 #include "dynosam/frontend/vision/VisionTools.hpp"
 #include "dynosam_cv/Camera.hpp"
+#include "dynosam_opt/Map.hpp"
 
 namespace dyno {
 
@@ -82,11 +83,13 @@ class RGBDInstanceFrontendModule : public FrontendModule {
   bool solveCameraMotion(Frame::Ptr frame_k, const Frame::Ptr& frame_k_1,
                          std::optional<gtsam::Rot3> R_curr_ref = {});
 
+  // TODO: force camera kf for now!!! LOGIC is all over the place
   void fillOutputPacketWithTracks(VisionImuPacket::Ptr vision_imu_packet,
                                   const Frame& frame,
                                   const gtsam::Pose3& T_k_1_k,
                                   const ObjectMotionMap& object_motions,
-                                  const ObjectPoseMap& object_poses) const;
+                                  const ObjectPoseMap& object_poses,
+                                  bool force_camera_kf = false) const;
 
   void sendToFrontendLogger(const Frame::Ptr& frame,
                             const VisionImuPacket::Ptr& vision_imu_packet);
@@ -123,8 +126,12 @@ class RGBDInstanceFrontendModule : public FrontendModule {
 
   gtsam::Pose3 T_lkf_k;
 
-  //! Last keyframe
+  //! Last (camera) keyframe
   Frame::Ptr frame_lkf_;
+
+  // should not share nodes!!
+  MapVision::Ptr full_local_map_;
+  MapVision::Ptr kf_local_map_;
 };
 
 }  // namespace dyno

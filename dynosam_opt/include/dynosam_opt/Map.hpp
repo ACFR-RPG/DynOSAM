@@ -44,6 +44,27 @@
 
 namespace dyno {
 
+struct MapUpdateResult {
+  FrameIds new_frames;
+  TrackletIds new_landmarks;
+  ObjectIds new_objects;
+
+  std::set<FrameId> touched_frames;
+  std::set<TrackletId> touched_landmarks;
+  std::set<ObjectId> touched_objects;
+};
+
+template <>
+inline std::string to_string(const MapUpdateResult& result) {
+  std::stringstream ss;
+  ss << "New frames " << container_to_string(result.new_frames) << " \n";
+  ss << "New landmarks " << container_to_string(result.new_landmarks) << " \n";
+  ss << "New objects " << container_to_string(result.new_objects) << " \n";
+  // ss << "New frames " << container_to_string(result.new_frames) << " \n";
+
+  return ss.str();
+}
+
 /**
  * @brief A container that holds all connected information about static and
  * dynamic entities that is build from input measurements.
@@ -107,10 +128,12 @@ class Map : public std::enable_shared_from_this<Map<MEASUREMENT>> {
    * @param measurements const GenericTrackedStatusVector<DERIVEDSTATUS>&
    */
   template <typename DERIVEDSTATUS>
-  void updateObservations(
+  MapUpdateResult updateObservations(
       const GenericTrackedStatusVector<DERIVEDSTATUS>& measurements) {
     using DerivedMeasurement =
         typename GenericTrackedStatusVector<DERIVEDSTATUS>::Value;
+
+    MapUpdateResult update_result;
     for (const DERIVEDSTATUS& status_measurement : measurements) {
       const TrackedValueStatus<DerivedMeasurement>& derived_status =
           static_cast<const TrackedValueStatus<DerivedMeasurement>&>(
@@ -122,9 +145,115 @@ class Map : public std::enable_shared_from_this<Map<MEASUREMENT>> {
       const FrameId frame_id = status.frameId();
       const ObjectId object_id = status.objectId();
       const bool is_static = status.isStatic();
-      addOrUpdateMapStructures(measurement, tracklet_id, frame_id, object_id,
-                               is_static);
+      addOrUpdateMapStructures(update_result, measurement, tracklet_id,
+                               frame_id, object_id, is_static);
     }
+    return update_result;
+  }
+
+  // TODO: provide map result as a hint for updating to not search through
+  // entire map!!
+  // TODO: if this map is only updated from the same map then we neever need up
+  // to update internal
+  //  properties as they will be shared
+  //  otherwise do we need t worry?
+  MapUpdateResult updateFromMap(const Map& other) {
+    MapUpdateResult update_result;
+    // update frame
+    for (const auto& [frame_id, other_frame_node] : other.frames_) {
+      if (!frameExists(frame_id)) {
+        frames_.insert2(frame_id, other_frame_node);
+        update_result.new_frames.push_back(frame_id);
+        update_result.touched_frames.insert(frame_id);
+      } else {
+        auto this_frame_node = getFrame(frame_id);
+        // add new properties
+        // since we use a set we can just add all properties of the new frame
+        // and only Nodes which aren't already in the proprties are added
+        const size_t dyn_lmks_size_before =
+            this_frame_node->dynamic_landmarks.size();
+        const size_t static_lmks_size_before =
+            this_frame_node->static_landmarks.size();
+        const size_t objects_size_before = this_frame_node->objects_seen.size();
+
+        this_frame_node->dynamic_landmarks.insert(
+            other_frame_node->dynamic_landmarks.begin(),
+            other_frame_node->dynamic_landmarks.end());
+
+        this_frame_node->static_landmarks.insert(
+            other_frame_node->static_landmarks.begin(),
+            other_frame_node->static_landmarks.end());
+
+        this_frame_node->objects_seen.insert(
+            other_frame_node->objects_seen.begin(),
+            other_frame_node->objects_seen.end());
+
+        const size_t dyn_lmks_size_after =
+            this_frame_node->dynamic_landmarks.size();
+        const size_t static_lmks_size_after =
+            this_frame_node->static_landmarks.size();
+        const size_t objects_size_after = this_frame_node->objects_seen.size();
+
+        const bool new_dyn_lmks = dyn_lmks_size_before != dyn_lmks_size_after;
+        const bool new_static_lmks =
+            static_lmks_size_before != static_lmks_size_after;
+        const bool new_objects_seen = objects_size_before != objects_size_after;
+
+        if (new_dyn_lmks || new_static_lmks || new_objects_seen) {
+          update_result.touched_frames.insert(frame_id);
+        }
+
+        // TODO: for now, not updating initial pose/motions
+      }
+    }
+
+    // update landmarks
+    for (const auto& [tracklet_id, other_landmark_node] : other.landmarks_) {
+      if (!landmarkExists(tracklet_id)) {
+        landmarks_.insert2(tracklet_id, other_landmark_node);
+        update_result.new_landmarks.push_back(tracklet_id);
+        update_result.touched_landmarks.insert(tracklet_id);
+      } else {
+        auto this_landmark_node = getLandmark(tracklet_id);
+        for (const auto& [seen_frame, measurement] :
+             other_landmark_node->getMeasurements()) {
+          // call special addition function that avoid adding dupliacted
+          // measurements!
+          if (this_landmark_node->addAvoidDupliactes(seen_frame, measurement)) {
+            update_result.touched_frames.insert(seen_frame->frame_id);
+            update_result.touched_landmarks.insert(tracklet_id);
+          }
+        }
+      }
+    }
+
+    // update objects
+    for (const auto& [object_id, other_objects_node] : other.objects_) {
+      if (!objectExists(object_id)) {
+        objects_.insert2(object_id, other_objects_node);
+
+        update_result.new_objects.push_back(object_id);
+        update_result.touched_objects.insert(object_id);
+      } else {
+        auto this_object_node = getObject(object_id);
+
+        const size_t dyn_lmks_size_before =
+            this_object_node->dynamic_landmarks.size();
+
+        this_object_node->dynamic_landmarks.insert(
+            other_objects_node->dynamic_landmarks.begin(),
+            other_objects_node->dynamic_landmarks.end());
+
+        const size_t dyn_lmks_size_after =
+            this_object_node->dynamic_landmarks.size();
+
+        if (dyn_lmks_size_before != dyn_lmks_size_after) {
+          update_result.touched_objects.insert(object_id);
+        }
+      }
+    }
+
+    return update_result;
   }
 
   /**
@@ -417,7 +546,8 @@ class Map : public std::enable_shared_from_this<Map<MEASUREMENT>> {
   const auto getFrames() const { return frames_; }
 
  private:
-  void addOrUpdateMapStructures(const Measurement& measurement,
+  void addOrUpdateMapStructures(MapUpdateResult& update_result,
+                                const Measurement& measurement,
                                 TrackletId tracklet_id, FrameId frame_id,
                                 ObjectId object_id, bool is_static) {
     typename LandmarkNodeM::Ptr landmark_node = nullptr;
@@ -432,12 +562,18 @@ class Map : public std::enable_shared_from_this<Map<MEASUREMENT>> {
       landmark_node->tracklet_id = tracklet_id;
       landmark_node->object_id = object_id;
       landmarks_.insert2(tracklet_id, landmark_node);
+
+      update_result.new_landmarks.push_back(tracklet_id);
+      update_result.touched_landmarks.insert(tracklet_id);
     }
 
     if (!frameExists(frame_id)) {
       frame_node = std::make_shared<FrameNodeM>(getptr());
       frame_node->frame_id = frame_id;
       frames_.insert2(frame_id, frame_node);
+
+      update_result.new_frames.push_back(frame_id);
+      update_result.touched_frames.insert(frame_id);
     }
 
     landmark_node = getLandmark(tracklet_id);
@@ -452,10 +588,12 @@ class Map : public std::enable_shared_from_this<Map<MEASUREMENT>> {
     CHECK_EQ(frame_node->frame_id, frame_id);
 
     landmark_node->add(frame_node, measurement);
+    update_result.touched_landmarks.insert(tracklet_id);
 
     // add to frame
     if (is_static) {
       frame_node->static_landmarks.insert(landmark_node);
+      update_result.touched_frames.insert(frame_id);
     } else {
       CHECK(object_id != background_label);
 
@@ -464,15 +602,20 @@ class Map : public std::enable_shared_from_this<Map<MEASUREMENT>> {
         object_node = std::make_shared<ObjectNodeM>(getptr());
         object_node->object_id = object_id;
         objects_.insert2(object_id, object_node);
+
+        update_result.new_objects.push_back(frame_id);
+        update_result.touched_objects.insert(object_id);
       }
 
       object_node = getObject(object_id);
       CHECK(object_node);
 
       object_node->dynamic_landmarks.insert(landmark_node);
+      update_result.touched_objects.insert(object_id);
 
       frame_node->dynamic_landmarks.insert(landmark_node);
       frame_node->objects_seen.insert(object_node);
+      update_result.touched_frames.insert(frame_id);
     }
   }
 

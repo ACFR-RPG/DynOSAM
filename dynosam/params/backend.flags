@@ -54,8 +54,8 @@
 # if true, only run as Static SLAM (mostly for debug/testing)
 --regular_backend_static_only=false
 
---min_static_observations=2
---min_dynamic_observations=2
+--min_static_observations=0
+--min_dynamic_observations=0
 
 
 # for ISAM2 params using ParallelObjectSAM

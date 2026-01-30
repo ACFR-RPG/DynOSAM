@@ -66,6 +66,7 @@ FrontendDSDRos::GroundTruthPublishers::GroundTruthPublishers(
 
 void FrontendDSDRos::spinOnceImpl(
     const VisionImuPacket::ConstPtr& frontend_output) {
+  VLOG(20) << "Spinning FrontendDSDRos k=" << frontend_output->frameId();
   updateAccumulatedDataStructured(frontend_output);
 
   // publish debug imagery

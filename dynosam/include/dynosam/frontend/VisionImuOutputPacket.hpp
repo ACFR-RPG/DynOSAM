@@ -39,6 +39,7 @@
 #include "dynosam_common/SensorModels.hpp"
 #include "dynosam_common/Types.hpp"
 #include "dynosam_cv/Camera.hpp"
+#include "dynosam_opt/Map.hpp"
 
 namespace dyno {
 
@@ -54,6 +55,10 @@ namespace dyno {
 class VisionImuPacket {
  public:
   DYNO_POINTER_TYPEDEFS(VisionImuPacket)
+
+  // currrently grows unbounded so that updating the backend map
+  // from the local map will grow with complexitity a lot!!!
+  MapVision::Ptr local_map;
 
   /// @brief Basic track structure representing a tracking status and visual
   /// measurements
@@ -146,6 +151,8 @@ class VisionImuPacket {
 
   const CameraTracks& cameraTracks() const;
   const gtsam::Pose3& cameraPose() const;
+
+  // TODO: no from the last kf no k-1
   /**
    * @brief Returns the relative camera motion T_k_1_k, representing the motion
    * of the camera from k-1 to k in the camera local frame (at k-1)

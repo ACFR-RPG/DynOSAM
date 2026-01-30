@@ -1557,6 +1557,15 @@ class HybridFormulationKeyFrame : public HybridFormulation {
     inline FrameId getFrameId() const { return frame_node->frame_id; }
   };
 
+  struct KeyFrameMetaData {
+    bool is_regular{true};
+    bool is_anchor{false};
+  };
+
+  // we may have object measurements at non-keyframes depending on how the
+  // front-end is implemented...
+  bool isObjectKeyFrame(ObjectId object_id, FrameId frame_id) const;
+
   void updateObject(const Context& context, UpdateObservationResult& result,
                     gtsam::Values& new_values,
                     gtsam::NonlinearFactorGraph& new_factors);
@@ -1581,13 +1590,19 @@ class HybridFormulationKeyFrame : public HybridFormulation {
 
   inline IntermediateMotionInfo getIntermediateMotionInfo(ObjectId object_id,
                                                           FrameId frame_id) {}
+
+ private:
   TemporalObjectCentricMap<Motion3ReferenceFrame> initial_H_W_AKF_k_;
   //! Bookkeeps the keyframing from the front-end so we manage the to/from
   //! frames provided by the front-end estimate This is not used to manage the
   //! keyframe pose or keyframe id in the backend Since this is DIFFERENT to the
   //! frontend The pose held in each KeyFrameRangeis the L_e_frontend (which is
   //! used to anchor) The frontend estimates
+
+  // TODO: dont even think we need this!!
   KeyFrameData front_end_keyframes_;
+
+  TemporalObjectCentricMap<KeyFrameMetaData> key_frames_per_object_;
 
   //! Initial estimate of points in object frame from frontend
   GenericObjectCentricMap<gtsam::Point3, TrackletId> m_L_initial_;

@@ -44,6 +44,7 @@ BackendDSDRos::BackendDSDRos(const DisplayParams params,
 
 void BackendDSDRos::spinOnceImpl(
     const BackendOutputPacket::ConstPtr& backend_output) {
+  VLOG(20) << "Spinning BackendDSDRos k=" << backend_output->getFrameId();
   // publish vo and path
   auto tic = utils::Timer::tic();
   constexpr static bool kPublishOdomAsTf = false;
@@ -98,9 +99,12 @@ void BackendDSDRos::spinOnceImpl(
   LOG(INFO) << ss.str();
 
   // // publish objects
+
+  // OKAY: this freezes somehow with the curreny keyframeing thing!!!
   DSDTransport::Publisher object_poses_publisher = dsd_transport_.addObjectInfo(
       object_motions, object_poses, params_.world_frame_id, timestamp_map,
       backend_output->getFrameId(), backend_output->getTimestamp());
+
   object_poses_publisher.publishObjectOdometry();
   object_poses_publisher.publishObjectPaths();
   auto objects_toc = utils::Timer::toc<std::chrono::nanoseconds>(tic);

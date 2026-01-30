@@ -313,7 +313,8 @@ class StaticFormulationUpdater : public StaticFormulationUpdaterImpl<MAP> {
           // odom starts working... or maybe not...
           gtsam::Pose3 X_W_i;
           CHECK(this->formulation_->map()->hasInitialSensorPose(frame_id_i,
-                                                                &X_W_i));
+                                                                &X_W_i))
+              << "Missing initial pose at k=" << frame_id_i;
 
           const gtsam::Pose3 leftPose = X_W_i;
           const gtsam::Cal3_S2 monoCal = K_stereo_->calibration();
