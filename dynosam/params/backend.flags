@@ -109,6 +109,8 @@
 --mpc_static_sdf_H_safety_distance_noise=1e-2
 --mpc_dynamic_obstacle_sigma=1e-2
 
+--mpc_dynamic_obstacle_prediction_sigma=3e-1
+
 --mpc_desired_follow_distance=2.0
 --mpc_desired_follow_heading=0.0
 
@@ -120,6 +122,7 @@
 --mpc_static_sdf_X_safety_distance=0.7
 --mpc_static_sdf_H_safety_distance=0.7
 --mpc_dynamic_obstacle_safety_distance=1.4
+--mpc_dynamic_obstacle_safety_distance_pred=1.4
 
 # To worsely tune planning but keep GTSAM not crashing
 # --mpc_static_sdf_X_safety_distance_sigma=1e-4
@@ -127,6 +130,7 @@
 # --mpc_dynamic_factor_sigma=1e-5
 
 --mpc_use_directed_factors=true
+--mpc_use_prediction_dynamic_obstacle_factors=false
 
 --mpc_local_goal_horizin=120
 

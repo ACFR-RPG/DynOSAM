@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-CONTAINER_NAME=dyno_sam
-CONTAINER_IMAGE_NAME=acfr-rpg/dyno_sam
+CONTAINER_NAME=dyno_jepp_iros
+CONTAINER_IMAGE_NAME=dyno_jepp_iros
 
 ### EDIT THIS TO WHEREVER YOU'RE STORING YOU DATA ###
 # folder should exist before you mount it

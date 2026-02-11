@@ -63,6 +63,9 @@ DEFINE_double(mpc_static_sdf_H_safety_distance_sigma, 0.1,
               "Sigma for sdf H obstacle factor");
 
 DEFINE_double(mpc_dynamic_obstacle_sigma, 0.1,
+              "Sigma for dynamic obstacle factor prediction");
+
+DEFINE_double(mpc_dynamic_obstacle_prediction_sigma, 0.1,
               "Sigma for dynamic obstacle factor");
 
 DEFINE_double(mpc_follow_sigma, 1.0, "Sigma for follow factor");
@@ -91,10 +94,16 @@ DEFINE_double(mpc_static_sdf_H_safety_distance, 1.0,
 DEFINE_double(mpc_dynamic_obstacle_safety_distance, 1.0,
               "Safety distance constant for keeping X away from dynamic "
               "obstacles. Only in Navigation mode");
+DEFINE_double(mpc_dynamic_obstacle_safety_distance_pred, 1.0,
+              "Safety distance constant for keeping H away from ego dynamic "
+              "obstacles X. Only in Navigation mode");
 
 DEFINE_bool(mpc_use_directed_factors, true,
             "Mostly for testing/experiments. Whether or not to use proposed "
             "directed factors");
+
+DEFINE_bool(mpc_use_prediction_dynamic_obstacle_factors, true,
+            "Use the directed dynamic obstacle factor on prediction for cooperative prediction.");
 
 namespace dyno {
 
@@ -1198,6 +1207,9 @@ MPCFormulation::MPCFormulation(const FormulationParams& params,
   dynamic_obstacle_factor_ =
       gtsam::noiseModel::Isotropic::Sigma(1u, FLAGS_mpc_dynamic_obstacle_sigma);
 
+  dynamic_obstacle_prediction_factor_ =
+      gtsam::noiseModel::Isotropic::Sigma(1u, FLAGS_mpc_dynamic_obstacle_prediction_sigma);
+
   lin_vel_ = Limits{-0.3, 1.0};
   ang_vel_ = Limits{-0.5, 0.5};
   lin_acc_ = Limits{-1.0, 0.5};
@@ -1331,6 +1343,8 @@ void MPCFormulation::otherUpdatesContext(
   FrameId frame_N = frame_k + mpc_horizon;
 
   const bool& use_directed_factors = FLAGS_mpc_use_directed_factors;
+  const bool& use_dynamic_obstacle_prediction_factors = FLAGS_mpc_use_prediction_dynamic_obstacle_factors;
+  
   LOG(INFO) << "Using directed factors: " << std::boolalpha
             << use_directed_factors;
 
@@ -2058,6 +2072,7 @@ void MPCFormulation::otherUpdatesContext(
       }
 
       MissionFactorBase::shared_ptr mission_factor = nullptr;
+      MissionFactorBase::shared_ptr mission_factor2 = nullptr;
       if (mission_type_ == MissionType::FOLLOW) {
         // add follow factors
         mission_factor = boost::make_shared<HybridMotionFollowJac0Factor>(
@@ -2071,6 +2086,19 @@ void MPCFormulation::otherUpdatesContext(
               camera_pose_key_k_predicted, motion_key_k_predicted, L_e,
               FLAGS_mpc_dynamic_obstacle_safety_distance,
               dynamic_obstacle_factor_);
+
+          if(use_dynamic_obstacle_prediction_factors) {
+            mission_factor2 = boost::make_shared<DynamicObstacleFactor<1>>(
+              camera_pose_key_k_predicted, motion_key_k_predicted, L_e,
+              FLAGS_mpc_dynamic_obstacle_safety_distance_pred,
+              dynamic_obstacle_prediction_factor_);
+
+            CHECK(mission_factor2);
+            new_factors.add(mission_factor2);
+            factors_to_remove_this_frame.add(mission_factor2);
+            mission_factors.add(mission_factor2);
+            
+          }
         } else {
           mission_factor = boost::make_shared<DynamicObstacleFactor<>>(
               camera_pose_key_k_predicted, motion_key_k_predicted, L_e,

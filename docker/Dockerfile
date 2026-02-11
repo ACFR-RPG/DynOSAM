@@ -68,7 +68,8 @@ RUN cd opencv/build && \
 RUN git clone https://github.com/MIT-SPARK/config_utilities.git
 RUN cd config_utilities/config_utilities && mkdir build && \
       cd build && \
-      cmake .. && make -j$(nproc) install
+      cmake -DBUILD_TESTING=OFF .. && make -j$(nproc) install
+
 
 
 

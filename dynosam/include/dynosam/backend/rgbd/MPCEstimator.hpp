@@ -237,6 +237,7 @@ class MPCFormulation : public RegularHybridFormulation,
   gtsam::SharedNoiseModel static_obstacle_H_noise_;
 
   gtsam::SharedNoiseModel dynamic_obstacle_factor_;
+  gtsam::SharedNoiseModel dynamic_obstacle_prediction_factor_;
 
   double desired_follow_distance_;
   double desired_follow_heading_;
