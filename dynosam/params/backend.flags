@@ -119,7 +119,7 @@
 
 # --mpc_dynamic_obstacle_safety_distance=2.0
 
---mpc_static_sdf_X_safety_distance=0.7
+--mpc_static_sdf_X_safety_distance=0.8
 --mpc_static_sdf_H_safety_distance=0.7
 --mpc_dynamic_obstacle_safety_distance=1.4
 --mpc_dynamic_obstacle_safety_distance_pred=1.4
@@ -129,10 +129,10 @@
 # --mpc_goal_sigma=1e-2
 # --mpc_dynamic_factor_sigma=1e-5
 
---mpc_use_directed_factors=true
+--mpc_use_directed_factors=false
 --mpc_use_prediction_dynamic_obstacle_factors=false
 
---mpc_local_goal_horizin=120
+--mpc_local_goal_horizon=120
 
 # 0: Follow, 1: Navigate
 --mission_type=1

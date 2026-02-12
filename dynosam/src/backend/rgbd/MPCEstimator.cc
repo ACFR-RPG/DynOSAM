@@ -43,7 +43,7 @@
 DEFINE_uint32(mpc_horizon, 4, "Dyno mpc time horizon");
 
 DEFINE_uint32(
-    mpc_local_goal_horizin, 120,
+    mpc_local_goal_horizon, 120,
     "Number of steps ahead to calculate the local goal from the global plan");
 
 DEFINE_double(mpc_vel2d_prior_sigma, 1.0, "Sigma for the cam pose prior");
@@ -1210,10 +1210,15 @@ MPCFormulation::MPCFormulation(const FormulationParams& params,
   dynamic_obstacle_prediction_factor_ =
       gtsam::noiseModel::Isotropic::Sigma(1u, FLAGS_mpc_dynamic_obstacle_prediction_sigma);
 
-  lin_vel_ = Limits{-0.3, 1.0};
-  ang_vel_ = Limits{-0.5, 0.5};
-  lin_acc_ = Limits{-1.0, 0.5};
-  ang_acc_ = Limits{-0.5, 0.5};
+  // lin_vel_ = Limits{-0.3, 1.0};
+  // ang_vel_ = Limits{-0.5, 0.5};
+  // lin_acc_ = Limits{-1.0, 0.5};
+  // ang_acc_ = Limits{-0.5, 0.5};
+
+  lin_vel_ = Limits{-0.5, 1.8};
+  ang_vel_ = Limits{-0.8, 0.8};
+  lin_acc_ = Limits{-1.2, 0.8};
+  ang_acc_ = Limits{-1.0, 1.0};
 
   // lin_vel_ = Limits{-0.3, 1.2};
   // ang_vel_ = Limits{-0.5, 0.5};
@@ -2124,7 +2129,7 @@ void MPCFormulation::otherUpdatesContext(
   }
 
   if (mission_type_ == MissionType::NAVIGATE) {
-    const int local_horizon = static_cast<int>(FLAGS_mpc_local_goal_horizin);
+    const int local_horizon = static_cast<int>(FLAGS_mpc_local_goal_horizon);
     // handle global path
     gtsam::Pose3 local_goal;
     bool local_goal_result = getLocalGoalFromGlobalPath(
