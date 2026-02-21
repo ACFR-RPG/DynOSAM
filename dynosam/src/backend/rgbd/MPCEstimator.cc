@@ -1215,14 +1215,14 @@ MPCFormulation::MPCFormulation(const FormulationParams& params,
   // lin_acc_ = Limits{-1.0, 0.5};
   // ang_acc_ = Limits{-0.5, 0.5};
 
-  lin_vel_ = Limits{-0.5, 1.8};
-  ang_vel_ = Limits{-0.8, 0.8};
-  lin_acc_ = Limits{-1.2, 0.8};
-  ang_acc_ = Limits{-1.0, 1.0};
-
-  // lin_vel_ = Limits{-0.3, 1.2};
-  // ang_vel_ = Limits{-0.5, 0.5};
+  // lin_vel_ = Limits{-0.5, 1.8};
+  // ang_vel_ = Limits{-0.8, 0.8};
   // lin_acc_ = Limits{-1.2, 0.8};
+  // ang_acc_ = Limits{-1.0, 1.0};
+
+  // lin_vel_ = Limits{-0.3, 1.15};
+  // ang_vel_ = Limits{-0.5, 0.5};
+  // lin_acc_ = Limits{-1.0, 0.7};
   // ang_acc_ = Limits{-0.5, 0.5};
 
 
@@ -1232,10 +1232,10 @@ MPCFormulation::MPCFormulation(const FormulationParams& params,
   // ang_acc_ = Limits{-1.0, 1.0};
 
 
-  // lin_vel_ = Limits{-0.3, 1.6};
-  // ang_vel_ = Limits{-1.0, 1.0};
-  // lin_acc_ = Limits{-1.2, 1.2};
-  // ang_acc_ = Limits{-0.8, 0.8};
+  lin_vel_ = Limits{-0.3, 1.6};
+  ang_vel_ = Limits{-1.0, 1.0};
+  lin_acc_ = Limits{-1.2, 1.2};
+  ang_acc_ = Limits{-0.8, 0.8};
 
   // lin_vel_ = Limits{-0.3, 1.2};
   // ang_vel_ = Limits{-0.5, 0.5};
