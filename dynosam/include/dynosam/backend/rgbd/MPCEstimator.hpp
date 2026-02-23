@@ -124,6 +124,8 @@ class MPCFormulation : public RegularHybridFormulation,
                  const NoiseModels& noise_models, const Sensors& sensors,
                  const FormulationHooks& hooks);
 
+  void decoupledPredictionPlanning(const PostUpdateData& data);
+
   AccessorTypePointer createAccessor(
       const SharedFormulationData& shared_data) const override {
     SharedHybridFormulationData shared_hybrid_data;
@@ -190,6 +192,8 @@ class MPCFormulation : public RegularHybridFormulation,
   // );
 
  private:
+  gtsam::Values decoupled_values_;              // Mik decoupled
+  gtsam::NonlinearFactorGraph decoupled_graph_; // Mik decoupled 
   SharedMPCData mpc_data_;
   Timestamp dt_{0.1};
 

@@ -101,6 +101,8 @@ DEFINE_double(mpc_dynamic_obstacle_safety_distance_pred, 1.0,
 DEFINE_bool(mpc_use_directed_factors, true,
             "Mostly for testing/experiments. Whether or not to use proposed "
             "directed factors");
+DEFINE_bool(mpc_decoupled, true,
+            "Decouple Estimation");
 
 DEFINE_bool(mpc_use_prediction_dynamic_obstacle_factors, true,
             "Use the directed dynamic obstacle factor on prediction for cooperative prediction.");
@@ -1348,7 +1350,12 @@ void MPCFormulation::otherUpdatesContext(
   FrameId frame_N = frame_k + mpc_horizon;
 
   const bool& use_directed_factors = FLAGS_mpc_use_directed_factors;
+  const bool& decoupled = FLAGS_mpc_decoupled;
   const bool& use_dynamic_obstacle_prediction_factors = FLAGS_mpc_use_prediction_dynamic_obstacle_factors;
+
+  if(decoupled){
+    return;
+  }
   
   LOG(INFO) << "Using directed factors: " << std::boolalpha
             << use_directed_factors;
@@ -2182,37 +2189,307 @@ void MPCFormulation::preUpdate(const PreUpdateData& data) {
   if (viz_) viz_->inPreUpdate();
 }
 
+void MPCFormulation::decoupledPredictionPlanning(const PostUpdateData& data) {
+  using namespace mpc_factors;
+
+  const gtsam::SharedNoiseModel pose_prior_noise =
+        gtsam::noiseModel::Diagonal::Sigmas(gtsam::Vector6::Constant(1e-3));
+
+  // ----------------------------------------
+  // 1. Define all variables upfront
+  // ----------------------------------------
+  FrameId frame_k = data.frame_id;                  // current frame from data
+  gtsam::NonlinearFactorGraph graph;               // LM factor graph
+  gtsam::Values initial_values;                    // initial values for optimizer
+  gtsam::Pose3 current_pose;                       // current ego pose
+  const size_t first_frame_id = 1;                  // LM graph always starts with id = 1
+  const size_t last_frame_id = mpc_data_.mpc_horizon+1;
+  auto accessor = this->derivedAccessor<MPCAccessor>();
+
+  const auto mpc_horizon = mpc_data_.mpc_horizon;
+  const auto object_to_follow = mpc_data_.object_to_follow;
+
+  // Some SDF Checks - Start
+  if (!T_map_camera_ && viz_) {
+    gtsam::Pose3 T;
+    if (viz_->queryGlobalOffset(T)) {
+      T_map_camera_ = T;
+      LOG(INFO) << "Found offset between dynosam pose and map frame!! " << T;
+      CHECK(sdf_map_);
+      sdf_map_->setQueryOffset(T);
+    }
+  }
+
+  bool sdf_map_valid = (bool)T_map_camera_;
+  if (sdf_map_valid)
+    LOG(INFO) << "Sdf map is valid. Can add obstacle factors if desired";
+  // Some SDF Checks - End
+  
+
+  // ----------------------------------------
+  // 2. Get current camera pose from accessor
+  // ----------------------------------------
+  auto camera_key = CameraPoseSymbol(frame_k);
+  if (auto maybe_pose = accessor->query<gtsam::Pose3>(camera_key)) {
+      current_pose = *maybe_pose;
+      LOG(INFO) << "Current camera pose at frame " << frame_k << ": " << current_pose;
+  } else {
+      LOG(WARNING) << "No camera pose available at frame " << frame_k << ". Aborting decoupled planning.";
+      return;
+  }
+
+  // ----------------------------------------
+  // 3. Initialize LM values (always first pose id = 1)
+  // ----------------------------------------
+  for (size_t frame_id = first_frame_id; frame_id <= last_frame_id; ++frame_id) {
+    // Camera pose: initialize all to current_pose
+    initial_values.insert(CameraPoseSymbol(frame_id), current_pose);
+
+    // Velocity and acceleration keys: initialize to zero
+    initial_values.insert(CameraVelSymbol(frame_id), gtsam::Vector2(0.0, 0.0));
+    initial_values.insert(CameraAccSymbol(frame_id-1), gtsam::Vector2(0.0, 0.0));
+  }
+
+  // ----------------------------------------
+  // 4. Add factors
+  // ----------------------------------------
+  for (size_t frame_id = first_frame_id; frame_id <= last_frame_id; ++frame_id) {
+
+    FrameId frame_id_m1 = frame_id - 1u;
+    FrameId frame_id_m2 = frame_id - 2u;
+
+    auto camera_key = CameraPoseSymbol(frame_id);
+    auto control_key = CameraVelSymbol(frame_id);
+    auto accel_key_previous = CameraAccSymbol(frame_id_m1);
+
+    auto camera_key_previous = CameraPoseSymbol(frame_id_m1);
+    auto control_key_previous = CameraVelSymbol(frame_id_m1);
+    auto accel_key_prev_prev = CameraAccSymbol(frame_id_m1);
+
+    if (frame_id == 1) {
+      // pose prior
+      graph.add(gtsam::PriorFactor<gtsam::Pose3>(
+          camera_key, current_pose, pose_prior_noise));
+
+      // velocity prior
+      auto velocity_prior_factor =
+          boost::make_shared<gtsam::PriorFactor<gtsam::Vector2>>(
+              control_key, gtsam::Vector2(0.0, 0.0), vel2d_prior_noise_);
+      graph.add(velocity_prior_factor);
+
+      // acceleration prior
+      auto acc_prior_factor =
+          boost::make_shared<gtsam::PriorFactor<gtsam::Vector2>>(
+              accel_key_previous, gtsam::Vector2(0.0, 0.0), vel2d_prior_noise_);
+      graph.add(acc_prior_factor);
+    }
+
+    if (frame_id == 2) {
+      // Acc smoothing factor directed
+      auto acc_smoothing_factor_dir = boost::make_shared<Vec2BetweenFactorDirected1>(
+              accel_key_prev_prev, accel_key_previous,
+              gtsam::traits<gtsam::Vector2>::Identity(),
+              accel2d_smoothing_noise_);
+      graph.add(acc_smoothing_factor_dir);
+
+      // Motion model factor directed
+      auto motion_model_factor_dir = boost::make_shared<MotionModelFactor<1, 3>>(
+              camera_key_previous, camera_key, control_key_previous,
+              control_key, accel_key_previous, dynamic_factor_noise_, dt_);
+      graph.add(motion_model_factor_dir);
+
+
+    } else if (frame_id > 2) {
+      // Acc smoothing factor
+      auto acc_smoothing_factor = boost::make_shared<gtsam::BetweenFactor<gtsam::Vector2>>(
+            accel_key_prev_prev, accel_key_previous,
+            gtsam::traits<gtsam::Vector2>::Identity(),
+            accel2d_smoothing_noise_);
+      graph.add(acc_smoothing_factor);
+
+      // Motion model factor
+      auto motion_model_factor = boost::make_shared<MotionModelFactor<>>(
+              camera_key_previous, camera_key, control_key_previous,
+              control_key, accel_key_previous, dynamic_factor_noise_, dt_);
+      graph.add(motion_model_factor);
+
+    }
+
+    if (frame_id > 1) {
+      // Vel Limit Factor
+      auto velocity_limit_factor = boost::make_shared<Vec2LimitFactor>(
+          control_key, lin_vel_.min, lin_vel_.max, ang_vel_.min, ang_vel_.max,
+          vel2d_limit_noise_, dt_);
+      graph.add(velocity_limit_factor);
+
+      // Static Obstacle Factor
+      if (sdf_map_valid) {
+        auto static_obstacle_factor =
+          boost::make_shared<SDFStaticObstacleXFactor>(
+              camera_key, CHECK_NOTNULL(sdf_map_),
+              FLAGS_mpc_static_sdf_X_safety_distance,
+              static_obstacle_X_noise_);
+        graph.add(static_obstacle_factor);
+      }
+
+      // Acc Cost Factor
+      auto acceleration_cost_factor =
+          boost::make_shared<gtsam::PriorFactor<gtsam::Vector2>>(
+              accel_key_previous, gtsam::Vector2(0.0, 0.0), accel2d_cost_noise_);
+      graph.add(acceleration_cost_factor);
+
+      // Acc Limit Factor
+      auto acceleration_limit_factor = boost::make_shared<Vec2LimitFactor>(
+          accel_key_previous, lin_acc_.min, lin_acc_.max, ang_acc_.min, ang_acc_.max,
+          accel2d_limit_noise_, dt_);
+      graph.add(acceleration_limit_factor);
+    }
+
+    if (frame_id == last_frame_id){
+      // Goal Factor
+      const int local_horizon = static_cast<int>(FLAGS_mpc_local_goal_horizon);
+      // handle global path
+      gtsam::Pose3 local_goal;
+      bool local_goal_result = getLocalGoalFromGlobalPath(
+          accessor->getSensorPose(frame_k).value(), local_horizon, local_goal);
+      if (local_goal_result) {
+        local_goal_ = local_goal;
+        VLOG(20) << "Calculated local goal from global plan with horizin: "
+                << local_horizon;
+        auto goal_factor = boost::make_shared<gtsam::PriorFactor<gtsam::Pose3>>(
+          camera_key, local_goal,
+          gtsam::noiseModel::Isotropic::Sigma(6u, FLAGS_mpc_goal_sigma));
+        graph.add(goal_factor);
+      } else{ // TODO: Sketchy code
+        return;
+      }
+    }
+  }
+
+  // ----------------------------------------
+  // 5. Run LM optimizer
+  // ----------------------------------------
+  gtsam::LevenbergMarquardtParams lm_params;
+  lm_params.setVerbosityLM("SUMMARY");
+  lm_params.setMaxIterations(50); // you can adjust
+
+  gtsam::LevenbergMarquardtOptimizer optimizer(graph, initial_values, lm_params);
+  gtsam::Values optimized_values = optimizer.optimize();
+
+  // ----------------------------------------
+  // 6. Store optimized graph and values in class
+  // ----------------------------------------
+  decoupled_graph_  = graph;
+  decoupled_values_ = optimized_values;
+
+  LOG(INFO) << "Decoupled LM optimization done. Horizon: " << mpc_data_.mpc_horizon;
+
+  // ----------------------------------------
+  // EXtract control commands
+  // ----------------------------------------
+  for (size_t num = 1; num <= 30; ++num) {
+    auto control_key      = CameraVelSymbol(num);
+    auto accel_key_prev   = CameraAccSymbol(num-1);
+    if (optimized_values.exists(control_key)) {
+      gtsam::Vector2 u = optimized_values.at<gtsam::Vector2>(control_key);
+      LOG(INFO) << "------------ Control at frame 2: " << u.transpose();
+    } else {
+      LOG(WARNING) << "Control key does not exist in optimized values for frame ";
+    }
+
+    if (optimized_values.exists(accel_key_prev)) {
+      gtsam::Vector2 a = optimized_values.at<gtsam::Vector2>(accel_key_prev);
+      LOG(INFO) << "------------ Acceleration at frame 1: " << a.transpose();
+    } else {
+      LOG(WARNING) << "Acceleration key does not exist in optimized values for frame ";
+    }
+  }
+
+  // Mik, add the factors that are neccessary to make this work.
+  // Get Goal
+  // Save last acc and velocity
+  // Make the algorithm iterative
+  // Add objects
+
+
+
+
+
+
+
+  //---------------------------------------------------------------------- Motion stuff
+  // if (auto query = accessor->query<gtsam::Pose3>(camera_key); query) {
+  //   gtsam::Pose3 current_pose = *query;
+  //   LOG(INFO) << "------------------ Camera pose at frame " << frame_k
+  //             << ": " << current_pose;
+  // } else {
+  //   LOG(INFO) << "No camera pose found at frame " << frame_k;
+  // }
+
+  // // check objects in the current frame
+  // for (const auto& [object_id, seen_frames] : data.dynamic_update_result.objects_affected_per_frame) {
+  //   // only consider if object is seen in current or previous frame
+  //   bool seen_current = seen_frames.find(frame_k) != seen_frames.end();
+  //   bool seen_prev    = seen_frames.find(frame_k_m1) != seen_frames.end();
+
+  //   if (seen_current) {
+  //     if (auto motion_current = accessor->getObjectMotion(frame_k, object_id)) {
+  //       LOG(INFO) << "------------------ Object " << object_id
+  //                 << " motion at frame " << frame_k << ": " << *motion_current;
+  //     }
+  //   }
+
+  //   if (seen_prev) {
+  //     if (auto motion_prev = accessor->getObjectMotion(frame_k_m1, object_id)) {
+  //       LOG(INFO) << "------------------ Object " << object_id
+  //                 << " motion at frame " << frame_k_m1 << ": " << *motion_prev;
+  //     }
+  //   }
+  // }
+}
+
+
 void MPCFormulation::postUpdate(const PostUpdateData& data) {
   Base::postUpdate(data);
-  if (viz_) viz_->inPostUpdate();
 
   // if we get here the update must have been good
   FrameId frame_k = data.frame_id;
-  FrameId frame_k_m1 = frame_k - 1u;
-  // remove tracking of old factors
-  if (factors_per_frame_.exists(frame_k_m1)) {
-    VLOG(10) << "Removing interal old factors";
-    factors_per_frame_.erase(frame_k_m1);
+
+  ///////// DECOUPLED
+  const bool& decoupled = FLAGS_mpc_decoupled;
+  if(decoupled){
+    decoupledPredictionPlanning(data);
+
+  } ///////// COUPLED
+  else{
+    FrameId frame_k_m1 = frame_k - 1u;
+    // remove tracking of old factors
+    if (factors_per_frame_.exists(frame_k_m1)) {
+      VLOG(10) << "Removing interal old factors";
+      factors_per_frame_.erase(frame_k_m1);
+    }
+
+    FrameId frame_N = frame_k + mpc_data_.mpc_horizon - 1;
+
+    auto formatter = this->formatter();
+    // values init camera pose, 2dvelocity, 2d acceletation
+    for (FrameId frame_id = frame_k; frame_id < frame_N; frame_id++) {
+      auto camera_key = CameraPoseSymbol(frame_id);
+      auto control_key = this->makeControlCommandKey(frame_id);
+      auto accel_key = this->makeAccelerationKey(frame_id);
+
+      // LOG(INFO) << formatter(camera_key) << " " <<
+      // theta_.at<gtsam::Pose3>(camera_key); LOG(INFO) << formatter(control_key)
+      // << " " << theta_.at<gtsam::Vector2>(control_key); LOG(INFO) <<
+      // formatter(accel_key) << " " << theta_.at<gtsam::Vector2>(accel_key);
+    }
   }
-
-  FrameId frame_N = frame_k + mpc_data_.mpc_horizon - 1;
-
-  auto formatter = this->formatter();
-  // values init camera pose, 2dvelocity, 2d acceletation
-  for (FrameId frame_id = frame_k; frame_id < frame_N; frame_id++) {
-    auto camera_key = CameraPoseSymbol(frame_id);
-    auto control_key = this->makeControlCommandKey(frame_id);
-    auto accel_key = this->makeAccelerationKey(frame_id);
-
-    // LOG(INFO) << formatter(camera_key) << " " <<
-    // theta_.at<gtsam::Pose3>(camera_key); LOG(INFO) << formatter(control_key)
-    // << " " << theta_.at<gtsam::Vector2>(control_key); LOG(INFO) <<
-    // formatter(accel_key) << " " << theta_.at<gtsam::Vector2>(accel_key);
-  }
-
+  
   // 1. Collect current estimates and publish to rviz
   // 2. Collect control command and send
+  /////// COUPLED
 
+  if (viz_) viz_->inPostUpdate();
   if (viz_) viz_->spin(data.timestamp, data.frame_id, this);
 }
 

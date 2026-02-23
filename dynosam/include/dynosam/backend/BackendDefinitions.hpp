@@ -57,6 +57,7 @@ using PoseToPointFactor = gtsam::PoseToPointFactor<gtsam::Pose3, Landmark>;
 using SymbolChar = unsigned char;
 static constexpr SymbolChar kPoseSymbolChar = 'X';
 static constexpr SymbolChar kVelocitySymbolChar = 'V';
+static constexpr SymbolChar kAccelerationSymbolChar = 'A';
 static constexpr SymbolChar kObjectMotionSymbolChar = 'H';
 static constexpr SymbolChar kObjectPoseSymbolChar = 'L';
 static constexpr SymbolChar kStaticLandmarkSymbolChar = 'l';
@@ -72,6 +73,12 @@ inline gtsam::Key L(unsigned char label, std::uint64_t j) {
 
 inline gtsam::Symbol CameraPoseSymbol(FrameId frame_id) {
   return gtsam::Symbol(kPoseSymbolChar, frame_id);
+}
+inline gtsam::Symbol CameraVelSymbol(FrameId frame_id) {
+  return gtsam::Symbol(kVelocitySymbolChar, frame_id);
+}
+inline gtsam::Symbol CameraAccSymbol(FrameId frame_id) {
+  return gtsam::Symbol(kAccelerationSymbolChar, frame_id);
 }
 inline gtsam::Symbol StaticLandmarkSymbol(TrackletId tracklet_id) {
   return gtsam::Symbol(kStaticLandmarkSymbolChar, tracklet_id);

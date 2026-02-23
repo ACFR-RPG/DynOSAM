@@ -132,6 +132,7 @@
 --mpc_use_directed_factors=true
 --mpc_use_prediction_dynamic_obstacle_factors=false
 
+--mpc_decoupled=true
 --mpc_local_goal_horizon=180
 
 # 0: Follow, 1: Navigate
