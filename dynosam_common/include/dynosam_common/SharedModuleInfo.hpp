@@ -43,6 +43,7 @@ class SharedModuleInfo {
 
   std::optional<GroundTruthPacketMap> getGroundTruthPackets() const;
   const FrameIdTimestampMap& getTimestampMap() const;
+  const ObjectIdClassMap& getClassLabelMap() const;
 
   bool getTimestamp(FrameId frame_id, Timestamp& timestamp) const;
 
@@ -50,6 +51,7 @@ class SharedModuleInfo {
       FrameId frame_id, const GroundTruthInputPacket& ground_truth_packet);
   SharedModuleInfo& updateTimestampMapping(FrameId frame_id,
                                            Timestamp timestamp);
+  SharedModuleInfo& updateClassLabelMapping(ObjectId object_id, std::string class_label);
 
  private:
   static std::unique_ptr<SharedModuleInfo> instance_;
@@ -58,6 +60,7 @@ class SharedModuleInfo {
   mutable std::mutex mutex_;
   GroundTruthPacketMap gt_packet_map_;
   FrameIdTimestampMap frame_id_to_timestamp_map_;
+  ObjectIdClassMap object_id_to_class_map_;
 };
 
 struct SharedModuleInterface {

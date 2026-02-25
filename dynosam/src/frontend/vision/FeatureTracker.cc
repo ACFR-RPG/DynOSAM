@@ -102,7 +102,13 @@ Frame::Ptr FeatureTracker::track(FrameId frame_id, Timestamp timestamp,
   // result after the function call) ObjectDetectionEngine is used if
   // params_.prefer_provided_object_detection is false
   vision_tools::ObjectBoundaryMaskResult boundary_mask_result;
-  objectDetection(boundary_mask_result, input_images);
+
+  ObjectDetectionResult observations = objectDetection(boundary_mask_result, input_images);
+
+  for (const auto& det : observations.detections) {
+      std::cout << "Detected object_id=" << det.object_id
+                << " class_name=" << det.class_name << std::endl;
+  }
 
   if (!initial_computation_ && params_.use_propogate_mask) {
     utils::ChronoTimingStats timer("propogate_mask");
@@ -155,18 +161,10 @@ Frame::Ptr FeatureTracker::track(FrameId frame_id, Timestamp timestamp,
   // TODO: SingleDetectionResult really does not need the tracklet ids they
   // are never actually used!! this prevents the frame from needing to do the
   // same calculations we've alrady done
+
   std::map<ObjectId, SingleDetectionResult> object_observations;
-  for (size_t i = 0; i < boundary_mask_result.objects_detected.size(); i++) {
-    ObjectId object_id = boundary_mask_result.objects_detected.at(i);
-    const cv::Rect& bb_detection =
-        boundary_mask_result.object_bounding_boxes.at(i);
-
-    SingleDetectionResult observation;
-    observation.object_id = object_id;
-    // observation.object_features = dynamic_features.getByObject(object_id);
-    observation.bounding_box = bb_detection;
-
-    object_observations[object_id] = observation;
+  for (const auto& detection : observations.detections) {
+    object_observations[detection.object_id] = detection;
   }
 
   utils::ChronoTimingStats f_timer("tracking_timer.frame_construction");
@@ -187,6 +185,8 @@ Frame::Ptr FeatureTracker::track(FrameId frame_id, Timestamp timestamp,
           << container_to_string(new_frame->getObjectIds());
   previous_frame_ = new_frame;
   boarder_detection_mask_ = boundary_mask_result.boundary_mask;
+
+  // FrontendModule::FrameToClassMap(new_frame);
 
   return new_frame;
 }
@@ -1148,7 +1148,7 @@ void FeatureTracker::requiresSampling(
   }
 }
 
-bool FeatureTracker::objectDetection(
+ObjectDetectionResult FeatureTracker::objectDetection(
     vision_tools::ObjectBoundaryMaskResult& boundary_mask_result,
     ImageContainer& image_container) {
   // from some experimental testing 10 pixles is a good boarder to add around
@@ -1179,7 +1179,25 @@ bool FeatureTracker::objectDetection(
       vision_tools::computeObjectMaskBoundaryMask(
           boundary_mask_result, object_mask, scaled_boarder_thickness,
           kUseAsFeatureDetectionMask);
-      return false;
+      
+      ObjectDetectionResult detection_result;
+      detection_result.input_image = image_container.rgb();
+      detection_result.labelled_mask = object_mask;
+
+      for (size_t i = 0; i < boundary_mask_result.objects_detected.size(); i++) {
+        ObjectId object_id = boundary_mask_result.objects_detected.at(i);
+        const cv::Rect& bb_detection =
+            boundary_mask_result.object_bounding_boxes.at(i);
+
+        SingleDetectionResult observation;
+        observation.object_id = object_id;
+        // observation.object_features = dynamic_features.getByObject(object_id);
+        observation.bounding_box = bb_detection;
+        observation.class_name = "goober";
+        detection_result.detections.push_back(observation);      
+      }
+
+      return detection_result;
     } else {
       LOG(FATAL) << "Params specify prefer provided object mask but input "
                     "is missing!";
@@ -1205,7 +1223,7 @@ bool FeatureTracker::objectDetection(
     // update or insert image container with object mask
     image_container.replace<ImageType::MotionMask>(ImageContainer::kObjectMask,
                                                    object_mask);
-    return true;
+    return detection_result;
   }
 }
 
@@ -1220,6 +1238,7 @@ void FeatureTracker::propogateMask(ImageContainer& image_container) {
 
   // note reference
   cv::Mat& current_mask = image_container.objectMotionMask();
+
 
   ObjectIds instance_labels;
   for (const Feature::Ptr& dynamic_feature :
@@ -1348,6 +1367,7 @@ void FeatureTracker::propogateMask(ImageContainer& image_container) {
               current_mask.at<ObjectId>(functional_keypoint::v(predicted_kp),
                                         functional_keypoint::u(predicted_kp)) =
                   instance_labels[i];
+
               //  current_rgb
               // updated_mask_points++;
             }
@@ -1357,5 +1377,6 @@ void FeatureTracker::propogateMask(ImageContainer& image_container) {
     }
   }
 }
+
 
 }  // namespace dyno

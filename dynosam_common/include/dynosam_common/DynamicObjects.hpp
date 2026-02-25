@@ -122,8 +122,10 @@ struct ObjectDetectionResult {
  * @param w_L_k_1 const gtsam::Pose3&
  * @return gtsam::Vector3
  */
-gtsam::Vector3 calculateBodyMotion(const gtsam::Pose3& w_k_1_H_k,
-                                   const gtsam::Pose3& w_L_k_1);
+gtsam::Vector6 calculateBodyMotion(const gtsam::Pose3& w_k_1_H_k,
+                                   const gtsam::Pose3& w_L_k_1,
+                                   Timestamp timestamp_km1,
+                                   Timestamp timestamp_k);
 
 enum PropogateType {
   InitGT,

@@ -111,6 +111,9 @@ using MotionMap =
 /// @brief Map of FrameIds (k) to Timestamps
 using FrameIdTimestampMap = gtsam::FastMap<FrameId, Timestamp>;
 
+/// @brief Map of Object Ids to CLass Labels
+using ObjectIdClassMap = gtsam::FastMap<ObjectId, std::string>;
+
 // T is expected to have (at least) bitwise | (OR) support
 template <typename T>
 class Flags {
