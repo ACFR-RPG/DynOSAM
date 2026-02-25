@@ -116,7 +116,6 @@ FrontendModule::SpinReturn RGBDInstanceFrontendModule::boostrapSpin(
 
   Frame::Ptr frame = tracker_->track(input->getFrameId(), input->getTimestamp(),
                                      *image_container);
-  FrontendModule::FrameToClassMap(frame);
 
   
   CHECK(frame->updateDepths());
