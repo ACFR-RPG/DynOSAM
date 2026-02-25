@@ -2313,92 +2313,6 @@ gtsam::Vector2 MPCFormulation::decoupledPredictionPlanning(const PostUpdateData&
 
 
 
-
-
-    // const auto [reference_frame_e, prediction_L_e_] = this->getObjectKeyFrame(object_to_follow, frame_k);
-
-    // // Get the motion values
-    // auto motion_key_km1 = ObjectMotionSymbol(object_to_follow, first_frame_id-1);  // k-1
-    // auto motion_key_k = ObjectMotionSymbol(object_to_follow, first_frame_id);  // k
-    // auto motion_km1_query = accessor->getObjectMotion(frame_k - 1, object_to_follow);
-    // auto motion_k_query = accessor->getObjectMotion(frame_k, object_to_follow);
-    // CHECK(motion_km1_query);
-    // CHECK(motion_k_query);
-    // gtsam::Pose3 H_km2_km1 = *motion_km1_query;
-    // gtsam::Pose3 H_km1_k   = *motion_k_query;
-
-    // // init old motions
-    // initial_values_planning.insert(motion_key_km1, H_km2_km1);
-    // initial_values_planning.insert(motion_key_k, H_km1_k);
-
-    // // Add priors
-    // auto motion_prior_km1 =
-    //         boost::make_shared<gtsam::PriorFactor<gtsam::Pose3>>(
-    //             motion_key_km1, H_km2_km1,
-    //             gtsam::noiseModel::Isotropic::Sigma(6u, 0.1));
-    // auto motion_prior_k =
-    //         boost::make_shared<gtsam::PriorFactor<gtsam::Pose3>>(
-    //             motion_key_k, H_km1_k,
-    //             gtsam::noiseModel::Isotropic::Sigma(6u, 0.1));
-    // graph_planning.add(motion_prior_km1);
-    // graph_planning.add(motion_prior_k);
-
-
-    // // -------------- SOMETHING WRONG HERE~!~~~
-    // // Init the motion and add factors
-    // for (size_t frame_id = first_frame_id+1; frame_id <= last_frame_id; ++frame_id) {
-    //   // init factors
-    //   auto camera_key = CameraPoseSymbol(frame_id);
-    //   auto motion_key_m2 = ObjectMotionSymbol(object_to_follow, frame_id - 2);
-    //   auto motion_key_m1 = ObjectMotionSymbol(object_to_follow, frame_id - 1);
-    //   auto motion_key = ObjectMotionSymbol(object_to_follow, frame_id);
-    //   gtsam::NonlinearFactor::shared_ptr constant_motion_factor = nullptr;
-    //   initial_values_planning.insert(motion_key, H_km1_k);
-
-    //   if(frame_id == first_frame_id+1){
-    //     // Add directed smoothing
-    //     constant_motion_factor =
-    //         boost::make_shared<HybridConstantMotionFactorDirected1And2>(
-    //             motion_key_m2, motion_key_m1,
-    //             motion_key, prediction_L_e_,
-    //             object_prediction_constant_motion_noise_);
-
-    //   } else if(frame_id == first_frame_id+2){
-    //     // Add directed smoothing
-    //     constant_motion_factor = 
-    //       boost::make_shared<HybridConstantMotionFactorDirected1>(
-    //         motion_key_m2, motion_key_m1, 
-    //         motion_key, prediction_L_e_, 
-    //         object_prediction_constant_motion_noise_);
-    //   } else{
-    //     // Add normal smoothing
-    //     constant_motion_factor =
-    //         boost::make_shared<HybridConstantMotionFactor<>>(
-    //             motion_key_m2, motion_key_m1,
-    //             motion_key, prediction_L_e_,
-    //             object_prediction_constant_motion_noise_);
-    //   }
-    //   graph_planning.add(constant_motion_factor);
-
-    //   //Add static obstacle factor
-    //   auto obstacle_H_factor = boost::make_shared<SDFStaticObstacleHFactor>(
-    //       motion_key, sdf_map_,
-    //       FLAGS_mpc_static_sdf_H_safety_distance, prediction_L_e_,
-    //       static_obstacle_H_noise_);
-    //   graph_planning.add(obstacle_H_factor);
-
-    //   //Add dynamic obstacle factor
-    //   auto mission_factor = boost::make_shared<DynamicObstacleFactor<2>>(
-    //           camera_key, motion_key, prediction_L_e_,
-    //           FLAGS_mpc_dynamic_obstacle_safety_distance,
-    //           dynamic_obstacle_factor_);
-    //   graph_planning.add(mission_factor);
-
-    // }
-
-
-
-
     // Computel initial guess
     // --- Get last real pose
     // auto L_W_km1_query = accessor->getObjectPose(frame_k - 1, object_to_follow);
@@ -2412,6 +2326,34 @@ gtsam::Vector2 MPCFormulation::decoupledPredictionPlanning(const PostUpdateData&
     // In this code we are just trying to get to:
     // constant_motion_factor = boost::make_shared<HybridConstantMotionFactorDirected1>(motion_key_k_m2_predicted, motion_key_k_m1_predicted, motion_key_k_predicted, L_e, object_prediction_constant_motion_noise_);
     
+  }
+  else{
+    // trust the old prediction, just move the index down by one as we moved
+    for (size_t frame_id = first_frame_id+2; frame_id <= last_frame_id; ++frame_id) {
+      auto motion_key_then = ObjectMotionSymbol(object_to_follow, frame_id);
+      if (decoupled_planning_values_.exists(motion_key_then)) {
+        // Key exists, get the value
+        auto motion_key_now = ObjectMotionSymbol(object_to_follow, frame_id-1);
+        gtsam::Pose3 motion_value = decoupled_planning_values_.at<gtsam::Pose3>(motion_key_then);
+
+        // Initialize
+        initial_values_planning.insert(motion_key_now, motion_value);
+
+        // Add prior
+        auto motion_prior =
+            boost::make_shared<gtsam::PriorFactor<gtsam::Pose3>>(
+                motion_key_now, motion_value, gtsam::noiseModel::Isotropic::Sigma(6u, 0.1));
+        graph_planning.add(motion_prior);
+
+        // Add dynamic obstacle factor
+        auto camera_key = CameraPoseSymbol(frame_id-1);
+        auto dynamic_obstacle_factorr = boost::make_shared<DynamicObstacleFactor<2>>(
+                camera_key, motion_key_now, prediction_L_e_,
+                FLAGS_mpc_dynamic_obstacle_safety_distance,
+                dynamic_obstacle_factor_);
+        graph_planning.add(dynamic_obstacle_factorr);
+      }
+    }
   }
   // ---------------------- The end of motion <3
 
@@ -2504,16 +2446,16 @@ gtsam::Vector2 MPCFormulation::decoupledPredictionPlanning(const PostUpdateData&
 
   // Obey the Velocity limits
   // Linear velocity
-  if (current_vel(0) > lin_vel_.max)
-    current_vel(0) = lin_vel_.max;
-  else if (current_vel(0) < lin_vel_.min)
-    current_vel(0) = lin_vel_.min;
+  // if (current_vel(0) > lin_vel_.max)
+  //   current_vel(0) = lin_vel_.max;
+  // else if (current_vel(0) < lin_vel_.min)
+  //   current_vel(0) = lin_vel_.min;
 
-  // Angular velocity
-  if (current_vel(1) > ang_vel_.max)
-    current_vel(1) = ang_vel_.max;
-  else if (current_vel(1) < ang_vel_.min)
-    current_vel(1) = ang_vel_.min;
+  // // Angular velocity
+  // if (current_vel(1) > ang_vel_.max)
+  //   current_vel(1) = ang_vel_.max;
+  // else if (current_vel(1) < ang_vel_.min)
+  //   current_vel(1) = ang_vel_.min;
 
   for (size_t frame_id = first_frame_id; frame_id <= last_frame_id; ++frame_id) {
 
@@ -2668,36 +2610,36 @@ gtsam::Vector2 MPCFormulation::decoupledPredictionPlanning(const PostUpdateData&
   // }
 
 
-  // Debug
-  gtsam::Point3 robot_t = current_pose.translation();
-  LOG(INFO) << "====== ROBOT CURRENT POSE ======";
-  LOG(INFO) << "Robot | x: " << robot_t.x()
-            << " y: " << robot_t.y()
-            << " z: " << robot_t.z();
+  // Debug Motion
+  // gtsam::Point3 robot_t = current_pose.translation();
+  // LOG(INFO) << "====== ROBOT CURRENT POSE ======";
+  // LOG(INFO) << "Robot | x: " << robot_t.x()
+  //           << " y: " << robot_t.y()
+  //           << " z: " << robot_t.z();
   
-  LOG(INFO) << "====== OBJECT PREDICTION ======";
+  // LOG(INFO) << "====== OBJECT PREDICTION ======";
 
-  for (size_t frame_id = first_frame_id; frame_id <= last_frame_id; ++frame_id) {
-      auto motion_key = ObjectMotionSymbol(object_to_follow, frame_id);
+  // for (size_t frame_id = first_frame_id; frame_id <= last_frame_id; ++frame_id) {
+  //     auto motion_key = ObjectMotionSymbol(object_to_follow, frame_id);
 
-      if (!optimized_values.exists(motion_key)) {
-          LOG(WARNING) << "Motion not found for frame " << frame_id;
-          continue;
-      }
+  //     if (!optimized_values.exists(motion_key)) {
+  //         LOG(WARNING) << "Motion not found for frame " << frame_id;
+  //         continue;
+  //     }
 
-      // Motion in embedded frame
-      gtsam::Pose3 H_W_k = optimized_values.at<gtsam::Pose3>(motion_key);
+  //     // Motion in embedded frame
+  //     gtsam::Pose3 H_W_k = optimized_values.at<gtsam::Pose3>(motion_key);
 
-      // Transform into world frame using embedded frame
-      gtsam::Pose3 L_W_obj = H_W_k * prediction_L_e_;
+  //     // Transform into world frame using embedded frame
+  //     gtsam::Pose3 L_W_obj = H_W_k * prediction_L_e_;
 
-      gtsam::Point3 t = L_W_obj.translation();
+  //     gtsam::Point3 t = L_W_obj.translation();
 
-      LOG(INFO) << "Step " << frame_id
-                << " | x: " << t.x()
-                << " y: " << t.y()
-                << " z: " << t.z();
-  }
+  //     LOG(INFO) << "Step " << frame_id
+  //               << " | x: " << t.x()
+  //               << " y: " << t.y()
+  //               << " z: " << t.z();
+  // }
 
 
   // Return Velocity Value
@@ -2792,8 +2734,8 @@ void MPCFormulation::postUpdate(const PostUpdateData& data) {
   // 2. Collect control command and send
   /////// COUPLED
 
-  if (viz_) viz_->inPostUpdate();
   if (viz_) viz_->spin(data.timestamp, data.frame_id, this, decoupled, vel_command);
+  if (viz_) viz_->inPostUpdate();
 }
 
 bool MPCFormulation::getLocalGoalFromGlobalPath(const gtsam::Pose3& X_k,
