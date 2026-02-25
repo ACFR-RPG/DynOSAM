@@ -1,0 +1,18 @@
+<launch>
+
+    <arg name="depth_scale" default="0.001" />
+    <arg name="rescale_image_width" default="640" />
+    <arg name="rescale_image_height" default="480" />
+
+    <!-- Launch a Python node -->
+    <node pkg="dynosam_ros"
+          exec="dynosam_tracking_demo_node"
+          name="dynosam_tracking_demo"
+          output="screen">
+
+        <!-- Remap topics -->
+        <remap from="camera_info" to="/camera/aligned_depth_to_color/camera_info"/>
+        <!-- <remap from="image_raw" to="/camera/aligned_depth_to_color/image_raw"/> -->
+        <remap from="image_raw" to="/camera/color/image_rect_color"/>
+    </node>
+</launch>

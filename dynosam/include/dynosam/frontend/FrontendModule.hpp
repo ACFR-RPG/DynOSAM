@@ -30,6 +30,7 @@
 
 #pragma once
 
+#include "dynosam/backend/Accessor.hpp"
 #include "dynosam/frontend/FrontendParams.hpp"
 #include "dynosam/frontend/VisionImuOutputPacket.hpp"
 #include "dynosam/pipeline/PipelineParams.hpp"
@@ -38,6 +39,8 @@
 #include "dynosam_common/ModuleBase.hpp"
 #include "dynosam_common/SharedModuleInfo.hpp"
 #include "dynosam_common/Types.hpp"
+#include "dynosam/frontend/vision/FeatureTracker.hpp"
+
 
 // #include "dynosam_common"
 
@@ -74,6 +77,16 @@ class FrontendModule
   const FrontendParams& getFrontendParams() const {
     return params_.frontend_params_;
   }
+
+  void setAccessor(Accessor::Ptr accessor) {
+    CHECK_NOTNULL(accessor);
+    accessor_ = accessor;
+  }
+
+  virtual void onBackendUpdateCallback(const FrameId /*frame_id*/,
+                                       const Timestamp /*timestamp*/) {}
+
+  void FrameToClassMap(const Frame::Ptr& frame) const;
 
  protected:
   /**
@@ -118,6 +131,8 @@ class FrontendModule
   gtsam::Pose3Vector
       camera_poses_;  //! Keeps track of current camera trajectory. Really just
                       //! for (viz) and drawn everytime
+  //! Accessor for the backend (i.e optimized values)
+  Accessor::Ptr accessor_{nullptr};
 };
 
 }  // namespace dyno

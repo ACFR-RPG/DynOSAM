@@ -102,7 +102,13 @@ Frame::Ptr FeatureTracker::track(FrameId frame_id, Timestamp timestamp,
   // result after the function call) ObjectDetectionEngine is used if
   // params_.prefer_provided_object_detection is false
   vision_tools::ObjectBoundaryMaskResult boundary_mask_result;
-  objectDetection(boundary_mask_result, input_images);
+
+  ObjectDetectionResult observations = objectDetection(boundary_mask_result, input_images);
+
+  for (const auto& det : observations.detections) {
+      std::cout << "Detected object_id=" << det.object_id
+                << " class_name=" << det.class_name << std::endl;
+  }
 
   if (!initial_computation_ && params_.use_propogate_mask) {
     utils::TimingStatsCollector timer("propogate_mask");
@@ -156,18 +162,10 @@ Frame::Ptr FeatureTracker::track(FrameId frame_id, Timestamp timestamp,
   // TODO: SingleDetectionResult really does not need the tracklet ids they
   // are never actually used!! this prevents the frame from needing to do the
   // same calculations we've alrady done
+
   std::map<ObjectId, SingleDetectionResult> object_observations;
-  for (size_t i = 0; i < boundary_mask_result.objects_detected.size(); i++) {
-    ObjectId object_id = boundary_mask_result.objects_detected.at(i);
-    const cv::Rect& bb_detection =
-        boundary_mask_result.object_bounding_boxes.at(i);
-
-    SingleDetectionResult observation;
-    observation.object_id = object_id;
-    // observation.object_features = dynamic_features.getByObject(object_id);
-    observation.bounding_box = bb_detection;
-
-    object_observations[object_id] = observation;
+  for (const auto& detection : observations.detections) {
+    object_observations[detection.object_id] = detection;
   }
 
   utils::TimingStatsCollector f_timer("tracking_timer.frame_construction");
@@ -188,6 +186,8 @@ Frame::Ptr FeatureTracker::track(FrameId frame_id, Timestamp timestamp,
           << container_to_string(new_frame->getObjectIds());
   previous_frame_ = new_frame;
   boarder_detection_mask_ = boundary_mask_result.boundary_mask;
+
+  // FrontendModule::FrameToClassMap(new_frame);
 
   return new_frame;
 }
@@ -239,19 +239,20 @@ bool FeatureTracker::stereoTrack(FeaturePtrs& stereo_features,
     return std::sqrt(dx * dx + dy * dy);
   };
   // update klt status based on result from flow
-  for (size_t i = 0; i < klt_status.size(); i++) {
-    const bool both_status_good = klt_status.at(i) && klt_reverse_status.at(i);
-    const bool within_image = isWithinShrunkenImage(right_feature_points.at(i));
-    const bool within_distance =
-        distance(left_feature_points.at(i),
-                 reverse_left_feature_points.at(i)) <= 0.5;
+  // for (size_t i = 0; i < klt_status.size(); i++) {
+  //   const bool both_status_good = klt_status.at(i) &&
+  //   klt_reverse_status.at(i); const bool within_image =
+  //   isWithinShrunkenImage(right_feature_points.at(i)); const bool
+  //   within_distance =
+  //       distance(left_feature_points.at(i),
+  //                reverse_left_feature_points.at(i)) <= 0.5;
 
-    if (both_status_good && within_image && within_distance) {
-      klt_status.at(i) = 1;
-    } else {
-      klt_status.at(i) = 0;
-    }
-  }
+  //   if (both_status_good && within_image && within_distance) {
+  //     klt_status.at(i) = 1;
+  //   } else {
+  //     klt_status.at(i) = 0;
+  //   }
+  // }
 
   TrackletIds good_stereo_tracklets;
 
@@ -617,8 +618,6 @@ void FeatureTracker::trackDynamicKLT(
     std::vector<cv::Point2f> current_points;
     current_points.resize(previous_pts.size());
 
-    LOG(INFO) << "Found " << tracklet_ids.size() << " dynamic inliers for KLT";
-
     if (tracklet_ids.size() > 0) {
       utils::TimingStatsCollector tracking_t(
           "dynamic_feature_track_klt.tracking");
@@ -771,8 +770,6 @@ void FeatureTracker::trackDynamicKLT(
     }
 
     for (const auto& [object_id, features_j] : tracks_per_object) {
-      LOG(INFO) << "Tracked " << features_j.size() << " j= " << object_id
-                << " with KLT";
       dynamic_features += features_j;
     }
   }
@@ -821,8 +818,9 @@ void FeatureTracker::trackDynamicKLT(
         cv::bitwise_and(obj_mask, detection_mask_impl, combined_mask);
 
         std::vector<cv::Point2f> detected_points;
-        cv::goodFeaturesToTrack(mono, detected_points, 300, qualityLevel,
-                                min_feature_distance, combined_mask);
+        cv::goodFeaturesToTrack(mono, detected_points, max_features_to_track,
+                                qualityLevel, min_feature_distance,
+                                combined_mask);
 
         std::vector<KeypointCV> keypoints;
         cv::KeyPoint::convert(detected_points, keypoints);
@@ -1021,7 +1019,7 @@ void FeatureTracker::sampleDynamic(FrameId frame_id,
 }
 
 void FeatureTracker::requiresSampling(
-    std::set<ObjectId>& objects_to_sample, const FeatureTrackerInfo& info,
+    std::set<ObjectId>& objects_to_sample, FeatureTrackerInfo& info,
     const ImageContainer& image_container,
     const gtsam::FastMap<ObjectId, FeatureContainer>& features_per_object,
     const vision_tools::ObjectBoundaryMaskResult& boundary_mask_result,
@@ -1045,14 +1043,23 @@ void FeatureTracker::requiresSampling(
         << " this could happen if the object mask changes dramatically...!!";
   }
 
-  if (!previous_frame_) {
-    if (!detected_objects.empty()) {
-      VLOG(5) << "All objects sampled as first frame";
-      objects_to_sample.insert(detected_objects.begin(),
-                               detected_objects.end());
-    }
-    return;
-  }
+  // NOTE: the object_reampled info is epeated on objects_to_sample
+  // but during testing trying not to change the functional interface!!
+  //  if (!previous_frame_) {
+  //    if (!detected_objects.empty()) {
+  //      VLOG(5) << "All objects sampled as first frame";
+  //      objects_to_sample.insert(detected_objects.begin(),
+  //                               detected_objects.end());
+  //      for(const ObjectId& object_id : objects_to_sample) {
+  //        CHECK(!info.dynamic_track.exists(object_id));
+  //        // this will make a new object status
+  //        auto& per_object_status = info.getObjectStatus(object_id);
+  //        per_object_status.object_new = true;
+  //        per_object_status.object_resampled = true;
+  //      }
+  //    }
+  //    return;
+  //  }
 
   const int& max_dynamic_point_age = params_.max_dynamic_feature_age;
   // bascially how early we want to retrack points based on their expiry
@@ -1067,11 +1074,11 @@ void FeatureTracker::requiresSampling(
   CHECK_GT(expiry_age, 0u);
 
   for (size_t i = 0; i < detected_objects.size(); i++) {
-    ObjectId object_id = detected_objects.at(i);
+    const ObjectId object_id = detected_objects.at(i);
 
     // object is tracked and therefore should exist in the previous frame!
     if (info.dynamic_track.exists(object_id)) {
-      const auto& per_object_status = info.dynamic_track.at(object_id);
+      auto& per_object_status = info.dynamic_track.at(object_id);
 
       if (!features_per_object.exists(object_id)) {
         LOG(WARNING) << "Object " << object_id
@@ -1123,6 +1130,7 @@ void FeatureTracker::requiresSampling(
 
       if (needs_sampling) {
         objects_to_sample.insert(object_id);
+        per_object_status.object_resampled = true;
 
         VLOG(5) << "Object " << info_string(info.frame_id, object_id)
                 << " requires sampling";
@@ -1135,11 +1143,15 @@ void FeatureTracker::requiresSampling(
       objects_to_sample.insert(object_id);
       VLOG(5) << "Object " << info_string(info.frame_id, object_id)
               << " requires sampling. Sampling reason: new object";
+      // this will make a new object status
+      auto& per_object_status = info.getObjectStatus(object_id);
+      per_object_status.object_new = true;
+      per_object_status.object_resampled = true;
     }
   }
 }
 
-bool FeatureTracker::objectDetection(
+ObjectDetectionResult FeatureTracker::objectDetection(
     vision_tools::ObjectBoundaryMaskResult& boundary_mask_result,
     ImageContainer& image_container) {
   // from some experimental testing 10 pixles is a good boarder to add around
@@ -1159,7 +1171,8 @@ bool FeatureTracker::objectDetection(
   // detection mask is in the opencv mask form: CV_8UC1 where white pixels (255)
   // are valid and black pixels (0) should not be detected on
   static constexpr bool kUseAsFeatureDetectionMask = true;
-  // else run etection
+  
+  // else run detection
   if (params_.prefer_provided_object_detection) {
     if (image_container.hasObjectMask()) {
       cv::Mat object_mask = image_container.objectMotionMask();
@@ -1170,7 +1183,110 @@ bool FeatureTracker::objectDetection(
       vision_tools::computeObjectMaskBoundaryMask(
           boundary_mask_result, object_mask, scaled_boarder_thickness,
           kUseAsFeatureDetectionMask);
-      return false;
+      
+      ObjectDetectionResult detection_result;
+      detection_result.input_image = image_container.rgb();
+      detection_result.labelled_mask = object_mask;
+      
+      // Run YOLO just for semantic labels
+      ObjectDetectionResult yolo_result;
+      if (object_detection_) {
+        VLOG(30) << "Running YOLO for semantic labeling k="
+                 << image_container.frameId();
+        utils::TimingStatsCollector timing("tracking_timer.yolo_semantic_labeling");
+        yolo_result = object_detection_->process(image_container.rgb());
+        
+        // Debug: print YOLO detections
+        for (const auto& yolo_det : yolo_result.detections) {
+          VLOG(10) << "YOLO found: object_id=" << yolo_det.object_id 
+                   << " class=" << yolo_det.class_name 
+                   << " bbox=" << yolo_det.bounding_box;
+        }
+      }
+      
+      // Choose matching method based on parameter
+      // Set this to true if object IDs match between mask and YOLO tracker
+      // Set to false to use IoU-based matching
+      const bool use_direct_id_matching = false;  // Change this based on your setup
+      
+      if (use_direct_id_matching) {
+        // METHOD 1: Direct ID lookup (when object IDs already match)
+        VLOG(10) << "Using direct ID matching for semantic labels";
+        
+        // Create map of object_id -> class_name from YOLO
+        std::map<ObjectId, std::string> yolo_labels;
+        for (const auto& yolo_det : yolo_result.detections) {
+          yolo_labels[yolo_det.object_id] = yolo_det.class_name;
+        }
+        
+        for (size_t i = 0; i < boundary_mask_result.objects_detected.size(); i++) {
+          ObjectId object_id = boundary_mask_result.objects_detected.at(i);
+          const cv::Rect& bb_detection =
+              boundary_mask_result.object_bounding_boxes.at(i);
+          
+          SingleDetectionResult observation;
+          observation.object_id = object_id;
+          observation.bounding_box = bb_detection;
+          observation.class_name = "unknown";  // default
+          
+          // Direct lookup by object_id
+          if (yolo_labels.find(object_id) != yolo_labels.end()) {
+            observation.class_name = yolo_labels[object_id];
+            VLOG(10) << "Object " << object_id 
+                     << " matched to class '" << observation.class_name << "'";
+          } else {
+            VLOG(10) << "No YOLO match found for object " << object_id;
+          }
+          
+          detection_result.detections.push_back(observation);      
+        }
+      } else {
+        // METHOD 2: IoU-based matching (when object IDs don't match)
+        VLOG(10) << "Using IoU-based matching for semantic labels";
+        
+        // IoU threshold for matching - adjust as needed
+        // Higher (0.5-0.7) = stricter, fewer false matches
+        // Lower (0.2-0.3) = more lenient, more objects get labels
+        const float iou_threshold = 0.3f;
+        
+        for (size_t i = 0; i < boundary_mask_result.objects_detected.size(); i++) {
+          ObjectId object_id = boundary_mask_result.objects_detected.at(i);
+          const cv::Rect& bb_detection =
+              boundary_mask_result.object_bounding_boxes.at(i);
+          
+          SingleDetectionResult observation;
+          observation.object_id = object_id;
+          observation.bounding_box = bb_detection;
+          observation.class_name = "unknown";  // default if no match
+          
+          // Find best matching YOLO detection by bounding box IoU
+          float best_iou = 0.0f;
+          std::string best_class = "unknown";
+          
+          for (const auto& yolo_det : yolo_result.detections) {
+            float iou = utils::calculateIoU(bb_detection, yolo_det.bounding_box);
+            if (iou > best_iou) {
+              best_iou = iou;
+              best_class = yolo_det.class_name;
+            }
+          }
+          
+          // Only use YOLO class if IoU is above threshold
+          if (best_iou > iou_threshold) {
+            observation.class_name = best_class;
+            VLOG(10) << "Matched mask object " << object_id 
+                     << " to YOLO class '" << best_class 
+                     << "' with IoU=" << best_iou;
+          } else {
+            VLOG(10) << "No good YOLO match for mask object " << object_id 
+                     << " (best IoU=" << best_iou << ")";
+          }
+          
+          detection_result.detections.push_back(observation);      
+        }
+      }
+      
+      return detection_result;
     } else {
       LOG(FATAL) << "Params specify prefer provided object mask but input "
                     "is missing!";
@@ -1183,9 +1299,15 @@ bool FeatureTracker::objectDetection(
     {
       utils::TimingStatsCollector timing("tracking_timer.detection_inference");
       detection_result = object_detection_->process(image_container.rgb());
+      
+      // Debug: print semantic labels from YOLO
+      for (const auto& det : detection_result.detections) {
+        VLOG(10) << "YOLO detected object_id=" << det.object_id 
+                 << " class_name='" << det.class_name << "' "
+                 << "confidence=" << det.confidence;
+      }
     }
     cv::Mat object_mask = detection_result.labelled_mask;
-
     {
       utils::TimingStatsCollector timing(
           "tracking_timer.compute_boundary_mask");
@@ -1193,11 +1315,10 @@ bool FeatureTracker::objectDetection(
           boundary_mask_result, detection_result, scaled_boarder_thickness,
           kUseAsFeatureDetectionMask);
     }
-
     // update or insert image container with object mask
     image_container.replace<ImageType::MotionMask>(ImageContainer::kObjectMask,
                                                    object_mask);
-    return true;
+    return detection_result;
   }
 }
 
@@ -1212,6 +1333,7 @@ void FeatureTracker::propogateMask(ImageContainer& image_container) {
 
   // note reference
   cv::Mat& current_mask = image_container.objectMotionMask();
+
 
   ObjectIds instance_labels;
   for (const Feature::Ptr& dynamic_feature :
@@ -1340,6 +1462,7 @@ void FeatureTracker::propogateMask(ImageContainer& image_container) {
               current_mask.at<ObjectId>(functional_keypoint::v(predicted_kp),
                                         functional_keypoint::u(predicted_kp)) =
                   instance_labels[i];
+
               //  current_rgb
               // updated_mask_points++;
             }
@@ -1349,5 +1472,6 @@ void FeatureTracker::propogateMask(ImageContainer& image_container) {
     }
   }
 }
+
 
 }  // namespace dyno

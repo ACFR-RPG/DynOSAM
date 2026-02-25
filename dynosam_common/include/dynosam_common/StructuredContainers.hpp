@@ -397,3 +397,29 @@ class FastUnorderedMap
 };
 
 }  // namespace dyno
+
+// allow convenience tuple like getters for FrameRange
+namespace std {
+template <typename T>
+struct tuple_size<dyno::FrameRange<T>> : std::integral_constant<size_t, 2> {};
+
+template <typename T>
+struct tuple_element<0, dyno::FrameRange<T>> {
+  using type = dyno::FrameId;
+};
+
+template <typename T>
+struct tuple_element<1, dyno::FrameRange<T>> {
+  using type = T;
+};
+}  // namespace std
+
+namespace dyno {
+template <size_t N, typename T>
+auto get(const FrameRange<T>& p) {
+  if constexpr (N == 0)
+    return p.dataPair().first;
+  else if constexpr (N == 1)
+    return p.dataPair().second;
+}
+}  // namespace dyno

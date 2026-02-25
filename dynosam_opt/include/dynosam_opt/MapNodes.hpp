@@ -447,6 +447,7 @@ class FrameNode : public MapNodeBase<MEASUREMENT> {
 
   /**
    * @brief True if the requested object was observed at the previous frame.
+   * TODO: this is hardcoded with k-1!!! Not valid for keyframing!!!
    *
    * @param object_id ObjectId
    * @return true
@@ -605,6 +606,25 @@ class ObjectNode : public MapNodeBase<MEASUREMENT> {
    */
   inline FrameId getLastSeenFrame() const {
     return getSeenFrames().template getLastIndex<FrameId>();
+  }
+
+  /**
+   * @brief Gets the frame id seen immediately before the latest one!
+   * If the object has only been seen once, return false
+   *
+   * @param frame_id
+   * @return true
+   * @return false
+   */
+  bool previouslySeenFrame(FrameId* frame_id = nullptr) const {
+    const FrameIds all_frames_seen = this->getSeenFrameIds();
+    if (all_frames_seen.size() < 2) {
+      return false;
+    }
+    if (frame_id) {
+      *frame_id = *(all_frames_seen.end() - 2);
+    }
+    return true;
   }
 
   /**

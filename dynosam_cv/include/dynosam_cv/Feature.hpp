@@ -95,33 +95,23 @@ class Feature {
 
   Feature() : data_() {}
 
-  Feature(const Feature& other) {
-    // TODO: use both mutexs?
-    std::lock_guard<std::mutex> lk(other.mutex_);
-    data_ = other.data_;
-  }
+  Feature(const Feature& other);
 
-  bool operator==(const Feature& other) const { return data_ == other.data_; }
+  bool operator==(const Feature& other) const;
 
   /**
    * @brief Gets keypoint observation.
    *
    * @return Keypoint
    */
-  Keypoint keypoint() const {
-    std::lock_guard<std::mutex> lk(mutex_);
-    return data_.keypoint;
-  }
+  Keypoint keypoint() const;
 
   /**
    * @brief Gets the measured flow.
    *
    * @return OpticalFlow
    */
-  OpticalFlow measuredFlow() const {
-    std::lock_guard<std::mutex> lk(mutex_);
-    return data_.measured_flow;
-  }
+  OpticalFlow measuredFlow() const;
 
   /**
    * @brief Gets the predicted keypoint.
@@ -134,10 +124,7 @@ class Feature {
    *
    * @return Keypoint
    */
-  Keypoint predictedKeypoint() const {
-    std::lock_guard<std::mutex> lk(mutex_);
-    return data_.predicted_keypoint;
-  }
+  Keypoint predictedKeypoint() const;
 
   /**
    * @brief Get the number of consequative frames this feature has been
@@ -145,51 +132,35 @@ class Feature {
    *
    * @return size_t
    */
-  size_t age() const {
-    std::lock_guard<std::mutex> lk(mutex_);
-    return data_.age;
-  }
+  size_t age() const;
 
   /**
    * @brief Get keypoint type (static or dynamci).
    *
    * @return KeyPointType
    */
-  KeyPointType keypointType() const {
-    std::lock_guard<std::mutex> lk(mutex_);
-    return data_.type;
-  }
+  KeyPointType keypointType() const;
 
   /**
    * @brief Get the keypoints unique tracklet id (ie. i).
    *
    * @return TrackletId
    */
-  TrackletId trackletId() const {
-    std::lock_guard<std::mutex> lk(mutex_);
-    return data_.tracklet_id;
-  }
+  TrackletId trackletId() const;
 
   /**
    * @brief Get the frame id this feature was observed in (ie. k).
    *
    * @return FrameId
    */
-  FrameId frameId() const {
-    std::lock_guard<std::mutex> lk(mutex_);
-    return data_.frame_id;
-  }
-
+  FrameId frameId() const;
   /**
    * @brief If the feature is an inlier.
    *
    * @return true
    * @return false
    */
-  bool inlier() const {
-    std::lock_guard<std::mutex> lk(mutex_);
-    return data_.inlier;
-  }
+  bool inlier() const;
 
   /**
    * @brief Get the object id associated with this feature (0 if
@@ -197,10 +168,7 @@ class Feature {
    *
    * @return ObjectId
    */
-  ObjectId objectId() const {
-    std::lock_guard<std::mutex> lk(mutex_);
-    return data_.tracking_label;
-  }
+  ObjectId objectId() const;
 
   /**
    * @brief Depth of this keypoint (will be Feature::invalid_depth is depth is
@@ -208,10 +176,7 @@ class Feature {
    *
    * @return Depth
    */
-  Depth depth() const {
-    std::lock_guard<std::mutex> lk(mutex_);
-    return data_.depth;
-  }
+  Depth depth() const;
 
   /**
    * @brief Gets the right keypoint. The value will be
@@ -219,17 +184,10 @@ class Feature {
    *
    * @return Keypoint
    */
-  Keypoint rightKeypoint() const {
-    std::lock_guard<std::mutex> lk(mutex_);
-    if (data_.right_kp.has_value()) return data_.right_kp.value();
-    DYNO_THROW_MSG(DynosamException)
-        << "Right Kp requested for" << data_.tracklet_id << " but not set";
-  }
+  Keypoint rightKeypoint() const;
 
   static Keypoint CalculatePredictedKeypoint(const Keypoint& keypoint,
-                                             const OpticalFlow& measured_flow) {
-    return keypoint + measured_flow;
-  }
+                                             const OpticalFlow& measured_flow);
 
   /**
    * @brief Sets the measured optical flow (which should start at the features
@@ -240,72 +198,27 @@ class Feature {
    *
    * @param measured_flow
    */
-  void setPredictedKeypoint(const OpticalFlow& measured_flow) {
-    std::lock_guard<std::mutex> lk(mutex_);
-    data_.measured_flow = measured_flow;
-    data_.predicted_keypoint =
-        CalculatePredictedKeypoint(data_.keypoint, measured_flow);
-  }
+  void setPredictedKeypoint(const OpticalFlow& measured_flow);
 
-  Feature& keypoint(const Keypoint& kp) {
-    std::lock_guard<std::mutex> lk(mutex_);
-    data_.keypoint = kp;
-    return *this;
-  }
+  Feature& keypoint(const Keypoint& kp);
 
-  Feature& measuredFlow(const OpticalFlow& measured_flow) {
-    std::lock_guard<std::mutex> lk(mutex_);
-    data_.measured_flow = measured_flow;
-    return *this;
-  }
+  Feature& measuredFlow(const OpticalFlow& measured_flow);
 
-  Feature& predictedKeypoint(const Keypoint& predicted_kp) {
-    std::lock_guard<std::mutex> lk(mutex_);
-    data_.predicted_keypoint = predicted_kp;
-    return *this;
-  }
+  Feature& predictedKeypoint(const Keypoint& predicted_kp);
 
-  Feature& age(const size_t& a) {
-    std::lock_guard<std::mutex> lk(mutex_);
-    data_.age = a;
-    return *this;
-  }
+  Feature& age(const size_t& a);
 
-  Feature& keypointType(const KeyPointType& kp_type) {
-    std::lock_guard<std::mutex> lk(mutex_);
-    data_.type = kp_type;
-    return *this;
-  }
+  Feature& keypointType(const KeyPointType& kp_type);
 
-  Feature& trackletId(const TrackletId& tracklet_id) {
-    std::lock_guard<std::mutex> lk(mutex_);
-    data_.tracklet_id = tracklet_id;
-    return *this;
-  }
+  Feature& trackletId(const TrackletId& tracklet_id);
 
-  Feature& frameId(const FrameId& frame_id) {
-    std::lock_guard<std::mutex> lk(mutex_);
-    data_.frame_id = frame_id;
-    return *this;
-  }
+  Feature& frameId(const FrameId& frame_id);
 
-  Feature& objectId(ObjectId id) {
-    std::lock_guard<std::mutex> lk(mutex_);
-    data_.tracking_label = id;
-    return *this;
-  }
+  Feature& objectId(ObjectId id);
 
-  Feature& depth(Depth d) {
-    std::lock_guard<std::mutex> lk(mutex_);
-    data_.depth = d;
-    return *this;
-  }
+  Feature& depth(Depth d);
 
-  Feature& rightKeypoint(const Keypoint& right_kp) {
-    std::lock_guard<std::mutex> lk(mutex_);
-    data_.right_kp = right_kp;
-    return *this;
-  }
+  Feature& rightKeypoint(const Keypoint& right_kp);
 
   /**
    * @brief If the feature is valid - a combination of inlier and if the
@@ -316,43 +229,21 @@ class Feature {
    * @return true
    * @return false
    */
-  bool usable() const {
-    std::lock_guard<std::mutex> lk(mutex_);
-    return data_.inlier && (data_.tracklet_id != invalid_id);
-  }
+  bool usable() const;
 
-  bool isStatic() const {
-    std::lock_guard<std::mutex> lk(mutex_);
-    return data_.type == KeyPointType::STATIC;
-  }
+  bool isStatic() const;
 
-  Feature& markOutlier() {
-    std::lock_guard<std::mutex> lk(mutex_);
-    data_.inlier = false;
-    return *this;
-  }
+  Feature& markOutlier();
 
-  Feature& markInlier() {
-    std::lock_guard<std::mutex> lk(mutex_);
-    data_.inlier = true;
-    return *this;
-  }
+  Feature& markInlier();
 
-  Feature& markInvalid() {
-    std::lock_guard<std::mutex> lk(mutex_);
-    data_.tracklet_id = invalid_id;
-    return *this;
-  }
+  Feature& markInvalid();
 
-  bool hasDepth() const {
-    std::lock_guard<std::mutex> lk(mutex_);
-    return !std::isnan(data_.depth);
-  }
+  bool hasDepth() const;
 
-  bool hasRightKeypoint() const {
-    std::lock_guard<std::mutex> lk(mutex_);
-    return data_.right_kp.has_value();
-  }
+  bool hasRightKeypoint() const;
+
+  bool stereoPoint(gtsam::StereoPoint2& stereo) const;
 
   inline static bool IsUsable(const Feature::Ptr& f) { return f->usable(); }
 

@@ -105,6 +105,8 @@ def load_dynosam_node(context, *args, **kwargs):
     motion_mask_cam_topic_config = LaunchConfiguration("motion_mask_cam_topic")
     optical_flow_cam_topic_config = LaunchConfiguration("optical_flow_cam_topic")
 
+    input_image_mode_config = LaunchConfiguration("input_image_mode")
+
     # additional cmdline arguments
     # args_config = LaunchConfiguration("argv")
 
@@ -189,7 +191,8 @@ def load_dynosam_node(context, *args, **kwargs):
         {"dataset_path": dynosam_dataset_path_config},
         {"online": online_config},
         {"wait_for_camera_params": wait_for_camera_params_config},
-        {"camera_params_timeout": camera_params_timeout_config}
+        {"camera_params_timeout": camera_params_timeout_config},
+        {"input_image_mode": input_image_mode_config}
     ]
 
     is_online = bool(online_config.perform(context))
@@ -203,11 +206,17 @@ def load_dynosam_node(context, *args, **kwargs):
         executable=executable,
         parameters=parameters,
         remappings=[
-            ("dataprovider/image/camera_info", camera_info_config),
-            ("dataprovider/image/rgb", rgb_cam_topic_config),
-            ("dataprovider/image/depth", depth_cam_topic_config),
-            ("dataprovider/image/mask", motion_mask_cam_topic_config),
-            ("dataprovider/image/flow", optical_flow_cam_topic_config)
+            ("dataprovider/camera/camera_info", camera_info_config),
+            # ("dataprovider/image/rgb", rgb_cam_topic_config),
+            # ("dataprovider/image/depth", depth_cam_topic_config),
+            # ("dataprovider/image/mask", motion_mask_cam_topic_config),
+            # ("dataprovider/image/flow", optical_flow_cam_topic_config)
+            # for now the dataprovider sub-node is not being extended properly
+            # but only when using the MultiSync class?
+            ("image/rgb", rgb_cam_topic_config),
+            ("image/depth", depth_cam_topic_config),
+            ("image/mask", motion_mask_cam_topic_config),
+            ("image/flow", optical_flow_cam_topic_config)
         ],
         # prefix='valgrind --tool=massif --massif-out-file=/tmp/massif.out',
         arguments=arguments,
@@ -283,7 +292,8 @@ def generate_dynosam_launch_description(**kwargs):
          "rgb_cam_topic": "/dyno/camera/rgb",
          "depth_cam_topic": "/dyno/camera/depth",
          "motion_mask_cam_topic": "/dyno/camera/motion_mask",
-         "optical_flow_cam_topic": "/dyno/camera/optical_flow"},
+         "optical_flow_cam_topic": "/dyno/camera/optical_flow",
+         "input_image_mode": 0},
          **kwargs)
 
     return LaunchDescription([

@@ -32,7 +32,8 @@ RUN apt-get update \
 # ROS installs
 RUN apt-get install -y \
       ros-kilted-ros2cli-common-extensions \
-      ros-kilted-vision-opencv
+      ros-kilted-vision-opencv \
+      nlohmann-json3-dev
 
 # other deps
 RUN apt-get install libpng++-dev

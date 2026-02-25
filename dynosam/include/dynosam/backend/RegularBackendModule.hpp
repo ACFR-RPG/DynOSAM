@@ -100,6 +100,8 @@ class RegularBackendModule
   std::pair<gtsam::Values, gtsam::NonlinearFactorGraph> getActiveOptimisation()
       const override;
 
+  Accessor::Ptr getAccessor() override;
+
  protected:
   void setupUpdates();
 

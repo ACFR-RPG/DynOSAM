@@ -46,13 +46,16 @@
 --use_smoothing_factor=true
 
 # 0: Full-batch, 1: sliding-window, 2: incremental
---optimization_mode=0
+--optimization_mode=2
 
 # 0: PTP, 1: Generic Projection, 2: Stereo Projection
 --static_formulation_type=2
 
+# if true, only run as Static SLAM (mostly for debug/testing)
+--regular_backend_static_only=false
+
 --min_static_observations=2
---min_dynamic_observations=2
+--min_dynamic_observations=0
 
 
 # for ISAM2 params using ParallelObjectSAM

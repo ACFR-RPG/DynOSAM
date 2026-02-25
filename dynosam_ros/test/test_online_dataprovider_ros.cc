@@ -72,12 +72,12 @@ TEST(OnlineDataProviderRos, testwaitCameraInfoSubscribe) {
   camera_info_msg.distortion_model = "plumb_bob";
 
   auto received = false;
-  std::shared_ptr<OnlineDataProviderRos> odpr = nullptr;
+  std::shared_ptr<RGBDTypeCalibrationHelper> odpr = nullptr;
   std::shared_future<bool> wait = std::async(std::launch::async, [&]() {
     OnlineDataProviderRosParams params;
     params.wait_for_camera_params = true;
     params.camera_params_timeout = -1;
-    odpr = std::make_shared<OnlineDataProviderRos>(node, params);
+    odpr = std::make_shared<RGBDTypeCalibrationHelper>(node, params);
     received = true;
     return true;
   });
@@ -98,25 +98,33 @@ TEST(OnlineDataProviderRos, testNowaitCameraInfoSubscribe) {
 
   OnlineDataProviderRosParams params;
   params.wait_for_camera_params = false;
-  auto odpr = std::make_shared<OnlineDataProviderRos>(node, params);
+  auto odpr = std::make_shared<RGBDTypeCalibrationHelper>(node, params);
   EXPECT_FALSE(odpr->getCameraParams());
+}
+
+TEST(MultiSync, printVersionMessageFilters) {
+  std::cout << "--- Detection Check ---" << std::endl;
+  // This will print the version number defined by the preprocessor logic
+  std::cout << "Defined MESSAGE_FILTERS_USES_NODE_INTERFACE: "
+            << MESSAGE_FILTERS_USES_NODE_INTERFACE << std::endl;
 }
 
 TEST(MultiSync, basicInvalidConnect) {
   auto node = std::make_shared<rclcpp::Node>("test");
 
-  using MIS = MultiImageSync<1>;
-  MIS image_sync(*node, {"image_raw"}, 10);
+  using MIS = MultiImageSync<2>;
+  MIS image_sync(*node, {"image_raw1", "image_raw2"}, 10);
   EXPECT_FALSE(image_sync.connect());
 }
 
 TEST(MultiSync, basicConnect) {
   auto node = std::make_shared<rclcpp::Node>("test");
 
-  using MIS = MultiImageSync<1>;
-  MIS image_sync(*node, {"image_raw"}, 10);
+  using MIS = MultiImageSync<2>;
+  MIS image_sync(*node, {"image_raw1", "image_raw2"}, 10);
   image_sync.registerCallback(
-      [](const sensor_msgs::msg::Image::ConstSharedPtr&) {});
+      [](const sensor_msgs::msg::Image::ConstSharedPtr&,
+         const sensor_msgs::msg::Image::ConstSharedPtr&) {});
 
   EXPECT_TRUE(image_sync.connect());
 }

@@ -20,7 +20,7 @@ byte_track::ByteTracker::ByteTracker(const int &frame_rate,
       frame_id_(0),
       // very important to start track id count at 1 (i.e greater than the
       // background label!)
-      track_id_count_(1) {}
+      track_id_count_(0) {}
 
 byte_track::ByteTracker::~ByteTracker() {}
 
@@ -37,8 +37,8 @@ std::vector<byte_track::STrackPtr> byte_track::ByteTracker::update(
     const cv::Rect_<float> cv_rect_f = object.bounding_box;
     byte_track::Rect<float> rect(cv_rect_f.x, cv_rect_f.y, cv_rect_f.width,
                                  cv_rect_f.height);
-    const auto strack = std::make_shared<STrack>(
-        rect, object.mask, object.class_name, object.confidence);
+    auto strack = std::make_shared<STrack>(rect, object.mask, object.class_name,
+                                           object.confidence);
     if (object.confidence >= track_thresh_) {
       det_stracks.push_back(strack);
     } else {

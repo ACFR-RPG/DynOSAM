@@ -53,7 +53,7 @@ def first_steps(
     dataset_path,
     params_folder_path=None,
     output_path="/root/results/DynoSAM",
-    online=False,
+    online=True, # CHANGED THIS FROM FALSE -> TRUE
     wait_for_camera_params=True,
     camera_params_timeout=-1,
     camera_frame_id="camera",

@@ -615,6 +615,7 @@ bool KltFeatureTracker::trackPoints(const cv::Mat& current_processed_img,
     // if we do not have enough features, detect more on the current image
     detectFeatures(current_processed_img, image_container, tracked_features,
                    tracked_features, detection_mask);
+    tracker_info.new_static_detections = true;
 
     const auto n_detected = tracked_features.size() - n_tracked;
     tracker_info.static_track_detections += n_detected;

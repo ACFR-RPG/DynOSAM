@@ -14,12 +14,21 @@ To use instead of the pre-computed object masks, set the dynosam params set `pre
 
 For object-level tracking we use a modified C++ implementation of ByteTracker
 
-# Model file
-- YoloV8ObjectDetector requires an exported `.onnx` file which will be converted to a `.engine` file when first loaded. See [export_yolo_tensorrt.py](./export/export_yolo_tensorrt.py) for how to export this file. It should (and by default) be put in the _installed_ share directory of `dynsam_nn` under `weights`. By default the model config will look in this folder for all model weights.
+## Exporting Model and Weights
+- DyoSAM looks for model weights in the `ros_ws/install.../dynosam_nn/weights` directory.
+> NOTE: this is the _install_ directory (ie. in the docker container it will be `/home/user/dev_ws/install/dynosam_nn/share/dynosam_nn/weights/`)
+- To export the model navigate to `dynosam_nn/export` and run
+```
+run python3 export_yolo_tensorrt.py
+```
+which should export a `.onnx` model to the weights directory.
+- YoloV8ObjectDetector requires an exported `.onnx` file which will be converted to a `.engine` file when first loaded.
 
-# Install
+## Install
 - python3 -m pip install "ultralytics==8.3.0" "numpy<2.0" "opencv-python<5.0"
 - sudo apt install python3-pybind11
+
+> NOTE: these dependancies should already be installed when using the Dockerfile
 
 
 ## Details

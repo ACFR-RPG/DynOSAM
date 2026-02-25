@@ -13,43 +13,43 @@ void printRefcount(const cv::cuda::GpuMat& gpu_mat,
     LOG(INFO) << prefix << " ref count is " << *gpu_mat.refcount;
 }
 
-struct Buffer;
+// struct Buffer;
 
-struct GpuContext {
-  Buffer acquire(int rows, int cols, int type);
+// struct GpuContext {
+//   Buffer acquire(int rows, int cols, int type);
 
-  std::unordered_map<int, Buffer> all_entries;
-  std::vector<int> active_entries;
-};
+//   std::unordered_map<int, Buffer> all_entries;
+//   std::vector<int> active_entries;
+// };
 
-struct Buffer {
-  struct Internal {
-    Internal(Buffer* b) : buffer(b) {}
-    ~Internal() {
-      LOG(INFO) << "Destricting internal with ref count " << buffer->refCount();
-    }
+// struct Buffer {
+//   struct Internal {
+//     Internal(Buffer* b) : buffer(b) {}
+//     ~Internal() {
+//       LOG(INFO) << "Destricting internal with ref count " << buffer->refCount();
+//     }
 
-    Buffer* buffer;
-  };
-  // must be before gpu_mat so its destructor is called after!
-  GpuContext* context_;
-  Internal internal_;
-  cv::cuda::GpuMat gpu_mat;
+//     Buffer* buffer;
+//   };
+//   // must be before gpu_mat so its destructor is called after!
+//   GpuContext* context_;
+//   Internal internal_;
+//   cv::cuda::GpuMat gpu_mat;
 
-  Buffer(GpuContext* context) : context_(context), internal_(this), gpu_mat() {}
-  Buffer(GpuContext* context, int rows, int cols, int type)
-      : context_(context), internal_(this), gpu_mat(rows, cols, type) {}
-  ~Buffer() { LOG(INFO) << "Destricting buffer with ref coutn " << refCount(); }
+//   Buffer(GpuContext* context) : context_(context), internal_(this), gpu_mat() {}
+//   Buffer(GpuContext* context, int rows, int cols, int type)
+//       : context_(context), internal_(this), gpu_mat(rows, cols, type) {}
+//   ~Buffer() { LOG(INFO) << "Destricting buffer with ref coutn " << refCount(); }
 
-  int refCount() const {
-    if (gpu_mat.refcount == nullptr)
-      return 0;
-    else
-      return *gpu_mat.refcount;
-  }
-};
+//   int refCount() const {
+//     if (gpu_mat.refcount == nullptr)
+//       return 0;
+//     else
+//       return *gpu_mat.refcount;
+//   }
+// };
 
-Buffer GpuContext::acquire(int rows, int cols, int type) {}
+// Buffer GpuContext::acquire(int rows, int cols, int type) {}
 
 // TEST(GpuCache, testBasicBuffer) {
 //     Buffer buf1;

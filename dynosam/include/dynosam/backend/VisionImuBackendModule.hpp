@@ -86,7 +86,7 @@ class VisionImuBackendModule : public BackendModuleType<MODULE_TRAITS> {
   }
 
   gtsam::NavState addInitialVisualState(
-      FrameId frame_id_k, FormulationType* formulation,
+      FrameId frame_id_k, Timestamp timestamp_k, FormulationType* formulation,
       gtsam::Values& new_values, gtsam::NonlinearFactorGraph& new_factors,
       const NoiseModels& noise_models, const gtsam::Pose3& X_k_w,
       const gtsam::Vector3& V_k_body = gtsam::Vector3(0, 0, 0)) {
@@ -98,21 +98,21 @@ class VisionImuBackendModule : public BackendModuleType<MODULE_TRAITS> {
                                           new_factors);
 
     // update nav state
-    return updateNavState(frame_id_k, X_k_w, V_k_body);
+    return updateNavState(frame_id_k, timestamp_k, X_k_w, V_k_body);
   }
 
   gtsam::NavState addInitialVisualInertialState(
-      FrameId frame_id_k, FormulationType* formulation,
+      FrameId frame_id_k, Timestamp timestamp_k, FormulationType* formulation,
       gtsam::Values& new_values, gtsam::NonlinearFactorGraph& new_factors,
       const NoiseModels& noise_models, const gtsam::NavState& nav_state_k,
       const gtsam::imuBias::ConstantBias& imu_bias) {
     return addInitialVisualInertialState(
-        frame_id_k, formulation, new_values, new_factors, noise_models,
-        nav_state_k.pose(), nav_state_k.bodyVelocity(), imu_bias);
+        frame_id_k, timestamp_k, formulation, new_values, new_factors,
+        noise_models, nav_state_k.pose(), nav_state_k.bodyVelocity(), imu_bias);
   }
 
   gtsam::NavState addInitialVisualInertialState(
-      FrameId frame_id_k, FormulationType* formulation,
+      FrameId frame_id_k, Timestamp timestamp_k, FormulationType* formulation,
       gtsam::Values& new_values, gtsam::NonlinearFactorGraph& new_factors,
       const NoiseModels& noise_models, const gtsam::Pose3& X_k_w,
       const gtsam::Vector3& V_k_body,
@@ -122,8 +122,8 @@ class VisionImuBackendModule : public BackendModuleType<MODULE_TRAITS> {
     CHECK_NOTNULL(formulation);
 
     // update pose and pose covariance
-    addInitialVisualState(frame_id_k, formulation, new_values, new_factors,
-                          noise_models, X_k_w);
+    addInitialVisualState(frame_id_k, timestamp_k, formulation, new_values,
+                          new_factors, noise_models, X_k_w);
 
     gtsam::SharedNoiseModel noise_init_vel_prior =
         gtsam::noiseModel::Isotropic::Sigma(3, 1e-5);
@@ -162,16 +162,19 @@ class VisionImuBackendModule : public BackendModuleType<MODULE_TRAITS> {
 
     // update internal state information
     imu_bias_ = imu_bias;
-    return updateNavState(frame_id_k, X_k_w, V_k_body);
+    return updateNavState(frame_id_k, timestamp_k, X_k_w, V_k_body);
   }
 
   gtsam::NavState addVisualInertialStates(
-      FrameId frame_id_k, FormulationType* formulation,
+      FrameId frame_id_k, Timestamp timestamp_k, FormulationType* formulation,
       gtsam::Values& new_values, gtsam::NonlinearFactorGraph& new_factors,
       const NoiseModels& noise_models, const gtsam::Pose3& T_k_1_k,
       const ImuFrontend::PimPtr& pim = nullptr) {
     CHECK_GT(frame_id_k, 0);
-    FrameId frame_id_k_1 = frame_id_k - 1u;
+    // FrameId frame_id_k_1 = frame_id_k - 1u;
+    // NOTE: this should becomes last_kf_id
+    FrameId frame_id_k_1 = last_nav_state_frame_id_;
+    LOG(INFO) << "Last kf id " << frame_id_k_1;
 
     auto from_id = frame_id_k_1;
     auto to_id = frame_id_k;
@@ -180,7 +183,7 @@ class VisionImuBackendModule : public BackendModuleType<MODULE_TRAITS> {
 
     // could be from VO or IMU. Do we need to know?
     const gtsam::NavState predicted_navstate_k =
-        predictNewState(frame_id_k, T_k_1_k, pim);
+        predictNewState(frame_id_k, timestamp_k, T_k_1_k, pim);
 
     // always add sensor pose
     formulation->addSensorPoseValue(predicted_navstate_k.pose(), frame_id_k,
@@ -239,13 +242,13 @@ class VisionImuBackendModule : public BackendModuleType<MODULE_TRAITS> {
     return predicted_navstate_k;
   }
 
-  gtsam::NavState predictNewState(FrameId frame_id_k,
+  gtsam::NavState predictNewState(FrameId frame_id_k, Timestamp timestamp_k,
                                   const gtsam::Pose3& T_k_1_k,
                                   const ImuFrontend::PimPtr& pim) const {
     CHECK_GT(frame_id_k, 0);
     CHECK_EQ(frame_id_k, (last_nav_state_frame_id_ + 1))
         << "State frame id's are not incrementally ascending. Are we dropping "
-           "IMU data per frame?";
+           "inertial/VO data per frame?";
 
     gtsam::NavState navstate_k;
 
@@ -274,10 +277,6 @@ class VisionImuBackendModule : public BackendModuleType<MODULE_TRAITS> {
       // apply relative pose
       gtsam::Pose3 X_w_k = X_w_k_1 * T_k_1_k;
 
-      // calculate dt for a rough body velocity
-      Timestamp timestamp_k;
-      CHECK(this->shared_module_info.getTimestamp(frame_id_k, timestamp_k));
-
       // assume previous timestep is frame frameid - 1
       CHECK_GT(timestamp_k, last_nav_state_time_);
 
@@ -291,13 +290,14 @@ class VisionImuBackendModule : public BackendModuleType<MODULE_TRAITS> {
   }
 
   const gtsam::NavState& updateNavStateFromFormulation(
-      FrameId frame_id_k, const FormulationType* formulation) {
-    const auto nav_state = navState(frame_id_k, formulation);
-    return updateNavState(frame_id_k, nav_state);
+      FrameId frame_id_k, Timestamp timestamp_k,
+      const FormulationType* formulation) {
+    const auto nav_state = navState(frame_id_k, timestamp_k, formulation);
+    return updateNavState(frame_id_k, timestamp_k, nav_state);
   }
 
   // Ideally this should be const but it updated the imu_bias_... why?
-  gtsam::NavState navState(FrameId frame_id_k,
+  gtsam::NavState navState(FrameId frame_id_k, Timestamp timestamp_k,
                            const FormulationType* formulation) {
     auto accessor = CHECK_NOTNULL(formulation)->accessorFromTheta();
     const gtsam::Values& values = formulation->getTheta();
@@ -315,9 +315,6 @@ class VisionImuBackendModule : public BackendModuleType<MODULE_TRAITS> {
 
       nav_state = gtsam::NavState(X_w_k_query.value(), V_body_k);
     } else {
-      Timestamp timestamp_k;
-      CHECK(this->shared_module_info.getTimestamp(frame_id_k, timestamp_k));
-
       // assume previous timestep is frame frameid - 1
       CHECK_GT(timestamp_k, last_nav_state_time_);
 
@@ -336,21 +333,15 @@ class VisionImuBackendModule : public BackendModuleType<MODULE_TRAITS> {
   }
 
   const gtsam::NavState& updateNavState(FrameId frame_id_k,
+                                        Timestamp timestamp_k,
                                         const gtsam::Pose3& X_k_w,
                                         const gtsam::Vector3& V_k_body) {
-    return updateNavState(frame_id_k, gtsam::NavState(X_k_w, V_k_body));
+    return updateNavState(frame_id_k, timestamp_k,
+                          gtsam::NavState(X_k_w, V_k_body));
   }
 
   const gtsam::NavState& updateNavState(FrameId frame_id_k,
-                                        const gtsam::NavState& nav_state_k) {
-    Timestamp timestamp_k;
-    CHECK(this->shared_module_info.getTimestamp(frame_id_k, timestamp_k));
-    return updateNavState(timestamp_k, frame_id_k, nav_state_k);
-  }
-
- private:
-  const gtsam::NavState& updateNavState(Timestamp timestamp_k,
-                                        FrameId frame_id_k,
+                                        Timestamp timestamp_k,
                                         const gtsam::NavState& nav_state_k) {
     nav_state_ = nav_state_k;
     last_nav_state_time_ = timestamp_k;
@@ -364,7 +355,7 @@ class VisionImuBackendModule : public BackendModuleType<MODULE_TRAITS> {
   // is the previous timestamp (ie. no KF)
   gtsam::NavState nav_state_;
   Timestamp last_nav_state_time_;
-  FrameId last_nav_state_frame_id_;
+  FrameId last_nav_state_frame_id_{0};
   gtsam::imuBias::ConstantBias imu_bias_;
 
  private:

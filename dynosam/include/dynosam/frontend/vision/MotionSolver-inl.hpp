@@ -172,8 +172,7 @@ OpticalFlowAndPoseOptimizer::Result OpticalFlowAndPoseOptimizer::optimize(
   Result result;
   result.best_result.object_id = *object_id.begin();
 
-  // double error_before = graph.error(values);
-  std::vector<double> post_errors;
+  const double error_before = graph.error(values);
   std::unordered_set<gtsam::Key> outlier_flows;
   // graph we will mutate by removing outlier factors
   gtsam::NonlinearFactorGraph mutable_graph = graph;
@@ -198,8 +197,6 @@ OpticalFlowAndPoseOptimizer::Result OpticalFlowAndPoseOptimizer::optimize(
                            mutable_graph, optimised_values, opt_params)
                            .optimize();
   }
-  // double error_after = mutable_graph.error(optimised_values);
-  // post_errors.push_back(error_after);
 
   gtsam::FactorIndices outlier_factors;
   // if we have outliers, enter iteration loop
@@ -251,12 +248,12 @@ OpticalFlowAndPoseOptimizer::Result OpticalFlowAndPoseOptimizer::optimize(
 
   // size_t initial_size = graph.size();
   // size_t inlier_size = mutable_graph.size();
-  // error_after = mutable_graph.error(optimised_values);
+  const double error_after = mutable_graph.error(optimised_values);
 
   // recover values
   result.best_result.refined_pose = optimised_values.at<gtsam::Pose3>(pose_key);
-  // result.error_before = error_before;
-  // result.error_after = error_after;
+  result.error_before = error_before;
+  result.error_after = error_after;
 
   // for each outlier edge, update the set of inliers
   for (TrackletId tracklet_id : tracklets) {

@@ -39,6 +39,9 @@
 #include "dynosam_common/Types.hpp"
 #include "dynosam_cv/Camera.hpp"
 
+// only for HybridObjectMotionSRIF
+#include "dynosam/frontend/vision/MotionSolver.hpp"
+
 namespace dyno {
 
 /**
@@ -77,7 +80,7 @@ class VisionImuPacket {
   };
 
   /**
-   * @brief Object track information epresenting visual measurements for a
+   * @brief Object track information representing visual measurements for a
    * single object as well as frame-to-frame (and possibly other) motion/pose
    * information.
    *
@@ -96,9 +99,17 @@ class VisionImuPacket {
   ImuFrontend::PimPtr pim() const;
   Camera::ConstPtr camera() const;
   PointCloudLabelRGB::Ptr denseLabelledCloud() const;
+  gtsam::Vector6 getBodyVelocity() const;
+
+  bool isCameraKeyFrame() const;
+  bool isObjectKeyFrame(ObjectId object_id) const;
+
+  // static or dynamic!!
+  bool isKeyFrame() const;
 
   const CameraTracks& cameraTracks() const;
   const gtsam::Pose3& cameraPose() const;
+
   /**
    * @brief Returns the relative camera motion T_k_1_k, representing the motion
    * of the camera from k-1 to k in the camera local frame (at k-1)
@@ -141,6 +152,7 @@ class VisionImuPacket {
   VisionImuPacket& groundTruthPacket(
       const GroundTruthInputPacket::Optional& gt);
   VisionImuPacket& debugImagery(const DebugImagery::Optional& dbg);
+  VisionImuPacket& updateBodyVelocity(const VisionImuPacket& prev_state);
 
   bool operator==(const VisionImuPacket& other) const {
     return frame_id_ == other.frame_id_ && timestamp_ == other.timestamp_;
@@ -188,6 +200,11 @@ class VisionImuPacket {
   static void fillLandmarkMeasurements(
       StatusLandmarkVector& landmarks,
       const CameraMeasurementStatusVector& camera_measurements);
+
+
+ private:
+  std::optional<gtsam::Vector6> stored_body_velocity;
+
 };
 
 }  // namespace dyno

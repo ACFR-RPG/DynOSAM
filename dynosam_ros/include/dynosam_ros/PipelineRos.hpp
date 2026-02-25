@@ -67,6 +67,9 @@ class DynoNode : public rclcpp::Node {
   // NOT cached!!
   virtual dyno::DataProvider::Ptr createDataProvider();
 
+  dyno::DataProvider::Ptr createOnlineDataProvider();
+  dyno::DataProvider::Ptr createDatasetDataProvider();
+
   //! Set by the param 'online' and indicates if the OnlineDataProviderRos
   //! should be used or not
   bool is_online_;

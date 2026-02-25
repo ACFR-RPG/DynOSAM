@@ -30,6 +30,8 @@
 
 #include "dynosam_common/utils/TimingStats.hpp"
 
+#include <glog/vlog_is_on.h>
+
 namespace dyno {
 namespace utils {
 
@@ -39,26 +41,58 @@ namespace utils {
 //     return os;
 // }
 
-TimingStatsCollector::TimingStatsCollector(const std::string& tag)
-    : tic_time_(Timer::tic()), collector_(tag + " [ms]") {}
-
-TimingStatsCollector::~TimingStatsCollector() { tocAndLog(); }
-
-void TimingStatsCollector::reset() {
-  tic_time_ = Timer::tic();
-  is_valid_ = true;
+TimingStatsCollector::TimingStatsCollector(const std::string& tag,
+                                           int glog_level,
+                                           bool construct_stopped)
+    : tag_(tag + " [ms]"),
+      glog_level_(glog_level),
+      tic_time_(Timer::tic()),
+      is_timing_(false) {
+  if (!construct_stopped) {
+    start();
+  }
 }
 
-bool TimingStatsCollector::isValid() const { return is_valid_; }
+TimingStatsCollector::~TimingStatsCollector() { stop(); }
 
-void TimingStatsCollector::tocAndLog() {
-  if (is_valid_) {
-    auto toc = Timer::toc<std::chrono::nanoseconds>(tic_time_);
-    auto milliseconds =
-        std::chrono::duration_cast<std::chrono::milliseconds>(toc);
-    collector_.AddSample(static_cast<double>(milliseconds.count()));
-    is_valid_ = false;
+void TimingStatsCollector::start() {
+  tic_time_ = Timer::tic();
+  is_timing_ = true;
+}
+
+void TimingStatsCollector::stop() {
+  if (isTiming() && shouldGlog()) {
+    log();
   }
+
+  tic_time_ = Timer::tic();
+  is_timing_ = false;
+}
+
+bool TimingStatsCollector::isTiming() const { return is_timing_; }
+
+bool TimingStatsCollector::shouldGlog() const {
+  if (glog_level_ == 0) {
+    return true;
+  }
+
+  return VLOG_IS_ON(glog_level_);
+}
+
+void TimingStatsCollector::discardTiming() { is_timing_ = false; }
+
+std::chrono::milliseconds TimingStatsCollector::delta() const {
+  const auto toc = Timer::toc<std::chrono::nanoseconds>(tic_time_);
+  return std::chrono::duration_cast<std::chrono::milliseconds>(toc);
+}
+
+void TimingStatsCollector::log() {
+  const auto milliseconds = delta();
+
+  if (!collector_) {
+    collector_ = std::make_unique<StatsCollector>(tag_);
+  }
+  collector_->AddSample(static_cast<double>(milliseconds.count()));
 }
 
 }  // namespace utils

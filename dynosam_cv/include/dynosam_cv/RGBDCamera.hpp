@@ -69,6 +69,26 @@ class RGBDCamera : public Camera {
   Keypoint rightKeypoint(double depth, const Keypoint& left_keypoint) const;
   double rightKeypoint(double depth, double uL) const;
 
+  /**
+   * @brief Get the stereo measurement for this feature.
+   *
+   * If the feature already has a right keypoint then the corresponding stereo
+   * measurement is returned.
+   *
+   * If it does not, RGBDCamera#projectRight is used to construct the right
+   * feature from depth and the resulting StereoPoint2 is returned. This will
+   * also update the right keypoint in feature.
+   *
+   * If force_recalculation is true, the right keypoint will be recalculated
+   * regardless
+   *
+   * @param feature
+   * @param force_recalculation
+   * @return std::pair<bool, gtsam::StereoPoint2>
+   */
+  std::pair<bool, gtsam::StereoPoint2> getStereo(
+      Feature::Ptr feature, const bool force_recalculation = false);
+
   double fxb() const;
   Baseline baseline() const;
 

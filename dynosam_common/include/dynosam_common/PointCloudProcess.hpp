@@ -89,6 +89,14 @@ void convert(const StatusLandmarkVector& status_vector,
   convert_pcl(status_vector, cloud);
 }
 
+template <typename PointT>
+bool convert(const gtsam::Point3& gtsam_point, PointT& pcl_point) {
+  pcl_point.x = static_cast<decltype(pcl_point.x)>(gtsam_point(0));
+  pcl_point.y = static_cast<decltype(pcl_point.y)>(gtsam_point(1));
+  pcl_point.z = static_cast<decltype(pcl_point.z)>(gtsam_point(2));
+  return true;
+}
+
 /**
  * @brief Constructs a gtsam::Point3 from the x,y,z components of the PointT.
  *

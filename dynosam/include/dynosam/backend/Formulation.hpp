@@ -40,6 +40,7 @@
 #include "dynosam_opt/Map.hpp"
 
 // really this should be in a more 'core' file
+#include "dynosam/frontend/VisionImuOutputPacket.hpp"
 #include "dynosam_opt/IncrementalOptimization.hpp"  // only for ErrorHandlingHooks
 
 namespace dyno {
@@ -74,6 +75,16 @@ struct UpdateObservationParams {
   bool enable_incremental_detail = false;
 };
 
+/**
+ * @brief Result of a static/dynamic point update by calling
+ * Formulation<MAP>#updateStaticObservations or
+ * Formulation<MAP>#updateDynamicObservations
+ *
+ * The objects affected per frame should be specified and any additional
+ * paramters for the optimisation (i.e gtsam::ISAM2UpdateParams) can be set,
+ * which will then be parsed to the optimiser by the BackendModule.
+ *
+ */
 struct UpdateObservationResult {
   gtsam::FastMap<ObjectId, std::set<FrameId>>
       objects_affected_per_frame;  // per frame
@@ -158,7 +169,9 @@ class BackendParams;
  *
  */
 struct PreUpdateData {
+  //! Should be keyframe id
   FrameId frame_id;
+  VisionImuPacket::ConstPtr input;
 
   PreUpdateData() {}
   PreUpdateData(FrameId _frame_id) : frame_id(_frame_id) {}
@@ -170,7 +183,11 @@ struct PreUpdateData {
  */
 struct PostUpdateData {
   FrameId frame_id;
+  //! Result from constructing the factor-graph based on dynamic point
+  //! observations
   UpdateObservationResult dynamic_update_result;
+  //! Result from constructing the factor-graph based on static point
+  //! observations
   UpdateObservationResult static_update_result;
 
   struct IncrementalResult {
@@ -182,6 +199,9 @@ struct PostUpdateData {
 
   // TODO: batch result!!!
 
+  //! Result from the optimiser after updating/optimising the lastest
+  //! factor-graph Incremental result is set only if incremental optimisation
+  //! used.
   std::optional<IncrementalResult> incremental_result = {};
 
   PostUpdateData() {}
@@ -275,8 +295,12 @@ class Formulation {
 
   using PointUpdateContextType = PointUpdateContext<Map>;
   using ObjectUpdateContextType = ObjectUpdateContext<Map>;
-  using AccessorType = AccessorT<MAP>;
-  using AccessorTypePointer = typename AccessorT<MAP>::Ptr;
+
+  //! We only have these specalised alias for backwards compatability
+  //! We used to not have a base Accessor that was independant of the map type
+  //! so we needed an alias like Accessor<MAP>. No longer!
+  using AccessorType = Accessor;
+  using AccessorTypePointer = Accessor::Ptr;
 
   DYNO_POINTER_TYPEDEFS(This)
 
@@ -611,6 +635,9 @@ class Formulation {
   mutable std::optional<std::string> fully_qualified_name_{std::nullopt};
 
   friend class internal::StaticFormulationUpdaterImpl<MAP>;
+
+  using StaticFormulationUpdaterT = internal::StaticFormulationUpdaterImpl<MAP>;
+  std::unique_ptr<StaticFormulationUpdaterT> static_updater_;
 };
 
 }  // namespace dyno

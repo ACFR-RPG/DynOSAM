@@ -323,7 +323,7 @@ enum class TestOptions : std::uint8_t {
 };
 
 template <>
-struct internal::EnableBitMaskOperators<TestOptions> : std::true_type {};
+struct dyno::internal::EnableBitMaskOperators<TestOptions> : std::true_type {};
 
 TEST(BitwiseFlags, testUnderlyingTypeSpecalization) {
   using TestFlags = Flags<TestOptions>;

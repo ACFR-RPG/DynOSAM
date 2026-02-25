@@ -86,6 +86,21 @@ double RGBDCamera::rightKeypoint(double depth, double uL) const {
   return uL - disparity;
 }
 
+std::pair<bool, gtsam::StereoPoint2> RGBDCamera::getStereo(
+    Feature::Ptr feature, const bool force_recalculation) {
+  gtsam::StereoPoint2 stereo_point;
+  // if no right feature or recalculation flag is true
+  if (!feature->hasRightKeypoint() || force_recalculation) {
+    // update the right keypoint of feature
+    if (!this->projectRight(feature)) {
+      return {false, stereo_point};
+    }
+  }
+
+  CHECK(feature->stereoPoint(stereo_point));
+  return {true, stereo_point};
+}
+
 double RGBDCamera::fxb() const { return fx_b_; }
 
 StereoCalibPtr RGBDCamera::getFakeStereoCalib() const {

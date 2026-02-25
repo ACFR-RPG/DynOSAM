@@ -38,6 +38,10 @@ class DataProvider {
   // this one will not guarnatee a binding of bind the data prover module
   DataProvider() = default;
 
+  /**
+   * @brief Calls the virtual DataProvider#shutdown() function
+   *
+   */
   virtual ~DataProvider();
 
   inline void registerImuSingleCallback(

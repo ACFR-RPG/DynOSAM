@@ -34,6 +34,195 @@
 
 namespace dyno {
 
+Feature::Feature(const Feature& other) {
+  // TODO: use both mutexs?
+  std::lock_guard<std::mutex> lk(other.mutex_);
+  data_ = other.data_;
+}
+
+bool Feature::operator==(const Feature& other) const {
+  return data_ == other.data_;
+}
+
+Keypoint Feature::keypoint() const {
+  std::lock_guard<std::mutex> lk(mutex_);
+  return data_.keypoint;
+}
+
+OpticalFlow Feature::measuredFlow() const {
+  std::lock_guard<std::mutex> lk(mutex_);
+  return data_.measured_flow;
+}
+
+Keypoint Feature::predictedKeypoint() const {
+  std::lock_guard<std::mutex> lk(mutex_);
+  return data_.predicted_keypoint;
+}
+
+size_t Feature::age() const {
+  std::lock_guard<std::mutex> lk(mutex_);
+  return data_.age;
+}
+
+KeyPointType Feature::keypointType() const {
+  std::lock_guard<std::mutex> lk(mutex_);
+  return data_.type;
+}
+
+TrackletId Feature::trackletId() const {
+  std::lock_guard<std::mutex> lk(mutex_);
+  return data_.tracklet_id;
+}
+
+FrameId Feature::frameId() const {
+  std::lock_guard<std::mutex> lk(mutex_);
+  return data_.frame_id;
+}
+
+bool Feature::inlier() const {
+  std::lock_guard<std::mutex> lk(mutex_);
+  return data_.inlier;
+}
+
+ObjectId Feature::objectId() const {
+  std::lock_guard<std::mutex> lk(mutex_);
+  return data_.tracking_label;
+}
+
+Depth Feature::depth() const {
+  std::lock_guard<std::mutex> lk(mutex_);
+  return data_.depth;
+}
+
+Keypoint Feature::rightKeypoint() const {
+  std::lock_guard<std::mutex> lk(mutex_);
+  if (data_.right_kp.has_value()) return data_.right_kp.value();
+  DYNO_THROW_MSG(DynosamException)
+      << "Right Kp requested for" << data_.tracklet_id << " but not set";
+  return Keypoint{};
+}
+
+Keypoint Feature::CalculatePredictedKeypoint(const Keypoint& keypoint,
+                                             const OpticalFlow& measured_flow) {
+  return keypoint + measured_flow;
+}
+
+void Feature::setPredictedKeypoint(const OpticalFlow& measured_flow) {
+  std::lock_guard<std::mutex> lk(mutex_);
+  data_.measured_flow = measured_flow;
+  data_.predicted_keypoint =
+      CalculatePredictedKeypoint(data_.keypoint, measured_flow);
+}
+
+Feature& Feature::keypoint(const Keypoint& kp) {
+  std::lock_guard<std::mutex> lk(mutex_);
+  data_.keypoint = kp;
+  return *this;
+}
+
+Feature& Feature::measuredFlow(const OpticalFlow& measured_flow) {
+  std::lock_guard<std::mutex> lk(mutex_);
+  data_.measured_flow = measured_flow;
+  return *this;
+}
+
+Feature& Feature::predictedKeypoint(const Keypoint& predicted_kp) {
+  std::lock_guard<std::mutex> lk(mutex_);
+  data_.predicted_keypoint = predicted_kp;
+  return *this;
+}
+
+Feature& Feature::age(const size_t& a) {
+  std::lock_guard<std::mutex> lk(mutex_);
+  data_.age = a;
+  return *this;
+}
+
+Feature& Feature::keypointType(const KeyPointType& kp_type) {
+  std::lock_guard<std::mutex> lk(mutex_);
+  data_.type = kp_type;
+  return *this;
+}
+
+Feature& Feature::trackletId(const TrackletId& tracklet_id) {
+  std::lock_guard<std::mutex> lk(mutex_);
+  data_.tracklet_id = tracklet_id;
+  return *this;
+}
+
+Feature& Feature::frameId(const FrameId& frame_id) {
+  std::lock_guard<std::mutex> lk(mutex_);
+  data_.frame_id = frame_id;
+  return *this;
+}
+
+Feature& Feature::objectId(ObjectId id) {
+  std::lock_guard<std::mutex> lk(mutex_);
+  data_.tracking_label = id;
+  return *this;
+}
+
+Feature& Feature::depth(Depth d) {
+  std::lock_guard<std::mutex> lk(mutex_);
+  data_.depth = d;
+  return *this;
+}
+
+Feature& Feature::rightKeypoint(const Keypoint& right_kp) {
+  std::lock_guard<std::mutex> lk(mutex_);
+  data_.right_kp = right_kp;
+  return *this;
+}
+
+bool Feature::usable() const {
+  std::lock_guard<std::mutex> lk(mutex_);
+  return data_.inlier && (data_.tracklet_id != invalid_id);
+}
+
+bool Feature::isStatic() const {
+  std::lock_guard<std::mutex> lk(mutex_);
+  return data_.type == KeyPointType::STATIC;
+}
+
+Feature& Feature::markOutlier() {
+  std::lock_guard<std::mutex> lk(mutex_);
+  data_.inlier = false;
+  return *this;
+}
+
+Feature& Feature::markInlier() {
+  std::lock_guard<std::mutex> lk(mutex_);
+  data_.inlier = true;
+  return *this;
+}
+
+Feature& Feature::markInvalid() {
+  std::lock_guard<std::mutex> lk(mutex_);
+  data_.tracklet_id = invalid_id;
+  return *this;
+}
+
+bool Feature::hasDepth() const {
+  std::lock_guard<std::mutex> lk(mutex_);
+  return !std::isnan(data_.depth);
+}
+
+bool Feature::hasRightKeypoint() const {
+  std::lock_guard<std::mutex> lk(mutex_);
+  return data_.right_kp.has_value();
+}
+
+bool Feature::stereoPoint(gtsam::StereoPoint2& stereo) const {
+  if (!hasRightKeypoint()) {
+    return false;
+  }
+
+  const Keypoint& L = this->keypoint();
+  const Keypoint& R = this->rightKeypoint();
+  stereo = gtsam::StereoPoint2(L(0), R(0), L(1));
+  return true;
+}
+
 FeatureContainer::FeatureContainer() : feature_map_() {}
 
 FeatureContainer::FeatureContainer(const FeaturePtrs feature_vector) {

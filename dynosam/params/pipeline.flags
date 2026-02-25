@@ -13,7 +13,7 @@
 # if -1, defaults to 0 for starting frame (i.e the first frame) and ending_frame=dataset_size
 --starting_frame=-1
 --ending_frame=-1
---use_backend=true
+--use_backend=false
 
 --save_frontend_json=false
 
@@ -22,3 +22,5 @@
 # and the bson file is searched for on output_path / <output_file>.json
 # where the output file name is determined by the frontend mode (RGB, mono)
 --frontend_from_file=false
+
+--use_opencv_display=true

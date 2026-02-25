@@ -36,10 +36,12 @@
 #include "dynosam/frontend/FrontendParams.hpp"
 #include "dynosam/frontend/vision/FeatureTrackerBase.hpp"
 #include "dynosam/frontend/vision/Frame.hpp"
+#include "dynosam/frontend/FrontendModule.hpp"
 #include "dynosam/frontend/vision/StaticFeatureTracker.hpp"
 #include "dynosam/visualizer/Visualizer-Definitions.hpp"
 #include "dynosam_cv/Camera.hpp"
 #include "dynosam_cv/Feature.hpp"
+#include "dynosam_common/SharedModuleInfo.hpp"
 
 // #include "dynosam_common/DynamicObjects.hpp"
 #include "dynosam_nn/ObjectDetector.hpp"
@@ -135,7 +137,7 @@ class FeatureTracker : public FeatureTrackerBase {
    * @param dynamic_tracking_mask const cv::Mat&
    */
   void requiresSampling(
-      std::set<ObjectId>& objects_to_sample, const FeatureTrackerInfo& info,
+      std::set<ObjectId>& objects_to_sample, FeatureTrackerInfo& info,
       const ImageContainer& image_container,
       const gtsam::FastMap<ObjectId, FeatureContainer>& features_per_object,
       const vision_tools::ObjectBoundaryMaskResult& boundary_mask_result,
@@ -146,7 +148,7 @@ class FeatureTracker : public FeatureTrackerBase {
  private:
   // TODO: for now we loose the actual object detection result if inference was
   // run!
-  bool objectDetection(
+  ObjectDetectionResult objectDetection(
       vision_tools::ObjectBoundaryMaskResult& boundary_mask_result,
       ImageContainer& image_container);
 
