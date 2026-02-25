@@ -128,70 +128,100 @@ void MPCEstimationVizRos::inPreUpdate() { pauseWorld(); }
 void MPCEstimationVizRos::inPostUpdate() { startWorld(); }
 
 void MPCEstimationVizRos::spin(Timestamp timestamp, FrameId frame_k,
-                               const MPCFormulation* formulation) {
-  auto predicted_camera_poses = formulation->getPredictedCameraPoses(frame_k);
-  auto [predicted_object_motions, predicted_object_poses] =
-      formulation->getObjectPredictions(frame_k);
-
-  LOG(INFO) << "Predicted poses of size " << predicted_camera_poses.size();
+                               const MPCFormulation* formulation,
+                               bool decoupled_version,
+                               const gtsam::Vector2& velocities) {
   
-  prediction_transport_.publishVisualOdometryPath(predicted_camera_poses,
-                                                  timestamp);
+  if(decoupled_version){
+    auto lim_lin_veld = formulation->lin_vel_;
+    auto lim_ang_veld = formulation->ang_vel_;
 
-  // we dont have future timestamps so make ones up
-  FrameIdTimestampMap fake_future_timestamps;
-  FrameId frame_N = frame_k + formulation->horizon();
-  // values init camera pose, 2dvelocity, 2d acceletation
-  Timestamp future_t = timestamp;
-  for (FrameId frame_id = frame_k; frame_id < frame_N; frame_id++) {
-    fake_future_timestamps.insert2(frame_id, future_t);
-    future_t += 1;
-  }
-
-  auto local_goal = formulation->local_goal_;
-  if (local_goal) {
-    LOG(INFO) << "Publishing local goal";
-    publishLocalGoalMarker(*local_goal, timestamp, "Local Goal");
-  }
-
-  auto command_query = formulation->getControlCommand(frame_k + 1);
-  if (!command_query) {
-    LOG(WARNING) << "Cannot emit control command for " << frame_k + 1
-                 << ": Invalid query!!";
-  } else {
-    auto lim_lin_vel = formulation->lin_vel_;
-    auto lim_ang_vel = formulation->ang_vel_;
-
-    gtsam::Vector2 command = *command_query;
-    double lin_vel = command.x();
-    if (lin_vel < lim_lin_vel.min) {
-      lin_vel = lim_lin_vel.min;
-    } else if (lin_vel > lim_lin_vel.max) {
-      lin_vel = lim_lin_vel.max;
+    double lin_veld = velocities.x();
+    if (lin_veld < lim_lin_veld.min) {
+      lin_veld = lim_lin_veld.min;
+    } else if (lin_veld > lim_lin_veld.max) {
+      lin_veld = lim_lin_veld.max;
     }
 
-    double ang_vel = command.y();
-    if (ang_vel < lim_ang_vel.min) {
-      ang_vel = lim_ang_vel.min;
-    } else if (ang_vel > lim_ang_vel.max) {
-      ang_vel = lim_ang_vel.max;
+    double ang_veld = velocities.y();
+    if (ang_veld < lim_ang_veld.min) {
+      ang_veld = lim_ang_veld.min;
+    } else if (ang_veld > lim_ang_veld.max) {
+      ang_veld = lim_ang_veld.max;
     }
 
-    LOG(INFO) << "Emitting command linear: " << lin_vel << " angular "
-              << ang_vel << " t=" << timestamp << " k=" << frame_k;
+    LOG(INFO) << "Emitting command linear: " << lin_veld << " angular "
+              << ang_veld << " t=" << timestamp << " k=" << frame_k;
     geometry_msgs::msg::Twist pub_msg;
-    pub_msg.linear.x = lin_vel;
-    pub_msg.angular.z = ang_vel;
+    pub_msg.linear.x = lin_veld;
+    pub_msg.angular.z = ang_veld;
     cmd_vel_pub_->publish(pub_msg);
+
+  } else {
+    auto predicted_camera_poses = formulation->getPredictedCameraPoses(frame_k);
+    auto [predicted_object_motions, predicted_object_poses] =
+        formulation->getObjectPredictions(frame_k);
+
+    LOG(INFO) << "Predicted poses of size " << predicted_camera_poses.size();
+    
+    prediction_transport_.publishVisualOdometryPath(predicted_camera_poses,
+                                                    timestamp);
+
+    // we dont have future timestamps so make ones up
+    FrameIdTimestampMap fake_future_timestamps;
+    FrameId frame_N = frame_k + formulation->horizon();
+    // values init camera pose, 2dvelocity, 2d acceletation
+    Timestamp future_t = timestamp;
+    for (FrameId frame_id = frame_k; frame_id < frame_N; frame_id++) {
+      fake_future_timestamps.insert2(frame_id, future_t);
+      future_t += 1;
+    }
+
+    auto local_goal = formulation->local_goal_;
+    if (local_goal) {
+      LOG(INFO) << "Publishing local goal";
+      publishLocalGoalMarker(*local_goal, timestamp, "Local Goal");
+    }
+    auto command_query = formulation->getControlCommand(frame_k + 1);
+    // auto command_query = formulation->getControlCommand(frame_k);
+    if (!command_query) {
+      LOG(WARNING) << "Cannot emit control command for " << frame_k + 1
+                  << ": Invalid query!!";
+    } else {
+      auto lim_lin_vel = formulation->lin_vel_;
+      auto lim_ang_vel = formulation->ang_vel_;
+
+      gtsam::Vector2 command = *command_query;
+      double lin_vel = command.x();
+      if (lin_vel < lim_lin_vel.min) {
+        lin_vel = lim_lin_vel.min;
+      } else if (lin_vel > lim_lin_vel.max) {
+        lin_vel = lim_lin_vel.max;
+      }
+
+      double ang_vel = command.y();
+      if (ang_vel < lim_ang_vel.min) {
+        ang_vel = lim_ang_vel.min;
+      } else if (ang_vel > lim_ang_vel.max) {
+        ang_vel = lim_ang_vel.max;
+      }
+
+      LOG(INFO) << "Emitting command linear: " << lin_vel << " angular "
+                << ang_vel << " t=" << timestamp << " k=" << frame_k;
+      geometry_msgs::msg::Twist pub_msg;
+      pub_msg.linear.x = lin_vel;
+      pub_msg.angular.z = ang_vel;
+      cmd_vel_pub_->publish(pub_msg);
+    }
+
+    DSDTransport::Publisher object_poses_publisher =
+        prediction_transport_.getDSDTransport().addObjectInfo(
+            predicted_object_motions, predicted_object_poses,
+            params_.world_frame_id, fake_future_timestamps, frame_k, timestamp);
+    object_poses_publisher.publishObjectPaths();
+
+    LOG(INFO) << "In MPCEstimationVizRos spin";
   }
-
-  DSDTransport::Publisher object_poses_publisher =
-      prediction_transport_.getDSDTransport().addObjectInfo(
-          predicted_object_motions, predicted_object_poses,
-          params_.world_frame_id, fake_future_timestamps, frame_k, timestamp);
-  object_poses_publisher.publishObjectPaths();
-
-  LOG(INFO) << "In MPCEstimationVizRos spin";
 }
 
 bool MPCEstimationVizRos::queryGlobalOffset(gtsam::Pose3& T_world_camera) {

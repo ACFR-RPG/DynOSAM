@@ -124,7 +124,7 @@ class MPCFormulation : public RegularHybridFormulation,
                  const NoiseModels& noise_models, const Sensors& sensors,
                  const FormulationHooks& hooks);
 
-  void decoupledPredictionPlanning(const PostUpdateData& data);
+  gtsam::Vector2 decoupledPredictionPlanning(const PostUpdateData& data);
 
   AccessorTypePointer createAccessor(
       const SharedFormulationData& shared_data) const override {
@@ -192,8 +192,14 @@ class MPCFormulation : public RegularHybridFormulation,
   // );
 
  private:
-  gtsam::Values decoupled_values_;              // Mik decoupled
-  gtsam::NonlinearFactorGraph decoupled_graph_; // Mik decoupled 
+  gtsam::Values decoupled_prediction_values_;              // Mik decoupled
+  gtsam::NonlinearFactorGraph decoupled_prediction_graph_; // Mik decoupled
+
+  gtsam::Values decoupled_planning_values_;              // Mik decoupled
+  gtsam::NonlinearFactorGraph decoupled_planning_graph_; // Mik decoupled 
+
+  gtsam::Pose3 prediction_L_e_;
+
   SharedMPCData mpc_data_;
   Timestamp dt_{0.1};
 
@@ -292,7 +298,9 @@ class MPCEstimationViz {
   virtual void inPostUpdate() {}
 
   virtual void spin(Timestamp timestamp, FrameId frame_id,
-                    const MPCFormulation* formulation) = 0;
+                    const MPCFormulation* formulation,
+                    bool decoupled_version,
+                    const gtsam::Vector2& velocities) = 0;
 };
 
 }  // namespace dyno

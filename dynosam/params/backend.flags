@@ -109,7 +109,7 @@
 --mpc_static_sdf_H_safety_distance_noise=1e-2
 --mpc_dynamic_obstacle_sigma=1e-2
 
---mpc_dynamic_obstacle_prediction_sigma=1e0
+--mpc_dynamic_obstacle_prediction_sigma=5e-2
 # 1e-3, 1e-2, 5e-2, 1e-1, 1e0, 5e-1, 2.5e-1, 1.5e-1, 2e-1, 2.3e-1, 1e-4
 --mpc_desired_follow_distance=2.0
 --mpc_desired_follow_heading=0.0
@@ -133,7 +133,7 @@
 --mpc_use_prediction_dynamic_obstacle_factors=false
 
 --mpc_decoupled=true
---mpc_local_goal_horizon=180
+--mpc_local_goal_horizon=120
 
 # 0: Follow, 1: Navigate
 --mission_type=1
