@@ -69,4 +69,20 @@ void DisplayCommon::publishOdometryPath(PathPub::SharedPtr pub,
   pub->publish(path);
 }
 
+void DisplayCommon::publishObjectPredPath(PathPub::SharedPtr pub,
+                                        const gtsam::Pose3Vector& poses,
+                                        Timestamp latest_timestamp,
+                                        const std::string& frame_id) {
+  nav_msgs::msg::Path path;
+  for (const gtsam::Pose3& odom : poses) {
+    geometry_msgs::msg::PoseStamped pose_stamped;
+    utils::convertWithHeader(odom, pose_stamped, latest_timestamp, frame_id);
+    path.poses.push_back(pose_stamped);
+  }
+
+  path.header.stamp = utils::toRosTime(latest_timestamp);
+  path.header.frame_id = frame_id;
+  pub->publish(path);
+}
+
 }  // namespace dyno

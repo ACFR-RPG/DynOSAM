@@ -260,6 +260,8 @@ DSDRos::DSDRos(const DisplayParams& params, rclcpp::Node::SharedPtr node)
       node_->create_publisher<nav_msgs::msg::Odometry>("odometry", 1);
   vo_path_publisher_ =
       node_->create_publisher<nav_msgs::msg::Path>("odometry_path", 1);
+  object_prediction_path_publisher_ =
+      node_->create_publisher<nav_msgs::msg::Path>("object_predicted_path", 1);
   tf_broadcaster_ = std::make_unique<tf2_ros::TransformBroadcaster>(*node_);
 
   static_points_pub_ =
@@ -289,6 +291,11 @@ void DSDRos::publishVisualOdometry(const gtsam::Pose3& T_world_camera,
 void DSDRos::publishVisualOdometryPath(const gtsam::Pose3Vector& poses,
                                        Timestamp latest_timestamp) {
   DisplayCommon::publishOdometryPath(vo_path_publisher_, poses,
+                                     latest_timestamp, params_.world_frame_id);
+}
+void DSDRos::publishObjectPredictionPath(const gtsam::Pose3Vector& poses,
+                                       Timestamp latest_timestamp) {
+  DisplayCommon::publishObjectPredPath(object_prediction_path_publisher_, poses,
                                      latest_timestamp, params_.world_frame_id);
 }
 

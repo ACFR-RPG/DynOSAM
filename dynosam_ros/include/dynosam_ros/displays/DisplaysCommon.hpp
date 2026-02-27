@@ -72,6 +72,10 @@ struct DisplayCommon {
                                   const gtsam::Pose3Vector& poses,
                                   Timestamp latest_timestamp,
                                   const std::string& frame_id);
+  static void publishObjectPredPath(PathPub::SharedPtr pub,
+                                const gtsam::Pose3Vector& poses,
+                                Timestamp latest_timestamp,
+                                const std::string& frame_id);
 };
 
 }  // namespace dyno

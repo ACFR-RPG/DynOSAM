@@ -235,6 +235,8 @@ class DSDRos {
                              Timestamp timestamp, const bool publish_tf);
   void publishVisualOdometryPath(const gtsam::Pose3Vector& poses,
                                  Timestamp latest_timestamp);
+  void publishObjectPredictionPath(const gtsam::Pose3Vector& poses,
+                                       Timestamp latest_timestamp);
 
   CloudPerObject publishStaticPointCloud(const StatusLandmarkVector& landmarks,
                                          const gtsam::Pose3& T_world_camera);
@@ -264,6 +266,7 @@ class DSDRos {
 
   OdometryPub::SharedPtr vo_publisher_;
   PathPub::SharedPtr vo_path_publisher_;
+  PathPub::SharedPtr object_prediction_path_publisher_;
 
   rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr
       static_points_pub_;

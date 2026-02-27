@@ -178,6 +178,7 @@ void MPCEstimationVizRos::spin(Timestamp timestamp, FrameId frame_k,
     LOG(INFO) << "Publishing local goal";
     publishLocalGoalMarker(local_goal_to_publish, timestamp, "Local Goal");
     // }
+    prediction_transport_.publishObjectPredictionPath(predicted_object_poses_to_publish, timestamp);
     // DSDTransport::Publisher object_poses_publisher =
     //     prediction_transport_.getDSDTransport().addObjectInfo(
     //         predicted_object_motions_to_publish, predicted_object_poses_to_publish,

@@ -133,7 +133,7 @@
 --mpc_use_prediction_dynamic_obstacle_factors=false
 
 --mpc_decoupled=true
---mpc_local_goal_horizon=120
+--mpc_local_goal_horizon=180
 
 # 0: Follow, 1: Navigate
 --mission_type=1

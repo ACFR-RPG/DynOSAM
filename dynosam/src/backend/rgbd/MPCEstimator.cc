@@ -1213,10 +1213,20 @@ MPCFormulation::MPCFormulation(const FormulationParams& params,
   dynamic_obstacle_prediction_factor_ =
       gtsam::noiseModel::Isotropic::Sigma(1u, FLAGS_mpc_dynamic_obstacle_prediction_sigma);
 
-  lin_vel_ = Limits{-0.3, 1.0};
-  ang_vel_ = Limits{-0.5, 0.5};
-  lin_acc_ = Limits{-1.0, 0.5};
-  ang_acc_ = Limits{-0.5, 0.5};
+  // lin_vel_ = Limits{-0.3, 1.0};
+  // ang_vel_ = Limits{-0.5, 0.5};
+  // lin_acc_ = Limits{-1.0, 0.5};
+  // ang_acc_ = Limits{-0.5, 0.5};
+
+  // lin_vel_ = Limits{-0.3, 1.2};
+  // ang_vel_ = Limits{-0.5, 0.5};
+  // lin_acc_ = Limits{-1.2, 0.8};
+  // ang_acc_ = Limits{-0.5, 0.5};
+
+  lin_vel_ = Limits{-0.3, 1.6};
+  ang_vel_ = Limits{-1.0, 1.0};
+  lin_acc_ = Limits{-1.2, 1.2};
+  ang_acc_ = Limits{-0.8, 0.8};
 
   // lin_vel_ = Limits{-0.3, 1.2};
   // ang_vel_ = Limits{-0.5, 0.5};
@@ -2842,7 +2852,7 @@ bool MPCFormulation::getLocalGoalFromGlobalPath(const gtsam::Pose3& X_k,
   size_t closest_index = find_closest_index(X_k, path);
   size_t desired_local_goal_index = closest_index + horizon;
 
-  size_t max_path_index = path.size() - 1u;
+  size_t max_path_index = path.size() - 1u - 2u; // Additional -2u because the global plan gets bugged at the end and goal theta will be random
   // handle case where we are close to end of goal
   size_t local_goal_index = std::min(desired_local_goal_index, max_path_index);
   CHECK_LE(local_goal_index, max_path_index);
