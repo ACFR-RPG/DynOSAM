@@ -130,7 +130,11 @@ void MPCEstimationVizRos::inPostUpdate() { startWorld(); }
 void MPCEstimationVizRos::spin(Timestamp timestamp, FrameId frame_k,
                                const MPCFormulation* formulation,
                                bool decoupled_version,
-                               const gtsam::Vector2& velocities) {
+                               const gtsam::Vector2& velocities,
+                               const gtsam::Pose3Vector& planned_camera_poses_to_publish,
+                               const gtsam::Pose3Vector& predicted_object_motions_to_publish,
+                               const gtsam::Pose3Vector& predicted_object_poses_to_publish,
+                               const gtsam::Pose3& local_goal_to_publish) {
   
   if(decoupled_version){
     auto lim_lin_veld = formulation->lin_vel_;
@@ -157,12 +161,36 @@ void MPCEstimationVizRos::spin(Timestamp timestamp, FrameId frame_k,
     pub_msg.angular.z = ang_veld;
     cmd_vel_pub_->publish(pub_msg);
 
+
+    // Visualize
+    // we dont have future timestamps so make ones up
+    FrameIdTimestampMap fake_future_timestamps;
+    FrameId frame_N = frame_k + formulation->horizon();
+    // values init camera pose, 2dvelocity, 2d acceletation
+    Timestamp future_t = timestamp;
+    for (FrameId frame_id = frame_k; frame_id < frame_N; frame_id++) {
+      fake_future_timestamps.insert2(frame_id, future_t);
+      future_t += 1;
+    }
+    // gtsam::Pose3Vector
+    prediction_transport_.publishVisualOdometryPath(planned_camera_poses_to_publish, timestamp);
+    // if (local_goal_to_publish) {
+    LOG(INFO) << "Publishing local goal";
+    publishLocalGoalMarker(local_goal_to_publish, timestamp, "Local Goal");
+    // }
+    // DSDTransport::Publisher object_poses_publisher =
+    //     prediction_transport_.getDSDTransport().addObjectInfo(
+    //         predicted_object_motions_to_publish, predicted_object_poses_to_publish,
+    //         params_.world_frame_id, fake_future_timestamps, frame_k, timestamp);
+    // object_poses_publisher.publishObjectPaths();
+
+
   } else {
     auto predicted_camera_poses = formulation->getPredictedCameraPoses(frame_k);
     auto [predicted_object_motions, predicted_object_poses] =
         formulation->getObjectPredictions(frame_k);
 
-    LOG(INFO) << "Predicted poses of size " << predicted_camera_poses.size();
+    LOG(INFO) << "Planned Camera poses of size " << predicted_camera_poses.size();
     
     prediction_transport_.publishVisualOdometryPath(predicted_camera_poses,
                                                     timestamp);

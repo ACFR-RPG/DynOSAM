@@ -1228,6 +1228,17 @@ MPCFormulation::MPCFormulation(const FormulationParams& params,
   // lin_acc_ = Limits{-1.2, 0.8};
   // ang_acc_ = Limits{-1.0, 1.0};
 
+
+  // lin_vel_ = Limits{-0.3, 1.2};
+  // ang_vel_ = Limits{-0.5, 0.5};
+  // lin_acc_ = Limits{-1.0, 0.6};
+  // ang_acc_ = Limits{-0.5, 0.5};
+
+  // lin_vel_ = Limits{-0.5, 1.8};
+  // ang_vel_ = Limits{-0.8, 0.8};
+  // lin_acc_ = Limits{-1.2, 0.8};
+  // ang_acc_ = Limits{-1.0, 1.0};
+
   desired_follow_distance_ = FLAGS_mpc_desired_follow_distance;
   desired_follow_heading_ = FLAGS_mpc_desired_follow_heading;
 
@@ -1406,6 +1417,17 @@ void MPCFormulation::otherUpdatesContext(
     } else {
       V_k = *velocity2d_query;
     }
+    // Linear velocity
+    if (V_k(0) > lin_vel_.max)
+      V_k(0) = lin_vel_.max;
+    else if (V_k(0) < lin_vel_.min)
+      V_k(0) = lin_vel_.min;
+
+    // Angular velocity
+    if (V_k(1) > ang_vel_.max)
+      V_k(1) = ang_vel_.max;
+    else if (V_k(1) < ang_vel_.min)
+      V_k(1) = ang_vel_.min;
 
     // at each timestep (update) assume we have removed all old factors
     // perterining to forward prediction stuff
@@ -2156,7 +2178,7 @@ void MPCFormulation::preUpdate(const PreUpdateData& data) {
   if (viz_) viz_->inPreUpdate();
 }
 
-gtsam::Vector2 MPCFormulation::decoupledPredictionPlanning(const PostUpdateData& data) {
+MPCFormulation::DecoupledPredictionPlanningResult MPCFormulation::decoupledPredictionPlanning(const PostUpdateData& data) {
   using namespace mpc_factors;
   using HybridConstantMotionFactorDirected1And2 = HybridConstantMotionFactor<1, 2>;
   using HybridConstantMotionFactorDirected1 = HybridConstantMotionFactor<1>;
@@ -2446,16 +2468,16 @@ gtsam::Vector2 MPCFormulation::decoupledPredictionPlanning(const PostUpdateData&
 
   // Obey the Velocity limits
   // Linear velocity
-  // if (current_vel(0) > lin_vel_.max)
-  //   current_vel(0) = lin_vel_.max;
-  // else if (current_vel(0) < lin_vel_.min)
-  //   current_vel(0) = lin_vel_.min;
+  if (current_vel(0) > lin_vel_.max)
+    current_vel(0) = lin_vel_.max;
+  else if (current_vel(0) < lin_vel_.min)
+    current_vel(0) = lin_vel_.min;
 
   // // Angular velocity
-  // if (current_vel(1) > ang_vel_.max)
-  //   current_vel(1) = ang_vel_.max;
-  // else if (current_vel(1) < ang_vel_.min)
-  //   current_vel(1) = ang_vel_.min;
+  if (current_vel(1) > ang_vel_.max)
+    current_vel(1) = ang_vel_.max;
+  else if (current_vel(1) < ang_vel_.min)
+    current_vel(1) = ang_vel_.min;
 
   for (size_t frame_id = first_frame_id; frame_id <= last_frame_id; ++frame_id) {
 
@@ -2609,6 +2631,19 @@ gtsam::Vector2 MPCFormulation::decoupledPredictionPlanning(const PostUpdateData&
   //   }
   // }
 
+  gtsam::Pose3Vector planned_camera_poses_to_publish;
+  planned_camera_poses_to_publish.push_back(current_pose);
+  LOG(INFO) << "====== OBJECT PLANNED POSES ======";
+  for (size_t frame_id = first_frame_id+1; frame_id <= last_frame_id; ++frame_id) {
+      auto camera_key = CameraPoseSymbol(frame_id);
+      if (!optimized_values.exists(camera_key)) {
+          LOG(WARNING) << "Camera Pose not found for frame " << frame_id;
+          continue;
+      }
+      gtsam::Pose3 pose_k = optimized_values.at<gtsam::Pose3>(camera_key);
+      planned_camera_poses_to_publish.push_back(pose_k); // result Poses
+
+  }
 
   // Debug Motion
   // gtsam::Point3 robot_t = current_pose.translation();
@@ -2617,29 +2652,33 @@ gtsam::Vector2 MPCFormulation::decoupledPredictionPlanning(const PostUpdateData&
   //           << " y: " << robot_t.y()
   //           << " z: " << robot_t.z();
   
-  // LOG(INFO) << "====== OBJECT PREDICTION ======";
+  gtsam::Pose3Vector predicted_object_motions_to_publish;
+  gtsam::Pose3Vector predicted_object_poses_to_publish;
+  LOG(INFO) << "====== OBJECT PREDICTION ======";
 
-  // for (size_t frame_id = first_frame_id; frame_id <= last_frame_id; ++frame_id) {
-  //     auto motion_key = ObjectMotionSymbol(object_to_follow, frame_id);
+  for (size_t frame_id = first_frame_id+1; frame_id <= last_frame_id; ++frame_id) {
+      auto motion_key = ObjectMotionSymbol(object_to_follow, frame_id);
 
-  //     if (!optimized_values.exists(motion_key)) {
-  //         LOG(WARNING) << "Motion not found for frame " << frame_id;
-  //         continue;
-  //     }
+      if (!optimized_values.exists(motion_key)) {
+          // LOG(WARNING) << "Motion not found for frame " << frame_id;
+          continue;
+      }
 
-  //     // Motion in embedded frame
-  //     gtsam::Pose3 H_W_k = optimized_values.at<gtsam::Pose3>(motion_key);
+      // Motion in embedded frame
+      gtsam::Pose3 H_W_k = optimized_values.at<gtsam::Pose3>(motion_key);
+      predicted_object_motions_to_publish.push_back(H_W_k); // result Motions
 
-  //     // Transform into world frame using embedded frame
-  //     gtsam::Pose3 L_W_obj = H_W_k * prediction_L_e_;
+      // Transform into world frame using embedded frame
+      gtsam::Pose3 L_W_obj = H_W_k * prediction_L_e_;
+      predicted_object_poses_to_publish.push_back(L_W_obj); // result Poses
 
-  //     gtsam::Point3 t = L_W_obj.translation();
+      // gtsam::Point3 t = L_W_obj.translation();
 
-  //     LOG(INFO) << "Step " << frame_id
-  //               << " | x: " << t.x()
-  //               << " y: " << t.y()
-  //               << " z: " << t.z();
-  // }
+      // LOG(INFO) << "Step " << frame_id
+      //           << " | x: " << t.x()
+      //           << " y: " << t.y()
+      //           << " z: " << t.z();
+  }
 
 
   // Return Velocity Value
@@ -2648,7 +2687,20 @@ gtsam::Vector2 MPCFormulation::decoupledPredictionPlanning(const PostUpdateData&
   if (optimized_values.exists(control_key)) {
       control_output = optimized_values.at<gtsam::Vector2>(control_key);
   }
-  return control_output;
+
+  DecoupledPredictionPlanningResult result;
+  result.velocities = control_output;
+  result.planned_camera_poses_to_publish = planned_camera_poses_to_publish;
+  result.predicted_object_motions_to_publish = predicted_object_motions_to_publish;
+  result.predicted_object_poses_to_publish = predicted_object_poses_to_publish;
+  
+  if (local_goal_) {
+      result.local_goal_to_publish = *local_goal_;  // unwrap the optional
+  } else {
+      result.local_goal_to_publish = gtsam::Pose3(); // identity pose as default
+  }
+
+  return result;
 
   // Mik, add the factors that are neccessary to make this work.
   // Get Goal
@@ -2702,9 +2754,21 @@ void MPCFormulation::postUpdate(const PostUpdateData& data) {
 
   ///////// DECOUPLED
   const bool& decoupled = FLAGS_mpc_decoupled;
+  // Declare all variables in outer scope so they exist regardless of decoupled flag
   gtsam::Vector2 vel_command(0.0, 0.0);
+  gtsam::Pose3Vector planned_camera_poses_to_publish;
+  gtsam::Pose3Vector predicted_object_motions_to_publish;
+  gtsam::Pose3Vector predicted_object_poses_to_publish;
+  gtsam::Pose3 local_goal_to_publish;
+
   if(decoupled){
-    vel_command = decoupledPredictionPlanning(data);
+    // Get results from decoupled prediction planning
+    auto result = decoupledPredictionPlanning(data);
+    vel_command = result.velocities;
+    planned_camera_poses_to_publish = result.planned_camera_poses_to_publish;
+    predicted_object_motions_to_publish = result.predicted_object_motions_to_publish;
+    predicted_object_poses_to_publish = result.predicted_object_poses_to_publish;
+    local_goal_to_publish = result.local_goal_to_publish;
   } ///////// COUPLED
   else{
     FrameId frame_k_m1 = frame_k - 1u;
@@ -2734,7 +2798,13 @@ void MPCFormulation::postUpdate(const PostUpdateData& data) {
   // 2. Collect control command and send
   /////// COUPLED
 
-  if (viz_) viz_->spin(data.timestamp, data.frame_id, this, decoupled, vel_command);
+  if (viz_) viz_->spin(data.timestamp, data.frame_id, this, 
+                        decoupled, 
+                        vel_command, 
+                        planned_camera_poses_to_publish,
+                        predicted_object_motions_to_publish,
+                        predicted_object_poses_to_publish,
+                        local_goal_to_publish);
   if (viz_) viz_->inPostUpdate();
 }
 

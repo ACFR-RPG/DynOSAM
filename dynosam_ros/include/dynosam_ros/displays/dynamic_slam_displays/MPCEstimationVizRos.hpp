@@ -51,7 +51,11 @@ class MPCEstimationVizRos : public MPCEstimationViz {
   void spin(Timestamp timestamp, FrameId frame_id,
             const MPCFormulation* formulation,
             bool decoupled_version,
-            const gtsam::Vector2& velocities) override;
+            const gtsam::Vector2& velocities,
+            const gtsam::Pose3Vector& planned_camera_poses_to_publish,
+            const gtsam::Pose3Vector& predicted_object_motions_to_publish,
+            const gtsam::Pose3Vector& predicted_object_poses_to_publish,
+            const gtsam::Pose3& local_goal_to_publish) override;
 
   bool queryGlobalOffset(gtsam::Pose3& T_world_camera) override;
 
