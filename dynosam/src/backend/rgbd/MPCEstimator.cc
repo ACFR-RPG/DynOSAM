@@ -1228,6 +1228,11 @@ MPCFormulation::MPCFormulation(const FormulationParams& params,
   // lin_acc_ = Limits{-1.2, 1.2};
   // ang_acc_ = Limits{-0.8, 0.8};
 
+  // lin_vel_ = Limits{-0.3, 1.6};
+  // ang_vel_ = Limits{-1.0, 1.0};
+  // lin_acc_ = Limits{-1.2, 1.2};
+  // ang_acc_ = Limits{-0.8, 0.8};
+
   // lin_vel_ = Limits{-0.3, 1.2};
   // ang_vel_ = Limits{-0.5, 0.5};
   // lin_acc_ = Limits{-1.0, 0.6};
