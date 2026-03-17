@@ -267,7 +267,7 @@ bool HybridObjectMotionSolver::solveImpl(
     // The object re-tracking
     // must be at least 2 for smoothing factor?
     if (previous_tracking_state != ObjectTrackingStatus::New &&
-        frame_k->getFrameId() % 7 == 0) {
+        frame_k->getFrameId() % 30 == 0) {
       LOG(INFO) << "New KF due to temporal frame";
       requires_new_keyframe = true;
     }
@@ -283,7 +283,7 @@ bool HybridObjectMotionSolver::solveImpl(
       } else {
         CHECK_EQ(solver->frameId(), frame_km1->getFrameId())
             << "j=" << object_id << " k=" << solver->frameId();
-        keyframe_status = ObjectKeyFrameStatus::RegularKeyFrame;
+        // keyframe_status = ObjectKeyFrameStatus::RegularKeyFrame;
 
         const std::lock_guard<std::mutex> lock(num_kfs_per_object_mutex_);
         const int num_kf = num_kfs_per_object_.at(object_id);

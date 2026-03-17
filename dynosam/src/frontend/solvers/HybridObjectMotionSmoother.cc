@@ -1305,7 +1305,7 @@ HybridObjectMotionOnlySmoother::updateFromInitialMotionImpl(
   // for now lets just warm start the smoother with the last
   // hack to way to determine if KF
   // should also add on frame_id - 1 == keyframe id
-  if (try_cross_KF_smoothing) {
+  if (false) {
     const FrameId frame_km1 = frame_id - 1u;
     const FrameId frame_km2 = frame_id - 2u;
 
@@ -1337,7 +1337,7 @@ HybridObjectMotionOnlySmoother::updateFromInitialMotionImpl(
 
       // TODO: params
       gtsam::SharedNoiseModel smoothing_motion_model =
-          gtsam::noiseModel::Isotropic::Sigma(6u, 0.1);
+          gtsam::noiseModel::Isotropic::Sigma(6u, 0.2);
 
       auto smoothing_factor = boost::make_shared<HybridSmoothingFactor2>(
           H_key_km2, H_key_km1, H_key_k, LKF_km2, LKF_km1, L_KF,
@@ -1503,7 +1503,7 @@ HybridObjectMotionOnlySmoother::updateFromInitialMotionImpl(
 
     // TODO: params
     gtsam::SharedNoiseModel smoothing_motion_model =
-        gtsam::noiseModel::Isotropic::Sigma(6u, 0.1);
+        gtsam::noiseModel::Isotropic::Sigma(6u, 0.2);
 
     // TODO: ALL motions should use the same L_KF_
     //  if L_KF_ is only updated when we reset internal ISAM then no problem!

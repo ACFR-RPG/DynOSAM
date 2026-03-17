@@ -148,7 +148,7 @@ def run_experiment_sequences(dataset_path, dataset_name, dataset_loader, *args):
         args_list.extend(list(specific_args))
         return args_list
     # run fukk hybrid in (full)batch mode to get results!!
-    run_sequnce(dataset_path, dataset_name, dataset_loader, parallel_hybrid,  *append_args_list(), run_as_frontend=False, run_as_experiment=False, run_analysis=False)
+    run_sequnce(dataset_path, dataset_name, dataset_loader, kf_hybrid,  *append_args_list(), run_as_frontend=False, run_as_experiment=False, run_analysis=False)
 
 
 def run_viodes():
@@ -204,8 +204,8 @@ def run_hybrid_solver_comparison_omd():
     # run_experiment_sequences("/root/data/vdo_slam/omd/omd/swinging_4_unconstrained_stereo/","omd_SS", omd_dataset, "--ending_frame=500", "--hybrid_motion_solver=1")
     # run_experiment_sequences("/root/data/vdo_slam/omd/omd/swinging_4_unconstrained_stereo/","omd_EIF", omd_dataset, "--ending_frame=500", "--hybrid_motion_solver=0")
     # run_experiment_sequences("/root/data/vdo_slam/omd/omd/swinging_4_unconstrained_stereo/","omd_PnP", omd_dataset, "--ending_frame=500", "--hybrid_motion_solver=3")
-    # run_experiment_sequences("/root/data/vdo_slam/omd/omd/swinging_4_unconstrained_stereo/","omd_MO_test1", omd_dataset, "--ending_frame=300", "--hybrid_motion_solver=4")
-    run_experiment_sequences("/root/data/vdo_slam/omd/omd/swinging_4_unconstrained_stereo/","omd_FS_test1", omd_dataset, "--ending_frame=300", "--hybrid_motion_solver=2")
+    run_experiment_sequences("/root/data/vdo_slam/omd/omd/swinging_4_unconstrained_stereo/","omd_MO_test1", omd_dataset, "--ending_frame=300", "--hybrid_motion_solver=4")
+    # run_experiment_sequences("/root/data/vdo_slam/omd/omd/swinging_4_unconstrained_stereo/","omd_FS_test1", omd_dataset, "--ending_frame=300", "--hybrid_motion_solver=2")
 
     # run_analysis("omd_FS")
     # run_analysis("omd_SS")
@@ -261,9 +261,9 @@ def run_uts_tech_lab_solver_comparison_test():
 
 
 if __name__ == '__main__':
-    # run_hybrid_solver_comparison_omd()
+    run_hybrid_solver_comparison_omd()
     # run_hybrid_solver_comparison_kitti()
-    run_uts_tech_lab_solver_comparison_test()
+    # run_uts_tech_lab_solver_comparison_test()
     # run_tartan_air()
     # run_kitti()
     # run_viodes()

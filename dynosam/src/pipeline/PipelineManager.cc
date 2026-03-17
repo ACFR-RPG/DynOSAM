@@ -245,10 +245,9 @@ void DynoPipelineManager::loadPipelines(const CameraParams& camera_params,
   std::shared_ptr<BackendOutputRegistra> output_registra = nullptr;
   // load frontend
   if (backend_type == BackendType::KF_HYBRID) {
-    throw DynosamException("KF-Hybrid is currently under development. Use Hybrid or Parallel-Hybrid for best results!");
     // PoseChangeVIFrontend
-    // loadPoseChangeModules(camera, factory, frontend_, backend_,
-    //                       external_backend_display_, output_registra);
+    loadPoseChangeModules(camera, factory, frontend_, backend_,
+                          external_backend_display_, output_registra);
   } else {
     loadRegularOrParallelHybridModules(camera, factory, frontend_, backend_,
                                        external_backend_display_,

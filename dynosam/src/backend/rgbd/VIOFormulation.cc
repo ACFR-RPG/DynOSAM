@@ -8,7 +8,7 @@ namespace dyno {
 StateQuery<gtsam::NavState> VIOAccessor::getNavState(FrameId frame_id) const {
   StateQuery<gtsam::Pose3> X_W_k_query = this->getSensorPose(frame_id);
 
-  if(!X_W_k_query) {
+  if (!X_W_k_query) {
     return StateQuery<gtsam::NavState>::NotInMap(X_W_k_query.key());
   }
   StateQuery<gtsam::Vector3> V_W_k_query =
@@ -17,31 +17,31 @@ StateQuery<gtsam::NavState> VIOAccessor::getNavState(FrameId frame_id) const {
   // if Camera velocity query is false then we assume we dont have imu values
   // becuase we dont have imu measurements
   // instead calculate nav state via finite difference
-  // NOTE: ideally we should check the VIOFormulation::isImuInitalized 
+  // NOTE: ideally we should check the VIOFormulation::isImuInitalized
   // or equivalent but the Accessor structure is such we need VIOAccessor
   // to have a default constructor!
-  if(V_W_k_query) {
+  if (V_W_k_query) {
     gtsam::NavState nav_state(X_W_k_query.get(), V_W_k_query.get());
     return StateQuery<gtsam::NavState>(X_W_k_query.key(), nav_state);
   }
-  
+
   const FrameId first_frame = this->getFrameIds().front();
-  //if first frame then we dont know the veloicity so just use zero
-  //this is hacky and also may be inconcsistent with the initial velocity
-  //used in the VIOFormulation but right now we only ever use the default
-  if(frame_id == first_frame) {
+  // if first frame then we dont know the veloicity so just use zero
+  // this is hacky and also may be inconcsistent with the initial velocity
+  // used in the VIOFormulation but right now we only ever use the default
+  if (frame_id == first_frame) {
     gtsam::NavState nav_state(X_W_k_query.get(), gtsam::Vector3(0.0, 0.0, 0.0));
     return StateQuery<gtsam::NavState>(X_W_k_query.key(), nav_state);
   }
 
   StateQuery<gtsam::Pose3> X_W_km1_query = this->getSensorPose(frame_id - 1u);
-  if(!X_W_km1_query) {
-    DYNO_THROW_MSG(DynosamException) 
-      << "Cannot calculate gtsam::NavState at k=" << frame_id
-      << " Pose query valid but no velocity state and no pose query at k-1!";
-    throw;
+  if (!X_W_km1_query) {
+    const gtsam::NavState nav_state(X_W_k_query.get(),
+                                    gtsam::Vector3(0.0, 0.0, 0.0));
+    return StateQuery<gtsam::NavState>(X_W_k_query.key(), nav_state);
   }
 
+  // only works if we have pose every frame... not the case when keyframing ;)
   const Timestamp timestamp_k = this->getTimestamp(frame_id);
   const Timestamp timestamp_km1 = this->getTimestamp(frame_id - 1u);
 
@@ -84,7 +84,6 @@ gtsam::NavState VIOFormulation::addStatesInitalise(
   this->addSensorPose(new_values, frame_id_k, X_W_k);
   this->addSensorPosePrior(new_factors, frame_id_k, X_W_k,
                            noise_models_.initial_pose_prior);
-
 
   gtsam::imuBias::ConstantBias initial_bias;  // TODO: make param
   initial_imu_bias_ = initial_bias;
@@ -134,7 +133,7 @@ gtsam::NavState VIOFormulation::addStatesPropogate(
     if (first_frame_ == last_propogate_frame_) {
       imu_states_initalise_ = true;
       // only now do we add velocity and IMU bias at k=first_frame_
-      // this ensures we dont add imu specific states unless we have 
+      // this ensures we dont add imu specific states unless we have
       // measurements from the IMU
       addImuStatesFromInitialNavState(new_values, new_factors);
       LOG(INFO) << "Initised VIO Formulation to use IMU";
@@ -212,7 +211,7 @@ gtsam::NavState VIOFormulation::predictAndAddFactorsVO(
   VIOAccessor::Ptr accessor = this->getAsVIOAccessor();
   const gtsam::NavState nav_state_prev =
       DYNO_GET_QUERY_DEBUG(accessor->getNavState(from_frame));
-  
+
   VLOG(10) << "Forward predicting k=" << frame_id_k << " t=" << timestamp_k
            << " using VO";
   const gtsam::Pose3 X_W_km1 = nav_state_prev.pose();
@@ -239,7 +238,6 @@ gtsam::NavState VIOFormulation::predictAndAddFactorsVO(
              << to_frame << " using VO";
   }
 
-
   addSensorPose(new_values, to_frame, nav_state_k.pose());
 
   // const gtsam::Key velocity_key(CameraVelocitySymbol(to_frame));
@@ -248,7 +246,6 @@ gtsam::NavState VIOFormulation::predictAndAddFactorsVO(
   // // initalise imu bias
   // const gtsam::Key imu_bias_key(ImuBiasSymbol(to_frame));
   // this->addValue(new_values, imu_bias_prev, imu_bias_key);
-
 
   return nav_state_k;
 }
@@ -293,14 +290,13 @@ gtsam::NavState VIOFormulation::predictAndAddFactorsIMU(
 }
 
 void VIOFormulation::addImuStatesFromInitialNavState(
-    gtsam::Values& new_values, gtsam::NonlinearFactorGraph& new_factors)
-{
+    gtsam::Values& new_values, gtsam::NonlinearFactorGraph& new_factors) {
   const gtsam::Symbol velocity_key(CameraVelocitySymbol(first_frame_));
   const gtsam::Symbol imu_bias_key(ImuBiasSymbol(first_frame_));
 
   const gtsam::Point3& V_W_first = initial_nav_state_.velocity();
   const auto& initial_bias = initial_imu_bias_;
-  
+
   this->addValue(new_values, V_W_first, velocity_key);
   // add bias state
   this->addValue(new_values, initial_bias, imu_bias_key);
