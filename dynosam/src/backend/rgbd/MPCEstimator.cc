@@ -31,6 +31,8 @@
 #include "dynosam/backend/rgbd/MPCEstimator.hpp"
 
 #include <glog/logging.h>
+#include <chrono>
+#include <fstream>
 
 #include "dynosam/factors/HybridFormulationFactors.hpp"
 #include "dynosam/utils/Numerical.hpp"
@@ -1213,14 +1215,18 @@ MPCFormulation::MPCFormulation(const FormulationParams& params,
   dynamic_obstacle_prediction_factor_ =
       gtsam::noiseModel::Isotropic::Sigma(1u, FLAGS_mpc_dynamic_obstacle_prediction_sigma);
 
-  lin_vel_ = Limits{-0.3, 1.0};
-  ang_vel_ = Limits{-0.5, 0.5};
-  lin_acc_ = Limits{-1.0, 0.5};
-  ang_acc_ = Limits{-0.5, 0.5};
+  // lin_vel_ = Limits{-0.3, 1.0};
+  // ang_vel_ = Limits{-0.5, 0.5};
+  // lin_acc_ = Limits{-1.0, 0.5};
+  // ang_acc_ = Limits{-0.5, 0.5};
 
   // lin_vel_ = Limits{-0.3, 1.2};
   // ang_vel_ = Limits{-0.5, 0.5};
   // lin_acc_ = Limits{-1.2, 0.8};
+  // ang_acc_ = Limits{-0.5, 0.5};
+  // lin_vel_ = Limits{-0.3, 1.2};
+  // ang_vel_ = Limits{-0.5, 0.5};
+  // lin_acc_ = Limits{-1.0, 0.6};
   // ang_acc_ = Limits{-0.5, 0.5};
 
   // lin_vel_ = Limits{-0.3, 1.6};
@@ -1238,10 +1244,10 @@ MPCFormulation::MPCFormulation(const FormulationParams& params,
   // lin_acc_ = Limits{-1.0, 0.6};
   // ang_acc_ = Limits{-0.5, 0.5};
 
-  // lin_vel_ = Limits{-0.5, 1.8};
-  // ang_vel_ = Limits{-0.8, 0.8};
-  // lin_acc_ = Limits{-1.2, 0.8};
-  // ang_acc_ = Limits{-1.0, 1.0};
+  lin_vel_ = Limits{-0.5, 1.8};
+  ang_vel_ = Limits{-0.8, 0.8};
+  lin_acc_ = Limits{-1.2, 0.8};
+  ang_acc_ = Limits{-1.0, 1.0};
 
 
   // lin_vel_ = Limits{-0.3, 1.2};
@@ -2406,6 +2412,18 @@ MPCFormulation::DecoupledPredictionPlanningResult MPCFormulation::decoupledPredi
       gtsam::Vector2(0.0, 0.0);
   }
 
+
+  // 0 init for optimization check
+  gtsam::Values initial_values_planning_0init = initial_values_planning;
+  gtsam::NonlinearFactorGraph graph_planning_0init;
+  for (size_t frame_id = first_frame_id; frame_id <= last_frame_id; ++frame_id) {
+    initial_values_planning_0init.insert(CameraPoseSymbol(frame_id), current_pose);
+    initial_values_planning_0init.insert(CameraVelSymbol(frame_id), gtsam::Vector2(0.0, 0.0));
+    initial_values_planning_0init.insert(CameraAccSymbol(frame_id-1), gtsam::Vector2(0.0, 0.0));
+  } 
+
+
+
   // ----------------------------------------
   // 3. Initialize LM values (always first pose id = 1)
   // ----------------------------------------
@@ -2607,15 +2625,238 @@ MPCFormulation::DecoupledPredictionPlanningResult MPCFormulation::decoupledPredi
     }
   }
 
+  // 0 init first
+  graph_planning_0init = graph_planning;
   // ----------------------------------------
-  // 5. Run LM optimizer
+  // CSV setup
   // ----------------------------------------
-  gtsam::LevenbergMarquardtParams lm_params;
-  lm_params.setVerbosityLM("SUMMARY");
-  lm_params.setMaxIterations(50); // you can adjust
+  std::string csv_path_0init = "/root/results/IROS/optimizer_research/experiment_3/csv/0_init/" + std::to_string(frame_k) + "_output.csv"; // Output path
 
+  // Open CSV (will create file if it doesn't exist)
+  std::ofstream csv_file_0init(csv_path_0init);
+  if (!csv_file_0init.is_open()) {
+      LOG(ERROR) << "Failed to open CSV file at: " << csv_path_0init;
+  }
+
+  // Write header
+  csv_file_0init << "iteration,current_cost";
+  for (size_t i = 0; i < 31; ++i) {
+      csv_file_0init << ",pose" << i << "_x,pose" << i << "_y";
+  }
+  csv_file_0init << "\n";
+
+  gtsam::LevenbergMarquardtParams lm_params;
+  lm_params.setMaxIterations(50); // max iterations
+  gtsam::LevenbergMarquardtOptimizer optimizer_0init(graph_planning_0init, initial_values_planning_0init, lm_params);
+
+  double prev_error = graph_planning_0init.error(initial_values_planning_0init);
+
+  // ----------------------------------------
+  // Write iteration 0 (initial values)
+  // ----------------------------------------
+  gtsam::Values optimized_values = initial_values_planning_0init;
+  double current_error = graph_planning_0init.error(optimized_values);
+
+  // Gather poses
+  gtsam::Pose3Vector camera_poses_to_save;
+  camera_poses_to_save.clear();
+  camera_poses_to_save.push_back(current_pose);
+  for (size_t frame_id = first_frame_id+1; frame_id <= last_frame_id; ++frame_id) {
+      auto camera_key = CameraPoseSymbol(frame_id);
+      if (optimized_values.exists(camera_key)) {
+          gtsam::Pose3 pose_k = optimized_values.at<gtsam::Pose3>(camera_key);
+          camera_poses_to_save.push_back(pose_k);
+      }
+  }
+
+  // Write CSV for iteration 0
+  csv_file_0init << 0 << "," << current_error;
+  for (const auto& pose : camera_poses_to_save) {
+      auto t = pose.translation();
+      csv_file_0init << "," << t.x() << "," << -t.z();
+  }
+  csv_file_0init << "\n";
+
+
+  // ----------------------------------------
+  // Single-step loop
+  // ----------------------------------------
+  size_t iteration = 0;
+  while (true) {
+      // Advance one iteration
+      optimizer_0init.iterate();
+      iteration++;
+
+      optimized_values = optimizer_0init.values();
+      double current_error = graph_planning_0init.error(optimized_values);
+
+      // Gather poses
+      camera_poses_to_save.clear();
+      camera_poses_to_save.push_back(current_pose);
+      for (size_t frame_id = first_frame_id+1; frame_id <= last_frame_id; ++frame_id) {
+          auto camera_key = CameraPoseSymbol(frame_id);
+          if (optimized_values.exists(camera_key)) {
+              gtsam::Pose3 pose_k = optimized_values.at<gtsam::Pose3>(camera_key);
+              camera_poses_to_save.push_back(pose_k);
+          }
+      }
+
+      // Write iteration info to CSV (no setprecision)
+      csv_file_0init << iteration << "," << current_error;
+      for (const auto& pose : camera_poses_to_save) {
+          auto t = pose.translation();
+          csv_file_0init << "," << t.x() << "," << -t.z();
+      }
+      csv_file_0init << "\n";
+
+      // Stopping conditions
+      if (optimizer_0init.iterations() >= lm_params.maxIterations) {
+          break;
+      }
+      if (std::abs(prev_error - current_error) < 1e-6) { // or use your LM relativeErrorTol
+          break;
+      }
+      prev_error = current_error;
+  }
+  csv_file_0init.close();
+
+
+
+  
+  // ----------------------------------------
+  // CSV setup
+  // ----------------------------------------
+  std::string csv_path = "/root/results/IROS/optimizer_research/experiment_3/csv/normal_init/" + std::to_string(frame_k) + "_output.csv"; // Output path
+
+  // Open CSV (will create file if it doesn't exist)
+  std::ofstream csv_file(csv_path);
+  if (!csv_file.is_open()) {
+      LOG(ERROR) << "Failed to open CSV file at: " << csv_path;
+  }
+
+  // Write header
+  csv_file << "iteration,current_cost";
+  for (size_t i = 0; i < 31; ++i) {
+      csv_file << ",pose" << i << "_x,pose" << i << "_y";
+  }
+  csv_file << "\n";
+
+
+  // ----------------------------------------
+  // Setup LM optimizer
+  // ----------------------------------------
   gtsam::LevenbergMarquardtOptimizer optimizer(graph_planning, initial_values_planning, lm_params);
-  gtsam::Values optimized_values = optimizer.optimize();
+
+  prev_error = graph_planning.error(initial_values_planning);
+
+
+  // ----------------------------------------
+  // Write iteration 0 (initial values)
+  // ----------------------------------------
+  optimized_values = initial_values_planning;
+  current_error = graph_planning.error(optimized_values);
+
+  // Gather poses
+  camera_poses_to_save.clear();
+  camera_poses_to_save.push_back(current_pose);
+  for (size_t frame_id = first_frame_id+1; frame_id <= last_frame_id; ++frame_id) {
+      auto camera_key = CameraPoseSymbol(frame_id);
+      if (optimized_values.exists(camera_key)) {
+          gtsam::Pose3 pose_k = optimized_values.at<gtsam::Pose3>(camera_key);
+          camera_poses_to_save.push_back(pose_k);
+      }
+  }
+
+  // Write CSV for iteration 0
+  csv_file << 0 << "," << current_error;
+  for (const auto& pose : camera_poses_to_save) {
+      auto t = pose.translation();
+      csv_file << "," << t.x() << "," << -t.z();
+  }
+  csv_file << "\n";
+
+
+  // ----------------------------------------
+  // Single-step loop
+  // ----------------------------------------
+  auto start_time = std::chrono::steady_clock::now();
+
+  iteration = 0;
+  while (true) {
+      // Advance one iteration
+      optimizer.iterate();
+      iteration++;
+
+      optimized_values = optimizer.values();
+      double current_error = graph_planning.error(optimized_values);
+
+      // Gather poses
+      camera_poses_to_save.clear();
+      camera_poses_to_save.push_back(current_pose);
+      for (size_t frame_id = first_frame_id+1; frame_id <= last_frame_id; ++frame_id) {
+          auto camera_key = CameraPoseSymbol(frame_id);
+          if (optimized_values.exists(camera_key)) {
+              gtsam::Pose3 pose_k = optimized_values.at<gtsam::Pose3>(camera_key);
+              camera_poses_to_save.push_back(pose_k);
+          }
+      }
+
+      // Write iteration info to CSV (no setprecision)
+      csv_file << iteration << "," << current_error;
+      for (const auto& pose : camera_poses_to_save) {
+          auto t = pose.translation();
+          csv_file << "," << t.x() << "," << -t.z();
+      }
+      csv_file << "\n";
+
+      // Stopping conditions
+      if (optimizer.iterations() >= lm_params.maxIterations) {
+          break;
+      }
+      if (std::abs(prev_error - current_error) < 1e-6) { // or use your LM relativeErrorTol
+          break;
+      }
+      prev_error = current_error;
+  }
+
+  auto end_time = std::chrono::steady_clock::now();
+  double elapsed_sec = std::chrono::duration<double>(end_time - start_time).count();
+
+  LOG(WARNING) << "--------------- Final cost: " << prev_error;
+  LOG(WARNING) << "--------------- Total iterations: " << iteration;
+  LOG(WARNING) << "--------------- Elapsed time: " << elapsed_sec << " seconds";
+  csv_file.close();
+
+  // ----------------------- The end of file stuff
+
+  // // ----------------------------------------
+  // // 5. Run LM optimizer
+  // // ----------------------------------------
+  // gtsam::LevenbergMarquardtParams lm_params;
+  // lm_params.setVerbosityLM("SUMMARY");
+  // lm_params.setMaxIterations(50); // you can adjust
+
+  // double initial_error = graph_planning.error(initial_values_planning);
+  // // Start timer
+  // auto start_time = std::chrono::steady_clock::now();
+
+  // gtsam::LevenbergMarquardtOptimizer optimizer(graph_planning, initial_values_planning, lm_params);
+  // gtsam::Values optimized_values = optimizer.optimize();
+
+  // // End timer
+  // auto end_time = std::chrono::steady_clock::now();
+
+  // // Duration in seconds
+  // double elapsed_sec =
+  //     std::chrono::duration<double>(end_time - start_time).count();
+
+  // double final_error = graph_planning.error(optimized_values);
+  // size_t iterations = optimizer.iterations();
+
+  // LOG(WARNING) << "--------------- Initial cost: " << initial_error;
+  // LOG(WARNING) << "--------------- Final cost: " << final_error;
+  // LOG(WARNING) << "--------------- Number of iterations: " << iterations;
+  // LOG(WARNING) << "--------------- Elapsed time: " << elapsed_sec << " seconds";
 
   // ----------------------------------------
   // 6. Store optimized graph and values in class
@@ -2648,7 +2889,7 @@ MPCFormulation::DecoupledPredictionPlanningResult MPCFormulation::decoupledPredi
 
   gtsam::Pose3Vector planned_camera_poses_to_publish;
   planned_camera_poses_to_publish.push_back(current_pose);
-  LOG(INFO) << "====== OBJECT PLANNED POSES ======";
+  LOG(INFO) << "====== ROBOT PLANNED POSES ======";
   for (size_t frame_id = first_frame_id+1; frame_id <= last_frame_id; ++frame_id) {
       auto camera_key = CameraPoseSymbol(frame_id);
       if (!optimized_values.exists(camera_key)) {

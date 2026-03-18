@@ -92,24 +92,24 @@
 
 # Dyno MPC stuff
 --mpc_horizon=30
---mpc_vel2d_prior_sigma=5e-3
---mpc_vel2d_limit_sigma=1e-2
+--mpc_vel2d_prior_sigma=5e-2
+--mpc_vel2d_limit_sigma=1e-1
 
---mpc_accel2d_limit_sigma=1e-2
---mpc_accel2d_cost_sigma=1e2
+--mpc_accel2d_limit_sigma=1e-1
+--mpc_accel2d_cost_sigma=1e3
 
---mpc_accel2d_smoothing_sigma=5e3
---mpc_dynamic_factor_sigma=1e-3
---mpc_object_prediction_constant_motion_sigma=1e-2
---mpc_follow_sigma=5e-2
---mpc_goal_sigma=1e-1
+--mpc_accel2d_smoothing_sigma=5e4
+--mpc_dynamic_factor_sigma=1e-2
+--mpc_object_prediction_constant_motion_sigma=1e-1
+--mpc_follow_sigma=5e-1
+--mpc_goal_sigma=1e-0
 
 
---mpc_static_sdf_X_safety_distance_sigma=1e-2
---mpc_static_sdf_H_safety_distance_noise=1e-2
---mpc_dynamic_obstacle_sigma=1e-2
+--mpc_static_sdf_X_safety_distance_sigma=1e-1
+--mpc_static_sdf_H_safety_distance_noise=1e-1
+--mpc_dynamic_obstacle_sigma=1e-1
 
---mpc_dynamic_obstacle_prediction_sigma=5e-2
+--mpc_dynamic_obstacle_prediction_sigma=5e-1
 # 1e-4, 1e-3, 1e-2, 5e-2, (1e-1), 1.5e-1, 2e-1, 2.5e-1, 2.3e-1, 5e-1, 3.6e-1
 # Num of steps to complete CDynoJEPP: 84, 82, 82, 82, (85), 86, 87, 90, 89, 94, 89
 # Num of steps to complete DynoJEPP: 92, 100, 97, 98, 97, 101, 94, 92, 98, 92
@@ -131,11 +131,11 @@
 # --mpc_goal_sigma=1e-2
 # --mpc_dynamic_factor_sigma=1e-5
 
---mpc_use_directed_factors=false
+--mpc_use_directed_factors=true
 --mpc_use_prediction_dynamic_obstacle_factors=false
 
---mpc_decoupled=false
---mpc_local_goal_horizon=120
+--mpc_decoupled=true
+--mpc_local_goal_horizon=200
 
 # 0: Follow, 1: Navigate
 --mission_type=1
