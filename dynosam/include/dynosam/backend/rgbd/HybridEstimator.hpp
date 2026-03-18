@@ -1600,9 +1600,13 @@ class HybridFormulationKeyFrame : public HybridFormulation {
   const KeyFrameData& getAnchorKeyFrames() const { return key_frame_data_; }
 
   ObjectPoseMap getInitialObjectPoses() const;
-  // object points in L
-  gtsam::FastMap<ObjectId, std::vector<std::pair<TrackletId, gtsam::Point3>>>
-  getObjectPoints() const;
+  // object points in L for all objects in the state
+  TrackedPointsPerObject getObjectPoints() const;
+  // object points in L for objects observed at frame_id
+  TrackedPointsPerObject getObjectPoints(FrameId frame_id) const;
+
+  // uses last frame in state
+  HybridKeyFrameUpdate generateUpdateInfo() const;
 
  private:
   struct Context {
@@ -1641,6 +1645,8 @@ class HybridFormulationKeyFrame : public HybridFormulation {
                              gtsam::Key pose_key, gtsam::Key object_motion_key,
                              gtsam::Key point_key, const gtsam::Pose3& KF_pose,
                              LandmarkNodePtr lmk_node, FrameNodePtr frame_node);
+  // helper function
+  TrackedPointsPerObject getObjectPoints(const ObjectIds& objects) const;
 
  protected:
   // neither overridden update callback is used as we directly overwrite the

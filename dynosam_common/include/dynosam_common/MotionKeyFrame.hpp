@@ -1,5 +1,6 @@
 #pragma once
 
+#include "dynosam_common/DynoState.hpp"
 #include "dynosam_common/Types.hpp"
 
 /**
@@ -13,6 +14,24 @@ enum class ObjectKeyFrameStatus {
   NonKeyFrame = 0,
   RegularKeyFrame = 1,
   AnchorKeyFrame = 2
+};
+
+// TODO: so inconsistent with names!!! Hybrid/Keyframe/PoseChange!?
+struct HybridKeyFrameUpdate {
+  FrameId frame_id;
+  Timestamp timestamp;
+
+  struct Object {
+    ObjectId object_id;
+    PoseWithMotionTrajectory trajectory;
+    //! Tracked object points in L (ie. ^Lm)
+    TrackedPointsPerObject::mapped_type object_points;
+  };
+
+  PoseTrajectory camera_trajectory;
+  std::vector<Object> object_infos;
+
+  const Object* getObject(ObjectId object_id) const;
 };
 
 struct ObjectPoseChangeInfo {
@@ -29,15 +48,6 @@ struct ObjectPoseChangeInfo {
   gtsam::Pose3 L_W_k;
 
   ObjectKeyFrameStatus keyframe_status{ObjectKeyFrameStatus::NonKeyFrame};
-
-  // // make intermediate keyframe to optimise w.r.t to the same anchor point
-  // // ie. indicates if a motion variable should be added this frame
-  // bool regular_keyframe{false};
-  // // make a new anchor point for the object
-  // // this happens when the object is new or has re-appeared (and therefore
-  // // has no contuous tracks) in this case a regular keyframe MUST also be
-  // // made a motion will added this frame AND the anchor pose will be updated
-  // bool anchor_keyframe{false};
 
   bool isKeyFrame() const {
     return keyframe_status != ObjectKeyFrameStatus::NonKeyFrame;

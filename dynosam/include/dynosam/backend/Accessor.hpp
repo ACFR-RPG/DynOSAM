@@ -196,6 +196,9 @@ class Accessor {
 
   virtual Timestamp getTimestamp(FrameId frame_id) const = 0;
 
+  FrameId getLatestFrameId() const;
+  Timestamp getLatestTimestamp() const;
+
   /**
    * @brief Check if there exists an estimate for object motion at time-step (k)
    * for object id (j). If result is true and a motion is provided, return true
@@ -242,8 +245,6 @@ class Accessor {
       ObjectId object_id) const = 0;
 
   MultiObjectTrajectories getMultiObjectTrajectories() const;
-
-  
 
   /**
    * @brief Get all landmarks (static and dynamic) at time-step k.

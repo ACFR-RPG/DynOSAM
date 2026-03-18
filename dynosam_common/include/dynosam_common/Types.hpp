@@ -111,6 +111,10 @@ using MotionMap =
 /// @brief Map of FrameIds (k) to Timestamps
 using FrameIdTimestampMap = gtsam::FastMap<FrameId, Timestamp>;
 
+/// @brief Alias to a map of object ids to a vector of tracklet/point pairs
+using TrackedPointsPerObject =
+    gtsam::FastMap<ObjectId, std::vector<std::pair<TrackletId, gtsam::Point3>>>;
+
 using FrontendUpdateCallback =
     std::function<void(const FrameId, const Timestamp)>;
 

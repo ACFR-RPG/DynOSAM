@@ -131,13 +131,6 @@ void ConsecutiveFrameObjectMotionSolver::updateTrajectories(
   using Iterator = ConstFeatureIterator<Predicate>;
 
   for (const auto& [object_id, motion_estimate] : motion_estimates) {
-    // auto object_points = FeatureFilterIterator(
-    //     const_cast<FeatureContainer&>(frame_km1->dynamic_features_),
-    //     [object_id, &frame_k](const Feature::Ptr& f) -> bool {
-    //       return Feature::IsUsable(f) && f->objectId() == object_id &&
-    //              frame_k->exists(f->trackletId()) &&
-    //              frame_k->isFeatureUsable(f->trackletId());
-    //     });
     Iterator object_points_iterator(frame_km1->dynamic_features_,
                                     Predicate(object_id, frame_k));
 

@@ -450,18 +450,22 @@ bool HybridObjectMotionSolver::getObjectStructureinW(
   return true;
 }
 
-void HybridObjectMotionSolver::updateObjectPoints(
-    const gtsam::FastMap<ObjectId,
-                         std::vector<std::pair<TrackletId, gtsam::Point3>>>&
-        points_per_object) {
+void HybridObjectMotionSolver::receiveUpdate(
+    const HybridKeyFrameUpdate& update_info) {
   LOG(INFO) << "Recieved point update!";
+
+  const std::lock_guard<std::mutex> lock(solvers_mutex_);
+  // apply to all solver and let the solver decide if it has an internal update
+  for (auto [_, solver] : solvers_) {
+    solver->receiveUpdate(update_info);
+  }
   // definitely need more checks, is same keyframe frame etc..
 
   //
-  for (const auto& [object_id, points] : points_per_object) {
-    CHECK(solverExists(object_id));
-    threadSafeFilterAccess(object_id)->updateObjectPoints(points);
-  }
+  // for (const auto& [object_update] : points_per_object) {
+  //   CHECK(solverExists(object_id));
+  //   threadSafeFilterAccess(object_id)->updateObjectPoints(points);
+  // }
 }
 
 gtsam::Pose3 HybridObjectMotionSolver::constructObjectPose(

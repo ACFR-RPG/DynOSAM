@@ -1,6 +1,7 @@
 #pragma once
 
 #include "dynosam/frontend/vision/Frame.hpp"
+#include "dynosam_common/MotionKeyFrame.hpp"
 #include "dynosam_common/Trajectories.hpp"
 #include "dynosam_common/Types.hpp"
 #include "dynosam_cv/RGBDCamera.hpp"
@@ -62,8 +63,7 @@ class HybridObjectMotionSolverImpl {
   virtual PoseWithMotionTrajectory localTrajectory() const = 0;
 
   // points in L
-  virtual void updateObjectPoints(
-      const std::vector<std::pair<TrackletId, gtsam::Point3>>&){};
+  virtual void receiveUpdate(const HybridKeyFrameUpdate&){};
 
  protected:
   const ObjectId object_id_;

@@ -26,12 +26,14 @@ PoseChangeVIFrontend::PoseChangeVIFrontend(
   }
 }
 
+PoseChangeVIFrontend::~PoseChangeVIFrontend() { logBestEstimates(); }
+
 void PoseChangeVIFrontend::onBackendUpdateComplete(FrameId frame_id,
                                                    Timestamp timestamp) {
   LOG(INFO) << "Recieved backend update at frame " << frame_id;
 
   // TODO: this is definitely not thread safe
-  object_motion_solver_->updateObjectPoints(formulation_->getObjectPoints());
+  object_motion_solver_->receiveUpdate(formulation_->generateUpdateInfo());
 }
 
 PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::boostrapSpin(
@@ -379,6 +381,7 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
         const KeyFrameData& lkf_data = keyframes_.at(lkf_id_);
         CHECK_EQ(lkf_data.kf_id, lkf_id_);
 
+        ObjectIds object_keyframes;
         // propogate from current last keyframe to the desired keyframe
         gtsam::NavState predicted_nav_state = formulation_->addStatesPropogate(
             pc_input->new_values, pc_input->new_factors,
@@ -394,11 +397,17 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
 
         // fill dynamic_measurements_kf for all objects present at this frame
         for (const ObjectId& j : object_ids) {
-          fillMeasurementsFromFeatureIterator(
+          auto num_added = fillMeasurementsFromFeatureIterator(
               &dynamic_measurements_kf,
               intermediate_motion_lkf_j.frame->usableDynamicIterator(j),
               intermediate_motion_lkf_j.to, intermediate_motion_lkf_j.timestamp,
               dynamic_pixel_sigmas_, dynamic_point_sigma_);
+
+          object_keyframes.push_back(j);
+
+          LOG(INFO) << "object j= " << j << " was not originally present at k="
+                    << intermediate_motion_lkf_j.to
+                    << " # features added=" << num_added;
         }
 
         // NOTE: this is different from the nav state that is mantained in the
@@ -413,11 +422,10 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
         keyframe_data.kf_id_prev = lkf_id_;
         keyframe_data.camera_keyframe = false;
         keyframe_data.retroactively_made_keyframe = true;
-        ////TODO: add objects (as this is now a to frame) BUT more than one
-        /// object could be added per frame!
+        // actually not sure this is right as these keyframes could be "from"
+        keyframe_data.object_keyframes = std::move(object_keyframes);
         keyframe_data.frame = intermediate_motion_lkf_j.frame;
         keyframe_data.nav_state = nav_state_lkf_j;
-        // keyframe_data.object_infos = kf_pose_change_infos;
         keyframes_.insert2(keyframe_data.kf_id, keyframe_data);
 
         // progressively update internal keyframe related properties
@@ -441,13 +449,14 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
         // not exist at this frame
         for (const ObjectId& j : object_ids) {
           if (!keyframe_data.isObjectKeyFrame(j)) {
-            LOG(INFO) << "object j= " << j
-                      << " was not originally present at k=" << lkf_id_j;
-            fillMeasurementsFromFeatureIterator(
+            auto num_added = fillMeasurementsFromFeatureIterator(
                 &dynamic_measurements_kf,
                 keyframe_data.frame->usableDynamicIterator(j),
                 keyframe_data.kf_id, keyframe_data.frame->getTimestamp(),
                 dynamic_pixel_sigmas_, dynamic_point_sigma_);
+            LOG(INFO) << "object j= " << j
+                      << " was not originally present at k=" << lkf_id_j
+                      << " # features added=" << num_added;
 
             keyframe_data.object_keyframes.push_back(j);
           }
@@ -457,6 +466,8 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
 
     // NOTE: this is different from the nav state that is mantained in the
     // frontend
+    /// hmmmm errr dont need to do this if we did this in the loop before!!!
+    // TODO: otherwise get Forward predicting k=16 t=16 using VO
     const gtsam::NavState predicted_nav_state =
         formulation_->addStatesPropogate(pc_input->new_values,
                                          pc_input->new_factors, frame_id_k,
@@ -576,6 +587,10 @@ void PoseChangeVIFrontend::constructVisualFactors(
                                                 new_factors, update_params);
     // }
   }
+}
+
+void PoseChangeVIFrontend::logBestEstimates() const {
+  VLOG(20) << "Logging test estimates from PoseChange frontend";
 }
 
 }  // namespace dyno

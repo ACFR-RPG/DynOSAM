@@ -46,10 +46,7 @@ class HybridObjectMotionSolver : public ObjectMotionSolver {
   }
 
   // points in L per object (j)
-  void updateObjectPoints(
-      const gtsam::FastMap<ObjectId,
-                           std::vector<std::pair<TrackletId, gtsam::Point3>>>&
-          points_per_object);
+  void receiveUpdate(const HybridKeyFrameUpdate& update_info);
 
  protected:
   bool solveImpl(Frame::Ptr frame_k, Frame::Ptr frame_km1, ObjectId object_id,

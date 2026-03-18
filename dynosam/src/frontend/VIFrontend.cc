@@ -5,12 +5,12 @@ namespace dyno {
 DEFINE_bool(use_frontend_logger, false,
             "If true, the frontend logger will be used");
 
-RGBDFrontendLogger::RGBDFrontendLogger()
-    : EstimationModuleLogger("frontend"),
+VIFrontendLogger::VIFrontendLogger(const std::string& logger_name)
+    : EstimationModuleLogger(logger_name),
       tracking_length_hist_file_name_(
           getOutputFilePath("tracklet_length_hist.json")) {}
 
-void RGBDFrontendLogger::logTrackingLengthHistogram(const Frame::Ptr frame) {
+void VIFrontendLogger::logTrackingLengthHistogram(const Frame::Ptr frame) {
   gtsam::FastMap<ObjectId, Histogram> histograms =
       vision_tools::makeTrackletLengthHistorgram(frame);
   // collect histograms per object and then nest them per frame
@@ -23,7 +23,7 @@ void RGBDFrontendLogger::logTrackingLengthHistogram(const Frame::Ptr frame) {
   tracklet_length_json_[std::to_string(frame->getFrameId())] = per_object_hist;
 }
 
-RGBDFrontendLogger::~RGBDFrontendLogger() {
+VIFrontendLogger::~VIFrontendLogger() {
   JsonConverter::WriteOutJson(tracklet_length_json_,
                               tracking_length_hist_file_name_);
 }
@@ -37,7 +37,7 @@ Frontend::Frontend(const std::string& name, const DynoParams& params,
       shared_ground_truth_(shared_ground_truth) {
   if (FLAGS_use_frontend_logger) {
     LOG(INFO) << "Using front-end logger!";
-    logger_ = std::make_unique<RGBDFrontendLogger>();
+    logger_ = std::make_unique<VIFrontendLogger>(name);
   }
 }
 

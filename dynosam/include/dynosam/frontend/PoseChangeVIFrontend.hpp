@@ -19,6 +19,8 @@ class PoseChangeVIFrontend : public VIFrontend {
                        ImageDisplayQueue* display_queue = nullptr,
                        const SharedGroundTruth& shared_ground_truth = {});
 
+  ~PoseChangeVIFrontend();
+
   void addPoseChangeOutputSink(const PoseChangeBackendSink& func) {
     pose_change_backend_sink_ = func;
   };
@@ -45,6 +47,8 @@ class PoseChangeVIFrontend : public VIFrontend {
                               gtsam::NonlinearFactorGraph& new_factors,
                               PostUpdateData& post_update_data);
 
+  void logBestEstimates() const;
+
   struct IntermediateMotion {
     //! Should be from a Keyframe
     FrameId from;
@@ -53,7 +57,9 @@ class PoseChangeVIFrontend : public VIFrontend {
     //! Timestamp at the current (ie. to) frame
     Timestamp timestamp;
 
+    //! Frame ptr at current frame (ie. to)
     Frame::Ptr frame;
+    //! Nav state at current frame (ie. to)
     gtsam::NavState frontend_nav_state;
 
     ImuFrontend::PimPtr pim;

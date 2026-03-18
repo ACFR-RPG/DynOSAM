@@ -203,8 +203,6 @@ gtsam::NavState VIOFormulation::predictAndAddFactorsVO(
     FrameId frame_id_k, Timestamp timestamp_k, const gtsam::Pose3& T_k_1_k) {
   CHECK(!isImuInitalized());
 
-  LOG(INFO) << "here";
-
   const FrameId from_frame = last_propogate_frame_;
   const FrameId to_frame = frame_id_k;
 
@@ -239,13 +237,6 @@ gtsam::NavState VIOFormulation::predictAndAddFactorsVO(
   }
 
   addSensorPose(new_values, to_frame, nav_state_k.pose());
-
-  // const gtsam::Key velocity_key(CameraVelocitySymbol(to_frame));
-  // // add predicted velocity value
-  // this->addValue(new_values, nav_state_k.velocity(), velocity_key);
-  // // initalise imu bias
-  // const gtsam::Key imu_bias_key(ImuBiasSymbol(to_frame));
-  // this->addValue(new_values, imu_bias_prev, imu_bias_key);
 
   return nav_state_k;
 }

@@ -1127,19 +1127,12 @@ ErrorHandlingHooks HybridFormulationV1::getCustomErrorHooks() {
   return getDefaultILSErrorHandlingHooks(handle_failed_object);
 }
 
-gtsam::FastMap<ObjectId, std::vector<std::pair<TrackletId, gtsam::Point3>>>
-HybridFormulationKeyFrame::getObjectPoints() const {
-  const auto frame_node = map()->lastFrame();
-  CHECK_NOTNULL(frame_node);
-
+TrackedPointsPerObject HybridFormulationKeyFrame::getObjectPoints(
+    const ObjectIds& objects) const {
   auto hybrid_accessor = this->derivedAccessor<HybridAccessor>();
 
-  gtsam::FastMap<ObjectId, std::vector<std::pair<TrackletId, gtsam::Point3>>>
-      points_per_object;
-
-  const auto object_seen =
-      frame_node->objects_seen.template collectIds<ObjectId>();
-  for (ObjectId object_id : object_seen) {
+  TrackedPointsPerObject points_per_object;
+  for (ObjectId object_id : objects) {
     StatusLandmarkVector estimates =
         hybrid_accessor->getLocalDynamicLandmarkEstimates(object_id);
 
@@ -1149,11 +1142,53 @@ HybridFormulationKeyFrame::getObjectPoints() const {
     for (const auto& lmk_status : estimates) {
       tracklet_pairs.push_back({lmk_status.trackletId(), lmk_status.value()});
     }
-
     points_per_object.insert2(object_id, std::move(tracklet_pairs));
   }
 
   return points_per_object;
+}
+
+TrackedPointsPerObject HybridFormulationKeyFrame::getObjectPoints() const {
+  auto hybrid_accessor = this->derivedAccessor<HybridAccessor>();
+  return getObjectPoints(hybrid_accessor->getObjectIds());
+}
+
+TrackedPointsPerObject HybridFormulationKeyFrame::getObjectPoints(
+    FrameId frame_id) const {
+  auto frame_node = map()->getFrame(frame_id);
+  CHECK_NOTNULL(frame_node);
+  const auto object_seens =
+      frame_node->objects_seen.template collectIds<ObjectId>();
+  return getObjectPoints(object_seens);
+}
+
+HybridKeyFrameUpdate HybridFormulationKeyFrame::generateUpdateInfo() const {
+  auto hybrid_accessor = this->derivedAccessor<HybridAccessor>();
+
+  // what if things are optimising when we do this...?
+  HybridKeyFrameUpdate info;
+  info.frame_id = hybrid_accessor->getLatestFrameId();
+  info.timestamp = hybrid_accessor->getLatestTimestamp();
+  info.camera_trajectory = hybrid_accessor->getCameraTrajectory();
+
+  auto object_trajectories = hybrid_accessor->getMultiObjectTrajectories();
+  auto object_points = getObjectPoints();
+
+  CHECK_EQ(object_trajectories.size(), object_points.size());
+
+  info.object_infos.reserve(object_trajectories.size());
+  for (const auto& [object_id, trajectory] : object_trajectories) {
+    CHECK(object_points.exists(object_id));
+
+    HybridKeyFrameUpdate::Object object_info;
+    object_info.object_id = object_id;
+    object_info.trajectory = trajectory;
+    object_info.object_points = object_points.at(object_id);
+
+    info.object_infos.push_back(std::move(object_info));
+  }
+
+  return info;
 }
 
 UpdateObservationResult HybridFormulationKeyFrame::updateDynamicObservations(
@@ -1387,7 +1422,8 @@ void HybridFormulationKeyFrame::updateObject(
     // actually could just sanity check we've added factors at any/every frame
     // that we have a motion for
 
-    CHECK(obj_lmk_node->seenAtFrame(lRKF_id));
+    CHECK(obj_lmk_node->seenAtFrame(lRKF_id))
+        << info_string(lRKF_id, obj_lmk_node->object_id);
     std::set<FrameId>& frames_with_factors_added =
         factors_added_.at(tracklet_id);
     const bool factor_not_added_for_lRKF =

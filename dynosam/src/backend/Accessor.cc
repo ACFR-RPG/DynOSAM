@@ -41,6 +41,11 @@ std::tuple<gtsam::Point3, bool> Accessor::computeObjectCentroid(
   return {translation, true};
 }
 
+FrameId Accessor::getLatestFrameId() const { return getFrameIds().back(); }
+Timestamp Accessor::getLatestTimestamp() const {
+  return this->getTimestamp(getLatestFrameId());
+}
+
 StatusLandmarkVector Accessor::getLandmarkEstimates(FrameId frame_id) const {
   StatusLandmarkVector estimates;
   estimates += getStaticLandmarkEstimates(frame_id);

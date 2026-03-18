@@ -40,7 +40,6 @@
 #include "dynosam_common/utils/SafeCast.hpp"
 #include "dynosam_opt/Map.hpp"
 
-
 namespace dyno {
 
 class Backend {
@@ -60,24 +59,21 @@ class BackendModule : public ModuleBase<INPUT, DynoState>, public Backend {
   using This = BackendModule<INPUT>;
   DYNO_POINTER_TYPEDEFS(This)
 
-  BackendModule(const BackendParams& params, Camera::Ptr camera, const SharedGroundTruth& shared_ground_truth)
+  BackendModule(const BackendParams& params, Camera::Ptr camera,
+                const SharedGroundTruth& shared_ground_truth)
       : Base("backend"),
         backend_params_(params),
         camera_(CHECK_NOTNULL(camera)),
         noise_models_(NoiseModels::fromBackendParams(params)),
-        shared_ground_truth_(shared_ground_truth) 
-      {
-
-        if(VLOG_IS_ON(10)) {
-
-          if(shared_ground_truth_.valid()) {
-            LOG(INFO) << "Backend initalised with valid ground truth";
-          }
-          else {
-            LOG(INFO) << "Backend initalised without ground truth";
-          }
-        }
+        shared_ground_truth_(shared_ground_truth) {
+    if (VLOG_IS_ON(10)) {
+      if (shared_ground_truth_.valid()) {
+        LOG(INFO) << "Backend initalised with valid ground truth";
+      } else {
+        LOG(INFO) << "Backend initalised without ground truth";
       }
+    }
+  }
 
   virtual ~BackendModule() = default;
 
@@ -98,9 +94,7 @@ class BackendModule : public ModuleBase<INPUT, DynoState>, public Backend {
    * @return FrameId
    */
   FrameId latestFrameId() const {
-    const auto accessor = this->getAccessor();
-    // getFrameIds should return an ordered vector of frames
-    return *accessor->getFrameIds().crbegin();
+    return this->getAccessor()->getLatestFrameId();
   }
 
   /**
@@ -119,7 +113,6 @@ class BackendModule : public ModuleBase<INPUT, DynoState>, public Backend {
     DynoState::Ptr state = std::make_shared<DynoState>();
 
     const auto camera_trajectory = accessor->getCameraTrajectory();
-    LOG(INFO) << camera_trajectory;
 
     // expect frame and timestamp to be from the last entry
     const auto last_camera_entry = camera_trajectory.last();
@@ -162,7 +155,8 @@ class BackendModuleT : public BackendModule<INPUT> {
       const typename FormulationT::Ptr&, FrameId, const gtsam::Values&,
       const gtsam::NonlinearFactorGraph&)>;
 
-  BackendModuleT(const BackendParams& params, Camera::Ptr camera, const SharedGroundTruth& shared_ground_truth)
+  BackendModuleT(const BackendParams& params, Camera::Ptr camera,
+                 const SharedGroundTruth& shared_ground_truth)
       : Base(params, camera, shared_ground_truth), map_(MapT::create()) {}
   virtual ~BackendModuleT() = default;
 

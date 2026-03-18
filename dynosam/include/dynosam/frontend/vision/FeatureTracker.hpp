@@ -169,6 +169,10 @@ class FeatureTracker : public FeatureTrackerBase {
   //! pixles around the boarder of each dynamic object. Mask of type CV_8UC1
   cv::Mat boarder_detection_mask_;
 
+  //! a boolean mask (255 for valid, 0 for invalid) indicating where dynamic
+  //! features were detected or tracked on the previous frame
+  cv::Mat dynamic_detection_mask_;
+
   FeatureTrackerInfo info_;
 
   // OccupandyGrid2D static_grid_; //! Grid used to feature bin static features

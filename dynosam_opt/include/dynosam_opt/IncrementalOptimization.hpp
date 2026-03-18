@@ -344,7 +344,8 @@ class IncrementalInterface {
 
   bool optimize(ResultType* result,
                 const FillArguments& update_arguments_filler,
-                const ErrorHandlingHooks& error_hooks = {}) {
+                const ErrorHandlingHooks& error_hooks =
+                    getDefaultILSErrorHandlingHooks()) {
     CHECK_NOTNULL(result);
     auto tic = utils::Timer::tic();
 

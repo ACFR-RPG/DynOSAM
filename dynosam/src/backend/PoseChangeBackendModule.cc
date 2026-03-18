@@ -17,7 +17,7 @@ PoseChangeVIBackendModule::PoseChangeVIBackendModule(
   CHECK_NOTNULL(hybrid_accessor_);
 
   gtsam::ISAM2Params isam2_params;
-  isam2_params.relinearizeThreshold = 0.001;
+  isam2_params.relinearizeThreshold = 0.01;
   isam2_params.relinearizeSkip = 1;
   // isam2_params.relinearizeSkip = FLAGS_regular_backend_relinearize_skip;
   isam2_params.keyFormatter = DynosamKeyFormatter;

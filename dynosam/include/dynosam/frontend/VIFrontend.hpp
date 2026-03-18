@@ -21,11 +21,11 @@ struct InvalidImageContainerException : public DynosamException {
                          container.toString() + "\n was invalid - " + what) {}
 };
 
-class RGBDFrontendLogger : public EstimationModuleLogger {
+class VIFrontendLogger : public EstimationModuleLogger {
  public:
-  DYNO_POINTER_TYPEDEFS(RGBDFrontendLogger)
-  RGBDFrontendLogger();
-  virtual ~RGBDFrontendLogger();
+  DYNO_POINTER_TYPEDEFS(VIFrontendLogger)
+  VIFrontendLogger(const std::string& logger_name = "frontend");
+  virtual ~VIFrontendLogger();
 
   void logTrackingLengthHistogram(const Frame::Ptr frame);
 
@@ -57,7 +57,7 @@ class Frontend : public ModuleBase<FrontendInputPacketBase, RealtimeOutput> {
   ImageDisplayQueue* display_queue_;
   const SharedGroundTruth shared_ground_truth_;
 
-  RGBDFrontendLogger::UniquePtr logger_;
+  VIFrontendLogger::UniquePtr logger_;
 };
 
 class VIFrontend : public Frontend {
@@ -119,13 +119,14 @@ class VIFrontend : public Frontend {
   //  modified in this function (since ConstFeatureIterator is const on the
   //  iterator but the features are non-const pointers)
   template <typename FeatureContainer, typename Predicate>
-  void fillMeasurementsFromFeatureIterator(
+  size_t fillMeasurementsFromFeatureIterator(
       CameraMeasurementStatusVector* measurements,
       internal::FilterView<FeatureContainer, Predicate> it, FrameId frame_id,
       Timestamp timestamp, const gtsam::Vector2& pixel_sigmas,
       double depth_sigma, StatusLandmarkVector* landmarks = nullptr) const {
     CHECK(measurements);
 
+    size_t num_added = 0;
     for (const Feature::Ptr& f : it) {
       CHECK_NOTNULL(f);
       const TrackletId tracklet_id = f->trackletId();
@@ -195,7 +196,10 @@ class VIFrontend : public Frontend {
       measurements->push_back(CameraMeasurementStatus(
           camera_measurement, frame_id, timestamp, tracklet_id, object_id,
           ReferenceFrame::LOCAL));
+      num_added++;
     }
+
+    return num_added;
   }
 
  protected:

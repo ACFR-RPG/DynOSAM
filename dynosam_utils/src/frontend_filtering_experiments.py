@@ -180,7 +180,7 @@ def run_tartan_air():
 
 def run_cluster():
     # run_experiment_sequences("/root/data/cluster_slam/CARLA-L2/", "cluster_l2_static_only", cluster_dataset)
-    run_experiment_sequences("/root/data/cluster_slam/CARLA-L1/", "test", cluster_dataset,  "--use_backend=true", "--use_object_motion_filtering=true")
+    run_experiment_sequences("/root/data/cluster_slam/CARLA-L1/", "carla_test_MO", cluster_dataset,  "--use_backend=true","--hybrid_motion_solver=4")
     # run_experiment_sequences("/root/data/cluster_slam/CARLA-S2/", "cluster_s2_static_only", cluster_dataset)
     # run_experiment_sequences("/root/data/cluster_slam/CARLA-S1/", "cluster_s1_static_only", cluster_dataset)
 
@@ -261,13 +261,13 @@ def run_uts_tech_lab_solver_comparison_test():
 
 
 if __name__ == '__main__':
-    run_hybrid_solver_comparison_omd()
+    # run_hybrid_solver_comparison_omd()
     # run_hybrid_solver_comparison_kitti()
     # run_uts_tech_lab_solver_comparison_test()
     # run_tartan_air()
     # run_kitti()
     # run_viodes()
-    # run_cluster()
+    run_cluster()
     # run_tartan_air()
     # run_aria()
     # run_omd()
