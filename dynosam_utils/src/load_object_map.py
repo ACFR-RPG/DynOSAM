@@ -17,8 +17,11 @@ import os
 import re
 import numpy as np
 import time
-def load_sorted_object_pcds(directory, object_id='j1'):
-    pattern = re.compile(r'object_map_k(\d+)_{}\.pcd'.format(object_id))
+def load_sorted_object_pcds(directory, object_id='j1', prefix=None):
+    regex_pattern = r'object_map_k(\d+)_{}\.pcd'.format(object_id)
+    if prefix is not None:
+        regex_pattern = prefix + regex_pattern
+    pattern = re.compile(regex_pattern)
     pcd_files = []
 
     for file in os.listdir(directory):
@@ -145,7 +148,10 @@ def visualize_spinning_growth(pcd_files, spin_steps=10, total_spin_deg=15, delay
 if __name__ == "__main__":
     # directory = "/root/results/DynoSAM/incremental_omd_test/"
     # directory = "/root/results/Dynosam_ecmr2024/cluster_l1_map/"
-    directory = "/root/results/Dynosam_ecmr2024/test_kitti_04/"
-    object_id = "j3"
-    pcd_files = load_sorted_object_pcds(directory, object_id)
+    # directory = "/root/results/Dynosam_ecmr2024/test_kitti_04/"
+    directory = "/root/results/frontend_filtering/omd_MO_test1/"
+    prefix = "doo_"
+    # prefix = "refined_"
+    object_id = "j2"
+    pcd_files = load_sorted_object_pcds(directory, object_id, prefix=prefix)
     visualize_spinning_growth(pcd_files)

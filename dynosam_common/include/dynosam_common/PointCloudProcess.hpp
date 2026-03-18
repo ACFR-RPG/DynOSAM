@@ -114,6 +114,15 @@ inline gtsam::Point3 pclPointToGtsam(const PointT& point) {
 }
 
 /**
+ * @brief Save a StatusLandmarkVector to file as a .pcd.
+ *
+ * @param landmarks const StatusLandmarkVector&
+ * @param filepath const std::string& Full file path.
+ */
+void saveAsPointCloud(const StatusLandmarkVector& landmarks,
+                      const std::string& filepath);
+
+/**
  * @brief A struct for bounding boxes estimated by pcl - both oriented (OBB) and
  * axis aligned (AABB). AABB does not require orientation (should be set as
  * Identity), nor position. OBB requires all and the min/max points are w.r.t

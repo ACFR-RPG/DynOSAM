@@ -1529,21 +1529,9 @@ void HybridFormulationKeyFrame::addObjects(
       }
     }
 
-    // if anchor (then also must be regular) then make both KF's
-    // if only regular, compute compsed motion
-    // this should correspond somewhat with the tracking status
-    // ie. if Anchor KF then we expect the object to be new (or - re-tracking
-    // but currently dont actually use this) otherwise expect to be
-    // well-tracked! an object can be well-tracked but also be a AKF (i
-    // guess)
-    // if decied upon on the fronted
-
-    // sanity check
-    // if (object_motion_tracking_status == ObjectTrackingStatus::New ||
-    //     object_motion_tracking_status == ObjectTrackingStatus::ReTracked)
     if (keyframe_status == ObjectKeyFrameStatus::AnchorKeyFrame) {
       key_frame_data_.startNewActiveRange(object_id, H_W_RKF_k.from(),
-                                          object_info.L_W_k);
+                                          object_info.L_W_KF);
       LOG(INFO) << "Making Anchor KF for NEW object "
                 << info_string(H_W_RKF_k.from(), object_id) << " with motion "
                 << H_W_RKF_k.from() << " -> " << H_W_RKF_k.to();
@@ -1551,7 +1539,7 @@ void HybridFormulationKeyFrame::addObjects(
       // the frontend range is always "to" because it indicates the start
       // of the next range and a single motion represents one
       front_end_keyframes_.startNewActiveRange(object_id, H_W_RKF_k.from(),
-                                               object_info.L_W_k);
+                                               object_info.L_W_KF);
       LOG(INFO) << "Making Regular KF for NEW object "
                 << info_string(H_W_RKF_k.from(), object_id) << " with motion "
                 << H_W_RKF_k.from() << " -> " << H_W_RKF_k.to();
@@ -1626,7 +1614,8 @@ void HybridFormulationKeyFrame::addObjects(
         Motion3ReferenceFrame H_W_AKF_lKF;
         // use refined motion estimate if available, otherwise fall back to
         // initial NOTE: I think the refined query should ALways be available
-        getSafeQuery(H_W_AKF_lKF, H_W_AKF_lKF_refined, H_W_AKF_lKF_initial);
+        // getSafeQuery(H_W_AKF_lKF, H_W_AKF_lKF_refined, H_W_AKF_lKF_initial);
+        H_W_AKF_lKF = H_W_AKF_lKF_initial;
 
         CHECK_EQ(H_W_AKF_lKF.from(), backend_kf_id);
         CHECK_EQ(H_W_AKF_lKF.to(), lRKF_id);

@@ -1,4 +1,4 @@
-parallel_run: True
+parallel_run: False
 
 # Use the camera params provided by the dataprovider (if available),
 # instead of the camera params specified by the CameraParams.yaml.

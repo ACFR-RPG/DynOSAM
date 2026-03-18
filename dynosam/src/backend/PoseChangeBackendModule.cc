@@ -2,6 +2,7 @@
 
 #include <gtsam/nonlinear/ISAM2Params.h>
 
+#include "dynosam_common/PointCloudProcess.hpp"
 #include "dynosam_opt/IncrementalOptimization.hpp"
 
 namespace dyno {
@@ -10,7 +11,11 @@ PoseChangeVIBackendModule::PoseChangeVIBackendModule(
     const BackendParams& params, Camera::Ptr camera,
     HybridFormulationKeyFrame::Ptr formulation,
     const SharedGroundTruth& shared_ground_truth)
-    : Base(params, camera, shared_ground_truth), formulation_(CHECK_NOTNULL(formulation)) {
+    : Base(params, camera, shared_ground_truth),
+      formulation_(CHECK_NOTNULL(formulation)) {
+  hybrid_accessor_ = formulation_->derivedAccessor<HybridAccessor>();
+  CHECK_NOTNULL(hybrid_accessor_);
+
   gtsam::ISAM2Params isam2_params;
   isam2_params.relinearizeThreshold = 0.001;
   isam2_params.relinearizeSkip = 1;
@@ -52,7 +57,19 @@ DynoState::Ptr PoseChangeVIBackendModule::spinOnce(
             << " error after " << result.getErrorAfter();
   gtsam::Values optimised_values = smoother_interface.calculateEstimate();
   formulation_->updateTheta(optimised_values);
-  // formulation_->updateTheta(input->new_values);
+
+  // for(const auto object_id : input->involved_objects) {
+  //   StatusLandmarkVector local_landmarks =
+  //     hybrid_accessor_->getLocalDynamicLandmarkEstimates(object_id);
+
+  //   std::string path = dyno::getOutputFilePath(
+  //       "refined_object_map_k" + std::to_string(input->frame_id) + "_j" +
+  //       std::to_string(object_id) + ".pcd");
+  //   VLOG(10) << "Writing object map of size " << local_landmarks.size()
+  //             << " - " << path;
+  //   saveAsPointCloud(local_landmarks, path);
+
+  // }
 
   // alert frontend
   if (frontend_update_callback_) {

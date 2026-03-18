@@ -60,7 +60,32 @@
 
 #include "dynosam_common/PointCloudProcess.hpp"
 
+#include <pcl/io/pcd_io.h>  //for dynamic map IO
+
+#include <filesystem>
+
 namespace dyno {
+
+namespace fs = std::filesystem;
+
+fs::path ensurePcdExtension(const std::string& input) {
+  fs::path p(input);
+
+  if (p.extension() != ".pcd") {
+    p.replace_extension(".pcd");
+  }
+
+  return p;
+}
+
+void saveAsPointCloud(const StatusLandmarkVector& landmarks,
+                      const std::string& filepath) {
+  pcl::PointCloud<pcl::PointXYZRGB> object_map_cloud;
+  convert(landmarks, object_map_cloud);
+
+  std::string file_path_pcd = ensurePcdExtension(filepath);
+  pcl::io::savePCDFileASCII(file_path_pcd, object_map_cloud);
+}
 
 ObjectBBX findAABBFromCloud(
     const pcl::PointCloud<pcl::PointXYZRGB>::Ptr obj_cloud_ptr) {

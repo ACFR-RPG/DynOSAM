@@ -18,6 +18,9 @@ struct PoseChangeInput {
   Timestamp timestamp;
   gtsam::Values new_values;
   gtsam::NonlinearFactorGraph new_factors;
+
+  //! Which objects (if any) were invoved in factors/values at this frame
+  ObjectIds involved_objects;
 };
 
 class PoseChangeVIBackendModule : public BackendModule<PoseChangeInput> {
@@ -57,6 +60,7 @@ class PoseChangeVIBackendModule : public BackendModule<PoseChangeInput> {
 
  private:
   HybridFormulationKeyFrame::Ptr formulation_;
+  HybridAccessor::Ptr hybrid_accessor_;
   ErrorHandlingHooks error_hooks_;
 
   std::unique_ptr<gtsam::ISAM2> smoother_;

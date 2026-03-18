@@ -30,8 +30,7 @@
 
 #include "dynosam/backend/ParallelObjectISAM.hpp"
 
-#include <pcl/io/pcd_io.h>  //for dynamic map IO
-
+#include "dynosam_common/PointCloudProcess.hpp"
 #include "dynosam_common/utils/TimingStats.hpp"
 #include "dynosam_opt/FactorGraphTools.hpp"
 #include "dynosam_opt/IncrementalOptimization.hpp"
@@ -318,15 +317,12 @@ void ParallelObjectISAM::updateStates() {
       StatusLandmarkVector object_map =
           accessor_->getLocalDynamicLandmarkEstimates(object_id_);
 
-      pcl::PointCloud<pcl::PointXYZRGB> object_map_cloud;
-      convert(object_map, object_map_cloud);
-
       std::string path = dyno::getOutputFilePath(
           "object_map_k" + std::to_string(result_.frame_id) + "_j" +
           std::to_string(object_id_) + ".pcd");
-      VLOG(10) << "Writing object map of size " << object_map_cloud.size()
-               << " - " << path;
-      pcl::io::savePCDFileASCII(path, object_map_cloud);
+      VLOG(10) << "Writing object map of size " << object_map.size() << " - "
+               << path;
+      saveAsPointCloud(object_map, path);
     }
   }
 

@@ -2,6 +2,8 @@
 
 #include <gflags/gflags.h>
 
+#include "dynosam_common/PointCloudProcess.hpp"
+
 DEFINE_int32(hybrid_motion_solver, 0,
              "Which solver to use. 0: EIF, 1: Smart Smoother, 2: Full "
              "Smoother, 3: PnP Only");
@@ -249,6 +251,8 @@ bool HybridObjectMotionSolver::solveImpl(
   const gtsam::Pose3 H_W_km1_k_pnp = X_W_k * G_W_inv;
 
   ObjectKeyFrameStatus keyframe_status{ObjectKeyFrameStatus::NonKeyFrame};
+  PoseInitalisationMethod pose_init_method{
+      PoseInitalisationMethod::NonKeyFrame};
 
   bool requires_new_keyframe = false;
   if (is_new) {
@@ -267,7 +271,7 @@ bool HybridObjectMotionSolver::solveImpl(
     // The object re-tracking
     // must be at least 2 for smoothing factor?
     if (previous_tracking_state != ObjectTrackingStatus::New &&
-        frame_k->getFrameId() % 30 == 0) {
+        frame_k->getFrameId() % 10 == 0) {
       LOG(INFO) << "New KF due to temporal frame";
       requires_new_keyframe = true;
     }
@@ -280,10 +284,11 @@ bool HybridObjectMotionSolver::solveImpl(
                   << "Creating new KF from centroid "
                   << info_string(frame_km1->getFrameId(), object_id);
         keyframe_status = ObjectKeyFrameStatus::AnchorKeyFrame;
+        pose_init_method = PoseInitalisationMethod::Centroid;
       } else {
         CHECK_EQ(solver->frameId(), frame_km1->getFrameId())
             << "j=" << object_id << " k=" << solver->frameId();
-        // keyframe_status = ObjectKeyFrameStatus::RegularKeyFrame;
+        keyframe_status = ObjectKeyFrameStatus::RegularKeyFrame;
 
         const std::lock_guard<std::mutex> lock(num_kfs_per_object_mutex_);
         const int num_kf = num_kfs_per_object_.at(object_id);
@@ -291,6 +296,8 @@ bool HybridObjectMotionSolver::solveImpl(
         if (num_kf == 0) {
           keyframe_status = ObjectKeyFrameStatus::AnchorKeyFrame;
         }
+        // initalise with previous track
+        pose_init_method = PoseInitalisationMethod::Previous;
       }
 
       const std::lock_guard<std::mutex> l(num_kfs_per_object_mutex_);
@@ -323,6 +330,7 @@ bool HybridObjectMotionSolver::solveImpl(
   // always add motion at k not k-1?
   if (keyframe_status != ObjectKeyFrameStatus::NonKeyFrame) {
     CHECK(requires_new_keyframe);
+    CHECK(pose_init_method != PoseInitalisationMethod::NonKeyFrame);
     /// mmmm if we keyframe at this frame
     // then the estimated motion is from km-1 to k
     // which is NOT what we want to estimate
@@ -346,13 +354,23 @@ bool HybridObjectMotionSolver::solveImpl(
     // TODO: mutex lock
     pose_change_info_.insert2(object_id, info);
 
+    // std::string path = dyno::getOutputFilePath(
+    //     "doo_object_map_k" + std::to_string(frame_k->getFrameId()) + "_j" +
+    //     std::to_string(object_id) + ".pcd");
+    // VLOG(10) << "Writing object map of size " <<
+    // info.initial_object_points.size()
+    //           << " - " << path;
+    // saveAsPointCloud(info.initial_object_points, path);
+
     gtsam::Pose3 new_KF_pose;
     // now reset solver for next frame (ie. make KF at k)
-    if (keyframe_status == ObjectKeyFrameStatus::AnchorKeyFrame) {
+    if (pose_init_method == PoseInitalisationMethod::Centroid) {
       new_KF_pose = constructObjectPose(object_id, frame_k, inlier_tracklets);
 
-    } else if (keyframe_status == ObjectKeyFrameStatus::RegularKeyFrame) {
+    } else if (pose_init_method == PoseInitalisationMethod::Previous) {
       new_KF_pose = solver->pose();
+    } else {
+      throw DynosamException("Should not get here");
     }
 
     // it actually does not make fully logical sense to keyframe for k+1 here

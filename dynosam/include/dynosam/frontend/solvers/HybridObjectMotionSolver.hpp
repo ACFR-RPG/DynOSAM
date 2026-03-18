@@ -98,6 +98,8 @@ class HybridObjectMotionSolver : public ObjectMotionSolver {
   // Info from the last frame. ONly stores change info with keyframes
   gtsam::FastMap<ObjectId, ObjectPoseChangeInfo> pose_change_info_;
 
+  enum PoseInitalisationMethod { NonKeyFrame, Centroid, Previous };
+
  private:
   gtsam::FastMap<ObjectId, ObjectTrackingStatus> object_statuses_;
   gtsam::FastMap<ObjectId, int> num_kfs_per_object_;

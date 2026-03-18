@@ -298,6 +298,10 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
       if (!keyframes_.exists(from_motion_frame_j)) {
         CHECK_GE(from_motion_frame_j, lkf_id_) << " for j=" << object_id;
       }
+
+      // also fill involved objects in the PoseChangeInput since we loop over
+      // the id's here anyway
+      pc_input->involved_objects.push_back(object_id);
     }
 
     for (const auto& [from_motion_frame_j, object_ids] :
