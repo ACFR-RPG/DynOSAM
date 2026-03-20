@@ -25,8 +25,8 @@ class RegularVIFrontend : public VIFrontend {
   };
 
  private:
-  SpinReturn boostrapSpin(FrontendInputPacketBase::ConstPtr input) override;
-  SpinReturn nominalSpin(FrontendInputPacketBase::ConstPtr input) override;
+  SpinReturn boostrapSpin(VIFrontendInput::ConstPtr input) override;
+  SpinReturn nominalSpin(VIFrontendInput::ConstPtr input) override;
 
   void fillOutputPacketWithTracks(
       VisionImuPacket::Ptr vision_imu_packet, const Frame& frame,

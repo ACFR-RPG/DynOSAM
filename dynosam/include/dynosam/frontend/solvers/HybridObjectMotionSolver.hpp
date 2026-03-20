@@ -104,6 +104,7 @@ class HybridObjectMotionSolver : public ObjectMotionSolver {
   mutable std::mutex object_status_mutex_;
   mutable std::mutex num_kfs_per_object_mutex_;
   mutable std::mutex solvers_mutex_;
+  mutable std::mutex pose_change_info_mutex_;
 };
 
 }  // namespace dyno

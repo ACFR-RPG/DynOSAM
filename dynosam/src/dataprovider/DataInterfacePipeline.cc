@@ -49,7 +49,7 @@ void DataInterfacePipeline::shutdownQueues() {
   this->onShutdown();
 }
 
-FrontendInputPacketBase::ConstPtr DataInterfacePipeline::getInputPacket() {
+VIFrontendInput::ConstPtr DataInterfacePipeline::getInputPacket() {
   if (isShutdown()) {
     return nullptr;
   }
@@ -80,41 +80,24 @@ FrontendInputPacketBase::ConstPtr DataInterfacePipeline::getInputPacket() {
             << ", timestamp=" << packet->timestamp();
     ground_truth_packet = ground_truth->at(packet->frameId());
   }
-  // if (ground_truth_packets_.find(packet->frameId()) !=
-  //     ground_truth_packets_.end()) {
-  //   VLOG(5) << "Gotten ground truth packet for frame id " <<
-  //   packet->frameId()
-  //           << ", timestamp=" << packet->timestamp();
-  //   ground_truth = ground_truth_packets_.at(packet->frameId());
-  // }
-
   const Timestamp& timestamp = packet->timestamp();
-  ImuMeasurements::Optional imu_meas;
-  imu_meas.emplace();
-  FrameAction action = getTimeSyncedImuMeasurements(timestamp, &(*imu_meas));
+  ImuMeasurements::Optional imu_measurements;
+  imu_measurements.emplace();
+  FrameAction action =
+      getTimeSyncedImuMeasurements(timestamp, &(*imu_measurements));
   switch (action) {
     case FrameAction::Use:
-      CHECK(imu_meas);
+      CHECK(imu_measurements);
       break;
     case FrameAction::Wait:
     case FrameAction::Drop:
-      imu_meas.reset();
+      imu_measurements.reset();
       break;
   }
 
-  auto frontend_input =
-      std::make_shared<FrontendInputPacketBase>(packet, ground_truth_packet);
-  frontend_input->imu_measurements = imu_meas;
-
-  // in some cases (ie datasets) we know ahead of time which imu packet is
-  // associated with which frame
-  // if it is provided, check that our getTimeSyncedImuMeasurements did the
-  // right thing
-  if (imu_meas && imu_meas->synchronised_frame_id) {
-    CHECK_EQ(packet->frameId(), imu_meas->synchronised_frame_id.value());
-  }
-
-  return frontend_input;
+  return std::make_shared<VIFrontendInput>(packet, ground_truth_packet,
+                                           imu_measurements);
+  ;
 }
 
 SharedGroundTruth DataInterfacePipeline::getSharedGroundTruth() const {

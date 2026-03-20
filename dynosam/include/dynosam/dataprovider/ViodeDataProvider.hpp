@@ -29,7 +29,7 @@
  */
 
 #include "dynosam/dataprovider/DatasetProvider.hpp"
-#include "dynosam/frontend/FrontendInputPacket.hpp"
+#include "dynosam/frontend/VIFrontendInput.hpp"
 #include "dynosam/frontend/imu/ImuMeasurements.hpp"
 #include "dynosam_common/Types.hpp"
 #include "dynosam_common/utils/GtsamUtils.hpp"

@@ -133,8 +133,8 @@ void HybridObjectMotionSmoother::receiveUpdate(
               << object_update->object_points.size() << " points for update";
 
     const std::lock_guard<std::mutex> lock(update_point_mutex_);
-    has_point_update_ = true;
-    updated_points_ = std::move(object_update->object_points);
+    // has_point_update_ = true;
+    // updated_points_ = std::move(object_update->object_points);
     // TODO: turn off update while testing initial point bug
   }
 }
@@ -342,19 +342,19 @@ HybridObjectMotionSmoother::Result HybridObjectMotionSmoother::updateSmoother(
 
   // Get current timestamp
   double current_timestamp = getCurrentTimestamp();
-  LOG(INFO) << "Current timestamp: " << current_timestamp;
+  // LOG(INFO) << "Current timestamp: " << current_timestamp;
 
   // Find the set of variables to be marginalized out
-  LOG(INFO) << "Findig keys before " << current_timestamp - smootherLag_;
+  // LOG(INFO) << "Findig keys before " << current_timestamp - smootherLag_;
   gtsam::KeyVector marginalizableKeys =
       findKeysBefore(current_timestamp - smootherLag_);
   result.marginalized_keys = marginalizableKeys;
 
-  std::cout << "Gets to marginalize due to filter: ";
-  for (const auto& key : marginalizableKeys) {
-    std::cout << DynosamKeyFormatter(key) << " ";
-  }
-  std::cout << std::endl;
+  // std::cout << "Gets to marginalize due to filter: ";
+  // for (const auto& key : marginalizableKeys) {
+  //   std::cout << DynosamKeyFormatter(key) << " ";
+  // }
+  // std::cout << std::endl;
 
   // Force iSAM2 to put the marginalizable variables at the beginning
   createOrderingConstraints(marginalizableKeys, constrainedKeys);

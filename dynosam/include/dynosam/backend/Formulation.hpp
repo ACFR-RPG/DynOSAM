@@ -240,26 +240,20 @@ struct Sensors {
   Sensors() {}
 };
 
-namespace internal {
-template <typename MAP>
-class StaticFormulationUpdaterImpl;
-}
-
 /**
  * @brief Helper function to log the full estimated state to file
  * using the provided logger and ground truth.
- * 
+ *
  * Logs full object and camera trajectories for all 0...K as well as the full
  * temporal dynamic map and full static map.
- * 
+ *
  * @param accessor Accessor::Ptr
  * @param logger BackendLogger&
  * @param ground_truth const std::optional<GroundTruthPacketMap>&
  */
 void logFromAccessor(
-  Accessor::Ptr accessor, 
-  BackendLogger& logger, 
-  const std::optional<GroundTruthPacketMap>& ground_truth = {});
+    Accessor::Ptr accessor, BackendLogger& logger,
+    const std::optional<GroundTruthPacketMap>& ground_truth = {});
 
 /**
  * @brief Base class for a formulation that defines the structure and
@@ -554,8 +548,6 @@ class Formulation {
   template <typename V>
   void addValue(gtsam::Values& new_values, const V& value, gtsam::Key key);
 
-  // TODO: make virtual and move to VIOFormulation
-
   /**
    * @brief Updates the static-point part of the factor graph for frame k.
    * This contains all the bookeeping logic to update the factor graph with
@@ -567,10 +559,10 @@ class Formulation {
    * @param update_params const UpdateObservationParams&
    * @return UpdateObservationResult
    */
-  UpdateObservationResult updateStaticObservations(
+  virtual UpdateObservationResult updateStaticObservations(
       FrameId frame_id_k, gtsam::Values& new_values,
       gtsam::NonlinearFactorGraph& new_factors,
-      const UpdateObservationParams& update_params);
+      const UpdateObservationParams& update_params) = 0;
 
   /**
    * @brief Updates the dyanmic-point part of the factor graph for frame k.
@@ -594,8 +586,8 @@ class Formulation {
 
   /**
    * @brief Logs all frames and values to file using Accessor and BackendLogger.
-   * The FormulationLoggingParams provides meta-data and ground truth information for
-   * logging.
+   * The FormulationLoggingParams provides meta-data and ground truth
+   * information for logging.
    *
    * @param backend_info const FormulationLoggingParams&
    */
@@ -644,11 +636,6 @@ class Formulation {
   //! Full name of the formulation and accounts for the additional configuration
   //! from the FormulationParams
   mutable std::optional<std::string> fully_qualified_name_{std::nullopt};
-
-  friend class internal::StaticFormulationUpdaterImpl<MAP>;
-
-  using StaticFormulationUpdaterT = internal::StaticFormulationUpdaterImpl<MAP>;
-  std::unique_ptr<StaticFormulationUpdaterT> static_updater_;
 };
 
 }  // namespace dyno

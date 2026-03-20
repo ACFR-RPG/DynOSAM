@@ -144,7 +144,7 @@ HybridKeyFrameFormulationDisplay::HybridKeyFrameFormulationDisplay(
   CHECK_NOTNULL(module);
 
   initial_anchor_object_key_frame_pub_ =
-      node_->create_publisher<MarkerArray>("anchor_object_keyframes", 1);
+      node_->create_publisher<MarkerArray>("object_keyframe_poses", 1);
 }
 
 void HybridKeyFrameFormulationDisplay::spinOnce(
@@ -154,41 +154,41 @@ void HybridKeyFrameFormulationDisplay::spinOnce(
   auto ros_time = utils::toRosTime(output->timestamp);
 
   visualization_msgs::msg::MarkerArray array;
-  const auto& regular_keyframes = module_->getRegularKeyFrames();
-  const auto& anchor_keyframes = module_->getAnchorKeyFrames();
 
   auto map = module_->map();
   auto frame_node = map->getFrame(output->frame_id);
   ObjectIds observed_objects = frame_node->getObservedObjects();
 
-  const auto keyframe_poses_per_object = module_->getInitialObjectPoses();
+  const auto object_trajectories = output->object_trajectories;
 
   int count = 0;
   for (const auto& object_id : observed_objects) {
     // CHECK(keyframe_poses_per_object.exists(object_id)) << "Missing object" <<
     // object_id;
-    if (!keyframe_poses_per_object.exists(object_id)) {
+    if (!object_trajectories.exists(object_id)) {
       continue;
     }
 
-    const auto& keyframe_poses = keyframe_poses_per_object.at(object_id);
+    const auto& trajectory_j = object_trajectories.at(object_id);
 
     std_msgs::msg::ColorRGBA colour_msg;
     convert(Color::uniqueId(object_id), colour_msg);
 
-    for (const auto& [frame_id, L_W_k] : keyframe_poses) {
+    for (const auto& entry : trajectory_j) {
+      const gtsam::Pose3& L_W_k = entry.data.pose;
+
       visualization_msgs::msg::Marker marker;
       // Header and Metadata
       marker.header.frame_id = params_.world_frame_id;
       marker.header.stamp = ros_time;
-      // marker.ns = "obj_" + std::to_string(object_id) + "_keyframe";
-      marker.ns = "obj_anchor_kf";
+
+      marker.ns = "obj_" + std::to_string(object_id) + "_keyframe_pose";
       marker.id = count;
       marker.action = visualization_msgs::msg::Marker::ADD;
 
       // Marker Type: LINE_LIST allows us to draw multiple lines (the three
       // axes)
-      marker.type = visualization_msgs::msg::Marker::SPHERE;
+      marker.type = visualization_msgs::msg::Marker::LINE_LIST;
       // marker.lifetime =
       // Translation
       marker.pose.position.x = L_W_k.x();
@@ -196,9 +196,8 @@ void HybridKeyFrameFormulationDisplay::spinOnce(
       marker.pose.position.z = L_W_k.z();
 
       // --- Line Properties ---
-      marker.scale.x = 0.2;
-      marker.scale.y = 0.2;
-      marker.scale.z = 0.2;
+      marker.scale.x = 0.04;                      // Line width in meters
+      constexpr static double axis_length = 0.4;  // Length of the axes
 
       // Orientation (Convert GTSAM Rotation to ROS Quaternion)
       const gtsam::Quaternion gtsam_q = L_W_k.rotation().toQuaternion();
@@ -207,7 +206,34 @@ void HybridKeyFrameFormulationDisplay::spinOnce(
       marker.pose.orientation.y = gtsam_q.y();
       marker.pose.orientation.z = gtsam_q.z();
 
-      marker.color = colour_msg;
+      geometry_msgs::msg::Point origin;  // (0, 0, 0)
+      origin.x = 0.0;
+      origin.y = 0.0;
+      origin.z = 0.0;
+
+      // X-Axis (start at origin, end at +X)
+      geometry_msgs::msg::Point x_end = origin;
+      x_end.x = axis_length;
+      marker.points.push_back(origin);
+      marker.points.push_back(x_end);
+      marker.colors.push_back(colour_msg);
+      marker.colors.push_back(colour_msg);
+
+      // Y-Axis (start at origin, end at +Y)
+      geometry_msgs::msg::Point y_end = origin;
+      y_end.y = axis_length;
+      marker.points.push_back(origin);
+      marker.points.push_back(y_end);
+      marker.colors.push_back(colour_msg);
+      marker.colors.push_back(colour_msg);
+
+      // Z-Axis (start at origin, end at +Z)
+      geometry_msgs::msg::Point z_end = origin;
+      z_end.z = axis_length;
+      marker.points.push_back(origin);
+      marker.points.push_back(z_end);
+      marker.colors.push_back(colour_msg);
+      marker.colors.push_back(colour_msg);
 
       array.markers.push_back(marker);
 

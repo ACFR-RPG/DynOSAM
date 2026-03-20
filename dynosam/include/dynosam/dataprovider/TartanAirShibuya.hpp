@@ -31,7 +31,7 @@
 #pragma once
 
 #include "dynosam/dataprovider/DatasetProvider.hpp"
-#include "dynosam/frontend/FrontendInputPacket.hpp"
+#include "dynosam/frontend/VIFrontendInput.hpp"
 #include "dynosam_common/Types.hpp"
 #include "dynosam_common/utils/GtsamUtils.hpp"
 #include "dynosam_common/utils/OpenCVUtils.hpp"

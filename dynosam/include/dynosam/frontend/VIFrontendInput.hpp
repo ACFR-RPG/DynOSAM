@@ -45,29 +45,29 @@
 
 namespace dyno {
 
-// inherit to add more sensor data (eg imu)
-// can be of any InputImagePacketBase with this as the default. We use this so
-// we can create a FrontendInputPacketBase type with the InputPacketType as the
-// actual derived type and not the base class so different modules do not have
-// to do their own casting to get image data
-struct FrontendInputPacketBase {
-  DYNO_POINTER_TYPEDEFS(FrontendInputPacketBase)
+struct VIFrontendInput {
+  DYNO_POINTER_TYPEDEFS(VIFrontendInput)
 
-  ImageContainer::Ptr image_container_;
-  GroundTruthInputPacket::Optional optional_gt_;
-  ImuMeasurements::Optional imu_measurements;
+  ImageContainer::Ptr image_container_{nullptr};
+  GroundTruthInputPacket::Optional ground_truth_packet{std::nullopt};
+  ImuMeasurements::Optional imu_measurements{std::nullopt};
 
-  FrontendInputPacketBase()
-      : image_container_(nullptr), optional_gt_(std::nullopt) {}
+  VIFrontendInput() = default;
 
-  FrontendInputPacketBase(
+  VIFrontendInput(
       ImageContainer::Ptr image_container,
-      GroundTruthInputPacket::Optional optional_gt = std::nullopt)
-      : image_container_(image_container), optional_gt_(optional_gt) {
-    CHECK(image_container_);
+      GroundTruthInputPacket::Optional ground_truth_packet_ = std::nullopt,
+      ImuMeasurements::Optional imu_measurements_ = std::nullopt)
+      : image_container_(CHECK_NOTNULL(image_container)),
+        ground_truth_packet(ground_truth_packet_),
+        imu_measurements(imu_measurements_) {
+    if (ground_truth_packet) {
+      CHECK_EQ(ground_truth_packet->frame_id_, image_container_->frameId());
+    }
 
-    if (optional_gt) {
-      CHECK_EQ(optional_gt_->frame_id_, image_container_->frameId());
+    if (imu_measurements && imu_measurements->synchronised_frame_id) {
+      CHECK_EQ(*imu_measurements->synchronised_frame_id,
+               image_container_->frameId());
     }
   }
 
@@ -78,8 +78,6 @@ struct FrontendInputPacketBase {
   inline Timestamp getTimestamp() const {
     return CHECK_NOTNULL(image_container_)->timestamp();
   }
-
-  virtual ~FrontendInputPacketBase() = default;
 };
 
 }  // namespace dyno

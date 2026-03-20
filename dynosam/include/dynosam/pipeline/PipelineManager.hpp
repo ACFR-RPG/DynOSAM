@@ -45,7 +45,7 @@
 namespace dyno {
 
 using FrontendPipeline =
-    PipelineModuleProcessor<FrontendInputPacketBase, RealtimeOutput>;
+    PipelineModuleProcessor<VIFrontendInput, RealtimeOutput>;
 
 using BackendOutputRegistra = QueueRegistra<DynoState>;
 

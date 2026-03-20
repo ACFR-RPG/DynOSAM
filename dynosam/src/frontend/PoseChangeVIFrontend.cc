@@ -33,11 +33,11 @@ void PoseChangeVIFrontend::onBackendUpdateComplete(FrameId frame_id,
   LOG(INFO) << "Recieved backend update at frame " << frame_id;
 
   // TODO: this is definitely not thread safe
-  object_motion_solver_->receiveUpdate(formulation_->generateUpdateInfo());
+  // object_motion_solver_->receiveUpdate(formulation_->generateUpdateInfo());
 }
 
 PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::boostrapSpin(
-    FrontendInputPacketBase::ConstPtr input) {
+    VIFrontendInput::ConstPtr input) {
   Frame::Ptr frame_k = featureTrack(input);
   const auto frame_id_k = input->getFrameId();
   const auto timestamp_k = input->getTimestamp();
@@ -52,7 +52,7 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::boostrapSpin(
   realtime_output->state.frame_id = frame_id_k;
   realtime_output->state.timestamp = timestamp_k;
   realtime_output->state.camera_trajectory = dyno_state_.camera_trajectory;
-  realtime_output->ground_truth = input->optional_gt_;
+  realtime_output->ground_truth = input->ground_truth_packet;
 
   IntermediateMotion intermediate_motion;
   intermediate_motion.from = lkf_id_;
@@ -127,7 +127,7 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::boostrapSpin(
 }
 
 PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
-    FrontendInputPacketBase::ConstPtr input) {
+    VIFrontendInput::ConstPtr input) {
   ImageContainer::Ptr image_container = input->image_container_;
   const auto frame_id_k = input->getFrameId();
   const auto timestamp_k = input->getTimestamp();
@@ -210,7 +210,7 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
   realtime_output->state.timestamp = timestamp_k;
   realtime_output->state.camera_trajectory = dyno_state_.camera_trajectory;
   realtime_output->state.object_trajectories = dyno_state_.object_trajectories;
-  realtime_output->ground_truth = input->optional_gt_;
+  realtime_output->ground_truth = input->ground_truth_packet;
 
   CameraMeasurementStatusVector static_measurements;
   fillMeasurementsFromFeatureIterator(
@@ -552,7 +552,9 @@ bool PoseChangeVIFrontend::shouldFrameBeKeyFrame(Frame::Ptr frame_k,
   const KeyFrameData& lkf_data = keyframes_.at(lkf_id_);
   const Frame::Ptr lkf_frame = lkf_data.frame;
 
-  return frame_k->getFrameId() % 10 == 0;
+  // return frame_k->getFrameId() % 10 == 0;
+  // FOR NOW!
+  return true;
 }
 
 size_t PoseChangeVIFrontend::extractKeyFramedMotions(

@@ -27,38 +27,34 @@ RegularVIFrontend::RegularVIFrontend(
 }
 
 RegularVIFrontend::SpinReturn RegularVIFrontend::boostrapSpin(
-    FrontendInputPacketBase::ConstPtr input) {
+    VIFrontendInput::ConstPtr input) {
   Frame::Ptr frame_k = featureTrack(input);
   const auto frame_id_k = input->getFrameId();
   const auto timestamp_k = input->getTimestamp();
 
   gtsam::Pose3 X_W_k_initial = gtsam::Pose3::Identity();
-  dyno_state_.camera_trajectory.insert(frame_id_k, timestamp_k,
-                                       X_W_k_initial);
-
+  dyno_state_.camera_trajectory.insert(frame_id_k, timestamp_k, X_W_k_initial);
 
   VisionImuPacket::Ptr vision_imu_packet = std::make_shared<VisionImuPacket>();
   vision_imu_packet->frameId(frame_id_k);
   vision_imu_packet->timestamp(timestamp_k);
-  vision_imu_packet->groundTruthPacket(input->optional_gt_);
-  
+  vision_imu_packet->groundTruthPacket(input->ground_truth_packet);
+
   // no motion as first frame!
   const gtsam::Pose3 T_km1_k = gtsam::Pose3::Identity();
   T_km1_k_ = T_km1_k;
   fillOutputPacketWithTracks(vision_imu_packet, *frame_k, X_W_k_initial,
                              T_km1_k_, dyno_state_.object_trajectories);
 
-
   if (regular_backend_output_sink_) {
     regular_backend_output_sink_(vision_imu_packet);
   }
-
 
   RealtimeOutput::Ptr realtime_output = std::make_shared<RealtimeOutput>();
   realtime_output->state.frame_id = frame_id_k;
   realtime_output->state.timestamp = timestamp_k;
   realtime_output->state.camera_trajectory = dyno_state_.camera_trajectory;
-  realtime_output->ground_truth = input->optional_gt_;
+  realtime_output->ground_truth = input->ground_truth_packet;
 
   logRealTimeOutput(realtime_output);
 
@@ -66,7 +62,7 @@ RegularVIFrontend::SpinReturn RegularVIFrontend::boostrapSpin(
 }
 
 RegularVIFrontend::SpinReturn RegularVIFrontend::nominalSpin(
-    FrontendInputPacketBase::ConstPtr input) {
+    VIFrontendInput::ConstPtr input) {
   ImageContainer::Ptr image_container = input->image_container_;
   const auto frame_id_k = input->getFrameId();
   const auto timestamp_k = input->getTimestamp();
@@ -126,15 +122,14 @@ RegularVIFrontend::SpinReturn RegularVIFrontend::nominalSpin(
 
   constexpr static bool kParallelSolve = true;
   object_motion_solver_->solve(frame_k, frame_km1,
-                               dyno_state_.object_trajectories,
-                               kParallelSolve);
+                               dyno_state_.object_trajectories, kParallelSolve);
 
   // construct output packet for backend
   VisionImuPacket::Ptr vision_imu_packet = std::make_shared<VisionImuPacket>();
   vision_imu_packet->frameId(frame_id_k);
   vision_imu_packet->timestamp(timestamp_k);
   vision_imu_packet->pim(pim);
-  vision_imu_packet->groundTruthPacket(input->optional_gt_);
+  vision_imu_packet->groundTruthPacket(input->ground_truth_packet);
 
   fillOutputPacketWithTracks(vision_imu_packet, *frame_k, nav_state_k.pose(),
                              T_km1_k_, dyno_state_.object_trajectories);
@@ -154,7 +149,7 @@ RegularVIFrontend::SpinReturn RegularVIFrontend::nominalSpin(
       vision_imu_packet->staticLandmarkMeasurements();
   realtime_output->state.dynamic_map =
       vision_imu_packet->dynamicLandmarkMeasurements();
-  realtime_output->ground_truth = input->optional_gt_;
+  realtime_output->ground_truth = input->ground_truth_packet;
 
   fillDebugImagery(realtime_output->debug_imagery, frame_k, frame_km1);
 

@@ -28,7 +28,17 @@ using RelativePoseAdaptor = opengv::relative_pose::CentralRelativeAdapter;
 
 PnPRansacSolver::PnPRansacSolver(const PnPRansacSolverParams& pnp_ransac_params,
                                  const CameraParams& camera_params)
-    : pnp_ransac_params_(pnp_ransac_params), camera_params_(camera_params) {}
+    : pnp_ransac_params_(pnp_ransac_params),
+      camera_params_(camera_params),
+      K_inv_(camera_params.getCameraMatrixEigen().inverse()) {
+  // pre-compute thresholds
+  const double reprojection_error = pnp_ransac_params_.ransac_threshold_pnp;
+  const double avg_focal_length =
+      0.5 * static_cast<double>(camera_params_.fx() + camera_params_.fy());
+  ransac_threshold_3d2d_ =
+      1.0 - std::cos(std::atan(std::sqrt(2.0) * reprojection_error /
+                               avg_focal_length));
+}
 
 Pose3SolverResult PnPRansacSolver::solve2d2d(
     const RelativePoseCorrespondences& correspondences,
@@ -42,9 +52,6 @@ Pose3SolverResult PnPRansacSolver::solve2d2d(
     return result;
   }
 
-  gtsam::Matrix K = camera_params_.getCameraMatrixEigen();
-  K = K.inverse();
-
   TrackletIds tracklets;
   tracklets.reserve(n_matches);
   // NOTE: currently without distortion! the correspondences should be made into
@@ -57,8 +64,10 @@ Pose3SolverResult PnPRansacSolver::solve2d2d(
     const Keypoint& ref_kp = corres.ref_;
     const Keypoint& cur_kp = corres.cur_;
 
-    gtsam::Vector3 ref_versor = (K * gtsam::Vector3(ref_kp(0), ref_kp(1), 1.0));
-    gtsam::Vector3 cur_versor = (K * gtsam::Vector3(cur_kp(0), cur_kp(1), 1.0));
+    gtsam::Vector3 ref_versor =
+        (K_inv_ * gtsam::Vector3(ref_kp(0), ref_kp(1), 1.0));
+    gtsam::Vector3 cur_versor =
+        (K_inv_ * gtsam::Vector3(cur_kp(0), cur_kp(1), 1.0));
 
     ref_versor = ref_versor.normalized();
     cur_versor = cur_versor.normalized();
@@ -132,9 +141,6 @@ Pose3SolverResult PnPRansacSolver::solve3d2d(
     return result;
   }
 
-  gtsam::Matrix K = camera_params_.getCameraMatrixEigen();
-  K = K.inverse();
-
   TrackletIds tracklets, inliers, outliers;
   tracklets.reserve(n_matches);
   // NOTE: currently without distortion! the correspondences should be made into
@@ -148,7 +154,7 @@ Pose3SolverResult PnPRansacSolver::solve3d2d(
     const AbsolutePoseCorrespondence& corres = correspondences.at(i);
     const Keypoint& kp = corres.cur_;
     // make Bearing vector
-    gtsam::Vector3 versor = (K * gtsam::Vector3(kp(0), kp(1), 1.0));
+    gtsam::Vector3 versor = (K_inv_ * gtsam::Vector3(kp(0), kp(1), 1.0));
     versor = versor.normalized();
     bearing_vectors.push_back(versor);
 
@@ -157,13 +163,6 @@ Pose3SolverResult PnPRansacSolver::solve3d2d(
   }
 
   VLOG(100) << "Collected " << tracklets.size() << " initial correspondances";
-
-  const double reprojection_error = pnp_ransac_params_.ransac_threshold_pnp;
-  const double avg_focal_length =
-      0.5 * static_cast<double>(camera_params_.fx() + camera_params_.fy());
-  const double threshold =
-      1.0 - std::cos(std::atan(std::sqrt(2.0) * reprojection_error /
-                               avg_focal_length));
 
   AbsolutePoseAdaptor adapter(bearing_vectors, points);
 
@@ -177,7 +176,7 @@ Pose3SolverResult PnPRansacSolver::solve3d2d(
   bool success = runRansac<AbsolutePoseProblem>(
       std::make_shared<AbsolutePoseProblem>(adapter,
                                             AbsolutePoseProblem::KNEIP),
-      threshold, pnp_ransac_params_.ransac_iterations,
+      ransac_threshold_3d2d_, pnp_ransac_params_.ransac_iterations,
       pnp_ransac_params_.ransac_probability,
       pnp_ransac_params_.optimize_3d2d_pose_from_inliers, best_result,
       ransac_inliers);

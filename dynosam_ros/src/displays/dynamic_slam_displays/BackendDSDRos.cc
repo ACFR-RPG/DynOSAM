@@ -30,21 +30,31 @@
 
 #include "dynosam_ros/displays/dynamic_slam_displays/BackendDSDRos.hpp"
 
+#include <pcl/conversions.h>
+#include <pcl/point_cloud.h>
+#include <pcl/point_types.h>
+#include <pcl/surface/concave_hull.h>
+
 #include "dynosam_common/utils/Timing.hpp"
 
 namespace dyno {
 
-BackendDSDRos::BackendDSDRos(const DisplayParams params,
+BackendDSDRos::BackendDSDRos(const DisplayParams& params,
                              rclcpp::Node::SharedPtr node)
-    : BackendDisplay(), dyno_state_publisher_(params, node) {
+    : BackendDisplay(),
+      display_params_(params),
+      dyno_state_publisher_(params, node) {
   temporal_dynamic_points_pub_ =
       node->create_publisher<sensor_msgs::msg::PointCloud2>(
           "temporal_dynamic_cloud", 1);
+  object_wire_frame_pub_ =
+      node->create_publisher<MarkerArray>("temporal_object_wireframes", 1);
 }
 
 void BackendDSDRos::spinOnce(const DynoState::ConstPtr& backend_output) {
   VLOG(20) << "Spinning BackendDSDRos k=" << backend_output->frame_id;
   dyno_state_publisher_.publish(*backend_output);
+  publishTemporalDynamicMapsAsWireFrames(backend_output);
   // // publish vo and path
   // auto tic = utils::Timer::tic();
   // constexpr static bool kPublishOdomAsTf = false;
@@ -248,6 +258,154 @@ void BackendDSDRos::publishTemporalDynamicMaps(
   // pcl::toROSMsg(temporal_cloud, pc2_msg);
   // pc2_msg.header.frame_id = params_.world_frame_id;
   // temporal_dynamic_points_pub_->publish(pc2_msg);
+}
+
+void BackendDSDRos::publishTemporalDynamicMapsAsWireFrames(
+    const DynoState::ConstPtr& latest_backend_output) {
+  const auto& dynamic_landmarks = latest_backend_output->dynamic_map;
+
+  CloudPerObject clouds_per_obj =
+      groupObjectCloud(dynamic_landmarks, latest_backend_output->cameraPose());
+
+  MarkerArray markers;
+
+  for (const auto& [object_id, obj_cloud] : clouds_per_obj) {
+    pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud(
+        new pcl::PointCloud<pcl::PointXYZRGB>(obj_cloud));
+
+    // concave full
+    pcl::ConcaveHull<pcl::PointXYZRGB> chull;
+    chull.setInputCloud(cloud);
+    chull.setAlpha(0.03);  // smaller alpha → tighter hull
+    pcl::PolygonMesh mesh;
+    chull.reconstruct(mesh);
+
+    pcl::PointCloud<pcl::PointXYZRGB> vertices;
+    pcl::fromPCLPointCloud2(mesh.cloud, vertices);
+
+    std_msgs::msg::ColorRGBA colour_msg;
+    convert(Color::uniqueId(object_id), colour_msg);
+
+    visualization_msgs::msg::Marker marker;
+    marker.header.frame_id = display_params_.world_frame_id;
+    marker.header.stamp = utils::toRosTime(latest_backend_output->timestamp);
+    marker.ns = "object_wireframe";
+    marker.id = object_id;
+    marker.type = visualization_msgs::msg::Marker::LINE_LIST;
+    marker.action = visualization_msgs::msg::Marker::ADD;
+    marker.scale.x = 0.02;  // line width
+
+    // Build unique edges
+    using Edge = std::pair<int, int>;
+    struct EdgeCompare {
+      bool operator()(const Edge& a, const Edge& b) const {
+        return a.first < b.first || (a.first == b.first && a.second < b.second);
+      }
+    };
+    std::set<Edge, EdgeCompare> edges;
+
+    for (const auto& poly : mesh.polygons) {
+      for (size_t i = 0; i < poly.vertices.size(); ++i) {
+        int v1 = poly.vertices[i];
+        int v2 = poly.vertices[(i + 1) % poly.vertices.size()];
+        if (v1 > v2) std::swap(v1, v2);
+        edges.insert({v1, v2});
+      }
+    }
+
+    for (const auto& e : edges) {
+      geometry_msgs::msg::Point p1, p2;
+      const auto& a = vertices[e.first];
+      const auto& b = vertices[e.second];
+
+      p1.x = a.x;
+      p1.y = a.y;
+      p1.z = a.z;
+      p2.x = b.x;
+      p2.y = b.y;
+      p2.z = b.z;
+
+      marker.points.push_back(p1);
+      marker.points.push_back(p2);
+
+      marker.colors.push_back(colour_msg);
+      marker.colors.push_back(colour_msg);
+    }
+
+    markers.markers.push_back(marker);
+
+    // boundary estimation
+    // pcl::NormalEstimation<pcl::PointXYZRGB, pcl::Normal> ne;
+    // pcl::search::KdTree<pcl::PointXYZRGB>::Ptr tree(new
+    // pcl::search::KdTree<pcl::PointXYZRGB>()); ne.setInputCloud(cloud);
+    // ne.setSearchMethod(tree);
+    // ne.setKSearch(20);
+
+    // pcl::PointCloud<pcl::Normal>::Ptr normals(new
+    // pcl::PointCloud<pcl::Normal>); ne.compute(*normals);
+
+    // pcl::BoundaryEstimation<pcl::PointXYZRGB, pcl::Normal, pcl::Boundary> be;
+    // be.setInputCloud(cloud);
+    // be.setInputNormals(normals);
+    // be.setRadiusSearch(0.02);
+    // be.setSearchMethod(tree);
+
+    // pcl::PointCloud<pcl::Boundary>::Ptr boundaries(new
+    // pcl::PointCloud<pcl::Boundary>); be.compute(*boundaries);
+
+    //   // Build LINE_LIST marker
+    // visualization_msgs::msg::Marker marker;
+    // marker.header.frame_id = display_params_.world_frame_id;
+    // marker.header.stamp = utils::toRosTime(latest_backend_output->timestamp);
+    // marker.ns = "object_wireframe";
+    // marker.id = object_id;
+    // marker.type = visualization_msgs::msg::Marker::LINE_LIST;
+    // marker.action = visualization_msgs::msg::Marker::ADD;
+    // marker.scale.x = 0.02;
+    // marker.color.r = 1.0;
+    // marker.color.g = 1.0;
+    // marker.color.b = 1.0;
+    // marker.color.a = 1.0;
+
+    // std_msgs::msg::ColorRGBA colour_msg;
+    // convert(Color::uniqueId(object_id), colour_msg);
+
+    // for (int i = 0; i < (int)cloud->points.size(); ++i)
+    // {
+    //     if (boundaries->points[i].boundary_point) // 1 = boundary
+    //     {
+    //         geometry_msgs::msg::Point p;
+    //         p.x = cloud->points[i].x;
+    //         p.y = cloud->points[i].y;
+    //         p.z = cloud->points[i].z;
+
+    //         // Connect to nearest neighbors in a small radius (simple
+    //         approach) for (int j = std::max(0, int(i - 3)); j <
+    //         std::min(int(cloud->points.size()), int(i + 3)); ++j)
+    //         {
+    //             if (i == j) continue;
+    //             geometry_msgs::msg::Point q;
+    //             q.x = cloud->points[j].x;
+    //             q.y = cloud->points[j].y;
+    //             q.z = cloud->points[j].z;
+
+    //             float dist = std::sqrt((p.x - q.x)*(p.x - q.x) + (p.y -
+    //             q.y)*(p.y - q.y) + (p.z - q.z)*(p.z - q.z)); if (dist < 0.03)
+    //             {
+    //                 marker.points.push_back(p);
+    //                 marker.points.push_back(q);
+
+    //                 marker.colors.push_back(colour_msg);
+    //                 marker.colors.push_back(colour_msg);
+    //             }
+    //         }
+    //     }
+    // }
+
+    // markers.markers.push_back(marker);
+  }
+
+  object_wire_frame_pub_->publish(markers);
 }
 
 }  // namespace dyno

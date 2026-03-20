@@ -180,6 +180,11 @@ class PnPRansacSolver {
  protected:
   const PnPRansacSolverParams pnp_ransac_params_;
   const CameraParams camera_params_;
+  //! Inverse of camera calibration matrix (cached)
+  const gtsam::Matrix33 K_inv_;
+
+  //! Pre-computed threshold used for the 3d2d solve
+  double ransac_threshold_3d2d_;
 };
 
 }  // namespace dyno

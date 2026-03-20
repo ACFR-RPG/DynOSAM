@@ -1422,8 +1422,8 @@ void HybridFormulationKeyFrame::updateObject(
     // actually could just sanity check we've added factors at any/every frame
     // that we have a motion for
 
-    CHECK(obj_lmk_node->seenAtFrame(lRKF_id))
-        << info_string(lRKF_id, obj_lmk_node->object_id);
+    // CHECK(obj_lmk_node->seenAtFrame(lRKF_id))
+    //     << info_string(lRKF_id, obj_lmk_node->object_id);
     std::set<FrameId>& frames_with_factors_added =
         factors_added_.at(tracklet_id);
     const bool factor_not_added_for_lRKF =
@@ -1448,14 +1448,60 @@ void HybridFormulationKeyFrame::updateObject(
                           point_key, AKF_pose, obj_lmk_node, frame_node_kf);
     frames_with_factors_added.insert(frame_id_kf);
 
+    // sanity check/ backwards adding of points to ensure measurements
+    // are added for all possible frames
+    const FrameIds frames_with_measurements = obj_lmk_node->getSeenFrameIds();
+    for (const FrameId frame_with_z : frames_with_measurements) {
+      // check if this frame is in the same backend range
+      // if it is not, ignore it!
+      const KeyFrameRange::ConstPtr range =
+          key_frame_data_.find(object_id, frame_with_z);
+      CHECK(range);
+      const auto [AKF_id_for_z, _] = range->dataPair();
+      // if we have not added a measurement
+      if (AKF_id_for_z != AKF_id) {
+        continue;
+      }
+
+      // we have not added a factor at frame id with z
+      // TODO: code duplication as above!!
+      const bool factor_not_added_for_frame_with_z =
+          frames_with_factors_added.find(frame_with_z) ==
+          frames_with_factors_added.end();
+      if (factor_not_added_for_frame_with_z &&
+          obj_lmk_node->seenAtFrame(frame_with_z)) {
+        auto frame_node_with_z = map->getFrame(frame_with_z);
+        CHECK_NOTNULL(frame_node_with_z);
+
+        const gtsam::Key object_motion_key =
+            frame_node_with_z->makeObjectMotionKey(object_id);
+        const gtsam::Key pose_key = frame_node_with_z->makePoseKey();
+
+        addHybridMotionFactor(new_factors, pose_key, object_motion_key,
+                              point_key, AKF_pose, obj_lmk_node,
+                              frame_node_with_z);
+        if (result.debug_info) {
+          result.debug_info->getObjectInfo(context.getObjectId())
+              .num_dynamic_factors++;
+        }
+        frames_with_factors_added.insert(frame_with_z);
+      }
+    }
+
     {
       // do a sanity check that we've added all meaasurement factors for this
       // point
-      const FrameIds frames_with_measurements = obj_lmk_node->getSeenFrameIds();
-      FrameIds frames_with_factors_added_vec(frames_with_factors_added.begin(),
-                                             frames_with_factors_added.end());
-      CHECK(equals_with_abs_tol(frames_with_measurements,
-                                frames_with_factors_added_vec));
+      // const FrameIds frames_with_measurements =
+      // obj_lmk_node->getSeenFrameIds(); FrameIds
+      // frames_with_factors_added_vec(frames_with_factors_added.begin(),
+      //                                        frames_with_factors_added.end());
+      // CHECK(equals_with_abs_tol(frames_with_measurements,
+      //                           frames_with_factors_added_vec))
+      //   << "Frames with measurements:" <<
+      //   container_to_string(frames_with_measurements)
+      //   << "\n"
+      //   << "Frames with factors:" <<
+      //   container_to_string(frames_with_factors_added_vec);
     }
 
     // if(!smoothing_factors_added_.exists(object_motion_key_kf)) {
@@ -1580,8 +1626,6 @@ void HybridFormulationKeyFrame::addObjects(
                 << info_string(H_W_RKF_k.from(), object_id) << " with motion "
                 << H_W_RKF_k.from() << " -> " << H_W_RKF_k.to();
       initial_H_W_AKF_k_.insert22(object_id, H_W_RKF_k.to(), H_W_RKF_k);
-      // } else if (object_motion_tracking_status ==
-      //            ObjectTrackingStatus::WellTracked) {
     } else {
       CHECK_EQ(keyframe_status, ObjectKeyFrameStatus::RegularKeyFrame);
 

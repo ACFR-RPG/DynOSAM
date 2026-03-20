@@ -149,9 +149,9 @@ if __name__ == "__main__":
     # directory = "/root/results/DynoSAM/incremental_omd_test/"
     # directory = "/root/results/Dynosam_ecmr2024/cluster_l1_map/"
     # directory = "/root/results/Dynosam_ecmr2024/test_kitti_04/"
-    directory = "/root/results/frontend_filtering/omd_MO_test1/"
-    prefix = "doo_"
-    # prefix = "refined_"
+    directory = "/root/results/frontend_filtering/omd_MO_test2/"
+    # prefix = "doo_"
+    prefix = "refined_"
     object_id = "j2"
     pcd_files = load_sorted_object_pcds(directory, object_id, prefix=prefix)
     visualize_spinning_growth(pcd_files)

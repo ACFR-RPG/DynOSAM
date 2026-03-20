@@ -74,16 +74,16 @@ enum RegularOptimizationType : int {
   INCREMENTAL = 2
 };
 
-struct BackendParams {
-  enum StaticFormulationType {
-    PTP = 0,  //! Pose-to-point factor with 3D projection residual in the camera
-              //! frame
-    GENERIC_PROJECTION = 1,  //! Regular projection factor with 2D projection
-                             //! residual on the image plane
-    STEREO_PROJECTION = 2,
-    SMART_PROJECTION = 3
-  };
+enum StaticFormulationType {
+  PTP = 0,  //! Pose-to-point factor with 3D projection residual in the camera
+            //! frame
+  GENERIC_PROJECTION = 1,  //! Regular projection factor with 2D projection
+                           //! residual on the image plane
+  STEREO_PROJECTION = 2,
+  SMART_PROJECTION = 3
+};
 
+struct BackendParams {
   //! RGBD/Stereo
   bool use_robust_kernals_ = FLAGS_use_robust_kernals;
   bool static_point_noise_as_robust = true;

@@ -40,7 +40,7 @@ namespace dyno {
 
 class BackendDSDRos : public BackendDisplay {
  public:
-  BackendDSDRos(const DisplayParams params, rclcpp::Node::SharedPtr node);
+  BackendDSDRos(const DisplayParams& params, rclcpp::Node::SharedPtr node);
   ~BackendDSDRos() = default;
 
   void spinOnce(const DynoState::ConstPtr& backend_output) override;
@@ -49,9 +49,17 @@ class BackendDSDRos : public BackendDisplay {
   void publishTemporalDynamicMaps(
       const DynoState::ConstPtr& latest_backend_output);
 
+  // TODO: should be in HybridDisplay!!!!
+  void publishTemporalDynamicMapsAsWireFrames(
+      const DynoState::ConstPtr& latest_backend_output);
+
  private:
+  DisplayParams display_params_;
   rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr
       temporal_dynamic_points_pub_;
+
+  MarkerArrayPub::SharedPtr object_wire_frame_pub_;
+
   gtsam::FastMap<ObjectId, std::deque<pcl::PointCloud<pcl::PointXYZRGB>>>
       temporal_clouds_;
   DynoStatePublisher dyno_state_publisher_;

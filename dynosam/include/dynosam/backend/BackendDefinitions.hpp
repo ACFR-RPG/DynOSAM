@@ -68,6 +68,7 @@ enum BackendType : int {
   KF_HYBRID = 8
 };
 
+// TODO: landmark related noise models should not be used anymore!!
 struct NoiseModels {
   gtsam::SharedNoiseModel initial_pose_prior;
   //! Between factor noise for between two consequative poses
@@ -127,7 +128,6 @@ struct SharedFormulationData {
     this->theta.insert(linearization);
   }
 };
-
 
 using CalibrationType =
     Camera::CalibrationType;  // TODO: really need to check that this one
@@ -208,8 +208,8 @@ class BackendLogger : public EstimationModuleLogger {
   DYNO_POINTER_TYPEDEFS(BackendLogger)
   BackendLogger(const std::string& name_prefix);
   ~BackendLogger() = default;
- private:
 
+ private:
 };
 
 }  // namespace dyno

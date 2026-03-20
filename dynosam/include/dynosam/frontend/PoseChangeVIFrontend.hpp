@@ -28,8 +28,8 @@ class PoseChangeVIFrontend : public VIFrontend {
   void onBackendUpdateComplete(FrameId frame_id, Timestamp timestamp);
 
  private:
-  SpinReturn boostrapSpin(FrontendInputPacketBase::ConstPtr input) override;
-  SpinReturn nominalSpin(FrontendInputPacketBase::ConstPtr input) override;
+  SpinReturn boostrapSpin(VIFrontendInput::ConstPtr input) override;
+  SpinReturn nominalSpin(VIFrontendInput::ConstPtr input) override;
 
   void solveObjectMotions(MultiObjectTrajectories& trajectories,
                           ObjectIds& object_with_new_motions,

@@ -379,8 +379,6 @@ class Frame {
       const Frame& previous_frame, ObjectId object_id,
       const ConstructCorrespondanceFunc<RefType, CurType>& func) const;
 
-  // special iterator types
-  // TODO: rename to just usableStaticIterator!!
   decltype(auto) usableStaticIterator() {
     return static_features_.usableIterator();
   }

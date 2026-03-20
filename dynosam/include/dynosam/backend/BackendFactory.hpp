@@ -49,9 +49,9 @@
 
 namespace dyno {
 
-class IncorrectParallelHybridConstruction : public DynosamException {
+class IncorrectBackendModuleConstruction : public DynosamException {
  public:
-  IncorrectParallelHybridConstruction(const std::string& what)
+  IncorrectBackendModuleConstruction(const std::string& what)
       : DynosamException(what) {}
 };
 
@@ -116,15 +116,14 @@ class BackendFactory
 
   virtual ~BackendFactory() = default;
 
-  // TODO: pass ground truth or formulation hooks with params!!
   BackendWrapper createModule(const ModuleParams& params) override {
     BackendWrapper wrapper;
 
     if (this->backend_type_ == BackendType::PARALLEL_HYBRID) {
       std::shared_ptr<ParallelHybridBackendModule> backend =
-          std::make_shared<ParallelHybridBackendModule>(params.backend_params,
-                                                        params.sensors.camera,
-                                                        params.shared_ground_truth);
+          std::make_shared<ParallelHybridBackendModule>(
+              params.backend_params, params.sensors.camera,
+              params.shared_ground_truth);
 
       wrapper.backend = backend;
       // Parallel Hybrid is a special case where we have a vizualiser over
@@ -136,16 +135,22 @@ class BackendFactory
 
     } else if (this->backend_type_ == BackendType::KF_HYBRID) {
       FormulationParams formulation_params = params.backend_params;
+
+      FormulationHooks hooks;
+      hooks.setGroundTruthPacketRequest(params.shared_ground_truth);
+
       NoiseModels noise_models =
           NoiseModels::fromBackendParams(params.backend_params);
+
       std::shared_ptr<HybridFormulationKeyFrame> formulation =
           std::make_shared<HybridFormulationKeyFrame>(
               formulation_params, HybridFormulationKeyFrame::Map::create(),
-              noise_models, params.sensors, FormulationHooks{});
+              noise_models, params.sensors, hooks);
 
       std::shared_ptr<PoseChangeVIBackendModule> pose_change_backend =
           std::make_shared<PoseChangeVIBackendModule>(
-              params.backend_params, params.sensors.camera, formulation, params.shared_ground_truth);
+              params.backend_params, params.sensors.camera, formulation,
+              params.shared_ground_truth);
 
       wrapper.backend = pose_change_backend;
       wrapper.backend_viz = this->createDisplay(pose_change_backend);
@@ -160,10 +165,9 @@ class BackendFactory
       CHECK_NOTNULL(formulation_factory);
 
       std::shared_ptr<RegularVIBackendModule> backend =
-          std::make_shared<RegularVIBackendModule>(params.backend_params,
-                                                   params.sensors.camera,
-                                                   formulation_factory,
-                                                   params.shared_ground_truth);
+          std::make_shared<RegularVIBackendModule>(
+              params.backend_params, params.sensors.camera, formulation_factory,
+              params.shared_ground_truth);
 
       wrapper.backend = backend;
 
@@ -188,11 +192,17 @@ class BackendFactory
 
     // TODO: or KF_HYBRDI!!
     if (this->backend_type_ == BackendType::PARALLEL_HYBRID) {
-      DYNO_THROW_MSG(IncorrectParallelHybridConstruction)
+      DYNO_THROW_MSG(IncorrectBackendModuleConstruction)
           << "Cannot construct PARALLEL_HYBRID backend with a call to "
-             "BackendFactory::createFormulation"
-          << " Use BackendFactory::createModule instead!";
-      return wrapper;
+             "BackendFactory::createFormulation. "
+             "Use BackendFactory::createModule instead!";
+      throw;
+    } else if (this->backend_type_ == BackendType::KF_HYBRID) {
+      DYNO_THROW_MSG(IncorrectBackendModuleConstruction)
+          << "Cannot construct KF_HYBRID backend with a call to "
+             "BackendFactory::createFormulation. "
+             "Use BackendFactory::createModule instead!";
+      throw;
     } else if (this->backend_type_ == BackendType::WCME) {
       LOG(INFO) << "Using WCME";
       std::shared_ptr<WorldMotionFormulation> formulation =
@@ -220,7 +230,7 @@ class BackendFactory
           std::make_shared<RegularHybridFormulation>(formulation_params, map,
                                                      noise_models, sensors,
                                                      formulation_hooks);
-    
+
       // call polciy function
       wrapper.display = this->createDisplay(formulation);
       wrapper.formulation = formulation;

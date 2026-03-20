@@ -95,7 +95,6 @@ struct FeatureTrackerInfo {
     if (!dynamic_track.exists(object_id)) {
       dynamic_track.insert2(object_id, PerObjectStatus(object_id));
     }
-    // CHECK(dynamic_track.exists(object_id));
     return dynamic_track.at(object_id);
   }
 

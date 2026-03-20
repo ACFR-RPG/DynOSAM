@@ -1,6 +1,6 @@
 #pragma once
 
-#include "dynosam/frontend/FrontendInputPacket.hpp"
+#include "dynosam/frontend/VIFrontendInput.hpp"
 #include "dynosam/frontend/imu/ImuFrontend.hpp"
 #include "dynosam/frontend/solvers/OpticalFlowAndPoseSolver.hpp"
 #include "dynosam/frontend/solvers/PnPRansac.hpp"
@@ -34,9 +34,9 @@ class VIFrontendLogger : public EstimationModuleLogger {
   json tracklet_length_json_;
 };
 
-class Frontend : public ModuleBase<FrontendInputPacketBase, RealtimeOutput> {
+class Frontend : public ModuleBase<VIFrontendInput, RealtimeOutput> {
  public:
-  using Base = ModuleBase<FrontendInputPacketBase, RealtimeOutput>;
+  using Base = ModuleBase<VIFrontendInput, RealtimeOutput>;
 
   DYNO_POINTER_TYPEDEFS(Frontend)
   Frontend(const std::string& name, const DynoParams& params,
@@ -50,8 +50,7 @@ class Frontend : public ModuleBase<FrontendInputPacketBase, RealtimeOutput> {
   void logRealTimeOutput(const RealtimeOutput::Ptr& output);
 
  protected:
-  virtual void validateInput(
-      const FrontendInputPacketBase::ConstPtr& input) const;
+  virtual void validateInput(const VIFrontendInput::ConstPtr& input) const;
 
   const DynoParams dyno_params_;
   ImageDisplayQueue* display_queue_;
@@ -69,11 +68,11 @@ class VIFrontend : public Frontend {
   virtual ~VIFrontend() = default;
 
  protected:
-  Frame::Ptr featureTrack(const FrontendInputPacketBase::ConstPtr input,
+  Frame::Ptr featureTrack(const VIFrontendInput::ConstPtr input,
                           std::optional<gtsam::Rot3> R_km1_k = std::nullopt);
 
   std::optional<gtsam::NavState> tryPropogateImu(
-      const FrontendInputPacketBase::ConstPtr input,
+      const VIFrontendInput::ConstPtr input,
       const gtsam::NavState& nav_state_lIMU, ImuFrontend::PimPtr& pim_out);
 
   bool tryStereoMatch(Frame::Ptr frame, ImageContainer::Ptr image_container,
@@ -133,6 +132,7 @@ class VIFrontend : public Frontend {
       const Keypoint& kp = f->keypoint();
       const ObjectId object_id = f->objectId();
       CHECK_EQ(f->objectId(), object_id);
+      CHECK_EQ(f->frameId(), frame_id);
       CHECK(Feature::IsUsable(f));
 
       MeasurementWithCovariance<Keypoint> kp_measurement =

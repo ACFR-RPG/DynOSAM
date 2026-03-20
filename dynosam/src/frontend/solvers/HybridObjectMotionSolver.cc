@@ -271,7 +271,7 @@ bool HybridObjectMotionSolver::solveImpl(
     // The object re-tracking
     // must be at least 2 for smoothing factor?
     if (previous_tracking_state != ObjectTrackingStatus::New &&
-        frame_k->getFrameId() % 10 == 0) {
+        frame_k->getFrameId() % 7 == 0) {
       LOG(INFO) << "New KF due to temporal frame";
       requires_new_keyframe = true;
     }
@@ -279,12 +279,30 @@ bool HybridObjectMotionSolver::solveImpl(
     // keyframe! const bool new_KF = object_retracked || frame_k->getFrameId() %
     // 35 == 0;
     if (requires_new_keyframe) {
-      if (previous_tracking_state == ObjectTrackingStatus::PoorlyTracked) {
+      LOG(INFO) << "j=" << object_id << " requires new KF";
+      // if previously lost or previously poorly tracked
+      if (object_retracked) {
         LOG(INFO) << "Object was poorly tracked or LOST previously. "
                   << "Creating new KF from centroid "
                   << info_string(frame_km1->getFrameId(), object_id);
-        keyframe_status = ObjectKeyFrameStatus::AnchorKeyFrame;
-        pose_init_method = PoseInitalisationMethod::Centroid;
+        // this is a bit like creating a new object so we dont want
+        // it to 1. send this motion to the backend or 2. create a new KF motion
+        auto new_KF_pose =
+            constructObjectPose(object_id, frame_km1, inlier_tracklets);
+        solver->createNewKeyedMotion(new_KF_pose, frame_km1, inlier_tracklets);
+        // // prevents the re-creation of a keyframe at k
+        // // // requires new keyframe is true but we should not send this to
+        // the backend
+        // // // reset num kf to be zero so that upon next keyframe decsion, the
+        // KF is an anchor
+        const std::lock_guard<std::mutex> lock(num_kfs_per_object_mutex_);
+        num_kfs_per_object_.at(object_id) = 0;
+        requires_new_keyframe = false;
+        // // actually if we re-track then should we not create new keyframe at
+        // km1 like as
+        // // if the object is new!?
+        // keyframe_status = ObjectKeyFrameStatus::AnchorKeyFrame;
+        // pose_init_method = PoseInitalisationMethod::Centroid;
       } else {
         CHECK_EQ(solver->frameId(), frame_km1->getFrameId())
             << "j=" << object_id << " k=" << solver->frameId();
@@ -294,14 +312,12 @@ bool HybridObjectMotionSolver::solveImpl(
         const int num_kf = num_kfs_per_object_.at(object_id);
         // ie. is first keyframe
         if (num_kf == 0) {
+          LOG(INFO) << "j=" << object_id << " made anchor frame as is first KF";
           keyframe_status = ObjectKeyFrameStatus::AnchorKeyFrame;
         }
         // initalise with previous track
         pose_init_method = PoseInitalisationMethod::Previous;
       }
-
-      const std::lock_guard<std::mutex> l(num_kfs_per_object_mutex_);
-      num_kfs_per_object_.at(object_id)++;
     }
   }
 
@@ -329,7 +345,6 @@ bool HybridObjectMotionSolver::solveImpl(
           << inlier_tracklets.size();
   // always add motion at k not k-1?
   if (keyframe_status != ObjectKeyFrameStatus::NonKeyFrame) {
-    CHECK(requires_new_keyframe);
     CHECK(pose_init_method != PoseInitalisationMethod::NonKeyFrame);
     /// mmmm if we keyframe at this frame
     // then the estimated motion is from km-1 to k
@@ -351,17 +366,25 @@ bool HybridObjectMotionSolver::solveImpl(
               << " with kf status: " << info.keyframe_status;
 
     CHECK(getObjectStructureinL(object_id, info.initial_object_points));
-    // TODO: mutex lock
-    pose_change_info_.insert2(object_id, info);
+    {
+      const std::lock_guard<std::mutex> lock(pose_change_info_mutex_);
+      pose_change_info_.insert2(object_id, info);
+    }
 
-    // std::string path = dyno::getOutputFilePath(
-    //     "doo_object_map_k" + std::to_string(frame_k->getFrameId()) + "_j" +
-    //     std::to_string(object_id) + ".pcd");
-    // VLOG(10) << "Writing object map of size " <<
-    // info.initial_object_points.size()
-    //           << " - " << path;
-    // saveAsPointCloud(info.initial_object_points, path);
+    std::string path = dyno::getOutputFilePath(
+        "doo_object_map_k" + std::to_string(frame_k->getFrameId()) + "_j" +
+        std::to_string(object_id) + ".pcd");
+    VLOG(10) << "Writing object map of size "
+             << info.initial_object_points.size() << " - " << path;
+    saveAsPointCloud(info.initial_object_points, path);
+  }
 
+  // logic is sperate to keyframe status which determines if a new keyframe
+  // should be made in the backend here we decide if a new keyframe is made in
+  // the frontend THe logic is split becuase for the frontend a newkeyframe pose
+  // needs to be made for new objects and re-tracked objects before the motion
+  // is sent to the backend!
+  if (requires_new_keyframe) {
     gtsam::Pose3 new_KF_pose;
     // now reset solver for next frame (ie. make KF at k)
     if (pose_init_method == PoseInitalisationMethod::Centroid) {
@@ -379,6 +402,14 @@ bool HybridObjectMotionSolver::solveImpl(
     // where we have new measurements (seen in k and k+1) as this will be
     // different to the current set of inlier tracks.
     solver->createNewKeyedMotion(new_KF_pose, frame_k, inlier_tracklets);
+
+    if (keyframe_status != ObjectKeyFrameStatus::NonKeyFrame) {
+      // increment number of KF's here to ensure that the solving is good
+      // and that the keyframe is actually created!!
+      // Only increment if a keyframe was sent to the backend!
+      const std::lock_guard<std::mutex> l(num_kfs_per_object_mutex_);
+      num_kfs_per_object_.at(object_id)++;
+    }
   }
 
   return true;

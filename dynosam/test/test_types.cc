@@ -31,7 +31,7 @@
 #include <filesystem>
 #include <nlohmann/json.hpp>  //for gt packet seralize tests
 
-#include "dynosam/frontend/FrontendInputPacket.hpp"
+#include "dynosam/frontend/VIFrontendInput.hpp"
 #include "dynosam_common/Exceptions.hpp"
 #include "dynosam_common/GroundTruthPacket.hpp"
 #include "dynosam_common/logger/Logger.hpp"

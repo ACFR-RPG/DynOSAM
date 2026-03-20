@@ -171,7 +171,7 @@ def run_tartan_air():
     # run_experiment_sequences("/root/data/TartanAir_shibuya/RoadCrossing03", "tas_rc3", tartan_air) #max_object_depth: 10.0
     # run_experiment_sequences("/root/data/TartanAir_shibuya/RoadCrossing04", "test_tartan", tartan_air, "--use_backend=false", "--use_object_motion_filtering=true")
     # run_experiment_sequences("/root/data/TartanAir_shibuya/RoadCrossing05", "test_tartan", tartan_air, "--use_backend=true")
-    run_experiment_sequences("/root/data/TartanAir_shibuya/RoadCrossing06", "tas_rc6", tartan_air, "--use_backend=false")
+    run_experiment_sequences("/root/data/TartanAir_shibuya/RoadCrossing06", "tas_rc6_FS", tartan_air,"--use_backend=true","--hybrid_motion_solver=2")
     # run_experiment_sequences("/root/data/TartanAir_shibuya/RoadCrossing07", "tas_rc7", tartan_air, "--starting_frame=5", "--ending_frame=65")
     # run_analysis("tas_rc7")
 
@@ -197,14 +197,14 @@ def run_kitti():
 
 
 def run_aria():
-    run_experiment_sequences("/root/data/zed/acfr_2_moving_small", "test_small", aria, "--use_backend=false", "--v=30")
+    run_experiment_sequences("/root/data/zed/acfr_2_moving_small", "test_small_acfr", aria, "--use_backend=true",  "--hybrid_motion_solver=2")
 
 def run_hybrid_solver_comparison_omd():
     # run_experiment_sequences("/root/data/vdo_slam/omd/omd/swinging_4_unconstrained_stereo/","omd_FS", omd_dataset, "--ending_frame=500", "--hybrid_motion_solver=2")
     # run_experiment_sequences("/root/data/vdo_slam/omd/omd/swinging_4_unconstrained_stereo/","omd_SS", omd_dataset, "--ending_frame=500", "--hybrid_motion_solver=1")
     # run_experiment_sequences("/root/data/vdo_slam/omd/omd/swinging_4_unconstrained_stereo/","omd_EIF", omd_dataset, "--ending_frame=500", "--hybrid_motion_solver=0")
     # run_experiment_sequences("/root/data/vdo_slam/omd/omd/swinging_4_unconstrained_stereo/","omd_PnP", omd_dataset, "--ending_frame=500", "--hybrid_motion_solver=3")
-    run_experiment_sequences("/root/data/vdo_slam/omd/omd/swinging_4_unconstrained_stereo/","omd_MO_test1", omd_dataset, "--ending_frame=300", "--hybrid_motion_solver=4", "--use_backend=true")
+    run_experiment_sequences("/root/data/vdo_slam/omd/omd/swinging_4_unconstrained_stereo/","omd_MO_test2", omd_dataset, "--ending_frame=300", "--hybrid_motion_solver=4", "--use_backend=true")
     # run_experiment_sequences("/root/data/vdo_slam/omd/omd/swinging_4_unconstrained_stereo/","omd_FS_test1", omd_dataset, "--ending_frame=300", "--hybrid_motion_solver=2", "--use_backend=true")
 
     # run_analysis("omd_FS")
@@ -223,8 +223,16 @@ def run_hybrid_solver_comparison_kitti():
     # run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0000/","kitti00_EIF", kitti_dataset, "--ending_frame=70", "--hybrid_motion_solver=0")
     # run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0000/","kitti00_PnP", kitti_dataset, "--ending_frame=70", "--hybrid_motion_solver=3")
 
-    run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0004/","kitti04_MO_noise_added_mL", kitti_dataset, "--ending_frame=100", "--hybrid_motion_solver=4")
-    run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0004/","kitti04_FS_noise_added_mL", kitti_dataset, "--ending_frame=100", "--hybrid_motion_solver=2")
+    # run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0004/","kitti04_MO_noise_added_mL", kitti_dataset, "--ending_frame=100", "--hybrid_motion_solver=4")
+    # run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0004/","kitti04_FS_noise_added_mL", kitti_dataset, "--ending_frame=100", "--hybrid_motion_solver=2")
+
+    # run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0004/","kitti04_MO", kitti_dataset, "--ending_frame=100", "--hybrid_motion_solver=4")
+    # run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0020/","kitti20_MO", kitti_dataset, "--hybrid_motion_solver=4")
+    # run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0018/","kitti18_MO", kitti_dataset, "--hybrid_motion_solver=4")
+    run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0000/","kitti00_MO", kitti_dataset, "--hybrid_motion_solver=4")
+
+
+
 
 
     # run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0004/","kitti04_SS", kitti_dataset, "--ending_frame=100", "--hybrid_motion_solver=1")

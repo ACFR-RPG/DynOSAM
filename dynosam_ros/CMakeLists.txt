@@ -30,7 +30,7 @@ find_package(cv_bridge REQUIRED)
 find_package(eigen3_cmake_module REQUIRED)
 find_package(Eigen3 REQUIRED)
 find_package(dynosam REQUIRED)
-find_package(PCL REQUIRED conversions)
+find_package(PCL REQUIRED conversions surface)
 find_package(rclpy REQUIRED)
 find_package(message_filters REQUIRED)
 
@@ -65,6 +65,7 @@ set(LINK_LIBS
   ${sensor_msgs_TARGETS}
   ${std_msgs_TARGETS}
   ${visualization_msgs_TARGETS}
+  ${PCL_LIBRARIES}
   cv_bridge::cv_bridge
   dynamic_slam_interfaces::dynamic_slam_interfaces_library
   dynosam::dynosam

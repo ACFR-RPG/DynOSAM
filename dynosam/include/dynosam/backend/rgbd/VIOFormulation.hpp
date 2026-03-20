@@ -6,8 +6,6 @@
 
 namespace dyno {
 
-class VIOFormulation;
-
 class VIOAccessor : public Accessor {
  public:
   DYNO_POINTER_TYPEDEFS(VIOAccessor)
@@ -21,15 +19,17 @@ class VIOAccessor : public Accessor {
   StateQuery<gtsam::NavState> getNavState(FrameId frame_id) const;
   StateQuery<gtsam::imuBias::ConstantBias> getImuBias(FrameId frame_id) const;
 
-private:
-
+ private:
 };
+
+class VIOUpdater;
 
 // if derive - also ensure that the DerivedAccessor derives from VIOAccessor
 class VIOFormulation : public Formulation<MapVision> {
  public:
   using Base = Formulation<MapVision>;
   using Base::AccessorTypePointer;
+  using Base::Map;
   using Base::MapTraitsType;
   using Base::ObjectUpdateContextType;
   using Base::PointUpdateContextType;
@@ -41,6 +41,10 @@ class VIOFormulation : public Formulation<MapVision> {
                  const FormulationHooks& hooks);
   virtual ~VIOFormulation() = default;
 
+  UpdateObservationResult updateStaticObservations(
+      FrameId frame_id_k, gtsam::Values& new_values,
+      gtsam::NonlinearFactorGraph& new_factors,
+      const UpdateObservationParams& update_params) override;
 
   gtsam::NavState addStatesInitalise(
       gtsam::Values& new_values, gtsam::NonlinearFactorGraph& new_factors,
@@ -81,7 +85,12 @@ class VIOFormulation : public Formulation<MapVision> {
       const ImuFrontend::PimPtr& pim);
 
   void addImuStatesFromInitialNavState(
-    gtsam::Values& new_values, gtsam::NonlinearFactorGraph& new_factors);
+      gtsam::Values& new_values, gtsam::NonlinearFactorGraph& new_factors);
+
+  template <typename DerivedUpdater>
+  std::shared_ptr<DerivedUpdater> updaterAs() const {
+    return std::static_pointer_cast<DerivedUpdater>(static_updater_);
+  }
 
  private:
   bool imu_states_initalise_{false};
@@ -100,7 +109,9 @@ class VIOFormulation : public Formulation<MapVision> {
   //! Initial imu bias prior noise model
   gtsam::SharedNoiseModel init_imu_bias_prior_noise_;
 
-
+  friend class VIOUpdater;
+  // Only shared to keep implementation hidden
+  std::shared_ptr<VIOUpdater> static_updater_;
 };
 
 }  // namespace dyno

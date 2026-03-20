@@ -71,8 +71,7 @@ void Frontend::logRealTimeOutput(const RealtimeOutput::Ptr& output) {
   }
 }
 
-void Frontend::validateInput(
-    const FrontendInputPacketBase::ConstPtr& input) const {
+void Frontend::validateInput(const VIFrontendInput::ConstPtr& input) const {
   const auto image_container = input->image_container_;
 
   if (!image_container) {
@@ -122,9 +121,8 @@ VIFrontend::VIFrontend(const std::string& name, const DynoParams& params,
   dynamic_pixel_sigmas_ << dynamic_pixel_sigma, dynamic_pixel_sigma;
 }
 
-Frame::Ptr VIFrontend::featureTrack(
-    const FrontendInputPacketBase::ConstPtr input,
-    std::optional<gtsam::Rot3> R_km1_k) {
+Frame::Ptr VIFrontend::featureTrack(const VIFrontendInput::ConstPtr input,
+                                    std::optional<gtsam::Rot3> R_km1_k) {
   ImageContainer::Ptr image_container = input->image_container_;
   Frame::Ptr frame = tracker_->track(input->getFrameId(), input->getTimestamp(),
                                      *image_container, R_km1_k);
@@ -133,7 +131,7 @@ Frame::Ptr VIFrontend::featureTrack(
 }
 
 std::optional<gtsam::NavState> VIFrontend::tryPropogateImu(
-    const FrontendInputPacketBase::ConstPtr input,
+    const VIFrontendInput::ConstPtr input,
     const gtsam::NavState& nav_state_lIMU, ImuFrontend::PimPtr& pim_out) {
   if (!input->imu_measurements.has_value()) {
     return {};

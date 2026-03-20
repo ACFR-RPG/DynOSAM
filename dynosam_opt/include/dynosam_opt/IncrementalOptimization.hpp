@@ -487,7 +487,8 @@ class IncrementalInterface {
       try {
         SmootherTraitsType::update(*smoother_, UpdateArguments{});
       } catch (const std::runtime_error& e) {
-        LOG(WARNING) << "Smoother failed running extra update steps";
+        LOG(WARNING) << "Smoother failed running extra update steps: "
+                     << e.what();
         return false;
       }
     }

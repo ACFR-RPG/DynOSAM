@@ -4,7 +4,7 @@
  */
 #pragma once
 
-#include "dynosam/frontend/FrontendInputPacket.hpp"
+#include "dynosam/frontend/VIFrontendInput.hpp"
 #include "dynosam/frontend/imu/ThreadSafeImuBuffer.hpp"
 #include "dynosam/pipeline/PipelineBase.hpp"
 #include "dynosam/pipeline/ThreadSafeQueue.hpp"
@@ -68,14 +68,12 @@ class ImuInterfaceHandler {
  * that takes data from the internal queues and processes them
  */
 class DataInterfacePipeline
-    : public MIMOPipelineModule<FrontendInputPacketBase,
-                                FrontendInputPacketBase>,
+    : public MIMOPipelineModule<VIFrontendInput, VIFrontendInput>,
       public ImuInterfaceHandler {
  public:
   DYNO_POINTER_TYPEDEFS(DataInterfacePipeline)
 
-  using MIMO =
-      MIMOPipelineModule<FrontendInputPacketBase, FrontendInputPacketBase>;
+  using MIMO = MIMOPipelineModule<VIFrontendInput, VIFrontendInput>;
   using OutputQueue = typename MIMO::OutputQueue;
 
   using ImageContainerPreprocesser =
@@ -86,8 +84,7 @@ class DataInterfacePipeline
   DataInterfacePipeline(bool parallel_run = false);
   virtual ~DataInterfacePipeline() = default;
 
-  // TODO: later should be vision only module
-  virtual FrontendInputPacketBase::ConstPtr getInputPacket() override;
+  virtual VIFrontendInput::ConstPtr getInputPacket() override;
 
   // expects input packet
   // TODO: I dont think should be vrtual?

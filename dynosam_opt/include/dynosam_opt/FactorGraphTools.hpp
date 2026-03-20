@@ -735,7 +735,7 @@ class BayesTreeMarginalizationHelper {
    */
   static std::unordered_set<Key> gatherAdditionalKeysToReEliminate(
       const BayesTree& bayesTree, const KeyVector& marginalizableKeys) {
-    const bool debug = true;  // ISDEBUG("BayesTreeMarginalizationHelper");
+    const bool debug = false;  // ISDEBUG("BayesTreeMarginalizationHelper");
 
     std::unordered_set<const Clique*> additionalCliques =
         gatherAdditionalCliquesToReEliminate(bayesTree, marginalizableKeys);
