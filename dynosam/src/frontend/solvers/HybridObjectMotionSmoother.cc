@@ -133,9 +133,8 @@ void HybridObjectMotionSmoother::receiveUpdate(
               << object_update->object_points.size() << " points for update";
 
     const std::lock_guard<std::mutex> lock(update_point_mutex_);
-    // has_point_update_ = true;
-    // updated_points_ = std::move(object_update->object_points);
-    // TODO: turn off update while testing initial point bug
+    has_point_update_ = true;
+    updated_points_ = std::move(object_update->object_points);
   }
 }
 
@@ -246,10 +245,6 @@ PoseWithMotionTrajectory HybridObjectMotionSmoother::localTrajectoryImpl(
     }
     CHECK(state_since_lKF_.exists(H_key_k)) << DynosamKeyFormatter(H_key_k);
 
-    // // const gtsam::Pose3 H_W_KF_k =
-    // state_since_lKF_.at<gtsam::Pose3>(H_key_k); const gtsam::Pose3 G_W_KF_k =
-    // state_since_lKF_.at<gtsam::Pose3>(H_key_k).inverse(); const gtsam::Pose3
-    // H_W_KF_k = camera_poses_.at(frame_id) * G_W_KF_k * L_W_KF.inverse();
     const gtsam::Pose3 H_W_KF_k =
         keyFrameMotionImpl(frame_id, state_since_lKF_);
 
@@ -309,6 +304,8 @@ HybridObjectMotionSmoother::updateFromInitialMotion(
   // functions work
   frames_since_lKF_.push_back(frame_id);
   timestamps_since_lKF_.push_back(timestamp);
+
+  camera_poses_.insert2(frame_id, frame->getPose());
 
   gtsam::Values smoother_state;
   auto result = this->updateFromInitialMotionImpl(
@@ -418,7 +415,7 @@ std::map<gtsam::Key, gtsam::Point3>
 HybridObjectMotionSmoother::getObjectPointsFromState(
     const gtsam::Values& values) const {
   return values.extract<gtsam::Point3>(
-      Symbol::ChrTest(kDynamicLandmarkSymbolChar));
+      gtsam::Symbol::ChrTest(kDynamicLandmarkSymbolChar));
 }
 
 std::map<gtsam::Key, gtsam::Pose3>
@@ -576,6 +573,9 @@ HybridObjectMotionOnlySmoother::updateFromInitialMotionImpl(
     };
 
     size_t existing_points_with_update = 0;
+    // TODO: not just if m_L_points exists becuase m_L_points is cleared every
+    // keyframe This is just a sanity check to say points we have measurements
+    // for so should also be if we have
     for (const auto& [tracklet_id, m_L] : points_with_update) {
       if (m_L_points_.exists(tracklet_id)) {
         // TODO: for now just update the point so that
@@ -618,7 +618,8 @@ HybridObjectMotionOnlySmoother::updateFromInitialMotionImpl(
         }
       } else {
         // must be seen before
-        CHECK(all_object_points.exists(tracklet_id));
+        // somtmetimes this fails... not sure why
+        // CHECK(all_object_points.exists(tracklet_id));
         // directly update the smoother state with the new point value
         // this will then be put into the global data-structure for all object
         // points.
@@ -653,10 +654,17 @@ HybridObjectMotionOnlySmoother::updateFromInitialMotionImpl(
       continue;
     }
 
+    double disparity = stereo_measurement.uL() - stereo_measurement.uR();
+    if (disparity < 0.5) {
+      continue;
+    }
+
     if (!m_L_points_.exists(tracklet_id)) {
       const gtsam::Point3 m_X_k = frame->backProjectToCamera(tracklet_id);
       // gtsam::Point3 m_W_K_noisy = utils::perturbWithNoise(m_X_k, 0.05);
 
+      // TODO: should use motion from last frame (ie optimzed) to
+      // initalise points
       Landmark m_L_init = HybridObjectMotion::projectToObject3(
           X_W_k, H_W_KF_k_initial, L_KF, m_X_k);
       m_L_points_.insert2(tracklet_id, m_L_init);
@@ -715,8 +723,10 @@ HybridObjectMotionOnlySmoother::updateFromInitialMotionImpl(
         ObjectMotionSymbol(object_id_, frame_id - 2u);
 
     // TODO: params
+    gtsam::Vector6 sigmas;
+    sigmas << 0.2, 0.2, 0.2, 0.1, 0.1, 0.1;
     gtsam::SharedNoiseModel smoothing_motion_model =
-        gtsam::noiseModel::Isotropic::Sigma(6u, 0.2);
+        gtsam::noiseModel::Isotropic::Sigmas(sigmas);
 
     // TODO: ALL motions should use the same L_KF_
     //  if L_KF_ is only updated when we reset internal ISAM then no problem!
@@ -844,6 +854,135 @@ HybridObjectMotionOnlySmoother::updateFromInitialMotionImpl(
   return result;
 }
 
+// size_t HybridObjectMotionOnlySmoother::handleKeyFrame(gtsam::Values&
+// smoother_state, const gtsam::Pose3& H_W_KF_k_initial,
+//     Frame::Ptr frame, const TrackletIds& tracklets)
+// {
+//   CHECK(m_L_points_.empty());
+//   CHECK(awaiting_measurements_.empty());
+
+//   const auto frame_id = frameId();
+//   size_t num_tracks_used = 0;
+//   for (const TrackletId& tracklet_id : tracklets) {
+//     CHECK(!m_L_points_.exists(tracklet_id));
+//     const Feature::Ptr feature = frame->at(tracklet_id);
+//     CHECK(feature);
+
+//     auto [stereo_keypoint_status, stereo_measurement] =
+//         rgbd_camera_->getStereo(feature);
+//     if (!stereo_keypoint_status) {
+//       continue;
+//     }
+
+//     double disparity = stereo_measurement.uL() - stereo_measurement.uR();
+//     if (disparity < 0.5) {
+//       continue;
+//     }
+
+//     awaiting_measurements_[tracklet_id] =
+//       std::vector<std::pair<FrameId,
+//       gtsam::StereoPoint2>>{std::make_pair(frame_id, stereo_measurement)};
+//     num_tracks_used++;
+//   }
+
+//   return num_tracks_used;
+// }
+
+// size_t HybridObjectMotionOnlySmoother::handleRegularFrame(gtsam::Values&
+// smoother_state, const gtsam::Pose3& H_W_KF_k_initial,
+//   Frame::Ptr frame, const TrackletIds& tracklets)
+// {
+//   const auto frame_id = frameId();
+
+//   gtsam::SharedNoiseModel stereo_noise_model =
+//       gtsam::noiseModel::Isotropic::Sigma(3u, 2.0);
+//   stereo_noise_model =
+//       factor_graph_tools::robustifyHuber(0.01, stereo_noise_model);
+
+//   // for debug stats
+//   size_t num_tracks_used = 0;
+//   size_t avg_feature_age = 0;
+
+//   size_t points_in_previous_kf = 0;
+//   // object_motion_to_tracklets_.insert2(H_key_k, TrackletIds{});
+
+//   for (const TrackletId& tracklet_id : tracklets) {
+//     const Feature::Ptr feature = frame->at(tracklet_id);
+//     CHECK(feature);
+
+//     auto [stereo_keypoint_status, stereo_measurement] =
+//         rgbd_camera_->getStereo(feature);
+//     if (!stereo_keypoint_status) {
+//       continue;
+//     }
+
+//     double disparity = stereo_measurement.uL() - stereo_measurement.uR();
+//     if (disparity < 0.5) {
+//       continue;
+//     }
+
+//     if (!m_L_points_.exists(tracklet_id)) {
+//       // check we have enough measurements on this tracklet
+//       if(!awaiting_measurements_.exists(tracklet_id)) {
+//         awaiting_measurements_[tracklet_id] =
+//           std::vector<std::pair<FrameId, gtsam::StereoPoint2>>();
+//       }
+//       auto& measurement_vector = awaiting_measurements_.at(tracklet_id);
+//       measurement_vector.push_back(std::make_pair(frame_id,
+//       stereo_measurement));
+
+//       const gtsam::Values& states_since_lkf = getValuesSinceLastKF();
+
+//       // attempt triangulation
+//       for(const auto [frame_id_i, stereo_measurement] : measurement_vector) {
+//         const gtsam::Pose3 X_w_i = getCameraPose(frame_id_i);
+//         const gtsam::Pose3 H_W_KF_ki =
+//         states_since_lkf.at<gtsam::Pose3>(ObjectMotionSymbol(object_id_,
+//         frame_id_i));
+
+//         const gtsam::Pose3 leftPose = X_W_i;
+//         const gtsam::Cal3_S2 monoCal = K_stereo_->calibration();
+//         const GtsamCamera leftCamera_i(leftPose, monoCal);
+//         const gtsam::Pose3 left_Pose_right = gtsam::Pose3(
+//             gtsam::Rot3(), gtsam::Point3(K_stereo_->baseline(), 0.0, 0.0));
+//         const gtsam::Pose3 rightPose = leftPose.compose(left_Pose_right);
+//         const GtsamCamera rightCamera_i(rightPose, monoCal);
+//       }
+
+//       const gtsam::Point3 m_X_k = frame->backProjectToCamera(tracklet_id);
+//       Landmark m_L_init = HybridObjectMotion::projectToObject3(
+//           X_W_k, H_W_KF_k_initial, L_KF, m_X_k);
+//       m_L_points_.insert2(tracklet_id, m_L_init);
+
+//       trackletid_to_frame_ids_.insert2(tracklet_id, FrameIds{});
+
+//       if (all_object_points.exists(tracklet_id)) {
+//         points_in_previous_kf++;
+//       }
+//     }
+//     const TrackletFramePair tracklet_frame_pair{tracklet_id, frame_id};
+//     CHECK(!mo_factor_map_.exists(tracklet_frame_pair)) <<
+//     tracklet_frame_pair;
+
+//     auto factor = boost::make_shared<StereoHybridMotionFactor3>(
+//         stereo_measurement, L_KF, X_W_k, m_L_points_.at(tracklet_id),
+//         stereo_noise_model, stereo_calibration_, H_key_k, false);
+
+//     const Slot starting_slot = new_factors.size();
+
+//     mo_factor_map_.insert2(tracklet_frame_pair,
+//                            std::make_pair(factor, starting_slot));
+//     mo_factor_to_tracklet_id_.insert2(factor, tracklet_frame_pair);
+//     trackletid_to_frame_ids_.at(tracklet_id).push_back(frame_id);
+//     object_motion_to_tracklets_.at(H_key_k).push_back(tracklet_id);
+
+//     new_factors += factor;
+
+//     num_tracks_used++;
+//     avg_feature_age += feature->age();
+//   }
+// }
+
 gtsam::Pose3 HybridObjectMotionOnlySmoother::keyFrameMotionImpl(
     FrameId frame_id, const gtsam::Values& values) const {
   const gtsam::Symbol H_key_k = ObjectMotionSymbol(object_id_, frame_id);
@@ -859,6 +998,7 @@ void HybridObjectMotionOnlySmoother::onNewKeyFrameMotion(
   trackletid_to_frame_ids_.clear();
   object_motion_to_tracklets_.clear();
 
+  // awaiting_measurements_.clear();
   m_L_points_.clear();
 }
 
@@ -874,8 +1014,6 @@ HybridObjectMotionSmartSmoother::updateFromInitialMotionImpl(
   const gtsam::Pose3 X_W_k = frame->getPose();
   // get current keyframe pose
   const gtsam::Pose3 L_KF = keyFramePose();
-
-  camera_poses_.insert2(frame_id, X_W_k);
 
   gtsam::Values new_values;
   gtsam::NonlinearFactorGraph new_factors;
@@ -1119,7 +1257,7 @@ gtsam::Pose3 HybridObjectMotionSmartSmoother::keyFrameMotionImpl(
 
   const gtsam::Pose3 G_W_KF_k = values.at<gtsam::Pose3>(H_key_k).inverse();
   const gtsam::Pose3 H_W_KF_k =
-      camera_poses_.at(frame_id) * G_W_KF_k * L_W_KF.inverse();
+      getCameraPose(frame_id) * G_W_KF_k * L_W_KF.inverse();
   return H_W_KF_k;
 }
 
@@ -1239,6 +1377,11 @@ HybridObjectMotionFullSmoother::updateFromInitialMotionImpl(
         rgbd_camera_->getStereo(feature);
 
     if (!stereo_keypoint_status) {
+      continue;
+    }
+
+    double disparity = stereo_measurement.uL() - stereo_measurement.uR();
+    if (disparity < 0.5) {
       continue;
     }
 

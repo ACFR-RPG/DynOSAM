@@ -371,12 +371,12 @@ bool HybridObjectMotionSolver::solveImpl(
       pose_change_info_.insert2(object_id, info);
     }
 
-    std::string path = dyno::getOutputFilePath(
-        "doo_object_map_k" + std::to_string(frame_k->getFrameId()) + "_j" +
-        std::to_string(object_id) + ".pcd");
-    VLOG(10) << "Writing object map of size "
-             << info.initial_object_points.size() << " - " << path;
-    saveAsPointCloud(info.initial_object_points, path);
+    // std::string path = dyno::getOutputFilePath(
+    //     "doo_object_map_k" + std::to_string(frame_k->getFrameId()) + "_j" +
+    //     std::to_string(object_id) + ".pcd");
+    // VLOG(10) << "Writing object map of size "
+    //          << info.initial_object_points.size() << " - " << path;
+    // saveAsPointCloud(info.initial_object_points, path);
   }
 
   // logic is sperate to keyframe status which determines if a new keyframe
@@ -591,7 +591,7 @@ HybridObjectMotionSolver::createAndInsertFilter(ObjectId object_id,
   } else if (FLAGS_hybrid_motion_solver == 2) {
     // run as full smoother
     solver = HybridObjectMotionSmoother::CreateWithInitialMotion<
-        HybridObjectMotionFullSmoother>(object_id, 15, keyframe_pose, frame,
+        HybridObjectMotionFullSmoother>(object_id, 40, keyframe_pose, frame,
                                         tracklets);
   } else if (FLAGS_hybrid_motion_solver == 3) {
     solver = PnPOnlySolver::CreateWithInitialMotion(object_id, keyframe_pose,

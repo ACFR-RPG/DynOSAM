@@ -382,14 +382,17 @@ bool ThreadsafeQueue<T>::popAll(std::vector<T>& data, size_t duration_ms) {
   data_cond_.wait_for(lk, std::chrono::milliseconds(duration_ms),
                       [this] { return !data_queue_.empty() || shutdown_; });
 
-  while (!data_queue_.empty()) {
+  typename TQB::InternalQueue queue;
+  std::swap(data_queue_, queue);
+  lk.unlock();
+
+  while (!queue.empty()) {
     if (shutdown_) {
       break;
     }
 
-    T value = std::move(*data_queue_.front());
-    data.push_back(value);
-    data_queue_.pop();
+    data.push_back(std::move(*queue.front()));
+    queue.pop();
   }
 
   return !data.empty();

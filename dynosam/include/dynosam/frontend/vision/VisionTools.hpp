@@ -140,6 +140,13 @@ void getCorrespondences(FeaturePairs& correspondences,
   }
 }
 
+void outlierRejectHomography(const std::vector<cv::Point2f>& previous,
+                             const std::vector<cv::Point2f>& current,
+                             const TrackletIds& tracklet_ids,
+                             std::vector<cv::Point2f>& verified_previous,
+                             std::vector<cv::Point2f>& verified_current,
+                             TrackletIds& verified_tracklet_ids);
+
 // unique object labels as present in a semantic/motion segmented image -> does
 // not include background label
 

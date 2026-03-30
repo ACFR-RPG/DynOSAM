@@ -172,7 +172,6 @@ enum PropogateType {
 
 using PropogatePoseResult = TemporalObjectCentricMap<PropogateType>;
 
-// TODO: depricate!
 /**
  * @brief Propogated a map of object poses via their motions or otherwise.
  *
@@ -191,30 +190,17 @@ using PropogatePoseResult = TemporalObjectCentricMap<PropogateType>;
  * current pose (initalised with object_centroids_k). If the last object pose is
  * too far away, the function will just re-enit with the current centroid.
  *
- * @param object_poses ObjectPoseMap& map of object poses and their appearing
- * frames
- * @param object_motions_k const MotionEstimateMap& object motions from k-1 to k
- * (size N)
- * @param object_centroids_k_1 const gtsam::Point3Vector& estimated object
- * centroids at k-1, must be of size N
- * @param object_centroids_k const gtsam::Point3Vector& estimated object
- * centroids at k,. must be of size N
- * @param frame_id_k FrameId current frame id (k)
+ * @param object_trajectories
+ * @param object_motions_k
+ * @param object_centroids_k_1
+ * @param object_centroids_k
+ * @param frame_id_k
+ * @param timestamp_k
+ * @param timestamp_km1
  * @param gt_packet_map std::optional<GroundTruthPacketMap> optionally provided
- * gt map
  * @param result PropogatePoseResult* result map. If not null, will be populated
  * with how each object new object pose was calculated
  */
-void propogateObjectPoses(
-    ObjectPoseMap& object_poses, const MotionEstimateMap& object_motions_k,
-    const gtsam::Point3Vector& object_centroids_k_1,
-    const gtsam::Point3Vector& object_centroids_k, FrameId frame_id_k,
-    std::optional<GroundTruthPacketMap> gt_packet_map = {},
-    PropogatePoseResult* result = nullptr);
-
-// DUPLICATED FOR NOW
-// TODO: should be called propogateTrajectories becuase the object motion is
-// included
 void propogateObjectTrajectory(
     MultiObjectTrajectories& object_trajectories,
     const MotionEstimateMap& object_motions_k,

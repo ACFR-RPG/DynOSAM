@@ -1,6 +1,7 @@
 #pragma once
 
 #include <gtsam/linear/NoiseModel.h>
+#include <gtsam/nonlinear/GaussNewtonOptimizer.h>
 #include <gtsam/nonlinear/LevenbergMarquardtOptimizer.h>
 
 #include "dynosam/factors/Pose3FlowProjectionFactor.h"
@@ -162,32 +163,11 @@ class OpticalFlowAndPoseSolver {
     std::unordered_set<gtsam::Key> outlier_flows;
     // graph we will mutate by removing outlier factors
     gtsam::NonlinearFactorGraph mutable_graph = graph;
-    gtsam::Values optimised_values = values;
 
-    gtsam::LevenbergMarquardtParams opt_params;
-    // for speed
-    opt_params.setMaxIterations(10);
-    // this is basically a set of prior looking factors on a pose so we know we
-    // need to eliminate the pose last to avoid fill in therefore we use our own
-    // custom ordering that has the pose last
-    opt_params.setOrdering(ordering);
-    if (VLOG_IS_ON(200))
-      opt_params.verbosity = gtsam::NonlinearOptimizerParams::Verbosity::ERROR;
-
-    {
-      utils::ChronoTimingStats timer("of_pose_solver.LM_solve", 7);
-      dyno::NonlinearOptimizer<gtsam::LevenbergMarquardtOptimizer> solver(
-          mutable_graph, optimised_values, opt_params);
-
-      NonlinearOptimizerSummary summary;
-      NonlinearOptimizerOptions options;
-      CHECK(solver.solve(optimised_values, options, &summary));
-
-      LOG(INFO) << "Initial error: " << summary.initial_error << " final error "
-                << summary.final_error << " time[s] "
-                << summary.cumulative_time_in_seconds
-                << " #iterations= " << summary.numIterations();
-    }
+    // LM way faster apparently!
+    // gtsam::Values optimised_values = solveLM(values, mutable_graph,
+    // ordering);
+    gtsam::Values optimised_values = solveGN(values, mutable_graph, ordering);
 
     gtsam::FactorIndices outlier_factors;
     // if we have outliers, enter iteration loop
@@ -221,9 +201,9 @@ class OpticalFlowAndPoseSolver {
 
           optimised_values.update(pose_key, initial_pose);
           // do we use values or optimised values here?
-          optimised_values = gtsam::LevenbergMarquardtOptimizer(
-                                 mutable_graph, optimised_values, opt_params)
-                                 .optimize();
+          // optimised_values = gtsam::LevenbergMarquardtOptimizer(
+          //                        mutable_graph, optimised_values, opt_params)
+          //                        .optimize();
           // error_after = mutable_graph.error(optimised_values);
           // post_errors.push_back(error_after);
 
@@ -386,6 +366,75 @@ class OpticalFlowAndPoseSolver {
 
     // refresh depth information for each frame
     CHECK(frame_k->updateDepths());
+  }
+
+ private:
+  gtsam::Values solveLM(const gtsam::Values& values,
+                        const gtsam::NonlinearFactorGraph& graph,
+                        const gtsam::Ordering& ordering) const {
+    gtsam::LevenbergMarquardtParams opt_params;
+    // for speed
+    opt_params.setMaxIterations(10);
+    // this is basically a set of prior looking factors on a pose so we know we
+    // need to eliminate the pose last to avoid fill in therefore we use our own
+    // custom ordering that has the pose last
+    opt_params.setOrdering(ordering);
+    if (VLOG_IS_ON(200)) {
+      opt_params.verbosity = gtsam::NonlinearOptimizerParams::Verbosity::ERROR;
+    }
+
+    dyno::NonlinearOptimizer<gtsam::LevenbergMarquardtOptimizer> solver(
+        graph, values, opt_params);
+
+    NonlinearOptimizerSummary summary;
+    NonlinearOptimizerOptions options;
+
+    gtsam::Values optimised_values = values;
+    {
+      utils::ChronoTimingStats timer("of_pose_solver.LM_solve", 7);
+      CHECK(solver.solve(optimised_values, options, &summary));
+    }
+
+    LOG(INFO) << "Initial error: " << summary.initial_error << " final error "
+              << summary.final_error << " time[s] "
+              << summary.cumulative_time_in_seconds
+              << " #iterations= " << summary.numIterations();
+
+    return optimised_values;
+  }
+
+  gtsam::Values solveGN(const gtsam::Values& values,
+                        const gtsam::NonlinearFactorGraph& graph,
+                        const gtsam::Ordering& ordering) const {
+    gtsam::GaussNewtonParams opt_params;
+    // for speed
+    opt_params.setMaxIterations(10);
+    // this is basically a set of prior looking factors on a pose so we know we
+    // need to eliminate the pose last to avoid fill in therefore we use our own
+    // custom ordering that has the pose last
+    opt_params.setOrdering(ordering);
+    if (VLOG_IS_ON(200)) {
+      opt_params.verbosity = gtsam::NonlinearOptimizerParams::Verbosity::ERROR;
+    }
+
+    dyno::NonlinearOptimizer<gtsam::GaussNewtonOptimizer> solver(graph, values,
+                                                                 opt_params);
+
+    NonlinearOptimizerSummary summary;
+    NonlinearOptimizerOptions options;
+
+    gtsam::Values optimised_values = values;
+    {
+      utils::ChronoTimingStats timer("of_pose_solver.GN_solve", 7);
+      CHECK(solver.solve(optimised_values, options, &summary));
+    }
+
+    LOG(INFO) << "Initial error: " << summary.initial_error << " final error "
+              << summary.final_error << " time[s] "
+              << summary.cumulative_time_in_seconds
+              << " #iterations= " << summary.numIterations();
+
+    return optimised_values;
   }
 
  private:

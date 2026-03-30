@@ -797,11 +797,16 @@ class MapPlotter3D(Evaluator):
         self._camera_eval = camera_eval
         self._object_eval = object_eval
         self.kwargs = kwargs
+        self._map_points_file = None
 
-        self._map_points_file = read_csv(
-            map_points_csv_file_path,
-            ["frame_id", "object_id", "tracklet_id", "x_world", "y_world", "z_world"]
-        )
+        try:
+            self._map_points_file = read_csv(
+                map_points_csv_file_path,
+                ["frame_id", "object_id", "tracklet_id", "x_world", "y_world", "z_world"]
+            )
+        except Exception as e:
+            pass
+
 
     def process(self, plot_collection: evo_plot.PlotCollection, results: Dict):
         print("Logging 3d points")
@@ -908,77 +913,78 @@ class MapPlotter3D(Evaluator):
 
         tracklet_set = set()
 
-        for row in self._map_points_file:
-            frame_id = float(row["frame_id"])
-            object_id = int(row["object_id"])
-            tracklet_id = int(row["tracklet_id"])
+        if self._map_points_file is not None:
+            for row in self._map_points_file:
+                frame_id = float(row["frame_id"])
+                object_id = int(row["object_id"])
+                tracklet_id = int(row["tracklet_id"])
 
 
-            if tracklet_id in tracklet_set:
-                continue
-
-            x_world = float(row["x_world"])
-            y_world = float(row["y_world"])
-            z_world = float(row["z_world"])
-
-            # do lazy conversion from camera convention to world convention
-            t_cam_convention = np.array([x_world, y_world, z_world, 1])
-            transform =camera_coordinate_to_world()
-            t_robot_convention = transform @ t_cam_convention
-
-            if object_id == 0 and plot_static_points:
-                static_points.append([t_robot_convention[0], t_robot_convention[1], t_robot_convention[2]])
-
-                tracklet_set.add(tracklet_id)
-            elif plot_object_points:
-                # just draw last object
-                # cont
-
-                # # this might happen becuase we log ALL the points, even on objects we only see a few number of times
-                if object_id not in object_trajs:
+                if tracklet_id in tracklet_set:
                     continue
 
-                # # # since this takes AGES just skip every 10 frames
-                # if int(frame_id) % 10 != 0:
-                #     continue
+                x_world = float(row["x_world"])
+                y_world = float(row["y_world"])
+                z_world = float(row["z_world"])
 
-                # object_trajectory = self._object_eval.make_object_trajectory(object_id)
-                # #this worls for when the code output the frame id as the timestamp (which may change in future?)
-                # object_trajectory_frames = object_trajs[object_id].timestamps
+                # do lazy conversion from camera convention to world convention
+                t_cam_convention = np.array([x_world, y_world, z_world, 1])
+                transform =camera_coordinate_to_world()
+                t_robot_convention = transform @ t_cam_convention
 
-                # last_frame = object_trajectory_frames[-1]
+                if object_id == 0 and plot_static_points:
+                    static_points.append([t_robot_convention[0], t_robot_convention[1], t_robot_convention[2]])
 
-                # print(f"frame {frame_id} last frame {last_frame}")
+                    tracklet_set.add(tracklet_id)
+                elif plot_object_points:
+                    # just draw last object
+                    # cont
 
-                # if frame_id < last_frame:
-                #     k_H_last = lie_algebra.se3()
+                    # # this might happen becuase we log ALL the points, even on objects we only see a few number of times
+                    if object_id not in object_trajs:
+                        continue
 
-                #     # calculate motion that takes us from current frame to last frame
-                #     for i in range(int(frame_id+1), last_frame):
-                #         # motions need to be in robot convention!!
-                #         _, motion = object_trajectory.get_motion_with_pose_current(i)
-                #         assert motion is not None
-                #         k_H_last = motion @ k_H_last
+                    # # # since this takes AGES just skip every 10 frames
+                    # if int(frame_id) % 10 != 0:
+                    #     continue
+
+                    # object_trajectory = self._object_eval.make_object_trajectory(object_id)
+                    # #this worls for when the code output the frame id as the timestamp (which may change in future?)
+                    # object_trajectory_frames = object_trajs[object_id].timestamps
+
+                    # last_frame = object_trajectory_frames[-1]
+
+                    # print(f"frame {frame_id} last frame {last_frame}")
+
+                    # if frame_id < last_frame:
+                    #     k_H_last = lie_algebra.se3()
+
+                    #     # calculate motion that takes us from current frame to last frame
+                    #     for i in range(int(frame_id+1), last_frame):
+                    #         # motions need to be in robot convention!!
+                    #         _, motion = object_trajectory.get_motion_with_pose_current(i)
+                    #         assert motion is not None
+                    #         k_H_last = motion @ k_H_last
 
 
-                #     # put points from frame K to last frame
-                #     t_robot_convention = k_H_last @ t_robot_convention
+                    #     # put points from frame K to last frame
+                    #     t_robot_convention = k_H_last @ t_robot_convention
 
 
-                # if int(frame_id) == int(last_frame):
-                    # get normalised timestamp in range 0-1
-                    # normalised_frame_id = (frame_id - np.min(object_trajectory_frames))/(np.max(object_trajectory_frames) - np.min(object_trajectory_frames))
-                    # print(frame_id)
-                    # print(normalised_frame_id)
-                    # time_dependant_colour = colour_generator_map[object_id](normalised_frame_id)
+                    # if int(frame_id) == int(last_frame):
+                        # get normalised timestamp in range 0-1
+                        # normalised_frame_id = (frame_id - np.min(object_trajectory_frames))/(np.max(object_trajectory_frames) - np.min(object_trajectory_frames))
+                        # print(frame_id)
+                        # print(normalised_frame_id)
+                        # time_dependant_colour = colour_generator_map[object_id](normalised_frame_id)
 
-                if object_id not in object_points:
-                    # x,y,z,colour
-                    object_points[object_id] = [[], [], []]
+                    if object_id not in object_points:
+                        # x,y,z,colour
+                        object_points[object_id] = [[], [], []]
 
-                object_points[object_id][0].append(t_robot_convention[0])
-                object_points[object_id][1].append(t_robot_convention[1])
-                object_points[object_id][2].append(t_robot_convention[2])
+                    object_points[object_id][0].append(t_robot_convention[0])
+                    object_points[object_id][1].append(t_robot_convention[1])
+                    object_points[object_id][2].append(t_robot_convention[2])
 
                 # print(f"Adding object point {t_robot_convention}: {object_id}")
 
@@ -989,25 +995,26 @@ class MapPlotter3D(Evaluator):
         ax.patch.set_facecolor('white')
         ax.axis('off')
 
-        static_points = np.array(static_points)
+        if len(static_points) > 0:
+            static_points = np.array(static_points)
 
-        if downsample_static_cloud is not None:
-            assert type(downsample_static_cloud) == float
+            if downsample_static_cloud is not None:
+                assert type(downsample_static_cloud) == float
 
-            import open3d as o3d
-            static_pc = o3d.geometry.PointCloud()
-            static_pc.points = o3d.utility.Vector3dVector(static_points)
+                import open3d as o3d
+                static_pc = o3d.geometry.PointCloud()
+                static_pc.points = o3d.utility.Vector3dVector(static_points)
 
-            logger.info(f"Downsampling static cloud with voxel size {downsample_static_cloud}")
-            static_pc_down = static_pc.voxel_down_sample(voxel_size=downsample_static_cloud)
+                logger.info(f"Downsampling static cloud with voxel size {downsample_static_cloud}")
+                static_pc_down = static_pc.voxel_down_sample(voxel_size=downsample_static_cloud)
 
-            static_points = np.asarray(static_pc_down.points)
+                static_points = np.asarray(static_pc_down.points)
 
-        # static points
-        # some of these params are after handtuning on particular datasets for pretty figures ;)
-        ax.scatter(static_points[:,0], static_points[:,1], static_points[:,2], s=2.0, c='black',alpha=1.0, zorder=0, marker=".")
-        for (_, data), object_colour in zip(object_points.items(), colour_list):
-            ax.scatter(data[0], data[1], data[2], s=3.0, alpha=0.7, c=object_colour)
+            # static points
+            # some of these params are after handtuning on particular datasets for pretty figures ;)
+            ax.scatter(static_points[:,0], static_points[:,1], static_points[:,2], s=2.0, c='black',alpha=1.0, zorder=0, marker=".")
+            for (_, data), object_colour in zip(object_points.items(), colour_list):
+                ax.scatter(data[0], data[1], data[2], s=3.0, alpha=0.7, c=object_colour)
 
 
         trajectory_helper.set_ax_limits(map_fig.gca())

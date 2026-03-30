@@ -483,9 +483,12 @@ class IncrementalInterface {
 
  private:
   bool doExtraUpdateIterations() {
+    Smoother& smoother = *smoother_;
     for (size_t n_iter = 1; n_iter < max_extra_iterations_; ++n_iter) {
       try {
-        SmootherTraitsType::update(*smoother_, UpdateArguments{});
+        SmootherTraitsType::update(smoother, UpdateArguments{});
+        SmootherTraitsType::calculateEstimate(smoother);
+
       } catch (const std::runtime_error& e) {
         LOG(WARNING) << "Smoother failed running extra update steps: "
                      << e.what();

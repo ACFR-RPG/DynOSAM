@@ -38,26 +38,36 @@ OpenCVImageDisplayQueue::OpenCVImageDisplayQueue(
       parallel_run_(parallel_run) {}
 
 void OpenCVImageDisplayQueue::process() {
-  bool queue_state = false;
-  if (parallel_run_) {
-    ImageToDisplay image_to_display;
-    queue_state = display_queue_->popBlockingWithTimeout(image_to_display, 2);
+  // bool queue_state = false;
+  // if (parallel_run_) {
+  //   ImageToDisplay image_to_display;
+  //   queue_state = display_queue_->popBlockingWithTimeout(image_to_display,
+  //   2);
 
-    if (queue_state) {
-      // cv::namedWindow(image_to_display.name_);
+  //   if (queue_state) {
+  //     // cv::namedWindow(image_to_display.name_);
+  //     cv::imshow(image_to_display.name_, image_to_display.image_);
+  //     cv::waitKey(1);  // Not needed because we are using startWindowThread()
+  //   }
+  // } else {
+  //   std::vector<ImageToDisplay> images_to_display;
+  //   queue_state = display_queue_->popAll(images_to_display, 2);
+
+  //   if (queue_state) {
+  //     for (const auto& image_to_display : images_to_display) {
+  //       cv::imshow(image_to_display.name_, image_to_display.image_);
+  //     }
+  //     cv::waitKey(1);
+  //   }
+  // }
+  std::vector<ImageToDisplay> images_to_display;
+  bool queue_state = display_queue_->popAll(images_to_display, 2);
+
+  if (queue_state) {
+    for (const auto& image_to_display : images_to_display) {
       cv::imshow(image_to_display.name_, image_to_display.image_);
-      cv::waitKey(1);  // Not needed because we are using startWindowThread()
     }
-  } else {
-    std::vector<ImageToDisplay> images_to_display;
-    queue_state = display_queue_->popAll(images_to_display, 2);
-
-    if (queue_state) {
-      for (const auto& image_to_display : images_to_display) {
-        cv::imshow(image_to_display.name_, image_to_display.image_);
-      }
-      cv::waitKey(1);
-    }
+    cv::waitKey(1);
   }
 }
 

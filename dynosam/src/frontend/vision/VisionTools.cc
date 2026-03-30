@@ -99,6 +99,38 @@ namespace vision_tools {
 //   // }
 // }
 
+void outlierRejectHomography(const std::vector<cv::Point2f>& previous,
+                             const std::vector<cv::Point2f>& current,
+                             const TrackletIds& tracklet_ids,
+                             std::vector<cv::Point2f>& verified_previous,
+                             std::vector<cv::Point2f>& verified_current,
+                             TrackletIds& verified_tracklet_ids) {
+  CHECK_EQ(previous.size(), current.size());
+  CHECK_EQ(tracklet_ids.size(), previous.size());
+
+  auto find_homograph = [&previous, &current]() -> cv::Mat {
+    if (previous.size() >= 4) {  // Minimum number of points required for RANSAC
+      cv::Mat mask;
+      cv::findHomography(previous, current, cv::RANSAC, 5.0, mask);
+      return mask;
+    } else {
+      return cv::Mat::ones(
+          previous.size(), 1,
+          CV_8U);  // If not enough points, assume all are inliers
+    }
+  };
+
+  const cv::Mat geometric_verification_mask = find_homograph();
+
+  for (int i = 0; i < geometric_verification_mask.rows; ++i) {
+    if (geometric_verification_mask.at<uchar>(i)) {
+      verified_current.push_back(current.at(i));
+      verified_previous.push_back(previous.at(i));
+      verified_tracklet_ids.push_back(tracklet_ids.at(i));
+    }
+  }
+}
+
 ObjectIds getObjectLabels(const cv::Mat& image) {
   // CHECK(!image.empty());
   // std::unordered_set<ObjectId> unique_labels;

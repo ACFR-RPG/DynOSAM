@@ -11,20 +11,24 @@ plt.rcdefaults()
 
 
 
-def make_plot(results_folder_path, prefix, plot_collection: evo_plot.PlotCollection=None):
+def make_plot(results_folder_path, prefix, title_extension:str = None, plot_collection: evo_plot.PlotCollection=None):
     dataset_eval = eval.DatasetEvaluator(results_folder_path)
     data_files = dataset_eval.make_data_files(prefix)
 
     map_points_log_path = dataset_eval.create_existing_file_path(data_files.map_point_log)
-    if map_points_log_path is None:
-        print("Cannot find map points file")
-        return
+    # if map_points_log_path is None:
+    #     print("Cannot find map points file")
+    #     return
 
     camera_pose_eval = dataset_eval.create_camera_pose_evaluator(data_files)
     motion_eval = dataset_eval.create_motion_error_evaluator(data_files)
 
-    plotter = eval.MapPlotter3D(map_points_log_path, camera_pose_eval, motion_eval, title=prefix,
-                                plot_object_points=True,
+    title = prefix
+    if title_extension is not None:
+        title = prefix + "_" + title_extension
+
+    plotter = eval.MapPlotter3D(map_points_log_path, camera_pose_eval, motion_eval, title=title,
+                                plot_object_points=False,
                                 plot_gt_objects=True,
                                 plot_gt_camera=True,
                                 downsample_static_cloud=0.05)
@@ -67,12 +71,16 @@ def make_plot(results_folder_path, prefix, plot_collection: evo_plot.PlotCollect
 # make_plot("/root/results/misc/", "object_centric_LM_opt_backend")
 
 plot_collection = evo_plot.PlotCollection("Map")
+
+make_plot("/root/results/frontend_filtering/omd_MO_test_with_update/", "pc-frontend", title_extension="MO_Update", plot_collection=plot_collection)
+make_plot("/root/results/frontend_filtering/omd_MO_test", "pc-frontend", plot_collection=plot_collection)
+
 # make_plot("/root/results/TRO2025/omd_swinging_4_unconstrained_sliding", "rgbd_motion_world_backend", plot_collection)
 
 # make_plot("/root/results/misc/", "wcme_isam_opt_backend", plot_collection)
 # make_plot("/root/results/misc/", "hybrid_isam_opt_backend", plot_collection)
-make_plot("/root/results/misc/", "hybrid_backend", plot_collection)
-make_plot("/root/results/misc/", "hybrid_batch_opt_backend", plot_collection)
+# make_plot("/root/results/misc/", "hybrid_backend", plot_collection)
+# make_plot("/root/results/misc/", "hybrid_batch_opt_backend", plot_collection)
 
 # make_plot("/root/results/misc/", "wcme_backend", plot_collection)
 # make_plot("/root/results/misc/", "wcme_batch_opt_backend", plot_collection)

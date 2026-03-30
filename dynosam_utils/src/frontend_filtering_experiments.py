@@ -148,7 +148,7 @@ def run_experiment_sequences(dataset_path, dataset_name, dataset_loader, *args):
         args_list.extend(list(specific_args))
         return args_list
     # run fukk hybrid in (full)batch mode to get results!!
-    run_sequnce(dataset_path, dataset_name, dataset_loader, kf_hybrid,  *append_args_list(), run_as_frontend=False, run_as_experiment=False, run_analysis=False)
+    run_sequnce(dataset_path, dataset_name, dataset_loader, kf_hybrid,  *append_args_list(), run_as_frontend=False, run_as_experiment=False, run_analysis=True)
 
 
 def run_viodes():
@@ -180,7 +180,18 @@ def run_tartan_air():
 
 def run_cluster():
     # run_experiment_sequences("/root/data/cluster_slam/CARLA-L2/", "cluster_l2_static_only", cluster_dataset)
-    run_experiment_sequences("/root/data/cluster_slam/CARLA-L1/", "carla_test_MO", cluster_dataset,  "--use_backend=true","--hybrid_motion_solver=4")
+    run_experiment_sequences("/root/data/cluster_slam/CARLA-L1/", "carla_l1_MO", cluster_dataset,  "--use_backend=false","--hybrid_motion_solver=4")
+    run_experiment_sequences("/root/data/cluster_slam/CARLA-L1/", "carla_l1_PnP", cluster_dataset,  "--use_backend=false","--hybrid_motion_solver=3")
+
+    run_experiment_sequences("/root/data/cluster_slam/CARLA-L2/", "carla_l2_MO", cluster_dataset,  "--use_backend=false","--hybrid_motion_solver=4")
+    run_experiment_sequences("/root/data/cluster_slam/CARLA-L2/", "carla_l2_PnP", cluster_dataset,  "--use_backend=false","--hybrid_motion_solver=3")
+
+    run_experiment_sequences("/root/data/cluster_slam/CARLA-S2/", "carla_S2_MO", cluster_dataset,  "--use_backend=false","--hybrid_motion_solver=4")
+    run_experiment_sequences("/root/data/cluster_slam/CARLA-S2/", "carla_S2_PnP", cluster_dataset,  "--use_backend=false","--hybrid_motion_solver=3")
+
+    run_experiment_sequences("/root/data/cluster_slam/CARLA-S1/", "carla_S1_MO", cluster_dataset,  "--use_backend=false","--hybrid_motion_solver=4")
+    run_experiment_sequences("/root/data/cluster_slam/CARLA-S1/", "carla_S1_PnP", cluster_dataset,  "--use_backend=false","--hybrid_motion_solver=3")
+
     # run_experiment_sequences("/root/data/cluster_slam/CARLA-S2/", "cluster_s2_static_only", cluster_dataset)
     # run_experiment_sequences("/root/data/cluster_slam/CARLA-S1/", "cluster_s1_static_only", cluster_dataset)
 
@@ -203,9 +214,15 @@ def run_hybrid_solver_comparison_omd():
     # run_experiment_sequences("/root/data/vdo_slam/omd/omd/swinging_4_unconstrained_stereo/","omd_FS", omd_dataset, "--ending_frame=500", "--hybrid_motion_solver=2")
     # run_experiment_sequences("/root/data/vdo_slam/omd/omd/swinging_4_unconstrained_stereo/","omd_SS", omd_dataset, "--ending_frame=500", "--hybrid_motion_solver=1")
     # run_experiment_sequences("/root/data/vdo_slam/omd/omd/swinging_4_unconstrained_stereo/","omd_EIF", omd_dataset, "--ending_frame=500", "--hybrid_motion_solver=0")
-    # run_experiment_sequences("/root/data/vdo_slam/omd/omd/swinging_4_unconstrained_stereo/","omd_PnP", omd_dataset, "--ending_frame=500", "--hybrid_motion_solver=3")
-    run_experiment_sequences("/root/data/vdo_slam/omd/omd/swinging_4_unconstrained_stereo/","omd_MO_test2", omd_dataset, "--ending_frame=300", "--hybrid_motion_solver=4", "--use_backend=true")
+    # run_experiment_sequences("/root/data/vdo_slam/omd/omd/swinging_4_unconstrained_stereo/","omd_PnP", omd_dataset, "--ending_frame=250", "--hybrid_motion_solver=3",  "--use_backend=false")
+    # run_experiment_sequences("/root/data/vdo_slam/omd/omd/swinging_4_unconstrained_stereo/","omd_MO_test", omd_dataset, "--ending_frame=250", "--hybrid_motion_solver=4", "--use_backend=false")
+    # run_experiment_sequences("/root/data/vdo_slam/omd/omd/swinging_4_unconstrained_stereo/","omd_FS_test", omd_dataset, "--ending_frame=250", "--hybrid_motion_solver=2", "--use_backend=false")
     # run_experiment_sequences("/root/data/vdo_slam/omd/omd/swinging_4_unconstrained_stereo/","omd_FS_test1", omd_dataset, "--ending_frame=300", "--hybrid_motion_solver=2", "--use_backend=true")
+
+    run_experiment_sequences("/root/data/vdo_slam/omd/omd/swinging_4_unconstrained_stereo/","omd_MO_test", omd_dataset, "--ending_frame=250", "--hybrid_motion_solver=4", "--use_backend=false", "--pc_smoother_allow_backend_updates=false")
+
+    # run_experiment_sequences("/root/data/vdo_slam/omd/omd/swinging_4_unconstrained_stereo/","omd_MO_test_with_update", omd_dataset, "--ending_frame=250", "--hybrid_motion_solver=4", "--use_backend=true", "--pc_smoother_allow_backend_updates=true")
+
 
     # run_analysis("omd_FS")
     # run_analysis("omd_SS")
@@ -229,8 +246,20 @@ def run_hybrid_solver_comparison_kitti():
     # run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0004/","kitti04_MO", kitti_dataset, "--ending_frame=100", "--hybrid_motion_solver=4")
     # run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0020/","kitti20_MO", kitti_dataset, "--hybrid_motion_solver=4")
     # run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0018/","kitti18_MO", kitti_dataset, "--hybrid_motion_solver=4")
-    run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0000/","kitti00_MO", kitti_dataset, "--hybrid_motion_solver=4")
+    # run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0000/","kitti00_MO_1", kitti_dataset, "--use_backend=false", "--hybrid_motion_solver=4")
 
+    run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0018/","kitti18_MO", kitti_dataset, "--use_backend=false", "--hybrid_motion_solver=4")
+    run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0018/","kitti18_PnP", kitti_dataset, "--use_backend=false", "--hybrid_motion_solver=3")
+
+    run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0020/","kitti20_MO", kitti_dataset, "--use_backend=false", "--hybrid_motion_solver=4")
+    run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0020/","kitti20_PnP", kitti_dataset, "--use_backend=false", "--hybrid_motion_solver=3")
+
+
+    run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0000/","kitti00_MO", kitti_dataset, "--use_backend=false", "--hybrid_motion_solver=4")
+    run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0000/","kitti00_PnP", kitti_dataset, "--use_backend=false", "--hybrid_motion_solver=3")
+
+    run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0004/","kitti04_MO", kitti_dataset, "--use_backend=false", "--hybrid_motion_solver=4")
+    run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0004/","kitti04_PnP", kitti_dataset, "--use_backend=false", "--hybrid_motion_solver=3")
 
 
 
@@ -271,14 +300,28 @@ def run_uts_tech_lab_solver_comparison_test():
 if __name__ == '__main__':
     # run_hybrid_solver_comparison_omd()
     # run_hybrid_solver_comparison_kitti()
-    # run_uts_tech_lab_solver_comparison_test()
+    run_uts_tech_lab_solver_comparison_test()
     # run_tartan_air()
     # run_kitti()
     # run_viodes()
-    run_cluster()
+    # run_cluster()
     # run_tartan_air()
     # run_aria()
     # run_omd()
     # run_online_sequence("test_online", "--hybrid_motion_solver=1")
 
-    # run_analysis("test_kitti")
+    # run_analysis("omd_MO_test_with_update")
+    # run_analysis("kitti00_MO")
+    # run_analysis("kitti00_PnP")
+    # run_analysis("kitti18_MO")
+    # run_analysis("kitti18_PnP")
+    # run_analysis("kitti20_MO")
+    # run_analysis("kitti20_PnP")
+    # run_analysis("omd_PnP")
+    # run_analysis("omd_MO_test")
+
+    # run_analysis("carla_l1_MO")
+    # run_analysis("carla_l1_PnP")
+
+    # run_analysis("carla_l2_MO")
+    # run_analysis("carla_l2_PnP")

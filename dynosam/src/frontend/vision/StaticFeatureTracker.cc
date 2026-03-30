@@ -533,17 +533,23 @@ bool KltFeatureTracker::trackPoints(const cv::Mat& current_processed_img,
   }
 
   // Geometric verification using RANSAC
-  const cv::Mat geometric_verification_mask =
-      geometricVerification(good_previous, good_current);
+  // const cv::Mat geometric_verification_mask =
+  //     geometricVerification(good_previous, good_current);
+  // std::vector<cv::Point2f> verified_current, verified_previous;
+  // TrackletIds verified_tracklets;
+  // for (int i = 0; i < geometric_verification_mask.rows; ++i) {
+  //   if (geometric_verification_mask.at<uchar>(i)) {
+  //     verified_current.push_back(good_current.at(i));
+  //     verified_previous.push_back(good_previous.at(i));
+  //     verified_tracklets.push_back(good_tracklets.at(i));
+  //   }
+  // }
+
   std::vector<cv::Point2f> verified_current, verified_previous;
   TrackletIds verified_tracklets;
-  for (int i = 0; i < geometric_verification_mask.rows; ++i) {
-    if (geometric_verification_mask.at<uchar>(i)) {
-      verified_current.push_back(good_current.at(i));
-      verified_previous.push_back(good_previous.at(i));
-      verified_tracklets.push_back(good_tracklets.at(i));
-    }
-  }
+  vision_tools::outlierRejectHomography(good_previous, good_current,
+                                        good_tracklets, verified_previous,
+                                        verified_current, verified_tracklets);
 
   CHECK_EQ(verified_tracklets.size(), verified_current.size());
 
@@ -632,19 +638,20 @@ bool KltFeatureTracker::shouldResample(
   return too_few_features || many_old_points;
 }
 
-cv::Mat KltFeatureTracker::geometricVerification(
-    const std::vector<cv::Point2f>& good_old,
-    const std::vector<cv::Point2f>& good_new) const {
-  if (good_old.size() >= 4) {  // Minimum number of points required for RANSAC
-    cv::Mat mask;
-    cv::findHomography(good_old, good_new, cv::RANSAC, 5.0, mask);
-    return mask;
-  } else {
-    return cv::Mat::ones(
-        good_old.size(), 1,
-        CV_8U);  // If not enough points, assume all are inliers
-  }
-}
+// cv::Mat KltFeatureTracker::geometricVerification(
+//     const std::vector<cv::Point2f>& good_old,
+//     const std::vector<cv::Point2f>& good_new) const {
+//   if (good_old.size() >= 4) {  // Minimum number of points required for
+//   RANSAC
+//     cv::Mat mask;
+//     cv::findHomography(good_old, good_new, cv::RANSAC, 5.0, mask);
+//     return mask;
+//   } else {
+//     return cv::Mat::ones(
+//         good_old.size(), 1,
+//         CV_8U);  // If not enough points, assume all are inliers
+//   }
+// }
 
 Feature::Ptr KltFeatureTracker::constructStaticFeatureFromPrevious(
     const Keypoint& kp_current, Feature::Ptr previous_feature,

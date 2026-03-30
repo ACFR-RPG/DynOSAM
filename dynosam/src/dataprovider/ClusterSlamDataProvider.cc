@@ -336,6 +336,8 @@ class ClusterSlamAllLoader {
                                                     right_camera_params);
     stereo_matcher_ = std::make_shared<StereoMatcher>(
         stereo_camera_, StereoMatchingParams{}, dense_stereo_params);
+
+    left_camera_params_.setDepthParams(stereo_camera_->getBaseline());
   }
 
   cv::Mat denseStereoReconstruction(size_t frame) const {
@@ -826,7 +828,7 @@ ClusterSlamDataLoader::ClusterSlamDataLoader(const fs::path& dataset_path)
 
     // TODO: currently cannot use this as frontend does not take RGBDCamera as
     // input (ie no baseline!!)
-    //  if (right_rgb) image_container.rightRgb(right_rgb.value());
+    if (right_rgb) image_container.rightRgb(right_rgb.value());
 
     CHECK(image_container_callback_);
     if (image_container_callback_)

@@ -224,6 +224,12 @@ class HybridObjectMotionSmoother : public HybridObjectMotionSolverImpl,
   PoseWithMotionTrajectory localTrajectoryImpl(
       bool include_keyframe = false) const;
 
+  const gtsam::Pose3& getCameraPose(FrameId frame_id) const {
+    return camera_poses_.at(frame_id);
+  }
+
+  const gtsam::Values& getValuesSinceLastKF() const { return state_since_lKF_; }
+
  protected:
   HybridObjectMotionSmoother(ObjectId object_id, Camera::Ptr camera,
                              double smootherLag);
@@ -286,7 +292,9 @@ class HybridObjectMotionSmoother : public HybridObjectMotionSolverImpl,
   //   return params;
   // }
   static dyno::ISAM2Params DefaultISAM2Params() {
-    dyno::ISAM2Params params;
+    dyno::ISAM2GaussNewtonParams gn_params;
+    // gn_params.wildfireThreshold = 0.00001;
+    dyno::ISAM2Params params(gn_params);
     params.findUnusedFactorSlots = true;
     // OKAY this seems to be extremely important!
     // when cacheLinearizedFactors = true (default) at least on gtsam 4.2.0
@@ -353,6 +361,8 @@ class HybridObjectMotionSmoother : public HybridObjectMotionSolverImpl,
 
   gtsam::Values all_m_L_points_;
 
+  gtsam::FastMap<FrameId, gtsam::Pose3> camera_poses_;
+
  private:
   inline gtsam::FixedLagSmootherResult update(
       const gtsam::NonlinearFactorGraph&,
@@ -382,7 +392,16 @@ class HybridObjectMotionOnlySmoother : public HybridObjectMotionSmoother {
                            const gtsam::Pose3 new_L_KF) override;
 
  private:
+  // size_t handleKeyFrame(gtsam::Values& smoother_state, const gtsam::Pose3&
+  // H_W_KF_k_initial,
+  //   Frame::Ptr frame, const TrackletIds& tracklets);
+  // size_t handleRegularFrame(gtsam::Values& smoother_state, const
+  // gtsam::Pose3& H_W_KF_k_initial,
+  //   Frame::Ptr frame, const TrackletIds& tracklets);
  private:
+  // gtsam::FastMap<TrackletId, std::vector<std::pair<FrameId,
+  // gtsam::StereoPoint2>>> awaiting_measurements_;
+
   GenericFactorMap<TrackletFramePair, StereoHybridMotionFactor3::shared_ptr>
       mo_factor_map_;
 
@@ -423,8 +442,6 @@ class HybridObjectMotionSmartSmoother : public HybridObjectMotionSmoother {
                            const gtsam::Pose3 new_L_KF) override;
 
  private:
-  gtsam::FastMap<FrameId, gtsam::Pose3> camera_poses_;
-
   /// SmartFactor stuff
   FactorMap<gtsam::SmartStereoProjectionPoseFactor::shared_ptr> factor_map_;
   gtsam::FastMap<gtsam::SmartStereoProjectionPoseFactor::shared_ptr, TrackletId>

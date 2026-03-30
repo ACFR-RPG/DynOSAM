@@ -636,32 +636,63 @@ void FeatureTracker::trackDynamicKLT(
       // used as flags argument for calcOpticalFlowPyrLK - initially starts as
       // default (0) flag
       int klt_flags = 0;
-      std::vector<uchar> status;
+      std::vector<uchar> klt_status;
       std::vector<float> err;
 
       utils::ChronoTimingStats calc_LK_timer(
           "dynamic_feature_track_klt.calc_LK");
-      // cv::calcOpticalFlowPyrLK(previous_mono, mono, previous_pts,
-      //                          current_points, status, err,
-      //                          klt_window_size, klt_max_level,
-      //                          klt_criteria, klt_flags);
+      cv::calcOpticalFlowPyrLK(previous_mono, mono, previous_pts,
+                               current_points, klt_status, err, klt_window_size,
+                               klt_max_level, klt_criteria, klt_flags);
+
+      // check flow back
+      std::vector<cv::Point2f> reverse_previous_feature_points = current_points;
+      std::vector<uchar> klt_reverse_status;
+      cv::calcOpticalFlowPyrLK(mono, previous_mono, current_points,
+                               reverse_previous_feature_points,
+                               klt_reverse_status, err, cv::Size(21, 21), 5);
+      CHECK_EQ(klt_reverse_status.size(), tracklet_ids.size());
+
+      auto distance = [](const cv::Point2f& pt1,
+                         const cv::Point2f& pt2) -> float {
+        float dx = pt1.x - pt2.x;
+        float dy = pt1.y - pt2.y;
+        return std::sqrt(dx * dx + dy * dy);
+      };
+      // update klt status based on result from flow
+      for (size_t i = 0; i < klt_status.size(); i++) {
+        const bool both_status_good =
+            klt_status.at(i) && klt_reverse_status.at(i);
+        const bool within_distance =
+            distance(previous_pts.at(i),
+                     reverse_previous_feature_points.at(i)) <= 0.5;
+
+        if (both_status_good && within_distance) {
+          klt_status.at(i) = 1;
+        } else {
+          klt_status.at(i) = 0;
+        }
+      }
+
+      CHECK_EQ(previous_pts.size(), current_points.size());
+      CHECK_EQ(klt_status.size(), current_points.size());
       // TODO: NO CACHING!
-      cv::cuda::GpuMat gpu_prev_img(previous_mono);
-      cv::cuda::GpuMat gpu_current_img(mono);
+      // cv::cuda::GpuMat gpu_prev_img(previous_mono);
+      // cv::cuda::GpuMat gpu_current_img(mono);
 
-      cv::cuda::GpuMat d_points1(previous_pts);    // upload points
-      cv::cuda::GpuMat d_points2(current_points);  // output points
-      cv::cuda::GpuMat d_status;                   // status of each point
-      cv::cuda::GpuMat d_err;                      // error for each point
+      // cv::cuda::GpuMat d_points1(previous_pts);    // upload points
+      // cv::cuda::GpuMat d_points2(current_points);  // output points
+      // cv::cuda::GpuMat d_status;                   // status of each point
+      // cv::cuda::GpuMat d_err;                      // error for each point
 
-      lk_cuda_tracker_->calc(gpu_prev_img, gpu_current_img, d_points1,
-                             d_points2, d_status, d_err);
+      // lk_cuda_tracker_->calc(gpu_prev_img, gpu_current_img, d_points1,
+      //                        d_points2, d_status, d_err);
 
-      // Download results back to CPU
-      d_points2.download(current_points);
-      d_status.download(status);
+      // // Download results back to CPU
+      // d_points2.download(current_points);
+      // d_status.download(status);
 
-      calc_LK_timer.stop();
+      // calc_LK_timer.stop();
 
       // if we used OPTFLOW_USE_INITIAL_FLOW check that we actually got good
       // flow
@@ -682,27 +713,72 @@ void FeatureTracker::trackDynamicKLT(
       // }
 
       CHECK_EQ(previous_pts.size(), current_points.size());
-      CHECK_EQ(status.size(), current_points.size());
+      CHECK_EQ(klt_status.size(), current_points.size());
 
-      std::vector<cv::Point2f> good_current, good_previous;
-      TrackletIds good_tracklets;
+      struct Tracklet2DVectors {
+        std::vector<cv::Point2f> current;
+        std::vector<cv::Point2f> previous;
+        TrackletIds tracklets;
+      };
+
+      gtsam::FastMap<ObjectId, Tracklet2DVectors> good_tracks_per_object;
+      // collect points per object for outlier rejection with homography
       // can also look at the err?
-      for (size_t i = 0; i < status.size(); i++) {
-        if (status[i]) {
-          good_current.push_back(current_points.at(i));
-          good_previous.push_back(previous_pts.at(i));
-          good_tracklets.push_back(tracklet_ids.at(i));
+      for (size_t i = 0; i < klt_status.size(); i++) {
+        if (!klt_status[i]) {
+          continue;
+          // good_current.push_back(current_points.at(i));
+          // good_previous.push_back(previous_pts.at(i));
+          // good_tracklets.push_back(tracklet_ids.at(i));
         }
+
+        TrackletId tracklet_id = tracklet_ids.at(i);
+        const Feature::Ptr previous_feature =
+            previous_inliers.getByTrackletId(tracklet_id);
+
+        const ObjectId object_id = previous_feature->objectId();
+        if (!good_tracks_per_object.exists(object_id)) {
+          good_tracks_per_object.insert2(object_id, Tracklet2DVectors{});
+        }
+
+        Tracklet2DVectors& tracklet_vectors =
+            good_tracks_per_object.at(object_id);
+        tracklet_vectors.current.push_back(current_points.at(i));
+        tracklet_vectors.previous.push_back(previous_pts.at(i));
+        tracklet_vectors.tracklets.push_back(tracklet_id);
       }
 
-      for (size_t i = 0; i < good_tracklets.size(); i++) {
-        TrackletId tracklet_id = good_tracklets.at(i);
+      // geometrically verified feature tracks and tracklets for all objects
+      std::vector<cv::Point2f> verified_current;
+      TrackletIds verified_tracklets;
+      // perform outlier rejection per object
+      for (const auto& [object_id, tracklet_vectors] : good_tracks_per_object) {
+        std::vector<cv::Point2f> verified_current_j, verified_previous_j;
+        TrackletIds verified_tracklets_j;
+
+        vision_tools::outlierRejectHomography(
+            tracklet_vectors.previous, tracklet_vectors.current,
+            tracklet_vectors.tracklets, verified_previous_j, verified_current_j,
+            verified_tracklets_j);
+
+        verified_current.insert(verified_current.begin(),
+                                verified_current_j.begin(),
+                                verified_current_j.end());
+        verified_tracklets.insert(verified_tracklets.begin(),
+                                  verified_tracklets_j.begin(),
+                                  verified_tracklets_j.end());
+      }
+
+      CHECK_EQ(verified_tracklets.size(), verified_current.size());
+
+      for (size_t i = 0; i < verified_tracklets.size(); i++) {
+        TrackletId tracklet_id = verified_tracklets.at(i);
 
         const Feature::Ptr previous_feature =
             previous_inliers.getByTrackletId(tracklet_id);
         CHECK(previous_feature->usable());
 
-        const Keypoint kp = utils::cvPointToGtsam(good_current.at(i));
+        const Keypoint kp = utils::cvPointToGtsam(verified_current.at(i));
         if (!isWithinShrunkenImage(kp)) {
           continue;
         }

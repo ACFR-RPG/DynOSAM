@@ -1,5 +1,10 @@
 #include "dynosam/frontend/PoseChangeVIFrontend.hpp"
 
+#include <gflags/gflags.h>
+
+DEFINE_bool(pc_smoother_allow_backend_updates, false,
+            "If updates from the backend should be received.");
+
 namespace dyno {
 
 PoseChangeVIFrontend::PoseChangeVIFrontend(
@@ -14,16 +19,16 @@ PoseChangeVIFrontend::PoseChangeVIFrontend(
   // TODo
   HybridObjectMotionSolverParams motion_params;
 
+  SharedGroundTruth ground_truth;
   if (FLAGS_init_object_pose_from_gt) {
     LOG(INFO) << "FLAGS_init_object_pose_from_gt is true. Object motion solver "
                  "will attempt to initalise object poses using provided ground "
                  "truth pose!";
-    object_motion_solver_ = std::make_unique<HybridObjectMotionSolver>(
-        motion_params, camera_->getParams(), shared_ground_truth);
-  } else {
-    object_motion_solver_ = std::make_unique<HybridObjectMotionSolver>(
-        motion_params, camera_->getParams());
+    ground_truth = shared_ground_truth_;
   }
+
+  object_motion_solver_ = std::make_unique<HybridObjectMotionSolver>(
+      motion_params, camera_->getParams(), ground_truth);
 }
 
 PoseChangeVIFrontend::~PoseChangeVIFrontend() { logBestEstimates(); }
@@ -33,7 +38,9 @@ void PoseChangeVIFrontend::onBackendUpdateComplete(FrameId frame_id,
   LOG(INFO) << "Recieved backend update at frame " << frame_id;
 
   // TODO: this is definitely not thread safe
-  // object_motion_solver_->receiveUpdate(formulation_->generateUpdateInfo());
+  if (FLAGS_pc_smoother_allow_backend_updates) {
+    object_motion_solver_->receiveUpdate(formulation_->generateUpdateInfo());
+  }
 }
 
 PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::boostrapSpin(
