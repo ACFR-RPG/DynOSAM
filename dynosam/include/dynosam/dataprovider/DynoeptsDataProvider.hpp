@@ -1,0 +1,28 @@
+#include "dynosam/dataprovider/DatasetProvider.hpp"
+#include "dynosam/frontend/VIFrontendInput.hpp"
+#include "dynosam_common/Types.hpp"
+#include "dynosam_common/utils/GtsamUtils.hpp"
+#include "dynosam_common/utils/OpenCVUtils.hpp"
+
+namespace dyno {
+
+// depth, motion masks, gt
+using DynoeptsProvider =
+    DynoDatasetProvider<cv::Mat, cv::Mat, GroundTruthInputPacket>;
+
+/**
+ * @brief
+ */
+class DynoeptsLoader : public DynoeptsProvider {
+ public:
+  DynoeptsLoader(const fs::path& dataset_path);
+
+  CameraParams::Optional getCameraParams() const override {
+    return left_camera_params_;
+  }
+
+ private:
+  CameraParams left_camera_params_;
+};
+
+}  // namespace dyno

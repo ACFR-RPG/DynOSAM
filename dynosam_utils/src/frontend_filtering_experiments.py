@@ -73,6 +73,7 @@ omd_dataset = 3
 aria=4
 tartan_air = 5
 viode = 6
+dynoepts=7
 
 def run_online_sequence(name, *args):
     rosbag = "/root/data/craig_integration/realsense/realsense_2025-02-07-14-57-13_0/"
@@ -207,6 +208,12 @@ def run_kitti():
     run_experiment_sequences("/root/data/vdo_slam/kitti/kitti/0004/", "test_kitti", kitti_dataset, "--shrink_row=25", "--shrink_col=50", "--use_backend=true", "--v=30")
 
 
+def run_dynoepts():
+    run_experiment_sequences("/root/data/dynoepts/UOPE56/others_50-55-004/others_54","dynoepts_uope_54_MO_test", dynoepts, "--hybrid_motion_solver=3", "--use_backend=false", "--pc_smoother_allow_backend_updates=false")
+
+    # run_experiment_sequences("/root/data/dynoepts/UOPE56/others_20-29-002/others_25","dynoepts_uope_25_MO_test", dynoepts, "--hybrid_motion_solver=4", "--use_backend=false", "--pc_smoother_allow_backend_updates=false")
+
+
 def run_aria():
     run_experiment_sequences("/root/data/zed/acfr_2_moving_small", "test_small_acfr", aria, "--use_backend=true",  "--hybrid_motion_solver=2")
 
@@ -300,7 +307,8 @@ def run_uts_tech_lab_solver_comparison_test():
 if __name__ == '__main__':
     # run_hybrid_solver_comparison_omd()
     # run_hybrid_solver_comparison_kitti()
-    run_uts_tech_lab_solver_comparison_test()
+    # run_uts_tech_lab_solver_comparison_test()
+    run_dynoepts()
     # run_tartan_air()
     # run_kitti()
     # run_viodes()

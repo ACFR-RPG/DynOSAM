@@ -34,6 +34,7 @@
 
 #include "dynosam/dataprovider/ClusterSlamDataProvider.hpp"
 #include "dynosam/dataprovider/DataProvider.hpp"
+#include "dynosam/dataprovider/DynoeptsDataProvider.hpp"
 #include "dynosam/dataprovider/KittiDataProvider.hpp"
 #include "dynosam/dataprovider/OMDDataProvider.hpp"
 #include "dynosam/dataprovider/ProjectAriaDataProvider.hpp"
@@ -103,6 +104,12 @@ DataProvider::Ptr DataProviderFactory::Create(
   } else if (dataset_type == DatasetType::VIODE) {
     LOG(INFO) << "Using VIODE dataset at path: " << dataset_folder_path;
     auto loader = std::make_shared<ViodeLoader>(dataset_folder_path);
+    loader->setStartingFrame(FLAGS_starting_frame);
+    loader->setEndingFrame(FLAGS_ending_frame);
+    return loader;
+  } else if (dataset_type == DatasetType::DYNOEPTS) {
+    LOG(INFO) << "Using DYNOEPTS dataset at path: " << dataset_folder_path;
+    auto loader = std::make_shared<DynoeptsLoader>(dataset_folder_path);
     loader->setStartingFrame(FLAGS_starting_frame);
     loader->setEndingFrame(FLAGS_ending_frame);
     return loader;

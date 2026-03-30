@@ -54,6 +54,7 @@ DEFINE_string(
     params_folder_path, "dynosam/params",
     "Path to the folder containing the yaml files with the VIO parameters.");
 
+#include "dynosam/dataprovider/DynoeptsDataProvider.hpp"
 #include "dynosam/dataprovider/KittiDataProvider.hpp"
 #include "dynosam/dataprovider/OMDDataProvider.hpp"
 #include "dynosam/frontend/vision/VisionTools.hpp"
@@ -67,8 +68,8 @@ int main(int argc, char* argv[]) {
   FLAGS_log_prefix = 1;
   FLAGS_v = 30;
 
-  KittiDataLoader::Params params;
-  KittiDataLoader loader("/root/data/vdo_slam/kitti/kitti/0004/", params);
+  // KittiDataLoader::Params params;
+  // KittiDataLoader loader("/root/data/vdo_slam/kitti/kitti/0004/", params);
   // ClusterSlamDataLoader loader("/root/data/cluster_slam/CARLA-S2");
   // loader.setStartingFrame(600);
   // OMDDataLoader loader(
@@ -80,6 +81,9 @@ int main(int argc, char* argv[]) {
 
   // auto detector = dyno::PyObjectDetectorWrapper::CreateYoloDetector();
   // CHECK_NOTNULL(detector);
+
+  DynoeptsLoader loader(
+      "/root/data/dynoepts/UOPE56/others_20-29-002/others_25");
 
   FrontendParams fp;
   fp.tracker_params.feature_detector_type =
@@ -93,121 +97,137 @@ int main(int argc, char* argv[]) {
   auto camera = std::make_shared<Camera>(*loader.getCameraParams());
   auto tracker = std::make_shared<FeatureTracker>(fp, camera);
 
-  loader.setCallback([&](dyno::FrameId frame_id, dyno::Timestamp timestamp,
-                         cv::Mat rgb, cv::Mat optical_flow, cv::Mat depth,
-                         cv::Mat motion, gtsam::Pose3,
-                         GroundTruthInputPacket) -> bool {
-    // LOG(INFO) << utils::Statistics::Print();
-    // loader.setCallback([&](dyno::FrameId frame_id, dyno::Timestamp timestamp,
-    //                        cv::Mat rgb, cv::Mat optical_flow, cv::Mat depth,
-    //                        cv::Mat motion, GroundTruthInputPacket,
-    //                        std::optional<ImuMeasurements> imu_measurements,
-    //                        std::optional<cv::Mat>) -> bool {
-    // loader.setCallback([&](dyno::FrameId frame_id, dyno::Timestamp timestamp,
-    //                        cv::Mat rgb, cv::Mat optical_flow, cv::Mat depth,
-    //                        cv::Mat motion, GroundTruthInputPacket,
-    //                        std::optional<cv::Mat>) -> bool {
-    LOG(INFO) << frame_id << " " << timestamp;
+  loader.registerImageContainerCallback(
+      [&](ImageContainer::Ptr container) -> void {
+        LOG(INFO) << container->frameId() << " " << container->timestamp();
 
-    cv::Mat of_viz, motion_viz, depth_viz;
-    of_viz = ImageType::OpticalFlow::toRGB(optical_flow);
-    motion_viz = ImageType::MotionMask::toRGB(motion);
-    depth_viz = ImageType::Depth::toRGB(depth);
+        cv::Mat rgb_viz, motion_viz, depth_viz;
+        motion_viz =
+            ImageType::MotionMask::toRGB(container->objectMotionMask());
+        depth_viz = ImageType::Depth::toRGB(container->depth());
+        rgb_viz = container->rgb();
 
-    // ImageContainerDeprecate::Ptr container = ImageContainerDeprecate::Create(
-    //     timestamp, frame_id, ImageWrapper<ImageType::RGBMono>(rgb),
-    //     ImageWrapper<ImageType::Depth>(depth),
-    //     ImageWrapper<ImageType::OpticalFlow>(optical_flow),
-    //     ImageWrapper<ImageType::MotionMask>(motion));
+        cv::imshow("RGB", rgb_viz);
+        cv::imshow("Depth", depth_viz);
+        cv::imshow("Motion", motion_viz);
+        cv::waitKey(1);
+      });
 
-    // cv::Mat boarder_mask;
-    // vision_tools::computeObjectMaskBoundaryMask(
-    //     motion,
-    //     boarder_mask,
-    //     8
-    // );
+  // loader.setCallback([&](dyno::FrameId frame_id, dyno::Timestamp timestamp,
+  //                        cv::Mat rgb, cv::Mat optical_flow, cv::Mat depth,
+  //                        cv::Mat motion, gtsam::Pose3,
+  //                        GroundTruthInputPacket) -> bool {
+  // LOG(INFO) << utils::Statistics::Print();
+  // loader.setCallback([&](dyno::FrameId frame_id, dyno::Timestamp timestamp,
+  //                        cv::Mat rgb, cv::Mat optical_flow, cv::Mat depth,
+  //                        cv::Mat motion, GroundTruthInputPacket,
+  //                        std::optional<ImuMeasurements> imu_measurements,
+  //                        std::optional<cv::Mat>) -> bool {
+  // loader.setCallback([&](dyno::FrameId frame_id, dyno::Timestamp timestamp,
+  //                        cv::Mat rgb, cv::Mat optical_flow, cv::Mat depth,
+  //                        cv::Mat motion, GroundTruthInputPacket,
+  //                        std::optional<cv::Mat>) -> bool {
+  // LOG(INFO) << frame_id << " " << timestamp;
 
-    // cv::Scalar red = dyno::Color::red();
+  // cv::Mat of_viz, motion_viz, depth_viz;
+  // of_viz = ImageType::OpticalFlow::toRGB(optical_flow);
+  // motion_viz = ImageType::MotionMask::toRGB(motion);
+  // depth_viz = ImageType::Depth::toRGB(depth);
 
-    // const ObjectIds instance_labels = vision_tools::getObjectLabels(motion);
-    // for(const auto object_id : instance_labels) {
-    //     std::vector<std::vector<cv::Point>> detected_contours;
-    //     vision_tools::findObjectBoundingBox(motion,
-    //     object_id,detected_contours);
+  // ImageContainerDeprecate::Ptr container = ImageContainerDeprecate::Create(
+  //     timestamp, frame_id, ImageWrapper<ImageType::RGBMono>(rgb),
+  //     ImageWrapper<ImageType::Depth>(depth),
+  //     ImageWrapper<ImageType::OpticalFlow>(optical_flow),
+  //     ImageWrapper<ImageType::MotionMask>(motion));
 
-    //     cv::drawContours(boarder_mask, detected_contours, -1, red, 8);
-    // }
+  // cv::Mat boarder_mask;
+  // vision_tools::computeObjectMaskBoundaryMask(
+  //     motion,
+  //     boarder_mask,
+  //     8
+  // );
 
-    // cv::imshow("Mask with boarder", boarder_mask);
+  // cv::Scalar red = dyno::Color::red();
 
-    // cv::imshow("RGB", rgb);
-    // cv::imshow("OF", of_viz);
-    // cv::imshow("Motion", motion_viz);
-    // // cv::waitKey(1);
-    // cv::imshow("Depth", depth_viz);
+  // const ObjectIds instance_labels = vision_tools::getObjectLabels(motion);
+  // for(const auto object_id : instance_labels) {
+  //     std::vector<std::vector<cv::Point>> detected_contours;
+  //     vision_tools::findObjectBoundingBox(motion,
+  //     object_id,detected_contours);
 
-    // auto object_detection_result = detector->process(rgb);
-    // cv::imshow("Detection Result", object_detection_result.colouredMask());
+  //     cv::drawContours(boarder_mask, detected_contours, -1, red, 8);
+  // }
 
-    ImageContainer image_container(frame_id, timestamp);
-    image_container.rgb(rgb)
-        .depth(depth)
-        .opticalFlow(optical_flow)
-        .objectMotionMask(motion);
-    // image_container.rgb(rgb).depth(depth).opticalFlow(optical_flow);
-    auto frame = tracker->track(frame_id, timestamp, image_container);
-    Frame::Ptr previous_frame = tracker->getPreviousFrame();
+  // cv::imshow("Mask with boarder", boarder_mask);
 
-    // if(frame_id == 605) {
-    //   auto all_tracks = frame->static_features_.collectTracklets();
-    //   frame->static_features_.markOutliers(all_tracks);
-    // }
+  // cv::imshow("RGB", rgb);
+  // cv::imshow("OF", of_viz);
+  // cv::imshow("Motion", motion_viz);
+  // // cv::waitKey(1);
+  // cv::imshow("Depth", depth_viz);
 
-    // // motion_viz =
-    // ImageType::MotionMask::toRGB(frame->image_container_.get<ImageType::MotionMask>());
-    // // // cv::imshow("Motion", motion_viz);
+  // auto object_detection_result = detector->process(rgb);
+  // cv::imshow("Detection Result", object_detection_result.colouredMask());
 
-    cv::Mat tracking;
-    if (previous_frame) {
-      ImageTracksParams track_viz_params(true);
-      track_viz_params.show_intermediate_tracking = true;
-      tracking = tracker->computeImageTracks(*previous_frame, *frame,
-                                             track_viz_params);
+  // ImageContainer image_container(frame_id, timestamp);
+  // image_container.rgb(rgb)
+  //     .depth(depth)
+  //     .opticalFlow(optical_flow)
+  //     .objectMotionMask(motion);
+  // // image_container.rgb(rgb).depth(depth).opticalFlow(optical_flow);
+  // auto frame = tracker->track(frame_id, timestamp, image_container);
+  // Frame::Ptr previous_frame = tracker->getPreviousFrame();
 
-      // if (imu_measurements) {
-      //   const auto previous_timestamp = previous_frame->getTimestamp();
+  // if(frame_id == 605) {
+  //   auto all_tracks = frame->static_features_.collectTracklets();
+  //   frame->static_features_.markOutliers(all_tracks);
+  // }
 
-      //   CHECK_GE(imu_measurements->timestamps_[0], previous_timestamp);
-      //   CHECK_LT(imu_measurements
-      //                ->timestamps_[imu_measurements->timestamps_.cols() - 1],
-      //            timestamp);
+  // // motion_viz =
+  // ImageType::MotionMask::toRGB(frame->image_container_.get<ImageType::MotionMask>());
+  // // // cv::imshow("Motion", motion_viz);
 
-      //   LOG(INFO) << "Gotten imu messages!";
+  // cv::Mat tracking;
+  // if (previous_frame) {
+  //   ImageTracksParams track_viz_params(true);
+  //   track_viz_params.show_intermediate_tracking = true;
+  //   tracking = tracker->computeImageTracks(*previous_frame, *frame,
+  //                                          track_viz_params);
 
-      //   CHECK(imu_measurements->synchronised_frame_id);
-      //   CHECK_EQ(imu_measurements->synchronised_frame_id.value(),
-      //            frame->getFrameId());
-      // }
-    }
-    if (!tracking.empty()) cv::imshow("Tracking", tracking);
+  // if (imu_measurements) {
+  //   const auto previous_timestamp = previous_frame->getTimestamp();
 
-    LOG(INFO) << to_string(tracker->getTrackerInfo());
-    const std::string path = "/root/results/misc/";
-    // if (previous_frame && (char)cv::waitKey(0) == 's') {
-    //   LOG(INFO) << "Saving...";
-    //   // cv::imwrite(path + "omd_su4_rgb.png", rgb);
-    //   // cv::imwrite(path + "omd_su4_of.png", of_viz);
-    //   // cv::imwrite(path + "omd_su4_motion.png", motion_viz);
-    //   // cv::imwrite(path + "omd_su4_depth.png", depth_viz);
-    //   // cv::imwrite(
-    //   //     path + "cluster_tracking_new" + std::to_string(frame_id) +
-    //   ".png",
-    //   //     tracking);
-    // }
-    cv::waitKey(1);
+  //   CHECK_GE(imu_measurements->timestamps_[0], previous_timestamp);
+  //   CHECK_LT(imu_measurements
+  //                ->timestamps_[imu_measurements->timestamps_.cols() - 1],
+  //            timestamp);
 
-    return true;
-  });
+  //   LOG(INFO) << "Gotten imu messages!";
+
+  //   CHECK(imu_measurements->synchronised_frame_id);
+  //   CHECK_EQ(imu_measurements->synchronised_frame_id.value(),
+  //            frame->getFrameId());
+  // }
+  // }
+  // if (!tracking.empty()) cv::imshow("Tracking", tracking);
+
+  LOG(INFO) << to_string(tracker->getTrackerInfo());
+  const std::string path = "/root/results/misc/";
+  // if (previous_frame && (char)cv::waitKey(0) == 's') {
+  //   LOG(INFO) << "Saving...";
+  //   // cv::imwrite(path + "omd_su4_rgb.png", rgb);
+  //   // cv::imwrite(path + "omd_su4_of.png", of_viz);
+  //   // cv::imwrite(path + "omd_su4_motion.png", motion_viz);
+  //   // cv::imwrite(path + "omd_su4_depth.png", depth_viz);
+  //   // cv::imwrite(
+  //   //     path + "cluster_tracking_new" + std::to_string(frame_id) +
+  //   ".png",
+  //   //     tracking);
+  // }
+  //   cv::waitKey(1);
+
+  //   return true;
+  // });
 
   while (loader.spin()) {
   }
