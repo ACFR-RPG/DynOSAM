@@ -261,19 +261,19 @@ class EstimationModuleLogger {
   virtual ~EstimationModuleLogger();
 
   // logs to motion errors
-  virtual size_t logObjectTrajectory(
+  size_t logObjectTrajectory(
       FrameId frame_id, const MultiObjectTrajectories& object_trajectories,
       const std::optional<GroundTruthPacketMap>& gt_packets = {});
 
-  virtual size_t logObjectTrajectory(
+  size_t logObjectTrajectory(
       const MultiObjectTrajectories& object_trajectories,
       const std::optional<GroundTruthPacketMap>& gt_packets = {});
 
-  virtual size_t logCameraPose(
+  size_t logCameraPose(
       FrameId frame_id, const PoseTrajectory& camera_poses,
       const std::optional<GroundTruthPacketMap>& gt_packets = {});
 
-  virtual size_t logCameraPose(
+  size_t logCameraPose(
       const PoseTrajectory& camera_poses,
       const std::optional<GroundTruthPacketMap>& gt_packets = {});
 
@@ -297,13 +297,17 @@ class EstimationModuleLogger {
                     const gtsam::Pose3& se3_gt, Timestamp timestamp,
                     FrameId frame_id);
 
-  bool logObjectTrajectoryEntry(
+  virtual bool logObjectTrajectoryEntry(
       const PoseWithMotionEntry& entry, const ObjectId object_id,
       const std::optional<GroundTruthPacketMap>& gt_packets = {});
 
-  bool logCameraPoseEntry(
+  virtual bool logCameraPoseEntry(
       const PoseTrajectoryEntry& entry,
       const std::optional<GroundTruthPacketMap>& gt_packets = {});
+
+  std::optional<ObjectPoseGT> getObjectGroundTruthHelper(
+      FrameId frame_id, ObjectId object_id,
+      const std::optional<GroundTruthPacketMap>& gt_packets) const;
 
  protected:
   const std::string module_name_;

@@ -209,9 +209,53 @@ def run_kitti():
 
 
 def run_dynoepts():
-    run_experiment_sequences("/root/data/dynoepts/UOPE56/others_50-55-004/others_54","dynoepts_uope_54_MO_test", dynoepts, "--hybrid_motion_solver=3", "--use_backend=false", "--pc_smoother_allow_backend_updates=false")
+    # run_experiment_sequences("/root/data/dynoepts/UOPE56/others_50-55-004/others_54","dynoepts_uope_54_MO_test", dynoepts, "--hybrid_motion_solver=4", "--use_backend=false", "--pc_smoother_allow_backend_updates=false")
+    # run_experiment_sequences("/root/data/dynoepts/UOPE56/others_50-55-004/others_54","dynoepts_uope_54_PnP_test", dynoepts, "--hybrid_motion_solver=3", "--use_backend=false", "--pc_smoother_allow_backend_updates=false")
+
+    # run_experiment_sequences("/root/data/dynoepts/UOPE56/others_50-55-004/others_52","dynoepts_uope_52_FS_test", dynoepts, "--hybrid_motion_solver=2", "--use_backend=false", "--pc_smoother_allow_backend_updates=false")
+    # run_experiment_sequences("/root/data/dynoepts/UOPE56/others_50-55-004/others_52","dynoepts_uope_52_MO_test", dynoepts, "--hybrid_motion_solver=4", "--use_backend=false", "--pc_smoother_allow_backend_updates=false")
+    # run_experiment_sequences("/root/data/dynoepts/UOPE56/others_50-55-004/others_52","dynoepts_uope_52_PnP_test", dynoepts, "--hybrid_motion_solver=3", "--use_backend=false", "--pc_smoother_allow_backend_updates=false")
+
+    # run_experiment_sequences("/root/data/dynoepts/UOPE56/others_50-55-004/others_51","dynoepts_uope_51_MO_test", dynoepts, "--hybrid_motion_solver=4", "--use_backend=false", "--pc_smoother_allow_backend_updates=false")
+    # run_experiment_sequences("/root/data/dynoepts/UOPE56/others_50-55-004/others_51","dynoepts_uope_51_PnP_test", dynoepts, "--hybrid_motion_solver=3", "--use_backend=false", "--pc_smoother_allow_backend_updates=false")
+
+    # run_experiment_sequences("/root/data/dynoepts/UOPE56/others_50-55-004/others_55","dynoepts_uope_55_MO_test", dynoepts, "--hybrid_motion_solver=4", "--use_backend=false", "--pc_smoother_allow_backend_updates=false")
+    # run_experiment_sequences("/root/data/dynoepts/UOPE56/others_50-55-004/others_55","dynoepts_uope_55_PnP_test", dynoepts, "--hybrid_motion_solver=3", "--use_backend=false", "--pc_smoother_allow_backend_updates=false")
+
+
+    # run_experiment_sequences("/root/data/dynoepts/UOPE56/others_50-55-004/others_50","dynoepts_uope_50_MO_test", dynoepts, "--hybrid_motion_solver=4", "--use_backend=false", "--pc_smoother_allow_backend_updates=false")
+    # run_experiment_sequences("/root/data/dynoepts/UOPE56/others_50-55-004/others_50","dynoepts_uope_50_PnP_test", dynoepts, "--hybrid_motion_solver=3", "--use_backend=false", "--pc_smoother_allow_backend_updates=false")
+
 
     # run_experiment_sequences("/root/data/dynoepts/UOPE56/others_20-29-002/others_25","dynoepts_uope_25_MO_test", dynoepts, "--hybrid_motion_solver=4", "--use_backend=false", "--pc_smoother_allow_backend_updates=false")
+    # run_experiment_sequences("/root/data/dynoepts/UOPE56/others_20-29-002/others_25","dynoepts_uope_25_PnP_test", dynoepts, "--hybrid_motion_solver=3", "--use_backend=false", "--pc_smoother_allow_backend_updates=false")
+
+    # run_experiment_sequences("/root/data/dynoepts/UOPE56/others_20-29-002/others_20","dynoepts_uope_20_MO_test", dynoepts, "--hybrid_motion_solver=4", "--use_backend=false", "--pc_smoother_allow_backend_updates=false")
+    # run_experiment_sequences("/root/data/dynoepts/UOPE56/others_20-29-002/others_20","dynoepts_uope_20_PnP_test", dynoepts, "--hybrid_motion_solver=3", "--use_backend=false", "--pc_smoother_allow_backend_updates=false")
+
+    # run_experiment_sequences("/root/data/dynoepts/UOPE56/others_20-29-002/others_21","dynoepts_uope_21_MO_test", dynoepts, "--hybrid_motion_solver=4", "--use_backend=false", "--pc_smoother_allow_backend_updates=false")
+    # run_experiment_sequences("/root/data/dynoepts/UOPE56/others_20-29-002/others_21","dynoepts_uope_21_PnP_test", dynoepts, "--hybrid_motion_solver=3", "--use_backend=false", "--pc_smoother_allow_backend_updates=false")
+
+    # this one is hard due to rubber duck!
+    # run_experiment_sequences("/root/data/dynoepts/UOPE56/others_20-29-002/others_22","dynoepts_uope_22_FS_test", dynoepts, "--hybrid_motion_solver=2", "--use_backend=false", "--pc_smoother_allow_backend_updates=false")
+    # run_experiment_sequences("/root/data/dynoepts/UOPE56/others_20-29-002/others_22","dynoepts_uope_22_MO_test", dynoepts, "--hybrid_motion_solver=4", "--use_backend=false", "--pc_smoother_allow_backend_updates=false")
+    # run_experiment_sequences("/root/data/dynoepts/UOPE56/others_20-29-002/others_22","dynoepts_uope_22_PnP_test", dynoepts, "--hybrid_motion_solver=3", "--use_backend=false", "--pc_smoother_allow_backend_updates=false")
+    # run_experiment_sequences("/root/data/dynoepts/UOPE56/others_20-29-002/others_22","dynoepts_uope_22_MO_w_update", dynoepts, "--hybrid_motion_solver=4", "--use_backend=true", "--pc_smoother_allow_backend_updates=true")
+
+    # run_experiment_sequences("/root/data/dynoepts/UOPE56/others_20-29-002/others_26","dynoepts_uope_26_MO_test", dynoepts, "--hybrid_motion_solver=4", "--use_backend=false", "--pc_smoother_allow_backend_updates=false")
+    # run_experiment_sequences("/root/data/dynoepts/UOPE56/others_20-29-002/others_26","dynoepts_uope_26_PnP_test", dynoepts, "--hybrid_motion_solver=3", "--use_backend=false", "--pc_smoother_allow_backend_updates=false")
+
+    run_experiment_sequences("/root/data/dynoepts/UOPE56/others_20-29-002/others_27","dynoepts_uope_27_FS_test", dynoepts, "--hybrid_motion_solver=2", "--use_backend=false", "--pc_smoother_allow_backend_updates=false")
+    # run_experiment_sequences("/root/data/dynoepts/UOPE56/others_20-29-002/others_27","dynoepts_uope_27_MO_test", dynoepts, "--hybrid_motion_solver=4", "--use_backend=false", "--pc_smoother_allow_backend_updates=false")
+    # run_experiment_sequences("/root/data/dynoepts/UOPE56/others_20-29-002/others_27","dynoepts_uope_27_PnP_test", dynoepts, "--hybrid_motion_solver=3", "--use_backend=false", "--pc_smoother_allow_backend_updates=false")
+
+    # run_experiment_sequences("/root/data/dynoepts/UOPE56/others_20-29-002/others_28","dynoepts_uope_28_MO_test", dynoepts, "--hybrid_motion_solver=4", "--use_backend=false", "--pc_smoother_allow_backend_updates=false")
+    # run_experiment_sequences("/root/data/dynoepts/UOPE56/others_20-29-002/others_28","dynoepts_uope_28_PnP_test", dynoepts, "--hybrid_motion_solver=3", "--use_backend=false", "--pc_smoother_allow_backend_updates=false")
+
+    # run_experiment_sequences("/root/data/dynoepts/UOPE56/others_20-29-002/others_29","dynoepts_uope_29_MO_test", dynoepts, "--hybrid_motion_solver=4", "--use_backend=false", "--pc_smoother_allow_backend_updates=false")
+    # run_experiment_sequences("/root/data/dynoepts/UOPE56/others_20-29-002/others_29","dynoepts_uope_29_PnP_test", dynoepts, "--hybrid_motion_solver=3", "--use_backend=false", "--pc_smoother_allow_backend_updates=false")
+
+
 
 
 def run_aria():
@@ -333,3 +377,6 @@ if __name__ == '__main__':
 
     # run_analysis("carla_l2_MO")
     # run_analysis("carla_l2_PnP")
+
+    # run_analysis("dynoepts_uope_25_PnP_test")
+    # run_analysis("dynoepts_uope_25_MO_test")

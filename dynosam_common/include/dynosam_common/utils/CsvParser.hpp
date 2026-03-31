@@ -79,6 +79,10 @@ class CsvHeader : public std::vector<std::string> {
     return ss.str();
   }
 
+  bool isValid() const { return !this->empty(); }
+
+  operator bool() const { return this->isValid(); }
+
   /**
    * @brief Finds the index of a column via its header name. If the query header
    * is not in the CsvHeader, -1 is returned.
@@ -156,7 +160,7 @@ class CsvReader {
       return pos_data_.size() - 1;
     }
 
-    inline bool usableHeader() const { return !header_.empty(); }
+    inline bool usableHeader() const { return (bool)header_; }
 
     static Row FromStream(std::istream& istream, const CsvHeader& header,
                           const char delimiter = DefaultDelimiter);
@@ -193,13 +197,14 @@ class CsvReader {
     using difference_type = std::size_t;
     using iterator_category = std::input_iterator_tag;
 
-    RowIterator(std::istream* input_stream)
+    RowIterator(std::istream* input_stream, const CsvHeader* header)
         : input_stream_(CHECK_NOTNULL(input_stream)->good() ? input_stream
-                                                            : nullptr) {
+                                                            : nullptr),
+          header_(header) {
       ++(*this);
     }
 
-    RowIterator() : input_stream_(nullptr) {}
+    RowIterator() {}
 
     // Pre Increment
     RowIterator& operator++() {
@@ -231,7 +236,8 @@ class CsvReader {
 
    private:
    private:
-    std::istream* input_stream_;
+    std::istream* input_stream_{nullptr};
+    const CsvHeader* header_{nullptr};
     // a non const value type
     // is requited to be non_const so that we can update the row with new data
     // during the pre-increment
@@ -247,19 +253,23 @@ class CsvReader {
   // TODO: no way to parse the header down to the row!!!!
   // TODO: if header is provided should check and skip the header so the user
   // does not have to manually increment the file
-  CsvReader(std::istream& stream) : infile_(stream) { CHECK(infile_.good()); }
+  CsvReader(std::istream& stream, const CsvHeader& header = CsvHeader{})
+      : infile_(stream), header_(header) {
+    CHECK(infile_.good());
+  }
 
-  iterator begin() { return iterator(&infile_); }
+  iterator begin() { return iterator(&infile_, &header_); }
   iterator end() { return iterator(); }
 
-  const_iterator begin() const { return const_iterator(&infile_); }
+  const_iterator begin() const { return const_iterator(&infile_, &header_); }
   const_iterator end() const { return const_iterator(); }
 
-  const_iterator cbegin() const { return const_iterator(&infile_); }
+  const_iterator cbegin() const { return const_iterator(&infile_, &header_); }
   const_iterator cend() const { return const_iterator(); }
 
  private:
   std::istream& infile_;
+  CsvHeader header_;
 };
 
 // Modified from:

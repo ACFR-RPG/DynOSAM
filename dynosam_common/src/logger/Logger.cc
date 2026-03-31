@@ -303,25 +303,36 @@ bool EstimationModuleLogger::logObjectTrajectoryEntry(
   const FrameId frame_id = entry.frame_id;
   const Timestamp timestamp = entry.timestamp;
 
-  if (gt_packets) {
-    if (gt_packets->exists(frame_id)) {
-      const GroundTruthInputPacket& gt_packet_k = gt_packets->at(frame_id);
-      // check object exists in this frame
-      ObjectPoseGT object_gt_k;
-      if (!gt_packet_k.getObject(object_id, object_gt_k)) {
-        // if no packet for this object found, continue and do not log
-        // return false;
-      } else {
-        CHECK(object_gt_k.prev_H_current_world_);
-        motion_gt = *object_gt_k.prev_H_current_world_;
-        pose_gt = object_gt_k.L_world_;
-      }
-    } else {
-      // gt packet has no entry for this frame id and the object ground truth is
-      // valid
-      // TODO: for now?
-      // return false;
-    }
+  // if (gt_packets) {
+  //   if (gt_packets->exists(frame_id)) {
+  //     const GroundTruthInputPacket& gt_packet_k = gt_packets->at(frame_id);
+  //     // check object exists in this frame
+  //     ObjectPoseGT object_gt_k;
+  //     if (!gt_packet_k.getObject(object_id, object_gt_k)) {
+  //       // if no packet for this object found, continue and do not log
+  //       // return false;
+  //     } else {
+  //       CHECK(object_gt_k.prev_H_current_world_) << info_string(frame_id,
+  //       object_id); motion_gt = *object_gt_k.prev_H_current_world_; pose_gt =
+  //       object_gt_k.L_world_;
+  //     }
+  //   } else {
+  //     // gt packet has no entry for this frame id and the object ground truth
+  //     is
+  //     // valid
+  //     // TODO: for now?
+  //     // return false;
+  //   }
+  // }
+  auto object_ground_truth =
+      getObjectGroundTruthHelper(frame_id, object_id, gt_packets);
+
+  // TODO: return false?
+  if (object_ground_truth) {
+    CHECK(object_ground_truth->prev_H_current_world_)
+        << info_string(frame_id, object_id);
+    motion_gt = *(object_ground_truth->prev_H_current_world_);
+    pose_gt = object_ground_truth->L_world_;
   }
 
   logObjectSE3(*object_motion_csv_, motion_est, motion_gt, timestamp, frame_id,
@@ -331,6 +342,23 @@ bool EstimationModuleLogger::logObjectTrajectoryEntry(
                object_id);
 
   return true;
+}
+
+std::optional<ObjectPoseGT> EstimationModuleLogger::getObjectGroundTruthHelper(
+    FrameId frame_id, ObjectId object_id,
+    const std::optional<GroundTruthPacketMap>& gt_packets) const {
+  std::optional<ObjectPoseGT> possible_object_gt = {};
+
+  if (gt_packets && gt_packets->exists(frame_id)) {
+    const GroundTruthInputPacket& gt_packet_k = gt_packets->at(frame_id);
+
+    ObjectPoseGT object_gt_k;
+    if (gt_packet_k.getObject(object_id, object_gt_k)) {
+      possible_object_gt.emplace(object_gt_k);
+    }
+  }
+
+  return possible_object_gt;
 }
 
 void EstimationModuleLogger::logObjectSE3(CsvWriter& writer,

@@ -1568,6 +1568,17 @@ class HybridFormulationV1 : public HybridFormulation {
   ErrorHandlingHooks getCustomErrorHooks() override;
 };
 
+// class KeyFrameBackendLogger : public BackendLogger {
+
+// public:
+//   KeyFrameBackendLogger();
+
+// private:
+//   bool logObjectTrajectoryEntry(
+//       const PoseWithMotionEntry& entry, const ObjectId object_id,
+//       const std::optional<GroundTruthPacketMap>& gt_packets = {}) override;
+// };
+
 // additional functionality when solved with the Regular Backend!
 class HybridFormulationKeyFrame : public HybridFormulation {
  public:

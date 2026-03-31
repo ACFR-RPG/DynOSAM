@@ -29,6 +29,8 @@ PoseChangeVIBackendModule::PoseChangeVIBackendModule(
   error_hooks_ = formulation_->getCustomErrorHooks();
 }
 
+PoseChangeVIBackendModule::~PoseChangeVIBackendModule() {}
+
 DynoState::Ptr PoseChangeVIBackendModule::spinOnce(
     PoseChangeInput::ConstPtr input) {
   LOG(INFO) << "In PoseChangeVIBackendModule";

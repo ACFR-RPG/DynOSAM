@@ -207,7 +207,7 @@ class BackendLogger : public EstimationModuleLogger {
  public:
   DYNO_POINTER_TYPEDEFS(BackendLogger)
   BackendLogger(const std::string& name_prefix);
-  ~BackendLogger() = default;
+  virtual ~BackendLogger() = default;
 
  private:
 };

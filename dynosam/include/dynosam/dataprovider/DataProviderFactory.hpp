@@ -42,7 +42,7 @@ enum DatasetType {
   ARIA,
   TARTAN_AIR_SHIBUYA,
   VIODE,
-  DYNOEPTS
+  DYNOPETS
 };
 
 struct DataProviderFactory {

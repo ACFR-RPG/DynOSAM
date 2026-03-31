@@ -68,7 +68,7 @@ add_library(${PROJECT_NAME} SHARED
   src/dataprovider/ProjectAriaDataProvider.cc
   src/dataprovider/TartanAirShibuya.cc
   src/dataprovider/ViodeDataProvider.cc
-  src/dataprovider/DynoeptsDataProvider.cc
+  src/dataprovider/DynopetsDataProvider.cc
 
   src/frontend/imu/ThreadSafeImuBuffer.cc
   src/frontend/imu/ImuFrontend.cc

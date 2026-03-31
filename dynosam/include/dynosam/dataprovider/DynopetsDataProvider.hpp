@@ -13,9 +13,9 @@ using DynoeptsProvider =
 /**
  * @brief
  */
-class DynoeptsLoader : public DynoeptsProvider {
+class DynopetsLoader : public DynoeptsProvider {
  public:
-  DynoeptsLoader(const fs::path& dataset_path);
+  DynopetsLoader(const fs::path& dataset_path);
 
   CameraParams::Optional getCameraParams() const override {
     return left_camera_params_;

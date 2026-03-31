@@ -54,7 +54,7 @@ DEFINE_string(
     params_folder_path, "dynosam/params",
     "Path to the folder containing the yaml files with the VIO parameters.");
 
-#include "dynosam/dataprovider/DynoeptsDataProvider.hpp"
+#include "dynosam/dataprovider/DynopetsDataProvider.hpp"
 #include "dynosam/dataprovider/KittiDataProvider.hpp"
 #include "dynosam/dataprovider/OMDDataProvider.hpp"
 #include "dynosam/frontend/vision/VisionTools.hpp"
@@ -82,7 +82,7 @@ int main(int argc, char* argv[]) {
   // auto detector = dyno::PyObjectDetectorWrapper::CreateYoloDetector();
   // CHECK_NOTNULL(detector);
 
-  DynoeptsLoader loader(
+  DynopetsLoader loader(
       "/root/data/dynoepts/UOPE56/others_20-29-002/others_25");
 
   FrontendParams fp;

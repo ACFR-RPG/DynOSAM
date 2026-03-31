@@ -1448,8 +1448,8 @@ HybridObjectMotionFullSmoother::updateFromInitialMotionImpl(
   // keyframe range lookup explicity rather than relying on frame subtraction
   // logic! need the frame_id >= 2 so the substraction does not result in a
   // large size_t value
-  if (false) {
-    // if (frame_id > 2 && frame_km2 >= keyFrameId()) {
+  // if (false) {
+  if (frame_id > 2 && frame_km2 >= keyFrameId()) {
     // sanity check that all motions use the same keyframe poses
     auto kf_data_km2 = keyframe_range_.find(frame_km2);
     CHECK(kf_data_km2);

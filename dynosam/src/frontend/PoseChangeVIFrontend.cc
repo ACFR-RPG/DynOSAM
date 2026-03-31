@@ -550,7 +550,7 @@ void PoseChangeVIFrontend::solveObjectMotions(
             << " k=" << frame_k->getFrameId();
 
   // only keyframes!!
-  infos = object_motion_solver_->poseChangeInfoMap();
+  infos = std::move(object_motion_solver_->poseChangeInfoMap());
 }
 
 bool PoseChangeVIFrontend::shouldFrameBeKeyFrame(Frame::Ptr frame_k,
@@ -559,9 +559,9 @@ bool PoseChangeVIFrontend::shouldFrameBeKeyFrame(Frame::Ptr frame_k,
   const KeyFrameData& lkf_data = keyframes_.at(lkf_id_);
   const Frame::Ptr lkf_frame = lkf_data.frame;
 
-  // return frame_k->getFrameId() % 10 == 0;
+  return frame_k->getFrameId() % 10 == 0;
   // FOR NOW!
-  return true;
+  // return true;
 }
 
 size_t PoseChangeVIFrontend::extractKeyFramedMotions(
@@ -600,6 +600,18 @@ void PoseChangeVIFrontend::constructVisualFactors(
 
 void PoseChangeVIFrontend::logBestEstimates() const {
   VLOG(20) << "Logging test estimates from PoseChange frontend";
+
+  // Use the presence of the backend sink function as a proxy to
+  // indicate if the backend was running!
+  if (!pose_change_backend_sink_) {
+    return;
+  }
+
+  VIOAccessor::Ptr accessor = formulation_->getAsVIOAccessor();
+
+  const PoseTrajectory& camera_trajectory = accessor->getCameraTrajectory();
+  const MultiObjectTrajectories& object_trajectories =
+      accessor->getMultiObjectTrajectories();
 }
 
 }  // namespace dyno

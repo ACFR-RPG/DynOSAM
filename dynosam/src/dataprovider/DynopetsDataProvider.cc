@@ -1,4 +1,6 @@
-#include "dynosam/dataprovider/DynoeptsDataProvider.hpp"
+#include "dynosam/dataprovider/DynopetsDataProvider.hpp"
+
+#include "dynosam_common/utils/CsvParser.hpp"
 
 namespace dyno {
 
@@ -8,7 +10,7 @@ class Loader {
   std::vector<std::filesystem::path> rgb_image_paths_;
   std::vector<std::filesystem::path> depth_image_paths_;
   std::vector<std::filesystem::path> mask_image_paths_;
-  GroundTruthPacketMap ground_truth_packets_;
+  std::vector<GroundTruthInputPacket> ground_truth_packets_;
   std::vector<Timestamp> times_;
   CameraParams camera_params_;
 
@@ -18,6 +20,7 @@ class Loader {
   Loader(const fs::path& dataset_path) {
     loadFilePaths(dataset_path);
     loadIntrinsics(dataset_path);
+    loadGroundTruth(dataset_path);
   };
 
   cv::Mat getRGB(size_t idx) const {
@@ -69,6 +72,7 @@ class Loader {
   }
 
   const GroundTruthInputPacket& getGtPacket(size_t idx) const {
+    CHECK_LT(idx, dataset_size_);
     return ground_truth_packets_.at(idx);
   }
 
@@ -77,11 +81,8 @@ class Loader {
   size_t size() const { return dataset_size_; }
 
   double getTimestamp(size_t idx) {
-    // for now just return idx
-    return idx;
-    // CHECK_LT(idx, rgb_image_paths_.size());
-    // CHECK_LT(idx, dataset_size_);
-    // return times_.at(idx);
+    CHECK_LT(idx, dataset_size_);
+    return times_.at(idx);
   }
 
  private:
@@ -141,6 +142,111 @@ class Loader {
     camera_params_ =
         CameraParams(K, D, cv::Size(W, H), DistortionModel::RADTAN);
   }
+
+  void loadGroundTruth(const std::string& file_path) {
+    const auto camera_poses_file_path = file_path + "/camera_poses.csv";
+    utils::throwExceptionIfPathInvalid(camera_poses_file_path);
+
+    const auto object_poses_file_path = file_path + "/object_poses.csv";
+    utils::throwExceptionIfPathInvalid(object_poses_file_path);
+
+    std::ifstream cam_pose_file(camera_poses_file_path);
+    if (!cam_pose_file.is_open()) {
+      throw std::runtime_error("Cannot open file: " + camera_poses_file_path);
+    }
+
+    std::ifstream object_pose_file(object_poses_file_path);
+    if (!object_pose_file.is_open()) {
+      throw std::runtime_error("Cannot open file: " + object_poses_file_path);
+    }
+
+    using PoseTimestampVector = std::vector<std::pair<Timestamp, gtsam::Pose3>>;
+
+    auto load_from_csv = [](CsvReader& csv) -> PoseTimestampVector {
+      PoseTimestampVector values;
+
+      // skip header row
+      auto it = csv.begin();
+      it++;
+
+      for (; it != csv.end(); it++) {
+        const CsvReader::Row& row = *it;
+        CHECK_EQ(row.size(), 8);
+
+        Timestamp timestamp = row.at<Timestamp>(0);
+
+        double tx = row.at<double>(1);
+        double ty = row.at<double>(2);
+        double tz = row.at<double>(3);
+
+        double qx = row.at<double>(4);
+        double qy = row.at<double>(5);
+        double qz = row.at<double>(6);
+        double qw = row.at<double>(7);
+
+        gtsam::Point3 t(tx, ty, tz);
+        gtsam::Rot3 rot(qw, qx, qy, qz);
+        values.push_back(std::make_pair(timestamp, gtsam::Pose3(rot, t)));
+      }
+      return values;
+    };
+
+    CsvReader camera_pose_csv(cam_pose_file);
+    CsvReader object_pose_csv(object_pose_file);
+
+    auto camera_poses = load_from_csv(camera_pose_csv);
+    auto object_poses = load_from_csv(object_pose_csv);
+
+    // dataset should already be set so call function after loadFilePaths
+    CHECK_EQ(camera_poses.size(), dataset_size_);
+    CHECK_EQ(object_poses.size(), dataset_size_);
+
+    gtsam::Pose3 initial_camera_pose;
+    bool initial_pose_set = false;
+
+    ground_truth_packets_.reserve(dataset_size_);
+    times_.reserve(dataset_size_);
+    for (size_t frame_id = 0; frame_id < camera_poses.size(); frame_id++) {
+      auto [timestamp_c, X_W_k_original] = camera_poses.at(frame_id);
+      auto [timestamp_o, L_W_k_original] = object_poses.at(frame_id);
+
+      CHECK_EQ(timestamp_c, timestamp_o);
+
+      if (!initial_pose_set) {
+        initial_camera_pose = X_W_k_original;
+        initial_pose_set = true;
+      }
+
+      gtsam::Pose3 X_W_k = initial_camera_pose.inverse() * X_W_k_original;
+      // L in camera frame
+      gtsam::Pose3 L_X_k = X_W_k_original.inverse() * L_W_k_original;
+      // ground truth L in world accounting for camera offset
+      gtsam::Pose3 L_W_k = X_W_k * L_X_k;
+
+      GroundTruthInputPacket gt_packet;
+      gt_packet.frame_id_ = frame_id;
+      gt_packet.timestamp_ = timestamp_c;
+      gt_packet.X_world_ = X_W_k;
+
+      ObjectPoseGT object_gt;
+      object_gt.frame_id_ = frame_id;
+      object_gt.object_id_ = 1;
+      object_gt.L_camera_ = L_X_k;
+      object_gt.L_world_ = L_W_k;
+
+      gt_packet.object_poses_.push_back(std::move(object_gt));
+
+      // set motions
+      if (frame_id > 0) {
+        const GroundTruthInputPacket& previous_gt_packet =
+            ground_truth_packets_.at(frame_id - 1);
+        gt_packet.calculateAndSetMotions(previous_gt_packet);
+      }
+
+      ground_truth_packets_.push_back(gt_packet);
+      times_.push_back(timestamp_c);
+    }
+  }
 };
 
 struct TimestampLoader : public TimestampBaseLoader {
@@ -154,9 +260,9 @@ struct TimestampLoader : public TimestampBaseLoader {
   double getItem(size_t idx) override { return loader_->getTimestamp(idx); }
 };
 
-DynoeptsLoader::DynoeptsLoader(const fs::path& dataset_path)
+DynopetsLoader::DynopetsLoader(const fs::path& dataset_path)
     : DynoeptsProvider(dataset_path) {
-  LOG(INFO) << "Starting DynoeptsLoader Loader with path" << dataset_path;
+  LOG(INFO) << "Starting DynopetsLoader Loader with path" << dataset_path;
 
   // this would go out of scope but we capture it in the functional loaders
   auto loader = std::make_shared<Loader>(dataset_path);
@@ -169,7 +275,7 @@ DynoeptsLoader::DynoeptsLoader(const fs::path& dataset_path)
       [loader](size_t idx) { return loader->getRGB(idx); });
 
   auto optical_flow_loader = std::make_shared<FunctionalDataFolder<cv::Mat>>(
-      [loader](size_t idx) { return cv::Mat(); });
+      [loader](size_t) { return cv::Mat(); });
 
   auto depth_loader = std::make_shared<FunctionalDataFolder<cv::Mat>>(
       [loader](size_t idx) { return loader->getDepth(idx); });
@@ -179,7 +285,7 @@ DynoeptsLoader::DynoeptsLoader(const fs::path& dataset_path)
 
   auto gt_loader =
       std::make_shared<FunctionalDataFolder<GroundTruthInputPacket>>(
-          [loader](size_t idx) { return GroundTruthInputPacket{}; });
+          [loader](size_t idx) { return loader->getGtPacket(idx); });
 
   this->setLoaders(timestamp_loader, rgb_loader, optical_flow_loader,
                    depth_loader, instance_mask_loader, gt_loader);
@@ -189,6 +295,9 @@ DynoeptsLoader::DynoeptsLoader(const fs::path& dataset_path)
                       GroundTruthInputPacket gt_object_pose_gt) -> bool {
     ImageContainer image_container(frame_id, timestamp);
     image_container.rgb(rgb).depth(depth).objectMotionMask(mask);
+
+    if (ground_truth_packet_callback_)
+      ground_truth_packet_callback_(gt_object_pose_gt);
 
     if (image_container_callback_)
       image_container_callback_(

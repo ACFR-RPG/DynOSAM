@@ -492,8 +492,8 @@ class MotionErrorEvaluator(Evaluator):
             object_trajectories_ref,
             plot_mode=plot_mode,
             plot_start_end_markers=True,
-            plot_axis_est=True,
-            plot_axis_ref=True,
+            plot_axis_est=False,
+            plot_axis_ref=False,
             # axis_marker_scale=1.0,
             downscale=0.1)
         ax.get_legend().remove()
@@ -1055,11 +1055,13 @@ class DatasetEvaluator:
 
                 table_formatter.add_results(data_files.plot_collection_name, results)
                 # right now just save metric plots per prefix
+                metric_name = data_files.plot_collection_name + "_" + self._sequence_name + "_metrics.pdf"
                 plot_collection.export(
-                    self._create_new_file_path(data_files.plot_collection_name + "_metrics.pdf"),
+                    self._create_new_file_path(metric_name),
                     confirm_overwrite=False)
 
-            table_formatter.save_pdf(self._create_new_file_path(self._sequence_name + "_result_tables"))
+            table_name = data_files.plot_collection_name + "_" + self._sequence_name + "_result_tables"
+            table_formatter.save_pdf(self._create_new_file_path(table_name))
 
                 # # plot_collection.show()
                 # self._save_to_pdf(data_files.plot_collection_name, plot_collection, results)

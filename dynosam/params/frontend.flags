@@ -2,7 +2,7 @@
 
 --use_byte_tracker=false
 
---init_object_pose_from_gt=false
+--init_object_pose_from_gt=true
 --use_frontend_logger=true
 
 # --semantic_mask_step_size=16

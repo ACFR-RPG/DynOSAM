@@ -591,7 +591,7 @@ class Formulation {
    *
    * @param backend_info const FormulationLoggingParams&
    */
-  void logBackendFromMap(const FormulationLoggingParams& backend_info);
+  virtual void logBackendFromMap(const FormulationLoggingParams& backend_info);
 
   /**
    * @brief Pre update hook called in the RegularBackend after the map is

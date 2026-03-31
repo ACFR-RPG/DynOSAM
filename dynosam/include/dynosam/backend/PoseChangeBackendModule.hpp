@@ -32,6 +32,8 @@ class PoseChangeVIBackendModule : public BackendModule<PoseChangeInput> {
                             HybridFormulationKeyFrame::Ptr formulation,
                             const SharedGroundTruth& shared_ground_truth = {});
 
+  ~PoseChangeVIBackendModule();
+
   std::pair<gtsam::Values, gtsam::NonlinearFactorGraph> getActiveOptimisation()
       const override {
     LOG(FATAL) << "Not implemented!";
