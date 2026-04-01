@@ -485,7 +485,6 @@ class MotionErrorEvaluator(Evaluator):
 
         # plot object poses
         plot_mode = evo_plot.PlotMode.xyz
-        ax = fig_all_object_traj.add_subplot(111, projection="3d")
         ax = core.plotting.plot_object_trajectories(
             fig_all_object_traj,
             object_trajectories,
@@ -498,21 +497,20 @@ class MotionErrorEvaluator(Evaluator):
             downscale=0.1)
         ax.get_legend().remove()
 
+        # add generic legend to indicate that dotted lines are ground truth
+        # and solid lines are esimtates
+        from matplotlib.lines import Line2D
+        legend_elements = [
+            Line2D([0], [0], color='black', linestyle='-', label='Estimated'),
+            Line2D([0], [0], color='black', linestyle='--', label='Ground Truth'),
+        ]
+        ax.legend(handles=legend_elements)
 
         fig_all_object_traj.suptitle(r"Estimated \& Ground Truth Object Trajectories")
         ax = fig_all_object_traj.gca()
         # trajectory_helper.set_ax_limits(ax, plot_mode)
         fig_all_object_traj.tight_layout()
 
-        # must happen after plot_object_trajectories becuase this is where we call the 'prepare axis'
-        # evo_plot.draw_coordinate_axes(ax, object_trajectories[f"Object 2"], plot_mode=evo_plot.PlotMode.xyz, marker_scale=2.0)
-        # evo_plot.draw_coordinate_axes(ax, object_trajectories_ref[f"Ground Truth Object 2"], plot_mode=evo_plot.PlotMode.xyz, marker_scale=2.0)
-
-        # plot reconsructed (calibrated) object poses
-        # fig_all_object_traj_calibrated = plt.figure(figsize=(8,8))
-        # core.plotting.plot_object_trajectories(fig_all_object_traj_calibrated, object_trajectories_calibrated, object_trajectories_ref, plot_mode=evo_plot.PlotMode.xyz, plot_start_end_markers=True)
-        # fig_all_object_traj_calibrated.suptitle("Obj Trajectories Calibrated")
-        # ax = fig_all_object_traj_calibrated.gca()
         trajectory_helper.set_ax_limits(ax, evo_plot.PlotMode.xyz)
 
         plot_collection.add_figure(

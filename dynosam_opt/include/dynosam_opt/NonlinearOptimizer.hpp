@@ -3,6 +3,7 @@
 #include <gtsam/nonlinear/NonlinearOptimizer.h>
 
 #include "dynosam_common/Exceptions.hpp"
+#include "dynosam_common/Types.hpp"
 #include "dynosam_common/utils/Timing.hpp"
 
 namespace dyno {
@@ -87,7 +88,7 @@ inline std::string to_string(const TerminationType& termination_type) {
 
 class IterationCallback {
  public:
-  virtual ~IterationCallback();
+  virtual ~IterationCallback() = default;
   virtual CallbackReturnType operator()(const IterationSummary& summary) = 0;
 };
 
@@ -114,7 +115,7 @@ struct NonlinearOptimizerSummary {
   // Time (in seconds) since the user called optimize().
   double cumulative_time_in_seconds = 0.0;
 
-  bool isSolutionUsable() const {
+  inline bool isSolutionUsable() const {
     return (termination_type == TerminationType::CONVERGENCE ||
             termination_type == TerminationType::NO_CONVERGENCE ||
             termination_type == TerminationType::USER_SUCCESS);
@@ -129,6 +130,9 @@ struct NonlinearOptimizerException : public DynosamException {
 template <typename SOLVER>
 class NonlinearOptimizer : public SOLVER {
  public:
+  static_assert(std::is_base_of<gtsam::NonlinearOptimizer, SOLVER>::value,
+                "SOLVER must inherit from gtsam::NonlinearOptimizer");
+
   using Solver = SOLVER;
 
   template <typename... Args>

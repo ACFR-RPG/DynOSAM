@@ -12,6 +12,7 @@
 #include "dynosam_opt/FactorGraphTools.hpp"
 #include "dynosam_opt/NonlinearOptimizer.hpp"
 #include "dynosam_opt/Symbols.hpp"
+#include "dynosam_opt/TimeBudgetOptimizationCallback.hpp"
 
 namespace dyno {
 
@@ -62,6 +63,8 @@ class OpticalFlowAndPoseSolver {
     flow_noise_ = gtsam::noiseModel::Robust::Create(
         gtsam::noiseModel::mEstimator::Huber::Create(params_.k_huber),
         flow_noise_);
+
+    // TODO: if realtime
   }
 
   /**
@@ -164,7 +167,6 @@ class OpticalFlowAndPoseSolver {
     // graph we will mutate by removing outlier factors
     gtsam::NonlinearFactorGraph mutable_graph = graph;
 
-    // LM way faster apparently!
     // gtsam::Values optimised_values = solveLM(values, mutable_graph,
     // ordering);
     gtsam::Values optimised_values = solveGN(values, mutable_graph, ordering);
@@ -444,6 +446,10 @@ class OpticalFlowAndPoseSolver {
   gtsam::SharedNoiseModel flow_noise_;
   //! Prior noise model for the flow
   gtsam::SharedNoiseModel flow_prior_noise_;
+
+  //! Optimization params and configuration
+  TimeBudgetOptimizationCallback::UniquePtr opt_callback_{nullptr};
+  size_t max_iterations = 100;
 };
 
 }  // namespace dyno

@@ -352,7 +352,7 @@ if __name__ == '__main__':
     # run_hybrid_solver_comparison_omd()
     # run_hybrid_solver_comparison_kitti()
     # run_uts_tech_lab_solver_comparison_test()
-    run_dynoepts()
+    # run_dynoepts()
     # run_tartan_air()
     # run_kitti()
     # run_viodes()
@@ -380,3 +380,7 @@ if __name__ == '__main__':
 
     # run_analysis("dynoepts_uope_25_PnP_test")
     # run_analysis("dynoepts_uope_25_MO_test")
+
+    run_analysis("dynoepts_uope_52_FS_test")
+    run_analysis("dynoepts_uope_52_MO_test")
+    run_analysis("dynoepts_uope_52_PnP_test")

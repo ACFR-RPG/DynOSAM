@@ -47,6 +47,7 @@ bool Frame::getCorrespondences(
     return false;
   }
 
+  correspondences.reserve(feature_correspondences.size());
   for (const auto& pair : feature_correspondences) {
     const Feature::Ptr& prev_feature = pair.first;
     const Feature::Ptr& curr_feature = pair.second;
@@ -76,6 +77,7 @@ bool Frame::getDynamicCorrespondences(
   }
 
   // unncessary but just for sanity check
+  correspondences.reserve(feature_correspondences.size());
   for (const auto& feature_pairs : feature_correspondences) {
     const Feature::Ptr& prev_feature = feature_pairs.first;
     const Feature::Ptr& curr_feature = feature_pairs.second;
