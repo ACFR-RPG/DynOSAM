@@ -213,7 +213,7 @@ def run_dynoepts():
     # run_experiment_sequences("/root/data/dynoepts/UOPE56/others_50-55-004/others_54","dynoepts_uope_54_PnP_test", dynoepts, "--hybrid_motion_solver=3", "--use_backend=false", "--pc_smoother_allow_backend_updates=false")
 
     # run_experiment_sequences("/root/data/dynoepts/UOPE56/others_50-55-004/others_52","dynoepts_uope_52_FS_test", dynoepts, "--hybrid_motion_solver=2", "--use_backend=false", "--pc_smoother_allow_backend_updates=false")
-    # run_experiment_sequences("/root/data/dynoepts/UOPE56/others_50-55-004/others_52","dynoepts_uope_52_MO_test", dynoepts, "--hybrid_motion_solver=4", "--use_backend=false", "--pc_smoother_allow_backend_updates=false")
+    run_experiment_sequences("/root/data/dynoepts/UOPE56/others_50-55-004/others_52","dynoepts_uope_52_MO_test", dynoepts, "--hybrid_motion_solver=4", "--use_backend=false", "--pc_smoother_allow_backend_updates=false")
     # run_experiment_sequences("/root/data/dynoepts/UOPE56/others_50-55-004/others_52","dynoepts_uope_52_PnP_test", dynoepts, "--hybrid_motion_solver=3", "--use_backend=false", "--pc_smoother_allow_backend_updates=false")
 
     # run_experiment_sequences("/root/data/dynoepts/UOPE56/others_50-55-004/others_51","dynoepts_uope_51_MO_test", dynoepts, "--hybrid_motion_solver=4", "--use_backend=false", "--pc_smoother_allow_backend_updates=false")
@@ -245,7 +245,7 @@ def run_dynoepts():
     # run_experiment_sequences("/root/data/dynoepts/UOPE56/others_20-29-002/others_26","dynoepts_uope_26_MO_test", dynoepts, "--hybrid_motion_solver=4", "--use_backend=false", "--pc_smoother_allow_backend_updates=false")
     # run_experiment_sequences("/root/data/dynoepts/UOPE56/others_20-29-002/others_26","dynoepts_uope_26_PnP_test", dynoepts, "--hybrid_motion_solver=3", "--use_backend=false", "--pc_smoother_allow_backend_updates=false")
 
-    run_experiment_sequences("/root/data/dynoepts/UOPE56/others_20-29-002/others_27","dynoepts_uope_27_FS_test", dynoepts, "--hybrid_motion_solver=2", "--use_backend=false", "--pc_smoother_allow_backend_updates=false")
+    # run_experiment_sequences("/root/data/dynoepts/UOPE56/others_20-29-002/others_27","dynoepts_uope_27_FS_test", dynoepts, "--hybrid_motion_solver=2", "--use_backend=false", "--pc_smoother_allow_backend_updates=false")
     # run_experiment_sequences("/root/data/dynoepts/UOPE56/others_20-29-002/others_27","dynoepts_uope_27_MO_test", dynoepts, "--hybrid_motion_solver=4", "--use_backend=false", "--pc_smoother_allow_backend_updates=false")
     # run_experiment_sequences("/root/data/dynoepts/UOPE56/others_20-29-002/others_27","dynoepts_uope_27_PnP_test", dynoepts, "--hybrid_motion_solver=3", "--use_backend=false", "--pc_smoother_allow_backend_updates=false")
 
@@ -352,7 +352,7 @@ if __name__ == '__main__':
     # run_hybrid_solver_comparison_omd()
     # run_hybrid_solver_comparison_kitti()
     # run_uts_tech_lab_solver_comparison_test()
-    # run_dynoepts()
+    run_dynoepts()
     # run_tartan_air()
     # run_kitti()
     # run_viodes()
@@ -381,6 +381,6 @@ if __name__ == '__main__':
     # run_analysis("dynoepts_uope_25_PnP_test")
     # run_analysis("dynoepts_uope_25_MO_test")
 
-    run_analysis("dynoepts_uope_52_FS_test")
-    run_analysis("dynoepts_uope_52_MO_test")
-    run_analysis("dynoepts_uope_52_PnP_test")
+    # run_analysis("dynoepts_uope_52_FS_test")
+    # run_analysis("dynoepts_uope_52_MO_test")
+    # run_analysis("dynoepts_uope_52_PnP_test")

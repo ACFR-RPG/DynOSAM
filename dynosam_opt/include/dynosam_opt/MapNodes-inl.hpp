@@ -45,18 +45,18 @@ bool FrameNode<MEASUREMENT>::objectObserved(ObjectId object_id) const {
   return objects_seen.exists(object_id);
 }
 
-template <typename MEASUREMENT>
-bool FrameNode<MEASUREMENT>::objectObservedInPrevious(
-    ObjectId object_id) const {
-  const auto frame_id_k_1 = frame_id - 1u;
-  FrameNodePtr<MEASUREMENT> frame_node_k_1 =
-      this->map_ptr_->template getFrame(frame_id_k_1);
+// template <typename MEASUREMENT>
+// bool FrameNode<MEASUREMENT>::objectObservedInPrevious(
+//     ObjectId object_id) const {
+//   const auto frame_id_k_1 = frame_id - 1u;
+//   FrameNodePtr<MEASUREMENT> frame_node_k_1 =
+//       this->map_ptr_->template getFrame(frame_id_k_1);
 
-  if (!frame_node_k_1) {
-    return false;
-  }
-  return frame_node_k_1->objectObserved(object_id);
-}
+//   if (!frame_node_k_1) {
+//     return false;
+//   }
+//   return frame_node_k_1->objectObserved(object_id);
+// }
 
 template <typename MEASUREMENT>
 gtsam::Key FrameNode<MEASUREMENT>::makePoseKey() const {
@@ -74,10 +74,10 @@ gtsam::Key FrameNode<MEASUREMENT>::makeObjectPoseKey(ObjectId object_id) const {
   return ObjectPoseSymbol(object_id, this->frame_id);
 }
 
-template <typename MEASUREMENT>
-bool FrameNode<MEASUREMENT>::objectMotionExpected(ObjectId object_id) const {
-  return objectObserved(object_id) && objectObservedInPrevious(object_id);
-}
+// template <typename MEASUREMENT>
+// bool FrameNode<MEASUREMENT>::objectMotionExpected(ObjectId object_id) const {
+//   return objectObserved(object_id) && objectObservedInPrevious(object_id);
+// }
 
 template <typename MEASUREMENT>
 std::vector<typename FrameNode<MEASUREMENT>::LandmarkMeasurementPair>

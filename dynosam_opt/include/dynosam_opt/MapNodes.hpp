@@ -443,7 +443,7 @@ class FrameNode : public MapNodeBase<MEASUREMENT> {
    * @return true
    * @return false
    */
-  bool objectObservedInPrevious(ObjectId object_id) const;
+  // bool objectObservedInPrevious(ObjectId object_id) const;
 
   /**
    * @brief True if the object appears at this (k) and the previous frame (k-1)
@@ -453,7 +453,7 @@ class FrameNode : public MapNodeBase<MEASUREMENT> {
    * @return true
    * @return false
    */
-  bool objectMotionExpected(ObjectId object_id) const;
+  // bool objectMotionExpected(ObjectId object_id) const;
 
   /**
    * @brief Constructs a robot/sensor pose key.
