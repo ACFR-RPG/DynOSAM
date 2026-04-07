@@ -149,10 +149,10 @@ class BackendModuleT : public BackendModule<INPUT> {
  public:
   using MapT = MAP;
   using Base = BackendModule<INPUT>;
-  using FormulationT = Formulation<MapT>;
+  using Formulation = FormulationT<MapT>;
 
   using PostFormulationUpdateCallback = std::function<void(
-      const typename FormulationT::Ptr&, FrameId, const gtsam::Values&,
+      const typename Formulation::Ptr&, FrameId, const gtsam::Values&,
       const gtsam::NonlinearFactorGraph&)>;
 
   BackendModuleT(const BackendParams& params, Camera::Ptr camera,
@@ -169,6 +169,12 @@ class BackendModuleT : public BackendModule<INPUT> {
 
  protected:
   typename MapT::Ptr map_;
+
+  // //! Formulation that will share the map_
+  // VIOFormulation<MapT>::Ptr formulation_;
+  // BackendModuleDisplay::Ptr formulation_display_;
+  // // Cached error hooks
+  // ErrorHandlingHooks error_hooks_;
   //! External callback containing formulation data and new values and factors
   PostFormulationUpdateCallback post_formulation_update_cb_;
 };

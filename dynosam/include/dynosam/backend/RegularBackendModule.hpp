@@ -47,6 +47,7 @@ namespace dyno {
 class RegularVIBackendModule
     : public BackendModuleT<MapVision, VisionImuPacket> {
  public:
+  //! Alias needed in BackendFactory
   using Factory = BackendFormulationFactory<MapVision>;
 
   using Base = BackendModuleT<MapVision, VisionImuPacket>;

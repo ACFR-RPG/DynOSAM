@@ -39,31 +39,15 @@
 namespace dyno {
 
 template <typename MAP>
-Formulation<MAP>::Formulation(const FormulationParams& params,
-                              typename Map::Ptr map,
-                              const NoiseModels& noise_models,
-                              const Sensors& sensors,
-                              const FormulationHooks& hooks)
-    : params_(params),
-      map_(map),
-      noise_models_(noise_models),
-      sensors_(sensors),
-      shared_data_(std::make_shared<SharedFormulationData>()) {
-  shared_data_->hooks = hooks;
-}
+FormulationT<MAP>::FormulationT(const FormulationParams& params,
+                                typename Map::Ptr map,
+                                const NoiseModels& noise_models,
+                                const Sensors& sensors,
+                                const FormulationHooks& hooks)
+    : Formulation(params, noise_models, sensors, hooks), map_(map) {}
 
 template <typename MAP>
-void Formulation<MAP>::setTheta(const gtsam::Values& linearization) {
-  shared_data_->threadSafeSetTheta(linearization);
-}
-
-template <typename MAP>
-void Formulation<MAP>::updateTheta(const gtsam::Values& linearization) {
-  shared_data_->threadSafeInsertOrAssignTheta(linearization);
-}
-
-template <typename MAP>
-gtsam::Pose3 Formulation<MAP>::getInitialOrLinearizedSensorPose(
+gtsam::Pose3 FormulationT<MAP>::getInitialOrLinearizedSensorPose(
     FrameId frame_id) const {
   const auto accessor = this->accessorFromTheta();
   // sensor pose from a previous/current linearisation point
@@ -79,13 +63,8 @@ gtsam::Pose3 Formulation<MAP>::getInitialOrLinearizedSensorPose(
 }
 
 template <typename MAP>
-BackendLogger::UniquePtr Formulation<MAP>::makeFullyQualifiedLogger() const {
-  return std::make_unique<BackendLogger>(getFullyQualifiedName());
-}
-
-template <typename MAP>
-void Formulation<MAP>::addFactor(gtsam::NonlinearFactorGraph& new_factors,
-                                 gtsam::NonlinearFactor::shared_ptr factor) {
+void FormulationT<MAP>::addFactor(gtsam::NonlinearFactorGraph& new_factors,
+                                  gtsam::NonlinearFactor::shared_ptr factor) {
   CHECK_NOTNULL(factor);
   factors_ += factor;
   new_factors += factor;
@@ -93,8 +72,8 @@ void Formulation<MAP>::addFactor(gtsam::NonlinearFactorGraph& new_factors,
 
 template <typename MAP>
 template <typename V>
-void Formulation<MAP>::addValue(gtsam::Values& new_values, const V& value,
-                                gtsam::Key key) {
+void FormulationT<MAP>::addValue(gtsam::Values& new_values, const V& value,
+                                 gtsam::Key key) {
   gtsam::Values values;
   values.insert(key, value);
 
@@ -103,7 +82,7 @@ void Formulation<MAP>::addValue(gtsam::Values& new_values, const V& value,
 }
 
 template <typename MAP>
-UpdateObservationResult Formulation<MAP>::updateDynamicObservations(
+UpdateObservationResult FormulationT<MAP>::updateDynamicObservations(
     FrameId frame_id_k, gtsam::Values& new_values,
     gtsam::NonlinearFactorGraph& new_factors,
     const UpdateObservationParams& update_params) {
@@ -399,112 +378,6 @@ UpdateObservationResult Formulation<MAP>::updateDynamicObservations(
   new_values.insert(internal_new_values);
 
   return result;
-}
-
-template <typename MAP>
-void Formulation<MAP>::logBackendFromMap(
-    const FormulationLoggingParams& backend_info) {
-  // TODO:
-  std::string logger_prefix = this->getFullyQualifiedName();
-  const std::string suffix = backend_info.logging_suffix;
-
-  // add suffix to name if required
-  if (!suffix.empty()) {
-    logger_prefix += ("_" + suffix);
-  }
-  BackendLogger::UniquePtr logger =
-      std::make_unique<BackendLogger>(logger_prefix);
-
-  auto accessor = this->accessorFromTheta();
-
-  CHECK(hooks().ground_truth_packets_request);
-
-  logFromAccessor(accessor, *logger, hooks().ground_truth_packets_request());
-
-  // TODO: do we still need the full batch hack? Hardly ever use FB anymore but
-  //  maybe fore backwards compatability!?
-
-  // TODO: formulation params are now backend params so no longer need to
-  //  pass backend params into Formulation with FormulationLoggingParams
-  //  CHECK_NOTNULL(backend_info.backend_params);
-  //  const auto& backend_params = *backend_info.backend_params;
-
-  // const ObjectPoseMap object_pose_map = accessor->getObjectPoses();
-
-  // for (FrameId frame_k : map->getFrameIds()) {
-  //   // TODO: hack - only go up to frames < full batch so we actually only
-  //   // include the optimised alues
-  //   // TODO: actually should be based on the optimization mode!!
-  //   if (params_.optimization_mode == RegularOptimizationType::FULL_BATCH &&
-  //       params_.full_batch_frame - 1 == (int)frame_k) {
-  //     break;
-  //   }
-
-  //   std::stringstream ss;
-  //   ss << "Logging data from map at frame " << frame_k;
-
-  //   // get MotionestimateMap
-  //   //  const MotionEstimateMap motions = map->getMotionEstimates(frame_k);
-  //   {
-  //     const MotionEstimateMap motions = accessor->getObjectMotions(frame_k);
-  //     auto result =
-  //         logger->logObjectMotion(frame_k, motions, ground_truth_packets);
-  //     if (result)
-  //       ss << " Logged " << *result << " motions from " << motions.size()
-  //          << " computed motions.";
-  //     else
-  //       ss << " Could not log object motions.";
-  //   }
-
-  //   StateQuery<gtsam::Pose3> X_k_query = accessor->getSensorPose(frame_k);
-
-  //   if (X_k_query) {
-  //     logger->logCameraPose(frame_k, X_k_query.get(), ground_truth_packets);
-  //   } else {
-  //     LOG(WARNING) << "Could not log camera pose estimate at frame " <<
-  //     frame_k;
-  //   }
-
-  //   // TODO: log!!
-  //   //  logger->logObjectPose(object_pose_map, ground_truth_packets);
-
-  //   if (map->frameExists(frame_k)) {
-  //     auto static_map = accessor->getStaticLandmarkEstimates(frame_k);
-  //     auto dynamic_map = accessor->getDynamicLandmarkEstimates(frame_k);
-
-  //     CHECK(X_k_query);  // actually not needed for points in world!!
-  //     logger->logPoints(frame_k, *X_k_query, static_map);
-  //     logger->logPoints(frame_k, *X_k_query, dynamic_map);
-  //   }
-
-  //   LOG(INFO) << ss.str();
-  // }
-
-  logger.reset();
-}
-
-template <typename MAP>
-typename Formulation<MAP>::AccessorType::Ptr
-Formulation<MAP>::accessorFromTheta() const {
-  if (!accessor_theta_) {
-    CHECK_NOTNULL(shared_data_);
-    accessor_theta_ = createAccessor(shared_data_);
-  }
-  return accessor_theta_;
-}
-
-template <typename MAP>
-std::string Formulation<MAP>::setFullyQualifiedName() const {
-  // get the derived name of the formulation
-  std::string logger_prefix = this->loggerPrefix();
-  const std::string suffix = params_.updater_suffix;
-
-  // add suffix to name if required
-  if (!suffix.empty()) {
-    logger_prefix += ("_" + suffix);
-  }
-  fully_qualified_name_ = logger_prefix;
-  return *fully_qualified_name_;
 }
 
 }  // namespace dyno

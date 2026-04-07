@@ -78,6 +78,15 @@ DEFINE_bool(
 
 namespace dyno {
 
+std::shared_ptr<RegularVIBackendModule::Factory> DefaultFactoryHelper(
+    const BackendType& backend_type) {
+  auto backend_factory = DefaultBackendFactory::Create(backend_type);
+  // only need the FormulationFactory
+  // we expect all regular formulations to a map of type MapVision since this is
+  // also defined by the RegularVIBackendModule itself
+  return CHECK_NOTNULL(backend_factory->asFormulationFactory<MapVision>());
+}
+
 RegularVIBackendModule::RegularVIBackendModule(
     const BackendParams& backend_params, Camera::Ptr camera,
     std::shared_ptr<RegularVIBackendModule::Factory> factory,
@@ -91,10 +100,9 @@ RegularVIBackendModule::RegularVIBackendModule(
     const BackendParams& backend_params, Camera::Ptr camera,
     const BackendType& backend_type,
     const SharedGroundTruth& shared_ground_truth)
-    : RegularVIBackendModule(
-          backend_params, camera,
-          DefaultBackendFactory<MapVision>::Create(backend_type),
-          shared_ground_truth) {}
+    : RegularVIBackendModule(backend_params, camera,
+                             DefaultFactoryHelper(backend_type),
+                             shared_ground_truth) {}
 
 RegularVIBackendModule::~RegularVIBackendModule() {
   if (backend_params_.use_logger_) {
@@ -223,18 +231,18 @@ void RegularVIBackendModule::setupFormulation(
   FormulationHooks hooks;
   hooks.setGroundTruthPacketRequest(this->shared_ground_truth_);
 
-  FormulationVizWrapper<MapVision> wrapper = factory->createFormulation(
+  FormulationVizWrapper wrapper = factory->createFormulation(
       formulation_params, map(), noise_models_, sensors, hooks);
 
   if (!wrapper.formulation) {
     throw DynosamException("Loaded formulation is null!");
   }
 
-  formulation_ =
-      std::dynamic_pointer_cast<VIOFormulation<MapVision>>(wrapper.formulation);
+  formulation_ = wrapper.as<VIOFormulation<MapVision>>();
   if (!formulation_) {
     throw DynosamException(
-        "Formulation loaded but does not inherit from VIOFormulation!");
+        "Formulation loaded but does not inherit from "
+        "VIOFormulation<MapVision>!");
   }
   formulation_display_ = wrapper.display;
   error_hooks_ = formulation_->getCustomErrorHooks();

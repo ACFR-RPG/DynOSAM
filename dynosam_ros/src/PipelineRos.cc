@@ -210,13 +210,10 @@ void DynoPipelineManagerRos::initalisePipeline() {
     };
   }
 
-  using RosBackendFactory = RegularBackendModuleFactory<BackendModulePolicyRos>;
-  // for now we just support regular backend ... in fact this design means we
-  // should depricate any other map...
-  //   auto factory =
-  //   DefaultBackendFactory<RegularBackendModuleTraits::MapType>::Create(params.backend_type);
-  //   auto this_node = this->shared_from_this();
-  //   CHECK_NOTNULL(this_node);
+  // Define a backend factory with a ROS specific policy
+  // This allows custom displays to be loaded at runtime depending
+  // on the formulation/module requested
+  using RosBackendFactory = BackendFactory<BackendModulePolicyRos>;
   auto factory =
       RosBackendFactory::Create(params.backend_type, display_params, this);
 

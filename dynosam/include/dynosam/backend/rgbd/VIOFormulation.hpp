@@ -26,9 +26,9 @@ template <typename MAP>
 class VIOUpdater;
 
 template <typename MAP>
-class VIOFormulation : public Formulation<MAP> {
+class VIOFormulation : public FormulationT<MAP> {
  public:
-  using Base = Formulation<MAP>;
+  using Base = FormulationT<MAP>;
   using This = VIOFormulation<MAP>;
   using Map = typename Base::Map;
 

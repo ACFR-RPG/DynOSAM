@@ -255,6 +255,188 @@ void logFromAccessor(
     Accessor::Ptr accessor, BackendLogger& logger,
     const std::optional<GroundTruthPacketMap>& ground_truth = {});
 
+// should be only getters for non map things (ie. accessor)
+// as well as non update related things
+class Formulation {
+ public:
+  DYNO_POINTER_TYPEDEFS(Formulation)
+
+  Formulation(const FormulationParams& params, const NoiseModels& noise_models,
+              const Sensors& sensors,
+              const FormulationHooks& hooks = FormulationHooks());
+  virtual ~Formulation() = default;
+
+ protected:
+  /**
+   * @brief Creates the associated Accessor for the derived formulation. The
+   * accessor will contain a pointer to This::theta_, so that when the values
+   * are updated the accessor has access to the latest values.
+   *
+   * @param values const SharedFormulationData::Ptr&
+   * @return Accessor::Ptr
+   */
+  virtual Accessor::Ptr createAccessor(
+      const SharedFormulationData::Ptr& shared_data) const = 0;
+
+ public:
+  /**
+   * @brief Defines the base name of this formulation. This name will appear as
+   * part of the output logs and may be augmented with the
+   * FormulationParams::suffix, if given. To get the fully qualified name (the
+   * actual name that will appear in the logs), use
+   * This::getFullyQualifiedName().
+   *
+   * @return std::string
+   */
+  virtual std::string loggerPrefix() const = 0;
+
+  /**
+   * @brief Get the current linearization point for this formulation. These
+   * values can be updated after external optimisation and are constructed by
+   * the derived formulation during update.
+   *
+   * @return gtsam::Values
+   */
+  gtsam::Values getTheta() const {
+    std::lock_guard<std::mutex> lock(shared_data_->theta_mutex);
+    return shared_data_->theta;
+  }
+
+  /**
+   * @brief Sets the full set of theta values (overrides them). This is used
+   * after external optimisation to update the values for the accessor which has
+   * a internal reference (pointer) to theta.
+   *
+   * @param linearization const gtsam::Values&
+   */
+  void setTheta(const gtsam::Values& linearization);
+
+  /**
+   * @brief Updates and assigns new values to theta. This is used after external
+   * optimisation to update the values for the accessor which has a internal
+   * reference (pointer) to theta.
+   *
+   * @param linearization const gtsam::Values&
+   */
+  void updateTheta(const gtsam::Values& linearization);
+
+  /**
+   * @brief Gets the current graph associated with the current theta and
+   * constructed by the derived formulation. Along theta, this should be used by
+   * an external optimisation routine.
+   *
+   * @return const gtsam::NonlinearFactorGraph&
+   */
+  const gtsam::NonlinearFactorGraph& getGraph() const { return factors_; }
+
+  /**
+   * @brief Public fucntion to access the Accessor for the derived formulation.
+   *
+   * @return Accessor::Ptr
+   */
+  Accessor::Ptr accessorFromTheta() const;
+
+  template <typename Derived>
+  std::shared_ptr<Derived> derivedAccessor() const {
+    if (!accessor_theta_) {
+      accessorFromTheta();
+    }
+    CHECK(accessor_theta_);
+    return std::dynamic_pointer_cast<Derived>(accessor_theta_);
+  }
+
+  const FormulationHooks& hooks() const { return shared_data_->hooks; }
+  const NoiseModels& noiseModels() const { return noise_models_; }
+  const Sensors& sensors() const { return sensors_; }
+  const FormulationParams& params() const { return params_; }
+
+  /**
+   * @brief Custom gtsam::Key formatter for this formulation.
+   * Defaults to DynosamKeyFormatter.
+   *
+   * @return gtsam::KeyFormatter
+   */
+  virtual gtsam::KeyFormatter formatter() const { return DynosamKeyFormatter; }
+
+  inline std::string format(const gtsam::Key& key) const {
+    return this->formatter()(key);
+  }
+
+  /**
+   * @brief Get custom error handling hooks for this formulation.
+   *
+   * By default returns getDefaultILSErrorHandlingHooks();
+   * Only sets error handling for ILS not for on failed object.
+   *
+   * @return ErrorHandlingHooks
+   */
+  virtual ErrorHandlingHooks getCustomErrorHooks() {
+    return getDefaultILSErrorHandlingHooks();
+  }
+
+  /**
+   * @brief Get the fully qualified name of this formulation which is derived
+   * from the loggerPrefix and optionally the FormulationParams::suffix if
+   * given.
+   *
+   * @return const std::string
+   */
+  const std::string getFullyQualifiedName() const {
+    return fully_qualified_name_.value_or(setFullyQualifiedName());
+  }
+
+  /**
+   * @brief Makes a logger using the fully-qualified name for this formulation.
+   *
+   * @return BackendLogger::UniquePtr
+   */
+  BackendLogger::UniquePtr makeFullyQualifiedLogger() const;
+
+  /**
+   * @brief Logs all frames and values to file using Accessor and BackendLogger.
+   * The FormulationLoggingParams provides meta-data and ground truth
+   * information for logging.
+   *
+   * @param backend_info const FormulationLoggingParams&
+   */
+  virtual void logBackendFromMap(const FormulationLoggingParams& backend_info);
+
+  /**
+   * @brief Pre update hook called in the RegularBackend after the map is
+   * updated with new measurements but before new values/factors are constructed
+   * from this formulation.
+   *
+   */
+  virtual void preUpdate(const PreUpdateData&){};
+
+  /**
+   * @brief Post-update hook called in the RegulatBackend after graph
+   * construction and optimization!
+   *
+   */
+  virtual void postUpdate(const PostUpdateData&){};
+
+ protected:
+  const FormulationParams params_;
+  const NoiseModels noise_models_;
+  Sensors sensors_;
+  gtsam::NonlinearFactorGraph factors_;
+  //! For data shared with the accessor. Includes currently linearization
+  //! (theta) and shared hook
+  SharedFormulationData::Ptr shared_data_;
+
+  mutable std::mutex mutex_;
+
+ private:
+  std::string setFullyQualifiedName() const;  // but isnt actually const ;)
+
+ private:
+  //! Full name of the formulation and accounts for the additional configuration
+  //! from the FormulationParams
+  mutable std::optional<std::string> fully_qualified_name_{std::nullopt};
+  mutable Accessor::Ptr accessor_theta_;
+};
+
 /**
  * @brief Base class for a formulation that defines the structure and
  * implementation for a factor-graph based Dynamic SLAM solution. Derived
@@ -296,10 +478,10 @@ void logFromAccessor(
  * @tparam MAP
  */
 template <typename MAP>
-class Formulation {
+class FormulationT : public Formulation {
  public:
   using Map = MAP;
-  using This = Formulation<Map>;
+  using This = FormulationT<Map>;
   using MapTraitsType = MapTraits<Map>;
   using MeasurementType = typename MapTraitsType::MeasurementType;
 
@@ -316,10 +498,10 @@ class Formulation {
 
   DYNO_POINTER_TYPEDEFS(This)
 
-  Formulation(const FormulationParams& params, typename Map::Ptr map,
-              const NoiseModels& noise_models, const Sensors& sensors,
-              const FormulationHooks& hooks = FormulationHooks());
-  virtual ~Formulation() = default;
+  FormulationT(const FormulationParams& params, typename Map::Ptr map,
+               const NoiseModels& noise_models, const Sensors& sensors,
+               const FormulationHooks& hooks = FormulationHooks());
+  virtual ~FormulationT() = default;
 
  protected:
   /**
@@ -408,30 +590,6 @@ class Formulation {
   virtual bool isDynamicTrackletInMap(
       const typename MapTraitsType::LandmarkNodePtr& lmk_node) const = 0;
 
-  /**
-   * @brief Defines the base name of this formulation. This name will appear as
-   * part of the output logs and may be augmented with the
-   * FormulationParams::suffix, if given. To get the fully qualified name (the
-   * actual name that will appear in the logs), use
-   * This::getFullyQualifiedName().
-   *
-   * @return std::string
-   */
-  virtual std::string loggerPrefix() const = 0;
-
-  /**
-   * @brief Creates the associated Accessor for the derived formulation. The
-   * accessor will contain a pointer to This::theta_, so that when the values
-   * are updated the accessor has access to the latest values.
-   *
-   * @param values const SharedFormulationData::Ptr&
-   * @return AccessorType::Ptr
-   */
-  virtual typename AccessorType::Ptr createAccessor(
-      const SharedFormulationData::Ptr& shared_data) const = 0;
-
-  // virtual void
-
  public:
   /**
    * @brief Get the map used by the formulation
@@ -439,108 +597,6 @@ class Formulation {
    * @return Map::Ptr
    */
   typename Map::Ptr map() const { return map_; }
-
-  /**
-   * @brief Get the current linearization point for this formulation. These
-   * values can be updated after external optimisation and are constructed by
-   * the derived formulation during update.
-   *
-   * @return gtsam::Values
-   */
-  gtsam::Values getTheta() const {
-    std::lock_guard<std::mutex> lock(shared_data_->theta_mutex);
-    return shared_data_->theta;
-  }
-
-  /**
-   * @brief Sets the full set of theta values (overrides them). This is used
-   * after external optimisation to update the values for the accessor which has
-   * a internal reference (pointer) to theta.
-   *
-   * @param linearization const gtsam::Values&
-   */
-  void setTheta(const gtsam::Values& linearization);
-
-  /**
-   * @brief Updates and assigns new values to theta. This is used after external
-   * optimisation to update the values for the accessor which has a internal
-   * reference (pointer) to theta.
-   *
-   * @param linearization const gtsam::Values&
-   */
-  void updateTheta(const gtsam::Values& linearization);
-
-  /**
-   * @brief Gets the current graph associated with the current theta and
-   * constructed by the derived formulation. Along theta, this should be used by
-   * an external optimisation routine.
-   *
-   * @return const gtsam::NonlinearFactorGraph&
-   */
-  const gtsam::NonlinearFactorGraph& getGraph() const { return factors_; }
-
-  const FormulationHooks& hooks() const { return shared_data_->hooks; }
-  const NoiseModels& noiseModels() const { return noise_models_; }
-  const Sensors& sensors() const { return sensors_; }
-  const FormulationParams& params() const { return params_; }
-
-  /**
-   * @brief Custom gtsam::Key formatter for this formulation.
-   * Defaults to DynosamKeyFormatter.
-   *
-   * @return gtsam::KeyFormatter
-   */
-  virtual gtsam::KeyFormatter formatter() const { return DynosamKeyFormatter; }
-
-  inline std::string format(const gtsam::Key& key) const {
-    return this->formatter()(key);
-  }
-
-  /**
-   * @brief Get custom error handling hooks for this formulation.
-   *
-   * By default returns getDefaultILSErrorHandlingHooks();
-   * Only sets error handling for ILS not for on failed object.
-   *
-   * @return ErrorHandlingHooks
-   */
-  virtual ErrorHandlingHooks getCustomErrorHooks() {
-    return getDefaultILSErrorHandlingHooks();
-  }
-
-  /**
-   * @brief Get the fully qualified name of this formulation which is derived
-   * from the loggerPrefix and optionally the FormulationParams::suffix if
-   * given.
-   *
-   * @return const std::string
-   */
-  const std::string getFullyQualifiedName() const {
-    return fully_qualified_name_.value_or(setFullyQualifiedName());
-  }
-
-  /**
-   * @brief Public fucntion to access the Accessor for the derived formulation.
-   *
-   * @return AccessorType::Ptr
-   */
-  typename AccessorType::Ptr accessorFromTheta() const;
-
-  template <typename Derived>
-  std::shared_ptr<Derived> derivedAccessor() const {
-    if (!accessor_theta_) {
-      accessorFromTheta();
-    }
-    CHECK(accessor_theta_);
-    return std::dynamic_pointer_cast<Derived>(accessor_theta_);
-  }
-
-  /**
-   * @brief Makes a logger using the fully-qualified name for this formulation.
-   *
-   * @return BackendLogger::UniquePtr
-   */
-  BackendLogger::UniquePtr makeFullyQualifiedLogger() const;
 
   void addFactor(gtsam::NonlinearFactorGraph& new_factors,
                  gtsam::NonlinearFactor::shared_ptr factor);
@@ -584,58 +640,18 @@ class Formulation {
       gtsam::NonlinearFactorGraph& new_factors,
       const UpdateObservationParams& update_params);
 
-  /**
-   * @brief Logs all frames and values to file using Accessor and BackendLogger.
-   * The FormulationLoggingParams provides meta-data and ground truth
-   * information for logging.
-   *
-   * @param backend_info const FormulationLoggingParams&
-   */
-  virtual void logBackendFromMap(const FormulationLoggingParams& backend_info);
-
-  /**
-   * @brief Pre update hook called in the RegularBackend after the map is
-   * updated with new measurements but before new values/factors are constructed
-   * from this formulation.
-   *
-   */
-  virtual void preUpdate(const PreUpdateData&){};
-
-  /**
-   * @brief Post-update hook called in the RegulatBackend after graph
-   * construction and optimization!
-   *
-   */
-  virtual void postUpdate(const PostUpdateData&){};
-
   gtsam::Pose3 getInitialOrLinearizedSensorPose(FrameId frame_id) const;
 
  protected:
   void clearGraph() { factors_.resize(0); }
 
- private:
-  std::string setFullyQualifiedName() const;  // but isnt actually const ;)
-
  protected:
-  const FormulationParams params_;
   typename Map::Ptr map_;
-  const NoiseModels noise_models_;
-  Sensors sensors_;
   //! the set of (static related) values managed by this updater. Allows
   //! checking if values have already been added over successive function calls
   gtsam::FastMap<gtsam::Key, bool> is_other_values_in_map;
-  gtsam::NonlinearFactorGraph factors_;
-  //! For data shared with the accessor. Includes currently linearization
-  //! (theta) and shared hook
-  SharedFormulationData::Ptr shared_data_;
-
-  mutable std::mutex mutex_;
 
  private:
-  mutable typename AccessorType::Ptr accessor_theta_;
-  //! Full name of the formulation and accounts for the additional configuration
-  //! from the FormulationParams
-  mutable std::optional<std::string> fully_qualified_name_{std::nullopt};
 };
 
 }  // namespace dyno

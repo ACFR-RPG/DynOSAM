@@ -884,7 +884,7 @@ TEST(RegularBackendModule, testObjectCentric) {
   gtsam::Values opt_values;
 
   backend.registerPostFormulationUpdateCallback(
-      [&](const dyno::RegularVIBackendModule::FormulationT::Ptr& formulation,
+      [&](const dyno::RegularVIBackendModule::Formulation::Ptr& formulation,
           dyno::FrameId frame_id, const gtsam::Values& new_values,
           const gtsam::NonlinearFactorGraph& new_factors) -> void {
         LOG(INFO) << "In backend callback " << frame_id;
