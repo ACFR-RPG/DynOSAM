@@ -38,6 +38,17 @@ struct NodeInterface {
   static inline Key getKey(const SharedNode& node) {
     return getKey<Key>(*node);
   }
+
+  template <typename Key>
+  static inline std::vector<Key> collectKeys(const SharedNodeSet& nodes) {
+    std::vector<Key> keys;
+    keys.resize(nodes.size());
+
+    for (const auto& node : nodes) {
+      keys.push_back(getKey<Key>(node));
+    }
+    return keys;
+  }
 };
 
 template <typename Node>
@@ -83,7 +94,7 @@ class MapInterfaceBase {
     std::vector<Key> keys;
     keys.resize(this->size());
 
-    for (const auto& node : nodes_) {
+    for (const auto& [_, node] : nodes_) {
       keys.push_back(NodeInterfaceT::template getKey<Key>(node));
     }
     return keys;
@@ -105,6 +116,7 @@ class MapInterfaceBase {
   iterator end() { return nodes_.end(); }
 
  protected:
+  //! FastMap of SharedNode
   SharedNodes nodes_;
 };
 
@@ -130,6 +142,13 @@ class FrameNodeInterface : protected MapInterfaceBase<FrameNode> {
   FrameId firstFrameId() const { return firstFrame()->frameId(); }
   Timestamp lastTimestamp() const { return lastFrame()->timestamp(); }
   Timestamp firstTimestamp() const { return firstFrame()->timestamp(); }
+
+  FrameIds getAllFrameIds() const {
+    return this->template collectKeys<FrameId>();
+  }
+
+  decltype(auto) getFrames() const { return this->template getNodes(); }
+  decltype(auto) getFrames() { return this->template getNodes(); }
 };
 
 template <typename LandmarkNode>
@@ -145,6 +164,9 @@ class LandmarkNodeInterface : protected MapInterfaceBase<LandmarkNode> {
   SharedNode getLandmark(TrackletId tracklet_id) const {
     return this->template at<TrackletId>(tracklet_id);
   }
+
+  decltype(auto) getLandmarks() const { return this->template getNodes(); }
+  decltype(auto) getLandmarks() { return this->template getNodes(); }
 };
 
 template <typename ObjectNode>
@@ -161,7 +183,9 @@ class ObjectNodeInterface : protected MapInterfaceBase<ObjectNode> {
     return this->template at<ObjectId>(object_id);
   }
 
-  // ObjectIds objectI
+  ObjectIds getAllObjectIds() const {
+    return this->template collectKeys<ObjectId>();
+  }
 
   /**
    * @brief Get number of objects seen
@@ -169,6 +193,9 @@ class ObjectNodeInterface : protected MapInterfaceBase<ObjectNode> {
    * @return size_t
    */
   size_t numObjectsSeen() const { return this->size(); }
+
+  decltype(auto) getObjects() const { return this->template getNodes(); }
+  decltype(auto) getObjects() { return this->template getNodes(); }
 };
 
 template <typename NodeTypes>
