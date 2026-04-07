@@ -504,6 +504,11 @@ class FastSet
   /** insert another set: handy for MATLAB access */
   void merge(const FastSet& other) { Base::insert(other.begin(), other.end()); }
 
+  const VALUE& front() const { return *this->cbegin(); }
+  const VALUE& back() const { return *this->crbegin(); }
+  VALUE& front() { return *this->begin(); }
+  VALUE& back() { return *this->rbegin(); }
+
  private:
 };
 

@@ -6,10 +6,17 @@
 
 #include "dynosam_common/StructuredContainers.hpp"
 #include "dynosam_common/Types.hpp"
+#include "dynosam_opt/Symbols.hpp"
 
 using namespace dyno;
 
 namespace dyno_testing {
+
+struct InvalidLandmarkQuery : public DynosamException {
+  InvalidLandmarkQuery(gtsam::Key key, const std::string& string)
+      : DynosamException("Landmark estimate query failed with key " +
+                         DynosamKeyFormatter(key) + ", reason: " + string) {}
+};
 
 template <typename Node>
 struct NodeInterface {
@@ -143,9 +150,7 @@ class FrameNodeInterface : protected MapInterfaceBase<FrameNode> {
   Timestamp lastTimestamp() const { return lastFrame()->timestamp(); }
   Timestamp firstTimestamp() const { return firstFrame()->timestamp(); }
 
-  FrameIds getAllFrameIds() const {
-    return this->template collectKeys<FrameId>();
-  }
+  FrameIds getFrameIds() const { return this->template collectKeys<FrameId>(); }
 
   decltype(auto) getFrames() const { return this->template getNodes(); }
   decltype(auto) getFrames() { return this->template getNodes(); }
@@ -208,10 +213,65 @@ class ObjectNodeBase {
   typedef NodeInterface<LandmarkNode> LandmarkNodeInterfaceT;
   typedef typename LandmarkNodeInterfaceT::SharedNodeSet Landmarks;
 
+  typedef NodeInterface<FrameNode> FrameNodeInterfaceT;
+  typedef typename FrameNodeInterfaceT::SharedNodeSet Frames;
+
   ObjectNodeBase(ObjectId object_id) : object_id_(object_id) {}
 
   int getId() const { return static_cast<int>(object_id_); }
   ObjectId objectId() const { return object_id_; }
+
+  // change this behaviour in deriving classes to change which frames are
+  // counted
+  Frames getSeenFrames() const {
+    Frames seen_frames;
+    for (const auto& lmk : dynamic_landmarks_) {
+      seen_frames.merge(lmk->getSeenFrames());
+    }
+    return seen_frames;
+  }
+
+  FrameId getFirstSeenFrame() const {
+    auto first_frame = getSeenFrames().front();
+    return first_frame->frameId();
+  }
+
+  FrameId getLastSeenFrame() const {
+    auto last_frame = getSeenFrames().back();
+    return last_frame->frameId();
+  }
+
+  Landmarks landmarksSeenAtFrame(FrameId frame_id) const {
+    Landmarks seen_lmks;
+    for (const auto& lmk : dynamic_landmarks_) {
+      // all frames this lmk was seen in
+      const Frames& frames = lmk->getSeenFrames();
+      // lmk was observed at this frame
+      if (frames.find(frame_id) != frames.end()) {
+        seen_lmks.insert(lmk);
+      }
+    }
+    return seen_lmks;
+  }
+
+  /**
+   * @brief Gets the frame id seen immediately before the latest one!
+   * If the object has only been seen once, return false
+   *
+   * @param frame_id
+   * @return true
+   * @return false
+   */
+  bool previouslySeenFrame(FrameId* frame_id = nullptr) const {
+    const Frames all_frames_seen = this->getSeenFrameIds();
+    if (all_frames_seen.size() < 2) {
+      return false;
+    }
+    if (frame_id) {
+      *frame_id = (all_frames_seen.end() - 2)->frameId();
+    }
+    return true;
+  }
 
  protected:
   ObjectId object_id_;
@@ -237,6 +297,40 @@ class FrameNodeBase {
   FrameId frameId() const { return frame_id_; }
   Timestamp timestamp() const { return timestamp_; }
 
+  /**
+   * @brief True if the requested object was observed in this frame.
+   *
+   * @param object_id ObjectId
+   * @return true
+   * @return false
+   */
+  bool objectObserved(ObjectId object_id) const {
+    return objects_.exists(static_cast<int>(object_id));
+  }
+
+  gtsam::Key makePoseKey() const { return CameraPoseSymbol(frame_id_); }
+  /**
+   * @brief Consturcts an object motion key.
+   * The associated motion will be from k-1 to k.
+   *
+   * @param object_id ObjectId
+   * @return gtsam::Key
+   */
+  gtsam::Key makeObjectMotionKey(ObjectId object_id) const {
+    return ObjectMotionSymbol(object_id, frame_id_);
+  }
+
+  /**
+   * @brief Construct an object pose key.
+   * The associated pose will be for frame k.
+   *
+   * @param object_id ObjectId
+   * @return gtsam::Key
+   */
+  gtsam::Key makeObjectPoseKey(ObjectId object_id) const {
+    return ObjectPoseSymbol(object_id, frame_id_);
+  }
+
  protected:
   FrameId frame_id_;
   Timestamp timestamp_;
@@ -247,6 +341,7 @@ class FrameNodeBase {
   Objects objects_;
 };
 
+// change getSeenFrames and seenAtFrame for derived KF behaviour
 template <typename NodeTypes>
 class LandmarkNodeBase {
  public:
@@ -352,6 +447,43 @@ class LandmarkNodeBase {
     return getMeasurement(frame);
   }
 
+  const Frames& getSeenFrames() const { return frames_; }
+  Frames& getSeenFrames() { return frames_; }
+
+  /**
+   * @brief Construcs a static landmark key for this landmark. The tracklet id
+   * will be used to construct a unique key.
+   *
+   * @exception DynosamException if the landmark is not static.
+   *
+   *
+   * @return gtsam::Key
+   */
+  gtsam::Key makeStaticKey() const {
+    const auto key = StaticLandmarkSymbol(tracklet_id_);
+    if (!this->isStatic()) {
+      throw InvalidLandmarkQuery(
+          key, "Static estimate requested but landmark is dynamic!");
+    }
+    return key;
+  }
+
+  /**
+   * @brief Construcs a dynamic landmark key for this landmark.
+   * @see LandmarkNode<MEASUREMENT>#makeDynamicSymbol
+   *
+   * @param frame_id
+   * @return gtsam::Key
+   */
+  gtsam::Key makeDynamicKey(FrameId frame_id) const {
+    const auto key = DynamicLandmarkSymbol(frame_id, tracklet_id_);
+    if (this->isStatic()) {
+      throw InvalidLandmarkQuery(
+          key, "Dynamic estimate requested but landmark is static!");
+    }
+    return key;
+  }
+
  protected:
   TrackletId tracklet_id_;
   ObjectId object_id_;
@@ -373,6 +505,12 @@ class DefaultFrameNode : public FrameNodeBase<NodeTypes> {
  public:
   using This = DefaultFrameNode<NodeTypes>;
   DYNO_POINTER_TYPEDEFS(This)
+
+  /// @brief Optional initial camera pose in world, provided by the front-end
+  std::optional<Pose3Measurement> X_W_k;
+  /// @brief Optional initial object motions in the world, provided by the
+  /// front-end
+  std::optional<MotionEstimateMap> H_W_km1_ks;
 };
 
 template <typename NodeTypes>
