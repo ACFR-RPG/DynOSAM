@@ -30,6 +30,7 @@ ament_python_install_package(${PROJECT_NAME})
 install(PROGRAMS
   scripts/eval_launch.py
   scripts/record_image_topic.py
+  scripts/dataset_to_dynosam_topics.py
   DESTINATION lib/${PROJECT_NAME}
 )
 

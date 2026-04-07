@@ -112,6 +112,10 @@ dyno::DataProvider::Ptr DynoNode::createOnlineDataProvider() {
       online_data_provider = std::make_shared<RGBDOnlineProviderRos>(
           this->create_sub_node("dataprovider"), online_params);
       break;
+    case InputImageMode::RGBDM:
+      online_data_provider = std::make_shared<RGBDMOnlineProviderRos>(
+          this->create_sub_node("dataprovider"), online_params);
+      break;
 
     default:
       LOG(FATAL) << "Unknown image_mode";

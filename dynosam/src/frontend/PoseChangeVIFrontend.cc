@@ -251,7 +251,7 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
 
   const bool ego_motion_keyframe = shouldFrameBeKeyFrame(frame_k, frame_km1);
   const bool is_keyframe = ego_motion_keyframe || num_object_keyframes > 0;
-  if (is_keyframe) {
+  if (withBackend() && is_keyframe) {
     LOG(INFO) << "KF selected for k=" << frame_id_k
               << " (ego kf= " << std::boolalpha << ego_motion_keyframe
               << " #object KF " << num_object_keyframes << ")";
@@ -559,9 +559,9 @@ bool PoseChangeVIFrontend::shouldFrameBeKeyFrame(Frame::Ptr frame_k,
   const KeyFrameData& lkf_data = keyframes_.at(lkf_id_);
   const Frame::Ptr lkf_frame = lkf_data.frame;
 
-  return frame_k->getFrameId() % 10 == 0;
+  // return frame_k->getFrameId() % 10 == 0;
   // FOR NOW!
-  // return true;
+  return true;
 }
 
 size_t PoseChangeVIFrontend::extractKeyFramedMotions(
@@ -603,7 +603,7 @@ void PoseChangeVIFrontend::logBestEstimates() const {
 
   // Use the presence of the backend sink function as a proxy to
   // indicate if the backend was running!
-  if (!pose_change_backend_sink_) {
+  if (!withBackend()) {
     return;
   }
 

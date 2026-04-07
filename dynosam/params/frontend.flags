@@ -17,6 +17,8 @@
 --set_dense_labelled_cloud=false
 --use_object_motion_filtering=true
 
+--hybrid_motion_solver=4
+
 --set_dense_labelled_cloud=false
 
 --refine_motion_estimate=true

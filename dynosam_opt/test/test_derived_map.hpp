@@ -40,77 +40,6 @@ struct NodeInterface {
   }
 };
 
-// interfaces get stuff from the map
-
-// template<typename Node>
-// class MapInterfaceBase {
-// public:
-//     struct NodeCompare {
-//         // enables heterogeneous lookup
-//         using is_transparent = void;
-
-//         bool operator()(const Node& a, const Node& b) const {
-//             return a.getId() < b.getId();
-//         }
-
-//         bool operator()(const Node& a, int id) const {
-//             return a.getId() < id;
-//         }
-
-//         bool operator()(int id, const Node& a) const {
-//             return id < a.getId();
-//         }
-//     };
-//     typedef std::shared_ptr<Node> SharedNode;
-//     // typedef gtsam::FastSet<Node> SharedNodeSet;
-//     typedef std::set<Node, NodeCompare> SharedNodeSet;
-
-//     const SharedNodeSet& getNodes() const { return nodes_; }
-//     SharedNodeSet& getNodes() { return nodes_; }
-
-//     bool exists(int index) const {
-//         return nodes_->find(index) != nodes_->end();
-//     }
-
-//     bool exists(const Node& node) const {
-//         return nodes_->find(node) != nodes_->end();
-//     }
-
-//     bool exists(const SharedNode& node) const {
-//         CHECK_NOTNULL(node);
-//         return nodes_->find(*node) != nodes_->end();
-//     }
-
-//     size_t size() const { return nodes_.size(); }
-//     bool empty() const { return nodes_.empty(); }
-
-//     template <typename Index = int>
-//     std::vector<Index> collectIds() const {
-//         std::vector<Index> ids;
-//         ids.reserve(this->size());
-
-//         for (const auto& node : nodes_) {
-//             ids.push_back(getIndexSafe<Index>(node));
-//         }
-//         return ids;
-//     }
-
-// private:
-//     template <typename Index>
-//     static inline Index castNodeId(const Node& node) {
-//         return static_cast<Index>(node.getId());
-//     }
-
-//     template <typename Index>
-//     static inline Index castNodeId(const SharedNode& node) {
-//         return castNodeId<Index>(*node);
-//     }
-
-// protected:
-//     SharedNodeSet nodes_;
-
-// };
-
 template <typename Node>
 class MapInterfaceBase {
  public:
@@ -133,6 +62,8 @@ class MapInterfaceBase {
   bool exists(Key key) const {
     return nodes_.exists(static_cast<int>(key));
   }
+
+  bool exists(int key) const { return nodes_.exists(key); }
 
   template <typename Key>
   const SharedNode& at(Key key) const {
@@ -158,12 +89,13 @@ class MapInterfaceBase {
     return keys;
   }
 
+  const_iterator begin() const { return nodes_.begin(); }
   const_iterator end() const { return nodes_.end(); }
 
-  /** Get the first factor */
+  /** Get the first node ordered by Node##getId */
   SharedNode front() const { return nodes_.front(); }
 
-  /** Get the last factor */
+  /** Get the last node ordered by Node##getId */
   SharedNode back() const { return nodes_.back(); }
 
   /** non-const STL-style begin() */
@@ -193,12 +125,11 @@ class FrameNodeInterface : protected MapInterfaceBase<FrameNode> {
   }
 
   SharedNode lastFrame() const { return this->nodes_.crbegin()->second; }
-
   SharedNode firstFrame() const { return this->nodes_.cbegin()->second; }
-
   FrameId lastFrameId() const { return lastFrame()->frameId(); }
-
   FrameId firstFrameId() const { return firstFrame()->frameId(); }
+  Timestamp lastTimestamp() const { return lastFrame()->timestamp(); }
+  Timestamp firstTimestamp() const { return firstFrame()->timestamp(); }
 };
 
 template <typename LandmarkNode>
@@ -257,7 +188,6 @@ class ObjectNodeBase {
 
  protected:
   ObjectId object_id_;
-
   Landmarks dynamic_landmarks_;
 };
 template <typename NodeTypes>
@@ -441,12 +371,27 @@ class Map : public FrameNodeInterface<typename NodeTypes::FrameNodeT>,
   struct Private {};
 
  public:
-  typedef FrameNodeInterface<typename NodeTypes::FrameNodeT>
-      FrameNodeInterfaceT;
-  typedef LandmarkNodeInterface<typename NodeTypes::LandmarkNodeT>
-      LandmarkNodeInterfaceT;
-  typedef ObjectNodeInterface<typename NodeTypes::ObjectNodeT>
-      ObjectNodeInterfaceT;
+  typedef typename NodeTypes::FrameNodeT FrameNodeT;
+  typedef typename NodeTypes::LandmarkNodeT LandmarkNodeT;
+  typedef typename NodeTypes::ObjectNodeT ObjectNodeT;
+
+  typedef typename NodeInterface<FrameNodeT>::SharedNode SharedFrameNodeT;
+  typedef typename NodeInterface<LandmarkNodeT>::SharedNode SharedLandmarkNodeT;
+  typedef typename NodeInterface<ObjectNodeT>::SharedNode SharedObjectNodeT;
+
+  typedef typename NodeTypes::Measurement Measurement;
+
+  typedef FrameNodeInterface<FrameNodeT> FrameNodeInterfaceT;
+  typedef LandmarkNodeInterface<LandmarkNodeT> LandmarkNodeInterfaceT;
+  typedef ObjectNodeInterface<ObjectNodeT> ObjectNodeInterfaceT;
+
+  /// @brief Alias to a GenericTrackedStatusVector using the templated
+  /// Measurement type, specifying that StatusVector must contain the desired
+  /// measurement type
+  /// @tparam DERIVEDSTATUS
+  template <typename DERIVEDSTATUS>
+  using MeasurementStatusVector =
+      GenericTrackedStatusVector<DERIVEDSTATUS, Measurement>;
 
   typedef Map<NodeTypes> This;
   DYNO_POINTER_TYPEDEFS(This)
@@ -457,18 +402,111 @@ class Map : public FrameNodeInterface<typename NodeTypes::FrameNodeT>,
     return std::make_shared<This>(Private());
   }
 
+  std::shared_ptr<const This> getPtr() const {
+    return this->shared_from_this();
+  }
   std::shared_ptr<This> getPtr() { return this->shared_from_this(); }
 
-  std::shared_ptr<FrameNodeInterfaceT> asFrameInterface() const {
+  std::shared_ptr<const FrameNodeInterfaceT> asFrameInterface() const {
+    return std::dynamic_pointer_cast<const FrameNodeInterfaceT>(this->getPtr());
+  }
+
+  std::shared_ptr<const LandmarkNodeInterfaceT> asLandmarkInterface() const {
+    return std::dynamic_pointer_cast<const LandmarkNodeInterfaceT>(
+        this->getPtr());
+  }
+
+  std::shared_ptr<const ObjectNodeInterfaceT> asObjectInterface() const {
+    return std::dynamic_pointer_cast<const ObjectNodeInterfaceT>(
+        this->getPtr());
+  }
+
+  std::shared_ptr<FrameNodeInterfaceT> asFrameInterface() {
     return std::dynamic_pointer_cast<FrameNodeInterfaceT>(this->getPtr());
   }
 
-  std::shared_ptr<LandmarkNodeInterfaceT> asLandmarkInterface() const {
+  std::shared_ptr<LandmarkNodeInterfaceT> asLandmarkInterface() {
     return std::dynamic_pointer_cast<LandmarkNodeInterfaceT>(this->getPtr());
   }
 
-  std::shared_ptr<ObjectNodeInterfaceT> asObjectInterface() const {
+  std::shared_ptr<ObjectNodeInterfaceT> asObjectInterface() {
     return std::dynamic_pointer_cast<ObjectNodeInterfaceT>(this->getPtr());
+  }
+
+  template <typename DERIVEDSTATUS>
+  void updateObservations(
+      const GenericTrackedStatusVector<DERIVEDSTATUS>& measurements) {
+    using DerivedMeasurement =
+        typename GenericTrackedStatusVector<DERIVEDSTATUS>::Value;
+
+    for (const DERIVEDSTATUS& status_measurement : measurements) {
+      const GenericValueTrack<DerivedMeasurement>& derived_status =
+          static_cast<const GenericValueTrack<DerivedMeasurement>&>(
+              status_measurement);
+      const GenericValueTrack<Measurement>& track =
+          derived_status.template asType<Measurement>();
+      // thread safe update
+      updateFromTrack(track);
+    }
+  }
+
+ private:
+  typedef GenericValueTrack<Measurement> GenericValueTrackT;
+
+  void updateFromTrack(const GenericValueTrackT& track) {
+    const Measurement& measurement = track.value();
+    const TrackletId tracklet_id = track.trackletId();
+    const FrameId frame_id = track.frameId();
+    const Timestamp timestamp = track.timestamp();
+    const ObjectId object_id = track.objectId();
+    const bool is_static = track.isStatic();
+
+    CHECK((is_static && object_id == background_label) ||
+          (!is_static && object_id != background_label));
+
+    auto object_interface = this->asObjectInterface();
+    auto frame_interface = this->asFrameInterface();
+    auto landmark_interface = this->asLandmarkInterface();
+
+    if (!landmark_interface->landmarkExists(tracklet_id)) {
+      landmark_interface->add(
+          std::make_shared<LandmarkNodeT>(tracklet_id, object_id));
+    }
+
+    if (!frame_interface->frameExists(frame_id)) {
+      frame_interface->add(std::make_shared<FrameNodeT>(frame_id, timestamp));
+    }
+
+    SharedLandmarkNodeT landmark_node =
+        landmark_interface->getLandmark(tracklet_id);
+    SharedFrameNodeT frame_node = frame_interface->getFrame(frame_id);
+
+    CHECK_NOTNULL(landmark_node);
+    CHECK_NOTNULL(frame_node);
+
+    CHECK_EQ(landmark_node->trackletId(), tracklet_id);
+    // this might fail of a tracklet get associated with a different object
+    CHECK_EQ(landmark_node->objectId(), object_id);
+    CHECK_EQ(frame_node->frameId(), frame_id);
+
+    landmark_node->add(frame_node, measurement);
+
+    if (is_static) {
+      frame_node->static_landmarks.insert(landmark_node);
+    } else {
+      CHECK(object_id != background_label);
+
+      if (!object_interface->objectExists(object_id)) {
+        object_interface->add(std::make_shared<ObjectNodeT>(object_id));
+      }
+
+      SharedObjectNodeT object_node = object_interface->getObject(object_id);
+      CHECK_NOTNULL(object_node);
+
+      object_node->dynamic_landmarks.insert(landmark_node);
+      frame_node->dynamic_landmarks.insert(landmark_node);
+      frame_node->objects_seen.insert(object_node);
+    }
   }
 };
 

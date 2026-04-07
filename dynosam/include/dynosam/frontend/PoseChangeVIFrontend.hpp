@@ -31,6 +31,11 @@ class PoseChangeVIFrontend : public VIFrontend {
   SpinReturn boostrapSpin(VIFrontendInput::ConstPtr input) override;
   SpinReturn nominalSpin(VIFrontendInput::ConstPtr input) override;
 
+  bool withBackend() const {
+    //! Use existance of backend sink as proxy logicc for "use backend"
+    return (bool)pose_change_backend_sink_;
+  }
+
   void solveObjectMotions(MultiObjectTrajectories& trajectories,
                           ObjectIds& object_with_new_motions,
                           ObjectPoseChangeInfoMap& infos, Frame::Ptr frame_k,

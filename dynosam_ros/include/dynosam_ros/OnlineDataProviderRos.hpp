@@ -46,7 +46,8 @@ enum InputImageMode : int {
   ALL = 0,
   //! Expects only rgb and depth images to be provided
   RGBD = 1,
-  STEREO = 2
+  STEREO = 2,
+  RGBDM = 3
 };
 
 struct OnlineDataProviderRosParams {
@@ -151,12 +152,16 @@ class RGBDTypeCalibrationHelper {
  public:
   RGBDTypeCalibrationHelper(rclcpp::Node::SharedPtr node,
                             const OnlineDataProviderRosParams& params);
+  virtual ~RGBDTypeCalibrationHelper() = default;
 
-  void processRGB(const cv::Mat& src, cv::Mat& dst);
-  void processDepth(const cv::Mat& src, cv::Mat& dst);
+  void processRGB(const cv::Mat& src, cv::Mat& dst) const;
+  void processDepth(const cv::Mat& src, cv::Mat& dst) const;
 
   const CameraParams::Optional& getOriginalCameraParams() const;
   const CameraParams::Optional& getCameraParams() const;
+
+ protected:
+  void undistortWithMaps(const cv::Mat& src, cv::Mat& dst) const;
 
  private:
   void setupNewCameraParams(const CameraParams& original_camera_params,
@@ -180,6 +185,18 @@ class RGBDTypeCalibrationHelper {
   //! Undistort maps
   cv::Mat mapx_;
   cv::Mat mapy_;
+};
+
+/**
+ * @brief RGBDM (RGB-Depth-Mask helper)
+ *
+ */
+class RGBDMTypeCalibrationHelper : public RGBDTypeCalibrationHelper {
+ public:
+  RGBDMTypeCalibrationHelper(rclcpp::Node::SharedPtr node,
+                             const OnlineDataProviderRosParams& params);
+
+  void processMask(const cv::Mat& src, cv::Mat& dst) const;
 };
 
 /**
@@ -211,8 +228,7 @@ class AllImagesOnlineProviderRos : public OnlineDataProviderRos {
 };
 
 /**
- * @brief Class that subscribes to rgb, depth, motion mask and dense optical
- * flow topics.
+ * @brief Class that subscribes to rgb and depth
  *
  */
 class RGBDOnlineProviderRos : public OnlineDataProviderRos {
@@ -228,6 +244,26 @@ class RGBDOnlineProviderRos : public OnlineDataProviderRos {
 
  private:
   std::unique_ptr<RGBDTypeCalibrationHelper> calibration_helper_;
+  MultiSyncBase::Ptr image_subscriber_;
+};
+
+/**
+ * @brief Class that subscribes to rgb, depth and masks
+ *
+ */
+class RGBDMOnlineProviderRos : public OnlineDataProviderRos {
+ public:
+  RGBDMOnlineProviderRos(rclcpp::Node::SharedPtr node,
+                         const OnlineDataProviderRosParams& params);
+
+  void subscribeImages() override;
+  void unsubscribeImages() override;
+  CameraParams::Optional getCameraParams() const override;
+
+  void updateAndCheckParams(DynoParams& dyno_params) override;
+
+ private:
+  std::unique_ptr<RGBDMTypeCalibrationHelper> calibration_helper_;
   MultiSyncBase::Ptr image_subscriber_;
 };
 
