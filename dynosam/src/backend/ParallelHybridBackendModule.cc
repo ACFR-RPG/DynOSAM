@@ -72,8 +72,7 @@ DEFINE_bool(use_marginal_covariance, true,
 namespace dyno {
 
 ParallelHybridBackendModule::ParallelHybridBackendModule(
-    const BackendParams& backend_params, 
-    Camera::Ptr camera,
+    const BackendParams& backend_params, Camera::Ptr camera,
     const SharedGroundTruth& shared_ground_truth)
     : Base(backend_params, camera, shared_ground_truth) {
   LOG(INFO) << "Creating ParallelHybridBackendModule";
@@ -421,11 +420,7 @@ ParallelObjectISAM::Ptr ParallelHybridBackendModule::getEstimator(
     LOG(INFO) << "Making new ParallelObjectISAM for object " << object_id;
 
     FormulationHooks hooks;
-    // TODO: ground truth!!
-    //  hooks.ground_truth_packets_request =
-    //      [&]() -> std::optional<GroundTruthPacketMap> {
-    //    return shared_module_info.getGroundTruthPackets();
-    //  };
+    hooks.setGroundTruthPacketRequest(this->shared_ground_truth_);
 
     Sensors sensors;
     sensors.camera = camera_;
@@ -519,7 +514,6 @@ void ParallelHybridBackendModule::implSolvePerObject(
     estimator->insertNewKeyFrame(frame_id_k);
   }
 }
-
 
 void ParallelHybridBackendModule::logBackendFromEstimators() {
   // TODO: name + suffix
@@ -713,7 +707,6 @@ MotionEstimateMap ParallelHybridAccessor::getObjectMotions(
   }
   return all_motions;
 }
-
 
 PoseTrajectory ParallelHybridAccessor::getCameraTrajectory() const {
   return static_accessor_->getCameraTrajectory();

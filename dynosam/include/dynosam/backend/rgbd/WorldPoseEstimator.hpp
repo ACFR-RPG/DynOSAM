@@ -52,7 +52,7 @@ class WorldPoseAccessor : public AccessorT<MapVision, VIOAccessor> {
       FrameId frame_id, TrackletId tracklet_id) const override;
 };
 
-class WorldPoseFormulation : public VIOFormulation {
+class WorldPoseFormulation : public VIOFormulation<MapVision> {
  public:
   using Base = VIOFormulation;
   using Base::AccessorTypePointer;

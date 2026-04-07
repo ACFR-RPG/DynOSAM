@@ -80,7 +80,7 @@ namespace dyno {
 
 RegularVIBackendModule::RegularVIBackendModule(
     const BackendParams& backend_params, Camera::Ptr camera,
-    std::shared_ptr<RegularVIBackendModule::Factory> factory, 
+    std::shared_ptr<RegularVIBackendModule::Factory> factory,
     const SharedGroundTruth& shared_ground_truth)
     : Base(backend_params, camera, shared_ground_truth) {
   setupOptimizers();
@@ -97,7 +97,7 @@ RegularVIBackendModule::RegularVIBackendModule(
           shared_ground_truth) {}
 
 RegularVIBackendModule::~RegularVIBackendModule() {
-  if(backend_params_.use_logger_) {
+  if (backend_params_.use_logger_) {
     formulation_->postUpdate(PostUpdateData(this->latestFrameId()));
 
     FormulationLoggingParams logging_params;
@@ -115,7 +115,8 @@ Accessor::Ptr RegularVIBackendModule::getAccessor() const {
   return formulation_->getAsVIOAccessor();
 }
 
-const VIOFormulation::Ptr RegularVIBackendModule::formulation() const {
+const VIOFormulation<MapVision>::Ptr RegularVIBackendModule::formulation()
+    const {
   return formulation_;
 }
 
@@ -229,7 +230,8 @@ void RegularVIBackendModule::setupFormulation(
     throw DynosamException("Loaded formulation is null!");
   }
 
-  formulation_ = std::dynamic_pointer_cast<VIOFormulation>(wrapper.formulation);
+  formulation_ =
+      std::dynamic_pointer_cast<VIOFormulation<MapVision>>(wrapper.formulation);
   if (!formulation_) {
     throw DynosamException(
         "Formulation loaded but does not inherit from VIOFormulation!");

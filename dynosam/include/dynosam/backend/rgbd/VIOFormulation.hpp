@@ -22,19 +22,23 @@ class VIOAccessor : public Accessor {
  private:
 };
 
+template <typename MAP>
 class VIOUpdater;
 
-// if derive - also ensure that the DerivedAccessor derives from VIOAccessor
-class VIOFormulation : public Formulation<MapVision> {
+template <typename MAP>
+class VIOFormulation : public Formulation<MAP> {
  public:
-  using Base = Formulation<MapVision>;
+  using Base = Formulation<MAP>;
+  using This = VIOFormulation<MAP>;
+  using Map = typename Base::Map;
+
+  // Map alias's available to deriving classes
   using Base::AccessorTypePointer;
-  using Base::Map;
   using Base::MapTraitsType;
   using Base::ObjectUpdateContextType;
   using Base::PointUpdateContextType;
 
-  DYNO_POINTER_TYPEDEFS(VIOFormulation)
+  DYNO_POINTER_TYPEDEFS(This)
 
   VIOFormulation(const FormulationParams& params, typename Map::Ptr map,
                  const NoiseModels& noise_models, const Sensors& sensors,
@@ -109,9 +113,13 @@ class VIOFormulation : public Formulation<MapVision> {
   //! Initial imu bias prior noise model
   gtsam::SharedNoiseModel init_imu_bias_prior_noise_;
 
-  friend class VIOUpdater;
+  friend class VIOUpdater<MAP>;
   // Only shared to keep implementation hidden
-  std::shared_ptr<VIOUpdater> static_updater_;
+  using VIOUpdaterM = VIOUpdater<MAP>;
+  std::shared_ptr<VIOUpdaterM> static_updater_;
 };
 
 }  // namespace dyno
+
+#include "dynosam/backend/rgbd/VIOFormulation-impl.hpp"
+#include "dynosam/backend/rgbd/VIOUpdater-impl.hpp"

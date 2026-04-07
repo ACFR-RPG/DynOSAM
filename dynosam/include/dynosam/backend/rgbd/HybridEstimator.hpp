@@ -1411,10 +1411,10 @@ class HybridAccessor : public AccessorT<MapVision, HybridAccessorCommon>,
 //  measurements care about so it can be measurement generic... eventually need
 //  way to define (AND CHECK, becuase we cannot assume all types have the same
 //  compile-time properties) and get the measurement we are interested in
-class HybridFormulation : public VIOFormulation,
+class HybridFormulation : public VIOFormulation<MapVision>,
                           public HybridFormulationProperties {
  public:
-  using Base = VIOFormulation;
+  using Base = VIOFormulation<MapVision>;
   using Base::AccessorTypePointer;
   using Base::MapTraitsType;
   using Base::ObjectUpdateContextType;

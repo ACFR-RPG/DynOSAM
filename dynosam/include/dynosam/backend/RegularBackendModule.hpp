@@ -54,7 +54,7 @@ class RegularVIBackendModule
 
   RegularVIBackendModule(const BackendParams& backend_params,
                          Camera::Ptr camera, std::shared_ptr<Factory> factory,
-                        const SharedGroundTruth& shared_ground_truth = {});
+                         const SharedGroundTruth& shared_ground_truth = {});
 
   /**
    * @brief Construct a new Regular V I Backend Module object A secondary
@@ -78,7 +78,7 @@ class RegularVIBackendModule
       const override;
 
   Accessor::Ptr getAccessor() const override;
-  const VIOFormulation::Ptr formulation() const;
+  const VIOFormulation<MapVision>::Ptr formulation() const;
   BackendModuleDisplay::Ptr formulationDisplay() const;
 
  protected:
@@ -137,7 +137,7 @@ class RegularVIBackendModule
       const IncrementalInterface<dyno::ISAM2>& smoother_interface) const;
 
  private:
-  VIOFormulation::Ptr formulation_;
+  VIOFormulation<MapVision>::Ptr formulation_;
   BackendModuleDisplay::Ptr formulation_display_;
 
   // Cached debug info
