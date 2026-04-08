@@ -475,6 +475,7 @@ PoseChangeVIFrontend::SpinReturn PoseChangeVIFrontend::nominalSpin(
     // frontend
     /// hmmmm errr dont need to do this if we did this in the loop before!!!
     // TODO: otherwise get Forward predicting k=16 t=16 using VO
+    CHECK_EQ(formulation_->getLastPropogatedFrame(), lkf_id_);
     const gtsam::NavState predicted_nav_state =
         formulation_->addStatesPropogate(pc_input->new_values,
                                          pc_input->new_factors, frame_id_k,
@@ -559,7 +560,7 @@ bool PoseChangeVIFrontend::shouldFrameBeKeyFrame(Frame::Ptr frame_k,
   const KeyFrameData& lkf_data = keyframes_.at(lkf_id_);
   const Frame::Ptr lkf_frame = lkf_data.frame;
 
-  // return frame_k->getFrameId() % 10 == 0;
+  // return frame_k->getFrameId() % 2 == 0;
   // FOR NOW!
   return true;
 }

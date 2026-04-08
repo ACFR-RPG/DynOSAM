@@ -649,8 +649,6 @@ class ClusterSlamAllLoader {
                                    pose.translation());
           // gtsam::Pose3 object_pose = pose;
 
-          LOG(INFO) << "Processing object " << i;
-
           // construct relative object pose with original camera pose
           auto relative_object_pose =
               original_camera_pose.inverse() * object_pose;
