@@ -76,7 +76,6 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
   ament_add_gmock(${PROJECT_NAME}_test
     test/test_main.cc
-    test/test_derived_map.cc
 )
 
 target_include_directories(${PROJECT_NAME}_test

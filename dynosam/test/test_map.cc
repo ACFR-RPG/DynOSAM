@@ -476,13 +476,13 @@ struct FilteredFrameNode;
 struct NodeTypesWithFilteredFrameNode {
   using Measurement = Keypoint;
   using FrameNodeT = FilteredFrameNode;
-  using ObjectNodeT = DefaultObjectNode<NodeTypesWithFilteredFrameNode>;
-  using LandmarkNodeT = DefaultLandmarkNode<NodeTypesWithFilteredFrameNode>;
+  using ObjectNodeT = RegularObjectNode<NodeTypesWithFilteredFrameNode>;
+  using LandmarkNodeT = RegularLandmarkNode<NodeTypesWithFilteredFrameNode>;
 };
 
 struct FilteredFrameNode
-    : public DefaultFrameNode<NodeTypesWithFilteredFrameNode> {
-  using Base = DefaultFrameNode<NodeTypesWithFilteredFrameNode>;
+    : public RegularFrameNode<NodeTypesWithFilteredFrameNode> {
+  using Base = RegularFrameNode<NodeTypesWithFilteredFrameNode>;
 
   FilteredFrameNode(FrameId id, Timestamp ts) : Base(id, ts) {}
 

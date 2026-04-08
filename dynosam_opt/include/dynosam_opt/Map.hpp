@@ -691,23 +691,23 @@ class LandmarkNodeBase {
 };
 
 template <typename NodeTypes>
-class DefaultObjectNode : public ObjectNodeBase<NodeTypes> {
+class RegularObjectNode : public ObjectNodeBase<NodeTypes> {
  public:
-  typedef DefaultObjectNode<NodeTypes> This;
+  typedef RegularObjectNode<NodeTypes> This;
   typedef ObjectNodeBase<NodeTypes> Base;
   DYNO_POINTER_TYPEDEFS(This)
 
-  DefaultObjectNode(ObjectId object_id) : Base(object_id) {}
+  RegularObjectNode(ObjectId object_id) : Base(object_id) {}
 };
 
 template <typename NodeTypes>
-class DefaultFrameNode : public FrameNodeBase<NodeTypes> {
+class RegularFrameNode : public FrameNodeBase<NodeTypes> {
  public:
-  typedef DefaultFrameNode<NodeTypes> This;
+  typedef RegularFrameNode<NodeTypes> This;
   typedef FrameNodeBase<NodeTypes> Base;
   DYNO_POINTER_TYPEDEFS(This)
 
-  DefaultFrameNode(FrameId frame_id, Timestamp timestamp)
+  RegularFrameNode(FrameId frame_id, Timestamp timestamp)
       : Base(frame_id, timestamp) {}
 
   void setInitialObjectMotions(const MotionEstimateMap& motions) {
@@ -746,25 +746,25 @@ class DefaultFrameNode : public FrameNodeBase<NodeTypes> {
 };
 
 template <typename NodeTypes>
-class DefaultLandmarkNode : public LandmarkNodeBase<NodeTypes> {
+class RegularLandmarkNode : public LandmarkNodeBase<NodeTypes> {
  public:
-  typedef DefaultLandmarkNode<NodeTypes> This;
+  typedef RegularLandmarkNode<NodeTypes> This;
   typedef LandmarkNodeBase<NodeTypes> Base;
   DYNO_POINTER_TYPEDEFS(This)
 
-  DefaultLandmarkNode(TrackletId tracklet_id, ObjectId object_id)
+  RegularLandmarkNode(TrackletId tracklet_id, ObjectId object_id)
       : Base(tracklet_id, object_id) {}
 };
 
 template <typename Measurement_>
-struct DefaultNodeTypes {
+struct RegularNodeTypes {
   using Measurement = Measurement_;
-  using ObjectNodeT = DefaultObjectNode<DefaultNodeTypes>;
-  using FrameNodeT = DefaultFrameNode<DefaultNodeTypes>;
-  using LandmarkNodeT = DefaultLandmarkNode<DefaultNodeTypes>;
+  using ObjectNodeT = RegularObjectNode<RegularNodeTypes>;
+  using FrameNodeT = RegularFrameNode<RegularNodeTypes>;
+  using LandmarkNodeT = RegularLandmarkNode<RegularNodeTypes>;
 };
 
-template <typename NodeTypes = DefaultNodeTypes<Keypoint>>
+template <typename NodeTypes = RegularNodeTypes<Keypoint>>
 class Map : public FrameNodeInterface<typename NodeTypes::FrameNodeT>,
             public LandmarkNodeInterface<typename NodeTypes::LandmarkNodeT>,
             public ObjectNodeInterface<typename NodeTypes::ObjectNodeT>,
@@ -1033,16 +1033,16 @@ T getStateQueryDebugHelper(const StateQuery<T>& query, const char* file,
 }  // namespace internal
 
 template <typename M>
-class DefaultMap : public Map<DefaultNodeTypes<M>> {
+class RegularMap : public Map<RegularNodeTypes<M>> {
   struct Private {};
 
  public:
-  using This = DefaultMap<M>;
-  using Base = Map<DefaultNodeTypes<M>>;
+  using This = RegularMap<M>;
+  using Base = Map<RegularNodeTypes<M>>;
   DYNO_POINTER_TYPEDEFS(This)
 
   // Constructor is only usable by this class
-  DefaultMap(Private) {}
+  RegularMap(Private) {}
 
   static std::shared_ptr<This> create() {
     return std::make_shared<This>(Private());
@@ -1095,17 +1095,17 @@ class DefaultMap : public Map<DefaultNodeTypes<M>> {
   }
 };
 
-using Map3d = DefaultMap<Landmark>;
+using Map3d = RegularMap<Landmark>;
 using ObjectNode3d = Map3d::ObjectNodeT;
 using LandmarkNode3d = Map3d::LandmarkNodeT;
 using FrameNode3d = Map3d::FrameNodeT;
 
-using Map2d = DefaultMap<Keypoint>;
+using Map2d = RegularMap<Keypoint>;
 using ObjectNode2d = Map2d::ObjectNodeT;
 using LandmarkNode2d = Map2d::LandmarkNodeT;
 using FrameNode2d = Map2d::FrameNodeT;
 
-using MapVision = DefaultMap<CameraMeasurement>;
+using MapVision = RegularMap<CameraMeasurement>;
 using ObjectNodeV = MapVision::ObjectNodeT;
 using LandmarkNodeV = MapVision::LandmarkNodeT;
 using FrameNodeV = MapVision::FrameNodeT;
